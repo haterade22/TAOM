@@ -145,8 +145,8 @@ markedly bigger animal relative to its rider than a horse does, which is the int
 
 | Constant | Value | Rationale |
 |---|---|---|
-| `AttackMinDamage` / `AttackMaxDamage` | 40 / 50 | Since 2026-09-18 (Mike; was 18 / 28, set while the attack still swept every enemy in the radius). One enemy per butt, every 10 s. The butt IGNORES armor (`CustomAttacksUtils.TakeDamage` writes the inflicted damage directly), so 40-50 lands in full on an Armored Troll; for scale a mid-tier sword swings 25-35 before armor, the warg bite tops out near 60, the elephant trample is 50-100 |
-| `AttackCooldownSeconds` | 10.0 | Level with the elephant's trample. Was 6.0 and played as overpowered, see below |
+| `AttackMinDamage` / `AttackMaxDamage` | 40 / 50 | Since 2026-09-18 (Mike; was 18 / 28, set while the attack still swept every enemy in the radius). One enemy per butt, every 35 s. The butt IGNORES armor (`CustomAttacksUtils.TakeDamage` writes the inflicted damage directly), so 40-50 lands in full on an Armored Troll; for scale a mid-tier sword swings 25-35 before armor, the warg bite tops out near 60, the elephant trample is 50-100 |
+| `AttackCooldownSeconds` | 35.0 | Raised to 35.0 on 2026-11-11 (Mike). Was 10.0 (level with the elephant's trample), and 6.0 before that, which played as overpowered, see below. The elk and Animalia follow this value, and their tests fail if it differs |
 | `AttackBlowMagnitude` | 35f | Below the elephant's 50f: a horse-scale creature should stagger, not launch |
 | `AttackTriggerRange` / `AttackRadius` | 1.5f / 2f | Was 2.5f / 3.5f, near the unscaled elephant's 3f / 4f. See below |
 | `AttackSingleTarget` | true | The head-butt hits ONE enemy inside `AttackRadius`, the one the ram faces most squarely (nearer on a tie, `SingleVictimPick`). Radial until 2026-09-18; the elephant and mumakil tramples stay radial. A shield-blocker straight ahead takes the butt (12 damage at most, no knockdown) and nobody else is hit. A mounted enemy is picked as the rider, never the horse: in the area version the blow log shows the butt hitting mounted lords and never their horses |
@@ -173,8 +173,8 @@ the ram is standing on top of. Damage, block scaling and the knockdown rule are 
 advisory. `ElephantLikeEngageDecorator` runs **one** scan at `AttackRadius` and then filters those
 results by `AttackTriggerRange`, so any trigger range above the radius is unreachable code and the
 constant would read as a number the ram never uses. It is held at 75% of the radius, the ratio the
-original 2.5/3.5 pair chose, and that margin matters more at 10s than it did at 6s: an attack
-committed against a target loitering on the rim now wastes a ten-second window.
+original 2.5/3.5 pair chose, and that margin matters more at 35s than it did at 6s: an attack
+committed against a target loitering on the rim now wastes a 35-second window.
 | `AttackActionName` | `act_war_ram_butt` | **The bespoke head-butt** (master `act_war_ram_butt`, clip `war_ram_butt`, 30 posed frames plus a 2.5 s head-down hold), bound in the Armory's `as_war_ram` and typed `actt_kick` (`ActionCodeType.Kick = 28`) in the Armory's `action_types.xml`. All four profile slots hold this one action, so `IsAttack` means exactly "mid-butt". Was `act_horse_kick` until 2026-09-18 |
 
 **Why a separate action, and why `actt_kick`.** The horse `monster_usage_set` the ram inherits names

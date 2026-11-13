@@ -763,6 +763,9 @@ class GhidraIntegrationTests(unittest.TestCase):
         "v1.5.6": {"set_attack_state": "0x6E16F0", "weapon_equipped": "0x6E2190",
                    "process_preload_queue": "0x4A1930", "import_stub": "0x9DD6D0",
                    "get_current_action_type": 0x6E3A40, "thunk_target": "0x153C80"},
+        "v1.5.7": {"set_attack_state": "0x6E1720", "weapon_equipped": "0x6E21C0",
+                   "process_preload_queue": "0x4A1950", "import_stub": "0x9DD700",
+                   "get_current_action_type": 0x6E3A70, "thunk_target": "0x153C80"},
     }
 
     def _pins(self):

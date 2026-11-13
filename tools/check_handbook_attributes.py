@@ -16,7 +16,7 @@ copied from:
 This script opens the cited decompile file, finds the named method plus every
 non-public helper it calls in the same class (transitively), and extracts the
 attribute and element names those bodies read through the idioms ILSpy emits for
-the v1.5.6 dump (the category tree named by TAOM_DECOMPILE_ROOT):
+the v1.5.7 dump (the category tree named by TAOM_DECOMPILE_ROOT):
 
     Attributes["x"]  Attributes?["x"]  GetAttribute("x")
     ReadObjectReferenceFromXml("x", ...)  ReadObjectReferenceFromXml<T>("x", ...)
@@ -78,7 +78,7 @@ from _gamedir import game_modules as resolve_game_modules  # noqa: E402
 REPO_ROOT = Path(__file__).resolve().parent.parent
 DOCS_DIR = REPO_ROOT / "docs" / "modding"
 MANIFEST_PATH = REPO_ROOT / "tools" / "handbook_attribute_manifest.json"
-DEFAULT_DUMP_ROOT = r"E:\Decompiled_Bannerlord\_categories_v1.5.6"
+DEFAULT_DUMP_ROOT = r"E:\Decompiled_Bannerlord\_categories_v1.5.7"
 DUMP_ENV_VAR = "TAOM_DECOMPILE_ROOT"
 DEFAULT_GAME_MODULES = resolve_game_modules(
     r"E:\Steam\steamapps\common\Mount & Blade II Bannerlord")
@@ -769,6 +769,10 @@ def main(argv=None) -> int:
     ap.add_argument("--update", action="store_true",
                     help="rewrite the manifest from the dump (needs the dump)")
     args = ap.parse_args(argv)
+
+    if not Path(args.docs).is_dir():
+        print(f"ERROR: handbook folder not found: {args.docs}", file=sys.stderr)
+        return 2
 
     dump_root = resolve_dump_root(args.dump_root)
     if args.update and not dump_root.is_dir():

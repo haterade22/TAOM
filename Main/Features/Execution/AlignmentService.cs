@@ -1,15 +1,20 @@
 using System;
 using System.Collections.Generic;
 using TAOM.Core.Logging;
+using TAOM.Features.WarPledge;
 
 namespace TAOM.Features.Execution;
 
 public class AlignmentService : IAlignmentService
 {
     private readonly Dictionary<string, FactionSide> _kingdomSides;
+    private readonly WarPledgeStore? _pledges;
 
-    public AlignmentService(IAlignmentConfigProvider configProvider, IModLogger logger)
+    // pledges: optional so that a test or a sibling feature can build the service from the table alone;
+    // the container always passes the store (WarPledgeWiringTests).
+    public AlignmentService(IAlignmentConfigProvider configProvider, IModLogger logger, WarPledgeStore? pledges = null)
     {
+        _pledges = pledges;
         _kingdomSides = new Dictionary<string, FactionSide>(StringComparer.OrdinalIgnoreCase);
 
         var alignments = configProvider.LoadAlignments();
@@ -29,7 +34,11 @@ public class AlignmentService : IAlignmentService
         logger.LogInfo($"AlignmentService: Loaded {_kingdomSides.Count} kingdom alignments");
     }
 
-    public FactionSide GetKingdomSide(string kingdomId) => GetSide(kingdomId);
+    // #1113: a pledged realm reads the side it joined. The override is here and never in GetSide, which
+    // GetCultureSide shares: for realms such as cardolan the kingdom id is also the culture id, and the
+    // culture keeps the table's side.
+    public FactionSide GetKingdomSide(string kingdomId) =>
+        _pledges != null && _pledges.TryGetSide(kingdomId, out var pledged) ? pledged : GetSide(kingdomId);
 
     public FactionSide GetCultureSide(string cultureId) => GetSide(cultureId);
 

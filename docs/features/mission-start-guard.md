@@ -127,13 +127,75 @@ Mission_AfterStart_MissionStartGuard_Patch
   Prefix     -> IMissionStartGuardService.BeginMission (also the canary)
   Finalizer  -> ReportEscaped, EndMissionStart(live swap count)
         |
-Hooks/MissionStartGuardCalls (6 helpers: try / catch when)
+Hooks/MissionStartGuardCalls (6 helpers: try / catch when; 3 also check the list size)
         |
 IMissionStartGuardService  (MissionStartGuardService)
    |            |               |
 IModLogger  IMissionStartGuardAdapter   IMissionStartGuardSettingsProvider
             (DisplayMessage)              (CrashReportSettings.Instance)
 ```
+
+### The list-size check (#1028)
+
+`Mission.AfterStart` walks `MissionBehaviors` with `foreach` around `EarlyStart` and `AfterStart`, and `MissionObjects` around
+`AfterMissionStart`. A start call that changes the list it is being walked from (an add, a remove, an indexer write, a sort,
+an add paired with a remove) makes the engine's next step through that list throw "Collection was modified" from the
+enumerator itself, outside every try the six helpers hold. The guard cannot survive that throw, and the engine loads the
+mission again. Before its call each of the three helpers takes a `Watch`: the list, its size and a `List<T>` enumerator.
+After the call it steps a copy of that enumerator, which throws exactly when the engine's own next step will. When it does,
+`IMissionStartGuardService.ReportListChange` writes one ERROR line: the list, the call, the owner's type and assembly, both
+sizes and, when the list grew, the newest item (at most five per mission). A healthy start never writes it, and it adds no
+patch. The owner is the call during which the change happened: it may only have called code (a mod's listener, for
+example) that made the change. It exists to name the culprit of #1028 (a stealth hideout raid that loops the loading
+screen, crash bundle `taom_crash_20261111_145332_395a9270`); remove it when the issue closes. It does not see a change made
+outside the three loops' calls, such as in `_battleSpawnPathSelector.Initialize()` or `_deploymentPlan.Initialize()`,
+which run between the loops: if the line never appears and the exception recurs, look there next.
+
+### Deferred adds (#1028)
+
+The list-size check names the culprit; this part removes the loop for an add made through `Mission.AddMissionBehavior`.
+Crash bundle `taom_crash_20261112_161559_ca0697d0` (an arena practice fight started from the Minas Tirith town menu; the
+fight started from the arena master's dialogue worked) logged `MissionBehaviors changed during AfterStart of
+SandBox.Missions.MissionLogics.CampaignMissionComponent ... size 99 to 100, newest item DualWield.DualWieldMissionBehavior`.
+The engine then loaded the mission again, and the first tick threw a `NullReferenceException` in
+`MissionMainAgentInteractionComponent.FocusTick`.
+
+The chain, read from the installed v1.5.7 sources: `CampaignMissionComponent.AfterStart` raises
+`CampaignEvents.AfterMissionStarted` (`CampaignMissionComponent.cs:140-144`). On the town-menu path
+`ArenaMasterCampaignBehavior.AfterMissionStarted` (`ArenaMasterCampaignBehavior.cs:368-376`, flag set at `:385`) sets
+`MissionMode.Battle` and calls `ArenaPracticeFightMissionController.StartPlayerPractice()`, which spawns the player and six
+fighters inside the walk. DualWield's `Mission.SpawnAgent` postfix then adds its behaviour, because its static `IsActive` is
+false and the mode is now a combat mode (`DualWieldSpawnPatches.cs:486-488`, `DualWieldSubModule.cs:179-181`; DualWield
+v0.10.5, decompiled). The dialogue path calls `StartPlayerPractice` from `StartPlayerPracticeAfterConversationEnd`
+(`ArenaMasterCampaignBehavior.cs:298-306`), after the mission has started, so nothing is added inside the walk. Every
+listener of `AfterMissionStarted` runs inside the walk.
+
+`Mission_AddMissionBehavior_MissionStartGuard_Patch` (same category) is a bool prefix on `Mission.AddMissionBehavior`. The
+`EarlyStart` and `AfterStart` helpers open a window around their call (`MissionBehaviorDeferral.Open`, thread-static). They
+close it right after a normal or survived return; a throw that is not survived leaves it open until Patch103's finalizer
+resets it. Inside the window the prefix queues the behaviour and skips the engine's add. Patch103's `AfterStart` finalizer
+applies the queue (`MissionStartGuardCalls.FlushDeferredAdds`) through the engine's own `AddMissionBehavior`, in add order,
+with the window closed, on a normal end and after a throw alike. One INFO line per queued add (at most five per mission)
+names the call, the owner and the type. The same toggle gates it.
+
+The window never covers `OnBehaviorInitialize` (an index loop over the live count, so an add there is safe and the new
+behaviour gets every start call) or `OnMissionBehaviorInitialize` (before the walk). That exclusion is load-bearing: vanilla
+adds there on purpose (four `OnMissionStarted` listeners, see the registry), and so do TAOM's `AddTaomBehavior` and DualWield's
+own `OnMissionBehaviorInitialize`.
+
+What a queued behaviour lacks until the flush: it is not in `MissionBehaviors`, its `Mission` is null and `OnCreated` has not
+run, and it misses `OnBehaviorInitialize`, `EarlyStart` and `AfterStart` of this start. `GetMissionBehavior` does not find it,
+so DualWield's spawn postfix (`DualWieldSpawnPatches.cs:494`) skips registering the agents spawned in that gap: in the bundle
+the player's practice agent and the six opponents. A respawn from `OnMissionTick` comes after the flush, and DualWield
+re-registers a player whose kit can dual wield, so the loss is the first batch only. DualWield overrides no start call.
+
+Limits, none seen with an installed mod:
+- A mod that guards its add only with `GetMissionBehavior<T>() == null` queues one copy per spawn, and the flush adds all of
+  them. DualWield is safe because its constructor sets `IsActive`.
+- A foreign void prefix or any postfix on `AddMissionBehavior` runs twice, once for the skipped call and once at the flush.
+- A remove, or any other direct change to `MissionBehaviors` inside the walk, still reloads the mission.
+- PatchShield can shield this target from a process's second game start. A missing-API throw from a behaviour's `OnCreated`
+  would let it strip TAOM's prefix, and the deferral would end without a warning (the canary watches `AfterStart` only).
 
 ## Configuration
 
@@ -157,6 +219,10 @@ differs hangs on its own load and simulates nothing differently.
 | `Main/Adapters/MissionStartGuardAdapter.cs` | The localized on-screen line |
 | `Main/Features/CrashReport/CrashReportSettings.cs` | The MCM toggle |
 | `Main/Features/MissionPerf/TickProfilerTranspiler.cs` | The shared soft-failing call-site swap |
+| `Main/Features/MissionStartGuard/Hooks/Mission_AddMissionBehavior_MissionStartGuard_Patch.cs` | The prefix that queues an add made during the walk (#1028) |
+| `Main/Features/MissionStartGuard/Hooks/MissionBehaviorDeferral.cs` | The thread-static window and queue |
+| `Main/Features/MissionStartGuard/MissionStartGuardChecks.cs` | The two in-game `[Check]` ids and their pass or fail rules (#1028) |
+| `tools/ingame_checks/1028.toml` | The manifest `tools/ingame_verdict.py` judges #1028 by |
 
 ## Dependencies
 
@@ -164,6 +230,7 @@ differs hangs on its own load and simulates nothing differently.
 - `IMissionStartGuardAdapter`: `InformationManager.DisplayMessage`.
 - `IDedicatedServerProvider` (CoopInterop): no message on a dedicated server.
 - `IModLogger`: `taom_debug.log`.
+- `IOutcomeLog`: the in-game `[Check]` lines of #1028 (once per mission).
 
 ## PatchShield and co-op
 
@@ -184,11 +251,12 @@ which would otherwise loop the mission.
 
 ## Tests
 
-- `TAOM.Tests/Features/MissionStartGuard/MissionStartGuardServiceTests.cs`: 34 tests. Toggle off, out of memory,
+- `TAOM.Tests/Features/MissionStartGuard/MissionStartGuardServiceTests.cs`: 53 tests. Toggle off, out of memory,
   settings throwing; the log line content; the 10-line cap; the 3-message budget and its reset by a new mission, not
   by the same one; dedicated server; a failing logger or adapter; the summary; the escaped-throw cap; the install
   lines; the canary (a call whose prefix did not run warns once, a live count of 5 warns once, a normal start is
-  silent, a second loss in the same process writes nothing more).
+  silent, a second loss in the same process writes nothing more); the list-change line and its five-line cap, reset by a new
+  mission and kept by the same one.
 - `MissionStartGuardHookTests.cs`: 14 tests. The prefix hands its instance to the service and sets `__state` even with
   no service or a throwing one; the finalizer reports an escaped throw before the end and passes `__state` and the live
   swap count; `Cleanup` zeroes the count only after a failed apply; a throwing service escapes neither.
@@ -196,17 +264,32 @@ which would otherwise loop the mission.
   Harmony rerun Patch103's finalizer, and nothing is warned; a prefix stripped after such a rerun is still reported once;
   a void cleanup taking the exception is called on a failed apply and Harmony still throws; Patch103's cleanup zeroes
   the swap count only on failure; a healthy call writes nothing.
-- `MissionStartGuardCallsTests.cs`: 11 tests (needs the game assemblies). A normal call runs once; a throwing call is
+- `MissionStartGuardCallsTests.cs`: 30 tests (needs the game assemblies). A normal call runs once; a throwing call is
   reported with the right call, type and assembly; a null owner is reported once as `<null>`; the guard saying no
   rethrows the same exception object with its
   stack; no service, a throwing filter, a throwing report; out of memory through the real service; and the IL of all
   six helpers (one exception filter, the engine call inside it). `MissionObject` cannot be allocated in a test host, so
-  the sixth helper has no behavioural subject.
-- `MissionStartGuardBindingTests.cs`: 15 tests. The target and the six call signatures; each call exactly once in the
+  the sixth helper has no behavioural subject. Ten more tests give a behavior that adds, removes or overwrites a list item,
+  or adds and removes one (both sizes and, when the list grew, the newest item are reported), a call that changes nothing (on a filled and an empty list), no
+  current mission, a throwing report, the watches reading the mission's own lists, and the objects list's mapping; they
+  allocate a `Mission` without its constructor.
+- `MissionStartGuardBindingTests.cs`: 18 tests. The target and the six call signatures; each call exactly once in the
   installed `Mission.AfterStart`; the rewrite swaps six sites with no warning and is idempotent; the real patch class
   applied to the real method builds a replacement the JIT accepts; parameter names (`__state` included), void finalizer
   and priorities; the static void `[HarmonyCleanup]` method; the
   category and phase; PatchShield's reach; the MCM attribute; the provider default.
+- Test counts: `grep -c "\[TestMethod\]" <file>`, 2026-11-12.
+- `MissionBehaviorDeferralTests.cs`: 20 tests. The window and queue (open only for the mission and the call, closed after, a null mission opens none),
+  the flush (order, window closed first, one failing add does not lose the rest), the toggle, and the Harmony prefix skipping
+  or passing the add. `MissionStartGuardCallsTests.cs` adds the window around `EarlyStart` and `AfterStart` and never around
+  `OnBehaviorInitialize` or the two submodule calls (`AfterMissionStart` cannot be allocated in a test host), the finalizer
+  applying the queue to a real `Mission` on a normal end and after a throw, and the prefix dropping a stale queue. `MissionStartGuardBindingTests.cs` applies the
+  real patch to the installed engine and checks an add inside and outside the window.
+- `MissionStartGuardManifestTests.cs`: 2 tests. Both check ids are legal outcome ids, and `tools/ingame_checks/1028.toml` names them.
+  One of them renders the lines through the real `OutcomeLog` and pins their exact text; `tools/tests/test_ingame_verdict.py`
+  (`Issue1028Tests`) judges the same literals against the real manifest. The service tests cover the outcome lines: a pass when every queued add landed, a fail with both counts when one did not, nothing
+  for an empty queue, one key per mission (kept when the same mission loads again), a fail for every list change even past the
+  ERROR line's cap, and an outcome log that throws.
 - `MissionStartGuardModuleTests.cs`: 5 tests. The service resolves from a real container, the helpers are handed it,
   and the install line is the ON line after a six-site swap and the warning after a soft fail.
 
@@ -227,22 +310,39 @@ behaviour's `AfterStart`, the #699 shape. Turn it on and start a battle.
    rather than assume, what the second load does: whether the battle starts, whether it loads again, and how many
    `not survived` lines appear (a battle with TAOM's behaviours added twice is not tested).
 
+A `[MissionStartGuard] ... changed MissionBehaviors from N to M` ERROR line names the owner of a list change (#1028); a
+healthy start never writes it.
+
+**#1028, the practice fight.** Start a Practice Fight from the Minas Tirith town arena menu (not through the arena master's
+dialogue) with DualWield on. The fight loads once and plays. The log holds one INFO line "was added to MissionBehaviors during
+... the add is queued" and one `[Check] id=taom.mission-start-guard.deferred-add result=pass queued=N added=N`.
+`python tools/ingame_verdict.py --issue 1028` judges the session: PASS on that line, FAIL on a `result=fail` line of the
+deferred-add or list-change check or on a "threw and was not survived" line, NOT REACHED when the path was not played or the
+build predates the fix. A mission start that loops anywhere in the session reads FAIL, whoever caused it (a list change in either list the engine
+walks, or a "not survived" throw), so a loop the fix does not cover is not hidden. The load-once look stays a person's check.
+
 Also check one Custom Battle after any change to the wrapped calls.
 
 ## Performance
 
-Each helper adds one static call and a `try` with an exception filter per start call, once per mission, and allocates
-nothing unless a call throws. `AfterMissionStart` runs per mission object (thousands in a siege scene), so that helper
-is the only one whose count is large; its cost is not measured. Nothing runs per frame.
+Each helper adds one static call and a `try` with an exception filter per start call, once per mission. The three list
+helpers also build a `Watch` (two reads of `Mission.Current`, a `Count` read and a struct copy, no allocation) and step an
+enumerator copy afterwards. A call that changed nothing allocates nothing; a reported change allocates its log line.
+`AfterMissionStart` runs per mission object (thousands in a siege scene), so that helper is the only one whose count is
+large; its cost is not measured. Nothing runs per frame.
 
 ## Changelog
 
 - 2026-10-08: added, adapted from yotthani's VanillaTuning `mission-start-guard`.
+- 2026-11-12: a behaviour added while `EarlyStart` or `AfterStart` runs is queued until `AfterStart` ends (#1028).
 
 ## GitHub Issue
 
-- **Issue:** #775 (draft item 1 in [adopt-yotthani-2026-10-08.md](../reviews/adopt-yotthani-2026-10-08.md)).
-- **Status:** built and unit-tested; not yet checked in game.
+- **Issue:** #775 (draft item 1 in [adopt-yotthani-2026-10-08.md](../reviews/adopt-yotthani-2026-10-08.md)); #1028 (the list-size
+  check and the deferred add).
+- **Status:** built and unit-tested. The in-game check of the deferred add was waived by the maintainer on 2026-11-12, so
+  `tools/ingame_checks/1028.toml` reads NOT REACHED until a session plays the path (a Practice Fight from the town arena menu with
+  DualWield on). The Codex pre-review was waived the same day.
 
 ---
 

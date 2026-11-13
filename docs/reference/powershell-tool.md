@@ -15,6 +15,16 @@ scoped (`Bash(git push *)`) or bare, switches the PowerShell tool off for the se
 Bash rule does not restrict PowerShell. Before adding one, set `CLAUDE_CODE_USE_POWERSHELL_TOOL=1`
 or add the matching `PowerShell(...)` deny rule. TAOM has no Bash deny rules today.
 
+**Trap: Windows PowerShell 5.1 corrupts UTF-8 text on a read-modify-write.** `Get-Content -Raw`
+in `powershell.exe` (5.1) reads a UTF-8 file without a BOM as Windows-1252, so
+`$t = Get-Content f -Raw; [IO.File]::WriteAllText(f, $t.Replace(...))` writes every non-ASCII
+character back as mojibake (`…` becomes `â€¦`, `ï` becomes `Ã¯`). A compile or `py_compile` still
+passes, so nothing flags it. Edit source with the Edit tool; script a bulk replace in Python with
+`encoding="utf-8"` on both sides; after any bulk edit, grep the changed files for `Ã`, `â€` and `Â`.
+Repair: re-encode each damaged line as cp1252 and decode it as UTF-8. Several TAOM tools run under
+5.1 (`powershell.exe -File ...` in the quadruped workflow), so the tool's `pwsh` default does not
+remove the trap. Source: Kysaro's notes (`feedback_powershell_utf8_roundtrip.md`, 2026-10-21).
+
 **Hooks:** a PreToolUse hook sees `tool_name` `"PowerShell"` and the command in
 `tool_input.command`, so every shell gate registers as `Bash|PowerShell`
 ([harness-facts.md](../../.claude/rules/harness-facts.md)).

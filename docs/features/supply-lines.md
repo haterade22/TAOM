@@ -121,10 +121,16 @@ the source module had one, which would have collided with TAOM's Patch36 prefix.
   near-zero transport for an order the service would reject. The per-frame bearing write shares
   the position write's `MinPositionDelta` change gate instead of running per caravan per frame.
 - **Clicking the caravan never opens vanilla's meeting**: `SupplyCaravanEncounterPatch`
-  (category `Patch73_SupplyLines`, prefix on `PlayerEncounter.DoMeeting`) finishes the
-  encounter with a one-line notice. The component's `Leader` is null, so vanilla would strike a
-  stranger conversation with the highest-tier roster troop, or a null partner on an empty
-  roster.
+  (category `Patch73_SupplyLines`, prefix on `PlayerEncounter.DoMeeting`) opens
+  `SupplyCaravanMeetingMenu`, one line and a Leave option. The component's `Leader` is null, so
+  vanilla would strike a stranger conversation with the highest-tier roster troop, or a null
+  partner on an empty roster. Only Leave ends the encounter, because the meeting runs inside
+  `PlayerEncounter.Init` (#1104). Delivery fires at 1.2 map units and runs before the encounter
+  check each frame. Outside an army the meeting radius is `Max(0.5, dt * 10)`, so a single player
+  with the feature on meets a caravan only on a large frame step (`dt` over 0.12, for example 16x
+  turbo below about 33 fps). In an army the radius starts at `0.5 * sqrt(attached parties + 1)`, so
+  a player who leads five or more attached parties meets one at normal speed. A co-op guest, or a
+  player with the feature off, also meets one at normal speed.
 - **Every trade good, uncapped (#587)**: `GetGoods` lists `ItemObject.IsTradeGood` (ItemType
   Goods: food, raw materials, finished goods), most valuable first, with no row cap. The port had
   carried the source module's food-only filter and a top-14 cut; the cut had to go because a
@@ -243,7 +249,8 @@ complete so cargo is never stranded by a toggle.
 | `Client/Features/SupplyLines/SupplyRouteVisualService.cs` | Throttled map arrow trail (0.25h resample, retint on change, 40-arrow cap). TAOM.Client (ADR-013); the interface is `ISupplyRouteVisualService.cs` and core registers `NullSupplyRouteVisualService` |
 | `Components/SupplyCaravanComponent.cs` | First custom PartyComponent in TAOM; identity only |
 | `Hooks/SupplyLinesCampaignBehavior.cs` | Events, SyncData halves, session reset gate, town/town_keep menu options |
-| `Hooks/SupplyCaravanEncounterPatch.cs` | Patch73_SupplyLines: DoMeeting guard, caravan click-through suppressed |
+| `Hooks/SupplyCaravanEncounterPatch.cs` | Patch73_SupplyLines: DoMeeting guard, opens the caravan's menu in place of vanilla's meeting |
+| `Hooks/SupplyCaravanMeetingMenu.cs` | The caravan's one-option menu; its Leave option ends the encounter |
 | `UI/GauntletSupplyOrderScreen.cs` + `SupplyOrderScreenVM.cs` + row VMs | The order screen (attribute path, focus layer, latched teardown); the VM owns the search state, the lazy catalogue and the hit pick |
 | `Main/_Module/GUI/PreFabs/SupplyLines/TaomSupplyOrderScreen.xml` | Ported prefab, `{=taom_sl_*}` texts. Text brushes are `Popup.Description.Text` / `Popup.Button.Text` (Native/GUI/Brushes/Popup.xml, grep-verified on the installed 1.4.8) with per-site `Brush.FontSize`; the port originally shipped `Popup.Text.Medium`/`.Small`, which exist in NO brush file anywhere and silently rendered 22 widgets with the engine default brush (round B critic). The search box is an `EditableTextWidget` on `Encyclopedia.Search.TextBox`, declared in TAOM's own Encyclopedia brush clone; the left column is a vertical StackLayout whose settlement and hit wrappers toggle on `IsSearchActive` (`IsHidden` on one, `IsVisible` on the other) so exactly one StretchToParent child is visible |
 

@@ -42,7 +42,7 @@ crowned with one title and addressed with the other, as in vanilla.
 ## Configuration
 
 None. The 48 rows (24 cultures, a male and a female title each) are in `Main/_Module/ModuleData/taom_module_strings.xml` (keys `taom_str_liege_title.<culture>` and
-`taom_str_liege_title_female.<culture>`), seeded in English in the 12 language files; translation is owed in #763.
+`taom_str_liege_title_female.<culture>`), translated in the 12 language files (2026-11-12, #763).
 
 ## Key Files
 

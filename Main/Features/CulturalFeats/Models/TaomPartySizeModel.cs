@@ -50,9 +50,9 @@ public class TaomPartySizeModel : DefaultPartySizeLimitModel
     }
 
     public override ExplainedNumber GetPartyMemberSizeLimit(
-        PartyBase party, bool includeDescriptions = false)
+        PartyBase party, bool isCurrentlyAtSea, bool includeDescriptions = false)
     {
-        var result = base.GetPartyMemberSizeLimit(party, includeDescriptions);
+        var result = base.GetPartyMemberSizeLimit(party, isCurrentlyAtSea, includeDescriptions);
         // Keep Wardens (#888): vanilla's patrol limit reads only the town Guard House and answers 0 for a castle patrol. MUST run
         // right after the base call, which returns the 0 it replaces, and before the culture feats, whose factors then apply to the
         // replaced number. Pinned by CastlePatrolSizeHookTests.

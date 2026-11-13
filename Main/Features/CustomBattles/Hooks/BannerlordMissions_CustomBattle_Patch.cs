@@ -25,6 +25,7 @@ public static class BannerlordMissions_CustomBattle_Patch
             {
                 _logger?.LogDebug("[CustomBattles] Adding CustomBattleTeamFixBehavior to custom battle mission");
                 __result.AddMissionBehavior(new CustomBattleTeamFixBehavior(_logger));
+                Muster.CustomBattleMuster.AddMissionBehaviors(__result);
             }
         }
         catch (Exception ex)

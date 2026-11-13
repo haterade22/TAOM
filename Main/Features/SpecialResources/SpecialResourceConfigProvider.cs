@@ -14,16 +14,19 @@ public class SpecialResourceConfigProvider : ISpecialResourceConfigProvider
 {
     private readonly IPathService _pathService;
     private readonly IModLogger _logger;
+    private readonly ISpecialResourceSettingsProvider _settings;
     private List<SpecialResource> _resources;
     private Dictionary<string, SpecialResource> _byKingdom;
     private Dictionary<string, SpecialResource> _byCulture;
     private Dictionary<string, SpecialResource> _byId;
     private Dictionary<string, TroopResourceCostEntry> _troopCosts;
+    private Dictionary<string, TroopResourceCostEntry> _goldOnlyTroopCosts;
 
-    public SpecialResourceConfigProvider(IPathService pathService, IModLogger logger)
+    public SpecialResourceConfigProvider(IPathService pathService, IModLogger logger, ISpecialResourceSettingsProvider settings = null)
     {
         _pathService = pathService;
         _logger = logger;
+        _settings = settings;
     }
 
     public IReadOnlyList<SpecialResource> GetAllResources()
@@ -53,7 +56,8 @@ public class SpecialResourceConfigProvider : ISpecialResourceConfigProvider
     public TroopResourceCostEntry GetTroopCost(string troopId)
     {
         EnsureLoaded();
-        return _troopCosts.TryGetValue(troopId, out var entry) ? entry : null;
+        var costs = _settings?.EliteTroopsCostGoldOnly == true ? _goldOnlyTroopCosts : _troopCosts;
+        return costs.TryGetValue(troopId, out var entry) ? entry : null;
     }
 
     private void EnsureLoaded()
@@ -66,6 +70,7 @@ public class SpecialResourceConfigProvider : ISpecialResourceConfigProvider
         _byCulture = new Dictionary<string, SpecialResource>();
         _byId = new Dictionary<string, SpecialResource>();
         _troopCosts = new Dictionary<string, TroopResourceCostEntry>();
+        _goldOnlyTroopCosts = new Dictionary<string, TroopResourceCostEntry>();
 
         LoadResources();
         LoadTroopCosts();
@@ -103,6 +108,7 @@ public class SpecialResourceConfigProvider : ISpecialResourceConfigProvider
                 }
 
                 var tiers = ParseTiers(el);
+                var (battleReference, battleMin, battleMax) = ParseBattleScale(el);
 
                 var resource = new SpecialResource(
                     id: el.Attribute("id")?.Value ?? "",
@@ -119,7 +125,11 @@ public class SpecialResourceConfigProvider : ISpecialResourceConfigProvider
                     perPrisoner: ParseFloat(el, "per_prisoner", 0f),
                     perTournamentWin: ParseFloat(el, "per_tournament_win", 0f),
                     perHideoutClear: ParseFloat(el, "per_hideout_clear", 0f),
-                    tierThresholds: tiers);
+                    tierThresholds: tiers,
+                    battleReferenceSize: battleReference,
+                    battleMinScale: battleMin,
+                    battleMaxScale: battleMax,
+                    emissaryPriceMultiplier: ParseEmissaryPriceMultiplier(el));
 
                 _resources.Add(resource);
 
@@ -154,16 +164,27 @@ public class SpecialResourceConfigProvider : ISpecialResourceConfigProvider
             var doc = XDocument.Load(path);
             foreach (var el in doc.Root.Elements("Troop"))
             {
+                var resourceId = el.Attribute("resource_id")?.Value ?? "";
+                var merchantCost = (int)ParseFloat(el, "merchant_cost", 0f);
+                // The emissary's resource price follows the TROOP's own resource, never the settlement owner's:
+                // the owner's resource comes from a kingdom-first lookup that can differ from the culture whose
+                // troops the emissary offers (a defected clan), and the price must not move with it. A row that
+                // names no known resource keeps its raw price.
+                var multiplier = _byId.TryGetValue(resourceId, out var priced) ? priced.EmissaryPriceMultiplier : 1;
                 var entry = new TroopResourceCostEntry(
                     troopId: el.Attribute("id")?.Value ?? "",
-                    resourceId: el.Attribute("resource_id")?.Value ?? "",
+                    resourceId: resourceId,
                     upgradeCost: (int)ParseFloat(el, "upgrade_cost", 0f),
                     dailyUpkeep: ParseFloat(el, "daily_upkeep", 0f),
                     recruitCost: (int)ParseFloat(el, "recruit_cost", 0f),
-                    merchantCost: (int)ParseFloat(el, "merchant_cost", 0f));
+                    merchantCost: merchantCost,
+                    emissaryPrice: (int)Math.Min((long)merchantCost * multiplier, int.MaxValue));
 
                 if (!string.IsNullOrEmpty(entry.TroopId))
+                {
                     _troopCosts[entry.TroopId] = entry;
+                    _goldOnlyTroopCosts[entry.TroopId] = entry.AsMerchantOnly();
+                }
             }
 
             _logger.LogInfo($"SpecialResourceConfigProvider: Loaded {_troopCosts.Count} troop cost entries");
@@ -202,6 +223,43 @@ public class SpecialResourceConfigProvider : ISpecialResourceConfigProvider
 
         tiers.Sort((a, b) => a.Threshold.CompareTo(b.Threshold));
         return tiers;
+    }
+
+    // The three battle-scale attributes are optional. A set that breaks an invariant (reference not above 0,
+    // a negative floor, a ceiling below the floor) falls back to the defaults together, with one warning,
+    // because a half-valid set could invert the scale. ParseFloat already drops NaN and Infinity.
+    private (float Reference, float Min, float Max) ParseBattleScale(XElement el)
+    {
+        var reference = ParseFloat(el, "battle_reference_size", SpecialResource.DefaultBattleReferenceSize);
+        var min = ParseFloat(el, "battle_min_scale", SpecialResource.DefaultBattleMinScale);
+        var max = ParseFloat(el, "battle_max_scale", SpecialResource.DefaultBattleMaxScale);
+
+        if (reference > 0f && min >= 0f && max >= min)
+            return (reference, min, max);
+
+        _logger.LogWarning(
+            $"SpecialResourceConfigProvider: Resource '{el.Attribute("id")?.Value}' has an invalid battle scale " +
+            $"(reference {reference}, min {min}, max {max}); using the defaults.");
+        return (SpecialResource.DefaultBattleReferenceSize, SpecialResource.DefaultBattleMinScale,
+            SpecialResource.DefaultBattleMaxScale);
+    }
+
+    // Optional whole number from 1 to MaxEmissaryPriceMultiplier. Anything else (zero or negative, a fraction,
+    // too large, not a number) falls back to 1 with a warning, so a typo never makes troops free or unaffordable.
+    private int ParseEmissaryPriceMultiplier(XElement el)
+    {
+        const string attr = "emissary_price_multiplier";
+        var raw = el.Attribute(attr)?.Value;
+        if (raw == null) return SpecialResource.DefaultEmissaryPriceMultiplier;
+
+        if (int.TryParse(raw, NumberStyles.Integer, CultureInfo.InvariantCulture, out var value)
+            && value >= 1 && value <= SpecialResource.MaxEmissaryPriceMultiplier)
+            return value;
+
+        _logger.LogWarning(
+            $"SpecialResourceConfigProvider: Resource '{el.Attribute("id")?.Value}' has an invalid {attr} '{raw}' " +
+            $"(expected a whole number from 1 to {SpecialResource.MaxEmissaryPriceMultiplier}); using {SpecialResource.DefaultEmissaryPriceMultiplier}.");
+        return SpecialResource.DefaultEmissaryPriceMultiplier;
     }
 
     private static float ParseFloat(XElement el, string attr, float defaultValue)

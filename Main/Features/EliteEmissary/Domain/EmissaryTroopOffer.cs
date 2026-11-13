@@ -6,20 +6,27 @@ public sealed class EmissaryTroopOffer
 {
     public string TroopId { get; }
 
-    /// <summary>One-time <c>merchant_cost</c> per unit, in the settlement faction's special resource.</summary>
-    public int MerchantCost { get; }
+    /// <summary>One-time price per unit: the troop's <c>EmissaryPrice</c> (<c>merchant_cost</c> times the multiplier of
+    /// the troop's own resource) in the settlement faction's special resource, or its gold price under the gold-only
+    /// option.</summary>
+    public int UnitPrice { get; }
 
     /// <summary>True if the player can afford at least ONE of this troop right now.</summary>
     public bool CanAfford { get; }
 
-    /// <summary>How many the player can afford at the current balance (floor(balance / cost)).</summary>
-    public int MaxAffordableQuantity { get; }
+    /// <summary>How many the player can buy now: floor(balance / price) and, under the gold-only option, at
+    /// most the party's free slots.</summary>
+    public int MaxQuantity { get; }
 
-    public EmissaryTroopOffer(string troopId, int merchantCost, bool canAfford, int maxAffordableQuantity)
+    /// <summary>True when the party's free slots, not the balance, set <see cref="MaxQuantity"/>.</summary>
+    public bool LimitedByPartySize { get; }
+
+    public EmissaryTroopOffer(string troopId, int unitPrice, bool canAfford, int maxQuantity, bool limitedByPartySize)
     {
         TroopId = troopId;
-        MerchantCost = merchantCost;
+        UnitPrice = unitPrice;
         CanAfford = canAfford;
-        MaxAffordableQuantity = maxAffordableQuantity;
+        MaxQuantity = maxQuantity;
+        LimitedByPartySize = limitedByPartySize;
     }
 }

@@ -1353,3 +1353,18 @@ Four review findings had one shape: a value was recorded once and read later, af
 - **Why missed:** each call wrote its effect at once, and every test ticked between two calls, so no test held two calls on one thing inside one tick.
 - **Prevent:** build an effect list once, at the end of the tick, from final state: one entry per thing, with a rule for which kind includes which. Name a thing that another layer reports back by an id that is never reused, not by a slot or an index. A loop over a group finishes the group after a step ends the run, and drops only the scoring. When the set behind a running mean changes, the mark moves by the jump, so the gain so far still counts. Test two calls on one thing inside one tick.
 - **Source:** [rca-hero-defence-levels-packs-2026-11-09.md](../rca-hero-defence-levels-packs-2026-11-09.md) rows P1 to P4.
+### A stored copy of a value is not always a field of its type: find the lists that group by it, and every reader between two refreshes (War Pledge, 2026-11-10)
+
+Momentum keeps each side's kingdoms in a list. The list is a copy of the kingdoms' sides, and only the enrollment sweep refreshes it: at session launch and on the daily tick. War Pledge let a side change inside a day. The handler for a destroyed kingdom removed that kingdom and checked victory with no sweep, so a side whose last enrolled kingdom fell could lose the war while a realm that had pledged to it that day was alive. This repeats "When a change lets a fixed attribute vary, sweep every reader that groups by it" (`data-content-cultures.md`) one layer down: the reader was found, its second entry point was not.
+
+- **Why missed:** the search for stored sides was a grep for fields of type `FactionSide`, and it found one. The data-flow trace then judged momentum by its sweep ("reads the side again on each use") and did not list the other code that reads the enrolled lists. Two Codex passes asked how the meter moves after a join, not who counts the lists.
+- **Prevent:** when a value starts to vary, search for its copies by meaning: a list, set or dictionary that groups or keys by it, in any type. For each copy, write down every refresh point and every reader. A reader whose decision cannot be taken back (a victory, a peace) must run after a refresh in the same call. For every other reader, state what the delay costs and whether a later refresh makes it good: here the four event handlers still score nothing for a realm between its pledge and the next sweep, and the feature doc says so.
+- **Source:** [rca-war-pledge-2026-11-10.md](../rca-war-pledge-2026-11-10.md), finding 14.
+
+### A step that creates state picks its co-op predicate from the truth table, not from its neighbour (Diplomacy, 2026-11-12)
+
+A first-time co-op joiner builds a local campaign for character creation, so every new-game listener runs on the client too. The fix for the initial alliances copied `ShouldDeferToHost` from the load-time repair in the same class. That predicate is true on every peer when TAOM cannot probe the co-op mod, solo included, which is safe for a repair or a veto but loses state for a step that creates it: a new campaign there has no host save to carry the alliances.
+
+- **Why missed:** the gate was copied from a neighbour with a different job (repair on load, not creation).
+- **Prevent:** for each new co-op gate, read the `CoopSessionPolicy` truth table for the case in hand. Yield (`ShouldDeferToHost`) for a decision the host makes; skip creation only on a known client (`IsCoopClient`). Add a test for the unprobeable-mod row.
+- **Source:** [rca-coop-client-initial-alliances-2026-11-12.md](../rca-coop-client-initial-alliances-2026-11-12.md), finding 1.

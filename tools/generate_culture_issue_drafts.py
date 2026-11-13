@@ -81,7 +81,7 @@ CULTURES = [
      "Polearm 295, Leadership 290), 1 placeholder lord (TAOM-invented)",
      "Galadriel + Denethor are the only two characters hitting 300 in any skill. Justified: "
      "Galadriel is one of the most powerful Elves in Middle-earth. Marchwardens (Haldir, "
-     "Rúmil, Orophin) are in Mirkwood not Lothlórien per TAOM's data."),
+     "Rúmil, Orophin) are Lothlórien lords in TAOM's data (moved from Mirkwood on 2026-11-12)."),
 
     ("mordor",     "mordor",     "Mordor",
      97, "orc",

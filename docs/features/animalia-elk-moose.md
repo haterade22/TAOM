@@ -274,7 +274,7 @@ fires `rear` and `kick` itself, and a clip on a mount rig needs the vanilla hors
 ## The antler attack (`Main/Features/Animalia/`, 2026-09-23)
 
 Each animal attacks with its own clip, fired by TAOM's behavior tree the way the great elk's charge is (#636): a
-live enemy in front within the trigger range, the attack off its 10 s cooldown, then the clip plays and one blow
+live enemy in front within the trigger range, the attack off its 35 s cooldown, then the clip plays and one blow
 lands on the enemy the animal faces most squarely (the ram's #618 single-target rule), under any rider, the
 player included, scaled by the rider's career charge bonus. Built on the shared elephant-like engine rather than
 as two clones of the great elk's seven files:
@@ -298,7 +298,7 @@ as two clones of the great elk's seven files:
 
 Their own actions, never `act_horse_kick`: the inherited horse usage set fires that itself as its `kick_action`,
 so the kick slot keeps its own clip (`attack_hind`, `attack_legs_01`) and the engine keeps firing it. Tests:
-`AnimaliaConfigTests` (literal id pins, the 1.0x reach and its flag, cooldown past each clip, damage / knockback /
+`AnimaliaConfigTests` (literal id pins, the 1.0x reach and its flag, cooldown past each clip, the cooldown equal to the ram's, damage / knockback /
 Blunt / single target, distinct actions), `AnimaliaWiringTests` (the IoC line, the `AddTaomBehavior` line, both
 profiles passing `reachScalesWithBody`, both services resolving),
 `AnimaliaAttackServiceTests` (each service answers only to its Monster, not the great elk's; each animal's one blow,
@@ -369,7 +369,7 @@ went with them. Re-add test riders on a branch when a test needs them; they do n
 
 - **The antler attack:** compiled constants in `Main/Features/Animalia/AnimaliaConfig.cs`: the Monster and set ids,
   the 1.0x reach (1.5 m trigger, 2 m radius) and `ReachScalesWithBody`, one Blunt blow (elk 60, moose 70; a quarter on
-  a shield block), knockback 35 / 45, facing 0.25, a 10 s cooldown, one target. A change needs a build.
+  a shield block), knockback 35 / 45, facing 0.25, a 35 s cooldown (the ram's since 2026-11-11, pinned by a test), one target. A change needs a build.
 - **Size:** each Monster's `taom_body_length` in the live `lotr_monster_animalia.xml` (elk 100, moose 150), read at
   every game init ([monster-size.md](monster-size.md)); no build.
 - **Riders and market:** the repo data files in "Who rides them" and `culture_marketplace_config.xml` (the provider
@@ -377,7 +377,7 @@ went with them. Re-add test riders on a branch when a test needs them; they do n
 
 ## Tests
 
-- C#: `AnimaliaConfigTests` (5), `AnimaliaAttackServiceTests` (7), `AnimaliaWiringTests` (4) and
+- C#: `AnimaliaConfigTests` (6), `AnimaliaAttackServiceTests` (7), `AnimaliaWiringTests` (4) and
   `AnimaliaMountWiringTests` (12; its live-Armory reads are Inconclusive where the Armory is absent), the behavior's
   entry in `BehaviorTreeMissionLogicInheritanceTests`, and `ElkMountWiringTests`' elk-saddle check over all three
   animals.
@@ -388,7 +388,7 @@ went with them. Re-add test riders on a branch when a test needs them; they do n
 ## Performance
 
 Per ridden animal, a tree pass about five times a second; each scan reads the native `AgentScale` once and queries
-nearby agents over 2 m times the scale (2 m for the elk, 3 m for the moose). The attack fires at most once per 10 s.
+nearby agents over 2 m times the scale (2 m for the elk, 3 m for the moose). The attack fires at most once per 35 s.
 Without these animals in a mission the behavior costs two empty prune loops per tick. The size pass is MonsterSize's,
 once per game init.
 
@@ -479,8 +479,7 @@ the output folder in variables whose names differ by more than case (`$M` and `$
    need the vertical travel removed and a cut into start / loop / end before they can replace vanilla's.
 3. **Game side:** Monsters, action sets, items and the antler actions DONE (both on `taom_elk_saddle_a`; the
    moose's hump may want its own saddle). The antler attack's C# is written and tested; real riders DONE (evening,
-   "Who rides them"); the size moved onto the Monsters. OWED: a deploy, then the in-game checklist below, the
-   twelve translations of the two item names (English rows registered; `/localize`, a paid run), deleting the test
+   "Who rides them"); the size moved onto the Monsters. OWED: a deploy, then the in-game checklist below, deleting the test
    riders before the next release, the jumps.
 4. In-game ladder per [creature-mount-authoring.md](../ai-includes/creature-mount-authoring.md).
 

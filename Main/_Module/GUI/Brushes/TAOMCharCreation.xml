@@ -609,4 +609,30 @@
        sprite does not). Not chasing the root cause further, consistent with how that earlier instance was
        handled. -->
 
+  <!-- Layered banner editor (TAOMBannerEditor.xml, 2026-11-11): card-button labels, slider values, layer rows -->
+  <Brush Name="CC.Banner.ActionText" Font="FS_CinzelWide" FontSize="12" TextHorizontalAlignment="Center" TextVerticalAlignment="Center">
+    <Styles>
+      <Style Name="Default" FontColor="#D9CBA0FF" TextGlowColor="#000000B0" TextGlowRadius="0.15" TextBlur="0.1" />
+      <Style Name="Hovered" FontColor="#F6E7B4FF" TextGlowColor="#000000B0" TextGlowRadius="0.15" TextBlur="0.1" />
+      <Style Name="Selected" FontColor="#F6E7B4FF" TextGlowColor="#000000C0" TextGlowRadius="0.2" TextBlur="0.1" />
+      <Style Name="Disabled" FontColor="#D9CBA0FF" TextAlphaFactor="0.35" TextGlowColor="#00000000" />
+    </Styles>
+  </Brush>
+  <Brush Name="CC.Banner.Value" Font="FS_Garamond" FontSize="16" TextHorizontalAlignment="Right" TextVerticalAlignment="Center">
+    <Styles><Style Name="Default" FontColor="#EFE7D2FF" TextGlowColor="#000000A0" TextGlowRadius="0.1" TextBlur="0.05" /></Styles>
+  </Brush>
+  <Brush Name="CC.Banner.LayerName" Font="FS_CinzelWide" FontSize="14" TextHorizontalAlignment="Left" TextVerticalAlignment="Center">
+    <Styles>
+      <Style Name="Default" FontColor="#D9CBA0FF" TextGlowColor="#000000B0" TextGlowRadius="0.15" TextBlur="0.1" />
+      <Style Name="Hovered" FontColor="#EFE7D2FF" TextGlowColor="#000000B0" TextGlowRadius="0.15" TextBlur="0.1" />
+      <Style Name="Selected" FontColor="#F6E7B4FF" TextGlowColor="#000000C0" TextGlowRadius="0.2" TextBlur="0.1" />
+    </Styles>
+  </Brush>
+  <Brush Name="CC.Banner.RowLabel" Font="FS_CinzelWide" FontSize="13" TextHorizontalAlignment="Left" TextVerticalAlignment="Center">
+    <Styles>
+      <Style Name="Default" FontColor="#D9CBA0FF" TextGlowColor="#000000B0" TextGlowRadius="0.15" TextBlur="0.1" />
+      <Style Name="Disabled" FontColor="#D9CBA0FF" TextAlphaFactor="0.35" TextGlowColor="#00000000" />
+    </Styles>
+  </Brush>
+
 </Brushes>

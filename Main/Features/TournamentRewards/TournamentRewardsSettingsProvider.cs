@@ -29,7 +29,7 @@ public sealed class TournamentRewardsSettingsProvider : ITournamentRewardsSettin
     private TaomSettings? Settings => _settings ?? TaomSettings.Instance;
 
     public int MaxBetPerRound =>
-        SettingClamp.Clamp(Settings?.TournamentMaxBetPerRound, 0, 0, TournamentRewardRules.MaxBetSetting);
+        SettingClamp.Clamp(Settings?.TournamentBetCapPerRound, 15_000, 0, TournamentRewardRules.MaxBetSetting);
 
     public float RenownMultiplier =>
         SettingClamp.Clamp(Settings?.TournamentRenownMultiplier, 1f, 0f, TournamentRewardRules.MaxMultiplier);

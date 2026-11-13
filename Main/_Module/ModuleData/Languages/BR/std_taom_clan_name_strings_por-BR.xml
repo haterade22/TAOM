@@ -80,8 +80,8 @@
     <string id="aom_clan_khuzait_17_name" text="{.NS}Mithruntai" />
     <string id="aom_clan_khuzait_18_name" text="{.NS}Vazevian" />
     <string id="aom_clan_khuzait_19_name" text="{.NS}Bozorganith" />
-    <string id="aom_clan_lindon_1_name" text="{.NS}Falathrim" />
-    <string id="aom_clan_lindon_2_name" text="{.NS}Edhil Mithlond" />
+    <string id="aom_clan_lindon_1_name" text="{.NS}Nos Nowë" />
+    <string id="aom_clan_lindon_2_name" text="{.NS}Nos Artanor" />
     <string id="aom_clan_lothlorien_1_name" text="{.NS}Nos Finarfin" />
     <string id="aom_clan_lothlorien_2_name" text="{.MP}Guardiões do Naith" />
     <string id="aom_clan_lothlorien_3_name" text="{.NS}Nos Malgalad" />
@@ -131,40 +131,40 @@
     <string id="aom_clan_arthedain_3_name" text="{.MP}Vigias de Amon Sûl" />
     <string id="aom_clan_arthedain_4_name" text="{.FS}Casa do Baranduin" />
     <string id="aom_clan_arthedain_5_name" text="{.FS}Casa de Emyn Beraid" />
-    <string id="aom_clan_sturgia_10_name" text="House of the Running River" />
-    <string id="aom_clan_sturgia_11_name" text="House of the Carnen" />
-    <string id="aom_clan_sturgia_12_name" text="House of Ravenhill" />
-    <string id="aom_clan_sturgia_13_name" text="House of the Forest River" />
-    <string id="aom_clan_sturgia_14_name" text="House of the Long Marshes" />
-    <string id="aom_clan_cardolan_1_name" text="House of Tyrn Gorthad" />
-    <string id="aom_clan_cardolan_2_name" text="House of Tharbad" />
-    <string id="aom_clan_cardolan_3_name" text="House of Minas Eithel" />
-    <string id="aom_clan_cardolan_4_name" text="Wardens of Sarn Ford" />
-    <string id="aom_clan_rhudaur_1_name" text="House of Cameth Brin" />
-    <string id="aom_clan_rhudaur_2_name" text="House of Ettendale" />
-    <string id="aom_clan_rhudaur_3_name" text="Wardens of the Coldfells" />
-    <string id="aom_clan_lindon_3_name" text="{.NS}Nos Galdor" />
-    <string id="aom_clan_lindon_4_name" text="{.NS}Nos Brithombar" />
-    <string id="aom_clan_lindon_5_name" text="Wardens of Ered Luin" />
-    <string id="aom_clan_lindon_6_name" text="{.NS}Nos Eglarest" />
-    <string id="aom_clan_eredluin_1_name" text="House of Borin" />
-    <string id="aom_clan_eredluin_2_name" text="{.NS}Broadbeams" />
-    <string id="aom_clan_eredluin_3_name" text="{.NS}Firebeards" />
-    <string id="aom_clan_eredluin_4_name" text="Wardens of Dolmed" />
-    <string id="aom_clan_anduinvale_1_name" text="House of Beorn" />
-    <string id="aom_clan_anduinvale_2_name" text="{.NS}Folk of the Old Ford" />
-    <string id="aom_clan_anduinvale_3_name" text="Wardens of the Carrock" />
-    <string id="aom_clan_anduinvale_4_name" text="{.NS}Riders of the Gladden" />
-    <string id="aom_clan_angaladh_1_name" text="House of Angáladh" />
-    <string id="aom_clan_angaladh_2_name" text="{.NS}Woodwards of the Forest Road" />
-    <string id="aom_clan_angaladh_3_name" text="Wardens of Emyn Duir" />
-    <string id="aom_clan_dorwinion_1_name" text="House of Vineholm" />
-    <string id="aom_clan_dorwinion_2_name" text="Wardens of the Redwater" />
-    <string id="aom_clan_dorwinion_3_name" text="House of Seagate" />
-    <string id="aom_clan_dorwinion_4_name" text="Wardens of the Eastmarch" />
-    <string id="aom_clan_southrhovanion_1_name" text="House of Vidugard" />
-    <string id="aom_clan_southrhovanion_2_name" text="{.NS}Riders of Southwood" />
-    <string id="aom_clan_southrhovanion_3_name" text="{.NS}Wainwatch Riders" />
-    <string id="aom_clan_southrhovanion_4_name" text="Wardens of the Northmark" />
+    <string id="aom_clan_sturgia_10_name" text="{.FS}Casa do Rio Corrente" />
+    <string id="aom_clan_sturgia_11_name" text="{.FS}Casa do Carnen" />
+    <string id="aom_clan_sturgia_12_name" text="{.FS}Casa da Colina do Corvo" />
+    <string id="aom_clan_sturgia_13_name" text="{.FS}Casa do Rio da Floresta" />
+    <string id="aom_clan_sturgia_14_name" text="{.FS}Casa dos Longos Pântanos" />
+    <string id="aom_clan_cardolan_1_name" text="{.FS}Casa de Tyrn Gorthad" />
+    <string id="aom_clan_cardolan_2_name" text="{.FS}Casa de Tharbad" />
+    <string id="aom_clan_cardolan_3_name" text="{.FS}Casa de Minas Eithel" />
+    <string id="aom_clan_cardolan_4_name" text="{.MP}Guardiões do Vau de Sarn" />
+    <string id="aom_clan_rhudaur_1_name" text="{.FS}Casa de Cameth Brin" />
+    <string id="aom_clan_rhudaur_2_name" text="{.FS}Casa de Ettendale" />
+    <string id="aom_clan_rhudaur_3_name" text="{.MP}Guardiões dos Ermos Frios" />
+    <string id="aom_clan_lindon_3_name" text="{.NS}Nos Thavn a Minas Loss" />
+    <string id="aom_clan_lindon_4_name" text="{.NS}Nos Eldalomril" />
+    <string id="aom_clan_lindon_5_name" text="{.NS}Nos Nenwendil" />
+    <string id="aom_clan_lindon_6_name" text="{.NS}Nos Inglor" />
+    <string id="aom_clan_eredluin_1_name" text="{.FS}Casa de Delingur" />
+    <string id="aom_clan_eredluin_2_name" text="{.FS}Casa de Dwálin" />
+    <string id="aom_clan_eredluin_3_name" text="{.FS}Casa de Úri" />
+    <string id="aom_clan_eredluin_4_name" text="{.FS}Casa de Eldran" />
+    <string id="aom_clan_anduinvale_1_name" text="{.FS}Casa de Beorn" />
+    <string id="aom_clan_anduinvale_2_name" text="{.MS}Povo do Velho Vau" />
+    <string id="aom_clan_anduinvale_3_name" text="{.MP}Guardiões da Carrocha" />
+    <string id="aom_clan_anduinvale_4_name" text="{.MP}Cavaleiros do Lírio" />
+    <string id="aom_clan_angaladh_1_name" text="{.FS}Casa de Angáladh" />
+    <string id="aom_clan_angaladh_2_name" text="{.MP}Silvícolas da Estrada da Floresta" />
+    <string id="aom_clan_angaladh_3_name" text="{.MP}Guardiões de Emyn Duir" />
+    <string id="aom_clan_dorwinion_1_name" text="{.FS}Casa de Vinhedo" />
+    <string id="aom_clan_dorwinion_2_name" text="{.MP}Guardiões do Águarruiva" />
+    <string id="aom_clan_dorwinion_3_name" text="{.FS}Casa do Portomar" />
+    <string id="aom_clan_dorwinion_4_name" text="{.MP}Guardiões da Marca Oriental" />
+    <string id="aom_clan_southrhovanion_1_name" text="{.FS}Casa de Vidugard" />
+    <string id="aom_clan_southrhovanion_2_name" text="{.MP}Cavaleiros da Mata do Sul" />
+    <string id="aom_clan_southrhovanion_3_name" text="{.MP}Cavaleiros da Vigília das Carroças" />
+    <string id="aom_clan_southrhovanion_4_name" text="{.MP}Guardiões da Marca do Norte" />
   </strings>
 </base>

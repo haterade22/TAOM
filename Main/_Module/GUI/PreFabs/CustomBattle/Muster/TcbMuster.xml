@@ -1,0 +1,99 @@
+<Prefab>
+  <!-- The centre of the Custom Battle screen: the troops the active army (TcbSideVM) can muster, 792 wide on the
+       encyclopedia's stone panel between the two armies. An arrow points at the army they join. Search, type tabs (their
+       widths come from the VM and fill the 744 inner width), rows with portrait, name, tier; click or + = muster
+       (Shift 10, Ctrl 100). -->
+  <Window>
+    <Widget WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent" SuggestedWidth="792">
+      <Children>
+        <EncyclopediaStonePanelWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Sprite="ec_panel_9" DoNotAcceptEvents="true" />
+
+        <!-- which army: the arrow points at it -->
+        <ImageWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="30" SuggestedHeight="30" MarginLeft="24" MarginTop="20" Sprite="cc_arrow_l" IsVisible="@IsPlayer" DoNotAcceptEvents="true" />
+        <ImageWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="30" SuggestedHeight="30" HorizontalAlignment="Right" MarginRight="24" MarginTop="20" Sprite="cc_arrow_r" IsVisible="@IsEnemy" DoNotAcceptEvents="true" />
+        <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="40" MarginLeft="70" MarginRight="70" MarginTop="15"
+                    Brush="Tcb.Heading" Brush.FontSize="24" Text="@AvailableHeader" DoNotAcceptEvents="true" />
+        <!-- two lines and a diamond at its own 1:1 proportions (fs_divider stretched past its 420 width distorts the diamond) -->
+        <Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="744" SuggestedHeight="16" HorizontalAlignment="Center" MarginTop="58" DoNotAcceptEvents="true">
+          <Children>
+            <ImageWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="356" SuggestedHeight="2" VerticalAlignment="Center" Sprite="fs_divider_thin" AlphaFactor="0.85" DoNotAcceptEvents="true" />
+            <ImageWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="14" SuggestedHeight="14" HorizontalAlignment="Center" VerticalAlignment="Center" Sprite="fs_diamond" AlphaFactor="0.85" DoNotAcceptEvents="true" />
+            <ImageWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="356" SuggestedHeight="2" HorizontalAlignment="Right" VerticalAlignment="Center" Sprite="fs_divider_thin" AlphaFactor="0.85" DoNotAcceptEvents="true" />
+          </Children>
+        </Widget>
+
+        <!-- search -->
+        <Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="744" SuggestedHeight="40" HorizontalAlignment="Center" MarginTop="84" Sprite="ec_search_box">
+          <Children>
+            <ImageWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="20" SuggestedHeight="20" MarginLeft="14" VerticalAlignment="Center" Sprite="ec_search_icon" DoNotAcceptEvents="true" />
+            <EditableTextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" MarginLeft="46" MarginRight="14" MarginTop="4" MarginBottom="4"
+                                Brush="Tcb.Search" DefaultSearchText="@SearchPlaceholder" Text="@SearchText" />
+          </Children>
+        </Widget>
+
+        <!-- type tabs -->
+        <ListPanel DataSource="{TroopKinds}" WidthSizePolicy="CoverChildren" HeightSizePolicy="Fixed" SuggestedHeight="40" HorizontalAlignment="Center" MarginTop="134"
+                   StackLayout.LayoutMethod="HorizontalLeftToRight">
+          <ItemTemplate>
+            <ButtonWidget WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent" SuggestedWidth="@Width" Brush="Tcb.Hover" Command.Click="ExecuteSelect" DoNotPassEventsToChildren="true">
+              <Children>
+                <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Brush="Tcb.TabOn" Brush.FontSize="15" Text="@Name" IsVisible="@IsSelected" />
+                <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Brush="Tcb.Tab" Brush.FontSize="15" Text="@Name" IsHidden="@IsSelected" />
+                <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="2" MarginLeft="10" MarginRight="10" VerticalAlignment="Bottom" Sprite="BlankWhiteSquare_9" Color="#E6C27AFF" IsVisible="@IsSelected" />
+              </Children>
+            </ButtonWidget>
+          </ItemTemplate>
+        </ListPanel>
+        <ImageWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="744" SuggestedHeight="1" HorizontalAlignment="Center" MarginTop="176" Brush="TAOM.Encyclopedia.Rule" AlphaFactor="0.6" DoNotAcceptEvents="true" />
+
+        <!-- troops -->
+        <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" MarginLeft="24" MarginRight="16" MarginTop="184" MarginBottom="18">
+          <Children>
+            <ScrollablePanel WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" MarginRight="16" AutoHideScrollBars="true" ClipRect="ClipRect" InnerPanel="ClipRect\List" VerticalScrollbar="..\Scrollbar">
+              <Children>
+                <Widget Id="ClipRect" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" ClipContents="true">
+                  <Children>
+                    <ListPanel Id="List" DataSource="{Troops}" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" StackLayout.LayoutMethod="VerticalTopToBottom">
+                      <ItemTemplate>
+                        <ButtonWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="66" Brush="Tcb.Hover" Command.Click="ExecuteAdd" DoNotPassEventsToChildren="true">
+                          <Children>
+                            <Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="84" SuggestedHeight="53" MarginLeft="4" VerticalAlignment="Center" DoNotAcceptEvents="true">
+                              <Children>
+                                <ImageWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Sprite="ec_troop_card_background" DoNotAcceptEvents="true" />
+                                <EncyclopediaMaskedImageWidget DataSource="{Image}" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Brush="TAOM.Encyclopedia.TroopCardMask"
+                                                               ImageId="@Id" AdditionalArgs="@AdditionalArgs" TextureProviderName="@TextureProviderName" DoNotAcceptEvents="true" />
+                                <ImageWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Sprite="ec_troop_card_rim" DoNotAcceptEvents="true" />
+                              </Children>
+                            </Widget>
+                            <ImageWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="12" SuggestedHeight="12" MarginLeft="104" MarginTop="15" Sprite="fs_diamond" IsVisible="@IsHero" DoNotAcceptEvents="true" />
+                            <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="30" MarginLeft="104" MarginRight="64" MarginTop="6" Brush="Tcb.Name" Brush.FontSize="22" Text="@Name" IsHidden="@IsHero" />
+                            <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="30" MarginLeft="122" MarginRight="64" MarginTop="6" Brush="Tcb.Name" Brush.FontSize="22" Brush.FontColor="#F0D898FF" Text="@Name" IsVisible="@IsHero" />
+                            <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="22" MarginLeft="104" MarginRight="64" MarginTop="37" Brush="Tcb.Sub" Text="@Info" />
+                            <Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="36" SuggestedHeight="36" HorizontalAlignment="Right" VerticalAlignment="Center" MarginRight="10" Sprite="cc_card_9" DoNotAcceptEvents="true">
+                              <!-- the plus drawn as two bars, centred on both axes (a glyph sits on the font's baseline, off centre) -->
+                              <Children>
+                                <Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="14" SuggestedHeight="2" HorizontalAlignment="Center" VerticalAlignment="Center" Sprite="BlankWhiteSquare_9" Color="#F0D898FF" DoNotAcceptEvents="true" />
+                                <Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="2" SuggestedHeight="14" HorizontalAlignment="Center" VerticalAlignment="Center" Sprite="BlankWhiteSquare_9" Color="#F0D898FF" DoNotAcceptEvents="true" />
+                              </Children>
+                            </Widget>
+                            <ImageWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="1" VerticalAlignment="Bottom" Brush="TAOM.Encyclopedia.Rule" AlphaFactor="0.35" DoNotAcceptEvents="true" />
+                          </Children>
+                        </ButtonWidget>
+                      </ItemTemplate>
+                    </ListPanel>
+                  </Children>
+                </Widget>
+              </Children>
+            </ScrollablePanel>
+            <ScrollbarWidget Id="Scrollbar" WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent" SuggestedWidth="10" HorizontalAlignment="Right" AlignmentAxis="Vertical" Handle="Handle" MaxValue="100" MinValue="0">
+              <Children>
+                <ImageWidget WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent" SuggestedWidth="1" HorizontalAlignment="Center" Brush="TAOM.Encyclopedia.Rule" AlphaFactor="0.3" />
+                <ImageWidget Id="Handle" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="9" SuggestedHeight="90" HorizontalAlignment="Center" Sprite="ec_list_scroll" />
+              </Children>
+            </ScrollbarWidget>
+          </Children>
+        </Widget>
+      </Children>
+    </Widget>
+  </Window>
+</Prefab>

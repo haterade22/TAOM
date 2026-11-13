@@ -2975,7 +2975,7 @@
 	<string id="taom_res_tt_depleted_in" text="{=taom_res_tt_depleted_in}Depleted in" />
 	<string id="taom_res_tt_days" text="{=taom_res_tt_days}{DAYS} days" />
 	<string id="taom_res_tt_deserting" text="{=taom_res_tt_deserting}Elite troops desert each day while you have no {RESOURCE}" />
-	<string id="taom_res_tt_per_battle" text="{=taom_res_tt_per_battle}Per battle" />
+	<string id="taom_res_tt_per_battle_ref" text="{=taom_res_tt_per_battle_ref}Per {SIZE}-man battle" />
 	<string id="taom_res_tt_per_raid" text="{=taom_res_tt_per_raid}Per raid" />
 	<string id="taom_res_tt_per_siege" text="{=taom_res_tt_per_siege}Per siege" />
 	<string id="taom_res_tt_per_prisoner" text="{=taom_res_tt_per_prisoner}Per prisoner" />
@@ -4220,11 +4220,6 @@
 	<string id="taom_wt_halved" text="{=taom_wt_halved}Held by your clan: halved" />
 	<string id="taom_wt_term" text="{=taom_wt_term}{DESCRIPTION}: {CHANGE}% of the base chance" />
 
-	<!-- Vanilla v1.5.6 HeroHelper.GetLastSeenText ids that no installed module defines. Delete these two rows when vanilla defines
-	     the ids: the GameText merge keeps the later module's attributes, so TAOM's row would replace vanilla's text and key. -->
-	<string id="str_last_seen_encyclopedia_entry_leading_army" text="{=taom_str_last_seen_encyclopedia_entry_leading_army}Last seen leading an army {?IS_IN_SETTLEMENT}at{?}near{\?} {SETTLEMENT}." />
-	<string id="str_last_seen_encyclopedia_entry_at_sea_leading_army" text="{=taom_str_last_seen_encyclopedia_entry_at_sea_leading_army}Last seen leading an army sailing near {SETTLEMENT}." />
-
   <!-- TAOM-NEWCULTURE:eredluin:BEGIN -->
   <string id="str_culture_description.eredluin" text="{=taom_str_culture_description.eredluin}The dwarves of Ered Luin dwell in the Blue Mountains at the western edge of Middle-earth. Durin's Folk came there in exile and made Thorin's Halls, and in this age the Broadbeams and the Firebeards keep Belegost and Nogrod again, the oldest dwarf-cities of the West. They are miners and smiths, poorer than their kin in the east, and they trade iron with the Elves of Lindon and the Men of Eriador while the goblins of Blue Craig gnaw at their roads." />
   <string id="str_culture_rich_name.eredluin" text="{=taom_str_culture_rich_name.eredluin}Dwarves of the Blue Mountains" />
@@ -4929,5 +4924,102 @@
 	<!-- harvested by tools/harvest_literal_loc_keys.py -->
 	<!-- MapEventGuard -->
 	<string id="taom_empty_meeting_text" text="{=taom_empty_meeting_text}There is nobody left in that party to speak for it." />
+	<!-- harvested by tools/harvest_literal_loc_keys.py -->
+	<!-- TaomSettings.cs -->
+	<string id="taom_specres_mcm_gold_only" text="{=taom_specres_mcm_gold_only}Elite Troops Cost Gold Only" />
+	<string id="taom_specres_mcm_gold_only_hint" text="{=taom_specres_mcm_gold_only_hint}When on, your troops cost no special resource to upgrade, recruit or keep, and none of them desert for lack of it. Gold and wages still apply. The Elite Emissary sells for gold, to a buyer of its own resource group only. You still earn the resource, and the armoury still takes it. When you turn this off, the charges return, and elite troops desert again at a zero balance. Default: off." />
+	<string id="taom_specres_mcm_gold_rate" text="{=taom_specres_mcm_gold_rate}Emissary Gold Per Resource" />
+	<string id="taom_specres_mcm_gold_rate_hint_base" text="{=taom_specres_mcm_gold_rate_hint_base}With Elite Troops Cost Gold Only on, the emissary's gold price is the troop's base emissary cost times this number. The resource price is a multiple of the same base cost. Default: 200." />
+	<!-- harvested by tools/harvest_literal_loc_keys.py -->
+	<!-- TaomSettings.cs -->
+	<string id="taom_arachnophobia_mcm_mode" text="{=taom_arachnophobia_mcm_mode}Arachnophobia Mode" />
+	<string id="taom_arachnophobia_mcm_mode_hint" text="{=taom_arachnophobia_mcm_mode_hint}Takes the giant spiders out of the game. Spider riders ride wargs instead. New volunteers, upgrades and the Elite Emissary no longer lead to a spider troop, and spider troops leave the encyclopedia and the Custom Battle troop list. Spider broods leave the campaign map, most within a day. The rest applies the next time you start or load a game. Spider troops that already exist stay, on wargs: in parties, garrisons, prisons and volunteer slots. Fords of War still offers its Spider Riders, on wargs. Lore text, and cobwebs in some scenes, stay. Default: off." />
+	<!-- harvested by tools/harvest_literal_loc_keys.py -->
+	<!-- TaomSettings.cs -->
+	<string id="taom_kingdom_allegiance_mcm_enabled" text="{=taom_kingdom_allegiance_mcm_enabled}Enable Kingdom Allegiance" />
+	<string id="taom_kingdom_allegiance_mcm_enabled_hint" text="{=taom_kingdom_allegiance_mcm_enabled_hint}When enabled (default), lords keep to their side of the war. An AI clan of the Free Peoples never joins, defects to or serves as mercenaries for an Evil realm, and an Evil clan never does so for a Free realm. Neutral clans and realms may deal with either side. A new campaign also starts with no friendships between Free and Evil lords: each one becomes enmity of the same strength. Your own clan and a realm you lead keep the base game's rules. Clans that already serve a realm of the other side stay where they are. When off, the base game's rules apply. Applies at once, no restart; the friendships part applies to new campaigns only." />
+	<!-- harvested by tools/harvest_literal_loc_keys.py -->
+	<!-- WarPledgeWorldAdapter -->
+	<string id="taom_war_pledge_joined_free" text="{=taom_war_pledge_joined_free}{REALM} joins the Free Peoples in the War of the Ring." />
+	<string id="taom_war_pledge_joined_evil" text="{=taom_war_pledge_joined_evil}{REALM} joins the Shadow in the War of the Ring." />
+	<!-- harvested by tools/harvest_literal_loc_keys.py -->
+	<!-- TaomSettings.cs -->
+	<string id="taom_war_pledge_mcm_enabled" text="{=taom_war_pledge_mcm_enabled}Enable War Pledge" />
+	<string id="taom_war_pledge_mcm_enabled_hint" text="{=taom_war_pledge_mcm_enabled_hint}When on, a Neutral realm can join the War of the Ring for good. In Full War, the side that is far behind on the war meter (25 points or more) calls on a Neutral realm that leans its way: Khand, Rhudaur, Umbar, Shaghana and Abanissa lean to the Shadow, Cardolan and Dorwinion to the Free Peoples. The realm then goes to war with every realm of the other side, and that war cannot end in peace while the War of the Ring lasts. One realm joins at a time, 30 days apart unless war_pledge.json says otherwise, and never a realm that a player rules. Needs Momentum Tracking on. Off stops new joins by the AI; a realm that has joined stays joined. Default: on." />
+	<!-- harvested by tools/harvest_literal_loc_keys.py -->
+	<!-- TaomSettings.cs -->
+	<string id="taom_realms_mcm_claim_price" text="{=taom_realms_mcm_claim_price}Claim Price (%)" />
+	<string id="taom_realms_mcm_claim_price_hint" text="{=taom_realms_mcm_claim_price_hint}The price of buying a claim on a title, as a percentage of its price in realms_titles.xml (40 for a Barony up to 500 for a Kingdom, in your people's own resource). AI lords pay for theirs in gold, at the same percentage. Between 10 and 500. Default: 100." />
+	<string id="taom_realms_mcm_influence_cost" text="{=taom_realms_mcm_influence_cost}Title Influence Cost (%)" />
+	<string id="taom_realms_mcm_influence_cost_hint" text="{=taom_realms_mcm_influence_cost_hint}The influence it costs to usurp, form, restore or revoke a title, as a percentage of its cost in realms_titles.xml. Restoring Gondor's throne for Aragorn costs 2500 at 100. Applies to AI lords too. Between 10 and 500. Default: 100." />
+	<string id="taom_realms_mcm_ai_claims" text="{=taom_realms_mcm_ai_claims}AI Lords Press Claims" />
+	<string id="taom_realms_mcm_ai_claims_hint" text="{=taom_realms_mcm_ai_claims_hint}When on, AI lords buy claims, usurp the titles they claim, form vacant titles their side holds and restore thrones, each week. When off, only you do; claims they already hold stay. Default: on." />
+	<string id="taom_realms_mcm_tribute_recv" text="{=taom_realms_mcm_tribute_recv}Tribute From Vassals" />
+	<string id="taom_realms_mcm_tribute_recv_hint" text="{=taom_realms_mcm_tribute_recv_hint}When on, each clan whose lords hold titles directly below your clan's, in your realm, pays your clan a share of its daily income from fiefs. It shows in the expected gold change. Applies to AI lords too. Receiving and paying are separate: with only this one on, lieges gain the gold without their vassals losing it. Default: on." />
+	<string id="taom_realms_mcm_tribute_recv_pct" text="{=taom_realms_mcm_tribute_recv_pct}Tribute From Vassals (%)" />
+	<string id="taom_realms_mcm_tribute_recv_pct_hint" text="{=taom_realms_mcm_tribute_recv_pct_hint}The share of a vassal clan's daily income from fiefs that its liege clan receives. A clan with more than one liege clan splits it among them. Between 1 and 25. Default: 5." />
+	<string id="taom_realms_mcm_tribute_pay" text="{=taom_realms_mcm_tribute_pay}Tribute To Liege" />
+	<string id="taom_realms_mcm_tribute_pay_hint" text="{=taom_realms_mcm_tribute_pay_hint}When on, your clan pays each liege clan, the clan whose lord holds a title directly above one of yours in your realm, a share of its daily income from fiefs. It shows in the expected gold change. Applies to AI lords too. A clan that cannot pay its whole tribute pays nothing that day. With only this one on, vassals lose the gold without their lieges gaining it. Default: on." />
+	<string id="taom_realms_mcm_tribute_pay_pct" text="{=taom_realms_mcm_tribute_pay_pct}Tribute To Liege (%)" />
+	<string id="taom_realms_mcm_tribute_pay_pct_hint" text="{=taom_realms_mcm_tribute_pay_pct_hint}The share of a clan's daily income from fiefs it pays its liege clans, split among them when it has more than one. Between 1 and 25. Default: 5." />
+	<string id="taom_realms_mcm_office_influence" text="{=taom_realms_mcm_office_influence}Office Influence (%)" />
+	<string id="taom_realms_mcm_office_influence_hint" text="{=taom_realms_mcm_office_influence_hint}The influence an office such as the Steward of Gondor or a Marshal of the Mark pays its holder's clan each week, as a percentage of its amount in realms_titles.xml. 0 stops it. Between 0 and 300. Default: 100." />
+	<string id="taom_realms_mcm_resentment" text="{=taom_realms_mcm_resentment}Resentment Over Fiefs" />
+	<string id="taom_realms_mcm_resentment_hint" text="{=taom_realms_mcm_resentment_hint}When on, a lord who holds the title of a town or castle that another clan owns likes its owner a little less each week, and the town loses a little loyalty. Default: on." />
+	<string id="taom_realms_mcm_liege_pull" text="{=taom_realms_mcm_liege_pull}Liege's Pull" />
+	<string id="taom_realms_mcm_liege_pull_hint" text="{=taom_realms_mcm_liege_pull_hint}When on, a vassal of another clan likes the holder of their liege title a little more each week, up to a relation of 30. Default: on." />
+	<string id="taom_realms_mcm_army_discount" text="{=taom_realms_mcm_army_discount}Liege Army Discount" />
+	<string id="taom_realms_mcm_army_discount_hint" text="{=taom_realms_mcm_army_discount_hint}When on, calling a vassal to an army costs their liege half the influence. When off, it costs what the base game asks. Default: on." />
+	<string id="taom_realms_mcm_family_grants" text="{=taom_realms_mcm_family_grants}Lands for Sons and Daughters" />
+	<string id="taom_realms_mcm_family_grants_hint" text="{=taom_realms_mcm_family_grants_hint}When on, AI lords hand lesser titles to their grown children. When off, they keep them; titles already handed down stay, and so do the grants made when a campaign starts, such as Boromir's West Osgiliath. Default: on." />
+	<string id="taom_realms_mcm_title_styles" text="{=taom_realms_mcm_title_styles}Lords Styled by Their Titles" />
+	<string id="taom_realms_mcm_title_styles_hint" text="{=taom_realms_mcm_title_styles_hint}When on, lord parties and the name above a conversation carry the lord's style and title, such as Steward Denethor of Gondor. When off, they show the plain name; the encyclopedia still lists every title. Party names change within an in-game hour. Default: on." />
+	<string id="taom_fui_banner_layers" text="{=taom_fui_banner_layers}LAYERS" />
+	<string id="taom_fui_banner_layer_background" text="{=taom_fui_banner_layer_background}Background" />
+	<string id="taom_fui_banner_layer_sigil" text="{=taom_fui_banner_layer_sigil}Sigil {INDEX}" />
+	<string id="taom_fui_banner_add" text="{=taom_fui_banner_add}ADD" />
+	<string id="taom_fui_banner_copy" text="{=taom_fui_banner_copy}COPY" />
+	<string id="taom_fui_banner_raise" text="{=taom_fui_banner_raise}RAISE" />
+	<string id="taom_fui_banner_lower" text="{=taom_fui_banner_lower}LOWER" />
+	<string id="taom_fui_banner_delete" text="{=taom_fui_banner_delete}DELETE" />
+	<string id="taom_fui_banner_position_x" text="{=taom_fui_banner_position_x}POSITION X" />
+	<string id="taom_fui_banner_position_y" text="{=taom_fui_banner_position_y}POSITION Y" />
+	<string id="taom_fui_banner_width" text="{=taom_fui_banner_width}WIDTH" />
+	<string id="taom_fui_banner_height" text="{=taom_fui_banner_height}HEIGHT" />
+	<string id="taom_fui_banner_rotation" text="{=taom_fui_banner_rotation}ROTATION" />
+	<string id="taom_fui_banner_mirror" text="{=taom_fui_banner_mirror}MIRROR" />
+	<string id="taom_fui_banner_outline" text="{=taom_fui_banner_outline}OUTLINE" />
+	<string id="taom_fui_banner_centre" text="{=taom_fui_banner_centre}CENTRE" />
+	<string id="taom_fui_banner_fit" text="{=taom_fui_banner_fit}RESET" />
+	<string id="taom_fui_banner_lock" text="{=taom_fui_banner_lock}LOCK RATIO" />
+	<string id="taom_fui_banner_color_primary" text="{=taom_fui_banner_color_primary}PRIMARY" />
+	<string id="taom_fui_banner_color_secondary" text="{=taom_fui_banner_color_secondary}SECONDARY" />
+	<string id="taom_fui_banner_swap" text="{=taom_fui_banner_swap}SWAP" />
+	<string id="taom_fui_banner_preview_shield" text="{=taom_fui_banner_preview_shield}SHIELD" />
+	<string id="taom_fui_banner_preview_pennant" text="{=taom_fui_banner_preview_pennant}PENNANT" />
+	<string id="taom_banner_category_dunedain" text="{=taom_banner_category_dunedain}Dúnedain" />
+	<string id="taom_banner_category_adunaic" text="{=taom_banner_category_adunaic}Adûnaic" />
+	<string id="taom_banner_category_haradrim" text="{=taom_banner_category_haradrim}Haradrim" />
+	<string id="taom_banner_category_easterling" text="{=taom_banner_category_easterling}Easterling" />
+	<string id="taom_banner_category_elven" text="{=taom_banner_category_elven}Elven" />
+	<string id="taom_banner_category_evil" text="{=taom_banner_category_evil}Forces of Evil" />
+	<string id="taom_banner_category_northmen" text="{=taom_banner_category_northmen}Northmen" />
+	<string id="taom_banner_category_orcish" text="{=taom_banner_category_orcish}Orcish" />
+	<string id="taom_banner_category_dwarven" text="{=taom_banner_category_dwarven}Dwarven" />
+	<string id="taom_banner_category_dunlending" text="{=taom_banner_category_dunlending}Dunlending" />
+	<string id="taom_banner_category_misc" text="{=taom_banner_category_misc}Miscellaneous" />
+	<!-- harvested by tools/harvest_literal_loc_keys.py -->
+	<!-- TaomSettings.cs -->
+	<string id="taom_battlehud_mcm_colour_mode" text="{=taom_battlehud_mcm_colour_mode}Battle HUD Colours" />
+	<string id="taom_battlehud_mcm_colour_mode_hint" text="{=taom_battlehud_mcm_colour_mode_hint}Changes only three rings of the round battle HUD: your player health, mount health and shield. Default keeps their stone look and colours. Each other choice draws those rings in flat colours that are easier to tell apart for that type of colour vision, on a dark track. The rings keep their order and fill as before, so their place and length also tell them apart. The career ability centre, the ammo count and all other screens do not change. A change applies in the current battle, with no restart." />
+	<!-- InformationManagerSettingsNotice -->
+	<string id="taom_coopcompat_settings_differ" text="{=taom_coopcompat_settings_differ}Your TAOM settings differ from the host's in: {GROUPS}. Co-op may behave differently for you." />
+	<string id="taom_coopcompat_build_mismatch" text="{=taom_coopcompat_build_mismatch}Your TAOM build is not the host's build. Co-op can desync or misbehave. Install the same TAOM download as the host." />
+	<!-- harvested by tools/harvest_literal_loc_keys.py -->
+	<!-- TaomSettings.cs -->
+	<string id="taom_hero_auras_mcm_enabled" text="{=taom_hero_auras_mcm_enabled}Enable Hero Auras" />
+	<string id="taom_hero_auras_mcm_enabled_hint" text="{=taom_hero_auras_mcm_enabled_hint}Named heroes strengthen the allied soldiers near them, each in his own way: Dain's dwarves keep their feet, Aragorn's men hold their nerve, the elven lords' archers draw faster. Only the heroes listed in hero_auras.json carry an aura. Where an aura and a soldier's own race ability give the same thing, the stronger counts; they never add. Takes effect from the next aura pulse." />
+	<string id="taom_hero_auras_mcm_strength" text="{=taom_hero_auras_mcm_strength}Hero Aura Strength" />
+	<string id="taom_hero_auras_mcm_strength_hint" text="{=taom_hero_auras_mcm_strength_hint}Multiplies every aura's bonuses. 1.0 is as authored in hero_auras.json; 0 turns every aura off. Morale floors and on/off effects such as shrug-off do not scale. Default: 1.0." />
 
 </strings>

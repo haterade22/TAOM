@@ -12,7 +12,7 @@ namespace TAOM.Features.BattleLoadDiagnostics;
 //
 // All file I/O is best-effort and swallowed — a diagnostic must never break a battle load
 // or the main menu. Touched only from the main thread (Mission.Initialize / OnMissionTick /
-// main-menu reach), so no locking is needed; the background watchdog never touches it.
+// main-menu reach), so no locking is needed; no background thread touches it.
 public sealed class BattleLoadStallMarker : IBattleLoadStallMarker
 {
     private const string MarkerFileName = "battle-load-inflight.marker";

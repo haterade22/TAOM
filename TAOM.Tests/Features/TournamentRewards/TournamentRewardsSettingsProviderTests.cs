@@ -19,20 +19,22 @@ public class TournamentRewardsSettingsProviderTests
     [TestMethod]
     public void Fallbacks_MatchTheCompiledDefaults()
     {
+        Assert.IsNull(TaomSettings.Instance, "this test is about the no-instance fallback");
+
         var provider = new TournamentRewardsSettingsProvider();
         var compiled = new TaomSettings();
 
-        Assert.AreEqual(compiled.TournamentMaxBetPerRound, provider.MaxBetPerRound);
+        Assert.AreEqual(compiled.TournamentBetCapPerRound, provider.MaxBetPerRound);
         Assert.AreEqual(compiled.TournamentRenownMultiplier, provider.RenownMultiplier);
         Assert.AreEqual(compiled.TournamentInfluenceMultiplier, provider.InfluenceMultiplier);
     }
 
     [TestMethod]
-    public void CompiledDefaults_AreUnlimitedBetsAndTheDesignedMultipliers()
+    public void CompiledDefaults_AreTheDesignedBetCapAndMultipliers()
     {
         var compiled = new TaomSettings();
 
-        Assert.AreEqual(0, compiled.TournamentMaxBetPerRound, "0 = unlimited");
+        Assert.AreEqual(15_000, compiled.TournamentBetCapPerRound, "15,000; 0 would mean unlimited");
         Assert.AreEqual(1.0f, compiled.TournamentRenownMultiplier);
         Assert.AreEqual(1.0f, compiled.TournamentInfluenceMultiplier);
     }
@@ -60,7 +62,7 @@ public class TournamentRewardsSettingsProviderTests
     [TestMethod]
     public void MaxBetSlider_SpansExactlyTheProvidersClamp()
     {
-        var (min, max) = SliderRange(nameof(TaomSettings.TournamentMaxBetPerRound));
+        var (min, max) = SliderRange(nameof(TaomSettings.TournamentBetCapPerRound));
 
         Assert.AreEqual(0.0, min);
         Assert.AreEqual((double)TournamentRewardRules.MaxBetSetting, max);
@@ -102,7 +104,7 @@ public class TournamentRewardsSettingsProviderTests
     [DataRow(500, 500)]
     public void MaxBetPerRound_McmValueOutsideTheSlider_IsClamped(int mcm, int expected)
     {
-        var provider = new TournamentRewardsSettingsProvider(new TaomSettings { TournamentMaxBetPerRound = mcm });
+        var provider = new TournamentRewardsSettingsProvider(new TaomSettings { TournamentBetCapPerRound = mcm });
 
         Assert.AreEqual(expected, provider.MaxBetPerRound);
     }

@@ -1,6 +1,6 @@
 # Bannerlord animation system map: from the Modding Kit to an agent's pose
 
-> **Engine and date:** Bannerlord v1.5.3 (the pin on 2026-09-26; `.claude/pinned-game-version.txt` now reads v1.5.6), read on 2026-09-26.
+> **Engine and date:** Bannerlord v1.5.3 (the pin on 2026-09-26; `.claude/pinned-game-version.txt` now reads v1.5.7), read on 2026-09-26.
 >
 > **Binaries:** the client `bin/Win64_Shipping_Client/TaleWorlds.Native.dll` (14,209,376 bytes, dated 2026-09-15,
 > SHA-256 prefix `45be32c57c451f78`) and the Modding Kit's `bin/Win64_Shipping_wEditor/TaleWorlds.Native.dll`
@@ -541,6 +541,12 @@ carry its own motion"), so this binds only an edit of a vanilla clip's payload.
   valid". A package without an entry is skipped whole with no log line (lessons, "A hand-built tpac package is
   invisible", #616) [Likely]; the client's skip path is not traced (UNVERIFIED), and neither is what it does when the
   stamp and the checksum differ.
+- **A clip package with no entry crashed `Agent.SetActionSet`.** Kysaro measured this (his note
+  `animation/project_tw3_anim_pipeline.md`, 2026-11-06), unverified in TAOM: clips cloned from vanilla ones, with no
+  RuntimeDataCache entry of their own, crashed the game at `Agent.SetActionSet` with exception code 0xE0434352. The
+  `.rdc` files are named by the clip package GUID and hold 1 to 9 KB of compiled data, so he could not clone an entry
+  and needed a Kit save of every clip. This is his measurement of one case, not a trace of the client's skip path; it
+  does not replace the "skipped whole, silently" lines above, and the two are not reconciled here.
 - Masters never get an entry and play anyway (`check_rdc_entries.py` docstring and the same lesson).
 - **The client opens an entry only by a registered package's GUID** (v1.5.5, deep review of 2026-10-18). One function
   (0x484CC0) formats `"%s%s/%s.%s"` from the module path, `RuntimeDataCache`, the package GUID and `rdc`; the opener
@@ -551,6 +557,11 @@ carry its own motion"), so this binds only an edit of a vanilla clip's payload.
 - **The Kit watches `.rdc` files.** A path handler (Kit 0x796C0) raises "External .rdc file modification detected.
   RDC files cannot be updated outside the editor. Please restart the game" [Certain for the string and code; Likely
   that it is a file-watch callback]. `set_clip_balance_name.py` refuses to run while the Kit runs, which avoids it.
+- **After a Kit reimport, start the Kit once more.** Kysaro measured this (his note
+  `tooling/project_editor_reimport_automation.md`, 2026-11-10), unverified in TAOM. After he reimported 17 clip masters
+  the `.rdc` files were not rewritten, and a battle froze about 1 s in, when the new run clip started (no crash event;
+  the rgl log just stops). One more Kit start re-cooked exactly those 17 on load and the freeze was gone. His rule: after
+  every reimport, run one more Kit start, then check that the RuntimeDataCache files have new timestamps (one per clip).
 - **Gate:** `python tools/check_rdc_entries.py [--under <folder>]` checks `_geo` and `_anm` packages, exempts
   masters, and exits 1 on a missing entry or an empty scan.
 
@@ -645,6 +656,14 @@ not find animation", 0 "undefined action" and 0 "default action set" lines [Cert
 **Skeleton against clip.** `as_hill_troll_warrior` declares `skeleton="troll_skeleton_a"`, binds 3,909 human clips
 beside 792 troll clips (3,941 and 760 before the 14:13 rebind on 2026-09-26), and plays in game (troll-race.md). So binding by clip index does not enforce skeleton identity
 [Likely]. Whether bone-count parity (28) is required is UNVERIFIED.
+
+**Cutscene action types used as binding slots.** Counted in Native `ModuleData/action_types.xml` this turn [Certain]:
+`act_cutscene_kingdom_made_pose_01` to `_06` (6 types; there is no `_07` or `_08`) and
+`act_cutscene_declare_dragon_banner_pose_01` to `_15` (15 types; `_07` exists here). Native `action_sets.xml` has 22 rows
+naming them. Kysaro binds his matched-kill clips to these types in his own `as_kys_mk_*` sets and lists
+`declare_dragon_banner_pose_09` to `_15` as the ones still free in his sets (his note
+`animation/project_matched_kills.md`, 2026-11-10); that bookkeeping is his, unverified in TAOM. His rule: check
+`action_types.xml` before binding, because a type that does not exist is a phantom `animation=` with no error.
 
 **Movement sets and module order** (MithrilForge `docs/anim-findings.md` section 7, Bannerlord 1.4.6, 2026-09-24;
 not measured by TAOM; review [adopt-mithrilforge-2026-09-29.md](../reviews/adopt-mithrilforge-2026-09-29.md)):
@@ -865,7 +884,7 @@ but a mid-walk call likely pops [Likely]. The managed `Agent.SetActionSet` also 
 | Null read at 0x6553C8 (v1.5.5: 0x655B88) | A clip missing from an alternatives group: when the remap entry is -1, 0x6553C6 zeroes the pointer and the weighted pick reads `[0 + 0x1D0]` [Certain for the read]; reachability UNVERIFIED | Section 8 | none | |
 | Delayed crash after "Could not find animation" | A phantom `animation=`: the slot keeps its inherited value or -1; a crash needs a later consumer that skips the -1 check [Certain] | creature-mount-authoring.md gotcha 7 (describes older behaviour) | `verify_mount_assets.py` CHECK 3 (creatures); the troll binders bind only clips on disk | No gate for humanoid sets; grep the rgl log |
 | Dedicated server dies on boot | A root-level `<action>`: `KeyNotFoundException` in `MergeElements` [Certain] | armory-guide.md "action_sets structure"; [module-armory.md](../modding/module-armory.md) | `audit_action_set_parity.py` (exits 1) | none |
-| A package's clips never appear | No `.rdc` entry: the package is skipped whole, silently [Likely] | lessons, "A hand-built tpac package is invisible" | `check_rdc_entries.py` | The client's skip path is UNVERIFIED |
+| A package's clips never appear | No `.rdc` entry: the package is skipped whole, silently [Likely] | lessons, "A hand-built tpac package is invisible" | `check_rdc_entries.py` | The client's skip path is UNVERIFIED; Kysaro measured a crash at `Agent.SetActionSet` (section 6, RuntimeDataCache) |
 | Divide by zero in `CreateAgent` | A `monster_usage` miss: -1 (2026-06-04) | creature-mount-authoring.md Phase 5 | `audit_mount_parity.py` | Exits 0 unless run with `--strict`, which fails on a usage gap in the spider, elephant or mumakil |
 | AV in `monster_usage.cpp` | A usage-table key miss dereferences the end sentinel (1.4.6); the path string still exists in 1.5.3 [Certain] | creature-mount-authoring.md Phase 5 | the parity audit | 1.5.3 offsets UNVERIFIED |
 | A clip silently missing | A duplicate clip name: the second is refused with a log line [Certain] | Section 6 | none | |

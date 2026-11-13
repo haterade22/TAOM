@@ -207,4 +207,16 @@ public class SwornAnewWiringTests
 
         CollectionAssert.AreEqual(new[] { "Patch116_PrisonerDefectionLine_Postfix.cs" }, patches);
     }
+
+    [TestMethod]
+    public void TheAdapter_SidesTheLordByTheirOwnClan_NeverTheirRealm()
+    {
+        // #1114: the lord's own people decide, as Kingdom Allegiance decides (#1111). Sided by the realm, an orc lord serving Gondor
+        // read Free, so a Free player could turn them and an Evil player could not; a Free lord in a Neutral realm could swear to Mordor.
+        var src = RepoPaths.ReadSource("Main/Adapters/SwornAnewAdapter.cs", stripComments: true);
+
+        StringAssert.Contains(src, "LordSide: FactionSides.OfOwnClan(hero)");
+        Assert.IsFalse(src.Contains("FactionSides.OfHero("), "the lord's side never comes from their realm");
+        StringAssert.Contains(src, "PlayerSide: FactionSides.OfPlayer()");
+    }
 }

@@ -34,21 +34,22 @@ public static class WarRamConfig
     /// constant would read as a number the ram never uses.
     ///
     /// Held at 75% of <see cref="AttackRadius"/>, the ratio the original 2.5/3.5 tuning chose. Keeping
-    /// the ram's commit point inside the circle it damages matters MORE at the current 10s cooldown
+    /// the ram's commit point inside the circle it damages matters MORE at the current 35s cooldown
     /// than it did at 6s: an attack committed against a target loitering on the rim is a wasted
-    /// 10-second window. Tunable from battle feel.</summary>
+    /// 35-second window. Tunable from battle feel.</summary>
     public const float AttackTriggerRange = 1.5f;
 
     /// <summary>The ram must face its nearest enemy: dot(toEnemy, lookDir) above this (elephant-like
     /// parity: 0.25f, kept identical since this gate is not scale-dependent).</summary>
     public const float AttackFacingDot = 0.25f;
 
-    /// <summary>Seconds between kick attacks. Level with the war elephant's 10s trample. It was 6s,
+    /// <summary>Seconds between kick attacks. Raised to 35s on 2026-11-11 (Mike); it was 10s, level with
+    /// the war elephant's trample. Before that it was 6s,
     /// on the reasoning that a horse-scale creature recovers faster than a giant, and in play that
     /// read as overpowered for a reason the per-hit numbers hide: unlike an elephant, rams arrive
     /// fifteen at a time in a lord's party, so a short cooldown on a knockdown AoE compounds across
     /// the stack rather than across one beast.</summary>
-    public const double AttackCooldownSeconds = 10.0;
+    public const double AttackCooldownSeconds = 35.0;
 
     /// <summary>The head-butt's reach: the ram hits ONE enemy inside this radius (see
     /// <see cref="AttackSingleTarget"/>), the one it faces most squarely. Until 2026-09-18 the attack was an
@@ -68,7 +69,7 @@ public static class WarRamConfig
     // roughly 25-35 raw BEFORE armor, the warg's bite tops out around 60 (40 base + up to 20 from speed), the
     // elephant's trample is 50-100. Note the butt IGNORES armor: CustomAttacksUtils.TakeDamage writes
     // InflictedDamage directly with DamageCalculated set, so every point lands (measured on the 18-28 band: 976
-    // hits on Armored Trolls averaged 23.1, the raw roll). One enemy per butt, one butt per ram per 10 s.
+    // hits on Armored Trolls averaged 23.1, the raw roll). One enemy per butt, one butt per ram per 35 s.
     /// <summary>Minimum head-butt damage before block scaling.</summary>
     public const int AttackMinDamage = 40;
 

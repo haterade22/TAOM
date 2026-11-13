@@ -88,24 +88,22 @@ public static class TickProfileLines
 
     public static string BuildPerfContext(PerfContext c) => string.Format(
         CultureInfo.InvariantCulture,
-        "[PerfContext] build={0} jitOptimized={1} clr={2} serverGC={3} latency={4} missionInProcess={5} scene={6} agents={7} frameLimiter={8} vsync={9} textureQuality={10} shadowQuality={11} particleDetail={12} ragdolls={13} memLoad={14} availPhysMB={15} tickProfiler={16} diag={17}",
+        "[PerfContext] build={0} jitOptimized={1} clr={2} serverGC={3} latency={4} missionInProcess={5} scene={6} agents={7} frameLimiter={8} vsync={9} textureQuality={10} shadowQuality={11} shadowType={12} shadowFiltering={13} particleDetail={14} ragdolls={15} memLoad={16} availPhysMB={17} tickProfiler={18} diag={19}",
         c.Build, Bool(c.JitOptimized), c.Clr, Bool(c.ServerGc), c.Latency, Int(c.MissionInProcess),
         string.IsNullOrEmpty(c.Scene) ? "unknown" : c.Scene, Int(c.Agents),
         OrNa(c.FrameLimiter), OrNa(c.VSync),
-        OrNa(c.TextureQuality), OrNa(c.ShadowQuality), OrNa(c.ParticleDetail), OrNa(c.Ragdolls),
+        OrNa(c.TextureQuality), OrNa(c.ShadowQuality), OrNa(c.ShadowType), OrNa(c.ShadowFiltering), OrNa(c.ParticleDetail), OrNa(c.Ragdolls),
         OrNa(c.MemLoadPercent), c.AvailPhysMb < 0 ? "na" : c.AvailPhysMb.ToString(CultureInfo.InvariantCulture),
         c.TickProfiler ? "on" : "off", c.Diag.Count == 0 ? "none" : string.Join(",", c.Diag));
 
-    /// <summary>The diagnostics that will run, in contract order, from their raw toggles: the stall
-    /// watchdog and the exit sampler also need the master <paramref name="battleLoad"/> toggle, and the
-    /// stall bundle needs the watchdog (their consumers gate on both); the other three stand alone.</summary>
-    public static IReadOnlyList<string> DiagTokens(bool battleLoad, bool stallWatchdog, bool stallBundle,
+    /// <summary>The diagnostics that will run, in contract order, from their raw toggles: the exit
+    /// sampler also needs the master <paramref name="battleLoad"/> toggle; the other three stand alone.
+    /// The old stallWatchdog and stallBundle tokens went with the load watchdog.</summary>
+    public static IReadOnlyList<string> DiagTokens(bool battleLoad,
         bool exitSampler, bool freezeSampler, bool memSampler, bool missionPerf)
     {
-        var tokens = new List<string>(7);
+        var tokens = new List<string>(5);
         if (battleLoad) tokens.Add("battleLoad");
-        if (battleLoad && stallWatchdog) tokens.Add("stallWatchdog");
-        if (battleLoad && stallWatchdog && stallBundle) tokens.Add("stallBundle");
         if (battleLoad && exitSampler) tokens.Add("exitSampler");
         if (freezeSampler) tokens.Add("freezeSampler");
         if (memSampler) tokens.Add("memSampler");
@@ -266,7 +264,7 @@ public static class TickProfileLines
 public sealed class PerfContext
 {
     public PerfContext(string build, bool jitOptimized, string clr, bool serverGc, string latency, int missionInProcess,
-        string scene, int agents, int frameLimiter, int vsync, int textureQuality, int shadowQuality, int particleDetail, int ragdolls,
+        string scene, int agents, int frameLimiter, int vsync, int textureQuality, int shadowQuality, int shadowType, int shadowFiltering, int particleDetail, int ragdolls,
         int memLoadPercent, long availPhysMb, bool tickProfiler, IReadOnlyList<string> diag)
     {
         Build = build;
@@ -281,6 +279,8 @@ public sealed class PerfContext
         VSync = vsync;
         TextureQuality = textureQuality;
         ShadowQuality = shadowQuality;
+        ShadowType = shadowType;
+        ShadowFiltering = shadowFiltering;
         ParticleDetail = particleDetail;
         Ragdolls = ragdolls;
         MemLoadPercent = memLoadPercent;
@@ -301,6 +301,8 @@ public sealed class PerfContext
     public int VSync { get; }
     public int TextureQuality { get; }
     public int ShadowQuality { get; }
+    public int ShadowType { get; }
+    public int ShadowFiltering { get; }
     public int ParticleDetail { get; }
     public int Ragdolls { get; }
     public int MemLoadPercent { get; }

@@ -185,7 +185,7 @@ in a pure type.
 - **Known limit.** Under a roof the view rises through it. The contract reads that the engine's cast tests the lifted point and not the segment from the hero up to it (it cites `MissionScreen` lines that moved; only the target and the support point at `:1513-1518` were re-read, so the cast itself is UNVERIFIED here). A lift drops the target lock, and no new lock starts until the view has sunk; the setting's hint says so.
 - **Check line.** `taom.seat-of-seeing.rise` with the height, once at the first lift of a mission. A `[[human]]` row owes the lift under a gatehouse.
 
-**Who reads the main agent as a player-driven hero** (contract 8.2: the grep, one line per file). Searched `Main`, `Client` and `Dependencies` for `IsPlayerControlled`, `IsAIControlled`, `IsMine`, `Agent.Main` and `MainAgent` in `*.cs`: 85 files, 7 of them the Seat's own. A known hit proved the search (`LostFootingRules.cs:39`, which the contract names). Formation-level `IsAIControlled` is a different flag (`Formation.IsAIControlled`): S4 never changes it, and S5 turns it false again on the formations it hands over, as before the fall.
+**Who reads the main agent as a player-driven hero** (contract 8.2: the grep, one line per file). Searched `Main`, `Client` and `Dependencies` for `IsPlayerControlled`, `IsAIControlled`, `IsMine`, `Agent.Main` and `MainAgent` in `*.cs`: 86 files, 7 of them the Seat's own. A known hit proved the search (`LostFootingRules.cs:39`, which the contract names). Formation-level `IsAIControlled` is a different flag (`Formation.IsAIControlled`): S4 never changes it, and S5 turns it false again on the formations it hands over, as before the fall.
 
 | File | Reads | Result with the hero on the AI |
 |---|---|---|
@@ -208,6 +208,7 @@ in a pure type.
 | `Main/Adapters/LongDefeatBattlefieldAdapter.Diagnostics.cs` | the main agent and `Controller` for a log line | Long Defeat's own mission; the hand-off refuses an agent that is already AI |
 | `Main/Adapters/LongDefeatBattlefieldAdapter.cs` | `AdoptMain(aiDriven)` flips the hero to the AI itself | the hand-off refuses (`not-player`), so the Seat never takes that hero back |
 | `Main/Adapters/LostFootingAdapter.cs` | `IsPlayerControlled` for the census | see `LostFootingRules.cs` |
+| `Main/Adapters/LostFootingRescueAdapter.cs` | `IsPlayerControlled`, `IsMainAgent` and `Agent.Main`'s position | the rescue refuses a handed hero (`player`); its 25 m player test measures from the hero's body, not the Seat's free camera, so a formation move can happen in view (#894) |
 | `Main/Adapters/MarshalOrderAdapter.cs` | `Formation.IsAIControlled` | unchanged by S4; S5 turns it false again on handed formations |
 | `Main/Adapters/StagedSiegeMissionAdapter.cs` | `target.IsAIControlled` of a formation | unchanged |
 | `Main/Features/AdvancedCombat/BaseBehaviorTree/IsAiAgentDecorator.cs` | `IsActive() && IsAIControlled` | a handed hero passes as AI, which he is |
@@ -514,7 +515,7 @@ NOT REACHED; `--issue 0 --sessions 2` over one session of each feature exits 0.
     opens. Game key 30 (CapsLock) is read by `MissionMainAgentController.cs:811`, which the shut controller already stops. The career ability key (V)
     and the perspective toggle (game key 27) still act.
 12. Options > Keybindings > Action shows "Take the Seat (TAOM)" with the key Q and no ERROR text; the MCM group renders its rows; with
-    the game in Russian the Seat's texts show the English seeds and no raw key.
+    the game in Russian the Seat's texts show the Russian translation and no raw key.
 13. Only if a rage holds the hero in single player at all: fall from the warg during a rage, take the Seat, then kill the warg. The
     flight keys do not move the hero.
 14. Turn on Begin Battles in the Seat and start a battle with a deployment: when the deployment ends the battle begins in the Seat, with
@@ -723,7 +724,7 @@ one failed or skipped class can leave every later Seat patch off), the thread gu
 `SeatHeroAdapter`, `SeatScreenAdapter`; another feature's guard line does not count), a log with no
 `[Shutdown] clean module unload` line, a `[BuildStamp]` that is not this checkout, or a `reason` other than `final`. A stamp is not this
 checkout when its sha is not HEAD, when the stamp line says `MISMATCH` (the word sits on the tier that was built apart, so the line the sha was read from is read to its end), when its `.dirty` mark disagrees with the tree (dirty with no uncommitted file, or clean with one,
-a deletion included), or when an uncommitted file under the build's own pathspec (`Main`, `Client`, `Dependencies`, `Stubs`,
+a deletion included), or when an uncommitted file under the build's own pathspec (`Main`, `Client`, `CoopCompat`, `Dependencies`, `Stubs`,
 `Directory.Build.props`, `GameReferences.targets`) is newer than the stamp's build time. It cannot tell a dirty deploy of a sibling
 worktree at the same HEAD from this one when this tree's edits are older than that build, a deletion made after a dirty build, or a file
 restored to HEAD after a dirty build while an older edit stays in the tree. Only a content hash in the stamp could close those three. The checkout is read when the run is judged, after the game exits, and not when it

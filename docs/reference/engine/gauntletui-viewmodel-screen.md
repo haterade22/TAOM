@@ -136,6 +136,25 @@ replacing whole screens (forward-compatible across patches, as long as the bound
   ignored", and `{..}` on the child "climbed above it to nothing". TAOM has not checked its own movie roots (Career,
   SupplyOrder, the FactionUI movies, the PartyScreen clones) for a root `DataSource`; bind through the view model passed to
   `LoadMovie`.
+- **UI debug mode hot-reloads open movies and adds a widget inspector.** Kysaro read this in the decompile (his note
+  `ui/project_bannerlord_ui_architecture.md`, 2026-09-21), unverified in TAOM. `UIConfig.DebugModeEnabled` (console
+  `ui.set_debug_mode 1`) starts a file watcher over every module's GUI folder; a changed prefab, brush or sprite file
+  rebuilds each open movie without a restart. The same mode switches on an ImGui widget tree (per widget: path,
+  visibility, size policies, size, position; Shift+F freezes a snapshot). He pairs it with
+  `ui.use_generated_prefabs 0` when the screen under edit is a native one.
+- **Generated (precompiled) prefabs win over XML.** TAOM sets `UIConfig.DoNotUseGeneratedPrefabs = true` at
+  `Dependencies/SubModule.cs:42` [Certain, read this turn], so a TAOM session loads XML. Kysaro's claim, unverified in
+  TAOM (his note `ui/project_bannerlord_ui_architecture.md`, 2026-09-21): `GauntletMovie.Load` tries a generated prefab
+  first, keyed by the movie name plus the ViewModel type's full name, and loads XML only when none matches. So an XML
+  override of a prefab bound to a native VM type is ignored while generated prefabs are on; one bound to TAOM's own VM
+  type (his FactionSelectionVM) works.
+- **A `DataSource="{X}"` on the same widget as `Command.Click` rebinds the command to X, and the click silently never
+  fires.** Kysaro measured this in his faction screen prefab (his note `ui/project_taom_factionui_module.md`,
+  2026-09-23), unverified in TAOM. The command was looked up on the child VM, which had no such method. Put the
+  `DataSource` on the child widget that needs it and leave the button on the outer VM.
+- **An `Attach()` that resets animation state must run before the VM constructor that can trigger it.** Kysaro measured
+  this (same note, 2026-09-23), unverified in TAOM. His faction screen built the VM first, whose constructor armed the
+  portrait reveal; the later `Attach()` reset it, so the first reveal never played. Reordering the two fixed it.
 - **Text shrinks when it runs out of lines, and the line box is taller than the font** [yotthani, screenshots plus code
   comments, one source, version not stated at those lines, not re-read by TAOM]. The test comment
   (`RealmUI/Game/Inventory.Tests/KingdomShapeTests.cs`@6265f4a2:209-210) reports that "the text ran out of its lines and the

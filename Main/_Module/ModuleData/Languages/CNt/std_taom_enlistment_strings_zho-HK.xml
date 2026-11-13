@@ -78,7 +78,7 @@
     <string id="taom_enlist_leave_refused" text="你現在無法在此告假離隊。" />
     <string id="taom_enlist_menu_duty" text="向你的士官長領取差事" />
     <string id="taom_enlist_menu_talk" text="與你的長官交談" />
-    <string id="taom_enlist_rank_sergeant" text="Sergeant" />
+    <string id="taom_enlist_rank_sergeant" text="軍士" />
     <string id="taom_enlist_reassign_pick" text="你目前隨{CURRENT_SECTION}行軍。你更願意站在哪裡？" />
     <string id="taom_enlist_release_battle" text="還有仗要打，此時不行。等戰場平靜了再來問我。" />
     <string id="taom_enlist_release_desert" text="那我不再與你們同行了。無論誓言如何，我要走了。" />
@@ -253,44 +253,44 @@
     <string id="taom_enlist_lost_broken_body" text="{COMMANDER}的隊伍已被擊潰。他仍活著，但已無旗幟可供隨行。你可堅守誓言、等他重舉旗幟，或視你的服役到此為止。若{DAYS}天內仍無消息，誓言即行失效，你將領到應得的報酬。" />
     <string id="taom_enlist_lost_hold" text="堅守你的誓言" />
     <string id="taom_enlist_lost_leave" text="視服役已然結束" />
-    <string id="taom_enlist_menu_discharged_leave" text="Go on your way" />
-    <string id="taom_enlist_wait_discharged" text="Your service has ended." />
-    <string id="taom_enlist_qm_refused_host" text="Only the host's quartermaster can issue kit in this campaign." />
-    <string id="taom_enlist_qm_refused_load" text="Your kit cannot be loaded into your baggage just now. Ask me again later." />
-    <string id="taom_enlist_qm_refused_stores" text="The quartermaster has nothing in his stores for your company." />
-    <string id="taom_enlist_qm_refused_best" text="You already carry the best kit my stores can issue." />
-    <string id="taom_enlist_rank_master_sergeant" text="Master Sergeant" />
-    <string id="taom_enlist_rank_private" text="Private" />
-    <string id="taom_enlist_rank_sergeant_first_class" text="Sergeant First Class" />
-    <string id="taom_enlist_rank_sergeant_major" text="Sergeant Major" />
-    <string id="taom_enlist_rank_specialist" text="Specialist" />
-    <string id="taom_enlist_rank_staff_sergeant" text="Staff Sergeant" />
-    <string id="taom_enlist_sitout_wounded_tip" text="You are wounded. The column fights on without you, and no one will hold it against you." />
-    <string id="taom_enlist_sitout_odds_tip" text="Your side holds the field by a wide margin. You may stay back, but your commander will remember it." />
-    <string id="taom_enlist_sitout_refused_tip" text="You serve in your commander's line. Take your place in the fight." />
-    <string id="taom_enlist_sitout_siege_tip" text="A siege needs every soldier. Take your place in the assault." />
-    <string id="taom_enlist_sat_out_line" text="You stayed back while the column fought, and your share of the battle's due was cut." />
-    <string id="taom_enlist_sat_out_wounded_line" text="You were wounded and stayed back while the column fought." />
-    <string id="taom_enlist_sat_out_forced_line" text="The column fought without you, and you had no way into the line." />
-    <string id="taom_enlist_act_raid" text="The column is raiding." />
-    <string id="taom_enlist_crown_war_release" text="{COMMANDER}'s realm has gone to war with yours. You are released from the column with honor, and your pay is settled." />
-    <string id="taom_enlist_desert_cost" text="Deserting will also cost you your commander's favor and your good name." />
-    <string id="taom_enlist_desert_cost_reply" text="(This will cost me my commander's favor and my good name.)" />
-    <string id="taom_enlist_spoils" text="Spoils of your own blade: {ITEMS}" />
-    <string id="taom_enlist_promoted_kit" text="The quartermaster has kit for your new rank." />
-    <string id="taom_enlist_promoted_notice" text="{COMMANDER} names you {RANK}." />
-    <string id="taom_enlist_board_kit" text="{NEWLINE}Kit to draw: the quartermaster holds gear for your rank." />
-    <string id="taom_enlist_term_body" text="{COMMANDER} offers you up to {BONUS} denars and renewed trust to sign on for another term, or you may leave the service with honor." />
-    <string id="taom_enlist_term_leave" text="Leave with honor" />
-    <string id="taom_enlist_term_renew" text="Sign on again" />
-    <string id="taom_enlist_term_title" text="Your term is served" />
-    <string id="taom_enlist_term_bonus_paid" text="You receive {GOLD} denars for signing on again." />
-    <string id="taom_enlist_oath_remembered" text="{COMMANDER} remembers your service: you begin as {RANK}." />
-    <string id="taom_enlist_refused_deserter" text="{COMMANDER} remembers your desertion and will not take your oath." />
-    <string id="taom_enlist_desert_memory" text="Your commander will not take your oath again for a time, and this term will count for nothing if you return." />
-    <string id="taom_enlist_desert_memory_reply" text="(My commander will not take my oath again for a time, and this term will count for nothing.)" />
-    <string id="taom_enlist_board_column" text="{NEWLINE}Column: {COLUMN}" />
-    <string id="taom_enlist_retinue_cost" text="Your own men cost {COST}{COIN} a day; service pays {PAY}{COIN}." />
-    <string id="taom_enlist_act_sitout" text="Your commander is fighting a battle your oath keeps you out of." />
+    <string id="taom_enlist_menu_discharged_leave" text="踏上你的旅途" />
+    <string id="taom_enlist_wait_discharged" text="你的役期已結束。" />
+    <string id="taom_enlist_qm_refused_host" text="本次征戰中只有主軍的軍需官能發放裝備。" />
+    <string id="taom_enlist_qm_refused_load" text="此刻你的裝備無法裝入行囊。稍後再來問我吧。" />
+    <string id="taom_enlist_qm_refused_stores" text="軍需官的庫房裡沒有適合你部隊的東西。" />
+    <string id="taom_enlist_qm_refused_best" text="你身上的裝備已是我庫中最好的了。" />
+    <string id="taom_enlist_rank_master_sergeant" text="軍士長" />
+    <string id="taom_enlist_rank_private" text="列兵" />
+    <string id="taom_enlist_rank_sergeant_first_class" text="一級軍士" />
+    <string id="taom_enlist_rank_sergeant_major" text="士官長" />
+    <string id="taom_enlist_rank_specialist" text="專技兵" />
+    <string id="taom_enlist_rank_staff_sergeant" text="參謀軍士" />
+    <string id="taom_enlist_sitout_wounded_tip" text="你負了傷。行伍將在沒有你的情況下繼續作戰，無人會因此責怪你。" />
+    <string id="taom_enlist_sitout_odds_tip" text="我方在戰場上佔盡優勢。你可以留在後方，但你的指揮官會記住這件事。" />
+    <string id="taom_enlist_sitout_refused_tip" text="你在指揮官的陣列中服役。回到你的位置去作戰。" />
+    <string id="taom_enlist_sitout_siege_tip" text="攻城需要每一名士兵。回到你在突擊中的位置。" />
+    <string id="taom_enlist_sat_out_line" text="當隊伍奮戰時你卻留在後方,你應得的戰利分成因此被削減。" />
+    <string id="taom_enlist_sat_out_wounded_line" text="你身負傷勢,在隊伍作戰時留在了後方。" />
+    <string id="taom_enlist_sat_out_forced_line" text="隊伍在沒有你的情況下作戰,你無從加入陣列。" />
+    <string id="taom_enlist_act_raid" text="行伍正在劫掠。" />
+    <string id="taom_enlist_crown_war_release" text="{COMMANDER} 的王國已與你的王國開戰。你帶著榮譽自行伍中解除職務，軍餉也已結清。" />
+    <string id="taom_enlist_desert_cost" text="逃兵也將使你失去指揮官的賞識與你的名譽。" />
+    <string id="taom_enlist_desert_cost_reply" text="（這會讓我失去指揮官的賞識與我的名譽。）" />
+    <string id="taom_enlist_spoils" text="你親手所得的戰利品：{ITEMS}" />
+    <string id="taom_enlist_promoted_kit" text="軍需官備有符合你新軍階的裝備。" />
+    <string id="taom_enlist_promoted_notice" text="{COMMANDER} 任命你為{RANK}。" />
+    <string id="taom_enlist_board_kit" text="{NEWLINE}可領裝備：軍需官備有符合你軍階的裝具。" />
+    <string id="taom_enlist_term_body" text="{COMMANDER} 願提供最多 {BONUS} 第納爾與重新託付的信任，請你再服役一期；你也可以帶著榮譽離開軍旅。" />
+    <string id="taom_enlist_term_leave" text="帶著榮譽離去" />
+    <string id="taom_enlist_term_renew" text="再簽一期" />
+    <string id="taom_enlist_term_title" text="你的役期已滿" />
+    <string id="taom_enlist_term_bonus_paid" text="你因再次簽署服役而獲得 {GOLD} 第納爾。" />
+    <string id="taom_enlist_oath_remembered" text="{COMMANDER} 記得你的效命：你以{RANK}的身分開始。" />
+    <string id="taom_enlist_refused_deserter" text="{COMMANDER} 記得你曾經逃兵，不願再受你的誓言。" />
+    <string id="taom_enlist_desert_memory" text="你的指揮官在一段時間內不會再接受你的誓言，若你歸來，這一期服役也將毫無意義。" />
+    <string id="taom_enlist_desert_memory_reply" text="（我的指揮官一段時間內不會再接受我的誓言，而這一期服役也將毫無意義。）" />
+    <string id="taom_enlist_board_column" text="{NEWLINE}行伍：{COLUMN}" />
+    <string id="taom_enlist_retinue_cost" text="你自己的部下每日耗費 {COST}{COIN}；軍餉為 {PAY}{COIN}。" />
+    <string id="taom_enlist_act_sitout" text="你的指揮官正在打一場你的誓言不容你參與的戰鬥。" />
   </strings>
 </base>

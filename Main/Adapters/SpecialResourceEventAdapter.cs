@@ -36,6 +36,7 @@ public sealed class SpecialResourceEventAdapter : ISpecialResourceEventAdapter
     private bool _hideoutFailureLogged;
     private bool _dailyFailureLogged;
     private bool _recruitFailureLogged;
+    private bool _heroLookupFailureLogged;
 
     public SpecialResourceEventAdapter(
         IPlayerControlQuery playerControl,
@@ -54,7 +55,7 @@ public sealed class SpecialResourceEventAdapter : ISpecialResourceEventAdapter
     // Candidates are read only on the authority of a live session.
     private bool ReadsCandidates => _coop.IsSessionActive && _coop.IsAuthority;
 
-    public EarnerRef DescribeLocalHero() => Describe(Hero.MainHero, null);
+    public EarnerRef DescribeLocalHero() => Describe(Hero.MainHero);
 
     public VictorySnapshot SnapshotVictory(MapEvent mapEvent)
     {
@@ -156,7 +157,7 @@ public sealed class SpecialResourceEventAdapter : ISpecialResourceEventAdapter
     {
         if (!_coop.IsSessionActive)
             return winner == Hero.MainHero?.CharacterObject ? DescribeLocalHero() : null;
-        return Describe(winner?.HeroObject, null);
+        return Describe(winner?.HeroObject);
     }
 
     public int CountPrisoners(FlattenedTroopRoster roster)
@@ -185,7 +186,7 @@ public sealed class SpecialResourceEventAdapter : ISpecialResourceEventAdapter
             }
 
             return new DailyTickInput(
-                Describe(hero, null),
+                Describe(hero),
                 PartyUpkeepReader.CountOwnedTowns(hero),
                 PartyUpkeepReader.Collect(hero.PartyBelongedTo, _config));
         }
@@ -204,11 +205,24 @@ public sealed class SpecialResourceEventAdapter : ISpecialResourceEventAdapter
             var scopedLeader = scopedPartyId != null
                 ? Campaign.Current?.CampaignObjectManager.Find<MobileParty>(scopedPartyId)?.LeaderHero
                 : null;
-            return new RecruitContext(scopedPartyId, Describe(scopedLeader, null), DescribeLocalHero());
+            return new RecruitContext(scopedPartyId, Describe(scopedLeader), DescribeLocalHero());
         }
         catch (Exception ex)
         {
             LogReadFailure(ref _recruitFailureLogged, "the recruit scope", ex);
+            return null;
+        }
+    }
+
+    public EarnerRef DescribeHero(string heroId)
+    {
+        try
+        {
+            return heroId == null ? null : Describe(Hero.Find(heroId));
+        }
+        catch (Exception ex)
+        {
+            LogReadFailure(ref _heroLookupFailureLogged, "a hero by id", ex);
             return null;
         }
     }
@@ -251,7 +265,7 @@ public sealed class SpecialResourceEventAdapter : ISpecialResourceEventAdapter
         };
     }
 
-    // The leader of each party on a side, once per hero, with the size of the party that fought.
+    // The leader of each party on a side, once per hero.
     private IReadOnlyList<EarnerRef> DescribeLeaders(MapEventSide side)
     {
         var result = new List<EarnerRef>();
@@ -262,7 +276,7 @@ public sealed class SpecialResourceEventAdapter : ISpecialResourceEventAdapter
         {
             var leader = p.Party?.LeaderHero;
             if (leader == null || !seen.Add(leader.StringId)) continue;
-            result.Add(Describe(leader, p.Party.MemberRoster?.TotalManCount));
+            result.Add(Describe(leader));
         }
         return result;
     }
@@ -284,19 +298,18 @@ public sealed class SpecialResourceEventAdapter : ISpecialResourceEventAdapter
         _logger.LogWarning($"[SpecRes] Could not read {what}: {ex}. Further failures of this kind are not logged.");
     }
 
-    private EarnerRef Describe(Hero hero, int? partyManCount)
+    private EarnerRef Describe(Hero hero)
     {
         if (hero == null) return null;
 
-        var isLocal = hero == Hero.MainHero;
-        // The local hero's party is the one the old code counted: the hero's own party, if any.
-        var men = isLocal ? hero.PartyBelongedTo?.MemberRoster?.TotalManCount : partyManCount;
+        // Hero.MainHero reads Game.Current.PlayerTroop unguarded, and Coop's source says it is null on a dedicated
+        // server, where DescribeHero (Patch144) runs. So read the local hero null-safe.
+        var isLocal = hero == (Game.Current?.PlayerTroop as CharacterObject)?.HeroObject;
         return new EarnerRef(
             hero.StringId,
             hero.Clan?.Kingdom?.StringId,
             hero.Culture?.StringId,
             isLocal,
-            _playerControl.OfHero(hero),
-            men);
+            _playerControl.OfHero(hero));
     }
 }

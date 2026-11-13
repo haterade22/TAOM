@@ -149,7 +149,9 @@ so; each move batch also ends with a client boot.
 
 ## Referenced by
 
+- [docs/adrs/014-separate-coop-compat-module.md](./014-separate-coop-compat-module.md)
 - [docs/adrs/README.md](./README.md)
+- [docs/features/coop-compat.md](../features/coop-compat.md)
 - [docs/features/coop-dedicated-server.md](../features/coop-dedicated-server.md)
 - [docs/features/coop-interop.md](../features/coop-interop.md)
 - [docs/features/server-settings.md](../features/server-settings.md)

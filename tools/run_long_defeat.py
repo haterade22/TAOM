@@ -25,6 +25,7 @@ The Elven Volley's proof run is --waves 3 --garrison-scale 1.3 --start-gold 5000
 The report's class must be the one armed (--class, run by run for --class all) or, with none armed, the bot's draw from the seed (class_problem), and the class check must pass. --class takes the classes of classes.json only (the three foot classes and cavalry), so a name the game does not offer is refused here instead of being replaced by the game.
 The tower volley's proof run is --waves 3 --garrison-scale 1.3 --start-gold 5000 at a fortress with recorded tower posts and tower_volley spots (phase3-plan.md Slice 8; Helm's Deep records none until 2026-11-06, and then tower level 3 is not for sale): the bot buys tower level 3 at clear 2, and each tower with a spot and a post archer looses its volley in wave 3. A report that bought level 3 before a wave the run played owes a tower-volley pass for each recorded tower that holds a spot and a post, and a posts pass is owed for each recorded tower that holds a post (one tower's line never pays another's).
 The high towers' proof run is --waves 2 --garrison-scale 1.3 --start-gold 5000 at a fortress with recorded tower posts (phase3-plan.md Slice 7, spike S6; Helm's Deep records none until 2026-11-06, and then the tower row is not for sale): the bot buys tower level 1 in the preparation and level 2 at clear 1. A report that bought a tower level before a wave the run played owes a posts pass line (the posted archers stood, held their posts 30 s in and loosed an arrow), and one with level 2 owes a pass with level=2 (the wave it filled). --posts-variant A, B or C names how the archers are held (A scripted position, B with a speed limit of 0, C with the formation not splittable by AI) by setting TAOM_LD_POSTS_VARIANT for the game, and then the pass lines must name that variant; run it once per variant, and Mike picks from the lines.
+A fortress row with a split block owes one split pass once the log shows a calm's split ([LongDefeat][Split] preparation: or intermission:) and a wave cleared (#1128); a skip does not pay it.
 A cavalry run also owes sally and sally-return, except that both read skip with reason=no-sally-point while no sally point is recorded in fortresses.json (the run rides from Begin): the judge accepts that skip for that reason alone, and only while this tree's fortress row holds no sally key at all (sally_recorded: the game writes the same reason when it drops a malformed block), and sally-return is owed only once a wave was cleared (sally_waived, owes_return).
 A report with a wave row whose healthFactor or damageFactor is above 1 (a wave past the authored list, as in --start-wave 12 --waves 2) also owes the scale check.
 A wave row's affixes must replay from the report's seed (affix_roll, the same SplitMix64 draw as the game's AffixPlan.Roll, cut by the Legend boons taken before that wave: affix_cut), and a run that cleared 5 waves or whose report shows a wave with affixes also owes the affix check, and a row with a stat power, hide, hammer, terror or blades an affix-effect line (pass or skip).
@@ -1399,7 +1400,8 @@ def contact_note(report_json, log_text):
     return f", {CONTACT_CHECK}: {passes} pass, {skips} skip"
 
 
-FAIL_LINE = re.compile(r"\[Check\] id=" + re.escape(CHECK_PREFIX) + r"\S+ result=fail\b")
+# The whole line, so the judge's message carries the detail and its reason= (a split fail with reason=no-places reads apart from a group that stood too far from its place).
+FAIL_LINE = re.compile(r"\[Check\] id=" + re.escape(CHECK_PREFIX) + r"\S+ result=fail\b[^\r\n]*")
 
 
 def skip_reasons(name, log_text):
@@ -1409,11 +1411,28 @@ def skip_reasons(name, log_text):
     return [m.group(1) if m else "" for m in found]
 
 
+def fortress_has(fortress_id, key):
+    """Whether this tree's fortresses.json row for the fortress holds the key."""
+    fortress = next((f for f in _json_object(FORTRESS_FILE).get("fortresses", []) if isinstance(f, dict) and f.get("id") == (fortress_id or DEFAULT_FORTRESS)), None)
+    return fortress is not None and key in fortress
+
+
 def sally_recorded(fortress_id):
     """Whether this tree's fortresses.json row for the fortress holds a `sally` key. The game also writes reason=no-sally-point when FortressesReader drops a malformed block, and the judge
     does not fail on config warnings, so the log's reason alone would waive a block somebody pasted in wrongly."""
-    fortress = next((f for f in _json_object(FORTRESS_FILE).get("fortresses", []) if isinstance(f, dict) and f.get("id") == (fortress_id or DEFAULT_FORTRESS)), None)
-    return fortress is not None and "sally" in fortress
+    return fortress_has(fortress_id, "sally")
+
+
+# The opening split (#1128). A fortress row with a split block owes one split pass once the log shows a split was made and a wave was cleared: a hold that never met contact ends at the
+# clear with a skip (reason=no-contact), and a skip never pays the row. A log with no [Split] line owes nothing here (a build from before the split, or a run that never reached a calm).
+SPLIT_CHECK = "split"
+SPLIT_MADE = re.compile(r"\[LongDefeat\]\[Split\] (?:preparation|intermission): wall ")
+
+
+def owes_split(report_json, log_text):
+    cleared = report_json.get("wavesCleared")
+    return (isinstance(cleared, int) and not isinstance(cleared, bool) and cleared >= 1 and fortress_has(report_json.get("fortress"), "split")
+            and SPLIT_MADE.search(log_text or "") is not None)
 
 
 def sally_waived(name, log_text, recorded=False):
@@ -1511,7 +1530,7 @@ def judge(done, report_json, log_text=None):
         return 1, f"reason={reason}" + note
     failed = FAIL_LINE.search(log_text)
     if failed:
-        return 1, "the log holds a failed check: " + failed.group(0)
+        return 1, "the log holds a failed check: " + failed.group(0)[:400]
     build, problem = build_of(log_text)
     if problem:
         return 1, f"reason={reason} but {problem}"
@@ -1543,6 +1562,8 @@ def judge(done, report_json, log_text=None):
                        (owes_volley, VOLLEY_CHECK), (owes_posts, POSTS_CHECK), (owes_tower_volley, TOWER_VOLLEY_CHECK)):
         if not lose and owed(report_json) and name not in required:
             required = required + (name,)
+    if not lose and owes_split(report_json, log_text) and SPLIT_CHECK not in required:
+        required = required + (SPLIT_CHECK,)
     if not lose and posts_variant and not owes_posts(report_json):
         return 1, f"reason={reason} but --posts-variant {posts_variant} was armed and the report bought no tower level before a wave it played, so the variant was never tried (does the fortress record tower posts?)"
     missing = [name for name in required if not check_pattern(name, "pass").search(log_text)]
@@ -1562,6 +1583,8 @@ def judge(done, report_json, log_text=None):
             hint = f" ({CHECK_PREFIX}{GATE_ATTACKED_CHECK} read reason=no-blow: no blow reached the repaired gate, so read the [Engines] lines for a ram that died earlier, R4)"
         if FORT_POINTS_CHECK in missing and "none-recorded" in skip_reasons(FORT_POINTS_CHECK, log_text):
             hint += f" ({CHECK_PREFIX}{FORT_POINTS_CHECK} read reason=none-recorded while fortresses.json records points: the game's reader accepted none, so read the config warnings)"
+        if SPLIT_CHECK in missing and skip_reasons(SPLIT_CHECK, log_text):
+            hint += f" ({CHECK_PREFIX}{SPLIT_CHECK} read only skips: {', '.join(r or '?' for r in skip_reasons(SPLIT_CHECK, log_text))})"
         return 1, f"reason={reason} but no pass line for: " + ", ".join(CHECK_PREFIX + name for name in missing) + hint
     unread_boons = [n for n in read_owed_picks(report_json) if not boon_read_pattern(n).search(log_text)]
     if not lose and unread_boons:

@@ -133,6 +133,18 @@ fallback.
   trees of `TAOM_Map`, `LOTRLOME_Armory` and TAOM. **TAOM:** `python tools/validate_mesh_refs.py --check-name <name>`
   checks both trees of every module (exit 0 free, 1 taken, 2 unverified). The procedure is the recipe below.
 - Names go into XML attributes: lowercase ASCII letters, digits and underscore. Prefix TAOM props `taom_`.
+- **The Kit lowercases a mesh name on import, and a prefab's metamesh lookup is case-sensitive.** An FBX
+  object `baf_angmar_castle_A` is stored as `baf_angmar_castle_a`, so a prefab that names the mixed-case
+  form keeps failing after the import. Author every resource name in lowercase.
+- **A prefab that names a metamesh the editor session cannot find crashes the editor or the Kit**. In game a
+  missing prefab loads as an empty entity ([battle-scenes.md](../features/battle-scenes.md)); what the game
+  does with a missing metamesh inside a prefab is not recorded here. The log line is
+  "Meta mesh with name `<x>` cannot be found!" in the newest `watchdog_log_*.txt`, so read that file first
+  after an editor crash. "Another module's prefab uses it" does not prove the mesh is loaded in your
+  session: reference Native meshes or meshes the session's logs show loaded, and copy a prefab XML into
+  `Prefabs/` only after its meshes are imported. Source: Kysaro's notes
+  (`feedback_prefab_missing_metamesh_crash.md`, three crashes on 2026-10-29; his
+  `kys_siege_mordor.xml` also crashed the Kit on a folder refresh). Unverified in TAOM.
 
 ## Budget
 

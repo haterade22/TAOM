@@ -100,7 +100,7 @@ public abstract class ElephantLikeAttackTaskBase : BTTask, IBTBannerlordBase, IB
 }
 
 /// <summary>
-/// The trample (double-sweep thrash) — the priority attack, 10s cooldown. Alternates randomly between the two
+/// The trample (double-sweep thrash) — the priority attack, each tree sets its cooldown. Alternates randomly between the two
 /// near-identical thrash clips (attack_3/attack_4) for variety; ADOD_Beasts never played attack_4 at all.
 /// </summary>
 public class ElephantLikeTrampleTask : ElephantLikeAttackTaskBase

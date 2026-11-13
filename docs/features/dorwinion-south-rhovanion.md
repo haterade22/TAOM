@@ -376,7 +376,7 @@ so the live map and the deployed TAOM agree.
   misplaced).
 - Career portraits: South Rhovanion's careers use Rohan's portraits, which exist; only Dorwinion's
   three (Dale's) are blank (#1058).
-- Translations are owed to the paid run (#763): about 1,100 ids are seeded as English per language.
+- Translations (2026-11-12, #763): about 1,100 ids were seeded as English per language and are now translated in all 12.
 - The live map carries rows trunk's fort `--check` rejects until the merge ("Live map edits, in the
   order they happened").
 - **Cross-session deploy hazard:** a deploy from another checkout can undo the build that defines the
@@ -404,4 +404,4 @@ so the live map and the deployed TAOM agree.
 
 - **Issue:** #1062.
 - **Status:** merged (`4b207f951`) and closed with `triage-needs-ingame`; the in-game checks
-  ("How to verify in game"), the dedicated-server re-stage and the #763 translations are owed.
+  ("How to verify in game") and the dedicated-server re-stage are owed.

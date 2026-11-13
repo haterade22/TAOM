@@ -184,7 +184,7 @@ public class GarrisonCultureCoverageTests
     {
         var random = Substitute.For<IRandomProvider>();
         random.Next(Arg.Any<int>()).Returns(0);
-        return new VolunteerRecruitmentService(random, Substitute.For<IModLogger>());
+        return new VolunteerRecruitmentService(random, Substitute.For<IModLogger>(), Substitute.For<TAOM.Features.Arachnophobia.IArachnophobiaService>());
     }
 
     /// <summary>

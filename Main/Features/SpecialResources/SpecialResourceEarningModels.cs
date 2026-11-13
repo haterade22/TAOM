@@ -15,14 +15,13 @@ public sealed class EarnerRef
 {
     public EarnerRef(
         string heroId, string kingdomId, string cultureId, bool isLocalMainHero,
-        PlayerControl control, int? partyManCount = null)
+        PlayerControl control)
     {
         HeroId = heroId;
         KingdomId = kingdomId;
         CultureId = cultureId;
         IsLocalMainHero = isLocalMainHero;
         Control = control;
-        PartyManCount = partyManCount;
     }
 
     public string HeroId { get; }
@@ -36,9 +35,6 @@ public sealed class EarnerRef
     public bool IsLocalMainHero { get; }
 
     public PlayerControl Control { get; }
-
-    /// <summary>Men in the party that fought, or null when the hero has none (the ratio then divides by 1).</summary>
-    public int? PartyManCount { get; }
 }
 
 /// <summary>A map event that ended. Candidates are filled only on the co-op authority during a live session.</summary>
@@ -140,6 +136,19 @@ public sealed class RecruitContext
     public EarnerRef ScopedLeader { get; }
 
     public EarnerRef Local { get; }
+}
+
+/// <summary>One upgrade Coop's server applied: the troop the men became, and how many.</summary>
+public sealed class CoopUpgradeLine
+{
+    public CoopUpgradeLine(string targetTroopId, int count)
+    {
+        TargetTroopId = targetTroopId;
+        Count = count;
+    }
+
+    public string TargetTroopId { get; }
+    public int Count { get; }
 }
 
 /// <summary>A recruit charge the local player is told about.</summary>

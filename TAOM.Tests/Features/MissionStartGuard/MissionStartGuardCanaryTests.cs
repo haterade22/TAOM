@@ -74,7 +74,7 @@ public class MissionStartGuardCanaryTests
         var settings = Substitute.For<IMissionStartGuardSettingsProvider>();
         settings.SurviveMissionStartFailures.Returns(true);
         var service = new MissionStartGuardService(settings, Substitute.For<IMissionStartGuardAdapter>(),
-            Substitute.For<IDedicatedServerProvider>(), _logger);
+            Substitute.For<IDedicatedServerProvider>(), _logger, Substitute.For<TAOM.Core.Logging.IOutcomeLog>());
         MissionStartGuardCalls.Initialize(service);
         MissionStartGuardSwaps.LastSwapped = MissionStartGuardService.ExpectedSites;
         _harmony = new Harmony(HarmonyId);

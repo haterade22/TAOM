@@ -14,7 +14,8 @@
         { "troop": "fow_rohan_eastfold_skirmisher", "class": "Ranged", "count": 50 }
       ],
       "keep": null,
-      "muster": {"foot": {"x": 186.91, "y": 141.235, "z": 3.749, "fx": 0.75, "fy": 0.662}, "archers": {"x": 197.678, "y": 151.557, "z": 1.728, "fx": 0.739, "fy": 0.673}}
+      "muster": {"foot": {"x": 186.91, "y": 141.235, "z": 3.749, "fx": 0.75, "fy": 0.662}, "archers": {"x": 197.678, "y": 151.557, "z": 1.728, "fx": 0.739, "fy": 0.673}},
+      "split": {"wallFoot": 0.7, "lowArchers": 0.7}
     }
   ]
 }

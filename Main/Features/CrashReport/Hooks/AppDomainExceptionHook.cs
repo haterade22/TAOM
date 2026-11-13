@@ -31,8 +31,8 @@ public sealed class AppDomainExceptionHook
     internal static int MainThreadId => Volatile.Read(ref _mainThreadId);
 
     // The definition of "off the main thread" shared by this hook and Native2ManagedBridge.
-    // BattleLoadStallWatchdog also captures from a worker (a thread-pool Timer) but does not use it
-    // yet: a known open follow-up (#650 decisions record). An unset id (0) never equals a real thread, so
+    // BattleLoadStallWatchdog, which captured from a worker (a thread-pool Timer) without using it, was
+    // removed 2026-11-12, so the #650 follow-up about it is moot. An unset id (0) never equals a real thread, so
     // it counts as off-main: the safe direction, since a main-thread capture then loses only its
     // Mission and Campaign sections and the inquiry.
     internal static bool IsOffMainThread(int mainThreadId)

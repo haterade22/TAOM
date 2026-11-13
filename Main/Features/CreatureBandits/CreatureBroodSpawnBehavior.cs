@@ -74,6 +74,18 @@ internal sealed class CreatureBroodSpawnBehavior : CampaignBehaviorBase
                 return;
             }
 
+            // Arachnophobia Mode (#1110), read each day like the spawn switch. The clan gets no patrol orders and no new brood.
+            if (TaomSettings.Instance?.ArachnophobiaMode ?? false)
+            {
+                int disbanded = CreatureBandParties.DisbandAll(clan);
+                if (disbanded > 0)
+                {
+                    _logger.LogInfo($"[Arachnophobia] {disbanded} spider brood(s) left the campaign map; {clan.WarPartyComponents.Count} remain.");
+                    Outcomes.Pass("taom.arachnophobia.broods-disbanded", "", $"count={disbanded}");
+                }
+                return;
+            }
+
             int strays = CreatureBandParties.ReturnStraysToPatrol(clan);
             int existing = clan.WarPartyComponents.Count;
             bool spawn = CreatureBanditRules.BroodsToSpawnToday(existing, CreatureBanditsConfig.MaxBroods, SpawnEnabled) > 0;

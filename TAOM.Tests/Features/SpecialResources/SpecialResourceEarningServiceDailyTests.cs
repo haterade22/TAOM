@@ -359,7 +359,7 @@ public class SpecialResourceEarningServiceDailyTests
     {
         var kit = new EarningTestKit(session: true);
 
-        var outcome = kit.Sut.OnDailyTick(Input(EarningTestKit.Remote("lord_1", 10, control)));
+        var outcome = kit.Sut.OnDailyTick(Input(EarningTestKit.Remote("lord_1", control)));
 
         Assert.IsFalse(outcome.Processed);
         kit.Service.DidNotReceiveWithAnyArgs().ApplyDailyTick(default, default, default, default, default);

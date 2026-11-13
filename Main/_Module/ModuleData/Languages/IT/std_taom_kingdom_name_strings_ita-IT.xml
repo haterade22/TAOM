@@ -71,40 +71,40 @@
     <string id="taom_arthedain_ruler_title" text="Re" />
     <string id="taom_arthedain_short_name" text="{.MN}Arthedain" />
     <string id="taom_arthedain_title" text="{.MS}Regno del Nord di Arthedain" />
-    <string id="taom_cardolan_desc" text="The southern of the three realms into which Arnor was sundered. Its kings lie in the barrows of Tyrn Gorthad and its riders keep the plains between the Baranduin and the Greyflood, but its towns are few and its lords contend with Arthedain and Rhudaur for the crown of Arnor." />
+    <string id="taom_cardolan_desc" text="Il più meridionale dei tre reami in cui Arnor fu diviso. I suoi re giacciono nei tumuli di Tyrn Gorthad e i suoi cavalieri sorvegliano le pianure tra il Baranduin e il Greyflood, ma le sue città sono poche e i suoi signori contendono ad Arthedain e Rhudaur la corona di Arnor." />
     <string id="taom_cardolan_name" text="{.MN}Cardolan" />
-    <string id="taom_cardolan_ruler_title" text="King" />
+    <string id="taom_cardolan_ruler_title" text="Re" />
     <string id="taom_cardolan_short_name" text="{.MN}Cardolan" />
-    <string id="taom_cardolan_title" text="Kingdom of Cardolan" />
-    <string id="taom_rhudaur_desc" text="The eastern of the three realms into which Arnor was sundered, a hill kingdom between the Hoarwell and the Loudwater. Its Dunedain lords hold Cameth Brin and the Angle and rule a hard people of hill-men, with trolls in the fells and orcs on every pass." />
+    <string id="taom_cardolan_title" text="{.MS}Regno di Cardolan" />
+    <string id="taom_rhudaur_desc" text="Il più orientale dei tre reami in cui Arnor fu diviso, un regno collinare tra il Fontegrigio e l'Acquachiara. I suoi signori Dúnedain tengono Cameth Brin e il Puntone e governano un popolo duro di uomini delle colline, con troll tra le brughiere e orchi su ogni valico." />
     <string id="taom_rhudaur_name" text="{.MN}Rhudaur" />
-    <string id="taom_rhudaur_ruler_title" text="King" />
+    <string id="taom_rhudaur_ruler_title" text="Re" />
     <string id="taom_rhudaur_short_name" text="{.MN}Rhudaur" />
-    <string id="taom_rhudaur_title" text="Kingdom of Rhudaur" />
-    <string id="taom_eredluin_desc" text="The dwarf kingdom of the Blue Mountains. Durin's Folk made Thorin's Halls there in their exile, and in this age the Broadbeams and the Firebeards hold Belegost and Nogrod again. Its lords are few and its halls are poorer than those of its kin in the east, but its smiths are the oldest in the West, and its axes keep the goblins of Blue Craig from the roads to Lindon." />
+    <string id="taom_rhudaur_title" text="{.MS}Regno di Rhudaur" />
+    <string id="taom_eredluin_desc" text="Il regno nanico dei Monti Azzurri. Il Popolo di Durin vi edificò le Sale di Thorin durante l'esilio, e in quest'era i Larghelmi e i Barbe di Fuoco tengono di nuovo Belegost e Nogrod. I suoi signori sono pochi e le sue sale più povere di quelle dei parenti a oriente, ma i suoi fabbri sono i più antichi dell'Ovest, e le sue asce tengono i goblin di Blue Craig lontani dalle strade per Lindon." />
     <string id="taom_eredluin_name" text="{.MN}Ered Luin" />
-    <string id="taom_eredluin_ruler_title" text="King" />
+    <string id="taom_eredluin_ruler_title" text="Re" />
     <string id="taom_eredluin_short_name" text="{.MN}Ered Luin" />
-    <string id="taom_eredluin_title" text="Kingdom of Ered Luin" />
-    <string id="taom_anduinvale_desc" text="The Beornings and the Woodmen of the Vales hold the upper Anduin between the Misty Mountains and Mirkwood. They keep the High Pass and the Old Ford open for honest travellers and take a heavy toll of orcs and wolves. Their chieftains hold Beorn's Hall and the Carrock and want no part in the wars of kings." />
-    <string id="taom_anduinvale_name" text="{.MN}Anduin Vale" />
-    <string id="taom_anduinvale_ruler_title" text="Chieftain" />
-    <string id="taom_anduinvale_short_name" text="{.MN}Anduin Vale" />
-    <string id="taom_anduinvale_title" text="{.MN}Anduin Vale" />
-    <string id="taom_angaladh_desc" text="The Woodmen of western Mirkwood cleared their steads under the eaves of the forest and named their realm for the iron-hard trees that ring Woodmen-town. They are bowmen and woodwards, few in number, at peace with the Elves to the north and ever watchful of Dol Guldur to the south." />
+    <string id="taom_eredluin_title" text="{.MS}Regno di Ered Luin" />
+    <string id="taom_anduinvale_desc" text="I Beorniani e gli Uomini dei Boschi delle Valli tengono l'alto Anduin tra le Montagne Nebbiose e Bosco Atro. Mantengono aperti l'Alto Passo e il Vecchio Guado per i viandanti onesti e infliggono gravi perdite a orchi e lupi. I loro capi detengono la Sala di Beorn e la Carrock e non vogliono parte alcuna nelle guerre dei re." />
+    <string id="taom_anduinvale_name" text="{.FS}Valle dell'Anduin" />
+    <string id="taom_anduinvale_ruler_title" text="Capo" />
+    <string id="taom_anduinvale_short_name" text="{.FS}Valle dell'Anduin" />
+    <string id="taom_anduinvale_title" text="{.FS}Valle dell'Anduin" />
+    <string id="taom_angaladh_desc" text="Gli Uomini dei Boschi del Bosco Atro occidentale hanno dissodato i loro poderi sotto le fronde della foresta e hanno dato al loro reame il nome degli alberi duri come ferro che circondano la Città degli Uomini dei Boschi. Sono arcieri e guardaboschi, pochi di numero, in pace con gli Elfi a nord e sempre vigili su Dol Guldur a sud." />
     <string id="taom_angaladh_name" text="{.MN}Angáladh" />
-    <string id="taom_angaladh_ruler_title" text="King" />
+    <string id="taom_angaladh_ruler_title" text="Re" />
     <string id="taom_angaladh_short_name" text="{.MN}Angáladh" />
-    <string id="taom_angaladh_title" text="Kingdom of Angáladh" />
-    <string id="taom_dorwinion_desc" text="The vintners of Dorwinion tend the warm slopes where the River Running meets the Sea of Rhûn. Their wine goes up the river to Dale, to the Elves of Mirkwood and to every hall that can pay for it, and their kings grow rich on it. They keep out of the wars of the West and buy peace from the East when they must." />
+    <string id="taom_angaladh_title" text="{.MS}Regno di Angáladh" />
+    <string id="taom_dorwinion_desc" text="I vignaioli di Dorwinion curano i pendii assolati dove il Fiume Fluente incontra il Mare di Rhûn. Il loro vino risale il fiume fino a Valle, agli Elfi di Bosco Atro e a ogni sala che possa pagarlo, e i loro re ne traggono ricchezza. Si tengono fuori dalle guerre dell'Ovest e, quando devono, comprano la pace dall'Est." />
     <string id="taom_dorwinion_name" text="{.MN}Dorwinion" />
-    <string id="taom_dorwinion_ruler_title" text="King" />
+    <string id="taom_dorwinion_ruler_title" text="Re" />
     <string id="taom_dorwinion_short_name" text="{.MN}Dorwinion" />
-    <string id="taom_dorwinion_title" text="Kingdom of Dorwinion" />
-    <string id="taom_southrhovanion_desc" text="The Northmen of South Rhovanion ride the wide plains between the southern eaves of Mirkwood and the Sea of Rhûn. They are horse-lords, kin of the Éothéod who rode north long ago, and they have not forgotten the Wainriders who once burned their halls. Their kings hold Vidugard and owe no lord in the West or the East." />
-    <string id="taom_southrhovanion_name" text="{.MN}South Rhovanion" />
-    <string id="taom_southrhovanion_ruler_title" text="King" />
-    <string id="taom_southrhovanion_short_name" text="{.MN}South Rhovanion" />
-    <string id="taom_southrhovanion_title" text="Kingdom of South Rhovanion" />
+    <string id="taom_dorwinion_title" text="{.MS}Regno di Dorwinion" />
+    <string id="taom_southrhovanion_desc" text="Gli Uomini del Nord del Rhovanion Meridionale cavalcano le ampie pianure tra i margini meridionali di Bosco Atro e il Mare di Rhûn. Sono signori dei cavalli, parenti degli Éothéod che migrarono a nord molto tempo fa, e non hanno dimenticato i Carrieri che un tempo arsero le loro sale. I loro re tengono Vidugard e non devono obbedienza ad alcun signore, né a Ovest né a Est." />
+    <string id="taom_southrhovanion_name" text="{.MN}Rhovanion Meridionale" />
+    <string id="taom_southrhovanion_ruler_title" text="Re" />
+    <string id="taom_southrhovanion_short_name" text="{.MN}Rhovanion Merid." />
+    <string id="taom_southrhovanion_title" text="{.MS}Regno del Rhovanion Meridionale" />
   </strings>
 </base>

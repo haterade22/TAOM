@@ -15,6 +15,7 @@ internal sealed record KeepPoint(float X, float Y, float Z, float Radius);
 /// Both are null until recorded; nothing reads them at run time yet.
 /// <paramref name="ArmouryPoint"/> and <paramref name="YardPoint"/> are the places the lord walks to in Phase 4 (phase4-plan.md section 5), recorded in the muster shape by <c>taom.ld_record armoury</c> and <c>yard</c>:
 /// where the armoury and the engineer's yard stand. Both are null until recorded, and a null place hides its shop row; nothing reads them at run time yet.
+/// <paramref name="Split"/> is the opening split of the defenders (Mike, 2026-11-12): the shares for the wall and the gate, and for the lower and the high walls. Null plays with no split.
 /// </summary>
 internal sealed record FortressEntry(
     string Id,
@@ -32,4 +33,5 @@ internal sealed record FortressEntry(
     IReadOnlyList<LdTower>? Towers = null,
     LdVolleyOrigins? Volley = null,
     MusterFrame? ArmouryPoint = null,
-    MusterFrame? YardPoint = null);
+    MusterFrame? YardPoint = null,
+    SplitShares? Split = null);

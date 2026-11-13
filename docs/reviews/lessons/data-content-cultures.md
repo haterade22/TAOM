@@ -2380,3 +2380,29 @@ A player saw two halberds in one Barad-Dur Guard set and the same Black Numenore
 - **Why missed:** the plan said famous villains lead only as generals. The leader lists were curated by hand, and the one test checked only that no buyable hero leads. Ugluk and Lurtz were Isengard's captain and lieutenant, and the Witch-king was Mordor's lieutenant.
 - **Prevent:** when a plan states a rule about named characters, write it as a test over the shipped data with the named ids, and read each chosen id's character in `lords.xml` or `lords.xslt` before it goes into a list.
 - **Source:** [rca-hero-defence-s12-2026-11-09.md](../rca-hero-defence-s12-2026-11-09.md) row R4; `AFamousVillain_LeadsOnlyAsAGeneral`.
+
+### When a change lets a fixed attribute vary, sweep every reader that groups by it (War Pledge, 2026-11-10)
+A kingdom's side was fixed for a whole campaign until War Pledge. Three readers assumed it. The join's own eligibility check read the side by id only, so a player-founded realm that momentum, the ledger and the map side by its culture could be pledged to the other side. The ledger analyzer recorded a side's first capital loss only on a kingdom's first loss, so a loss after a pledge was dropped. Its net change per side read a joining realm's lands as a gain, with nothing to say so.
+- **Why missed:** the reader table was built for the C# callers of `IAlignmentService` and judged each one "follows the pledge". It did not ask which answer each reader gives for the same realm (the id alone, or the id and then the culture), and it left out the Python analyzer, which reads the side from log lines.
+- **Prevent:** when a feature makes a value change over time, list every reader that groups, counts or compares by it, the tools that read its logged form included, and write one test per reader with the value changing in the middle of the run. For a side, choose between `GetKingdomSide` (id) and `ResolveSide` (id, then culture) from what the other readers of the same realm use, and give the test fake a kingdom whose culture is not its id.
+- **Source:** [rca-war-pledge-2026-11-10.md](../rca-war-pledge-2026-11-10.md), findings 1, 3 and 10.
+
+### Moving a hero to another culture changes that culture's generated-lord kit pool (Haldir, 2026-11-12)
+`LordKitSelector` offers a lord kit to generated lords of a culture once 2 or more donor lords of that culture carry it (`MinimumDonors = 2`, keyed on the donor's own culture). Haldir, Rumil and Orophin moved from Mirkwood to Lothlorien but kept `mirkwood_*` template rosters, which carry `Item.taom_animalia_moose_a`. Each kit has one Lothlorien donor, so nothing leaks yet. If two moved lords share one roster, generated Lothlorien lords roll moose gear. Agent 7 also counted the Mirkwood pool after the move, and the count by roster id showed no loss: 3 lords remain on `medium_a`.
+- **Why missed:** the data edit changed `culture=` and `faction=` only. Nothing in the gates reads donor counts, and the kit question was filed as a cosmetic open decision.
+- **Prevent:** when a lord changes culture, change the kit in the same edit, or name the roster pair and check that no two moved lords share one. Count donors by the selector's rule, not by roster id.
+- **Source:** [rca-lothlorien-marchwardens-2026-11-12.md](../rca-lothlorien-marchwardens-2026-11-12.md), finding 1.
+
+### A scene can crash at load for its XML volume, with RAM to spare (Kysaro's Calembel, 2026-10-17)
+
+- **Why missed:** a full-city Calembel town crashed in a siege on every run while Minas Tirith, with a higher memory peak, passed. Nine theories were tested and falsified (one broken building, mesh-override caps, density, unique asset counts, missing prefabs, a stale navmesh) before a disassembly found a fixed 32 MB scene-load scratch arena that returns NULL when full. TAOM's scene audit counted entities, which this limit does not follow.
+- **Prevent:** before wiring a large scene, count the XML elements under `<entities>`; past about 160,000, run its mission type 3 of 3 times before it ships, and cut expanded LOD and material-override lines first. Two shipped TAOM scenes are past that line with no load evidence: see [battle-load-diagnostics.md](../../features/battle-load-diagnostics.md) "Scene size".
+- **Source:** Kysaro's notes, `scenes/project_calembel_siege_crash.md`, reviewed in [adopt-kysaro-knowledge-2026-11-12.md](../adopt-kysaro-knowledge-2026-11-12.md).
+
+### Key a price on its data row, not on a lookup that can disagree with it (emissary price multiplier, 2026-11-12)
+
+The Elite Emissary's resource price was first written as `merchant_cost` times the multiplier of the resource the settlement owner resolves to. The owner's resource comes from a kingdom-first lookup, while the offers follow the owner clan's culture. In shipped data the two always agree. A clan that defects, or a player vassal of another culture, makes them differ, and the price then moved by a factor of 20, with the encyclopedia badge (which priced by the troop's own resource) showing another number than the charge.
+
+- **Why missed:** the multiplier sat on the resource because the charge methods already held one. Every test, and every row in shipped data, had the troop's resource and the owner's resource agree, so no check could fail.
+- **Prevent:** when a number is derived from a runtime lookup (a resolved faction, culture or resource) and the same number is shown or charged somewhere else, fold it into the data row at load and have every reader use the row. Write one test where the lookup returns something other than the row's own value, and gate the largest value against the smallest limit any lookup result could carry.
+- **Source:** [rca-special-resource-pricing-2026-11-12.md](../rca-special-resource-pricing-2026-11-12.md), finding 1.

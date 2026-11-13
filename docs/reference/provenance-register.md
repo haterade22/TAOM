@@ -64,9 +64,9 @@ is ever treated as a token, which is what keeps the bare word "Alliance" from ma
 | ADOD_Beasts | `ADOD_Beasts` `ADOD` `ADODHowdahObject` `ADODBeastsMissionLogic` | purchased-asset, code terms informal | behavioural-port | `Main/Features/Elephant/**` `Main/Features/ElephantLike/**` `Main/Features/Mumakil/**` `Main/Features/WarRam/**` `Main/Features/Elk/**` `Main/Features/Animalia/**` `docs/reference/lotrlome-armory-snapshot/Prefabs/taom_howdah_platform.xml` (live: `LOTRLOME_Armory/Prefabs`) | cleared |
 | BehaviorTrees | `BehaviorTrees.dll` | maintainer-owned | verbatim-port | `Main/BehaviorTrees/**` | cleared |
 | BannerlordTogether | `BannerlordTogether` `BattleLinkMPClient` | no-decompile policy, see detail | interop-only | (none) | cleared |
-| BannerlordCoop | `BannerlordCoop` `Bannerlord-Coop-Team` `Bannerlord.Coop` | BannerlordCoop Source Available License since 2026-06-17 (no copying, distribution or use in another project without the maintainers' written permission; earlier MIT releases keep MIT) | interop-only | `Main/Features/CoopInterop/Missions/CoopMissionAuthority.cs` (binds Coop's agent registry and `CoopMissionController` by reflection; no Coop code copied) | uncleared |
+| BannerlordCoop | `BannerlordCoop` `Bannerlord-Coop-Team` `Bannerlord.Coop` | BannerlordCoop Source Available License since 2026-06-17 (no copying, distribution or use in another project without the maintainers' written permission; earlier MIT releases keep MIT) | interop-only | `Main/Features/CoopInterop/Missions/CoopMissionAuthority.cs` (binds Coop's agent registry and `CoopMissionController` by reflection; no Coop code copied); `CoopCompat/` (`TAOM.CoopCompat` compiles against Coop's `Common`, `GameInterface` and `Coop.Core` and implements its message interfaces; no Coop code copied, no Coop binary ships) | uncleared |
 | BannerlordCoop.DedicatedServer | `Bannerlord-Coop-Team/BannerlordCoop.DedicatedServer` `Bannerlord Coop LLC` | proprietary (Bannerlord Coop LLC) | interop-only | `docs/research/taom-headless-server.md` (staging and boot research read from the server repo's scripts and its staged output); `TAOM.Tests/Infrastructure/ServerLoadGateTests.cs` (reads a staged server root read-only, from `TAOM_DS_STAGE`); nothing from the repo ships and no file of it is copied | uncleared |
-| TAOM-Coop (Sternab) | `Sternab/TAOM-Coop` `TAOM.CoopCompat` | author-granted, terms informal (via the maintainer, 2026-10-21; private repo, no `LICENSE`) | behavioural-port | `Main/Features/CoopInterop/CoopPlayerControlQuery.cs`; the T6 guard in `Main/Features/TroopWeight/Hooks/PartyUpgraderUpgradeReadyTroopsHook.cs`; `docs/research/coop-compat-gap-ledger.md` (comparison only) | cleared |
+| TAOM-Coop (Sternab) | `Sternab/TAOM-Coop` `TAOM.CoopCompat` | author-granted, terms informal (via the maintainer, 2026-10-21; private repo, no `LICENSE`) | behavioural-port | `Main/Features/CoopInterop/CoopPlayerControlQuery.cs`; the T6 guard in `Main/Features/TroopWeight/Hooks/PartyUpgraderUpgradeReadyTroopsHook.cs`; `CoopCompat/` (the separate module, its settings handshake and its momentum relay); `docs/research/coop-compat-gap-ledger.md` (comparison only) | cleared |
 | Yotthani Harad war paint | `HaradTattoos` `tattoo_harad` | UNKNOWN | redistributed | `Main/_Module/AssetSources/tattoos/**` `Main/_Module/Assets/tattoos/**`; the entries in `Main/_Module/ModuleData/skins.xml` | uncleared |
 | Yotthani HoN mods (external developer drop) | `Features_fixed` `HoN` `yotthani/bannerlord` | MIT, (c) 2026 yotthani (the maintainer's statement of 2026-10-09; no root `LICENSE` in `yotthani/bannerlord` yet, asked for) | verbatim-port | `Main/Features/SiegeDismount/**` `Main/Features/MixedFormations/**` `Main/Features/SmartCavalryAI/**` `Main/Features/FiefManagement/**` `Main/Features/QuickActions/**` `Main/Features/EquipPresets/**` `Main/Features/CompanionTactics/**` | cleared |
 | TAOM_Promoted | `TAOM_Promoted` `RF_Promoted` | UNKNOWN | behavioural-port | `Main/Features/FieldCommission/**` | uncleared |
@@ -78,7 +78,8 @@ is ever treated as a token, which is what keeps the bare word "Alliance" from ma
 | AssertAutoIgnore (poheniks) | `AssertAutoIgnore` | UNKNOWN | behavioural-port | `tools/assert_auto_ignore.py` | uncleared |
 | ROT-Core | `ROT-Core` `ROT.dll` `ROTTownTradersBehavior` | UNKNOWN | behavioural-port | `Main/Features/EliteEmissary/**` | uncleared |
 | TOR_Core | `TOR_Core` `TheOldRealms/TOR_Core` | GPL-3.0 | behavioural-port | `Main/Features/CreatureSiegeRole/**` | pending-license |
-| module audio | `ModuleSounds` `taom_music_module_sounds.xml` | UNKNOWN | redistributed | `Main/_Module/ModuleSounds/**` | uncleared |
+| module audio | `ModuleSounds` `taom_music_module_sounds.xml` | UNKNOWN | redistributed | `Main/_Module/ModuleSounds/**` except `StoryMusic/` (next row) | uncleared |
+| Story mission music | `StoryMusic` `isengard_vs_rohan` | purchased from its composer, name not recorded | redistributed | `Main/_Module/ModuleSounds/StoryMusic/**` (see the detail) | cleared |
 | Aniron (Pete Klassen) | `aniron` | UNKNOWN | redistributed | `Main/_Module/GUI/Fonts/aniron.{fnt,bfnt}` | uncleared |
 | Minion Pro (Adobe) | `minionpro` `Minion Pro` | Adobe commercial, redistribution NOT granted by a desktop licence | redistributed | `Main/_Module/GUI/Fonts/minionpro.{fnt,bfnt}` | uncleared |
 | Ringbearer | `ringbearer` `FS_Ringbearer` | Pete Klassen freeware: free distribution only with the original archive, private use only, no modification (see detail) | redistributed | `Main/_Module/GUI/Fonts/ringbearer.{fnt,bfnt}` `Main/_Module/GUI/FactionUI/RuntimeFonts/FS_Ringbearer/**` | uncleared |
@@ -98,6 +99,8 @@ is ever treated as a token, which is what keeps the bare word "Alliance" from ma
 | Exoside Quad Remesher engine | `Quad Remesher` `QuadRemesher` `xremeshlib` | proprietary, local licensed dependency | comparison-only | `docs/research/quad-remesher-engine.md`; no native code, binary, license data, or mesh assets redistributed | uncleared |
 | Exoside Blender bridge | `qr_exe.py` `qr_operators.py` | GPL-2.0-or-later | behavioural-port | `tools/blender/quad_remesh_job.py` `tools/tests/test_quad_remesh_job.py`; the standalone package carries the GPL notice and license text | cleared |
 | Hair Tool (Bartosz Styperek, JOSECONSCO) | `Hair Tool` `hair_tool` | GPL-3.0-or-later | behavioural-port | `tools/hair_engine/**` `tools/blender/hair_engine_*.py` are behavioral implementations with GPL notices; the older `tools/blender/hair_tool_pipeline.py` bridge remains interop-only; no add-on source, node assets, textures, or presets redistributed | cleared |
+| Petik 2.0.7 (Mihai Dobrin) | `Petik` `MdUtilMultiPetik` | GPL-3.0-or-later | verbatim-port | `tools/petik/Petik/**` with six recorded compatibility edits in `__init__.py` and `op_md_petik.py`; the separate KEYforce Petik installable archive carries source and license | cleared |
+| Retopo Planes 1.6.3 (Nodes Interactive) | `RetopoPlanes` `Nodes Interactive` | proprietary, behavioral reference only; no product code or assets shipped | behavioural-port | `docs/research/retopo-planes-1-6-3-clean-room.md`; independently structured implementation in `tools/retopo_engine/**` `tools/blender/retopo_{adapter,operators}.py`; measured synthetic outputs in `tools/tests/fixtures/retopo_reference.json`; no source `.blend`, nodes, demo assets, or textures redistributed | cleared |
 | Hindsight | `Hindsight` `vectorize-io/hindsight` | MIT | comparison-only | (none) | cleared |
 | Harness² (Google Research) | `Harness²` `harness2` `google-research/harness2` | Apache-2.0 | behavioural-port | `docs/ai-includes/harness-retro.md`; `.claude/skills/harness-retro/SKILL.md` (the verdict and proposal rules; `tools/harness_retro.py` is TAOM original, see detail) | cleared |
 | Stuck Battle Guard v1.0.0 (a TAOM player's workaround module) | `StuckBattleGuard` `stuckbattle.` | UNKNOWN | behavioural-port | the stuck AI battle sweep in `Main/Features/MapEventGuard/` and `Main/Adapters/StuckBattle*Adapter.cs`; see detail | uncleared |
@@ -131,6 +134,7 @@ is ever treated as a token, which is what keeps the bare word "Alliance" from ma
 | HyperFrames | `heygen-com/hyperframes` `hyperframes` | Apache-2.0 | comparison-only | (none) | cleared |
 | ArtCraft | `storytold/artcraft` | MIT OR Apache-2.0 | comparison-only | `docs/reference/ue-to-bannerlord-asset-pipeline.md` "Generating the source" (fal's Tripo option names, found through its fal binding and confirmed on fal's page; the text is TAOM's own) | cleared |
 | Achaea, help page The Trials of Mnemosyne (https://www.achaea.com/game-help?id=1668) | `Achaea` `Trials of Mnemosyne` | UNKNOWN | comparison-only | `Main/Features/LongDefeat/Domain/{BoonDeck,BoonPlan}.cs` `Main/Features/LongDefeat/Domain/SurvivalRun.Boons.cs` (the idea of a pick of three cards with banked rerolls, read on 2026-11-05; every name, text, number and rule is TAOM's own) | uncleared |
+| Kysaro's knowledge notes (TAOM team member) | `Kysaro/bannerlord-knowledge-Kysaro` | UNKNOWN | comparison-only | `.claude/rules/evidence-over-claims.md` A.5, B and C.4, `docs/features/battle-load-diagnostics.md` "Scene size", `docs/reference/external-mod-couplings.md` "Kysaro's modules", traps and engine facts listed in `docs/reviews/adopt-kysaro-knowledge-2026-11-12.md` (facts and lessons only, read 2026-11-12 at `f0a4370b5`; every sentence is TAOM's own and each fact names his note) | cleared |
 
 <!-- provenance-register-end -->
 
@@ -537,6 +541,13 @@ binds Coop's `INetworkAgentRegistry`, `CoopMissionController` and `ContainerProv
 ask whether this peer owns an agent. That is `interop-only` (member names and shapes, nothing copied),
 and it does not change the row's open licence question. The row's derivation cell holds `interop-only`; the `comparison-only` classification above covers the decompile research alone.
 
+`TAOM.CoopCompat` (#967 C3, [ADR-014](../adrs/014-separate-coop-compat-module.md)) adds compile-time
+references to Coop's public assemblies: it subscribes to Coop's `MessageBroker`, sends through
+`INetwork` and implements Coop's message interfaces. That is still `interop-only`: no Coop code is
+copied, and `tools/package_release.py` refuses a package that carries a Coop assembly. The maintainer
+reports the Coop maintainers' permission for this module (2026-11-11). The written grant is not in
+this repo, so the row stays `uncleared` until it is recorded here.
+
 The co-op dedicated server repo, `Bannerlord-Coop-Team/BannerlordCoop.DedicatedServer`, has its own row: it is proprietary, under a licence from Bannerlord Coop LLC. TAOM reads it for staging and boot research (the headless plan in [`docs/research/taom-headless-server.md`](../research/taom-headless-server.md)) and runs one test against a server staged from it. That is `interop-only`: TAOM ships nothing from it, copies none of its files.
 
 ### TAOM-Coop (Sternab)
@@ -551,7 +562,9 @@ components, `TroopWeightPolicyComponent` and `TournamentBracketComponent`, which
 for player-driven parties (`PartyUpgraderUpgradeReadyTroopsHook.cs`). Behaviour was reproduced from
 reading; structure, naming and decomposition are TAOM's (the provider is a reflection-bound
 interface, the guard is one early return), hence `behavioural-port`. Further ports add their paths
-to Covers. The repo
+to Covers. `TAOM.CoopCompat` (#967 C3) is such a port: a separate module next to TAOM, a
+settings fingerprint check at join and a War of the Ring momentum relay follow his module's
+approach. The code is TAOM's own, written for Bannerlord v1.5.7 and the Coop 1.5.x API. The repo
 also vendors the private `Bannerlord-Coop-Team/BannerlordCoop.DedicatedServer` source under
 `wrapper/`: that part is not Sternab's to grant and never enters this public repo.
 
@@ -641,23 +654,32 @@ v0.7.5.1's. A list of module ids is a compatibility fact about other people's mo
 
 ### Module audio (UNCLEARED)
 
-`Main/_Module/ModuleSounds/` ships 436 tracked files (342 WAV, 93 MP3) plus the culture music set
-introduced in `cf2b9c44` ("17 cultures, 476 tracks"). No upstream, author, or terms are recorded
-anywhere in the repo, and `Main/_Module/THIRD-PARTY-LICENSES.txt` historically disclaimed audio
-provenance in the same breath as art and game data.
+`Main/_Module/ModuleSounds/` ships 436 tracked files (342 WAV, 93 MP3) by an earlier count;
+`git ls-files Main/_Module/ModuleSounds | wc -l` prints today's. No
+upstream, author, or terms are recorded anywhere in the repo, and `Main/_Module/THIRD-PARTY-LICENSES.txt`
+historically disclaimed audio provenance in the same breath as art and game data. The culture music
+set of `cf2b9c44` ("17 cultures, 476 tracks") never reached trunk: that commit is only on the
+contributor branch `origin/Theboyys-Music-Integration-1.4.5` (issue #275, open), and no file under
+`ModuleSounds/taom/` is tracked on trunk (checked 2026-11-10).
 
 The maintainer's position (2026-08-25) is that the audio is third-party in origin and is not
 claimed. That is now stated explicitly rather than left to a blanket disclaimer: the audio is
 excluded from TAOM's CC BY-NC-SA grant in `LICENSE-CONTENT.md`, and `THIRD-PARTY-LICENSES.txt`
 carries its own section saying TAOM does not hold rights in it.
 
-The playback engine is unaffected and is TAOM original work under MIT: `MusicPlaybackService`,
-`MusicTrackIndex`, `MusicTransitionResolver`, `Patch46_Music` and the surrounding code.
+The playback engine that branch wrote (`MusicPlaybackService`, `MusicTrackIndex`,
+`MusicTransitionResolver`, `Patch46_Music`) is not on trunk either; trunk's `Patch46` is a
+tournament patch. TAOM's own music code is the Faction UI menu-music patch and, for #1105,
+the story mission track ([music and sound events](engine/music-and-sound-events.md)).
 
-**What would clear this row:** identify the upstream and its terms, or replace the audio. Until
-then it is redistributed with unknown terms, which is the same class of exposure as the
-NativeSkinFixes row below (while that DLL shipped), at lower stakes only because audio is easier to swap than a native hook
-library.
+**Story mission music.** `ModuleSounds/StoryMusic/isengard_vs_rohan.ogg` (#1105, 2026-11-10) is an
+OGG encode of `Isengard vs. Rohan Third Draft.wav` from the maintainer's asset folder. The WAV is a
+Cubase 14 render with no composer, copyright or description field. The maintainer bought the track
+from a music composer and does not remember the composer's name (maintainer, 2026-11-11), so the row
+is `cleared` on his purchase. What stays unknown: the composer's name and the purchase terms in
+writing, and whether the track uses third-party samples or quotes a film, game or other melody. If
+the receipt or the composer turns up, record the name and terms here. It keeps its own folder and
+row so that its status can change without the rest of the audio.
 
 ### Fonts: Aniron, Minion Pro, Ringbearer (UNCLEARED)
 
@@ -1052,6 +1074,20 @@ nothing was cloned, built or run. No code was ported. Its fal binding led TAOM t
 names, which were confirmed on fal's own page and written in TAOM's words. Record:
 [`docs/reviews/adopt-artcraft-2026-11-08.md`](../reviews/adopt-artcraft-2026-11-08.md).
 
+## Retopo Planes 1.6.3 detail
+
+The maintainer supplied the proprietary reference file, SHA-256
+`6e00e628d0638fbab315076baf1db466c6b93e583f2a5123dcf50ff510441b64`. TAOM inspected its public
+settings and measured independently authored synthetic outputs. The implementation uses new Python
+structure and algorithms, not the product's Geometry Nodes or other expression. Repeated behavioral
+comparisons make this a `behavioural-port`, not the single-pass clean-room procedure.
+
+No product license grant is implied or asserted. The reference file, nodes, demo meshes, textures,
+materials, presets, and activation data are not redistributed. The shipped notice records this
+boundary. Validity corrections for crossed initialization, inverted Y mirrors, and negative
+thickness are explicit in the capability matrix. `cleared` applies to that independently authored
+implementation boundary. Petik is separate GPL-3.0-or-later source with its own notices.
+
 ---
 
 <!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
@@ -1059,6 +1095,7 @@ names, which were confirmed on fal's own page and written in TAOM's words. Recor
 ## Referenced by
 
 - [docs/adrs/010-knowledge-base-architecture.md](../adrs/010-knowledge-base-architecture.md)
+- [docs/adrs/014-separate-coop-compat-module.md](../adrs/014-separate-coop-compat-module.md)
 - [docs/ai-includes/external-repo-adoption.md](../ai-includes/external-repo-adoption.md)
 - [docs/features/butter-lib-distance-matrix.md](../features/butter-lib-distance-matrix.md)
 - [docs/features/companion-tactics.md](../features/companion-tactics.md)

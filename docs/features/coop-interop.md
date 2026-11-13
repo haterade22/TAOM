@@ -34,6 +34,7 @@ still stands.
 |---|---|
 | BannerlordTogether specifics, its no-decompile policy, its boot matrix | [`bannerlord-together-compat.md`](bannerlord-together-compat.md) |
 | BannerlordCoop internals — Harmony ids, tick model, policies, object identity, integration surface | [`../research/bannerlordcoop-internals.md`](../research/bannerlordcoop-internals.md) |
+| Filing a BannerlordCoop issue or PR, or merging `development` into `bannerlord-1.5.x` (the Coop team's rules) | [`/coop-upstream`](../../.claude/skills/coop-upstream/SKILL.md) |
 | Staging, booting, stopping and diagnosing TAOM on the dedicated server | [`coop-dedicated-server.md`](coop-dedicated-server.md) |
 | What happens to the hero a joiner created, and how TAOM's character-creation grants get re-applied | [`player-possession.md`](player-possession.md) |
 | Why a TAOM-less host can corrupt every hero's race on a full client | [`hero-race.md`](hero-race.md) — the degenerate-legend capture guard |
@@ -58,19 +59,20 @@ Coop's join check refuses a client whose game version or module list differs fro
 co-op session needs the Coop build for the Bannerlord version TAOM targets. Coop's released line and its
 Bannerlord v1.5 port are separate branches of [Bannerlord-Coop-Team/BannerlordCoop](https://github.com/Bannerlord-Coop-Team/BannerlordCoop):
 
-| Coop build | Branch | Bannerlord | Works with current TAOM (v1.5.6) | Where |
+| Coop build | Branch | Bannerlord | Works with current TAOM (v1.5.7) | Where |
 |---|---|---|---|---|
 | v0.1.7 (released 2026-10-30) | `development` | v1.4.8 (`<GameVersion>` in `source/Coop/Coop.csproj`) | No | GitHub release and ModDB; the Coop team's ModDB "Headless Server" is the v1.4.8 dedicated server |
 | v0.1.6 (released 2026-10-06) | `development` | v1.4.8 | No | as above |
-| `bannerlord-1.5.x` (not released) | `bannerlord-1.5.x` | v1.5.6 since 2026-10-29 (`2fab86882`) | Yes | built from source; TAOM's dev install runs it |
+| `bannerlord-1.5.x` (not released) | `bannerlord-1.5.x` | v1.5.7 since 2026-11-10 (`83c46b153`) | Built from source, yes; no live co-op session has run it on v1.5.7. The port fixed the two engine signatures v1.5.7 removed ([v1.5.7-impact.md](../migration/v1.5.7-impact.md)). Open PRs on 2026-11-11: [#4630](https://github.com/Bannerlord-Coop-Team/BannerlordCoop/pull/4630) merges `development` again, and #4631 to #4634 follow v1.5.7 changes (party parley, villages that give in, the courtship retry, the grain quest) | built from source; TAOM's dev install runs it |
 
 The v1.5 branch split from `development` on 2026-10-03 (`5f4d63cc0`), so the features `development` gained since
 (v0.1.7's siege fixes, ransom, emissaries, child education and the rest) reach v1.5.6 only through a merge of
-`development` into `bannerlord-1.5.x`. That merge (`development` at `c8233b09b`, mod version 0.1.8) is in
-review as [Coop PR #4230](https://github.com/Bannerlord-Coop-Team/BannerlordCoop/pull/4230), opened
-2026-10-31 and not merged yet; its automated suites pass on v1.5.6, and no live co-op session has run it. Until
-it merges, the `bannerlord-1.5.x` row above lacks those features. The co-op dedicated server for
-v1.5.6 is [coop-dedicated-server.md](coop-dedicated-server.md).
+`development` into `bannerlord-1.5.x`. That merge (`development` at `c8233b09b`, mod version 0.1.8) went in
+as [Coop PR #4230](https://github.com/Bannerlord-Coop-Team/BannerlordCoop/pull/4230), opened 2026-10-31 and
+merged on 2026-11-05; its automated suites passed on v1.5.6, and no live co-op session has run it. A second
+merge (`development` at `0a375595f`) is [Coop PR #4630](https://github.com/Bannerlord-Coop-Team/BannerlordCoop/pull/4630),
+opened 2026-11-11; its unit, harness and E2E suites passed on v1.5.7. The co-op
+dedicated server is [coop-dedicated-server.md](coop-dedicated-server.md).
 
 **Tracking:** `docs/reviews/upstream-watch.json` lists this repo under `releases`, so the session-start banner
 prints an `UPSTREAM RELEASE:` line when the tag of Coop's latest full release differs from the one recorded. The
@@ -87,7 +89,8 @@ published as one, for example) never triggers it. Then update this table and run
 | `IDedicatedServerProvider` / `DedicatedServerProvider` | **Process-constant**: "is there a real player in this process at all". Reads the engine's build constant `GameNetwork.IsDedicatedServer` (the server DLL returns true, the client DLL false), NOT co-op role; `TAOM.Dependencies` reads the same constant directly and `DedicatedServerProvider` is the test seam for the services. Startup code that runs before the container is built, or must not resolve a service, reads the same constant through `Main/Composition/ClientComposition.IsDedicatedServer()` (the B6c `SubModule` and `ManualPatchApplicator` guards, ADR-013). |
 | `ServerAssemblyReport` | On a dedicated server only, one Info line at the start of the once-per-process part of `OnGameInitializationFinished`: `[Server] client-only assemblies loaded at game init: <names>; not loaded: <names>`, over the 16 `ClientAssemblies` names. "Not loaded" means not loaded yet, not unavailable: the Coop module loads its copies of the view layer after TAOM boots. Never throws (ADR-013, B6c). |
 | `PlayerControl` / `IPlayerControlQuery` / `CoopPlayerControlQuery` | **Per entity**: "is this party, clan or hero a human player's?" (Player, NotPlayer, Unknown). Reflection-bound to Coop's `PlayerManager.TryGetControlledObjectInfo`, answers live, caches only the binding (#966). See [Who is a player](#who-is-a-player-the-fourth-question). |
-| `RecruitAttributionScope` and `Hooks/CoopRecruitAttributionPatch` (Patch113) | A thread-static party id set around Coop's server-side `HandleOnRecruitmentDone`, so the party-less `OnUnitRecruited` can be charged to the recruiting guest's party leader. Policy: `SpecialResources/RecruitChargePolicy`. Applied at `Main/SubModule.cs:1840`; notes in [the patch registry](../reference/harmony-patch-registry.md). |
+| `RecruitAttributionScope` and `Hooks/CoopRecruitAttributionPatch` (Patch113) | A thread-static party id set around Coop's server-side `HandleOnRecruitmentDone`, so the party-less `OnUnitRecruited` can be charged to the recruiting guest's party leader. Policy: `SpecialResources/RecruitChargePolicy`. Applied at `Main/SubModule.cs:1862`; notes in [the patch registry](../reference/harmony-patch-registry.md). |
+| `Hooks/CoopUpgradeChargePatch` (Patch144) | A postfix on Coop's server-side `PartyDoneLogicHandler.ApplyUpgradedTroopHistory`, so a player's troop upgrades charge `upgrade_cost` to that player. Coop's client cancels TAOM's queued spend when it resets the screen. Policy: `SpecialResources/RecruitChargePolicy`; [special-resources.md](special-resources.md) "Co-op upgrade charge"; notes in [the patch registry](../reference/harmony-patch-registry.md). |
 | `CoopSessionPolicy` | The pure authority decision, split out so it is testable without a game — same pattern as `PatchShieldPolicy` / `SaveShieldPolicy`. |
 | `Missions/` (`CoopMissionRole`, `CoopMissionRoles`, `CoopMissionRolePolicy`, `ICoopMissionAuthority`, `CoopMissionAuthority`, `CoopMissionOwnership`) | The mission behavior layer (#967 C7): each TAOM behavior's role, the add-time filter, and the reflection-bound live ownership read. See [Mission behaviors](#mission-behaviors-967-c7). |
 | `CoopSuppressedUiAttribute` / `CoopUiRegistrationPolicy` | Marks and filters UIExtenderEx types a co-op host has taken ownership of. |
@@ -96,6 +99,10 @@ published as one, for example) never triggers it. Then update this table and run
 
 Other half in `Dependencies/Foundation/`: `CoopPresence`, `CoopModuleList`, and the `PatchShield` /
 `SaveShield` co-op inversions.
+
+Code that needs compile-time Coop types (the join handshake, the momentum relay) lives in the separate
+`TAOM.CoopCompat` module, never in `TAOM.dll`: [coop-compat.md](coop-compat.md),
+[ADR-014](../adrs/014-separate-coop-compat-module.md).
 
 ## Layer 1 — detection (process-constant)
 
@@ -150,8 +157,17 @@ co-op mod:
 
 ```
 TAOM.Dependencies → BUTR alias stubs → Native → SandBoxCore → Sandbox → StoryMode → CustomBattle
-                  → TAOM → TAOM_Map → LOTRLOME_Armory → Coop
+                  → TAOM_Map → LOTRLOME_Armory → TAOM → Coop → TAOM.CoopCompat
 ```
+
+`TAOM` comes after `TAOM_Map` and `LOTRLOME_Armory`, as in a normal TAOM list: the engine merges
+XML in launcher order and a later module's row wins, so TAOM's stylesheets and rows must land on
+top of the two data modules ([load order and dependencies](../modding/load-order-and-dependencies.md),
+section B). The order was wrong here until 2026-11-12. A BUTR-style launcher can still move TAOM
+above `TAOM_Map`, because `TAOM_Map/SubModule.xml` asks for that; check the list by hand. Players
+in Host and Client mode set this order in the launcher on every PC.
+
+`TAOM.CoopCompat` depends on TAOM and Coop, so the launcher sorts it after both. Its code starts at the first campaign start, after every module's `OnSubModuleLoad`, so on a dedicated server (where Coop has no submodule) its place against `DedicatedServer.Windows` does not matter.
 
 **Why it is first, and not "after the vanilla modules like every other mod":** `TAOM.Dependencies`
 bundles the whole BUTR stack (0Harmony, ButterLib, UIExtenderEx, MCM) and installs the
@@ -284,6 +300,7 @@ side that costs least:
 | War of the Ring participation (`WarEventSnapshotAdapter.IsPlayerRelated`) | Not involved | A guess would let a stranger's wars move the shared meter |
 | Special resource earning (`SpecialResourceEarnPolicy.MayEarn`) | Not a player: nobody earns | An earn writes a balance, so doubt means no write |
 | Seasoned Hosts (`SeasonedHostsAdapter`) | Player: no bonus | The skill XP multiplier and the training factor are boosts for AI only, so doubt means none |
+| Uncapturable Heroes (`UncapturablePlayerCheck`, #1139) | Player: vanilla captures | A capture is a valid state and a player made a fugitive is not. The registry answers `Unknown` for every hero at once, so in that session no lore hero is protected |
 
 The recruit charge does not use this query: it follows the Patch113 scope instead (below).
 
@@ -327,12 +344,13 @@ behaviour's whole `RegisterEvents` and follow each handler to the service.
 | `RaceAgeBehavior` | `OnDailyTick` | Re-kills locally what the host already replicated. |
 | `HiddenHostsMemoryBehavior` | the Scouting XP grant in `OnTick` and `OnBeforeSave` (the same gate: `IsAuthority` and `MayWriteSaveBackedState`) | `Hero.AddSkillXp` writes the scout's saved skill XP; a client's would be per-peer state in the host's save. The pending XP is taken every tick and dropped on a client, so it cannot be banked. The memory rows themselves are not gated (below). |
 | `WarOfTheRingBehavior` | `OnDailyTick`, **`OnSessionLaunched`** | Both call the identical `CheckPhaseTransition` → `DeclareWar`, and `OnSessionLaunched` first calls `ReconcileDeclaredWars` → `DeclareWar` (#772), before its phase check. On a save already at Full War, the reconcile declares each Phase 2 or Hostile-pair war whose stored stance is not War and that the model still holds at war (`ShouldBlockPeace`), so a peace made legitimately stays. After the phase check the daily tick (not the session launch, which runs before the map event and siege managers are restored) also calls `EndWarsForbiddenByPhase` (peace for any AI war the Peace or Isengard War phase vetoes), which returns early under `ShouldDeferToHost` because `IsAuthority` alone is true on both peers under BannerlordTogether. Both calls sit behind the one `IsAuthority` return at the top of the handler. `OnSessionLaunchedEvent` fires on every peer, and a co-op join *is* a save-load, so an ungated client issued its own war set on connect. Under BannerlordCoop the host's Phase 2 wars reach clients through Coop's stance sync, and the load-time reconcile through the join snapshot. Under BannerlordTogether `IsAuthority` fails open, so every peer runs the reconcile; it can only declare for a save already at Full War that still has undeclared Phase 2 or Hostile pairs (UNVERIFIED whether that mod's client-side suppression contains it). |
-| `WarOfTheRingMomentumBehavior` | `OnDailyTick`, **`OnKingdomDestroyed`, `OnMapEventEnded`, `OnSiegeCompleted`, `OnRaidCompleted`, `OnArmyGathered`, `OnSessionLaunched`** | `MomentumWarState` rides TAOM `SyncData` that nothing replicates. `OnKingdomDestroyed` reached the same `CheckAndApplyVictory` → `EndWar`/`MakePeace` as the tick. Daily gate sits **after** `RefreshMapMeter`: local UI a client still needs drawn. **Participation (#966):** `WarEventSnapshotAdapter` sets `PlayerInvolved` also when any party on either side is a player's (`OfParty == Player`), or the event involves a kingdom holding a player's clan; `Unknown` counts as not involved, and single-player is unchanged. The state itself is still per peer. |
+| `WarOfTheRingMomentumBehavior` | `OnDailyTick`, **`OnKingdomDestroyed`, `OnMapEventEnded`, `OnSiegeCompleted`, `OnRaidCompleted`, `OnArmyGathered`, `OnSessionLaunched`** | `MomentumWarState` rides TAOM `SyncData` that nothing replicates. `OnKingdomDestroyed` reached the same `CheckAndApplyVictory` → `EndWar`/`MakePeace` as the tick. Daily gate sits **after** `RefreshMapMeter`: local UI a client still needs drawn. **Participation (#966):** `WarEventSnapshotAdapter` sets `PlayerInvolved` also when any party on either side is a player's (`OfParty == Player`), or the event involves a kingdom holding a player's clan; `Unknown` counts as not involved, and single-player is unchanged. With `TAOM.CoopCompat` installed, the server sends the war state to the clients ([coop-compat.md](coop-compat.md)); without it the state is per peer. |
 | `MessengerCampaignBehavior` | `OnHourlyTick` | Arrival writes `MobileParty.MainParty.Position` — on a client, *its own* party. |
 | `SiegeDefenseBehavior` | `OnHourlyTick` | `Clan.Influence` + global relation off `Hero.MainHero`, which differs per peer. **Known limitation below.** |
 | `CastleRecruitmentBehavior` | `OnGameLoaded`, `OnNewGameCreated` | The one castle path a client reaches; creates heroes. |
 | `CastleRecruitmentBehavior` (hourly recruit) | `OnHourlyTickParty`, through `CastleAiRecruitDispatcher.TryRecruit` | **Stands down on every peer while a session is live, and always while a co-op mod TAOM cannot probe is enabled** (`IsSessionActive \|\| ShouldDeferToHost`), read live after the castle guards (#920). Not a gold guard: BannerlordCoop already refuses player-controlled parties inside `CheckRecruiting` (its own prefix, which also runs for the dispatcher's delegate call). The stand-down matches BannerlordCoop's shutdown of vanilla's hourly recruit for every party while a session is live (BannerlordCoop keeps that patch after the session ends; TAOM's recruit resumes); `ShouldDeferToHost` also covers BannerlordTogether and any co-op mod TAOM cannot probe, solo play included. Recruiting on entry stays in vanilla. |
 | `WarChronicleBehavior` | `OnDailyTick` (`IsAuthority` and `MayWriteSaveBackedState`), `OnKingdomDestroyed` and `OnGameLoaded` (`IsAuthority`) | Escape rolls (`EndCaptivityAction.ApplyByEscape`), effect registry and baseline writes ride TAOM `SyncData` that nothing replicates, and the ledger line is the host's record. Under BannerlordTogether `IsAuthority` fails open, so every peer runs the daily tick with its own escape rolls and rally writes (UNVERIFIED whether that mod's client-side suppression contains it). See [war-chronicle.md](war-chronicle.md). `OnGameLoaded` writes the ledger's `t=load` marker, which `tools/analyze_war_ledger.py` rewinds to (#792), so it is the host's line too. |
+| `WarPledgeBehavior` | `OnDailyTick` (`IsAuthority` and not `ShouldDeferToHost`) | The daily step can pledge a Neutral realm, which makes peace with every live realm of its new side and declares war on every live realm the alignment table puts on the other side, a realm the player rules included, and the pledge rides TAOM `SyncData` that nothing replicates. A client that joined before a pledge keeps the realm Neutral in its own side lookups, while the host's wars reach it through the co-op mod. The console's `taom.add_war_pledge` has the same gate plus `MayWriteSaveBackedState`. See [war-pledge.md](war-pledge.md). Not exercised in a co-op session. |
 | `WarChronicleEventsBehavior` | `OnSessionLaunched`, `OnDailyTick`, `OnSettlementOwnerChanged`, `OnSiegeEventStarted` (`IsAuthority` and `MayWriteSaveBackedState`) | The chronicle's event chain (#765). Opening and resolving events writes timed war effects, the army focus, `Chronicle` momentum awards and the saved event rows, none of which a co-op mod replicates. `OnTick` stays ungated: it only drains the announcement queue, which re-checks `IsAuthority` before it shows a popup. `taom.chronicle_open` refuses on a non-authority peer. Under BannerlordTogether `IsAuthority` fails open, so every peer runs the chain (UNVERIFIED whether that mod's client-side suppression contains it). See [war-chronicle.md](war-chronicle.md). |
 | `StuckBattleCampaignBehavior` | `OnHourlyTick`, through `StuckBattleService.Resolve` | **Stands down on every peer while a session is live** (`IsSessionActive \|\| ShouldDeferToHost`), the host included: Coop's `MapEvent.Update` prefix stops vanilla finishing a battle that holds a remote player's party, and the sweep's player-battle test sees only the local player, so an award there would commit and never finish (#748). |
 | `BondsOfBattleBehavior` | `OnPlayerBattleEnd` (`ShouldDeferToHost`) | Changes the player's relation with lords and notables, which a client's own `Hero.MainHero` makes differ per peer. Four entry points: this handler; `TroopHandoverService.OnHandover`, called by Patch106's postfix on `PartyScreenLogic.DoneLogic`, which returns false under `ShouldDeferToHost` (the installed co-op module replaces `DoneLogic` with its own bool prefix, so a co-op session may capture an influence of 0 anyway); `TroopHandoverService.OnHandover` again, called by [Lord Courtesies](lord-courtesies.md)' gift settle (its screen is not donating, and the same `ShouldDeferToHost` gate applies); and `TaomBarterModel`, which needs no gate because the installed co-op module routes a client's barter to the server and never calls the model. A dedicated server grants nothing: `RelationGrantService.Grant` refuses it. |
@@ -354,6 +372,7 @@ behaviour's whole `RegisterEvents` and follow each handler to the service.
 | `NamegivingBehavior`, `FiefNamingMixin` | The behavior's `OnSettlementOwnerChangedEvent`, `OnClanChangedKingdomEvent` and `OnSessionLaunchedEvent` handlers, through `NamegivingService.ReconcileLore` and `ReconcileAllLore`; the mixin's `ExecuteRenameFief`, the prompts' final apply and the button's refresh, through `NamegivingService.MayWriteWorld` | **Single-player only** ([Namegiving](namegiving.md)): the button shows and works, and the lore names change, only while `CoopSessionPolicy.IsSinglePlayerAuthority` (no live session, no deferral to a host, no dedicated server, and `IsAuthority`). Both halves write the world (a settlement's saved custom name, and the player's influence for a rename). `NamegivingService.Check` is read live at each refresh and again inside `Apply`, so the gate holds at the moment of the write; the reconcile passes check it per call, before the switch, so a co-op peer restores nothing either. The switch is counted in the settings fingerprint (`CoopSettingsRelevance` does not exclude it), because the lore half reacts to captures on its own. The trade-off: a solo player with a co-op mod TAOM cannot probe gets no button and no lore names. |
 | `SpecialResourcesBehavior` | `OnMapEventEnded`, `OnRaidCompleted`, `OnPrisonerTaken`, `OnHideoutCompleted`, `OnTournamentFinished`, `OnDailyTickHero`, `OnUnitRecruited`, through `SpecialResourceEarningService` and `SpecialResourceEarnPolicy.MayEarn` (`IsSessionActive`, `IsAuthority`, `IsDedicatedServer`, `IPlayerControlQuery.OfHero`) | **A who-is-a-player gate, per player (#967 C1).** With no session, today's rule: the local `MainHero` earns unless this is a dedicated server (one log line). During a session only the authority writes, and it credits each registered remote player: the leaders of the winning or attacking parties for battle, siege, raid and hideout, the winner for a tournament, every living player hero for the daily tick. The registry alone decides who is a player: the authority's own hero earns, pays and counts as nobody's (a guest swapped in as `MainHero` inside a barter or crime scope still earns, with no toast), a client writes nothing, and an `Unknown` registry answer earns nothing. **Prisoner income pays nobody during a session** (the event has no actor; one log line) until C2. Remote upkeep desertion is off during a session until C4 and C6. The balance a client sees is still its own until C4 mirrors the server's. Detail: [special-resources.md](special-resources.md#per-player-earning-under-co-op-967-c1). |
 | `AlignmentDesertionBehavior` | `OnDailyTickParty` and `OnDailyTickSettlement`, through `TryResolveOwner` and `DesertionOwnerPolicy.ShouldSkip` (`AlignmentDesertionBehavior.cs:65,86,96-101`) | **A who-is-a-player gate, not an authority gate.** During a session a remote player's clan (Player, but not `Clan.PlayerClan`) and any Unknown owner lose no troops; with no session this peer's own clan follows "Apply To Player", and in a session the authority's own clan, which the registry does not list, follows "Apply To AI Lords" like an AI clan. Before #966 a remote player's party read as an AI clan and shed troops. Skipped, not relayed: a remote player gets no desertion popup (that relay is #967). Single-player is unchanged. See [alignment-desertion.md](alignment-desertion.md). |
+| `LordRetinueBehavior` | `OnDailyTickParty` and `OnPartyDisbandStartedEvent`, through `IsAiLordParty` and `LordRetinueWorld` ([Lord Retinue](lord-retinue.md)) | **An authority gate and a who-is-a-player gate.** It acts only where `IsAuthority && !ShouldDeferToHost`, so a co-op client and a peer running a co-op mod TAOM cannot probe do nothing. A party is touched only when `OfParty` and `OfClan` both say `NotPlayer`, and a hero is taken only when `OfHero` says `NotPlayer`, so a remote player's party, clan and kin are left alone and an unreadable registry fails closed. The gate is the pure `RetinueGate.MayChange`, pinned by `RetinueGateTests`. It writes the world (roster, roles, a hero's settlement) through vanilla actions. In the BannerlordCoop source (bannerlord-1.5.x) `AddHeroToPartyAction` runs on the server only and `MobileParty.Scout` is auto-synced; no co-op run has checked the whole path. The disband release has no enable switch, because heroes taken earlier stay aboard when the feature is turned off. |
 | `PartyUpgraderUpgradeReadyTroopsHook` (troop weight shed) | `OnUpgradeReadyTroops`, after the `LeaderHero` exit (`PartyUpgraderUpgradeReadyTroopsHook.cs:52`) | **A who-is-a-player gate.** No shed for any mobile party whose `OfParty` is not `NotPlayer` (Player or Unknown). The `TaomSettings` toggle is still per peer; a server-authoritative setting is open. See [troop-weight-system.md](troop-weight-system.md). |
 | `EnlistmentDialogBehavior` | The enlist offer, through `ShowsOfferFor(verdict, deferToHost)` (`EnlistmentDialogBehavior.cs:113,120-121`) | **Hidden for a guest** (`ShouldDeferToHost`); a player host and a solo player keep it. On a dedicated server the host is the placeholder hero, so enlistment cannot be offered per player yet. Cost: under a co-op mod TAOM cannot probe (or a failed Coop role bind) `ShouldDeferToHost` is true on every peer, solo play included, so the offer hides there too. See [enlistment.md](enlistment.md). |
 | Field camp overlay (`FieldCampOverlayVM`) | The camp button and `ExecuteOpenCampMenu`, through `ICampMenuActivationQuery.DefersToCoopHost` (`FieldCampOverlayVM.cs:176,224`; `MapScreenCampMenuActivationQuery.cs:38`) | **Hidden for a guest** (`ShouldDeferToHost`): the camp service writes local, save-backed state. The BannerlordCoop human host is a loopback client and defers too, so only a solo player keeps the camp; the same unprobeable-mod cost as the enlist offer applies. See [field-camp.md](field-camp.md). |
@@ -368,7 +387,7 @@ behaviour's whole `RegisterEvents` and follow each handler to the service.
 | `CreatureBroodSpawnBehavior` | `OnDailyTick` (`IsAuthority`, #1084) | Spawns a spider brood and gives strays their patrol order back ([creature-bandits.md](creature-bandits.md)). A new party is server work: on a client the spawn threw in `WarPartyComponent.OnInitialize`, and a party that did spawn there would exist on that peer only. `OnSessionLaunched` only resets the diagnostics and logs, so it stays ungated. Pinned by `CreatureSpawnCoopGateTests`. Under BannerlordTogether `IsAuthority` fails open, so every peer runs the tick as before the fix (UNVERIFIED whether that mod's client-side suppression contains it). |
 | `TrollBandSpawnBehavior` | `OnDailyTick` (`IsAuthority`, #1084) | The troll band twin of the brood row: one band per kingdom, spawned and ordered on the host only. Pinned by `CreatureSpawnCoopGateTests`. |
 | `RefugeCampaignBehavior` | the tick and event world writes and their messages, in `RefugeService` (`OwnsTheRefuges`, which is `IsAuthority`, #1086): `HourlyTick`, `OnMapEventStarted`, `OnMapEventEnded`, `OnPartyDisbandStarted`, `OnPeaceMade`, the AI pin and disband cancel in `OnGameLoaded`, and the hold and messages in `FrameTick` and `OnPartyDestroyed`; the map encounter redirect (`ShouldDeferToHost`) | A client loads the host's whole refuge book. The behavior stays a plain fan-out. Ungated, it cancelled disbands every hour, could start raid battles (raids are off by default), freed refuge prisoners at peace and added and removed militia on parties the server owns, and on load re-pinned their AI. On a client the load still adopts orphan rows and rebuilds the visuals. The frame tick still runs so the book and the visuals follow the world, but off authority it skips the hold on the player's party, the build note and the raised and stronghold messages, and a destroyed refuge drops its row without the fallen message: every refuge in a guest's book is another player's. The map encounter redirect (`RefugeEncounterPatch`) stands down while `ShouldDeferToHost`, so a guest who clicks a refuge gets vanilla's meeting and never the manage, upgrade or dismantle menu. The player actions (`Found`, `Upgrade`, `Dismantle`) are reached only from the encounter menu and the camp menu's "Establish a refuge" and "Enter refuge" options, and both menus stay closed for a guest (`ICampMenuActivationQuery.DefersToCoopHost`). Behind them the service has a final guard (`PlayerMayChangeRefuges`: `IsAuthority` and not `ShouldDeferToHost`): `CanFound` and `CanUpgrade` return `SharedCampaign`, shown as `{=taom_rf_reason_coop_off}`, and `Dismantle` changes nothing. On a guest `OnPartyDisbandStarted` still turns a warden-less row into an orphan in the book, without the cancel or the message. Pinned by `RefugeServiceTests` and `RefugeEncounterPatchTests`. Under BannerlordTogether `IsAuthority` fails open, so every peer runs these handlers as before the fix (UNVERIFIED whether that mod's client-side suppression contains it). |
-| `SupplyLinesCampaignBehavior` | `HourlyTick`, `FrameTick`, `OnGameLoaded`, `OnCaravanDestroyed`, `CancelCampOrders` and `ActiveOrders`, in `SupplyOrderService` (`OwnsTheOrders`, which is `IsAuthority`, #1086); the town menu option, in `SupplyOrderTownMenu` (`ShouldDeferToHost`) | The hourly and frame passes deliver cargo and the escort to the main party and destroy caravans, the frame pass writes caravan positions, and the load respawns a missing caravan with `MobileParty.CreateParty`. All of that is server work. A guest's book holds the host's orders, so off authority `ActiveOrders` is empty (the route visual draws nothing and clears what it drew), a destroyed caravan neither marks its order lost nor shows "A supply caravan was lost!", and a camp break (`CampService.BreakPlayerCamp`, from the ungated camp ticks) destroys no caravan. The session reset stays ungated. An order creates a party and moves gold, so a guest sees the option disabled with `{=taom_sl_coop_off}`; the camp's supply order is reached only from the camp menu, closed for a guest. Behind both, `TryPlaceOrder` refuses with the same text unless the peer has authority and does not defer to the host. A guest who meets the host's caravan gets the same teardown as the owner (`SupplyCaravanEncounterPatch`; vanilla's meeting would find no leader), with `{=taom_sl_caravan_meet_other}` instead of the owner's line. A dedicated server ticking the book delivers to its placeholder hero's party, which is the who-is-a-player gap above. Pinned by `SupplyOrderServiceTests`, `SupplyLinesCampaignBehaviorTests` and `SupplyCaravanEncounterPatchTests`. Under BannerlordTogether `IsAuthority` fails open, so every peer runs these handlers as before the fix (UNVERIFIED whether that mod's client-side suppression contains it). |
+| `SupplyLinesCampaignBehavior` | `HourlyTick`, `FrameTick`, `OnGameLoaded`, `OnCaravanDestroyed`, `CancelCampOrders` and `ActiveOrders`, in `SupplyOrderService` (`OwnsTheOrders`, which is `IsAuthority`, #1086); the town menu option, in `SupplyOrderTownMenu` (`ShouldDeferToHost`) | The hourly and frame passes deliver cargo and the escort to the main party and destroy caravans, the frame pass writes caravan positions, and the load respawns a missing caravan with `MobileParty.CreateParty`. All of that is server work. A guest's book holds the host's orders, so off authority `ActiveOrders` is empty (the route visual draws nothing and clears what it drew), a destroyed caravan neither marks its order lost nor shows "A supply caravan was lost!", and a camp break (`CampService.BreakPlayerCamp`, from the ungated camp ticks) destroys no caravan. The session reset stays ungated. An order creates a party and moves gold, so a guest sees the option disabled with `{=taom_sl_coop_off}`; the camp's supply order is reached only from the camp menu, closed for a guest. Behind both, `TryPlaceOrder` refuses with the same text unless the peer has authority and does not defer to the host. A guest who meets the host's caravan gets the same one-option menu as the owner (`SupplyCaravanEncounterPatch`; vanilla's meeting would find no leader), with `{=taom_sl_caravan_meet_other}` instead of the owner's line. A dedicated server ticking the book delivers to its placeholder hero's party, which is the who-is-a-player gap above. Pinned by `SupplyOrderServiceTests`, `SupplyLinesCampaignBehaviorTests` and `SupplyCaravanEncounterPatchTests`. Under BannerlordTogether `IsAuthority` fails open, so every peer runs these handlers as before the fix (UNVERIFIED whether that mod's client-side suppression contains it). |
 | `LotrIssuesCampaignBehavior` | `OnGameLoaded`, `OnCheckForIssue` (`IsAuthority`, #1086) | The load sweep cancels lingering vanilla issues (`CompleteIssueWithCancel`), and `OnCheckForIssue` adds potential issue data. `OnCheckForIssue` also fires during a first-time joiner's character creation, where `IsAuthority` is false too. BannerlordCoop gates its own vanilla twin of the sweep on clients (`DisableIssuesCampaignBehavior`) and stops the daily issue checks there, but not the first issue pass of a new campaign, which calls `CheckForIssues` too. Pinned by `ClientWorldWriteGateTests` (the load sweep through a counting override, since only a live campaign reaches its write). Under BannerlordTogether `IsAuthority` fails open, so every peer runs these handlers as before the fix (UNVERIFIED whether that mod's client-side suppression contains it). |
 | `NamedCompanionBehavior` | `OnGameLoaded` (`IsAuthority`, #1086) | `EnsureCompanionsPlaced` sets `BornSettlement`, changes a companion's state, moves it into a settlement and sets `HasMet`. Usually nothing to do after the server's own load, but it is hero state the server owns. The new-game spawn runs only while a campaign is built. Pinned by `ClientWorldWriteGateTests`. |
 | `NazgulFamilyBehavior` | `OnSessionLaunched` (`IsAuthority`, #1086) | Severs the Ringwraiths' spouse, parent, child and ex-spouse links on a pre-strip save. Idempotent and a no-op once the server has run it, but family links are shared hero state. Pinned by `ClientWorldWriteGateTests`. |
@@ -381,9 +400,10 @@ behaviour's whole `RegisterEvents` and follow each handler to the service.
 | `LordHarnessEventBehavior` | `OnPlayerBattleEnd` (`ShouldDeferToHost`, `IsDedicatedServer`) | The item grant and the relation change in the inquiry callbacks. |
 | `LordsLadderBehavior` | `OnPlayerBattleEnd`, `OnHourlyTick` (`!ShouldDeferToHost && !IsDedicatedServer`) | The item grant and the quest progress. `OnQuestCompleted` stays ungated: it writes this peer's TAOM save data keyed to the quest owner, and its only consumer, the armoury, refuses a guest. |
 | `HostReviewCampaignBehavior` | the camp menu option, in `HostReviewService` (`IsSessionActive`) | Player action: the review mission does not start in a co-op session. |
+| `StoryDevMenuBehavior` | the dev menu behind `taom.story_open`, in `StoryDevMenuBehavior.Open` (`CoopSessionPolicy.IsSinglePlayerAuthority`) | Dev console entry (#1105, slice 1): refused in a co-op session. The mission it opens writes nothing to the campaign, so a single-player run changes no shared state. |
 | `TaomBuildingSeedingBehavior` | `OnGameLoaded` (`IsAuthority`, checked in `TaomBuildingSeedingService`) | Adds town buildings, a shared write. |
 | `LordCourtesiesDialogBehavior` | the dialog lines, in `LordCourtesiesService` (`!ShouldDeferToHost && !IsDedicatedServer`) | Player action: the relation charge, the clan reveal and the troop gift. |
-| `DiplomacyBehavior` | `OnSessionLaunched` (`ShouldDeferToHost`) | Enforces the permanent alliances. The initial alliances run only while a new campaign is built. |
+| `DiplomacyBehavior` | `OnSessionLaunched` (`ShouldDeferToHost`), `OnNewGameCreatedPartialFollowUp` (`IsCoopClient`) | Enforces the permanent alliances, and sets up the initial alliances in a new campaign. A first-time joiner builds a local campaign for character creation, and Coop's `StartAlliance` prefix on a client asks the server instead of forming the alliance, so a Coop client skips both; the host's save carries them. The new-game step reads `IsCoopClient`: with a co-op mod TAOM cannot probe, `ShouldDeferToHost` is true in solo too, and a new campaign there has no host save to carry the alliances. |
 | `EliteEmissaryBehavior` | the purchase, in `EliteEmissaryInquiryPresenter.ExecutePurchase` (`ShouldDeferToHost`) | See "Client-reachable entry points" below. The behavior's own handlers only register the menus and dialog. |
 | `FiefGrantingCampaignBehavior` | `MapEventEnded`, `OnSettlementOwnerChanged` (`IsAuthority`) | The saved siege participation record. Session launch and load only reset the in-memory service. |
 | `PlayerClanLeadershipRepairBehavior` | `OnSessionLaunched`, in `PlayerClanLeadershipService` (`IsAuthority`) | Promotes a clan leader. |
@@ -399,6 +419,7 @@ behaviour's whole `RegisterEvents` and follow each handler to the service.
 | `EnlistmentQuartermasterBehavior` | the kit request (`IsAuthority`) | Player action. |
 | `EnlistmentDutyBehavior` | `OnHourlyTick`, `OnDailyTick` (`IsAuthority`) | Duty orchestration. |
 | `EnlistmentAssignmentDialogBehavior` | the assignment line (`IsAuthority`) | Player action. Guests never get the enlist offer (`ShouldDeferToHost` in `EnlistmentDialogBehavior`), and under BannerlordCoop the human host is a loopback client, so the enlistment player actions work for no human player in a session. |
+| `RealmsCampaignBehavior` | every listener (`OnDailyTick`, `OnWeeklyTick`, `OnHeroKilled`, `OnSettlementOwnerChanged`, `OnRulingClanChanged`, the clan-leader pending resolve, the hourly title creation, the session-launch upgrade and former-banner repair) and every player action (claim, usurp, grant, revoke, form, restore, appoint, dismiss) (`IsAuthority`) | The titles spend influence and gold, change relations, give fiefs, change ruling clans and banners. A client keeps the ledger it loaded with the host's save, read only: the encyclopedia and the title windows show it, and their buttons do nothing (UNVERIFIED in a live session). |
 
 **What makes any peer earn at all is the participation fix in the same change.** The victory gate
 used to ask whether the player IS the winning side's `LeaderParty.LeaderHero`, conflating
@@ -616,6 +637,7 @@ reason.
 | `CareerPerkMissionBehavior` | AgentOwner | `MissionAbilityExecutionContext.ApplyAoeBuff` buffs only owned allies (a live check). The morale burst has none, by the same AI-controller invariant: it reads the ally's `CommonAIComponent`, which a human puppet lacks (puppet mounts are AI at build and keep the component until co-op sets them `None`, so the burst on a horse is inert). |
 | `CreatureSiegeRoleMissionBehavior` | AgentOwner | Already safe: it excludes ladder faces only for `agent.IsAIControlled`, and a puppet is `Controller None`. Pinned. Caveat: an owned mount reads `None` for up to 2 s during co-op's synthetic mount turn (see Mounts above), and a non-AI agent releases its role (`RoleReason.NotAIControlled`), so a mount may drop its siege role for that window (not checked in game). |
 | `RaceAbilitiesMissionLogic` | AgentOwner | Tree seam. The fear-on-kill loop and the aura pulse frighten through `DreadAgentGate` (the AI-controller invariant). The killer's heal-on-kill runs only when the killer has ability state in the store, and only this peer's own activations create that state, so a puppet killer heals nothing. |
+| `HeroAurasMissionLogic` | AgentOwner | `HeroAuraPulse.Run` stamps only allies for which `CoopMissionOwnership.IsOwnedHere` holds, as the career area buff does, so each peer gives the aura to its own soldiers near any hero it can see. The morale top-up also needs `IsAIControlled`, which a puppet lacks. |
 | `DeadTargetResetMissionBehavior` | AgentOwner | No check, by an invariant: it resets only agents with `IsAIControlled`, and a puppet is `Controller None` (the same AI-controller invariant as `CreatureSiegeRoleMissionBehavior`). Pinned by `DeadTargetResetWiringTests`. |
 | `AutonomousMovementPlayerController`, `SiegePropDiagnosticsMissionBehavior`, `MissionPerfHeartbeatBehavior`, `MissionTickProfilerBehavior`, `BattleActionBarMissionView`, `MissionDiagnosticBehavior`, `CrashReportDevTriggerMissionBehavior`, `AnimMemoryProbeMissionBehavior`, `SkeletonBufferWatchMissionBehavior`, `CreatureBanditDiagnosticsBehavior` | Local | This peer's own view, log or diagnostics. Unchanged. |
 | `SeatView` | Local | The Seat of Seeing's camera ([seat-of-seeing.md](seat-of-seeing.md)): one peer's own screen, built by the engine as a `[DefaultView]` in TAOM.Client. It moves this peer's camera and gates this peer's hero controller, and writes no campaign or battle state; the lift of the third-person view with the order panel (`SeatRiseWithPanel`) writes only this peer's camera target offset. In a session the policy (`SeatMissionPolicy`) gives the camera and the orders its kind allows, never the hero hand-off or mission time, so a `FightOn` hand-off never runs there. A session is the engine's network session or a live co-op session, host or client (`SeatMissionClassifier.InNetworkSession`): the engine's flag alone reads false in a co-op battle. A dedicated server builds no screen, so core's null screen adapter stays. |
@@ -667,6 +689,46 @@ The fix needs a seat relay (#967 C3). Before C7 every peer spawned its own crew.
 9. A guest's signature strike frightens no host AI.
 10. Howdah and mumakil crews stand on the deck for puppets, once, on every peer.
 11. After a battle-host migration, the adopted elephant and mumakil crew: expect them off their seats (see Known limits).
+
+## Battles between players (#1139)
+
+Coop lets two players fight each other in a field battle. Its encounter handler opens one when both
+sides are players (`ConversationRequestHandler.cs:314-317` on Coop `bannerlord-1.5.x` e9906952a) and
+refuses one while either player is in a siege. Coop's `doc/PlayerEncounterSync.md` section 6.4 still
+calls this "future"; the code is past it. In towns, villages and castle courtyards no blow to or from
+another player's agent lands (`LocationPvpBlockPatch`).
+
+**The battle.** The mission model above needs no change. Each peer owns its own troops, and the other
+player's troops are puppets on the enemy team, so the player-team and AI-controller invariants hold
+when the players are enemies. Two limits follow from it:
+
+- Fear from a race ability's kill or a signature strike reaches only the troops of the peer that ran
+  it, so it never frightens the other player's troops. The dread aura is the exception, because every
+  peer pulses it over its own AI troops.
+- `DreadAuraAffectsPlayerTroops` is read on each peer for its own troops, so a player who turns it off
+  is immune to the other player's dread.
+
+**The defeat.** Coop's server takes a defeated player hero prisoner itself
+(`PlayerStartCaptivityPatches.CaptureDefeatedPlayerHeroes`, which calls `TakePrisonerAction.Apply`),
+whoever beat him, a player or the AI. Both [Uncapturable Heroes](uncapturable-heroes.md) seams ask
+`IPlayerControlQuery.OfHero` and leave a player's hero, or one whose status is `Unknown`, to vanilla
+and Coop. Before #1139 they compared with `Hero.MainHero`, which on the server is the server's own
+hero. A player who is Sauron or a Nazgûl was then made a fugitive, so Coop's captivity flow ran only
+half, and `MakeHeroFugitiveAction` destroys a party its fugitive leads. A co-op mod TAOM cannot see
+(BannerlordTogether, or a failed Coop bind) still gets the `Hero.MainHero` comparison.
+
+**Who can fight.** Any two players in different factions. The war veto ([diplomacy](diplomacy.md),
+`WarOfTheRingService.GetWarVeto`) runs on the server, where `ShouldDeferToHost` is false, so a war
+declared through `DeclareWarAction` (a kingdom decision, for example) stays refused between permanent
+allies, and between two lore kingdoms of the same side before `WarEnded`. It does not stop a battle
+between players: Coop's hostile demand calls `DeclareWarAction.ApplyByPlayerHostility`, which TAOM may
+refuse, then sets the war stance itself (`VillageHostileFactionStanceHelper.ApplyWarStance`, from
+`PlayerPartyHostileEncounterService.DeclareWar`) and starts the battle. That war raises no
+`OnWarDeclared`. A clan outside any kingdom is never vetoed: the prefix passes a faction that is not a
+kingdom to vanilla (`DeclareWarAction_ApplyInternal_Patch.cs:41-42`). UNVERIFIED: whether
+`EndWarsForbiddenByPhase` later ends such a war.
+
+In-game checks owed: the list on #1139.
 
 ## Client-side object creation
 
@@ -724,13 +786,13 @@ to characterise. The existing try/catch around acceptance is containment, not co
 
 ## What is NOT done
 
-- **No MCM settings parity: reported, not yet exchanged.** TAOM ships **525** settings across
+- **No MCM settings parity: reported, not yet exchanged.** TAOM ships **546** settings across
   four MCM classes (the 284 here counted `[SettingPropertyGroup]` lines alongside the properties;
-  the split is 490 in `TaomSettings`, 24 in `BattleLoadDiagnosticsSettings`, 10 in
+  the split is 514 in `TaomSettings`, 21 in `BattleLoadDiagnosticsSettings`, 10 in
   `CrashReportSettings` and 1 in `BlowDiagnosticsSettings`).
-  **333 are simulation-relevant**, traced to the feature that consumes each one and kept when that feature
-  ships a GameModel, CampaignBehavior, MissionBehavior or Harmony patch; all 333 are in
-  `TaomSettings`. The 192 excluded (67 counted 2026-09-22, less the Native Skin Fixes toggle removed with the feature 2026-10-05, the 38 Realm Borders settings added from 2026-09-30 to 2026-10-08, the Crash Report AfterStart dev trigger added 2026-10-01, the Battle Corpses advice toggle and button added 2026-10-01, and the thirteen Menus & Loading Screens settings added 2026-10-01, #704, and the three tick profiler settings added 2026-10-02, and the hitch probe toggle added 2026-10-02, and the Animation Clip Memory probe toggle added 2026-10-02, and the map profiler toggle added 2026-10-03, and the Load-Time Stamps toggle added 2026-10-03, and the Race Abilities war cry, message and debug-log toggles added 2026-10-04, and the Race Abilities glow toggle added 2026-10-04, and the Crash Report mission-start survival toggle added 2026-10-08, and the Crash Report skeleton buffer guard and watch toggles added 2026-10-08, and the Map Performance nameplate cull and map view release settings added 2026-10-08, and the War Chronicle announcements toggle added 2026-10-08, and the three Animation Variety settings and the swing alternative probe toggle added 2026-10-17, and the Hidden Hosts toggle added 2026-10-18, and the Fell Foes debug log toggle added 2026-10-19, the two Telchar's Mark settings added 2026-10-19, #875, the two Reeve's Ledger switches added 2026-10-19, #857, and the Lost Footing census toggle added 2026-10-20, #894, the Watch-Silver and Tidings of the Lists switches added 2026-10-21, #859, less the two Quick Actions "include equipped" toggles removed 2026-10-23, #925, and the Cardolan and Rhudaur realm colours added 2026-10-23, #978, and the Loremaster's Line switch added 2026-10-23, #877, and the Hearth Roll tint toggle added 2026-10-23, #906, and the six camp work, rest healing and start-in-camp settings added 2026-10-24, #860, and the Notable Services switch added 2026-10-24, #899, and the Harvest Road notices toggle added 2026-10-26, #912, and the Make Tools switch added 2026-10-26, #910, and the two Many Hammers switches added 2026-10-26, #911, and the Bandit Voices greetings toggle added 2026-10-26, #900, less the two Auto-Resolve Diagnostics toggles removed with the feature 2026-10-26, and the Inn Rounds switch and its two scales added 2026-10-26, #901, and the Prisoner Banners toggle added 2026-10-27, #902, and the Ered Luin realm colour added 2026-10-27, and the Warden's Tally switch added 2026-10-27, #903, and the Anduin Vale and Angáladh realm colours added 2026-10-28, and the Dorwinion and South Rhovanion realm colours added 2026-10-29, and the two Seat of Seeing settings added 2026-11-03, and the two Seat of Seeing pointer settings added 2026-11-04, and the three Marshal's Word settings added 2026-11-04 and the Outlines switch added with its stage M4, and the Hollow Square and Spacing Repair switches added with its stage M5 (the repair is read once at patch time and stays off whenever co-op is present, so no value of it reaches a co-op simulation), and the Throwers Throw First switch added 2026-11-05 (read only by a live session, which is off online), and the two Seat of Seeing settings for the hero's hand-off and the take of a soldier added 2026-11-04, and the Seat of Seeing rise setting added with its stage S7, and the five Screen Performance settings in `BattleLoadDiagnosticsSettings` added 2026-10-19, #851 to #854) are instrumentation, player-local convenience,
+  **355 are simulation-relevant**, traced to the feature that consumes each one and kept when that feature
+  ships a GameModel, CampaignBehavior, MissionBehavior or Harmony patch; all 355 are in
+  `TaomSettings`. The 191 excluded (67 counted 2026-09-22, less the three Stall Watchdog settings removed 2026-11-12 with the load watchdog, less the Native Skin Fixes toggle removed with the feature 2026-10-05, the 38 Realm Borders settings added from 2026-09-30 to 2026-10-08, the Crash Report AfterStart dev trigger added 2026-10-01, the Battle Corpses advice toggle and button added 2026-10-01, and the thirteen Menus & Loading Screens settings added 2026-10-01, #704, and the three tick profiler settings added 2026-10-02, and the hitch probe toggle added 2026-10-02, and the Animation Clip Memory probe toggle added 2026-10-02, and the map profiler toggle added 2026-10-03, and the Load-Time Stamps toggle added 2026-10-03, and the Race Abilities war cry, message and debug-log toggles added 2026-10-04, and the Race Abilities glow toggle added 2026-10-04, and the Crash Report mission-start survival toggle added 2026-10-08, and the Crash Report skeleton buffer guard and watch toggles added 2026-10-08, and the Map Performance nameplate cull and map view release settings added 2026-10-08, and the War Chronicle announcements toggle added 2026-10-08, and the three Animation Variety settings and the swing alternative probe toggle added 2026-10-17, and the Hidden Hosts toggle added 2026-10-18, and the Fell Foes debug log toggle added 2026-10-19, the two Telchar's Mark settings added 2026-10-19, #875, the two Reeve's Ledger switches added 2026-10-19, #857, and the Lost Footing census toggle added 2026-10-20, #894, the Watch-Silver and Tidings of the Lists switches added 2026-10-21, #859, less the two Quick Actions "include equipped" toggles removed 2026-10-23, #925, and the Cardolan and Rhudaur realm colours added 2026-10-23, #978, and the Loremaster's Line switch added 2026-10-23, #877, and the Hearth Roll tint toggle added 2026-10-23, #906, and the six camp work, rest healing and start-in-camp settings added 2026-10-24, #860, and the Notable Services switch added 2026-10-24, #899, and the Harvest Road notices toggle added 2026-10-26, #912, and the Make Tools switch added 2026-10-26, #910, and the two Many Hammers switches added 2026-10-26, #911, and the Bandit Voices greetings toggle added 2026-10-26, #900, less the two Auto-Resolve Diagnostics toggles removed with the feature 2026-10-26, and the Inn Rounds switch and its two scales added 2026-10-26, #901, and the Prisoner Banners toggle added 2026-10-27, #902, and the Ered Luin realm colour added 2026-10-27, and the Warden's Tally switch added 2026-10-27, #903, and the Anduin Vale and Angáladh realm colours added 2026-10-28, and the Dorwinion and South Rhovanion realm colours added 2026-10-29, and the two Seat of Seeing settings added 2026-11-03, and the two Seat of Seeing pointer settings added 2026-11-04, and the three Marshal's Word settings added 2026-11-04 and the Outlines switch added with its stage M4, and the Hollow Square and Spacing Repair switches added with its stage M5 (the repair is read once at patch time and stays off whenever co-op is present, so no value of it reaches a co-op simulation), and the Throwers Throw First switch added 2026-11-05 (read only by a live session, which is off online), and the two Seat of Seeing settings for the hero's hand-off and the take of a soldier added 2026-11-04, and the Seat of Seeing rise setting added with its stage S7, and the Realms title styles toggle added 2026-11-11 (it renames parties and the conversation header only), and the Battle HUD Colours dropdown added 2026-11-12 (it recolours three rings of each player's own battle HUD), and the five Screen Performance settings in `BattleLoadDiagnosticsSettings` added 2026-10-19, #851 to #854) are instrumentation, player-local convenience,
   presentation, two action buttons, and the three time-acceleration knobs whose UI co-op already
   suppresses; the list with its reasons is
   `Main/Features/CoopInterop/CoopSettingsRelevance.cs`.
@@ -742,7 +804,7 @@ to characterise. The existing try/catch around acceptance is containment, not co
   excluded name may stop matching a real property, and no two settings classes may share a
   property name.
 
-  `SettingsFingerprint` hashes those 333: one code per MCM group plus a global, culture-invariant
+  `SettingsFingerprint` hashes those 355: one code per MCM group plus a global, culture-invariant
   so a comma decimal separator cannot fake a mismatch — and `SettingsFingerprintLog` writes them
   to each peer's log under the co-op gate. Floats and doubles hash as their IEEE bit patterns
   (-0 folded to 0), not as runtime-formatted text, so a .NET 6 server and a net472 client agree on
@@ -751,7 +813,7 @@ to characterise. The existing try/catch around acceptance is containment, not co
   every diagnostics property is excluded so this moves no hash today (a test asserts exactly
   that), and it means a simulation-affecting setting added to a diagnostics page later is covered
   the day it lands. That makes the "compare settings manually" workaround a comparison of a few
-  short strings instead of 333 values read off two screens.
+  short strings instead of 355 values read off two screens.
 
   **All four classes are `AttributeGlobalSettings<T>`, and the reasoning above depends on it.**
   MCM has three scopes, and only one of them travels with a save. Verified against MCM 5.12.1:
@@ -770,12 +832,12 @@ to characterise. The existing try/catch around acceptance is containment, not co
   PerSave class would be equal by construction and need not be hashed; a PerCampaign one would
   need hashing more urgently than a global, not less.
 
-  **A matching fingerprint means the MCM settings agree, and nothing wider.** It covers the 333
+  **A matching fingerprint means the MCM settings agree, and nothing wider.** It covers the 355
   values on the four settings pages. It does not cover the `ModuleData` JSON/XML that several
   features fall back to when a setting is unset (on a client only; a server never reads them for an
   MCM-backed field), the `TAOM.Dependencies` flag files
   (`patchshield-disabled.flag`, `saveshield-swallow-disabled.flag`, `coop-force-active.flag`),
-  or any difference outside TAOM. None of those three flags gates a setting in the 333 (each
+  or any difference outside TAOM. None of those three flags gates a setting in the 355 (each
   governs a Dependencies-side shield with no MCM property), but the general point holds: read the
   log line as "our settings pages match", not as "our installs are equivalent".
 
@@ -786,24 +848,24 @@ to characterise. The existing try/catch around acceptance is containment, not co
   fingerprint hashes the file's values; a client still hashes its MCM values. The counts above do
   not change: the file covers the same settings.
 
-  **Still not done:** peers do not exchange them. Putting the fingerprint in save metadata and
-  comparing on join is the remaining step, and it cannot be verified without two machines in a
-  session — `FingerprintReport.DivergentGroups` is already there for it. BannerlordCoop still
-  syncs no setting, so divergent settings continue to defeat everything above; they are now
-  visible rather than silent.
+  **Compared at join, not enforced:** with `TAOM.CoopCompat` installed, a joining client sends its
+  fingerprint and the server answers with `FingerprintReport.DivergentGroups`; the client shows the
+  player which groups differ ([coop-compat.md](coop-compat.md)). It warns and never disconnects, and
+  nothing copies the server's values to the client. Not yet checked with two machines in a session.
 - **No ModuleData content hash.** Coop's handshake compares module ids and version strings only, and
   disconnects on mismatch — so identical TAOM versions on all peers are mandatory, and a TAOM version
   bump is a co-op compatibility break.
-- **No sync of TAOM's own campaign state.** Clients get the join-time baseline from the host's save,
-  then never hear about WotR momentum or culture-conversion deltas.
+- **Little sync of TAOM's own campaign state.** Clients get the join-time baseline from the host's
+  save. `TAOM.CoopCompat` relays the War of the Ring momentum state; culture-conversion deltas and
+  every other TAOM state still never reach a client.
 - **War of the Ring participation: attribution fixed, state still per peer (#966).**
   `WarEventSnapshotAdapter.FromSiege` applies the same `IsPlayerRelated` test as the battle
   snapshot beside it (fixed 2026-08-03). Since #966 the test also counts any party on either side
   whose `OfParty` is `Player`, and any kingdom holding a player's clan, so a remote player in a
   different kingdom is credited when the event is scored on the authority; `Unknown` counts as not
-  involved. The old local kingdom check stays, so on a dedicated server the local kingdom clause still names the world-gen hero's kingdom (`OfClan` answers Player only for a registered clan in a session, and that clan is not in the registry). What is still missing: the momentum state is TAOM `SyncData` that nothing replicates, so
-  a client never sees the meter move, and the `IsAuthority` gates on the scoring handlers are
-  unchanged.
+  involved. The old local kingdom check stays, so on a dedicated server the local kingdom clause still names the world-gen hero's kingdom (`OfClan` answers Player only for a registered clan in a session, and that clan is not in the registry). The momentum state is TAOM `SyncData` that Coop does not replicate;
+  `TAOM.CoopCompat` sends it from the server to the clients, so without that module a client never
+  sees the meter move. The `IsAuthority` gates on the scoring handlers are unchanged.
 - **Dedicated server: no longer "unsupported", but not supported either.** The 2026-08-03 field
   group ran TAOM on a BannerlordCoop dedicated server by hand-copying the client binaries into
   `bin/Win64_Shipping_Server/`, and that session is the evidence source for the race-capture,
@@ -969,12 +1031,14 @@ Owed by the #966 work (Batch B, co-op player attribution), none of it run in gam
 ## Referenced by
 
 - [docs/adrs/013-server-safe-core-client-ui-submodule.md](../adrs/013-server-safe-core-client-ui-submodule.md)
+- [docs/adrs/014-separate-coop-compat-module.md](../adrs/014-separate-coop-compat-module.md)
 - [docs/ai-includes/orientation.md](../ai-includes/orientation.md)
 - [docs/features/alignment-desertion.md](./alignment-desertion.md)
 - [docs/features/animation-variety.md](./animation-variety.md)
 - [docs/features/bandit-voices.md](./bandit-voices.md)
 - [docs/features/bannerlord-together-compat.md](./bannerlord-together-compat.md)
 - [docs/features/bond-of-hire.md](./bond-of-hire.md)
+- [docs/features/coop-compat.md](./coop-compat.md)
 - [docs/features/coop-dedicated-server.md](./coop-dedicated-server.md)
 - [docs/features/dread-aura.md](./dread-aura.md)
 - [docs/features/encyclopedia.md](./encyclopedia.md)

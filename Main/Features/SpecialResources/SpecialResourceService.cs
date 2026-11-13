@@ -66,14 +66,18 @@ public class SpecialResourceService : ISpecialResourceService, ISpecialResourceS
         return _storage.Get(heroId, resource.Id);
     }
 
-    public void EarnFromBattle(string heroId, string? kingdomId, string? cultureId, float enemySizeRatio)
+    public void EarnFromBattle(string heroId, string? kingdomId, string? cultureId, float enemyCount)
     {
         var resource = ResolveResource(kingdomId, cultureId);
         if (resource == null) return;
 
-        var clampedRatio = Math.Max(0.5f, Math.Min(2f, enemySizeRatio));
-        Earn(heroId, resource, "BATTLE", resource.PerBattleVictoryBase * clampedRatio, "F1",
-            $" (ratio {enemySizeRatio:F2}→{clampedRatio:F2})");
+        // The pay follows the enemy's absolute size, so beating a small band pays little however few men
+        // the player brought. A count that is not finite is a bad read: it fails the gate and pays the floor.
+        var scale = FiniteFloatValidator.IsFinite(enemyCount)
+            ? Math.Max(resource.BattleMinScale, Math.Min(resource.BattleMaxScale, enemyCount / resource.BattleReferenceSize))
+            : resource.BattleMinScale;
+        Earn(heroId, resource, "BATTLE", resource.PerBattleVictoryBase * scale, "F1",
+            $" (enemies {enemyCount:F0}, scale {scale:F2})");
     }
 
     public void EarnFromRaid(string heroId, string? kingdomId, string? cultureId)
@@ -227,6 +231,8 @@ public class SpecialResourceService : ISpecialResourceService, ISpecialResourceS
         if (cost == null) return;
 
         var totalCost = GetEffectiveUpgradeCost(heroId, cost.UpgradeCost, count);
+        if (!(totalCost > 0f)) return;
+
         _storage.Add(heroId, resource.Id, -totalCost);
         _logger.LogInfo($"[SpecRes] SPEND: -{totalCost} {resource.DisplayName} for {troopId} x{count}");
     }
@@ -290,7 +296,7 @@ public class SpecialResourceService : ISpecialResourceService, ISpecialResourceS
         var cost = _config.GetTroopCost(troopId);
         if (cost == null || cost.MerchantCost <= 0) return true;
 
-        var totalCost = cost.MerchantCost * count;
+        var totalCost = (long)cost.EmissaryPrice * count;
         var available = _storage.Get(heroId, resource.Id);
         var canAfford = available >= totalCost;
         _logger.LogDebug($"[SpecRes] CanAffordMerchant: {troopId} x{count} cost={totalCost} {resource.DisplayName} available={available:F0} → {canAfford}");
@@ -315,7 +321,7 @@ public class SpecialResourceService : ISpecialResourceService, ISpecialResourceS
             return;
         }
 
-        var totalCost = cost.MerchantCost * count;
+        var totalCost = (long)cost.EmissaryPrice * count;
         _storage.Add(heroId, resource.Id, -totalCost);
         _logger.LogInfo($"[SpecRes] MERCHANT: -{totalCost} {resource.DisplayName} for {troopId} x{count} (balance now {_storage.Get(heroId, resource.Id):F0})");
     }

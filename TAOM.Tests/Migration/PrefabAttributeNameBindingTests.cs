@@ -87,8 +87,6 @@ public class PrefabAttributeNameBindingTests
         "SettlementNameplateItemWidget.SettlementNameplateQuestWidget",
         // SandBox/GUI/Prefabs/Party/PartyTroopTuple.xml:162
         "Widget.HueFactor",
-        // Native/GUI/Prefabs/BannerEditor/BannerEditor.xml:13
-        "Widget.WidgetToAddIcons",
         // Native/GUI/Prefabs/Standard/Standard.DropdownWithHorizontalControl.xml:68
         "Widget.WidgetToCopyHeightFrom",
     };

@@ -151,42 +151,86 @@ public class SpecialResourceServiceTests
     // ── Earning ──
 
     [TestMethod]
-    public void EarnFromBattle_AddsScaledAmount_BasedOnEnemySizeRatio()
+    public void EarnFromBattle_ReferenceSizeBattle_PaysTheBase()
     {
         _storage.Get("hero1", "war_spoils").Returns(100f);
-        _service.EarnFromBattle("hero1", "empire_s", null, 1.5f);
-        _storage.Received(1).Set("hero1", "war_spoils", 115f);
+        _service.EarnFromBattle("hero1", "empire_s", null, 100f);
+        _storage.Received(1).Set("hero1", "war_spoils", 110f);
+    }
+
+    [TestMethod]
+    public void EarnFromBattle_SmallBand_PaysAFractionOfTheBase()
+    {
+        // 15 enemies against the default reference of 100 men: 10 * 0.15 = 1.5.
+        _storage.Get("hero1", "war_spoils").Returns(100f);
+        _service.EarnFromBattle("hero1", "empire_s", null, 15f);
+        _storage.Received(1).Set("hero1", "war_spoils", 101.5f);
     }
 
     [TestMethod]
     public void EarnFromBattle_WorksViaCultureFallback()
     {
         _storage.Get("hero1", "war_spoils").Returns(100f);
-        _service.EarnFromBattle("hero1", null, "mordor", 1.0f);
+        _service.EarnFromBattle("hero1", null, "mordor", 100f);
         _storage.Received(1).Set("hero1", "war_spoils", 110f);
     }
 
     [TestMethod]
-    public void EarnFromBattle_ClampsRatio_ToMinHalf()
+    public void EarnFromBattle_NoEnemies_PaysTheMinimumScale()
     {
+        // The default floor is 0.05: 10 * 0.05 = 0.5.
         _storage.Get("hero1", "war_spoils").Returns(100f);
-        _service.EarnFromBattle("hero1", "empire_s", null, 0.1f);
-        _storage.Received(1).Set("hero1", "war_spoils", 105f);
+        _service.EarnFromBattle("hero1", "empire_s", null, 0f);
+        _storage.Received(1).Set("hero1", "war_spoils", 100.5f);
     }
 
     [TestMethod]
-    public void EarnFromBattle_ClampsRatio_ToMaxTwo()
+    public void EarnFromBattle_HugeArmy_ClampsToTheMaximumScale()
+    {
+        // The default ceiling is 3: 10 * 3 = 30.
+        _storage.Get("hero1", "war_spoils").Returns(100f);
+        _service.EarnFromBattle("hero1", "empire_s", null, 5000f);
+        _storage.Received(1).Set("hero1", "war_spoils", 130f);
+    }
+
+    [TestMethod]
+    public void EarnFromBattle_NaNCount_PaysTheMinimumScale()
     {
         _storage.Get("hero1", "war_spoils").Returns(100f);
-        _service.EarnFromBattle("hero1", "empire_s", null, 5.0f);
-        _storage.Received(1).Set("hero1", "war_spoils", 120f);
+        _service.EarnFromBattle("hero1", "empire_s", null, float.NaN);
+        _storage.Received(1).Set("hero1", "war_spoils", 100.5f);
+    }
+
+    [TestMethod]
+    public void EarnFromBattle_InfiniteCount_PaysTheMinimumScale()
+    {
+        // A non-finite count is a bad read, so it fails the gate and pays the floor, not the ceiling.
+        _storage.Get("hero1", "war_spoils").Returns(100f);
+        _service.EarnFromBattle("hero1", "empire_s", null, float.PositiveInfinity);
+        _storage.Received(1).Set("hero1", "war_spoils", 100.5f);
+    }
+
+    [TestMethod]
+    public void EarnFromBattle_ResourceWithOwnReference_UsesIt()
+    {
+        var custom = new SpecialResource(
+            id: "gems", kingdomIds: new[] { "erebor" }, cultureIds: new string[0],
+            displayName: "Gems", iconSpriteName: "i", cap: 500f, startingAmount: 0f, dailyPerTown: 0f,
+            perBattleVictoryBase: 10f, perRaid: 0f, perSiegeVictory: 0f, perPrisoner: 0f,
+            battleReferenceSize: 20f, battleMinScale: 0.5f, battleMaxScale: 2f);
+        _config.GetByKingdomId("erebor").Returns(custom);
+        _storage.Get("hero1", "gems").Returns(0f);
+
+        _service.EarnFromBattle("hero1", "erebor", null, 10f);
+
+        _storage.Received(1).Set("hero1", "gems", 5f);
     }
 
     [TestMethod]
     public void EarnFromBattle_CapsAtResourceMax()
     {
         _storage.Get("hero1", "war_spoils").Returns(498f);
-        _service.EarnFromBattle("hero1", "empire_s", null, 1.0f);
+        _service.EarnFromBattle("hero1", "empire_s", null, 100f);
         _storage.Received(1).Set("hero1", "war_spoils", 500f);
     }
 
@@ -440,6 +484,45 @@ public class SpecialResourceServiceTests
         _service.ChargeMerchantPurchase("hero1", "empire_s", null, "mordor_uruk_captain", 2);
 
         _storage.Received(1).Add("hero1", "war_spoils", -60f);
+    }
+
+    // The emissary's resource price is the troop row's own EmissaryPrice (merchant_cost times its resource's
+    // multiplier, folded in at load), so these two methods read it and never merchant_cost.
+    private static TroopResourceCostEntry PricedElite() =>
+        new("mordor_uruk_captain", "war_spoils", upgradeCost: 0, dailyUpkeep: 0f, recruitCost: 0, merchantCost: 30, emissaryPrice: 600);
+
+    [TestMethod]
+    public void ChargeMerchantPurchase_TroopWithAnEmissaryPrice_ChargesThatPriceTimesCount()
+    {
+        _config.GetTroopCost("mordor_uruk_captain").Returns(PricedElite());
+
+        _service.ChargeMerchantPurchase("hero1", "empire_s", null, "mordor_uruk_captain", 2);
+
+        _storage.Received(1).Add("hero1", "war_spoils", -1200f); // 600 x 2, not merchant_cost 30 x 2
+    }
+
+    [TestMethod]
+    public void CanAffordMerchantPurchase_TroopWithAnEmissaryPrice_FlipsAtThatPrice()
+    {
+        _config.GetTroopCost("mordor_uruk_captain").Returns(PricedElite());
+
+        _storage.Get("hero1", "war_spoils").Returns(1199f);
+        Assert.IsFalse(_service.CanAffordMerchantPurchase("hero1", "empire_s", null, "mordor_uruk_captain", 2));
+
+        _storage.Get("hero1", "war_spoils").Returns(1200f);
+        Assert.IsTrue(_service.CanAffordMerchantPurchase("hero1", "empire_s", null, "mordor_uruk_captain", 2));
+    }
+
+    [TestMethod]
+    public void ChargeMerchantPurchase_BuyerResourceDiffersFromTheTroops_StillChargesTheTroopsPrice()
+    {
+        // The buyer's resource is Mordor's, the troop's row names another: the amount is the troop's.
+        _config.GetTroopCost("gems_elite").Returns(
+            new TroopResourceCostEntry("gems_elite", "gems", upgradeCost: 0, dailyUpkeep: 0f, recruitCost: 0, merchantCost: 10, emissaryPrice: 200));
+
+        _service.ChargeMerchantPurchase("hero1", "empire_s", null, "gems_elite", 1);
+
+        _storage.Received(1).Add("hero1", "war_spoils", -200f);
     }
 
     [TestMethod]

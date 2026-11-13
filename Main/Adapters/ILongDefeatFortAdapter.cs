@@ -91,4 +91,20 @@ internal interface ILongDefeatFortAdapter
 
     /// <summary>An agent loosed an arrow (the logic's <c>OnAgentShootMissile</c>, which the engine declares not multithread callable, Mission.cs:4982). Counted against the tower whose post archer he is; any other agent is ignored.</summary>
     void NotePostShot(object shooter);
+
+    /// <summary>
+    /// The opening split (Mike, 2026-11-12): every standing defender on foot who is not the player or a post archer goes to one of four formations, the infantry to the wall or the gate and the archers
+    /// to the lower or the high walls by the shares, each group nearest its place. The places come from the scene's own siege objects. Each group is taken off AI control and ordered to its place with
+    /// the shapes of vanilla's ready order. A pair whose two places the scene does not give is not split. Safe to call again inside a hold: the soldiers it placed keep their group, and the others fill the group below its share.
+    /// </summary>
+    LdSplitResult SplitDefenders(SplitShares shares);
+
+    /// <summary>The defense level of each siege lane in the engine's order: 0 empty, 1 token, 2 full (<c>SiegeLane.GetDefenseState</c>). Empty when the mission has no lanes.</summary>
+    IReadOnlyList<int> ReadLaneLevels();
+
+    /// <summary>The split's held groups as they stand now, in the order wall, gate, low, high; a group the last split did not make is absent. Empty when nothing is held.</summary>
+    IReadOnlyList<LdSplitGroup> ReadSplit();
+
+    /// <summary>Hands the split's groups back to AI control, except a group whose order the player changed. Forgets the groups.</summary>
+    LdSplitRelease ReleaseSplit();
 }

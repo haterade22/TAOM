@@ -28,7 +28,7 @@
     <string id="TAOM_dale_desc" text="Dove le acque del Fiume Rapido incontrano l'ombra della Montagna Solitaria, sorge Dale. La Città degli Uomini era stata ricostruita dalle rovine all'indomani della Battaglia dei Cinque Eserciti. Un tempo luogo di musica e allegria, di commercio e dorate sale di mercato, Dale prosperava sotto la protezione di Erebor. I suoi mercanti navigavano veloci barche lungo il Celduin, le sue strade risuonavano di risate e il suo popolo conosceva la pace. Ma la pace fu infranta quando giunse il drago. Smaug, la morte alata del Nord, si abbatté su Erebor in fiamme e furia, e Dale fu la prima a soffrire. La città bruciò, il suo popolo fuggì, e per quasi due secoli le fiere torri a cupola rimasero silenziose e spezzate, un monumento al dolore. Eppure la rovina non è la fine della storia di Dale. Con la morte del drago, Bard l'Arciere alzò nuovamente il suo stendardo e richiamò il suo popolo a casa. Dalla cenere e dalla pietra Dale risorse ancora, non come era una volta, ma più grande. Sotto Re Bard e suo figlio Bain, la città prospera di nuovo, le sue mura forti, il suo popolo orgoglioso e il suo sguardo sempre vigile. Gli Uomini di Dale non sono potenti in numero, né antichi nella magia, ma sono saldi e fedeli." />
     <string id="TAOM_harad" text="{.MN}Harad" />
     <string id="TAOM_harad_short" text="{.MN}Harad" />
-    <string id="TAOM_harad_title" text="Taskralan di Harwan" />
+    <string id="TAOM_harad_title" text="{.MN}Taskralan di Harwan" />
     <string id="TAOM_harad_ruler" text="Taskral" />
     <string id="TAOM_harad_desc" text="Harad, una vasta e diversificata regione a sud di Gondor, comprende deserti aridi, rigogliose giungle e fertili oasi. La sua geografia è varia quanto il suo popolo, con dune sconfinate che lasciano il posto a fitte foreste e fiumi brulicanti di vita. La storia di Harad è intrisa di antiche leggende, con grandiose città e fortezze sparse nel paesaggio, costruite da sovrani le cui eredità risuonano attraverso i secoli. Il Grande Deserto di Haradwaith separa la sua frontiera settentrionale dalla terra del cuore, mentre le sue coste meridionali pullulano di commercio e pirateria. Unite sotto le insegne di Sauron, le numerose tribù e regni di Harad incanalano le loro profonde tradizioni negli sforzi bellici, trasformando questa terra vibrante in una potenza di cultura e conflitto." />
     <string id="TAOM_rohan" text="{.MN}Rohan" />
@@ -648,9 +648,9 @@
     <string id="aom_lord_1_4_name" text="Brunhild Artigliodferro" />
     <string id="aom_lord_1_5_name" text="Othric il Selvaggio" />
     <string id="aom_lord_1_6_name" text="Torvald Cornodibue" />
-    <string id="aom_lord_1_7_name" text="Denethor II, Sovrintendente di Gondor" />
+    <string id="aom_lord_1_7_name" text="Denethor II" />
     <string id="aom_lord_1_8_name" text="Húrioneth" />
-    <string id="aom_lord_1_9_name" text="Imrahil, Principe di Dol Amroth" />
+    <string id="aom_lord_1_9_name" text="Imrahil" />
     <string id="aom_lord_1_10_name" text="Aranel" />
     <string id="aom_lord_1_25_name" text="Elphir" />
     <string id="aom_lord_1_35_name" text="Erchirion" />
@@ -699,11 +699,11 @@
     <string id="aom_lord_1_67_name" text="Eorwyn Frecciadipiuma" />
     <string id="aom_lord_1_40_name" text="Borhador" />
     <string id="aom_lord_1_46_name" text="Malrior" />
-    <string id="aom_lord_1_45_name" text="Forlong, Signore di Lossarnach" />
+    <string id="aom_lord_1_45_name" text="Forlong" />
     <string id="aom_lord_1_57_name" text="Baranor" />
-    <string id="aom_lord_1_52_name" text="Hirluin, Signore di Pinnath Gelin" />
-    <string id="aom_lord_1_53_name" text="Angbor, Signore di Lamedon" />
-    <string id="aom_lord_1_71_name" text="Golasgil, Signore di Anfalas" />
+    <string id="aom_lord_1_52_name" text="Hirluin" />
+    <string id="aom_lord_1_53_name" text="Angbor" />
+    <string id="aom_lord_1_71_name" text="Golasgil" />
     <string id="aom_lord_1_73_name" text="Narmir" />
     <string id="aom_lord_1_62_name" text="Oromar" />
     <string id="aom_lord_1_30_name" text="Gothmog, Luogotenente di Morgul" />
@@ -922,7 +922,7 @@
     <string id="aom_lord_V11_c2_name" text="Dagunic" />
     <string id="aom_lord_V11_u_name" text="Voleric" />
     <string id="aom_lord_V9_u_name" text="Urundulf" />
-    <string id="aom_lord_5_1_name" text="Vargûl, l'Alto Signore della Guerra di Khand" />
+    <string id="aom_lord_5_1_name" text="Vargûl" />
     <string id="aom_lord_5_7_name" text="Kharzul" />
     <string id="aom_lord_5_3_name" text="Ergeon" />
     <string id="aom_lord_5_4_name" text="Nywin" />
@@ -1035,7 +1035,7 @@
     <string id="aom_lord_SE9_s_name" text="Jonna" />
     <string id="aom_lord_WE8_c_name" text="Pelendur" />
     <string id="aom_lord_WE8_u_name" text="Barandil" />
-    <string id="aom_lord_WE9_l_name" text="Duinhir, Signore di Morthond" />
+    <string id="aom_lord_WE9_l_name" text="Duinhir" />
     <string id="aom_lord_WE9_u_name" text="Duilin" />
     <string id="aom_lord_WE9_u2_name" text="Rosfin" />
     <string id="TAOM_hero_dead_2_1" text="Olek il Vecchio cadde difendendo Valle dai predoni Orientali. Il suo sacrificio mise in sicurezza i passi montani ed è ricordato nei canti di tutto il regno." />

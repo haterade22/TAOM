@@ -52,6 +52,22 @@ public sealed class StrandEntry
 
     public OffMeshDetail? Detail { get; set; }
 
+    /// <summary>Metres a second at the latest sighting; NaN when the engine gave none.</summary>
+    public float Speed { get; set; } = float.NaN;
+
+    /// <summary>The near move was tried while the agent stayed stranded; reset once he is free of every condition (#894 phase 2).</summary>
+    public bool NearTried { get; set; }
+
+    /// <summary>The formation move was tried while the agent stayed stranded; reset with the near try.</summary>
+    public bool FarTried { get; set; }
+
+    /// <summary>Clock time when a formation move refused for the player near may be tried again; NaN until the first such
+    /// refusal while stranded, which is the only one logged and counted.</summary>
+    public float FarRetryAt { get; set; } = float.NaN;
+
+    /// <summary>A rescue moved the agent, and the next end of its episode tells whether that freed it.</summary>
+    public bool AwaitFree { get; set; }
+
     public bool IsStranded => OffMesh || WaterStill || LandBelow;
 
     public bool InClass(StrandClass c) => c == StrandClass.OffMesh ? OffMesh : c == StrandClass.WaterStill ? WaterStill : LandBelow;
@@ -178,4 +194,13 @@ public sealed class LostFootingMissionState
     public double TotalMs { get; set; }
 
     public double MaxTickMs { get; set; }
+
+    /// <summary>Moves the rescue made (one agent can count more than once), and tries the adapter refused (#894 phase 2).</summary>
+    public int Rescued { get; set; }
+
+    public int RescueRefused { get; set; }
+
+    /// <summary>Moved agents whose episode then ended by recovery (seen on the mesh, out of water), not by death or the
+    /// end of the battle. It does not show that the agent walked afterwards.</summary>
+    public int Freed { get; set; }
 }

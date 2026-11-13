@@ -632,6 +632,18 @@ class TestStaleModuleFiles(unittest.TestCase):
             self.assertIn("Shaders/D3D11/shader_mapping.bin", copied)
             self.assertEqual(self._stale(td, plan, {"Main/_Module/SubModule.xml": b"x"}), [])
 
+    def test_stale_module_files_reads_the_coopcompat_tree_under_its_own_root(self):
+        with tempfile.TemporaryDirectory() as td:
+            plan = self._plan(td, "TAOM.CoopCompat", ["SubModule.xml", "bin/Win64_Shipping_Client/TAOM.CoopCompat.dll"])
+            self.assertEqual(self._stale(td, plan, {"CoopCompat/_Module/SubModule.xml": b"x"}), [])
+        with tempfile.TemporaryDirectory() as td:
+            plan = self._plan(td, "TAOM.CoopCompat", ["SubModule.xml", "ModuleData/stray.xml",
+                                                      "bin/Win64_Shipping_Client/TAOM.CoopCompat.dll"])
+            problems = self._stale(td, plan, {"CoopCompat/_Module/SubModule.xml": b"x"})
+            self.assertEqual(len(problems), 1, problems)
+            self.assertIn("TAOM.CoopCompat/ModuleData/stray.xml", problems[0])
+            self.assertIn("CoopCompat/_Module", problems[0])
+
     def test_stale_module_files_ignores_other_modules(self):
         with tempfile.TemporaryDirectory() as td:
             plan = self._plan(td, "TAOM.Dependencies", ["GUI/Prefabs/McmOnly.xml"])
@@ -767,6 +779,110 @@ class TestClientOnlyServerBin(unittest.TestCase):
             self.assertEqual(sorted(pr.shipped_dll_copies(plan)),
                              ["bin/Win64_Shipping_Client/TAOM.Client.dll",
                               "bin/Win64_Shipping_Client/TAOM.dll"])
+
+
+class TestCoopCompatModule(unittest.TestCase):
+    """TAOM.CoopCompat ships a copy of its two DLLs per bin folder (client and server: the server needs
+    it, unlike TAOM.Client) and no other DLL or program anywhere: an allowlist in bin and a refusal of
+    any .dll or .exe outside it, because Coop's licence forbids redistributing its binaries, the
+    dedicated server is private, and a second copy of a library Coop loads would load twice."""
+
+    OWN = ("TAOM.CoopCompat.dll", "TAOM.CoopCompat.Coop.dll")
+
+    def test_the_module_is_registered_everywhere_the_packager_keys_on_a_module(self):
+        self.assertIn("TAOM.CoopCompat", pr.DEFAULT_MODULES)
+        self.assertEqual(pr.SHIPPED_DLLS["taom.coopcompat"], self.OWN)
+        self.assertEqual(pr.REPO_MANIFESTS["taom.coopcompat"], "CoopCompat/_Module/SubModule.xml")
+        self.assertEqual(pr.REPO_MODULE_ROOTS["taom.coopcompat"], "CoopCompat/_Module")
+
+    def test_the_server_bin_copy_is_not_refused(self):
+        with tempfile.TemporaryDirectory() as td:
+            src = Path(td) / "Modules"
+            for folder in ("Win64_Shipping_Client", "Win64_Shipping_wEditor", "Win64_Shipping_Server"):
+                for name in self.OWN:
+                    _write(src, f"TAOM.CoopCompat/bin/{folder}/{name}", 16)
+            _write(src, "TAOM.CoopCompat/SubModule.xml", 10)
+            plan = pr.plan_module(src / "TAOM.CoopCompat")
+            self.assertEqual(pr.client_only_in_server_bin([plan]), [])
+            self.assertEqual(pr.retired_binaries([plan]), [])
+            self.assertEqual(pr.unshipped_in_coopcompat([plan]), [])
+            self.assertEqual(len(pr.shipped_dll_copies(plan)), 6)
+            r = _run("--source", str(src), "--dest", str(Path(td) / "out"), "--modules",
+                     "TAOM.CoopCompat", "--dry-run")
+            self.assertEqual(r.returncode, 0, r.stdout + r.stderr)
+
+    def test_each_file_the_build_never_writes_is_named(self):
+        names = ("Missions.dll", "Coop.CrashReporter.exe", "BannerlordCoopServer.exe", "Serilog.dll",
+                 "TaleWorlds.Core.dll", "0Harmony.dll", "MCMv5.dll", "TAOM.Dependencies.dll")
+        for name in names:
+            with self.subTest(name=name), tempfile.TemporaryDirectory() as td:
+                src = Path(td) / "Modules"
+                _write(src, "TAOM.CoopCompat/bin/Win64_Shipping_Client/TAOM.CoopCompat.dll", 16)
+                _write(src, f"TAOM.CoopCompat/bin/Win64_Shipping_Client/{name}", 16)
+                plan = pr.plan_module(src / "TAOM.CoopCompat")
+                self.assertEqual(pr.unshipped_in_coopcompat([plan]),
+                                 [f"TAOM.CoopCompat/bin/Win64_Shipping_Client/{name}"])
+
+    def test_both_own_assemblies_pass(self):
+        with tempfile.TemporaryDirectory() as td:
+            src = Path(td) / "Modules"
+            for name in self.OWN:
+                _write(src, f"TAOM.CoopCompat/bin/Win64_Shipping_Client/{name}", 16)
+            plan = pr.plan_module(src / "TAOM.CoopCompat")
+            self.assertEqual(pr.unshipped_in_coopcompat([plan]), [])
+
+    def test_a_library_or_program_outside_bin_is_refused_too(self):
+        with tempfile.TemporaryDirectory() as td:
+            src = Path(td) / "Modules"
+            _write(src, "TAOM.CoopCompat/bin/Win64_Shipping_Client/TAOM.CoopCompat.dll", 16)
+            _write(src, "TAOM.CoopCompat/SubModule.xml", 10)
+            _write(src, "TAOM.CoopCompat/ModuleData/notes.xml", 10)
+            _write(src, "TAOM.CoopCompat/ModuleData/Common.dll", 16)
+            _write(src, "TAOM.CoopCompat/Assets/BannerlordCoopServer.EXE", 16)
+            plan = pr.plan_module(src / "TAOM.CoopCompat")
+            self.assertEqual(sorted(pr.unshipped_in_coopcompat([plan])),
+                             ["TAOM.CoopCompat/Assets/BannerlordCoopServer.EXE",
+                              "TAOM.CoopCompat/ModuleData/Common.dll"])
+
+    def test_the_match_is_case_insensitive_and_covers_every_bin_subfolder(self):
+        with tempfile.TemporaryDirectory() as td:
+            src = Path(td) / "Modules"
+            _write(src, "TAOM.CoopCompat/bin/Win64_Shipping_Client/SERILOG.DLL", 16)
+            _write(src, "TAOM.CoopCompat/bin/Win64_Shipping_wEditor/sub/coop.core.dll", 16)
+            _write(src, "TAOM.CoopCompat/BIN/Win64_Shipping_Server/taom.coopcompat.coop.DLL", 16)
+            plan = pr.plan_module(src / "TAOM.CoopCompat")
+            self.assertEqual(sorted(pr.unshipped_in_coopcompat([plan])),
+                             ["TAOM.CoopCompat/bin/Win64_Shipping_Client/SERILOG.DLL",
+                              "TAOM.CoopCompat/bin/Win64_Shipping_wEditor/sub/coop.core.dll"])
+
+    def test_other_modules_are_not_flagged(self):
+        with tempfile.TemporaryDirectory() as td:
+            src = Path(td) / "Modules"
+            _write(src, "TAOM.CoopCompat/bin/Win64_Shipping_Client/TAOM.CoopCompat.dll", 16)
+            _write(src, "TAOM.Dependencies/bin/Win64_Shipping_Client/Autofac.dll", 16)
+            plans = [pr.plan_module(src / "TAOM.CoopCompat"), pr.plan_module(src / "TAOM.Dependencies")]
+            self.assertEqual(pr.unshipped_in_coopcompat(plans), [])
+
+    def test_a_dry_run_and_a_real_run_refuse_and_name_the_file(self):
+        with tempfile.TemporaryDirectory() as td:
+            src = Path(td) / "Modules"
+            _write(src, "TAOM.CoopCompat/bin/Win64_Shipping_Client/TAOM.CoopCompat.dll", 16)
+            _write(src, "TAOM.CoopCompat/bin/Win64_Shipping_Server/GameInterface.dll", 16)
+            for extra in (["--dry-run"], []):
+                r = _run("--source", str(src), "--dest", str(Path(td) / "out"), "--modules",
+                         "TAOM.CoopCompat", *extra)
+                self.assertEqual(r.returncode, 2, r.stdout)
+                self.assertIn("TAOM.CoopCompat/bin/Win64_Shipping_Server/GameInterface.dll", r.stderr)
+                self.assertIn("licence", r.stderr)
+                self.assertIn("never writes", r.stderr)
+            self.assertFalse((Path(td) / "out").exists())
+
+    def test_a_manifest_that_does_not_name_the_coop_assembly_still_requires_it(self):
+        # TAOM.CoopCompat.Coop.dll is loaded by TAOM.CoopCompat.dll, never by SubModule.xml, so the
+        # manifest cannot be what decides whether it is required.
+        plan = pr.plan_module(Path("nowhere") / "TAOM.CoopCompat")
+        with mock.patch.object(pr, "commit_dll_names", return_value=["TAOM.CoopCompat.dll"]):
+            self.assertEqual(pr.required_dlls(plan, "0" * 40), self.OWN)
 
 
 class TestGamePassBinIsRefused(unittest.TestCase):
@@ -945,6 +1061,49 @@ class TestRequireBuildCli(unittest.TestCase):
             r = self._gate(src, td)
             self.assertEqual(r.returncode, 2, r.stdout)
             self.assertIn("TAOM/GUI/PreFabs/NoSuchPrefabAtHead_1024.xml", r.stderr)
+
+    COOP_DLLS = ("TAOM.CoopCompat.dll", "TAOM.CoopCompat.Coop.dll")
+
+    def _coopcompat_problems(self, td, copies, dlls=COOP_DLLS):
+        # The stale-file comparison reads CoopCompat/_Module at the rev; it is stubbed because it only
+        # covers the pre-commit HEAD (which does not track the module yet). TestStaleModuleFiles
+        # covers the comparison itself.
+        src = Path(td) / "Modules"
+        for folder, stamp in copies.items():
+            for dll in dlls:
+                self._modules(td, stamp, f"TAOM.CoopCompat/bin/{folder}/{dll}")
+        plan = pr.plan_module(src / "TAOM.CoopCompat")
+        with mock.patch.object(pr, "stale_module_files", return_value=[]):
+            return pr.require_build([plan], "HEAD", ("TAOM.CoopCompat",))
+
+    def test_coopcompat_needs_its_client_dll_and_every_copy_is_stamp_checked(self):
+        with tempfile.TemporaryDirectory() as td:
+            problems, checked = self._coopcompat_problems(
+                td, {"Win64_Shipping_Server": f"{STAMP}+{self.head}.dirty"})
+            text = "\n".join(problems)
+            self.assertIn("TAOM.CoopCompat: bin/Win64_Shipping_Client/TAOM.CoopCompat.dll is missing", text)
+            self.assertIn("TAOM.CoopCompat: bin/Win64_Shipping_Client/TAOM.CoopCompat.Coop.dll is missing", text)
+            self.assertIn("TAOM.CoopCompat/bin/Win64_Shipping_Server/TAOM.CoopCompat.dll", text)
+            self.assertIn("TAOM.CoopCompat/bin/Win64_Shipping_Server/TAOM.CoopCompat.Coop.dll", text)
+            self.assertIn("uncommitted", text)
+            self.assertEqual(sorted(checked), ["TAOM.CoopCompat/bin/Win64_Shipping_Server/TAOM.CoopCompat.Coop.dll",
+                                               "TAOM.CoopCompat/bin/Win64_Shipping_Server/TAOM.CoopCompat.dll"])
+
+    def test_coopcompat_clean_copies_in_client_and_server_bins_pass(self):
+        with tempfile.TemporaryDirectory() as td:
+            clean = f"{STAMP}+{self.head}"
+            problems, checked = self._coopcompat_problems(
+                td, {"Win64_Shipping_Client": clean, "Win64_Shipping_Server": clean})
+            self.assertEqual(problems, [])
+            self.assertEqual(len(checked), 4)
+
+    def test_coopcompat_refuses_a_client_bin_without_the_coop_assembly(self):
+        with tempfile.TemporaryDirectory() as td:
+            clean = f"{STAMP}+{self.head}"
+            problems, _checked = self._coopcompat_problems(
+                td, {"Win64_Shipping_Client": clean}, dlls=("TAOM.CoopCompat.dll",))
+            self.assertEqual(problems,
+                             ["TAOM.CoopCompat: bin/Win64_Shipping_Client/TAOM.CoopCompat.Coop.dll is missing"])
 
     def test_refuses_when_a_requested_module_is_absent(self):
         # Planning skips a missing module folder; the gate must not certify the rest.
@@ -2091,7 +2250,8 @@ class TestJitReportCli(unittest.TestCase):
             _write(src, "TAOM_Map/SubModule.xml", 10)
             r = self._dry(src, td, modules=("TAOM_Map",))
             self.assertEqual(r.returncode, 0, r.stderr)
-            self.assertIn("no planned module ships TAOM.dll, TAOM.Client.dll or TAOM.Dependencies.dll", r.stdout)
+            self.assertIn("no planned module ships TAOM.dll, TAOM.Client.dll, "
+                          "TAOM.Dependencies.dll or TAOM.CoopCompat.dll", r.stdout)
 
 
 def _report_text(rows, trailer=True, total=None):

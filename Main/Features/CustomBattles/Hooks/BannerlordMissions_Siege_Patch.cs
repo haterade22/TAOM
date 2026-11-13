@@ -38,6 +38,7 @@ public static class BannerlordMissions_Siege_Patch
             {
                 _logger?.LogDebug("[CustomBattles] Adding CustomBattleTeamFixBehavior to custom siege mission");
                 __result.AddMissionBehavior(new CustomBattleTeamFixBehavior(_logger));
+                Muster.CustomBattleMuster.AddMissionBehaviors(__result);
             }
         }
         catch (Exception ex)

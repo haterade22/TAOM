@@ -3,7 +3,7 @@
         xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/BUTR/Bannerlord.XmlSchemas/master/SubModule.xsd">
   <Id value="TAOM" />
   <Name value="TAOM" />
-  <Version value="v2.0.36" />
+  <Version value="v2.0.38" />
   <DefaultModule value="false" />
   <ModuleCategory value="Singleplayer"/>
   <ModuleType value="Community" />
@@ -28,13 +28,13 @@
     <!-- Version-pinned mirror of the DependedModule above, for BUTR/BLSE launchers (which DO read
          this block). Bump this alongside Dependencies/_Module/SubModule.xml's <Version> whenever
          the Dependencies assembly changes — a stale pairing is the #371 failure mode. -->
-    <DependedModuleMetadata id="TAOM.Dependencies" order="LoadBeforeThis" version="v2.0.36" />
-    <DependedModuleMetadata id="Native" order="LoadBeforeThis" version="v1.5.6.*" />
+    <DependedModuleMetadata id="TAOM.Dependencies" order="LoadBeforeThis" version="v2.0.38" />
+    <DependedModuleMetadata id="Native" order="LoadBeforeThis" version="v1.5.7.*" />
     <DependedModuleMetadata id="SandBoxCore" order="LoadBeforeThis" />
     <DependedModuleMetadata id="Sandbox" order="LoadBeforeThis" />
     <DependedModuleMetadata id="CustomBattle" order="LoadBeforeThis" />
     <!-- Co-op interop (2026-07-31). BUTR/BLSE launchers read this block; the VANILLA launcher does
-         not — `TaleWorlds.ModuleManager.ModuleInfo.LoadWithFullPath` (installed v1.5.6) parses only
+         not — `TaleWorlds.ModuleManager.ModuleInfo.LoadWithFullPath` (installed v1.5.7) parses only
          DependedModules, ModulesToLoadAfterThis, IncompatibleModules and SubModules, with no branch
          for DependedModuleMetadatas at all. The engine-honoured pin is the <ModulesToLoadAfterThis>
          element below; this line is the BUTR-launcher mirror of it. Deliberately NOT a

@@ -2134,20 +2134,20 @@
   <Faction
 		id="clan_lindon_1"
 		initial_home_settlement="Settlement.town_LN1"
-		name="{=aom_clan_lindon_1_name}Falathrim"
+		name="{=aom_clan_lindon_1_name}Nos Nowë"
 		tier="6"
 		owner="Hero.lord_LN1_1"
 		culture="Culture.lindon"
 		super_faction="Kingdom.lindon"
 		is_noble="true"
-		color="FF758DA2"
-		color2="FF203054"
+		color="FF7FAFC9"
+		color2="FFC9CED4"
 		default_party_template="PartyTemplate.kingdom_hero_party_rivendell_lindon_1_template"
-		banner_key="11.2017.2017.1528.1528.764.764.1.0.0.15000.2018.2018.483.483.764.764.0.0.0" />
+		banner_key="11.293.293.1528.1528.764.764.1.0.0.505.2018.2018.410.410.764.764.0.0.45.505.293.293.390.390.764.764.0.0.45.15000.2022.2022.443.441.764.763.0.0.0" />
   <Faction
 		id="clan_lindon_2"
 		initial_home_settlement="Settlement.town_LN2"
-		name="{=aom_clan_lindon_2_name}Edhil Mithlond"
+		name="{=aom_clan_lindon_2_name}Nos Artanor"
 		tier="4"
 		owner="Hero.lord_LN2_1"
 		culture="Culture.lindon"
@@ -2264,7 +2264,7 @@
 		color="FF5960A8"
 		color2="FFD2D6D5"
 		default_party_template="PartyTemplate.kingdom_hero_party_arthedain_template"
-		banner_key="11.190.190.1528.1528.764.764.1.0.0.11002.110.110.700.700.764.764.0.0.0" />
+		banner_key="11.176.176.1528.1528.764.764.1.0.0.31010.267.267.301.301.636.884.0.0.0.31010.267.267.301.301.893.884.0.1.0.31008.324.324.422.422.764.720.0.0.0.31009.332.332.95.95.686.795.0.0.0.31009.332.332.95.95.843.795.0.1.0" />
   <Faction
 		id="clan_arthedain_4"
 		initial_home_settlement="Settlement.castle_AN5"
@@ -2391,7 +2391,7 @@
   <Faction
 		id="clan_lindon_3"
 		initial_home_settlement="Settlement.town_LN3"
-		name="{=aom_clan_lindon_3_name}Nos Galdor"
+		name="{=aom_clan_lindon_3_name}Nos Thavn a Minas Loss"
 		tier="5"
 		owner="Hero.lord_LN3_1"
 		culture="Culture.lindon"
@@ -2400,11 +2400,11 @@
 		color="FF6F8FA8"
 		color2="FF1E2F4F"
 		default_party_template="PartyTemplate.kingdom_hero_party_rivendell_lindon_2_template"
-		banner_key="11.2017.2017.1528.1528.764.764.1.0.0.31001.2022.2022.483.483.764.764.0.0.0" />
+		banner_key="11.2023.2023.1528.1528.764.764.1.0.0.31003.293.293.477.477.764.777.0.0.0.515.2016.2016.39.39.594.614.0.0.0.515.2016.2016.39.39.934.614.0.0.0" />
   <Faction
 		id="clan_lindon_4"
 		initial_home_settlement="Settlement.castle_LN1"
-		name="{=aom_clan_lindon_4_name}Nos Brithombar"
+		name="{=aom_clan_lindon_4_name}Nos Eldalomril"
 		tier="3"
 		owner="Hero.lord_LN4_1"
 		culture="Culture.lindon"
@@ -2417,7 +2417,7 @@
   <Faction
 		id="clan_lindon_5"
 		initial_home_settlement="Settlement.castle_LN2"
-		name="{=aom_clan_lindon_5_name}Wardens of Ered Luin"
+		name="{=aom_clan_lindon_5_name}Nos Nenwendil"
 		tier="3"
 		owner="Hero.lord_LN5_1"
 		culture="Culture.lindon"
@@ -2430,7 +2430,7 @@
   <Faction
 		id="clan_lindon_6"
 		initial_home_settlement="Settlement.castle_LN3"
-		name="{=aom_clan_lindon_6_name}Nos Eglarest"
+		name="{=aom_clan_lindon_6_name}Nos Inglor"
 		tier="2"
 		owner="Hero.lord_LN6_1"
 		culture="Culture.lindon"
@@ -2445,7 +2445,7 @@
   <Faction
 		id="clan_eredluin_1"
 		initial_home_settlement="Settlement.town_EL3"
-		name="{=aom_clan_eredluin_1_name}House of Borin"
+		name="{=aom_clan_eredluin_1_name}House of Delingur"
 		tier="5"
 		owner="Hero.lord_EL1_1"
 		culture="Culture.eredluin"
@@ -2454,11 +2454,11 @@
 		color="FF3E5A7A"
 		color2="FFB8C4CC"
 		default_party_template="PartyTemplate.kingdom_hero_party_eredluin_template"
-		banner_key="11.200.200.1528.1528.764.764.1.0.0.24000.110.110.700.700.764.764.0.0.0" />
+		banner_key="11.292.200.1528.1528.764.764.1.0.0.31007.110.110.523.523.764.764.0.0.0" />
   <Faction
 		id="clan_eredluin_2"
 		initial_home_settlement="Settlement.town_EL1"
-		name="{=aom_clan_eredluin_2_name}Broadbeams"
+		name="{=aom_clan_eredluin_2_name}House of Dwálin"
 		tier="4"
 		owner="Hero.lord_EL2_1"
 		culture="Culture.eredluin"
@@ -2467,11 +2467,11 @@
 		color="FF34495E"
 		color2="FFC8CCD0"
 		default_party_template="PartyTemplate.kingdom_hero_party_eredluin_template"
-		banner_key="11.200.200.1528.1528.764.764.1.0.0.24001.110.110.700.700.764.764.0.0.0" />
+		banner_key="11.116.116.1528.1528.764.764.0.0.0.515.173.173.33.33.757.587.0.0.0.515.173.173.33.33.656.622.0.0.0.515.173.173.33.33.858.622.0.0.0.515.173.173.33.33.587.706.0.0.0.515.173.173.33.33.926.706.0.0.0.515.173.173.33.33.556.809.0.0.0.515.173.173.33.33.957.809.0.0.0.503.114.114.350.350.754.791.0.0.0.505.193.193.758.758.754.1159.0.0.45.505.134.134.220.220.754.849.0.0.45.505.193.193.392.392.754.1095.0.0.45" />
   <Faction
 		id="clan_eredluin_3"
 		initial_home_settlement="Settlement.town_EL2"
-		name="{=aom_clan_eredluin_3_name}Firebeards"
+		name="{=aom_clan_eredluin_3_name}House of Úri"
 		tier="4"
 		owner="Hero.lord_EL3_1"
 		culture="Culture.eredluin"
@@ -2480,11 +2480,11 @@
 		color="FF6A3A2A"
 		color2="FFE0B080"
 		default_party_template="PartyTemplate.kingdom_hero_party_eredluin_template"
-		banner_key="11.200.200.1528.1528.764.764.1.0.0.24002.110.110.700.700.764.764.0.0.0" />
+		banner_key="11.149.149.1528.1528.764.764.1.0.0.509.240.240.588.587.764.764.0.0.23.509.222.222.558.557.764.764.0.0.23.500.240.240.407.407.764.764.0.0.0.503.161.161.397.396.764.764.0.0.0.24008.228.228.332.314.764.763.0.0.0.515.228.228.25.25.764.558.0.0.0.515.228.228.25.25.910.618.0.0.0.515.228.228.25.25.970.764.0.0.0.515.228.228.25.25.910.910.0.0.0.515.228.228.25.25.764.970.0.0.0.515.228.228.25.25.618.910.0.0.0.515.228.228.25.25.558.764.0.0.0.515.228.228.25.25.618.618.0.0.0" />
   <Faction
 		id="clan_eredluin_4"
 		initial_home_settlement="Settlement.castle_EL2"
-		name="{=aom_clan_eredluin_4_name}Wardens of Dolmed"
+		name="{=aom_clan_eredluin_4_name}House of Eldran"
 		tier="3"
 		owner="Hero.lord_EL4_1"
 		culture="Culture.eredluin"
@@ -2493,7 +2493,7 @@
 		color="FF2C3E50"
 		color2="FFB0B8C0"
 		default_party_template="PartyTemplate.kingdom_hero_party_eredluin_template"
-		banner_key="11.200.200.1528.1528.764.764.1.0.0.24003.110.110.700.700.764.764.0.0.0" />
+		banner_key="11.100.100.1528.1528.764.764.0.0.0.504.173.173.1104.939.764.765.0.0.180.504.101.101.1104.939.764.661.0.0.180.504.173.173.356.483.765.711.0.0.0.504.173.173.169.241.657.702.0.0.0.504.173.173.169.241.873.702.0.0.0.504.173.173.363.309.764.846.0.0.180.24025.102.173.128.153.661.750.0.0.0.24025.102.173.128.153.870.750.0.0.0.504.173.173.304.402.764.730.0.0.0.24025.102.173.307.339.766.731.0.0.0.505.173.173.114.114.764.835.0.0.45.505.173.173.51.51.657.840.0.0.56.505.173.173.51.51.871.840.0.1.304.505.293.293.63.63.764.814.0.0.45.505.173.173.63.63.764.861.0.0.45.24510.293.293.39.39.555.747.0.0.45.24510.293.293.39.39.974.747.0.0.45.24510.293.293.39.39.623.826.0.0.45.24510.293.293.39.39.906.826.0.0.45.24510.293.293.39.39.696.901.0.0.45.24510.293.293.39.39.833.901.0.0.45.24510.293.293.42.43.764.977.0.0.0.515.20.20.34.34.764.533.0.0.0.515.20.20.34.34.601.588.0.0.0.515.20.20.34.34.928.588.0.0.0.505.101.100.1110.273.765.278.0.0.0" />
   <!-- TAOM-NEWFACTIONS:eredluin:END -->
   <!-- TAOM-NEWFACTIONS:anduinvale:BEGIN -->
   <Faction

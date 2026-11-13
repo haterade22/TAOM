@@ -26,7 +26,7 @@ public class LongDefeatMissionLogicTests
         new(new RunPlan("helms", new[] { new GarrisonRow("t", FormationSlot.Infantry, 1) },
                 new WavePlan(new[] { new WaveSpec(110, new[] { new WaveTroop("a", FormationSlot.Infantry, 1) }) }, new WaveScaling(10, 300)),
                 new ShopPlan(0, Array.Empty<ShopOffer>()), RunRules.Default, RunOptions.Default),
-            new LongDefeatSession(), Substitute.For<IModLogger>(), Substitute.For<IOutcomeLog>(), menu ?? new FakeLongDefeatMenu(), "m1");
+            new LongDefeatSession(), Substitute.For<IModLogger>(), Substitute.For<IOutcomeLog>(), (menu ?? new FakeLongDefeatMenu()).EndGame, "m1");
 
     // The text of the first block after the marker, by brace depth.
     private static string BodyOf(string source, string marker)

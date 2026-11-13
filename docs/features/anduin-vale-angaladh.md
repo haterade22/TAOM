@@ -414,7 +414,7 @@ Restart Bannerlord fully, then start a new campaign. Precondition: the rows are 
   `translate_with_claude.py --sync-ids` at 19:06, run with its module default `all`: an insert-only
   English seeding of 102 earlier Armory ids per language, with no backup (#1056). Seed with
   `--module TAOM`.
-- Translations are seeded into 12 languages (free) and owed to the paid run (#763). The live BR and
+- Translations are in all 12 languages (2026-11-12, #763). The live BR and
   IT grammar tags (41 rows each) are written by merge step 1 (`name_tags.py --target live-map`), not
   now, and each `taom_map` count in `tools/external-loc-coverage-baseline.json` rose by 41.
 

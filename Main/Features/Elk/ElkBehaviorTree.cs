@@ -17,7 +17,7 @@ namespace TAOM.Features.Elk;
 /// thread (#592).
 ///
 /// One branch: when a live enemy is in front within <see cref="ElkConfig.AttackTriggerRange"/> and the charge is
-/// off cooldown (10 s), the elk lowers its antlers (act_war_ram_butt, the ram's head-down clip on the shared
+/// off cooldown (35 s), the elk lowers its antlers (act_war_ram_butt, the ram's head-down clip on the shared
 /// horse_skeleton) and lands one 60 Blunt blow, scaled by the rider's career charge bonus, on the one enemy it faces
 /// most squarely; the blow is the rider's. It fires under ANY rider, the player included, as the warg's bite does
 /// (Mike, 2026-09-23): the attack is automatic and the rider keeps steering. Between charges it idles and the engine's

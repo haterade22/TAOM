@@ -184,7 +184,7 @@ MSTest with NSubstitute and a hand-written engine fake, in `TAOM.Tests/Features/
 - **In game:** force each side from the console, watch a host raid, fight it, save and load mid-raid, switch the feature off mid-host, and check the destroy path of a host killed in a battle.
 - **Balance:** two fast-forward runs to day 200 from one save, hosts on and off, compared with `tools/analyze_war_ledger.py`.
 - **Budget check from `maxHourMs`:** read the slowest hourly step of the day from the daily debug line over a long run and compare it with the proposed 1 ms budget.
-- **Translation (paid):** the 21 `taom_fat_envoy_*` keys (title, body, five options with hints, answer button, seven result lines) are registered in `taom_module_strings.xml` and seeded in English in the 12 language files; the paid translation run (`/localize`) is still owed. The five slice 1 message keys and the nine `taom_fat_host_*` names are English only until the same run.
+- **Translation (done 2026-11-12, #763):** the 21 `taom_fat_envoy_*` keys (title, body, five options with hints, answer button, seven result lines) are registered in `taom_module_strings.xml` and translated in the 12 language files. The five slice 1 message keys and the nine `taom_fat_host_*` names are translated in the same pass.
 - **In game (slice 2).** Setup: join the target realm with `campaign.join_kingdom`, give the clan villages with `campaign.give_settlement_to_player` (7 or more villages gives 4 price units, which is what shows Haggle), send a host with `taom.spawn_raid_host evil confirm`, then `taom.set_envoy_due confirm`. Check: the look of the popup (title "{HOST} Demands Tribute", five options, disabled Pay with its purse hint, no cancel button, the game pauses); the popup reopening after Haggle; each option in turn; pay and watch the host drop an engage order on the main party or a raid on one of the clan's villages in that same moment, then skip them; seize and watch the side's next host choose the player's kingdom; Ask for time and the return; save and load after Seize and after Ask for time (the grudge and the due hour survive), and with a popup open (it returns at the next hour); an enlisted player; a busy map (menu, encounter); a host in a battle; a second due envoy behind the first.
 - **Balance:** the unit price, the haggle numbers and the 24 to 48 hour default wait are first guesses (see "Why these defaults").
 - **In game (own side).** Fast-forward a campaign past day 89 (Full War on day 44, plus the 45-day `firstHostDelayDays`) with hosts on, then read the log: hosts should log raids (`went home after N/M raids` or raids counted in the daily line) instead of `was broken after 0/N raids`, and no own-side lord should be seen chasing a host on the map.
@@ -202,7 +202,7 @@ MSTest with NSubstitute and a hand-written engine fake, in `TAOM.Tests/Features/
 ## GitHub Issue
 
 - **Issue:** #870, Fire and Tribute: raiding hosts for Good, Neutral and Evil, with a tribute envoy
-- **Status:** Shipped on `bannerlord-1.5.x` (slice 1 `21e0807f9`, slice 2 the envoy `c3246f607`, v2.0.35). Issue open: the in-game checks, balance runs, the MapPerf budget check and the translation of its 35 keys (#763) are owed.
+- **Status:** Shipped on `bannerlord-1.5.x` (slice 1 `21e0807f9`, slice 2 the envoy `c3246f607`, v2.0.35). Issue open: the in-game checks, balance runs and the MapPerf budget check are owed.
 
 ---
 

@@ -127,7 +127,7 @@ SESSION_SITE = re.compile(r"\[Session\] swallowed feature=(\S+) site=(\S+) n=(\d
 BUILD_STAMP = re.compile(r"\[BuildStamp\] TAOM=\S+ build\.(\d{8}-\d{6})Z\+([0-9a-f]{7,40})(\.dirty)?(?:\s|$)")
 UNLOAD_LINE = "[Shutdown] clean module unload"
 # The pathspec the build marks a stamp .dirty from (Directory.Build.props, target TaomStampWorkingTreeState); a test reads it out of there.
-WATCHED_PATHS = ("Main", "Client", "Dependencies", "Stubs", "Directory.Build.props", "GameReferences.targets")
+WATCHED_PATHS = ("Main", "Client", "CoopCompat", "Dependencies", "Stubs", "Directory.Build.props", "GameReferences.targets")
 
 
 def stale_build(log_text, head, changed):

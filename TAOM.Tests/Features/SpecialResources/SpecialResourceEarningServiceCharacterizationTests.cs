@@ -14,7 +14,7 @@ namespace TAOM.Tests.Features.SpecialResources;
 [TestClass]
 public class SpecialResourceEarningServiceCharacterizationTests
 {
-    private static VictorySnapshot Win(int enemy = 30, int? men = 10, bool siege = false) => new()
+    private static VictorySnapshot Win(int enemy = 30, bool siege = false) => new()
     {
         State = "AttackerVictory",
         IsPlayerMapEvent = true,
@@ -24,7 +24,7 @@ public class SpecialResourceEarningServiceCharacterizationTests
         IsSiege = siege,
         BeatAFieldParty = true,
         EnemyCount = enemy,
-        LocalHero = EarningTestKit.Local(men),
+        LocalHero = EarningTestKit.Local(),
     };
 
     private static RaidOrHideoutSnapshot Raid() => new()
@@ -46,13 +46,14 @@ public class SpecialResourceEarningServiceCharacterizationTests
     // --- Victory ---
 
     [TestMethod]
-    public void OnVictory_AttackerWinsFieldBattle_EarnsFromBattleWithEnemyRatio()
+    public void OnVictory_AttackerWinsFieldBattle_EarnsFromBattleWithEnemyCount()
     {
         var kit = new EarningTestKit();
 
-        kit.Sut.OnVictory(Win(enemy: 30, men: 10));
+        // The pay follows the enemy's size alone.
+        kit.Sut.OnVictory(Win(enemy: 30));
 
-        kit.Service.Received(1).EarnFromBattle("main", "k", "c", 3f);
+        kit.Service.Received(1).EarnFromBattle("main", "k", "c", 30f);
         kit.Service.DidNotReceiveWithAnyArgs().EarnFromSiege(default, default, default);
     }
 
@@ -141,36 +142,13 @@ public class SpecialResourceEarningServiceCharacterizationTests
     }
 
     [TestMethod]
-    public void OnVictory_PartyHasNoRoster_DividesByOne()
+    public void OnVictory_NoEnemies_PassesZero()
     {
         var kit = new EarningTestKit();
 
-        kit.Sut.OnVictory(Win(enemy: 7, men: null));
+        kit.Sut.OnVictory(Win(enemy: 0));
 
-        kit.Service.Received(1).EarnFromBattle("main", "k", "c", 7f);
-    }
-
-    [TestMethod]
-    public void OnVictory_EmptyPartyAgainstEnemies_PassesInfiniteRatioThrough()
-    {
-        // Moved gate, parity kept: 30 / 0 is +Infinity and the ratio is not validated here (the resource
-        // service owns the clamp). The test pins that, so a change of behaviour is a decision.
-        var kit = new EarningTestKit();
-
-        kit.Sut.OnVictory(Win(enemy: 30, men: 0));
-
-        kit.Service.Received(1).EarnFromBattle("main", "k", "c", float.PositiveInfinity);
-    }
-
-    [TestMethod]
-    public void OnVictory_NoEnemiesAndEmptyParty_PassesNaNRatioThrough()
-    {
-        // 0 / 0 is NaN. Parity keeps it passing the gate; the resource service owns the finite clamp.
-        var kit = new EarningTestKit();
-
-        kit.Sut.OnVictory(Win(enemy: 0, men: 0));
-
-        kit.Service.Received(1).EarnFromBattle("main", "k", "c", Arg.Is<float>(r => float.IsNaN(r)));
+        kit.Service.Received(1).EarnFromBattle("main", "k", "c", 0f);
     }
 
     [TestMethod]

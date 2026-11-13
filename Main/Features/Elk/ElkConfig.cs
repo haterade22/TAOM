@@ -49,8 +49,9 @@ public static class ElkConfig
     public const float AttackFacingDot = 0.25f;
 
     /// <summary>Seconds between antler charges. Must outlast the 3.5 s clip (butt plus head-down hold), or the
-    /// tree restarts the charge mid-hold. The ram's 10 s: Mirkwood cavalry come in stacks like the ram's.</summary>
-    public const double AttackCooldownSeconds = 10.0;
+    /// tree restarts the charge mid-hold. The ram's 35 s (Mike, 2026-11-11; both were 10 s): Mirkwood cavalry
+    /// come in stacks like the ram's. <c>AttackCooldown_FollowsTheWarRam</c> pins the match.</summary>
+    public const double AttackCooldownSeconds = 35.0;
 
     /// <summary>The charge's reach: it hits ONE enemy inside this radius (<see cref="AttackSingleTarget"/>). The ram's
     /// 2 m at 1.0x, scaled with the body like the trigger range so the trigger stays inside it.</summary>

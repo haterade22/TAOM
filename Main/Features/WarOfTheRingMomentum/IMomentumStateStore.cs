@@ -22,5 +22,19 @@ public interface IMomentumStateStore
 
     Dictionary<string, string> Serialize();
     void Deserialize(Dictionary<string, string> data);
+
+    /// <summary>
+    /// The war state without <see cref="PlayerEvents"/>, for a co-op server to send to its clients.
+    /// The server's own player events belong to no player, so they never travel.
+    /// </summary>
+    Dictionary<string, string> CaptureWarState();
+
+    /// <summary>
+    /// Replace the war state with one from <see cref="CaptureWarState"/> and keep this peer's
+    /// <see cref="PlayerEvents"/>. A co-op client calls it with the server's state; it writes only
+    /// TAOM's own copy, never an engine object. Returns false, and keeps the prior state, for an
+    /// empty snapshot or one of another version.
+    /// </summary>
+    bool ApplyWarState(Dictionary<string, string> data);
     void ResetForNewGame();
 }

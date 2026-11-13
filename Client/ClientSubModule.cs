@@ -48,6 +48,7 @@ public sealed class ClientSubModule : MBSubModuleBase
     protected override void OnGameStart(Game game, IGameStarter gameStarterObject)
     {
         base.OnGameStart(game, gameStarterObject);
+        Features.Realms.RealmsClient.OnGameStart();
         if (_uiExtender != null)
             return;
 
@@ -80,6 +81,7 @@ public sealed class ClientSubModule : MBSubModuleBase
     protected override void OnApplicationTick(float dt)
     {
         base.OnApplicationTick(dt);
+        Features.Realms.RealmsClient.Tick();
         try
         {
             if (!_autorunResolved)

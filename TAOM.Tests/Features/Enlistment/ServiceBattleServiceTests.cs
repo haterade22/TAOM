@@ -756,6 +756,105 @@ public class ServiceBattleServiceTests
         _gameMenu.Received(1).EnsureMenuOpen(EnlistmentMenuService.ServiceWaitMenuId);
     }
 
+    [TestMethod]
+    public void TryJoin_FailsWhileAlreadyInAMapEvent_StaysInBattleStateAndLeavesArmyPartyAndMenuAlone()
+    {
+        // Leaving the army clears AttachedTo, which pulls an active party out of its event (#551).
+        // Parking deactivates a party that is still fighting. The service menu would cover the battle.
+        // Attached would lift the presence hold, which is keyed on EnlistedBattle.
+        MakeRollbackInsideAMapEvent(currentMenuId: "encounter");
+
+        _service.OnCommanderBattleStarted("lord_party_1");
+
+        Assert.AreEqual(EnlistmentState.EnlistedBattle, _store.Record.State);
+        _army.DidNotReceive().LeaveArmy();
+        _partyAdapter.DidNotReceive().ParkNear(Arg.Any<string>());
+        _encounter.DidNotReceive().Finish(Arg.Any<bool>());
+        _gameMenu.DidNotReceive().EnsureMenuOpen(EnlistmentMenuService.ServiceWaitMenuId);
+        _gameMenu.DidNotReceive().ExitToLast();
+    }
+
+    [TestMethod]
+    public void TryJoin_FailsWhileAlreadyInAMapEvent_ServiceMenuUp_ExitsIt()
+    {
+        // The service menu is a parked soldier's normal menu, and the battle never resolves under it.
+        // The engine opens `encounter` itself when no menu is up (#1021).
+        MakeRollbackInsideAMapEvent(currentMenuId: EnlistmentMenuService.ServiceWaitMenuId);
+
+        _service.OnCommanderBattleStarted("lord_party_1");
+
+        _gameMenu.Received(1).ExitToLast();
+        _gameMenu.DidNotReceive().EnsureMenuOpen(EnlistmentMenuService.ServiceWaitMenuId);
+    }
+
+    [TestMethod]
+    public void TryJoin_RollbackAfterTheMergePutThePartyInTheEvent_UndoesTheMergeParksAndReopensTheMenu()
+    {
+        // MobileParty.SetAttachedToInternal copies the commander's event side onto a merged party, so a
+        // landed merge always reads as in-event. Leaving the army clears that side again.
+        MakeEnlisted();
+        _encounter.JoinBattle(PartyBattleSide.Defender).Returns(false);
+        _encounter.IsMainPartyInMapEvent.Returns(true);
+        _army.LeaveArmy().Returns(_ =>
+        {
+            _encounter.IsMainPartyInMapEvent.Returns(false);
+            return true;
+        });
+        _gameMenu.CurrentMenuId.Returns("encounter");
+
+        _service.OnCommanderBattleStarted("lord_party_1");
+
+        _army.Received(1).LeaveArmy();
+        Assert.AreEqual(EnlistmentState.EnlistedAttached, _store.Record.State);
+        _partyAdapter.Received(1).ParkNear("lord_1_1");
+        _gameMenu.Received(1).EnsureMenuOpen(EnlistmentMenuService.ServiceWaitMenuId);
+    }
+
+    [TestMethod]
+    public void TryJoin_RollbackAfterTheMergeAndStillInTheEvent_LeavesTheBattleMenu()
+    {
+        // The undo did not clear the event side, so the service menu would cover a live battle (#1099).
+        MakeEnlisted();
+        _encounter.JoinBattle(PartyBattleSide.Defender).Returns(false);
+        _encounter.IsMainPartyInMapEvent.Returns(true);
+        _encounter.GetOwnership(Arg.Any<string>()).Returns(new EncounterOwnershipSnapshot(
+            hasEncounter: true, hasEncounteredMobileParty: true, playerInMapEvent: true));
+        _gameMenu.CurrentMenuId.Returns("encounter");
+
+        _service.OnCommanderBattleStarted("lord_party_1");
+
+        _army.Received(1).LeaveArmy();
+        _encounter.DidNotReceive().Finish(Arg.Any<bool>());
+        _gameMenu.DidNotReceive().EnsureMenuOpen(EnlistmentMenuService.ServiceWaitMenuId);
+    }
+
+    private void MakeRollbackInsideAMapEvent(string currentMenuId)
+    {
+        MakeEnlisted();
+        _army.JoinCommanderArmy(Arg.Any<string>()).Returns(false);
+        _encounter.JoinBattle(PartyBattleSide.Defender).Returns(false);
+        _encounter.IsMainPartyInMapEvent.Returns(true);
+        _encounter.GetOwnership(Arg.Any<string>()).Returns(new EncounterOwnershipSnapshot(
+            hasEncounter: true, hasEncounteredMobileParty: true, playerInMapEvent: true));
+        _gameMenu.CurrentMenuId.Returns(currentMenuId);
+    }
+
+    [TestMethod]
+    public void BattleEnded_PlayerStillInTheEndingEvent_StillReopensTheServiceWaitMenu()
+    {
+        // Pins where the in-event gate lives. It belongs to the failed join alone: this path runs
+        // while the ending event still holds the player, so a gate inside ReassertServiceMenu
+        // would leave a soldier on the map with no menu.
+        MakeEnlisted(EnlistmentState.EnlistedBattle);
+        _encounter.HasCurrent.Returns(false);
+        _encounter.IsMainPartyInMapEvent.Returns(true);
+        _gameMenu.CurrentMenuId.Returns("encounter");
+
+        _service.OnCommanderBattleEnded(mainPartyWasInEndingEvent: true);
+
+        _gameMenu.Received(1).EnsureMenuOpen(EnlistmentMenuService.ServiceWaitMenuId);
+    }
+
     // ---- transient army membership (#443, field reports 4 and 7) ----
 
     [TestMethod]

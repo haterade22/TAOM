@@ -28,7 +28,7 @@ internal sealed class LongDefeatMenuAdapter : ILongDefeatMenuAdapter
 
     public void Choose(string title, string description, IReadOnlyList<LongDefeatChoice> choices, Action<string> onPicked)
     {
-        var elements = choices.Select(c => new InquiryElement(c.Id, Resolve(c), null)).ToList();
+        var elements = choices.Select(c => new InquiryElement(c.Id, Resolve(c), null, true, c.Hint == null ? null : new TextObject(c.Hint).ToString())).ToList();
         MBInformationManager.ShowMultiSelectionInquiry(new MultiSelectionInquiryData(
             titleText: new TextObject(title).ToString(),
             descriptionText: new TextObject(description).ToString(),

@@ -161,6 +161,7 @@ public class FordsVerdictDiagnosticsTests
     public void Check09_Melee_RuleIsUnchangedByTheNewEvidence()
     {
         var run = Run();
+        run.Perf.LiveSeconds = 600; // a full-length run: a short one with no strike ordered is not judged (#1137)
         var tower = Tower(run, "t1");
         run.Lanes[0].AttackContactUnitSeconds = 500;
         tower.GunnerBlowsMelee = 50;

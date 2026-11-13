@@ -136,7 +136,7 @@ A hero of age shows "Lvl: {LEVEL}, Skills:" as the skills heading instead of van
 The filters, the layout and the header are per-peer UI: they change no campaign behavior and save nothing, so there is no gate (see "Deliberately NOT gated" in [coop-interop.md](coop-interop.md)). The Patch119 postfix skips nothing and writes no campaign state.
 
 ### Translation
-The 15 `taom_ency_*` rows in `taom_module_strings.xml` are seeded in English (the race filter label, the 8 race items, the 5 stage labels and the level header). The paid translation run is owed as a backlog issue.
+The 15 `taom_ency_*` rows in `taom_module_strings.xml` (the race filter label, the 8 race items, the 5 stage labels and the level header) were seeded in English and are translated in all 12 languages (2026-11-12, #763).
 
 ### In-game checklist
 Not yet checked in game.
@@ -184,6 +184,7 @@ Not yet checked in game.
 
 - 2026-05-13 — #145: replaced concrete-singleton coupling (`TaomSettings.Instance?.ShowAllEncyclopediaCharacters`) in `TaomInformationRestrictionModel` with an injected `IEncyclopediaSettingsProvider` (new `EncyclopediaSettingsProvider` + `EncyclopediaIoC`, registered in `Main/IoC.cs`); tests updated to NSubstitute on the new interface.
 
+- 2026-11-10 (v2.0.37): Native v1.5.7 defines both `str_last_seen_encyclopedia_entry_leading_army` ids itself (`module_strings.xml`, placeholder key `{=*}`), so TAOM's two rows in `taom_module_strings.xml` and their 24 language rows are deleted (#1112). The page shows vanilla's English text in every language. Checklist item 6 is still owed, now on v1.5.7.
 - 2026-10-27 (v2.0.36): Patch123 (the `HeroHelper.GetLastSeenText` guard for crash 9b2a103e) was retired. Vanilla v1.5.6 null-guards every army and party leader read the patch covered, so the guard, `LastSeenState` and their tests are deleted. The two vanilla strings v1.5.6 adds for a hero leading an army (`str_last_seen_encyclopedia_entry_leading_army` and `..._at_sea_leading_army`) are defined in `taom_module_strings.xml`, because no installed module defines them (#1036). Needs an in-game check (checklist item 6).
 - 2026-10-26: crash 9b2a103e: Patch123 contains the vanilla v1.5.x `HeroHelper.GetLastSeenText` NRE. Its new prisoner and army branches read the captor's or army leader's hero without a null check, so the page of a known lord held by a leaderless party (bandits, for example) crashed. The page now shows "last seen near X" for him. Needs an in-game check.
 

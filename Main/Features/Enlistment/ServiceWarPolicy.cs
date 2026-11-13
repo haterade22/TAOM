@@ -11,7 +11,8 @@ namespace TAOM.Features.Enlistment;
 /// through the vanilla <c>encounter</c> menu, whose <c>MenuHelper.EncounterAttackConsequence</c>
 /// runs <c>BeHostileAction.ApplyEncounterHostileAction</c> — and that fires
 /// <c>DeclareWarAction.ApplyByPlayerHostility</c> whenever the player's clan is not already at war
-/// with the defender's faction. So the player's clan accrues its own private war with every enemy
+/// with the defender's faction (since Bannerlord v1.5.7, not when the opposing leader party is a
+/// caravan or villager party). So the player's clan accrues its own private war with every enemy
 /// his lord happens to meet, one battle at a time, with no announcement and no way back. The
 /// question was never whether wars happen; it is whether they are deliberate and reversible.
 ///

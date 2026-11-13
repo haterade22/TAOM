@@ -648,9 +648,9 @@
     <string id="aom_lord_1_4_name" text="布倫希爾德·鐵爪" />
     <string id="aom_lord_1_5_name" text="奧斯里克,狂野者" />
     <string id="aom_lord_1_6_name" text="托瓦德·牛角" />
-    <string id="aom_lord_1_7_name" text="迪耐瑟二世,剛鐸攝政王" />
+    <string id="aom_lord_1_7_name" text="迪耐瑟二世" />
     <string id="aom_lord_1_8_name" text="胡里歐涅絲" />
-    <string id="aom_lord_1_9_name" text="伊姆拉希爾,多爾安羅斯親王" />
+    <string id="aom_lord_1_9_name" text="伊姆拉希爾" />
     <string id="aom_lord_1_10_name" text="阿拉涅爾" />
     <string id="aom_lord_1_25_name" text="艾爾菲爾" />
     <string id="aom_lord_1_35_name" text="埃爾希理安" />
@@ -699,11 +699,11 @@
     <string id="aom_lord_1_67_name" text="伊歐溫·羽箭" />
     <string id="aom_lord_1_40_name" text="波哈多" />
     <string id="aom_lord_1_46_name" text="馬爾里歐" />
-    <string id="aom_lord_1_45_name" text="佛龍,洛桑納赫領主" />
+    <string id="aom_lord_1_45_name" text="佛龍" />
     <string id="aom_lord_1_57_name" text="巴拉諾" />
-    <string id="aom_lord_1_52_name" text="希路因,皮那斯基林領主" />
-    <string id="aom_lord_1_53_name" text="安格博,拉米頓領主" />
-    <string id="aom_lord_1_71_name" text="戈拉斯吉爾,安法拉斯領主" />
+    <string id="aom_lord_1_52_name" text="希路因" />
+    <string id="aom_lord_1_53_name" text="安格博" />
+    <string id="aom_lord_1_71_name" text="戈拉斯吉爾" />
     <string id="aom_lord_1_73_name" text="納米爾" />
     <string id="aom_lord_1_62_name" text="歐洛馬" />
     <string id="aom_lord_1_30_name" text="勾斯魔格,魔窟副官" />
@@ -922,7 +922,7 @@
     <string id="aom_lord_V11_c2_name" text="達古尼克" />
     <string id="aom_lord_V11_u_name" text="沃勒里克" />
     <string id="aom_lord_V9_u_name" text="烏倫杜爾夫" />
-    <string id="aom_lord_5_1_name" text="瓦爾古爾,侃德大軍閥" />
+    <string id="aom_lord_5_1_name" text="瓦爾古爾" />
     <string id="aom_lord_5_7_name" text="卡爾祖爾" />
     <string id="aom_lord_5_3_name" text="埃爾吉恩" />
     <string id="aom_lord_5_4_name" text="尼溫" />
@@ -1035,7 +1035,7 @@
     <string id="aom_lord_SE9_s_name" text="瓊娜" />
     <string id="aom_lord_WE8_c_name" text="佩蘭多" />
     <string id="aom_lord_WE8_u_name" text="巴蘭迪爾" />
-    <string id="aom_lord_WE9_l_name" text="杜因希爾，墨松德領主" />
+    <string id="aom_lord_WE9_l_name" text="杜因希爾" />
     <string id="aom_lord_WE9_u_name" text="杜林" />
     <string id="aom_lord_WE9_u2_name" text="羅斯芬" />
     <string id="TAOM_hero_dead_2_1" text="老者歐雷克在保衛河谷邦、抵禦東夷劫掠者時陣亡。他的犧牲確保了山道的安全，全國歌謠皆傳頌其名。" />
@@ -1478,6 +1478,6 @@
     <string id="TAOM_hero_SE9_s_bn" text="法拉金是黑努曼諾爾女巫，每當她的丈夫出征，奇立斯納吉爾的實權便在她手中。她的名字令人想起努曼諾爾的末代君王。" />
     <string id="TAOM_hero_SE9_c1_bn" text="齊古爾貝爾是奇立斯納吉爾的繼承人，受過黑暗技藝的訓練。他的名字意為「巫師的愛慕者」——努曼諾爾在認清索倫的真面目之前，正是如此稱呼他。" />
     <string id="TAOM_hero_SE9_c2_bn" text="齊姆拉金是劍主的次子女，也是兩人中更危險的那一個。她承襲了母親的天賦，卻毫無母親的耐性。" />
-    <string id="aom_aserai_cb_name" text="Harwan" />
+    <string id="aom_aserai_cb_name" text="哈爾萬" />
   </strings>
 </base>

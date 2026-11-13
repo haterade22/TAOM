@@ -7,7 +7,7 @@ namespace TAOM.Features.ElephantLike.BehaviorTreeElements;
 /// Cooldown gate for one elephant-like attack kind: passes when the attack has never fired or its cooldown window
 /// has fully elapsed. The pure check is <see cref="IElephantLikeAttackService.IsOffCooldown"/>; the stamps live on
 /// the tree blackboard and are written by the attack tasks when they fire. One class, two instances per tree
-/// (Trample 10s priority branch, SideAttack 4s fallback branch).
+/// (Trample priority branch, SideAttack fallback branch; each tree sets both cooldowns).
 /// </summary>
 public class ElephantLikeAttackOffCooldownDecorator : BTReturnFalseDecorator, IBTElephantLikeBlackboard
 {

@@ -2,7 +2,8 @@
 
 The faction screen's top strip shows GUI/FactionUI/RuntimeSprites/fs_emblem_<faction key>.png and
 falls back to the star (fs_emblem_default) when the file is missing. For each faction in FACTIONS
-this tool reads the kingdom's banner_key in taom_spkingdoms.xml, takes the layer-1 icon (the sigil),
+this tool reads the kingdom's banner_key in taom_spkingdoms.xml, takes the first layer icon with a
+ui_taom_bannericons sprite (the sigil; vanilla shapes under it have none),
 crops that icon's white-on-alpha sprite out of the baked UI banner atlas (rect from
 TAOMSpriteData.xml), and fills it with the colour every shipped emblem uses for the faction's side.
 
@@ -58,11 +59,16 @@ def side_colour(side):
     return SIDE_COLOURS[side]
 
 
-def sigil_icon(banner_key):
+def sigil_icon(banner_key, sprites):
+    """The sigil's icon id: the first layer whose icon is one of `sprites`. A layered banner can put
+    vanilla shapes, which have no ui_taom_bannericons sprite, under its sigil."""
     fields = banner_key.split(".")
     if len(fields) < 2 * SIGIL_FIELD:
         raise ValueError(f"banner key has no sigil layer: {banner_key!r}")
-    return fields[SIGIL_FIELD]
+    for icon in fields[SIGIL_FIELD::SIGIL_FIELD]:
+        if icon in sprites:
+            return icon
+    raise ValueError(f"banner key has no layer with a ui_taom_bannericons sprite: {banner_key!r}")
 
 
 def _kingdom_banner_keys():
@@ -105,9 +111,10 @@ def build_emblems(only=None):
     emblems = {}
     for key in keys:
         kingdom = faction_kingdoms[key]
-        icon = sigil_icon(banner_keys[kingdom])
-        if icon not in rects:
-            raise ValueError(f"{key}: sigil {icon} has no ui_taom_bannericons sprite")
+        try:
+            icon = sigil_icon(banner_keys[kingdom], sprites=rects)
+        except ValueError as error:
+            raise ValueError(f"{key}: {error}") from error
         sheet, x, y, w, h = rects[icon]
         if sheet not in atlases:
             atlases[sheet] = Image.open(str(ATLAS).format(sheet=sheet)).convert("RGBA")

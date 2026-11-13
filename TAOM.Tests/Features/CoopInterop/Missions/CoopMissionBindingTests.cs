@@ -7,6 +7,7 @@ using NSubstitute;
 using TaleWorlds.MountAndBlade;
 using TAOM.Core.Logging;
 using TAOM.Features.CoopInterop;
+using TAOM.Features.CoopInterop.Hooks;
 using TAOM.Features.CoopInterop.Missions;
 using TAOM.Tests.Migration;
 
@@ -16,7 +17,8 @@ namespace TAOM.Tests.Features.CoopInterop.Missions;
 /// Binding gate for the members <see cref="CoopMissionAuthority"/> and <see cref="CoopSessionProvider"/> bind by
 /// name (#967, C7). Both classes fail open by design, so a BannerlordCoop rename would otherwise make every
 /// ownership answer fall back to engine controllers with only a log line. This loads the installed Coop DLLs and
-/// checks the shapes, then runs the real bind against them and expects no warning.
+/// checks the shapes, then runs the real bind against them and expects no warning. It also pins the server method
+/// Patch144 (<see cref="CoopUpgradeChargePatch"/>, #967 C2) postfixes, whose parameters the postfix reads by position.
 /// </summary>
 [TestClass]
 [TestCategory("LiveInstall")]
@@ -158,6 +160,25 @@ public class CoopMissionBindingTests
 
         Assert.IsTrue(query.CompiledProbeBound, "the real registry method binds and compiles");
         logger.DidNotReceive().LogWarning(Arg.Any<string>());
+    }
+
+    [TestMethod]
+    [TestCategory("BindingVerification")]
+    public void PartyDoneLogicHandler_ApplyUpgradedTroopHistory_TakesTheTypesPatch144ReadsByPosition()
+    {
+        var handler = Require("GameInterface.Services.Party.Handlers.PartyDoneLogicHandler");
+
+        var target = handler.GetMethod("ApplyUpgradedTroopHistory", BindingFlags.NonPublic | BindingFlags.Static);
+        Assert.IsNotNull(target, "PartyDoneLogicHandler.ApplyUpgradedTroopHistory(Hero, List<Tuple<CharacterObject, CharacterObject, int>>)");
+        Assert.AreEqual(typeof(void), target!.ReturnType);
+
+        // The postfix reads __0 and __1 by position, so a reordered or retyped parameter would hand it the wrong value.
+        var postfix = typeof(CoopUpgradeChargePatch).GetMethod(nameof(CoopUpgradeChargePatch.Postfix))!;
+        CollectionAssert.AreEqual(
+            postfix.GetParameters().Select(p => p.ParameterType).ToArray(),
+            target.GetParameters().Select(p => p.ParameterType).ToArray());
+
+        Assert.AreEqual(target, CoopUpgradeChargePatch.TargetMethod(), "the patch's own reflection finds the same method");
     }
 
     [TestMethod]

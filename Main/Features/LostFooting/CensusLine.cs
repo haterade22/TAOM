@@ -56,6 +56,21 @@ public static class CensusLine
             AppendKind(sb, KindName(k), s.EpisodeKinds[(int)k]);
         sb.Append(" cost probes=").Append(s.Probes.ToString(Culture)).Append(" totalMs=").Append(s.TotalMs.ToString("0.00", Culture));
         sb.Append(" maxTickMs=").Append(s.MaxTickMs.ToString("0.00", Culture));
+        sb.Append(" rescued=").Append(s.Rescued.ToString(Culture)).Append(" freed=").Append(s.Freed.ToString(Culture)).Append(" refused=").Append(s.RescueRefused.ToString(Culture));
+        return sb.ToString();
+    }
+
+    /// <summary>One rescue try (#894 phase 2): a move with both ends, or a refusal with its reason.</summary>
+    public static string Rescue(RescuePlan plan, StrandEntry e, RescueResult r, float clock)
+    {
+        var sb = new StringBuilder(Tag);
+        sb.Append(" rescue t=").Append(clock.ToString("0", Culture)).Append("s move=").Append(plan.Move == RescueMove.Near ? "near" : "formation");
+        sb.Append(" cause=").Append(plan.Cause == RescueCause.OffMesh ? "offmesh" : "water");
+        sb.Append(" kind=").Append(KindName(e.Kind));
+        if (r.Moved) sb.Append(" result=moved meters=").Append(Num(r.Meters, "0.0"));
+        else sb.Append(" result=refused reason=").Append(r.Reason);
+        sb.Append(" from=(").Append(Num(e.X, "0.0")).Append(',').Append(Num(e.Y, "0.0")).Append(',').Append(Num(e.Z, "0.0")).Append(')');
+        if (r.Moved) sb.Append(" to=(").Append(Num(r.ToX, "0.0")).Append(',').Append(Num(r.ToY, "0.0")).Append(',').Append(Num(r.ToZ, "0.0")).Append(')');
         return sb.ToString();
     }
 

@@ -15,7 +15,7 @@ namespace TAOM.Features.SwornAnew;
 /// applies only to a kingdom the player's clan rules), then requires custody (held by the player's party, or in a settlement the
 /// player's clan owns, as vanilla's prisoner line does), then lore (<see cref="IUncapturableRegistry"/>: Sauron and the Nine by
 /// identity, whatever that feature's own switch says), then alignment: a Free lord is never asked to join an Evil realm, nor an
-/// Evil lord a Free one, and a Neutral side on either end is allowed. That last rule is <see cref="FactionSideRules.AreOpposed"/>,
+/// Evil lord a Free one, and a Neutral side on either end is allowed. A lord's side is their own clan's, whatever realm they serve. That last rule is <see cref="FactionSideRules.AreOpposed"/>,
 /// not <see cref="IAlignmentService.AreEnemyAlignments(FactionSide, FactionSide)"/>, which calls Neutral the enemy of everyone.
 /// </para>
 /// The service keeps no state, so it needs no per-campaign reset. The model override stands down on a dedicated server, on a co-op

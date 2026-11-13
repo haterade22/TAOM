@@ -307,7 +307,7 @@ internal sealed class LongDefeatEffectsAdapter : ILongDefeatEffectsAdapter
 
     public LdTargetSample ReadTarget(BoonTarget target, IReadOnlyList<string> stats, bool newest)
     {
-        var plain = Standing(target).Where(a => !a.IsRunningAway && !RaceAbilityHooks.HasLiveAbility(a)).ToList();
+        var plain = Standing(target).Where(a => !a.IsRunningAway && !RaceAbilityHooks.HasLiveEffects(a)).ToList();
         var agent = newest ? plain.LastOrDefault() : plain.FirstOrDefault();
         return agent == null
             ? LdTargetSample.None
@@ -356,7 +356,7 @@ internal sealed class LongDefeatEffectsAdapter : ILongDefeatEffectsAdapter
 
         foreach (var agent in standing)
         {
-            if (agent.IsHuman && agent.IsActive() && !agent.IsRunningAway && agent.Character != null && !RaceAbilityHooks.HasLiveAbility(agent))
+            if (agent.IsHuman && agent.IsActive() && !agent.IsRunningAway && agent.Character != null && !RaceAbilityHooks.HasLiveEffects(agent))
                 return agent;
         }
 

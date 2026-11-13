@@ -100,6 +100,8 @@ KINGDOMS = {
         # its royal house fly the crown of Arnor (11004, Mike 2026-10-28); the White Tree went to clan 5.
         banner="11.190.190.1528.1528.764.764.1.0.0.{icon}.110.110.700.700.764.764.0.0.0",
         kingdom_icon=11004, clan_icons=[11004, 11001, 11002, 11003, 11000],
+        # The Wardens of Amon Sul fly a hand-made layered banner (72715c417) the template cannot express.
+        clan_banner_keys={"clan_arthedain_3": "11.176.176.1528.1528.764.764.1.0.0.31010.267.267.301.301.636.884.0.0.0.31010.267.267.301.301.893.884.0.1.0.31008.324.324.422.422.764.720.0.0.0.31009.332.332.95.95.686.795.0.0.0.31009.332.332.95.95.843.795.0.1.0"},
         clan_colors=[("FF4870B8", "FFC8CCD8"), ("FF3A6298", "FFC8CCD8"), ("FF5960A8", "FFD2D6D5"),
                      ("FF2E4A78", "FFCACCCB"), ("FF4E75BC", "FFEAEEEF")],
         # Day-one stances. value < 0 or isAtWar declares war at load (Kingdom.Deserialize,
@@ -179,8 +181,8 @@ KINGDOMS = {
     ),
     # Ered Luin (2026-10-27): the dwarf kingdom of the Blue Mountains, on its own culture
     # (promote_borrowed_cultures.py, cut from Erebor, and generate_eredluin_troops.py). A middling
-    # realm: the ruling House of Borin at tier 5, the Broadbeams and Firebeards at 4, the Wardens of
-    # Dolmed at 3, so about 9 lord parties. Free side, with Erebor and Lindon as its natural allies.
+    # realm: the ruling House of Delingur at tier 5, the Houses of Dwálin and Úri at 4, the House of
+    # Eldran at 3 (house names 72715c417), so about 9 lord parties. Free side, with Erebor and Lindon as its natural allies.
     "eredluin": dict(
         region="EL", culture="eredluin", race="dwarf", capital="town_EL3", tmpl="rivendell", lords="dwarf",
         equip="eredluin", side="free", color="0xFF3E5A7A", color2="0xFFB8C4CC",
@@ -189,10 +191,10 @@ KINGDOMS = {
         # The dwarf templates' own skill sets (SKILL_TEMPLATE_MISMATCH, as Arthedain's note says).
         lord_skill=("taom_dwarf_lord_skills", "taom_dwarf_lord_skills", "taom_dwarf_lady_skills"),
         lords_per_clan=4,  # 4 clans x 4 = 16 lords (2 male + 2 female, married within the clan)
-        clans=[("clan_eredluin_1", 5, "town_EL3", "House of Borin"),
-               ("clan_eredluin_2", 4, "town_EL1", "Broadbeams"),
-               ("clan_eredluin_3", 4, "town_EL2", "Firebeards"),
-               ("clan_eredluin_4", 3, "castle_EL2", "Wardens of Dolmed")],
+        clans=[("clan_eredluin_1", 5, "town_EL3", "House of Delingur"),
+               ("clan_eredluin_2", 4, "town_EL1", "House of Dwálin"),
+               ("clan_eredluin_3", 4, "town_EL2", "House of Úri"),
+               ("clan_eredluin_4", 3, "castle_EL2", "House of Eldran")],
         leader_name="Farin II",
         male_names=["Andvari", "Fjalar", "Frosti", "Ginnar", "Hepti", "Skirfir", "Virfir", "Aurvang"],
         female_names=["Bryndís", "Gerda", "Hlíf", "Sigrún", "Ásta", "Védís", "Ragna", "Herdís"],
@@ -201,6 +203,15 @@ KINGDOMS = {
         # silver (palette 110) on the slate blue of the Blue Mountains (palette 200).
         banner="11.200.200.1528.1528.764.764.1.0.0.{icon}.110.110.700.700.764.764.0.0.0",
         kingdom_icon=24000, clan_icons=[24000, 24001, 24002, 24003],
+        # The realm and its four houses fly hand-made layered banners (72715c417). Keep the icons above:
+        # clan_icons is what turns the clan banner rewrite on, and the clan count check reads it.
+        kingdom_banner_key="11.292.200.1528.1528.764.764.1.0.0.31007.110.110.523.523.764.764.0.0.0",
+        clan_banner_keys={
+            "clan_eredluin_1": "11.292.200.1528.1528.764.764.1.0.0.31007.110.110.523.523.764.764.0.0.0",
+            "clan_eredluin_2": "11.116.116.1528.1528.764.764.0.0.0.515.173.173.33.33.757.587.0.0.0.515.173.173.33.33.656.622.0.0.0.515.173.173.33.33.858.622.0.0.0.515.173.173.33.33.587.706.0.0.0.515.173.173.33.33.926.706.0.0.0.515.173.173.33.33.556.809.0.0.0.515.173.173.33.33.957.809.0.0.0.503.114.114.350.350.754.791.0.0.0.505.193.193.758.758.754.1159.0.0.45.505.134.134.220.220.754.849.0.0.45.505.193.193.392.392.754.1095.0.0.45",
+            "clan_eredluin_3": "11.149.149.1528.1528.764.764.1.0.0.509.240.240.588.587.764.764.0.0.23.509.222.222.558.557.764.764.0.0.23.500.240.240.407.407.764.764.0.0.0.503.161.161.397.396.764.764.0.0.0.24008.228.228.332.314.764.763.0.0.0.515.228.228.25.25.764.558.0.0.0.515.228.228.25.25.910.618.0.0.0.515.228.228.25.25.970.764.0.0.0.515.228.228.25.25.910.910.0.0.0.515.228.228.25.25.764.970.0.0.0.515.228.228.25.25.618.910.0.0.0.515.228.228.25.25.558.764.0.0.0.515.228.228.25.25.618.618.0.0.0",
+            "clan_eredluin_4": "11.100.100.1528.1528.764.764.0.0.0.504.173.173.1104.939.764.765.0.0.180.504.101.101.1104.939.764.661.0.0.180.504.173.173.356.483.765.711.0.0.0.504.173.173.169.241.657.702.0.0.0.504.173.173.169.241.873.702.0.0.0.504.173.173.363.309.764.846.0.0.180.24025.102.173.128.153.661.750.0.0.0.24025.102.173.128.153.870.750.0.0.0.504.173.173.304.402.764.730.0.0.0.24025.102.173.307.339.766.731.0.0.0.505.173.173.114.114.764.835.0.0.45.505.173.173.51.51.657.840.0.0.56.505.173.173.51.51.871.840.0.1.304.505.293.293.63.63.764.814.0.0.45.505.173.173.63.63.764.861.0.0.45.24510.293.293.39.39.555.747.0.0.45.24510.293.293.39.39.974.747.0.0.45.24510.293.293.39.39.623.826.0.0.45.24510.293.293.39.39.906.826.0.0.45.24510.293.293.39.39.696.901.0.0.45.24510.293.293.39.39.833.901.0.0.45.24510.293.293.42.43.764.977.0.0.0.515.20.20.34.34.764.533.0.0.0.515.20.20.34.34.601.588.0.0.0.515.20.20.34.34.928.588.0.0.0.505.101.100.1110.273.765.278.0.0.0",
+        },
         clan_colors=[("FF3E5A7A", "FFB8C4CC"), ("FF34495E", "FFC8CCD0"), ("FF6A3A2A", "FFE0B080"),
                      ("FF2C3E50", "FFB0B8C0")],
         # No war on day one (see Arthedain's note); the enemies are in diplomacy.json.
@@ -353,7 +364,7 @@ LEADER_BLURB = {
     "arthedain": "King of Arthedain, heir of Arvedui and of Isildur, who holds Fornost against the orcs of Gundabad and keeps an uneasy peace with his kin in Cardolan and Rhudaur.",
     "cardolan": "King of Cardolan, heir of Earendur's second son, who keeps the barrow-kings' crown at Caras Gorthad.",
     "rhudaur": "King of Rhudaur, heir of Earendur's third son, lord of Cameth Brin and of the hill-men of the Angle.",
-    "eredluin": "King of Ered Luin, of the line of Borin, Lord of Thorin's Halls, who holds the Blue Mountains with the Broadbeams of Belegost and the Firebeards of Nogrod.",
+    "eredluin": "King of Ered Luin, of the House of Delingur, Lord of Thorin's Halls, who holds the Blue Mountains with the Broadbeams of Belegost and the Firebeards of Nogrod.",
     "anduinvale": "son of Beorn, Chieftain of the Beornings, who keeps the High Pass and the Old Ford and lets no orc cross the Vales of Anduin.",
     "angaladh": "King of Angáladh, lord of Woodmen-town, who keeps the eaves of Mirkwood against the shadow of Dol Guldur.",
     "dorwinion": "King of Dorwinion, lord of Vineholm, whose wine goes up the River Running to Dale and the Elves of Mirkwood.",
@@ -376,12 +387,19 @@ ELF_LEADER = "Círdan"
 
 
 def kingdom_banner(k):
-    """The realm's banner key; `{fg}` in its template takes the realm's emblem colour (`sigil`)."""
+    """The realm's banner key; `{fg}` in its template takes the realm's emblem colour (`sigil`). A hand-made
+    layered key in `kingdom_banner_key` wins, since the one-icon template cannot express it."""
+    if k.get("kingdom_banner_key"):
+        return k["kingdom_banner_key"]
     return k["banner"].format(icon=k["kingdom_icon"], fg=k.get("sigil"))
 
 
 def clan_banner(k, ci):
-    """Clan `ci`'s banner key: its own icon, and its own emblem colour when the realm lists `clan_sigils`."""
+    """Clan `ci`'s banner key: its own icon, and its own emblem colour when the realm lists `clan_sigils`. A
+    hand-made key in `clan_banner_keys`, by clan id, wins, as for the kingdom."""
+    hand_made = k.get("clan_banner_keys", {}).get(k["clans"][ci][0])
+    if hand_made:
+        return hand_made
     fg = k["clan_sigils"][ci] if k.get("clan_sigils") else k.get("sigil")
     return k["banner"].format(icon=k["clan_icons"][ci], fg=fg)
 

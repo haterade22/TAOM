@@ -10,9 +10,8 @@ namespace TAOM.Tests.Features.BondOfHire;
 
 /// <summary>
 /// The two player-facing lines of the Clans panel (#868). The C# literal is the English source, the English row in
-/// <c>taom_module_strings.xml</c> must equal it, and the twelve language files carry the seeded English default (the paid
-/// translation run in #763 replaces each row later). A copied <c>{=KEY}</c> shows the old text, so a row left on an older wording
-/// fails. The subject is the mercenaries, never the player, and no word is gendered.
+/// <c>taom_module_strings.xml</c> must equal it, and each of the twelve language files carries one row (its translation, or
+/// the English default until the paid run in #763 fills it) that keeps every placeholder of the English. The subject is the mercenaries, never the player, and no word is gendered.
 /// </summary>
 [TestClass]
 public class BondOfHireWordingTests
@@ -62,9 +61,12 @@ public class BondOfHireWordingTests
         Assert.AreEqual(LiteralInTheTexts(key), rows[0]);
     }
 
+    private static List<string> Tokens(string text) =>
+        Regex.Matches(text, @"\{[^{}]*\}").Cast<Match>().Select(m => m.Value).Distinct().OrderBy(t => t, System.StringComparer.Ordinal).ToList();
+
     [DataTestMethod]
     [DynamicData(nameof(Keys), DynamicDataSourceType.Method)]
-    public void EveryLanguageFile_HoldsOneRow_OfTheCurrentEnglish_NoneStale(string key, string wording)
+    public void EveryLanguageFile_HoldsOneRow_KeepingTheEnglishPlaceholders(string key, string wording)
     {
         var english = LiteralInTheTexts(key).Substring(("{=" + key + "}").Length);
         var languages = Directory.GetDirectories(RepoPaths.RepoPath("Main", "_Module", "ModuleData", "Languages"));
@@ -75,7 +77,7 @@ public class BondOfHireWordingTests
             var rows = Rows("Main/_Module/ModuleData/Languages/" + Path.GetFileName(dir) + "/" + Path.GetFileName(file), key);
 
             Assert.AreEqual(1, rows.Count, Path.GetFileName(file));
-            Assert.AreEqual(english, rows[0], Path.GetFileName(file) + ": the row must equal the current English");
+            CollectionAssert.AreEqual(Tokens(english), Tokens(rows[0]), Path.GetFileName(file) + ": the row must keep the English placeholders");
         }
     }
 

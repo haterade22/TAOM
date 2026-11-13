@@ -28,6 +28,14 @@ Services NEVER accept sealed TaleWorlds types directly. Always wrap with adapter
 
 **The campaign statics are computed getters too.** `Hero.MainHero` (`CharacterObject.PlayerCharacter.HeroObject`) and `MobileParty.MainParty` (`Campaign.Current.MainParty`) throw with no campaign, which is every Custom Battle, so `Hero.MainHero?.` guards nothing there. Code a mission can reach reads `CharacterObject.PlayerCharacter?.HeroObject` (or `(Game.Current?.PlayerTroop as CharacterObject)?.HeroObject`, which also survives no Game) and `Campaign.Current?.MainParty`, or returns on `Campaign.Current == null` first (#97, #699). `PartyBase.MainParty` is the inverse case: it returns null only without a campaign, and with one it reads `Campaign.Current.MainParty.Party` (v1.5.5 `PartyBase.cs:209-219`), so it throws, `?.` included, while the stored main party is null. Check `Campaign.Current?.MainParty` and read `Campaign.Current?.MainParty?.Party`; `MainPartyNullCheckScanTests` fails a null comparison, `is null`, `??` or `?.` on the getter written directly or inside any number of its own parentheses, and passes a call argument (`Find (PartyBase.MainParty)?.X`); it cannot see a check through a local alias (`var p = PartyBase.MainParty; if (p == null)`), so review for that form, and it blanks comments but not strings, so a string holding the check fails it (#792).
 
+## A singleton adapter keeps no engine object after its operation (MANDATORY)
+
+Adapters are `Reuse.Singleton`, and patches hold them in statics, so a field that keeps a `Hero`, a `Clan` or a list of
+them keeps that campaign reachable after a load. Return engine objects inside the snapshot a call hands back. When one
+operation must hold them across calls, the adapter exposes a release, the service calls it in a `finally`, and a test
+covers the fault path (`IAllegianceRelationAdapter.Release`; #952, repeated in #1111;
+[lessons](../../docs/reviews/lessons/adapters-taleworlds-api.md)).
+
 ## Testing
 - Adapters themselves are thin wrappers — test coverage via service tests that mock the adapter interface
 - Use `NSubstitute.Substitute.For<IXxxAdapter>()` in tests

@@ -51,14 +51,15 @@ The tag is added to the language files only. `tools/translation_name_tags.json` 
 - **A name led by a common noun** takes the noun's own tag: "Aldeia" `{.FS}`, "Acampamento" `{.MS}`, "Villaggio" `{.MS}`,
   "Insenatura" `{.FS}`, "Casa" `{.FS}`, "Regno" `{.MS}`. The longest phrase wins ("Alto Reino"), and a noun joined to the rest
   by hyphens is found through its first segment ("Prole-das-Rochas"). A plural noun takes a plural tag: BR "Gobelins",
-  "Saqueadores" `{.MP}`; IT "Goblin", "Orchi", "Predoni" `{.MP}`. The noun tables hold 128 BR and 121 IT entries.
+  "Saqueadores" `{.MP}`; IT "Goblin", "Orchi", "Predoni" `{.MP}`. The noun tables hold 193 BR and 171 IT entries (2026-11-12).
 - **A culture name** is a plural people (`{.MP}`) or a place (plain).
 - **A name that began with an article** lost it: "A Mão Branca" is now "Mão Branca" with `{.FS}`, "Os Lobos Vermelhos" is now
   "Lobos Vermelhos" with `{.MP}`, "Gli Spaccacranio" is "Spaccacranio" with `{.MP}`. The tag carries the article's gender and
   number, so a vanilla sentence adds its own article once. 58 BR and 59 IT names changed; their translation cache entries
   changed with them. The gender is a pin in the table.
-- **Not tagged, listed for a human:** a row still in English ("House of Ravenhill", 40 per language), the Haradric titles
-  "Taskralan" and "Châjaphân" (3 per language), and IT "Gondoriano", an adjective and not a noun.
+- **Not tagged, listed for a human:** a row still in English, the two lore names excluded as "still English", and IT
+  "Gondoriano", an adjective and not a noun. The Haradric titles "Taskralan" and "Châjaphân" are proper prefixes since
+  2026-11-12 and take the plain tag.
 - **Kingdom ruler titles and descriptions** are not names and carry no tag.
 - **BR "clan eliminated":** vanilla's `str_clan_destroyed` (`WYHqMwwo`) leaves its fifth `GENDER` option empty, so a `{.NS}` clan
   would read with no verb. TAOM keeps a BR row for it with the fifth option filled ("foi eliminado"), registered like the other
@@ -125,14 +126,14 @@ The four lore names are in the inventory. "Minas Ithil" and "Amon Lanc" are Sind
 town tag. "Deadmen's Dike" and "Treegarth of Orthanc" are still English in every language, so the table excludes them until
 they are translated.
 
-Undecided: 57 BR and 58 IT (2026-10-27). Per language that is 52 rows still in English (11 of them Ered Luin's clan and
-kingdom names, seeded in English until the translation run), 3 Haradric titles and the 2 lore names that are still English; IT also holds "Gondoriano", excluded as an adjective. `python tools/generate_name_tags.py --list-undecided`
+Undecided: 2 BR and 3 IT (2026-11-12): the 2 lore names excluded as "still English" (both are translated now, so the
+exclusions are out of date) and IT "Gondoriano", excluded as an adjective. `python tools/generate_name_tags.py --list-undecided`
 prints each with its reason.
 
 Settlement tags are judged on the live text, because that is what the apply tags. 47 live names (the Carn Dûm, Cardolan and
 Rhudaur additions) and Ered Luin's 31 (2026-10-27) have no translation cache entry, so a rebuild writes their English default, which is what the live file
-holds. `castle_AN5` differs the other way round (live "Vigia do Mitheithel", cache "Colinas do Vento"), so the live file is
-tagged in place with `name_tags.py --target live-map`, never by rebuild; its tag is `{.FS}` in both languages.
+holds. Tag the live file in place with `name_tags.py --target live-map`, never by rebuild. Until 2026-11-12 the `castle_AN5`
+cache held the old "Colinas do Vento"; the cache now holds the live text in all 12 languages.
 
 **The live file is tagged.** On 2026-10-26, on Mike's word, `castle_ES1` lost its article ("O Morannon", "Il Morannon" became
 "Morannon"), and `name_tags.py --target live-map --apply --allow-live-write` then tagged 1,086 rows per language, 2,172 in all.
@@ -274,6 +275,12 @@ table does not know, so a rewritten name never loses it. The three live-map writ
 
 ## Changelog
 
+- 2026-11-12 (language pass, #763): translating names that were English left 85 BR and 72 IT names led by a
+  noun the rules did not know ("Forte", "Salão", "Rocca"), so `--write` dropped them and they lost their tag. The rules
+  gained 64 BR and 49 IT head nouns, the proper prefixes Taskralan, Châjaphân and Rhovanion, and pins for "Última Ponte",
+  "Ultimo Ponte" and "Vecchio Guado". Both languages tag 1,265 of 1,265 live names again. After any translator run in BR
+  or IT, compare the tagged count from `--list-undecided` with the count before the run
+  (`docs/reviews/rca-localization-pass-2026-11-12.md`, H2).
 - 2026-10-27 (Ered Luin): `generate_name_tags.py --write` added the Ered Luin rows to the tag table, `name_tags.py --lang
   all --apply` tagged its seeded BR and IT name rows, and a live apply tagged its 31 settlement names per language; the
   confirm gate reads 1140/1140 in both languages.

@@ -44,14 +44,15 @@ public class SpecialResourceEarningServiceCoopTests
     // --- Victory ---
 
     [TestMethod]
-    public void OnVictory_TwoWinningPlayers_EachEarnsWithTheirOwnRatio()
+    public void OnVictory_TwoWinningPlayers_EachEarnsFromTheSameEnemyCount()
     {
         var kit = new EarningTestKit(session: true);
 
-        kit.Sut.OnVictory(Win(EarningTestKit.Remote("g1", 10), EarningTestKit.Remote("g2", 5)));
+        // Each winning player earns from the enemy's size alone.
+        kit.Sut.OnVictory(Win(EarningTestKit.Remote("g1"), EarningTestKit.Remote("g2")));
 
-        kit.Service.Received(1).EarnFromBattle("g1", "k", "c", 3f);
-        kit.Service.Received(1).EarnFromBattle("g2", "k", "c", 6f);
+        kit.Service.Received(1).EarnFromBattle("g1", "k", "c", 30f);
+        kit.Service.Received(1).EarnFromBattle("g2", "k", "c", 30f);
         kit.Service.DidNotReceive().EarnFromBattle("main", Arg.Any<string>(), Arg.Any<string>(), Arg.Any<float>());
     }
 
@@ -86,7 +87,7 @@ public class SpecialResourceEarningServiceCoopTests
     {
         var kit = new EarningTestKit(session: true);
 
-        kit.Sut.OnVictory(Win(EarningTestKit.Remote("lord_1", 10, control)));
+        kit.Sut.OnVictory(Win(EarningTestKit.Remote("lord_1", control)));
 
         kit.Service.DidNotReceiveWithAnyArgs().EarnFromBattle(default, default, default, default);
     }
@@ -127,16 +128,6 @@ public class SpecialResourceEarningServiceCoopTests
         kit.Sut.OnVictory(s);
 
         kit.Service.DidNotReceiveWithAnyArgs().EarnFromBattle(default, default, default, default);
-    }
-
-    [TestMethod]
-    public void OnVictory_SessionPlayerWithNoRoster_DividesByOne()
-    {
-        var kit = new EarningTestKit(session: true);
-
-        kit.Sut.OnVictory(Win(EarningTestKit.Remote("g1", null)));
-
-        kit.Service.Received(1).EarnFromBattle("g1", "k", "c", 30f);
     }
 
     [TestMethod]
@@ -222,7 +213,7 @@ public class SpecialResourceEarningServiceCoopTests
 
         kit.Sut.OnRaid(Raid(
             EarningTestKit.Remote("g1"),
-            EarningTestKit.Remote("lord_1", 10, PlayerControl.NotPlayer),
+            EarningTestKit.Remote("lord_1", PlayerControl.NotPlayer),
             EarningTestKit.Local(control: PlayerControl.NotPlayer)));
 
         kit.Service.Received(1).EarnFromRaid("g1", "k", "c");
@@ -317,7 +308,7 @@ public class SpecialResourceEarningServiceCoopTests
     {
         var kit = new EarningTestKit(session: true);
 
-        kit.Sut.OnTournament(EarningTestKit.Remote("lord_1", 10, control));
+        kit.Sut.OnTournament(EarningTestKit.Remote("lord_1", control));
 
         kit.Service.DidNotReceiveWithAnyArgs().EarnFromTournament(default, default, default);
     }
@@ -420,5 +411,61 @@ public class SpecialResourceEarningServiceCoopTests
             new RecruitContext("party_g1", EarningTestKit.Remote("g1"), EarningTestKit.Local()), "elephant", 1);
 
         kit.Service.DidNotReceiveWithAnyArgs().ChargeRecruitCost(default, default, default, default, default);
+    }
+
+    // --- Upgrades (#967 C2) ---
+
+    private static CoopUpgradeLine[] Upgrades(params CoopUpgradeLine[] lines) => lines;
+
+    [TestMethod]
+    public void ChargeCoopUpgrades_Server_ChargesThePlayerForEachLineAndReturnsWhatLeft()
+    {
+        var kit = new EarningTestKit(session: true, dedicated: true);
+        kit.Service.GetCurrentAmount("g1", "k", "c").Returns(20f, 13f);
+
+        var charged = kit.Sut.ChargeCoopUpgrades(
+            EarningTestKit.Remote("g1"), Upgrades(new CoopUpgradeLine("elite_a", 2), new CoopUpgradeLine("elite_b", 1)));
+
+        Assert.AreEqual(7f, charged, 0.001f);
+        kit.Service.Received(1).SpendForUpgrade("g1", "k", "c", "elite_a", 2);
+        kit.Service.Received(1).SpendForUpgrade("g1", "k", "c", "elite_b", 1);
+    }
+
+    [TestMethod]
+    public void ChargeCoopUpgrades_UntrackedPlayer_IsSeededBeforeTheCharge()
+    {
+        var kit = new EarningTestKit(session: true, dedicated: true);
+        kit.Storage.Contains("g1", "war_spoils").Returns(false);
+
+        kit.Sut.ChargeCoopUpgrades(EarningTestKit.Remote("g1"), Upgrades(new CoopUpgradeLine("elite_a", 2)));
+
+        Received.InOrder(() =>
+        {
+            kit.Storage.Set("g1", "war_spoils", 10f);
+            kit.Service.SpendForUpgrade("g1", "k", "c", "elite_a", 2);
+        });
+    }
+
+    [TestMethod]
+    public void ChargeCoopUpgrades_Client_ChargesAndSeedsNobody()
+    {
+        var kit = new EarningTestKit(session: true, authority: false);
+
+        var charged = kit.Sut.ChargeCoopUpgrades(EarningTestKit.Remote("g1"), Upgrades(new CoopUpgradeLine("elite_a", 2)));
+
+        Assert.AreEqual(0f, charged);
+        kit.Service.DidNotReceiveWithAnyArgs().SpendForUpgrade(default, default, default, default, default);
+        kit.Storage.DidNotReceiveWithAnyArgs().Set(default, default, default);
+    }
+
+    [TestMethod]
+    public void ChargeCoopUpgrades_UpgraderGone_ChargesNobody()
+    {
+        var kit = new EarningTestKit(session: true, dedicated: true);
+
+        var charged = kit.Sut.ChargeCoopUpgrades(null, Upgrades(new CoopUpgradeLine("elite_a", 2)));
+
+        Assert.AreEqual(0f, charged);
+        kit.Service.DidNotReceiveWithAnyArgs().SpendForUpgrade(default, default, default, default, default);
     }
 }

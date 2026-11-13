@@ -381,7 +381,16 @@ public class NotableServicesWiringTests
         foreach (var file in files)
         {
             var xml = File.ReadAllText(file);
-            Assert.IsTrue(Regex.IsMatch(xml, "id=\"taom_ns_roguery_notice\" text=\"(\\{=taom_ns_roguery_notice\\})?" + Regex.Escape(text) + "\""), file);
+            var rows = Regex.Matches(xml, "id=\"taom_ns_roguery_notice\" text=\"(?:\\{=taom_ns_roguery_notice\\})?([^\"]*)\"");
+            Assert.AreEqual(1, rows.Count, file + ": one row");
+            var row = System.Net.WebUtility.HtmlDecode(rows[0].Groups[1].Value);
+            if (Path.GetFileName(file) == "taom_module_strings.xml")
+                Assert.AreEqual(text, row, file);
+            else
+            {
+                StringAssert.Contains(row, "{XP}", file);
+                StringAssert.Contains(row, "{SKILL_NAME}", file);
+            }
             Assert.IsFalse(xml.Contains("+{XP} Roguery experience"), file);
         }
     }

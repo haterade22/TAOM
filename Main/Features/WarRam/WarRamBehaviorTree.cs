@@ -16,7 +16,7 @@ namespace TAOM.Features.WarRam;
 /// <c>BehaviorTreeMissionLogic.OnMissionTick</c> on the main thread (#592).
 ///
 /// Attack model: ONLY the kick-attack branch is wired, deliberately (see <see cref="WarRamConfig"/>).
-/// When a live enemy is in front and the kick is off cooldown (10 s), the ram fires it via
+/// When a live enemy is in front and the kick is off cooldown (35 s), the ram fires it via
 /// <see cref="ElephantLikeTrampleTask"/>; there is no side-attack fallback sequence like the war
 /// elephant/Mumakil's tusk swing, so the ram simply idles between kicks and the engine's regular mount
 /// handling (the rider's steering or cavalry AI, plus native charge) continues underneath, same as the other

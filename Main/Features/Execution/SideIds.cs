@@ -6,7 +6,7 @@ namespace TAOM.Features.Execution;
 /// Built from engine objects in exactly one place, <c>TAOM.Adapters.FactionSides</c>; services carry the
 /// pair around whole so a kingdom can never be zipped with another entity's culture (#957).
 /// </summary>
-/// <param name="FactionId">StringId of the entity's map faction (a kingdom or a clan), empty when it has none.</param>
+/// <param name="FactionId">StringId of the entity: a map faction (a kingdom or a clan), or a lord's own clan for <c>FactionSides.OfOwnClan</c>; empty when it has none.</param>
 /// <param name="CultureId">StringId of the culture of that same entity, empty when it has none.</param>
 public sealed record SideIds(string FactionId, string CultureId)
 {

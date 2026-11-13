@@ -466,14 +466,16 @@
     <string id="zulgor_description" text="祖爾戈爾，翼獸飼育者，孵化墮獸之卵，擴張卡姆爾的制空之域。" />
     <string id="zulgora_description" text="祖爾戈拉，暗影編織者，編造幻象，如傳說中索倫的欺瞞般迷惑敵人。" />
     <string id="zulgoth_description" text="祖爾戈斯擔任半獸人祭儀者，依獸人習俗所暗示的那樣向黑暗力量獻祭。他的儀典為部族的行動召來力量。" />
-    <string id="lord_AN1_1_description" text="Arvegil II, King of Arthedain, heir of Arvedui and of Isildur, who holds Fornost against the orcs of Gundabad and keeps an uneasy peace with his kin in Cardolan and Rhudaur." />
-    <string id="lord_CA1_1_description" text="Aranthir, King of Cardolan, heir of Earendur's second son, who keeps the barrow-kings' crown at Caras Gorthad." />
-    <string id="lord_RH1_1_description" text="Belegorn, King of Rhudaur, heir of Earendur's third son, lord of Cameth Brin and of the hill-men of the Angle." />
-    <string id="lord_LN3_1_description" text="Galdor of the Havens, who bore Círdan's counsel to the house of Elrond, keeps Forlond on the northern arm of the Gulf of Lhûn." />
-    <string id="lord_EL1_1_description" text="Farin II, King of Ered Luin, of the line of Borin, Lord of Thorin's Halls, who holds the Blue Mountains with the Broadbeams of Belegost and the Firebeards of Nogrod." />
-    <string id="lord_AND1_1_description" text="Ingomar, King of Angáladh, lord of Woodmen-town, who keeps the eaves of Mirkwood against the shadow of Dol Guldur." />
-    <string id="lord_AV1_1_description" text="Grimbeorn, son of Beorn, Chieftain of the Beornings, who keeps the High Pass and the Old Ford and lets no orc cross the Vales of Anduin." />
-    <string id="lord_DO1_1_description" text="Ostric, King of Dorwinion, lord of Vineholm, whose wine goes up the River Running to Dale and the Elves of Mirkwood." />
-    <string id="lord_SRH1_1_description" text="Vidumar, King of South Rhovanion, lord of Vidugard, who rides the plains south of Mirkwood and remembers the Wainriders." />
+    <string id="lord_AN1_1_description" text="阿維吉爾二世，雅西頓國王，阿維都伊與伊西鐸的後裔；他據守佛諾斯特以抗剛達巴的半獸人，並與卡多蘭和魯道爾的親族維持著不安的和平。" />
+    <string id="lord_CA1_1_description" text="阿蘭希爾，卡多蘭國王，埃雅仁都爾次子的後裔；他在卡拉斯戈薩德守著古墳諸王的冠冕。" />
+    <string id="lord_RH1_1_description" text="貝烈苟恩，魯道爾國王，埃雅仁都爾三子的後裔，卡美斯布林與三角洲丘陵人的領主。" />
+    <string id="lord_LN3_1_description" text="麥卡薩瑪，剛多林的潘洛德之子，石柱家族與雪塔家族的繼承人，鎮守盧恩灣北臂的佛隆德。" />
+    <string id="lord_EL1_1_description" text="法林二世，藍色山脈之王，出身德林古爾家族，索林廳堂之主，與貝磊勾斯特的寬膝族及諾格羅德的火鬚族共守藍色山脈。" />
+    <string id="lord_AND1_1_description" text="英戈瑪，安加拉茲國王，林中人之城的領主；他守衛幽暗密林的邊緣，抵禦多爾哥多的陰影。" />
+    <string id="lord_AV1_1_description" text="格林比翁，比翁之子，比翁一族的族長；他守護著高隘口與古渡口，不讓任何半獸人越過安都因河谷。" />
+    <string id="lord_DO1_1_description" text="奧斯特里克，多溫尼安國王，葡園堡的領主；他的美酒沿奔流河而上，送往河谷邦與幽暗密林的精靈。" />
+    <string id="lord_SRH1_1_description" text="維杜瑪，南羅凡尼安國王，維杜加德的領主；他馳騁於幽暗密林以南的平原，仍記得戰車民的往事。" />
+    <string id="haldir_lothlorien_description" text="哈爾迪爾，邊境哨衛，一如書中羅瑞安的邊疆守衛，以無聲而精準的巡邏守護著金色森林的邊界。" />
+    <string id="orophin_lothlorien_description" text="歐洛芬，警醒的弓手，如電影中的邊境守衛般徹夜守望，他的箭矢射倒了被多爾哥多陰影腐化的野獸。" />
   </strings>
 </base>

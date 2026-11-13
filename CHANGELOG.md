@@ -10,6 +10,10813 @@
 > [`docs/changelog-archive/CHANGELOG-2026-H2-handwritten.md`](docs/changelog-archive/CHANGELOG-2026-H2-handwritten.md);
 > older ones are in [`docs/changelog-archive/CHANGELOG-2026-H1.md`](docs/changelog-archive/CHANGELOG-2026-H1.md).
 
+## v2.0.38 (2026-11-10)
+
+Commits since v2.0.37: 19 (19 with the version label, 0 without); 1 landed twice and is listed once.
+
+### Features
+
+#### feat(battle-hud): v2.0.37 - Add circular HUD and ammo counter
+
+`30be2d60`
+
+Replace the native health bars with a compact, textured circular HUD.
+Horse and shield rings appear only while equipped. The centre shows
+career charge, its ability icon and the configured activation key.
+
+Close the gaps between rings and increase the health red's saturation.
+Hide the weapon previews and show native ammo counts in a small capsule
+with the approved elven quiver or single-javelin icon. Load its sprites
+with the mission HUD and release them when it closes.
+
+Refs #1095.
+Validation: solution build and 241 focused HUD/UI tests passed against
+Bannerlord v1.5.7. Equipment states and texture were reviewed earlier.
+Not-tested: live ammo weapon switching and low-ammo alert animation.
+
+### Fixes
+
+#### fix(tools): v2.0.37 - Fixing Fix
+
+`fa2a3b26`
+
+#### fix(engine): v2.0.37 - Close the findings of the v1.5.7 reviews
+
+`9625000c`
+
+Four reviews ran on the released v1.5.7 bump: a Codex pre-review, a
+sweep of the engine diff, the deep-review lenses and the full gate
+run. None found a fault in the three code edits of the fix. This
+commit closes what they did find.
+
+- The call-shape gate for GetPartyMemberSizeLimit could not read a
+  call inside an interpolation hole, and the taom.career_perks cheat
+  had one. The call is now a local, and a second test fails when a
+  call stands in a string.
+- A new LiveInstall test fails when the live TAOM_Map or
+  LOTRLOME_Armory manifest names another engine version than the pin.
+- check_handbook_attributes.py exits 2 when its --docs folder does
+  not exist. It printed "0 finding(s)" and exited 0.
+- Three Enlistment comments said that Attack always starts a war.
+  v1.5.7 skips the hostile action against a caravan or villager
+  leader party. The sit-out rule itself is unchanged: whether it
+  should let those fights through waits for the maintainer.
+- The record (v1.5.7-impact.md, v1.5.7-diff-ranked.md) is corrected
+  where it said more than its evidence. Four call sites changed, not
+  three. It now lists the engine changes it left out. The Modding Kit
+  and the Dedicated Server both moved to v1.5.7 within the hour. A
+  third engine caller of the party size model writes the troop weight
+  snapshot when the map bar tooltip opens (display only).
+- The Modding Kit decompile is regenerated. Its build asserts that
+  the player is already at war with the faction of a caravan or
+  villager party when Attack runs.
+- /engine-bump gains two steps: grep comments and docs for each
+  changed engine member, and read the Kit and server versions again
+  before the commit that states them.
+
+Known limitation: nothing has run in game on v1.5.7.
+
+Gates on this tree: build 0 errors; C# suite 38,050 passed, 0 failed,
+9 skipped; strict binding gate 966 of 966; Python tool suite 8,487
+tests OK (12 skipped); both native pin files OK; the API snapshot
+reproduces; lint_docs exits 0.
+
+RCA: docs/reviews/rca-engine-bump-v1-5-7-2026-11-10.md
+Refs #1112
+
+#### fix(tools): v2.0.37 - Define retopology metadata value semantics
+
+`07809f9b`
+
+Infer undeclared point attributes through subdivision and seam merging, preserve exact source mappings across disconnected components, and default generated guide and seam flags to false. Drop unsupported attribute domains consistently and document the propagation rules. The maintainer waived the GitHub issue requirement for this retopology toolkit work.
+
+#### fix(tools): v2.0.37 - Complete auto fill metadata propagation
+
+`5481c31e`
+
+Slice and combine point and face attributes for per-pattern auto fill, propagate point values through split and subdivision vertices, and preserve undeclared point mappings during seam merging. Use distinct face IDs in the Blender mixed-domain verification. The maintainer waived the GitHub issue requirement for this retopology toolkit work.
+
+#### fix(tools): v2.0.37 - Propagate domains through retopology workflows
+
+`b6403c26`
+
+Preserve face metadata through auto fill and mirroring, map point and face attributes through separation, seam merging, and thickness, and handle mixed-domain guides with defined defaults. Reject stale attribute arrays on Blender export and test the full round trip. The maintainer waived the GitHub issue requirement for this retopology toolkit work.
+
+#### fix(sworn-anew): v2.0.37 - Side a captured lord by their own clan
+
+`2d6e5b9e`
+
+Sworn Anew lets the player recruit a captured lord and refuses when
+the lord and the player's realm are Free against Evil. It read the
+lord's side from the realm the lord serves, while Kingdom Allegiance
+(#1111) reads it from the lord's own clan. An orc lord whose clan
+served Gondor therefore read Free: a Rohan player could turn them and
+a Mordor player could not.
+
+For players: a captured lord is now judged by their own people,
+whatever realm they serve. An orc lord serving Gondor can swear to an
+Evil realm, not a Free one. A Free lord serving a Neutral realm can
+no longer swear to Mordor. A Neutral lord, such as a Khand clan
+serving Mordor, can now be asked by any player. Lords whose clan and
+realm are on the same side, every lord at a new game, keep their old
+answer.
+
+How: SwornAnewAdapter builds the lord's side with
+FactionSides.OfOwnClan, the clan's own id and culture, as Kingdom
+Allegiance does. The player's side stays the player's realm.
+
+Review: /deep-review tier 1 (data flow, engine compatibility) and a
+Codex pre-review on the installed v1.5.7 DLLs found no behaviour
+defect. One medium and seven low test and doc findings were fixed
+here: OfOwnClan now has behavioural tests on staged engine objects,
+an older FactionSides test no longer reads OfOwnClan's text, and the
+checklist sets up every case with campaign.set_clan_culture. See
+docs/reviews/rca-sworn-anew-own-clan-2026-11-10.md.
+
+Verification on this tree with Bannerlord v1.5.7: full suite 38,096
+passed, 0 failed, 9 skipped; canary tripped; API snapshot reproduces;
+lint_docs exits 0. Tool tests ran 8,490 with one failure, the doc
+graph ratchet, whose two new orphans are the v2.0.37 release notes
+in docs/releases/, which this change does not touch.
+
+Not-tested: no in-game run yet; sworn-anew.md checklist step 17.
+
+Refs #1114
+
+#### fix(tools): v2.0.37 - Carry retopology attribute domains explicitly
+
+`47151627`
+
+Store attribute domains on Mesh and preserve them through copying, Blender reads and writes, combined guides, vertex splitting, and compaction. This keeps point pattern IDs and face pattern, part, and plane IDs correct even when counts become ambiguous. Add explicit-domain and general-loop UV regressions. The maintainer waived the GitHub issue requirement for this retopology toolkit work.
+
+#### fix(tools): v2.0.37 - Adding
+
+`335d6a65`
+
+#### fix(tools): v2.0.37 - Preserve metadata domains in topology repair
+
+`c20bd0ab`
+
+Determine point and face attribute domains before splitting so face identifiers cannot grow or remap as vertex data. Skip repair work for healthy meshes and use linear-time component labels. Document the independent inspector UV evidence. The maintainer waived the GitHub issue requirement for this retopology toolkit work.
+
+#### fix(tools): v2.0.37 - Preserve face identity in topology repair
+
+`0a7393a7`
+
+Use canonical face slots during triangle splitting, copy only point-domain attributes, resolve debug edges through face provenance, and normalize mirrored loose-line keys. Remove unused quadratic UV work and strengthen differential, metadata, and helper-transform checks. The maintainer waived the GitHub issue requirement for this retopology toolkit work.
+
+#### fix(kingdom-allegiance): v2.0.37 - Keep AI lords to their own side
+
+`85e8788d`
+
+A player found orc lords serving Gondor, and Free lords started new
+campaigns as friends of Mordor and Isengard lords. The start data was
+right: vanilla's AI weighs culture when a clan joins, defects to or
+hires on with a realm, but never blocks a realm of the other side, and
+the new-game relation roll never reads the Free/Evil side.
+
+For players: an AI clan of the Free Peoples no longer joins, defects
+to or hires on as mercenaries with an Evil realm, and an Evil clan no
+longer does so with a Free realm. Neutral clans and realms still deal
+with either side. A new campaign starts with no Free-vs-Evil
+friendships: each one becomes enmity of the same strength. The switch
+is MCM "World/Kingdom Allegiance", on by default, no restart.
+
+Limits: clans that already serve an opposed realm stay; only new
+joins are vetoed. The player keeps vanilla's freedom: the player's
+clan and a realm the player rules are never vetoed. The friendship
+flip applies to new campaigns only. The vanilla Last Stand and
+invasion start scenarios (offered only while War of the Ring is off),
+cheats and two StoryMode quests move clans without a score, so the
+veto does not reach them.
+
+How: TaomDiplomacyModel returns vanilla's own veto score for the clan
+and mercenary join scores when an AI clan meets an AI-led realm of
+the opposed side, except for the realm the clan already serves:
+vanilla's mercenary leave score subtracts that join score, so vetoing
+it pushed serving mercenaries out. Patch145, a postfix on
+CharacterRelationCampaignBehavior.UpdateFriendshipAndEnemies, flips
+the opposed friendships of living and dead lords after vanilla's
+roll. Sides come from execution/alignment.json through each clan's
+own id and culture, never its realm.
+
+Review: /deep-review tier 1 (data flow, engine compatibility, XML)
+and a Codex pre-review, against the installed v1.5.7 DLLs. Three
+medium and eight low findings were fixed in this change; see
+docs/reviews/rca-kingdom-allegiance-2026-11-10.md.
+
+Verification with Bannerlord v1.5.7, on this change over trunk
+8841aac99 (the later commits change no production code and none of
+this change's files): full suite 38,077 passed, 0 failed, 9 skipped;
+canary tripped; API snapshot reproduces; data gates 5 PASS; lint_docs
+exits 0. Tool tests ran 8,486 with one failure in another session's
+then uncommitted retopology test, which this change does not touch.
+
+Not-tested: no in-game run yet; the checks are in
+tools/ingame_checks/1111.toml. The two new MCM strings carry English
+in the 12 language files until the translator runs (#763).
+
+Refs #1111
+
+#### fix(tools): v2.0.37 - Make retopology repair deterministic
+
+`61b03036`
+
+Canonicalize non-manifold repair across input face order, preserve asymmetric mirror attributes and duplicate-triangle connectors, and carry object transforms through inspector outputs. Clarify the measured high-sharp layout difference and add regression coverage. The maintainer waived the GitHub issue requirement for this retopology toolkit work.
+
+### Tests
+
+#### test(engine): v2.0.37 - Make the party size call gate read nested calls
+
+`6ba5dff0`
+
+Follow-ups from the Codex pre-review of the v1.5.7 engine bump. No
+shipped code changes.
+
+PartyMemberSizeLimitCallShapeTests looked for the call with a pattern
+that could not see an argument with brackets in it, so
+GetPartyMemberSizeLimit(ResolveParty(), true) passed, and a string
+that held the call text failed. The test now blanks comments and
+string and character literals, reads balanced brackets and splits the
+top-level arguments. Fourteen shape cases pin it: a nested call, a
+space before the bracket, arguments over several lines, a named
+literal, a variable, a string, a verbatim string, both comment kinds,
+a declaration and a nameof. The rule is a true or false literal
+passed by position; a bool variable is outside it.
+
+docs/features/keep-wardens.md showed the patrol hook's call with one
+argument, which no longer compiles on v1.5.7. It now shows the call
+the code makes.
+
+docs/migration/v1.5.7-impact.md names the commits and the v2.0.37
+tag, records that a tester's log confirmed the new campaign hang, and
+lists two items that wait for a decision: the testing package and the
+enlistment sit-out rule, which is now stricter than v1.5.7 needs for
+caravans and villager parties. v1.5.7-diff-ranked.md qualifies the
+party health tooltip row for a party at sea with a naval DLC crew
+bonus.
+
+Refs #1112
+
+### Documentation
+
+#### docs(index): v2.0.37 - Link the since-October Discord note
+
+`93b07114`
+
+docs/releases/2026-11-10-since-oct-28-discord.md reached trunk with no
+link to it and none out of it, so the doc graph ratchet failed on the
+merged tree: "components: 15 exceeds the baseline 14". One line in
+docs/INDEX.md, beside the other release notes, joins it to the graph.
+The ratchet then reads orphans 9 and components 14.
+
+#### docs(reviews): v2.0.37 - Record the harness retro of 2026-11-10
+
+`0e884df2`
+
+The retro Mike asked for after the Bannerlord v1.5.7 bump (#1112). It
+reads the session transcripts of 2026-11-03 to 2026-11-10: 55 main
+sessions and 1,183 subagent transcripts, with no parse failure.
+
+The record gives a verdict on each harness change older than seven
+days and proposes two edits. Both wait for Mike's decision, and this
+commit changes no harness file.
+
+- check-verification-evidence stopped a session 32 times in 16
+  sessions. In 16 of those the changed C# file belonged to another
+  session or tree: the hook reads the whole shared checkout against
+  one build marker. The proposal is to judge only the session's own
+  edits and runs.
+- The UPSTREAM AHEAD banner printed in 49 sessions and no session
+  acted on it. The proposal is to print it once in seven days.
+
+The Gates section of the v1.5.7 impact doc gains the run on the review
+follow-ups (a7a628c73): 38,221 C# tests and 8,489 tool tests, with no
+failure.
+
+#### docs(release): v2.0.37 - Full release note, linked from the index
+
+`a7a628c7`
+
+The v2.0.37 note listed only the engine change. It now covers the 442
+commits since v2.0.36 by feature, in 166 bullets that were checked
+against their commit bodies. The save, settings and package warnings
+are on top, and the known limits and a test list are at the end. A
+line that says "not tested in game" means no person has seen it work.
+
+The tool suite was red at the tag: the release added the two v2.0.37
+notes and nothing linked them, so the doc graph ratchet counted two
+new orphans. docs/INDEX.md now links both, and /release Phase 5 adds
+that line and runs the ratchet.
+
+Refs #1112
+
+#### docs(rules): v2.0.37 - Codify the Kingdom Allegiance review lessons
+
+`99d914b8`
+
+Two rule lines from the Kingdom Allegiance review (#1111):
+
+- gamemodels.md rule 1: before overriding a model method, grep the
+  base model and the engine for every call of it, the base class's own
+  virtual self-calls included. The mercenary leave score reads the
+  mercenary join score, which the first version of the veto missed.
+- adapters.md: a singleton adapter keeps no engine object after its
+  operation; one that must hold them across calls exposes a release
+  the service calls in a finally. This repeats #952.
+
+The RCA now records both as applied.
+
+### Chores
+
+#### chore(release): v2.0.37 - Reseed the shipped troop id baseline
+
+`af753fcd`
+
+tools/shipped_troop_ids.txt now lists the 1,120 troop ids that the
+v2.0.37 tag ships, read from the tag's 27 troop files. The
+TROOP_ID_REMOVED check compares later work with this list, so a troop
+id that a tester's save can hold does not leave the data unnoticed.
+Nothing changes for players.
+
+## v2.0.37 (2026-11-10)
+
+Commits since v2.0.36: 439 (439 with the version label, 0 without); 3 landed twice and are listed once.
+
+### Features
+
+#### feat(tournament-rewards): v2.0.36 - raise default bet cap to 15,000
+
+`b0511847`
+
+Raises the default tournament bet cap per round from 0 (unlimited) to
+15,000. Players can still raise the MCM slider to 1,000,000 or set it
+back to 0 for unlimited.
+
+MCM persists each setting by property name and loads the saved value
+over the compiled default, so the MCM property was renamed from
+TournamentMaxBetPerRound to TournamentBetCapPerRound: a bare default
+edit would never have reached an existing install. The HintText tells
+a player who already saved a value that it was reset.
+
+Deep-reviewed (Agent 5 data flow, effort high; Codex xhigh pre-review):
+two LOW doc gaps found and fixed (a stale "at the default of 0"
+sentence in the feature doc, and a stale feature-map row), plus one
+LOW test-hardening item applied. RCA:
+docs/reviews/rca-tournament-bet-cap-default-2026-11-10.md
+
+#### feat(special-resources): v2.0.36 - flatten siege/raid/battle payouts
+
+`caf54596`
+
+Mike asked for bigger special-currency payouts from siege, raid and
+battle wins. All 11 currencies now pay the same flat rate instead of
+the old per-faction tiers (per_siege_victory 250, per_raid 100,
+per_battle_victory_base 50), so reward size matches the scale of the
+fight instead of which culture a player picked.
+
+No lord-specific capture reward: OnPrisonerTakenEvent carries no
+actor, so nothing today can tell a captured lord apart from a
+captured unit. per_prisoner stays as is.
+
+Updated the feature doc's example row, rates table and faction-tier
+notes to match the new flat rates.
+
+#### feat(coop-interop): v2.0.36 - co-op troop upgrades charge upgrade_cost
+
+`078b3747`
+
+In a co-op session, upgrading a troop into an elite now costs the
+player its special resource, as it does in single player (#967 C2).
+
+Coop replaces the party screen's Done on the client and resets the
+screen, which cancelled TAOM's queued charge, and the server applied
+the upgrades without one. New Patch144 runs after Coop's server-side
+ApplyUpgradedTroopHistory and charges each upgrade's upgrade_cost to
+the player whose screen the server applied, with the career discount
+the server holds. Only the server charges; a client pays nothing. A
+screen the server rejects charges nothing. With Elite Troops Cost
+Gold Only on at the server, nothing is charged.
+
+Limits until #967 C4 and C5: the guest sees the lower balance at the
+next join, the client's upgrade gate reads a balance that upgrades
+did not lower, and the server's charge stops at zero. The server may
+not hold a guest's career discount yet, so a guest can pay full
+price.
+
+Review: /deep-review tier 1 (lenses 5, 2 and 7) and one Codex ultra
+pass, 0 Codex findings. Lens 2 found no test pinning Coop's method
+shape; CoopMissionBindingTests now checks it against the installed
+GameInterface.dll. The server's local-hero read is now null-safe.
+RCA: docs/reviews/rca-emissary-party-coop-upgrades-2026-11-09.md.
+
+Not-tested: no co-op session has run this change. The check is in
+tools/ingame_checks/967.toml and needs a guest upgrade on a server.
+
+#### feat(elite-emissary): v2.0.36 - gold sales stop at the party limit
+
+`6885f5a1`
+
+With Elite Troops Cost Gold Only on, the Elite Emissary no longer
+sells more troops than the party has room for (#1108). A resource
+balance used to keep each purchase small; gold does not.
+
+Each offer and each purchase is capped at the free slots divided by
+the slots one troop fills. While Troop Weight is on, a heavy troop
+fills its weight: with 10 free slots the emissary sells 3 troops of
+weight 3, and no Mumakil rider (weight 20). The offer hint says how
+many the party has room for, a full party greys the offer, and a
+purchase that no longer fits is refused before any gold or troop
+moves. With the option off, nothing changes.
+
+Review: /deep-review tier 1 (lenses 5, 2 and 7) and one Codex ultra
+pass on this change and the co-op upgrade charge that follows. My own
+tests found that the first cap counted every troop as one slot.
+RCA: docs/reviews/rca-emissary-party-coop-upgrades-2026-11-09.md.
+
+Not-tested: no session has played this change. The new human rows
+are in tools/ingame_checks/1108.toml. The two new strings are
+English in the 12 language files until the translator runs.
+
+#### feat(mission-perf): v2.0.36 - log shadow type and filtering per mission
+
+`67640c4a`
+
+A player reports that dynamic shadows cost large battles more frame
+rate than any other setting (#1103). Before any change to shadows, the
+cost must be measured, so each mission's [PerfContext] line now also
+records the player's Shadow Type (0 None, 1 Static Only, 2 Static and
+Dynamic) and Shadow Filtering (0 None, 1 PCF) as shadowType and
+shadowFiltering. Nothing is written and nothing changes for players.
+
+tools/perf_runs.py compare prints each group's shadowType,
+shadowFiltering and shadowQuality on a settings line. It calls the
+compare INCONCLUSIVE when one group holds two known values of one of
+them, so a run on the wrong setting cannot pass as evidence. Logs from
+older builds still parse and show na. The exit code is unchanged; to
+undo the new check, revert its loop in compare_rows.
+
+Whether the engine applies a Shadow Type change to a running session
+is UNVERIFIED, so the feature doc says to restart the game after one.
+
+Review: Codex (ultra) and the data flow, engine compatibility and
+tooling lenses found no production defect. One MEDIUM and seven LOW
+items are fixed here.
+RCA: docs/reviews/rca-shadow-instrumentation-2026-11-09.md
+
+Refs #1103
+
+#### feat(arachnophobia): v2.0.36 - Arachnophobia Mode hides the spiders
+
+`1c4070ff`
+
+Adds the MCM option Arachnophobia Mode, in a new Accessibility group
+and off by default, for players who want to play without the giant
+spiders (#1110).
+
+With the option on, every soldier that rides a spider rides a warg
+instead: a brown, dark or fell warg, chosen by the spider it replaces.
+New volunteers, upgrades and the Elite Emissary no longer lead to a
+spider troop, and spider troops leave the encyclopedia and the Custom
+Battle troop list. Spider broods stop spawning, and the broods already
+on the campaign map disband at the next daily tick. A brood in a
+battle, or one holding a hero prisoner, waits until it can leave.
+
+Troops cannot be deleted, because saves refer to them by id. Spider
+troops already in a save stay until they die, on wargs and still named
+Spider Rider. Fords of War still offers its Spider Riders, on wargs.
+Lore text, and cobwebs in some scenes, stay. The mode changes only
+data that each game reloads from XML and that no save holds, so
+turning it off brings the spiders back at the next load. Broods then
+return at one a day. In co-op, all players need the same value.
+
+Review: a tier 1 /deep-review (three lenses and a Codex pass) and a
+re-review of the fixes. The two medium behaviour fixes: a brood with
+regular prisoners could never leave, and a leftover spider troop could
+still upgrade into another one.
+RCA: docs/reviews/rca-arachnophobia-mode-2026-11-09.md.
+
+Not-tested: no session has played this change. The in-game checks are
+in tools/ingame_checks/1110.toml. The two new strings are English in
+the 12 language files until the translator runs.
+
+Refs #1110.
+
+#### feat(tools): v2.0.36 - Add independent garment retopology toolkit
+
+`ad99f3e4`
+
+Add an independent UV-guided garment retopology engine and Blender panel
+with pattern flattening, editable quad guides, assisted cuts, X/Y
+mirroring, density controls, source-detail reprojection, thickness, and
+non-manifold inspection and split-edge repair.
+
+Package Petik 2.0.7 with three compatibility fixes and source-only
+KEYforce installers, differential fixtures, clean-room provenance, and
+runtime tests for patch generation, projection, and modal controls.
+
+The maintainer waived the GitHub issue requirement for this work.
+
+#### feat(special-resources): v2.0.36 - elite troops can cost gold only
+
+`fc7cd73c`
+
+Adds the MCM option Elite Troops Cost Gold Only, in a new Special
+Resources group and off by default, for players who want elite units
+without special resources (#1108).
+
+With the option on, no troop costs a special resource to upgrade,
+recruit or keep, and none desert for lack of it. Gold, XP and wages
+still apply. The Elite Emissary sells for gold at merchant_cost times
+the new Emissary Gold Per Resource setting (default 200, range 50 to
+1000), and only to a buyer whose special resource matches the
+settlement owner's. Players still earn the resource, the map bar
+still shows the amount, and the armoury still takes it.
+
+While the option is on, the two career perks for upkeep and upgrade
+cost do nothing, and elephant and Mumakil upkeep is 0. Turning it off
+restores every cost, and desertion resumes at a zero balance. With
+the option off, nothing changes. In co-op the option is per peer, and
+the authority charges by its own value.
+
+Review: two /deep-review waves, a convergence pass and one Codex
+ultra pass. Codex found that at cheat-scale gold the emissary could
+grant unpaid troops. The gold total is now computed without overflow.
+RCA: docs/reviews/rca-gold-only-elite-troops-2026-11-09.md.
+
+Not-tested: no session has played this change. The in-game checks are
+in tools/ingame_checks/1108.toml. The five new strings are English in
+the 12 language files until the translator runs.
+
+#### feat(tools): v2.0.36 - decompile summary and Ghidra 12.2 re-review
+
+`6abb50e2`
+
+A second review of morluto/rea (1,393 commits since the first) and of
+Ghidra, to catch upstream changes and anything the first passes missed
+(#1098). rea is still not installed and no text was copied.
+
+tools/native_decompile.py gains --summary. It prints the function,
+caller and string rows and the engine-method labels with no C and no
+decompile call, so a reader can choose what to read. The v1.5.3 lookup
+helper run with --callers 1 falls from 1,902 lines to 19.
+
+/investigate Phase 5 now searches sibling code for the same failure
+after the root cause is confirmed, and its report has a Siblings row.
+The deep-review tooling lens gains item 19: cache keys, work finished
+before a failure, and limits reported beside read failures.
+
+The desktop moved from Ghidra 12.1.4 to 12.2 with PyGhidra 3.2.0, after
+a side-by-side trial on the v1.5.6 client. 106 opt-in integration tests
+pass with none skipped. Four of five pinned decompiles are identical
+and the fifth inverts one branch. The function count fell from 33,339
+to 33,337, because 12.2 merges two tail functions into their only
+caller; no code is lost and --rva still answers there. That met the
+wording of the trial's gate, so the maintainer made the call to switch.
+12.2 fixes 32 advisories, none on TAOM's path, and no decompile gain was
+measured.
+
+A spike of Ghidra's RTTI class recovery improved class-member C but
+overwrote 111 seeded engine-method names, so it was not adopted.
+
+Review: one deep-reviewer tooling-lens pass, no HIGH, seven findings
+fixed. Those fixes had no second reviewer; they were checked by the
+tests and the reviewer's mutation script (18 of 19 mutants killed, the
+survivor is a default main never uses). Verified with /verify: 37,773
+C# tests and 8,353 tool tests, 0 failed. No in-game check applies.
+
+#### feat(fords-of-war): v2.0.36 - spear packs and pros for the last placed
+
+`fcc7c39c`
+
+Every culture can now buy a foot spear pack and its AI buys it, as
+Mike asked: spears are the counter to cavalry now that pierce blows
+do double damage to riders. Rohan and Rivendell had no foot spear
+troop, so each gets a new one with a spear and a sidearm and no
+shield. Erebor and Mirkwood use their veteran militia spearmen. Dol
+Guldur's goblin impalers take the crawlers' place, because it already
+fills all 12 unit keys; crawlers still come in its free waves. Harad
+already had spears, but its AI never bought them.
+
+The factions at the bottom gain pros. Dol Guldur deals double damage
+to towers with 30% more income, Gondor deals 50% more damage to
+towers, Harad earns 35% more and Dale 25% more. Gundabad's packs hold
+1.5 times the troops at the same price, through a new packSize feat.
+Each pro shows in the faction's strength list. Harad stays below
+Erebor's 40%, because being the richest is Erebor's identity.
+
+The per-tower assault limit now rises with the attacker's tower damage
+feat. It held ordinary blows to a fixed rate, so a crowd would not
+have delivered the double damage. This also lifts Isengard's limit by
+15%.
+
+Rohan's riders cost 0.7 of the full price, up from 0.65, and its horse
+archers 0.55, up from 0.5: it won 10 of 11 in the partial round 4
+under double pierce damage. The rise is small because every AI now
+fields spears against it.
+
+The elves now show six kinds of unit, the same as Gondor, so the test
+that said they have the fewest now says they have no more than anyone.
+
+The full suite passed: 37,773 C# tests and 8,322 tool tests. The new
+text is seeded in English for the 12 languages. The balance log has
+the partial round 4 record, each old value and the undo.
+
+Not-tested: spears against cavalry in a real fight. Round 5 is the
+in-game check for these values.
+
+No issue: Mike waived issues for Fords of War, 2026-10-31.
+
+#### feat(tools): v2.0.36 - add skill routing and hostile PR evals
+
+`bce6641e`
+
+Add a paid eval suite for the AI harness. tools/run_skill_evals.py
+stages TAOM's skills and the CLAUDE.md skill table as a temporary
+plugin, then runs nine cases through claude plugin eval: six routing
+cases, two negative controls, and one pull request with a planted
+instruction for /review-outside-pr. The runner refuses a cost cap of
+zero or less and never publishes a report. A free unit test fails
+when a case names a skill that no longer exists.
+
+Results on 2026-11-08 with Sonnet: all 9 cases passed one run each,
+and the hostile case passed 3 further runs. A mutated hostile case
+failed its two canary graders, so those graders can fail. An eval has
+less context than a real session and each routing result is one run,
+so these passes do not explain the zero-use skills in the last retro.
+The hostile case covers one payload and does not establish resistance
+to prompt injection.
+
+The two ideas come from the review of vercel-labs/agent-browser,
+recorded in docs/reviews/adopt-agent-browser-2026-11-08.md. No code
+from that project is installed or copied.
+
+No player-visible change, and no in-game check applies.
+
+no issue: waived by the maintainer for this repository tooling.
+
+#### feat(tools): v2.0.36 - keep each Fords round robin as data in the repo
+
+`7dd043d9`
+
+On 2026-11-07, 252 Fords of War run folders under E:/Temp/fords-runs
+turned out to be deleted, and with them most of round 1 and part of
+round 2. A round takes about 13 hours of game time, so its results now
+live in the repo as well.
+
+tools/fords_round_data.py writes one build's round robin matches as
+per-troop records: the outcome, the towers lost and when each fell,
+tower damage per class, the heroes fielded and, per troop of each
+side, how many spawned, killed and died. It picks the matches exactly
+as fords_round_robin.py summary does. Two files are committed under
+docs/features/fords-of-war/rounds/: round 2 (52 surviving matches on
+329e841d2) and round 3 (all 78 matches on c24803f6e, no crash).
+
+The balance log also records a fast lane simulator that was tried and
+dropped: in a two-fold cross-validation on the round 2 matches it
+picked worse winners than one strength number per faction, so it was
+not kept.
+
+Round 3's balance reading and decisions come in a later commit.
+
+No issue: Mike waived issues for Fords of War, 2026-10-31.
+
+#### feat(fords): v2.0.36 - AI lanes regroup under their own tower
+
+`ce509918`
+
+The Fords of War AI used to send every lane forward until it died. Now
+a lane outside the assault falls back to its own tower when the enemy
+near its front outvalues it badly, fights there with the tower's
+support, and returns to Push once the odds ease.
+
+The AI compares the value of the units within 40 m of the lane's lead,
+from both sides and any lane, not the lane's headcount: a headcount
+includes units still at the base and ignores quality, and the elven
+lanes cap at 40 against 90 to 123 for the others. A hero counts as 250
+there, about one strong elite, so one hero neither forces nor blocks a
+regroup.
+
+- A lane goes to Fall back when at least 10 enemies are near its lead
+  and their value is more than 1.6 times its own.
+- It returns to Push when 10 or more enemies are still near and their
+  value is at most 1.1 times its own, when its lead reached its tower
+  with no enemy near, or when nobody is left in it. A lane with only a
+  few pursuers near keeps going home.
+- The AI releases only a Fall back it ordered; a person's stays.
+- A Fall back lane whose nearest enemy is within its tower's fire
+  range charges, and keeps fighting 15 m past that range once engaged.
+- With every lane on Fall back, the AI still buys from its cycle.
+- Each order logs [FordsOfWar][Ai] regroup (and regroup end) with the
+  side, lane, both values and the enemy count.
+
+The constants (1.6, 1.1, 10, 40 m, 250) are first guesses; round 4 of
+the round robin measures them. Undo: set AiCommander.FallBackRatio to
+1000 to turn the AI half off, and remove the FightsAtOwnTower test in
+LaneMarchRules.Evaluate to turn the tower fight off.
+
+Reviewed by /deep-review (tier 1, Lens 5 and Lens 2, Codex ultra and
+a high re-review, two Lens 5 re-checks): 10 MEDIUM and 7 LOW, all fixed
+or documented in docs/reviews/rca-fords-regroup-2026-11-07.md.
+Not tested in game.
+
+No issue: Mike waived issues for Fords of War, 2026-10-31.
+
+#### feat(tools): v2.0.36 - dump the game when a Fords run stalls
+
+`7fdc22a3`
+
+run_fords_autorun.py wrote a full dump with procdump only after a
+crash. A match that froze, with the game still running, was stopped
+with nothing to read, so the Fords hang still has no named site. The
+runner now takes the same dump when a run ends on a stall, while the
+game process is still alive, so the next hang can be read with the
+native crash triage.
+
+No issue: Mike waived issues for Fords of War, 2026-10-31.
+
+#### feat(enlistment): v2.0.36 - report siege and camera-follow state
+
+`d0e61cc9`
+
+Add settlement siege state and camera-follow ownership to taom.service_status so support can distinguish a parked enlisted party from a camera left following the commander.
+
+Verified against installed v1.5.6 MapCameraView and Campaign.CameraFollowParty, with 5 console binding tests and the full managed suite: 37,658 passed, 9 skipped, 0 failed.
+
+Not-tested: live taom.service_status output in a campaign.
+
+Refs #538
+
+#### feat(fords): v2.0.36 - pierce blows deal double damage to cavalry
+
+`d679586f`
+
+Rohan won all 12 of its matches in round 2, and spearmen traded only
+0.73 to 0.79 gold in every set of matches, because nothing gave them
+an edge over the riders they exist to stop. In a Fords of War match a
+horse or a rider now takes twice the damage of a pierce blow
+(pierceVsMountedFactor 2 in match.json). Outside Fords of War nothing
+changes.
+
+The rule covers spears and pikes in either grip, arrows, bolts,
+javelins, tower arrows and couched lances. It hits every rider and
+every mount, ridden or not: horses, camels, elk, wargs, spiders,
+Erebor's war rams, and Harad's war elephant and mumak. A blow a shield
+blocks keeps its shield damage. Mike offered 2 or 3; 2, because the
+rule also reaches every bow and every tower.
+
+In a match, warg and spider bites, creature attacks and signature
+strike splash now go through the damage model like every other blow.
+So army upgrades and hero factors reach them for the first time:
+Sauron's splash deals three times what it did, and a side's melee
+upgrades raise its wargs' bites.
+
+To undo the rule, set pierceVsMountedFactor to 1. Undoing the scripted
+blow routing means reverting the FordsScriptedBlows.Damage call in
+CustomAttacksUtils.TakeDamage. Reviewed by Lens 5, Lens 2 and Codex
+(3 medium and 6 low findings, fixed or documented in the RCA). Not
+measured in game yet: round 4 measures it.
+
+No issue: Mike waived issues for Fords of War, 2026-10-31.
+
+#### feat(fords): v2.0.36 - culture tactics for lane formations
+
+`6b7c5f78`
+
+Until now every lane of every faction marched in the engine's default
+line and broke into a charge at 25 m, so no culture fought differently.
+A faction's tactics block in factions.json now sets the arrangement its
+lanes march and close in, the range at which a lane closes on the
+nearest enemy as one formation, and the range at which it charges.
+
+Isengard, Erebor, Gondor and the Easterlings close the last 20 m in a
+shield wall and charge only at 5 to 8 m. Rivendell, Mirkwood and Dale
+advance as one formation from 45 to 55 m and charge at 8 to 10 m.
+Rohan marches in a wedge and charges at 40 m; Mordor and Gundabad march
+loose and charge at 35 m. Harad, Dol Guldur and Umbar keep the old
+behaviour as the control group.
+
+While closing, a lane walks to the point on its path nearest the enemy,
+never past the next enemy tower, and the director sends the formation's
+arrangement once per change before the movement order. The decision
+trace gains arr= on the [LaneState] lines.
+
+To undo it for one faction, delete its tactics line in factions.json;
+without any block the code sends no arrangement and charges at the
+engage range as before. Reviewed by Lens 5, Lens 2 and Codex (8 medium
+and 7 low findings, all fixed or documented in the RCA). Not measured
+in game yet: round 4 of the round robin measures it.
+
+No issue: Mike waived issues for Fords of War, 2026-10-31.
+
+#### feat(blender): v2.0.36 - add independent hair engine
+
+`6791dbc7`
+
+Implement TAOM's independent hair generation, grooming, profiles,
+conversion, short and shell hair, particles, baking, rigging, presets,
+libraries, and safe installation. Add transactional Blender operators,
+drawing, sculpting, and end-to-end delivery without importing Hair Tool.
+
+Keep the Hair Tool 4.6.1 bridge for upstream-specific scenes. Make
+the independent engine the default across grooming skills, scope rules,
+feature maps, and recipient documentation.
+
+Include GPL-3.0-or-later notices for the behavioral engine
+implementation, separate from the existing bridge license. Package 59
+source files for KEYforce and Kysaro without upstream assets, meshes,
+or activation data.
+
+Verification: 8,311 repository tests with 12 skips; 302
+extracted-package tests; Blender 5.2.3 generation, all 12 bakes,
+rigging, particles, rollback, FBX re-import, and five LOD levels.
+Differential UV contracts passed.
+
+Not-tested: human GUI ergonomics, exact upstream geometric parity,
+Kit import, and in-game acceptance of recipient-created assets.
+
+Issue: independent engine implementation waived by Mike.
+
+#### feat(blender): v2.0.36 - package Hair Toolkit and audit Hair Tool
+
+`610864cc`
+
+Add a source-only recipient package for KEYforce and Kysaro with the
+grooming bridge, kitbash tools, tests, workflow documents, and license
+notices. Include the complete Hair Tool 4.6.1 static audit in the ZIP.
+
+Document all 65 Python modules and eight Blender libraries,
+representative runtime evidence, unresolved binary formats, updater
+security risks, and the boundary between this audit and an independent
+replacement engine. Link the research from the grooming workflow and
+documentation indexes.
+
+Verification: 8,226 tools tests with 12 skips; 50 focused tests; 217
+extracted-package tests; Ruff, documentation, provenance, review
+contract, and document graph checks.
+
+Not-tested: every interactive Hair Tool operator, complete baking and
+preset matrices, Kit import, and in-game acceptance of recipient-created
+grooms.
+
+Issue: retroactive issue waived by Mike.
+
+#### feat(blender): v2.0.36 - add Hair Tool grooming workflow
+
+`7252a2db`
+
+Add deterministic Hair Tool guides for dwarf and elf hair and beards,
+with Blender 5.2 compatibility, UV and material validation,
+transform-safe weights, previews, and staged FBX delivery.
+
+Wire the workflow into AI instructions, asset docs, provenance, and the
+existing LOD and skin-registration processes.
+
+Verified with 8,222 Python tests, 12 skips, real Blender author runs for
+all three profiles, and dwarf FBX plus five-LOD validation.
+
+Issue waived by the maintainer.
+Not-tested: Kit import and in-game groom, helmet, and head-turn checks
+remain asset-specific.
+
+#### feat(dire-wolf): v2.0.36 - warg-sized wolf, rider in the saddle
+
+`8f0b2854`
+
+The dire wolf looked like a pup in portraits and the inventory, and its
+rider sat over the hips. Both are fixed in the wolf's own rig.
+
+Portraits and the inventory draw a mount at its mesh size, so the wolf
+rig is now 2.08 times the purchased pack's wolf: 1.94 m tall, a little
+taller than a warg's 1.70 m. In battle, taom_body_length 115 makes it
+about 2.22 m, 25% larger than the wargs.
+
+The engine seats a rider where the mount usage's rider animation puts
+it, not on rider_sit_bone (native v1.5.6, read from the decompile). The
+wolf uses the warg's rider animations, so its saddle must sit where the
+warg's does. The whole rig moves 0.52 model units toward the tail: the
+meshes, the skeleton's root, the animation masters and the Monster's
+body capsule. The mesh tool measures both seats: the wolf's is 6 mm
+from the warg's along the back and 10 mm in height.
+
+Gait clips now hold the pack's travel times the rig scale only. The
+engine already divides the agent's speed by its scale, so the earlier
+extra factor for the Monster's size made every stride 10% too long.
+
+Tools: tools/blender/rig_scale.py scales and moves a rig and finds a
+saddle's seat; tools/blender/scale_dire_wolf_anims.py rebuilds the six
+animation FBX with the pack's take names, which the Kit uses as master
+names (tools/blender/fbx_takes.py); apply_dire_wolf_skeleton.py gains
+--scale, --back and --replace and loses the pack-size master copy;
+gen_dire_wolf_anim_clips.ps1 finds masters by name and checks their
+frame counts against the pack's. Tests hold the live Monster to the
+writer, and the rig constants equal across the five tools.
+
+The live Armory changes, their backups and the replay steps are in
+docs/reference/lotrlome-dire-wolf-changes.md. The mount runtime doc,
+the harness guide and the war ram doc no longer say the rider sits on
+rider_sit_bone. Review: docs/reviews/rca-dire-wolf-resize-2026-11-06.md.
+
+Not tested in game: the seat at a stand, walk, gallop and turn, the
+size beside a warg, and the fur over the saddle (#1081 keeps
+triage-needs-ingame). Deferred, with reasons, in the RCA: an --out
+equal to --src guard, shape keys and shared mesh data in scale_rig,
+and two weak test fixtures.
+
+Refs #1081
+
+#### feat(tools): v2.0.36 - add independent quad-remeshing toolkit
+
+`0ecae097`
+
+Adds a deterministic cube-map remesher for closed star-shaped meshes and a
+serialized Exoside job bridge with safe artifact handling.
+
+Includes NumPy and Blender adapters, examples, 21 focused tests, and
+research/provenance documentation. Verified with 8,145 Python tests, real
+Blender runs, correct volume and material projection, and bridge-file
+restoration.
+
+Issue waived by the maintainer.
+Not-tested: general open or strongly concave meshes, field-aligned organic
+edge flow, and production-scale performance.
+
+#### feat(long-defeat): v2.0.36 - theme the shop, boons and battle HUD
+
+`6e9a5a5e`
+
+Replace the tall shop stack with reinforcement and fortification tabs,
+show three compact boon choices in a separate panel, and add a compact
+battle rail with the B/H/M/N shortcuts. Reuse existing stone, gold and
+button assets and retain the original movies as fallbacks.
+
+Keep tab hitboxes inside the shop, size boon rows from their text, and
+use the run's actual volley readiness. B also closes the focused shop.
+
+Validation: solution build and 2,599 focused local checks passed.
+GauntletPreview confirmed tab, boon and rail bounds and tab state changes.
+Local development test updates are excluded at the maintainer's request.
+Not-tested: fresh-checkout suite without those local test updates.
+
+#### feat(dwarf-attacks): v2.0.36 - dwarves head-butt and drop-kick
+
+`97d8cb72`
+
+AI and companion dwarves on foot now have two attacks of their own
+(#1087). An enemy within 1.3 m in front of a dwarf gets a head butt
+that staggers him (18 damage, every 12 s at most). An enemy 1.8 to
+2.6 m away gets a two-footed drop kick that knocks him down (25
+damage, every 20 s at most). Each attack hits one victim on the
+dwarf's own level. A shield raised toward the dwarf halves the blow
+and stops the knockdown. The player's own dwarf never attacks, also
+when the Battle Command seat, Fords of War or the Long Defeat hand
+him to the AI. The attacks run in field battles, sieges and
+hideouts, not in arenas or tournaments.
+
+MCM, Battle Tactics/Dwarf Attacks: one switch, on by default, and a
+damage slider from 0 to 300 % (100 %). At 0 % the attacks still
+play but deal no damage.
+
+The clips are keyed by hand on dwarf_skeleton_a in Blender and
+compiled in the Modding Kit. Both actions are typed actt_kick and
+live in the unversioned LOTRLOME_Armory: act_dwarf_head_butt and
+act_dwarf_drop_kick in action_types.xml, bound in as_dwarf_warrior.
+A reinstall drops them; tools/bind_dwarf_attack_actions.py --apply
+puts them back, and its --check runs in data_gates.py and
+audit_armory_refs.py. The release must ship the Armory package with
+the clips and rows (docs/reference/release-process.md). The game log
+names a missing action or clip once per mission.
+
+Each dwarf's tree runs from the feature's own mission tick, not as an
+agent component: every dwarf soldier already carries the race
+ability tree in the one slot an agent has, and taking it would cost
+him Stand Fast.
+
+Deep review at tier 1 (Codex, Data flow, Engine compatibility, XML,
+Tooling), then a second wave (Standards, Efficiency, Completeness,
+Design) and a convergence pass: one HIGH, the shared tree slot, and
+the MEDIUM and LOW findings, all fixed before this commit. RCA:
+docs/reviews/rca-dwarf-attacks-2026-11-06.md.
+
+Tests: TAOM.Tests 37530 passed, 15 failed, 9 skipped; the 15 are
+FactionUI gates that fail on trunk already. tools/tests 8168 ran, OK.
+Not tested in game after the review fixes: a Custom Battle before
+them showed both attacks landing. The checks are in
+tools/ingame_checks/1087.toml. Translations of the 4 MCM keys are
+seeded with English and owed under #763.
+
+#### feat(faction-ui): v2.0.36 - theme campaign and encyclopedia UI
+
+`0f00a8e7`
+
+Add illustrated campaign navigation, the Two Trees clock and expandable
+stats. Integrate themed escape and campaign options screens.
+
+Replace encyclopedia lists and detail pages with shared stone panels,
+live portrait and banner previews, settlement illustrations and paged
+clan, fief and relationship galleries. Embed the horizontal family tree.
+Reuse gallery arrows and a common viewport footer across detail pages,
+and place breadcrumbs in the header.
+
+Keep development tests, existing test edits and personal tooling local
+at the maintainer's request. Public issue creation and further feature
+documentation were not requested.
+
+Validation: changed XML and picture configuration parse successfully.
+The whole-mod data gate reports identical failures on clean upstream:
+44 missing item references, 8 external map assignment mismatches and
+2 career-kit differences derived from the installed Armory. The
+maintainer authorized ignoring those external-module failures for this
+UI publication. No external module data is changed by this commit.
+
+#### feat(lothlorien): v2.0.36 - own armour ladder, emissary and review fixes
+
+`8591edd0`
+
+A deep review of the Lothlorien work (issue #1085) ran Codex at ultra
+and four lenses (Data flow, Engine compatibility, XML, Tooling) over
+both earlier commits, including the fix pass of 2026-11-05 that never
+got a second look. This commit holds its fixes, the five decisions Mike
+made on the findings, and the record (two RCAs and lessons).
+
+Fixes from the review:
+
+- The generated lord template file still gave a new Lorien ruler, a
+  rebel lord and a woman who comes of age as a lord the Rivendell gold
+  set. The four Lorien lord and ruler battle rosters now follow
+  lothlorien_bat_template_medium_a. They are hand-ported, because
+  regenerating the file deletes 120 rosters of other cultures and
+  re-equips 78 (issue #637; three docs and the generator header now
+  say so).
+- Three Isengard starter boots that draw the Uruk-hai shoe mesh hid the
+  leg. They show the shin again, like the shoes. The new
+  tools/audit_leg_cover_flags.py enforces the leg cover rule by mesh,
+  and it is a data_gates row, as are the two armour generators' --check.
+  Their --apply and --check flags exclude each other.
+- rebalance_armor.py leaves generator-owned items alone in every restat
+  mode (sk_ll_ and sk_gb_orc_), says how many it left, and
+  derive_armor_tiers.py marks them generator-owned.
+- New tests: the shared generator writer, the leg pieces, the lord and
+  ruler rosters, the named heroes' sets, the clan bindings and the
+  restat skip in all five modes, with control items and a mutation
+  check of the guard.
+- Docs: the generator order, the consumer checklist, wrong counts, the
+  art cache wording and the lessons.
+
+Decisions:
+
+- The Lorien lord-grade pieces stay lord-only (recorded as the one
+  exception to lord kit being sold at a level 3 armoury).
+- Lothlorien gets an armour ladder of its own: a lord's material, a
+  Deep Seam row, an Armourer's Commission row, and no armour_from
+  donor. The material has a placeholder name and wears Mirkwood's bar
+  until an artist clones one; its name is seeded in English in the 12
+  language files and listed in issue #763.
+- The Snow Orc generator owns its values.
+- Lothlorien joins the Elite Emissary: key settlement town_L1, six
+  offers at 28 and 18 Elven Wine, on the level scale of the other
+  cultures.
+- Galadriel's greaves are a Lorien piece.
+
+Lord kit and clan templates are saved state and reach new campaigns
+only.
+
+Outside git: the live LOTRLOME_Armory got the leg cover flags (Lorien,
+Isengard, Mordor; the Uruk-hai shoes stay false), the bow names and the
+Lorien items, with a backup beside each file. The lotraom-assets mirror
+holds none of these edits yet, and the new material still needs its own
+bar mesh.
+
+Not-tested: no in-game run; it needs a full restart and a new campaign.
+Known failures not from this change: the game build pin test, and the
+FBX LOD report drift in the unversioned Armory (KEYforce's art).
+
+Refs #1085, #637, #763
+
+#### feat(long-defeat): v2.0.36 - Phase 4 config for armoury and yard
+
+`65d161d5`
+
+The first slice of The Long Defeat's Phase 4 (the armoury, the
+engineer's yard and the death rule, phase4-plan.md) reads its data and
+sells nothing yet. shop.json may now carry an armoury block (gear sets
+of armour or weapons, each for some or all classes), a yard block (the
+engines on sale) and a marshal block (the bought hero who holds the
+general's seat while the lord is down). fortresses.json may carry the
+armoury and yard places that the recorder writes since 36f67e8e3.
+Nothing ships in these blocks, LocationOffer offers nothing, and
+shipped play does not change.
+
+LoadoutMerge puts a bought set on top of the class kit (decision D35):
+an armour set replaces the armour slots it names, a weapons set
+replaces all four weapon slots, and the horse is never touched. At
+launch, LongDefeatGearItems hides every set with an item that does not
+exist or does not fit its slot, using the engine's own slot rule, and
+names it in a warning. The wrapper's LOCATION_OFFERED mirrors the C#
+offer, with a parity test.
+
+Review: tier 2, lenses 5 and tooling. They found the three blocks
+stored twice on the plan (now one copy on the shop, forwarded), a
+launch check without the slot test, summaries that described effects
+not built, a weak parity parser and one dead member; all are fixed.
+RCA rows 1 to 8 in docs/reviews/rca-long-defeat-phase4-2026-11-06.md.
+
+The live Helm's Deep scene was reworked in the Kit this morning: the
+towertop and walltower entities gave way to new geometry. The Slice 8
+pin that named them now checks the rule it guards, that no tower
+entity carries a script, and is Inconclusive when none is named (RCA
+phase 3 row 92).
+
+Verify: 37,408 C# tests passed; the one failure is the BUTR pin test,
+red until BUTR publishes build 125270. All 8,029 tool tests passed.
+The API snapshot reproduces.
+
+Not-tested: no game run; nothing is for sale until later slices.
+
+#### feat(arnor): v2.0.36 - four elite troops from player feedback
+
+`c85be479`
+
+Player feedback asked for elite units for the Arnor realms. Four are
+in, all as upgrade steps and none in a party template or recruitment
+pool:
+
+- Arthedain: the Knight of Annuminas (L31 cavalry, after the Lancer),
+  the Evendim Warden (L36, after the Warden of Fornost, a poleaxe and
+  no shield) and the Dunedain Steel Bowman (L36, after the Ranger
+  Captain, with a new sixth Arthedain bow).
+- Cardolan: the Tharbad Bridge Guard (L31, a pike and no shield, a
+  second upgrade of the Veteran Barrow Guard beside the Warden of Tyrn
+  Gorthad).
+
+None costs a special resource (#963 stands). The Grey Company Ranger
+from the same feedback is not part of this change.
+
+Known limitation: the engine's AI upgrader and the notables' volunteer
+growth read upgrade targets. AI Arthedain lords upgrade their Lancers,
+Wardens and Ranger Captains into the new troops, the Lancer now grows
+Knight of Annuminas volunteers, and a Veteran Barrow Guard volunteer
+grows into either top Cardolan troop. A Cardolan lord with no preferred
+formation sends his Veteran Barrow Guards to one of the two by a hash of
+his id. Documented in docs/features/arthedain.md and
+docs/features/cardolan-rhudaur.md.
+
+Also in this change:
+- faction_characters.json pins the Arthedain faction screen to the
+  King's Guard of Fornost. Two level 36 foot troops now tie on tier and
+  level, and the lower id would have taken the viewport.
+- Four armour exemption rows for the new level 36 troops, with the
+  King's Guard's reason.
+- ranged-troops.html regenerated; design docs and generator docstrings
+  brought up to date.
+- Review record: docs/reviews/rca-arnor-elite-troops-2026-11-06.md.
+
+No GitHub issue: Mike waived it for this work. The new troop names and
+the new bow name are English in all 12 languages until the paid
+translator runs (backlog row added to #763). For that bow name the
+external loc coverage baseline rises by one untranslated Armory row per
+language.
+
+Not-tested: in game. A full restart is needed for the new troops and for
+the new bow (ladder_arthedain_bow_t7), which was written to the live,
+unversioned LOTRLOME_Armory; a reinstall of the Armory drops it, so
+rerun generate_ranged_ladder_items.py --apply. Owed: the four upgrade
+buttons on the party screen, the bow reading "Ranger's Bow VII", the
+Evendim Warden and the Bridge Guard spawning with their polearm and no
+shield (and which grip their sword uses), and the Arthedain faction
+screen showing the King's Guard.
+
+Tests: C# suite 37354 passed and 2 failed, neither from this change.
+BannerlordRefAsmVersion_PinnedGameVersion_IsTheSameGameBuild is a game
+build mismatch (installed 125270, reference package 125053).
+LongDefeatTowerVolleyPinTests (the Helm's Deep towers test) reads the
+live TAOM_Map Helm's Deep scene, which was rewritten today and no longer
+names a towertop or walltower. Python tool tests: 8030 passed.
+
+#### feat(long-defeat): v2.0.36 - the high towers' volley
+
+`b0c46909`
+
+Tower level 3 of The Long Defeat (400 gold) now adds a volley to each
+high tower: 6 arrows aimed by themselves at attackers within 80 m,
+first 20 s into the wave and then every 30 s. Each tower fires from
+its own recorded spots behind the parapet, through the same scripted
+missile path as the Elven Volley, and each arrow belongs to one of
+that tower's live post archers, never to the player. A tower with no
+archer standing holds its fire for the rest of the wave. The clear
+stops the clocks.
+
+Level 3 is sold only while some tower has both a volley spot and a
+post, so the player never pays for a volley that cannot fire. Helm's
+Deep records neither yet, so the tower row still stops at level 2 and
+shipped play does not change until the points are recorded. Once level
+3 is reached, the row says the towers are fully manned.
+
+The arrow is a new item, ld_tower_arrow: a copy of Fords of War's
+fow_tower_arrow that cannot be picked up, so a missed arrow never
+becomes a pickup, and Fords is untouched. It reuses vanilla's "Arrows"
+name. This reverses decision D32 (reuse the Fords arrow); the plan
+marks it for Mike to confirm, with the undo steps.
+
+Each volley use now has its own hit window, matched by the exact
+missile index the engine returns, so one tower's hits never count for
+another or for the Elven Volley. The tower volley has its own check,
+taom.long-defeat.tower-volley, with name=value words only and a test
+that runs the line through the real log sanitiser against the
+manifest pattern. The judge owes one tower-volley pass, and one posts
+pass, per recorded tower that can fire.
+
+Review: tier 1, lenses 5 and 2, then lens 7 on the new item. They
+found level 3 sold for spots on a tower with no posts, a hit fallback
+by item that could book one source's hits to another, a missed arrow
+that became a pickup, and stale comments and plan lines; all are
+fixed. RCA rows 83 to 91 in docs/reviews/rca-long-defeat-phase3-2026-11-05.md.
+
+Verify: 37,344 C# tests passed; the one failure is the BUTR pin test,
+red until BUTR publishes build 125270. 8,019 tool tests ran with the
+same 3 trunk failures as before this change (ranged ladder counts and
+the armour generator list). The API snapshot reproduces.
+
+Not-tested: no game run; the tower volley cannot fire until Mike
+records tower posts and tower volley spots. Whether the hit's missile
+index equals the one AddCustomMissile returns is native and
+unverified. 1 new string is an English seed; translations go to #763.
+
+#### feat(lothlorien): v2.0.36 - own troop tree wired in, villager, lord kits
+
+`d59fcef0`
+
+Lothlorien now fields its own troops everywhere a player meets them.
+KEYforce's tree and armour pack were already merged (e09f04ef8), but
+the culture still handed out Rivendell troops through most of the
+systems around the tree. A tier 1 review found the gaps and this
+commit closes them.
+
+Recruitment and armies: four Lorien militia troops (levels 11 and 16)
+and seven Lorien military party templates (default army, three
+patrols, militia, rebels, vassal reward) replace the Rivendell
+bindings. The crown guard is the Mallorn Defender. The villager is
+now villager_lothlorien with its own party template, and it upgrades
+into lorien_scout instead of imladris_recruit. Enlistment rosters
+(14) and career kits (26) come from the Lorien tree, and the 24
+Lorien troops of level 31 and above have troop weights.
+
+Lords: every Lorien lord now wears Lorien armour in battle. The five
+shared lord templates use sk_ll pieces, including three of the four
+lord-grade pieces that nobody wore. Civilian sets still use
+Rivendell items.
+
+Troop data: shield lines no longer pair a shield with the two-handed
+he_sword, which the AI would never draw. The second sword comes from
+the melee ladder band of each tier.
+
+Armour: seven lord-only pieces are no longer sold in markets, and the
+chests no longer claim female variants that have no mesh. The Lorien
+generator keeps KEYforce's values, and rebalance_armor.py now skips
+sk_ll items so a restat cannot undo them. The armour generators
+share tools/_generated_files.py (backup, parse check, --check).
+
+Bows: the eight Lorien bows keep their Rivendell and Mirkwood donor
+meshes and are now labelled "[Lorien] Longbow" with a tier numeral.
+
+Tests: LothlorienOwnTreeDataTests pins the troop slots, the military
+templates, the clan templates, the weights, the villager and the
+lord kits. A test in test_kingdom_caps.py pins the armour skip.
+Pins in the militia, ranged ladder, upgrade skill and armour curve
+tests moved with the new data.
+
+Saved state: clan default party templates, lord skills and lord kit
+are saved with the campaign, so they reach new campaigns only.
+
+Outside git: the Armory art cache entries (53 .rdc files, copied from
+the lotraom-assets mirror), the lord-only and gender flags, the bow
+labels and the two bow items ladder_lothlorien_bow_t2 and _t3 were
+changed in the live LOTRLOME_Armory, with backups beside each file.
+The mirror still lacks the two bow items.
+
+The new troop and item names are English only until issue 763 is
+translated; the external loc baseline was raised for them.
+
+Not-tested: no in-game run. Needs a full restart and a new campaign.
+Known failures in this tree, none from this change: the game build
+pin test, and the Arthedain and Cardolan generator checks, which
+belong to uncommitted work in the same checkout.
+
+Refs #1085, #763
+
+#### feat(long-defeat): v2.0.36 - archers on the high towers
+
+`9c3a402c`
+
+The high towers of The Long Defeat can now be manned. In an
+intermission the player buys tower level 1 (250 gold, up to 4 archers
+on each recorded tower) and level 2 (300 gold, up to 8). The archers
+are Eastfold bowmen; they appear on the tick after the buy at the
+recorded posts, facing out, and the posts fill again at every clear.
+They count against the garrison cap, and a post the cap leaves empty
+is named as short. Level 3, the tower volley, is the next slice.
+
+The archers stand in their own formation (index 4, which the boot
+lines of two runs showed empty) and are held on their posts. How they
+are held is the open part of spike S6, so the run can pick one of
+three ways by the TAOM_LD_POSTS_VARIANT setting or the wrapper's
+--posts-variant flag: a scripted hold (A, the default), the same with
+a speed limit of 0 (B), or the formation left to the AI but kept from
+being split (C). During a wave the code puts strayed archers back
+every second, and both that pass and each fill move out any soldier
+the battle AI moved into the formation. A post spawn that fails
+is counted as failed, apart from the cap's short, and fails the wave.
+
+Helm's Deep records no tower posts yet, so the tower row stays hidden
+and shipped play does not change until the posts are recorded.
+
+A new posts check reads each tower over a wave: how many archers were
+expected and manned, how many held their posts, the drift, how many
+were put back, and their shots. 1079.toml names the proof run, one
+for each variant, and a human row for how the towers look. The
+wrapper owes a level 2 pass once level 2 was bought, and it fails a
+run armed with --posts-variant that never bought a tower.
+
+The judge also fails a report whose waves list does not have one row
+per cleared wave; a lost wave has no row. This closes the Phase 2
+follow-up from RCA row 120.
+
+Review: tier 1, lenses 5, 2 and 7, then a second wave (lenses 1, 3,
+4, 6 and tooling) after a HIGH. The HIGH: the check wrote "held=4 of
+4", which the log sanitiser turns into "held=4_of_4", so the manifest
+row could never pass on a real log; it now writes "held=4 sampled=4",
+and a test runs the line through the real sanitiser against the
+manifest pattern. Also fixed: a soldier the AI moved into the posts
+formation took the towers off sale after they were paid for; a failed
+spawn passed as short; a boot guard that could never fire; a lock
+and per-tick copies on a callback the engine runs on the main thread
+only; 19 judge tests that a direct run of the test file skipped. Some
+new tests in the second wave pin fixed behaviour and were not seen to
+fail first. Moving the formation to index 7 was rejected: the fill
+now clears strangers, and the new formation lines will show whether
+index 4 gets claimed. RCA rows 55 to 82 in
+docs/reviews/rca-long-defeat-phase3-2026-11-05.md.
+
+Verify: 37,298 C# tests passed; the one failure is the BUTR pin test,
+red until BUTR publishes build 125270. 8,006 tool tests ran with the
+same 3 trunk failures as before this change (ranged ladder counts and
+the armour generator list). The API snapshot reproduces.
+
+Not-tested: no game run; the posts cannot fill until Mike records
+tower posts. Owed: --waves 2 --garrison-scale 1.3 --start-gold 5000
+with --posts-variant A, B and C. 4 new strings are English seeds;
+translations go to #763.
+
+#### feat(long-defeat): v2.0.36 - record the armoury and yard places
+
+`36f67e8e`
+
+The Long Defeat's point recorder learns two optional kinds, armoury and
+yard: the places the lord will walk to in Phase 4 to buy his own gear
+and siege engines. Each is a point with the way he faces, the newest
+record wins, and neither is ever a missing piece. taom.ld_export prints
+an armoury and a yard block in the same shape as the sally, and lists
+both as not yet recorded until they are. The fortress reader takes
+fields by name, so a fortress row that carries these blocks loads as
+before; nothing reads them until Phase 4. This lets one recording
+session this morning take the sally, the keep, the tower and volley
+points and the two Phase 4 places, and the recording steps in
+phase3-plan.md now name them.
+
+Review: tier 2, lens 5. It found the recording steps did not name the
+new kinds, stale comments and doc sentences that listed the old kinds,
+two missing test cases and a reply that read "A armoury"; all are
+fixed. RCA in docs/reviews/rca-long-defeat-recorder-2026-11-06.md.
+
+Verify: 37,232 C# tests passed; the one failure is the BUTR pin test,
+red until BUTR publishes build 125270. 7,981 tool tests ran with the
+same 3 trunk failures as before this change (ranged ladder counts and
+the armour generator list). The API snapshot reproduces.
+
+Not-tested: no game run; the console commands run in a mission only.
+
+#### feat(long-defeat): v2.0.36 - the Elven Volley, engine half
+
+`2341f38f`
+
+The Elven Volley of The Long Defeat now fires in the engine. The shop
+sells two levels: level 1 (350 gold, 12 arrows, 45 s cooldown) lands
+on the densest group of attackers by itself, and level 2 (300 gold, 16
+arrows, 40 s) lands where the player looks. The player calls it with
+N during a wave; the panel only buys it. Each arrow is a scripted
+missile added with Mission.AddCustomMissile from a recorded spot behind
+the parapet, one per attacker in reach, so only the arrows are seen.
+
+The arrow is a new item, ld_elven_arrow, with the elven arrow's look,
+30 thrust and speed 45, the values of the Fords tower arrow. It loads
+for Custom Game only, cannot be picked up, and reuses vanilla's
+"Arrows" name. Each arrow belongs to a live AI archer far from melee,
+never to the player, so the engine cancels a hit on a defender and
+every kill keeps a real owner.
+
+Helm's Deep records no volley spots yet, so the volley stays hidden
+there and N says nothing: shipped play does not change until the spots
+are recorded. A spot that fails the navmesh, boundary or a 2 m clear
+ray at boot is dropped and named in the log.
+
+A new volley check reads each use: the missiles added equal the shots
+planned, one attacker per arrow, no agent spawned, at least half the
+arrows land on a foe within 6 s, and no defender takes an uncancelled
+hit. Shield blocks are counted apart. The line also gives the impact
+speed beside the launch speed, because the aim ignores air drag and
+long shots may land short; Mike's run will show by how much. The
+autorun bot buys level 1 in the preparation and level 2 after the
+first clear when it has the gold, and fires whenever the volley is ready. 1079.toml names
+the proof run and a human row for the arrows' look.
+
+Review: tier 1, lenses 5, 2 and 7. They found that N showed a buy
+prompt where no volley is sold, that the crosshair ray measured its
+range from the eye instead of the walls, that a defender's shield
+block failed the check, that the "missiles added" test could never
+fail, that a missed arrow could be picked up, and smaller gaps; all
+are fixed or written to the plan's Slice 6 and 8 rows. RCA rows 38 to
+54 in docs/reviews/rca-long-defeat-phase3-2026-11-05.md.
+
+Verify: 37,222 C# tests passed; the one failure is the BUTR pin test,
+red until BUTR publishes build 125270. 7,981 tool tests ran with the
+same 3 trunk failures as before this change (ranged ladder counts and
+the armour generator list). The API snapshot reproduces.
+
+Not-tested: no game run; the volley cannot fire until Mike records
+volley.origins. Owed: a --waves 3 run for the automatic and crosshair
+levels, and Mike pressing N. 13 new strings are English seeds;
+translations go to #763.
+
+#### feat(long-defeat): v2.0.36 - gate levels and gate repair
+
+`26d8b796`
+
+The gate of The Long Defeat's fortress is now for sale in two ways, in
+an intermission. Reinforce the gate buys up to three levels, each
+adding hit points. Repair the gate mends a damaged or broken gate, at a
+price set by the share of hit points it is missing. A level keeps the
+gate's share of health, so a half-broken gate stays half-broken at the
+higher maximum, and a level survives a break. The gate levels touch
+only gates; the Hammer affix touches only rams and siege towers, and
+the endless factors touch only soldiers.
+
+A broken gate comes back closed. The repair runs the engine's own
+gate reset (CastleGate.OnMissionReset, reached by reflection, the
+first reflection site in The Long Defeat, with its binding row) and
+then shuts the gate; if the reset is not found, the repair does
+nothing and its check fails. Gates are read from the objects held
+since the boot, because a fallen gate leaves the engine's list of
+active objects.
+
+New checks follow each purchase. gate-level and gate-repair read the
+gate's hit points back after the write. gate-attacked passes when the
+attackers strike the gate again after a level or a repair, and fails
+if any attacker stands behind a standing gate, measured on the gate's
+own forward axis within a band of height, so the wall walk above the
+door does not count. An attacker who came over the wall and walks
+behind the gate also counts as through; whether that should fail is
+an open question for the maintainer. fort-points
+tests every recorded tower post and volley spot for navmesh and the
+mission boundary; it writes a skip until the points are recorded. The
+autorun bot repairs first, then buys levels. The report lists a share
+per gate, the judge prices a repair gate by gate, and 1079.toml names
+the proof run.
+
+Review: tier 1, lenses 5 and 2. They found that gate-attacked guessed
+the gate's axis and counted the wall walk, that a reading with no gate
+plane read as nobody through, that a repair whose reset failed still
+counted, and that the boot line for archer positions was written
+before the tactic had split any formation; all are fixed. RCA rows 26
+to 37 in docs/reviews/rca-long-defeat-phase3-2026-11-05.md.
+
+Verify: 37,108 C# tests passed; the one failure is the BUTR pin test,
+red until BUTR publishes build 125270. The binding gate passes (131).
+7,958 tool tests ran with the same 3 trunk failures as before this
+change (ranged ladder counts and the armour generator list).
+
+In game at 469181e55, before this change: field care passed (mean
+health 0.943 to 0.987 for 0.986 expected, held on the next tick, 150
+paid), and an ordinary 5-wave run passed every check with three field
+care purchases.
+
+Not-tested: no game run. Owed: --waves 3 --garrison-scale 1.3
+--start-gold 5000 for the gate checks. The new strings are English
+seeds; translations go to #763.
+
+#### feat(long-defeat): v2.0.36 - field care, the first fortification
+
+`469181e5`
+
+Field care is the first fortification on sale in The Long Defeat. In
+an intermission, after the first clear, the shop panel offers it: it
+heals every standing defender by a share of the health they are
+missing, once per intermission. The heal lands on the next tick and
+goes through the same rest the run already gives at each clear, so it
+never raises a soldier above his health limit. It is not on sale in a
+wave or before the first wave, when nobody is hurt.
+
+The shop panel has a Fortifications group that lists field care with
+its price, or "Used" once it is bought for this intermission. The
+autorun bot buys it after its packs, as decision D27 sets, so an
+ordinary run now spends its price too. The five price boons now say
+"Everything in the shop costs ...", because their factor also prices
+fortifications.
+
+A field-care check proves each heal: the mean health of the standing
+defenders before and after must match the share bought, the next
+tick's reading must still hold it, and the purse must have paid
+exactly the price. When the garrison is so near full health that a
+heal could not be seen apart from rounding, the check writes a skip
+rather than a pass. The judge owes a field-care pass whenever the
+report lists the purchase, and 1079.toml names the proof run.
+
+Review: tier 1, lenses 5 and 2. They found that the check could pass a
+heal that never landed on a nearly whole garrison, that the price
+boons still named only packs, that care was listed before anyone could
+need it, and that an empty next reading counted as the run's end; all
+are fixed. RCA rows 21 to 25 in
+docs/reviews/rca-long-defeat-phase3-2026-11-05.md.
+
+Verify: 37,020 C# tests passed; the one failure is the BUTR pin test,
+red until BUTR publishes build 125270. 7,934 tool tests ran with the
+same 3 trunk failures as before this change (ranged ladder counts and
+the armour generator list).
+
+Not-tested: no game run. Owed: --waves 2 --garrison-scale 1.3
+--start-gold 5000 for the field-care line. The new strings are English
+seeds; translations go to #763.
+
+#### feat(long-defeat): v2.0.36 - volley aim and cooldown rules
+
+`6d2cd39b`
+
+The Long Defeat now has the rules that will aim and time its volleys:
+the Elven Volley and the level 3 tower volley share one aiming
+routine. Nothing fires yet; the battle side comes in a later slice,
+and nothing is for sale, so a shipped run plays exactly as before.
+
+Aiming. At level 1 the volley picks the densest group of attackers in
+range and fires at it. With the crosshair upgrade it fires where the
+player aims; if the aim hits nothing, the volley holds and stays
+ready. Each arrow is aimed at its own attacker, at chest height, the
+nearest to the aim centre first, so the fire is very accurate. Range
+is measured from the nearest firing spot.
+
+Timing. The run arms a volley, and its cooldown starts only when a
+shot really fires. A shot held back for want of a target or a firing
+spot keeps the volley ready and asks again a second later. A tower
+volley whose post archers are all dead stops for the rest of the
+wave, since nobody is left to own its arrows, and is back at the next
+wave. The Elven Volley is ready at the start of each wave. The run
+counts each volley's shots and holds per wave for the report.
+
+Review: tier 2, lens 5. It found that a tower volley with no owner
+retried every second instead of stopping, as decision D22 says; that
+is fixed. A sale gate that would sell a tower volley level to a tower
+with no recorded volley spots, and the director's side of the volley,
+are noted on the later slice rows. RCA rows 18 to 20 in
+docs/reviews/rca-long-defeat-phase3-2026-11-05.md.
+
+Verify: 36,980 C# tests passed; the one failure is the BUTR pin test,
+red until BUTR publishes build 125270. 7,921 tool tests ran with the
+same 3 trunk failures as before this change (ranged ladder counts and
+the armour generator list).
+
+Not-tested: no game run; nothing fires yet.
+
+#### feat(long-defeat): v2.0.36 - fortification rules, not yet for sale
+
+`64203883`
+
+The rules for The Long Defeat's fortifications are now in the run
+itself, ready for the slices that bring them into the battle: gate
+levels and gate repair, high towers with posted archers, field care,
+and the Elven Volley. Nothing is for sale yet. The shop's list of
+offered fortifications is empty, so every purchase answers "not
+offered", and a shipped run plays exactly as before; a test runs the
+director with and without the new data and gets the same calls and the
+same gold at every tick.
+
+The prices and levels are in the new fortifications block of
+shop.json. A price boon also lowers fortification prices, never below
+1. A purchase is refused with a clear reason: the run is over, the
+shop is closed, the item is not offered or not yet recorded for the
+fortress, there is not enough gold, the garrison is full, the item is
+at its last level, there is nothing to repair, or field care was
+already used this intermission. Tower archers are new soldiers inside
+the garrison cap, and a cleared wave refills them free before any
+bought pack. A gate level keeps the gate's share of hit points, and a
+repair is priced by the share that is missing.
+
+The run report gains the fortification fields (purchases, gold spent
+on each, the gate at each wave), and keeps schema 2. A new start_gold
+option (--start-gold) lets an unattended run afford every purchase; a
+board run keeps it unset. The autorun bot has a fixed buying order for
+when the purchases open. The judge's Python loader reads the same
+block by the same rules, and both suites read one shared file of 56
+reader cases, so the two cannot drift. The leaderboard plan gains the
+matching rules.
+
+Review: tier 2, lenses 5 and tooling. They found that effects bought in
+the last tick of an intermission could land after the wave started, a
+stale repair factor, a second field care that replaced the first, and
+two Python reader edges; all are fixed. Repair pricing for a fortress
+with more than one gate is deferred to the gate slice, since no
+fortress has two. RCA rows 8 to 17 in
+docs/reviews/rca-long-defeat-phase3-2026-11-05.md.
+
+Verify: 36,910 C# tests passed; the one failure is the BUTR pin test,
+red until BUTR publishes build 125270. 7,921 tool tests ran with the
+same 3 trunk failures as before this change (ranged ladder counts and
+the armour generator list).
+
+Not-tested: no game run; nothing is offered yet.
+
+#### feat(long-defeat): v2.0.36 - record tower posts and volley spots
+
+`dc857656`
+
+The Long Defeat's recorder now takes the points Phase 3 needs, so the
+maintainer can record all of them for Helm's Deep in one session in
+game. taom.ld_record learns three kinds beside keep, muster and sally:
+
+- post <tower>: a place where a tower archer stands, with his facing.
+- tower_volley <tower>: a spot a tower's volley fires from.
+- volley: a spot behind the parapet that the Elven Volley fires from.
+
+A tower name is lower-case letters and underscores, such as hornburg.
+Posts and spots are kept in the order they were recorded, while keep,
+muster and sally keep only the newest. taom.ld_record clear <kind>
+[tower] removes a kind's records, and works without a live agent. A
+post needs a level look, because the archer faces that way; a volley
+spot fires at a target, so any look is taken. With no argument or a
+bad one, the command prints every kind with an example.
+
+taom.ld_export now prints one paste-ready JSON block for each recorded
+part (keep, muster, sally, towers and volley), each under a line that
+names its field in fortresses.json, plus a count per kind and per
+tower. The fortress reader reads the new towers and volley blocks and
+drops a bad point, tower or block with one warning. fortresses.json is
+unchanged: no point is invented, and a row with neither block loads as
+before.
+
+Review: tier 2, lens 5. It found that the export left out the muster
+block, and that clear asked for a live agent it does not use; both are
+fixed. RCA rows 1 to 7 in
+docs/reviews/rca-long-defeat-phase3-2026-11-05.md.
+
+Verify: 36,770 C# tests passed; the one failure is the BUTR pin test,
+red until BUTR publishes build 125270. 7,876 tool tests ran with the
+same 3 trunk failures as before this change (ranged ladder counts and
+the armour generator list).
+
+In game at b94495ede, before this change: the Cavalry class (3 waves,
+mounted, sally checks skipped with no point), seed 29 (Gallop of the
+Eorlingas read back) and the wave 8 lieutenant (3x health, 5 summons
+of 20, all passed) passed. That lieutenant run, at a 3x garrison, also
+spawned one muster batch of 20 stacked on the muster point; it is
+under investigation.
+
+Not-tested: no game run. The maintainer records the points on
+2026-11-06; the director reads them in later Phase 3 slices.
+
+#### feat(long-defeat): v2.0.36 - the Cavalry class
+
+`476e4e65`
+
+The Long Defeat now offers a fourth class, Cavalry. It is in the setup
+prompt, in taom.ld_start (helms 3 cavalry) and in --class cavalry, and
+the autorun bot can draw it. The rider starts mounted, in the gear of
+Rohan's own East Emnet Eorlingas Lancer: spear, shield, sword, helmet,
+armour, cape, arm guards, boots, a horse and its armour.
+
+Cavalry has three boons of its own: Gallop of the Eorlingas (move 15%
+faster, which reaches the horse), Spear of Eorl (25% more damage, but
+swing and thrust 10% slower) and Oath of Eorl (35% more health).
+
+Helm's Deep has no sally point yet, so a Cavalry run rides from the
+start inside the walls. A lord whose horse dies fights on foot until a
+sally point brings the remount, so the class text no longer promises
+a horse for the whole run. While the
+fortress records no sally point, the judge accepts a skipped sally
+and sally-return check, but only with the reason no-sally-point. When
+the point is recorded, both checks are required again. A run that
+cleared no wave, or a run built to lose, no longer owes sally-return.
+
+Adding a fourth class moved the class each seed draws, so the proof
+seeds in 1079.toml change. Seed 29 draws Cavalry with Gallop as its
+first pick, for the horse read.
+
+Review: tier 1, lenses 5 and 2. They found that the Spear of Eorl
+drawback slowed only swings, while the class spear only thrusts; it now
+slows both. Two texts promised what the class does not do (a horse all
+run, the rest of the gear kept) and are reworded. RCA rows 108 to 115
+in docs/reviews/rca-long-defeat-phase2-2026-11-05.md.
+
+Verify: 36,391 C# tests passed; the one failure is the BUTR pin test,
+red until BUTR publishes build 125270. 7,859 tool tests ran with the
+same 3 trunk failures as before this change (ranged ladder counts and
+the armour generator list).
+
+In game at cfc5236c4, before this change: Morgul Blades (seed 3)
+passed with no missing kill owner, and a --lose run passed.
+
+Not-tested: no game run. Owed: --class cavalry --waves 3, and seed 29.
+The new strings are English seeds; translations go to #763.
+
+#### feat(marshals-word): v2.0.36 - throwers stand and throw, then charge
+
+`943db3c7`
+
+Order a company of javelin or axe throwers to Advance and it no longer
+walks straight into the enemy line. It halts at a throwing distance
+worked out from its own weapons (24 to 32 metres), throws while it
+stands, and then goes in to melee on vanilla's Advance. The company is
+released when no more than three in ten of its throwers still hold a
+missile, when the enemy closes to 12 metres, after 40 seconds at the
+stand or 120 seconds in all, or when any other order, the hold-the-line
+rule, a fire mode or AI control takes over. A company already within 12
+metres of the enemy is left alone. On release the company aims at where
+the enemy is now, not at a point vanilla remembered from earlier, so it
+never walks back.
+
+The rule only touches the player's own companies in a field battle, is
+off in co-op and multiplayer, and has its own setting, Throwers Throw
+First, on by default.
+
+In the game, run 20261105-214011 stood a company of 40 javelineers at
+30.2 metres, where it threw 39 javelins in 13.9 seconds before the enemy
+closed and it charged home. The control run 20261105-214249, with the
+rule off, walked the same company in without a halt. The measured cost
+was 3.6 microseconds per order call on average.
+
+No GitHub issue: the maintainer waived it for this work. The two new
+setting strings carry English seeds in the 12 languages; their
+translation is on the backlog in #763.
+
+#### feat(long-defeat): v2.0.36 - the mounted sally, waiting for its point
+
+`cfc5236c`
+
+The Long Defeat can now send a mounted lord out of the walls at each
+wave start and bring him home at the clear. This is the code for the
+sally spike. No class rides yet: the Cavalry class follows in its own
+change, and Helm's Deep has no sally point recorded yet.
+
+At a wave start a mounted lord rides out to the recorded sally point,
+turned to its facing. A lord who lost his horse gets a new one there,
+and keeps his share of health. At the clear he returns to the foot
+muster point. A body you took over after a death never sallies. If the
+lord leaves the field in a way the mode planned, the removal does not
+count as a death.
+
+taom.ld_record sally records the point where you stand, and
+taom.ld_export prints the sally block to paste into fortresses.json.
+At boot the mode tests the sally point and the home point for navmesh
+and for the mission boundary. A failing sally point, or none at all,
+lets the lord ride from the start inside the walls. A mounted class
+whose home point fails refuses the boot with its reason, because the
+lord would have no proven place to spawn.
+
+Three new checks follow the ride: sally (mounted near the point at the
+wave start), sally-return (home at the clear) and sally-contact (a hit
+by or on the lord or his horse near the point, reported but not
+required). A line every 5 s while he is outside the walls logs his
+hits, his kills, the nearest attacker and the gate.
+
+Review: tier 1, lenses 5 and 2. They found that a teleport did not turn
+the lord to the point's facing; the horse and rider now turn before the
+move. Smaller fixes: the export names every recorded piece, the
+cavalry formation is placed only once rather than at every wave, and a
+remount refreshes the lord's stats once. RCA rows 93 to
+107 in docs/reviews/rca-long-defeat-phase2-2026-11-05.md.
+
+Verify: 36,369 C# tests passed; the one failure is the BUTR pin test,
+red until BUTR publishes build 125270. 7,847 tool tests ran with the
+same 3 trunk failures as before this change (ranged ladder counts and
+the armour generator list).
+
+Not-tested: no game run, and no point recorded. Owed: the maintainer
+records the sally point in game, then two Cavalry runs.
+
+#### feat(long-defeat): v2.0.36 - Morgul Blades and a real owner per kill
+
+`c7924190`
+
+The last of the eight enemy powers of The Long Defeat now acts and
+enters the roll. At Helm's Deep it is named Fouled Blades. In a wave
+with this power, an attacker's hit poisons the defender it strikes: 2
+damage each second for 6 seconds. Poison ignores armour and the damage
+boons. A tick that does not kill lowers health directly; a tick that
+would kill ends the defender with a death blow owned by an attacker.
+
+Every kill the mode makes now has a real owner. A poison death belongs
+to the attacker who poisoned the defender, else to the commander, else
+to any standing attacker; with no attacker standing, the tick waits.
+A straggler felled at the end of a stalled wave is now killed by a
+standing defender's blow when your own body has fallen. Before, the
+engine gave that kill to the victim himself when the player was dead.
+That defender gets the kill and his formation gets the morale, as for
+any kill.
+
+Hits reach the mode through the engine's score callback. A hit with no
+attacker, a hit on oneself, a blocked hit, a hit that took no health
+and a killing blow do not poison; a horse's blow counts for its rider.
+Defenders enter the agent registry at their first hit and leave it at
+their removal, and every held agent is checked against its slot before
+use, so a reused slot can never be poisoned or killed by mistake.
+
+The affix check now proves the blades: doses, ticks, damage and any
+owner that was missing at the blow. The seeded affix rolls change with
+the full pool of eight, and the proof seeds in 1079.toml follow.
+
+Review: tier 1, lenses 5 and 2, low findings only. They found that a
+killing blow was counted as a dose, and that held agent handles were
+checked with IsActive() alone; both are fixed. RCA rows 84 to 92 in
+docs/reviews/rca-long-defeat-phase2-2026-11-05.md.
+
+Verify: 36,218 C# tests passed; the one failure is the BUTR pin test,
+red until BUTR publishes build 125270. 7,840 tool tests ran with the
+same 3 trunk failures as before this change (ranged ladder counts and
+the armour generator list).
+
+In game at b4745b63d, before this change: the troop boons (seeds 33,
+archer 22 and 4), the wave 4 captain, Hammer (seed 8) and Winged
+Terror (seeds 33 and 6, slowest pulse 1.6 ms) passed.
+
+Not-tested: no game run. Owed: --start-wave 5 --waves 1 --seed 3 for
+the blades, and a --lose run that fells stragglers after the player
+has died.
+
+#### feat(fords-of-war): v2.0.36 - heroes take the field with a guard
+
+`8c3a9ec4`
+
+Mike asked that every culture's hero be summoned with elite troops of
+its culture that guard it. Each faction now has a hero guard in
+factions.json: four of its elite foot, Rohan's King's Knights mounted,
+and three for the two elf factions (Mirkwood's are archers, since it
+fields no elite foot). Whenever a hero takes the field, bought, free,
+respawned or bought back, its guard joins it in the hero's lane for
+the hero's owner and marches with that lane. The guard costs nothing
+on top of the hero, and hero prices are unchanged.
+
+A review found that guards first skipped the lane and side troop caps,
+as a hero does, so repeated respawns could pile them up while bought
+packs and free waves waited. Guards now wait in the wave scheduler and
+go out first in their lane, but only when there is room, without
+taking a place in the pack queue. Each guard request writes one
+[FordsOfWar][Hero] guard line, because a guard is also one of the
+faction's offers and the spawn counts by troop cannot show it.
+
+Not measured in a match yet; it lands after the round robin's build.
+
+No issue: Mike waived issues for Fords of War, 2026-10-31.
+
+#### feat(fords-of-war): v2.0.36 - Dol Guldur's uruk army in three rows
+
+`e3c672b4`
+
+Mike asked for Dol Guldur to field many more of its uruks in place of
+goblins, with one or two goblins for a swarm, three rows of troops, its
+Khamul cavalry and its spider riders. The buy panel now shows a third
+row of four, bound to F9 to F12, for any faction with more than eight
+offers. The keys come from a table, because the engine numbers F11
+and F12 apart from F10.
+
+Dol Guldur now sells twelve packs: seven uruk lines, Khamul's shadow
+guard and veiled knights, warg raiders, spider riders and one goblin
+crawler swarm. Spider riders are bought and no longer called, since a
+paid call is a purchase with a cooldown; the creature call keeps the
+fell wargs. Its free waves are uruks with two goblins each, where they
+were goblins and orcs. Five uruk and Khamul copies join the Fords
+roster, and six goblin and orc copies nothing fields any more leave it.
+Two strings changed their English and got new keys in all twelve
+languages, seeded in English like the other Fords keys under #763.
+
+The review found that free-wave archers in every faction spawned with
+the role Infantry, because a wave troop with no offer falls back to
+it, so the diagnostics counted them as melee. All 27 entries now say
+Ranged, and a test holds every wave troop to its own class.
+
+Not measured in a match yet; it lands after the round robin's build.
+
+No issue: Mike waived issues for Fords of War, 2026-10-31.
+
+#### feat(long-defeat): v2.0.36 - Hammer and Winged Terror affixes
+
+`b4745b63`
+
+Two more enemy powers of The Long Defeat now act and enter the roll,
+so a wave from wave 5 can draw seven powers. At Helm's Deep they are
+named Engines of Orthanc and Crebain from Dunland.
+
+Hammer of the Underworld gives the attackers' rams and siege towers
+50% more hit points for that wave. Each wave start sets every standing
+engine to its vanilla hit points times the wave's factor, and keeps its
+share of damage, so a wave without the power puts the vanilla value
+back. A destroyed engine stays destroyed. The power touches only
+engines; the endless health and damage factors touch only soldiers.
+
+Winged Terror lowers the morale of defenders within 8 m of an attacker
+by 3 every 2 seconds, but never below 35, so it cannot rout anyone by
+itself. Your own lord is never drained, also when the autorun bot
+plays him.
+
+The affix check now proves both powers. The hammer check reads each
+engine's hit points back at the wave start and logs whether the gate
+stands or has fallen. The terror check counts the defenders drained,
+fails if one ends below the floor, and fails a pulse that takes 16 ms
+or more. The seeded affix rolls change with the larger pool, and the
+proof seeds in 1079.toml follow.
+
+The stat hooks and the damage hooks now share one armed mission and
+one published table, so the attackers' damage factor is stored once.
+This fold was owed from the Slice 3 review and lands in this commit
+with its own tests.
+
+Review: tier 1, lenses 5 and 2. They found that the gate check read
+the active objects, which a fallen gate leaves, so it could never show
+a destroyed gate; it now reads every mission object. They also found
+that the autorun lord was drained. Both are fixed. RCA rows 78 to 83
+in docs/reviews/rca-long-defeat-phase2-2026-11-05.md.
+
+Verify: 36,129 C# tests passed; the one failure is the BUTR pin test,
+red until BUTR publishes build 125270. 7,838 tool tests ran with the
+same 3 trunk failures as before this change (ranged ladder counts and
+the armour generator list).
+
+Not-tested: no game run. Owed: --start-wave 5 --waves 1 --seed 8 for
+hammer and --seed 6 for terror, with the pulse time under 16 ms.
+
+#### feat(long-defeat): v2.0.36 - enemy commanders and their summons
+
+`219ac1b7`
+
+Every fourth wave of The Long Defeat now brings an enemy commander. At
+Helm's Deep the captain comes at wave 4, the lieutenant at wave 8 and
+the general at wave 12, and each later commander wave brings the
+general again, stronger each time. A captain has twice his own base
+health, a lieutenant three times and a general four times.
+
+Each commander has abilities on a cooldown, all in waves.json. Every
+commander has a war cry: for 15 seconds his soldiers swing 15% faster
+and move 10% faster. The lieutenant and the general also summon 20
+Uruk-hai from the attackers' spawn, and 5 more for each later return.
+His abilities stop when he dies or leaves the field. He enters through the spawn queue, so he counts against the live
+cap like any soldier. The HUD shows his rank and his next ability.
+
+Killing a commander pays a rank bounty, and summoned soldiers pay their
+own troop's bounty. A soldier felled at the end of a stalled wave pays
+nothing. Each spawned attacker now carries its role, roster, summon or
+commander, and each felled soldier is marked on its own, so the kill
+and fell counts stay exact. Summons count in the stalemate rule. A new
+Legend boon, The Long Silence, makes every commander cooldown 50%
+longer.
+
+The report records each commander and each summon, and the new
+commander and summon checks read his health and his ability timing
+back. The troop boon proof seeds in 1079.toml change, because the new
+boon row moves every seeded draw.
+
+Review: tier 1, lenses 5 and 2. They found that the end of wave fell
+could not kill a commander above 2000 health, that the late scale
+sample could read the commander or a summon, and that the fell limit
+in the wave check left out summons. All three are fixed. RCA rows 67
+to 77 in docs/reviews/rca-long-defeat-phase2-2026-11-05.md.
+
+Verify: 36,048 C# tests passed; the one failure is the BUTR pin test,
+red until BUTR publishes build 125270. 7,838 tool tests ran with 3
+failures, all on trunk before this change: the ranged ladder counts in
+test_ranged_ladder.py and the armour generator list, after the
+Lothlorien and Snow Orc troop trees.
+
+Not-tested: no game run. Owed: a 5-wave run with --garrison-scale 1.5
+for the captain, and --start-wave 8 --waves 1 for the summon. The new
+strings are English seeds; translations go to #763.
+
+#### feat(long-defeat): v2.0.36 - troop and class boons
+
+`f908d4d5`
+
+The boon pool of The Long Defeat grows from 12 to 30. Troop boons
+strengthen one group of your soldiers: infantry, archers or cavalry. A
+soldier's group comes from its own troop, mounted first, then ranged,
+then infantry, so a rider bought to fight on foot counts as cavalry.
+Each class also has three boons of its own, offered only to that class.
+
+Stat boons reach the soldiers already standing and every later spawn.
+Health boons scale those standing by the boon's own factor and keep
+each soldier's share of health, so a pick does not heal. Your own body
+takes the player boons only, and a soldier you take over after a death
+gets your stats and health at once. A "damage taken" drawback also
+raises fall damage, since a fall is damage taken.
+
+The HUD names your class beside the wave, and the end panel opens with
+it. The boon check now reads a taken stat or health boon back from a
+standing soldier and from the first pack of that group spawned after
+the pick.
+
+Review: tier 1, lenses 5 and 2. They found that the lord's health boon
+could apply twice when he respawned in the same tick as a pick; health
+for the lord is now written as a whole. RCA rows 59 to 66 in
+docs/reviews/rca-long-defeat-phase2-2026-11-05.md.
+
+Verify: 35,908 C# tests passed; the one failure is the BUTR pin test,
+red until BUTR publishes build 125270. 7,792 tool tests passed.
+
+Not-tested: no game run. The named proof seeds are in 1079.toml. The
+new strings are English seeds; translations go to #763.
+
+#### feat(fords-of-war): v2.0.36 - Rohan fields cheap riders often
+
+`6d2c51de`
+
+Mike found Rohan weak in Fords of War and asked for cheap cavalry and
+many chances to field it. Every Rohan rider pack now costs half the
+full price for its level, down from 0.7, and the horse archers 0.4.
+The spear and sword rider packs hold 8 riders, up from 6, so a pack of
+8 costs what 6 cost before. Every free wave brings 5 riders, up from
+3, and keeps its foot and archers, since riders do little damage to
+towers. The AI buys a rider pack in 7 of its 10 pack buys, up from 6,
+and keeps two foot buys to take towers.
+
+Nothing is measured yet: the change lands after the round robin on
+92973f27a, so that round stays on one build. The third native crash
+at 0x6B716E (Rohan v Rivendell) is recorded in the feature doc; two of
+three were Rohan matches, so more Rohan horses may raise that rate.
+
+No issue: Mike waived issues for Fords of War, 2026-10-31.
+
+#### feat(fords-of-war): v2.0.36 - Fords of War is the only map
+
+`54d4f778`
+
+Mike asked to remove every map but Fords of War. The four generated
+maps (Rohan Plains II, Pelennor Fields, Mordor Plains I and Rohan
+Plains I) leave the Fords maps.json, so the hand-built lane scene is
+now the default, and the setup menu no longer asks for a map. The
+scenes stay in the game for Custom Battle, and the generated layout
+code stays with its tests for a map added later.
+
+No issue: Mike waived issues for Fords of War, 2026-10-31.
+
+#### feat(long-defeat): v2.0.36 - three foot classes with their own kits
+
+`3efa878e`
+
+A run of The Long Defeat now starts with a class: Sword and Board, Two
+Handed Infantry or Archer. The setup asks for it after the fortress,
+and taom.ld_start takes it as a second word. The class sets your own
+starting gear, from your faction's own troops; classes.json names each
+kit per class and culture. The two-handed kit uses the Armory axe
+wm_rohan_ws_axe_2h_a01, a named exception to the own-gear rule, because
+no Rohan troop carries a two-handed weapon.
+
+At spawn each kit item is checked against its slot; an unknown or
+misfit item leaves its slot empty with one warning, and the class check
+then fails. A foot class never gets a horse. The report names the class,
+and the class check reads the spawned lord's gear back. The Cavalry
+class follows after the mounted sally spike, so --class cavalry is
+refused for now.
+
+Review: tier 1, lenses 5, 2, 7 and Tooling. They found that the planned
+fallback to the lord's own gear would make the engine throw for a hero
+with no battle set, so the kit always starts from an empty battle set.
+RCA rows 45 to 58 in docs/reviews/rca-long-defeat-phase2-2026-11-05.md.
+
+Verify: 35,759 C# tests passed; the one failure is the BUTR pin test,
+red until BUTR publishes build 125270. 7,766 tool tests passed.
+validate_moduledata.py reports 0 errors.
+
+Not-tested: no game run. The owed check is one --class run per class.
+The new strings are English seeds; translations go to #763.
+
+#### feat(long-defeat): v2.0.36 - boons: pick 1 of 3 every third wave
+
+`87c5098b`
+
+Every third cleared wave of The Long Defeat now offers a boon: three
+cards, pick one, and it lasts until the run ends. The pick sits in the
+shop panel, and an open pick stays open into later intermissions. One
+reroll is earned per five cleared waves, with at most three banked; a
+reroll shows three new cards. Some boons carry a drawback, shown on the
+card. This slice brings the war chest, fortress and rare Legend boons;
+the troop and class boons follow with the classes.
+
+The offers come from the run's seed, so a board entry replays them, and
+the report lists each pick, what was offered and the rerolls earned and
+spent. The boon and reroll checks prove a pick took effect and a reroll
+spent one from the bank. The autorun bot picks, and spends its first
+reroll, so an unattended run proves both.
+
+The mechanics follow the Trials of Mnemosyne on achaea.com, comparison
+only: every boon name and text is TAOM's own. The provenance register
+now says so.
+
+Review: tier 2, lenses 5, 7 and Tooling. RCA rows 36 to 44 in
+docs/reviews/rca-long-defeat-phase2-2026-11-05.md.
+
+Verify: 35,671 C# tests passed; the one failure is the BUTR pin test,
+red until BUTR publishes build 125270. 7,740 tool tests passed.
+validate_moduledata.py reports 0 errors.
+
+Not-tested: no game run. The owed check is a 5-wave run with one
+starting reroll. The new strings are English seeds; translations go to
+#763.
+
+#### feat(long-defeat): v2.0.36 - affixes give each wave named powers
+
+`177ae903`
+
+From wave 5 each wave of The Long Defeat rolls named powers for its
+attackers: one power from wave 5, two from wave 10, three from wave 15.
+The roll comes from the run's seed, so a board entry replays it. The
+intermission names the next wave's powers and its health and damage
+factors on the HUD, so gold can be spent against them.
+
+Five powers work now, with Isengard names in affixes.json: faster and
+more eager swings, a faster march and charge, keener aim and faster
+shots, better block and parry, and more armour (hide). Three more,
+hammer, terror and blades, keep their data but stay out of the roll
+until Slices 8 and 9 give them an effect, so no wave names a power that
+does nothing. The stat powers run through the custom battle stat model;
+a horse takes its rider's powers. The wave's stats are set before its
+first soldier spawns, so armour written at spawn reaches every attacker.
+
+The report writes each wave's powers. An affix check proves the roll
+replays from the seed, and an affix-effect check reads one soldier's
+stats back against the stat model's own answer.
+
+Review: tier 1, lenses 5 and 2; a HIGH in that wave (the read-back
+baseline left out armour weight, so the march power always read wrong)
+brought a second wave of lenses 1, 3, 4, 6 and Tooling. RCA rows 18 to
+35 in docs/reviews/rca-long-defeat-phase2-2026-11-05.md.
+
+Verify: 35,556 C# tests passed; the one failure is the BUTR pin test,
+red until BUTR publishes build 125270. 7,702 tool tests passed.
+
+Not-tested: no game run. The owed check is --start-wave 5 --waves 1
+with a seed per power. The new strings are English seeds; translations
+go to #763.
+
+#### feat(long-defeat): v2.0.36 - the endless scale past the authored waves
+
+`0b3a5b5f`
+
+Past the last authored wave, The Long Defeat no longer repeats the same
+fight. Each wave beyond the list raises attackers' health by 5% and
+their damage by 3%, up to three times, and every third extra wave moves
+each troop one step up its tier chain. A wave still never exceeds the
+battle size, so the pressure grows through the soldiers, not their
+number. waves.json holds the numbers.
+
+Health is written to each attacker after it spawns. Damage goes through
+the custom battle damage model, and a fall is not scaled. The factor
+also reaches the gate, the walls and shields, not only soldiers, so the
+gate falls faster deep into a run; the ram itself is not scaled. That
+is a design choice taken on the maintainer's standing word, and the
+feature doc names it.
+
+The launch check now covers every tier troop the scale can reach. The
+run report carries each wave's factors, and a new scale check reads a
+sample of attackers to prove the health landed.
+
+Review: tier 1, lenses 5 and 2. RCA rows 7 to 17 in
+docs/reviews/rca-long-defeat-phase2-2026-11-05.md.
+
+Verify: 35,411 C# tests passed; the one failure is the BUTR pin test,
+red until BUTR publishes build 125270. 7,675 tool tests passed.
+
+Not-tested: no game run. The owed check is --start-wave 12 --waves 2,
+whose wave 13 takes the first tier step.
+
+#### feat(long-defeat): v2.0.36 - Phase 2 foundations: seeds and schema 2
+
+`746dcf12`
+
+The ground the Phase 2 mechanics build on. Each run now has a seed, and
+every later random roll (affixes, boon offers) derives from it, so a
+board entry can be replayed. With no seed armed, the run takes the
+start time's ticks, capped at 2^53-1 so a JavaScript reader keeps every
+digit. The run report moves to schema 2: it echoes the seed, the start
+wave and the starting rerolls, and carries empty fields for the class,
+boons, affixes, commanders and poison that later slices fill. The
+balance hash now covers six config files, three of them not shipped yet.
+
+A source gate now allows kills only in Fell and ApplyPoison, so every
+new damage source must name a real killer. Fell still uses the engine's
+own choice when no player stands; Slice 9 fixes that.
+
+For unattended runs, tools/run_long_defeat.py adds --seed,
+--start-wave, --start-rerolls, --class and --deep, and its judge holds
+the report to schema 2 and to what was armed. A run can start at a later
+wave for testing; such a run never reaches the player's best-run file.
+
+Review: tier 2, lenses 5 and Tooling. RCA rows 1 to 6 in
+docs/reviews/rca-long-defeat-phase2-2026-11-05.md. The plan behind this
+work is docs/features/long-defeat/phase2-plan.md.
+
+Verify: 35,312 C# tests passed; the one failure is the BUTR pin test,
+red until BUTR publishes build 125270. The tools suite passed before the
+review fixes, and the touched Python tests pass after them.
+
+Not-tested: no game run. The owed check is one --start-wave 3 --waves 1
+run.
+
+#### feat(tools): v2.0.36 - Fords of War round robin per faction
+
+`92973f27`
+
+Mike, 2026-11-05: play every faction against every other at least once,
+record the data, then make balance decisions, not from one matchup.
+tools/fords_round_robin.py prints the 78 pairs with each faction West in
+half its matches, lists what is left on a build, and sums the finished
+matches into one table per faction: wins by keep and on time, gold
+trade, towers taken and lost, and minutes. The balance log states the
+rule.
+
+#### feat(marshal): v2.0.36 - massed fire, hold the line and the panel
+
+`ca160a54`
+
+Marshal's Word gains the rest of its stages. Massed fire is the third
+fire mode: a company's archers draw and hold, and the word comes by
+itself once most of those who can shoot are holding. Hold the Line
+(Period) makes the shielded foot soldiers of a company in a shield
+wall, circle or square stop attacking and keep their places; a
+wounded soldier strikes back for a few seconds, and a charge, a
+retreat or a second press lets them fight. A hollow square keeps the
+side its player chose, and a company with riders under a tenth of
+its soldiers keeps foot spacing (Spacing Repair, needs a restart).
+The order panel gains a Marshal's Word set with the three orders.
+
+The clamp that keeps a soldier near his place only replaces an input
+that walks him away from it. A soldier the crowd pushes off his place
+is not walked back; that is a named limit. The hold-slot check judges
+whether the clamp's steered soldiers end closer to their places, not
+how far they stand.
+
+Section 9.4, throwers on an advance, is not built: its cost on the AI
+thread cannot be shown safe from here (contract Deviations row 25).
+
+The tier 1 review found three HIGH, all fixed: the hold text promised
+more than the rule does, the panel set's own button drew no icon, and
+hold_line_slot could pass on a second of contact. The fixes also
+cover cleanup after a fault, blows of a soldier outside the line, a
+quiet control company, and a square trial on a mixed company. The
+second review wave found no HIGH; its items are not in this commit.
+
+Proof, each step in its own custom battle on this build, exit 0:
+20261105-023912 hold_line_proof (held blows 0 against 26),
+20261105-024158 hold_line_slot (48 steered reads, 20 closer and 3
+farther), 20261105-024451 hold_line_strike, 20261105-024707
+hold_line_flag (flags back in 0.3 s), 20261105-024759
+square_side_kept, 20261105-024850 volley_massed (28 of 28 loosed) and
+20261105-025030 spacing_one_rider.
+
+Still owed: the panel in the game (human rows), the clamp's input
+frame and thread (UNVERIFIED), and the new rows' translations (#763).
+The maintainer waived the GitHub issue for this work.
+
+#### feat(seat-of-seeing): v2.0.36 - mission time and the rising view
+
+`46b303ae`
+
+The Seat of Seeing gains stages S6 and S7. Three new keys control
+mission time from the Seat: stay pauses and resumes, slow steps down to
+a half and a quarter, and quicken steps up through 2x and 4x, then 10x
+when the Seat is up or the hero has fallen. The camera still flies
+while the battle is paused. S7 is the setting SeatRiseWithPanel, off by
+default: with it on, the third person view rises while the order panel
+is open and sinks when the panel closes.
+
+The Seat shares the clock with other writers. When another writer
+raises fast forward, the Seat gives up its fixed step and its slow
+request, and it leaves their flag alone. Long Defeat's clock stays
+Long Defeat's: the ladder holds at 1x there, and slow time and the
+pause still work. Stay always resumes a held pause. With the Seat off
+it then cancels whatever the keys left on.
+
+The review found one HIGH, and the fix closes it: a raised flag over a
+level 4 fixed step would have run the battle at about 40x. Run
+20261105-003400 passed the changed stages and the new step adopt_flag,
+which read a ratio of 10.0 with no fixed step and no request. Run
+20261105-003513 passed all 25 Seat rows in one battle. Deviations rows
+101 to 137 record what the build changed from the contract.
+
+Still owed: a person running the human rows, which cover the real keys,
+the message text, the Options rows, the score screen's F key, and the
+view rising under a roof. The new rows' translations (#763) are seeded
+English. The maintainer waived the GitHub issue for this work.
+
+#### feat(fords-of-war): v2.0.36 - at minute 40 the stronger side wins
+
+`e5a37e8e`
+
+Even sides lose only outer towers and clear no lane, so Dale v Gondor and
+Harad v Rohan had no winner in 45 minutes. Now at minute 40 the side with
+more towers standing wins, then the side with the larger share of its hit
+points left, keep included. Mike's target is 30 to 40 minutes, so this is
+the latest a match should run, and lopsided matches still end by a fallen
+keep. The feed warns five minutes before, and the result panel says time
+ran out. timeLimitMinutes in match.json sets it, and 0 turns it off.
+
+No match has run this yet. The four new lines have seeded English in all
+twelve languages, covered by the Fords row in #763.
+
+#### feat(seat): v2.0.36 - the hero fights on, and you take a soldier
+
+`6a9b7f94`
+
+The Seat of Seeing can now leave the hero fighting while the player
+commands from above. When the hero falls, the player keeps the
+company and can take a soldier of their party. The setting
+`SeatHeroFightsOn` stays off, so a player sees this only after
+turning it on.
+
+This also fixes a co-op fault that was live on trunk. The Seat and
+Marshal's Word read `GameNetwork.IsSessionActive` to spot an online
+battle, and the BannerlordCoop repo has no use of `CurrentGameType`,
+so a co-op battle read as single player. Both now also ask
+`ICoopSessionProvider`, so in a co-op battle the Seat gives the
+camera only and Marshal's Word stays off. No run has played this in
+a co-op battle: unit tests pin both reads.
+
+The tier 1 review found two HIGH defects. A failed hand-back left
+the hero on the AI with nothing owed; the controller write now runs
+in a `finally`, and the session retries at most three times. The
+manifest's fail lists also missed the panel gate's failure line.
+The review also made the boundary hold follow the fight-on
+permission, so a hideout, tournament or arena loses the hold too.
+The take now refuses Mumak crew and a soldier with no formation.
+docs/reviews/rca-seat-of-seeing-s4-s5-2026-11-04.md has every row.
+
+Proof: game runs 20261104-193822 and 20261104-193933 passed
+`enter`, `fight_on`, `morale_held`, `back_to_stand`, `hero_falls`
+and `take_soldier` in custom battles, exit 0 with no swallowed
+error. The full C# suite reads 33,996 passed, 9 skipped and 1
+failed: `BannerlordRefAsmVersion_PinnedGameVersion_IsTheSameGameBuild`,
+which stays red until BUTR publishes the changeset. The tools suite
+ran 7,340 tests with no failure. The gate `loc-coverage` reads FAIL
+on this base for names the dire wolf work wrote to the Armory, and
+trunk's raised baseline clears it at the merge.
+
+Not exercised by any run: the hand-back's retry, the retreat stop,
+the boundary hold, the Mumak and no-formation refusals, the pointer
+path of the take, a campaign battle and a siege. Those stay on unit
+tests and on the human rows in `tools/ingame_checks/0.toml`.
+
+The maintainer waived the GitHub issue for this work.
+
+#### feat(marshal): v2.0.36 - volley on the word, marks and outlines
+
+`520798ff`
+
+Marshal's Word gains a volley: archers draw and hold until the
+player gives the word, or for 14 seconds at most. A mark tells a
+ranged company which enemy company to shoot, and outlines show the
+player's companies and their target. Massed fire is not in this
+commit; it needed this hold proved first.
+
+A mark does not steer melee soldiers. Run 20261104-185456 read 1 of
+20 on target for a melee company on a Move, at 29.7 m, so the melee
+half stopped under the stage's own rule, and the text says that a
+mark steers ranged soldiers. To restore it, bring back the step and
+the row (Deviations row 19 in the contract).
+
+The tier 1 review found two HIGH defects, both in the trial's judge:
+it could not read a real SKIPPED line of a Marshal patch class, and
+it passed a run with dead keys. The review also fixed callback flags
+left on soldiers after a fault, a stale census at the word, a second
+word erasing the first word's window, and a charge read as a mark.
+`array_keeps_offsets` could pass with the layout never applied; it
+now drags the front 20 m and measures the move.
+docs/reviews/rca-marshals-word-m3-m4-2026-11-04.md has every row.
+
+Proof, each subset in its own custom battle, exit 0 with no swallowed
+error:
+
+- 20261104-194038: `queue_two_moves`, `direct_order_clears` and
+  `outline_clears`.
+- 20261104-194149: `array_keeps_offsets` (`miss=0.0`) and
+  `arrive_together` (25.3 seconds).
+- 20261104-194356: `volley_holds` (35 of 40 holding at a gap of
+  80.3 m) and `volley_looses` (36 of 37).
+- 20261104-194538: `mark_keeps_order` (19 of 20 on target).
+
+The full C# suite reads 34,076 passed, 9 skipped and 1 failed:
+`BannerlordRefAsmVersion_PinnedGameVersion_IsTheSameGameBuild`, which
+stays red until BUTR publishes the changeset. The tools suite ran
+7,360 tests with no failure. The gate `loc-coverage` reads FAIL on
+this base for names the dire wolf work wrote to the Armory, and
+trunk's raised baseline clears it at the merge.
+
+Not exercised by any run: a mark click, a fault's cleanup, thrown
+weapons, a campaign battle and a siege. Run 20261104-184948 read at
+most 6 of 40 holding, and its cause was not shown. Enemy focus stays
+unproved: `focus_follows_cursor` read `focused=none`.
+
+The maintainer waived the GitHub issue for this work.
+
+#### feat(long-defeat): v2.0.36 - the last few defenders lose the run
+
+`47c75a3b`
+
+A run could end as a stalemate when attackers never reached the last
+defender: the first run at 10x ended on 89 attackers against 1 defender.
+That is now a loss. When the charge and its quiet spell bring no result,
+and 5 or fewer defenders stand (stragglerCount), fewer than the
+attackers, the run ends with "The garrison has fallen". Larger
+stand-offs stay stalemates.
+
+This loss skips the stale check, because the run did end. The check line
+and the [End] line now name how many defenders stood, since
+reason=lost_defenders no longer proves that none did.
+
+Review: tier 2, lens 5 traced every consumer of the end reason. RCA row
+31 in docs/reviews/rca-long-defeat-phase1-2026-11-04.md. Codex did not
+run, because this work has no paid word.
+
+Not-tested: no game run has reached this end. A person who is still
+alive at this end has not been played: Escape can dismiss the end panel,
+as on the other ends.
+
+#### feat(gundabad): v2.0.36 - the Snow Orcs of Mount Gram
+
+`df1bc16c`
+
+KEYforce's Snow Orc tree (13 troops, T1 Recruit to T5 Blackshields:
+infantry, spearmen, archers, wolf riders) and the snow orc kit.
+
+- tools/generate_snow_orc_armor.py writes the 20 Armory pieces
+  (chests, tunics, fur capes) into their own folder,
+  LOTRLOME_items/gundabad_snow, on Gundabad's cap: the armour tools
+  read only a folder's five slot files, and FOLDER_DEFAULT_LINE
+  routes the folder to Gundabad. Helmets, plain pauldrons, bracers
+  and greaves come from Mordor's Morannon pool.
+- tools/generate_snow_orc_troops.py writes troops_gundabad_snow.xml;
+  pieces follow the mesh-tier ladder (heavy only at T5). Skills from
+  rebalance_troops --restat, with detect_culture routing the file to
+  Gundabad's modifier; bows on the gundabad ladder line.
+- Mount Gram (town_G2) and the Grishuk clan (clan_gundabad_6, new
+  snow template) recruit them; the culture pool adds the recruit.
+- Career kits: Gundabad joins ARMOUR_LINE (pale uruk kit only), so a
+  player does not start in the orc-only snow kit.
+
+Not-tested: in-game look of the snow kit and campaign recruitment
+
+#### feat(lothlorien): v2.0.36 - Lothlorien fields its own troop trees
+
+`a09728ec`
+
+Lothlorien recruited Rivendell's tree whole. It now has three trees
+of its own (KEYforce's design), 28 troops plus a tavern copy, built
+the TAOM way:
+
+- Regular Lorien T4-T7 (worst armour), Marchwardens T5-T8 (middle,
+  home Talas Duiren / clan_lothlorien_2), Galadhrim T6-T9 (best).
+  T6-T8 wear Galadhrim pieces only, T9s and lords Mallorn only.
+- tools/generate_lothlorien_armor.py writes the 77 Armory pieces
+  (LOTRLOME_items/lothlorien) on the kingdom-cap curve (cap 60);
+  tools/generate_lothlorien_troops.py writes troops_lothlorien.xml.
+  Skills from rebalance_troops --restat, bows on the new lothlorien
+  ranged-ladder line.
+- Culture troops, volunteer pools, clan 1 and a new Marchwarden clan
+  2 template, tavern merc lorien_mw_sentry_merc.
+- Galadriel wears her own four pieces; Celeborn a mounted glaive and
+  bow in Mallorn elite; Thandirion the best Marchwarden kit.
+  Galadriel and Celeborn skills raised above the T9 troops.
+- The Lorien practice dummy is obsolete (hidden from custom battle;
+  the arena still finds it by id).
+
+Regenerated: troop name strings and 12 language seeds, armour
+classes, loc-coverage baseline, ranged-troops.html (also catches up
+rows the page had not picked up since earlier commits).
+
+Not-tested: in-game look of the new armour and campaign recruitment
+
+#### feat(long-defeat): v2.0.36 - speed controls at 1x, 2x, 4x and 10x
+
+`dba8f886`
+
+The Long Defeat can now run faster, so a long wave no longer takes its
+full time to watch. Press M to step through 1x, 2x, 4x and 10x, or use
+the four buttons in the shop panel. The HUD strip shows the current
+speed. The speed goes back to 1x when the run ends, so the fight behind
+the end panel stays at normal speed.
+
+10x has two forms. With no person driving a soldier, it uses the
+engine's fast forward. While you control your own soldier, it uses a
+fixed step of at most 0.1 s per frame instead, because fast forward
+reads each key press once per internal step. That gives true 10x only
+at 100 frames per second, and about 6x at 60. Reports count seconds in
+mission time.
+
+The run report adds maxSpeed. tools/run_long_defeat.py adds --speed, and
+its judge fails a run whose report does not show the armed speed. The
+leaderboard plan allows the field. Whether fast runs count on the board
+is still the maintainer's decision.
+
+git-and-commits.md now states the rule to clean up after each commit or
+merge.
+
+Review: tier 1 lenses 5 and 2 found no engine incompatibility. RCA rows
+28 to 30 in docs/reviews/rca-long-defeat-phase1-2026-11-04.md. Codex did
+not run, because this work has no paid word.
+
+Verify: 33,873 tests passed. One failed:
+BannerlordRefAsmVersion_PinnedGameVersion_IsTheSameGameBuild, which
+stays red until BUTR publishes build 125270. The tools suite passed.
+
+Not-tested: no game run has used this code. A --speed 10 run and a
+person's check at 10x are owed: use on a siege engine, crouch, weapon
+switch and one movement tap. The three new strings are English seeds in
+the 12 languages; translations go to #763.
+
+#### feat(tools): v2.0.36 - click through engine asserts without a stall
+
+`ca1bc5f2`
+
+AssertAutoIgnore.exe by poheniks stopped on the rglBuffer.cpp:899
+assert: it printed "Closing: ASSERT" once and never clicked. Which of
+its UI Automation calls blocks is not known. Its button click uses a
+synchronous send, and one blocked call stops its only thread.
+
+tools/assert_auto_ignore.py does the same job with the posted
+WM_COMMAND that run_fords_autorun.py already uses, so it does not wait
+for the dialog. It keeps the exe's title table, clicks only in the
+Launcher and Bannerlord processes, never presses a button named Abort,
+sleeps between polls, and logs each window once with its text. An
+ignored assert is no pass for asset work: judge that with a game launch.
+
+The title table came from reading the decompiled exe, so the provenance
+register gains a behavioural-port row with its license unknown.
+
+No GitHub issue: Mike asked to commit and push and named none.
+Not-tested: a live Modding Kit assert; a real MessageBoxA ASSERT test
+box closed with IDIGNORE. The Always Ignore? button order is unseen.
+
+#### feat(long-defeat): v2.0.36 - new defenders muster in the open field
+
+`b42b3d1d`
+
+New defenders at Helm's Deep spawned on a terrace inside the fortress
+and got stuck there. Garrison batches and bought packs now spawn at two
+points Mike recorded, in the open ground behind the Deeping Wall, one
+for foot and one for archers. They climb to their posts from there, and
+the soldiers already on the wall stay put. fortresses.json holds the
+points, and taom.ld_record and taom.ld_export record new ones. A point
+with no navmesh falls back to the scene's frame and fails the muster
+check.
+
+A wave's last few attackers no longer hold it open. When 5 or fewer
+stand, and fewer than the defenders, they fall after 60 s, with no
+charge, whatever else dies meanwhile. Larger stand-offs keep the longer
+path. stragglerCount and stragglerSeconds in waves.json set this. Each
+felled soldier now gets a log line naming its class, its formation's
+behavior, its speed and its place, to show why such soldiers stay out.
+
+Review: tier 1 lenses 5 and 2 found no engine incompatibility. RCA rows
+26 and 27 in docs/reviews/rca-long-defeat-phase1-2026-11-04.md. Codex
+did not run, because this work has no paid word.
+
+Not-tested: one partial run used the points, on a build before the
+straggler change. No run has shown the new straggler rule or its line.
+
+#### feat(dire-wolf): v2.0.36 - ride dire wolves in Gundabad and goblins
+
+`53cf195a`
+
+Gundabad and the shared goblin tree (Goblin-town, Misty Mountain Orcs,
+Blue Craig) each gain a three-step wolf rider line, from the purchased
+ADOD_Beasts wolves. The wolf keeps its own skeleton and clips and binds
+the warg's action names, so it uses the warg's behavior tree, rage and
+bite. Its bite bones are chosen by Monster id in WargConfig. Riderless
+packs are a follow-up, #1082.
+
+Goblin-town, the Misty Mountain Orcs and Blue Craig now earn War Spoils
+and show it on the map bar. The riders from level 26 cost 1 War Spoils
+to upgrade or recruit, with 0.05 daily upkeep. They may replace cavalry
+in a garrison swap, because they ride warg-style mounts.
+
+The live Armory carries the art and data: see
+docs/reference/lotrlome-dire-wolf-changes.md. A TAOM release needs an
+Armory package with the wolves, or these six troops spawn on foot.
+
+verify_mount_assets.py now matches exact clip items, so a clip whose
+name is part of another name, or matches a master, cannot hide a lost
+tag or a deleted file. It also fails on empty input and on an unbound
+gait row, and --game now works. Elephant and Mumakil already failed this
+gate on their stand clips. The loc coverage baseline takes the 5 new
+Armory item names, whose translation stays with #763.
+
+Known limitation: the Monster has the warg's 5 rein attributes. Our
+saddle builds no rein cloth, but a vanilla family 1 harness with reins
+fits in the inventory, and source reading shows it reaches a null rein
+skeleton in AddHorseReinsClothMesh. Not seen in game; test with
+light_harness. A prisoner recruit is charged with no balance gate, the
+open #563, so these riders can be recruited at zero War Spoils.
+
+Save-compat: a loaded save in the three goblin realms starts at 0 War
+Spoils and foreign upkeep troops owe upkeep after one tick of grace,
+then desert. A hero of another resource culture there moves to War
+Spoils, and the Armoury lord forge needs 150 War Spoils.
+
+Not-tested: nothing has run in game. docs/features/dire-wolf.md lists
+the 12 owed checks. BannerlordRefAsmVersion fails on this base for an
+unrelated reason. audit_fbx_lods and check_rdc_entries also fail, and
+neither names a wolf package.
+
+Refs #1081. Review: docs/reviews/rca-dire-wolf-2026-11-04.md.
+
+#### feat(fords-of-war): v2.0.36 - towers throw with no bowmen on top
+
+`b7a3ac17`
+
+Mike reported that archers aim at the invulnerable bowmen on a tower,
+which wastes their time. The towers no longer show bowmen. Each tower
+throws its own volley, and every third volley now leads with a hurled
+rock that has a small blast (towers.rockEveryVolleys, fow_tower_rock).
+It is not a lobbed catapult shot: from about 27 m up and within 45 m a
+true lob takes 5 s or more and misses.
+
+The engine's AddCustomMissile needs an owner agent, so each tower keeps
+one hidden owner on a team hostile to nobody. Native target scans reject
+it at the enemy test, so no AI aims at it. With no AI controller its
+missiles still do damage. FordsUpgradeHooks.Reduce stops a tower shot
+from hurting its own side, and the director takes the owner's side from
+its tower. towers.gunnersPerTower is gone.
+
+Two side effects: tower shots no longer wear shields, and a tower arrow
+that hits its own side registers a blow of 0 damage where it used to
+vanish. The feature doc's claim that bowmen absorb melee blows was stale:
+every report since 2026-11-02 records 0.
+
+No match has run this. The thrust of 30 and the rate of one rock in
+three volleys are starting values. A run owes the check that no archer
+aims at the owner, that volleys still hit, that no own-side unit is hurt,
+that the rock shows, and that it causes no native fault on custom
+skeletons. The fire-pot crash in blow-diagnostics.md is still unresolved.
+
+#### feat(seat): v2.0.36 - a cursor, a kept panel and a view that follows
+
+`aaff9477`
+
+The Seat of Seeing gains its pointer and its follow view, stages S2
+and S3.
+
+With the order panel open in the Seat, a cursor shows and orders land
+where it points. Holding the middle button hides the cursor and turns
+the view, and the cursor comes back where it was. A left release now
+charges the company under the cursor, not the one at the screen centre.
+A click on a panel button does not press it yet: it gives a Move order
+on the ground behind it, and the setting's hint says so. A new setting,
+Keep the order panel open (off by default), reopens the panel after each
+order, unless the player closed it or a Transfer order is running.
+
+End hides the whole interface for a clean view and brings it back. It
+also comes back when the panel opens, a dialog shows, another layer
+takes focus, or the Seat comes down. While the Seat is up, the sky view
+no longer draws the crosshair, attack arrows, reload display or hit
+marker, and the drop, cheer and walk mode inputs do nothing to the hero.
+
+Insert keeps the view to the soldier under the pointer, or with the
+panel open and one company selected, to that company. The mouse turns
+the orbit, the wheel changes the distance, and the movement keys let go
+with no jump. If the soldier falls or the company is gone, the view lets
+go with one message.
+
+The field trial grew from six steps to thirteen. One run of an earlier
+tree passed twelve on 2026-11-04. The thirteenth failed on the trial's
+own kill, which threw inside vanilla's custom battle morale model, so
+the kill now goes through the engine's own cheat. Three fix rounds came
+after that run, and none of them has run in the game, so the company
+let-go is still unproved. Real keys, the mouse, the wheel, the drawn
+cursor and the look of the orbit are rows a person owes.
+
+Trade-offs kept on purpose. Keep the order panel open holds the stay at
+quarter speed under the game's slow-down option, and its hint says so.
+The first cursor of a mission leaves an empty layer that ticks until the
+mission ends, and its cost is unmeasured. A press of the usage, cheer or
+walk key held at the moment of entry acts once on return. Three rule
+files went in the review, because the code said the same thing with
+fewer names.
+
+Review record: docs/reviews/rca-seat-of-seeing-s2-s3-2026-11-04.md. The
+last fix round was not re-reviewed, because nothing in it was above
+MEDIUM. The harness's review record gains the rows Codex found. The full
+C# suite passes except the game-version test, which the next merge of
+trunk turns green. There is no GitHub issue yet: it waits for the
+maintainer's word.
+
+#### feat(marshal): v2.0.36 - orders in turn and a line that keeps its shape
+
+`a4317fd8`
+
+Marshal's Word adds richer battle orders for companies. Two of its six
+stages land here, both on by default and off in a network session.
+
+Orders in turn: hold Left Shift while giving an order with the order
+panel open, and the company carries it out after its current orders.
+Flags on the ground show the road ahead. A direct order given without
+the key clears the queue. Each queued order goes through the same order
+code a click uses, so the engine's order events and TAOM's order patches
+still run.
+
+Keep the array: several selected companies given one click or one drag
+now move as one body and keep their places relative to each other. Hold
+Left Alt to turn the group without stretching it. With Arrive Together
+on, the nearer companies walk slower, so the group comes in at about the
+same moment. Three settings in the new Marshal's Word group turn the
+feature, the array and the pace on or off, and two keys join Options.
+
+Neither stage has run in the game yet. The proof so far is the unit
+tests, the review and arithmetic. Each log check that judges a march was
+run against dead builds, but its constants rest on a model of soldier
+speed and not on a measured march, so the first game run's readings come
+before any more tuning of them. The feature doc names what the checks
+cannot separate, and the two ways a working pace can read FAIL.
+
+Trade-offs kept on purpose. Left Shift and Left Alt are also vanilla's
+zoom and banner keys, because only a held key reads well here, and the
+feature reads them only with the panel open. A march whose companies
+changed writes no verdict at all. A rejoining unit can end a line step
+early and change the patience count, and that stays a named limit.
+
+Review record: docs/reviews/rca-marshals-word-m1-m2-2026-11-04.md. The
+last fix round was not re-reviewed, because nothing in it was above
+MEDIUM. The full C# suite passes except the game-version test, which the
+next merge of trunk turns green. There is no GitHub issue yet: it waits
+for the maintainer's word.
+
+#### feat(fords-of-war): v2.0.36 - fight as a soldier on the battlefield
+
+`e45f6df2`
+
+In a Fords of War match, point at one of your soldiers and press P to
+fight as that soldier. A hero near the pointer wins over a closer
+soldier. The engine's own controls, camera and health display take over,
+the command panel hides, your lanes keep their last orders, and the
+match runs at 1x. Press P again and the soldier goes back to its AI. If
+the soldier falls, you go back to the battlefield view by yourself and
+can take another. Your speed setting comes back with the panel, and a
+match that ends hands the soldier back.
+
+You can take a person of your own side who stands in a formation and is
+on foot or on a horse, camel or mule. Tower gunners, seated howdah and
+mumak crew, trolls, riders of any other creature, and a soldier in
+flight or fading out stay out. A troll's release and blocked clips have
+never run in a logged battle, and a behavior tree drives any other
+creature.
+
+The engine's Mission.TakeControlOfAgent does the take, and no Harmony
+patch is needed. The take and the hand-back run on the mission tick,
+because a view tick overlaps the agent tick. No vanilla code clears the
+main agent of a living agent, so the hand-back is the part to watch. It
+gives the soldier's new AI components their morale and the lane's
+behavior values, which the engine leaves unset.
+
+The commander camera now keeps its own view angle of 65, because a
+soldier's zoom would otherwise stay after the fight. The view list gate
+no longer bans the agent status HUD, because a controlled soldier needs
+it, and the mission view allowlist gains the control view.
+
+Nobody has played this, and no run has exercised it: Mike tests it next.
+The launcher's --control-check flag scripts a take, a hand-back and a
+fall for a later unattended run, and [FordsOfWar][Control] log lines
+record each step. A read of the source found no path from a main agent
+in this mission to campaign data, but only a game can prove that.
+
+The new key hint replaces TAOM_FOW_Hud_KeysHintSpeed, and three new
+messages join it. All four have seeded English in all twelve languages,
+for translation under #763.
+
+Audited the docs against the code for this push: the feature doc, build
+spec, balance log, feature map, tool catalog, patch registry, unattended
+run doc and game-run skill now state the assault limit, wall wear, hero
+factors, Rohan's prices and the 30-minute target where they were stale.
+
+#### feat(fords-of-war): v2.0.36 - a lost lane sends no more free waves
+
+`cf09df73`
+
+With every tower of a lane down, attackers still stopped to fight each
+free wave as it spawned at the base, 170 to 226 m short of an open keep,
+and a siege needs the lead within 45 m. Erebor stood with all of
+Gundabad's towers down for 18 minutes and did 80 damage to the keep.
+
+A lane whose towers have all fallen now starts no new free wave for its
+owner. A wave that already started still spawns its remaining units, and
+a bought pack still comes, so a comeback stays possible.
+
+No match has measured this. The four 45-minute matches queued for it did
+not run, because Mike asked for the push first and plays next. The cause
+above is likely, not proven, and the balance log says so.
+
+#### feat(long-defeat): v2.0.36 - the end panel names the report and losses
+
+`4492a5b7`
+
+The Long Defeat's end panel now shows the defenders lost in cleared
+waves and the name of the run's report file, with the folder it sits in
+under the game's install. A player needs that file to submit a run to
+the leaderboard (#1080). The panel shows only the file's name and a
+relative folder, so a clip of it cannot show a Windows user name. The
+defenders lost match the leaderboard's second rank key exactly, and no
+server rule can check that number, so a clip must prove it.
+
+Review: tier 2 lenses 5 and 7 found nothing blocking. They measured the
+new lines against the game's fonts, and both fit the panel in English.
+Translated lines do not wrap, so check their length when #763 runs.
+
+Not-tested: the panel in a game.
+
+#### feat(hero-race): v2.0.36 - dwarven armour icons framed for dwarves (Patch132) (#1077)
+
+`d74fc8e9`
+
+Vanilla shoots every armour inventory icon with a fixed camera set up
+for human meshes. Dwarven armour is modelled in dwarf body space, so
+dwarf helmets sat low and off to the side, half out of the icon.
+
+Patch132_ItemIconRacePosition is a ClientOnly postfix on
+ItemThumbnailCache.GetItemPoseAndCamera that moves the icon pose before
+vanilla builds the entity from it, so gloves on their skeleton move too.
+Helmets centre themselves: the centre of their mesh bounds goes onto
+the icon camera's line of sight. Armour and capes take offsets from a
+new third config, ItemIconPatch.json, keyed <race>_<slot>, added in the
+camera's own axes. An item counts as dwarven when its mesh name names
+the race or a dwarven realm; id and culture only decide for an item
+without a mesh name.
+
+The icon rows can be tuned live with taom.set_race_offset /
+taom.nudge_race_offset icon <race>_<slot>; the console clears the
+thumbnail cache through a new client seam, IThumbnailCacheAdapter
+(ADR-013), so the icons re-render when the inventory is reopened.
+
+Checked in game: dwarf helmets centred, armour and capes framed.
+Gloves and boots have no row yet.
+
+Review: docs/reviews/rca-item-icon-race-2026-10-26.md
+
+#### feat(long-defeat): v2.0.36 - the run report carries what a board checks
+
+`9a99ec75`
+
+A leaderboard needs to tell a real run from an edited file (#1080). The
+Long Defeat run report now also holds the build, a hash of the three
+balance files, the active modules with their versions, cheat mode at
+launch, the run's options, and its start and end times. It holds no
+player name.
+
+The board itself is not built. The plan, with its 14 server rules, is
+docs/features/long-defeat/leaderboard-plan.md. A read of six real
+reports found that rules 4 to 12 hold on each of them. No check can
+prove a score from a public mod, so a top 10 entry will also need a
+clip.
+
+Review: tier 1 lenses 5 and 2 found no HIGH in the code, and they
+corrected the plan. Codex did not run, because this work has no paid
+word.
+
+Not-tested: these fields in a game. The next run writes them.
+
+#### feat(tools): v2.0.36 - one release check for the TAOM and TAOM_Map pair
+
+`002f8ff7`
+
+Five hand-written grep paragraphs in release-process.md guarded the same
+fault, realm by realm: TAOM and TAOM_Map ship as separate packages that
+name each other's rows. tools/check_release_pair.py replaces them with
+one command on a channel's Modules folder. It reports only
+UNKNOWN_CULTURE, BROKEN_FACTION_REF, BROKEN_SETTLEMENT_REF and
+LANDLESS_CULTURE, and reads vanilla's clans from the install, because a
+channel holds no SandBox. A channel missing a file it needs exits 2,
+never a pass. It reads clean on the live install: 1,266 settlements, 51
+cultures, 278 clans. It was proved on fixtures and has not run on a
+release channel, because those folders are Mike's.
+
+BROKEN_SETTLEMENT_REF is new and joined both commit gates. It resolves
+Settlement.X refs against the world the game builds, and it skips TAOM's
+two settlement files that no SubModule.xml row loads. Shipped data reads
+clean.
+
+tools/README.md no longer tells a translator to run the rebuild after an
+API run: --apply already wrote the files, and the rebuild also rewrites
+the TAOM files.
+
+No issue: Mike asked for the RCA follow-ups fixed, 2026-11-04.
+
+#### feat(tools): v2.0.36 - BROKEN_ROSTER_REF, a misspelt EquipmentSet id
+
+`3b4a406f`
+
+A misspelt `<EquipmentSet id>` stops every later character loading, and
+no gate resolved those ids. The validator now reports one as an ERROR.
+
+It reads refs from TAOM's XML, the extra roots and TAOM's XSLT, because
+lords.xslt names rosters too. It reads roster ids from TAOM, vanilla,
+the Armory and TAOM_Map, and takes out a roster an XSLT strips. The pass
+is skipped without the install.
+
+The code joined both commit gates and the codes doc. Shipped data reads
+clean: 6,839 roster ids, no finding.
+
+Tested first: BrokenRosterRefTests, 7 tests, all red before the code.
+
+No issue: a follow-up from the rules review, which Mike waived one
+for, 2026-11-03.
+
+#### feat(fords-of-war): v2.0.36 - walls weaken in a long match
+
+`bf329914`
+
+Even sides fight mid-lane and rarely reach a tower, so a match between
+them did not end. After minute 15 every blow on a tower or keep now does
+more, and the assault limit rises with it, by 15% of the base for each
+minute: 3.25 times at minute 30 and 5.5 times at minute 45. Locks still
+hold. The match feed says so once, and a [FordsOfWar][Wear] line records
+it. The new numbers are towers.wearStartMinutes and towers.wearPerMinute
+in match.json, and a rate of 0 turns it off. Balance runs read the first
+15 minutes, so they do not see it.
+
+Measured in three matches of 45 minutes at 4x. Rivendell beat Mordor at
+39.6 minutes. Dale v Gondor moved from 2 towers to 0, to 4 to 1. Erebor
+took all of Gundabad's towers at 1,641 seconds, where it took them at
+2,192 before.
+
+This does not finish every match. A keep is almost never attacked:
+Erebor stood with every Gundabad tower down for 18 minutes and did 80
+damage to the keep. A likely cause, not proven, is that attackers stop
+to fight each wave as it spawns at the base. The balance log records it
+as the next thing that limits match length.
+
+The feature doc now states Mike's target of 30 to 40 minutes, with 30
+best, in place of 30 to 45. These numbers do not reach it yet.
+
+These matches ran on engine changeset 125270, the Steam hotfix of
+2026-11-04. BannerlordRefAsmVersion_PinnedGameVersion_IsTheSameGameBuild
+fails on any tree until BUTR publishes reference assemblies for that
+build; this change does not touch it. The new feed line has seeded
+English in all twelve languages, for translation under #763.
+
+#### feat(long-defeat): v2.0.36 - the garrison rests between waves
+
+`8b7961dd`
+
+Defender losses grew wave by wave on every wave table, even when two
+waves held the same troops and count (77 lost, then 151). Nothing heals
+a surviving soldier in a mission, so wounds added up. At each cleared
+wave, every standing defender now regains half of the health they are
+missing. restShare in long_defeat/waves.json sets the share, and 0 turns
+the rule off. The line "[LongDefeat][Wave] N rest: defenders C, mean
+health B% to A%" measures the wound, reading A back from the engine.
+
+Bought healing is still planned for a later phase, and it can add to
+this. Damage to the gate and to shields still carries over.
+
+Review: tier 1 lenses 5 and 2 on this diff found no HIGH or MEDIUM. RCA
+row 20 in docs/reviews/rca-long-defeat-phase1-2026-11-04.md. Codex did
+not run, because this work has no paid word.
+
+Verified: the suite passes except
+BannerlordRefAsmVersion_PinnedGameVersion_IsTheSameGameBuild, which is
+red because Steam moved the game to changeset 125270 and BUTR has not
+published that build yet.
+
+Not-tested: this rule in game. The next run measures it.
+
+#### feat(seat): v2.0.36 - a field trial that plays one battle by itself
+
+`8b041f03`
+
+The Seat of Seeing can now prove itself with nobody at the keyboard.
+A script inside the game opens one real custom battle, presses the
+Seat's own controls in order, writes one log line per fact and quits.
+tools/run_command_trial.py launches it and judges the log. Only the
+environment variable TAOM_COMMAND_TRIAL arms it, and a player session
+pays the few checks the feature doc lists and allocates nothing per
+frame.
+
+Each run plays six steps: the Seat refuses during deployment, it
+enters, it flies the expected distance, the hero stands still, the
+glide back ends near the hero, and a second entry keeps the height.
+A PASS also needs a clean module unload, no failed Seat check, and a
+[BuildStamp] that matches this checkout, so a stale deploy cannot
+report success for code it never ran.
+
+Three runs passed on 2026-11-04 in the real game. They do not cover
+real key bindings, the movement axes, the wheel or the mouse, because
+the trial replaces the input read. How the blend and glide look is
+also unjudged. The pictures show the vanilla attack arrow in the sky
+view, which the next stage removes.
+
+Three trade-offs, kept on purpose. The build check costs about 40
+lines in a test wrapper, and it is the only thing that ties a PASS to
+the tree under test. The script's six working steps were rewritten as
+iterators, because the two features' later stages add at least 28 more
+steps to a class that already held eleven shared fields. The
+autostart's exits sit behind a small host interface, because those
+exits are all that guarantees an unattended run ends, and they had no
+test.
+
+Review record: docs/reviews/rca-seat-of-seeing-trial-2026-11-04.md.
+The same commit records the second Codex pass on stage S1, which found
+nothing new, and two contract edits that keep each feature's trial
+steps in its own files. Codex on this harness runs next. There is no
+GitHub issue yet: it waits for the maintainer's word.
+
+#### feat(long-defeat): v2.0.36 - Phase 1: waves, gold, shop at Helm's Deep
+
+`a05500f6`
+
+The Long Defeat is now a playable mode from the main menu (#1079). You
+hold Helm's Deep against wave after wave of Isengard. A cleared wave
+pays kill bounties and a bonus. Between waves a shop (B) sells packs of
+Rohan troops, and a horn (H) starts the next wave early for bonus gold.
+You are the defenders' general, with the order bar. If you die you take
+over a soldier, and you rise at the keep when the wave ends. No wave
+retreats. The run ends when no defender stands, or when attackers hold
+the keep point long enough, and the best run is saved in Documents.
+
+Ten waves are authored, then the last one scales by count. The content
+is three JSON files under ModuleData/long_defeat. The numbers are tuned
+on the unattended shop bot and are a first guess, not final balance.
+Later phases add commanders, affixes, boons, classes and fortifications.
+
+A Long Defeat attacker no longer panics on low morale, through one
+clause in TaomCustomBattleMoraleModel, so a wave fights to its last man.
+The counter taom.long-defeat.morale-hold shows when the clause fires.
+
+The Phase 0 spike and its wrapper are gone. The unattended run is now
+tools/run_long_defeat.py, which judges the [Check] lines and reads
+tools/ingame_checks/1079.toml through ingame_verdict. It fails on a
+stale deploy, a missing spawn read-back or too few wave lines.
+
+Review: tier 1 deep-review, both waves. One HIGH, Photo Mode locked the
+run, is fixed. All findings are in
+docs/reviews/rca-long-defeat-phase1-2026-11-04.md. Codex did not run,
+because this work has no paid word.
+
+Verified: 32,341 C# tests and 7,157 tool tests pass. Three unattended
+runs on earlier dirty builds: one passed 2 waves, and two lost at waves
+4 and 5 of 5 on earlier wave tables, which proved the respawn, a lost
+run's report and the end panel line.
+
+Not-tested: this wave table in game, five cleared waves, a keep loss,
+the shop with a person's clicks, the Leave and Escape exits, the Photo
+Mode veto and the prefab colours. Clean-tree runs follow this commit.
+
+Translations owed: the TAOM_LD_* rows carry English in the 12 language
+files until #763.
+
+#### feat(fords-of-war): v2.0.36 - cheaper Rohan riders and Dol Guldur packs
+
+`730a1149`
+
+Rohan's design makes it the finest cavalry, and its riders traded at
+0.09 to 0.49 of their gold. A table of every unit role showed why:
+cavalry made 1.12 kills per death, close to ranged units, but its price
+was too high. Rohan's rider packs now cost 0.7 of the full price for
+their level and its horse archers 0.5, the only riders so discounted.
+Cavalry's gold trade across all factions rose from 0.71 to 1.20. Rohan's
+rose to 1.22 against Harad and 1.96 against Mordor.
+
+Dol Guldur lost its fights against all three opponents, at about 0.6
+gold trade. Its four cheapest packs now cost 0.8 of the full price, and
+its creature calls cost less. The result is mixed: its trade against
+Erebor rose to 1.06, it stayed near 0.65 against the others, and it took
+no tower in three matches. It is still the weakest faction, and the
+balance log names the next lever.
+
+The balance log also records the first long matches under the tower
+limit. No keep fell in three matches of 45 minutes. Rivendell, which
+lost all 6 towers and took none before the limit, now leads Mordor 4 to
+2. Even sides such as Dale and Gondor reach only 2 towers to 0, which is
+past the 30 to 45 minute target, and raising the limit would not change
+that. A time-based rule is the likely answer and waits for Mike's word.
+
+One 1x match confirms the limit: Rivendell lost 1 tower to Mordor and
+took none, at 3.0 gold trade. The other numbers come from single matches
+at 4x.
+
+#### feat(seat): v2.0.36 - a commander's view for any mission with a screen
+
+`f2ee9a16`
+
+The Seat of Seeing is a free camera for the player. One key (Take the
+Seat, default Q, rebindable) lifts the view off the hero over about
+0.7 seconds, in any mission with a main screen. The engine's own
+movement keys, the wheel and the mouse fly it, and the same key brings
+it back: with the engine's short glide from third person, at once from
+first person. The hero stands fast while the view is up, and the order
+panel works from the Seat, with the flag on the ground under the
+screen centre. This is stage S1 of the contract in
+docs/features/seat-of-seeing/build-spec.md.
+
+A manned siege engine or a board game refuses the Seat with a message.
+A mission whose camera belongs to another view, such as Fords of War,
+leaves it off. A co-op session keeps the camera. The MCM group "Seat of
+Seeing" holds SeatEnabled (on) and BeginBattlesInSeat (off).
+
+The warg rage controller's swap back no longer turns vanilla's main
+agent controller on while the Seat is up, and two of its unused events
+are gone.
+
+Not yet run in the game. The owed checks are in the draft manifest
+tools/ingame_checks/0.toml. No GitHub issue exists yet: the draft waits
+for the maintainer's word, and the manifest takes its number then. The
+new strings are seeded for the 12 languages and owed to the translator
+(#763).
+
+Review: docs/reviews/rca-seat-of-seeing-s1-2026-11-04.md. The Codex
+pass on the last fix round stopped at the account's usage limit, so it
+is owed before this branch merges.
+
+#### feat(fords-of-war): v2.0.36 - a tower takes 50 damage a second at most
+
+`5869f424`
+
+Numbers counted in full against a tower, so the cheapest pack was the
+best tower killer in the game. An 8,000-point elven tower fell 32
+seconds after its first blow, at about 250 damage a second, while
+Rivendell's own attacks did 21 to 38 a second. A horde then stood in
+every lane, and the other side never reached a tower. That conflicted
+with the design, where a tower takes many waves.
+
+A tower now takes at most 50 points a second from ordinary blows. A blow
+past that is cut, or counted as Crowded when nothing is left. Heroes and
+siege units pass the limit and spend none of it. An outer tower lasts at
+least 160 seconds against soldiers alone. The new number is
+towers.assaultDamagePerSecond in match.json, and 0 means no limit.
+
+Mordor's damageToTowers 0.6 and its trait line are gone, because the
+limit treats every horde the same way.
+
+Measured on nine pairs at 4x. Rivendell v Mordor moved from 5 towers to
+0 to 2 towers to 1, and Erebor v Gundabad from 6 to 0 to 3 to 1. The
+side that was behind now reaches towers: Rivendell's tower damage rose
+from 522 to 9,727, and Dol Guldur's from 0 to 11,778. No keep fell in 15
+minutes. These are single matches at 4x, with no 1x match and no long
+match yet.
+
+Check 12 failed once in these runs: one raging warg rider was not back
+in its formation within 60 mission seconds. This change does not touch
+rage, and the balance log records it as open.
+
+#### feat(fords-of-war): v2.0.36 - a threatened lane follows the buy cycle
+
+`22c1bfcb`
+
+An AI side that fell behind kept falling behind. With every lane under
+threat it bought only the cheapest spear or infantry pack, and its buy
+cycle stopped, so it got no elites and no upgrades. Isengard spent 6,125
+gold on units and 480 on upgrades in one match. A threatened lane now
+gets the cycle's next entry, and the AI saves for it. A faction with no
+cycle keeps the old rule.
+
+Measured on nine pairs at 4x. Rivendell's upgrades rose from 510 to
+2,380 gold, and Isengard's from 480 to 2,190. The towers did not even
+out, and losers still deal almost no tower damage, so a later change has
+to address that.
+
+tools/fords_match_review.py now names the build a match ran on, the
+winner and the time a keep fell, and it flags a win before 30 minutes.
+It treats 4x as the balance speed and flags a speed changed by hand.
+
+The balance log records the first survey of all the pairs. Erebor
+destroyed Dol Guldur's keep at 889 seconds in that survey, the first
+keep to fall, and poison now has proof in runs. Rohan's riders trade
+badly for their price, by a table of every unit role.
+
+The feature doc gains one crash and one closed topic. One match died at
+native offset 0x6B4C4E, where the AI reads target agent index -1. It
+looks like an engine fault, with one occurrence, and no fix is proposed.
+The white ground in Fords runs comes from Mike's ReShade setup and is
+closed.
+
+#### feat(tools): v2.0.36 - lint dead memory citations in the engine study
+
+`2129f753`
+
+The engine study cited 86 private memory files that no reader could
+open, and none of them exists any more. The last two passes removed
+them. docs/reference/engine now falls under the same lint as the rules,
+so the citations cannot return. The rest of docs/reference stays out,
+because rule-provenance.md and the hook catalog name such files as
+history.
+
+Also regenerates docs/reviews/_clan_registry.json, which lacked 16 clans
+the data holds, among them feral_orcs and the Dorwinion and Anduin Vale
+houses. build_clan_specs.py reads it.
+
+Tested: tools/tests/test_lint_rule_drift.py, red before the change.
+
+No issue: Mike waived one for the rules review, 2026-11-03.
+
+#### feat(hooks): v2.0.36 - warn when MEMORY.md passes its limit
+
+`3ea14a73`
+
+MEMORY.md loads in every subagent and regrows between sweeps, and only
+a report tool measured it. session-start.sh now prints one note at
+startup when the file passes ADR-011's 40 lines or 4 KB.
+
+The memory folder carries the main checkout's name, so a session in a
+sibling worktree looked in the wrong place and read as under the limit.
+The banner and the compact-time Dead ends find now take the name from
+git's common dir and match it as the end of the folder name, so a
+worktree project that only contains the name no longer matches.
+
+Tested: tools/test_hooks.sh section 7n, with rows for both limits, a
+compaction, a sibling worktree and a project that contains the name.
+
+No issue: Mike waived one for the rules review, 2026-11-03.
+
+#### feat(hooks): v2.0.36 - commit gates for every committer
+
+`434d1d79`
+
+Only commit-msg bound every committer, and 41 commits had skipped the
+Claude gates. .githooks/pre-commit and pre-merge-commit now run the doc
+budget, gitignored-file and ModuleData gates for anyone whose clone sets
+core.hooksPath, the terminal and the IDE included. A clean merge skips
+pre-commit, so pre-merge-commit runs the same gates.
+
+They run beside the Claude commit gates until about 2026-11-17, when the
+two are compared and those gates go. An XML commit takes about 22 s.
+
+All three hooks are POSIX sh. The git inside Visual Studio and GitHub
+Desktop ships no bash, so commit-msg had failed every commit from them
+since it landed. Those gits have no GNU timeout either, so the gates run
+with no time limit there. A hook fails open, and says so, when Python or
+a tool is missing, crashes or overruns.
+
+Known limit: validate_moduledata and generate_career_kits read the
+working tree, not the index, so the hook names any ModuleData file with
+unstaged edits. The hook cannot see an amend. The maintainer decides
+both at the comparison.
+
+block-no-verify now reads each git call the way bash reads it, through
+_shellwords.py bypass: a subshell, a glued separator, bash -c, a quoted
+flag and every global option are seen, and a commit message naming a
+flag is no longer refused. A # inside a word no longer ends the word,
+which also misled the amend and path readers of the other gates.
+
+A new PostToolUse hook asks where a new feedback memory belongs. The
+session banner reports a wrong core.hooksPath. harness-facts.md and
+hook-authoring.md shrink below their trunk sizes.
+
+No issue: Mike waived one for the rules review, 2026-11-03.
+
+#### feat(tools): v2.0.36 - yield by lens, provenance and stale loc checks
+
+`69d2e8c0`
+
+The review pipeline is the largest spend, and nothing measured its
+yield per lens. analyze_reviews.py now prints real, false positive and
+severity by tier, by finder and by lens, with a sole-finder column and
+a count of findings with no credit. Its lens table reads 299 findings
+from 19 of 554 RCAs, because the others record no lens, and the heading
+says so. REVIEW-LOG.md loses its stale Metrics block.
+
+harness_retro.py gains a banner table (printed, invoked, run directly),
+the versions seen, rule-load counts, and --exclude-session, which warns
+on an id with no transcript.
+
+check_provenance.py checks the register's vocabulary, every shipped
+non-TAOM binary and every adoption record. It finds 5 adoption records
+the register names nowhere. Those rows wait for the maintainer, and
+/verify lists them. check_stale_loc_rows.py reports a staged English
+edit whose translations were left behind. Both are in /verify or
+/localize, and in tools/README.md.
+
+The doc graph ratchet now leaves docs/reviews out and lists its own
+orphans. Its baseline moves from 26 and 29 to 27 orphans and 32
+components: the excess is the unlinked release posts and one research
+doc added since 2026-08-31, and linking them brings it back down.
+
+No issue: Mike waived one for the rules review, 2026-11-03.
+
+#### feat(tools): v2.0.36 - the doc linter judges what a commit records
+
+`35ff005d`
+
+Under --staged, every gating check of lint_docs now reads the tree the
+commit records, through one git cat-file --batch. Another session's
+unstaged edit can no longer refuse a commit, and a staged breach can no
+longer pass behind a clean working copy. Under --only-paths that tree
+is the named working copies on top of HEAD. The cost is a little more
+code in the linter, for one reader that a new check inherits.
+
+New check 11, rule text drift, refuses a citation of a machine-local
+memory file, a backticked symbol no tracked file holds, and a dotnet
+test or build of a TAOM target without -p:ModuleId=, which can deploy
+over a running game. Over-cap path rules now only warn unless a commit
+grows them, which replaces the old on-off switch.
+
+A crash in the linter exits 3, and --clean-merge tells it that git has
+not written MERGE_HEAD yet. The commit-msg checker now also refuses
+Close, Fixed and space or "and" separated issue lists, which close only
+the first number, and it allows a code span naming that form.
+
+gamemodels.md drops its table for the registry, the one catalogue. The
+RCA threshold and tier table are untouched: those wait for the usage
+comparison due about 2026-11-10.
+
+No issue: Mike waived one for the rules review, 2026-11-03.
+
+#### feat(tools): v2.0.36 - validator codes and one command for data gates
+
+`f1675c05`
+
+Authors ran one of two validators and saw 63 of 275 errors. Now
+python tools/data_gates.py runs the gates for the changed files and
+prints PASS, FAIL or NOT RUN for each. A gate that skipped, validated
+zero files or could not run reads NOT RUN, which has not passed, and a
+missing or ambiguous named file exits 2. /verify runs it.
+
+New validator codes:
+
+- TROOP_ID_REMOVED: a shipped troop id no file defines, which leaves a
+  hollow character in a save. tools/shipped_troop_ids.txt holds the 945
+  ids of v2.0.36 with the accepted exceptions, and /release reseeds it.
+- INCONSISTENT_WEAPON_SLOT and TOWNSFOLK_WITHOUT_BATTLE_ROSTER. Both
+  start clean.
+
+Also: fords_of_war/*.xml joins the NPC schema, with a coverage test for
+every applies_to glob. apply_culture_skills_traits.py gains --check and
+audit_mount_parity.py gains --strict. translate_with_claude.py now
+requires --module. audit_fbx_lods.py --check fails on a shipped, used
+chain that lacks a level, whatever the committed report says, and it
+reports 49 such chains today against a report that says 0, so
+/armory-audit reads BROKEN until the maintainer decides. A crash in
+generate_career_kits.py now exits 3, not 1.
+
+Corrected engine claims, each read from the v1.5.6 source:
+FirstBattleEquipment is null for a civilian-only character, not empty,
+and a fixed-equipment spawn throws. Preachers never spawn. The arena
+stands claim rests on #295's log, because the spawner is not in managed
+code. CharacterSpawner is a scene script, and its only caller is the
+thumbnail cache.
+
+No issue: Mike waived one for the rules review, 2026-11-03.
+
+#### feat(fords-of-war): v2.0.36 - AI spare gold follows its buy cycle
+
+`4297cd2f`
+
+The rule from the last commit, spare gold buys upgrades, swung the
+towers hard to Mordor. A horde's lane is nearly always full, so Mordor
+put up to 71% of its gold into upgrades, five levels by about 500
+seconds, while Rivendell bought one. Upgrades have a flat price and a
+value that grows with the army, so they favour a horde. Rivendell lost
+5 and 4 towers and took 1 and 0.
+
+That rule is gone. While the assault lane is full, gold above the
+reserve now buys the buy cycle's next pack for the lane with the most
+room, and the cycle moves on. Each faction's upgrades and elites keep
+the share its cycle gives them, and Mordor fields temple guard for the
+first time. With every lane full the gold waits for a hero.
+
+The towers stayed one-sided, which showed the older balance was an
+accident: Mordor used to waste its gold on heroes. An orc costs about 5
+gold and strikes a tower about as hard as an elite, and an 8,000-point
+elven tower fell 32 and 34 seconds after its first logged blow. Mordor's
+units now deal 40% less damage to towers, and a new trait line says so.
+Its towers fall later, but Rivendell still loses 4 and takes 0 or 1 in
+15 minutes.
+
+The first 45-minute match on these rules ended with no keep down.
+Rivendell lost all 6 towers and dealt 7 tower damage. Its AI never
+attacks, because it only attacks from a lane that is not threatened, and
+a horde threatens every lane. The balance log records this as open until
+the other pairs show whether every small army does the same.
+
+Check 8 failed once and passed in the next five matches; the cause is
+not known. These numbers come from matches at 4x, one 45-minute match
+and no 1x match. The new trait line has seeded English in all twelve
+languages, for translation under #763.
+
+#### feat(fords-of-war): v2.0.36 - stronger heroes, AI spends spare gold
+
+`eedfca81`
+
+Heroes did not earn their price. A hero of 1,000 to 2,400 gold made 0
+to 2 kills per minute in three matches, so over a match it killed about
+as many as one 43-gold swordguard. A hero now deals 3 times the damage
+and takes 0.4 times the damage, through the same damage model seam as
+the army upgrades. The new numbers are heroes.damageFactor and
+heroes.damageTakenFactor in match.json.
+
+The AI also spent its gold badly. Mordor paid up to 54% of its gold for
+heroes and buybacks, and a full lane stopped the buy cycle at a pack.
+Rivendell ended four matches on 1,372 to 2,465 gold unspent, and Mordor
+two 4x matches on about 1,600. The AI's reserve rises to easy 600,
+normal 800, hard 1000, which keeps heroes to surplus gold. While its
+lane is full, gold above the reserve buys the next upgrade its cycle
+names.
+
+tools/fords_match_review.py now gives each hero's lives, time on the
+field and kills per minute, and splits tower damage by class. The end
+of match [Upgrade] line counts the blows the hero factors changed.
+
+Six matches of Rivendell v Mordor compared the speeds. Balance runs now
+use 4x, and 10x is for smoke and crash runs only, because 10x changes
+the result: Mordor's losses, the towers lost and the gold trade all
+fell outside the range of the 1x matches. The balance log has the
+numbers. The cause of the 10x difference is not known.
+
+No match has run on these numbers yet. The factors are a first guess,
+to be measured at 4x next.
+
+#### feat(tools): v2.0.36 - harness_retro can leave a session out
+
+`3f53e462`
+
+The #1078 comparison reads a week of normal work, but the rules audit
+of 2026-11-03 spent about 5.4M subagent tokens on its first day, and the
+rules work that follows would distort it further. --exclude-session
+drops a session's main transcript and everything under its folder,
+workflow agents included, and the report names what it left out.
+Excluding every session still reads as UNCHECKED, never as clean.
+
+No issue: Mike waived one for the rules review, 2026-11-03.
+
+#### feat(fords-of-war): v2.0.36 - match speed: 2x, 4x and 10x
+
+`e527289e`
+
+A commander can now speed up a match with the button under the clock or
+the T key: 1x, 2x, 4x and 10x. An unattended run takes the same speed
+from `--speed` on tools/run_fords_autorun.py, so a 15-minute test match
+at 10x takes about 90 seconds after the load.
+
+10x is the engine's own fast forward, which vanilla offers on the
+scoreboard after the player falls. 2x and 4x set the mission's fixed
+step each frame to the frame's time times the speed, capped at 0.1
+seconds, so a slow frame slows the match. Neither needs a patch.
+Scene.TimeSpeed cannot do this, because the mission caps it at 1 every
+frame.
+
+Each change of speed writes a [FordsOfWar][Speed] line, and
+tools/fords_match_review.py names a fast match first. The keys hint text
+has a new id, so its old row left all twelve language files.
+
+No match has run at any speed above 1x yet. Vanilla never uses the fixed
+step, and whether fast matches give the same balance numbers as normal
+ones is still to be measured.
+
+#### feat(long-defeat): v2.0.36 - the Phase 0 spike for wave survival
+
+`758c8f6f`
+
+The Long Defeat (#1079) is a planned survival mode on the siege maps:
+you defend Helm's Deep or Minas Tirith against waves, and you spend
+gold between them. This commit lands only its Phase 0 spike, so that a
+build from the main checkout carries it for the first in-game run.
+
+Players see no change. The spike has no menu entry. Only the cheat-mode
+console command taom.ld_start and the variable TAOM_LONGDEFEAT_SPIKE
+start it, and it adds no behavior or patch to any other mission.
+
+One run answers S1 boot, S2 waves, S3 engine life, S4 gate repair, S5
+engine buy and part of S7 gear and S8 cost, through tagged [LongDefeat]
+log lines. tools/run_long_defeat_spike.py runs it with nobody at the
+keyboard. S6 and the rest of S7 and S8 are still owed.
+
+The review found that the first draft could not pass S1 and that its
+evidence could mislead. The findings and their causes are in
+docs/reviews/rca-long-defeat-spike-2026-11-03.md. The engine facts are
+in docs/reference/engine/mission-and-missionbehavior-lifecycle.md.
+
+Not-tested: the mission has never run in game, so every engine claim
+here comes from the decompile. Codex did not review this: no paid word
+was given for this work.
+
+Refs #1079
+
+#### feat(fords-of-war): v2.0.36 - a free hero every five minutes
+
+`0c4cf8b4`
+
+Each side's next hero now takes the field for nothing every five
+minutes of live time, so both sides see their heroes whatever their
+gold. In the matches reviewed so far a side fielded one hero at most,
+and often none.
+
+The cheapest hero comes first, so the strongest comes last. It goes to
+the lane where its side is most outnumbered. A side with no hero slot
+free or no hero left waits for the next arrival. A commander can still
+pay to field a hero early, and a dead hero still comes back on its own
+timer or by buyback.
+
+The title of the hero panel counts down to the next arrival. The AI no
+longer saves gold for a hero, a plan added one commit ago, because the
+free hero replaces it. `heroes.freeArrivalSeconds` in match.json sets
+the interval, and 0 turns it off.
+
+No match has run on this build. The new panel text is an English seed
+in all twelve languages until the next translation pass.
+
+#### feat(fords-of-war): v2.0.36 - AI saves for heroes, gold lines, review
+
+`a7ede74d`
+
+The computer commander now spends its gold where a faction's plan says.
+In both Rivendell and Mordor matches, Mordor bought no upgrade and no
+hero, because the automatic creature call ran first at every decision
+and took the gold. The creatures it lost were worth 4,766 and 4,482,
+and they killed 442 and 515. Rivendell ended one match with 1,854 gold
+unspent, because a full assault lane stopped all buying.
+
+A buy order can now name `hero`, and the AI saves for its cheapest hero
+at that place. Every faction has one. Creatures come only from `beast:`
+entries, so Mordor and Dol Guldur now name theirs, and the automatic
+call is gone. Upgrades, beasts and heroes no longer wait for room in
+the assault lane. Mordor's wargs and trolls cost less.
+
+The balance line at the end of a match now says where each side's gold
+came from and what it paid for. tools/fords_match_review.py reads a
+finished match and flags what needs a person's reading, and
+docs/features/fords-of-war/balance-log.md keeps the findings.
+
+No match has run on this build, so the effect of these numbers is not
+measured yet.
+
+#### feat(fords-of-war): v2.0.36 - poisoned arrows, enemy name on the strip
+
+`6cb671ca`
+
+Harad's arrows and bolts now poison the soldier they strike: 3 hit
+points a second for 8 seconds, through any armour. Dol Guldur's venom
+does 2 a second for 6 seconds. Poison answers heavy elites such as
+Rivendell and Erebor, which shrug off weak blows. Another hit refreshes
+the time but never stacks, so massed archers cannot melt one target. A
+shield block, a tower's arrow and a mount carry no poison, and a lethal
+dose credits the archer while the archer lives.
+
+The top strip now names the enemy faction in red, next to its keep bar.
+
+No match has run on this build, so neither the poison numbers nor their
+balance are measured yet.
+
+#### feat(fords-of-war): v2.0.36 - balance lines at the end of each match
+
+`79af58da`
+
+Each match now ends with [FordsOfWar][Balance] lines in the log. They
+give what each troop killed and lost, in units and in gold value, and
+each commander's gold earned, spent and left. A balance pass can then
+see which troop earned its price, which the side totals could not show.
+
+The Upgrades panel now reads "Level 0 of 3" before the first purchase,
+in place of "+0%" and "-0%".
+
+#### feat(fords-of-war): v2.0.36 - the mumak costs 1000 gold, AI saves for it
+
+`5e487172`
+
+The mumak now costs 1000 gold. A player's gold stacks until the player
+spends it, so nothing changes for a player but the price.
+
+Harad's AI spent its gold on a war elephant whenever the timer was
+ready, so it never reached a mumak. A beast entry in a faction's buy
+order now makes the AI save for that beast and call it there. The other
+creature factions still call the dearest one their gold reaches.
+
+An unattended run keeps playing when the game window loses focus. A
+lost focus opened the Escape menu, which paused the mission until
+someone closed it. The panel view now declines that menu in an armed
+run, and the player's own setting stays as it is.
+
+The launcher has a new flag, --allow-open-kit, which starts a match
+beside an open Modding Kit. It passes only the Kit's own Watchdog, never
+a running game, and only when the maintainer has said yes.
+
+No match has run on this build.
+
+#### feat(fords-of-war): v2.0.36 - buy army upgrades with gold
+
+`37bfc50e`
+
+A new Upgrades panel sits above the heroes. Gold buys three levels on
+each of six tracks for the whole army: melee damage, missile damage,
+melee armour, missile armour, siegecraft and fortify. Key U hides the
+panel, and Shift+F1 to F6 or a click buys a level.
+
+A level also reaches the units already on the field, because the
+damage model reads it on each blow. Tower gunners gain nothing from the
+damage tracks. Each faction pays its own prices: Erebor's armour costs
+less, Dale's and Mirkwood's missile damage costs less, Isengard's
+siegecraft costs less, and Gundabad pays more for everything.
+
+The AI buys upgrades too. An entry in a faction's buy order names one,
+and the AI saves its gold for it.
+
+Only the Custom Battle damage model calls the upgrades, because this
+mode never runs in a campaign. The test that holds that model to the
+campaign model now names these two calls as its only exception.
+
+The new text holds English until the paid translation pass in #763. No
+match has run with upgrades yet, and balance is not measured.
+
+#### feat(fords-of-war): v2.0.36 - Dale, Dol Guldur, Easterlings and more
+
+`6e8e293c`
+
+Five more factions, so the mode now has thirteen.
+
+Dale breaks towers from range: its archers deal 4 times the damage to
+towers, but its melee is weak. Dol Guldur slows enemy tower fire by a
+quarter and calls spiders and fell wargs, but earns 15 percent less.
+The Easterlings answer fastest: new orders are ready twice as fast,
+but their towers fire 15 percent slower.
+
+Umbar gets rich from the map: camps pay 3 times as much, capture points
+twice as much and kills a quarter more, but its income is 20 percent
+lower and it has no troop above level 31. Mirkwood shares Far Sight
+with Rivendell, keeps the same low numbers, and has the finest archers.
+
+Five new feats carry this: rangedDamageToTowers, enemyTowerFireRate,
+orderCooldown, campReward and captureIncome. The new text holds English
+until the paid translation pass in #763.
+
+No match has run on this build, and balance is not measured.
+
+#### feat(fords-of-war): v2.0.36 - Rivendell, Erebor, Harad, Gundabad
+
+`68d2da83`
+
+Four new factions, each with its own way to win.
+
+Rivendell holds at range: its towers fire 50 percent further than any
+other, and all three heroes may fight at once. It has 150 troops and
+five offers, so a horde floods it.
+
+Erebor survives ten minutes, then outspends everyone. It earns 40
+percent more income and its towers mend 4 times as fast, but its free
+waves come a quarter later and it has few bows.
+
+Harad saves gold for one great beast at a time: a war elephant or a
+mumak every 2 minutes. Its towers have 15 percent fewer hit points.
+
+Gundabad ends the match early. Its free waves come twice as often and
+its packs cost a quarter less, but the waves never improve and its
+towers have 30 percent fewer hit points.
+
+Two new feats carry this: towerRegen and heroSlotBonus. The new text
+holds English until the paid translation pass in #763.
+
+No match has run on this build. Balance is not measured, and nothing
+yet proves that a mumak spawns in this mode or damages a tower.
+
+#### feat(fords-of-war): v2.0.36 - Sentries, Stone and a tower range feat
+
+`8a55e40d`
+
+Rohan's towers now fire 30 percent faster because of its Sentries, the
+fastest in the game. Gondor gives up its faster fire and its towers get
+40 percent more hit points instead, so each faction owns one tower
+strength.
+
+A new feat, towerRange, sets how far a faction's towers fire. The fire,
+the unit counts near a tower and the siege all read the same range. A
+lane on Hold stands back by the extra reach, because it has no order
+that answers tower fire. No shipped faction uses the feat yet.
+
+The AI now starts an assault at the same share of its faction's lane
+cap. Isengard attacks at about 57 units and Mordor at about 96, where
+both waited for 70. A faction with a low cap would never reach 70.
+
+Balance is not measured on this build yet.
+
+#### feat(fords-of-war): v2.0.36 - each faction's AI buys to its identity
+
+`b4606fef`
+
+The AI always bought the dearest offer it could afford, so Mordor's AI
+bought small elite packs and never a horde, and Rohan's AI bought no
+foot soldiers to take towers. Each faction now has a repeating buy
+order in factions.json. An entry is an offer id, or a role name for the
+dearest offer of that role the gold reaches, which suits Gondor's
+rotating bands. The AI saves up when the next entry costs too much.
+Mordor buys orc packs most often, and Rohan keeps some foot.
+
+Balance is not measured on this build yet.
+
+#### feat(tools): v2.0.36 - the retro prices usage, scans workflow agents
+
+`4358d162`
+
+The harness retro now answers where Claude usage goes. A new report
+section 11 prices every request at API list rates, as a proxy for
+relative size: cost by agent with tool calls per request and thinking
+share, main-session spend by context size, cache rebuilds by idle gap,
+and review runs (lenses of one session within an hour of each other).
+
+Also fixed a blind spot. `discover` looked only in `subagents/` and
+never in `subagents/workflows/<run>/`, so 979 workflow transcripts were
+missing from every earlier retro, for hooks and tool errors as well as
+tokens. The new total matches a hand calculation to within 0.02%.
+
+A reviewed Gitleaks false positive also goes in: a Fords test constant
+named HitKey, which is a probe key. (#1078)
+
+#### feat(fords-of-war): v2.0.36 - four factions, a new command panel
+
+`e75ad58a`
+
+The four factions now play differently. Each has feats that change
+the rules for it, a roster built for its strengths, and lines that tell
+the player what it is good and bad at during the countdown.
+
+Rohan fields the best cavalry: six of eight offers are riders. Its foot
+and archers are weak, and riders deal a quarter of the damage to
+towers. Gondor has strong towers and calls on its regions: a band of
+four offers from one region changes every 30 seconds from a shuffled
+deck, the panel names the next one, and 150 gold calls a chosen region
+at once. Mordor has the largest army, huge cheap packs of very weak
+orcs, strong Black Uruks and costly Black Numenoreans, and it can call
+a creature every 30 seconds for gold. Isengard is the tower killer: 50%
+more damage to towers, free waves that grow every 5 minutes, and 50
+fewer troops. A new feat is one property and one use in a rule.
+
+The command panel is rebuilt from research into commander HUDs. The
+middle of the screen stays clear. The keeps and clock sit on a slim
+strip at the top, the battle board at the bottom left, a fixed 4 by 2
+buy grid and 2 by 2 orders at the bottom centre, and the heroes at the
+bottom right. Buy slots never move when offers change. The research is
+in docs/features/fords-of-war/hud-research.md.
+
+The unattended launcher can save pictures of the screen with the UI
+(--screenshots), so a session can see a layout. That found a bug no
+test could: one stretched child made each panel fill the screen.
+
+Seen in game with pictures: every panel, the region list, the region
+row and the creature row, in short matches. Not seen: a person pressing
+the new keys, or a click on the region list. The numbers are first
+values, not measured balance.
+
+#### feat(fords-of-war): v2.0.36 - the mode gets its own troop roster
+
+`33ca557d`
+
+Fords of War now fields its own copies of the 51 troops it uses, held
+in fords_of_war/fords_troops.xml and loaded for CustomGame only. A
+balance edit there cannot reach a campaign. Each copy starts with the
+same armour, weapons and skills as its campaign troop, so this commit
+changes no balance. A hidden flag keeps the copies out of the Custom
+Battle picker, and no copy has upgrade targets. Heroes stay the
+campaign's lords.
+
+Not seen in game yet: a match that fields the copies.
+
+#### feat(fords-of-war): v2.0.36 - Seize order, neutral camps with a ring
+
+`88b189e8`
+
+Lanes get a fourth order, Seize (key V). The lane walks to its nearest
+open camp or capture point, fights there until its side holds it, then
+returns to Push by itself. A lane can seize an objective only when it
+is one of the two lanes nearest to it, because lane bars keep a lane
+off its neighbour's ground. The AI gives the same order: one lane at a
+time, outside its assault, with no enemy at its tower and 12 units or
+more.
+
+Neutral camps now play. Each camp spawns its creatures on a third team,
+hostile to both sides, and shows a 15 m ring on the ground. The
+creatures stay home until a unit comes within 20 m and walk back when
+none is left. Clearing a camp pays its reward to the killer's side.
+
+The feature doc now also covers the hand-built map: real towers,
+bowmen, lane IDs, the volley and the housekeeping.
+
+Seen in one 900 s match on taom_fords_01_forceatmo, an AI on each side:
+both camps cleared and paid, 6 captures, 3 towers fell, no crash. The
+look of the ring has not been seen yet.
+
+#### feat(tools): v2.0.36 - launcher can wait for a dump after a crash
+
+`26ebc5c7`
+
+The launcher killed a crashed game at once. The Watchdog holds the
+process and asks a person about a dump, so a kill loses the dump, and
+Windows records no fault offset while a debugger holds the process.
+With --keep-on-crash <seconds> the launcher waits for a person to
+answer the dump dialog. The default of 0 keeps the old behaviour.
+
+#### feat(fords-of-war): v2.0.36 - arrows from towers, unlimited thrown
+
+`9f430f2a`
+
+Tower volleys now mix arrows with the javelins: every second missile is
+the new fow_tower_arrow, an item that loads only in Fords of War and so
+can never sell in a campaign. It carries its own damage, because a
+volley has no bow to add any. The engine needs an agent to own each
+missile, so the bowmen stay on the towers as owners.
+
+Thrown weapons are now unlimited, like arrows and bolts. The engine's
+AmmoSupplyLogic covers only arrows and bolts, so the mode tops up every
+unit's thrown slots each 3 s. Horses with no rider are removed on the
+same 3 s pass, which frees agent slots; wargs and other creatures stay.
+A [Housekeep] line reports both totals.
+
+The arrow's damage is a first value, to tune from a run. None of this
+has been seen in game yet.
+
+#### feat(fords-of-war): v2.0.36 - bowmen on tower tops, lanes hold their IDs
+
+`22d4f4c7`
+
+On a hand-built Fords of War map, towers now carry their garrison on
+top. The scene names each spot with a fow_gunner tag; an unkillable
+bowman stands there, held still with his bow in hand, and the existing
+scripted volley leaves from outside the walls so it cannot strike its
+own tower. Keeps have no spots, so they have no garrison on such a
+map. Melee units no longer waste blows on ground gunners.
+
+Each lane's units are also barred from the other lanes' navmesh ids
+(laneFaceIds in maps.json, the rider and his mount alike), so a lane
+cannot walk into its neighbour. The list order keeps the engine's
+exclusion sets within their limit of 6, and a map asking for more gets
+no bars and one warning. The four generated maps declare neither key
+and behave as before.
+
+Neither part has been seen in game yet. The new [Garrison] lines and
+the [Lane] bars and faces lines report what a run does.
+
+#### feat(fords-of-war): v2.0.36 - real towers take damage on tags maps
+
+`1f4f44a3`
+
+A tags scene whose towers are real entities (they have children or a
+body) now keeps them. The fitter no longer slides such a tower onto the
+lane, and the tower director attaches a damage component to the tagged
+entity at match start instead of building a barricade beside it. The
+component is a plain destructable with an empty state list, so the
+existing tower hit patch and the rules' hit points apply unchanged.
+
+A map declares its real towers with towerHalfWidth in maps.json (taom_
+fords_01 sets 5.5). That widens the melee contact measure from 4 m to
+half width plus 2.5 m, so check 9's contact seconds read the right
+number, and it gives the map no ground garrison for now. Generated maps
+are unchanged.
+
+New log lines: [Tower] attached, order (first attack order per stream
+and tower, with the navmesh face under the target and whether a path
+exists) and fell (visibility and physics read back after a fall). The
+tower health line also carries the damage per contact second.
+
+Not game-tested: no run has struck a real tower yet.
+
+#### feat(fords-of-war): v2.0.36 - Fords of War map entry, footing census
+
+`fd5f3dfe`
+
+Adds taom_fords_01 to the Fords of War map list as the fifth and last
+entry, so Rohan Plains II stays the default. It loads as a tags map
+(the scene authors its own lanes, towers and keeps) and is named by the
+new key TAOM_FOW_Map_Fords01, "[Fords] Fords of War". The key is seeded
+English-only into all 12 language files; the paid translation is owed to
+the existing backlog in #763. The map prompt now lists five maps.
+
+On a map whose layout the scene itself authored, the director takes a
+1 Hz look at every live unit and logs two info lines every 30 mission
+seconds. [Ground] gives min/median/max of how high units stand over the
+terrain and under the navmesh, plus the off-navmesh move count.
+[Lane] faces gives, per stream, unit-seconds on the shared, own-lane,
+foreign-lane and tower-top face groups, and on foot or mounted. Nothing
+reads them: no verdict changes, and the four generated maps take no
+look at all.
+
+Not game-tested: the scene has not been run through this build yet.
+
+#### feat(fords-of-war): v2.0.36 - AI gathers 70 units before it assaults
+
+`50e74c76`
+
+The Fords of War AI commander now holds its assault lane until 70
+units stand there, then pushes (lanes.assaultThreshold, was 40). At 40
+the AI almost never built a lane up: its lanes averaged about 48 units,
+so the build step rarely ran and every lane pushed with whatever it
+had.
+
+In a 45-minute AI match at 70 (run 20261101-152949), East sieged
+towers in 50 samples against 17 at 40, its lane 0 units stood at the
+tower for 1,204 unit-seconds against 7, and one West outer tower fell
+to 1,750 of 8,000 hit points. No tower fell, and West never sieged
+although its lanes stayed on Push with 59 to 74 units, so the higher
+threshold did not stall the AI. One run per setting is a small sample.
+
+Tower hit points stay at 8000, 11000 and 18000: the maintainer set the
+target that a group of 15 units in contact needs about 2 minutes on an
+outer tower. The feature doc and the RCA addendum record both
+decisions.
+
+#### feat(fords-of-war): v2.0.36 - lanes siege towers they outnumber
+
+`cae08f24`
+
+A Fords of War lane that reaches an enemy tower now attacks it when it
+holds the ground there. Before, a lane always charged any enemy within
+25 m of its lead, and defenders walk out through their own tower, so
+lanes fought in front of towers and almost never struck them: West
+received no tower attack order in four unattended matches.
+
+Under Push, when the lead is within the tower's fire range (45 m) and
+the units of the side's lanes that target that tower outnumber the
+tower owner's units there by 1.5 to 1, the lane attacks the tower. It
+keeps attacking while it is not outnumbered there and its lead stays
+within fire range plus 15 m. The rule applies to the player's lanes as
+to the AI's, since both use the same orders. The [LaneState] log line
+shows near=<attackers>/<defenders> and siege=<true|false>.
+
+Towers now regenerate 1 hit point per second after 45 s without
+damage, in place of 15 per second after 20 s: the faster regeneration
+healed everything an assault did in every lull. Hit points stay at
+8000, 11000 and 18000.
+
+In a 45-minute AI match on this build (run 20261101-143718), lanes
+sieged towers on four of six streams, units in contact with the tower
+rose from about 1 % of the time under the order to between 5 % and
+22 %, and the most-hit tower took 4,210 hit points, three times the
+earlier best. No tower fell, so AI matches still end without a keep
+falling; the next steps are AI concentration of force and the
+maintainer's target for a human-led assault.
+
+Reviews: two architects (diagnosis and challenge), /deep-review Lens 5
+and Lens 2 twice; the second pass found the order could still flip at
+the 60 m line, fixed by starting a siege only within fire range. RCA
+addendum in docs/reviews/rca-fords-of-war-2026-10-31.md.
+
+#### feat(fords-of-war): v2.0.36 - thrust damage floor for tower melee
+
+`1bb0c4b0`
+
+Spear and lance thrusts now damage Fords of War towers. Vanilla scales
+a melee blow on an object by 0.1 for pierce and by another 0.15 when a
+thrust hits with the shaft, then truncates the result, so most thrusts
+reached a tower as 0: in an unattended 900 s match, 124 of 142 melee
+blows on towers did nothing. A probe on OnRegisterBlow proved the
+cause blow by blow (/investigate, 2026-11-01).
+
+The maintainer chose a floor: a melee blow that arrives as 0 from a
+weapon with thrust damage takes towers.thrustFloorFactor (0.2 in
+match.json) of the weapon's thrust damage, then the normal tower rules
+(own side, locks, factors). The patch cannot see the strike type, so a
+rare zero swing from a weapon with thrust damage is floored too. In
+two 900 s AI matches, 129 and 38 floored blows took 1,020 and 266 hit
+points, no melee blow stayed at 0, and the engine's and the rules' hit
+points never differed. No tower fell in either match; balance is still
+open.
+
+Also in this change:
+- The run report counts kicks and own-side blows apart from zero
+  damage, and a blow from the tower's own side is labelled first, so
+  check 9's lock part counts only blows the lock stopped.
+- The melee probe records each tower blow by strike, damage type,
+  tip, passive, alternative, arm and mounted bits, with a capped trace
+  that now names the attacker and the thread.
+- Codex review fixes: a tower slide keeps the chain order, the match
+  reserves lane capacity for units still spawning, a failed match
+  start shuts the director down, and check 06 ignores gold commands
+  from an earlier match.
+
+Reviews: Codex (two ultra passes), /deep-review Lens 5 and Lens 2 on
+the floor; RCA addendum in docs/reviews/rca-fords-of-war-2026-10-31.md.
+
+#### feat(tools): v2.0.36 - unattended game runs, idle gate, game-run skill
+
+`8d883051`
+
+Claude sessions can now collect in-game evidence without waiting for
+the maintainer. The new /game-run skill and its runbook
+(docs/reference/unattended-game-runs.md) say when a run is owed, how to
+deploy the tree under test, how to run tools/run_fords_autorun.py, how
+to judge the run folder and what to report. CLAUDE.md lists the skill.
+
+The maintainer's standing decision (2026-11-01): a session starts the
+game without asking only when no Bannerlord.exe runs and the PC has had
+no keyboard or mouse input for 10 minutes; otherwise it asks once. The
+launcher enforces this with --require-idle-minutes (default 10; 0 turns
+the gate off after an explicit yes) and refuses with the input age.
+
+The launcher also stops passing a run that crashed at quit (Codex
+review 2026-11-01, F1): a CrashReport error block counts from the run's
+start to the end of the log, because the driver writes its done file
+before it quits, and an exit code other than 0 or -1 (Bannerlord's code
+after its own quit) fails the run.
+
+What the runbook records from Mike's ArmorySim tool: the direct
+/singleplayer launch, an env-armed driver, the main-menu wait, the done
+file and QuitGame, the safely_exited reset, crash-marker scans and the
+own-process kill rule. Headless single player is not possible: the
+dedicated server does not load TAOM.Client. Today the driver plays a
+Fords of War match only; a general scenario driver is planned.
+
+#### feat(fords-of-war): v2.0.36 - towers fall, unattended test runs
+
+`db8f7c10`
+
+AI lanes in Fords of War now attack enemy towers. In the first match
+melee never struck a tower (check 9 FAIL): the lane rules measured from
+the mean of every unit, which each new wave pulled back to the base,
+every lane unit spawned unalarmed, and the generated lanes fitted the
+Rohan scene badly. Now:
+
+- A lane is measured by its lead group: the band around its k-th most
+  advanced unit (k = 10 percent, at least 3), so one runaway cannot
+  lead it. A lead within attack range of the next standing enemy tower,
+  or level with or past it, attacks that tower. A marching lane never
+  steps back to an earlier waypoint, and a held lane forms up 60 m
+  before the enemy tower or at the lane midpoint, whichever is nearer
+  its own base. Lane geometry runs on a table built once per lane.
+- Lane units spawn alarmed, as vanilla battle spawns do.
+- A healed tower no longer breaks the engine: regeneration could lift
+  a damaged tower's hit points over a damage stage, and the next hit
+  threw inside the engine and left the tower invisible and unhittable.
+  The tower adapter now keeps the shown stage from moving backward
+  through the engine's own hook.
+- The layout fitter searches around a bad point instead of dropping
+  it, slides a tower along its lane, settles a base along the lane
+  axis, and refuses a layout in which a lane loses every tower of one
+  side. A retry planner tries narrower lane spreads and, on a near
+  square boundary, the other axis. Rohan Plains II is the first map.
+- The self-check report proves each link of the tower chain: lane
+  commands counted per kind, a [LaneState] line per lane, a per-lane
+  ladder from order to applied damage at the ordered tower, a bypass
+  part, per-tower lowest hit points, damage and regeneration, the
+  effective tower config, and an exceptions part that fails when
+  CrashReport swallowed an exception during the match.
+
+For testing without a player, TAOM_FORDS_AUTORUN arms an unattended
+match, and tools/run_fords_autorun.py starts the game, plays one match
+(--west-ai puts an AI on both sides), collects the report and quits.
+Players are never affected: only that environment variable arms it.
+
+Verified in game, unattended, on the desktop (E:/Temp/fords-runs):
+six matches of 600 to 1800 s, 0 FAIL rows; check 9 PASS (731 native
+tower blows in the first). On the fixed build a tower fell below its
+first damage stage, healed and was struck again with no exception
+(20261101-081305). Reviewed by /deep-review at
+tier 1 in two waves, the fixes re-reviewed; Codex did not run (paid,
+not authorized). RCA: docs/reviews/rca-fords-of-war-2026-10-31.md,
+night addendum.
+
+Known limitation: no tower fell in a 30-minute AI match. Most melee
+blows on a tower do zero raw damage, the invulnerable tower gunners
+absorb many swings, and regeneration heals what melee takes. Tower
+balance is the maintainer's decision; the report now gives the
+numbers.
+
+#### feat(tools): v2.0.36 - verdict summaries skip [Swallowed] lines
+
+`53e13cfe`
+
+The in-game verdict reader took a [Swallowed] warning for a session
+summary, because the warning's fixed text names "the [Session]
+summary". A swallowed site logged after the last real summary then
+replaced it, and its errors= warning and swallowed sites were lost; a
+log holding only a [Swallowed] line showed a false summary. The reader
+now matches [Session] summary and [Session] swallowed only as INFO
+lines behind the logger's timestamp. No verdict or exit code changes.
+
+/verify Step 6 and /release Phase 5 now run --owed --sessions 10, so
+a two-session check such as #1011 can pass; per check the newest PASS
+or FAIL still wins. Both note that #981 needs a re-run with --ds-data
+and --ds-engine after a staged-server run. A FAIL is described as
+evidence against the logged build, and exit 3 as git missing or gh
+failed, matching the tool.
+
+A missing summary now also names a game still in its first 10
+minutes, and the doc says a last heartbeat summary can mean the game
+is still running. The C# architecture rule names the swallow-ok
+marker for catches that are silent on purpose.
+
+Part of #1074.
+
+#### feat(tools): v2.0.36 - /verify and /release report in-game verdicts
+
+`c5705474`
+
+The in-game verdict reader now says how each session it reads ended.
+For every TAOM log in a session it prints the last [Session] summary
+line (reason, uptime, check totals, swallowed totals), a WARNING when
+errors= is above 0, because an outcome-log call then wrote nothing and
+a [Check] line may be missing, and the [Session] swallowed sites
+written after that summary. A log with no summary line is named, with
+the two reasons it can happen. Text and markdown output both carry
+it, and no verdict or exit code changes.
+
+/verify gains Step 6, which runs python tools/ingame_verdict.py --owed
+and reports the verdicts as information only: NOT REACHED is the
+normal state before anyone plays, and a FAIL is shown, never counted
+against the tree. /release runs the same command in Phase 5 before
+the notes are written, lists every owed check that is not PASS in the
+testers' checklist, and names a FAIL to Mike before the release
+commit.
+
+New docs/features/ingame-verdicts.md explains how to read a verdict
+and how to add a check (the id, the IOutcomeLog call, the manifest),
+the counters-only rule for hot paths and the swallow-ok marker. The
+feature map has its row, and the C# architecture rule has two lines on
+IOutcomeLog and its cost.
+
+Part of #1074.
+
+#### feat(logging): v2.0.36 - report swallowed exceptions, add a ratchet
+
+`cd4fb371`
+
+Silent catch blocks in the enlistment lord-conversation gate, character
+creation, hero race spawning, the order of battle overlay, army
+targeting and the creature behaviour tree wrapper now write one
+[Swallowed] warning per site and a count in the [Session] summary.
+Every fallback is unchanged. The enlistment menu and detach hooks
+already logged their failures, so only the guards around their log
+calls gained a swallow-ok comment, as did the other catches where
+silence is right, such as a failing log call.
+
+The behaviour tree wrapper's other three failure paths (no mission
+logic, a tree that already exists, an unknown tree name) reach the log
+the same way. Until now they showed only an on-screen message, so the
+log said a creature's tree failed to build but not why, and a duplicate
+tree left no trace at all.
+
+A new test, SilentCatchRatchetTests, counts silent catches in every
+Harmony patch and Hooks file against a per-file baseline (155 files,
+218 catches). A new silent catch fails the tests, and a fixed one
+lowers the baseline in the same commit.
+
+Part of #1073.
+
+#### feat(recruitment): v2.0.36 - a daily log check for AI castle recruits
+
+`852678f8`
+
+With AI Recruits From Castles off, the game log now says at each daily
+tick whether the setting held. A new "[Check]
+id=taom.castle-recruit.ai-off" line, keyed by the campaign day, passes
+when no AI lord took a castle notable's volunteer that day, and counts
+how many times the castle rule turned one away (blocked=). It fails
+when an AI lord did recruit at a castle, and a second fail line names
+the castle, the lord, the notable and the troop at the moment it
+happens. While both castle recruitment toggles are on, the day is
+skipped with reason=toggle-on.
+
+python tools/ingame_verdict.py --issue 918 reads these lines from a
+play session. It passes after three days that each turned at least
+one AI lord away; days with no refusal prove nothing and do not count.
+Test from a fresh game launch with a single load: the engine reruns
+the loaded day, and a reload inside one game process can drop that
+day's lines, which reads as not reached rather than a pass or a fail.
+
+The castle rule's refusals and the AI castle recruits are also counted
+in the session summary. Garrison auto-recruits raise no recruit event,
+and the player's recruit screen raises a different one, so both stay
+in-game checks. Three new engine mirror tests pin the facts the check
+relies on: an AI lord's castle volunteer recruit still runs through
+GetRecruitVolunteerFromIndividual into ApplyInternal, ApplyInternal
+still raises the recruit event, and castle garrisons recruit through
+their own query, which the castle rule does not answer.
+
+Part of #1072.
+
+#### feat(fords-of-war): v2.0.36 - each match judges its in-game checks
+
+`cd67866b`
+
+A Fords of War match now checks itself and writes the result to the
+TAOM log, so a test run can be judged from the log files alone. For
+each of the 16 checks in the feature doc's "How to verify in game",
+the report gives PASS, FAIL, PARTIAL or NOT SEEN, the numbers behind
+it, the rule, and what only a person can judge. Each match also writes
+Logs\fords_report_<log time>_run<n>.json beside taom_debug_<log
+time>.log.
+
+The final block (final=1) is written when the main menu comes back
+after the match, or when the start-failed notice is acknowledged.
+Earlier blocks (final=0) are written at the result and at mission end,
+and a one-line summary every 30 seconds of match time is the record
+if the game crashes. Search the log for "[FordsOfWar][Verdict]".
+
+The report covers the main menu entry and prompts, the console
+commands, spawns and hero ids, the countdown, towers, waves, marching,
+fighting and kill gold, the camera, Photo Mode and Options, gold and
+packs, heroes, lane orders and holding outside tower fire, melee and
+own-side damage on towers, the tower volley damage, warg riders
+returning to their formation after a rage, capture points, the keep,
+the result and the exits, a failed start, and the agent count against
+both TAOM's cap and the engine's limit.
+
+Warg riders: the rage log also counts a rider who ends up on foot
+with no formation ("stranded"). This finds an older warg behaviour in
+which a rider thrown from a living warg never gets his formation back.
+
+Not-tested: no game run yet; the first match is the test of the report
+Review and RCA: docs/reviews/rca-fords-of-war-2026-10-31.md (addendum)
+
+#### feat(hero-race): v2.0.36 - race persistence writes check lines
+
+`e4dbdf9c`
+
+Race persistence now writes check lines that report, from the log
+alone, whether dead heroes kept their race across a save and a load
+(#1011). Run python tools/ingame_verdict.py --issue 1011 --sessions 2
+after saving a campaign in one session and loading it in the next.
+
+Each save writes taom.race-persist.capture with the number of heroes
+captured and how many of them are dead. If the race table is too small
+to trust, the check fails. The capture that runs at every session
+launch writes no line, so loading a save cannot pass the save check.
+
+Each load writes taom.race-persist.restore. Once the restore is done,
+it reads every race back and compares it with the race it set. It
+passes with mismatch=0 and fails with the first hero whose race
+disagrees. A new campaign writes a skip, and a loaded save with no race
+data fails. Each save and each load has its own key, so every one
+writes its line.
+
+The hero roster now reports whether each hero is alive. No saved field
+changes. The case of a son born after his father died gets no check
+line, because nothing at that point can fail: the son copies his
+father's race. The manifest lists it for a person to check in game.
+
+Part of #1072.
+
+#### feat(logging): v2.0.36 - battle action bar attach and stance checks
+
+`b4ad748f`
+
+The battle action bar (#970) now writes [Check] lines, so the in-game
+verdict reader can judge it from the session log:
+python tools/ingame_verdict.py --issue 970.
+
+taom.battle-action-bar.attach is written once per mission. It passes
+when the bar's layer is added and its movie loaded. It fails when the
+attach throws, when the movie did not load (the engine does not throw
+for a missing prefab, so the old "layer attached" line also appeared
+then), or at mission end when the battle reached Battle mode with the
+setting on and the bar never attached. A battle fought with the setting
+off writes a skip with reason=setting-off. A battle that ends during
+deployment writes nothing, since the bar attaches only once the battle
+starts.
+
+taom.battle-action-bar.stance passes when a click on Brace for
+Cavalry, Pike Wall, Testudo, Line Charge or Skirmish reaches the stance,
+once per stance per game session. The other four buttons are display
+only and record nothing.
+
+The #970 manifest now passes the attach only on the [Check] line; a
+"layer attach failed" line still fails it, so older logs keep their
+verdict, and a build from before this change reads as not reached. The
+manifest gate test is stricter: each [Check] id a manifest names must
+be a string literal outside a comment in a .cs file under Main or
+Client. Before, a mention in a comment passed it.
+
+Part of #1072.
+
+#### feat(career): v2.0.36 - career screen open and init check lines
+
+`0ab3dc35`
+
+The career button now logs whether its click opened the career
+screen, so tools/ingame_verdict.py --issue 971 can judge the owed
+in-game check from the session log.
+
+taom.career-screen.open passes when the career screen is on top after
+the click. It fails with reason=not-on-top when it is not (no main
+hero, or no screen built), and with the exception's type when the
+click throws; the exception still propagates as before.
+taom.career-screen.init passes at the end of the screen's
+OnInitialize, with mode=normal or mode=switch, so the dialogue's
+career switch picker is told apart. tools/ingame_checks/971.toml reads
+both, and a build without these lines is NOT REACHED, never FAIL.
+
+Part of #1072.
+
+#### feat(tools): v2.0.36 - in-game check verdicts read from session logs
+
+`c8d69e42`
+
+A new tool, tools/ingame_verdict.py, reads a play session's logs and
+gives each owed in-game check of an issue a verdict: PASS, FAIL or NOT
+REACHED, with up to three evidence lines per check. A person is then
+needed only for what a log cannot show, which each issue lists as
+"still owed by a person". Read-only unless --post is given.
+
+Manifests: each issue's checks live in tools/ingame_checks/<issue>.toml
+(issue, fixed_in, logs, optional allow_dirty, [[check]] tables, and
+[[human]] claims that are printed and never counted). A check has an
+id, what the tester does (needs), an optional scope regex that cuts
+each log into segments, and regex lists: reached (the path was run),
+pass (it worked, each pattern at least min times) and fail. A pattern
+that matches an empty line, a scope over more than one log kind, a
+non-UTF-8 file or a field of the wrong type is a manifest error. The
+first two manifests are #981 (the server settings file, from the
+[ServerSettings], [SettingsFingerprint], [TickProfiler] and
+[DedicatedServer] lines) and #970 (the battle action bar attaching in
+a field battle; a battle that ends in deployment is NOT REACHED, only
+"layer attach failed" fails).
+
+Verdict rules, in order, per check and per segment:
+1. a fail pattern matches: FAIL;
+2. every pass pattern matches: PASS;
+3. every reached pattern matches: the absence setting decides, FAIL by
+   default, but only when every log kind the manifest names was read,
+   else NOT REACHED because a missing line proves nothing;
+4. otherwise NOT REACHED, with a [Check] skip line giving the reason.
+Across segments FAIL wins, then PASS. With --sessions K the newest
+PASS or FAIL per check stands, and a PASS names an older bound
+session's FAIL for the same check. An issue is PASS when every check
+is, FAIL when any is, else NOT REACHED. A crash report echoes the last
+log lines back behind "[CrashReport] "; those copies are never matched,
+so they cannot count toward min or open a second segment.
+
+Build binding: evidence counts only from a build that contains the
+fix. The tool reads the [BuildStamp] sha of the session's TAOM logs and
+asks git (merge-base --is-ancestor) whether it includes fixed_in. A
+.dirty build counts only with allow_dirty, and a sha git cannot compare
+leaves the session NOT REACHED with git's exit code.
+
+Logs read: the newest TAOM log, the Coop client log (placed by its file
+time, since its lines carry no date), diag.log and the engine rgl logs
+of the same session window, and with --ds-data and --ds-engine the
+dedicated server's logs. --session PATH takes the log kind from the
+file, and --owed selects issues that have a manifest.
+
+--post comments the markdown report on each issue with the user
+profile path replaced by %USERPROFILE%. It runs only when a person
+asks for it, never labels and never closes an issue.
+
+Exit codes: 0 every issue PASS, 1 any FAIL, 4 some NOT REACHED or
+nothing judged, 2 bad arguments or manifest, 3 git missing or gh
+failed.
+
+The #981 hitch probe check is judged on the no-file boot alone, and
+only once that server reached SERVING. The one-key and bad-value
+checks are reached by either the accepted or the rejected line, so an
+accepted -5 or a rejected 4 reads FAIL, not NOT REACHED. When the
+taom-ds log is missing the fallback note names the folder searched.
+
+Run on this machine's logs, both issues read NOT REACHED: the newest
+client session played no field battle with the bar on, and no server
+log on this machine with [ServerSettings] lines came from a clean
+build.
+
+Part of #1070.
+
+#### feat(logging): v2.0.36 - check lines, counters and a session summary
+
+`cb4eeaa3`
+
+TAOM's debug log can now record that a feature did what it was built
+to do, and how a session ended, in lines a script can read. This
+commit adds the logging API and the session summary; no feature
+writes a check yet.
+
+- Check lines, "[Check] id=<owner.feature.step> result=pass|fail|skip
+  name=value ...", go to the log at INFO the first time an id, result
+  and scope are seen, and are only counted after that, with at most
+  256 scopes per result for each id. Each result has its own 256, so
+  a fail after a pass in the same scope, or after 256 passing scopes,
+  still writes its line. An id that breaks the naming pattern is
+  counted as an error instead of written.
+- Counters for hot paths cost one atomic increment and write nothing
+  until the summary.
+- A swallowed exception is reported once per feature and site as a
+  [Swallowed] warning, then counted. The screen and menu guard
+  (ScreenFaultLog) now reports every throw this way, so its repeats
+  are counted; its existing error line is unchanged. The Reeve's
+  Ledger window's constructor guard now names its site "ledger
+  constructor", so its count stays apart from the reserve buttons'.
+- [Session] summary lines report uptime, the check, counter and
+  swallowed totals, and PatchShield's swallowed count, which until
+  now reached only diag.log. They are written before each save,
+  before a crash report collects its log tail (so the report and the
+  bundled log both carry them), at module unload just before the
+  [Shutdown] line, on process exit (once, shared with unload), and
+  every 10 minutes of real time from the application tick. A crash
+  report is also written when the battle-load stall watchdog reports
+  a stall, so that case writes one reason=crash summary too. The
+  first 10-minute summary comes 10 minutes after the module loads;
+  from then on a session that ends in a native crash or a debugger
+  stop leaves a summary at most 10 minutes older than its last
+  application tick. During a main-thread hang the heartbeat writes
+  nothing.
+
+Part of #1071.
+
+#### feat(staged-siege): v2.0.36 - a run report grades each staged siege
+
+`863ff65a`
+
+A staged siege now grades itself in the TAOM log when the battle
+ends, so a test run can be judged from the log alone. Every staged
+walls battle and every armed lord's hall fight writes a header, one
+line per stage (times, zone counts, reinforcements, losses) and one
+line per check: PASS, FAIL or NOT SEEN, with the numbers behind it.
+The checks cover the stage tactic, the spawn settings, the flags,
+the defender detachment, the captures, the gates, where and whether
+reinforcements arrive, softlocks, the attackers reaching the inner
+points, the end and its result, the victory cue, the HUD and any
+fault. The report is also written after a fault.
+
+The running log gains troop counts every 5 seconds and at each
+capture, the detachment's order changes, the victory cue and a line
+each time the HUD's stage strip or objective changes. After a
+campaign siege, the log also says how the map event ended and who
+took the settlement.
+
+Search the log for "[StagedSiege] CHECK" to read a run's verdicts.
+The feature doc maps every in-game check to the line that proves it.
+
+Review: docs/reviews/rca-staged-siege-run-report-2026-10-31.md
+Refs #1054
+
+#### feat(fords-of-war): v2.0.36 - Fords of War, a lane-push battle mode
+
+`726975a5`
+
+Fords of War is a new single-player battle mode with its own option
+on the main menu. It needs no campaign. Choose a faction for each
+side (Gondor, Rohan, Mordor or Isengard) and an AI difficulty. West
+is you and East is the AI. You have no agent: you are the commander,
+with a free camera and a command panel.
+
+Three lanes cross the field. In each lane, each side has a chain of
+towers that must fall in order. When a side loses every tower in one
+lane, its keep can be attacked. The towers shoot back. Free waves
+march down each lane on a timer. Spend gold on troop packs (F1 to F8
+or the panel buttons) and on heroes. Kills, towers and heroes pay a
+bounty, and each capture point you hold pays income. Give each lane a
+Push, Hold or Fall back order. A dead hero respawns on a timer, or you
+can buy the hero back. The AI commander uses the same shop and the
+same orders as you, at three difficulties. Destroy the enemy keep to
+win. The game returns to the main menu 25 s after the result.
+
+Console: taom.fords_start [west] [east] [aiProfile] [scene] at the
+main menu with cheat mode on, and taom.fords_gold <amount> during a
+match.
+
+Also in this change: a warg rider that joins a battle after the start
+now keeps its formation after a rage and after its warg dies. Before,
+it could lose the formation for the rest of the battle. This also
+affected warg reinforcements in campaign battles.
+
+Known limitation: the mode uses a generated lane layout over three
+existing field scenes until a greybox scene is built. The new texts
+are English in all 12 languages until the next translation run
+(#763). Neutral creature camps come in a later phase, and the AI does
+not go for capture points yet. The mode is not tested in game yet.
+
+Review and RCA: docs/reviews/rca-fords-of-war-2026-10-31.md.
+
+Not-tested: the whole mode in game (fords-of-war.md checklist)
+Research: DestructableComponent.OnHit, Mission.AddCustomMissile
+Research: mount and rider build order, MissionAgentPanicHandler
+Save-compat: none, the mode writes no save data
+
+#### feat(tools): v2.0.36 - watch Coop releases, record Coop versions
+
+`37ff3692`
+
+The session-start banner now prints an UPSTREAM RELEASE line when
+BannerlordCoop publishes a release other than the one TAOM recorded.
+upstream_watch.py gains an optional releases list in
+docs/reviews/upstream-watch.json (one latest-release read per entry,
+cached and budgeted like the commit check) and a seen command that
+records the new tag. A tag that is not a plain tag is reported, never
+printed into the command the line suggests.
+
+coop-interop.md gains a version table: Coop v0.1.7 and v0.1.6 are
+Bannerlord v1.4.8 builds and do not run with current TAOM; only the
+unreleased bannerlord-1.5.x branch runs on v1.5.6.
+
+#### feat(staged-siege): v2.0.36 - staged sieges in custom battle
+
+`3d446ac6`
+
+Staged sieges now also run in custom battle. Pick a siege on a castle
+with recorded points, Ustokol Castle for now, and the battle runs the
+same points A to D as in the campaign, whichever side you play. There
+is no lord's hall afterwards: taking D wins the battle for the
+attacker, and losing D loses it for the defender. A win now shows the
+usual "battle won" line and the hint to press Tab for the results,
+as the lord's hall win already does in the campaign.
+
+Developers can record the points of a new castle in a custom battle
+too, without travelling there on the campaign map. The mod options
+text now describes both kinds of siege.
+
+Review: docs/reviews/rca-staged-siege-phase3a-2026-10-29.md
+Refs #1054
+
+#### feat(staged-siege): v2.0.36 - point E in the lord's hall, trolls follow
+
+`32712bd5`
+
+Staged sieges gain a fifth point. After you take point D as the
+attacker, the defenders fall back to the lord's hall, and its last
+room is now point E: hold it with enough troops for about 20 seconds
+and the hall is won, and the castle with it. A flag marks the room,
+and the panel at the top of the screen shows E like the other
+points. The hall arms from the siege's saved state, so it still works
+after you retreat and attack again, reload a save or restart the
+game. When the hall is taken, finish the defenders still standing or
+step away from them before you leave the battle.
+
+Trolls now fight with the stage plan. In the stages where the AI is
+sent to a point (A, C and D for attackers; C and D for defenders),
+Creature Siege Role lets AI-led trolls go with their formation
+instead of sending them to the gate. In stage B they break gates as
+before. Trolls in formations you command still follow your orders.
+
+When you lead the attack, no army on your side stops your siege
+engines in stage A any more, an allied lord's included.
+
+Review: docs/reviews/rca-staged-siege-phase2-2026-10-29.md
+Refs #1054
+
+#### feat(staged-siege): v2.0.36 - capture points A to D in castle sieges
+
+`0518c443`
+
+A castle assault on a recorded scene is now fought in four stages
+instead of one. The attackers must take point A outside the walls,
+then B in the gatehouse, then C in the courtyard, then D near the
+keep. Each captured point brings in the next share of troops from
+both armies. Nothing is created, and every casualty counts in the
+campaign.
+
+- A: a defender detachment holds the ground in front of the gate.
+- B: the normal siege fight. Taking B opens both gates.
+- C and D: the defenders hold each point and the attackers assault
+  it.
+- When you attack, taking D sends the defenders back to the lord's
+  hall, which is fought as before. When you defend, losing D loses
+  the castle.
+
+A panel at the top of the screen shows the points, the active one
+and the capture progress, and a marker floats over the active point.
+Flags stand at the points and take the colours of the side that
+holds them.
+
+The first recorded scene is sturgia_castle_siege_001, which 17
+castles use, among them Caradhras, Hollin Gate, Krathol and
+Hammerdeep. Every other siege stays as it was. The feature is off by
+default: turn it on in the mod options, Staged Siege group under
+Battle Tactics. In a staged siege the Reinforcement Wave Count
+option does not apply. Co-op sessions never run it.
+
+Developers record new scenes with the taom.staged_siege_* console
+commands (docs/features/staged-siege.md).
+
+Review: docs/reviews/rca-staged-siege-2026-10-29.md
+Refs #1054
+
+#### feat(kingdoms): v2.0.36 - Dorwinion and South Rhovanion join the map
+
+`4b207f95`
+
+Two new Neutral kingdoms hold the 61 settlements placed in Rhovanion
+(#1062).
+
+Dorwinion, the vintners of the Sea of Rhûn, is cut from Dale. King
+Ostric's four clans hold three towns, four castles and 23 villages. Its
+21 troops fight as Dale's do, spears and bows with a short river-rider
+cavalry line.
+
+South Rhovanion, the horse-lords of the plains, is the first realm cut
+from Rohan. King Vidumar's four clans hold two towns, four castles and
+25 villages. Its 22 troops include a horse-archer line, and its lords
+use Rohan's faces and lord templates.
+
+Both kingdoms start at peace with everyone and stand between Ered Luin
+and Arthedain in strength. Each has three careers, character creation
+rows (parked until the realms have their own armour), backstories for
+its wanderers, culture doctrines, banners, volunteer pools and
+localization ids in all 12 languages (English for now; translation is
+on #763). The live map's settlement names raise the external
+localization baseline by 61 per language.
+
+Tooling: the culture promoter now cuts from Rohan as well as Dale, and
+lists every cloned wanderer in the new culture. The map tools' --check
+now compares each live row's culture, owner and village binding with
+their tables. The region sync test reads its realm list from the
+generators instead of a hand-kept list.
+
+Save compatibility: the settlement distance cache was rebuilt with the
+new ids, so older saves take the #1041 path.
+
+The live map rows moved to their own kingdoms right after this build
+was deployed. Any TAOM build without this commit now throws on a new
+campaign, so every checkout must merge it before its next deploy.
+
+Gates on trunk 1ef7d1af6 plus this change: TAOM.Tests 28,171 passed,
+0 failed; tools tests 6,114 ran, 0 failed; validate_moduledata 0
+errors; both map --check pass, now also on culture, owner and village
+binding; external loc coverage, starter kit verify and the doc lint
+pass. Not run: a new campaign in game, the dedicated server.
+
+Review: docs/reviews/rca-dorwinion-south-rhovanion-2026-10-29.md
+
+#### feat(bandits): v2.0.36 - Feral Orcs, an orc bandit faction in 23 dens
+
+`0799af37`
+
+The Feral Orcs are masterless orcs and goblins who answer to no Dark
+Lord. They hold 23 dens, from the Ered Luin borders and Arthedain
+through Rhudaur, Cardolan and the Anduin vales to Dale, South Rhun and
+Dorwinion, and their raiding parties roam out of those dens like any
+other hideout gang. Their gear is whatever they stole: Mordor, goblin,
+Gundabad and Dol Guldur pieces mixed in the same party (#1063).
+
+The faction has its own five troops: the goblin snaga and archer, the
+orc raider, the Black Uruk brute (spear or polearm, no shield) and a
+heavily armoured warchief who guards each den. The faction is data
+only: a culture, a clan, raider and boss party templates, the troop
+file, and a den description, with the culture added to the hideout
+description, voice accent (silent), banner bearer and heraldry lists.
+The dens live in the TAOM_Map module; BanditHideoutLiveDataTests fails
+if a map reinstall drops them.
+
+New campaigns only: a running campaign gets no Feral Orcs. The names
+and the den description are English in every language until the
+translation backlog (#763) runs.
+
+Known limitation: the clan ships in TAOM and the dens ship in TAOM_Map.
+A TAOM build paired with a TAOM_Map package that lacks the dens throws
+KeyNotFoundException in GetInfestedHideoutCount on a new game. The
+next release must ship a map package that contains them; a runtime
+guard is the follow-up.
+
+Known limitation: a save made before this change loads the 23 dens
+but not their clan. An emptied den can then be picked by the Gold Rush
+incident, which looks for the den's clan and throws a
+NullReferenceException. Found by the Codex pre-review; the fix is the
+follow-up to this commit.
+
+#### feat(companions): v2.0.36 - named companions tell their story
+
+`3950d71c`
+
+No named companion had ever told their backstory: TAOM marks each
+one as met when it places them, which skips the game's first-meeting
+dialogue (#1061).
+
+- The first time you talk to a named companion you have not
+  recruited, after the greeting, they now tell their story: the
+  seven lines each companion has always had, with your two possible
+  replies, then the usual options and the hire.
+- It plays once per companion. In an older save each unrecruited
+  companion tells it once on the next talk.
+- A companion who would refuse to join you (a Free companion and an
+  Evil player) keeps the story, since it ends with an offer to join.
+- It is skipped on a co-op client, which cannot record that it
+  played.
+- The story texts read English in other languages until the
+  translation run (#763).
+
+RCA: docs/reviews/rca-companion-intro-2026-10-29.md
+
+#### feat(companions): v2.0.36 - Elegost, a Ranger of the North in Bree
+
+`28e03ec6`
+
+Player feedback asked for a Dunedain wanderer to meet on the road in
+Eriador (#1060).
+
+- Elegost, a Ranger of the North, waits in the Bree tavern beside
+  Aragorn as a named companion. He carries the Arthedain Ranger's
+  kit without the helm: the Arthedain bow, a Numenorean bastard sword
+  and Arnor mail. Free and Neutral players can hire him; Evil players
+  are refused.
+- New campaigns only: a save made before this never loads him.
+- His name and backstory read English in the other languages until
+  the translation run (#763). Like every named companion's backstory,
+  his is not shown in game yet; the companion intro dialogue that fixes
+  this for all of them is the next change.
+- A new test checks that every configured companion has its
+  character, its hero row and all seven backstory strings.
+
+#### feat(staged-siege): v2.0.36 - spike tools for siege capture points
+
+`9ade8175`
+
+This commit adds the first console commands for the Staged Siege spike
+(#1054). They test, in a real siege, the engine parts that the feature
+needs:
+
+- taom.ss_flag spawns the multiplayer flag pole in singleplayer.
+  taom.ss_flag_move and taom.ss_flag_color raise, lower and colour it.
+- taom.ss_record records a capture point or a spawn spot for a stage.
+  It appends one JSON line to staged_siege_records.jsonl, in
+  Documents under Mount and Blade II Bannerlord\TAOM.
+- taom.ss_flags_from_records puts a flag on each recorded point.
+- taom.ss_open_gates opens every castle gate, so that an attacker can
+  walk in and record the inner points.
+- taom.ss_finish ends the battle. An attacker gets "defender pushed
+  back", so the vanilla lord's hall fight must follow. A defender gets
+  a defeat.
+- taom.ss_status shows the scene, the sides, the team AI, the gates and
+  the flags.
+
+The commands need cheat mode. The mission logic does nothing until a
+command uses it, and it is absent in co-op (role Unsafe). This branch
+is a spike and does not merge as is.
+
+Refs #1054
+
+#### feat(kingdoms): v2.0.36 - Anduin Vale and Angáladh, two Neutral realms
+
+`88c6365c`
+
+Two new kingdoms on the main map, both of Northmen and both Neutral:
+they keep out of the War of the Ring and start at peace with every
+realm.
+
+Anduin Vale is the land of the Beornings and the Woodmen of the Vales,
+between the Misty Mountains and Mirkwood. Chieftain Grimbeorn holds
+Beorn's Hall, with the Folk of the Old Ford, the Wardens of the Carrock
+and the Riders of the Gladden: two towns, four castles and sixteen
+villages. Its troops are Beorning axemen, Woodman bowmen and a few Vale
+Riders, up to the Bear-warden of the Carrock.
+
+Angáladh is the realm of the Woodmen of western Mirkwood. King Ingomar
+holds Woodmen-town, with the Woodwards of the Forest Road and the
+Wardens of Emyn Duir: one town, four castles and fourteen villages. Its
+troops fight on foot with spear, axe and bow, up to the Guard of
+Woodmen-town.
+
+Each realm has its own culture, lords and ladies, notables, wanderers
+with their own stories, careers and character creation. Both are weak
+in numbers, and both wear Dale's armour until they have their own, so
+neither can be chosen at character creation yet.
+
+A new campaign is needed to meet them.
+
+Known limitation: the Angáladh card on the faction map still covers the
+wrong part of the map (#1057), and their careers show a blank portrait
+(#1058).
+
+Built by the kingdom generators, extended to take a culture from Dale
+(tools/promote_borrowed_cultures.py). Review and fixes:
+docs/reviews/rca-anduin-vale-angaladh-2026-10-28.md. Closes #1053.
+
+#### feat(faction-map): v2.0.36 - park six realms with no armour yet
+
+`7476bb1f`
+
+Lindon, Ered Luin, Cardolan, Rhudaur, Umbar and Khand can no longer be
+chosen at character creation. Their troops have no armour yet, so a
+start there would look unfinished. The faction screen no longer lists
+them, and on the faction map they behave like the other realms that
+are not playable: their lore card opens, but they cannot be confirmed.
+The six kingdoms stay in the campaign as AI realms with their lords,
+settlements and armies, and saves already started in one of them are
+not affected.
+
+Known limitation: the Advanced Starting Options menu still offers
+these kingdoms for a King, Vassal or Mercenary start.
+
+The six "playable" flags in factionmap/factions.json are now false.
+WorkInProgressFaction_IsNotPlayable pins them and holds their cards to
+the same content minimums as the playable ones, so a realm keeps that
+check while it is parked. FactionUIConfigIdsTests now requires each
+faction screen tuning key to name a faction in factions.json rather
+than a playable one, so the parked realms keep their tuning rows; the
+faction screen logs one warning per tuning file for them.
+faction-map.md lists the parked realms and how to restore one.
+
+Reviewed with /deep-review (data flow and ModuleData lenses, tier 2);
+every finding was LOW and is fixed. RCA:
+docs/reviews/rca-parked-realms-2026-10-28.md
+
+#### feat(realm-borders): v2.0.36 - Cardolan's border is its banner green
+
+`90d4c7f9`
+
+Cardolan's realm border on the campaign map was a pale peach (#E8B89A)
+that matched nothing else of the realm. It is now #28745C, the green of
+Cardolan's banner, faction card and culture colours. The palette's own
+rules still hold: Abanissa and Mirkwood, the nearest colours, sit 17
+and 19 CIE76 apart, above the minimum of 15.
+
+The MCM setting keeps its empty default, so every player who never set
+a Cardolan colour gets the green; a colour a player typed stays.
+
+Not-tested: the border on the campaign map in game.
+
+#### feat(banners): v2.0.36 - realm banners, banner sheets packed
+
+`9985f2db`
+
+Lindon's houses now fly their own emblems, drawn for TAOM in a sober
+Tolkien heraldic style, in a new palette: Sea Mist Blue, Grey Havens
+Silver, Elven Pine, White Ship Pearl and High Elven Gold. The realm and
+the Falathrim keep Gil-galad's lozenge of stars, silver on Sea Mist.
+Cardolan flies a white interlace of seven stars on green, with the House
+of Tharbad in gold. Arthedain's realm and royal house fly the crown of
+Arnor.
+
+The banner icon sheets are packed (#1047): the 20 partly used sheets
+became 10, so TAOM ships 24 flag textures instead of 34. Icon ids do not
+change, so banner keys and saved banners are unaffected. The Anduin
+Vale bear (icon 20006) now shows on flags; it pointed at an empty cell
+before. The sprite rebake also restores three UI icons that were
+missing (the cargo map bar icon and the Postern Gate pair), and 39 dead
+sprite atlases are gone (2.5 GB of unused texture data in the install).
+
+The Modding Kit loads TAOM again: TAOM.Dependencies now mirrors its
+binaries into its editor folder, so Harmony, MCM and UIExtenderEx
+resolve there. The standalone community modules that supplied them are
+no longer installed.
+
+Known limitation: realm colours change in new campaigns only. An
+existing save shows the new banners with the old realm colours. A clan
+that joins Lindon or Cardolan mid-session shows the realm's colours
+until the next load, as Isengard's vassals already do.
+
+Known limitation: Cardolan troops still wear brown, and the faction
+selection map keeps the old Lindon and Cardolan colours. Both are fixed
+in the follow-up commit.
+
+Deferred: tools/pack_banner_sheets.py --apply is not safe to run a
+second time (it reuses packed sheet names); do not run it until the
+follow-up lands (#1047 stays open).
+
+Refs #1047
+
+#### feat(faction-ui): v2.0.36 - emblems for the five Eriador kingdoms
+
+`74dc9bca`
+
+The faction selection screen showed the default star for Arthedain,
+Cardolan, Rhudaur and Ered Luin, because no emblem image existed for
+them. Each of the five Eriador kingdoms now shows the sigil from its
+own kingdom banner: cream for the free peoples (Lindon, Arthedain,
+Ered Luin) and gold for the neutral realms (Cardolan, Rhudaur), the
+same colours as every other emblem. Lindon's swan emblem is replaced
+by the diamond of stars that its banner carries.
+
+tools/make_faction_emblems.py writes the five images from each
+kingdom's banner_key and the baked UI banner atlas; --check fails when
+an image no longer matches the banner. The hand-drawn emblems of the
+other factions are untouched.
+
+Not-tested: the in-game render of the five tiles on the faction screen.
+
+#### feat(dungeons): v2.0.36 - Warden's Tally: a lord's odds of escape
+
+`a58d9e71`
+
+A town or castle dungeon menu now says, under the game's own sentence,
+how full the dungeon is and how many of its prisoners are lords, and
+each lord's daily chance to slip out. When more than the base applies,
+it lists the base chance, the halving for a dungeon your clan holds,
+and each of the governor's perks as a share of the base chance. A lord
+of a kingdom with a War Chronicle escape boost gets his own line with
+the combined chance, and a lord the game will not let escape (one
+waiting for his execution) is named as such. A dungeon that holds no
+lord shows the game's text alone.
+
+The numbers are the ones the game rolls: the base chance, the halving
+and the perk terms come from the same code the War Chronicle's extra
+escape roll uses, which now holds the one copy of them. On a co-op
+client the menu leaves out the halving and the boost, since only the
+server rolls escapes. The MCM switch "Show Warden's Tally", in the
+"World/Warden's Tally" group (on by default), hides the whole tally.
+
+The text is added when the game opens the menu, through its public
+menu event, not a patch. Its eight new lines are English in every
+language until the translation backlog (#763) runs.
+
+Review: docs/reviews/rca-wardens-tally-2026-10-28.md.
+
+Closes #903
+
+#### feat(git): v2.0.36 - a commit-msg hook checks every committer
+
+`0382d5d2`
+
+Commits made from a terminal or an IDE now meet the same message rules
+as the ones Claude makes. The repository's .git/config pointed
+core.hooksPath at a folder on C: that did not exist, so no git hook
+ran. It now names the tracked .githooks folder, whose commit-msg hook
+runs tools/check_commit_msg.py on every commit:
+
+- the subject reads <type>[(scope)]: vX.Y.Z - <description>, with the
+  <Version> of the tree being committed (the staged SubModule.xml when
+  it is staged), so a crash report's version maps to its commits;
+- the subject is at most 72 characters;
+- the message has no AI attribution line.
+
+A fixup!, squash! or amend! subject passes, and the hook fails open,
+saying so, when Python or the checker is missing. .gitattributes keeps
+.githooks/* at LF line endings, because bash refuses a CRLF shebang.
+The hooks catalog, the git rules and three review records that said
+no git hook runs now describe it.
+
+Each clone sets core.hooksPath once: git config core.hooksPath
+.githooks. A worktree on a branch older than this commit runs no hook.
+
+Tests: test_check_commit_msg.py 14 passed, including a commit refused
+and one accepted through the real hook in a scratch repository; tool
+suite 5,956 ran, OK (13 skipped); ruff and lint_docs clean.
+
+#### feat(careers): v2.0.36 - Ered Luin's two-handed career (#1045)
+
+`f7a6368e`
+
+Ered Luin's careers are now one per fighting style. The Warden of
+Thorin's Halls fights with a one-handed axe and a shield, the new
+Mattock Hewer of Belegost fights with a two-handed axe and throwing
+axes, and the Firebeard Arbalester keeps the crossbow. The Hewer
+replaces the Broadbeam Shield-guard, which was a second shield career
+with the same kit as the Warden.
+
+- A new career archetype, TwoHanded, gives a career its own starting
+  kit: a two-handed weapon and a throwing weapon, with no one-handed
+  weapon, spear or shield. The Hewer starts with Ered Luin's two-handed
+  axe and a stack of throwing axes, and runs the same ability as the
+  other foot careers (Mattock Storm: +15% melee damage and +10% damage
+  reduction to allies within 50 m for 8 s).
+- Ered Luin's mattock line (the Mattock Hewer, the Mattock Warrior and
+  the veteran) now carries throwing axes, so the career kit comes from
+  Ered Luin's own troops.
+- The career kit tool refuses a roster slot its kit does not have, and
+  its check now reports a missing slot and an unknown archetype.
+
+Ered Luin is not in any release yet. A save made on a test build with
+the Broadbeam Shield-guard would load with an empty career; the
+general fix for a career id that no longer exists is #1046.
+
+Review: /deep-review tier 1 (Codex ultra; lenses 5, 2, 7 and Tooling;
+one convergence pass), every confirmed finding fixed. RCA:
+docs/reviews/rca-ered-luin-two-handed-career-2026-10-28.md.
+
+Verification: /verify on this branch: build 0 errors; C# 27,957
+passed, 0 failed, 7 skipped; Python tool tests 5,942 OK (11 skipped);
+canary tripped; API snapshot reproduces. Not tested in game.
+
+#### feat(cultures): v2.0.36 - Ered Luin, the dwarves of the Blue Mountains
+
+`c625ada0`
+
+A new playable dwarf kingdom, the Kingdom of Ered Luin, holds the Blue
+Mountains on the western edge of Eriador under King Farin II.
+
+- Three towns: Thorin's Halls (the capital), Belegost and Nogrod. Five
+  castles: Dwarrowgate, Ironcrag, Stonewatch, Dolmed Hold and
+  Hammerdeep. 23 villages of mines, folds and steadings feed them.
+- Four clans with 16 lords: the House of Borin, the Broadbeams of
+  Belegost, the Firebeards of Nogrod and the Wardens of Dolmed.
+- A culture of its own (eredluin), cloned from Erebor with its own
+  names, colours, feats and 12 wanderers.
+- 27 troops, all dwarves and all on foot: an axe-and-shield line to
+  the Warden of Thorin's Halls, a two-handed mattock line, bowmen, and
+  a noble line that splits into the Broadbeam shield wall (capstone:
+  the King's Guard of Thorin's Halls) and the Firebeard crossbows.
+- Character creation menus and gear, three careers (Warden of Thorin's
+  Halls, Shield-guard of Belegost, Nogrod Arbalester) and their kits,
+  and rows in every per-culture table (diplomacy, alignment, colours,
+  start options, crown guard, liege titles, Inn Rounds, recruitment).
+- The faction card for Ered Luin is now playable.
+
+The settlements live in the TAOM_Map module (settlements.xml and its
+12 language files, written live with backups). TAOM and TAOM_Map must
+ship Ered Luin together: either one alone points the map at a culture
+that does not exist, or leaves the culture with no land, which crashes
+the daily tick. release-process.md has the per-channel check. New
+campaign only; rebuild the distance cache in game. New text is English
+in every language until the translation backlog (#763) runs.
+
+Troops borrow Erebor and Iron Hills armour, and wear each piece only
+at or above the level another kingdom wears it, so no Erebor piece
+changes its armour class (armour_classes.xml is unchanged). A new test
+guards this.
+
+Tooling: realm_troops.py gains a race, a face template, a borrowed
+ranged-ladder line and a crossbow role; generate_eredluin_troops.py
+uses them. generate_armour_classes.py no longer links a piece to a
+successor below lord that is no better on any armour value and worse
+on one. The trade-off: the elite-to-lord forge path stays exempt, so
+77 pre-existing lord links still lower some armour; that is an open
+decision. insert_new_faction_cc_menus.py now prepares and parses every
+output before it writes any. insert_new_faction_careers.py counts its
+splice anchors before it writes. add_map_fortifications.py records the
+fortifications the testing channel already ships, so its save-order
+check judges only the unreleased batch.
+
+Follow-ups, no issue yet: ability icons for the 30 cloned careers;
+dead mercenary and outlaw templates and _e lord rosters in every
+generated realm; dwarf education tutors render as humans (an engine
+patch); rebalance_ranged_ladders.py rewrites a tracked report on its
+default run; a per-channel TAOM and TAOM_Map pairing gate; a
+NamedWeapons check in realm_troops.self_check.
+
+Review: Codex (ultra) pre-review, /deep-review tier 1 (lenses 5, 2, 7,
+Tooling, one skeptic per finding), one convergence pass and one check
+of its fixes. RCA: docs/reviews/rca-ered-luin-2026-10-27.md.
+
+Tests: 27,949 of 27,957 C# tests pass (7 skipped). The one failure,
+BannerlordRefAsmVersion (RefAsm 1.5.5 against the pinned 1.5.6), fails
+on the base commit too. 5,885 Python tool tests pass (11 skipped).
+Every generator --check is clean, and validate_moduledata.py reports 0
+errors and no new warning.
+
+Owed: in-game checks (a new campaign as Ered Luin, the navmesh audit
+of the 31 settlements, the distance cache rebuild).
+
+#### feat(ui): v2.0.35 - quest log builds finished quests when selected
+
+`3db11542`
+
+With "Quest Log Fast Open" on (Screen Performance group, default on),
+the quest log no longer builds the stage list of every finished quest
+when it opens. A finished quest builds its stages when the player
+selects it. The quest giver portrait, the "updated" mark and date
+sorting work as before. If any of its four guard patches failed to
+attach, the screen keeps vanilla's build.
+
+Refs #854
+Not-tested: in game; measured A/B owed (Log Screen Open Times).
+
+#### feat(ui): v2.0.35 - party screen reuses troop portraits and item counts
+
+`3f816822`
+
+With "Party Fast Open" on (Screen Performance group, default on), the
+party screen builds each troop portrait code once per screen instead
+of once per row and upgrade target, and counts each item category
+once while it builds or refreshes the troop lists. What the screen
+shows is unchanged.
+
+Refs #853
+Not-tested: in game; measured A/B owed (Log Screen Open Times).
+
+#### feat(ui): v2.0.35 - inventory and trade screens skip wasted work
+
+`33c3bdf1`
+
+With "Inventory Fast Open" on (Screen Performance group, default on),
+the inventory and trade screens skip the name sort that the screen
+replaces with its own sort a moment later, and each item row reuses
+its two concept lookups instead of scanning the concept list again.
+Row order, trade values and every button are unchanged. Both changes
+bail out to vanilla if the game code they rewrite has changed.
+
+Refs #852
+Not-tested: in game; measured A/B owed (Log Screen Open Times).
+
+#### feat(ui): v2.0.35 - clan screen builds its party list once
+
+`11aeb8ae`
+
+Vanilla builds the clan screen's party list three times every time
+the screen opens. With "Clan Fast Open" on (Screen Performance group,
+default on), the panel skips the two repeat builds and re-renders the
+Caravans and Garrisons header counts itself. Refuge rows and the troop
+weight lines are unchanged. The switch is off under a live co-op
+session.
+
+Refs #851
+Not-tested: in game; measured A/B owed (Log Screen Open Times).
+
+#### feat(ui): v2.0.35 - screen open timer and Screen Performance switches
+
+`ea7cce7b`
+
+Adds the shared base for faster clan, inventory, party and quest
+screens. A new "Screen Performance" group on the Battle Load
+Diagnostics settings page holds "Log Screen Open Times" (off by
+default; one line per screen open in taom_debug.log) and four switches,
+one per screen, that later changes read on every open. Nothing about
+the screens changes yet.
+
+Refs #851, #852, #853, #854
+
+#### feat(careers): v2.0.34 - Gondor careers become either/or forks
+
+`28a7ee62`
+
+Career redesign pilot (#769 C2). Gondor's three careers, the Captain of
+Osgiliath, the Ranger of Ithilien and the Knight of Belfalas, replace
+their old six groups of five choices with a root and six forks: two or
+three options each, one pick per fork. A career point comes at levels
+1, 5, 10, 15, 20 and 25.
+
+The forks: an oath (your own damage, or your own troop class's
+damage); the Steward's Ledger (renown and influence, or elite troops
+free of daily resource upkeep); a muster (party size, or double the
+realm's special resource); the Ward of the White Tower (troops shrug
+off dread and terror, hold their blocks against crush-throughs, or
+resist knockdown); a drill (daily experience for your troop class, or
+more party size and cheaper recruits); and a capstone (less damage to
+you, less to your troop class, or a longer, wider career ability).
+
+Existing saves: a hero with a Gondor career has every career choice
+refunded once, back to the root, on the first load (tree_version 2);
+tier unlocks stay, and the player sees one message. Other kingdoms'
+careers are unchanged.
+
+The new texts show in English in all 12 languages until a translation
+run. The 111 old Gondor strings stay registered until the cleanup step
+(C5). The balance numbers were set overnight under the maintainer's
+delegation and are drafts: docs/reviews/career-forks-gondor-table-
+2026-10-15.md shows each one, and tools/career_design/gondor.json is
+the source. An in-game check is owed (docs/features/career-system.md,
+"In-game check: the Gondor pilot").
+
+Reviewed by three lenses; RCA
+docs/reviews/rca-career-gondor-pilot-2026-10-15.md. The generator now
+also refuses another troop class in a career's own-class forks.
+
+#### feat(tools): v2.0.34 - career forks generator, free English seeding
+
+`c2c8afe4`
+
+Career redesign content step C1 (#769). A new tool writes a kingdom's
+forked career trees from one JSON spec; no kingdom is written yet.
+
+tools/generate_career_forks.py turns tools/career_design/<kingdom>.json
+into the root choice and six either/or forks of each career, inside
+hash-guarded regions of the two career XML files. Before it writes, it:
+- prices every option in value units against a tier budget and caps
+  every possible build (a cut counts as a benefit; a penalty is
+  refused);
+- reads which effect types exist, which are flat, class-filtered or
+  honour an attack mask from the C# itself, and each career's special
+  resource and upkeep troops from the game data;
+- refuses a hand edit of generated text, and refuses a changed tree
+  unless its tree_version rises, so old saves are always refunded;
+- writes both files through temporary files and restores them if the
+  second write fails.
+
+After a write it prints the localization steps. A new free mode,
+translate_with_claude.py --seed-only, writes the English rows into the
+12 language files without calling any translation service.
+
+The balance numbers in tools/career_design/_rules.json are drafts set
+overnight under the maintainer's delegation; the review table of the
+first kingdom shows each one.
+
+Reviewed by three lenses, a fix round, a convergence review and a
+review of the seed-only mode; RCA
+docs/reviews/rca-career-forks-generator-2026-10-15.md.
+
+#### feat(careers): v2.0.34 - ten campaign career perks, two new models
+
+`e91660cc`
+
+Career redesign engine step E11 (#769). Nothing changes in play yet:
+no shipped career uses these effects until the generator writes a
+kingdom's trees.
+
+New career effects, each read where the game decides the number:
+- Influence from battles (only inside a kingdom, as in vanilla).
+- Cheaper recruits, also for your garrisons' automatic recruiting.
+- Faster prisoner conversion.
+- Troops eat less food.
+- Wounded troops of the party you lead recover faster.
+- Daily gold in your clan income.
+- More gold from defeated parties (your own share; allies keep theirs).
+- More raid gold and goods.
+- Daily training XP for your troops of one class (new
+  TaomPartyTrainingModel).
+- Better buy and sell prices (new TaomPartyTradeModel).
+
+Each effect has an icon, a translatable label and a console line.
+The console also shows food change, troop healing and clan gold
+change. Effects key on the party's leader, except influence (owner
+first, like renown). A cut of 100% or more stops at nothing instead of
+flipping back. The healing model's career survival code moved into
+the career service.
+
+Reviewed by six lenses and a convergence review;
+RCA docs/reviews/rca-career-e11-2026-10-15.md. Translations of the new
+labels are owed (English in all 12 languages until a /localize run).
+Co-op behaviour of these effects is unverified.
+
+#### feat(careers): v2.0.34 - two-effect options, troop classes, counters
+
+`bce56605`
+
+Career redesign engine steps E8 to E10 and E13 (#769). Nothing changes
+in play yet: no shipped career uses the new attributes, and the
+kingdom trees that will use them come with the generator.
+
+- A career option can now carry two effects, for example "+25% renown
+  and +25% influence".
+- An effect on your troops can name the troops it helps with
+  troop_class (Infantry, Ranged, Cavalry): "your infantry deal 8% more
+  damage". A horse archer counts as ranged and cavalry, a skirmisher
+  as infantry and ranged. Troop damage and troop resistance now also
+  honour attack_type_mask, so "your infantry take less damage from
+  arrows" works.
+- Three new troop counters for a leader's own troops: fear resistance
+  (less morale lost to the Dread Aura, signature strikes and race
+  abilities), knockdown resistance (engine blows, charges and the
+  dismount check; TAOM's own forced knockdowns such as Sauron's
+  overhead slam, the elephant-like creatures and troll brute force
+  still knock down), and a chance to hold a shield against a
+  crush-through. Heroes are not covered. Campaign battles only for
+  knockdown and crush.
+- The Active Effects panel and the effect names are now translatable
+  as whole phrases, and mount health and inventory capacity bonuses,
+  which showed nothing there, now show as percentages.
+- taom.career_perks shows each class's values, and the mission log
+  gains a troop counter summary per leader and class.
+
+Reviewed by an eight-lens /deep-review, a fix round and a four-reviewer
+convergence review; RCA docs/reviews/rca-career-e8e10-2026-10-14.md.
+The builder template now has a Lessons slot. Translations of the new
+strings are owed (English in all 12 languages until a /localize run).
+
+### Fixes
+
+#### fix(tools): v2.0.36 - Complete retopology workflow data handling
+
+`8841aac9`
+
+Keep disconnected coincident planes separate during density, tolerate mirror-control vertices in morph preview, apply marked manual corner overrides, and preserve face metadata through Blender read and combine operations. Add independent regressions and real Blender face-domain round-trip checks. The maintainer waived the GitHub issue requirement for this retopology toolkit work.
+
+#### fix(engine): v2.0.36 - Stop the new campaign hang on Bannerlord v1.5.7
+
+`31f95443`
+
+On Bannerlord v1.5.7 a new campaign never left the loading screen.
+The engine added a required isCurrentlyAtSea parameter to
+PartySizeLimitModel.GetPartyMemberSizeLimit, so a TAOM build made for
+v1.5.6 called a method that no longer exists. The first patrol spawn
+threw MissingMethodException, the tick shield logged it, and the load
+step ran again on every frame.
+
+TaomPartySizeModel now overrides the three-parameter method and hands
+the flag to vanilla. PatrolRosterHook and the taom.career_perks cheat
+pass the party's own at-sea state, as vanilla's PartyBase does. The
+cheat passed (party, true) before. On v1.5.7 that still compiled and
+meant "at sea, no descriptions", so the call now names
+includeDescriptions. A new test, PartyMemberSizeLimitCallShapeTests,
+fails on a bool literal passed by position to that method.
+
+The native address pins get their rows for the v1.5.7 client. The
+code sites did not move; three data addresses did.
+
+A build from this commit does not run on v1.5.6. The next commit
+moves the pins and the docs and carries the gate numbers. Nothing has
+run in game on v1.5.7 yet. The /deep-review lenses and the Codex
+pre-review were still running at this commit, on the maintainer's
+word; their findings follow in later commits.
+
+Refs #1112
+
+#### fix(tools): v2.0.36 - Preserve manifold connectors during repair
+
+`bc369fe4`
+
+Score candidate fan repairs by their actual effect on manifold connectors instead of retaining faces by input order. Limit full-corner triangle splitting to the three-face reference shape and test mixed meshes, adjacent bad edges, and every retained-fan face order. The maintainer waived the GitHub issue requirement for this retopology toolkit work.
+
+#### fix(tools): v2.0.36 - Complete non-manifold repair data preservation
+
+`4ce3976a`
+
+Choose lower-cost endpoint splits so retained and neighboring sheets keep manifold connectors. Preserve original loose vertices and line attributes through compaction, and derive debug markers from real descendant face edges. Add healthy-triangle, retained-fan, loose-data, and debug-provenance regressions. The maintainer waived the GitHub issue requirement for this retopology toolkit work.
+
+#### fix(tools): v2.0.36 - Preserve valid sheets during triangle repair
+
+`b86efb18`
+
+Limit full-corner triangle splitting to components whose faces all touch non-manifold edges, leaving unrelated valid sheets connected. Add the Blender-confirmed disjoint-sheet regression and update the documented test count. The maintainer waived the GitHub issue requirement for this retopology toolkit work.
+
+#### fix(tools): v2.0.36 - Preserve topology during edge repair
+
+`d5209574`
+
+Repair intersecting non-manifold edges against current vertex fans while preserving manifold sheet connectors, UV loops, metadata, and original debug locations. Match Blender's full-corner triangle split behavior and remove unused repair vertices.
+
+Strengthen adjacent-sheet and multi-face regression coverage, including exact mirror point attributes. The maintainer waived the GitHub issue requirement for this retopology toolkit work.
+
+#### fix(tools): v2.0.36 - Guarantee retopology repair postconditions
+
+`3b805cf3`
+
+Preserve connector subfans with source-tracked duplicates, split any
+residual overfull edges, and return remapped debug indices without
+dropping no-repair geometry or attributes.
+
+Verify multi-plane IDs, unequal components, off-axis mirror points, and
+analytic density projection. The maintainer waived the GitHub issue
+requirement for this work.
+
+#### fix(tools): v2.0.36 - Finish retopology repair and UV checks
+
+`287185e6`
+
+Preserve connected inspector fans and their edge metadata, remove unused
+vertices after adjacent repairs, and keep separated attributes on real
+edges only.
+
+Retain point attributes through collection merging and mirroring, pin
+flat transforms in Blender, and verify density metadata and analytic
+source-UV associations. The maintainer waived the GitHub issue
+requirement for this work.
+
+#### fix(tools): v2.0.36 - Complete retopology metadata invariants
+
+`a6253e47`
+
+Cap repaired edge fans at two faces, avoid unrelated inspector vertices,
+track merged seam clusters, and preserve UV and edge metadata through
+mirror and separation operations.
+
+Keep flat output transforms explicit, strengthen density UV and metadata
+oracles, and document the remaining high-sharp layout exception. The
+maintainer waived the GitHub issue requirement for this work.
+
+#### fix(tools): v2.0.36 - Preserve retopology topology invariants
+
+`0a80144f`
+
+Restrict seam welding to different faces, preserve quad output and part
+associations, and keep split inspector fans connected without quadratic
+whole-mesh scans. Filter self-mirrored faces individually.
+
+Restore measured density behavior, complete density UV assertions, use
+world-space guide edits, keep flat outputs in UV space, and isolate
+installable verification behind a disposable add-on directory.
+
+Support closed Petik lines through creation and control-point growth,
+record the sixth compatibility fix, and align behavioral-port evidence.
+The maintainer waived the GitHub issue requirement for this work.
+
+#### fix(tools): v2.0.36 - Harden retopology topology and workflows
+
+`3451cf08`
+
+Correct guide initialization, mirror and thickness orientation, disconnected
+patterns, density reconciliation, seam merging, bevel propagation, and
+inspector fan repair. Preserve selected UV maps, source transforms,
+point guides, and output-specific staged reports.
+
+Add meaningful base and upper-crease density, self-mirror handling,
+empty-input validation, face-free previews, and transform-aware outputs.
+Fix Petik multi-line snapping and closed-loop discovery, with five
+compatibility changes recorded in its notice.
+
+Add independent validity oracles, reproducible package tests, installed
+archive verification, and behavioral-port provenance. The maintainer
+waived the GitHub issue requirement for this work.
+
+#### fix(tools): v2.0.36 - Keep disconnected plane patterns separate
+
+`cb6913ff`
+
+Initialize each connected source pattern independently before resolving
+holes within that pattern. This prevents disconnected triangulated
+garments from being bridged into a single annulus.
+
+Add a two-pattern regression test. The maintainer waived the GitHub
+issue requirement for this work.
+
+#### fix(tools): v2.0.36 - Normalize KEYforce package text
+
+`ffd223cb`
+
+Normalize every packaged text source and manifest hash to LF so LF and
+CRLF checkouts produce identical outer and nested add-on archives.
+
+Add a two-checkout reproducibility regression test. The maintainer
+waived the GitHub issue requirement for this work.
+
+#### fix(tools): v2.0.36 - Complete retopology behavior coverage
+
+`6b86ac42`
+
+Match complete synthetic reference geometry and UV associations,
+preserve holes and mirrored/thickened winding, average shared UV source
+vertices, and retain metadata through output stages.
+
+Add distinct morph, mismatch, polyloop and sibling helpers with density
+labels. Verify named UV maps, installed add-on behavior, staged saves,
+and Petik hotkeys, help, right-click and wheel controls.
+
+Include regression tests in the deterministic KEYforce package. The
+maintainer waived the GitHub issue requirement for this work.
+
+#### fix(creature-crews): v2.0.36 - crews stop at the engine's agent limit
+
+`d0d95bf2`
+
+A Custom Battle at battle size 800, Rohan riders against Harad on
+elephants and mumakils, crashed while it loaded. The howdah and mumakil
+crew spawners called Mission.SpawnAgent with no capacity check. The
+engine holds 2,040 agents, mounts included. At a full pool its slot
+search returns -1 and the native spawn writes through that index over
+the mission's own memory.
+
+Both spawners now compare the live agent count with the engine's limit
+before each crew member spawns. At the limit the remaining seats on
+that beast stay empty, and the log prints one warning per spawner per
+mission. Seats fill in drain order with no reserve below the limit, so
+crews and reinforcements share the free slots.
+
+CrewAgentBudgetTests fails when a direct Mission.SpawnAgent caller has
+no HasRoom call in the same method. It proves that the call exists, not
+that it guards the spawn.
+
+Known limitation: no automated check reproduces the crash, and the
+in-game check on #1107 is still owed, with rosters larger than the
+battle size.
+
+Refs #1107. Review record:
+docs/reviews/rca-crew-agent-limit-2026-11-09.md
+
+#### fix(supply-lines): v2.0.36 - caravan meeting keeps its encounter open
+
+`218f4ee3`
+
+Meeting a supply caravan on the map no longer ends the encounter while
+the game is still building it. The caravan now opens a short menu with
+a Leave option. The old code ended the encounter from inside the
+engine's encounter start, and the engine then read the encounter it had
+just lost. This path needs a click on the caravan at a high time speed
+in single player. A co-op guest, or a player with the feature off, can
+reach it at normal speed.
+
+This change does not prove a fix for the reported crash when an Order
+Supplies delivery arrives. No crash bundle shows Supply Lines code, and
+the one bundle sent is the older siege-aftermath crash on v2.0.27. A
+crash bundle from a current build is still needed (#1104).
+
+An enlisted player whose commander battle cannot be joined now stays
+in a battle they are already in, when the army merge did not land. The
+game no longer leaves the army, parks the party or covers the fight
+with the service menu. A rollback after a merge still undoes the merge,
+and it no longer opens the service menu over a live battle (#1099).
+
+RCA: docs/reviews/rca-supply-caravan-meeting-2026-11-09.md
+
+Not-tested: no in-game run of the caravan menu, its background art or
+the two rollback paths. Checks are in tools/ingame_checks/1104.toml
+and 1099.toml. No Codex review of this change.
+
+#### fix(map-event-guard): v2.0.36 - guard empty meetings, keep battle menu
+
+`d1572fcc`
+
+Four follow-ups from the sally-out crash (#1099).
+
+A battle an enlisted player enters without their commander now records
+the battle state. Before, the state stayed attached, and the service
+wait menu could replace the battle menu. In such a battle kill XP, the
+merit band and spoils now pay, as a reload into the same battle already
+did. The maintenance pump also leaves the battle menu alone during a
+map event.
+
+When the sally-out guard stops a check and the service wait menu covers
+the battle menu, the guard switches back to the battle menu so the
+battle can close.
+
+Patch143_EmptyMeetingGuard replaces a meeting with a party that has no
+leader hero and no men with a one-option Leave menu. Vanilla threw on
+that null partner and then on every frame. The menu text is new and
+stays English until the translator runs; Leave uses vanilla's key.
+
+Review: docs/reviews/rca-sally-empty-party-2026-11-08.md. It also
+records a HIGH in existing code, not changed here: the Supply Lines
+DoMeeting prefix calls Finish inside Init.
+
+Not-tested: no in-game run. No known way forces an empty party. Codex
+did not re-review these follow-ups.
+
+#### fix(combat): v2.0.36 - hits no longer knock creature riders off
+
+`368f9b5a`
+
+A blow that would unhorse a cavalryman no longer knocks a rider off a
+warg, ram, elk, elephant, mumakil, chariot or any other creature
+mount. The blow's damage still lands. Riders on vanilla horses, camels
+and mules are dismounted as before, and dismounting or remounting by
+choice is unchanged.
+
+Patch48 was spider-only because the spider is the one creature whose
+crash on this path a debugger proved. It now uses the same creature
+mount check as Patch47, and this supersedes the previous commit's note
+that Patch48 stays spider-only. On v1.5.6 the native dismount path
+that this flag enables uses the same unguarded action lookup as the
+mounted-death branches. A fault on any creature except the spider is
+not proven. The cost is a gameplay change: signature strike knockdowns
+and the ram, elephant and mumakil attacks no longer unhorse a creature
+rider, and Wainrider Wall's second roll has no effect for a charioteer.
+
+The warg bite's error log now names the victim, its Monster and the
+mount it rode. The crash report behind #1101 had none of these. The
+mount is read before the blow, because Patch47 clears that link inside
+Agent.Die. The catch itself stays, because a rethrow out of the
+mission tick risks a hang on the next frame. Patch47's second branch
+also stays until a battle shows a surviving rider misbehaving.
+
+Review: Data flow and Engine compatibility lenses on this change, no
+CRITICAL or HIGH, one MEDIUM (the mount read after the sever) and four
+LOW items fixed. Codex did not run: no paid pass was authorized, so
+the merge goes without it. Verified with /verify: 37,800 C# tests
+passed, 0 failed, 9 skipped; 8,353 tool tests passed, 12 skipped.
+
+Not-tested: Patch47 and Patch48 in a live battle; owed in #1101
+Research: Mission.cs blow flags, native 0x602170, 0x5EC2F0, 0x5ED980
+Issue: #1101
+RCA: docs/reviews/rca-creature-mount-death-dismount-2026-11-08.md
+
+#### fix(map-event-guard): v2.0.36 - close battles after enlisted captures
+
+`fa51a812`
+
+An enlisted player who won a battle and captured a lord could crash to
+desktop shortly afterwards. When the capture conversation ended, TAOM
+put the service wait menu over the encounter menu while the battle was
+still open, and only the encounter menu closes the player's own battle.
+Time kept running until an hourly sally-out check closed the battle,
+emptied the besieging party and opened a meeting with nobody left to
+speak for it. The conversation view threw a null reference, and the
+map conversation tableau then threw on every frame.
+
+The service menu no longer replaces the encounter menu while the
+player is in a map event, so the battle closes the normal way.
+
+Patch142 is the backstop for any other route into that state. It stops
+a sally-out check only when the besieger leader is inside the player's
+battle and nobody would be left in that party. Every other check runs
+vanilla, because the vanilla call on this path also closes the battle.
+SallyOutGuardService holds the rule and SallySiegeAdapter does the
+engine reads.
+
+Fixes the crash in bundles 9d1db520 and 66372c43. Refs #1099.
+RCA: docs/reviews/rca-sally-empty-party-2026-11-08.md
+
+Not-tested: no in-game run, no save and no deterministic repro exist.
+Owed in game: win a battle while enlisted, capture a lord, and confirm
+the encounter menu returns, the battle closes and service continues.
+Research: SallyOutsCampaignBehavior.CheckSallyOut, MapEventManager.Tick,
+PlayerEncounter.Finish, ConversationHelper
+Save-compat: no saved data
+
+#### fix(combat): v2.0.36 - every creature rider dismounts before death
+
+`50687fa0`
+
+A player crashed mid-battle on Bannerlord 1.4.8 when a warg bite
+killed its target and the game faulted inside the engine's native
+Agent.Die. The battle had 122 wargs and the player's war rams. The
+fix landed on the 1.4.x line in 57ba233b6, and this commit brings it
+to the v1.5.6 line.
+
+Patch47 already routed the spider around that native fault by
+dismounting the rider just before death, but it checked for spiders
+only. It now covers every mount whose Monster is not vanilla's horse,
+horse_2, camel or mule, which is 16 Monsters in the Armory today. A
+rider seated on one dies the on-foot death, and a dying creature mount
+drops its rider first. Vanilla mounts are unchanged.
+
+The private Agent.SetMountAgent lookup the patch depends on is now
+pinned by ReflectionSiteBindingTests and the API snapshot, typed to
+its overload, and prints one red line if an engine update removes it.
+Docs and comments that described Patch47 as spider-only, or exempted
+the war ram, elk and Animalia mounts, are corrected.
+
+The engine facts were re-read on v1.5.6: the native call clears both
+mount links, native die tests those links for its mounted branches,
+and the vanilla mountable set is still those four ids.
+
+Known limitation: the crash logged no victim or native offset, so a
+war ram or warg fault is inferred, not proven. A rider who survives a
+dying creature now skips native's fall action and usage re-check, and
+a creature whose rider dies skips its move-away goal; the visible
+effect of both is unknown until a battle is played. Patch48, the guard
+for a non-lethal dismount hit, stays spider-only pending a decision.
+
+Review: Data flow and Engine compatibility lenses, no CRITICAL or
+HIGH, one MEDIUM and the LOW items fixed. Codex did not run and is
+owed before merge. Verified with /verify: 37,796 C# tests passed and
+0 failed, 8,353 tool tests ran with 0 failed.
+
+Not-tested: the patch in a live battle; owed on v1.5.6 in #1101
+Research: Agent.Die, Agent.SetMountAgent, native set_mount_agent, die
+Issue: #1101
+RCA: docs/reviews/rca-creature-mount-death-dismount-2026-11-08.md
+
+#### fix(fords): v2.0.36 - check 8 judges no Seize hold as a lane hold
+
+`1c275b73`
+
+Check 8 failed a run with "East1 in fire of tower_west_1_0", though
+East1 was seizing a capture point, not holding. A lane on Seize holds
+at the objective with the same HoldAt command a lane on Hold gets, and
+the field probe judged every HoldAt as a lane hold. It measures arrival
+along the lane's axis, and that point stands 70 m off lane 1, so units
+standing next to the enemy tower looked as if they had reached it.
+
+The probe now skips a HoldAt whose target is exactly a capture point's
+or a camp's position. The Seize rule aims at the layout slot itself and
+the director records the rules' own command, so the match is exact.
+Expect check 8's settledSamples to drop: in that run most of the
+"held" samples of West1 and East0 were Seize holds.
+
+Reviewed by /deep-review (tier 1, Lens 5, Lens 2, Codex ultra). Codex
+rated one case MEDIUM, an objective placed exactly on a hold waypoint;
+no scene has one (the nearest is 70 m away), so it is accepted and
+written up in docs/reviews/rca-fords-check8-seize-hold-2026-11-07.md.
+Not run in game.
+
+No issue: Mike waived issues for Fords of War, 2026-10-31.
+
+#### fix(fords): v2.0.36 - no warg rage in a Fords of War match
+
+`ca32cb11`
+
+Mike asked for the warg rage to be off in this mode ("it is not needed
+for this"). A raging warg leaves its formation and can turn on any
+agent within 20 m, friend or foe, which a lane battle has no use for.
+WargTryToGoRage, the only code that starts a rage, now reads once, when
+its tree is built, whether the mission is a Fords match, and starts no
+rage there. Every other mission keeps the rage as it was. Race
+abilities stay on.
+
+The rage instrument stays as a tripwire. Check 12 now reads NOT SEEN on
+every run, and a rage start fails the row, since it would mean the gate
+broke. The verdict contract gains a FailOnly kind for a part that has
+no passing scenario, and the clean scenario no longer plays a rage.
+
+Reviewed by Lens 5, Lens 2 and Codex: one medium and five low
+findings, all fixed. Not seen in game yet.
+
+No issue: Mike waived issues for Fords of War, 2026-10-31.
+
+#### fix(fords): v2.0.36 - fade every riderless mount, not only horses
+
+`75468a0a`
+
+Mike saw a war elephant with no rider wandering a match, and the log
+had recorded it already: riderlessOthersPeak=camel:5,
+taom_war_elephant:1, taom_mumakil:1. The housekeeping sweep faded only
+riderless horses and wargs. It now fades every riderless mount after
+20 s, whatever its kind: dire wolves, spiders, camels, elk, war rams,
+elephants and mumakil as well. A mount a soldier is holding or has
+chosen still stays. The nine test cases of the old horse and warg
+filter (IsSwept, Wargs) go with it.
+
+The housekeeping line now counts per Monster id: mountsRemoved for the
+mounts faded and mountsSpared for those the guard held back (for
+example horse:22,taom_war_elephant:1), and fords_match_review.py reads
+the new fields.
+
+A fade routs the mount first, which resets every soldier that targets
+it, so it is safe for every kind (Lens 2, native decompile). Reviewed
+by Lens 5, Lens 2, the Tooling lens and Codex: five low findings, all
+fixed. Not seen in game yet: round 4 reads the new counts.
+
+No issue: Mike waived issues for Fords of War, 2026-10-31.
+
+#### fix(missions): v2.0.36 - reset dead targets before the corpse delete
+
+`0931c1e1`
+
+Once a second, in every mission, TAOM now clears the target of each AI
+soldier whose target is dead or unconscious, using the engine's own
+reset (Agent.InvalidateTargetAgent). This prevents the native crash at
+TaleWorlds.Native.dll RVA 0x6B716E, which ended about one in 22
+unattended Fords of War matches and can happen in any large battle.
+
+The cause, read from a full dump and the decompiled engine: a death
+clears nobody's target. The engine fades the corpse without a rout and
+deletes it 30 s later. The delete sets each soldier's target index to
+-1 but leaves the soldier's "target is valid" flag set, so the next AI
+tick reads agent slot -1 and faults. A rout clears both, which is why
+Agent.FadeOut is safe, and SetTargetAgent(null) only queues the -1 and
+leaves the flag as well, so it is no fix.
+
+A soldier that still held a dead target now picks a new one within a
+second; a soldier whose target is alive is not touched. At mission end
+the TAOM log gets "[DeadTarget] mission end: sweeps=N reset=M", which
+tools/ingame_checks/1096.toml reads.
+
+Lens 5, Lens 2 and Codex found no code defect; their six corrections
+to the doc, comments and test names are applied. Not tested in game
+yet: an unattended round has to show no 0x6B716E crash.
+
+Refs #1096
+
+#### fix(mordor): v2.0.36 - Black Uruk weapon duplicates and lance kits
+
+`fae81fb3`
+
+Black Uruk troops carry the weapon mix they were meant to have again.
+The melee ladder rebalance of 2026-09-21 swapped each out-of-range
+weapon for the single best in-range one, so different weapons in one
+troop collapsed into the same item.
+
+- Barad-Dur Guard: set 1 showed two copies of Uruk Halberd IX. Every
+  set now carries one halberd, and the sets vary between Halberds IX,
+  VI and XII. The Fords of War copy gets the same fix.
+- Shield Guard: the duplicate spear in set 1 is now a spare Uruk
+  Halberd III, the shape the troop had before the rebalance.
+- Grunt and hired Grunt: Orc Polearms II and III return beside the
+  Black Numenorean lance. Set 1 had a sword and no second weapon, and
+  because a battle mixes sets slot by slot, about one Grunt in 14
+  spawned with a lance and no sidearm. Every set now has a polearm
+  and a sword or axe.
+
+tools/fix_melee_ladder.py no longer gives a troop a weapon it already
+carries or was already given, so a future run cannot collapse a kit
+again. It also never falls back to a hero blade because the only other
+in-range weapon is one the troop keeps.
+
+Known limitation: the Shield Guard still opens with Gundabad Spear III
+in all four sets. At that tier Mordor owns one in-range spear that
+works with a shield; variety would mean the tier 7 halberd as its main
+weapon, or a spear outside the range.
+
+The Grunt keeps the lance in 7 of its 14 sets on purpose: the Mordor
+cavalry and infantry career kits take that polearm, and Orc Polearm II
+cannot be used beside their shield.
+
+Not-tested: in game. Restart the game and watch a battle with Grunts
+and Barad-Dur Guards; the troop screen always shows set 1.
+
+Review: /deep-review tier 2 (data flow, XML and tooling lenses), RCA
+in docs/reviews/rca-black-uruk-weapons-2026-11-07.md. Codex was not
+run, by the maintainer's choice. The GitHub issue was waived by the
+maintainer.
+
+#### fix(tools): v2.0.36 - validate and package quad remeshing
+
+`dba5416a`
+
+Rejects non-star-shaped input with a source-normal check and scales the
+multiple-surface tolerance. Makes exact nearest-triangle selection correct
+and tests material mapping by signed normals.
+
+Adds wait-loop tests, a reproducible package file list, and GPL scope
+documentation. Clarifies research artifact locations and removes a stale
+module reference. The extracted toolkit passes all 32 tests.
+
+#### fix(coop): v2.0.36 - no-game test tags and the #1086 follow-ups
+
+`c50df195`
+
+The no-game test run (.ai/verification.md, built against the BUTR
+reference assemblies) failed 212 tests that build engine view models,
+TextObjects or behaviors without the RequiresGame tag. They are tagged
+now: the whole class where every test needed the game, else only the
+failing methods, so the engine-free tests stay in that run. The run
+reports 31,402 passed and 0 failed.
+
+Co-op follow-ups from the #1086 audit, each a second line behind a
+menu that was already closed to a guest:
+- Supply orders: placing an order is refused for a guest, with the
+  same "not available in a shared campaign" text as the town menu.
+- Refuges: founding and upgrading report a new shared-campaign reason,
+  and dismantling does nothing, for a guest.
+- A guest who meets the host's supply caravan no longer reads "Your
+  supply caravan presses on"; the line now says a caravan passes on
+  toward its lord.
+- The offer to join a kingdom after character creation is not made to
+  a guest, and an accept checks again at the click.
+- Career quests: a guest no longer gets the item, renown or influence
+  reward, which would write the host's hero; tier unlocks and career
+  flags still apply. A dedicated server pays renown and influence to
+  the quest's owner but skips the item.
+- Tournaments: when vanilla's Join fails inside the reflected call,
+  TAOM no longer runs Join a second time.
+- The Nazgul family clean-up clears the ex-spouse list through the
+  public list instead of reflection.
+
+Two new strings (taom_rf_reason_coop_off, taom_sl_caravan_meet_other)
+are seeded in all 12 languages; the paid translation is on #763.
+
+Reviews: Codex (ultra), Data flow, Engine and XML lenses. Fixed: three
+catches the silent-catch gate counted, the dedicated-server reward
+rule, two wrong engine claims about Hero._exSpouses. Each new guard
+was removed in turn and its tests failed. RCA:
+docs/reviews/rca-1091-followups-2026-11-06.md.
+
+Verify: build, NuGet audit, Python 8,124 tests, canary and API
+snapshot pass. C# 37,578 of 37,588 passed; the one failure,
+LongDefeatPrefabTests.EveryDataSourceProperty_IsBoundByOneOfTheMovies,
+comes from 6e9a5a5e7 (its test updates were left out on purpose).
+
+Not-tested: an in-game BannerlordCoop session.
+
+Refs #1091
+
+#### fix(tools): v2.0.36 - harden quad remeshing and examples
+
+`c8650bef`
+
+Rejects nested or non-star-shaped inputs instead of silently remeshing the
+wrong surface. Makes nearest-triangle selection exact with a bounding-box
+filter, preserving the correct source material and projection metrics.
+
+Fixes example import paths and the NumPy-only test path. Adds nested-shell
+and material-shortlist regressions, bringing the engine suite to 12 tests.
+Both example entry points pass real Blender 5.2.3 runs.
+
+#### fix(faction-ui): v2.0.36 - one blank line before the strings close
+
+`241db659`
+
+The module strings file must end with exactly one blank line before
+its closing tag (CareerEffectLocalizationTests); the merge of trunk
+left none.
+
+Refs #1090.
+
+#### fix(faction-ui): v2.0.36 - localize list labels, safe tree refresh
+
+`d524e4d6`
+
+Review fixes on the move of the faction UI behind the client seam.
+
+The themed encyclopedia list's "Filters", "Reset" and "Open entry"
+labels were built from key ids at runtime, so no string table held
+them and every language showed English. They are now ordinary
+registered keys, seeded in the 12 languages until a translator pass.
+The character screen's level label uses the same "Level {LEVEL}" key
+as the hero page.
+
+The hero page's family tree and the unit page's troop tree now tell
+Gauntlet to re-read the tree on a refresh instead of passing the value
+through UIExtenderEx, which throws on a null value on v1.5.6. No game
+path refreshes a live page twice today, so no crash was seen.
+
+Two registered strings that nothing reads are gone with their 24
+language rows, the themed map bar loses its unused constants, the
+null presentation adapter's doc states what a client without
+TAOM.Client really shows, a test pins the troop names patch category
+that core applies, and the clock hint patch has a registry entry.
+
+Review and root cause: docs/reviews/rca-factionui-adr013-2026-11-06.md.
+Not tested in game: every themed screen.
+
+Refs #1090.
+
+#### fix(faction-ui): v2.0.36 - restore the campaign escape background
+
+`67d385a3`
+
+Reload dependent brushes after requested sprites are registered. The
+escape menu shares main-menu sprites, and its cached brushes otherwise
+retain released textures after the campaign keeps only the chrome alive.
+
+Preserve delayed texture release and skip brush reloads when no images
+changed. The fix also covers an independent main-menu image reload while
+the campaign chrome remains loaded.
+
+Validation: reproduced both failures before the fix; 128 focused resource
+and movie checks passed afterwards. The maintainer confirmed the campaign
+escape background works in game. Development tests remain local as asked.
+
+#### fix(combat): v2.0.36 - shields cover only toward the attacker
+
+`2118e610`
+
+Scripted blows that TAOM delivers itself now count a raised shield as
+a block only when its bearer faces the attacker (#1089). Before, a
+soldier with a shield up caught the reduced blow from a troll's
+Brute Force ring, a war ram, an elephant, a mumak, an elk, a moose or
+a signature strike ring even when the blow came from behind. The rule
+lives in one place, ShieldCover.Faces: the attacker must be in front
+of the bearer's look direction on the ground plane. A blocked blow
+still keeps the same share of its damage as before: half for the
+dwarf attacks and the troll ring, a quarter for the elephant-like
+attacks, and shieldBlockedMultiplier (0.25 shipped) for the signature
+strike rings.
+
+The trolls' Brute Force no longer starts when the Armory has lost
+act_troll_brute_force (#1088). The missing action resolved to act_none,
+which plays nothing, and the busy test then read an idle troll's empty
+channel as a smash in progress. The ready check now refuses the smash,
+as the dwarf attacks already did.
+
+Review and root cause: docs/reviews/rca-shield-cover-2026-11-06.md.
+Not tested in game: the facing rule against a posed shield, and a
+rider's shield. Native shield geometry stays UNVERIFIED.
+
+Closes #1088. Closes #1089.
+
+#### fix(faction-ui): v2.0.36 - move the faction UI behind the client seam
+
+`0ca5364d`
+
+The themed campaign and encyclopedia screens from the faction UI merge
+lived in core TAOM.dll, but their widgets, view models and mixins name
+client-only assemblies (Gauntlet, UIExtenderEx, the client's family
+tree view model). Under ADR-013 the dedicated server loads core
+without those assemblies, so it would fail to JIT these methods. The
+merge left 15 tests failing on that and on related gates.
+
+What moved and why:
+- The 19 files of FactionUI/Campaign now live in TAOM.Client, same
+  namespace. Core reaches them through a new adapter,
+  ICampaignPresentationAdapter: core registers a null version that
+  keeps every movie's own data source, and the client composition
+  replaces it. View models cross the seam as opaque objects, as
+  IQuestJournalAdapter already does, so no service signature names a
+  TaleWorlds class (ADR-007).
+- The two tree mixins now register with the rest of the client's
+  extensions on the client's OnGameStart. Before, CampaignPresentation
+  made a second UIExtender for them on the first themed encyclopedia
+  movie and bound them by reflection. They stay inert until a themed
+  prefab binds them.
+- The TAOM.EncyclopediaTroopNames patch category is applied with the
+  guarded helper at the first game initialisation, next to
+  Patch9_RaceFilter, instead of from the movie hook. Every rewrite is
+  gated on a flag that the first themed encyclopedia movie sets, so
+  the names change at the same moment as before. New unit tests cover
+  the flag.
+- The encyclopedia picture cache is released from the client's unload
+  instead of core's, at the same shutdown point.
+
+Gates touched:
+- The co-op presence gate gains one allowlist entry for the movie
+  hook. Its themed map bar binds the time-control mixin that
+  ClientUiExtensions drops on co-op presence. The coop-interop doc
+  names presence as the right predicate for that one-shot UI
+  registration, and the movie swap must follow the same decision, or
+  a solo game with the Coop module enabled would show a dead
+  fast-forward button.
+- The field camp overlay binding test now also reads the themed
+  overlay prefab, which FrontEndMovieService loads over the same view
+  model, and counts DataSource bindings. That is where CampButtonHint
+  is bound; a new test covers the reader.
+- The client isolation count rises from 45 to 50 to name the classes
+  that now live in the client: the two tree mixins and the three
+  gallery mixins.
+
+Data: TAOMMapBar drops its unused VisualDefinitions,
+TAOMEncyclopediaUnitPage drops an unsupported MouseScrollAxis, two
+new strings (taom_hero_level, taom_encyclopedia_upgrade_stage) are
+registered, and each of the 12 languages gets the 8 rows it lacked,
+seeded with English text until a translator pass. The harmony patch
+registry and the API snapshot list the new category.
+
+Not checked in game: the themed screens, the encyclopedia names and
+the co-op case were verified by the test suite only.
+
+#### fix(tools): v2.0.36 - answer No to the game crash question
+
+`239e31a9`
+
+The game's crash question ("*_*", "The application faced a problem.
+We need to collect necessary files...") stayed open while the tool
+ran. Watchdog.exe shows it as a system message box, so csrss.exe owns
+the window, not any game process, and the tool read only the dialogs
+of the Launcher and Bannerlord processes.
+
+The tool now also watches the game folder's Watchdog.exe, and while a
+game process runs it reads the dialogs csrss.exe owns. There it answers
+only the "*_*" title, with No, and leaves every other program's system
+message box alone. A real system message box titled "*_*" closed with
+IDNO from a posted click. While the tool runs, no crash files are
+collected: stop it first to keep a crash dump.
+
+No GitHub issue: Mike asked to commit and push and named none.
+Not-tested: the real Watchdog question after a real crash.
+
+#### fix(coop): v2.0.36 - co-op guests no longer write shared world state
+
+`efcf3f69`
+
+An audit of all 57 TAOM campaign behaviors for writes a BannerlordCoop
+client makes to the shared world. A guest loads the server's save, so
+a feature's local book (the player's refuges, the player's supply
+orders) holds every player's entries there.
+
+- Refuges: a guest who clicks a refuge now gets the vanilla meeting,
+  not the refuge menu, so a guest can no longer upgrade or dismantle
+  another player's refuge. RefugeService skips its ticks, event
+  writes, the hold on the player's party and its messages off
+  authority; the book and the map visuals still follow the world.
+- Supply Lines: SupplyOrderService moves, respawns, loses or cancels
+  caravans only with authority, including the camp break that runs on
+  every peer. A guest sees the town option disabled with a reason.
+- Tournaments: a guest joins the vanilla way, with no prize swap and
+  no skill pick or award.
+- The LOTR issue load sweep, named companions, the Nazgul family and
+  banner injection run only with authority; alliance proposals and
+  paid career changes are refused for a guest.
+- Player Possession stays ungated, as a known limit.
+
+docs/features/coop-interop.md now classifies every behavior, so the
+unclassified baseline in CoopGateDocCoverageTests is gone. Two new
+strings (taom_sl_coop_off, taom_career_coop_gold_off) are seeded in
+all 12 languages; the paid translation is on #763.
+
+Tests: guest and authority tests for each gate; every new gate was
+removed or forced open and the guest tests failed. RCA:
+docs/reviews/rca-coop-audit-1086-2026-11-06.md.
+
+Not-tested: an in-game BannerlordCoop session.
+
+Refs #1086
+
+#### fix(creature-bandits): v2.0.36 - spawn creature bands on the host only
+
+`3da2aa58`
+
+In a co-op session every client also ran the daily spider brood and
+troll band spawns. Each try threw a caught NullReferenceException in
+WarPartyComponent.OnInitialize, and the stray patrol orders would have
+written AI state on parties that only the server moves. Both daily
+ticks now stop unless this peer has authority (singleplayer or the
+dedicated server), reading the flag on every tick.
+
+Tests: CreatureSpawnCoopGateTests pins both ticks off on a client and
+on with authority. The coop-interop.md rows for both behaviors land
+with #1086.
+
+Not-tested: an in-game BannerlordCoop session.
+
+Closes #1084
+
+#### fix(fords-of-war): v2.0.36 - a warg near its lane mates counts as back
+
+`a8447bc8`
+
+Check 12 asks whether a raging warg's rider returns to its formation.
+In round robin run 20261106-054613 (Gondor v Dol Guldur) it failed: the
+rider was 208 m from the formation's front-middle after 60 seconds. A
+Fords lane formation strings out along its lane, and at that minute the
+lane average lay 22 to 314 m from its lead group, so a rider with the
+lead group can read as lost.
+
+A rider now also counts as back when it is within 15 m of a mate in the
+formation's arrangement. A mate is never the rider itself, a detached
+unit, or another rider whose rage episode is open, so two riders reset
+together far from the formation cannot vouch for each other. The old
+front-middle allowance stays. The returned and not-returned log lines
+print both distances, distance= and nearest=, so the next run shows
+which rule passed each rider.
+
+The cause is likely, not proven: the failed run did not log where the
+rider was. A Fords run with wargs will show it.
+
+Review: deep review tier 1 (Data flow and Engine compatibility lenses,
+Codex at xhigh) on the first draft; its seven findings are fixed and
+recorded in docs/reviews/rca-fords-warg-return-2026-11-06.md.
+
+No issue: Mike waived issues for Fords of War, 2026-10-31.
+
+#### fix(tools): v2.0.36 - Long Defeat judge needs a waves list
+
+`d344449d`
+
+The judge of an unattended Long Defeat run now fails a report whose
+waves field is missing or is not a list. Before, such a report read as
+having nothing to replay, so the affix, boon and commander checks
+passed with nothing checked. Every report the game writes carries the
+list, empty for a run lost before its first clear, so no real run is
+affected.
+
+Review: tier 2, tooling lens. It confirmed that every end path writes
+the list, and found that a list shorter than the number of cleared
+waves still passes; the game writes one row per clear, so the judge
+should also compare the two. That needs the test fixture to carry a
+replayable row per clear, and is recorded as a follow-up on the Slice
+13 row of the plan, with the real reason AFFIX_FROM_CLEARS stays. RCA
+rows 120 and 121 in docs/reviews/rca-long-defeat-phase2-2026-11-05.md.
+
+Verify: 533 tool tests pass (run_long_defeat and ingame_verdict), ruff
+is clean on both files, and lint_docs exits 0. No C# changed; the full
+C# suite runs before the push.
+
+Not-tested: no game run; the judge reads reports from earlier runs.
+
+#### fix(long-defeat): v2.0.36 - log why a garrison batch stacks
+
+`7f7adc22`
+
+One unattended run of The Long Defeat at a triple garrison spawned a
+whole muster batch of 20 militia on the muster point itself, instead
+of in ranks around it. Two more runs with the same timing did not
+repeat it, so the cause is not yet known. The likely cause is that
+the engine's formation layout found no place for the new soldier and
+put him on the formation's order position, but that is not proven.
+
+So no fix is made yet. Instead, a batch that stacks now writes one
+warning line, "[LongDefeat][Muster] stacked batch", which repeats the
+engine's own place lookup for the next soldier and logs what tells the
+possible causes apart: whether the layout gave a place, whether that
+place has a navmesh, the formation's real file count against the
+smallest count the layout allows, its width, arrangement and order,
+and how far its order position stands from the muster point. The line
+uses the same bound as the muster check, so a small pack placed beside
+the point writes nothing.
+
+Review: tier 2, lens 5. It found that the first draft of the line
+could not separate the two ways the layout returns no place; the line
+now logs the facts for both. RCA rows 116 to 119 in
+docs/reviews/rca-long-defeat-phase2-2026-11-05.md.
+
+Verify: the build has no errors, the Long Defeat and gate tests pass
+(2,208), and lint_docs exits 0. The full C# suite runs before the push;
+its one expected failure is the BUTR pin test. No tool code changed.
+
+Not-tested: the line has not fired in game yet; it waits for the next
+stacked batch.
+
+#### fix(tools): v2.0.36 - fair round robin counts and the full crash dump
+
+`ac845e63`
+
+The round robin counted a match whose speed changed during play,
+because it read only the speed the match was armed with. It now needs
+exactly one [FordsOfWar][Speed] speed=4 line in the log. One real run
+fails that rule: a soldier was taken with P, and the match runs at 1x
+while a person controls one, so that pair is played again.
+
+The engine dump copy from the last commit could miss the full dump: the
+Watchdog writes the dump twice and lets the game die right after the
+second pass. The launcher now reads the game's own watchdog log, which
+names the dump and writes "Starting Crash Uploader" once both passes
+are done, and copies it then. A dump that is gone or cannot be copied
+is said once, with the path to copy by hand.
+
+The feature doc now names the crash mechanism the dumps show: an
+engine AI reads a target that a delete set to -1 while its flag still
+says the target is valid. A horse fade cannot cause it, because the
+engine routs a fading agent first and the rout resets every soldier
+aiming at it. The open candidate is the delete of a dead agent.
+
+No issue: Mike waived issues for Fords of War, 2026-10-31.
+
+#### fix(fords-of-war): v2.0.36 - deaths after the end leave the trade
+
+`96158ffa`
+
+A Codex review found that soldiers who die in the 25 second result
+window after the winner is named still entered the troop tally, the
+[Balance] lines the round robin reads as each side's gold trade. Those
+deaths change no result, and the gold ledger already ignores them, so
+the tally now leaves them out too. The report's own death count keeps
+them, as before. A scenario test plays two identical matches to the
+time limit, kills every soldier after the end in one of them, and
+expects the same tally.
+
+The RCA of the day records this second review round: three Claude
+lenses and two Codex passes, what they found, and what was left out.
+
+No issue: Mike waived issues for Fords of War, 2026-10-31.
+
+#### fix(tools): v2.0.36 - an unattended crash keeps the engine's dump
+
+`974e60bb`
+
+When a Fords of War match crashed under run_fords_autorun.py, the
+engine wrote its dump to crashes/<stamp>/dump.dmp, and the crash
+uploader deleted the whole crashes folder as soon as Mike sent the
+report. The run on 2026-11-05 at 15:00 lost its dump that way. While
+the launcher waits with --keep-on-crash, it now copies the newest dump
+written since the start into the run folder as engine_dump.dmp, once
+its size holds still between two polls, and once more when the wait
+ends.
+
+No issue: Mike waived issues for Fords of War, 2026-10-31.
+
+#### fix(warg): v2.0.36 - a rider not back says how far it is
+
+`ddcd0204`
+
+Check 12 failed twice in Fords matches with a rider who got his formation
+back after a rage but was not near it 60 mission seconds later. The log
+said only the seconds, so nothing showed whether the rider wandered off
+or stood in a charging lane whose soldiers had scattered from the point
+the check measures to. The not-returned line now gives the distance and
+the allowed radius. Behaviour does not change.
+
+No issue: Mike waived issues for Fords of War, 2026-10-31.
+
+#### fix(tools): v2.0.36 - the round robin counts only finished matches
+
+`8fa6e9c7`
+
+A deep review of the Fords of War round robin found that it counted a
+match that never finished: a run with no winner as a draw, a run whose
+report was not final as a win, and a run that never went live. Each also
+took its pair off the list of what was left to play. It now counts only
+a final report with a winner, from a build whose stamp names the commit
+with no .dirty or .nogit, played in the scheduled order at 4x with both
+sides on AI and no control check. Factions come from the build's own
+factions.json. The game always names a winner since the time limit, so
+the Draw column is gone. An unreadable folder is named on stderr and
+skipped, where it used to stop the queue, and other builds' folders are
+skipped before they are parsed. A troop both factions field is credited
+to neither, the minutes and the "won on time" line use the winner's own
+time, a recorded end on time decides between a time win and a keep win,
+and --control-check takes only a positive number of seconds.
+
+No issue: Mike waived issues for Fords of War, 2026-10-31.
+
+#### fix(fords-of-war): v2.0.36 - no tower falls after the match ends
+
+`cae6db76`
+
+A deep review of the day's Fords of War work found that a tower still
+took damage after a match ended. The hit hook stays installed for the 25
+second result window, wear is frozen at its highest, and heroes skip the
+assault limit, so a keep could fall under the "time ran out" panel and
+the run tools would record a win on time as a keep win. A blow after the
+end now does nothing, with the reason MatchEnded.
+
+The run report now records an end on time, and check 14 accepts it in
+place of a fallen keep. Rocks count apart from javelins and arrows, both
+their launches and their hits, so check 11's hit rate stays like for
+like; the rock also warns when it cannot reach the fire range. Zeroed
+tower shots on the tower's own side are counted in the [Upgrade] totals
+line. The rock's comment and the feature doc now say what the ring
+really does, that a rock can knock down a soldier it does not kill, and
+what a zeroed own-side shot still shows. Rivendell and Mirkwood tell
+their slower free waves in a weakness; the two new lines have seeded
+English in all twelve languages, covered by the Fords row in #763.
+
+A soldier handed back after control keeps its morale reset. The review
+first called that call dead, but MissionState.OpenNew adds the morale
+logic to every mission by default, so a test now pins the call and its
+reason. The RCA is docs/reviews/rca-fords-of-war-2026-11-05.md, with
+three lessons. The paid Codex pass that tier 1 asks for did not run and
+is owed.
+
+No issue: Mike waived issues for Fords of War, 2026-10-31.
+
+#### fix(fords-of-war): v2.0.36 - the speed key moves from T to L
+
+`7b026603`
+
+The engine's chat box reads the same scene layer input as the panel, and
+it starts typing when T is released, so T could change the match speed
+and open the chat box together. This comes from a read of the engine
+source and no game has shown it. L is free in this mission: the engine
+binds it only on the campaign's panels. The speed button is unchanged.
+
+The panel's key table now has a gate against the chat keys T, Y and
+Enter. The key hint's new id, TAOM_FOW_Hud_KeysHintFull, has seeded
+English in all twelve languages, for translation under #763.
+
+#### fix(fords-of-war): v2.0.36 - less AI work per frame, melee on check 9
+
+`9ea4ffd4`
+
+The AI commander decides every few seconds, but the match built its full
+read model on every tick to ask it. A new AiCommander.IsDue skips that
+work on the frames when no decision is due. Decide keeps its own check,
+so the AI's choices do not change.
+
+Check 9's ladder now prints melee= beside towerBlows=, so a ranged lane's
+damage can be told from melee contact at a tower. No game run has
+exercised either change; both follow-ups come from the Fords of War RCA.
+
+#### fix(tools): v2.0.36 - what Codex found in the gates and hooks
+
+`ff211455`
+
+Codex read the rules review's gates and the follow-up tools. These are
+the findings that held when checked against the code:
+
+- commit-msg took the version from the working file when SubModule.xml
+  was not staged, so an unstaged edit changed the version it wanted.
+- data_gates selected no gate for a path with a non-ASCII character.
+- ServiceSignatureGateTests skipped a generic service or adapter.
+- TROOP_ID_REMOVED refused a single-quoted or spaced id.
+- config-protection let docs/./adrs through.
+- The dotnet lint accepted a named ModuleId or a comment.
+- The doc graph ratchet passed an empty corpus as an improvement.
+- block-no-verify's raw path let -n before an input redirection through.
+- The NuGet secret rule missed a value that holds a newline.
+- The release baseline test now proves it reads the tag.
+
+No issue: Mike waived it for this work, 2026-11-04.
+
+#### fix(warg): v2.0.36 - rage timeout ends a chase, Mixed logs its gate
+
+`38e5e627`
+
+The warg's 6 s rage timeout could never end a chase, because the timer
+restarted on every pass of the tree. It now starts once per rage and each
+attack restarts it, so it means 6 s with no attack. Rages end sooner, so
+this changes balance, and one Fords match is owed.
+
+A rage has 2 attacks, as it always had. The old min 2 and max 3 could
+only ever give 2, so the config now says rageAttacks = 2.
+
+A remote co-op rider on a warg took the fallback branch, which cleared
+the timer and dropped the first rider's restore. That branch now closes
+the first rider's rage first (Codex).
+
+Mixed Formations now logs once per formation each mission when the
+cavalry gate suspends a layout, so a session can prove it for #714. The
+debug hint now says what the toggle does: two lines in the log file and
+nothing on the HUD.
+
+Two Mordor rosters that nothing binds are gone. The Ithilien and
+Belfalas templates stay, on Mike's word.
+
+No issue: Mike waived it for this work, 2026-11-04.
+
+#### fix(career): v2.0.36 - Mike's RCA decisions: ladder, gate, HUD, income
+
+`95a348a6`
+
+Four RCA follow-ups that Mike decided on 2026-11-04.
+
+A former hero's lord's gear quest is now cancelled in the daily sweep.
+Kills credit only the current hero's rung quest, so that quest could
+never finish. The ladder state stays, so the hero can start the rung
+again on a return.
+
+MutationService keeps a mutation's old value and logs a warning when a
+calculator gives NaN or Infinity. Only a hand-edited config can reach
+it, through a huge multiplier.
+
+The staged siege HUD and the career diamond tooltip no longer hold a
+stretching child in a box that covers its children. The HUD strip paints
+its own background with margins inside. The tooltip's frame is now its
+parent, so the frame draws under the canvas and not over it. A person
+must look at both in game.
+
+Hard AI income in Fords of War goes from 1.2 to 1.0, because the design
+says no extra powers. Hard keeps 5 s decisions, no skipped decisions and
+its reserve. Earlier balance numbers need a new read.
+
+No issue: Mike waived it for this work, 2026-11-04.
+
+#### fix(tools): v2.0.36 - last review fixes in the gates and the rebuild
+
+`0385cc04`
+
+rebuild_translation_files wrote CR CR LF, because it joined on CRLF and
+then wrote in text mode; it now writes bytes. It fails loudly when a
+named TAOM_Map is missing, reads no TAOM source when TAOM is not named,
+and reports the Armory in a dry run.
+
+The raw hook path refuses -n right before a separator. The visual
+definition gate counts only the widget tree under Window. The NuGet rule
+reads single quotes and spaces around the equals sign.
+check_release_pair has one route to exit 2. The memory walker no longer
+calls a folder an orphan.
+
+The catalog, the MCP doc and the template counts follow. The MCP
+server's registries stay a snapshot from its start, now stated in
+docs/reference/mcp-servers.md.
+
+RCA: docs/reviews/rca-follow-ups-2026-11-04.md.
+No issue: Mike asked for the RCA follow-ups fixed, 2026-11-04.
+
+#### fix(warg): v2.0.36 - a new rider closes the rage, the player's returns
+
+`4a7b7164`
+
+Codex's re-review found the last fix wrong for a rider who mounts during
+a rage: he got the first rider's formation, and a second rage overwrote
+the first rider's record. A rage now belongs to the rider it started on.
+CloseRageOnNewRider closes it before the rage clears anything on the new
+rider, so he keeps his own and the first gets his back. Only a rider's
+owner touches him in co-op, on the live path too.
+
+A player whose warg dies mid-rage now gets his formation back, as the
+other closes give it: OnWargDied's two branches had hidden that. Check
+12's stranded clock is 100 mission seconds, because the 30 of the last
+commit fails a good run at 10x. Pins now read the exact conditions.
+
+Correction to 7a21239dc's body: open=0 cannot be required of a run,
+because a good match can end with an episode inside its window. The owed
+proof is stranded=0 and no "Exception running the behavior tree" line.
+
+RCA: docs/reviews/rca-follow-ups-2026-11-04.md.
+No issue: Mike asked for the RCA follow-ups fixed, 2026-11-04.
+
+#### fix(tools): v2.0.36 - the NuGet rule reads either order and split lines
+
+`285c5a1e`
+
+secret-nuget-cleartext matched key before value on one line only. It now
+finds value before key and a pair split across lines, keeping the
+redaction and the placeholder rule.
+
+RCA: docs/reviews/rca-follow-ups-2026-11-04.md.
+No issue: Mike asked for the RCA follow-ups fixed, 2026-11-04.
+
+#### fix(tools): v2.0.36 - read settlement refs in XSLT, skip comments
+
+`334c187e`
+
+BROKEN_SETTLEMENT_REF read only XML attributes, while spclans.xslt,
+spkingdoms.xslt and spcultures.xslt write 34 home settlements as element
+text, so the pair check could pass a channel missing one. It now reads
+TAOM's own XSLT too. The sweep no longer reads a commented-out row as a
+live ref.
+
+BROKEN_ROSTER_REF no longer accepts a roster only NavalDLC defines,
+because SubModule.xml lists that module as incompatible. Both registries
+gain a size floor, so a broken path warns.
+
+check_release_pair reads vanilla's cultures from the install as well as
+its clans. It exits 3 on a crash, where it used to exit 1, the code for
+a disagreement, and exits 2 for a needed file that does not parse or a
+map with no settlements.xslt.
+
+The MCP server clears the read cache after its one registry build, which
+frees about 200 MB. find_references reports real line numbers after a
+multi-line comment.
+
+RCA: docs/reviews/rca-follow-ups-2026-11-04.md.
+No issue: Mike asked for the RCA follow-ups fixed, 2026-11-04.
+
+#### fix(tools): v2.0.36 - small tool fixes from the review
+
+`b6dc611d`
+
+audit_mount_parity's war ram section could never fail a gate: --strict
+printed a gap and exited 0. Its gaps now count, and a missing monster
+file reports a gap in place of a traceback.
+
+skeleton_hit_capsules gives one error line and exit 2 for a garbage or
+cut file. rebalance_ranged_ladders no longer raises on a --docs-html
+path with no folder. fbx_remap_materials says what it writes, and its
+report names the file that remains after --apply.
+
+REGION_META lost its last reader when the map tools stopped writing
+factions.json, so it goes, with border_match's import of it and
+assemble_faction_map's unused shutil.
+
+RCA: docs/reviews/rca-follow-ups-2026-11-04.md.
+No issue: Mike asked for the RCA follow-ups fixed, 2026-11-04.
+
+#### fix(tools): v2.0.36 - a crash dump is judged by its file
+
+`91185bdc`
+
+The review ran procdump on a dummy process: it wrote a 28 MB dump, and
+dump_crash reported a failure, because procdump v12.01 exits 0xFFFFFFFE
+for a dump it wrote and for a pid it never found. The dump now counts as
+written when crash.dmp exists and is not empty.
+
+Its output goes to procdump.log in the run folder, not to a pipe.
+procdump.exe starts procdump64.exe, which inherited the pipe, so the 180
+s limit did not hold, and its UTF-16 text reached runner_log.txt as NUL
+bytes. A real crash under the Watchdog is still untested.
+
+RCA: docs/reviews/rca-follow-ups-2026-11-04.md.
+No issue: Mike asked for the RCA follow-ups fixed, 2026-11-04.
+
+#### fix(tools): v2.0.36 - the translation rebuild writes only on --apply
+
+`570fa0e8`
+
+rebuild_translation_files wrote on a plain --lang run, and no flag could
+leave the TAOM files out, although every doc says not to run it on TAOM.
+A run is now a dry run until --apply, and --module
+{TAOM,TAOM_Map,Armory} is required and names each module it may write.
+The live Armory write gets the backup the TAOM_Map write has. --dry-run
+stays accepted.
+
+RCA: docs/reviews/rca-follow-ups-2026-11-04.md.
+No issue: Mike asked for the RCA follow-ups fixed, 2026-11-04.
+
+#### fix(tools): v2.0.36 - map writers read the live row's scenes too
+
+`ad8f13d0`
+
+add_map_villages and add_map_fortifications checked only the scene names
+in their planning table, so a live row that named a missing scene
+passed. Both now read the row's own scene names as well, and a village
+row that names another scene than the table's is reported.
+
+test_live_map_writers_main failed 5 tests since the scene check landed,
+because main() read the real install. Its fixtures now patch the folder
+list, forts included, and a new test proves a missing scene refuses and
+writes nothing.
+
+RCA: docs/reviews/rca-follow-ups-2026-11-04.md.
+No issue: Mike asked for the RCA follow-ups fixed, 2026-11-04.
+
+#### fix(hooks): v2.0.36 - raw fallback refuses again, scan finds its memory
+
+`000bcf1d`
+
+8afe46d39 stopped block-no-verify's raw fallback from over-blocking, and
+lost eight refusals doing it, among them the flag inside bash -c and
+eval. That path needs a command past the reader's limit, a reader crash
+or a 20 s overrun, so over-blocking is the safe direction. Any text that
+names --no-veri refuses again. A quoted -n, a -n past a global option, a
+subshell and a glued separator now refuse as well.
+
+context_budget_scan's fallback search could read another project's
+memory that holds the checkout's name, so it now matches the name at the
+end of the folder. A linked folder named like a page no longer stops its
+link walker, and a walker that fails says so.
+
+RCA: docs/reviews/rca-follow-ups-2026-11-04.md.
+No issue: a follow-up from the rules review, which Mike waived one for,
+2026-11-03.
+
+#### fix(race-age): v2.0.36 - keep the pregnancy guards before the clan read
+
+`174a7e89`
+
+79d90c08f moved the guards into one service call, and its arguments read
+hero.Clan before the guards ran, so a clanless immortal or out-of-window
+hero went from 0 to a NullReferenceException. It also floored a negative
+chance to 0, and that commit's "both mean no pregnancy" is false by one
+draw in 2^24, because the engine tests RandomFloat <= chance.
+
+The service now has CanConceive for the guards and
+GetDailyPregnancyBaseChance for the formula. The model calls them in
+that order and keeps the negative result, so every input gives what it
+gave before the extraction.
+
+RCA: docs/reviews/rca-follow-ups-2026-11-04.md.
+No issue: Mike asked for the RCA follow-ups fixed, 2026-11-04.
+
+#### fix(warg): v2.0.36 - a rage always closes and gives the formation back
+
+`7a21239d`
+
+The review of the rage fix found more ways to lose a rider's formation,
+one of them proven in two game logs from 2026-11-04.
+
+A rage whose hitter was already dead threw in the same pass that took
+the formation: "enemy died" nulls the hitter, and the next decorator
+read it. The throw stopped the warg's tree for the battle. That
+decorator now returns false with no hitter. Two more threw on a
+riderless warg, because a mount has no Team, so a rider who left during
+a wait also stopped the tree.
+
+A hit in the second after a rage's last attack starts the next rage
+before the first closes. The rider has no formation by then, so the
+store wrote null over the real one. A second start on the same rider now
+keeps it.
+
+With no enemy within 60 m the "no enemy close" branch wins every pass,
+so nothing closed an open rage. CloseOpenRage closes it there.
+
+The stored rider now gets his formation back first. A rider who took his
+place joins it only if he has none, and a panicked rider stays out,
+because Agent.OnFleeing cleared his on purpose. Closing clears the
+stored rider too, and OnWargDied now acts only during an open rage on a
+rider who still holds his slot, so a warg death long after a rage
+touches nobody. A warg that never raged no longer moves its first-scan
+rider back either.
+
+Check 12 counted a rider stranded after two looks 1 s apart, while the
+reset can lag a dismount by 6 s on the wall clock, 24 mission seconds at
+4x. It now takes 30 mission seconds on foot.
+
+Correction to 17b071c7a's body: a warg death already restored a rider
+when the tree was built before his formation was set. The stored rider
+comes from the tree's own build; only the formation is null then.
+
+Owed in game: an unattended Fords match with check 12 reading
+stranded=0, no "Exception running the behavior tree" line and open=0,
+and a normal battle smoke, since warg code runs in every mission.
+Whether a mount's IsPlayerControlled is ever true is still unverified,
+so the player's path keeps its old shape: a rage that took his
+controller stays open on a dismount. One that took only his formation
+now gives it back.
+
+RCA: docs/reviews/rca-follow-ups-2026-11-04.md.
+No issue: Mike asked for the RCA follow-ups fixed, 2026-11-04.
+
+#### fix(warg): v2.0.36 - a rider who leaves a raging warg gets his formation
+
+`17b071c7`
+
+A rage takes the rider's formation and the end of the rage gives it
+back. A rider who left a living warg mid-rage never got it back: the end
+looked at the warg's current rider, and the rage branch never ran again
+once the warg had no rider.
+
+The rage start now stores the rider. The end falls back to him while he
+still holds his agent slot and this machine owns him, and the no rider
+branch closes an open rage. Agent slots recycle, so the stored handle is
+checked first, and in co-op only the owner restores him. A rider whose
+warg dies mid-rage now gets his formation back too, even when the tree
+was built before him.
+
+Closing a rage clears the stored formation. Without that, a warg death
+long after the rage would move the rider back to it from wherever he had
+gone.
+
+Owed in game: an unattended Fords match with such a rage, check 12
+reading stranded=0, and a normal battle smoke, since warg code runs in
+every mission. The 60 second not-returned outcome in runs
+20261104-002531 and 20261104-080805 is a different case, undiagnosed and
+unchanged here.
+
+No issue: Mike asked for the RCA follow-ups fixed, 2026-11-04.
+
+#### fix(careers): v2.0.36 - cloned careers show their source's ability icon
+
+`4d9ae0e8`
+
+The career screen built the icon name from the ability template id, and
+no sprite exists for a clone's own id, so 42 cloned careers showed no
+ability icon. A career may now carry ability_sprite, and the 42 clones
+name their root source's icon. insert_new_faction_careers.py writes the
+attribute on a new clone, and CareerAbilitySpriteTests fails a career
+whose icon resolves to no registered sprite.
+
+Portraits are a separate gap under #1058. Owed in game: a look at the
+career screen icons on the clones.
+
+No issue: Mike asked for the RCA follow-ups fixed, 2026-11-04.
+
+#### fix(armour-ladder): v2.0.36 - each ladder quest gets its own journal
+
+`32aeb9e1`
+
+A rung's quest id came from the definition alone, so two heroes' quests
+on one rung shared a journal record, as when an heir starts a rung the
+former hero held. LadderQuests.Start now builds the id with
+CareerQuestService.NewQuestStringId. Saved quests keep their ids; only
+new starts change. Nothing looks a ladder quest up by its id.
+
+Owed in game: an heir's rung gets its own journal record.
+
+No issue: Mike asked for the RCA follow-ups fixed, 2026-11-04.
+
+#### fix(nameplate-fade): v2.0.36 - stop pinning MCM defaults at construction
+
+`69275212`
+
+NameplateFadeSettingsProvider read TaomSettings.Instance once in its
+constructor, so a resolve before MCM was up kept the defaults for the
+whole session. It now caches on the first non-null read.
+HotPathSettingsProvidersTests gains this provider and two others of its
+kind. Only this one failed first.
+
+Three texts from the same RCA are corrected: Patch35's catch message
+said its postfix was disabled for the session, when only the log is
+one-shot; module-dependencies.md gains the MCM bump step; and
+elephant.md now says the toggle read is cached.
+
+No issue: Mike asked for the RCA follow-ups fixed, 2026-11-04.
+
+#### fix(action-bar): v2.0.36 - drop the dead DataSource on the movie root
+
+`258db5e7`
+
+BattleActionBarMissionView passes the view model to LoadMovie, and the
+engine reads no DataSource on a movie's root view, so the attribute did
+nothing. TheMovieRoot_CarriesNoDataSource pins that. The feature is
+parked and off by default.
+
+No issue: Mike asked for the RCA follow-ups fixed, 2026-11-04.
+
+#### fix(ui): v2.0.36 - remove dead visual definitions and gate them
+
+`498d07e0`
+
+No live widget named GameMenu.xml's InfoPanel or PartyScreen.xml's
+FormationListPanel and FormationSeperator. They go, with the three
+constants only they read: InfoPanel.Width,
+FormationListPanel.NegativeHeight and Party.Formation.Seperator.Width.
+
+EveryVisualDefinition_IsNamedByAWidgetInItsPrefab now fails such a
+definition. It failed on these three before the deletion. The check
+parses the XML, so a commented-out widget does not count. No external
+mod in external-mod-couplings.md names them. No player-visible change is
+expected; the two screens were not opened in game.
+
+No issue: Mike asked for the RCA follow-ups fixed, 2026-11-04.
+
+#### fix(tools): v2.0.36 - four small tool follow-ups and their catalog rows
+
+`1011a4ef`
+
+audit_claude_config gains secret-nuget-cleartext: three vendored
+tarballs once held that block, and no rule matched it.
+
+skeleton_hit_capsules prints one error line and returns 2 on a bad path
+or skeleton, in place of a traceback. fbx_remap_materials writes its dry
+run into a temp folder, not beside the source; a headless Blender run
+proved both modes. audit_mount_parity gains a war ram section against
+the horse it inherits from. completion-workflow.md step 6 now says to
+grep the docs for each fact a change makes false.
+
+Catalog rows in tools/README.md follow all of this night's tool changes.
+
+No issue: a follow-up from the rules review, which Mike waived one
+for, 2026-11-03.
+
+#### fix(tools): v2.0.36 - loc tools read one source list, seed like the file
+
+`44d4dba4`
+
+rebuild_translation_files.py kept its own list of 10 English sources
+while the pipeline has 23. It now reads tools/_loc_sources.py and skips
+a key another source owns, so a shared key cannot get a second row. Do
+not run it on the TAOM module: a row with no cache entry falls back to
+English.
+
+The seeder copied the last row's indent and line ending, and in 24
+language files the last row differs from the rest. It now uses the
+file's usual ones. Existing rows stay as they are.
+
+No issue: a follow-up from the rules review, which Mike waived one
+for, 2026-11-03.
+
+#### fix(tools): v2.0.36 - runners try a crash dump, print the right labels
+
+`c31a7ef6`
+
+A crash in an unattended run lost its dump, because the Watchdog asks a
+person. The launcher now tries procdump before it stops the game. A
+missing tool, a timeout or a failed dump goes in the runner log. No real
+crash has run yet, and one note says the Watchdog can block the attach,
+so the doc says tried, not promised.
+
+The Long Defeat wrapper prints its own evidence instead of Fords labels
+over its data. unattended-game-runs.md no longer claims that exit 0
+needs the clean-unload line: the launcher prints that line and does not
+judge it.
+
+No issue: a follow-up from the rules review, which Mike waived one
+for, 2026-11-03.
+
+#### fix(tools): v2.0.36 - realm tools refuse named weapons, dead scenes
+
+`c30c4e61`
+
+realm_troops.self_check refuses a generated troop that carries a
+`<NamedWeapons>` id: a Mattock Warrior carried Dain's hammer once.
+
+add_map_villages and add_map_fortifications refuse a scene name with no
+scene.xscene, in --check and before --apply writes: four villages once
+went onto an empty folder. Both read clean on the live map today, 197
+villages and 59 forts.
+
+rebalance_ranged_ladders no longer rewrites the tracked
+ranged-troops.html on its read-only default run. It writes it only with
+--docs-html or on --apply.
+
+promote_borrowed_cultures loses a raiders prefix that never matched, and
+a test name that claimed more than it asserted is corrected.
+
+No issue: a follow-up from the rules review, which Mike waived one
+for, 2026-11-03.
+
+#### fix(tools): v2.0.36 - map tools stop writing factions.json
+
+`b7fefdae`
+
+factions.json is kept by hand, but process_faction_map.py and
+assemble_faction_map.py still regenerated it from tables that disagree
+with it on 14 of 46 rows, and only a warning stood in the way. Neither
+tool writes it now.
+
+make_new_factions_playable.py is deleted: a spent one-off whose --apply
+would write stale Lindon and Blue Craig entries.
+
+Tested first: a run must leave no factions.json in its output folder.
+
+No issue: a follow-up from the rules review, which Mike waived one
+for, 2026-11-03.
+
+#### fix(ui): v2.0.36 - gate brush sprites, delete an unused gold brush
+
+`462d745e`
+
+A brush that names a sprite no module defines draws nothing on that
+layer, with no error, and no gate read the brush files. 35 of 526 names
+resolved nowhere. 34 are the game's own dead references, which vanilla
+brushes of the same file also name, on naval and old map bar layers.
+
+One was TAOM's: ROT.Icon.Gold in GoldIcon.xml, a layer for a game
+version before 1.6.1. Nothing in the repo, TAOM_Map, the Armory, Coop or
+Diplomacy uses that brush, so the file goes.
+
+EveryBrushSprite_ResolvesOrIsNamedByTheGamesOwnBrushes now fails on a
+name no module defines and no game brush names. It was red on that one
+brush before the deletion. No visible change in game.
+
+No issue: a follow-up from the rules review, which Mike waived one
+for, 2026-11-03.
+
+#### fix(hooks): v2.0.36 - raw fallback stops over-blocking, scan follows
+
+`8afe46d3`
+
+block-no-verify reads a command as raw text only when its reader
+cannot. On that path it refused any git command whose text named a flag,
+and after a quoted message was stripped, a double space let the -n test
+read past a separator into the next command. Now a message or a line
+that runs no git may name a flag. A flag quoted as a whole word, a
+quoted core.hooksPath value and a flag on a continuation line still
+refuse.
+
+context_budget_scan.sh derived its memory folder from the checkout, so
+it could miss the main memory from a sibling worktree. It now takes the
+main checkout's name from git. Its orphan check also follows links
+through the files MEMORY.md links, so a card the archive lists is no
+longer reported as lost.
+
+Tested: tools/test_hooks.sh, section 7e and section 8.
+
+No issue: a follow-up from the rules review, which Mike waived one
+for, 2026-11-03.
+
+#### fix(tools): v2.0.36 - validator reuses its file reads and ref walk
+
+`5f87810e`
+
+The validator's file cache held 64 entries while a run reads about
+4,300 files, so each entry left before its next read: 23,076 misses and
+2 hits. The cache now has no bound. Two collision passes also walked the
+Armory's XML and this repo's twice, and they now share one walk per run.
+
+A run fell from 25.3 s to 14.5 s with the same output, by hash, for
+about 180 MB more memory. The commit hook runs this validator on every
+ModuleData commit.
+
+The MCP server's find_references outlives an edit, so it now reads each
+file fresh instead of through the larger cache.
+
+Tested first: a second sweep of 200 files must hit the cache, one run
+must walk the refs once, and a query must see an edit made after the
+last query. Each was red on the old code.
+
+No issue: a follow-up from the rules review, which Mike waived one
+for, 2026-11-03.
+
+#### fix(long-defeat): v2.0.36 - a wave no longer waits on its last few
+
+`eab59cbd`
+
+A wave could wait up to about 150 s on its last attackers: 8 of the 15
+cleared waves in four runs waited 110 s or more on the last 1 or 2.
+Mike closed a run at the end of wave 5 because 2 attackers stood far
+outside the walls and nothing moved. When at most a tenth of the wave
+stands, fewer than the defenders, and nobody has died for 20 s, those
+attackers now fall at once, with no charge, so the defenders stay on the
+walls. A felled soldier pays no bounty. stragglerQuietSeconds in
+long_defeat/waves.json sets the wait. Larger stand-offs keep the longer
+path through the charge.
+
+Why such a soldier stays outside the walls is not traced.
+
+Not-tested: this rule in game. The next run measures it.
+
+#### fix(tools): v2.0.36 - taom-src's cache follows the game build
+
+`97219836`
+
+Steam can replace every engine DLL and leave Version.xml alone, as the
+v1.5.6 hotfix did on 2026-11-04 (changeset 125053 to 125270). taom-src
+keyed its cache on the version string, so it went on serving the old
+build's sources with no warning. The cache folder now carries the write
+time of TaleWorlds.Library.dll, as v1.5.6-202611041234. The old folder
+stays as it is, so a session that reads it is not disturbed.
+
+#### fix(long-defeat): v2.0.36 - waves end, and the unattended spike passes
+
+`985b0d54`
+
+The first unattended runs of the Long Defeat spike (#1079). The caves
+are gone. A run at Helm's Deep cleared three waves with S1, S2, S3, S4
+and S7 answered, and one at Minas Tirith answered S8: a 10 s load and
+frames of 13 to 14 ms at 300 soldiers.
+
+A wave could never clear. Only BattleEndLogic ends a vanilla siege, and
+this mode leaves it out, so the last 7 attackers and 31 defenders stood
+apart until the run's limit. At Helm's Deep a hidden inner gate at
+height 32.5 held the Middle lane closed and drew attackers to it,
+because the engine's InnerGate ignores visibility. Boot now breaks any
+hidden gate. After a quiet spell both teams get TacticCharge, and
+stragglers nobody reaches fall: at most a tenth of the wave, and fewer
+than the defenders. Beyond that the run ends as stalemate, because the
+first form of this rule felled 35 attackers with 2 defenders left and
+read as a clear.
+
+The wrapper presses Cancel on the Helm's Deep terrain shader dialog,
+which otherwise holds a load. A pile on the frame point has its own
+line and fails nothing: the terrace runs out of slots, and Phase 1
+needs a muster place with room. The wrapper's defaults are the tested
+170 defenders, 110 attackers and an 1,800 s limit. S5 logs why a bought
+engine has no lasting crew. It stays open for Phase 4.
+
+Deep review ran lenses 5, 2 and Tooling and one re-review, with no HIGH
+finding. The two HIGH rows in the RCA came from reading the runs. Codex
+did not run, because this work has no paid word. RCA:
+docs/reviews/rca-long-defeat-spike-2026-11-03.md.
+
+Not-tested: the hidden gate break and the straggler limit in a game.
+The next run settles both.
+
+#### fix(tools): v2.0.36 - taom-src takes short names, reads the game first
+
+`857734c6`
+
+AGENTS.md and the rules write `taom-src path <Type>` with a short name,
+and a short name failed. It now resolves through engine-types.tsv, an
+index built once per game version from assembly metadata in a few
+seconds. An ambiguous name throws and lists its candidates.
+
+The index row's DLL is only the first probe, so a dead row or a moved
+type falls through to the chain a full name takes, and a miss rebuilds
+the index once. The two guards cost about four lines: a cut index would
+tell an agent that a real engine type does not exist, and lenses fan out
+in parallel right after a bump, when no index exists yet.
+
+This also ends the #1038 trap where a type could be read from the stale
+engine copies in Modules\Coop. The search order now comes from a list of
+the game's own modules, held equal to engine_body_diff.py by a test, in
+place of a guess from the presence of TaleWorlds.* DLLs. dll-index.json
+moved into the version folder, because a mapping in the cache root
+outlived a bump: 23 types routed to Coop on 2026-10-14, and 134 tonight.
+
+Tested: tools/tests/test_taom_src_short_names.py, 8 of 11 red on the old
+code and 11 green on the new, including a dead row, a wrong row and a
+cut index. The old root dll-index.json stays on disk unused.
+
+Reviewed at tier 2 by Data flow and Tooling; CODEX: NOT AUTHORIZED, so a
+Codex pass is owed. Findings: "Second review" in
+docs/reviews/rca-rules-review-2026-11-03.md.
+
+No issue: Mike waived one for the rules review, 2026-11-03.
+
+#### fix(long-defeat): v2.0.36 - soldiers spawn where the engine places them
+
+`10e2efb4`
+
+The Long Defeat spike (#1079) ran in game for the first time, at Helm's
+Deep. The boot worked and the siege engines worked: both towers and the
+ram reached the walls, the gate fell and two lanes opened. Most of the
+garrison stood in the caves under the fortress, because the spike laid
+its own grid of positions, and a computed position skips the layout
+filter that keeps a soldier on the frame's floor.
+
+Every soldier now spawns with no position, and the deployment plan and
+the engine's layout give the place. A new line, [S1] spawn level, reads
+back each batch per class: the height against the frame, the navmesh,
+and a count of soldiers piled on the frame point. The unattended judge
+fails a run on spawn level WRONG. An ok line does not mean on the walls:
+Helm's Deep authors its archers' frame on low ground, and the feature
+doc says so. [S1] frames now prints all six frames.
+
+The feature doc also records the maintainer's decisions for the later
+phases: no wave retreats, the general, enemy commanders, the four
+classes, boons, affixes and the endless scale.
+
+Deep review ran lenses 5, 2 and Tooling, with no HIGH or CRITICAL
+finding. Codex did not run, because this work has no paid word. RCA:
+docs/reviews/rca-long-defeat-spike-2026-11-03.md.
+
+Not-tested: the fix in a game. The first unattended run is next.
+
+#### fix(fords-of-war): v2.0.36 - the speed button leaves the top strip
+
+`fd36dcb8`
+
+The speed button under the clock stretched the top strip and covered
+the clock. It now stands alone in the top left corner of the screen,
+and the clock is back as it was. The button and the T key do the same
+as before.
+
+#### fix(tools): v2.0.36 - the match launcher refuses beside an open Kit
+
+`826e77ae`
+
+The Modding Kit and the game share one shader cache, and an engine that
+starts with another module list deletes it. A match started beside the
+Kit and the Kit crashed 14 seconds later. The Kit started beside a match
+and the game crashed about 3 minutes later on its next missing shader.
+Those matches also compiled about 1550 shaders each, where a match with
+the Kit closed compiled none.
+
+This removes --allow-open-kit, which arrived in the last commits and
+never shipped to a player. The launcher now refuses while the Kit is
+open and says why. The evidence is two crashes with this timing and no
+dump, so it is a strong inference, not a proof.
+
+#### fix(fords-of-war): v2.0.36 - first Rivendell and Mordor balance pass
+
+`d5500dd9`
+
+Rivendell lost 199 units to Mordor's 2027 and took six towers to one.
+It won on its free waves: about 240 of its 300 units came free, and its
+free L21 recruit has more skill than the Uruk that Mordor pays for. Its
+free waves are now 3 units every 60 seconds, not 5 every 40, and its
+elite packs cost a quarter more.
+
+Mordor sent 1196 L1 orcs, and the engine's armour formula takes a weak
+blow close to nothing, so numbers added little. Its free waves and its
+rabble pack now start at L11. Those orcs are still far weaker than an
+Uruk, so the horde stays a horde.
+
+These numbers come from one match, and a rematch from both sides will
+test them.
+
+#### fix(fords-of-war): v2.0.36 - riderless wargs leave the field
+
+`2bf30097`
+
+Riderless wargs ran around the field and held agent slots: one match
+reached 28 riderless mounts at once. They now fade like riderless
+horses, after the same 20 seconds and with the same guard, which spares
+a mount that a soldier holds or has chosen.
+
+A warg in a rage keeps its rider, so an empty warg has lost it. Other
+riderless mounts stay, and the Housekeep log line now names the most of
+each kind that stood at once. No match has run with this change yet.
+
+#### fix(tests): v2.0.36 - the prefab gate ignores path case
+
+`53a4e4e5`
+
+NoPrefab_GainsAStretchChildInsideACoverChildrenParent failed on the main
+checkout with no prefab change. Git tracks GUI/PreFabs, this checkout
+holds GUI/Prefabs, and the gate looked up paths from the disk with an
+ordinal comparer, so all five baseline entries missed. The worktrees
+hold PreFabs, so the gate passed there. Known and seen now ignore case.
+
+Path case joins the gate state list in .claude/rules/tests.md and the
+lesson in build-tooling-workflow.md.
+
+RCA: docs/reviews/rca-gauntlet-ratchet-case-2026-11-03.md. Its finding
+2, a misleading message for a malformed prefab, stays as it is, because
+the sibling prefab test fails the suite on the same file with the right
+message. Found while verifying #1078.
+
+#### fix(fords-of-war): v2.0.36 - check 11 reads tower arrows
+
+`f512c46a`
+
+Check 11 dropped every tower arrow as another item, so its figures
+could not tune the arrow, and 20 missiles with no javelin hit could
+fail it by mistake. It now judges the javelin and the arrow each on
+that item's own damage and speed. A missing arrow item now fails it.
+
+The Housekeep log line now gives the most riderless mounts other than
+horses that stood at once. The sweep still removes horses only, and the
+old comment that a riderless warg fights on was wrong: it only sleeps.
+
+The Custom Game comments in SubModule.xml, the adapter summary and the
+feature doc now describe what the files do, and a test pins the arrow's
+game type. In-game arrow numbers are not measured on this build yet.
+
+#### fix(fords-of-war): v2.0.36 - first faction balance pass, quieter panel
+
+`33b9deb6`
+
+Eight 900 s matches with an AI on each side showed Isengard far ahead:
+it took 4.3 towers a match and lost 0.7, and dealt about 43,000 to
+51,000 melee damage to towers against 12,000 to 20,000 for the others.
+Mordor lost about 1,440 units a match and dealt the least tower damage.
+Rohan lost 2.5 towers a match and took 1.3.
+
+Isengard's tower bonus drops from 50% to 15%, and its Uruk-hai cost 25%
+more, so it fields fewer. Mordor's orcs rise from 60% to 75% of the
+campaign troop's skills. Rohan's riders deal about a third of normal
+damage to towers, up from a quarter, and its towers fire at 90% in
+place of 75%. These are still early numbers from one AI level.
+
+Race ability messages no longer show in Fords of War. An ability fires
+every few seconds there, and the green lines covered the battle board.
+
+#### fix(fords-of-war): v2.0.36 - stop a native crash on riderless horses
+
+`c0f290d9`
+
+Removing riderless horses could crash the game. The crash came about
+once in seven long matches and held no managed error. The first dump
+named the site: TaleWorlds.Native.dll+0x6E5BCD, the engine call that
+reads a mount's walking speed limit, reached from an AI rider's
+parallel update. The dump shows a rider that still held a horse as its
+mount, while that horse recorded no rider and its native data was gone.
+
+The engine's fade, unlike a death, does not unlink a rider from its
+mount. The housekeeping pass faded any horse on the engine's riderless
+list within 3 s, including one a soldier was getting on or off. A horse
+now goes only after 20 s with no rider, and only when no soldier holds
+it or has chosen it, with the soft fade vanilla uses for the same job.
+A log counter shows how often the guard spares a horse.
+
+The agent cap check now reads each faction's own cap. It failed Mordor
+for using the 100 extra troops its feat grants.
+
+The dump cannot show the fade itself: the native fields past the agent
+index were not captured. So the cause is a strong inference, and only
+further long matches with no crash can confirm the fix.
+
+#### fix(fords-of-war): v2.0.36 - lanes charge only their own lane's foes
+
+`206d7f60`
+
+A lane charged any enemy within 25 m of its lead, even one in another
+lane, so waves on the outer lanes walked across the gaps and piled up
+in one lane. A lane now charges only enemies of its own lane. At the
+enemy keep, where the lanes meet, it charges any enemy. Units still
+fight an enemy who reaches them.
+
+The hand-built map is now taom_fords_01_forceatmo. The name makes the
+mission use the scene's own atmosphere, as on the four other maps, in
+place of the mode's noon fallback. That fallback is the likely cause of
+the white and yellow ground seen from high up; a run must confirm it.
+
+The tower fall log line now reads what the engine does: it hides the
+root, which hides the children, and turns physics off with children.
+The old line read each child's own flag and the static body flag, so
+it reported a fallen tower as still standing.
+
+#### fix(stale-character): v2.0.36 - keep a restored race in hollow repair
+
+`de90a245`
+
+The repair for a hollow parent copied every field from the registered
+XML character, race included. On a registered generated hero that
+overwrote the race RacePersistenceService had restored at session
+launch, and the next save captured the wrong one. Such a hero now keeps
+its race. An unregistered hollow character still takes the twin's race,
+because its own is the unsaved default.
+
+A birth that ends with no child and no exception now writes a fail line.
+PatchShield can swallow a missing-API exception before the Finalizer
+runs, and that birth used to read as passed with child=none.
+
+Known limitation: the parent-birth check is not paired per birth, so a
+hard kill inside a second repaired birth in one process reads as PASS
+after an earlier birth finished. A managed throw writes its fail line,
+so only a kill hides. Pairing needs a per-attempt id, which the
+simplicity criterion rejects. The manifest records the limit.
+
+Found by one Codex pass on 1165a00de: 3 real items, 0 false positives,
+rated lower after verification. Its probe also reproduced the report's
+IL offset 124 only with a null raw culture, which supports the
+diagnosis. The fixes were not re-reviewed by Codex, because one pass was
+approved. Nothing has run in game. The origin stays open.
+
+Known test failure, not from this change, on a Prefabs and PreFabs
+folder case mismatch on this disk:
+NoPrefab_GainsAStretchChildInsideACoverChildrenParent
+
+RCA:
+docs/reviews/rca-offspring-parent-culture-2026-11-02.md
+
+Refs #1076
+
+#### fix(stale-character): v2.0.36 - repair a hollow parent before a birth
+
+`1165a00d`
+
+The game crashed on the campaign map when a lord's child was born, with
+a NullReferenceException in CharacterObject.get_StealthEquipments
+(player bundle 3fbdc0c5, lord_MM15_6). The stack fits a hollow parent
+character: one the save keeps but XML never reached, so its raw culture
+is null and the hero's own getters hide that until a birth copies it
+onto the child. Restoring the culture alone only moved the throw to the
+body range, after the half-built child had joined the saved hero list.
+
+A Prefix on HeroCreator.DeliverOffSpring now repairs each hollow parent.
+With a healthy registered character of the same id, the parent takes it
+as origin through the engine's own InitializeHeroCharacterOnAfterLoad,
+which restores culture, body range, race, skills and equipment together.
+With none, it takes the culture from the hero or clan and fills the
+other null fields. It never invents a culture. A void Finalizer writes
+whether the birth finished, and a census line at load names every hollow
+hero with the facts that separate the possible origins.
+
+Trade-off: the repair writes one saved field, _originCharacter, on a
+character that is already broken, and the twin then joins the save, as
+any XML template used as an origin does. In return the engine repeats
+the copy on later loads for a hero in the hero lists.
+
+Known limitation: the origin is open. An engine path that produces this
+state is traced in the RCA, but what first made this save's character
+hollow is unverified, and the player's save is not available. Nothing
+has run in game. The RCA lists steps to build the state by hand.
+
+Not run: Codex, because paid dispatch was not requested.
+
+Known test failure, not from this change, on a Prefabs and PreFabs
+folder case mismatch on this disk:
+NoPrefab_GainsAStretchChildInsideACoverChildrenParent
+
+Review: lens 5 and lens 2 found the partial repair, and lenses 1, 3, 4
+and 6 ran on the fix. RCA:
+docs/reviews/rca-offspring-parent-culture-2026-11-02.md
+
+Refs #1076
+
+#### fix(fords-of-war): v2.0.36 - start on the first tick, unhide the scene
+
+`e6dbea3e`
+
+The first in-game match of Fords of War showed two faults. Both are
+fixed.
+
+The match started twice. The tower gunners were spawned during the
+mission start, and another mod's spawn hook (DualWield) added its own
+mission behaviour at that moment, so the engine loaded the mission
+again: towers and gunners were built twice, creatures reported a
+behaviour tree that already existed, and two start errors showed on
+screen. The match now starts on the first mission tick.
+
+The battlefield was black under the command panel. Three panel boxes
+grew to the full screen, and their dark backgrounds stacked over the
+scene; the troop and order rows also drew at the top left instead of
+the bottom. Each box now paints its own background. A new test fails
+on this layout mistake in any TAOM screen.
+
+The match report also logs the camera's position, the ground under
+it and its view direction for the first 30 seconds of a match.
+
+Known limitation: on the Rohan field map the generated lanes fit
+badly (3 of 14 towers are missing, and two lanes barely move), and AI
+melee never strikes a tower, so no tower can fall yet. A dedicated
+three-lane map is next.
+
+Review and RCA: docs/reviews/rca-fords-of-war-2026-10-31.md (rows G1
+and G2).
+
+#### fix(tools): v2.0.36 - tighten the in-game verdict reader and its docs
+
+`95647d13`
+
+The reader no longer repeats the 163-character "no summary" reason for
+every session; it prints it once per run and points back to it after.
+A non-ASCII digit in a summary's errors= field (for example a
+superscript two) no longer raises ValueError. The "no TAOM log" summary
+line now has a test in both the text and Markdown renderers.
+
+The feature doc now says what the reader does: the summary reports
+outcome-call totals, a heartbeat is at most one interval older than the
+last application tick and absent during a main-thread hang, and
+SilentCatchRatchetTests is on trunk. How to add a check says fixed_in
+is the fix commit the issue names, and that every reached pattern must
+be a [Check] line or the check sets absence = "not-reached", which
+avoids a false FAIL on builds between the fix and the emitter. How to
+verify in game asks for a build with no uncommitted changes and names
+the dedicated server folders for the #981 re-run. The /verify Step 6
+wording is clear about which summary line to report.
+
+Part of #1074.
+
+#### fix(logging): v2.0.36 - tighten the silent catch scan, report one more
+
+`00fddd3c`
+
+The order of battle finalize hook now reports a failed tracker clear
+through Outcomes.Swallowed, like its constructor pair. The fallback is
+unchanged. The silent catch baseline drops to 154 files and 217
+catches.
+
+The scan behind the ratchet is stricter in four ways, none of which
+moved the baseline on the real tree. A log call or swallow-ok comment
+inside a nested catch no longer clears the catch around it. Report and
+Record count only as calls, and a logger only as a member access, so a
+variable named lastReport or logger no longer hides a silent catch. A
+HarmonyPatch attribute in a comma list or written with global:: now
+selects its file. A block comment inside an interpolated string no
+longer swallows the code after it.
+
+A correction to the first commit of this branch: its body says the
+enlistment menu hooks report through Swallowed. They do not. Only the
+lord-conversation gate does. The menu and detach hooks already logged
+their failures, and only the guards around their log calls gained a
+swallow-ok comment.
+
+Part of #1073.
+
+#### fix(career): v2.0.36 - correct career check wording, pin init detail
+
+`2d693400`
+
+The career screen check notes said only the career button opens the
+screen in normal mode. RealmUI's map-bar tile opens it in normal mode
+too, so it writes an init line with no click and no open line. The
+code comment, the 971.toml manifest and the career-system doc now say
+so.
+
+The doc also claimed a screen that fails to build still registers and
+then throws a NullReferenceException. In v1.5.6 a throw in the screen
+constructor leaves CreateScreen wrapped by Activator.CreateInstance
+and registers nothing; only a state with no screen type registers a
+null listener. The sentence now says that.
+
+The init check test now asserts the call site takes its key from
+Mode and its detail from InitDetail, so passing an empty string for
+either no longer slips through. No runtime behaviour changes.
+
+Part of #1072.
+
+#### fix(recruitment): v2.0.36 - castle check wording matches the engine
+
+`da5c87c2`
+
+The #918 check text now says what the code and the engine do. A reload
+inside one game process drops the lines of every day that process
+already logged, and the engine reruns the saved day only when the save
+was made in its first half. The blocked= count and the fail's day cover
+the window since the previous daily tick, not the calendar day.
+
+The garrison in-game item is removed from the manifest: a garrison
+grows every day from town troops and bound villages' notables, so a
+person could not see the castle rule work or fail there. The mirror
+test GarrisonAutoRecruit_UsesTheGarrisonQuery_InInstalledEngine pins it.
+
+CastleRecruitKind is replaced by a bool IsAiCastleRecruit, since only
+the AI value had a consumer. Behavior is unchanged.
+
+Part of #1072.
+
+#### fix(hero-race): v2.0.36 - dead-hero checks fail on a lost roster
+
+`75c0c27a`
+
+The race persistence checks read a roster that lost its dead heroes as
+NOT REACHED, so an older passing save or load in the same run could
+hide the #1011 regression. Every TAOM campaign has a dead hero from
+day 0, so zero dead heroes always means the bug.
+
+A capture line with dead=0 now fails the capture check, even when
+another save in the session passed. The restore line gains
+dead_seen=<n>, the number of dead heroes the roster holds when the
+load runs (one counter in the restore loop, no saved field changes),
+and dead_seen=0 fails the restore check. A load-only session on a
+regressed roster can no longer leave an older session's pass standing.
+
+Part of #1072.
+
+#### fix(logging): v2.0.36 - pin the battle action bar attach verdicts
+
+`0bc2a132`
+
+The in-game check for the battle action bar chooses pass, fail or skip
+in the mission view, and no test pinned which result each case writes.
+Swapping pass and fail there would have kept CI green while a loaded
+bar reported FAIL in game.
+
+The two mappings (attach: pass when the movie loaded, fail otherwise;
+mission end: fail never-attached or skip setting-off) now live in
+BattleActionBarChecks as pure helpers that take the outcome log. Tests
+check the exact result and detail each case writes, and the view makes
+one call at each site. Behaviour is unchanged.
+
+The feature doc now says the attach check writes at most one line per
+result per mission, since a failed attach followed by a successful
+retry writes both.
+
+Part of #1072.
+
+#### fix(hero-race): v2.0.36 - a save with no race record skips its check
+
+`40006d07`
+
+A save older than the race persistence behavior has no record for it,
+so the engine never calls its SyncData and the race map stays empty.
+The restore check now writes skip reason=no-record for that load
+instead of a FAIL, which used to turn a whole in-game session red when
+there was nothing to restore. An empty map that did come from the
+save's record still fails with reason=no-saved-data.
+
+The #1011 manifest no longer tells a tester to wait for a hero to die:
+every TAOM campaign starts with a dead hero (lord_E6_2), so dead=0 on
+a capture line points to the regression. The posthumous-son item now
+says the father must die on a build with the fix, since a father who
+died earlier keeps the reverted race. A test pins the corrupt-legend
+warning text the manifest fails on, and the feature doc names the
+no-record skip, the 256-line limit per result and the legacy
+read-back.
+
+Part of #1072.
+
+#### fix(career): v2.0.36 - pin the career open check's type test and fail
+
+`4e0c2a3b`
+
+The career button's open check now has tests that fail if the
+postfix stops testing that the top screen is the career screen, or
+drops the line it writes when that screen is not on top. Either
+change would have let a click that opened nothing pass or go
+unreported while every earlier test stayed green.
+
+The 971 manifest, the patch comment and the career system doc now
+say what the open pass line proves: the screen was pushed and no
+exception reached the click handler. Only the init line proves the
+screen finished building. The doc also drops a wrong cause for
+reason=not-on-top: a screen that cannot be built throws a
+NullReferenceException in GameState.HandleInitialize instead, which
+the check reports by name. The manifest's person-owed item no longer
+asks for Escape to close the screen, which #971 never covered.
+
+Part of #1072.
+
+#### fix(logging): v2.0.36 - fail #970 attach check on an unregistered bar
+
+`30a93868`
+
+When the battle action bar's view is not registered with the mission
+screen (the original #970 bug), the engine never ticks or finalizes
+it, so it writes no [Check] line and the reader showed the attach
+check as NOT REACHED. The reader now fails it on the view's own
+"screen init: MissionScreen=NULL" line.
+
+The end-of-mission verdict no longer fails a battle that ended with
+the setting on but where no Battle-mode tick saw it on: a registered
+view ticks whenever the screen is active, so that case was only a
+setting turned on in the last frames, and a false FAIL. Two test
+messages that claimed the wrong reason are corrected, and the outcome
+log test now checks that the resolved log lands in the field the
+emitters use.
+
+Part of #1072.
+
+#### fix(tools): v2.0.36 - refuse items written to a slot they cannot fill
+
+`2420508f`
+
+The ModuleData validator now reports ITEM_SLOT_REJECTED, an error the
+commit hook enforces, for any equipment row whose item type the engine
+will not put in that slot. Equipment.DeserializeNode assigns an item
+only when IsItemFitsToSlot passes; otherwise it asserts and leaves the
+slot empty, so the troop never wears the item. No reference is broken
+and the XSD types slot as a plain string, which is how the Uruk-hai
+champion and berserker shipped their skirt (BodyArmor) in the Cape slot
+for months (#729).
+
+The pass reuses audit_battle_equipment_memory.py's slot rule, standalone
+rosters and troop-level overrides, over Native, SandBoxCore, SandBox,
+the live Armory and the repo module, battle and civilian sets alike. A
+module folder that is missing is a warning, never a silent pass. It
+adds about 0.5 s to a full run and finds nothing on trunk today; a
+scratch copy with the champion's skirt moved back to Cape gives exactly
+one finding.
+
+apply_isengard_troop_revamp.py also wrote the skirt to Cape for both
+troops, so a re-run would have undone the #729 fix. Its table now
+writes Body, matching troops_isengard.xml.
+
+Refs #729.
+
+#### fix(faction-ui): v2.0.36 - named cards play the real hero
+
+`b2cf46b7`
+
+On the faction screen, several named cards started a new level 1 clan
+with copied looks instead of the pre-made character (#1067). Each card
+now takes over the real hero where one exists in the world.
+
+- Sauron, the Witch-king, the Nazgul card and Khamul: the Player
+  Switcher setting that allows them is now on by default. It is renamed
+  to "Allow Sauron and the Nazgul" (PlayerSwitcherAllowDarkLords), so a
+  saved value from an older build resets to the new default. Turn it off
+  to keep the lore promise; the faction screen then copies their look.
+- Gimli and Aragorn are clanless companions. Their cards now adopt the
+  real hero into the new clan. You still name the clan and design its
+  banner, and the kingdom join offer follows.
+- Haldir and Bolg belong to another culture's kingdom than the screen
+  they appear on. Their cards now take them over in their own clan.
+
+The legend cards (Gandalf, Thorin and the others) have no hero in the
+world, so they stay copies. Their mismatched faces and kits are borrowed
+stand-ins in the card data and need content work, not code.
+
+Known results, kept on purpose: the Nazgul card makes that Nazgul the
+leader of the Witch-king's clan, a player Sauron keeps the NPC combat
+tuning, and a player-controlled dark lord can be taken prisoner.
+
+Review: docs/reviews/rca-faction-cards-1067-2026-10-30.md
+
+#### fix(settlements): v2.0.36 - castle_K4 to Khand, castle_FH8 to Abanissa
+
+`2434d62a`
+
+Krûk Azhanna (castle_K4) now belongs to Khand: the Variag clan Varyash
+holds it, and it and its three villages are Variag. It was a Rhûn castle
+since the Khand retag left it out. Urutúsh (castle_FH8) now belongs to
+Abanissa (clan_abanissa_7, the clan of the nearest Abanissa castle), and
+it and its three villages are Abanissa instead of Shaghana.
+
+Existing saves get the new cultures on load. The new owners apply to new
+campaigns, because ownership is saved state.
+
+The map data lives in the TAOM_Map module, which this repo does not
+track, so a reinstall or an editor save from an older copy could put the
+old owners back without anyone noticing.
+tools/settlement_assignments.json now pins the owner and culture of both
+castles, validate_moduledata.py
+reports SETTLEMENT_ASSIGNMENT_DRIFT when a pinned castle or one of its
+villages no longer matches, and tools/apply_settlement_assignments.py
+--apply writes the pinned values back. The commit hook enforces the new
+error code.
+
+#### fix(campaign): v2.0.36 - port PR #1064 supply and desertion fixes
+
+`ab78564e`
+
+Supply caravans now route by the same land rules as vanilla parties.
+The route query passed no terrain exclusions and a soft 100/100 region
+cost, so a caravan could cross mountains, lakes and rivers that lord
+parties walk around. It now passes the navigation model's exclusions
+and the distance model's region costs. It also skips the native query
+when either end of the route is off the land navmesh, where native
+code would read before its face table; such a route takes the straight
+line, as a failed query always did.
+
+Supply route arrows check the map scene for a terrain heightmap before
+they ask for terrain height, because native code reads the heightmap
+without a null check. Without one, an arrow takes vanilla's land
+height.
+
+Alignment desertion skips a field party or garrison while it is in a
+map event, as vanilla desertion does, and resumes on the next daily
+tick (#750).
+
+Ported from Jopila's PR #1064, which reported both supply crashes on
+Bannerlord 1.4.8. Neither crash was reproduced on 1.5.6, and the
+in-game checks are still owed. Thanks to Jopila for the reports, the
+fixes and the evidence.
+
+Refs #1068, #750. Review: docs/reviews/rca-pr1064-port-2026-10-30.md
+
+#### fix(ui): v2.0.36 - the troop upgrade pop-up shows used horses again
+
+`7012783b`
+
+TAOM's copy of the party screen's troop upgrade and recruit pop-up was
+an old copy of the game's file. It had lost the tooltip that lists the
+horses an upgrade uses, so hovering the horse count showed nothing. The
+copy now follows the Bannerlord v1.5.6 file, which also brings back the
+game's header layout, list and key-hint placement. TAOM's close button
+at the top right stays as it was.
+
+A test that compares TAOM's copies of game screens with the originals
+now also fails when a copy drops a data binding the original declares,
+so this kind of loss is caught before it ships. It checks elements
+that carry an Id; the limits are written in the test.
+
+Refs #1051.
+Review: docs/reviews/rca-actionset-guard-popup-2026-10-29.md
+
+#### fix(creatures): v2.0.36 - notice a missing creature action set
+
+`c94f797e`
+
+The Animalia elk and moose, the elk, the war ram and the trolls check at
+mission start that the Armory still provides their action set. That
+check could never fail: when the game cannot find an action set it
+logs a line and hands back its default human set, which counts as
+valid. A missing set was then reported as a missing animation clip,
+which sent anyone reading the log to the wrong file.
+
+The check now also compares the name of the set the game returned with
+the one asked for, so a missing set is reported as missing. Nothing
+changes in play when the sets are present, as they are in the current
+Armory.
+
+The same correction is made in two reference docs and two test
+comments that said the lookup throws on a missing set.
+
+Refs #1065.
+Review: docs/reviews/rca-actionset-guard-popup-2026-10-29.md
+
+#### fix(bandits): v2.0.36 - Feral Orcs review fixes, second wave
+
+`1ef7d1af`
+
+The last two review lenses found defects in the two earlier Feral
+Orcs commits (#1063):
+
+- The grammar tag table those commits shipped was not valid JSON, so
+  a clean checkout broke the translation tools and a name test. The
+  table is rebuilt with the generator's own writer.
+- Half of all feral snagas carried a shield together with a two-handed
+  axe, which the AI will not draw. Snagas now fight with a one-handed
+  Dol Guldur mace and a small Mordor shield, not the 220-hit-point
+  starter shields they had.
+- The den names were in no translation cache, so the next language
+  rebuild would have turned them back to English. All 12 languages
+  are cached, and the Portuguese and Italian names carry their
+  masculine grammar tag.
+
+Corrections to the earlier commit bodies: the Feral Orcs never rout
+only with Culture Doctrine turned on in MCM (off by default), and
+Mordor, goblin and Misty Mountain orcs do rout; the den names were
+translated in every language from the start.
+
+The Patch125 notes now list every caller of the two guarded methods,
+and the in-game check no longer asks for the encyclopedia (it shows no
+bandit clans) or for one particular den (a new game fills a random
+seven). RCA: docs/reviews/rca-feral-orcs-2026-10-29.md
+
+#### fix(bandits): v2.0.36 - guard bandit clans and dens that load apart
+
+`cd06da90`
+
+A bandit clan ships in TAOM and the dens of its culture ship in
+TAOM_Map, and a saved campaign reloads settlements but not clans, so
+the pair can arrive half. Two vanilla lookups crashed on the missing
+half (#1063, found by the Codex review of the Feral Orcs):
+
+- A clan with no den of its culture, as with TAOM and an older
+  TAOM_Map, threw KeyNotFoundException on every new game. The clan now
+  raids nothing and the log names the missing map.
+- A den with no clan of its culture, as with the Feral Orcs' dens in a
+  save made before them, threw NullReferenceException when the Gold
+  Rush incident tried to fill it. The den now stays empty.
+
+Patch125_HideoutClanGuard does both and runs vanilla in every other
+case. The release process now checks that each channel ships the
+Feral Orcs' clan and dens together, or neither.
+
+The Feral Orcs also change after review, at Mike's word: they never
+rout, like every other orc culture; their stolen kingdom armour no
+longer sets the tier of Mordor, Gundabad and Dol Guldur pieces, so
+markets, loot and the armoury are as before; and the archer keeps both
+its goblin and its Mordor bow through a ladder rebalance. The BR and
+IT faction name carries its grammar tag, which the previous commit
+left out.
+
+A save made before the Feral Orcs shows their 23 dens empty; a new
+campaign is needed to meet them. RCA:
+docs/reviews/rca-feral-orcs-2026-10-29.md
+
+#### fix(faction-ui): v2.0.36 - face generator asks again for its model
+
+`6589bdd1`
+
+Pick a kingdom without a painted portrait on the faction screen (the
+five Eriador kingdoms) and Character Customization opened with no
+character on it. Touching any setting, Randomize, or Next and then
+Back made the character appear.
+
+Those kingdoms show a 3D character preview instead of a portrait. The
+preview is torn down during the face generator's first frames, and
+that teardown loses the face generator's only request to load its
+model's meshes. Vanilla BodyGeneratorView asks once, when it builds a
+model, and afterwards only checks, so the model stayed hidden; any
+setting builds a new model with a new request, which loads. Vanilla's
+own CharacterTableau asks again on every tick, so a lost request
+recovers there.
+
+BodyGeneratorViewOnTickPatch, a prefix on BodyGeneratorView.OnTick,
+now asks again on every tick for each model still loading, as
+CharacterTableau does. The list empties once a model shows, so a
+loaded screen does no work. FactionUIBindingTests pins the
+_visualsBeingPrepared field and OnTick(dt); Patch95 now counts eleven
+classes, nine once the temporary face generator diagnostic goes.
+
+Tested: full suite green (28115 passed). Not tested: in game, pushed
+before the build on Mike's word; no /deep-review. What native drops
+from the lost request is not traced yet.
+
+#### fix(gui): v2.0.36 - drop eight screen files copied from the base game
+
+`fc932d4c`
+
+TAOM carried its own copies of eight base-game screen files: the party
+screen's sort bar and composition panel, the recruit and upgrade rows
+of the troop pop-up, the custom battle sliders and dropdowns, and the
+party and settlement nameplate lists. Each was identical to the base
+game's file, yet it replaced it, so a later game update to any of
+them would never have reached players (the way the Execute button
+lost its blood-feud mark). They are removed, and the game's own files
+load instead; nothing looks or works differently.
+
+A test now fails if TAOM ships a screen file identical to the one it
+replaces, and the procedure for an out-of-date copy is to delete it,
+from the repo and the installed module, when it holds no TAOM change.
+
+If you install over an older TAOM, remove the old Modules\TAOM folder
+first: copying the new files over it leaves these eight in place.
+
+Review: docs/reviews/rca-identical-gui-copies-2026-10-28.md.
+
+Refs #1051
+
+#### fix(banners): v2.0.36 - safe sheet packing, Cardolan and Lindon colours
+
+`b41de91e`
+
+Cardolan's troops and map parties now wear the green and white of its
+new banner instead of brown, and the faction selection map and the
+Cardolan and Lindon culture colours match the new realm colours (Sea
+Mist and Silver for Lindon, green and white for Cardolan). These take
+effect in new campaigns.
+
+The banner sheet packer is safe to run again (#1047). A second run no
+longer overwrites the packed sheets: packed sheets never move, a new
+emblem sheet goes into the free cells of an existing packed sheet, and a
+run that saves no sheet changes nothing. Packing refuses while a sheet
+is missing, a cell is empty or shared, art has no icon row, or an icon
+id is listed twice, so no emblem can be lost. Pruning old sheets lists
+by default, keeps any sheet the installed game still names, refuses
+while the game or the Modding Kit runs, and removes a texture's cache
+entry before the texture. The gate now also checks the sprite data and
+that each Kit texture matches its current source sheet.
+
+A Modding Kit session no longer leaves TAOM.Dependencies' crash-loop
+marker behind, so the next game no longer logs a false crash loop.
+
+The docs now describe what the Kit does when a submodule DLL is missing
+(a "Cannot find" box per DLL, then it stops the launch), the packing
+steps with a build before pruning, and the current sheet inventory.
+
+RCA: docs/reviews/rca-banner-packing-2026-10-28.md
+
+Closes #1047
+
+#### fix(kingdoms): v2.0.36 - bare names for four kingdoms (#1050)
+
+`e37b1733`
+
+Arthedain, Cardolan, Ered Luin and Rhudaur now show their bare names in
+the kingdom list and the encyclopedia, as Erebor, Imladris and Lindon
+always have. They showed "Kingdom of X". Their titles ("North-Kingdom
+of Arthedain") and the faction cards ("Kingdom of X" for every realm)
+do not change.
+
+- Arthedain keeps its translations: each language's name row now holds
+  that language's short name (Arthedain, Артедайн, アルセダイン), and
+  the translation cache holds the same text, so a translator run or a
+  rebuild cannot bring back "Königreich Arthedain".
+- A new check, KingdomNameTests, fails a "Kingdom of" kingdom name in
+  the generator table, in taom_spkingdoms.xml or spkingdoms.xslt, and a
+  translated row of a bare name that adds its language's word for
+  kingdom. The kingdom recipe, the culture authoring checklist and the
+  ModuleData rule now state the naming rule and how to rename a
+  kingdom.
+
+An old save keeps "Kingdom of X" in English only: the save stores the
+name with its key, and every translated language shows the new name.
+
+Review: /deep-review, XML lens with a data-flow brief; no data defect,
+one LOW about old saves, fixed. RCA:
+docs/reviews/rca-bare-kingdom-names-2026-10-28.md.
+
+Verification: /verify in the worktree: build 0 errors; C# 28,104
+passed, 0 failed, 7 skipped; Python tool tests 5,959 OK (11 skipped);
+canary tripped; API snapshot reproduces. Not tested in game.
+
+#### fix(party-screen): v2.0.36 - the Execute button shows the feud mark
+
+`54084879`
+
+On the party screen, the Execute button on a prisoner row now shows
+the small blood-feud mark beside the skull, as the base game does, and
+the skull itself matches the base game again. TAOM's own copy of the
+party row had missed both when the base game changed it.
+
+Both of TAOM's party row copies are now checked against the installed
+game's files, element for element apart from TAOM's two deliberate
+edits, so a later change to the base game's rows fails a test instead
+of reaching players silently.
+
+The clan screen's member list now gets its settings and its log in the
+same way as TAOM's other screen additions, and a test holds it there;
+nothing changes for the player.
+
+Review: docs/reviews/rca-tuple-blood-feud-2026-10-27.md.
+
+Fixes #1031
+
+#### fix(tests): v2.0.36 - no-game binding gate runs with no variable
+
+`8589a338`
+
+The no-game binding gate in .ai/verification.md now passes as written:
+591 of 591 tests, where it failed 509 of 593 because a RefAsm build
+stamped an empty game folder. A RefAsm build now stamps the stub
+refasm-game folder it writes beside the test DLL, with its TaomGameRefs
+mode, and the test DLL loads only that folder, whatever
+BANNERLORD_GAME_DIR says. A no-game run can no longer mix the
+installed module assemblies with BUTR's stubs, which is how an earlier
+count came out as 29 failures (#1038 item 14).
+
+- Twenty-two tests that ran engine code but skipped through an
+  EnsureLoaded guard now carry RequiresGame, and two
+  CustomBattleDamageModelTests binding tests that run engine
+  constructors carry RequiresGameIL. All of them still run with the
+  game.
+- The no-game unit step fails 7 tests, down from 9, with the variable
+  set or unset; plan 044 hands them off. CreatureBandits Patch93 and
+  Patch94 pass now that the stub modules load.
+- One test pins both stamps per mode and replaces a test that passed
+  on an empty stamp. Two resolver tests pin the RefAsm precedence.
+- .ai/verification.md drops the variable step. tests.md says that an
+  EnsureLoaded guard no longer keeps a test off the stubs, and that
+  RequiresGameIL alone keeps a test only out of the gate.
+- This supersedes plan 010's empty RefAsm stamp and review 008's F2
+  ruling, and applies D46; the maintainer chose the stub stamp and its
+  precedence on 2026-10-28.
+- The v1.5.6 impact record names the seventh failure's class
+  (Patch109WiringTests, not ManyHammersWiringTests) and the corrected
+  counts.
+
+Install: strict binding gate 818 of 818; full suite 27,952 passed,
+0 failed, 7 skipped. RefAsm: build 0 errors; with BANNERLORD_GAME_DIR
+set to the install, the gate passes 591 of 591 and the unit step fails
+the same 7 as with it unset. An incremental build in either direction
+regenerates both stamps. Review: tier-2 deep review and a convergence
+pass, RCA docs/reviews/rca-nogame-gate-2026-10-28.md.
+
+Not tested: the laptop, a Release build and an IDE test runner.
+
+#### fix(lindon): v2.0.36 - elven banners for the six houses and the realm
+
+`f4d3ff6e`
+
+Lindon's six noble houses flew the dark Gundabad orc crest on the map
+and in battle. Each house now has its own elven sigil in gold on light
+blue: the Falathrim a lozenge of stars, Edhil Mithlond a leaf lozenge,
+Nos Galdor the Sindar leaf, Nos Brithombar a compass rose, the Wardens
+of Ered Luin the Noldor sun ring and Nos Eglarest a starburst. The
+kingdom, which flew Rivendell's banner, now flies the Falathrim's
+stars, so Mithlond and its ruling house show them too. Existing saves
+get the new banners at their next load (Banner Injection); in an old
+save a Lindon house that leaves the kingdom shows its sigil in the old
+grey colours until the next load.
+
+Cause: the new-faction generator clones every clan from
+clan_gundabad_1, banner included, unless the realm names a banner,
+and the #1039 one-off copied that key into the four new houses. The
+one-off now records the six keys, the Lindon tests require Noldor,
+Sindar or Silvan sigils for every Lindon clan and the kingdom, and a
+generator test requires every regeneratable realm to name its banners.
+RCA: docs/reviews/rca-lindon-banners-2026-10-28.md (#1039).
+
+Review: /deep-review tier 2 (lenses 5, 7 and Tooling); Codex not run.
+
+Verification: the C# suite passed 27,950 (0 failed); the Python tool
+suite ran 5,925 tests, all OK, the two new banner tests included;
+validate_moduledata.py reports 0 errors; validate_xml_schemas.py
+passes clans.xml and taom_spkingdoms.xml; the one-off's dry run
+reproduces the clan block. Not yet in game: the deployed module still
+holds the old keys until a build, then the check in the Lindon feature
+doc's step 7.
+
+#### fix(map): v2.0.36 - Dunland names, 7 village descriptions, safer tools
+
+`87ffea9b`
+
+Four Dunland towns and castles showed their old Calradian names in 11
+languages (Galtrev showed "Epicrotea"); they now show their English
+names until the translation backlog (#763) translates them. Seven
+villages that had no description get one, eight descriptions now name
+their fortification as the map does, and 96 language rows that no
+settlement read are gone (#1042).
+
+The deep review of #1042 found that the map tools could leave a
+half-finished repair behind, and that nothing would notice a reinstall
+undoing it. Now:
+- Apply-MapVillageNames.py writes the cache first and the master last,
+  so a run that fails part-way is finished by running it again. It
+  refuses a name another settlement already carries, and exits 2 on
+  the wrong file.
+- The two #1042 one-offs refuse to run without --rerun-retired, since
+  a re-run after #763 would turn translations back into English.
+  write_village_descriptions.py --check, also a live test in the
+  Python suite, fails after a reinstall of an older TAOM_Map package.
+- generate_new_faction_settlements.py is retired the same way.
+- Tests cover each guard in the tools' main(): 19 deliberate breaks
+  each fail a test.
+
+The live TAOM_Map files were written at 06:03 with backups beside them
+(*.bak_descriptions_20261028_060318, *.bak_reset_stale_20261028_060318)
+and reach players with the next TAOM_Map package; release-process.md
+now checks each channel for the repair. The loc coverage baseline is
+left for the Ered Luin merge, which changes it too: refresh it after
+both have landed.
+
+RCA: docs/reviews/rca-map-tool-followups-2026-10-27.md. Follow-ups:
+#1043. Review: /deep-review tier 1 (lenses 5, 2, 7 and Tooling) and
+one convergence pass; Codex not run.
+
+Verification: the Python tool suite ran 5,866 tests, all OK, the live
+drift test included. The C# build succeeded; the C# suite passed
+27,940 and failed 3, none from this change: the engine-bump RefAsm pin
+test, and two live-data tests that read the 31 Ered Luin rows already
+on the live map while the clans and culture they name wait on the
+unmerged Ered Luin branch (validate_moduledata gives 0 errors on that
+branch). add_map_villages.py --check passes; add_map_fortifications.py
+--check fails only on those Ered Luin rows. validate_xml_schemas.py
+passes on the 13 live files and the API snapshot reproduces. Not
+checked in game yet: the new texts in the encyclopedia and the names
+in a translated language.
+
+#### fix(ui): v2.0.35 - Shadowfax Screens convergence fixes and RCA
+
+`b747cf39`
+
+Convergence review fixes: the clan check reads 1 run, 2 skipped; an
+inventory test class is tagged RequiresGame; the quest log open cannot
+leave its scope stuck if the patch check throws; stale comments and
+removal checklists corrected. Adds the review RCA, two lessons and a
+conventions line to the parallel builder checklist.
+
+Review: docs/reviews/rca-shadowfax-screens-speed-2026-10-19.md
+Refs #851, #852, #853, #854
+
+#### fix(ui): v2.0.35 - quest log sort stops boxing, rechecks its hooks
+
+`642f92e3`
+
+Review fixes for the quest log. Sorting no longer boxes an argument or
+walks the journal for each comparison. Each open checks again that the
+four guard patches are attached, and the open line names the switch
+state.
+
+Refs #854
+
+#### fix(ui): v2.0.35 - party fast open keeps the portrait cache only
+
+`579bb93f`
+
+Review fixes for the party screen. The item category count cache is
+removed: it saved at most about a millisecond per open. The portrait
+cache stays. The open line now names the switch state.
+
+Refs #853
+
+#### fix(ui): v2.0.35 - inventory fast open keeps the name sort skip only
+
+`22695bd0`
+
+Review fixes for the inventory and trade screens. The concept lookup
+cache is removed: it saved under a microsecond per row. The open timer
+now times the inventory view model build and logs the real inventory
+mode. A failed rewrite writes one warning line.
+
+Refs #852
+
+#### fix(ui): v2.0.35 - clan fast open swaps one call, timer on the VM
+
+`c3266287`
+
+Review fixes for the clan screen. The skip is now a call swap inside
+ClanPartiesVM.RefreshValues, so postfixes on RefreshPartiesList run
+only for builds that really run. The open timer now times the clan
+view model build. The module wiring tests are one class.
+
+Refs #851
+
+#### fix(careers): v2.0.34 - career screen shows the root perk, keystones
+
+`23799be8`
+
+The career screen's Active Effects panel left out the career's root
+perk and the passives of keystone picks, although the game applies
+both (#769). It now lists every passive the hero holds, by the same
+rule the passive service uses, and the header shows the root perk's
+text under the career description.
+
+An in-game look of the new header line is owed (step 14 of the
+Gondor pilot check in docs/features/career-system.md). Open for the
+maintainer: keystone tooltips still say "While active" for their
+always-on passives, some older root texts promise more than their
+effect gives, and the panel still shows no attack mask.
+
+Reviewed by three lenses, two refuters per MEDIUM finding and a fix
+round. Refs #769.
+
+#### fix(tools): v2.0.34 - career generator caps every type, checks roots
+
+`c3859c41`
+
+A late data-flow review of the career forks generator (#769) found
+gaps that guard future kingdom specs; the shipped Gondor data is
+unchanged.
+
+- A career's root perk now has a budget (1.5 value units), and every
+  priced effect type belongs to a cap group, so no build can stack an
+  uncapped bonus. Nine types gained draft caps (ammo, health, healing,
+  mount charge and health, speeds, spotting range).
+- A spec's archetype must match the runtime archetype map the ability
+  executors use.
+- The tool warns when an added key already has translated rows (a
+  removed option coming back would revive old text), and when an
+  option's effects change under unchanged text.
+- A mutation's operation is optional, and troop_class "All" is
+  accepted.
+- Seven older cavalry roots exceed the new budget; when their batch
+  regenerates them they shrink to +5% mount charge (decided under the
+  maintainer's delegation, noted in the rules).
+
+Reviewed by two lenses, two refuters per MEDIUM finding and a fix
+round. Refs #769.
+
+#### fix(careers): v2.0.34 - bound perk magnitudes, stronger wiring pins
+
+`d0907915`
+
+A Codex review of the campaign career perks (#769 E11) found three
+small issues; nothing changes in play.
+
+- The career data loader now drops a perk whose value is above 10,000
+  in size, with a warning. A very large value could otherwise add up
+  to infinity and break the loot and raid gold the engine pays.
+- Three tests now catch a recruit discount that is computed but not
+  used, daily gold paid twice, and lost daily training.
+- The docs again name the "Daily Gold Change" message as the place to
+  see the daily gold perk. An earlier review said vanilla shows no
+  such message; it does.
+
+The RCA's Codex section, the review log and the Codex track record
+are updated.
+
+Refs #769. RCA docs/reviews/rca-career-e11-2026-10-15.md.
+
+#### fix(careers): v2.0.34 - crush hold rolls its own locked generator
+
+`9f58c58d`
+
+The troop crush-hold counter (#769 E10) rolled with MBRandom on the
+engine's defend-collision callback, which the engine may call from
+several threads at once. MBRandom is the game's single shared random
+generator and has no lock, so two rolls at the same moment could
+corrupt it. A Codex review reproduced the corruption against the
+installed v1.5.5 generator. The hold now draws from its own generator
+under its own lock, and a test pins that it never draws MBRandom.
+
+Nothing changes in play yet: no shipped career uses the crush hold.
+The older Combat Mechanics roll on the same path still uses MBRandom
+and is a follow-up.
+
+The Codex prompt and report, the RCA's Codex section, the review log
+and the Codex track record are updated.
+
+Refs #769. RCA docs/reviews/rca-career-e8e10-2026-10-14.md.
+
+### Data
+
+#### data(harad): v2.0.36 - Harad characters wear yotthani's face paint
+
+`eeef0d58`
+
+Harad villagers, notables, wanderers, troops and lords now wear war
+paint: 8 designs for men and 7 for women, made by yotthani and
+imported through the Modding Kit. The designs are appended to the
+human tattoo lists, so existing tattoo numbers do not move. The face
+editor offers them and 12 new tattoo colours to every human player.
+Umbar stays clean-faced on a new preset, fighter_umbar.
+
+Lords with their own face key never roll, so 53 Harad lords now hold
+a design and a colour in the key itself. The other 170 Harad lords
+roll from the preset through the Lord Face Variety pass.
+
+Known limitation: a stored tattoo colour is a position along the
+palette, so the longer palette changes the tattoo colour of other
+cultures, including Rhun troops and 270 lord rows.
+Known limitation: the face editor tiles for the new designs show
+unrelated thumbnails. The paint on the head is correct.
+Known limitation: saved lords keep their stored face until a new
+campaign.
+Known limitation: the textures have no stated licence yet. Confirm
+the terms with yotthani before a public release.
+
+Issue #1100. Review record:
+docs/reviews/rca-harad-war-paint-2026-11-08.md. The Codex pass was
+not authorized and is owed.
+
+Not-tested: the 24 colour count in the face editor; painted Harad and
+clean Umbar in a battle; the Rhun design; a painted lord of each kind
+
+#### data(custom-battle): v2.0.36 - Thandirion in the Lorien commanders
+
+`c4c39449`
+
+The Marchwarden captain (lord_L2_2, best Marchwarden kit) joins
+Galadriel and Celeborn in the curated Lothlorien custom battle list.
+
+### Refactoring
+
+#### refactor(character-creation): v2.0.36 - unify bonus resolution
+
+`e99fcccc`
+
+Share one skill and attribute resolver between narrative and career options. Remove the duplicated maps while preserving resolution timing, null-result logging, factory invocation and exception behavior.
+
+Update character-creation and career-selection docs, correct the career count and age-selection menu id, and record the factory-testing lesson.
+
+Verified with 245 character-creation tests and the full managed suite: 37,658 passed, 9 skipped, 0 failed. Documentation checks passed.
+
+Interactive verification remains tracked by #1097 with triage-needs-ingame.
+
+Refs #1097
+
+#### refactor(marshal): v2.0.36 - hold the line gets its own driver
+
+`786df77b`
+
+Hold the Line now has its own driver beside the fire driver, and the
+engine reads of a blow and a shot move into one combat reader. The
+slot counts live in two small types with their own tests. Both the
+clamp and its measure read the soldier's position, where the measure
+used to read the frame's origin; the two are stored apart in the
+engine, so runs before this change used the other read.
+
+Behaviour changes with this round:
+- A soldier who leaves the line no longer adds to the closer and
+  farther counts, and loose= counts soldiers in the line only.
+- When the control company goes quiet, the next control is the
+  company that fought most in the window just judged, not the one
+  with the most blows in the whole battle.
+- hold_line_slot and hold_line_strike fail flag-not-restored when
+  the soldiers' attack flags do not come back after the hold.
+- Every way a hold ends (the key, a new press on a held company, the
+  AI taking the company, a team change) writes the last slot line.
+- The hold-slot line names steered=, closer= and farther=, and its
+  pass needs at least five steered reads.
+- A soldier whose flag cannot be given back is logged as an error,
+  which fails the captured check.
+
+Review: a second wave on the first review, then seven lenses with
+three skeptics per finding and a critic, and Codex at high effort. No
+reviewer found a HIGH; the three MEDIUM findings and all LOW findings
+are fixed, and an independent checker read the fixes.
+
+The maintainer waived the GitHub issue for this work.
+
+#### refactor(race-age): v2.0.36 - pregnancy rules move into the service
+
+`79d90c08`
+
+The immortal checks, the fertility window and the base chance formula
+sat in TaomPregnancyModel behind Hero reads, the ADR-007 extraction
+deferred when #131 closed. IRaceAgeService.GetDailyPregnancyBaseChance
+now holds them, with six new tests. The model keeps the Hero reads and
+the Virile perk, and returns exactly 0 for a guarded hero before it
+reads a perk.
+
+One edge differs. A clan far over its cap made the old formula go
+negative; the model now returns 0 there. Both mean no pregnancy.
+
+No issue: Mike asked for the RCA follow-ups fixed, 2026-11-04.
+
+#### refactor(banner-colors): v2.0.36 - remove a patch that changes nothing
+
+`8dbdfeb1`
+
+ClanPartyItemVM_GetCharacterCode_Patch could never change a result. For
+a hero, vanilla's ClanPartyItemVM.GetCharacterCode returns
+CampaignUIHelper.GetCharacterCode, which TAOM already recolours. For a
+non-hero, BannerHeroAdapter gives no clan info, so the postfix returned
+early. The patch and its one SubModule.cs line go.
+
+Owed in game: a clan screen party row's hero portrait with clan colours
+on.
+
+No issue: Mike asked for the RCA follow-ups fixed, 2026-11-04.
+
+#### refactor(race-age): v2.0.36 - drop an offspring rule vanilla repeats
+
+`7983854e`
+
+TaomHeroCreationModel overrode GetCharacterTemplateForOffspring to give
+a son his father's template and a daughter her mother's. Vanilla's
+DefaultHeroCreationModel does the same (lines 346-353), so the override
+goes. Patch13_RaceAge and the model's kit overrides stay.
+
+No issue: Mike asked for the RCA follow-ups fixed, 2026-11-04.
+
+#### refactor(ui): v2.0.36 - one strict hex colour parser
+
+`c59a2b00`
+
+RealmPaletteProvider and RaceAbilitiesConfigProvider each held their own
+strict #RRGGBB check. Both now call HexColorParser.TryParseRgb, which
+refuses eight digits and a short byte padded with a space. Both keep the
+colours they gave before: their existing test rows pass unchanged, and
+two new tests cover the parser.
+
+No issue: Mike asked for the RCA follow-ups fixed, 2026-11-04.
+
+### Tests
+
+#### test(tools): v2.0.36 - Verify named retopology UV maps
+
+`f6cd9971`
+
+Exercise the flatten operator with distinct active and requested UV
+layers and verify that it reads the requested layer without changing the
+source selection. Record the runtime evidence in the feature guide.
+
+The maintainer waived the GitHub issue requirement for this work.
+
+#### test(faction-ui): v2.0.36 - share campaign UI regression checks
+
+`02ac37d8`
+
+Cover themed movie resource holds, camp caption hints and layer ordering,
+client gallery registration, and the settlement description close path.
+Retain the current client-isolation counts and upstream's themed Long
+Defeat prefab checks while merging the pending local test additions.
+
+Validation: build and 139 focused tests passed against Bannerlord 1.5.6.
+No production code or module assets changed.
+
+#### test(long-defeat): v2.0.36 - check the themed HUD and panel movies
+
+`8032749b`
+
+The Long Defeat theming (6e9a5a5e7) added TAOMLongDefeatHud and
+TAOMLongDefeatPanel under FactionUI. FrontEndMovieService loads them in
+place of the original two movies over the same LongDefeatHudVM, and 28
+new view model properties are bound only there. The prefab test read
+only the originals, so it called those properties unbound and failed
+on trunk.
+
+The two binding tests now read all four movies. The tests that guard
+play (no root DataSource, a HUD that takes no clicks, panel buttons
+that pass no events to their children, a panel that never fires the
+volley) now read both HUDs and both panels, because the originals load
+only when the theme fails. The speed, fortification and text tests stay
+on the originals, whose themed layout differs by design.
+
+Review: tier 2, data-flow lens; its coverage finding is applied. RCA
+rows 13 and 14 in docs/reviews/rca-long-defeat-phase4-2026-11-06.md.
+
+Not-tested: no game run; this changes tests only.
+
+#### test(long-defeat): v2.0.36 - guard the Helm's Deep inner gate
+
+`d4e4fb91`
+
+The Helm's Deep rework in the Kit this morning dropped the scene's
+hidden inner gate. The siege AI reads that gate with no null check
+(BehaviorAssaultWalls once the outer gate is open, MovementOrder on a
+defenders' charge), so The Long Defeat and a campaign siege of Helm's
+Deep would have thrown. Mike put aserai_castle_gate_inner_l1 back at
+(137.5, 185.8, 32.7), and lotraom-assets carries it as 6afd64ce5.
+
+A new LiveInstall test, LongDefeatHelmsDeepGateTests, reads the live
+scene for one visible outer gate and at least one inner gate. It reads
+gates the way the engine finds them: CastleGate objects only, with an
+entity's own tags replacing its prefab's. It fails on the gateless
+scene of lotraom-assets 72f3b4a17 and passes on the live one. The
+adapter comment and long-defeat.md no longer cite the old scene line.
+
+Review: tier 2, data-flow lens. It found the tag merge, the CastleGate
+and visibility checks and three prose points; all are fixed. RCA rows 9
+to 12 in docs/reviews/rca-long-defeat-phase4-2026-11-06.md.
+
+Not-tested: no game run on the restored gate yet.
+
+#### test(dire-wolf): v2.0.36 - every Armory Monster file must be loaded
+
+`e7ab20fc`
+
+A merge of KEYforce's Lorien and Snow Orc trees replaced the live
+Armory SubModule.xml on 2026-11-05 and lost the dire wolf's Monster
+row. The engine then loaded no dire_wolf, and a wolf rider's portrait
+threw in FillAnimationSystemData. The live row is restored with
+apply_dire_wolf_armory.py --apply.
+
+LiveMonsterRegistrationTests now fails when a Monster file in the live
+Armory has no SubModule.xml row, for every creature. It failed on
+lotr_monster_dire_wolf before the fix and passes after it. It skips
+where the Armory is not installed.
+
+Not-tested: the portrait and a battle with wolf riders after a game
+restart.
+
+Refs #1081.
+
+#### test(seat): v2.0.36 - read only the Seat's rows after stage three
+
+`e03d4ad6`
+
+The step table holds Marshal's rows after the Seat's once the two
+branches merge, so the test now takes the five rows it names.
+
+#### test(gates): v2.0.36 - close two holes in the new gates
+
+`ed3f911e`
+
+CoopPresenceReadGateTests missed legal whitespace around the dot. The
+visual definition gate counted a VisualState inside an unused definition
+as a widget that names it; it now reads only the widget tree. It also
+fails the other direction: a widget that names a definition its prefab
+lacks, which throws at movie load (WidgetExtensions.cs:120). Shipped
+prefabs read clean.
+
+RCA: docs/reviews/rca-follow-ups-2026-11-04.md.
+No issue: Mike asked for the RCA follow-ups fixed, 2026-11-04.
+
+#### test(faction-map): v2.0.36 - pin Blue Craig's and Lindon's game_faction
+
+`f9a8bdeb`
+
+Faction_GameFaction_IsItsOwnCulture pins goblins_of_blue_craig to
+bluecraig and high_kingdom_of_lindon to lindon, the rows a retired map
+tool would have overwritten with stale values. A temporary stale value
+turned the pin red.
+
+No issue: Mike asked for the RCA follow-ups fixed, 2026-11-04.
+
+#### test(core): v2.0.36 - race test reads cultures through the real loader
+
+`834e0703`
+
+CultureRaceConsistencyTests kept its own repo-root walker and a regex
+parser of cultures.json. It now uses RepoPaths and
+CultureCreationDataProvider, the loader the game uses. A temporary edit
+that reversed Isengard's keys and took uruk_hai out of its races turned
+the test red, so a reordered entry is read.
+
+No issue: Mike asked for the RCA follow-ups fixed, 2026-11-04.
+
+#### test(coop): v2.0.36 - gate co-op presence reads behind an allowlist
+
+`53febe1a`
+
+Presence is true whenever the Coop module is enabled, so it suits only a
+startup or session launch decision (lesson "Presence is not authority").
+CoopPresenceReadGateTests fails a new read outside seven named files,
+each listed with its reason, and fails a listed file whose read is gone,
+so the list cannot rot. Renaming one allowlist key turned both tests
+red.
+
+The RCA said to propose this gate to Mike first. His word of 2026-11-04,
+to fix all follow-ups, is the go-ahead, and the test is one file to
+remove if he disagrees.
+
+No issue: Mike asked for the RCA follow-ups fixed, 2026-11-04.
+
+#### test(gates): v2.0.36 - gates for entry points, services and sprites
+
+`8caac7da`
+
+ADR-002 and ADR-007 claimed tests that never existed, and they could
+not stop a repeat. These hold those rules for every committer who runs
+the suite.
+
+- EntryPointLineCountGateTests fails an entry point of 150 lines or
+  more. EntryPointLineCountBaseline.txt lists the 18 older classes, each
+  with the most lines it may have, and it only shrinks. A manually
+  applied Harmony patch counts as an entry point.
+- ServiceSignatureGateTests fails a public, internal or protected
+  member of a *Service type or an I*Adapter interface that names a
+  TaleWorlds class. TextObject is the one exception.
+  ServiceSignatureBaseline.txt lists the 113 older signatures. It needs
+  the game install.
+- ServiceLocatorGateTests fails an IoC.Resolve in a service, a view
+  model or an engine. There are none today.
+- PrefabSpriteTests fails a prefab sprite no sheet registers.
+- DependenciesPairing_MainMetadataEqualsDependenciesVersion holds #371:
+  the main metadata and the dependencies version must match, and
+  /release now runs it.
+- NotableTemplateGenderTests also requires each notable and headman
+  template in its own culture's notable_templates block, with a battle
+  and a civilian set. An empty list crashes the Trader start.
+
+AGENTS.md and the rules name the gates, and the ADRs now say what holds
+them. In ADR-007, "sealed" was partly false: Town, Equipment and
+TroopRoster, among others, are plain public classes.
+
+No issue: Mike waived one for the rules review, 2026-11-03.
+
+#### test(faction-ui): v2.0.36 - count the temporary face generator patches
+
+`f8b90d3f`
+
+d5522c9f5 added a temporary diagnostic, FaceGenFirstOpenDiagnosticPatch
+and its nested TickWatch, to Patch95_FactionUI. Two checks failed on
+trunk since then: EveryPatch95Class_CarriesTheAppliedCategory still
+expected eight patch classes, and the API snapshot did not list the
+two new patch targets.
+
+The test now expects ten, and a comment names the two temporary classes
+and says to put the count back to eight and regenerate the snapshot
+when the diagnostic is removed. patch-targets.md is regenerated (343 to
+345 patches).
+
+Reviewed with /deep-review, Data flow lens (tier 2, no Codex on Mike's
+word): no finding in the change. Three low follow-ups in the diagnostic
+itself went to the session that owns it.
+
+#### test(ui): v2.0.35 - module wiring tests cover all four screens
+
+`e77ef965`
+
+After the four screen changes met in one module, two wiring tests no
+longer registered the co-op provider the clan service needs, and each
+test reset only its own screen's static hook. Every module test now
+registers the shared dependencies and resets all five hooks.
+
+### Documentation
+
+#### docs(fords-of-war): v2.0.36 - round 5 record and parked status
+
+`43d34966`
+
+Fords of War is parked while other work goes ahead. The feature doc
+now opens with a Status section: what round 5 showed, what a person
+still owes in game, the items raised in chat that had no written
+home, and how to resume. It also describes the round robin queue,
+which until now lived only in a session script.
+
+Round 5 on fcc7c39c8 played 75 of 78 pairs. Gundabad's pack size feat
+made it too strong (11 of 12), Rohan still won 10 of 12, Mordor fell
+to 1 win with the same troop trade as round 3, and the archers of the
+four shield-wall factions traded far worse than in round 3. 40 of the
+75 matches ended on the time limit. The balance log records the round
+and five round 6 proposals, which are not applied. The per-troop
+records are in rounds/round5_fcc7c39c8.json.
+
+Known limitations gain the one crash of round 5, at
+TaleWorlds.Native.dll+0x565D8D during mission teardown, with its
+cause still open, and the field evidence for the 0x6B716E fix: no
+such crash in 98 runs.
+
+No issue: Mike waived issues for Fords of War, 2026-10-31.
+
+#### docs(supply-lines): v2.0.36 - correct who can meet a caravan
+
+`e6edc572`
+
+The Supply Lines notes said a single player with the feature on meets
+a caravan only on a large frame step. That holds outside an army. A
+player who leads five or more attached parties has a larger meeting
+radius and can meet a caravan at normal speed after clicking it. So
+the caravan bug fixed in 218f4ee31 is a more likely cause of a delivery
+crash for army leaders than the earlier notes said. No crash bundle
+proves it (#1104).
+
+This changes no gameplay. A Codex review of 218f4ee31 also corrected a
+regression test that a small rewrite could defeat, a rollback test that
+used two different event states, the in-game check for the patch's
+error path, and a co-op note about what a guest sees.
+
+RCA: docs/reviews/rca-supply-caravan-meeting-2026-11-09.md
+
+Not-tested: no in-game run. The checks in
+tools/ingame_checks/1104.toml and 1099.toml are still owed.
+
+#### docs(native): v2.0.36 - on-demand RTTI class recovery
+
+`78f91890`
+
+Ghidra's RecoverClassesFromRTTIScript makes class-member native code
+much easier to read, but it also renamed 111 seeded engine-method
+implementations, so it stays out of tools/native_decompile.py. The
+maintainer chose to keep it available for the day a crash needs it.
+
+docs/features/ghidra-native-decompile.md now says when to use it, how
+to run it on a copy of a project (about 10 minutes per binary), how far
+to trust the output, and what a permanent adoption would need.
+/native-crash-triage points to that section at its decompile step.
+
+This also corrects the review record and a lesson from #1098. Running
+the script before seeding would not repair the names, because _seed
+names only functions that still have a default name.
+
+Docs only, no code changed. The script in the doc is a trimmed copy of
+the one the spike ran; that exact text was not run. Follows #1098.
+
+#### docs(reviews): v2.0.36 - record the ArtCraft review
+
+`ee10acfd`
+
+Review storytold/artcraft at 79d87b2b5 through the GitHub API. Nothing
+was cloned, built or run, and no code was ported.
+
+The app is not installed. Its login windows extract provider cookies,
+it copies browser TLS fingerprints, and its webview allows unsafe-eval
+and third-party analytics. NOTICE excludes its bundled sounds, memes
+and motion data from the license.
+
+The asset pipeline doc now lists the Tripo H3.1 inputs face_limit,
+quad, the multi-view image order and the quality levels, and
+/prep-tripo-prop points to them when the FBX does not exist yet. The
+inputs were confirmed on fal's API page. No TAOM asset has used them.
+
+Multi-view input, Hunyuan Smart Topology and Blender blocking stay open
+until a paid trial runs.
+
+Not-tested: no Tripo generation used these inputs
+
+#### docs(reviews): v2.0.36 - record the hyperframes review
+
+`a29bbc25`
+
+Review of heygen-com/hyperframes at 327e20208 through /adopt-external.
+Nothing was taken. It renders HTML to MP4 for coding agents, which is
+out of domain for TAOM.
+
+CLI telemetry is on by default, and all 9 published skills tell the
+agent to run a usage beacon as they start, so it was not installed.
+
+A gate that makes comment citations resolve was measured and not
+added: 4 of 895 repo-path citations in C# comments are untracked.
+
+#### docs(reviews): v2.0.36 - re-review impeccable at 924bbd194
+
+`892c988a`
+
+The second review of pbakaus/impeccable covers f75ee2a2 to 924bbd194
+(810 files changed). It stays uninstalled and nothing new is ported.
+The three references behind the #1007 ports did not change, so the
+Gauntlet screen checklist and the translation fit report stay current.
+
+The launcher now probes a bundled binary's version, but still runs it
+and IMPECCABLE_BIN with no checksum. `impeccable context` can rewrite
+hook settings after a local consent key is set.
+
+Not read: crates, tests, live-browser.js. Nothing was run.
+
+#### docs(provenance): v2.0.36 - move the claude-mem register row
+
+`d380e127`
+
+Move the claude-mem row below the jakubkrehel row in the provenance
+register. The text of every row is unchanged.
+
+No issue: a one-row move with no change of content.
+
+#### docs(reviews): v2.0.36 - index the jakubkrehel skills review
+
+`3023b398`
+
+Add the jakubkrehel/skills review to the adoption history and to the
+provenance register as comparison-only. Nothing from it is in TAOM.
+
+#### docs(skills): v2.0.36 - adopt mattpocock/skills review ideas
+
+`f1d7b126`
+
+Reviewed mattpocock/skills at 4ae2317dd with /adopt-external. Nothing
+was installed, and no upstream file was copied.
+
+/deep-review's completeness lens now reads the issue or plan behind a
+diff and reports requirements that are missing or wrong, and behaviour
+nobody asked for. /investigate now asks for one check that goes red
+on the bug and three ranked hypotheses with predictions, tags
+temporary log lines with a unique prefix, and accepts "no seam" with
+a reason where a regression test cannot be written.
+
+Skill authors get three more tests in external-skill-ports.md. A new
+page, session-phase-boundaries.md, helps choose between continuing,
+/clear, a resume card, a subagent and /compact. agent-teams.md has a
+design-it-twice section for use when the maintainer asks, /issue
+separates open questions from out-of-scope work on multi-session
+features, and the ADR template asks whether a decision needs an ADR.
+
+The vet of 183 files reported one HIGH, a false positive on a shell
+comment in a file TAOM did not take. The 2026-05-29 verdict that
+upstream's diagnose skill was duplicative is reversed for four points
+that /investigate lacked.
+
+No issue was opened: this is skill text and a review record, not a
+feature.
+
+#### docs(rules): v2.0.36 - rank AI-writing tells and link the full list
+
+`5472faa2`
+
+The prose rules now order AI-writing tells by strength. One sighting
+of a strong tell justifies an edit, and a weak tell needs others in
+the same passage. docs/reference/writing-tells.md holds all 26
+patterns, the condition for keeping each one, and TAOM's exceptions.
+AGENTS.md links that page, which is how Codex and other clients get
+it.
+
+A chat reply now leads with its decision. In chat, status text and
+code comments, ASD-STE100 wins where it conflicts with a tell. Commit
+bodies, release notes, issues and docs stay natural prose, because
+/release publishes commit bodies to players. /deep-review, /improve
+issue drafts and the /release note each point at the list.
+
+The list adapts blader/humanizer v3.1.0 (commit 0ef9fe5bc, MIT) in
+TAOM's words. Nothing from it was installed or run, and the /humanizer
+skill removed by the 2026-10-08 audit stays removed. A phrase gate in
+the doc linter was measured and declined: 31 phrases had no true hit
+in 981 commit bodies and 107,985 added markdown lines.
+
+Player-facing strings and existing prose are out of scope. Chat has
+no mechanical check, only the always-loaded rule.
+
+No issue: Mike waived the issue for this work, 2026-11-08.
+
+#### docs(reviews): v2.0.36 - record the Game Studios review
+
+`d71f8952`
+
+Reviewed Donchitos/Claude-Code-Game-Studios at 05ad7c8a with
+/adopt-external. Nothing was installed. The template is for new Godot,
+Unity and Unreal games, so most of it does not apply to TAOM.
+
+Four ideas came over in TAOM's words. The tooling review lens now asks
+who writes a key that a tool reads, flags hand-written gate lists, and
+warns about assertions that pass by accident. /game-run now asks for
+screenshots when a change alters what is drawn on the screen, and the
+agent reads them from the Fords runner's folder.
+
+On two weeks of transcripts, the template's large-read guard would
+touch at most 4.27% of Read output, and its subagent artifact hook had
+no problem to solve, so neither was added.
+
+No issue was opened: this is review text and a record, not a feature.
+
+#### docs(reviews): v2.0.36 - record the claude-mem review
+
+`811fed98`
+
+Reviewed thedotmack/claude-mem at 3ab6e1a and took nothing from it.
+It records every tool call through hooks, compresses the records with
+a model and injects them into later sessions, which ADR-011 and the
+Hindsight rejection already rule out. Telemetry is on by default.
+
+The one change to how TAOM works is in the adoption procedure: step 1
+now searches adoption-history.md first, because a first review and a
+re-review looked the same until someone searched.
+
+#### docs(reviews): v2.0.36 - record the jakubkrehel skills review
+
+`5e2899da`
+
+Review of jakubkrehel/skills at 157da620 through /adopt-external.
+Nothing was taken. The repository holds 15 skills for web interfaces,
+and TAOM's screens are Gauntlet prefabs. Its string, button and state
+rules already exist in TAOM.
+
+A removed-lines review step was tried on the last 40 prefab commits
+and not added: it fired on 14 of them, mostly deliberate cleanups.
+
+#### docs(rules): v2.0.36 - a capped result proves no complete list
+
+`ce95aaab`
+
+The evidence rule now says that a capped search result, such as a
+Grep head_limit or a truncated: true response, proves neither a
+complete list nor a total. An agent must say that the result was
+capped, or run the search again without the cap.
+
+The idea came from a review of NVIDIA/auto-ontology, read at c447003
+and not installed. The rest of that repository is a text-to-SQL
+product with no use in TAOM. The review entry and provenance row are
+in this commit.
+
+#### docs(reviews): v2.0.36 - record the t3code repository review
+
+`bc1e9ed5`
+
+Review pingdotgg/t3code through /adopt-external. Nothing was taken,
+cloned or installed. The project is a GUI over coding agent CLIs. It
+keeps telemetry on by default, reads the Claude and Codex account ids,
+and starts new threads in Full access.
+
+Two ideas were tried against TAOM's own record before any edit. A
+reverse-state check for /deep-review misses the one case that escaped
+review and fits only cases the review already caught. A test placement
+rule found no repeated case in the last five test-adding commits.
+
+No issue was opened for this record, on the maintainer's word to
+commit it and move on.
+
+#### docs(reviews): v2.0.36 - record the worktrunk re-review
+
+`4e3bbf5a`
+
+worktrunk stays skipped after a second look at 76 newer commits, read
+at a6ebf8b. Its forced removal now saves uncommitted work to a backup
+ref, but deleting a branch from a clean worktree saves nothing, and no
+TAOM hook has a rule for the wt binary. Its check for merged branches
+would reclassify neither of our 2 unmerged local branches. Nothing was
+ported, installed or run.
+
+#### docs(reviews): v2.0.36 - record the kepano repository review
+
+`bc8345de`
+
+Reviewed Steph Ango's public repositories through /adopt-external and
+took nothing. The Obsidian skills serve a wikilink vault format that
+ADR-010 rejected, and defuddle needs a global npm install for a need
+TAOM rarely has.
+
+A hand trial of the vault's random revisit on five old lessons found
+none stale or duplicated, so /harness-retro gains no step. The result
+is in the review record, the adoption history and the provenance
+register.
+
+#### docs(blender): v2.0.36 - require quad toolkit in workflows
+
+`a03a04dc`
+
+Route all Blender quad retopology through the merged toolkit: independent
+cube-map for eligible meshes and the licensed Exoside bridge otherwise.
+Add the rule to shared AI instructions, Tripo and map-icon procedures,
+task indexes, and the shareable package guide.
+
+No GitHub issue was created; the maintainer's prototype waiver covers
+this documentation follow-up.
+
+Not-tested: no new Blender runtime run was needed for documentation-only
+changes; the extracted package passes 32 tests and Ruff.
+
+#### docs(tools): v2.0.36 - correct quad toolkit test counts
+
+`2605a7e0`
+
+Correct the packaged README and Exoside feature guide to match the
+32 focused tests, including 18 bridge tests.
+
+No GitHub issue was created; the maintainer declined a retroactive
+issue for this prototype.
+
+Not-tested: no Bannerlord runtime check applies to these Blender
+documentation corrections.
+
+#### docs: v2.0.36 - delete the provenance rule and rule history doc
+
+`ca6312a9`
+
+Two files are gone at the maintainer's request:
+.claude/rules/provenance.md (the path-scoped third-party attribution
+rule) and docs/reference/rule-provenance.md (the archive of the "why
+this rule exists" sections behind the always-load rules).
+
+Every mention of either file is removed. Live docs that pointed at the
+rule now point at docs/reference/provenance-register.md, which stays as
+the record of third-party sources, along with asset-provenance.md,
+tools/check_provenance.py and the /verify provenance step. Review
+records, RCAs, plans, the handwritten changelog archive and ADR-011
+lose the mention too; CHANGELOG.md is generated by /release and keeps
+its one line.
+
+The lint_rule_drift test fixture that borrowed rule-provenance.md as a
+sample unscanned reference file now uses docs/reference/other.md.
+
+Verified: tools/tests/test_lint_rule_drift.py 47 passed,
+check_provenance.py exits 0, lint_docs.py --fail-on-drift exits 0 with
+no dead links.
+
+#### docs(long-defeat): v2.0.36 - Helm's Deep rework, scene facts updated
+
+`8493c3f2`
+
+The maintainer reworked the Helm's Deep scene in the Kit on 2026-11-06
+(new castle geometry and navmesh). An audit compared every fact The
+Long Defeat takes from the scene with the new scene.xscene and with a
+copy of the old one. The spawn frames, the outer gate (same prefab,
+navmesh ids 500 and 501, 15000 hit points), the side walls, the 3
+archer positions, the 4 ladder spawners and the 4 defender sites with
+their mangonel and ballista spawners are where they were, to within
+0.3 m. The old towertop and walltower entities gave way to one
+sm_helms_dep_castle_tower_a, which carries no script, so the tower
+volley still has no mission object to ignore. The defender engine
+spawners, hidden before, are now visible; the boot still disables
+them.
+
+This commit updates the scene line numbers, the tower names and the
+"hidden" wording in the feature doc, the Phase 3 and Phase 4 plans
+and one adapter comment, and dates the navmesh note that rested on a
+run of the old scene. No behaviour changes.
+
+Open, not in this commit: the new scene has no inner gate. The engine
+sets InnerGate only from a gate tagged inner_gate
+(TeamAISiegeComponent.cs:57), and BehaviorAssaultWalls.cs:122 and
+MovementOrder.cs:902 read InnerGate.IsGateOpen with no null check, so
+the attackers' AI is likely to throw once the outer gate breaks. This
+is read from the code, not seen in a run, and the campaign siege of
+Helm's Deep uses the same scene. The fix is the maintainer's choice.
+The two muster points were recorded on the old geometry and must be
+recorded again.
+
+#### docs(troops): v2.0.36 - add-a-troop workflow and the Arnor mistakes
+
+`8ecbf312`
+
+Records what the Arnor elite troops change got wrong and the workflow
+that replaces it, each fact in the place that fires when it is needed.
+
+- .claude/rules/troops.md: three checks before a troop edit. Is the
+  tree generated, who reads the upgrade edge, and does the role curve
+  match the weapon in Item0.
+- docs/modding/troops.md: the generated-tree note, the list of readers
+  of an upgrade edge (AI upgrader, volunteer growth, garrison
+  conversion, field commission, the faction screen), why a second target
+  splits the AI's lords, the curve rule, and a nine-step order for
+  adding a troop to a generated tree.
+- docs/features/weapon-xml-pipeline.md: which usages the Arnor weapons
+  have without a shield, read from the merged data.
+- docs/features/faction-ui.md: the viewport tie-break that needs a line
+  in faction_characters.json.
+- docs/ai-includes/completion-workflow.md: what carries the owed in-game
+  checks when the maintainer waives the issue.
+- The /deep-review skill: brief reviewers with decisions and facts you
+  read, never your own conclusions.
+- docs/reference/rule-provenance.md and docs/reviews/lessons/misc.md:
+  the incident and the lesson.
+- The Arnor RCA gains the process mistakes (code before tests, a scope
+  claim without a trace, an unscoped "no pike item", a relayed claim, a
+  brief that carried conclusions) and lists both failing C# tests.
+
+Documentation only; no code or data changed.
+
+#### docs(lothlorien): v2.0.36 - covers_legs fix, RCA round 2, lessons
+
+`12503a21`
+
+The Lorien armour generator wrote covers_legs="false" on all eight of
+its leg pieces, so every greave drew with the bare shin showing. It now
+writes "true", and a new test pins it. The live Armory was fixed in the
+same way: the Lorien, Isengard and Mordor leg pieces are "true", with a
+backup beside each file. The Uruk-hai shoes stay "false" on purpose,
+like the vanilla moccasins and the lady's shoe. Seven vanilla pieces
+(SandBoxCore, SandBoxCoreMP, NavalDLC) are untouched.
+
+The documentation records what went wrong in the Lothlorien review and
+the process that works:
+
+- RCA round 2 lists ten mistakes with their cost and the right process:
+  calling the armour unversioned when it lives in lotraom-assets, a
+  validator run that read the wrong tree, enlistment rosters seeded out
+  of order and unscoped, a scan limited to four module folders, suites
+  started detached, a second round committed without its own deep
+  review, and two unchecked sentences in an issue draft.
+- new-culture-authoring.md gets a consumer checklist (3d) and the order
+  of generator runs, plus the leg piece rule. The troop rule points to
+  it.
+- Six lessons go to the data-content and build-tooling files.
+- The feature doc gets a safe-change procedure and four more in-game
+  checks (villager, lord kits, leg pieces, bow names).
+- items-armor.md states the covers_legs convention and its exceptions.
+
+Not-tested: no in-game run. The leg piece change needs a full restart.
+The round 2 files have not had a separate deep review yet.
+
+Refs #1085
+
+#### docs(long-defeat): v2.0.36 - Phase 3 fortifications overview
+
+`689f0cd0`
+
+The Long Defeat's feature doc gains a Phase 3 overview for a reader:
+what the player can buy in an intermission (gate levels and repair,
+field care, the Elven Volley's two levels, the high towers' three),
+the shipped prices from shop.json, and which rows stay hidden until
+Helm's Deep's points are recorded. It also notes that the plan's
+premise of no StrategicArea at Helm's Deep was corrected (E21), lists
+the Phase 3 proof runs, and says Slices 1 to 8 are on trunk. The
+feature map's Long Defeat row lists the Phase 3 files.
+
+All 226 TAOM_LD strings the code uses have a row in the module strings
+and in all 12 language files; 37 were added since Phase 2's docs, all
+English seeds for the #763 batch. The dev console and tools README
+rows already matched the code.
+
+#### docs(long-defeat): v2.0.36 - the Phase 4 plan
+
+`0d709dcf`
+
+The plan for The Long Defeat's Phase 4: the armoury, where the lord
+walks to buy armour and weapons sets that he wears for the rest of the
+run; the engineer's yard, where he buys a mangonel for one of Helm's
+Deep's own defender sites; and the death rule, where a fallen lord
+takes over a soldier for the rest of the wave and rises at the keep at
+the next clear, with a bought Marshal holding the general's seat while
+he is down. It holds decisions D33 to D49, the engine facts with their
+sources, eleven slices with three spikes first (the rise, the gear
+swap, the engine), the checks, the report fields and the risks.
+
+Open questions OQ8 to OQ20 each carry a recommendation and are taken
+at it unless Mike changes them. Among them: only the mangonel is sold
+at Helm's Deep, because its defender sites hold mangonel and ballista
+spawners and no trebuchet; no ballista; the Marshal is Theodred on
+foot; a destroyed engine is lost; and the rise place is the recorded
+keep, which also moves the zone the attackers must hold.
+
+An architect drafted it, three reviewers critiqued it (engine, code
+fit, completeness; 45 findings, 44 applied, 1 rejected with its reason
+in section 12), and an architect revised it. Nothing is built.
+
+#### docs(long-defeat): v2.0.36 - one Phase 2 section and the proof list
+
+`8d836154`
+
+The Long Defeat's feature doc now describes Phase 2 as one section,
+with a part for each mechanic: the seeded run and its report, the
+endless scale, the affixes, the boons, the classes, the commanders,
+poison and the kill owner, the Cavalry sally and the recorder. Each
+earlier slice had added its own paragraph, so facts were repeated and
+some had gone stale. Two are corrected: boons.json ships 34 boons (5
+war chest, 5 fortress, 3 Legend, 12 class and 9 troop), not 30, and a
+Cavalry class now exists.
+
+"How to verify in game" lists every Phase 2 proof run with its current
+seed from 1079.toml. The doc says what unattended runs proved on
+2026-11-05 and what is still owed: the sally itself, which needs a
+recorded point, the kill owner after the player's death, and a
+person's play. It also describes the stacked muster batch under
+investigation and the diagnostic line that waits for it. The
+feature-map row names the current code folders, data files, tools and
+status.
+
+A strings audit found every one of the 194 TAOM_LD keys in use
+registered in taom_module_strings.xml and present in all 12 language
+files.
+
+Verify: the localization and Long Defeat tests pass (2,004), and
+lint_docs exits 0.
+
+Not-tested: docs only.
+
+#### docs(long-defeat): v2.0.36 - Phase 3 plan for the fortifications
+
+`b94495ed`
+
+Phase 3 of The Long Defeat gives the defenders things to buy for their
+walls: gate repair and gate levels, high towers with posted archers and
+a volley at level 3, field care that heals the standing troops, and
+the Elven Volley. The plan in docs/features/long-defeat/phase3-plan.md
+splits this into 10 slices with tests and an in-game proof for each,
+and records decisions D16 to D32.
+
+The Elven Volley follows the maintainer's choices of 2026-11-05:
+arrows only, bought for gold and used on a cooldown, aimed at the
+largest group of attackers at level 1 and at the crosshair after an
+upgrade. The Lothlorien arrow item cannot be fired as it is: it has 4
+thrust and a missile speed of 10, because a real arrow takes its power
+from the bow. The plan therefore proposes a new arrow item with the
+elven look.
+
+An architect drafted the plan, and three critics (engine, code fit,
+completeness) checked it. All 46 of their findings are applied, and
+section 12 records each outcome. Seven questions stay open for the
+maintainer, each with a recommended answer. The points the plan needs
+on the scene (tower posts and volley spots) are recorded by the
+maintainer in game; the plan invents no coordinate.
+
+Not-tested: a plan only; no code.
+
+#### docs(marshal): v2.0.36 - runs and review record of the hold driver
+
+`f248c8ad`
+
+The four Hold the Line steps ran in the game on the build of the
+separate hold driver, one battle per step, and all four passed with
+the soldiers' attack flags restored after each hold. These are the
+first runs with the clamp, its trend and the slot distance all read
+from one position. In the proof battle the first control company went
+quiet, and the driver then took the company that fought most in the
+window it had just judged, which is the new re-pick at work.
+
+The review record now covers the second fix round: 31 findings that
+survived three skeptics each (1 MEDIUM, 30 LOW) and 3 from Codex
+(2 MEDIUM, 1 LOW), all fixed. A new lesson in testing-qa.md says
+that a correction to one reader of a rule searches its other readers.
+
+The maintainer waived the GitHub issue for this work.
+
+#### docs(long-defeat): v2.0.36 - the Phase 2 build plan
+
+`d9784056`
+
+The plan for The Long Defeat Phase 2: enemy commanders, affixes,
+boons, the four classes and the endless scale, in 13 slices. A check
+of its 101 engine claims against the installed engine found 3 wrong
+and 55 partly right, and the plan now carries those corrections. Open
+decisions D3 to D13 take the recommendation the plan gives, on the
+maintainer's word of 2026-11-05.
+
+#### docs(rules): v2.0.36 - the session picks model and effort per spawn
+
+`062b30a8`
+
+Mike, 2026-11-05: change the model and effort as you want, no need to
+ask. The rule now records that standing word, which the Agent tool's
+effort parameter needs. The deep-reviewer exception stays.
+
+#### docs(marshal): v2.0.36 - review record and runs of the hold steps
+
+`bb75f359`
+
+The review of Massed fire, Hold the Line, the square and spacing
+repairs and the order panel set is recorded with the cause of each
+finding. Three were HIGH: the hold text promised that a pushed
+soldier walks back, the panel set's own button drew no icon, and
+hold_line_slot could pass on a second of contact. Five findings share
+one cause, a trial verdict that could not fail, which the Seat's
+review found a day before; a new lesson says to write the fail
+fixture of each rule first.
+
+The run history adds two rounds. On the reviewed build and again on
+trunk 3392f15cb, with the Seat's S6 and S7 merged, all seven Marshal
+steps passed, one battle each (20261105-075913 to 20261105-081049 on
+trunk; hold_line_slot read 65 steered reads, 29 closer and 2
+farther).
+
+Owed: the sixteen items of the second review wave, among them the
+trend's baseline read, and two structure follow-ups. The maintainer
+waived the GitHub issue for this work.
+
+#### docs(fords-of-war): v2.0.36 - measure of the night balance change
+
+`315a5cbd`
+
+Dol Guldur lasts 28.6 minutes where it lasted 20.4. Slower free waves
+barely moved the elves, so the next lever is their fighting quality.
+
+#### docs(fords-of-war): v2.0.36 - measure of the time limit
+
+`0ae71a7a`
+
+Dale v Gondor and Harad v Rohan both ended at minute 40 with a winner and
+a clean exit.
+
+#### docs(reviews): v2.0.36 - RCA follow-ups name the landed commit
+
+`fe0d60f5`
+
+The rebase onto trunk changed the fix commit to 08e1422ae.
+
+#### docs(fords-of-war): v2.0.36 - measures of wall wear at 0.25
+
+`cecbdd1a`
+
+Lopsided matches now end near the target: 33.8 and 27.6 minutes. Even
+matches still do not end in 45 minutes, and the log says why.
+
+#### docs(fords-of-war): v2.0.36 - measures of lost lanes and bare towers
+
+`679b5f5c`
+
+Four matches on dec65baec with no crash and no FAIL row. The lost lane
+rule works: Erebor's keep took 80 damage in 18 minutes before, and now
+falls 320 s after its last lane clears. Both wins came at about 40
+minutes, so the target of 30 is not met yet. No missile or blow reached
+a hidden tower owner, and volleys hit about as often as before.
+
+#### docs(reviews): v2.0.36 - close two Fords of War RCA follow-ups
+
+`abf19e71`
+
+The AI read model and check 9 items closed in f99a92e38.
+
+#### docs(long-defeat): v2.0.36 - a run at any speed counts on the board
+
+`d18ec3d4`
+
+The leaderboard plan had left this open. A run at any speed now counts,
+and the report still records maxSpeed. The feature doc also records
+that 10x may play harder than 1x and that the maintainer accepted it.
+
+#### docs(long-defeat): v2.0.36 - record the 10x run results
+
+`e554f2fb`
+
+Four unattended runs at 10x cleared 5 waves once and lost on wave 5
+three times, against three clears of three at 1x. They lost a mean of
+305 defenders in waves 1 to 4, against 232. One run proved the new loss
+on the last few defenders in game. The cause of the extra losses is
+unknown, and the feature doc says so.
+
+#### docs(long-defeat): v2.0.36 - record the Phase 1 proof runs
+
+`4d1a9105`
+
+Phase 1 has its proof: three unattended 5-wave runs and one lose run
+passed at build c075c92f0. The 1079 manifest now pins that build and no
+longer accepts a dirty one.
+
+The first run at 10x did not clear 5 waves. It cleared 4 and then ended
+in a stalemate, 89 attackers against 1 defender they could not reach, so
+the manifest's stale check reads FAIL for that session. It lost more
+defenders in waves 3 and 4 than the 1x runs did. One run cannot say
+whether 10x causes that, and the feature doc records it as open.
+
+#### docs(reviews): v2.0.36 - record the Codex passes and Mike's answers
+
+`3bb89aff`
+
+The RCA now holds the two xhigh Codex passes Mike asked for, rows C1 to
+C12 with the findings rejected and why, the two process faults, and his
+"as recommended" answers. The prompts are committed beside the earlier
+ones. Follow-up lines that his answers settled now name the outcome.
+
+No issue: Mike waived it for this work, 2026-11-04.
+
+#### docs(reviews): v2.0.36 - record Mike's 14 RCA decisions
+
+`316b0952`
+
+Mike answered "as recommended" on 2026-11-04, so the 14 RCA follow-up
+lines now name his decision or the fix. This also corrects the test that
+pinned the old hard AI income in 95a348a60, which went in red.
+
+#### docs(reviews): v2.0.36 - RCA for the follow-up fixes, 59 lines closed
+
+`931d5908`
+
+docs/reviews/rca-follow-ups-2026-11-04.md records the tier 1 review of
+this branch: 21 confirmed findings, 6 of them HIGH, one proven in two
+game logs, and the fresh review plan 032 owed. Its lessons went to three
+category files, and REVIEW-LOG.md has its entry.
+
+59 RCA follow-up lines now name their fix or their reason. The 27 still
+counted are 14 that wait on Mike's decision, ered-luin row 17, five
+Fords lines another session owns and seven new ones with their reasons.
+
+The convergence pass's last small fixes come with it: closing a rage
+clears FirstAttack, the raw hook path refuses -n before a redirect, the
+NuGet rule keeps a value holding the other quote, and the rebuild drops
+an unused import.
+
+No issue: Mike asked for the RCA follow-ups fixed, 2026-11-04.
+
+#### docs(tools): v2.0.36 - catalog rows and notes follow the review's fixes
+
+`1499aaa6`
+
+tools/README.md, the codes doc and release-process.md now state the
+pair check's exit codes and its XSLT reach, the rebuild's --apply and
+--module flags, the map writers' scene checks and the procdump attempt.
+The catalog's false line that TAOM_Map is never swept goes. The realm
+test reads one table of letters in place of two branches.
+
+No issue: Mike asked for the RCA follow-ups fixed, 2026-11-04.
+
+#### docs: v2.0.36 - correct the statements the review found false
+
+`35044f58`
+
+The career docs still said clones have no ability icon, and told an
+artist to drop a PNG the code would then ignore; they now give the real
+route. The recipes still said twelve templates. Others said the ladder
+tool rewrites its html on any run, that the rebuild lacks
+global_strings.xml, that the map tools write factions.json, and that
+TAOM_Map feeds no other registry. offspring-race-inheritance.md,
+banner-color-persistence.md, elephant.md and mixed-formations.md each
+carried false lines; the Mixed Formations corrections come from the
+fresh review plan 032 owed.
+
+rebalance_party_template_maxes drops its exclusion of the removed
+templates. dr3-execution-handoff.md gains the credential sweep line the
+security RCA asked for.
+
+RCA: docs/reviews/rca-follow-ups-2026-11-04.md.
+No issue: Mike asked for the RCA follow-ups fixed, 2026-11-04.
+
+#### docs: v2.0.36 - the hotfix, the taom-src cache and the leaderboard plan
+
+`fe20eddf`
+
+The docs that name the taom-src cache now say it is per game build. The
+index, lookup, map and feature doc point at the leaderboard plan and
+record the hotfix, the boon change and the new report fields. The RCA
+gains the leaderboard review, and a lesson records why a cache must not
+key on the version string alone.
+
+#### docs(mixed-formations): v2.0.36 - correct three stale claims
+
+`35aa3743`
+
+From the plan 032 review's list: IFormationAdapter's IsAligned comment
+named Formation.GetOrderPositionOfUnit, when the adapter reads the slot
+from the arrangement; two more comments there cited v1.3.15; and
+mixed-formations.md said the hot path allocates nothing, when the
+once-per-second default pass walks a LINQ query per formation.
+
+commit-gates.md gives the ModuleData gates' current time, about 12 s
+together, in place of 22 s.
+
+No issue: Mike asked for the RCA follow-ups fixed, 2026-11-04.
+
+#### docs(api-snapshot): v2.0.36 - regenerate after two deletions
+
+`333e7490`
+
+The API snapshot drops ClanPartyItemVM_GetCharacterCode_Patch and the
+GetCharacterTemplateForOffspring override, both removed in this work.
+tools/snapshot_api_surface.ps1 -Check now reproduces.
+
+No issue: Mike asked for the RCA follow-ups fixed, 2026-11-04.
+
+#### docs(migration): v2.0.36 - what the 125270 hotfix moved and what is owed
+
+`59b6c326`
+
+The impact doc records the hotfix: what really changed, the member-level
+diff, the released builds, the native checks, the gates on f39b399b4 and
+the two tools that misled us. Still owed: the BUTR pin, the control
+battles with each creature, and a session banner that can see a hotfix.
+
+#### docs(ai): v2.0.36 - route the data gates and provenance checks
+
+`b935b830`
+
+.ai/verification.md defined the data-gates and provenance checks, but
+no lane in routing.json asked for them, so a review packet never named
+them. The moduledata and asset lanes now ask for data-gates. The asset
+and native lanes ask for provenance, and the native lane also matches
+the register and the adoption records.
+
+The line that said no provenance test exists now says what the check
+proves: the register's form, not intent.
+
+No issue: a follow-up from the rules review, which Mike waived one
+for, 2026-11-03.
+
+#### docs(long-defeat): v2.0.36 - what the runs measured, Phase 1 landing
+
+`74415987`
+
+The rest rule's own line does not support wounds as the main cause of
+the growing losses: survivors' mean health was already 84% to 91% before
+each rest. The rule stays for now, and why losses swing between runs is
+still open. The feature doc and RCA say so, and name what is unproved.
+Phase 1 lands on trunk on Mike's word with its three clean 5-wave runs
+and a --lose run still owed. One unattended clean run passed every check
+and lost at wave 5, and the next was closed by hand with 2 attackers
+left.
+
+#### docs(long-defeat): v2.0.36 - a boon pick every 3 waves
+
+`0195d0fd`
+
+Mike moved the later boon pick from every 5 cleared waves to every 3.
+Boons are not built yet, so only the design record changes.
+
+#### docs(long-defeat): v2.0.36 - the review's lessons and last leftovers
+
+`44058ce4`
+
+The Phase 1 RCA gains its lens section and the convergence pass, which
+found no behaviour defect. Three lessons land: a mode that copies a
+sibling's views must copy what they refuse; Gauntlet reads #RRGGBBAA and
+a modal panel's root keeps taking clicks; a fake that returns 0 hides
+its seam. Two leftovers the pass named go too: a stale comment and two
+dead locals in a test.
+
+#### docs(commander): v2.0.36 - correct both build contracts
+
+`1d5d0a56`
+
+A read of every unbuilt stage against the installed engine found
+defects that would have shipped, so both contracts change before the
+next builders start. The Seat of Seeing contract gains Deviations rows
+24 to 33. The Marshal's Word contract gains row 2 and a field trial
+table in section 11.
+
+The largest corrections: a morale write that would have routed the
+hero, default keys T and Y that also open the chat box (Insert and
+Delete replace them), a panel toggle that could not close, a mark that
+could not fire, an outline that could not clear, and a volley word
+that released every later soldier.
+
+The mission lifecycle doc also closes a question it left open. The
+engine's own FinishDeployment call runs inside the mission tick loop,
+and it holds because the loop runs downward and the removals sit at or
+above the running behaviour.
+
+#### docs(fords-of-war): v2.0.36 - the 1x check on an even pair
+
+`776aad17`
+
+One match of Harad v Rohan at normal speed, on the final prices, was
+close: 2 towers to 3, with gold trades of 0.94 and 0.89. The 4x match of
+that pair also ended 2 to 3.
+
+#### docs(reviews): v2.0.36 - which scenes hide an inner gate
+
+`b5417938`
+
+A scan of the live TAOM_Map scene files: 5 of the 30 scenes with castle
+gate prefabs hide an inner gate, and the engine's InnerGate ignores
+visibility. Two have no other inner gate. The Long Defeat breaks such a
+gate at boot. Nobody has checked what a campaign siege does on them.
+
+#### docs: v2.0.36 - career art counts for 91 careers
+
+`a2d3dc6b`
+
+career-system and gui-sprite-system still counted 70 careers. Counted
+from the shipped file on 2026-11-04: 91 careers, 49 with an ability icon
+and 46 whose portrait sprite has a PNG, so 42 and 45 have none.
+
+#### docs: v2.0.36 - finish the feature doc pass, record its open questions
+
+`f4058993`
+
+The last waves of the pass over docs/features and docs/modding. A second
+reader refuted 8 of the writers' corrections and found 14 more false
+statements, and all of them are fixed.
+
+The larger changes: anduin-vale-angaladh says its 41 settlements are in
+the live file and the branch is done. career-cc-selection counts 91
+careers across 32 cultures, and 42 careers with no ability icon.
+no-mount-cultures adds Angaladh, describes the service behind the horse
+guards and names the tests it once said were missing. ered-luin says it
+is not playable while parked. race-age-system counts its custom
+cultures and rosters. tournament-armor-assignment counts 27 practice
+dummies. bannerlord-together-compat counts 71 classified classes and 20
+transpilers. doc-graph and coop-dedicated-server name the current
+checks.
+
+docs/reviews/doc-pass-2026-11-03-open-questions.md lists what the
+writers could not settle from the code. Those are leads for a person or
+a live read, and nobody checked them a second time.
+
+#### docs: v2.0.36 - correct 25 more feature docs against their code
+
+`24e52abb`
+
+The twelfth to fourteenth waves of the feature doc pass. A second reader
+refuted 10 of the writers' corrections and found 16 more false
+statements, and all of them are fixed.
+
+The larger changes: cardolan-rhudaur says both realms are parked
+(playable false). troop-skill-balance counts 25 culture files and says
+nine of them have no cultural modifier, and it recounts the troop tree.
+gondor-ithilien-ranger carries the current recruitment pools.
+starting-equipment-tuning counts 400 and 180 rosters. ranged-ladders
+counts 138 items. caravan-bandit-parity describes the budget retune.
+mesh-ref-validation adds the skin attributes and says tier C is exact
+for a pack that parses. kingdom-creation counts the Aserai bindings
+that remain. The four Neutral realms join alignment-aware-execution,
+war-of-the-ring and lord-skills. The rest correct test counts, line
+citations and file locations.
+
+#### docs: v2.0.36 - correct 26 modding and feature docs against their code
+
+`ff1fe193`
+
+The ninth to eleventh waves of the doc pass, mostly the modding guides.
+A second reader refuted 39 of the writers' corrections and found 16 more
+false statements, and all of them are fixed.
+
+The modding guides carry re-measured counts and line citations:
+file-catalogue and submodule-and-registration count 143 SubModule rows,
+configs-factions-and-world counts 30 kingdoms and 36 alignment keys,
+settlements counts the live file's rows, body-properties and
+banners-and-heraldry carry current lines, id-cheatsheet and items-armor
+count 35 cultures, and balance-levers and configs-balance count 470
+value knobs across 104 groups. open-questions marks a resolved one.
+
+The feature docs: localization says every other language is an AI first
+draft, gondor-armor-revamp names RecruitmentPools, and
+new-factions-misty-mountains-lindon carries the feats as built.
+
+#### docs(long-defeat): v2.0.36 - correct the proof run's folder name
+
+`3564d978`
+
+The proof run's folder is E:\Temp\long-defeat-runs\20261103-235325. The
+docs, and the body of 8cbfa8333, named 20261103-235336, which does not
+exist.
+
+#### docs(long-defeat): v2.0.36 - the hidden gate fix proved, Phase 1 plan
+
+`8cbfa833`
+
+Run 20261103-235336 at Helm's Deep passed with 0 waves ended by felling
+stragglers. With the hidden inner gate broken at boot, the Middle lane
+opens once the outer gate falls, and waves 1 and 2 of 110 cleared at 349
+s and 669 s with no stale line, against 465 s and 840 s before. Wave 3
+went quiet with 44 attackers left, and the charge ended it at 1,254 s.
+
+docs/features/long-defeat/phase1-plan.md holds the Phase 1 plan: a
+design pass on the spike's evidence, attacked from the source and
+settled, with 13 slices in build order.
+
+#### docs(tools): v2.0.36 - leave Fords rows to their owner, lower the graph
+
+`49bf62fe`
+
+The two Fords of War rows of tools/README.md go back to their old text,
+because another session holds newer rows for them, unpushed. The doc
+graph baseline drops from 27 orphans and 32 components to the 10 and 14
+the new INDEX links reach. A trial merge with the local trunk gives 9
+and 13, so the lower numbers refuse nothing there.
+
+No issue: Mike waived one for the rules review, 2026-11-03.
+
+#### docs: v2.0.36 - rebuild backlink footers of the docs this work touched
+
+`6e886fe8`
+
+Generated by tools/build_backlinks.py. Only the docs the rules review
+and its doc passes changed take the new footers, as git-and-commits.md
+asks, so docs another session is editing stay as they are.
+
+No issue: Mike waived one for the rules review, 2026-11-03.
+
+#### docs(tools): v2.0.36 - correct the remaining catalog rows
+
+`f7cf6def`
+
+The tool rows the last pass did not reach, each read against the commits
+to its script since the row was last edited. Eight rows said less than
+the script does, or something it no longer does: for example
+wire_starter_kit_rosters rewires 400 rosters, not 256, and
+fords_match_review also flags weak heroes and a match run above normal
+speed. The other 24 hold.
+
+No issue: Mike waived one for the rules review, 2026-11-03.
+
+#### docs: v2.0.36 - correct tool rows, tester checklist and asset ledgers
+
+`66dd9753`
+
+The same check as the last pass, over what it did not read: the rows of
+tools/README.md whose script changed after the row, the animation map,
+the rest of the engine study, the tester checklist and the Armory
+ledgers. One checker tried to refute the diff, and its 16 defects are
+fixed here.
+
+Testers now get the realms the character creation map really offers: 18
+playable, with the 10 parked ones named, in place of 16 cultures that
+included a parked realm and two that are not factions. The XSLT
+paragraph in the tool catalog counts 20 stylesheets, not 16, and names
+what applies them. Present-tense claims that CI runs a tool are gone: CI
+left on 2026-10-05. The spider and elephant Monsters do not author
+IsHumanoid. The Armory stock gate dates are corrected.
+
+For the maintainer: the testing release now carries the four camp
+packages, so the static prop doc's vanilla fallback conclusion needs an
+in-game check on that build.
+
+No issue: Mike waived one for the rules review, 2026-11-03.
+
+#### docs: v2.0.36 - correct reference docs that later commits made false
+
+`50e8dc7a`
+
+A second pass over 51 docs in docs/reference, the engine study and the
+migration tracker, each read against the commits newer than its last
+real edit. Every correction names the line that proves it, and one
+checker then tried to refute the whole diff: it found 15 defects, fixed
+here.
+
+Examples: the localization map counts 21 source files and 23 per
+language, not 20 and 22. The UE pipeline doc says the Animalia gaits and
+riders are in place, and only the jumps stay open. The engine lifecycle
+doc gives the real SubModule line numbers and the feature module phase.
+The party template doc says the 260 target is in force. A claim that a
+spider spawn patch still runs is gone: it was deleted on 2026-06-10.
+
+Dead citations to private memory files left the engine docs. Each keeps
+its fact, and links the lesson that holds it when one exists.
+
+Left for the maintainer: the Armory snapshot holds older copies of
+skins.xml and weapon_descriptions.xslt; the Mordor and Erebor templates
+sum to 267 and 225 against targets of 260 and 220.
+
+No issue: Mike waived one for the rules review, 2026-11-03.
+
+#### docs: v2.0.36 - correct 15 feature and modding docs against their code
+
+`3b1af277`
+
+The eighth wave of the doc pass, the first to reach the modding guides.
+A second reader refuted 8 of the writers' corrections and found 24 more
+false statements, and all of them are fixed.
+
+The largest changes: module-dependencies carries the current csproj line
+citations, the 44 tracked vendored files (now through ButterLib 1.5.1),
+the v2.0.36 version text and the current test ranges. lords-and-heroes,
+clans and skill-sets carry re-measured counts and line citations.
+items-weapons-and-crafting carries the current row counts and backups.
+recipe-new-mod-from-zero and recipe-retire-content cite the current tool
+lines, and the retire recipe names the shipped troop id error.
+cultural-feats says 130 feats, not 30 or 77. ai-party-size lists 90 test
+methods. validation-and-testing says 20 stylesheets across the three
+modules.
+
+#### docs(harness): v2.0.36 - /deep-review cites the budget rule by its home
+
+`099840f3`
+
+The wave limit cited a private memory file that moved to agent-teams.md
+and no longer exists. Text only: no review step changes.
+
+No issue: Mike waived one for the rules review, 2026-11-03.
+
+#### docs(reviews): v2.0.36 - RCA of the taom-src and banner review
+
+`f07d70a7`
+
+Six MEDIUM and three LOW findings from a tier 2 review of the night's
+script changes, all fixed in this branch, and one lesson: a fast path
+goes in front of the path it replaces, never beside it.
+
+No issue: Mike waived one for the rules review, 2026-11-03.
+
+#### docs: v2.0.36 - correct stale docs, fill the catalogs
+
+`3ead3765`
+
+A sweep of the open audit rows, every stale path or symbol and the
+catalogs, each row checked against the tree.
+
+Catalogs: tools/README.md gains rows for the 44 scripts it lacked. The
+feature map gains 18 folders and the Client half of 5 rows. The INDEX
+links the docs the graph reported as unlinked, which takes the unlinked
+count from 342 to 76, mostly review records.
+
+Corrected: the README's default branch, projects and the 8 kingdoms its
+table lacked; the roadmap's model count; ADR-008's checklist and its
+deploying test line; mcp-servers.md, which listed servers it says do not
+load; a false "35 archetypes" and an unsafe regen check in the lord
+skills guide; a bad path in the engine lifecycle doc.
+
+Provenance: the register gains rows for the five adoption records that
+had none (ponytail, mattpocock/skills twice, pstack and
+claude-plugins-official), all behavioural ports.
+
+Moved out of private memory so every client can read them: the clean-up
+rule after a merge, the heraldry prompt wording, the RU cache eviction
+and stale-row method, and the Armory note in the release process, which
+stays marked as not re-verified.
+
+No issue: Mike waived one for the rules review, 2026-11-03.
+
+#### docs(harness): v2.0.36 - correct false lines in skills and rules
+
+`f4b036e9`
+
+/ship described a full review that /deep-review's tier table replaced,
+and it demanded an issue that an agent may not file unasked. It now
+points at /deep-review's Step 2 and says to ask Mike about work done
+without an issue. Neither edit adds or removes a review step.
+
+Lens 1 names ServiceLocatorGateTests in place of the grep that test now
+runs. feature-builder no longer asks for coverage percentages that
+nothing measures. /verify's suite size is current, and xslt.md keeps the
+identity rule as one line. /localize says to search issue bodies, and
+CLAUDE.md says how to test for CRLF here: the probe it warned about
+reports 0 under the Bash tool.
+
+/deep-review loses a dead claim that MEMORY.md indexes the lessons.
+Three audit rows that change review spend (G6-064, G6-070, G8-048) stay
+out until the usage comparison in #1078 reads out, about 2026-11-10.
+
+No issue: Mike waived one for the rules review, 2026-11-03.
+
+#### docs: v2.0.36 - correct 40 more feature docs against their code
+
+`28b8f628`
+
+The sixth and seventh waves of the feature doc pass. A second reader
+refuted 14 of the writers' corrections and found 6 more false statements,
+and all of them are fixed.
+
+The commonest correction is the four Neutral realms (Anduin Vale,
+Angaladh, Dorwinion, South Rhovanion) and the Feral Orcs, which many
+culture lists and counts did not yet hold: startup-resources,
+culture-conversion, menu-link-colors, voice-accents, lord-banners,
+culture-marketplace, hall-of-fire and elite-emissary.
+
+Others: banner-bearers and faction-ui name the hooks that replaced
+OnTeamDeployed and the eleventh patch class. battle-balance names
+GetDefaultTroopPower. troop-progression describes the conditional
+settlement map. atmosphere-persistence says the Rohan and Mordor field
+scenes came back on 2026-10-03. coop-interop, diplomacy and
+skip-campaign-intro correct line citations. The rest correct test
+counts and file locations.
+
+#### docs: v2.0.36 - correct 22 more feature docs against their code
+
+`8ce80c2f`
+
+The fourth and fifth waves of the feature doc pass. A second reader
+refuted 12 of the writers' corrections and found 8 more false
+statements, and all of them are fixed.
+
+The larger changes: army-targeting no longer describes the reach
+falloff, removed on 2026-08-22, and names IsWithinBorderRescueRange.
+settlement-food says the count-getter patches are gone, so weighted
+equals raw and the correction adds 0. lotr-issues counts 82 issues,
+with the 26 Armourer's Commission rows. marriage-alignment,
+alignment-recruitment and armour-acquisition add the realms that came
+on 2026-10-29. caravan-trade resolves its policy through ResolveSide.
+field-commission lists its seventh MCM setting and its diagnostics
+field. The rest correct test counts, line citations and registration
+counts.
+
+#### docs: v2.0.36 - correct 23 feature docs against their code
+
+`20616aad`
+
+The second and third waves of the feature doc pass. Each doc was
+compared with the commits newer than its last real edit, and a second
+reader tried to refute each correction from the source. That reader
+refuted 8 and found 4 more false statements, and all of them are fixed.
+
+The larger changes: culture-doctrine and bandit-management list the
+cultures and clans added since (Anduin Vale, Angaladh, Dorwinion and
+the Feral Orcs). advanced-start-options counts 22 TAOM kingdoms.
+localization-override registers 489 ids. liege-titles has 48 title
+rows, and inn-rounds has 30 culture rows. main-menu-customizer names
+the Fords of War entry. The rest correct test counts, line citations
+and file locations.
+
+Also a note in module-armory: new texture names are lower case, which
+is no licence to rename files the editor tracks.
+
+#### docs: v2.0.36 - correct feature docs that fell behind their code
+
+`2e34cade`
+
+A pass over the feature docs compares each one with the commits newer
+than its last real edit, then corrects what those commits made false.
+Each correction names its proof, and a second reader tried to refute it
+from the source.
+
+The elephant doc changed most. The trample gate and radius scale with
+the 1.3x model (3.9 m and 5.2 m), the howdah's root keeps a fixed
+distance above the live spine, and the crew troop is harad_howdah_crew,
+so Field Commission merit goes to that troop and not to harad_archer.
+A crewed elephant rides its archers about 4.35 m up, not 3.2 m. The
+status line's path field now also reads spine-height. Smaller
+corrections: a stale line citation in map-event-guard, test counts in
+lord-party-templates, the Fords copy of the mumakil rider in mumakil,
+and small facts in many-hammers and namegiving.
+
+#### docs: v2.0.36 - tidy two old records
+
+`a8aac639`
+
+Shorten an aside in the native skin investigation and in one audit
+evidence note. Neither edit changes a finding.
+
+#### docs: v2.0.36 - build contracts for two commander features
+
+`8a7725d9`
+
+The Seat of Seeing lifts the player's view off the hero, so that a battle
+or any other mission can be watched and ordered from above. Marshal's
+Word gives formations queued orders, a shared march, held volleys, marked
+targets, a hollow square and a holding shield line.
+
+These two contracts pin the names, folders, numbers and engine seams every
+later build stage follows. Each engine seam was read from the installed
+v1.5.6 decompile. No code ships with this commit.
+
+#### docs(reviews): v2.0.36 - RCA of the rules review gates
+
+`b6b54ce8`
+
+The review of this branch found 16 HIGH findings across two waves and a
+convergence pass, all fixed. The record is
+docs/reviews/rca-rules-review-2026-11-03.md, with five lessons in
+docs/reviews/lessons/build-tooling-workflow.md.
+
+A Codex pass on this diff is owed: tier 2 asks once per session, and
+this session never got that word.
+
+No issue: Mike waived one for the rules review, 2026-11-03.
+
+#### docs: v2.0.36 - decisions move from private memory to the repo
+
+`683fd133`
+
+Durable facts that only one machine's memory held now live where they
+fire, so Codex and the laptop can read them: the Gondor armour id
+prefixes and the settlement distance cache layout in the module map, the
+Armory and race notes, child townsfolk, the localization pipeline, the
+workflow script gotchas, and the Harmony fork research, which was not
+pursued.
+
+The cache layout was wrong in its first draft. It now comes from
+NavigationCache.Serialize and a full walk of the live file: a bool
+follows each id, pairs are in no order, and the tail is two defined
+tables.
+
+ADR-012 no longer names Serena as live or the deleted refactoring
+agent, and /upstream-review points at the adoption history.
+
+No issue: Mike waived one for the rules review, 2026-11-03.
+
+#### docs(fords-of-war): v2.0.36 - bring the docs up to the code
+
+`dc877487`
+
+An audit of the Fords of War docs against the code and data corrected
+63 statements. The feature doc still described four factions, and now
+lists all thirteen with their offers, heroes and feats. It also had
+wrong offer counts, free wave tiers, creature rules, panel layout and
+launcher flags, and it lacked the upgrades config, the speed button and
+the upgrades panel.
+
+build-spec.md, greybox-scene-spec.md and hud-research.md now carry a
+status note: they record the design before the build, and the feature
+doc and the JSON files win. docs/INDEX.md and doc-lookup.md had no entry
+for the feature doc or the balance log, and now do.
+
+The known limitation that no keep has fallen is no longer true. In run
+20261103-203523 Erebor destroyed Dol Guldur's keep at 889 seconds, and
+check 14 passed its keep, result, exit and menu parts for the first
+time. A person has still to see the result panel.
+
+Some claims stay as written because nobody could check them from source
+this pass: the engine and decompile references, and the faction skill
+multipliers.
+
+#### docs: v2.0.36 - correct stale paths in the living docs
+
+`bb7da8ff`
+
+A sweep of the living docs found 65 repo paths that no longer exist,
+cited 79 times. This commit corrects the ones that were wrong and leaves
+the ones that are right as written: placeholders, shorthand, build
+output, other repositories, and sentences that already say the thing
+was removed.
+
+The corrected paths: Main/_Module/GUI/PreFabs was spelled Prefabs in
+eight docs, and banners-and-heraldry.md stated the wrong spelling as the
+right one. taom_spkingdoms.xml had the wrong case in six docs. Finished
+one-off scripts moved to tools/oneoff/. Equipment sets moved to
+equipmentsets/, and heroes.xslt and custom_battle_commanders.json had
+wrong folders.
+
+race-age-system.md listed GetCivilianEquipment_Patch.cs as a Harmony
+patch. No such file exists in the tree or in the history of Main/, so
+the row is gone.
+
+#### docs(adrs): v2.0.36 - amend the ADRs, drop false samples and gates
+
+`250e1b32`
+
+The ADRs taught types, tests and CI that do not exist. IAdapterFactory
+has no C# hits and 48 Markdown hits. ADR-008 made four provider
+interfaces a MUST, and none exists. ADR-007 cited an architecture test
+that never existed. ADR-008 described a coverage gate and a workflow,
+and ADR-011 a budget job, all gone since 2026-10-05. Reviewers read these
+files often, so a correct patch could be flagged against a fiction.
+
+Each decision stands. False samples and false enforcement claims leave,
+and every changed ADR ends with a dated amendment saying what left and
+what is true now. ADR-005 keeps its IoC.cs exception.
+
+ADR-008 also stops teaching a catch of NullReferenceException as control
+flow in a service. ADR-002 keeps one warning its sample section carried:
+never delegate to BaseModel, because your overrides do not reach it.
+
+Two rules change, by amendment. ADR-009's "no comments inside methods"
+was not the working standard, since other rules require comments, so it
+now matches lens 9a's keep-list. Summaries are one sentence by default,
+and may run longer to record an engine fact or why a gate exists.
+
+ADR-011 records what its budget section got wrong: MEMORY.md reaches
+subagents, the skill list returns after compaction, and a commit made
+outside Claude meets no budget check until the pre-commit lands.
+
+No issue: Mike waived one for the rules review, 2026-11-03.
+
+#### docs: v2.0.36 - delete guides with no reader, correct the rest
+
+`4fbfb7ad`
+
+Six guides go whole: tdd-enforcement, security, decompiled-code-analysis,
+research-workflow, iterative-problem-solving and
+multi-approach-validation. Retained transcripts on this machine show no
+Read call on them except the audit's own, and they carried wrong advice:
+a web application security template, an empty catch, "do not give up"
+against the retry budget, and commands that deploy. patterns.md,
+testing-guide.md, code-quality.md and architecture.md keep only what
+nothing else holds, under their old names so links stay true.
+
+.ai/review-reference.md replaces its copies of the path rules with links.
+It keeps its overview, key paths and Codex lessons, and now lists the
+maintainer's intentional exceptions, so Codex stops reporting them.
+
+Mike's standing decisions move out of private memory to where they fire:
+release-process.md, development-machines.md, module-dependencies.md,
+armory-guide.md, encyclopedia.md, fords-of-war.md,
+banner-icon-generation.md, TRANSLATOR_GUIDE.md and weapon-xml-pipeline.md.
+
+Corrections: the README no longer calls Codex mandatory for every C#
+feature. tools/README.md no longer says every script has --dry-run.
+Module docs state current library versions by pointing at the csproj.
+The co-op row says four questions, as its target does. The plan table
+shows the perf plans merged, and the feature template carries Mike's rule
+that an in-game check names the line that proves it. asset-provenance.md
+stops claiming paths that third-party rows in the register cover, and
+stops listing counts it cannot keep current.
+
+No issue: Mike waived one for the rules review, 2026-11-03.
+
+#### docs(skills): v2.0.36 - correct the skills, drop three unused agents
+
+`452796db`
+
+The debugger, error-detective and refactoring-specialist agents go: the
+audit log shows 1, 0 and 0 spawns since 2026-09-13. /investigate keeps
+the shared-dimensions list and csharp-patterns.md keeps the rename
+sweep. deep-reviewer gains the maintainer's intentional exceptions,
+because no lens reads the review reference.
+
+Stale text that sent a session wrong: /engine-bump said -Check drifts by
+design and that triage reads offsets from the wEditor DLL, and neither
+is true. /native-crash-triage said to copy DLLs by hand, while
+SessionStart archives them. /improve said commit gates judge the main
+checkout, fixed on 2026-10-16. Lens 1 now asks for a dated source per
+fact, not a Last verified line. Nine dead memory citations leave
+/investigate alone.
+
+/investigate and /native-crash-triage gain Mike's rule for a crash
+reported only by logs: read every line first. /release records item 4b's
+version grep as the one read-only exception to his folders. A contributor
+PR's build and tests need his word per PR, as .ai/policy.md says. /freeze
+no longer blocks memory or scratchpad writes, and a relative path
+resolves against the git root. implementer and feature-builder may use
+Monitor; one spawn must still prove it.
+
+No issue: Mike waived one for the rules review, 2026-11-03.
+
+#### docs(rules): v2.0.36 - cut the path rules back toward their cap
+
+`625e8fc5`
+
+Nine of eighteen path rules exceeded the 12 KB cap, and every C# read in
+every subagent paid for them. The rules stay; narrative, copies and
+reference tables leave. csharp-architecture.md falls from 29.7 KB to
+9.9 KB, harmony-patches.md from 19.4 KB to 10.9 KB, troops.md from
+15.5 KB to 10.6 KB and vanilla-data-comparison.md from 22.2 KB to 5 KB.
+gui-ui.md is still over, at 16.8 KB.
+
+Config provider validation moves to its own rule, config-providers.md,
+which loads only on provider, loader, settings and tuning files. The
+thread table goes to the engine doc, prefab clone detail to
+gui-prefab-clones.md, and party template bindings to party-templates.md.
+
+Text that was false goes: the race table in troops.md, the sort by
+primary damage (the gate judges DPS), and a quick check that called
+every clan template dead. Coverage percentages go too, since nothing
+measures them and four thresholds disagreed: every decision path has a
+test, judged by the two-edit test.
+
+harmony-patches.md now says to list a lesson file's headings and read
+the matching entries, because reading 200 KB per patch cost about 50k
+tokens. provenance.md records the settled TAOM.dll wording and the Fab
+purchase rule, and data-scripts.md records hand edit or script as a
+judgment call, so other clients can see them.
+
+The trade-off: moved text now loads only when its own files are touched,
+and it drops at /compact until then.
+
+No issue: Mike waived one for the rules review, 2026-11-03.
+
+#### docs(rules): v2.0.36 - trim the entry docs and always-on rules
+
+`e653257a`
+
+AGENTS.md drops its copies of the reviewer role, the Codex skill list
+and the provider table, which live in .ai and the Codex guide. Claude
+reads .ai files for a packet or a paid dispatch; Codex and other clients
+keep reading them first. The saving pays for one new line: Research
+first now says to quote the line that produces an effect, never to infer
+it from a member's name. About 94 of 249 RCAs since 2026-10-01 mention
+that mistake by keyword.
+
+The issue rule states its waiver and says to ask once, because an agent
+could not obey it as written: filing needs the maintainer's word. "No
+git action" now means git that changes state; reads are free. TDD names
+the thin entry point exception and the architecture row names the
+ADR-007 seam. Fixes get the re-review their risk tier requires. Preserve
+others' work gains the generator rule from the lost workbook.
+
+CLAUDE.md names the weapon guide, says no path rule fires in a sibling
+worktree, points parallel builders at agent-teams.md and drops the
+deleted agents. The /ship row says Codex runs on his go-ahead.
+
+The always-on rules lose description frontmatter the harness ignores
+and the cadence table, now one sentence that counts tools/tests. The
+review-gate paragraph moves to the top of /deep-review. A hook ask stall
+gets its own line under autonomous runs. think-before-coding now carries
+Mike's words on open-ended work and on how he wants decisions presented.
+
+No issue: Mike waived one for the rules review, 2026-11-03.
+
+#### docs(rules): v2.0.36 - correct the rules that caused harm
+
+`2992763f`
+
+A full audit of the rule set found text that sends the next session
+wrong. This commit fixes what can hurt today; later commits take the
+rest.
+
+Weapon guide: spears go in OneHandedPolearm first. Its old advice was
+the defect that leaves shield troops unable to draw them. Trap index:
+act_horse_kick is the engine's rear kick, and a mount's own attack gets
+its own action. Lord skills guide: --all-cultures is no longer called
+safe, because it can undo hand-tuned lords. Review reference: the false
+"never use SandBox" line goes, and xslt.md holds the rule. Lens 7 no
+longer asks for the DependedModule row Mike ruled out. The outside PR
+Unicode check now runs here, where it used to exit 2 and read as clean.
+
+Paid calls: the completion sequence, /deep-review, /localize, the
+culture guide, the port checklist and /adopt-external no longer order
+Codex or the paid translator without the maintainer's word. /localize
+now seeds by default and records owed work in #763.
+
+Samples and commands: gamemodels.md and csharp-patterns.md lose samples
+built on types that do not exist. A thread-local clears in a finalizer,
+because a Postfix does not run on a throw. Every dotnet test line in the
+guides and skills carries the no-deploy flags. feature-builder reports
+single-owner lines instead of editing them. .editorconfig stops ordering
+CRLF on shell scripts. Six plan rows stop listing a 1.4.5 port as owed.
+
+CLAUDE.md gains the missing /review-outside-pr row, loses the false
+claim about the skill list after /compact, and stops sending symbol
+lookups to the disabled Serena server.
+
+model-effort-selection.md now follows Mike's 2026-11-02 word: the main
+session does most of the work. The trade-off is cost per request, about
+$0.158 for the main session against $0.053 for implementer at list
+prices, so a job that fits a subagent still goes to one.
+
+No issue: Mike waived one for the rules review, 2026-11-03.
+
+#### docs(reviews): v2.0.36 - measure Headroom, do not install it
+
+`6a54436c`
+
+Headroom compresses tool output through a local proxy. The maintainer
+approved an offline trial (#1078). The default mode would save about 1%
+of spend on TAOM's traffic, and about 2% with every protection off.
+
+Two defaults cause this. Read and Grep are excluded by name, and Read
+is 38.8% of TAOM's tool output. Earlier turns stay frozen, so nothing
+old shrinks. The lossless mode saved 0.00%.
+
+Its text compressor also changes code that a reviewer reads, although
+its docs say code passes through. 344 of 989 sampled code outputs
+changed, and one C# ternary lost its `?`.
+
+Nothing is ported. The record has the method, the limits and the
+security notes: docs/reviews/adopt-headroom-2026-11-03.md. The venv,
+clone, model and plaintext store are deleted.
+
+#### docs(harness): v2.0.36 - deep review effort follows the risk tier
+
+`2c737d97`
+
+A tier 1 first-wave lens and an adversarial escalation keep max effort.
+A tier 2 first-wave lens and every second-wave lens now pass effort
+high. Maintainer decision of 2026-11-03, #1078.
+
+The test ran lenses 5 and 2 on one diff at both levels. High cost 30%
+of max and found the shared MEDIUM and the same LOW items. It missed
+one MEDIUM that only max found, the riderless warg, so tier 1 stays at
+max. One diff is thin evidence, so the retro after a week checks a real
+review for lost findings.
+
+harness-facts.md now states the documented precedence: the Agent effort
+parameter overrides a definition's effort. Transcripts of spawns with
+effort high ran at high.
+
+#### docs(harness): v2.0.36 - cut rule load, reviewers batch their reads
+
+`2ca35d6e`
+
+Measured across every transcript, deep-reviewer is 51% of usage and the
+main session 26%, and 80% of all spend is holding context, not writing.
+Every message re-reads the whole context, so two text changes follow.
+
+Reviewers made 1.2 tool calls per request. deep-reviewer.md now tells
+them to send independent reads as parallel calls in one message, so the
+same files get read in fewer messages.
+
+moduledata-validation.md was 44.7 KB and fired on every read under
+tools/, whatever the task. It is now 9.5 KB, under the 12,288-byte rule
+budget. The XML I/O convention moves verbatim to a small new rule,
+data-scripts.md, for tools/. The validator code table and the long
+sections move verbatim to docs/reference/moduledata-validator-codes.md.
+
+CLAUDE.md and harness-facts.md said MEMORY.md never reaches a subagent.
+The transcripts show it in all 2,232 sampled spawns with an instructions
+record, against the Claude Code docs too. The cause is unknown, so the
+docs now state the observation. (#1078)
+
+#### docs(coop): v2.0.36 - the Coop v1.5.6 merge is in review as PR #4230
+
+`0fbbe372`
+
+The co-op interop page now says where the merge of Coop development
+into its v1.5 branch stands: it is open as Coop PR #4230, its automated
+suites pass on Bannerlord v1.5.6, and no live co-op session has run it.
+Until it merges, the v1.5 Coop build lacks the v0.1.7 features.
+
+#### docs(coop): v2.0.36 - the headless spike worktree is archived
+
+`a2383b9e`
+
+The throwaway spike worktree from 2026-10-22 is removed; its
+uncommitted probes are archived at E:\CoopDS\spike-archive-20261022.
+
+#### docs(coop): v2.0.36 - the co-op server runs on Bannerlord v1.5.6
+
+`6eb7b3b0`
+
+Steam's Dedicated Server moved to v1.5.6 (build 26320246, .NET 8). With
+server PR #115 a vanilla stage booted, autosaved and reloaded; the TAOM
+stage of the v2.0.36 install passes the server load gates and waits for
+a save made on a v1.5.6 client. The three DS asset packages must now be
+copied from the v1.5.6 client. Server PR #105 is merged.
+
+#### docs(harness): v2.0.36 - two more trap lines in the orientation
+
+`ac1d8edb`
+
+The trap index in docs/ai-includes/orientation.md was full at 45
+rows, so two traps from the Oct 29 review of yotthani's repositories
+had no line. The cap is now 47 rows, and the budget for CLAUDE.md
+with its imports is now 25,600 bytes, up from 24,576 (ADR-011 now
+says 25 KB). The two rows use about 340 bytes; the entry docs total
+24,925 bytes. Every session and every subagent pays those bytes.
+
+The new lines:
+
+- Other mods: four mods reach TAOM members and files by name, so a
+  rename passes the build and breaks them. The list is in
+  docs/reference/external-mod-couplings.md.
+- Event listener order: a listener added after the engine's runs
+  before it on the same event. This is now confirmed on v1.5.6
+  (MbEvent`1.cs:24-30), not only on v1.5.5.
+
+#### docs(yotthani): v2.0.36 - engine and campaign findings, Oct 29
+
+`2ac85fbe`
+
+yotthani's latest work in the bannerlord and MithrilForge repositories
+was reviewed (817 and 8 commits) and its findings were added to TAOM's
+reference docs, each credited and tagged with its evidence and game
+version. No code was taken from either repository.
+
+What the docs now hold, among other things: why a formation order
+during deployment moves nobody; the agent limit and what failed when
+releasing the campaign map's render memory; measurements of the map's
+graphics options; how sieges are relieved and when a garrison sallies;
+that wanderers change towns every day; face channel rules for custom
+heads, and a way to make beards and eyebrows follow a custom head with
+no runtime code; and the TAOM names that other mods patch or read, so
+a rename does not silently break them.
+
+A claim that the game throws when an action set is missing is corrected
+in the remaining docs and community guides: it returns the default set.
+
+Review: docs/reviews/adopt-yotthani-2026-10-29.md
+
+#### docs(coop): v2.0.36 - co-op follows Bannerlord v1.5.6
+
+`0c5d8140`
+
+BannerlordCoop's bannerlord-1.5.x no longer built on v1.5.6: eleven
+perk lookups in GameInterface used the HasPerk and PerkHelper shapes
+that v1.5.6 removed, so co-op paths would throw at run time. The port
+is on the co-op team's branch and deployed to the dev install, and the
+migration doc records its checks: a clean Release build, no unresolved
+engine member, unit and E2E suites green, and a body diff of all 4,567
+patched engine methods with no broken patch.
+
+The operator page now says what still blocks a v1.5.6 session: Steam
+still ships the v1.5.5 dedicated server, co-op refuses a client on a
+different game version, and the v1.5.6 server moves to .NET 8.
+
+#### docs(kingdoms): v2.0.36 - record the Dorwinion and South Rhovanion merge
+
+`a79c055a`
+
+The feature doc now records the merge of 4b207f951: the branch build
+was deployed at 17:22:56 and the 61 live map rows moved to their own
+kingdoms at 17:23:15. It says that any checkout must contain that
+commit before it deploys, and where the live backups went
+(E:\taom-live-backups\2026-10-29-dorwinion-south-rhovanion\).
+
+The kingdom recipe names the retag script as the model for the next
+realm whose rows go in on interim owners. The settlements chapter has
+the new size of the live file. Two lessons are added: a script that
+writes live rows naming new ids checks the deployed build first, and a
+gate's realm list comes from the generators' own tables.
+
+#### docs(contributing): v2.0.36 - open the repo to outside pull requests
+
+`d08637c7`
+
+Anyone can now open a pull request on TAOM; until today GitHub limited
+them to collaborators. CONTRIBUTING.md explains where to send a change
+(bannerlord-1.5.x for Bannerlord 1.5.6, or bannerlord-1.4.5 for 1.4.8
+bug fixes), what a good PR carries (a failing test, the reproduction,
+the engine evidence), what we will not merge (binaries, build files and
+AI tooling changes without an agreed issue) and the licence terms a
+contribution comes under.
+
+A pull request template asks for the same reproduction, the checks the
+contributor ran and a confirmation that the PR carries no binaries.
+
+For maintainers, the review-outside-pr skill fixes the order of the
+checks. A security read of the diff on GitHub comes first, because a
+checkout, a build or a test already runs the contributor's code on the
+reviewing machine. Only then come a worktree audit, /verify and a
+report-only /deep-review. A bannerlord-1.4.5 PR skips the build, since
+it does not compile against the 1.5.x engine, and its engine calls are
+checked against the preserved 1.4.8 decompile instead.
+
+#### docs(plans): v2.0.36 - plan 044, the last 7 no-game test failures
+
+`0740c632`
+
+Plan 044 hands another session the 7 tests that still fail the no-game
+(RefAsm) unit step because they run engine code on BUTR's stubs: four
+CoopMissionOwnershipTests and one EnlistmentHourlyTickTests test get
+the RequiresGame class tag, the CampActivitySettings save-id test reads
+attribute data instead of constructing the engine attribute, and the
+Patch109 index test gets the tag plus the EnsureLoaded guard it lacks,
+which also stops it failing when run alone with the game (#1038 item
+14).
+
+- Every count in the plan is relative to the executor's own first
+  runs, so it holds as trunk moves on.
+- Step 0 asks the maintainer whether /verify should run the no-game
+  unit step, so a new untagged test fails at once.
+- The run folder plans/_audit/2026-10-28-nogame-tests holds the
+  baseline, the decisions and the cold review.
+
+#### docs(skills): v2.0.36 - engine bump writes its Gates after the last run
+
+`370b4bf2`
+
+The /engine-bump skill now says when the impact record's Gates section
+is written: from the final /verify output, after the commit, in the
+past tense, naming the commit each number comes from. A later commit
+that changes one of those numbers rewrites the whole section, not only
+its own clause. The v1.5.6 record was written as a plan before its
+evidence existed, and three later commits each fixed only their own
+clause, so it claimed that a commit body quoted test numbers it never
+held (corrected in 7bac0c9d4).
+
+- After the BUTR pin moves, the skill now says to run the three no-game
+  commands in .ai/verification.md and quote that run. Since the no-game
+  gate fix (#1038 item 14), a RefAsm test DLL loads only its stub
+  folder, so the result no longer depends on the shell's game
+  variables.
+
+#### docs: v2.0.36 - no-game gate step and v1.5.6 gate record
+
+`7bac0c9d`
+
+The no-game binding gate in .ai/verification.md now says to point
+BANNERLORD_GAME_DIR at TAOM.Tests/bin/Debug/net472/refasm-game for that
+one command. GameAssemblies reads the folder only through that
+variable, so the documented command loaded no module assembly and
+failed 509 of 593 tests. With the variable set, 2 of 593 fail, both in
+CustomBattleDamageModelTests.
+
+The v1.5.6 impact record is corrected in two places:
+
+- The Gates section is in the past tense. It labels the first verify
+  pass (814 gate, 27,934 passed) and the final one (818 gate, 27,942
+  passed), and no longer claims that the 12b010626 commit body quotes
+  the final run (it does not).
+- The RefAsm count is now from a clean run on aa135873d with both game
+  variables unset: 9 failed, 23,300 passed, 54 skipped. Six tests run
+  engine code on the stubs and three cannot load
+  TaleWorlds.MountAndBlade.View. The earlier 29 came from runs that
+  left BANNERLORD_GAME_DIR set.
+
+feature-map.md no longer states a culture count; the file holds 30, not
+the 24 it named.
+
+- lint_docs.py --fail-on-drift exit 0; test_ai_documentation.py 4
+  passed.
+
+#### docs(map): v2.0.36 - #1042 and Lindon docs match the shipped tools
+
+`af2b198e`
+
+The v2.0.36 tester note told players that a v2.0.35 campaign should
+keep working. The repo's own docs (#1041) say a save made before the
+Cardolan and Rhudaur rows is expected not to load once the distance
+cache names them, and this TAOM_Map ships that cache, so the note now
+says to start a new campaign and to report an older save that loads.
+
+A docs audit of #1039 and #1042 on trunk also found:
+- The naming and settlements docs pointed to a "targeted write" the
+  TL;DR no longer described; it is back, with the cache eviction and
+  the name check. The renamer's step 4 now says it refuses a name
+  already on the map, which it does since 87ffea9b2.
+- A renamed settlement now shows its English name until the backlog
+  (#763) translates it; four docs and two docstrings still said every
+  language keeps the same spelling.
+- Translated names change at the next game start or a language switch,
+  not at the next save load (module-map.md).
+- Counts re-measured on the live files (1,141 settlements, 242 with a
+  description, 1,388 rows per language file, 4,677 reset name rows),
+  Brynbuarth's example description, the file catalogue's writer lists,
+  and the Blue Craig and Moria rows of the new-factions doc.
+- An in-game checklist for #1042 in taom-map-settlement-naming.md, the
+  RCA owed-line for the coverage baseline (the Ered Luin merge
+  refreshed it), the lessons heading, an older RCA's conclusion, and
+  the Referenced-by footers of three docs.
+
+Verification: lint_docs.py reports 0 dead links and 0 dashes,
+build_backlinks.py --dry-run lists none of the changed docs,
+check_handbook_attributes.py reports 0 findings, ruff passes on the
+three tools, and their seven test modules pass. The issue bodies of
+#1039 and #1042 and #1042's closing comment were updated to match.
+
+#### docs: v2.0.36 - Ered Luin doc names its issue, #1044
+
+`4d804e70`
+
+The feature doc now names its GitHub issue, #1044, and records that its
+translation row was added to the backlog in #763.
+
+#### docs: v2.0.36 - Referenced-by footers for the Ered Luin docs
+
+`930df808`
+
+build_backlinks.py output for the eight docs whose footers the Ered
+Luin commit changed: the new feature doc and RCA get footers, five docs
+gain links from them, and scene-entities.md gets back the footer its
+regeneration dropped.
+
+The same run also rewrote 116 other footers. A run of the tool on the
+base commit's docs writes the same 116 footers, so that drift is older
+than this branch, and this commit leaves it out.
+
+#### docs(engine): v2.0.36 - yotthani and MithrilForge code holds on v1.5.6
+
+`3cdffd8a`
+
+An audit of every code item adopted from yotthani's and MithrilForge's
+work, against Bannerlord v1.5.6, found nothing that needs a code
+change. The v1.5.6 impact record now says so, with the evidence, and
+lists the install log lines the first v1.5.6 start must show (no TAOM
+session has run on v1.5.6 yet).
+
+- The adopted features' own tests pass on this build (2,282 passed,
+  0 failed, 1 benchmark skipped), as do their dependency (177) and
+  tooling (255) tests.
+- ShaderCacheKeeper builds and its tests pass; v1.5.6 still imports
+  XInputGetState and XInputSetState by name. The shader cache format
+  word moved from 0x0783 to 0x0784 (read in both clients at the cache
+  reader's compare), which the keeper does not read, so the first
+  v1.5.6 start rebuilds every cache.
+- shader-cache-keeper.md said the Modding Kit has its own build
+  number. It does not: each v1.5.5 binary holds only 124170 and each
+  v1.5.6 binary only 125053, and the v1.5.6 Kit wrote 0x784 and 125053
+  into the live cache. The doc and its header table are corrected.
+- Native reads, copied vanilla loops and save types the adopted code
+  relies on are unchanged; no adopted feature injects a field by name.
+  MobileParty.Bearing has its own binding test but no reflection gate
+  row (#1038).
+
+#### docs(engine): v2.0.36 - v1.5.6 record after the release, tool rows
+
+`04c3c454`
+
+Brings the v1.5.6 bump's documentation up to date after v2.0.36
+shipped, and fills gaps the bump found in older docs. No code or data
+changes.
+
+- The v1.5.6 impact record names the release (bump 12b010626, tag
+  v2.0.36 at aa708f620), records that the live TAOM_Map and Armory
+  manifests now read v2.0.36 with Native v1.5.6.*, and lists what the
+  next editor package owes (stray Game Pass bins in the dev install,
+  the backup sweep, the #1026 text processor fix). TRACKING and the
+  three feature changelogs name v2.0.36.
+- tools/README.md gains the rows the v1.5.5 bump owed:
+  check_engine_member_refs.ps1 and engine_body_diff.py, with their
+  blind spots (#1038), and a taom-src.ps1 row: it needs a fully
+  qualified type name (checked: "MobileParty" fails,
+  "TaleWorlds.CampaignSystem.Party.MobileParty" resolves).
+  native_archive.py's row says --status never re-checks the install.
+- The API snapshot README no longer hard-codes counts (it said 220
+  patches against 343 today); it points at each file's header.
+- Release: Mike's rule that packages and release folders are his is
+  in /release and release-process.md. When he keeps them, Phase 8
+  stops after the build at the tag and proves the stamps of the
+  deployed DLLs.
+- completion-workflow: "Closes #a, #b" closes only #a on push.
+- hooks-catalog: the ModuleData commit hook also reads the live
+  TAOM_Map and Armory, so another session's live edit can block an
+  XML commit; wait for it, never bypass.
+- coop-interop: co-op is blocked on v1.5.6 until Coop is rebuilt
+  (its GameInterface calls removed perk overloads), and the dedicated
+  server moves to .NET 8.
+- /engine-bump Phase 1: taom-src takes a fully qualified name and can
+  read SandBox types from the stale Coop copies.
+
+Gates: lint_docs.py --fail-on-drift exit 0 (0 new dashes); bash
+tools/test_hooks.sh 1,241 passed, 0 failed.
+
+#### docs(api): v2.0.35 - regenerate the patch target and model snapshots
+
+`ddb496d2`
+
+Brings the generated snapshots in line with trunk: the Enlistment and
+Hidden Hosts hooks are listed, the two retired Castle Recruitment
+patches are gone, and the model count includes the new one.
+
+#### docs(ui): v2.0.35 - Shadowfax Screens doc, feature map and patch targets
+
+`402280dc`
+
+The feature doc now covers the screen open speed work in its overview,
+key files, dependencies, tests and issue list; the feature map row
+names the four patch categories and the Screen Performance switches;
+the patch target snapshot lists the new hooks.
+
+### Chores
+
+#### chore(engine): v2.0.36 - Move pins, data and docs to Bannerlord v1.5.7
+
+`2c91d2cb`
+
+Completes the move from Bannerlord v1.5.6.125270 to v1.5.7.125802.
+
+For players: TAOM no longer overrides two "last seen" lines on an
+army leader's encyclopedia page. Vanilla v1.5.7 defines both texts
+itself, so TAOM's two rows and their 24 untranslated language rows
+are gone and the page shows vanilla's wording.
+
+Pins: the game pin, the AGENTS.md target, the Native constraint in
+SubModule.xml, the BUTR reference assemblies (1.5.7.125802-beta), the
+handbook gate's decompile tree and the API snapshot. The live TAOM_Map
+and LOTRLOME_Armory SubModule.xml files, which are not in this
+repository, carry the same Native row (v1.5.7.*).
+
+Record: docs/migration/v1.5.7-impact.md lists every engine change of
+the update and what TAOM has beside it, and v1.5.7-diff-ranked.md
+lists the six changed members TAOM binds. None needs more code.
+Statements of the current version moved in the README, the
+contributor guide and the modding and reference docs. A line that
+records a check made on v1.5.6 was left as written.
+
+Gates against the installed v1.5.7 build, run on this change over
+trunk 3b805cf38 (trunk's four later commits touch only the retopology
+tools): full suite 38,029 passed, 0 failed, 9 skipped; strict binding
+gate 966 of 966; tool tests 8,472 OK; snapshot reproduces; lint_docs
+exits 0. The no-game stub binding gate fails 8 of 696 in the
+Marshal's Word and Long Defeat tests, which this change does not
+touch: they need the RequiresGameIL tag.
+
+Owed: no in-game run on v1.5.7 yet; the Modding Kit is still v1.5.6;
+the co-op mod needs a rebuild for v1.5.7; the armory FBX LOD report
+drifts from an art drop. The /deep-review lenses and the Codex
+pre-review were still running at this commit, on the maintainer's
+word; their findings follow in later commits.
+
+Refs #1112
+
+#### chore: v2.0.36 - mark one Gitleaks match as a false positive
+
+`187feb22`
+
+The history scan flagged a line in the Long Defeat phase 2 RCA. The
+match is prose: the word keys followed by a plan file name. The line
+was read before its fingerprint went into .gitleaksignore, and the
+scan of 3,820 commits now reports no leaks.
+
+#### chore(startup): v2.0.36 - remove a startup message nobody receives
+
+`397f6b49`
+
+The green "TAOM loaded successfully!" line never appeared in game.
+TAOM sent it from OnSubModuleLoad, but the engine has no message queue
+and builds the chat log later, in OnBeforeInitialModuleScreenSetAsRoot.
+Players see no change.
+
+#### chore(build): v2.0.36 - BUTR reference assemblies for changeset 125270
+
+`12e05c60`
+
+The v1.5.6 hotfix moved the installed game to changeset 125270 on
+2026-11-04 (f39b399b4), but BannerlordRefAsmVersion stayed on the
+125053 build because BUTR had not published 125270 yet. It has now,
+for all four packages, so the pin follows and
+BannerlordRefAsmVersion_PinnedGameVersion_IsTheSameGameBuild passes.
+
+Tests: full suite against the install, 37,445 passed, 0 failed. The
+no-game RefAsm build compiles; its test run fails the same 212 tests
+on the old 125053 packages and on the new ones (engine constructors
+called by tests that lack the RequiresGame tag), so the bump adds no
+failure.
+
+#### chore(snapshot): v2.0.36 - record Patch132 in the API snapshot
+
+`5976636c`
+
+The dwarven armour icon patch from d74fc8e93 landed without a regenerated
+snapshot, so tools/engine_body_diff.py would miss its target at the next
+engine bump, and /verify step 2d failed on every tree since.
+
+#### chore(data): v2.0.36 - remove Lindon's and Blue Craig's unbound rosters
+
+`17b738aa`
+
+The lords of these two realms use equip="rivendell" and equip="goblin",
+so only the _a roster of each is read, through taom_spcultures.xml. The
+_b, _c and _d rows and lindon_glorfindel_* are named by no file in the
+three modules or tools, and none carries Flags, so no engine template
+search reads them. 14 rows go.
+
+Both promoter targets now set rosters_kept, so a later run cannot bring
+back these rows or the _e rows the earlier commit removed: that commit's
+claim held for eight realms only. Their promoter runs still refuse, as
+they did before this work.
+
+RCA: docs/reviews/rca-follow-ups-2026-11-04.md.
+No issue: Mike asked for the RCA follow-ups fixed, 2026-11-04.
+
+#### chore(data): v2.0.36 - remove 46 party templates and 22 rosters unused
+
+`14fcc5f3`
+
+Every generated realm shipped a mercenary and an outlaw party template
+and a fifth lord roster, in battle and civilian form, that nothing
+reads. A hero party template is bound through a clan's
+default_party_template, and no clan in TAOM, TAOM_Map or the Armory
+names one of the 46. The engine reads no such id by name: its only
+kingdom_hero_party literal is the caravan ambushers'. Vanilla's own 11
+mercenary templates stay, because vanilla's minor clans bind them.
+
+The 22 rosters are the _e rows of 11 cultures. No file names them, and
+none carries Flags. Every engine template search passes a non-zero
+EquipmentCategories, so an unflagged roster matches none.
+
+The realm generators, the promoter and insert_new_factions.py stop
+writing them, so a regeneration cannot bring them back. A new culture
+now needs ten templates, and the docs say so. Each generator's --check
+and the promoter's --check report no change, and the validator reports
+no error. Blue Craig and Lindon's promoter runs still refuse, as they
+did before this change, so their rows were removed by hand.
+
+No save refers to either: nothing bound them, so no party or hero used
+them. Not run in game.
+
+No issue: Mike asked for the RCA follow-ups fixed, 2026-11-04.
+
+#### chore(engine): v2.0.36 - pins for the v1.5.6 hotfix, changeset 125270
+
+`f39b399b`
+
+Steam moved the game from changeset 125053 to 125270 on 2026-11-04 and
+kept the version string v1.5.6. No TAOM-bound engine member changed, and
+players need no new build for it. This adds the new native address rows
+for the skeleton buffer guard and the clip budget gate, and updates the
+Python pin tables, all read back from the new binary and checked by a
+second reader. The binding gate passes 910 of 910.
+
+taom-src now passes the game's bin as a reference path, so a type in a
+module's own bin decompiles against the engine: OrderTroopPlacer goes
+from 164 unresolved IL comments to none. decompile_bannerlord.ps1 sets
+UTF-8 output, because a run from a non-console shell wrote "?" for every
+non-ASCII letter.
+
+Verified: 32,372 C# tests and 7,177 tool tests pass. One test stays red,
+BannerlordRefAsmVersion_PinnedGameVersion_IsTheSameGameBuild, until BUTR
+publishes reference assemblies for 125270.
+
+#### chore(harness): v2.0.36 - remove the agent teams flag, add the retro
+
+`b6012355`
+
+The flag was thought to make MEMORY.md load in subagents, against the
+docs. It does not. Headless sessions with the flag at 0, at 1 and unset
+all loaded MEMORY.md in the subagent and offered SendMessage, the last
+on 2.1.317. TeamCreate was on no list, and no tracked file needs it, so
+the flag left .claude/settings.json and the maintainer's user settings.
+To restore it, set CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS to 1 under env.
+
+agent-teams.md loses its section on the feature, and gains the
+2026-09-05 budget incident that only private memory held.
+
+Adds docs/reviews/harness-retro-2026-11-03.md, the numbers behind the
+rules review, and docs/features/commit-gates.md, which records what each
+git hook runs, what it reads and its known limits.
+
+No issue: Mike waived one for the rules review, 2026-11-03.
+
+#### chore(harness): v2.0.36 - remove dead hooks and Serena, fix the gates
+
+`9cfcadd0`
+
+Seven hooks go. post-compact and pre-compact print to the debug log on
+an automatic compaction, which is nearly every run, so nothing read them.
+check-deep-review was muted by any reviewer in any session, and neither
+of its two fires led to a review. check-version-tagged repeats what
+session-start already says at every startup. session-stop wrote a log
+nothing reads. mcp-health-check fired once, and its only effect was a
+55 s sleep.
+
+Serena leaves: it was off in settings.local.json with no calls in any
+retained transcript, while CLAUDE.md sent every agent to it. Its .mcp.json
+entry, tracked config, memories and 16 deny rules go together. MCP write
+tools still bypass the gates, so a new server with write tools gets them
+denied first.
+
+block-no-verify now refuses every spelling that skips commit-msg: git
+commit -n, git's own --no-veri prefix, and a one-call -c core.hooksPath.
+It used to match only the word --no-verify. git push -n stays allowed.
+
+check-claude-files-tracked drops its untracked half, which denied
+git add and git commit in one command, the form harness-facts asks for,
+and which refused over another session's new file. The gitignored half
+stays. config-protection now allows a new ADR, which CLAUDE.md tells
+agents to write. check-moduledata-validation keeps its deny and stops
+saying findings are in staged files, since they can be in the live
+modules. check-polearm-shield-parity audits the tree the edit is in.
+
+check-verification-evidence stays, against the audit's advice. With no
+CI it is the only automatic nudge before a done claim, and each fire
+costs one turn. It now judges the work tree the session is in.
+
+session-start warns when core.hooksPath does not name .githooks, drops
+the TODO count, and its retro banner now says to tell Mike, because a
+"run this" line reached only the model and nothing ran. hooks-catalog.md
+falls from 42 KB to 10 KB, with a truth table saying who each gate binds.
+harness-facts.md corrects the facts that went stale with Claude Code
+2.1.314: the skill list returns after compaction, idle compaction reached
+the panel, and no path rule fires in a sibling worktree.
+
+Checked with bash tools/test_hooks.sh (1165 passed, 0 failed) and
+tools/audit_claude_config.py. No game code changed.
+
+No issue: Mike waived one for the rules review, 2026-11-03.
+
+#### chore(rules): v2.0.36 - destructible damage stages move forward only
+
+`c2c3a6f2`
+
+The adapters rule gains one section: never raise a damaged
+DestructableComponent's hit points unless the shown damage stage is
+kept from moving backward (the engine's OnCalculateDestructionStateIndex
+hook). A heal over the first stage line makes the next hit read the
+stage list at index -1 after the model is hidden. Found in Fords of War
+tower regeneration; the engine note is in
+docs/reference/engine/usable-machines.md.
+
+#### chore(rules): v2.0.36 - name the Gauntlet stretch-in-cover gate
+
+`d4fb51a5`
+
+The GUI prefabs row of the ModuleData validation gate table names
+GauntletStretchInCoverRatchetTests. The test fails when a prefab under
+Main/_Module/GUI gains a StretchToParent child inside a CoverChildren
+parent with no max size; Gauntlet grows such a parent to all the space
+it is offered. It shipped three times (#388, #866 and Fords of War,
+where it hid the whole battle scene).
+
+Source: docs/reviews/rca-fords-of-war-2026-10-31.md row G2.
+
+#### chore(review): v2.0.36 - judge self-check rules on real evidence
+
+`d3fc3c4d`
+
+Lens 4's two-edit test check gains one clause: a self-check or verdict
+rule needs one test on evidence its real producers made, in the
+engine's call order, that passes it, and one injected fault that fails
+it. A hand-built evidence record proves only the rule's arithmetic.
+
+Source: the Fords of War logging review, where 13 false verdicts in
+one wave came from rules tested only on hand-built records (the fourth
+time this category shipped). docs/reviews/rca-fords-of-war-2026-10-31.md
+addendum.
+
+#### chore(review): v2.0.36 - check new mission types and engine effects
+
+`ce7f8d6b`
+
+Two /deep-review changes from the Fords of War review. Step 2c gains
+one expansion: a change that adds a mission type or a new agent spawn
+path gets one agent on every TAOM behavior and default view that
+attaches to all missions, judged in the new context (no main agent,
+no team AI, late spawns, no campaign). Lens 2 must quote the engine
+line that produces each effect a change relies on (damage, validity,
+ammo, thread, ordering), or mark the effect UNVERIFIED. A binding
+test proves only that a member exists.
+
+Source: docs/reviews/rca-fords-of-war-2026-10-31.md (D2, D4, D6).
+
+#### chore(build): v2.0.36 - BUTR v1.5.6 reference assemblies
+
+`c03ed426`
+
+BUTR published the Bannerlord v1.5.6 reference assemblies
+(1.5.6.125053-beta, the installed changeset) after v2.0.36 shipped.
+GameReferences.targets now names them, so the no-game build compiles
+the v1.5.6 source again and the pin test passes. Players see no
+change: the shipped build compiles against the installed game.
+
+- RefAsm build: dotnet build TAOM.Tests -p:TaomGameRefs=RefAsm,
+  0 errors.
+- Install build: 0 errors; strict binding gate 818 of 818; full suite
+  27,941 of 27,950 passed, 7 skipped, and
+  BannerlordRefAsmVersion_PinnedGameVersion_IsTheSameGameBuild now
+  passes. The 2 failures read the live TAOM_Map, where another
+  session's Ered Luin kingdom is in progress (castle_EL1 to EL5 owned
+  by clans no clans.xml defines yet); this change does not touch it.
+- The RefAsm test run fails 29 tests that run engine code without the
+  RequiresGame category, so the stubs throw. A control run of the
+  v2.0.35 tag with its own 1.5.5 pin already failed 12 of them; the
+  other 16 were added to trunk since. None is caused by the pin
+  (#1038 item 14).
+
+### diag
+
+#### diag(faction-ui): v2.0.36 - face generator log survives an engine rename
+
+`80881936`
+
+Two fixes to the temporary face generator diagnostic, from taom-07's
+review of d5522c9f5.
+
+The engine field lookups ran in the class's static initializer. If an
+engine update renamed _visualToShow, every later use of the class threw
+TypeInitializationException, including the write in its own catch, so
+the exception left BodyGeneratorView.OnTick on every frame. The lookups
+now run lazily inside the try blocks.
+
+The watch gave up after 300 ticks, about 5 seconds at 60 fps, and then
+reported a slow model as never loaded. It now has no limit: it logs
+"still hidden" once at 600 ticks, and the next open reports an earlier
+open whose model was never shown.
+
+The Patch95 docs still count eight classes; the diagnostic is temporary.
+
+#### diag(faction-ui): v2.0.36 - log the face generator's first open
+
+`d5522c9f`
+
+On the themed faction screen, a pick of any newer kingdom (Lindon,
+Arthedain, Cardolan, Rhudaur, Ered Luin) opens Character
+Customization with no character on it. Next and then Back shows the
+character. Erebor and Gondor show it on the first open.
+
+Vanilla BodyGeneratorView makes a model visible only once the engine
+reports every mesh and texture of it loaded, so a model that never
+loads stays hidden with nothing logged. This temporary diagnostic logs,
+on each face generator open, the player's culture, race, sex, the gear
+on the character and the show gear, and whether the model became
+visible within 300 ticks.
+
+Temporary: remove it with the fix. It makes
+EveryPatch95Class_CarriesTheAppliedCategory fail (the test pins eight
+Patch95 classes; this adds two), pushed as is on Mike's word, without
+/deep-review.
+
+### tune
+
+#### tune(fords-of-war): v2.0.36 - round 4 prices and AI buy cycles
+
+`78009c0a`
+
+Round robin 3 finished on c24803f6e, so this records it and sets the
+values round 4 plays with. Each pair plays once and one round is
+noisy, so only factions at one end across all three rounds change.
+
+Erebor's five elite packs now cost 1.55 of the full price for their
+level, up from 1.4, and the Easterlings' iron legion, dragon guard and
+obsidian knights cost 1.25, up from 1.1. Rohan stays as it is, because
+round 4 also doubles pierce damage against cavalry and a second change
+could not be told apart from that one.
+
+The AI of Dol Guldur, Gundabad and Harad stops buying the packs that
+traded worst and buys more of those that traded best. Gundabad's
+brawlers and Harad's levies come only from purchases, so an AI side
+fields none of them now. A person playing these factions can still
+buy every pack.
+
+The commit that added the round data says round 3 had no crash. That
+holds only for the 78 counted runs. Five other runs failed and were
+replayed: one native crash at 0x6B716E, two stalls and two early game
+exits. The balance log has each run, and the feature doc's known
+limitations now name the fifth crash and the stall.
+
+The full suite passed before the last wording edits to the docs and
+one test comment; the Fords config tests passed after them. Round 4 is
+the in-game check, so these values are not measured yet.
+
+No issue: Mike waived issues for Fords of War, 2026-10-31.
+
+#### tune(fords-of-war): v2.0.36 - round 3 prices and free waves
+
+`c24803f6`
+
+Round robin 2 played all 78 pairs on 329e841d2 with no crash. The
+same four factions finished last as in round 1: Dol Guldur won none of
+its 12 matches, and Isengard, Gundabad and Rivendell won 3 each.
+Mirkwood and Easterlings won 10 of 12. The full table and what each
+round 1 change did are in the balance log.
+
+This pass changes values in factions.json only:
+
+- Dol Guldur's packs cost about a fifth less (the cheapest uruk packs
+  and the goblin swarm 0.65 of the full price, the rest 0.75 to 1.2),
+  and each free wave brings two more uruks, 12 in all.
+- Isengard's five free waves bring 12, one more uruk and one more
+  spearman. Its cheaper foot in round 1 did not move its results.
+- Gundabad's upgrades cost the base price, down from 1.25 of it. Its
+  lanes were already full, so a larger free wave would only wait.
+- Rivendell's packs cost 1.1 of the full price, down from 1.25. It won
+  its fights but lost 72 towers, the most of any faction.
+- Mirkwood's three archer packs cost 1.15, up from 1.0.
+- Easterlings' packs cost 1.1, up from 1.0.
+
+No trait text changes. Each old value is in the balance log, so each
+change is undone by one edit. Round 3 measures these together with the
+weaker Rohan riders.
+
+Review: deep review tier 2 (Data flow lens). It found that larger
+Gundabad waves would mostly wait behind the lane cap, so Gundabad gets
+cheaper upgrades instead; its three LOW findings are fixed in the log.
+Codex skipped: a values change with no code path.
+
+No issue: Mike waived issues for Fords of War, 2026-10-31.
+
+#### tune(fords-of-war): v2.0.36 - Rohan's cheap riders made weaker
+
+`a582ace4`
+
+Rohan won 10 of its first 10 matches in the second Fords of War round
+robin, 9 of them by taking the keep, in 27 minutes on average. Mike
+asked for its cheap riders to be weaker.
+
+- The five rider packs cost 0.65 of the full price for their level,
+  up from 0.5.
+- The horse archers cost 0.5, up from 0.4.
+- Each free wave brings 4 riders, down from 5.
+
+Rohan's riders are still the cheapest of any faction, its two
+lowest-level packs still hold 8 riders, and its AI still buys riders
+in 7 of 10 pack buys. An 8-pack now costs 100 gold, up from 80. The rider troops keep their skills, because Long Defeat
+fields two of the same troops.
+
+Not measured yet: the second round stays on its build to the end, and
+the next round measures this change.
+
+No issue: Mike waived issues for Fords of War, 2026-10-31.
+
+#### tune(fords-of-war): v2.0.36 - first round robin balance pass
+
+`329e841d`
+
+Every Fords of War faction played every other once at 4x on build
+92973f27a, 78 matches. Mirkwood and Erebor won 11 of 12, while
+Isengard, Gundabad, Harad and Rivendell won 3 and Dol Guldur none.
+West and East won 39 each.
+
+This pass changes four factions that the later roster changes leave
+about as they were:
+
+- Erebor's five elite packs cost 1.4 of the full price, up from 1.2.
+- Mirkwood's free waves bring 3 spearmen and 2 archers, not 2 and 3.
+- Isengard's six foot packs cost 1.1 of the full price, down from 1.25.
+- Harad's first free wave brings militia (level 11), not levies
+  (level 6).
+
+Dol Guldur, Rohan and Rivendell wait for the next round, which also
+measures Dol Guldur's new army, Rohan's cheap riders and hero guards.
+Rohan won 9 of 12 before its cheap riders, so it may now be too
+strong. The balance log holds the full table.
+
+Not measured yet: round 2 runs on this build.
+
+No issue: Mike waived issues for Fords of War, 2026-10-31.
+
+#### tune(fords-of-war): v2.0.36 - Mordor sends a swarm
+
+`0c324fc8`
+
+Mike, 2026-11-05: Rivendell's stats, armour and weapons are so good that
+only numbers can beat them, like a swarm. Mordor already outnumbered
+Rivendell 3 to 1 and lost 4,670 units to 351, and its cap was not the
+limit: it peaked at 123 a lane against a cap of 190. Every Mordor free
+wave is now 1.5 times as large, 25 orcs where it was 17, the largest of
+any faction. Elves keep their quality. The round robin measures it.
+
+#### tune(fords-of-war): v2.0.36 - fewer free elves, a richer Dol Guldur
+
+`a04b08fb`
+
+A six-match survey shows elves win through free troops, so a price would
+not touch them: 72% of Mirkwood's units came free, and a Rivendell free
+bowman killed 19.6 times its value. Rivendell's free waves now come at 2
+times the interval, and Mirkwood's at 1.5 times. Dol Guldur is the
+weakest faction and lost to Erebor in 20 minutes, 7 towers to 0, so it no
+longer has 15% less income. Its stated weakness is that its strongest
+soldiers come only in packs of three. No match has measured these yet.
+
+tools/fords_match_review.py also crashed on a win with no fallen keep,
+and now reports a win on time.
+
+#### tune(fords-of-war): v2.0.36 - walls wear faster, toward 30 minutes
+
+`27d90e50`
+
+With the lost lane rule, wins came at about 40 minutes and the first
+towers fell at about 25. towers.wearPerMinute goes from 0.15 to 0.25, so
+the walls are as weak at minute 24 as they were at minute 30. No match
+has measured this value; it is a test value for the next four matches.
+
 ## v2.0.36 (2026-10-27)
 
 Commits since v2.0.35: 307 (293 with the version label, 14 without); 3 landed twice and are listed once.

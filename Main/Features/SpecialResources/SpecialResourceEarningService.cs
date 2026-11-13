@@ -83,8 +83,7 @@ public sealed class SpecialResourceEarningService
                 return;
             }
 
-            var playerCount = e.PartyManCount ?? 1;
-            _service.EarnFromBattle(e.HeroId, e.KingdomId, e.CultureId, (float)s.EnemyCount / playerCount);
+            _service.EarnFromBattle(e.HeroId, e.KingdomId, e.CultureId, s.EnemyCount);
         });
     }
 
@@ -301,6 +300,26 @@ public sealed class SpecialResourceEarningService
             return new RecruitChargeNotice(resource?.DisplayName, charged);
         }
         return null;
+    }
+
+    /// <summary>
+    /// #967 C2: charges <c>upgrade_cost</c> for the upgrades Coop's server applied from one player's party
+    /// screen and returns what left that player's balance. The client's queue never commits, because Coop's
+    /// Done resets the screen first. Patch144 names the player and reads the lines.
+    /// </summary>
+    public float ChargeCoopUpgrades(EarnerRef upgrader, IReadOnlyList<CoopUpgradeLine> upgrades)
+    {
+        var payer = RecruitChargePolicy.ChoosePayer(
+            isAuthority: _coop.IsAuthority, isDedicated: _dedicatedServer.IsDedicatedServer,
+            sessionActive: _coop.IsSessionActive,
+            hasScope: true, upgrader, mainHero: null);
+        if (payer == null) return 0f;
+
+        SeedPlayer(payer);
+        var before = _service.GetCurrentAmount(payer.HeroId, payer.KingdomId, payer.CultureId);
+        foreach (var upgrade in upgrades)
+            _service.SpendForUpgrade(payer.HeroId, payer.KingdomId, payer.CultureId, upgrade.TargetTroopId, upgrade.Count);
+        return before - _service.GetCurrentAmount(payer.HeroId, payer.KingdomId, payer.CultureId);
     }
 
     // Nobody was charged. A scoped recruit whose party or leader is gone is worth one warning; a

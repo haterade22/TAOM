@@ -570,6 +570,7 @@ never finishes. `IsAuthority` also fails open under BannerlordTogether.
 - **Prevent:** a world-mutating pass over shared entities (battles, parties, settlements) either asks who controls each
   entity or stands down while `IsSessionActive || ShouldDeferToHost`, and says which in `coop-interop.md`'s gated table.
 - **Source:** `docs/reviews/rca-stuck-battle-guard-2026-10-06.md` row 2 (Engine and Data-flow lenses, independently).
+- **Repeat (2026-11-12):** LordRetinue shipped its first draft with `Clan.PlayerClan`, `MobileParty.MainParty` and `IsHumanPlayerCharacter` while the sibling it was copied from (`AlignmentDesertionBehavior`) used `IPlayerControlQuery`. Both lenses of the review found it. No gate scans a new behavior for local-peer statics; the follow-up is named in [rca-lord-retinue-2026-11-12.md](../rca-lord-retinue-2026-11-12.md).
 
 ### A map event with a winner is not always a battle, and RaidCompleted is not always a loot
 A looting raid ends as an attacker victory, so `OnMapEventEnded` paid the battle credit on every raid;
@@ -1128,3 +1129,56 @@ A guest loads the server's save, so a TAOM book that means "the player's refuges
 **Prevent:** when the target menu's init can move on by itself, use `SwitchTo` and accept where it lands. `EnsureMenuOpen` fits menus whose init does nothing.
 
 **Source:** `docs/reviews/rca-sally-empty-party-2026-11-08.md`, finding 15.
+
+### A crash hypothesis names the check that fires first on its route (#1104, 2026-11-09)
+The Patch73 defect was ranked first for a crash at supply delivery, because a player might click the caravan as it arrives. Delivery fires at 1.2 map units and runs before the encounter check each frame. Outside an army the meeting radius is `Max(0.5, dt * 10)`, so such a single player with the feature on reaches the defect only on a large frame step.
+- **Why missed:** the ranking came from what a player might do, and the review that rated the defect HIGH read only the encounter chain.
+- **Prevent:** before ranking a hypothesis, list the checks that can end the route first, compare their numbers and their order in the tick, and write the condition under which the route is reached.
+- **Source:** `docs/reviews/rca-supply-caravan-meeting-2026-11-09.md`.
+
+### A guard on "is in a map event" asks who put the party there (#1099, 2026-11-09)
+A failed-join guard skipped the army undo for any party in an event. `MobileParty.SetAttachedToInternal` copies the commander's event side onto a merged party, so the join's own merge made every such rollback read as in-event and the undo never ran.
+- **Why missed:** the unit tests stubbed the flag, and the merge left no trace in the fake.
+- **Prevent:** before gating on an engine state, list every writer of that state on the path, the current method included. Model a writer in the test fake when the method itself can set the state.
+- **Source:** `docs/reviews/rca-supply-caravan-meeting-2026-11-09.md`.
+
+### A limit read from an engine formula covers every branch of that method (#1104, 2026-11-09)
+`PartyBase.GetEncounterTargetPoint` has an army branch. Two review lenses and the RCA quoted only the branch for a party outside an army, so the docs said a single player reaches Patch73 only on a large frame step. A player who leads five or more attached parties reaches it at normal speed, because the army radius is `0.5 * sqrt(attached parties + 1)`.
+- **Why missed:** each reader stopped at the first formula that explained the number in hand. The same formula had already been corrected once in this review, and that correction did not prompt a read of the whole method.
+- **Prevent:** before a doc says "only when X" from an engine formula, read the whole method, then cover each branch or scope the claim to the branch you read.
+- **Source:** `docs/reviews/rca-supply-caravan-meeting-2026-11-09.md`, Codex pass.
+
+### A guard that waits for a later day names the engine path that ends the wait (#1110, 2026-11-09)
+Arachnophobia Mode skipped a spider brood that held prisoners and said it would disband on a later day. Nothing removes regular prisoners from a bandit party under its prisoner limit: `PrisonerReleaseCampaignBehavior.HourlyPartyTick` releases only above the limit, selling needs a friendly fortification, and prisoner recruitment serves lord parties. A brood that won one fight stayed on the map.
+- **Why missed:** the guard copied a cautious default, and the plan stated the retry as a fact. Nobody traced what clears the condition.
+- **Prevent:** a skip-and-retry guard cites the decompiled line that clears its condition. With no such line, narrow the guard to the state that needs it (here a hero prisoner: an NPC hero has a daily escape chance in `DailyHeroTick`, and the player leaves through player captivity) and let the engine's own destroy handle the rest (`MobileParty.RemoveParty` frees every hero but the player and clears the roster). A chance is not a deadline: write "until the hero leaves", not "on a later day".
+- **Source:** [rca-arachnophobia-mode-2026-11-09.md](../rca-arachnophobia-mode-2026-11-09.md), finding 2.
+
+### A state a patch sets and restores is traced to its writers first: the map event was already a defender victory (#1121, 2026-11-12)
+Patch146 forced `DefenderVictory` around the private loot steps and restored the old state, because vanilla's retreat handler sets the winner to none on its next line. On the real path the mission end has already written `DefenderVictory` (`MissionResult.CreateSuccessful`, `CampaignMissionComponent.OnMissionResultReady`, `PlayerEncounter.SetPlayerVictorious`), so both writes did nothing; on a stale `EnemyRetreated` result from the reused siege encounter the state is `None`, and the write ran `OnBattleWon` and created rewards for a fight nobody fought.
+- **Why missed:** the plan took the state at the handler from the handler's own later line. Nobody listed what writes `BattleState` before the seam. The rule "Writers before gates" names a gate that reads a flag, not a patch that writes one.
+- **Prevent:** before a patch writes engine state around a call, list every writer that runs before the seam, with citations. When the state already holds the wanted value, delete the write and gate on the state: that also closes the stale-result path.
+- **Source:** [rca-siege-retreat-loot-2026-11-12.md](../rca-siege-retreat-loot-2026-11-12.md), findings 2 and 8.
+
+### A vanilla step copied onto another path keeps its assumption about the loser (#1121, 2026-11-12)
+The first Patch146 ran vanilla's three loot steps (casualties, items, prisoners). In a win the loser is destroyed next (`CaptureDefeatedPartyMembers`), so taking its whole cargo and prisoners is free. After an attacker retreat the besiegers survive and keep the siege, so the item step took about half of their baggage (`DefaultBattleRewardModel.cs:313`) on every repulse. Vanilla itself captures no one from a retreating side (`MapEvent.cs:1799`).
+- **Why missed:** the three steps were copied as a unit from `CalculateAndCommitMapEventResults`, and the tests faked the adapter, so no test could disagree with the engine.
+- **Prevent:** state what each reused step assumes about the loser, and copy only the steps whose assumption holds on the new path. A counted field needs a producer: trace every writer of the roster it counts.
+- **Source:** [rca-siege-retreat-loot-2026-11-12.md](../rca-siege-retreat-loot-2026-11-12.md), findings 3 and 5.
+### A feature that puts state into a container vanilla never fills inherits every vanilla reader and cleanup of it (LordRetinue, 2026-11-12)
+LordRetinue put a clan hero into an AI lord party's roster and gave the hero a party role. Vanilla AI parties carry only their leader, so the disband merge, the commander search, the role effects, the wage and size models all assume nothing else is aboard. The merge copies the whole roster into the garrison and then clears it, which left a hero listed in the garrison with no party. A hero aboard is never a commander candidate, so a clan that gained a party slot found no reserve leader.
+- **Why missed:** the handover said vanilla "mostly handles" the release, the plan wrote it down as "left to vanilla", and 12 green unit tests covered only the pure decision service. No step listed the consumers of the new state.
+- **Prevent:** before the first test, list every vanilla reader and cleanup of the state the feature creates (a roster entry, a role, a flag) with a quoted line each: who removes it, who counts it, who skips an entity that has it. Release it on every path that ends its host (disband, death, capture, marriage). Test each removal path in game before closing the issue.
+- **Source:** [rca-lord-retinue-2026-11-12.md](../rca-lord-retinue-2026-11-12.md), findings 1, 4, 5 and 8 (Engine and Data-flow lenses, independently).
+
+### A slot that falls back to its occupant is already filled: compare the candidate with the occupant, not with zero (LordRetinue, 2026-11-12)
+`MobileParty.EffectiveScout`, `EffectiveSurgeon`, `EffectiveEngineer` and `EffectiveQuartermaster` return the leader when no role is set, and vanilla never sets a role on an AI party. The first LordRetinue draft treated "no holder" as an empty slot and gave the role to any hero with a positive skill, so a relative with Steward 30 replaced a leader with Steward 120 and cut the party size limit by about 22 (the Steward effect reads only the role holder).
+- **Why missed:** the plan modeled the role as empty. The fallback was known and quoted in the first message of the session, yet every test fixture started from a leader with no skills.
+- **Prevent:** a decision that fills a slot with a fallback compares the candidate's value with the fallback's value, and its fixtures give the fallback a higher value than the candidate. The service takes the fallback's values as input.
+- **Source:** [rca-lord-retinue-2026-11-12.md](../rca-lord-retinue-2026-11-12.md), finding 2.
+
+### What TAOM's own gate refuses is not what a co-op mod can still write: read the mod's path before stating a co-op world rule (#1139, 2026-11-13)
+The #1139 doc said two players of the same side cannot go to war, because TAOM's `DeclareWarAction` prefix refuses that pair on the server. Coop's hostile demand calls `DeclareWarAction`, accepts the refusal, then sets the war stance itself (`VillageHostileFactionStanceHelper.ApplyWarStance`) and starts the battle. The same session's root defect was the older form of this mistake: "the player" read as `Hero.MainHero`, which on the Coop server is the server's own hero (see the 2026-08-03 entry above).
+- **Why missed:** the claim came from an audit agent and was corrected by reading TAOM's veto alone. A veto is proof of what TAOM refuses, not of what the world can reach.
+- **Prevent:** a sentence about what players can or cannot do in a co-op session cites the co-op mod's code path that would do it, not only TAOM's gate on it. Under Coop, "the player" is `IPlayerControlQuery`, never `Hero.MainHero` (#1141 audits the rest).
+- **Source:** [rca-coop-pvp-capture-2026-11-13.md](../rca-coop-pvp-capture-2026-11-13.md), findings F0 and F1.

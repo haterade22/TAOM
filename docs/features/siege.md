@@ -67,6 +67,16 @@ To properly resolve the warning:
 
 The patch is a safety net only; the intended fix is to add the scene entities.
 
+## Engine facts from Kysaro's siege setup work
+
+Kysaro measured these (his note `gameplay/project_siege_setup.md`, 2026-11-09), unverified in TAOM.
+
+- **`DestructableComponent.OnHit` zeroes the damage of an empty weapon unless the attacker is a `BatteringRam`.** His
+  gate breaker calls `TriggerOnHit` with `DestroyOnAnyHit = true` for that hit. `CastleGate.OnDestroyed` then opens the
+  navmesh as a ram break does, and a broken gate leaves `Mission.ActiveMissionObjects` (use `MissionObjects`).
+- **A siege tower with no entity tagged "wheel" crashes at mission load.** `SiegeWeaponMovementComponent` samples the
+  ground under the wheels. A mesh-less wheel entity is enough.
+
 ## Changelog
 - 2026-03-20 — Added the Harmony Prefix on `BesiegerCamp.GetSiegeCampPartyPosition`: guards empty `siegeCamp1GlobalFrames`, swaps camp2 frames into the camp1 slot when camp1 is empty, and falls back to the settlement gate position when both arrays are empty (fixes the `IndexOutOfRangeException` on settlements like "Gwígar" lacking `siege_camp_1` scene entities).
 - 2026-09-24: the folder is null-clean and its `.editorconfig` sets the nullable warnings to errors (plan 019, #660); explicit no-settlement branch in the prefix; tests for every path through the prefix. In the same folder, a partial or `null` `KingdomMessages` entry now falls back per field to `SiegeDefenseService`'s defaults ([siege-defense.md](siege-defense.md#configuration)). The no-settlement path stays a logged defer to vanilla: it is unreachable from vanilla in v1.5.3, and the log line is the tripwire if an engine change ever reaches it.

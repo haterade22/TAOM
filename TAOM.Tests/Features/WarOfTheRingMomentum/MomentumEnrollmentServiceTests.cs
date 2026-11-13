@@ -137,12 +137,34 @@ public class MomentumEnrollmentServiceTests
     public void RemoveKingdom_EnrolledEitherSide_RemovesAndReturnsTrue()
     {
         _sut.SweepEnrollment(_state);
+        // As at KingdomDestroyed: the engine has marked the kingdom eliminated, so it is off the live list.
+        _allianceAdapter.GetAllKingdomIds().Returns(new List<string> { "empire_w", "vlandia", "umbar" });
 
         Assert.IsTrue(_sut.RemoveKingdom(_state, "empire_s"));
         Assert.IsFalse(_state.DoesKingdomTakePart("empire_s"));
 
+        _allianceAdapter.GetAllKingdomIds().Returns(new List<string> { "empire_w", "umbar" });
         Assert.IsTrue(_sut.RemoveKingdom(_state, "vlandia"));
         Assert.IsFalse(_state.DoesKingdomTakePart("vlandia"));
+    }
+
+    // #1113: the enrolled sets are only as fresh as the last sweep, and a pledge changes a kingdom's side
+    // inside a day. The caller counts each side's kingdoms right after this call (the elimination victory),
+    // so a realm that took a side since the last sweep must already be in the count. The engine marks the
+    // kingdom eliminated before it raises KingdomDestroyed (v1.5.7 DestroyKingdomAction.cs:9), so the
+    // destroyed kingdom is off the live list here.
+    [TestMethod]
+    public void RemoveKingdom_ARealmTookASideSinceTheLastSweep_EnrollsItBeforeTheSideIsCounted()
+    {
+        _sut.SweepEnrollment(_state);
+        _alignmentService.ResolveSide("umbar", "").Returns(FactionSide.Evil);
+        _allianceAdapter.GetAllKingdomIds().Returns(new List<string> { "empire_w", "vlandia", "umbar" });
+
+        Assert.IsTrue(_sut.RemoveKingdom(_state, "empire_s"));
+
+        Assert.IsFalse(_state.Evil.ContainsKingdom("empire_s"), "the destroyed kingdom is not enrolled again");
+        Assert.IsTrue(_state.Evil.ContainsKingdom("umbar"));
+        Assert.AreEqual(1, _state.Evil.KingdomIds.Count, "the side still has a kingdom: no elimination victory");
     }
 
     [TestMethod]

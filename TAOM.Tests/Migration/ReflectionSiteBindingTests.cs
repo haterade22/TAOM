@@ -86,6 +86,8 @@ public class ReflectionSiteBindingTests
     [DataRow("TaleWorlds.MountAndBlade.TeamAIComponent", "TeamAIComponent", "_currentTactic", "Field", "TeamTacticProbe.cs:30")]
     // --- BannerColorPersistence banner-paste (BannerEditorView_OnTick_Patch.cs) ---
     [DataRow("SandBox.GauntletUI.BannerEditor.BannerEditorView", "BannerEditorView", "RefreshShieldAndCharacter", "Method", "BannerEditorView_OnTick_Patch.cs:23")]
+    // --- Layered banner editor: the view's refresh callback it calls after each edit (TaomBannerEditorVM.cs) ---
+    [DataRow("TaleWorlds.CampaignSystem.ViewModelCollection.BannerEditorVM", "BannerEditorVM", "_refresh", "Field", "TaomBannerEditorVM.cs:39")]
     // --- SpecialResources transactional spend (PartyScreenLogic_AddCommand_Patch.cs) ---
     [DataRow("TaleWorlds.CampaignSystem.Party.PartyScreenLogic+PartyCommand", "PartyCommand", "TotalNumber", "Member", "PartyScreenLogic_AddCommand_Patch.cs:72")]
     // --- SpecialResources encyclopedia troop badge (EncyclopediaUnitBadgeMixin.cs, #590) ---
@@ -136,6 +138,9 @@ public class ReflectionSiteBindingTests
     [DataRow("TaleWorlds.Core.HorseComponent", "HorseComponent", "set_BodyLength", "Method", "MonsterSizeCatalogAdapter.cs:23")]
     [DataRow("TaleWorlds.Core.ItemObject", "ItemObject", "CalculateEffectiveness", "Method", "MonsterSizeCatalogAdapter.cs:28")]
     [DataRow("TaleWorlds.Core.ItemObject", "ItemObject", "set_Effectiveness", "Method", "MonsterSizeCatalogAdapter.cs:30")]
+    // --- Arachnophobia Mode (#1110): the upgrade edge into a spider troop and the Custom Battle list both go through private setters. Missing: that route stays open, and the game start writes a fail line on taom.arachnophobia.apply.
+    [DataRow("TaleWorlds.CampaignSystem.CharacterObject", "CharacterObject", "set_UpgradeTargets", "Method", "TroopMountCatalogAdapter.cs:21")]
+    [DataRow("TaleWorlds.Core.BasicCharacterObject", "BasicCharacterObject", "set_IsObsolete", "Method", "TroopMountCatalogAdapter.cs:24")]
     // --- Seat of Seeing (S1): the return glide reads CameraElevation, whose setter is private (SeatScreenAdapter.cs). Missing: CameraElevation keeps the mouse's integral from the stay (MissionScreen:3051-3053, 3249-3251), so the glide's vertical angle starts from an unrelated value (4569), a visible jump.
     [DataRow("TaleWorlds.MountAndBlade.View.Screens.MissionScreen", "MissionScreen", "set_CameraElevation", "Method", "SeatScreenAdapter.cs:50")]
     // --- Seat of Seeing (S2): keep the order panel open reaches the panel's view model through the handler's protected _dataSource. Missing: the reopen cannot run, and the session writes a fail line on taom.seat-of-seeing.panel-reopened.
@@ -232,6 +237,8 @@ public class ReflectionSiteBindingTests
     [DataRow("TaleWorlds.MountAndBlade.MovementOrder", "MovementOrder", "_engageTargetPositionCache", "Field", "MarshalEngagePoint.cs:17")]
     // --- The Long Defeat gate repair (#1079, phase 3 Slice 5, D17): vanilla's own mission reset, protected internal, called by name on a gate the Mission has disabled. Missing: no gate is repaired and gate-repair fails.
     [DataRow("TaleWorlds.MountAndBlade.CastleGate", "CastleGate", "OnMissionReset", "Method", "LongDefeatBattlefieldAdapter.Gates.cs:46")]
+    // --- Siege Retreat Loot (Patch146, #1121): vanilla's private casualty-loot step, called by name when a defender's assault ends by attacker retreat. Missing: the adapter answers false, the service logs an error and the retreat gives no loot, as in vanilla.
+    [DataRow("TaleWorlds.CampaignSystem.MapEvents.MapEvent", "MapEvent", "LootDefeatedPartyCasualties", "Method", "SiegeRetreatLootAdapter.cs:28")]
     public void ReflectionSite_ResolvesAgainstInstalledEngine(string fullName, string simpleName, string member, string kind, string source)
     {
         if (!_gameLoaded)

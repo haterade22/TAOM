@@ -381,6 +381,11 @@ The tool printed `TOTAL: 93830 entities in 141 files (cap 131072, warn 120000)` 
 day. Sum every enabled module before believing it. `Prefabs_Unused/` holds another 91,023 entities
 that are parked, not deleted, so moving a file back into `Prefabs/` can cost you the entire margin.
 
+A second load limit is per scene, not global: a scene's XML volume can crash the load with RAM to
+spare (a 32 MB native scratch arena, found by Kysaro). Two shipped TAOM_Map scenes sit past his line;
+the measured table is in [battle-load-diagnostics.md](../features/battle-load-diagnostics.md)
+"Scene size".
+
 ## Recipes
 
 ### Create the map module from zero

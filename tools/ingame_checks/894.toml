@@ -1,0 +1,34 @@
+# In-game checks for #894 phase 2 (Lost Footing rescue), read by tools/ingame_verdict.py. The lines come from
+# Main/Features/LostFooting/CensusLine.cs: one rescue line per try, and the summary at the end of each battle. A refusal is
+# not a fail (no standing spot, the player near); the checks ask that moves happen and that a moved soldier is seen back
+# on the mesh (freed). Whether he then walks is the human row.
+# NOT REACHED is normal in a battle where nobody stays stuck for 10 seconds.
+issue = 894
+title = "Stuck agent rescue: off-navmesh soldiers and soldiers stranded in water (phase 2)"
+fixed_in = "a7e112ba1"   # trunk on origin before the rescue: the manifest ships with the emitter
+logs = ["taom"]
+
+[[check]]
+id = "taom.lost-footing.rescue-moved"
+needs = "a siege or field battle where soldiers stay stuck: the Long Defeat on Helm's Deep shows 10 to 40 wall soldiers off the mesh"
+reached = ['\[LostFooting\] rescue t=\d+s move=']
+pass = ['\[LostFooting\] rescue t=\d+s move=(near|formation) cause=\w+ kind=\w+ result=moved meters=\d']
+absence = "not-reached"
+
+[[check]]
+id = "taom.lost-footing.rescue-freed"
+needs = "the same battle to its end: the summary counts moved soldiers whose episode then ended by recovery"
+reached = ['\[LostFooting\] summary .* rescued=[1-9]\d* ']
+pass = ['\[LostFooting\] summary .* rescued=[1-9]\d* freed=[1-9]\d* ']
+# A fail needs at least five moves with none freed: one moved soldier who then died is not evidence against the rescue.
+fail = ['\[LostFooting\] summary .* rescued=([5-9]|[1-9]\d+) freed=0 ']
+absence = "not-reached"
+
+[[human]]
+claim = "a soldier stuck on a wall or in a corner for 10 seconds steps to a spot nearby and walks again; nobody falls off a wall or lands inside a wall"
+
+[[human]]
+claim = "a soldier still stuck after 30 seconds appears at his place in his formation only while you are at least 25 m away; you never see one jump"
+
+[[human]]
+claim = "with Lost Footing Rescue off in MCM, no [LostFooting] rescue line appears and nobody is moved"

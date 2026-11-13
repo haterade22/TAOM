@@ -178,10 +178,12 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
 
     // --- Tournaments ---
 
+    // Renamed from TournamentMaxBetPerRound (Mike, 2026-11-10): default goes from 0 (unlimited) to 15,000, and
+    // MCM loads a saved value by name, so a player who ever saved any value under the old name would have kept it.
     [SettingPropertyGroup("Tournaments")]
     [SettingPropertyInteger("Max Bet Per Round", 0, TAOM.Features.TournamentRewards.TournamentRewardRules.MaxBetSetting, Order = 0, RequireRestart = false,
-        HintText = "The most you may bet in each tournament round. 0 = unlimited (up to your purse). Roguery's Deep Pockets doubles any other value. Vanilla is 150. Default: 0.")]
-    public int TournamentMaxBetPerRound { get; set; } = 0;
+        HintText = "The most you may bet in each tournament round. 0 = unlimited (up to your purse); raise this slider for a bigger cap, or back to 0 to remove it. Roguery's Deep Pockets doubles any other value. Vanilla is 150. Default: 15,000. Saved values from before 2026-11-10 were reset to this default; if you had chosen your own, set it again.")]
+    public int TournamentBetCapPerRound { get; set; } = 15_000;
 
     [SettingPropertyGroup("Tournaments")]
     [SettingPropertyFloatingInteger("Renown Multiplier", 0.0f, TAOM.Features.TournamentRewards.TournamentRewardRules.MaxMultiplier, "#0.00", Order = 1, RequireRestart = false,
@@ -396,6 +398,13 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
     [SettingPropertyFloatingInteger("Army Focus Multiplier", TAOM.Features.WarChronicle.WarChronicleSettingsProvider.ArmyFocusMin, TAOM.Features.WarChronicle.WarChronicleSettingsProvider.ArmyFocusMax, "#0.00", Order = 2, RequireRestart = false,
         HintText = "During a siege window, how much more the attackers' armies want to besiege the target and the defender's armies want to defend it once it is attacked. 1 turns the focus off. Needs AI Strategic Intelligence on. Default 1.4.")]
     public float WarChronicleArmyFocus { get; set; } = 1.4f;
+
+    // --- War of the Ring / War Pledge (#1113) ---
+
+    [SettingPropertyGroup("War of the Ring/War Pledge")]
+    [SettingPropertyBool("{=taom_war_pledge_mcm_enabled}Enable War Pledge", Order = 0, RequireRestart = false,
+        HintText = "{=taom_war_pledge_mcm_enabled_hint}When on, a Neutral realm can join the War of the Ring for good. In Full War, the side that is far behind on the war meter (25 points or more) calls on a Neutral realm that leans its way: Khand, Rhudaur, Umbar, Shaghana and Abanissa lean to the Shadow, Cardolan and Dorwinion to the Free Peoples. The realm then goes to war with every realm of the other side, and that war cannot end in peace while the War of the Ring lasts. One realm joins at a time, 30 days apart unless war_pledge.json says otherwise, and never a realm that a player rules. Needs Momentum Tracking on. Off stops new joins by the AI; a realm that has joined stays joined. Default: on.")]
+    public bool WarPledgeEnabled { get; set; } = true;
 
     // --- Battle Balance / Troop Power ---
 
@@ -1374,6 +1383,18 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
         HintText = "When ON (default), settlement garrisons shed opposed troops (e.g. a conquered fief's old-culture defenders leave). When OFF, only mobile parties are affected (if 'Apply To Mobile Parties' is on).")]
     public bool EnableAlignmentDesertionGarrisons { get; set; } = true;
 
+    // --- World / Lord Retinue (LordRetinue feature, #1122) ---
+
+    [SettingPropertyGroup("World/Lord Retinue", GroupOrder = 40)]
+    [SettingPropertyBool("Enable Lord Retinue", Order = 0, RequireRestart = false,
+        HintText = "When enabled, an AI lord party whose clan is at its party limit takes one idle adult clan member along and gives that member a party role (scout, surgeon, engineer or quartermaster) the member is better at than the lord. The heroes go back to a settlement when the clan drops below its party limit or when this is turned off. When off, no new heroes join. A party whose disband starts always frees every hero aboard but its leader, with this on or off.")]
+    public bool EnableLordRetinue { get; set; } = true;
+
+    [SettingPropertyGroup("World/Lord Retinue")]
+    [SettingPropertyInteger("Extra Heroes Per Party", 0, LordRetinue.LordRetinueSettingsProvider.MaxExtraHeroesCap, "0", Order = 1, RequireRestart = false,
+        HintText = "How many extra clan heroes one AI lord party may carry. Default 1. Heroes already riding along stay when you lower this. A hero who rides along costs the clan a daily wage and a party slot, and can be wounded, captured or killed in battle with the lord.")]
+    public int LordRetinueMaxExtraHeroes { get; set; } = 1;
+
     // --- Combat Mechanics (CombatMechanics feature — crush-through, cleave, charge knockdown) ---
 
     [SettingPropertyGroup("Combat Mechanics", GroupOrder = 24)]
@@ -1519,6 +1540,18 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
     [SettingPropertyBool("Ability Glow and Sparks", Order = 4, RequireRestart = false,
         HintText = "A soldier whose ability is active wears a coloured outline: red for fury, steel blue for a guard, violet for dread; the speed and aim abilities stay unlit. Sparks burst on the soldier who fires and on a few of the kin who join him. Only the soldiers nearest the camera are outlined (visuals.maxGlowing in race_abilities.json). Drawn on this client only, and hidden while Hide Battle UI is on.")]
     public bool RaceAbilityGlow { get; set; } = true;
+
+    // --- Battle Tactics / Hero Auras (#1127) ---
+
+    [SettingPropertyGroup("Battle Tactics/Hero Auras", GroupOrder = 88)]
+    [SettingPropertyBool("{=taom_hero_auras_mcm_enabled}Enable Hero Auras", Order = 0, RequireRestart = false,
+        HintText = "{=taom_hero_auras_mcm_enabled_hint}Named heroes strengthen the allied soldiers near them, each in his own way: Dain's dwarves keep their feet, Aragorn's men hold their nerve, the elven lords' archers draw faster. Only the heroes listed in hero_auras.json carry an aura. Where an aura and a soldier's own race ability give the same thing, the stronger counts; they never add. Takes effect from the next aura pulse.")]
+    public bool EnableHeroAuras { get; set; } = true;
+
+    [SettingPropertyGroup("Battle Tactics/Hero Auras")]
+    [SettingPropertyFloatingInteger("{=taom_hero_auras_mcm_strength}Hero Aura Strength", 0.0f, 2.0f, "#0.00", Order = 1, RequireRestart = false,
+        HintText = "{=taom_hero_auras_mcm_strength_hint}Multiplies every aura's bonuses. 1.0 is as authored in hero_auras.json; 0 turns every aura off. Morale floors and on/off effects such as shrug-off do not scale. Default: 1.0.")]
+    public float HeroAuraStrength { get; set; } = 1f;
 
     // --- World / Uncapturable Heroes ---
 
@@ -1967,7 +2000,7 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
 
     [SettingPropertyGroup("Menus & Loading Screens/Character Creation")]
     [SettingPropertyBool("Themed Banner Editor", Order = 4, RequireRestart = false,
-        HintText = "Kysaro's reskin of the banner editor during character creation. The banner editor in a running campaign stays vanilla. Takes effect the next time it opens.")]
+        HintText = "The themed, layered banner editor, both during character creation and in a running campaign. Takes effect the next time it opens.")]
     public bool FrontEndCustomBannerEditor { get; set; } = true;
 
     [SettingPropertyGroup("Menus & Loading Screens/Character Creation")]
@@ -2601,8 +2634,13 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
 
     [SettingPropertyGroup("Battle Tactics/Lost Footing", GroupOrder = 64)]
     [SettingPropertyBool("Lost Footing Census", Order = 0, RequireRestart = false,
-        HintText = "Counts soldiers, mounts and creatures that are stuck in a battle, standing off the walkable ground or wading in water without moving, and writes what it finds to the log with a [LostFooting] tag, with a summary when the battle ends. It only watches: it never moves or changes anything in the battle. Field battles, sieges and sally-outs. Default: on.")]
+        HintText = "Counts soldiers, mounts and creatures that are stuck in a battle, standing off the walkable ground or wading in water without moving, and writes what it finds to the log with a [LostFooting] tag, with a summary when the battle ends. It only watches: it never moves or changes anything in the battle. With the rescue on, the start line and the summary are still written. Field battles, sieges and sally-outs. Default: on.")]
     public bool LostFootingCensus { get; set; } = true;
+
+    [SettingPropertyGroup("Battle Tactics/Lost Footing")]
+    [SettingPropertyBool("Lost Footing Rescue", Order = 1, RequireRestart = false,
+        HintText = "Moves a soldier who stays stuck back to where he can walk: off the walkable ground or still in water for 10 seconds, he steps to the nearest good spot within 6 m at his own height; still stuck after 30 seconds, he moves to his place in his formation while you are at least 25 m away. A riderless horse gets the short step only. Never the player, fleeing men, creatures, men working a ladder or machine, or men holding a set post or waiting at a ladder. Field battles, sieges and sally-outs, not co-op. Default: on.")]
+    public bool LostFootingRescue { get; set; } = true;
     // --- Good Deeds (docs/features/good-deeds.md, #864) ---
     //
     // Relation earned by releasing a captured lord, donating a hero prisoner to a settlement and winning a town's tournament.
@@ -2796,6 +2834,89 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
     [SettingPropertyBool("Enable Sworn Anew", Order = 0, RequireRestart = false,
         HintText = "When enabled (default), a captured lord can be asked to join your kingdom, in a conversation or from the party screen, and serves it instead of being ransomed. The lord must hold a clan of another kingdom (not its ruler, and not a mercenary or minor clan), must be held by your party or in a settlement your clan owns, and must not be a lord who can never be captured, such as Sauron and the Nazgul. A Free Peoples lord is never asked to join an Evil realm, and an Evil lord is never asked to join a Free one. The base game's blood feud rule still applies. When off, the base game's rules apply: only a kingdom's ruler can recruit a captured lord, through its 'join us, and be set free' line, which checks no realm. When on, both lines pass this check, and the ruler-only line also needs the lord held by your party or in your clan's dungeon. Applies at once, no restart.")]
     public bool SwornAnewEnabled { get; set; } = TAOM.Features.SwornAnew.SwornAnewSettingsProvider.DefaultEnabled;
+    // --- Kingdom Allegiance (docs/features/kingdom-allegiance.md, #1111) ---
+    //
+    // Read at each AI join score and once at new-game relation seeding, through KingdomAllegianceSettingsProvider's one cached
+    // settings reference, so it needs no restart. GroupOrder 86 is used by no other group. A new setting, so the default (on)
+    // reaches every install.
+
+    [SettingPropertyGroup("World/Kingdom Allegiance", GroupOrder = 86)]
+    [SettingPropertyBool("{=taom_kingdom_allegiance_mcm_enabled}Enable Kingdom Allegiance", Order = 0, RequireRestart = false,
+        HintText = "{=taom_kingdom_allegiance_mcm_enabled_hint}When enabled (default), lords keep to their side of the war. An AI clan of the Free Peoples never joins, defects to or serves as mercenaries for an Evil realm, and an Evil clan never does so for a Free realm. Neutral clans and realms may deal with either side. A new campaign also starts with no friendships between Free and Evil lords: each one becomes enmity of the same strength. Your own clan and a realm you lead keep the base game's rules. Clans that already serve a realm of the other side stay where they are. When off, the base game's rules apply. Applies at once, no restart; the friendships part applies to new campaigns only.")]
+    public bool KingdomAllegianceEnabled { get; set; } = TAOM.Features.KingdomAllegiance.KingdomAllegianceSettingsProvider.DefaultEnabled;
+
+    // --- Realms (docs/features/realms.md) ---
+    //
+    // Feudal titles, claims, vassal duties and offices. Prices and payments are percentages of realms_titles.xml, which stays
+    // the baseline. Read when a price is quoted, on the daily and weekly ticks and when a name is built, through
+    // RealmsSettingsProvider's one cached settings reference, so none needs a restart. GroupOrder 87 is used by no other
+    // group. New settings, so the defaults reach every install.
+
+    [SettingPropertyGroup("World/Realms", GroupOrder = 87)]
+    [SettingPropertyInteger("{=taom_realms_mcm_claim_price}Claim Price (%)", TAOM.Features.Realms.RealmsSettingsProvider.MinCostPercent, TAOM.Features.Realms.RealmsSettingsProvider.MaxCostPercent, Order = 0, RequireRestart = false,
+        HintText = "{=taom_realms_mcm_claim_price_hint}The price of buying a claim on a title, as a percentage of its price in realms_titles.xml (40 for a Barony up to 500 for a Kingdom, in your people's own resource). AI lords pay for theirs in gold, at the same percentage. Between 10 and 500. Default: 100.")]
+    public int RealmsClaimPricePercent { get; set; } = TAOM.Features.Realms.RealmsSettingsProvider.DefaultPercent;
+
+    [SettingPropertyGroup("World/Realms")]
+    [SettingPropertyInteger("{=taom_realms_mcm_influence_cost}Title Influence Cost (%)", TAOM.Features.Realms.RealmsSettingsProvider.MinCostPercent, TAOM.Features.Realms.RealmsSettingsProvider.MaxCostPercent, Order = 1, RequireRestart = false,
+        HintText = "{=taom_realms_mcm_influence_cost_hint}The influence it costs to usurp, form, restore or revoke a title, as a percentage of its cost in realms_titles.xml. Restoring Gondor's throne for Aragorn costs 2500 at 100. Applies to AI lords too. Between 10 and 500. Default: 100.")]
+    public int RealmsInfluenceCostPercent { get; set; } = TAOM.Features.Realms.RealmsSettingsProvider.DefaultPercent;
+
+    [SettingPropertyGroup("World/Realms")]
+    [SettingPropertyBool("{=taom_realms_mcm_ai_claims}AI Lords Press Claims", Order = 2, RequireRestart = false,
+        HintText = "{=taom_realms_mcm_ai_claims_hint}When on, AI lords buy claims, usurp the titles they claim, form vacant titles their side holds and restore thrones, each week. When off, only you do; claims they already hold stay. Default: on.")]
+    public bool RealmsAiClaims { get; set; } = true;
+
+    [SettingPropertyGroup("World/Realms")]
+    [SettingPropertyBool("{=taom_realms_mcm_tribute_recv}Tribute From Vassals", Order = 3, RequireRestart = false,
+        HintText = "{=taom_realms_mcm_tribute_recv_hint}When on, each clan whose lords hold titles directly below your clan's, in your realm, pays your clan a share of its daily income from fiefs. It shows in the expected gold change. Applies to AI lords too. Receiving and paying are separate: with only this one on, lieges gain the gold without their vassals losing it. Default: on.")]
+    public bool RealmsTributeReceive { get; set; } = true;
+
+    [SettingPropertyGroup("World/Realms")]
+    [SettingPropertyInteger("{=taom_realms_mcm_tribute_recv_pct}Tribute From Vassals (%)", TAOM.Features.Realms.RealmsSettingsProvider.MinTributePercent, TAOM.Features.Realms.RealmsSettingsProvider.MaxTributePercent, Order = 4, RequireRestart = false,
+        HintText = "{=taom_realms_mcm_tribute_recv_pct_hint}The share of a vassal clan's daily income from fiefs that its liege clan receives. A clan with more than one liege clan splits it among them. Between 1 and 25. Default: 5.")]
+    public int RealmsTributeReceivePercent { get; set; } = TAOM.Features.Realms.RealmsSettingsProvider.DefaultTributePercent;
+
+    [SettingPropertyGroup("World/Realms")]
+    [SettingPropertyBool("{=taom_realms_mcm_tribute_pay}Tribute To Liege", Order = 5, RequireRestart = false,
+        HintText = "{=taom_realms_mcm_tribute_pay_hint}When on, your clan pays each liege clan, the clan whose lord holds a title directly above one of yours in your realm, a share of its daily income from fiefs. It shows in the expected gold change. Applies to AI lords too. A clan that cannot pay its whole tribute pays nothing that day. With only this one on, vassals lose the gold without their lieges gaining it. Default: on.")]
+    public bool RealmsTributePay { get; set; } = true;
+
+    [SettingPropertyGroup("World/Realms")]
+    [SettingPropertyInteger("{=taom_realms_mcm_tribute_pay_pct}Tribute To Liege (%)", TAOM.Features.Realms.RealmsSettingsProvider.MinTributePercent, TAOM.Features.Realms.RealmsSettingsProvider.MaxTributePercent, Order = 6, RequireRestart = false,
+        HintText = "{=taom_realms_mcm_tribute_pay_pct_hint}The share of a clan's daily income from fiefs it pays its liege clans, split among them when it has more than one. Between 1 and 25. Default: 5.")]
+    public int RealmsTributePayPercent { get; set; } = TAOM.Features.Realms.RealmsSettingsProvider.DefaultTributePercent;
+
+    [SettingPropertyGroup("World/Realms")]
+    [SettingPropertyInteger("{=taom_realms_mcm_office_influence}Office Influence (%)", TAOM.Features.Realms.RealmsSettingsProvider.MinPaymentPercent, TAOM.Features.Realms.RealmsSettingsProvider.MaxPaymentPercent, Order = 7, RequireRestart = false,
+        HintText = "{=taom_realms_mcm_office_influence_hint}The influence an office such as the Steward of Gondor or a Marshal of the Mark pays its holder's clan each week, as a percentage of its amount in realms_titles.xml. 0 stops it. Between 0 and 300. Default: 100.")]
+    public int RealmsOfficeInfluencePercent { get; set; } = TAOM.Features.Realms.RealmsSettingsProvider.DefaultPercent;
+
+    [SettingPropertyGroup("World/Realms")]
+    [SettingPropertyBool("{=taom_realms_mcm_resentment}Resentment Over Fiefs", Order = 8, RequireRestart = false,
+        HintText = "{=taom_realms_mcm_resentment_hint}When on, a lord who holds the title of a town or castle that another clan owns likes its owner a little less each week, and the town loses a little loyalty. Default: on.")]
+    public bool RealmsResentment { get; set; } = true;
+
+    [SettingPropertyGroup("World/Realms")]
+    [SettingPropertyBool("{=taom_realms_mcm_liege_pull}Liege's Pull", Order = 9, RequireRestart = false,
+        HintText = "{=taom_realms_mcm_liege_pull_hint}When on, a vassal of another clan likes the holder of their liege title a little more each week, up to a relation of 30. Default: on.")]
+    public bool RealmsLiegePull { get; set; } = true;
+
+    [SettingPropertyGroup("World/Realms")]
+    [SettingPropertyBool("{=taom_realms_mcm_army_discount}Liege Army Discount", Order = 10, RequireRestart = false,
+        HintText = "{=taom_realms_mcm_army_discount_hint}When on, calling a vassal to an army costs their liege half the influence. When off, it costs what the base game asks. Default: on.")]
+    public bool RealmsLiegeArmyDiscount { get; set; } = true;
+
+    [SettingPropertyGroup("World/Realms")]
+    [SettingPropertyBool("{=taom_realms_mcm_family_grants}Lands for Sons and Daughters", Order = 11, RequireRestart = false,
+        HintText = "{=taom_realms_mcm_family_grants_hint}When on, AI lords hand lesser titles to their grown children. When off, they keep them; titles already handed down stay, and so do the grants made when a campaign starts, such as Boromir's West Osgiliath. Default: on.")]
+    public bool RealmsFamilyGrants { get; set; } = true;
+
+    [SettingPropertyGroup("World/Realms")]
+    [SettingPropertyBool("{=taom_realms_mcm_title_styles}Lords Styled by Their Titles", Order = 12, RequireRestart = false,
+        HintText = "{=taom_realms_mcm_title_styles_hint}When on, lord parties and the name above a conversation carry the lord's style and title, such as Steward Denethor of Gondor. When off, they show the plain name; the encyclopedia still lists every title. Party names change within an in-game hour. Default: on.")]
+    public bool RealmsTitleStyles { get; set; } = true;
+
     // --- Provender-master (docs/features/provender.md, #908) ---
     //
     // Standing orders and morale options for the hero in the party's Quartermaster role. Every value is read when an order is
@@ -3023,4 +3144,31 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
     [SettingPropertyInteger("{=taom_dwarf_attacks_mcm_damage}Dwarf Attack Damage (%)", 0, TAOM.Features.DwarfAttacks.DwarfAttacksConfig.MaxDamagePercent, Order = 1, RequireRestart = false,
         HintText = "{=taom_dwarf_attacks_mcm_damage_hint}The damage of the head butt and the drop kick, as a percentage of their normal damage. Armour does not reduce it. At 0 the attacks still play but hurt no one and knock no one down. Default: 100.")]
     public int DwarfAttacksDamagePercent { get; set; } = TAOM.Features.DwarfAttacks.DwarfAttacksConfig.DefaultDamagePercent;
+
+    // --- Special Resources (#1108) ---
+
+    [SettingPropertyGroup("Special Resources")]
+    [SettingPropertyBool("{=taom_specres_mcm_gold_only}Elite Troops Cost Gold Only", Order = 0, RequireRestart = false,
+        HintText = "{=taom_specres_mcm_gold_only_hint}When on, your troops cost no special resource to upgrade, recruit or keep, and none of them desert for lack of it. Gold and wages still apply. The Elite Emissary sells for gold, to a buyer of its own resource group only. You still earn the resource, and the armoury still takes it. When you turn this off, the charges return, and elite troops desert again at a zero balance. Default: off.")]
+    public bool EliteTroopsCostGoldOnly { get; set; } = false;
+
+    [SettingPropertyGroup("Special Resources")]
+    [SettingPropertyInteger("{=taom_specres_mcm_gold_rate}Emissary Gold Per Resource", SpecialResources.SpecialResourceSettingsProvider.MinGoldPerResource, SpecialResources.SpecialResourceSettingsProvider.MaxGoldPerResource, Order = 1, RequireRestart = false,
+        HintText = "{=taom_specres_mcm_gold_rate_hint_base}With Elite Troops Cost Gold Only on, the emissary's gold price is the troop's base emissary cost times this number. The resource price is a multiple of the same base cost. Default: 200.")]
+    public int EmissaryGoldPerResource { get; set; } = SpecialResources.SpecialResourceSettingsProvider.DefaultGoldPerResource;
+
+    // --- Accessibility (#1110) ---
+
+    [SettingPropertyGroup("Accessibility", GroupOrder = 85)]
+    [SettingPropertyBool("{=taom_arachnophobia_mcm_mode}Arachnophobia Mode", Order = 0, RequireRestart = false,
+        HintText = "{=taom_arachnophobia_mcm_mode_hint}Takes the giant spiders out of the game. Spider riders ride wargs instead. New volunteers, upgrades and the Elite Emissary no longer lead to a spider troop, and spider troops leave the encyclopedia and the Custom Battle troop list. Spider broods leave the campaign map, most within a day. The rest applies the next time you start or load a game. Spider troops that already exist stay, on wargs: in parties, garrisons, prisons and volunteer slots. Fords of War still offers its Spider Riders, on wargs. Lore text, and cobwebs in some scenes, stay. Default: off.")]
+    public bool ArachnophobiaMode { get; set; } = false;
+
+    // Persists by index: never reorder or remove a choice (BattleHudColourPaletteTests pins them). The battle
+    // HUD reads it again while a battle runs, so an applied change shows in the current battle.
+    [SettingPropertyGroup("Accessibility")]
+    [SettingPropertyDropdown("{=taom_battlehud_mcm_colour_mode}Battle HUD Colours", Order = 1, RequireRestart = false,
+        HintText = "{=taom_battlehud_mcm_colour_mode_hint}Changes only three rings of the round battle HUD: your player health, mount health and shield. Default keeps their stone look and colours. Each other choice draws those rings in flat colours that are easier to tell apart for that type of colour vision, on a dark track. The rings keep their order and fill as before, so their place and length also tell them apart. The career ability centre, the ammo count and all other screens do not change. A change applies in the current battle, with no restart.")]
+    public Dropdown<string> BattleHudColourMode { get; set; } = new Dropdown<string>(
+        TAOM.Features.BattleHud.UI.BattleHudColourPalette.Choices, 0);
 }

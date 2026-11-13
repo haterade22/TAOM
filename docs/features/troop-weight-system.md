@@ -318,6 +318,16 @@ assumed:** `GetPartyMemberSizeLimit` has exactly two call sites in `TaleWorlds.C
 in the install references it either. If a future engine version routes a gameplay decision through the
 explainer, this gate silently stops taxing that decision: re-run that grep on any engine bump.
 
+**v1.5.7 (2026-11-10, #1112):** the re-grep finds a third engine caller, outside
+`TaleWorlds.CampaignSystem`. `CampaignUIHelper.GetMainPartyHealthTooltip`
+(`TaleWorlds.CampaignSystem.ViewModelCollection`) calls the model with `isCurrentlyAtSea: false` and
+no descriptions for its Land Troop Capacity row. It is a tooltip, not a gameplay decision, but it
+runs the enforcement path, so each hover over the map bar's troop item writes the main party's base
+snapshot (`_lastBaseLimit`). While the engine's cached limit is current, the value written is the
+same. While that cache is stale (a Steward level or a clan tier change with no roster change), the
+display surfaces below show the fresh base beside vanilla's cached limit until the next roster
+change. Display only: the shed skips the main party.
+
 ### The five display surfaces
 
 All are postfixes in `Patch17_TroopWeight` delegating to the single `TroopWeightDisplayHook`

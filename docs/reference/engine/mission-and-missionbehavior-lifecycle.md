@@ -165,6 +165,12 @@ ticks. Spawn on the first mission tick instead
 (Fords of War, 2026-10-31: `FordsOfWarMissionLogic` marks its start as due in `AfterStart` and starts on the first
 `OnMissionTick`).
 
+Since 2026-11-12 the guard also queues a behaviour that a hook adds while `EarlyStart` or `AfterStart` runs (#1028, the
+DualWield case above) and applies it when `Mission.AfterStart` ends, so that one add no longer makes the engine load the
+mission again. The rule above still stands. A queued behaviour has no `Mission` and has not run `OnCreated` until then, a spawn
+from your own code still runs every hook, and a remove or any other direct change to `MissionBehaviors` inside the walk still
+reloads the mission. Details and limits: [mission-start-guard.md](../../features/mission-start-guard.md#deferred-adds-1028).
+
 ### A custom siege mission must answer two engine questions (v1.5.6)
 
 Leaving vanilla's spawn logic out of a mission's list breaks two engine paths whose call sites name neither it nor the removed behaviors. This section is read from the decompile for Long Defeat (#1079). Two Phase 1 runs (20261104-033424 and 20261104-035343) booted with `LongDefeatMissionLogic` implementing `IBattlePowerCalculationLogic` and no vanilla spawn logic, passed the `boot` check, and ran 2 and 3 waves with the team AI ticking and no crash. They did not show the retreat itself: no wave retreats in this mode.
@@ -177,6 +183,28 @@ Three more engine facts for a mission that fights in waves:
 - **A breach of 100 attackers or fewer leaves its engines.** `TacticBreachWalls.DetermineCurrentLanes` calls `StopUsingAllMachines` and keeps one lane when `InitialUnitCount` is at most 100 (:544-553, :558-572). It counts when the tactic first sees an enemy, so a tactic that first ticks on a partial spawn batch latches that for good, and `Team.ResetTactic` keeps the same object: give each wave a new `TacticBreachWalls`. `StopUsingAllMachines` also clears `ForcedUse` on every engine of the side (TacticComponent.cs:534-540), and for towers and rams only `SiegeWeapon.OnInit` and a player's order set it back, so a new tactic alone does not restore it: call `SetForcedUse(true)` before the reset.
 - **A destroyed machine leaves `ActiveMissionObjects`.** `Mission.OnObjectDisabled` disables a `UsableMachine` in the same call (Mission.cs:3060), so a list read from the active objects cannot show a destroyed gate, tower or ram. Take the list once.
 - **Vanilla's undo of a destroyed gate** is `CastleGate.OnMissionReset` (protected internal, :341-348). It restores the hit points, the door references and the tick. It does not close the navmesh that `OnDestroyed` opened: `SetAutoOpenState(false)` does that. It does not remake the gate's detachment, which `UsableMachine.Disable` destroyed (:659-661).
+
+### Mission traps measured by Kysaro (KysaroMod, 2026-11, unverified in TAOM)
+
+- **`CheckDeployment` spawns a side only when every team of that side `IsPlanMade`.** Plans are made only for teams with
+  troops, and `PlanForSpawnLogic` plans an empty third team one tick after the side's own teams. Planned earlier, the
+  real team is never planned. His symptom was an enemy army that never spawned (his note
+  `gameplay/project_three_sided_battles.md`, 2026-11-09).
+- **`Teams.Add` mid-battle crashed** (same note).
+- **Clear static agent collections, or the next mission can freeze.** A static `BattleRoles.HornBlowers` carried the
+  previous battle's agents into the next mission and froze it natively in `WaitTickCompletion`. He clears such
+  collections in `OnBehaviorInitialize` and `OnRemoveBehavior` (his note `ui/project_custom_battle_overhaul.md`,
+  2026-11-08). The lifecycle order above says `OnBehaviorInitialize` never fires on TAOM's path, and his three-sided note
+  says the same for his mod behaviours, so `OnRemoveBehavior` is the reachable half.
+- **Never swap an action set on a walking agent** (native crash, same note). His working lever swaps at spawn:
+  `Agent.SetActionSet(monster.FillAnimationSystemData(set, char.GetStepSize(), false))` in `OnAgentBuild`, riders
+  skipped (his note `animation/project_tw3_anim_pipeline.md`, 2026-11-06).
+- **Open question: does a soldier read the `Monster`'s `action_set`?**
+  [bannerlord-animation-system-map.md](../bannerlord-animation-system-map.md) section 7 (line 632) says `Monster` reads
+  `action_set` [Certain, `Monster.cs:304-321`]. Kysaro's claim (same tw3 note) is that the engine never reads `Monster`
+  `action_set` for soldiers: the set name is `as_<base_monster>_warrior`, so an XSLT on the monster does nothing for
+  them. Neither side is tested by TAOM on a soldier spawn; do not rely on a monster `action_set` edit, or on its
+  absence of effect, until one is.
 
 ## ⚠️ The `: MissionLogic` gotcha (confirmed at the source)
 

@@ -1,0 +1,62 @@
+<Brushes>
+  <!-- TAOM_CustomBattleUI's Custom Battle screen. TAOM's palette and fonts: gold #D6B266 / #F0CE80, cream #EFE7D2, grey #A89A80;
+       FS_CinzelWide (spaced capitals) for titles, labels and buttons, FS_Garamond for names and text, both from
+       GUI/FactionUI/RuntimeFonts. The chrome is the encyclopedia's and the creation frame's shared art (ec_*, cc_*, fs_*, mm_*)
+       through their own widgets and brushes (CC.Card, CC.Confirm, TAOM.Encyclopedia.*). FrontEndSpriteService reads this file
+       inside the screen's acquire, after the fonts and the held images are registered, and again after an engine resource
+       refresh: it is one of the character creation group's brush files. -->
+  <Brush Name="Tcb.Title" Font="FS_CinzelWide" FontSize="30" TextHorizontalAlignment="Left" TextVerticalAlignment="Center">
+    <Styles><Style Name="Default" FontColor="#EFE7D2FF" TextGlowColor="#000000C0" TextGlowRadius="0.2" TextBlur="0.1" /></Styles>
+  </Brush>
+  <Brush Name="Tcb.Tab" Font="FS_CinzelWide" FontSize="20" TextHorizontalAlignment="Center" TextVerticalAlignment="Center">
+    <Styles><Style Name="Default" FontColor="#A89A80FF" /></Styles>
+  </Brush>
+  <Brush Name="Tcb.TabOn" Font="FS_CinzelWide" FontSize="20" TextHorizontalAlignment="Center" TextVerticalAlignment="Center">
+    <Styles><Style Name="Default" FontColor="#F0E2BAFF" TextGlowColor="#D6B26640" TextGlowRadius="0.3" /></Styles>
+  </Brush>
+  <Brush Name="Tcb.Heading" Font="FS_CinzelWide" FontSize="22" TextHorizontalAlignment="Center" TextVerticalAlignment="Center">
+    <Styles><Style Name="Default" FontColor="#E6CC8CFF" TextGlowColor="#000000B0" TextGlowRadius="0.15" /></Styles>
+  </Brush>
+  <Brush Name="Tcb.Label" Font="FS_CinzelWide" FontSize="15" TextHorizontalAlignment="Left" TextVerticalAlignment="Center">
+    <Styles><Style Name="Default" FontColor="#D6B266FF" /></Styles>
+  </Brush>
+  <Brush Name="Tcb.Button" Font="FS_CinzelWide" FontSize="16" TextHorizontalAlignment="Center" TextVerticalAlignment="Center">
+    <Styles><Style Name="Default" FontColor="#E8DCC0FF" /></Styles>
+  </Brush>
+  <Brush Name="Tcb.Faction" Font="FS_Garamond" FontSize="34" TextHorizontalAlignment="Left" TextVerticalAlignment="Center">
+    <Styles><Style Name="Default" FontColor="#EFE7D2FF" TextGlowColor="#000000C0" TextGlowRadius="0.2" /></Styles>
+  </Brush>
+  <Brush Name="Tcb.Name" Font="FS_Garamond" FontSize="21" TextHorizontalAlignment="Left" TextVerticalAlignment="Center">
+    <Styles><Style Name="Default" FontColor="#EFE7D2FF" /></Styles>
+  </Brush>
+  <Brush Name="Tcb.Sub" Font="FS_Garamond" FontSize="16" TextHorizontalAlignment="Left" TextVerticalAlignment="Center">
+    <Styles><Style Name="Default" FontColor="#BCAE92FF" /></Styles>
+  </Brush>
+  <Brush Name="Tcb.Summary" Font="FS_Garamond" FontSize="20" TextHorizontalAlignment="Center" TextVerticalAlignment="Center">
+    <Styles><Style Name="Default" FontColor="#D9CDB0FF" /></Styles>
+  </Brush>
+  <Brush Name="Tcb.Error" Font="FS_Garamond" FontSize="19" TextHorizontalAlignment="Center" TextVerticalAlignment="Center">
+    <Styles><Style Name="Default" FontColor="#E8806AFF" /></Styles>
+  </Brush>
+  <Brush Name="Tcb.Count" Font="FS_Garamond" FontSize="24" TextHorizontalAlignment="Center" TextVerticalAlignment="Center">
+    <Styles><Style Name="Default" FontColor="#EFE7D2FF" /></Styles>
+  </Brush>
+  <Brush Name="Tcb.MapTitle" Font="FS_CinzelWide" FontSize="34" TextHorizontalAlignment="Left" TextVerticalAlignment="Center">
+    <Styles><Style Name="Default" FontColor="#F2E6C8FF" TextGlowColor="#000000E0" TextGlowRadius="0.35" /></Styles>
+  </Brush>
+  <Brush Name="Tcb.Search" Font="FS_Garamond" FontSize="20" TextHorizontalAlignment="Left" TextVerticalAlignment="Center">
+    <Styles><Style Name="Default" FontColor="#E8DCC0FF" /></Styles>
+  </Brush>
+  <!-- a row or option that lights up under the mouse (ButtonWidget Brush; transparent until hovered) -->
+  <Brush Name="Tcb.Hover">
+    <Layers>
+      <BrushLayer Name="Default" Sprite="BlankWhiteSquare_9" Color="#D6B266FF" />
+    </Layers>
+    <Styles>
+      <Style Name="Default"><BrushLayer Name="Default" AlphaFactor="0" /></Style>
+      <Style Name="Hovered"><BrushLayer Name="Default" AlphaFactor="0.12" /></Style>
+      <Style Name="Pressed"><BrushLayer Name="Default" AlphaFactor="0.22" /></Style>
+      <Style Name="Disabled"><BrushLayer Name="Default" AlphaFactor="0" /></Style>
+    </Styles>
+  </Brush>
+</Brushes>

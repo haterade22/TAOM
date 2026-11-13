@@ -1,0 +1,72 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+	<!-- Tests of TAOM.CoopCompat. A project of its own, not TAOM.Tests: a compile reference to Coop there
+	     would break dotnet test TAOM.Tests on a machine with no Coop. Same skip switch as the product:
+	     without Coop at CoopBinDir this project compiles nothing. The Coop DLLs are copied to this
+	     project's test output only, never to a shipped module. -->
+	<PropertyGroup>
+		<IsPackable>false</IsPackable>
+		<IsTestProject>true</IsTestProject>
+		<CoopBinDir Condition="'$(CoopBinDir)' == ''">$(GameFolder)\Modules\Coop\bin\$(GameBinariesFolder)</CoopBinDir>
+		<TaomCoopCompatEnabled>false</TaomCoopCompatEnabled>
+		<TaomCoopCompatEnabled Condition="Exists('$(CoopBinDir)\Common.dll')">true</TaomCoopCompatEnabled>
+		<EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.8.0" />
+		<PackageReference Include="MSTest.TestAdapter" Version="3.1.1" />
+		<PackageReference Include="MSTest.TestFramework" Version="3.1.1" />
+		<PackageReference Include="NSubstitute" Version="5.1.0" />
+		<PackageReference Include="Lib.Harmony" Version="2.4.2" />
+		<PackageReference Include="coverlet.collector" Version="6.0.0">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+	</ItemGroup>
+
+	<ItemGroup Condition="'$(TaomCoopCompatEnabled)' == 'true'">
+		<Compile Include="**\*.cs" Exclude="obj\**;bin\**" />
+		<ProjectReference Include="..\CoopCompat\TAOM.CoopCompat.csproj" />
+		<ProjectReference Include="..\CoopCompat\Coop\TAOM.CoopCompat.Coop.csproj" />
+		<ProjectReference Include="..\Main\TAOM.csproj" />
+		<Reference Include="Common"><HintPath>$(CoopBinDir)\Common.dll</HintPath><Private>True</Private></Reference>
+		<Reference Include="Autofac"><HintPath>$(CoopBinDir)\Autofac.dll</HintPath><Private>True</Private></Reference>
+		<Reference Include="GameInterface"><HintPath>$(CoopBinDir)\GameInterface.dll</HintPath><Private>True</Private></Reference>
+		<Reference Include="Coop.Core"><HintPath>$(CoopBinDir)\Coop.Core.dll</HintPath><Private>True</Private></Reference>
+		<Reference Include="protobuf-net"><HintPath>$(CoopBinDir)\protobuf-net.dll</HintPath><Private>True</Private></Reference>
+		<Reference Include="protobuf-net.Core"><HintPath>$(CoopBinDir)\protobuf-net.Core.dll</HintPath><Private>True</Private></Reference>
+		<Reference Include="LiteNetLib"><HintPath>$(CoopBinDir)\LiteNetLib.dll</HintPath><Private>True</Private></Reference>
+		<!-- Common's logger needs these at run time; they sit in Coop's bin and are copied to the test output only. -->
+		<Reference Include="System.Diagnostics.DiagnosticSource"><HintPath>$(CoopBinDir)\System.Diagnostics.DiagnosticSource.dll</HintPath><Private>True</Private></Reference>
+		<Reference Include="System.Threading.Channels"><HintPath>$(CoopBinDir)\System.Threading.Channels.dll</HintPath><Private>True</Private></Reference>
+		<Reference Include="System.Text.Json"><HintPath>$(CoopBinDir)\System.Text.Json.dll</HintPath><Private>True</Private></Reference>
+		<Reference Include="System.Text.Encodings.Web"><HintPath>$(CoopBinDir)\System.Text.Encodings.Web.dll</HintPath><Private>True</Private></Reference>
+		<Reference Include="System.IO.Pipelines"><HintPath>$(CoopBinDir)\System.IO.Pipelines.dll</HintPath><Private>True</Private></Reference>
+		<Reference Include="Microsoft.Bcl.AsyncInterfaces"><HintPath>$(CoopBinDir)\Microsoft.Bcl.AsyncInterfaces.dll</HintPath><Private>True</Private></Reference>
+		<Reference Include="System.Collections.Immutable"><HintPath>$(CoopBinDir)\System.Collections.Immutable.dll</HintPath><Private>True</Private></Reference>
+		<Reference Include="System.Memory"><HintPath>$(CoopBinDir)\System.Memory.dll</HintPath><Private>True</Private></Reference>
+		<Reference Include="System.Buffers"><HintPath>$(CoopBinDir)\System.Buffers.dll</HintPath><Private>True</Private></Reference>
+		<Reference Include="System.ValueTuple"><HintPath>$(CoopBinDir)\System.ValueTuple.dll</HintPath><Private>True</Private></Reference>
+		<Reference Include="Serilog.Enrichers.Process"><HintPath>$(CoopBinDir)\Serilog.Enrichers.Process.dll</HintPath><Private>True</Private></Reference>
+		<Reference Include="Serilog.Sinks.Debug"><HintPath>$(CoopBinDir)\Serilog.Sinks.Debug.dll</HintPath><Private>True</Private></Reference>
+	</ItemGroup>
+
+	<ItemGroup>
+		<Reference Include="$(TaomGameBin)\TaleWorlds.*.dll" Exclude="$(TaomGameBin)\TaleWorlds.Native.dll">
+			<HintPath>%(Identity)</HintPath>
+			<Private>True</Private>
+		</Reference>
+	</ItemGroup>
+
+	<Target Name="TaomCoopCompatTestsTaskExtensions" AfterTargets="Build" Condition="'$(TaomCoopCompatEnabled)' == 'true'">
+		<!-- NuGet restores an older System.Threading.Tasks.Extensions and Unsafe that win the reference conflict; Coop's logger needs its newer one. -->
+		<Copy SourceFiles="$(CoopBinDir)\System.Threading.Tasks.Extensions.dll;$(CoopBinDir)\System.Runtime.CompilerServices.Unsafe.dll" DestinationFolder="$(OutDir)" />
+	</Target>
+
+	<Target Name="TaomCoopCompatTestsSkipNotice" BeforeTargets="CoreCompile" Condition="'$(TaomCoopCompatEnabled)' != 'true'">
+		<Message Importance="high" Text="TAOM.CoopCompat.Tests skipped: no Coop at $(CoopBinDir)" />
+	</Target>
+
+	<Import Project="..\GameReferences.targets" />
+</Project>

@@ -7,7 +7,7 @@ using TAOM.Core.Logging;
 namespace TAOM.Features.BattleLoadDiagnostics;
 
 // Exit-stall stack sampler (#331 round 2). The ~107s tournament-exit stall froze the MAIN
-// thread inside Mission.EndMissionInternal, so — like BattleLoadStallWatchdog — only a
+// thread inside Mission.EndMissionInternal, so only a
 // background thread can observe it. The sampler is armed by LogExitBegin and DISARMED at
 // MapResumed (#425): teardown is what it watches, and everything after MapResumed is player
 // time — menus, conversations, loot — field-measured at 123 s with three [ERROR] samples

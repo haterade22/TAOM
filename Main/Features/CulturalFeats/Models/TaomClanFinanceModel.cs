@@ -4,6 +4,7 @@ using TaleWorlds.CampaignSystem.Settlements;
 using TaleWorlds.Core;
 using TAOM.Features.CareerSystem;
 using TAOM.Features.CareerSystem.Domain;
+using TAOM.Features.Realms;
 
 namespace TAOM.Features.CulturalFeats.Models;
 
@@ -45,7 +46,22 @@ public class TaomClanFinanceModel : DefaultClanFinanceModel
     {
         var result = base.CalculateClanGoldChange(clan, includeDescriptions, applyWithdrawals, includeDetails);
         AddServiceWageLine(clan, applyWithdrawals, ref result);
+        RealmsCampaign.Current?.AddTributeIncome(clan, includeDetails, ref result);
+        RealmsCampaign.Current?.AddTributeExpenses(clan, includeDetails, ref result);
         AddCareerDailyGold(clan, ref result);
+        return result;
+    }
+
+    /// <summary>
+    /// The clan screen's "Expenses" tile (<c>ClanManagementVM</c>, the only engine caller, v1.5.7), so it carries the
+    /// tribute the clan pays as the income tile carries what it receives.
+    /// </summary>
+    public override ExplainedNumber CalculateClanExpenses(
+        Clan clan, bool includeDescriptions = false, bool applyWithdrawals = false,
+        bool includeDetails = false)
+    {
+        var result = base.CalculateClanExpenses(clan, includeDescriptions, applyWithdrawals, includeDetails);
+        RealmsCampaign.Current?.AddTributeExpenses(clan, includeDetails, ref result);
         return result;
     }
 
@@ -57,9 +73,10 @@ public class TaomClanFinanceModel : DefaultClanFinanceModel
     /// while the expected-change tooltip beside it showed the line. Two numbers on one screen
     /// disagreeing about the same income is how field report 2 gets filed a second time.
     ///
-    /// Safe to add here for a stronger reason than the tooltip's: the ONLY caller in the engine is
-    /// <c>ClanManagementVM</c> (<c>CalculateClanIncome(_clan)</c>, defaulted
-    /// <c>applyWithdrawals: false</c>) — nothing moves money through this method at all. The
+    /// Safe to add here for a stronger reason than the tooltip's: the engine callers are
+    /// <c>ClanManagementVM</c> (<c>CalculateClanIncome(_clan)</c>, defaulted <c>applyWithdrawals: false</c>)
+    /// and, in story mode only, StoryMode's <c>AchievementsCampaignBehavior.ProgressDailyIncome</c> (a
+    /// "MaxDailyIncome" stat, v1.5.7). Nothing moves money through this method at all. The
     /// withdrawal guard is kept anyway, because a future caller that does would otherwise pay the
     /// player twice.
     /// </summary>
@@ -69,6 +86,7 @@ public class TaomClanFinanceModel : DefaultClanFinanceModel
     {
         var result = base.CalculateClanIncome(clan, includeDescriptions, applyWithdrawals, includeDetails);
         AddServiceWageLine(clan, applyWithdrawals, ref result);
+        RealmsCampaign.Current?.AddTributeIncome(clan, includeDetails, ref result);
         AddCareerDailyGold(clan, ref result);
         return result;
     }

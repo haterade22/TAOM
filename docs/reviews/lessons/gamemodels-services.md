@@ -1391,3 +1391,27 @@ The Fords of War pierce rule against cavalry went into the Custom Battle damage 
 - **Why missed:** the rule was placed where the modelled blows pass, and nobody listed the other paths a blow's damage takes.
 - **Prevent:** before a damage rule ships, grep every write of `InflictedDamage` and every `DamageCalculated = true`, and read the blocked case in `Mission.GetAttackCollisionResults`; say in the rule's doc which paths it covers.
 - **Source:** [rca-fords-pierce-cavalry-2026-11-07.md](../rca-fords-pierce-cavalry-2026-11-07.md), findings 1 and 2.
+
+### A quantity derived from a balance goes back through the purchase at the limits (#1108, 2026-11-09)
+
+The emissary's gold offer held the purse in a `float` and multiplied price by quantity in an `int`. Above 16,777,216 gold the float rounds, so the offered maximum could be one too many, and at `int.MaxValue` gold the total wrapped negative. The affordability check passed, the troops were granted, the charge was refused and the result was `Success`.
+
+- **Why missed:** the first pass saw the float and called it a display problem, because the purchase compares ints. Nobody multiplied the offered maximum by the price.
+- **Prevent:** hold money in an integer type or a `double`, never a `float`. Compute an `int` price times an `int` quantity in `long` before comparing it. Test the round trip: build the offer at the largest balance and pass its maximum to the purchase.
+- **Source:** [rca-gold-only-elite-troops-2026-11-09.md](../rca-gold-only-elite-troops-2026-11-09.md), row 8.
+
+### Room in a party is its free slots divided by what one troop fills (#1108, 2026-11-09)
+
+The gold-only emissary's first party cap was `PartySizeLimit - NumberOfAllMembers`, one troop per slot. TAOM's Troop Weight already deflates the main party's limit by its weight surplus (`TroopWeightService.ApplyPartySizeWeightPenalty`), so a free slot is a weighted slot, and 10 free slots took 10 weight-3 elites: 20 over the limit.
+
+- **Why missed:** I read the engine's two numbers and not the TAOM model that writes the limit. The weights live in another feature's XML.
+- **Prevent:** before a capacity check, list every writer of the limit, TAOM's models included (`csharp-architecture.md` "Writers before gates"), and ask what one unit fills. Test with a unit heavier than one slot.
+- **Source:** [rca-emissary-party-coop-upgrades-2026-11-09.md](../rca-emissary-party-coop-upgrades-2026-11-09.md), row 1.
+
+### An overridden model method is also read by the base model's own other methods (#1111, 2026-11-10)
+
+`TaomDiplomacyModel` vetoed `GetScoreOfMercenaryToJoinKingdom` for opposed realms, with the barterables as the census of its callers. Vanilla's `DefaultDiplomacyModel.GetScoreOfMercenaryToLeaveKingdom` (v1.5.7 `:426`) subtracts the join score of the clan's current realm through a virtual self-call, so the veto pushed opposed mercenaries that already served out of their realm, and on a move into a second opposed realm the two vetoes cancelled.
+
+- **Why missed:** the callers came from the plan, which listed the barterables only. Nobody grepped the base model for its own calls of the method it overrides.
+- **Prevent:** before overriding a model method, grep the base model and the engine for every call of that method, the base class's own virtual self-calls included, and decide for each reader whether the override must answer it. Exempt the inputs a second reader asks about (here, the realm the clan already serves) and test that exemption.
+- **Source:** [rca-kingdom-allegiance-2026-11-10.md](../rca-kingdom-allegiance-2026-11-10.md), row 1.

@@ -31,7 +31,13 @@ public class TaomDiplomacyModelPersonalRelationsTests
         _personal = Substitute.For<IPersonalRelationService>();
         _sut = new TaomDiplomacyModel(
             Substitute.For<IWarOfTheRingService>(), Substitute.For<ICoopSessionProvider>(),
-            Substitute.For<IOnAllianceAction>(), _personal);
+            Substitute.For<IOnAllianceAction>(), _personal,
+            new TAOM.Features.KingdomAllegiance.KingdomAllegianceService(
+                Substitute.For<TAOM.Features.KingdomAllegiance.IKingdomAllegianceSettingsProvider>(),
+                Substitute.For<TAOM.Features.Execution.IAlignmentService>(), Substitute.For<ICoopSessionProvider>(),
+                new TAOM.Core.Logging.OutcomeLog(Substitute.For<TAOM.Core.Logging.IModLogger>())),
+            new TAOM.Features.KingdomAllegiance.Models.AllegianceFactsReader(
+                Substitute.For<IPlayerControlQuery>(), Substitute.For<TAOM.Core.Logging.IOutcomeLog>()));
     }
 
     [TestMethod]

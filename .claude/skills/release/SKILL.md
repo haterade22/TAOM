@@ -68,17 +68,18 @@ aborts if more turn up than `-MaxOrphans`. Detail: `docs/reference/module-backup
 | File | Field | When |
 |------|-------|------|
 | `Main/_Module/SubModule.xml` | `<Version value="v2.0.X" />` | Every release |
-| `Dependencies/_Module/SubModule.xml` | `<Version value="v2.0.Y" />` | Every release since v2.0.29 (all four modules read one version); must change whenever the Dependencies assembly changed |
+| `Dependencies/_Module/SubModule.xml` | `<Version value="v2.0.Y" />` | Every release since v2.0.29 (all five modules read one version); must change whenever the Dependencies assembly changed |
 | `Main/_Module/SubModule.xml` | `<DependedModuleMetadata id="TAOM.Dependencies" … version="v2.0.Y" />` | **Must equal the line above** |
+| `CoopCompat/_Module/SubModule.xml` | `<Version value="v2.0.X" />` and `<DependedModuleMetadata id="TAOM" … version="v2.0.X" />` | Every release: both equal TAOM's version (a convention, one number for the release; Coop's join check needs the same version on every peer; `TAOM.Tests` `CoopCompatPairing_VersionAndTaomMetadataEqualMainVersion` pins it) |
 
 Outside the repo, set the same `v2.0.X` in the live `<game>/Modules/TAOM_Map/SubModule.xml` and
 `<game>/Modules/LOTRLOME_Armory/SubModule.xml` too. Both modules are unversioned (no git), and the release
-note tells players all four modules read the release number. The gate below checks only the two repo files.
+note tells players all five modules read the release number. The gate below checks only the three repo files.
 
 **The #371 gate: do not skip.** After editing, run the pairing test; red stops the release:
 
 ```bash
-dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId= --filter DependenciesPairing_MainMetadataEqualsDependenciesVersion
+dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId= --filter "FullyQualifiedName~DependenciesPairing_MainMetadataEqualsDependenciesVersion|FullyQualifiedName~CoopCompatPairing"
 ```
 
 BUTR/BLSE launchers read `DependedModuleMetadatas`; the vanilla launcher does not. A mismatch lets a
@@ -134,13 +135,17 @@ into `docs/releases/vX.Y.Z-testers.md`, under a first line naming the release, f
 release note in Phase 6. A tester who confirms a check closes the loop: remove the label from that
 issue.
 
+Last, add one line for the release note to `docs/INDEX.md` ("Player-facing copy"), with a link to
+the testers' checklist in it, and run `python tools/check_doc_graph_ratchet.py`. A note that nothing
+links is an orphan, and the tool suite fails on it (`test_doc_graph_ratchet`).
+
 ## Phase 6 — Commit
 
 First, `git rev-parse HEAD` must print the SHA Phase 4 ended at. If another commit landed since,
 the section misses it: `git checkout -- CHANGELOG.md` and run Phase 4 again.
 
 Stage **explicitly** with `git add <paths>`, never `-A`: the Phase 3 version files, `CHANGELOG.md`
-(Phase 4), the release note and the testers' checklist (Phase 5). A shared file routinely holds two sessions' edits.
+(Phase 4), the release note, the testers' checklist and the `docs/INDEX.md` line (Phase 5). A shared file routinely holds two sessions' edits.
 
 ```
 chore(release): vX.Y.Z - TAOM vX.Y.Z
@@ -188,10 +193,11 @@ Rebuild at the tag before anything ships.
    deploys every file in the tree, committed or not.
 2. Gate the DLLs: `python tools/package_release.py --source "<game>/Modules" --dest <out> --game-root "<game>" --require-build vX.Y.Z --dry-run`
    must print `build stamp OK` and exit 0. It reads every `bin/<platform>/` copy of `TAOM.dll`,
-   `TAOM.Client.dll` and `TAOM.Dependencies.dll` and refuses any copy whose stamp says `.dirty` or
-   `nogit`, or names a commit other than the tag's; a requested TAOM or TAOM.Dependencies missing from
+   `TAOM.Client.dll`, `TAOM.Dependencies.dll`, `TAOM.CoopCompat.dll` and `TAOM.CoopCompat.Coop.dll` and refuses any copy whose stamp says `.dirty` or
+   `nogit`, or names a commit other than the tag's; a requested TAOM, TAOM.Dependencies or TAOM.CoopCompat missing from
    `--source`; and a tag whose `Directory.Build.props` predates the `.dirty` flag. Every run also
-   refuses a `TAOM.Client.dll` in a `bin/Win64_Shipping_Server/` (ADR-013).
+   refuses a `TAOM.Client.dll` in a `bin/Win64_Shipping_Server/` (ADR-013), and any file in a
+   `TAOM.CoopCompat/bin` that the module's build never writes (a Coop or dedicated-server binary, or a second copy of a library Coop loads).
    Its scene shader cache, module shader sack and `JIT optimization` sections are reports that
    never refuse: a scene without a sack ships as it is (Mike's call), JIT optimization OFF is
    expected (Debug builds ship on purpose), `ON (no DebuggableAttribute on the assembly)` means the
@@ -206,7 +212,9 @@ Rebuild at the tag before anything ships.
    prune and hand over; never write a package with the command above. When he says the packages and
    release folders are his for this release (as on 2026-10-27), stop after step 1 and prove the
    stamps on the DLLs the build deployed instead of the step 2 dry run: every `TAOM.dll`,
-   `TAOM.Client.dll` and `TAOM.Dependencies.dll` under `<game>/Modules/{TAOM,TAOM.Dependencies}/bin`
+   `TAOM.Client.dll`, `TAOM.Dependencies.dll`, `TAOM.CoopCompat.dll` and `TAOM.CoopCompat.Coop.dll` under
+   `<game>/Modules/{TAOM,TAOM.Dependencies,TAOM.CoopCompat}/bin` (the Client and Server copies of both
+   TAOM.CoopCompat DLLs included)
    must read `+<tag commit>` with no `.dirty` (`[System.Diagnostics.FileVersionInfo]::GetVersionInfo(<dll>).ProductVersion`).
    Hand the prune, the sweep `-Apply`, gates 6 and 6a and steps 4 and 5 to him as a list; a
    `Gaming.Desktop.x64_Shipping_Client` folder left in the install by an older build is one of them.

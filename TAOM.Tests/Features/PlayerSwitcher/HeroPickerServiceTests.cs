@@ -352,16 +352,16 @@ public class HeroPickerServiceTests
     [TestMethod]
     public void FindTakeover_AHeroOfAnotherCulture_IsFoundThroughHisOwnCulture()
     {
-        // Haldir: a Mirkwood lord on the Lothlorien card.
-        _adapter.CultureOf("haldir").Returns("mirkwood");
-        _adapter.GetCandidates("mirkwood").Returns(new List<PickableHeroInfo>
+        // Bolg: a Misty Mountains lord on the Gundabad card.
+        _adapter.CultureOf("bolg").Returns("mistymountainorcs");
+        _adapter.GetCandidates("mistymountainorcs").Returns(new List<PickableHeroInfo>
         {
-            Hero("haldir", name: "Haldir", culture: "mirkwood", clanId: "clan_mirkwood_3"),
+            Hero("bolg", name: "Bolg", culture: "mistymountainorcs", clanId: "clan_mistymountainorcs_6"),
         });
 
-        var row = _sut.FindTakeover("haldir", Culture, PlayerSwitchPolicy.Default);
+        var row = _sut.FindTakeover("bolg", Culture, PlayerSwitchPolicy.Default);
 
-        Assert.AreEqual("haldir", row.HeroId);
+        Assert.AreEqual("bolg", row.HeroId);
         Assert.IsTrue(row.HasClan);
     }
 

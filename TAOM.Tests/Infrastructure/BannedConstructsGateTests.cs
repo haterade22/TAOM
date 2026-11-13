@@ -31,7 +31,7 @@ namespace TAOM.Tests.Infrastructure;
 [TestClass]
 public class BannedConstructsGateTests
 {
-    private static readonly string[] ScannedRoots = { "Main", "Client", "Dependencies", "TAOM.Tests" };
+    private static readonly string[] ScannedRoots = { "Main", "Client", "CoopCompat", "Dependencies", "TAOM.Tests", "TAOM.CoopCompat.Tests" };
 
     // ADR-005: "ONLY allowed in IoC.cs for build-specific service registration".
     private const string IoCRegistrationFile = "Main/IoC.cs";

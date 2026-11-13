@@ -1,6 +1,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TaleWorlds.Core;
 using TAOM.Features.Animalia;
+using TAOM.Features.WarRam;
 
 namespace TAOM.Tests.Features.Animalia;
 
@@ -40,6 +41,14 @@ public class AnimaliaConfigTests
         // (tools/gen_animalia_anim_clips.ps1, frames / 30): attack_front_low 75 frames, attack_head_01 47.
         Assert.IsTrue(AnimaliaConfig.AttackCooldownSeconds > 75 / 30.0);
         Assert.IsTrue(AnimaliaConfig.AttackCooldownSeconds > 47 / 30.0);
+    }
+
+    [TestMethod]
+    public void Cooldown_FollowsTheWarRam()
+    {
+        // Mike, 2026-11-11: the elk and the moose attack as often as the ram butts. A ram retune must move this value too.
+        Assert.AreEqual(WarRamConfig.AttackCooldownSeconds, AnimaliaConfig.AttackCooldownSeconds,
+            "Animalia follows the war ram's cooldown: change AnimaliaConfig.AttackCooldownSeconds with WarRamConfig's");
     }
 
     [TestMethod]

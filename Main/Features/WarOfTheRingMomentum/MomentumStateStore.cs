@@ -84,6 +84,33 @@ public class MomentumStateStore : IMomentumStateStore
         }
     }
 
+    public Dictionary<string, string> CaptureWarState()
+    {
+        var data = Serialize();
+        data.Remove("player.events");
+        return data;
+    }
+
+    public bool ApplyWarState(Dictionary<string, string> data)
+    {
+        if (data == null || data.Count == 0)
+        {
+            _logger.LogWarning("MomentumStateStore: empty war state ignored");
+            return false;
+        }
+
+        var version = Get(data, "version");
+        if (version != Version)
+        {
+            _logger.LogWarning($"MomentumStateStore: war state version '{version}' ignored, expected {Version}");
+            return false;
+        }
+
+        State = RestoreWarState(data);
+        NotifyMomentumChanged();
+        return true;
+    }
+
     public void Deserialize(Dictionary<string, string> data)
     {
         State = new MomentumWarState();
@@ -92,13 +119,7 @@ public class MomentumStateStore : IMomentumStateStore
         if (data == null || data.Count == 0)
             return;
 
-        State.RestoreFlags(
-            warStarted: Get(data, "warStarted") == "1",
-            warEnded: Get(data, "warEnded") == "1",
-            victor: ParseEnumOrDefault(Get(data, "victor"), WarOutcome.None, "victor"));
-
-        DeserializeSide(data, FreePrefix, State.Free);
-        DeserializeSide(data, EvilPrefix, State.Evil);
+        State = RestoreWarState(data);
 
         foreach (var name in SplitList(Get(data, "player.events")))
         {
@@ -107,6 +128,19 @@ public class MomentumStateStore : IMomentumStateStore
             else
                 _logger.LogWarning($"MomentumStateStore: unknown player event type '{name}' skipped");
         }
+    }
+
+    private MomentumWarState RestoreWarState(Dictionary<string, string> data)
+    {
+        var state = new MomentumWarState();
+        state.RestoreFlags(
+            warStarted: Get(data, "warStarted") == "1",
+            warEnded: Get(data, "warEnded") == "1",
+            victor: ParseEnumOrDefault(Get(data, "victor"), WarOutcome.None, "victor"));
+
+        DeserializeSide(data, FreePrefix, state.Free);
+        DeserializeSide(data, EvilPrefix, state.Evil);
+        return state;
     }
 
     private void DeserializeSide(Dictionary<string, string> data, string prefix, MomentumSideData side)

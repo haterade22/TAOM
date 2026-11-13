@@ -611,6 +611,25 @@ into the setting's own tooltip, and the second time the CHANGELOG even said the 
   A claim of the form "X and Y both say Z" is verified by opening X and Y, not by confirming Z.
 - **Source:** #559 bandit scaling MCM, deep-review 2026-09-11, `docs/reviews/rca-bandit-scaling-mcm-2026-09-11.md`.
 
+### A changed MCM default also stales prose that is not the HintText or the Configuration table (tournament bet cap, 2026-11-10)
+The HintText was correct on the first pass this time (it named the new default and the reset
+notice). The drift moved to two surfaces the "HintText" lesson above does not name: an explanatory
+paragraph elsewhere in the same feature doc ("at the default of 0, the wager text shows
+50,000,000", false once the default became 15,000), and a different doc's cross-reference row
+(`docs/reference/feature-map.md`, "default unlimited"). Third occurrence of the general pattern,
+first two on the HintText itself.
+- **Why missed:** the session's doc pass updated every surface it was editing (the Configuration
+  table, the Overview sentence, the Changelog), which created a false sense that "the doc" was
+  reconciled; a second, same-doc paragraph describing the default in free prose and an entirely
+  separate reference doc were never grepped for the old value.
+- **Prevent:** when a compiled MCM default changes, grep every doc that states the default in
+  prose, not only the Configuration table row and the HintText: the feature doc itself (for any
+  OTHER paragraph using the word "default" or describing "at the default" behavior) and
+  `docs/reference/feature-map.md`'s row for that feature. There is more than one reader of a stated
+  default (the player reads the HintText; the next developer reads the feature doc and the feature
+  map), and each reader's surface needs its own grep.
+- **Source:** `docs/reviews/rca-tournament-bet-cap-default-2026-11-10.md`, deep-review 2026-11-10 (Agent 5 data flow + Codex `xhigh` pre-review).
+
 ### `{newline}` is a GameTexts variable that exists only once a Game has initialized
 `{newline}` is not a localization token; it is a text variable that `GameTexts.InitializeGlobalTags()` registers from `Game.Initialize`. A `TextObject` rendered at the cold main menu (before any campaign or custom game exists) evaluates it to an empty string, so a multi-paragraph inquiry body runs together with no error. Vanilla menu code binds the variable locally for that reason.
 - **Why missed:** the review traced `{newline}` to `InitializeGlobalTags` and reported it "bound at early bootstrap" without checking the caller, and the text was only ever exercised in a running game.
@@ -1228,6 +1247,7 @@ its parent's hover, so it needs no size at all.
   that no inserted element is `StretchToParent` and that the `HintWidget` has no size policy.
 - **Source:** `/deep-review` of #866; `DecisionOptionFiefCountPrefabTests`.
 - **Recurred (Fords of War, 2026-10-31):** three panel boxes with a `StretchToParent` background child grew to the full screen and stacked to near black over the whole battle scene. A lesson alone did not stop the third occurrence, so the rule is now a gate: `GauntletStretchInCoverRatchetTests` fails on any new `StretchToParent` child of a `CoverChildren` parent without a max size in any prefab file under `Main/_Module/GUI` (prefab inserts built in C# keep their own tests), counts the five older files down, and exempts grid parents and parents with a max size (`rca-fords-of-war-2026-10-31.md` row G2).
+- **Recurred (Battle Action Bar, found 2026-11-12):** `BattleActionBar.xml` was on the ratchet's known list with one count, so the gate allowed it. With "Show Battle Action Bar" on and a formation selected, its `#00000099` background dimmed all but the bottom strip of the screen, and the buttons sat above the top edge, so nobody saw a bar (#1119). A known-list row can hide a live defect: check what bounds each listed parent. The two rows left are bounded by an ancestor (`MomentumView.xml` by the `Fixed` 1100 x 900 popup; `PreBuildCharacterSelection.xml` by its `Fixed` 400 px column, which is full screen height by design), so they fill that box and no more; the action bar's box had only a `StretchToParent` root above it, so it filled the screen. The background moved onto the `CoverChildren` box and the row came off the list.
 
 ### A hover target lies inside every ancestor's rectangle: Gauntlet hit-tests by containment (Loremaster's Line, 2026-10-23)
 `EventManager.CollectEnableWidgetsAt` (v1.5.5 EventManager.cs:880-901) descends into a child only when the
@@ -1505,3 +1525,49 @@ The faction UI built `{=taom_ency_filters}` and two more keys by concatenation i
 - **Why missed:** both gates start from literals. Nothing walks from a registered key to a reader.
 - **Prevent:** write every TAOM key as a literal `{=taom_...}default` at its use; never pass a key id through a helper. Before a seed run, grep each new key for a reader outside the string tables.
 - **Source:** [rca-factionui-adr013-2026-11-06.md](../rca-factionui-adr013-2026-11-06.md), F2 and F3.
+
+### A setting's hint promises only what the code enforces, exceptions included (#1110, 2026-11-09)
+
+The Arachnophobia Mode hint said "no one can recruit, upgrade into or buy a spider troop". The code kept a hidden troop's own upgrade edges (a comment said so), prisoners and existing volunteer slots stayed recruitable, and Fords of War kept its offer by the maintainer's decision. Codex and the XML lens found the gap from opposite ends.
+
+- **Why missed:** the hint was written from the plan's goal. Each exception was added later, in code or in the doc's "What Stays" section, and nothing compared the two.
+- **Prevent:** before seeding a hint, read every "stays", "keeps" and "still" in the feature doc and the code comments, and check that the hint excludes each or scopes its claim ("new volunteers", "already exist"). An absolute word ("no one", "never") needs a route table behind it.
+- **Source:** [rca-arachnophobia-mode-2026-11-09.md](../rca-arachnophobia-mode-2026-11-09.md), findings 1 and 3.
+
+### Read a convention from its newest uses, not from the first two that a grep finds (War Pledge, 2026-11-10)
+The MCM name and hint of `WarPledgeEnabled` reached review with no `{=KEY}`. The check behind that was a grep for two old setting names in the language files, which found nothing, and the conclusion that MCM text has no language rows. 35 settings in `TaomSettings.cs` key their name and hint, and the two features before this one (#1110, #1111) did.
+- **Why missed:** the sample was the oldest settings in the file. The `/localize` skill names no case for MCM attributes, so nothing contradicted the sample.
+- **Prevent:** before stating that a convention does not exist, read the three newest instances of the thing: the last settings added to `TaomSettings.cs`, the last rows of the strings file. A new MCM setting keys its name and hint (`{=taom_<feature>_mcm_<name>}` and `..._hint`), then `python tools/harvest_literal_loc_keys.py --apply` and the seed pass register them.
+- **Source:** [rca-war-pledge-2026-11-10.md](../rca-war-pledge-2026-11-10.md), finding 7.
+
+### When a configured number changes meaning, search for its readers and for every text that names it (battle pay, 2026-11-12)
+
+Battle pay changed from "base times a clamped enemy-to-player ratio" to "base times the enemy's size over a reference size". The change searched for callers of `EarnFromBattle` and for docs that mention the ratio. The map-bar tooltip row "Per battle" reads the input constant `PerBattleVictoryBase` directly, so it kept showing the base (+50) for a 15-man fight that now pays 7.5. An MCM hint that says "the troop's resource price" became ambiguous in the same change.
+
+- **Why missed:** a caller search finds the function's callers. It cannot find a display of the config field, and the code graph sees types only, not config properties or localized strings.
+- **Prevent:** when a configured value changes meaning, grep the field name, its XML attribute, the localization keys and default texts that mention it ("per battle", "price", "ratio") and the docs. Give a reworded text a new key: a changed English text under an old key leaves 12 stale rows, while a new key shows the correct English from its inline default until the language pass.
+- **Source:** [rca-special-resource-pricing-2026-11-12.md](../rca-special-resource-pricing-2026-11-12.md), findings 2 and 3.
+
+### A gate that excuses a pattern must also fail on a damaged row of that pattern (language pass, 2026-11-12)
+
+The writing-system gate flagged five rows that keep a file name verbatim, as #763 asks ("castle_patrols.json"). I added a mask that blanked every camelCase or underscore token, with five clean DataRows. The mask also blanked "haiOops" in a CNt ability name, and the corrupted row passed both shipped-row gates.
+
+- **Why missed:** every new DataRow tested the clean direction. The run before the mask had reported the row, and I did not re-read that report after the change.
+- **Prevent:** an exemption names its source: mask a token only when the registered English holds the same token. Add a damaged DataRow of the exempted shape and see it fail before the mask goes in. After a gate change, diff its report against the run before.
+- **Source:** [rca-localization-pass-2026-11-12.md](../rca-localization-pass-2026-11-12.md), finding H1.
+
+### After a translation run, compare the BR and IT tagged-name count with the count before it (language pass, 2026-11-12)
+
+Translating names that were English turned 157 BR and IT names into rows led by a noun the tag rules did not know ("Forte", "Rocca"). `generate_name_tags.py --write` dropped them from the table, `name_tags.py` wrote no tag, and both tag gates passed, because they check the rows against the table.
+
+- **Why missed:** I read the PASS line, not the count beside it (1,199 of 1,199, down from 1,265).
+- **Prevent:** after any translator run in BR or IT, run `python tools/generate_name_tags.py --list-undecided` and compare the tagged count with the count before the run. Settle each new "unknown first word" with a head noun, a proper prefix or a pin before the tags are applied.
+- **Source:** [rca-localization-pass-2026-11-12.md](../rca-localization-pass-2026-11-12.md), finding H2.
+
+### A key gate scoped by prefix misses every TAOM prefix it does not list (clan finance, 2026-11-12)
+
+The Realms feature declares 196 `{=realms_*}` keys in C#, and none has a language row. `harvest_literal_loc_keys.py` and `UnregisteredLocalizationKeyBaselineTests` match only `taom_`, so neither the harvest nor the gate saw them: players in the other 11 languages see English, and the suite is green.
+
+- **Why missed:** the prefix keeps vanilla ids out of the gate, and the Realms feature added a second TAOM prefix. Nothing compares the gate's list with the prefixes that C# uses.
+- **Prevent:** a new feature uses the `taom_` prefix for player text. When a gate selects keys by prefix, list the prefixes C# actually uses (`grep -rhoE '\{=[a-z]+_' --include=*.cs Main Client | sort | uniq -c`) and compare them with the gate's list.
+- **Source:** [rca-clan-finance-line-count-2026-11-12.md](../rca-clan-finance-line-count-2026-11-12.md), finding 1; #1130.

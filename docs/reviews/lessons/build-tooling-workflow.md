@@ -4824,7 +4824,7 @@ with the clean-unload line present, so it would have failed every run.
 
 The Seat's manifest started as `seat-of-seeing.toml`, with a change to `RepoManifestGateTests` to accept a name with no number, and no reader could open that file. Its `fixed_in` named a commit only the branch held, so a rebase would have turned every build into "predates fixed_in". `tools/ingame_checks/0.toml` with `issue = 0` needs no gate change: `--issue 0` reads it, `--owed` never reaches it, and `--post` stops at `gh`. Hold one draft at a time, and rename it when the issue exists.
 - **Why missed:** the manifest began from "what lets the gate pass", not from "what a reader needs". The sibling's "commit before the feature" was copied without its reason.
-- **Prevent:** do not change a gate to fit a draft. Before writing a manifest, run its reader on a rendered line. Its `fixed_in` is a commit already on trunk.
+- **Prevent:** do not change a gate to fit a draft. Before writing a manifest, run its reader on a rendered line. Its `fixed_in` is a commit already on origin: a commit on the local trunk can still be amended or rebased (#1108, [rca-gold-only-elite-troops-2026-11-09.md](../rca-gold-only-elite-troops-2026-11-09.md) row 1).
 - **Source:** [rca-seat-of-seeing-s1-2026-11-04.md](../rca-seat-of-seeing-s1-2026-11-04.md), rows 6 and 7.
 ### A fast path goes in front of the path it replaces, never beside it (taom-src short names, 2026-11-03)
 
@@ -4942,3 +4942,53 @@ The first `--summary` footer said to read one function with `--rva 0x<entry>`. A
 - **Why missed:** the hint was written for the default binary, and the test asserted only the flag name.
 - **Prevent:** a printed follow-up command carries each option that chose the input, and a test asserts the option with its value.
 - **Source:** [adopt-rea-ghidra-2026-11-08.md](../adopt-rea-ghidra-2026-11-08.md), review table.
+
+### A tool that prints a setting to expose a bad run also judges it (#1103, 2026-11-09)
+
+`perf_runs.py compare` gained a `settings` line so that an A/B run on the wrong Shadow Type would show. A group of four runs at Static Only and one at Static and Dynamic printed `shadowType=1/2` and an empty `inconclusive` list, although the tool already marks a compare across two scenes INCONCLUSIVE. No script reads the line, so the check depended on a person noticing one `/`.
+
+- **Why missed:** the plan said "prints the new keys per group", and the printed line was taken as the safeguard. The new output was not put through the checks the tool already runs on its neighbours.
+- **Prevent:** when a tool shows a value so that a bad input shows, give the bad case the tool's own verdict (a refusal, an INCONCLUSIVE reason, an exit code), and test that case. Ask the same question of every new line added beside existing checks.
+- **Source:** [rca-shadow-instrumentation-2026-11-09.md](../rca-shadow-instrumentation-2026-11-09.md) row 1.
+
+### The tag waits for the tool suite, and a release note is linked before it (v2.0.37, 2026-11-10)
+
+v2.0.37 was tagged while the gate run on the release tree was still in the Python tool suite, and the run was stopped to save the wait. The suite has one red test at the tag: `test_doc_graph_ratchet`, because the release commit added two release notes that nothing links. The C# suite, the binding gate and the build were green, so the release looked verified.
+
+- **Why missed:** `/release` wrote the notes and had no step for `docs/INDEX.md`. The two earlier releases left their notes unlinked too, and the ratchet's baseline had room for exactly one more file.
+- **Prevent:** `/release` Phase 5 links the note from `docs/INDEX.md` and runs `check_doc_graph_ratchet.py`. Let `/verify` finish before the tag: the suite that is still running is the one that has not passed. An earlier lesson says the same of baselines ("Wait for long suites with one command").
+- **Source:** [rca-engine-bump-v1-5-7-2026-11-10.md](../rca-engine-bump-v1-5-7-2026-11-10.md), finding 3.
+
+### Land a commit on a shared checkout without writing another session's files (v1.5.7 bump, 2026-11-10)
+
+`git merge --ff-only` into the trunk checkout was refused, because another session had unstaged edits in 18 files the bump changes. A scratch script merged the bump's change into each of those working copies, set the index entry to the new blob and fast-forwarded. It read each file once and wrote it a few seconds later with no second read: a save by the other session in that window would have been overwritten, and the script's own check would still have passed. No loss was found afterwards.
+
+- **Why missed:** "Never write a reconstructed shared file to disk" was read as "do not lose their edits", which a three-way merge satisfies. The rule is about who writes the file.
+- **Prevent:** when a fast-forward is refused over another session's edits, do not write their files. Push the branch to the remote trunk and let the other session take it with its own pull, or wait until the overlap is committed. A plain fast-forward is fine when no file the commit changes is dirty in that checkout: check the overlap first.
+- **Source:** [rca-engine-bump-v1-5-7-2026-11-10.md](../rca-engine-bump-v1-5-7-2026-11-10.md), finding 4.
+
+### Stop a background run by its own script path, and list the matches first (v1.5.7 bump, 2026-11-10)
+
+To stop this session's gate run, a process filter matched the command text `unittest discover -s tools/tests`. Another session ran the same command from its own folder, and its three shell processes and one Python process were stopped too.
+
+- **Why missed:** the filter named what the run does, and several sessions do the same thing at once. The earlier lesson on stopping a queue lists script names that only one session used.
+- **Prevent:** match on the full path of the session's own script, or on its worktree path in the command line. Print the matching processes with their parents before stopping any, and stop by process id.
+- **Source:** [rca-engine-bump-v1-5-7-2026-11-10.md](../rca-engine-bump-v1-5-7-2026-11-10.md), finding 18.
+
+### A gate that a named file selects judges that file (siege wall gate, 2026-11-10)
+The new `siege-walls` row of `tools/data_gates.py` was selected by a scene file named on the command line, but it ran its tool bare, and the tool then read the live install. A faulty scene in a staged drop or a channel folder got the install's PASS. Repeat of "A gate reads what its consumer reads, and proves it read all of it".
+- **Why missed:** the row was tested for selection only, and the one manual run named the live file, where the default folder gives the same answer.
+- **Prevent:** a `data_gates.py` row whose glob matches single files sets `files=True`, and its test asserts the command line that the runner builds, with a file outside the default folder.
+- **Source:** [rca-helms-deep-siege-wall-2026-11-10.md](../rca-helms-deep-siege-wall-2026-11-10.md), review finding 1.
+
+### A check that names a module's DLLs covers every DLL the module ships (TAOM.CoopCompat, 2026-11-12)
+The TAOM.CoopCompat split moved the transport and the wire contracts into a second DLL, `TAOM.CoopCompat.Coop.dll`. The handshake's build identity still read the MVIDs of `TAOM.dll` and `TAOM.CoopCompat.dll` only, so a different second DLL passed as the same build. The packager's no-Coop-binary check read the module's `bin/` only, while the include-list copies a `.dll` from `ModuleData` or `Assets` too.
+- **Why missed:** the split was reviewed for the engine's type scan, and nobody listed the other places that name the module's assemblies. The build identity had been judged "too little gain" before the split, when it would have needed a new wire field.
+- **Prevent:** when code moves into a new assembly, grep for every list of the module's assemblies (identity, packaging allowlist, stamp checks, deploy items, reference gates) and test that each one covers the new DLL. A refusal for a file type covers the whole module tree, not one folder.
+- **Source:** Kimi review of commit 561d1b308 (2026-11-12), findings F1 (MEDIUM) and F2 (LOW).
+
+### A new in-game check manifest is loaded by tools/tests, which the C# suite never runs (#1121, 2026-11-12)
+`tools/ingame_checks/1121.toml` shipped with `fixed_in = "UNCOMMITTED"`. The loader needs a sha (`[0-9a-f]{7,40}`), so `RepoManifestGateTests` fails and no verdict can run. The 39,019-test C# run passed. The same manifest also wrote its pass line in the prefix, where the loot was collected, not in the postfix that opens the screen, so a failing screen would still have read as a pass.
+- **Why missed:** only `tools/tests` loads every manifest; my first Python run timed out and I read nothing from it. The pass line sat where the data was easiest to count.
+- **Prevent:** after any manifest edit run `python -m unittest tools.tests.test_ingame_verdict`, and treat a timed-out run as no evidence. Use the trunk commit before the work as `fixed_in`. Write the pass line where the effect lands, and give every error text one tag that one `fail` pattern catches, with a test that scans the source for the `LogError` texts.
+- **Source:** [rca-siege-retreat-loot-2026-11-12.md](../rca-siege-retreat-loot-2026-11-12.md), findings 1 and 4.

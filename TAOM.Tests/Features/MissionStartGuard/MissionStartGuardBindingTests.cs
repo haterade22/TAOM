@@ -255,6 +255,100 @@ public class MissionStartGuardBindingTests
         Assert.AreEqual(0, boolPrefixes.Count());
     }
 
+    // ---- The second class: the prefix on Mission.AddMissionBehavior (#1028) ----
+
+    private static readonly Type AddPatchType = typeof(Mission_AddMissionBehavior_MissionStartGuard_Patch);
+
+    [TestMethod]
+    [TestCategory("BindingVerification")]
+    [TestCategory("RequiresGame")]
+    public void AddPatch_TargetsAPublicNonVirtualVoidAddMissionBehavior_InTheLiteralCategory()
+    {
+        RequireGame();
+
+        var info = HarmonyMethod.Merge(AddPatchType.GetCustomAttributes<HarmonyPatch>().Select(a => a.info).ToList());
+        var categories = AddPatchType.GetCustomAttributes<HarmonyPatchCategory>().Select(c => c.info.category).ToList();
+        var target = typeof(Mission).GetMethod(nameof(Mission.AddMissionBehavior), BindingFlags.Public | BindingFlags.Instance);
+
+        Assert.AreEqual(typeof(Mission), info.declaringType);
+        Assert.AreEqual(nameof(Mission.AddMissionBehavior), info.methodName);
+        CollectionAssert.AreEqual(new[] { "Patch103_MissionStartGuard" }, categories);
+        Assert.IsNotNull(target, "Mission.AddMissionBehavior moved or went private");
+        Assert.AreEqual(typeof(void), target!.ReturnType);
+        Assert.IsFalse(target.IsVirtual, "a virtual target would need the declaring-type override question settled");
+        CollectionAssert.AreEqual(new[] { typeof(MissionBehavior) }, target.GetParameters().Select(p => p.ParameterType).ToArray(),
+            "the prefix binds the one parameter by position (__0), so only its type matters");
+    }
+
+    [TestMethod]
+    [TestCategory("BindingVerification")]
+    public void AddPatch_Prefix_IsABoolPrefixAtFirstPriorityBindingByTheEnginesNames()
+    {
+        var prefix = AccessTools.Method(AddPatchType, "Prefix");
+
+        Assert.IsNotNull(prefix);
+        Assert.AreEqual(typeof(bool), prefix.ReturnType, "false skips the engine's add, which is how the add is queued");
+        CollectionAssert.AreEqual(new[] { "__instance", "__0" }, prefix.GetParameters().Select(p => p.Name).ToArray(),
+            "__0 binds by position: an engine rename of the parameter must not fail the category's apply");
+        Assert.AreEqual(typeof(MissionBehavior), prefix.GetParameters()[1].ParameterType);
+        Assert.IsNotNull(prefix.GetCustomAttribute<HarmonyPrefix>());
+        Assert.AreEqual(Priority.First, prefix.GetCustomAttribute<HarmonyPriority>()!.info.priority);
+    }
+
+    [TestMethod]
+    [TestCategory("BindingVerification")]
+    [TestCategory("RequiresGameIL")]
+    public void AddPatch_AppliedToTheInstalledEngine_QueuesInsideTheWindowAndAddsOutsideIt()
+    {
+        RequireGame();
+        const string id = "taom.tests.missionstartguard.addpatch";
+        var harmony = new Harmony(id);
+        var service = Substitute.For<IMissionStartGuardService>();
+        service.ShouldDeferBehaviorAdds().Returns(true);
+        MissionStartGuardCalls.Initialize(service);
+        try
+        {
+            Mission mission;
+            try { mission = (Mission)System.Runtime.Serialization.FormatterServices.GetUninitializedObject(typeof(Mission)); }
+            catch (Exception ex) { Assert.Inconclusive("Mission cannot be allocated in this host: " + ex.GetType().Name); return; }
+            foreach (var (name, value) in new (string, object)[]
+                     {
+                         ("<MissionBehaviors>k__BackingField", new List<MissionBehavior>()),
+                         ("<MissionLogics>k__BackingField", new List<MissionLogic>()),
+                         ("_otherMissionBehaviors", new List<MissionBehavior>()),
+                     })
+            {
+                var field = typeof(Mission).GetField(name, BindingFlags.NonPublic | BindingFlags.Instance);
+                if (field == null) { Assert.Inconclusive("Mission's internals moved: " + name); return; }
+                field.SetValue(mission, value);
+            }
+
+            harmony.CreateClassProcessor(AddPatchType).Patch();
+            Assert.IsTrue(Harmony.GetPatchInfo(typeof(Mission).GetMethod(nameof(Mission.AddMissionBehavior))).Prefixes.Any(p => p.owner == id));
+
+            var queued = new StubLogic();
+            MissionBehaviorDeferral.Open(mission, TAOM.Features.MissionStartGuard.Models.StartCall.AfterStart, queued);
+            mission.AddMissionBehavior(queued);
+            Assert.AreEqual(0, mission.MissionBehaviors.Count, "inside the window the engine's add is skipped");
+            Assert.AreEqual(1, MissionBehaviorDeferral.Pending);
+
+            MissionStartGuardCalls.FlushDeferredAdds();
+            Assert.AreSame(queued, mission.MissionBehaviors.Single(), "the flush adds it through the engine's own method");
+
+            var outside = new StubLogic();
+            mission.AddMissionBehavior(outside);
+            Assert.AreEqual(2, mission.MissionBehaviors.Count, "outside the window the add is the engine's, untouched");
+        }
+        finally
+        {
+            harmony.UnpatchAll(id);
+            MissionBehaviorDeferral.Reset();
+            MissionStartGuardCalls.Initialize(null);
+        }
+    }
+
+    private sealed class StubLogic : MissionLogic { }
+
     // ---- Wiring ----
 
     [TestMethod]

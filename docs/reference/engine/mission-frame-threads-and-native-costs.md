@@ -183,6 +183,16 @@ Consequences for TAOM code:
   functions and about 1,000 field offsets in 150 functions depend on it, so it is not patchable in
   practice. [TAOM-verified] The `0xC60` stride and a 16-bit next-index list both appear in the native
   nearby-agent walk (section 4).
+- **A full pool corrupts the mission.** [TAOM-verified, Ghidra, v1.5.6 project key
+  `Win64_Shipping_Client-fa3eb85fcabc2e9e`; `python tools/native_decompile.py --rva 0x5C4E70`, then `--rva 0x5B9E10`]
+  The slot search `FUN_1805c4e70` scans slots 0 to `0x7F7` and returns -1 when none is free. `FUN_1805b9e10`, which
+  `IMBMission.CreateAgent` (`0x6F6120`) calls, does not test that result and writes through `index * 0xC60 + pool`. The
+  pool starts at `mission + 0x2D50`, so slot -1 is `+0x20F0` to `+0x2D50`. That range covers three tree anchors and a mutex of the object embedded at `mission + 0x20` (its `+0x2B58`, `+0x2B88`, `+0x2BB8` and `+0x2BE8`).
+  `Mission.SpawnAgent` has no managed check. Vanilla's reinforcements compare `AllAgents.Count` with `MaxNumberOfAgentsForMission` first (`MissionBattleSideSpawnContext.TryReinforcementSpawn`); the initial spawn reads no live count and relies on `_battleSize`, capped at `MaxNumberOfAgentsForMission / 2`.
+  The two crew spawners call `CrewAgentBudget.HasRoom`, which answers for one slot. `CrewAgentBudgetTests` proves that every direct `Mission.SpawnAgent` caller also calls `HasRoom` in the same method, not that the call guards the spawn.
+  The `SpawnTroop*` and `SpawnMonster` callers are not gated. CreatureBandits and BannerBearers replace a vanilla spawn; Fords of War and Long Defeat stay under the limit by their own caps (`fords_of_war/match.json`, `long_defeat/waves.json`, read 2026-11-09); the dev console has no total.
+  A player's log (#1107) fits this: 800 spawns in one frame, 55 mumakil crews of 8, then a managed `AccessViolationException` on the next crew spawn. No log line prints the agent count, so 1,600 agents from 800 mounted troops is an inference.
+  The process later died at `+0x5A63A0`, a tree walk in `FUN_1805a6340`, with fault address `0xFFFFFFFFFFFFFFFF`. Which tree it walked is UNVERIFIED: that bundle has no dump.
 - **Every mount is an agent.** [yotthani, re-checked by the 2026-10-02 audit in the v1.5.3 decompile]
   `BannerlordConfig._battleSizes` is the fixed array {200, 300, 400, 500, 600, 800, 1000} and the menu
   value is an index; `DefaultBattleMissionAgentSpawnLogic` caps soldiers at
@@ -381,6 +391,10 @@ TAOM-verified were re-derived by TAOM; the rest are not yet.
   vanilla keeps only a 512 px mip tail and streams the rest.
 - **Metamesh visible distance** defaults to `FLT_MAX` on a Kit import; shipped small props use 20 to 50 m,
   baskets 100 to 200, map icons 200.
+- **Map icon visible distance: open conflict.** Kysaro's map-icon research reads the native `map_castle_a`,
+  `map_castle_d` and `map_town_a` metameshes as one LOD with visible distance `FLT_MAX` (Meta Mesh Editor, 2026-10-24,
+  his note `map-icons/project_map_icons_research.md`; see [map-icons.md](../../kitbash/map-icons.md)). That disagrees
+  with "map icons 200" above. Neither figure was measured on v1.5.7 by TAOM.
 - **Particle emitters** carry a min and max config that bound the Particle Detail option; an emitter is
   created only inside its bounds. That and the other gates act on creation and emission only: a created
   emitter is simulated every step, seen or not (section 1; yotthani, MithrilForge
@@ -546,6 +560,21 @@ TAOM consequence: battles above the menu's 1,000 soldiers (another mod's battle 
 melee near the camera can reach the limit. TAOM guards and watches the two skeleton pools: see
 [skeleton-buffer-guard.md](../../features/skeleton-buffer-guard.md) (the decision is item 2 of
 [adopt-yotthani-2026-10-08.md](../../reviews/adopt-yotthani-2026-10-08.md)).
+
+## 11. Execution scene and battle gore crashes (Kysaro, KysaroMod, 2026-11-09)
+
+Kysaro measured these (his note `gameplay/project_kysaro_gore.md`, 2026-11-09), unverified in TAOM.
+
+- **The `scn_execution_notification` scene needs a physics world for blood emitters.** Native blood particle emitters
+  with `enable_collision` crashed `TaleWorlds.Native` there until a postfix on `SceneNotificationData.SceneProperties`
+  called `InitializePhysics` for that scene. That was the real cause of what he first logged as a "particles crash".
+  His earlier suspects were runtime particle creation and `GameEntity.CreateEmpty` inside the scene; a later entry
+  records that prefabs spawned with `GameEntity.Instantiate` render there, because the scene file already holds a
+  `particle_system_instanced_component`. Treat "particles or `CreateEmpty` crash" as superseded by the physics-world cause.
+- **Severed-head `AgentVisuals` must be reset in a `Mission.EndMissionInternal` prefix.** Reset only in
+  `OnRemoveBehavior`, every battle with a beheading crashed on exit (an MSVCP140 access violation right after
+  "MissionScreen-OnDeactivate"). His Harmony prefix on `Mission.EndMissionInternal` cleans heads, stumps and blood first.
+  Custom Battle tests missed it because they end with `QuitGame` and never close a mission normally.
 
 ## How to re-verify
 

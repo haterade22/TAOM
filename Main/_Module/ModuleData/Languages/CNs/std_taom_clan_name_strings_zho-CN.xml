@@ -80,8 +80,8 @@
     <string id="aom_clan_khuzait_17_name" text="米斯伦泰" />
     <string id="aom_clan_khuzait_18_name" text="瓦泽维安" />
     <string id="aom_clan_khuzait_19_name" text="博佐尔加尼斯" />
-    <string id="aom_clan_lindon_1_name" text="法拉斯民" />
-    <string id="aom_clan_lindon_2_name" text="米斯隆德精灵" />
+    <string id="aom_clan_lindon_1_name" text="诺斯·诺威" />
+    <string id="aom_clan_lindon_2_name" text="诺斯·阿塔诺" />
     <string id="aom_clan_lothlorien_1_name" text="费纳芬家族" />
     <string id="aom_clan_lothlorien_2_name" text="奈斯守卫" />
     <string id="aom_clan_lothlorien_3_name" text="玛尔加拉德家族" />
@@ -131,40 +131,40 @@
     <string id="aom_clan_arthedain_3_name" text="阿蒙苏尔守护者" />
     <string id="aom_clan_arthedain_4_name" text="巴兰都因家族" />
     <string id="aom_clan_arthedain_5_name" text="埃明贝莱德家族" />
-    <string id="aom_clan_sturgia_10_name" text="House of the Running River" />
-    <string id="aom_clan_sturgia_11_name" text="House of the Carnen" />
-    <string id="aom_clan_sturgia_12_name" text="House of Ravenhill" />
-    <string id="aom_clan_sturgia_13_name" text="House of the Forest River" />
-    <string id="aom_clan_sturgia_14_name" text="House of the Long Marshes" />
-    <string id="aom_clan_cardolan_1_name" text="House of Tyrn Gorthad" />
-    <string id="aom_clan_cardolan_2_name" text="House of Tharbad" />
-    <string id="aom_clan_cardolan_3_name" text="House of Minas Eithel" />
-    <string id="aom_clan_cardolan_4_name" text="Wardens of Sarn Ford" />
-    <string id="aom_clan_rhudaur_1_name" text="House of Cameth Brin" />
-    <string id="aom_clan_rhudaur_2_name" text="House of Ettendale" />
-    <string id="aom_clan_rhudaur_3_name" text="Wardens of the Coldfells" />
-    <string id="aom_clan_lindon_3_name" text="Nos Galdor" />
-    <string id="aom_clan_lindon_4_name" text="Nos Brithombar" />
-    <string id="aom_clan_lindon_5_name" text="Wardens of Ered Luin" />
-    <string id="aom_clan_lindon_6_name" text="Nos Eglarest" />
-    <string id="aom_clan_eredluin_1_name" text="House of Borin" />
-    <string id="aom_clan_eredluin_2_name" text="Broadbeams" />
-    <string id="aom_clan_eredluin_3_name" text="Firebeards" />
-    <string id="aom_clan_eredluin_4_name" text="Wardens of Dolmed" />
-    <string id="aom_clan_anduinvale_1_name" text="House of Beorn" />
-    <string id="aom_clan_anduinvale_2_name" text="Folk of the Old Ford" />
-    <string id="aom_clan_anduinvale_3_name" text="Wardens of the Carrock" />
-    <string id="aom_clan_anduinvale_4_name" text="Riders of the Gladden" />
-    <string id="aom_clan_angaladh_1_name" text="House of Angáladh" />
-    <string id="aom_clan_angaladh_2_name" text="Woodwards of the Forest Road" />
-    <string id="aom_clan_angaladh_3_name" text="Wardens of Emyn Duir" />
-    <string id="aom_clan_dorwinion_1_name" text="House of Vineholm" />
-    <string id="aom_clan_dorwinion_2_name" text="Wardens of the Redwater" />
-    <string id="aom_clan_dorwinion_3_name" text="House of Seagate" />
-    <string id="aom_clan_dorwinion_4_name" text="Wardens of the Eastmarch" />
-    <string id="aom_clan_southrhovanion_1_name" text="House of Vidugard" />
-    <string id="aom_clan_southrhovanion_2_name" text="Riders of Southwood" />
-    <string id="aom_clan_southrhovanion_3_name" text="Wainwatch Riders" />
-    <string id="aom_clan_southrhovanion_4_name" text="Wardens of the Northmark" />
+    <string id="aom_clan_sturgia_10_name" text="奔流河家族" />
+    <string id="aom_clan_sturgia_11_name" text="卡尔宁河家族" />
+    <string id="aom_clan_sturgia_12_name" text="鸦岭家族" />
+    <string id="aom_clan_sturgia_13_name" text="森林河家族" />
+    <string id="aom_clan_sturgia_14_name" text="长沼泽家族" />
+    <string id="aom_clan_cardolan_1_name" text="提恩·戈萨德家族" />
+    <string id="aom_clan_cardolan_2_name" text="塔巴德家族" />
+    <string id="aom_clan_cardolan_3_name" text="米那斯·埃塞尔家族" />
+    <string id="aom_clan_cardolan_4_name" text="萨恩渡口守卫" />
+    <string id="aom_clan_rhudaur_1_name" text="卡梅斯·布林家族" />
+    <string id="aom_clan_rhudaur_2_name" text="埃滕谷家族" />
+    <string id="aom_clan_rhudaur_3_name" text="冷荒原守卫" />
+    <string id="aom_clan_lindon_3_name" text="诺斯·萨文·阿·米那斯洛斯" />
+    <string id="aom_clan_lindon_4_name" text="诺斯·埃尔达洛姆瑞尔" />
+    <string id="aom_clan_lindon_5_name" text="诺斯·宁温迪尔" />
+    <string id="aom_clan_lindon_6_name" text="诺斯·英格罗" />
+    <string id="aom_clan_eredluin_1_name" text="德林古尔家族" />
+    <string id="aom_clan_eredluin_2_name" text="德瓦林家族" />
+    <string id="aom_clan_eredluin_3_name" text="乌瑞家族" />
+    <string id="aom_clan_eredluin_4_name" text="埃尔德兰家族" />
+    <string id="aom_clan_anduinvale_1_name" text="贝奥恩家族" />
+    <string id="aom_clan_anduinvale_2_name" text="老渡口之民" />
+    <string id="aom_clan_anduinvale_3_name" text="卡洛克守卫" />
+    <string id="aom_clan_anduinvale_4_name" text="格拉顿骑手" />
+    <string id="aom_clan_angaladh_1_name" text="安加拉兹家族" />
+    <string id="aom_clan_angaladh_2_name" text="林道护林人" />
+    <string id="aom_clan_angaladh_3_name" text="埃敏杜尔守卫" />
+    <string id="aom_clan_dorwinion_1_name" text="葡园堡家族" />
+    <string id="aom_clan_dorwinion_2_name" text="赤水河守卫" />
+    <string id="aom_clan_dorwinion_3_name" text="海门家族" />
+    <string id="aom_clan_dorwinion_4_name" text="东马克守卫" />
+    <string id="aom_clan_southrhovanion_1_name" text="维杜加德家族" />
+    <string id="aom_clan_southrhovanion_2_name" text="南林骑手" />
+    <string id="aom_clan_southrhovanion_3_name" text="车民哨骑" />
+    <string id="aom_clan_southrhovanion_4_name" text="北境守卫" />
   </strings>
 </base>

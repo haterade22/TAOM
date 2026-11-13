@@ -375,6 +375,7 @@ internal sealed partial class LongDefeatBattlefieldAdapter : ILongDefeatBattlefi
 
     public void OrderCharge()
     {
+        ClearSplit();
         _mission.DefenderTeam.DelegateCommandToAI();
         var attackers = _mission.AttackerTeam;
         var defenders = _mission.DefenderTeam;
@@ -516,6 +517,7 @@ internal sealed partial class LongDefeatBattlefieldAdapter : ILongDefeatBattlefi
         _gates = new List<CastleGate>();
         ClearGates();
         ClearPosts();
+        ClearSplit();
         _ladders = new List<SiegeLadder>();
         _towers = new List<SiegeTower>();
         _rams = new List<BatteringRam>();

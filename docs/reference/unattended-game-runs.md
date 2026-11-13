@@ -141,6 +141,24 @@ ArmorySim 0.2 is the maintainer's standalone tool and stays standalone: nothing 
 | Crash detection | Scans `rgl_log_<pid>` and `watchdog_log_<pid>` | Same markers, plus the TAOM log's `[CrashReport]` block |
 | Stopping | Kills its own process tree after a creation-time check | Kills the process it started through its handle, plus a `-p <pid>` watchdog |
 
+## Harness gotchas measured by Kysaro
+
+From his own test harnesses, unverified in TAOM.
+
+- **`SaveHandler.SaveAs` only queues the save.** He saves through `OnBeforeSave` plus `MBSaveLoad`, and notes that the
+  bare `MBSaveLoad` path drops behaviour data (his note `gameplay/project_taom_kysaro_diplomacy.md`, 2026-11-05).
+- **`HideInquiry` leaves "active state disabled" requests in `GameStateManager`, and the map stops ticking.** His
+  `ReleaseStalePause` clears them (same note). TAOM's driver calls `HideAnyInquiry` while it waits at the menu (table
+  above); whether that leaves such requests is not checked.
+- **Never Harmony-patch campaign view models before `OnGameInitializationFinished`.** Patching `EncyclopediaHeroPageVM`
+  and similar at `OnBeforeInitialModuleScreenSetAsRoot` JITs the class, which runs `CampaignUIHelper`'s static
+  constructor before `GameTexts` exists. The result was a `TypeInitializationException` for the whole session, a hung
+  save load and a failed new game (same note, 2026-11-04 entry).
+- **Launch `Bannerlord.exe /singleplayer _MODULES_*...*_MODULES_` from `bin\Win64_Shipping_Client`.** Starting
+  `TaleWorlds.MountAndBlade.Launcher.exe` directly shows "There is no target file!", and `steam://run/261550` stops at
+  the launcher UI (his note `scenes/project_calembel_siege_crash.md`, 2026-10-17). The recipe above already starts
+  `Bannerlord.exe` directly.
+
 ## Scope today and what is planned
 
 Today the in-game driver plays only a Fords of War match, so `/game-run` serves Fords checks and any change a Fords match exercises

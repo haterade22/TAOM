@@ -20,6 +20,7 @@ using TAOM.Features.RaceAge;
 using TAOM.Features.Execution;
 using TAOM.Features.AlignmentRecruitment;
 using TAOM.Features.AlignmentDesertion;
+using TAOM.Features.LordRetinue;
 using TAOM.Features.MarriageAlignment;
 using TAOM.Features.NazgulFamily;
 using TAOM.Features.NavalTravel;
@@ -116,6 +117,7 @@ public static class IoC
         ExecutionIoC.RegisterExecutionFeature(container);
         RecruitmentAlignmentIoC.RegisterAlignmentRecruitmentFeature(container);
         AlignmentDesertionIoC.RegisterAlignmentDesertionFeature(container);
+        LordRetinueIoC.RegisterLordRetinueFeature(container);
         MarriageAlignmentIoC.RegisterMarriageAlignmentFeature(container);
         Features.PrisonerRecruitment.PrisonerRecruitmentIoC.RegisterPrisonerRecruitmentFeature(container);
         NazgulFamilyIoC.RegisterNazgulFamilyFeature(container);
@@ -135,6 +137,7 @@ public static class IoC
         Features.TrollBruteForce.TrollBruteForceIoC.RegisterTrollBruteForceFeature(container);
         Features.DwarfAttacks.DwarfAttacksIoC.RegisterDwarfAttacksFeature(container);
         Features.MonsterSize.MonsterSizeIoC.RegisterMonsterSizeFeature(container);
+        Features.Arachnophobia.ArachnophobiaIoC.RegisterArachnophobiaFeature(container);
         CustomBattlesIoC.RegisterCustomBattlesFeature(container);
         BattleBalanceIoC.RegisterBattleBalanceFeature(container);
         Features.CombatMechanics.CombatMechanicsIoC.RegisterCombatMechanicsFeature(container);

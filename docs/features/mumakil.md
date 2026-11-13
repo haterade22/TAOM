@@ -329,9 +329,10 @@ harness slot and the same exemption.
 
 ### Risks to settle before or during the smoke
 
-- **Agent budget.** Eight crew across four mumakil is 32 extra agents, on top of any crewed elephants in the same
-  battle. The engine's cap is native and unverified, and #627's RCA already records a reinforcement-headroom guard as
-  NOT APPLIED for the same reason.
+- **Agent budget (#1107: fixed in code, in-game check owed).** Eight crew across four mumakil is 32 extra agents, on top of any crewed elephants
+  in the same battle. The engine holds 2,040 agents, mounts included. `CrewAgentBudget.HasRoom` stops a crew at that
+  limit and the remaining seats stay empty, first come, first served in drain order. #627's RCA records a
+  reinforcement-headroom guard as NOT APPLIED and none is added here, so crews and reinforcements share the free slots.
 - **Formation averaging.** Crew are ordinary members of their side's Ranged formation and count toward its average
   and median position (#627, data-flow F-4). A mumakil's crew is four times an elephant's, so this scales with the
   feature. Unmeasured; watch the archer formation's behaviour with several beasts on the field.

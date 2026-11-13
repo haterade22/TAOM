@@ -33,14 +33,14 @@
     <string id="aom_taom_rohan_battle_fords_of_isen_forceatmo_name" text="[洛汗] 艾辛河渡口" />
     <string id="aom_taom_rohan_castle_helms_deep_forceatmo_name" text="[洛汗] 聖盔谷 - 夜雨" />
     <string id="aom_taom_rohan_edoras_town_forceatmo_name" text="[洛汗] 伊多拉斯" />
-    <string id="aom_taom_gondor_battle_001_forceatmo_name" text="[Gondor] Ruined Outpost" />
-    <string id="aom_taom_gondor_pelennor_fields_forceatmo_name" text="[Gondor] Pelennor Fields" />
-    <string id="aom_taom_dwarven_moria_e_forceatmo_name" text="[Misty Mountains] Eastern Moria" />
-    <string id="aom_taom_gondor_town_pelargir_forceatmo_name" text="[Gondor] Pelargir" />
-    <string id="aom_taom_gondor_town_serelond_forceatmo_name" text="[Gondor] Serelond" />
-    <string id="aom_taom_gondor_village_amongelin_forceatmo_name" text="[Gondor] Amon Gelin Village" />
-    <string id="aom_taom_gondor_village_lothgobel_forceatmo_name" text="[Gondor] Lothgobel Village" />
-    <string id="aom_taom_mordor_town_01_forceatmo_name" text="[Mordor] Mordor Town" />
-    <string id="aom_taom_rohan_battle_002_forceatmo_name" text="[Rohan] Rohan Plains II" />
+    <string id="aom_taom_gondor_battle_001_forceatmo_name" text="[剛鐸] 廢棄哨站" />
+    <string id="aom_taom_gondor_pelennor_fields_forceatmo_name" text="[剛鐸] 佩蘭諾平原" />
+    <string id="aom_taom_dwarven_moria_e_forceatmo_name" text="[迷霧山脈] 東摩瑞亞" />
+    <string id="aom_taom_gondor_town_pelargir_forceatmo_name" text="[剛鐸] 佩拉格" />
+    <string id="aom_taom_gondor_town_serelond_forceatmo_name" text="[剛鐸] 塞瑞隆德" />
+    <string id="aom_taom_gondor_village_amongelin_forceatmo_name" text="[剛鐸] 阿蒙蓋林村" />
+    <string id="aom_taom_gondor_village_lothgobel_forceatmo_name" text="[剛鐸] 洛斯戈貝爾村" />
+    <string id="aom_taom_mordor_town_01_forceatmo_name" text="[魔多] 魔多城鎮" />
+    <string id="aom_taom_rohan_battle_002_forceatmo_name" text="[洛汗] 洛汗平原 II" />
   </strings>
 </base>

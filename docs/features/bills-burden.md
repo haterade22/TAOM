@@ -116,8 +116,8 @@ Keep #876 open, and keep this change out of a player release, until step 5 passe
 
 ## Translation
 
-The two strings are seeded in English in all 12 language files. The paid translation is owed in the
-translation backlog, #763.
+The two strings are translated in all 12 language files (2026-11-12, in the
+translation backlog, #763).
 
 ## Owed in-game checks
 
@@ -127,7 +127,7 @@ translation backlog, #763.
   change).
 - The row is red when over capacity, and the colour returns to normal below it.
 - Tooltip order: fill row, weight breakdown, capacity breakdown. WEIGHT matches the inventory screen.
-- In one non-English language, both tooltip rows show the English seed text, not a raw key.
+- In one non-English language, both tooltip rows show the translated text, not a raw key.
 - While you lead an army, compare the red state with the speed tooltip's "Overburdened" line.
 
 ## Changelog

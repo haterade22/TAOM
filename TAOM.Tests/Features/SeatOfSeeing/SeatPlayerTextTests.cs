@@ -8,9 +8,8 @@ using TAOM.Tests.Infrastructure;
 namespace TAOM.Tests.Features.SeatOfSeeing;
 
 /// <summary>
-/// The Seat's player text in the C# literal, the English row and the 12 language rows. Each language row holds the seeded English, so a row
-/// left behind would keep the old sentence for good: translator discovery treats a row equal to its English as untranslated, and no other
-/// test compares a row with the English.
+/// The Seat's player text in the C# literal, the English row and the 12 language rows. Each language row is its translation (or the English until
+/// the paid run fills it) and keeps every placeholder of the English, with exactly one row per key.
 /// </summary>
 [TestClass]
 public class SeatPlayerTextTests
@@ -47,6 +46,9 @@ public class SeatPlayerTextTests
         Regex.Matches(File.ReadAllText(path), @"<string\s+id=""" + Regex.Escape(id) + @"""\s+text=""([^""]*)""")
             .Cast<Match>().Select(m => System.Net.WebUtility.HtmlDecode(m.Groups[1].Value)).ToList();
 
+    private static List<string> Tokens(string text) =>
+        Regex.Matches(text, @"\{[^{}]*\}").Cast<Match>().Select(m => m.Value).Distinct().OrderBy(t => t, System.StringComparer.Ordinal).ToList();
+
     private static string SettingLiteral(string key) =>
         Regex.Match(RepoPaths.ReadSource("Main/Features/TaomSettings.cs"), @"\{=" + key + @"\}([^""]+)""").Groups[1].Value;
 
@@ -61,7 +63,7 @@ public class SeatPlayerTextTests
     [DataRow("taom_seat_time_stayed", "The battle is paused. Press Stay time (Home unless rebound) again to go on.")]
     [DataRow("taom_seat_time_resumed", "The battle goes on.")]
     [DataRow("taom_seat_time_other_clock", "This battle has its own speed control.")]
-    public void ASeatMessage_ReadsTheSameInTheCode_TheEnglishRow_AndEveryLanguageRow(string key, string expected)
+    public void ASeatMessage_ReadsTheSameInTheCodeAndTheEnglishRow_AndEveryLanguageRowKeepsItsPlaceholders(string key, string expected)
     {
         Assert.AreEqual(expected, Literal(key), "the C# literal");
         Assert.AreEqual(expected, Row(RepoPaths.ReadSource(Modules + "taom_module_strings.xml"), key), "the English row");
@@ -69,12 +71,12 @@ public class SeatPlayerTextTests
         var files = LanguageFiles();
         Assert.AreEqual(12, files.Length, "one module string file for each of the 12 languages");
         foreach (var file in files)
-            Assert.AreEqual(expected, Row(File.ReadAllText(file), key), file);
+            CollectionAssert.AreEqual(Tokens(expected), Tokens(Row(File.ReadAllText(file), key)), file);
     }
 
     [DataTestMethod]
     [DynamicData(nameof(TimeKeyRowData), DynamicDataSourceType.Method)]
-    public void ATimeKeyRow_IsTheExpectedWording_InGlobalStrings_AndSeededInEveryKeybindLanguageFile(string rowId, string key, string wording)
+    public void ATimeKeyRow_IsTheExpectedWording_InGlobalStrings_AndEveryKeybindLanguageFileHoldsOneRow(string rowId, string key, string wording)
     {
         var global = RowsById(RepoPaths.RepoPath("Main", "_Module", "ModuleData", "global_strings.xml"), rowId);
 
@@ -86,7 +88,7 @@ public class SeatPlayerTextTests
         {
             var seeded = RowsById(file, key);
             Assert.AreEqual(1, seeded.Count, Path.GetFileName(file) + " carries one row for " + key);
-            Assert.AreEqual(wording, seeded[0], Path.GetFileName(file));
+            CollectionAssert.AreEqual(Tokens(wording), Tokens(seeded[0]), Path.GetFileName(file));
         }
     }
 
@@ -119,13 +121,13 @@ public class SeatPlayerTextTests
     [DataRow("taom_seat_mcm_enabled_hint")]
     [DataRow("taom_seat_mcm_rise_hint")]
     [DataRow("taom_seat_mcm_rise")]
-    public void ASettingText_ReadsTheSameInTheAttribute_TheEnglishRow_AndEveryLanguageRow(string key)
+    public void ASettingText_ReadsTheSameInTheAttributeAndTheEnglishRow_AndEveryLanguageRowKeepsItsPlaceholders(string key)
     {
         var literal = Regex.Match(RepoPaths.ReadSource("Main/Features/TaomSettings.cs"), "\\{=" + key + "\\}([^\"]+)\"").Groups[1].Value;
         Assert.IsTrue(literal.Length > 0, key + " has no literal in TaomSettings");
         Assert.AreEqual(literal, Row(RepoPaths.ReadSource(Modules + "taom_module_strings.xml"), key), "the English row");
 
         foreach (var file in LanguageFiles())
-            Assert.AreEqual(literal, Row(File.ReadAllText(file), key), file);
+            CollectionAssert.AreEqual(Tokens(literal), Tokens(Row(File.ReadAllText(file), key)), file);
     }
 }

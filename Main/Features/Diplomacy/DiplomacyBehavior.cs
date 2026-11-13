@@ -21,7 +21,7 @@ public class DiplomacyBehavior : CampaignBehaviorBase
     {
         _logger.LogInfo("[Diplomacy] DiplomacyBehavior registering events");
         CampaignEvents.OnNewGameCreatedPartialFollowUpEvent.AddNonSerializedListener(
-            this, OnNewGameCreatedPartialFollowUp);
+            this, (_, index) => OnNewGameCreatedFollowUp(index));
 
         CampaignEvents.OnSessionLaunchedEvent.AddNonSerializedListener(
             this, _ => OnSessionLaunched());
@@ -54,10 +54,20 @@ public class DiplomacyBehavior : CampaignBehaviorBase
     {
     }
 
-    private void OnNewGameCreatedPartialFollowUp(CampaignGameStarter starter, int index)
+    // CO-OP: a first-time joiner builds a local campaign for character creation, and Coop's
+    // StartAlliance prefix on a client asks the server instead of forming the alliance. The host's
+    // save carries the alliances, so a Coop client skips them. IsCoopClient, not ShouldDeferToHost:
+    // with a co-op mod TAOM cannot probe, a new campaign has no host save to carry them.
+    internal void OnNewGameCreatedFollowUp(int index)
     {
         if (index == 0)
         {
+            if (_coop.IsCoopClient)
+            {
+                _logger.LogInfo("[Diplomacy][coop] initial alliances skipped: the host's save carries them");
+                return;
+            }
+
             _logger.LogInfo("[Diplomacy] New game created — establishing initial alliances");
             _service.EstablishInitialAlliances();
         }

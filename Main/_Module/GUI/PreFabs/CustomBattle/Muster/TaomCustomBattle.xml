@@ -1,0 +1,143 @@
+<Prefab>
+  <!-- TAOM_CustomBattleUI's Custom Battle screen (TcbVM), encyclopedia look (2026-11-11): one centred 1760 frame of the
+       shared encyclopedia stone. Header strip with the title and the Armies / Battlefield tabs; the Armies tab holds the
+       two armies (TcbArmyLeft / TcbArmyRight, 460) either side of the troops the active army can muster (TcbMuster, 792);
+       the Battlefield tab holds the map preview and settings (TaomCustomBattleField) with the two armies summarised below
+       the settings. Footer: Back and Randomise (translucent fs_confirm), the map, the total and, when there is one, what stops
+       a start, then the gold Start (fs_confirm, opaque). -->
+  <Window>
+    <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Sprite="BlankWhiteSquare_9" Color="#0A0A0CFF">
+      <Children>
+        <Widget WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent" SuggestedWidth="1760" HorizontalAlignment="Center" MarginTop="24" MarginBottom="20">
+          <Children>
+
+            <!-- header strip: title (tabs are drawn after the layers, below) -->
+            <EncyclopediaStonePanelWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="72" Sprite="ec_header" DoNotAcceptEvents="true" />
+            <TextWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="760" SuggestedHeight="72" MarginLeft="36"
+                        Brush="Tcb.Title" Brush.TextHorizontalAlignment="Left" Text="@TitleText" DoNotAcceptEvents="true" />
+
+            <!-- ARMIES -->
+            <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" MarginTop="84" MarginBottom="84" IsVisible="@IsArmiesTab" DoNotAcceptEvents="true">
+              <Children>
+                <TcbArmyLeft DataSource="{Player}" />
+                <TcbMuster DataSource="{Active}" HorizontalAlignment="Center" />
+                <TcbArmyRight DataSource="{Enemy}" HorizontalAlignment="Right" />
+              </Children>
+            </Widget>
+
+            <!-- BATTLEFIELD -->
+            <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" MarginTop="84" MarginBottom="84" IsVisible="@IsFieldTab" DoNotAcceptEvents="true">
+              <Children>
+                <TaomCustomBattleField DataSource="{Field}" />
+                <!-- the armies that meet here, under the settings -->
+                <Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="576" SuggestedHeight="152" HorizontalAlignment="Right" VerticalAlignment="Bottom" DoNotAcceptEvents="true">
+                  <Children>
+                    <EncyclopediaStonePanelWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Sprite="ec_panel_9" DoNotAcceptEvents="true" />
+                    <Widget DataSource="{Player}" WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent" SuggestedWidth="276" MarginLeft="12" ClipContents="true" DoNotAcceptEvents="true">
+                      <Children>
+                        <TcbHangingBannerSmall MarginLeft="10" VerticalAlignment="Center" />
+                        <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="34" MarginLeft="84" MarginRight="8" MarginTop="38"
+                                    Brush="Tcb.Faction" Brush.FontSize="24" Text="@FactionName" DoNotAcceptEvents="true" />
+                        <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="26" MarginLeft="84" MarginRight="8" MarginTop="78"
+                                    Brush="Tcb.Label" Brush.FontSize="15" Brush.FontColor="#E8DCC0FF" Text="@TroopsLine" DoNotAcceptEvents="true" />
+                      </Children>
+                    </Widget>
+                    <ImageWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="1" SuggestedHeight="112" HorizontalAlignment="Center" VerticalAlignment="Center"
+                                 Brush="TAOM.Encyclopedia.Rule" AlphaFactor="0.5" DoNotAcceptEvents="true" />
+                    <Widget DataSource="{Enemy}" WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent" SuggestedWidth="276" HorizontalAlignment="Right" MarginRight="12" ClipContents="true" DoNotAcceptEvents="true">
+                      <Children>
+                        <TcbHangingBannerSmall MarginLeft="10" VerticalAlignment="Center" />
+                        <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="34" MarginLeft="84" MarginRight="8" MarginTop="38"
+                                    Brush="Tcb.Faction" Brush.FontSize="24" Text="@FactionName" DoNotAcceptEvents="true" />
+                        <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="26" MarginLeft="84" MarginRight="8" MarginTop="78"
+                                    Brush="Tcb.Label" Brush.FontSize="15" Brush.FontColor="#E8DCC0FF" Text="@TroopsLine" DoNotAcceptEvents="true" />
+                      </Children>
+                    </Widget>
+                  </Children>
+                </Widget>
+              </Children>
+            </Widget>
+
+            <!-- tabs: drawn after both tab layers so nothing full-screen lies over them (user 2026-11-10: the
+                 ARMIES button did nothing from the Battlefield tab) -->
+            <ListPanel WidthSizePolicy="CoverChildren" HeightSizePolicy="Fixed" SuggestedHeight="72" HorizontalAlignment="Right" MarginRight="30"
+                       StackLayout.LayoutMethod="HorizontalLeftToRight">
+              <Children>
+                <ButtonWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="230" SuggestedHeight="56" VerticalAlignment="Center" Brush="Tcb.Hover"
+                              Command.Click="ExecuteArmiesTab" DoNotPassEventsToChildren="true">
+                  <Children>
+                    <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Brush="Tcb.TabOn" Brush.FontSize="21" Text="@ArmiesText" IsVisible="@IsArmiesTab" />
+                    <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Brush="Tcb.Tab" Brush.FontSize="21" Text="@ArmiesText" IsHidden="@IsArmiesTab" />
+                    <Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="170" SuggestedHeight="2" HorizontalAlignment="Center" VerticalAlignment="Bottom" MarginBottom="6"
+                            Sprite="BlankWhiteSquare_9" Color="#E6C27AFF" IsVisible="@IsArmiesTab" />
+                  </Children>
+                </ButtonWidget>
+                <ImageWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="12" SuggestedHeight="12" MarginLeft="10" MarginRight="10" VerticalAlignment="Center"
+                             Sprite="fs_diamond" AlphaFactor="0.8" DoNotAcceptEvents="true" />
+                <ButtonWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="230" SuggestedHeight="56" VerticalAlignment="Center" Brush="Tcb.Hover"
+                              Command.Click="ExecuteFieldTab" DoNotPassEventsToChildren="true">
+                  <Children>
+                    <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Brush="Tcb.TabOn" Brush.FontSize="21" Text="@FieldText" IsVisible="@IsFieldTab" />
+                    <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Brush="Tcb.Tab" Brush.FontSize="21" Text="@FieldText" IsHidden="@IsFieldTab" />
+                    <Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="170" SuggestedHeight="2" HorizontalAlignment="Center" VerticalAlignment="Bottom" MarginBottom="6"
+                            Sprite="BlankWhiteSquare_9" Color="#E6C27AFF" IsVisible="@IsFieldTab" />
+                  </Children>
+                </ButtonWidget>
+              </Children>
+            </ListPanel>
+
+            <!-- footer: Back, Randomise | map, the battle's total and what stops a start | START -->
+            <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="72" VerticalAlignment="Bottom">
+              <Children>
+                <EncyclopediaStonePanelWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Sprite="ec_panel_9" DoNotAcceptEvents="true" />
+
+                <!-- Back and Randomise: the creation screen's secondary pair (translucent CC.NarrativeConfirm), fs_confirm at its 7.27:1 art -->
+                <ButtonWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="262" SuggestedHeight="36" MarginLeft="18" VerticalAlignment="Center" Brush="CC.NarrativeConfirm"
+                              Command.Click="ExecuteBack" UpdateChildrenStates="true" DoNotPassEventsToChildren="true">
+                  <Children>
+                    <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" MarginLeft="40" MarginRight="40" MarginBottom="5" Brush="CC.ConfirmTextSmall" Text="@BackText" />
+                  </Children>
+                </ButtonWidget>
+                <ButtonWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="262" SuggestedHeight="36" MarginLeft="292" VerticalAlignment="Center" Brush="CC.NarrativeConfirm"
+                              Command.Click="ExecuteRandomise" UpdateChildrenStates="true" DoNotPassEventsToChildren="true">
+                  <Children>
+                    <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" MarginLeft="40" MarginRight="40" MarginBottom="5" Brush="CC.ConfirmTextSmall" Text="@RandomText" />
+                  </Children>
+                </ButtonWidget>
+
+                <!-- the map (up to two lines), the battle's total centred on the footer, and under it, only when there is one, the
+                     reason Start is refused: the total never moves -->
+                <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" MarginLeft="572" MarginRight="456" ClipContents="true" DoNotAcceptEvents="true">
+                  <Children>
+                    <TextWidget DataSource="{Field}" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="250" SuggestedHeight="60" VerticalAlignment="Center"
+                                Brush="Tcb.Label" Brush.FontSize="16" Text="@MapName" DoNotAcceptEvents="true" />
+                    <ImageWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="1" SuggestedHeight="44" MarginLeft="262" VerticalAlignment="Center"
+                                 Brush="TAOM.Encyclopedia.Rule" AlphaFactor="0.5" DoNotAcceptEvents="true" />
+                    <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="30" MarginLeft="272" VerticalAlignment="Center"
+                                Brush="Tcb.Label" Brush.FontSize="19" Brush.FontColor="#E8DCC0FF" Brush.TextHorizontalAlignment="Center" Text="@TotalText" IsHidden="@IsOverLimit" DoNotAcceptEvents="true" />
+                    <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="30" MarginLeft="272" VerticalAlignment="Center"
+                                Brush="Tcb.Label" Brush.FontSize="19" Brush.FontColor="#E8806AFF" Brush.TextHorizontalAlignment="Center" Text="@TotalText" IsVisible="@IsOverLimit" DoNotAcceptEvents="true" />
+                    <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="18" MarginLeft="272" VerticalAlignment="Bottom" MarginBottom="2"
+                                Brush="Tcb.Error" Brush.FontSize="15" Text="@Status" IsVisible="@HasStatus" DoNotAcceptEvents="true" />
+                  </Children>
+                </Widget>
+
+                <!-- START: fs_confirm at its 7.27:1 art, the caption inside the pill (CC.ConfirmText 22 overflowed 350 wide) -->
+                <ButtonWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="422" SuggestedHeight="58" HorizontalAlignment="Right" VerticalAlignment="Center" MarginRight="18"
+                              Brush="CC.Confirm" Command.Click="ExecuteStart" UpdateChildrenStates="true" DoNotPassEventsToChildren="true">
+                  <Children>
+                    <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" MarginLeft="60" MarginRight="60" MarginBottom="8" Brush="CC.ConfirmText" Brush.FontSize="19" Text="@StartText" />
+                  </Children>
+                </ButtonWidget>
+              </Children>
+            </Widget>
+
+          </Children>
+        </Widget>
+
+        <!-- popups of the active army (faction, commander, banner), over the whole screen -->
+        <TcbPopups DataSource="{Active}" />
+      </Children>
+    </Widget>
+  </Window>
+</Prefab>

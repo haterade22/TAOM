@@ -22,7 +22,14 @@ public sealed class TroopResourceCostEntry
     // ResourceId (documentation only). See docs/features/elite-emissary.md.
     public int MerchantCost { get; }
 
-    public TroopResourceCostEntry(string troopId, string resourceId, int upgradeCost, float dailyUpkeep, int recruitCost = 0, int merchantCost = 0)
+    // What the emissary charges for this troop in a special resource: MerchantCost times the
+    // emissary_price_multiplier of THIS row's resource (ResourceId), computed once at load. It follows the troop,
+    // never the settlement's owner, so the offer list, the charge and the encyclopedia badge always agree. The
+    // gold-only price never reads it: that price is MerchantCost times the MCM gold rate. Equals MerchantCost
+    // when the row names no multiplied resource.
+    public int EmissaryPrice { get; }
+
+    public TroopResourceCostEntry(string troopId, string resourceId, int upgradeCost, float dailyUpkeep, int recruitCost = 0, int merchantCost = 0, int? emissaryPrice = null)
     {
         TroopId = troopId;
         ResourceId = resourceId;
@@ -30,5 +37,10 @@ public sealed class TroopResourceCostEntry
         DailyUpkeep = dailyUpkeep;
         RecruitCost = recruitCost;
         MerchantCost = merchantCost;
+        EmissaryPrice = emissaryPrice ?? merchantCost;
     }
+
+    /// <summary>This row as the gold-only option reads it (#1108): the emissary price stays and no troop cost remains.</summary>
+    public TroopResourceCostEntry AsMerchantOnly() =>
+        new(TroopId, ResourceId, upgradeCost: 0, dailyUpkeep: 0f, recruitCost: 0, merchantCost: MerchantCost, emissaryPrice: EmissaryPrice);
 }

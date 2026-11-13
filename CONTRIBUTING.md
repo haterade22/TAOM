@@ -5,7 +5,7 @@ happens to it after you do.
 
 ## Where to send it
 
-- **Branch:** open pull requests against `bannerlord-1.5.x`, which targets Bannerlord **v1.5.6**
+- **Branch:** open pull requests against `bannerlord-1.5.x`, which targets Bannerlord **v1.5.7**
   (the Steam beta branch). Bug fixes for the legacy Bannerlord 1.4.8 line can go to
   `bannerlord-1.4.5`; build and test those against 1.4.8 and say so in the PR.
 - **One fix per pull request.** Small PRs get reviewed quickly; a bundle waits for its slowest part.
@@ -14,7 +14,7 @@ happens to it after you do.
 
 ## Setting up
 
-The [README](README.md#quick-start-developers) has the full setup. In short: Bannerlord v1.5.6,
+The [README](README.md#quick-start-developers) has the full setup. In short: Bannerlord v1.5.7,
 the .NET SDK (or Visual Studio 2022), and `.\setup-dev-env.ps1` to point the build at your install.
 
 Build and run the tests without deploying into the game:
@@ -64,6 +64,10 @@ Every outside PR goes through the same three checks, in this order:
    clear reason, or edits to the paths listed above stops here.
 2. **Build and tests.** The full solution build and the whole test suite.
 3. **Code review.** A review of correctness, engine compatibility and the project rules.
+
+The default branches accept changes only through a pull request. Trusted collaborators with write
+access merge their own pull requests. A pull request from a fork waits for a maintainer, and nothing
+from your branch is built before the security review passes.
 
 We may push small fixes to your branch or ask for changes. A maintainer merges; passing checks are
 not approval on their own.

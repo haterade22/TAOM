@@ -10,13 +10,13 @@ namespace TAOM.Features.HeroRace;
 /// Repairs <see cref="ActionIndexCache"/>'s static action indices when they were baked before the
 /// engine loaded action types.
 ///
-/// The fault: <c>ActionIndexCache</c> declares 215 <c>static readonly</c> fields (v1.4.7) populated
-/// by an explicit static constructor, each via <c>Create(name)</c> →
-/// <c>MBAnimation.GetActionCodeWithName</c>. Because the cctor is explicit the type is not
-/// <c>beforefieldinit</c>, so ANY static member access — field or the <c>Create</c> method — forces
-/// the whole set to initialise. If that happens before action types are loaded, every index is baked
-/// to <c>-1</c> for the life of the process, and the fields being <c>readonly</c> means the cctor
-/// never re-runs to correct them.
+/// The fault: <c>ActionIndexCache</c> declares 220 <c>static readonly</c> fields (v1.5.7), 219 of them
+/// set by its static constructor, each via <c>Create(name)</c> →
+/// <c>MBAnimation.GetActionCodeWithName</c>. The type is <c>beforefieldinit</c> (read from the
+/// installed IL; ILSpy's C# view prints a <c>static</c> constructor either way), so the runtime may
+/// run the constructor at or before the first static field access. If that happens before action
+/// types are loaded, every index is baked to <c>-1</c> for the life of the process, and the fields
+/// being <c>readonly</c> means the cctor never re-runs to correct them.
 ///
 /// The consequence is player-visible: vanilla <c>CharacterTableau.GetIdleAction()</c> returns
 /// <c>ActionIndexCache.act_inventory_idle_start</c>, so <c>SetAction(-1)</c> is a no-op and every
@@ -27,7 +27,8 @@ namespace TAOM.Features.HeroRace;
 ///   - No-op when the statics are healthy, so it is safe to ship before the diagnosis is confirmed.
 ///   - Never touches <c>ActionIndexCache</c> until a gate proves action types are loaded, using
 ///     <c>MBAnimation</c> only — otherwise this class would cause the very fault it repairs.
-///   - Never writes an index it cannot prove belongs to the field (see the round-trip check below).
+///   - Never writes an index it cannot prove belongs to the field: the round-trip check below, and
+///     <c>ActionIndexCacheRepairEngineTests</c>, which diffs the field-to-action map against the engine.
 ///   - Never throws.
 /// </summary>
 public static class ActionIndexCacheRepair
@@ -37,7 +38,7 @@ public static class ActionIndexCacheRepair
 
     /// <summary>
     /// Bounds retries. The primary call site is a prefix on <c>CharacterTableau.RefreshCharacterTableau</c>,
-    /// so an unrecoverable failure that returned "retry me" would re-run the whole 215-field
+    /// so an unrecoverable failure that returned "retry me" would re-run the whole 220-field
     /// reflection + native scan on every tableau refresh for the rest of the session.
     /// </summary>
     private static int _attempts;
@@ -56,15 +57,19 @@ public static class ActionIndexCacheRepair
 
     /// <summary>
     /// Fields whose name does NOT equal the action name the engine's own cctor assigns them.
-    /// Verified against v1.4.7 by diffing all 214 <c>Create(...)</c> call sites in the cctor against
-    /// their target field names — <c>act_raid_jump = Create("act_raid_jump_1")</c> is the only
-    /// divergence, and there is no action literally named <c>act_raid_jump</c> in
-    /// <c>Native/ModuleData/action_types.xml</c>. Without this map the field would be reported as
-    /// "unknown to this engine build" and silently left poisoned.
+    /// Found by diffing every <c>Create(...)</c> call site in the cctor against its target field name.
+    /// The first divergence found was <c>act_raid_jump = Create("act_raid_jump_1")</c>. The v1.5.3
+    /// cctor already holds two more, <c>act_wreckage_death_01</c> and <c>_02</c> (219 call sites in
+    /// v1.5.7). None of these three field names is an action in the action_types XML. Without this
+    /// map the field is reported as "unknown to this engine build" and silently left poisoned.
+    /// <c>ActionIndexCacheRepairEngineTests</c> diffs the installed engine's cctor against this map,
+    /// so an engine bump that adds or changes a divergence fails a test instead of passing unseen.
     /// </summary>
     private static readonly Dictionary<string, string> KnownNameOverrides = new(StringComparer.Ordinal)
     {
         ["act_raid_jump"] = "act_raid_jump_1",
+        ["act_wreckage_death_01"] = "act_cutscene_main_hero_battle_death_01",
+        ["act_wreckage_death_02"] = "act_cutscene_main_hero_battle_death_02",
     };
 
     /// <summary>The action name to look up for a given field. Pure; testable without an engine.</summary>

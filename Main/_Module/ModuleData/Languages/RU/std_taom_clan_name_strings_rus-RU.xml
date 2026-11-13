@@ -80,8 +80,8 @@
     <string id="aom_clan_khuzait_17_name" text="Митрунтай" />
     <string id="aom_clan_khuzait_18_name" text="Вазевиан" />
     <string id="aom_clan_khuzait_19_name" text="Бозорганит" />
-    <string id="aom_clan_lindon_1_name" text="Фалатрим" />
-    <string id="aom_clan_lindon_2_name" text="Эдиль Митлонд" />
+    <string id="aom_clan_lindon_1_name" text="Нос Новэ" />
+    <string id="aom_clan_lindon_2_name" text="Нос Артанор" />
     <string id="aom_clan_lothlorien_1_name" text="Нос Финарфин" />
     <string id="aom_clan_lothlorien_2_name" text="Стражи Нейта" />
     <string id="aom_clan_lothlorien_3_name" text="Нос Малгалад" />
@@ -131,40 +131,40 @@
     <string id="aom_clan_arthedain_3_name" text="Стражи Амон-Сул" />
     <string id="aom_clan_arthedain_4_name" text="Дом Барандуина" />
     <string id="aom_clan_arthedain_5_name" text="Дом Эмин-Берайд" />
-    <string id="aom_clan_sturgia_10_name" text="House of the Running River" />
-    <string id="aom_clan_sturgia_11_name" text="House of the Carnen" />
-    <string id="aom_clan_sturgia_12_name" text="House of Ravenhill" />
-    <string id="aom_clan_sturgia_13_name" text="House of the Forest River" />
-    <string id="aom_clan_sturgia_14_name" text="House of the Long Marshes" />
-    <string id="aom_clan_cardolan_1_name" text="House of Tyrn Gorthad" />
-    <string id="aom_clan_cardolan_2_name" text="House of Tharbad" />
-    <string id="aom_clan_cardolan_3_name" text="House of Minas Eithel" />
-    <string id="aom_clan_cardolan_4_name" text="Wardens of Sarn Ford" />
-    <string id="aom_clan_rhudaur_1_name" text="House of Cameth Brin" />
-    <string id="aom_clan_rhudaur_2_name" text="House of Ettendale" />
-    <string id="aom_clan_rhudaur_3_name" text="Wardens of the Coldfells" />
-    <string id="aom_clan_lindon_3_name" text="Nos Galdor" />
-    <string id="aom_clan_lindon_4_name" text="Nos Brithombar" />
-    <string id="aom_clan_lindon_5_name" text="Wardens of Ered Luin" />
-    <string id="aom_clan_lindon_6_name" text="Nos Eglarest" />
-    <string id="aom_clan_eredluin_1_name" text="House of Borin" />
-    <string id="aom_clan_eredluin_2_name" text="Broadbeams" />
-    <string id="aom_clan_eredluin_3_name" text="Firebeards" />
-    <string id="aom_clan_eredluin_4_name" text="Wardens of Dolmed" />
-    <string id="aom_clan_anduinvale_1_name" text="House of Beorn" />
-    <string id="aom_clan_anduinvale_2_name" text="Folk of the Old Ford" />
-    <string id="aom_clan_anduinvale_3_name" text="Wardens of the Carrock" />
-    <string id="aom_clan_anduinvale_4_name" text="Riders of the Gladden" />
-    <string id="aom_clan_angaladh_1_name" text="House of Angáladh" />
-    <string id="aom_clan_angaladh_2_name" text="Woodwards of the Forest Road" />
-    <string id="aom_clan_angaladh_3_name" text="Wardens of Emyn Duir" />
-    <string id="aom_clan_dorwinion_1_name" text="House of Vineholm" />
-    <string id="aom_clan_dorwinion_2_name" text="Wardens of the Redwater" />
-    <string id="aom_clan_dorwinion_3_name" text="House of Seagate" />
-    <string id="aom_clan_dorwinion_4_name" text="Wardens of the Eastmarch" />
-    <string id="aom_clan_southrhovanion_1_name" text="House of Vidugard" />
-    <string id="aom_clan_southrhovanion_2_name" text="Riders of Southwood" />
-    <string id="aom_clan_southrhovanion_3_name" text="Wainwatch Riders" />
-    <string id="aom_clan_southrhovanion_4_name" text="Wardens of the Northmark" />
+    <string id="aom_clan_sturgia_10_name" text="Дом Бегущей реки" />
+    <string id="aom_clan_sturgia_11_name" text="Дом Карнена" />
+    <string id="aom_clan_sturgia_12_name" text="Дом Воронова холма" />
+    <string id="aom_clan_sturgia_13_name" text="Дом Лесной реки" />
+    <string id="aom_clan_sturgia_14_name" text="Дом Долгих болот" />
+    <string id="aom_clan_cardolan_1_name" text="Дом Тирн Гортад" />
+    <string id="aom_clan_cardolan_2_name" text="Дом Тарбада" />
+    <string id="aom_clan_cardolan_3_name" text="Дом Минас Эйтель" />
+    <string id="aom_clan_cardolan_4_name" text="Стражи Сарн Форда" />
+    <string id="aom_clan_rhudaur_1_name" text="Дом Камет Брин" />
+    <string id="aom_clan_rhudaur_2_name" text="Дом Эттендейла" />
+    <string id="aom_clan_rhudaur_3_name" text="Стражи Холодных пустошей" />
+    <string id="aom_clan_lindon_3_name" text="Нос Тавн а Минас Лосс" />
+    <string id="aom_clan_lindon_4_name" text="Нос Эльдаломриль" />
+    <string id="aom_clan_lindon_5_name" text="Нос Ненвендиль" />
+    <string id="aom_clan_lindon_6_name" text="Нос Инглор" />
+    <string id="aom_clan_eredluin_1_name" text="Дом Делингура" />
+    <string id="aom_clan_eredluin_2_name" text="Дом Двалина" />
+    <string id="aom_clan_eredluin_3_name" text="Дом Ури" />
+    <string id="aom_clan_eredluin_4_name" text="Дом Эльдрана" />
+    <string id="aom_clan_anduinvale_1_name" text="Дом Беорна" />
+    <string id="aom_clan_anduinvale_2_name" text="Народ Старого Брода" />
+    <string id="aom_clan_anduinvale_3_name" text="Стражи Каррока" />
+    <string id="aom_clan_anduinvale_4_name" text="Всадники Ирисной реки" />
+    <string id="aom_clan_angaladh_1_name" text="Дом Ангалада" />
+    <string id="aom_clan_angaladh_2_name" text="Лесные стражи Лесного тракта" />
+    <string id="aom_clan_angaladh_3_name" text="Стражи Эмин Дуир" />
+    <string id="aom_clan_dorwinion_1_name" text="Дом Виноградного холма" />
+    <string id="aom_clan_dorwinion_2_name" text="Стражи Красноводной" />
+    <string id="aom_clan_dorwinion_3_name" text="Дом Морских Врат" />
+    <string id="aom_clan_dorwinion_4_name" text="Стражи Восточной марки" />
+    <string id="aom_clan_southrhovanion_1_name" text="Дом Видугарда" />
+    <string id="aom_clan_southrhovanion_2_name" text="Всадники Южнолесья" />
+    <string id="aom_clan_southrhovanion_3_name" text="Всадники Повозочного дозора" />
+    <string id="aom_clan_southrhovanion_4_name" text="Стражи Северной марки" />
   </strings>
 </base>

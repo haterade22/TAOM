@@ -1147,7 +1147,8 @@ public class SubModule : MBSubModuleBase
         campaignStarter.AddModel(new TaomAllianceModel(diplomacyService));
         campaignStarter.AddModel(new TaomKingdomDecisionPermissionModel(diplomacyService, wotrService,
             IoC.Resolve<IOnAllianceAction>(), coopSession));
-        campaignStarter.AddModel(new TaomDiplomacyModel(wotrService, coopSession, IoC.Resolve<IOnAllianceAction>(), IoC.Resolve<Features.Relations.IPersonalRelationService>()));
+        campaignStarter.AddModel(new TaomDiplomacyModel(wotrService, coopSession, IoC.Resolve<IOnAllianceAction>(), IoC.Resolve<Features.Relations.IPersonalRelationService>(),
+            IoC.Resolve<Features.KingdomAllegiance.KingdomAllegianceService>(), IoC.Resolve<Features.KingdomAllegiance.Models.AllegianceFactsReader>()));
 
         var wotrLogger = IoC.Resolve<IModLogger>();
         // #764: must stay `new` per campaign. Its constructor resets the process-lifetime WotR service;
@@ -1235,12 +1236,15 @@ public class SubModule : MBSubModuleBase
         var specialResourceService = IoC.Resolve<ISpecialResourceService>();
         var specialResourceStorage = IoC.Resolve<ISpecialResourceStorageService>();
         var specialResourceLogger = IoC.Resolve<IModLogger>();
+        var specialResourceEarning = IoC.Resolve<SpecialResourceEarningService>();
+        var specialResourceEvents = IoC.Resolve<ISpecialResourceEventAdapter>();
         var specialResourceBehavior = new SpecialResourcesBehavior(
             specialResourceService, specialResourceStorage, specialResourceLogger,
-            IoC.Resolve<SpecialResourceEarningService>(),
-            IoC.Resolve<ISpecialResourceEventAdapter>());
+            specialResourceEarning, specialResourceEvents);
         campaignStarter.AddBehavior(specialResourceBehavior);
         PartyScreenLogic_AddCommand_Patch.SetBehavior(specialResourceBehavior);
+        // Patch144 charges co-op upgrades with this campaign's earning service, the one the behavior holds.
+        Features.CoopInterop.Hooks.CoopUpgradeChargePatch.Initialize(specialResourceEvents, specialResourceEarning);
 
         // TEMPORARY: troop-count diagnostic (special-currency undercount investigation). Dumps the
         // main party's raw + weighted counts to the log on party-screen open. Remove with the behavior.
@@ -1468,6 +1472,14 @@ public class SubModule : MBSubModuleBase
             IoC.Resolve<IModLogger>(),
             IoC.Resolve<Features.CoopInterop.IPlayerControlQuery>()));
 
+        // LordRetinue (#1122) — AI lord parties take an idle clan hero along and give it an empty party role.
+        // Registered unconditionally so the MCM toggle takes effect at runtime; stateless (no SyncData).
+        campaignStarter.AddBehavior(new Features.LordRetinue.Hooks.LordRetinueBehavior(
+            IoC.Resolve<Features.LordRetinue.LordRetinueService>(),
+            IoC.Resolve<Features.LordRetinue.Hooks.LordRetinueWorld>(),
+            IoC.Resolve<Features.CoopInterop.ICoopSessionProvider>(),
+            IoC.Resolve<Features.CoopInterop.IPlayerControlQuery>()));
+
         // EliteEmissary — buy a faction's elite troops for its special resource at key settlements.
         // Registered unconditionally so the MCM master toggle takes effect at runtime; stateless (no SyncData).
         campaignStarter.AddBehavior(new Features.EliteEmissary.Hooks.EliteEmissaryBehavior(
@@ -1545,6 +1557,11 @@ public class SubModule : MBSubModuleBase
         IoC.Resolve<Features.MonsterSize.IMonsterSizeService>().ApplyMonsterSizes();
         hookStamp?.Mark("monster_size");
 
+        // Arachnophobia Mode (docs/features/arachnophobia-mode.md): every game init too, because each game reloads its
+        // troops from XML. It runs for Custom Battle as well, and uses the mount items the size pass finished.
+        IoC.Resolve<Features.Arachnophobia.IArachnophobiaService>().ApplyForGame(Features.TaomSettings.Instance?.ArachnophobiaMode ?? false, game?.GameType is Campaign);
+        hookStamp?.Mark("arachnophobia");
+
         // Armour acquisition (docs/features/armour-acquisition.md): every game init too, for the same reason, and
         // before a new game's workshops cache their items (OnNewGameCreatedPartialFollowUp runs after this hook).
         // Only a campaign has the markets, workshops and loot the gate reaches.
@@ -1575,7 +1592,7 @@ public class SubModule : MBSubModuleBase
 
         // Harmony patches are process-global (applied to methods, persist across games). Apply this
         // whole per-game-init patch block ONCE per process — re-applying on a 2nd game init duplicates
-        // every prefix/postfix, restarts the BattleLoad watchdog, and CRASHES the non-idempotent
+        // every prefix/postfix, restarts the BattleLoad samplers, and CRASHES the non-idempotent
         // DeliverOffSpring transpiler (chained twice, it can't find its already-NOPped anchor). The
         // shader-precompile walk starts N custom games in one process and tripped exactly this on item 2;
         // a player loading a 2nd campaign/custom-battle in one session hits the same crash.
@@ -1857,6 +1874,7 @@ public class SubModule : MBSubModuleBase
         TryPatchCategory("Patch34_QuickActions");
         TryPatchCategory("Patch109_TelcharsMark");
         TryPatchCategory("Patch113_CoopRecruitAttribution");
+        TryPatchCategory("Patch144_CoopUpgradeCharge");
         TryPatchCategory("Patch35_CompanionTactics");
         TryPatchCategory("Patch36_FiefManagement");
         SettlementNameplateWidget_DetermineTargetAlphaValue_Patch.Initialize(
@@ -1907,7 +1925,7 @@ public class SubModule : MBSubModuleBase
         // BattleLoadDiagnostics — phase-stamp the attack->battle-playable lifecycle so an
         // intermittent battle-load hang leaves a log whose last line names the stuck phase
         // (and, for the equipment phase, the agent + the item whose bo_ collision mesh is
-        // missing). The background stall watchdog auto-triggers a crash bundle on a freeze.
+        // missing). A background sampler logs the stack of a frozen thread.
         var battleLoadSvc = IoC.Resolve<Features.BattleLoadDiagnostics.IBattleLoadDiagnosticsService>();
         var equipSnapshotAdapter = IoC.Resolve<IEquipmentSnapshotAdapter>();
         var battleLoadStallMarker = IoC.Resolve<Features.BattleLoadDiagnostics.IBattleLoadStallMarker>();
@@ -1937,7 +1955,7 @@ public class SubModule : MBSubModuleBase
         // FinishMissionLoadingDone -> BattlePlayable was the LAST dark window, and a player bundle
         // (b18f3441) spent 290 s in it: MissionState.OnTick withholds the first Mission.Tick behind
         // Handler.RenderIsReady() (SceneView.ReadyToRender), which stays false while a cold shader
-        // cache compiles. This marks that wait at 1 Hz and feeds the count to the stall watchdog.
+        // cache compiles. This marks that wait at 1 Hz.
         Features.BattleLoadDiagnostics.Hooks.MissionState_OnTick_RenderWait_Patch.Initialize(battleLoadSvc);
         // Exit-phase probes (issue #331 — 30s-2min hang exiting tournaments): stamp the
         // mission end -> map resume window so the dominant phase gap names the time sink.
@@ -1955,7 +1973,6 @@ public class SubModule : MBSubModuleBase
         // them private), so an engine bump can throw here. A DIAGNOSTICS category must never take
         // startup down with it — losing the stamps is survivable, losing the game is not.
         TryPatchCategory("Patch43_BattleLoadDiagnostics");
-        IoC.Resolve<Features.BattleLoadDiagnostics.BattleLoadStallWatchdog>().Start();
 
         // Patch91 battle-freeze probes (#634): a player's battle froze with the heap flat and no
         // exception, the shape of an agent tick that never finishes while the next frame waits in
@@ -2045,11 +2062,7 @@ public class SubModule : MBSubModuleBase
                 // simulation-affecting setting added to one of them later is covered the day it
                 // lands instead of silently missing from every peer's fingerprint.
                 Features.CoopInterop.SettingsFingerprintLog.WriteAcross(
-                    IoC.Resolve<IModLogger>(),
-                    Features.TaomSettings.Instance,
-                    Features.BattleLoadDiagnostics.BattleLoadDiagnosticsSettings.Instance,
-                    Features.BlowDiagnostics.BlowDiagnosticsSettings.Instance,
-                    Features.CrashReport.CrashReportSettings.Instance);
+                    IoC.Resolve<IModLogger>(), Features.CoopInterop.TaomSettingsPages.All());
             }
         }
         catch (System.Exception ex)
@@ -2089,7 +2102,7 @@ public class SubModule : MBSubModuleBase
         base.OnMissionBehaviorInitialize(mission);
 
         // BattleLoadDiagnostics phase-6: "battle playable" marker on first tick + closes
-        // the loading window so the stall watchdog stands down and phase-5 stops logging.
+        // the loading window so phase-5 stops logging.
         //
         // Registered UNCONDITIONALLY (TAOM convention, and latch rule 3 in
         // .claude/rules/harmony-patches.md: verify "unconditional" at the OUTERMOST gate). This

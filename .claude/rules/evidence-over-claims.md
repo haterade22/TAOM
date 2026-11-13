@@ -17,6 +17,8 @@ A review finding (Codex, a `/deep-review` lens, a subagent, the user) is a hypot
    `DeadBattleEquipment`. Fixing."
 4. **Spot-check a subagent's load-bearing claims before relaying them**, security claims above all.
    Relaying an unchecked report is the same failure as trusting an agent's "done".
+5. **When the user rejects the same result a second time, stop patching.** Review the whole result
+   and its inputs before the next edit, and report what the review found.
 
 ## B. Verify before "done"
 
@@ -25,7 +27,9 @@ exit code and output, then state the claim with that evidence, or report the fai
 what the run did not cover (no in-game check, one build) beside the claim.
 
 Not verification: an earlier run, "should pass", a linter pass (it does not compile), a subagent's
-self-report, your own confidence. Stop and verify if you are about to type "Done!" or commit on an
+self-report, your own confidence, a value read back from the same API or layer that set it (prove the
+effect by an independent signal: the dialog closed, the file changed on disk, the target shows it).
+Stop and verify if you are about to type "Done!" or commit on an
 unrun build.
 
 This gates claims, not edits. The cadence that keeps it cheap: a compile after each edit; the filtered
@@ -50,4 +54,5 @@ and API behaviour as much as counts and hashes. The traps behind past fabricatio
 4. **Reporting an empty search as absence.** No hit proves absence only inside what was searched:
    name the scope (which build, which modules, which folders) with the negative result. A capped
    result (a Grep `head_limit`, `truncated: true`) proves neither a complete list nor a total: say it
-   was capped, or re-run it uncapped.
+   was capped, or re-run it uncapped. A failed mechanism proves only that mechanism dead: when the
+   user points at a case that works, re-search before repeating "impossible".

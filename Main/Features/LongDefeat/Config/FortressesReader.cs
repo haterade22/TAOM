@@ -108,10 +108,38 @@ internal static partial class FortressesReader
         WarnShortTowers(towers, shop, id, s);
         return new FortressEntry(id, LongDefeatConfigScope.Text(o["name"]) ?? id, scene, defender, attacker, player, garrison, roster, shop,
             ReadKeep(o["keep"], id, waves.Rules.KeepRadius, s), ReadMuster(o["muster"], id, s), ReadSally(o["sally"], id, s),
-            towers, ReadVolley(o["volley"], id, s), ReadPlace(o["armoury"], id, "armoury", ArmouryFallback, s), ReadPlace(o["yard"], id, "yard", YardFallback, s));
+            towers, ReadVolley(o["volley"], id, s), ReadPlace(o["armoury"], id, "armoury", ArmouryFallback, s), ReadPlace(o["yard"], id, "yard", YardFallback, s),
+            ReadSplit(o["split"], id, s));
     }
 
-    private static bool IsSceneName(string scene)
+    // The opening split (Mike, 2026-11-12): {"wallFoot": share, "lowArchers": share}. Absent or null is no split and no warning; a bad block is one warning and no split.
+    internal static SplitShares? ReadSplit(JToken? token, string fortress, LongDefeatConfigScope s)
+    {
+        if (token == null || token.Type == JTokenType.Null)
+            return null;
+
+        var label = $"fortress '{fortress}' split";
+        if (!(token is JObject o))
+        {
+            s.Warn($"{label} is not an object; the defenders are not split");
+            return null;
+        }
+
+        var shares = new float[2];
+        var names = new[] { "wallFoot", "lowArchers" };
+        for (var i = 0; i < shares.Length; i++)
+        {
+            if (!LongDefeatConfigScope.TryFloat(o[names[i]], SplitShares.Min, SplitShares.Max, out shares[i], out var why))
+            {
+                s.Warn($"{label}.{names[i]} {why} (a share lies in [{SplitShares.Min}, {SplitShares.Max}]); the defenders are not split");
+                return null;
+            }
+        }
+
+        return SplitShares.TryCreate(shares[0], shares[1], out var split) ? split : null;
+    }
+
+    internal static bool IsSceneName(string scene)
     {
         if (scene.Length > MaxSceneLength)
             return false;
@@ -125,7 +153,7 @@ internal static partial class FortressesReader
         return true;
     }
 
-    private static List<GarrisonRow> ReadGarrison(JArray? array, string fortress, LongDefeatConfigScope s)
+    internal static List<GarrisonRow> ReadGarrison(JArray? array, string fortress, LongDefeatConfigScope s)
     {
         var rows = new List<GarrisonRow>();
         if (array == null)
@@ -157,7 +185,7 @@ internal static partial class FortressesReader
         return rows;
     }
 
-    private static KeepPoint? ReadKeep(JToken? token, string fortress, float defaultRadius, LongDefeatConfigScope s)
+    internal static KeepPoint? ReadKeep(JToken? token, string fortress, float defaultRadius, LongDefeatConfigScope s)
     {
         if (token == null || token.Type == JTokenType.Null)
             return null;
@@ -191,7 +219,7 @@ internal static partial class FortressesReader
     }
 
     // The block LongDefeatRecorder.Export writes: {"foot": {x,y,z,fx,fy}, "archers": {...}}, each point optional. One bad value reverts the whole block with one warning.
-    private static MusterPoints? ReadMuster(JToken? token, string fortress, LongDefeatConfigScope s)
+    internal static MusterPoints? ReadMuster(JToken? token, string fortress, LongDefeatConfigScope s)
     {
         if (token == null || token.Type == JTokenType.Null)
             return null;

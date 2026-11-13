@@ -9,4 +9,5 @@
 [WarLedger] v=1 t=event cid=c1 day=70 ev=destroyed k=vlandia
 [WarLedger] v=1 t=event cid=c1 day=71 ev=chronicle id=hornburg outcome=Held
 [WarLedger] v=1 t=event cid=c1 day=41 ev=tier k=k from=0 to=2 loss=0.000
+[WarLedger] v=1 t=event cid=c1 day=72 ev=pledge k=cardolan side=free by=ai
 [WarLedger] v=1 t=load cid=c1 day=72

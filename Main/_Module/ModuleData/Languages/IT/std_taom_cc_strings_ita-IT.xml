@@ -1018,337 +1018,337 @@
     <string id="taom_cc_taom_education_arthedain_5_desc" text="Da ragazzo hai seguito i Ramingi, imparando a muoverti senza rumore per la Foresta di Chet e lungo il Fiume Gelido. Hai teso il tuo primo arco prima di farti crescere la barba, e poco dopo cadde il tuo primo orco." />
     <string id="taom_cc_taom_education_arthedain_6_text" text="Hai racimolato lungo la Grande Strada Est." />
     <string id="taom_cc_taom_education_arthedain_6_desc" text="Sei cresciuto sulla strada tra Brea e il Brandivino, portando messaggi per qualche moneta e vendendo ciò che i viandanti lasciavano indietro. La strada ti ha insegnato mani svelte, lingua ancor più svelta e quando sparire." />
-    <string id="taom_cc_taom_parent_cardolan_1_text" text="Noble Houses of Cardolan" />
-    <string id="taom_cc_taom_parent_cardolan_1_desc" text="Your family belonged to one of the old houses of Cardolan, whose fathers lie in the royal barrows of Tyrn Gorthad. Your father rode in the King's host from Caras Gorthad, while your mother kept the family's lands along the Greenway and its long memory." />
-    <string id="taom_cc_taom_parent_cardolan_2_text" text="Merchants of Tharbad" />
-    <string id="taom_cc_taom_parent_cardolan_2_desc" text="Your family kept a trading house in Tharbad, where the North-South Road crosses the Greyflood. Barges from the coast, wool from the downs and Dwarvish iron from the west all passed through their warehouses, and every bale paid its toll." />
-    <string id="taom_cc_taom_parent_cardolan_3_text" text="Farmers of Minhiriath" />
-    <string id="taom_cc_taom_parent_cardolan_3_desc" text="Your family worked the wide fields of Minhiriath between the rivers. They sent a son to the levy every spring and kept a spear by the door, for orcs and outlaws came up the Greyflood more often than the floods." />
-    <string id="taom_cc_taom_parent_cardolan_4_text" text="Smiths of Caras Gorthad" />
-    <string id="taom_cc_taom_parent_cardolan_4_desc" text="Your family were smiths and wrights in Caras Gorthad, shoeing the horses of the King's riders and forging the spearheads Cardolan is known for. Their craft came down unbroken from Númenórean masters." />
-    <string id="taom_cc_taom_parent_cardolan_5_text" text="Wardens of the Barrows" />
-    <string id="taom_cc_taom_parent_cardolan_5_desc" text="Your family were wardens of Tyrn Gorthad, keeping watch over the tombs of the kings and the downs around them. Few honoured them and fewer knew their names, but no robber walked the barrows while they kept the watch." />
-    <string id="taom_cc_taom_parent_cardolan_6_text" text="Drifters of the Greenway" />
-    <string id="taom_cc_taom_parent_cardolan_6_desc" text="Your family lived on the roads, drifting between Tharbad, Sarn Ford and the edge of the Old Forest. They traded what they found, took what they could, and learned that a stranger's purse was often looser than his tongue." />
-    <string id="taom_cc_taom_parent_rhudaur_1_text" text="Noble Houses of the Angle" />
-    <string id="taom_cc_taom_parent_rhudaur_1_desc" text="Your family belonged to one of the Dúnedain houses of the Angle, between the Hoarwell and the Loudwater, whose blood runs back to Eärendur's youngest son. Your father rode in the King's host from Cameth Brin, while your mother kept the family's hill lands and its long memory." />
-    <string id="taom_cc_taom_parent_rhudaur_2_text" text="Traders of the Last Bridge" />
-    <string id="taom_cc_taom_parent_rhudaur_2_desc" text="Your family kept a trading post at the Last Bridge, where the Great East Road crosses the Hoarwell. Dwarves on the road to the Iron Hills, hill-men with furs and Elves from the hidden valley all passed their doors, and every one of them paid." />
-    <string id="taom_cc_taom_parent_rhudaur_3_text" text="Herders of the Rhudaur fells" />
-    <string id="taom_cc_taom_parent_rhudaur_3_desc" text="Your family were hill-men who herded sheep and goats on the fells of Rhudaur. They sent a son to the levy every spring and kept an axe by the door, for trolls and orcs came down from the mountains more often than the snow." />
-    <string id="taom_cc_taom_parent_rhudaur_4_text" text="Smiths of Cameth Brin" />
-    <string id="taom_cc_taom_parent_rhudaur_4_desc" text="Your family were smiths in the tower town of Cameth Brin, forging the axes of the hill-men and the swords of the Dúnedain lords. Their craft was learned from Númenórean masters and hardened by mountain iron." />
-    <string id="taom_cc_taom_parent_rhudaur_5_text" text="Rangers of the Angle" />
-    <string id="taom_cc_taom_parent_rhudaur_5_desc" text="Your family were Rangers of the Angle, walking the wild hills between the rivers to keep the passes and the roads. Few thanked them and fewer knew their names, but the trolls kept to the high fells while they kept the watch." />
-    <string id="taom_cc_taom_parent_rhudaur_6_text" text="Drifters of the Trollshaws" />
-    <string id="taom_cc_taom_parent_rhudaur_6_desc" text="Your family lived on the edges, drifting between the Trollshaws, the Last Bridge and the empty country around Weathertop. They traded what they found, took what they could, and learned that a stranger's purse was often looser than his tongue." />
-    <string id="taom_cc_taom_youth_cardolan_1_text" text="Rode with the King's riders of Cardolan." />
-    <string id="taom_cc_taom_youth_cardolan_1_desc" text="You joined the mounted companies of Caras Gorthad, the best horsemen of the three northern kingdoms, learning to ride and fight with the lance across the open plains." />
-    <string id="taom_cc_taom_youth_cardolan_2_text" text="Stood watch on the walls of Caras Gorthad." />
-    <string id="taom_cc_taom_youth_cardolan_2_desc" text="You served in the garrison of Caras Gorthad, keeping the night watch on its walls and learning the craft of siege defence from captains who had held them against the wild men of the south." />
-    <string id="taom_cc_taom_youth_cardolan_3_text" text="Hunted along the Greyflood with the Minhiriath bowmen." />
-    <string id="taom_cc_taom_youth_cardolan_3_desc" text="You followed the bowmen of Minhiriath along the Greyflood and the Swanfleet marshes, striking at orcs and outlaws from cover and learning to read the river country as other men read letters." />
-    <string id="taom_cc_taom_youth_cardolan_4_text" text="Trained with the King's spearmen." />
-    <string id="taom_cc_taom_youth_cardolan_4_desc" text="You joined the spear companies of the King's guard, training in disciplined infantry warfare to hold a line of Cardolan spears against horse and foot alike." />
-    <string id="taom_cc_taom_youth_cardolan_5_text" text="Lived by your wits on the wharves of Tharbad." />
-    <string id="taom_cc_taom_youth_cardolan_5_desc" text="You scraped by on the wharves of Tharbad, where smugglers and cutpurses made their living among the barges. You learned the value of a quick hand, a well-thrown stone and a story nobody could check." />
-    <string id="taom_cc_taom_youth_rhudaur_1_text" text="Rode with the hill riders of Rhudaur." />
-    <string id="taom_cc_taom_youth_rhudaur_1_desc" text="You joined the few mounted companies of Rhudaur, learning to ride sure-footed ponies over the fells and to strike fast and be gone before the enemy could form." />
-    <string id="taom_cc_taom_youth_rhudaur_2_text" text="Stood watch on the walls of Cameth Brin." />
-    <string id="taom_cc_taom_youth_rhudaur_2_desc" text="You served in the garrison of Cameth Brin, keeping the night watch on its tower and learning the craft of siege defence from captains who had held it against the orcs of the mountains." />
-    <string id="taom_cc_taom_youth_rhudaur_3_text" text="Ranged the fells with the Rangers of the Angle." />
-    <string id="taom_cc_taom_youth_rhudaur_3_desc" text="You followed the Rangers of the Angle along the Hoarwell and up into the Ettenmoors, striking at orcs and trolls from cover and learning to read the hills as other men read letters." />
-    <string id="taom_cc_taom_youth_rhudaur_4_text" text="Trained with the Guard of Cameth Brin." />
-    <string id="taom_cc_taom_youth_rhudaur_4_desc" text="You joined the guard of Cameth Brin, training with greatsword and poleaxe to defend the King and the hall of his fathers on its rock above the hills." />
-    <string id="taom_cc_taom_youth_rhudaur_5_text" text="Lived by your wits in the Trollshaws." />
-    <string id="taom_cc_taom_youth_rhudaur_5_desc" text="You scraped by in the Trollshaws, where outlaws and troll-hoard robbers made their living. You learned the value of a quick hand, a well-thrown stone and a story nobody could check." />
-    <string id="taom_cc_taom_adulthood_cardolan_1_text" text="You held Sarn Ford against a host from Dunland." />
-    <string id="taom_cc_taom_adulthood_cardolan_1_desc" text="When the Dunlendings came north over the Greyflood in force, you held your line at Sarn Ford until the King's riders came. Your name was spoken in the hall at Caras Gorthad." />
-    <string id="taom_cc_taom_adulthood_cardolan_2_text" text="You won the Dwarves of the Blue Mountains as partners in trade." />
-    <string id="taom_cc_taom_adulthood_cardolan_2_desc" text="When iron ran short in the forges of Caras Gorthad, you rode west to the Ered Luin and bargained with the Dwarves until the ore carts rolled east again. The King's treasurer does not forget who kept the forges lit." />
-    <string id="taom_cc_taom_adulthood_cardolan_3_text" text="You brought in the harvest of Minhiriath before the floods." />
-    <string id="taom_cc_taom_adulthood_cardolan_3_desc" text="When the rivers rose early in a hard autumn, you gathered the farmers' levies to bring the harvest in and raised the dykes before the Greyflood broke them. The villages remember." />
-    <string id="taom_cc_taom_adulthood_cardolan_4_text" text="You forged a spear presented to a knight of Cardolan." />
-    <string id="taom_cc_taom_adulthood_cardolan_4_desc" text="A knight of the King's riders had heard of your work and commissioned a lance for the day he took his oath. When he couched it before the assembled companies and it ran true, you knew your name was made." />
-    <string id="taom_cc_taom_adulthood_cardolan_5_text" text="You guided a warden patrol out of an ambush in the Old Forest." />
-    <string id="taom_cc_taom_adulthood_cardolan_5_desc" text="When a patrol of barrow-wardens was cut off under the eaves of the Old Forest, you led them out by a path no outlaw knew, losing not a single man. Their captain clasped your arm and named you a friend of the Dúnedain." />
-    <string id="taom_cc_taom_adulthood_cardolan_6_text" text="You uncovered a band of barrow-robbers working out of Tharbad." />
-    <string id="taom_cc_taom_adulthood_cardolan_6_desc" text="For months grave-goods from Tyrn Gorthad had been turning up in the back rooms of Tharbad. You traced the trade, found the men behind it and handed them to the King's wardens, keeping a little of the gold for your trouble." />
-    <string id="taom_cc_taom_adulthood_rhudaur_1_text" text="You held the Ettendale against a host from the mountains." />
-    <string id="taom_cc_taom_adulthood_rhudaur_1_desc" text="When orcs and hill-trolls came down out of the Ettenmoors in force, you held your line in the Ettendale until the King's men came. Your name was spoken in the hall at Cameth Brin." />
-    <string id="taom_cc_taom_adulthood_rhudaur_2_text" text="You won the Dwarves of the Iron Hills as partners in trade." />
-    <string id="taom_cc_taom_adulthood_rhudaur_2_desc" text="When the Dwarves on the East Road wanted a safe crossing of the Hoarwell, you bargained with them until their caravans paid tolls at the Last Bridge and their iron came to Cameth Brin. The King's treasurer does not forget who filled his chests." />
-    <string id="taom_cc_taom_adulthood_rhudaur_3_text" text="You brought the flocks down from the fells before the snows." />
-    <string id="taom_cc_taom_adulthood_rhudaur_3_desc" text="When an early winter fell on the high pastures, you gathered the herders and drove every flock down to the valleys before the passes closed. The villages remember." />
-    <string id="taom_cc_taom_adulthood_rhudaur_4_text" text="You forged an axe presented to a lord of the Angle." />
-    <string id="taom_cc_taom_adulthood_rhudaur_4_desc" text="A lord of the Angle had heard of your work and commissioned a war-axe for the day he took his oath. When he raised it before the assembled guard and it rang true, you knew your name was made." />
-    <string id="taom_cc_taom_adulthood_rhudaur_5_text" text="You guided a Ranger company out of an ambush in the Trollshaws." />
-    <string id="taom_cc_taom_adulthood_rhudaur_5_desc" text="When a Ranger patrol was cut off among the troll-holes of the Trollshaws, you led them out by a path no troll had found, losing not a single man. Their captain clasped your arm and named you a friend of the Dúnedain." />
-    <string id="taom_cc_taom_adulthood_rhudaur_6_text" text="You uncovered a band of troll-hoard robbers working out of the Last Bridge." />
-    <string id="taom_cc_taom_adulthood_rhudaur_6_desc" text="For months gold from the old troll-hoards had been turning up in the back rooms of the Last Bridge. You traced the trade, found the men behind it and handed them to the King's wardens, keeping a little of the gold for your trouble." />
-    <string id="taom_cc_taom_education_cardolan_1_text" text="Drilled with the sons of the old houses." />
-    <string id="taom_cc_taom_education_cardolan_1_desc" text="You grew up training alongside the children of Cardolan's noble families in the yards of Caras Gorthad. You learned sword and lance under knights sworn to the King, and the lineages of the barrow-kings by heart." />
-    <string id="taom_cc_taom_education_cardolan_2_text" text="Apprenticed at the Tharbad market." />
-    <string id="taom_cc_taom_education_cardolan_2_desc" text="You spent your youth carrying ledgers and running errands in the market of Tharbad, where the roads and the river meet. You learned to bargain with bargemen, flatter Dwarves and never trust a Dunlending's scales." />
-    <string id="taom_cc_taom_education_cardolan_3_text" text="Labored on the farms of Minhiriath." />
-    <string id="taom_cc_taom_education_cardolan_3_desc" text="You worked from dawn to dusk on the farms between the rivers, hauling grain and driving cattle to the fords. When the levy was called you were handed a spear and taught to hold a line." />
-    <string id="taom_cc_taom_education_cardolan_4_text" text="Apprenticed to a smith of Caras Gorthad." />
-    <string id="taom_cc_taom_education_cardolan_4_desc" text="You learned your craft in the forges of Caras Gorthad, working the bellows under a master who still kept the Númenórean ways of tempering steel. By the time you were grown your hands knew the work better than your head." />
-    <string id="taom_cc_taom_education_cardolan_5_text" text="Walked the downs with the barrow-wardens." />
-    <string id="taom_cc_taom_education_cardolan_5_desc" text="You followed the wardens of Tyrn Gorthad as a youngster, learning to move without sound across the downs and through the eaves of the Old Forest. You strung your first bow before you could grow a beard." />
-    <string id="taom_cc_taom_education_cardolan_6_text" text="Scrounged along the North-South Road." />
-    <string id="taom_cc_taom_education_cardolan_6_desc" text="You grew up on the road between Tharbad and Sarn Ford, running messages for coin and selling what travellers left behind. The road taught you quick hands, a quicker tongue and when to vanish." />
-    <string id="taom_cc_taom_education_rhudaur_1_text" text="Drilled with the sons of the Angle." />
-    <string id="taom_cc_taom_education_rhudaur_1_desc" text="You grew up training alongside the children of Rhudaur's Dúnedain houses in the yards of Cameth Brin. You learned sword and bow under lords sworn to the King, and the lineage of Eärendur's youngest son by heart." />
-    <string id="taom_cc_taom_education_rhudaur_2_text" text="Apprenticed at the Last Bridge." />
-    <string id="taom_cc_taom_education_rhudaur_2_desc" text="You spent your youth carrying tallies and running errands at the trading post of the Last Bridge, where the East Road meets the hill country. You learned to bargain with Dwarves, flatter hill-chiefs and never trust a stranger's weights." />
-    <string id="taom_cc_taom_education_rhudaur_3_text" text="Herded sheep on the fells." />
-    <string id="taom_cc_taom_education_rhudaur_3_desc" text="You worked from dawn to dusk on the high fells, driving flocks between the summer and winter pastures and keeping the wolves off them. When the levy was called you were handed an axe and taught to hold a line." />
-    <string id="taom_cc_taom_education_rhudaur_4_text" text="Apprenticed to a smith of Cameth Brin." />
-    <string id="taom_cc_taom_education_rhudaur_4_desc" text="You learned your craft in the forges of Cameth Brin, working mountain iron under a master who still kept the Númenórean ways of tempering steel. By the time you were grown your hands knew the work better than your head." />
-    <string id="taom_cc_taom_education_rhudaur_5_text" text="Ranged the hills with the Dúnedain." />
-    <string id="taom_cc_taom_education_rhudaur_5_desc" text="You followed the Rangers of the Angle as a youngster, learning to move without sound along the Loudwater and through the Trollshaws. You strung your first bow before you could grow a beard, and your first orc fell to it soon after." />
-    <string id="taom_cc_taom_education_rhudaur_6_text" text="Scrounged along the Great East Road." />
-    <string id="taom_cc_taom_education_rhudaur_6_desc" text="You grew up on the road between the Last Bridge and Weathertop, running messages for coin and selling what travellers left behind. The road taught you quick hands, a quicker tongue and when to vanish." />
-    <string id="taom_cc_taom_parent_eredluin_1_text" text="Noble of Thorin's Halls" />
-    <string id="taom_cc_taom_parent_eredluin_1_desc" text="Your family belonged to the House of Borin, kin to King Farin, wielding great axes and leading the warriors who keep the honour of Thorin's Halls in the Blue Mountains." />
-    <string id="taom_cc_taom_parent_eredluin_2_text" text="Master Smith of Nogrod" />
-    <string id="taom_cc_taom_parent_eredluin_2_desc" text="Your family kept a forge in Nogrod, where the Firebeards have worked iron since the Elder Days. Their blades and mail went west to the Elves of Lindon and east along the Dwarf-road, and every piece fetched its price." />
-    <string id="taom_cc_taom_parent_eredluin_3_text" text="Miner of Mount Dolmed" />
-    <string id="taom_cc_taom_parent_eredluin_3_desc" text="Your family worked the iron mines beneath Mount Dolmed, following the ore into the roots of the Blue Mountains, shoring the galleries against collapse and selling the ore by the cartload in Thorin's Halls." />
-    <string id="taom_cc_taom_parent_eredluin_4_text" text="Broadbeam Warrior" />
-    <string id="taom_cc_taom_parent_eredluin_4_desc" text="Your family fought among the Broadbeams of Belegost, mastering axe and shield and holding the mountain gates when the goblins of Blue Craig came down from the north." />
-    <string id="taom_cc_taom_parent_eredluin_5_text" text="Hoard-Keeper of the Halls" />
-    <string id="taom_cc_taom_parent_eredluin_5_desc" text="Your family kept the hoards and storehouses of Thorin's Halls, reckoning the kingdom's wealth and planning how a mountain hold is supplied and defended through a hard winter." />
-    <string id="taom_cc_taom_parent_eredluin_6_text" text="Warden of the Dwarf-road" />
-    <string id="taom_cc_taom_parent_eredluin_6_desc" text="Your family walked the Dwarf-road east through the Shire to Bree, tracking orcs and wolves with the bow and guarding the caravans that keep the Blue Mountains in trade." />
-    <string id="taom_cc_taom_youth_eredluin_1_text" text="Served in the King's Guard of Thorin's Halls." />
-    <string id="taom_cc_taom_youth_eredluin_1_desc" text="You pledged your loyalty to King Farin, serving in the guard of Thorin's Halls and learning to wield axe and long-hafted mattock in defence of the mountain halls." />
-    <string id="taom_cc_taom_youth_eredluin_2_text" text="Defended the gates of Belegost." />
-    <string id="taom_cc_taom_youth_eredluin_2_desc" text="As part of the garrison of Belegost, you manned the crossbows on the gate-towers and held the passes against all comers, learning the craft of dwarven siege defence." />
-    <string id="taom_cc_taom_youth_eredluin_3_text" text="Trained with the Firebeard hewers." />
-    <string id="taom_cc_taom_youth_eredluin_3_desc" text="You joined the hewers of the Firebeards, the shock troops of Nogrod, learning to hurl throwing axes and fight in the narrow corridors of the mountain halls." />
-    <string id="taom_cc_taom_youth_eredluin_4_text" text="Scouted the slopes below Blue Craig." />
-    <string id="taom_cc_taom_youth_eredluin_4_desc" text="You ranged the northern slopes of the Blue Mountains, where the goblins of Blue Craig hold their caves, tracking raiders and wolves and keeping watch on the passes." />
-    <string id="taom_cc_taom_youth_eredluin_5_text" text="Stood in the vanguard of the Broadbeams." />
-    <string id="taom_cc_taom_youth_eredluin_5_desc" text="You trained in the vanguard of the Broadbeams, mastering the long spear and the two-handed axe in the close formations of the dwarven host." />
-    <string id="taom_cc_taom_youth_eredluin_6_text" text="Marched with the caravan guards on the Dwarf-road." />
-    <string id="taom_cc_taom_youth_eredluin_6_desc" text="You marched with the trading caravans along the Dwarf-road through the Shire to Bree, learning the ways of commerce and the art of defending valuable cargo." />
-    <string id="taom_cc_taom_adulthood_eredluin_1_text" text="You fought off a goblin raid from Blue Craig alone." />
-    <string id="taom_cc_taom_adulthood_eredluin_1_desc" text="Returning from an outer patrol, you came upon a band of Blue Craig goblins that had slipped past the watch. There was no time to get help. You held the narrow path with your axe until the alarm reached the gate. Three goblins did not reach it." />
-    <string id="taom_cc_taom_adulthood_eredluin_2_text" text="You struck the best trade agreement with Lindon in a generation." />
-    <string id="taom_cc_taom_adulthood_eredluin_2_desc" text="The price of Dwarvish iron at the Grey Havens had not been revised in a lifetime of Men. You assembled the facts and put the case to the Elves of Lindon with such clarity that the agreement was rewritten within the month, and King Farin's treasurer learned your name." />
-    <string id="taom_cc_taom_adulthood_eredluin_3_text" text="You opened a new seam of iron beneath the Blue Mountains." />
-    <string id="taom_cc_taom_adulthood_eredluin_3_desc" text="The old maps showed a collapse, but you followed the sound of water in the deep stone and found the gallery intact behind the rubble. The seam within was rich, and the engineers who mapped it added your name to the survey record of Thorin's Halls." />
-    <string id="taom_cc_taom_adulthood_eredluin_4_text" text="You held the shieldwall at the gates of Belegost." />
-    <string id="taom_cc_taom_adulthood_eredluin_4_desc" text="When a goblin host from Blue Craig pushed into the lower gates, you anchored your section of the shieldwall while others buckled, buying the counterattack time to form. The captain of the Broadbeams noted your name in the battle record, which is the closest a Dwarf gets to poetry." />
-    <string id="taom_cc_taom_adulthood_eredluin_5_text" text="You balanced the hoard-reckoning after years of discrepancy." />
-    <string id="taom_cc_taom_adulthood_eredluin_5_desc" text="The ledgers of Thorin's Halls had been misaligned for years, with losses no one could explain. You spent three months cross-referencing records and found the error: a simple conversion mistake compounded across twenty years of entries. The King's treasurer shook your hand." />
-    <string id="taom_cc_taom_adulthood_eredluin_6_text" text="You tracked a band of orcs on the Dwarf-road back to its lair." />
-    <string id="taom_cc_taom_adulthood_eredluin_6_desc" text="The band had struck three caravans on the Dwarf-road east of the mountains and slipped away before anyone could follow. You went alone into the hills, found the camp, counted them, sketched the approach, and brought the report back in time for the wardens to act on it." />
-    <string id="taom_cc_taom_education_eredluin_1_text" text="Trained in the great hall with the King's axe-brothers." />
-    <string id="taom_cc_taom_education_eredluin_1_desc" text="You practised combat alongside the young warriors of King Farin's household, learning to swing the two-handed axe in the echoing training halls deep in the Blue Mountains. Every scar was a lesson; every lesson was a point of pride." />
-    <string id="taom_cc_taom_education_eredluin_2_text" text="Apprenticed at the forges of Nogrod." />
-    <string id="taom_cc_taom_education_eredluin_2_desc" text="You spent your youth at the smith's bench in Nogrod, learning to work the iron of the Blue Mountains in forges older than any kingdom of Men. When the work was done you carried finished blades to the Elves of Lindon, who paid in silver and in patience." />
-    <string id="taom_cc_taom_education_eredluin_3_text" text="Worked the iron mines of Mount Dolmed." />
-    <string id="taom_cc_taom_education_eredluin_3_desc" text="You swung a pick in the deep galleries under Mount Dolmed before your beard had grown, learning the hidden passages of the mountain and the engineering of tunnels and supports. The deep stone became as familiar to you as open sky." />
-    <string id="taom_cc_taom_education_eredluin_4_text" text="Drilled with the Broadbeam shieldwall." />
-    <string id="taom_cc_taom_education_eredluin_4_desc" text="You trained in the close-quarters style of the Broadbeams of Belegost, learning to brace a shield and swing an axe in tight tunnel formations. Your short stride was an advantage in the corridors where taller folk stumbled." />
-    <string id="taom_cc_taom_education_eredluin_5_text" text="Counted the stores of Thorin's Halls." />
-    <string id="taom_cc_taom_education_eredluin_5_desc" text="You helped tally the iron, grain and coin of Thorin's Halls from an early age, learning to keep ledgers and to supply a mountain hold through the long winters. The work made you methodical and gave you a strategist's eye for resources." />
-    <string id="taom_cc_taom_education_eredluin_6_text" text="Patrolled the foothills and the Dwarf-road." />
-    <string id="taom_cc_taom_education_eredluin_6_desc" text="You ranged the eastern foothills of the Blue Mountains with the outer watch, learning to track orc raiders and shoot from cover among the pines along the Dwarf-road. The mountain air sharpened your senses and distance became your ally." />
-    <string id="taom_cc_taom_parent_anduinvale_1_text" text="House of Beorn" />
-    <string id="taom_cc_taom_parent_anduinvale_1_desc" text="Your family belonged to the House of Beorn, kin and companions to Grimbeorn, carrying great axes in the hall of Beorn and riding the sturdy ponies of the Vales wherever the chieftain's word sent them." />
-    <string id="taom_cc_taom_parent_anduinvale_2_text" text="Traders of the Old Ford" />
-    <string id="taom_cc_taom_parent_anduinvale_2_desc" text="Your family kept a trading house at the Old Ford, where the road from the High Pass meets the river. Honey, hides and timber went across to the Woodmen and the Elves of Mirkwood, and every cart paid its due." />
-    <string id="taom_cc_taom_parent_anduinvale_3_text" text="Free Farmers of the Vales" />
-    <string id="taom_cc_taom_parent_anduinvale_3_desc" text="Your family farmed the rich land between the Carrock and the Gladden, keeping cattle, bees and a spear by the door, for wolves and goblins came down from the Misty Mountains more often than the rain." />
-    <string id="taom_cc_taom_parent_anduinvale_4_text" text="Carpenters of Beorn's Hall" />
-    <string id="taom_cc_taom_parent_anduinvale_4_desc" text="Your family were carpenters and axe-smiths in Beorn's Hall, raising the long timber houses of the Vales and forging the broad axes the Beornings are known for." />
-    <string id="taom_cc_taom_parent_anduinvale_5_text" text="Hunters of the Mirkwood Edge" />
-    <string id="taom_cc_taom_parent_anduinvale_5_desc" text="Your family hunted the eaves of Mirkwood east of the river, taking deer and boar and keeping watch on the trees for spiders and the servants of Dol Guldur." />
-    <string id="taom_cc_taom_parent_anduinvale_6_text" text="Drifters of the Gladden" />
-    <string id="taom_cc_taom_parent_anduinvale_6_desc" text="Your family drifted along the Gladden and the banks of the Anduin, trading what they found, taking what they could, and learning that a ferryman hears more than he says." />
-    <string id="taom_cc_taom_parent_angaladh_1_text" text="House of Angáladh" />
-    <string id="taom_cc_taom_parent_angaladh_1_desc" text="Your family belonged to the House of Angáladh, kin to King Ingomar, bearing great axes in his hall at Woodmen-town and leading the forest levies along the Forest Road." />
-    <string id="taom_cc_taom_parent_angaladh_2_text" text="Traders of Woodmen-town" />
-    <string id="taom_cc_taom_parent_angaladh_2_desc" text="Your family kept a trading house in Woodmen-town, where timber, furs and honey came in from the clearings and went out along the Forest Road, and where every load paid its toll." />
-    <string id="taom_cc_taom_parent_angaladh_3_text" text="Clearing Farmers" />
-    <string id="taom_cc_taom_parent_angaladh_3_desc" text="Your family worked a clearing hacked out of the forest, felling trees in winter and sowing in spring, with a spear by the door because spiders and wolves came out of the trees more often than the rain." />
-    <string id="taom_cc_taom_parent_angaladh_4_text" text="Woodwrights of Ironwood Hall" />
-    <string id="taom_cc_taom_parent_angaladh_4_desc" text="Your family were woodwrights and axe-smiths at Ironwood Hall, felling the dark heartwood the hall is named for and hafting the broad axes of the Woodmen." />
-    <string id="taom_cc_taom_parent_angaladh_5_text" text="Woodwards of the Forest Road" />
-    <string id="taom_cc_taom_parent_angaladh_5_desc" text="Your family were woodwards of the Forest Road, walking its length with bow and hatchet to keep the way open and the spiders back. Few thanked them, but the road stayed passable." />
-    <string id="taom_cc_taom_parent_angaladh_6_text" text="Outcasts of Thornhold" />
-    <string id="taom_cc_taom_parent_angaladh_6_desc" text="Your family lived on the thorny edges of the Thornhold marches, taking what the forest and the road gave, and learned that a stranger's purse was often looser than his tongue." />
-    <string id="taom_cc_taom_youth_anduinvale_1_text" text="Rode messages for Grimbeorn." />
-    <string id="taom_cc_taom_youth_anduinvale_1_desc" text="You rode as a runner for the chieftain, carrying his word between Beorn's Hall, the Old Ford and the Carrock, and learned to read the Vales from the back of a pony." />
-    <string id="taom_cc_taom_youth_anduinvale_2_text" text="Stood watch at the High Pass." />
-    <string id="taom_cc_taom_youth_anduinvale_2_desc" text="You served in the garrison that watches the High Pass, shooting from the rocks at goblin raiders and learning how a few bowmen can hold a narrow way." />
-    <string id="taom_cc_taom_youth_anduinvale_3_text" text="Fought in the Gladden levy." />
-    <string id="taom_cc_taom_youth_anduinvale_3_desc" text="You fought in the river-levy of the Gladden, throwing hand-axes from the reeds and closing with the blade when the raiders from Dol Guldur came near the water." />
-    <string id="taom_cc_taom_youth_anduinvale_4_text" text="Tracked wolves and orcs along the Mirkwood edge." />
-    <string id="taom_cc_taom_youth_anduinvale_4_desc" text="You rode the forest margin east of the Anduin, tracking wolves and orc-bands to their dens and learning to shoot from the saddle between the trees." />
-    <string id="taom_cc_taom_youth_anduinvale_5_text" text="Joined the axe-men of Beorn's Hall." />
-    <string id="taom_cc_taom_youth_anduinvale_5_desc" text="You took the axe among the household men of Beorn's Hall, learning to fight shoulder to shoulder with spear and blade in the yard under the chieftain's eye." />
-    <string id="taom_cc_taom_youth_anduinvale_6_text" text="Travelled with the river-traders." />
-    <string id="taom_cc_taom_youth_anduinvale_6_desc" text="You went up and down the Anduin with the river-traders, minding boats and cargo, and learned how to pass a toll, a watchman and a doubtful stranger." />
-    <string id="taom_cc_taom_youth_angaladh_1_text" text="Ran dispatches for King Ingomar." />
-    <string id="taom_cc_taom_youth_angaladh_1_desc" text="You carried the king's word between Woodmen-town and the outlying holds, running the forest trails from hold to hold." />
-    <string id="taom_cc_taom_youth_angaladh_2_text" text="Manned the palisade of the Forest Gate." />
-    <string id="taom_cc_taom_youth_angaladh_2_desc" text="You served on the wall of the Forest Gate, shooting from the platforms at wolves and goblins on the road below and learning how few bowmen can hold a narrow way." />
-    <string id="taom_cc_taom_youth_angaladh_3_text" text="Fought in the Thornhold levy." />
-    <string id="taom_cc_taom_youth_angaladh_3_desc" text="You fought in the levy of Thornhold, hurling hand-axes from behind the thorn-hedges and closing with the blade when raiders came through the gaps." />
-    <string id="taom_cc_taom_youth_angaladh_4_text" text="Hunted spiders and wolves under the Emyn Duir." />
-    <string id="taom_cc_taom_youth_angaladh_4_desc" text="You ranged the dark trees beneath the Emyn Duir, tracking wolf-packs and burning spider-nests, and learned to shoot at a running shadow between the trunks." />
-    <string id="taom_cc_taom_youth_angaladh_5_text" text="Joined the spear-line of Woodmen-town." />
-    <string id="taom_cc_taom_youth_angaladh_5_desc" text="You took the spear in the household guard of Woodmen-town, learning to stand shoulder to shoulder in the narrow ways between the trees, where a line of spears stops what a charge cannot." />
-    <string id="taom_cc_taom_youth_angaladh_6_text" text="Peddled goods along the Forest Road." />
-    <string id="taom_cc_taom_youth_angaladh_6_desc" text="You went up and down the Forest Road with a pack of knives, thread and honey-cakes, and learned how to pass a hungry stranger, a toll-warden and a doubtful bargain." />
-    <string id="taom_cc_taom_adulthood_anduinvale_1_text" text="You held the Carrock ford beside Grimbeorn." />
-    <string id="taom_cc_taom_adulthood_anduinvale_1_desc" text="When a goblin host came down from the High Pass to cut the Vales in two, you stood in the ford with the axe-men of the House of Beorn until the Vale Riders came round their flank. Your name was spoken in the hall that night." />
-    <string id="taom_cc_taom_adulthood_anduinvale_2_text" text="You opened a free market at the Old Ford." />
-    <string id="taom_cc_taom_adulthood_anduinvale_2_desc" text="You brought Beornings, Woodmen and the Elves of Mirkwood to one table and settled the tolls at the Old Ford, so that honey and timber crossed the river without a quarrel. Grimbeorn's steward does not forget who filled the storehouses." />
-    <string id="taom_cc_taom_adulthood_anduinvale_3_text" text="You rebuilt the farms of Eastbank after a goblin raid." />
-    <string id="taom_cc_taom_adulthood_anduinvale_3_desc" text="When raiders burned the farms of Eastbank, you gathered the neighbours, raised the barns before the first frost and kept watch on the fields until the harvest was in. The villages remember." />
-    <string id="taom_cc_taom_adulthood_anduinvale_4_text" text="You raised the gates of Gladden Hold." />
-    <string id="taom_cc_taom_adulthood_anduinvale_4_desc" text="You framed and hung the great timber gates of Gladden Hold, hewing the beams yourself. When the first raiders broke against them and held, the garrison named the gates after you." />
-    <string id="taom_cc_taom_adulthood_anduinvale_5_text" text="You guided families out of the shadow of Dol Guldur." />
-    <string id="taom_cc_taom_adulthood_anduinvale_5_desc" text="When the shadow in the south grew and Woodmen families fled north through the trees, you led them across the river by paths no orc scout knew, and lost not one child. Grimbeorn gave you his hand." />
-    <string id="taom_cc_taom_adulthood_anduinvale_6_text" text="You broke a ring of goblin fences at the Old Ford." />
-    <string id="taom_cc_taom_adulthood_anduinvale_6_desc" text="For months stolen goods from the Misty Mountains had turned up in the back rooms along the river. You traced the trade, found the men behind it and handed them to the wardens, keeping a little of the silver for your trouble." />
-    <string id="taom_cc_taom_adulthood_angaladh_1_text" text="You held the Forest Gate beside King Ingomar." />
-    <string id="taom_cc_taom_adulthood_angaladh_1_desc" text="When a host of orcs came up from Dol Guldur to force the Forest Gate, you stood in the passage with the king's spearmen until the woodwards came round through the trees. Your name was spoken in the hall that night." />
-    <string id="taom_cc_taom_adulthood_angaladh_2_text" text="You opened a timber market with the Beornings." />
-    <string id="taom_cc_taom_adulthood_angaladh_2_desc" text="You crossed the Anduin and put the case for Angáladh's timber to the Beornings with such plainness that a regular market was set up within the month. The king's steward learned your name." />
-    <string id="taom_cc_taom_adulthood_angaladh_3_text" text="You drove the spiders out of Thornhold's old fields." />
-    <string id="taom_cc_taom_adulthood_angaladh_3_desc" text="When the forest crept back over the abandoned clearings of Thornhold, you led the farmers in with fire and spears, cleared the nests and brought in a harvest where none had grown in a generation." />
-    <string id="taom_cc_taom_adulthood_angaladh_4_text" text="You raised the new gate-beams of Ironwood Hall." />
-    <string id="taom_cc_taom_adulthood_angaladh_4_desc" text="You chose, felled and hauled the ironwood for the great beams of the hall's gate, hewing them yourself. When the first raiders broke against them and held, the garrison named the gate-beams after you." />
-    <string id="taom_cc_taom_adulthood_angaladh_5_text" text="You brought a woodward patrol out of a spider-hollow." />
-    <string id="taom_cc_taom_adulthood_angaladh_5_desc" text="When a woodward patrol was cut off in a hollow under the Emyn Duir, you led them out by a deer-trail no spider watched, losing not a single man. Their captain clasped your arm and named you a friend of the woodwards." />
-    <string id="taom_cc_taom_adulthood_angaladh_6_text" text="You broke a band of fences working the Forest Road." />
-    <string id="taom_cc_taom_adulthood_angaladh_6_desc" text="For months looted goods had been turning up in the back rooms of Woodmen-town. You traced the trade, found the men behind it and handed them to the king's wardens, keeping a little of the silver for your trouble." />
-    <string id="taom_cc_taom_education_anduinvale_1_text" text="Trained in the hall of Grimbeorn." />
-    <string id="taom_cc_taom_education_anduinvale_1_desc" text="You grew up among the chieftain's household in Beorn's Hall, swinging the great axe against posts and learning to sit a pony in full gear. Every bruise was a lesson, and the old bear-tales taught you what a Beorning owes his kin." />
-    <string id="taom_cc_taom_education_anduinvale_2_text" text="Kept tallies at the Old Ford." />
-    <string id="taom_cc_taom_education_anduinvale_2_desc" text="You spent your youth counting carts and bales at the Old Ford market, learning to bargain with Woodmen, Elves and the occasional Dwarf, and to know a fair price from a quick tongue." />
-    <string id="taom_cc_taom_education_anduinvale_3_text" text="Tended the bees and cattle of the Vales." />
-    <string id="taom_cc_taom_education_anduinvale_3_desc" text="You worked from dawn to dusk among the hives and herds below the Carrock, hauling water and mending fences. When the levy was called you were handed a spear and taught to hold a line." />
-    <string id="taom_cc_taom_education_anduinvale_4_text" text="Learned the woodwright's craft in Beorn's Hall." />
-    <string id="taom_cc_taom_education_anduinvale_4_desc" text="You learned your trade in the timber yards of Beorn's Hall, shaping beams and hafting axes under a master who judged every cut by eye. By the time you were grown your hands knew the work better than your head." />
-    <string id="taom_cc_taom_education_anduinvale_5_text" text="Hunted the Mirkwood borders and the Carrock slopes." />
-    <string id="taom_cc_taom_education_anduinvale_5_desc" text="You ranged the edge of Mirkwood and the stony slopes of the Carrock with the hunters, learning to move without sound and to loose a bow at a shadow. Your first goblin fell to it soon after." />
-    <string id="taom_cc_taom_education_anduinvale_6_text" text="Scraped by on the banks of the Gladden." />
-    <string id="taom_cc_taom_education_anduinvale_6_desc" text="You grew up among the reed-huts and landings of the Gladden, running errands for coin and selling what the river brought. The water taught you quick hands, a quicker tongue and when to vanish." />
-    <string id="taom_cc_taom_education_angaladh_1_text" text="Trained in the hall of King Ingomar." />
-    <string id="taom_cc_taom_education_angaladh_1_desc" text="You grew up among the king's household in Woodmen-town, swinging the great axe against stumps and learning to move through the trees in full gear. Every bruise was a lesson, and the old forest songs taught you what the Woodmen owe each other." />
-    <string id="taom_cc_taom_education_angaladh_2_text" text="Counted timber in the yards of Woodmen-town." />
-    <string id="taom_cc_taom_education_angaladh_2_desc" text="You spent your youth tallying logs and planks in the timber yards of Woodmen-town, learning to bargain with Beornings and caravan-masters and to tell sound wood from rot." />
-    <string id="taom_cc_taom_education_angaladh_3_text" text="Worked the clearings round Thornhold." />
-    <string id="taom_cc_taom_education_angaladh_3_desc" text="You worked from dawn to dusk in the clearings around Thornhold, hauling stumps and driving cattle out of the shadow of the trees. When the levy was called you were handed a spear and taught to hold a line." />
-    <string id="taom_cc_taom_education_angaladh_4_text" text="Learned the woodwright's craft at Ironwood Hall." />
-    <string id="taom_cc_taom_education_angaladh_4_desc" text="You learned your trade at Ironwood Hall, splitting the dark heartwood and hafting axes under a master who tested every handle with a blow. By the time you were grown your hands knew the work better than your head." />
-    <string id="taom_cc_taom_education_angaladh_5_text" text="Hunted the forest trails beneath the Emyn Duir." />
-    <string id="taom_cc_taom_education_angaladh_5_desc" text="You followed the woodwards under the Emyn Duir, learning to move without sound over the leaf-litter and to loose a bow at a shadow. Your first spider fell to it soon after." />
-    <string id="taom_cc_taom_education_angaladh_6_text" text="Scraped by around the Forest Gate." />
-    <string id="taom_cc_taom_education_angaladh_6_desc" text="You grew up among the lean-tos outside the Forest Gate, running errands for travellers and selling what the road dropped. The road taught you quick hands, a quicker tongue and when to vanish." />
-    <string id="taom_cc_taom_parent_dorwinion_1_text" text="Household of King Ostric" />
-    <string id="taom_cc_taom_parent_dorwinion_1_desc" text="Your family served in the hall of King Ostric at Vineholm, riding in his household and carrying his word along the river roads wherever the vintage and the realm required it." />
-    <string id="taom_cc_taom_parent_dorwinion_2_text" text="Wine-merchants of Redwater" />
-    <string id="taom_cc_taom_parent_dorwinion_2_desc" text="Your family kept a wine-house at Redwater, shipping casks down the river and across the Sea of Rhûn, and every cask paid its toll before it left the quay." />
-    <string id="taom_cc_taom_parent_dorwinion_3_text" text="Vineyard Farmers" />
-    <string id="taom_cc_taom_parent_dorwinion_3_desc" text="Your family tended vines and orchards on the sunlit slopes above the Redwater, with a spear by the door, for raiders from the east came up the shore more often than the frost." />
-    <string id="taom_cc_taom_parent_dorwinion_4_text" text="Coopers and Vintners of Vineholm" />
-    <string id="taom_cc_taom_parent_dorwinion_4_desc" text="Your family were coopers and press-wrights in Vineholm, building the barrels and presses the realm's wealth depends on, and forging the short swords of the town guard." />
-    <string id="taom_cc_taom_parent_dorwinion_5_text" text="Fowlers of the River Running" />
-    <string id="taom_cc_taom_parent_dorwinion_5_desc" text="Your family hunted the reed-beds and river-woods along the River Running, taking fowl and deer for the markets of Seagate and keeping a sharp eye on the water." />
-    <string id="taom_cc_taom_parent_dorwinion_6_text" text="Dockside Drifters of Seagate" />
-    <string id="taom_cc_taom_parent_dorwinion_6_desc" text="Your family lived among the quays of Seagate, working the boats for coin and learning that a harbour-master hears more than he says." />
-    <string id="taom_cc_taom_parent_southrhovanion_1_text" text="Retainers of King Vidumar" />
-    <string id="taom_cc_taom_parent_southrhovanion_1_desc" text="Your family served in the hall of King Vidumar at Vidugard, riding in his household and carrying his spear wherever the plains required it." />
-    <string id="taom_cc_taom_parent_southrhovanion_2_text" text="Horse-traders of Southwood" />
-    <string id="taom_cc_taom_parent_southrhovanion_2_desc" text="Your family were horse-traders in Southwood, bringing herds to the fairs and selling mounts to every lord from the forest to the eastern sea." />
-    <string id="taom_cc_taom_parent_southrhovanion_3_text" text="Freeholders of the Northmark" />
-    <string id="taom_cc_taom_parent_southrhovanion_3_desc" text="Your family were free farmers of the Northmark, raising horses and barley on the long grass-lands, with a spear by the door, for wolves and Wainrider scouts came over the plain more often than the rain." />
-    <string id="taom_cc_taom_parent_southrhovanion_4_text" text="Smiths of Horsemead" />
-    <string id="taom_cc_taom_parent_southrhovanion_4_desc" text="Your family were smiths at Horsemead, shoeing the king's herds and forging the bits, spurs and blades of his riders." />
-    <string id="taom_cc_taom_parent_southrhovanion_5_text" text="Hunters of the Southern Eaves" />
-    <string id="taom_cc_taom_parent_southrhovanion_5_desc" text="Your family hunted along the southern eaves of Mirkwood, skilled with the bow and watchful of whatever crept out from under the trees." />
-    <string id="taom_cc_taom_parent_southrhovanion_6_text" text="Wanderers of the Plains" />
-    <string id="taom_cc_taom_parent_southrhovanion_6_desc" text="Your family drifted across the open plains south of the forest, following the herds, taking what work they could find and sometimes what they could not." />
-    <string id="taom_cc_taom_youth_dorwinion_1_text" text="Rode with the vine-wardens of Vineholm." />
-    <string id="taom_cc_taom_youth_dorwinion_1_desc" text="You joined the mounted wardens who patrol the vineyards and the Redwater banks, learning to ride and fight with the spear along the narrow terraces." />
-    <string id="taom_cc_taom_youth_dorwinion_2_text" text="Stood watch on the walls of Seagate." />
-    <string id="taom_cc_taom_youth_dorwinion_2_desc" text="You served in the garrison of Seagate, shooting from the wall at raiders on the Sea of Rhûn and learning how a few bowmen can hold a harbour." />
-    <string id="taom_cc_taom_youth_dorwinion_3_text" text="Fought in the vineyard levy." />
-    <string id="taom_cc_taom_youth_dorwinion_3_desc" text="You trained with the levy of the vineyards, learning to hurl javelins from between the vines and to close with the sword when raiders broke through the rows." />
-    <string id="taom_cc_taom_youth_dorwinion_4_text" text="Tracked raiders along the Eastmarch." />
-    <string id="taom_cc_taom_youth_dorwinion_4_desc" text="You rode the dry country of the Eastmarch, east of the vines, tracking raiders and wolves from the saddle and learning to loose a bow at a gallop." />
-    <string id="taom_cc_taom_youth_dorwinion_5_text" text="Joined the spear-line of Vinewatch." />
-    <string id="taom_cc_taom_youth_dorwinion_5_desc" text="You took your place in the spear-line of Vinewatch, learning to stand firm with spear and shield against the riders who come up out of the east." />
-    <string id="taom_cc_taom_youth_dorwinion_6_text" text="Worked the wine barges of the Redwater." />
-    <string id="taom_cc_taom_youth_dorwinion_6_desc" text="You went up and down the Redwater and across the Sea of Rhûn with the wine barges, minding casks and learning how to pass a toll, a watchman and a doubtful buyer." />
-    <string id="taom_cc_taom_youth_southrhovanion_1_text" text="Rode with the household riders of Vidugard." />
-    <string id="taom_cc_taom_youth_southrhovanion_1_desc" text="You proved your skill in the saddle among the king's household riders, learning to charge with the lance and to fight with spear and sword from horseback." />
-    <string id="taom_cc_taom_youth_southrhovanion_2_text" text="Stood watch on the wall of Wainwatch." />
-    <string id="taom_cc_taom_youth_southrhovanion_2_desc" text="You served in the garrison of Wainwatch, shooting from its wall and learning tactics and discipline from the captains who watch the eastern plain." />
-    <string id="taom_cc_taom_youth_southrhovanion_3_text" text="Joined the skirmishers of Westmark." />
-    <string id="taom_cc_taom_youth_southrhovanion_3_desc" text="You joined the skirmishers of Westmark, learning to throw javelins and to fight with the sword on foot beside the riders." />
-    <string id="taom_cc_taom_youth_southrhovanion_4_text" text="Rode with the scouts of the open plain." />
-    <string id="taom_cc_taom_youth_southrhovanion_4_desc" text="You ranged far across the grass with the scouts, watching for Wainrider smoke and wolf-packs and learning to shoot from the saddle." />
-    <string id="taom_cc_taom_youth_southrhovanion_5_text" text="Stood among the spearmen of the Northmark." />
-    <string id="taom_cc_taom_youth_southrhovanion_5_desc" text="As a spearman of the Northmark you learned to hold the line with spear and shield against a charge." />
-    <string id="taom_cc_taom_youth_southrhovanion_6_text" text="Followed the herds with the wagon-folk." />
-    <string id="taom_cc_taom_youth_southrhovanion_6_desc" text="Rather than take up arms, you travelled with the herd-wagons and the camp-followers, learning to live by wit, trade and a quick hand." />
-    <string id="taom_cc_taom_adulthood_dorwinion_1_text" text="You held the gate of Sunwall against a host from the east." />
-    <string id="taom_cc_taom_adulthood_dorwinion_1_desc" text="When a war-band came out of the eastern steppe and rode at the walls of Sunwall, you held the gate with the king's guard until the riders of Vineholm came round their flank. Your name was spoken in the hall that night." />
-    <string id="taom_cc_taom_adulthood_dorwinion_2_text" text="You opened the first free market on the Sea of Rhûn." />
-    <string id="taom_cc_taom_adulthood_dorwinion_2_desc" text="No merchant wanted to go first with raiders on every shore. You sailed, settled the tolls and brought the vintners of Redwater and the buyers of the east to one table. The king's steward does not forget who filled the cellars." />
-    <string id="taom_cc_taom_adulthood_dorwinion_3_text" text="You saved the vintage of Redwater from an early frost." />
-    <string id="taom_cc_taom_adulthood_dorwinion_3_desc" text="When frost came a month early to the terraces, you gathered the pickers and brought the grapes in within three days. The villages remember." />
-    <string id="taom_cc_taom_adulthood_dorwinion_4_text" text="You built the great press of Vineholm." />
-    <string id="taom_cc_taom_adulthood_dorwinion_4_desc" text="The vintners commissioned a new press for the king's cellar. You designed it and cut its beams yourself, and when the first juice ran the cellarmen named it after you." />
-    <string id="taom_cc_taom_adulthood_dorwinion_5_text" text="You guided families out of the burning Eastmarch." />
-    <string id="taom_cc_taom_adulthood_dorwinion_5_desc" text="When raiders fired the farms of the Eastmarch and the families fled west, you led them along dry ravines no rider had scouted, and lost not one child. The king gave you his hand." />
-    <string id="taom_cc_taom_adulthood_dorwinion_6_text" text="You exposed a smuggling ring on the quays of Seagate." />
-    <string id="taom_cc_taom_adulthood_dorwinion_6_desc" text="For months wine had been leaving the king's warehouses without paying a toll. You traced the cargo, found the harbour official behind it and handed him to the wardens, keeping a little of the silver for your trouble." />
-    <string id="taom_cc_taom_adulthood_southrhovanion_1_text" text="You rode in the charge that broke a Wainrider host before Wainwatch." />
-    <string id="taom_cc_taom_adulthood_southrhovanion_1_desc" text="When a Wainrider host came up the eastern plain and the line wavered at its centre, you rode into the charge and held your place until the host broke. The riders of Vidugard still speak of it." />
-    <string id="taom_cc_taom_adulthood_southrhovanion_2_text" text="You made the best horse-fair prices Southwood had seen in five years." />
-    <string id="taom_cc_taom_adulthood_southrhovanion_2_desc" text="The buyers from the south had come expecting to set the price as they always did. You rallied the breeders, held out together, and the herds sold at a price the fair still remembers." />
-    <string id="taom_cc_taom_adulthood_southrhovanion_3_text" text="You broke a Wainrider raid that struck the Northmark in early autumn." />
-    <string id="taom_cc_taom_adulthood_southrhovanion_3_desc" text="The raiders had timed their strike for the harvest, when the farmsteads lay open. You gathered the levy, met them on foot at the stream-crossing and held them there until the riders came." />
-    <string id="taom_cc_taom_adulthood_southrhovanion_4_text" text="You forged a sword the king chose for his household guard." />
-    <string id="taom_cc_taom_adulthood_southrhovanion_4_desc" text="The commission came from the king's stables: a blade that could be carried at the saddle and drawn without a pause. When Vidumar chose your pattern for his own riders, your name was made." />
-    <string id="taom_cc_taom_adulthood_southrhovanion_5_text" text="You tracked the scouts mapping the approaches to Westmark." />
-    <string id="taom_cc_taom_adulthood_southrhovanion_5_desc" text="You noticed the signs of careful watching: grass pressed back upright, stones turned, a fire dug over. You followed the trail south and brought the report back in time for the riders to act." />
-    <string id="taom_cc_taom_adulthood_southrhovanion_6_text" text="You exposed a spy working inside Vidugard." />
-    <string id="taom_cc_taom_adulthood_southrhovanion_6_desc" text="The spy had been in the town for two years, passing word of the herds and the garrison to the east. You watched him until you knew the pattern, and delivered him to the king's wardens." />
-    <string id="taom_cc_taom_education_dorwinion_1_text" text="Trained in the hall of King Ostric." />
-    <string id="taom_cc_taom_education_dorwinion_1_desc" text="You grew up among the king's household at Vineholm, learning to ride in full gear and to swing heavy weapons under the old guardsmen. Every bruise was a lesson, and the songs of the hall taught you what you owe your lord." />
-    <string id="taom_cc_taom_education_dorwinion_2_text" text="Clerked in the wine-houses of Redwater." />
-    <string id="taom_cc_taom_education_dorwinion_2_desc" text="You learned to keep tallies and charm buyers in the cellars of Redwater, where every cask is sampled and every price argued, and to tell a fair bargain from a quick tongue." />
-    <string id="taom_cc_taom_education_dorwinion_3_text" text="Worked the terraces above the Redwater." />
-    <string id="taom_cc_taom_education_dorwinion_3_desc" text="You grew up hauling baskets and driving carts on the vine terraces, building a strong back and sound legs. When the levy was called you were handed a spear and taught to hold a line." />
-    <string id="taom_cc_taom_education_dorwinion_4_text" text="Apprenticed to a cooper of Vineholm." />
-    <string id="taom_cc_taom_education_dorwinion_4_desc" text="You learned your trade in the cooperages of Vineholm, bending staves and hooping barrels under a master who judged every join by its sound. By the time you were grown your hands knew the work better than your head." />
-    <string id="taom_cc_taom_education_dorwinion_5_text" text="Hunted the reed-beds of the River Running." />
-    <string id="taom_cc_taom_education_dorwinion_5_desc" text="You ranged the marshes and river-woods with the fowlers, learning to move without sound and to loose a bow at a shadow among the reeds." />
-    <string id="taom_cc_taom_education_dorwinion_6_text" text="Scraped by on the quays of Seagate." />
-    <string id="taom_cc_taom_education_dorwinion_6_desc" text="You grew up among the dockhands and petty thieves of Seagate, running errands for coin and selling what fell off the barges. The harbour taught you quick hands, a quicker tongue and when to vanish." />
-    <string id="taom_cc_taom_education_southrhovanion_1_text" text="Rode in training with the household of King Vidumar." />
-    <string id="taom_cc_taom_education_southrhovanion_1_desc" text="You spent your youth learning the art of mounted war among the king's household at Vidugard, where the old riders taught you to keep your seat, your spear and your temper through a long day in the saddle." />
-    <string id="taom_cc_taom_education_southrhovanion_2_text" text="Traded horses at the fairs of Southwood." />
-    <string id="taom_cc_taom_education_southrhovanion_2_desc" text="You carried prices and tallies between the horse-fairs of Southwood and the lesser holds of the plain, learning to judge a mount at a glance and a buyer in a breath." />
-    <string id="taom_cc_taom_education_southrhovanion_3_text" text="Raised horses and stood levy on the Northmark." />
-    <string id="taom_cc_taom_education_southrhovanion_3_desc" text="You worked your family's pastures on the Northmark, learning to handle horses almost before you could walk. When the levy was called you took a spear and a place in the line." />
-    <string id="taom_cc_taom_education_southrhovanion_4_text" text="Apprenticed to the smiths of Horsemead." />
-    <string id="taom_cc_taom_education_southrhovanion_4_desc" text="You learned to shape bits, spurs and blades in the forge-houses of Horsemead, under a master who judged a sword by how it sat in the hand of a rider." />
-    <string id="taom_cc_taom_education_southrhovanion_5_text" text="Hunted the southern eaves and watched the horizon." />
-    <string id="taom_cc_taom_education_southrhovanion_5_desc" text="You ranged widely along the forest edge with your bow, hunting game and keeping a sharp eye on both the trees and the open grass." />
-    <string id="taom_cc_taom_education_southrhovanion_6_text" text="Drifted across the plains with no fixed allegiance." />
-    <string id="taom_cc_taom_education_southrhovanion_6_desc" text="You wandered the open grass without clan or hold to call your own, learning to live by wit and trade, and to read a stranger before he reached your fire." />
+    <string id="taom_cc_taom_parent_cardolan_1_text" text="Nobili Casate di Cardolan" />
+    <string id="taom_cc_taom_parent_cardolan_1_desc" text="La tua famiglia apparteneva a una delle antiche casate di Cardolan, i cui padri giacciono nei tumuli reali di Tyrn Gorthad. Tuo padre cavalcò nell'esercito del Re da Caras Gorthad, mentre tua madre custodiva le terre della famiglia lungo la Via Verde e la sua lunga memoria." />
+    <string id="taom_cc_taom_parent_cardolan_2_text" text="Mercanti di Tharbad" />
+    <string id="taom_cc_taom_parent_cardolan_2_desc" text="La tua famiglia teneva una casa commerciale a Tharbad, dove la Strada Nord-Sud attraversa il Greyflood. Chiatte dalla costa, lana dalle colline e ferro nanico dall'occidente passavano tutti per i loro magazzini, e ogni balla pagava il suo pedaggio." />
+    <string id="taom_cc_taom_parent_cardolan_3_text" text="Contadini di Minhiriath" />
+    <string id="taom_cc_taom_parent_cardolan_3_desc" text="La tua famiglia lavorava gli ampi campi di Minhiriath tra i fiumi. Mandavano un figlio alla leva ogni primavera e tenevano una lancia presso la porta, poiché orchi e fuorilegge risalivano il Greyflood più spesso delle piene." />
+    <string id="taom_cc_taom_parent_cardolan_4_text" text="Fabbri di Caras Gorthad" />
+    <string id="taom_cc_taom_parent_cardolan_4_desc" text="La tua famiglia era di fabbri e artigiani a Caras Gorthad, ferrando i cavalli dei cavalieri del Re e forgiando le punte di lancia per cui Cardolan è rinomata. La loro arte discendeva ininterrotta dai maestri númenóreani." />
+    <string id="taom_cc_taom_parent_cardolan_5_text" text="Guardiani dei Tumuli" />
+    <string id="taom_cc_taom_parent_cardolan_5_desc" text="La tua famiglia era di guardiani di Tyrn Gorthad, vegliando sulle tombe dei re e sulle colline attorno. Pochi li onoravano e ancor meno ne conoscevano i nomi, ma nessun ladro percorse i tumuli finché montarono la guardia." />
+    <string id="taom_cc_taom_parent_cardolan_6_text" text="Vagabondi della Via Verde" />
+    <string id="taom_cc_taom_parent_cardolan_6_desc" text="La tua famiglia viveva sulle strade, vagando tra Tharbad, il Guado di Sarn e i margini della Vecchia Foresta. Commerciavano ciò che trovavano, prendevano ciò che potevano, e impararono che la borsa di uno straniero era spesso più sciolta della sua lingua." />
+    <string id="taom_cc_taom_parent_rhudaur_1_text" text="Nobili Casate dell'Angolo" />
+    <string id="taom_cc_taom_parent_rhudaur_1_desc" text="La tua famiglia apparteneva a una delle casate dei Dúnedain dell'Angolo, tra il Fontegrigio e l'Acqualuce, il cui sangue risale al figlio più giovane di Eärendur. Tuo padre cavalcava nell'esercito del Re da Cameth Brin, mentre tua madre custodiva le terre collinari della famiglia e la sua lunga memoria." />
+    <string id="taom_cc_taom_parent_rhudaur_2_text" text="Mercanti dell'Ultimo Ponte" />
+    <string id="taom_cc_taom_parent_rhudaur_2_desc" text="La tua famiglia teneva un emporio all'Ultimo Ponte, dove la Grande Strada Est attraversa il Fontegrigio. Nani diretti ai Colli Ferrosi, uomini delle colline con pellicce ed Elfi della valle nascosta passavano dalle loro porte, e tutti pagavano." />
+    <string id="taom_cc_taom_parent_rhudaur_3_text" text="Pastori dei monti di Rhudaur" />
+    <string id="taom_cc_taom_parent_rhudaur_3_desc" text="La tua famiglia era fatta di uomini delle colline che pascolavano pecore e capre sui monti di Rhudaur. Mandavano un figlio alla leva ogni primavera e tenevano un'ascia accanto alla porta, perché troll e orchi scendevano dai monti più spesso della neve." />
+    <string id="taom_cc_taom_parent_rhudaur_4_text" text="Fabbri di Cameth Brin" />
+    <string id="taom_cc_taom_parent_rhudaur_4_desc" text="La tua famiglia era di fabbri nella città-torre di Cameth Brin, forgiando le asce degli uomini delle colline e le spade dei signori Dúnedain. La loro arte fu appresa da maestri Númenóreani e temprata dal ferro delle montagne." />
+    <string id="taom_cc_taom_parent_rhudaur_5_text" text="Ramingi dell'Angolo" />
+    <string id="taom_cc_taom_parent_rhudaur_5_desc" text="La tua famiglia era fatta di Ramingi dell'Angolo, che percorrevano le colline selvagge tra i fiumi per vegliare sui passi e sulle strade. Pochi li ringraziavano e ancor meno conoscevano i loro nomi, ma i troll restavano sulle alture finché essi montavano la guardia." />
+    <string id="taom_cc_taom_parent_rhudaur_6_text" text="Vagabondi dei Boschi dei Troll" />
+    <string id="taom_cc_taom_parent_rhudaur_6_desc" text="La tua famiglia viveva ai margini, vagando tra i Boschi dei Troll, l'Ultimo Ponte e le terre deserte attorno al Colle Vento. Commerciavano ciò che trovavano, prendevano ciò che potevano, e impararono che la borsa di uno straniero era spesso più sciolta della sua lingua." />
+    <string id="taom_cc_taom_youth_cardolan_1_text" text="Hai cavalcato con i cavalieri del Re di Cardolan." />
+    <string id="taom_cc_taom_youth_cardolan_1_desc" text="Ti sei unito alle compagnie a cavallo di Caras Gorthad, i migliori cavalieri dei tre regni del nord, imparando a cavalcare e a combattere con la lancia nelle pianure aperte." />
+    <string id="taom_cc_taom_youth_cardolan_2_text" text="Hai montato la guardia sulle mura di Caras Gorthad." />
+    <string id="taom_cc_taom_youth_cardolan_2_desc" text="Hai servito nella guarnigione di Caras Gorthad, vegliando di notte sulle sue mura e imparando l'arte della difesa negli assedi da capitani che le avevano tenute contro gli uomini selvaggi del sud." />
+    <string id="taom_cc_taom_youth_cardolan_3_text" text="Hai cacciato lungo il Flutto Grigio con gli arcieri di Minhiriath." />
+    <string id="taom_cc_taom_youth_cardolan_3_desc" text="Hai seguito gli arcieri di Minhiriath lungo il Flutto Grigio e le paludi di Cignatorta, colpendo orchi e fuorilegge dal riparo e imparando a leggere le terre fluviali come altri leggono le lettere." />
+    <string id="taom_cc_taom_youth_cardolan_4_text" text="Ti sei addestrato con i lancieri del Re." />
+    <string id="taom_cc_taom_youth_cardolan_4_desc" text="Ti sei unito alle compagnie di lancieri della guardia del Re, addestrandoti alla disciplinata guerra di fanteria per tenere una linea di lance di Cardolan contro cavalieri e fanti." />
+    <string id="taom_cc_taom_youth_cardolan_5_text" text="Hai vissuto d'astuzia sulle banchine di Tharbad." />
+    <string id="taom_cc_taom_youth_cardolan_5_desc" text="Hai tirato avanti sulle banchine di Tharbad, dove contrabbandieri e tagliaborse si guadagnavano da vivere tra le chiatte. Hai imparato il valore di una mano svelta, di un sasso ben tirato e di una storia che nessuno poteva verificare." />
+    <string id="taom_cc_taom_youth_rhudaur_1_text" text="Hai cavalcato con i cavalieri delle colline di Rhudaur." />
+    <string id="taom_cc_taom_youth_rhudaur_1_desc" text="Ti sei unito alle poche compagnie montate di Rhudaur, imparando a cavalcare pony dal passo sicuro sui monti e a colpire in fretta per sparire prima che il nemico potesse schierarsi." />
+    <string id="taom_cc_taom_youth_rhudaur_2_text" text="Hai montato la guardia sulle mura di Cameth Brin." />
+    <string id="taom_cc_taom_youth_rhudaur_2_desc" text="Hai servito nella guarnigione di Cameth Brin, vegliando di notte sulla sua torre e imparando l'arte della difesa negli assedi da capitani che l'avevano tenuta contro gli orchi delle montagne." />
+    <string id="taom_cc_taom_youth_rhudaur_3_text" text="Hai percorso i monti con i Ramingi dell'Angolo." />
+    <string id="taom_cc_taom_youth_rhudaur_3_desc" text="Hai seguito i Ramingi dell'Angolo lungo il Fontegrigio e su fino alle Lande di Etten, colpendo orchi e troll dal riparo e imparando a leggere le colline come altri leggono le lettere." />
+    <string id="taom_cc_taom_youth_rhudaur_4_text" text="Ti sei addestrato con la Guardia di Cameth Brin." />
+    <string id="taom_cc_taom_youth_rhudaur_4_desc" text="Ti sei unito alla guardia di Cameth Brin, addestrandoti con spadone e azza per difendere il Re e la sala dei suoi padri sulla rocca sopra le colline." />
+    <string id="taom_cc_taom_youth_rhudaur_5_text" text="Hai vissuto d'astuzia nei Boschi dei Troll." />
+    <string id="taom_cc_taom_youth_rhudaur_5_desc" text="Hai tirato avanti nei Boschi dei Troll, dove fuorilegge e predoni dei tesori dei troll si guadagnavano da vivere. Hai imparato il valore di una mano svelta, di un sasso ben tirato e di una storia che nessuno poteva verificare." />
+    <string id="taom_cc_taom_adulthood_cardolan_1_text" text="Hai difeso il Guado di Sarn contro un'armata di Dunlanda." />
+    <string id="taom_cc_taom_adulthood_cardolan_1_desc" text="Quando i Dunlandesi vennero a nord oltre il Flutto Grigio in forze, tenesti la linea al Guado di Sarn finché non giunsero i cavalieri del Re. Il tuo nome fu pronunciato nella sala di Caras Gorthad." />
+    <string id="taom_cc_taom_adulthood_cardolan_2_text" text="Hai guadagnato i Nani dei Monti Azzurri come soci in commercio." />
+    <string id="taom_cc_taom_adulthood_cardolan_2_desc" text="Quando il ferro scarseggiò nelle fucine di Caras Gorthad, cavalcasti a ovest verso l'Ered Luin e trattasti con i Nani finché i carri di minerale non ripresero la via dell'est. Il tesoriere del Re non dimentica chi ha tenuto accese le fucine." />
+    <string id="taom_cc_taom_adulthood_cardolan_3_text" text="Hai raccolto il raccolto di Minhiriath prima delle piene." />
+    <string id="taom_cc_taom_adulthood_cardolan_3_desc" text="Quando i fiumi si gonfiarono presto in un duro autunno, radunasti le leve dei contadini per portare dentro il raccolto e innalzasti gli argini prima che il Flutto Grigio li rompesse. I villaggi ricordano." />
+    <string id="taom_cc_taom_adulthood_cardolan_4_text" text="Hai forgiato una lancia donata a un cavaliere di Cardolan." />
+    <string id="taom_cc_taom_adulthood_cardolan_4_desc" text="Un cavaliere dei cavalieri del Re aveva sentito parlare del tuo lavoro e commissionò una lancia per il giorno in cui avrebbe prestato giuramento. Quando la imbracciò dinanzi alle compagnie radunate e questa resse, sapesti che il tuo nome era fatto." />
+    <string id="taom_cc_taom_adulthood_cardolan_5_text" text="Hai guidato una pattuglia di guardiani fuori da un'imboscata nella Vecchia Foresta." />
+    <string id="taom_cc_taom_adulthood_cardolan_5_desc" text="Quando una pattuglia di guardiani dei tumuli fu tagliata fuori sotto le fronde della Vecchia Foresta, li conducesti fuori per un sentiero che nessun fuorilegge conosceva, senza perdere un solo uomo. Il loro capitano ti strinse il braccio e ti chiamò amico dei Dúnedain." />
+    <string id="taom_cc_taom_adulthood_cardolan_6_text" text="Hai smascherato una banda di predoni di tumuli che operava da Tharbad." />
+    <string id="taom_cc_taom_adulthood_cardolan_6_desc" text="Per mesi corredi funebri provenienti da Tyrn Gorthad erano comparsi nei retrobottega di Tharbad. Seguisti il traffico, trovasti gli uomini che vi stavano dietro e li consegnasti ai guardiani del Re, tenendo un po' d'oro per il disturbo." />
+    <string id="taom_cc_taom_adulthood_rhudaur_1_text" text="Hai difeso la Ettendale contro un'orda venuta dai monti." />
+    <string id="taom_cc_taom_adulthood_rhudaur_1_desc" text="Quando orchi e troll delle colline scesero in forze dalle Ettenbrughiere, tenesti la linea nella Ettendale finché non giunsero gli uomini del Re. Il tuo nome fu pronunciato nella sala di Cameth Brin." />
+    <string id="taom_cc_taom_adulthood_rhudaur_2_text" text="Hai conquistato i Nani dei Colli Ferrosi come soci in commercio." />
+    <string id="taom_cc_taom_adulthood_rhudaur_2_desc" text="Quando i Nani sulla Strada dell'Est vollero un guado sicuro sul Fiumegrigio, trattasti con loro finché le loro carovane non pagarono il pedaggio all'Ultimo Ponte e il loro ferro non giunse a Cameth Brin. Il tesoriere del Re non dimentica chi gli ha riempito le casse." />
+    <string id="taom_cc_taom_adulthood_rhudaur_3_text" text="Hai portato le greggi giù dalle alture prima delle nevi." />
+    <string id="taom_cc_taom_adulthood_rhudaur_3_desc" text="Quando un inverno precoce calò sui pascoli alti, radunasti i pastori e spingesti ogni gregge giù nelle valli prima che i passi si chiudessero. I villaggi lo ricordano." />
+    <string id="taom_cc_taom_adulthood_rhudaur_4_text" text="Hai forgiato un'ascia donata a un signore dell'Angolo." />
+    <string id="taom_cc_taom_adulthood_rhudaur_4_desc" text="Un signore dell'Angolo aveva sentito parlare del tuo lavoro e commissionò un'ascia da guerra per il giorno in cui avrebbe prestato giuramento. Quando la levò dinanzi alla guardia radunata e questa risuonò limpida, sapesti che il tuo nome era fatto." />
+    <string id="taom_cc_taom_adulthood_rhudaur_5_text" text="Hai guidato una compagnia di Ramingi fuori da un'imboscata nei Boschi dei Troll." />
+    <string id="taom_cc_taom_adulthood_rhudaur_5_desc" text="Quando una pattuglia di Ramingi fu tagliata fuori tra le tane dei troll nei Boschi dei Troll, li conducesti fuori per un sentiero che nessun troll aveva trovato, senza perdere un solo uomo. Il loro capitano ti strinse il braccio e ti chiamò amico dei Dúnedain." />
+    <string id="taom_cc_taom_adulthood_rhudaur_6_text" text="Hai smascherato una banda di predoni di tesori di troll che operava dall'Ultimo Ponte." />
+    <string id="taom_cc_taom_adulthood_rhudaur_6_desc" text="Per mesi l'oro degli antichi tesori dei troll era comparso nei retrobottega dell'Ultimo Ponte. Seguisti il traffico, trovasti gli uomini che vi stavano dietro e li consegnasti ai guardiani del Re, tenendo un po' d'oro per il disturbo." />
+    <string id="taom_cc_taom_education_cardolan_1_text" text="Addestrato con i figli delle antiche casate." />
+    <string id="taom_cc_taom_education_cardolan_1_desc" text="Sei cresciuto addestrandoti accanto ai figli delle famiglie nobili di Cardolan nei cortili di Caras Gorthad. Hai imparato spada e lancia sotto cavalieri giurati al Re, e a memoria i lignaggi dei re dei tumuli." />
+    <string id="taom_cc_taom_education_cardolan_2_text" text="Apprendista al mercato di Tharbad." />
+    <string id="taom_cc_taom_education_cardolan_2_desc" text="Hai passato la giovinezza portando registri e facendo commissioni nel mercato di Tharbad, dove le strade e il fiume si incontrano. Hai imparato a trattare con i barcaioli, a lusingare i Nani e a non fidarti mai della bilancia di un Dunlendiano." />
+    <string id="taom_cc_taom_education_cardolan_3_text" text="Hai faticato nelle fattorie di Minhiriath." />
+    <string id="taom_cc_taom_education_cardolan_3_desc" text="Hai lavorato dall'alba al tramonto nelle fattorie tra i fiumi, trasportando grano e conducendo bestiame ai guadi. Quando fu chiamata la leva ti misero in mano una lancia e ti insegnarono a tenere la linea." />
+    <string id="taom_cc_taom_education_cardolan_4_text" text="Apprendista di un fabbro di Caras Gorthad." />
+    <string id="taom_cc_taom_education_cardolan_4_desc" text="Hai imparato il mestiere nelle fucine di Caras Gorthad, azionando i mantici sotto un maestro che ancora conservava i modi númenóreani di temprare l'acciaio. Quando fosti adulto le tue mani conoscevano il lavoro meglio della tua testa." />
+    <string id="taom_cc_taom_education_cardolan_5_text" text="Hai percorso le Colline con i guardiani dei tumuli." />
+    <string id="taom_cc_taom_education_cardolan_5_desc" text="Da ragazzo hai seguito i guardiani di Tyrn Gorthad, imparando a muoverti senza rumore tra le colline e sotto le fronde della Vecchia Foresta. Hai teso il tuo primo arco prima di poter avere la barba." />
+    <string id="taom_cc_taom_education_cardolan_6_text" text="Ti sei arrangiato lungo la Strada Nord-Sud." />
+    <string id="taom_cc_taom_education_cardolan_6_desc" text="Sei cresciuto sulla strada tra Tharbad e il Guado di Sarn, portando messaggi per qualche moneta e vendendo ciò che i viaggiatori lasciavano. La strada ti ha insegnato mani svelte, lingua ancora più svelta e quando svanire." />
+    <string id="taom_cc_taom_education_rhudaur_1_text" text="Addestrato con i figli dell'Angolo." />
+    <string id="taom_cc_taom_education_rhudaur_1_desc" text="Sei cresciuto addestrandoti accanto ai figli delle casate dei Dúnedain di Rhudaur nei cortili di Cameth Brin. Hai imparato spada e arco sotto signori giurati al Re, e a memoria il lignaggio del figlio più giovane di Eärendur." />
+    <string id="taom_cc_taom_education_rhudaur_2_text" text="Apprendista all'Ultimo Ponte." />
+    <string id="taom_cc_taom_education_rhudaur_2_desc" text="Hai passato la giovinezza portando conteggi e facendo commissioni all'emporio dell'Ultimo Ponte, dove la Strada dell'Est incontra le terre collinari. Hai imparato a trattare con i Nani, a lusingare i capi delle colline e a non fidarti mai dei pesi di uno straniero." />
+    <string id="taom_cc_taom_education_rhudaur_3_text" text="Hai pascolato pecore sulle alture." />
+    <string id="taom_cc_taom_education_rhudaur_3_desc" text="Hai lavorato dall'alba al tramonto sulle alte brughiere, spingendo le greggi tra i pascoli estivi e invernali e tenendo lontani i lupi. Quando fu chiamata la leva ti misero in mano un'ascia e ti insegnarono a tenere la linea." />
+    <string id="taom_cc_taom_education_rhudaur_4_text" text="Apprendista di un fabbro di Cameth Brin." />
+    <string id="taom_cc_taom_education_rhudaur_4_desc" text="Hai imparato il mestiere nelle fucine di Cameth Brin, lavorando il ferro di montagna sotto un maestro che ancora conservava i modi númenóreani di temprare l'acciaio. Quando fosti adulto le tue mani conoscevano il lavoro meglio della tua testa." />
+    <string id="taom_cc_taom_education_rhudaur_5_text" text="Hai battuto le colline con i Dúnedain." />
+    <string id="taom_cc_taom_education_rhudaur_5_desc" text="Da ragazzo hai seguito i Ramingi dell'Angolo, imparando a muoverti senza rumore lungo il Sonoroacque e attraverso i Boschi dei Troll. Hai teso il tuo primo arco prima di poter avere la barba, e poco dopo il tuo primo orco vi cadde sotto." />
+    <string id="taom_cc_taom_education_rhudaur_6_text" text="Ti sei arrangiato lungo la Grande Strada dell'Est." />
+    <string id="taom_cc_taom_education_rhudaur_6_desc" text="Sei cresciuto sulla strada tra l'Ultimo Ponte e il Colle Vento, portando messaggi per qualche moneta e vendendo ciò che i viandanti si lasciavano dietro. La strada ti ha insegnato mani rapide, una lingua ancor più rapida e il momento giusto per sparire." />
+    <string id="taom_cc_taom_parent_eredluin_1_text" text="Nobile delle Sale di Thorin" />
+    <string id="taom_cc_taom_parent_eredluin_1_desc" text="La tua famiglia apparteneva alla Casa di Delingur, parente di Re Farin, maestra nel maneggiare grandi asce e guida dei guerrieri che custodiscono l'onore delle Sale di Thorin nei Monti Azzurri." />
+    <string id="taom_cc_taom_parent_eredluin_2_text" text="Mastro Fabbro di Nogrod" />
+    <string id="taom_cc_taom_parent_eredluin_2_desc" text="La tua famiglia teneva una forgia a Nogrod, dove i Barbelunghe di Fuoco lavorano il ferro fin dai Giorni Antichi. Le loro lame e cotte di maglia andavano a ovest agli Elfi di Lindon e a est lungo la Strada dei Nani, e ogni pezzo spuntava il suo prezzo." />
+    <string id="taom_cc_taom_parent_eredluin_3_text" text="Minatore del Monte Dolmed" />
+    <string id="taom_cc_taom_parent_eredluin_3_desc" text="La tua famiglia lavorava le miniere di ferro sotto il Monte Dolmed, seguendo il minerale fin nelle radici dei Monti Azzurri, puntellando le gallerie contro i crolli e vendendo il minerale a carrettate nelle Sale di Thorin." />
+    <string id="taom_cc_taom_parent_eredluin_4_text" text="Guerriero Lanuta" />
+    <string id="taom_cc_taom_parent_eredluin_4_desc" text="La tua famiglia combatteva tra i Lanuti di Belegost, padroneggiando ascia e scudo e tenendo le porte della montagna quando i goblin di Blue Craig scendevano da nord." />
+    <string id="taom_cc_taom_parent_eredluin_5_text" text="Custode del Tesoro delle Sale" />
+    <string id="taom_cc_taom_parent_eredluin_5_desc" text="La tua famiglia custodiva i tesori e i magazzini delle Sale di Thorin, calcolando la ricchezza del regno e pianificando come una roccaforte montana venga rifornita e difesa durante un duro inverno." />
+    <string id="taom_cc_taom_parent_eredluin_6_text" text="Guardiano della Strada dei Nani" />
+    <string id="taom_cc_taom_parent_eredluin_6_desc" text="La tua famiglia percorreva la Strada dei Nani verso est attraverso la Contea fino a Brea, seguendo le tracce di orchi e lupi con l'arco e proteggendo le carovane che mantengono i Monti Azzurri nei commerci." />
+    <string id="taom_cc_taom_youth_eredluin_1_text" text="Hai servito nella Guardia del Re delle Sale di Thorin." />
+    <string id="taom_cc_taom_youth_eredluin_1_desc" text="Hai giurato fedeltà a Re Farin, servendo nella guardia delle Sale di Thorin e imparando a maneggiare l'ascia e il piccone dal lungo manico in difesa delle sale della montagna." />
+    <string id="taom_cc_taom_youth_eredluin_2_text" text="Hai difeso le porte di Belegost." />
+    <string id="taom_cc_taom_youth_eredluin_2_desc" text="Come parte della guarnigione di Belegost, hai manovrato le balestre sulle torri della porta e hai tenuto i valichi contro chiunque, imparando l'arte nanica della difesa d'assedio." />
+    <string id="taom_cc_taom_youth_eredluin_3_text" text="Ti sei addestrato con gli spaccatori Barbelunghe di Fuoco." />
+    <string id="taom_cc_taom_youth_eredluin_3_desc" text="Ti sei unito agli spaccatori dei Barbelunghe di Fuoco, le truppe d'urto di Nogrod, imparando a scagliare asce da lancio e a combattere negli stretti corridoi delle sale della montagna." />
+    <string id="taom_cc_taom_youth_eredluin_4_text" text="Hai esplorato i pendii sotto Blue Craig." />
+    <string id="taom_cc_taom_youth_eredluin_4_desc" text="Hai battuto i pendii settentrionali dei Monti Azzurri, dove i goblin di Blue Craig tengono le loro caverne, seguendo le tracce di predoni e lupi e vigilando sui valichi." />
+    <string id="taom_cc_taom_youth_eredluin_5_text" text="Sei stato nell'avanguardia dei Lanuti." />
+    <string id="taom_cc_taom_youth_eredluin_5_desc" text="Ti sei addestrato nell'avanguardia dei Lanuti, padroneggiando la lunga lancia e l'ascia a due mani nelle formazioni serrate dell'esercito nanico." />
+    <string id="taom_cc_taom_youth_eredluin_6_text" text="Hai marciato con le guardie delle carovane sulla Strada dei Nani." />
+    <string id="taom_cc_taom_youth_eredluin_6_desc" text="Hai marciato con le carovane mercantili lungo la Strada dei Nani attraverso la Contea fino a Brea, imparando le vie del commercio e l'arte di difendere un carico prezioso." />
+    <string id="taom_cc_taom_adulthood_eredluin_1_text" text="Hai respinto da solo un'incursione di goblin da Blue Craig." />
+    <string id="taom_cc_taom_adulthood_eredluin_1_desc" text="Tornando da una pattuglia esterna, ti imbattesti in una banda di goblin di Blue Craig che era sfuggita alla sorveglianza. Non c'era tempo per cercare aiuto. Tenesti il sentiero stretto con la tua ascia finché l'allarme non raggiunse la porta. Tre goblin non la raggiunsero mai." />
+    <string id="taom_cc_taom_adulthood_eredluin_2_text" text="Hai concluso il miglior accordo commerciale con Lindon da una generazione." />
+    <string id="taom_cc_taom_adulthood_eredluin_2_desc" text="Il prezzo del ferro nanico ai Rifugi Oscuri non veniva rivisto da una vita d'Uomo. Raccogliesti i dati e presentasti il caso agli Elfi di Lindon con tale chiarezza che l'accordo fu riscritto entro il mese, e il tesoriere di Re Farin imparò il tuo nome." />
+    <string id="taom_cc_taom_adulthood_eredluin_3_text" text="Hai aperto un nuovo filone di ferro sotto i Monti Azzurri." />
+    <string id="taom_cc_taom_adulthood_eredluin_3_desc" text="Le vecchie mappe indicavano un crollo, ma seguisti il suono dell'acqua nella pietra profonda e trovasti la galleria intatta dietro le macerie. Il filone era ricco, e gli ingegneri che lo mapparono aggiunsero il tuo nome ai registri delle Sale di Thorin." />
+    <string id="taom_cc_taom_adulthood_eredluin_4_text" text="Hai tenuto il muro di scudi alle porte di Belegost." />
+    <string id="taom_cc_taom_adulthood_eredluin_4_desc" text="Quando un'orda di goblin da Blue Craig irruppe nelle porte inferiori, tenesti saldo il tuo tratto del muro di scudi mentre altri cedevano, dando al contrattacco il tempo di formarsi. Il capitano dei Lanuti annotò il tuo nome nel registro della battaglia, che per un Nano è quanto di più vicino alla poesia." />
+    <string id="taom_cc_taom_adulthood_eredluin_5_text" text="Hai riequilibrato i conti del tesoro dopo anni di discrepanze." />
+    <string id="taom_cc_taom_adulthood_eredluin_5_desc" text="I registri delle Sale di Thorin erano disallineati da anni, con perdite che nessuno sapeva spiegare. Passasti tre mesi a confrontare i documenti e trovasti l'errore: un semplice sbaglio di conversione moltiplicato lungo vent'anni di annotazioni. Il tesoriere del Re ti strinse la mano." />
+    <string id="taom_cc_taom_adulthood_eredluin_6_text" text="Hai seguito una banda di orchi sulla Strada dei Nani fino al loro covo." />
+    <string id="taom_cc_taom_adulthood_eredluin_6_desc" text="La banda aveva colpito tre carovane sulla Strada dei Nani a est dei monti ed era sparita prima che qualcuno potesse inseguirla. Andasti da solo tra le colline, trovasti l'accampamento, li contasti, tracciasti la via d'accesso e riportasti il rapporto in tempo perché i guardiani potessero agire." />
+    <string id="taom_cc_taom_education_eredluin_1_text" text="Ti sei addestrato nella grande sala con i fratelli d'ascia del Re." />
+    <string id="taom_cc_taom_education_eredluin_1_desc" text="Ti esercitasti al combattimento accanto ai giovani guerrieri della casa di Re Farin, imparando a vibrare l'ascia a due mani nelle risonanti sale d'addestramento nel profondo dei Monti Azzurri. Ogni cicatrice era una lezione; ogni lezione un motivo d'orgoglio." />
+    <string id="taom_cc_taom_education_eredluin_2_text" text="Sei stato apprendista alle forge di Nogrod." />
+    <string id="taom_cc_taom_education_eredluin_2_desc" text="Passasti la giovinezza al banco del fabbro a Nogrod, imparando a lavorare il ferro dei Monti Azzurri in forge più antiche di ogni regno degli Uomini. A lavoro finito portavi le lame compiute agli Elfi di Lindon, che pagavano in argento e in pazienza." />
+    <string id="taom_cc_taom_education_eredluin_3_text" text="Hai lavorato nelle miniere di ferro del Monte Dolmed." />
+    <string id="taom_cc_taom_education_eredluin_3_desc" text="Hai impugnato un piccone nelle gallerie profonde sotto il Monte Dolmed prima ancora che ti crescesse la barba, imparando i passaggi nascosti della montagna e l'arte di scavare cunicoli e puntellarli. La pietra profonda ti divenne familiare quanto il cielo aperto." />
+    <string id="taom_cc_taom_education_eredluin_4_text" text="Ti sei addestrato nella muraglia di scudi dei Barbelunghe." />
+    <string id="taom_cc_taom_education_eredluin_4_desc" text="Ti sei addestrato nello stile ravvicinato dei Barbelunghe di Belegost, imparando a serrare lo scudo e a vibrare l'ascia in formazioni strette nei tunnel. La tua corporatura bassa era un vantaggio nei corridoi dove i più alti inciampavano." />
+    <string id="taom_cc_taom_education_eredluin_5_text" text="Hai contato le scorte delle Sale di Thorin." />
+    <string id="taom_cc_taom_education_eredluin_5_desc" text="Fin da piccolo hai aiutato a contare il ferro, il grano e le monete delle Sale di Thorin, imparando a tenere i registri e a rifornire una roccaforte montana durante i lunghi inverni. Quel lavoro ti rese metodico e ti diede l'occhio di uno stratega per le risorse." />
+    <string id="taom_cc_taom_education_eredluin_6_text" text="Hai pattugliato le pendici e la Strada dei Nani." />
+    <string id="taom_cc_taom_education_eredluin_6_desc" text="Hai percorso le pendici orientali dei Monti Azzurri con la guardia esterna, imparando a seguire le tracce dei predoni orcheschi e a tirare da riparo tra i pini lungo la Strada dei Nani. L'aria di montagna affinò i tuoi sensi e la distanza divenne tua alleata." />
+    <string id="taom_cc_taom_parent_anduinvale_1_text" text="Casa di Beorn" />
+    <string id="taom_cc_taom_parent_anduinvale_1_desc" text="La tua famiglia apparteneva alla Casa di Beorn, parenti e compagni di Grimbeorn, portando grandi asce nella sala di Beorn e cavalcando i robusti pony delle Valli ovunque la parola del capo li mandasse." />
+    <string id="taom_cc_taom_parent_anduinvale_2_text" text="Mercanti del Vecchio Guado" />
+    <string id="taom_cc_taom_parent_anduinvale_2_desc" text="La tua famiglia teneva una casa commerciale al Vecchio Guado, dove la strada dall'Alto Passo incontra il fiume. Miele, pelli e legname passavano agli Uomini dei Boschi e agli Elfi di Bosco Atro, e ogni carro pagava il suo dazio." />
+    <string id="taom_cc_taom_parent_anduinvale_3_text" text="Liberi contadini delle Valli" />
+    <string id="taom_cc_taom_parent_anduinvale_3_desc" text="La tua famiglia coltivava la terra fertile tra la Carroccia e l'Iris, allevando bestiame e api e tenendo una lancia presso la porta, perché lupi e goblin scendevano dai Monti Nebbiosi più spesso della pioggia." />
+    <string id="taom_cc_taom_parent_anduinvale_4_text" text="Carpentieri della Sala di Beorn" />
+    <string id="taom_cc_taom_parent_anduinvale_4_desc" text="La tua famiglia era di carpentieri e fabbri d'asce nella Sala di Beorn, innalzando le lunghe case di legno delle Valli e forgiando le larghe asce per cui i Beorniani sono rinomati." />
+    <string id="taom_cc_taom_parent_anduinvale_5_text" text="Cacciatori del margine di Bosco Atro" />
+    <string id="taom_cc_taom_parent_anduinvale_5_desc" text="La tua famiglia cacciava ai margini di Bosco Atro a est del fiume, abbattendo cervi e cinghiali e vigilando tra gli alberi contro i ragni e i servi di Dol Guldur." />
+    <string id="taom_cc_taom_parent_anduinvale_6_text" text="Vagabondi dell'Iris" />
+    <string id="taom_cc_taom_parent_anduinvale_6_desc" text="La tua famiglia vagava lungo l'Iris e le rive dell'Anduin, barattando ciò che trovava, prendendo ciò che poteva, e imparando che un traghettatore sente più di quanto dica." />
+    <string id="taom_cc_taom_parent_angaladh_1_text" text="Casa di Angáladh" />
+    <string id="taom_cc_taom_parent_angaladh_1_desc" text="La tua famiglia apparteneva alla Casa di Angáladh, parente di Re Ingomar, portando grandi asce nella sua sala a Villa degli Uomini dei Boschi e guidando le leve forestali lungo la Strada della Foresta." />
+    <string id="taom_cc_taom_parent_angaladh_2_text" text="Mercanti di Villa degli Uomini dei Boschi" />
+    <string id="taom_cc_taom_parent_angaladh_2_desc" text="La tua famiglia teneva una casa commerciale a Villa degli Uomini dei Boschi, dove legname, pellicce e miele giungevano dalle radure e partivano lungo la Strada della Foresta, e dove ogni carico pagava il suo pedaggio." />
+    <string id="taom_cc_taom_parent_angaladh_3_text" text="Contadini delle radure" />
+    <string id="taom_cc_taom_parent_angaladh_3_desc" text="La tua famiglia lavorava una radura strappata alla foresta, abbattendo alberi d'inverno e seminando in primavera, con una lancia presso la porta perché ragni e lupi uscivano dagli alberi più spesso della pioggia." />
+    <string id="taom_cc_taom_parent_angaladh_4_text" text="Legnaioli della Sala del Bosco di Ferro" />
+    <string id="taom_cc_taom_parent_angaladh_4_desc" text="La tua famiglia era di carpentieri e fabbri d'asce alla Sala del Bosco di Ferro, abbattendo il cuore scuro del legno da cui la sala prende nome e immanicando le larghe asce degli Uomini dei Boschi." />
+    <string id="taom_cc_taom_parent_angaladh_5_text" text="Guardaboschi della Strada della Foresta" />
+    <string id="taom_cc_taom_parent_angaladh_5_desc" text="La tua famiglia era di guardaboschi della Strada della Foresta, percorrendola in lungo e in largo con arco e accetta per tenere la via aperta e i ragni a distanza. Pochi li ringraziavano, ma la strada restava percorribile." />
+    <string id="taom_cc_taom_parent_angaladh_6_text" text="Reietti di Rocca dei Rovi" />
+    <string id="taom_cc_taom_parent_angaladh_6_desc" text="La tua famiglia viveva ai margini spinosi delle marche di Rocca dei Rovi, prendendo ciò che la foresta e la strada offrivano, e imparò che la borsa di uno straniero era spesso più sciolta della sua lingua." />
+    <string id="taom_cc_taom_youth_anduinvale_1_text" text="Hai portato messaggi per Grimbeorn." />
+    <string id="taom_cc_taom_youth_anduinvale_1_desc" text="Cavalcavi come messaggero per il capo, portando la sua parola tra la Sala di Beorn, il Vecchio Guado e la Carroccia, e imparasti a leggere le Valli dalla groppa di un pony." />
+    <string id="taom_cc_taom_youth_anduinvale_2_text" text="Hai montato la guardia all'Alto Passo." />
+    <string id="taom_cc_taom_youth_anduinvale_2_desc" text="Hai servito nella guarnigione che sorveglia l'Alto Passo, tirando dalle rocce contro i predoni goblin e imparando come pochi arcieri possano tenere un passaggio stretto." />
+    <string id="taom_cc_taom_youth_anduinvale_3_text" text="Hai combattuto nella leva dell'Iris." />
+    <string id="taom_cc_taom_youth_anduinvale_3_desc" text="Hai combattuto nella leva fluviale dell'Iris, scagliando asce da lancio tra i canneti e venendo alle lame quando i predoni di Dol Guldur si avvicinavano all'acqua." />
+    <string id="taom_cc_taom_youth_anduinvale_4_text" text="Hai seguito le tracce di lupi e orchi lungo il margine di Bosco Atro." />
+    <string id="taom_cc_taom_youth_anduinvale_4_desc" text="Hai cavalcato il margine della foresta a est dell'Anduin, seguendo lupi e bande di orchi fino alle loro tane e imparando a tirare dalla sella tra gli alberi." />
+    <string id="taom_cc_taom_youth_anduinvale_5_text" text="Ti sei unito agli uomini dell'ascia della Casa di Beorn." />
+    <string id="taom_cc_taom_youth_anduinvale_5_desc" text="Hai impugnato l'ascia tra gli uomini della casa di Beorn, imparando a combattere spalla a spalla con lancia e lama nel cortile, sotto l'occhio del capo." />
+    <string id="taom_cc_taom_youth_anduinvale_6_text" text="Hai viaggiato con i mercanti del fiume." />
+    <string id="taom_cc_taom_youth_anduinvale_6_desc" text="Hai risalito e disceso l'Anduin con i mercanti del fiume, badando a barche e carichi, e hai imparato come superare un pedaggio, una guardia e uno straniero sospetto." />
+    <string id="taom_cc_taom_youth_angaladh_1_text" text="Hai portato dispacci per re Ingomar." />
+    <string id="taom_cc_taom_youth_angaladh_1_desc" text="Hai portato la parola del re tra la Città dei Boscaioli e i presidi periferici, correndo i sentieri della foresta di rocca in rocca." />
+    <string id="taom_cc_taom_youth_angaladh_2_text" text="Hai presidiato la palizzata della Porta della Foresta." />
+    <string id="taom_cc_taom_youth_angaladh_2_desc" text="Hai servito sulle mura della Porta della Foresta, tirando dalle piattaforme contro lupi e goblin sulla strada sottostante, e hai imparato quanto pochi arcieri bastino a tenere un passaggio stretto." />
+    <string id="taom_cc_taom_youth_angaladh_3_text" text="Hai combattuto nella leva di Thornhold." />
+    <string id="taom_cc_taom_youth_angaladh_3_desc" text="Hai combattuto nella leva di Thornhold, scagliando asce da dietro le siepi di spine e venendo alla lama quando i predoni passavano dai varchi." />
+    <string id="taom_cc_taom_youth_angaladh_4_text" text="Hai cacciato ragni e lupi sotto le Emyn Duir." />
+    <string id="taom_cc_taom_youth_angaladh_4_desc" text="Hai percorso gli alberi oscuri sotto le Emyn Duir, seguendo branchi di lupi e bruciando nidi di ragni, e hai imparato a colpire un'ombra in corsa tra i tronchi." />
+    <string id="taom_cc_taom_youth_angaladh_5_text" text="Ti sei unito alla linea di lance della Città dei Boscaioli." />
+    <string id="taom_cc_taom_youth_angaladh_5_desc" text="Hai impugnato la lancia nella guardia della Città dei Boscaioli, imparando a stare spalla a spalla nei passaggi stretti tra gli alberi, dove una linea di lance ferma ciò che una carica non può." />
+    <string id="taom_cc_taom_youth_angaladh_6_text" text="Hai venduto merci lungo la Strada della Foresta." />
+    <string id="taom_cc_taom_youth_angaladh_6_desc" text="Hai percorso in lungo e in largo la Strada della Foresta con un fardello di coltelli, filo e focacce al miele, e hai imparato come superare uno straniero affamato, un gabelliere e un affare dubbio." />
+    <string id="taom_cc_taom_adulthood_anduinvale_1_text" text="Hai tenuto il guado della Carroccia accanto a Grimbeorn." />
+    <string id="taom_cc_taom_adulthood_anduinvale_1_desc" text="Quando un'orda di goblin scese dall'Alto Passo per spezzare in due le Valli, sei rimasto nel guado con gli uomini dell'ascia della Casa di Beorn finché i Cavalieri della Valle non ne aggirarono il fianco. Quella notte il tuo nome fu pronunciato nella sala." />
+    <string id="taom_cc_taom_adulthood_anduinvale_2_text" text="Hai aperto un libero mercato al Vecchio Guado." />
+    <string id="taom_cc_taom_adulthood_anduinvale_2_desc" text="Hai portato Beorniani, Boscaioli ed Elfi di Bosco Atro a un solo tavolo e hai fissato i pedaggi al Vecchio Guado, così che miele e legname attraversassero il fiume senza contese. L'intendente di Grimbeorn non dimentica chi riempì i magazzini." />
+    <string id="taom_cc_taom_adulthood_anduinvale_3_text" text="Hai ricostruito le fattorie di Eastbank dopo un'incursione di goblin." />
+    <string id="taom_cc_taom_adulthood_anduinvale_3_desc" text="Quando i predoni bruciarono le fattorie di Eastbank, hai radunato i vicini, rialzato i fienili prima della prima gelata e vegliato sui campi fino al raccolto. I villaggi ricordano." />
+    <string id="taom_cc_taom_adulthood_anduinvale_4_text" text="Hai eretto le porte di Gladden Hold." />
+    <string id="taom_cc_taom_adulthood_anduinvale_4_desc" text="Hai costruito e montato le grandi porte di legno di Gladden Hold, sgrossando tu stesso le travi. Quando i primi predoni vi si infransero contro e le porte ressero, la guarnigione le intitolò a te." />
+    <string id="taom_cc_taom_adulthood_anduinvale_5_text" text="Hai guidato famiglie fuori dall'ombra di Dol Guldur." />
+    <string id="taom_cc_taom_adulthood_anduinvale_5_desc" text="Quando l'ombra a sud crebbe e le famiglie dei Boscaioli fuggirono a nord tra gli alberi, le hai condotte oltre il fiume per sentieri che nessuna vedetta orchesca conosceva, senza perdere un solo bambino. Grimbeorn ti strinse la mano." />
+    <string id="taom_cc_taom_adulthood_anduinvale_6_text" text="Hai smantellato un giro di ricettatori di goblin al Vecchio Guado." />
+    <string id="taom_cc_taom_adulthood_anduinvale_6_desc" text="Per mesi merci rubate dai Monti Nebbiosi spuntarono nelle retrobotteghe lungo il fiume. Hai seguito il traffico, scovato gli uomini dietro di esso e li hai consegnati alle guardie, tenendo un po' d'argento per il disturbo." />
+    <string id="taom_cc_taom_adulthood_angaladh_1_text" text="Hai tenuto la Porta della Foresta accanto a re Ingomar." />
+    <string id="taom_cc_taom_adulthood_angaladh_1_desc" text="Quando un'orda di orchi salì da Dol Guldur per forzare la Porta della Foresta, sei rimasto nel passaggio con i lancieri del re finché i guardaboschi non giunsero aggirando tra gli alberi. Quella notte il tuo nome fu pronunciato nella sala." />
+    <string id="taom_cc_taom_adulthood_angaladh_2_text" text="Hai aperto un mercato del legname con i Beorniani." />
+    <string id="taom_cc_taom_adulthood_angaladh_2_desc" text="Hai attraversato l'Anduin e hai esposto ai Beorniani la questione del legname di Angáladh con tale chiarezza che entro il mese fu istituito un mercato regolare. L'intendente del re imparò il tuo nome." />
+    <string id="taom_cc_taom_adulthood_angaladh_3_text" text="Hai scacciato i ragni dai vecchi campi di Thornhold." />
+    <string id="taom_cc_taom_adulthood_angaladh_3_desc" text="Quando la foresta tornò a invadere le radure abbandonate di Thornhold, hai guidato i contadini con fuoco e lance, ripulito i nidi e portato un raccolto dove nulla cresceva da una generazione." />
+    <string id="taom_cc_taom_adulthood_angaladh_4_text" text="Hai innalzato le nuove travi della porta della Sala del Legnoferro." />
+    <string id="taom_cc_taom_adulthood_angaladh_4_desc" text="Hai scelto, abbattuto e trascinato il legnoferro per le grandi travi della porta della sala, sgrossandole tu stesso. Quando i primi predoni vi si infransero contro e ressero, la guarnigione le intitolò a te." />
+    <string id="taom_cc_taom_adulthood_angaladh_5_text" text="Hai portato fuori una pattuglia di guardaboschi da una conca di ragni." />
+    <string id="taom_cc_taom_adulthood_angaladh_5_desc" text="Quando una pattuglia di guardaboschi rimase tagliata fuori in una conca sotto le Emyn Duir, li hai condotti fuori per un sentiero di cervi che nessun ragno sorvegliava, senza perdere un solo uomo. Il loro capitano ti strinse il braccio e ti nominò amico dei guardaboschi." />
+    <string id="taom_cc_taom_adulthood_angaladh_6_text" text="Hai smantellato una banda di ricettatori attiva sulla Strada della Foresta." />
+    <string id="taom_cc_taom_adulthood_angaladh_6_desc" text="Per mesi merci saccheggiate spuntarono nelle retrobotteghe della Città dei Boscaioli. Hai seguito il traffico, scovato gli uomini dietro di esso e li hai consegnati alle guardie del re, tenendo un po' d'argento per il disturbo." />
+    <string id="taom_cc_taom_education_anduinvale_1_text" text="Addestrato nella sala di Grimbeorn." />
+    <string id="taom_cc_taom_education_anduinvale_1_desc" text="Sei cresciuto tra i servitori del capo nella Sala di Beorn, roteando la grande ascia contro i pali e imparando a cavalcare un pony in pieno assetto. Ogni livido era una lezione, e le vecchie storie dell'orso ti insegnarono ciò che un Beorniano deve ai suoi parenti." />
+    <string id="taom_cc_taom_education_anduinvale_2_text" text="Tenevi i conti al Vecchio Guado." />
+    <string id="taom_cc_taom_education_anduinvale_2_desc" text="Hai passato la giovinezza a contare carri e balle al mercato del Vecchio Guado, imparando a contrattare con Uomini dei Boschi, Elfi e qualche Nano, e a distinguere un prezzo onesto da una lingua svelta." />
+    <string id="taom_cc_taom_education_anduinvale_3_text" text="Accudivi le api e il bestiame delle Valli." />
+    <string id="taom_cc_taom_education_anduinvale_3_desc" text="Hai lavorato dall'alba al tramonto tra gli alveari e le mandrie sotto il Carrock, portando acqua e riparando steccati. Quando fu chiamata la leva ti diedero una lancia e ti insegnarono a tenere la linea." />
+    <string id="taom_cc_taom_education_anduinvale_4_text" text="Hai imparato l'arte del legno nella Sala di Beorn." />
+    <string id="taom_cc_taom_education_anduinvale_4_desc" text="Hai imparato il mestiere nei depositi di legname della Sala di Beorn, sagomando travi e immanicando asce sotto un maestro che giudicava ogni taglio a occhio. Da adulto le tue mani conoscevano il lavoro meglio della tua testa." />
+    <string id="taom_cc_taom_education_anduinvale_5_text" text="Hai cacciato ai confini di Bosco Atro e sui pendii del Carrock." />
+    <string id="taom_cc_taom_education_anduinvale_5_desc" text="Hai battuto i margini di Bosco Atro e i pendii sassosi del Carrock con i cacciatori, imparando a muoverti senza rumore e a scoccare una freccia contro un'ombra. Il tuo primo goblin cadde poco dopo." />
+    <string id="taom_cc_taom_education_anduinvale_6_text" text="Sei sopravvissuto a stento sulle rive dell'Iris." />
+    <string id="taom_cc_taom_education_anduinvale_6_desc" text="Sei cresciuto tra le capanne di canne e gli approdi dell'Iris, facendo commissioni per qualche moneta e vendendo ciò che il fiume portava. L'acqua ti insegnò mani svelte, lingua più svelta e quando sparire." />
+    <string id="taom_cc_taom_education_angaladh_1_text" text="Addestrato nella sala di Re Ingomar." />
+    <string id="taom_cc_taom_education_angaladh_1_desc" text="Sei cresciuto tra i servitori del re nella città degli Uomini dei Boschi, roteando la grande ascia contro i ceppi e imparando a muoverti tra gli alberi in pieno assetto. Ogni livido era una lezione, e gli antichi canti della foresta ti insegnarono ciò che gli Uomini dei Boschi si devono l'un l'altro." />
+    <string id="taom_cc_taom_education_angaladh_2_text" text="Contavi il legname nei depositi della città degli Uomini dei Boschi." />
+    <string id="taom_cc_taom_education_angaladh_2_desc" text="Hai passato la giovinezza a contare tronchi e assi nei depositi di legname della città degli Uomini dei Boschi, imparando a contrattare con Beorniani e capi-carovana e a distinguere il legno sano dal marcio." />
+    <string id="taom_cc_taom_education_angaladh_3_text" text="Hai lavorato le radure attorno a Thornhold." />
+    <string id="taom_cc_taom_education_angaladh_3_desc" text="Hai lavorato dall'alba al tramonto nelle radure attorno a Thornhold, estirpando ceppi e spingendo il bestiame fuori dall'ombra degli alberi. Quando fu chiamata la leva ti diedero una lancia e ti insegnarono a tenere la linea." />
+    <string id="taom_cc_taom_education_angaladh_4_text" text="Hai imparato l'arte del legno a Ironwood Hall." />
+    <string id="taom_cc_taom_education_angaladh_4_desc" text="Hai imparato il mestiere a Ironwood Hall, spaccando il durame scuro e immanicando asce sotto un maestro che provava ogni manico con un colpo. Da adulto le tue mani conoscevano il lavoro meglio della tua testa." />
+    <string id="taom_cc_taom_education_angaladh_5_text" text="Hai cacciato sui sentieri della foresta sotto gli Emyn Duir." />
+    <string id="taom_cc_taom_education_angaladh_5_desc" text="Hai seguito i guardaboschi sotto gli Emyn Duir, imparando a muoverti senza rumore sul fogliame e a scoccare una freccia contro un'ombra. Il tuo primo ragno cadde poco dopo." />
+    <string id="taom_cc_taom_education_angaladh_6_text" text="Sei sopravvissuto a stento presso la Porta della Foresta." />
+    <string id="taom_cc_taom_education_angaladh_6_desc" text="Sei cresciuto tra le tettoie fuori dalla Porta della Foresta, facendo commissioni per i viandanti e vendendo ciò che la strada lasciava cadere. La strada ti insegnò mani svelte, lingua più svelta e quando sparire." />
+    <string id="taom_cc_taom_parent_dorwinion_1_text" text="Casa di Re Ostric" />
+    <string id="taom_cc_taom_parent_dorwinion_1_desc" text="La tua famiglia serviva nella sala di Re Ostric a Vineholm, cavalcando al suo seguito e portando la sua parola lungo le strade fluviali ovunque la vendemmia e il regno lo richiedessero." />
+    <string id="taom_cc_taom_parent_dorwinion_2_text" text="Mercanti di vino di Redwater" />
+    <string id="taom_cc_taom_parent_dorwinion_2_desc" text="La tua famiglia teneva una casa del vino a Redwater, spedendo botti lungo il fiume e attraverso il Mare di Rhûn, e ogni botte pagava il suo pedaggio prima di lasciare la banchina." />
+    <string id="taom_cc_taom_parent_dorwinion_3_text" text="Coltivatori di vigneti" />
+    <string id="taom_cc_taom_parent_dorwinion_3_desc" text="La tua famiglia curava viti e frutteti sui pendii assolati sopra il Redwater, con una lancia accanto alla porta, poiché i predoni dall'est risalivano la riva più spesso del gelo." />
+    <string id="taom_cc_taom_parent_dorwinion_4_text" text="Bottai e vinai di Vineholm" />
+    <string id="taom_cc_taom_parent_dorwinion_4_desc" text="La tua famiglia era di bottai e costruttori di torchi a Vineholm, fabbricando le botti e i torchi da cui dipende la ricchezza del regno, e forgiando le spade corte della guardia cittadina." />
+    <string id="taom_cc_taom_parent_dorwinion_5_text" text="Uccellatori del Fiume Celere" />
+    <string id="taom_cc_taom_parent_dorwinion_5_desc" text="La tua famiglia cacciava tra i canneti e i boschi ripari lungo il Fiume Celere, prendendo uccelli e cervi per i mercati di Seagate e tenendo d'occhio l'acqua." />
+    <string id="taom_cc_taom_parent_dorwinion_6_text" text="Vagabondi dei moli di Seagate" />
+    <string id="taom_cc_taom_parent_dorwinion_6_desc" text="La tua famiglia viveva tra le banchine di Seagate, lavorando sulle barche per qualche moneta e imparando che un capitano del porto sente più di quanto dica." />
+    <string id="taom_cc_taom_parent_southrhovanion_1_text" text="Seguaci di Re Vidumar" />
+    <string id="taom_cc_taom_parent_southrhovanion_1_desc" text="La tua famiglia serviva nella sala di Re Vidumar a Vidugard, cavalcando al suo seguito e portando la sua lancia ovunque le pianure lo richiedessero." />
+    <string id="taom_cc_taom_parent_southrhovanion_2_text" text="Mercanti di cavalli di Southwood" />
+    <string id="taom_cc_taom_parent_southrhovanion_2_desc" text="La tua famiglia era di mercanti di cavalli a Southwood, portando mandrie alle fiere e vendendo cavalcature a ogni signore dalla foresta al mare orientale." />
+    <string id="taom_cc_taom_parent_southrhovanion_3_text" text="Liberi proprietari della Marca del Nord" />
+    <string id="taom_cc_taom_parent_southrhovanion_3_desc" text="La tua famiglia era composta da liberi contadini della Marca del Nord, che allevavano cavalli e coltivavano orzo nelle lunghe praterie, con una lancia accanto alla porta, poiché i lupi e gli esploratori dei Carrieri attraversavano la piana più spesso della pioggia." />
+    <string id="taom_cc_taom_parent_southrhovanion_4_text" text="Fabbri di Horsemead" />
+    <string id="taom_cc_taom_parent_southrhovanion_4_desc" text="La tua famiglia era di fabbri a Horsemead, che ferravano le mandrie del re e forgiavano i morsi, gli speroni e le lame dei suoi cavalieri." />
+    <string id="taom_cc_taom_parent_southrhovanion_5_text" text="Cacciatori delle Falde Meridionali" />
+    <string id="taom_cc_taom_parent_southrhovanion_5_desc" text="La tua famiglia cacciava lungo le falde meridionali di Bosco Atro, abile con l'arco e vigile su qualunque cosa strisciasse fuori da sotto gli alberi." />
+    <string id="taom_cc_taom_parent_southrhovanion_6_text" text="Vagabondi delle Pianure" />
+    <string id="taom_cc_taom_parent_southrhovanion_6_desc" text="La tua famiglia errava per le pianure aperte a sud della foresta, seguendo le mandrie, accettando il lavoro che trovava e talvolta anche quello che non trovava." />
+    <string id="taom_cc_taom_youth_dorwinion_1_text" text="Hai cavalcato con i guardiani delle vigne di Vineholm." />
+    <string id="taom_cc_taom_youth_dorwinion_1_desc" text="Ti sei unito ai guardiani a cavallo che pattugliano i vigneti e le rive del Fiume Rosso, imparando a cavalcare e a combattere con la lancia lungo gli stretti terrazzamenti." />
+    <string id="taom_cc_taom_youth_dorwinion_2_text" text="Hai montato la guardia sulle mura di Seagate." />
+    <string id="taom_cc_taom_youth_dorwinion_2_desc" text="Hai servito nella guarnigione di Seagate, scoccando frecce dalle mura contro i predoni del Mare di Rhûn e imparando come pochi arcieri possano tenere un porto." />
+    <string id="taom_cc_taom_youth_dorwinion_3_text" text="Hai combattuto nella leva dei vigneti." />
+    <string id="taom_cc_taom_youth_dorwinion_3_desc" text="Ti sei addestrato con la leva dei vigneti, imparando a scagliare giavellotti tra i filari e a passare alla spada quando i predoni sfondavano le file." />
+    <string id="taom_cc_taom_youth_dorwinion_4_text" text="Hai inseguito i predoni lungo la Marca Orientale." />
+    <string id="taom_cc_taom_youth_dorwinion_4_desc" text="Hai cavalcato le terre aride della Marca Orientale, a est delle vigne, inseguendo predoni e lupi dalla sella e imparando a scoccare l'arco al galoppo." />
+    <string id="taom_cc_taom_youth_dorwinion_5_text" text="Ti sei unito alla linea di lance di Vinewatch." />
+    <string id="taom_cc_taom_youth_dorwinion_5_desc" text="Hai preso il tuo posto nella linea di lance di Vinewatch, imparando a resistere saldo con lancia e scudo contro i cavalieri che salgono da oriente." />
+    <string id="taom_cc_taom_youth_dorwinion_6_text" text="Hai lavorato sulle chiatte del vino del Fiume Rosso." />
+    <string id="taom_cc_taom_youth_dorwinion_6_desc" text="Hai risalito e disceso il Fiume Rosso e attraversato il Mare di Rhûn con le chiatte del vino, badando alle botti e imparando come superare un pedaggio, una guardia e un compratore dubbioso." />
+    <string id="taom_cc_taom_youth_southrhovanion_1_text" text="Hai cavalcato con i cavalieri della casa di Vidugard." />
+    <string id="taom_cc_taom_youth_southrhovanion_1_desc" text="Hai dimostrato la tua abilità in sella tra i cavalieri della casa del re, imparando a caricare con la lancia e a combattere a cavallo con lancia e spada." />
+    <string id="taom_cc_taom_youth_southrhovanion_2_text" text="Hai montato la guardia sulle mura di Wainwatch." />
+    <string id="taom_cc_taom_youth_southrhovanion_2_desc" text="Hai servito nella guarnigione di Wainwatch, scoccando frecce dalle sue mura e imparando tattica e disciplina dai capitani che sorvegliano la piana orientale." />
+    <string id="taom_cc_taom_youth_southrhovanion_3_text" text="Ti sei unito agli schermagliatori della Marca Occidentale." />
+    <string id="taom_cc_taom_youth_southrhovanion_3_desc" text="Ti sei unito agli schermagliatori della Marca Occidentale, imparando a lanciare giavellotti e a combattere con la spada a piedi accanto ai cavalieri." />
+    <string id="taom_cc_taom_youth_southrhovanion_4_text" text="Hai cavalcato con gli esploratori della piana aperta." />
+    <string id="taom_cc_taom_youth_southrhovanion_4_desc" text="Hai battuto lunghe distese d'erba con gli esploratori, vigilando sui fumi dei Carrieri e sui branchi di lupi e imparando a tirare dalla sella." />
+    <string id="taom_cc_taom_youth_southrhovanion_5_text" text="Hai combattuto tra i lancieri della Marca del Nord." />
+    <string id="taom_cc_taom_youth_southrhovanion_5_desc" text="Come lanciere della Marca del Nord hai imparato a tenere la linea con lancia e scudo contro una carica." />
+    <string id="taom_cc_taom_youth_southrhovanion_6_text" text="Hai seguito le mandrie con la gente dei carri." />
+    <string id="taom_cc_taom_youth_southrhovanion_6_desc" text="Invece di prendere le armi, hai viaggiato con i carri delle mandrie e con chi seguiva l'accampamento, imparando a vivere d'astuzia, di commercio e di mano lesta." />
+    <string id="taom_cc_taom_adulthood_dorwinion_1_text" text="Hai difeso la porta di Sunwall contro un'orda venuta da oriente." />
+    <string id="taom_cc_taom_adulthood_dorwinion_1_desc" text="Quando una banda guerriera uscì dalla steppa orientale e si gettò contro le mura di Sunwall, tenesti la porta con la guardia del re finché i cavalieri di Vineholm non li presero di fianco. Quella notte il tuo nome fu pronunciato nella sala." />
+    <string id="taom_cc_taom_adulthood_dorwinion_2_text" text="Hai aperto il primo libero mercato sul Mare di Rhûn." />
+    <string id="taom_cc_taom_adulthood_dorwinion_2_desc" text="Nessun mercante voleva essere il primo, con predoni su ogni riva. Tu salpasti, fissasti i pedaggi e portasti i vignaioli del Fiume Rosso e i compratori dell'est a un solo tavolo. Il siniscalco del re non dimentica chi gli ha riempito le cantine." />
+    <string id="taom_cc_taom_adulthood_dorwinion_3_text" text="Hai salvato la vendemmia del Fiume Rosso da un gelo precoce." />
+    <string id="taom_cc_taom_adulthood_dorwinion_3_desc" text="Quando il gelo giunse ai terrazzamenti con un mese d'anticipo, radunasti i vendemmiatori e raccogliesti l'uva in tre giorni. I villaggi lo ricordano." />
+    <string id="taom_cc_taom_adulthood_dorwinion_4_text" text="Hai costruito il grande torchio di Vineholm." />
+    <string id="taom_cc_taom_adulthood_dorwinion_4_desc" text="I vignaioli commissionarono un nuovo torchio per la cantina del re. Tu lo progettasti e ne tagliasti le travi con le tue mani, e quando sgorgò il primo mosto i cantinieri gli diedero il tuo nome." />
+    <string id="taom_cc_taom_adulthood_dorwinion_5_text" text="Hai guidato le famiglie fuori dalla Marca Orientale in fiamme." />
+    <string id="taom_cc_taom_adulthood_dorwinion_5_desc" text="Quando i predoni diedero fuoco alle fattorie della Marca Orientale e le famiglie fuggirono a ovest, tu le conducesti lungo burroni asciutti che nessun cavaliere aveva esplorato, e non perdesti un solo bambino. Il re ti strinse la mano." />
+    <string id="taom_cc_taom_adulthood_dorwinion_6_text" text="Hai smascherato una banda di contrabbandieri sulle banchine di Seagate." />
+    <string id="taom_cc_taom_adulthood_dorwinion_6_desc" text="Per mesi il vino era uscito dai magazzini del re senza pagare dazio. Seguisti il carico, scopristi il funzionario del porto che vi stava dietro e lo consegnasti alle guardie, tenendo un po' d'argento per il disturbo." />
+    <string id="taom_cc_taom_adulthood_southrhovanion_1_text" text="Hai cavalcato nella carica che spezzò un'oste di Carristi davanti a Wainwatch." />
+    <string id="taom_cc_taom_adulthood_southrhovanion_1_desc" text="Quando un'oste di Carristi risalì la pianura orientale e la linea vacillò al centro, tu ti lanciasti nella carica e tenesti la tua posizione finché l'oste non si ruppe. I cavalieri di Vidugard ne parlano ancora." />
+    <string id="taom_cc_taom_adulthood_southrhovanion_2_text" text="Hai ottenuto i migliori prezzi alla fiera dei cavalli che Southwood vedesse da cinque anni." />
+    <string id="taom_cc_taom_adulthood_southrhovanion_2_desc" text="I compratori del sud erano venuti aspettandosi di fissare il prezzo come sempre. Tu radunasti gli allevatori, resisteste uniti, e le mandrie furono vendute a un prezzo che la fiera ricorda ancora." />
+    <string id="taom_cc_taom_adulthood_southrhovanion_3_text" text="Hai respinto un'incursione di Carristi che colpì la Marca Settentrionale all'inizio dell'autunno." />
+    <string id="taom_cc_taom_adulthood_southrhovanion_3_desc" text="I predoni avevano calcolato l'attacco per il raccolto, quando le fattorie erano scoperte. Radunasti la leva, li affrontasti a piedi al guado del torrente e li trattenesti lì finché non giunsero i cavalieri." />
+    <string id="taom_cc_taom_adulthood_southrhovanion_4_text" text="Hai forgiato una spada che il re scelse per la sua guardia personale." />
+    <string id="taom_cc_taom_adulthood_southrhovanion_4_desc" text="La commissione venne dalle scuderie del re: una lama che potesse essere portata alla sella ed estratta senza esitazione. Quando Vidumar scelse il tuo modello per i suoi cavalieri, il tuo nome fu fatto." />
+    <string id="taom_cc_taom_adulthood_southrhovanion_5_text" text="Hai seguito le tracce degli esploratori che mappavano le vie d'accesso a Westmark." />
+    <string id="taom_cc_taom_adulthood_southrhovanion_5_desc" text="Notasti i segni di una sorveglianza accurata: erba raddrizzata, pietre smosse, un fuoco sepolto. Seguisti la pista verso sud e riportasti la notizia in tempo perché i cavalieri agissero." />
+    <string id="taom_cc_taom_adulthood_southrhovanion_6_text" text="Hai smascherato una spia che operava dentro Vidugard." />
+    <string id="taom_cc_taom_adulthood_southrhovanion_6_desc" text="La spia era in città da due anni, passando notizie sulle mandrie e sulla guarnigione a oriente. La osservasti finché non ne conoscesti le abitudini, e la consegnasti alle guardie del re." />
+    <string id="taom_cc_taom_education_dorwinion_1_text" text="Addestrato nella sala di Re Ostric." />
+    <string id="taom_cc_taom_education_dorwinion_1_desc" text="Crescesti tra la casa del re a Vineholm, imparando a cavalcare in pieno equipaggiamento e a maneggiare armi pesanti sotto i vecchi guardiani. Ogni livido era una lezione, e i canti della sala ti insegnarono ciò che devi al tuo signore." />
+    <string id="taom_cc_taom_education_dorwinion_2_text" text="Scrivano nelle case del vino di Redwater." />
+    <string id="taom_cc_taom_education_dorwinion_2_desc" text="Imparasti a tenere i conti e a conquistare i compratori nelle cantine di Redwater, dove ogni botte viene assaggiata e ogni prezzo discusso, e a distinguere un affare onesto da una lingua svelta." />
+    <string id="taom_cc_taom_education_dorwinion_3_text" text="Hai lavorato i terrazzamenti sopra il Redwater." />
+    <string id="taom_cc_taom_education_dorwinion_3_desc" text="Crescesti trasportando ceste e guidando carri sui terrazzamenti delle vigne, forgiando una schiena forte e gambe salde. Quando fu chiamata la leva ti misero in mano una lancia e ti insegnarono a tenere la linea." />
+    <string id="taom_cc_taom_education_dorwinion_4_text" text="Apprendista presso un bottaio di Vineholm." />
+    <string id="taom_cc_taom_education_dorwinion_4_desc" text="Imparasti il mestiere nelle botteghe di Vineholm, piegando doghe e cerchiando botti sotto un maestro che giudicava ogni giuntura dal suono. Da adulto le tue mani conoscevano il lavoro meglio della tua testa." />
+    <string id="taom_cc_taom_education_dorwinion_5_text" text="Hai cacciato nei canneti del Fiume Celere." />
+    <string id="taom_cc_taom_education_dorwinion_5_desc" text="Percorresti le paludi e i boschi fluviali con gli uccellatori, imparando a muoverti senza rumore e a scoccare una freccia contro un'ombra tra i giunchi." />
+    <string id="taom_cc_taom_education_dorwinion_6_text" text="Hai tirato avanti sulle banchine di Seagate." />
+    <string id="taom_cc_taom_education_dorwinion_6_desc" text="Crescesti tra gli scaricatori e i ladruncoli di Seagate, facendo commissioni per qualche moneta e vendendo ciò che cadeva dalle chiatte. Il porto ti insegnò mani svelte, una lingua ancora più svelta e il momento giusto per sparire." />
+    <string id="taom_cc_taom_education_southrhovanion_1_text" text="Hai cavalcato in addestramento con la casa di Re Vidumar." />
+    <string id="taom_cc_taom_education_southrhovanion_1_desc" text="Passasti la giovinezza imparando l'arte della guerra a cavallo tra la casa del re a Vidugard, dove i vecchi cavalieri ti insegnarono a mantenere la sella, la lancia e la calma per un'intera giornata di cavalcata." />
+    <string id="taom_cc_taom_education_southrhovanion_2_text" text="Hai commerciato cavalli alle fiere di Southwood." />
+    <string id="taom_cc_taom_education_southrhovanion_2_desc" text="Portavi prezzi e registri tra le fiere equine di Southwood e i minori possedimenti della pianura, imparando a giudicare una cavalcatura a colpo d'occhio e un compratore in un respiro." />
+    <string id="taom_cc_taom_education_southrhovanion_3_text" text="Hai allevato cavalli e servito nella leva della Marca Settentrionale." />
+    <string id="taom_cc_taom_education_southrhovanion_3_desc" text="Lavorasti i pascoli della tua famiglia nella Marca Settentrionale, imparando a trattare i cavalli quasi prima di saper camminare. Quando fu chiamata la leva prendesti una lancia e un posto nella linea." />
+    <string id="taom_cc_taom_education_southrhovanion_4_text" text="Apprendista presso i fabbri di Horsemead." />
+    <string id="taom_cc_taom_education_southrhovanion_4_desc" text="Imparasti a forgiare morsi, speroni e lame nelle fucine di Horsemead, sotto un maestro che giudicava una spada da come stava nella mano di un cavaliere." />
+    <string id="taom_cc_taom_education_southrhovanion_5_text" text="Hai cacciato ai margini meridionali e scrutato l'orizzonte." />
+    <string id="taom_cc_taom_education_southrhovanion_5_desc" text="Vagasti a lungo lungo il limitare della foresta con il tuo arco, cacciando selvaggina e tenendo d'occhio sia gli alberi sia l'erba aperta." />
+    <string id="taom_cc_taom_education_southrhovanion_6_text" text="Hai vagato per le pianure senza fedeltà alcuna." />
+    <string id="taom_cc_taom_education_southrhovanion_6_desc" text="Vagasti per l'erba aperta senza clan né dimora da chiamare tua, imparando a vivere d'ingegno e di commercio, e a leggere uno straniero prima che raggiungesse il tuo fuoco." />
   </strings>
 </base>

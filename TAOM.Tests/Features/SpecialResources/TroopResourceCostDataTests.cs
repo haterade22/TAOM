@@ -59,6 +59,44 @@ public class TroopResourceCostDataTests
             "Cost rows whose resource_id names no <Resource id> in special_resources_config.xml: " + string.Join(", ", unresolved));
     }
 
+    // The emissary price of a troop is merchant_cost times the emissary_price_multiplier of the resource its row names.
+    private static List<(string Troop, string Resource, int Price)> EmissaryPrices()
+    {
+        var resources = Load("special_resources_config.xml").Root.Elements("Resource").ToDictionary(
+            r => (string)r.Attribute("id"),
+            r => (int?)r.Attribute("emissary_price_multiplier") ?? 1);
+
+        return CostRows().Where(c => c.MerchantCost > 0 && resources.ContainsKey(c.ResourceId))
+            .Select(c => (c.TroopId, c.ResourceId, c.MerchantCost * resources[c.ResourceId]))
+            .ToList();
+    }
+
+    [TestMethod]
+    public void EveryEmissaryPrice_AfterTheMultiplier_FitsUnderEveryResourceCap()
+    {
+        // The buyer pays in the settlement owner's resource, which can differ from the troop's, so the price must
+        // fit under the smallest cap of any resource.
+        var smallestCap = Load("special_resources_config.xml").Root.Elements("Resource").Min(r => ParseFloat(r, "cap"));
+        var prices = EmissaryPrices();
+        Assert.IsTrue(prices.Count > 0, "no troop row carries a merchant_cost");
+
+        var unaffordable = prices.Where(p => p.Price > smallestCap).Select(p => $"{p.Troop} costs {p.Price}, smallest cap {smallestCap}").ToList();
+
+        Assert.AreEqual(0, unaffordable.Count,
+            "An emissary price above a resource cap can never be paid: " + string.Join("; ", unaffordable));
+    }
+
+    [TestMethod]
+    public void EveryEmissaryPrice_ExceptWarDrums_IsAtLeastOneHundred()
+    {
+        // Income pays about 50 for a full 100-man battle, so an elite troop must cost several battles (2026-11-12).
+        // War Drums keeps its own scale: its two creature rows were priced by hand at 70 and 2,800.
+        var cheap = EmissaryPrices().Where(p => p.Resource != "war_drums" && p.Price < 100)
+            .Select(p => $"{p.Troop} costs {p.Price}").ToList();
+
+        Assert.AreEqual(0, cheap.Count, "Emissary prices under 100: " + string.Join("; ", cheap));
+    }
+
     [TestMethod]
     public void EveryMarkedRow_ResolvesAnIconSprite()
     {

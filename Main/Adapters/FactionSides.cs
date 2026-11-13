@@ -34,6 +34,20 @@ internal static class FactionSides
         return new SideIds(string.Empty, hero.Culture?.StringId ?? string.Empty);
     }
 
+    /// <summary>
+    /// A lord by their own people: the hero's clan with the clan's culture, never the clan's realm, so an orc clan serving Gondor
+    /// still reads Evil. A clanless hero reads their own culture.
+    /// </summary>
+    public static SideIds OfOwnClan(Hero? hero)
+    {
+        if (hero == null)
+            return SideIds.None;
+        var clan = hero.Clan;
+        if (clan != null)
+            return Of(clan);
+        return new SideIds(string.Empty, hero.Culture?.StringId ?? string.Empty);
+    }
+
     /// <summary>A hero character reads <see cref="OfHero"/>; a troop has no faction and reads its own culture.</summary>
     public static SideIds OfCharacter(CharacterObject? character)
     {

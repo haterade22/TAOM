@@ -813,13 +813,13 @@
     <string id="taom_career_grp_ranger_of_the_north_t1_a" text="Yeşilyol Avcısı" />
     <string id="taom_career_grp_ranger_of_the_north_t1_b" text="Rüzgartepe Gözcüsü" />
     <string id="taom_career_grp_ranger_of_the_north_t2_a" text="Kuzey Yazıları İzcisi" />
-    <string id="taom_career_grp_ranger_of_the_north_t2_b" text="Dúnedain Rangers" />
+    <string id="taom_career_grp_ranger_of_the_north_t2_b" text="Dúnedain Kolcuları" />
     <string id="taom_career_grp_ranger_of_the_north_t3_a" text="Nenuial Oku" />
     <string id="taom_career_grp_ranger_of_the_north_t3_b" text="Chetwood Gölgesi" />
     <string id="taom_career_grp_warden_of_fornost_t1_a" text="Hendek Muhafızı" />
     <string id="taom_career_grp_warden_of_fornost_t1_b" text="Baranduin Geçidi'nin Bekçisi" />
     <string id="taom_career_grp_warden_of_fornost_t2_a" text="Kuzey Yazıları Öncüsü" />
-    <string id="taom_career_grp_warden_of_fornost_t2_b" text="Sword of the North Downs" />
+    <string id="taom_career_grp_warden_of_fornost_t2_b" text="Kuzey Yazıları'nın Kılıcı" />
     <string id="taom_career_grp_warden_of_fornost_t3_a" text="Arvedui'nin Ordusu" />
     <string id="taom_career_grp_warden_of_fornost_t3_b" text="Amon Sûl'ün Bekçisi" />
     <string id="taom_career_knight_of_arthedain" text="Arthedain Şövalyesi" />
@@ -930,1082 +930,1082 @@
     <string id="taom_wof_t3b_p2" text="+%10 direnç." />
     <string id="taom_wof_t3b_p3" text="+%15 zırh delme." />
     <string id="taom_wof_t3b_p4" text="+8 azami sağlık." />
-    <string id="taom_ability_bowman_of_minhiriath" text="Ambush" />
-    <string id="taom_ability_bowman_of_minhiriath_tt" text="Spring a deadly ambush — boosts +20% ranged damage, +20% draw speed, and +15% movement speed for 8s." />
-    <string id="taom_ability_captain_of_cameth_brin" text="Hold the Line" />
-    <string id="taom_ability_captain_of_cameth_brin_tt" text="Rally your soldiers with iron discipline — boosts +15% melee damage and +10% damage reduction to allies within 50m for 8s." />
-    <string id="taom_ability_knight_of_cardolan" text="Stampede" />
-    <string id="taom_ability_knight_of_cardolan_tt" text="Thunder forward with an unstoppable cavalry charge — boosts +25% charge damage, +20% mount speed, and +10% melee damage for 8s." />
-    <string id="taom_ability_ranger_of_the_angle" text="Ambush" />
-    <string id="taom_ability_ranger_of_the_angle_tt" text="Spring a deadly ambush — boosts +20% ranged damage, +20% draw speed, and +15% movement speed for 8s." />
-    <string id="taom_ability_rider_of_the_fells" text="Stampede" />
-    <string id="taom_ability_rider_of_the_fells_tt" text="Thunder forward with an unstoppable cavalry charge — boosts +25% charge damage, +20% mount speed, and +10% melee damage for 8s." />
-    <string id="taom_ability_warden_of_tyrn_gorthad" text="Hold the Line" />
-    <string id="taom_ability_warden_of_tyrn_gorthad_tt" text="Rally your soldiers with iron discipline — boosts +15% melee damage and +10% damage reduction to allies within 50m for 8s." />
-    <string id="taom_bom_t1a_key" text="Ambush radius increased, arrows deal bonus damage from stealth." />
-    <string id="taom_bom_t1a_p1" text="+8% ranged damage." />
-    <string id="taom_bom_t1a_p2" text="+5% armor penetration." />
-    <string id="taom_bom_t1a_p3" text="+7% movement speed." />
-    <string id="taom_bom_t1a_p4" text="+5% battle renown gain." />
-    <string id="taom_bom_t1b_key" text="Ambush duration extended, granting additional evasion." />
-    <string id="taom_bom_t1b_p1" text="+5% resistance." />
-    <string id="taom_bom_t1b_p2" text="+5 max health." />
-    <string id="taom_bom_t1b_p3" text="+5% party spotting range." />
-    <string id="taom_bom_t1b_p4" text="+10% stealth bonus." />
-    <string id="taom_bom_t2a_key" text="Ambush charge requirement reduced, activating more frequently." />
-    <string id="taom_bom_t2a_p1" text="+10% party spotting range." />
-    <string id="taom_bom_t2a_p2" text="+10% movement speed." />
-    <string id="taom_bom_t2a_p3" text="+13% stealth bonus." />
-    <string id="taom_bom_t2a_p4" text="+10% battle renown gain." />
-    <string id="taom_bom_t2b_key" text="Ambush also increases troop ranged damage while active." />
-    <string id="taom_bom_t2b_p1" text="+12% ranged damage." />
-    <string id="taom_bom_t2b_p2" text="+10% armor penetration." />
-    <string id="taom_bom_t2b_p3" text="+8 max health." />
-    <string id="taom_bom_t2b_p4" text="+3% troop damage." />
-    <string id="taom_bom_t3a_key" text="Ambush radius greatly increased, devastating arrow volleys." />
-    <string id="taom_bom_t3a_p1" text="+18% ranged damage." />
-    <string id="taom_bom_t3a_p2" text="+15% armor penetration." />
-    <string id="taom_bom_t3a_p3" text="+15% battle renown gain." />
-    <string id="taom_bom_t3a_p4" text="+5% troop damage." />
-    <string id="taom_bom_t3b_key" text="Ambush charge greatly reduced, becoming nearly always available." />
-    <string id="taom_bom_t3b_p1" text="+15% stealth bonus." />
-    <string id="taom_bom_t3b_p2" text="+15% movement speed." />
-    <string id="taom_bom_t3b_p3" text="+9 max health." />
-    <string id="taom_bom_t3b_p4" text="+15% party spotting range." />
-    <string id="taom_bowman_of_minhiriath_root_desc" text="Ambush grants +5% ranged damage and scales duration with Bow skill." />
-    <string id="taom_career_bowman_of_minhiriath" text="Bowman of Minhiriath" />
-    <string id="taom_career_bowman_of_minhiriath_desc" text="An elite scout who strikes from the river country of Minhiriath, ambushing raiders from Dunland with deadly precision." />
-    <string id="taom_career_captain_of_cameth_brin" text="Captain of Cameth Brin" />
-    <string id="taom_career_captain_of_cameth_brin_desc" text="A battle-hardened infantry officer who holds the tower of Cameth Brin against the mountains, forging order from chaos when the fells burn. The Captain holds the line where others would break, rallying soldiers through sheer force of will." />
-    <string id="taom_career_grp_bowman_of_minhiriath_t1_a" text="Hunter of the Greenway" />
-    <string id="taom_career_grp_bowman_of_minhiriath_t1_b" text="Watcher of the Marshes" />
-    <string id="taom_career_grp_bowman_of_minhiriath_t2_a" text="Scout of the South Downs" />
-    <string id="taom_career_grp_bowman_of_minhiriath_t2_b" text="Bowman of the Greyflood" />
-    <string id="taom_career_grp_bowman_of_minhiriath_t3_a" text="Arrow of the Gwathló" />
-    <string id="taom_career_grp_bowman_of_minhiriath_t3_b" text="Shadow of Eryn Vorn" />
-    <string id="taom_career_grp_captain_of_cameth_brin_t1_a" text="Warden of the Ettendale" />
-    <string id="taom_career_grp_captain_of_cameth_brin_t1_b" text="Keeper of the Hoarwell Crossing" />
-    <string id="taom_career_grp_captain_of_cameth_brin_t2_a" text="Vanguard of the Coldfells" />
-    <string id="taom_career_grp_captain_of_cameth_brin_t2_b" text="Sword of the Last Bridge" />
-    <string id="taom_career_grp_captain_of_cameth_brin_t3_a" text="Host of Belegorn" />
-    <string id="taom_career_grp_captain_of_cameth_brin_t3_b" text="Lord of the Tower of Cameth Brin" />
-    <string id="taom_career_grp_knight_of_cardolan_t1_a" text="Lancer of Minhiriath" />
-    <string id="taom_career_grp_knight_of_cardolan_t1_b" text="Warden of Tharbad" />
-    <string id="taom_career_grp_knight_of_cardolan_t2_a" text="Rider of the Plains" />
-    <string id="taom_career_grp_knight_of_cardolan_t2_b" text="Shieldwall of Aranthir" />
-    <string id="taom_career_grp_knight_of_cardolan_t3_a" text="Knight of the Greenway" />
-    <string id="taom_career_grp_knight_of_cardolan_t3_b" text="Charge of Caras Gorthad" />
-    <string id="taom_career_grp_ranger_of_the_angle_t1_a" text="Hunter of the East Road" />
-    <string id="taom_career_grp_ranger_of_the_angle_t1_b" text="Watcher of the Last Bridge" />
-    <string id="taom_career_grp_ranger_of_the_angle_t2_a" text="Scout of the Ettenmoors" />
-    <string id="taom_career_grp_ranger_of_the_angle_t2_b" text="Bowman of the Hoarwell" />
-    <string id="taom_career_grp_ranger_of_the_angle_t3_a" text="Arrow of the Loudwater" />
-    <string id="taom_career_grp_ranger_of_the_angle_t3_b" text="Shadow of the Trollshaws" />
-    <string id="taom_career_grp_rider_of_the_fells_t1_a" text="Lancer of the Angle" />
-    <string id="taom_career_grp_rider_of_the_fells_t1_b" text="Warden of the Loudwater" />
-    <string id="taom_career_grp_rider_of_the_fells_t2_a" text="Rider of the High Fells" />
-    <string id="taom_career_grp_rider_of_the_fells_t2_b" text="Shieldwall of Belegorn" />
-    <string id="taom_career_grp_rider_of_the_fells_t3_a" text="Knight of the Ettenmoors" />
-    <string id="taom_career_grp_rider_of_the_fells_t3_b" text="Charge of Cameth Brin" />
-    <string id="taom_career_grp_warden_of_tyrn_gorthad_t1_a" text="Warden of the Downs" />
-    <string id="taom_career_grp_warden_of_tyrn_gorthad_t1_b" text="Keeper of the Greyflood Crossing" />
-    <string id="taom_career_grp_warden_of_tyrn_gorthad_t2_a" text="Vanguard of the South Downs" />
-    <string id="taom_career_grp_warden_of_tyrn_gorthad_t2_b" text="Sword of Sarn Ford" />
-    <string id="taom_career_grp_warden_of_tyrn_gorthad_t3_a" text="Host of Aranthir" />
-    <string id="taom_career_grp_warden_of_tyrn_gorthad_t3_b" text="Keeper of the Royal Barrows" />
-    <string id="taom_career_knight_of_cardolan" text="Knight of Cardolan" />
-    <string id="taom_career_knight_of_cardolan_desc" text="An armored champion of the southern kingdom, whose thundering charge has broken countless enemy formations. The Knight of Cardolan combines Cardolan discipline with Caras Gorthad's proud cavalry tradition, becoming an immovable wall of steel." />
-    <string id="taom_career_ranger_of_the_angle" text="Ranger of the Angle" />
-    <string id="taom_career_ranger_of_the_angle_desc" text="An elite scout who strikes from the fells of the Angle, ambushing orcs and trolls from the mountains with deadly precision." />
-    <string id="taom_career_rank1_bowman_of_minhiriath" text="Scout of Minhiriath" />
-    <string id="taom_career_rank1_captain_of_cameth_brin" text="Ohtar of the Last Bridge" />
-    <string id="taom_career_rank1_knight_of_cardolan" text="Squire of Caras Gorthad" />
-    <string id="taom_career_rank1_ranger_of_the_angle" text="Scout of the Angle" />
-    <string id="taom_career_rank1_rider_of_the_fells" text="Squire of the Angle" />
-    <string id="taom_career_rank1_warden_of_tyrn_gorthad" text="Ohtar of Sarn Ford" />
-    <string id="taom_career_rank2_bowman_of_minhiriath" text="Bowman of Minhiriath" />
-    <string id="taom_career_rank2_captain_of_cameth_brin" text="Warden of the Fells" />
-    <string id="taom_career_rank2_knight_of_cardolan" text="Barrow-Knight" />
-    <string id="taom_career_rank2_ranger_of_the_angle" text="Ranger of the Angle" />
-    <string id="taom_career_rank2_rider_of_the_fells" text="Fell-Knight" />
-    <string id="taom_career_rank2_warden_of_tyrn_gorthad" text="Warden of the Barrows" />
-    <string id="taom_career_rank3_bowman_of_minhiriath" text="Captain of the Bowmen" />
-    <string id="taom_career_rank3_captain_of_cameth_brin" text="Captain of Cameth Brin" />
-    <string id="taom_career_rank3_knight_of_cardolan" text="Knight of the Barrow-Kings" />
-    <string id="taom_career_rank3_ranger_of_the_angle" text="Captain of the Angle Rangers" />
-    <string id="taom_career_rank3_rider_of_the_fells" text="Knight of the Fells" />
-    <string id="taom_career_rank3_warden_of_tyrn_gorthad" text="Warden of Tyrn Gorthad" />
-    <string id="taom_career_rider_of_the_fells" text="Rider of the Fells" />
-    <string id="taom_career_rider_of_the_fells_desc" text="An armored champion of the hill kingdom, whose thundering charge has broken countless enemy formations. The Rider of the Fells combines Rhudaur discipline with Cameth Brin's proud cavalry tradition, becoming an immovable wall of steel." />
-    <string id="taom_career_warden_of_tyrn_gorthad" text="Warden of Tyrn Gorthad" />
-    <string id="taom_career_warden_of_tyrn_gorthad_desc" text="A battle-hardened infantry officer who keeps the barrows of Tyrn Gorthad and the walls of Caras Gorthad, forging order from chaos when the downs burn. The Warden holds the line where others would break, rallying soldiers through sheer force of will." />
-    <string id="taom_cocb_root_desc" text="Career Ability grants +5% melee damage and improves troop morale near rivers and coasts." />
-    <string id="taom_cocb_t1a_key" text="Career Ability radius increased, commanding wider river approaches." />
-    <string id="taom_cocb_t1a_p1" text="+8% melee damage." />
-    <string id="taom_cocb_t1a_p2" text="+10% swing speed." />
-    <string id="taom_cocb_t1a_p3" text="+3% troop damage." />
-    <string id="taom_cocb_t1a_p4" text="+5% battle renown gain." />
-    <string id="taom_cocb_t1b_key" text="Career Ability duration extended, holding the harbor line longer." />
-    <string id="taom_cocb_t1b_p1" text="+5% resistance." />
-    <string id="taom_cocb_t1b_p2" text="+6 max health." />
-    <string id="taom_cocb_t1b_p3" text="+5% troop morale." />
-    <string id="taom_cocb_t1b_p4" text="-5% troop wages." />
-    <string id="taom_cocb_t2a_key" text="Career Ability charge requirement reduced, allowing more frequent activation." />
-    <string id="taom_cocb_t2a_p1" text="+8% party movement speed." />
-    <string id="taom_cocb_t2a_p2" text="+10% troop morale." />
-    <string id="taom_cocb_t2a_p3" text="+2 party size." />
-    <string id="taom_cocb_t2a_p4" text="+10% battle renown gain." />
-    <string id="taom_cocb_t2b_key" text="Career Ability also boosts troop melee damage while active." />
-    <string id="taom_cocb_t2b_p1" text="+12% melee damage." />
-    <string id="taom_cocb_t2b_p2" text="+8% armor penetration." />
-    <string id="taom_cocb_t2b_p3" text="+15% swing speed." />
-    <string id="taom_cocb_t2b_p4" text="+6 max health." />
-    <string id="taom_cocb_t3a_key" text="Career Ability grants troop resistance while active, fortifying the fleet." />
-    <string id="taom_cocb_t3a_p1" text="+15% troop morale." />
-    <string id="taom_cocb_t3a_p2" text="+4 party size." />
-    <string id="taom_cocb_t3a_p3" text="-10% troop wages." />
-    <string id="taom_cocb_t3a_p4" text="+10% custom resource gain." />
-    <string id="taom_cocb_t3b_key" text="Career Ability radius and duration maximized, dominating every waterway." />
-    <string id="taom_cocb_t3b_p1" text="+15% melee damage." />
-    <string id="taom_cocb_t3b_p2" text="+10% resistance." />
-    <string id="taom_cocb_t3b_p3" text="+15% armor penetration." />
-    <string id="taom_cocb_t3b_p4" text="+8 max health." />
-    <string id="taom_knight_of_cardolan_root_desc" text="Stampede grants +5% melee damage and scales with the force of a mounted charge." />
-    <string id="taom_koc_t1a_key" text="Stampede ability radius increased, sweeping through wider enemy formations." />
-    <string id="taom_koc_t1a_p1" text="+8% melee damage." />
-    <string id="taom_koc_t1a_p2" text="+10% horse charge damage." />
-    <string id="taom_koc_t1a_p3" text="+3% troop damage." />
-    <string id="taom_koc_t1a_p4" text="+5% battle renown gain." />
-    <string id="taom_koc_t1b_key" text="Stampede duration extended, maintaining the charge longer." />
-    <string id="taom_koc_t1b_p1" text="+8% resistance." />
-    <string id="taom_koc_t1b_p2" text="+7 max health." />
-    <string id="taom_koc_t1b_p3" text="+10% horse health." />
-    <string id="taom_koc_t1b_p4" text="+10% troop resistance." />
-    <string id="taom_koc_t2a_key" text="Stampede charge requirement reduced for more frequent thundering charges." />
-    <string id="taom_koc_t2a_p1" text="+13% horse charge damage." />
-    <string id="taom_koc_t2a_p2" text="+12% melee damage." />
-    <string id="taom_koc_t2a_p3" text="+8% movement speed." />
-    <string id="taom_koc_t2a_p4" text="+10% battle renown gain." />
-    <string id="taom_koc_t2b_key" text="Stampede also boosts troop resistance while active." />
-    <string id="taom_koc_t2b_p1" text="+10% resistance." />
-    <string id="taom_koc_t2b_p2" text="+8 max health." />
-    <string id="taom_koc_t2b_p3" text="+13% horse health." />
-    <string id="taom_koc_t2b_p4" text="+13% troop resistance." />
-    <string id="taom_koc_t3a_key" text="Stampede grants troop morale while active, inspiring the host of Cardolan." />
-    <string id="taom_koc_t3a_p1" text="+15% troop morale." />
-    <string id="taom_koc_t3a_p2" text="+4 party size." />
-    <string id="taom_koc_t3a_p3" text="-10% troop upgrade cost." />
-    <string id="taom_koc_t3a_p4" text="-10% custom resource upgrade cost." />
-    <string id="taom_koc_t3b_key" text="Stampede radius and duration maximized — the charge of Caras Gorthad is unstoppable." />
-    <string id="taom_koc_t3b_p1" text="+15% resistance." />
-    <string id="taom_koc_t3b_p2" text="+9 max health." />
-    <string id="taom_koc_t3b_p3" text="+15% horse charge damage." />
-    <string id="taom_koc_t3b_p4" text="+15% troop resistance." />
-    <string id="taom_ranger_of_the_angle_root_desc" text="Ambush grants +5% ranged damage and scales duration with Bow skill." />
-    <string id="taom_rider_of_the_fells_root_desc" text="Stampede grants +5% melee damage and scales with the force of a mounted charge." />
-    <string id="taom_rota_t1a_key" text="Ambush radius increased, arrows deal bonus damage from stealth." />
-    <string id="taom_rota_t1a_p1" text="+8% ranged damage." />
-    <string id="taom_rota_t1a_p2" text="+5% armor penetration." />
-    <string id="taom_rota_t1a_p3" text="+7% movement speed." />
-    <string id="taom_rota_t1a_p4" text="+5% battle renown gain." />
-    <string id="taom_rota_t1b_key" text="Ambush duration extended, granting additional evasion." />
-    <string id="taom_rota_t1b_p1" text="+5% resistance." />
-    <string id="taom_rota_t1b_p2" text="+5 max health." />
-    <string id="taom_rota_t1b_p3" text="+5% party spotting range." />
-    <string id="taom_rota_t1b_p4" text="+10% stealth bonus." />
-    <string id="taom_rota_t2a_key" text="Ambush charge requirement reduced, activating more frequently." />
-    <string id="taom_rota_t2a_p1" text="+10% party spotting range." />
-    <string id="taom_rota_t2a_p2" text="+10% movement speed." />
-    <string id="taom_rota_t2a_p3" text="+13% stealth bonus." />
-    <string id="taom_rota_t2a_p4" text="+10% battle renown gain." />
-    <string id="taom_rota_t2b_key" text="Ambush also increases troop ranged damage while active." />
-    <string id="taom_rota_t2b_p1" text="+12% ranged damage." />
-    <string id="taom_rota_t2b_p2" text="+10% armor penetration." />
-    <string id="taom_rota_t2b_p3" text="+8 max health." />
-    <string id="taom_rota_t2b_p4" text="+3% troop damage." />
-    <string id="taom_rota_t3a_key" text="Ambush radius greatly increased, devastating arrow volleys." />
-    <string id="taom_rota_t3a_p1" text="+18% ranged damage." />
-    <string id="taom_rota_t3a_p2" text="+15% armor penetration." />
-    <string id="taom_rota_t3a_p3" text="+15% battle renown gain." />
-    <string id="taom_rota_t3a_p4" text="+5% troop damage." />
-    <string id="taom_rota_t3b_key" text="Ambush charge greatly reduced, becoming nearly always available." />
-    <string id="taom_rota_t3b_p1" text="+15% stealth bonus." />
-    <string id="taom_rota_t3b_p2" text="+15% movement speed." />
-    <string id="taom_rota_t3b_p3" text="+9 max health." />
-    <string id="taom_rota_t3b_p4" text="+15% party spotting range." />
-    <string id="taom_rotf_t1a_key" text="Stampede ability radius increased, sweeping through wider enemy formations." />
-    <string id="taom_rotf_t1a_p1" text="+8% melee damage." />
-    <string id="taom_rotf_t1a_p2" text="+10% horse charge damage." />
-    <string id="taom_rotf_t1a_p3" text="+3% troop damage." />
-    <string id="taom_rotf_t1a_p4" text="+5% battle renown gain." />
-    <string id="taom_rotf_t1b_key" text="Stampede duration extended, maintaining the charge longer." />
-    <string id="taom_rotf_t1b_p1" text="+8% resistance." />
-    <string id="taom_rotf_t1b_p2" text="+7 max health." />
-    <string id="taom_rotf_t1b_p3" text="+10% horse health." />
-    <string id="taom_rotf_t1b_p4" text="+10% troop resistance." />
-    <string id="taom_rotf_t2a_key" text="Stampede charge requirement reduced for more frequent thundering charges." />
-    <string id="taom_rotf_t2a_p1" text="+13% horse charge damage." />
-    <string id="taom_rotf_t2a_p2" text="+12% melee damage." />
-    <string id="taom_rotf_t2a_p3" text="+8% movement speed." />
-    <string id="taom_rotf_t2a_p4" text="+10% battle renown gain." />
-    <string id="taom_rotf_t2b_key" text="Stampede also boosts troop resistance while active." />
-    <string id="taom_rotf_t2b_p1" text="+10% resistance." />
-    <string id="taom_rotf_t2b_p2" text="+8 max health." />
-    <string id="taom_rotf_t2b_p3" text="+13% horse health." />
-    <string id="taom_rotf_t2b_p4" text="+13% troop resistance." />
-    <string id="taom_rotf_t3a_key" text="Stampede grants troop morale while active, inspiring the host of Rhudaur." />
-    <string id="taom_rotf_t3a_p1" text="+15% troop morale." />
-    <string id="taom_rotf_t3a_p2" text="+4 party size." />
-    <string id="taom_rotf_t3a_p3" text="-10% troop upgrade cost." />
-    <string id="taom_rotf_t3a_p4" text="-10% custom resource upgrade cost." />
-    <string id="taom_rotf_t3b_key" text="Stampede radius and duration maximized — the charge of Cameth Brin is unstoppable." />
-    <string id="taom_rotf_t3b_p1" text="+15% resistance." />
-    <string id="taom_rotf_t3b_p2" text="+9 max health." />
-    <string id="taom_rotf_t3b_p3" text="+15% horse charge damage." />
-    <string id="taom_rotf_t3b_p4" text="+15% troop resistance." />
-    <string id="taom_wotg_root_desc" text="Career Ability grants +5% melee damage and improves troop morale near rivers and coasts." />
-    <string id="taom_wotg_t1a_key" text="Career Ability radius increased, commanding wider river approaches." />
-    <string id="taom_wotg_t1a_p1" text="+8% melee damage." />
-    <string id="taom_wotg_t1a_p2" text="+10% swing speed." />
-    <string id="taom_wotg_t1a_p3" text="+3% troop damage." />
-    <string id="taom_wotg_t1a_p4" text="+5% battle renown gain." />
-    <string id="taom_wotg_t1b_key" text="Career Ability duration extended, holding the harbor line longer." />
-    <string id="taom_wotg_t1b_p1" text="+5% resistance." />
-    <string id="taom_wotg_t1b_p2" text="+6 max health." />
-    <string id="taom_wotg_t1b_p3" text="+5% troop morale." />
-    <string id="taom_wotg_t1b_p4" text="-5% troop wages." />
-    <string id="taom_wotg_t2a_key" text="Career Ability charge requirement reduced, allowing more frequent activation." />
-    <string id="taom_wotg_t2a_p1" text="+8% party movement speed." />
-    <string id="taom_wotg_t2a_p2" text="+10% troop morale." />
-    <string id="taom_wotg_t2a_p3" text="+2 party size." />
-    <string id="taom_wotg_t2a_p4" text="+10% battle renown gain." />
-    <string id="taom_wotg_t2b_key" text="Career Ability also boosts troop melee damage while active." />
-    <string id="taom_wotg_t2b_p1" text="+12% melee damage." />
-    <string id="taom_wotg_t2b_p2" text="+8% armor penetration." />
-    <string id="taom_wotg_t2b_p3" text="+15% swing speed." />
-    <string id="taom_wotg_t2b_p4" text="+6 max health." />
-    <string id="taom_wotg_t3a_key" text="Career Ability grants troop resistance while active, fortifying the fleet." />
-    <string id="taom_wotg_t3a_p1" text="+15% troop morale." />
-    <string id="taom_wotg_t3a_p2" text="+4 party size." />
-    <string id="taom_wotg_t3a_p3" text="-10% troop wages." />
-    <string id="taom_wotg_t3a_p4" text="+10% custom resource gain." />
-    <string id="taom_wotg_t3b_key" text="Career Ability radius and duration maximized, dominating every waterway." />
-    <string id="taom_wotg_t3b_p1" text="+15% melee damage." />
-    <string id="taom_wotg_t3b_p2" text="+10% resistance." />
-    <string id="taom_wotg_t3b_p3" text="+15% armor penetration." />
-    <string id="taom_wotg_t3b_p4" text="+8 max health." />
-    <string id="taom_ability_nogrod_arbalester" text="Firebeard Volley" />
-    <string id="taom_ability_nogrod_arbalester_tt" text="Load bolts forged in Nogrod: boosts +20% ranged damage, +20% draw speed, and +15% movement speed for 8s." />
-    <string id="taom_ability_warden_of_thorins_halls" text="Bastion of the Halls" />
-    <string id="taom_ability_warden_of_thorins_halls_tt" text="Invoke the strength of the mountain halls: boosts +15% melee damage and +10% damage reduction to allies within 50m for 8s." />
-    <string id="taom_career_grp_nogrod_arbalester_t1_a" text="Nogrod Volley" />
-    <string id="taom_career_grp_nogrod_arbalester_t1_b" text="Watcher of the Dwarf-road" />
-    <string id="taom_career_grp_nogrod_arbalester_t2_a" text="Relentless Bolt" />
-    <string id="taom_career_grp_nogrod_arbalester_t2_b" text="Ballista of the Mountain" />
-    <string id="taom_career_grp_nogrod_arbalester_t3_a" text="Storm of Steel" />
-    <string id="taom_career_grp_nogrod_arbalester_t3_b" text="Engine of Nogrod" />
-    <string id="taom_career_grp_warden_of_thorins_halls_t1_a" text="Hammer of the Deeps" />
-    <string id="taom_career_grp_warden_of_thorins_halls_t1_b" text="Gatewall Warden" />
-    <string id="taom_career_grp_warden_of_thorins_halls_t2_a" text="Wrath of the Blue Mountains" />
-    <string id="taom_career_grp_warden_of_thorins_halls_t2_b" text="Shieldwall of Thorin's Halls" />
-    <string id="taom_career_grp_warden_of_thorins_halls_t3_a" text="Iron Bulwark" />
-    <string id="taom_career_grp_warden_of_thorins_halls_t3_b" text="Guard of the King's Hall" />
-    <string id="taom_career_nogrod_arbalester" text="Firebeard Arbalester" />
-    <string id="taom_career_nogrod_arbalester_desc" text="A Firebeard engineer-warrior of Nogrod who wields masterwork crossbows of great stopping power, each bolt forged in the furnaces of the Blue Mountains." />
-    <string id="taom_career_rank1_nogrod_arbalester" text="Bolt-Smith of Nogrod" />
-    <string id="taom_career_rank1_warden_of_thorins_halls" text="Deep Warden" />
-    <string id="taom_career_rank2_nogrod_arbalester" text="Firebeard Quarreler" />
-    <string id="taom_career_rank2_warden_of_thorins_halls" text="Warden of Thorin's Halls" />
-    <string id="taom_career_rank3_nogrod_arbalester" text="Forge-Lord of the Firebeards" />
-    <string id="taom_career_rank3_warden_of_thorins_halls" text="Shieldwall of the Blue Mountains" />
-    <string id="taom_career_warden_of_thorins_halls" text="Warden of Thorin's Halls" />
-    <string id="taom_career_warden_of_thorins_halls_desc" text="An elite dwarven warrior in heavy mail of Blue Mountain iron who holds the gates of Thorin's Halls against goblin and orc alike." />
-    <string id="taom_nga_t1_a_key" text="Firebeard Volley radius increased, covering wider kill zones." />
-    <string id="taom_nga_t1_a_p1" text="+8% ranged damage." />
-    <string id="taom_nga_t1_a_p2" text="+5% armor penetration." />
-    <string id="taom_nga_t1_a_p3" text="+7% movement speed." />
-    <string id="taom_nga_t1_a_p4" text="+5% battle renown gain." />
-    <string id="taom_nga_t1_b_key" text="Firebeard Volley duration extended, sustained barrage." />
-    <string id="taom_nga_t1_b_p1" text="+5% resistance." />
-    <string id="taom_nga_t1_b_p2" text="+5 max health." />
-    <string id="taom_nga_t1_b_p3" text="+5% party spotting range." />
-    <string id="taom_nga_t1_b_p4" text="+10% stealth bonus." />
-    <string id="taom_nga_t2_a_key" text="Firebeard Volley charge reduced, maintaining constant pressure." />
-    <string id="taom_nga_t2_a_p1" text="+10% party spotting range." />
-    <string id="taom_nga_t2_a_p2" text="+10% movement speed." />
-    <string id="taom_nga_t2_a_p3" text="+13% stealth bonus." />
-    <string id="taom_nga_t2_a_p4" text="+10% battle renown gain." />
-    <string id="taom_nga_t2_b_key" text="Firebeard Volley gains additional penetration while active." />
-    <string id="taom_nga_t2_b_p1" text="+12% ranged damage." />
-    <string id="taom_nga_t2_b_p2" text="+10% armor penetration." />
-    <string id="taom_nga_t2_b_p3" text="+8 max health." />
-    <string id="taom_nga_t2_b_p4" text="+3% troop damage." />
-    <string id="taom_nga_t3_a_key" text="Firebeard Volley radius greatly expanded, inescapable volleys." />
-    <string id="taom_nga_t3_a_p1" text="+18% ranged damage." />
-    <string id="taom_nga_t3_a_p2" text="+15% armor penetration." />
-    <string id="taom_nga_t3_a_p3" text="+15% battle renown gain." />
-    <string id="taom_nga_t3_a_p4" text="+5% troop damage." />
-    <string id="taom_nga_t3_b_key" text="Firebeard Volley charge greatly reduced, relentless fire." />
-    <string id="taom_nga_t3_b_p1" text="+15% stealth bonus." />
-    <string id="taom_nga_t3_b_p2" text="+15% movement speed." />
-    <string id="taom_nga_t3_b_p3" text="+9 max health." />
-    <string id="taom_nga_t3_b_p4" text="+15% party spotting range." />
-    <string id="taom_nogrod_arbalester_root_desc" text="Firebeard Volley grants +5% ranged damage with masterwork bolts." />
-    <string id="taom_warden_of_thorins_halls_root_desc" text="Bastion of the Halls grants +5 health, dwarven craft protecting you." />
-    <string id="taom_woth_t1_a_key" text="Bastion of the Halls radius increased, empowering more warriors." />
-    <string id="taom_woth_t1_a_p1" text="+8% melee damage." />
-    <string id="taom_woth_t1_a_p2" text="+3% troop damage." />
-    <string id="taom_woth_t1_a_p3" text="+6 max health." />
-    <string id="taom_woth_t1_a_p4" text="+7% swing speed." />
-    <string id="taom_woth_t1_b_key" text="Bastion of the Halls duration extended, fortifying the defense." />
-    <string id="taom_woth_t1_b_p1" text="+8% resistance." />
-    <string id="taom_woth_t1_b_p2" text="+5% troop morale." />
-    <string id="taom_woth_t1_b_p3" text="+10% troop resistance." />
-    <string id="taom_woth_t1_b_p4" text="+5% troop survival." />
-    <string id="taom_woth_t2_a_key" text="Bastion of the Halls charge reduced, activating more frequently." />
-    <string id="taom_woth_t2_a_p1" text="+10% troop morale." />
-    <string id="taom_woth_t2_a_p2" text="+2 party size." />
-    <string id="taom_woth_t2_a_p3" text="+10% battle renown gain." />
-    <string id="taom_woth_t2_a_p4" text="-10% troop wages." />
-    <string id="taom_woth_t2_b_key" text="Bastion of the Halls grants additional defensive buffs while active." />
-    <string id="taom_woth_t2_b_p1" text="+12% resistance." />
-    <string id="taom_woth_t2_b_p2" text="+8 max health." />
-    <string id="taom_woth_t2_b_p3" text="+13% troop resistance." />
-    <string id="taom_woth_t2_b_p4" text="+5% troop damage." />
-    <string id="taom_woth_t3_a_key" text="Bastion of the Halls radius greatly expanded, devastating power." />
-    <string id="taom_woth_t3_a_p1" text="+15% melee damage." />
-    <string id="taom_woth_t3_a_p2" text="+10 max health." />
-    <string id="taom_woth_t3_a_p3" text="+7% troop damage." />
-    <string id="taom_woth_t3_a_p4" text="+4 party size." />
-    <string id="taom_woth_t3_b_key" text="Bastion of the Halls charge greatly reduced, nearly always available." />
-    <string id="taom_woth_t3_b_p1" text="+18% resistance." />
-    <string id="taom_woth_t3_b_p2" text="+15% hero health regeneration." />
-    <string id="taom_woth_t3_b_p3" text="+20% troop morale." />
-    <string id="taom_woth_t3_b_p4" text="+15% troop survival." />
-    <string id="taom_ability_hewer_of_belegost" text="Mattock Storm" />
-    <string id="taom_ability_hewer_of_belegost_tt" text="Swing the great mattock with your kin: boosts +15% melee damage and +10% damage reduction to allies within 50m for 8s." />
-    <string id="taom_career_grp_hewer_of_belegost_t1_a" text="Mattock of the Deeps" />
-    <string id="taom_career_grp_hewer_of_belegost_t1_b" text="Shield-Breaker" />
-    <string id="taom_career_grp_hewer_of_belegost_t2_a" text="Wrath of the Broadbeams" />
-    <string id="taom_career_grp_hewer_of_belegost_t2_b" text="Hewing of Belegost" />
-    <string id="taom_career_grp_hewer_of_belegost_t3_a" text="Stonebreaker's Fury" />
-    <string id="taom_career_grp_hewer_of_belegost_t3_b" text="Breaker of the Broad Gate" />
-    <string id="taom_career_hewer_of_belegost" text="Mattock Hewer of Belegost" />
-    <string id="taom_career_hewer_of_belegost_desc" text="A Broadbeam hewer of Belegost who swings a great mattock in both hands, breaking shields and the orcs behind them." />
-    <string id="taom_career_rank1_hewer_of_belegost" text="Mattock-bearer" />
-    <string id="taom_career_rank2_hewer_of_belegost" text="Hewer of Belegost" />
-    <string id="taom_career_rank3_hewer_of_belegost" text="Stonebreaker of the Blue Mountains" />
-    <string id="taom_hewer_of_belegost_root_desc" text="Mattock Storm grants +5 health, the weight of the mattock behind you." />
-    <string id="taom_hob_t1_a_key" text="Mattock Storm radius increased, empowering more warriors." />
-    <string id="taom_hob_t1_a_p1" text="+8% melee damage." />
-    <string id="taom_hob_t1_a_p2" text="+3% troop damage." />
-    <string id="taom_hob_t1_a_p3" text="+6 max health." />
-    <string id="taom_hob_t1_a_p4" text="+7% swing speed." />
-    <string id="taom_hob_t1_b_key" text="Mattock Storm duration extended, fortifying the defense." />
-    <string id="taom_hob_t1_b_p1" text="+8% resistance." />
-    <string id="taom_hob_t1_b_p2" text="+5% troop morale." />
-    <string id="taom_hob_t1_b_p3" text="+10% troop resistance." />
-    <string id="taom_hob_t1_b_p4" text="+5% troop survival." />
-    <string id="taom_hob_t2_a_key" text="Mattock Storm charge reduced, activating more frequently." />
-    <string id="taom_hob_t2_a_p1" text="+10% troop morale." />
-    <string id="taom_hob_t2_a_p2" text="+2 party size." />
-    <string id="taom_hob_t2_a_p3" text="+10% battle renown gain." />
-    <string id="taom_hob_t2_a_p4" text="-10% troop wages." />
-    <string id="taom_hob_t2_b_key" text="Mattock Storm grants additional defensive buffs while active." />
-    <string id="taom_hob_t2_b_p1" text="+12% resistance." />
-    <string id="taom_hob_t2_b_p2" text="+8 max health." />
-    <string id="taom_hob_t2_b_p3" text="+13% troop resistance." />
-    <string id="taom_hob_t2_b_p4" text="+5% troop damage." />
-    <string id="taom_hob_t3_a_key" text="Mattock Storm radius greatly expanded, devastating power." />
-    <string id="taom_hob_t3_a_p1" text="+15% melee damage." />
-    <string id="taom_hob_t3_a_p2" text="+10 max health." />
-    <string id="taom_hob_t3_a_p3" text="+7% troop damage." />
-    <string id="taom_hob_t3_a_p4" text="+4 party size." />
-    <string id="taom_hob_t3_b_key" text="Mattock Storm charge greatly reduced, nearly always available." />
-    <string id="taom_hob_t3_b_p1" text="+18% resistance." />
-    <string id="taom_hob_t3_b_p2" text="+15% hero health regeneration." />
-    <string id="taom_hob_t3_b_p3" text="+20% troop morale." />
-    <string id="taom_hob_t3_b_p4" text="+15% troop survival." />
-    <string id="taom_ability_archer_of_eastbank" text="Carrock Volley" />
-    <string id="taom_ability_archer_of_eastbank_tt" text="Loose the arrows of the Woodmen: boosts +20% ranged damage, +20% draw speed, and +15% movement speed for 8s." />
-    <string id="taom_ability_axe_warden_of_beorns_hall" text="Carrock Stand" />
-    <string id="taom_ability_axe_warden_of_beorns_hall_tt" text="Plant your feet and hold the ford: boosts +15% melee damage and +10% damage reduction to allies within 50m for 8s." />
-    <string id="taom_ability_hewer_of_ironwood_hall" text="Heartwood Storm" />
-    <string id="taom_ability_hewer_of_ironwood_hall_tt" text="Swing the great axe with your kin: boosts +15% melee damage and +10% damage reduction to allies within 50m for 8s." />
-    <string id="taom_ability_rider_of_the_vales" text="Vale Gallop" />
-    <string id="taom_ability_rider_of_the_vales_tt" text="Spur your horse along the Vale roads: boosts +25% charge damage, +20% mount speed, and +10% melee damage for 8s." />
-    <string id="taom_ability_warden_of_the_forest_gate" text="Thornwall" />
-    <string id="taom_ability_warden_of_the_forest_gate_tt" text="Set your spear in the path and hold the line: boosts +15% melee damage and +10% damage reduction to allies within 50m for 8s." />
-    <string id="taom_ability_woodward_of_the_forest_road" text="Ironwood Volley" />
-    <string id="taom_ability_woodward_of_the_forest_road_tt" text="Loose the arrows of the woodwards: boosts +20% ranged damage, +20% draw speed, and +15% movement speed for 8s." />
-    <string id="taom_aoe_t1_a_key" text="Carrock Volley radius increased, covering wider kill zones." />
-    <string id="taom_aoe_t1_a_p1" text="+8% ranged damage." />
-    <string id="taom_aoe_t1_a_p2" text="+5% armor penetration." />
-    <string id="taom_aoe_t1_a_p3" text="+7% movement speed." />
-    <string id="taom_aoe_t1_a_p4" text="+5% battle renown gain." />
-    <string id="taom_aoe_t1_b_key" text="Carrock Volley duration extended, sustained barrage." />
-    <string id="taom_aoe_t1_b_p1" text="+5% resistance." />
-    <string id="taom_aoe_t1_b_p2" text="+5 max health." />
-    <string id="taom_aoe_t1_b_p3" text="+5% party spotting range." />
-    <string id="taom_aoe_t1_b_p4" text="+10% stealth bonus." />
-    <string id="taom_aoe_t2_a_key" text="Carrock Volley charge reduced, maintaining constant pressure." />
-    <string id="taom_aoe_t2_a_p1" text="+10% party spotting range." />
-    <string id="taom_aoe_t2_a_p2" text="+10% movement speed." />
-    <string id="taom_aoe_t2_a_p3" text="+13% stealth bonus." />
-    <string id="taom_aoe_t2_a_p4" text="+10% battle renown gain." />
-    <string id="taom_aoe_t2_b_key" text="Carrock Volley gains additional penetration while active." />
-    <string id="taom_aoe_t2_b_p1" text="+12% ranged damage." />
-    <string id="taom_aoe_t2_b_p2" text="+10% armor penetration." />
-    <string id="taom_aoe_t2_b_p3" text="+8 max health." />
-    <string id="taom_aoe_t2_b_p4" text="+3% troop damage." />
-    <string id="taom_aoe_t3_a_key" text="Carrock Volley radius greatly expanded, inescapable volleys." />
-    <string id="taom_aoe_t3_a_p1" text="+18% ranged damage." />
-    <string id="taom_aoe_t3_a_p2" text="+15% armor penetration." />
-    <string id="taom_aoe_t3_a_p3" text="+15% battle renown gain." />
-    <string id="taom_aoe_t3_a_p4" text="+5% troop damage." />
-    <string id="taom_aoe_t3_b_key" text="Carrock Volley charge greatly reduced, relentless fire." />
-    <string id="taom_aoe_t3_b_p1" text="+15% stealth bonus." />
-    <string id="taom_aoe_t3_b_p2" text="+15% movement speed." />
-    <string id="taom_aoe_t3_b_p3" text="+9 max health." />
-    <string id="taom_aoe_t3_b_p4" text="+15% party spotting range." />
-    <string id="taom_archer_of_eastbank_root_desc" text="Carrock Volley grants +5% ranged damage in honor of the Woodmen bowmen of the Vales." />
-    <string id="taom_awbh_t1_a_key" text="Carrock Stand radius increased, empowering more warriors." />
-    <string id="taom_awbh_t1_a_p1" text="+8% melee damage." />
-    <string id="taom_awbh_t1_a_p2" text="+3% troop damage." />
-    <string id="taom_awbh_t1_a_p3" text="+6 max health." />
-    <string id="taom_awbh_t1_a_p4" text="+7% swing speed." />
-    <string id="taom_awbh_t1_b_key" text="Carrock Stand duration extended, fortifying the defense." />
-    <string id="taom_awbh_t1_b_p1" text="+8% resistance." />
-    <string id="taom_awbh_t1_b_p2" text="+5% troop morale." />
-    <string id="taom_awbh_t1_b_p3" text="+10% troop resistance." />
-    <string id="taom_awbh_t1_b_p4" text="+5% troop survival." />
-    <string id="taom_awbh_t2_a_key" text="Carrock Stand charge reduced, activating more frequently." />
-    <string id="taom_awbh_t2_a_p1" text="+10% troop morale." />
-    <string id="taom_awbh_t2_a_p2" text="+2 party size." />
-    <string id="taom_awbh_t2_a_p3" text="+10% battle renown gain." />
-    <string id="taom_awbh_t2_a_p4" text="-10% troop wages." />
-    <string id="taom_awbh_t2_b_key" text="Carrock Stand grants additional defensive buffs while active." />
-    <string id="taom_awbh_t2_b_p1" text="+12% resistance." />
-    <string id="taom_awbh_t2_b_p2" text="+8 max health." />
-    <string id="taom_awbh_t2_b_p3" text="+13% troop resistance." />
-    <string id="taom_awbh_t2_b_p4" text="+5% troop damage." />
-    <string id="taom_awbh_t3_a_key" text="Carrock Stand radius greatly expanded, devastating power." />
-    <string id="taom_awbh_t3_a_p1" text="+15% melee damage." />
-    <string id="taom_awbh_t3_a_p2" text="+10 max health." />
-    <string id="taom_awbh_t3_a_p3" text="+7% troop damage." />
-    <string id="taom_awbh_t3_a_p4" text="+4 party size." />
-    <string id="taom_awbh_t3_b_key" text="Carrock Stand charge greatly reduced, nearly always available." />
-    <string id="taom_awbh_t3_b_p1" text="+18% resistance." />
-    <string id="taom_awbh_t3_b_p2" text="+15% hero health regeneration." />
-    <string id="taom_awbh_t3_b_p3" text="+20% troop morale." />
-    <string id="taom_awbh_t3_b_p4" text="+15% troop survival." />
-    <string id="taom_axe_warden_of_beorns_hall_root_desc" text="Carrock Stand grants +5% resistance and steadies the defenders." />
-    <string id="taom_career_archer_of_eastbank" text="Archer of Eastbank" />
-    <string id="taom_career_archer_of_eastbank_desc" text="A Woodman bowman of the Vales who shoots from the eaves of Mirkwood and the banks of the Gladden, carrying on a tradition of unerring marksmanship." />
-    <string id="taom_career_axe_warden_of_beorns_hall" text="Axe-warden of Beorn's Hall" />
-    <string id="taom_career_axe_warden_of_beorns_hall_desc" text="A broad-shouldered axeman of the House of Beorn who holds the fords and passes of the Vales against goblin and wolf alike." />
-    <string id="taom_career_grp_archer_of_eastbank_t1_a" text="Bowman of the Gladden" />
-    <string id="taom_career_grp_archer_of_eastbank_t1_b" text="Watch of the Mirkwood Edge" />
-    <string id="taom_career_grp_archer_of_eastbank_t2_a" text="Heir of the Woodmen" />
-    <string id="taom_career_grp_archer_of_eastbank_t2_b" text="Hawk-Sighted Archer" />
-    <string id="taom_career_grp_archer_of_eastbank_t3_a" text="Wolfbane of the Vales" />
-    <string id="taom_career_grp_archer_of_eastbank_t3_b" text="The Bow of the Eaves" />
-    <string id="taom_career_grp_axe_warden_of_beorns_hall_t1_a" text="Axeman of the Vales" />
-    <string id="taom_career_grp_axe_warden_of_beorns_hall_t1_b" text="Axewall of the Old Ford" />
-    <string id="taom_career_grp_axe_warden_of_beorns_hall_t2_a" text="Axe of Beorn" />
-    <string id="taom_career_grp_axe_warden_of_beorns_hall_t2_b" text="Bulwark of the Gladden" />
-    <string id="taom_career_grp_axe_warden_of_beorns_hall_t3_a" text="Vanguard of Grimbeorn" />
-    <string id="taom_career_grp_axe_warden_of_beorns_hall_t3_b" text="The Last Stand at the Carrock" />
-    <string id="taom_career_grp_hewer_of_ironwood_hall_t1_a" text="Axe-bearer of Ironwood Hall" />
-    <string id="taom_career_grp_hewer_of_ironwood_hall_t1_b" text="Splitter of the Forest Road" />
-    <string id="taom_career_grp_hewer_of_ironwood_hall_t2_a" text="Axe of the Heartwood" />
-    <string id="taom_career_grp_hewer_of_ironwood_hall_t2_b" text="Hewing of the Emyn Duir" />
-    <string id="taom_career_grp_hewer_of_ironwood_hall_t3_a" text="Great-axe of King Ingomar" />
-    <string id="taom_career_grp_hewer_of_ironwood_hall_t3_b" text="The Felling of the Dark Wood" />
-    <string id="taom_career_grp_rider_of_the_vales_t1_a" text="Rider of the Gladden" />
-    <string id="taom_career_grp_rider_of_the_vales_t1_b" text="Warden of the Old Road" />
-    <string id="taom_career_grp_rider_of_the_vales_t2_a" text="Lance of the Vales" />
-    <string id="taom_career_grp_rider_of_the_vales_t2_b" text="Outrider of the Woodmen's Friendship" />
-    <string id="taom_career_grp_rider_of_the_vales_t3_a" text="The Charge of the Carrock" />
-    <string id="taom_career_grp_rider_of_the_vales_t3_b" text="Courier of the Chieftain" />
-    <string id="taom_career_grp_warden_of_the_forest_gate_t1_a" text="Spearman of Woodmen-town" />
-    <string id="taom_career_grp_warden_of_the_forest_gate_t1_b" text="Shieldwall of the Forest Gate" />
-    <string id="taom_career_grp_warden_of_the_forest_gate_t2_a" text="Spear of Ingomar" />
-    <string id="taom_career_grp_warden_of_the_forest_gate_t2_b" text="Bulwark of the Forest Road" />
-    <string id="taom_career_grp_warden_of_the_forest_gate_t3_a" text="Vanguard of King Ingomar" />
-    <string id="taom_career_grp_warden_of_the_forest_gate_t3_b" text="The Last Stand at Thornhold" />
-    <string id="taom_career_grp_woodward_of_the_forest_road_t1_a" text="Bowman of Thornhold" />
-    <string id="taom_career_grp_woodward_of_the_forest_road_t1_b" text="Watch of the Forest Road" />
-    <string id="taom_career_grp_woodward_of_the_forest_road_t2_a" text="Heir of the Woodwards" />
-    <string id="taom_career_grp_woodward_of_the_forest_road_t2_b" text="Owl-Sighted Archer" />
-    <string id="taom_career_grp_woodward_of_the_forest_road_t3_a" text="Spider-Slayer of the Emyn Duir" />
-    <string id="taom_career_grp_woodward_of_the_forest_road_t3_b" text="The Bow of Ingomar's Line" />
-    <string id="taom_career_hewer_of_ironwood_hall" text="Hewer of Ironwood Hall" />
-    <string id="taom_career_hewer_of_ironwood_hall_desc" text="An Ironwood hewer of Angáladh who swings a great axe in both hands, splitting shields and the orcs behind them." />
-    <string id="taom_career_rank1_archer_of_eastbank" text="Bowman of the Gladden" />
-    <string id="taom_career_rank1_axe_warden_of_beorns_hall" text="Vale Axeman" />
-    <string id="taom_career_rank1_hewer_of_ironwood_hall" text="Ironwood Axeman" />
-    <string id="taom_career_rank1_rider_of_the_vales" text="Road-Rider of the Vales" />
-    <string id="taom_career_rank1_warden_of_the_forest_gate" text="Spear of the Forest Gate" />
-    <string id="taom_career_rank1_woodward_of_the_forest_road" text="Bowman of Thornhold" />
-    <string id="taom_career_rank2_archer_of_eastbank" text="Hawk-Eye of Eastbank" />
-    <string id="taom_career_rank2_axe_warden_of_beorns_hall" text="Axe-warden of Beorn's Hall" />
-    <string id="taom_career_rank2_hewer_of_ironwood_hall" text="Hewer of Ironwood Hall" />
-    <string id="taom_career_rank2_rider_of_the_vales" text="Warden of the Old Ford Road" />
-    <string id="taom_career_rank2_warden_of_the_forest_gate" text="Warden of the Forest Gate" />
-    <string id="taom_career_rank2_woodward_of_the_forest_road" text="Spider-Shooter" />
-    <string id="taom_career_rank3_archer_of_eastbank" text="Bow-lord of the Vales" />
-    <string id="taom_career_rank3_axe_warden_of_beorns_hall" text="Champion of the Carrock" />
-    <string id="taom_career_rank3_hewer_of_ironwood_hall" text="Great-axe of the Emyn Duir" />
-    <string id="taom_career_rank3_rider_of_the_vales" text="Marshal of the Vales" />
-    <string id="taom_career_rank3_warden_of_the_forest_gate" text="Captain of Woodmen-town" />
-    <string id="taom_career_rank3_woodward_of_the_forest_road" text="Bow-Master of the Woodwards" />
-    <string id="taom_career_rider_of_the_vales" text="Rider of the Vales" />
-    <string id="taom_career_rider_of_the_vales_desc" text="A mounted patrol of the Vales who rides the Old Ford road and the foot of the Misty Mountains, safeguarding farms and caravans from goblin raiders." />
-    <string id="taom_career_warden_of_the_forest_gate" text="Warden of the Forest Gate" />
-    <string id="taom_career_warden_of_the_forest_gate_desc" text="A stalwart guardian of the Forest Gate who holds the narrow way under the trees against orc, wolf and spider with shield and spear." />
-    <string id="taom_career_woodward_of_the_forest_road" text="Woodward of the Forest Road" />
-    <string id="taom_career_woodward_of_the_forest_road_desc" text="A woodward bowman of western Mirkwood who shoots from the platforms of the Forest Gate and the trees of the road, carrying on a tradition of unerring marksmanship." />
-    <string id="taom_hewer_of_ironwood_hall_root_desc" text="Heartwood Storm grants +5% resistance and steadies the defenders." />
-    <string id="taom_hiwh_t1_a_key" text="Heartwood Storm radius increased, empowering more warriors." />
-    <string id="taom_hiwh_t1_a_p1" text="+8% melee damage." />
-    <string id="taom_hiwh_t1_a_p2" text="+3% troop damage." />
-    <string id="taom_hiwh_t1_a_p3" text="+6 max health." />
-    <string id="taom_hiwh_t1_a_p4" text="+7% swing speed." />
-    <string id="taom_hiwh_t1_b_key" text="Heartwood Storm duration extended, fortifying the defense." />
-    <string id="taom_hiwh_t1_b_p1" text="+8% resistance." />
-    <string id="taom_hiwh_t1_b_p2" text="+5% troop morale." />
-    <string id="taom_hiwh_t1_b_p3" text="+10% troop resistance." />
-    <string id="taom_hiwh_t1_b_p4" text="+5% troop survival." />
-    <string id="taom_hiwh_t2_a_key" text="Heartwood Storm charge reduced, activating more frequently." />
-    <string id="taom_hiwh_t2_a_p1" text="+10% troop morale." />
-    <string id="taom_hiwh_t2_a_p2" text="+2 party size." />
-    <string id="taom_hiwh_t2_a_p3" text="+10% battle renown gain." />
-    <string id="taom_hiwh_t2_a_p4" text="-10% troop wages." />
-    <string id="taom_hiwh_t2_b_key" text="Heartwood Storm grants additional defensive buffs while active." />
-    <string id="taom_hiwh_t2_b_p1" text="+12% resistance." />
-    <string id="taom_hiwh_t2_b_p2" text="+8 max health." />
-    <string id="taom_hiwh_t2_b_p3" text="+13% troop resistance." />
-    <string id="taom_hiwh_t2_b_p4" text="+5% troop damage." />
-    <string id="taom_hiwh_t3_a_key" text="Heartwood Storm radius greatly expanded, devastating power." />
-    <string id="taom_hiwh_t3_a_p1" text="+15% melee damage." />
-    <string id="taom_hiwh_t3_a_p2" text="+10 max health." />
-    <string id="taom_hiwh_t3_a_p3" text="+7% troop damage." />
-    <string id="taom_hiwh_t3_a_p4" text="+4 party size." />
-    <string id="taom_hiwh_t3_b_key" text="Heartwood Storm charge greatly reduced, nearly always available." />
-    <string id="taom_hiwh_t3_b_p1" text="+18% resistance." />
-    <string id="taom_hiwh_t3_b_p2" text="+15% hero health regeneration." />
-    <string id="taom_hiwh_t3_b_p3" text="+20% troop morale." />
-    <string id="taom_hiwh_t3_b_p4" text="+15% troop survival." />
-    <string id="taom_rider_of_the_vales_root_desc" text="Vale Gallop grants +5% melee damage and your horse quickens." />
-    <string id="taom_rotv_t1_a_key" text="Vale Gallop radius expanded, sweeping wider formations." />
-    <string id="taom_rotv_t1_a_p1" text="+8% melee damage." />
-    <string id="taom_rotv_t1_a_p2" text="+10% horse charge damage." />
-    <string id="taom_rotv_t1_a_p3" text="+7% swing speed." />
-    <string id="taom_rotv_t1_a_p4" text="+5% party movement speed." />
-    <string id="taom_rotv_t1_b_key" text="Vale Gallop duration extended, maintaining momentum." />
-    <string id="taom_rotv_t1_b_p1" text="+10% horse health." />
-    <string id="taom_rotv_t1_b_p2" text="+5 max health." />
-    <string id="taom_rotv_t1_b_p3" text="-5% troop wages." />
-    <string id="taom_rotv_t1_b_p4" text="+5% resistance." />
-    <string id="taom_rotv_t2_a_key" text="Vale Gallop charge reduced, swifter activation." />
-    <string id="taom_rotv_t2_a_p1" text="+10% party movement speed." />
-    <string id="taom_rotv_t2_a_p2" text="-10% troop wages." />
-    <string id="taom_rotv_t2_a_p3" text="+10% troop morale." />
-    <string id="taom_rotv_t2_a_p4" text="+10% battle renown gain." />
-    <string id="taom_rotv_t2_b_key" text="Vale Gallop boosts mount resilience while active." />
-    <string id="taom_rotv_t2_b_p1" text="+12% melee damage." />
-    <string id="taom_rotv_t2_b_p2" text="+13% horse charge damage." />
-    <string id="taom_rotv_t2_b_p3" text="+13% horse health." />
-    <string id="taom_rotv_t2_b_p4" text="+10% swing speed." />
-    <string id="taom_rotv_t3_a_key" text="Vale Gallop radius greatly expanded, unstoppable impact." />
-    <string id="taom_rotv_t3_a_p1" text="+18% melee damage." />
-    <string id="taom_rotv_t3_a_p2" text="+15% horse charge damage." />
-    <string id="taom_rotv_t3_a_p3" text="+15% swing speed." />
-    <string id="taom_rotv_t3_a_p4" text="+7% troop damage." />
-    <string id="taom_rotv_t3_b_key" text="Vale Gallop charge greatly reduced, ride without ceasing." />
-    <string id="taom_rotv_t3_b_p1" text="+15% horse health." />
-    <string id="taom_rotv_t3_b_p2" text="-15% troop wages." />
-    <string id="taom_rotv_t3_b_p3" text="+15% party movement speed." />
-    <string id="taom_rotv_t3_b_p4" text="+9 max health." />
-    <string id="taom_warden_of_the_forest_gate_root_desc" text="Thornwall grants +5% resistance and steadies the defenders." />
-    <string id="taom_wfg_t1_a_key" text="Thornwall radius increased, empowering more warriors." />
-    <string id="taom_wfg_t1_a_p1" text="+8% melee damage." />
-    <string id="taom_wfg_t1_a_p2" text="+3% troop damage." />
-    <string id="taom_wfg_t1_a_p3" text="+6 max health." />
-    <string id="taom_wfg_t1_a_p4" text="+7% swing speed." />
-    <string id="taom_wfg_t1_b_key" text="Thornwall duration extended, fortifying the defense." />
-    <string id="taom_wfg_t1_b_p1" text="+8% resistance." />
-    <string id="taom_wfg_t1_b_p2" text="+5% troop morale." />
-    <string id="taom_wfg_t1_b_p3" text="+10% troop resistance." />
-    <string id="taom_wfg_t1_b_p4" text="+5% troop survival." />
-    <string id="taom_wfg_t2_a_key" text="Thornwall charge reduced, activating more frequently." />
-    <string id="taom_wfg_t2_a_p1" text="+10% troop morale." />
-    <string id="taom_wfg_t2_a_p2" text="+2 party size." />
-    <string id="taom_wfg_t2_a_p3" text="+10% battle renown gain." />
-    <string id="taom_wfg_t2_a_p4" text="-10% troop wages." />
-    <string id="taom_wfg_t2_b_key" text="Thornwall grants additional defensive buffs while active." />
-    <string id="taom_wfg_t2_b_p1" text="+12% resistance." />
-    <string id="taom_wfg_t2_b_p2" text="+8 max health." />
-    <string id="taom_wfg_t2_b_p3" text="+13% troop resistance." />
-    <string id="taom_wfg_t2_b_p4" text="+5% troop damage." />
-    <string id="taom_wfg_t3_a_key" text="Thornwall radius greatly expanded, devastating power." />
-    <string id="taom_wfg_t3_a_p1" text="+15% melee damage." />
-    <string id="taom_wfg_t3_a_p2" text="+10 max health." />
-    <string id="taom_wfg_t3_a_p3" text="+7% troop damage." />
-    <string id="taom_wfg_t3_a_p4" text="+4 party size." />
-    <string id="taom_wfg_t3_b_key" text="Thornwall charge greatly reduced, nearly always available." />
-    <string id="taom_wfg_t3_b_p1" text="+18% resistance." />
-    <string id="taom_wfg_t3_b_p2" text="+15% hero health regeneration." />
-    <string id="taom_wfg_t3_b_p3" text="+20% troop morale." />
-    <string id="taom_wfg_t3_b_p4" text="+15% troop survival." />
-    <string id="taom_wfr_t1_a_key" text="Ironwood Volley radius increased, covering wider kill zones." />
-    <string id="taom_wfr_t1_a_p1" text="+8% ranged damage." />
-    <string id="taom_wfr_t1_a_p2" text="+5% armor penetration." />
-    <string id="taom_wfr_t1_a_p3" text="+7% movement speed." />
-    <string id="taom_wfr_t1_a_p4" text="+5% battle renown gain." />
-    <string id="taom_wfr_t1_b_key" text="Ironwood Volley duration extended, sustained barrage." />
-    <string id="taom_wfr_t1_b_p1" text="+5% resistance." />
-    <string id="taom_wfr_t1_b_p2" text="+5 max health." />
-    <string id="taom_wfr_t1_b_p3" text="+5% party spotting range." />
-    <string id="taom_wfr_t1_b_p4" text="+10% stealth bonus." />
-    <string id="taom_wfr_t2_a_key" text="Ironwood Volley charge reduced, maintaining constant pressure." />
-    <string id="taom_wfr_t2_a_p1" text="+10% party spotting range." />
-    <string id="taom_wfr_t2_a_p2" text="+10% movement speed." />
-    <string id="taom_wfr_t2_a_p3" text="+13% stealth bonus." />
-    <string id="taom_wfr_t2_a_p4" text="+10% battle renown gain." />
-    <string id="taom_wfr_t2_b_key" text="Ironwood Volley gains additional penetration while active." />
-    <string id="taom_wfr_t2_b_p1" text="+12% ranged damage." />
-    <string id="taom_wfr_t2_b_p2" text="+10% armor penetration." />
-    <string id="taom_wfr_t2_b_p3" text="+8 max health." />
-    <string id="taom_wfr_t2_b_p4" text="+3% troop damage." />
-    <string id="taom_wfr_t3_a_key" text="Ironwood Volley radius greatly expanded, inescapable volleys." />
-    <string id="taom_wfr_t3_a_p1" text="+18% ranged damage." />
-    <string id="taom_wfr_t3_a_p2" text="+15% armor penetration." />
-    <string id="taom_wfr_t3_a_p3" text="+15% battle renown gain." />
-    <string id="taom_wfr_t3_a_p4" text="+5% troop damage." />
-    <string id="taom_wfr_t3_b_key" text="Ironwood Volley charge greatly reduced, relentless fire." />
-    <string id="taom_wfr_t3_b_p1" text="+15% stealth bonus." />
-    <string id="taom_wfr_t3_b_p2" text="+15% movement speed." />
-    <string id="taom_wfr_t3_b_p3" text="+9 max health." />
-    <string id="taom_wfr_t3_b_p4" text="+15% party spotting range." />
-    <string id="taom_woodward_of_the_forest_road_root_desc" text="Ironwood Volley grants +5% ranged damage in honor of the woodwards of the Forest Road." />
-    <string id="taom_ability_bowman_of_redwater" text="Seagate Volley" />
-    <string id="taom_ability_bowman_of_redwater_tt" text="Loose the arrows of the Redwater bowmen: boosts +20% ranged damage, +20% draw speed, and +15% movement speed for 8s." />
-    <string id="taom_ability_marksman_of_westmark" text="Light Fletching" />
-    <string id="taom_ability_marksman_of_westmark_tt" text="Nock a flight of swift light-fletch arrows: boosts +20% ranged damage, +20% draw speed, and +15% movement speed for 8s." />
-    <string id="taom_ability_rider_of_vidugard" text="Warcry of Vidugard" />
-    <string id="taom_ability_rider_of_vidugard_tt" text="Raise the warcry of the horse-lords: boosts +25% charge damage, +20% mount speed, and +10% melee damage for 8s." />
-    <string id="taom_ability_river_rider_of_seagate" text="Shore Gallop" />
-    <string id="taom_ability_river_rider_of_seagate_tt" text="Spur your horse along the river roads: boosts +25% charge damage, +20% mount speed, and +10% melee damage for 8s." />
-    <string id="taom_ability_spear_warden_of_vinewatch" text="Terrace Wall" />
-    <string id="taom_ability_spear_warden_of_vinewatch_tt" text="Set your spear and hold the terrace wall: boosts +15% melee damage and +10% damage reduction to allies within 50m for 8s." />
-    <string id="taom_ability_warden_of_wainwatch" text="Stand Fast" />
-    <string id="taom_ability_warden_of_wainwatch_tt" text="Dig in with iron resolve: boosts +15% melee damage and +10% damage reduction to allies within 50m for 8s." />
-    <string id="taom_bowman_of_redwater_root_desc" text="Seagate Volley grants +5% ranged damage in honor of the bowmen of the Redwater." />
-    <string id="taom_bwr_t1_a_key" text="Seagate Volley radius increased, covering wider kill zones." />
-    <string id="taom_bwr_t1_a_p1" text="+8% ranged damage." />
-    <string id="taom_bwr_t1_a_p2" text="+5% armor penetration." />
-    <string id="taom_bwr_t1_a_p3" text="+7% movement speed." />
-    <string id="taom_bwr_t1_a_p4" text="+5% battle renown gain." />
-    <string id="taom_bwr_t1_b_key" text="Seagate Volley duration extended, sustained barrage." />
-    <string id="taom_bwr_t1_b_p1" text="+5% resistance." />
-    <string id="taom_bwr_t1_b_p2" text="+5 max health." />
-    <string id="taom_bwr_t1_b_p3" text="+5% party spotting range." />
-    <string id="taom_bwr_t1_b_p4" text="+10% stealth bonus." />
-    <string id="taom_bwr_t2_a_key" text="Seagate Volley charge reduced, maintaining constant pressure." />
-    <string id="taom_bwr_t2_a_p1" text="+10% party spotting range." />
-    <string id="taom_bwr_t2_a_p2" text="+10% movement speed." />
-    <string id="taom_bwr_t2_a_p3" text="+13% stealth bonus." />
-    <string id="taom_bwr_t2_a_p4" text="+10% battle renown gain." />
-    <string id="taom_bwr_t2_b_key" text="Seagate Volley gains additional penetration while active." />
-    <string id="taom_bwr_t2_b_p1" text="+12% ranged damage." />
-    <string id="taom_bwr_t2_b_p2" text="+10% armor penetration." />
-    <string id="taom_bwr_t2_b_p3" text="+8 max health." />
-    <string id="taom_bwr_t2_b_p4" text="+3% troop damage." />
-    <string id="taom_bwr_t3_a_key" text="Seagate Volley radius greatly expanded, inescapable volleys." />
-    <string id="taom_bwr_t3_a_p1" text="+18% ranged damage." />
-    <string id="taom_bwr_t3_a_p2" text="+15% armor penetration." />
-    <string id="taom_bwr_t3_a_p3" text="+15% battle renown gain." />
-    <string id="taom_bwr_t3_a_p4" text="+5% troop damage." />
-    <string id="taom_bwr_t3_b_key" text="Seagate Volley charge greatly reduced, relentless fire." />
-    <string id="taom_bwr_t3_b_p1" text="+15% stealth bonus." />
-    <string id="taom_bwr_t3_b_p2" text="+15% movement speed." />
-    <string id="taom_bwr_t3_b_p3" text="+9 max health." />
-    <string id="taom_bwr_t3_b_p4" text="+15% party spotting range." />
-    <string id="taom_career_bowman_of_redwater" text="Bowman of Redwater" />
-    <string id="taom_career_bowman_of_redwater_desc" text="A bowman of the Redwater who shoots from the walls of Seagate and the reed-beds of the river, carrying on a tradition of unerring marksmanship." />
-    <string id="taom_career_grp_bowman_of_redwater_t1_a" text="Bowman of Redwater" />
-    <string id="taom_career_grp_bowman_of_redwater_t1_b" text="Watch of the Sea of Rhûn" />
-    <string id="taom_career_grp_bowman_of_redwater_t2_a" text="Heir of the Redwater Bowmen" />
-    <string id="taom_career_grp_bowman_of_redwater_t2_b" text="Falcon-Sighted Archer" />
-    <string id="taom_career_grp_bowman_of_redwater_t3_a" text="Raider-Bane of Seagate" />
-    <string id="taom_career_grp_bowman_of_redwater_t3_b" text="The Bow of King Ostric's Line" />
-    <string id="taom_career_grp_marksman_of_westmark_t1_a" text="Hawk of Westmark" />
-    <string id="taom_career_grp_marksman_of_westmark_t1_b" text="Warden of the Western Plain" />
-    <string id="taom_career_grp_marksman_of_westmark_t2_a" text="Captain of the Muster" />
-    <string id="taom_career_grp_marksman_of_westmark_t2_b" text="Shadow of Mirkwood" />
-    <string id="taom_career_grp_marksman_of_westmark_t3_a" text="Bowman of the Plain" />
-    <string id="taom_career_grp_marksman_of_westmark_t3_b" text="Host of Rhovanion" />
-    <string id="taom_career_grp_rider_of_vidugard_t1_a" text="Heir of the Horse-lords" />
-    <string id="taom_career_grp_rider_of_vidugard_t1_b" text="Rider of the Open Plain" />
-    <string id="taom_career_grp_rider_of_vidugard_t2_a" text="Oath of the Horse-lords" />
-    <string id="taom_career_grp_rider_of_vidugard_t2_b" text="Lord of the Herds" />
-    <string id="taom_career_grp_rider_of_vidugard_t3_a" text="Charge of the Plain" />
-    <string id="taom_career_grp_rider_of_vidugard_t3_b" text="Song of Rhovanion" />
-    <string id="taom_career_grp_river_rider_of_seagate_t1_a" text="Rider of the Redwater" />
-    <string id="taom_career_grp_river_rider_of_seagate_t1_b" text="Warden of the Wine Road" />
-    <string id="taom_career_grp_river_rider_of_seagate_t2_a" text="Lance of the Vineyards" />
-    <string id="taom_career_grp_river_rider_of_seagate_t2_b" text="Outrider of the Eastern Trade" />
-    <string id="taom_career_grp_river_rider_of_seagate_t3_a" text="The Charge of the Shore" />
-    <string id="taom_career_grp_river_rider_of_seagate_t3_b" text="Courier of the King" />
-    <string id="taom_career_grp_spear_warden_of_vinewatch_t1_a" text="Vine-warden of the Redwater" />
-    <string id="taom_career_grp_spear_warden_of_vinewatch_t1_b" text="Shieldwall of the Terraces" />
-    <string id="taom_career_grp_spear_warden_of_vinewatch_t2_a" text="Spear of King Ostric" />
-    <string id="taom_career_grp_spear_warden_of_vinewatch_t2_b" text="Bulwark of the Redwater" />
-    <string id="taom_career_grp_spear_warden_of_vinewatch_t3_a" text="Vanguard of King Ostric" />
-    <string id="taom_career_grp_spear_warden_of_vinewatch_t3_b" text="The Last Stand at Sunwall" />
-    <string id="taom_career_grp_warden_of_wainwatch_t1_a" text="Gate of Wainwatch" />
-    <string id="taom_career_grp_warden_of_wainwatch_t1_b" text="Watch of the Plain" />
-    <string id="taom_career_grp_warden_of_wainwatch_t2_a" text="Shieldman of Wainwatch" />
-    <string id="taom_career_grp_warden_of_wainwatch_t2_b" text="Warden of the Eastern Fords" />
-    <string id="taom_career_grp_warden_of_wainwatch_t3_a" text="Bastion of the Northmark" />
-    <string id="taom_career_grp_warden_of_wainwatch_t3_b" text="Warden of Rhovanion" />
-    <string id="taom_career_marksman_of_westmark" text="Marksman of Westmark" />
-    <string id="taom_career_marksman_of_westmark_desc" text="A heavy archer of the Westmark garrison who has mastered the art of loosing light, high-velocity arrows with lethal precision, capable of penetrating armour at distances that leave enemies no safe quarter." />
-    <string id="taom_career_rank1_bowman_of_redwater" text="Bowman of Redwater" />
-    <string id="taom_career_rank1_marksman_of_westmark" text="Bowman of Westmark" />
-    <string id="taom_career_rank1_rider_of_vidugard" text="Rider of the Plain" />
-    <string id="taom_career_rank1_river_rider_of_seagate" text="River-Rider of Seagate" />
-    <string id="taom_career_rank1_spear_warden_of_vinewatch" text="Spearman of Vinewatch" />
-    <string id="taom_career_rank1_warden_of_wainwatch" text="Watchman of Wainwatch" />
-    <string id="taom_career_rank2_bowman_of_redwater" text="Hawk-Eye of Redwater" />
-    <string id="taom_career_rank2_marksman_of_westmark" text="Marksman of Westmark" />
-    <string id="taom_career_rank2_rider_of_vidugard" text="Captain of the Riders" />
-    <string id="taom_career_rank2_river_rider_of_seagate" text="Warden of the Shore Road" />
-    <string id="taom_career_rank2_spear_warden_of_vinewatch" text="Spear-warden of Vinewatch" />
-    <string id="taom_career_rank2_warden_of_wainwatch" text="Gate-warden of Wainwatch" />
-    <string id="taom_career_rank3_bowman_of_redwater" text="Bow-lord of the Redwater" />
-    <string id="taom_career_rank3_marksman_of_westmark" text="Arrow-warden of the Plain" />
-    <string id="taom_career_rank3_rider_of_vidugard" text="Horse-lord of Rhovanion" />
-    <string id="taom_career_rank3_river_rider_of_seagate" text="Marshal of the Redwater" />
-    <string id="taom_career_rank3_spear_warden_of_vinewatch" text="Captain of Vineholm" />
-    <string id="taom_career_rank3_warden_of_wainwatch" text="Warden of the Eastern Plain" />
-    <string id="taom_career_rider_of_vidugard" text="Rider of Vidugard" />
-    <string id="taom_career_rider_of_vidugard_desc" text="A Northman horse-lord of the plains south of Mirkwood who rides with the thunder of generations of herdsmen, inspiring allies with a warcry that rolls across the grass and scattering enemies under the hooves of heavy cavalry." />
-    <string id="taom_career_river_rider_of_seagate" text="River-Rider of Seagate" />
-    <string id="taom_career_river_rider_of_seagate_desc" text="A mounted patrol of the Redwater shore who rides the vineyard ways and the road to Seagate, safeguarding wine caravans from raiders out of the east." />
-    <string id="taom_career_spear_warden_of_vinewatch" text="Spear-warden of Vinewatch" />
-    <string id="taom_career_spear_warden_of_vinewatch_desc" text="A stalwart guardian of Vinewatch who holds the vineyard roads and the walls above the Redwater against raiders and bandits with shield and spear." />
-    <string id="taom_career_warden_of_wainwatch" text="Warden of Wainwatch" />
-    <string id="taom_career_warden_of_wainwatch_desc" text="A grizzled spear-warden of Wainwatch who patrols the eastern plain on foot and by pony, guarding the realm's eastern flank against the Wainriders through endurance, local knowledge and a tenacious grip on contested ground." />
-    <string id="taom_mow_root_desc" text="Light Fletching grants +5% ranged damage, making every shaft count." />
-    <string id="taom_mow_t1_a_key" text="Eagle Eye" />
-    <string id="taom_mow_t1_a_key_desc" text="Your sight is keener than any hawk. Light Fletching radius +3." />
-    <string id="taom_mow_t1_a_p1" text="True Flight" />
-    <string id="taom_mow_t1_a_p1_desc" text="Your arrows fly without deviation. +6% ranged damage." />
-    <string id="taom_mow_t1_a_p2" text="Gap Finder" />
-    <string id="taom_mow_t1_a_p2_desc" text="You find the joints in every suit of armour. +5% armour penetration." />
-    <string id="taom_mow_t1_a_p3" text="Westmark Training" />
-    <string id="taom_mow_t1_a_p3_desc" text="Westmark archers are the finest on the plain. +5 health." />
-    <string id="taom_mow_t1_a_p4" text="Full Quiver" />
-    <string id="taom_mow_t1_a_p4_desc" text="You carry more white-feathered shafts than any other. +10% ammo." />
-    <string id="taom_mow_t1_b_key" text="Steadfast Draw" />
-    <string id="taom_mow_t1_b_key_desc" text="You hold your draw longer for the perfect shot. Light Fletching duration +4s." />
-    <string id="taom_mow_t1_b_p1" text="Swift Nock" />
-    <string id="taom_mow_t1_b_p1_desc" text="Your hands move faster than the eye can follow. +5% ranged damage." />
-    <string id="taom_mow_t1_b_p2" text="Bowman's Endurance" />
-    <string id="taom_mow_t1_b_p2_desc" text="You draw and fire for hours without tiring. +6 health." />
-    <string id="taom_mow_t1_b_p3" text="Open Field Scout" />
-    <string id="taom_mow_t1_b_p3_desc" text="You read the plains of Rhovanion as a book. +5% party spotting range." />
-    <string id="taom_mow_t1_b_p4" text="Northman Discipline" />
-    <string id="taom_mow_t1_b_p4_desc" text="You drill your archers to hold the line. +10% troop resistance." />
-    <string id="taom_mow_t2_a_key" text="Volley Captain" />
-    <string id="taom_mow_t2_a_key_desc" text="You coordinate devastating mass fire. Light Fletching charge cost -20." />
-    <string id="taom_mow_t2_a_p1" text="Pin the Line" />
-    <string id="taom_mow_t2_a_p1_desc" text="Your volleys suppress enemy advances. +13% troop resistance." />
-    <string id="taom_mow_t2_a_p2" text="Bodkin Point" />
-    <string id="taom_mow_t2_a_p2_desc" text="Hardened tips punch through mail and plate. +10% armour penetration." />
-    <string id="taom_mow_t2_a_p3" text="Field Craft" />
-    <string id="taom_mow_t2_a_p3_desc" text="You use every fold of ground to your advantage. +13% stealth bonus." />
-    <string id="taom_mow_t2_a_p4" text="War Arrow Cache" />
-    <string id="taom_mow_t2_a_p4_desc" text="Pre-positioned caches keep your quiver full. +13% ammo." />
-    <string id="taom_mow_t2_b_key" text="Sustained Barrage" />
-    <string id="taom_mow_t2_b_key_desc" text="The rain of arrows does not abate. Light Fletching duration +2s." />
-    <string id="taom_mow_t2_b_p1" text="Covering Fire" />
-    <string id="taom_mow_t2_b_p1_desc" text="Your archers cover every advance. +4% troop damage." />
-    <string id="taom_mow_t2_b_p2" text="Forged in Mirkwood's Shadow" />
-    <string id="taom_mow_t2_b_p2_desc" text="Westmark's warriors are tempered by proximity to Mirkwood. +6 health." />
-    <string id="taom_mow_t2_b_p3" text="Horse-lord's Eye" />
-    <string id="taom_mow_t2_b_p3_desc" text="The plains hold no secrets from you. +8% party spotting range." />
-    <string id="taom_mow_t2_b_p4" text="Precision Drilled" />
-    <string id="taom_mow_t2_b_p4_desc" text="Your archers loose with mechanical perfection. +4% troop damage." />
-    <string id="taom_mow_t3_a_key" text="Legendary Shot" />
-    <string id="taom_mow_t3_a_key_desc" text="Songs will be sung of your skill. Light Fletching radius +5." />
-    <string id="taom_mow_t3_a_p1" text="King's Arrow" />
-    <string id="taom_mow_t3_a_p1_desc" text="One arrow, one kill -- every time. +12% ranged damage." />
-    <string id="taom_mow_t3_a_p2" text="Westmark's Champion" />
-    <string id="taom_mow_t3_a_p2_desc" text="You are the finest shot in all of Rhovanion. +9 health." />
-    <string id="taom_mow_t3_a_p3" text="War Host Bowmen" />
-    <string id="taom_mow_t3_a_p3_desc" text="Your legend draws the finest archers. +4 party size." />
-    <string id="taom_mow_t3_a_p4" text="Endless Shafts" />
-    <string id="taom_mow_t3_a_p4_desc" text="Your supply lines keep the arrows flying. +15% ammo." />
-    <string id="taom_mow_t3_b_key" text="Reflexive Loose" />
-    <string id="taom_mow_t3_b_key_desc" text="The nock and release is pure muscle memory. Light Fletching charge cost -30." />
-    <string id="taom_mow_t3_b_p1" text="Rain of Arrows" />
-    <string id="taom_mow_t3_b_p1_desc" text="Your archers darken the sky. +6% troop damage." />
-    <string id="taom_mow_t3_b_p2" text="Swift March" />
-    <string id="taom_mow_t3_b_p2_desc" text="Light infantry move swiftly across the plain. +5% party movement speed." />
-    <string id="taom_mow_t3_b_p3" text="Fame of Rhovanion" />
-    <string id="taom_mow_t3_b_p3_desc" text="Your deeds bring glory to Westmark. +12% battle renown gain." />
-    <string id="taom_mow_t3_b_p4" text="Army of Rhovanion" />
-    <string id="taom_mow_t3_b_p4_desc" text="The finest bowmen of Rhovanion rally to your banner. +5 party size." />
-    <string id="taom_river_rider_of_seagate_root_desc" text="Shore Gallop grants +5% melee damage and your horse quickens." />
-    <string id="taom_rov_root_desc" text="Warcry of Vidugard grants +10% horse charge damage, summoning the thunder of the ancestors." />
-    <string id="taom_rov_t1_a_key" text="Ancestor's Thunder" />
-    <string id="taom_rov_t1_a_key_desc" text="The warcry echoes across the plain. Warcry of Vidugard radius +3." />
-    <string id="taom_rov_t1_a_p1" text="First Charge" />
-    <string id="taom_rov_t1_a_p1_desc" text="You lead the charge and none can match your speed. +10% horse charge damage." />
-    <string id="taom_rov_t1_a_p2" text="Born to Ride" />
-    <string id="taom_rov_t1_a_p2_desc" text="Horse and rider are one. +10% horse health." />
-    <string id="taom_rov_t1_a_p3" text="Grassland Endurance" />
-    <string id="taom_rov_t1_a_p3_desc" text="Riding the plains of Rhovanion has hardened you. +5 health." />
-    <string id="taom_rov_t1_a_p4" text="Rallying Cry" />
-    <string id="taom_rov_t1_a_p4_desc" text="Your cry heartens the host. +3% troop morale." />
-    <string id="taom_rov_t1_b_key" text="Sustained Warcry" />
-    <string id="taom_rov_t1_b_key_desc" text="The thunder rolls on. Warcry of Vidugard duration +4s." />
-    <string id="taom_rov_t1_b_p1" text="Swift Plains" />
-    <string id="taom_rov_t1_b_p1_desc" text="The Northmen ride the wind itself. +5% movement speed." />
-    <string id="taom_rov_t1_b_p2" text="Rhovanion Warband" />
-    <string id="taom_rov_t1_b_p2_desc" text="Northmen ride in close formation. +2% troop damage." />
-    <string id="taom_rov_t1_b_p3" text="Rider's Resolve" />
-    <string id="taom_rov_t1_b_p3_desc" text="You do not break, no matter the odds. +6 health." />
-    <string id="taom_rov_t1_b_p4" text="Stalwart Mount" />
-    <string id="taom_rov_t1_b_p4_desc" text="Your horse is battle-hardened. +10% horse health." />
-    <string id="taom_rov_t2_a_key" text="The Horse-lords' Legacy" />
-    <string id="taom_rov_t2_a_key_desc" text="The ancestors ride with you always. Warcry charge cost -20." />
-    <string id="taom_rov_t2_a_p1" text="Unstoppable Charge" />
-    <string id="taom_rov_t2_a_p1_desc" text="Nothing stands before the Northmen. +13% horse charge damage." />
-    <string id="taom_rov_t2_a_p2" text="Shield Wall Breaker" />
-    <string id="taom_rov_t2_a_p2_desc" text="Your charge shatters shield walls. +8% melee damage." />
-    <string id="taom_rov_t2_a_p3" text="Northmen Morale" />
-    <string id="taom_rov_t2_a_p3_desc" text="The cry of Rhovanion heartens all who hear it. +8% troop morale." />
-    <string id="taom_rov_t2_a_p4" text="Long Rider" />
-    <string id="taom_rov_t2_a_p4_desc" text="You cover vast distances without tiring. +6 health." />
-    <string id="taom_rov_t2_b_key" text="Riding Song" />
-    <string id="taom_rov_t2_b_key_desc" text="The song of the Northmen carries the riders onward. Warcry duration +2s." />
-    <string id="taom_rov_t2_b_p1" text="Herd-Bred" />
-    <string id="taom_rov_t2_b_p1_desc" text="Your horse has the blood of the great herds. +13% horse health." />
-    <string id="taom_rov_t2_b_p2" text="Plains Master" />
-    <string id="taom_rov_t2_b_p2_desc" text="You know every valley and ridge of the plain. +8% party spotting range." />
-    <string id="taom_rov_t2_b_p3" text="Honour Bound" />
-    <string id="taom_rov_t2_b_p3_desc" text="Northmen need no coin to stay loyal. -5% troop wages." />
-    <string id="taom_rov_t2_b_p4" text="Iron Stirrups" />
-    <string id="taom_rov_t2_b_p4_desc" text="Your riding is sure even in the fiercest melee. +7 health." />
-    <string id="taom_rov_t3_a_key" text="Charge of the Northmen" />
-    <string id="taom_rov_t3_a_key_desc" text="The greatest charge in the age of men. Warcry radius +5." />
-    <string id="taom_rov_t3_a_p1" text="Thunder of the Plain" />
-    <string id="taom_rov_t3_a_p1_desc" text="As in the great battles of the plain, your charge is unstoppable. +15% horse charge damage." />
-    <string id="taom_rov_t3_a_p2" text="Lord of the Plain" />
-    <string id="taom_rov_t3_a_p2_desc" text="The greatest riders follow you. +9 health." />
-    <string id="taom_rov_t3_a_p3" text="Company Commander" />
-    <string id="taom_rov_t3_a_p3_desc" text="A great company of riders rides at your back. +5 party size." />
-    <string id="taom_rov_t3_a_p4" text="Glory of Rhovanion" />
-    <string id="taom_rov_t3_a_p4_desc" text="Your deeds bring glory to Rhovanion. +12% battle renown gain." />
-    <string id="taom_rov_t3_b_key" text="Ever Ready" />
-    <string id="taom_rov_t3_b_key_desc" text="The warcry is always on your lips. Warcry charge cost -30." />
-    <string id="taom_rov_t3_b_p1" text="Wave of Riders" />
-    <string id="taom_rov_t3_b_p1_desc" text="The Northmen crash over the enemy like a wave. +6% troop damage." />
-    <string id="taom_rov_t3_b_p2" text="Swift as the Wind" />
-    <string id="taom_rov_t3_b_p2_desc" text="The Northmen are faster than legend. +8% party movement speed." />
-    <string id="taom_rov_t3_b_p3" text="Songs of Rhovanion" />
-    <string id="taom_rov_t3_b_p3_desc" text="The deeds of the Northmen are sung for ages. +14% battle renown gain." />
-    <string id="taom_rov_t3_b_p4" text="The Great Host" />
-    <string id="taom_rov_t3_b_p4_desc" text="The full host of the Northmen rides to war. +6 party size." />
-    <string id="taom_rros_t1_a_key" text="Shore Gallop radius expanded, sweeping wider formations." />
-    <string id="taom_rros_t1_a_p1" text="+8% melee damage." />
-    <string id="taom_rros_t1_a_p2" text="+10% horse charge damage." />
-    <string id="taom_rros_t1_a_p3" text="+7% swing speed." />
-    <string id="taom_rros_t1_a_p4" text="+5% party movement speed." />
-    <string id="taom_rros_t1_b_key" text="Shore Gallop duration extended, maintaining momentum." />
-    <string id="taom_rros_t1_b_p1" text="+10% horse health." />
-    <string id="taom_rros_t1_b_p2" text="+5 max health." />
-    <string id="taom_rros_t1_b_p3" text="-5% troop wages." />
-    <string id="taom_rros_t1_b_p4" text="+5% resistance." />
-    <string id="taom_rros_t2_a_key" text="Shore Gallop charge reduced, swifter activation." />
-    <string id="taom_rros_t2_a_p1" text="+10% party movement speed." />
-    <string id="taom_rros_t2_a_p2" text="-10% troop wages." />
-    <string id="taom_rros_t2_a_p3" text="+10% troop morale." />
-    <string id="taom_rros_t2_a_p4" text="+10% battle renown gain." />
-    <string id="taom_rros_t2_b_key" text="Shore Gallop boosts mount resilience while active." />
-    <string id="taom_rros_t2_b_p1" text="+12% melee damage." />
-    <string id="taom_rros_t2_b_p2" text="+13% horse charge damage." />
-    <string id="taom_rros_t2_b_p3" text="+13% horse health." />
-    <string id="taom_rros_t2_b_p4" text="+10% swing speed." />
-    <string id="taom_rros_t3_a_key" text="Shore Gallop radius greatly expanded, unstoppable impact." />
-    <string id="taom_rros_t3_a_p1" text="+18% melee damage." />
-    <string id="taom_rros_t3_a_p2" text="+15% horse charge damage." />
-    <string id="taom_rros_t3_a_p3" text="+15% swing speed." />
-    <string id="taom_rros_t3_a_p4" text="+7% troop damage." />
-    <string id="taom_rros_t3_b_key" text="Shore Gallop charge greatly reduced, ride without ceasing." />
-    <string id="taom_rros_t3_b_p1" text="+15% horse health." />
-    <string id="taom_rros_t3_b_p2" text="-15% troop wages." />
-    <string id="taom_rros_t3_b_p3" text="+15% party movement speed." />
-    <string id="taom_rros_t3_b_p4" text="+9 max health." />
-    <string id="taom_spear_warden_of_vinewatch_root_desc" text="Terrace Wall grants +5% resistance and steadies the defenders." />
-    <string id="taom_swov_t1_a_key" text="Terrace Wall radius increased, empowering more warriors." />
-    <string id="taom_swov_t1_a_p1" text="+8% melee damage." />
-    <string id="taom_swov_t1_a_p2" text="+3% troop damage." />
-    <string id="taom_swov_t1_a_p3" text="+6 max health." />
-    <string id="taom_swov_t1_a_p4" text="+7% swing speed." />
-    <string id="taom_swov_t1_b_key" text="Terrace Wall duration extended, fortifying the defense." />
-    <string id="taom_swov_t1_b_p1" text="+8% resistance." />
-    <string id="taom_swov_t1_b_p2" text="+5% troop morale." />
-    <string id="taom_swov_t1_b_p3" text="+10% troop resistance." />
-    <string id="taom_swov_t1_b_p4" text="+5% troop survival." />
-    <string id="taom_swov_t2_a_key" text="Terrace Wall charge reduced, activating more frequently." />
-    <string id="taom_swov_t2_a_p1" text="+10% troop morale." />
-    <string id="taom_swov_t2_a_p2" text="+2 party size." />
-    <string id="taom_swov_t2_a_p3" text="+10% battle renown gain." />
-    <string id="taom_swov_t2_a_p4" text="-10% troop wages." />
-    <string id="taom_swov_t2_b_key" text="Terrace Wall grants additional defensive buffs while active." />
-    <string id="taom_swov_t2_b_p1" text="+12% resistance." />
-    <string id="taom_swov_t2_b_p2" text="+8 max health." />
-    <string id="taom_swov_t2_b_p3" text="+13% troop resistance." />
-    <string id="taom_swov_t2_b_p4" text="+5% troop damage." />
-    <string id="taom_swov_t3_a_key" text="Terrace Wall radius greatly expanded, devastating power." />
-    <string id="taom_swov_t3_a_p1" text="+15% melee damage." />
-    <string id="taom_swov_t3_a_p2" text="+10 max health." />
-    <string id="taom_swov_t3_a_p3" text="+7% troop damage." />
-    <string id="taom_swov_t3_a_p4" text="+4 party size." />
-    <string id="taom_swov_t3_b_key" text="Terrace Wall charge greatly reduced, nearly always available." />
-    <string id="taom_swov_t3_b_p1" text="+18% resistance." />
-    <string id="taom_swov_t3_b_p2" text="+15% hero health regeneration." />
-    <string id="taom_swov_t3_b_p3" text="+20% troop morale." />
-    <string id="taom_swov_t3_b_p4" text="+15% troop survival." />
-    <string id="taom_wwk_root_desc" text="Stand Fast grants +5% resistance and channels the vigilance of Wainwatch's border watchers." />
-    <string id="taom_wwk_t1_a_key" text="River Ford Mastery" />
-    <string id="taom_wwk_t1_a_key_desc" text="You know every crossing. Stand Fast radius +3." />
-    <string id="taom_wwk_t1_a_p1" text="Shield and Spear" />
-    <string id="taom_wwk_t1_a_p1_desc" text="Classic Northman infantry discipline. +5% melee damage." />
-    <string id="taom_wwk_t1_a_p2" text="Watch Post Hardening" />
-    <string id="taom_wwk_t1_a_p2_desc" text="Years at isolated posts forge you like iron. +5 health." />
-    <string id="taom_wwk_t1_a_p3" text="Border Eyes" />
-    <string id="taom_wwk_t1_a_p3_desc" text="Nothing crosses the plain unseen by you. +5% party spotting range." />
-    <string id="taom_wwk_t1_a_p4" text="Wetland Endurance" />
-    <string id="taom_wwk_t1_a_p4_desc" text="The damp of the river country makes you resilient. +5% blunt resistance." />
-    <string id="taom_wwk_t1_b_key" text="Sustained Watch" />
-    <string id="taom_wwk_t1_b_key_desc" text="The watch is maintained through all trials. Stand Fast duration +4s." />
-    <string id="taom_wwk_t1_b_p1" text="Stream Swimmer" />
-    <string id="taom_wwk_t1_b_p1_desc" text="The river holds no fear for you. +5% movement speed." />
-    <string id="taom_wwk_t1_b_p2" text="Warden's Constitution" />
-    <string id="taom_wwk_t1_b_p2_desc" text="Years of lonely watch service make you tough as old wood. +6 health." />
-    <string id="taom_wwk_t1_b_p3" text="Loyal Guard" />
-    <string id="taom_wwk_t1_b_p3_desc" text="Your men need little pay -- duty is enough. -4% troop wages." />
-    <string id="taom_wwk_t1_b_p4" text="Warden's Discipline" />
-    <string id="taom_wwk_t1_b_p4_desc" text="Your infantry hold firm when others break. +10% troop resistance." />
-    <string id="taom_wwk_t2_a_key" text="Prepared Crossing" />
-    <string id="taom_wwk_t2_a_key_desc" text="You have scouted this ground for years. Stand Fast charge cost -20." />
-    <string id="taom_wwk_t2_a_p1" text="Shield Line" />
-    <string id="taom_wwk_t2_a_p1_desc" text="Your men form an impenetrable wall. +13% troop resistance." />
-    <string id="taom_wwk_t2_a_p2" text="Tested Steel" />
-    <string id="taom_wwk_t2_a_p2_desc" text="Every weapon is honed by the Wainwatch smiths. +8% melee damage." />
-    <string id="taom_wwk_t2_a_p3" text="Mirkwood's Warning" />
-    <string id="taom_wwk_t2_a_p3_desc" text="The forest teaches you to sense danger early. +10% party spotting range." />
-    <string id="taom_wwk_t2_a_p4" text="Fortified Will" />
-    <string id="taom_wwk_t2_a_p4_desc" text="The isolation of Wainwatch breeds iron resolve. +6 health." />
-    <string id="taom_wwk_t2_b_key" text="Tireless Patrol" />
-    <string id="taom_wwk_t2_b_key_desc" text="You patrol without pause or rest. Stand Fast duration +2s." />
-    <string id="taom_wwk_t2_b_p1" text="Wainwatch Hold" />
-    <string id="taom_wwk_t2_b_p1_desc" text="No enemy crosses the plain while you guard it. +8% troop morale." />
-    <string id="taom_wwk_t2_b_p2" text="River Armour" />
-    <string id="taom_wwk_t2_b_p2_desc" text="Your armour is as a river's current -- relentless. +10% resistance to ranged." />
-    <string id="taom_wwk_t2_b_p3" text="Fords Expert" />
-    <string id="taom_wwk_t2_b_p3_desc" text="You move swiftly through terrain that bogs others down. +6% party movement speed." />
-    <string id="taom_wwk_t2_b_p4" text="Border Iron" />
-    <string id="taom_wwk_t2_b_p4_desc" text="Hard service at the border has made you indestructible. +7 health." />
-    <string id="taom_wwk_t3_a_key" text="Wainwatch's Bastion" />
-    <string id="taom_wwk_t3_a_key_desc" text="You are the last line between civilisation and darkness. Stand Fast radius +5." />
-    <string id="taom_wwk_t3_a_p1" text="Unbreakable Line" />
-    <string id="taom_wwk_t3_a_p1_desc" text="Your shieldwall has never broken. +15% troop resistance." />
-    <string id="taom_wwk_t3_a_p2" text="Immortal Guard" />
-    <string id="taom_wwk_t3_a_p2_desc" text="The watch never ends. +9 health." />
-    <string id="taom_wwk_t3_a_p3" text="Garrison Commander" />
-    <string id="taom_wwk_t3_a_p3_desc" text="Your company swells with volunteers. +4 party size." />
-    <string id="taom_wwk_t3_a_p4" text="Defender's Glory" />
-    <string id="taom_wwk_t3_a_p4_desc" text="Victory in defence brings great honour. +12% battle renown gain." />
-    <string id="taom_wwk_t3_b_key" text="Ever Vigilant" />
-    <string id="taom_wwk_t3_b_key_desc" text="The watch is always maintained. Stand Fast charge cost -30." />
-    <string id="taom_wwk_t3_b_p1" text="Wall of Spears" />
-    <string id="taom_wwk_t3_b_p1_desc" text="Your infantry fight as one. +6% troop damage." />
-    <string id="taom_wwk_t3_b_p2" text="Swift to the Call" />
-    <string id="taom_wwk_t3_b_p2_desc" text="Your men respond instantly to any threat. +6% party movement speed." />
-    <string id="taom_wwk_t3_b_p3" text="Warden of the Plain" />
-    <string id="taom_wwk_t3_b_p3_desc" text="The plain's finest guardian. +12% battle renown gain." />
-    <string id="taom_wwk_t3_b_p4" text="Host of Wainwatch" />
-    <string id="taom_wwk_t3_b_p4_desc" text="All of Wainwatch's strength rides behind you. +5 party size." />
-    <string id="taom_career_grp_captain_of_osgiliath_f1" text="Oath of the Crossing" />
-    <string id="taom_career_grp_captain_of_osgiliath_f2" text="Steward's Ledger" />
-    <string id="taom_career_grp_captain_of_osgiliath_f3" text="Muster of the Fiefs" />
-    <string id="taom_career_grp_captain_of_osgiliath_f4" text="Ward of the White Tower" />
-    <string id="taom_career_grp_captain_of_osgiliath_f5" text="Tower Guard Drill" />
-    <string id="taom_career_grp_captain_of_osgiliath_f6" text="Endurance of Westernesse" />
-    <string id="taom_career_grp_knight_of_belfalas_f1" text="Oath of the Swan" />
-    <string id="taom_career_grp_knight_of_belfalas_f2" text="Steward's Ledger" />
-    <string id="taom_career_grp_knight_of_belfalas_f3" text="Muster of the Fiefs" />
-    <string id="taom_career_grp_knight_of_belfalas_f4" text="Ward of the White Tower" />
-    <string id="taom_career_grp_knight_of_belfalas_f5" text="Stables of Dol Amroth" />
-    <string id="taom_career_grp_knight_of_belfalas_f6" text="The Silver Swan" />
-    <string id="taom_career_grp_ranger_of_ithilien_f1" text="Oath of Henneth Annun" />
-    <string id="taom_career_grp_ranger_of_ithilien_f2" text="Steward's Ledger" />
-    <string id="taom_career_grp_ranger_of_ithilien_f3" text="Muster of the Fiefs" />
-    <string id="taom_career_grp_ranger_of_ithilien_f4" text="Ward of the White Tower" />
-    <string id="taom_career_grp_ranger_of_ithilien_f5" text="Watch on the Poros" />
-    <string id="taom_career_grp_ranger_of_ithilien_f6" text="Shadow of Ithilien" />
-    <string id="taom_cf_captain_of_osgiliath_f1_a" text="+15% melee damage." />
-    <string id="taom_cf_captain_of_osgiliath_f1_b" text="Your infantry deal 8% more damage." />
-    <string id="taom_cf_captain_of_osgiliath_f2_a" text="+25% renown, and +25% influence while you serve a kingdom." />
-    <string id="taom_cf_captain_of_osgiliath_f2_b" text="Your elite troops cost no daily upkeep in your realm's special resource." />
-    <string id="taom_cf_captain_of_osgiliath_f3_a" text="+50 party size." />
-    <string id="taom_cf_captain_of_osgiliath_f3_b" text="Double your realm's special resource from every source." />
-    <string id="taom_cf_captain_of_osgiliath_f4_a" text="Your troops lose 60% less morale to dread and terror." />
-    <string id="taom_cf_captain_of_osgiliath_f4_b" text="Your troops' blocks hold against a crush-through half the time." />
-    <string id="taom_cf_captain_of_osgiliath_f4_c" text="Your troops resist knockdown from blows and light charges 50% better." />
-    <string id="taom_cf_captain_of_osgiliath_f5_a" text="Your infantry gain 15 experience each day." />
-    <string id="taom_cf_captain_of_osgiliath_f5_b" text="+20 party size, and recruits cost 30% less." />
-    <string id="taom_cf_captain_of_osgiliath_f6_a" text="You take 20% less damage." />
-    <string id="taom_cf_captain_of_osgiliath_f6_b" text="Your infantry take 12% less damage." />
-    <string id="taom_cf_captain_of_osgiliath_f6_c" text="Your Career Ability lasts 8 seconds longer and reaches 20 meters further." />
-    <string id="taom_cf_captain_of_osgiliath_root" text="+5% melee damage." />
-    <string id="taom_cf_knight_of_belfalas_f1_a" text="Your mount's charge deals 10% more damage." />
-    <string id="taom_cf_knight_of_belfalas_f1_b" text="Your cavalry deal 8% more damage." />
-    <string id="taom_cf_knight_of_belfalas_f2_a" text="+25% renown, and +25% influence while you serve a kingdom." />
-    <string id="taom_cf_knight_of_belfalas_f2_b" text="Your elite troops cost no daily upkeep in your realm's special resource." />
-    <string id="taom_cf_knight_of_belfalas_f3_a" text="+50 party size." />
-    <string id="taom_cf_knight_of_belfalas_f3_b" text="Double your realm's special resource from every source." />
-    <string id="taom_cf_knight_of_belfalas_f4_a" text="Your troops lose 60% less morale to dread and terror." />
-    <string id="taom_cf_knight_of_belfalas_f4_b" text="Your troops' blocks hold against a crush-through half the time." />
-    <string id="taom_cf_knight_of_belfalas_f4_c" text="Your troops resist knockdown from blows and light charges 50% better." />
-    <string id="taom_cf_knight_of_belfalas_f5_a" text="Your cavalry gain 15 experience each day." />
-    <string id="taom_cf_knight_of_belfalas_f5_b" text="+20 party size, and recruits cost 30% less." />
-    <string id="taom_cf_knight_of_belfalas_f6_a" text="You take 20% less damage." />
-    <string id="taom_cf_knight_of_belfalas_f6_b" text="Your cavalry take 12% less damage." />
-    <string id="taom_cf_knight_of_belfalas_f6_c" text="Your Career Ability lasts 8 seconds longer and reaches 20 meters further." />
-    <string id="taom_cf_knight_of_belfalas_root" text="+5% melee damage." />
-    <string id="taom_cf_ranger_of_ithilien_f1_a" text="+15% ranged damage." />
-    <string id="taom_cf_ranger_of_ithilien_f1_b" text="Your ranged troops deal 8% more damage." />
-    <string id="taom_cf_ranger_of_ithilien_f2_a" text="+25% renown, and +25% influence while you serve a kingdom." />
-    <string id="taom_cf_ranger_of_ithilien_f2_b" text="Your elite troops cost no daily upkeep in your realm's special resource." />
-    <string id="taom_cf_ranger_of_ithilien_f3_a" text="+50 party size." />
-    <string id="taom_cf_ranger_of_ithilien_f3_b" text="Double your realm's special resource from every source." />
-    <string id="taom_cf_ranger_of_ithilien_f4_a" text="Your troops lose 60% less morale to dread and terror." />
-    <string id="taom_cf_ranger_of_ithilien_f4_b" text="Your troops' blocks hold against a crush-through half the time." />
-    <string id="taom_cf_ranger_of_ithilien_f4_c" text="Your troops resist knockdown from blows and light charges 50% better." />
-    <string id="taom_cf_ranger_of_ithilien_f5_a" text="Your ranged troops gain 15 experience each day." />
-    <string id="taom_cf_ranger_of_ithilien_f5_b" text="+20 party size, and recruits cost 30% less." />
-    <string id="taom_cf_ranger_of_ithilien_f6_a" text="You take 20% less damage." />
-    <string id="taom_cf_ranger_of_ithilien_f6_b" text="Your ranged troops take 12% less damage." />
-    <string id="taom_cf_ranger_of_ithilien_f6_c" text="Your Career Ability lasts 8 seconds longer and reaches 20 meters further." />
-    <string id="taom_cf_ranger_of_ithilien_root" text="+5% ranged damage." />
+    <string id="taom_ability_bowman_of_minhiriath" text="Pusu" />
+    <string id="taom_ability_bowman_of_minhiriath_tt" text="Ölümcül bir pusu kur — 8 saniye boyunca %20 menzilli hasar, %20 yay germe hızı ve %15 hareket hızı artırır." />
+    <string id="taom_ability_captain_of_cameth_brin" text="Hattı Tut" />
+    <string id="taom_ability_captain_of_cameth_brin_tt" text="Askerlerini demir disiplinle topla — 8 saniye boyunca 50 m içindeki müttefiklere %15 yakın dövüş hasarı ve %10 hasar azaltma kazandırır." />
+    <string id="taom_ability_knight_of_cardolan" text="İzdiham" />
+    <string id="taom_ability_knight_of_cardolan_tt" text="Durdurulamaz bir süvari hücumuyla gürleyerek ilerle — 8 saniye boyunca %25 hücum hasarı, %20 at hızı ve %10 yakın dövüş hasarı artırır." />
+    <string id="taom_ability_ranger_of_the_angle" text="Pusu" />
+    <string id="taom_ability_ranger_of_the_angle_tt" text="Ölümcül bir pusu kur — 8 saniye boyunca %20 menzilli hasar, %20 yay germe hızı ve %15 hareket hızı artırır." />
+    <string id="taom_ability_rider_of_the_fells" text="İzdiham" />
+    <string id="taom_ability_rider_of_the_fells_tt" text="Durdurulamaz bir süvari hücumuyla ilerle — 8 sn boyunca +%25 hücum hasarı, +%20 at hızı ve +%10 yakın dövüş hasarı sağlar." />
+    <string id="taom_ability_warden_of_tyrn_gorthad" text="Hattı Tut" />
+    <string id="taom_ability_warden_of_tyrn_gorthad_tt" text="Askerlerini demir disiplinle topla — 8 sn boyunca 50 m içindeki müttefiklere +%15 yakın dövüş hasarı ve +%10 hasar azaltma sağlar." />
+    <string id="taom_bom_t1a_key" text="Pusu yarıçapı artar, oklar gizlilikten bonus hasar verir." />
+    <string id="taom_bom_t1a_p1" text="+%8 menzilli hasar." />
+    <string id="taom_bom_t1a_p2" text="+%5 zırh delme." />
+    <string id="taom_bom_t1a_p3" text="+%7 hareket hızı." />
+    <string id="taom_bom_t1a_p4" text="+%5 savaş şöhreti kazanımı." />
+    <string id="taom_bom_t1b_key" text="Pusu süresi uzar, ek kaçınma sağlar." />
+    <string id="taom_bom_t1b_p1" text="+%5 direnç." />
+    <string id="taom_bom_t1b_p2" text="+5 azami can." />
+    <string id="taom_bom_t1b_p3" text="+%5 müfreze görüş menzili." />
+    <string id="taom_bom_t1b_p4" text="+%10 gizlilik bonusu." />
+    <string id="taom_bom_t2a_key" text="Pusu şarj gereksinimi azalır, daha sık etkinleşir." />
+    <string id="taom_bom_t2a_p1" text="+%10 müfreze görüş menzili." />
+    <string id="taom_bom_t2a_p2" text="+%10 hareket hızı." />
+    <string id="taom_bom_t2a_p3" text="+%13 gizlilik bonusu." />
+    <string id="taom_bom_t2a_p4" text="+%10 savaş şöhreti kazanımı." />
+    <string id="taom_bom_t2b_key" text="Pusu etkinken asker menzilli hasarını da artırır." />
+    <string id="taom_bom_t2b_p1" text="+%12 menzilli hasar." />
+    <string id="taom_bom_t2b_p2" text="+%10 zırh delme." />
+    <string id="taom_bom_t2b_p3" text="+8 azami can." />
+    <string id="taom_bom_t2b_p4" text="+%3 asker hasarı." />
+    <string id="taom_bom_t3a_key" text="Pusu yarıçapı büyük ölçüde artar, yıkıcı ok yağmurları." />
+    <string id="taom_bom_t3a_p1" text="+%18 menzilli hasar." />
+    <string id="taom_bom_t3a_p2" text="+%15 zırh delme." />
+    <string id="taom_bom_t3a_p3" text="+%15 savaş şöhreti kazanımı." />
+    <string id="taom_bom_t3a_p4" text="+%5 asker hasarı." />
+    <string id="taom_bom_t3b_key" text="Pusu şarjı büyük ölçüde azalır, neredeyse her zaman kullanılabilir olur." />
+    <string id="taom_bom_t3b_p1" text="+%15 gizlilik bonusu." />
+    <string id="taom_bom_t3b_p2" text="+%15 hareket hızı." />
+    <string id="taom_bom_t3b_p3" text="+9 azami can." />
+    <string id="taom_bom_t3b_p4" text="+%15 müfreze görüş menzili." />
+    <string id="taom_bowman_of_minhiriath_root_desc" text="Pusu +%5 menzilli hasar verir ve süresi Yay becerisiyle ölçeklenir." />
+    <string id="taom_career_bowman_of_minhiriath" text="Minhiriath Yaycısı" />
+    <string id="taom_career_bowman_of_minhiriath_desc" text="Minhiriath'ın ırmak diyarından vuran, Dunland'dan gelen akıncıları ölümcül bir isabetle pusuya düşüren seçkin bir izci." />
+    <string id="taom_career_captain_of_cameth_brin" text="Cameth Brin Yüzbaşısı" />
+    <string id="taom_career_captain_of_cameth_brin_desc" text="Cameth Brin kulesini dağlara karşı tutan, bozkırlar yandığında kaostan düzen yaratan, savaşta pişmiş bir piyade subayı. Yüzbaşı, başkalarının dağılacağı yerde hattı tutar ve askerleri salt irade gücüyle toparlar." />
+    <string id="taom_career_grp_bowman_of_minhiriath_t1_a" text="Yeşilyol Avcısı" />
+    <string id="taom_career_grp_bowman_of_minhiriath_t1_b" text="Bataklıkların Gözcüsü" />
+    <string id="taom_career_grp_bowman_of_minhiriath_t2_a" text="Güney Tepeleri İzcisi" />
+    <string id="taom_career_grp_bowman_of_minhiriath_t2_b" text="Boztaşkın Okçusu" />
+    <string id="taom_career_grp_bowman_of_minhiriath_t3_a" text="Gwathló'nun Oku" />
+    <string id="taom_career_grp_bowman_of_minhiriath_t3_b" text="Eryn Vorn'un Gölgesi" />
+    <string id="taom_career_grp_captain_of_cameth_brin_t1_a" text="Ettendale Muhafızı" />
+    <string id="taom_career_grp_captain_of_cameth_brin_t1_b" text="Kırağısu Geçidi'nin Bekçisi" />
+    <string id="taom_career_grp_captain_of_cameth_brin_t2_a" text="Soğukyaylaların Öncüsü" />
+    <string id="taom_career_grp_captain_of_cameth_brin_t2_b" text="Son Köprü'nün Kılıcı" />
+    <string id="taom_career_grp_captain_of_cameth_brin_t3_a" text="Belegorn'un Ordusu" />
+    <string id="taom_career_grp_captain_of_cameth_brin_t3_b" text="Cameth Brin Kulesi'nin Efendisi" />
+    <string id="taom_career_grp_knight_of_cardolan_t1_a" text="Minhiriath Mızraklısı" />
+    <string id="taom_career_grp_knight_of_cardolan_t1_b" text="Tharbad Muhafızı" />
+    <string id="taom_career_grp_knight_of_cardolan_t2_a" text="Ovaların Atlısı" />
+    <string id="taom_career_grp_knight_of_cardolan_t2_b" text="Aranthir Kalkan Duvarı" />
+    <string id="taom_career_grp_knight_of_cardolan_t3_a" text="Yeşilyol Şövalyesi" />
+    <string id="taom_career_grp_knight_of_cardolan_t3_b" text="Caras Gorthad Hücumu" />
+    <string id="taom_career_grp_ranger_of_the_angle_t1_a" text="Doğu Yolu'nun Avcısı" />
+    <string id="taom_career_grp_ranger_of_the_angle_t1_b" text="Son Köprü'nün Gözcüsü" />
+    <string id="taom_career_grp_ranger_of_the_angle_t2_a" text="Ettenbozkırları İzcisi" />
+    <string id="taom_career_grp_ranger_of_the_angle_t2_b" text="Kırağısu Okçusu" />
+    <string id="taom_career_grp_ranger_of_the_angle_t3_a" text="Gürsu'nun Oku" />
+    <string id="taom_career_grp_ranger_of_the_angle_t3_b" text="Trol Koruları'nın Gölgesi" />
+    <string id="taom_career_grp_rider_of_the_fells_t1_a" text="Köşe'nin Mızraklısı" />
+    <string id="taom_career_grp_rider_of_the_fells_t1_b" text="Gürsu Muhafızı" />
+    <string id="taom_career_grp_rider_of_the_fells_t2_a" text="Yüce Yaylaların Süvarisi" />
+    <string id="taom_career_grp_rider_of_the_fells_t2_b" text="Belegorn Kalkan Duvarı" />
+    <string id="taom_career_grp_rider_of_the_fells_t3_a" text="Ettenbozkırları Şövalyesi" />
+    <string id="taom_career_grp_rider_of_the_fells_t3_b" text="Cameth Brin Hücumu" />
+    <string id="taom_career_grp_warden_of_tyrn_gorthad_t1_a" text="Tepelerin Muhafızı" />
+    <string id="taom_career_grp_warden_of_tyrn_gorthad_t1_b" text="Boz Irmak Geçidi'nin Bekçisi" />
+    <string id="taom_career_grp_warden_of_tyrn_gorthad_t2_a" text="Güney Tepeleri Öncüsü" />
+    <string id="taom_career_grp_warden_of_tyrn_gorthad_t2_b" text="Sarn Geçidi'nin Kılıcı" />
+    <string id="taom_career_grp_warden_of_tyrn_gorthad_t3_a" text="Aranthir'in Ordusu" />
+    <string id="taom_career_grp_warden_of_tyrn_gorthad_t3_b" text="Kraliyet Höyüklerinin Bekçisi" />
+    <string id="taom_career_knight_of_cardolan" text="Cardolan Şövalyesi" />
+    <string id="taom_career_knight_of_cardolan_desc" text="Gümbürdeyen hücumuyla sayısız düşman düzenini bozmuş, güney krallığının zırhlı yiğidi. Cardolan Şövalyesi, Cardolan disiplinini Caras Gorthad'ın gururlu süvari geleneğiyle birleştirerek yerinden oynatılamaz bir çelik duvara dönüşür." />
+    <string id="taom_career_ranger_of_the_angle" text="Köşe Kolcusu" />
+    <string id="taom_career_ranger_of_the_angle_desc" text="Köşe'nin yamaçlarından saldıran, dağlardan orkları ve trolleri ölümcül bir isabetle pusuya düşüren seçkin bir izci." />
+    <string id="taom_career_rank1_bowman_of_minhiriath" text="Minhiriath İzcisi" />
+    <string id="taom_career_rank1_captain_of_cameth_brin" text="Son Köprü'nün Ohtar'ı" />
+    <string id="taom_career_rank1_knight_of_cardolan" text="Caras Gorthad Silahtarı" />
+    <string id="taom_career_rank1_ranger_of_the_angle" text="Angle İzcisi" />
+    <string id="taom_career_rank1_rider_of_the_fells" text="Angle Silahtarı" />
+    <string id="taom_career_rank1_warden_of_tyrn_gorthad" text="Sarn Geçidi Ohtarı" />
+    <string id="taom_career_rank2_bowman_of_minhiriath" text="Minhiriath Okçusu" />
+    <string id="taom_career_rank2_captain_of_cameth_brin" text="Yabanıl Tepelerin Muhafızı" />
+    <string id="taom_career_rank2_knight_of_cardolan" text="Höyük Şövalyesi" />
+    <string id="taom_career_rank2_ranger_of_the_angle" text="Angle Kolcusu" />
+    <string id="taom_career_rank2_rider_of_the_fells" text="Yaban Şövalyesi" />
+    <string id="taom_career_rank2_warden_of_tyrn_gorthad" text="Höyüklerin Muhafızı" />
+    <string id="taom_career_rank3_bowman_of_minhiriath" text="Okçuların Kaptanı" />
+    <string id="taom_career_rank3_captain_of_cameth_brin" text="Cameth Brin Kaptanı" />
+    <string id="taom_career_rank3_knight_of_cardolan" text="Höyük Krallarının Şövalyesi" />
+    <string id="taom_career_rank3_ranger_of_the_angle" text="Angle Kolcularının Kaptanı" />
+    <string id="taom_career_rank3_rider_of_the_fells" text="Yaylaların Şövalyesi" />
+    <string id="taom_career_rank3_warden_of_tyrn_gorthad" text="Tyrn Gorthad Muhafızı" />
+    <string id="taom_career_rider_of_the_fells" text="Yaylaların Süvarisi" />
+    <string id="taom_career_rider_of_the_fells_desc" text="Gürleyen hücumuyla sayısız düşman düzenini kıran, tepe krallığının zırhlı şampiyonu. Yaylaların Süvarisi, Rhudaur disiplinini Cameth Brin'in gururlu süvari geleneğiyle birleştirerek sarsılmaz bir çelik duvarına dönüşür." />
+    <string id="taom_career_warden_of_tyrn_gorthad" text="Tyrn Gorthad Muhafızı" />
+    <string id="taom_career_warden_of_tyrn_gorthad_desc" text="Tyrn Gorthad höyüklerini ve Caras Gorthad surlarını koruyan, tepeler alev aldığında kaostan düzen yaratan, savaşta pişmiş bir piyade subayı. Muhafız, başkalarının dağılacağı yerde hattı tutar ve iradesinin gücüyle askerleri toparlar." />
+    <string id="taom_cocb_root_desc" text="Meslek Yeteneği +%5 yakın dövüş hasarı verir ve nehirlerin ile kıyıların yakınında asker moralini artırır." />
+    <string id="taom_cocb_t1a_key" text="Kariyer Yeteneği yarıçapı arttı, daha geniş nehir geçitlerine hükmeder." />
+    <string id="taom_cocb_t1a_p1" text="+%8 yakın dövüş hasarı." />
+    <string id="taom_cocb_t1a_p2" text="+%10 savurma hızı." />
+    <string id="taom_cocb_t1a_p3" text="+%3 asker hasarı." />
+    <string id="taom_cocb_t1a_p4" text="+%5 savaş şöhreti kazanımı." />
+    <string id="taom_cocb_t1b_key" text="Kariyer Yeteneği süresi uzatıldı, liman hattı daha uzun tutulur." />
+    <string id="taom_cocb_t1b_p1" text="+%5 direnç." />
+    <string id="taom_cocb_t1b_p2" text="+6 azami sağlık." />
+    <string id="taom_cocb_t1b_p3" text="+%5 asker morali." />
+    <string id="taom_cocb_t1b_p4" text="-%5 asker maaşı." />
+    <string id="taom_cocb_t2a_key" text="Kariyer Yeteneği şarj gereksinimi azaldı, daha sık kullanıma imkân tanır." />
+    <string id="taom_cocb_t2a_p1" text="+%8 müfreze hareket hızı." />
+    <string id="taom_cocb_t2a_p2" text="+%10 asker morali." />
+    <string id="taom_cocb_t2a_p3" text="+2 müfreze boyutu." />
+    <string id="taom_cocb_t2a_p4" text="+%10 savaş şöhreti kazanımı." />
+    <string id="taom_cocb_t2b_key" text="Kariyer Yeteneği etkinken askerlerin yakın dövüş hasarını da artırır." />
+    <string id="taom_cocb_t2b_p1" text="+%12 yakın dövüş hasarı." />
+    <string id="taom_cocb_t2b_p2" text="+%8 zırh delme." />
+    <string id="taom_cocb_t2b_p3" text="+%15 savurma hızı." />
+    <string id="taom_cocb_t2b_p4" text="+6 azami sağlık." />
+    <string id="taom_cocb_t3a_key" text="Kariyer Yeteneği etkinken askerlere direnç verir, filoyu tahkim eder." />
+    <string id="taom_cocb_t3a_p1" text="+%15 asker morali." />
+    <string id="taom_cocb_t3a_p2" text="+4 müfreze boyutu." />
+    <string id="taom_cocb_t3a_p3" text="-%10 asker maaşı." />
+    <string id="taom_cocb_t3a_p4" text="+%10 özel kaynak kazanımı." />
+    <string id="taom_cocb_t3b_key" text="Kariyer Yeteneği yarıçapı ve süresi azamiye çıktı, tüm su yollarına hükmeder." />
+    <string id="taom_cocb_t3b_p1" text="+%15 yakın dövüş hasarı." />
+    <string id="taom_cocb_t3b_p2" text="+%10 direnç." />
+    <string id="taom_cocb_t3b_p3" text="+%15 zırh delme." />
+    <string id="taom_cocb_t3b_p4" text="+8 azami sağlık." />
+    <string id="taom_knight_of_cardolan_root_desc" text="İzdiham +%5 yakın dövüş hasarı verir ve atlı hücumun gücüyle ölçeklenir." />
+    <string id="taom_koc_t1a_key" text="İzdiham yeteneğinin yarıçapı artar, daha geniş düşman düzenlerini süpürür." />
+    <string id="taom_koc_t1a_p1" text="+%8 yakın dövüş hasarı." />
+    <string id="taom_koc_t1a_p2" text="+%10 at hücum hasarı." />
+    <string id="taom_koc_t1a_p3" text="+%3 asker hasarı." />
+    <string id="taom_koc_t1a_p4" text="+%5 savaş şöhreti kazanımı." />
+    <string id="taom_koc_t1b_key" text="İzdiham süresi uzar, hücum daha uzun sürdürülür." />
+    <string id="taom_koc_t1b_p1" text="+%8 direnç." />
+    <string id="taom_koc_t1b_p2" text="+7 azami can." />
+    <string id="taom_koc_t1b_p3" text="+%10 at canı." />
+    <string id="taom_koc_t1b_p4" text="+%10 asker direnci." />
+    <string id="taom_koc_t2a_key" text="İzdiham dolum gereksinimi azalır, daha sık gürleyen hücumlar." />
+    <string id="taom_koc_t2a_p1" text="+%13 at hücum hasarı." />
+    <string id="taom_koc_t2a_p2" text="+%12 yakın dövüş hasarı." />
+    <string id="taom_koc_t2a_p3" text="+%8 hareket hızı." />
+    <string id="taom_koc_t2a_p4" text="+%10 savaş şöhreti kazanımı." />
+    <string id="taom_koc_t2b_key" text="İzdiham etkinken ayrıca asker direncini artırır." />
+    <string id="taom_koc_t2b_p1" text="+%10 direnç." />
+    <string id="taom_koc_t2b_p2" text="+8 azami can." />
+    <string id="taom_koc_t2b_p3" text="+%13 at canı." />
+    <string id="taom_koc_t2b_p4" text="+%13 asker direnci." />
+    <string id="taom_koc_t3a_key" text="İzdiham etkinken asker morali verir, Cardolan ordusuna ilham olur." />
+    <string id="taom_koc_t3a_p1" text="+%15 asker morali." />
+    <string id="taom_koc_t3a_p2" text="+4 müfreze büyüklüğü." />
+    <string id="taom_koc_t3a_p3" text="-%10 asker yükseltme maliyeti." />
+    <string id="taom_koc_t3a_p4" text="-%10 özel kaynak yükseltme maliyeti." />
+    <string id="taom_koc_t3b_key" text="İzdiham yarıçapı ve süresi azami seviyede — Caras Gorthad'ın hücumu durdurulamaz." />
+    <string id="taom_koc_t3b_p1" text="+%15 direnç." />
+    <string id="taom_koc_t3b_p2" text="+9 azami sağlık." />
+    <string id="taom_koc_t3b_p3" text="+%15 at hücum hasarı." />
+    <string id="taom_koc_t3b_p4" text="+%15 birlik direnci." />
+    <string id="taom_ranger_of_the_angle_root_desc" text="Pusu +%5 menzilli hasar sağlar ve süresi Yay becerisine göre artar." />
+    <string id="taom_rider_of_the_fells_root_desc" text="İzdiham +%5 yakın dövüş hasarı sağlar ve atlı hücumun gücüyle ölçeklenir." />
+    <string id="taom_rota_t1a_key" text="Pusu yarıçapı artar, oklar gizlilikten bonus hasar verir." />
+    <string id="taom_rota_t1a_p1" text="+%8 menzilli hasar." />
+    <string id="taom_rota_t1a_p2" text="+%5 zırh delme." />
+    <string id="taom_rota_t1a_p3" text="+%7 hareket hızı." />
+    <string id="taom_rota_t1a_p4" text="+%5 savaş şöhreti kazancı." />
+    <string id="taom_rota_t1b_key" text="Pusu süresi uzar ve ek kaçınma sağlar." />
+    <string id="taom_rota_t1b_p1" text="+%5 direnç." />
+    <string id="taom_rota_t1b_p2" text="+5 azami sağlık." />
+    <string id="taom_rota_t1b_p3" text="+%5 müfreze görüş menzili." />
+    <string id="taom_rota_t1b_p4" text="+%10 gizlilik bonusu." />
+    <string id="taom_rota_t2a_key" text="Pusu için gereken dolum azalır, daha sık etkinleşir." />
+    <string id="taom_rota_t2a_p1" text="+%10 müfreze görüş menzili." />
+    <string id="taom_rota_t2a_p2" text="+%10 hareket hızı." />
+    <string id="taom_rota_t2a_p3" text="+%13 gizlilik bonusu." />
+    <string id="taom_rota_t2a_p4" text="+%10 savaş şöhreti kazancı." />
+    <string id="taom_rota_t2b_key" text="Pusu etkinken askerlerin menzilli hasarını da artırır." />
+    <string id="taom_rota_t2b_p1" text="+%12 menzilli hasar." />
+    <string id="taom_rota_t2b_p2" text="+%10 zırh delme." />
+    <string id="taom_rota_t2b_p3" text="+8 azami sağlık." />
+    <string id="taom_rota_t2b_p4" text="+%3 asker hasarı." />
+    <string id="taom_rota_t3a_key" text="Pusu yarıçapı büyük ölçüde artar, yıkıcı ok yaylımları." />
+    <string id="taom_rota_t3a_p1" text="+%18 menzilli hasar." />
+    <string id="taom_rota_t3a_p2" text="+%15 zırh delme." />
+    <string id="taom_rota_t3a_p3" text="+%15 savaş şöhreti kazancı." />
+    <string id="taom_rota_t3a_p4" text="+%5 birlik hasarı." />
+    <string id="taom_rota_t3b_key" text="Pusu şarjı büyük ölçüde azaltıldı, neredeyse her zaman kullanılabilir hâle geldi." />
+    <string id="taom_rota_t3b_p1" text="+%15 gizlilik bonusu." />
+    <string id="taom_rota_t3b_p2" text="+%15 hareket hızı." />
+    <string id="taom_rota_t3b_p3" text="+9 azami can." />
+    <string id="taom_rota_t3b_p4" text="+%15 müfreze görüş menzili." />
+    <string id="taom_rotf_t1a_key" text="İzdiham yeteneğinin yarıçapı arttı, daha geniş düşman düzenlerini süpürüyor." />
+    <string id="taom_rotf_t1a_p1" text="+%8 yakın dövüş hasarı." />
+    <string id="taom_rotf_t1a_p2" text="+%10 at hücum hasarı." />
+    <string id="taom_rotf_t1a_p3" text="+%3 birlik hasarı." />
+    <string id="taom_rotf_t1a_p4" text="+%5 savaş şöhreti kazancı." />
+    <string id="taom_rotf_t1b_key" text="İzdiham süresi uzatıldı, hücum daha uzun sürüyor." />
+    <string id="taom_rotf_t1b_p1" text="+%8 direnç." />
+    <string id="taom_rotf_t1b_p2" text="+7 azami can." />
+    <string id="taom_rotf_t1b_p3" text="+%10 at canı." />
+    <string id="taom_rotf_t1b_p4" text="+%10 birlik direnci." />
+    <string id="taom_rotf_t2a_key" text="İzdiham şarj gereksinimi azaldı, gürleyen hücumlar daha sık yapılıyor." />
+    <string id="taom_rotf_t2a_p1" text="+%13 at hücum hasarı." />
+    <string id="taom_rotf_t2a_p2" text="+%12 yakın dövüş hasarı." />
+    <string id="taom_rotf_t2a_p3" text="+%8 hareket hızı." />
+    <string id="taom_rotf_t2a_p4" text="+%10 savaş şöhreti kazancı." />
+    <string id="taom_rotf_t2b_key" text="İzdiham etkinken birlik direncini de artırır." />
+    <string id="taom_rotf_t2b_p1" text="+%10 direnç." />
+    <string id="taom_rotf_t2b_p2" text="+8 azami can." />
+    <string id="taom_rotf_t2b_p3" text="+%13 at canı." />
+    <string id="taom_rotf_t2b_p4" text="+%13 birlik direnci." />
+    <string id="taom_rotf_t3a_key" text="İzdiham etkinken birlik moralini artırır ve Rhudaur ordusuna ilham verir." />
+    <string id="taom_rotf_t3a_p1" text="+%15 birlik morali." />
+    <string id="taom_rotf_t3a_p2" text="+4 müfreze büyüklüğü." />
+    <string id="taom_rotf_t3a_p3" text="-%10 birlik yükseltme maliyeti." />
+    <string id="taom_rotf_t3a_p4" text="-%10 özel kaynak yükseltme maliyeti." />
+    <string id="taom_rotf_t3b_key" text="İzdihamın yarıçapı ve süresi azami seviyede — Cameth Brin'in hücumu durdurulamaz." />
+    <string id="taom_rotf_t3b_p1" text="+%15 direnç." />
+    <string id="taom_rotf_t3b_p2" text="+9 azami can." />
+    <string id="taom_rotf_t3b_p3" text="+%15 at hücum hasarı." />
+    <string id="taom_rotf_t3b_p4" text="+%15 birlik direnci." />
+    <string id="taom_wotg_root_desc" text="Kariyer Yeteneği +%5 yakın dövüş hasarı sağlar ve nehirler ile kıyılar yakınında birlik moralini artırır." />
+    <string id="taom_wotg_t1a_key" text="Kariyer Yeteneği yarıçapı artar, daha geniş nehir geçitlerine hükmedilir." />
+    <string id="taom_wotg_t1a_p1" text="+%8 yakın dövüş hasarı." />
+    <string id="taom_wotg_t1a_p2" text="+%10 savurma hızı." />
+    <string id="taom_wotg_t1a_p3" text="+%3 birlik hasarı." />
+    <string id="taom_wotg_t1a_p4" text="+%5 savaş şöhreti kazanımı." />
+    <string id="taom_wotg_t1b_key" text="Kariyer Yeteneği süresi uzar, liman hattı daha uzun süre tutulur." />
+    <string id="taom_wotg_t1b_p1" text="+%5 direnç." />
+    <string id="taom_wotg_t1b_p2" text="+6 azami can." />
+    <string id="taom_wotg_t1b_p3" text="+%5 birlik morali." />
+    <string id="taom_wotg_t1b_p4" text="-%5 birlik maaşları." />
+    <string id="taom_wotg_t2a_key" text="Kariyer Yeteneği dolum gereksinimi azalır, daha sık kullanıma olanak tanır." />
+    <string id="taom_wotg_t2a_p1" text="+%8 müfreze hareket hızı." />
+    <string id="taom_wotg_t2a_p2" text="+%10 birlik morali." />
+    <string id="taom_wotg_t2a_p3" text="+2 müfreze büyüklüğü." />
+    <string id="taom_wotg_t2a_p4" text="+%10 savaş şöhreti kazanımı." />
+    <string id="taom_wotg_t2b_key" text="Kariyer Yeteneği etkinken birliklerin yakın dövüş hasarını da artırır." />
+    <string id="taom_wotg_t2b_p1" text="+%12 yakın dövüş hasarı." />
+    <string id="taom_wotg_t2b_p2" text="+%8 zırh delme." />
+    <string id="taom_wotg_t2b_p3" text="+%15 savurma hızı." />
+    <string id="taom_wotg_t2b_p4" text="+6 azami can." />
+    <string id="taom_wotg_t3a_key" text="Kariyer Yeteneği etkinken birliklere direnç sağlar, filoyu güçlendirir." />
+    <string id="taom_wotg_t3a_p1" text="+%15 birlik morali." />
+    <string id="taom_wotg_t3a_p2" text="+4 müfreze büyüklüğü." />
+    <string id="taom_wotg_t3a_p3" text="-%10 birlik maaşları." />
+    <string id="taom_wotg_t3a_p4" text="+%10 özel kaynak kazanımı." />
+    <string id="taom_wotg_t3b_key" text="Kariyer Yeteneği yarıçapı ve süresi azami seviyede, her su yoluna hükmeder." />
+    <string id="taom_wotg_t3b_p1" text="+%15 yakın dövüş hasarı." />
+    <string id="taom_wotg_t3b_p2" text="+%10 direnç." />
+    <string id="taom_wotg_t3b_p3" text="+%15 zırh delme." />
+    <string id="taom_wotg_t3b_p4" text="+8 azami can." />
+    <string id="taom_ability_nogrod_arbalester" text="Ateşsakal Yaylımı" />
+    <string id="taom_ability_nogrod_arbalester_tt" text="Nogrod'da dövülmüş kargıları yerleştir: 8 saniye boyunca %20 menzilli hasar, %20 yay germe hızı ve %15 hareket hızı artırır." />
+    <string id="taom_ability_warden_of_thorins_halls" text="Salonların Burcu" />
+    <string id="taom_ability_warden_of_thorins_halls_tt" text="Dağ salonlarının gücünü çağır: 8 sn boyunca 50 m içindeki müttefiklere +%15 yakın dövüş hasarı ve +%10 hasar azaltma sağlar." />
+    <string id="taom_career_grp_nogrod_arbalester_t1_a" text="Nogrod Yaylım Ateşi" />
+    <string id="taom_career_grp_nogrod_arbalester_t1_b" text="Cüce Yolu'nun Gözcüsü" />
+    <string id="taom_career_grp_nogrod_arbalester_t2_a" text="Amansız Kargı" />
+    <string id="taom_career_grp_nogrod_arbalester_t2_b" text="Dağın Mancınığı" />
+    <string id="taom_career_grp_nogrod_arbalester_t3_a" text="Çelik Fırtınası" />
+    <string id="taom_career_grp_nogrod_arbalester_t3_b" text="Nogrod Düzeneği" />
+    <string id="taom_career_grp_warden_of_thorins_halls_t1_a" text="Derinliklerin Çekici" />
+    <string id="taom_career_grp_warden_of_thorins_halls_t1_b" text="Kapı Duvarı Muhafızı" />
+    <string id="taom_career_grp_warden_of_thorins_halls_t2_a" text="Mavi Dağlar'ın Gazabı" />
+    <string id="taom_career_grp_warden_of_thorins_halls_t2_b" text="Thorin'in Salonları'nın Kalkan Duvarı" />
+    <string id="taom_career_grp_warden_of_thorins_halls_t3_a" text="Demir Siper" />
+    <string id="taom_career_grp_warden_of_thorins_halls_t3_b" text="Kral Salonu Muhafızı" />
+    <string id="taom_career_nogrod_arbalester" text="Ateşsakal Arbaletçisi" />
+    <string id="taom_career_nogrod_arbalester_desc" text="Her oku Mavi Dağlar'ın ocaklarında dövülmüş, büyük durdurma gücüne sahip usta işi arbaletler kullanan bir Nogrodlu Ateşsakal mühendis-savaşçısı." />
+    <string id="taom_career_rank1_nogrod_arbalester" text="Nogrod Ok Ustası" />
+    <string id="taom_career_rank1_warden_of_thorins_halls" text="Derinlik Muhafızı" />
+    <string id="taom_career_rank2_nogrod_arbalester" text="Ateşsakal Kundakçısı" />
+    <string id="taom_career_rank2_warden_of_thorins_halls" text="Thorin Salonları Muhafızı" />
+    <string id="taom_career_rank3_nogrod_arbalester" text="Ateşsakalların Demirci Lordu" />
+    <string id="taom_career_rank3_warden_of_thorins_halls" text="Mavi Dağların Kalkan Duvarı" />
+    <string id="taom_career_warden_of_thorins_halls" text="Thorin'in Salonlarının Muhafızı" />
+    <string id="taom_career_warden_of_thorins_halls_desc" text="Mavi Dağ demirinden ağır zırhıyla Thorin'in Salonları'nın kapılarını goblin ve orklara karşı tutan seçkin bir cüce savaşçı." />
+    <string id="taom_nga_t1_a_key" text="Ateşsakal Yaylımı yarıçapı artar, daha geniş ölüm bölgelerini kapsar." />
+    <string id="taom_nga_t1_a_p1" text="+%8 menzilli hasar." />
+    <string id="taom_nga_t1_a_p2" text="+%5 zırh delme." />
+    <string id="taom_nga_t1_a_p3" text="+%7 hareket hızı." />
+    <string id="taom_nga_t1_a_p4" text="+%5 savaş şöhreti kazanımı." />
+    <string id="taom_nga_t1_b_key" text="Ateşsakal Yaylımı süresi uzar, sürekli bombardıman." />
+    <string id="taom_nga_t1_b_p1" text="+%5 direnç." />
+    <string id="taom_nga_t1_b_p2" text="+5 azami can." />
+    <string id="taom_nga_t1_b_p3" text="+%5 müfreze görüş menzili." />
+    <string id="taom_nga_t1_b_p4" text="+%10 gizlilik bonusu." />
+    <string id="taom_nga_t2_a_key" text="Ateşsakal Yaylımı şarjı azalır, sürekli baskı sağlanır." />
+    <string id="taom_nga_t2_a_p1" text="+%10 müfreze görüş menzili." />
+    <string id="taom_nga_t2_a_p2" text="+%10 hareket hızı." />
+    <string id="taom_nga_t2_a_p3" text="+%13 gizlilik bonusu." />
+    <string id="taom_nga_t2_a_p4" text="+%10 savaş şöhreti kazanımı." />
+    <string id="taom_nga_t2_b_key" text="Ateşsakal Yaylımı etkinken ek delme kazanır." />
+    <string id="taom_nga_t2_b_p1" text="+%12 menzilli hasar." />
+    <string id="taom_nga_t2_b_p2" text="+%10 zırh delme." />
+    <string id="taom_nga_t2_b_p3" text="+8 azami sağlık." />
+    <string id="taom_nga_t2_b_p4" text="+%3 asker hasarı." />
+    <string id="taom_nga_t3_a_key" text="Ateşsakal Yaylımı'nın yarıçapı büyük ölçüde genişler, kaçınılmaz yaylım ateşi." />
+    <string id="taom_nga_t3_a_p1" text="+%18 menzilli hasar." />
+    <string id="taom_nga_t3_a_p2" text="+%15 zırh delme." />
+    <string id="taom_nga_t3_a_p3" text="+%15 savaş şöhreti kazancı." />
+    <string id="taom_nga_t3_a_p4" text="+%5 asker hasarı." />
+    <string id="taom_nga_t3_b_key" text="Ateşsakal Yaylımı'nın dolum süresi büyük ölçüde azalır, amansız ateş." />
+    <string id="taom_nga_t3_b_p1" text="+%15 gizlilik bonusu." />
+    <string id="taom_nga_t3_b_p2" text="+%15 hareket hızı." />
+    <string id="taom_nga_t3_b_p3" text="+9 azami sağlık." />
+    <string id="taom_nga_t3_b_p4" text="+%15 müfreze görüş menzili." />
+    <string id="taom_nogrod_arbalester_root_desc" text="Ateşsakal Yaylımı, usta işi oklarla +%5 menzilli hasar sağlar." />
+    <string id="taom_warden_of_thorins_halls_root_desc" text="Salonların Burcu +5 sağlık sağlar, cüce zanaatı seni korur." />
+    <string id="taom_woth_t1_a_key" text="Salonların Burcu yarıçapı arttı, daha fazla savaşçıyı güçlendirir." />
+    <string id="taom_woth_t1_a_p1" text="+%8 yakın dövüş hasarı." />
+    <string id="taom_woth_t1_a_p2" text="+%3 asker hasarı." />
+    <string id="taom_woth_t1_a_p3" text="+6 azami can." />
+    <string id="taom_woth_t1_a_p4" text="+%7 savurma hızı." />
+    <string id="taom_woth_t1_b_key" text="Salonların Burcu süresi uzadı, savunmayı pekiştirir." />
+    <string id="taom_woth_t1_b_p1" text="+%8 direnç." />
+    <string id="taom_woth_t1_b_p2" text="+%5 asker morali." />
+    <string id="taom_woth_t1_b_p3" text="+%10 asker direnci." />
+    <string id="taom_woth_t1_b_p4" text="+%5 asker hayatta kalma." />
+    <string id="taom_woth_t2_a_key" text="Salonların Burcu doluş süresi azaldı, daha sık etkinleşir." />
+    <string id="taom_woth_t2_a_p1" text="+%10 asker morali." />
+    <string id="taom_woth_t2_a_p2" text="+2 müfreze büyüklüğü." />
+    <string id="taom_woth_t2_a_p3" text="+%10 savaş şöhreti kazancı." />
+    <string id="taom_woth_t2_a_p4" text="-%10 asker ücretleri." />
+    <string id="taom_woth_t2_b_key" text="Salonların Burcu etkinken ek savunma güçlendirmeleri sağlar." />
+    <string id="taom_woth_t2_b_p1" text="+%12 direnç." />
+    <string id="taom_woth_t2_b_p2" text="+8 azami can." />
+    <string id="taom_woth_t2_b_p3" text="+%13 asker direnci." />
+    <string id="taom_woth_t2_b_p4" text="+%5 asker hasarı." />
+    <string id="taom_woth_t3_a_key" text="Salonların Burcu yarıçapı büyük ölçüde genişledi, yıkıcı bir güç." />
+    <string id="taom_woth_t3_a_p1" text="+%15 yakın dövüş hasarı." />
+    <string id="taom_woth_t3_a_p2" text="+10 azami can." />
+    <string id="taom_woth_t3_a_p3" text="+%7 asker hasarı." />
+    <string id="taom_woth_t3_a_p4" text="+4 müfreze büyüklüğü." />
+    <string id="taom_woth_t3_b_key" text="Salonların Burcu doluş süresi büyük ölçüde azaldı, neredeyse her zaman hazır." />
+    <string id="taom_woth_t3_b_p1" text="+%18 direnç." />
+    <string id="taom_woth_t3_b_p2" text="+%15 kahraman can yenilenmesi." />
+    <string id="taom_woth_t3_b_p3" text="+%20 asker morali." />
+    <string id="taom_woth_t3_b_p4" text="+%15 asker hayatta kalma." />
+    <string id="taom_ability_hewer_of_belegost" text="Kazma Fırtınası" />
+    <string id="taom_ability_hewer_of_belegost_tt" text="Büyük kazmayı soydaşlarınla birlikte savur: 8 saniye boyunca 50 m içindeki müttefiklere %15 yakın dövüş hasarı ve %10 hasar azaltma kazandırır." />
+    <string id="taom_career_grp_hewer_of_belegost_t1_a" text="Derinliklerin Kazması" />
+    <string id="taom_career_grp_hewer_of_belegost_t1_b" text="Kalkan Kıran" />
+    <string id="taom_career_grp_hewer_of_belegost_t2_a" text="Geniş Kirişlerin Gazabı" />
+    <string id="taom_career_grp_hewer_of_belegost_t2_b" text="Belegost'un Baltalaması" />
+    <string id="taom_career_grp_hewer_of_belegost_t3_a" text="Taşkıran'ın Hiddeti" />
+    <string id="taom_career_grp_hewer_of_belegost_t3_b" text="Geniş Kapı'nın Kırıcısı" />
+    <string id="taom_career_hewer_of_belegost" text="Belegost'un Kazma Baltacısı" />
+    <string id="taom_career_hewer_of_belegost_desc" text="Büyük bir kazmayı iki eliyle savuran, kalkanları ve ardındaki orkları parçalayan bir Belegostlu Geniş Sakal baltacısı." />
+    <string id="taom_career_rank1_hewer_of_belegost" text="Kazma Taşıyıcısı" />
+    <string id="taom_career_rank2_hewer_of_belegost" text="Belegost Yarıcısı" />
+    <string id="taom_career_rank3_hewer_of_belegost" text="Mavi Dağların Taşkıranı" />
+    <string id="taom_hewer_of_belegost_root_desc" text="Kazma Fırtınası +5 sağlık verir; kazmanın ağırlığı arkanda." />
+    <string id="taom_hob_t1_a_key" text="Kazma Fırtınası yarıçapı arttı, daha fazla savaşçıyı güçlendirir." />
+    <string id="taom_hob_t1_a_p1" text="+%8 yakın dövüş hasarı." />
+    <string id="taom_hob_t1_a_p2" text="+%3 birlik hasarı." />
+    <string id="taom_hob_t1_a_p3" text="+6 azami can." />
+    <string id="taom_hob_t1_a_p4" text="+%7 savurma hızı." />
+    <string id="taom_hob_t1_b_key" text="Kazma Fırtınası süresi uzadı, savunmayı pekiştirir." />
+    <string id="taom_hob_t1_b_p1" text="+%8 direnç." />
+    <string id="taom_hob_t1_b_p2" text="+%5 birlik morali." />
+    <string id="taom_hob_t1_b_p3" text="+%10 birlik direnci." />
+    <string id="taom_hob_t1_b_p4" text="+%5 birlik hayatta kalma." />
+    <string id="taom_hob_t2_a_key" text="Kazma Fırtınası şarjı azaldı, daha sık etkinleşir." />
+    <string id="taom_hob_t2_a_p1" text="+%10 birlik morali." />
+    <string id="taom_hob_t2_a_p2" text="+2 müfreze boyutu." />
+    <string id="taom_hob_t2_a_p3" text="+%10 savaş şöhreti kazanımı." />
+    <string id="taom_hob_t2_a_p4" text="-%10 birlik ücreti." />
+    <string id="taom_hob_t2_b_key" text="Kazma Fırtınası etkinken ek savunma takviyeleri sağlar." />
+    <string id="taom_hob_t2_b_p1" text="+%12 direnç." />
+    <string id="taom_hob_t2_b_p2" text="+8 azami can." />
+    <string id="taom_hob_t2_b_p3" text="+%13 asker direnci." />
+    <string id="taom_hob_t2_b_p4" text="+%5 asker hasarı." />
+    <string id="taom_hob_t3_a_key" text="Kazma Fırtınası yarıçapı büyük ölçüde genişler, yıkıcı güç." />
+    <string id="taom_hob_t3_a_p1" text="+%15 yakın dövüş hasarı." />
+    <string id="taom_hob_t3_a_p2" text="+10 azami can." />
+    <string id="taom_hob_t3_a_p3" text="+%7 asker hasarı." />
+    <string id="taom_hob_t3_a_p4" text="+4 müfreze büyüklüğü." />
+    <string id="taom_hob_t3_b_key" text="Kazma Fırtınası dolum süresi büyük ölçüde azalır, neredeyse her zaman kullanılabilir." />
+    <string id="taom_hob_t3_b_p1" text="+%18 direnç." />
+    <string id="taom_hob_t3_b_p2" text="+%15 kahraman can yenilenmesi." />
+    <string id="taom_hob_t3_b_p3" text="+%20 asker morali." />
+    <string id="taom_hob_t3_b_p4" text="+%15 asker hayatta kalma oranı." />
+    <string id="taom_ability_archer_of_eastbank" text="Carrock Ok Yağmuru" />
+    <string id="taom_ability_archer_of_eastbank_tt" text="Ormanadamları'nın oklarını salıver: 8 saniye boyunca %20 menzilli hasar, %20 yay germe hızı ve %15 hareket hızı artırır." />
+    <string id="taom_ability_axe_warden_of_beorns_hall" text="Carrock Direnişi" />
+    <string id="taom_ability_axe_warden_of_beorns_hall_tt" text="Ayaklarını yere bas ve geçidi tut: 8 saniye boyunca 50 m içindeki müttefiklere %15 yakın dövüş hasarı ve %10 hasar azaltma kazandırır." />
+    <string id="taom_ability_hewer_of_ironwood_hall" text="Özodun Fırtınası" />
+    <string id="taom_ability_hewer_of_ironwood_hall_tt" text="Büyük baltayı soydaşlarınla birlikte savur: 8 saniye boyunca 50 m içindeki müttefiklere %15 yakın dövüş hasarı ve %10 hasar azaltma kazandırır." />
+    <string id="taom_ability_rider_of_the_vales" text="Vadi Dörtnalı" />
+    <string id="taom_ability_rider_of_the_vales_tt" text="Atını Vadi yollarında mahmuzla: 8 sn boyunca +%25 hücum hasarı, +%20 at hızı ve +%10 yakın dövüş hasarı sağlar." />
+    <string id="taom_ability_warden_of_the_forest_gate" text="Dikenduvar" />
+    <string id="taom_ability_warden_of_the_forest_gate_tt" text="Mızrağını yola sabitle ve hattı tut: 8 sn boyunca 50 m içindeki müttefiklere +%15 yakın dövüş hasarı ve +%10 hasar azaltma sağlar." />
+    <string id="taom_ability_woodward_of_the_forest_road" text="Demirağaç Yaylımı" />
+    <string id="taom_ability_woodward_of_the_forest_road_tt" text="Orman bekçilerinin oklarını salıver: 8 sn boyunca +%20 menzilli hasar, +%20 yay çekme hızı ve +%15 hareket hızı sağlar." />
+    <string id="taom_aoe_t1_a_key" text="Carrock Yaylımı yarıçapı artar, daha geniş ölüm alanlarını kapsar." />
+    <string id="taom_aoe_t1_a_p1" text="+%8 menzilli hasar." />
+    <string id="taom_aoe_t1_a_p2" text="+%5 zırh delme." />
+    <string id="taom_aoe_t1_a_p3" text="+%7 hareket hızı." />
+    <string id="taom_aoe_t1_a_p4" text="+%5 savaş şöhreti kazanımı." />
+    <string id="taom_aoe_t1_b_key" text="Carrock Yaylımı süresi uzar, kesintisiz bombardıman." />
+    <string id="taom_aoe_t1_b_p1" text="+%5 direnç." />
+    <string id="taom_aoe_t1_b_p2" text="+5 azami sağlık." />
+    <string id="taom_aoe_t1_b_p3" text="+%5 müfreze görüş menzili." />
+    <string id="taom_aoe_t1_b_p4" text="+%10 gizlilik bonusu." />
+    <string id="taom_aoe_t2_a_key" text="Carrock Yaylımı bekleme süresi azalır, sürekli baskı sağlar." />
+    <string id="taom_aoe_t2_a_p1" text="+%10 müfreze görüş menzili." />
+    <string id="taom_aoe_t2_a_p2" text="+%10 hareket hızı." />
+    <string id="taom_aoe_t2_a_p3" text="+%13 gizlilik bonusu." />
+    <string id="taom_aoe_t2_a_p4" text="+%10 savaş şöhreti kazanımı." />
+    <string id="taom_aoe_t2_b_key" text="Carrock Yaylımı etkinken ek zırh delme kazanır." />
+    <string id="taom_aoe_t2_b_p1" text="+%12 menzilli hasar." />
+    <string id="taom_aoe_t2_b_p2" text="+%10 zırh delme." />
+    <string id="taom_aoe_t2_b_p3" text="+8 azami sağlık." />
+    <string id="taom_aoe_t2_b_p4" text="+%3 asker hasarı." />
+    <string id="taom_aoe_t3_a_key" text="Carrock Yaylımı yarıçapı büyük ölçüde genişler, kaçınılmaz yaylımlar." />
+    <string id="taom_aoe_t3_a_p1" text="+%18 menzilli hasar." />
+    <string id="taom_aoe_t3_a_p2" text="+%15 zırh delme." />
+    <string id="taom_aoe_t3_a_p3" text="+%15 savaş şöhreti kazanımı." />
+    <string id="taom_aoe_t3_a_p4" text="+%5 asker hasarı." />
+    <string id="taom_aoe_t3_b_key" text="Carrock Yaylımı dolum süresi büyük ölçüde azalır, bitmeyen ateş." />
+    <string id="taom_aoe_t3_b_p1" text="+%15 gizlilik bonusu." />
+    <string id="taom_aoe_t3_b_p2" text="+%15 hareket hızı." />
+    <string id="taom_aoe_t3_b_p3" text="+9 azami can." />
+    <string id="taom_aoe_t3_b_p4" text="+%15 müfreze görüş menzili." />
+    <string id="taom_archer_of_eastbank_root_desc" text="Carrock Yaylımı, Vadiler'in Ormanadamı okçularının onuruna +%5 menzilli hasar verir." />
+    <string id="taom_awbh_t1_a_key" text="Carrock Duruşu yarıçapı artar, daha fazla savaşçıyı güçlendirir." />
+    <string id="taom_awbh_t1_a_p1" text="+%8 yakın dövüş hasarı." />
+    <string id="taom_awbh_t1_a_p2" text="+%3 asker hasarı." />
+    <string id="taom_awbh_t1_a_p3" text="+6 azami can." />
+    <string id="taom_awbh_t1_a_p4" text="+%7 savurma hızı." />
+    <string id="taom_awbh_t1_b_key" text="Carrock Duruşu süresi uzar, savunmayı sağlamlaştırır." />
+    <string id="taom_awbh_t1_b_p1" text="+%8 direnç." />
+    <string id="taom_awbh_t1_b_p2" text="+%5 asker morali." />
+    <string id="taom_awbh_t1_b_p3" text="+%10 asker direnci." />
+    <string id="taom_awbh_t1_b_p4" text="+%5 asker hayatta kalma." />
+    <string id="taom_awbh_t2_a_key" text="Carrock Duruşu dolum süresi azalır, daha sık etkinleşir." />
+    <string id="taom_awbh_t2_a_p1" text="+%10 asker morali." />
+    <string id="taom_awbh_t2_a_p2" text="+2 müfreze büyüklüğü." />
+    <string id="taom_awbh_t2_a_p3" text="+%10 savaş şöhreti kazanımı." />
+    <string id="taom_awbh_t2_a_p4" text="-%10 asker maaşı." />
+    <string id="taom_awbh_t2_b_key" text="Carrock Duruşu etkinken ek savunma güçlendirmeleri verir." />
+    <string id="taom_awbh_t2_b_p1" text="+%12 direnç." />
+    <string id="taom_awbh_t2_b_p2" text="+8 azami can." />
+    <string id="taom_awbh_t2_b_p3" text="+%13 asker direnci." />
+    <string id="taom_awbh_t2_b_p4" text="+%5 asker hasarı." />
+    <string id="taom_awbh_t3_a_key" text="Carrock Duruşu yarıçapı büyük ölçüde genişler, yıkıcı güç." />
+    <string id="taom_awbh_t3_a_p1" text="+%15 yakın dövüş hasarı." />
+    <string id="taom_awbh_t3_a_p2" text="+10 azami can." />
+    <string id="taom_awbh_t3_a_p3" text="+%7 asker hasarı." />
+    <string id="taom_awbh_t3_a_p4" text="+4 müfreze büyüklüğü." />
+    <string id="taom_awbh_t3_b_key" text="Carrock Duruşu dolum süresi büyük ölçüde azalır, neredeyse her zaman kullanılabilir." />
+    <string id="taom_awbh_t3_b_p1" text="+%18 direnç." />
+    <string id="taom_awbh_t3_b_p2" text="+%15 kahraman can yenilenmesi." />
+    <string id="taom_awbh_t3_b_p3" text="+%20 asker morali." />
+    <string id="taom_awbh_t3_b_p4" text="+%15 asker hayatta kalma." />
+    <string id="taom_axe_warden_of_beorns_hall_root_desc" text="Carrock Duruşu %5 direnç verir ve savunucuları sağlamlaştırır." />
+    <string id="taom_career_archer_of_eastbank" text="Doğuyaka Okçusu" />
+    <string id="taom_career_archer_of_eastbank_desc" text="Mirkwood'un orman eteklerinden ve Gladden kıyılarından ok atan, şaşmaz nişancılık geleneğini sürdüren bir Vadiler Ormancısı yaycısı." />
+    <string id="taom_career_axe_warden_of_beorns_hall" text="Beorn Salonu'nun Balta Muhafızı" />
+    <string id="taom_career_axe_warden_of_beorns_hall_desc" text="Vadiler'in geçitlerini ve sığ geçişlerini goblinlere ve kurtlara karşı tutan geniş omuzlu bir Beorn Hanedanı baltacısı." />
+    <string id="taom_career_grp_archer_of_eastbank_t1_a" text="Gladden Yaycısı" />
+    <string id="taom_career_grp_archer_of_eastbank_t1_b" text="Mirkwood Sınırı Gözcüsü" />
+    <string id="taom_career_grp_archer_of_eastbank_t2_a" text="Ormancıların Varisi" />
+    <string id="taom_career_grp_archer_of_eastbank_t2_b" text="Şahin Gözlü Okçu" />
+    <string id="taom_career_grp_archer_of_eastbank_t3_a" text="Vadiler'in Kurt Belası" />
+    <string id="taom_career_grp_archer_of_eastbank_t3_b" text="Orman Eteklerinin Yayı" />
+    <string id="taom_career_grp_axe_warden_of_beorns_hall_t1_a" text="Vadiler Baltacısı" />
+    <string id="taom_career_grp_axe_warden_of_beorns_hall_t1_b" text="Eski Geçit'in Balta Duvarı" />
+    <string id="taom_career_grp_axe_warden_of_beorns_hall_t2_a" text="Beorn'un Baltası" />
+    <string id="taom_career_grp_axe_warden_of_beorns_hall_t2_b" text="Gladden'ın Siperi" />
+    <string id="taom_career_grp_axe_warden_of_beorns_hall_t3_a" text="Grimbeorn'un Öncüsü" />
+    <string id="taom_career_grp_axe_warden_of_beorns_hall_t3_b" text="Carrock'taki Son Direniş" />
+    <string id="taom_career_grp_hewer_of_ironwood_hall_t1_a" text="Demirorman Salonu'nun Balta Taşıyıcısı" />
+    <string id="taom_career_grp_hewer_of_ironwood_hall_t1_b" text="Orman Yolu'nun Yarıcısı" />
+    <string id="taom_career_grp_hewer_of_ironwood_hall_t2_a" text="Özodunun Baltası" />
+    <string id="taom_career_grp_hewer_of_ironwood_hall_t2_b" text="Emyn Duir'in Baltalaması" />
+    <string id="taom_career_grp_hewer_of_ironwood_hall_t3_a" text="Kral Ingomar'ın Büyük Baltası" />
+    <string id="taom_career_grp_hewer_of_ironwood_hall_t3_b" text="Kara Ormanın Devrilişi" />
+    <string id="taom_career_grp_rider_of_the_vales_t1_a" text="Gladden Süvarisi" />
+    <string id="taom_career_grp_rider_of_the_vales_t1_b" text="Eski Yolun Muhafızı" />
+    <string id="taom_career_grp_rider_of_the_vales_t2_a" text="Vadilerin Mızrağı" />
+    <string id="taom_career_grp_rider_of_the_vales_t2_b" text="Ormanlıların Dostluk Öncüsü" />
+    <string id="taom_career_grp_rider_of_the_vales_t3_a" text="Carrock Hücumu" />
+    <string id="taom_career_grp_rider_of_the_vales_t3_b" text="Reisin Ulağı" />
+    <string id="taom_career_grp_warden_of_the_forest_gate_t1_a" text="Ormanlılar Kentinin Mızrakçısı" />
+    <string id="taom_career_grp_warden_of_the_forest_gate_t1_b" text="Orman Kapısı'nın Kalkan Duvarı" />
+    <string id="taom_career_grp_warden_of_the_forest_gate_t2_a" text="Ingomar'ın Mızrağı" />
+    <string id="taom_career_grp_warden_of_the_forest_gate_t2_b" text="Orman Yolunun Siperi" />
+    <string id="taom_career_grp_warden_of_the_forest_gate_t3_a" text="Kral Ingomar'ın Öncü Birliği" />
+    <string id="taom_career_grp_warden_of_the_forest_gate_t3_b" text="Thornhold'daki Son Direniş" />
+    <string id="taom_career_grp_woodward_of_the_forest_road_t1_a" text="Thornhold Okçusu" />
+    <string id="taom_career_grp_woodward_of_the_forest_road_t1_b" text="Orman Yolu Gözcüsü" />
+    <string id="taom_career_grp_woodward_of_the_forest_road_t2_a" text="Orman Bekçilerinin Vârisi" />
+    <string id="taom_career_grp_woodward_of_the_forest_road_t2_b" text="Baykuş Gözlü Okçu" />
+    <string id="taom_career_grp_woodward_of_the_forest_road_t3_a" text="Emyn Duir'in Örümcek Katili" />
+    <string id="taom_career_grp_woodward_of_the_forest_road_t3_b" text="Ingomar Soyunun Yayı" />
+    <string id="taom_career_hewer_of_ironwood_hall" text="Demirorman Salonu Baltacısı" />
+    <string id="taom_career_hewer_of_ironwood_hall_desc" text="Büyük bir baltayı iki eliyle savuran, kalkanları ve ardındaki orkları yaran bir Angáladhlı Demirorman baltacısı." />
+    <string id="taom_career_rank1_archer_of_eastbank" text="Gladden Okçusu" />
+    <string id="taom_career_rank1_axe_warden_of_beorns_hall" text="Vadi Baltacısı" />
+    <string id="taom_career_rank1_hewer_of_ironwood_hall" text="Demirorman Baltacısı" />
+    <string id="taom_career_rank1_rider_of_the_vales" text="Vadilerin Yol Süvarisi" />
+    <string id="taom_career_rank1_warden_of_the_forest_gate" text="Orman Kapısı Mızrağı" />
+    <string id="taom_career_rank1_woodward_of_the_forest_road" text="Thornhold Okçusu" />
+    <string id="taom_career_rank2_archer_of_eastbank" text="Eastbank Şahin Gözü" />
+    <string id="taom_career_rank2_axe_warden_of_beorns_hall" text="Beorn Salonu Balta Muhafızı" />
+    <string id="taom_career_rank2_hewer_of_ironwood_hall" text="Ironwood Salonu Yarıcısı" />
+    <string id="taom_career_rank2_rider_of_the_vales" text="Eski Geçit Yolu Muhafızı" />
+    <string id="taom_career_rank2_warden_of_the_forest_gate" text="Orman Kapısı Muhafızı" />
+    <string id="taom_career_rank2_woodward_of_the_forest_road" text="Örümcek Avcısı" />
+    <string id="taom_career_rank3_archer_of_eastbank" text="Vadilerin Yay Efendisi" />
+    <string id="taom_career_rank3_axe_warden_of_beorns_hall" text="Carrock Şampiyonu" />
+    <string id="taom_career_rank3_hewer_of_ironwood_hall" text="Emyn Duir'in Büyük Baltası" />
+    <string id="taom_career_rank3_rider_of_the_vales" text="Vadilerin Mareşali" />
+    <string id="taom_career_rank3_warden_of_the_forest_gate" text="Ormanadamları Kasabasının Kaptanı" />
+    <string id="taom_career_rank3_woodward_of_the_forest_road" text="Orman Bekçilerinin Yay Ustası" />
+    <string id="taom_career_rider_of_the_vales" text="Vadilerin Süvarisi" />
+    <string id="taom_career_rider_of_the_vales_desc" text="Eski Geçit yolunu ve Puslu Dağlar'ın eteklerini kolaçan eden, çiftlikleri ve kervanları goblin akıncılarından koruyan atlı bir Vadiler devriyesi." />
+    <string id="taom_career_warden_of_the_forest_gate" text="Orman Kapısı Muhafızı" />
+    <string id="taom_career_warden_of_the_forest_gate_desc" text="Ağaçların altındaki dar geçidi kalkan ve mızrakla orka, kurda ve örümceğe karşı tutan sarsılmaz bir Orman Kapısı koruyucusu." />
+    <string id="taom_career_woodward_of_the_forest_road" text="Orman Yolunun Orman Bekçisi" />
+    <string id="taom_career_woodward_of_the_forest_road_desc" text="Orman Kapısı'nın platformlarından ve yol boyunca ağaçlardan ok atan, şaşmaz nişancılık geleneğini sürdüren batı Kuyutorman'lı bir orman bekçisi okçusu." />
+    <string id="taom_hewer_of_ironwood_hall_root_desc" text="Özodun Fırtınası +%5 direnç verir ve savunucuları sağlamlaştırır." />
+    <string id="taom_hiwh_t1_a_key" text="Özodun Fırtınası yarıçapı arttı, daha fazla savaşçıyı güçlendirir." />
+    <string id="taom_hiwh_t1_a_p1" text="+%8 yakın dövüş hasarı." />
+    <string id="taom_hiwh_t1_a_p2" text="+%3 asker hasarı." />
+    <string id="taom_hiwh_t1_a_p3" text="+6 azami sağlık." />
+    <string id="taom_hiwh_t1_a_p4" text="+%7 savurma hızı." />
+    <string id="taom_hiwh_t1_b_key" text="Özodun Fırtınası süresi uzatıldı, savunmayı tahkim eder." />
+    <string id="taom_hiwh_t1_b_p1" text="+%8 direnç." />
+    <string id="taom_hiwh_t1_b_p2" text="+%5 asker morali." />
+    <string id="taom_hiwh_t1_b_p3" text="+%10 birlik direnci." />
+    <string id="taom_hiwh_t1_b_p4" text="+%5 birlik hayatta kalma." />
+    <string id="taom_hiwh_t2_a_key" text="Özçam Fırtınası şarjı azaldı, daha sık etkinleşir." />
+    <string id="taom_hiwh_t2_a_p1" text="+%10 birlik morali." />
+    <string id="taom_hiwh_t2_a_p2" text="+2 müfreze boyutu." />
+    <string id="taom_hiwh_t2_a_p3" text="+%10 savaş şöhreti kazanımı." />
+    <string id="taom_hiwh_t2_a_p4" text="-%10 birlik ücreti." />
+    <string id="taom_hiwh_t2_b_key" text="Özçam Fırtınası etkinken ek savunma takviyeleri sağlar." />
+    <string id="taom_hiwh_t2_b_p1" text="+%12 direnç." />
+    <string id="taom_hiwh_t2_b_p2" text="+8 azami can." />
+    <string id="taom_hiwh_t2_b_p3" text="+%13 birlik direnci." />
+    <string id="taom_hiwh_t2_b_p4" text="+%5 birlik hasarı." />
+    <string id="taom_hiwh_t3_a_key" text="Özçam Fırtınası yarıçapı büyük ölçüde genişledi, yıkıcı güç." />
+    <string id="taom_hiwh_t3_a_p1" text="+%15 yakın dövüş hasarı." />
+    <string id="taom_hiwh_t3_a_p2" text="+10 azami can." />
+    <string id="taom_hiwh_t3_a_p3" text="+%7 birlik hasarı." />
+    <string id="taom_hiwh_t3_a_p4" text="+4 müfreze boyutu." />
+    <string id="taom_hiwh_t3_b_key" text="Özçam Fırtınası şarjı büyük ölçüde azaldı, neredeyse her zaman kullanılabilir." />
+    <string id="taom_hiwh_t3_b_p1" text="+%18 direnç." />
+    <string id="taom_hiwh_t3_b_p2" text="+%15 kahraman can yenilenmesi." />
+    <string id="taom_hiwh_t3_b_p3" text="+%20 birlik morali." />
+    <string id="taom_hiwh_t3_b_p4" text="+%15 birlik hayatta kalma." />
+    <string id="taom_rider_of_the_vales_root_desc" text="Vadi Dörtnalı +%5 yakın dövüş hasarı sağlar ve atınız hızlanır." />
+    <string id="taom_rotv_t1_a_key" text="Vadi Dörtnalı'nın yarıçapı genişledi, daha geniş düzenleri süpürüyor." />
+    <string id="taom_rotv_t1_a_p1" text="+%8 yakın dövüş hasarı." />
+    <string id="taom_rotv_t1_a_p2" text="+%10 at hücum hasarı." />
+    <string id="taom_rotv_t1_a_p3" text="+%7 savurma hızı." />
+    <string id="taom_rotv_t1_a_p4" text="+%5 birlik hareket hızı." />
+    <string id="taom_rotv_t1_b_key" text="Vadi Dörtnalı süresi uzatıldı, hız korunur." />
+    <string id="taom_rotv_t1_b_p1" text="+%10 at canı." />
+    <string id="taom_rotv_t1_b_p2" text="+5 azami can." />
+    <string id="taom_rotv_t1_b_p3" text="-%5 asker ücretleri." />
+    <string id="taom_rotv_t1_b_p4" text="+%5 direnç." />
+    <string id="taom_rotv_t2_a_key" text="Vadi Dörtnalı bekleme süresi azaldı, daha hızlı etkinleşir." />
+    <string id="taom_rotv_t2_a_p1" text="+%10 birlik hareket hızı." />
+    <string id="taom_rotv_t2_a_p2" text="-%10 asker ücretleri." />
+    <string id="taom_rotv_t2_a_p3" text="+%10 asker morali." />
+    <string id="taom_rotv_t2_a_p4" text="+%10 savaş şöhreti kazanımı." />
+    <string id="taom_rotv_t2_b_key" text="Vadi Dörtnalı etkinken binek dayanıklılığını artırır." />
+    <string id="taom_rotv_t2_b_p1" text="+%12 yakın dövüş hasarı." />
+    <string id="taom_rotv_t2_b_p2" text="+%13 at hücum hasarı." />
+    <string id="taom_rotv_t2_b_p3" text="+%13 at canı." />
+    <string id="taom_rotv_t2_b_p4" text="+%10 savurma hızı." />
+    <string id="taom_rotv_t3_a_key" text="Vadi Dörtnalı yarıçapı büyük ölçüde genişledi, durdurulamaz darbe." />
+    <string id="taom_rotv_t3_a_p1" text="+%18 yakın dövüş hasarı." />
+    <string id="taom_rotv_t3_a_p2" text="+%15 at hücum hasarı." />
+    <string id="taom_rotv_t3_a_p3" text="+%15 savurma hızı." />
+    <string id="taom_rotv_t3_a_p4" text="+%7 asker hasarı." />
+    <string id="taom_rotv_t3_b_key" text="Vadi Dörtnalı bekleme süresi büyük ölçüde azaldı, durmadan sür." />
+    <string id="taom_rotv_t3_b_p1" text="+%15 at canı." />
+    <string id="taom_rotv_t3_b_p2" text="-%15 asker ücretleri." />
+    <string id="taom_rotv_t3_b_p3" text="+%15 birlik hareket hızı." />
+    <string id="taom_rotv_t3_b_p4" text="+9 azami can." />
+    <string id="taom_warden_of_the_forest_gate_root_desc" text="Dikenduvar %5 direnç sağlar ve savunmacıları sağlamlaştırır." />
+    <string id="taom_wfg_t1_a_key" text="Dikenduvar yarıçapı arttı, daha fazla savaşçıyı güçlendirir." />
+    <string id="taom_wfg_t1_a_p1" text="+%8 yakın dövüş hasarı." />
+    <string id="taom_wfg_t1_a_p2" text="+%3 asker hasarı." />
+    <string id="taom_wfg_t1_a_p3" text="+6 azami sağlık." />
+    <string id="taom_wfg_t1_a_p4" text="+%7 savurma hızı." />
+    <string id="taom_wfg_t1_b_key" text="Dikenduvar süresi uzadı, savunmayı pekiştirir." />
+    <string id="taom_wfg_t1_b_p1" text="+%8 direnç." />
+    <string id="taom_wfg_t1_b_p2" text="+%5 birlik morali." />
+    <string id="taom_wfg_t1_b_p3" text="+%10 birlik direnci." />
+    <string id="taom_wfg_t1_b_p4" text="+%5 birlik hayatta kalma." />
+    <string id="taom_wfg_t2_a_key" text="Dikenduvar bekleme süresi azaldı, daha sık etkinleşir." />
+    <string id="taom_wfg_t2_a_p1" text="+%10 birlik morali." />
+    <string id="taom_wfg_t2_a_p2" text="+2 müfreze boyutu." />
+    <string id="taom_wfg_t2_a_p3" text="+%10 savaş şöhreti kazanımı." />
+    <string id="taom_wfg_t2_a_p4" text="-%10 birlik maaşı." />
+    <string id="taom_wfg_t2_b_key" text="Dikenduvar etkinken ek savunma takviyeleri sağlar." />
+    <string id="taom_wfg_t2_b_p1" text="+%12 direnç." />
+    <string id="taom_wfg_t2_b_p2" text="+8 azami sağlık." />
+    <string id="taom_wfg_t2_b_p3" text="+%13 birlik direnci." />
+    <string id="taom_wfg_t2_b_p4" text="+%5 birlik hasarı." />
+    <string id="taom_wfg_t3_a_key" text="Dikenduvar yarıçapı büyük ölçüde genişledi, yıkıcı güç." />
+    <string id="taom_wfg_t3_a_p1" text="+%15 yakın dövüş hasarı." />
+    <string id="taom_wfg_t3_a_p2" text="+10 azami sağlık." />
+    <string id="taom_wfg_t3_a_p3" text="+%7 birlik hasarı." />
+    <string id="taom_wfg_t3_a_p4" text="+4 müfreze boyutu." />
+    <string id="taom_wfg_t3_b_key" text="Dikenduvar bekleme süresi büyük ölçüde azaldı, neredeyse her zaman hazır." />
+    <string id="taom_wfg_t3_b_p1" text="+%18 direnç." />
+    <string id="taom_wfg_t3_b_p2" text="+%15 kahraman sağlık yenilenmesi." />
+    <string id="taom_wfg_t3_b_p3" text="+%20 birlik morali." />
+    <string id="taom_wfg_t3_b_p4" text="+%15 birlik hayatta kalma." />
+    <string id="taom_wfr_t1_a_key" text="Demirağaç Yaylımı yarıçapı arttı, daha geniş ölüm sahalarını kapsar." />
+    <string id="taom_wfr_t1_a_p1" text="+%8 menzilli hasar." />
+    <string id="taom_wfr_t1_a_p2" text="+%5 zırh delme." />
+    <string id="taom_wfr_t1_a_p3" text="+%7 hareket hızı." />
+    <string id="taom_wfr_t1_a_p4" text="+%5 savaş şöhreti kazanımı." />
+    <string id="taom_wfr_t1_b_key" text="Demirağaç Yaylımı süresi uzadı, kesintisiz bombardıman." />
+    <string id="taom_wfr_t1_b_p1" text="+%5 direnç." />
+    <string id="taom_wfr_t1_b_p2" text="+5 azami sağlık." />
+    <string id="taom_wfr_t1_b_p3" text="+%5 müfreze görüş menzili." />
+    <string id="taom_wfr_t1_b_p4" text="+%10 gizlilik bonusu." />
+    <string id="taom_wfr_t2_a_key" text="Demirağaç Yaylımı bekleme süresi azaldı, sürekli baskı sağlar." />
+    <string id="taom_wfr_t2_a_p1" text="+%10 müfreze görüş menzili." />
+    <string id="taom_wfr_t2_a_p2" text="+%10 hareket hızı." />
+    <string id="taom_wfr_t2_a_p3" text="+%13 gizlilik bonusu." />
+    <string id="taom_wfr_t2_a_p4" text="+%10 savaş şöhreti kazanımı." />
+    <string id="taom_wfr_t2_b_key" text="Demirağaç Yaylımı etkinken ek zırh delme kazanır." />
+    <string id="taom_wfr_t2_b_p1" text="+%12 menzilli hasar." />
+    <string id="taom_wfr_t2_b_p2" text="+%10 zırh delme." />
+    <string id="taom_wfr_t2_b_p3" text="+8 azami can." />
+    <string id="taom_wfr_t2_b_p4" text="+%3 birlik hasarı." />
+    <string id="taom_wfr_t3_a_key" text="Demirağaç Yaylımı yarıçapı büyük ölçüde genişler, kaçınılmaz yaylım ateşleri." />
+    <string id="taom_wfr_t3_a_p1" text="+%18 menzilli hasar." />
+    <string id="taom_wfr_t3_a_p2" text="+%15 zırh delme." />
+    <string id="taom_wfr_t3_a_p3" text="+%15 savaş şöhreti kazanımı." />
+    <string id="taom_wfr_t3_a_p4" text="+%5 birlik hasarı." />
+    <string id="taom_wfr_t3_b_key" text="Demirağaç Yaylımı dolum süresi büyük ölçüde azalır, amansız ateş." />
+    <string id="taom_wfr_t3_b_p1" text="+%15 gizlilik bonusu." />
+    <string id="taom_wfr_t3_b_p2" text="+%15 hareket hızı." />
+    <string id="taom_wfr_t3_b_p3" text="+9 azami can." />
+    <string id="taom_wfr_t3_b_p4" text="+%15 müfreze görüş menzili." />
+    <string id="taom_woodward_of_the_forest_road_root_desc" text="Demirağaç Yaylımı, Orman Yolu'nun orman bekçileri onuruna +%5 menzilli hasar sağlar." />
+    <string id="taom_ability_bowman_of_redwater" text="Denizkapısı Ok Yağmuru" />
+    <string id="taom_ability_bowman_of_redwater_tt" text="Kızılsu okçularının oklarını salıver: 8 saniye boyunca %20 menzilli hasar, %20 yay germe hızı ve %15 hareket hızı artırır." />
+    <string id="taom_ability_marksman_of_westmark" text="Hafif Tüyleme" />
+    <string id="taom_ability_marksman_of_westmark_tt" text="Hızlı, hafif tüylü oklardan bir yaylım hazırla: 8 saniye boyunca %20 menzilli hasar, %20 yay germe hızı ve %15 hareket hızı artırır." />
+    <string id="taom_ability_rider_of_vidugard" text="Vidugard Savaş Narası" />
+    <string id="taom_ability_rider_of_vidugard_tt" text="At-lordlarının savaş narasını yükselt: 8 sn boyunca +%25 hücum hasarı, +%20 at hızı ve +%10 yakın dövüş hasarı sağlar." />
+    <string id="taom_ability_river_rider_of_seagate" text="Kıyı Dörtnalı" />
+    <string id="taom_ability_river_rider_of_seagate_tt" text="Atını nehir yollarında mahmuzla: 8 sn boyunca +%25 hücum hasarı, +%20 at hızı ve +%10 yakın dövüş hasarı sağlar." />
+    <string id="taom_ability_spear_warden_of_vinewatch" text="Teras Duvarı" />
+    <string id="taom_ability_spear_warden_of_vinewatch_tt" text="Mızrağını sabitle ve teras duvarını tut: 8 sn boyunca 50 m içindeki müttefiklere +%15 yakın dövüş hasarı ve +%10 hasar azaltma sağlar." />
+    <string id="taom_ability_warden_of_wainwatch" text="Sıkı Dur" />
+    <string id="taom_ability_warden_of_wainwatch_tt" text="Demir bir kararlılıkla mevzilen: 8 sn boyunca 50 m içindeki müttefiklere +%15 yakın dövüş hasarı ve +%10 hasar azaltma sağlar." />
+    <string id="taom_bowman_of_redwater_root_desc" text="Deniz Kapısı Yaylımı, Kızılsu okçularının onuruna +%5 menzilli hasar verir." />
+    <string id="taom_bwr_t1_a_key" text="Deniz Kapısı Yaylımı yarıçapı artar, daha geniş ölüm sahaları kapsar." />
+    <string id="taom_bwr_t1_a_p1" text="+%8 menzilli hasar." />
+    <string id="taom_bwr_t1_a_p2" text="+%5 zırh delme." />
+    <string id="taom_bwr_t1_a_p3" text="+%7 hareket hızı." />
+    <string id="taom_bwr_t1_a_p4" text="+%5 savaş şöhreti kazanımı." />
+    <string id="taom_bwr_t1_b_key" text="Deniz Kapısı Yaylımı süresi uzar, sürekli bombardıman." />
+    <string id="taom_bwr_t1_b_p1" text="+%5 direnç." />
+    <string id="taom_bwr_t1_b_p2" text="+5 azami can." />
+    <string id="taom_bwr_t1_b_p3" text="+%5 müfreze görüş menzili." />
+    <string id="taom_bwr_t1_b_p4" text="+%10 gizlilik bonusu." />
+    <string id="taom_bwr_t2_a_key" text="Denizkapısı Yaylım Ateşi'nin dolum süresi azalır, sürekli baskı sağlanır." />
+    <string id="taom_bwr_t2_a_p1" text="+%10 müfreze görüş menzili." />
+    <string id="taom_bwr_t2_a_p2" text="+%10 hareket hızı." />
+    <string id="taom_bwr_t2_a_p3" text="+%13 gizlilik bonusu." />
+    <string id="taom_bwr_t2_a_p4" text="+%10 savaş şöhreti kazanımı." />
+    <string id="taom_bwr_t2_b_key" text="Denizkapısı Yaylım Ateşi etkinken ek delicilik kazanır." />
+    <string id="taom_bwr_t2_b_p1" text="+%12 menzilli hasar." />
+    <string id="taom_bwr_t2_b_p2" text="+%10 zırh delme." />
+    <string id="taom_bwr_t2_b_p3" text="+8 azami can." />
+    <string id="taom_bwr_t2_b_p4" text="+%3 asker hasarı." />
+    <string id="taom_bwr_t3_a_key" text="Denizkapısı Yaylım Ateşi'nin yarıçapı büyük ölçüde genişler, kaçışı olmayan yaylımlar." />
+    <string id="taom_bwr_t3_a_p1" text="+%18 menzilli hasar." />
+    <string id="taom_bwr_t3_a_p2" text="+%15 zırh delme." />
+    <string id="taom_bwr_t3_a_p3" text="+%15 savaş şöhreti kazanımı." />
+    <string id="taom_bwr_t3_a_p4" text="+%5 asker hasarı." />
+    <string id="taom_bwr_t3_b_key" text="Denizkapısı Yaylım Ateşi'nin dolum süresi büyük ölçüde azalır, amansız ateş." />
+    <string id="taom_bwr_t3_b_p1" text="+%15 gizlilik bonusu." />
+    <string id="taom_bwr_t3_b_p2" text="+%15 hareket hızı." />
+    <string id="taom_bwr_t3_b_p3" text="+9 azami can." />
+    <string id="taom_bwr_t3_b_p4" text="+%15 müfreze görüş menzili." />
+    <string id="taom_career_bowman_of_redwater" text="Kızılsu Yaycısı" />
+    <string id="taom_career_bowman_of_redwater_desc" text="Denizkapısı'nın surlarından ve ırmağın sazlıklarından ok atan, şaşmaz nişancılık geleneğini sürdüren bir Kızılsu yaycısı." />
+    <string id="taom_career_grp_bowman_of_redwater_t1_a" text="Kızılsu Okçusu" />
+    <string id="taom_career_grp_bowman_of_redwater_t1_b" text="Rhûn Denizi Nöbeti" />
+    <string id="taom_career_grp_bowman_of_redwater_t2_a" text="Kızılsu Okçularının Vârisi" />
+    <string id="taom_career_grp_bowman_of_redwater_t2_b" text="Şahin Gözlü Okçu" />
+    <string id="taom_career_grp_bowman_of_redwater_t3_a" text="Denizkapı'nın Akıncı Belası" />
+    <string id="taom_career_grp_bowman_of_redwater_t3_b" text="Kral Ostric Soyunun Yayı" />
+    <string id="taom_career_grp_marksman_of_westmark_t1_a" text="Batısınır Şahini" />
+    <string id="taom_career_grp_marksman_of_westmark_t1_b" text="Batı Ovası Muhafızı" />
+    <string id="taom_career_grp_marksman_of_westmark_t2_a" text="Toplanmanın Yüzbaşısı" />
+    <string id="taom_career_grp_marksman_of_westmark_t2_b" text="Karanlık Orman'ın Gölgesi" />
+    <string id="taom_career_grp_marksman_of_westmark_t3_a" text="Ova Okçusu" />
+    <string id="taom_career_grp_marksman_of_westmark_t3_b" text="Rhovanion Ordusu" />
+    <string id="taom_career_grp_rider_of_vidugard_t1_a" text="At Efendilerinin Varisi" />
+    <string id="taom_career_grp_rider_of_vidugard_t1_b" text="Açık Ovanın Süvarisi" />
+    <string id="taom_career_grp_rider_of_vidugard_t2_a" text="At Efendilerinin Yemini" />
+    <string id="taom_career_grp_rider_of_vidugard_t2_b" text="Sürülerin Efendisi" />
+    <string id="taom_career_grp_rider_of_vidugard_t3_a" text="Ovanın Hücumu" />
+    <string id="taom_career_grp_rider_of_vidugard_t3_b" text="Rhovanion'un Şarkısı" />
+    <string id="taom_career_grp_river_rider_of_seagate_t1_a" text="Kızılsu Süvarisi" />
+    <string id="taom_career_grp_river_rider_of_seagate_t1_b" text="Şarap Yolunun Muhafızı" />
+    <string id="taom_career_grp_river_rider_of_seagate_t2_a" text="Bağların Mızrağı" />
+    <string id="taom_career_grp_river_rider_of_seagate_t2_b" text="Doğu Ticaretinin Öncüsü" />
+    <string id="taom_career_grp_river_rider_of_seagate_t3_a" text="Kıyının Hücumu" />
+    <string id="taom_career_grp_river_rider_of_seagate_t3_b" text="Kralın Ulağı" />
+    <string id="taom_career_grp_spear_warden_of_vinewatch_t1_a" text="Kızılsu Bağ Muhafızı" />
+    <string id="taom_career_grp_spear_warden_of_vinewatch_t1_b" text="Teraslerin Kalkan Duvarı" />
+    <string id="taom_career_grp_spear_warden_of_vinewatch_t2_a" text="Kral Ostric'in Mızrağı" />
+    <string id="taom_career_grp_spear_warden_of_vinewatch_t2_b" text="Kızılsu Siperi" />
+    <string id="taom_career_grp_spear_warden_of_vinewatch_t3_a" text="Kral Ostric'in Öncü Birliği" />
+    <string id="taom_career_grp_spear_warden_of_vinewatch_t3_b" text="Sunwall'daki Son Direniş" />
+    <string id="taom_career_grp_warden_of_wainwatch_t1_a" text="Wainwatch Kapısı" />
+    <string id="taom_career_grp_warden_of_wainwatch_t1_b" text="Ovanın Gözcüsü" />
+    <string id="taom_career_grp_warden_of_wainwatch_t2_a" text="Wainwatch Kalkanlısı" />
+    <string id="taom_career_grp_warden_of_wainwatch_t2_b" text="Doğu Geçitlerinin Muhafızı" />
+    <string id="taom_career_grp_warden_of_wainwatch_t3_a" text="Kuzey Sınırının Burcu" />
+    <string id="taom_career_grp_warden_of_wainwatch_t3_b" text="Rhovanion Muhafızı" />
+    <string id="taom_career_marksman_of_westmark" text="Batı Sınırı Nişancısı" />
+    <string id="taom_career_marksman_of_westmark_desc" text="Hafif ve yüksek hızlı okları ölümcül bir isabetle atma sanatında ustalaşmış, düşmana güvenli bir mesafe bırakmayacak uzaklıklardan zırh delebilen bir Batı Sınırı garnizonu ağır okçusu." />
+    <string id="taom_career_rank1_bowman_of_redwater" text="Kızılsu Okçusu" />
+    <string id="taom_career_rank1_marksman_of_westmark" text="Batı Sınırı Okçusu" />
+    <string id="taom_career_rank1_rider_of_vidugard" text="Ova Süvarisi" />
+    <string id="taom_career_rank1_river_rider_of_seagate" text="Seagate Nehir Süvarisi" />
+    <string id="taom_career_rank1_spear_warden_of_vinewatch" text="Vinewatch Mızrakçısı" />
+    <string id="taom_career_rank1_warden_of_wainwatch" text="Wainwatch Gözcüsü" />
+    <string id="taom_career_rank2_bowman_of_redwater" text="Redwater Şahin Gözü" />
+    <string id="taom_career_rank2_marksman_of_westmark" text="Westmark Nişancısı" />
+    <string id="taom_career_rank2_rider_of_vidugard" text="Süvarilerin Kaptanı" />
+    <string id="taom_career_rank2_river_rider_of_seagate" text="Sahil Yolu Muhafızı" />
+    <string id="taom_career_rank2_spear_warden_of_vinewatch" text="Vinewatch Mızrak Muhafızı" />
+    <string id="taom_career_rank2_warden_of_wainwatch" text="Wainwatch Kapı Muhafızı" />
+    <string id="taom_career_rank3_bowman_of_redwater" text="Redwater Yay Efendisi" />
+    <string id="taom_career_rank3_marksman_of_westmark" text="Ovanın Ok Muhafızı" />
+    <string id="taom_career_rank3_rider_of_vidugard" text="Rhovanion'un At Lordu" />
+    <string id="taom_career_rank3_river_rider_of_seagate" text="Kızılsu Mareşali" />
+    <string id="taom_career_rank3_spear_warden_of_vinewatch" text="Vineholm Kaptanı" />
+    <string id="taom_career_rank3_warden_of_wainwatch" text="Doğu Ovasının Muhafızı" />
+    <string id="taom_career_rider_of_vidugard" text="Vidugard Süvarisi" />
+    <string id="taom_career_rider_of_vidugard_desc" text="Kuyutorman'ın güneyindeki ovaların Kuzeyli at lordu; nesillerce süren çoban geleneğinin gürültüsüyle at sürer, otların üzerinde yankılanan savaş çığlığıyla müttefiklerine şevk verir ve ağır süvari nallarının altında düşmanları dağıtır." />
+    <string id="taom_career_river_rider_of_seagate" text="Denizkapı'nın Nehir Süvarisi" />
+    <string id="taom_career_river_rider_of_seagate_desc" text="Bağ yollarını ve Denizkapı'ya giden yolu kolaçan eden, şarap kervanlarını doğudan gelen akıncılardan koruyan atlı bir Kızılsu kıyısı devriyesi." />
+    <string id="taom_career_spear_warden_of_vinewatch" text="Vinewatch'ın Mızrak Muhafızı" />
+    <string id="taom_career_spear_warden_of_vinewatch_desc" text="Bağ yollarını ve Kızılsu üzerindeki surları kalkan ve mızrakla akıncılara ve haydutlara karşı tutan sarsılmaz bir Vinewatch koruyucusu." />
+    <string id="taom_career_warden_of_wainwatch" text="Wainwatch Muhafızı" />
+    <string id="taom_career_warden_of_wainwatch_desc" text="Doğu ovasını yaya ve midilliyle devriye gezen, dayanıklılığı, yöre bilgisi ve çekişmeli topraklara inatçı tutunuşuyla diyarın doğu kanadını Araba Sürenler'e karşı koruyan çetin bir Wainwatch mızrak muhafızı." />
+    <string id="taom_mow_root_desc" text="Hafif Tüyleme +%5 menzilli hasar sağlar; her ok hedefini bulur." />
+    <string id="taom_mow_t1_a_key" text="Kartal Gözü" />
+    <string id="taom_mow_t1_a_key_desc" text="Görüşün her şahinden keskindir. Hafif Tüyleme yarıçapı +3." />
+    <string id="taom_mow_t1_a_p1" text="Şaşmaz Uçuş" />
+    <string id="taom_mow_t1_a_p1_desc" text="Okların sapmadan uçar. +%6 menzilli hasar." />
+    <string id="taom_mow_t1_a_p2" text="Açık Bulan" />
+    <string id="taom_mow_t1_a_p2_desc" text="Her zırhın ek yerlerini bulursun. +%5 zırh delme." />
+    <string id="taom_mow_t1_a_p3" text="Batı Sınırı Eğitimi" />
+    <string id="taom_mow_t1_a_p3_desc" text="Batı Sınırı okçuları ovanın en iyileridir. +5 sağlık." />
+    <string id="taom_mow_t1_a_p4" text="Dolu Sadak" />
+    <string id="taom_mow_t1_a_p4_desc" text="Beyaz tüylü okları herkesten çok taşırsın. +%10 cephane." />
+    <string id="taom_mow_t1_b_key" text="Sarsılmaz Çekiş" />
+    <string id="taom_mow_t1_b_key_desc" text="Kusursuz atış için yayı daha uzun gerersin. Hafif Tüyleme süresi +4sn." />
+    <string id="taom_mow_t1_b_p1" text="Hızlı Kurma" />
+    <string id="taom_mow_t1_b_p1_desc" text="Ellerin gözün takip edebileceğinden hızlı hareket eder. +%5 menzilli hasar." />
+    <string id="taom_mow_t1_b_p2" text="Okçu Dayanıklılığı" />
+    <string id="taom_mow_t1_b_p2_desc" text="Saatlerce yorulmadan gerer ve atarsın. +6 sağlık." />
+    <string id="taom_mow_t1_b_p3" text="Açık Arazi İzcisi" />
+    <string id="taom_mow_t1_b_p3_desc" text="Rhovanion ovalarını bir kitap gibi okursun. +%5 müfreze görüş menzili." />
+    <string id="taom_mow_t1_b_p4" text="Kuzeyli Disiplini" />
+    <string id="taom_mow_t1_b_p4_desc" text="Okçularını hattı tutmak üzere eğitirsin. +%10 birlik direnci." />
+    <string id="taom_mow_t2_a_key" text="Yaylım Ateşi Yüzbaşısı" />
+    <string id="taom_mow_t2_a_key_desc" text="Yıkıcı toplu atışları yönetirsin. Hafif Tüyleme şarj maliyeti -20." />
+    <string id="taom_mow_t2_a_p1" text="Hattı Çivile" />
+    <string id="taom_mow_t2_a_p1_desc" text="Yaylım ateşin düşman ilerleyişini bastırır. +%13 birlik direnci." />
+    <string id="taom_mow_t2_a_p2" text="Zırh Delici Uç" />
+    <string id="taom_mow_t2_a_p2_desc" text="Sertleştirilmiş uçlar zincir ve levha zırhı deler. +%10 zırh delme." />
+    <string id="taom_mow_t2_a_p3" text="Arazi Ustalığı" />
+    <string id="taom_mow_t2_a_p3_desc" text="Zeminin her kıvrımını lehine kullanırsın. +%13 gizlilik bonusu." />
+    <string id="taom_mow_t2_a_p4" text="Savaş Oku Zulası" />
+    <string id="taom_mow_t2_a_p4_desc" text="Önceden yerleştirilmiş zulalar sadağını dolu tutar. +%13 cephane." />
+    <string id="taom_mow_t2_b_key" text="Kesintisiz Bombardıman" />
+    <string id="taom_mow_t2_b_key_desc" text="Ok yağmuru dinmez. Hafif Tüyleme süresi +2sn." />
+    <string id="taom_mow_t2_b_p1" text="Destek Ateşi" />
+    <string id="taom_mow_t2_b_p1_desc" text="Okçuların her ilerleyişi destekler. +%4 birlik hasarı." />
+    <string id="taom_mow_t2_b_p2" text="Karanlık Orman'ın Gölgesinde Dövülmüş" />
+    <string id="taom_mow_t2_b_p2_desc" text="Batı Sınırı savaşçıları Karanlık Orman'a yakınlıkla çelikleşmiştir. +6 sağlık." />
+    <string id="taom_mow_t2_b_p3" text="At Efendisinin Gözü" />
+    <string id="taom_mow_t2_b_p3_desc" text="Ovaların senden saklı sırrı yoktur. +%8 müfreze görüş menzili." />
+    <string id="taom_mow_t2_b_p4" text="Kusursuz Talimli" />
+    <string id="taom_mow_t2_b_p4_desc" text="Okçuların makine gibi kusursuz atış yapar. +%4 asker hasarı." />
+    <string id="taom_mow_t3_a_key" text="Efsanevi Atış" />
+    <string id="taom_mow_t3_a_key_desc" text="Hünerin türkülere konu olacak. Hafif Tüyleme yarıçapı +5." />
+    <string id="taom_mow_t3_a_p1" text="Kralın Oku" />
+    <string id="taom_mow_t3_a_p1_desc" text="Tek ok, tek ölüm -- her seferinde. +%12 menzilli hasar." />
+    <string id="taom_mow_t3_a_p2" text="Batısınır'ın Şampiyonu" />
+    <string id="taom_mow_t3_a_p2_desc" text="Tüm Rhovanion'un en iyi nişancısısın. +9 can." />
+    <string id="taom_mow_t3_a_p3" text="Savaş Ordusu Okçuları" />
+    <string id="taom_mow_t3_a_p3_desc" text="Efsanen en iyi okçuları çeker. +4 müfreze büyüklüğü." />
+    <string id="taom_mow_t3_a_p4" text="Bitmeyen Oklar" />
+    <string id="taom_mow_t3_a_p4_desc" text="İkmal hatların okların uçmasını sürdürür. +%15 cephane." />
+    <string id="taom_mow_t3_b_key" text="Refleksle Salıverme" />
+    <string id="taom_mow_t3_b_key_desc" text="Kirişe takmak ve bırakmak saf kas hafızasıdır. Hafif Tüyleme şarj maliyeti -30." />
+    <string id="taom_mow_t3_b_p1" text="Ok Yağmuru" />
+    <string id="taom_mow_t3_b_p1_desc" text="Okçuların göğü karartır. +%6 asker hasarı." />
+    <string id="taom_mow_t3_b_p2" text="Hızlı Yürüyüş" />
+    <string id="taom_mow_t3_b_p2_desc" text="Hafif piyade ovada hızla ilerler. +%5 müfreze hareket hızı." />
+    <string id="taom_mow_t3_b_p3" text="Rhovanion'un Şöhreti" />
+    <string id="taom_mow_t3_b_p3_desc" text="Yaptıkların Batısınır'a şan getirir. +%12 savaş şöhreti kazanımı." />
+    <string id="taom_mow_t3_b_p4" text="Rhovanion Ordusu" />
+    <string id="taom_mow_t3_b_p4_desc" text="Rhovanion'un en iyi okçuları sancağın altında toplanır. +5 müfreze büyüklüğü." />
+    <string id="taom_river_rider_of_seagate_root_desc" text="Kıyı Dörtnalı +%5 yakın dövüş hasarı sağlar ve atınız hızlanır." />
+    <string id="taom_rov_root_desc" text="Vidugard Savaş Narası +%10 at hücum hasarı verir ve ataların gök gürültüsünü çağırır." />
+    <string id="taom_rov_t1_a_key" text="Ataların Gök Gürültüsü" />
+    <string id="taom_rov_t1_a_key_desc" text="Savaş narası ovada yankılanır. Vidugard Savaş Narası yarıçapı +3." />
+    <string id="taom_rov_t1_a_p1" text="İlk Hücum" />
+    <string id="taom_rov_t1_a_p1_desc" text="Hücuma sen öncülük edersin ve hızına kimse yetişemez. +%10 at hücum hasarı." />
+    <string id="taom_rov_t1_a_p2" text="Binmek İçin Doğmuş" />
+    <string id="taom_rov_t1_a_p2_desc" text="At ve binici tek bir bedendir. +%10 at canı." />
+    <string id="taom_rov_t1_a_p3" text="Bozkır Dayanıklılığı" />
+    <string id="taom_rov_t1_a_p3_desc" text="Rhovanion ovalarında at sürmek seni çelikleştirdi. +5 can." />
+    <string id="taom_rov_t1_a_p4" text="Toplanma Narası" />
+    <string id="taom_rov_t1_a_p4_desc" text="Narán orduya cesaret verir. +%3 asker morali." />
+    <string id="taom_rov_t1_b_key" text="Sürekli Savaş Çığlığı" />
+    <string id="taom_rov_t1_b_key_desc" text="Gök gürültüsü sürüyor. Vidugard'ın Savaş Çığlığı süresi +4sn." />
+    <string id="taom_rov_t1_b_p1" text="Hızlı Ovalar" />
+    <string id="taom_rov_t1_b_p1_desc" text="Kuzeyliler rüzgârın kendisine biner. +%5 hareket hızı." />
+    <string id="taom_rov_t1_b_p2" text="Rhovanion Savaş Bölüğü" />
+    <string id="taom_rov_t1_b_p2_desc" text="Kuzeyliler sıkı düzende at sürer. +%2 asker hasarı." />
+    <string id="taom_rov_t1_b_p3" text="Binicinin Azmi" />
+    <string id="taom_rov_t1_b_p3_desc" text="Şartlar ne olursa olsun yılmazsın. +6 can." />
+    <string id="taom_rov_t1_b_p4" text="Sarsılmaz Binek" />
+    <string id="taom_rov_t1_b_p4_desc" text="Atın savaşta pişmiştir. +%10 at canı." />
+    <string id="taom_rov_t2_a_key" text="At-efendilerinin Mirası" />
+    <string id="taom_rov_t2_a_key_desc" text="Atalar daima seninle at sürer. Savaş çığlığı şarj maliyeti -20." />
+    <string id="taom_rov_t2_a_p1" text="Durdurulamaz Hücum" />
+    <string id="taom_rov_t2_a_p1_desc" text="Kuzeylilerin önünde hiçbir şey duramaz. +%13 at hücum hasarı." />
+    <string id="taom_rov_t2_a_p2" text="Kalkan Duvarı Kıran" />
+    <string id="taom_rov_t2_a_p2_desc" text="Hücumun kalkan duvarlarını paramparça eder. +%8 yakın dövüş hasarı." />
+    <string id="taom_rov_t2_a_p3" text="Kuzeyli Morali" />
+    <string id="taom_rov_t2_a_p3_desc" text="Rhovanion'un çığlığı onu duyan herkese cesaret verir. +%8 asker morali." />
+    <string id="taom_rov_t2_a_p4" text="Uzun Yol Binicisi" />
+    <string id="taom_rov_t2_a_p4_desc" text="Yorulmadan uçsuz bucaksız mesafeler katedersin. +6 can." />
+    <string id="taom_rov_t2_b_key" text="Biniş Şarkısı" />
+    <string id="taom_rov_t2_b_key_desc" text="Kuzeylilerin şarkısı binicileri ileri taşır. Savaş çığlığı süresi +2sn." />
+    <string id="taom_rov_t2_b_p1" text="Sürü Soyu" />
+    <string id="taom_rov_t2_b_p1_desc" text="Atın büyük sürülerin kanını taşır. +%13 at canı." />
+    <string id="taom_rov_t2_b_p2" text="Ova Efendisi" />
+    <string id="taom_rov_t2_b_p2_desc" text="Ovanın her vadisini ve sırtını bilirsin. +%8 müfreze görüş menzili." />
+    <string id="taom_rov_t2_b_p3" text="Şerefe Bağlı" />
+    <string id="taom_rov_t2_b_p3_desc" text="Kuzeylilerin sadık kalmak için paraya ihtiyacı yoktur. -%5 asker maaşı." />
+    <string id="taom_rov_t2_b_p4" text="Demir Üzengiler" />
+    <string id="taom_rov_t2_b_p4_desc" text="En kızgın çarpışmada bile biniciliğin sağlamdır. +7 can." />
+    <string id="taom_rov_t3_a_key" text="Kuzeylilerin Hücumu" />
+    <string id="taom_rov_t3_a_key_desc" text="İnsanlar Çağı'nın en büyük hücumu. Savaş çığlığı yarıçapı +5." />
+    <string id="taom_rov_t3_a_p1" text="Ovanın Gök Gürültüsü" />
+    <string id="taom_rov_t3_a_p1_desc" text="Ovanın büyük savaşlarındaki gibi, hücumun durdurulamaz. +%15 at hücum hasarı." />
+    <string id="taom_rov_t3_a_p2" text="Ovanın Efendisi" />
+    <string id="taom_rov_t3_a_p2_desc" text="En büyük biniciler seni izler. +9 can." />
+    <string id="taom_rov_t3_a_p3" text="Bölük Komutanı" />
+    <string id="taom_rov_t3_a_p3_desc" text="Ardında büyük bir binici bölüğü at sürer. +5 müfreze büyüklüğü." />
+    <string id="taom_rov_t3_a_p4" text="Rhovanion'un Şanı" />
+    <string id="taom_rov_t3_a_p4_desc" text="Yaptıkların Rhovanion'a şan getirir. +%12 savaş şöhreti kazanımı." />
+    <string id="taom_rov_t3_b_key" text="Daima Hazır" />
+    <string id="taom_rov_t3_b_key_desc" text="Savaş narası hep dilinizin ucunda. Savaş narası şarj maliyeti -30." />
+    <string id="taom_rov_t3_b_p1" text="Süvari Dalgası" />
+    <string id="taom_rov_t3_b_p1_desc" text="Kuzeyliler düşmanın üzerine bir dalga gibi çarpar. +%6 birlik hasarı." />
+    <string id="taom_rov_t3_b_p2" text="Rüzgâr Kadar Hızlı" />
+    <string id="taom_rov_t3_b_p2_desc" text="Kuzeyliler efsanelerden bile hızlıdır. +%8 müfreze hareket hızı." />
+    <string id="taom_rov_t3_b_p3" text="Rhovanion Türküleri" />
+    <string id="taom_rov_t3_b_p3_desc" text="Kuzeylilerin kahramanlıkları çağlar boyu söylenir. +%14 savaş şöhreti kazanımı." />
+    <string id="taom_rov_t3_b_p4" text="Büyük Ordu" />
+    <string id="taom_rov_t3_b_p4_desc" text="Kuzeylilerin tüm ordusu savaşa sürer. +6 müfreze büyüklüğü." />
+    <string id="taom_rros_t1_a_key" text="Kıyı Dörtnalı yarıçapı genişler, daha geniş düzenleri süpürür." />
+    <string id="taom_rros_t1_a_p1" text="+%8 yakın dövüş hasarı." />
+    <string id="taom_rros_t1_a_p2" text="+%10 at hücum hasarı." />
+    <string id="taom_rros_t1_a_p3" text="+%7 savurma hızı." />
+    <string id="taom_rros_t1_a_p4" text="+%5 müfreze hareket hızı." />
+    <string id="taom_rros_t1_b_key" text="Kıyı Dörtnalı süresi uzar, ivme korunur." />
+    <string id="taom_rros_t1_b_p1" text="+%10 at canı." />
+    <string id="taom_rros_t1_b_p2" text="+5 azami can." />
+    <string id="taom_rros_t1_b_p3" text="-%5 birlik ücretleri." />
+    <string id="taom_rros_t1_b_p4" text="+%5 direnç." />
+    <string id="taom_rros_t2_a_key" text="Kıyı Dörtnalı şarjı azalır, daha hızlı etkinleşir." />
+    <string id="taom_rros_t2_a_p1" text="+%10 müfreze hareket hızı." />
+    <string id="taom_rros_t2_a_p2" text="-%10 birlik ücretleri." />
+    <string id="taom_rros_t2_a_p3" text="+%10 birlik morali." />
+    <string id="taom_rros_t2_a_p4" text="+%10 savaş şöhreti kazanımı." />
+    <string id="taom_rros_t2_b_key" text="Kıyı Dörtnalı etkinken binek dayanıklılığını artırır." />
+    <string id="taom_rros_t2_b_p1" text="+%12 yakın dövüş hasarı." />
+    <string id="taom_rros_t2_b_p2" text="+%13 at hücum hasarı." />
+    <string id="taom_rros_t2_b_p3" text="+%13 at canı." />
+    <string id="taom_rros_t2_b_p4" text="+%10 savurma hızı." />
+    <string id="taom_rros_t3_a_key" text="Kıyı Dörtnalı yarıçapı büyük ölçüde genişler, durdurulamaz çarpma." />
+    <string id="taom_rros_t3_a_p1" text="+%18 yakın dövüş hasarı." />
+    <string id="taom_rros_t3_a_p2" text="+%15 at hücum hasarı." />
+    <string id="taom_rros_t3_a_p3" text="+%15 savurma hızı." />
+    <string id="taom_rros_t3_a_p4" text="+%7 birlik hasarı." />
+    <string id="taom_rros_t3_b_key" text="Kıyı Dörtnalı şarjı büyük ölçüde azalır, durmaksızın sürün." />
+    <string id="taom_rros_t3_b_p1" text="+%15 at canı." />
+    <string id="taom_rros_t3_b_p2" text="-%15 birlik ücretleri." />
+    <string id="taom_rros_t3_b_p3" text="+%15 müfreze hareket hızı." />
+    <string id="taom_rros_t3_b_p4" text="+9 azami can." />
+    <string id="taom_spear_warden_of_vinewatch_root_desc" text="Teras Duvarı %5 direnç sağlar ve savunmacıları sağlamlaştırır." />
+    <string id="taom_swov_t1_a_key" text="Teras Duvarı yarıçapı arttı, daha fazla savaşçıyı güçlendirir." />
+    <string id="taom_swov_t1_a_p1" text="+%8 yakın dövüş hasarı." />
+    <string id="taom_swov_t1_a_p2" text="+%3 asker hasarı." />
+    <string id="taom_swov_t1_a_p3" text="+6 azami sağlık." />
+    <string id="taom_swov_t1_a_p4" text="+%7 savurma hızı." />
+    <string id="taom_swov_t1_b_key" text="Teras Duvarı süresi uzadı, savunmayı pekiştirir." />
+    <string id="taom_swov_t1_b_p1" text="+%8 direnç." />
+    <string id="taom_swov_t1_b_p2" text="+%5 asker morali." />
+    <string id="taom_swov_t1_b_p3" text="+%10 asker direnci." />
+    <string id="taom_swov_t1_b_p4" text="+%5 asker hayatta kalma." />
+    <string id="taom_swov_t2_a_key" text="Teras Duvarı dolum süresi azaldı, daha sık etkinleşir." />
+    <string id="taom_swov_t2_a_p1" text="+%10 asker morali." />
+    <string id="taom_swov_t2_a_p2" text="+2 müfreze boyutu." />
+    <string id="taom_swov_t2_a_p3" text="+%10 savaş şöhreti kazanımı." />
+    <string id="taom_swov_t2_a_p4" text="-%10 asker ücretleri." />
+    <string id="taom_swov_t2_b_key" text="Teras Duvarı etkinken ek savunma takviyeleri sağlar." />
+    <string id="taom_swov_t2_b_p1" text="+%12 direnç." />
+    <string id="taom_swov_t2_b_p2" text="+8 azami sağlık." />
+    <string id="taom_swov_t2_b_p3" text="+%13 asker direnci." />
+    <string id="taom_swov_t2_b_p4" text="+%5 asker hasarı." />
+    <string id="taom_swov_t3_a_key" text="Teras Duvarı yarıçapı büyük ölçüde genişledi, yıkıcı güç." />
+    <string id="taom_swov_t3_a_p1" text="+%15 yakın dövüş hasarı." />
+    <string id="taom_swov_t3_a_p2" text="+10 azami sağlık." />
+    <string id="taom_swov_t3_a_p3" text="+%7 asker hasarı." />
+    <string id="taom_swov_t3_a_p4" text="+4 müfreze boyutu." />
+    <string id="taom_swov_t3_b_key" text="Teras Duvarı dolum süresi büyük ölçüde azaldı, neredeyse her zaman kullanılabilir." />
+    <string id="taom_swov_t3_b_p1" text="+%18 direnç." />
+    <string id="taom_swov_t3_b_p2" text="+%15 kahraman sağlık yenilenmesi." />
+    <string id="taom_swov_t3_b_p3" text="+%20 asker morali." />
+    <string id="taom_swov_t3_b_p4" text="+%15 asker hayatta kalma." />
+    <string id="taom_wwk_root_desc" text="Sıkı Dur +%5 direnç verir ve Wainwatch sınır gözcülerinin teyakkuzunu taşır." />
+    <string id="taom_wwk_t1_a_key" text="Nehir Geçidi Ustalığı" />
+    <string id="taom_wwk_t1_a_key_desc" text="Her geçidi bilirsin. Sıkı Dur yarıçapı +3." />
+    <string id="taom_wwk_t1_a_p1" text="Kalkan ve Mızrak" />
+    <string id="taom_wwk_t1_a_p1_desc" text="Klasik Kuzeyli piyade disiplini. +%5 yakın dövüş hasarı." />
+    <string id="taom_wwk_t1_a_p2" text="Gözcü Karakolu Sertliği" />
+    <string id="taom_wwk_t1_a_p2_desc" text="Issız karakollarda geçen yıllar seni demir gibi döver. +5 can." />
+    <string id="taom_wwk_t1_a_p3" text="Sınır Gözleri" />
+    <string id="taom_wwk_t1_a_p3_desc" text="Ovadan hiçbir şey senin gözünden kaçmadan geçemez. +%5 müfreze görüş menzili." />
+    <string id="taom_wwk_t1_a_p4" text="Sulak Arazi Dayanıklılığı" />
+    <string id="taom_wwk_t1_a_p4_desc" text="Nehir diyarının rutubeti seni dirençli kılar. +%5 künt hasar direnci." />
+    <string id="taom_wwk_t1_b_key" text="Aralıksız Nöbet" />
+    <string id="taom_wwk_t1_b_key_desc" text="Nöbet her türlü çileye rağmen sürdürülür. Sarsılma süresi +4sn." />
+    <string id="taom_wwk_t1_b_p1" text="Akıntı Yüzücüsü" />
+    <string id="taom_wwk_t1_b_p1_desc" text="Nehir sana korku vermez. +%5 hareket hızı." />
+    <string id="taom_wwk_t1_b_p2" text="Muhafızın Bünyesi" />
+    <string id="taom_wwk_t1_b_p2_desc" text="Yıllarca süren yalnız nöbet hizmeti seni eski kereste kadar sert yapar. +6 can." />
+    <string id="taom_wwk_t1_b_p3" text="Sadık Muhafız" />
+    <string id="taom_wwk_t1_b_p3_desc" text="Adamların az ücretle yetinir -- görev yeter. -%4 asker maaşı." />
+    <string id="taom_wwk_t1_b_p4" text="Muhafızın Disiplini" />
+    <string id="taom_wwk_t1_b_p4_desc" text="Piyadelerin, başkaları dağılırken sapasağlam durur. +%10 asker direnci." />
+    <string id="taom_wwk_t2_a_key" text="Hazırlanmış Geçit" />
+    <string id="taom_wwk_t2_a_key_desc" text="Bu araziyi yıllardır keşfediyorsun. Sarsılma şarj maliyeti -20." />
+    <string id="taom_wwk_t2_a_p1" text="Kalkan Hattı" />
+    <string id="taom_wwk_t2_a_p1_desc" text="Adamların aşılmaz bir duvar oluşturur. +%13 asker direnci." />
+    <string id="taom_wwk_t2_a_p2" text="Sınanmış Çelik" />
+    <string id="taom_wwk_t2_a_p2_desc" text="Her silah Yük Nöbeti demircilerince bilenir. +%8 yakın dövüş hasarı." />
+    <string id="taom_wwk_t2_a_p3" text="Karanlıkorman'ın Uyarısı" />
+    <string id="taom_wwk_t2_a_p3_desc" text="Orman sana tehlikeyi erkenden sezmeyi öğretir. +%10 müfreze görüş menzili." />
+    <string id="taom_wwk_t2_a_p4" text="Tahkim Edilmiş İrade" />
+    <string id="taom_wwk_t2_a_p4_desc" text="Yük Nöbeti'nin yalnızlığı demirden bir azim doğurur. +6 can." />
+    <string id="taom_wwk_t2_b_key" text="Yorulmaz Devriye" />
+    <string id="taom_wwk_t2_b_key_desc" text="Durmadan, dinlenmeden devriye gezersin. Sarsılma süresi +2sn." />
+    <string id="taom_wwk_t2_b_p1" text="Yük Nöbeti Direnişi" />
+    <string id="taom_wwk_t2_b_p1_desc" text="Sen nöbet tuttukça hiçbir düşman ovayı geçemez. +%8 asker morali." />
+    <string id="taom_wwk_t2_b_p2" text="Nehir Zırhı" />
+    <string id="taom_wwk_t2_b_p2_desc" text="Zırhın bir nehrin akıntısı gibidir -- amansız. +%10 menzilli saldırı direnci." />
+    <string id="taom_wwk_t2_b_p3" text="Geçit Uzmanı" />
+    <string id="taom_wwk_t2_b_p3_desc" text="Başkalarını batağa saplayan arazide hızla ilerlersin. +%6 müfreze hareket hızı." />
+    <string id="taom_wwk_t2_b_p4" text="Sınır Demiri" />
+    <string id="taom_wwk_t2_b_p4_desc" text="Sınırdaki çetin hizmet seni yıkılmaz kıldı. +7 can." />
+    <string id="taom_wwk_t3_a_key" text="Yük Nöbeti'nin Burcu" />
+    <string id="taom_wwk_t3_a_key_desc" text="Medeniyet ile karanlık arasındaki son hat sensin. Sarsılma yarıçapı +5." />
+    <string id="taom_wwk_t3_a_p1" text="Kırılmaz Hat" />
+    <string id="taom_wwk_t3_a_p1_desc" text="Kalkan duvarın hiç kırılmadı. +%15 asker direnci." />
+    <string id="taom_wwk_t3_a_p2" text="Ölümsüz Muhafız" />
+    <string id="taom_wwk_t3_a_p2_desc" text="Nöbet asla bitmez. +9 can." />
+    <string id="taom_wwk_t3_a_p3" text="Garnizon Komutanı" />
+    <string id="taom_wwk_t3_a_p3_desc" text="Bölüğün gönüllülerle büyür. +4 müfreze boyutu." />
+    <string id="taom_wwk_t3_a_p4" text="Savunucunun Şanı" />
+    <string id="taom_wwk_t3_a_p4_desc" text="Savunmadaki zafer büyük onur getirir. +%12 savaş şöhreti kazanımı." />
+    <string id="taom_wwk_t3_b_key" text="Daima Teyakkuzda" />
+    <string id="taom_wwk_t3_b_key_desc" text="Nöbet hiç aksamaz. Sarsılma yeteneği şarj maliyeti -30." />
+    <string id="taom_wwk_t3_b_p1" text="Mızrak Duvarı" />
+    <string id="taom_wwk_t3_b_p1_desc" text="Piyadelerin tek vücut olarak savaşır. +%6 birlik hasarı." />
+    <string id="taom_wwk_t3_b_p2" text="Çağrıya Hızlı Koşan" />
+    <string id="taom_wwk_t3_b_p2_desc" text="Adamların her tehdide anında karşılık verir. +%6 müfreze hareket hızı." />
+    <string id="taom_wwk_t3_b_p3" text="Ovanın Muhafızı" />
+    <string id="taom_wwk_t3_b_p3_desc" text="Ovanın en iyi koruyucusu. +%12 savaş şöhreti kazanımı." />
+    <string id="taom_wwk_t3_b_p4" text="Wainwatch Ordusu" />
+    <string id="taom_wwk_t3_b_p4_desc" text="Wainwatch'un tüm gücü ardında at sürüyor. +5 müfreze boyutu." />
+    <string id="taom_career_grp_captain_of_osgiliath_f1" text="Geçidin Yemini" />
+    <string id="taom_career_grp_captain_of_osgiliath_f2" text="Vekilharcın Defteri" />
+    <string id="taom_career_grp_captain_of_osgiliath_f3" text="Tımarların Toplanması" />
+    <string id="taom_career_grp_captain_of_osgiliath_f4" text="Ak Kule'nin Koruması" />
+    <string id="taom_career_grp_captain_of_osgiliath_f5" text="Kule Muhafızı Talimi" />
+    <string id="taom_career_grp_captain_of_osgiliath_f6" text="Batıdiyar'ın Dayanıklılığı" />
+    <string id="taom_career_grp_knight_of_belfalas_f1" text="Kuğu Yemini" />
+    <string id="taom_career_grp_knight_of_belfalas_f2" text="Kâhyanın Defteri" />
+    <string id="taom_career_grp_knight_of_belfalas_f3" text="Tımarların Toplanışı" />
+    <string id="taom_career_grp_knight_of_belfalas_f4" text="Ak Kule'nin Muhafızı" />
+    <string id="taom_career_grp_knight_of_belfalas_f5" text="Dol Amroth Ahırları" />
+    <string id="taom_career_grp_knight_of_belfalas_f6" text="Gümüş Kuğu" />
+    <string id="taom_career_grp_ranger_of_ithilien_f1" text="Henneth Annûn Yemini" />
+    <string id="taom_career_grp_ranger_of_ithilien_f2" text="Kâhyanın Defteri" />
+    <string id="taom_career_grp_ranger_of_ithilien_f3" text="Tımarların Toplanışı" />
+    <string id="taom_career_grp_ranger_of_ithilien_f4" text="Ak Kule'nin Muhafızı" />
+    <string id="taom_career_grp_ranger_of_ithilien_f5" text="Poros Nöbeti" />
+    <string id="taom_career_grp_ranger_of_ithilien_f6" text="Ithilien'in Gölgesi" />
+    <string id="taom_cf_captain_of_osgiliath_f1_a" text="%15 daha fazla yakın dövüş hasarı." />
+    <string id="taom_cf_captain_of_osgiliath_f1_b" text="Piyadeleriniz %8 daha fazla hasar verir." />
+    <string id="taom_cf_captain_of_osgiliath_f2_a" text="+%25 şöhret ve bir krallığa hizmet ederken +%25 nüfuz." />
+    <string id="taom_cf_captain_of_osgiliath_f2_b" text="Seçkin birlikleriniz diyarınızın özel kaynağından günlük bakım masrafı gerektirmez." />
+    <string id="taom_cf_captain_of_osgiliath_f3_a" text="+50 müfreze büyüklüğü." />
+    <string id="taom_cf_captain_of_osgiliath_f3_b" text="Diyarınızın özel kaynağını her kaynaktan iki katına çıkarın." />
+    <string id="taom_cf_captain_of_osgiliath_f4_a" text="Askerleriniz dehşet ve korkudan %60 daha az moral kaybeder." />
+    <string id="taom_cf_captain_of_osgiliath_f4_b" text="Askerlerinizin blokları, blok kırma darbelerine karşı yarı yarıya dayanır." />
+    <string id="taom_cf_captain_of_osgiliath_f4_c" text="Askerleriniz darbelerden ve hafif hücumlardan yere düşmeye %50 daha iyi direnir." />
+    <string id="taom_cf_captain_of_osgiliath_f5_a" text="Piyadeleriniz her gün 15 tecrübe kazanır." />
+    <string id="taom_cf_captain_of_osgiliath_f5_b" text="+20 müfreze büyüklüğü ve askerler %30 daha ucuza alınır." />
+    <string id="taom_cf_captain_of_osgiliath_f6_a" text="%20 daha az hasar alırsınız." />
+    <string id="taom_cf_captain_of_osgiliath_f6_b" text="Piyadeleriniz %12 daha az hasar alır." />
+    <string id="taom_cf_captain_of_osgiliath_f6_c" text="Meslek Yeteneğiniz 8 saniye daha uzun sürer ve 20 metre daha uzağa erişir." />
+    <string id="taom_cf_captain_of_osgiliath_root" text="+%5 yakın dövüş hasarı." />
+    <string id="taom_cf_knight_of_belfalas_f1_a" text="Binek hayvanınızın hücumu %10 daha fazla hasar verir." />
+    <string id="taom_cf_knight_of_belfalas_f1_b" text="Süvarileriniz %8 daha fazla hasar verir." />
+    <string id="taom_cf_knight_of_belfalas_f2_a" text="+%25 şöhret ve bir krallığa hizmet ederken +%25 nüfuz." />
+    <string id="taom_cf_knight_of_belfalas_f2_b" text="Seçkin askerleriniz, diyarınızın özel kaynağından günlük bakım masrafı gerektirmez." />
+    <string id="taom_cf_knight_of_belfalas_f3_a" text="+50 müfreze büyüklüğü." />
+    <string id="taom_cf_knight_of_belfalas_f3_b" text="Diyarınızın özel kaynağını her kaynaktan iki katına çıkarır." />
+    <string id="taom_cf_knight_of_belfalas_f4_a" text="Askerleriniz dehşet ve korkudan %60 daha az moral kaybeder." />
+    <string id="taom_cf_knight_of_belfalas_f4_b" text="Askerlerinizin blokları, blok kırma darbelerine karşı yarı yarıya dayanır." />
+    <string id="taom_cf_knight_of_belfalas_f4_c" text="Askerleriniz darbelerden ve hafif hücumlardan yere düşmeye %50 daha iyi direnir." />
+    <string id="taom_cf_knight_of_belfalas_f5_a" text="Süvarileriniz her gün 15 tecrübe kazanır." />
+    <string id="taom_cf_knight_of_belfalas_f5_b" text="+20 müfreze büyüklüğü ve askerler %30 daha ucuza alınır." />
+    <string id="taom_cf_knight_of_belfalas_f6_a" text="%20 daha az hasar alırsınız." />
+    <string id="taom_cf_knight_of_belfalas_f6_b" text="Süvarileriniz %12 daha az hasar alır." />
+    <string id="taom_cf_knight_of_belfalas_f6_c" text="Meslek Yeteneğiniz 8 saniye daha uzun sürer ve 20 metre daha uzağa erişir." />
+    <string id="taom_cf_knight_of_belfalas_root" text="+%5 yakın dövüş hasarı." />
+    <string id="taom_cf_ranger_of_ithilien_f1_a" text="+%15 menzilli hasar." />
+    <string id="taom_cf_ranger_of_ithilien_f1_b" text="Menzilli askerleriniz %8 daha fazla hasar verir." />
+    <string id="taom_cf_ranger_of_ithilien_f2_a" text="+%25 şöhret ve bir krallığa hizmet ederken +%25 nüfuz." />
+    <string id="taom_cf_ranger_of_ithilien_f2_b" text="Seçkin askerleriniz, diyarınızın özel kaynağından günlük bakım masrafı gerektirmez." />
+    <string id="taom_cf_ranger_of_ithilien_f3_a" text="+50 müfreze büyüklüğü." />
+    <string id="taom_cf_ranger_of_ithilien_f3_b" text="Diyarınızın özel kaynağını her kaynaktan iki katına çıkarır." />
+    <string id="taom_cf_ranger_of_ithilien_f4_a" text="Askerleriniz dehşet ve korkudan %60 daha az moral kaybeder." />
+    <string id="taom_cf_ranger_of_ithilien_f4_b" text="Askerlerinizin blokları, blok kırma darbelerine karşı yarı yarıya dayanır." />
+    <string id="taom_cf_ranger_of_ithilien_f4_c" text="Askerleriniz darbelerden ve hafif hücumlardan yere düşmeye %50 daha iyi direnir." />
+    <string id="taom_cf_ranger_of_ithilien_f5_a" text="Menzilli askerleriniz her gün 15 tecrübe kazanır." />
+    <string id="taom_cf_ranger_of_ithilien_f5_b" text="+20 müfreze büyüklüğü ve askerler %30 daha ucuza alınır." />
+    <string id="taom_cf_ranger_of_ithilien_f6_a" text="%20 daha az hasar alırsınız." />
+    <string id="taom_cf_ranger_of_ithilien_f6_b" text="Menzilli askerleriniz %12 daha az hasar alır." />
+    <string id="taom_cf_ranger_of_ithilien_f6_c" text="Meslek Yeteneğiniz 8 saniye daha uzun sürer ve 20 metre daha uzağa erişir." />
+    <string id="taom_cf_ranger_of_ithilien_root" text="+%5 menzilli hasar." />
   </strings>
 </base>

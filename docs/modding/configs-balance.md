@@ -13,8 +13,8 @@ All fifteen live under [`Main/_Module/ModuleData/`](../../Main/_Module/ModuleDat
 | File | Provider | Registered | MCM group |
 |---|---|---|---|
 | [`TroopWeights/troop_weights.xml`](../../Main/_Module/ModuleData/TroopWeights/troop_weights.xml) | `TroopWeightXmlLoader` | `TroopWeightIoC.cs:11` | Troop Weight (toggle only) |
-| [`special_resources/special_resources_config.xml`](../../Main/_Module/ModuleData/special_resources/special_resources_config.xml) | `SpecialResourceConfigProvider` | `SpecialResourcesIoC.cs:11` | none |
-| [`special_resources/troop_resource_costs.xml`](../../Main/_Module/ModuleData/special_resources/troop_resource_costs.xml) | `SpecialResourceConfigProvider` | `SpecialResourcesIoC.cs:11` | none |
+| [`special_resources/special_resources_config.xml`](../../Main/_Module/ModuleData/special_resources/special_resources_config.xml) | `SpecialResourceConfigProvider` | `SpecialResourcesIoC.cs:12` | none |
+| [`special_resources/troop_resource_costs.xml`](../../Main/_Module/ModuleData/special_resources/troop_resource_costs.xml) | `SpecialResourceConfigProvider` | `SpecialResourcesIoC.cs:12` | Special Resources (gold-only option) |
 | [`startup_resources/startup_resources_config.xml`](../../Main/_Module/ModuleData/startup_resources/startup_resources_config.xml) | `StartupResourcesConfigProvider` | `StartupResourcesIoC.cs:13` | none |
 | [`configs/battle_balance_config.json`](../../Main/_Module/ModuleData/configs/battle_balance_config.json) | `BattleBalanceConfigProvider` | `BattleBalanceIoC.cs:9` | Battle Balance/Troop Power, Battle Balance/Casualty Ratios |
 | [`settlement_food/settlement_food_config.json`](../../Main/_Module/ModuleData/settlement_food/settlement_food_config.json) | `SettlementFoodConfigProvider` | `SettlementFoodIoC.cs:9` | Settlement Food (toggle only) |
@@ -59,10 +59,10 @@ Weight is not a party-size cost by itself. The penalty is `weighted count minus 
 | `resource_id` | string | no | none | Documentation only. The resource charged is always the player's resolved one | `special-resources.md:134` |
 | `upgrade_cost` | int | no | 0 (not charged) | Charged on the party-screen upgrade into this troop | `special-resources.md:127` |
 | `recruit_cost` | int | no | 0 (not charged) | Charged once when recruited as a volunteer | `special-resources.md:128` |
-| `merchant_cost` | int | no | 0, and the offer is dropped with a warning | The one-time elite emissary purchase price | `EliteEmissaryService.cs:78-81` |
+| `merchant_cost` | int | no | 0, and the offer is dropped with a warning | The one-time elite emissary purchase price | `EliteEmissaryService.cs:96-100` |
 | `daily_upkeep` | float | no | 0 | Charged every daily tick the troop is in the party | `special-resources.md:129` |
 
-`merchant_cost` is the attribute the special-resources doc leaves out. It is the emissary price, and an offer troop whose row has no `merchant_cost` is dropped and warned at load rather than sold for nothing ([elite-emissary](../features/elite-emissary.md)). All four cost attributes can appear on one row; they are charged by different systems and never substitute for each other. Only a row with `daily_upkeep` above zero makes a troop an upkeep troop: a merchant-only row is charged once at the emissary and never drains the balance or deserts at zero (before 2026-09-11 it did desert; [special-resources](../features/special-resources.md) "Desertion Mechanics").
+`merchant_cost` is the attribute the special-resources doc leaves out. It is the emissary price, and an offer troop whose row has no `merchant_cost` is dropped and warned at load rather than sold for nothing ([elite-emissary](../features/elite-emissary.md)). All four cost attributes can appear on one row; they are charged by different systems and never substitute for each other. Only a row with `daily_upkeep` above zero makes a troop an upkeep troop: a merchant-only row is charged once at the emissary and never drains the balance or deserts at zero (before 2026-09-11 it did desert; [special-resources](../features/special-resources.md) "Desertion Mechanics"). With the MCM option `EliteTroopsCostGoldOnly` on, `upgrade_cost`, `recruit_cost` and `daily_upkeep` read as zero and the emissary sells for `merchant_cost` times `EmissaryGoldPerResource` in gold ([special-resources](../features/special-resources.md) "Gold-only option").
 
 `special_resources_config.xml` carries the resource definitions themselves: `id`, `display_name`, `icon_sprite`, `cap`, `starting_amount`, `daily_per_town`, `per_battle_victory_base`, `per_raid`, `per_siege_victory`, `per_prisoner`, `per_tournament_win`, `per_hideout_clear`. <!-- measured: python ElementTree attribute union over Resource elements in special_resources_config.xml 2026-09-05 -->
 

@@ -237,8 +237,8 @@ internal class SpecialResourceMapBarMixin : BaseViewModelMixin<MapInfoVM>
 
         result.Add(new TooltipProperty("", "", 0, onlyShowWhenExtended: false,
             TooltipProperty.TooltipPropertyFlags.DefaultSeperator));
-        // Each row is the base after the career gain (#767). Per battle is the base at an enemy ratio of 1.
-        result.Add(new TooltipProperty(Label("{=taom_res_tt_per_battle}Per battle"), "+" + Amount(_service.ScaleEarned(hero.StringId, resource.PerBattleVictoryBase)), 0));
+        // Each row is the base after the career gain (#767). Per battle is what an enemy of battle_reference_size men pays; a smaller or larger enemy pays a share of it.
+        result.Add(new TooltipProperty(new TextObject("{=taom_res_tt_per_battle_ref}Per {SIZE}-man battle").SetTextVariable("SIZE", Amount(resource.BattleReferenceSize)).ToString(), "+" + Amount(_service.ScaleEarned(hero.StringId, resource.PerBattleVictoryBase)), 0));
         result.Add(new TooltipProperty(Label("{=taom_res_tt_per_raid}Per raid"), "+" + Amount(_service.ScaleEarned(hero.StringId, resource.PerRaid)), 0));
         result.Add(new TooltipProperty(Label("{=taom_res_tt_per_siege}Per siege"), "+" + Amount(_service.ScaleEarned(hero.StringId, resource.PerSiegeVictory)), 0));
         result.Add(new TooltipProperty(Label("{=taom_res_tt_per_prisoner}Per prisoner"), "+" + Amount(_service.ScaleEarned(hero.StringId, resource.PerPrisoner)), 0));

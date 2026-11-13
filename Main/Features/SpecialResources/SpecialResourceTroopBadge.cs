@@ -21,7 +21,10 @@ internal static class SpecialResourceTroopBadge
         new TextObject("{=taom_res_badge_title}Requires {RESOURCE}")
             .SetTextVariable("RESOURCE", resource.DisplayName);
 
-    /// <summary>Label and pre-formatted amount, one row per cost field above zero, in a fixed order.</summary>
+    /// <summary>
+    /// Label and pre-formatted amount, one row per cost field above zero, in a fixed order. The emissary row
+    /// shows <see cref="TroopResourceCostEntry.EmissaryPrice"/>, the number the emissary charges in resource mode.
+    /// </summary>
     public static IReadOnlyList<KeyValuePair<TextObject, string>> Rows(TroopResourceCostEntry cost)
     {
         var rows = new List<KeyValuePair<TextObject, string>>(4);
@@ -29,7 +32,7 @@ internal static class SpecialResourceTroopBadge
         if (cost.UpgradeCost > 0) Add(rows, "{=taom_res_badge_upgrade}Upgrade", cost.UpgradeCost);
         if (cost.RecruitCost > 0) Add(rows, "{=taom_res_badge_recruit}Recruit", cost.RecruitCost);
         if (cost.DailyUpkeep > 0f) Add(rows, "{=taom_res_badge_upkeep}Upkeep per day", cost.DailyUpkeep);
-        if (cost.MerchantCost > 0) Add(rows, "{=taom_res_badge_emissary}Elite Emissary price", cost.MerchantCost);
+        if (cost.MerchantCost > 0) Add(rows, "{=taom_res_badge_emissary}Elite Emissary price", cost.EmissaryPrice);
         return rows;
     }
 

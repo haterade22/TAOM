@@ -242,7 +242,7 @@ The six vanilla-wrapped cultures get their terrain feat appended to their `<cult
 | `Main/Features/CulturalFeats/Models/TaomSettlementLoyaltyModel.cs` | Settlement loyalty feats |
 | `Main/Features/CulturalFeats/Models/TaomPartyMoraleModel.cs` | Party morale feats |
 | `Main/Features/CulturalFeats/Models/TaomSmithingModel.cs` | Smithing energy cost feats |
-| `Main/Features/CulturalFeats/Models/TaomClanFinanceModel.cs` | Tariff income feats; the enlistment wage line (display only); the career `DailyGold` count on both projections, also when `applyWithdrawals` is true (#769 E11) |
+| `Main/Features/CulturalFeats/Models/TaomClanFinanceModel.cs` | Tariff income feats; the enlistment wage line (display only); the career `DailyGold` count on both projections, also when `applyWithdrawals` is true (#769 E11); the Realms tribute lines from `RealmsCampaign.Tribute.cs` on the gold change, the income tile and the `CalculateClanExpenses` override |
 | `Main/Features/CulturalFeats/Models/TaomRaidModel.cs` | Raid damage feats; the raid speed also applies the leader's career `TroopDamage` through `ApplyFactor`, which reads only the army-wide (All-class) pips of that class-filtered type (#769); `GetRaidLootMultiplier` is scaled by the receiving leader's career `RaidLoot` (#769 E11) |
 | `Main/Features/TroopProgression/Models/TaomPartyWageModel.cs` | Wage/garrison feat checks (extended); the buyer's career `RecruitCost` in the recruitment cost (#769 E11) |
 | `Main/Features/Diplomacy/Models/TaomDiplomacyModel.cs` | Decision penalty feat (extended) |

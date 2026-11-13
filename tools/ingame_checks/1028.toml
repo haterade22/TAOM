@@ -1,0 +1,31 @@
+# In-game checks for #1028, read by tools/ingame_verdict.py. The [Check] lines come from
+# Main/Features/MissionStartGuard/MissionStartGuardChecks.cs, written by MissionStartGuardService. A pass: Patch103 queued a
+# behaviour that a mod added while Mission.AfterStart walked MissionBehaviors, and applied it when the walk ended (queued and
+# added are the counts; DualWield does it from its Mission.SpawnAgent postfix when a Practice Fight is started from the
+# town arena menu). A fail: the engine's add threw at that flush, or a change to MissionBehaviors inside the walk still
+# happened, which is the "Collection was modified" loop of #1028 (the list-change line). The [MissionStartGuard] INFO line
+# "was added to MissionBehaviors during ... the add is queued" is the same event in words. The fix is
+# docs/features/mission-start-guard.md "Deferred adds (#1028)".
+# Any mission start that loops anywhere in the session fails this check, whoever caused it: a list-change line for either list
+# the engine walks in Mission.AfterStart (MissionBehaviors or MissionObjects), or a "threw and was not survived" line for any
+# cause. That is the class #1028 describes, and a loop the fix does not cover should read FAIL, not be hidden.
+# The maintainer waived the in-game check on 2026-11-12; this manifest stays so a session that plays the path is judged.
+issue = 1028
+title = "Stealth hideout raid loops on the loading screen: a swallowed throw in Mission.AfterStart"
+fixed_in = "6f32888fb"   # the fix; a session built before it writes none of these lines and reads NOT REACHED
+logs = ["taom"]
+
+[[check]]
+id = "taom.mission-start-guard.deferred-add"
+needs = "a Practice Fight started from the Minas Tirith town arena menu (not through the arena master's dialogue) with DualWield enabled; any other mod that adds a behaviour inside a start call writes the same line. A mission start that loops anywhere in the session reads FAIL"
+reached = ['\[Check\] id=taom\.mission-start-guard\.deferred-add result=(pass|fail)']
+pass = ['\[Check\] id=taom\.mission-start-guard\.deferred-add result=pass queued=[1-9][0-9]* added=[1-9][0-9]*']
+fail = [
+  '\[Check\] id=taom\.mission-start-guard\.deferred-add result=fail',
+  '\[Check\] id=taom\.mission-start-guard\.list-change result=fail',
+  '\[MissionStartGuard\] Mission\.AfterStart threw and was not survived',
+]
+absence = "not-reached"
+
+[[human]]
+claim = "a Practice Fight started from the town arena menu loads once and plays, with no second loading screen, and the player and the opponents fight normally"

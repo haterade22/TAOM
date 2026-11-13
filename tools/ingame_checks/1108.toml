@@ -1,0 +1,39 @@
+# In-game checks for #1108, read by tools/ingame_verdict.py.
+# Written by Main/Features/EliteEmissary/EliteEmissaryService.cs when the emissary sells for gold.
+# NOT REACHED is the normal result with Elite Troops Cost Gold Only off.
+issue = 1108
+title = "Option: elite troops for gold, with no special resource"
+fixed_in = "e6edc5729"   # trunk on origin before the feature: the manifest ships with the emitter
+logs = ["taom"]
+
+[[check]]
+id = "taom.elite-emissary.gold-purchase"
+needs = "a gold purchase from the Elite Emissary: turn on Elite Troops Cost Gold Only in MCM, then buy a troop from the emissary at Minas Tirith as a Gondor player"
+reached = ['\[Check\] id=taom\.elite-emissary\.gold-purchase result=(pass|fail) ']
+pass = ['\[Check\] id=taom\.elite-emissary\.gold-purchase result=pass troop=\S+ qty=\d+ gold=\d+$']
+fail = ['\[Check\] id=taom\.elite-emissary\.gold-purchase result=fail ']
+absence = "not-reached"
+
+[[human]]
+claim = "with the option off, upgrading into a Gondor elite still needs Castar"
+
+[[human]]
+claim = "with the option on and 0 Castar, a level 41 Gondor elite upgrade costs only gold and XP, and a Fountain Guard recruits from a notable for gold"
+
+[[human]]
+claim = "with the option on, a day passes with elite troops in the party: no upkeep line and no desertion"
+
+[[human]]
+claim = "with the option on, the emissary at Minas Tirith lists prices in denars, the gold falls after a purchase and the Castar does not"
+
+[[human]]
+claim = "with the option on and Hide Emissary Without Resource at its default, the capital of a faction at peace that uses a different resource shows no emissary option"
+
+[[human]]
+claim = "with the option on and a nearly full party, the emissary offers no more troops than the party's free slots and says so, and a full party greys the offer"
+
+[[human]]
+claim = "with the option and Troop Weight on, 10 free slots let the emissary sell 3 troops of weight 3 (a listed troop at level 41 or above), and the party size after the purchase is still within its limit"
+
+[[human]]
+claim = "with the option off, the emissary still sells past the party limit"

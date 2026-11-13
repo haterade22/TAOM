@@ -46,8 +46,8 @@ The same recipe and the same generators, extended rather than copied:
 | Narrative menus, careers, starting gear | `insert_new_faction_cc_menus.py`, `insert_new_faction_careers.py`, `generate_char_creation_equipment.py`, `generate_starter_kit.py`, `wire_starter_kit_rosters.py`, `generate_career_kits.py` | Authored dwarf text on Erebor's mechanics; Erebor's Ironguard cloned twice (one-handed and two-handed) and its Crossbow Master once, no cavalry career; Erebor's gear with no mount ("Careers and character creation") |
 | Tables keyed on culture | hand edits to each table and its compiled C# twin | Erebor's row wherever the rule is a dwarf one ("Tables keyed on culture") |
 
-**A middling realm.** The ruling House of Borin is tier 5, the Broadbeams and the Firebeards tier 4
-and the Wardens of Dolmed tier 3, so the realm starts with about 9 lord parties
+**A middling realm.** The ruling House of Delingur is tier 5, the Houses of Dwálin and Úri tier 4
+and the House of Eldran tier 3, so the realm starts with about 9 lord parties
 (`DefaultClanTierModel.GetPartyLimitForTier`: tier 5 gives 3, tiers 3 and 4 give 2). That sits
 between the weak Arnor realms (about 8) and Blue Craig (12). Towns start at 3,000 to 3,200
 prosperity against Erebor's 3,500, castles at 800, villages at Erebor's hearth 350, and the culture
@@ -88,10 +88,10 @@ C#: VolunteerRecruitmentService.EredLuin.cs, the culture rows of the compiled ta
 
 | Clan (tier) | Lords | Holds |
 |-------------|-------|-------|
-| House of Borin (5), King Farin II | `lord_EL1_1` to `_4` | Thorin's Halls `town_EL3` (capital), Dwarrowgate `castle_EL5` |
-| Broadbeams (4) | `lord_EL2_1` to `_4` | Belegost `town_EL1`, Ironcrag `castle_EL1` |
-| Firebeards (4) | `lord_EL3_1` to `_4` | Nogrod `town_EL2`, Stonewatch `castle_EL4` |
-| Wardens of Dolmed (3) | `lord_EL4_1` to `_4` | Dolmed Hold `castle_EL2`, Hammerdeep `castle_EL3` |
+| House of Delingur (5), King Farin II | `lord_EL1_1` to `_4` | Thorin's Halls `town_EL3` (capital), Dwarrowgate `castle_EL5` |
+| House of Dwálin (4) | `lord_EL2_1` to `_4` | Belegost `town_EL1`, Ironcrag `castle_EL1` |
+| House of Úri (4) | `lord_EL3_1` to `_4` | Nogrod `town_EL2`, Stonewatch `castle_EL4` |
+| House of Eldran (3) | `lord_EL4_1` to `_4` | Dolmed Hold `castle_EL2`, Hammerdeep `castle_EL3` |
 
 Four lords per clan, two married couples. Each lord draws a face from Erebor's `fighter_erebor`
 template at campaign start. That template's hair tags are culture names (`empire`, `sturgia`), but
@@ -106,9 +106,9 @@ icons 24000 to 24003 (`banner_icons.xml`, ones no clan flew) in silver on the sl
 
 Names come from the Old Norse dwarf-lists Tolkien drew on, avoiding every name Erebor's lords and
 bandits use and every canonical dwarf of the age. Two are also in Erebor's culture pool: Hanar, and
-Farin, kept with Borin for the royal house. The king is Farin II, of the line
-of Borin: Borin's descendants (Fundin, Balin, Dwalin, Glóin, Gimli) were Thorin's folk in the Blue
-Mountains.
+Farin, the king's name. The king is Farin II of the House of Delingur (the house name since 72715c417).
+Borin stays in the pool: Borin's descendants (Fundin, Balin, Dwalin, Glóin, Gimli) were Thorin's folk
+in the Blue Mountains.
 
 ### Settlements
 
@@ -275,7 +275,7 @@ contamination gate refuses Erebor's place and people words.
 menus (parents, youth, education, adulthood): Erebor's mechanics entry for entry (skills,
 attribute, focus, occupation and title types) with authored text (`AUTHORED["eredluin"]`),
 registered as 48 `taom_cc_*` rows in `taom_cc_strings.xml`. The text is set in Thorin's Halls under
-King Farin of the House of Borin, among the Broadbeams of Belegost and the Firebeards of Nogrod, the
+King Farin of the House of Delingur, among the Broadbeams of Belegost and the Firebeards of Nogrod, the
 iron mines of Mount Dolmed, the Dwarf-road through the Shire to Bree, the trade with Lindon and the
 goblins of Blue Craig; it names no Erebor place or person. Childhood has no culture-keyed entries.
 
@@ -450,7 +450,7 @@ Restart Bannerlord fully, then start a new campaign.
 - The six age-8 education tutors (`child_education_templates_stage_2_page_0_branch_0_eredluin` to
   `_5`) have no `race` and render as humans in human clothes, cloned from Erebor's identical gap. The
   fix is an engine-side patch that passes the race through the education screen, not data.
-- Translations owed to the paid run (#763, row added 2026-10-28): the 536 ids seeded with English into each of the 12
+- Translated in all 12 languages (2026-11-12, #763; row added 2026-10-28): the 536 ids seeded with English into each of the 12
   languages, the 2 faction-card keys whose English changed (`taom_faction_kingdom_of_ered_duin_name`
   and `_desc`, reset to English and evicted from the 12 translation caches), and the 31 Ered Luin
   settlement names in each language of the live TAOM_Map (each `taom_map` count in

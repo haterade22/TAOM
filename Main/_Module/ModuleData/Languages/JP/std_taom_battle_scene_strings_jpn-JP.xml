@@ -33,14 +33,14 @@
     <string id="aom_taom_rohan_battle_fords_of_isen_forceatmo_name" text="[ローハン] アイゼンの浅瀬" />
     <string id="aom_taom_rohan_castle_helms_deep_forceatmo_name" text="[ローハン] ヘルム峡谷 - 夜の雨" />
     <string id="aom_taom_rohan_edoras_town_forceatmo_name" text="[ローハン] エドラス" />
-    <string id="aom_taom_gondor_battle_001_forceatmo_name" text="[Gondor] Ruined Outpost" />
-    <string id="aom_taom_gondor_pelennor_fields_forceatmo_name" text="[Gondor] Pelennor Fields" />
-    <string id="aom_taom_dwarven_moria_e_forceatmo_name" text="[Misty Mountains] Eastern Moria" />
-    <string id="aom_taom_gondor_town_pelargir_forceatmo_name" text="[Gondor] Pelargir" />
-    <string id="aom_taom_gondor_town_serelond_forceatmo_name" text="[Gondor] Serelond" />
-    <string id="aom_taom_gondor_village_amongelin_forceatmo_name" text="[Gondor] Amon Gelin Village" />
-    <string id="aom_taom_gondor_village_lothgobel_forceatmo_name" text="[Gondor] Lothgobel Village" />
-    <string id="aom_taom_mordor_town_01_forceatmo_name" text="[Mordor] Mordor Town" />
-    <string id="aom_taom_rohan_battle_002_forceatmo_name" text="[Rohan] Rohan Plains II" />
+    <string id="aom_taom_gondor_battle_001_forceatmo_name" text="[ゴンドール] 廃墟の前哨地" />
+    <string id="aom_taom_gondor_pelennor_fields_forceatmo_name" text="[ゴンドール] ペレンノール野" />
+    <string id="aom_taom_dwarven_moria_e_forceatmo_name" text="[霧ふり山脈] 東モリア" />
+    <string id="aom_taom_gondor_town_pelargir_forceatmo_name" text="[ゴンドール] ペラルギア" />
+    <string id="aom_taom_gondor_town_serelond_forceatmo_name" text="[ゴンドール] セレロンド" />
+    <string id="aom_taom_gondor_village_amongelin_forceatmo_name" text="[ゴンドール] アモン・ゲリンの村" />
+    <string id="aom_taom_gondor_village_lothgobel_forceatmo_name" text="[ゴンドール] ロスゴベルの村" />
+    <string id="aom_taom_mordor_town_01_forceatmo_name" text="[モルドール] モルドールの町" />
+    <string id="aom_taom_rohan_battle_002_forceatmo_name" text="[ローハン] ローハン平原 II" />
   </strings>
 </base>

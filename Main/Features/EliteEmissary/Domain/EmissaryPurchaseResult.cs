@@ -3,7 +3,7 @@ namespace TAOM.Features.EliteEmissary.Domain;
 public enum EmissaryPurchaseStatus
 {
     Success,
-    /// <summary>Player lacks enough of the owner faction's resource for the requested quantity.</summary>
+    /// <summary>Player lacks enough of the owner faction's resource, or gold under the gold-only option.</summary>
     Unaffordable,
     /// <summary>Owner faction maps to no special resource — nothing to charge.</summary>
     NoResource,
@@ -13,6 +13,8 @@ public enum EmissaryPurchaseStatus
     Invalid,
     /// <summary>Charge/afford passed but the roster grant failed (no party, unknown troop id).</summary>
     Failed,
+    /// <summary>Under the gold-only option, the quantity is more than the party's free slots.</summary>
+    PartyFull,
 }
 
 /// <summary>Typed outcome of <see cref="IEliteEmissaryService.Purchase"/> — never throws; the boundary
@@ -23,6 +25,9 @@ public sealed class EmissaryPurchaseResult
     public string TroopId { get; }
     public int Quantity { get; }
     public int TotalCost { get; }
+
+    /// <summary>The resource name. Null when the emissary sells for gold, and on a request refused before pricing
+    /// (Invalid, NoResource, NotOffered).</summary>
     public string ResourceDisplayName { get; }
 
     public bool IsSuccess => Status == EmissaryPurchaseStatus.Success;

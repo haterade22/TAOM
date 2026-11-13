@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using BehaviorTreeWrapper;
 using TAOM.Core.Logging;
 using TAOM.Features.AdvancedCombat;
+using TAOM.Features.ElephantLike;
 using TaleWorlds.Core;
 using TaleWorlds.Library;
 using TaleWorlds.MountAndBlade;
@@ -112,12 +113,23 @@ internal sealed class HowdahCrewSpawner
 
         // One pass: the layout dump already lists every seat, so only a SKIPPED seat is worth a line here.
         int spawned = 0;
+        bool atAgentLimit = false;
+        int maxAgents = DefaultBattleMissionAgentSpawnLogic.MaxNumberOfAgentsForMission;
         foreach (StandingPoint sp in machine.StandingPoints)
         {
             if (!(sp is TaomHowdahStandingPoint seat) || seat.IsDisabled || seat.MovingAgent != null)
             {
                 _logger.LogInfo($"{machine.LogTag}   seat skipped: type={sp.GetType().Name} disabled={sp.IsDisabled} occupied={sp.MovingAgent != null}");
                 continue;
+            }
+
+            // SpawnAgent has no capacity check: at a full agent pool the native spawn writes over the mission (#1107).
+            if (!CrewAgentBudget.HasRoom(mission.AllAgents.Count, maxAgents))
+            {
+                atAgentLimit = true;
+                if (_loggedErrors.Add("HowdahCrew:agent-limit"))
+                    _logger.LogWarning($"{machine.LogTag} crew stopped at the engine's {maxAgents}-agent limit; this seat and the rest of this howdah's seats stay empty");
+                break;
             }
 
             // Spawn on the seat's own crew frame: it stands on the floor top (3.15 m, 0.8 m behind the elephant's
@@ -169,9 +181,9 @@ internal sealed class HowdahCrewSpawner
             spawned++;
         }
 
-        if (spawned == 0)
-            _logger.LogWarning($"{machine.LogTag} no available seats for crew spawn.");
-        else
+        if (spawned > 0)
             _logger.LogInfo($"{machine.LogTag} crew force-spawned: {spawned} archer(s)");
+        else if (!atAgentLimit)
+            _logger.LogWarning($"{machine.LogTag} no available seats for crew spawn.");
     }
 }

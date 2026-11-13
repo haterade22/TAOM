@@ -66,7 +66,6 @@ public static class CoopSettingsRelevance
         // beside it is Presentation.
         "SkeletonBufferWatch",
         "EnableMemorySampler", "MemorySampleIntervalSeconds",
-        "EnableStallWatchdog", "EnableStallWatchdogBundle", "StallWatchdogSeconds",
         "EnableExitStallSampler", "EnableMissionTickStallSampler",
         "ThrowOnNextApplicationTick", "ThrowOnNextMissionTick", "ThrowOnNextMissionAfterStart",
         // Each is read by exactly one *DiagnosticsSettingsProvider whose only job is gating a
@@ -173,6 +172,9 @@ public static class CoopSettingsRelevance
         // never grants (CoopSessionPolicy.MayWriteSaveBackedState), so peers disagreeing about the toggle cannot
         // make the simulation differ.
         "HiddenHostsEnabled",
+        // Realms: whether YOUR lord party names and conversation speaker carry the lord's style and title. A name built on
+        // each peer from the titles it holds; no campaign state is read for it or written.
+        "RealmsTitleStyles",
         // Many Hammers (#911): whether YOUR smelting list leaves out the weapons you locked. A view filter on one client's
         // list; no campaign state is read or written.
         "ManyHammersHideLockedEnabled",
@@ -222,6 +224,8 @@ public static class CoopSettingsRelevance
         // War Chronicle (#765): the event popups are drawn on this client only. The chronicle itself runs on
         // the host; WarChronicleEnabled and WarChronicleArmyFocus stay in.
         "WarChronicleAnnouncements",
+        // The battle HUD colour option: the colours of this client's own health, mount and shield rings, nothing else.
+        "BattleHudColourMode",
         // The faction picker shapes the local player's own character creation, which each peer runs
         // for themselves; the co-op layer replicates the hero that results, not the screen.
         "FrontEndFactionScreen",

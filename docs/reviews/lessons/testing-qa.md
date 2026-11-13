@@ -2651,3 +2651,96 @@ Three parts of spike run 6 would have misled a decision. The HOLD-DIAG `call` fi
 - **Why missed:** the design and measurement reviews read the code. What a native getter returns and how far a computed constant is off show only in a run.
 - **Prevent:** before a spike field feeds a rule or a verdict, show from the raw lines that it varies and tracks what its name says. Give a scenario that is compared with another the same pass bar, or print the other bar beside its own. Log a miss distance for every shot, so a setup error reads as a setup error and not as an engine result. Replace a computed engine constant with a measured one before a recipe uses it.
 - **Source:** `docs/features/hero-defence.md` "Spike results (Gate 1)", runs `20261109-224259` and `20261109-233240`. Related: "A fix gets its own check on every path, and a RED from a stub needs a mutant".
+### A wiring test that registers its own fake cannot prove the feature registers the real one (#1108, 2026-11-09)
+
+`Registration_GivesTheProviderTheSettings` ran the feature's IoC and then registered a fake with `IfAlreadyRegistered.Replace`. With the feature's registration deleted, the fake filled the gap and the test stayed green. The parameter is optional, so a missing registration would otherwise resolve to null with no error.
+
+- **Why missed:** the fake was needed to turn the toggle on, the test passed, and nobody deleted the line the test names.
+- **Prevent:** assert `IsRegistered<T>()` before the replacement, or resolve the real type. For a wiring test, delete the registration it names and watch it fail.
+- **Source:** [rca-gold-only-elite-troops-2026-11-09.md](../rca-gold-only-elite-troops-2026-11-09.md) row 7.
+
+### A source pin on a branch pins its condition and its exit, not only the order of two calls (#1110, 2026-11-09)
+
+`BroodTick_DisbandsAndSpawnsNothingWithTheModeOn` checked only that the `DisbandAll` text came before `ReturnStraysToPatrol`. Inverting the mode check or deleting the `return;` after the disband left it green, and so did moving the mode call in `SubModule` below the once-per-process guard. This is the third review in a week to find a pin that a breaking edit passes (Seat of Seeing S1, 2026-11-04; Supply Lines, 2026-11-09).
+- **Why missed:** the earlier lesson asks for a pin on each forwarding line. These seams are branches, and the pin recorded only the order its author cared about.
+- **Prevent:** for a branch, pin the condition text, the call with its arguments, the exit, and any guard it must precede. Before you keep a pin, name one edit that breaks the behaviour and check that the pin fails on it.
+- **Source:** [rca-arachnophobia-mode-2026-11-09.md](../rca-arachnophobia-mode-2026-11-09.md), finding 4.
+
+### A skip line in a manifest's fail list turns NOT REACHED into FAIL (#1111, 2026-11-10)
+
+`tools/ingame_checks/1111.toml` listed the check's `result=skip` line under `fail`. `judge_segment` checks fail patterns first, so a session with the switch off read FAIL, not NOT REACHED with its reason.
+
+- **Why missed:** the skip was read as a failed setup; the NOT REACHED meaning in `ingame-verdicts.md` was not reread, and the manifest was not run through `judge_segment`.
+- **Prevent:** match only the pass line in `reached`, keep skip lines out of `fail` (the `1011.toml` shape), and run `judge_segment` on a synthetic skip, pass and fault line before the manifest ships.
+- **Source:** [rca-kingdom-allegiance-2026-11-10.md](../rca-kingdom-allegiance-2026-11-10.md), row 4.
+
+### Stage a field-backed engine getter on a bare object before falling back to a source pin (#1114, 2026-11-10)
+
+The first `OfOwnClan` test only checked the source text for `return Of(clan);`. It caught a revert, but not a wrong input (`Clan.PlayerClan`), and it broke on a harmless rename. The class summary said a `Hero` cannot be built in the test process, yet `Hero.Clan`, `Clan.Kingdom`, `Clan.Culture` and `Hero.Culture` all read fields, so an uninitialized object with those fields set runs the real code. A second defect: an older test sliced the source from `OfHero(` to `OfCharacter(`, and when `OfOwnClan` was inserted between them, two assertions matched the new method's copy of the same text.
+
+- **Why missed:** the test copied its siblings and the summary's claim instead of reading which getters are field-backed; nobody reread the slice windows when a method was inserted.
+- **Prevent:** read the getter chain with `taom-src`; where it ends in fields, stage the object with `FormatterServices.GetUninitializedObject` and set the fields (`FactionSidesTests.LordServing`), and add a contrast case so the staging itself is proven. A source slice ends at the next method's header, never two methods down. Prove either kind with a mutation run.
+- **Source:** [rca-sworn-anew-own-clan-2026-11-10.md](../rca-sworn-anew-own-clan-2026-11-10.md), rows 1 and 2.
+### A source-scan gate counts the matches it could not read, and fails on any (v1.5.7 bump, 2026-11-10)
+
+`PartyMemberSizeLimitCallShapeTests` scans TAOM's source for a bool literal passed by position to one engine method. Its first form matched one call per line and missed a nested call in an argument (Codex). The rewrite reads balanced brackets, and it still missed a call inside an interpolation hole, where one of the live calls stood (`CareerPerkCheats.cs:88`). Each fix widened what the scanner reads, and nothing said what it still skipped.
+
+- **Why missed:** the shape cases came from the calls that existed and from the last review's finding. A scanner that blanks strings treats a call in `$"{...}"` as text, and a clean result reads the same as an unread call.
+- **Prevent:** give a source scan a second count that needs no parsing (the method name with its bracket in the comment-free source) and fail when it differs from the calls the scanner read. Then a shape the scanner cannot read fails the gate. Here: `TaomCallers_AreAllReadByTheScanner`.
+- **Source:** [rca-engine-bump-v1-5-7-2026-11-10.md](../rca-engine-bump-v1-5-7-2026-11-10.md), findings 1 and 2.
+### A new line kind in a format two languages share goes into the shared fixture (War Pledge, 2026-11-10)
+The `ev=pledge` ledger line had a C# golden-line test and a Python helper that wrote the same text by hand. A rename of one of its keys in the C# formatter and its C# test would have passed both suites and left every pledge line malformed in the field. `tools/tests/fixtures/war_ledger_v1.txt` exists to stop that: `WarLedgerFormatterTests.Fixture_IsExactlyWhatTheFormatterWrites` writes it and the analyzer's fixture test parses it. The new line was not in it.
+- **Why missed:** the fixture is named in two docstrings and in no rule, and the new line was tested where its code was written, once per language.
+- **Prevent:** a new `[WarLedger]` line or event kind adds one line to the fixture, one entry to the C# `written` array and one assertion on the parsed fields, in the change that adds the formatter method. The same holds for any file one language writes and another reads: find the shared fixture before writing a second copy of the line.
+- **Source:** [rca-war-pledge-2026-11-10.md](../rca-war-pledge-2026-11-10.md), finding 2.
+
+### A test helper that swaps a process-wide static saves the original once per test (Patch103 list check, #1028, 2026-11-11)
+
+- **Why missed:** `InstallMission` saved the current `Mission._current` on every call. A test that installs twice made the first fake the "previous" value, so cleanup restored a fake, and a later test that assumes "no mission" ran against it and passed.
+- **Prevent:** save the original on the first install of a test only (a flag), restore only when the flag is set, and have a test that needs the empty state set it itself. Two-edit test: move the save back into every install and the no-mission test must fail.
+- **Source:** [rca-mission-list-check-2026-11-11.md](../rca-mission-list-check-2026-11-11.md), row 2.
+
+### A readback from the layer that made the change is not proof it took (Kysaro's terrain generator, 2026-09)
+
+- **Why missed:** a UI Automation script set a file path in a Windows dialog, read the value back through the same accessibility API and reported success. The dialog never accepted the file, so nothing was imported. The user reported it more than five times before anyone looked for another signal.
+- **Prevent:** prove an automation step by a signal the step did not produce: the dialog closed, the file on disk changed, the target application shows the change. When the user says "it doesn't work" again in new words, stop re-testing the same assumption. Rule: `evidence-over-claims.md` B.
+- **Source:** Kysaro's notes, `lessons/feedback_verify_dont_assume_success.md` (`Kysaro/bannerlord-knowledge-Kysaro`, reviewed in [adopt-kysaro-knowledge-2026-11-12.md](../adopt-kysaro-knowledge-2026-11-12.md)).
+
+### A second rejection of the same result means review the base, not patch faster (Kysaro's armour sessions, 2026-10-25)
+
+- **Why missed:** six fixes were stacked on one armour set (sleeves, glove tuck, wrists, cuffs, ring, snap) on top of a retopology that had given the helmet and gloves too few polygons. Each round fixed a symptom; the user found new defects in game each time and called the session "terrible". The results were "checked" on grey test renders that did not predict what the game showed.
+- **Prevent:** after the second rejection of the same area, stop editing, review the whole result and its inputs, and report the review before the next change. Judge visual work the way the engine shows it (textured, lit, posed, back faces culled). Rule: `evidence-over-claims.md` A.5; the render trap is in `/prep-tripo-prop` "Top traps". The restart on the next set, with the base fixed first, was accepted.
+- **Source:** Kysaro's notes, `lessons/feedback_dark_lord_session_bad.md` and `feedback_baf_culled_split_review.md`.
+
+### One dead mechanism is not proof the goal is impossible (Kysaro's faction screen, 2026-09-25)
+
+- **Why missed:** a pixel test proved that one Gauntlet XML property does not move the 3D camera. The claim grew into "the camera cannot be moved from this UI" and was repeated twice, while the module already had a working Harmony prefix on `BodyGeneratorView.InitCamera` that moves it. The user's pushback ("how did you do it for character customization then?") was the signal.
+- **Prevent:** scope a negative finding to the mechanism tested. When the user points at a case that already works, grep for the patches and hooks around it before repeating the claim. Rule: `evidence-over-claims.md` C.4.
+- **Source:** Kysaro's notes, `lessons/feedback_dont_overgeneralize_native_constraints.md`.
+
+### A verdict manifest needs a test that renders the real line and judges it, or a changed line reads NOT REACHED for ever (2026-11-12)
+
+The #1028 manifest was checked by two tests that each pinned half: C# asserted that the check ids appear in the TOML, and
+`test_ingame_verdict.py` asserted that each id appears in some `.cs` file. Neither compared the text the code writes with the
+regex that reads it, and the pass pattern ended in `$`. A field appended to the detail, or an edit to the regex, would still
+leave the "reached" pattern matching, and `absence = "not-reached"` would then report NOT REACHED for every session for ever,
+never FAIL. The manifest header also named one list while its fail patterns judged the whole session.
+- **Why missed:** each side was tested against its own copy of the contract, and the contract (the line text) was in neither test.
+- **Prevent:** for every new manifest, put the exact rendered lines in one C# test that goes through the real `OutcomeLog`, and the
+  same literals in a Python test that judges them on the real manifest (pass, fail, pass beside a fail, nothing). Do not end a
+  pass pattern with `$`. State in the manifest header what a fail pattern fails on, because fail patterns are not gated on `reached`.
+- **Source:** [rca-mission-start-defer-2026-11-12.md](../rca-mission-start-defer-2026-11-12.md) "Follow-up review", `/deep-review` Agent 5.
+
+### A verdict that counts exposure from the first sample needs a window after its trigger (Fords check 09, 2026-11-13)
+
+Check 09 failed `melee` once enemies stood near a tower for 30 unit-seconds with no blow. That holds in the first minutes of any match, before the rules order a strike, so every 120 s smoke failed. The first fix exempted runs with no order at all, and still failed a smoke whose first order came near its end: in the passing runs the first order came at live second 108.6 and 112.1.
+
+- **Why missed:** the threshold was set on 600 s and longer runs; the fix read only the failing runs, not when the trigger arrives in the passing ones.
+- **Prevent:** for a check that expects an effect after a trigger, start its window at the trigger and give it a minimum age; read the trigger's timing in passing runs before choosing it. Check that the scenario fakes produce the evidence a new rule reads, or the fault scenario can no longer fail.
+- **Source:** [rca-fords-check09-short-run-2026-11-13.md](../rca-fords-check09-short-run-2026-11-13.md), finding 1.
+
+### A fail-open seam's test asserts that the decision input was read, because "it deferred" is also what the catch does (#1139, 2026-11-13)
+Both Uncapturable Heroes seams catch every exception and defer to vanilla. In the test process `Hero.MainHero` throws (`Game.Current` is null), so the old code also deferred, and four of six new tests passed with the fix reverted.
+- **Why missed:** the tests asserted the seam's outcome, which equals its failure mode, and no mutation run was made before the review. Repeat of the #1086 entry "prove the gate with a mutation" in `campaign-mechanics.md`.
+- **Prevent:** when a seam fails open (a catch that defers, a null guard that returns the default), a test of the deferring branch asserts that the seam consulted its input (`Received(1).OfHero(hero)`), and the fix is mutation-checked: put the old condition back and watch every new test fail.
+- **Source:** [rca-coop-pvp-capture-2026-11-13.md](../rca-coop-pvp-capture-2026-11-13.md), finding F2.

@@ -33,18 +33,4 @@ public class BattleLoadLoadingWindowTests
         BattleLoadLoadingWindow.Close();
         Assert.IsFalse(BattleLoadLoadingWindow.IsOpen);
     }
-
-    [TestMethod]
-    public void OpenedAtUtc_WhenClosed_ReturnsNull()
-    {
-        BattleLoadLoadingWindow.Close();
-        Assert.IsNull(BattleLoadLoadingWindow.OpenedAtUtc);
-    }
-
-    [TestMethod]
-    public void OpenedAtUtc_WhenOpen_HasValue()
-    {
-        BattleLoadLoadingWindow.Enter();
-        Assert.IsTrue(BattleLoadLoadingWindow.OpenedAtUtc.HasValue);
-    }
 }

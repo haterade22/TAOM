@@ -28,5 +28,8 @@
     <string id="taom_emissary_no_offers" text="使者目前沒有精銳部隊可供招募。" />
     <string id="taom_emissary_failed" text="使者無法完成交易。" />
     <string id="taom_emissary_coop_guest" text="這名使節只與本次戰役的主機交涉。" />
+    <string id="taom_emissary_denars" text="第納爾" />
+    <string id="taom_emissary_party_full" text="你的隊伍已無空間容納這些士兵。" />
+    <string id="taom_emissary_offer_room" text="你的隊伍尚可容納 {MAX} 人。" />
   </strings>
 </base>

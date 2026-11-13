@@ -556,11 +556,11 @@ The lord's gear ladder: #693. The base feature: none yet (see Owed).
   it is never sold, looted or a tournament prize; `MouthOfSauronHelmDataTests` pins the row and the live helm's 50
   head armour (Mike lowered it from 55 in the unversioned Armory:
   [snapshot README](../reference/lotrlome-armory-snapshot/README.md)).
+- 2026-11-06: Lórien owns a ladder of its own (Mike): `taom_lords_material_lothlorien` (placeholder name and Mirkwood's bar), its `<Material>` row and the compiled default, a Deep Seam row and an Armourer's Commission row (`sk_ll_gl_chest_heavy_a`), and no `armour_from` donor. Its lord-grade pieces stay lord-only.
 
 ---
 
 <!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
-- 2026-11-06: Lórien owns a ladder of its own (Mike): `taom_lords_material_lothlorien` (placeholder name and Mirkwood's bar), its `<Material>` row and the compiled default, a Deep Seam row and an Armourer's Commission row (`sk_ll_gl_chest_heavy_a`), and no `armour_from` donor. Its lord-grade pieces stay lord-only.
 
 ## Referenced by
 

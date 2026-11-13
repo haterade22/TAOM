@@ -92,8 +92,8 @@ public class CoopVetoClassificationTests
         ["SupplyCaravanEncounterPatch"] = new(CoopVeto.ReviewedSafe,
             "Player-local UI redirect, the caravan sibling of RefugeEncounterPatch: when the LOCAL " +
             "player bumps a supply caravan (the condition checks the component, not the owner, so a co-op " +
-            "guest meeting the host's caravan gets the same line, #1086), the meeting conversation (which would strike a " +
-            "stranger dialog off a Leader-less roster) is replaced by an info line plus the same " +
+            "guest meeting the host's caravan gets the same menu with guest wording, #1086), the meeting conversation (which would strike a " +
+            "stranger dialog off a Leader-less roster) is replaced by a one-option menu whose Leave runs the " +
             "Finish+hold teardown vanilla's leave path runs. DoMeeting only runs for the local " +
             "player's encounter, the condition reads the encountered party's component type " +
             "(replicated party state, identical on every peer), and no shared campaign mutation is " +
@@ -234,7 +234,9 @@ public class CoopVetoClassificationTests
             "PrisonRoster), so what carries it matters: the condition is lore-fixed identity. Who " +
             "is protected comes from the compiled NazgulRegistry roster plus a shipped hero/race " +
             "list, and the FaceGen race id it reads is shipped character data, so every peer " +
-            "computes the same answer from the same files. The alternative was deferring to the " +
+            "computes the same answer from the same files. A co-op player's hero is never vetoed " +
+            "(#1139): the player test is IPlayerControlQuery, Coop's own registry, and Coop runs " +
+            "the battle capture on its server only. The alternative was deferring to the " +
             "host, which was rejected because the sibling battle seam " +
             "(Hero_CanBecomePrisoner_Patch) is a postfix on a query and cannot be host-gated " +
             "without making Sauron capturable in a fief but not in a field battle. An edited " +
@@ -437,6 +439,17 @@ public class CoopVetoClassificationTests
         ["Patch57_NavalAtSeaLandRescueGuard"] = new(CoopVeto.Parked,
             "NavalTravel is PARKED (#120/#296) and the category is commented out in SubModule.cs. " +
             "It moves parties on the campaign map — re-classify before reviving."),
+
+        // --- Mission start (#1028) ----------------------------------------------------------
+        ["Mission_AddMissionBehavior_MissionStartGuard_Patch"] = new(CoopVeto.ReviewedSafe,
+            "Mission.AddMissionBehavior is skipped only while this peer's own Mission.AfterStart is running its " +
+            "EarlyStart or AfterStart call (a thread-static window, so another thread or another mission is never " +
+            "touched), and the queued behaviour is added through the engine's own method when AfterStart ends. The " +
+            "mission behaviour list is a local object of one mission start, not replicated campaign state, so no " +
+            "campaign mutation is skipped. The window opens on the same call on every peer, and a peer whose " +
+            "\"Survive Mission Start Failures\" switch differs only keeps the engine's add, which on a mod that adds " +
+            "during the walk is the loop of #1028: crash containment, classified as instrumentation in " +
+            "CoopSettingsRelevance, like the guard's other behaviour."),
     };
 
     // Scans SOURCE, not the loaded assembly, and that is deliberate.

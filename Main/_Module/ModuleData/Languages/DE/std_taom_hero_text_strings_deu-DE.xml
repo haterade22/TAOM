@@ -466,14 +466,16 @@
     <string id="zulgor_description" text="Zulgor, ein Schwingenzüchter, brütet grauenvolle Eier aus und erweitert Khamûls Herrschaft über die Lüfte." />
     <string id="zulgora_description" text="Zulgora, eine Schattenweberin, erschafft Trugbilder und täuscht Feinde wie Saurons Blendwerke in den Erzählungen." />
     <string id="zulgoth_description" text="Zulgoth dient als Ritualist unter den Orks und bringt dunklen Mächten Opfer dar, wie es in den Bräuchen der Orks angedeutet wird. Seine Riten beschwören Stärke für die Unternehmungen des Klans." />
-    <string id="lord_AN1_1_description" text="Arvegil II, King of Arthedain, heir of Arvedui and of Isildur, who holds Fornost against the orcs of Gundabad and keeps an uneasy peace with his kin in Cardolan and Rhudaur." />
-    <string id="lord_CA1_1_description" text="Aranthir, King of Cardolan, heir of Earendur's second son, who keeps the barrow-kings' crown at Caras Gorthad." />
-    <string id="lord_RH1_1_description" text="Belegorn, King of Rhudaur, heir of Earendur's third son, lord of Cameth Brin and of the hill-men of the Angle." />
-    <string id="lord_LN3_1_description" text="Galdor of the Havens, who bore Círdan's counsel to the house of Elrond, keeps Forlond on the northern arm of the Gulf of Lhûn." />
-    <string id="lord_EL1_1_description" text="Farin II, King of Ered Luin, of the line of Borin, Lord of Thorin's Halls, who holds the Blue Mountains with the Broadbeams of Belegost and the Firebeards of Nogrod." />
-    <string id="lord_AND1_1_description" text="Ingomar, King of Angáladh, lord of Woodmen-town, who keeps the eaves of Mirkwood against the shadow of Dol Guldur." />
-    <string id="lord_AV1_1_description" text="Grimbeorn, son of Beorn, Chieftain of the Beornings, who keeps the High Pass and the Old Ford and lets no orc cross the Vales of Anduin." />
-    <string id="lord_DO1_1_description" text="Ostric, King of Dorwinion, lord of Vineholm, whose wine goes up the River Running to Dale and the Elves of Mirkwood." />
-    <string id="lord_SRH1_1_description" text="Vidumar, King of South Rhovanion, lord of Vidugard, who rides the plains south of Mirkwood and remembers the Wainriders." />
+    <string id="lord_AN1_1_description" text="Arvegil II., König von Arthedain, Erbe Arveduis und Isildurs, der Fornost gegen die Orks von Gundabad hält und einen unsicheren Frieden mit seinen Verwandten in Cardolan und Rhudaur wahrt." />
+    <string id="lord_CA1_1_description" text="Aranthir, König von Cardolan, Erbe des zweiten Sohnes Earendurs, der die Krone der Hügelgrabkönige zu Caras Gorthad bewahrt." />
+    <string id="lord_RH1_1_description" text="Belegorn, König von Rhudaur, Erbe des dritten Sohnes Earendurs, Herr von Cameth Brin und der Bergmenschen des Winkels." />
+    <string id="lord_LN3_1_description" text="Maicasáma, Sohn des Penlod von Gondolin und Erbe des Hauses der Säule und des Turms des Schnees, hält Forlond am nördlichen Arm des Golfs von Lhûn." />
+    <string id="lord_EL1_1_description" text="Farin II., König von Ered Luin, aus dem Hause Delingur, Herr von Thorins Hallen, der das Blaue Gebirge mit den Breitbärten von Belegost und den Feuerbärten von Nogrod hält." />
+    <string id="lord_AND1_1_description" text="Ingomar, König von Angáladh, Herr der Waldmenschen-Stadt, der die Säume des Düsterwalds gegen den Schatten von Dol Guldur hält." />
+    <string id="lord_AV1_1_description" text="Grimbeorn, Sohn Beorns, Häuptling der Beorninger, der den Hohen Pass und die Alte Furt hält und keinen Ork die Anduin-Täler überqueren lässt." />
+    <string id="lord_DO1_1_description" text="Ostric, König von Dorwinion, Herr von Vineholm, dessen Wein den Eilend hinauf nach Thal und zu den Elben des Düsterwalds gelangt." />
+    <string id="lord_SRH1_1_description" text="Vidumar, König von Südrhovanion, Herr von Vidugard, der die Ebenen südlich des Düsterwalds durchreitet und sich der Wagenfahrer erinnert." />
+    <string id="haldir_lothlorien_description" text="Haldir, ein Grenzwächter, gleicht den Grenzern Lóriens aus den Büchern und patrouilliert mit stiller Präzision, um die Grenzen des Goldenen Waldes zu schützen." />
+    <string id="orophin_lothlorien_description" text="Orophin, ein wachsamer Bogenschütze, hält Wache wie die Grenzwächter in den Filmen; seine Pfeile strecken Bestien nieder, die vom Schatten Dol Guldurs verderbt wurden." />
   </strings>
 </base>

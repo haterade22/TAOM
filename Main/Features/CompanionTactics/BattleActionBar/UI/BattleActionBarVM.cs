@@ -73,6 +73,7 @@ public sealed class BattleActionBarVM : ViewModel
 
     /// <summary>
     /// Refresh button list to match the supplied formation. Pass null to hide the bar.
+    /// A formation with no action hides the bar too: it would be an empty box holding only the name (#1119).
     /// Always rebuilds (no formation-equality short-circuit) so external stance changes
     /// (Patch35_Formation_SetMovementOrder) and composition changes (casualties) are reflected.
     /// </summary>
@@ -80,7 +81,8 @@ public sealed class BattleActionBarVM : ViewModel
     {
         _actionButtons.Clear();
 
-        if (formation == null || adapter == null)
+        var actions = formation != null && adapter != null ? _service.GetActionsForFormation(adapter) : null;
+        if (formation == null || adapter == null || actions == null || actions.Count == 0)
         {
             IsVisible = false;
             FormationName = string.Empty;
@@ -92,7 +94,6 @@ public sealed class BattleActionBarVM : ViewModel
         FormationName = formation.RepresentativeClass.ToString();
         _currentFormationIndex = adapter.FormationIndex;
 
-        var actions = _service.GetActionsForFormation(adapter);
         foreach (var action in actions)
         {
             _actionButtons.Add(new ActionButtonVM(action, SyncActiveFromStance));

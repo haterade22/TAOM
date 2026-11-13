@@ -67,7 +67,7 @@
 	<Target Name="TaomStampWorkingTreeState"
 	        AfterTargets="InitializeSourceControlInformation"
 	        BeforeTargets="AddSourceRevisionToInformationalVersion">
-		<Exec Command="git --no-optional-locks status --porcelain --untracked-files=normal -- Main Client Dependencies Stubs Directory.Build.props GameReferences.targets 2&gt;nul"
+		<Exec Command="git --no-optional-locks status --porcelain --untracked-files=normal -- Main Client CoopCompat Dependencies Stubs Directory.Build.props GameReferences.targets 2&gt;nul"
 		      WorkingDirectory="$(MSBuildThisFileDirectory)"
 		      ConsoleToMSBuild="true"
 		      IgnoreExitCode="true"

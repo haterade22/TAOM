@@ -627,8 +627,8 @@
     <string id="aom_lord_I4_41_name" text="Durghash" />
     <string id="aom_lord_I4_4_name" text="Gorlag, Mistrz Kuźni Uruk-hai" />
     <string id="aom_lord_I4_5_name" text="Thraka" />
-    <string id="aom_lord_L1_1_name" text="Galadriela, Pani Lothlórien" />
-    <string id="aom_lord_L1_2_name" text="Celeborn, Pan Lothlórien" />
+    <string id="aom_lord_L1_1_name" text="Galadriela" />
+    <string id="aom_lord_L1_2_name" text="Celeborn" />
     <string id="aom_lord_L1_3_name" text="Galadion" />
     <string id="aom_lord_L2_1_name" text="Caurmínas" />
     <string id="aom_lord_L2_2_name" text="Thandirion" />
@@ -644,9 +644,9 @@
     <string id="aom_lord_LN1_4_name" text="Lhúnedhel" />
     <string id="aom_lord_LN1_5_name" text="Nimwen" />
     <string id="aom_lord_LN1_6_name" text="Lindis" />
-    <string id="aom_lord_LN2_1_name" text="Aeglir" />
-    <string id="aom_lord_LN2_2_name" text="Celebrin" />
-    <string id="aom_lord_LN2_3_name" text="Edronil" />
+    <string id="aom_lord_LN2_1_name" text="Auredhir" />
+    <string id="aom_lord_LN2_2_name" text="Feren" />
+    <string id="aom_lord_LN2_3_name" text="Arador" />
     <string id="aom_lord_LN2_4_name" text="Nárwen" />
     <string id="aom_lord_M10_11_name" text="Gulzag" />
     <string id="aom_lord_M10_1_name" text="Mauhoshat" />
@@ -963,7 +963,7 @@
     <string id="aom_lord_SH9_7_name" text="Zarrîn" />
     <string id="aom_lord_SH9_8_name" text="Anâhita" />
     <string id="aom_lord_SH9_9_name" text="Bahâra" />
-    <string id="aom_lord_U1_11_name" text="Lord Gimilzôr" />
+    <string id="aom_lord_U1_11_name" text="Gimilzôr" />
     <string id="aom_lord_U1_12_name" text="Gimilthôn" />
     <string id="aom_lord_U1_13_name" text="Pharazôn" />
     <string id="aom_lord_U1_1_name" text="Ar-Gimilkhâd" />
@@ -1016,7 +1016,7 @@
     <string id="aom_lord_AN5_3_name" text="Maethil" />
     <string id="aom_lord_AN5_4_name" text="Tirwen" />
     <string id="aom_lord_S10_1_name" text="Halvard" />
-    <string id="aom_lord_S10_2_name" text="Ragnhild" />
+    <string id="aom_lord_S10_2_name" text="Ragnhilda" />
     <string id="aom_lord_S10_3_name" text="Arnkel" />
     <string id="aom_lord_S10_4_name" text="Torgrim" />
     <string id="aom_lord_S10_5_name" text="Eyvind" />
@@ -1070,17 +1070,17 @@
     <string id="aom_lord_RH3_2_name" text="Harnoth" />
     <string id="aom_lord_RH3_3_name" text="Olwen" />
     <string id="aom_lord_RH3_4_name" text="Seren" />
-    <string id="aom_lord_LN3_1_name" text="Galdor" />
-    <string id="aom_lord_LN3_2_name" text="Faelwen" />
-    <string id="aom_lord_LN3_3_name" text="Thalanor" />
-    <string id="aom_lord_LN3_4_name" text="Glîrwen" />
-    <string id="aom_lord_LN4_1_name" text="Ostaron" />
-    <string id="aom_lord_LN4_2_name" text="Brethilwen" />
-    <string id="aom_lord_LN4_3_name" text="Hîrion" />
+    <string id="aom_lord_LN3_1_name" text="Maicasáma" />
+    <string id="aom_lord_LN3_2_name" text="Edhetariel" />
+    <string id="aom_lord_LN3_3_name" text="Talanthir" />
+    <string id="aom_lord_LN3_4_name" text="Nimlothel" />
+    <string id="aom_lord_LN4_1_name" text="Anrod" />
+    <string id="aom_lord_LN4_2_name" text="Adanel" />
+    <string id="aom_lord_LN4_3_name" text="Megilhir" />
     <string id="aom_lord_LN5_1_name" text="Luinor" />
     <string id="aom_lord_LN5_2_name" text="Celebwen" />
     <string id="aom_lord_LN5_3_name" text="Lothron" />
-    <string id="aom_lord_LN6_1_name" text="Aearion" />
+    <string id="aom_lord_LN6_1_name" text="Esgaldil" />
     <string id="aom_lord_LN6_2_name" text="Gwaeriel" />
     <string id="aom_lord_LN6_3_name" text="Rínthal" />
     <string id="aom_lord_EL1_1_name" text="Farin II" />
@@ -1137,16 +1137,16 @@
     <string id="aom_lord_DO2_4_name" text="Hilde" />
     <string id="aom_lord_DO3_1_name" text="Gerulf" />
     <string id="aom_lord_DO3_2_name" text="Aldwin" />
-    <string id="aom_lord_DO3_3_name" text="Irmgard" />
-    <string id="aom_lord_DO3_4_name" text="Liutgard" />
+    <string id="aom_lord_DO3_3_name" text="Irmgarda" />
+    <string id="aom_lord_DO3_4_name" text="Liutgarda" />
     <string id="aom_lord_DO4_1_name" text="Berengar" />
     <string id="aom_lord_DO4_2_name" text="Raedric" />
-    <string id="aom_lord_DO4_3_name" text="Mathilde" />
+    <string id="aom_lord_DO4_3_name" text="Matylda" />
     <string id="aom_lord_DO4_4_name" text="Oda" />
     <string id="aom_lord_SRH1_1_name" text="Vidumar" />
     <string id="aom_lord_SRH1_2_name" text="Marhwin" />
     <string id="aom_lord_SRH1_3_name" text="Amalaberga" />
-    <string id="aom_lord_SRH1_4_name" text="Hildegund" />
+    <string id="aom_lord_SRH1_4_name" text="Hildegunda" />
     <string id="aom_lord_SRH2_1_name" text="Thrasaric" />
     <string id="aom_lord_SRH2_2_name" text="Videric" />
     <string id="aom_lord_SRH2_3_name" text="Swanhilda" />

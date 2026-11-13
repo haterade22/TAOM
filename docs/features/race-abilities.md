@@ -108,6 +108,11 @@ The effects reach the engine through six shared models, each calling one `RaceAb
 | `TaomBattleMoraleModel` | campaign | no panic while a morale floor is live |
 | `TaomCustomBattleMoraleModel` | Custom Battle | the same |
 
+Since #1127 a hero aura reaches the same seams ([hero-auras.md](hero-auras.md)). Each hook reads the soldier's own live
+ability merged with his aura (`RaceAbilityEffectsMerge`: the stronger value per channel, never a sum), so a soldier
+with an aura and no live ability gets the aura's effects too. The telemetry counts only the events a live ability took
+part in; on a soldier with both, the aura's share is counted under his ability.
+
 ### Crush-through order
 
 `RaceAbilityHooks.CrushVerdict` runs before Combat Mechanics' own rules: a defender in Stand Fast holds against

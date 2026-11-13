@@ -30,7 +30,7 @@ public class LostFootingMissionLogicTests
         _logger.When(l => l.LogInfo(Arg.Any<string>())).Do(c => _info.Add(c.Arg<string>()));
         var settings = Substitute.For<ILostFootingSettingsProvider>();
         settings.CensusEnabled.Returns(true);
-        var service = new LostFootingService(_adapter, settings, _logger, new LostFootingTunables(), new SteppingStampClock(1), () => true);
+        var service = new LostFootingService(_adapter, new FakeLostFootingRescueAdapter(), settings, _logger, new LostFootingTunables(), new SteppingStampClock(1), () => true);
         _sut = new LostFootingMissionLogic(service, _logger);
         _adapter.Agents.Add(new AgentProbe());
     }

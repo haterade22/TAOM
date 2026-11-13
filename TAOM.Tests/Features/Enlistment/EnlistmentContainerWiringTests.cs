@@ -54,6 +54,9 @@ public class EnlistmentContainerWiringTests
         container.RegisterInstance(Substitute.For<global::TAOM.Adapters.IDutyWorldAdapter>());
 
         container.RegisterInstance(Substitute.For<global::TAOM.Features.Messengers.IMessengerConversationState>());
+        // ITroopWeightService (TroopWeightIoC, Main/IoC.cs) entered with the emissary's weighted party room
+        // (#1108): IPlayerPartyAdapter -> ITroopWeightService.
+        container.RegisterInstance(Substitute.For<global::TAOM.Features.TroopWeight.ITroopWeightService>());
         EnlistmentIoC.RegisterEnlistmentFeature(container);
         return container;
     }

@@ -256,9 +256,9 @@ def cs_string_literals(text):
 
 
 def taom_source_files():
-    # Main and Client only: a [Check] line goes through IOutcomeLog, which lives in Main, and TAOM.Dependencies
-    # cannot reference Main. Build output (obj, bin) is skipped.
-    for folder in ("Main", "Client"):
+    # Main, Client and CoopCompat only: a [Check] line goes through IOutcomeLog, which lives in Main, and
+    # TAOM.Dependencies cannot reference Main. Build output (obj, bin) is skipped.
+    for folder in ("Main", "Client", "CoopCompat"):
         for p in sorted((REPO / folder).rglob("*.cs")):
             if not {"obj", "bin"} & set(p.relative_to(REPO).parts):
                 yield p
@@ -302,12 +302,12 @@ var c = '\''; R("taom.n.after-escaped-char");
             with self.subTest(absent=absent):
                 self.assertNotIn(absent, literals)
 
-    def test_the_gate_reads_main_and_client_only(self):
+    def test_the_gate_reads_main_client_and_coopcompat_only(self):
         files = list(taom_source_files())
         self.assertTrue(files)
         for p in files:
             parts = p.relative_to(REPO).parts
-            self.assertIn(parts[0], {"Main", "Client"}, p)
+            self.assertIn(parts[0], {"Main", "Client", "CoopCompat"}, p)
             self.assertFalse({"obj", "bin"} & set(parts), p)
 
 
@@ -333,7 +333,7 @@ class RepoManifestGateTests(unittest.TestCase):
                 # The id is a string literal in code (design 3b rule 5); a mention in a comment does not count.
                 # assertTrue, not assertIn: the message would print every literal in the repo.
                 self.assertTrue(check_id in literals,
-                                f"#{m.issue} names [Check] id={check_id}, which no .cs file under Main or Client "
+                                f"#{m.issue} names [Check] id={check_id}, which no .cs file under Main, Client or CoopCompat "
                                 "holds as a string literal outside a comment")
 
     def test_970_names_the_attach_and_stance_checks(self):
@@ -418,6 +418,49 @@ class HollowParent1076Tests(unittest.TestCase):
     def test_a_healthy_game_is_not_reached(self):
         code, repair, birth, out = self.judge("hollow_parent_healthy_game.txt")
         self.assertEqual((code, repair, birth), (4, "NOT REACHED", "NOT REACHED"), out)
+
+
+class CoopCompat967Tests(unittest.TestCase):
+    """The real #967 manifest, C3 checks. The lines render what the CoopCompat services write through
+    IOutcomeLog: FileLogger prefixes "[<time>] [INFO] " and OutcomeLog.Record writes "[Check] id=<id>
+    result=<pass|fail>" and the sanitised detail. None is on disk yet."""
+
+    SETTINGS_SERVER = "taom.coopcompat.settings.server"
+    SETTINGS_CLIENT = "taom.coopcompat.settings.client"
+    MOMENTUM_SERVER = "taom.coopcompat.momentum.server"
+    MOMENTUM_CLIENT = "taom.coopcompat.momentum.client"
+    SETTINGS_PASS = "result=pass verdict=match groups=0 build_mismatch=false"
+    MOMENTUM_PASS = "result=pass sequence=1 entries=610"
+
+    def setUp(self):
+        self.t = Tree(self)
+        self.t.real_manifest("967.toml")
+
+    def judge(self, *checks):
+        stamp = (f"[2026-11-12 10:00:00] [INFO] [BuildStamp] TAOM=v2.0.38 build.20261112-100000Z+{GOOD} "
+                 f"TAOM.Dependencies=v2.0.38 build.20261112-095958Z+{GOOD} (pair OK)")
+        lines = [stamp] + [f"[2026-11-12 10:05:00] [INFO] [Check] id={cid} {tail}" for cid, tail in checks]
+        path = self.t.client / "Logs" / "taom_debug_2026-11-12_10-00-00.log"
+        path.write_text("\n".join(lines) + "\n", encoding="utf-8")
+        code, out, _ = self.t.run(["--issue", "967"])
+        return code, out
+
+    def test_the_four_pass_lines_pass_each_check(self):
+        code, out = self.judge((self.SETTINGS_SERVER, self.SETTINGS_PASS),
+                               (self.SETTINGS_CLIENT, self.SETTINGS_PASS),
+                               (self.MOMENTUM_SERVER, self.MOMENTUM_PASS),
+                               (self.MOMENTUM_CLIENT, self.MOMENTUM_PASS))
+        for check_id in (self.SETTINGS_SERVER, self.SETTINGS_CLIENT, self.MOMENTUM_SERVER, self.MOMENTUM_CLIENT):
+            with self.subTest(check_id=check_id):
+                self.assertEqual(verdict_of(out, check_id), "PASS", out)
+
+    def test_a_client_build_mismatch_fails_the_client_settings_check(self):
+        code, out = self.judge((self.SETTINGS_CLIENT, "result=fail verdict=match groups=0 build_mismatch=true"))
+        self.assertEqual(verdict_of(out, self.SETTINGS_CLIENT), "FAIL", out)
+
+    def test_a_log_with_no_momentum_lines_leaves_the_momentum_check_not_reached(self):
+        code, out = self.judge((self.SETTINGS_SERVER, self.SETTINGS_PASS))
+        self.assertEqual(verdict_of(out, self.MOMENTUM_SERVER), "NOT REACHED", out)
 
 
 class VerdictRuleTests(unittest.TestCase):
@@ -999,6 +1042,47 @@ class Issue971Tests(unittest.TestCase):
         self.assertEqual(verdict_of(out, self.OPEN), "NOT REACHED")
         self.assertEqual(verdict_of(out, self.INIT), "NOT REACHED")
         self.assertIn("no line matched", out)
+
+
+class Issue1028Tests(unittest.TestCase):
+    """The real #1028 manifest, judged on the lines MissionStartGuardService writes (MissionStartGuardChecks.cs). The literals are
+    the ones MissionStartGuardManifestTests renders through the real OutcomeLog, so a change to the line format fails one of the two."""
+
+    STAMP = "[2026-11-12 10:00:00] [INFO] "
+    PASS = STAMP + "[Check] id=taom.mission-start-guard.deferred-add result=pass queued=2 added=2"
+    SHORT = STAMP + "[Check] id=taom.mission-start-guard.deferred-add result=fail queued=2 added=1 reason=engine-add-threw"
+    LISTCHANGE = STAMP + ("[Check] id=taom.mission-start-guard.list-change result=fail call=AfterStart owner=Mod.Foo "
+                          "list=MissionBehaviors before=3 after=4 newest=Mod.Newest")
+    ESCAPED = ("[2026-11-12 10:00:00] [ERROR] [MissionStartGuard] Mission.AfterStart threw and was not survived "
+               "(a call the guard does not wrap, or the toggle is off; 1 of 3 logged per process): boom")
+    OTHER = STAMP + "[Session] something else"
+
+    class _Log:
+        kind = "taom"
+        name = "taom_debug_test.log"
+
+        def __init__(self, lines):
+            self.lines = list(enumerate(lines, 1))
+
+    def judge(self, *lines):
+        manifest = iv.load_manifest(TOOLS / "ingame_checks" / "1028.toml", 1028)
+        return iv.judge_check(manifest.checks[0], [self._Log(lines)], [])
+
+    def test_a_queued_add_that_landed_passes(self):
+        self.assertEqual(self.judge(self.PASS).verdict, "PASS")
+
+    def test_a_flush_that_lost_an_add_fails(self):
+        self.assertEqual(self.judge(self.SHORT).verdict, "FAIL")
+
+    def test_a_pass_beside_an_unsurvived_throw_fails(self):
+        # The flush also runs after a throw; the mission then loads again, so the session is not a pass.
+        self.assertEqual(self.judge(self.PASS, self.ESCAPED).verdict, "FAIL")
+
+    def test_a_list_change_inside_the_walk_fails_even_without_a_deferred_add(self):
+        self.assertEqual(self.judge(self.LISTCHANGE, self.OTHER).verdict, "FAIL")
+
+    def test_a_session_that_never_started_the_fight_is_not_reached(self):
+        self.assertEqual(self.judge(self.OTHER).verdict, "NOT REACHED")
 
 
 class HeroRace1011Tests(unittest.TestCase):

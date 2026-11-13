@@ -155,3 +155,6 @@ go to `docs/reviews/lessons/build-tooling-workflow.md`, a better default goes in
 | Thousands of islands, single-digit UV use | Sharp seams on a decimated mesh: use `chart_abf`; on a rebuilt mesh, `unwrap_texture_sets.py` nets |
 | Converter finds no roughness or metallic | Painter's glTF export packs them in one ORM map; the converter reads R AO, G roughness, B metallic |
 | Boxes inside out in game, fine in Blender | Faces wound inward: Blender and Cycles draw back faces. `unwrap_texture_sets.py` fails on them |
+| Editor or Kit crashes opening a prefab ("Meta mesh with name ... cannot be found!" in `watchdog_log_*.txt`) | The prefab names a mesh the session has not imported, or in mixed case: the Kit lowercases names and the lookup is case-sensitive. Stage the XML only after the import ([props doc](../../../docs/reference/tpac-static-prop-authoring.md) "Names") |
+| A Blender MCP "dry run" changed or deleted the real object | `bpy.ops.object.duplicate()` over MCP can leave the original active: copy with `bpy.data.objects.new(name, src.data.copy())` and assert `new.data is not src.data` first |
+| Every QA render passed, the user sees shreds and holes in game | Blender renders both sides; the engine culls back faces. Judge with backface culling on, textured and lit, with close-ups of each changed seam, before saying it looks right |

@@ -16,4 +16,6 @@ public class LostFootingSettingsProvider : ILostFootingSettingsProvider
     internal LostFootingSettingsProvider(TaomSettings settings) => _settings = settings;
 
     public bool CensusEnabled => Settings?.LostFootingCensus ?? true;
+
+    public bool RescueEnabled => Settings?.LostFootingRescue ?? true;
 }

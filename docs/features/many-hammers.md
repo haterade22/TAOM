@@ -68,7 +68,7 @@ Only a group's first property carries `GroupOrder` (MCM ignores it on any later 
 
 ### Player text
 
-No new in-game text. Four MCM strings (two labels and two hints) carry `{=KEY}` ids: `taom_mh_mcm_bulk`, `taom_mh_mcm_bulk_hint`, `taom_mh_mcm_hide_locked`, `taom_mh_mcm_hide_locked_hint`. The keys are registered in `taom_module_strings.xml` and seeded with the English default in all 12 language files; only the translation is owed (#763). `ManyHammersWordingTests` holds each language row to the current English.
+No new in-game text. Four MCM strings (two labels and two hints) carry `{=KEY}` ids: `taom_mh_mcm_bulk`, `taom_mh_mcm_bulk_hint`, `taom_mh_mcm_hide_locked`, `taom_mh_mcm_hide_locked_hint`. The keys are registered in `taom_module_strings.xml` and translated in all 12 language files (2026-11-12, #763). `ManyHammersWordingTests` checks that each language row keeps every placeholder of the English.
 
 ## Key Files
 

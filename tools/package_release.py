@@ -28,7 +28,7 @@ audit called it "editor-mode packs", but vanilla Native ships 26.36 GB of it (me
 Usage:
   python tools/package_release.py --source "<game>/Modules" --dest D:/taom-release --dry-run
   python tools/package_release.py --source "<game>/Modules" --dest D:/taom-release \\
-      --modules TAOM TAOM_Map LOTRLOME_Armory TAOM.Dependencies --allow-unknown
+      --modules TAOM TAOM_Map LOTRLOME_Armory TAOM.Dependencies TAOM.CoopCompat --allow-unknown
   python tools/package_release.py ... --exclude-candidate RACE_TEST --json manifest.json
   python tools/package_release.py --source "<game>/Modules" --dest D:/taom-release --require-build v2.0.31 --dry-run
   python tools/package_release.py --source "<channel>/Modules" --game-root "<game>" --dest D:/x --dry-run
@@ -37,7 +37,7 @@ Every run also reports, and never refuses over: what each shipped SceneObj/<scen
 ShaderCache/D3D11 (terrain shader header, compressed shader cache sack, the sack's format), with
 a WARNING for a sack whose format differs from the majority; every module-level
 <module>/Shaders/D3D11 sack the planned modules hold (size and format); and whether the JIT
-optimizes each shipped copy of TAOM.dll, TAOM.Client.dll and TAOM.Dependencies.dll (OFF, ON, or
+optimizes each shipped copy of TAOM.dll, TAOM.Client.dll, TAOM.Dependencies.dll and TAOM.CoopCompat.dll (OFF, ON, or
 unknown with its reason when the file, or its DebuggableAttribute, cannot be read). TAOM ships Debug builds on
 purpose, so the JIT line is a fact to read, not a gate.
 
@@ -50,7 +50,9 @@ the report says so in one policy line. Scene sacks and the other files in Shader
 Exit codes: 0 ok · 1 nothing to do · 2 bad input / unknown entries / non-empty destination / failed --require-build (a DLL that is not a clean
             build of the release commit, or a TAOM file the commit does not track) /
             retired binaries or a Game Pass bin in the source (dry runs included) / a client-only
-            assembly (TAOM.Client.dll) in a dedicated-server bin (dry runs included) / a shipped
+            assembly (TAOM.Client.dll) in a dedicated-server bin (dry runs included) / any file in a
+            TAOM.CoopCompat bin that its build never writes (a Coop, server or third-party binary;
+            dry runs included) / a shipped
             ModuleData file defining a taom_test_ id / a shader with no complete source that ships, or
             a shader report that is missing, unreadable or does not add up (all dry runs included).
 """
@@ -73,10 +75,10 @@ COPY = "copy"
 EXCLUDE = "exclude"
 UNKNOWN = "unknown"
 
-# Default module set: the TAOM release modules that ship RDC, plus Dependencies.
+# Default module set: the TAOM release modules that ship RDC, plus Dependencies and CoopCompat.
 # Alliance.Wargs was absorbed into LOTRLOME_Armory on 2026-08-28 and is no longer shipped
 # as its own module; see docs/reference/lotrlome-warg-changes.md.
-DEFAULT_MODULES = ("TAOM", "TAOM_Map", "LOTRLOME_Armory", "TAOM.Dependencies")
+DEFAULT_MODULES = ("TAOM", "TAOM_Map", "LOTRLOME_Armory", "TAOM.Dependencies", "TAOM.CoopCompat")
 
 # Top-level directories observed across TAOM's release set AND vanilla Native /
 # SandBoxCore (enumerated 2026-08-10). Evidence, not memory: SceneEditData and SceneObj
@@ -164,7 +166,13 @@ REPO_ROOT = Path(__file__).resolve().parent.parent
 # ships, so the gate reads them all; the Win64 client copy of each must exist. TAOM.Client.dll
 # (ADR-013) is TAOM's client-only second submodule: it is in every client bin and never in the
 # dedicated-server one.
-SHIPPED_DLLS = {"taom": ("TAOM.dll", "TAOM.Client.dll"), "taom.dependencies": ("TAOM.Dependencies.dll",)}
+SHIPPED_DLLS = {"taom": ("TAOM.dll", "TAOM.Client.dll"), "taom.dependencies": ("TAOM.Dependencies.dll",),
+                "taom.coopcompat": ("TAOM.CoopCompat.dll", "TAOM.CoopCompat.Coop.dll")}
+
+# Of the SHIPPED_DLLS entries after the first, these are required only when the commit's SubModule.xml
+# names them (a pre-ADR-013 commit has no TAOM.Client.dll). Every other entry is always required:
+# TAOM.CoopCompat.Coop.dll is loaded by TAOM.CoopCompat.dll and is never named in a manifest.
+MANIFEST_GATED_DLLS = frozenset({"taom.client.dll"})
 
 # A dedicated server must never carry these: the server staging promotes a stray DLL from a module's
 # Win64_Shipping_Server folder into its app bin. Compared case-insensitively by file name.
@@ -182,7 +190,8 @@ GAME_PASS_DIR = "Gaming.Desktop.x64_Shipping_Client"
 
 # Where each shipped module's SubModule.xml lives in the repo, for the release commit's copy.
 REPO_MANIFESTS = {"taom": "Main/_Module/SubModule.xml",
-                  "taom.dependencies": "Dependencies/_Module/SubModule.xml"}
+                  "taom.dependencies": "Dependencies/_Module/SubModule.xml",
+                  "taom.coopcompat": "CoopCompat/_Module/SubModule.xml"}
 
 # InformationalVersion as the assembly metadata stores it (UTF-8): build.<yyyyMMdd-HHmmss>Z, then
 # '+' ('.' on older builds), then the commit SHA or "nogit", then an optional .dirty or .nogit flag.
@@ -467,14 +476,16 @@ def commit_dll_names(plan, sha: str):
 
 def required_dlls(plan, sha: str) -> tuple:
     """The assemblies a clean build of `sha` must have shipped for this module: the first SHIPPED_DLLS
-    entry always, each further one only when the commit's SubModule.xml loads it. A pre-ADR-013
-    commit's manifest does not name TAOM.Client.dll, so it is not required of that commit."""
+    entry always, each further one always too unless it is in MANIFEST_GATED_DLLS, which only a
+    SubModule.xml that loads it requires. A pre-ADR-013 commit's manifest does not name
+    TAOM.Client.dll, so it is not required of that commit."""
     names = SHIPPED_DLLS.get(plan.name.casefold(), ())
     loaded = commit_dll_names(plan, sha)
     if loaded is None:
         return names
     folded = {n.casefold() for n in loaded}
-    return names[:1] + tuple(n for n in names[1:] if n.casefold() in folded)
+    return names[:1] + tuple(n for n in names[1:]
+                             if n.casefold() not in MANIFEST_GATED_DLLS or n.casefold() in folded)
 
 
 def manifest_mismatch(plan, sha: str):
@@ -513,6 +524,29 @@ def client_only_in_server_bin(plans) -> list:
             and PurePosixPath(rel).name.casefold() in CLIENT_ONLY_DLLS]
 
 
+# TAOM.CoopCompat sits beside Coop and the dedicated server but ships none of their binaries: Coop's
+# licence forbids redistributing them and the dedicated server is private. An allowlist, so a new
+# Coop or third-party file cannot slip past a name pattern: under the module's bin/ (any platform
+# folder or subfolder, names compared case-insensitively) only the SHIPPED_DLLS names are allowed.
+COOPCOMPAT_MODULE = "taom.coopcompat"
+
+
+def unshipped_in_coopcompat(plans) -> list:
+    """<module>/<rel> of every TAOM.CoopCompat file the build never writes: under bin/, any file whose name
+    is not one of its SHIPPED_DLLS; anywhere else, any .dll or .exe (the general include-list copies every
+    file under a known top directory, ModuleData and Assets included)."""
+    allowed = {n.casefold() for n in SHIPPED_DLLS[COOPCOMPAT_MODULE]}
+
+    def refused(rel):
+        path = PurePosixPath(rel)
+        if rel.split("/", 1)[0].casefold() == "bin":
+            return path.name.casefold() not in allowed
+        return path.suffix.casefold() in (".dll", ".exe")
+
+    return [f"{p.name}/{rel}" for p in plans if p.name.casefold() == COOPCOMPAT_MODULE
+            for rel, _size in p._copy_list if refused(rel)]
+
+
 # A Custom-Battle test troop (/release pre-flight 5) DEFINED by id; a {=taom_test_x} name key alone
 # defines nothing.
 _TEST_TROOP_ID_RE = re.compile(rb'\bid\s*=\s*"taom_test_')
@@ -537,9 +571,9 @@ def test_troop_files(plans) -> list:
 
 
 # Where each pruned module's tracked files live in the repo: <game>/Modules/TAOM/<rel> is
-# Main/_Module/<rel>. TAOM.Dependencies is exempt: MCM's UI assets sit in its install and not in the repo
+# Main/_Module/<rel>, and TAOM.CoopCompat's is CoopCompat/_Module/<rel>. TAOM.Dependencies is exempt: MCM's UI assets sit in its install and not in the repo
 # (docs/reference/release-process.md), so it has no entry.
-REPO_MODULE_ROOTS = {"taom": "Main/_Module"}
+REPO_MODULE_ROOTS = {"taom": "Main/_Module", "taom.coopcompat": "CoopCompat/_Module"}
 # Deploys never delete, so an install keeps files from every earlier deploy. These are the build's own
 # outputs, not tracked sources: bin/ (the build), Shaders/D3D11/ (the Kit's shader compile) and
 # RuntimeDataCache* (excluded unless --keep-rdc).
@@ -796,7 +830,7 @@ def require_build(plans, rev: str, requested=()) -> tuple:
             if reason:
                 problems.append(f"{p.name}/{rel}: {reason}")
     if not checked and not problems:
-        problems.append("neither TAOM nor TAOM.Dependencies is in the module set; nothing to verify")
+        problems.append("none of TAOM, TAOM.Dependencies or TAOM.CoopCompat is in the module set; nothing to verify")
     return problems, checked
 
 
@@ -1065,8 +1099,8 @@ def _jit_report(plans) -> None:
     TAOM ships Debug builds on purpose, so this never refuses."""
     taom = [p for p in plans if p.name.casefold() in SHIPPED_DLLS]
     if not taom:
-        print("\nTAOM assemblies: no planned module ships TAOM.dll, TAOM.Client.dll or "
-              "TAOM.Dependencies.dll, so there is no JIT optimization line")
+        print("\nTAOM assemblies: no planned module ships TAOM.dll, TAOM.Client.dll, "
+              "TAOM.Dependencies.dll or TAOM.CoopCompat.dll, so there is no JIT optimization line")
         return
     print("\nTAOM assemblies, JIT optimization (report only, never refuses):")
     for p in taom:
@@ -1104,7 +1138,7 @@ def main(argv=None) -> int:
                     help="Bannerlord install folder whose Shaders/Sources holds the native shader "
                          "sources (default: the parent of --source)")
     ap.add_argument("--require-build", metavar="REV",
-                    help="refuse unless TAOM.dll, TAOM.Client.dll and TAOM.Dependencies.dll are clean builds of "
+                    help="refuse unless TAOM.dll, TAOM.Client.dll, TAOM.Dependencies.dll and TAOM.CoopCompat.dll are clean builds of "
                          "this tag or commit and every TAOM file is tracked there (checked in --dry-run too)")
     args = ap.parse_args(argv)
     # A piped stdout on Windows is cp1252: a folder name it cannot encode is escaped, never a
@@ -1178,6 +1212,16 @@ def main(argv=None) -> int:
         print("\nERROR: a client-only assembly in a dedicated-server bin (ADR-013); delete it there and "
               "re-run (Main/TAOM.csproj's server mirror never writes it):", file=sys.stderr)
         for rel in server_client:
+            print(f"  {rel}", file=sys.stderr)
+        return 2
+
+    coop_runtime = unshipped_in_coopcompat(plans)
+    if coop_runtime:
+        print("\nERROR: a file in TAOM.CoopCompat that TAOM.CoopCompat's build never writes. "
+              "Coop's licence forbids shipping its binaries, the dedicated server is private, and a second "
+              "copy of a library Coop loads must not ship either; delete it there "
+              "(the install or the channel folder) and re-run:", file=sys.stderr)
+        for rel in coop_runtime:
             print(f"  {rel}", file=sys.stderr)
         return 2
 

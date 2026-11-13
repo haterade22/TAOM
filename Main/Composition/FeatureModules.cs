@@ -34,6 +34,7 @@ internal static class FeatureModules
         new Features.ButterLibDistanceMatrix.ButterLibDistanceMatrixModule(),
         new Features.MapEventGuard.StuckBattleModule(),
         new Features.MapEventGuard.EncounterGuardModule(),
+        new Features.SiegeRetreatLoot.SiegeRetreatLootModule(),
         new Features.WarChronicle.WarChronicleModule(),
         new Features.MissionStartGuard.MissionStartGuardModule(),
         new Features.SkeletonBuffer.SkeletonBufferModule(),
@@ -98,8 +99,13 @@ internal static class FeatureModules
         new Features.ShadowfaxScreens.ShadowfaxScreensModule(),
         new Features.FordsOfWar.FordsOfWarModule(),
         new Features.LongDefeat.LongDefeatModule(),
+        new Features.StoryMissions.StoryMissionsModule(),
         new Features.SeatOfSeeing.SeatOfSeeingModule(),
         new Features.MarshalsWord.MarshalsWordModule(),
         new Features.DeadTargetReset.DeadTargetResetModule(),
+        new Features.KingdomAllegiance.KingdomAllegianceModule(),
+        new Features.WarPledge.WarPledgeModule(),
+        new Features.Realms.RealmsModule(),
+        new Features.HeroAuras.HeroAurasModule(),
     };
 }

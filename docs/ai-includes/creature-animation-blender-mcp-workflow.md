@@ -218,6 +218,14 @@ The session's meta-lesson is last.
   *all* clips with `quad_movement`; an independent `tpac_clipinfo` re-check found 2 gait clips were
   untagged. A port's own doc asserting a property holds for *all* elements is a CLAIM to verify against
   the artifacts, not a fact.
+- **A dry run on a real object copies through the data API, never `bpy.ops.object.duplicate()`.**
+  Over the MCP an operator runs without a real UI context, so after `duplicate()` the active object can
+  still be the original: Kysaro's dry-run test (2026-10-10) recoloured, moved and then deleted the
+  user's real mesh. Copy with `new = bpy.data.objects.new("DRYRUN_x", src.data.copy())`, link it to a
+  collection, and assert `new.data is not src.data` before any edit. If damage happens anyway on an
+  unsaved file, call `bpy.ops.ed.undo()` one step at a time and compare vertex, face and material counts
+  after each step: in his case one step restored the object. Tell the user at once what happened and
+  what was restored.
 - **Stale-tool watch** — `tools/blender/creature_anim_ops.py` still has `primary_bone_axis='X'`; audit a
   tool's defaults before reusing it.
 - **Never judge a direction from gameplay footage or a screenshot** (the Yotthani handoff (`docs/reviews/adopt-yotthani-animation-handoff-2026-09-18.md`)).

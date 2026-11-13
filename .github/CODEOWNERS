@@ -1,0 +1,28 @@
+# The maintainer and five collaborators own every path. The default branch ruleset requires no
+# approval and no code owner review, so this file only names the people to ask. The lines below
+# repeat the maintainer for the paths that .claude/skills/review-outside-pr/SKILL.md treats as high
+# risk (Phase 1, step 3), so a reviewer sees those paths by name.
+
+*                   @haterade22 @ThyrellTTV @KEYforcez @yotthani @Kysaro @REDACTEDSTUFF
+
+# GitHub uses the last matching line. The lines below name the maintainer alone, so a reviewer
+# sees the maintainer as the owner of these paths.
+
+*.csproj            @haterade22
+*.props             @haterade22
+*.targets           @haterade22
+*.sln               @haterade22
+/NuGet.config       @haterade22
+/build.ps1          @haterade22
+/setup-dev-env.ps1  @haterade22
+/.claude/           @haterade22
+/.ai/               @haterade22
+/.agents/           @haterade22
+/.mcp.json          @haterade22
+/AGENTS.md          @haterade22
+/CLAUDE.md          @haterade22
+/.github/           @haterade22
+/.gitattributes     @haterade22
+/.githooks/         @haterade22
+/.vscode/           @haterade22
+/tools/             @haterade22

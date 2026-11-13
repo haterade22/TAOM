@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using TAOM.Adapters;
+using TAOM.Core.Domain;
 using TAOM.Core.Logging;
 using TAOM.Features.Execution;
 using TAOM.Features.RealmBorders.Domain;
@@ -21,7 +22,7 @@ namespace TAOM.Features.RealmBorders;
 /// frame, and fades the borders with the camera distance. Hourly it tells the player when their party
 /// has crossed into another realm. Nothing here runs without a map screen.
 /// </summary>
-public sealed class RealmBorderService
+public sealed class RealmBorderService : IKingdomRenameListener
 {
     public const float TileSize = 128f;
     public const float Lift = 0.3f;
@@ -157,6 +158,15 @@ public sealed class RealmBorderService
 
     /// <summary>Ownership, a kingdom, a war or an alliance may have changed: look again on the next map frame.</summary>
     public void MarkDirty() => _dirty = true;
+
+    /// <summary>
+    /// Goes up by one each time a kingdom is renamed in play; the names layer letters the names anew when it changes, and
+    /// otherwise never reads them. Game thread only.
+    /// </summary>
+    public int NameVersion { get; private set; }
+
+    /// <summary>A kingdom took a new name (Realms: Erebor as Durin's Folk). Its place on the map is unchanged.</summary>
+    public void OnKingdomRenamed(string kingdomId) => NameVersion++;
 
     public void ToggleVisible()
     {

@@ -1877,551 +1877,551 @@
     <string id="aom_arthedain_male_name_8" text="Арвелег" />
     <string id="aom_arthedain_male_name_9" text="Арафор" />
     <string id="aom_arthedain_name" text="Артедайн" />
-    <string id="aom_cardolan_clan_1" text="House of Tyrn Gorthad" />
-    <string id="aom_cardolan_clan_10" text="House of the Greenway" />
-    <string id="aom_cardolan_clan_11" text="House of Swanfleet" />
-    <string id="aom_cardolan_clan_12" text="House of Andrath" />
-    <string id="aom_cardolan_clan_2" text="House of Tharbad" />
-    <string id="aom_cardolan_clan_3" text="House of the Greyflood" />
-    <string id="aom_cardolan_clan_4" text="House of Minhiriath" />
-    <string id="aom_cardolan_clan_5" text="House of the South Downs" />
-    <string id="aom_cardolan_clan_6" text="House of Sarn Ford" />
-    <string id="aom_cardolan_clan_7" text="House of Eryn Vorn" />
-    <string id="aom_cardolan_clan_8" text="House of the Barrows" />
-    <string id="aom_cardolan_clan_9" text="House of Minas Eithel" />
-    <string id="aom_cardolan_desc" text="The Dúnedain of Cardolan hold the south of old Arnor, the plains and river country between the Baranduin and the Greyflood. Their kings lie in the barrows of Tyrn Gorthad, their barges still come up to Tharbad, and their riders are the best of the three northern kingdoms. Their towns are few and their lords quarrel with Arthedain and Rhudaur over the old crown, while the wild lands grow bolder every year." />
-    <string id="aom_cardolan_female_name_1" text="Elendis" />
-    <string id="aom_cardolan_female_name_10" text="Ivren" />
-    <string id="aom_cardolan_female_name_11" text="Lindis" />
-    <string id="aom_cardolan_female_name_12" text="Mírwen" />
-    <string id="aom_cardolan_female_name_13" text="Morleth" />
-    <string id="aom_cardolan_female_name_14" text="Nellas" />
-    <string id="aom_cardolan_female_name_15" text="Nimloth" />
-    <string id="aom_cardolan_female_name_16" text="Orwen" />
-    <string id="aom_cardolan_female_name_17" text="Rían" />
-    <string id="aom_cardolan_female_name_18" text="Saelind" />
-    <string id="aom_cardolan_female_name_19" text="Tirnel" />
-    <string id="aom_cardolan_female_name_2" text="Aerin" />
-    <string id="aom_cardolan_female_name_20" text="Vanwë" />
-    <string id="aom_cardolan_female_name_21" text="Andreth" />
-    <string id="aom_cardolan_female_name_22" text="Emeldir" />
-    <string id="aom_cardolan_female_name_23" text="Lalaith" />
-    <string id="aom_cardolan_female_name_24" text="Silmariën" />
-    <string id="aom_cardolan_female_name_3" text="Beriel" />
-    <string id="aom_cardolan_female_name_4" text="Calimë" />
-    <string id="aom_cardolan_female_name_5" text="Daeriel" />
-    <string id="aom_cardolan_female_name_6" text="Eilinel" />
-    <string id="aom_cardolan_female_name_7" text="Faeleth" />
-    <string id="aom_cardolan_female_name_8" text="Gwaeren" />
-    <string id="aom_cardolan_female_name_9" text="Haleth" />
-    <string id="aom_cardolan_male_name_1" text="Anardil" />
-    <string id="aom_cardolan_male_name_10" text="Erchon" />
-    <string id="aom_cardolan_male_name_11" text="Faelon" />
-    <string id="aom_cardolan_male_name_12" text="Gaerhil" />
-    <string id="aom_cardolan_male_name_13" text="Hallon" />
-    <string id="aom_cardolan_male_name_14" text="Hirluin" />
-    <string id="aom_cardolan_male_name_15" text="Iorlas" />
-    <string id="aom_cardolan_male_name_16" text="Lothon" />
-    <string id="aom_cardolan_male_name_17" text="Mallos" />
-    <string id="aom_cardolan_male_name_18" text="Morlad" />
-    <string id="aom_cardolan_male_name_19" text="Nardur" />
-    <string id="aom_cardolan_male_name_2" text="Arthaer" />
-    <string id="aom_cardolan_male_name_20" text="Orodhel" />
-    <string id="aom_cardolan_male_name_21" text="Pelendur" />
-    <string id="aom_cardolan_male_name_22" text="Ruithel" />
-    <string id="aom_cardolan_male_name_23" text="Sarandil" />
-    <string id="aom_cardolan_male_name_24" text="Tarandor" />
-    <string id="aom_cardolan_male_name_25" text="Thalion" />
-    <string id="aom_cardolan_male_name_26" text="Turgil" />
-    <string id="aom_cardolan_male_name_27" text="Vorondil" />
-    <string id="aom_cardolan_male_name_28" text="Bregor" />
-    <string id="aom_cardolan_male_name_29" text="Celedor" />
-    <string id="aom_cardolan_male_name_3" text="Baradhel" />
-    <string id="aom_cardolan_male_name_30" text="Dírion" />
-    <string id="aom_cardolan_male_name_31" text="Golasgil" />
-    <string id="aom_cardolan_male_name_32" text="Hadrion" />
-    <string id="aom_cardolan_male_name_33" text="Ingold" />
-    <string id="aom_cardolan_male_name_34" text="Mardacil" />
-    <string id="aom_cardolan_male_name_35" text="Nimbor" />
-    <string id="aom_cardolan_male_name_36" text="Ohtar" />
-    <string id="aom_cardolan_male_name_37" text="Rondor" />
-    <string id="aom_cardolan_male_name_38" text="Taurion" />
-    <string id="aom_cardolan_male_name_39" text="Ulbor" />
-    <string id="aom_cardolan_male_name_4" text="Belethor" />
-    <string id="aom_cardolan_male_name_40" text="Halmir" />
-    <string id="aom_cardolan_male_name_5" text="Caladhor" />
-    <string id="aom_cardolan_male_name_6" text="Calenon" />
-    <string id="aom_cardolan_male_name_7" text="Celebros" />
-    <string id="aom_cardolan_male_name_8" text="Dagnir" />
-    <string id="aom_cardolan_male_name_9" text="Dorthar" />
-    <string id="aom_cardolan_name" text="Cardolan" />
-    <string id="aom_rhudaur_clan_1" text="House of Cameth Brin" />
-    <string id="aom_rhudaur_clan_10" text="House of Egladil" />
-    <string id="aom_rhudaur_clan_11" text="House of the Fells" />
-    <string id="aom_rhudaur_clan_12" text="House of Greyfell" />
-    <string id="aom_rhudaur_clan_2" text="House of the Angle" />
-    <string id="aom_rhudaur_clan_3" text="House of Ettendale" />
-    <string id="aom_rhudaur_clan_4" text="House of the Coldfells" />
-    <string id="aom_rhudaur_clan_5" text="House of the Trollshaws" />
-    <string id="aom_rhudaur_clan_6" text="House of the Last Bridge" />
-    <string id="aom_rhudaur_clan_7" text="House of the Loudwater" />
-    <string id="aom_rhudaur_clan_8" text="House of the Hoarwell" />
-    <string id="aom_rhudaur_clan_9" text="House of the Ettenmoors" />
-    <string id="aom_rhudaur_desc" text="Rhudaur is the hill kingdom of old Arnor, between the Hoarwell and the Loudwater. Its Dúnedain lords hold the Angle and the tower of Cameth Brin and rule a people of hill-men who never loved the West. The line of its first king still endures, but its holds are cold, its fells are full of trolls, and the orcs of the mountains watch every pass." />
-    <string id="aom_rhudaur_female_name_1" text="Gilwen" />
-    <string id="aom_rhudaur_female_name_10" text="Ilar" />
-    <string id="aom_rhudaur_female_name_11" text="Lowri" />
-    <string id="aom_rhudaur_female_name_12" text="Maelis" />
-    <string id="aom_rhudaur_female_name_13" text="Morfudd" />
-    <string id="aom_rhudaur_female_name_14" text="Nesta" />
-    <string id="aom_rhudaur_female_name_15" text="Olwen" />
-    <string id="aom_rhudaur_female_name_16" text="Rhosyn" />
-    <string id="aom_rhudaur_female_name_17" text="Seren" />
-    <string id="aom_rhudaur_female_name_18" text="Tegwen" />
-    <string id="aom_rhudaur_female_name_19" text="Andraste" />
-    <string id="aom_rhudaur_female_name_2" text="Aelin" />
-    <string id="aom_rhudaur_female_name_20" text="Brynja" />
-    <string id="aom_rhudaur_female_name_21" text="Eluned" />
-    <string id="aom_rhudaur_female_name_22" text="Gwenith" />
-    <string id="aom_rhudaur_female_name_23" text="Mirien" />
-    <string id="aom_rhudaur_female_name_24" text="Rhiain" />
-    <string id="aom_rhudaur_female_name_3" text="Branwen" />
-    <string id="aom_rhudaur_female_name_4" text="Cerys" />
-    <string id="aom_rhudaur_female_name_5" text="Dilwen" />
-    <string id="aom_rhudaur_female_name_6" text="Eirlys" />
-    <string id="aom_rhudaur_female_name_7" text="Ffion" />
-    <string id="aom_rhudaur_female_name_8" text="Glenwen" />
-    <string id="aom_rhudaur_female_name_9" text="Heledd" />
-    <string id="aom_rhudaur_male_name_1" text="Belegorn" />
-    <string id="aom_rhudaur_male_name_10" text="Galdric" />
-    <string id="aom_rhudaur_male_name_11" text="Gorlan" />
-    <string id="aom_rhudaur_male_name_12" text="Haldric" />
-    <string id="aom_rhudaur_male_name_13" text="Harnoth" />
-    <string id="aom_rhudaur_male_name_14" text="Ithrandor" />
-    <string id="aom_rhudaur_male_name_15" text="Kelmar" />
-    <string id="aom_rhudaur_male_name_16" text="Lorgan" />
-    <string id="aom_rhudaur_male_name_17" text="Malbor" />
-    <string id="aom_rhudaur_male_name_18" text="Morcai" />
-    <string id="aom_rhudaur_male_name_19" text="Nethril" />
-    <string id="aom_rhudaur_male_name_2" text="Amrodir" />
-    <string id="aom_rhudaur_male_name_20" text="Orodrim" />
-    <string id="aom_rhudaur_male_name_21" text="Pellam" />
-    <string id="aom_rhudaur_male_name_22" text="Radhruin" />
-    <string id="aom_rhudaur_male_name_23" text="Rostan" />
-    <string id="aom_rhudaur_male_name_24" text="Sarn" />
-    <string id="aom_rhudaur_male_name_25" text="Talgar" />
-    <string id="aom_rhudaur_male_name_26" text="Thorondur" />
-    <string id="aom_rhudaur_male_name_27" text="Ulfar" />
-    <string id="aom_rhudaur_male_name_28" text="Vardil" />
-    <string id="aom_rhudaur_male_name_29" text="Wulfric" />
-    <string id="aom_rhudaur_male_name_3" text="Brannoc" />
-    <string id="aom_rhudaur_male_name_30" text="Arnach" />
-    <string id="aom_rhudaur_male_name_31" text="Bryn" />
-    <string id="aom_rhudaur_male_name_32" text="Cuthred" />
-    <string id="aom_rhudaur_male_name_33" text="Draugor" />
-    <string id="aom_rhudaur_male_name_34" text="Egalric" />
-    <string id="aom_rhudaur_male_name_35" text="Fornor" />
-    <string id="aom_rhudaur_male_name_36" text="Garth" />
-    <string id="aom_rhudaur_male_name_37" text="Hunthor" />
-    <string id="aom_rhudaur_male_name_38" text="Ivorn" />
-    <string id="aom_rhudaur_male_name_39" text="Mardoc" />
-    <string id="aom_rhudaur_male_name_4" text="Cadorn" />
-    <string id="aom_rhudaur_male_name_40" text="Torgil" />
-    <string id="aom_rhudaur_male_name_5" text="Corran" />
-    <string id="aom_rhudaur_male_name_6" text="Dergil" />
-    <string id="aom_rhudaur_male_name_7" text="Dunhal" />
-    <string id="aom_rhudaur_male_name_8" text="Eredhir" />
-    <string id="aom_rhudaur_male_name_9" text="Fengar" />
-    <string id="aom_rhudaur_name" text="Rhudaur" />
-    <string id="aom_eredluin_clan_1" text="House of Borin" />
-    <string id="aom_eredluin_clan_10" text="House of Azaghâl" />
-    <string id="aom_eredluin_clan_11" text="Keepers of the Dwarf-road" />
-    <string id="aom_eredluin_clan_12" text="House of Gamil" />
-    <string id="aom_eredluin_clan_2" text="Broadbeams" />
-    <string id="aom_eredluin_clan_3" text="Firebeards" />
-    <string id="aom_eredluin_clan_4" text="Wardens of Dolmed" />
-    <string id="aom_eredluin_clan_5" text="House of Frerin" />
-    <string id="aom_eredluin_clan_6" text="House of Narvi" />
-    <string id="aom_eredluin_clan_7" text="Stonehands of Belegost" />
-    <string id="aom_eredluin_clan_8" text="Hammerers of Nogrod" />
-    <string id="aom_eredluin_clan_9" text="House of Telchar" />
-    <string id="aom_eredluin_desc" text="The dwarves of Ered Luin dwell in the Blue Mountains at the western edge of Middle-earth. Durin's Folk came there in exile and made Thorin's Halls, and in this age the Broadbeams and the Firebeards keep Belegost and Nogrod again, the oldest dwarf-cities of the West. They are miners and smiths, poorer than their kin in the east, and they trade iron with the Elves of Lindon and the Men of Eriador while the goblins of Blue Craig gnaw at their roads." />
-    <string id="aom_eredluin_female_name_1" text="Bryndís" />
-    <string id="aom_eredluin_female_name_10" text="Eydís" />
-    <string id="aom_eredluin_female_name_11" text="Hildis" />
-    <string id="aom_eredluin_female_name_12" text="Thórdís" />
-    <string id="aom_eredluin_female_name_13" text="Arndís" />
-    <string id="aom_eredluin_female_name_14" text="Valdís" />
-    <string id="aom_eredluin_female_name_15" text="Jódís" />
-    <string id="aom_eredluin_female_name_16" text="Ingdís" />
-    <string id="aom_eredluin_female_name_17" text="Steindís" />
-    <string id="aom_eredluin_female_name_18" text="Ölrún" />
-    <string id="aom_eredluin_female_name_19" text="Gudrún" />
-    <string id="aom_eredluin_female_name_2" text="Gerda" />
-    <string id="aom_eredluin_female_name_20" text="Hervör" />
-    <string id="aom_eredluin_female_name_21" text="Thóra" />
-    <string id="aom_eredluin_female_name_22" text="Járnsaxa" />
-    <string id="aom_eredluin_female_name_23" text="Brynja" />
-    <string id="aom_eredluin_female_name_24" text="Svanhild" />
-    <string id="aom_eredluin_female_name_3" text="Hlíf" />
-    <string id="aom_eredluin_female_name_4" text="Sigrún" />
-    <string id="aom_eredluin_female_name_5" text="Ásta" />
-    <string id="aom_eredluin_female_name_6" text="Védís" />
-    <string id="aom_eredluin_female_name_7" text="Ragna" />
-    <string id="aom_eredluin_female_name_8" text="Herdís" />
-    <string id="aom_eredluin_female_name_9" text="Una" />
-    <string id="aom_eredluin_male_name_1" text="Andvari" />
-    <string id="aom_eredluin_male_name_10" text="Hár" />
-    <string id="aom_eredluin_male_name_11" text="Alf" />
-    <string id="aom_eredluin_male_name_12" text="Yngvi" />
-    <string id="aom_eredluin_male_name_13" text="Finnar" />
-    <string id="aom_eredluin_male_name_14" text="Hlévang" />
-    <string id="aom_eredluin_male_name_15" text="Dolgthrasir" />
-    <string id="aom_eredluin_male_name_16" text="Haugspori" />
-    <string id="aom_eredluin_male_name_17" text="Svíur" />
-    <string id="aom_eredluin_male_name_18" text="Nýrád" />
-    <string id="aom_eredluin_male_name_19" text="Reginn" />
-    <string id="aom_eredluin_male_name_2" text="Fjalar" />
-    <string id="aom_eredluin_male_name_20" text="Vitr" />
-    <string id="aom_eredluin_male_name_21" text="Litr" />
-    <string id="aom_eredluin_male_name_22" text="Veggr" />
-    <string id="aom_eredluin_male_name_23" text="Ánarr" />
-    <string id="aom_eredluin_male_name_24" text="Hornbori" />
-    <string id="aom_eredluin_male_name_25" text="Fræg" />
-    <string id="aom_eredluin_male_name_26" text="Lóin" />
-    <string id="aom_eredluin_male_name_27" text="Bárin" />
-    <string id="aom_eredluin_male_name_28" text="Dúri" />
-    <string id="aom_eredluin_male_name_29" text="Thekk" />
-    <string id="aom_eredluin_male_name_3" text="Frosti" />
-    <string id="aom_eredluin_male_name_30" text="Glór" />
-    <string id="aom_eredluin_male_name_31" text="Narvi" />
-    <string id="aom_eredluin_male_name_32" text="Borin" />
-    <string id="aom_eredluin_male_name_33" text="Farin" />
-    <string id="aom_eredluin_male_name_34" text="Grór" />
-    <string id="aom_eredluin_male_name_35" text="Thrár" />
-    <string id="aom_eredluin_male_name_36" text="Durlin" />
-    <string id="aom_eredluin_male_name_37" text="Hanar" />
-    <string id="aom_eredluin_male_name_38" text="Bruni" />
-    <string id="aom_eredluin_male_name_39" text="Skáfid" />
-    <string id="aom_eredluin_male_name_4" text="Ginnar" />
-    <string id="aom_eredluin_male_name_40" text="Eikin" />
-    <string id="aom_eredluin_male_name_5" text="Hepti" />
-    <string id="aom_eredluin_male_name_6" text="Skirfir" />
-    <string id="aom_eredluin_male_name_7" text="Virfir" />
-    <string id="aom_eredluin_male_name_8" text="Aurvang" />
-    <string id="aom_eredluin_male_name_9" text="Jari" />
-    <string id="aom_eredluin_name" text="Dwarves of Ered Luin" />
-    <string id="aom_anduinvale_clan_1" text="House of the Langflood" />
-    <string id="aom_anduinvale_clan_10" text="Folk of the Misty Eaves" />
-    <string id="aom_anduinvale_clan_11" text="House of the Long Hall" />
-    <string id="aom_anduinvale_clan_12" text="Wolf-hunters of the Vale" />
-    <string id="aom_anduinvale_clan_2" text="Folk of the Gladden Fields" />
-    <string id="aom_anduinvale_clan_3" text="Keepers of the High Pass" />
-    <string id="aom_anduinvale_clan_4" text="House of Framsburg" />
-    <string id="aom_anduinvale_clan_5" text="Bear-kin of the Vale" />
-    <string id="aom_anduinvale_clan_6" text="Honey-wardens of Beorn's Hall" />
-    <string id="aom_anduinvale_clan_7" text="Ferrymen of the Anduin" />
-    <string id="aom_anduinvale_clan_8" text="House of the Eyrie" />
-    <string id="aom_anduinvale_clan_9" text="Herdsmen of the Upper Vale" />
-    <string id="aom_anduinvale_desc" text="The Beornings keep the upper vale of the Anduin between the Misty Mountains and Mirkwood, a folk of farmers, herdsmen and honey-keepers who share the river meadows with the Woodmen of the Vales. They hold the Carrock and the Old Ford, take no toll from honest travellers and a heavy one from orcs and wolves. Their chieftains are chosen for strength and plain speech, and they follow no king into a war that is not their own." />
-    <string id="aom_anduinvale_female_name_1" text="Beornwyn" />
-    <string id="aom_anduinvale_female_name_10" text="Osburh" />
-    <string id="aom_anduinvale_female_name_11" text="Sigeburh" />
-    <string id="aom_anduinvale_female_name_12" text="Wynflaed" />
-    <string id="aom_anduinvale_female_name_13" text="Eanflaed" />
-    <string id="aom_anduinvale_female_name_14" text="Bregoswith" />
-    <string id="aom_anduinvale_female_name_15" text="Heahburh" />
-    <string id="aom_anduinvale_female_name_16" text="Leofgyth" />
-    <string id="aom_anduinvale_female_name_17" text="Mildthryth" />
-    <string id="aom_anduinvale_female_name_18" text="Saethryth" />
-    <string id="aom_anduinvale_female_name_19" text="Beornflaed" />
-    <string id="aom_anduinvale_female_name_2" text="Eadgyth" />
-    <string id="aom_anduinvale_female_name_20" text="Cwenburh" />
-    <string id="aom_anduinvale_female_name_21" text="Eadburh" />
-    <string id="aom_anduinvale_female_name_22" text="Frithuswith" />
-    <string id="aom_anduinvale_female_name_23" text="Aelfwyn" />
-    <string id="aom_anduinvale_female_name_24" text="Wulfthryth" />
-    <string id="aom_anduinvale_female_name_3" text="Aelfgifu" />
-    <string id="aom_anduinvale_female_name_4" text="Wulfwyn" />
-    <string id="aom_anduinvale_female_name_5" text="Leofrun" />
-    <string id="aom_anduinvale_female_name_6" text="Godgifu" />
-    <string id="aom_anduinvale_female_name_7" text="Hildeswith" />
-    <string id="aom_anduinvale_female_name_8" text="Cyneburh" />
-    <string id="aom_anduinvale_female_name_9" text="Ealhswith" />
-    <string id="aom_anduinvale_male_name_1" text="Beornwulf" />
-    <string id="aom_anduinvale_male_name_10" text="Folcbeorn" />
-    <string id="aom_anduinvale_male_name_11" text="Hunbeorn" />
-    <string id="aom_anduinvale_male_name_12" text="Torhtbeorn" />
-    <string id="aom_anduinvale_male_name_13" text="Wilbeorn" />
-    <string id="aom_anduinvale_male_name_14" text="Cuthbeorn" />
-    <string id="aom_anduinvale_male_name_15" text="Saebeorn" />
-    <string id="aom_anduinvale_male_name_16" text="Tidbeorn" />
-    <string id="aom_anduinvale_male_name_17" text="Osric" />
-    <string id="aom_anduinvale_male_name_18" text="Oswine" />
-    <string id="aom_anduinvale_male_name_19" text="Eadric" />
-    <string id="aom_anduinvale_male_name_2" text="Beornoth" />
-    <string id="aom_anduinvale_male_name_20" text="Ealdred" />
-    <string id="aom_anduinvale_male_name_21" text="Wighard" />
-    <string id="aom_anduinvale_male_name_22" text="Leofwine" />
-    <string id="aom_anduinvale_male_name_23" text="Ceolwulf" />
-    <string id="aom_anduinvale_male_name_24" text="Hereward" />
-    <string id="aom_anduinvale_male_name_25" text="Aelfhere" />
-    <string id="aom_anduinvale_male_name_26" text="Bregowine" />
-    <string id="aom_anduinvale_male_name_27" text="Deorwine" />
-    <string id="aom_anduinvale_male_name_28" text="Eanred" />
-    <string id="aom_anduinvale_male_name_29" text="Frithuwald" />
-    <string id="aom_anduinvale_male_name_3" text="Beornred" />
-    <string id="aom_anduinvale_male_name_30" text="Guthlac" />
-    <string id="aom_anduinvale_male_name_31" text="Heremod" />
-    <string id="aom_anduinvale_male_name_32" text="Hygered" />
-    <string id="aom_anduinvale_male_name_33" text="Merewald" />
-    <string id="aom_anduinvale_male_name_34" text="Ordgar" />
-    <string id="aom_anduinvale_male_name_35" text="Waermund" />
-    <string id="aom_anduinvale_male_name_36" text="Wynstan" />
-    <string id="aom_anduinvale_male_name_37" text="Ealhmund" />
-    <string id="aom_anduinvale_male_name_38" text="Beornhelm" />
-    <string id="aom_anduinvale_male_name_39" text="Hunwald" />
-    <string id="aom_anduinvale_male_name_4" text="Beornstan" />
-    <string id="aom_anduinvale_male_name_40" text="Wigstan" />
-    <string id="aom_anduinvale_male_name_5" text="Ealdbeorn" />
-    <string id="aom_anduinvale_male_name_6" text="Wigbeorn" />
-    <string id="aom_anduinvale_male_name_7" text="Heahbeorn" />
-    <string id="aom_anduinvale_male_name_8" text="Sigebeorn" />
-    <string id="aom_anduinvale_male_name_9" text="Cynebeorn" />
-    <string id="aom_anduinvale_name" text="Beornings" />
-    <string id="aom_angaladh_clan_1" text="House of Woodmen-town" />
-    <string id="aom_angaladh_clan_10" text="House of the Elder Kings" />
-    <string id="aom_angaladh_clan_11" text="Keepers of the Woodmen-road" />
-    <string id="aom_angaladh_clan_12" text="Folk of the Black Mere" />
-    <string id="aom_angaladh_clan_2" text="Bowmen of the Western Eaves" />
-    <string id="aom_angaladh_clan_3" text="House of the Ironwood" />
-    <string id="aom_angaladh_clan_4" text="Folk of Rhosgobel" />
-    <string id="aom_angaladh_clan_5" text="Hunters of the Narrows" />
-    <string id="aom_angaladh_clan_6" text="Charcoal-burners of the Greenwood" />
-    <string id="aom_angaladh_clan_7" text="House of the Great Oak" />
-    <string id="aom_angaladh_clan_8" text="Spider-slayers of the Eaves" />
-    <string id="aom_angaladh_clan_9" text="Folk of the Eastern Shore" />
-    <string id="aom_angaladh_desc" text="The Woodmen of Angáladh live under the western eaves of Mirkwood, where their fathers cleared steads among trees so hard that axes ring on them like iron. They are bowmen, woodcutters and hunters, few in number and slow to trust, at peace with the Elves of the northern wood. Every year the shadow in the south of the forest grows, and every year their king sends more of his archers to watch the Narrows." />
-    <string id="aom_angaladh_female_name_1" text="Vidumavi" />
-    <string id="aom_angaladh_female_name_10" text="Hildigunda" />
-    <string id="aom_angaladh_female_name_11" text="Audofleda" />
-    <string id="aom_angaladh_female_name_12" text="Baddo" />
-    <string id="aom_angaladh_female_name_13" text="Sunigilda" />
-    <string id="aom_angaladh_female_name_14" text="Liuvigunda" />
-    <string id="aom_angaladh_female_name_15" text="Ragnahilda" />
-    <string id="aom_angaladh_female_name_16" text="Theudelinda" />
-    <string id="aom_angaladh_female_name_17" text="Gundiwara" />
-    <string id="aom_angaladh_female_name_18" text="Swanahilda" />
-    <string id="aom_angaladh_female_name_19" text="Aiwilda" />
-    <string id="aom_angaladh_female_name_2" text="Amalasuntha" />
-    <string id="aom_angaladh_female_name_20" text="Frithigunda" />
-    <string id="aom_angaladh_female_name_21" text="Wilithruda" />
-    <string id="aom_angaladh_female_name_22" text="Rodelinda" />
-    <string id="aom_angaladh_female_name_23" text="Ansigunda" />
-    <string id="aom_angaladh_female_name_24" text="Ermenberga" />
-    <string id="aom_angaladh_female_name_3" text="Matasuntha" />
-    <string id="aom_angaladh_female_name_4" text="Amalafrida" />
-    <string id="aom_angaladh_female_name_5" text="Thiudigotho" />
-    <string id="aom_angaladh_female_name_6" text="Ostrogotho" />
-    <string id="aom_angaladh_female_name_7" text="Gaatha" />
-    <string id="aom_angaladh_female_name_8" text="Galswintha" />
-    <string id="aom_angaladh_female_name_9" text="Goiswintha" />
-    <string id="aom_angaladh_male_name_1" text="Vidugavia" />
-    <string id="aom_angaladh_male_name_10" text="Fritigern" />
-    <string id="aom_angaladh_male_name_11" text="Athanaric" />
-    <string id="aom_angaladh_male_name_12" text="Gainas" />
-    <string id="aom_angaladh_male_name_13" text="Sarus" />
-    <string id="aom_angaladh_male_name_14" text="Sigeric" />
-    <string id="aom_angaladh_male_name_15" text="Wallia" />
-    <string id="aom_angaladh_male_name_16" text="Thorismund" />
-    <string id="aom_angaladh_male_name_17" text="Thiudimir" />
-    <string id="aom_angaladh_male_name_18" text="Gesimund" />
-    <string id="aom_angaladh_male_name_19" text="Hunimund" />
-    <string id="aom_angaladh_male_name_2" text="Vinitharya" />
-    <string id="aom_angaladh_male_name_20" text="Gunthamund" />
-    <string id="aom_angaladh_male_name_21" text="Hilderic" />
-    <string id="aom_angaladh_male_name_22" text="Agila" />
-    <string id="aom_angaladh_male_name_23" text="Athanagild" />
-    <string id="aom_angaladh_male_name_24" text="Liuva" />
-    <string id="aom_angaladh_male_name_25" text="Witteric" />
-    <string id="aom_angaladh_male_name_26" text="Gundemar" />
-    <string id="aom_angaladh_male_name_27" text="Swinthila" />
-    <string id="aom_angaladh_male_name_28" text="Chintila" />
-    <string id="aom_angaladh_male_name_29" text="Tulga" />
-    <string id="aom_angaladh_male_name_3" text="Marhari" />
-    <string id="aom_angaladh_male_name_30" text="Egica" />
-    <string id="aom_angaladh_male_name_31" text="Berimund" />
-    <string id="aom_angaladh_male_name_32" text="Ansigar" />
-    <string id="aom_angaladh_male_name_33" text="Thiudagast" />
-    <string id="aom_angaladh_male_name_34" text="Aiwamund" />
-    <string id="aom_angaladh_male_name_35" text="Baudila" />
-    <string id="aom_angaladh_male_name_36" text="Fravitta" />
-    <string id="aom_angaladh_male_name_37" text="Wulfila" />
-    <string id="aom_angaladh_male_name_38" text="Hrodigast" />
-    <string id="aom_angaladh_male_name_39" text="Audawin" />
-    <string id="aom_angaladh_male_name_4" text="Marhwini" />
-    <string id="aom_angaladh_male_name_40" text="Ermanaric" />
-    <string id="aom_angaladh_male_name_5" text="Forthwini" />
-    <string id="aom_angaladh_male_name_6" text="Athalaric" />
-    <string id="aom_angaladh_male_name_7" text="Theodemir" />
-    <string id="aom_angaladh_male_name_8" text="Valamir" />
-    <string id="aom_angaladh_male_name_9" text="Vidimir" />
-    <string id="aom_angaladh_name" text="Woodmen" />
-    <string id="aom_dorwinion_clan_1" text="House of the Wine-presses" />
-    <string id="aom_dorwinion_clan_10" text="Wardens of the Southern Vines" />
-    <string id="aom_dorwinion_clan_11" text="Folk of the Vineyards" />
-    <string id="aom_dorwinion_clan_12" text="House of the Elf-wine" />
-    <string id="aom_dorwinion_clan_2" text="Vintners of the Redwater" />
-    <string id="aom_dorwinion_clan_3" text="Boatmen of the River Running" />
-    <string id="aom_dorwinion_clan_4" text="House of the Sunward Slopes" />
-    <string id="aom_dorwinion_clan_5" text="Cellarers of Vineholm" />
-    <string id="aom_dorwinion_clan_6" text="Shoremen of the Inland Sea" />
-    <string id="aom_dorwinion_clan_7" text="Traders of the Wine-road" />
-    <string id="aom_dorwinion_clan_8" text="House of the Golden Grape" />
-    <string id="aom_dorwinion_clan_9" text="Bargemen of the Carnen" />
-    <string id="aom_dorwinion_desc" text="The Men of Dorwinion tend the vineyards on the warm slopes above the Sea of Rhûn, and their wine goes up the Redwater and the River Running to the halls of Elves and Men far to the west. They are vintners, boatmen and river traders, a Northman folk who would rather sell to a stranger than fight him. Their king keeps his court at Vineholm, and every year the Easterlings across the inland sea look harder at his rich and lightly guarded land." />
-    <string id="aom_dorwinion_female_name_1" text="Gundeperga" />
-    <string id="aom_dorwinion_female_name_10" text="Anselperga" />
-    <string id="aom_dorwinion_female_name_11" text="Liutperga" />
-    <string id="aom_dorwinion_female_name_12" text="Ratruda" />
-    <string id="aom_dorwinion_female_name_13" text="Tassia" />
-    <string id="aom_dorwinion_female_name_14" text="Gaila" />
-    <string id="aom_dorwinion_female_name_15" text="Wigilinda" />
-    <string id="aom_dorwinion_female_name_16" text="Romilda" />
-    <string id="aom_dorwinion_female_name_17" text="Aldegunda" />
-    <string id="aom_dorwinion_female_name_18" text="Guntrada" />
-    <string id="aom_dorwinion_female_name_19" text="Sindrada" />
-    <string id="aom_dorwinion_female_name_2" text="Ansa" />
-    <string id="aom_dorwinion_female_name_20" text="Hildegarda" />
-    <string id="aom_dorwinion_female_name_21" text="Gundrada" />
-    <string id="aom_dorwinion_female_name_22" text="Theodorada" />
-    <string id="aom_dorwinion_female_name_23" text="Ermelinda" />
-    <string id="aom_dorwinion_female_name_24" text="Ansperga" />
-    <string id="aom_dorwinion_female_name_3" text="Ratperga" />
-    <string id="aom_dorwinion_female_name_4" text="Clotsuinda" />
-    <string id="aom_dorwinion_female_name_5" text="Walderada" />
-    <string id="aom_dorwinion_female_name_6" text="Rosamund" />
-    <string id="aom_dorwinion_female_name_7" text="Ermengarda" />
-    <string id="aom_dorwinion_female_name_8" text="Gisela" />
-    <string id="aom_dorwinion_female_name_9" text="Adelperga" />
-    <string id="aom_dorwinion_male_name_1" text="Alboin" />
-    <string id="aom_dorwinion_male_name_10" text="Perctarit" />
-    <string id="aom_dorwinion_male_name_11" text="Cunincpert" />
-    <string id="aom_dorwinion_male_name_12" text="Aripert" />
-    <string id="aom_dorwinion_male_name_13" text="Rothari" />
-    <string id="aom_dorwinion_male_name_14" text="Ariwald" />
-    <string id="aom_dorwinion_male_name_15" text="Wacho" />
-    <string id="aom_dorwinion_male_name_16" text="Tato" />
-    <string id="aom_dorwinion_male_name_17" text="Godepert" />
-    <string id="aom_dorwinion_male_name_18" text="Garibald" />
-    <string id="aom_dorwinion_male_name_19" text="Ansprand" />
-    <string id="aom_dorwinion_male_name_2" text="Audoin" />
-    <string id="aom_dorwinion_male_name_20" text="Hildeprand" />
-    <string id="aom_dorwinion_male_name_21" text="Rodoald" />
-    <string id="aom_dorwinion_male_name_22" text="Adaloald" />
-    <string id="aom_dorwinion_male_name_23" text="Alahis" />
-    <string id="aom_dorwinion_male_name_24" text="Gundahar" />
-    <string id="aom_dorwinion_male_name_25" text="Gundioc" />
-    <string id="aom_dorwinion_male_name_26" text="Godegisel" />
-    <string id="aom_dorwinion_male_name_27" text="Gundomar" />
-    <string id="aom_dorwinion_male_name_28" text="Gislahar" />
-    <string id="aom_dorwinion_male_name_29" text="Gibica" />
-    <string id="aom_dorwinion_male_name_3" text="Agilulf" />
-    <string id="aom_dorwinion_male_name_30" text="Gaiseric" />
-    <string id="aom_dorwinion_male_name_31" text="Huneric" />
-    <string id="aom_dorwinion_male_name_32" text="Thrasamund" />
-    <string id="aom_dorwinion_male_name_33" text="Gelimer" />
-    <string id="aom_dorwinion_male_name_34" text="Godigisel" />
-    <string id="aom_dorwinion_male_name_35" text="Ardaric" />
-    <string id="aom_dorwinion_male_name_36" text="Thurisind" />
-    <string id="aom_dorwinion_male_name_37" text="Cunimund" />
-    <string id="aom_dorwinion_male_name_38" text="Turismod" />
-    <string id="aom_dorwinion_male_name_39" text="Gisulf" />
-    <string id="aom_dorwinion_male_name_4" text="Authari" />
-    <string id="aom_dorwinion_male_name_40" text="Romuald" />
-    <string id="aom_dorwinion_male_name_5" text="Cleph" />
-    <string id="aom_dorwinion_male_name_6" text="Grimoald" />
-    <string id="aom_dorwinion_male_name_7" text="Liutprand" />
-    <string id="aom_dorwinion_male_name_8" text="Ratchis" />
-    <string id="aom_dorwinion_male_name_9" text="Aistulf" />
-    <string id="aom_dorwinion_name" text="Men of Dorwinion" />
-    <string id="aom_southrhovanion_clan_1" text="House of the Barrow-kings" />
-    <string id="aom_southrhovanion_clan_10" text="House of the Old Forest Road" />
-    <string id="aom_southrhovanion_clan_11" text="Folk of the Brown Lands" />
-    <string id="aom_southrhovanion_clan_12" text="Watchers of the Dagorlad" />
-    <string id="aom_southrhovanion_clan_2" text="Riders of the East Bight" />
-    <string id="aom_southrhovanion_clan_3" text="Horse-herds of the Plains" />
-    <string id="aom_southrhovanion_clan_4" text="Folk of the Southern Eaves" />
-    <string id="aom_southrhovanion_clan_5" text="House of the Wain-breakers" />
-    <string id="aom_southrhovanion_clan_6" text="Spearmen of the Fords" />
-    <string id="aom_southrhovanion_clan_7" text="House of the White Mares" />
-    <string id="aom_southrhovanion_clan_8" text="Keepers of the Horse-fields" />
-    <string id="aom_southrhovanion_clan_9" text="Riders of the Celduin" />
-    <string id="aom_southrhovanion_desc" text="The Northmen of South Rhovanion ride the wide plains between the southern eaves of Mirkwood and the Brown Lands, a free people of horse-breeders who count the Éothéod of the north as their kin. Their fathers were the lords of the Northmen in the days of the old kings, and the barrows of those kings still stand on the grasslands. Twice the Wainriders came out of the East with wagon and fire and broke them, and the riders of the plains have not forgotten it." />
-    <string id="aom_southrhovanion_female_name_1" text="Viduhilda" />
-    <string id="aom_southrhovanion_female_name_10" text="Ansawintha" />
-    <string id="aom_southrhovanion_female_name_11" text="Sigihilda" />
-    <string id="aom_southrhovanion_female_name_12" text="Gaisahildo" />
-    <string id="aom_southrhovanion_female_name_13" text="Wulfahilda" />
-    <string id="aom_southrhovanion_female_name_14" text="Athalgunda" />
-    <string id="aom_southrhovanion_female_name_15" text="Frithuwara" />
-    <string id="aom_southrhovanion_female_name_16" text="Harjahildo" />
-    <string id="aom_southrhovanion_female_name_17" text="Gunthiwintha" />
-    <string id="aom_southrhovanion_female_name_18" text="Thiudawara" />
-    <string id="aom_southrhovanion_female_name_19" text="Austrahilda" />
-    <string id="aom_southrhovanion_female_name_2" text="Marhawintha" />
-    <string id="aom_southrhovanion_female_name_20" text="Sunjawintha" />
-    <string id="aom_southrhovanion_female_name_21" text="Swinthahilda" />
-    <string id="aom_southrhovanion_female_name_22" text="Vidurada" />
-    <string id="aom_southrhovanion_female_name_23" text="Marhamavi" />
-    <string id="aom_southrhovanion_female_name_24" text="Ermanaberga" />
-    <string id="aom_southrhovanion_female_name_3" text="Marhildo" />
-    <string id="aom_southrhovanion_female_name_4" text="Forthiwintha" />
-    <string id="aom_southrhovanion_female_name_5" text="Hrodagunda" />
-    <string id="aom_southrhovanion_female_name_6" text="Ermanahilda" />
-    <string id="aom_southrhovanion_female_name_7" text="Aiwigunda" />
-    <string id="aom_southrhovanion_female_name_8" text="Gaisawintha" />
-    <string id="aom_southrhovanion_female_name_9" text="Balthildo" />
-    <string id="aom_southrhovanion_male_name_1" text="Vidurik" />
-    <string id="aom_southrhovanion_male_name_10" text="Forthagast" />
-    <string id="aom_southrhovanion_male_name_11" text="Hrodamund" />
-    <string id="aom_southrhovanion_male_name_12" text="Hrodarik" />
-    <string id="aom_southrhovanion_male_name_13" text="Ermanagast" />
-    <string id="aom_southrhovanion_male_name_14" text="Ermanamund" />
-    <string id="aom_southrhovanion_male_name_15" text="Aiwarik" />
-    <string id="aom_southrhovanion_male_name_16" text="Aiwulf" />
-    <string id="aom_southrhovanion_male_name_17" text="Gaisamund" />
-    <string id="aom_southrhovanion_male_name_18" text="Gaisarik" />
-    <string id="aom_southrhovanion_male_name_19" text="Balthamar" />
-    <string id="aom_southrhovanion_male_name_2" text="Viduhari" />
-    <string id="aom_southrhovanion_male_name_20" text="Balthulf" />
-    <string id="aom_southrhovanion_male_name_21" text="Ansamar" />
-    <string id="aom_southrhovanion_male_name_22" text="Ansulf" />
-    <string id="aom_southrhovanion_male_name_23" text="Sigiwini" />
-    <string id="aom_southrhovanion_male_name_24" text="Sigirik" />
-    <string id="aom_southrhovanion_male_name_25" text="Hildimar" />
-    <string id="aom_southrhovanion_male_name_26" text="Hildiwini" />
-    <string id="aom_southrhovanion_male_name_27" text="Wulfamund" />
-    <string id="aom_southrhovanion_male_name_28" text="Wulfarik" />
-    <string id="aom_southrhovanion_male_name_29" text="Athalwini" />
-    <string id="aom_southrhovanion_male_name_3" text="Vidumund" />
-    <string id="aom_southrhovanion_male_name_30" text="Athalgast" />
-    <string id="aom_southrhovanion_male_name_31" text="Frithumar" />
-    <string id="aom_southrhovanion_male_name_32" text="Frithuwini" />
-    <string id="aom_southrhovanion_male_name_33" text="Harjamund" />
-    <string id="aom_southrhovanion_male_name_34" text="Harjarik" />
-    <string id="aom_southrhovanion_male_name_35" text="Gunthamar" />
-    <string id="aom_southrhovanion_male_name_36" text="Gunthiwini" />
-    <string id="aom_southrhovanion_male_name_37" text="Thiudawini" />
-    <string id="aom_southrhovanion_male_name_38" text="Austrowini" />
-    <string id="aom_southrhovanion_male_name_39" text="Sunjamar" />
-    <string id="aom_southrhovanion_male_name_4" text="Vidugast" />
-    <string id="aom_southrhovanion_male_name_40" text="Swinthamar" />
-    <string id="aom_southrhovanion_male_name_5" text="Marhamund" />
-    <string id="aom_southrhovanion_male_name_6" text="Marhagast" />
-    <string id="aom_southrhovanion_male_name_7" text="Marharik" />
-    <string id="aom_southrhovanion_male_name_8" text="Marhulf" />
-    <string id="aom_southrhovanion_male_name_9" text="Forthari" />
-    <string id="aom_southrhovanion_name" text="Northmen of Rhovanion" />
+    <string id="aom_cardolan_clan_1" text="Дом Тирн Гортад" />
+    <string id="aom_cardolan_clan_10" text="Дом Зелёного тракта" />
+    <string id="aom_cardolan_clan_11" text="Дом Лебяжьей заводи" />
+    <string id="aom_cardolan_clan_12" text="Дом Андрата" />
+    <string id="aom_cardolan_clan_2" text="Дом Тарбада" />
+    <string id="aom_cardolan_clan_3" text="Дом Сероструя" />
+    <string id="aom_cardolan_clan_4" text="Дом Минхириата" />
+    <string id="aom_cardolan_clan_5" text="Дом Южных холмов" />
+    <string id="aom_cardolan_clan_6" text="Дом Сарн Форда" />
+    <string id="aom_cardolan_clan_7" text="Дом Эрин Ворн" />
+    <string id="aom_cardolan_clan_8" text="Дом Курганов" />
+    <string id="aom_cardolan_clan_9" text="Дом Минас Эйтель" />
+    <string id="aom_cardolan_desc" text="Дунэдайн Кардолана владеют югом старого Арнора — равнинами и речным краем между Барандуином и Сероструем. Их короли покоятся в курганах Тирн Гортада, их барки всё ещё поднимаются к Тарбаду, а их всадники — лучшие из трёх северных королевств. Городов у них немного, а их владыки спорят с Артэдайном и Рудауром о старой короне, меж тем как дикие земли год от года становятся всё дерзостнее." />
+    <string id="aom_cardolan_female_name_1" text="Элендис" />
+    <string id="aom_cardolan_female_name_10" text="Иврен" />
+    <string id="aom_cardolan_female_name_11" text="Линдис" />
+    <string id="aom_cardolan_female_name_12" text="Мирвен" />
+    <string id="aom_cardolan_female_name_13" text="Морлет" />
+    <string id="aom_cardolan_female_name_14" text="Неллас" />
+    <string id="aom_cardolan_female_name_15" text="Нимлот" />
+    <string id="aom_cardolan_female_name_16" text="Орвен" />
+    <string id="aom_cardolan_female_name_17" text="Риан" />
+    <string id="aom_cardolan_female_name_18" text="Саэлинд" />
+    <string id="aom_cardolan_female_name_19" text="Тирнель" />
+    <string id="aom_cardolan_female_name_2" text="Аэрин" />
+    <string id="aom_cardolan_female_name_20" text="Ванвэ" />
+    <string id="aom_cardolan_female_name_21" text="Андрет" />
+    <string id="aom_cardolan_female_name_22" text="Эмельдир" />
+    <string id="aom_cardolan_female_name_23" text="Лалайт" />
+    <string id="aom_cardolan_female_name_24" text="Сильмариэн" />
+    <string id="aom_cardolan_female_name_3" text="Бериэль" />
+    <string id="aom_cardolan_female_name_4" text="Калимэ" />
+    <string id="aom_cardolan_female_name_5" text="Даэриэль" />
+    <string id="aom_cardolan_female_name_6" text="Эйлинель" />
+    <string id="aom_cardolan_female_name_7" text="Фаэлет" />
+    <string id="aom_cardolan_female_name_8" text="Гваэрен" />
+    <string id="aom_cardolan_female_name_9" text="Халет" />
+    <string id="aom_cardolan_male_name_1" text="Анардиль" />
+    <string id="aom_cardolan_male_name_10" text="Эрхон" />
+    <string id="aom_cardolan_male_name_11" text="Фаэлон" />
+    <string id="aom_cardolan_male_name_12" text="Гаэрхиль" />
+    <string id="aom_cardolan_male_name_13" text="Халлон" />
+    <string id="aom_cardolan_male_name_14" text="Хирлуин" />
+    <string id="aom_cardolan_male_name_15" text="Иорлас" />
+    <string id="aom_cardolan_male_name_16" text="Лотон" />
+    <string id="aom_cardolan_male_name_17" text="Маллос" />
+    <string id="aom_cardolan_male_name_18" text="Морлад" />
+    <string id="aom_cardolan_male_name_19" text="Нардур" />
+    <string id="aom_cardolan_male_name_2" text="Артаэр" />
+    <string id="aom_cardolan_male_name_20" text="Ородхель" />
+    <string id="aom_cardolan_male_name_21" text="Пелендур" />
+    <string id="aom_cardolan_male_name_22" text="Руитель" />
+    <string id="aom_cardolan_male_name_23" text="Сарандиль" />
+    <string id="aom_cardolan_male_name_24" text="Тарандор" />
+    <string id="aom_cardolan_male_name_25" text="Талион" />
+    <string id="aom_cardolan_male_name_26" text="Тургиль" />
+    <string id="aom_cardolan_male_name_27" text="Ворондиль" />
+    <string id="aom_cardolan_male_name_28" text="Брегор" />
+    <string id="aom_cardolan_male_name_29" text="Келедор" />
+    <string id="aom_cardolan_male_name_3" text="Барадель" />
+    <string id="aom_cardolan_male_name_30" text="Дирион" />
+    <string id="aom_cardolan_male_name_31" text="Голасгил" />
+    <string id="aom_cardolan_male_name_32" text="Хадрион" />
+    <string id="aom_cardolan_male_name_33" text="Ингольд" />
+    <string id="aom_cardolan_male_name_34" text="Мардакил" />
+    <string id="aom_cardolan_male_name_35" text="Нимбор" />
+    <string id="aom_cardolan_male_name_36" text="Охтар" />
+    <string id="aom_cardolan_male_name_37" text="Рондор" />
+    <string id="aom_cardolan_male_name_38" text="Таурион" />
+    <string id="aom_cardolan_male_name_39" text="Ульбор" />
+    <string id="aom_cardolan_male_name_4" text="Белетор" />
+    <string id="aom_cardolan_male_name_40" text="Халмир" />
+    <string id="aom_cardolan_male_name_5" text="Каладор" />
+    <string id="aom_cardolan_male_name_6" text="Каленон" />
+    <string id="aom_cardolan_male_name_7" text="Келеброс" />
+    <string id="aom_cardolan_male_name_8" text="Дагнир" />
+    <string id="aom_cardolan_male_name_9" text="Дортар" />
+    <string id="aom_cardolan_name" text="Кардолан" />
+    <string id="aom_rhudaur_clan_1" text="Дом Камет Брина" />
+    <string id="aom_rhudaur_clan_10" text="Дом Эгладиля" />
+    <string id="aom_rhudaur_clan_11" text="Дом Нагорий" />
+    <string id="aom_rhudaur_clan_12" text="Дом Грейфелла" />
+    <string id="aom_rhudaur_clan_2" text="Дом Угла" />
+    <string id="aom_rhudaur_clan_3" text="Дом Эттендейла" />
+    <string id="aom_rhudaur_clan_4" text="Дом Хладных Нагорий" />
+    <string id="aom_rhudaur_clan_5" text="Дом Троллиной Пущи" />
+    <string id="aom_rhudaur_clan_6" text="Дом Последнего Моста" />
+    <string id="aom_rhudaur_clan_7" text="Дом Бруинена" />
+    <string id="aom_rhudaur_clan_8" text="Дом Митейтеля" />
+    <string id="aom_rhudaur_clan_9" text="Дом Эттенмурс" />
+    <string id="aom_rhudaur_desc" text="Рудаур — горное королевство древнего Арнора, лежащее между Митейтелем и Бруиненом. Его дунаданские владыки держат Угол и башню Камет Брин и правят народом горцев, что никогда не любил Запад. Род первого его короля ещё длится, но крепости его холодны, нагорья кишат троллями, а орки гор стерегут каждый перевал." />
+    <string id="aom_rhudaur_female_name_1" text="Гилвен" />
+    <string id="aom_rhudaur_female_name_10" text="Илар" />
+    <string id="aom_rhudaur_female_name_11" text="Лаури" />
+    <string id="aom_rhudaur_female_name_12" text="Мэлис" />
+    <string id="aom_rhudaur_female_name_13" text="Морвидд" />
+    <string id="aom_rhudaur_female_name_14" text="Неста" />
+    <string id="aom_rhudaur_female_name_15" text="Олвен" />
+    <string id="aom_rhudaur_female_name_16" text="Росин" />
+    <string id="aom_rhudaur_female_name_17" text="Серен" />
+    <string id="aom_rhudaur_female_name_18" text="Тегвен" />
+    <string id="aom_rhudaur_female_name_19" text="Андрасте" />
+    <string id="aom_rhudaur_female_name_2" text="Элин" />
+    <string id="aom_rhudaur_female_name_20" text="Бринья" />
+    <string id="aom_rhudaur_female_name_21" text="Элунед" />
+    <string id="aom_rhudaur_female_name_22" text="Гвенит" />
+    <string id="aom_rhudaur_female_name_23" text="Мириэн" />
+    <string id="aom_rhudaur_female_name_24" text="Риайн" />
+    <string id="aom_rhudaur_female_name_3" text="Бранвен" />
+    <string id="aom_rhudaur_female_name_4" text="Керис" />
+    <string id="aom_rhudaur_female_name_5" text="Дилвен" />
+    <string id="aom_rhudaur_female_name_6" text="Эйрлис" />
+    <string id="aom_rhudaur_female_name_7" text="Ффион" />
+    <string id="aom_rhudaur_female_name_8" text="Гленвен" />
+    <string id="aom_rhudaur_female_name_9" text="Хеледд" />
+    <string id="aom_rhudaur_male_name_1" text="Белегорн" />
+    <string id="aom_rhudaur_male_name_10" text="Галдрик" />
+    <string id="aom_rhudaur_male_name_11" text="Горлан" />
+    <string id="aom_rhudaur_male_name_12" text="Халдрик" />
+    <string id="aom_rhudaur_male_name_13" text="Харнот" />
+    <string id="aom_rhudaur_male_name_14" text="Итрандор" />
+    <string id="aom_rhudaur_male_name_15" text="Келмар" />
+    <string id="aom_rhudaur_male_name_16" text="Лорган" />
+    <string id="aom_rhudaur_male_name_17" text="Малбор" />
+    <string id="aom_rhudaur_male_name_18" text="Моркай" />
+    <string id="aom_rhudaur_male_name_19" text="Нетрил" />
+    <string id="aom_rhudaur_male_name_2" text="Амродир" />
+    <string id="aom_rhudaur_male_name_20" text="Ородрим" />
+    <string id="aom_rhudaur_male_name_21" text="Пеллам" />
+    <string id="aom_rhudaur_male_name_22" text="Радруин" />
+    <string id="aom_rhudaur_male_name_23" text="Ростан" />
+    <string id="aom_rhudaur_male_name_24" text="Сарн" />
+    <string id="aom_rhudaur_male_name_25" text="Талгар" />
+    <string id="aom_rhudaur_male_name_26" text="Торондур" />
+    <string id="aom_rhudaur_male_name_27" text="Ульфар" />
+    <string id="aom_rhudaur_male_name_28" text="Вардил" />
+    <string id="aom_rhudaur_male_name_29" text="Вульфрик" />
+    <string id="aom_rhudaur_male_name_3" text="Браннок" />
+    <string id="aom_rhudaur_male_name_30" text="Арнах" />
+    <string id="aom_rhudaur_male_name_31" text="Брин" />
+    <string id="aom_rhudaur_male_name_32" text="Кутред" />
+    <string id="aom_rhudaur_male_name_33" text="Драугор" />
+    <string id="aom_rhudaur_male_name_34" text="Эгалрик" />
+    <string id="aom_rhudaur_male_name_35" text="Форнор" />
+    <string id="aom_rhudaur_male_name_36" text="Гарт" />
+    <string id="aom_rhudaur_male_name_37" text="Хунтор" />
+    <string id="aom_rhudaur_male_name_38" text="Иворн" />
+    <string id="aom_rhudaur_male_name_39" text="Мардок" />
+    <string id="aom_rhudaur_male_name_4" text="Кадорн" />
+    <string id="aom_rhudaur_male_name_40" text="Торгил" />
+    <string id="aom_rhudaur_male_name_5" text="Корран" />
+    <string id="aom_rhudaur_male_name_6" text="Дергил" />
+    <string id="aom_rhudaur_male_name_7" text="Дунхал" />
+    <string id="aom_rhudaur_male_name_8" text="Эредхир" />
+    <string id="aom_rhudaur_male_name_9" text="Фенгар" />
+    <string id="aom_rhudaur_name" text="Рудаур" />
+    <string id="aom_eredluin_clan_1" text="Дом Делингура" />
+    <string id="aom_eredluin_clan_10" text="Дом Азагхала" />
+    <string id="aom_eredluin_clan_11" text="Хранители Гномьего тракта" />
+    <string id="aom_eredluin_clan_12" text="Дом Гамиля" />
+    <string id="aom_eredluin_clan_2" text="Дом Двалина" />
+    <string id="aom_eredluin_clan_3" text="Дом Ури" />
+    <string id="aom_eredluin_clan_4" text="Дом Эльдрана" />
+    <string id="aom_eredluin_clan_5" text="Дом Фрерина" />
+    <string id="aom_eredluin_clan_6" text="Дом Нарви" />
+    <string id="aom_eredluin_clan_7" text="Каменные Длани Белегоста" />
+    <string id="aom_eredluin_clan_8" text="Молотобойцы Ногрода" />
+    <string id="aom_eredluin_clan_9" text="Дом Телхара" />
+    <string id="aom_eredluin_desc" text="Гномы Эред Луин живут в Синих горах на западном краю Средиземья. Народ Дурина пришёл туда в изгнании и построил Чертоги Торина, а в эту эпоху Широкобороды и Огнебороды вновь владеют Белегостом и Ногродом, древнейшими гномьими городами Запада. Они рудокопы и кузнецы, беднее своих восточных сородичей, и торгуют железом с эльфами Линдона и людьми Эриадора, покуда гоблины Синего Утёса грызут их дороги." />
+    <string id="aom_eredluin_female_name_1" text="Бриндис" />
+    <string id="aom_eredluin_female_name_10" text="Эйдис" />
+    <string id="aom_eredluin_female_name_11" text="Хильдис" />
+    <string id="aom_eredluin_female_name_12" text="Тордис" />
+    <string id="aom_eredluin_female_name_13" text="Арндис" />
+    <string id="aom_eredluin_female_name_14" text="Вальдис" />
+    <string id="aom_eredluin_female_name_15" text="Йодис" />
+    <string id="aom_eredluin_female_name_16" text="Ингдис" />
+    <string id="aom_eredluin_female_name_17" text="Стейндис" />
+    <string id="aom_eredluin_female_name_18" text="Эльрун" />
+    <string id="aom_eredluin_female_name_19" text="Гудрун" />
+    <string id="aom_eredluin_female_name_2" text="Герда" />
+    <string id="aom_eredluin_female_name_20" text="Хервёр" />
+    <string id="aom_eredluin_female_name_21" text="Тора" />
+    <string id="aom_eredluin_female_name_22" text="Ярнсакса" />
+    <string id="aom_eredluin_female_name_23" text="Брюнья" />
+    <string id="aom_eredluin_female_name_24" text="Сванхильд" />
+    <string id="aom_eredluin_female_name_3" text="Хлив" />
+    <string id="aom_eredluin_female_name_4" text="Сигрун" />
+    <string id="aom_eredluin_female_name_5" text="Аста" />
+    <string id="aom_eredluin_female_name_6" text="Вейдис" />
+    <string id="aom_eredluin_female_name_7" text="Рагна" />
+    <string id="aom_eredluin_female_name_8" text="Хердис" />
+    <string id="aom_eredluin_female_name_9" text="Уна" />
+    <string id="aom_eredluin_male_name_1" text="Андвари" />
+    <string id="aom_eredluin_male_name_10" text="Хар" />
+    <string id="aom_eredluin_male_name_11" text="Альв" />
+    <string id="aom_eredluin_male_name_12" text="Ингви" />
+    <string id="aom_eredluin_male_name_13" text="Финнар" />
+    <string id="aom_eredluin_male_name_14" text="Хлеванг" />
+    <string id="aom_eredluin_male_name_15" text="Дольгтрасир" />
+    <string id="aom_eredluin_male_name_16" text="Хаугспори" />
+    <string id="aom_eredluin_male_name_17" text="Свиур" />
+    <string id="aom_eredluin_male_name_18" text="Нюрад" />
+    <string id="aom_eredluin_male_name_19" text="Регин" />
+    <string id="aom_eredluin_male_name_2" text="Фьялар" />
+    <string id="aom_eredluin_male_name_20" text="Витр" />
+    <string id="aom_eredluin_male_name_21" text="Литр" />
+    <string id="aom_eredluin_male_name_22" text="Веггр" />
+    <string id="aom_eredluin_male_name_23" text="Анарр" />
+    <string id="aom_eredluin_male_name_24" text="Хорнбори" />
+    <string id="aom_eredluin_male_name_25" text="Фрег" />
+    <string id="aom_eredluin_male_name_26" text="Лоин" />
+    <string id="aom_eredluin_male_name_27" text="Барин" />
+    <string id="aom_eredluin_male_name_28" text="Дури" />
+    <string id="aom_eredluin_male_name_29" text="Текк" />
+    <string id="aom_eredluin_male_name_3" text="Фрости" />
+    <string id="aom_eredluin_male_name_30" text="Глор" />
+    <string id="aom_eredluin_male_name_31" text="Нарви" />
+    <string id="aom_eredluin_male_name_32" text="Борин" />
+    <string id="aom_eredluin_male_name_33" text="Фарин" />
+    <string id="aom_eredluin_male_name_34" text="Грор" />
+    <string id="aom_eredluin_male_name_35" text="Трар" />
+    <string id="aom_eredluin_male_name_36" text="Дурлин" />
+    <string id="aom_eredluin_male_name_37" text="Ханар" />
+    <string id="aom_eredluin_male_name_38" text="Бруни" />
+    <string id="aom_eredluin_male_name_39" text="Скафид" />
+    <string id="aom_eredluin_male_name_4" text="Гиннар" />
+    <string id="aom_eredluin_male_name_40" text="Эйкин" />
+    <string id="aom_eredluin_male_name_5" text="Хепти" />
+    <string id="aom_eredluin_male_name_6" text="Скирфир" />
+    <string id="aom_eredluin_male_name_7" text="Вирфир" />
+    <string id="aom_eredluin_male_name_8" text="Аурванг" />
+    <string id="aom_eredluin_male_name_9" text="Яри" />
+    <string id="aom_eredluin_name" text="Гномы Эред Луина" />
+    <string id="aom_anduinvale_clan_1" text="Дом Длинной Реки" />
+    <string id="aom_anduinvale_clan_10" text="Народ Туманной Опушки" />
+    <string id="aom_anduinvale_clan_11" text="Дом Длинного Чертога" />
+    <string id="aom_anduinvale_clan_12" text="Волчьи ловцы Долины" />
+    <string id="aom_anduinvale_clan_2" text="Народ Ирисной Низины" />
+    <string id="aom_anduinvale_clan_3" text="Стражи Высокого Перевала" />
+    <string id="aom_anduinvale_clan_4" text="Дом Фрамсбурга" />
+    <string id="aom_anduinvale_clan_5" text="Медвежья родня Долины" />
+    <string id="aom_anduinvale_clan_6" text="Медовые хранители Чертога Беорна" />
+    <string id="aom_anduinvale_clan_7" text="Перевозчики Андуина" />
+    <string id="aom_anduinvale_clan_8" text="Дом Орлиного Гнезда" />
+    <string id="aom_anduinvale_clan_9" text="Пастухи Верхней Долины" />
+    <string id="aom_anduinvale_desc" text="Беорнинги владеют верхней долиной Андуина между Мглистыми горами и Лихолесьем — народ земледельцев, пастухов и пчеловодов, делящий речные луга с Лесовиками Долин. Они держат Каррок и Старый Брод, не берут пошлины с честных путников и берут тяжкую — с орков и волков. Вождей своих они выбирают за силу и прямую речь и не идут ни за каким королём на войну, что им не своя." />
+    <string id="aom_anduinvale_female_name_1" text="Беорнвин" />
+    <string id="aom_anduinvale_female_name_10" text="Осбур" />
+    <string id="aom_anduinvale_female_name_11" text="Сигебур" />
+    <string id="aom_anduinvale_female_name_12" text="Винфлед" />
+    <string id="aom_anduinvale_female_name_13" text="Эанфлед" />
+    <string id="aom_anduinvale_female_name_14" text="Брегосвит" />
+    <string id="aom_anduinvale_female_name_15" text="Хеабур" />
+    <string id="aom_anduinvale_female_name_16" text="Леофгит" />
+    <string id="aom_anduinvale_female_name_17" text="Мильдрит" />
+    <string id="aom_anduinvale_female_name_18" text="Сэтрит" />
+    <string id="aom_anduinvale_female_name_19" text="Беорнфлед" />
+    <string id="aom_anduinvale_female_name_2" text="Эадгит" />
+    <string id="aom_anduinvale_female_name_20" text="Квенбур" />
+    <string id="aom_anduinvale_female_name_21" text="Эадбур" />
+    <string id="aom_anduinvale_female_name_22" text="Фритусвит" />
+    <string id="aom_anduinvale_female_name_23" text="Эльфвин" />
+    <string id="aom_anduinvale_female_name_24" text="Вульфтрит" />
+    <string id="aom_anduinvale_female_name_3" text="Эльфгифу" />
+    <string id="aom_anduinvale_female_name_4" text="Вульфвин" />
+    <string id="aom_anduinvale_female_name_5" text="Леофрун" />
+    <string id="aom_anduinvale_female_name_6" text="Годгифу" />
+    <string id="aom_anduinvale_female_name_7" text="Хильдесвит" />
+    <string id="aom_anduinvale_female_name_8" text="Кюнебур" />
+    <string id="aom_anduinvale_female_name_9" text="Эалсвит" />
+    <string id="aom_anduinvale_male_name_1" text="Беорнвульф" />
+    <string id="aom_anduinvale_male_name_10" text="Фолькбеорн" />
+    <string id="aom_anduinvale_male_name_11" text="Хунбеорн" />
+    <string id="aom_anduinvale_male_name_12" text="Торхтбеорн" />
+    <string id="aom_anduinvale_male_name_13" text="Вильбеорн" />
+    <string id="aom_anduinvale_male_name_14" text="Кутбеорн" />
+    <string id="aom_anduinvale_male_name_15" text="Сэбеорн" />
+    <string id="aom_anduinvale_male_name_16" text="Тидбеорн" />
+    <string id="aom_anduinvale_male_name_17" text="Осрик" />
+    <string id="aom_anduinvale_male_name_18" text="Освин" />
+    <string id="aom_anduinvale_male_name_19" text="Эадрик" />
+    <string id="aom_anduinvale_male_name_2" text="Беорнот" />
+    <string id="aom_anduinvale_male_name_20" text="Эалдред" />
+    <string id="aom_anduinvale_male_name_21" text="Вигхард" />
+    <string id="aom_anduinvale_male_name_22" text="Леофвин" />
+    <string id="aom_anduinvale_male_name_23" text="Кеолвульф" />
+    <string id="aom_anduinvale_male_name_24" text="Хереворд" />
+    <string id="aom_anduinvale_male_name_25" text="Эльфхере" />
+    <string id="aom_anduinvale_male_name_26" text="Брегувине" />
+    <string id="aom_anduinvale_male_name_27" text="Деорвине" />
+    <string id="aom_anduinvale_male_name_28" text="Эанред" />
+    <string id="aom_anduinvale_male_name_29" text="Фритувальд" />
+    <string id="aom_anduinvale_male_name_3" text="Беорнред" />
+    <string id="aom_anduinvale_male_name_30" text="Гутлак" />
+    <string id="aom_anduinvale_male_name_31" text="Херемод" />
+    <string id="aom_anduinvale_male_name_32" text="Хигеред" />
+    <string id="aom_anduinvale_male_name_33" text="Меревальд" />
+    <string id="aom_anduinvale_male_name_34" text="Ордгар" />
+    <string id="aom_anduinvale_male_name_35" text="Вэрмунд" />
+    <string id="aom_anduinvale_male_name_36" text="Винстан" />
+    <string id="aom_anduinvale_male_name_37" text="Эальхмунд" />
+    <string id="aom_anduinvale_male_name_38" text="Беорнхельм" />
+    <string id="aom_anduinvale_male_name_39" text="Хунвальд" />
+    <string id="aom_anduinvale_male_name_4" text="Беорнстан" />
+    <string id="aom_anduinvale_male_name_40" text="Вигстан" />
+    <string id="aom_anduinvale_male_name_5" text="Эальдбеорн" />
+    <string id="aom_anduinvale_male_name_6" text="Вигбеорн" />
+    <string id="aom_anduinvale_male_name_7" text="Хеахбеорн" />
+    <string id="aom_anduinvale_male_name_8" text="Сигебеорн" />
+    <string id="aom_anduinvale_male_name_9" text="Кинебеорн" />
+    <string id="aom_anduinvale_name" text="Беорнинги" />
+    <string id="aom_angaladh_clan_1" text="Дом Города Лесовиков" />
+    <string id="aom_angaladh_clan_10" text="Дом Древних Королей" />
+    <string id="aom_angaladh_clan_11" text="Хранители Лесного Тракта" />
+    <string id="aom_angaladh_clan_12" text="Народ Чёрного Озера" />
+    <string id="aom_angaladh_clan_2" text="Лучники Западной Опушки" />
+    <string id="aom_angaladh_clan_3" text="Дом Железного Леса" />
+    <string id="aom_angaladh_clan_4" text="Народ Росгобела" />
+    <string id="aom_angaladh_clan_5" text="Охотники Теснины" />
+    <string id="aom_angaladh_clan_6" text="Углежоги Зелёного Леса" />
+    <string id="aom_angaladh_clan_7" text="Дом Великого Дуба" />
+    <string id="aom_angaladh_clan_8" text="Паукоборцы Опушки" />
+    <string id="aom_angaladh_clan_9" text="Народ Восточного Берега" />
+    <string id="aom_angaladh_desc" text="Лесовики Ангалада живут под западными опушками Лихолесья, где их отцы расчистили усадьбы среди деревьев, столь твёрдых, что топоры звенят о них, как о железо. Это лучники, дровосеки и охотники, малочисленные и недоверчивые, живущие в мире с эльфами северного леса. С каждым годом тень на юге леса растёт, и с каждым годом их король шлёт всё больше стрелков стеречь Теснину." />
+    <string id="aom_angaladh_female_name_1" text="Видумави" />
+    <string id="aom_angaladh_female_name_10" text="Хильдигунда" />
+    <string id="aom_angaladh_female_name_11" text="Аудофледа" />
+    <string id="aom_angaladh_female_name_12" text="Баддо" />
+    <string id="aom_angaladh_female_name_13" text="Сунигильда" />
+    <string id="aom_angaladh_female_name_14" text="Лиувигунда" />
+    <string id="aom_angaladh_female_name_15" text="Рагнахильда" />
+    <string id="aom_angaladh_female_name_16" text="Теуделинда" />
+    <string id="aom_angaladh_female_name_17" text="Гундивара" />
+    <string id="aom_angaladh_female_name_18" text="Сванахильда" />
+    <string id="aom_angaladh_female_name_19" text="Айвильда" />
+    <string id="aom_angaladh_female_name_2" text="Амаласунта" />
+    <string id="aom_angaladh_female_name_20" text="Фритигунда" />
+    <string id="aom_angaladh_female_name_21" text="Вилитруда" />
+    <string id="aom_angaladh_female_name_22" text="Роделинда" />
+    <string id="aom_angaladh_female_name_23" text="Ансигунда" />
+    <string id="aom_angaladh_female_name_24" text="Эрменберга" />
+    <string id="aom_angaladh_female_name_3" text="Матасунта" />
+    <string id="aom_angaladh_female_name_4" text="Амалафрида" />
+    <string id="aom_angaladh_female_name_5" text="Тиудигото" />
+    <string id="aom_angaladh_female_name_6" text="Острогото" />
+    <string id="aom_angaladh_female_name_7" text="Гаата" />
+    <string id="aom_angaladh_female_name_8" text="Галсвинта" />
+    <string id="aom_angaladh_female_name_9" text="Гойсвинта" />
+    <string id="aom_angaladh_male_name_1" text="Видугавия" />
+    <string id="aom_angaladh_male_name_10" text="Фритигерн" />
+    <string id="aom_angaladh_male_name_11" text="Атанарих" />
+    <string id="aom_angaladh_male_name_12" text="Гайна" />
+    <string id="aom_angaladh_male_name_13" text="Сар" />
+    <string id="aom_angaladh_male_name_14" text="Сигерих" />
+    <string id="aom_angaladh_male_name_15" text="Валлия" />
+    <string id="aom_angaladh_male_name_16" text="Торисмунд" />
+    <string id="aom_angaladh_male_name_17" text="Тиудимир" />
+    <string id="aom_angaladh_male_name_18" text="Гезимунд" />
+    <string id="aom_angaladh_male_name_19" text="Хунимунд" />
+    <string id="aom_angaladh_male_name_2" text="Винитарья" />
+    <string id="aom_angaladh_male_name_20" text="Гунтамунд" />
+    <string id="aom_angaladh_male_name_21" text="Хильдерих" />
+    <string id="aom_angaladh_male_name_22" text="Агила" />
+    <string id="aom_angaladh_male_name_23" text="Атанагильд" />
+    <string id="aom_angaladh_male_name_24" text="Лиува" />
+    <string id="aom_angaladh_male_name_25" text="Виттерих" />
+    <string id="aom_angaladh_male_name_26" text="Гундемар" />
+    <string id="aom_angaladh_male_name_27" text="Свинтила" />
+    <string id="aom_angaladh_male_name_28" text="Хинтила" />
+    <string id="aom_angaladh_male_name_29" text="Тульга" />
+    <string id="aom_angaladh_male_name_3" text="Мархари" />
+    <string id="aom_angaladh_male_name_30" text="Эгика" />
+    <string id="aom_angaladh_male_name_31" text="Беримунд" />
+    <string id="aom_angaladh_male_name_32" text="Ансигар" />
+    <string id="aom_angaladh_male_name_33" text="Тиудагаст" />
+    <string id="aom_angaladh_male_name_34" text="Айвамунд" />
+    <string id="aom_angaladh_male_name_35" text="Баудила" />
+    <string id="aom_angaladh_male_name_36" text="Фравитта" />
+    <string id="aom_angaladh_male_name_37" text="Вульфила" />
+    <string id="aom_angaladh_male_name_38" text="Хродигаст" />
+    <string id="aom_angaladh_male_name_39" text="Аудавин" />
+    <string id="aom_angaladh_male_name_4" text="Мархвини" />
+    <string id="aom_angaladh_male_name_40" text="Эрманарих" />
+    <string id="aom_angaladh_male_name_5" text="Фортвини" />
+    <string id="aom_angaladh_male_name_6" text="Аталарих" />
+    <string id="aom_angaladh_male_name_7" text="Теодемир" />
+    <string id="aom_angaladh_male_name_8" text="Валамир" />
+    <string id="aom_angaladh_male_name_9" text="Видимир" />
+    <string id="aom_angaladh_name" text="Лесовики" />
+    <string id="aom_dorwinion_clan_1" text="Дом Виноградных Давилен" />
+    <string id="aom_dorwinion_clan_10" text="Стражи Южных Лоз" />
+    <string id="aom_dorwinion_clan_11" text="Народ Виноградников" />
+    <string id="aom_dorwinion_clan_12" text="Дом Эльфийского Вина" />
+    <string id="aom_dorwinion_clan_2" text="Виноделы Красноводной" />
+    <string id="aom_dorwinion_clan_3" text="Лодочники Быстротечной" />
+    <string id="aom_dorwinion_clan_4" text="Дом Солнечных Склонов" />
+    <string id="aom_dorwinion_clan_5" text="Погребщики Винехольма" />
+    <string id="aom_dorwinion_clan_6" text="Поморы Внутреннего Моря" />
+    <string id="aom_dorwinion_clan_7" text="Торговцы Винного Пути" />
+    <string id="aom_dorwinion_clan_8" text="Дом Золотой Грозди" />
+    <string id="aom_dorwinion_clan_9" text="Баржевники Карнена" />
+    <string id="aom_dorwinion_desc" text="Люди Дорвиниона возделывают виноградники на тёплых склонах над морем Рун, и вино их уходит вверх по Красноводной и Быстротечной в чертоги эльфов и людей далеко на западе. Они виноделы, лодочники и речные торговцы — северный народ, что скорее продаст чужаку, чем станет с ним биться. Их король держит двор в Винехольме, и с каждым годом истерлинги с того берега внутреннего моря всё пристальнее смотрят на его богатую и слабо защищённую землю." />
+    <string id="aom_dorwinion_female_name_1" text="Гундеперга" />
+    <string id="aom_dorwinion_female_name_10" text="Ансельперга" />
+    <string id="aom_dorwinion_female_name_11" text="Лиутперга" />
+    <string id="aom_dorwinion_female_name_12" text="Ратруда" />
+    <string id="aom_dorwinion_female_name_13" text="Тассия" />
+    <string id="aom_dorwinion_female_name_14" text="Гайла" />
+    <string id="aom_dorwinion_female_name_15" text="Вигилинда" />
+    <string id="aom_dorwinion_female_name_16" text="Ромильда" />
+    <string id="aom_dorwinion_female_name_17" text="Альдегунда" />
+    <string id="aom_dorwinion_female_name_18" text="Гунтрада" />
+    <string id="aom_dorwinion_female_name_19" text="Синдрада" />
+    <string id="aom_dorwinion_female_name_2" text="Анса" />
+    <string id="aom_dorwinion_female_name_20" text="Хильдегарда" />
+    <string id="aom_dorwinion_female_name_21" text="Гундрада" />
+    <string id="aom_dorwinion_female_name_22" text="Теодорада" />
+    <string id="aom_dorwinion_female_name_23" text="Эрмелинда" />
+    <string id="aom_dorwinion_female_name_24" text="Ансперга" />
+    <string id="aom_dorwinion_female_name_3" text="Ратперга" />
+    <string id="aom_dorwinion_female_name_4" text="Клотсвинда" />
+    <string id="aom_dorwinion_female_name_5" text="Вальдерада" />
+    <string id="aom_dorwinion_female_name_6" text="Розамунда" />
+    <string id="aom_dorwinion_female_name_7" text="Эрменгарда" />
+    <string id="aom_dorwinion_female_name_8" text="Гизела" />
+    <string id="aom_dorwinion_female_name_9" text="Адельперга" />
+    <string id="aom_dorwinion_male_name_1" text="Альбоин" />
+    <string id="aom_dorwinion_male_name_10" text="Пертарит" />
+    <string id="aom_dorwinion_male_name_11" text="Кунинкперт" />
+    <string id="aom_dorwinion_male_name_12" text="Ариперт" />
+    <string id="aom_dorwinion_male_name_13" text="Ротари" />
+    <string id="aom_dorwinion_male_name_14" text="Аривальд" />
+    <string id="aom_dorwinion_male_name_15" text="Вахо" />
+    <string id="aom_dorwinion_male_name_16" text="Тато" />
+    <string id="aom_dorwinion_male_name_17" text="Годеперт" />
+    <string id="aom_dorwinion_male_name_18" text="Гарибальд" />
+    <string id="aom_dorwinion_male_name_19" text="Анспранд" />
+    <string id="aom_dorwinion_male_name_2" text="Аудоин" />
+    <string id="aom_dorwinion_male_name_20" text="Хильдепранд" />
+    <string id="aom_dorwinion_male_name_21" text="Родоальд" />
+    <string id="aom_dorwinion_male_name_22" text="Адалоальд" />
+    <string id="aom_dorwinion_male_name_23" text="Алахис" />
+    <string id="aom_dorwinion_male_name_24" text="Гундахар" />
+    <string id="aom_dorwinion_male_name_25" text="Гундиок" />
+    <string id="aom_dorwinion_male_name_26" text="Годегизель" />
+    <string id="aom_dorwinion_male_name_27" text="Гундомар" />
+    <string id="aom_dorwinion_male_name_28" text="Гислахар" />
+    <string id="aom_dorwinion_male_name_29" text="Гибика" />
+    <string id="aom_dorwinion_male_name_3" text="Агилульф" />
+    <string id="aom_dorwinion_male_name_30" text="Гейзерих" />
+    <string id="aom_dorwinion_male_name_31" text="Хунерих" />
+    <string id="aom_dorwinion_male_name_32" text="Тразамунд" />
+    <string id="aom_dorwinion_male_name_33" text="Гелимер" />
+    <string id="aom_dorwinion_male_name_34" text="Годигизел" />
+    <string id="aom_dorwinion_male_name_35" text="Ардарих" />
+    <string id="aom_dorwinion_male_name_36" text="Турисинд" />
+    <string id="aom_dorwinion_male_name_37" text="Кунимунд" />
+    <string id="aom_dorwinion_male_name_38" text="Туризмод" />
+    <string id="aom_dorwinion_male_name_39" text="Гизульф" />
+    <string id="aom_dorwinion_male_name_4" text="Аутари" />
+    <string id="aom_dorwinion_male_name_40" text="Ромуальд" />
+    <string id="aom_dorwinion_male_name_5" text="Клеф" />
+    <string id="aom_dorwinion_male_name_6" text="Гримоальд" />
+    <string id="aom_dorwinion_male_name_7" text="Лиутпранд" />
+    <string id="aom_dorwinion_male_name_8" text="Ратхис" />
+    <string id="aom_dorwinion_male_name_9" text="Айстульф" />
+    <string id="aom_dorwinion_name" text="Люди Дорвиниона" />
+    <string id="aom_southrhovanion_clan_1" text="Дом Королей Курганов" />
+    <string id="aom_southrhovanion_clan_10" text="Дом Старой Лесной Дороги" />
+    <string id="aom_southrhovanion_clan_11" text="Народ Бурых Равнин" />
+    <string id="aom_southrhovanion_clan_12" text="Стражи Дагорлада" />
+    <string id="aom_southrhovanion_clan_2" text="Всадники Восточной Излучины" />
+    <string id="aom_southrhovanion_clan_3" text="Табунщики Равнин" />
+    <string id="aom_southrhovanion_clan_4" text="Народ Южных Опушек" />
+    <string id="aom_southrhovanion_clan_5" text="Дом Сокрушителей Повозок" />
+    <string id="aom_southrhovanion_clan_6" text="Копейщики Бродов" />
+    <string id="aom_southrhovanion_clan_7" text="Дом Белых Кобылиц" />
+    <string id="aom_southrhovanion_clan_8" text="Хранители Конских Пастбищ" />
+    <string id="aom_southrhovanion_clan_9" text="Всадники Келдуина" />
+    <string id="aom_southrhovanion_desc" text="Северяне Южного Рованиона кочуют по широким равнинам между южными опушками Лихолесья и Бурыми Равнинами — вольный народ коневодов, считающий северных эотеод своей роднёй. Их отцы были владыками северян во дни древних королей, и курганы тех королей доныне стоят среди трав. Дважды выходили с Востока кибиточники с повозками и огнём и сокрушали их, и всадники равнин этого не забыли." />
+    <string id="aom_southrhovanion_female_name_1" text="Видухильда" />
+    <string id="aom_southrhovanion_female_name_10" text="Ансавинта" />
+    <string id="aom_southrhovanion_female_name_11" text="Сигихильда" />
+    <string id="aom_southrhovanion_female_name_12" text="Гайсахильдо" />
+    <string id="aom_southrhovanion_female_name_13" text="Вульфахильда" />
+    <string id="aom_southrhovanion_female_name_14" text="Атальгунда" />
+    <string id="aom_southrhovanion_female_name_15" text="Фритувара" />
+    <string id="aom_southrhovanion_female_name_16" text="Харьяхильдо" />
+    <string id="aom_southrhovanion_female_name_17" text="Гунтивинта" />
+    <string id="aom_southrhovanion_female_name_18" text="Тиудавара" />
+    <string id="aom_southrhovanion_female_name_19" text="Аустрахильда" />
+    <string id="aom_southrhovanion_female_name_2" text="Мархавинта" />
+    <string id="aom_southrhovanion_female_name_20" text="Сунъявинта" />
+    <string id="aom_southrhovanion_female_name_21" text="Свинтахильда" />
+    <string id="aom_southrhovanion_female_name_22" text="Видурада" />
+    <string id="aom_southrhovanion_female_name_23" text="Мархамави" />
+    <string id="aom_southrhovanion_female_name_24" text="Эрманаберга" />
+    <string id="aom_southrhovanion_female_name_3" text="Мархильдо" />
+    <string id="aom_southrhovanion_female_name_4" text="Фортивинта" />
+    <string id="aom_southrhovanion_female_name_5" text="Хродагунда" />
+    <string id="aom_southrhovanion_female_name_6" text="Эрманахильда" />
+    <string id="aom_southrhovanion_female_name_7" text="Айвигунда" />
+    <string id="aom_southrhovanion_female_name_8" text="Гайсавинта" />
+    <string id="aom_southrhovanion_female_name_9" text="Бальтильдо" />
+    <string id="aom_southrhovanion_male_name_1" text="Видурик" />
+    <string id="aom_southrhovanion_male_name_10" text="Фортагаст" />
+    <string id="aom_southrhovanion_male_name_11" text="Хродамунд" />
+    <string id="aom_southrhovanion_male_name_12" text="Хродарик" />
+    <string id="aom_southrhovanion_male_name_13" text="Эрманагаст" />
+    <string id="aom_southrhovanion_male_name_14" text="Эрманамунд" />
+    <string id="aom_southrhovanion_male_name_15" text="Айварик" />
+    <string id="aom_southrhovanion_male_name_16" text="Айвульф" />
+    <string id="aom_southrhovanion_male_name_17" text="Гайсамунд" />
+    <string id="aom_southrhovanion_male_name_18" text="Гайсарик" />
+    <string id="aom_southrhovanion_male_name_19" text="Бальтамар" />
+    <string id="aom_southrhovanion_male_name_2" text="Видухари" />
+    <string id="aom_southrhovanion_male_name_20" text="Бальтульф" />
+    <string id="aom_southrhovanion_male_name_21" text="Ансамар" />
+    <string id="aom_southrhovanion_male_name_22" text="Ансульф" />
+    <string id="aom_southrhovanion_male_name_23" text="Сигивини" />
+    <string id="aom_southrhovanion_male_name_24" text="Сигирик" />
+    <string id="aom_southrhovanion_male_name_25" text="Хильдимар" />
+    <string id="aom_southrhovanion_male_name_26" text="Хильдивини" />
+    <string id="aom_southrhovanion_male_name_27" text="Вульфамунд" />
+    <string id="aom_southrhovanion_male_name_28" text="Вульфарик" />
+    <string id="aom_southrhovanion_male_name_29" text="Аталвини" />
+    <string id="aom_southrhovanion_male_name_3" text="Видумунд" />
+    <string id="aom_southrhovanion_male_name_30" text="Аталгаст" />
+    <string id="aom_southrhovanion_male_name_31" text="Фритумар" />
+    <string id="aom_southrhovanion_male_name_32" text="Фритувини" />
+    <string id="aom_southrhovanion_male_name_33" text="Харьямунд" />
+    <string id="aom_southrhovanion_male_name_34" text="Харьярик" />
+    <string id="aom_southrhovanion_male_name_35" text="Гунтамар" />
+    <string id="aom_southrhovanion_male_name_36" text="Гунтивини" />
+    <string id="aom_southrhovanion_male_name_37" text="Тиудавини" />
+    <string id="aom_southrhovanion_male_name_38" text="Аустровини" />
+    <string id="aom_southrhovanion_male_name_39" text="Суньямар" />
+    <string id="aom_southrhovanion_male_name_4" text="Видугаст" />
+    <string id="aom_southrhovanion_male_name_40" text="Свинтамар" />
+    <string id="aom_southrhovanion_male_name_5" text="Мархамунд" />
+    <string id="aom_southrhovanion_male_name_6" text="Мархагаст" />
+    <string id="aom_southrhovanion_male_name_7" text="Мархарик" />
+    <string id="aom_southrhovanion_male_name_8" text="Мархульф" />
+    <string id="aom_southrhovanion_male_name_9" text="Фортари" />
+    <string id="aom_southrhovanion_name" text="Северяне Рованиона" />
   </strings>
 </base>

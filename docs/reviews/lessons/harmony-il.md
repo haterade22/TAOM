@@ -1416,3 +1416,40 @@ The new `HandleWargTargetHit` log read the victim's mount in its `catch`. Patch4
 - **Why missed:** the tests stubbed a mount that never changed, so they passed. The port review had already recorded the same hazard for the `blow` diagnostic line.
 - **Prevent:** in a catch around a call that mutates its subject, read the fields you will log before the call, and write a test that changes the field during the call. When a guard's scope changes, grep the effect's words (`dismounted`, `unhorse`) as well as the patch name.
 - **Source:** `docs/reviews/rca-creature-mount-death-dismount-2026-11-08.md`.
+
+### A prefix inside `PlayerEncounter.Init` must leave the encounter open (Patch73, #1104, 2026-11-09)
+`SupplyCaravanEncounterPatch` called `PlayerEncounter.Finish()` from a `DoMeeting` prefix. `DoMeeting` runs inside `Init`, and `RestartPlayerEncounter` reads `PlayerEncounter.Current` on the line after `Init` (v1.5.6 `EncounterManager.cs:339-340`), so that read throws after the prefix has returned and its catch cannot see it.
+- **Why missed:** the patch copied the teardown from vanilla's own menu init and checked that the calls matched. Vanilla runs that teardown only on its leave branch, and nobody read the caller above the menu.
+- **Prevent:** before a prefix ends or replaces shared state, read the callers up the stack to the frame that owns that state, and read what each does after the call returns. In a meeting prefix, open a menu and end the encounter from its Leave option, as Patch73, Patch75 and Patch143 do.
+- **Source:** `docs/reviews/rca-sally-empty-party-2026-11-08.md`.
+
+### A patch on another mod's method needs a live-install shape test, and its docs cite the installed build (Patch144, #967, 2026-11-09)
+
+`HarmonyPatchBindingTests` passes a `ThirdPartyTargetPatches` class whenever `Prepare` returns false, which is always in a test host without that mod. Patch144's postfix reads Coop's `__0` and `__1` by position, so a Coop change to the parameters that kept the method name would have passed every test. The registry also said the handler checks the sender, which only the Coop source checkout does; the installed `GameInterface.dll` predates that commit.
+
+- **Why missed:** I took the `ThirdPartyTargetPatches` row for a shape gate. It only proves that `Prepare` fails closed. I read the mod's source checkout, not the DLL the game loads.
+- **Prevent:** add a `BindingVerification` row that loads the installed mod DLL (`CoopMissionBindingTests` does this for Coop) and compares the target's parameter types with the patch method's. Write behaviour claims from the installed build, and name the source commit when the two differ.
+- **Source:** [rca-emissary-party-coop-upgrades-2026-11-09.md](../rca-emissary-party-coop-upgrades-2026-11-09.md), rows 2 and 3.
+
+### Detect a "Collection was modified" throw with the enumerator's own check, not a size compare (Patch103 list check, #1028, 2026-11-11)
+
+- **Why missed:** I took "a behavior was added or removed" from the #1028 hypothesis and used the list's size as the signal. `List<T>.Enumerator.MoveNext` throws on any `_version` change, and an indexer write, `Sort`, `Reverse` or an add paired with a remove keep the size. I also wrote that the call whose size differs "is the culprit"; it proves only where the change happened.
+- **Prevent:** to see what the engine's enumerator will see, take `list.GetEnumerator()` before the call and step a copy of the struct after it (`Watch<T>` in `MissionStartGuardCalls`). Test the size-equal cases. A diagnostic's text says what it proves ("during AfterStart of X"), not who to blame.
+- **Source:** [rca-mission-list-check-2026-11-11.md](../rca-mission-list-check-2026-11-11.md), rows 1 and 4.
+
+### Take the cause from the owner the evidence names, and a caller list from an IL scan, never from a partial decompile cache (2026-11-12)
+
+The #1028 fix queues a `Mission.AddMissionBehavior` made while `Mission.AfterStart` walks `MissionBehaviors`. Its first docs said the
+fighters spawn inside `ArenaPracticeFightMissionController.AfterStart` and listed three callers of `AddMissionBehavior`. Both were
+wrong. The guard's log line named `CampaignMissionComponent`, whose `AfterStart` raises `CampaignEvents.AfterMissionStarted`; the
+menu path's listener spawns the fighters. The caller list came from a grep over a decompile cache that holds a subset of the engine's
+types, and missed four `OnMissionStarted` listeners that add inside `AfterStart`.
+- **Why missed:** the first file that matched the mission's name became the cause, although the evidence had already named another owner.
+  The cache's size was known and the doc named "decompile, three types" as the scope, but a short result was still read as a full list
+  (`evidence-over-claims.md` C4).
+- **Prevent:** (1) start a causal chain at the owner the log or the guard names, and read each hop (event, listener, caller) before the
+  doc says "spawns inside X". (2) A "callers of the patched method" list comes from an IL scan of every assembly that references it
+  (`ilspycmd -il`, or the byte scan the registry already uses for foreign patchers), and the doc states which assemblies were swept
+  whole. (3) A new class in an existing patch category binds the engine's parameters by position (`__0`) when the name is not the point,
+  because `PatchCategoryIndex.Apply` stops at the first class that throws and would take the older patches of the category with it.
+- **Source:** [rca-mission-start-defer-2026-11-12.md](../rca-mission-start-defer-2026-11-12.md), `/deep-review` Agents 2 and 5.

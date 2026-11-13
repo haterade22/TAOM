@@ -106,13 +106,15 @@ themed movie that throws while building falls back to vanilla's and is not tried
   list the hero is taken over through every stage. Campaign options keep a new campaign's defaults
   (every difficulty at its easiest, Iron Man off, the life and death cycle on, as an untouched options
   screen leaves them); Iron Man and, with the Birth and Aging Options module, the life and death cycle
-  can no longer be set, the rest can in the campaign's options. On the named cards, Haldir (a Mirkwood
-  lord on the Lothlorien screen) and Bolg (Misty Mountains culture on the Gundabad screen) are taken
-  over across culture (#1067; they were copied before, Mike 2026-10-02, and Mike changed that on
-  2026-10-30). Their career comes from the menu of the screen's culture and is stored under the hero's
+  can no longer be set, the rest can in the campaign's options. On the named cards, Bolg (Misty Mountains
+  culture on the Gundabad screen) is taken over across culture (#1067; he was copied before, Mike
+  2026-10-02, and Mike changed that on 2026-10-30). Haldir was the second such case, as a Mirkwood
+  lord on the Lothlorien screen; on 2026-11-12 he became a Lothlorien lord (`lord_M3_3`, culture
+  `lothlorien`, clan `clan_lothlorien_3`, id kept), so his takeover is no longer across culture.
+  Bolg's career comes from the menu of the screen's culture and is stored under the hero's
   id, which holds no culture, so it carries over. A later career switch is judged against the hero's own
-  culture (`CareerRegistry.IsEligible`), so once Haldir leaves a Lothlorien career he cannot pick one
-  again. The Nazgûl card is `lord_1_155`, a member of the Witch-king's clan: taking him over makes him
+  culture (`CareerRegistry.IsEligible`), so once Bolg leaves a Gundabad career he cannot pick one
+  again; Haldir can pick a Lothlorien career again. The Nazgûl card is `lord_1_155`, a member of the Witch-king's clan: taking him over makes him
   that clan's leader (Player Switcher's #550 rule), so the Witch-king stays on as a member of the
   player's clan and his gold moves to the player (Mike, 2026-10-30: keep it).
 - **Adopting a clanless card hero (#1067).** Aragorn and Gimli have no clan. A named card whose hero is a
@@ -462,6 +464,14 @@ career page and into the game. Owed:
   career choice and into the game (Mike); the faction screen now hides only Player Switcher's panel.
 - 2026-10-02: a taken-over lord keeps their own treasury instead of vanilla's 1,000 gold (Mike), for
   faction-screen and Player Switcher takeovers alike; Haldir and Bolg stay copies (Mike: fine).
+- 2026-11-12: Haldir (`lord_M3_3`), Rumil (`lord_M4_3`) and Orophin (`lord_M4_5`) moved from Mirkwood to
+  Lothlorien (culture `lothlorien`, clan `clan_lothlorien_3`). The ids are kept so saves, the card and
+  the name rows keep working. Haldir's two gear rosters now carry `Culture.lothlorien`. Rumil wears
+  `lothlorien_bat_template_medium_d` and Orophin `_c`, with the matching civilian kits, so no
+  Mirkwood moose gear reaches generated Lothlorien lords. Haldir's and Orophin's descriptions have new
+  keys (`haldir_lothlorien_description`, `orophin_lothlorien_description`) with no language rows until
+  the language pass. That pass keeps the 12 rows of the old keys `haldir_description` and
+  `orophin_description`: a hero text is saved with the hero, so existing saves still show them.
 
 ## GitHub Issue
 

@@ -1,4 +1,3 @@
-using System;
 using HarmonyLib;
 using TaleWorlds.Engine;
 using TaleWorlds.MountAndBlade;
@@ -8,7 +7,7 @@ namespace TAOM.Features.BattleLoadDiagnostics.Hooks;
 // Phase 4f — the FinishMissionLoadingDone -> BattlePlayable window, from the inside.
 //
 // Why (player bundle b18f3441, 2026-09-04): a load sat 305 s past FinishMissionLoadingDone with
-// NOTHING in the TAOM phase log, and the stall watchdog wrote a crash bundle for it. The engine's
+// NOTHING in the TAOM phase log, and the stall watchdog (removed 2026-11-12) wrote a crash bundle for it. The engine's
 // own rgl_log for that exact 290-second window holds 818 `compile_shader` lines plus two others:
 // the load was working the whole time. MissionState.OnTick reaches TickMission only through
 //
@@ -19,8 +18,8 @@ namespace TAOM.Features.BattleLoadDiagnostics.Hooks;
 // scene's shaders compile, and FinishMissionLoading's last line (Scene.ResumeLoadingRenderings)
 // is what starts the compile flood. So on a cold shader cache the mission sits one frame short of
 // playable, BattleLoadPhaseBehavior.OnMissionTick never runs, and the loading window never closes.
-// Verified against the installed v1.4.8: MissionState.cs:110-113, Native__TaleWorlds.MountAndBlade
-// .View.cs:15963 (MissionStartedRendering) / :16584 (RenderIsReady).
+// Verified against the installed v1.5.7: MissionState.cs:110-113, MissionScreen.cs:2370-2376
+// (MissionStartedRendering) and :2907-2909 (RenderIsReady).
 //
 // POSTFIX by design: on the frame the mission finally ticks, TickMission has already cleared
 // FirstMissionTickAfterLoading, so the guard skips it. The marker fires only on frames that did
@@ -30,12 +29,9 @@ namespace TAOM.Features.BattleLoadDiagnostics.Hooks;
 // else, and the native shader read only once past them. The 1 Hz throttle lives in the service
 // (NoteLoadingPoll's division of labour), not here.
 //
-// Observation matrix (static-state rule, .claude/rules/harmony-patches.md): the probe's four states
-// are -1 never-sampled, 0 nothing-compiling, >0 in-progress, and 0 again at completion. States 2 and
-// 4 share the `0` encoding, which is the collision the rule warns about — but nothing here acts on a
-// sentinel-to-terminal transition. The only consumer, BattleLoadStallWatchdog.Decide, treats -1 and 0
-// identically (do not defer, let the watchdog fire), so absent evidence and finished work both fail
-// in the SAFE direction and no _hasObservedWork latch is needed.
+// Observation matrix (static-state rule, .claude/rules/harmony-patches.md): this postfix keeps no
+// state between frames. The value goes only into the 1 Hz log stamp, where -1 means the native
+// read threw (the stamp then leaves the shaders= token out) and 0 means nothing is compiling.
 //
 // MissionState.OnTick is `protected override`, so it is bound BY STRING like the sibling
 // TickLoading / FinishMissionLoading patches in this category. AccessTools.Method searches
@@ -65,11 +61,8 @@ public static class MissionState_OnTick_RenderWait_Patch
 
             int shaders;
             try { shaders = Utilities.GetNumberOfShaderCompilationsInProgress(); }
-            catch { shaders = BattleLoadRenderWaitProbe.NeverSampled; }
+            catch { shaders = -1; }
 
-            // Publish on the MAIN thread; the background watchdog reads the static rather than
-            // calling into the engine from a thread-pool thread.
-            BattleLoadRenderWaitProbe.Publish(shaders, DateTime.UtcNow);
             _service?.NoteWaitingForRender(shaders);
         }
         catch { /* diagnostic only — a diagnostic must never break a mission tick */ }

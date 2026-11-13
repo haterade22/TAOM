@@ -60,7 +60,7 @@ public class SpecialResourceGainTests
 
     private static readonly (string Name, Action<SpecialResourceService> Earn, float Base)[] Paths =
     {
-        ("battle", s => s.EarnFromBattle("hero1", "empire_s", null, 1f), 10f),
+        ("battle", s => s.EarnFromBattle("hero1", "empire_s", null, 100f), 10f),
         ("raid", s => s.EarnFromRaid("hero1", "empire_s", null), 8f),
         ("siege", s => s.EarnFromSiege("hero1", "empire_s", null), 15f),
         ("prisoners", s => s.EarnFromPrisoners("hero1", "empire_s", null, 4), 4f),

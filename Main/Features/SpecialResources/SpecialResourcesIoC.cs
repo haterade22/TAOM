@@ -8,6 +8,7 @@ public static class SpecialResourcesIoC
 {
     public static void RegisterSpecialResourcesFeature(IContainer container)
     {
+        container.Register<ISpecialResourceSettingsProvider, SpecialResourceSettingsProvider>(Reuse.Singleton);
         container.Register<ISpecialResourceConfigProvider, SpecialResourceConfigProvider>(Reuse.Singleton);
         container.Register<ISpecialResourceStorageService, SpecialResourceStorageService>(Reuse.Singleton);
         container.Register<ISpecialResourceService, SpecialResourceService>(Reuse.Singleton);

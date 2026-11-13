@@ -14,7 +14,9 @@ namespace TAOM.Features.WarChronicle.Ledger;
 /// order) that <c>tools/analyze_war_ledger.py</c> parses. Pure and culture-proof: numbers are formatted
 /// with the invariant culture so a German thread writes <c>0.300</c>, never <c>0,300</c>. Any text that
 /// is not a number goes through <see cref="Token"/>, so an id cannot split a line or forge a key.
-/// A change to a line is a format change: bump the version and teach the analyzer.
+/// A change to a line is a format change: bump the version and teach the analyzer. A new line or event kind
+/// keeps the version: an older analyzer skips it as malformed, warns, and reports the rest. It goes into the
+/// shared fixture (<c>tools/tests/fixtures/war_ledger_v1.txt</c>) with the analyzer's key table.
 /// </summary>
 internal static class WarLedgerFormatter
 {
@@ -58,6 +60,10 @@ internal static class WarLedgerFormatter
     /// <summary>The outcome is Held, Fell, Lapsed, Occurred or Skipped; any other text is kept as a safe token.</summary>
     internal static string ChronicleEvent(string campaignId, int day, string eventId, string outcome) =>
         Inv($"{Head} t=event cid={Token(campaignId)} day={day} ev=chronicle id={Token(eventId)} outcome={Token(outcome)}");
+
+    /// <summary>A Neutral realm pledged to <paramref name="side"/> (#1113); <c>by</c> is ai or console.</summary>
+    internal static string PledgeEvent(string campaignId, int day, string kingdomId, FactionSide side, bool byAi) =>
+        Inv($"{Head} t=event cid={Token(campaignId)} day={day} ev=pledge k={Token(kingdomId)} side={SideName(side)} by={(byAi ? "ai" : "console")}");
 
     /// <summary>
     /// A save was loaded on <paramref name="day"/>: the analyzer drops this campaign's records of later days,

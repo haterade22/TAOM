@@ -32,6 +32,7 @@ public sealed class FrontEndMovieService
     public const string ClanNamingMovie = "TAOMClanNaming";
     public const string OptionsMovie = "TAOMOptionsStage";
     public const string FactionScreenMovie = "TAOMFactionScreen";
+    public const string CustomBattleMovie = "TaomCustomBattle";
 
     private const FrontEndImageGroups CreationFrame = FrontEndImageGroups.CharacterCreation;
 
@@ -95,7 +96,7 @@ public sealed class FrontEndMovieService
                 return Settings.CustomReviewStage ? Themed(movieName, ReviewMovie, CreationFrame) : null;
 
             case "BannerEditor" when dataSourceTypeName == "BannerEditorVM":
-                return Settings.CustomBannerEditor && _state.IsInCharacterCreation() ? Themed(movieName, BannerEditorMovie, CreationFrame) : null;
+                return Settings.CustomBannerEditor ? Themed(movieName, BannerEditorMovie, CreationFrame) : null;
 
             case "CharacterCreationClanNamingStage" when dataSourceTypeName == "CharacterCreationClanNamingStageVM":
                 return Settings.CustomClanNaming ? Themed(movieName, ClanNamingMovie, CreationFrame) : null;
@@ -134,6 +135,19 @@ public sealed class FrontEndMovieService
             case "LongDefeatHud" when dataSourceTypeName == "LongDefeatHudVM":
             case "LongDefeatPanel" when dataSourceTypeName == "LongDefeatHudVM":
                 return Themed(movieName, "TAOM" + movieName, CreationFrame);
+
+            // The circular battle HUD (#1095) is a UIExtenderEx extension of the native AgentStatus prefab,
+            // which this movie includes. The native movie loads unchanged; only its icon hold is taken, so
+            // the bh_* images are registered before the movie binds them and released after it closes.
+            case "MainAgentHUD" when dataSourceTypeName == "MissionAgentStatusVM":
+                _sprites.Acquire(FrontEndImageGroups.BattleHud);
+                return new MovieSwap(movieName, movieName, FrontEndImageGroups.BattleHud);
+
+            // TAOM's own Custom Battle screen, loaded by name from CustomBattleScreen_OnInitialize_Patch. Its prefab
+            // draws the main menu's and the encyclopedia's images by their own names, so the swap only takes the hold
+            // on both groups for as long as the movie lives.
+            case CustomBattleMovie when dataSourceTypeName == "TcbVM":
+                return Themed(movieName, CustomBattleMovie, FrontEndImageGroups.MainMenu | CreationFrame);
 
             default:
                 return null;

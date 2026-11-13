@@ -53,7 +53,6 @@ public sealed class BattleLoadDiagnosticsService : IBattleLoadDiagnosticsService
     // through the log to find out which scene the last line before a CTD belonged to.
     private volatile string _currentSceneName = string.Empty;
     private int _seq;
-    private volatile string _currentStatusLine = "phase=<none>";
     private volatile bool _exitWindowActive;
     private long _exitWindowOpenedUtcTicks; // 0 = closed; read via Interlocked (feeds ExitStallSampler)
 
@@ -79,7 +78,6 @@ public sealed class BattleLoadDiagnosticsService : IBattleLoadDiagnosticsService
     }
 
     public bool IsEnabled => _settings.IsEnabled;
-    public string CurrentStatusLine => _currentStatusLine;
 
     public void ResetLifecycle()
     {
@@ -556,10 +554,7 @@ public sealed class BattleLoadDiagnosticsService : IBattleLoadDiagnosticsService
     // vocabulary is shared with the [SaveLoad] campaign-launch phases via ProcessMemoryTokens.
     private static string MemStats() => ProcessMemoryTokens.Format();
 
-    // Single choke point: increment the sequence, stamp elapsed ms, update the status line
-    // for the watchdog, and write the marker. The status line is updated BEFORE the
-    // (potentially throwing) log write so the watchdog sees the latest phase even if the
-    // sink hiccups.
+    // Single choke point: increment the sequence, stamp elapsed ms, and write the marker.
     private void Emit(BattleLoadPhase phase, string detail)
     {
         try
@@ -568,7 +563,6 @@ public sealed class BattleLoadDiagnosticsService : IBattleLoadDiagnosticsService
             long ms = 0;
             try { ms = _stopwatch.ElapsedMilliseconds; } catch { /* clock best-effort */ }
 
-            _currentStatusLine = $"phase={phase} seq={seq} {detail}";
             _logger.LogInfo($"{Tag} seq={seq} t=+{ms}ms phase={phase} {detail}");
         }
         catch (Exception ex) { SafeWarn("Emit", ex); }

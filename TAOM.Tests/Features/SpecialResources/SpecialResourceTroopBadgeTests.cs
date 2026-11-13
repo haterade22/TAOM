@@ -69,6 +69,28 @@ public class SpecialResourceTroopBadgeTests
         Assert.IsFalse(SpecialResourceTroopBadge.IsShown(null));
     }
 
+    // ── Rows: the emissary price ──
+
+    [TestMethod]
+    public void Rows_EmissaryPrice_ShowsTheEmissaryPriceNotTheRawMerchantCost()
+    {
+        var cost = new TroopResourceCostEntry("t", "war_spoils", upgradeCost: 0, dailyUpkeep: 0f, recruitCost: 5, merchantCost: 28, emissaryPrice: 560);
+
+        var emissary = SpecialResourceTroopBadge.Rows(cost).Single(r => r.Key.Value.Contains("taom_res_badge_emissary"));
+
+        Assert.AreEqual("560", emissary.Value); // the number the emissary charges, so badge and charge agree
+    }
+
+    [TestMethod]
+    public void Rows_EmissaryPrice_EntryWithoutAnExplicitPrice_ShowsTheMerchantCost()
+    {
+        var cost = new TroopResourceCostEntry("t", "war_spoils", upgradeCost: 0, dailyUpkeep: 0f, recruitCost: 5, merchantCost: 28);
+
+        var emissary = SpecialResourceTroopBadge.Rows(cost).Single(r => r.Key.Value.Contains("taom_res_badge_emissary"));
+
+        Assert.AreEqual("28", emissary.Value);
+    }
+
     // ── Title ──
 
     [TestMethod]

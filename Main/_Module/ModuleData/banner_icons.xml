@@ -2,8 +2,9 @@
 <base xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xmlns:xsd="http://www.w3.org/2001/XMLSchema" type="string">
   <BannerIconData>
-    <!-- Gondor Icons -->
-    <BannerIconGroup id="100" name="{=!}TAOM Gondor Alpha 01" is_pattern="false">
+    <!-- One group per people (the editor's icon pages); each icon names its own sheet. -->
+    <BannerIconGroup id="100" name="{=taom_banner_category_dunedain}Dúnedain" is_pattern="false">
+      <!-- Gondor Icons -->
       <Icon id="10000" material_name="taom_banners_gondor_alpha_01" texture_index="0" />
       <Icon id="10001" material_name="taom_banners_gondor_alpha_01" texture_index="1" />
       <Icon id="10002" material_name="taom_banners_gondor_alpha_01" texture_index="2" />
@@ -20,9 +21,6 @@
       <Icon id="10013" material_name="taom_banners_gondor_alpha_01" texture_index="13" />
       <Icon id="10014" material_name="taom_banners_gondor_alpha_01" texture_index="14" />
       <Icon id="10015" material_name="taom_banners_gondor_alpha_01" texture_index="15" />
-    </BannerIconGroup>
-
-    <BannerIconGroup id="101" name="{=!}TAOM Gondor Alpha 02" is_pattern="false">
       <Icon id="10016" material_name="taom_banners_packed_alpha_02" texture_index="0" />
       <Icon id="10017" material_name="taom_banners_packed_alpha_02" texture_index="1" />
       <Icon id="10018" material_name="taom_banners_packed_alpha_02" texture_index="2" />
@@ -38,9 +36,7 @@
       <Icon id="10028" material_name="taom_banners_packed_alpha_02" texture_index="12" />
       <Icon id="10029" material_name="taom_banners_packed_alpha_02" texture_index="13" />
       <Icon id="10030" material_name="taom_banners_packed_alpha_02" texture_index="14" />
-    </BannerIconGroup>
-
-    <BannerIconGroup id="105" name="{=!}TAOM Gondor Ornaments 01" is_pattern="false">
+      <Icon id="31006" material_name="taom_banners_packed_alpha_02" texture_index="15" />
       <Icon id="10500" material_name="taom_banners_packed_alpha_09" texture_index="7" />
       <Icon id="10501" material_name="taom_banners_packed_alpha_09" texture_index="8" />
       <Icon id="10502" material_name="taom_banners_packed_alpha_09" texture_index="9" />
@@ -48,10 +44,7 @@
       <Icon id="10504" material_name="taom_banners_packed_alpha_09" texture_index="11" />
       <Icon id="10505" material_name="taom_banners_packed_alpha_09" texture_index="12" />
       <Icon id="10506" material_name="taom_banners_packed_alpha_09" texture_index="13" />
-    </BannerIconGroup>
-
-    <!-- Arnor Icons-->
-    <BannerIconGroup id="110" name="{=!}TAOM Arnor Alpha 01" is_pattern="false">
+      <!-- Arnor Icons-->
       <Icon id="11000" material_name="taom_banners_packed_alpha_09" texture_index="0" />
       <Icon id="11001" material_name="taom_banners_packed_alpha_09" texture_index="1" />
       <Icon id="11002" material_name="taom_banners_packed_alpha_09" texture_index="2" />
@@ -59,10 +52,12 @@
       <Icon id="11004" material_name="taom_banners_packed_alpha_09" texture_index="4" />
       <Icon id="11005" material_name="taom_banners_packed_alpha_09" texture_index="5" />
       <Icon id="11006" material_name="taom_banners_packed_alpha_09" texture_index="6" />
+      <Icon id="31008" material_name="taom_banners_packed_alpha_09" texture_index="14" />
+      <Icon id="31009" material_name="taom_banners_packed_alpha_09" texture_index="15" />
     </BannerIconGroup>
 
-    <!-- Umbar Icons-->
-    <BannerIconGroup id="120" name="{=!}TAOM Umbar Alpha 01" is_pattern="false">
+    <BannerIconGroup id="120" name="{=taom_banner_category_adunaic}Adûnaic" is_pattern="false">
+      <!-- Umbar Icons-->
       <Icon id="12000" material_name="taom_banners_packed_alpha_10" texture_index="0" />
       <Icon id="12001" material_name="taom_banners_packed_alpha_10" texture_index="1" />
       <Icon id="12002" material_name="taom_banners_packed_alpha_10" texture_index="2" />
@@ -72,207 +67,14 @@
       <Icon id="12006" material_name="taom_banners_packed_alpha_10" texture_index="6" />
     </BannerIconGroup>
 
-    <!-- Harad Icons -->
-    <BannerIconGroup id="130" name="{=!}TAOM Harad Alpha 01" is_pattern="false">
+    <BannerIconGroup id="130" name="{=taom_banner_category_haradrim}Haradrim" is_pattern="false">
+      <!-- Harad Icons -->
       <Icon id="13000" material_name="taom_banners_packed_alpha_03" texture_index="11" />
       <Icon id="13001" material_name="taom_banners_packed_alpha_03" texture_index="12" />
       <Icon id="13002" material_name="taom_banners_packed_alpha_03" texture_index="13" />
       <Icon id="13003" material_name="taom_banners_packed_alpha_03" texture_index="14" />
       <Icon id="13004" material_name="taom_banners_packed_alpha_03" texture_index="15" />
-    </BannerIconGroup>
-
-    <!-- Rhûn/Khand Icons -->
-    <BannerIconGroup id="140" name="{=!}TAOM Rhûn Alpha 01" is_pattern="false">
-      <Icon id="14000" material_name="taom_banners_rhun_alpha_01" texture_index="0" />
-      <Icon id="14001" material_name="taom_banners_rhun_alpha_01" texture_index="1" />
-      <Icon id="14002" material_name="taom_banners_rhun_alpha_01" texture_index="2" />
-      <Icon id="14003" material_name="taom_banners_rhun_alpha_01" texture_index="3" />
-      <Icon id="14004" material_name="taom_banners_rhun_alpha_01" texture_index="4" />
-      <Icon id="14005" material_name="taom_banners_rhun_alpha_01" texture_index="5" />
-      <Icon id="14006" material_name="taom_banners_rhun_alpha_01" texture_index="6" />
-      <Icon id="14007" material_name="taom_banners_rhun_alpha_01" texture_index="7" />
-      <Icon id="14008" material_name="taom_banners_rhun_alpha_01" texture_index="8" />
-      <Icon id="14009" material_name="taom_banners_rhun_alpha_01" texture_index="9" />
-      <Icon id="14010" material_name="taom_banners_rhun_alpha_01" texture_index="10" />
-      <Icon id="14011" material_name="taom_banners_rhun_alpha_01" texture_index="11" />
-      <Icon id="14012" material_name="taom_banners_rhun_alpha_01" texture_index="12" />
-      <Icon id="14013" material_name="taom_banners_rhun_alpha_01" texture_index="13" />
-      <Icon id="14014" material_name="taom_banners_rhun_alpha_01" texture_index="14" />
-      <Icon id="14015" material_name="taom_banners_rhun_alpha_01" texture_index="15" />
-    </BannerIconGroup>
-
-    <BannerIconGroup id="145" name="{=!}TAOM Rhûn Ornaments 01" is_pattern="false">
-      <Icon id="14500" material_name="taom_banners_packed_alpha_10" texture_index="7" />
-      <Icon id="14501" material_name="taom_banners_packed_alpha_10" texture_index="8" />
-      <Icon id="14502" material_name="taom_banners_packed_alpha_10" texture_index="9" />
-      <Icon id="14503" material_name="taom_banners_packed_alpha_10" texture_index="10" />
-    </BannerIconGroup>
-
-    <!-- Noldor Icons -->
-    <BannerIconGroup id="150" name="{=!}TAOM Noldor Alpha 01" is_pattern="false">
-      <Icon id="15000" material_name="taom_banners_packed_alpha_06" texture_index="0" />
-      <Icon id="15001" material_name="taom_banners_packed_alpha_06" texture_index="1" />
-      <Icon id="15002" material_name="taom_banners_packed_alpha_06" texture_index="2" />
-      <Icon id="15003" material_name="taom_banners_packed_alpha_06" texture_index="3" />
-      <Icon id="15004" material_name="taom_banners_packed_alpha_06" texture_index="4" />
-      <Icon id="15005" material_name="taom_banners_packed_alpha_06" texture_index="5" />
-      <Icon id="15006" material_name="taom_banners_packed_alpha_06" texture_index="6" />
-      <Icon id="15007" material_name="taom_banners_packed_alpha_06" texture_index="7" />
-      <Icon id="15008" material_name="taom_banners_packed_alpha_06" texture_index="8" />
-      <Icon id="15009" material_name="taom_banners_packed_alpha_06" texture_index="9" />
-    </BannerIconGroup>
-
-    <!-- Sindar Icons -->
-    <BannerIconGroup id="160" name="{=!}TAOM Sindar Alpha 01" is_pattern="false">
-      <Icon id="16000" material_name="taom_banners_packed_alpha_07" texture_index="0" />
-      <Icon id="16001" material_name="taom_banners_packed_alpha_07" texture_index="1" />
-      <Icon id="16002" material_name="taom_banners_packed_alpha_07" texture_index="2" />
-      <Icon id="16003" material_name="taom_banners_packed_alpha_07" texture_index="3" />
-      <Icon id="16004" material_name="taom_banners_packed_alpha_07" texture_index="4" />
-      <Icon id="16005" material_name="taom_banners_packed_alpha_07" texture_index="5" />
-      <Icon id="16006" material_name="taom_banners_packed_alpha_07" texture_index="6" />
-      <Icon id="16007" material_name="taom_banners_packed_alpha_07" texture_index="7" />
-      <Icon id="16008" material_name="taom_banners_packed_alpha_07" texture_index="8" />
-      <Icon id="16009" material_name="taom_banners_packed_alpha_07" texture_index="9" />
-    </BannerIconGroup>
-
-    <!-- Silvan Icons -->
-    <BannerIconGroup id="170" name="{=!}TAOM Silvan Alpha 01" is_pattern="false">
-      <Icon id="17000" material_name="taom_banners_packed_alpha_08" texture_index="0" />
-      <Icon id="17001" material_name="taom_banners_packed_alpha_08" texture_index="1" />
-      <Icon id="17002" material_name="taom_banners_packed_alpha_08" texture_index="2" />
-      <Icon id="17003" material_name="taom_banners_packed_alpha_08" texture_index="3" />
-      <Icon id="17004" material_name="taom_banners_packed_alpha_08" texture_index="4" />
-      <Icon id="17005" material_name="taom_banners_packed_alpha_08" texture_index="5" />
-      <Icon id="17006" material_name="taom_banners_packed_alpha_08" texture_index="6" />
-      <Icon id="17007" material_name="taom_banners_packed_alpha_08" texture_index="7" />
-      <Icon id="17008" material_name="taom_banners_packed_alpha_08" texture_index="8" />
-    </BannerIconGroup>
-
-    <!-- Dol Guldur Icons -->
-    <BannerIconGroup id="180" name="{=!}TAOM Dol Guldur Alpha 01" is_pattern="false">
-      <Icon id="18000" material_name="taom_banners_packed_alpha_04" texture_index="11" />
-      <Icon id="18001" material_name="taom_banners_packed_alpha_04" texture_index="12" />
-      <Icon id="18002" material_name="taom_banners_packed_alpha_04" texture_index="13" />
-      <Icon id="18003" material_name="taom_banners_packed_alpha_04" texture_index="14" />
-    </BannerIconGroup>
-
-    <!-- Mordor Icons -->
-    <BannerIconGroup id="190" name="{=!}TAOM Mordor Alpha 01" is_pattern="false">
-      <Icon id="19000" material_name="taom_banners_mordor_alpha_01" texture_index="0" />
-      <Icon id="19001" material_name="taom_banners_mordor_alpha_01" texture_index="1" />
-      <Icon id="19002" material_name="taom_banners_mordor_alpha_01" texture_index="2" />
-      <Icon id="19003" material_name="taom_banners_mordor_alpha_01" texture_index="3" />
-      <Icon id="19004" material_name="taom_banners_mordor_alpha_01" texture_index="4" />
-      <Icon id="19005" material_name="taom_banners_mordor_alpha_01" texture_index="5" />
-      <Icon id="19006" material_name="taom_banners_mordor_alpha_01" texture_index="6" />
-      <Icon id="19007" material_name="taom_banners_mordor_alpha_01" texture_index="7" />
-      <Icon id="19008" material_name="taom_banners_mordor_alpha_01" texture_index="8" />
-      <Icon id="19009" material_name="taom_banners_mordor_alpha_01" texture_index="9" />
-      <Icon id="19010" material_name="taom_banners_mordor_alpha_01" texture_index="10" />
-      <Icon id="19011" material_name="taom_banners_mordor_alpha_01" texture_index="11" />
-      <Icon id="19012" material_name="taom_banners_mordor_alpha_01" texture_index="12" />
-      <Icon id="19013" material_name="taom_banners_mordor_alpha_01" texture_index="13" />
-      <Icon id="19014" material_name="taom_banners_mordor_alpha_01" texture_index="14" />
-      <Icon id="19015" material_name="taom_banners_mordor_alpha_01" texture_index="15" />
-    </BannerIconGroup>
-
-    <!-- Andúin Vale Icons -->
-    <BannerIconGroup id="200" name="{=!}TAOM Andúin Vale Alpha 01" is_pattern="false">
-      <Icon id="20000" material_name="taom_banners_packed_alpha_08" texture_index="9" />
-      <Icon id="20001" material_name="taom_banners_packed_alpha_08" texture_index="10" />
-      <Icon id="20002" material_name="taom_banners_packed_alpha_08" texture_index="11" />
-      <Icon id="20003" material_name="taom_banners_packed_alpha_08" texture_index="12" />
-      <Icon id="20004" material_name="taom_banners_packed_alpha_08" texture_index="13" />
-      <Icon id="20005" material_name="taom_banners_packed_alpha_08" texture_index="14" />
-      <Icon id="20006" material_name="taom_banners_packed_alpha_08" texture_index="15" />
-    </BannerIconGroup>
-
-    <!-- Rohan Icons -->
-    <BannerIconGroup id="210" name="{=!}TAOM Rohan Alpha 01" is_pattern="false">
-      <Icon id="21000" material_name="taom_banners_packed_alpha_05" texture_index="0" />
-      <Icon id="21001" material_name="taom_banners_packed_alpha_05" texture_index="1" />
-      <Icon id="21002" material_name="taom_banners_packed_alpha_05" texture_index="2" />
-      <Icon id="21003" material_name="taom_banners_packed_alpha_05" texture_index="3" />
-      <Icon id="21004" material_name="taom_banners_packed_alpha_05" texture_index="4" />
-      <Icon id="21005" material_name="taom_banners_packed_alpha_05" texture_index="5" />
-      <Icon id="21006" material_name="taom_banners_packed_alpha_05" texture_index="6" />
-      <Icon id="21007" material_name="taom_banners_packed_alpha_05" texture_index="7" />
-      <Icon id="21008" material_name="taom_banners_packed_alpha_05" texture_index="8" />
-      <Icon id="21009" material_name="taom_banners_packed_alpha_05" texture_index="9" />
-      <Icon id="21010" material_name="taom_banners_packed_alpha_05" texture_index="10" />
-    </BannerIconGroup>
-
-    <!-- Gundabad Icons -->
-    <BannerIconGroup id="220" name="{=!}TAOM Gundabad Alpha 01" is_pattern="false">
-      <Icon id="22000" material_name="taom_banners_packed_alpha_05" texture_index="11" />
-      <Icon id="22001" material_name="taom_banners_packed_alpha_05" texture_index="12" />
-      <Icon id="22002" material_name="taom_banners_packed_alpha_05" texture_index="13" />
-      <Icon id="22003" material_name="taom_banners_packed_alpha_05" texture_index="14" />
-    </BannerIconGroup>
-
-    <!-- Isengard Icons -->
-    <BannerIconGroup id="230" name="{=!}TAOM Isengard Alpha 01" is_pattern="false">
-      <Icon id="23000" material_name="taom_banners_packed_alpha_07" texture_index="10" />
-      <Icon id="23001" material_name="taom_banners_packed_alpha_07" texture_index="11" />
-      <Icon id="23002" material_name="taom_banners_packed_alpha_07" texture_index="12" />
-      <Icon id="23003" material_name="taom_banners_packed_alpha_07" texture_index="13" />
-    </BannerIconGroup>
-
-    <!-- Dwarves Icons -->
-    <BannerIconGroup id="240" name="{=!}TAOM Dwarves Alpha 01" is_pattern="false">
-      <Icon id="24000" material_name="taom_banners_dwarves_alpha_01" texture_index="0" />
-      <Icon id="24001" material_name="taom_banners_dwarves_alpha_01" texture_index="1" />
-      <Icon id="24002" material_name="taom_banners_dwarves_alpha_01" texture_index="2" />
-      <Icon id="24003" material_name="taom_banners_dwarves_alpha_01" texture_index="3" />
-      <Icon id="24004" material_name="taom_banners_dwarves_alpha_01" texture_index="4" />
-      <Icon id="24005" material_name="taom_banners_dwarves_alpha_01" texture_index="5" />
-      <Icon id="24006" material_name="taom_banners_dwarves_alpha_01" texture_index="6" />
-      <Icon id="24007" material_name="taom_banners_dwarves_alpha_01" texture_index="7" />
-      <Icon id="24008" material_name="taom_banners_dwarves_alpha_01" texture_index="8" />
-      <Icon id="24009" material_name="taom_banners_dwarves_alpha_01" texture_index="9" />
-      <Icon id="24010" material_name="taom_banners_dwarves_alpha_01" texture_index="10" />
-      <Icon id="24011" material_name="taom_banners_dwarves_alpha_01" texture_index="11" />
-      <Icon id="24012" material_name="taom_banners_dwarves_alpha_01" texture_index="12" />
-      <Icon id="24013" material_name="taom_banners_dwarves_alpha_01" texture_index="13" />
-      <Icon id="24014" material_name="taom_banners_dwarves_alpha_01" texture_index="14" />
-      <Icon id="24015" material_name="taom_banners_dwarves_alpha_01" texture_index="15" />
-    </BannerIconGroup>
-
-    <BannerIconGroup id="241" name="{=!}TAOM Dwarves Alpha 02" is_pattern="false">
-      <Icon id="24016" material_name="taom_banners_packed_alpha_01" texture_index="0" />
-      <Icon id="24017" material_name="taom_banners_packed_alpha_01" texture_index="1" />
-      <Icon id="24018" material_name="taom_banners_packed_alpha_01" texture_index="2" />
-      <Icon id="24019" material_name="taom_banners_packed_alpha_01" texture_index="3" />
-      <Icon id="24020" material_name="taom_banners_packed_alpha_01" texture_index="4" />
-      <Icon id="24021" material_name="taom_banners_packed_alpha_01" texture_index="5" />
-      <Icon id="24022" material_name="taom_banners_packed_alpha_01" texture_index="6" />
-      <Icon id="24023" material_name="taom_banners_packed_alpha_01" texture_index="7" />
-      <Icon id="24024" material_name="taom_banners_packed_alpha_01" texture_index="8" />
-      <Icon id="24025" material_name="taom_banners_packed_alpha_01" texture_index="9" />
-      <Icon id="24026" material_name="taom_banners_packed_alpha_01" texture_index="10" />
-      <Icon id="24027" material_name="taom_banners_packed_alpha_01" texture_index="11" />
-      <Icon id="24028" material_name="taom_banners_packed_alpha_01" texture_index="12" />
-      <Icon id="24029" material_name="taom_banners_packed_alpha_01" texture_index="13" />
-      <Icon id="24030" material_name="taom_banners_packed_alpha_01" texture_index="14" />
-    </BannerIconGroup>
-
-    <BannerIconGroup id="245" name="{=!}TAOM Dwarves Ornaments 01" is_pattern="false">
-      <Icon id="24500" material_name="taom_banners_packed_alpha_04" texture_index="0" />
-      <Icon id="24501" material_name="taom_banners_packed_alpha_04" texture_index="1" />
-      <Icon id="24502" material_name="taom_banners_packed_alpha_04" texture_index="2" />
-      <Icon id="24503" material_name="taom_banners_packed_alpha_04" texture_index="3" />
-      <Icon id="24504" material_name="taom_banners_packed_alpha_04" texture_index="4" />
-      <Icon id="24505" material_name="taom_banners_packed_alpha_04" texture_index="5" />
-      <Icon id="24506" material_name="taom_banners_packed_alpha_04" texture_index="6" />
-      <Icon id="24507" material_name="taom_banners_packed_alpha_04" texture_index="7" />
-      <Icon id="24508" material_name="taom_banners_packed_alpha_04" texture_index="8" />
-      <Icon id="24509" material_name="taom_banners_packed_alpha_04" texture_index="9" />
-      <Icon id="24510" material_name="taom_banners_packed_alpha_04" texture_index="10" />
-    </BannerIconGroup>
-
-    <!-- Âbanissa Icons -->
-    <BannerIconGroup id="250" name="{=!}TAOM Abanissa Alpha 01" is_pattern="false">
+      <!-- Âbanissa Icons -->
       <Icon id="25000" material_name="taom_banners_abanissa_alpha_01" texture_index="0" />
       <Icon id="25001" material_name="taom_banners_abanissa_alpha_01" texture_index="1" />
       <Icon id="25002" material_name="taom_banners_abanissa_alpha_01" texture_index="2" />
@@ -291,33 +93,95 @@
       <Icon id="25015" material_name="taom_banners_abanissa_alpha_01" texture_index="15" />
     </BannerIconGroup>
 
-    <!-- Dunland Icons -->
-    <BannerIconGroup id="260" name="{=!}TAOM Dunland Alpha 01" is_pattern="false">
-      <Icon id="26000" material_name="taom_banners_packed_alpha_03" texture_index="0" />
-      <Icon id="26001" material_name="taom_banners_packed_alpha_03" texture_index="1" />
-      <Icon id="26002" material_name="taom_banners_packed_alpha_03" texture_index="2" />
-      <Icon id="26003" material_name="taom_banners_packed_alpha_03" texture_index="3" />
-      <Icon id="26004" material_name="taom_banners_packed_alpha_03" texture_index="4" />
-      <Icon id="26005" material_name="taom_banners_packed_alpha_03" texture_index="5" />
-      <Icon id="26006" material_name="taom_banners_packed_alpha_03" texture_index="6" />
-      <Icon id="26007" material_name="taom_banners_packed_alpha_03" texture_index="7" />
-      <Icon id="26008" material_name="taom_banners_packed_alpha_03" texture_index="8" />
-      <Icon id="26009" material_name="taom_banners_packed_alpha_03" texture_index="9" />
-      <Icon id="26010" material_name="taom_banners_packed_alpha_03" texture_index="10" />
+    <BannerIconGroup id="140" name="{=taom_banner_category_easterling}Easterling" is_pattern="false">
+      <!-- Rhûn/Khand Icons -->
+      <Icon id="14000" material_name="taom_banners_rhun_alpha_01" texture_index="0" />
+      <Icon id="14001" material_name="taom_banners_rhun_alpha_01" texture_index="1" />
+      <Icon id="14002" material_name="taom_banners_rhun_alpha_01" texture_index="2" />
+      <Icon id="14003" material_name="taom_banners_rhun_alpha_01" texture_index="3" />
+      <Icon id="14004" material_name="taom_banners_rhun_alpha_01" texture_index="4" />
+      <Icon id="14005" material_name="taom_banners_rhun_alpha_01" texture_index="5" />
+      <Icon id="14006" material_name="taom_banners_rhun_alpha_01" texture_index="6" />
+      <Icon id="14007" material_name="taom_banners_rhun_alpha_01" texture_index="7" />
+      <Icon id="14008" material_name="taom_banners_rhun_alpha_01" texture_index="8" />
+      <Icon id="14009" material_name="taom_banners_rhun_alpha_01" texture_index="9" />
+      <Icon id="14010" material_name="taom_banners_rhun_alpha_01" texture_index="10" />
+      <Icon id="14011" material_name="taom_banners_rhun_alpha_01" texture_index="11" />
+      <Icon id="14012" material_name="taom_banners_rhun_alpha_01" texture_index="12" />
+      <Icon id="14013" material_name="taom_banners_rhun_alpha_01" texture_index="13" />
+      <Icon id="14014" material_name="taom_banners_rhun_alpha_01" texture_index="14" />
+      <Icon id="14015" material_name="taom_banners_rhun_alpha_01" texture_index="15" />
+      <Icon id="14500" material_name="taom_banners_packed_alpha_10" texture_index="7" />
+      <Icon id="14501" material_name="taom_banners_packed_alpha_10" texture_index="8" />
+      <Icon id="14502" material_name="taom_banners_packed_alpha_10" texture_index="9" />
+      <Icon id="14503" material_name="taom_banners_packed_alpha_10" texture_index="10" />
     </BannerIconGroup>
 
-    <!-- Dale Icons -->
-    <BannerIconGroup id="270" name="{=!}TAOM Dale Alpha 01" is_pattern="false">
-      <Icon id="27000" material_name="taom_banners_packed_alpha_07" texture_index="14" />
-      <Icon id="27001" material_name="taom_banners_packed_alpha_07" texture_index="15" />
+    <BannerIconGroup id="150" name="{=taom_banner_category_elven}Elven" is_pattern="false">
+      <!-- Noldor Icons -->
+      <Icon id="15000" material_name="taom_banners_packed_alpha_06" texture_index="0" />
+      <Icon id="15001" material_name="taom_banners_packed_alpha_06" texture_index="1" />
+      <Icon id="15002" material_name="taom_banners_packed_alpha_06" texture_index="2" />
+      <Icon id="15003" material_name="taom_banners_packed_alpha_06" texture_index="3" />
+      <Icon id="15004" material_name="taom_banners_packed_alpha_06" texture_index="4" />
+      <Icon id="15005" material_name="taom_banners_packed_alpha_06" texture_index="5" />
+      <Icon id="15006" material_name="taom_banners_packed_alpha_06" texture_index="6" />
+      <Icon id="15007" material_name="taom_banners_packed_alpha_06" texture_index="7" />
+      <Icon id="15008" material_name="taom_banners_packed_alpha_06" texture_index="8" />
+      <Icon id="15009" material_name="taom_banners_packed_alpha_06" texture_index="9" />
+      <!-- Sindar Icons -->
+      <Icon id="16000" material_name="taom_banners_packed_alpha_07" texture_index="0" />
+      <Icon id="16001" material_name="taom_banners_packed_alpha_07" texture_index="1" />
+      <Icon id="16002" material_name="taom_banners_packed_alpha_07" texture_index="2" />
+      <Icon id="16003" material_name="taom_banners_packed_alpha_07" texture_index="3" />
+      <Icon id="16004" material_name="taom_banners_packed_alpha_07" texture_index="4" />
+      <Icon id="16005" material_name="taom_banners_packed_alpha_07" texture_index="5" />
+      <Icon id="16006" material_name="taom_banners_packed_alpha_07" texture_index="6" />
+      <Icon id="16007" material_name="taom_banners_packed_alpha_07" texture_index="7" />
+      <Icon id="16008" material_name="taom_banners_packed_alpha_07" texture_index="8" />
+      <Icon id="16009" material_name="taom_banners_packed_alpha_07" texture_index="9" />
+      <!-- Silvan Icons -->
+      <Icon id="17000" material_name="taom_banners_packed_alpha_08" texture_index="0" />
+      <Icon id="17001" material_name="taom_banners_packed_alpha_08" texture_index="1" />
+      <Icon id="17002" material_name="taom_banners_packed_alpha_08" texture_index="2" />
+      <Icon id="17003" material_name="taom_banners_packed_alpha_08" texture_index="3" />
+      <Icon id="17004" material_name="taom_banners_packed_alpha_08" texture_index="4" />
+      <Icon id="17005" material_name="taom_banners_packed_alpha_08" texture_index="5" />
+      <Icon id="17006" material_name="taom_banners_packed_alpha_08" texture_index="6" />
+      <Icon id="17007" material_name="taom_banners_packed_alpha_08" texture_index="7" />
+      <Icon id="17008" material_name="taom_banners_packed_alpha_08" texture_index="8" />
+      <!-- Lindon houses and the Cardolan crown (2026-10-28, #1047) -->
+      <Icon id="31000" material_name="taom_banners_packed_alpha_06" texture_index="10" />
+      <Icon id="31001" material_name="taom_banners_packed_alpha_06" texture_index="11" />
+      <Icon id="31002" material_name="taom_banners_packed_alpha_06" texture_index="12" />
+      <Icon id="31003" material_name="taom_banners_packed_alpha_06" texture_index="13" />
+      <Icon id="31004" material_name="taom_banners_packed_alpha_06" texture_index="14" />
+      <Icon id="31005" material_name="taom_banners_packed_alpha_06" texture_index="15" />
     </BannerIconGroup>
 
-    <BannerIconGroup id="275" name="{=!}TAOM Dale Ornaments 01" is_pattern="false">
-      <Icon id="27500" material_name="taom_banners_packed_alpha_01" texture_index="15" />
-    </BannerIconGroup>
-
-    <!-- ===== New banner sheets (2026-06; pending tpac compile) ===== -->
-    <BannerIconGroup id="181" name="{=!}TAOM Dol Guldur Alpha 02" is_pattern="false">
+    <BannerIconGroup id="180" name="{=taom_banner_category_evil}Forces of Evil" is_pattern="false">
+      <!-- Dol Guldur Icons -->
+      <Icon id="18000" material_name="taom_banners_packed_alpha_04" texture_index="11" />
+      <Icon id="18001" material_name="taom_banners_packed_alpha_04" texture_index="12" />
+      <Icon id="18002" material_name="taom_banners_packed_alpha_04" texture_index="13" />
+      <Icon id="18003" material_name="taom_banners_packed_alpha_04" texture_index="14" />
+      <!-- Mordor Icons -->
+      <Icon id="19000" material_name="taom_banners_mordor_alpha_01" texture_index="0" />
+      <Icon id="19001" material_name="taom_banners_mordor_alpha_01" texture_index="1" />
+      <Icon id="19002" material_name="taom_banners_mordor_alpha_01" texture_index="2" />
+      <Icon id="19003" material_name="taom_banners_mordor_alpha_01" texture_index="3" />
+      <Icon id="19004" material_name="taom_banners_mordor_alpha_01" texture_index="4" />
+      <Icon id="19005" material_name="taom_banners_mordor_alpha_01" texture_index="5" />
+      <Icon id="19006" material_name="taom_banners_mordor_alpha_01" texture_index="6" />
+      <Icon id="19007" material_name="taom_banners_mordor_alpha_01" texture_index="7" />
+      <Icon id="19008" material_name="taom_banners_mordor_alpha_01" texture_index="8" />
+      <Icon id="19009" material_name="taom_banners_mordor_alpha_01" texture_index="9" />
+      <Icon id="19010" material_name="taom_banners_mordor_alpha_01" texture_index="10" />
+      <Icon id="19011" material_name="taom_banners_mordor_alpha_01" texture_index="11" />
+      <Icon id="19012" material_name="taom_banners_mordor_alpha_01" texture_index="12" />
+      <Icon id="19013" material_name="taom_banners_mordor_alpha_01" texture_index="13" />
+      <Icon id="19014" material_name="taom_banners_mordor_alpha_01" texture_index="14" />
+      <Icon id="19015" material_name="taom_banners_mordor_alpha_01" texture_index="15" />
       <Icon id="18100" material_name="taom_banners_dolguldur_alpha_02" texture_index="0" />
       <Icon id="18101" material_name="taom_banners_dolguldur_alpha_02" texture_index="1" />
       <Icon id="18102" material_name="taom_banners_dolguldur_alpha_02" texture_index="2" />
@@ -334,9 +198,6 @@
       <Icon id="18113" material_name="taom_banners_dolguldur_alpha_02" texture_index="13" />
       <Icon id="18114" material_name="taom_banners_dolguldur_alpha_02" texture_index="14" />
       <Icon id="18115" material_name="taom_banners_dolguldur_alpha_02" texture_index="15" />
-    </BannerIconGroup>
-
-    <BannerIconGroup id="191" name="{=!}TAOM Mordor Alpha 02" is_pattern="false">
       <Icon id="19100" material_name="taom_banners_mordor_alpha_02" texture_index="0" />
       <Icon id="19101" material_name="taom_banners_mordor_alpha_02" texture_index="1" />
       <Icon id="19102" material_name="taom_banners_mordor_alpha_02" texture_index="2" />
@@ -355,7 +216,51 @@
       <Icon id="19115" material_name="taom_banners_mordor_alpha_02" texture_index="15" />
     </BannerIconGroup>
 
-    <BannerIconGroup id="221" name="{=!}TAOM Gundabad Alpha 02" is_pattern="false">
+    <BannerIconGroup id="200" name="{=taom_banner_category_northmen}Northmen" is_pattern="false">
+      <!-- Andúin Vale Icons -->
+      <Icon id="20000" material_name="taom_banners_packed_alpha_08" texture_index="9" />
+      <Icon id="20001" material_name="taom_banners_packed_alpha_08" texture_index="10" />
+      <Icon id="20002" material_name="taom_banners_packed_alpha_08" texture_index="11" />
+      <Icon id="20003" material_name="taom_banners_packed_alpha_08" texture_index="12" />
+      <Icon id="20004" material_name="taom_banners_packed_alpha_08" texture_index="13" />
+      <Icon id="20005" material_name="taom_banners_packed_alpha_08" texture_index="14" />
+      <Icon id="20006" material_name="taom_banners_packed_alpha_08" texture_index="15" />
+      <!-- Rohan Icons -->
+      <Icon id="21000" material_name="taom_banners_packed_alpha_05" texture_index="0" />
+      <Icon id="21001" material_name="taom_banners_packed_alpha_05" texture_index="1" />
+      <Icon id="21002" material_name="taom_banners_packed_alpha_05" texture_index="2" />
+      <Icon id="21003" material_name="taom_banners_packed_alpha_05" texture_index="3" />
+      <Icon id="21004" material_name="taom_banners_packed_alpha_05" texture_index="4" />
+      <Icon id="21005" material_name="taom_banners_packed_alpha_05" texture_index="5" />
+      <Icon id="21006" material_name="taom_banners_packed_alpha_05" texture_index="6" />
+      <Icon id="21007" material_name="taom_banners_packed_alpha_05" texture_index="7" />
+      <Icon id="21008" material_name="taom_banners_packed_alpha_05" texture_index="8" />
+      <Icon id="21009" material_name="taom_banners_packed_alpha_05" texture_index="9" />
+      <Icon id="21010" material_name="taom_banners_packed_alpha_05" texture_index="10" />
+      <!-- Dale Icons -->
+      <Icon id="27000" material_name="taom_banners_packed_alpha_07" texture_index="14" />
+      <Icon id="27001" material_name="taom_banners_packed_alpha_07" texture_index="15" />
+      <Icon id="27500" material_name="taom_banners_packed_alpha_01" texture_index="15" />
+      <!-- Dale Icons (misc sheet) -->
+      <Icon id="30012" material_name="taom_banners_misc_alpha_01" texture_index="12" />
+      <Icon id="30013" material_name="taom_banners_misc_alpha_01" texture_index="13" />
+      <!-- Dorwinion Icons (misc sheet) -->
+      <Icon id="30011" material_name="taom_banners_misc_alpha_01" texture_index="11" />
+      <Icon id="30014" material_name="taom_banners_misc_alpha_01" texture_index="14" />
+      <Icon id="30015" material_name="taom_banners_misc_alpha_01" texture_index="15" />
+    </BannerIconGroup>
+
+    <BannerIconGroup id="220" name="{=taom_banner_category_orcish}Orcish" is_pattern="false">
+      <!-- Gundabad Icons -->
+      <Icon id="22000" material_name="taom_banners_packed_alpha_05" texture_index="11" />
+      <Icon id="22001" material_name="taom_banners_packed_alpha_05" texture_index="12" />
+      <Icon id="22002" material_name="taom_banners_packed_alpha_05" texture_index="13" />
+      <Icon id="22003" material_name="taom_banners_packed_alpha_05" texture_index="14" />
+      <!-- Isengard Icons -->
+      <Icon id="23000" material_name="taom_banners_packed_alpha_07" texture_index="10" />
+      <Icon id="23001" material_name="taom_banners_packed_alpha_07" texture_index="11" />
+      <Icon id="23002" material_name="taom_banners_packed_alpha_07" texture_index="12" />
+      <Icon id="23003" material_name="taom_banners_packed_alpha_07" texture_index="13" />
       <Icon id="22100" material_name="taom_banners_gundabad_alpha_02" texture_index="0" />
       <Icon id="22101" material_name="taom_banners_gundabad_alpha_02" texture_index="1" />
       <Icon id="22102" material_name="taom_banners_gundabad_alpha_02" texture_index="2" />
@@ -372,9 +277,6 @@
       <Icon id="22113" material_name="taom_banners_gundabad_alpha_02" texture_index="13" />
       <Icon id="22114" material_name="taom_banners_gundabad_alpha_02" texture_index="14" />
       <Icon id="22115" material_name="taom_banners_gundabad_alpha_02" texture_index="15" />
-    </BannerIconGroup>
-
-    <BannerIconGroup id="231" name="{=!}TAOM Isengard Alpha 02" is_pattern="false">
       <Icon id="23100" material_name="taom_banners_isengard_alpha_02" texture_index="0" />
       <Icon id="23101" material_name="taom_banners_isengard_alpha_02" texture_index="1" />
       <Icon id="23102" material_name="taom_banners_isengard_alpha_02" texture_index="2" />
@@ -391,9 +293,126 @@
       <Icon id="23113" material_name="taom_banners_isengard_alpha_02" texture_index="13" />
       <Icon id="23114" material_name="taom_banners_isengard_alpha_02" texture_index="14" />
       <Icon id="23115" material_name="taom_banners_isengard_alpha_02" texture_index="15" />
+      <Icon id="28000" material_name="taom_banners_mistymountainorcs_alpha_01" texture_index="0" />
+      <Icon id="28001" material_name="taom_banners_mistymountainorcs_alpha_01" texture_index="1" />
+      <Icon id="28002" material_name="taom_banners_mistymountainorcs_alpha_01" texture_index="2" />
+      <Icon id="28003" material_name="taom_banners_mistymountainorcs_alpha_01" texture_index="3" />
+      <Icon id="28004" material_name="taom_banners_mistymountainorcs_alpha_01" texture_index="4" />
+      <Icon id="28005" material_name="taom_banners_mistymountainorcs_alpha_01" texture_index="5" />
+      <Icon id="28006" material_name="taom_banners_mistymountainorcs_alpha_01" texture_index="6" />
+      <Icon id="28007" material_name="taom_banners_mistymountainorcs_alpha_01" texture_index="7" />
+      <Icon id="28008" material_name="taom_banners_mistymountainorcs_alpha_01" texture_index="8" />
+      <Icon id="28009" material_name="taom_banners_mistymountainorcs_alpha_01" texture_index="9" />
+      <Icon id="28010" material_name="taom_banners_mistymountainorcs_alpha_01" texture_index="10" />
+      <Icon id="28011" material_name="taom_banners_mistymountainorcs_alpha_01" texture_index="11" />
+      <Icon id="28012" material_name="taom_banners_mistymountainorcs_alpha_01" texture_index="12" />
+      <Icon id="28013" material_name="taom_banners_mistymountainorcs_alpha_01" texture_index="13" />
+      <Icon id="28014" material_name="taom_banners_mistymountainorcs_alpha_01" texture_index="14" />
+      <Icon id="28015" material_name="taom_banners_mistymountainorcs_alpha_01" texture_index="15" />
+      <Icon id="28100" material_name="taom_banners_mistymountainorcs_alpha_02" texture_index="0" />
+      <Icon id="28101" material_name="taom_banners_mistymountainorcs_alpha_02" texture_index="1" />
+      <Icon id="28102" material_name="taom_banners_mistymountainorcs_alpha_02" texture_index="2" />
+      <Icon id="28103" material_name="taom_banners_mistymountainorcs_alpha_02" texture_index="3" />
+      <Icon id="28104" material_name="taom_banners_mistymountainorcs_alpha_02" texture_index="4" />
+      <Icon id="28105" material_name="taom_banners_mistymountainorcs_alpha_02" texture_index="5" />
+      <Icon id="28106" material_name="taom_banners_mistymountainorcs_alpha_02" texture_index="6" />
+      <Icon id="28107" material_name="taom_banners_mistymountainorcs_alpha_02" texture_index="7" />
+      <Icon id="28108" material_name="taom_banners_mistymountainorcs_alpha_02" texture_index="8" />
+      <Icon id="28109" material_name="taom_banners_mistymountainorcs_alpha_02" texture_index="9" />
+      <Icon id="28110" material_name="taom_banners_mistymountainorcs_alpha_02" texture_index="10" />
+      <Icon id="28111" material_name="taom_banners_mistymountainorcs_alpha_02" texture_index="11" />
+      <Icon id="28112" material_name="taom_banners_mistymountainorcs_alpha_02" texture_index="12" />
+      <Icon id="28113" material_name="taom_banners_mistymountainorcs_alpha_02" texture_index="13" />
+      <Icon id="28114" material_name="taom_banners_mistymountainorcs_alpha_02" texture_index="14" />
+      <Icon id="28115" material_name="taom_banners_mistymountainorcs_alpha_02" texture_index="15" />
+      <Icon id="29000" material_name="taom_banners_goblin_alpha_01" texture_index="0" />
+      <Icon id="29001" material_name="taom_banners_goblin_alpha_01" texture_index="1" />
+      <Icon id="29002" material_name="taom_banners_goblin_alpha_01" texture_index="2" />
+      <Icon id="29003" material_name="taom_banners_goblin_alpha_01" texture_index="3" />
+      <Icon id="29004" material_name="taom_banners_goblin_alpha_01" texture_index="4" />
+      <Icon id="29005" material_name="taom_banners_goblin_alpha_01" texture_index="5" />
+      <Icon id="29006" material_name="taom_banners_goblin_alpha_01" texture_index="6" />
+      <Icon id="29007" material_name="taom_banners_goblin_alpha_01" texture_index="7" />
+      <Icon id="29008" material_name="taom_banners_goblin_alpha_01" texture_index="8" />
+      <Icon id="29009" material_name="taom_banners_goblin_alpha_01" texture_index="9" />
+      <Icon id="29010" material_name="taom_banners_goblin_alpha_01" texture_index="10" />
+      <Icon id="29011" material_name="taom_banners_goblin_alpha_01" texture_index="11" />
+      <Icon id="29012" material_name="taom_banners_goblin_alpha_01" texture_index="12" />
+      <Icon id="29013" material_name="taom_banners_goblin_alpha_01" texture_index="13" />
+      <Icon id="29014" material_name="taom_banners_goblin_alpha_01" texture_index="14" />
+      <Icon id="29015" material_name="taom_banners_goblin_alpha_01" texture_index="15" />
+      <!-- Orc Icons (misc sheet) -->
+      <Icon id="30000" material_name="taom_banners_misc_alpha_01" texture_index="0" />
+      <Icon id="30001" material_name="taom_banners_misc_alpha_01" texture_index="1" />
+      <Icon id="30002" material_name="taom_banners_misc_alpha_01" texture_index="2" />
+      <Icon id="30003" material_name="taom_banners_misc_alpha_01" texture_index="3" />
+      <Icon id="30004" material_name="taom_banners_misc_alpha_01" texture_index="4" />
+      <Icon id="30005" material_name="taom_banners_misc_alpha_01" texture_index="5" />
+      <Icon id="30006" material_name="taom_banners_misc_alpha_01" texture_index="6" />
+      <Icon id="30007" material_name="taom_banners_misc_alpha_01" texture_index="7" />
+      <Icon id="30009" material_name="taom_banners_misc_alpha_01" texture_index="9" />
     </BannerIconGroup>
 
-    <BannerIconGroup id="261" name="{=!}TAOM Dunland Alpha 02" is_pattern="false">
+    <BannerIconGroup id="240" name="{=taom_banner_category_dwarven}Dwarven" is_pattern="false">
+      <!-- Dwarves Icons -->
+      <Icon id="24000" material_name="taom_banners_dwarves_alpha_01" texture_index="0" />
+      <Icon id="24001" material_name="taom_banners_dwarves_alpha_01" texture_index="1" />
+      <Icon id="24002" material_name="taom_banners_dwarves_alpha_01" texture_index="2" />
+      <Icon id="24003" material_name="taom_banners_dwarves_alpha_01" texture_index="3" />
+      <Icon id="24004" material_name="taom_banners_dwarves_alpha_01" texture_index="4" />
+      <Icon id="24005" material_name="taom_banners_dwarves_alpha_01" texture_index="5" />
+      <Icon id="24006" material_name="taom_banners_dwarves_alpha_01" texture_index="6" />
+      <Icon id="24007" material_name="taom_banners_dwarves_alpha_01" texture_index="7" />
+      <Icon id="24008" material_name="taom_banners_dwarves_alpha_01" texture_index="8" />
+      <Icon id="24009" material_name="taom_banners_dwarves_alpha_01" texture_index="9" />
+      <Icon id="24010" material_name="taom_banners_dwarves_alpha_01" texture_index="10" />
+      <Icon id="24011" material_name="taom_banners_dwarves_alpha_01" texture_index="11" />
+      <Icon id="24012" material_name="taom_banners_dwarves_alpha_01" texture_index="12" />
+      <Icon id="24013" material_name="taom_banners_dwarves_alpha_01" texture_index="13" />
+      <Icon id="24014" material_name="taom_banners_dwarves_alpha_01" texture_index="14" />
+      <Icon id="24015" material_name="taom_banners_dwarves_alpha_01" texture_index="15" />
+      <Icon id="24016" material_name="taom_banners_packed_alpha_01" texture_index="0" />
+      <Icon id="24017" material_name="taom_banners_packed_alpha_01" texture_index="1" />
+      <Icon id="24018" material_name="taom_banners_packed_alpha_01" texture_index="2" />
+      <Icon id="24019" material_name="taom_banners_packed_alpha_01" texture_index="3" />
+      <Icon id="24020" material_name="taom_banners_packed_alpha_01" texture_index="4" />
+      <Icon id="24021" material_name="taom_banners_packed_alpha_01" texture_index="5" />
+      <Icon id="24022" material_name="taom_banners_packed_alpha_01" texture_index="6" />
+      <Icon id="24023" material_name="taom_banners_packed_alpha_01" texture_index="7" />
+      <Icon id="24024" material_name="taom_banners_packed_alpha_01" texture_index="8" />
+      <Icon id="24025" material_name="taom_banners_packed_alpha_01" texture_index="9" />
+      <Icon id="24026" material_name="taom_banners_packed_alpha_01" texture_index="10" />
+      <Icon id="24027" material_name="taom_banners_packed_alpha_01" texture_index="11" />
+      <Icon id="24028" material_name="taom_banners_packed_alpha_01" texture_index="12" />
+      <Icon id="24029" material_name="taom_banners_packed_alpha_01" texture_index="13" />
+      <Icon id="24030" material_name="taom_banners_packed_alpha_01" texture_index="14" />
+      <Icon id="24500" material_name="taom_banners_packed_alpha_04" texture_index="0" />
+      <Icon id="24501" material_name="taom_banners_packed_alpha_04" texture_index="1" />
+      <Icon id="24502" material_name="taom_banners_packed_alpha_04" texture_index="2" />
+      <Icon id="24503" material_name="taom_banners_packed_alpha_04" texture_index="3" />
+      <Icon id="24504" material_name="taom_banners_packed_alpha_04" texture_index="4" />
+      <Icon id="24505" material_name="taom_banners_packed_alpha_04" texture_index="5" />
+      <Icon id="24506" material_name="taom_banners_packed_alpha_04" texture_index="6" />
+      <Icon id="24507" material_name="taom_banners_packed_alpha_04" texture_index="7" />
+      <Icon id="24508" material_name="taom_banners_packed_alpha_04" texture_index="8" />
+      <Icon id="24509" material_name="taom_banners_packed_alpha_04" texture_index="9" />
+      <Icon id="24510" material_name="taom_banners_packed_alpha_04" texture_index="10" />
+      <Icon id="31007" material_name="taom_banners_packed_alpha_04" texture_index="15" />
+    </BannerIconGroup>
+
+    <BannerIconGroup id="260" name="{=taom_banner_category_dunlending}Dunlending" is_pattern="false">
+      <!-- Dunland Icons -->
+      <Icon id="26000" material_name="taom_banners_packed_alpha_03" texture_index="0" />
+      <Icon id="26001" material_name="taom_banners_packed_alpha_03" texture_index="1" />
+      <Icon id="26002" material_name="taom_banners_packed_alpha_03" texture_index="2" />
+      <Icon id="26003" material_name="taom_banners_packed_alpha_03" texture_index="3" />
+      <Icon id="26004" material_name="taom_banners_packed_alpha_03" texture_index="4" />
+      <Icon id="26005" material_name="taom_banners_packed_alpha_03" texture_index="5" />
+      <Icon id="26006" material_name="taom_banners_packed_alpha_03" texture_index="6" />
+      <Icon id="26007" material_name="taom_banners_packed_alpha_03" texture_index="7" />
+      <Icon id="26008" material_name="taom_banners_packed_alpha_03" texture_index="8" />
+      <Icon id="26009" material_name="taom_banners_packed_alpha_03" texture_index="9" />
+      <Icon id="26010" material_name="taom_banners_packed_alpha_03" texture_index="10" />
       <Icon id="26100" material_name="taom_banners_dunland_alpha_02" texture_index="0" />
       <Icon id="26101" material_name="taom_banners_dunland_alpha_02" texture_index="1" />
       <Icon id="26102" material_name="taom_banners_dunland_alpha_02" texture_index="2" />
@@ -412,90 +431,10 @@
       <Icon id="26115" material_name="taom_banners_dunland_alpha_02" texture_index="15" />
     </BannerIconGroup>
 
-    <BannerIconGroup id="280" name="{=!}TAOM Misty Mountain Orcs Alpha 01" is_pattern="false">
-      <Icon id="28000" material_name="taom_banners_mistymountainorcs_alpha_01" texture_index="0" />
-      <Icon id="28001" material_name="taom_banners_mistymountainorcs_alpha_01" texture_index="1" />
-      <Icon id="28002" material_name="taom_banners_mistymountainorcs_alpha_01" texture_index="2" />
-      <Icon id="28003" material_name="taom_banners_mistymountainorcs_alpha_01" texture_index="3" />
-      <Icon id="28004" material_name="taom_banners_mistymountainorcs_alpha_01" texture_index="4" />
-      <Icon id="28005" material_name="taom_banners_mistymountainorcs_alpha_01" texture_index="5" />
-      <Icon id="28006" material_name="taom_banners_mistymountainorcs_alpha_01" texture_index="6" />
-      <Icon id="28007" material_name="taom_banners_mistymountainorcs_alpha_01" texture_index="7" />
-      <Icon id="28008" material_name="taom_banners_mistymountainorcs_alpha_01" texture_index="8" />
-      <Icon id="28009" material_name="taom_banners_mistymountainorcs_alpha_01" texture_index="9" />
-      <Icon id="28010" material_name="taom_banners_mistymountainorcs_alpha_01" texture_index="10" />
-      <Icon id="28011" material_name="taom_banners_mistymountainorcs_alpha_01" texture_index="11" />
-      <Icon id="28012" material_name="taom_banners_mistymountainorcs_alpha_01" texture_index="12" />
-      <Icon id="28013" material_name="taom_banners_mistymountainorcs_alpha_01" texture_index="13" />
-      <Icon id="28014" material_name="taom_banners_mistymountainorcs_alpha_01" texture_index="14" />
-      <Icon id="28015" material_name="taom_banners_mistymountainorcs_alpha_01" texture_index="15" />
-    </BannerIconGroup>
-
-    <BannerIconGroup id="281" name="{=!}TAOM Misty Mountain Orcs Alpha 02" is_pattern="false">
-      <Icon id="28100" material_name="taom_banners_mistymountainorcs_alpha_02" texture_index="0" />
-      <Icon id="28101" material_name="taom_banners_mistymountainorcs_alpha_02" texture_index="1" />
-      <Icon id="28102" material_name="taom_banners_mistymountainorcs_alpha_02" texture_index="2" />
-      <Icon id="28103" material_name="taom_banners_mistymountainorcs_alpha_02" texture_index="3" />
-      <Icon id="28104" material_name="taom_banners_mistymountainorcs_alpha_02" texture_index="4" />
-      <Icon id="28105" material_name="taom_banners_mistymountainorcs_alpha_02" texture_index="5" />
-      <Icon id="28106" material_name="taom_banners_mistymountainorcs_alpha_02" texture_index="6" />
-      <Icon id="28107" material_name="taom_banners_mistymountainorcs_alpha_02" texture_index="7" />
-      <Icon id="28108" material_name="taom_banners_mistymountainorcs_alpha_02" texture_index="8" />
-      <Icon id="28109" material_name="taom_banners_mistymountainorcs_alpha_02" texture_index="9" />
-      <Icon id="28110" material_name="taom_banners_mistymountainorcs_alpha_02" texture_index="10" />
-      <Icon id="28111" material_name="taom_banners_mistymountainorcs_alpha_02" texture_index="11" />
-      <Icon id="28112" material_name="taom_banners_mistymountainorcs_alpha_02" texture_index="12" />
-      <Icon id="28113" material_name="taom_banners_mistymountainorcs_alpha_02" texture_index="13" />
-      <Icon id="28114" material_name="taom_banners_mistymountainorcs_alpha_02" texture_index="14" />
-      <Icon id="28115" material_name="taom_banners_mistymountainorcs_alpha_02" texture_index="15" />
-    </BannerIconGroup>
-
-    <BannerIconGroup id="290" name="{=!}TAOM Goblin Alpha 01" is_pattern="false">
-      <Icon id="29000" material_name="taom_banners_goblin_alpha_01" texture_index="0" />
-      <Icon id="29001" material_name="taom_banners_goblin_alpha_01" texture_index="1" />
-      <Icon id="29002" material_name="taom_banners_goblin_alpha_01" texture_index="2" />
-      <Icon id="29003" material_name="taom_banners_goblin_alpha_01" texture_index="3" />
-      <Icon id="29004" material_name="taom_banners_goblin_alpha_01" texture_index="4" />
-      <Icon id="29005" material_name="taom_banners_goblin_alpha_01" texture_index="5" />
-      <Icon id="29006" material_name="taom_banners_goblin_alpha_01" texture_index="6" />
-      <Icon id="29007" material_name="taom_banners_goblin_alpha_01" texture_index="7" />
-      <Icon id="29008" material_name="taom_banners_goblin_alpha_01" texture_index="8" />
-      <Icon id="29009" material_name="taom_banners_goblin_alpha_01" texture_index="9" />
-      <Icon id="29010" material_name="taom_banners_goblin_alpha_01" texture_index="10" />
-      <Icon id="29011" material_name="taom_banners_goblin_alpha_01" texture_index="11" />
-      <Icon id="29012" material_name="taom_banners_goblin_alpha_01" texture_index="12" />
-      <Icon id="29013" material_name="taom_banners_goblin_alpha_01" texture_index="13" />
-      <Icon id="29014" material_name="taom_banners_goblin_alpha_01" texture_index="14" />
-      <Icon id="29015" material_name="taom_banners_goblin_alpha_01" texture_index="15" />
-    </BannerIconGroup>
-
-    <BannerIconGroup id="300" name="{=!}TAOM Misc Alpha 01" is_pattern="false">
-      <Icon id="30000" material_name="taom_banners_misc_alpha_01" texture_index="0" />
-      <Icon id="30001" material_name="taom_banners_misc_alpha_01" texture_index="1" />
-      <Icon id="30002" material_name="taom_banners_misc_alpha_01" texture_index="2" />
-      <Icon id="30003" material_name="taom_banners_misc_alpha_01" texture_index="3" />
-      <Icon id="30004" material_name="taom_banners_misc_alpha_01" texture_index="4" />
-      <Icon id="30005" material_name="taom_banners_misc_alpha_01" texture_index="5" />
-      <Icon id="30006" material_name="taom_banners_misc_alpha_01" texture_index="6" />
-      <Icon id="30007" material_name="taom_banners_misc_alpha_01" texture_index="7" />
+    <BannerIconGroup id="300" name="{=taom_banner_category_misc}Miscellaneous" is_pattern="false">
       <Icon id="30008" material_name="taom_banners_misc_alpha_01" texture_index="8" />
-      <Icon id="30009" material_name="taom_banners_misc_alpha_01" texture_index="9" />
       <Icon id="30010" material_name="taom_banners_misc_alpha_01" texture_index="10" />
-      <Icon id="30011" material_name="taom_banners_misc_alpha_01" texture_index="11" />
-      <Icon id="30012" material_name="taom_banners_misc_alpha_01" texture_index="12" />
-      <Icon id="30013" material_name="taom_banners_misc_alpha_01" texture_index="13" />
-      <Icon id="30014" material_name="taom_banners_misc_alpha_01" texture_index="14" />
-      <Icon id="30015" material_name="taom_banners_misc_alpha_01" texture_index="15" />
-    </BannerIconGroup>
-
-    <!-- Lindon houses and the Cardolan crown (2026-10-28, #1047) -->
-    <BannerIconGroup id="310" name="{=!}TAOM Lindon Alpha 01" is_pattern="false">
-      <Icon id="31000" material_name="taom_banners_packed_alpha_06" texture_index="10" />
-      <Icon id="31001" material_name="taom_banners_packed_alpha_06" texture_index="11" />
-      <Icon id="31002" material_name="taom_banners_packed_alpha_06" texture_index="12" />
-      <Icon id="31003" material_name="taom_banners_packed_alpha_06" texture_index="13" />
-      <Icon id="31004" material_name="taom_banners_packed_alpha_06" texture_index="14" />
-      <Icon id="31005" material_name="taom_banners_packed_alpha_06" texture_index="15" />
+      <Icon id="31010" material_name="taom_banners_packed_alpha_10" texture_index="11" />
     </BannerIconGroup>
 
     <BannerColors>

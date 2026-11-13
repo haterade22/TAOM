@@ -60,10 +60,10 @@
 	<string id="aom_clan_erebor_5_name" text="{=aom_clan_erebor_5_name}Bit Górli" />
 	<string id="aom_clan_erebor_6_name" text="{=aom_clan_erebor_6_name}Bit Róri" />
 	<string id="aom_clan_erebor_7_name" text="{=aom_clan_erebor_7_name}Bit Nórin" />
-	<string id="aom_clan_eredluin_1_name" text="{=aom_clan_eredluin_1_name}House of Borin" />
-	<string id="aom_clan_eredluin_2_name" text="{=aom_clan_eredluin_2_name}Broadbeams" />
-	<string id="aom_clan_eredluin_3_name" text="{=aom_clan_eredluin_3_name}Firebeards" />
-	<string id="aom_clan_eredluin_4_name" text="{=aom_clan_eredluin_4_name}Wardens of Dolmed" />
+	<string id="aom_clan_eredluin_1_name" text="{=aom_clan_eredluin_1_name}House of Delingur" />
+	<string id="aom_clan_eredluin_2_name" text="{=aom_clan_eredluin_2_name}House of Dwálin" />
+	<string id="aom_clan_eredluin_3_name" text="{=aom_clan_eredluin_3_name}House of Úri" />
+	<string id="aom_clan_eredluin_4_name" text="{=aom_clan_eredluin_4_name}House of Eldran" />
 	<string id="aom_clan_goblin_1_name" text="{=aom_clan_goblin_1_name}Skrithak" />
 	<string id="aom_clan_goblin_2_name" text="{=aom_clan_goblin_2_name}Yaghûl" />
 	<string id="aom_clan_goblin_3_name" text="{=aom_clan_goblin_3_name}Gorkil" />
@@ -100,12 +100,12 @@
 	<string id="aom_clan_khuzait_17_name" text="{=aom_clan_khuzait_17_name}Mithruntai" />
 	<string id="aom_clan_khuzait_18_name" text="{=aom_clan_khuzait_18_name}Vazevian" />
 	<string id="aom_clan_khuzait_19_name" text="{=aom_clan_khuzait_19_name}Bozorganith" />
-	<string id="aom_clan_lindon_1_name" text="{=aom_clan_lindon_1_name}Falathrim" />
-	<string id="aom_clan_lindon_2_name" text="{=aom_clan_lindon_2_name}Edhil Mithlond" />
-	<string id="aom_clan_lindon_3_name" text="{=aom_clan_lindon_3_name}Nos Galdor" />
-	<string id="aom_clan_lindon_4_name" text="{=aom_clan_lindon_4_name}Nos Brithombar" />
-	<string id="aom_clan_lindon_5_name" text="{=aom_clan_lindon_5_name}Wardens of Ered Luin" />
-	<string id="aom_clan_lindon_6_name" text="{=aom_clan_lindon_6_name}Nos Eglarest" />
+	<string id="aom_clan_lindon_1_name" text="{=aom_clan_lindon_1_name}Nos Nowë" />
+	<string id="aom_clan_lindon_2_name" text="{=aom_clan_lindon_2_name}Nos Artanor" />
+	<string id="aom_clan_lindon_3_name" text="{=aom_clan_lindon_3_name}Nos Thavn a Minas Loss" />
+	<string id="aom_clan_lindon_4_name" text="{=aom_clan_lindon_4_name}Nos Eldalomril" />
+	<string id="aom_clan_lindon_5_name" text="{=aom_clan_lindon_5_name}Nos Nenwendil" />
+	<string id="aom_clan_lindon_6_name" text="{=aom_clan_lindon_6_name}Nos Inglor" />
 	<string id="aom_clan_lothlorien_1_name" text="{=aom_clan_lothlorien_1_name}Nos Finarfin" />
 	<string id="aom_clan_lothlorien_2_name" text="{=aom_clan_lothlorien_2_name}Wardens of the Naith" />
 	<string id="aom_clan_lothlorien_3_name" text="{=aom_clan_lothlorien_3_name}Nos Malgalad" />

@@ -235,7 +235,7 @@ Four causes, all found by instrumenting a live session rather than by reading co
 | Rule | Why |
 |---|---|
 | **Close the conversation's `PlayerEncounter` when the oath is sworn** | The oath happens inside a conversation, which runs inside a `PlayerEncounter`. Parking without closing it left `PlayerEncounter.Current` live for the whole term — measured at `playerEncounter=True` on **93 of 93** ticks — and `EncounterManager` refuses EVERY main-party encounter while it is set. That single leak made the player unable to click any lord or settlement, and it survived into discharge. The donor closes it at the same point (`FinalizeEnlistmentConversation`: `Finish()` then attach). Discharge closes it too, and the hourly reconciler self-heals saves already stuck in that state. |
-| **Every return to parked service owes the player a menu** | Re-parking alone leaves them on the open map with no menu and no way to act — reported as "after battle I was left behind and the option menu isn't here". The only re-assert was `OnConversationEnded`, which never fires on the battle path. Both battle paths (normal end, failed-join rollback) now call `ReassertServiceMenu`. `OnConversationEnded` itself returns while the player is in a map event, because the battle menu is all that closes the player's own battle (#1099). The maintenance pump also stands down in a map event, and a battle the commander is not in still sets `EnlistedBattle` (`OnPlayerBattleStarted`). |
+| **Every return to parked service owes the player a menu** | Re-parking alone leaves them on the open map with no menu and no way to act — reported as "after battle I was left behind and the option menu isn't here". The only re-assert was `OnConversationEnded`, which never fires on the battle path. Both battle paths (normal end, failed-join rollback) now call `ReassertServiceMenu`, and the rollback skips that call inside a map event. A failed join whose army merge did not land (a commander with no kingdom or army), by a party already in another event, is no rollback: the party stays in that battle in `EnlistedBattle`. A merge that landed moves the party off that event, and the rollback runs as before. `OnConversationEnded` itself returns while the player is in a map event, because the battle menu is all that closes the player's own battle (#1099). The maintenance pump also stands down in a map event, and a battle the commander is not in still sets `EnlistedBattle` (`OnPlayerBattleStarted`). |
 | **Never anchor world spawns on the commander's CURRENT settlement** *(HISTORICAL — the duty spawn path was deleted with the travel model, #428)* | The durable half, still true: `CommanderSnapshot.SettlementId` is empty whenever the column is marching — nearly always — and the live status board reads it. The rest describes a design that no longer exists: hunt duties could only start while the commander sat in a town, and every `recon_sweep` failed with `SpawnLooterParty: settlement=''`. Nothing in the mod spawns or destroys a party any more; `SpawnLooterParty` survives only as a banned symbol in `FieldDutyRuntimeTests`. |
 | **Calibrate diagnostic thresholds against a real session, not a guess** | The drift warning used `> 1f`; ordinary inter-tick drift while marching is ~1.8, so it fired on essentially every sync — **291 of one session's 299 warnings**. A per-world-map-event line produced another 3674. The threshold is now `15f`, and the routine lines sit behind the toggle described below. A diagnostic that fires constantly is indistinguishable from no diagnostic. |
 
@@ -2304,7 +2304,7 @@ Open risks:
    on a failed read.
 3. Any `PlayerEncounter.Finish` with no winner while he is inside ends the commander's whole fight
    (`RaidEventComponent.cs:222`): Leave when the army merge was unavailable, or a `TryJoin` rollback.
-4. The pre-existing join-rollback `LeaveArmy` mid-event; Patch82 is the floor.
+4. Any other `LeaveArmy` mid-event; Patch82 is the floor. A failed join leaves a party alone when the party is in an event and the army merge did not land (#1099).
 
 **Owed in-game check.** See the #831/#954 bullet under "What actually remains". Control: a raid
 fought off by the commander as defender still joins (he joins the running raid, so the pump makes the
@@ -2714,8 +2714,8 @@ What actually remains, each a state no test can reach:
   encounters start.
 - **Quartermaster answers (#829).** Draw a kit (expect the issued line), ask again at the same rank
   (expect "already drawn"), and if reachable trigger empty stores and a co-op client (expect the
-  stores and host-only lines). Check each text; the three new keys show English until the paid
-  translation run. The cannot-load case (the party cannot take items) is effectively unreachable by
+  stores and host-only lines). Check each text; the three new keys are translated in
+  all 12 languages (2026-11-12, #763). The cannot-load case (the party cannot take items) is effectively unreachable by
   hand and is covered by unit tests.
 - **Discharge during load (#828).** (a) MCM switch off, saved on the open map with the service menu:
   load, expect the body "Your service has ended." and one enabled option "Go on your way", landing
@@ -2901,8 +2901,8 @@ Specifically owed, because each is a state a test structurally cannot reach:
    same pay and kit. Promote through the new ranks (Sergeant First Class, Master Sergeant, Sergeant
    Major) and read each promotion toast and the board line ("Toward Sergeant First Class" at Staff
    Sergeant). Ask the quartermaster for kit at the top tier and read the answer ("You already carry
-   the best kit my stores can issue."). Rank names and that answer show in English until the paid
-   translation run.
+   the best kit my stores can issue."). Rank names and that answer are translated in
+   all 12 languages (2026-11-12, #939).
 
 ### Still owed beyond testing
 
@@ -2914,7 +2914,7 @@ Specifically owed, because each is a state a test structurally cannot reach:
   2026-08-08 and then absorbed the 26 duty-result toasts (#428), the 2 duty toast keys the adapter
   composes, the 6 commander-loss strings, and the earlier status-board work. That was true on
   2026-08-09; the #828, #829 and #936 strings (the seven rank names and the best-kit answer among
-  them) ship English until the next paid translation run, tracked in #939.
+  them) are translated in all 12 languages (2026-11-12, #939).
 
   **Duty text has one source (#845).** `enlistment_duties.json` carries the English of every duty
   row as `{=taom_enlist_duty_<id>_<suffix>}English` strings: `title` on every row, `success` and

@@ -138,6 +138,7 @@ internal sealed class LongDefeatConfigCatalog
             ClassName = chosen?.Name ?? "",
             ArmouryPoint = fortress.ArmouryPoint,
             YardPoint = fortress.YardPoint,
+            Split = fortress.Split,
         };
     }
 

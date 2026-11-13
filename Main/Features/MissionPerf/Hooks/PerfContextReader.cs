@@ -59,13 +59,15 @@ internal static class PerfContextReader
             Safe("vsync", () => options.VSyncOption, -1),
             Safe("textureQuality", () => options.TextureQualityOption, -1),
             Safe("shadowQuality", () => options.ShadowmapResolutionOption, -1),
+            Safe("shadowType", () => options.ShadowmapTypeOption, -1),
+            Safe("shadowFiltering", () => options.ShadowmapFilteringOption, -1),
             Safe("particleDetail", () => options.ParticleDetailOption, -1),
             Safe("ragdolls", () => options.RagdollOption, -1),
             memLoad,
             availPhysMb,
             measuring,
             Safe<System.Collections.Generic.IReadOnlyList<string>>("diag", () => TickProfileLines.DiagTokens(
-                settings.IsEnabled, settings.StallWatchdogEnabled, settings.StallWatchdogBundleEnabled,
+                settings.IsEnabled,
                 settings.ExitStallSamplerEnabled, settings.MissionTickStallSamplerEnabled, settings.MemorySamplerEnabled,
                 BattleLoadDiagnosticsSettings.Instance?.EnableMissionPerfHeartbeat ?? true),
                 Array.Empty<string>()));

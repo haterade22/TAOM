@@ -77,7 +77,7 @@ exception), so static calls in services are a review check, not a grep.
 
 ### Amendment (2026-11-03): provider rules removed
 
-The provider types this ADR told services to use (`ICampaignTimeProvider`, `IModulePathProvider`, `IPlayerHeroProvider`, `ICampaignProvider`) do not exist in TAOM code, and the "Create if needed" rows were never created. Seams and adapters (ADR-007) met the need. Rule 3, the provider items in Rule 4, Rule 5, Implementation Patterns 1 to 3, the codebase examples and the Migration Guide left with them. Pattern 3 taught catching `NullReferenceException` as control flow in a service, which contradicts `.claude/rules/adapters.md`.
+The provider types this ADR told services to use (`ICampaignTimeProvider`, `IModulePathProvider`, `IPlayerHeroProvider`, `ICampaignProvider`) do not exist in TAOM code, and the "Create if needed" rows were never created. Seams and adapters (ADR-007) met the need. Rule 3, the provider items in Rule 4, Rule 5, Implementation Patterns 1 to 3, the codebase examples and the Migration Guide left with them. Pattern 3 taught catching `NullReferenceException` as control flow in a service, which contradicts `.claude/rules/adapters.md`. <!-- illustrative-name -->
 
 The Rule 4 checklist named a `Main/Core/Services/` folder that does not exist; a feature's services live in its folder under `Main/Features/`, and shared ones under `Main/Core/Infrastructure/`.
 

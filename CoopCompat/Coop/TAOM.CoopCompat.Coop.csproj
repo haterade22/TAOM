@@ -1,0 +1,58 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+	<!-- TAOM.CoopCompat.Coop: every type of the module that needs a Coop assembly to load (the transport and
+	     the wire contracts). The engine runs GetTypes() on each DLL that SubModule.xml names before any
+	     OnSubModuleLoad, when Coop is not loaded yet, so those types cannot live in TAOM.CoopCompat.dll.
+	     This DLL is not named in SubModule.xml: it loads from the module's bin folder the first time
+	     TAOM.CoopCompat.dll runs code that uses one of its types (TypeScanGateTests). It ships beside
+	     TAOM.CoopCompat.dll and never ships a Coop DLL (Private=False below). -->
+	<PropertyGroup>
+		<Version>2.0.0</Version>
+		<Deterministic>true</Deterministic>
+		<PathMap>$(MSBuildProjectDirectory)=/_/</PathMap>
+		<GenerateTargetFrameworkAttribute>false</GenerateTargetFrameworkAttribute>
+		<AssemblyName>TAOM.CoopCompat.Coop</AssemblyName>
+		<RootNamespace>TAOM.CoopCompat</RootNamespace>
+		<CoopBinDir Condition="'$(CoopBinDir)' == ''">$(GameFolder)\Modules\Coop\bin\$(GameBinariesFolder)</CoopBinDir>
+		<TaomCoopCompatEnabled>false</TaomCoopCompatEnabled>
+		<TaomCoopCompatEnabled Condition="Exists('$(CoopBinDir)\Common.dll')">true</TaomCoopCompatEnabled>
+		<EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+	</PropertyGroup>
+
+	<ItemGroup Condition="'$(TaomCoopCompatEnabled)' == 'true'">
+		<Compile Include="**\*.cs" Exclude="obj\**;bin\**" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Reference Include="$(TaomGameBin)\TaleWorlds.*.dll" Exclude="$(TaomGameBin)\TaleWorlds.Native.dll">
+			<HintPath>%(Identity)</HintPath>
+			<Private>False</Private>
+		</Reference>
+	</ItemGroup>
+
+	<!-- The five public Coop assemblies plus protobuf-net.Core, never copied to the output (licence). -->
+	<ItemGroup Condition="'$(TaomCoopCompatEnabled)' == 'true'">
+		<Reference Include="Common"><HintPath>$(CoopBinDir)\Common.dll</HintPath><Private>False</Private></Reference>
+		<Reference Include="Autofac"><HintPath>$(CoopBinDir)\Autofac.dll</HintPath><Private>False</Private></Reference>
+		<Reference Include="GameInterface"><HintPath>$(CoopBinDir)\GameInterface.dll</HintPath><Private>False</Private></Reference>
+		<Reference Include="Coop.Core"><HintPath>$(CoopBinDir)\Coop.Core.dll</HintPath><Private>False</Private></Reference>
+		<Reference Include="protobuf-net"><HintPath>$(CoopBinDir)\protobuf-net.dll</HintPath><Private>False</Private></Reference>
+		<Reference Include="protobuf-net.Core"><HintPath>$(CoopBinDir)\protobuf-net.Core.dll</HintPath><Private>False</Private></Reference>
+		<Reference Include="LiteNetLib"><HintPath>$(CoopBinDir)\LiteNetLib.dll</HintPath><Private>False</Private></Reference>
+	</ItemGroup>
+
+	<ItemGroup>
+		<AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
+			<_Parameter1>TAOM.CoopCompat</_Parameter1>
+		</AssemblyAttribute>
+		<AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
+			<_Parameter1>TAOM.CoopCompat.Tests</_Parameter1>
+		</AssemblyAttribute>
+	</ItemGroup>
+
+	<Target Name="TaomCoopCompatCoopSkipNotice" BeforeTargets="CoreCompile" Condition="'$(TaomCoopCompatEnabled)' != 'true'">
+		<Message Importance="high" Text="TAOM.CoopCompat.Coop skipped: no Coop at $(CoopBinDir)" />
+	</Target>
+
+	<Import Project="..\..\GameReferences.targets" />
+</Project>

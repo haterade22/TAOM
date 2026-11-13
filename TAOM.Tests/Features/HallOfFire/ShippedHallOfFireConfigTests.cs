@@ -72,7 +72,7 @@ public class ShippedHallOfFireConfigTests
     public void ShippedConfig_EveryConversionTargetCultureHasARowOrIsVanilla()
     {
         var random = Substitute.For<IRandomProvider>();
-        var targets = new VolunteerRecruitmentService(random, Substitute.For<IModLogger>()).GetPooledCultureIds()
+        var targets = new VolunteerRecruitmentService(random, Substitute.For<IModLogger>(), Substitute.For<TAOM.Features.Arachnophobia.IArachnophobiaService>()).GetPooledCultureIds()
             .Where(c => !string.IsNullOrEmpty(c)).OrderBy(c => c, StringComparer.Ordinal).ToList();
         Assert.IsTrue(targets.Count >= 20, $"Only {targets.Count} conversion targets found; the recruitment pools moved and this gate would pass vacuously.");
 

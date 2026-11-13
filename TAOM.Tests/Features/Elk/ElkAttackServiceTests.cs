@@ -2,6 +2,7 @@ using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TAOM.Features.Elk;
 using TAOM.Features.ElephantLike;
+using TAOM.Features.WarRam;
 
 // Great elk antler charge: pure decision-service tests (#636). The shared elephant-like decision surface,
 // no TaleWorlds dependencies, every branch reachable without mocks. The antler charge is one 60 Blunt blow (Mike,
@@ -95,6 +96,12 @@ public class ElkAttackServiceTests
     public void IsOffCooldown_LastFiredInFuture_ReturnsFalse()
         // Clock skew or a bad stamp: a future lastFired reads as ON cooldown, not off.
         => Assert.IsFalse(_sut.IsOffCooldown(lastFired: Now.AddSeconds(30), now: Now, cooldownSeconds: ElkConfig.AttackCooldownSeconds));
+
+    [TestMethod]
+    public void AttackCooldown_FollowsTheWarRam()
+        // Mike, 2026-11-11: the elk charges as often as the ram butts. A ram retune must move this value too.
+        => Assert.AreEqual(WarRamConfig.AttackCooldownSeconds, ElkConfig.AttackCooldownSeconds,
+            "the elk follows the war ram's cooldown: change ElkConfig.AttackCooldownSeconds with WarRamConfig's");
 
     // ------------------------------------------------------------------ ComputeInflictedDamage
     // Mike, 2026-09-23: the antler charge is one 60 Blunt blow. Armour does not reduce it (CustomAttacksUtils writes

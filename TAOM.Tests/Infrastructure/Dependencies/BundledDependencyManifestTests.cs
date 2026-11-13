@@ -236,6 +236,35 @@ public class BundledDependencyManifestTests
             "Bump the constraint per docs/migration/dr3-maintenance.md Scenario A, or run /engine-bump.");
     }
 
+    [DataTestMethod]
+    [TestCategory("LiveInstall")]
+    [DataRow("TAOM_Map")]
+    [DataRow("LOTRLOME_Armory")]
+    public void LiveModuleNativeConstraint_MatchesPinnedGameVersion(string moduleId)
+    {
+        // TAOM_Map and LOTRLOME_Armory are not in this repo. /engine-bump moves their Native row by hand, and a
+        // reinstall or an older editor copy brings the previous engine's row back (deep review F4, 2026-11-10).
+        string? env = Environment.GetEnvironmentVariable("BANNERLORD_GAME_DIR");
+        string game = string.IsNullOrWhiteSpace(env) ? @"E:\Steam\steamapps\common\Mount & Blade II Bannerlord" : env;
+        string manifest = Path.Combine(game, "Modules", moduleId, "SubModule.xml");
+        if (!File.Exists(PinnedGameVersionFile) || !File.Exists(manifest))
+        {
+            Assert.Inconclusive($"{moduleId} is not installed on this machine, or the engine pin file is absent: its Native row cannot be checked here.");
+            return;
+        }
+
+        var pinned = File.ReadAllText(PinnedGameVersionFile).Trim();
+        var nativeVersion = (string?)XDocument.Load(manifest)
+            .Root?.Element("DependedModuleMetadatas")
+            ?.Elements("DependedModuleMetadata")
+            .SingleOrDefault(e => (string?)e.Attribute("id") == "Native")
+            ?.Attribute("version");
+
+        Assert.AreEqual($"{pinned}.*", nativeVersion,
+            $"The live {moduleId}/SubModule.xml Native constraint is {nativeVersion ?? "(none)"} but the pinned game version is {pinned}. " +
+            "Back the file up, then set the row to the pin (/engine-bump Phase 4, item 7).");
+    }
+
     // ── Redistribution attribution ────────────────────────────────────────────────────────────
 
     [TestMethod]
@@ -337,6 +366,34 @@ public class BundledDependencyManifestTests
         Assert.AreEqual(actual, pinned,
             "Main/_Module/SubModule.xml pins TAOM.Dependencies at '" + pinned + "' but Dependencies/_Module/SubModule.xml is '"
             + actual + "' (#371). Set both to the release version.");
+    }
+
+    /// <summary>
+    /// TAOM.CoopCompat's manifest version and its pin on TAOM must both equal TAOM's version. Every peer must
+    /// run one TAOM.CoopCompat version, and equal to TAOM's is the release convention. The release skill runs
+    /// this test by name after it bumps the version files.
+    /// </summary>
+    [TestMethod]
+    public void CoopCompatPairing_VersionAndTaomMetadataEqualMainVersion()
+    {
+        var main = XDocument.Load(MainSubModule).Root!.Element("Version");
+        Assert.IsNotNull(main, "Main/_Module/SubModule.xml has no <Version>.");
+        var taomVersion = (string?)main!.Attribute("value");
+        Assert.IsFalse(string.IsNullOrWhiteSpace(taomVersion), "Main/_Module/SubModule.xml <Version> is empty.");
+
+        var compatManifest = Path.Combine(RepoRoot, @"CoopCompat\_Module\SubModule.xml");
+        var compat = XDocument.Load(compatManifest).Root!;
+        var compatVersion = (string?)compat.Element("Version")?.Attribute("value");
+        var taomPin = compat.Descendants("DependedModuleMetadata")
+            .Where(e => (string?)e.Attribute("id") == "TAOM").Select(e => (string?)e.Attribute("version")).ToList();
+
+        Assert.AreEqual(taomVersion, compatVersion,
+            "Every peer must run one TAOM.CoopCompat version, and equal to TAOM's is the release convention: "
+            + "CoopCompat/_Module/SubModule.xml <Version> is '" + compatVersion + "', Main's is '" + taomVersion + "'.");
+        Assert.AreEqual(1, taomPin.Count, "Expected exactly one <DependedModuleMetadata id=\"TAOM\"> in " + compatManifest);
+        Assert.AreEqual(taomVersion, taomPin[0],
+            "Every peer must run one TAOM.CoopCompat version, and equal to TAOM's is the release convention: "
+            + "its TAOM metadata pins '" + taomPin[0] + "', Main's <Version> is '" + taomVersion + "'.");
     }
 
     /// <summary>Minimal reader for the `[modules]` section — mirrors CoopModuleList's format.</summary>

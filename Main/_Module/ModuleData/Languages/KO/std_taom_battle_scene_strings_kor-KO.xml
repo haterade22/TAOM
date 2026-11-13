@@ -33,14 +33,14 @@
     <string id="aom_taom_rohan_battle_fords_of_isen_forceatmo_name" text="[로한] 아이센 여울" />
     <string id="aom_taom_rohan_castle_helms_deep_forceatmo_name" text="[로한] 헬름 협곡 - 밤비" />
     <string id="aom_taom_rohan_edoras_town_forceatmo_name" text="[로한] 에도라스" />
-    <string id="aom_taom_gondor_battle_001_forceatmo_name" text="[Gondor] Ruined Outpost" />
-    <string id="aom_taom_gondor_pelennor_fields_forceatmo_name" text="[Gondor] Pelennor Fields" />
-    <string id="aom_taom_dwarven_moria_e_forceatmo_name" text="[Misty Mountains] Eastern Moria" />
-    <string id="aom_taom_gondor_town_pelargir_forceatmo_name" text="[Gondor] Pelargir" />
-    <string id="aom_taom_gondor_town_serelond_forceatmo_name" text="[Gondor] Serelond" />
-    <string id="aom_taom_gondor_village_amongelin_forceatmo_name" text="[Gondor] Amon Gelin Village" />
-    <string id="aom_taom_gondor_village_lothgobel_forceatmo_name" text="[Gondor] Lothgobel Village" />
-    <string id="aom_taom_mordor_town_01_forceatmo_name" text="[Mordor] Mordor Town" />
-    <string id="aom_taom_rohan_battle_002_forceatmo_name" text="[Rohan] Rohan Plains II" />
+    <string id="aom_taom_gondor_battle_001_forceatmo_name" text="[곤도르] 폐허가 된 전초기지" />
+    <string id="aom_taom_gondor_pelennor_fields_forceatmo_name" text="[곤도르] 펠렌노르 평원" />
+    <string id="aom_taom_dwarven_moria_e_forceatmo_name" text="[안개산맥] 동부 모리아" />
+    <string id="aom_taom_gondor_town_pelargir_forceatmo_name" text="[곤도르] 펠라르기르" />
+    <string id="aom_taom_gondor_town_serelond_forceatmo_name" text="[곤도르] 세렐론드" />
+    <string id="aom_taom_gondor_village_amongelin_forceatmo_name" text="[곤도르] 아몬 겔린 마을" />
+    <string id="aom_taom_gondor_village_lothgobel_forceatmo_name" text="[곤도르] 로스고벨 마을" />
+    <string id="aom_taom_mordor_town_01_forceatmo_name" text="[모르도르] 모르도르 도시" />
+    <string id="aom_taom_rohan_battle_002_forceatmo_name" text="[로한] 로한 평원 II" />
   </strings>
 </base>

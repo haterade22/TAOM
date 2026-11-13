@@ -4,16 +4,18 @@ using TaleWorlds.CampaignSystem;
 using TaleWorlds.Library;
 using TaleWorlds.MountAndBlade;
 using TaleWorlds.MountAndBlade.ViewModelCollection;
+using TAOM.Features.BattleHud.UI;
 using TAOM.Features.CareerSystem.Abilities;
 
 namespace TAOM.Features.CareerSystem.UI;
 
-// Issue #382 — data source for the career energy bar injected into the AgentStatus HUD
-// (CareerEnergyBarPrefab). Hooked on the VM's per-frame Tick so the drain/refill animates.
-// UIExtenderEx constructs mixins with only (parentVM); services resolve once at the
-// boundary (same pattern as CharacterDeveloperCareerMixin). All state mapping lives in
-// the unit-tested CareerEnergyBarStateMapper; this class only moves values across the
-// VM boundary.
+// Issues #382 and #1095: the career disk at the centre of the circular battle HUD (injected by
+// CareerEnergyBarPrefab into the AgentStatus HUD). Hooked on the VM's per-frame Tick so the drain and
+// refill animate. UIExtenderEx constructs mixins with only (parentVM); services resolve once at the
+// boundary. State mapping lives in the unit-tested CareerEnergyBarStateMapper and
+// BattleHudStateMapper.MapCentre; this class only moves values across the VM boundary. Without a
+// career ability (custom battle, a campaign hero with no career) every flag is off and the HUD shows
+// a neutral dark centre with no glyph and no key.
 [ViewModelMixin("Tick")]
 internal class MissionAgentStatusCareerMixin : BaseViewModelMixin<MissionAgentStatusVM>
 {
@@ -22,11 +24,11 @@ internal class MissionAgentStatusCareerMixin : BaseViewModelMixin<MissionAgentSt
     private readonly ICareerAbilityService _abilityService;
     private readonly IAbilityInputAdapter _input;
 
-    private bool _isCareerBarVisible;
-    private bool _isBarReady;
-    private bool _isBarActive;
-    private bool _isBarCooldown;
-    private float _barFillWidth;
+    private bool _hasCareerAbility;
+    private bool _isAbilityReady;
+    private bool _isAbilityActive;
+    private bool _isAbilityCooldown;
+    private float _abilityFill;
     private string _activationKeyText = "";
     private string _careerGlyphSprite = "";
     private bool _hasCareerGlyph;
@@ -43,123 +45,60 @@ internal class MissionAgentStatusCareerMixin : BaseViewModelMixin<MissionAgentSt
     public override void OnRefresh()
     {
         var hero = Campaign.Current != null ? CharacterObject.PlayerCharacter?.HeroObject : null;
-        if (hero == null)
-        {
-            HideBar();
-            return;
-        }
-
-        // Same identity gate as CareerPerkMissionBehavior (Issue #377): the bar belongs to
-        // the career hero, not to whichever soldier the player is controlling.
+        // Same identity gate as CareerPerkMissionBehavior (Issue #377): the disk belongs to the career
+        // hero, not to whichever soldier the player is controlling.
         var mainAgent = Mission.Current?.MainAgent;
-        var isControllingCareerHero =
-            mainAgent != null && CareerHeroIdentityGate.IsCareerHeroAgent(mainAgent, hero);
+        var ability = hero != null && mainAgent != null && CareerHeroIdentityGate.IsCareerHeroAgent(mainAgent, hero)
+            && _dataService.HasCareer(hero.StringId)
+                ? _abilityService.GetOrCreateAbility(hero.StringId, _registry, _dataService)
+                : null;
 
-        if (!isControllingCareerHero || !_dataService.HasCareer(hero.StringId))
-        {
-            HideBar();
-            return;
-        }
+        // Read per refresh: the key is rebindable mid-mission from the Esc menu. The adapter caches the
+        // GameKey, and the setters only notify when a value moves.
+        var key = ability != null ? _input?.ActivationKeyName ?? "" : "";
+        var centre = ability != null
+            ? BattleHudStateMapper.MapCentre(true, CareerEnergyBarStateMapper.Map(ability), key)
+            : default;
 
-        var ability = _abilityService.GetOrCreateAbility(hero.StringId, _registry, _dataService);
-        if (ability == null)
-        {
-            HideBar();
-            return;
-        }
+        HasCareerAbility = centre.HasAbility;
+        IsAbilityReady = centre.IsReady;
+        IsAbilityActive = centre.IsActive;
+        IsAbilityCooldown = centre.IsCooldown;
+        AbilityFill = centre.Fill01;
+        ActivationKeyText = key;
+        HasActivationKey = centre.ShowKey;
 
-        // Read per refresh rather than once in the ctor: the key is rebindable in
-        // Options > Keybindings, and a player can change it mid-mission through the Esc menu. The
-        // adapter caches the GameKey, so this is a field read plus a text lookup, and the setter
-        // only raises OnPropertyChanged when the label actually moves.
-        ActivationKeyText = _input?.ActivationKeyName ?? "";
-        HasActivationKey = !string.IsNullOrEmpty(ActivationKeyText);
-
-        var state = CareerEnergyBarStateMapper.Map(ability);
-        IsCareerBarVisible = true;
-        IsBarReady = state.IsReady;
-        IsBarActive = state.IsActive;
-        IsBarCooldown = state.IsCooldown;
-        BarFillWidth = state.Fill01 * CareerEnergyBarStateMapper.FillMaxWidth;
-
-        var careerId = _dataService.GetCareerStringId(hero.StringId);
+        var careerId = ability != null ? _dataService.GetCareerStringId(hero!.StringId) : null;
         var career = careerId != null ? _registry.GetCareer(careerId) : null;
         CareerGlyphSprite = career?.KeystoneIcon ?? "";
         HasCareerGlyph = !string.IsNullOrEmpty(CareerGlyphSprite);
     }
 
-    private void HideBar()
-    {
-        IsCareerBarVisible = false;
-        IsBarReady = false;
-        IsBarActive = false;
-        IsBarCooldown = false;
-        BarFillWidth = 0f;
-    }
+    [DataSourceProperty]
+    public bool HasCareerAbility { get => _hasCareerAbility; set { if (_hasCareerAbility != value) { _hasCareerAbility = value; OnPropertyChanged(nameof(HasCareerAbility)); } } }
 
     [DataSourceProperty]
-    public bool IsCareerBarVisible
-    {
-        get => _isCareerBarVisible;
-        set { if (_isCareerBarVisible != value) { _isCareerBarVisible = value; OnPropertyChanged(nameof(IsCareerBarVisible)); } }
-    }
+    public bool IsAbilityReady { get => _isAbilityReady; set { if (_isAbilityReady != value) { _isAbilityReady = value; OnPropertyChanged(nameof(IsAbilityReady)); } } }
 
     [DataSourceProperty]
-    public bool IsBarReady
-    {
-        get => _isBarReady;
-        set { if (_isBarReady != value) { _isBarReady = value; OnPropertyChanged(nameof(IsBarReady)); } }
-    }
+    public bool IsAbilityActive { get => _isAbilityActive; set { if (_isAbilityActive != value) { _isAbilityActive = value; OnPropertyChanged(nameof(IsAbilityActive)); } } }
 
     [DataSourceProperty]
-    public bool IsBarActive
-    {
-        get => _isBarActive;
-        set { if (_isBarActive != value) { _isBarActive = value; OnPropertyChanged(nameof(IsBarActive)); } }
-    }
+    public bool IsAbilityCooldown { get => _isAbilityCooldown; set { if (_isAbilityCooldown != value) { _isAbilityCooldown = value; OnPropertyChanged(nameof(IsAbilityCooldown)); } } }
 
     [DataSourceProperty]
-    public bool IsBarCooldown
-    {
-        get => _isBarCooldown;
-        set { if (_isBarCooldown != value) { _isBarCooldown = value; OnPropertyChanged(nameof(IsBarCooldown)); } }
-    }
+    public float AbilityFill { get => _abilityFill; set { if (_abilityFill != value) { _abilityFill = value; OnPropertyChanged(nameof(AbilityFill)); } } }
 
     [DataSourceProperty]
-    public float BarFillWidth
-    {
-        get => _barFillWidth;
-        set { if (_barFillWidth != value) { _barFillWidth = value; OnPropertyChanged(nameof(BarFillWidth)); } }
-    }
+    public string ActivationKeyText { get => _activationKeyText; set { if (_activationKeyText != value) { _activationKeyText = value; OnPropertyChanged(nameof(ActivationKeyText)); } } }
 
     [DataSourceProperty]
-    public string ActivationKeyText
-    {
-        get => _activationKeyText;
-        set { if (_activationKeyText != value) { _activationKeyText = value; OnPropertyChanged(nameof(ActivationKeyText)); } }
-    }
+    public string CareerGlyphSprite { get => _careerGlyphSprite; set { if (_careerGlyphSprite != value) { _careerGlyphSprite = value; OnPropertyChanged(nameof(CareerGlyphSprite)); } } }
 
     [DataSourceProperty]
-    public string CareerGlyphSprite
-    {
-        get => _careerGlyphSprite;
-        set { if (_careerGlyphSprite != value) { _careerGlyphSprite = value; OnPropertyChanged(nameof(CareerGlyphSprite)); } }
-    }
+    public bool HasCareerGlyph { get => _hasCareerGlyph; set { if (_hasCareerGlyph != value) { _hasCareerGlyph = value; OnPropertyChanged(nameof(HasCareerGlyph)); } } }
 
+    // Clearing the binding in Options is a supported state and empties the key text; the chip then hides.
     [DataSourceProperty]
-    public bool HasCareerGlyph
-    {
-        get => _hasCareerGlyph;
-        set { if (_hasCareerGlyph != value) { _hasCareerGlyph = value; OnPropertyChanged(nameof(HasCareerGlyph)); } }
-    }
-
-    // Gates the key chip the same way HasCareerGlyph gates the medallion. Clearing the binding in
-    // Options is a supported state and empties ActivationKeyText, but the chip is a fixed 30x22
-    // sprite: without this the player would be left looking at an empty dark box on the energy bar.
-    [DataSourceProperty]
-    public bool HasActivationKey
-    {
-        get => _hasActivationKey;
-        set { if (_hasActivationKey != value) { _hasActivationKey = value; OnPropertyChanged(nameof(HasActivationKey)); } }
-    }
+    public bool HasActivationKey { get => _hasActivationKey; set { if (_hasActivationKey != value) { _hasActivationKey = value; OnPropertyChanged(nameof(HasActivationKey)); } } }
 }

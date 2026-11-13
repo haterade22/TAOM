@@ -115,7 +115,7 @@ config so they can be tuned apart. The size itself is not here: it is the Monste
 | Constant | Value | Note |
 |---|---|---|
 | `AttackDamage` / `AttackDamageType` | 60 / `DamageTypes.Blunt` | One blow on one victim, lethal (`CanKillEvenIfBlunt`). Ignores armour: `CustomAttacksUtils.TakeDamage` writes the damage directly. A shield block quarters it (15); the rider's career charge bonus multiplies it, and a multiplier outside (0, 10] counts as 1 (`ElephantLikeAttackService.MaxRiderMultiplier`) |
-| `AttackCooldownSeconds` | 10.0 | Must outlast the 3.5 s clip (butt plus head-down hold) |
+| `AttackCooldownSeconds` | 35.0 | Must outlast the 3.5 s clip (butt plus head-down hold). The ram's value since 2026-11-11 (Mike); both were 10.0. `ElkAttackServiceTests` pins the match |
 | `ReachScalesWithBody` | true | The shared nodes multiply the two ranges below by the elk's live agent scale, which comes from the Monster's `taom_body_length` (110, so 1.65 m / 2.2 m). Replaced `AuthoredScale` (1.1f; 2.0f, then 1.2f, earlier on 2026-09-23) that evening |
 | `AttackTriggerRange` / `AttackRadius` | 1.5 m / 2 m at 1.0x | Measured from the elk's centre, so they grow with the body. The engage decorator scans once at the radius and filters by the trigger range, so the range must stay inside the radius |
 | `AttackSingleTarget` | true | One victim per charge |
@@ -246,7 +246,7 @@ a Mirkwood market like any Mirkwood item (Mike, 2026-09-23: it may be sold).
   tree to one agent; the shared action and set; the four equal slots; single target; cooldown longer than the
   clip; trigger range inside the radius; the reach at 1.0x with `ReachScalesWithBody` set; the elk profile passing that flag on; the live Monster
   declaring a valid `taom_body_length` while `taom_elk_a` holds the placeholder `body_length` 100; one 60 Blunt blow.
-- `ElkAttackServiceTests` (30, one six-row data test among them): the gate and cooldown tests mirror the ram's; the
+- `ElkAttackServiceTests` (31, one six-row data test among them): the gate and cooldown tests mirror the ram's, and one pins the cooldown to the ram's; the
   charge is 60 whatever the roll and 15 shield-blocked; a rider bonus scales it (75 at +25%, 19 on a block, 30 at a
   -50% malus, 600 at the 10x cap); a NaN, infinite, zero, negative or past-the-cap multiplier lands it unscaled.
 - `CareerAgentStatServiceTests`: eight `MountChargeMultiplier` tests, one pinning that it equals what

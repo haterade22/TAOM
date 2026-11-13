@@ -34,6 +34,24 @@ public interface IMissionStartGuardService
     /// <summary>An exception that still left <c>Mission.AfterStart</c> (from the engine calls the guard does not wrap): logged at most three times per process.</summary>
     void ReportEscaped(Exception exception);
 
+    /// <summary>
+    /// One <c>EarlyStart</c>, <c>AfterStart</c> or <c>AfterMissionStart</c> call changed the list the engine was walking
+    /// around it (#1028). <c>Mission.AfterStart</c> walks <c>MissionBehaviors</c> and <c>MissionObjects</c> with
+    /// <c>foreach</c>, so any change (an add, a remove, an indexer write, a sort) makes the engine's next step throw
+    /// "Collection was modified" outside every call the guard wraps. Logs the list, the call, the owner, both sizes and,
+    /// when the list grew, its newest item ("n/a" otherwise); at most five lines per mission.
+    /// </summary>
+    void ReportListChange(StartCall call, string ownerType, string ownerAssembly, string list, int before, int after, string newestType);
+
+    /// <summary>Whether a behaviour added while the engine walks <c>MissionBehaviors</c> is queued until the walk ends (#1028). The same toggle as <see cref="ShouldSurvive"/>.</summary>
+    bool ShouldDeferBehaviorAdds();
+
+    /// <summary>One INFO line: a behaviour of <paramref name="addedType"/> was queued during <paramref name="call"/> of <paramref name="ownerType"/>.</summary>
+    void ReportDeferredAdd(StartCall call, string ownerType, string addedType);
+
+    /// <summary>The queue was applied when <c>Mission.AfterStart</c> ended: <paramref name="queued"/> behaviours, <paramref name="added"/> of them added. Writes the in-game check line (#1028).</summary>
+    void ReportFlush(int queued, int added);
+
     /// <summary>The install line: how many call sites the transpiler wrapped, or the warning when it is not all of them (which also uses up the once-per-process lost-guard warning).</summary>
     void LogInstall(int wrappedSites);
 }

@@ -50,7 +50,7 @@ Bannerlord has no concept of per-faction resources beyond gold and influence. Th
 - **SyncData persistence:** Composite `heroId:resourceId` keys. The load path repairs a non-finite entry to zero (#558) and does NOT clamp to the cap: a per-player cap applied to every key once shrank other resources' balances (#133), so `ClampAll` is no longer called. The load reads into a null local, not the live dictionary: the engine leaves the ref unchanged when the key is missing, so a behavior record without the balances key loads empty storage instead of the previous campaign's balances (defensive: every TAOM build has written the key). **Open gap:** a save older than SpecialResources (before 2026-04-07) has no record for this behavior, the engine's `LoadBehaviorData` never calls its SyncData, and loaded after another campaign in the same process it still inherits that campaign's balances; the `_syncedThisSession` reset at the top of `OnGameLoaded` (the FiefGranting and FieldCamp shape) awaits Mike's call. The storage is a process-lifetime singleton that a new game never loads into, so `OnNewGameCreated` wipes it (`RestoreData(null)`) along with the service's session state, before the character-creation finalize seeds the new hero (plan 001)
 - **Career passive integration:** `SpecialResourceGain` scales every earning source (daily town income, battle, raid, siege, prisoners, tournament, hideout) through one `ScaleEarned`, which always multiplies and earns 0 for a result that is not a finite positive (#767), `SpecialResourceUpkeepModifier` reduces upkeep, `SpecialResourceUpgradeCostModifier` reduces upgrade cost; all wired through `ICareerPassiveService`
 - **Resource tiers:** Optional `<Tiers>` XML element defines threshold-based progression (pilot: Gems with 3 tiers). `GetCurrentTier()` resolves highest tier where balance >= threshold. Map bar shows tier name when active.
-- **Map bar display:** `SpecialResourceMapBarMixin` adds one `MapInfoItemVM` to `SecondaryInfoItems` on its first refresh, guarded by `Contains` (`MapBarVM.Initialize` runs that refresh before the view loads and the next one 2 s later, #958), and removes it while the hero has no resource (#977) (dormant ownership hazard, see `.claude/rules/gui-ui.md`; the old IndexOutOfRange claim did not reproduce on v1.4.8). The tooltip renders the daily breakdown: title with balance and cap, tier or next tier, `Daily change` rundown with income (town count), elite upkeep (troop-type count) and one row per troop type in the extended (Alt) view, net, `Depleted in N days` while the balance shrinks (no countdown when the net is below the balance's float resolution, since the stored value would never move), or, at zero with a net at or below zero, a notice that elite troops desert each day while the resource stays at zero (the tick adds the net before it tests the balance, so at zero with income covering upkeep nothing deserts and no notice shows); then the per-event rates (each projected through `ISpecialResourceService.ScaleEarned`, so they show the post-gain amount the earning paths store; Per battle is the base at an enemy ratio of 1). Every label is a `{=taom_res_tt_*}` key rendered through `TextObject.ToString()` because `TooltipProperty` accepts strings only. `HasWarning` lights when `HasUpkeepDue` and `balance + net <= 0`, the desertion trigger, one day ahead; vanilla lights gold the same way (`MapInfoVM.UpdatePlayerInfo`). Until 2026-09-11 the tooltip computed upkeep from an EMPTY troop list, so it never showed an upkeep line (#558). See [gui-sprite-system.md](gui-sprite-system.md).
+- **Map bar display:** `SpecialResourceMapBarMixin` adds one `MapInfoItemVM` to `SecondaryInfoItems` on its first refresh, guarded by `Contains` (`MapBarVM.Initialize` runs that refresh before the view loads and the next one 2 s later, #958), and removes it while the hero has no resource (#977) (dormant ownership hazard, see `.claude/rules/gui-ui.md`; the old IndexOutOfRange claim did not reproduce on v1.4.8). The tooltip renders the daily breakdown: title with balance and cap, tier or next tier, `Daily change` rundown with income (town count), elite upkeep (troop-type count) and one row per troop type in the extended (Alt) view, net, `Depleted in N days` while the balance shrinks (no countdown when the net is below the balance's float resolution, since the stored value would never move), or, at zero with a net at or below zero, a notice that elite troops desert each day while the resource stays at zero (the tick adds the net before it tests the balance, so at zero with income covering upkeep nothing deserts and no notice shows); then the per-event rates (each projected through `ISpecialResourceService.ScaleEarned`, so they show the post-gain amount the earning paths store; the battle row reads "Per {SIZE}-man battle", the base an enemy of `battle_reference_size` men pays; a smaller or larger enemy pays a share of it, `taom_res_tt_per_battle_ref`). Every label is a `{=taom_res_tt_*}` key rendered through `TextObject.ToString()` because `TooltipProperty` accepts strings only. `HasWarning` lights when `HasUpkeepDue` and `balance + net <= 0`, the desertion trigger, one day ahead; vanilla lights gold the same way (`MapInfoVM.UpdatePlayerInfo`). Until 2026-09-11 the tooltip computed upkeep from an EMPTY troop list, so it never showed an upkeep line (#558). See [gui-sprite-system.md](gui-sprite-system.md).
 - **Comprehensive logging:** `[SpecRes]` prefix throughout all components
 
 ### Component Diagram
@@ -80,7 +80,7 @@ Behavior  Patch26    MapBarMixin  SpriteWidget  Cheats (taom.print/add_special_r
 <!-- excerpt: the shipped row also lists gundabad, dolguldur, goblin, mistymountainorcs and bluecraig as kingdom and culture -->
 <Resource id="war_spoils" display_name="War Spoils" icon_sprite="SpecialResources\taom_war_spoils_icon"
   cap="10000" starting_amount="0" daily_per_town="0.2"
-  per_battle_victory_base="14" per_raid="12" per_siege_victory="20"
+  per_battle_victory_base="50" per_raid="100" per_siege_victory="250"
   per_prisoner="2" per_tournament_win="3" per_hideout_clear="8">
   <Kingdom id="empire_s" />
   <Kingdom id="isengard" />
@@ -89,11 +89,14 @@ Behavior  Patch26    MapBarMixin  SpriteWidget  Cheats (taom.print/add_special_r
 </Resource>
 ```
 
-Earning rates are now differentiated per faction identity:
-- **Aggressive factions** (Mordor, Harad): high battle/raid, low daily
-- **Mining/trade factions** (Erebor, Dale): high daily, low battle
-- **Honor factions** (Rohan): high tournament, zero raid (unless a lord's party is beaten in the raid)
-- **Peaceful factions** (Elves): high daily, zero raid (unless a lord's party is beaten in the raid)
+Battle, raid and siege use the same base for every resource (see the table below; changed
+2026-11-10). A raid and a siege pay that base flat. A battle pays it scaled by the enemy's size: three optional attributes on
+`<Resource>`, `battle_reference_size`, `battle_min_scale` and `battle_max_scale`, set the scale. An invalid set (a reference of 0 or
+less, a negative floor, a ceiling under the floor, or a value that is not a number) reverts all three to the defaults with one
+warning. Daily income, prisoner, tournament and hideout rates still differ per faction identity:
+- **Mining/trade factions** (Erebor, Dale): high daily
+- **Honor factions** (Rohan): high tournament
+- **Peaceful factions** (Elves): high daily, low prisoner
 
 ### Resource Tiers (Optional): `<Tiers>` element inside `<Resource>`
 
@@ -182,21 +185,25 @@ here (33 px on the map bar); if they alias, widen the widget first and bake a sm
 ### Current Values (read from `special_resources_config.xml`, 2026-09-11)
 
 Every resource has cap 10000 and starting amount 0. Daily income is per owned town before the career
-gain passive (the gain scales every source below); the battle payout is the base times the enemy-to-player size ratio clamped to 0.5 to 2.
+gain passive (the gain scales every source below); the battle payout is the base times the enemy's size in men divided by `battle_reference_size` (default 100), clamped to `battle_min_scale` (0.05) through `battle_max_scale` (3). Beating 15 orcs pays 0.15 of the base, a 100-man battle pays the base, and 300 men or more pay three times it.
+
+Battle base, Raid and Siege are flat 50 / 100 / 250 for every resource since 2026-11-10 (previously
+differentiated per faction, roughly 5 to 14 / 0 to 16 / 10 to 20). Town/day, Prisoner, Tournament and
+Hideout still differ per resource.
 
 | Resource | Town/day | Battle base | Raid | Siege | Prisoner | Tournament | Hideout |
 |---|---:|---:|---:|---:|---:|---:|---:|
-| War Spoils | 0.2 | 14 | 12 | 20 | 2 | 3 | 8 |
-| Gems | 1.0 | 5 | 3 | 10 | 0 | 8 | 4 |
-| Castar | 0.6 | 8 | 4 | 18 | 1 | 6 | 5 |
-| Marks | 0.4 | 12 | 0 | 12 | 1 | 10 | 6 |
-| Elven Wine | 0.8 | 6 | 0 | 10 | 0 | 8 | 4 |
-| Lake Fish | 0.7 | 7 | 5 | 10 | 1 | 8 | 5 |
-| War Drums | 0.3 | 14 | 14 | 16 | 2 | 4 | 8 |
-| Tribal Relics | 0.4 | 10 | 10 | 12 | 1 | 6 | 8 |
-| Dunlending Ale | 0.3 | 10 | 12 | 10 | 1 | 5 | 10 |
-| Plunder | 0.3 | 10 | 16 | 14 | 3 | 4 | 10 |
-| War Banners | 0.5 | 12 | 6 | 16 | 1 | 6 | 5 |
+| War Spoils | 0.2 | 50 | 100 | 250 | 2 | 3 | 8 |
+| Gems | 1.0 | 50 | 100 | 250 | 0 | 8 | 4 |
+| Castar | 0.6 | 50 | 100 | 250 | 1 | 6 | 5 |
+| Marks | 0.4 | 50 | 100 | 250 | 1 | 10 | 6 |
+| Elven Wine | 0.8 | 50 | 100 | 250 | 0 | 8 | 4 |
+| Lake Fish | 0.7 | 50 | 100 | 250 | 1 | 8 | 5 |
+| War Drums | 0.3 | 50 | 100 | 250 | 2 | 4 | 8 |
+| Tribal Relics | 0.4 | 50 | 100 | 250 | 1 | 6 | 8 |
+| Dunlending Ale | 0.3 | 50 | 100 | 250 | 1 | 5 | 10 |
+| Plunder | 0.3 | 50 | 100 | 250 | 3 | 4 | 10 |
+| War Banners | 0.5 | 50 | 100 | 250 | 1 | 6 | 5 |
 
 `troop_resource_costs.xml` holds 92 rows (`grep -c "<Troop "`, 2026-11-04): 50 carry a `daily_upkeep` (among them the 3 dire wolf riders at 0.05, the 8 Mordor uruk elites at 0.05
 to 0.3, the 13 Black Numenoreans at 0.03 to 0.15 since the second halving of 2026-09-15 (#600; the
@@ -228,6 +235,35 @@ balance to zero in one screen and start desertion the next day; and
 authored creature pricing (one unit eats about eighteen maximum battle payouts a day); it is a balance
 question, not a defect, and the daily toast now makes it visible.
 
+## Gold-only option (#1108)
+
+Players asked for a way to get elite troops for gold alone. **Elite Troops Cost Gold Only**
+(`EliteTroopsCostGoldOnly`, MCM group "Special Resources", default off, no restart needed) provides it.
+
+While the option is on, `SpecialResourceConfigProvider.GetTroopCost` returns each row with `upgrade_cost`,
+`recruit_cost` and `daily_upkeep` at zero and `merchant_cost` unchanged. Every reader has handled that
+merchant-only shape since #558, so the upgrade gate (Patch26), the recruit gate and charge (Patch51, and the
+prisoner recruit charge), upkeep, desertion, the map-bar warning and the encyclopedia badge carry no branch
+of their own. The zeroed rows are built once at load, because the map bar reads this path at 5 to 10 Hz. The
+game's gold prices, XP costs and wages still apply. The [Elite Emissary](elite-emissary.md) sells for gold
+while the option is on.
+
+The option does not change earning, the amount on the map bar or saved balances, and nothing it does is saved.
+The bar's upkeep rows and red warning go away, because no upkeep is due. The armoury
+still charges resource plus gold (`ArmouryUpgradeService`). The career passives
+`SpecialResourceUpkeepModifier` and `SpecialResourceUpgradeCostModifier` have nothing to modify while it is
+on. Turning it off restores every charge, and a party with upkeep troops at a zero balance deserts again from
+the next daily tick. AI lords pay none of these costs either way.
+
+Under co-op the option is per peer, like other `TaomSettings` toggles: Patch26 and Patch51 read the client's
+MCM value, and a dedicated server reads `taom-server-settings.json`. The authority holds the balances and reads
+its own value for the recruit charge, the upgrade charge and daily upkeep, so a mismatch changes what each peer's gates allow and
+what the authority charges. A mismatch cannot cost troops, because remote desertion is off during a session.
+Both settings are simulation-relevant, so `SettingsFingerprint`
+hashes them and the "Special Resources" code in each peer's log shows a mismatch.
+
+Owed in game: the claims in `tools/ingame_checks/1108.toml`.
+
 ## Key Files
 
 | File | Purpose |
@@ -237,7 +273,9 @@ question, not a defect, and the daily toast now makes it visible.
 | `Main/Features/SpecialResources/ISpecialResourceStorageService.cs` | Storage interface |
 | `Main/Features/SpecialResources/SpecialResourceStorageService.cs` | Composite-key dict persistence |
 | `Main/Features/SpecialResources/ISpecialResourceConfigProvider.cs` | Config interface (GetByKingdomId, GetByCultureId, GetById, GetTroopCost) |
-| `Main/Features/SpecialResources/SpecialResourceConfigProvider.cs` | XML loader with multi-key indexing |
+| `Main/Features/SpecialResources/SpecialResourceConfigProvider.cs` | XML loader with multi-key indexing; returns the merchant-only rows while the gold-only option is on (#1108) |
+| `Main/Features/SpecialResources/ISpecialResourceSettingsProvider.cs` | The gold-only option's toggle and emissary gold rate (#1108) |
+| `Main/Features/SpecialResources/SpecialResourceSettingsProvider.cs` | MCM over the compiled defaults for the gold-only option; range-checks the emissary gold rate (#1108) |
 | `Main/Features/SpecialResources/SpecialResourcesBehavior.cs` | CampaignBehavior: subscribes the events, seeds, forwards each event to the earning service (276-line ratchet) |
 | `Main/Features/SpecialResources/SpecialResourceEarningService.cs` | Who earns, pays and ticks for each event: the single-player branches moved unchanged, plus the co-op authority's per-player earning and daily tick (#967 C1) |
 | `Main/Features/SpecialResources/SpecialResourceEarningModels.cs` | Plain data between adapter and service: `EarnerRef`, `VictorySnapshot`, `RaidOrHideoutSnapshot`, `DailyTickInput`, `DailyOutcome`, `EarningNotice`, `RecruitContext`, `RecruitChargeNotice` |
@@ -291,7 +329,7 @@ question, not a defect, and the daily toast now makes it visible.
 - `SpecialResourceServiceGrantTests.cs` — 9 tests for `GrantAmount` (cap clamp, floor at 0, already-at-cap, unresolved kingdom/culture, NaN/Infinity rejection, grant during an open party-screen session) against a real storage instance
 - `SpecialResourceSpenderTests.cs`: 6 tests for the narrow spend armour acquisition uses: the balance resolved by kingdom, then culture, with its display name; none for a hero whose kingdom and culture have no resource; `TrySpend` debits only a balance that covers the amount, and refuses a non-finite or non-positive amount or a hero with no resource
 - `SpecialResourceEarnPolicyTests.cs`: the AI-led-army regression, player-led still earns, losing side, unresolved battle, player on no side, neither side resolved, and every `MapEvent.BattleTypes` value with both field-party flags against an independent expectation (plus a guard on the enum's members); and `MayEarn` for every combination of session, authority, dedicated and player control against an independent expectation (#967 C1)
-- `SpecialResourceEarningServiceCharacterizationTests.cs`, `SpecialResourceEarningServiceDailyTests.cs`, `SpecialResourceEarningServiceCoopTests.cs`: the single-player paths moved unchanged (including the NaN and infinite battle ratio and the NaN balance gates, pinned as parity), then the co-op authority's per-player earning, seeding, daily tick and recruit payer, and that a client writes nothing (#967 C1)
+- `SpecialResourceEarningServiceCharacterizationTests.cs`, `SpecialResourceEarningServiceDailyTests.cs`, `SpecialResourceEarningServiceCoopTests.cs`: the single-player paths moved unchanged (including the NaN balance gates, pinned as parity; the battle path now passes the raw enemy count), then the co-op authority's per-player earning, seeding, daily tick and recruit payer, and that a client writes nothing (#967 C1)
 - `SpecialResourcesBehaviorLineCountTests.cs`: the 276-line ratchet on the behavior
 - `SpecialResourceMapBarMixinWiringTests.cs`: 4 source pins on the map-bar mixin (comments stripped): the entry is added on the first refresh behind `Contains` with only the three guard returns before it (#958), the no-resource guard comes before the insert, and the no-resource branch removes the entry (#977)
 - `SpecialResourceCheatsFormatTests.cs` — 6 tests for the console echo, including a legacy balance above a lowered cap
@@ -300,6 +338,8 @@ question, not a defect, and the daily toast now makes it visible.
 - `RecruitGatePatchTests.cs`: 4 tests (#600). `RecruitCartGrouping` counts duplicates, skips nulls, keeps first-seen order; the `ExecuteDone` prefix carries Patch51's category and targets `ExecuteDone`
 - `TroopResourceCostDataTests.cs`: tests reading the shipped XML: every `resource_id` names a configured resource, every badged row reaches a `SpecialResources\` icon sprite, every Gondor troop at level 41 or above carries an `upgrade_cost` and a `daily_upkeep`, no tree troop's `daily_upkeep` exceeds the 0.4 band ceiling, every volunteer-pooled upkeep troop carries a `recruit_cost` (#600), and no troop in `troops_arthedain.xml` has a row (#963). Ered Luin's troops have no row either, by the
 comment in `troop_resource_costs.xml`, but no test pins that
+- `SpecialResourceGoldOnlyTests.cs`: the gold-only option (#1108) through the real provider, service and storage over real XML: the row with the toggle on, off and flipped live, the IoC wiring, and the recruit, upgrade, upkeep, desertion and badge readers, each with a toggle-off case that proves the fixture reaches the gate
+- `SpecialResourceSettingsProviderTests.cs`: the toggle's default and MCM read-through, the rate at both limits, and an out-of-range rate falling back to 200 with one warning (#1108)
 - `TAOM.Tests/Features/DevConsole/ConsoleCommandBindingTests.cs` — 5 tests pinning the engine reflection contract for every attributed TAOM console command (assembly-wide; see [dev-console.md](dev-console.md))
 
 ## Cheat Command
@@ -402,6 +442,12 @@ Under BannerlordCoop the server raises `OnUnitRecruited` for a guest's recruitme
 
 **Not effective yet:** a guest's affordability gate (Patch51) reads a stale client balance, and the server's charge floors at zero, until balances are server-owned. Coop's prisoner and mercenary recruit paths never raise `OnUnitRecruited`, so their `recruit_cost` is never charged under co-op, host included. Both are tracked in #967. Single-player is unchanged. Detail: [coop-interop.md](coop-interop.md), [harmony-patch-registry.md](../reference/harmony-patch-registry.md).
 
+## Co-op upgrade charge (#967 C2)
+
+Coop's client replaces `PartyScreenLogic.DoneLogic`. Its prefix calls `Reset(true)`, which raises `AfterReset`, so `SpecialResourcesBehavior.OnPartyScreenReset` cancels the queued spend and the client commits nothing. On the server, `TryApplyTroopRosterDeltas` changes the roster, and `PartyDoneLogicHandler.ApplyUpgradedTroopHistory` stands in for `OnPlayerUpgradedTroops`: it grants the leader's upgrade XP. Patch144 (`CoopUpgradeChargePatch`) runs after that method and charges each target troop's `upgrade_cost` to the player Coop applied the screen for, through `SpecialResourceEarningService.ChargeCoopUpgrades` and `SpendForUpgrade`. The payer rule is `RecruitChargePolicy.ChoosePayer` with that player in the scope position, so a client pays nothing. The first charge seeds a guest's starting amount.
+
+**Not effective yet:** a guest sees the charge only at the next join, because the client balance stays stale until #967 C4. Until then the client's Patch26 gate and clamp read a balance that upgrades never lowered, and the server's charge floors at zero. #967 C5 makes careers server-owned, and until then the server may not hold a guest's career discount, so a guest can pay the full price. With Elite Troops Cost Gold Only on at the server, each row's `upgrade_cost` reads 0 and nothing is charged. Single-player is unchanged.
+
 ## Per-player earning under co-op (#967 C1)
 
 With no co-op session every earning path is the single-player code, moved unchanged from
@@ -423,7 +469,7 @@ nothing. A guest swapped in as `MainHero` does earn, with no toast: a session no
 
 | Event | Who is paid during a session |
 |---|---|
-| Won battle or siege | The leader of each party on the winning side that is a registered player, with that party's own ratio (enemy count divided by the party's `TotalManCount`) |
+| Won battle or siege | The leader of each party on the winning side that is a registered player, with the same enemy-size scale as single-player (the enemy count alone; the party's own size no longer matters) |
 | Raid, hideout clear | The leaders of the attacker side's parties that are registered players, once each |
 | Tournament | The winner's hero, if registered |
 | Prisoners | Nobody. `OnPrisonerTakenEvent` carries only the roster, so it cannot say whose capture it was; one log line, until #967 C2 patches in the capturing party |
@@ -448,7 +494,7 @@ Owed in game. Single-player, same amounts as before: field win, win inside an AI
 party-screen prisoners, tournament, send-troops hideout (pays once), daily line then desertion after
 grace, elephant recruit charge. Co-op (Steam host and two guests, server log): read the hero id on the
 `Co-op <source>: credited hero` and `DailyTick (co-op)` lines, so a guest's win credits that guest's hero
-only; two guests each earn with their own ratio; a guest's raid, hideout and tournament win pay once;
+only; two guests each earn the same enemy-size scaled amount; a guest's raid, hideout and tournament win pay once;
 prisoners pay nobody with one log line; upkeep per player and no desertion; the client log shows no
 battle, siege, raid, hideout or tournament `SpecRes` earn lines. The seed line check is dropped while every
 resource's `starting_amount` is 0 (a seed then only records the pair).
@@ -477,6 +523,8 @@ resource's `starting_amount` is 0 (a seed then only records the pair).
 
 ## Changelog
 
+- 2026-11-10 (Mike): every one of the 11 resources now pays the same flat rate per win: `per_siege_victory="250"`, `per_raid="100"`, `per_battle_victory_base="50"` (still scaled by the enemy size ratio at earn time), replacing the previous per-resource tiers of roughly 10 to 20, 0 to 16 and 5 to 14. `per_prisoner` and the other rates are unchanged. No lord-specific capture reward exists; `per_prisoner` still pays per captured unit of any kind, not per lord. Config only; no new test needed, `SpecialResourceServiceTests` and sibling suites (440 total) still pass against the new values.
+- 2026-11-09 (#1108): the MCM option Elite Troops Cost Gold Only removes the special-resource troop costs and makes the Elite Emissary sell for gold. See "Gold-only option". Owed in game.
 - 2026-10-21 (#967 C1): earning moved out of `SpecialResourcesBehavior` into `SpecialResourceEarningService` (behavior 615 to 276 lines, pinned by `SpecialResourcesBehaviorLineCountTests`). The co-op authority now credits each registered remote player for battle, siege, raid, hideout and tournament wins and ticks their daily income and upkeep; its own `MainHero` earns nothing during a session, and prisoner income pays nobody until C2. `SpecialResourceEarnPolicy.MayCreditMainHero` is replaced by `SpecialResourceEarnPolicy.MayEarn`, and in a session the player registry alone decides who is a player. Single-player behaviour is unchanged. See "Per-player earning under co-op (#967 C1)".
 - 2026-10-08 (#771): one party-screen subscriber per process. `ScreenManager.OnPushScreen` is a static event, so a behavior left subscribed by a save load without a Game Over never became garbage, and after N loads each party-screen open wrote N `[SpecRes] PartyScreen session BEGUN` lines. `SpecialResourcesBehavior` now keeps its handler in a private static field of the engine's `ScreenManager.OnPushScreenEvent` type, removing the previous one before adding its own; the next campaign's `RegisterEvents` or a Game Over (a no-heir death) removes it and clears the field. `TroopCountDiagnosticsBehavior` (a singleton) removes its handler before adding it, so its dump is written once. No unit test covers it (campaign entry point). The in-game check is still owed: load a save three times in one session, open the party screen once, and expect one `[SpecRes] PartyScreen session BEGUN` line and one `[TroopCountDiag]` dump.
 - 2026-10-09 (#790): a "send troops" hideout clear paid `per_hideout_clear` twice; it now pays
@@ -484,6 +532,10 @@ resource's `starting_amount` is 0 (a seed then only records the pair).
   game: one send-troops clear writes one `[SpecRes] HIDEOUT:` line, also after saving in its success
   menu and loading.
 - 2026-10-09 (#770): a raid no longer also pays the battle credit for a militia-only fight. `SpecialResourceEarnPolicy.PaysBattleCredit(type, beatAFieldParty)` is false for a raid, forced supplies and forced volunteers unless the enemy side held a non-militia, non-villager party that started with healthy troops, so a real fight against a lord inside those events (defending your own village, a lord inside a village you raid, an army raid in which a lord's party is beaten) pays. `per_raid` is paid once, only when the village state is Looted and the player is on the winning side, so a resisted raid no longer pays it twice, and the tournament, hideout and raid toasts show the earned delta, so a `per_raid="0"` culture sees none. Tests in `SpecialResourceEarnPolicyTests`. Owed in game: a raid with a same-faction lord inside shows one BATTLE and one RAID line; defending your own village from an enemy lord raid and winning shows one BATTLE line and no RAID; a militia-only raid shows no BATTLE and one RAID; a Rohan raid with no lord shows no BATTLE line, a `RAID: +0` line and no toast.
+- 2026-11-12 (language pass, #763): the two unused keys `taom_res_tt_per_battle` and `taom_specres_mcm_gold_rate_hint` are removed from `taom_module_strings.xml`, the 12 language files and the translation caches, and `taom_res_tt_per_battle_ref` and `taom_specres_mcm_gold_rate_hint_base` are translated in all 12 languages.
+- 2026-11-12 (later): `EarnerRef.PartyManCount`, its two adapter reads and the test-kit parameter are removed; nothing read them once battle pay stopped dividing by the party's size. No behavior change.
+- 2026-11-12: the Elite Emissary's resource price is now `merchant_cost` times the `emissary_price_multiplier` of the resource the troop's own cost row names (ten resources ship 20, War Drums none), folded into `TroopResourceCostEntry.EmissaryPrice` at load. With battle pay scaled to enemy size, the base prices of 6 to 45 were still one or two fights. A L46 troop now costs 560 and a L51 troop 900; upkeep is unchanged. The price follows the troop, not the settlement's owner: the owner's resource comes from a kingdom-first lookup that can differ from the culture whose troops are offered (a defected clan), and an owner-keyed multiplier would have moved the price by a factor of 20 there and made the encyclopedia badge disagree with the charge (found by the deep review, `docs/reviews/rca-special-resource-pricing-2026-11-12.md`). Gold-only prices ignore the multiplier. The raw `merchant_cost` values in the rows are unchanged, so the data tests that pin them still hold. The map-bar tooltip row now reads `Per {SIZE}-man battle` (new key `taom_res_tt_per_battle_ref`), because "Per battle +50" overstated a small fight by up to 20 times, and the MCM gold-rate hint names the base cost (new key `taom_specres_mcm_gold_rate_hint_base`); the two old keys are now unused, and the language rows for the new keys wait for the project lead's pass. Tests: `SpecialResourceConfigProviderEmissaryPriceTests`, `TroopResourceCostDataTests` (price under every cap, at least 100), `EliteEmissaryServiceTests`, `SpecialResourceServiceTests`, `SpecialResourceTroopBadgeTests`. Saves made before this change buy 20 times fewer emissary troops with the same balance. In-game check owed: open an emissary in a key settlement and read the new prices, then read the map-bar tooltip.
+- 2026-11-12: a battle victory pays by the enemy's absolute size, not the ratio of enemy to player men clamped to 0.5 to 2. The old rule paid 25 to 100 for beating 10 to 20 orcs, enough for several tier 9 and 10 emissary troops after one fight. Now `base * clamp(enemyCount / battle_reference_size, battle_min_scale, battle_max_scale)` with defaults 100, 0.05 and 3, so 15 orcs pay 7.5 of a base 50, a 100-man battle pays 50, and 5 or fewer enemies pay the floor of 2.5. A non-finite count pays the floor. Prices are unchanged. Raid, siege, hideout, tournament and prisoner pay are unchanged and can still be farmed. In-game check owed: win a small fight and a large one and read the `[SpecRes] BATTLE` log line. Tests in `SpecialResourceServiceTests` and `SpecialResourceConfigProviderBattleScaleTests`.
 - 2026-10-08 (#767): the career gain scales every earning source (battle, raid, siege, prisoners, tournament, hideout) as well as the daily town income, through one public `ScaleEarned` that the map-bar tooltip also reads. Upkeep has one computation (`BuildUpkeepLines`) shared by the breakdown and desertion, so a non-finite upkeep modifier charges the configured upkeep and a troop whose career-modified upkeep is zero no longer deserts or triggers warnings. The six earning methods share one `Earn` helper. Tests in `SpecialResourceGainTests`.
 - 2026-09-25: the cave and hill trolls became special-resource troops (Mike: "cost should be high and upkeep lowish, 4 to 5"): recruit 50, upkeep 5 and 4, outside the tree-troop 0.4 ceiling with the other creatures (`TroopResourceCostDataTests`).
 - 2026-09-24 (plan 001): a second campaign started in the same game process no longer inherits the first one's balances. `OnNewGameCreated` wipes the singleton storage, and the SyncData load reads into a null local so a behavior record without the balances key loads empty. A save older than the feature (no record at all) still inherits a previous campaign's balances until the load-path follow-up lands. Five tests in `SpecialResourcesBehaviorSessionResetTests`. In-game smoke owed: finish or quit a campaign, start another without restarting, check the map bar shows only the new culture's starting amount.

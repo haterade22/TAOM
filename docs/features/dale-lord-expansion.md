@@ -102,7 +102,7 @@ The XML is the source of truth and the generator is retired. A future change edi
 - Faces need an in-game look (see Architecture).
 - The 27 new heroes have no biography text; the 55 vanilla-derived Dale heroes get one from `heroes.xslt`.
 - The new clans reuse the party templates of clans 1, 4, 2, 3 and 6 and the shared Dale banner. A heraldry pass owes both.
-- The new names are English until #763.
+- The new names are translated in all 12 languages (2026-11-12, #763).
 - New campaign only.
 - In-game check owed.
 

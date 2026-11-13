@@ -32,5 +32,14 @@ reached = ['\[Enlistment\] the player entered a battle the commander is not in']
 pass = ['\[Enlistment\] the player entered a battle the commander is not in; state is EnlistedBattle']
 absence = "not-reached"
 
+# Written by Main/Features/Enlistment/ServiceBattleService.cs when a commander battle cannot be joined and the party
+# is already in an event and the army merge did not land.
+[[check]]
+id = "taom.enlistment.failed-join-in-event"
+needs = "a commander battle that cannot be joined, with no army merge (a commander with no kingdom or army), while the player is already in a map event (no known way to force it)"
+reached = ['\[Enlistment\] could not join commander battle \(.*\) while already in a live event']
+pass = ['\[Enlistment\] could not join commander battle \(.*\) while already in a live event; staying in that battle']
+absence = "not-reached"
+
 [[human]]
 claim = "an enlisted player who wins a battle and captures a lord in the post-battle conversation sees the encounter menu after the conversation, the battle closes, service continues, and no NullReferenceException appears in CreateConversationTableau"

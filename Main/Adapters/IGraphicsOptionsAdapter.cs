@@ -31,6 +31,12 @@ public interface IGraphicsOptionsAdapter
     /// <summary>Shadow-map Resolution: the raw option value the engine stores, rounded; -1 when unreadable.</summary>
     int ShadowmapResolutionOption { get; }
 
+    /// <summary>Shadow Type: 0 None, 1 Static Only, 2 Static and Dynamic; -1 when unreadable.</summary>
+    int ShadowmapTypeOption { get; }
+
+    /// <summary>Shadow Filtering: 0 None, 1 PCF; -1 when unreadable.</summary>
+    int ShadowmapFilteringOption { get; }
+
     /// <summary>Particle Detail: the raw option value the engine stores, rounded; -1 when unreadable.</summary>
     int ParticleDetailOption { get; }
 

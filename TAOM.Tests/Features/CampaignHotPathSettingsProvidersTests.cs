@@ -19,6 +19,7 @@ using TAOM.Features.FireAndTribute;
 using TAOM.Features.FiefManagement;
 using TAOM.Features.HarvestRoad;
 using TAOM.Features.HiddenHosts;
+using TAOM.Features.LordRetinue;
 using TAOM.Features.KeepWardens;
 using TAOM.Features.KingsMuster;
 using TAOM.Features.FromTheAshes;
@@ -83,6 +84,7 @@ public class CampaignHotPathSettingsProvidersTests
     [DataRow(typeof(CaravanTradeSettingsProvider))]
     [DataRow(typeof(CastleRecruitmentSettingsProvider))]
     [DataRow(typeof(AlignmentDesertionSettingsProvider))]
+    [DataRow(typeof(LordRetinueSettingsProvider))]
     [DataRow(typeof(RealmBordersSettingsProvider))]
     [DataRow(typeof(FieldCommissionSettingsProvider))]
     [DataRow(typeof(QuickActionsSettingsProvider))]
@@ -161,6 +163,10 @@ public class CampaignHotPathSettingsProvidersTests
 
     // #910: the smithing model asks for the cap once per smelting-list item and per smelt; the accessor takes the settings once.
     [DataRow(typeof(SmithsMeasureSettingsProvider))]
+    // #1108: the map bar reads every troop's cost row at each refresh (5 to 10 Hz), and each read asks the toggle.
+    [DataRow(typeof(TAOM.Features.SpecialResources.SpecialResourceSettingsProvider))]
+    // #1111: the diplomacy model asks the switch at every AI join, defection and mercenary score of the daily clan tick.
+    [DataRow(typeof(TAOM.Features.KingdomAllegiance.KingdomAllegianceSettingsProvider))]
     public void OnlyTheLazySettingsAccessor_ReadsTheMcmInstance(Type provider)
     {
         var accessor = provider.GetProperty("Settings", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static)
@@ -184,6 +190,7 @@ public class CampaignHotPathSettingsProvidersTests
     [DataRow(typeof(ICaravanTradeSettingsProvider), typeof(CaravanTradeSettingsProvider))]
     [DataRow(typeof(ICastleRecruitmentSettingsProvider), typeof(CastleRecruitmentSettingsProvider))]
     [DataRow(typeof(IAlignmentDesertionSettingsProvider), typeof(AlignmentDesertionSettingsProvider))]
+    [DataRow(typeof(ILordRetinueSettingsProvider), typeof(LordRetinueSettingsProvider))]
     [DataRow(typeof(IRealmBordersSettings), typeof(RealmBordersSettingsProvider))]
     [DataRow(typeof(IQuickActionsSettingsProvider), typeof(QuickActionsSettingsProvider))]
     [DataRow(typeof(ITimeAccelerationSettingsProvider), typeof(TimeAccelerationSettingsProvider))]
@@ -194,6 +201,7 @@ public class CampaignHotPathSettingsProvidersTests
     [DataRow(typeof(IShadowfaxScreensSettingsProvider), typeof(ShadowfaxScreensSettingsProvider))]
     [DataRow(typeof(IFiefManagementSettingsProvider), typeof(FiefManagementSettingsProvider))]
     [DataRow(typeof(IEyeOfSauronSettings), typeof(EyeOfSauronSettingsProvider))]
+    [DataRow(typeof(TAOM.Features.SpecialResources.ISpecialResourceSettingsProvider), typeof(TAOM.Features.SpecialResources.SpecialResourceSettingsProvider))]
     [DataRow(typeof(IWatchfulHoldsSettings), typeof(WatchfulHoldsSettingsProvider))]
     [DataRow(typeof(IHiddenHostsSettings), typeof(HiddenHostsSettingsProvider))]
     [DataRow(typeof(IUnderTheEavesSettings), typeof(UnderTheEavesSettingsProvider))]
@@ -220,6 +228,7 @@ public class CampaignHotPathSettingsProvidersTests
     [DataRow(typeof(TAOM.Features.NotableServices.INotableServicesSettingsProvider), typeof(TAOM.Features.NotableServices.NotableServicesSettingsProvider))]
     [DataRow(typeof(TAOM.Features.InnRounds.IInnRoundsSettingsProvider), typeof(TAOM.Features.InnRounds.InnRoundsSettingsProvider))]
     [DataRow(typeof(ISmithsMeasureSettingsProvider), typeof(SmithsMeasureSettingsProvider))]
+    [DataRow(typeof(TAOM.Features.KingdomAllegiance.IKingdomAllegianceSettingsProvider), typeof(TAOM.Features.KingdomAllegiance.KingdomAllegianceSettingsProvider))]
     public void Provider_ResolvesFromARealContainer(Type service, Type implementation)
     {
         using var container = new Container();
@@ -390,6 +399,18 @@ public class CampaignHotPathSettingsProvidersTests
     }
 
     [TestMethod]
+    public void KingdomAllegiance_ReadsThroughTheCachedSettings()
+    {
+        var mcm = new TaomSettings();
+        var sut = new TAOM.Features.KingdomAllegiance.KingdomAllegianceSettingsProvider(mcm);
+        Assert.IsTrue(sut.Enabled);
+
+        mcm.KingdomAllegianceEnabled = false;
+
+        Assert.IsFalse(sut.Enabled);
+    }
+
+    [TestMethod]
     public void AlignmentDesertion_ReadsThroughTheCachedSettings()
     {
         var mcm = new TaomSettings();
@@ -404,6 +425,23 @@ public class CampaignHotPathSettingsProvidersTests
 
         Assert.IsFalse(sut.IsEnabled);
         Assert.AreEqual(0.25f, sut.Rate, 0.0001f);
+    }
+
+    [TestMethod]
+    public void LordRetinue_ReadsThroughTheCachedSettings_AndClampsTheCap()
+    {
+        var mcm = new TaomSettings();
+        var sut = new LordRetinueSettingsProvider(mcm);
+        Assert.IsTrue(sut.IsEnabled);
+        Assert.AreEqual(1, sut.MaxExtraHeroes);
+
+        mcm.EnableLordRetinue = false;
+        mcm.LordRetinueMaxExtraHeroes = 99;
+        Assert.IsFalse(sut.IsEnabled);
+        Assert.AreEqual(2, sut.MaxExtraHeroes);
+
+        mcm.LordRetinueMaxExtraHeroes = -5;
+        Assert.AreEqual(0, sut.MaxExtraHeroes);
     }
 
     [TestMethod]

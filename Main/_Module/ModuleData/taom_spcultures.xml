@@ -6754,10 +6754,10 @@
       <name name="{=aom_eredluin_female_name_24}Svanhild" />
     </female_names>
     <clan_names>
-      <name name="{=aom_eredluin_clan_1}House of Borin" />
-      <name name="{=aom_eredluin_clan_2}Broadbeams" />
-      <name name="{=aom_eredluin_clan_3}Firebeards" />
-      <name name="{=aom_eredluin_clan_4}Wardens of Dolmed" />
+      <name name="{=aom_eredluin_clan_1}House of Delingur" />
+      <name name="{=aom_eredluin_clan_2}House of Dwálin" />
+      <name name="{=aom_eredluin_clan_3}House of Úri" />
+      <name name="{=aom_eredluin_clan_4}House of Eldran" />
       <name name="{=aom_eredluin_clan_5}House of Frerin" />
       <name name="{=aom_eredluin_clan_6}House of Narvi" />
       <name name="{=aom_eredluin_clan_7}Stonehands of Belegost" />

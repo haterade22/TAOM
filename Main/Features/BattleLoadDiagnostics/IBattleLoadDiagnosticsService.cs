@@ -10,11 +10,6 @@ public interface IBattleLoadDiagnosticsService
 {
     bool IsEnabled { get; }
 
-    // The most recent phase marker as a compact string (e.g. "phase=AgentEquipBegin
-    // seq=57 agent#57 ..."). Read by the stall watchdog (off-thread) for its STILL-LOADING
-    // line so the bundle/marker names the exact phase that froze.
-    string CurrentStatusLine { get; }
-
     // Phase 1 — restart the stopwatch + sequence counter at the start of a new encounter.
     void ResetLifecycle();
     void LogEncounterStart(int mainPartySize);

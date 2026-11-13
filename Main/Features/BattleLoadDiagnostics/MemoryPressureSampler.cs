@@ -9,7 +9,7 @@ namespace TAOM.Features.BattleLoadDiagnostics;
 // frequently commit-exhaustion deaths (native allocator fails, the AV surfaces far from the
 // cause) — this stamps a periodic [MemSample] line so the tail of any crash log shows the
 // memory trajectory, and a one-shot WARN when commit headroom runs low. Same shape as
-// BattleLoadStallWatchdog: thread-pool Timer, swallow-and-warn callback, pure static decision
+// MissionTickStallWatchdog: thread-pool Timer, swallow-and-warn callback, pure static decision
 // seams unit-tested per ADR-008.
 //
 // The line literals + thresholds are a cross-lane contract: tools/triage_battle_load.py

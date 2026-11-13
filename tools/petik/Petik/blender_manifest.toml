@@ -1,0 +1,13 @@
+schema_version = "1.0.0"
+id = "Petik"
+version = "2.0.7"
+name = "Petik"
+tagline = "Creates quad mesh patches"
+maintainer = "Mihai Dobrin <dobrin.3d@gmail.com>"
+type = "add-on"
+website = "https://blendermarket.com/products/petik"
+tags = ["Mesh"]
+blender_version_min = "4.5.0"
+license = [
+  "SPDX:GPL-3.0-or-later",
+]

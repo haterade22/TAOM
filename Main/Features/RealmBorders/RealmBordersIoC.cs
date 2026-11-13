@@ -1,5 +1,6 @@
 using DryIoc;
 using TAOM.Adapters;
+using TAOM.Core.Domain;
 using TAOM.Features.RealmBorders.Hooks;
 
 namespace TAOM.Features.RealmBorders;
@@ -22,6 +23,8 @@ public static class RealmBordersIoC
         // drawn tiles, reset per session by the behavior (Singleton Services Session-Reset rule).
         registrator.Register<RealmTerritoryService>(Reuse.Singleton);
         registrator.Register<RealmBorderService>(Reuse.Singleton);
+        // Realms renames kingdoms in play (Erebor as Durin's Folk); the service letters the map names anew.
+        registrator.RegisterMapping<IKingdomRenameListener, RealmBorderService>();
         // The atlas view's parchment sheet: built per map scene through the renderer, which drops it with the scene.
         registrator.Register<RealmAtlasService>(Reuse.Singleton);
         registrator.Register<RealmBordersCampaignBehavior>(Reuse.Singleton);

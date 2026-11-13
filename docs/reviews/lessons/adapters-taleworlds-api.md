@@ -49,6 +49,7 @@ A custom `MBGameManager`/`CustomGameManager.OnLoadFinished` override that opens 
 Before using any TaleWorlds API that returns a collection of entities (agents, allies, "nearby X"), decompile at least one vanilla call site and check what post-filtering vanilla applies — in particular, whether the *caller/source* is in the returned set. For "nearby X" APIs, assume the caller IS included unless the name/docs say otherwise; grep call sites at `E:/Decompiled_Bannerlord/`, note what vanilla does AFTER the call (filtering, de-dup, excluding the source), and mirror it or justify the deviation in a comment.
 - **Why missed:** Codex review caught that `Mission.GetNearbyAllyAgents(position, radius, team, list)` returns ALL allies in radius *including the source agent*; vanilla callers filter the source out after the call. TAOM didn't, double-buffing the activating hero (once via the hero-buff path, once via the ally-buff path) on every Ranged/Cavalry AoE activation.
 - **Prevent:** Treat the *existence* of an API as cheap to verify but its *semantics* (inclusion, ordering, filtering) as something that needs decompilation of a real vanilla call site or actual testing. Same class as `feedback_engine_scale_research.md`.
+- **Recurred 2026-11-12 (#1127, `docs/reviews/rca-hero-auras-2026-11-12.md`):** `HeroAuraPulse.Run` gave each hero his own aura and counted him in the in-game check, because the builder read the sibling Dread Aura code but not this entry. The same query's "ally" also means every team not hostile to the one passed (the native enemy matrix), so a same-team filter silently dropped an allied army's troops. Both facts are now item 4 of the mission-scope section in `.claude/rules/csharp-architecture.md`, which loads on every C# edit.
 
 ### Before reusing a shared TAOM decision service, read its implementation AND check for a sibling that already consumes it — its policy semantics differ by caller intent
 `IAlignmentService.AreEnemyAlignments(a,b)` reads like "are these two at odds?" but encodes `Neutral is an enemy of everyone` (`AlignmentService.cs:49-50`) — correct for execution-relation penalties, wrong for trade/recruitment permissiveness. CaravanTrade's `SameAlignmentAndNeutral` policy (the shipped default) used `!AreEnemyAlignments`, so it silently BLOCKED trade for every Neutral kingdom (Umbar/battania/shaghana/abanissa) — the exact opposite of its documented "neutrals always tradeable."
@@ -1791,6 +1792,7 @@ The Long Defeat copied Fords of War's HUD and panel but not `IsPhotoModeAllowed(
 - **Why missed:** the plan listed what each copied class does. A veto does nothing visible, so a list of what a class does never names it.
 - **Prevent:** when a mode copies a sibling, run `grep -n "public override bool" <sibling's view files>` and account for each override in the plan: copied, not needed and why, or changed.
 - **Source:** [rca-long-defeat-phase1-2026-11-04.md](../rca-long-defeat-phase1-2026-11-04.md), row 1.
+- **Repeat (Story Missions, #1105, 2026-11-10):** the story list was built from the Long Defeat's list and Host Review's, and kept neither the HUD's veto nor Host Review's Photo Mode view. Its dev menu also copied Host Review's mission host but not `HostReviewService.GetBlock`, so it opened over encounters and other menus. The lesson was in this file, but path rules do not load in a sibling worktree, and nothing machine-checked it. **Gate:** `PhotoModeEscapeMenuGateTests` fails any `[ViewMethod]` list with the singleplayer escape menu and neither the Photo Mode view nor a view that refuses it. A copied launcher or menu entry also copies its precedent's refusals, each with a test. Source: [rca-story-missions-slice1-2026-11-10.md](../rca-story-missions-slice1-2026-11-10.md), rows 1 and 2.
 
 ### A co-op battle is not a network session to the engine: read `ICoopSessionProvider` (Seat of Seeing, 2026-11-04)
 
@@ -1847,3 +1849,84 @@ A new reflection catalogue row copied the code comment: only the engine's full r
 - **Why missed:** the arrangement was read as geometry, and the new range was tested on fixed distances only.
 - **Prevent:** before sending an arrangement, read `ArrangementOrder.OnApply`, `OnCancel` and the behaviour set `RefreshBehaviorValues` picks for it. A branch triggered by a jumping value gets a latch or a second threshold, and a target built from a moving agent is kept until the agent moves a set distance from it, with a test where only the noise changes.
 - **Source:** [rca-fords-culture-tactics-2026-11-07.md](../rca-fords-culture-tactics-2026-11-07.md), findings 1 and 3, R1.
+
+### A direct `Mission.SpawnAgent` needs its own capacity check, and a deduped catch hides how often it failed (#1107, 2026-11-09)
+
+The howdah and mumakil crew spawners called `Mission.SpawnAgent` from a mission tick, outside vanilla's spawn budget. In a Custom Battle at battle size 800, 55 mumakil crews of 8 spawned and the next crew spawn raised an `AccessViolationException`. No log line prints the agent count: 800 mounted troops plus 440 crew match the engine's 2,040 slots exactly, which is an inference. At a full pool the native spawn takes slot -1 and writes over the native mission. The other 142 mumakils and all 262 howdahs spawned no crew either: `catch (Exception)` kept the drain going, and the per-type `_loggedErrors` set printed only the first failure per spawner.
+
+- **Why missed:** `mumakil.md` listed the agent budget as an open risk with an unverified cap, and nobody closed it after section 3 of `mission-frame-threads-and-native-costs.md` verified the limit. Crew were only ever tried in small battles.
+- **Prevent:** a direct `Mission.SpawnAgent` caller calls `CrewAgentBudget.HasRoom` first (gate: `CrewAgentBudgetTests`, which proves the call exists in the same method, not that it guards the spawn). When a log shows one error from a deduped catch, count the successes before you believe the failure happened once.
+- **Source:** #1107.
+
+### State what a gate's matcher sees, and name the vanilla path that holds a check (#1107, 2026-11-09)
+
+The first text of the #1107 fix said that every spawn outside vanilla's budget calls `HasRoom`, and that vanilla compares the live count before it spawns. The gate matches only a direct `Mission.SpawnAgent`, five other sites spawn through `SpawnTroopWithAgentBuildData` or `SpawnTroop` with no check, and only vanilla's reinforcements read the live count.
+
+- **Why missed:** each sentence was generalized from one site, the two crew spawners and `TryReinforcementSpawn`. No step compared them with the other spawn sites or with the initial spawn path.
+- **Prevent:** a doc line that names a gate says what its matcher covers. A claim that vanilla "checks X first" names the method that does it, after you read every sibling path.
+- **Source:** #1107, found independently by Codex, the data flow lens and the engine compatibility lens.
+
+### Repeat: a singleton adapter kept a campaign's heroes after its run (#1111, 2026-11-10)
+
+`AllegianceRelationAdapter`, registered Singleton and held in a patch static, kept the `List<Hero>` it read for the new-game friendship flip, so every lord of that campaign stayed reachable after a later load. This repeats "A singleton adapter holds no engine objects between calls" (#952) above.
+
+- **Why missed:** the adapter needs the list between `ReadLords` and the writes, and its comment said "one instance serves one run" while the module registered it Singleton. The #952 entry lives only in this file; no rule line and no gate points a new adapter at it.
+- **Prevent:** an adapter that must hold engine objects across the calls of one operation exposes a release the service calls in a `finally`, with a test for the fault path. A rule line for `adapters.md` is proposed in the RCA.
+- **Source:** [rca-kingdom-allegiance-2026-11-10.md](../rca-kingdom-allegiance-2026-11-10.md), row 2.
+
+### A parameter inserted before one of the same type compiles at the old call sites with a changed meaning (v1.5.7 bump, 2026-11-10)
+
+v1.5.7 changed `PartySizeLimitModel.GetPartyMemberSizeLimit(PartyBase, bool includeDescriptions = false)` to `(PartyBase, bool isCurrentlyAtSea, bool includeDescriptions = false)`. The override stopped compiling and the one-argument caller failed behind it, but `CareerPerkCheats` passed `(party.Party, true)` and still compiled: its `true` now meant "at sea", with descriptions off.
+
+- **Why missed:** it was found, because the two signatures were compared before the fix. The compiler, the binding gate and `check_engine_member_refs.ps1` all pass such a call, so nothing but a read of every caller finds it.
+- **Prevent:** when an engine signature changes, grep every TAOM caller of the member and read its arguments, not only the lines the compiler rejects. Pass a bool to an engine method by name. Gate for this member: `PartyMemberSizeLimitCallShapeTests`.
+- **Source:** #1112; [v1.5.7-impact.md](../../migration/v1.5.7-impact.md).
+
+### A sound event that ends by itself is gone: replay on a new event (#1105, 2026-11-10)
+`SoundEvent.Play()` on an event that has just ended looks like a replay, and the managed wrapper is one line that hides why it cannot work. In v1.5.7 native, the STOPPED callback queues the event id, and the next native sound update releases the FMOD instance and removes the id (`FUN_180237200`). After that `IsValid` is false and `Play()` on the same object fails. psai makes a new event for each channel it plays, and a TAOM loop must do the same: create a new event for every play.
+- **Why missed:** the design asked whether `event:/music` loops by itself, a question about the sound bank, and not whether a stopped event still exists, a question about the native lifetime. The unit tests faked the adapter, so they proved the cue's logic and not the engine's.
+- **Prevent:** for any engine handle that a callback can end (a sound, an effect, a timer), read the native callback for what it frees before the design relies on reuse. When the decompile is not readable, mark the reuse UNVERIFIED and use a new handle.
+- **Source:** docs/reviews/rca-story-mission-music-2026-11-10.md finding 1; docs/reference/engine/music-and-sound-events.md section 5 (#1105)
+### A comment that states an engine rule is bound to the engine: grep it at every bump (v1.5.7 bump, 2026-11-10)
+
+v1.5.7 made `MenuHelper.EncounterAttackConsequence` skip the hostile action against a caravan or villager leader party. TAOM patches neither that method nor its caller, so the member diff, the binding gate and the patch-note table all read "Inherited". Three Enlistment comments still said that Attack always declares the war, and `OathSitOutRule` rests on that rule. An independent sweep of the engine diff found it, not the bump's own steps.
+
+- **Why missed:** the bound surface is patches, models, reflection sites and loaders. A comment or a rule that restates what vanilla does has no row there, and a grep for the member's name in code finds nothing when only a comment names it.
+- **Prevent:** for each engine member the diff shows as changed, grep its name across TAOM's source with comments, and across `docs/features/`. Judge every hit that states the old behaviour as fact. `/engine-bump` Phase 3 has the step.
+- **Source:** [rca-engine-bump-v1-5-7-2026-11-10.md](../rca-engine-bump-v1-5-7-2026-11-10.md), finding 6.
+### The first faction of a declaration carries the blame: order the arguments by who acted (War Pledge, 2026-11-10)
+`DeclareWarAction.ApplyByDefault(a, b)` hands `a` to `AllianceCampaignBehavior.ApplyBrokenAlliancePenalty` as the kingdom whose ruler loses 100 relation with the other ruler, and who takes a trait hit when that ruler is the player (v1.5.7 `AllianceCampaignBehavior.cs:582-590`). War Pledge first reused the Full War reconcile, which declares each pair in kingdom-list order, so a realm the AI pledged could charge the break to the ruler of the realm it turned on, a player included.
+- **Why missed:** the reuse was judged on which wars it declares, not on what the action and its listeners do with the order of the two factions. Repeat of "Read every branch of an engine method you call for its side effect".
+- **Prevent:** before reusing a loop that calls a two-faction engine action, read what the action and each listener do with the first faction (penalties, political stagnation, notices), and pass the faction that acted as the first one. Pin the order with a fake that records the declarer.
+- **Source:** [rca-war-pledge-2026-11-10.md](../rca-war-pledge-2026-11-10.md), finding 5.
+
+### A thread claim cites the engine line that proves the overlap (War Pledge, 2026-11-10)
+The first War Pledge text said the daily tick writes a pledge while the party AI worker reads a side. In v1.5.7 `Campaign.RealTick` calls `WaitAsyncTasks()` (Campaign.cs:907) before `Campaign.Tick` fires the daily events, so the two cannot overlap. The store's copy-on-write design was still right, because a gate requires a read-only path and a console command's timing against the task is not known. But four comments and the feature doc stated a race that does not exist, and none named the second worker route into the store (`MobilePartyAi` through `FactionManager.IsAtWarAgainstFaction` and `IsAtConstantWar` to `DiplomacyService.GetRelationshipTier`).
+- **Why missed:** the claim was written from a gate's comment after the gate failed, without reading where the worker starts and where the main thread waits for it.
+- **Prevent:** a sentence that says two things run at the same time names the line that starts the worker and the line where the writer waits for it, or says that no such line was found. For the campaign map: the late AI task starts in `MapScreen.OnPostFrameTick` and is awaited at the top of `Campaign.RealTick`. Any model the party AI queries (`IsAtConstantWar` included) is a worker-side reader.
+- **Source:** [rca-war-pledge-2026-11-10.md](../rca-war-pledge-2026-11-10.md), finding 4.
+
+### A mission start that survives an exception is not a mission that started (Helm's Deep, 2026-11-10)
+The first battle on the reworked Helm's Deep scene ended in a stand-off in wave 1 of The Long Defeat. The base game's siege set-up had thrown at the mission start: the right wall's `broken_child` had no `WallSegment` script, and `WallSegment.OnChooseUsedWallSegment` calls `GetFirstScriptOfType<WallSegment>()` on both tagged children with no null check. Mission Start Guard caught the exception, so the only traces were its `[ERROR]` line, its `[WARNING]` summary and an on-screen notice that nobody watched, and the fight ran with the walls not arranged. The engine code is the same in v1.5.6 and v1.5.7. The art pass of 2026-11-06 had replaced the breach mesh and kept its tag.
+- **Why missed:** the scene was saved after the last game run on it. The v2.0.37 release note said that no battle had run on it, and nobody ran one. A guard that keeps a mission alive also turns a failed set-up into a quiet log line.
+- **Reach (2026-11-10):** 1 of 59 live `TAOM_Map` scene files, and none of 479 base game scene files. A campaign siege of Helm's Deep runs the same set-up.
+- **Prevent:** `python tools/check_siege_wall_scripts.py` reads every map scene for a sided wall whose `solid_child` or `broken_child` lacks the script, and it runs in the tool suite. After a scene is saved in the Kit, run one mission on it before it ships. When you judge an unattended run, read its log for `[MissionStartGuard]` lines, not only its verdict rows.
+- **Source:** [rca-helms-deep-siege-wall-2026-11-10.md](../rca-helms-deep-siege-wall-2026-11-10.md).
+
+### A rule about what a callee needs comes from its caller's loop (siege walls, 2026-11-10)
+The first text on siege walls said that `FindRightMostWall` is safe with one or two walls, read from the method alone. Its caller, `ArrangeDestructedMeshes`, calls it once per wall hit-point entry and removes the wall each time, and the campaign and The Long Defeat pass two entries. So one wall also throws, on the second call. Repeat of "Read the caller of a patched handler before describing its trigger".
+- **Why missed:** the method was read to explain a `null`, not to state a rule, and the sentence became a rule in the doc.
+- **Prevent:** before a doc or a gate states what an engine method needs, read the loop that calls it and the arguments each caller passes, and write the rule for the whole loop.
+- **Source:** [rca-helms-deep-siege-wall-2026-11-10.md](../rca-helms-deep-siege-wall-2026-11-10.md), review finding 2.
+
+### A formation's order spot is not the unit's own place, and a flagged unit gets none (#894, 2026-11-10)
+`Formation.GetOrderPositionOfUnit` reads as "this soldier's place". In v1.5.7 a unit without its own slot gets the formation's single order point (Formation.cs:1344, :1360-1362), and a unit flagged `UnreachableViaNavMesh` gets `WorldPosition.Invalid` (:1382-1385). The Lost Footing rescue moved 29 of 31 soldiers onto one point, and its unreachable cause could never move anyone. `Agent.IsUsingGameObject` likewise covers standing points only, not ladder climbers or queued agents on a scripted hold.
+- **Why missed:** both members were used for what their names say; the code that produces the spot and the flag's one reader were not read. The run log showed the stacking before any reviewer did.
+- **Prevent:** before a move or a guard relies on an engine member, read the body that produces its value and every branch that can return Invalid or a shared value. Log both ends of every engine write, so a run shows what a name hid.
+- **Source:** docs/reviews/rca-lost-footing-rescue-2026-11-10.md rows 2 to 4 (#894)
+
+### Holding formations off AI: every caller of the reset is a hand-back (#1128, 2026-11-12)
+The Long Defeat's opening split takes four defender formations off AI control and holds them until contact. The design listed the hand-backs its own code causes (`OrderCharge`, `AdoptMain`), but in v1.5.7 `Mission.OnAgentRemoved` also calls `Team.DelegateCommandToAI` when the main agent is removed, after every behaviour's `OnAgentRemoved` has run. The groups went back to the AI with the director still holding them, and the check judged the tactic's placement. A held order with no navmesh had a second trap: `MovementOrder.GetPosition` returns a substitute point that follows the formation, so "the order moved" no longer meant "the player ordered it".
+- **Why missed:** the hand-backs were listed from TAOM's call sites, not from the engine's callers of `SetControlledByAI(true)` and `DelegateCommandToAI`.
+- **Prevent:** before holding engine state that another system resets, grep the decompile for every caller of the reset and decide each one (re-apply on the next tick, never inside the callback that precedes the reset). Before comparing an order's position, require a navmesh and the boundary at the stored point.
+- **Source:** docs/reviews/rca-long-defeat-split-2026-11-12.md rows 2 and 3 (#1128)
