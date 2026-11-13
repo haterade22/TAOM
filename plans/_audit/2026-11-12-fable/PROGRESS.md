@@ -31,10 +31,12 @@ merges into the run branch only. Nothing is merged into the trunk and nothing is
 | 2026-11-12 | "ensure you make all changes on a new branch we can merge later" | All commits on `improve/2026-11-12-run` and its plan branches; no trunk merge, no push | the end of this run |
 | 2026-11-12 | "Keep it reasonable" (agents); "pick the correct model and effort for each task" | Agent count and tiers as in the Models table | the end of this run |
 | 2026-11-12 | "I don't want to waste usage on things they already did" (Kimi) | BRIEF.md "Already done" | the end of this run |
+| 2026-11-13 01:55 | "commit, push and merge when you need to and proceed with your best recommendations! Deconlict with other sessions and COOP always is priority for game runs" | Push the run branch; merge into the trunk when the orchestrator's conditions hold (every branch READY, the trunk merged in, full verification green, one in-game smoke run passed); game runs allowed when the install is free, co-op sessions first | the end of this run |
 | 2026-11-12 (standing, think-before-coding.md) | "do what you recommend, repo-required issues too" | Issue-first for each executed plan | standing |
 
-Not authorized: merge into the trunk, push, paid calls (Codex, translator), protected-file edits,
-deleting what this run did not create, a game launch or deploy (taom-b4 holds the install tonight).
+Not authorized: paid calls (Codex, translator), protected-file edits, deleting what this run did not
+create outside its branches. Until 2026-11-13 01:55 a trunk merge, a push and a game launch were also
+not authorized; the row of that time changes that.
 
 ## Status
 
