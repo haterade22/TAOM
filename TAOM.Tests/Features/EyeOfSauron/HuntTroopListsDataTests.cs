@@ -25,8 +25,11 @@ public class HuntTroopListsDataTests
     private static Dictionary<string, XElement> LoadCharacters()
     {
         var byId = new Dictionary<string, XElement>(StringComparer.Ordinal);
-        foreach (var file in Directory.EnumerateFiles(RepoPaths.RepoPath("Main", "_Module", "ModuleData"), "*.xml",
-                     SearchOption.AllDirectories))
+        // Languages holds string tables, never an NPCCharacter, so the scan skips it.
+        var moduleData = RepoPaths.RepoPath("Main", "_Module", "ModuleData");
+        var languages = Path.Combine(moduleData, "Languages") + Path.DirectorySeparatorChar;
+        foreach (var file in Directory.EnumerateFiles(moduleData, "*.xml", SearchOption.AllDirectories)
+                     .Where(f => !f.StartsWith(languages, StringComparison.OrdinalIgnoreCase)))
         {
             XDocument doc;
             try { doc = XDocument.Load(file); }
