@@ -35,9 +35,17 @@ INPUT=$(cat)
 if command -v jq >/dev/null 2>&1; then
   FILE_PATH=$(echo "$INPUT" | jq -r '.tool_input.file_path // empty')
 else
-  # Unescape the JSON backslash doubling that Windows paths always carry; jq -r does it for free.
-  FILE_PATH=$(echo "$INPUT" | grep -oE '"file_path"[[:space:]]*:[[:space:]]*"[^"]*"' | head -1 \
-              | sed 's/.*"\([^"]*\)"$/\1/' | sed 's/\\\\/\\/g')
+  # A bash regex, not a grep and sed pipeline: this line runs on every Edit and Write, and the
+  # pipeline's five process starts cost about 0.1 s each time on this machine. Unescape only the JSON
+  # backslash doubling that Windows paths always carry (jq -r does it for free), so the path keeps
+  # its backslashes and the muted "did not run" message keeps its text.
+  FILE_PATH=""
+  FILE_RE='"file_path"[[:space:]]*:[[:space:]]*"(([^"\\]|\\.)*)"'
+  if [[ "$INPUT" =~ $FILE_RE ]]; then
+    BS='\'
+    FILE_PATH=${BASH_REMATCH[1]}
+    FILE_PATH=${FILE_PATH//\\\\/$BS}
+  fi
 fi
 
 [[ -z "$FILE_PATH" ]] && exit 0

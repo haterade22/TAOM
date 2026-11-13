@@ -3400,6 +3400,20 @@ if [[ $PG_RC2 -eq 0 && -z "$PG_ERR2" ]]; then
 else
     bad "check-polearm-shield-parity without python repeated itself: rc=$PG_RC2, ${PG_ERR2:0:120}"
 fi
+# The edited path is parsed in bash (no jq here). A Windows path arrives with doubled backslashes and
+# a path may hold spaces: each must still reach the roster filter and report its finding.
+mkdir -p "$PG/my data"; cp "$PG/data/r.xml" "$PG/my data/r 2.xml"
+PG_WIN=$(cygpath -w "$PG/data/r.xml" 2>/dev/null); [[ -n "$PG_WIN" ]] || PG_WIN="$PG/data/r.xml"
+for PG_CASE in "a Windows path|$PG_WIN" "a path with spaces|$PG/my data/r 2.xml"; do
+    rm -f "$PG/.claude/logs/.polearm-gate-reported-v2"
+    PG_PAYLOAD=$("$HPY" -c 'import json,sys; print(json.dumps({"hook_event_name":"PostToolUse","tool_name":"Edit","tool_input":{"file_path":sys.argv[1]}}))' "${PG_CASE#*|}")
+    PG_OUT3=$(pg_run)
+    if printf '%s' "$PG_OUT3" | "$HPY" -c 'import json,sys; o=json.load(sys.stdin)["hookSpecificOutput"]; sys.exit(0 if "troop_x" in o["additionalContext"] else 1)' 2>/dev/null; then
+        ok "check-polearm-shield-parity parses ${PG_CASE%%|*} and reports"
+    else
+        bad "check-polearm-shield-parity did not report for ${PG_CASE%%|*}: ${PG_OUT3:0:160}"
+    fi
+done
 rm -rf "$PG"
 
 # ---------------------------------------------------------------------------
@@ -3512,6 +3526,45 @@ elif (( SS_SECS >= 9 )); then
 else
     ok "session-start.sh with a hung graphify probe: the UNCHECKED note, back in ${SS_SECS} s"
 fi
+# A stale graph (status exit 1): the status's own "refresh:" hint is dropped once the detached refresh
+# has started, because it told the session to start a second one, and kept when the refresh did not
+# start (Bannerlord running, a held lock, the opt-out), where it is the only instruction left.
+cat > "$UP/fakepy-stale" <<'FAKE'
+#!/bin/sh
+if [ "$1" = "tools/graphify_taom.py" ] && [ "$2" = "status" ]; then
+  echo "graphify code graph: STALE, 3 code file(s) changed since it was built"
+  echo "  refresh: python tools/graphify_taom.py refresh   (about 2.5 minutes; run it in the background)"
+  exit 1
+fi
+if [ "$1" = "tools/graphify_taom.py" ] && [ "$2" = "refresh" ]; then
+  case "$FAKE_GRAPH" in
+    started) echo "graphify_taom: background refresh started (pid 1, log x)." ;;
+    *) echo "graphify_taom: background refresh not started: Bannerlord is running" ;;
+  esac
+  exit 0
+fi
+printf taompy; exit 0
+FAKE
+chmod +x "$UP/fakepy-stale" 2>/dev/null
+ss_stale() {   # $1 the fake refresh's answer: started or blocked
+    printf '{"source":"startup"}' | timeout -k 2 20 env CLAUDE_PROJECT_DIR="$UP" TAOM_PYBIN="$UP/fakepy-stale" FAKE_GRAPH="$1" \
+        bash "$UP/.claude/hooks/session-start.sh" 2>/dev/null
+}
+GS_ON=$(ss_stale started)
+if grep -q '^graphify code graph: STALE' <<< "$GS_ON" && grep -q 'background refresh started' <<< "$GS_ON" \
+   && ! grep -q 'refresh: python tools/graphify_taom.py refresh' <<< "$GS_ON"; then
+    ok "session-start.sh with a stale graph and a started refresh: the STALE line without the refresh hint"
+else
+    bad "session-start.sh with a stale graph and a started refresh still prints the refresh hint, or lost the STALE or started line"
+fi
+GS_OFF=$(ss_stale blocked)
+if grep -q '^graphify code graph: STALE' <<< "$GS_OFF" && grep -q 'background refresh not started' <<< "$GS_OFF" \
+   && grep -q 'refresh: python tools/graphify_taom.py refresh' <<< "$GS_OFF"; then
+    ok "session-start.sh with a stale graph and no refresh started: the refresh hint stays"
+else
+    bad "session-start.sh with a stale graph and no refresh started lost the refresh hint, the only instruction left"
+fi
+rm -f "$UP/fakepy-stale"
 # The native-build archive probe (#1004): its one line is echoed, silence stays silent, a hung probe
 # says UNCHECKED inside the shared deadline, and it is called with --detach and the resolved install.
 mkdir -p "$UP/fakegame/bin/Win64_Shipping_Client"
