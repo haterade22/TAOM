@@ -264,10 +264,10 @@ agents temporarily leave the grid (skirmish, man a siege engine) without leaving
   `Mission.GetAgentTroopClass_Override` is the unused, patch-free hook if that runtime hole ever needs closing.
 - **Three TAOM features patch this system:** **SmartCavalryAI** (`Patch31` — coordinated charge state machine, a
   `Formation.SetMovementOrder` Postfix), **MixedFormations** (`Patch30` — arrangement/position math), **CompanionTactics**
-  (`Patch35` — a `SetMovementOrder` Postfix). The two `SetMovementOrder` postfixes share the **deferred
-  `Patch_MissionTime_SetMovementOrder` category** (applied at `OnMissionBehaviorInitialize`, not `OnSubModuleLoad`,
+  (`Patch35`, a `SetMovementOrder` Postfix). The two `SetMovementOrder` postfixes each sit in their feature's own **deferred
+  category**, `Patch_MissionTime_SmartCavalryAI` and `Patch_MissionTime_CompanionTactics` (applied at `OnMissionBehaviorInitialize`, not `OnSubModuleLoad`,
   because `MovementOrder.cctor` reads `Mission.Current.CurrentTime`; see [harmony-patches.md](../../../.claude/rules/harmony-patches.md)).
-  **Any future patch with `MovementOrder` in its postfix signature must use this category** ([harmony-patches.md](../../../.claude/rules/harmony-patches.md)).
+  **Any future patch with `MovementOrder` in its postfix signature goes in its feature's own `Patch_MissionTime_<Feature>` category** ([harmony-patches.md](../../../.claude/rules/harmony-patches.md)).
 - **SmartCavalryAI + MixedFormations are field-battle only** (2026-07-16, siege CTD #349): both gate on
   `Mission.IsFieldBattle` (`Mission.cs:1373` — true ONLY for `MissionTeamAIType == FieldBattle`), so neither touches
   formations in a siege / sally-out / hideout / naval / settlement mission. Two gotchas worth inheriting: (1) **never
@@ -341,7 +341,7 @@ exception.
   `GetFormationClass`); `TaleWorlds.Core.EquipmentIndex.cs`:21,23 (`ArmorItemEndSlot` == `Horse` == 10);
   `TaleWorlds.MountAndBlade.Mission.cs`:1555 (`GetAgentTroopClass_Override`, no subscriber), :2539-2551
   (`GetAgentTroopClass` + `DismountedClass` collapse), :4442 (`SpawnTroop` → `Team.GetFormation`).
-- TAOM patches: `Patch31_SmartCavalryAI`, `Patch30` MixedFormations, `Patch35` CompanionTactics, shared `Patch_MissionTime_SetMovementOrder` ([harmony-patch-registry.md](../harmony-patch-registry.md)). Gotcha lessons: [harmony-il](../../reviews/lessons/harmony-il.md), [gamemodels-services](../../reviews/lessons/gamemodels-services.md).
+- TAOM patches: `Patch31_SmartCavalryAI`, `Patch30` MixedFormations, `Patch35` CompanionTactics, deferred `Patch_MissionTime_SmartCavalryAI` and `Patch_MissionTime_CompanionTactics` ([harmony-patch-registry.md](../harmony-patch-registry.md)). Gotcha lessons: [harmony-il](../../reviews/lessons/harmony-il.md), [gamemodels-services](../../reviews/lessons/gamemodels-services.md).
 
 ---
 

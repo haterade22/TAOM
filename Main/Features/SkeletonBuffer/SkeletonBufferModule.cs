@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using DryIoc;
 using TAOM.Adapters;
 using TAOM.Composition;
+using TAOM.Features.MissionPerf.AnimMemory;
 using TAOM.Features.SkeletonBuffer.Hooks;
 
 namespace TAOM.Features.SkeletonBuffer;
@@ -28,6 +29,8 @@ internal sealed class SkeletonBufferModule : TaomFeatureModule
         registrator.Register<ISkeletonBufferMemoryAdapter, SkeletonBufferMemoryAdapter>(Reuse.Singleton);
         registrator.Register<ISkeletonBufferEngineAdapter, SkeletonBufferEngineAdapter>(Reuse.Singleton);
         registrator.Register<ISkeletonBufferSettingsProvider, SkeletonBufferSettingsProvider>(Reuse.Singleton);
+        registrator.Register<IEngineSignatureCacheAdapter, EngineSignatureCacheAdapter>(Reuse.Singleton, ifAlreadyRegistered: IfAlreadyRegistered.Keep);
+        registrator.Register<EngineSignatureCache>(Reuse.Singleton, ifAlreadyRegistered: IfAlreadyRegistered.Keep);
         registrator.Register<ISkeletonBufferGuardService, SkeletonBufferGuardService>(Reuse.Singleton);
         registrator.Register<SkeletonBufferWatchService>(Reuse.Singleton);
     }

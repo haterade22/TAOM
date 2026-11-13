@@ -187,14 +187,14 @@ public class MarshalThrowerWiringTests
     }
 
     [TestMethod]
-    public void TheModule_RegistersTheThrowerAdapter_PerResolve_AndAddsNoPatchCategory()
+    public void TheModule_RegistersTheThrowerAdapter_PerResolve_AndDeclaresTheThrowerCategoryFirst()
     {
         using var container = new Container();
         new MarshalsWordModule().RegisterServices(container);
 
         Assert.IsInstanceOfType(container.Resolve<IMarshalThrowerAdapter>(), typeof(MarshalThrowerAdapter));
         Assert.AreNotSame(container.Resolve<IMarshalThrowerAdapter>(), container.Resolve<IMarshalThrowerAdapter>(), "it caches the mission's field battle fact");
-        Assert.AreEqual(1, new MarshalsWordModule().PatchCategories.Count, "the two thrower patches join the shared deferred category the SubModule already applies");
+        Assert.AreEqual(MarshalsWordModule.ThrowerPatchCategory, new MarshalsWordModule().PatchCategories[0].Category, "the two thrower patches have their own first-mission category, applied before Patch141");
     }
 
     [TestMethod]
