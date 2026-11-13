@@ -165,7 +165,9 @@ owed, and Slice 2 waits on it.
 ## How to add a story mission
 
 1. Add a row to `story_missions.json` with a Defend side, two culture ids, a garrison and at least
-   one wave.
+   one wave. A row with a second wave also gets The Long Defeat's engine restore (#1160): a ram or
+   siege tower destroyed in one wave stands again at the start of the next. Every row today has one
+   wave, so no story mission meets it yet.
 2. Check every troop id and culture id with `python tools/validate_moduledata.py`.
 3. Run `taom.story_open <id>` once to time the scene load. A load of many minutes needs a stand-in.
 4. No code changes are needed.

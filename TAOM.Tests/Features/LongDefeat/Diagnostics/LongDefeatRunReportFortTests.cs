@@ -60,6 +60,14 @@ public class LongDefeatRunReportFortTests
         Assert.AreEqual(JTokenType.Null, Report(OneWave(), new Purse(600))["startGold"]!.Type);
     }
 
+    // A test option (#1160): the wrapper holds the report to the clear it armed, and a board run has none.
+    [TestMethod]
+    public void Build_TheBreakEnginesClearIsEchoed_AndNoneIsNull()
+    {
+        Assert.AreEqual(1, (int)Report(OneWave(), new Purse(600), new RunOptions { BreakEnginesAtClear = 1 })["breakEngines"]!);
+        Assert.AreEqual(JTokenType.Null, Report(OneWave(), new Purse(600))["breakEngines"]!.Type);
+    }
+
     [TestMethod]
     public void Build_SpentOnSplitsTheSpentGoldBySink_AndTheSinksSumToSpent()
     {

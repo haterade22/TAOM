@@ -409,7 +409,7 @@ the *arrange*, not from the assertion.
 
 `_unanchorable` second-faction test · battania volunteer-pool value test · offset-preserving comment
 blanking in the retag script · Khand name lists (`male_names` / `clan_names`; Dale has the identical
-gap) · a `castle_village` culture-invariant check in `validate_moduledata.py` · `lords.xslt`'s 396
+gap; both done 2026-11-13, PR #1169) · a `castle_village` culture-invariant check in `validate_moduledata.py` · `lords.xslt`'s 396
 `<xsl:attribute name="culture">` lords being invisible to `LANDLESS_CULTURE` (redundant today, since
 the `.xml` lord path caught all 18 real cases) · `Patch65`'s statics not reset on
 `OnSubModuleUnloaded` · a repo-wide issue for the unguarded `OnGameInitializationFinished`

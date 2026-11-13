@@ -167,15 +167,50 @@ public class WarOfTheRingBehaviorSessionResetTests
         });
     }
 
+    // #1163: the daily tick also runs the repair, after the phase check. Switching the War of the
+    // Ring off and on again in Full War leaves a Hostile pair that made peace meanwhile at war in
+    // the model only, with no declaration; the next daily tick declares it. (#772 pinned "without
+    // the repair" here. That described the behaviour of the time: its RCA records no reason against
+    // a daily run, and until #819 nothing could undeclare a Hostile pair inside a session.)
     [TestMethod]
-    public void OnDailyTick_Host_ChecksThePhaseWithoutTheRepair()
+    public void OnDailyTick_Host_ChecksThePhaseThenRunsTheRepair()
     {
         var sut = new WarOfTheRingBehavior(_service, Substitute.For<IModLogger>(), _coop, () => 45f);
         _service.ClearReceivedCalls();
 
         sut.OnDailyTick();
 
+        Received.InOrder(() =>
+        {
+            _service.CheckPhaseTransition(45f);
+            _service.ReconcileDeclaredWars();
+        });
+    }
+
+    [TestMethod]
+    public void OnDailyTick_PeerThatMustDeferToTheHost_DoesNotRunTheRepair()
+    {
+        // IsAuthority stays true: a co-op mod TAOM cannot probe, where every peer yields.
+        _coop.ShouldDeferToHost.Returns(true);
+        var sut = new WarOfTheRingBehavior(_service, Substitute.For<IModLogger>(), _coop, () => 45f);
+        _service.ClearReceivedCalls();
+
+        sut.OnDailyTick();
+
         _service.Received(1).CheckPhaseTransition(45f);
+        _service.DidNotReceive().ReconcileDeclaredWars();
+    }
+
+    [TestMethod]
+    public void OnDailyTick_CoopClient_RunsNeitherThePhaseCheckNorTheRepair()
+    {
+        _coop.IsAuthority.Returns(false);
+        var sut = new WarOfTheRingBehavior(_service, Substitute.For<IModLogger>(), _coop, () => 45f);
+        _service.ClearReceivedCalls();
+
+        sut.OnDailyTick();
+
+        _service.DidNotReceive().CheckPhaseTransition(Arg.Any<float>());
         _service.DidNotReceive().ReconcileDeclaredWars();
     }
 }
