@@ -5654,3 +5654,18 @@ Scope: review A covered the night batch `d4fb51a50..c2c3a6f28` (unattended game 
 | 19 | Decisions of the two fixes with no test | Other: coverage | The fix tests stopped at the service that changed | A handler test with the real services, the threshold peace, the analyzer cases |
 
 - **In-game:** nothing was run. The owed checks are in `tools/ingame_checks/1113.toml`.
+
+## Review (number assigned at merge): plan 049 refuge save-load repair unit (Refs #1132), tier-1 deep review (Lens 5, Lens 2), Codex not run (2026-11-13)
+
+- **Scope:** branch `improve/049-refuge-load-repair-unit`, diff `664f19c5b..9b783ca9a`: the new `Domain/RefugeBookRepair.cs`, the
+  shortened `RefugeService.LoadFrom`, and the new `RefugeBookRepairTests.cs`. A behaviour-preserving move; no save format change.
+- **Codex:** not run. Codex is out of usage and a paid call needs the maintainer's word; the lens rounds stand in for it.
+- **Lenses:** Data flow, 13 flows, 0 gaps; Engine compatibility, 10 verified, 0 incompatible, and 1 LOW. 0 false positives.
+- **Confirmed:** 1 row in `docs/reviews/rca-refuge-load-repair-unit-2026-11-13.md`, fixed. Four pre-existing items are listed as
+  follow-ups in `docs/reviews/deep-review-049-refuge-load-repair-unit-2026-11-13.md`.
+
+| # | Bug | Category | Why missed | Preventive action |
+|---|-----|----------|-----------|-------------------|
+| F1 | A new test comment said `CampaignTime.Never` is the one nonzero `CampaignTime` a test can build without a campaign; `operator -` builds another | Other: comment against engine source | The comment came word for word from the plan and was not re-derived | Comment narrowed to "the only public factory"; lesson in `lessons/testing-qa.md` |
+
+- **In-game:** nothing was run; another session held the game install.

@@ -2699,3 +2699,15 @@ never FAIL. The manifest header also named one list while its fail patterns judg
   same literals in a Python test that judges them on the real manifest (pass, fail, pass beside a fail, nothing). Do not end a
   pass pattern with `$`. State in the manifest header what a fail pattern fails on, because fail patterns are not gated on `reached`.
 - **Source:** [rca-mission-start-defer-2026-11-12.md](../rca-mission-start-defer-2026-11-12.md) "Follow-up review", `/deep-review` Agent 5.
+
+### A comment a plan supplies beside a new test is a draft: re-derive its "only" and "never" from the engine source (plan 049, 2026-11-13)
+
+Plan 049's new test carried a comment, taken word for word from the plan, saying `CampaignTime.Never` "is the one nonzero
+CampaignTime a test can build without a campaign". `operator -` on `Zero` and `Never` builds another. The plan had paraphrased an
+older comment in `RefugeServiceTests.cs`, so the overclaim spread from one test file to the next.
+- **Why missed:** the executor checked the code the plan supplied and copied its comments as given. A word like "the one", "only" or
+  "never" is a claim about every constructor, factory and operator of the type, and it was checked against the factories alone.
+- **Prevent:** before committing a plan-supplied comment that states an engine fact, open the type with `pwsh tools/taom-src.ps1 path
+  <Type>` and test the claim against every public member that returns the type. Narrow the wording to what was checked ("the only
+  public factory that ...").
+- **Source:** [rca-refuge-load-repair-unit-2026-11-13.md](../rca-refuge-load-repair-unit-2026-11-13.md) F1, `/deep-review` Agent 2.
