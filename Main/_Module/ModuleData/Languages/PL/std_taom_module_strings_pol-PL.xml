@@ -7845,6 +7845,7 @@
     <string id="taom_hero_auras_mcm_enabled_hint" text="Nazwani bohaterowie wzmacniają sojuszniczych żołnierzy w pobliżu, każdy na swój sposób: krasnoludowie Dáina twardo trzymają się na nogach, ludzie Aragorna zachowują zimną krew, łucznicy elfich władców strzelają szybciej. Aurę noszą tylko bohaterowie wymienieni w hero_auras.json. Gdy aura i rasowa zdolność żołnierza dają to samo, liczy się silniejsza; nigdy się nie sumują. Działa od następnego impulsu aury." />
     <string id="taom_hero_auras_mcm_strength" text="Siła aury bohatera" />
     <string id="taom_hero_auras_mcm_strength_hint" text="Mnoży premie wszystkich aur. 1.0 to wartości zapisane w hero_auras.json; 0 wyłącza wszystkie aury. Minimalne poziomy morale oraz efekty typu włącz/wyłącz, takie jak otrząśnięcie się, nie są skalowane. Domyślnie: 1.0." />
+    <string id="taom_messenger_waiting" text="Your messenger cannot find {HERO_NAME} yet and will wait until they can be reached." />
   </strings>
 
 </base>
