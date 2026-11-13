@@ -15,6 +15,21 @@ internal sealed record LdEngineReport(IReadOnlyList<LdEngineReading> Engines, in
     public static LdEngineReport None { get; } = new(new LdEngineReading[0], 0, 0);
 }
 
+/// <summary>
+/// One ram or siege tower deployed at the boot, as the field holds it now (#1160). <c>Kind</c> and <c>Index</c> (its place among the boot's engines of that kind) name it across reads. <c>Traveled</c> is the
+/// distance along its path since its start, <c>Arrived</c> whether it reached the wall or gate, <c>InLane</c> whether its siege lane lists it, and <c>Done</c> whether its task is already complete (a ram whose
+/// gate is down), so the attackers have no use for it. <c>QueuesOff</c> and <c>WaitAtStart</c> hold a tower to its boot state (a ram reads true for both): every ladder queue off, as the boot leaves them
+/// until the tower arrives, and its waiting soldiers sent to the lower wait point, the boot's choice.
+/// </summary>
+internal readonly record struct LdEngineState(string Kind, int Index, bool Destroyed, bool Disabled, float HitPoints, float MaxHitPoints, float Traveled, bool Arrived, bool InLane, bool Done, bool QueuesOff,
+    bool WaitAtStart);
+
+/// <summary>What one wave start's restore did: each engine it brought back, as read after the restore, and a problem when it could not act (an engine's reset was not found or threw).</summary>
+internal sealed record LdEngineRestore(IReadOnlyList<LdEngineState> Restored, string? Problem = null)
+{
+    public static LdEngineRestore None { get; } = new(new LdEngineState[0]);
+}
+
 /// <summary>A wave's Winged Terror pulses added up: how many, how many defenders lost morale and how much, how many were left below the floor, and the slowest pulse.</summary>
 internal sealed class LdTerrorTally
 {
