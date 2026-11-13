@@ -1241,5 +1241,240 @@ class BannerVersionRuleTests(Base):
         self.assertNotIn("CLAUDE.md", rules)
 
 
+SA = "aaaaaaaa-1111-2222-3333-444444444444"
+SB = "bbbbbbbb-1111-2222-3333-444444444444"
+SC = "cccccccc-1111-2222-3333-444444444444"
+
+
+def at_hour(hours):
+    """A timestamp `hours` after 2026-10-10 00:00 UTC."""
+    return (hr.datetime(2026, 10, 10, tzinfo=hr.timezone.utc) + hr.timedelta(hours=hours)).strftime(
+        "%Y-%m-%dT%H:%M:%S.000Z")
+
+
+class SharedEditTests(Base):
+    def edit(self, tid, path, session, hours=1, name="Edit", key="file_path"):
+        return tool_use(tid, name, session=session, ts=at_hour(hours), **{key: path})
+
+    def shared(self):
+        code, _ = self.env.run()
+        self.assertEqual(code, 0)
+        return self.env.signals()["shared_edits"]
+
+    def test_two_sessions_within_a_day_share_the_file(self):
+        self.env.write(SA + ".jsonl", [self.edit("t1", "E:/repos/TAOM/Foo.cs", SA, 1)])
+        self.env.write(SB + ".jsonl", [self.edit("t2", "E:/repos/TAOM/Foo.cs", SB, 20)])
+        s = self.shared()
+        self.assertEqual((s["files_edited"], s["shared_files"], s["session_pairs"]), (1, 1, 1))
+        row = s["top"][0]
+        self.assertEqual(row["file"], "e:/repos/taom/foo.cs")
+        self.assertEqual(row["session_ids"], ["aaaaaaaa", "bbbbbbbb"])
+        self.assertEqual((row["first"], row["last"]), ("2026-10-10 01:00", "2026-10-10 20:00"))
+        self.assertEqual(row["edits"], 2)
+
+    def test_edits_more_than_a_day_apart_are_not_shared(self):
+        self.env.write(SA + ".jsonl", [self.edit("t1", "E:/repos/TAOM/Foo.cs", SA, 1)])
+        self.env.write(SB + ".jsonl", [self.edit("t2", "E:/repos/TAOM/Foo.cs", SB, 26)])
+        s = self.shared()
+        self.assertEqual((s["files_edited"], s["shared_files"], s["session_pairs"]), (1, 0, 0))
+        self.assertEqual(s["top"], [])
+
+    def test_a_close_pair_counts_even_when_other_edits_are_far_apart(self):
+        self.env.write(SA + ".jsonl", [self.edit("t1", "E:/x/Foo.cs", SA, 1), self.edit("t2", "E:/x/Foo.cs", SA, 60)])
+        self.env.write(SB + ".jsonl", [self.edit("t3", "E:/x/Foo.cs", SB, 70)])
+        self.assertEqual(self.shared()["shared_files"], 1)
+
+    def test_one_session_and_its_own_subagent_are_one_session(self):
+        self.env.write(SA + ".jsonl", [self.edit("t1", "E:/x/Foo.cs", SA, 1)])
+        self.env.write(SA + "/subagents/agent-1.jsonl", [self.edit("t2", "E:/x/Foo.cs", SA, 2)])
+        self.assertEqual(self.shared()["shared_files"], 0)
+
+    def test_a_subagent_edit_counts_for_its_parent_session(self):
+        # A subagent record carries its main session's id.
+        self.env.write(SA + ".jsonl", [self.edit("t1", "E:/x/Foo.cs", SA, 1)])
+        self.env.write(SB + "/subagents/workflows/wf_1/agent-1.jsonl", [self.edit("t2", "E:/x/Foo.cs", SB, 2)])
+        s = self.shared()
+        self.assertEqual(s["shared_files"], 1)
+        self.assertEqual(s["top"][0]["session_ids"], ["aaaaaaaa", "bbbbbbbb"])
+
+    def test_backslash_and_case_differences_are_one_file(self):
+        self.env.write(SA + ".jsonl", [self.edit("t1", "E:\\repos\\TAOM\\Main\\Foo.cs", SA, 1)])
+        self.env.write(SB + ".jsonl", [self.edit("t2", "e:/repos/taom/main/foo.CS", SB, 2)])
+        s = self.shared()
+        self.assertEqual((s["files_edited"], s["shared_files"]), (1, 1))
+
+    def test_a_home_folder_path_is_shown_from_the_tilde(self):
+        self.env.write(SA + ".jsonl", [self.edit("t1", "C:\\Users\\someone\\notes\\Todo.md", SA)])
+        self.env.write(SB + ".jsonl", [self.edit("t2", "c:/users/someone/notes/todo.md", SB)])
+        self.assertEqual(self.shared()["top"][0]["file"], "~/notes/todo.md")
+        self.assertNotIn("someone", self.env.report())
+
+    def test_every_edit_tool_counts_and_read_does_not(self):
+        self.env.write(SA + ".jsonl", [self.edit("t1", "E:/x/a.md", SA, 1, "Write"),
+                                       self.edit("t2", "E:/x/b.md", SA, 1, "MultiEdit"),
+                                       self.edit("t3", "E:/x/c.ipynb", SA, 1, "NotebookEdit", "notebook_path"),
+                                       self.edit("t4", "E:/x/d.md", SA, 1, "Read")])
+        self.env.write(SB + ".jsonl", [self.edit("t5", "E:/x/a.md", SB, 2), self.edit("t6", "E:/x/b.md", SB, 2),
+                                       self.edit("t7", "E:/x/c.ipynb", SB, 2), self.edit("t8", "E:/x/d.md", SB, 2)])
+        s = self.shared()
+        self.assertEqual({r["file"] for r in s["top"]}, {"e:/x/a.md", "e:/x/b.md", "e:/x/c.ipynb"})
+        self.assertEqual(s["files_edited"], 4)
+
+    def test_git_bash_and_windows_drive_spellings_are_one_file(self):
+        self.env.write(SA + ".jsonl", [self.edit("t1", "/e/repos/x/A.cs", SA, 1)])
+        self.env.write(SB + ".jsonl", [self.edit("t2", "E:\\repos\\x\\A.cs", SB, 2)])
+        s = self.shared()
+        self.assertEqual((s["files_edited"], s["shared_files"]), (1, 1))
+        self.assertEqual(s["top"][0]["file"], "e:/repos/x/a.cs")
+
+    def test_the_claude_home_folder_is_excluded_and_counted(self):
+        for n, (sid, path) in enumerate([(SA, "C:\\Users\\someone\\.claude\\memory\\MEMORY.md"),
+                                         (SB, "c:/users/someone/.claude/memory/memory.md"),
+                                         (SA, "C:/Users/someone/.claude/plans/p.md"),
+                                         (SB, "C:/Users/someone/.claude/plans/p.md")]):
+            self.env.write("%s%d.jsonl" % (sid, n), [self.edit("t%d" % n, path, sid, 1)])
+        self.env.write(SA + ".jsonl", [self.edit("t9", "E:/x/Foo.cs", SA, 1),
+                                       self.edit("t11", "E:/repos/TAOM/.claude/rules/x.md", SA, 1)])
+        self.env.write(SB + ".jsonl", [self.edit("t10", "E:/x/Foo.cs", SB, 1),
+                                       self.edit("t12", "E:/repos/TAOM/.claude/rules/x.md", SB, 1)])
+        s = self.shared()
+        # A checkout's own .claude folder is repo content and stays counted.
+        self.assertEqual((s["files_edited"], s["shared_files"], s["excluded_claude_home"]), (2, 2, 2))
+        self.assertEqual([r["file"] for r in s["top"]], ["e:/repos/taom/.claude/rules/x.md", "e:/x/foo.cs"])
+        self.assertIn("2 file(s) under the user's .claude folder", self.env.report())
+
+    def test_edits_scanned_out_of_time_order_are_still_compared_by_time(self):
+        # The later edit comes first in the file; only the sort keeps the 99 h gap from reading as -99 h.
+        self.env.write(SA + ".jsonl", [self.edit("t1", "E:/x/Foo.cs", SA, 100), self.edit("t2", "E:/x/Foo.cs", SB, 1)])
+        self.assertEqual(self.shared()["shared_files"], 0)
+
+    def test_an_edit_before_the_window_is_not_counted(self):
+        self.env.write(SA + ".jsonl", [tool_use("t1", "Edit", session=SA, ts="2026-09-30T23:00:00.000Z",
+                                                file_path="E:/x/Foo.cs")])
+        self.env.write(SB + ".jsonl", [tool_use("t2", "Edit", session=SB, ts="2026-10-01T01:00:00.000Z",
+                                                file_path="E:/x/Foo.cs")])
+        s = self.shared()
+        self.assertEqual((s["files_edited"], s["shared_files"]), (1, 0))
+
+    def test_session_pairs_are_distinct_across_files(self):
+        self.env.write(SA + ".jsonl", [self.edit("t1", "E:/x/a.cs", SA), self.edit("t2", "E:/x/b.cs", SA),
+                                       self.edit("t3", "E:/x/c.cs", SA)])
+        self.env.write(SB + ".jsonl", [self.edit("t4", "E:/x/a.cs", SB), self.edit("t5", "E:/x/b.cs", SB)])
+        self.env.write(SC + ".jsonl", [self.edit("t6", "E:/x/c.cs", SC)])
+        s = self.shared()
+        self.assertEqual((s["shared_files"], s["session_pairs"]), (3, 2))
+
+    def test_top_lists_ten_files_most_sessions_first(self):
+        recs_a = [self.edit("a%d" % i, "E:/x/f%02d.cs" % i, SA) for i in range(12)]
+        recs_b = [self.edit("b%d" % i, "E:/x/f%02d.cs" % i, SB) for i in range(12)]
+        self.env.write(SA + ".jsonl", recs_a)
+        self.env.write(SB + ".jsonl", recs_b)
+        self.env.write(SC + ".jsonl", [self.edit("c1", "E:/x/f11.cs", SC)])
+        s = self.shared()
+        self.assertEqual(s["shared_files"], 12)
+        self.assertEqual(len(s["top"]), 10)
+        self.assertEqual(s["top"][0]["file"], "e:/x/f11.cs")
+        self.assertEqual(len(s["top"][0]["session_ids"]), 3)
+
+    def test_report_has_the_section(self):
+        self.env.write(SA + ".jsonl", [self.edit("t1", "E:/x/Foo.cs", SA)])
+        self.env.write(SB + ".jsonl", [self.edit("t2", "E:/x/Foo.cs", SB)])
+        _code, out = self.env.run()
+        text = self.env.report()
+        self.assertIn("## 12. Files two sessions edited", text)
+        self.assertIn("| e:/x/foo.cs | aaaaaaaa, bbbbbbbb |", text)
+        self.assertIn("shared edits: 1", out)
+
+
+def boundary(session="s1", ts=TS):
+    return rec("system", session, ts, subtype="compact_boundary")
+
+
+def calls(prefix, texts, session="s1"):
+    """A tool call and its result per text; a text of None is a success."""
+    out = []
+    for i, text in enumerate(texts):
+        tid = "%s%d" % (prefix, i)
+        out += [tool_use(tid, "Bash", session=session, command="ls"),
+                tool_result(tid, text or "ok", error=text is not None, session=session)]
+    return out
+
+
+class PostCompactionTests(Base):
+    def post(self):
+        code, _ = self.env.run()
+        self.assertEqual(code, 0)
+        return self.env.signals()["post_compaction"]
+
+    def test_counts_results_and_errors_each_side(self):
+        self.env.write("a.jsonl", calls("b", [None, "boom"]) + [boundary()] + calls("a", ["bad 1", None, "bad 2"]))
+        p = self.post()
+        self.assertEqual(p["compactions"], 1)
+        self.assertEqual((p["before"]["results"], p["before"]["errors"]), (2, 1))
+        self.assertEqual((p["after"]["results"], p["after"]["errors"]), (3, 2))
+        self.assertEqual((p["before"]["rate"], p["after"]["rate"]), (0.5, 0.6667))
+
+    def test_hook_denies_classifier_and_rejections_are_results_not_errors(self):
+        deny = "PreToolUse:Bash hook error: [validate-push]: BLOCKED"
+        self.env.write("a.jsonl", [boundary()] + calls("a", [deny, hr.CLASSIFIER_PREFIX + " x",
+                                                            hr.REJECTION_PREFIX + " y", "real error"]))
+        p = self.post()
+        self.assertEqual((p["after"]["results"], p["after"]["errors"]), (4, 1))
+
+    def test_each_side_stops_at_twenty_results(self):
+        self.env.write("a.jsonl", calls("b", ["e"] * 25) + [boundary()] + calls("a", [None] * 5 + ["e"] * 20))
+        p = self.post()
+        self.assertEqual((p["before"]["results"], p["before"]["errors"]), (20, 20))
+        self.assertEqual((p["after"]["results"], p["after"]["errors"]), (20, 15))
+
+    def test_every_boundary_is_measured(self):
+        self.env.write("a.jsonl", calls("x", ["e"]) + [boundary()] + calls("y", [None]) + [boundary()]
+                       + calls("z", ["e"]))
+        p = self.post()
+        self.assertEqual(p["compactions"], 2)
+        # y0 is the first boundary's after and the second's before, never two boundaries' after.
+        self.assertEqual((p["before"]["results"], p["before"]["errors"]), (2, 1))
+        self.assertEqual((p["after"]["results"], p["after"]["errors"]), (2, 1))
+
+    def test_close_boundaries_count_a_result_once_per_side(self):
+        self.env.write("a.jsonl", calls("w", [None] * 5) + [boundary()] + calls("x", ["e"] * 10) + [boundary()]
+                       + calls("y", [None] * 5))
+        p = self.post()
+        self.assertEqual((p["before"]["results"], p["before"]["errors"]), (15, 10))
+        self.assertEqual((p["after"]["results"], p["after"]["errors"]), (15, 10))
+
+    def test_a_subagent_compaction_is_not_measured(self):
+        self.env.write("s1.jsonl", calls("m", [None]))
+        self.env.write("s1/subagents/agent-1.jsonl", calls("b", ["e"]) + [boundary()] + calls("a", ["e"]))
+        p = self.post()
+        self.assertEqual(p["compactions"], 0)
+        self.assertEqual(self.env.signals()["sessions"]["compactions"], 1)
+
+    def test_top_five_signatures_after(self):
+        texts = ["fail kind %s" % k for k in "abcdef"] + ["fail kind a", "fail kind a"]
+        self.env.write("a.jsonl", calls("b", ["not this one"]) + [boundary()] + calls("a", texts))
+        p = self.post()
+        self.assertEqual(len(p["top_after"]), 5)
+        self.assertEqual((p["top_after"][0]["signature"], p["top_after"][0]["count"]), ("fail kind a", 3))
+        self.assertNotIn("not this one", [r["signature"] for r in p["top_after"]])
+
+    def test_no_compaction_reads_as_none_measured(self):
+        self.env.write("a.jsonl", calls("a", ["e"]))
+        p = self.post()
+        self.assertEqual(p["compactions"], 0)
+        self.assertIsNone(p["after"]["rate"])
+        self.assertIn("## 13. Tool errors after a compaction", self.env.report())
+        self.assertIn("No compaction", self.env.report())
+
+    def test_report_shows_both_rates(self):
+        self.env.write("a.jsonl", calls("b", [None, "boom"]) + [boundary()] + calls("a", ["bad"]))
+        _code, out = self.env.run()
+        text = self.env.report()
+        self.assertIn("## 13. Tool errors after a compaction", text)
+        self.assertIn("| Before | 2 | 1 | 50.0% |", text)
+        self.assertIn("| After | 1 | 1 | 100.0% |", text)
+        self.assertIn("post-compaction: 1 compaction", out)
+
+
 if __name__ == "__main__":
     unittest.main()

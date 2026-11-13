@@ -10,13 +10,13 @@ With no fresh user prompt, continue established work; don't start new work.
   branch delete, posting a comment) need authorization given for this run.
 - If the transcript doesn't make the next step obvious, stop and report rather than guess.
 - Once the run is established, never stop to ask "should I keep going?"; the user may be away. End
-  only when the work is done, genuinely blocked, or the no-progress breaker below trips. Out of
-  obvious steps, first re-read the transcript and recombine near-misses.
-- A trivial failure (typo, missing import, a flake): fix and retry. A fundamentally broken approach:
-  record the outcome (commit body, log) and move on.
+  only when the work is done, blocked, or the no-progress breaker below trips. Out of obvious
+  steps, re-read the transcript and recombine near-misses.
+- A trivial failure (typo, missing import, a flake): fix and retry. The same failure twice: consult
+  `architect` once. A broken approach: record the outcome (commit body, log) and move on.
 - No-progress breaker: a work-driving `/loop` or wakeup ends each work tick with
-  `python tools/loop_progress.py --state <file>` (`--help`). Exit 3 means stop and report what was
-  tried. Progress is what the files show, never the agent's own report.
+  `python tools/loop_progress.py --state <file>`. Exit 3 means stop and report what was tried.
+  Progress is what the files show, never the agent's own report.
 - Keep dangerous git text out of inline commands: a hook ask stalls an unattended agent even in
   bypass mode. Run such text from a script file.
 

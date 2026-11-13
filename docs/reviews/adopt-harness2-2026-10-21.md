@@ -102,6 +102,29 @@ and no evidence trail beyond their commit body.
 | X5 | Cue and confidence fields on lesson entries | Declined: lesson headings already name the situation and the operation; `output-style.md` carries the confidence tags |
 | X6 | Grader-verdict tripwire, budget identity, run fingerprint, candidate diversity metric | Declined: they protect benchmark integrity; the git SHA already fingerprints the harness |
 
+## Delta review, 2026-11-12
+
+Mike asked again what the harness could take, with the same question put to
+[claude-code-harness](adopt-claude-code-harness-2026-11-12.md) (#1138).
+
+- **Read:** `1cfe254e..686881751`, 17 commits, all dated 2026-11-02 and all fixes, through
+  `gh api .../compare`. The patches of `harness2/core/`, `harness2/config.py`, `harness2/cli/judge.py`
+  and `harness2/substrate/` were read in full; the benchmark runners and new tests by file list only.
+  Nothing was cloned or run.
+- **What changed:** a failed or incomplete grade stays ungraded and never replaces the grade of the
+  same selection; a rollout's reuse identity now includes the task's inputs; a retry keeps a
+  rejected attempt's edits; proposer failures are recorded instead of cached; and a new
+  `config.scrub_env` removes 21 variables (API keys, host tokens and provider endpoint settings)
+  from every agent subprocess, keeping only the provider keys the chosen model needs.
+- **Verdict:** nothing new to take. The grading and identity fixes protect benchmark integrity, which
+  X6 declined; TAOM's analogues are `/game-run`'s NOT_SEEN and graphify's staleness check. The
+  environment scrub raised a TAOM question, which is in the
+  [claude-code-harness record](adopt-claude-code-harness-2026-11-12.md#security) ("Secrets in the
+  session environment"): Mike chose to record the exposure only.
+- **D1:** its condition was verdicts that stay confounded after two or three retros. Three retros
+  have run; the 2026-11-10 record judges six changes "helped", one "helped, as a pair" and one
+  "helped, confounded between the three", and two had no observed effect. D1 stays deferred.
+
 ---
 
 <!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->

@@ -1385,19 +1385,25 @@ stop_expect() {  # hook payload want label
         bad "$1: expected $3 ($4), got '$got', rc $(cat "$SANDBOX/stop.rc" 2>/dev/null), stderr: $(head -c 100 "$SANDBOX/stop.err" 2>/dev/null)"
     fi
 }
-# shellcheck disable=SC2010  # counts one fixed marker suffix; the names are ours, not user input
-stop_markers() { ls -A "$STOP_REPO/.claude/logs" 2>/dev/null | grep -c -- '-reminded$'; }
+# A streak marker is a tree-wide .claude/logs/.<hook>-reminded or a per-session
+# .claude/logs/sessions/<id>.reminded (#1138).
+stop_markers() { find "$STOP_REPO/.claude/logs" -maxdepth 2 \( -name '.*-reminded' -o -name '*.reminded' \) 2>/dev/null | wc -l | tr -d ' '; }
+STOP_REPO_M=$(cygpath -m "$STOP_REPO" 2>/dev/null || echo "$STOP_REPO")
 # Ends (clear) or restarts (set) each hook's streak the way a session would. The verification
 # streak ends through the real writer, called as the PowerShell tool, so the writer's marker path
-# and the reader's are proven to agree (a PowerShell build must mute the reminder: plan 011).
+# and the reader's are proven to agree (a PowerShell build must mute the reminder: plan 011). It
+# starts through the real edit recorder, so the recorder's ledger and the reader's agree (#1138).
 stop_condition() {  # hook clear|set
     local now; now=$(date +%s)
     case "$1:$2" in
         check-verification-evidence.sh:clear)
             touch -d "@$((now - 10))" "$STOP_REPO/Main/Foo.cs"
-            "$HPY" -c 'import json; print(json.dumps({"tool_name":"PowerShell","tool_input":{"command":"dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId="},"hook_event_name":"PostToolUse"}))' \
+            "$HPY" -c 'import json; print(json.dumps({"session_id":"t","tool_name":"PowerShell","tool_input":{"command":"dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId="},"hook_event_name":"PostToolUse"}))' \
                 | CLAUDE_PROJECT_DIR="$STOP_REPO" timeout -k 2 10 bash "$REPO/.claude/hooks/mark-verification-run.sh" >/dev/null 2>&1 ;;
-        check-verification-evidence.sh:set) touch -d "@$((now + 3))" "$STOP_REPO/Main/Foo.cs" ;;
+        check-verification-evidence.sh:set)
+            touch -d "@$((now + 3))" "$STOP_REPO/Main/Foo.cs"
+            "$HPY" -c 'import json,sys; print(json.dumps({"session_id":"t","tool_name":"Edit","tool_input":{"file_path":sys.argv[1]},"hook_event_name":"PostToolUse"}))' "$STOP_REPO_M/Main/Foo.cs" \
+                | CLAUDE_PROJECT_DIR="$STOP_REPO" timeout -k 2 10 bash "$REPO/.claude/hooks/record-session-edit.sh" >/dev/null 2>&1 ;;
         *) return 2 ;;
     esac
     return 0
@@ -1409,6 +1415,7 @@ for name in $STOP_HOOKS; do
     git -C "$STOP_REPO" checkout -q -- CHANGELOG.md
     git -C "$STOP_REPO" tag -d v9.9.9 >/dev/null 2>&1
     rm -f "$STOP_REPO"/.claude/logs/.*-reminded "$STOP_REPO"/.claude/logs/.verification-ran "$STOP_REPO/.claude/logs/agent-audit.log"
+    rm -rf "$STOP_REPO/.claude/logs/sessions"
     stop_condition "$name" set
     [[ $? == 2 ]] && { bad "7a has no clear and set steps for the Stop hook $name"; continue; }
     stop_expect "$name" "$STOP_LOOP" silent "is silent when stop_hook_active is true"
@@ -1430,20 +1437,46 @@ for name in $STOP_HOOKS; do
     stop_expect "$name" "$STOP_LIVE" block "reminds on the next streak after one that ended in the continuation"
 done
 # A session that entered a worktree sends that worktree as the payload cwd, while CLAUDE_PROJECT_DIR
-# stays at the main checkout. The hook judges the cwd's tree and keeps its markers under the project:
-# dirty C# only in the second worktree reminds when the payload names it, and is silent without it.
+# stays at the main checkout. With no session id (the tree-wide fallback) the hook judges the cwd's
+# tree and keeps its markers under the project: dirty C# only in the second worktree reminds when the
+# payload names it, and is silent without it. With a session id it judges the session's ledger, whose
+# paths are absolute, so the worktree edit reminds whatever the cwd says; dirty C# in the cwd's tree
+# that no ledger holds (a shell edit) reminds, and one another session's ledger holds does not (#1138).
 git -C "$STOP_REPO" checkout -q -- Main/Foo.cs
 rm -f "$STOP_REPO"/.claude/logs/.*-reminded "$STOP_REPO/.claude/logs/.verification-ran"
+rm -rf "$STOP_REPO/.claude/logs/sessions"
 STOP_WT="$SANDBOX/stop-wt"
 git -C "$STOP_REPO" worktree add -q --detach "$STOP_WT" 2>/dev/null
 printf 'class Foo { int w; }\n' > "$STOP_WT/Main/Foo.cs"
 STOP_WT_M=$(cygpath -m "$STOP_WT" 2>/dev/null || echo "$STOP_WT")
-stop_expect check-verification-evidence.sh "$STOP_LIVE" silent "ignores dirty C# in a second worktree the payload does not name"
+STOP_NOSID='{"hook_event_name":"Stop","stop_hook_active":false}'
+stop_expect check-verification-evidence.sh "$STOP_NOSID" silent "ignores dirty C# in a second worktree the payload does not name"
 stop_expect check-verification-evidence.sh \
-    "{\"hook_event_name\":\"Stop\",\"session_id\":\"t\",\"cwd\":\"$STOP_WT_M\",\"stop_hook_active\":false}" \
+    "{\"hook_event_name\":\"Stop\",\"cwd\":\"$STOP_WT_M\",\"stop_hook_active\":false}" \
     block "reminds for dirty C# in the worktree the payload cwd names"
+rm -f "$STOP_REPO"/.claude/logs/.*-reminded
+stop_rec() {  # $1 session id, $2 file_path: a Write through the real recorder
+    "$HPY" -c 'import json,sys; print(json.dumps({"session_id":sys.argv[1],"tool_name":"Write","tool_input":{"file_path":sys.argv[2]},"hook_event_name":"PostToolUse"}))' "$1" "$2" \
+        | CLAUDE_PROJECT_DIR="$STOP_REPO" timeout -k 2 10 bash "$REPO/.claude/hooks/record-session-edit.sh" >/dev/null 2>&1
+}
+STOP_LIVE_WT="{\"hook_event_name\":\"Stop\",\"session_id\":\"t\",\"cwd\":\"$STOP_WT_M\",\"stop_hook_active\":false}"
+stop_rec o "$STOP_WT_M/Main/Foo.cs"
+stop_expect check-verification-evidence.sh "$STOP_LIVE_WT" silent "with a session id, ignores dirty C# in its cwd tree that another session's ledger holds"
+rm -rf "$STOP_REPO/.claude/logs/sessions"
+# A session launched in the worktree keeps its ledger there; its claim counts as well.
+"$HPY" -c 'import json,sys; print(json.dumps({"session_id":"w2","tool_name":"Write","tool_input":{"file_path":sys.argv[1]},"hook_event_name":"PostToolUse"}))' "$STOP_WT_M/Main/Foo.cs" \
+    | CLAUDE_PROJECT_DIR="$STOP_WT" timeout -k 2 10 bash "$REPO/.claude/hooks/record-session-edit.sh" >/dev/null 2>&1
+stop_expect check-verification-evidence.sh "$STOP_LIVE_WT" silent "with a session id, ignores dirty C# that a session launched in that worktree recorded"
+rm -rf "$STOP_WT/.claude/logs/sessions" "$STOP_REPO/.claude/logs/sessions"
+stop_expect check-verification-evidence.sh "$STOP_LIVE_WT" block "with a session id, reminds for dirty C# in its cwd tree that no ledger holds"
+stop_expect check-verification-evidence.sh "$STOP_LIVE_WT" silent "mutes that reminder after one, with the ledger folder it had to make"
+rm -rf "$STOP_REPO/.claude/logs/sessions"
+touch -d "@$(( $(date +%s) + 3 ))" "$STOP_WT/Main/Foo.cs"
+stop_rec t "$STOP_WT_M/Main/Foo.cs"
+stop_expect check-verification-evidence.sh "$STOP_LIVE" block "with a session id, reminds for its own worktree edit whatever the payload cwd"
 git -C "$STOP_REPO" worktree remove --force "$STOP_WT" 2>/dev/null
 rm -f "$STOP_REPO"/.claude/logs/.*-reminded
+rm -rf "$STOP_REPO/.claude/logs/sessions"
 
 # ---------------------------------------------------------------------------
 head2 "7b. check-claude-files-tracked: denies with a valid decision, inside its registration"
@@ -3991,6 +4024,323 @@ grep -q 'MEMORY.md is' <<< "$(mb_sibling startup)" \
     && bad "session-start read the MEMORY.md of a project that only contains the name" \
     || ok "session-start reads only the project named for the main checkout"
 rm -rf "$MB_P" "$MB_H" "$MB_M" "$MB_W"
+
+# ---------------------------------------------------------------------------
+head2 "7o. the verification reminder judges the session's own edits; a file two sessions edit is noted (#1138)"
+# check-verification-evidence.sh judged every dirty *.cs in the tree against one shared build marker,
+# so 16 of 32 Stop blocks in one retro week named another session's C# (harness-retro-2026-11-10 P1).
+# record-session-edit.sh now keeps a ledger per session id (.claude/logs/sessions/<id>.edits),
+# mark-verification-run.sh touches <id>.verified, and the Stop hook judges the ledger's own C# first,
+# then C# that no ledger holds.
+# A payload with no session id keeps the tree-wide check. Every step runs the real hooks.
+LR="$SANDBOX/ledger-repo"
+LL="$LR/.claude/logs/sessions"
+mkdir -p "$LR/Main" "$LR/.claude/logs"
+git -C "$LR" init -q 2>/dev/null
+printf 'class Foo {}\n' > "$LR/Main/Foo.cs"
+printf 'class Bar {}\n' > "$LR/Main/Bar.cs"
+git -C "$LR" add Main 2>/dev/null
+git -C "$LR" -c user.name=t -c user.email=t@example.invalid commit -qm init 2>/dev/null
+LR_M=$(cygpath -m "$LR" 2>/dev/null || echo "$LR")
+lr_pl() {  # $1 session id, $2 file_path, $3 JSON object merged in (a null value drops the key): an Edit payload
+    "$HPY" -c 'import json, sys
+d = {"session_id": sys.argv[1], "hook_event_name": "PostToolUse", "tool_name": "Edit",
+     "tool_input": {"file_path": sys.argv[2], "old_string": "a", "new_string": "b"}}
+d.update(json.loads(sys.argv[3] or "{}"))
+print(json.dumps({k: v for k, v in d.items() if v is not None}))' "$1" "$2" "${3:-}"
+}
+lr_rec() {  # $1 payload, $2 project dir (default $LR): the recorder's stdout; rc and stderr in the sandbox
+    printf '%s' "$1" | CLAUDE_PROJECT_DIR="${2:-$LR}" timeout -k 2 10 bash "$REPO/.claude/hooks/record-session-edit.sh" 2>"$SANDBOX/lr.err"
+    echo "$?" > "$SANDBOX/lr.rc"
+}
+lr_build() {  # $1 session id: a dotnet test through the real marker writer
+    "$HPY" -c 'import json, sys; print(json.dumps({"session_id": sys.argv[1], "tool_name": "Bash", "tool_input": {"command": "dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId="}, "hook_event_name": "PostToolUse"}))' "$1" \
+        | CLAUDE_PROJECT_DIR="$LR" timeout -k 2 10 bash "$REPO/.claude/hooks/mark-verification-run.sh" >/dev/null 2>&1
+}
+lr_stop_pl() { printf '{"hook_event_name":"Stop","session_id":"%s","stop_hook_active":false}' "$1"; }
+LR_NOSID='{"hook_event_name":"Stop","stop_hook_active":false}'
+lr_expect() {  # $1 Stop payload, $2 block|silent, $3 label, $4 text the reason must hold, $5 ERE it must not match
+    local out rc got reason
+    out=$(printf '%s' "$1" | CLAUDE_PROJECT_DIR="$LR" timeout -k 2 10 bash "$REPO/.claude/hooks/check-verification-evidence.sh" 2>"$SANDBOX/lr.err")
+    rc=$?
+    got=$(stop_shape "$out")
+    reason=$(printf '%s' "$out" | "$HPY" -c 'import json, sys
+try: print(json.loads(sys.stdin.read()).get("reason", ""))
+except Exception: pass' 2>/dev/null)
+    if [[ "$got" != "$2" || $rc != 0 || -s "$SANDBOX/lr.err" ]]; then
+        bad "check-verification-evidence: expected $2 ($3), got '$got', rc $rc, stderr: $(head -c 100 "$SANDBOX/lr.err" 2>/dev/null)"
+    elif [[ -n "${4:-}" && "$reason" != *"$4"* ]]; then
+        bad "check-verification-evidence ($3): the reason does not name '$4': ${reason:0:200}"
+    elif [[ -n "${5:-}" && "$reason" =~ $5 ]]; then
+        bad "check-verification-evidence ($3): the reason matches '$5': ${reason:0:200}"
+    else
+        ok "check-verification-evidence $3"
+    fi
+}
+LR_NOW=$(date +%s)
+lr_dirty() {  # $1 file under Main, $2 text: a dirty edit whose mtime is ahead of any marker
+    printf '%s\n' "$2" > "$LR/Main/$1"
+    touch -d "@$(( $(date +%s) + 3 ))" "$LR/Main/$1"
+}
+lr_dirty Bar.cs 'class Bar { int u; }'
+lr_rec "$(lr_pl u "$LR_M/Main/Bar.cs")" >/dev/null
+[[ -f "$LL/u.edits" ]] && ok "record-session-edit writes the session's ledger" \
+    || bad "record-session-edit wrote no $LL/u.edits for session u"
+lr_expect "$(lr_stop_pl t)" silent "is silent for a session that never edited the dirty C# of another session"
+lr_dirty Foo.cs 'class Foo { int t; }'
+lr_rec "$(lr_pl t "$LR_M/Main/Foo.cs")" >/dev/null
+lr_expect "$(lr_stop_pl t)" block "reminds a session for its own dirty C#, and names only its own file" "Foo.cs" 'Bar\.cs|another session'
+lr_expect "$(lr_stop_pl u)" block "reminds a second session for its own file: the first session's reminder does not mute it" "Bar.cs" 'Foo\.cs'
+lr_expect "$(lr_stop_pl t)" silent "mutes a session after one reminder"
+[[ -f "$LL/t.reminded" && -f "$LL/u.reminded" ]] && ok "each session keeps its own streak marker" \
+    || bad "expected the streak markers t.reminded and u.reminded under $LL: $(ls -A "$LL" 2>/dev/null | tr '\n' ' ')"
+[[ ! -e "$LR/.claude/logs/.verification-reminded" ]] && ok "the session path leaves the tree-wide streak marker alone" \
+    || bad "the session path wrote the tree-wide .verification-reminded"
+# Both files predate u's build, so the tree-wide .verification-ran it also touches is newer than
+# t's Foo.cs: only t's own missing .verified keeps t's reminder alive below.
+touch -d "@$((LR_NOW - 10))" "$LR/Main/Bar.cs" "$LR/Main/Foo.cs"
+lr_build u
+[[ -f "$LL/u.verified" ]] && ok "mark-verification-run touches the session's .verified marker" \
+    || bad "mark-verification-run wrote no $LL/u.verified for session u"
+lr_expect "$(lr_stop_pl u)" silent "is silent for a session once its own build ran"
+[[ ! -e "$LL/u.reminded" ]] && ok "a session's streak marker clears once its build ran" \
+    || bad "u.reminded survived u's build: u's next streak stays muted"
+[[ -f "$LL/t.reminded" ]] && ok "another session's build leaves this session's streak open" \
+    || bad "u's build cleared t.reminded, so u's build muted t"
+rm -f "$LL/t.reminded"
+lr_expect "$(lr_stop_pl t)" block "still reminds a session after another session's build" "Foo.cs"
+touch -d "@$((LR_NOW - 10))" "$LR/Main/Foo.cs"
+lr_build t
+lr_expect "$(lr_stop_pl t)" silent "is silent for a session once its own build ran after its edit"
+git -C "$LR" checkout -q -- Main/Foo.cs Main/Bar.cs
+lr_dirty Foo.cs 'class Foo { int v; }'
+git -C "$LR" checkout -q -- Main/Foo.cs
+lr_expect "$(lr_stop_pl t)" silent "is silent when the session's edit was reverted"
+lr_dirty Foo.cs 'class Foo { int w; }'
+lr_expect "$LR_NOSID" block "keeps the tree-wide check for a payload with no session id" "another session"
+[[ -f "$LR/.claude/logs/.verification-reminded" ]] && ok "the no-session fallback keeps the tree-wide streak marker" \
+    || bad "the no-session fallback wrote no .verification-reminded"
+git -C "$LR" checkout -q -- Main/Foo.cs
+# A Windows path arrives with JSON-doubled backslashes, maybe in another case; NTFS ignores case,
+# so the ledger stores / separators and every comparison folds case.
+lr_dirty Bar.cs 'class Bar { int w; }'
+LR_W=$(cygpath -w "$LR" 2>/dev/null || echo "$LR")
+LR_WL="${LR_W,,}"
+if [[ -e "${LR_M,,}/main/bar.cs" ]]; then
+    lr_rec "$(lr_pl w "${LR_WL//\//\\}\\main\\bar.cs")" >/dev/null
+    if [[ -f "$LL/w.edits" ]] && ! grep -q '\\' "$LL/w.edits"; then
+        ok "record-session-edit stores a backslash path with / separators"
+    else
+        bad "record-session-edit kept a backslash or wrote nothing: $(head -c 200 "$LL/w.edits" 2>/dev/null)"
+    fi
+    lr_expect "$(lr_stop_pl w)" block "reminds for an edit recorded as a lower-case Windows backslash path" "bar.cs"
+else
+    echo "  note: this file system is case-sensitive, so the case-folded path row is SKIPPED (not passed)"
+fi
+# A \u escape in the path takes the Python parse (D40), never a skip.
+printf '{"session_id":"x","hook_event_name":"PostToolUse","tool_name":"Edit","tool_input":{"file_path":"%s/Main/\\u0042ar.cs"}}' "$LR_M" > "$SANDBOX/lr-u.json"
+lr_rec "$(cat "$SANDBOX/lr-u.json")" >/dev/null
+if grep -q '/Main/Bar\.cs$' "$LL/x.edits" 2>/dev/null; then
+    ok "record-session-edit decodes a \\u-escaped path"
+else
+    bad "record-session-edit did not record the \\u-escaped path as Main/Bar.cs: $(head -c 200 "$LL/x.edits" 2>/dev/null)"
+fi
+lr_expect "$(lr_stop_pl x)" block "reminds for an edit whose path arrived \\u-escaped" "Bar.cs"
+# An escaped backslash before a lower-case u (C:\\proj\\units) is no \u escape: with no Python the
+# path is still recorded. _pybin.sh takes the settings.json TAOM_PYBIN pin before PATH, so both go.
+printf '%s' "$(lr_pl nopy 'C:\proj\units\U.cs')" \
+    | TAOM_PYBIN=/nonexistent PATH=/usr/bin:/bin CLAUDE_PROJECT_DIR="$LR" timeout -k 2 10 bash "$REPO/.claude/hooks/record-session-edit.sh" >/dev/null 2>&1
+if grep -q $'\tC:/proj/units/U.cs$' "$LL/nopy.edits" 2>/dev/null; then
+    ok "record-session-edit records a path holding \\\\u with no interpreter"
+else
+    bad "record-session-edit needed Python for C:\\proj\\units\\U.cs, or dropped it: $(head -c 200 "$LL/nopy.edits" 2>/dev/null)"
+fi
+rm -f "$LL/nopy.edits"
+# A subagent's payload carries its parent's session_id plus agent_id and agent_type.
+lr_rec "$(lr_pl p "$LR_M/Main/Bar.cs" '{"agent_id":"a7c1","agent_type":"implementer"}')" >/dev/null
+[[ -f "$LL/p.edits" && ! -e "$LL/a7c1.edits" ]] && ok "a subagent's edit is recorded under the parent session id" \
+    || bad "a subagent payload was not recorded under its session_id p: $(ls -A "$LL" 2>/dev/null | tr '\n' ' ')"
+lr_expect "$(lr_stop_pl p)" block "reminds the parent session for its subagent's edit" "Bar.cs"
+git -C "$LR" checkout -q -- Main/Bar.cs
+# A new feature folder: git 2.55 matches no icase pathspec two or more levels inside an untracked
+# folder, so the session's own edit there must still be found as its own, after a build.
+lr_build n
+mkdir -p "$LR/Main/New/Sub"
+lr_dirty New/Sub/X.cs 'class X {}'
+lr_rec "$(lr_pl n "$LR_M/Main/New/Sub/X.cs")" >/dev/null
+lr_expect "$(lr_stop_pl n)" block "finds its own edit inside a new untracked folder two levels deep" "this session edited C# after its last recorded build or test ($LR_M/Main/New/Sub/X.cs)"
+rm -rf "$LR/Main/New"
+# Only C#, and at most three names, newest first.
+lr_dirty Notes.md 'notes'
+lr_rec "$(lr_pl m "$LR_M/Main/Notes.md")" >/dev/null
+lr_expect "$(lr_stop_pl m)" silent "is silent for a session that edited only a non-C# file"
+rm -f "$LR/Main/Notes.md"
+for c in A B C D; do
+    lr_dirty "Cap$c.cs" "class Cap$c {}"
+    lr_rec "$(lr_pl k "$LR_M/Main/Cap$c.cs")" >/dev/null
+done
+lr_expect "$(lr_stop_pl k)" block "names the three newest of four edited files" \
+    "($LR_M/Main/CapD.cs, $LR_M/Main/CapC.cs, $LR_M/Main/CapB.cs)" 'CapA\.cs'
+rm -f "$LR"/Main/Cap?.cs
+# C# changed through a shell command never reaches a ledger. Dirty C# no ledger holds reminds,
+# under its own streak marker; once another session's ledger holds it, or it predates the build
+# the baseline names, it does not. Before its first build a session's baseline is the last build of
+# any session (.verification-ran), as before #1138.
+lr_dirty Shell.cs 'class Shell {}'
+lr_expect "$(lr_stop_pl s)" block "reminds for dirty C# that no ledger holds (a shell edit)" \
+    "no session's ledger holds it (Main/Shell.cs)"
+[[ -f "$LL/s.tree.reminded" && ! -e "$LL/s.reminded" ]] && ok "check-verification-evidence keeps that streak in <id>.tree.reminded" \
+    || bad "the unrecorded-C# streak did not use s.tree.reminded alone: $(cd "$LL" 2>/dev/null && printf '%s ' s.*)"
+lr_expect "$(lr_stop_pl s)" silent "mutes the unrecorded-C# reminder after one"
+# A dismissed reminder about such a file must not mute the session's own next edit.
+lr_dirty Foo.cs 'class Foo { int s; }'
+lr_rec "$(lr_pl s "$LR_M/Main/Foo.cs")" >/dev/null
+lr_expect "$(lr_stop_pl s)" block "reminds for its own edit after an unrecorded-C# reminder" "($LR_M/Main/Foo.cs)"
+git -C "$LR" checkout -q -- Main/Foo.cs
+rm -f "$LL/s.edits" "$LL/s.reminded"
+# A claim counts in the spelling the tool used: a lower-case Windows path with backslashes, or a
+# Git Bash /e/ path.
+if [[ -e "${LR_M,,}/main/bar.cs" ]]; then
+    lr_rec "$(lr_pl o "${LR_WL//\//\\}\\main\\shell.cs")" >/dev/null
+else
+    lr_rec "$(lr_pl o "$LR_M/Main/Shell.cs")" >/dev/null
+fi
+lr_expect "$(lr_stop_pl s)" silent "is silent for dirty C# another session's ledger holds in another case and separators"
+[[ ! -e "$LL/s.tree.reminded" ]] && ok "the unrecorded-C# streak marker clears when nothing is left" \
+    || bad "s.tree.reminded survived once another session's ledger held Shell.cs"
+rm -f "$LL/o.edits"
+if [[ "$LR_M" == ?:/* ]]; then
+    LR_DRIVE=${LR_M:0:1}
+    # printf, not lr_pl: Git Bash rewrites a /e/ argument to E:/ when it starts a native python.
+    lr_rec "$(printf '{"session_id":"o","hook_event_name":"PostToolUse","tool_name":"Edit","tool_input":{"file_path":"%s"}}' "/${LR_DRIVE,,}${LR_M:2}/Main/Shell.cs")" >/dev/null
+    grep -q $'\t/[a-z]/' "$LL/o.edits" 2>/dev/null && ok "record-session-edit keeps a Git Bash /e/ path as given" \
+        || bad "the /e/ claim row did not record a /e/ path: $(head -c 200 "$LL/o.edits" 2>/dev/null)"
+    lr_expect "$(lr_stop_pl s)" silent "is silent for dirty C# another session's ledger holds as a Git Bash /e/ path"
+    rm -f "$LL/o.edits"
+else
+    echo "  note: this path has no drive letter, so the Git Bash /e/ claim row is SKIPPED (not passed)"
+fi
+# Before its first build, a session judges such a file against the last build of any session.
+touch -d "@$((LR_NOW - 10))" "$LR/Main/Shell.cs"
+lr_build u
+lr_expect "$(lr_stop_pl v)" silent "is silent before its first build for unrecorded C# older than another session's build"
+lr_build s
+lr_expect "$(lr_stop_pl s)" silent "is silent for unrecorded C# older than the session's own build"
+rm -f "$LL/s.tree.reminded" "$LL/v.tree.reminded"
+# A working session (its own edit, then its build) whose shell command changes C# afterwards; then
+# the same file staged and changed again, which two git listings report: it is named once.
+lr_dirty Foo.cs 'class Foo { int r; }'
+lr_rec "$(lr_pl r "$LR_M/Main/Foo.cs")" >/dev/null
+touch -d "@$((LR_NOW - 10))" "$LR/Main/Foo.cs"
+lr_build r
+lr_dirty Shell.cs 'class Shell { int r; }'
+lr_expect "$(lr_stop_pl r)" block "reminds a working session for a shell change after its build" \
+    "no session's ledger holds it (Main/Shell.cs)"
+git -C "$LR" add Main/Shell.cs
+lr_dirty Shell.cs 'class Shell { int r2; }'
+rm -f "$LL/r.tree.reminded"
+lr_expect "$(lr_stop_pl r)" block "reminds for a staged and changed file, and names it once" \
+    "(Main/Shell.cs)" 'Shell\.cs, Main/Shell\.cs'
+git -C "$LR" reset -q -- Main/Shell.cs
+rm -f "$LR/Main/Shell.cs" "$LL/r.tree.reminded"
+git -C "$LR" checkout -q -- Main/Foo.cs
+# At most three names for C# no ledger holds (git lists untracked files in name order).
+for c in A B C D; do lr_dirty "Un$c.cs" "class Un$c {}"; done
+lr_expect "$(lr_stop_pl cap3)" block "names at most three files no ledger holds" \
+    "(Main/UnA.cs, Main/UnB.cs, Main/UnC.cs)" 'UnD\.cs'
+rm -f "$LR"/Main/Un?.cs "$LL/cap3.tree.reminded"
+# No session id or no path: silent, and nothing written.
+LR_BEFORE=$(ls -A "$LL" 2>/dev/null | wc -l)
+LR_OUT=$(lr_rec "$(lr_pl q "$LR_M/Main/Bar.cs" '{"session_id":null}')")
+LR_OUT2=$(lr_rec '{"session_id":"q","hook_event_name":"PostToolUse","tool_name":"Edit","tool_input":{}}')
+if [[ -z "$LR_OUT$LR_OUT2" && "$(ls -A "$LL" 2>/dev/null | wc -l)" == "$LR_BEFORE" ]]; then
+    ok "record-session-edit is silent and writes nothing without a session id or a path"
+else
+    bad "record-session-edit without a session id or path printed '${LR_OUT:0:80}${LR_OUT2:0:80}' or wrote a file"
+fi
+
+# The cross-session note: once per (file, other session), never for the session itself, never past
+# 24 h, always valid PostToolUse additionalContext. The recorder needs no real file for this.
+NP="$SANDBOX/ledger-notes"
+NL="$NP/.claude/logs/sessions"
+mkdir -p "$NL"
+SA=aaaaaaaa-0000-4000-8000-000000000001
+SB=bbbbbbbb-0000-4000-8000-000000000002
+SE=eeeeeeee-0000-4000-8000-000000000005
+SD=dddddddd-0000-4000-8000-000000000004
+NX="C:/proj/Main/Shared.cs"
+nrec() { lr_rec "$(lr_pl "$1" "$2")" "$NP"; }
+note_check() {  # $1 output, $2 label, $3 text it must hold, $4 text it must not hold
+    if ! printf '%s' "$1" | "$HPY" -c 'import json, sys
+o = json.loads(sys.stdin.read())["hookSpecificOutput"]
+sys.exit(0 if o["hookEventName"] == "PostToolUse" and isinstance(o["additionalContext"], str)
+         and o["additionalContext"].startswith("record-session-edit: ") and sys.argv[1] in o["additionalContext"]
+         and (not sys.argv[2] or sys.argv[2] not in o["additionalContext"]) else 1)' "$3" "${4:-}" 2>/dev/null; then
+        bad "record-session-edit ($2): not a PostToolUse additionalContext holding '$3'${4:+ without '$4'}: ${1:0:240}"
+    elif [[ "$(cat "$SANDBOX/lr.rc")" != 0 || -s "$SANDBOX/lr.err" ]]; then
+        bad "record-session-edit ($2): rc $(cat "$SANDBOX/lr.rc"), stderr $(head -c 100 "$SANDBOX/lr.err")"
+    else
+        ok "record-session-edit $2"
+    fi
+}
+note_none() {  # $1 output, $2 label
+    if [[ -z "$1" && "$(cat "$SANDBOX/lr.rc")" == 0 && ! -s "$SANDBOX/lr.err" ]]; then
+        ok "record-session-edit $2"
+    else
+        bad "record-session-edit ($2): expected silence, got rc $(cat "$SANDBOX/lr.rc"): ${1:0:200}"
+    fi
+}
+note_none "$(nrec "$SA" "$NX")" "is silent for the first session to edit a file"
+note_none "$(nrec "$SA" "$NX")" "is silent when the same session edits the file again"
+note_check "$(nrec "$SB" "$NX")" "notes another session's edit within 24 h" "another session (aaaaaaaa) edited $NX at " "$SA"
+note_none "$(nrec "$SB" 'c:\proj\main\SHARED.cs')" "notes a (file, other session) pair once, whatever the case and separators"
+# A fresh pair, so silence from a pair already noted cannot pass for a match.
+S1=11111111-0000-4000-8000-000000000011
+S2=22222222-0000-4000-8000-000000000012
+note_none "$(nrec "$S1" "C:/proj/Main/Case.cs")" "is silent for the first session to edit a second file"
+note_check "$(nrec "$S2" 'c:\proj\main\CASE.cs')" "matches another session's edit of the same file in another case and with backslashes" "(11111111)"
+# The project folder in Windows form: the .warned file must still be told apart, or the note repeats.
+NPW=$(cygpath -w "$NP" 2>/dev/null || echo "$NP")
+S3=33333333-0000-4000-8000-000000000013
+S4=44444444-0000-4000-8000-000000000014
+lr_rec "$(lr_pl "$S3" "C:/proj/Native.cs")" "$NPW" >/dev/null
+note_check "$(lr_rec "$(lr_pl "$S4" "C:/proj/Native.cs")" "$NPW")" "notes another session with the project folder in Windows form" "(33333333)"
+note_none "$(lr_rec "$(lr_pl "$S4" "C:/proj/Native.cs")" "$NPW")" "notes once with the project folder in Windows form"
+note_check "$(nrec "$SA" "$NX")" "notes the second session to the first one" "(bbbbbbbb)"
+note_none "$(nrec "$SA" "$NX")" "does not repeat the note to the first session"
+NE_OUT=$(nrec "$SE" "$NX")
+note_check "$NE_OUT" "names every other session in one note" "aaaaaaaa"
+[[ "$NE_OUT" == *bbbbbbbb* ]] && ok "record-session-edit names the second other session in the same note"     || bad "record-session-edit left the second other session out of the note: ${NE_OUT:0:240}"
+note_check "$(nrec "$SB" "$NX")" "notes a third session without repeating the first" "(eeeeeeee)" "aaaaaaaa"
+printf '%s\t%s\n' "$(( $(date +%s) - 90000 ))" "C:/proj/Old.cs" > "$NL/cccccccc-old.edits"
+note_none "$(nrec "$SD" "C:/proj/Old.cs")" "is silent for another session's edit older than 24 h"
+printf '%s\t%s\n' "$(date +%s)" "C:/proj/Stale.cs" > "$NL/cccccccc-stale.edits"
+touch -d '2 days ago' "$NL/cccccccc-stale.edits"
+note_none "$(nrec "$SD" "C:/proj/Stale.cs")" "is silent for a ledger untouched for 24 h"
+nrec "$SA" '/proj/we"ird.cs' >/dev/null
+note_check "$(nrec "$SB" '/proj/we"ird.cs')" "keeps the note valid JSON for a path holding a quote" '/proj/we"ird.cs'
+# A ledger line is file data: its epoch reaches bash arithmetic only as digits (hook-authoring.md).
+printf '%s%s\t%s\n' "$(date +%s)" "$PROBE" "C:/proj/Probe.cs" > "$NL/cccccccc-probe.edits"
+nrec "$SD" "C:/proj/Probe.cs" >/dev/null
+if [[ -e "$AM" ]]; then
+    rm -f "$AM"; bad "record-session-edit ran a ledger epoch as arithmetic"
+else
+    ok "record-session-edit reads a ledger epoch as digits only"
+fi
+# Housekeeping: a new session's first edit deletes ledgers older than 7 days; a ledger over 4,000
+# lines keeps its last 2,000.
+printf '1\tC:/old.cs\n' > "$NL/ffffffff-week.edits"; touch -d '8 days ago' "$NL/ffffffff-week.edits"
+printf '1\tC:/old.cs\n' > "$NL/ffffffff-two.edits"; touch -d '2 days ago' "$NL/ffffffff-two.edits"
+nrec gggggggg-new "C:/proj/New.cs" >/dev/null
+[[ ! -e "$NL/ffffffff-week.edits" && -e "$NL/ffffffff-two.edits" ]] && ok "a new ledger deletes ledgers older than 7 days, and only those" \
+    || bad "the 7-day cleanup did not delete only the 8-day-old ledger: $(ls -A "$NL" | tr '\n' ' ')"
+awk 'BEGIN { for (i = 1; i <= 4000; i++) printf "%d\tC:/proj/Line%d.cs\n", 1, i }' > "$NL/$SE.edits"
+nrec "$SE" "C:/proj/Last.cs" >/dev/null
+NLINES=$(wc -l < "$NL/$SE.edits" | tr -d ' ')
+[[ "$NLINES" == 2000 ]] && tail -1 "$NL/$SE.edits" | grep -q 'C:/proj/Last.cs$' \
+    && ok "a ledger over 4,000 lines keeps its last 2,000" \
+    || bad "a ledger of 4,001 lines kept $NLINES lines, last: $(tail -1 "$NL/$SE.edits")"
+rm -rf "$LR" "$NP"
 
 # ---------------------------------------------------------------------------
 head2 "8. tools/context_budget_scan.sh runs under set -u and measures the launch load"

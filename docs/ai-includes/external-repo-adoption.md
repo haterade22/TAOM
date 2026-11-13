@@ -40,6 +40,7 @@ A watched repo (listed in `docs/reviews/upstream-watch.json`, today yotthani's t
 
 - A review finding is a hypothesis, not a verdict: verify before implementing (evidence-over-claims.md).
 - When authoring docs/skills that DESCRIBE security patterns, avoid embedding the literal trigger strings — they can self-flag `/security-scan`. Describe the category instead, or put `audit-allow:` on the line.
+- In Git Bash, prefix `git sparse-checkout set` with `MSYS_NO_PATHCONV=1`. Without it, a pattern that starts with `/` is rewritten as a Windows path (`!/bin/` became `!C:/Program Files/Git/usr/bin/`), the exclusion matches nothing, and the repo's prebuilt binaries land in the scratch clone ([adopt-claude-code-harness-2026-11-12.md](../reviews/adopt-claude-code-harness-2026-11-12.md)). Read the rules back with `git sparse-checkout list`.
 
 ## Precedents
 
