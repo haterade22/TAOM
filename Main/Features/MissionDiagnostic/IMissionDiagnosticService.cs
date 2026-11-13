@@ -22,7 +22,7 @@ public interface IMissionDiagnosticService
     // (action set name, race name, sex) per mission, naming the first agent seen with it.
     void LogActionSetSeen(string actionSetName, string raceName, bool isFemale, string agentName, string characterId, string monsterId);
 
-    // Called from the boundary for every agent in the action-set window before any name is read: true the
+    // Called from the boundary for every agent the census reads (once each, on the tick after it is created) before any name is read: true the
     // first time this mission sees the (action set index, race id, sex) combination. The boundary reads the
     // names and calls LogActionSetSeen only on true, so a combination already seen costs no native string
     // marshal. One index has one name and one race id one cached race name, so this filter never hides a line.

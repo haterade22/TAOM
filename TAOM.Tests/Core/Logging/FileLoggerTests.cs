@@ -1,4 +1,5 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NSubstitute;
 using TAOM.Core.Logging;
 using System;
 using System.IO;
@@ -117,11 +118,12 @@ public class FileLoggerTests
     // see FileLogger.DurableInfoTags) are what we triage crashes from -- they must be on disk the moment
     // the call returns. Plain INFO and DEBUG are written by the writer thread and flushed on a timer.
     //
-    // The three single-line tests below state the per-level contract but are only PROBABILISTIC
-    // regression gates: against an async writer they fail only when the read beats the drain
-    // (observed 2/5 then 4/5 failing across two runs). The two bulk tests -- 101-line ordering and
-    // 400-line concurrency -- are the DETERMINISTIC gates: an async writer sleeping 50ms cannot
-    // have drained a full batch, so they read an empty file every time. Keep both.
+    // The single-line tests below state the per-level contract but are only PROBABILISTIC
+    // regression gates: a writer that left a durable line to the timed flush fails them only when the
+    // read beats the next flush pass. The two bulk tests -- 101-line ordering and 400-line
+    // concurrency -- are the DETERMINISTIC gates: the StreamWriter holds the tail of a batch in its
+    // buffer until a flush, so a timed flush cannot have put all of it on disk by the immediate read.
+    // Keep both.
 
     [TestMethod]
     public void LogInfo_CrashPhaseStamp_WithoutDispose_LineIsOnDiskImmediately()
@@ -142,6 +144,28 @@ public class FileLoggerTests
 
         var content = ReadLogWithoutDispose();
         foreach (var tag in FileLogger.DurableInfoTags) StringAssert.Contains(content, $"{tag} stamp for {tag}");
+    }
+
+    // The list is a contract: a doc or a tool reads these tags after a crash. One literal copy here, so that
+    // removing a tag from production fails this test instead of shrinking the loop in the test above.
+    [TestMethod]
+    public void DurableInfoTags_AreExactlyTheTagsTheDocsAndToolsRelyOn()
+    {
+        var expected = new[]
+        {
+            "[BattleLoad]", "[SaveLoad]", "[MapLoad]", "[BlowDiag]", "[MemSample]", "[MemStation]", "[MemProbe]",
+            "[ExitStall]", "[ScreenOpen]", "[CreatureBandits]", "[EnlistDiag]", "[ShaderPrecompilation]",
+            "[CrashReport]", "[Shutdown]", "[PatchApply]", "[StuckBattle]", "[SmokeTestGate]", "[Session]",
+            "[MissionDiag]", "[Check]",
+        };
+
+        CollectionAssert.AreEquivalent(expected, FileLogger.DurableInfoTags);
+    }
+
+    [TestMethod]
+    public void IsDurableInfo_OutcomeCheckLine_True()
+    {
+        Assert.IsTrue(FileLogger.IsDurableInfo("[Check] id=battle.start result=pass"));
     }
 
     [TestMethod]
@@ -165,7 +189,7 @@ public class FileLoggerTests
         Assert.IsFalse(FileLogger.IsDurableInfo(null));
     }
 
-    // Plain INFO is flushed by the writer thread within FlushIntervalMs, without any further call.
+    // Plain INFO is flushed by the writer thread within about a third of a second (FlushIntervalMs plus one 50 ms loop pass), without any further call.
     [TestMethod]
     public void LogInfo_PlainLine_IsOnDiskWithinTheFlushInterval()
     {
@@ -211,9 +235,11 @@ public class FileLoggerTests
     [TestMethod]
     public void TryFlush_OnALoggerWithoutBuffering_DoesNothingAndDoesNotThrow()
     {
-        var logger = NSubstitute.Substitute.For<IModLogger>();
+        var logger = Substitute.For<IModLogger>();
 
         logger.TryFlush();
+
+        Assert.AreEqual(0, logger.ReceivedCalls().Count(), "a logger that cannot buffer must not be called");
     }
 
     [TestMethod]
@@ -304,7 +330,7 @@ public class FileLoggerTests
     // StreamWriter is not thread-safe. Without a shared lock, concurrent drains tear lines into
     // each other; assert every line is intact, not merely that the count is right.
     [TestMethod]
-    public void LogInfo_ConcurrentWritesFromManyThreads_EveryLineIntactAndCountMatches()
+    public void LogWarning_ConcurrentWritesFromManyThreads_EveryLineIntactAndCountMatches()
     {
         var logger = new FileLogger();
         const int threads = 8, perThread = 50;
@@ -347,7 +373,7 @@ public class FileLoggerTests
     // Sync-draining moves IO faults off the writer thread and onto the GAME thread, where they
     // would newly propagate into engine code. A logger must never take the game down.
     [TestMethod]
-    public void LogInfo_WhenWriterFaulted_DoesNotThrowToCaller()
+    public void Log_AtEveryLevelWhenWriterFaulted_DoesNotThrowToCaller()
     {
         var logger = new FileLogger();
         logger.LogInfo("before fault");
@@ -360,9 +386,10 @@ public class FileLoggerTests
     }
 
     // A write fault drops the line the writer was mid-way through. The crash-forensics log must
-    // never look healthy while silently losing lines, so it reports the loss once writing recovers.
+    // never look healthy while silently losing lines, so it reports the faults once writing recovers.
+    // The notice counts faults, not lines: one fault can drop one or more.
     [TestMethod]
-    public void LogInfo_AfterWriteFaultRecovers_ReportsTheLostLineCount()
+    public void LogWarning_AfterWriteFaultRecovers_ReportsTheWriteFaultCount()
     {
         var logger = new FileLogger();
         logger.LogInfo("before fault");
@@ -374,7 +401,7 @@ public class FileLoggerTests
         logger.LogWarning("after recovery");
 
         var content = ReadLogWithoutDispose();
-        StringAssert.Contains(content, "line(s) lost to a write fault");
+        StringAssert.Contains(content, "write fault(s)");
         StringAssert.Contains(content, "after recovery");
     }
 

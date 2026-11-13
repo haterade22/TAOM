@@ -12,12 +12,14 @@ namespace TAOM.Core.Logging;
 // that start with one of DurableInfoTags (the phase stamps and the diagnostics whose docs promise the
 // last line survives a crash).
 //
-// Everything else (plain INFO, and DEBUG) is queued and written by the writer thread, which flushes at
-// most FlushIntervalMs after a write. Before that, nearly every INFO line (about 3,300 call sites)
-// flushed on the game thread under the lock the writer thread also held, which showed up as hitch tails
+// Everything else (plain INFO, and DEBUG) is queued and written by the writer thread. Its timer starts when
+// the thread writes the line and is checked once per loop pass after a 50 ms Sleep, so a plain line can wait
+// about 300 ms after it was written and about 350 ms after the call. Before that, nearly every INFO line
+// (about 3,300 call sites) flushed on the game thread under the lock the writer thread also held, which showed up as hitch tails
 // during load, spawn and the daily campaign tick. A plain line can now be lost on a hard crash if it
-// was written in the last FlushIntervalMs; Flush() (called by the crash reporter before it reads the
-// log, on process exit and on Dispose) closes that window for every managed exit.
+// was written in that window; Flush() (called by the crash reporter before it reads the
+// log, on process exit and on Dispose) closes it for an orderly exit. Environment.FailFast, a stack
+// overflow, a native crash and a killed process skip Flush, so a plain line can still be lost there.
 //
 // One queue, not two: whichever thread drains writes in enqueue order, so a durable write flushes
 // any queued line ahead of it and global ordering is preserved. Flush lands in the OS page cache,
@@ -45,7 +47,8 @@ public class FileLogger : IModLogger, IFlushableLogger
     // existed. Debug logs are small next to the crash bundles that already share this directory.
     private const int DefaultRetainedLogs = 30;
 
-    // Longest a plain INFO/DEBUG line waits in memory before it is flushed to the OS.
+    // How long the writer thread lets written plain INFO/DEBUG lines sit before it flushes them to the OS.
+    // The check runs once per loop pass after a 50 ms Sleep, so the real wait is a little longer.
     internal const int FlushIntervalMs = 250;
 
     // INFO lines that start with one of these flush at once. These are the crash-phase stamps and the
@@ -57,7 +60,7 @@ public class FileLogger : IModLogger, IFlushableLogger
         "[BattleLoad]", "[SaveLoad]", "[MapLoad]", "[BlowDiag]", "[MemSample]", "[MemStation]", "[MemProbe]",
         "[ExitStall]", "[ScreenOpen]", "[CreatureBandits]", "[EnlistDiag]", "[ShaderPrecompilation]",
         "[CrashReport]", "[Shutdown]", "[PatchApply]", "[StuckBattle]", "[SmokeTestGate]", "[Session]",
-        "[MissionDiag]",
+        "[MissionDiag]", "[Check]",
     };
 
     internal static bool IsDurableInfo(string message)
@@ -162,7 +165,7 @@ public class FileLogger : IModLogger, IFlushableLogger
                 if (_droppedToWriteFault > 0)
                 {
                     _logFile.WriteLine($"[{DateTime.Now:yyyy-MM-dd HH:mm:ss}] [WARNING] " +
-                        $"FileLogger: {_droppedToWriteFault} line(s) lost to a write fault.");
+                        $"FileLogger: {_droppedToWriteFault} write fault(s); one or more lines may have been lost at each.");
                     _droppedToWriteFault = 0;
                 }
 

@@ -170,7 +170,7 @@ per battle load versus zero.
 ### Moving a diagnostic stamp from INFO to DEBUG is a feature change, not a perf tweak
 
 TAOM's `FileLogger` drains INFO synchronously with a flush on the calling thread and leaves DEBUG on
-an async queue — precisely so a hard native CTD preserves the tail. A crash-localisation stamp
+an async queue — precisely so a hard native CTD preserves the tail. (Since PR #1170, 2026-11-13: only WARNING, ERROR and INFO lines that start with a tag in `FileLogger.DurableInfoTags` flush on the calling thread; other INFO lines are flushed by the writer thread within about a third of a second.) A crash-localisation stamp
 downgraded to DEBUG disappears from exactly the logs it exists to produce.
 
 - **Why missed:** a deep-review Efficiency agent recommended downgrading `AgentBuildDone` to DEBUG

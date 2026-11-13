@@ -129,7 +129,7 @@ public sealed class CrashReportService : ICrashReportService
             // every frame would otherwise write one per frame.
             _outcomes.WriteSummary("crash");
 
-            // Plain INFO lines sit in memory for up to 250 ms. Flush them before the collectors read the log tail
+            // Plain INFO lines can sit in memory for about 350 ms after the call. Flush them before the collectors read the log tail
             // and the bundle copies taom_debug.log, so the bundle ends at the crash and not a moment before it.
             _logger.TryFlush();
 
