@@ -22465,7 +22465,7 @@
     <!-- Culture.vlandia -->
     <NPCCharacter id="lord_4_3_2" name="{=aom_lord_4_3_2_name}Éowyn Eoforing" age="18" voice="ironic" is_female="true" default_group="Cavalry" is_hero="true" culture="Culture.vlandia" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_rohan_young_lady_skills">
         <face>
-            <BodyProperties version="4" weight="0.5" build="0.5" key="0011A407144400062897A829649497DB8C988BB9BCD4B379A5868D485A689A9A0167761306297985000000000000000000000000000000000000000038D42003" />
+            <BodyProperties version="4" weight="0.5" build="0.5" key="0007A407144400062897A829649497DB8C988BB9BCD4B379A5868D485A689A9A0167761306297985000000000000000000000000000000000000000038D42003" />
             <hair_tags>
                 <hair_tag name="vlandia" />
             </hair_tags>
@@ -22555,7 +22555,7 @@
     </NPCCharacter>
     <NPCCharacter id="lord_4_6_2" name="{=aom_lord_4_6_2_name}Elfgrim Grimingas" age="1" voice="curt" default_group="Cavalry" is_hero="true" is_female="false" culture="Culture.vlandia" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_knight_skills_rookie">
         <face>
-            <BodyProperties version="4" age="36.13" weight="0" build="0.5" key="000D0C04000016028F70E00E0D505035708D86909FC8E2054996B74686D4A835009706030944F85500000000000000000000000000000000000000003F3C4002" />
+            <BodyProperties version="4" age="36.13" weight="0" build="0.5" key="00030C04000016028F70E00E0D505035708D86909FC8E2054996B74686D4A835009706030944F85500000000000000000000000000000000000000003F3C4002" />
             <hair_tags>
                 <hair_tag name="vlandia" />
             </hair_tags>
@@ -22658,7 +22658,7 @@
             <!--face_key
 			value="00057bfb513c12425eb3a9aa48b3487295c668767888682ddb89a87662a4415a000536af057746e8000000000000000000000000000000000000000000002000"
 			/-->
-            <BodyProperties version="4" age="22.16" weight="0.2778" build="0.3148" key="000A3C02800031832F708B47F200F05E901E86E2FE61320BD16505198B2A8111008546030846B09500000000000000000000000000000000000000003F145002" />
+            <BodyProperties version="4" age="22.16" weight="0.2778" build="0.3148" key="00063C02800031832F708B47F200F05E901E86E2FE61320BD16505198B2A8111008546030846B09500000000000000000000000000000000000000003F145002" />
             <hair_tags>
                 <hair_tag name="vlandia" />
             </hair_tags>
@@ -22850,7 +22850,7 @@
             <!--face_key
 			value="000c73f31a0003cd33bd62c7862c39599c824998719e7eb543b588b88b13688b0007c2af855a1122000000000000000000000000000000000000000000000000"
 			/-->
-            <BodyProperties version="4" age="28.16" weight="0.5741" build="0.4699" key="000D6008000023C227806EF1F00B3007D0FC8B60D164EC006FF97B048B50F00400779603075AC59900000000000000000000000000000000000000003EFC5002" />
+            <BodyProperties version="4" age="28.16" weight="0.5741" build="0.4699" key="00036004000023C227806EF1F00B3007D0FC8B60D164EC006FF97B048B50F00400779603075AC59900000000000000000000000000000000000000003EFC5002" />
             <hair_tags>
                 <hair_tag name="vlandia" />
             </hair_tags>
@@ -22898,7 +22898,7 @@
     </NPCCharacter>
     <NPCCharacter id="lord_4_27_3" name="{=aom_lord_4_27_3_name}Ælfwynn Æthellafing" age="19" voice="curt" is_female="true" default_group="Cavalry" is_hero="true" culture="Culture.vlandia" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_rohan_young_lady_skills">
         <face>
-            <BodyProperties version="4" age="35.15" weight="0.3565" build="0.6042" key="000A300280143004B08001420BC1D041A76A806C0FC77001A789101B8A871B99007956030706EF0C00000000000000000000000000000000000000003EEC1003" />
+            <BodyProperties version="4" age="35.15" weight="0.3565" build="0.6042" key="0006300280143004B08001420BC1D041A76A806C0FC77001A789101B8A871B99007956030706EF0C00000000000000000000000000000000000000003EEC1003" />
             <hair_tags>
                 <hair_tag name="vlandia" />
             </hair_tags>
@@ -22943,7 +22943,7 @@
     </NPCCharacter>
     <NPCCharacter id="lord_4_27_4" name="{=aom_lord_4_27_4_name}Sæweald Æthellafing" age="19" voice="ironic" default_group="Cavalry" is_hero="true" culture="Culture.vlandia" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_rohan_young_lord_skills">
         <face>
-            <BodyProperties version="4" age="17.16" weight="0.5741" build="0.4699" key="000A60080000100510806F61F007FF07B8058C60D0646C0460194B168B50D104008796030854C59E00000000000000000000000000000000000000003EFC2002" />
+            <BodyProperties version="4" age="17.16" weight="0.5741" build="0.4699" key="000660040000100510806F61F007FF07B8058C60D0646C0460194B168B50D104008796030854C59E00000000000000000000000000000000000000003EFC2002" />
             <hair_tags>
                 <hair_tag name="vlandia" />
             </hair_tags>
@@ -22991,7 +22991,7 @@
     </NPCCharacter>
     <NPCCharacter id="lord_4_28_3" name="{=aom_lord_4_28_3_name}Rynelda" age="3" voice="curt" is_female="true" default_group="Cavalry" is_hero="true" culture="Culture.vlandia" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_matriarch_skills_rookie">
         <face>
-            <BodyProperties version="4" age="5.15" weight="0.0093" build="0.5602" key="000D200150B400032E8000170BCA5004A2698A6C008D1011A579051C89F71BA6007806030703760000000000000000000000000000000000000000003EE40003" />
+            <BodyProperties version="4" age="5.15" weight="0.0093" build="0.5602" key="0003200150B400032E8000170BCA5004A2698A6C008D1011A579051C89F71BA6007806030703760000000000000000000000000000000000000000003EE40003" />
             <hair_tags>
                 <hair_tag name="vlandia" />
             </hair_tags>
@@ -23132,7 +23132,7 @@
     </NPCCharacter>
     <NPCCharacter id="lord_V11_l_1" name="{=aom_lord_V11_l_1_name}Wynnðryð Deáfringas" age="44" voice="ironic" is_female="true" default_group="Cavalry" is_hero="true" culture="Culture.vlandia" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_rohan_lady_skills">
         <face>
-            <BodyProperties version="4" age="33.15" weight="0.4514" build="0.6806" key="000D300290B41004378E608F0B4200049464C53A05CDD001A00C491C89F71BA6007A7603070023F400000000000000000000000000000000000000003EFC1003" />
+            <BodyProperties version="4" age="33.15" weight="0.4514" build="0.6806" key="0003300290B41004378E608F0B4200049464C53A05CDD001A00C491C89F71BA6007A7603070023F400000000000000000000000000000000000000003EFC1003" />
             <hair_tags>
                 <hair_tag name="vlandia" />
             </hair_tags>
@@ -23225,7 +23225,7 @@
     </NPCCharacter>
     <NPCCharacter id="lord_V11_l_3" name="{=aom_lord_V11_l_3_name}Léobrand Deáfringas" age="19" voice="curt" is_female="false" default_group="Cavalry" is_hero="true" culture="Culture.vlandia" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_rohan_young_lord_skills">
         <face>
-            <BodyProperties version="4" age="22.16" weight="0.3704" build="0.5926" key="000AC40C400010026E8116E1190BE10981FFBA60BD97563353567D083E57B60000896603081AD0F900000000000000000000000000000000000000003F141002" />
+            <BodyProperties version="4" age="22.16" weight="0.3704" build="0.5926" key="0006C403800010026E8116E1190BE10981FFBA60BD97563353567D083E57B60000896603081AD0F900000000000000000000000000000000000000003F141002" />
             <hair_tags>
                 <hair_tag name="vlandia" />
             </hair_tags>
@@ -23273,7 +23273,7 @@
     </NPCCharacter>
     <NPCCharacter id="lord_V11_l_4" name="{=aom_lord_V11_l_4_name}Léowynn Deáfringas" age="13" voice="ironic" is_female="true" default_group="Cavalry" is_hero="true" culture="Culture.vlandia" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_chatelaine_skills_rookie">
         <face>
-            <BodyProperties version="4" age="16.15" weight="0.4514" build="0.6806" key="000DB40D901410042780000001440004C014C59A097D4102A74FF90C8B9B1B06007A76030700281400000000000000000000000000000000000000003EFC1003" />
+            <BodyProperties version="4" age="16.15" weight="0.4514" build="0.6806" key="0003B404D01410042780000001440004C014C59A097D4102A74FF90C8B9B1B06007A76030700281400000000000000000000000000000000000000003EFC1003" />
             <hair_tags>
                 <hair_tag name="vlandia" />
             </hair_tags>
@@ -23318,7 +23318,7 @@
     </NPCCharacter>
     <NPCCharacter id="lord_rohan_2_1" name="{=aom_lord_rohan_2_1_name}Isenmund Cerdicing" age="40" voice="ironic" default_group="Cavalry" is_hero="true" culture="Culture.vlandia" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_rohan_knight_skills">
         <face>
-            <BodyProperties version="4" age="32.01" weight="0.5139" build="0.6435" key="0005580E40001244259D9156CB621D5BCA8897A6427AC8C999B649B77BA58952008A86030856D79700000000000000000000000000000000000000003F142142" />
+            <BodyProperties version="4" age="32.01" weight="0.5139" build="0.6435" key="00055800C0001244259D9156CB621D5BCA8897A6427AC8C999B649B77BA58952008A86030856D79700000000000000000000000000000000000000003F142142" />
             <hair_tags>
                 <hair_tag name="vlandia" />
             </hair_tags>
@@ -23366,7 +23366,7 @@
     </NPCCharacter>
     <NPCCharacter id="lord_rohan_5_1" name="{=aom_lord_rohan_5_1_name}Eadwig Oscyteling" age="35" voice="ironic" default_group="Cavalry" is_hero="true" culture="Culture.vlandia" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_rohan_knight_skills">
         <face>
-            <BodyProperties version="4" age="32.01" weight="0.5139" build="0.6435" key="00053C0E40001244B989CC38CDA88487C99ABBC693A3837531D36743B4896B2D009A8603092A795700000000000000000000000000000000000000003F340082" />
+            <BodyProperties version="4" age="32.01" weight="0.5139" build="0.6435" key="00053C00C0001244B989CC38CDA88487C99ABBC693A3837531D36743B4896B2D009A8603092A795700000000000000000000000000000000000000003F340082" />
             <hair_tags>
                 <hair_tag name="vlandia" />
             </hair_tags>
@@ -23414,7 +23414,7 @@
     </NPCCharacter>
     <NPCCharacter id="lord_rohan_9_1" name="{=aom_lord_rohan_9_1_name}Dúnhere Dúning" age="45" voice="ironic" default_group="Cavalry" is_hero="true" culture="Culture.vlandia" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_rohan_knight_skills">
         <face>
-            <BodyProperties version="4" age="32.01" weight="0.5139" build="0.6435" key="0008F00D800002423BB625668464386847289A9B61E6937AC7573C1D9156C97600BA86030B9F786800000000000000000000000000000000000000003F7C8142" />
+            <BodyProperties version="4" age="32.01" weight="0.5139" build="0.6435" key="0008F004C00002423BB625668464386847289A9B61E6937AC7573C1D9156C97600BA86030B9F786800000000000000000000000000000000000000003F7C8142" />
             <hair_tags>
                 <hair_tag name="vlandia" />
             </hair_tags>
@@ -23462,7 +23462,7 @@
     </NPCCharacter>
     <NPCCharacter id="lord_rohan_10_1" name="{=aom_lord_rohan_10_1_name}Éomund Eoforing" age="40" voice="ironic" default_group="Cavalry" is_hero="true" culture="Culture.vlandia" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_rohan_knight_skills">
         <face>
-            <BodyProperties version="4" age="32.01" weight="0.5139" build="0.6435" key="0008AC0A400013834BA6777C4487B836784BA7484671467588584B5C68A96BC200BA86030BBC875700000000000000000000000000000000000000003F742002" />
+            <BodyProperties version="4" age="32.01" weight="0.5139" build="0.6435" key="0008AC01800013834BA6777C4487B836784BA7484671467588584B5C68A96BC200BA86030BBC875700000000000000000000000000000000000000003F742002" />
             <hair_tags>
                 <hair_tag name="vlandia" />
             </hair_tags>
@@ -23558,7 +23558,7 @@
     </NPCCharacter>
     <NPCCharacter id="lord_rohan_13_1" name="{=aom_lord_rohan_13_1_name}Wulf Celmunding" age="42" voice="ironic" default_group="Cavalry" is_hero="true" culture="Culture.vlandia" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_rohan_knight_skills">
         <face>
-            <BodyProperties version="4" age="32.01" weight="0.5139" build="0.6435" key="0008E80E400014834BA6777C4487B8367157A74846714675754EB64756944366009A86030964858C00000000000000000000000000000000000000003F342042" />
+            <BodyProperties version="4" age="32.01" weight="0.5139" build="0.6435" key="0008E800C00014834BA6777C4487B8367157A74846714675754EB64756944366009A86030964858C00000000000000000000000000000000000000003F342042" />
             <hair_tags>
                 <hair_tag name="vlandia" />
             </hair_tags>
@@ -23606,7 +23606,7 @@
     </NPCCharacter>
     <NPCCharacter id="lord_rohan_14_1" name="{=aom_lord_rohan_14_1_name}Widmund Widmunding" age="40" voice="ironic" default_group="Cavalry" is_hero="true" culture="Culture.vlandia" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_rohan_knight_skills">
         <face>
-            <BodyProperties version="4" age="32.01" weight="0.5139" build="0.6435" key="000A7C08C000081B7C79BCB0E5E576D786C3A99A38A2B864C4E62D76D73499D8009A8603095BD36800000000000000000000000000000000000000003F246142" />
+            <BodyProperties version="4" age="32.01" weight="0.5139" build="0.6435" key="00067C04C000081B7C79BCB0E5E576D786C3A99A38A2B864C4E62D76D73499D8009A8603095BD36800000000000000000000000000000000000000003F246142" />
             <hair_tags>
                 <hair_tag name="vlandia" />
             </hair_tags>
@@ -23654,7 +23654,7 @@
     </NPCCharacter>
     <NPCCharacter id="lord_rohan_15_1" name="{=aom_lord_rohan_15_1_name}Fróda Ordgaring" age="37" voice="ironic" is_female="true" default_group="Cavalry" is_hero="true" culture="Culture.vlandia" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_rohan_lady_skills">
         <face>
-            <BodyProperties version="4" age="32.01" weight="0.5139" build="0.6435" key="000A4C08C0003001678599B73553916664999358666643565967991567553944009A8603093D6A8300000000000000000000000000000000000000003F243003" />
+            <BodyProperties version="4" age="32.01" weight="0.5139" build="0.6435" key="00064C04C0003001678599B73553916664999358666643565967991567553944009A8603093D6A8300000000000000000000000000000000000000003F243003" />
             <hair_tags>
                 <hair_tag name="vlandia" />
             </hair_tags>
@@ -23744,7 +23744,7 @@
     </NPCCharacter>
     <NPCCharacter id="lord_rohan_17_1" name="{=aom_lord_rohan_17_1_name}Waldæg Bregdaning" age="39" voice="ironic" default_group="Cavalry" is_hero="true" culture="Culture.vlandia" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_rohan_knight_skills">
         <face>
-            <BodyProperties version="4" age="28.01" weight="0.5139" build="0.6435" key="0008D40A40001344355B9985B42884476B6E6A6A754456D77C8886674396586D008A860308939C7700000000000000000000000000000000000000003F1490C2" />
+            <BodyProperties version="4" age="28.01" weight="0.5139" build="0.6435" key="0008D40180001344355B9985B42884476B6E6A6A754456D77C8886674396586D008A860308939C7700000000000000000000000000000000000000003F1490C2" />
             <hair_tags>
                 <hair_tag name="vlandia" />
             </hair_tags>
@@ -23840,7 +23840,7 @@
     </NPCCharacter>
     <NPCCharacter id="lord_rohan_22_1" name="{=aom_lord_rohan_22_1_name}Béowyrt Rungaring" age="41" voice="ironic" default_group="Cavalry" is_hero="true" culture="Culture.vlandia" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_rohan_knight_skills">
         <face>
-            <BodyProperties version="4" age="28.01" weight="0.5139" build="0.6435" key="0008AC0A400013434BB775D797887753784AA748467146752C7CB7865956A66B00BA86030B99C41600000000000000000000000000000000000000003F742042" />
+            <BodyProperties version="4" age="28.01" weight="0.5139" build="0.6435" key="0008AC01800013434BB775D797887753784AA748467146752C7CB7865956A66B00BA86030B99C41600000000000000000000000000000000000000003F742042" />
             <hair_tags>
                 <hair_tag name="vlandia" />
             </hair_tags>
@@ -46454,7 +46454,7 @@
   <!-- TAOM-DALE-EXPANSION:BEGIN -->
     <NPCCharacter id="lord_S10_1" name="{=aom_lord_S10_1_name}Halvard" age="46" voice="curt" default_group="Infantry" is_hero="true" culture="Culture.sturgia" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_lord_skills">
         <face>
-            <BodyProperties version="4" weight="0.5" build="0.5" key="0011B40597BC038E94A8C26585AAA93992D5A78776779C82329B657437695D35000005A80DE9BA6200001105000030A30000001F000000000000000000000000" />
+            <BodyProperties version="4" weight="0.5" build="0.5" key="0007B40597BC038E94A8C26585AAA93992D5A78776779C82329B657437695D35000005A80DE9BA6200001105000030A30000001F000000000000000000000000" />
             <hair_tags>
                 <hair_tag name="sturgia" />
             </hair_tags>
@@ -46643,7 +46643,7 @@
     </NPCCharacter>
     <NPCCharacter id="lord_S10_5" name="{=aom_lord_S10_5_name}Eyvind" age="29" voice="earnest" default_group="Ranged" is_hero="true" culture="Culture.sturgia" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_bowman_skills">
         <face>
-            <BodyProperties version="4" weight="0.5" build="0.5" key="000BE002C000220E72233A57C8658B97395B684B174BD5D7474584799D857BDD0005556609ADA5A9000000000000000000000000000000000000000000A04000" />
+            <BodyProperties version="4" weight="0.5" build="0.5" key="0007E002C000220E72233A57C8658B97395B684B174BD5D7474584799D857BDD0005556609ADA5A9000000000000000000000000000000000000000000A04000" />
             <hair_tags>
                 <hair_tag name="sturgia" />
             </hair_tags>
@@ -46736,7 +46736,7 @@
     </NPCCharacter>
     <NPCCharacter id="lord_S11_1" name="{=aom_lord_S11_1_name}Ketil" age="51" voice="curt" default_group="Cavalry" is_hero="true" culture="Culture.sturgia" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_knight_skills">
         <face>
-            <BodyProperties version="4" weight="0.7" build="0.6" key="0011800FC03C000D56C95A39982BA7946C65C77675B4C727B9A5987C94B6BA3B0007B47A0CDA898600001105000030A30000001F000000000000000001B89000" />
+            <BodyProperties version="4" weight="0.7" build="0.6" key="0007800FC03C000D56C95A39982BA7946C65C77675B4C727B9A5987C94B6BA3B0007B47A0CDA898600001105000030A30000001F000000000000000001B89000" />
             <hair_tags>
                 <hair_tag name="sturgia" />
             </hair_tags>
@@ -46784,7 +46784,7 @@
     </NPCCharacter>
     <NPCCharacter id="lord_S11_2" name="{=aom_lord_S11_2_name}Gudrun" age="48" voice="earnest" is_female="true" default_group="Infantry" is_hero="true" culture="Culture.sturgia" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_lady_skills">
         <face>
-            <BodyProperties version="4" weight="0.5" build="0.5" key="000BC80B5214300A7EE465888DC8A65436978A783956D896B377679DB8659936019776130986984800000000000000000000000000000000000000003F342003" />
+            <BodyProperties version="4" weight="0.5" build="0.5" key="0007C80B5214300A7EE465888DC8A65436978A783956D896B377679DB8659936019776130986984800000000000000000000000000000000000000003F342003" />
             <hair_tags>
                 <hair_tag name="sturgia" />
             </hair_tags>
@@ -46829,7 +46829,7 @@
     </NPCCharacter>
     <NPCCharacter id="lord_S11_3" name="{=aom_lord_S11_3_name}Orm" age="27" voice="ironic" default_group="Cavalry" is_hero="true" culture="Culture.sturgia" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_knight_skills">
         <face>
-            <BodyProperties version="4" weight="0.5" build="0.5" key="000BF40580FC334E8489486C8926E456A760CC57355354DBC67E4315618A3CAB000005E60977A7B900001105000030A30000001F000000000000000000002000" />
+            <BodyProperties version="4" weight="0.5" build="0.5" key="0007F40580FC334E8489486C8926E456A760CC57355354DBC67E4315618A3CAB000005E60977A7B900001105000030A30000001F000000000000000000002000" />
             <hair_tags>
                 <hair_tag name="sturgia" />
             </hair_tags>
@@ -46970,7 +46970,7 @@
     </NPCCharacter>
     <NPCCharacter id="lord_S11_6" name="{=aom_lord_S11_6_name}Hrafn" age="19" voice="earnest" default_group="Infantry" is_hero="true" culture="Culture.sturgia" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_young_lord_skills">
         <face>
-            <BodyProperties version="4" weight="0.4" build="0.4" key="0011800FC03C034E9AC95A39982BA7946C658E785779C5BA8BA878A694B6BA3B0100047A0F39258900001105000030A30000001F000000000000000001B85100" />
+            <BodyProperties version="4" weight="0.4" build="0.4" key="0007800FC03C034E9AC95A39982BA7946C658E785779C5BA8BA878A694B6BA3B0100047A0F39258900001105000030A30000001F000000000000000001B85100" />
             <hair_tags>
                 <hair_tag name="sturgia" />
             </hair_tags>
@@ -47066,7 +47066,7 @@
     </NPCCharacter>
     <NPCCharacter id="lord_S12_2" name="{=aom_lord_S12_2_name}Asa" age="41" voice="softspoken" is_female="true" default_group="Infantry" is_hero="true" culture="Culture.sturgia" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_lady_skills">
         <face>
-            <BodyProperties version="4" weight="0.5" build="0.5" key="0011E002D2B40004973B69A748A57AA68777CAB82AA578B2A64B79C774C69A7A01877613085A472A0000000000000000000000000000000000000000231C2083" />
+            <BodyProperties version="4" weight="0.5" build="0.5" key="0007E002D2B40004973B69A748A57AA68777CAB82AA578B2A64B79C774C69A7A01877613085A472A0000000000000000000000000000000000000000231C2083" />
             <hair_tags>
                 <hair_tag name="sturgia" />
             </hair_tags>
@@ -47111,7 +47111,7 @@
     </NPCCharacter>
     <NPCCharacter id="lord_S12_3" name="{=aom_lord_S12_3_name}Geirmund" age="22" voice="ironic" default_group="Infantry" is_hero="true" culture="Culture.sturgia" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_young_lord_skills">
         <face>
-            <BodyProperties version="4" weight="0.4" build="0.6" key="000BA00B40001008A43A8AB8557888874A6A94868B767788988844778A69247900058005079777A800001105000030A30000001F000000000000000000CC0000" />
+            <BodyProperties version="4" weight="0.4" build="0.6" key="0007A00B40001008A43A8AB8557888874A6A94868B767788988844778A69247900058005079777A800001105000030A30000001F000000000000000000CC0000" />
             <hair_tags>
                 <hair_tag name="sturgia" />
             </hair_tags>
@@ -47159,7 +47159,7 @@
     </NPCCharacter>
     <NPCCharacter id="lord_S12_4" name="{=aom_lord_S12_4_name}Bjarni" age="35" voice="curt" default_group="Ranged" is_hero="true" culture="Culture.sturgia" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_bowman_skills">
         <face>
-            <BodyProperties version="4" weight="0.5" build="0.5" key="000B800B4000000D875C989A8860996A1879956888677896699A8679A86723690000000307A6889600001105000030A30000001F000000000000000000000000" />
+            <BodyProperties version="4" weight="0.5" build="0.5" key="0007800B4000000D875C989A8860996A1879956888677896699A8679A86723690000000307A6889600001105000030A30000001F000000000000000000000000" />
             <hair_tags>
                 <hair_tag name="sturgia" />
             </hair_tags>
@@ -47255,7 +47255,7 @@
     </NPCCharacter>
     <NPCCharacter id="lord_S13_1" name="{=aom_lord_S13_1_name}Starkad" age="49" voice="curt" default_group="Cavalry" is_hero="true" culture="Culture.sturgia" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_knight_skills">
         <face>
-            <BodyProperties version="4" weight="0.8" build="0.5" key="0011AC0700000008975D98B886639678796AA5A76A87677859779A888658234A000430090497967900001105000030A30000001F000000000000000000A40000" />
+            <BodyProperties version="4" weight="0.8" build="0.5" key="0007AC0700000008975D98B886639678796AA5A76A87677859779A888658234A000430090497967900001105000030A30000001F000000000000000000A40000" />
             <hair_tags>
                 <hair_tag name="sturgia" />
             </hair_tags>
@@ -47348,7 +47348,7 @@
     </NPCCharacter>
     <NPCCharacter id="lord_S13_3" name="{=aom_lord_S13_3_name}Audun" age="26" voice="ironic" default_group="Ranged" is_hero="true" culture="Culture.sturgia" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_bowman_skills">
         <face>
-            <BodyProperties version="4" weight="0.5" build="0.5" key="000B700E402C325968215CB4D9779D947BABE1EA12D7B9649975B5856DB7C355016776130655A58500000000000000000000000000000000000000002AD42042" />
+            <BodyProperties version="4" weight="0.5" build="0.5" key="0007700E402C325968215CB4D9779D947BABE1EA12D7B9649975B5856DB7C355016776130655A58500000000000000000000000000000000000000002AD42042" />
             <hair_tags>
                 <hair_tag name="sturgia" />
             </hair_tags>
@@ -47396,7 +47396,7 @@
     </NPCCharacter>
     <NPCCharacter id="lord_S13_4" name="{=aom_lord_S13_4_name}Ingvar" age="31" voice="curt" default_group="Ranged" is_hero="true" culture="Culture.sturgia" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_bowman_skills">
         <face>
-            <BodyProperties version="4" weight="0.3" build="0.4" key="0016AC0A1100000E923C3CC26AD6C61669788947438E9864A5439BCB447C584A0167761306C8B9A5000000000000000000000000000000000000000036C44003" />
+            <BodyProperties version="4" weight="0.3" build="0.4" key="0006AC0A1100000E923C3CC26AD6C61669788947438E9864A5439BCB447C584A0167761306C8B9A5000000000000000000000000000000000000000036C44003" />
             <hair_tags>
                 <hair_tag name="sturgia" />
             </hair_tags>
@@ -47444,7 +47444,7 @@
     </NPCCharacter>
     <NPCCharacter id="lord_S13_5" name="{=aom_lord_S13_5_name}Solveig" age="21" voice="softspoken" is_female="true" default_group="Infantry" is_hero="true" culture="Culture.sturgia" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_young_lady_skills">
         <face>
-            <BodyProperties version="4" weight="0.4" build="0.3" key="000BB80B40001003963657A49E536D58A75688678546525569688969855687D600043005049779870000000000000FFE00000000000000000000000000500000" />
+            <BodyProperties version="4" weight="0.4" build="0.3" key="0007B80B40001003963657A49E536D58A75688678546525569688969855687D600043005049779870000000000000FFE00000000000000000000000000500000" />
             <hair_tags>
                 <hair_tag name="sturgia" />
             </hair_tags>
@@ -47489,7 +47489,7 @@
     </NPCCharacter>
     <NPCCharacter id="lord_S14_1" name="{=aom_lord_S14_1_name}Thormod" age="53" voice="curt" default_group="Infantry" is_hero="true" culture="Culture.sturgia" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_lord_skills">
         <face>
-            <BodyProperties version="4" weight="0.6" build="0.9" key="000BD0058000100D785AA72917C606A54D469CDC9A3683A59A15AF927269E22C00070478065D7806000000000000000000000000000000000000000000001184" />
+            <BodyProperties version="4" weight="0.6" build="0.9" key="0007D0058000100D785AA72917C606A54D469CDC9A3683A59A15AF927269E22C00070478065D7806000000000000000000000000000000000000000000001184" />
             <hair_tags>
                 <hair_tag name="sturgia" />
             </hair_tags>
@@ -47582,7 +47582,7 @@
     </NPCCharacter>
     <NPCCharacter id="lord_S14_3" name="{=aom_lord_S14_3_name}Brynjar" age="28" voice="ironic" default_group="Cavalry" is_hero="true" culture="Culture.sturgia" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_knight_skills">
         <face>
-            <BodyProperties version="4" weight="0.2" build="0.6" key="000B300CC000300DA4A56A443FB7AA9674A624797769AAA8D879575B59B825B9000777450745277900001105000030A30000001F000000000000000001403000" />
+            <BodyProperties version="4" weight="0.2" build="0.6" key="0007300CC000300DA4A56A443FB7AA9674A624797769AAA8D879575B59B825B9000777450745277900001105000030A30000001F000000000000000001403000" />
             <hair_tags>
                 <hair_tag name="sturgia" />
             </hair_tags>
@@ -47678,7 +47678,7 @@
     </NPCCharacter>
     <NPCCharacter id="lord_S14_5" name="{=aom_lord_S14_5_name}Yrsa" age="23" voice="softspoken" is_female="true" default_group="Infantry" is_hero="true" culture="Culture.sturgia" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_young_lady_skills">
         <face>
-            <BodyProperties version="4" weight="0.5" build="0.5" key="000B30071014200B845CA2CD6B97D578576756477263BCB7C7664675989C2A94019776130944A9870000000000000000000000000000000000000000593440C3" />
+            <BodyProperties version="4" weight="0.5" build="0.5" key="000730071014200B845CA2CD6B97D578576756477263BCB7C7664675989C2A94019776130944A9870000000000000000000000000000000000000000593440C3" />
             <hair_tags>
                 <hair_tag name="sturgia" />
             </hair_tags>
