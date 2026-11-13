@@ -456,7 +456,7 @@ with differing kits (#648).
   lords live only in `lords.xslt`, new ones only in `characters/lords.xml`. Moving one means folding
   every value the row wins into the template, checked by transforming the installed vanilla file
   (the #644 shape), then deleting the row. `NazgulRaceDataTests.LordsXml_DefinesNoneOfTheNine` pins
-  the Nine; #648 carries the general gate.
+  the Nine; #648 added the general gate, `LordDoubleDefinitionTests.NoLordIsDefinedInBothLordsFiles`.
 - **Source:** `docs/reviews/rca-nazgul-race-2026-09-23.md` finding 1 (2026-09-23).
 
 ### A module's XSLT runs before that module's own XML merges (#791, 2026-10-14)

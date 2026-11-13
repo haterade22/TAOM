@@ -305,9 +305,8 @@ Code: No code changes needed
    vanilla, the lord belongs in `lords.xslt`: edit the `<xsl:attribute name="name">` there. A
    vanilla id should have no `characters/lords.xml` row at all (Mike, 2026-09-23: vanilla lords in
    the XSLT, new ones in `lords.xml`), because a second definition wins per attribute and unions
-   its equipment sets with the template's, a random kit per campaign. 176 ids still have both
-   (#648); for one of those, a template-only edit does not show until the row's value moves into
-   the template and the row goes, as #644 did for three of the Nine.
+   its equipment sets with the template's, a random kit per campaign. Since #648 no id has both,
+   and `LordDoubleDefinitionTests.NoLordIsDefinedInBothLordsFiles` fails on a new one.
 2. Keep the key stable and change only the literal after `}`. Changing the key orphans twelve
    translations.
 3. If the key is registered in `taom_xslt_strings.xml`, update the row there too, then run the
