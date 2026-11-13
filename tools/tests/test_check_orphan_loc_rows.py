@@ -96,6 +96,21 @@ class ReaderTests(GateCase):
         _write(self.root / "Client/Feature.cs", 'class F { string s = "{=taom_a}Hi"; }')
         self.assertEqual(self.run_gate()[0], 0)
 
+    def test_coopcompat_csharp_literal_reader_passes(self):
+        # CoopCompat is a module of its own (TAOM.CoopCompat), but its player text registers in
+        # TAOM's English files (harvest_literal_loc_keys.py scans it), so its literals are readers too.
+        self.strings("taom_a")
+        _write(self.root / "CoopCompat/Handshake/Notice.cs", 'class N { string s = "{=taom_a}Hi"; }')
+        self.assertEqual(self.run_gate()[0], 0)
+
+    def test_a_test_project_literal_is_not_a_reader(self):
+        self.strings("taom_a")
+        _write(self.root / "TAOM.Tests/FeatureTests.cs", 'class T { string s = "{=taom_a}Hi"; }')
+        _write(self.root / "TAOM.CoopCompat.Tests/NoticeTests.cs", 'class T { string s = "taom_a"; }')
+        code, out, _ = self.run_gate()
+        self.assertEqual(code, 1)
+        self.assertIn("UNREAD taom_a", out)
+
     def test_csharp_comment_is_not_a_reader(self):
         self.strings("taom_a")
         _write(self.root / "Main/Feature.cs", "class F { } // was taom_a\n/* taom_a */")

@@ -84,6 +84,7 @@ internal static class LongDefeatRunReport
                     ["towers"] = purse.SpentOn(PurseSink.Towers),
                     ["fieldCare"] = purse.SpentOn(PurseSink.FieldCare),
                     ["volley"] = purse.SpentOn(PurseSink.Volley),
+                    ["upgrades"] = purse.SpentOn(PurseSink.Upgrades),
                 },
             },
             ["purchases"] = new JArray((fort ?? RunFort.None).Purchases.Select(Purchase)),
@@ -117,9 +118,9 @@ internal static class LongDefeatRunReport
 
     private static JObject Volley(VolleyWaveRecord v) => new() { ["uses"] = v.Uses, ["arrows"] = v.Arrows, ["hits"] = v.Hits, ["kills"] = v.Kills, ["withheld"] = v.Withheld };
 
-    private static readonly string[] PurchaseKinds = { "pack", "gateLevel", "gateRepair", "towerLevel", "fieldCare", "volleyLevel" };
+    private static readonly string[] PurchaseKinds = { "pack", "gateLevel", "gateRepair", "towerLevel", "fieldCare", "volleyLevel", "upgrade" };
 
-    /// <summary>One purchase: the wave it precedes, its kind, the offer (a pack's only), the level a level kind reached, shop.json's price and the price paid, and the share (a repair's missing share summed over its gates, care's heal share) to three decimals; a repair also lists each gate's own share in <c>shares</c>.</summary>
+    /// <summary>One purchase: the wave it precedes, its kind, the offer (a pack's only), the level a level kind reached, shop.json's price and the price paid (an upgrade's for one soldier, and its <c>count</c>), and the share (a repair's missing share summed over its gates, care's heal share) to three decimals; a repair also lists each gate's own share in <c>shares</c>.</summary>
     private static JObject Purchase(FortPurchase p)
     {
         var row = new JObject
@@ -136,6 +137,9 @@ internal static class LongDefeatRunReport
         // A repair is priced per gate (D18), so its row lists each gate's missing share beside the total; a row with no list is a one-gate repair.
         if (p.Kind == PurchaseKind.GateRepair)
             row["shares"] = new JArray((p.Shares ?? new[] { p.Share }).Select(s => Math.Round((double)s, 3, MidpointRounding.AwayFromZero)));
+        // An upgrade (#1161) is priced per soldier: basePrice is the step's price for one, price is what the soldiers replaced cost, and count says how many.
+        if (p.Kind == PurchaseKind.Upgrade)
+            row["count"] = p.Count;
         return row;
     }
 

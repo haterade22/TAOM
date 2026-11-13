@@ -248,7 +248,7 @@ logged per frame.
 | `wallMs` | the closed frames' wall time, boundary to boundary |
 | `realTickMs` | `Campaign.RealTick`, inside `mapStateMs`; it starts with `WaitAsyncTasks`, the main thread waiting for the previous frame's party AI task (started from `MapScreen.OnPostFrameTick`, outside every bracket) |
 | `mapScreenMs` | `MapScreen.OnFrameTick` |
-| `otherMs` | per frame `max(0, frameMs - mapStateMs - mapScreenMs - appTickMs)`: rendering, the native engine, UI, the other submodules' application ticks and the profiler's own boundary work. Once per window that includes building and writing the `[MapProfile]` line (a synchronous flushed write) and the hook check that follows it (see "Hook health"), so their time lands in the next window's `otherMs` and `maxFrameMs` and their allocation in the next `allocKB` (and any collection they cause in the next window's `gc` deltas). The looks at a campaign change (the previous session's, before its `newCampaign` summary, and the new session's own) land the same way in the new session's first frame. What one look costs is UNVERIFIED (see "Cost"). The listener walk's per-listener bookkeeping is inside `tickEventMs` (and so `campaignTickMs` and `mapStateMs`), not here |
+| `otherMs` | per frame `max(0, frameMs - mapStateMs - mapScreenMs - appTickMs)`: rendering, the native engine, UI, the other submodules' application ticks and the profiler's own boundary work. Once per window that includes building and writing the `[MapProfile]` line (queued; the writer thread writes and flushes it) and the hook check that follows it (see "Hook health"), so their time lands in the next window's `otherMs` and `maxFrameMs` and their allocation in the next `allocKB` (and any collection they cause in the next window's `gc` deltas). The looks at a campaign change (the previous session's, before its `newCampaign` summary, and the new session's own) land the same way in the new session's first frame. What one look costs is UNVERIFIED (see "Cost"). The listener walk's per-listener bookkeeping is inside `tickEventMs` (and so `campaignTickMs` and `mapStateMs`), not here |
 | `allocKB` | main-thread allocation over the closed frames, or `na` |
 | `speed` | the class with the most closed frames (`Stop`, `Play`, `FF`, `FF2`, `FF3`, `na` when none closed), from the engine's simplified time-control mode: a Stoppable mode with the main party waiting reads `Stop`, and such frames still tick the map |
 | `parties` | `Campaign.Current.MobileParties.Count` at the window, `na` when unreadable |
@@ -336,7 +336,7 @@ the `[MapProfiler]` consequence line.
   lookup, per TAOM view the same. No allocation after a type's first sighting, no lock, nothing logged
   per frame. Once per window (5 s of wall clock), at each session start and at the end of each measuring
   session, off the per-frame path: six `Harmony.GetPatchInfo` lookups for the hook check, plus, once per
-  window, the line's synchronous write. Both run after the boundary's timestamp is taken, so they sit inside a
+  window, the line's enqueue (the writer thread writes and flushes it). Both run after the boundary's timestamp is taken, so they sit inside a
   measured frame: a window start's write and check in the next window's first frame, and the looks at a campaign
   change in the new session's first frame, each landing in that frame's `otherMs` and `maxFrameMs` and in `allocKB`
   (the look at a `gameEnd` ends the session, so it lands in no closed frame). What one look costs is UNVERIFIED, not

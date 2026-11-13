@@ -9,7 +9,7 @@
 # at a clear, when no attacker formation ticks, so it does not cover a player's destroy in the middle of a wave: the [[human]] rows below do.
 issue = 1160
 title = "The Long Defeat: siege engines the player destroys come back for the next wave"
-fixed_in = "54819b067"   # trunk before the fix: the manifest ships with the emitter
+fixed_in = "552147156"   # the fix commit (merged to trunk in d70174349)
 logs = ["taom"]
 
 [[check]]

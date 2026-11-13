@@ -820,10 +820,11 @@ managed `catch` cannot help there: an access violation is a corrupted-state exce
 (`scanMs` in the header), plus one read of the budget float. Then, per mission, one aligned 32-bit read
 of the counter and one `MBAnimation.IsAnyAnimationLoadingFromDisk()` call per second (a native walk
 over every clip record, not only the on-demand ones, stopping at the first one loading; it takes no
-lock), one log line every 5 s, and one or two lines at mission end. Each INFO line is written and
-flushed on the calling thread, which is the main thread here (`FileLogger.LogInfo` is durable).
+lock), one log line every 5 s, and one or two lines at mission end. Each INFO line is queued by the
+calling thread (the main thread here) and written by the logger's writer thread, which flushes it within about a third
+of a second; no tag of this feature is in `FileLogger.DurableInfoTags`, so a hard crash can lose the last fraction of a second.
 **Not yet measured in a battle:** what one `IsAnyAnimationLoadingFromDisk()` call costs against the
-full clip table, and what each synchronous flush costs a frame. The scan reports its own cost
+full clip table, and what each queued log line costs a frame. The scan reports its own cost
 (`scanMs`); nothing else is timed.
 
 **Measuring that cost.** The heartbeat's A/B ("Reading an A/B": the toggle off against on, five runs

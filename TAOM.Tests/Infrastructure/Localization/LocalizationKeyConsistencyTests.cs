@@ -262,7 +262,9 @@ public class LocalizationKeyConsistencyTests
 
         var checkedSites = 0;
         var problems = new List<string>();
-        foreach (var file in RepoPaths.CSharpFiles())
+        // TAOM.CoopCompat registers its player text in TAOM's ModuleData too (see FindDeclaredKeys in
+        // UnregisteredLocalizationKeyBaselineTests), so its defaults are compared as well.
+        foreach (var file in RepoPaths.CSharpFiles(RepoPaths.CodeRoots.Concat(new[] { "CoopCompat" }).ToArray()))
         {
             var lines = File.ReadAllLines(file);
             for (var n = 0; n < lines.Length; n++)
