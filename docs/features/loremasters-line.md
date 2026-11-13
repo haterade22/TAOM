@@ -174,8 +174,8 @@ view model; about 11 ms once at screen open for a 20-hero clan, also paid with t
 
 ## Translation
 
-The seven strings are seeded in English, and the two reworded ones (`taom_ll_tt_capped`, `taom_ll_mcm_enable_hint`) are
-re-seeded in all twelve language files. The paid translation is owed in the translation backlog, #763.
+The seven strings are translated, and the two reworded ones (`taom_ll_tt_capped`, `taom_ll_mcm_enable_hint`) are
+re-translated in all twelve language files (2026-11-12, #763).
 
 ## Owed in-game checks
 

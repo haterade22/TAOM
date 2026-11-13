@@ -80,7 +80,7 @@ The spawn days are vanilla's own town numbers (`10 - (level - 1) * 2`). A town p
 Group "Fief Management/Keep Wardens" (GroupOrder 4), two switches, both simulation-relevant and counted in the co-op settings fingerprint:
 
 - `EnableCastlePatrols` (Order 0), default on. Label key `taom_keep_wardens_label`, hint key `taom_keep_wardens_hint`.
-- `EnableGuardHouseBuildPriority` (Order 1, "Guard House Build Priority"), default on. Label key `taom_keep_wardens_build_label`, hint key `taom_keep_wardens_build_hint`. English in all 12 languages until the paid translation run.
+- `EnableGuardHouseBuildPriority` (Order 1, "Guard House Build Priority"), default on. Label key `taom_keep_wardens_build_label`, hint key `taom_keep_wardens_build_hint`. Translated in all 12 languages (2026-11-12, #763).
 
 The settings provider reads both through one cached accessor (`CampaignHotPathSettingsProvidersTests`).
 

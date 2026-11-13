@@ -86,8 +86,8 @@ so the other second-wave proposals below are not applied in this commit; each is
   copied `Tokens()` helpers; `placeholders_match` on cache and override fills (Lens 2 Q2, Lens 7 Q2).
 - FOLLOW-UP: no issue: the second-wave items above (Lens 6 P1 to P4, Lens 3 L1, Lens 1), and Lens 4's LOW items: an
   unanchored camelCase alternative in `Identifier`, test names that claim more than they check, two Harlond spellings in
-  CNs and KO, and feature docs that still say "English until #763".
-- FOLLOW-UP: no issue: per-language copies of the live Armory `loc_lothlorien.xml` (85 rows per language) wait for the
+  CNs and KO. (Lens 4's feature docs that still said "English until #763" are updated in the follow-up docs commit.)
+- FOLLOW-UP: #1129: per-language copies of the live Armory `loc_lothlorien.xml` (85 rows per language) wait for the
   maintainer's word.
 
 ## Watch in game

@@ -188,7 +188,7 @@ These need the in-game check below; none is confirmed.
 
 ## Translation
 
-The 18 `taom_lod_*` rows are seeded in English in all language files. The paid translation run is tracked in a backlog issue; until it lands, every language shows the English text.
+The 18 `taom_lod_*` rows are translated in all 12 language files (2026-11-12, #763).
 
 ## Changelog
 

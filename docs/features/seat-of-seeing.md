@@ -515,7 +515,7 @@ NOT REACHED; `--issue 0 --sessions 2` over one session of each feature exits 0.
     opens. Game key 30 (CapsLock) is read by `MissionMainAgentController.cs:811`, which the shut controller already stops. The career ability key (V)
     and the perspective toggle (game key 27) still act.
 12. Options > Keybindings > Action shows "Take the Seat (TAOM)" with the key Q and no ERROR text; the MCM group renders its rows; with
-    the game in Russian the Seat's texts show the English seeds and no raw key.
+    the game in Russian the Seat's texts show the Russian translation and no raw key.
 13. Only if a rage holds the hero in single player at all: fall from the warg during a rage, take the Seat, then kill the warg. The
     flight keys do not move the hero.
 14. Turn on Begin Battles in the Seat and start a battle with a deployment: when the deployment ends the battle begins in the Seat, with

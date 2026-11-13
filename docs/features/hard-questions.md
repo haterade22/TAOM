@@ -158,13 +158,13 @@ If Armour Acquisition's gate fails at game init (it logs when it does), named pi
 9. Victim on the enemy side, Personal Relations on: a clan-topic force lowers his clan leader by 12 and each kinsman by 10; a strip lowers each other lord of his clan by 20. Same side: 1.5 times. Personal Relations off: his clan leader drops once, by the strongest hit. Neutral victim (an Umbar or Khand lord), Personal Relations on: a strip lowers each other lord of his clan by 20 and no lord of another clan.
 10. After a force and after a strip, the summary line appears once, with the right lord count (singular for one lord).
 11. A dungeon death: before you leave, note whether his standing figure still offers a conversation; then leave and re-enter the dungeon: he is gone.
-12. In German, the 19 lines show English seed text with `{PRICE}`, `{COMPANION}` and `{COUNT}` filled.
+12. In German, the 19 lines show the German text with `{PRICE}`, `{COMPANION}` and `{COUNT}` filled.
 13. Ransom screen: no lines (#1001). The backstreet ransom screen hides the lines: open it and talk to a captive lord, and no Hard Questions line shows. The tavern broker's screen does not allow Talk, because a mission is running. Open the normal party screen and talk to a captive lord: the lines show.
 14. Neutral realm (owed, #957): as a player whose clan serves a Neutral realm (Khand, Umbar, Shaghana or Abanissa) with a Free-culture hero, force a clan topic on a Free captive and on an Evil captive: both read the Neutral multiplier (Honor and Mercy at the base amount), not the same-side 1.5 times.
 
 ## Translations
 
-The 19 `taom_hq_*` keys are registered and seeded in English in all 12 languages. Paid translation is owed, on Mike's word.
+The 19 `taom_hq_*` keys are registered and translated in all 12 languages (2026-11-12, #763).
 
 ## Changelog
 

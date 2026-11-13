@@ -135,7 +135,7 @@ Out-of-range values revert to defaults with a warning. **JSON config requires a 
 | [Client/Features/Messengers/UI/MessengerEncyclopediaMixin.cs](../../Client/Features/Messengers/UI/MessengerEncyclopediaMixin.cs) | UIExtenderEx VM mixin (data sources + click command) |
 | [Main/_Module/ModuleData/messengers/messenger_config.json](../../Main/_Module/ModuleData/messengers/messenger_config.json) | Advanced tuning |
 | [Main/_Module/ModuleData/taom_messenger_strings.xml](../../Main/_Module/ModuleData/taom_messenger_strings.xml) | EN base. Keys added since #898 live in `taom_module_strings.xml` (harvested by `tools/harvest_literal_loc_keys.py`) |
-| `Main/_Module/ModuleData/Languages/<LANG>/std_taom_messenger_strings_*.xml` | 12 language variants (BR/CNs/CNt/DE/FR/IT/JP/KO/PL/RU/SP/TR), English placeholder text where untranslated. The five keys added by #898 (`taom_enlist_not_by_messenger`, `taom_send_messenger_cost`, `taom_messenger_trip_days`, `taom_messenger_same_settlement`, `taom_messenger_same_army`) are in `taom_module_strings.xml` and its language files; their translation is owed in backlog #763. |
+| `Main/_Module/ModuleData/Languages/<LANG>/std_taom_messenger_strings_*.xml` | 12 language variants (BR/CNs/CNt/DE/FR/IT/JP/KO/PL/RU/SP/TR), translated (2026-11-12, #763). The five keys added by #898 (`taom_enlist_not_by_messenger`, `taom_send_messenger_cost`, `taom_messenger_trip_days`, `taom_messenger_same_settlement`, `taom_messenger_same_army`) are in `taom_module_strings.xml` and its language files; they are translated too (#763). |
 
 ## Pricing and refusals (#898)
 
