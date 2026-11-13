@@ -8,9 +8,9 @@ using TaleWorlds.CampaignSystem;
 namespace TAOM.Tests.Adapters;
 
 /// <summary>
-/// #1141: the War Chronicle escape pass and rally run on the co-op server, where <c>Clan.PlayerClan</c> is
-/// the server's own clan. A remote player's clan must still count as a player's, or TAOM's help for AI
-/// lords and realms reaches a human player.
+/// #1141: the War Chronicle escape pass, rally and volunteer multiplier run on the co-op server, where
+/// <c>Clan.PlayerClan</c> is the server's own clan. A remote player's clan must still count as a player's, or
+/// TAOM's effects for AI lords and realms reach a human player.
 /// </summary>
 [TestClass]
 [TestCategory("RequiresGame")] // builds an engine Clan

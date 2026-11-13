@@ -55,4 +55,33 @@ public class RunPlanTroopsTests
             CollectionAssert.Contains(ids.ToList(), target);
         Assert.AreEqual(ids.Count, ids.Distinct().Count());
     }
+
+    [TestMethod]
+    public void BothLists_HoldEveryUpgradeTroop_SoTheLaunchChecksThemAndTheBoonsKnowTheirGroup()
+    {
+        var plan = Plan();
+        plan = plan with
+        {
+            Shop = plan.Shop with
+            {
+                Upgrades = new[] { new UpgradeStep("shop_militia>axe", "axe", "shop_militia", "axe", 15), new UpgradeStep("axe>vet", "vet", "axe", "vet", 25) },
+            },
+        };
+
+        var all = RunPlanTroops.AllTroopIds(plan);
+        var defenders = RunPlanTroops.DefenderTroopIds(plan);
+
+        CollectionAssert.IsSubsetOf(new[] { "axe", "vet" }, all.ToList());
+        CollectionAssert.AreEquivalent(new[] { "g_foot", "g_bow", "shop_militia", "axe", "vet" }, defenders.ToArray());
+        Assert.AreEqual(all.Count, all.Distinct().Count());
+    }
+
+    [TestMethod]
+    public void DefenderGroups_IgnoreTheUpgradeSteps_SoTheBoonReplayOfOlderReportsStaysTheSame()
+    {
+        var plan = Plan();
+        var withSteps = plan with { Shop = plan.Shop with { Upgrades = new[] { new UpgradeStep("g_bow>rider", "rider", "g_bow", "rider", 15) } }, TroopGroups = new Dictionary<string, BoonTarget> { ["rider"] = BoonTarget.Cavalry } };
+
+        CollectionAssert.AreEquivalent(RunPlanTroops.DefenderGroups(plan).ToList(), RunPlanTroops.DefenderGroups(withSteps).ToList());
+    }
 }

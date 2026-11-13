@@ -7877,6 +7877,7 @@
     <string id="taom_hero_auras_mcm_enabled_hint" text="Les héros nommés renforcent les soldats alliés proches d'eux, chacun à sa manière : les nains de Dáin gardent leur aplomb, les hommes d'Aragorn gardent leur sang-froid, les archers des seigneurs elfes tirent plus vite. Seuls les héros répertoriés dans hero_auras.json portent une aura. Lorsqu'une aura et la capacité raciale propre d'un soldat apportent la même chose, la plus forte l'emporte ; elles ne s'additionnent jamais. Prend effet à la prochaine impulsion d'aura." />
     <string id="taom_hero_auras_mcm_strength" text="Puissance des auras de héros" />
     <string id="taom_hero_auras_mcm_strength_hint" text="Multiplie les bonus de chaque aura. 1.0 correspond aux valeurs définies dans hero_auras.json ; 0 désactive toutes les auras. Les seuils minimaux de moral et les effets de type tout ou rien, comme l'encaissement, ne sont pas mis à l'échelle. Par défaut : 1.0." />
+    <string id="taom_messenger_waiting" text="Your messenger cannot find {HERO_NAME} yet and will wait until they can be reached." />
   </strings>
 
 </base>

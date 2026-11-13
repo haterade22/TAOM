@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using BehaviorTreeWrapper;
+using TAOM.Adapters;
 using TAOM.Core.Logging;
 using TAOM.Features.CareerSystem.Abilities;
 using TAOM.Features.RaceAbilities.Domain;
@@ -79,7 +80,7 @@ public sealed class RaceAbilityRuntime
     internal int WavesLogged { get; set; }
 
     public RaceAbilityProfile? ProfileOf(Agent? agent) =>
-        agent != null && agent.IsHuman ? Resolver.Resolve(agent.Character?.Race, agent.Character?.Culture?.StringId) : null;
+        agent != null && agent.IsHuman ? Resolver.Resolve(agent.Character?.Race, CharacterCulture.IdOf(agent.Character)) : null;
 
     public bool IsKin(RaceAbilityProfile profile, Agent other) =>
         Resolver.IsKin(profile, other.Character?.Race, ProfileOf(other));

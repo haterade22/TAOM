@@ -141,7 +141,7 @@ public class MessengerCampaignBehaviorSourceTests
     }
 
     [TestMethod]
-    public void TheArrival_AsksTheServiceForItsVerdict_WithTheRawPartyEqualityAndTheEngineState()
+    public void TheArrival_AsksTheServiceForItsVerdict_WithTheSnapshotAndTheEngineState()
     {
         var behavior = RepoPaths.ReadSource(Path, stripComments: true);
         var reader = RepoPaths.ReadSource("Main/Features/Messengers/MessengerTargetReader.cs", stripComments: true);
@@ -149,10 +149,33 @@ public class MessengerCampaignBehaviorSourceTests
 
         Assert.IsTrue(body.Length > 0, "HandleArrivedMessenger not found");
         StringAssert.Contains(body, "_service.ClassifyArrival(");
-        StringAssert.Contains(body, "sharesMainHeroParty: target.PartyBelongedTo == Hero.MainHero?.PartyBelongedTo");
+        StringAssert.Contains(body, "MessengerTargetReader.ReadSnapshot(target)");
         StringAssert.Contains(body, "playerAvailable: IsPlayerAvailable()");
         StringAssert.Contains(body, "targetPartyInMapEvent: target.PartyBelongedTo?.MapEvent != null");
-        Assert.IsFalse(body.Contains("IsInPlayerParty"), "arrival's party test is true when both parties are null; IsInPlayerParty is not");
+        // #1133: a raw party equality is true when both parties are null (a captive player and a target with no party),
+        // which dropped the messenger as "in your own party". The snapshot's test needs both parties to exist.
+        Assert.IsFalse(body.Contains("== Hero.MainHero?.PartyBelongedTo"), "the arrival must not compare the two parties itself");
+        StringAssert.Contains(reader, "Hero.MainHero?.PartyBelongedTo != null");
         StringAssert.Contains(reader, "heroState: (MessengerHeroState)(int)hero.HeroState");
+        StringAssert.Contains(reader, "isSpecial: hero.IsSpecial");
+    }
+
+    [TestMethod]
+    public void TheArrival_TellsThePlayerOnce_WhenTheMessengerWaitsForTheHero()
+    {
+        var behavior = RepoPaths.ReadSource(Path, stripComments: true);
+        var notices = RepoPaths.ReadSource("Main/Features/Messengers/MessengerArrivalNotices.cs", stripComments: true);
+        var body = Regex.Match(behavior, @"ArrivedHandleOutcome HandleArrivedMessenger\([\s\S]*?\n    \}").Value;
+
+        // The latch is on the messenger, so one notice per messenger and per load; the other wait (a busy player) is silent.
+        StringAssert.Matches(body, new Regex(
+            @"if \(verdict == MessengerArrivalVerdict\.WaitForTarget && messenger\.TryMarkWaitNoticeShown\(\)\)\s*MessengerArrivalNotices\.Waiting\(target\);"));
+        // Both waits keep the messenger for the next hour: only Ready goes on to the inquiry.
+        StringAssert.Matches(body, new Regex(
+            @"if \(verdict != MessengerArrivalVerdict\.Ready\)\s*return ArrivedHandleOutcome\.WaitForNextTick;"));
+        // A log line, not an inquiry: the hourly tick must not open a dialog for a wait.
+        StringAssert.Contains(notices, "{=taom_messenger_waiting}");
+        StringAssert.Contains(notices, "InformationManager.DisplayMessage(");
+        Assert.IsFalse(notices.Contains("ShowInquiry"), "the wait notice must not pause the game or need an answer");
     }
 }

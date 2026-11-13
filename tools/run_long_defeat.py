@@ -3,7 +3,7 @@
 
 Run:  python tools/run_long_defeat.py [--fortress helms] [--waves N] [--lose] [--garrison-scale X] [--live-limit S] [--screenshots 5,60]
                                       [--speed 1|2|4|10] [--class ID|all] [--seed N] [--start-wave N] [--start-rerolls N] [--start-gold N] [--posts-variant A|B|C] [--deep]
-                                      [--require-idle-minutes N] [--runs N] [--dry-run]
+                                      [--break-engines N] [--require-idle-minutes N] [--runs N] [--dry-run]
 
 Deploy the tree under test with ./build.ps1 first and check the [BuildStamp] line: a build without the autorun idles at the main menu and
 the run ends as a stall. The in-game LongDefeatAutorunDriver starts the run from the main menu with the shop bot and an AI-driven main
@@ -26,6 +26,7 @@ The report's class must be the one armed (--class, run by run for --class all) o
 The tower volley's proof run is --waves 3 --garrison-scale 1.3 --start-gold 5000 at a fortress with recorded tower posts and tower_volley spots (phase3-plan.md Slice 8; Helm's Deep records none until 2026-11-06, and then tower level 3 is not for sale): the bot buys tower level 3 at clear 2, and each tower with a spot and a post archer looses its volley in wave 3. A report that bought level 3 before a wave the run played owes a tower-volley pass for each recorded tower that holds a spot and a post, and a posts pass is owed for each recorded tower that holds a post (one tower's line never pays another's).
 The high towers' proof run is --waves 2 --garrison-scale 1.3 --start-gold 5000 at a fortress with recorded tower posts (phase3-plan.md Slice 7, spike S6; Helm's Deep records none until 2026-11-06, and then the tower row is not for sale): the bot buys tower level 1 in the preparation and level 2 at clear 1. A report that bought a tower level before a wave the run played owes a posts pass line (the posted archers stood, held their posts 30 s in and loosed an arrow), and one with level 2 owes a pass with level=2 (the wave it filled). --posts-variant A, B or C names how the archers are held (A scripted position, B with a speed limit of 0, C with the formation not splittable by AI) by setting TAOM_LD_POSTS_VARIANT for the game, and then the pass lines must name that variant; run it once per variant, and Mike picks from the lines.
 A fortress row with a split block owes one split pass once the log shows a calm's split ([LongDefeat][Split] preparation: or intermission:) and a wave cleared (#1128); a skip does not pay it.
+The engines' restore proof run is --waves 2 --garrison-scale 1.3 --start-gold 5000 --break-engines 1 (#1160): at clear 1 the game destroys every ram and tower, the bot repairs a broken gate, and the start of wave 2 brings the engines back. --break-engines N must be below --waves, the report must echo it as breakEngines (a run armed with none must report null), and a report that cleared a wave past N, a lost run included, owes an engine-restore and an engine-use pass that name the wave after the break (w=startWave+N); a skip, or a pass of another wave, does not pay either.
 A cavalry run also owes sally and sally-return, except that both read skip with reason=no-sally-point while no sally point is recorded in fortresses.json (the run rides from Begin): the judge accepts that skip for that reason alone, and only while this tree's fortress row holds no sally key at all (sally_recorded: the game writes the same reason when it drops a malformed block), and sally-return is owed only once a wave was cleared (sally_waived, owes_return).
 A report with a wave row whose healthFactor or damageFactor is above 1 (a wave past the authored list, as in --start-wave 12 --waves 2) also owes the scale check.
 A wave row's affixes must replay from the report's seed (affix_roll, the same SplitMix64 draw as the game's AffixPlan.Roll, cut by the Legend boons taken before that wave: affix_cut), and a run that cleared 5 waves or whose report shows a wave with affixes also owes the affix check, and a row with a stat power, hide, hammer, terror or blades an affix-effect line (pass or skip).
@@ -150,7 +151,7 @@ target_waves = None
 tree_head = None
 # The --speed the run was armed with, or None: the report's maxSpeed must equal it, or the arm key never took effect.
 expected_speed = None
-# The report fields the arm file fixed ({"seed": N, "startWave": N, "startRerolls": N, "startGold": N}): each must come back equal, or the arm key never took effect.
+# The report fields the arm file fixed ({"seed": N, "startWave": N, "startRerolls": N, "startGold": N, "breakEngines": N}): each must come back equal, or the arm key never took effect.
 expected_report = {}
 
 
@@ -671,7 +672,8 @@ def owes_summon(report_json):
 MAX_PRICE = 1_000_000
 FORT_OFFERED = {"gate": 3, "towers": 3, "fieldCare": True, "volley": 2}  # field care landed in Slice 4, the gate in Slice 5, the Elven Volley in Slice 6, tower levels 1 and 2 in Slice 7 and level 3, the tower volley, in Slice 8; each later slice raises its kind here and in FortOffer.Offered
 PURCHASE_KINDS = ("pack", "gateLevel", "gateRepair", "towerLevel", "fieldCare", "volleyLevel")
-SPENT_ON = ("packs", "gate", "towers", "fieldCare", "volley")
+# "upgrades" is the sink of the shop's troop upgrades (#1161); its purchase kind is not judged yet, so a report that bought one is refused until that check lands.
+SPENT_ON = ("packs", "gate", "towers", "fieldCare", "volley", "upgrades")
 KIND_SINK = {"pack": "packs", "gateLevel": "gate", "gateRepair": "gate", "towerLevel": "towers", "fieldCare": "fieldCare", "volleyLevel": "volley"}
 SHARE_TOLERANCE = 0.0005
 
@@ -1435,6 +1437,35 @@ def owes_split(report_json, log_text):
             and SPLIT_MADE.search(log_text or "") is not None)
 
 
+# The engines' restore (#1160). The game writes engine-restore (key w<N>) at the wave start that brought an engine back and engine-use (key w<N>) at that wave's clear. --break-engines N makes the
+# game destroy them at clear N, so the next wave restores them: a report that echoes breakEngines N and cleared a wave past N owes a pass of each that names that wave, a lost run included.
+ENGINE_RESTORE_CHECK = "engine-restore"
+ENGINE_USE_CHECK = "engine-use"
+
+
+def owes_engine_checks(report_json):
+    at, cleared = report_json.get("breakEngines"), report_json.get("wavesCleared")
+    return _is_int(at) and _is_int(cleared) and cleared > at
+
+
+def owed_engine_passes(report_json, log_text):
+    """The engine checks a report owes and the log does not pay. The break at clear N falls in wave startWave + N - 1 (the first wave is startWave), so the restore is at the start of wave
+    startWave + N and both passes must name it (w=<that wave>): a pass of another wave, or a skip, pays nothing."""
+    if not owes_engine_checks(report_json):
+        return []
+    start = report_json.get("startWave")
+    wave = (start if _is_int(start) else 1) + report_json["breakEngines"]
+    return [f"{name} (a pass with w={wave}, the wave after the break)" for name in (ENGINE_RESTORE_CHECK, ENGINE_USE_CHECK)
+            if not re.search(check_pattern(name, "pass").pattern + r" w=" + str(wave) + r"\b", log_text or "")]
+
+
+def break_engines_problem(known):
+    """Why --break-engines cannot prove the restore with these flags, or None: the game breaks nothing at the clear that ends the run, so a wave must follow the break."""
+    if known.break_engines is not None and known.break_engines >= known.waves:
+        return f"--break-engines {known.break_engines} must be below --waves {known.waves}: the game breaks nothing at the clear that ends the run, so no wave would prove the restore"
+    return None
+
+
 def sally_waived(name, log_text, recorded=False):
     """Whether a sally check is waived because no sally point is recorded: the fortress row holds no sally block (recorded), the log holds no pass for either sally check (a pass shows
     that a point exists, so then both are owed again), at least one skip of this check, and every skip of it reads reason=no-sally-point. Any other reason (point-unusable, taken-over,
@@ -1490,7 +1521,7 @@ def judge(done, report_json, log_text=None):
     if mismatch:
         return 1, f"the report's waves do not match its clears: {mismatch}{note}"
     # A run that armed no start wave is a run from wave 1, so the default is checked too, not only an armed value.
-    for key, wanted in {"startWave": 1, "startGold": None, **expected_report}.items():
+    for key, wanted in {"startWave": 1, "startGold": None, "breakEngines": None, **expected_report}.items():
         got = report_json.get(key)
         if isinstance(got, bool) or got != wanted:
             return 1, f"armed with {key}={wanted!r} but the report's {key}={report_json.get(key)!r}: the arm key never took effect"
@@ -1575,6 +1606,7 @@ def judge(done, report_json, log_text=None):
         missing.append(VOLLEY_CHECK + " (a pass with mode=crosshair: level two aims where the lord looks)")
     if not lose:
         missing.extend(owed_tower_passes(report_json, log_text))
+    missing.extend(owed_engine_passes(report_json, log_text))
     if not lose and reached_effect_affixes(report_json) and not check_pattern(AFFIX_EFFECT_CHECK, "(?:pass|skip)").search(log_text):
         missing.append(AFFIX_EFFECT_CHECK)
     if missing:
@@ -1708,6 +1740,8 @@ def build_parser():
                         help="begin the run at this wave number (a test option: the clears still count from 0, so the report is not a board run)")
     parser.add_argument("--start-gold", type=whole_in_range(0, 100000),
                         help="the gold the run starts with instead of the shop's, and the sign that the bot buys fortifications before packs (a test option: the report is not a board run; fortification runs use 5000)")
+    parser.add_argument("--break-engines", type=whole_in_range(1, 100),
+                        help="at this clear the game destroys every ram and siege tower, so the next wave proves they come back (#1160; a test option, below --waves; the proof run adds --start-gold 5000 so the bot repairs the gate)")
     parser.add_argument("--posts-variant", type=str.upper, choices=POSTS_VARIANTS,
                         help="how the high towers' archers are held (spike S6): A a scripted position, B with a speed limit of 0, C with the posts formation not splittable by AI; sets TAOM_LD_POSTS_VARIANT for the game (default: the game's own, A)")
     parser.add_argument("--start-rerolls", type=whole_in_range(0, 3), default=DEFAULT_START_REROLLS,
@@ -1734,7 +1768,7 @@ def arm_pairs(known, out, wall_limit, class_id=None):
     scale = known.garrison_scale if known.garrison_scale is not None else (LOSE_GARRISON_SCALE if known.lose else None)
     expect = "deep" if known.deep else ("lost" if known.lose else None)
     return [("fortress", known.fortress), ("waves", known.waves), ("garrison_scale", scale), ("expect", expect),
-            ("class", class_id), ("seed", known.seed), ("start_wave", known.start_wave), ("start_rerolls", known.start_rerolls), ("start_gold", known.start_gold),
+            ("class", class_id), ("seed", known.seed), ("start_wave", known.start_wave), ("start_rerolls", known.start_rerolls), ("start_gold", known.start_gold), ("break_engines", known.break_engines),
             ("live_limit_seconds", known.live_limit), ("wall_limit_seconds", wall_limit), ("screenshots", known.screenshots),
             ("speed", known.speed), ("out", out), ("quit", 1)]
 
@@ -1748,6 +1782,8 @@ def armed_report_fields(known):
         fields["startWave"] = known.start_wave
     if known.start_gold is not None:
         fields["startGold"] = known.start_gold
+    if known.break_engines is not None:
+        fields["breakEngines"] = known.break_engines
     return fields
 
 
@@ -1772,6 +1808,9 @@ def main(argv=None):
     parser = build_parser()
     known, rest = parser.parse_known_args(argv)
     apply_deep(known)
+    problem = break_engines_problem(known)
+    if problem:
+        parser.error(problem)
     posts_variant = known.posts_variant
     if known.posts_variant:
         os.environ[POSTS_VARIANT_ENV] = known.posts_variant

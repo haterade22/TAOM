@@ -167,6 +167,18 @@ public class CampaignHotPathSettingsProvidersTests
     [DataRow(typeof(TAOM.Features.SpecialResources.SpecialResourceSettingsProvider))]
     // #1111: the diplomacy model asks the switch at every AI join, defection and mercenary score of the daily clan tick.
     [DataRow(typeof(TAOM.Features.KingdomAllegiance.KingdomAllegianceSettingsProvider))]
+    // Hall Seats: not a hot path (read once per spawn pass, when a hall spawns its characters); the accessor still takes the settings once.
+    [DataRow(typeof(TAOM.Features.HallSeats.HallSeatsSettingsProvider))]
+    // Perf: the war check (party-AI worker thread too) reads four settings; the army AI scores every candidate; the others are read per
+    // bandit spawn, per settlement day tick, per marriage check, per encyclopedia list and per settlement food and gold model call.
+    [DataRow(typeof(TAOM.Features.Diplomacy.TaomSettingsProvider))]
+    [DataRow(typeof(TAOM.Features.ArmyTargeting.ArmyTargetingSettingsProvider))]
+    [DataRow(typeof(TAOM.Features.BanditManagement.BanditScalingSettingsProvider))]
+    [DataRow(typeof(TAOM.Features.CultureConversion.CultureConversionSettingsProvider))]
+    [DataRow(typeof(TAOM.Features.MarriageAlignment.MarriageAlignmentSettingsProvider))]
+    [DataRow(typeof(TAOM.Features.Encyclopedia.EncyclopediaSettingsProvider))]
+    [DataRow(typeof(TAOM.Features.SettlementFood.Models.TaomSettlementFoodModel))]
+    [DataRow(typeof(TAOM.Features.SettlementEconomy.Models.TaomSettlementEconomyModel))]
     public void OnlyTheLazySettingsAccessor_ReadsTheMcmInstance(Type provider)
     {
         var accessor = provider.GetProperty("Settings", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static)
@@ -181,6 +193,75 @@ public class CampaignHotPathSettingsProvidersTests
             .ToList();
         Assert.AreEqual(0, offenders.Count,
             provider.Name + " resolves the MCM instance outside the lazy accessor: " + string.Join(", ", offenders));
+    }
+
+    // Types whose property getters still resolve the MCM instance directly. Shrink this list, never grow it: a new
+    // class that reads TaomSettings.Instance in a getter takes the reference once through a lazy Settings accessor instead.
+    private static readonly string[] UncachedGetterAllowlist =
+    {
+        "TAOM.Features.Arena.TournamentAlignmentSettingsProvider",
+        "TAOM.Features.ArmourAcquisition.ArmourAcquisitionSettingsProvider",
+        "TAOM.Features.BattleCorpses.BattleCorpseSettingsProvider",
+        "TAOM.Features.BattleLoadDiagnostics.BattleLoadDiagnosticsSettingsProvider",
+        "TAOM.Features.CreatureBandits.CreatureBroodSpawnBehavior",
+        "TAOM.Features.CreatureBandits.TrollBandSpawnBehavior",
+        "TAOM.Features.CreatureSiegeRole.CreatureSiegeRoleSettingsProvider",
+        "TAOM.Features.EliteEmissary.EliteEmissarySettingsProvider",
+        "TAOM.Features.Enlistment.EnlistmentDiagnosticsSettingsProvider",
+        "TAOM.Features.Enlistment.EnlistmentFeatureSettingsProvider",
+        "TAOM.Features.EquipPresets.EquipPresetsSettingsProvider",
+        "TAOM.Features.FiefGranting.FiefGrantSettingsProvider",
+        "TAOM.Features.HardQuestions.HardQuestionsSettingsProvider",
+        "TAOM.Features.HeroRace.HeroRaceSettingsProvider",
+        "TAOM.Features.LordCourtesies.LordCourtesiesSettingsProvider",
+        "TAOM.Features.Messengers.MessengerSettingsProvider",
+        "TAOM.Features.MountDespawn.MountDespawnSettingsProvider",
+        "TAOM.Features.NavalTravel.NavalTravelSettingsProvider",
+        "TAOM.Features.PrisonerRecruitment.PrisonerRecruitmentSettingsProvider",
+        "TAOM.Features.Siege.SiegeDefenseSettingsProvider",
+        "TAOM.Features.SiegeDismount.SiegeDismountSettingsProvider",
+        "TAOM.Features.SiegeForces.SiegeForcesSettingsProvider",
+        "TAOM.Features.StagedSiege.StagedSiegeSettingsProvider",
+        "TAOM.Features.TelcharsMark.TelcharsMarkSettingsProvider",
+        "TAOM.Features.UncapturableHeroes.UncapturableHeroesSettingsProvider",
+        "TAOM.Features.WandererAllegiance.WandererAllegianceSettingsProvider",
+        "TAOM.Features.WarOfTheRingMomentum.MomentumSettingsProvider",
+    };
+
+    [TestMethod]
+    public void NoPropertyGetter_ReadsTheMcmInstanceOutsideALazyAccessor_ExceptTheAllowlist()
+    {
+        var assembly = typeof(TaomSettings).Assembly;
+        Type[] types;
+        try { types = assembly.GetTypes(); }
+        catch (ReflectionTypeLoadException e) { types = e.Types.Where(t => t != null).ToArray()!; }
+
+        int accessors = 0;
+        var offenders = new System.Collections.Generic.SortedSet<string>(StringComparer.Ordinal);
+        foreach (var type in types)
+        {
+            MethodInfo[] methods;
+            try { methods = type.GetMethods(Declared); }
+            catch (Exception e) when (e is TypeLoadException || e is System.IO.IOException) { continue; }
+            foreach (var getter in methods.Where(m => m.Name.StartsWith("get_", StringComparison.Ordinal)))
+            {
+                bool calls;
+                try { calls = CallsInstance(getter); }
+                catch (Exception e) when (e is NotSupportedException || e is System.IO.IOException || e is TypeLoadException) { continue; } // a body that needs an unloadable game assembly cannot be scanned
+                if (!calls) continue;
+                if (getter.Name == "get_Settings") { accessors++; continue; }
+                if (getter.Name == "get_Instance") continue; // the settings classes' own singleton getters
+                offenders.Add(type.FullName + "." + getter.Name);
+            }
+        }
+
+        Assert.IsTrue(accessors >= 50, "the scan must find the lazy Settings accessors, found " + accessors);
+        var unexpected = offenders.Where(o => !UncachedGetterAllowlist.Any(a => o.StartsWith(a + ".", StringComparison.Ordinal))).ToList();
+        Assert.AreEqual(0, unexpected.Count,
+            "property getters that resolve TaomSettings.Instance on every read (cache it in a lazy Settings accessor): "
+            + string.Join(", ", unexpected));
+        var stale = UncachedGetterAllowlist.Where(a => !offenders.Any(o => o.StartsWith(a + ".", StringComparison.Ordinal))).ToList();
+        Assert.AreEqual(0, stale.Count, "allowlist entries that no longer read the instance (remove them): " + string.Join(", ", stale));
     }
 
     // A second (internal, test-only) constructor must leave exactly one public constructor, or DryIoc
@@ -416,15 +497,39 @@ public class CampaignHotPathSettingsProvidersTests
         var mcm = new TaomSettings();
         var cfg = Substitute.For<IAlignmentDesertionConfigProvider>();
         cfg.GetConfig().Returns(new AlignmentDesertionConfig());
-        var sut = new AlignmentDesertionSettingsProvider(cfg, mcm);
+        var recruitment = Substitute.For<TAOM.Features.AlignmentRecruitment.IRecruitmentAlignmentSettingsProvider>();
+        var sut = new AlignmentDesertionSettingsProvider(cfg, recruitment, mcm);
         Assert.IsTrue(sut.IsEnabled);
         Assert.AreEqual(0.5f, sut.Rate, 0.0001f);
+        Assert.IsFalse(sut.GoodRejectsEvilOnly);
 
         mcm.EnableAlignmentDesertion = false;
         mcm.AlignmentDesertionRate = 0.25f;
+        recruitment.IsEnabled.Returns(true);
+        recruitment.GoodRejectsEvilOnly.Returns(true);
 
         Assert.IsFalse(sut.IsEnabled);
         Assert.AreEqual(0.25f, sut.Rate, 0.0001f);
+        Assert.IsTrue(sut.GoodRejectsEvilOnly, "Desertion reads Recruitment Alignment's 'Only Good Rejects Evil' live.");
+    }
+
+    [TestMethod]
+    public void AlignmentDesertion_GoodRejectsEvilOnly_NeedsRecruitmentAlignmentSwitchedOn()
+    {
+        var cfg = Substitute.For<IAlignmentDesertionConfigProvider>();
+        cfg.GetConfig().Returns(new AlignmentDesertionConfig());
+        var recruitment = Substitute.For<TAOM.Features.AlignmentRecruitment.IRecruitmentAlignmentSettingsProvider>();
+        var sut = new AlignmentDesertionSettingsProvider(cfg, recruitment, new TaomSettings());
+        recruitment.GoodRejectsEvilOnly.Returns(true);
+
+        recruitment.IsEnabled.Returns(false);
+        Assert.IsFalse(sut.GoodRejectsEvilOnly, "A leftover 'Only Good Rejects Evil' does nothing while Recruitment Alignment is off.");
+
+        recruitment.IsEnabled.Returns(true);
+        Assert.IsTrue(sut.GoodRejectsEvilOnly);
+
+        recruitment.GoodRejectsEvilOnly.Returns(false);
+        Assert.IsFalse(sut.GoodRejectsEvilOnly);
     }
 
     [TestMethod]

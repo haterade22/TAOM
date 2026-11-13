@@ -17,7 +17,8 @@
 # 3. Cross-session note: when another session's ledger, modified in the last 24 hours, holds the same
 #    path (case folded) with an epoch in the last 24 hours, and this session has not been told about
 #    that (other session, path) pair (<id>.warned), it records the pairs, then sends one
-#    additionalContext naming them. One awk reads every candidate ledger.
+#    additionalContext naming them. One awk reads every candidate ledger. A path under a user's
+#    .claude folder gets no note: it sits in no checkout, so git diff cannot show it.
 #
 # Channel: PostToolUse additionalContext, the check-polearm-shield-parity.sh shape (exit-0 stderr
 # reaches only the debug log). Never blocks: always exits 0, and any failure exits 0 silently. No
@@ -58,6 +59,12 @@ if (( 10#${LINES:-0} > 4000 )); then
     tail -n 2000 "$EDITS" > "$EDITS.$$.tmp" 2>/dev/null && mv -f "$EDITS.$$.tmp" "$EDITS" 2>/dev/null
     rm -f "$EDITS.$$.tmp" 2>/dev/null
 fi
+
+# A file under a user's .claude folder (memory, plans, settings) sits in no checkout, so a note that
+# says to read its git diff is wrong. The ledger keeps the line. The pattern is harness_retro.py's
+# _CLAUDE_HOME, plus the Git Bash /c/ form.
+HOME_RE='^(/[a-z]|[a-z]:)/users/[^/]+/\.claude/'
+[[ "${FILE_PATH,,}" =~ $HOME_RE ]] && exit 0
 
 # Other sessions' ledgers touched in the last 24 hours (1,440 minutes), read by one awk: the latest
 # epoch per other session for this path, skipping pairs already in this session's .warned. Paths

@@ -166,6 +166,7 @@ internal sealed partial class LongDefeatDirector
         if (_run.Result != null)
             return;
 
+        TickStanding(dt, fx);
         TickSplit(dt, fx.DefenderBatches.Count > 0);
         TickVolleyWatch(dt);
         TickPosts(dt);
@@ -287,6 +288,8 @@ internal sealed partial class LongDefeatDirector
         var action = ShopBot.Decide(view, _botClock);
         if (action.Kind == BotActionKind.Buy && action.OfferId != null)
             _run.TryBuy(action.OfferId);
+        else if (action.Kind == BotActionKind.Upgrade && action.OfferId != null)
+            _run.TryUpgrade(action.OfferId);
         else if (action.Kind == BotActionKind.Pick && action.OfferId != null)
             _run.TryPickBoon(action.OfferId);
         else if (action.Kind == BotActionKind.Reroll)
