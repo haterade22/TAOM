@@ -5682,3 +5682,11 @@ Report `docs/reviews/deep-review-047-fold-safe-twins-2026-11-13.md`; RCA `docs/r
 
 - **Pre-existing, owed to the maintainer:** widen #1133 to non-wanderer Released and Traveling targets; a prisoner player's messenger to a partyless target is dropped as Confused (no issue yet).
 - **In-game:** nothing was run (the install was held by another session).
+
+## Review (number assigned at merge): plan 048, delete eight members nothing calls, deep review with the Data flow lens (2026-11-13)
+
+- **Scope:** branch `improve/048-delete-dead-members`, `664f19c5b..5e788732f` (11 files: eight members deleted from six files, three comment-only corrections, the entry point baseline row, one feature doc).
+- **Codex:** not run (out of usage; a paid call needs Mike's word).
+- **Confirmed:** 0. 0 false positives. Lens 5 traced 13 flows with no gap; the lead re-checked the engine call site of the weapon toggle and the Patch0 and Patch21 comment claims. Two pre-existing LOW items are recorded as follow-ups in `docs/reviews/deep-review-048-delete-dead-members-2026-11-13.md`. No RCA: nothing was confirmed.
+- **Suite:** `Passed!  - Failed:     0, Passed: 39250, Skipped:     9, Total: 39259`, equal to the base.
+- **In-game:** nothing was run, and the diff owes none.

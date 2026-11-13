@@ -18,16 +18,6 @@ public static class StackFrameSnapshotBuilder
         catch { return Array.Empty<StackFrameSnapshot>(); }
     }
 
-    public static IReadOnlyList<StackFrameSnapshot> FromCurrent(int skipFrames = 1)
-    {
-        try
-        {
-            var st = new StackTrace(skipFrames, fNeedFileInfo: true);
-            return Build(st);
-        }
-        catch { return Array.Empty<StackFrameSnapshot>(); }
-    }
-
     private static IReadOnlyList<StackFrameSnapshot> Build(StackTrace st)
     {
         var frames = st.GetFrames();

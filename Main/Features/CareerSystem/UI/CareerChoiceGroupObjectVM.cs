@@ -7,7 +7,6 @@ namespace TAOM.Features.CareerSystem.UI;
 public class CareerChoiceGroupObjectVM : ViewModel
 {
     private readonly CareerChoiceGroupDefinition _group;
-    private bool _isExpanded;
     private bool _isLocked;
     private MBBindingList<CareerChoiceObjectVM> _choices;
 
@@ -45,20 +44,6 @@ public class CareerChoiceGroupObjectVM : ViewModel
     public int Tier => _group.Tier;
 
     [DataSourceProperty]
-    public bool IsExpanded
-    {
-        get => _isExpanded;
-        set
-        {
-            if (_isExpanded != value)
-            {
-                _isExpanded = value;
-                OnPropertyChangedWithValue(value, nameof(IsExpanded));
-            }
-        }
-    }
-
-    [DataSourceProperty]
     public bool IsLocked
     {
         get => _isLocked;
@@ -84,11 +69,5 @@ public class CareerChoiceGroupObjectVM : ViewModel
                 OnPropertyChangedWithValue(value, nameof(Choices));
             }
         }
-    }
-
-    public void ExecuteToggleExpand()
-    {
-        if (!_isLocked)
-            IsExpanded = !IsExpanded;
     }
 }
