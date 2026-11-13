@@ -7,7 +7,7 @@ Feature: plan 048, delete eight members nothing calls and correct the comments t
          describe them (branch improve/048-delete-dead-members, 664f19c5b..5e788732f)
 Date:    2026-11-13
 
-Scope:   C# (7 files: 6 deletions, 1 comment-only edit), one test-file comment, the entry point
+Scope:   C# (8 files: 6 deletions, 2 comment-only edits), one test-file comment, the entry point
          line-count baseline, one feature doc. No XML, no harness files.
 Blast radius: 8 deleted members. git grep -n -w over every tracked .cs and .xml at the tip finds
          no caller (orchestrator spec check, re-run by the lead with the member names and with the
@@ -114,3 +114,21 @@ Codex not run: out of usage, and a paid call needs the maintainer's word. The co
 ### Codex lessons (pending)
 
 None. No new false-positive pattern and no missed category.
+
+## Convergence round 1
+
+Reviewed range: `5e788732f..b8fadf068`. One finding.
+
+1. **LOW, FIXED** in the commit that adds this section (subject "fix(reviews): v2.0.38 -
+   convergence fixes for plan 048"). The Scope line in the report block said
+   "C# (7 files: 6 deletions, 1 comment-only edit)". `git diff --numstat 664f19c5b..5e788732f`
+   lists 8 non-test C# files: 6 with deletions, plus 2 with comment-only edits
+   (MBMapScene_GetBattleSceneIndexMap_Patch.cs, 3/3, and PatchReportFormatter.cs, 1/1). The line now
+   reads "C# (8 files: 6 deletions, 2 comment-only edits)". With the test file, the baseline and the
+   feature doc, this record now counts 11 files. That agrees with the REVIEW-LOG entry ("11 files:
+   eight members deleted from six files, three comment-only corrections ..."), which counts the test
+   comment among its three corrections.
+
+No code changed in this round. The full suite at b8fadf068, run before the edit:
+`Passed!  - Failed:     0, Passed: 39250, Skipped:     9, Total: 39259`, equal to the base. No gate
+changed, so no differential sweep.
