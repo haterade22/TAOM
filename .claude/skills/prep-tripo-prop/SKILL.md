@@ -115,23 +115,26 @@ are in each script's docstring; the scripts are listed in [tools/README.md](../.
    plus `--stem t_<mesh>` for the one set of the decimate route. Without `--stem` every set in the
    folder becomes `t_<set>`. It refuses to overwrite (`--force`), warns on a flat normal, and
    "metal map is near-constant" is correct for stone.
-2. Check every Kit name is free. `python tools/validate_mesh_refs.py --check-name <mesh>` sees
+2. Run the two mesh gates of `/blender-asset` on the Kit FBX: `tools/blender/mesh_preflight.py`
+   with `--profile prop` (`--profile icon` for a map icon), then `tools/blender/qa_views.py`. Read
+   the verdict and the six views before the file goes anywhere.
+3. Check every Kit name is free. `python tools/validate_mesh_refs.py --check-name <mesh>` sees
    metamesh names only, so also search the faction's `AssetSources` and `Assets` folders for each
    material and `t_` texture name: the Kit binds materials by name module-wide and a same-named older
    one wins silently.
-3. With Mike's word, copy the FBX and the textures into the Kit folder, new names or with a backup,
+4. With Mike's word, copy the FBX and the textures into the Kit folder, new names or with a backup,
    and compare hashes after. A prop takes `<mesh>.fbx` (with its `bo_`). A map icon takes
    `<mesh>_low.fbx` renamed `<mesh>.fbx` (decimate route) or `<dir>\vN\uv\<name>.fbx` (rebuild
    route), no `bo_`, into `TAOM_Map\AssetSources\Campaign Map\Map Icons\<faction>\`, textures in
    `textures\`; conventions in [map-icons.md](../../../docs/kitbash/map-icons.md). Read back in
    Blender, the FBX sits at rotation X 90 and scale 0.01: the Kit's proven format, not a fault.
-4. Mike restarts the editor (it scans resources at startup only), imports the textures, then the
+5. Mike restarts the editor (it scans resources at startup only), imports the textures, then the
    mesh. One Kit material per FBX material, named exactly as the FBX material (`t_<mesh>` on the
    decimate route, the set names on the rebuild route), with `use_specular` on, or the `_s` texture
    is never read. For a map icon he points the settlement entity's child `meta_mesh_component` in
    `SceneObj/Main_map/scene.xscene` at the new metamesh. Change only that one entity: a faction icon
    metamesh is shared (`gundabad_town` draws three settlements).
-5. In game: right scale, no pink or white texture, siege and gate slots in place.
+6. In game: right scale, no pink or white texture, siege and gate slots in place.
 
 ## Phase 5: Records
 
@@ -157,4 +160,4 @@ go to `docs/reviews/lessons/build-tooling-workflow.md`, a better default goes in
 | Boxes inside out in game, fine in Blender | Faces wound inward: Blender and Cycles draw back faces. `unwrap_texture_sets.py` fails on them |
 | Editor or Kit crashes opening a prefab ("Meta mesh with name ... cannot be found!" in `watchdog_log_*.txt`) | The prefab names a mesh the session has not imported, or in mixed case: the Kit lowercases names and the lookup is case-sensitive. Stage the XML only after the import ([props doc](../../../docs/reference/tpac-static-prop-authoring.md) "Names") |
 | A Blender MCP "dry run" changed or deleted the real object | `bpy.ops.object.duplicate()` over MCP can leave the original active: copy with `bpy.data.objects.new(name, src.data.copy())` and assert `new.data is not src.data` first |
-| Every QA render passed, the user sees shreds and holes in game | Blender renders both sides; the engine culls back faces. Judge with backface culling on, textured and lit, with close-ups of each changed seam, before saying it looks right |
+| Every QA render passed, the user sees shreds and holes in game | Blender renders both sides; the engine culls back faces. Judge with backface culling on (`tools/blender/qa_views.py`), textured and lit, with close-ups of each changed seam, before saying it looks right |
