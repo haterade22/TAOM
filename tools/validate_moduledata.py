@@ -38,6 +38,7 @@ try:
     import taom_schema as ts
     # Aliased: main() binds a local `game_modules`, which would shadow the import.
     from _gamedir import game_modules as resolve_game_modules
+    from remap_stale_scene_names import REMAP as SCENE_REMAP
 
     REPO_ROOT = Path(__file__).resolve().parent.parent
     MODULEDATA = REPO_ROOT / "Main" / "_Module" / "ModuleData"
@@ -713,24 +714,32 @@ def prison_scene_issues(game_modules, scene_files=_scene_files) -> list:
 
     A prison break loads the settlement's `prison` Location scene and spawns its guards on the
     scene's `stealth_agent` patrol points and its reinforcements on `prison_break_reinforcement_point`.
-    A pre-1.5 dungeon scene has neither, so the guards have no patrol parent and the mission
-    cannot start. Orthanc and Orthanc Gate shipped `empire_dungeon_a` while the other 278 prisons
-    used `*_dungeon_stealth` (2026-11-13). TAOM_Map is unversioned, so this is the in-repo gate.
-    A scene no module ships is a WARNING (not checked here; tools/audit_scene_names.py owns that)."""
+    A pre-1.5 dungeon scene has neither, so the guards have no stealth spawn points and the prison
+    break is expected to fail (not verified in game). Orthanc and Orthanc Gate shipped
+    `empire_dungeon_a` while the other 278 prisons used `*_dungeon_stealth` (2026-11-13). TAOM_Map is
+    unversioned, so this is the in-repo gate. A scene no module ships is a WARNING (not checked
+    here; tools/audit_scene_names.py owns that). A live file that does not parse, or that holds no
+    prison Location rows, is an ERROR: a gate that checked nothing must not read as a pass."""
     live = Path(game_modules) / "TAOM_Map" / "ModuleData" / "settlements.xml"
     rel = "TAOM_Map/ModuleData/settlements.xml"
     if not live.is_file():
         return [ts.Issue(severity=ts.Severity.WARNING, code=PRISON_CODE, file=rel, line=0, entry_id="",
                          message=f"prison scenes were NOT checked: {live} not found")]
-    root = ET.fromstring(live.read_bytes())
+    try:
+        root = ET.fromstring(live.read_bytes())
+    except ET.ParseError as exc:
+        return [ts.Issue(severity=ts.Severity.ERROR, code=PRISON_CODE, file=rel, line=0, entry_id="",
+                         message=f"{live} does not parse ({exc}); prison scenes NOT checked")]
     scenes = scene_files(game_modules)
     tags_cache = {}
     issues = []
+    prisons = 0
     for settlement in root.iter("Settlement"):
         sid = settlement.get("id", "")
         for loc in settlement.iter("Location"):
             if loc.get("id") != "prison":
                 continue
+            prisons += 1
             names = [loc.get(a) for a in ("scene_name", "scene_name_1", "scene_name_2", "scene_name_3")]
             for name in dict.fromkeys(n for n in names if n):
                 xscene = scenes.get(name.lower())
@@ -745,11 +754,19 @@ def prison_scene_issues(game_modules, scene_files=_scene_files) -> list:
                     tags_cache[name.lower()] = [t for t in _PRISON_SCENE_TAGS if t not in text]
                 missing = tags_cache[name.lower()]
                 if missing:
+                    if name.lower() in {k.lower() for k in SCENE_REMAP}:
+                        repair = ("run python tools/remap_stale_scene_names.py --dry-run, then with "
+                                  "--apply (a backup is made)")
+                    else:
+                        repair = "point the prison at a *_dungeon_stealth scene"
                     issues.append(ts.Issue(
                         severity=ts.Severity.ERROR, code=PRISON_CODE, file=rel, line=0, entry_id=sid,
-                        message=f"prison scene {name} has no {' or '.join(missing)} entities, so a prison "
-                                f"break here cannot start; use the culture's *_dungeon_stealth scene "
-                                f"(python tools/remap_stale_scene_names.py --apply)"))
+                        message=f"prison scene {name} has no {' or '.join(missing)} entities, so its "
+                                f"guards have no stealth spawn points and a prison break here is "
+                                f"expected to fail (not verified in game); {repair}"))
+    if not prisons:
+        issues.append(ts.Issue(severity=ts.Severity.ERROR, code=PRISON_CODE, file=rel, line=0, entry_id="",
+                               message=f"no prison Location rows in {live}, nothing checked"))
     return issues
 
 

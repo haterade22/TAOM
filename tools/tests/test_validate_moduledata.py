@@ -3066,8 +3066,12 @@ class PrisonSceneTests(unittest.TestCase):
     and Orthanc Gate named empire_dungeon_a, which has neither, while 278 prisons used a
     *_dungeon_stealth scene. TAOM_Map is unversioned, so this is the in-repo gate."""
 
-    STEALTH = '<scene><entity name="a" tags="stealth_agent"/><entity tags="prison_break_reinforcement_point"/></scene>'
-    OLD = '<scene><entity name="chair" tags="npc_common"/></scene>'
+    AGENT = '<tag name="stealth_agent"/>'
+    REINFORCEMENT = '<variable name="SpawnGroupTag" value="prison_break_reinforcement_point"/>'
+    STEALTH = f'<scene><entity>{AGENT}</entity><entity>{REINFORCEMENT}</entity></scene>'
+    ONLY_AGENT = f'<scene><entity>{AGENT}</entity></scene>'
+    ONLY_REINFORCEMENT = f'<scene><entity>{REINFORCEMENT}</entity></scene>'
+    OLD = '<scene><entity name="chair"><tag name="npc_common"/></entity></scene>'
 
     def setUp(self):
         self._tmp = tempfile.TemporaryDirectory()
@@ -3098,6 +3102,48 @@ class PrisonSceneTests(unittest.TestCase):
         self.assertEqual([(i.entry_id, i.severity) for i in found], [("town_isengard", ts.Severity.ERROR)])
         self.assertEqual(found[0].code, vm.PRISON_CODE)
         self.assertIn("prison_break_reinforcement_point", found[0].message)
+        # empire_dungeon_a is a key of the remap tool's table, so the repair names the tool.
+        self.assertIn("remap_stale_scene_names.py --dry-run, then with --apply (a backup is made)",
+                      found[0].message)
+
+    def test_scene_with_only_the_agent_tag_names_the_missing_reinforcement_tag(self):
+        _write(self.modules / "SandBox" / "SceneObj" / "half_a" / "scene.xscene", self.ONLY_AGENT)
+        self._settlements(("town_a", '<Location id="prison" scene_name="half_a" />'))
+        found = self._issues()
+        self.assertEqual([i.severity for i in found], [ts.Severity.ERROR])
+        self.assertIn("has no prison_break_reinforcement_point entities", found[0].message)
+        self.assertNotIn("has no stealth_agent", found[0].message)
+
+    def test_scene_with_only_the_reinforcement_tag_names_the_missing_agent_tag(self):
+        _write(self.modules / "SandBox" / "SceneObj" / "half_b" / "scene.xscene", self.ONLY_REINFORCEMENT)
+        self._settlements(("town_b", '<Location id="prison" scene_name="half_b" />'))
+        found = self._issues()
+        self.assertEqual([i.severity for i in found], [ts.Severity.ERROR])
+        self.assertIn("has no stealth_agent entities", found[0].message)
+
+    def test_repair_text_skips_the_remap_tool_for_a_scene_it_cannot_fix(self):
+        # half_a is not a key of the remap tool's REMAP table.
+        _write(self.modules / "SandBox" / "SceneObj" / "half_a" / "scene.xscene", self.ONLY_AGENT)
+        self._settlements(("town_a", '<Location id="prison" scene_name="half_a" />'))
+        message = self._issues()[0].message
+        self.assertNotIn("remap_stale_scene_names", message)
+        self.assertIn("point the prison at a *_dungeon_stealth scene", message)
+
+    def test_unparsable_live_file_is_one_error_not_a_crash(self):
+        path = self.modules / "TAOM_Map" / "ModuleData" / "settlements.xml"
+        path.parent.mkdir(parents=True)
+        path.write_bytes(b"<Settlements><Settlement>")
+        found = self._issues()
+        self.assertEqual([i.severity for i in found], [ts.Severity.ERROR])
+        self.assertIn("does not parse", found[0].message)
+        self.assertIn("prison scenes NOT checked", found[0].message)
+
+    def test_live_file_with_no_prison_rows_is_an_error(self):
+        self._settlements(("town_EW1", ""))
+        found = self._issues()
+        self.assertEqual([i.severity for i in found], [ts.Severity.ERROR])
+        self.assertIn("no prison Location rows in", found[0].message)
+        self.assertIn("nothing checked", found[0].message)
 
     def test_level_slots_are_checked_and_scene_names_ignore_case(self):
         self._settlements(("castle_orthanc_gate",
