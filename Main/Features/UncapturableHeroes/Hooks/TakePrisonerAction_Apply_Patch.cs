@@ -1,6 +1,7 @@
 using System;
 using HarmonyLib;
 using TAOM.Core.Logging;
+using TAOM.Features.CoopInterop;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Actions;
 using TaleWorlds.CampaignSystem.Party;
@@ -30,18 +31,21 @@ public static class TakePrisonerAction_Apply_Patch
 {
     private static IUncapturableHeroService? _service;
     private static IModLogger? _logger;
+    private static IPlayerControlQuery? _players;
 
     /// <summary>Called once from UncapturableHeroesIoC at container build time.</summary>
-    public static void Initialize(IUncapturableHeroService service, IModLogger logger)
+    public static void Initialize(IUncapturableHeroService service, IModLogger logger, IPlayerControlQuery players)
     {
         _service = service;
         _logger = logger;
+        _players = players;
     }
 
     public static void ResetForUnload()
     {
         _service = null;
         _logger = null;
+        _players = null;
     }
 
     [HarmonyPrefix]
@@ -51,7 +55,8 @@ public static class TakePrisonerAction_Apply_Patch
         {
             // The player's own captivity is a whole subsystem (PlayerCaptivity.StartCaptivity, the
             // prisoner wait menu, ransom). Five of this method's call sites exist only to run it.
-            if (prisonerCharacter == null || prisonerCharacter == Hero.MainHero)
+            // Under co-op the server captures a defeated remote player here too (#1139).
+            if (prisonerCharacter == null || UncapturablePlayerCheck.BelongsToPlayers(prisonerCharacter, _players))
                 return true;
 
             // Already held. MakeHeroFugitiveAction touches PartyBelongedTo, the settlement and the
@@ -102,7 +107,10 @@ public static class TakePrisonerAction_Apply_Patch
     private static bool IsPlayerCapturing(PartyBase? capturerParty)
     {
         var captorFaction = capturerParty?.MapFaction;
+        if (captorFaction == null)
+            return false;
+
         var playerFaction = Hero.MainHero?.MapFaction;
-        return captorFaction != null && playerFaction != null && captorFaction == playerFaction;
+        return playerFaction != null && captorFaction == playerFaction;
     }
 }

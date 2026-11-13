@@ -1,6 +1,7 @@
 using DryIoc;
 using TAOM.Adapters;
 using TAOM.Core.Logging;
+using TAOM.Features.CoopInterop;
 using TAOM.Features.UncapturableHeroes.Hooks;
 
 namespace TAOM.Features.UncapturableHeroes;
@@ -26,8 +27,9 @@ public static class UncapturableHeroesIoC
     {
         var service = container.Resolve<IUncapturableHeroService>();
         var logger = container.Resolve<IModLogger>();
+        var players = container.Resolve<IPlayerControlQuery>();
 
-        Hero_CanBecomePrisoner_Patch.Initialize(service, logger);
-        TakePrisonerAction_Apply_Patch.Initialize(service, logger);
+        Hero_CanBecomePrisoner_Patch.Initialize(service, logger, players);
+        TakePrisonerAction_Apply_Patch.Initialize(service, logger, players);
     }
 }

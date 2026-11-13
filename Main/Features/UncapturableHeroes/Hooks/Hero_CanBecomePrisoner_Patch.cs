@@ -1,6 +1,7 @@
 using System;
 using HarmonyLib;
 using TAOM.Core.Logging;
+using TAOM.Features.CoopInterop;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Actions;
 
@@ -29,18 +30,21 @@ public static class Hero_CanBecomePrisoner_Patch
 {
     private static IUncapturableHeroService? _service;
     private static IModLogger? _logger;
+    private static IPlayerControlQuery? _players;
 
     /// <summary>Called once from UncapturableHeroesIoC at container build time.</summary>
-    public static void Initialize(IUncapturableHeroService service, IModLogger logger)
+    public static void Initialize(IUncapturableHeroService service, IModLogger logger, IPlayerControlQuery players)
     {
         _service = service;
         _logger = logger;
+        _players = players;
     }
 
     public static void ResetForUnload()
     {
         _service = null;
         _logger = null;
+        _players = null;
     }
 
     /// <remarks>
@@ -62,8 +66,8 @@ public static class Hero_CanBecomePrisoner_Patch
 
             // The player is handled by vanilla on both call sites: MapEvent skips MainHero outright
             // at :1974, and the other caller is the voluntary-surrender menu, which must keep
-            // working.
-            if (__instance == null || __instance == Hero.MainHero)
+            // working. A remote co-op player counts too, or the two seams disagree (#1139).
+            if (__instance == null || UncapturablePlayerCheck.BelongsToPlayers(__instance, _players))
                 return;
 
             var service = _service;
