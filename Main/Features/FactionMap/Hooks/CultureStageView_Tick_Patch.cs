@@ -1,4 +1,3 @@
-using System;
 using System.Reflection;
 using HarmonyLib;
 
@@ -13,27 +12,11 @@ public static class CultureStageView_Tick_Patch
 
     public static void Initialize(IOnCultureStageViewTick hook) => _hook = hook;
 
-    private static readonly string[] PossibleTypeNames =
-    {
-        "SandBox.GauntletUI.CharacterCreation.CharacterCreationCultureStageView",
-        "SandBox.View.CharacterCreation.CharacterCreationCultureStageView",
-    };
-
-    private static Type? FindCultureStageViewType()
-    {
-        foreach (var typeName in PossibleTypeNames)
-        {
-            var type = AccessTools.TypeByName(typeName);
-            if (type != null) return type;
-        }
-        return null;
-    }
-
-    static bool Prepare() => FindCultureStageViewType() != null;
+    static bool Prepare() => CultureStageViewType.Find() != null;
 
     static MethodBase? TargetMethod()
     {
-        var type = FindCultureStageViewType();
+        var type = CultureStageViewType.Find();
         return type != null ? AccessTools.Method(type, "Tick", new[] { typeof(float) }) : null;
     }
 
