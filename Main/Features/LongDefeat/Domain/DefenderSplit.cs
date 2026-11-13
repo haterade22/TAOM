@@ -26,10 +26,10 @@ internal enum SplitStep
 {
     None,
 
-    /// <summary>A fresh split: a new hold starts its clock and takes the lanes' levels.</summary>
+    /// <summary>A fresh split: a new hold starts its clock and takes the close attacker counts.</summary>
     Split,
 
-    /// <summary>A split again inside the hold (a pack mustered): the clock and the lanes' levels stay.</summary>
+    /// <summary>A split again inside the hold (a pack mustered): the clock and the counts stay.</summary>
     Resplit,
     Release,
 }
@@ -54,9 +54,9 @@ internal static class DefenderSplit
     }
 
     /// <summary>
-    /// Contact: a siege lane whose defense level (0 empty, 1 token, 2 full, as <c>SiegeLane.GetDefenseState</c> gives it) rose since the hold began, or a lane list that changed.
-    /// The siege AI defends a lane from the moment its level leaves empty, so the hold hands back at that moment. A lane already active when the hold began (an engine left
-    /// at the wall) is not new contact.
+    /// Contact: a side whose count of attackers at the walls (the siege AI's close attacker count: near the side's defender origin, or on an inside navmesh face such as a docked tower's floor)
+    /// rose since the hold began, or a list that changed. A lane's defense level is no contact: the engine raises it when an attacker formation takes one of the lane's engines, which a wave
+    /// does within a second of its spawn (first run, 2026-11-13). A count already up when the hold began is not new contact.
     /// </summary>
     public static bool Contact(IReadOnlyList<int> atHold, IReadOnlyList<int> now)
     {

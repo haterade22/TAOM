@@ -64,6 +64,8 @@ Bannerlord v1.5 port are separate branches of [Bannerlord-Coop-Team/BannerlordCo
 | v0.1.6 (released 2026-10-06) | `development` | v1.4.8 | No | as above |
 | `bannerlord-1.5.x` (not released) | `bannerlord-1.5.x` | v1.5.7 since 2026-11-10 (`83c46b153`) | Built from source, yes; no live co-op session has run it on v1.5.7. The port fixed the two engine signatures v1.5.7 removed ([v1.5.7-impact.md](../migration/v1.5.7-impact.md)). Open PRs on 2026-11-11: [#4630](https://github.com/Bannerlord-Coop-Team/BannerlordCoop/pull/4630) merges `development` again, and #4631 to #4634 follow v1.5.7 changes (party parley, villages that give in, the courtship retry, the grain quest) | built from source; TAOM's dev install runs it |
 
+**License (read 2026-11-12).** From 2026-06-17, new BannerlordCoop versions are source-available, not MIT: the code may be viewed and contributed to, but not copied, modified, redistributed or used in another project, nor used for a competing multiplayer or co-op mod, without the maintainers' written permission (`LICENSE` and `NOTICE.md` in the repo). Versions released before that date keep their MIT terms. So TAOM copies no Coop code, and a feature that needs Coop's mission layer outside a campaign (the Long Defeat's [multiplayer research](long-defeat.md#dependencies)) needs that permission or a contribution to Coop itself.
+
 The v1.5 branch split from `development` on 2026-10-03 (`5f4d63cc0`), so the features `development` gained since
 (v0.1.7's siege fixes, ransom, emissaries, child education and the rest) reach v1.5.6 only through a merge of
 `development` into `bannerlord-1.5.x`. That merge (`development` at `c8233b09b`, mod version 0.1.8) went in

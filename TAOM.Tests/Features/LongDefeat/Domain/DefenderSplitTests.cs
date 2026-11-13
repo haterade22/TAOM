@@ -55,16 +55,16 @@ public class DefenderSplitTests
     }
 
     [TestMethod]
-    public void Contact_IsALaneThatRoseSinceTheHold()
+    public void Contact_IsACountThatRoseSinceTheHold()
     {
         Assert.IsFalse(DefenderSplit.Contact(new[] { 0, 0, 0 }, new[] { 0, 0, 0 }));
         Assert.IsTrue(DefenderSplit.Contact(new[] { 0, 0, 0 }, new[] { 0, 1, 0 }));
-        Assert.IsFalse(DefenderSplit.Contact(new[] { 2, 0, 0 }, new[] { 2, 0, 0 }), "a lane already active at the hold is not new contact");
-        Assert.IsFalse(DefenderSplit.Contact(new[] { 2, 0, 0 }, new[] { 1, 0, 0 }), "a lane that calmed is not contact");
+        Assert.IsFalse(DefenderSplit.Contact(new[] { 2, 0, 0 }, new[] { 2, 0, 0 }), "a count already up at the hold is not new contact");
+        Assert.IsFalse(DefenderSplit.Contact(new[] { 2, 0, 0 }, new[] { 1, 0, 0 }), "a count that fell is not contact");
     }
 
     [TestMethod]
-    public void Contact_ALaneCountThatChangedIsContact()
+    public void Contact_AListLengthThatChangedIsContact()
     {
         Assert.IsTrue(DefenderSplit.Contact(new[] { 0, 0 }, new[] { 0, 0, 0 }));
         Assert.IsTrue(DefenderSplit.Contact(new[] { 0, 0, 0 }, new List<int>()));
@@ -86,7 +86,7 @@ public class DefenderSplitTests
         var hold = new SplitHold();
         hold.Next(RunPhase.Preparation, false, false);
         Assert.AreEqual(SplitStep.None, hold.Next(RunPhase.Preparation, true, false));
-        Assert.AreEqual(SplitStep.Resplit, hold.Next(RunPhase.Preparation, false, false), "a split again keeps the hold's clock and lanes");
+        Assert.AreEqual(SplitStep.Resplit, hold.Next(RunPhase.Preparation, false, false), "a split again keeps the hold's clock and counts");
     }
 
     [TestMethod]

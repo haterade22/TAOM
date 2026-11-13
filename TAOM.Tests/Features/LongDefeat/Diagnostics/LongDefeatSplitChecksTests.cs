@@ -11,7 +11,7 @@ namespace TAOM.Tests.Features.LongDefeat.Diagnostics;
 [TestClass]
 public class LongDefeatSplitChecksTests
 {
-    private static readonly int[] Lanes = { 1, 0, 0 };
+    private static readonly int[] Close = { 1, 0, 0 };
     private static readonly LdSplitRelease Release = new(4, 0);
 
     private static LdSplitGroup[] Groups(float wallMedian = 6f, int wallCount = 21, float lowMedian = 30f) => new[]
@@ -25,18 +25,18 @@ public class LongDefeatSplitChecksTests
     [TestMethod]
     public void Stand_EveryGroupInReach_Passes_AndTheArchersHaveTheWiderReach()
     {
-        var v = LongDefeatSplitChecks.Stand(1, Groups(lowMedian: LongDefeatSplitChecks.ArcherReach), 30f, Release, Lanes);
+        var v = LongDefeatSplitChecks.Stand(1, Groups(lowMedian: LongDefeatSplitChecks.ArcherReach), 30f, Release, Close);
 
         Assert.AreEqual(CheckResult.Pass, v.Result, v.Detail);
         StringAssert.Contains(v.Detail, "low=7 low_median=40.0 low_high=2");
         StringAssert.StartsWith(v.Detail, "w=1 wall=21 wall_median=6.0 wall_high=18 gate=9 ");
-        StringAssert.EndsWith(v.Detail, "held_s=30.0 released=4 kept=0 lanes=1,0,0");
+        StringAssert.EndsWith(v.Detail, "held_s=30.0 released=4 kept=0 close=1,0,0");
     }
 
     [TestMethod]
     public void Stand_NoGroupStillHeld_IsAnEngineTookSkip()
     {
-        var v = LongDefeatSplitChecks.Stand(1, Groups(wallMedian: 90f), 30f, new LdSplitRelease(0, 0), Lanes);
+        var v = LongDefeatSplitChecks.Stand(1, Groups(wallMedian: 90f), 30f, new LdSplitRelease(0, 0), Close);
 
         Assert.AreEqual(CheckResult.Skip, v.Result);
         StringAssert.EndsWith(v.Detail, "reason=engine-took");
@@ -51,7 +51,7 @@ public class LongDefeatSplitChecksTests
         var pattern = Regex.Match(row, @"^pass = \['(.*)'\]", RegexOptions.Multiline).Groups[1].Value;
         Assert.IsTrue(pattern.Length > 0, "the split row has no pass pattern");
 
-        var verdict = LongDefeatSplitChecks.Stand(1, Groups(), 30f, Release, Lanes);
+        var verdict = LongDefeatSplitChecks.Stand(1, Groups(), 30f, Release, Close);
 
         Assert.AreEqual(CheckResult.Pass, verdict.Result);
         var line = "[Check] id=taom.long-defeat.split result=pass " + OutcomeLog.SanitiseDetail(verdict.Detail);
@@ -61,13 +61,13 @@ public class LongDefeatSplitChecksTests
     [TestMethod]
     public void Stand_AnArcherGroupPastItsReach_Fails()
     {
-        Assert.AreEqual(CheckResult.Fail, LongDefeatSplitChecks.Stand(1, Groups(lowMedian: LongDefeatSplitChecks.ArcherReach + 0.1f), 30f, Release, Lanes).Result);
+        Assert.AreEqual(CheckResult.Fail, LongDefeatSplitChecks.Stand(1, Groups(lowMedian: LongDefeatSplitChecks.ArcherReach + 0.1f), 30f, Release, Close).Result);
     }
 
     [TestMethod]
     public void Stand_AFootGroupPastItsReach_Fails()
     {
-        var v = LongDefeatSplitChecks.Stand(1, Groups(wallMedian: 30f), 30f, Release, Lanes);
+        var v = LongDefeatSplitChecks.Stand(1, Groups(wallMedian: 30f), 30f, Release, Close);
 
         Assert.AreEqual(CheckResult.Fail, v.Result);
     }
@@ -75,21 +75,21 @@ public class LongDefeatSplitChecksTests
     [TestMethod]
     public void Stand_AnEmptyGroup_OrANaNMedian_Fails()
     {
-        Assert.AreEqual(CheckResult.Fail, LongDefeatSplitChecks.Stand(1, Groups(wallCount: 0), 30f, Release, Lanes).Result);
-        Assert.AreEqual(CheckResult.Fail, LongDefeatSplitChecks.Stand(1, Groups(wallMedian: float.NaN), 30f, Release, Lanes).Result);
+        Assert.AreEqual(CheckResult.Fail, LongDefeatSplitChecks.Stand(1, Groups(wallCount: 0), 30f, Release, Close).Result);
+        Assert.AreEqual(CheckResult.Fail, LongDefeatSplitChecks.Stand(1, Groups(wallMedian: float.NaN), 30f, Release, Close).Result);
     }
 
     [TestMethod]
     public void Stand_AShortOrNaNHold_IsASkip()
     {
-        Assert.AreEqual(CheckResult.Skip, LongDefeatSplitChecks.Stand(1, Groups(), LongDefeatSplitChecks.MinHoldSeconds - 0.1f, Release, Lanes).Result);
-        StringAssert.EndsWith(LongDefeatSplitChecks.Stand(1, Groups(), float.NaN, Release, Lanes).Detail, "reason=short-hold");
+        Assert.AreEqual(CheckResult.Skip, LongDefeatSplitChecks.Stand(1, Groups(), LongDefeatSplitChecks.MinHoldSeconds - 0.1f, Release, Close).Result);
+        StringAssert.EndsWith(LongDefeatSplitChecks.Stand(1, Groups(), float.NaN, Release, Close).Detail, "reason=short-hold");
     }
 
     [TestMethod]
     public void Stand_NoGroups_IsASkip()
     {
-        var v = LongDefeatSplitChecks.Stand(1, Array.Empty<LdSplitGroup>(), 30f, Release, Lanes);
+        var v = LongDefeatSplitChecks.Stand(1, Array.Empty<LdSplitGroup>(), 30f, Release, Close);
 
         Assert.AreEqual(CheckResult.Skip, v.Result);
         StringAssert.EndsWith(v.Detail, "reason=no-groups");
