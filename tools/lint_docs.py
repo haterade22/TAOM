@@ -49,21 +49,23 @@ AUDITS_DIR = DOCS_DIR / "audits"
 # custom or general-purpose subagent, and again after /compact. So is every rule without a
 # `paths:` field. These caps are ADR-011's ceilings; the 2026-09-23 landing was about 22 KB of
 # entry docs and about 12 KB of unscoped rules, down from 52.6 KB and 51 KB. What keeps them there is
-# ADR-011's routing: a trap's full text lives in its owning doc with one line in the orientation.md
-# trap index, a standing lesson is one line in its area rule, and nothing is restated. AGENTS.md
+# ADR-011's routing: a trap's full text lives in its owning doc with one line in its area's trap
+# sheet (.claude/rules/traps/, path-scoped) or, when no sheet reaches the work, in the orientation.md
+# trap index; a standing lesson is one line in its area rule, and nothing is restated. The 2026-11-13
+# amendment lowered the entry-doc and trap-row caps after the sheets took 33 of the 47 rows. AGENTS.md
 # alone is also capped at 8,192 bytes by tools/reviewctl.py (the provider-neutral bootstrap every
 # Codex session pays for), which is stricter than anything here. Bytes are counted with CRLF
 # folded to LF, so a Windows and any other checkout agree.
 ENTRY_DOC_ROOT = "CLAUDE.md"
 IMPORT_MAX_HOPS = 4                # Claude Code follows nested @-imports this deep (memory docs)
-ENTRY_DOCS_MAX_BYTES = 25_600      # hard cap on the entry docs together (fails --fail-on-drift)
-ENTRY_DOCS_WARN_BYTES = 23_000     # report-only early warning
+ENTRY_DOCS_MAX_BYTES = 22_528      # hard cap on the entry docs together (fails --fail-on-drift)
+ENTRY_DOCS_WARN_BYTES = 20_480     # report-only early warning
 ENTRY_DOC_MAX_LINES = 200          # per file: the Claude Code docs' adherence ceiling
 ENTRY_DOC_MAX_TABLE_ROW = 400      # chars; a row is an index entry
 ENTRY_DOC_MAX_PROSE_LINE = 600     # chars; catches paragraph bloat outside tables
 TRAP_INDEX_DOC = "docs/ai-includes/orientation.md"
 TRAP_INDEX_HEADING = "## Trap index"
-TRAP_INDEX_MAX_ROWS = 47           # when full, merge a line or move one into its area rule
+TRAP_INDEX_MAX_ROWS = 24           # when full, merge a line or move one into its trap sheet
 TRAP_INDEX_MAX_ROW_CHARS = 180
 RULES_DIR_REL = ".claude/rules"
 UNSCOPED_RULES_MAX_BYTES = 16_384  # hard cap on every rule without `paths:`, together

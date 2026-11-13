@@ -265,6 +265,34 @@ The original rows above stay as the record of the decision. These facts have mov
 - **The `@AGENTS.md` import:** it stays because Claude Code reads AGENTS.md natively (v2.1.277 and later) only when no CLAUDE.md exists at or above the working directory.
 - **`omitClaudeMd`:** the field exists since v2.1.271 and no TAOM agent sets it. The reason to reject it is no longer the installed version: custom agents need the invariants in the preamble, and shrinking the preamble helps every agent.
 
+### Amendment (2026-11-13): trap sheets, skill descriptions, lower caps
+
+On 2026-11-13 the entry docs stood at 25,590 of 25,600 bytes, the unscoped rules at 16,370 of 16,384, and
+the trap index at 47 of 47 rows. Every always-loaded tier was full, so each new trap or skill forced an
+eviction. Three changes, each moving text to a narrower trigger that already existed:
+
+- **Trap sheets.** `.claude/rules/traps/*.md` are path rules that hold one line per trap for one area
+  (campaign C#, missions, creatures and assets, troop and culture data). 33 of the 47 index rows moved
+  there unchanged. The orientation.md index keeps one row per sheet and the traps no path rule can reach:
+  the live Armory and TAOM_Map, the Kit, co-op, cross-area renames. Routing item 6 now reads: a trap's
+  full text goes in its owning doc, plus one line in its area's trap sheet; a line in the index only when
+  no sheet's paths reach the work. The cost is the one the Negative section names: a sheet reaches Claude
+  on a matching read, so design work before any read depends on following the sheet's index row.
+- **Skill descriptions carry the trigger and the gate.** The skill listing is re-sent after compaction
+  (v2.1.304), so the CLAUDE.md Skills table no longer repeats what each description says. It keeps the
+  four reflex gates, the rows that route to a doc and not a skill, and the two invocation policies.
+- **Duplicates removed.** The model tiers stay in `model-effort-selection.md` alone; the reuse ladder and
+  the `IoC.Resolve` rule moved to `csharp-patterns.md`; the sprite and PrefabExtension checks were already
+  in `gui-ui.md`; the retopology rule sits on the orientation.md Tools line.
+
+| Constant | Before | After |
+|---|---|---|
+| `ENTRY_DOCS_MAX_BYTES` / `ENTRY_DOCS_WARN_BYTES` | 25,600 / 23,000 | 22,528 / 20,480 |
+| `TRAP_INDEX_MAX_ROWS` | 47 | 24 |
+
+The live sizes are `python tools/lint_docs.py --context-budget-json`. Not done here, and still over their
+report-only ceiling: `harness-facts.md`, `gui-ui.md` and `hook-authoring.md`.
+
 ---
 
 <!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->

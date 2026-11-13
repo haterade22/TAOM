@@ -1,6 +1,6 @@
 ---
 name: security-scan
-description: Use when auditing TAOM's Claude Code config for security issues — committed secrets, over-broad permissions, hook exfiltration, MCP risk, hidden-unicode injection. Runs tools/audit_claude_config.py.
+description: "Use after editing hooks, settings, MCP config or CLAUDE.md, not routine feature edits. Audits Claude Code config for secrets, broad permissions, hook exfiltration, MCP risk and hidden unicode with tools/audit_claude_config.py."
 allowed-tools: Bash, Read
 ---
 

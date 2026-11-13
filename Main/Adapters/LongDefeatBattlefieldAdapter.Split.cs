@@ -242,18 +242,22 @@ internal sealed partial class LongDefeatBattlefieldAdapter
         return Usable(at) ? new SplitPlace(at, frame.rotation.f.AsVec2.Normalized(), DefaultWidth, side) : null;
     }
 
-    public IReadOnlyList<int> ReadLaneLevels()
+    // The siege AI's own count of attackers at the walls, left, middle and right (SiegeQuerySystem.LocateAttackers): within 15 m of a side's defender origin and 3 m of its height, or on an
+    // inside navmesh face (a face id that ends in 1, a docked tower's floors among them) in the side's region; refreshed every 5 s. With no right_defender_origin tag, as at Helm's Deep, the
+    // right origin is the middle lane's, so the right count holds the gate. A lane's defense level is no contact: DetermineLaneState raises it when an attacker formation takes one of the
+    // lane's engines, within a second of the wave's spawn.
+    public IReadOnlyList<int> ReadCloseAttackers()
     {
-        var lanes = TeamAISiegeComponent.SiegeLanes;
-        if (lanes == null)
+        var query = TeamAISiegeComponent.QuerySystem;
+        if (query == null)
             return Array.Empty<int>();
 
         // A new array each read: the director keeps the hold's read and compares later reads with it.
-        var levels = new int[lanes.Count];
-        for (var i = 0; i < levels.Length; i++)
-            levels[i] = (int)lanes[i].GetDefenseState();
-        return levels;
+        return new[] { query.LeftCloseAttackerCount, query.MiddleCloseAttackerCount, query.RightCloseAttackerCount };
     }
+
+    // QueryData.Expire sets each count's expiry to 0, so the next read runs LocateAttackers again (SiegeQuerySystem.Expire).
+    public void RefreshCloseAttackers() => TeamAISiegeComponent.QuerySystem?.Expire();
 
     public LdSplitRelease ReleaseSplit()
     {

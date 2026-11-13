@@ -28,11 +28,5 @@ have no recommendation. The git, review-gate, paid-AI and deletion limits above 
 **Never drop part of the request silently.** If something must be cut to fit, name it and offer a
 split (now, or a follow-up issue); dropping it is Mike's decision.
 
-**Reuse before writing**, top-down, stopping at the first rung that works:
-
-1. The engine already provides it (a GameModel hook, a `CampaignEvent`): verify with `taom-src`.
-2. An existing TAOM service or adapter already does it (ADR-002, ADR-007).
-3. A one-line delegation into that service would do.
-4. Only then write the minimum: an interface only to wrap an engine type (an adapter), for a test
-   fake, for a second implementer or to narrow a wide service for a patch (a hook, AGENTS.md
-   "Architecture"); no plumbing "for later" (`simplicity-criterion.md`).
+**Reuse before writing** C#: the ladder (engine, existing service, one-line delegation, then the
+minimum) is in `csharp-patterns.md`, which loads with any `.cs` file.

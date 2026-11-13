@@ -93,11 +93,11 @@ public class LongDefeatDirectorSplitTests
         Assert.AreEqual(Shares, rig.Field.Splits[0]);
         var line = rig.SplitLines().Single();
         StringAssert.Contains(line, "[Split] preparation: wall 21 at (226.8, 147.7, 9.9), gate 9");
-        StringAssert.Contains(line, "lanes 0,0,0");
+        StringAssert.Contains(line, "close 0,0,0");
     }
 
     [TestMethod]
-    public void NoSplitBlock_NeverSplits_NorReadsTheLanes()
+    public void NoSplitBlock_NeverSplits_NorReadsTheAttackers()
     {
         var rig = NewRig(noSplit: true);
         Assert.IsTrue(rig.Director.Start());
@@ -106,7 +106,7 @@ public class LongDefeatDirectorSplitTests
         rig.Ticks(10);
 
         Assert.AreEqual(0, rig.Field.Count("Split"));
-        Assert.AreEqual(0, rig.Field.LaneReads);
+        Assert.AreEqual(0, rig.Field.CloseReads);
         Assert.AreEqual(0, rig.Verdicts().Count);
     }
 
@@ -126,7 +126,7 @@ public class LongDefeatDirectorSplitTests
         rig.Ticks(10);
         rig.StartWave();
         rig.Ticks(3);
-        rig.Field.LaneLevels[1] = 2;
+        rig.Field.CloseAttackers[1] = 2;
         rig.Ticks(1);
 
         var verdict = rig.Verdicts().Single();
@@ -145,18 +145,18 @@ public class LongDefeatDirectorSplitTests
         Assert.IsTrue(rig.SplitLines().Any(l => l.Contains("[Split] wave 1 starts: wall 21 median 6.5 m high 18")), string.Join("\n", rig.SplitLines()));
 
         rig.Ticks(5);
-        Assert.AreEqual(0, rig.Field.Count("ReleaseSplit"), "no lane rose: still held");
-        Assert.IsTrue(rig.Field.LaneReads > 0, "the lanes are read in the wave");
+        Assert.AreEqual(0, rig.Field.Count("ReleaseSplit"), "no attacker at the walls: still held");
+        Assert.IsTrue(rig.Field.CloseReads > 0, "the attackers are read in the wave");
 
-        rig.Field.LaneLevels[0] = 1;
+        rig.Field.CloseAttackers[0] = 1;
         rig.Ticks(1);
 
         Assert.AreEqual(1, rig.Field.Count("ReleaseSplit"));
         var verdict = rig.Verdicts().Single();
         StringAssert.StartsWith(verdict, "pass w1 ");
         StringAssert.Contains(verdict, "wall=21 wall_median=6.5 wall_high=18");
-        StringAssert.Contains(verdict, "released=4 kept=0 lanes=1,0,0");
-        StringAssert.Contains(rig.SplitLines().Last(), "contact in wave 1: lanes 0,0,0 to 1,0,0");
+        StringAssert.Contains(verdict, "released=4 kept=0 close=1,0,0");
+        StringAssert.Contains(rig.SplitLines().Last(), "contact in wave 1: close 0,0,0 to 1,0,0");
         rig.Ticks(5);
         Assert.AreEqual(1, rig.Field.Count("ReleaseSplit"), "released once");
     }
@@ -171,7 +171,7 @@ public class LongDefeatDirectorSplitTests
         rig.Ticks(25);
         rig.StartWave();
         rig.Ticks(2);
-        rig.Field.LaneLevels[2] = 2;
+        rig.Field.CloseAttackers[2] = 2;
         rig.Ticks(1);
 
         StringAssert.StartsWith(rig.Verdicts().Single(), "fail w1 ");
@@ -184,7 +184,7 @@ public class LongDefeatDirectorSplitTests
         Assert.IsTrue(rig.Director.Start());
         rig.InPreparationWithTheGarrison();
         rig.StartWave();
-        rig.Field.LaneLevels[0] = 1;
+        rig.Field.CloseAttackers[0] = 1;
         rig.Ticks(1);
 
         var verdict = rig.Verdicts().Single();
@@ -212,7 +212,7 @@ public class LongDefeatDirectorSplitTests
         var verdict = rig.Verdicts().Single();
         StringAssert.StartsWith(verdict, "skip w1 ");
         StringAssert.EndsWith(verdict, "reason=charge");
-        rig.Field.LaneLevels[0] = 2;
+        rig.Field.CloseAttackers[0] = 2;
         rig.Ticks(2);
         Assert.AreEqual(1, rig.Verdicts().Count, "a dropped hold writes no second line");
     }
@@ -226,12 +226,12 @@ public class LongDefeatDirectorSplitTests
         rig.InPreparationWithTheGarrison();
         rig.Ticks(10);
         rig.StartWave();
-        rig.Field.LaneLevels[0] = 2;
+        rig.Field.CloseAttackers[0] = 2;
         rig.Ticks(3);
 
         Assert.AreEqual(1, rig.Field.Count("Split"), "no retry in the same calm");
         Assert.AreEqual(0, rig.Field.Count("ReleaseSplit"));
-        Assert.AreEqual(0, rig.Field.LaneReads, "nothing held: no lane read");
+        Assert.AreEqual(0, rig.Field.CloseReads, "nothing held: no read");
         Assert.AreEqual("fail w1 w=1 reason=no-places problem=no_wall_segment_off_the_gate's_side", rig.Verdicts().Single());
         Assert.IsTrue(rig.Log.Lines.Any(l => l.Contains("[Split] not split (preparation): no wall segment off the gate's side")));
     }
@@ -273,9 +273,9 @@ public class LongDefeatDirectorSplitTests
         Assert.IsTrue(rig.Director.Start());
         rig.InPreparationWithTheGarrison();
         rig.StartWave();
-        rig.Field.LaneLevels[0] = 1;
+        rig.Field.CloseAttackers[0] = 1;
         rig.Ticks(1);
-        rig.Field.LaneLevels[0] = 0;
+        rig.Field.CloseAttackers[0] = 0;
 
         for (var round = 0; round < 40 && rig.Phase == RunPhase.Wave; round++)
         {
@@ -293,8 +293,47 @@ public class LongDefeatDirectorSplitTests
         StringAssert.Contains(rig.SplitLines().Last(l => l.Contains(": wall ")), "[Split] intermission:");
     }
 
+    // The engine caches the close counts for 5 s, so at a clear the cache can still hold the last wave's counts. Unrefreshed, they hid the next wave's contact as the hold's baseline,
+    // or, after a horn within 5 s, released the hold at the new wave's first tick.
     [TestMethod]
-    public void TheLordsFall_WhileHeld_SplitsAgainOnTheNextTick_AndKeepsTheLaneBaseline()
+    public void AFreshSplit_RefreshesTheEngineCache_SoTheLastWavesCountNeitherHidesNorFakesContact()
+    {
+        var rig = NewRig();
+        Assert.IsTrue(rig.Director.Start());
+        rig.InPreparationWithTheGarrison();
+        rig.StartWave();
+        rig.Field.CloseAttackers[0] = 2;
+        rig.Ticks(1);
+        Assert.AreEqual(1, rig.Field.Count("ReleaseSplit"));
+        rig.Field.CachedClose = new List<int> { 2, 0, 0 };
+        rig.Field.CloseAttackers[0] = 0;
+
+        for (var round = 0; round < 40 && rig.Phase == RunPhase.Wave; round++)
+        {
+            while (rig.Field.AttackersStanding > 0)
+            {
+                rig.Field.AttackersStanding--;
+                rig.Director.OnAgentRemoved("A:orc", true);
+            }
+
+            rig.Ticks(1);
+        }
+
+        Assert.AreEqual(RunPhase.Intermission, rig.Phase);
+        rig.PumpUntil(() => rig.Field.Count("Split") == 2, limit: 5);
+        StringAssert.Contains(rig.SplitLines().Last(l => l.Contains(": wall ")), "close 0,0,0");
+
+        rig.StartWave();
+        Assert.AreEqual(1, rig.Field.Count("ReleaseSplit"), "a horn at once after the split reads the refreshed counts, not the last wave's");
+        rig.Field.CloseAttackers[0] = 1;
+        rig.Ticks(1);
+
+        Assert.AreEqual(2, rig.Field.Count("ReleaseSplit"), "one attacker at the walls in wave 2 is contact, whatever the cache held at the clear");
+        StringAssert.Contains(rig.SplitLines().Last(), "contact in wave 2: close 0,0,0 to 1,0,0");
+    }
+
+    [TestMethod]
+    public void TheLordsFall_WhileHeld_SplitsAgainOnTheNextTick_AndKeepsTheContactBaseline()
     {
         var rig = NewRig();
         Assert.IsTrue(rig.Director.Start());
@@ -305,12 +344,12 @@ public class LongDefeatDirectorSplitTests
 
         rig.Director.OnAgentRemoved("P", true);
         rig.Field.MainBody = 0;
-        rig.Field.LaneLevels[0] = 1;
+        rig.Field.CloseAttackers[0] = 1;
         rig.Ticks(1);
 
         Assert.AreEqual(splits + 1, rig.Field.Count("Split"), "the engine handed every formation to the AI; the split takes them back");
         Assert.IsTrue(rig.SplitLines().Any(l => l.Contains("[Split] the lord fell:")), string.Join("\n", rig.SplitLines()));
-        Assert.AreEqual(1, rig.Field.Count("ReleaseSplit"), "the re-split kept the hold's lane levels, so the risen lane is contact");
+        Assert.AreEqual(1, rig.Field.Count("ReleaseSplit"), "the re-split kept the hold's counts, so the risen count is contact");
         StringAssert.StartsWith(rig.Verdicts().Single(), "pass w1 ");
     }
 

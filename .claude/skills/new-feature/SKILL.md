@@ -1,6 +1,6 @@
 ---
 name: new-feature
-description: Scaffold a new TAOM feature module with IoC, services, adapters, and tests following project conventions
+description: "Use for a new feature once told to build it: scaffolds the module with IoC, services, adapters and tests following project conventions. Offer /freeze with it."
 argument-hint: [FeatureName]
 ---
 
