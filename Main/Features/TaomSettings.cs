@@ -289,7 +289,7 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
 
     [SettingPropertyGroup("War of the Ring/Momentum")]
     [SettingPropertyBool("Enable Momentum Tracking", Order = 0, RequireRestart = false,
-        HintText = "Tracks Evil vs Good war progress from battles, sieges, raids, armies and relative strength. Reaching the victory threshold ENDS the war. Default: on.")]
+        HintText = "Tracks Evil vs Good war progress from battles, sieges, raids, armies and relative strength. The war ends at the victory threshold only when Enable Victory (End the War) is on; that setting is off by default, so the war is endless. Default: on.")]
     public bool MomentumEnabled { get; set; } = true;
 
     [SettingPropertyGroup("War of the Ring/Momentum")]
@@ -299,7 +299,7 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
 
     [SettingPropertyGroup("War of the Ring/Momentum")]
     [SettingPropertyBool("Enable Victory (End the War)", Order = 6, RequireRestart = false,
-        HintText = "When OFF (default) the War of the Ring is endless — momentum is tracked but no side ever wins. Turn ON to let a side win at the Victory Threshold (or by eliminating the other), which ends the war and makes peace. Default: off (endless).")]
+        HintText = "When OFF (default) the War of the Ring is endless: momentum is tracked but no side ever wins. Turn ON to let a side win at the Victory Threshold (or by eliminating the other), which ends the war and makes peace. Default: off (endless).")]
     public bool MomentumVictoryEnabled { get; set; } = false;
 
     [SettingPropertyGroup("War of the Ring/Momentum")]
@@ -1212,7 +1212,7 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
 
     [SettingPropertyGroup("World/Recruitment Alignment")]
     [SettingPropertyBool("Only Good Rejects Evil", Order = 1, RequireRestart = false,
-        HintText = "When ON, only a Free-aligned recruiter is blocked from Evil-controlled settlements; Evil recruiters may recruit anywhere. When OFF (default), the block is symmetric — Free and Evil each refuse the other.")]
+        HintText = "When ON, only a Free-aligned recruiter is blocked from Evil-controlled settlements; Evil recruiters may recruit anywhere, and Alignment Desertion then removes no Free troops from Evil lords or their garrisons at all, not only the ones they recruit. When OFF (default), the block is symmetric: Free and Evil each refuse the other, and opposed troops desert either way.")]
     public bool AlignmentRecruitmentGoodRejectsEvilOnly { get; set; } = false;
 
     [SettingPropertyGroup("World/Recruitment Alignment")]
@@ -1355,7 +1355,7 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
 
     [SettingPropertyGroup("World/Alignment Desertion", GroupOrder = 38)]
     [SettingPropertyBool("Enable Alignment Desertion", Order = 0, RequireRestart = false,
-        HintText = "When enabled, troops whose culture is opposed in alignment to their lord (Free vs Evil) desert each day — an Evil lord sheds Good troops and a Good lord sheds Evil troops. Alignment comes from execution/alignment.json. Neutral cultures (Umbar etc.) never desert. When off, vanilla.")]
+        HintText = "When enabled, troops whose culture is opposed in alignment to their lord (Free vs Evil) desert each day: an Evil lord sheds Good troops and a Good lord sheds Evil troops. Alignment comes from execution/alignment.json. Neutral cultures (Umbar etc.) never desert. Troops that would desert cannot be recruited from prisoners, notables' volunteers or by garrison auto-recruit (tavern mercenaries are not checked). With Recruitment Alignment on and its 'Only Good Rejects Evil' on, Evil lords and their garrisons shed no Free troops. When off, vanilla.")]
     public bool EnableAlignmentDesertion { get; set; } = true;
 
     [SettingPropertyGroup("World/Alignment Desertion")]
@@ -2458,7 +2458,7 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
 
     [SettingPropertyGroup("War of the Ring/Armies")]
     [SettingPropertyBool("Rulers call hosts for less influence", Order = 1, RequireRestart = false,
-        HintText = "When enabled (default), an AI kingdom ruler, Good or Evil, pays half the influence (0.5 by default, RulerCallCostFactor in army_targeting.json) for each party called into an army, after culture feats. Cheaper calls also make the influence an army spends on keeping itself together cheaper for the ruler, so those hosts hold longer and the ruler's clan keeps more influence for votes. Your own calls, as a ruler or a vassal, cost what they always did. Singleplayer only: in a co-op session this does nothing. When off, the cost is what it was before this feature (culture feats still apply). Applies at once, no restart.")]
+        HintText = "When enabled (default), an AI kingdom ruler, Good or Evil, pays half the influence (0.5 by default, RulerCallCostFactor in army_targeting.json) for each party called into an army, after culture feats. Cheaper calls also make the influence an army spends on keeping itself together cheaper for the ruler, so those hosts hold longer and the ruler's clan keeps more influence for votes. Your own calls, as a ruler or a vassal, cost what they always did. Singleplayer only: in a co-op session this does nothing. When off, the ruler pays the usual cost; culture feats and the Realms liege army discount still apply. The two discounts do not stack: when both apply to a call, the larger one is used. Applies at once, no restart.")]
     public bool EnableKingsMusterDiscount { get; set; } = true;
 
     // --- Bonds of Battle (relations earned on campaign, docs/features/bonds-of-battle.md) ---
@@ -2904,7 +2904,7 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
 
     [SettingPropertyGroup("World/Realms")]
     [SettingPropertyBool("{=taom_realms_mcm_army_discount}Liege Army Discount", Order = 10, RequireRestart = false,
-        HintText = "{=taom_realms_mcm_army_discount_hint}When on, calling a vassal to an army costs their liege half the influence. When off, it costs what the base game asks. Default: on.")]
+        HintText = "{=taom_realms_mcm_army_discount_hint}When on, calling a vassal to an army costs their liege half the influence. It does not stack with the King's Muster ruler discount: when both apply, the larger one is used. When off, other discounts such as culture feats and the King's Muster still apply. Default: on.")]
     public bool RealmsLiegeArmyDiscount { get; set; } = true;
 
     [SettingPropertyGroup("World/Realms")]

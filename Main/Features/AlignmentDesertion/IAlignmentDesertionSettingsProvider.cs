@@ -12,4 +12,10 @@ public interface IAlignmentDesertionSettingsProvider
     bool ApplyToPlayer { get; }
     bool ApplyToParties { get; }
     bool ApplyToGarrisons { get; }
+
+    /// <summary>
+    /// The Recruitment Alignment "Only Good Rejects Evil" switch. When on, Evil owners keep Free troops, matching
+    /// the recruiting rule that lets Evil recruiters take them.
+    /// </summary>
+    bool GoodRejectsEvilOnly { get; }
 }
