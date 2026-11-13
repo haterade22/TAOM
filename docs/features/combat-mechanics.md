@@ -350,7 +350,7 @@ MCM: "Combat Mechanics" group (GroupOrder 24), 18 members as of 2026-10-20: the 
 
 ## Performance
 
-All overrides are per-hit. Services precompute lookups at construction (monster-id settlement variants are expanded into the lookup sets at construction — the per-call path is a bare `HashSet`/`Dictionary` probe), take `in` structs, and allocate nothing per call; the race resolver caches per race id; weapon-class names come from a static enum-name cache. Engine-sourced floats (momentum, charge velocity, knockdown resistance) are NaN-guarded with positive-polarity gates — NaN always fails the gate or defers to vanilla.
+All overrides are per-hit. Services precompute lookups at construction (monster-id settlement variants are expanded into the lookup sets at construction — the per-call path is a bare `HashSet`/`Dictionary` probe), take `in` structs, and allocate nothing per call; the race resolver caches per race id; weapon-class names come from a static enum-name cache. Engine-sourced floats (momentum, charge velocity, knockdown resistance, and the charge victim's maximum health and inflicted damage, #728) are NaN-guarded with positive-polarity gates — NaN always fails the gate or defers to vanilla.
 
 ## Known limitations / follow-ups
 
