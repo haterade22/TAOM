@@ -371,6 +371,61 @@ public class LongDefeatBindingTests
         Method(typeof(Mission), "IsPositionInsideBoundaries", typeof(bool), typeof(Vec2));
     }
 
+    // The engines' restore (#1160): the two vanilla resets the restore calls by reflection, the destructible's reset and faces, the movement reads the checks take, the lane the engine goes back into,
+    // the breakable wall the tower's reset shows broken, the tower state set back after the reset, the attackers' engine lists built again, and the hit the test option breaks an engine with.
+    [TestMethod]
+    [TestCategory("BindingVerification")]
+    public void TheEngineRestoreMembers_StillResolve()
+    {
+        // The reflection sites: found by name on each type itself (AccessTools.DeclaredMethod searches only declared members), so if an override moves up the hierarchy the lookup returns null and the
+        // restore reports "<Type>.OnMissionReset was not found"; this test fails first.
+        foreach (var type in new[] { typeof(SiegeTower), typeof(BatteringRam) })
+        {
+            var reset = type.GetMethod("OnMissionReset", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly, null, Type.EmptyTypes, null);
+            Assert.IsNotNull(reset, type.Name + ".OnMissionReset() is no longer declared on " + type.Name + ": a destroyed engine cannot come back (#1160)");
+            Assert.AreEqual(typeof(void), reset!.ReturnType);
+            Assert.IsTrue(reset.IsVirtual, "the restore invokes the override the engine itself runs on a mission reset");
+            Property(type, "MovementComponent", typeof(SiegeWeaponMovementComponent));
+            Property(type, "HasArrivedAtTarget", typeof(bool));
+            Assert.IsTrue(typeof(IPrimarySiegeWeapon).IsAssignableFrom(type), type.Name + " is no longer a primary siege weapon, so no lane holds it");
+        }
+
+        Property(typeof(IPrimarySiegeWeapon), "WeaponSide", typeof(FormationAI.BehaviorSide));
+        Method(typeof(IPrimarySiegeWeapon), "HasCompletedAction", typeof(bool));
+        Property(typeof(UsableMachine), "DestructionComponent", typeof(DestructableComponent));
+        Method(typeof(DestructableComponent), "Reset", typeof(void));
+        Method(typeof(MissionObject), "SetAbilityOfFaces", typeof(void), typeof(bool));
+        Field(typeof(DestructableComponent), "DestroyedByStoneOnly", typeof(bool));
+        Assert.IsFalse(typeof(DestructableComponent).GetField("DestroyedByStoneOnly", AnyMember)!.IsInitOnly, "the break clears DestroyedByStoneOnly for its own hit");
+        Method(typeof(DestructableComponent), "TriggerOnHit", typeof(void), typeof(Agent), typeof(int), typeof(Vec3), typeof(Vec3), typeof(MissionWeapon).MakeByRefType(), typeof(int), typeof(ScriptComponentBehavior));
+        Method(typeof(SiegeWeaponMovementComponent), "GetTotalDistanceTraveledForPathTracker", typeof(float));
+        Property(typeof(TeamAISiegeComponent), "SiegeLanes", typeof(System.Collections.Generic.List<SiegeLane>));
+        Property(typeof(SiegeLane), "LaneSide", typeof(FormationAI.BehaviorSide));
+        Property(typeof(SiegeLane), "PrimarySiegeWeapons", typeof(System.Collections.Generic.List<IPrimarySiegeWeapon>));
+        Method(typeof(Scene), "FindEntitiesWithTag", typeof(System.Collections.Generic.IEnumerable<GameEntity>), typeof(string));
+        Method(typeof(MBExtensions), "CollectChildrenEntitiesWithTag", typeof(System.Collections.Generic.List<GameEntity>), typeof(GameEntity), typeof(string));
+        Method(typeof(GameEntity), "GetVisibilityExcludeParents", typeof(bool));
+        Method(typeof(GameEntity), "SetVisibilityExcludeParents", typeof(void), typeof(bool));
+
+        // The tower settle after its reset, and the restore check's read of it.
+        Field(typeof(SiegeTower), "_queueManagers", typeof(System.Collections.Generic.List<LadderQueueManager>));
+        Field(typeof(UsableMachine), "ActiveWaitStandingPoint", typeof(GameEntity));
+        Property(typeof(UsableMachine), "WaitStandingPoints", typeof(System.Collections.Generic.List<GameEntity>));
+        Field(typeof(LadderQueueManager), "ManagedNavigationFaceId", typeof(int));
+        Method(typeof(LadderQueueManager), "DeactivateImmediate", typeof(void));
+        Property(typeof(LadderQueueManager), "IsDeactivated", typeof(bool));
+        Method(typeof(Scene), "SetAbilityOfFacesWithId", typeof(int), typeof(int), typeof(bool));
+
+        // The attackers' engine lists, built again once every engine is back.
+        Property(typeof(Team), "FormationsIncludingEmpty", typeof(MBList<Formation>));
+        Property(typeof(Formation), "AI", typeof(FormationAI));
+        var getBehavior = typeof(FormationAI).GetMethods(AnyMember).SingleOrDefault(m => m.Name == "GetBehavior" && m.IsGenericMethodDefinition && m.GetParameters().Length == 0);
+        Assert.IsNotNull(getBehavior, "FormationAI.GetBehavior<T>() no longer resolves");
+        Assert.AreEqual(typeof(BehaviorUseSiegeMachines), getBehavior!.MakeGenericMethod(typeof(BehaviorUseSiegeMachines)).ReturnType);
+        var relist = Method(typeof(BehaviorUseSiegeMachines), "OnValidBehaviorSideChanged", typeof(void));
+        Assert.AreEqual(typeof(BehaviorUseSiegeMachines), relist.DeclaringType, "the relist relies on the override that builds the engine list again from the active objects");
+    }
+
     // The Elven Volley (phase3-plan.md Slice 6, section 4 "Binding gate"): the scripted missile with all ten parameters (forcedMissileIndex included), the two hit callbacks, the eye and chest points, the ray
     // cast the aim and the clearance test use, the missile list the cancelled-hit lookup walks, and the agent flags the owner rule reads.
     [TestMethod]

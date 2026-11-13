@@ -1200,3 +1200,8 @@ Player Possession's join check ran on the hourly tick. #1177 also ran it on `OnP
 - **Why missed:** the draft traced the state at Coop's raiser only. The hourly check's safety came from what always ran between a raiser and the next tick, and the new listener removed that gap.
 - **Prevent:** before a check moves from a tick or a later event to a synchronous one, list every raiser of the new event (engine, TAOM, the co-op mods) and read the check's inputs at each one. A value kept across a boundary on purpose needs the event that ends its life.
 - **Source:** [rca-possession-switch-2026-11-13.md](../rca-possession-switch-2026-11-13.md), finding 1.
+### A shared player check carries its own reason for `Unknown`: re-read it for each new caller (#1141, 2026-11-13)
+The #1141 follow-up reused `PlayerClanCheck` for the War Chronicle volunteer multiplier. The helper's comment justified "`Unknown` counts as a player" by "the callers exclude players from AI help", which is not why the volunteer rule wants it: that multiplier can cut production too. The same change wrote a caravan limit from the clan-scoped levers only, though the war gate tests the faction.
+- **Why missed:** the helper and the setting were read at the level of the first caller and the first lever.
+- **Prevent:** when a new caller adopts a shared "is this a player's" check, read the helper's stated reason and rewrite it to cover the new caller, or give that caller its own rule. When a doc states what a player-scoped setting does, name the scope of each seam (clan, hero, faction, global).
+- **Source:** [rca-coop-mainhero-audit-2026-11-13.md](../rca-coop-mainhero-audit-2026-11-13.md), findings R12 and R13.

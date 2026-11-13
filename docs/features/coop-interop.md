@@ -305,6 +305,7 @@ side that costs least:
 | Seasoned Hosts (`SeasonedHostsAdapter`) | Player: no bonus | The skill XP multiplier and the training factor are boosts for AI only, so doubt means none |
 | Uncapturable Heroes (`UncapturablePlayerCheck`, #1139) | Player: vanilla captures | A capture is a valid state and a player made a fugitive is not. The registry answers `Unknown` for every hero at once, so in that session no lore hero is protected |
 | War Chronicle extra escape and rally (`PlayerClanCheck`, #1141) | Player: no extra roll, no rally effects | Both are help for AI lords and realms, so in doubt a player gets none. An unreadable registry stops the extra escape and the rally for every realm |
+| War Chronicle volunteer rate (`TaomVolunteerModel`, `CastleNotableMaintainer`, through `PlayerClanCheck`, #1141) | Player: no multiplier | A player's fiefs are never changed by an effect (decision D4), so doubt means no change. An unreadable registry stops the multiplier on every fief |
 | Realms AI claims (`RealmsCampaign.IsAPlayersClan`, #1141) | Player: no AI claim | A claim spends the clan's influence and gold, so doubt means no write. An unreadable registry stops every AI claim |
 | Pregnancy (`TaomPregnancyModel.IsPlayerMarriage`, #1141) | Not a player: AI rules | `Player` lifts the clan brake; doubt must not lift it for every AI clan |
 

@@ -31,6 +31,7 @@ internal static class LongDefeatRunReport
             ["startWave"] = options.StartWave,
             ["startRerolls"] = options.StartRerolls,
             ["startGold"] = options.StartGold is int startGold ? new JValue(startGold) : JValue.CreateNull(),
+            ["breakEngines"] = options.BreakEnginesAtClear is int breakAt ? new JValue(breakAt) : JValue.CreateNull(),
             ["boons"] = new JArray((boons?.Picks ?? Array.Empty<BoonPickRecord>()).Select(Pick)),
             ["rerolls"] = new JObject { ["earned"] = boons?.Earned ?? 0, ["used"] = boons?.Used ?? 0, ["banked"] = boons?.Banked ?? 0 },
             ["targetWaves"] = options.StopAfterWaves is int target ? new JValue(target) : JValue.CreateNull(),

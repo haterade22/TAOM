@@ -97,7 +97,7 @@ Battle smoke. Two MCM settings under **Battle Tactics/Dwarf Attacks**, both read
 | Constant | Head butt | Drop kick | Note |
 |---|---|---|---|
 | Trigger distance to the nearest enemy | 0 to 1.3 m | 1.8 to 2.6 m | In front: cosine above 0.7 |
-| Cooldown (mission seconds) | 12 | 20 | Separate, so a dwarf may do one of each |
+| Cooldown (mission seconds) | 50 | 60 | Separate, so a dwarf may do one of each |
 | Impact (clip progress) | 12/35, frame 13 | 20/53, frame 21 | From the authored clips |
 | Reach at impact | 1.5 m | 1.6 m | In front of the start facing: cosine above 0.5 |
 | Damage | 18 | 25 | Half against a shield |
@@ -198,6 +198,7 @@ counter increment; the `[Check]` line is written once per attack kind per proces
   tree slot (dwarves had lost Stand Fast); the player's own dwarf is excluded after an AI hand-over; a height limit;
   the shield counts only toward the dwarf; an attack with a missing action never starts; combat missions only.
 - 2026-11-06: the shield rule moved to `TAOM.Core.Combat.ShieldCover`, shared with the troll ring, the elephant-like attacks and the signature strike rings; the dwarves' behaviour is unchanged.
+- 2026-11-13: the cooldowns went from 12 s (head butt) and 20 s (drop kick) to 50 s and 60 s, Mike's call. Only the two constants changed. An interrupted attack still spends its whole cooldown, so a cut-short attack now costs a dwarf 50 or 60 s.
 
 ## GitHub Issue
 
