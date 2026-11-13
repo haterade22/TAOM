@@ -21,6 +21,13 @@ public interface IAlignmentDesertionService
     bool ShouldEvaluate(string ownerKingdomId, bool isPlayerOwned, bool isGarrison);
 
     /// <summary>
+    /// True when one troop of <paramref name="troopCultureId"/> would desert this owner under today's settings: the
+    /// same gates and the same per-troop rule as <see cref="CalculateDesertion"/>. Recruiting (prisoners, volunteers,
+    /// garrison auto-recruit) asks this so an owner never pays for a troop the next daily tick removes.
+    /// </summary>
+    bool WouldDesert(string ownerKingdomId, bool isPlayerOwned, bool isGarrison, string troopCultureId);
+
+    /// <summary>
     /// Returns the per-troop-type desertion for a single party or garrison. Empty when the feature or
     /// the relevant owner/location toggle is off, when the owner is Neutral/kingdomless, or when no
     /// troop is opposed.

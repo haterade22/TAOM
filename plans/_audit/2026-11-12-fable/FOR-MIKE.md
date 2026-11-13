@@ -20,6 +20,14 @@ Each line has the recommended answer first and where the evidence is.
 2. **Messenger arrival decisions** (#1133): a prisoner target, a `Released` or `Traveling` target, and
    a player who is a prisoner all lose or misroute a paid messenger. Recommended: they wait. Item 050
    made that a change to one tested function.
+   **Decided 2026-11-13:** a prisoner target stays lost; every other case is delivered. Done on
+   `fix/messenger-arrival-1133`: a fugitive, released or travelling target and a captive player now
+   wait and are delivered. In-game checks owed: `docs/features/messengers.md` items 23 to 27.
+   The same branch closes the two limits of that rule: the wait writes one line to the message log,
+   and a fugitive or released hero of the Special occupation, whom the engine's daily settle skips,
+   is lost and refused at the send. The new key `taom_messenger_waiting` has its rows in the 12
+   language files, seeded in English on your word (2026-11-13) with the 220 Dale and Khand name
+   keys of #1169; the paid translation run is still yours (backlog #1129).
 3. **Two "superseded" validators are still live doc steps** (verify-tests-tools.md, TOOLS-01):
    `audit_item_refs.py --show-locations` and `validate_all_troop_refs.py` are named in about 25
    procedure lines. Recommended: keep both until someone proves `validate_moduledata.py` prints the
@@ -41,6 +49,7 @@ Each line has the recommended answer first and where the evidence is.
 9. **`improve_ctl.py args review` routes six lenses for any C# change**, while the deep-review skill's
    tier rule launches one or two. This run followed the tier rule (DECISIONS 10). Recommended: make
    the tool route by tier, so the next run does not need a hand edit.
+   **Done 2026-11-13** (`86843d0fa`): a review item takes a `tier`.
 10. **MEMORY.md is over its 4 KB target** (DX-11): two index lines repeat repo rules. Recommended:
     delete `model-effort-free-choice` and `act-on-recommendations`.
 11. **Finished one-off scripts** (TOOLS-02, TOOLS-09): six troop-revamp scripts and 11 `tools/oneoff/`
@@ -66,6 +75,27 @@ Each line has the recommended answer first and where the evidence is.
     (deep-review-048); the mirror enum `MessengerHeroState` could be one `isNotSpawned` flag
     (deep-review-050); `check_orphan_loc_rows.py` exits 1 on the trunk for two co-op rows,
     `taom_coopcompat_settings_differ` and `taom_coopcompat_build_mismatch` (executor 047).
+    **2026-11-13:** `IsLocked` is deleted (branch `fix/messenger-arrival-1133`). The enum stays: the
+    #1133 rule reads five of its states, so one flag no longer fits. The two co-op rows were a
+    false alarm of the gate, which did not scan `CoopCompat/`; it does now and exits 0. The warg
+    rage case is confirmed in the code (v1.5.7), not yet seen in game: `HandleQuickRelease`
+    (`MissionGauntletMainAgentEquipDropView`) sets `_weaponUsageToggleRequested` on vanilla's
+    controller, only vanilla's `ControlTick` reads and clears it, `OnPreMissionTick` skips
+    `ControlTick` while `_activated` is false, and `Enable()` leaves the flag set. So a quick
+    release during a rage toggles the weapon usage when the rage ends. No code changed. A fix could
+    answer false from `IsMainAgentAvailable` while TAOM's controller holds the hero, as Patch140
+    does for the Seat (the wheel then stays closed during a rage), or skip
+    `OnWeaponUsageToggleRequested` then. Recommended: leave it unless a player reports it.
+    **Not built, 2026-11-13, for two reasons.** First, the defect may be out of reach:
+    `docs/features/warg-combat.md` records an open question that the swap into a rage may never
+    run in single player (`PrepareOnFirstCall` tests the warg's own `IsPlayerControlled`, and a
+    mount gets an AI controller), and then `HoldsHero` stays false. The in-game warg Custom Battle
+    that doc already owes settles it. Second, the fix is not small: the scouts' design needs a new
+    patch category (Patch149) with its own module, a row in `CoopVetoClassificationTests`, registry
+    and feature-map rows, a line-neutral edit of a controller that sits exactly on its line
+    baseline, and a fallback (a cached field reference) in case the JIT inlines the one-line
+    target. The single engine caller is `HandleQuickRelease`, a tap of the equipment key under
+    0.3 seconds.
 16. **Commit wording the reviews flagged, LOW** (reword at a squash or leave): the body of
     `cf21b3d33` says the binding gate "fails only when a patch's target is missing" (it also fails a
     target with no body or a throw); `3014400f8` is typed `fix:` and changes only a test and review

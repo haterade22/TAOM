@@ -137,6 +137,7 @@ internal sealed partial class SurvivalRun
 
         EmitMuster(s.Dt, fx);
         EmitPacks(fx);
+        EmitUpgrades(fx);
 
         if (BetweenWaves)
         {
@@ -252,6 +253,7 @@ internal sealed partial class SurvivalRun
             RerollsUsed = _deck.Used,
             Boons = _ownedCards,
             GarrisonCap = _r.GarrisonCap,
+            Upgrades = UpgradeRowsNow(),
         };
     }
 
@@ -312,6 +314,7 @@ internal sealed partial class SurvivalRun
         _phase = RunPhase.Wave;
         _left = 0f;
         _waveInit = true;
+        ForgetStanding();
         _waveAffixes = CutRoll(_plan.Affixes.Roll(Seed, _wave));
     }
 

@@ -49,6 +49,9 @@ internal sealed class LongDefeatSession
 
     public BuyResult TryBuy(string offerId) => _run?.TryBuy(offerId) ?? BuyResult.RunOver;
 
+    /// <summary>Buys an upgrade step (#1161): every standing soldier of its troop that the gold pays for is spent for at once and replaced on the next tick.</summary>
+    public UpgradeResult TryUpgrade(string stepId) => _run?.TryUpgrade(stepId) ?? UpgradeResult.RunOver;
+
     public StartResult TryStartWave() => _run?.TryStartWave() ?? StartResult.RunOver;
 
     public PickResult TryPickBoon(string boonId) => _run?.TryPickBoon(boonId) ?? PickResult.RunOver;

@@ -17,6 +17,19 @@ public sealed class PendingMessenger
         Arrived = arrived;
     }
 
+    // Not saved, so the save format keeps its four fields: after a load the player is told once more.
+    private bool _waitNoticeShown;
+
+    /// <summary>True the first time only: the hourly tick tells the player once that this messenger waits for its
+    /// target to be on the map again (#1133).</summary>
+    public bool TryMarkWaitNoticeShown()
+    {
+        if (_waitNoticeShown)
+            return false;
+        _waitNoticeShown = true;
+        return true;
+    }
+
     public string Serialize()
     {
         var inv = CultureInfo.InvariantCulture;

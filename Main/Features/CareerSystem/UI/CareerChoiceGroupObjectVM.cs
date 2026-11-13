@@ -7,13 +7,11 @@ namespace TAOM.Features.CareerSystem.UI;
 public class CareerChoiceGroupObjectVM : ViewModel
 {
     private readonly CareerChoiceGroupDefinition _group;
-    private bool _isLocked;
     private MBBindingList<CareerChoiceObjectVM> _choices;
 
-    public CareerChoiceGroupObjectVM(CareerChoiceGroupDefinition group, bool isLocked)
+    public CareerChoiceGroupObjectVM(CareerChoiceGroupDefinition group)
     {
         _group = group;
-        _isLocked = isLocked;
         _choices = new MBBindingList<CareerChoiceObjectVM>();
     }
 
@@ -42,20 +40,6 @@ public class CareerChoiceGroupObjectVM : ViewModel
 
     [DataSourceProperty]
     public int Tier => _group.Tier;
-
-    [DataSourceProperty]
-    public bool IsLocked
-    {
-        get => _isLocked;
-        set
-        {
-            if (_isLocked != value)
-            {
-                _isLocked = value;
-                OnPropertyChangedWithValue(value, nameof(IsLocked));
-            }
-        }
-    }
 
     [DataSourceProperty]
     public MBBindingList<CareerChoiceObjectVM> Choices

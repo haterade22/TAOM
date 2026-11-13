@@ -114,6 +114,10 @@ internal sealed partial class LongDefeatDirector
             _logger.LogInfo($"{Tag}[Wave] {_run.WavesCleared} rest: defenders {rest.Count}, mean health {Percent(rest.MeanBefore)} to {Percent(rest.MeanAfter)}");
         }
 
+        // After the batches and before the care, so the care heals an upgraded soldier too (#1161).
+        if (fx.Upgrades.Count > 0)
+            ApplyUpgrades(fx.Upgrades);
+
         // After the batches, so a pack bought beside the care is healed too; before any volley.
         if (fx.FieldCare > 0f)
             ApplyFieldCare(fx.FieldCare);

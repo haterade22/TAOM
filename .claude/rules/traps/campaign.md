@@ -40,6 +40,7 @@ history and the gate. A new trap for this area is a new row here, never a row in
 | Event listener order | Newest first: a listener added after the engine's runs before it on the same event | [ticks](../../../docs/reference/engine/campaign-tick-time-and-party-ai.md) |
 | "Frozen" game | Can be a stuck kingdom vote waiting on an `IsKingsDecisionOver` edge: `Patch80` | [diplomacy](../../../docs/features/diplomacy.md) |
 | Hero capture | Patch `Hero.CanBecomePrisoner`; denying capture grants escape; both seams share one `DeathMark` guard | [capture](../../../docs/features/uncapturable-heroes.md) |
+| Hero states | `Fugitive`, `Released` and `Traveling` end by themselves (one daily line settles the first two, and skips a Special hero): never give one a final verdict, never write "the engine never" from one method | [messengers](../../../docs/features/messengers.md) |
 | `Town.LastCapturedBy` | A leader-clan stamp, not participation; score sieges from `IFiefSiegeParticipationService` | [fiefs](../../../docs/features/fief-granting.md) |
 | MarriageModel | One slot: `AddModel` does not compose, so every marriage rule goes in `TaomMarriageModel` | [marriage](../../../docs/features/marriage-alignment.md) |
 | Player Switcher | Register at priority 1100; reassign the player clan before removing the created hero | [switcher](../../../docs/features/player-switcher.md) |
