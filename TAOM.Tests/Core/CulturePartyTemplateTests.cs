@@ -157,6 +157,11 @@ public class CulturePartyTemplateTests
                     continue;
                 }
 
+                // #482: the engine reads only the id attribute of each child and appends a null when
+                // it is missing; SpawnCaravan's predicate then throws on that entry.
+                if (lists[0].Elements().Any(entry => string.IsNullOrEmpty(entry.Attribute("id")?.Value)))
+                    offenders.Add($"{cultureId}/{wrapper}: a child with no id attribute (a null caravan entry)");
+
                 var ids = lists[0].Elements()
                     .Select(entry => entry.Attribute("id")?.Value)
                     .Where(value => !string.IsNullOrEmpty(value))
@@ -289,6 +294,8 @@ public class CulturePartyTemplateTests
             {
                 if (!culture.Elements(wrapper).Elements().Any())
                     offenders.Add($"{cultureId}/{wrapper} (empty or absent)");
+                else if (culture.Elements(wrapper).Elements().Any(entry => string.IsNullOrEmpty(entry.Attribute("id")?.Value)))
+                    offenders.Add($"{cultureId}/{wrapper} (a child with no id attribute: a null caravan entry, #482)");
             }
         }
 

@@ -127,9 +127,9 @@ public static class CollectAssemblyTypesShim
             catch (Exception fxEx)
             {
                 DiagLog.LogCaught(Tag, "GetTypesFinalizer/partial-extract", fxEx);
-                return __exception;
+                return RethrowStackPreserver.PreserveForRethrow(__exception, null);
             }
         }
-        return __exception;
+        return RethrowStackPreserver.PreserveForRethrow(__exception, null);
     }
 }

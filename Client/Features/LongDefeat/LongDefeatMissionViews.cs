@@ -9,7 +9,8 @@ namespace TAOM.Client.Features.LongDefeat;
 
 /// <summary>
 /// The view list for the "TaomLongDefeat" mission (#1079): the player-agent list of <c>HostReviewMissionViews</c>, without its campaign
-/// view and its deployment views (this mission has no deployment phase), plus the siege engine markers. Every static method on a
+/// view and its deployment views (this mission has no deployment phase), plus the siege engine markers and the kill feed of Custom Battle's
+/// lists (#1159; it follows the player's kill feed options). Every static method on a
 /// <c>[ViewCreatorModule]</c> class must carry <c>[ViewMethod]</c> (ViewCreatorManager.cs:63-66).
 /// </summary>
 [ViewCreatorModule]
@@ -32,6 +33,7 @@ public static class LongDefeatMissionViews
             new MissionBoundaryWallView(),
             ViewCreator.CreateMissionFormationMarkerUIHandler(mission),
             new MissionFormationTargetSelectionHandler(),
+            ViewCreator.CreateSingleplayerMissionKillNotificationUIHandler(),
             ViewCreator.CreateMissionSpectatorControlView(mission),
             ViewCreator.CreateMissionSiegeEngineMarkerView(mission),
             new MissionItemContourControllerView(),

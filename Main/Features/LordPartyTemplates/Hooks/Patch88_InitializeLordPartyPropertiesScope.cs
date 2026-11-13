@@ -31,9 +31,9 @@ public static class Patch88_InitializeLordPartyPropertiesScope
     }
 
     [HarmonyFinalizer]
-    public static Exception? Finalizer(Exception? __exception, Hero? __state)
+    // void, like the outer scope: it only restores the owner, so Harmony keeps the trace itself.
+    public static void Finalizer(Hero? __state)
     {
         Patch88_LordPartyTemplate.AmbientOwner = __state;
-        return __exception;
     }
 }

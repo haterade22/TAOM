@@ -17,9 +17,10 @@ namespace TAOM.Features.LordPartyTemplates.Hooks;
 /// ambient owner back to this scope rather than null it mid-flight. Harmony's <c>__state</c> is
 /// per invocation, which is exactly the ownership a nested scope needs.
 ///
-/// The finalizer returns <c>__exception</c> untouched. Patch65 also finalizes this method and
-/// swallows <c>InvalidOperationException</c> on purpose; every finalizer on a method writes the same
-/// exception slot, so this one must be transparent or it would decide what Patch65 decided.
+/// The finalizer is <c>void</c> (#1155). Patch65 also finalizes this method and swallows
+/// <c>InvalidOperationException</c> on purpose; a finalizer that returns a value writes the exception
+/// slot every finalizer shares, and a void one cannot, so this scope never decides what Patch65
+/// decided and never touches the trace.
 /// </summary>
 [HarmonyPatch(typeof(HeroSpawnCampaignBehavior), "SpawnLordParty")]
 [HarmonyPatchCategory(Patch88_LordPartyTemplate.Category)]
@@ -33,9 +34,8 @@ public static class Patch88_SpawnLordPartyScope
     }
 
     [HarmonyFinalizer]
-    public static Exception? Finalizer(Exception? __exception, Hero? __state)
+    public static void Finalizer(Hero? __state)
     {
         Patch88_LordPartyTemplate.AmbientOwner = __state;
-        return __exception;
     }
 }
