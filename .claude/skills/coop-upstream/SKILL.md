@@ -56,4 +56,12 @@ Our own 1.5.x fixes can go in the same update. Before the push, on the merged he
 4. `git push upstream HEAD:bannerlord-1.5.x` (never a bare push to `origin`, the fork; never force).
    Report the push, then close our own PRs that the update includes, each with a one-line comment.
 
+## Checking our open items
+
+Run `python tools/check_coop_upstream_rules.py` after you file an issue or open a PR, after each
+update of `bannerlord-1.5.x`, and at the start of any Coop session (Mike, 2026-11-13: "check those
+things from time to time"). Exit 1 lists each rule miss on our open issues and PRs: fix our own item
+with `gh issue edit` or `gh pr edit --body-file`. A missing log label means Mike must attach the logs.
+Exit 3 means `gh` failed: report it, not a pass.
+
 Co-op game runs take priority over other sessions' game runs (Mike, 2026-11-13).
