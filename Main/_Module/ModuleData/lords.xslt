@@ -7437,7 +7437,7 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.4526" build="0.5473" key="000A08044070300E4976245366B465B59A4B8308619547498764AA1275284A240898768909675A3A00000000000000000000000000000000000000006F3C2084"/>
+                <BodyProperties version="4" weight="0.4526" build="0.5473" key="000608044070300E4976245366B465B59A4B8308619547498764AA1275284A240898768909675A3A00000000000000000000000000000000000000006F3C2084"/>
             </face>
             <skills>
                 <skill id="OneHanded" value="60" />
@@ -8198,7 +8198,7 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.7" build="0.7" key="000B0005807015843C72310F67D8F06E801C853C01B5813CE9923E7C7F70530C009AA602096E8FE00000000000000000000000000000000000000000012C4042"/>
+                <BodyProperties version="4" weight="0.7" build="0.7" key="00070005807015843C72310F67D8F06E801C853C01B5813CE9923E7C7F70530C009AA602096E8FE00000000000000000000000000000000000000000012C4042"/>
             </face>
             <skills>
                 <skill id="OneHanded" value="215" />
@@ -8793,7 +8793,7 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.4" build="0.6" key="000B100151141010627A8278C8B6825989B65558B77AAC5795A778895979A76301C776130C385387000000000000000000000000000000000000000043A400C4" />
+                <BodyProperties version="4" weight="0.4" build="0.6" key="0007100151141010627A8278C8B6825989B65558B77AAC5795A778895979A76301C776130C385387000000000000000000000000000000000000000043A400C4" />
                 <hair_tags>
                     <hair_tag name="sturgia" />
                 </hair_tags>
@@ -8918,7 +8918,7 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.5" build="0.5" key="001108000070200FD33892A397AC34867B393C86ADDA750B66EE13B68C999CD90157761305747845000000000000000000000000000000000000000034A40083" />
+                <BodyProperties version="4" weight="0.5" build="0.5" key="000708000070200FD33892A397AC34867B393C86ADDA750B66EE13B68C999CD90157761305747845000000000000000000000000000000000000000034A40083" />
                 <hair_tags>
                     <hair_tag name="sturgia" />
                 </hair_tags>
@@ -9345,7 +9345,7 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.5" build="0.5" key="001C68070FE40009776A7BC4C8767889A85B469799583A24DB916477A389668101C776130C89899300000000000000000000000000000000000000005B8C30C3" />
+                <BodyProperties version="4" weight="0.5" build="0.5" key="000668070FE40009776A7BC4C8767889A85B469799583A24DB916477A389668101C776130C89899300000000000000000000000000000000000000005B8C30C3" />
                 <hair_tags>
                     <hair_tag name="sturgia" />
                 </hair_tags>
@@ -9406,7 +9406,7 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.5" build="0.5" key="001C680710E4200777476D84B87649B77CC4469799583A24967922B69496277B01C776130CB42C5D00000000000000000000000000000000000000005B8C30C3" />
+                <BodyProperties version="4" weight="0.5" build="0.5" key="0006680710E4200777476D84B87649B77CC4469799583A24967922B69496277B01C776130CB42C5D00000000000000000000000000000000000000005B8C30C3" />
                 <hair_tags>
                     <hair_tag name="sturgia" />
                 </hair_tags>
@@ -9467,7 +9467,7 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.5" build="0.5" key="000B4C0710E4100D9BB5B85867759DB27C84967BC8BB966AF371F5599496277B00C776030CE4B6C500000000000000000000000000000000000000005B8C3043" />
+                <BodyProperties version="4" weight="0.5" build="0.5" key="00074C0710E4100D9BB5B85867759DB27C84967BC8BB966AF371F5599496277B00C776030CE4B6C500000000000000000000000000000000000000005B8C3043" />
                 <hair_tags>
                     <hair_tag name="sturgia" />
                 </hair_tags>
@@ -9528,7 +9528,7 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.6" build="0.6" key="00164C02C0882342BAB7B9566DA53AD368A6628171B9A586A7883546559D974501977613094979CE000000000000000000000000000000000000000041341002" />
+                <BodyProperties version="4" weight="0.6" build="0.6" key="00064C02C0882342BAB7B9566DA53AD368A6628171B9A586A7883546559D974501977613094979CE000000000000000000000000000000000000000041341002" />
                 <hair_tags>
                     <hair_tag name="sturgia" />
                 </hair_tags>
@@ -9592,7 +9592,7 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.5" build="0.5" key="000B2802D088000AC4886AA8789859A797CAD63996786A57CBB8885895D177B60197761309D8CA7600000000000000000000000000000000000000002B2C1083" />
+                <BodyProperties version="4" weight="0.5" build="0.5" key="00072802D088000AC4886AA8789859A797CAD63996786A57CBB8885895D177B60197761309D8CA7600000000000000000000000000000000000000002B2C1083" />
                 <hair_tags>
                     <hair_tag name="sturgia" />
                 </hair_tags>
@@ -9653,7 +9653,7 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.5" build="0.5" key="000B78071114200E8D1723DA7A67949A66266E8653525564594C4368786D87B30187761308288EC7000000000000000000000000000000000000000031143003" />
+                <BodyProperties version="4" weight="0.5" build="0.5" key="000778071114200E8D1723DA7A67949A66266E8653525564594C4368786D87B30187761308288EC7000000000000000000000000000000000000000031143003" />
                 <hair_tags>
                     <hair_tag name="sturgia" />
                 </hair_tags>
@@ -9714,7 +9714,7 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.5" build="0.5" key="000B740A11001001583A7894D487CE78C5AA46B87A7486657B1B789866D6823901277613028B77670000000000000000000000000000000000000000623C3003" />
+                <BodyProperties version="4" weight="0.5" build="0.5" key="0007740A11001001583A7894D487CE78C5AA46B87A7486657B1B789866D6823901277613028B77670000000000000000000000000000000000000000623C3003" />
                 <hair_tags>
                     <hair_tag name="sturgia" />
                 </hair_tags>
@@ -9836,7 +9836,7 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.5" build="0.5" key="000B080150CC30064899E76527D86898746C92BAB8DAA66B7B8B3698896A983101B776130BB47BA900000000000000000000000000000000000000005B6C0083" />
+                <BodyProperties version="4" weight="0.5" build="0.5" key="0007080150CC30064899E76527D86898746C92BAB8DAA66B7B8B3698896A983101B776130BB47BA900000000000000000000000000000000000000005B6C0083" />
                 <hair_tags>
                     <hair_tag name="sturgia" />
                 </hair_tags>
@@ -9897,7 +9897,7 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.5" build="0.5" key="000B0C02D2B410069419993888AD9C89477AB8686789AB88845B929CA6AC5C670197761309E3999800000000000000000000000000000000000000002D341003" />
+                <BodyProperties version="4" weight="0.5" build="0.5" key="00070C02D2B410069419993888AD9C89477AB8686789AB88845B929CA6AC5C670197761309E3999800000000000000000000000000000000000000002D341003" />
                 <hair_tags>
                     <hair_tag name="sturgia" />
                 </hair_tags>
@@ -10140,7 +10140,7 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" key="0016200140BC140143FBBB8747BD9C66A9446A946C85E738A778E765678CA9B4000BD8350BB5C64C0000037F0000000F00000037049140010000000001903000"/>
+                <BodyProperties version="4" key="0006200140BC140143FBBB8747BD9C66A9446A946C85E738A778E765678CA9B4000BD8350BB5C64C0000037F0000000F00000037049140010000000001903000"/>
             </face>
             <skills>
                 <skill id="OneHanded" value="215" />
@@ -10191,7 +10191,7 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" key="001C900580BC3004946A9B5AA87AD8B3C9B53ACB38775717464D46BA9D9767A50004AB1804BB8A6D0000037F0000000F00000037049140010000000001E00000"/>
+                <BodyProperties version="4" key="0006900580BC3004946A9B5AA87AD8B3C9B53ACB38775717464D46BA9D9767A50004AB1804BB8A6D0000037F0000000F00000037049140010000000001E00000"/>
             </face>
             <skills>
                 <skill id="OneHanded" value="40" />
@@ -13243,7 +13243,7 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.4706" build="0.6001" key="0005180A00CC00049172105733863178A76987A967716698AB94AE398C6A5582036976350666486B00000000000000000000000000000000000000002EDC2042"/>
+                <BodyProperties version="4" weight="0.4706" build="0.6001" key="0005180140CC00049172105733863178A76987A967716698AB94AE398C6A5582036976350666486B00000000000000000000000000000000000000002EDC2042"/>
             </face>
             <skills>
                 <skill id="OneHanded" value="60" />
@@ -13298,7 +13298,7 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.5517" build="0.5949" key="000B60014000234665734C57613665A5354588837351AC1455E8373672131432037980350768BB63000000000000000000000000000000000000000026E01082"/>
+                <BodyProperties version="4" weight="0.5517" build="0.5949" key="000760014000234665734C57613665A5354588837351AC1455E8373672131432037980350768BB63000000000000000000000000000000000000000026E01082"/>
             </face>
             <skills>
                 <skill id="OneHanded" value="235" />
@@ -13623,7 +13623,7 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" key="00127C04403C3004B7D8465988D98C845A24288FAD8AB786279B9CAA78AA48B500059A43059AA965000000000000000000000000000000000000000000282000"/>
+                <BodyProperties version="4" key="00027C04403C3004B7D8465988D98C845A24288FAD8AB786279B9CAA78AA48B500059A43059AA965000000000000000000000000000000000000000000282000"/>
             </face>
             <skills>
                 <skill id="OneHanded" value="40" />
@@ -13786,7 +13786,7 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.6404" build="0.6682" key="0005B008800039CD48802D04476A22F69E19714BC2BB1B05FF6F00777B853103027AA0240759705000000000000000000000000000000000000000007CE82001"/>
+                <BodyProperties version="4" weight="0.6404" build="0.6682" key="0005B004800039CD48802D04476A22F69E19714BC2BB1B05FF6F00777B853103027AA0240759705000000000000000000000000000000000000000007CE82001"/>
             </face>
             <skills>
                 <skill id="OneHanded" value="230" />
@@ -13894,7 +13894,7 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.6561" build="0.7254" key="000A1C044000200213731F53422567A40340782A62818C5644865A2982340431017BA01307534CA3000000000000000000000000000000000000000024F070C4"/>
+                <BodyProperties version="4" weight="0.6561" build="0.7254" key="00061C044000200213731F53422567A40340782A62818C5644865A2982340431017BA01307534CA3000000000000000000000000000000000000000024F070C4"/>
             </face>
             <skills>
                 <skill id="OneHanded" value="160" />
@@ -14002,7 +14002,7 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="1" build="0.6157" key="000AD40000001343EE7E000F4AAB0022AB5E70F090EDE6067446100F8B5B0F080099F60309F6E0FE00000000000000000000000000000000000000003D2C7002"/>
+                <BodyProperties version="4" weight="1" build="0.6157" key="0006D40000001343EE7E000F4AAB0022AB5E70F090EDE6067446100F8B5B0F080099F60309F6E0FE00000000000000000000000000000000000000003D2C7002"/>
             </face>
             <skills>
                 <skill id="OneHanded" value="265" />
@@ -14111,7 +14111,7 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" key="00055C0880BC0245678789A8C8B6C2728588854B98886843B5DCD6C879C689370005676409844933000000000000000000000000000000000000000000F08000"/>
+                <BodyProperties version="4" key="00055C0480BC0245678789A8C8B6C2728588854B98886843B5DCD6C879C689370005676409844933000000000000000000000000000000000000000000F08000"/>
             </face>
             <skills>
                 <skill id="OneHanded" value="200" />
@@ -14165,7 +14165,7 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" key="00055C0880BC0245678789A8C8B6C2728588854B98886843B5DCD6C879C689370005676409844933000000000000000000000000000000000000000000F08000"/>
+                <BodyProperties version="4" key="00055C0480BC0245678789A8C8B6C2728588854B98886843B5DCD6C879C689370005676409844933000000000000000000000000000000000000000000F08000"/>
             </face>
             <skills>
                 <skill id="OneHanded" value="230" />
@@ -14489,7 +14489,7 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.38" build="0.1644" key="0000500FC0CC100378A061BC61A180068D4BA177F0C1E601B0FF1B008FE78B00007276030720F81100000000000000000000000000000000000000003AF40102"/>
+                <BodyProperties version="4" weight="0.38" build="0.1644" key="0000500240CC100378A061BC61A180068D4BA177F0C1E601B0FF1B008FE78B00007276030720F81100000000000000000000000000000000000000003AF40102"/>
             </face>
             <skills>
                 <skill id="OneHanded" value="230" />
@@ -14597,7 +14597,7 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" key="000B48058FFC300578E42AAB88C6A5BD924B6988339398973D8EA8676AA7686500056D2507336C86000000000000000000000000000000000000000000C81000"/>
+                <BodyProperties version="4" key="000748058FFC300578E42AAB88C6A5BD924B6988339398973D8EA8676AA7686500056D2507336C86000000000000000000000000000000000000000000C81000"/>
             </face>
             <skills>
                 <skill id="OneHanded" value="250" />
@@ -14651,7 +14651,7 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.4491" build="0.7222" key="000A14080000168200800A1F0530F00E660F8960B08860020019011F8E0BA101008B76030805E60600000000000000000000000000000000000000003F049002"/>
+                <BodyProperties version="4" weight="0.4491" build="0.7222" key="000614040000168200800A1F0530F00E660F8960B08860020019011F8E0BA101008B76030805E60600000000000000000000000000000000000000003F049002"/>
             </face>
             <skills>
                 <skill id="OneHanded" value="230" />
@@ -14705,7 +14705,7 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0" build="0.5" key="0008D40A400010149E70FF0790609008AB9D709070EF9600744D70098DB2D404007706030707A09500000000000000000000000000000000000000003CF47042"/>
+                <BodyProperties version="4" weight="0" build="0.5" key="0008D401800010149E70FF0790609008AB9D709070EF9600744D70098DB2D404007706030707A09500000000000000000000000000000000000000003CF47042"/>
             </face>
             <skills>
                 <skill id="OneHanded" value="235" />
@@ -14824,7 +14824,7 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.5" build="0.5" key="000B040B4070300A59453CA886740D767888B63281AA8878BC957C5659C2945701777613078AB58600000000000000000000000000000000000000006AF420C3" />
+                <BodyProperties version="4" weight="0.5" build="0.5" key="000704028070300A59453CA886740D767888B63281AA8878BC957C5659C2945701777613078AB58600000000000000000000000000000000000000006AF420C3" />
                 <hair_tags>
                     <hair_tag name="vlandia" />
                 </hair_tags>
@@ -14946,7 +14946,7 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.5" build="0.5" key="000B680A1070000AB27B84CD4CC38B9CBA75B4AABB9AC152965A9D22CEADBE45019776130998732700000000000000000000000000000000000000001B2C2084" age="25.84" />
+                <BodyProperties version="4" weight="0.5" build="0.5" key="000768015070000AB27B84CD4CC38B9CBA75B4AABB9AC152965A9D22CEADBE45019776130998732700000000000000000000000000000000000000001B2C2084" age="25.84" />
                 <hair_tags>
                     <hair_tag name="vlandia" />
                 </hair_tags>
@@ -15007,7 +15007,7 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.2639" build="0.7222" key="000D3C0140FC0001E08010E3E2E7E2117EF887621E988104A009041F8A870A07009B4603090CE6F500000000000000000000000000000000000000003F1C2003" age="40.15" />
+                <BodyProperties version="4" weight="0.2639" build="0.7222" key="00033C0140FC0001E08010E3E2E7E2117EF887621E988104A009041F8A870A07009B4603090CE6F500000000000000000000000000000000000000003F1C2003" age="40.15" />
                 <hair_tags>
                     <hair_tag name="vlandia" />
                 </hair_tags>
@@ -15129,7 +15129,7 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.5" build="0.5" key="0000740E4044000B3969339927553498A84BB8A877D96D6645597984592A439501477613046A3907000000000000000000000000000000000000000050942043" />
+                <BodyProperties version="4" weight="0.5" build="0.5" key="00007400C044000B3969339927553498A84BB8A877D96D6645597984592A439501477613046A3907000000000000000000000000000000000000000050942043" />
                 <hair_tags>
                     <hair_tag name="vlandia" />
                 </hair_tags>
@@ -15193,7 +15193,7 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.5" build="0.5" key="0000740E4044000B3969339927553498A84BB8A877D96D6645597984592A439501477613046A3907000000000000000000000000000000000000000050942043" />
+                <BodyProperties version="4" weight="0.5" build="0.5" key="00007400C044000B3969339927553498A84BB8A877D96D6645597984592A439501477613046A3907000000000000000000000000000000000000000050942043" />
                 <hair_tags>
                     <hair_tag name="vlandia" />
                 </hair_tags>
@@ -15257,7 +15257,7 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.5" build="0.5" key="0000540E4070100B9D95A3A74EA8C8B848778365688C85437456344D43777968014776130475B2940000000000000000000000000000000000000000268C30C4" />
+                <BodyProperties version="4" weight="0.5" build="0.5" key="00005400C070100B9D95A3A74EA8C8B848778365688C85437456344D43777968014776130475B2940000000000000000000000000000000000000000268C30C4" />
                 <hair_tags>
                     <hair_tag name="vlandia" />
                 </hair_tags>
@@ -15318,7 +15318,7 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.4769" build="0.6042" key="000D3006D014200A8E8000120BC13021A78A806C0FC77034A4591B1C8A87119900797603070CEF0C00000000000000000000000000000000000000003EFC2003" age="45.15" />
+                <BodyProperties version="4" weight="0.4769" build="0.6042" key="00033006D014200A8E8000120BC13021A78A806C0FC77034A4591B1C8A87119900797603070CEF0C00000000000000000000000000000000000000003EFC2003" age="45.15" />
                 <hair_tags>
                     <hair_tag name="vlandia" />
                 </hair_tags>
@@ -15379,7 +15379,7 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0" build="0.5" key="0008240D800013820E70FF0790680008AB9D709079EF9B01744D7B098942D474007706030707A3F500000000000000000000000000000000000000003CF45042" age="12.16" />
+                <BodyProperties version="4" weight="0" build="0.5" key="00082404C00013820E70FF0790680008AB9D709079EF9B01744D7B098942D474007706030707A3F500000000000000000000000000000000000000003CF45042" age="12.16" />
                 <hair_tags>
                     <hair_tag name="vlandia" />
                 </hair_tags>
@@ -15447,7 +15447,7 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.1574" build="0.5602" key="000A200150B4000A6E8000100BC79001A269846C0A811013A579051C89F71BA6007826030703760000000000000000000000000000000000000000003EE40003" age="10.15" />
+                <BodyProperties version="4" weight="0.1574" build="0.5602" key="0006200150B4000A6E8000100BC79001A269846C0A811013A579051C89F71BA6007826030703760000000000000000000000000000000000000000003EE40003" age="10.15" />
                 <hair_tags>
                     <hair_tag name="vlandia" />
                 </hair_tags>
@@ -15508,7 +15508,7 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.4306" build="0.4699" key="0005CC0D800013436E8F6EF11905A009717CC2604DB77E03C01904008E50E60400776603075AC59900000000000000000000000000000000000000003EFC1002" age="40.16" />
+                <BodyProperties version="4" weight="0.4306" build="0.4699" key="0005CC04C00013436E8F6EF11905A009717CC2604DB77E03C01904008E50E60400776603075AC59900000000000000000000000000000000000000003EFC1002" age="40.16" />
                 <hair_tags>
                     <hair_tag name="vlandia" />
                 </hair_tags>
@@ -15572,7 +15572,7 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.5" build="0.5" key="00164005802C100244849395E765385463ABA4846AA46E7A788D797974658C8901777613077C2D3C00000000000000000000000000000000000000002CEC40C3" age="21" />
+                <BodyProperties version="4" weight="0.5" build="0.5" key="00064005802C100244849395E765385463ABA4846AA46E7A788D797974658C8901777613077C2D3C00000000000000000000000000000000000000002CEC40C3" age="21" />
                 <BodyPropertiesMax version="4" age="22" weight="0.6" build="0.6" key="00164005802C100244849395E765385463ABA4846AA46E7A788D797974658C8901777613077C2D3C00000000000000000000000000000000000000002CEC40C3" />
                 <hair_tags>
                     <hair_tag name="vlandia" />
@@ -15634,7 +15634,7 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.5" build="0.5" key="00052C089314100B599B39385A8372459867775D8A397A98773789A84B355847019776130946854400000000000000000000000000000000000000003F1C3044"/>
+                <BodyProperties version="4" weight="0.5" build="0.5" key="00052C049314100B599B39385A8372459867775D8A397A98773789A84B355847019776130946854400000000000000000000000000000000000000003F1C3044"/>
             </face>
             <skills>
                 <skill id="OneHanded" value="250" />
@@ -15689,7 +15689,7 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.5" build="0.5" key="00052C089314100B599B39385A8372459867775D8A397A98773789A84B355847019776130946854400000000000000000000000000000000000000003F1C3044"/>
+                <BodyProperties version="4" weight="0.5" build="0.5" key="00052C049314100B599B39385A8372459867775D8A397A98773789A84B355847019776130946854400000000000000000000000000000000000000003F1C3044"/>
             </face>
             <skills>
                 <skill id="OneHanded" value="60" />
@@ -15744,7 +15744,7 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.5" build="0.5" key="00052C089314100B599B39385A8372459867775D8A397A98773789A84B355847019776130946854400000000000000000000000000000000000000003F1C3044"/>
+                <BodyProperties version="4" weight="0.5" build="0.5" key="00052C049314100B599B39385A8372459867775D8A397A98773789A84B355847019776130946854400000000000000000000000000000000000000003F1C3044"/>
             </face>
             <skills>
                 <skill id="OneHanded" value="40" />
@@ -15799,7 +15799,7 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.5" build="0.5" key="00052C089314100B599B39385A8372459867775D8A397A98773789A84B355847019776130946854400000000000000000000000000000000000000003F1C3044"/>
+                <BodyProperties version="4" weight="0.5" build="0.5" key="00052C049314100B599B39385A8372459867775D8A397A98773789A84B355847019776130946854400000000000000000000000000000000000000003F1C3044"/>
             </face>
             <skills>
                 <skill id="OneHanded" value="240" />
@@ -15908,7 +15908,7 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.4" build="0.5" key="00113C0891880002654AAC95A9972C89D33975D5959CC9D4C9754C08398B35770177761307A5606700000000000000000000000000000000000000003EDC0083"/>
+                <BodyProperties version="4" weight="0.4" build="0.5" key="00073C0491880002654AAC95A9972C89D33975D5959CC9D4C9754C08398B35770177761307A5606700000000000000000000000000000000000000003EDC0083"/>
             </face>
             <skills>
                 <skill id="OneHanded" value="40" />
@@ -15962,7 +15962,7 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.4" build="0.5" key="00113C0891880002654AAC95A9972C89D33975D5959CC9D4C9754C08398B35770177761307A5606700000000000000000000000000000000000000003EDC0083"/>
+                <BodyProperties version="4" weight="0.4" build="0.5" key="00073C0491880002654AAC95A9972C89D33975D5959CC9D4C9754C08398B35770177761307A5606700000000000000000000000000000000000000003EDC0083"/>
             </face>
             <skills>
                 <skill id="OneHanded" value="160" />
@@ -16016,7 +16016,7 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.7" build="0.7" key="00113C0891880002654AAC95A9972C89D33975D5959CC9D4C9754C08398B35770177761307A5606700000000000000000000000000000000000000003EDC0083"/>
+                <BodyProperties version="4" weight="0.7" build="0.7" key="00073C0491880002654AAC95A9972C89D33975D5959CC9D4C9754C08398B35770177761307A5606700000000000000000000000000000000000000003EDC0083"/>
             </face>
             <skills>
                 <skill id="OneHanded" value="240" />
@@ -16070,7 +16070,7 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" age="40" weight="0.4766" build="0.5592" key="000D4C0A40CC034D45537629596A6586645E5A74B6B7A9557EABA7C88A714A6603887635084E64880000000000000000000000000000000000000000711C8102"/>
+                <BodyProperties version="4" age="40" weight="0.4766" build="0.5592" key="00034C0180CC034D45537629596A6586645E5A74B6B7A9557EABA7C88A714A6603887635084E64880000000000000000000000000000000000000000711C8102"/>
             </face>
             <skills>
                 <skill id="OneHanded" value="240" />
@@ -21945,7 +21945,7 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.5" build="0.5" key="0015C8054044068CB7A388848DA2B46798378B58269B28772C23873661A7A63600477603042744BE000000000000000000000000000000000000000030940102" />
+                <BodyProperties version="4" weight="0.5" build="0.5" key="0005C8054044068CB7A388848DA2B46798378B58269B28772C23873661A7A63600477603042744BE000000000000000000000000000000000000000030940102" />
                 <hair_tags>
                     <hair_tag name="sturgia" />
                 </hair_tags>
