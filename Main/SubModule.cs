@@ -584,10 +584,9 @@ public class SubModule : MBSubModuleBase
         {
             logger.LogWarning($"[BannerBearers] Patch63 spawn guard failed to apply: {ex.Message}");
         }
-        // Patch_MissionTime_SetMovementOrder (shared by Patch31_SmartCavalryAI,
-        // Patch35_CompanionTactics' Formation.SetMovementOrder hook, and the MovementOrder
-        // hooks MarshalThrowerPatch and MarshalThrowerTimer) is applied in
-        // OnMissionBehaviorInitialize — MovementOrder.cctor reads Mission.Current.CurrentTime,
+        // Patch_MissionTime_SmartCavalryAI (Patch31, Patch31b) and Patch_MissionTime_CompanionTactics
+        // (Patch35's Formation.SetMovementOrder hook) are applied in OnMissionBehaviorInitialize, and
+        // Marshal's Word's thrower category by its module at the FirstMission phase — MovementOrder.cctor reads Mission.Current.CurrentTime,
         // which is null during OnSubModuleLoad and would crash JIT prep with NRE.
 
         var bannerColorConfig = IoC.Resolve<IBannerColorConfigProvider>();
@@ -2160,7 +2159,12 @@ public class SubModule : MBSubModuleBase
         if (!_missionTimePatchesApplied)
         {
             _missionTimePatchesApplied = true;
-            TryPatchCategory("Patch_MissionTime_SetMovementOrder");
+            // One category per feature, so a class that fails after a game update turns off only its own
+            // feature. SmartCavalry before Companion Tactics, as when they shared one category (assembly
+            // order): both put a postfix on Formation.SetMovementOrder. Marshal's Word's thrower category
+            // targets MovementOrder members and is applied by its module in the FirstMission phase below.
+            TryPatchCategory("Patch_MissionTime_SmartCavalryAI");
+            TryPatchCategory("Patch_MissionTime_CompanionTactics");
             FeatureModuleHooks.RunPhase(ApplyPhase.FirstMission, TryPatchCategory);
             _patches.EndPhase("Mission");
             _patches.WriteHeldCategoryLines(Features.LoadTimeStamps.LoadTimeStampsHooks.DetailEnabled);

@@ -68,7 +68,7 @@ TAOM.Features.CompanionTactics/
     ├── UI/{BattleActionBarVM, ActionButtonVM}
     └── Hooks/
         BattleActionBarMissionView                        (MissionView NOT Harmony; field battles only; lives in Client/ since ADR-013, same path under Client/Features/)
-        Patch35_Formation_SetMovementOrder                (clears stance on move when CancelStanceOnMove; lives in shared Patch_MissionTime_SetMovementOrder category — see below)
+        Patch35_Formation_SetMovementOrder                (clears stance on move when CancelStanceOnMove; lives in deferred Patch_MissionTime_CompanionTactics category — see below)
 ```
 
 Adapters added/extended:

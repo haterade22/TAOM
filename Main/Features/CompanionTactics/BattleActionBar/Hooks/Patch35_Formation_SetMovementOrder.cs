@@ -17,7 +17,7 @@ namespace TAOM.Features.CompanionTactics.BattleActionBar.Hooks;
 // Shared with Patch31_FormationSetMovementOrder. The category is applied from
 // OnMissionBehaviorInitialize (one-shot guarded) because MovementOrder.cctor reads
 // Mission.Current.CurrentTime — null during OnSubModuleLoad / OnGameInitializationFinished.
-[HarmonyPatchCategory("Patch_MissionTime_SetMovementOrder")]
+[HarmonyPatchCategory("Patch_MissionTime_CompanionTactics")]
 public static class Patch35_Formation_SetMovementOrder
 {
     // Phase 9b #164 — `?` nullable annotations match the `??=` lazy-init pattern. Codex review

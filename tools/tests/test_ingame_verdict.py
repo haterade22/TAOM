@@ -2136,7 +2136,7 @@ class MarshalsWordManifestTests(unittest.TestCase):
         self.assertEqual(verdict_of(out, self.THROWERS_STAND), "FAIL", out)
         self.assertEqual(verdict_of(out, self.CAPTURED), "FAIL", out)
 
-    def test_the_shared_category_failing_to_apply_fails_the_captured_check(self):
+    def test_the_mission_time_category_failing_to_apply_fails_the_captured_check(self):
         code, out, _ = self.judge("marshal_throwers_category_failed.txt")
         self.assertEqual(code, 1, out)
         self.assertEqual(verdict_of(out, self.CAPTURED), "FAIL", out)
@@ -2210,12 +2210,12 @@ class MarshalsWordManifestTests(unittest.TestCase):
         for calls in ("300", "999", "1000", "52000"):
             self.assertTrue(pattern.search(line % calls), "calls=" + calls)
 
-    def test_every_thrower_check_names_the_postfix_fault_and_the_shared_category_in_its_fail_list(self):
+    def test_every_thrower_check_names_the_postfix_fault_and_the_mission_time_category_in_its_fail_list(self):
         for check_id in (self.THROWERS_STAND, self.THROWERS_THROW, self.THROWERS_MELEE, self.THROWERS_COST):
             patterns = [p.pattern for p in self.check(check_id).fails]
             with self.subTest(check_id=check_id):
                 self.assertIn(r"\[MarshalsWord\] the thrower stand failed", patterns)
-                self.assertIn(r"\[PatchApply\] Patch_MissionTime_SetMovementOrder (?:FAILED|SKIPPED)", patterns)
+                self.assertIn(r"\[PatchApply\] Patch_MissionTime_MarshalsWord (?:FAILED|SKIPPED)", patterns)
 
 
 

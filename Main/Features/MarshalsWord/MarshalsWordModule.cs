@@ -17,8 +17,14 @@ internal sealed class MarshalsWordModule : TaomFeatureModule
 {
     internal const string PatchCategory = "Patch141_MarshalsWord";
 
+    // The two thrower classes (MarshalThrowerPatch, MarshalThrowerTimer), whose patch signatures carry a MovementOrder. Their own
+    // category since 2026-11-13: in the category they shared with SmartCavalry and Companion Tactics, one failing class turned off
+    // all three features. Applied first, as before.
+    internal const string ThrowerPatchCategory = "Patch_MissionTime_MarshalsWord";
+
     private static readonly PatchCategoryDecl[] Categories =
     {
+        new(ThrowerPatchCategory, ApplyPhase.FirstMission),
         new(PatchCategory, ApplyPhase.FirstMission),
     };
 

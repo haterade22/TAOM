@@ -300,20 +300,20 @@ class MarshalJudgeTests(unittest.TestCase):
             for level in ("WARNING", "INFO"):
                 self.assertIsNone(trial.MARSHAL_ERROR.search(f"[2026-11-04 10:00:05] [{level}] [PatchApply] {text}"), (level, text))
 
-    def test_the_shared_movement_order_category_failing_to_apply_fails_the_run(self):
-        """The two thrower patches are applied through the shared category, and the applier writes its name, with no Patch141_ in it."""
-        for text in ("Patch_MissionTime_SetMovementOrder FAILED (x)",):
+    def test_the_marshals_word_mission_time_category_failing_to_apply_fails_the_run(self):
+        """The two thrower patches are applied through Patch_MissionTime_MarshalsWord, and the applier writes its name, with no Patch141_ in it."""
+        for text in ("Patch_MissionTime_MarshalsWord FAILED (x)",):
             code, why = judge(FINAL, None, full_log(extra=(f"[2026-11-05 10:00:05] [ERROR] [PatchApply] {text}",)))
             self.assertEqual(code, 1, text)
-            self.assertIn("Patch_MissionTime_SetMovementOrder", why)
+            self.assertIn("Patch_MissionTime_MarshalsWord", why)
             for level in ("WARNING", "INFO"):
                 self.assertIsNone(trial.MARSHAL_ERROR.search(f"[2026-11-05 10:00:05] [{level}] [PatchApply] {text}"), (level, text))
 
     def test_every_thrower_patch_class_is_judged_when_the_applier_skips_it(self):
-        """The thrower classes carry the shared category, not Patch141_, so their names are read out of the source and each is judged as the applier writes it."""
+        """The thrower classes carry Patch_MissionTime_MarshalsWord, not Patch141_, so their names are read out of the source and each is judged as the applier writes it."""
         hooks = REPO / "Main" / "Features" / "MarshalsWord" / "Hooks"
         classes = [match.group(1) for path in hooks.glob("*.cs") for match in re.finditer(
-            r'HarmonyPatchCategory\("Patch_MissionTime_SetMovementOrder"\)\]\s*public static class (\w+)', path.read_text(encoding="utf-8"))]
+            r'HarmonyPatchCategory\("Patch_MissionTime_MarshalsWord"\)\]\s*public static class (\w+)', path.read_text(encoding="utf-8"))]
         self.assertEqual(sorted(classes), ["MarshalThrowerPatch", "MarshalThrowerTimer"])
         for name in classes:
             line = f"[2026-11-05 10:00:05] [ERROR] [PatchApply] TAOM.Features.MarshalsWord.Hooks.{name} SKIPPED (its attributes cannot be read, so its patches are off)"

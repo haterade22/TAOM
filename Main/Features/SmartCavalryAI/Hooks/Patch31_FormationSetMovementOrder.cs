@@ -37,7 +37,7 @@ namespace TAOM.Features.SmartCavalryAI.Hooks;
 // Shared with Patch35_Formation_SetMovementOrder and Patch31b. The category is applied from
 // OnMissionBehaviorInitialize (one-shot guarded) because MovementOrder.cctor reads
 // Mission.Current.CurrentTime, which is null during OnSubModuleLoad / OnGameInitializationFinished.
-[HarmonyPatchCategory("Patch_MissionTime_SetMovementOrder")]
+[HarmonyPatchCategory("Patch_MissionTime_SmartCavalryAI")]
 public static class Patch31_FormationSetMovementOrder
 {
     // A re-issue of a Move carries the very same struct; a player click on "the same spot" does not
