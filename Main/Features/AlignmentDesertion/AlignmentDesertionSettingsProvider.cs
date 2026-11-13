@@ -1,4 +1,5 @@
 using TAOM.Features;
+using TAOM.Features.AlignmentRecruitment;
 
 namespace TAOM.Features.AlignmentDesertion;
 
@@ -20,13 +21,18 @@ public sealed class AlignmentDesertionSettingsProvider : IAlignmentDesertionSett
     private TaomSettings? _settings;
     private TaomSettings? Settings => _settings ??= TaomSettings.Instance;
 
-    public AlignmentDesertionSettingsProvider(IAlignmentDesertionConfigProvider configProvider)
+    private readonly IRecruitmentAlignmentSettingsProvider _recruitment;
+
+    public AlignmentDesertionSettingsProvider(IAlignmentDesertionConfigProvider configProvider,
+        IRecruitmentAlignmentSettingsProvider recruitment)
     {
         _defaults = configProvider.GetConfig();
+        _recruitment = recruitment;
     }
 
-    internal AlignmentDesertionSettingsProvider(IAlignmentDesertionConfigProvider configProvider, TaomSettings settings)
-        : this(configProvider) => _settings = settings;
+    internal AlignmentDesertionSettingsProvider(IAlignmentDesertionConfigProvider configProvider,
+        IRecruitmentAlignmentSettingsProvider recruitment, TaomSettings settings)
+        : this(configProvider, recruitment) => _settings = settings;
 
     public bool IsEnabled => Settings?.EnableAlignmentDesertion ?? _defaults.Enabled;
 
@@ -39,4 +45,7 @@ public sealed class AlignmentDesertionSettingsProvider : IAlignmentDesertionSett
     public bool ApplyToParties => Settings?.EnableAlignmentDesertionParties ?? _defaults.ApplyToParties;
 
     public bool ApplyToGarrisons => Settings?.EnableAlignmentDesertionGarrisons ?? _defaults.ApplyToGarrisons;
+
+    // One switch for both features: Recruitment Alignment's own provider already merges MCM over its JSON mode.
+    public bool GoodRejectsEvilOnly => _recruitment.GoodRejectsEvilOnly;
 }

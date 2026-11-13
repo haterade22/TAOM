@@ -416,15 +416,19 @@ public class CampaignHotPathSettingsProvidersTests
         var mcm = new TaomSettings();
         var cfg = Substitute.For<IAlignmentDesertionConfigProvider>();
         cfg.GetConfig().Returns(new AlignmentDesertionConfig());
-        var sut = new AlignmentDesertionSettingsProvider(cfg, mcm);
+        var recruitment = Substitute.For<TAOM.Features.AlignmentRecruitment.IRecruitmentAlignmentSettingsProvider>();
+        var sut = new AlignmentDesertionSettingsProvider(cfg, recruitment, mcm);
         Assert.IsTrue(sut.IsEnabled);
         Assert.AreEqual(0.5f, sut.Rate, 0.0001f);
+        Assert.IsFalse(sut.GoodRejectsEvilOnly);
 
         mcm.EnableAlignmentDesertion = false;
         mcm.AlignmentDesertionRate = 0.25f;
+        recruitment.GoodRejectsEvilOnly.Returns(true);
 
         Assert.IsFalse(sut.IsEnabled);
         Assert.AreEqual(0.25f, sut.Rate, 0.0001f);
+        Assert.IsTrue(sut.GoodRejectsEvilOnly, "Desertion reads Recruitment Alignment's 'Only Good Rejects Evil' live.");
     }
 
     [TestMethod]

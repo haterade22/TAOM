@@ -1212,7 +1212,7 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
 
     [SettingPropertyGroup("World/Recruitment Alignment")]
     [SettingPropertyBool("Only Good Rejects Evil", Order = 1, RequireRestart = false,
-        HintText = "When ON, only a Free-aligned recruiter is blocked from Evil-controlled settlements; Evil recruiters may recruit anywhere. When OFF (default), the block is symmetric — Free and Evil each refuse the other.")]
+        HintText = "When ON, only a Free-aligned recruiter is blocked from Evil-controlled settlements; Evil recruiters may recruit anywhere, and Alignment Desertion lets Evil lords keep the Free troops they recruit. When OFF (default), the block is symmetric: Free and Evil each refuse the other, and opposed troops desert either way.")]
     public bool AlignmentRecruitmentGoodRejectsEvilOnly { get; set; } = false;
 
     [SettingPropertyGroup("World/Recruitment Alignment")]
@@ -1355,7 +1355,7 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
 
     [SettingPropertyGroup("World/Alignment Desertion", GroupOrder = 38)]
     [SettingPropertyBool("Enable Alignment Desertion", Order = 0, RequireRestart = false,
-        HintText = "When enabled, troops whose culture is opposed in alignment to their lord (Free vs Evil) desert each day — an Evil lord sheds Good troops and a Good lord sheds Evil troops. Alignment comes from execution/alignment.json. Neutral cultures (Umbar etc.) never desert. When off, vanilla.")]
+        HintText = "When enabled, troops whose culture is opposed in alignment to their lord (Free vs Evil) desert each day: an Evil lord sheds Good troops and a Good lord sheds Evil troops. Alignment comes from execution/alignment.json. Neutral cultures (Umbar etc.) never desert. Troops that would desert cannot be recruited from prisoners, notables or by garrisons. With Recruitment Alignment's 'Only Good Rejects Evil' on, Evil lords keep Free troops. When off, vanilla.")]
     public bool EnableAlignmentDesertion { get; set; } = true;
 
     [SettingPropertyGroup("World/Alignment Desertion")]

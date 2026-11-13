@@ -58,6 +58,9 @@ Given owner kingdom id, `isPlayerOwned`, `isGarrison`, and a roster snapshot:
 3. Location gate: garrison + `!ApplyToGarrisons` → none; party + `!ApplyToParties` → none.
 4. Owner side Neutral (includes kingdomless/independent) → none. (Mercenary clans keep `Kingdom` set to
    their employer, so they resolve to the employer's side and DO purge — not exempt.)
+   Owner side Evil while Recruitment Alignment's "Only Good Rejects Evil" is on → none: that switch lets Evil
+   recruiters take Free troops, so Evil owners keep them (`IAlignmentDesertionSettingsProvider.GoodRejectsEvilOnly`
+   reads the recruitment provider live).
 5. Rate ≤ 0 → none (a 0% slider means "no desertion"; the min-1 floor does not fire at rate 0).
 6. Per troop: skip heroes, zero-count, Neutral-culture, and same-side troops. Opposed troops desert
    `min(count, max(1, (int)(count × rate)))`. Symmetric — Free sheds Evil and Evil sheds Free.
@@ -122,10 +125,33 @@ culture-id keys whose ids differ from their kingdom id:
 | `Main/Features/AlignmentDesertion/AlignmentDesertionConfig.cs` | JSON DTO |
 | `Main/Features/AlignmentDesertion/AlignmentDesertionConfigProvider.cs` | Loads + validates JSON |
 | `Main/Features/AlignmentDesertion/AlignmentDesertionSettingsProvider.cs` | Merges MCM over JSON |
-| `Main/Features/AlignmentDesertion/AlignmentDesertionIoC.cs` | DryIoc registration (3 singletons) |
+| `Main/Features/AlignmentDesertion/AlignmentDesertionIoC.cs` | DryIoc registration (4 singletons) |
+| `Main/Features/AlignmentDesertion/DesertionRecruitGuard.cs` | Recruit seams ask whether a troop would desert (engine boundary) |
+| `Main/Features/AlignmentDesertion/DesertionRecruitCap.cs` | Pure volunteer slot caps for the guard |
 | `Main/Features/Execution/AlignmentService.cs` | Added `GetCultureSide` (shares the id→side table) |
 | `Main/_Module/ModuleData/alignment_desertion/alignment_desertion_config.json` | Defaults |
 | `Main/Features/TaomSettings.cs` | MCM group "World/Alignment Desertion" (GroupOrder 38) |
+
+## Recruiting never offers a troop that would desert
+
+Found by the conflict audit (13 Nov 2026): vanilla AI lords recruited enemy-side prisoners (paying the morale
+cost), AI lords and garrisons bought a captured fief's old-culture volunteers before culture conversion, and
+the next daily tick removed them again. `IAlignmentDesertionService.WouldDesert(owner, isPlayerOwned,
+isGarrison, troopCulture)` answers the same question as `CalculateDesertion` for one troop (a matrix test pins
+the two together), and `DesertionRecruitGuard` asks it at every recruit seam:
+
+| Seam | Where | Effect |
+|---|---|---|
+| Prisoners | `TaomPrisonerRecruitmentCalculationModel.IsPrisonerRecruitable` and `CalculateRecruitableNumber` | Not recruitable for a lord party or the main party it would desert (AI daily recruit and the player's party screen) |
+| Volunteers | `TaomVolunteerModel.MaximumIndexHeroCanRecruitFromHero` | Index capped before the notable's first slot that would desert |
+| Garrison auto-recruit | `TaomVolunteerModel.MaximumIndexGarrisonCanRecruitFromHero` | Slot count capped the same way, under the garrison switches |
+| AI trip estimate | `Patch114_AiVolunteerEstimate_Postfix` | Estimate recounted without those volunteers, so no trip for nothing |
+
+The owner is resolved as the behavior does (leader's clan, owner clan for a garrison, the co-op skips of
+`DesertionOwnerPolicy`), so every switch (master, player, AI, parties, garrisons, rate 0) turns the guard off
+exactly where it turns desertion off. Slot arithmetic is pure in `DesertionRecruitCap`. A guard failure logs
+once and keeps vanilla's answer. The party screen shows a blocked prisoner as not recruitable, with vanilla's
+reason text.
 
 ## Battle rosters
 
@@ -163,6 +189,11 @@ The decision was to skip, not to relay: a remote player gets no desertion popup,
   and `ShouldEvaluate`: each gate, and a matrix proving a false answer always means `CalculateDesertion`
   would return nothing. A NaN rate (reachable only through a hand-edited MCM file) still passes the gate
   and sheds one troop per opposed type through the min-1 floor, exactly as before the gate existed (pinned by `ShouldEvaluate_NaNRate_IsTrue_ParityWithTheOriginalGate`).
+  Six more cover recruiting: `WouldDesert` for opposed, same-side and Neutral troops, each switch, a matrix
+  against `CalculateDesertion`, and "Only Good Rejects Evil" (Evil owners keep Free troops, Free owners still
+  shed Evil ones).
+- `TAOM.Tests/Features/AlignmentDesertion/DesertionRecruitCapTests.cs`: 6 tests for the slot caps (first
+  deserter slot, inclusive hero index, garrison slot count, AI estimate window; never raises vanilla's value).
 - `TAOM.Tests/Features/AlignmentDesertion/AlignmentDesertionBehaviorTests.cs`: 4 `RequiresGame` tests, 13
   runs: one that stages a lord party and a garrison from uninitialized engine objects, in and out of a
   map event, and checks that only the party out of battle reaches the owner check (four runs), an
@@ -198,6 +229,8 @@ roster is scanned once into a small POCO list, decided, and written back.
 
 - 2026-06-27 — Feature created. 50%/day opposed-alignment desertion for parties + garrisons (AI + player),
   four MCM gates + rate slider; added `gondor`/`mordor` to `alignment.json` + `IAlignmentService.GetCultureSide`.
+- 2026-11-13: recruiting no longer offers a troop that would desert (prisoners, volunteers, garrison
+  auto-recruit, AI trip estimate); "Only Good Rejects Evil" also makes desertion one-sided.
 
 ## GitHub Issue
 

@@ -2,6 +2,7 @@ using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.GameComponents;
 using TaleWorlds.CampaignSystem.Party;
 using TAOM.Adapters;
+using TAOM.Features.AlignmentDesertion;
 using TAOM.Features.CareerSystem;
 using TAOM.Features.CareerSystem.Domain;
 
@@ -11,12 +12,31 @@ public class TaomPrisonerRecruitmentCalculationModel : DefaultPrisonerRecruitmen
 {
     private readonly IPrisonerRecruitmentMoraleService _morale;
     private readonly ICareerPassiveService _careerPassives;
+    private readonly IDesertionRecruitGuard _desertionGuard;
 
-    public TaomPrisonerRecruitmentCalculationModel(IPrisonerRecruitmentMoraleService morale, ICareerPassiveService careerPassives)
+    public TaomPrisonerRecruitmentCalculationModel(IPrisonerRecruitmentMoraleService morale, ICareerPassiveService careerPassives,
+        IDesertionRecruitGuard desertionGuard)
     {
         _morale = morale;
         _careerPassives = careerPassives;
+        _desertionGuard = desertionGuard;
     }
+
+    /// <summary>
+    /// A prisoner that alignment desertion would take from this party the next day is not recruitable: AI parties
+    /// (vanilla <c>RecruitPrisonersCampaignBehavior</c>) stop paying morale for troops that leave again. Applies to
+    /// lord parties and the main party only, under the same owner and location switches as the desertion itself.
+    /// </summary>
+    public override bool IsPrisonerRecruitable(PartyBase party, CharacterObject character, out int conformityNeeded)
+        => base.IsPrisonerRecruitable(party, character, out conformityNeeded)
+           && !_desertionGuard.WouldDesertFromParty(party, character);
+
+    /// <summary>
+    /// The count the party screen and the recruit ticks use: 0 for a prisoner that would desert, so the player's
+    /// party screen offers no recruit either.
+    /// </summary>
+    public override int CalculateRecruitableNumber(PartyBase party, CharacterObject character)
+        => _desertionGuard.WouldDesertFromParty(party, character) ? 0 : base.CalculateRecruitableNumber(party, character);
 
     /// <summary>
     /// Career PrisonerConversion (#769 E11): the prisoner XP a recruiting party earns per hour, vanilla's answer
