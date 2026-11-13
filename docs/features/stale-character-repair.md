@@ -264,7 +264,11 @@ the field, step 5 is an inference from the frames, and what first made this save
   separate the candidate origins. It writes nothing itself. It runs after `SandBoxManager.OnCampaignStart`
   (`Campaign.cs:1434`), so a generated hero's character has already copied its origin's culture. It is silent on a
   healthy load. Coop's culture getter postfix fills the raw culture on a read, so a character whose only null is the culture reads
-  healthy under co-op; a hollow one still shows through its other null fields.
+  healthy under co-op; a hollow one still shows through its other null fields. **One known origin, co-op:** a joined
+  player's character is a copy of `main_hero` under a new `Player` id with no template link, so it loaded hollow on
+  every client join (Coop #4675). Coop `bannerlord-1.5.x` e132c0fce links it to `main_hero` when it joins; in a Host
+  plus 2 clients run on that build, no client's census reported it (2026-11-13). A hero that joined before that
+  build still loads hollow.
 - **Repair at the birth**, `Patch83_OffspringParentRepair`, a Prefix on `DeliverOffSpring`, for both parents:
   - **With a healthy registered character of the same id:** it sets `_originCharacter` to that twin and calls the
     engine's `InitializeHeroCharacterOnAfterLoad`, which copies culture, body range, race, skills and equipment
