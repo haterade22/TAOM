@@ -234,9 +234,11 @@ Do NOT skip this step. The point is not just to fix bugs — it's to make the sa
 For each confirmed bug:
 1. Make the code change
 2. `dotnet build TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId=`: must compile
-3. `dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId=`: must pass (both flags on both commands, or the build deploys into the game install)
+3. Run the tests of the changed type: `python tools/graphify_taom.py tests "<changed type or file>"` prints the `dotnet test --filter` line (after `refresh --if-stale`: a stale graph misses a new test file). They must pass
 4. Update tests if behavior changed
 5. Add any preventive tests identified in 3e
+
+After the last fix, run the full suite once: `dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId=` must pass (both flags on both commands, or the build deploys into the game install), and the Python suite when a tool changed (`/verify` Steps 2 and 2b). Skip this run only when `/ship` Phase 4 runs `/verify` next.
 
 ### 3h: Update the Codex lessons (`.ai/review-reference.md`)
 
@@ -261,5 +263,5 @@ orchestrator consolidates them once at wrap-up.
 - Decompile vanilla targets for ALL Harmony patch and GameModel findings
 - Config cross-reference is mandatory, not optional
 - When in doubt about design intent, flag for user input rather than guessing
-- Build and test after EVERY batch of fixes
+- Build and run the changed type's tests after EVERY fix; the full suite once after the last (3f)
 - Flat formatting in prompts — no indented continuation lines

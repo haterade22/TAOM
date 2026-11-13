@@ -90,16 +90,10 @@ A SKILL.md is executable instructions: follow its phases in order.
   says; a sub-problem shared by two briefs gets one pinned solution. Fan out at most four wide, with one checker.
   Review ordering and spawn templates: [agent-teams.md](docs/ai-includes/agent-teams.md).
 - Agents: `taleworlds-researcher`, `feature-builder`, `deep-reviewer` (the `/deep-review` lenses;
-  Opus 5.5 at max effort is set in its definition, so never pass `model`); tiers `fast-reader`, `implementer`,
-  `architect` (below).
+  Opus 5.5 at max effort is set in its definition); tiers `fast-reader`, `implementer`, `architect`
+  (`.claude/rules/model-effort-selection.md`).
 - In the VS Code panel, Stop and Escape end only the turn; background subagents keep running until
   stopped from the agent map. A stopped subagent's progress is on disk, not in its report.
-
-## Model & Effort Selection
-
-Each task runs on the cheapest model and lowest effort that does it well: the table, escalation and
-the one-line note before each spawn are in `.claude/rules/model-effort-selection.md`. Tier agents:
-`fast-reader` (Haiku/low), `implementer` (Sonnet/medium), `architect` (Opus/high).
 
 ## MCP and shell
 
