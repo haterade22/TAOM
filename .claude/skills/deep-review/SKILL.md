@@ -1,6 +1,6 @@
 ---
 name: deep-review
-description: Use before committing C# or XML work. Risk-tiered senior reviewers report defects; a second wave and design improvements follow a CRITICAL or HIGH.
+description: "Use before every commit touching C# or XML/XSLT, repo or live install; skip only config and docs. Risk-tiered senior reviewers report defects; a second wave follows a CRITICAL or HIGH."
 argument-hint: "[feature-name]"
 effort: max
 ---

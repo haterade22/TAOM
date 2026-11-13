@@ -1,6 +1,6 @@
 ---
 name: armory-audit
-description: Use after any Armory sync, art drop, or "ARMORY ART DRIFT" at session start. Audits every mesh and body ref, joins breakage to troops, writes the report.
+description: "Use after an Armory sync or art drop, or on ARMORY ART DRIFT, before any battle or tournament smoke. Audits every mesh and body ref, joins breakage to troops, reports."
 argument-hint: [check|regen]
 ---
 
