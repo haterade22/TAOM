@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using TaleWorlds.MountAndBlade;
+using TAOM.Adapters;
 
 namespace TAOM.Features.BannerBearers.Hooks;
 
@@ -42,7 +43,7 @@ internal static class FormationBannerHeraldry
         foreach (var unit in formation.UnitsWithoutLooseDetachedOnes)
         {
             if (unit is Agent agent)
-                output.Add(agent.Character?.Culture?.StringId);
+                output.Add(CharacterCulture.IdOf(agent.Character));
         }
 
         // Every unit detached (UnitsWithoutLooseDetachedOnes empty while CountOfUnits > 0).
@@ -50,7 +51,7 @@ internal static class FormationBannerHeraldry
         {
             var first = formation.GetFirstUnit();
             if (first != null)
-                output.Add(first.Character?.Culture?.StringId);
+                output.Add(CharacterCulture.IdOf(first.Character));
         }
     }
 
