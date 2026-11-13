@@ -245,7 +245,7 @@ A Musician spectator is a 1-in-10 draw. In-house repros produced `townsman_dunla
 
 **Rule this bought:** never infer what a mission contains from `InitializeMissionBehaviorsDelegate`. `MissionDiagnosticBehavior` already dumps the live behavior list into the same log — read that.
 
-`FileLogger` writes every `[BattleLoad]` line (INFO) **synchronously on the calling thread**, so the begin line is on disk the moment the call returns — before the engine can freeze *or* crash inside the equip. Until 2026-07-16 it was queued to a background writer with a 50 ms poll, which was adequate for a **hang** (main thread frozen, writer thread alive to drain) but lost the queue outright on a **hard crash**. See "Crash-durability caveat" under *Read a hang log*.
+`FileLogger` writes every `[BattleLoad]` line (INFO, durable tag) **synchronously on the calling thread**, so the begin line is on disk the moment the call returns, before the engine can freeze *or* crash inside the equip. Until 2026-07-16 it was queued to a background writer with a 50 ms poll, which was adequate for a **hang** (main thread frozen, writer thread alive to drain) but lost the queue outright on a **hard crash**. See "Crash-durability caveat" under *Read a hang log*.
 
 ### The render-ready gate, the last dark window (bundle b18f3441, 2026-09-04)
 
@@ -584,7 +584,7 @@ The page also holds the "Mission Performance" and "Map Performance" groups, desc
 | `Main/Features/BattleLoadDiagnostics/Cheats/MemoryProbeCheats.cs` | `taom.print_memory [label] [gpu]` — Tier A, cheat gate (`RunAnywhere`). See [dev-console.md](dev-console.md) |
 | `Main/Adapters/IEquipmentSnapshotAdapter.cs` / `EquipmentSnapshotAdapter.cs` | ADR-007 boundary: `Agent`/`Equipment`/`ItemObject` → `EquipmentSnapshot` |
 | `Main/Features/BattleLoadDiagnostics/BattleLoadDiagnosticsIoC.cs` | DryIoc registrations |
-| `Main/Core/Logging/FileLogger.cs` | **Not part of this feature, but load-bearing for its contract** — INFO/WARNING/ERROR drain synchronously so a stamp survives a hard crash; DEBUG stays async. Changing that reopens the blind window (#350) |
+| `Main/Core/Logging/FileLogger.cs` | **Not part of this feature, but load-bearing for its contract**: WARNING/ERROR and INFO lines tagged with `FileLogger.DurableInfoTags` (the stamps) drain synchronously so a stamp survives a hard crash; plain INFO and DEBUG are queued and flushed by the writer thread within about a third of a second (and by `Flush()` in the crash reporter, on exit and on Dispose). Changing that reopens the blind window (#350) |
 
 Wiring: `Main/IoC.cs` (registration), `Main/SubModule.cs`: `OnGameInitializationFinished` `Initialize(...)`s all 19 hooks then applies `Patch43` (try/catch-guarded: the category binds **four** private engine methods by string, and a diagnostics category must never break startup); `OnMissionBehaviorInitialize` adds `BattleLoadPhaseBehavior` and brackets TAOM's own behaviors via the local `AddTaomBehavior` helper, which stamps each by name; `OnGameEnd` calls `ResetLifecycle()` (best-effort, try/catch'd) so a still-open exit window dies with the `Game` (#425).
 
@@ -616,7 +616,7 @@ OUTERMOST gate.
 
 ## Dependencies
 
-- `TAOM.Core.Logging.IModLogger` / `FileLogger` (the log sink; its per-line background flush is what makes the hang survivable).
+- `TAOM.Core.Logging.IModLogger` / `FileLogger` (the log sink; its timed flush by a live writer thread is what makes a hang survivable, and a durable tag is on disk at once).
 - MCM (`AttributeGlobalSettings`).
 
 ## Tests
@@ -700,7 +700,7 @@ Within the OpenNew→Initialize window, the last stamp names the segment:
 that survives across chained missions in one process (the clock is `IsRunning`-guarded, so a second
 mission inherits the first's origin): read **gaps between consecutive lines**, never the absolute.
 
-**Crash-durability caveat.** `[BattleLoad]`/`[SaveLoad]` lines are INFO and, since 2026-07-16, written synchronously — so the last INFO line is a true record of how far execution got. `[DEBUG]` lines are still async and a hard crash drops whatever is queued, so **do not read the last DEBUG line as the stopping point**. Before that change every level was async, which is why the Nan Angren log could not be localized: `MissionInitialize` might have been reached and merely never written.
+**Crash-durability caveat.** `[BattleLoad]`/`[SaveLoad]` lines are INFO and, since 2026-07-16, written synchronously (still true: both tags are in `FileLogger.DurableInfoTags`; untagged INFO is flushed by the writer thread within about a third of a second), so the last INFO line is a true record of how far execution got. `[DEBUG]` lines are still async and a hard crash drops whatever is queued, so **do not read the last DEBUG line as the stopping point**. Before that change every level was async, which is why the Nan Angren log could not be localized: `MissionInitialize` might have been reached and merely never written.
 
 ### Add a new lifecycle phase
 
@@ -805,7 +805,7 @@ Two editor facts from the same work: the editor's Save wipes every non-canonical
 - Master toggle off → every hook early-outs immediately.
 - `seq` uses `Interlocked`, so a read from another thread is torn-free.
 - The blind-window stamps add ~5 lines per load, plus one `TaomBehaviorAdded` per TAOM behavior (~11–15). All fire once per mission load; none is per-frame.
-- **Synchronous INFO is paid on the game thread, and the honest figure is not "a few hundred lines".** Phase 5 emits INFO *per spawning agent*, so a large battle turns ~1000 stamps into game-thread flushes, each also draining the DEBUG queued behind it — during the equip burst the game thread ends up writing most of the log. Budget: ~15 ms across a multi-second load that already does native scene I/O. It is the same total work as before, on a different thread, and it holds **only** because `Flush()` lands in the OS page cache (which a dying process does not lose) — `WriteThrough` would turn each flush into a physical disk write and is deliberately not used. This is load-time, behind a loading screen, and it is the exact window the instrument exists to survive; making those lines async again would reopen #350.
+- **Synchronous (durable-tag) INFO is paid on the game thread, and the honest figure is not "a few hundred lines".** Phase 5 emits INFO *per spawning agent*, so a large battle turns ~1000 stamps into game-thread flushes, each also draining the DEBUG queued behind it, during the equip burst the game thread ends up writing most of the log. Budget: ~15 ms across a multi-second load that already does native scene I/O. It is the same total work as before, on a different thread, and it holds **only** because `Flush()` lands in the OS page cache (which a dying process does not lose), `WriteThrough` would turn each flush into a physical disk write and is deliberately not used. This is load-time, behind a loading screen, and it is the exact window the instrument exists to survive; making those lines async again would reopen #350.
 - Lock contention is bounded by **one `Drain()` batch** (queue depth × per-line write), *not* by the writer's 50 ms poll — the `Thread.Sleep(50)` sits in `ProcessQueue`, outside `Drain()`'s lock, so a durable write can never block on it. (A review agent claimed a 50 ms stall; it conflated the wake interval with lock-hold time. See the RCA.)
 
 ## Related
