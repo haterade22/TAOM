@@ -450,6 +450,13 @@ public class CoopVetoClassificationTests
             "\"Survive Mission Start Failures\" switch differs only keeps the engine's add, which on a mod that adds " +
             "during the walk is the loop of #1028: crash containment, classified as instrumentation in " +
             "CoopSettingsRelevance, like the guard's other behaviour."),
+        ["Patch147_CaravanTemplateGuard"] = new(CoopVeto.ReviewedSafe,
+            "Skips CaravansCampaignBehavior.SpawnCaravan only when vanilla's own template pick fails (#482). " +
+            "Vanilla throws a NullReferenceException at that point, before CreateCaravanParty, so the skip drops " +
+            "no replicated mutation: no caravan is made either way. The condition reads the hero's culture " +
+            "templates, saved RandomValue, Power and current settlement, all campaign state, and no TAOM setting. " +
+            "Under BannerlordCoop both callers (DailyTickHero, OnNewGameCreatedPartialFollowUpEndEvent) run on the " +
+            "server only (DisableCaravansCampaignBehaviorPatch), so no client reaches the prefix."),
     };
 
     // Scans SOURCE, not the loaded assembly, and that is deliberate.

@@ -188,7 +188,7 @@ Codex, Claude, Kimi and other models use the same policy and evidence records.
 - [fief-granting](features/fief-granting.md): who gets a captured town or castle (Patch70 decision swap, siege participation record, ten MCM knobs; the ballot shows each candidate's fief count and a hover list; #458, #565, #866)
 - [provender](features/provender.md): the Provender-master (#908): the hero in the party's Quartermaster role buys food at open markets within a wage reserve, slaughters livestock when the stores without the herd run low, and lifts morale with pay or a race- or culture-chosen ration, and sells loot at a nearby town for a cut (#909)
 - [kingdom-creation](features/kingdom-creation.md) — TAOM kingdom + clan + lord authoring
-- [lord-spawn-guard](features/lord-spawn-guard.md) — Patch65 + the Variag settlement retag: a landless culture CTDs the daily clan tick
+- [lord-spawn-guard](features/lord-spawn-guard.md) — Patch65 + the Variag settlement retag: a landless culture CTDs the daily clan tick; Patch147: a merchant with no fitting caravan template sends no caravan instead of crashing
 - [map-event-guard](features/map-event-guard.md): Patch82, restoring the `BattleObserver`/`TroopUpgradeTracker` pairing that four unguarded engine dereferences rely on; and the hourly sweep that ends AI battles stuck at N vs 0 (#748)
 - [bard-town-guard](features/bard-town-guard.md): Patch110 (#824), a call-site swap that stops the tavern musician's conversation condition from throwing in a town whose culture owns no other town
 - [lord-banners](features/lord-banners.md): lords of TAOM cultures receive banner items (#823) and a joining vassal a level 2 banner (#933), through two campaign models
