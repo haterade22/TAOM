@@ -6,20 +6,26 @@ namespace TAOM.Features.LongDefeat.Domain;
 /// <summary>Every troop a run can spawn, so the launcher can refuse a missing one before the run instead of a batch spawning none after the domain has dequeued it.</summary>
 internal static class RunPlanTroops
 {
-    /// <summary>The garrison, the shop, the towers' troop, every authored wave, every tier target, every commander and every summon troop, each id once.</summary>
+    /// <summary>The garrison, the shop, the towers' troop, every upgrade troop, every authored wave, every tier target, every commander and every summon troop, each id once.</summary>
     public static IReadOnlyList<string> AllTroopIds(RunPlan plan) =>
-        plan.Garrison.Select(r => r.TroopId)
-            .Concat(plan.Shop.Offers.Select(o => o.TroopId))
-            .Concat(TowerTroops(plan))
+        DefenderTroopIds(plan)
             .Concat(plan.Waves.Authored.SelectMany(w => w.Mix.Select(m => m.TroopId)))
             .Concat(plan.Waves.Endless.Targets)
             .Concat(plan.Waves.Commanders.TroopIds)
             .Distinct()
             .ToList();
 
-    /// <summary>The troops of the player's side: the garrison and the shop, each id once. Their groups are read from the engine's characters before the run.</summary>
+    /// <summary>
+    /// The troops of the player's side: the garrison, the shop, the towers' troop and both ends of every upgrade step (#1161), each id once. Their groups are read from the engine's characters
+    /// before the run, so an upgraded soldier keeps the boons of his group.
+    /// </summary>
     public static IReadOnlyList<string> DefenderTroopIds(RunPlan plan) =>
-        plan.Garrison.Select(r => r.TroopId).Concat(plan.Shop.Offers.Select(o => o.TroopId)).Concat(TowerTroops(plan)).Distinct().ToList();
+        plan.Garrison.Select(r => r.TroopId)
+            .Concat(plan.Shop.Offers.Select(o => o.TroopId))
+            .Concat(TowerTroops(plan))
+            .Concat(plan.Shop.Upgrades.SelectMany(s => new[] { s.FromTroop, s.ToTroop }))
+            .Distinct()
+            .ToList();
 
     /// <summary>The troop the high towers' posts are manned by, when the shop carries the towers row (it joins the launch's existence check, as any troop does).</summary>
     private static IEnumerable<string> TowerTroops(RunPlan plan) =>

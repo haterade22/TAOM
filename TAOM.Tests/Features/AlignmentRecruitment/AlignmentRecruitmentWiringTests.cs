@@ -6,6 +6,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
 using TAOM.Composition;
 using TAOM.Core.Logging;
+using TAOM.Features.AlignmentDesertion;
 using TAOM.Features.AlignmentRecruitment;
 using TAOM.Features.AlignmentRecruitment.Hooks;
 
@@ -68,26 +69,33 @@ public class AlignmentRecruitmentWiringTests
     public void TheModule_InitializesItsStaticsFromTheContainer()
     {
         var service = Substitute.For<IRecruitmentAlignmentService>();
+        var guard = Substitute.For<IDesertionRecruitGuard>();
         var logger = Substitute.For<IModLogger>();
         var serviceField = typeof(Patch114_AiVolunteerEstimate_Postfix).GetField("_service", BindingFlags.NonPublic | BindingFlags.Static);
+        var guardField = typeof(Patch114_AiVolunteerEstimate_Postfix).GetField("_desertionGuard", BindingFlags.NonPublic | BindingFlags.Static);
         var loggerField = typeof(Patch114_AiVolunteerEstimate_Postfix).GetField("_logger", BindingFlags.NonPublic | BindingFlags.Static);
         Assert.IsNotNull(serviceField, "Patch114_AiVolunteerEstimate_Postfix._service not found.");
+        Assert.IsNotNull(guardField, "Patch114_AiVolunteerEstimate_Postfix._desertionGuard not found.");
         Assert.IsNotNull(loggerField, "Patch114_AiVolunteerEstimate_Postfix._logger not found.");
         try
         {
             using var container = new Container();
             container.RegisterInstance(service);
+            container.RegisterInstance(guard);
             container.RegisterInstance(logger);
 
             new AlignmentRecruitmentModule().InitializeStatics(container);
 
             // Without this handoff the postfix returns on a null service and the feature is silently off.
             Assert.AreSame(service, serviceField!.GetValue(null));
+            // Without the guard the estimate still counts volunteers that would desert the lord.
+            Assert.AreSame(guard, guardField!.GetValue(null));
             Assert.AreSame(logger, loggerField!.GetValue(null));
         }
         finally
         {
             serviceField!.SetValue(null, null);
+            guardField!.SetValue(null, null);
             loggerField!.SetValue(null, null);
         }
     }

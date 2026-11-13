@@ -1085,14 +1085,14 @@ public class SubModule : MBSubModuleBase
         campaignStarter.AddModel(new TaomCharacterStatsModel(careerPassives,
             IoC.Resolve<TAOM.Features.CombatMechanics.IRaceCombatModifiersResolver>()));
         campaignStarter.AddModel(new TaomPartyWageModel(costService, careerPassives, wageModifiers, aiPartySize));
-        campaignStarter.AddModel(new TaomVolunteerModel(volunteerService, recruitmentService, volunteerContextAdapter, IoC.Resolve<VolunteerProductionService>(), recruitmentAlignment, IoC.Resolve<ICastleRecruitmentService>()));
+        campaignStarter.AddModel(new TaomVolunteerModel(volunteerService, recruitmentService, volunteerContextAdapter, IoC.Resolve<VolunteerProductionService>(), recruitmentAlignment, IoC.Resolve<ICastleRecruitmentService>(), IoC.Resolve<TAOM.Features.AlignmentDesertion.IDesertionRecruitGuard>()));
 
         // Prisoner-recruitment morale waiver: no morale lost recruiting a prisoner of your own
         // faction or alignment side (Isengard taking on Mordor/Gundabad/Dunland troops). Vanilla
         // charges -1/-2 regardless. Registering here (OnGameStart) puts TAOM after SandBox's
         // DefaultPrisonerRecruitmentCalculationModel in the backwards model scan, so ours resolves.
         campaignStarter.AddModel(new TaomPrisonerRecruitmentCalculationModel(
-            IoC.Resolve<TAOM.Features.PrisonerRecruitment.IPrisonerRecruitmentMoraleService>(), careerPassives));
+            IoC.Resolve<TAOM.Features.PrisonerRecruitment.IPrisonerRecruitmentMoraleService>(), careerPassives, IoC.Resolve<TAOM.Features.AlignmentDesertion.IDesertionRecruitGuard>()));
 
         // NavalTravel — PARKED 2026-06-26: TAOM_Map's navmesh isn't set up to take advantage of naval
         // travel (no naval region navmesh → AI can't route at sea; #296/#120), so the feature is disabled
