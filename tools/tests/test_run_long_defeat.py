@@ -82,7 +82,7 @@ def wave_row(wave, seed=7, **more):
 
 # A run that bought nothing of the fortifications: no purchase, no gold spent, no level, and a wave row whose volleys never fired.
 NO_VOLLEYS = {"volley": {"uses": 0, "arrows": 0, "hits": 0, "kills": 0, "withheld": 0}, "towerVolley": {"uses": 0, "arrows": 0, "hits": 0, "kills": 0, "withheld": 0}}
-NO_FORT = {"purchases": [], "gold": {"spent": 0, "spentOn": {"packs": 0, "gate": 0, "towers": 0, "fieldCare": 0, "volley": 0}},
+NO_FORT = {"purchases": [], "gold": {"spent": 0, "spentOn": {"packs": 0, "gate": 0, "towers": 0, "fieldCare": 0, "volley": 0, "upgrades": 0}},
            "fortifications": {"gateLevel": 0, "towerLevel": 0, "volleyLevel": 0}}
 
 
@@ -2836,9 +2836,18 @@ class PurchaseJudgeTests(unittest.TestCase):
         report["gold"]["spent"] = 180
         self.assertIn("spentOn", self.problem(report))
 
-    def test_a_spent_on_that_is_not_the_five_sinks_is_refused(self):
+        # #1161: gold on upgrades with no purchase that paid it does not balance either.
+        report = self.report([])
+        report["gold"]["spentOn"]["upgrades"] = 30
+        report["gold"]["spent"] = 30
+        self.assertIn("gold.spentOn.upgrades", self.problem(report))
+
+    def test_a_spent_on_that_is_not_the_six_sinks_is_refused(self):
         report = self.report([])
         del report["gold"]["spentOn"]["volley"]
+        self.assertIn("spentOn", self.problem(report))
+        report = self.report([])
+        del report["gold"]["spentOn"]["upgrades"]
         self.assertIn("spentOn", self.problem(report))
         report = self.report([])
         report["gold"]["spentOn"]["packs"] = -1
@@ -2928,7 +2937,7 @@ class PurchaseJudgeTests(unittest.TestCase):
         ld.expected_report = {}
         self.addCleanup(setattr, ld, "target_waves", None)
         self.addCleanup(setattr, ld, "tree_head", None)
-        report = {**REPORT, "gold": {"spent": 5, "spentOn": {"packs": 0, "gate": 0, "towers": 0, "fieldCare": 0, "volley": 0}}}
+        report = {**REPORT, "gold": {"spent": 5, "spentOn": {"packs": 0, "gate": 0, "towers": 0, "fieldCare": 0, "volley": 0, "upgrades": 0}}}
 
         code, why = ld.judge(FINAL, report, FULL_LOG)
 
@@ -3199,7 +3208,7 @@ class FieldCareJudgeTests(unittest.TestCase):
         bought = [{"beforeWave": 2, "kind": "fieldCare", "id": "", "level": 0, "basePrice": 150, "price": 150, "share": 0.75}] if care else []
         spent = 150 if care else 0
         return {**REPORT, "wavesCleared": 2, "wavesFelled": 0, "startGold": 5000, "waves": [wave_row(1), wave_row(2)], "purchases": bought,
-                "gold": {"spent": spent, "spentOn": {"packs": 0, "gate": 0, "towers": 0, "fieldCare": spent, "volley": 0}}, **more}
+                "gold": {"spent": spent, "spentOn": {"packs": 0, "gate": 0, "towers": 0, "fieldCare": spent, "volley": 0, "upgrades": 0}}, **more}
 
     def log(self, *extra):
         return log_of(ld.REQUIRED_CHECKS, 2) + "\n" + "\n".join(extra)
@@ -3214,7 +3223,7 @@ class FieldCareJudgeTests(unittest.TestCase):
         # Tower level 3 is the tower volley (Slice 8): all three levels are for sale; a fourth is no row of the shop.
         def towers(levels):
             bought = [{"beforeWave": n, "kind": "towerLevel", "id": "", "level": n, "basePrice": price, "price": price, "share": 0.0} for n, price in levels]
-            return self.report(care=False, purchases=bought, gold={"spent": sum(p for _, p in levels), "spentOn": {"packs": 0, "gate": 0, "towers": sum(p for _, p in levels), "fieldCare": 0, "volley": 0}},
+            return self.report(care=False, purchases=bought, gold={"spent": sum(p for _, p in levels), "spentOn": {"packs": 0, "gate": 0, "towers": sum(p for _, p in levels), "fieldCare": 0, "volley": 0, "upgrades": 0}},
                                fortifications={"gateLevel": 0, "towerLevel": len(levels), "volleyLevel": 0})
         self.assertIsNone(ld.purchase_problem(towers(((1, 250), (2, 300), (3, 400)))))
         self.assertIsNotNone(ld.purchase_problem(towers(((1, 250), (2, 300), (3, 400), (4, 400)))))
@@ -3313,7 +3322,7 @@ class GateJudgeTests(unittest.TestCase):
             bought.append({"beforeWave": 2, "kind": "gateLevel", "id": "", "level": 1, "basePrice": 200, "price": 200, "share": 0.0})
         spent = sum(p["price"] for p in bought)
         return {**REPORT, "wavesCleared": waves, "wave": waves, "wavesFelled": 0, "startGold": 5000, "waves": [wave_row(n) for n in range(1, waves + 1)], "purchases": bought,
-                "gold": {"spent": spent, "spentOn": {"packs": 0, "gate": spent, "towers": 0, "fieldCare": 0, "volley": 0}},
+                "gold": {"spent": spent, "spentOn": {"packs": 0, "gate": spent, "towers": 0, "fieldCare": 0, "volley": 0, "upgrades": 0}},
                 "fortifications": {"gateLevel": 1 if level else 0, "towerLevel": 0, "volleyLevel": 0}, **more}
 
     def log(self, *extra):
@@ -3502,7 +3511,7 @@ class VolleyJudgeTests(unittest.TestCase):
             volley = {"uses": 1, "arrows": arrows, "hits": 8, "kills": 3, "withheld": 0} if fire else NO_VOLLEYS["volley"]
             rows.append(wave_row(n, volley=volley))
         return {**REPORT, "wavesCleared": waves, "wave": waves, "wavesFelled": 0, "startGold": 5000, "waves": rows, "purchases": bought,
-                "gold": {"spent": spent, "spentOn": {"packs": 0, "gate": 0, "towers": 0, "fieldCare": 0, "volley": spent}},
+                "gold": {"spent": spent, "spentOn": {"packs": 0, "gate": 0, "towers": 0, "fieldCare": 0, "volley": spent, "upgrades": 0}},
                 "fortifications": {"gateLevel": 0, "towerLevel": 0, "volleyLevel": levels}, **more}
 
     def line(self, result, detail, name="volley"):
@@ -3706,7 +3715,7 @@ class PostsJudgeTests(unittest.TestCase):
             bought.append({"beforeWave": 2, "kind": "towerLevel", "id": "", "level": 2, "basePrice": 300, "price": 300, "share": 0.0})
         spent = sum(p["price"] for p in bought)
         return {**cleared(waves), "wave": waves, "wavesFelled": 0, "startGold": 5000, "purchases": bought,
-                "gold": {"spent": spent, "spentOn": {"packs": 0, "gate": 0, "towers": spent, "fieldCare": 0, "volley": 0}},
+                "gold": {"spent": spent, "spentOn": {"packs": 0, "gate": 0, "towers": spent, "fieldCare": 0, "volley": 0, "upgrades": 0}},
                 "fortifications": {"gateLevel": 0, "towerLevel": levels, "volleyLevel": 0}, **more}
 
     @staticmethod
@@ -3804,7 +3813,7 @@ class PostsJudgeTests(unittest.TestCase):
         self.assertIn("failed check", why)
 
     def towerless(self):
-        return {**self.report(), "purchases": [], "gold": {"spent": 0, "spentOn": {"packs": 0, "gate": 0, "towers": 0, "fieldCare": 0, "volley": 0}},
+        return {**self.report(), "purchases": [], "gold": {"spent": 0, "spentOn": {"packs": 0, "gate": 0, "towers": 0, "fieldCare": 0, "volley": 0, "upgrades": 0}},
                 "fortifications": {"gateLevel": 0, "towerLevel": 0, "volleyLevel": 0}}
 
     def test_a_run_that_bought_no_tower_owes_no_posts_line(self):
@@ -3905,7 +3914,7 @@ class TowerVolleyJudgeTests(unittest.TestCase):
         bought = [{"beforeWave": n, "kind": "towerLevel", "id": "", "level": n, "basePrice": price, "price": price, "share": 0.0} for n, price in prices]
         spent = sum(price for _, price in prices)
         return {**cleared(waves), "wave": waves, "wavesFelled": 0, "startGold": 5000, "purchases": bought,
-                "gold": {"spent": spent, "spentOn": {"packs": 0, "gate": 0, "towers": spent, "fieldCare": 0, "volley": 0}},
+                "gold": {"spent": spent, "spentOn": {"packs": 0, "gate": 0, "towers": spent, "fieldCare": 0, "volley": 0, "upgrades": 0}},
                 "fortifications": {"gateLevel": 0, "towerLevel": levels, "volleyLevel": 0}, **more}
 
     @staticmethod
@@ -3974,7 +3983,7 @@ class TowerVolleyJudgeTests(unittest.TestCase):
         self.assertIn("taom.long-defeat.tower-volley", why)
 
         elven = {**self.report(levels=0), "purchases": [{"beforeWave": 1, "kind": "volleyLevel", "id": "", "level": 1, "basePrice": 350, "price": 350, "share": 0.0}],
-                 "gold": {"spent": 350, "spentOn": {"packs": 0, "gate": 0, "towers": 0, "fieldCare": 0, "volley": 350}}, "fortifications": {"gateLevel": 0, "towerLevel": 0, "volleyLevel": 1}}
+                 "gold": {"spent": 350, "spentOn": {"packs": 0, "gate": 0, "towers": 0, "fieldCare": 0, "volley": 350, "upgrades": 0}}, "fortifications": {"gateLevel": 0, "towerLevel": 0, "volleyLevel": 1}}
         code, why = ld.judge(FINAL, elven, self.log(*self.volley("hornburg")))
         self.assertEqual(code, 1)
         self.assertIn("taom.long-defeat.volley", why)

@@ -58,13 +58,41 @@ stays undetectable for the rest of the session.
 process because `IoC.Configure()` runs once in `OnSubModuleLoad`, so `IPlayerPossessionService`
 survives the campaign switch while staying injectable and unit-testable.
 
-**The heir problem is solved by three independent guards**, any one of which is sufficient:
+**The heir problem is handled by three guards:**
 
 | Guard | Effect |
 |---|---|
-| `ICoopPresenceProvider.IsCoopActive` | Solo play never reaches the re-grant at all |
+| `ICoopPresenceProvider.IsCoopActive` | With no co-op module enabled, play never reaches the re-grant. It is true whenever a co-op module is enabled, session or not |
 | Single consumption | A co-op player's heir, inheriting hours after the join, finds the choices already consumed |
-| `SyncData` marker per hero id | A reconnect cannot be handed a second package |
+| `SyncData` marker per hero id | A reconnect cannot be handed a second package. A BannerlordCoop client never saves, so there the first two guards do this job |
+
+With a co-op module enabled but no session, none of the three stops a solo heir, or a hero loaded after a
+character creation in the same process, from receiving the package (#1183, a decision owed).
+
+**A new character creation drops the choices of an earlier one (#1177).** TAOM's Player Switcher hands
+the player a lord inside character creation's finalize loop, before phase 9 captures the new choices, and
+that hand-over raises the player-character-changed event. Without the drop, a process that kept an
+earlier creation's choices (a solo campaign with a co-op module enabled, or a failed join) handed them to
+that lord. `BeginCharacterCreation` runs on `OnCharacterCreationInitializedEvent`
+(`TryConsumePossession_SecondCampaignsPlayerSwitcherBeforeItsCapture_DoesNotFire` pins it).
+
+**The check runs at the player switch, and hourly as a fallback (#1177).** BannerlordCoop's join
+hand-off (`HeroInterface.SwitchToPlayer`) calls `ChangePlayerCharacterAction.Apply`. Coop's prefix on
+`Apply` replaces the vanilla body and raises `OnPlayerCharacterChangedEvent` itself (Coop
+`bannerlord-1.5.x` 995517e60, `ChangePlayerCharacterActionPatches.cs:57`), as vanilla does (v1.5.7
+`ChangePlayerCharacterAction.cs:53`),
+so the behavior checks there. If Coop drops that call, only the hourly fallback remains. The hourly
+check alone came too late: `Campaign.Tick` reaches the periodic events, the hourly tick among them, only
+when `_dt > 0f` or in the first two ticks of a session (`Campaign.cs:977-981`). A joining client's clock
+can stand still for minutes, so the first battle could start without the career. The handler runs
+inside Coop's switch, before Coop's own work after it (captivity, camera, fog of war). The event
+dispatch catches nothing, so an escaping exception would end the switch before Coop's
+`EnterCampaignState()` (`LoadingState.cs:81`); the handler logs it and returns. The handler reads
+`Hero.MainHero`, not its arguments: under Coop both are the joined hero, because Coop sets
+`PlayerTroop` before it calls `Apply`. The client is still in Coop's `LoadingState` there, where Coop's sync policy
+allows original calls. That changes no grant: Coop's property sync never stops a client's race set
+(its setter prefix returns `void`), and Coop's `GiveGoldAction.ApplyInternal` prefix returns
+`ModInformation.IsServer`, so the startup gold grant does nothing on a Coop client at either time.
 
 ### Component Diagram
 
@@ -75,7 +103,7 @@ OnCharacterCreationIsOver          OnSessionLaunched / OnGameLoaded
 PlayerPossessionBehavior  ------------->  RecordBaselineHero(id)
   (boundary: sealed Hero -> ids)
         |
-        | HourlyTickEvent
+        | OnPlayerCharacterChangedEvent (HourlyTickEvent as the fallback)
         v
 IPlayerPossessionService.TryConsumePossession(currentHeroId)
         |  true, at most once
@@ -105,7 +133,8 @@ would be a worse outcome than the bug this fixes.
 
 **`ResetForNewCampaign` deliberately does NOT clear the choices.** Character creation completes and
 raises its event BEFORE the joining client's campaign is replaced, so clearing on new-campaign would
-discard exactly the data being carried across that boundary. It clears only the baseline.
+discard exactly the data being carried across that boundary. It clears only the baseline. A new
+character creation is what drops them (#1177, above).
 
 **Race is validated before it is set.** `GetRaceNameFromId` coerces unknown ids to `"human"`, so a
 race id from a module set this client lacks would be written as a valid-looking race and cached for
@@ -120,7 +149,7 @@ the session (`.claude/rules/csharp-architecture.md`, validate-before-lookup).
 | `Main/Features/PlayerPossession/IJoinReconciliationService.cs` / `JoinReconciliationService.cs` | Re-invokes the existing grant paths |
 | `Main/Features/PlayerPossession/PlayerPossessionBehavior.cs` | Boundary + `SyncData` marker list |
 | `Main/Features/PlayerPossession/PlayerPossessionIoC.cs` | Singleton registrations (required, not stylistic) |
-| `TAOM.Tests/Features/PlayerPossession/` | 23 tests, including explicit single-player inertness |
+| `TAOM.Tests/Features/PlayerPossession/` | The tests, including explicit single-player inertness |
 
 ## Testing
 
@@ -131,10 +160,19 @@ Unit-tested end to end at the service layer. The tests that matter most are the 
 - `TryConsumePossession_CalledRepeatedly_ReturnsTrueOnlyOnce`
 - `Reapply_OneGrantThrows_TheOthersStillApply`
 - `ResetForNewCampaign_KeepsCharacterCreationChoices`
+- `TryConsumePossession_SecondCampaignsPlayerSwitcherBeforeItsCapture_DoesNotFire` and
+  `TryConsumePossession_JoinAfterACompletedCharacterCreation_StillFires`
+- `OnPlayerCharacterChanged_WhenTheCheckThrows_LogsTheErrorAndReturns`, and a source pin for the three
+  listeners inside `RegisterEvents` (`PlayerPossessionSwitchTests`)
 
 **Not unit-testable (requires a live multiplayer session):** the hand-off itself. Verifying this
 end to end needs a two-client co-op session where a joiner creates a non-human character of a culture
-with a non-zero startup-gold grant, and confirms race, gold, career and resource seed after joining.
+with a non-zero startup-gold grant, and confirms race, career and resource seed after joining (on a
+Coop client the gold grant does nothing, as above). With the client's clock stopped, the TAOM log shows
+`[Possession] Controlled hero changed` between Coop's `Player switch before` and `Player switch after`
+lines, before any battle. Solo, with a co-op module enabled: finish one character creation, start a
+second new campaign in the same game process and pick a lord with the Player Switcher. The log shows
+`[Possession] A new character creation began` and no `Controlled hero changed` line.
 
 ## Related
 

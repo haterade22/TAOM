@@ -555,7 +555,8 @@ in a state dump.
 - **Then calibrate against a real session and turn the volume down.** First-pass thresholds are
   guesses: `drift > 1f` fired on 291 of 299 warnings because true drift is ~1.8, and a
   per-world-map-event INFO line contributed 3674 lines to a 6001-line log. Diagnostics that fire
-  constantly bury the signal they were added to surface, and INFO flushes synchronously.
+  constantly bury the signal they were added to surface, and INFO flushes synchronously (since PR #1170,
+  2026-11-13: only INFO lines with a durable tag do).
 
 **Source:** live play-test 2026-08-07 against #406. Sibling lessons above cover why the test suite
 could not see any of it (mocked adapters) and why checking return values was not enough.

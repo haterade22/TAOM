@@ -921,7 +921,7 @@ the disk.
 answer was treated as sufficient. Not-per-frame is not once-per-event.
 
 **Prevent:** enumerate the target's callers before costing any logging in a postfix. Reserve durable
-levels (INFO+, which `FileLogger` flushes synchronously so a native CTD preserves the tail) for events
+levels (INFO+, which `FileLogger` flushes synchronously so a native CTD preserves the tail; since PR #1170, 2026-11-13, that holds for WARNING, ERROR and INFO lines with a durable tag only) for events
 that genuinely happen once; put the common case on DEBUG.
 
 **Source:** `docs/reviews/rca-patch69-tournament-guard-2026-08-07.md` finding 1 (#407).
@@ -1383,6 +1383,7 @@ results, and it delays the finding that would actually change the code.
 
 "This line is noisy" is not a reason to downgrade or delete it. The count is the reason, and if the
 count cannot be produced the change does not go in. TAOM's `FileLogger` writes INFO synchronously
+(since PR #1170, 2026-11-13: only INFO lines with a durable tag, with WARNING and ERROR)
 and leaves DEBUG on an async queue that a hard native CTD discards, so every INFO-to-DEBUG move
 spends real crash-forensic value; the price is only worth paying against a measured volume.
 

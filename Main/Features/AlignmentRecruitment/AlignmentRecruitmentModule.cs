@@ -23,7 +23,8 @@ internal sealed class AlignmentRecruitmentModule : TaomFeatureModule
     public override string Id => "AlignmentRecruitment";
 
     public override void InitializeStatics(IResolver resolver) =>
-        Patch114_AiVolunteerEstimate_Postfix.Initialize(resolver.Resolve<IRecruitmentAlignmentService>(), resolver.Resolve<IModLogger>());
+        Patch114_AiVolunteerEstimate_Postfix.Initialize(resolver.Resolve<IRecruitmentAlignmentService>(),
+            resolver.Resolve<AlignmentDesertion.IDesertionRecruitGuard>(), resolver.Resolve<IModLogger>());
 
     public override IReadOnlyList<PatchCategoryDecl> PatchCategories => Categories;
 }

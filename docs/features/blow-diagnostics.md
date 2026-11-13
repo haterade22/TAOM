@@ -21,7 +21,7 @@ Both are **native AccessViolations**. The managed debug log and the native `rgl_
 
 ## How it works
 
-Three thin Harmony prefixes (category `Patch63_BlowDiagnostics`) delegate to `IBlowDiagnosticService`, which stamps to the **durable** log level (`IModLogger.LogInfo` — synchronous flush). Durability is the whole point: a native AV kills the process without unwinding, so anything still queued async is lost — which is exactly why the plain debug log lost the final 20s of the original crash (CareerSystem uses `LogDebug`). The tag is `[BlowDiag]`.
+Three thin Harmony prefixes (category `Patch63_BlowDiagnostics`) delegate to `IBlowDiagnosticService`, which stamps to the **durable** log level (`IModLogger.LogInfo` with the `[BlowDiag]` tag, which is in `FileLogger.DurableInfoTags`: synchronous flush). Durability is the whole point: a native AV kills the process without unwinding, so anything still queued async is lost, which is exactly why the plain debug log lost the final 20s of the original crash (CareerSystem uses `LogDebug`). The tag is `[BlowDiag]`.
 
 | Hook | Target | Stamp |
 |------|--------|-------|
