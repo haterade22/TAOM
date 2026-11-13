@@ -122,7 +122,7 @@ public class CommandTrialWiringTests
     public void TheEnvironmentVariable_IsReadInOnePlaceOnly()
     {
         var reads = RepoPaths.CSharpFiles("Main", "Client")
-            .Where(f => File.ReadAllText(f).Contains("TAOM_COMMAND_TRIAL") || File.ReadAllText(f).Contains("CommandTrialOptions.EnvVar"))
+            .Where(f => RepoPaths.Text(f).Contains("TAOM_COMMAND_TRIAL") || RepoPaths.Text(f).Contains("CommandTrialOptions.EnvVar"))
             .Select(f => Path.GetFileName(f))
             .OrderBy(n => n)
             .ToList();

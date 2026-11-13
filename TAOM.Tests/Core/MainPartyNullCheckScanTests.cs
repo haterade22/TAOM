@@ -117,7 +117,7 @@ public class MainPartyNullCheckScanTests
     {
         var offenders = RepoPaths.CSharpFiles()
             .Where(p => RepoPaths.MentionsOutsideComments(p, "MainParty"))
-            .Where(p => NullCheck.IsMatch(RepoPaths.StripComments(File.ReadAllText(p))))
+            .Where(p => NullCheck.IsMatch(RepoPaths.StripComments(RepoPaths.Text(p))))
             .Select(p => p.Substring(RepoPaths.RepoPath().Length).TrimStart('\\', '/'))
             .ToList();
 

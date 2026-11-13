@@ -161,7 +161,7 @@ public class PrefabExtensionBrushTests
         var used = 0;
         foreach (var file in CSharpFiles())
         {
-            var text = File.ReadAllText(file);
+            var text = RepoPaths.Text(file);
             if (!text.Contains("[PrefabExtension("))
                 continue;
             foreach (Match m in BrushLiteral.Matches(text))
@@ -230,7 +230,7 @@ public class PrefabBrushPropertyTests
         var usedInCSharp = 0;
         foreach (var file in CSharpFiles())
         {
-            var text = File.ReadAllText(file);
+            var text = RepoPaths.Text(file);
             if (!text.Contains("[PrefabExtension("))
                 continue;
             foreach (Match m in BrushPropertyLiteral.Matches(text))

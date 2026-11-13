@@ -38,7 +38,7 @@ public class ServiceLocatorGateTests
                 continue;
 
             scanned++;
-            var count = Calls(File.ReadAllText(file));
+            var count = Calls(RepoPaths.Text(file));
             if (count > 0)
                 failures.Add($"{relative}: {count} IoC.Resolve call(s); take the dependency in the constructor and resolve it in the boundary class");
         }

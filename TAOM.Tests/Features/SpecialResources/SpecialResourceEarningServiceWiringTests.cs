@@ -20,7 +20,7 @@ public class SpecialResourceEarningServiceWiringTests
     public void EarningService_IsResolvedOnceInSubModule_AndNowhereElse()
     {
         var holders = RepoPaths.CSharpFiles()
-            .Where(path => RepoPaths.StripComments(File.ReadAllText(path)).Contains(Resolve))
+            .Where(path => RepoPaths.StripComments(RepoPaths.Text(path)).Contains(Resolve))
             .Select(path => Path.GetFileName(path))
             .ToList();
 

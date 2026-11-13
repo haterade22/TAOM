@@ -166,7 +166,7 @@ public class BannedConstructsGateTests
         var violations = CSharpFiles(ScannedRoots)
             .SelectMany(path => ScanDirectives(
                 path.Substring(repoDir.Length).TrimStart('\\', '/').Replace('\\', '/'),
-                File.ReadAllText(path).Replace("\r\n", "\n")))
+                RepoPaths.Text(path).Replace("\r\n", "\n")))
             .ToList();
 
         Assert.AreEqual(0, violations.Count,

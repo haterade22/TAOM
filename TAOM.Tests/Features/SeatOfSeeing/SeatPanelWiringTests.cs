@@ -165,7 +165,7 @@ public class SeatPanelWiringTests
     {
         // MBDebug.DisableAllUI backs toggle_ui. The Seat restores only its own hide, which is sound only while nothing else writes it.
         var hits = RepoPaths.CSharpFiles("Main", "Client")
-            .Where(f => Regex.IsMatch(RepoPaths.StripComments(File.ReadAllText(f)), @"\bDisableAllUI\b"))
+            .Where(f => Regex.IsMatch(RepoPaths.StripComments(RepoPaths.Text(f)), @"\bDisableAllUI\b"))
             .Select(Path.GetFileName)
             .ToList();
 

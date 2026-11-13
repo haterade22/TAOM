@@ -61,7 +61,7 @@ public class SeatTimeRiseWiringTests
     {
         var offenders = RepoPaths.CSharpFiles("Main", "Client", "Dependencies")
             .Where(f => !f.EndsWith("SeatScreenAdapter.cs") && !f.EndsWith("FordsMissionSpeed.cs") && !f.EndsWith("LongDefeatMissionSpeed.cs") && !f.EndsWith("CommandTrialHost.Seat.cs"))
-            .Where(f => Regex.IsMatch(RepoPaths.StripComments(System.IO.File.ReadAllText(f)),
+            .Where(f => Regex.IsMatch(RepoPaths.StripComments(RepoPaths.Text(f)),
                 @"AddTimeSpeedRequest|RemoveTimeSpeedRequest|SetFastForwardingFromUI|\.FixedDeltaTimeMode\s*=|\.FixedDeltaTime\s*=|MissionState\.Current[^;]*\.Paused\s*="))
             .Select(System.IO.Path.GetFileName)
             .ToList();
@@ -121,7 +121,7 @@ public class SeatTimeRiseWiringTests
         StringAssert.Contains(Adapter(), "_mission.SetCustomCameraTargetLocalOffset(metres == 0f ? Vec3.Zero : new Vec3(0f, 0f, metres, -1f));");
 
         var writers = RepoPaths.CSharpFiles("Main", "Client", "Dependencies")
-            .Where(f => RepoPaths.StripComments(System.IO.File.ReadAllText(f)).Contains("SetCustomCameraTargetLocalOffset"))
+            .Where(f => RepoPaths.StripComments(RepoPaths.Text(f)).Contains("SetCustomCameraTargetLocalOffset"))
             .Select(System.IO.Path.GetFileName)
             .ToList();
         CollectionAssert.AreEqual(new[] { "SeatScreenAdapter.cs" }, writers, "the property has one writer in the repo, which is why the sink needs no saved value");
