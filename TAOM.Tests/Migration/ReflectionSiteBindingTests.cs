@@ -253,6 +253,16 @@ public class ReflectionSiteBindingTests
     [DataRow("SandBox.Conversation.MissionLogics.MissionConversationLogic", "MissionConversationLogic", "_teleportNearCharacter", "Field", "HallSeatsAdapter.cs:156")]
     // --- Hall Seats (Patch148): the machines vanilla has already marked used, so the seat count skips them. Missing: the field ref is null, the adapter reads no hall and every lord spawns as in vanilla.
     [DataRow("SandBox.Missions.MissionLogics.MissionAgentHandler", "MissionAgentHandler", "_usedSpawnPoints", "Field", "HallSeatsAdapter.cs:143")]
+    // --- Encounter Lines (Patch149): vanilla's private records of the caravans and villager parties the player has met, read as
+    // the non-generic IDictionary (their value type is a private nested enum). A miss logs one warning and every first-meeting read
+    // answers false, so the caravan and villager greetings stay vanilla.
+    [DataRow("TaleWorlds.CampaignSystem.CampaignBehaviors.CaravansCampaignBehavior", "CaravansCampaignBehavior", "_interactedCaravans", "Field", "EncounterLinesAdapter.cs:34")]
+    [DataRow("TaleWorlds.CampaignSystem.CampaignBehaviors.VillagerCampaignBehavior", "VillagerCampaignBehavior", "_interactedVillagers", "Field", "EncounterLinesAdapter.cs:35")]
+    // The text seam's three ConversationManager fields, bound once in Initialize. A miss logs one warning and the surrender and
+    // hideout boss lines stay vanilla.
+    [DataRow("TaleWorlds.CampaignSystem.Conversation.ConversationManager", "ConversationManager", "_sentences", "Field", "EncounterSentenceTextPatch.cs:39")]
+    [DataRow("TaleWorlds.CampaignSystem.Conversation.ConversationManager", "ConversationManager", "_currentSentence", "Field", "EncounterSentenceTextPatch.cs:40")]
+    [DataRow("TaleWorlds.CampaignSystem.Conversation.ConversationManager", "ConversationManager", "_currentSentenceText", "Field", "EncounterSentenceTextPatch.cs:41")]
     public void ReflectionSite_ResolvesAgainstInstalledEngine(string fullName, string simpleName, string member, string kind, string source)
     {
         if (!_gameLoaded)

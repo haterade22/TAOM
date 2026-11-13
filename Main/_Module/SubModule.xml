@@ -1288,6 +1288,20 @@
       </IncludedGameTypes>
     </XmlNode>
     <XmlNode>
+      <XmlName id="GameText" path="taom_encounter_lord_strings"/>
+      <IncludedGameTypes>
+        <GameType value="Campaign"/>
+        <GameType value="CampaignStoryMode"/>
+      </IncludedGameTypes>
+    </XmlNode>
+    <XmlNode>
+      <XmlName id="GameText" path="taom_encounter_strings"/>
+      <IncludedGameTypes>
+        <GameType value="Campaign"/>
+        <GameType value="CampaignStoryMode"/>
+      </IncludedGameTypes>
+    </XmlNode>
+    <XmlNode>
       <XmlName id="GameText" path="taom_cc_strings"/>
       <IncludedGameTypes>
         <GameType value="Campaign"/>

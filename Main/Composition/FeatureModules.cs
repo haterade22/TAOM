@@ -92,6 +92,7 @@ internal static class FeatureModules
         new Features.SmithsMeasure.SmithsMeasureModule(),
         new Features.ManyHammers.ManyHammersModule(),
         new Features.BanditVoices.BanditVoicesModule(),
+        new Features.EncounterLines.EncounterLinesModule(),
         new Features.InnRounds.InnRoundsModule(),
         new Features.TimeAcceleration.TimeAccelerationModule(),
         new Features.WardensTally.WardensTallyModule(),
