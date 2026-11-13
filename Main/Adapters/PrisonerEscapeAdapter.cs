@@ -7,12 +7,17 @@ using TaleWorlds.CampaignSystem.CharacterDevelopment;
 using TaleWorlds.CampaignSystem.Party;
 using TaleWorlds.CampaignSystem.Settlements;
 using TaleWorlds.Core;
+using TAOM.Features.CoopInterop;
 
 namespace TAOM.Adapters;
 
 /// <summary>Production <see cref="IPrisonerEscapeAdapter"/>: <c>EscapeTerms</c> repeats <c>PrisonerReleaseCampaignBehavior.DailyHeroTick</c>'s perk calls (v1.5.6 :223-245) and the battle-or-siege and player-clan fields are TAOM's own exclusions.</summary>
 public sealed class PrisonerEscapeAdapter : IPrisonerEscapeAdapter
 {
+    private readonly IPlayerControlQuery _players;
+
+    public PrisonerEscapeAdapter(IPlayerControlQuery players) => _players = players;
+
     public IReadOnlyList<PrisonerEscapeSnapshot> GetCapturedLords(IReadOnlyCollection<string> kingdomIds)
     {
         var result = new List<PrisonerEscapeSnapshot>();
@@ -29,7 +34,7 @@ public sealed class PrisonerEscapeAdapter : IPrisonerEscapeAdapter
 
             var clans = kingdom.Clans;
             for (var i = 0; i < clans.Count; i++)
-                ReadClan(clans[i], kingdom.StringId, playerClan, mainHero, result);
+                ReadClan(clans[i], kingdom.StringId, playerClan, mainHero, _players, result);
         }
 
         return result;
@@ -51,12 +56,12 @@ public sealed class PrisonerEscapeAdapter : IPrisonerEscapeAdapter
 
         // The parties SettlementComponent.GetPrisonerHeroes counts for vanilla's "There are N prisoners here."
         // (v1.5.6 SettlementComponent.cs:158-185): the settlement's own party and each garrison party in it.
-        ReadRoster(own, reading, playerClan, mainHero);
+        ReadRoster(own, reading, playerClan, mainHero, _players);
         var parties = settlement.Parties;
         for (var i = 0; i < parties.Count; i++)
         {
             if (parties[i] != null && parties[i].IsGarrison)
-                ReadRoster(parties[i].Party, reading, playerClan, mainHero);
+                ReadRoster(parties[i].Party, reading, playerClan, mainHero, _players);
         }
 
         return reading;
@@ -70,14 +75,16 @@ public sealed class PrisonerEscapeAdapter : IPrisonerEscapeAdapter
             return false;
 
         var hero = Hero.AllAliveHeroes.FirstOrDefault(h => h.StringId == heroId);
-        if (hero == null || !hero.IsPrisoner || hero.PartyBelongedToAsPrisoner == null || hero == Hero.MainHero)
+        if (hero == null || !hero.IsPrisoner || hero.PartyBelongedToAsPrisoner == null
+            || _players.OfHero(hero) != PlayerControl.NotPlayer)
             return false;
 
         EndCaptivityAction.ApplyByEscape(hero);
         return true;
     }
 
-    private static void ReadRoster(PartyBase captor, DungeonReading into, Clan playerClan, Hero mainHero)
+    private static void ReadRoster(
+        PartyBase captor, DungeonReading into, Clan playerClan, Hero mainHero, IPlayerControlQuery players)
     {
         var roster = captor.PrisonRoster;
         into.HeldRegulars += roster.TotalRegulars;
@@ -92,13 +99,15 @@ public sealed class PrisonerEscapeAdapter : IPrisonerEscapeAdapter
             into.Lords.Add(new DungeonLord
             {
                 Name = hero.Name?.ToString() ?? string.Empty,
-                Snapshot = Read(hero, captor, hero.Clan?.Kingdom?.StringId ?? string.Empty, playerClan, mainHero, terms),
+                Snapshot = Read(hero, captor, hero.Clan?.Kingdom?.StringId ?? string.Empty, playerClan, mainHero, players, terms),
                 Terms = TermLines(terms),
             });
         }
     }
 
-    private static void ReadClan(Clan clan, string kingdomId, Clan playerClan, Hero mainHero, List<PrisonerEscapeSnapshot> into)
+    private static void ReadClan(
+        Clan clan, string kingdomId, Clan playerClan, Hero mainHero, IPlayerControlQuery players,
+        List<PrisonerEscapeSnapshot> into)
     {
         var heroes = clan?.Heroes;
         if (heroes == null)
@@ -110,12 +119,13 @@ public sealed class PrisonerEscapeAdapter : IPrisonerEscapeAdapter
             var captor = hero?.PartyBelongedToAsPrisoner;
             if (hero == null || !hero.IsPrisoner || captor == null)
                 continue;
-            into.Add(Read(hero, captor, kingdomId, playerClan, mainHero, EscapeTerms(hero, captor, false)));
+            into.Add(Read(hero, captor, kingdomId, playerClan, mainHero, players, EscapeTerms(hero, captor, false)));
         }
     }
 
     private static PrisonerEscapeSnapshot Read(
-        Hero hero, PartyBase captor, string kingdomId, Clan playerClan, Hero mainHero, ExplainedNumber escapeTerms)
+        Hero hero, PartyBase captor, string kingdomId, Clan playerClan, Hero mainHero, IPlayerControlQuery players,
+        ExplainedNumber escapeTerms)
     {
         var mobile = captor.IsMobile;
         var settlement = mobile ? captor.MobileParty.CurrentSettlement : null;
@@ -133,7 +143,7 @@ public sealed class PrisonerEscapeAdapter : IPrisonerEscapeAdapter
             CaptorInMapEventOrSiege = captor.MapEvent != null || captor.SiegeEvent != null,
             CanBeReleased = CanBeReleased(hero),
             IsMainHero = hero == mainHero,
-            IsPlayerClan = playerClan != null && hero.Clan == playerClan,
+            IsPlayerClan = PlayerClanCheck.IsAPlayersClan(hero.Clan, players),
         };
     }
 

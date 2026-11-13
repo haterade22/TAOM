@@ -51,6 +51,7 @@ public sealed class PrisonerEscapeSnapshot
 
     public bool IsMainHero { get; set; }
 
-    /// <summary>TAOM's own exclusion, not vanilla's: the lord belongs to the player's clan (decision D4).</summary>
+    /// <summary>TAOM's own exclusion, not vanilla's: the lord's clan is a human player's (decision D4), a co-op
+    /// guest's included (#1141, <c>PlayerClanCheck</c>).</summary>
     public bool IsPlayerClan { get; set; }
 }

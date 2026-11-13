@@ -301,6 +301,9 @@ side that costs least:
 | Special resource earning (`SpecialResourceEarnPolicy.MayEarn`) | Not a player: nobody earns | An earn writes a balance, so doubt means no write |
 | Seasoned Hosts (`SeasonedHostsAdapter`) | Player: no bonus | The skill XP multiplier and the training factor are boosts for AI only, so doubt means none |
 | Uncapturable Heroes (`UncapturablePlayerCheck`, #1139) | Player: vanilla captures | A capture is a valid state and a player made a fugitive is not. The registry answers `Unknown` for every hero at once, so in that session no lore hero is protected |
+| War Chronicle extra escape and rally (`PlayerClanCheck`, #1141) | Player: no extra roll, no rally effects | Both are help for AI lords and realms, so in doubt a player gets none. An unreadable registry stops the extra escape and the rally for every realm |
+| Realms AI claims (`RealmsCampaign.IsAPlayersClan`, #1141) | Player: no AI claim | A claim spends the clan's influence and gold, so doubt means no write. An unreadable registry stops every AI claim |
+| Pregnancy (`TaomPregnancyModel.IsPlayerMarriage`, #1141) | Not a player: AI rules | `Player` lifts the clan brake; doubt must not lift it for every AI clan |
 
 The recruit charge does not use this query: it follows the Patch113 scope instead (below).
 
@@ -419,7 +422,7 @@ behaviour's whole `RegisterEvents` and follow each handler to the service.
 | `EnlistmentQuartermasterBehavior` | the kit request (`IsAuthority`) | Player action. |
 | `EnlistmentDutyBehavior` | `OnHourlyTick`, `OnDailyTick` (`IsAuthority`) | Duty orchestration. |
 | `EnlistmentAssignmentDialogBehavior` | the assignment line (`IsAuthority`) | Player action. Guests never get the enlist offer (`ShouldDeferToHost` in `EnlistmentDialogBehavior`), and under BannerlordCoop the human host is a loopback client, so the enlistment player actions work for no human player in a session. |
-| `RealmsCampaignBehavior` | every listener (`OnDailyTick`, `OnWeeklyTick`, `OnHeroKilled`, `OnSettlementOwnerChanged`, `OnRulingClanChanged`, the clan-leader pending resolve, the hourly title creation, the session-launch upgrade and former-banner repair) and every player action (claim, usurp, grant, revoke, form, restore, appoint, dismiss) (`IsAuthority`) | The titles spend influence and gold, change relations, give fiefs, change ruling clans and banners. A client keeps the ledger it loaded with the host's save, read only: the encyclopedia and the title windows show it, and their buttons do nothing (UNVERIFIED in a live session). |
+| `RealmsCampaignBehavior` | every listener (`OnDailyTick`, `OnWeeklyTick`, `OnHeroKilled`, `OnSettlementOwnerChanged`, `OnRulingClanChanged`, the clan-leader pending resolve, the hourly title creation, the session-launch upgrade and former-banner repair) and every player action (claim, usurp, grant, revoke, form, restore, appoint, dismiss) (`IsAuthority`) | The titles spend influence and gold, change relations, give fiefs, change ruling clans and banners. A client keeps the ledger it loaded with the host's save, read only: the encyclopedia and the title windows show it, and their buttons do nothing (UNVERIFIED in a live session). The weekly AI claims skip a co-op guest's clan (#1141). The offices pass and the grants to children still treat a guest as AI, because no Realms player action reaches the host from a guest. |
 
 **What makes any peer earn at all is the participation fix in the same change.** The victory gate
 used to ask whether the player IS the winning side's `LeaderParty.LeaderHero`, conflating

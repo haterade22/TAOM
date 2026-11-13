@@ -88,6 +88,7 @@ public class WarChronicleEventsWiringTests
         container.RegisterInstance(Substitute.For<IWarOfTheRingService>());
         container.RegisterInstance(Substitute.For<IAlignmentService>());
         container.RegisterInstance(Substitute.For<ICoopSessionProvider>());
+        container.RegisterInstance(Substitute.For<IPlayerControlQuery>());
         container.RegisterInstance(Substitute.For<IPathService>());
         container.RegisterInstance(Substitute.For<IAllianceAdapter>());
         container.RegisterInstance(Substitute.For<IMomentumAwardService>());
