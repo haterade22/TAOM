@@ -1230,7 +1230,7 @@
         <GameType value="CampaignStoryMode"/>
       </IncludedGameTypes>
     </XmlNode>
-    <!-- XSLT to remove "the" before faction names in action/comment strings -->
+    <!-- XSLT: "the" removal in action/comment strings, Middle-earth lord self-introductions and liege titles -->
     <XmlNode>
       <XmlName id="GameText" path="action_strings"/>
       <IncludedGameTypes>
