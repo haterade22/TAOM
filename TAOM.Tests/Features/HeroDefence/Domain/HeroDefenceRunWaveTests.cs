@@ -241,20 +241,6 @@ public class HeroDefenceRunWaveTests
     }
 
     [TestMethod]
-    public void Clear_AfterTheWaveLimit_UnreleasedCreepsDroppedForFreeDoNotDiluteTheLeakShare()
-    {
-        var driver = new DefenceDriver(null, Enumerable.Repeat(1, 9).ToArray()).InWave();
-        driver.Run.CreepGone(driver.Live[0], CreepEnd.Leaked);
-        var gold = driver.Run.Gold;
-
-        driver.Tick(300f);
-        driver.Tick();
-
-        Assert.AreEqual(DefencePhase.Pause, driver.Run.Phase);
-        Assert.AreEqual(gold, driver.Run.Gold, "the one creep that took the field leaked, so the share is 1 and the bonus 0");
-    }
-
-    [TestMethod]
     public void Clear_BonusPastTheGoldCeiling_StopsAtTheCeiling()
     {
         var driver = new DefenceDriver(new DefenceRules { WaveBonusBase = int.MaxValue }).InWave();
@@ -647,6 +633,49 @@ public class HeroDefenceRunWaveTests
 
         Assert.AreEqual(DefencePhase.Pause, driver.Run.Phase);
         Assert.AreEqual(1, driver.Run.WavesCleared);
+    }
+
+    [TestMethod]
+    public void Clear_AfterTheWaveLimit_WithAHeroStanding_PaysNoBonus()
+    {
+        var driver = new DefenceDriver().InWave();
+        var before = driver.Run.Gold;
+        driver.Tick(186f);
+
+        driver.Tick();
+
+        Assert.AreEqual(1, driver.Run.WavesCleared, "the wave still clears");
+        Assert.AreEqual(before, driver.Run.Gold, "a timeout is a safety net, not a clean clear (Mike, 2026-11-13, decision 12)");
+    }
+
+    [TestMethod]
+    public void Clear_LastCreepGoneInTheTickThatCrossesTheLimit_PaysTheBonus()
+    {
+        var driver = new DefenceDriver().InWave();
+        var before = driver.Run.Gold;
+        driver.End(CreepEnd.Culled);
+
+        driver.Tick(186f);
+
+        Assert.AreEqual(1, driver.Run.WavesCleared);
+        Assert.AreEqual(before + 125, driver.Run.Gold, "the clear test runs before the limit test, so an earned clear keeps its bonus");
+    }
+
+    [TestMethod]
+    public void Clear_NextWaveAfterATimeout_PaysTheBonusAgain()
+    {
+        var driver = new DefenceDriver().InWave();
+        driver.Tick(186f);
+        driver.Tick();
+        driver.Run.TryStartWave();
+        driver.Tick();
+        var before = driver.Run.Gold;
+
+        driver.End(CreepEnd.Culled);
+        driver.Tick();
+
+        Assert.AreEqual(2, driver.Run.WavesCleared);
+        Assert.AreEqual(before + 150, driver.Run.Gold, "100 + 25 x 2: the timeout mark belongs to one wave only");
     }
 
     [TestMethod]

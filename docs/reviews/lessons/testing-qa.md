@@ -2744,3 +2744,9 @@ Both Uncapturable Heroes seams catch every exception and defer to vanilla. In th
 - **Why missed:** the tests asserted the seam's outcome, which equals its failure mode, and no mutation run was made before the review. Repeat of the #1086 entry "prove the gate with a mutation" in `campaign-mechanics.md`.
 - **Prevent:** when a seam fails open (a catch that defers, a null guard that returns the default), a test of the deferring branch asserts that the seam consulted its input (`Received(1).OfHero(hero)`), and the fix is mutation-checked: put the old condition back and watch every new test fail.
 - **Source:** [rca-coop-pvp-capture-2026-11-13.md](../rca-coop-pvp-capture-2026-11-13.md), finding F2.
+
+### A rule that zeroes a result makes its inputs dead: delete the bookkeeping and the tests that asserted through it (Hero Defence D12, 2026-11-13)
+Decision 12 made a timed-out wave pay no clear bonus. The change guarded `AddGold` but kept a leak-share counter written only on the timeout path, and kept a test whose assertion (gold unchanged after a timeout) now held whatever the share was. Lens 5 found both.
+- **Why missed:** the change was written as "add a guard", not as "what reads the values this guard now discards"; the old test stayed green, and a green old test read as coverage.
+- **Prevent:** after a guard short-circuits a computed value, grep every write of its inputs and delete a write that can no longer reach a reader; reread each test that asserts the guarded output and delete or rewrite one that the guard alone satisfies. Pin the boundary the guard creates with its own test (here: the last creep gone in the tick that crosses the limit still pays).
+- **Source:** `/deep-review` lens 5 on `HeroDefenceRun.Wave.cs` (feat/hero-defence), findings Trace 3 and Trace 5.

@@ -24,6 +24,7 @@ internal sealed partial class HeroDefenceRun
     private float _waveLimit;
     private int _waveSpawned;
     private int _waveLeaked;
+    private bool _waveTimedOut;
 
     private bool QueueDone => _packNext >= _brief.Packs.Count;
 
@@ -113,6 +114,7 @@ internal sealed partial class HeroDefenceRun
         _waveSeconds = 0f;
         _waveSpawned = 0;
         _waveLeaked = 0;
+        _waveTimedOut = false;
         _waveLimit = _r.WaveLimitBaseSeconds + _r.WaveLimitPerCreepSeconds * _brief.Packs.Sum(pack => pack.Creeps.Count);
         _pending.WaveBegan = _brief;
     }
@@ -174,10 +176,12 @@ internal sealed partial class HeroDefenceRun
 
     /// <summary>
     /// The hard limit of a wave. With a hero standing the rest goes for free. With no hero standing the rest counts as leaks, so the
-    /// limit cannot turn a loss into a clear. An unreleased creep enters the leak share only when it leaks, because a free drop never took the field.
+    /// limit cannot turn a loss into a clear. A wave that reaches the limit pays no clear bonus: the limit is a backstop for when the
+    /// stall clocks did not end the wave, not a clean clear (Mike, 2026-11-13).
     /// </summary>
     private void ExpireWave()
     {
+        _waveTimedOut = true;
         var end = AnyHeroStanding ? CreepEnd.Culled : CreepEnd.Leaked;
         EndGroup(_alive.Keys, end);
 
@@ -188,7 +192,6 @@ internal sealed partial class HeroDefenceRun
                 if (Result != null)
                     break;
 
-                _waveSpawned++;
                 LoseLives(creep);
             }
         }
@@ -199,9 +202,13 @@ internal sealed partial class HeroDefenceRun
     private void ClearWave()
     {
         WavesCleared++;
-        var leakedShare = _waveSpawned > 0 ? (double)_waveLeaked / _waveSpawned : 0d;
-        var bonus = ((double)_r.WaveBonusBase + (double)_r.WaveBonusPerWave * Wave) * (1d - leakedShare);
-        AddGold(Math.Round(bonus, MidpointRounding.AwayFromZero));
+        if (!_waveTimedOut)
+        {
+            var leakedShare = _waveSpawned > 0 ? (double)_waveLeaked / _waveSpawned : 0d;
+            var bonus = ((double)_r.WaveBonusBase + (double)_r.WaveBonusPerWave * Wave) * (1d - leakedShare);
+            AddGold(Math.Round(bonus, MidpointRounding.AwayFromZero));
+        }
+
         _phase = DefencePhase.Pause;
         _left = _r.PauseSeconds;
 

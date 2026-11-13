@@ -7,7 +7,7 @@ towers are named heroes: creeps from every culture walk one serpentine road to a
 Aragorn and others) and places them during a pause. When the wave comes the heroes fight by themselves. Each creep that reaches the
 exit costs lives, and the run is endless until the lives run out.
 
-**Status (2026-11-09):** in development under #1106. The pure core is built: the run rules and the wave generator, with their
+**Status (2026-11-13):** in development under #1106. Mike's sixteen open choices are decided (see "Decisions" below). The pure core is built: the run rules and the wave generator, with their
 config readers and shipped data. Nothing is registered in IoC or `SubModule.xml`, so the mode is not in the game yet. The engine
 recipes come from spike runs on the Fords of War scene; the Gate 1 results are in "Spike results (Gate 1)" below.
 
@@ -100,6 +100,30 @@ waves.json  cultures.json  rosters.json
 
 Reused unchanged from the other modes: `Vec3f` and `AgentKey` (`Main/Features/FordsOfWar/Domain/`), `RunRandom` and `EndlessScale`
 (`Main/Features/LongDefeat/Domain/`).
+
+## Decisions (2026-11-13)
+
+Mike took the recommended option on all sixteen open choices ("proceed with your best recommendations"). The evidence for each is
+in "Spike results (Gate 1)" below. The slice that applies a choice owns its test.
+
+| # | Choice | Decision | Where it lands |
+|---|---|---|---|
+| 1 | Ability arrow thrust | 100 (pierces the heavy tower shield out to 100 m) | Slice 10 item |
+| 2 | Melee hold against a 30-creep pack | A 10 m leash: past 10 m flat from his post the hero teleports back | Slice 5 |
+| 3 | Melee facing | M5, face the target | Slice 5 |
+| 4 | Mounted packs at a road hero | Ride through: a mounted pack never charges | Slice 6; a short ride-through spike confirms it |
+| 5 | Hero cap | 6 on the field | `waves.json` `maxPlaced`, already 6 |
+| 6 | Release after a charged hero falls | Move when no road hero stands within the 22 m release distance | `PackOrderRule`, already so (`Charge_ChargedHeroFell_*` tests) |
+| 7 | Creep archers | Ranged row plus director stands: stand 10 to 12 s against a hero ahead, never behind; drop the row once past | Slice 6 |
+| 8 | Target priority | Steers the regular bow too (automatic selection off, target set at 2 Hz) | Slice 12 |
+| 9 | Ranged hero reached in melee on the road | Plateau posts for ranged heroes until base health is tuned | Slice 5 placement |
+| 10 | Base hero health | 3000 for now, one JSON value, tuned in the first balance run | Slice 5 `heroes.json` |
+| 11 | Controlled hero leads a pack off the road | Pack leash: a pack more than 15 m off the road goes back to Move (15 m is a guess) | Slice 8 |
+| 12 | A wave that reaches its time limit | The wave clears, but pays no clear bonus | `HeroDefenceRun.ExpireWave`, done |
+| 13 | Mounted bounty rounding | Round once, after the +50% | `HeroDefenceRun.Bounty`, already so |
+| 14 | Growth cap | Factor 20 | `waves.json` `maxFactor`, already 20 |
+| 15 | Shaghana | Merged into Harad | Roster generator, already so |
+| 16 | Wave leaders | Approved as listed in `cultures.json` | Already so |
 
 ## Spike results (Gate 1)
 
