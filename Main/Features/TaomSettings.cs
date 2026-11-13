@@ -289,7 +289,7 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
 
     [SettingPropertyGroup("War of the Ring/Momentum")]
     [SettingPropertyBool("Enable Momentum Tracking", Order = 0, RequireRestart = false,
-        HintText = "Tracks Evil vs Good war progress from battles, sieges, raids, armies and relative strength. Reaching the victory threshold ENDS the war. Default: on.")]
+        HintText = "Tracks Evil vs Good war progress from battles, sieges, raids, armies and relative strength. The war ends at the victory threshold only when Enable Victory (End the War) is on; that setting is off by default, so the war is endless. Default: on.")]
     public bool MomentumEnabled { get; set; } = true;
 
     [SettingPropertyGroup("War of the Ring/Momentum")]
@@ -299,7 +299,7 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
 
     [SettingPropertyGroup("War of the Ring/Momentum")]
     [SettingPropertyBool("Enable Victory (End the War)", Order = 6, RequireRestart = false,
-        HintText = "When OFF (default) the War of the Ring is endless — momentum is tracked but no side ever wins. Turn ON to let a side win at the Victory Threshold (or by eliminating the other), which ends the war and makes peace. Default: off (endless).")]
+        HintText = "When OFF (default) the War of the Ring is endless: momentum is tracked but no side ever wins. Turn ON to let a side win at the Victory Threshold (or by eliminating the other), which ends the war and makes peace. Default: off (endless).")]
     public bool MomentumVictoryEnabled { get; set; } = false;
 
     [SettingPropertyGroup("War of the Ring/Momentum")]
