@@ -2699,3 +2699,11 @@ never FAIL. The manifest header also named one list while its fail patterns judg
   same literals in a Python test that judges them on the real manifest (pass, fail, pass beside a fail, nothing). Do not end a
   pass pattern with `$`. State in the manifest header what a fail pattern fails on, because fail patterns are not gated on `reached`.
 - **Source:** [rca-mission-start-defer-2026-11-12.md](../rca-mission-start-defer-2026-11-12.md) "Follow-up review", `/deep-review` Agent 5.
+
+### A verdict that counts exposure from the first sample needs a window after its trigger (Fords check 09, 2026-11-13)
+
+Check 09 failed `melee` once enemies stood near a tower for 30 unit-seconds with no blow. That holds in the first minutes of any match, before the rules order a strike, so every 120 s smoke failed. The first fix exempted runs with no order at all, and still failed a smoke whose first order came near its end: in the passing runs the first order came at live second 108.6 and 112.1.
+
+- **Why missed:** the threshold was set on 600 s and longer runs; the fix read only the failing runs, not when the trigger arrives in the passing ones.
+- **Prevent:** for a check that expects an effect after a trigger, start its window at the trigger and give it a minimum age; read the trigger's timing in passing runs before choosing it. Check that the scenario fakes produce the evidence a new rule reads, or the fault scenario can no longer fail.
+- **Source:** [rca-fords-check09-short-run-2026-11-13.md](../rca-fords-check09-short-run-2026-11-13.md), finding 1.

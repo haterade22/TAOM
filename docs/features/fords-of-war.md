@@ -982,7 +982,11 @@ or the setup flow, registered in `taom_module_strings.xml` and seeded in English
   fitter was rewritten, and the planner limits (10% dropped, 30 m tower move, 5% bad segments) are untested in game.
 - **Check 9 is resolved.** The unattended 600 s match `20261031-220826` (East AI against a passive West) passed check 9 with 731
   native tower blows, which answers build-spec open question 3: melee AI does damage the barricade. The earlier FAIL (the 16:54
-  match, 1,030 unit-seconds near a tower and no blow) came before the lane rules were rewritten.
+  match, 1,030 unit-seconds near a tower and no blow) came before the lane rules were rewritten. A run under 600 live seconds
+  judges `melee` only once an `AttackTower` order is 30 mission seconds old at the run's end, and reports NOT_SEEN before that
+  (#1137): the waves first meet near the outer towers and fight each other, the 120 s smoke runs `20261110-154302` and
+  `20261112-235217` collected 49.1 and 54.1 unit-seconds near a tower with no strike ordered, and in longer runs the first order
+  came at live second 108.6 and 112.1. A full-length run still fails with no blow, ordered or not.
 - **The first AI matches saw no tower fall.** In `20261031-222418` and `20261031-225939` (1800 s, both
   sides AI) no tower fell and no keep fell. On that generated map, gunners on the ground absorbed a share of the melee blows
   (`GunnerBlowsMelee`); every report since they moved to the tower tops on 2026-11-02 records 0. Most melee blows on a tower do zero raw damage (`RawZero`; read `meleeRaw` in the check 9
