@@ -229,56 +229,6 @@ public class FormationLayoutServiceTests
         Assert.AreEqual(0, affected);
     }
 
-    // -------- IsMixedFormation thresholds --------
-
-    [TestMethod]
-    public void IsMixedFormation_AllMelee_False()
-    {
-        var f = MakeFormation(20, 0);
-
-        Assert.IsFalse(_sut.IsMixedFormation(f));
-    }
-
-    [TestMethod]
-    public void IsMixedFormation_AllRanged_False()
-    {
-        var f = MakeFormation(0, 20);
-
-        Assert.IsFalse(_sut.IsMixedFormation(f));
-    }
-
-    [TestMethod]
-    public void IsMixedFormation_TooSmall_False()
-    {
-        var f = MakeFormation(5, 4); // total 9, below MinTotalUnits=10
-
-        Assert.IsFalse(_sut.IsMixedFormation(f));
-    }
-
-    [TestMethod]
-    public void IsMixedFormation_MinorityTooSmall_False()
-    {
-        var f = MakeFormation(20, 4); // total 24, minority 4 < MinUnitsOfMinorityClass=5
-
-        Assert.IsFalse(_sut.IsMixedFormation(f));
-    }
-
-    [TestMethod]
-    public void IsMixedFormation_MinorityBelow20Percent_False()
-    {
-        var f = MakeFormation(50, 6); // total 56, minority 6, 6/56 = 10.7% < 20%
-
-        Assert.IsFalse(_sut.IsMixedFormation(f));
-    }
-
-    [TestMethod]
-    public void IsMixedFormation_BalancedAndLargeEnough_True()
-    {
-        var f = MakeFormation(8, 6); // total 14, minority 6 ≥ 5, 6/14 = 42.8% ≥ 20%
-
-        Assert.IsTrue(_sut.IsMixedFormation(f));
-    }
-
     // -------- SmartCavalryAI × MixedFormations handshake (#189 / #190) --------
     //
     // The two-feature contract: SmartCavalryAI owns cavalry formation behavior; MixedFormations
@@ -323,19 +273,6 @@ public class FormationLayoutServiceTests
     }
 
     [TestMethod]
-    public void IsMixedFormation_CavalryFormation_ReturnsFalse_HonoringSmartCavalryHandshake()
-    {
-        // FormationLayoutService.IsMixedFormationInternal — `if (formation.RepresentativeIsCavalry) return false;`
-        // Even a horse-archer formation that meets the 20%/≥5 ranged-minority threshold must NOT
-        // be classified as mixed — SmartCavalryAI handles horse-archer behavior.
-        var horseArchers = MakeFormation(8, 6); // would be mixed if not cavalry
-        horseArchers.RepresentativeIsCavalry.Returns(true);
-
-        Assert.IsFalse(_sut.IsMixedFormation(horseArchers),
-            "Cavalry formation must not be classified as mixed — horse-archer layout belongs to SmartCavalryAI.");
-    }
-
-    [TestMethod]
     public void CavalryHandshake_NonCavalry_DoesNotShortCircuit_BaselineAssertion()
     {
         // Sanity baseline: the cavalry guard does NOT short-circuit non-cavalry formations.
@@ -347,9 +284,6 @@ public class FormationLayoutServiceTests
 
         var posResult = _sut.ComputeUnitPlanePosition(infantry, agentIndex: 0, agentIsRanged: false);
         Assert.IsNotNull(posResult, "Non-cavalry formation must NOT short-circuit the cavalry guard.");
-
-        Assert.IsTrue(_sut.IsMixedFormation(infantry),
-            "Non-cavalry mixed formation must still be classified as mixed.");
     }
 
     // -------- ApplyDefaultsToFormations --------

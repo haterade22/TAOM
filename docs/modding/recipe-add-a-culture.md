@@ -354,13 +354,11 @@ separate C# edit under `Main/Features/TroopProgression/RecruitmentPools/`
   `taom_partyTemplates.xml` or `troop_weights.xml`. See
   [moduledata-validation.md](../features/moduledata-validation.md) for the real coverage matrix.
   <!-- measured: ls tools/schemas/*.json | wc -l 2026-09-05 -->
-- **`docs/cultures.md` is stale in three places.** It puts `taom_equipment_sets_{culture}.xml` at the
-  `ModuleData` root, but all 20 files sit under `Main/_Module/ModuleData/equipmentsets/`. Its "Gaps"
-  table lists Umbar, Dale and Lothlorien as having no equipment set file; all three exist (Khand
-  still has none, and no `khand` culture either). And it says 12 wanderers per culture: across
-  `taom_wanderers.xml` there are 210 entries over 20 cultures, 17 at exactly 10, Erebor 12, Gondor
-  13, Mordor 15. Author 10.
-  <!-- measured: ls Main/_Module/ModuleData/equipmentsets/taom_equipment_sets_*.xml | wc -l 2026-09-05 -->
+- **Author 10 wanderers, and put the equipment set file under `equipmentsets/`.** Every
+  `taom_equipment_sets_{culture}.xml` sits under `Main/_Module/ModuleData/equipmentsets/`, and most
+  cultures in `taom_wanderers.xml` hold exactly 10 wanderers (a few older ones hold 12 to 15).
+  `docs/cultures.md` said otherwise until it was corrected on 2026-11-12.
+  <!-- measured: ls Main/_Module/ModuleData/equipmentsets/taom_equipment_sets_*.xml | wc -l 2026-11-12 -->
   <!-- measured: python -c "import xml.etree.ElementTree as ET,collections;c=collections.Counter((e.get('culture') or '').replace('Culture.','') for e in ET.parse('Main/_Module/ModuleData/taom_wanderers.xml').getroot().iter('NPCCharacter'));print(sum(c.values()),len(c),sum(1 for v in c.values() if v==10),{k:v for k,v in c.items() if v!=10})" 2026-09-05 -->
 - **A non-human culture needs more than `race=`.** The race must be registered in the live
   `LOTRLOME_Armory/ModuleData/skins.xml` and needs an `as_<race>_facegen` and

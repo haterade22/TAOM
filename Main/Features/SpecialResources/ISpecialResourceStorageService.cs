@@ -18,5 +18,4 @@ public interface ISpecialResourceStorageService
 
     Dictionary<string, float> GetAllData();
     void RestoreData(Dictionary<string, float> data);
-    void ClampAll(float cap);
 }

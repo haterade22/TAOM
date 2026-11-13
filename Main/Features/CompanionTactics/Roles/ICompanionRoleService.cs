@@ -19,12 +19,6 @@ public interface ICompanionRoleService
     /// <summary>Short text label for HUD ("BOW", "INF", "1H", ...). Empty for Unknown.</summary>
     string GetRoleShortText(CombatRole role);
 
-    /// <summary>Tooltip hint string ("Best suited for: ...") with optional " (Has mount)" suffix.</summary>
-    string GetRoleHint(CombatRole role, bool isMounted);
-
-    /// <summary>uint AABBGGRR color for UI prefix. White (uint.MaxValue) for Unknown.</summary>
-    uint GetRoleColor(CombatRole role);
-
     /// <summary>True for ranged classes (Archer, Crossbow, Slinger).</summary>
     bool IsRangedRole(CombatRole role);
 }

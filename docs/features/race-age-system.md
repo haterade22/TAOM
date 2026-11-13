@@ -135,6 +135,8 @@ Read from `race_age_config.json` on 2026-09-19 (#628). Every race comes of age a
 
 `TaomPregnancyModel` **reimplements** `GetDailyChanceOfPregnancyForHero(Hero hero)` rather than calling `base`. This is necessary because the vanilla `DefaultPregnancyModel` hardcodes fertility age bounds to 18-45 in a private `IsHeroAgeSuitableForPregnancy` method: calling `base` would return 0 for any hero over age 45, defeating race-specific fertility windows (e.g., Dwarves with `fertilityEnd: 220`).
 
+Because `base` never runs, BannerlordCoop's prefix on that vanilla method never runs either. The prefix swaps vanilla's `Hero.MainHero` test for Coop's `IsPlayerHero`, since pregnancy ticks run on the co-op server, where `Hero.MainHero` is the server's own hero. TAOM asks `IPlayerControlQuery` instead (`IsPlayerMarriage`, #1141), so a co-op guest's marriage skips the clan brake and the race bonus as the player's does. Without a session the answer is the `Hero.MainHero` comparison.
+
 ### Calculation Steps
 
 1. If the hero's race is immortal → return 0 (no children)

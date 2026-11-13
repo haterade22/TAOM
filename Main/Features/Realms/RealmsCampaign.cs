@@ -6,6 +6,7 @@ using TaleWorlds.CampaignSystem.Actions;
 using TaleWorlds.CampaignSystem.Settlements;
 using TaleWorlds.Library;
 using TAOM.Core.Domain;
+using TAOM.Features.CoopInterop;
 using TAOM.Features.Realms.Domain.Config;
 using TAOM.Features.Realms.Domain.Persistence;
 using TAOM.Features.Realms.Domain.Services;
@@ -40,6 +41,9 @@ public sealed partial class RealmsCampaign
 
     /// <summary>This peer may change the campaign: singleplayer or a co-op host (docs/features/coop-interop.md).</summary>
     private readonly Func<bool> _isAuthority;
+
+    /// <summary>Who is a human player, local or a co-op guest (#1141).</summary>
+    private readonly IPlayerControlQuery _players;
     private readonly RealmsService _service = new();
     private readonly IRealmLeaders _leaders = new RealmLeaders();
     private RealmsConfig? _config;
@@ -51,10 +55,11 @@ public sealed partial class RealmsCampaign
     private int _savedVersion = RealmsSaveFormat.Version;
     private bool _needsUpgrade;
 
-    public RealmsCampaign(IRealmsPopupAdapter popups, Func<bool> isAuthority, IRealmsSettingsProvider? settings = null,
-        IEnumerable<IKingdomRenameListener>? renameListeners = null)
+    public RealmsCampaign(IRealmsPopupAdapter popups, Func<bool> isAuthority, IPlayerControlQuery players,
+        IRealmsSettingsProvider? settings = null, IEnumerable<IKingdomRenameListener>? renameListeners = null)
     {
         _popups = popups;
+        _players = players;
         _settings = settings ?? new RealmsSettingsProvider();
         _isAuthority = isAuthority;
         _renameListeners = renameListeners?.ToArray() ?? Array.Empty<IKingdomRenameListener>();
@@ -266,6 +271,19 @@ public sealed partial class RealmsCampaign
         Debug.Print($"[TAOM.Realms] weekly tick {clock.ElapsedMilliseconds} ms: consequences {consequences}, offices {offices - consequences}, "
                     + $"AI titles and claims {claims - offices}, report {clock.ElapsedMilliseconds - claims} ({events.Count} events).");
     }
+
+    /// <summary>
+    /// A clan the weekly AI claims leave alone (#1141): one the player query does not call AI. On the co-op server
+    /// <c>Clan.PlayerClan</c> is the server's own clan, so only the query knows a guest's clan; without a session it is
+    /// the <c>Clan.PlayerClan</c> comparison. <see cref="PlayerControl.Unknown"/> leaves the clan alone: a claim
+    /// spends the clan's influence and gold, so doubt means no write. Offices and grants to children keep the local
+    /// comparison: a guest cannot fill an office or grant a title (every player act is authority-only and Coop
+    /// forwards none), so a skip there would leave the guest's offices empty and the clan's children landless.
+    /// </summary>
+    internal bool IsAPlayersClan(Clan clan) => _players.OfClan(clan) != PlayerControl.NotPlayer;
+
+    /// <summary>The same test for a clan leader.</summary>
+    internal bool IsAPlayersHero(Hero hero) => _players.OfHero(hero) != PlayerControl.NotPlayer;
 
     /// <summary>AI clan leaders hand lesser titles to their grown children. The player's clan grants nothing by itself.</summary>
     private IReadOnlyList<TitleEvent> GrantToChildren()

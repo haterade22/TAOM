@@ -95,23 +95,6 @@ public class BannerColorServiceTests
     }
 
     [TestMethod]
-    public void ApplyClanColors_SetsColor1AndColor2FromInfo()
-    {
-        // Arrange
-        var info = new ClanColorInfo("clan_gondor_1", 0xFF112233, 0xFF445566);
-        var sut = CreateSut();
-        uint color1 = 0;
-        uint color2 = 0;
-
-        // Act
-        sut.ApplyClanColors(ref color1, ref color2, info);
-
-        // Assert
-        Assert.AreEqual(0xFF112233u, color1);
-        Assert.AreEqual(0xFF445566u, color2);
-    }
-
-    [TestMethod]
     public void GetUniqueIconColor_SameAsBackground_ReturnsInvertedRgb()
     {
         // Arrange
@@ -186,17 +169,6 @@ public class BannerColorServiceTests
 
         // Act & Assert
         Assert.IsFalse(sut.IsUniqueSecondaryColorEnabled());
-    }
-
-    [TestMethod]
-    public void IsLayerLimitTranspilerEnabled_ReflectsConfig()
-    {
-        // Arrange
-        _config.EnableLayerLimitTranspiler = false;
-        var sut = CreateSut();
-
-        // Act & Assert
-        Assert.IsFalse(sut.IsLayerLimitTranspilerEnabled());
     }
 
     [TestMethod]

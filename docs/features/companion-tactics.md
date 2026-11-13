@@ -74,7 +74,6 @@ TAOM.Features.CompanionTactics/
 Adapters added/extended:
 - `IBattleEquipmentSnapshot` (NEW) — value-object snapshot of `Equipment`'s 4 weapon slots + has-shield + has-mount.
 - `IHeroCombatAdapter` (NEW) — campaign-time wrapper for `Hero` exposing `StringId`, `BattleEquipment` snapshot, `HasMount`, `HasShield`.
-- `IAgentCombatAdapter` (NEW) — mission-time wrapper for `Agent` exposing `Index`, `IsRanged`, weapon-class, has-shield, has-mount.
 - `IFormationAdapter` (EXTENDED) — added `FormationIndex`, `RangedUnitCount`, `CavalryUnitCount`, `PolearmUnitCount`, `ShieldUnitCount` (last two TTL-cached at 500ms in `FormationAdapter`).
 
 ### Component Diagram
@@ -183,7 +182,6 @@ A preset is a named copy of the Order of Battle layout: the formation type of ea
 | `Main/Features/CompanionTactics/BattleActionBar/Hooks/Patch35_Formation_SetMovementOrder.cs` | Implements `CancelStanceOnMove`. Belongs to shared `Patch_MissionTime_SetMovementOrder` category (applied once from `OnMissionBehaviorInitialize` because `MovementOrder.cctor` reads `Mission.Current.CurrentTime`). |
 | `Main/Adapters/{I,}BattleEquipmentSnapshot.cs` | Equipment value-object snapshot (no sealed `Equipment` leak) |
 | `Main/Adapters/{I,}HeroCombatAdapter.cs` | `Hero` wrapper; classifies from `BattleEquipment`, or from a given `Equipment` (Auto-Assign passes the agent's spawn equipment) |
-| `Main/Adapters/{I,}AgentCombatAdapter.cs` | Mission-time `Agent` wrapper |
 | `Main/Adapters/IFormationAdapter.cs` (EXTENDED) | Adds `FormationIndex` + 4 unit-count properties |
 | `Main/Adapters/FormationAdapter.cs` (EXTENDED) | TTL-cached polearm/shield count scan |
 | `Main/_Module/GUI/PreFabs/BattleActionBar.xml` | Bound to `BattleActionBarVM` (vanilla brushes only) |
@@ -193,7 +191,7 @@ A preset is a named copy of the Order of Battle layout: the formation type of ea
 
 - `ICompanionTacticsSettingsProvider`: typed read through a cached `TaomSettings.Instance` (testable seam).
 - `IModLogger` (TAOM core) — file logger; gated HUD output via Debug toggles.
-- `IFormationAdapter`, `IHeroCombatAdapter`, `IAgentCombatAdapter`, `IBattleEquipmentSnapshot` — sealed-type wrappers per ADR-007.
+- `IFormationAdapter`, `IHeroCombatAdapter`, `IBattleEquipmentSnapshot` — sealed-type wrappers per ADR-007.
 - TaleWorlds types used: `Hero`, `Equipment`, `WeaponClass`, `EquipmentIndex`, `Formation`, `Mission`, `MissionMode`, `OrderOfBattleVM`, `OrderOfBattleHeroItemVM`, `OrderOfBattleFormationItemVM`, `DeploymentFormationClass`, `Agent`, `CharacterObject`, `MissionGauntletOrderOfBattleUIHandler`, `GauntletLayer`, `MissionScreen`, `MBBindingList<T>`, `SelectorVM<OrderOfBattleFormationClassSelectorItemVM>`, `OrderOfBattleFormationClassSelectorItemVM`, `MultiSelectionInquiryData`, `TextInquiryData`.
 
 ## Tests
@@ -221,7 +219,7 @@ The folder `TAOM.Tests/Features/CompanionTactics/` holds 18 test files, plus `TA
 
 1. Add the value to `CombatRole.cs` enum.
 2. Update `CompanionRoleService.ClassifyWeapon` to map a `WeaponClass` (or combination) to the new role.
-3. Add a case to `GetRoleShortText`, `GetRoleHint`, `GetRoleColor` for the new value. **All four are required** — `GetRoleColor` will fall through to `uint.MaxValue` (white) if missed, which makes the role invisible in role badges. Codex review #35 caught this for `OneHanded` and `Slinger`.
+3. Add a case to `GetRoleShortText` for the new value.
 4. Add a case to `IsRangedRole` if it's a ranged variant.
 5. Add a scoring entry to `HeroAutoAssigner.ScoreRoleForFormation` for every formation class.
 6. Add a unit test in `CompanionRoleServiceTests` covering the new role's classification path.

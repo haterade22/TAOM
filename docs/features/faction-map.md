@@ -19,7 +19,7 @@ Three Harmony patches intercept `CultureStageView`'s lifecycle:
 
 - `Patch7_FactionMap` (`CultureStageView_Constructor_Patch`) — Postfix on `CultureStageView` constructor. Delegates to `CultureStageViewCreatedHook.OnCreated`, which: loads region and faction data from JSON via `IFactionConfigProvider`, initializes `IFactionRegistryService`, releases the vanilla movie, constructs `FactionSelectionVM`, and loads the custom `CharacterCreationCultureStage` movie backed by `FactionSelectionVM`.
 - `CultureStageView_Tick_Patch` — Postfix on `Tick`. Delegates to `CultureStageViewTickHook` for per-frame hover state updates.
-- `CultureStageView_Finalize_Patch` — Postfix on `Finalize`. Delegates to `CultureStageViewFinalizeHook` for cleanup.
+- `CultureStageView_Finalize_Patch`: Prefix on `OnFinalize`. Delegates to `CultureStageViewFinalizeHook` for cleanup.
 
 When a player confirms a faction, the `onCultureConfirmed` callback calls `ICultureSettingService.SetCultureOnCharacterCreation`, then replicates the vanilla `NextStage()` flow by: calling `SetMainCharacterName` on the character creation content, then invoking the `_affirmativeAction` delegate.
 

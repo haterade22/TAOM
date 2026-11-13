@@ -30,7 +30,7 @@ public class PartyMemberSizeLimitCallShapeTests
     public void TaomCallers_PassNoPositionalBoolLiteral()
     {
         var calls = CSharpFiles("Main", "Client", "Dependencies")
-            .SelectMany(file => FindCalls(File.ReadAllText(file)).Select(call => (File: file, Call: call)))
+            .SelectMany(file => FindCalls(Text(file)).Select(call => (File: file, Call: call)))
             .ToList();
 
         // TaomPartySizeModel's base call is always there. No invocation means the scan broke, not that the code is clean.
@@ -47,7 +47,7 @@ public class PartyMemberSizeLimitCallShapeTests
     {
         // A call the scanner did not read is a call the rule above never judged.
         var unread = CSharpFiles("Main", "Client", "Dependencies")
-            .Where(file => CountUnreadCalls(File.ReadAllText(file)) != 0)
+            .Where(file => CountUnreadCalls(Text(file)) != 0)
             .Select(Path.GetFileName)
             .ToList();
         Assert.AreEqual(0, unread.Count,

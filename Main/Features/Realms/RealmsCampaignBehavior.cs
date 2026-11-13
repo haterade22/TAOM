@@ -13,8 +13,8 @@ namespace TAOM.Features.Realms;
 public sealed class RealmsCampaignBehavior : CampaignBehaviorBase
 {
     public RealmsCampaignBehavior(IRealmsPopupAdapter popups, ICoopSessionProvider coop, IRealmsSettingsProvider settings,
-        IEnumerable<IKingdomRenameListener>? renameListeners = null) =>
-        Realms = new RealmsCampaign(popups, () => coop.IsAuthority, settings, renameListeners);
+        IPlayerControlQuery players, IEnumerable<IKingdomRenameListener>? renameListeners = null) =>
+        Realms = new RealmsCampaign(popups, () => coop.IsAuthority, players, settings, renameListeners);
 
     public static RealmsCampaignBehavior? Current =>
         TaleWorlds.CampaignSystem.Campaign.Current?.GetCampaignBehavior<RealmsCampaignBehavior>();

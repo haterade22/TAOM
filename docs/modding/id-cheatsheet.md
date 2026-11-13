@@ -462,8 +462,6 @@ The second example is the comment above the last race in the Armory skin registr
 
 ## Gotchas: what fails silently and what crashes
 
-- **The xml-data rule's region-code line disagrees with the map.** It says `EN=Rohan`, `B=Dunland`, `K=Easterlings`; the live file has `EN` = `Culture.empire` (Dunland), no `B` prefix at all, `K` = `Culture.battania` (Khand) with no `khuzait` holdouts, and Rohan under `V`. Trust the census above (`.claude/rules/xml-data.md:37` versus the `TAOM_Map/ModuleData/settlements.xml` census).
-- **The naming doc's `K` note is stale too.** It reports 26 of 27 `K` settlements as `battania`; the live count is 48 `battania` and no `khuzait` of 48 (`docs/reference/taom-map-settlement-naming.md:88`).
 - **Two Armory prefixes live where the guide says they do not** (`urukscout_*` in `mordor/`, `sk_dwarf_dain_*` in `iron_hills/`) and `clo_urukscout_*` names nothing (`docs/reference/armory-guide.md:27-33`). Adding a new item under the guide's folder would create the very shadowing the guide warns about.
 - **black-numenorean.md says TAOM has zero `race="human"`; it has thirteen**, on wanderers, named companions and faction-picker display characters, none on troops (`docs/features/black-numenorean.md:167-168`).
 - **Five trait ids in `lords.xml` do nothing** (`Politician`, `Manager`, `KnightFightingSkills`, `CavalryFightingSkills`, `ArcherFightingSkills`) and a trait value is never clamped to its range (`PropertyOwner.cs:78-85`; `DefaultTraits.cs:129-153`).

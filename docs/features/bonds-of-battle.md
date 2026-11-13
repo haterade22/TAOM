@@ -111,7 +111,7 @@ TAOM_Map's settlements sit a median 17 units from their nearest neighbour, and a
 
 ## Localization
 
-New lines, all in `taom_module_strings.xml`: `taom_bonds_together`, `taom_bonds_against`, `taom_bonds_bandits`, `taom_bonds_handover`. The two gratitude lines are worded without a gender ("thanks you"). The twelve languages hold the English text until the paid translation run.
+New lines, all in `taom_module_strings.xml`: `taom_bonds_together`, `taom_bonds_against`, `taom_bonds_bandits`, `taom_bonds_handover`. The two gratitude lines are worded without a gender ("thanks you"). The twelve languages hold the translated text (2026-11-12, #763).
 
 ## Tests
 

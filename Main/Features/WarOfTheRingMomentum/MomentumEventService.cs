@@ -112,6 +112,9 @@ public class MomentumEventService : IMomentumEventService
     {
         if (raid == null || !state.HasWarStarted || state.HasWarEnded || !raid.AttackerVictory)
             return;
+        // #774: a won militia fight also reports an attacker victory; only the loot is a raid.
+        if (!raid.VillageLooted)
+            return;
         if (string.IsNullOrEmpty(raid.AttackerFactionId) || !state.DoesKingdomTakePart(raid.AttackerFactionId))
             return;
 

@@ -3115,8 +3115,9 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
 
     [SettingPropertyGroup("Marshal's Word")]
     [SettingPropertyBool("{=taom_marshal_mcm_outlines}Outlines", Order = 3, RequireRestart = false,
-        HintText = "{=taom_marshal_mcm_outlines_hint}While the order panel is open, or while the show-indicators key (default Left Alt) is held, the soldiers of your selected companies wear a gold outline and an enemy company that one of them marks or charges wears a red one. Hold Mark, Do Not Move (default Left Ctrl) while you order a charge to mark an enemy company without moving: a mark steers archers and other ranged soldiers, and soldiers fighting hand to hand choose their own foe. Default: on.")]
-    public bool MarshalOutlines { get; set; } = TAOM.Features.MarshalsWord.MarshalSettingsProvider.DefaultOutlines;
+        HintText = "{=taom_marshal_mcm_outlines_hint}While the order panel is open, or while the show-indicators key (default Left Alt) is held, the soldiers of your selected companies wear a gold outline and an enemy company that one of them marks or charges wears a red one. Hold Mark, Do Not Move (default Left Ctrl) while you order a charge to mark an enemy company without moving: a mark steers archers and other ranged soldiers, and soldiers fighting hand to hand choose their own foe. This setting was renamed when its default changed to off, so a value you saved earlier was reset: turn it on again if you want it. Default: off.")]
+    // Renamed from MarshalOutlines: MCM keeps a saved value per property name, so a flipped default under the old name would reach fresh installs only.
+    public bool MarshalShowOutlines { get; set; } = TAOM.Features.MarshalsWord.MarshalSettingsProvider.DefaultOutlines;
 
     [SettingPropertyGroup("Marshal's Word")]
     [SettingPropertyBool("{=taom_marshal_mcm_hollow_square}Hollow Square", Order = 4, RequireRestart = false,

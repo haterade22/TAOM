@@ -118,6 +118,10 @@ public class WarEventSnapshotAdapter : IWarEventSnapshotAdapter
             return new RaidOutcomeSnapshot
             {
                 AttackerVictory = winnerSide == BattleSideEnum.Attacker,
+                // #774: the engine sets the village to Looted just before raising RaidCompleted,
+                // and only when its hit points reached zero (v1.5.6 RaidEventComponent.cs:269-277).
+                VillageLooted = component?.MapEventSettlement?.Village?.VillageState
+                                == Village.VillageStates.Looted,
                 AttackerFactionId = faction?.StringId,
                 AttackerPartyName = attackerParty?.Name?.ToString() ?? "",
                 AttackerFactionName = faction?.Name?.ToString() ?? "",

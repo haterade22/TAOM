@@ -129,7 +129,7 @@ WardensTallyTexts   (view -> TextObjects with {=taom_wt_*} keys; vanilla's sente
 
 ## Translation
 
-The 12 language files hold English seed rows only. The paid translation is owed in backlog #763.
+The 12 language files hold translated rows (2026-11-12, #763).
 
 ## How to verify in game
 

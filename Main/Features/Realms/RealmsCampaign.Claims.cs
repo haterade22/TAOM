@@ -75,8 +75,8 @@ public sealed partial class RealmsCampaign
         foreach (var clan in Clan.All.ToList())
         {
             var leader = clan?.Leader;
-            if (clan == null || clan.IsEliminated || clan.IsBanditFaction || clan == Clan.PlayerClan
-                || leader == null || !leader.IsAlive || leader == Hero.MainHero || !clan.Settlements.Any(s => s.IsTown || s.IsCastle))
+            if (clan == null || clan.IsEliminated || clan.IsBanditFaction || IsAPlayersClan(clan)
+                || leader == null || !leader.IsAlive || IsAPlayersHero(leader) || !clan.Settlements.Any(s => s.IsTown || s.IsCastle))
                 continue;
 
             var cheapestForm = _service.CheapestFormCost(leader.StringId, config);

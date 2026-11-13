@@ -69,7 +69,7 @@ None. Grid cell size is hardcoded (`CellSize = 20f`, a public instance field, no
 - `ISpatialGridDebugService` — resolved via `IoC` in `AdvancedCombatBehavior`
 
 ## Tests
-`TAOM.Tests/Features/AdvancedCombat/BoneCollisionServiceTests.cs` — 11 tests covering `IBoneCollisionService.CreateAnimationBoneCheck` / `CreateTimedBoneCheck` and the bone-tracking lifecycle via `IAgentAdapter` + `IAgentVisualsAdapter` substitutes.
+`TAOM.Tests/Features/AdvancedCombat/BoneCollisionServiceTests.cs` — tests covering the bone-tracking lifecycle via `IAgentAdapter` + `IAgentVisualsAdapter` substitutes.
 
 `SpatialGridQueryTests.cs` (9) runs the grid query through its generic helpers against a brute-force sphere scan, and pins column order and a point that moved since the rebuild. `SpatialGridReuseTests.cs` (5) pins the reused build against the cells the positions name (worked out in the test, not by the helper under test) and the O(cell) removal against the old walk, and two maps built in turn over one spare stack (a build never touches or shares a list with the published map), and `SpatialGridDormancyTests.cs` (10) pins when a rebuild is skipped and when a query rebuilds first (build counts), the two resets in `Rebuild` among them (a rebuilt grid is unread again; a woken grid does not rebuild on its next query), and both log lines literally. `SpatialGridWiringTests.cs` (8) drives the instance on bare agents through the grid's position and liveness seam: the first query after skipped rebuilds answers from a fresh build for an agent that spawned, moved into range or died during the idle spell; a query with no skipped rebuild answers from the last scheduled build; a removal drops the agent from the next answer and from both map generations, on the mission tick only, after each of several alternating builds. `BoneCheckRangeGateTests.cs` (10) drives `BoneCheck.CheckTargets`: the range gate, a NaN frame, and every per-target skip, singly and in a mixed list. `BoneCheckDuringAnimationTickTests.cs` (7) drives `BoneCheckDuringAnimation.Tick` with substitutes and `default(ActionIndexCache)`: a wind-up frame never touches the attacker's visuals, the window end and a missing skeleton or visuals in the window expire the check, and a NaN progress keeps it without a hit test. One IL rule, with a control fixture, pins a single progress read per tick.
 
@@ -82,7 +82,7 @@ None. Grid cell size is hardcoded (`CellSize = 20f`, a public instance field, no
 ## How to Add a New Bone-Based Attack
 1. Obtain an `IAgentAdapter` for the attacker and a `List<IAgentAdapter>` for targets (use `SpatialGrid.Instance.GetAgentsInRadius` to find nearby agents).
 2. Determine which `sbyte` bone indices on the attacker to track (see `HumanAnimationConstants` or inspect the monster skeleton).
-3. Call `IBoneCollisionService.CreateAnimationBoneCheck(...)` or `CreateTimedBoneCheck(...)` with an `onCollisionCallback` that calls `CustomAttacksUtils.TakeDamage(target, attacker, damage)`.
+3. Construct a `BoneCheckDuringAnimation` (animation-driven) or a `BoneCheck` (timed) with an `onCollisionCallback` that calls `CustomAttacksUtils.TakeDamage(target, attacker, damage)`.
 4. Pass the returned `BoneCheck` to `AdvancedCombatBehavior.AddBoneCheckComponent(check)` — the behavior is accessible via `Mission.Current.GetMissionBehavior<AdvancedCombatBehavior>()`.
 5. The check runs automatically each tick until it expires or all targets are hit.
 

@@ -55,8 +55,6 @@ internal sealed class FakeCoopTransport : ICoopTransport
         return true;
     }
 
-    public void RunOnGameThread(Action action) => action();
-
     public void RaiseClientReady() => ClientReady?.Invoke();
     public void RaiseHello(CoopPeer peer, CoopCompatHello hello) => HelloReceived?.Invoke(peer, hello);
     public void RaiseReply(CoopCompatHelloReply reply) => HelloReplyReceived?.Invoke(reply);

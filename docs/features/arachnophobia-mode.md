@@ -128,4 +128,4 @@ The log writes each `[Check]` line once per process for each result and game typ
 ## GitHub Issue
 
 - **Issue:** #1110: [Arachnophobia Mode: a setting that hides spiders and takes spider troops out of play](https://github.com/haterade22/TAOM/issues/1110)
-- **Status:** Closed at merge; the in-game checks above are owed (label `triage-needs-ingame`), and the two MCM strings wait for the translator (#763)
+- **Status:** Closed at merge; the in-game checks above are owed (label `triage-needs-ingame`)

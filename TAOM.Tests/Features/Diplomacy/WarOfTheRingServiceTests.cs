@@ -177,6 +177,47 @@ public class WarOfTheRingServiceTests
         Assert.IsFalse(_sut.ShouldBlockPeace("empire_w", "empire_s"));
     }
 
+    // #819: switching the War of the Ring off in MCM during Full War lifts the peace block.
+    [TestMethod]
+    public void ShouldBlockPeace_FullWarMcmToggleOff_ReturnsFalse()
+    {
+        _settingsProvider.IsAvailable.Returns(true);
+        _settingsProvider.WarOfTheRingEnabled.Returns(false);
+        _diplomacyService.GetRelationshipTier("empire_w", "empire_s").Returns(AllianceTier.Hostile);
+        CreateSut();
+        _sut.SetPhaseFromSave(WarPhase.FullWar);
+
+        Assert.IsFalse(_sut.ShouldBlockPeace("empire_w", "empire_s"));
+    }
+
+    [TestMethod]
+    public void ShouldBlockPeace_FullWarMcmToggleOnJsonOff_ReturnsTrue()
+    {
+        var config = CreateDefaultConfig();
+        config.Enabled = false;
+        _configProvider.LoadConfig().Returns(config);
+        _settingsProvider.IsAvailable.Returns(true);
+        _settingsProvider.WarOfTheRingEnabled.Returns(true);
+        _diplomacyService.GetRelationshipTier("empire_w", "empire_s").Returns(AllianceTier.Hostile);
+        CreateSut();
+        _sut.SetPhaseFromSave(WarPhase.FullWar);
+
+        Assert.IsTrue(_sut.ShouldBlockPeace("empire_w", "empire_s"));
+    }
+
+    [TestMethod]
+    public void ShouldBlockPeace_FullWarNoMcmJsonOff_ReturnsFalse()
+    {
+        var config = CreateDefaultConfig();
+        config.Enabled = false;
+        _configProvider.LoadConfig().Returns(config);
+        _diplomacyService.GetRelationshipTier("empire_w", "empire_s").Returns(AllianceTier.Hostile);
+        CreateSut();
+        _sut.SetPhaseFromSave(WarPhase.FullWar);
+
+        Assert.IsFalse(_sut.ShouldBlockPeace("empire_w", "empire_s"));
+    }
+
     [TestMethod]
     public void CheckPhaseTransition_Disabled_DoesNothing()
     {

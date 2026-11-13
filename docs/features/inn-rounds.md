@@ -146,7 +146,7 @@ The 30 rows are the 24 main cultures of `taom_spcultures.xml` and the six rename
 
 ## Translation
 
-The 12 language files hold English seed rows only. The paid translation is owed in backlog #763.
+The 12 language files hold translated rows (2026-11-12, #763).
 
 ## Changelog
 

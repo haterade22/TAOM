@@ -52,7 +52,7 @@ exception. `EnsureLoaded()` returns true on the stub `refasm-game` folder, so an
 `RequiresGame` removes a test only from the unit step, and `RequiresGameIL` only from the gate.
 
 Capture test totals, failures and skips. Empty discovery is not success. The
-Python tool tests (`/verify` Step 2b) treat fewer than 2,500 discovered tests as broken; record skips affecting the
+Python tool tests (`/verify` Step 2b) treat fewer than 6,500 discovered tests as broken; record skips affecting the
 assigned scope as incomplete evidence. The ModuleData validator can auto-skip
 engine-dependent checks without the game install: exit zero alone is insufficient.
 Review the validator's documented coverage limits before asserting correctness.

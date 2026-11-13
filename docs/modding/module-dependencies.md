@@ -842,11 +842,11 @@ Code: No code changes needed
 - **`diag.log` is append-only and never rotated**: 3,150,674 bytes on this machine.
   <!-- measured: ls -la "<game>/Modules/TAOM.Dependencies" 2026-09-05 -->
   It is the first file to read for any incident ([dr3-maintenance.md](../migration/dr3-maintenance.md) line 255).
-- **[dr3-maintenance.md](../migration/dr3-maintenance.md) line 236 still says the Foundation classes
-  came from BetaDeps "via clean-room rewrite".** The provenance register retracts that: the headers
-  say "Ports BetaDeps.Foundation.X", the derivation is `behavioural-port`, status `uncleared`
+- **The Foundation classes that came from BetaDeps are a behavioural port, not a clean-room rewrite.**
+  The headers say "Ports BetaDeps.Foundation.X", the derivation is `behavioural-port`, status `uncleared`
   ([provenance-register.md](../reference/provenance-register.md), its BetaDeps section). The shipped notice
-  uses the corrected wording (`Dependencies/_Module/THIRD-PARTY-LICENSES.txt:107-118`).
+  (`Dependencies/_Module/THIRD-PARTY-LICENSES.txt:107-118`) and
+  [dr3-maintenance.md](../migration/dr3-maintenance.md) (corrected 2026-11-12) use that wording.
 
 ## Numbers in this chapter
 

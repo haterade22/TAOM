@@ -35,9 +35,7 @@ public class LordTemplateRosterTests
 
     private static XslCompiledTransform LoadTransform()
     {
-        var transform = new XslCompiledTransform();
-        transform.Load(Path.Combine(ModuleData(), "lord_template_rosters.xslt"));
-        return transform;
+        return CompiledXslt.Get(Path.Combine(ModuleData(), "lord_template_rosters.xslt"), XsltLoadStyle.FrameworkDefaults);
     }
 
     private static XDocument Apply(XslCompiledTransform transform, XDocument input)

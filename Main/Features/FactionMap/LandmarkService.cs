@@ -13,11 +13,7 @@ public class LandmarkService : ILandmarkService
         _landmarks = BuildLandmarks();
     }
 
-    public IReadOnlyList<LandmarkDef> GetAllLandmarks() => _landmarks;
-
     public IEnumerable<LandmarkDef> GetCapitals() => _landmarks.Where(l => l.Type == LandmarkType.Capital);
-
-    public IEnumerable<LandmarkDef> GetByFaction(int factionId) => _landmarks.Where(l => l.FactionId == factionId);
 
     private static List<LandmarkDef> BuildLandmarks() => new List<LandmarkDef>
     {

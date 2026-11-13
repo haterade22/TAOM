@@ -391,6 +391,7 @@ Ring](war-of-the-ring.md) feature. Register saveables in the same `726900801` se
 | `Main/Features/LotrIssues/LotrIssuesCampaignBehavior.cs` | thin behavior: one `OnCheckForIssueEvent` listener → `AddPotentialIssueData` with def-carrying `RelatedObject` |
 | `Main/Features/LotrIssues/ILotrIssueService.cs` / `LotrIssueService.cs` | pure: eligibility, count/reward math, reward application |
 | `Main/Features/LotrIssues/Templates/{DeliverGoods,DeliverPersonnel,Combat}LotrIssue.cs` | the 3 generic mechanic `IssueBase` + paired `QuestBase` classes |
+| `Main/Features/LotrIssues/LotrIssueTemplateRules.cs` | rules the 3 templates share: the frequency map (the behavior's too) and the relation floor for taking a quest (-10 with no definition); static, so no class enters the IssueBase hierarchy (save ids) |
 | `Main/Features/LotrIssues/LotrIssueConfigProvider.cs` | validating XML loader (skips-invalid-and-warns, `FiniteFloatValidator`) |
 | `Main/Features/LotrIssues/LotrIssueSuppression.cs` | `RemoveBehaviors<T>` of all 43 vanilla issue behaviors + suppression-list test |
 | `Main/Features/LotrIssues/LotrIssueSaveableTypeDefiner.cs` | save registration (base `726900801`, localIds 101–106) |
@@ -398,7 +399,7 @@ Ring](war-of-the-ring.md) feature. Register saveables in the same `726900801` se
 | `Main/Adapters/{ILotrIssueGiverAdapter,ILotrIssueRewardAdapter}.cs` (+impls) | sealed-type boundary (ADR-007) |
 | `Main/_Module/ModuleData/lotr_issues/taom_lotr_issues.xml` | the 82 issue configs (flavor, cultures, rewards, counts) |
 | `Main/_Module/ModuleData/taom_lotr_issue_strings.xml` | 327 localization keys (English source-of-truth) |
-| `TAOM.Tests/Features/LotrIssues/*` | config-provider + service + suppression tests (84 `[TestMethod]` methods, plus two data-driven ones) |
+| `TAOM.Tests/Features/LotrIssues/*` | config-provider, service, suppression, template-invariant and template-rules tests (87 `[TestMethod]` methods, plus five data-driven ones) |
 
 ## Migrated notes (from CLAUDE.md, 2026-07-12)
 

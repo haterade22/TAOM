@@ -287,6 +287,33 @@ public static class PatchShieldPolicy
         return set.ToList();
     }
 
+    /// <summary>
+    /// The owners the rescue strip acts on for one method: every owner with at least one prefix,
+    /// postfix or transpiler there, once each (case-insensitive), blanks dropped. Finalizers are
+    /// never stripped and are not passed, so an owner whose only patch there is a finalizer is not
+    /// logged or counted as unpatched (#726).
+    /// </summary>
+    public static IReadOnlyCollection<string> OwnersToStrip(
+        IEnumerable<string?>? prefixOwners,
+        IEnumerable<string?>? postfixOwners,
+        IEnumerable<string?>? transpilerOwners)
+    {
+        var owners = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        AddOwners(owners, prefixOwners);
+        AddOwners(owners, postfixOwners);
+        AddOwners(owners, transpilerOwners);
+        return owners;
+    }
+
+    private static void AddOwners(HashSet<string> owners, IEnumerable<string?>? source)
+    {
+        if (source == null) return;
+        foreach (var owner in source)
+        {
+            if (!string.IsNullOrEmpty(owner)) owners.Add(owner!);
+        }
+    }
+
     /// <summary>Case-insensitive prefix match of a Harmony owner id against the allowlist.</summary>
     public static bool IsProtectedOwner(string? owner, IEnumerable<string> protectedPrefixes)
     {

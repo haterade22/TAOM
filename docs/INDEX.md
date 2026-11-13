@@ -5,6 +5,10 @@
 rules; this index maps the persistent knowledge. `CLAUDE.md` is Claude's adapter
 to the shared instructions and its client-specific workflows.
 
+Search this file (`grep -n -i <term> docs/INDEX.md`); do not read it whole. It is a curated topical
+map, not a complete list: [feature-map.md](reference/feature-map.md) and `ls docs/features` name
+every feature.
+
 ## Quickstart paths
 
 For any AI client, start with [AGENTS.md](../AGENTS.md) and the
@@ -16,17 +20,18 @@ Codex, Claude, Kimi and other models use the same policy and evidence records.
 | Starting a Codex session | [Codex operating guide](ai-includes/codex-operating-guide.md): instruction discovery, five workflow skills, tools, checks and paid-dispatch boundaries |
 | A fresh Claude session orienting itself | [CLAUDE.md](../CLAUDE.md) → this file → relevant topical section below |
 | Looking for one feature's canonical docs | The "By major system" section below, or directly [docs/features/<name>.md](features/) |
-| Debugging a regression | [reviews/](reviews/) (search for `rca-<feature>-<date>.md`), then auto-memory `feedback_<symptom>.md` files |
+| Debugging a regression | [reviews/](reviews/) (search for `rca-<feature>-<date>.md`), then the subsystem's lessons file: `grep -n '^### ' docs/reviews/lessons/<category>.md` ([index](reviews/LESSONS-LEARNED.md)) |
 | Authoring a new feature module | [ai-includes/architecture.md](ai-includes/architecture.md) + [ADR-002](adrs/002-thin-entry-points.md) + [ADR-007](adrs/007-adapter-pattern.md), then pick the nearest existing feature doc as a template |
 | Authoring a new culture's armor + troops end-to-end | [ai-includes/new-culture-authoring.md](ai-includes/new-culture-authoring.md) |
 | Adding or fixing lord skills + traits (any culture) | [ai-includes/lord-skills-authoring.md](ai-includes/lord-skills-authoring.md) |
 | Briefing an artist's AI assistant before it edits troops, armour or weapons | [ai-includes/artist-ladder-brief.md](ai-includes/artist-ladder-brief.md): the armour, weapon and ranged ladders, and the gates to run |
 | Adding a rideable creature mount end-to-end (assets → XML → C# → validation) | [ai-includes/creature-mount-authoring.md](ai-includes/creature-mount-authoring.md): elephant+spider-distilled; the 1.4.6 lookup-hardening rules + 18-gotcha index. A **reskin of a vanilla skeleton skips Phases 1 to 5 entirely** (no new rig, no usage sets; at most an `as_horse` child set and a clip for its own attack): worked example [features/war-ram.md](features/war-ram.md) |
 | Bringing a bought quadruped pack (Fab, own rig, own clips) in as a horse-skeleton mount with its own animation | [ai-includes/quadruped-pack-to-horse-skeleton-workflow.md](ai-includes/quadruped-pack-to-horse-skeleton-workflow.md): the 13 stages from Fab to battle, who runs each, its tool and gate, and the gotchas the Animalia elk and moose hit (#646) and the WildMesh3D pack added (#794: `.blend` sources, in-place clips, broken vendor gaits) |
+| Working on a mesh in Blender, or checking one before the Modding Kit | [Blender asset gates](features/blender-asset-gates.md): the `/blender-asset` skill (live-session rules, which workflow owns which task), the pre-export check and the culled views |
 | Quad-remeshing or retopologizing a Blender mesh | [Required quad toolkit selection](features/cube-map-remesh.md#required-workflow-selection): independent cube-map for eligible meshes, otherwise the licensed Exoside bridge |
 | Authoring dwarf, elf, or other hair and beards | [Independent hair engine](features/independent-hair-engine.md): generation, grooming, baking, rigging, presets, TAOM weight and UV gates, previews, LODs, and Kit handoff. The optional upstream route is [Hair Tool workflow](features/hair-tool-workflow.md) |
 | Researching a TaleWorlds API before editing | [ai-includes/taleworlds-research-guide.md](ai-includes/taleworlds-research-guide.md) + `pwsh tools/taom-src.ps1 path <Type>` |
-| **Editing the mod data without writing C#** (balancing, adding or removing troops, armour, weapons, lords, cultures, kingdoms, settlements) | [modding/README.md](modding/README.md) and its 38 chapters |
+| **Editing the mod data without writing C#** (balancing, adding or removing troops, armour, weapons, lords, cultures, kingdoms, settlements) | [modding/README.md](modding/README.md) and its chapters |
 | Adding text the player will read | [localization/TRANSLATOR_GUIDE.md](localization/TRANSLATOR_GUIDE.md) + [features/localization.md](features/localization.md) |
 | Closing out a feature (build, review, authorized publication) | [Shared workflow](../.ai/README.md) + [verification](../.ai/verification.md); Claude-specific commands remain in [completion-workflow.md](ai-includes/completion-workflow.md) |
 | Checking what was scored on each Codex review | [reviews/REVIEW-LOG.md](reviews/REVIEW-LOG.md) |
@@ -272,6 +277,7 @@ TAOM ships no multiplayer of its own; these cover behaving correctly when a thir
 - [reference/unattended-game-runs.md](reference/unattended-game-runs.md): the standing runbook for starting Bannerlord with nobody at the keyboard (maintainer's decision, 2026-11-01: no `Bannerlord.exe` running and 10 minutes without input, else ask once). Why headless is not possible, the launch recipe and every game-side file it touches, the in-game driver contract, how to judge a run, the costs, and what ArmorySim taught; the skill is `/game-run`, the launcher `tools/run_fords_autorun.py`
 - **Claude-config security auditor:** `tools/audit_claude_config.py` (behind `/security-scan`): scans `.claude/`, `.mcp.json`, `settings*.json`, `CLAUDE.md` for secrets / over-broad permissions / hook-exfil / MCP risk / prompt-injection, plus SkillSpector-derived skill-threat categories + Python-AST + clean-room YARA. Run on TAOM's own config before `/ship` or after a hook/permission/MCP change. `--external` vets a foreign tree whole, `--user` this machine's user scope and installed plugins; exit 3 (UNCHECKED) means nothing was scanned; run `--root <repo> --external` (full severity) to vet a FOREIGN skill BEFORE adopting it via `/adopt-external`. Adoption review: [adopt-skillspector](reviews/adopt-skillspector-2026-06-22.md).
 - [reference/module-backup-sweep.md](reference/module-backup-sweep.md): getting backup sidecars out of what ships (`.bak` breaks the Cloudflare distribution). `tools/sweep_module_backups.ps1` moves them to a dated quarantine with a SHA256 manifest rather than deleting, because `LOTRLOME_Armory` and `TAOM_Map` are untracked and the sidecars are their only rollback. Two traps it encodes: a bare `*.bak` glob matched 18 of 658 files (the dated `.bak-<topic>` suffixes dominate), and a sidecar whose live sibling is gone is a **sole copy**, not a backup. Gated by `/release` Phase 2. The 2026-09-01 run moved 781 files, 937 MB
+- [blender-asset-gates](features/blender-asset-gates.md): one pre-export mesh check with a verdict, six views with back faces culled, the `/blender-asset` skill, and the reference analysis template
 - [cube-map-remesh](features/cube-map-remesh.md): independent quad-remeshing baseline for closed, manifold, star-shaped meshes, with welded topology, source projection, material assignment, quality metrics, and Blender verification
 - [quad-remesher-job](features/quad-remesher-job.md): licensed Exoside process bridge with fixed-path serialization, preservation, artifacts, and headless Blender operation
 - [quad-remesher-engine](research/quad-remesher-engine.md): active reverse engineering of Exoside's native remeshing pipeline, with the confirmed call graph, vector-field and mixed-integer UV solver structure, an independent implementation plan, and the remaining unknowns

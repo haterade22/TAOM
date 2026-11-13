@@ -136,7 +136,7 @@ A hero of age shows "Lvl: {LEVEL}, Skills:" as the skills heading instead of van
 The filters, the layout and the header are per-peer UI: they change no campaign behavior and save nothing, so there is no gate (see "Deliberately NOT gated" in [coop-interop.md](coop-interop.md)). The Patch119 postfix skips nothing and writes no campaign state.
 
 ### Translation
-The 15 `taom_ency_*` rows in `taom_module_strings.xml` are seeded in English (the race filter label, the 8 race items, the 5 stage labels and the level header). The paid translation run is owed as a backlog issue.
+The 15 `taom_ency_*` rows in `taom_module_strings.xml` (the race filter label, the 8 race items, the 5 stage labels and the level header) were seeded in English and are translated in all 12 languages (2026-11-12, #763).
 
 ### In-game checklist
 Not yet checked in game.

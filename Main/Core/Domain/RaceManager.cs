@@ -90,18 +90,6 @@ public class RaceManager : IRaceManager
         return _orderedRaceNames!;
     }
 
-    public List<int> GetAllRaceIds()
-    {
-        EnsureInitialized();
-        return new List<int>(_idToName!.Keys);
-    }
-
-    public List<string> GetAllRaceNames()
-    {
-        EnsureInitialized();
-        return new List<string>(_idToName!.Values);
-    }
-
     public bool IsValidRaceName(string name)
     {
         EnsureInitialized();

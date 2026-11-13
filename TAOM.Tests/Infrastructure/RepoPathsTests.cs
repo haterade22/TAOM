@@ -125,4 +125,88 @@ public class RepoPathsTests
         Assert.ThrowsException<FileNotFoundException>(
             () => RepoPaths.MentionsOutsideComments(missing, "X"));
     }
+
+    [TestMethod]
+    public void Text_CodeRootFile_ReturnsOneCachedInstance()
+    {
+        var path = RepoPaths.RepoPath("Main", "SubModule.cs");
+
+        var first = RepoPaths.Text(path);
+
+        Assert.AreEqual(File.ReadAllText(path), first);
+        Assert.AreSame(first, RepoPaths.Text(path), "a code-root .cs file is read once per test run");
+    }
+
+    [TestMethod]
+    public void Text_EitherSeparator_ReturnsTheSameCachedInstance()
+    {
+        var path = RepoPaths.RepoPath("Client", "ClientSubModule.cs");
+
+        Assert.AreSame(RepoPaths.Text(path), RepoPaths.Text(path.Replace('\\', '/')));
+    }
+
+    // A tracked .cs file outside the four roots and outside obj and bin: only the root check keeps it
+    // out of the cache, so each call reads the disk and returns a new string.
+    [TestMethod]
+    public void Text_TrackedFileOutsideTheCorpusRoots_IsNotCached()
+    {
+        var path = RepoPaths.RepoPath("TAOM.Tests", "Infrastructure", "RepoPathsTests.cs");
+
+        Assert.AreNotSame(RepoPaths.Text(path), RepoPaths.Text(path), "only Main, Client, Dependencies and CoopCompat are cached");
+    }
+
+    // A tracked non-.cs file under a corpus root and outside obj and bin: only the .cs check keeps it out
+    // of the cache, so each call reads the disk and returns a new string. ReadSource callers read this file.
+    [TestMethod]
+    public void Text_TrackedNonCsFileUnderACorpusRoot_IsNotCached()
+    {
+        var path = RepoPaths.RepoPath("Main", "_Module", "SubModule.xml");
+
+        Assert.AreNotSame(RepoPaths.Text(path), RepoPaths.Text(path), "only .cs files are cached");
+    }
+
+    // A .cs name under bin, written during the test: the bin segment and the root check both keep it out.
+    [TestMethod]
+    public void Text_CsFileUnderBin_IsReadFreshEveryCall()
+    {
+        var probe = RepoPaths.RepoPath("TAOM.Tests", "bin", "repopaths-text-probe.cs");
+        Directory.CreateDirectory(Path.GetDirectoryName(probe)!);
+        try
+        {
+            File.WriteAllText(probe, "first");
+            Assert.AreEqual("first", RepoPaths.Text(probe));
+            File.WriteAllText(probe, "second");
+            Assert.AreEqual("second", RepoPaths.Text(probe), "a .cs file under bin is not cached");
+        }
+        finally
+        {
+            File.Delete(probe);
+        }
+    }
+
+    [TestMethod]
+    public void CSharpFiles_KeepsTheCallersRootOrderAndTheDirectoryWalkOrder()
+    {
+        var repoDir = RepoPaths.RepoPath();
+        foreach (var roots in new[] { new[] { "Main", "Client" }, new[] { "Client", "Main" } })
+        {
+            var walked = roots
+                .SelectMany(r => Directory.EnumerateFiles(RepoPaths.RepoPath(r), "*.cs", SearchOption.AllDirectories))
+                .Where(f => !f.Substring(repoDir.Length).Split('\\', '/').Any(s => s == "obj" || s == "bin"))
+                .ToList();
+
+            CollectionAssert.AreEqual(walked, RepoPaths.CSharpFiles(roots).ToList(), string.Join(",", roots) + ": first call");
+            CollectionAssert.AreEqual(walked, RepoPaths.CSharpFiles(roots).ToList(), string.Join(",", roots) + ": second call");
+        }
+    }
+
+    [TestMethod]
+    public void MentionsOutsideComments_MissingCodeRootFile_Throws()
+    {
+        var missing = RepoPaths.RepoPath("Main", "NoSuchFile_Plan046.cs");
+
+        Assert.ThrowsException<FileNotFoundException>(() => RepoPaths.MentionsOutsideComments(missing, "X"));
+        Assert.ThrowsException<FileNotFoundException>(() => RepoPaths.MentionsOutsideComments(missing, "X"),
+            "a failed read must cache nothing");
+    }
 }

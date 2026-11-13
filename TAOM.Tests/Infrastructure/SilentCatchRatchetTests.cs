@@ -39,7 +39,7 @@ public class SilentCatchRatchetTests
         foreach (var file in RepoPaths.CSharpFiles())
         {
             var rel = file.Substring(repoDir.Length).TrimStart('\\', '/').Replace('\\', '/');
-            var text = File.ReadAllText(file).Replace("\r\n", "\n");
+            var text = RepoPaths.Text(file).Replace("\r\n", "\n");
             if (!SilentCatchScan.IsSelected(rel, text))
                 continue;
 

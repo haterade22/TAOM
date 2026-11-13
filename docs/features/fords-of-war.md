@@ -24,7 +24,7 @@ Mike parked the mode on 2026-11-10 to work on other features. Everything below i
 - **Stability:** one crash in round 5, at a new site after the match had ended (see Known limitations, "A crash at `+0x565D8D`"). No `0x6B716E` in 98 runs since its fix.
 - **Owed in game, by a person:** soldier control (key P: the feel, target lock, the pick on a slope), the result panel, a provoked failed start (check 15), the tower rock's look and sound, a camp's ring, spears against cavalry in a real fight, archers in a shield wall, and whether a fading mumakil's crew reach the ground. Each has its entry below.
 - **Raised with Mike in chat and not written up elsewhere:** the height at which the mumakil crew stand; a lane on Seize in lane 1 that stood under tower fire short of capture point 0; the trait lines that say 150 and 50 troops where the caps are 120 and 48 (balance-log.md, "Troop caps in trait text"); the AI regroup constants (1.6, 1.1, 10 units, 40 m, a hero as 250), which no round has tuned; and 252 run folders under `E:/Temp/fords-runs` found deleted on 2026-11-07, which only a shadow copy or an undelete tool could bring back.
-- **Translations:** every `TAOM_FOW_` text is English in the 12 languages until the backlog of issue #763 runs.
+- **Translations:** every `TAOM_FOW_` text is translated in all 12 languages (2026-11-12, #763).
 
 **To resume:** read the balance log's round 5 record, apply the round 6 proposals in one change, build, and play a full round robin (How to tune or extend, "Run a round robin"). To finish round 5 instead, make a detached worktree at `fcc7c39c8` and play the three pairs that `python tools/fords_round_robin.py todo --build fcc7c39c8` lists.
 
@@ -314,7 +314,7 @@ layout code stays, with its tests, for a map added later (see "Add a map"). On `
 no verdict: `[Ground] units=<n> aboveTerrain=min/med/max belowNav=min/med/max offNavMoves=<n>` (how high units stand over the
 terrain and under the navmesh) and one `[Lane] faces <stream> own= shared= foreign= top= off= foot= mounted=` line per stream
 (unit-seconds by navigation face group: 0 shared, lane n is group n + 1, 4 tower tops). The German to Turkish names of the
-new map are English seeds until the Fords translations owed to #763 are run. Tower and keep prefab `siege_barricade_a`, scale 1.0 and 1.6 (the 1.6
+new map are translated (2026-11-12, #763). Tower and keep prefab `siege_barricade_a`, scale 1.0 and 1.6 (the 1.6
 is a placeholder, not measured). Neutral camp default: 2 `fow_hill_troll` for a reward of 250.
 
 **Factions** (offers / heroes with price):
@@ -882,7 +882,7 @@ checks below name log lines.
     N x (1 + 0.0006 x the gunner's Throwing skill) hit points. Armour, a leg hit, a non-human body and
     race damage reductions lower it; a head or neck hit doubles it; the impact speed scales it by
     (relative impact speed / launch speed) squared, so an attacker walking into the volley takes more.
-    Check also that no warning says the reach is below the fire range. Report: `check=11` (item N and S, reach against fire range, per-hit magnitude against N x multiplier x (impact speed / S) squared). The `hits` part also FAILs when the towers asked to fire at least 10 times and not one missile was added (`launched` counts missiles the adapter added, 0 when the aim skipped them all), and when 20 or more missiles flew and no hit was seen; the row prints the hits it filtered out, by reason. The hit reader takes engine structs, so only your run proves it.
+    Check also that no warning says the reach is below the fire range. Report: `check=11` (item N and S, reach against fire range, per-hit magnitude against N x multiplier x (impact speed / S) squared). The `hits` part also FAILs when the towers asked to fire at least 10 times and not one missile was added (`launched` counts missiles the adapter added, 0 when the aim skipped them all), and when 400 or more missiles flew and no hit was seen (#1152: tower missiles hit only 4 to 18 percent of the time, so a 120 second smoke, with 12 to 52 missiles, reports `hits` NOT_SEEN); the row prints the hits it filtered out, by reason. The hit reader takes engine structs, so only your run proves it.
 12. Since 2026-11-07 no warg rages in a match (Mike: "it is not needed for this"; `WargTryToGoRage` starts none in Fords), so
     this row reads NOT SEEN on every run, and a `started=` count above 0 FAILs it: the gate broke. Before that: field a Mordor or
     Isengard warg rider (`warg_raiders`, `warg_enforcers`) and watch a raging warg: it returns to its lane formation instead of
@@ -982,7 +982,11 @@ or the setup flow, registered in `taom_module_strings.xml` and seeded in English
   fitter was rewritten, and the planner limits (10% dropped, 30 m tower move, 5% bad segments) are untested in game.
 - **Check 9 is resolved.** The unattended 600 s match `20261031-220826` (East AI against a passive West) passed check 9 with 731
   native tower blows, which answers build-spec open question 3: melee AI does damage the barricade. The earlier FAIL (the 16:54
-  match, 1,030 unit-seconds near a tower and no blow) came before the lane rules were rewritten.
+  match, 1,030 unit-seconds near a tower and no blow) came before the lane rules were rewritten. A run under 600 live seconds
+  judges `melee` only once an `AttackTower` order is 30 mission seconds old at the run's end, and reports NOT_SEEN before that
+  (#1137): the waves first meet near the outer towers and fight each other, the 120 s smoke runs `20261110-154302` and
+  `20261112-235217` collected 49.1 and 54.1 unit-seconds near a tower with no strike ordered, and in longer runs the first order
+  came at live second 108.6 and 112.1. A full-length run still fails with no blow, ordered or not.
 - **The first AI matches saw no tower fall.** In `20261031-222418` and `20261031-225939` (1800 s, both
   sides AI) no tower fell and no keep fell. On that generated map, gunners on the ground absorbed a share of the melee blows
   (`GunnerBlowsMelee`); every report since they moved to the tower tops on 2026-11-02 records 0. Most melee blows on a tower do zero raw damage (`RawZero`; read `meleeRaw` in the check 9

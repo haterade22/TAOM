@@ -9,7 +9,7 @@ internal sealed class MarshalSettingsProvider : IMarshalSettingsProvider
     internal const bool DefaultEnabled = true;
     internal const bool DefaultKeepArray = true;
     internal const bool DefaultArriveTogether = true;
-    internal const bool DefaultOutlines = true;
+    internal const bool DefaultOutlines = false;
     internal const bool DefaultHollowSquare = true;
     internal const bool DefaultSpacingRepair = true;
     internal const bool DefaultThrowersFirst = true;
@@ -28,7 +28,7 @@ internal sealed class MarshalSettingsProvider : IMarshalSettingsProvider
 
     public bool ArriveTogether => Settings?.MarshalArriveTogether ?? DefaultArriveTogether;
 
-    public bool Outlines => Settings?.MarshalOutlines ?? DefaultOutlines;
+    public bool Outlines => Settings?.MarshalShowOutlines ?? DefaultOutlines;
 
     public bool HollowSquare => Settings?.MarshalHollowSquare ?? DefaultHollowSquare;
 

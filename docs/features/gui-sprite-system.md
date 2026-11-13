@@ -238,7 +238,7 @@ internal class MyPrefab : PrefabExtensionInsertPatch
 
 ### Prefab: `CareerScreen.xml`
 
-The diamond grid of #388, not the earlier expandable pip panels. The prefab declares two visual definitions, `CareerHeaderSlide` and `CareerFooterSlide` (the title bar and the Done button slide in); there is no `ExtendablePanel`, and no prefab binds `IsExpanded`, `IsLocked` or `ExecuteToggleExpand` on the group VM.
+The diamond grid of #388, not the earlier expandable pip panels. The prefab declares two visual definitions, `CareerHeaderSlide` and `CareerFooterSlide` (the title bar and the Done button slide in); there is no `ExtendablePanel`, and no prefab binds `IsLocked` on the group VM.
 
 **Layout** (normal mode; one fixed-width 1720 column, centred):
 ```
@@ -301,7 +301,7 @@ CareerScreenVM
 └── ExecuteClose()
 ```
 
-`@IsForkLocked` is true only for an untaken choice refused with `ForkFull`; the other lock reasons dim the diamond through `@IsUnavailable` and speak through `@LockReasonText`. Exposed by the VMs but bound by no prefab: `AbilityLabel` and the int `FreeCareerPoints` on the screen VM, `Name`, `KeystoneIconSprite` and `HasKeystoneIcon` on the choice, and `IsExpanded`, `IsLocked`, `Tier` on the group.
+`@IsForkLocked` is true only for an untaken choice refused with `ForkFull`; the other lock reasons dim the diamond through `@IsUnavailable` and speak through `@LockReasonText`. Exposed by the VMs but bound by no prefab: `AbilityLabel` and the int `FreeCareerPoints` on the screen VM, `Name`, `KeystoneIconSprite` and `HasKeystoneIcon` on the choice, and `IsLocked` and `Tier` on the group.
 
 ### Career Button on Character Developer
 
@@ -368,7 +368,7 @@ The 3 completed resource icons (gems, caster, marks) are in `SpriteParts/ui_taom
 | `Main/_Module/GUI/TAOMSpriteData.xml` | Sprite category declaration |
 | `Main/Features/CareerSystem/UI/GauntletCareerScreen.cs` | Screen creation + lifecycle |
 | `Main/Features/CareerSystem/UI/CareerScreenVM.cs` | Career screen ViewModel (root) |
-| `Main/Features/CareerSystem/UI/CareerChoiceGroupObjectVM.cs` | Choice group VM (group name and its choices; its expand state is bound by no prefab) |
+| `Main/Features/CareerSystem/UI/CareerChoiceGroupObjectVM.cs` | Choice group VM (group name, tier, lock state and its choices) |
 | `Main/Features/CareerSystem/UI/CareerChoiceObjectVM.cs` | Individual choice VM (taken, free, unavailable, fork-locked state and the lock-reason line) |
 | `Client/Features/CareerSystem/UI/TaomCareerDiamondWidget.cs` | The diamond widget: glow, tooltip and keystone tint |
 | `Main/Features/CareerSystem/UI/CareerEffectDisplayMap.cs` | Diamond icon, label and Active Effects line format per effect type |

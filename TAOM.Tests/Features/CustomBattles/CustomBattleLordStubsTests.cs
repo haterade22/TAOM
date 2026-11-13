@@ -61,8 +61,7 @@ public class CustomBattleLordStubsTests
     [TestMethod]
     public void EveryStub_IsRebuiltByLordsXslt_IntoAFullCharacter()
     {
-        var transform = new XslCompiledTransform();
-        transform.Load(Path.Combine(ModuleData(), "lords.xslt"));
+        var transform = CompiledXslt.Get(Path.Combine(ModuleData(), "lords.xslt"), XsltLoadStyle.FrameworkDefaults);
         var output = new XDocument();
         using (var writer = output.CreateWriter())
             transform.Transform(StubFile().CreateReader(), null, writer);

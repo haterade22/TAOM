@@ -6,6 +6,7 @@ Running scorecard. Numbers are not unique keys; rows since 2026-09-24 carry "(at
 
 | # | Date | Feature | Codex Verdict | Claude Verdict | Real Bugs | False Positives | Missed Bugs | Prompt Version |
 |---|------|---------|--------------|----------------|-----------|-----------------|-------------|----------------|
+| (at merge) | 2026-11-13 | Plan 051 (#1132): tools dead scripts, the README game-dir section, the translator's sibling-parse hoist and the shared docs-graph build, `664f19c5b..ee81570a3` | not run | agree (all five lens items confirmed and fixed) | 5 LOW | 0 | none known | two-lens deep review (Data flow, Tooling); RCA `rca-tools-dead-scripts-and-test-speed-2026-11-13.md` |
 | (at merge) | 2026-11-10 | War Pledge Slice 1 (#1113): adversarial pass on the landed commit `65189fc49`, then a pass on its fixes | issues-found (`ultra`: 0 P1, 1 P2, 1 P3, 11 coverage gaps, 6 of 8 suspects disputed with evidence; `high` on the fixes: 0 P1, 0 P2, 2 P3) | agree (all confirmed and fixed; the P2 rated LOW: console only, victory off by default; one design item is a follow-up for Slice 2) | 4 LOW (one is a regression of the first fix), plus 2 coverage rows | 0 | 0 | gpt-6-astra, ultra then high; RCA `rca-war-pledge-2026-11-10.md`, rows 14 to 19 |
 | (at merge) | 2026-11-09 | Supply Lines caravan meeting menu and failed-join stay branch (#1104, #1099), commit `218f4ee31` | issues-found (0 CRITICAL, 0 HIGH, 0 MEDIUM, 2 LOW, 5 LOW observations; the defect suspects disputed on the ordinary paths) | agree (5 confirmed and fixed, 2 left open with no known producer) | 5 | 0 | 0 | gpt-6-astra, ultra, read-only sandbox; RCA `rca-supply-caravan-meeting-2026-11-09.md` |
 | (at merge) | 2026-11-01 | Fords of War: the night batch `d4fb51a50..c2c3a6f28` (review A) and the whole feature at `c2c3a6f28` (review B), on `E:/repos/taom-fords-of-war` | issues-found (A: 0 CRITICAL, 0 HIGH, 2 MEDIUM; B: 0 CRITICAL, 0 HIGH, 3 MEDIUM; 23 and 34 suspects disputed with evidence) | agree (all five confirmed and fixed; review A's remedy for F1 corrected, because Bannerlord exits -1 after a normal quit) | 5 | 0 | 0 (the F1 remedy error was Claude's, caught against in-game runs Codex could not see) | gpt-6-astra, ultra; RCA `rca-fords-of-war-2026-10-31.md` |
@@ -5654,3 +5655,87 @@ Scope: review A covered the night batch `d4fb51a50..c2c3a6f28` (unattended game 
 | 19 | Decisions of the two fixes with no test | Other: coverage | The fix tests stopped at the service that changed | A handler test with the real services, the threshold peace, the analyzer cases |
 
 - **In-game:** nothing was run. The owed checks are in `tools/ingame_checks/1113.toml`.
+
+## Review (plan 047, number assigned at merge): fold three behaviour-identical twins, 2-lens deep review, Codex not run (2026-11-13)
+
+- **Scope:** branch `improve/047-fold-safe-twins`, `664f19c5b..911373c9e`: `LotrIssueTemplateRules` (the frequency map and the relation floor shared by the three LotrIssue templates and `LotrIssuesCampaignBehavior`), `CultureStageViewType` (the one type probe for the three CultureStageView patches), and `SupplyRowVM` with `ForGood` and `ForTroop` (replacing `SupplyGoodRowVM` and `SupplyTroopRowVM`).
+- **Claude:** lenses 2 (Engine compatibility) and 5 (Data flow); the review lead verified every finding in the worktree: 3 confirmed (0 HIGH, 0 MEDIUM, 3 LOW), 0 false positives, all fixed. Behaviour parity held on every orchestrator question: the relation compare is the same `int` widened to `float`, the at-war test stays behind `CurrentSettlement != null`, no class enters the `IssueBase` hierarchy, each patch keeps `Prepare`, `TargetMethod` and `_hook`, and one row type binds both prefab item templates. LOW: two new comments stated a build or gate fact the code contradicts (both drafted by the plan), and the fold removed the compile-time split between goods and troop rows with no test to replace it. The two new screen tests were RED under mutants of the three factory call sites.
+- **Codex:** not run (out of usage; a paid call needs the maintainer's word).
+- **Final suite:** `Passed!  - Failed: 0, Passed: 39268, Skipped: 9, Total: 39277` (base 39266 passed, 39275 total, plus the two new tests).
+
+| # | Bug | Category | Why Missed | Preventive Action |
+|---|---|---|---|---|
+| 1 | Probe comment said TAOM cannot reference SandBox.GauntletUI at compile time | Doc claim against the build | Plan text copied after a code-only parity check; repeat of the #737 moved-comment lesson | Comment corrected; adapters lesson |
+| 2 | Test comment said the binding gate proves both names resolve | Doc claim against a gate | Same source; the gate's failing branch was not read | Comment corrected; same lesson |
+| 3 | Goods and troop rows share one type with no label test on the screen | Test coverage of a removed guard | The fold tested each factory alone, the screen tests read `ItemId` only | Two screen tests, RED under two mutants |
+
+Report `docs/reviews/deep-review-047-fold-safe-twins-2026-11-13.md`; RCA `docs/reviews/rca-fold-safe-twins-2026-11-13.md`. No convergence pass was launched by the lead (it cannot spawn agents). In-game: nothing was run; another session held the game install.
+
+## Review (number assigned at merge): messenger arrival classification (plan 050, #1132), deep review Agents 2 and 5, Codex not run (2026-11-13)
+
+- **Scope:** `664f19c5b..0848c47e2` on `improve/050-messenger-arrival-classification`, then the review follow-up commit.
+- **Codex:** not run (out of usage); the two lens reports stand in for it.
+- **Confirmed:** 1 MED in `docs/reviews/rca-messenger-arrival-classification-2026-11-13.md`, fixed. 0 false positives. One optional design note not applied (the plan names the mirror enum). Report: `docs/reviews/deep-review-050-messenger-arrival-classification-2026-11-13.md`.
+
+| # | Bug | Category | Why missed | Preventive action |
+|---|-----|----------|-----------|-------------------|
+| 1 | The source pin did not assert the `playerAvailable` or map event argument that the commit's `Not-tested:` trailer said it held | Other: claim not backed by a test | The plan drafted the trailer and the pin apart and named different reads; the executor copied both | Two assertions, each proven by a mutation; lesson in `lessons/testing-qa.md` |
+
+- **Pre-existing, owed to the maintainer:** widen #1133 to non-wanderer Released and Traveling targets; a prisoner player's messenger to a partyless target is dropped as Confused (no issue yet).
+- **In-game:** nothing was run (the install was held by another session).
+
+## Review (number assigned at merge): plan 048, delete eight members nothing calls, deep review with the Data flow lens (2026-11-13)
+
+- **Scope:** branch `improve/048-delete-dead-members`, `664f19c5b..5e788732f` (11 files: eight members deleted from six files, three comment-only corrections, the entry point baseline row, one feature doc).
+- **Codex:** not run (out of usage; a paid call needs Mike's word).
+- **Confirmed:** 0. 0 false positives. Lens 5 traced 13 flows with no gap; the lead re-checked the engine call site of the weapon toggle and the Patch0 and Patch21 comment claims. Two pre-existing LOW items are recorded as follow-ups in `docs/reviews/deep-review-048-delete-dead-members-2026-11-13.md`. No RCA: nothing was confirmed.
+- **Suite:** `Passed!  - Failed:     0, Passed: 39250, Skipped:     9, Total: 39259`, equal to the base.
+- **In-game:** nothing was run, and the diff owes none.
+
+## Review (number assigned at merge): plan 049 refuge save-load repair unit (Refs #1132), tier-1 deep review (Lens 5, Lens 2), Codex not run (2026-11-13)
+
+- **Scope:** branch `improve/049-refuge-load-repair-unit`, diff `664f19c5b..9b783ca9a`: the new `Domain/RefugeBookRepair.cs`, the
+  shortened `RefugeService.LoadFrom`, and the new `RefugeBookRepairTests.cs`. A behaviour-preserving move; no save format change.
+- **Codex:** not run. Codex is out of usage and a paid call needs the maintainer's word; the lens rounds stand in for it.
+- **Lenses:** Data flow, 13 flows, 0 gaps; Engine compatibility, 10 verified, 0 incompatible, and 1 LOW. 0 false positives.
+- **Confirmed:** 1 row in `docs/reviews/rca-refuge-load-repair-unit-2026-11-13.md`, fixed. Four pre-existing items are listed as
+  follow-ups in `docs/reviews/deep-review-049-refuge-load-repair-unit-2026-11-13.md`.
+
+| # | Bug | Category | Why missed | Preventive action |
+|---|-----|----------|-----------|-------------------|
+| F1 | A new test comment said `CampaignTime.Never` is the one nonzero `CampaignTime` a test can build without a campaign; `operator -` builds another | Other: comment against engine source | The comment came word for word from the plan and was not re-derived | Comment narrowed to what holds: `Never` reads no tick static, and `Hours` and `Days` give `Zero` for every finite argument with no campaign (the first narrowing, "the only public factory", missed NaN and infinity, convergence round 1); lesson in `lessons/testing-qa.md` |
+
+- **In-game:** nothing was run; another session held the game install.
+
+## Review (number assigned at merge): test-suite read caches, plan 046 (#1132), deep review lead pass with no Codex (2026-11-13)
+
+- **Scope:** `664f19c5b..eb38f4009` on `improve/046-test-suite-read-caches`, test code under `TAOM.Tests` only.
+- **Codex:** not run (out of usage; a paid call needs the maintainer's word).
+- **Confirmed:** 2 LOW from Agent 5, both fixed: a probe comment that claimed to isolate the root check, and
+  public doc comments that did not say the results are cached. 0 false positives. Rows in
+  `docs/reviews/rca-test-suite-read-caches-2026-11-13.md`.
+
+| # | Bug | Category | Why missed | Preventive action |
+|---|-----|----------|-----------|-------------------|
+| 1 | The uncached-path probe tripped both the bin and the root clause, so neither had its own test | Other: test isolation | The mutation proof disabled the whole method | A read-only probe for the root clause, proven by a per-clause mutant; lesson in `lessons/testing-qa.md` |
+| 2 | The run-snapshot contract was only on a private field | Convention inconsistency | The contract went beside the data, not on the entry points | Doc comments on `CSharpFiles`, `ReadSource`, `MentionsOutsideComments` and the class |
+
+- **In-game:** not applicable (test code only).
+
+## Review (number assigned at merge): plan 051, tools dead scripts and test speed, deep review with two lenses, Codex not run (2026-11-13)
+
+- **Scope:** `664f19c5b..ee81570a3` on `improve/051-tools-dead-scripts-and-test-speed` (Refs #1132): three retired scripts deleted, the `tools/README.md` game-dir section rewritten around two `git grep` commands, the sibling-file parse of `translate_with_claude.py` hoisted in `discover_entries`, and one docs-graph build shared by two ratchet tests.
+- **Codex:** not run (out of usage); the orchestrator's convergence rounds stand in for it.
+- **Lenses:** Data flow and Tooling correctness. Both proved the hoist against the base code (276 shipped pairs, 0 mismatches; identical `SystemExit` on every malformed-file case) and the ratchet memo (every assertion still fails under a mutant). 0 HIGH, 0 MEDIUM, 5 LOW, all confirmed and fixed. 0 false positives.
+- **Report:** `docs/reviews/deep-review-051-tools-dead-scripts-and-test-speed-2026-11-13.md`; RCA `docs/reviews/rca-tools-dead-scripts-and-test-speed-2026-11-13.md`.
+
+| # | Bug | Category | Why missed | Preventive action |
+|---|-----|----------|-----------|-------------------|
+| F1 | The hoist's parity test compared two paths that both run the new collector | Other: test oracle shared with the code | The plan's oracle predated the refactor that rerouted the per-call path | Base-computed `EXPECTED` sets; lesson in `lessons/testing-qa.md` |
+| F2 | No test through `discover_entries`, the caller the hoist rewired | Other: coverage | The tests stopped at the helper that changed | Two synthetic-tree tests, red under an empty-siblings mutant; same lesson |
+| F3 | README "every one falls back" was false for `weapon_xml/config.py`; the inheritors and importer counts were misdescribed | Other: doc against a computed list | The counts were reproduced, the sentences quantifying over them were not | Prose re-scoped and the exception named; lesson in `lessons/build-tooling-workflow.md` |
+| F4 | A feature doc said the successor validator's run "ends" with PASS | Other: doc against output | Written from the source line, not a run | Reworded |
+| F5 | A redundant local `mock` import | Dead code | Ruff does not flag it | Deleted |
+
+- **Gate sweep:** the removed generator spec held 137 ids, of which the old gate refused 0; the deleted Gondor gate refuses 0 of 313 refs today. Only an `sk_gd_*` id defined outside `LOTRLOME_items/gondor/` passes now where it failed before (intended).
+- **In-game:** not applicable (tools and docs only).

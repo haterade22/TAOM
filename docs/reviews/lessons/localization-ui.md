@@ -1563,3 +1563,11 @@ Translating names that were English turned 157 BR and IT names into rows led by 
 - **Why missed:** I read the PASS line, not the count beside it (1,199 of 1,199, down from 1,265).
 - **Prevent:** after any translator run in BR or IT, run `python tools/generate_name_tags.py --list-undecided` and compare the tagged count with the count before the run. Settle each new "unknown first word" with a head noun, a proper prefix or a pin before the tags are applied.
 - **Source:** [rca-localization-pass-2026-11-12.md](../rca-localization-pass-2026-11-12.md), finding H2.
+
+### A key gate scoped by prefix misses every TAOM prefix it does not list (clan finance, 2026-11-12)
+
+The Realms feature declares 196 `{=realms_*}` keys in C#, and none has a language row. `harvest_literal_loc_keys.py` and `UnregisteredLocalizationKeyBaselineTests` match only `taom_`, so neither the harvest nor the gate saw them: players in the other 11 languages see English, and the suite is green.
+
+- **Why missed:** the prefix keeps vanilla ids out of the gate, and the Realms feature added a second TAOM prefix. Nothing compares the gate's list with the prefixes that C# uses.
+- **Prevent:** a new feature uses the `taom_` prefix for player text. When a gate selects keys by prefix, list the prefixes C# actually uses (`grep -rhoE '\{=[a-z]+_' --include=*.cs Main Client | sort | uniq -c`) and compare them with the gate's list.
+- **Source:** [rca-clan-finance-line-count-2026-11-12.md](../rca-clan-finance-line-count-2026-11-12.md), finding 1; #1130.

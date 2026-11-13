@@ -139,12 +139,11 @@ The trade-off: with the toggle off, you can't view stats remotely either. The cl
 
 ## Tests
 
-- `TAOM.Tests/Features/FiefManagement/FiefHubServiceTests.cs`: 27 tests:
+- `TAOM.Tests/Features/FiefManagement/FiefHubServiceTests.cs`: 25 tests:
   - `GetOrderedFiefs`: empty / sort (towns first) / alphabetical-within-class / null-skip
   - `Count`: empty / 3 fiefs
   - `Next/Previous`: empty / single / wraparound (fwd + reverse) / middle-step
   - `Clamp`: negative / beyond-count / empty
-  - `GetAt`: empty (null) / beyond-count (clamps to last)
   - `PlayerIsAt`: null / adapter true / adapter false
 
 - `TAOM.Tests/Features/FiefManagement/FiefHubOpenerTests.cs`: each guard in `GetAvailability` (toggle, map not clear, enlisted-attached, no fiefs, every other enlistment state stays available), the fixed guard order, that a busy map never reads the fief count, and `TryOpen` for all four outcomes plus debug logging.

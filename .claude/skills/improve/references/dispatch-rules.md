@@ -79,7 +79,11 @@ short: read git log and git status and continue from there, never reset.
    names come with the reason each is expected. A test filter that matches nothing proves nothing. If
    you add tests that touch engine types, also run the RefAsm unit step from .ai/verification.md (an
    engine-bound test without [TestCategory("RequiresGame")] fails the no-game replay). If you touch .claude/hooks
-   or tools/test_hooks.sh, run the hook suite (rule 4).
+   or tools/test_hooks.sh, run the hook suite (rule 4). Other agents build and test on this machine
+   at the same time, so a slow suite run is not a hang. For a type's callers, run
+   python tools/graphify_taom.py status --brief first and affected only when the graph is fresh;
+   otherwise use git grep -n -w "<Type>" and say so. Never run its refresh: it writes outside your
+   paths and can outlast rule 4's limit.
 8. TDD. Write the failing test first, run it and quote the failure, then implement and see it pass. A
    test is not done until it has failed against the code it guards.
 9. Protected and single-owner files. Never edit .claude/settings.json, .claude/settings.local.json,
@@ -89,8 +93,10 @@ short: read git log and git status and continue from there, never reset.
 10. Commit. Stage explicit paths only (never -A, -u or .). Subject
     '<type>(<scope>): <version> - <description>', at most 72 characters; body wrapped at 72 saying what
     changed and why, written for a reader of the release note (it is the changelog entry); no
-    Co-Authored-By or other AI attribution; a Not-tested: trailer for what cannot be tested. Write the
-    message to a file and run git commit -F "<file>". Never --no-verify. If a hook denies, read its reason
+    Co-Authored-By or other AI attribution; a Not-tested: trailer for what cannot be tested. The type
+    names what the commit changes, because the release note groups by it: test: for tests only, docs:
+    for docs and review records only, refactor: for code with the same behaviour, and fix: only for a
+    defect in shipped behaviour. Write the message to a file and run git commit -F "<file>". Never --no-verify. If a hook denies, read its reason
     and fix the cause if it is yours. For staged work, commit once per stage.
 11. Shared files. Do not edit CHANGELOG.md (generated at /release) or plans/README.md (the
     orchestrator's index). No GitHub issues, comments or labels. A lesson your prompt asks for goes at

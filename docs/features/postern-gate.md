@@ -130,7 +130,7 @@ The shared pipeline's files are listed in [taom-buildings.md](taom-buildings.md)
 - **Issue:** [#855](https://github.com/haterade22/TAOM/issues/855) Postern Gate: town and castle building cuts siege break-in losses ([#915](https://github.com/haterade22/TAOM/issues/915) was a
   duplicate, closed)
 - **Status:** Shipped on `bannerlord-1.5.x` in `8b015667f` (v2.0.35). Issue open: the in-game check and the editor bake
-  of the building icon are owed; the paid translation of its strings is tracked in [#931](https://github.com/haterade22/TAOM/issues/931).
+  of the building icon are owed; its strings are translated in all 12 languages (2026-11-12), tracked in [#931](https://github.com/haterade22/TAOM/issues/931).
 
 ---
 

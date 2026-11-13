@@ -190,7 +190,7 @@ public static class CoopSettingsRelevance
         // orders it issues go through the same OrderController a player's click does. MarshalSpacingRepair is read once at patch time and the patch stays off
         // whenever co-op is present (MarshalSpacingPatch.Prepare), so no value of it reaches a co-op simulation either; MarshalHollowSquare and MarshalThrowersFirst are read only by a live session, and only that session writes the table the two thrower patches read, so
         // with no session both answer as vanilla.
-        "MarshalEnabled", "MarshalKeepArray", "MarshalArriveTogether", "MarshalOutlines", "MarshalHollowSquare", "MarshalSpacingRepair", "MarshalThrowersFirst",
+        "MarshalEnabled", "MarshalKeepArray", "MarshalArriveTogether", "MarshalShowOutlines", "MarshalHollowSquare", "MarshalSpacingRepair", "MarshalThrowersFirst",
         "SupplyShowRouteVisual",
         "NameplateFadeFarDistance", "NameplateFadeNearDistance",
         "EnableNameplateRelationColors", "NameplateRelationTintStrength",

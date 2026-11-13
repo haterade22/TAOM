@@ -83,7 +83,7 @@ Every value is read when the deed happens, none per frame, so none needs a resta
 
 ### Localization
 
-One key, `{=taom_gooddeeds_tournament}The people of {TOWN} honor your victory.`, shown as one green message-log line. It uses "your" and no gendered verb or adjective, so every translation fits any player. The twelve language files carry the seeded English row until the paid translation run; `GoodDeedsWordingTests` pins the English row to the C# literal and each language row to the current English.
+One key, `{=taom_gooddeeds_tournament}The people of {TOWN} honor your victory.`, shown as one green message-log line. It uses "your" and no gendered verb or adjective, so every translation fits any player. The twelve language files carry the translated row (2026-11-12, #763); `GoodDeedsWordingTests` pins the English row to the C# literal and checks that each language row keeps `{TOWN}` and not the old spelling.
 
 ## Key Files
 

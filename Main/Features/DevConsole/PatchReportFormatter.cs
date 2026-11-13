@@ -12,7 +12,7 @@ namespace TAOM.Features.DevConsole;
 /// Two behaviours are deliberately encoded rather than flagged as faults, because both are correct
 /// by design and a report that cried wolf on them would be ignored within a week:
 /// manual patches carry no <c>[HarmonyPatchCategory]</c> and get their own bucket, and some
-/// categories (e.g. <c>Patch0_BattleScenes</c>) are deliberately never registered, so
+/// categories (e.g. <c>Patch21_ShaderPrecompilation</c>, parked) are deliberately never registered, so
 /// declared-but-not-applied is sometimes the right answer. The report states the facts and lets the
 /// reader apply the registry.
 /// </summary>

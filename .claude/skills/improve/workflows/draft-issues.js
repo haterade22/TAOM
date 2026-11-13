@@ -86,7 +86,7 @@ function runValues(o) {
     `- <scratch>: ${args.scratch}; <your label>: ${o.label}; your scratch folder: ${join(args.scratch, o.label)}`,
     `- <tmp>: ${args.tmp}`,
     `- <version>: ${args.version}; today: ${args.date}`,
-    '- ORCHESTRATOR NOTE (it overrides the standing rule "Workspace" for these paths only): a file or folder this prompt names as yours to write may lie inside the main checkout, where the run folder lives; write it there, and touch nothing else in the main checkout.',
+    '- ORCHESTRATOR NOTE (it overrides the standing rule "Workspace" for these paths only): a file or folder this prompt names as yours to write may lie inside the main checkout or the run worktree, where the run folder lives; write it there, and touch nothing else in that checkout.',
   ].join('\n')
 }
 

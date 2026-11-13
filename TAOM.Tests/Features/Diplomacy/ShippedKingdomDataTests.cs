@@ -119,10 +119,7 @@ public class ShippedKingdomDataTests
         Assert.IsTrue(before > 0, "the vanilla file has no war rows: the check tested nothing");
 
         var settings = new XmlReaderSettings { DtdProcessing = DtdProcessing.Ignore, XmlResolver = null };
-        var xslt = new XslCompiledTransform();
-        using (var sheet = XmlReader.Create(
-                   Path.Combine(CultureDataFixture.ModuleDataPath(), "spkingdoms.xslt"), settings))
-            xslt.Load(sheet, new XsltSettings(false, false), null);
+        var xslt = CompiledXslt.Get(Path.Combine(CultureDataFixture.ModuleDataPath(), "spkingdoms.xslt"), XsltLoadStyle.IgnoreDtdNoResolver);
 
         var result = new XDocument();
         using (var input = XmlReader.Create(file!, settings))

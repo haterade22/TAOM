@@ -127,8 +127,8 @@ idempotent; add the culture's picks to its `PICKS` table).
 - Armorer, horse merchant, barber, merchant
 - Beggar, female beggar, female dancer
 
-**12 Wanderer NPCs:**
-- `spc_wanderer_{culture}_0` through `_11`
+**10 Wanderer NPCs** (the norm: 23 of the 30 cultures in `taom_wanderers.xml` hold exactly 10, counted 2026-11-12):
+- `spc_wanderer_{culture}_0` through `_9`
 
 ### 3. Troop Tree (REQUIRED)
 **File:** Create `Main/_Module/ModuleData/troops/troops_{culture}.xml`
@@ -137,7 +137,7 @@ idempotent; add the culture's picks to its `PICKS` table).
 - Each troop needs: skills, equipment roster refs, upgrade paths, culture assignment
 
 ### 4. Equipment Sets (REQUIRED)
-**File:** Create `Main/_Module/ModuleData/taom_equipment_sets_{culture}.xml`
+**File:** Create `Main/_Module/ModuleData/equipmentsets/taom_equipment_sets_{culture}.xml`
 - Battle equipment rosters (tiers a-e)
 - Civilian equipment rosters
 - Stealth/duel/marriage bride rosters
@@ -214,7 +214,7 @@ Cardolan, Rhudaur, Ered Luin, Anduin Vale, Angáladh, Dorwinion and South Rhovan
 | 1 | `taom_spcultures.xml` | Add ~350-line `<Culture>` block |
 | 2 | `characters/npcs_{culture}.xml` | **Create** (~900-1300 lines, 26 notables + townsfolk + wanderers) |
 | 3 | `troops/troops_{culture}.xml` | **Create** (full troop tree) |
-| 4 | `taom_equipment_sets_{culture}.xml` | **Create** (battle/civilian/troop equipment) |
+| 4 | `equipmentsets/taom_equipment_sets_{culture}.xml` | **Create** (battle/civilian/troop equipment) |
 | 5 | `taom_partyTemplates.xml` | Add ~8 party template entries |
 | 6 | `taom_spkingdoms.xml` | Add kingdom entry |
 | 7 | `characters/clans.xml` | Add clan entries |

@@ -25,7 +25,10 @@ numbering.
 - **TDD**: the failing test comes before the implementation (AGENTS.md "TDD").
 - **Blast radius**: for every C# type the plan changes, the output of
   `python tools/graphify_taom.py affected "<Type>" --depth 2`, quoted in Current state
-  (AGENTS.md "Blast radius first").
+  (AGENTS.md "Blast radius first"). The writer runs it only when `graphify_taom.py status --brief`
+  says the graph is fresh; otherwise it quotes the caller list from `git grep -n -w "<Type>"` and
+  says so. A plan never tells an executor to run `refresh`: in a linked worktree it writes a graph
+  outside the executor's paths and can outlast the 15-minute call limit.
 - **Engine facts**: signatures quoted from `pwsh tools/taom-src.ps1 path <Type>`; the executor never
   guesses TaleWorlds behaviour.
 - **Convention pointers**: the ADRs and rules that bind the change, one line each (for example ADR-007
@@ -273,8 +276,18 @@ and tip) | PARTIAL | MERGED (commit, issue) | BLOCKED | REJECTED.
   RED step builds the project" and "A plan's RED check names the diagnostics").
 - A deletion's RED lives in the log, and an "untestable" waiver covers only the engine-bound lines
   ([lessons](../../../../docs/reviews/lessons/testing-qa.md), "A deletion's RED step lives in the log"
-  and "A boundary's 'untestable' waiver").
+  and `A boundary's "untestable" waiver`).
 - Retiring a duty searches for the duty, not its phrases ([lesson](../../../../docs/reviews/lessons/build-tooling-workflow.md),
   "Retiring a duty").
 - A dependent plan is re-anchored after its prerequisite's review lands.
+- Every verification command can pass as written. The cold reviews of the 2026-11-12 run found 13
+  blocking items in six plans (`plans/_audit/2026-11-12-fable/plan-review-04*.md` and
+  `plan-review-05*.md`), most of this kind: a `git grep` that must see a file created in an earlier step
+  needs `--untracked`, or runs after the step that stages the file; a check that a diff holds no
+  `class` or `SaveableField` line greps only its added and removed lines (`grep '^[+-]'`), because a
+  hunk header names the enclosing class; proof that a named test class ran is a filtered run with its
+  exact count, because a full run at default verbosity prints only failures and the totals line; a
+  count the plan states ("stage the six paths") equals the list beside it.
+- A measurement gate states its threshold, what the executor reports when the gate stops the part, and
+  that such a stop is a successful outcome.
 - The prose has no em or en dash.

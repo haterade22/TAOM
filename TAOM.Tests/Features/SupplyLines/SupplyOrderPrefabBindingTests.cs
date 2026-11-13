@@ -36,8 +36,8 @@ public class SupplyOrderPrefabBindingTests
     private static readonly Dictionary<string, Type> CollectionItemTypes = new Dictionary<string, Type>
     {
         ["Settlements"] = typeof(SupplySourceRowVM),
-        ["Goods"] = typeof(SupplyGoodRowVM),
-        ["Troops"] = typeof(SupplyTroopRowVM),
+        ["Goods"] = typeof(SupplyRowVM),
+        ["Troops"] = typeof(SupplyRowVM),
         ["SearchHits"] = typeof(SupplySearchHitRowVM),
     };
 
@@ -184,8 +184,7 @@ public class SupplyOrderPrefabBindingTests
         {
             typeof(SupplyOrderScreenVM),
             typeof(SupplySourceRowVM),
-            typeof(SupplyGoodRowVM),
-            typeof(SupplyTroopRowVM),
+            typeof(SupplyRowVM),
             typeof(SupplySearchHitRowVM),
         };
         foreach (var vmType in vmTypes)

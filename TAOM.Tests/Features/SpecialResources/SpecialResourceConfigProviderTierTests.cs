@@ -172,7 +172,7 @@ public class SpecialResourceConfigProviderTierTests
     // ── Multi-resource — only gems gets tiers ──
 
     [TestMethod]
-    public void GetAllResources_MixedResources_OnlyGemsHasTiers()
+    public void MixedResources_OnlyGemsHasTiers()
     {
         WriteResourceXml(@"<?xml version=""1.0"" encoding=""utf-8""?>
 <SpecialResources>
@@ -192,9 +192,6 @@ public class SpecialResourceConfigProviderTierTests
 </SpecialResources>");
 
         var provider = new SpecialResourceConfigProvider(_pathService, _logger);
-        var all = provider.GetAllResources();
-
-        Assert.AreEqual(2, all.Count);
         var gems = provider.GetByKingdomId("erebor");
         var warSpoils = provider.GetByKingdomId("empire_s");
 

@@ -202,6 +202,24 @@ behind the unwrap, measured on the 84,053-triangle rebuild:
   Mike's word. The Painter traps found on the way are in
   [substance-painter-mcp-setup.md](substance-painter-mcp-setup.md).
 
+**Bake symptoms and texel density (read on 2026-11-13, not yet tested by TAOM).** From the bake
+and UV references of [arjun988/blender-skills](https://github.com/arjun988/blender-skills) (MIT),
+kept only where TAOM's own bake path can meet the symptom. TAOM's measured settings above win where
+they differ. Review: [adopt-blender-skills-2026-11-13.md](../reviews/adopt-blender-skills-2026-11-13.md).
+
+| Symptom in a high-to-low bake | Likely cause | First thing to try |
+|---|---|---|
+| Seams show in the normal map | Cage too tight or too loose | Change the cage distance in small steps (the source's range is 0.01 to 0.05 m; the prep script starts at 0.02 and scales with the prop) |
+| Black spots | The high mesh crosses itself | Fix the crossing geometry |
+| Detail missing | Ray distance too short | Raise the ray distance; lower it again if artifacts appear |
+| Detail blurred | The bake is too small | Bake larger |
+| Stripes | A UV seam in a bad place | Move the seam to a hidden edge |
+| Contact shadow missing in the AO | AO ray distance too short | Raise it (for the opposite fault see "Whole walls dark" in the skill) |
+
+The source's smallest bake margin is 16 px at the final size, and it bakes one small part before
+the whole set. Texel density is the texture size over the length it covers: a 1,024 px map across
+2 m is 512 px per metre, the unit of the px/m figures above.
+
 ## Kit-composition path — new pieces from measured existing parts (2026-07-28/29)
 
 The third acquisition path (after UE kits and Tripo props): compose NEW kit pieces

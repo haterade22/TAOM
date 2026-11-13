@@ -24,6 +24,7 @@ public class WarChronicleIoCTests
         container.RegisterInstance(Substitute.For<IWarOfTheRingService>());
         container.RegisterInstance(Substitute.For<IAlignmentService>());
         container.RegisterInstance(Substitute.For<ICoopSessionProvider>());
+        container.RegisterInstance(Substitute.For<IPlayerControlQuery>());
         container.RegisterInstance(Substitute.For<IPathService>());
         WarChronicleIoC.RegisterWarChronicleFeature(container);
         return container;

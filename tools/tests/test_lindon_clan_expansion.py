@@ -29,10 +29,11 @@ VANILLA_MD = [GAME / "Modules" / "SandBox" / "ModuleData", GAME / "Modules" / "S
 LIVE_SETTLEMENTS = GAME / "Modules" / "TAOM_Map" / "ModuleData" / "settlements.xml"
 
 NEW_CLANS = {
-    "clan_lindon_3": ("town_LN3", "Nos Galdor", "5", "lord_LN3_1"),
-    "clan_lindon_4": ("castle_LN1", "Nos Brithombar", "3", "lord_LN4_1"),
-    "clan_lindon_5": ("castle_LN2", "Wardens of Ered Luin", "3", "lord_LN5_1"),
-    "clan_lindon_6": ("castle_LN3", "Nos Eglarest", "2", "lord_LN6_1"),
+    # The Realms in Exile house names (72715c417).
+    "clan_lindon_3": ("town_LN3", "Nos Thavn a Minas Loss", "5", "lord_LN3_1"),
+    "clan_lindon_4": ("castle_LN1", "Nos Eldalomril", "3", "lord_LN4_1"),
+    "clan_lindon_5": ("castle_LN2", "Nos Nenwendil", "3", "lord_LN5_1"),
+    "clan_lindon_6": ("castle_LN3", "Nos Inglor", "2", "lord_LN6_1"),
 }
 # One fief per clan; Mithlond stays with the Falathrim.
 FIEF_OWNERS = {
@@ -102,13 +103,18 @@ def elven_sheet_icons():
 
 
 def sigil_layers(case, owner, key, icons):
-    """The sigil icon ids of a banner key, after asserting it has at least one and each is on an elven sheet."""
+    """The sigil icon ids of a banner key, after asserting it has at least one elven icon and that every TAOM icon
+    in it is elven. A layered banner (72715c417) may put vanilla shapes (505, 515), which are not TAOM icons, under
+    its sigil, as Rivendell's does with 503; another TAOM group's icon, such as the orc crest, still fails."""
     parts = key.split(".")
     case.assertEqual(0, len(parts) % 10, owner)
     layers = [parts[i:i + 10] for i in range(0, len(parts), 10)]
     case.assertGreater(len(layers), 1, f"{owner} flies no sigil")
+    elven = r"^\{=taom_banner_category_elven\}"
     for layer in layers[1:]:
-        case.assertRegex(icons.get(layer[0], "undefined"), r"^\{=taom_banner_category_elven\}", (owner, layer[0]))
+        if layer[0] in icons:
+            case.assertRegex(icons[layer[0]], elven, (owner, layer[0]))
+    case.assertTrue(any(layer[0] in icons for layer in layers[1:]), f"{owner} flies no elven sigil")
     return tuple(layer[0] for layer in layers[1:])
 
 

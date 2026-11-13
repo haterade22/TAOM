@@ -34,6 +34,7 @@ still stands.
 |---|---|
 | BannerlordTogether specifics, its no-decompile policy, its boot matrix | [`bannerlord-together-compat.md`](bannerlord-together-compat.md) |
 | BannerlordCoop internals — Harmony ids, tick model, policies, object identity, integration surface | [`../research/bannerlordcoop-internals.md`](../research/bannerlordcoop-internals.md) |
+| Filing a BannerlordCoop issue or PR, or merging `development` into `bannerlord-1.5.x` (the Coop team's rules) | [`/coop-upstream`](../../.claude/skills/coop-upstream/SKILL.md) |
 | Staging, booting, stopping and diagnosing TAOM on the dedicated server | [`coop-dedicated-server.md`](coop-dedicated-server.md) |
 | What happens to the hero a joiner created, and how TAOM's character-creation grants get re-applied | [`player-possession.md`](player-possession.md) |
 | Why a TAOM-less host can corrupt every hero's race on a full client | [`hero-race.md`](hero-race.md) — the degenerate-legend capture guard |
@@ -62,15 +63,18 @@ Bannerlord v1.5 port are separate branches of [Bannerlord-Coop-Team/BannerlordCo
 |---|---|---|---|---|
 | v0.1.7 (released 2026-10-30) | `development` | v1.4.8 (`<GameVersion>` in `source/Coop/Coop.csproj`) | No | GitHub release and ModDB; the Coop team's ModDB "Headless Server" is the v1.4.8 dedicated server |
 | v0.1.6 (released 2026-10-06) | `development` | v1.4.8 | No | as above |
-| `bannerlord-1.5.x` (not released) | `bannerlord-1.5.x` | v1.5.7 since 2026-11-10 (`83c46b153`) | Built from source, yes; no live co-op session has run it on v1.5.7. The port fixed the two engine signatures v1.5.7 removed ([v1.5.7-impact.md](../migration/v1.5.7-impact.md)). Open PRs on 2026-11-11: [#4630](https://github.com/Bannerlord-Coop-Team/BannerlordCoop/pull/4630) merges `development` again, and #4631 to #4634 follow v1.5.7 changes (party parley, villages that give in, the courtship retry, the grain quest) | built from source; TAOM's dev install runs it |
+| `bannerlord-1.5.x` (not released) | `bannerlord-1.5.x` | v1.5.7 since 2026-11-10 (`83c46b153`) | Built from source, yes. The port fixed the two engine signatures v1.5.7 removed ([v1.5.7-impact.md](../migration/v1.5.7-impact.md)). Since 2026-11-13 it takes `development` by direct merge, with no port PRs ([`/coop-upstream`](../../.claude/skills/coop-upstream/SKILL.md)). Live harness runs with TAOM loaded (Host plus 1 or 2 clients, save `taomcoop157`) reached the campaign on 2026-11-12 and again on 2026-11-13 at `e00afde69` | built from source; TAOM's dev install runs it |
+
+**License (read 2026-11-12).** From 2026-06-17, new BannerlordCoop versions are source-available, not MIT: the code may be viewed and contributed to, but not copied, modified, redistributed or used in another project, nor used for a competing multiplayer or co-op mod, without the maintainers' written permission (`LICENSE` and `NOTICE.md` in the repo). Versions released before that date keep their MIT terms. So TAOM copies no Coop code, and a feature that needs Coop's mission layer outside a campaign (the Long Defeat's [multiplayer research](long-defeat.md#dependencies)) needs that permission or a contribution to Coop itself.
 
 The v1.5 branch split from `development` on 2026-10-03 (`5f4d63cc0`), so the features `development` gained since
 (v0.1.7's siege fixes, ransom, emissaries, child education and the rest) reach v1.5.6 only through a merge of
 `development` into `bannerlord-1.5.x`. That merge (`development` at `c8233b09b`, mod version 0.1.8) went in
 as [Coop PR #4230](https://github.com/Bannerlord-Coop-Team/BannerlordCoop/pull/4230), opened 2026-10-31 and
-merged on 2026-11-05; its automated suites passed on v1.5.6, and no live co-op session has run it. A second
-merge (`development` at `0a375595f`) is [Coop PR #4630](https://github.com/Bannerlord-Coop-Team/BannerlordCoop/pull/4630),
-opened 2026-11-11; its unit, harness and E2E suites passed on v1.5.7. The co-op
+merged on 2026-11-05; its automated suites passed on v1.5.6. A second merge (`development` at `0a375595f`,
+[Coop PR #4630](https://github.com/Bannerlord-Coop-Team/BannerlordCoop/pull/4630)) and a direct merge of
+`development` at `fcd4df7b0` went in on 2026-11-13 (`aa9284167`); the Release build, unit, E2E and harness
+suites passed on v1.5.7 before the push. The co-op
 dedicated server is [coop-dedicated-server.md](coop-dedicated-server.md).
 
 **Tracking:** `docs/reviews/upstream-watch.json` lists this repo under `releases`, so the session-start banner
@@ -299,6 +303,10 @@ side that costs least:
 | War of the Ring participation (`WarEventSnapshotAdapter.IsPlayerRelated`) | Not involved | A guess would let a stranger's wars move the shared meter |
 | Special resource earning (`SpecialResourceEarnPolicy.MayEarn`) | Not a player: nobody earns | An earn writes a balance, so doubt means no write |
 | Seasoned Hosts (`SeasonedHostsAdapter`) | Player: no bonus | The skill XP multiplier and the training factor are boosts for AI only, so doubt means none |
+| Uncapturable Heroes (`UncapturablePlayerCheck`, #1139) | Player: vanilla captures | A capture is a valid state and a player made a fugitive is not. The registry answers `Unknown` for every hero at once, so in that session no lore hero is protected |
+| War Chronicle extra escape and rally (`PlayerClanCheck`, #1141) | Player: no extra roll, no rally effects | Both are help for AI lords and realms, so in doubt a player gets none. An unreadable registry stops the extra escape and the rally for every realm |
+| Realms AI claims (`RealmsCampaign.IsAPlayersClan`, #1141) | Player: no AI claim | A claim spends the clan's influence and gold, so doubt means no write. An unreadable registry stops every AI claim |
+| Pregnancy (`TaomPregnancyModel.IsPlayerMarriage`, #1141) | Not a player: AI rules | `Player` lifts the clan brake; doubt must not lift it for every AI clan |
 
 The recruit charge does not use this query: it follows the Patch113 scope instead (below).
 
@@ -401,7 +409,7 @@ behaviour's whole `RegisterEvents` and follow each handler to the service.
 | `StoryDevMenuBehavior` | the dev menu behind `taom.story_open`, in `StoryDevMenuBehavior.Open` (`CoopSessionPolicy.IsSinglePlayerAuthority`) | Dev console entry (#1105, slice 1): refused in a co-op session. The mission it opens writes nothing to the campaign, so a single-player run changes no shared state. |
 | `TaomBuildingSeedingBehavior` | `OnGameLoaded` (`IsAuthority`, checked in `TaomBuildingSeedingService`) | Adds town buildings, a shared write. |
 | `LordCourtesiesDialogBehavior` | the dialog lines, in `LordCourtesiesService` (`!ShouldDeferToHost && !IsDedicatedServer`) | Player action: the relation charge, the clan reveal and the troop gift. |
-| `DiplomacyBehavior` | `OnSessionLaunched` (`ShouldDeferToHost`) | Enforces the permanent alliances. The initial alliances run only while a new campaign is built. |
+| `DiplomacyBehavior` | `OnSessionLaunched` (`ShouldDeferToHost`), `OnNewGameCreatedPartialFollowUp` (`IsCoopClient`) | Enforces the permanent alliances, and sets up the initial alliances in a new campaign. A first-time joiner builds a local campaign for character creation, and Coop's `StartAlliance` prefix on a client asks the server instead of forming the alliance, so a Coop client skips both; the host's save carries them. The new-game step reads `IsCoopClient`: with a co-op mod TAOM cannot probe, `ShouldDeferToHost` is true in solo too, and a new campaign there has no host save to carry the alliances. |
 | `EliteEmissaryBehavior` | the purchase, in `EliteEmissaryInquiryPresenter.ExecutePurchase` (`ShouldDeferToHost`) | See "Client-reachable entry points" below. The behavior's own handlers only register the menus and dialog. |
 | `FiefGrantingCampaignBehavior` | `MapEventEnded`, `OnSettlementOwnerChanged` (`IsAuthority`) | The saved siege participation record. Session launch and load only reset the in-memory service. |
 | `PlayerClanLeadershipRepairBehavior` | `OnSessionLaunched`, in `PlayerClanLeadershipService` (`IsAuthority`) | Promotes a clan leader. |
@@ -417,7 +425,7 @@ behaviour's whole `RegisterEvents` and follow each handler to the service.
 | `EnlistmentQuartermasterBehavior` | the kit request (`IsAuthority`) | Player action. |
 | `EnlistmentDutyBehavior` | `OnHourlyTick`, `OnDailyTick` (`IsAuthority`) | Duty orchestration. |
 | `EnlistmentAssignmentDialogBehavior` | the assignment line (`IsAuthority`) | Player action. Guests never get the enlist offer (`ShouldDeferToHost` in `EnlistmentDialogBehavior`), and under BannerlordCoop the human host is a loopback client, so the enlistment player actions work for no human player in a session. |
-| `RealmsCampaignBehavior` | every listener (`OnDailyTick`, `OnWeeklyTick`, `OnHeroKilled`, `OnSettlementOwnerChanged`, `OnRulingClanChanged`, the clan-leader pending resolve, the hourly title creation, the session-launch upgrade and former-banner repair) and every player action (claim, usurp, grant, revoke, form, restore, appoint, dismiss) (`IsAuthority`) | The titles spend influence and gold, change relations, give fiefs, change ruling clans and banners. A client keeps the ledger it loaded with the host's save, read only: the encyclopedia and the title windows show it, and their buttons do nothing (UNVERIFIED in a live session). |
+| `RealmsCampaignBehavior` | every listener (`OnDailyTick`, `OnWeeklyTick`, `OnHeroKilled`, `OnSettlementOwnerChanged`, `OnRulingClanChanged`, the clan-leader pending resolve, the hourly title creation, the session-launch upgrade and former-banner repair) and every player action (claim, usurp, grant, revoke, form, restore, appoint, dismiss) (`IsAuthority`) | The titles spend influence and gold, change relations, give fiefs, change ruling clans and banners. A client keeps the ledger it loaded with the host's save, read only: the encyclopedia and the title windows show it, and their buttons do nothing (UNVERIFIED in a live session). The weekly AI claims skip a co-op guest's clan (#1141). The offices pass and the grants to children still treat a guest as AI, because no Realms player action reaches the host from a guest. |
 
 **What makes any peer earn at all is the participation fix in the same change.** The victory gate
 used to ask whether the player IS the winning side's `LeaderParty.LeaderHero`, conflating
@@ -687,6 +695,46 @@ The fix needs a seat relay (#967 C3). Before C7 every peer spawned its own crew.
 9. A guest's signature strike frightens no host AI.
 10. Howdah and mumakil crews stand on the deck for puppets, once, on every peer.
 11. After a battle-host migration, the adopted elephant and mumakil crew: expect them off their seats (see Known limits).
+
+## Battles between players (#1139)
+
+Coop lets two players fight each other in a field battle. Its encounter handler opens one when both
+sides are players (`ConversationRequestHandler.cs:314-317` on Coop `bannerlord-1.5.x` e9906952a) and
+refuses one while either player is in a siege. Coop's `doc/PlayerEncounterSync.md` section 6.4 still
+calls this "future"; the code is past it. In towns, villages and castle courtyards no blow to or from
+another player's agent lands (`LocationPvpBlockPatch`).
+
+**The battle.** The mission model above needs no change. Each peer owns its own troops, and the other
+player's troops are puppets on the enemy team, so the player-team and AI-controller invariants hold
+when the players are enemies. Two limits follow from it:
+
+- Fear from a race ability's kill or a signature strike reaches only the troops of the peer that ran
+  it, so it never frightens the other player's troops. The dread aura is the exception, because every
+  peer pulses it over its own AI troops.
+- `DreadAuraAffectsPlayerTroops` is read on each peer for its own troops, so a player who turns it off
+  is immune to the other player's dread.
+
+**The defeat.** Coop's server takes a defeated player hero prisoner itself
+(`PlayerStartCaptivityPatches.CaptureDefeatedPlayerHeroes`, which calls `TakePrisonerAction.Apply`),
+whoever beat him, a player or the AI. Both [Uncapturable Heroes](uncapturable-heroes.md) seams ask
+`IPlayerControlQuery.OfHero` and leave a player's hero, or one whose status is `Unknown`, to vanilla
+and Coop. Before #1139 they compared with `Hero.MainHero`, which on the server is the server's own
+hero. A player who is Sauron or a Nazgûl was then made a fugitive, so Coop's captivity flow ran only
+half, and `MakeHeroFugitiveAction` destroys a party its fugitive leads. A co-op mod TAOM cannot see
+(BannerlordTogether, or a failed Coop bind) still gets the `Hero.MainHero` comparison.
+
+**Who can fight.** Any two players in different factions. The war veto ([diplomacy](diplomacy.md),
+`WarOfTheRingService.GetWarVeto`) runs on the server, where `ShouldDeferToHost` is false, so a war
+declared through `DeclareWarAction` (a kingdom decision, for example) stays refused between permanent
+allies, and between two lore kingdoms of the same side before `WarEnded`. It does not stop a battle
+between players: Coop's hostile demand calls `DeclareWarAction.ApplyByPlayerHostility`, which TAOM may
+refuse, then sets the war stance itself (`VillageHostileFactionStanceHelper.ApplyWarStance`, from
+`PlayerPartyHostileEncounterService.DeclareWar`) and starts the battle. That war raises no
+`OnWarDeclared`. A clan outside any kingdom is never vetoed: the prefix passes a faction that is not a
+kingdom to vanilla (`DeclareWarAction_ApplyInternal_Patch.cs:41-42`). UNVERIFIED: whether
+`EndWarsForbiddenByPhase` later ends such a war.
+
+In-game checks owed: the list on #1139.
 
 ## Client-side object creation
 

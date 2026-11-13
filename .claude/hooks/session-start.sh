@@ -58,9 +58,8 @@ cd "${CLAUDE_PROJECT_DIR:-$(pwd)}" || exit 0
 
 echo "=== TAOM Session Context ==="
 
-# Current branch
-BRANCH=$(git branch --show-current 2>/dev/null || echo "unknown")
-echo "Branch: $BRANCH"
+# No branch line and no recent-commit list here: the harness puts the branch, the status and the
+# last five commits into every main session as gitStatus, and again after a compaction.
 
 # Hook-toolchain health. Every gate in this repo parses its stdin JSON, so if no safe
 # interpreter resolves, every gate quietly turns off and looks exactly like a clean run.
@@ -202,28 +201,38 @@ if [[ -n "${PYBIN:-}" && -f tools/graphify_taom.py ]] && ! ss_probe_budget; then
 elif [[ -n "${PYBIN:-}" && -f tools/graphify_taom.py ]]; then
   GRAPH_STATUS=$(timeout -k 0.5 "$SS_PROBE_BUDGET" "$PYBIN" tools/graphify_taom.py status --brief 2>/dev/null)
   GRAPH_RC=$?
-  echo ""
-  if [[ $GRAPH_RC -eq 124 || $GRAPH_RC -eq 137 || -z "$GRAPH_STATUS" ]]; then
-    echo "NOTE: graphify code graph freshness UNCHECKED this session (status overran ${SS_PROBE_BUDGET%????} s or printed nothing)."
-  else
-    printf '%s\n' "$GRAPH_STATUS"
-  fi
   # A stale graph refreshes itself in a detached child (#995): one day of merges left it 645 files
   # behind, and every workflow step then paid the refresh or answered from old code. The wrapper
   # returns at once and prints why it did or did not start (opt-out, lock, Bannerlord running).
+  # It runs before the status is printed, so that the status can drop its "refresh:" hint when the
+  # refresh is already running: the hint told nearly every session to start a second one.
+  GRAPH_AUTO_LINE=""
   if [[ $GRAPH_RC -eq 1 ]]; then
     if ss_probe_budget; then
       GRAPH_AUTO=$(timeout -k 0.5 "$SS_PROBE_BUDGET" "$PYBIN" tools/graphify_taom.py refresh --if-stale --detach 2>/dev/null)
       GRAPH_AUTO_RC=$?
       if [[ $GRAPH_AUTO_RC -eq 124 || $GRAPH_AUTO_RC -eq 137 || -z "$GRAPH_AUTO" ]]; then
-        echo "NOTE: graphify background refresh UNCHECKED this session (the start overran ${SS_PROBE_BUDGET%????} s or printed nothing)."
+        GRAPH_AUTO_LINE="NOTE: graphify background refresh UNCHECKED this session (the start overran ${SS_PROBE_BUDGET%????} s or printed nothing)."
       else
-        printf '%s\n' "$GRAPH_AUTO"
+        GRAPH_AUTO_LINE="$GRAPH_AUTO"
       fi
     else
-      echo "NOTE: graphify background refresh not started (session-start time budget spent)."
+      GRAPH_AUTO_LINE="NOTE: graphify background refresh not started (session-start time budget spent)."
     fi
   fi
+  echo ""
+  if [[ $GRAPH_RC -eq 124 || $GRAPH_RC -eq 137 || -z "$GRAPH_STATUS" ]]; then
+    echo "NOTE: graphify code graph freshness UNCHECKED this session (status overran ${SS_PROBE_BUDGET%????} s or printed nothing)."
+  elif [[ "$GRAPH_AUTO_LINE" == *"background refresh started"* ]]; then
+    # Split on newlines under set -f, never a here-string or a process substitution (hook-authoring.md).
+    set -f; IFS=$'\n'; GRAPH_LINES=($GRAPH_STATUS); IFS=$' \t\n'; set +f
+    for GRAPH_LINE in "${GRAPH_LINES[@]}"; do
+      [[ "$GRAPH_LINE" == *"refresh: python tools/graphify_taom.py refresh"* ]] || printf '%s\n' "$GRAPH_LINE"
+    done
+  else
+    printf '%s\n' "$GRAPH_STATUS"
+  fi
+  [[ -n "$GRAPH_AUTO_LINE" ]] && printf '%s\n' "$GRAPH_AUTO_LINE"
 else
   echo ""
   echo "NOTE: graphify code graph freshness UNCHECKED this session (no safe python or no tools/graphify_taom.py)."
@@ -356,11 +365,6 @@ else
     echo "HARNESS RETRO DUE: last retro $RETRO_DATE ($(( (RETRO_NOW - RETRO_EPOCH) / 86400 )) days ago). Tell Mike once in your first reply and ask whether to run /harness-retro."
   fi
 fi
-
-# Last 5 commits
-echo ""
-echo "Recent commits:"
-git log --oneline -5 2>/dev/null || echo "  (no commits)"
 
 # Uncommitted changes count
 STAGED=$(git diff --cached --name-only 2>/dev/null | wc -l | tr -d ' ')

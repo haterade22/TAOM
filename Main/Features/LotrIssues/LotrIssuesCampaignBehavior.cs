@@ -109,7 +109,7 @@ public class LotrIssuesCampaignBehavior : CampaignBehaviorBase
             var type = TemplateType(def.Template);
             if (type == null) continue; // template not yet implemented (later waves)
             Campaign.Current.IssueManager.AddPotentialIssueData(hero,
-                new PotentialIssueData(OnSelected, type, MapFrequency(def.Frequency), def));
+                new PotentialIssueData(OnSelected, type, LotrIssueTemplateRules.MapFrequency(def.Frequency), def));
         }
     }
 
@@ -138,16 +138,6 @@ public class LotrIssuesCampaignBehavior : CampaignBehaviorBase
             case LotrIssueTemplate.DeliverPersonnel: return typeof(DeliverPersonnelLotrIssue);
             case LotrIssueTemplate.Combat: return typeof(CombatLotrIssue);
             default: return null;
-        }
-    }
-
-    private static IssueBase.IssueFrequency MapFrequency(IssueFrequencyTier tier)
-    {
-        switch (tier)
-        {
-            case IssueFrequencyTier.VeryCommon: return IssueBase.IssueFrequency.VeryCommon;
-            case IssueFrequencyTier.Rare: return IssueBase.IssueFrequency.Rare;
-            default: return IssueBase.IssueFrequency.Common;
         }
     }
 }

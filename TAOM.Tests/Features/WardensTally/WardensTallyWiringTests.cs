@@ -33,6 +33,7 @@ public class WardensTallyWiringTests
         WarChronicleIoC.RegisterWarChronicleFeature(container);
         container.RegisterInstance(Substitute.For<IModLogger>());
         container.RegisterInstance(Substitute.For<ICoopSessionProvider>());
+        container.RegisterInstance(Substitute.For<IPlayerControlQuery>());
         return container;
     }
 

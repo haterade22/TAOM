@@ -441,9 +441,6 @@ Code: No code changes needed
   (`Main/_Module/ModuleData/spkingdoms.xslt:13-211`). The tables in
   `alignment-aware-execution.md:228-248` and `execution.md:74-94` have `empire` and `vlandia`
   swapped; do not copy them.
-- **`diplomacy.md`'s tier counts are stale.** It says 5 permanent, 11 natural, 10 permanent, 33
-  hostile; the shipped file holds 153 rows, 38 `Permanent`, 29 `Natural`, 7 `Neutral`, 79 `Hostile`
-  ([diplomacy.md:92](../features/diplomacy.md)).
 - **A `cave_troll`-race troop named in a guard pool never appears.** The exclusion is a hardcoded
   invariant, not config, and the rejection is a one-line warning
   (`Main/Features/SettlementGuards/SettlementGuardService.cs:12-16`). Banner bearers exclude five

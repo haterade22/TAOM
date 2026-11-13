@@ -14,7 +14,7 @@ namespace TAOM.Tests.Adapters;
 [TestCategory("RequiresGame")]
 public class PrisonerEscapeAdapterTests
 {
-    private readonly PrisonerEscapeAdapter _sut = new PrisonerEscapeAdapter();
+    private readonly PrisonerEscapeAdapter _sut = new PrisonerEscapeAdapter(NSubstitute.Substitute.For<TAOM.Features.CoopInterop.IPlayerControlQuery>());
 
     [TestMethod]
     public void GetCapturedLords_NoCampaign_ReturnsEmpty()

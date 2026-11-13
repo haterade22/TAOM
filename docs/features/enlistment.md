@@ -2714,8 +2714,8 @@ What actually remains, each a state no test can reach:
   encounters start.
 - **Quartermaster answers (#829).** Draw a kit (expect the issued line), ask again at the same rank
   (expect "already drawn"), and if reachable trigger empty stores and a co-op client (expect the
-  stores and host-only lines). Check each text; the three new keys show English until the paid
-  translation run. The cannot-load case (the party cannot take items) is effectively unreachable by
+  stores and host-only lines). Check each text; the three new keys are translated in
+  all 12 languages (2026-11-12, #763). The cannot-load case (the party cannot take items) is effectively unreachable by
   hand and is covered by unit tests.
 - **Discharge during load (#828).** (a) MCM switch off, saved on the open map with the service menu:
   load, expect the body "Your service has ended." and one enabled option "Go on your way", landing
@@ -2901,8 +2901,8 @@ Specifically owed, because each is a state a test structurally cannot reach:
    same pay and kit. Promote through the new ranks (Sergeant First Class, Master Sergeant, Sergeant
    Major) and read each promotion toast and the board line ("Toward Sergeant First Class" at Staff
    Sergeant). Ask the quartermaster for kit at the top tier and read the answer ("You already carry
-   the best kit my stores can issue."). Rank names and that answer show in English until the paid
-   translation run.
+   the best kit my stores can issue."). Rank names and that answer are translated in
+   all 12 languages (2026-11-12, #939).
 
 ### Still owed beyond testing
 
@@ -2914,7 +2914,7 @@ Specifically owed, because each is a state a test structurally cannot reach:
   2026-08-08 and then absorbed the 26 duty-result toasts (#428), the 2 duty toast keys the adapter
   composes, the 6 commander-loss strings, and the earlier status-board work. That was true on
   2026-08-09; the #828, #829 and #936 strings (the seven rank names and the best-kit answer among
-  them) ship English until the next paid translation run, tracked in #939.
+  them) are translated in all 12 languages (2026-11-12, #939).
 
   **Duty text has one source (#845).** `enlistment_duties.json` carries the English of every duty
   row as `{=taom_enlist_duty_<id>_<suffix>}English` strings: `title` on every row, `success` and

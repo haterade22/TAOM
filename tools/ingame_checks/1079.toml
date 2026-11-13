@@ -392,8 +392,8 @@ needs = "a Long Defeat run at a fortress whose fortresses.json row has a split b
 reached = ['\[Check\] id=taom\.long-defeat\.split result=']
 pass = ['\[Check\] id=taom\.long-defeat\.split result=pass w=[0-9]+ ']
 fail = ['\[Check\] id=taom\.long-defeat\.split result=fail']
-# Written by LongDefeatDirector.Split.cs, key w<N> for the wave the split stood before, when the hold ends at the first contact (a siege lane rose above its defense level at the hold, SiegeLane.GetDefenseState).
-# Each group the split made is <name>=<count> <name>_median=<m> <name>_high=<count at or above the wall line>, for wall, gate, low and high; then held_s= released= kept= lanes=. A pass needs every group to hold soldiers and its median ground
+# Written by LongDefeatDirector.Split.cs, key w<N> for the wave the split stood before, when the hold ends at the first contact (a close attacker count, SiegeQuerySystem, rose above its count at the hold, which a fresh split reads after it drops the engine's 5 s cache; with no right_defender_origin tag, as at Helm's Deep, the right count holds the gate).
+# Each group the split made is <name>=<count> <name>_median=<m> <name>_high=<count at or above the wall line>, for wall, gate, low and high; then held_s= released= kept= close=. A pass needs every group to hold soldiers and its median ground
 # distance to its place within 25 m for the infantry and 40 m for the archers (Scatter spreads them over the archer points within 40 m). The [LongDefeat][Split] lines name each group's place and size at each split and at each wave start.
 # A skip proves nothing and is named: reason=short-hold (the hold lasted under 20 s), engine-took (no group was still off AI control at the release), charge (the stalemate charge ended the hold), no-contact (the wave cleared first), run-ended or no-groups. run_long_defeat.py owes one pass once the log shows a split was made and a wave cleared. A fail with reason=no-places means the scene gave no place for a pair, and the defenders stayed with the AI.
 absence = "not-reached"

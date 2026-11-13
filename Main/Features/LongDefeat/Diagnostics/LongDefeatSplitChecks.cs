@@ -20,9 +20,9 @@ internal static class LongDefeatSplitChecks
     internal const float ArcherReach = 40f;
     internal const float MinHoldSeconds = 20f;
 
-    internal static CheckVerdict Stand(int wave, IReadOnlyList<LdSplitGroup> groups, float heldSeconds, LdSplitRelease release, IReadOnlyList<int> lanes)
+    internal static CheckVerdict Stand(int wave, IReadOnlyList<LdSplitGroup> groups, float heldSeconds, LdSplitRelease release, IReadOnlyList<int> close)
     {
-        var detail = $"w={N(wave)} " + string.Join(" ", groups.Select(Describe)) + $" held_s={F1(heldSeconds)} released={N(release.Released)} kept={N(release.KeptByPlayer)} lanes={string.Join(",", lanes)}";
+        var detail = $"w={N(wave)} " + string.Join(" ", groups.Select(Describe)) + $" held_s={F1(heldSeconds)} released={N(release.Released)} kept={N(release.KeptByPlayer)} close={string.Join(",", close)}";
         if (groups.Count == 0)
             return Skip(detail, "no-groups");
         if (release.Released + release.KeptByPlayer == 0)

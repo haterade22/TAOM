@@ -74,7 +74,7 @@ The default and the range live in `BondOfHireSettingsProvider`; the MCM hint quo
 | `taom_boh_term_days` | These mercenaries agreed to serve for at least {DAYS} more {?IS_PLURAL}days{?}day{\?} |
 | `taom_boh_term_unknown` | It is not known how long these mercenaries will serve |
 
-The subject is the mercenaries, never the player, and no word is gendered. The 12 language files carry the seeded English default until the paid translation run (#763).
+The subject is the mercenaries, never the player, and no word is gendered. The 12 language files carry the translated text (2026-11-12, #763).
 
 ## Key Files
 

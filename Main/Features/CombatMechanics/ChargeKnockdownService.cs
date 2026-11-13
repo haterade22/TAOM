@@ -73,6 +73,13 @@ public class ChargeKnockdownService : IChargeKnockdownService
         if (!context.HasKnockBackFlag)
             return null;
 
+        // #728: a NaN or infinite health or damage turns the comparison below into an owned
+        // verdict from garbage; defer to vanilla as for the corrupt inputs above. Branch A reads
+        // neither.
+        if (!FiniteFloatValidator.IsFinite(context.VictimMaxHealth)
+            || !FiniteFloatValidator.IsFinite(context.InflictedDamage))
+            return null;
+
         // #610: neutral ratio, penetration and the floor are MCM-live, read per hit; the max stays JSON.
         float raceResist = _raceModifiers.Resolve(context.VictimRaceId).KnockdownResistanceMultiplier;
         float penetration = _settings.ChargeHorsePenetration

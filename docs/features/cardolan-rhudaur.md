@@ -225,9 +225,10 @@ generator and `--only <culture>`. Both `generate_new_faction_kingdoms.py` and
   its career descriptions (`taom_careers.xml`) and five wanderer backstories still fight Angmar,
   and the Remnants
   of Angmar faction card still stands (a decision for Mike; changing them resets their translations).
-- All new English text waits for the paid translation run (#763). The 12 translated
-  `loc_arnor.xml` files in the live Armory have no row yet for the 9 new ladder bows, so
-  `sync_ranged_ladder_translations.py` stops on `ladder_rhudaur_bow_t2` until that run adds them.
+- All new English text is translated in all 12 languages (2026-11-12, #763), and the 12
+  `loc_arnor.xml` files in the live Armory have rows for the 9 new ladder bows. With those rows in
+  place, `sync_ranged_ladder_translations.py --verify` stops on `ladder_arthedain_bow_t7` instead,
+  which has no retired row to copy from.
 - No new faction-screen art was made: both cards show the existing `faction_kingdom_of_cardolan.png`
   and `faction_kingdom_of_rhudaur.png` in `Main/_Module/GUI/SpriteData/FactionMap/`.
 

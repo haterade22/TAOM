@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using TAOM.Features.FordsOfWar.Autorun;
 using TAOM.Features.FordsOfWar.Domain;
 
 namespace TAOM.Features.FordsOfWar.Diagnostics;
@@ -72,6 +73,17 @@ internal static partial class FordsVerdicts
         return (judged > 0 ? FordsResult.Pass : FordsResult.NotSeen, numbers);
     }
 
+    /// <summary>How long a tower strike must have stood ordered before a short run expects a melee blow from it.</summary>
+    private const double StrikeAgeSeconds = 30.0;
+
+    /// <summary>Mission seconds from the first AttackTower order of any stream to the end of the run; negative when none was given.</summary>
+    private static double OldestStrikeAge(FordsRunEvidence run)
+    {
+        var key = nameof(LaneCommandKind.AttackTower);
+        var first = run.Lanes.Where(l => l.FirstGivenMt.ContainsKey(key)).Select(l => l.FirstGivenMt[key]).DefaultIfEmpty(double.NaN).Min();
+        return double.IsNaN(first) ? -1.0 : run.Mt - first;
+    }
+
     private static FordsVerdictRow Check09(FordsRunEvidence run)
     {
         var locked = Blows(run, null, TowerDamageReason.Locked);
@@ -80,7 +92,10 @@ internal static partial class FordsVerdicts
 
         var meleeApplied = Blows(run, TowerBlowClass.Melee, TowerDamageReason.Applied);
         var nearSeconds = run.Towers.Values.Sum(t => t.MeleeNearUnitSeconds);
-        var melee = meleeApplied > 0 ? FordsResult.Pass : nearSeconds >= 30.0 ? FordsResult.Fail : FordsResult.NotSeen;
+        // #1137: early in a match the waves meet near the outer towers before any strike is ordered, and the first order can come
+        // too late for a blow. A short run fails only once a strike has been ordered for StrikeAgeSeconds; a full-length run as before.
+        var strikeOwed = run.Perf.LiveSeconds >= FordsAutorunPlan.DefaultLiveSeconds || OldestStrikeAge(run) >= StrikeAgeSeconds;
+        var melee = meleeApplied > 0 ? FordsResult.Pass : nearSeconds >= 30.0 && strikeOwed ? FordsResult.Fail : FordsResult.NotSeen;
         var (bypass, bypassNumbers) = Bypass(run);
 
         var drifted = string.Join(",", run.Towers.Where(p => p.Value.DriftFlagged).Select(p => p.Key));
@@ -93,7 +108,7 @@ internal static partial class FordsVerdicts
             + " gunnerBlows=" + run.Towers.Values.Sum(t => t.GunnerBlowsMelee) + " melee/" + run.Towers.Values.Sum(t => t.GunnerBlowsRanged) + " ranged"
             + " | " + Ladder(run) + " | " + TowerHealth(run)
             + " | melee blows " + BlowsByReason(run, TowerBlowClass.Melee) + " | all blows " + BlowsByReason(run, null),
-            "A blow on a locked tower took nothing, engine and rules hit points never differed by more than 1 on two samples in a row, melee landed once enemies stood at a tower for 30 unit-seconds, and no marching stream had more than half its units more than 10 m past the next standing enemy tower on two looks in a row (the looks are the 1 Hz field probe, measured from the units, not from the rules' lead). The ladder names, per stream ordered at a tower, the broken link: units under the order, flagged AttackEntity, within 4 m of that tower, blows on the tower against blows on its gunners, and the blows that took hit points.",
+            "A blow on a locked tower took nothing, engine and rules hit points never differed by more than 1 on two samples in a row, melee landed once enemies stood at a tower for 30 unit-seconds (in a run shorter than the default 600 live seconds, only once a tower strike had been ordered 30 mission seconds before the run ended), and no marching stream had more than half its units more than 10 m past the next standing enemy tower on two looks in a row (the looks are the 1 Hz field probe, measured from the units, not from the rules' lead). The ladder names, per stream ordered at a tower, the broken link: units under the order, flagged AttackEntity, within 4 m of that tower, blows on the tower against blows on its gunners, and the blows that took hit points.",
             "The tower bar moves when it is struck.");
     }
 
@@ -135,6 +150,15 @@ internal static partial class FordsVerdicts
         return values.Count % 2 == 1 ? values[mid] : (values[mid - 1] + values[mid]) / 2.0;
     }
 
+    /// <summary>
+    /// Tower missiles (javelins and arrows, as Launched and HitsSeen count them) launched with no hit before check 11
+    /// fails (#1152). The runs on file hit 4.35 to 18.4 percent of the time over 150 or more launches, so 20 misses in
+    /// a row came in about a third of 120 second smokes. The three missiles of a volley share one target, so count
+    /// volleys: 400 missiles are about 133 volleys, and at 4.35 percent per volley that many misses come in about
+    /// 0.3 percent of runs. Every run of 300 live seconds or more on file launched at least 409.
+    /// </summary>
+    private const int NoHitFailLaunches = 400;
+
     private static FordsVerdictRow Check11(FordsRunEvidence run)
     {
         var v = run.Volley;
@@ -165,7 +189,7 @@ internal static partial class FordsVerdicts
             hitsResult = FordsResult.Fail;
             hitsNumbers += "; the towers asked to fire and no missile was ever added";
         }
-        else if (v.Launched >= 20 && v.HitsSeen == 0)
+        else if (v.Launched >= NoHitFailLaunches && v.HitsSeen == 0)
         {
             hitsResult = FordsResult.Fail;
             hitsNumbers += "; missiles flew and none struck anyone";
@@ -181,7 +205,7 @@ internal static partial class FordsVerdicts
             parts.Add(ArrowPart(v, arrows));
 
         return Row(11, parts.ToArray(), "perBodyPart " + ByPart(javelins) + (arrowId == null ? "" : " arrowPerBodyPart " + ByPart(arrows)),
-            "The javelin and the arrow each resolved with a reach past the fire range, and for each the median ratio of the engine's magnitude to its own N x multiplier x (impact speed / S) squared over unshielded, unmounted human hits is within 20 percent of 1; it fails when the towers asked to fire 10 times and no missile was added, or when 20 missiles flew and no hit was seen.",
+            "The javelin and the arrow each resolved with a reach past the fire range, and for each the median ratio of the engine's magnitude to its own N x multiplier x (impact speed / S) squared over unshielded, unmounted human hits is within 20 percent of 1; it fails when the towers asked to fire 10 times and no missile was added, or when " + NoHitFailLaunches + " missiles flew and no hit was seen.",
             "The hit points lost look right on armoured and leg hits.");
     }
 

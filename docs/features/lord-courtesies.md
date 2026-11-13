@@ -120,7 +120,7 @@ Four parts of the original proposal are not built. AI lords selling bandit priso
 
 ## Translations
 
-The 10 new keys carry English seed text in all 12 languages. A paid translation run is owed (backlog); until then every language shows the English line.
+The 10 new keys carry translated text in all 12 languages (2026-11-12, #763).
 
 ## In-game checklist
 

@@ -99,8 +99,11 @@ internal interface ILongDefeatFortAdapter
     /// </summary>
     LdSplitResult SplitDefenders(SplitShares shares);
 
-    /// <summary>The defense level of each siege lane in the engine's order: 0 empty, 1 token, 2 full (<c>SiegeLane.GetDefenseState</c>). Empty when the mission has no lanes.</summary>
-    IReadOnlyList<int> ReadLaneLevels();
+    /// <summary>The attackers at the walls on each side, left, middle and right, as the siege AI counts them (<c>SiegeQuerySystem</c>'s close attacker counts). Empty when the mission has no siege query system.</summary>
+    IReadOnlyList<int> ReadCloseAttackers();
+
+    /// <summary>Drops the siege AI's 5 s cache of those counts (<c>SiegeQuerySystem.Expire</c>), so the next read counts the attackers again. Does nothing when the mission has no siege query system.</summary>
+    void RefreshCloseAttackers();
 
     /// <summary>The split's held groups as they stand now, in the order wall, gate, low, high; a group the last split did not make is absent. Empty when nothing is held.</summary>
     IReadOnlyList<LdSplitGroup> ReadSplit();

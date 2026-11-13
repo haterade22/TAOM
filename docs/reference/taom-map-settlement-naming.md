@@ -135,7 +135,7 @@ For a bulk display-name change (for one or two ids a targeted write is simpler, 
 5. **Apply** with `python tools/Apply-MapVillageNames.py --apply`: it writes the master and the 12 loc rows of each renamed id, backs up each changed file, and removes the renamed ids from `tools/translation_cache/<lang>.json` (#1042).
 6. **Re-tag** the BR and IT names: `python tools/generate_name_tags.py --write`, then `python tools/name_tags.py --target live-map --apply --allow-live-write`.
 7. **Verify:** grep for any remaining placeholder substrings (`Castle Village [A-Z]`, `Village [A-Z]+\d+_\d+`).
-8. **In-game spot-check:** launch Bannerlord, tour the campaign map, confirm names render. Switch language (DE/FR/JP): a renamed settlement shows its current English name until the translation backlog (#763) runs, then its translation (transliterated in JP, KO, CN and RU).
+8. **In-game spot-check:** launch Bannerlord, tour the campaign map, confirm names render. Switch language (DE/FR/JP): a renamed settlement shows its translation since 2026-11-12 (#763; transliterated in JP, KO, CN and RU).
 
 ### Adding a brand-new settlement (not a rename)
 
@@ -262,8 +262,8 @@ With TAOM, TAOM_Map and LOTRLOME_Armory loaded:
 
 1. In the Encyclopedia, Mearhtun, Maeswen and Lhan Penrhos show Middle-earth descriptions (Mearhtun: "lies on the open
    grasslands near Marton"), not Calradian ones.
-2. In German or Russian, Mearhtun shows Mearhtun (not Usanc), Linenhold shows Linenhold (not Dorf E2_1) and Galtrev
-   shows Galtrev (not Epicrotea), in English until the translation backlog (#763) runs.
+2. In German, Mearhtun shows Mearhtun (not Usanc), Linenhold shows Linenhold (not Dorf E2_1) and Galtrev shows
+   Galtrev (not Epicrotea). In Russian they show Меархтун, Линенхольд and Галтрев (translated 2026-11-12, #763).
 3. Before publishing a `TAOM_Map` package, run the channel check in
    [release-process.md](release-process.md) ("TAOM_Map must carry the #1042 name and description repair").
 

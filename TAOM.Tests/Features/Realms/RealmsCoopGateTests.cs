@@ -21,7 +21,8 @@ public class RealmsCoopGateTests
         var previous = LiegeArmyDiscount.Behavior;
         try
         {
-            var realms = new RealmsCampaign(new NullRealmsPopupAdapter(), () => false);
+            var realms = new RealmsCampaign(new NullRealmsPopupAdapter(), () => false,
+                NSubstitute.Substitute.For<TAOM.Features.CoopInterop.IPlayerControlQuery>());
 
             Assert.IsFalse(realms.EnsureInitialized());
             Assert.IsFalse(realms.Service.IsInitialized);

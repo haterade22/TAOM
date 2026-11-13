@@ -121,7 +121,7 @@ The mission behavior's apply-on-change needs a live `Mission` and is covered by 
 5. Burst: cap 250, fade 300, wait for about 250 bodies, drop the fade to 10, then toggle cleanup off and on. Read `[MissionStall]` and `[MissionPerf]` around each change.
 6. With high options, the main menu offers the change once; Apply rewrites `number_of_ragdolls` in `engine_config.txt` and `NumberOfCorpses` in `BannerlordConfig.txt` (back both up first), and Options, Performance shows 5 and Low (25). Whether the ragdoll limit takes effect before a restart is unverified.
 7. Ragdolls 1 and corpses High: Apply keeps ragdolls at 1. Turn "Recommend Battle Settings" off and restart: no inquiry.
-8. After the translation run, one non-English language: the inquiry names the options as that language's Options screen does.
+8. In one non-English language: the inquiry names the options as that language's Options screen does.
 
 ## Changelog
 

@@ -20,10 +20,10 @@ _(7 rules; `python tools/lint_docs.py --context-budget-json` gives their sizes. 
 |------|---------|
 | `environment-failures.md` | Report environment failures (missing tools, paths, MCP down) and stop; don't fix infra. Check which machine you are on first. |
 | `evidence-over-claims.md` | Verify a review finding before implementing it; no performative agreement; no "done" without fresh output (a subagent's self-report doesn't count); never state an unread fact. |
-| `model-effort-selection.md` | The main session does most work (Mike, 2026-11-02); a delegated task gets the cheapest model and effort that fits (routing table, one-tier escalation, a one-line note before each spawn). Tier agents `fast-reader`, `implementer`, `architect`. |
+| `model-effort-selection.md` | The main session does most work (Mike, 2026-11-02); a delegated task gets the cheapest model and effort that fits (the tiers, one-tier escalation, a one-line note before each spawn). Tier agents `fast-reader`, `implementer`, `architect`. |
 | `output-style.md` | Part 1 (chat): open with scrutiny, not agreement; tag every response `[Certain]`/`[Likely]`/`[Guessing]`; one step per message in a live session; lead a reply with the decision; STE wins in STE text. Part 2 (produced prose): no em or en dash, the tells in strength order, full list in `docs/reference/writing-tells.md`; boldface and tables stay. |
 | `simplicity-criterion.md` | Keep-or-reject matrix: a tiny gain with added complexity is rejected; a deletion that holds parity always wins. |
-| `think-before-coding.md` | State load-bearing assumptions before the first edit and ask when one is uncertain; don't ask on trivial work; make the goal testable; reuse-before-write ladder. |
+| `think-before-coding.md` | State load-bearing assumptions before the first edit and ask when one is uncertain; don't ask on trivial work; make the goal testable; a pointer to the reuse ladder in `csharp-patterns.md`. |
 | `working-discipline.md` | Autonomous-loop stewardship (continue established work, never stop to ask permission) and edit-scope discipline, including during a review gate. |
 
 ## Path-scoped rules (load when a matching file is read, written or edited)
@@ -33,7 +33,7 @@ _(7 rules; `python tools/lint_docs.py --context-budget-json` gives their sizes. 
 | `adapters.md` | Adapter pattern, research-first |
 | `config-providers.md` | Config files, MCM settings and editor-visible fields validate semantics at load, not only syntax; NaN and range checks, both-surface MCM clamps, reload scope |
 | `csharp-architecture.md` | Non-negotiable rules, IoC lifetimes, entity state matrix, session reset, float gates, lookup fallbacks, mission-scope agent handles and threads |
-| `csharp-patterns.md` | Hook, Strategy and GameModel patterns, quick reference |
+| `csharp-patterns.md` | The reuse-before-write ladder, lazy `IoC.Resolve` on a hot path; Hook, Strategy and GameModel patterns, quick reference |
 | `data-scripts.md` | Scripts under `tools/`: the XML I/O convention, backups, dry run, parse before write; model the deserializer when reading what a troop carries |
 | `external-skill-ports.md` | Authoring a skill from scratch, and the per-field checklist for porting one from an external suite |
 | `gamemodels.md` | GameModel override pattern, base-class rules, registration |
@@ -48,6 +48,20 @@ _(7 rules; `python tools/lint_docs.py --context-budget-json` gives their sizes. 
 | `vanilla-data-comparison.md` | Compare against the installed vanilla before modifying mirrored data; stale references crash |
 | `xml-data.md` | NPC naming, region codes, culture ids, equipment roster schema, formatting |
 | `xslt.md` | XSLT passthrough, SandBoxCore reference |
+
+## Trap sheets (`.claude/rules/traps/`, path-scoped)
+
+One line per trap, loaded with the files of its area. The orientation.md trap index holds one row per
+sheet and the traps no sheet's paths can reach (the live Armory and TAOM_Map, the Kit, cross-area
+renames). A new trap is a row in its sheet ([ADR-011](../adrs/011-knowledge-delivery-tiers.md),
+amendment of 2026-11-13).
+
+| Sheet | Area |
+|-------|------|
+| `traps/campaign.md` | Campaign behaviors, ticks, menus, map events, capture, marriage, settings, console commands, parked features |
+| `traps/mission.md` | Mission logic, agents, formations, siege ladders, moving platforms, native calls |
+| `traps/creatures-assets.md` | Mounts, creatures, race rigs, skeletons, animation clips, Kit and Unreal imports |
+| `traps/data.md` | Troop and character XML, equipment sets, player start kits, culture files, ranged ladders |
 
 ---
 

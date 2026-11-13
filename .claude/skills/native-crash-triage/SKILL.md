@@ -1,6 +1,6 @@
 ---
 name: native-crash-triage
-description: Root-cause native Bannerlord CTDs (AccessViolation in TaleWorlds.Native.dll) and hangs, via Event Log offsets, hang dumps, Ghidra decompile and live debugger forensics. No symbols needed.
+description: "Use on a native CTD (AccessViolation in TaleWorlds.Native.dll, no managed culprit) or a hang; never blind-retry. Event Log offsets, hang dumps, Ghidra decompile, live debugger forensics. No symbols needed."
 ---
 
 # Native Crash Triage

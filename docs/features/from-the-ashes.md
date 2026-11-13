@@ -208,7 +208,7 @@ All of this is unseen in game. Items marked verified in source were read in the 
 
 - **Issue:** [#856](https://github.com/haterade22/TAOM/issues/856) From the Ashes: help rebuild raided villages and finish fief projects
 - **Status:** Shipped on `bannerlord-1.5.x` in `c4e4b4d43` (v2.0.35; its text tests gained the game tag in `79c5d3101`).
-  Issue open: the in-game check is owed; the paid translation of its strings is tracked in [#931](https://github.com/haterade22/TAOM/issues/931).
+  Issue open: the in-game check is owed; its strings are translated in all 12 languages (2026-11-12), tracked in [#931](https://github.com/haterade22/TAOM/issues/931).
 
 ---
 

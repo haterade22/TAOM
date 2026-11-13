@@ -12,7 +12,8 @@ namespace TAOM.Tests.Features.DevConsole;
 /// is declared but never registered, or that silently fails to apply after an engine bump, is dead
 /// code with no error and no warning. Today "did Patch63 apply?" is only answerable by grepping
 /// `taom_debug`. Two behaviours are deliberately encoded rather than treated as bugs: manual patches
-/// carry no category by design, and `Patch0_BattleScenes` is deliberately disabled — so
+/// carry no category by design, and a parked category such as `Patch21_ShaderPrecompilation` is
+/// never registered, so
 /// declared-but-not-applied is sometimes the correct output, and the report has to say which is which
 /// rather than crying wolf.
 /// </summary>

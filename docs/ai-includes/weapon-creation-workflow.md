@@ -54,6 +54,12 @@ bo_<same full mesh id>                          e.g. bo_wm_dale_ws_sword_a01_bla
 > near-match in the packaged names before deleting the item — a missing asset is a typo until proven
 > otherwise.
 
+Before the import, run the two mesh gates of
+[`/blender-asset`](../../.claude/skills/blender-asset/SKILL.md) on the artist's FBX:
+`tools/blender/mesh_preflight.py` with `--profile mesh` (guards, handles and pommels take no `bo_`,
+so the `prop` profile would fail them), then `tools/blender/qa_views.py`. They find a `.001` name,
+a missing UV layer and faces wound inward before the tpac is built.
+
 ## Step B — Import the FBX + textures into the Bannerlord editor
 
 Importing produces:

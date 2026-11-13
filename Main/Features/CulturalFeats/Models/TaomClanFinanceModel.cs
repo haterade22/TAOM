@@ -1,9 +1,7 @@
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.GameComponents;
 using TaleWorlds.CampaignSystem.Settlements;
-using System.Collections.Generic;
 using TaleWorlds.Core;
-using TaleWorlds.Localization;
 using TAOM.Features.CareerSystem;
 using TAOM.Features.CareerSystem.Domain;
 using TAOM.Features.Realms;
@@ -48,64 +46,23 @@ public class TaomClanFinanceModel : DefaultClanFinanceModel
     {
         var result = base.CalculateClanGoldChange(clan, includeDescriptions, applyWithdrawals, includeDetails);
         AddServiceWageLine(clan, applyWithdrawals, ref result);
-        AddTributeIncome(clan, includeDetails, ref result);
-        AddTributeExpenses(clan, includeDetails, ref result);
+        RealmsCampaign.Current?.AddTributeIncome(clan, includeDetails, ref result);
+        RealmsCampaign.Current?.AddTributeExpenses(clan, includeDetails, ref result);
         AddCareerDailyGold(clan, ref result);
         return result;
     }
 
     /// <summary>
-    /// The clan screen's "Expenses" tile (<c>ClanManagementVM</c>, the only engine caller), so it carries the tribute the
-    /// clan pays as the income tile carries what it receives.
+    /// The clan screen's "Expenses" tile (<c>ClanManagementVM</c>, the only engine caller, v1.5.7), so it carries the
+    /// tribute the clan pays as the income tile carries what it receives.
     /// </summary>
     public override ExplainedNumber CalculateClanExpenses(
         Clan clan, bool includeDescriptions = false, bool applyWithdrawals = false,
         bool includeDetails = false)
     {
         var result = base.CalculateClanExpenses(clan, includeDescriptions, applyWithdrawals, includeDetails);
-        AddTributeExpenses(clan, includeDetails, ref result);
+        RealmsCampaign.Current?.AddTributeExpenses(clan, includeDetails, ref result);
         return result;
-    }
-
-    /// <summary>
-    /// Realms tribute (docs/features/realms.md): what the clan's vassal clans pay it today. Real gold, so like DailyGold it is
-    /// on every call, the paying one included: <c>DailyTickClan</c> moves each clan's whole gold change, so the vassal's
-    /// daily tick takes its tribute and the liege's adds it, with no transfer of its own. Read from a sheet built once a
-    /// day (<see cref="RealmsCampaign"/>), so each call is a lookup. With details on (the map bar's tooltip) each vassal clan
-    /// is its own line under the total, as the base game shows Settlement Income.
-    /// </summary>
-    private static void AddTributeIncome(Clan clan, bool includeDetails, ref ExplainedNumber result)
-    {
-        var realms = clan == null ? null : RealmsCampaign.Current;
-        if (realms == null)
-            return;
-        AddTributeLine(realms.TributeFrom(clan!), 1, includeDetails, TributeFromVassals, ref result);
-    }
-
-    /// <summary>What the clan pays its liege clans today; see <see cref="AddTributeIncome"/>.</summary>
-    private static void AddTributeExpenses(Clan clan, bool includeDetails, ref ExplainedNumber result)
-    {
-        var realms = clan == null ? null : RealmsCampaign.Current;
-        if (realms == null)
-            return;
-        AddTributeLine(realms.TributeTo(clan!), -1, includeDetails, TributeToLiege, ref result);
-    }
-
-    private static readonly TextObject TributeFromVassals = new("{=realms_finance_tribute_in}Tribute from Vassals");
-    private static readonly TextObject TributeToLiege = new("{=realms_finance_tribute_out}Tribute to Liege");
-
-    private static void AddTributeLine(IReadOnlyList<(Clan Clan, int Gold)> lines, int sign, bool includeDetails, TextObject label,
-        ref ExplainedNumber result)
-    {
-        if (lines.Count == 0)
-            return;
-        var inner = new ExplainedNumber(0f, result.IncludeDescriptions);
-        foreach (var (other, gold) in lines)
-            inner.Add(sign * gold, other.Name);
-        if (includeDetails)
-            result.AddFromExplainedNumber(inner, label);
-        else
-            result.Add(inner.ResultNumber, label);
     }
 
     /// <summary>
@@ -116,9 +73,10 @@ public class TaomClanFinanceModel : DefaultClanFinanceModel
     /// while the expected-change tooltip beside it showed the line. Two numbers on one screen
     /// disagreeing about the same income is how field report 2 gets filed a second time.
     ///
-    /// Safe to add here for a stronger reason than the tooltip's: the ONLY caller in the engine is
-    /// <c>ClanManagementVM</c> (<c>CalculateClanIncome(_clan)</c>, defaulted
-    /// <c>applyWithdrawals: false</c>) — nothing moves money through this method at all. The
+    /// Safe to add here for a stronger reason than the tooltip's: the engine callers are
+    /// <c>ClanManagementVM</c> (<c>CalculateClanIncome(_clan)</c>, defaulted <c>applyWithdrawals: false</c>)
+    /// and, in story mode only, StoryMode's <c>AchievementsCampaignBehavior.ProgressDailyIncome</c> (a
+    /// "MaxDailyIncome" stat, v1.5.7). Nothing moves money through this method at all. The
     /// withdrawal guard is kept anyway, because a future caller that does would otherwise pay the
     /// player twice.
     /// </summary>
@@ -128,7 +86,7 @@ public class TaomClanFinanceModel : DefaultClanFinanceModel
     {
         var result = base.CalculateClanIncome(clan, includeDescriptions, applyWithdrawals, includeDetails);
         AddServiceWageLine(clan, applyWithdrawals, ref result);
-        AddTributeIncome(clan, includeDetails, ref result);
+        RealmsCampaign.Current?.AddTributeIncome(clan, includeDetails, ref result);
         AddCareerDailyGold(clan, ref result);
         return result;
     }

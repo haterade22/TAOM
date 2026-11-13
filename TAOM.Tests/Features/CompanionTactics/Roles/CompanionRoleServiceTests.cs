@@ -232,22 +232,6 @@ public class CompanionRoleServiceTests
     }
 
     [TestMethod]
-    public void GetRoleHint_MountedNonCavalryRole_AppendsHasMountSuffix()
-    {
-        var hint = _sut.GetRoleHint(CombatRole.Archer, isMounted: true);
-
-        Assert.IsTrue(hint.Contains("Has mount"), $"Expected '(Has mount)' suffix, got: {hint}");
-    }
-
-    [TestMethod]
-    public void GetRoleHint_CavalryRole_DoesNotAppendHasMount()
-    {
-        var hint = _sut.GetRoleHint(CombatRole.Cavalry, isMounted: true);
-
-        Assert.IsFalse(hint.Contains("Has mount"));
-    }
-
-    [TestMethod]
     public void IsRangedRole_RangedClasses_True()
     {
         Assert.IsTrue(_sut.IsRangedRole(CombatRole.Archer));
@@ -262,11 +246,5 @@ public class CompanionRoleServiceTests
         Assert.IsFalse(_sut.IsRangedRole(CombatRole.ShieldInfantry));
         Assert.IsFalse(_sut.IsRangedRole(CombatRole.Skirmisher));
         Assert.IsFalse(_sut.IsRangedRole(CombatRole.HorseArcher));
-    }
-
-    [TestMethod]
-    public void GetRoleColor_Unknown_ReturnsMaxValue()
-    {
-        Assert.AreEqual(uint.MaxValue, _sut.GetRoleColor(CombatRole.Unknown));
     }
 }

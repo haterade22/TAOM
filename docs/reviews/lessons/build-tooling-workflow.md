@@ -4992,3 +4992,72 @@ The TAOM.CoopCompat split moved the transport and the wire contracts into a seco
 - **Why missed:** only `tools/tests` loads every manifest; my first Python run timed out and I read nothing from it. The pass line sat where the data was easiest to count.
 - **Prevent:** after any manifest edit run `python -m unittest tools.tests.test_ingame_verdict`, and treat a timed-out run as no evidence. Use the trunk commit before the work as `fixed_in`. Write the pass line where the effect lands, and give every error text one tag that one `fail` pattern catches, with a test that scans the source for the `LogError` texts.
 - **Source:** [rca-siege-retreat-loot-2026-11-12.md](../rca-siege-retreat-loot-2026-11-12.md), findings 1 and 4.
+
+### When a hand count becomes a command, re-check every quantifier beside it against that command's list (plan 051, 2026-11-13)
+
+Plan 051 replaced the README's "29 tools honour it" with a `git grep -l` command and its dated
+count (50). The count was right, but "Every one falls back to `E:\Steam\...`" now ranged over the
+50, and `weapon_xml/config.py` in that list has no fallback. The three tools described as
+inheriting the variable were members of the 50, and the `_gamedir` importer list (90) included six
+that only use its process and path helpers.
+- **Why missed:** the executor reproduced the numbers but not the sentences that quantify over them.
+- **Prevent:** after swapping a count for a command, run the command, then test each "every",
+  "all", "only" and "the N that" in the surrounding paragraph against its output, by script where
+  you can. Name an exception rather than keep a universal claim.
+- **Source:** [rca-tools-dead-scripts-and-test-speed-2026-11-13.md](../rca-tools-dead-scripts-and-test-speed-2026-11-13.md) F3, `/deep-review` Agent 5 and the Tooling lens.
+
+### A new mesh gate is calibrated on an approved asset, and its canary runs every branch (#1153, 2026-11-13)
+
+The first run of `tools/blender/mesh_preflight.py` failed the approved `erebor_dwarf_house_01`: 0.99%
+of its surface is seen only from behind, the limit copied from `unwrap_texture_sets.py` was 0.1%, and
+the 36 faces are thin trim slabs wound inward with a face right behind each, so no hole shows. The
+canary (one good file, one broken copy) then passed, and review still found two faults in paths it
+never took: the views cropped any mesh taller than three quarters of its box diagonal, and the
+sampling path for meshes over 200,000 faces used a stepped bmesh slice, which Blender refuses.
+- **Why missed:** the limit came from a tool built for one icon, and the canary's file was wide, low
+  and small, so the picture height and the face cap never came into play.
+- **Prevent:** before a new geometric check gets a fail limit, run it on an asset Mike has approved
+  and set the limit from that number. Give the canary one case per branch of the Blender-side code:
+  a tall mesh, a mesh over each size cap (force the cap low), a hidden object. A branch no canary
+  ran is unproven, whatever the unit tests say about the pure rules.
+- **Source:** [adopt-blender-skills-2026-11-13.md](../adopt-blender-skills-2026-11-13.md), "What changed against the plan" and "Review of the change set".
+### A tool that takes its arguments by value needs a file that carries them (/improve, 2026-11-12)
+The skill said to build a workflow's args with `improve_ctl.py args --out <file>` and hand them to the Workflow tool. The tool takes args by value, and the args hold the 9 KB dispatch rules, so each launch meant typing 20 KB of JSON into a tool call. The run wrote its own wrapper generator in scratch: a script that embeds the JSON and calls the workflow script through `workflow()`.
+- **Why missed:** the earlier runs pasted the args, and nobody priced the paste or its risk of a slip.
+- **Prevent:** `improve_ctl.py args ... --wrap <script.js>` writes that wrapper; SKILL.md "Phases" and run-protocol "Launching a workflow and waiting for it" use it. When a harness tool cannot read a file, give the generator an output form the tool can run.
+- **Source:** `plans/_audit/2026-11-12-fable/PROGRESS.md`, log of 2026-11-12 21:46.
+
+
+### An orchestrator that may not end its turn needs a wait that blocks (/improve, 2026-11-12)
+SKILL.md forbids ending a turn while agents run, and the harness has no blocking wait, so the run wrote three scratch scripts that polled `improve_ctl.py watch` in a loop. The liveness watch was a separate background loop that could be forgotten.
+- **Why missed:** the rule said what not to do, and no tool gave the allowed form.
+- **Prevent:** `improve_ctl.py watch --dir <folder> [--dir <folder>] --wait 570 [--step N]` blocks until an agent finishes, an agent is newly flagged, no agent has been at work for two looks in a row, or the limit passes. Every wait is then also a liveness check. Use each return for the spec check of what finished. The first version of the wait ended on any state that already held (a flag that stood, the moment between two waves with no agent), so it did not block when it mattered: a wait ends on a change, never on a state.
+- **Source:** `plans/_audit/2026-11-12-fable/PROGRESS.md`.
+
+
+### A tool that routes review lenses by file type overrides the skill's risk tier (/improve, 2026-11-13)
+`improve_ctl.py args review` gave every C# branch six lenses. The deep-review skill had since gained a risk tier table that launches one or two and keeps the rest for a second wave. The run edited the generated args by hand to follow the skill.
+- **Why missed:** the tier rule landed in the skill on 2026-10-22, and the tool that mirrors the skill's routing was not on the list of its consumers.
+- **Prevent:** a review item carries `tier` (1 or 2); the tool routes that tier's wave and names the lenses it leaves out, so the lead reports them SKIPPED BY TIER. When a skill's routing rule changes, grep for every tool and workflow that copies it (`lenses_for`, `LENS_ORDER`, `WAVES`).
+- **Source:** `plans/_audit/2026-11-12-fable/DECISIONS.md` row 10.
+
+
+### Convergence rounds find a LOW in the last round's prose nearly every time (/improve, 2026-11-13)
+Six branches each ran a lead, a convergence round, a fix pass and a second round. Every round 1 finding was LOW. Most were wording in the review's own records (a file count, an "only" that overstated a gate), and two second rounds found another LOW in the text the fix pass had just written. Review cost 6.0 M of the run's 12.5 M subagent tokens. Three refuters cost 0.8 M and narrowed or cut 22 of 27 findings before any plan existed.
+- **Why missed:** the loop treats every severity alike, and a reviewer at max effort that reads prose finds something in prose.
+- **Prevent:** `--stop-on-low` (`stopOnLow` in `review.js`): a round whose findings are all LOW ends the loop and hands them to the orchestrator, who fixes the ones in code, tests and comments and tracks the ones in records. Spend agents where they overturn claims (refuters before plans), not where they polish records.
+- **Source:** `plans/_audit/2026-11-12-fable/PROGRESS.md` rows "8 Review"; the three review workflow results.
+
+
+### A workflow prompt that prescribes `fix(` makes every review commit a fix (/improve, 2026-11-13)
+`review.js` told the lead to commit with the subject `fix(<scope>): ... review follow-ups` and the fix pass with `fix(<scope>): ... convergence fixes`. On six branches those commits changed tests, comments and review records, and their bodies said "No change in game". `/release` builds the changelog from commit subjects, so each would be listed as a fix. A convergence reviewer flagged one of them; the others have the same type.
+- **Why missed:** the subject was a literal in the prompt, and the commit rule the agents receive did not say what each type means.
+- **Prevent:** the prompts now ask for `<type>` chosen by what the commit changes, and dispatch rule 10 defines the types (`fix` only for a defect in shipped behaviour). A literal in a prompt is a decision made for every case: write the rule, not the value.
+- **Source:** the review result of plan 050, convergence round 1, finding 1; `plans/_audit/2026-11-12-fable/FOR-MIKE.md` item 16.
+
+
+### File a red baseline as an issue only after a look at the trunk (/improve, 2026-11-12)
+The run's baseline showed nine failing tool tests on the trunk, and the run filed #1135 for them. A trunk commit 15 minutes younger than the baseline had already fixed them, so the issue was closed two hours later.
+- **Why missed:** the dedupe step searched open issues, not the commits made since the baseline.
+- **Prevent:** before filing a failure the baseline shows on the trunk, fetch and read `git log --oneline <baseline>..origin/<trunk>` (run-protocol "Issues").
+- **Source:** #1135.

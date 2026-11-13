@@ -633,7 +633,7 @@ re-masks at the next two-second refresh, until the tooltip is rebuilt. Vanilla's
 - The scout-away rule and the scout report moved to [#847](https://github.com/haterade22/TAOM/issues/847) and are built: see "Far Watch (#847)" above.
 - Hover tooltips still show exact numbers and the name until Phase 2.
 - The memory symbol `~` and its popup text arrive with Phase 3.
-- Translation: the seven `taom_hhost_*` keys (three from phases 1 and 2, three from phase 3, one from #848) are seeded as English in all 12 languages; the paid translation run is owed (the six in #942, the #848 key in #763).
+- Translation: the seven `taom_hhost_*` keys (three from phases 1 and 2, three from phase 3, one from #848) are translated in all 12 languages (2026-11-12; the six in #942, the #848 key in #763).
 
 ## Not in Phase 2
 

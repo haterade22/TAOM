@@ -4846,7 +4846,7 @@
 	<string id="taom_marshal_word_given" text="{=taom_marshal_word_given}The word is given." />
 	<!-- TaomSettings.cs -->
 	<string id="taom_marshal_mcm_outlines" text="{=taom_marshal_mcm_outlines}Outlines" />
-	<string id="taom_marshal_mcm_outlines_hint" text="{=taom_marshal_mcm_outlines_hint}While the order panel is open, or while the show-indicators key (default Left Alt) is held, the soldiers of your selected companies wear a gold outline and an enemy company that one of them marks or charges wears a red one. Hold Mark, Do Not Move (default Left Ctrl) while you order a charge to mark an enemy company without moving: a mark steers archers and other ranged soldiers, and soldiers fighting hand to hand choose their own foe. Default: on." />
+	<string id="taom_marshal_mcm_outlines_hint" text="{=taom_marshal_mcm_outlines_hint}While the order panel is open, or while the show-indicators key (default Left Alt) is held, the soldiers of your selected companies wear a gold outline and an enemy company that one of them marks or charges wears a red one. Hold Mark, Do Not Move (default Left Ctrl) while you order a charge to mark an enemy company without moving: a mark steers archers and other ranged soldiers, and soldiers fighting hand to hand choose their own foe. This setting was renamed when its default changed to off, so a value you saved earlier was reset: turn it on again if you want it. Default: off." />
 	<!-- SeatScreenAdapter -->
 	<string id="taom_seat_hero_fell" text="{=taom_seat_hero_fell}Your hero has fallen. Press Take this soldier (Delete unless rebound) to take a soldier." />
 	<string id="taom_seat_take_nobody" text="{=taom_seat_take_nobody}There is nobody there to take." />

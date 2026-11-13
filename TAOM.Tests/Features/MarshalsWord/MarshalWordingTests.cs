@@ -45,7 +45,7 @@ public class MarshalWordingTests
             "On an Advance, a company of yours whose soldiers mostly carry javelins or other throwing weapons stops short of the enemy and throws, then goes in to melee when most have thrown, when the enemy comes close or after 40 seconds standing. A company holding the line, holding its fire, on a fire mode or in a shield wall, circle, square or column advances as before. Default: on."),
         (SettingsFile, "taom_marshal_mcm_outlines", "Outlines"),
         (SettingsFile, "taom_marshal_mcm_outlines_hint",
-            "While the order panel is open, or while the show-indicators key (default Left Alt) is held, the soldiers of your selected companies wear a gold outline and an enemy company that one of them marks or charges wears a red one. Hold Mark, Do Not Move (default Left Ctrl) while you order a charge to mark an enemy company without moving: a mark steers archers and other ranged soldiers, and soldiers fighting hand to hand choose their own foe. Default: on."),
+            "While the order panel is open, or while the show-indicators key (default Left Alt) is held, the soldiers of your selected companies wear a gold outline and an enemy company that one of them marks or charges wears a red one. Hold Mark, Do Not Move (default Left Ctrl) while you order a charge to mark an enemy company without moving: a mark steers archers and other ranged soldiers, and soldiers fighting hand to hand choose their own foe. This setting was renamed when its default changed to off, so a value you saved earlier was reset: turn it on again if you want it. Default: off."),
     };
 
     // The key rows of global_strings.xml, by the engine's id (category and game key id), with the English each language file seeds.
@@ -246,7 +246,7 @@ public class MarshalWordingTests
             StringAssert.EndsWith(hint, value ? "Default: on." : "Default: off.", key);
         }
 
-        Assert.IsTrue(settings.Contains("MarshalOutlines { get; set; } = TAOM.Features.MarshalsWord.MarshalSettingsProvider.DefaultOutlines;"));
+        Assert.IsTrue(settings.Contains("MarshalShowOutlines { get; set; } = TAOM.Features.MarshalsWord.MarshalSettingsProvider.DefaultOutlines;"));
     }
 
     [TestMethod]

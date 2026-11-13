@@ -236,7 +236,7 @@ AUTHORED = {
     "eredluin": {
         "parents": [
             ("Noble of Thorin's Halls",
-             "Your family belonged to the House of Borin, kin to King Farin, wielding great axes and leading the warriors who keep the honour of Thorin's Halls in the Blue Mountains."),
+             "Your family belonged to the House of Delingur, kin to King Farin, wielding great axes and leading the warriors who keep the honour of Thorin's Halls in the Blue Mountains."),
             ("Master Smith of Nogrod",
              "Your family kept a forge in Nogrod, where the Firebeards have worked iron since the Elder Days. Their blades and mail went west to the Elves of Lindon and east along the Dwarf-road, and every piece fetched its price."),
             ("Miner of Mount Dolmed",

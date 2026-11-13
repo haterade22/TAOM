@@ -1,0 +1,19 @@
+schema_version: "1.1"
+name: route-blender-asset
+description: A hand-modelled prop FBX to check before the Modding Kit, with the go-ahead given
+tags: [routing]
+plugins: ["../.."]
+execution:
+  max_turns: 6
+  timeout_seconds: 120
+  allowed_tools: [Skill]
+  append_system_prompt: "@@CLAUDE_SKILLS_TABLE@@"
+  prompt: >-
+    I modelled a Gondor market stall by hand in Blender and exported it to
+    E:/LOTRAOMAssets/_export/gondor/sm_gd_market_stall_001.fbx. Go ahead and check the mesh
+    before I import it into the Modding Kit.
+graders:
+  - name: skill-fired
+    type: tool_used
+    tool: Skill
+    input_match: '"skill"\s*:\s*"(?:[\w-]+:)?blender-asset"'

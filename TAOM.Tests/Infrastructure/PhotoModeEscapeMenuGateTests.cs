@@ -26,7 +26,7 @@ public class PhotoModeEscapeMenuGateTests
         // Filter on the raw text first, then strip comments from the few candidates. A file that names a token only in a comment passes this
         // filter, and the checks below, which read the stripped text, then drop it.
         var sources = RepoPaths.CSharpFiles()
-            .Select(f => (File: f, Raw: File.ReadAllText(f)))
+            .Select(f => (File: f, Raw: RepoPaths.Text(f)))
             .Where(s => s.Raw.Contains("IsPhotoModeAllowed") || s.Raw.Contains("[ViewCreatorModule]"))
             .ToDictionary(s => s.File, s => RepoPaths.StripComments(s.Raw));
         var refusers = new HashSet<string>(sources.Values
