@@ -77,8 +77,7 @@ public class CommentStringTagsTests
         var ids = OverriddenIds();
         Assert.IsTrue(ids.Count > 0, "No override templates found in comment_strings.xslt.");
 
-        var transform = new XslCompiledTransform();
-        transform.Load(XsltPath());
+        var transform = CompiledXslt.Get(XsltPath(), XsltLoadStyle.FrameworkDefaults);
 
         var output = new XDocument();
         using (var writer = output.CreateWriter())

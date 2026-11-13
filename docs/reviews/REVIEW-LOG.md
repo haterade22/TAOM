@@ -5705,3 +5705,18 @@ Report `docs/reviews/deep-review-047-fold-safe-twins-2026-11-13.md`; RCA `docs/r
 | F1 | A new test comment said `CampaignTime.Never` is the one nonzero `CampaignTime` a test can build without a campaign; `operator -` builds another | Other: comment against engine source | The comment came word for word from the plan and was not re-derived | Comment narrowed to what holds: `Never` reads no tick static, and `Hours` and `Days` give `Zero` for every finite argument with no campaign (the first narrowing, "the only public factory", missed NaN and infinity, convergence round 1); lesson in `lessons/testing-qa.md` |
 
 - **In-game:** nothing was run; another session held the game install.
+
+## Review (number assigned at merge): test-suite read caches, plan 046 (#1132), deep review lead pass with no Codex (2026-11-13)
+
+- **Scope:** `664f19c5b..eb38f4009` on `improve/046-test-suite-read-caches`, test code under `TAOM.Tests` only.
+- **Codex:** not run (out of usage; a paid call needs the maintainer's word).
+- **Confirmed:** 2 LOW from Agent 5, both fixed: a probe comment that claimed to isolate the root check, and
+  public doc comments that did not say the results are cached. 0 false positives. Rows in
+  `docs/reviews/rca-test-suite-read-caches-2026-11-13.md`.
+
+| # | Bug | Category | Why missed | Preventive action |
+|---|-----|----------|-----------|-------------------|
+| 1 | The uncached-path probe tripped both the bin and the root clause, so neither had its own test | Other: test isolation | The mutation proof disabled the whole method | A read-only probe for the root clause, proven by a per-clause mutant; lesson in `lessons/testing-qa.md` |
+| 2 | The run-snapshot contract was only on a private field | Convention inconsistency | The contract went beside the data, not on the entry points | Doc comments on `CSharpFiles`, `ReadSource`, `MentionsOutsideComments` and the class |
+
+- **In-game:** not applicable (test code only).

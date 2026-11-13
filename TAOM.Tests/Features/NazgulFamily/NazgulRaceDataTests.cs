@@ -42,8 +42,7 @@ public class NazgulRaceDataTests
 
     private static XDocument TransformSentinelStub()
     {
-        var transform = new XslCompiledTransform();
-        transform.Load(Path.Combine(CultureDataFixture.ModuleDataPath(), "lords.xslt"));
+        var transform = CompiledXslt.Get(Path.Combine(CultureDataFixture.ModuleDataPath(), "lords.xslt"), XsltLoadStyle.FrameworkDefaults);
 
         var stub = new XElement("NPCCharacters",
             TheNine.Select(id => new XElement("NPCCharacter",

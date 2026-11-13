@@ -45,7 +45,7 @@ public class ClientIsolationGateTests
         Assert.IsTrue(files.Count > 0, "The scan read no file under Client/.");
 
         var offenders = files
-            .Where(f => ForbiddenInTheClient.IsMatch(RepoPaths.StripComments(File.ReadAllText(f))))
+            .Where(f => ForbiddenInTheClient.IsMatch(RepoPaths.StripComments(RepoPaths.Text(f))))
             .Select(Path.GetFileName)
             .ToList();
 

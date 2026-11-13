@@ -2728,3 +2728,16 @@ older comment in `RefugeServiceTests.cs`, so the overclaim spread from one test 
   floats included. Narrow the wording to what was checked. The first narrowing here, "the only public factory that is nonzero",
   was still false: `Hours(float.NaN)` multiplies NaN by a zero tick static and the unchecked cast gives long.MinValue ticks.
 - **Source:** [rca-refuge-load-repair-unit-2026-11-13.md](../rca-refuge-load-repair-unit-2026-11-13.md) F1, `/deep-review` Agent 2.
+
+### A probe that claims to isolate one clause of a guard must trip no other clause (plan 046, 2026-11-13)
+
+`RepoPathsTests` wrote its uncached-path probe to `TAOM.Tests/bin/repopaths-text-probe.cs` and said that only
+the root check kept it out of the cache. `IsCorpusFile` also rejects any path with a `bin` segment, so the
+probe tripped two clauses and guarded neither: with the root clause turned into an `||`, every RepoPaths test
+stayed green.
+- **Why missed:** the probe went under `bin` so the file it writes stays git-ignored, and the mutation proof
+  disabled the whole method (`return true;`), which any one probe catches.
+- **Prevent:** for a guard built from several conditions, run one mutant per condition, and give each
+  condition a probe that passes every other condition. Prefer a read-only probe on a tracked file (here,
+  two reads of a tracked .cs file outside the roots must return two string instances) over a written one.
+- **Source:** [rca-test-suite-read-caches-2026-11-13.md](../rca-test-suite-read-caches-2026-11-13.md), `/deep-review` Agent 5.

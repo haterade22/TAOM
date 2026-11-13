@@ -21,7 +21,7 @@ public class AffectRelativesGateTests
     {
         // The raw match is a necessary condition, so only its few candidates pay for StripComments.
         var offenders = CSharpFiles()
-            .Select(f => (Path: f, Text: File.ReadAllText(f)))
+            .Select(f => (Path: f, Text: Text(f)))
             .Where(f => AffectRelativesTrue.IsMatch(f.Text) && AffectRelativesTrue.IsMatch(StripComments(f.Text)))
             .Select(f => f.Path)
             .Select(f => f.Substring(RepoPath().Length))

@@ -33,10 +33,7 @@ public class ShippedCastleOwnerCultureTests
     /// <summary>Applies a stylesheet to a document the way MBObjectManager.ApplyXslt does.</summary>
     private static XDocument Transform(XDocument source, string stylesheet)
     {
-        var settings = new XmlReaderSettings { DtdProcessing = DtdProcessing.Ignore, XmlResolver = null };
-        var xslt = new XslCompiledTransform();
-        using (var sheet = XmlReader.Create(stylesheet, settings))
-            xslt.Load(sheet, new XsltSettings(false, false), null);
+        var xslt = CompiledXslt.Get(stylesheet, XsltLoadStyle.IgnoreDtdNoResolver);
 
         using var input = source.CreateReader();
         using var buffer = new StringWriter();

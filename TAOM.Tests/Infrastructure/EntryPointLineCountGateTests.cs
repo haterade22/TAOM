@@ -234,7 +234,7 @@ public class EntryPointLineCountGateTests
 
     private static List<KeyValuePair<string, int>> LiveOffenders()
     {
-        var sources = RepoPaths.CSharpFiles().Select(File.ReadAllText).ToList();
+        var sources = RepoPaths.CSharpFiles().Select(RepoPaths.Text).ToList();
         Assert.IsTrue(sources.Count > 500, "Main and Client sources were not found");
         var offenders = Offenders(sources);
         Assert.IsTrue(offenders.Count > 0 || File.Exists(BaselinePath), "no entry point was recognised");

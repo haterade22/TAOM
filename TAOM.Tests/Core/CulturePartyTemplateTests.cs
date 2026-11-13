@@ -336,8 +336,7 @@ public class CulturePartyTemplateTests
     /// </summary>
     private static XDocument TransformSentinelStub()
     {
-        var transform = new XslCompiledTransform();
-        transform.Load(Path.Combine(CultureDataFixture.ModuleDataPath(), "spcultures.xslt"));
+        var transform = CompiledXslt.Get(Path.Combine(CultureDataFixture.ModuleDataPath(), "spcultures.xslt"), XsltLoadStyle.FrameworkDefaults);
 
         var output = new XDocument();
         using (var writer = output.CreateWriter())
