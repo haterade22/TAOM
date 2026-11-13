@@ -270,7 +270,8 @@ public class CoopAuthorityGateTests
         // DailyTickSettlementEvent (client-blocked by Coop), but OnGameLoadedEvent fires on every
         // peer because a joining client loads the host's save through the normal pipeline.
         var service = Substitute.For<ICastleRecruitmentService>();
-        var sut = new CastleRecruitmentBehavior(service, Substitute.For<IModLogger>(), Client());
+        var sut = new CastleRecruitmentBehavior(service, Substitute.For<IModLogger>(), Client(),
+            Substitute.For<IPlayerControlQuery>());
 
         sut.OnGameLoaded(null);
 
@@ -281,7 +282,8 @@ public class CoopAuthorityGateTests
     public void CastleRecruitment_OnNewGameCreated_CoopClient_DoesNotEnsureCastles()
     {
         var service = Substitute.For<ICastleRecruitmentService>();
-        var sut = new CastleRecruitmentBehavior(service, Substitute.For<IModLogger>(), Client());
+        var sut = new CastleRecruitmentBehavior(service, Substitute.For<IModLogger>(), Client(),
+            Substitute.For<IPlayerControlQuery>());
 
         sut.OnNewGameCreated(null);
 
@@ -303,7 +305,8 @@ public class CoopAuthorityGateTests
         var service = Substitute.For<ICastleRecruitmentService>();
         var host = Substitute.For<ICoopSessionProvider>();
         host.IsAuthority.Returns(true);
-        var sut = new CastleRecruitmentBehavior(service, Substitute.For<IModLogger>(), host);
+        var sut = new CastleRecruitmentBehavior(service, Substitute.For<IModLogger>(), host,
+            Substitute.For<IPlayerControlQuery>());
 
         sut.OnGameLoaded(null);
 

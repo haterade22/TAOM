@@ -2781,3 +2781,8 @@ A source test asserted that the messenger target reader contains `hero.PartyBelo
 - **Why missed:** the pin was chosen by reading the line it should guard, not by searching the file for it; the tests were named for the story, not for what they pass in.
 - **Prevent:** after writing a `StringAssert.Contains` pin, count the substring's occurrences in the pinned file (`grep -o -F '<pin>' <file> | wc -l`, since `-c` counts lines); more than one means a longer pin or a regex over the whole expression. Before adding a test, search the class for the same call with the same arguments.
 - **Source:** [rca-messenger-arrival-1133-2026-11-13.md](../rca-messenger-arrival-1133-2026-11-13.md), finding 4.
+### A mutation restored in the same second leaves the mutant's bytecode in force (#1160, 2026-11-13)
+A mutation script swapped two lines of `tools/run_long_defeat.py`, ran one test, and wrote the original bytes back. The swap kept the file's size and the restore came in the same second, so the `.pyc` that the mutant run wrote still matched (Python checks the source's size and its mtime in whole seconds). The next full tool suite ran the mutant and failed a test on correct source; the disassembly of `main` showed the swapped call order.
+- **Why missed:** the restore was checked byte for byte, and the bytecode cache was not considered.
+- **Prevent:** run each mutant with `python -B`, and after the restore move the file's mtime forward (or delete its `__pycache__` entry). When a test fails on source that reads correct, compare `dis` of the function with the source before anything else.
+- **Source:** docs/reviews/rca-long-defeat-engines-2026-11-13.md row 20 (#1160)

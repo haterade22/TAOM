@@ -32,7 +32,10 @@ public class TaomSettlementFoodModel : DefaultSettlementFoodModel
         _config = configProvider.GetConfig();
     }
 
-    private bool Enabled => TaomSettings.Instance?.EnableSettlementFoodTuning ?? true;
+    private TaomSettings? _settings;
+    private TaomSettings? Settings => _settings ??= TaomSettings.Instance;
+
+    private bool Enabled => Settings?.EnableSettlementFoodTuning ?? true;
 
     public override int NumberOfMenOnGarrisonToEatOneFood => Enabled ? _config.GarrisonFoodDivisor : 20;
 

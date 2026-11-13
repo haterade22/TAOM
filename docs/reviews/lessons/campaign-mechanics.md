@@ -1210,3 +1210,9 @@ The change that closed the endless wait for a Special hero said, in a code comme
 - **Why missed:** `evidence-over-claims.md` C.4 (an empty search proves absence only inside what was searched) was applied to reports and not to comments and docs. "Never" was written from the method that was open, with no search for the other callers of the state change.
 - **Prevent:** before "never", "no engine code" or "needs a new patch" goes into a comment or a doc, search for every caller of the state change, or every patch on the type, and write what the search covered. If the search was not run, name the one method: "the daily settle skips it", not "the engine never settles it".
 - **Source:** [rca-messenger-arrival-1133-2026-11-13.md](../rca-messenger-arrival-1133-2026-11-13.md), findings 7, 11 and 12 (and 2 and 6).
+
+### A shared player check carries its own reason for `Unknown`: re-read it for each new caller (#1141, 2026-11-13)
+The #1141 follow-up reused `PlayerClanCheck` for the War Chronicle volunteer multiplier. The helper's comment justified "`Unknown` counts as a player" by "the callers exclude players from AI help", which is not why the volunteer rule wants it: that multiplier can cut production too. The same change wrote a caravan limit from the clan-scoped levers only, though the war gate tests the faction.
+- **Why missed:** the helper and the setting were read at the level of the first caller and the first lever.
+- **Prevent:** when a new caller adopts a shared "is this a player's" check, read the helper's stated reason and rewrite it to cover the new caller, or give that caller its own rule. When a doc states what a player-scoped setting does, name the scope of each seam (clan, hero, faction, global).
+- **Source:** [rca-coop-mainhero-audit-2026-11-13.md](../rca-coop-mainhero-audit-2026-11-13.md), findings R12 and R13.

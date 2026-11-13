@@ -48,6 +48,13 @@ public sealed class KingsMusterService
         return (int)(cost * _factor);
     }
 
+    /// <summary>
+    /// The factor <see cref="ApplyRulerDiscount"/> applies to a call by this leader (1 when it applies none). The Realms liege
+    /// discount reads it so the two do not stack (<c>LiegeArmyDiscountRule</c>).
+    /// </summary>
+    public float AppliedFactor(bool isKingdomRuler, bool isLedByMainHero)
+        => !isKingdomRuler || isLedByMainHero || _factor >= 1f || !Applies ? 1f : _factor;
+
     private bool Applies =>
         _settings.DiscountEnabled
         && !_coop.IsSessionActive

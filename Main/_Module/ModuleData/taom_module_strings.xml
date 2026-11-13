@@ -4969,7 +4969,7 @@
 	<string id="taom_realms_mcm_liege_pull" text="{=taom_realms_mcm_liege_pull}Liege's Pull" />
 	<string id="taom_realms_mcm_liege_pull_hint" text="{=taom_realms_mcm_liege_pull_hint}When on, a vassal of another clan likes the holder of their liege title a little more each week, up to a relation of 30. Default: on." />
 	<string id="taom_realms_mcm_army_discount" text="{=taom_realms_mcm_army_discount}Liege Army Discount" />
-	<string id="taom_realms_mcm_army_discount_hint" text="{=taom_realms_mcm_army_discount_hint}When on, calling a vassal to an army costs their liege half the influence. When off, it costs what the base game asks. Default: on." />
+	<string id="taom_realms_mcm_army_discount_hint" text="{=taom_realms_mcm_army_discount_hint}When on, calling a vassal to an army costs their liege half the influence. It does not stack with the King's Muster ruler discount: when both apply, the larger one is used. When off, other discounts such as culture feats and the King's Muster still apply. Default: on." />
 	<string id="taom_realms_mcm_family_grants" text="{=taom_realms_mcm_family_grants}Lands for Sons and Daughters" />
 	<string id="taom_realms_mcm_family_grants_hint" text="{=taom_realms_mcm_family_grants_hint}When on, AI lords hand lesser titles to their grown children. When off, they keep them; titles already handed down stay, and so do the grants made when a campaign starts, such as Boromir's West Osgiliath. Default: on." />
 	<string id="taom_realms_mcm_title_styles" text="{=taom_realms_mcm_title_styles}Lords Styled by Their Titles" />

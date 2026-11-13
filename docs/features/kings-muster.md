@@ -127,6 +127,7 @@ The call cost runs on the AI's hourly think on the main thread, once per army ca
 - More ruler-led armies and longer-lasting ones: a ruler's per-party cost, and with it the cohesion boost price of the ruler's army, is halved by default. A ruler's clan keeps more influence for votes and for its own spending.
 - The discount lets a ruler's clan stay above the `Influence > 100` gate longer, so armies can come more often.
 - Every kingdom is affected, Good and Evil alike (decision 1); the player as ruler gets no discount.
+- It does not stack with the Realms liege army discount (`docs/features/realms.md`). When a ruler calls a vassal of their own title, the larger of the two discounts applies, half by default, not a quarter. `KingsMusterService.AppliedFactor` tells the Realms postfix what this discount already took off.
 - The discounted cost is vanilla's ranking key, so a ruler's candidate order can shift slightly (see "Design Challenge"); the floor of 0.25 bounds it.
 
 **Owed:** a 60-day balance check by hand reading, with the switch on and then off: the ruler's clan influence on the kingdom screen on days 0, 30 and 60, and the ruler's armies seen at fixed checkpoints. No census line is added.
@@ -134,6 +135,7 @@ The call cost runs on the AI's hourly think on the main thread, once per army ca
 ## Changelog
 
 - 2026-10-24: first version (#874).
+- 2026-11-13: no longer stacks with the Realms liege army discount (conflict audit); the MCM hint says what turning it off leaves on.
 
 ## How to verify in game
 
