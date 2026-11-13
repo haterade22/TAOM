@@ -159,3 +159,11 @@ None. No Codex run, so no new false-positive pattern and no missed category to r
 - RCA: `docs/reviews/rca-tools-dead-scripts-and-test-speed-2026-11-13.md`
 - Lessons: `docs/reviews/lessons/testing-qa.md` (refactor parity oracles),
   `docs/reviews/lessons/build-tooling-workflow.md` (quantifiers beside a computed count)
+
+## Convergence round 1
+
+One finding, on the range ee81570a3..1bb502c1c.
+
+| # | Sev | Finding | Outcome |
+|---|---|---|---|
+| C1 | LOW | The RCA's "Why each agent missed these" said both lenses found every item, so no lens missed one. This report's Details show otherwise: Data flow raised traces 6, 10 and 13 (RCA F1, F3, F4), and Tooling raised F1 to F4 (RCA F1, F2, F3, F5). The same section filed RCA F4 under the F3 cause, although F4 is the "the run ends" line copied from the plan's draft (`plans/051-tools-dead-scripts-and-test-speed.md:509`). | Fixed in the commit "fix(docs): v2.0.38 - convergence fixes for plan 051": the section now says the two lenses found every item between them and names what each missed (Data flow: F2, F5; Tooling: F4), and the executor bullet is split into F3 (the counts' quantifiers) and F4 (the copied draft line). Checked against the Details above and the plan line. Docs only. |

@@ -38,14 +38,18 @@ made correct and computable, and the error moved into the words around it.
 
 ## Why each agent missed these
 
-Only two lenses ran (the change is Python tools and docs, with no C#, XML, hook or harness file). Both found
-every item above, so no lens missed one. The misses were the executor's:
+Only two lenses ran (the change is Python tools and docs, with no C#, XML, hook or harness file).
+Between them the two lenses found every item, so none escaped review: Data flow raised F1, F3 and
+F4, and Tooling correctness raised F1, F2, F3 and F5 (Data flow missed F2 and F5; Tooling missed
+F4). The misses in the change itself were the executor's:
 
 - **Executor, F1 and F2:** followed the plan's test list, which named "hoisted equals per-call" as
   the oracle. Standing rule 12 says a test oracle a plan supplies is a draft to verify; it was not
   re-derived after the per-call path changed.
-- **Executor, F3 and F4:** reproduced the two counts (50 and 90 are right) but not the sentences
-  that quantify over them.
+- **Executor, F3:** reproduced the two counts (50 and 90 are right) but not the sentences that
+  quantify over them.
+- **Executor, F4:** copied the plan's draft line ("the run ends ...") without reading a run's last
+  lines (standing rule 12).
 - **Executor, F5:** ruff is clean on a redundant local import; nothing else checks it.
 
 ## Feedback memories to codify
