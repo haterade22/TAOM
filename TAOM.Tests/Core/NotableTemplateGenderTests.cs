@@ -154,8 +154,7 @@ public class NotableTemplateGenderTests
     [TestMethod]
     public void RenamedVanillaCultures_AlsoOfferAFemaleNotableTemplate()
     {
-        var transform = new XslCompiledTransform();
-        transform.Load(Path.Combine(ModuleData(), "spcultures.xslt"));
+        var transform = CompiledXslt.Get(Path.Combine(ModuleData(), "spcultures.xslt"), XsltLoadStyle.FrameworkDefaults);
 
         var output = new XDocument();
         using (var writer = output.CreateWriter())

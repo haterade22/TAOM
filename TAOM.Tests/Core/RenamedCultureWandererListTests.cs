@@ -30,8 +30,7 @@ public class RenamedCultureWandererListTests
     public void SpculturesXslt_RenamedCultures_ListEveryWandererOfTheirCulture()
     {
         var moduleData = CultureDataFixture.ModuleDataPath();
-        var transform = new XslCompiledTransform();
-        transform.Load(Path.Combine(moduleData, "spcultures.xslt"));
+        var transform = CompiledXslt.Get(Path.Combine(moduleData, "spcultures.xslt"), XsltLoadStyle.FrameworkDefaults);
 
         var stub = new XDocument(new XElement("SPCultures",
             RenamedCultures.Select(id => new XElement("Culture", new XAttribute("id", id)))));

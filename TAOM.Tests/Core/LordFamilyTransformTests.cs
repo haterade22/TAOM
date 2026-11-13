@@ -67,9 +67,7 @@ public class LordFamilyTransformTests
     private static XDocument Transform(string sourceXml, string stylesheet)
     {
         var settings = new XmlReaderSettings { DtdProcessing = DtdProcessing.Ignore, XmlResolver = null };
-        var xslt = new XslCompiledTransform();
-        using (var sheet = XmlReader.Create(stylesheet, settings))
-            xslt.Load(sheet, new XsltSettings(false, false), null);
+        var xslt = CompiledXslt.Get(stylesheet, XsltLoadStyle.IgnoreDtdNoResolver);
 
         using var input = XmlReader.Create(sourceXml, settings);
         using var buffer = new StringWriter();

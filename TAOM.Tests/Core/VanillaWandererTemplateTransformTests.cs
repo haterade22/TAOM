@@ -34,10 +34,7 @@ public class VanillaWandererTemplateTransformTests
     /// <summary>Applies the stylesheet the way MBObjectManager.ApplyXslt does.</summary>
     private static XDocument Transform(XmlReader input)
     {
-        var settings = new XmlReaderSettings { DtdProcessing = DtdProcessing.Ignore, XmlResolver = null };
-        var xslt = new XslCompiledTransform();
-        using (var sheet = XmlReader.Create(LordsXslt, settings))
-            xslt.Load(sheet, new XsltSettings(false, false), null);
+        var xslt = CompiledXslt.Get(LordsXslt, XsltLoadStyle.IgnoreDtdNoResolver);
 
         var result = new XDocument();
         using (var output = result.CreateWriter())

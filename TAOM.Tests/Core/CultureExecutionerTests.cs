@@ -94,8 +94,7 @@ public class CultureExecutionerTests
     [TestMethod]
     public void RenamedVanillaCultures_EmitAnExecutionerThatResolves()
     {
-        var transform = new XslCompiledTransform();
-        transform.Load(Path.Combine(ModuleData(), "spcultures.xslt"));
+        var transform = CompiledXslt.Get(Path.Combine(ModuleData(), "spcultures.xslt"), XsltLoadStyle.FrameworkDefaults);
 
         var stub = new XDocument(new XElement("SPCultures",
             new[] { "empire", "aserai", "vlandia", "khuzait", "sturgia", "battania" }

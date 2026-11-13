@@ -23,9 +23,7 @@ public class CustomBattleTroopFilterTests
     private static XDocument Run(string npcXml)
     {
         var settings = new XmlReaderSettings { DtdProcessing = DtdProcessing.Ignore, XmlResolver = null };
-        var xslt = new XslCompiledTransform();
-        using (var sheet = XmlReader.Create(RepoPaths.RepoPath(Sheet.Split('/')), settings))
-            xslt.Load(sheet, new XsltSettings(false, false), null);
+        var xslt = CompiledXslt.Get(RepoPaths.RepoPath(Sheet.Split('/')), XsltLoadStyle.IgnoreDtdNoResolver);
 
         using var input = XmlReader.Create(new StringReader(npcXml), settings);
         using var buffer = new StringWriter();
