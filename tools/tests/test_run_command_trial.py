@@ -302,6 +302,8 @@ class MarshalJudgeTests(unittest.TestCase):
 
     def test_the_marshals_word_mission_time_category_failing_to_apply_fails_the_run(self):
         """The two thrower patches are applied through Patch_MissionTime_MarshalsWord, and the applier writes its name, with no Patch141_ in it."""
+        applier = (REPO / "Main" / "PatchCategoryApplier.cs").read_text(encoding="utf-8")
+        self.assertIn("[PatchApply] {category} FAILED (Harmony stops a category at its first failing class)", applier, "the text below is the applier's own format")
         for text in ("Patch_MissionTime_MarshalsWord FAILED (x)",):
             code, why = judge(FINAL, None, full_log(extra=(f"[2026-11-05 10:00:05] [ERROR] [PatchApply] {text}",)))
             self.assertEqual(code, 1, text)

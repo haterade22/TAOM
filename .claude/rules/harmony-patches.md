@@ -57,10 +57,12 @@ ALWAYS decompile the target method with `ilspycmd` (`pwsh tools/taom-src.ps1 pat
 
 ## MovementOrder postfixes: use a deferred mission-time category (MANDATORY)
 Any patch with `MovementOrder` in its postfix signature MUST go in its feature's own `Patch_MissionTime_<Feature>`
-category, applied once from `OnMissionBehaviorInitialize` beside the others, because `MovementOrder.cctor` reads
-`Mission.Current.CurrentTime`: null in `OnSubModuleLoad`/`OnGameInitializationFinished`. One category per feature, so a
-class that fails turns off only its own feature (split 2026-11-13). List it in `docs/reference/harmony-patch-registry.md`,
-section `Patch_MissionTime_SetMovementOrder`.
+category, applied at the first mission (`OnMissionBehaviorInitialize`) because `MovementOrder.cctor` reads `Mission.Current.CurrentTime`: null in
+`OnSubModuleLoad`/`OnGameInitializationFinished`. One category per feature, so a class that fails turns off only its own
+feature (split 2026-11-13). A feature module declares its category at `ApplyPhase.FirstMission`, as `MarshalsWordModule` does:
+that is the default route. `SubModule.cs` is single-owner and applies only the two existing ones, `Patch_MissionTime_SmartCavalryAI`
+and `Patch_MissionTime_CompanionTactics`. Document it under its own `## <category>` registry heading, or in the section `Patch_MissionTime_SetMovementOrder`
+plus a `NoRegistryHeading` row in `PatchCategoryNumberTests`; otherwise that test fails.
 
 ## Common Pitfalls
 - Collection modification during iteration — use `.ToList()` copy

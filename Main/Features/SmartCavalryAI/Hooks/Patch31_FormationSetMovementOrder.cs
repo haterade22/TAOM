@@ -34,7 +34,7 @@ namespace TAOM.Features.SmartCavalryAI.Hooks;
 // Explicit parameter type array matches the Patch35 sibling: Formation.SetMovementOrder has one
 // overload today, and a second one would otherwise make the attribute ambiguous.
 [HarmonyPatch(typeof(Formation), nameof(Formation.SetMovementOrder), new[] { typeof(MovementOrder) })]
-// Shared with Patch35_Formation_SetMovementOrder and Patch31b. The category is applied from
+// Shared with Patch31b only (Patch35 and Marshal's Word have their own). The category is applied from
 // OnMissionBehaviorInitialize (one-shot guarded) because MovementOrder.cctor reads
 // Mission.Current.CurrentTime, which is null during OnSubModuleLoad / OnGameInitializationFinished.
 [HarmonyPatchCategory("Patch_MissionTime_SmartCavalryAI")]

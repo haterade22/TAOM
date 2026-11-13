@@ -53,7 +53,7 @@ public class SharedMovementOrderPostfixTests
     public void SubModule_AppliesSharedCategoryInMissionInit_NotOnSubModuleLoad()
     {
         // Phase 9b — MovementOrder.cctor reads Mission.Current.CurrentTime; null during
-        // OnSubModuleLoad → crashes JIT prep with NRE. The shared category MUST be applied via
+        // OnSubModuleLoad → crashes JIT prep with NRE. Both per-feature categories MUST be applied via
         // OnMissionBehaviorInitialize with a one-shot guard. Verify the comment + apply site.
         var src = RepoPaths.ReadSource("Main/SubModule.cs", stripComments: true);
         StringAssert.Contains(src, "Patch_MissionTime_SmartCavalryAI",

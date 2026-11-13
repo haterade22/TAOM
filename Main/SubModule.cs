@@ -586,8 +586,8 @@ public class SubModule : MBSubModuleBase
         }
         // Patch_MissionTime_SmartCavalryAI (Patch31, Patch31b) and Patch_MissionTime_CompanionTactics
         // (Patch35's Formation.SetMovementOrder hook) are applied in OnMissionBehaviorInitialize, and
-        // Marshal's Word's thrower category by its module at the FirstMission phase — MovementOrder.cctor reads Mission.Current.CurrentTime,
-        // which is null during OnSubModuleLoad and would crash JIT prep with NRE.
+        // Marshal's Word's thrower category by its module at the FirstMission phase, because MovementOrder.cctor
+        // reads Mission.Current.CurrentTime, which is null during OnSubModuleLoad and would crash JIT prep with NRE.
 
         var bannerColorConfig = IoC.Resolve<IBannerColorConfigProvider>();
         var bannerColorService = IoC.Resolve<IBannerColorService>();

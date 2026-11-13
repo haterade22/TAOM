@@ -266,8 +266,9 @@ compare and one lock; for a charge order it scans the enemy formations once for 
 ## History
 
 - 2026-11-13: Patch31 and Patch31b moved to their own deferred category, `Patch_MissionTime_SmartCavalryAI`,
-  so a SmartCavalry class that fails after a game update no longer turns off Companion Tactics and
-  Marshal's Word, and the reverse.
+  so a SmartCavalry class that fails after a game update no longer turns off the classes that
+  followed it in the old shared category (Marshal's Word's two thrower classes and Companion Tactics' Patch35).
+  A failure in the old category was logged, not silent.
 - 2026-09-13, #586: state machine v2. Move-based line-up, arrangement-slot alignment, frozen-direction
   contact, reform point past the live enemy, hit-and-run loop, dwell budgets and HandOff, charge-now
   on a second F3, cancel on other orders and on AI-controlled formations, identical-re-issue test,

@@ -68,7 +68,7 @@ TAOM.Features.CompanionTactics/
     ├── UI/{BattleActionBarVM, ActionButtonVM}
     └── Hooks/
         BattleActionBarMissionView                        (MissionView NOT Harmony; field battles only; lives in Client/ since ADR-013, same path under Client/Features/)
-        Patch35_Formation_SetMovementOrder                (clears stance on move when CancelStanceOnMove; lives in deferred Patch_MissionTime_CompanionTactics category — see below)
+        Patch35_Formation_SetMovementOrder                (clears stance on move when CancelStanceOnMove; lives in deferred Patch_MissionTime_CompanionTactics category; see below)
 ```
 
 Adapters added/extended:
@@ -179,7 +179,7 @@ A preset is a named copy of the Order of Battle layout: the formation type of ea
 | `Main/Features/CompanionTactics/FormationPresets/OOBOverlayService.cs` | Cached-FieldInfo reflection on `_dataSource`, `_isActive`; `GauntletLayer` lifecycle |
 | `Main/Features/CompanionTactics/FormationPresets/Hooks/FormationPresetCampaignBehavior.cs` | `SyncData` with try/catch — guards the LOAD/ref path only (NOT the off-thread save write); degrades to empty on BaseId collision |
 | `Client/Features/CompanionTactics/BattleActionBar/Hooks/BattleActionBarMissionView.cs` | `[DefaultView]` MissionView (TAOM.Client, ADR-013), built by the engine in every mission with a screen. A field battle is `Mission.IsFieldBattle`; the `GauntletLayer` attaches on the first screen tick whose mode is Battle (the mode is Deployment at screen init), then a 0.5s refresh. The layer takes mouse buttons only (`SetInputRestrictions(false, InputUsageMask.MouseButtons)`), so the cursor stays hidden and attack, block and the camera keep working. A view added through `AddTaomBehavior` would never tick (#970) |
-| `Main/Features/CompanionTactics/BattleActionBar/Hooks/Patch35_Formation_SetMovementOrder.cs` | Implements `CancelStanceOnMove`. Belongs to shared `Patch_MissionTime_SetMovementOrder` category (applied once from `OnMissionBehaviorInitialize` because `MovementOrder.cctor` reads `Mission.Current.CurrentTime`). |
+| `Main/Features/CompanionTactics/BattleActionBar/Hooks/Patch35_Formation_SetMovementOrder.cs` | Implements `CancelStanceOnMove`. Belongs to its own deferred `Patch_MissionTime_CompanionTactics` category (applied once from `OnMissionBehaviorInitialize` because `MovementOrder.cctor` reads `Mission.Current.CurrentTime`). |
 | `Main/Adapters/{I,}BattleEquipmentSnapshot.cs` | Equipment value-object snapshot (no sealed `Equipment` leak) |
 | `Main/Adapters/{I,}HeroCombatAdapter.cs` | `Hero` wrapper; classifies from `BattleEquipment`, or from a given `Equipment` (Auto-Assign passes the agent's spawn equipment) |
 | `Main/Adapters/IFormationAdapter.cs` (EXTENDED) | Adds `FormationIndex` + 4 unit-count properties |
@@ -213,7 +213,7 @@ The folder `TAOM.Tests/Features/CompanionTactics/` holds 18 test files, plus `TA
 - `CompanionTacticsWiringTests.cs`: 2 tests; the overlay's DI graph (with `IOOBCaptainAutoAssigner` and `IOOBPresetApplier`) resolves.
 - `CompanionTacticsSettingsProviderTests.cs`: 3 tests; the documented defaults without MCM, every fallback equal to the MCM compiled default, and reads going through the cached settings so live MCM edits apply.
 - `FormationPresets/HoNFormationPresetSerializationTests.cs` — 5 tests; every `[SaveableField]` must be a save-serializable type (the DateTime save-corruption regression guard, allowlist fails closed on unknown types); every container field's exact closed type is allowlisted; ids unique; retired id 3 not reused; definer registers only the mod-specific container (no duplicate-of-engine registrations).
-- `SharedMovementOrderPostfixTests.cs` — 6 tests; shared `Formation.SetMovementOrder` postfix dispatch (SmartCavalry + CancelStanceOnMove) ordering/guards.
+- `SharedMovementOrderPostfixTests.cs`: 8 tests; shared `Formation.SetMovementOrder` postfix dispatch (SmartCavalry + CancelStanceOnMove) ordering/guards.
 
 ## How to add a new combat role
 

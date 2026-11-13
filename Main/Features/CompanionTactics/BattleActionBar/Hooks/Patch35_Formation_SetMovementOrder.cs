@@ -14,7 +14,7 @@ namespace TAOM.Features.CompanionTactics.BattleActionBar.Hooks;
 ///   public void SetMovementOrder(MovementOrder input)
 /// </summary>
 [HarmonyPatch(typeof(Formation), nameof(Formation.SetMovementOrder), new[] { typeof(MovementOrder) })]
-// Shared with Patch31_FormationSetMovementOrder. The category is applied from
+// Its own deferred category, apart from Patch31's. It is applied from
 // OnMissionBehaviorInitialize (one-shot guarded) because MovementOrder.cctor reads
 // Mission.Current.CurrentTime — null during OnSubModuleLoad / OnGameInitializationFinished.
 [HarmonyPatchCategory("Patch_MissionTime_CompanionTactics")]
