@@ -169,6 +169,7 @@ Defaults equal LOTRAOM's shipped `momentum_config.xml`, so the out-of-box balanc
 
 - **Scale fix**: config values are internal-scale units ×100'd into the store (donor was 100× off its own tuning).
 - **Raids require an enrolled kingdom**: the donor sided raids by culture with no enrollment check, so every looter raid fed Evil +200.
+- **A raid counts only when the village is looted** (#774): the engine raises `RaidCompleted` with the attacker as winner both for a won militia fight and for the loot, so the donor counted a resisted raid twice. The snapshot carries `VillageLooted` (the village state the engine sets just before the event) and `ProcessRaid` skips the militia-only event.
 - **No alliance-stance setting**: `StanceType.Alliance` doesn't exist on 1.4.6; TAOM Diplomacy owns stances anyway.
 - **Raid/army don't apply the participation multiplier or victory-gate credit**: donor parity — LOTRAOM applied both only to battles and sieges. Documented on the snapshot DTOs.
 - **Dropped the dead tanh soft-cap** (`softCapDivisor`/`DisplayMomentum`): never wired into the donor's UI either; removed per the simplicity criterion.
