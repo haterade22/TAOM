@@ -29,7 +29,10 @@ public class TaomSettlementEconomyModel : DefaultSettlementEconomyModel
         _config = configProvider.GetConfig();
     }
 
-    private bool Enabled => TaomSettings.Instance?.EnableSettlementEconomyTuning ?? true;
+    private TaomSettings? _settings;
+    private TaomSettings? Settings => _settings ??= TaomSettings.Instance;
+
+    private bool Enabled => Settings?.EnableSettlementEconomyTuning ?? true;
 
     public override int GetTownGoldChange(Town town)
     {

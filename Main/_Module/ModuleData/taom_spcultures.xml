@@ -6965,64 +6965,6 @@
     weapon_practice_stage_2="NPCCharacter.weapon_practice_stage_2_anduinvale"
     weapon_practice_stage_3="NPCCharacter.weapon_practice_stage_3_anduinvale"
     gear_dummy="NPCCharacter.gear_dummy_anduinvale">
-    <notable_templates>
-      <template name="NPCCharacter.spc_notable_anduinvale_0" />
-      <template name="NPCCharacter.spc_notable_anduinvale_0b" />
-      <template name="NPCCharacter.spc_notable_anduinvale_1" />
-      <template name="NPCCharacter.spc_notable_anduinvale_1b" />
-      <template name="NPCCharacter.spc_notable_anduinvale_2" />
-      <template name="NPCCharacter.spc_notable_anduinvale_2b" />
-      <template name="NPCCharacter.spc_notable_anduinvale_3" />
-      <template name="NPCCharacter.spc_notable_anduinvale_3b" />
-      <template name="NPCCharacter.spc_notable_anduinvale_4" />
-      <template name="NPCCharacter.spc_notable_anduinvale_4b" />
-      <template name="NPCCharacter.spc_notable_anduinvale_5" />
-      <template name="NPCCharacter.spc_notable_anduinvale_6" />
-      <template name="NPCCharacter.spc_notable_anduinvale_7" />
-      <template name="NPCCharacter.spc_notable_anduinvale_8" />
-      <template name="NPCCharacter.spc_notable_anduinvale_9" />
-      <template name="NPCCharacter.spc_notable_anduinvale_gl1" />
-      <template name="NPCCharacter.spc_notable_anduinvale_10" />
-      <template name="NPCCharacter.spc_notable_anduinvale_11" />
-      <template name="NPCCharacter.spc_notable_anduinvale_gl4" />
-      <template name="NPCCharacter.spc_notable_anduinvale_12" />
-      <template name="NPCCharacter.spc_notable_anduinvale_13" />
-      <template name="NPCCharacter.spc_notable_anduinvale_21" />
-      <template name="NPCCharacter.spc_notable_anduinvale_22" />
-      <template name="NPCCharacter.spc_anduinvale_headman_1" />
-      <template name="NPCCharacter.spc_anduinvale_headman_2" />
-      <template name="NPCCharacter.spc_anduinvale_headman_3" />
-      <template name="NPCCharacter.spc_wanderer_anduinvale_0" />
-      <template name="NPCCharacter.spc_wanderer_anduinvale_1" />
-      <template name="NPCCharacter.spc_wanderer_anduinvale_2" />
-      <template name="NPCCharacter.spc_wanderer_anduinvale_3" />
-      <template name="NPCCharacter.spc_wanderer_anduinvale_4" />
-      <template name="NPCCharacter.spc_wanderer_anduinvale_5" />
-      <template name="NPCCharacter.spc_wanderer_anduinvale_6" />
-      <template name="NPCCharacter.spc_wanderer_anduinvale_7" />
-      <template name="NPCCharacter.spc_wanderer_anduinvale_8" />
-      <template name="NPCCharacter.spc_wanderer_anduinvale_9" />
-    </notable_templates>
-    <vassal_reward_items>
-      <item id="Item.dale_longbow_a" />
-    </vassal_reward_items>
-    <caravan_party_templates>
-      <caravan_party_template id="PartyTemplate.caravan_template_anduinvale" />
-    </caravan_party_templates>
-    <elite_caravan_party_templates>
-      <caravan_party_template id="PartyTemplate.elite_caravan_template_anduinvale" />
-    </elite_caravan_party_templates>
-    <available_ship_hulls/>
-    <banner_bearer_replacement_weapons>
-      <item id="Item.sturgia_sword_1_t2" />
-      <item id="Item.sturgia_sword_2_t3" />
-      <item id="Item.sturgia_sword_4_t4" />
-      <item id="Item.sturgia_sword_5_t5" />
-    </banner_bearer_replacement_weapons>
-    <default_policies>
-      <policy id="policy_lawspeakers" />
-      <policy id="policy_precarial_land_tenure" />
-    </default_policies>
     <male_names>
       <name name="{=aom_anduinvale_male_name_1}Beornwulf" />
       <name name="{=aom_anduinvale_male_name_2}Beornoth" />
@@ -7105,6 +7047,64 @@
       <name name="{=aom_anduinvale_clan_11}House of the Long Hall" />
       <name name="{=aom_anduinvale_clan_12}Wolf-hunters of the Vale" />
     </clan_names>
+    <notable_templates>
+      <template name="NPCCharacter.spc_notable_anduinvale_0" />
+      <template name="NPCCharacter.spc_notable_anduinvale_0b" />
+      <template name="NPCCharacter.spc_notable_anduinvale_1" />
+      <template name="NPCCharacter.spc_notable_anduinvale_1b" />
+      <template name="NPCCharacter.spc_notable_anduinvale_2" />
+      <template name="NPCCharacter.spc_notable_anduinvale_2b" />
+      <template name="NPCCharacter.spc_notable_anduinvale_3" />
+      <template name="NPCCharacter.spc_notable_anduinvale_3b" />
+      <template name="NPCCharacter.spc_notable_anduinvale_4" />
+      <template name="NPCCharacter.spc_notable_anduinvale_4b" />
+      <template name="NPCCharacter.spc_notable_anduinvale_5" />
+      <template name="NPCCharacter.spc_notable_anduinvale_6" />
+      <template name="NPCCharacter.spc_notable_anduinvale_7" />
+      <template name="NPCCharacter.spc_notable_anduinvale_8" />
+      <template name="NPCCharacter.spc_notable_anduinvale_9" />
+      <template name="NPCCharacter.spc_notable_anduinvale_gl1" />
+      <template name="NPCCharacter.spc_notable_anduinvale_10" />
+      <template name="NPCCharacter.spc_notable_anduinvale_11" />
+      <template name="NPCCharacter.spc_notable_anduinvale_gl4" />
+      <template name="NPCCharacter.spc_notable_anduinvale_12" />
+      <template name="NPCCharacter.spc_notable_anduinvale_13" />
+      <template name="NPCCharacter.spc_notable_anduinvale_21" />
+      <template name="NPCCharacter.spc_notable_anduinvale_22" />
+      <template name="NPCCharacter.spc_anduinvale_headman_1" />
+      <template name="NPCCharacter.spc_anduinvale_headman_2" />
+      <template name="NPCCharacter.spc_anduinvale_headman_3" />
+      <template name="NPCCharacter.spc_wanderer_anduinvale_0" />
+      <template name="NPCCharacter.spc_wanderer_anduinvale_1" />
+      <template name="NPCCharacter.spc_wanderer_anduinvale_2" />
+      <template name="NPCCharacter.spc_wanderer_anduinvale_3" />
+      <template name="NPCCharacter.spc_wanderer_anduinvale_4" />
+      <template name="NPCCharacter.spc_wanderer_anduinvale_5" />
+      <template name="NPCCharacter.spc_wanderer_anduinvale_6" />
+      <template name="NPCCharacter.spc_wanderer_anduinvale_7" />
+      <template name="NPCCharacter.spc_wanderer_anduinvale_8" />
+      <template name="NPCCharacter.spc_wanderer_anduinvale_9" />
+    </notable_templates>
+    <vassal_reward_items>
+      <item id="Item.dale_longbow_a" />
+    </vassal_reward_items>
+    <caravan_party_templates>
+      <caravan_party_template id="PartyTemplate.caravan_template_anduinvale" />
+    </caravan_party_templates>
+    <elite_caravan_party_templates>
+      <caravan_party_template id="PartyTemplate.elite_caravan_template_anduinvale" />
+    </elite_caravan_party_templates>
+    <available_ship_hulls/>
+    <banner_bearer_replacement_weapons>
+      <item id="Item.sturgia_sword_1_t2" />
+      <item id="Item.sturgia_sword_2_t3" />
+      <item id="Item.sturgia_sword_4_t4" />
+      <item id="Item.sturgia_sword_5_t5" />
+    </banner_bearer_replacement_weapons>
+    <default_policies>
+      <policy id="policy_lawspeakers" />
+      <policy id="policy_precarial_land_tenure" />
+    </default_policies>
         <cultural_feats>
             <feat id="taom_dale_plain_speed" />
             <feat id="taom_dale_loyalty" />
@@ -7243,64 +7243,6 @@
     weapon_practice_stage_2="NPCCharacter.weapon_practice_stage_2_angaladh"
     weapon_practice_stage_3="NPCCharacter.weapon_practice_stage_3_angaladh"
     gear_dummy="NPCCharacter.gear_dummy_angaladh">
-    <notable_templates>
-      <template name="NPCCharacter.spc_notable_angaladh_0" />
-      <template name="NPCCharacter.spc_notable_angaladh_0b" />
-      <template name="NPCCharacter.spc_notable_angaladh_1" />
-      <template name="NPCCharacter.spc_notable_angaladh_1b" />
-      <template name="NPCCharacter.spc_notable_angaladh_2" />
-      <template name="NPCCharacter.spc_notable_angaladh_2b" />
-      <template name="NPCCharacter.spc_notable_angaladh_3" />
-      <template name="NPCCharacter.spc_notable_angaladh_3b" />
-      <template name="NPCCharacter.spc_notable_angaladh_4" />
-      <template name="NPCCharacter.spc_notable_angaladh_4b" />
-      <template name="NPCCharacter.spc_notable_angaladh_5" />
-      <template name="NPCCharacter.spc_notable_angaladh_6" />
-      <template name="NPCCharacter.spc_notable_angaladh_7" />
-      <template name="NPCCharacter.spc_notable_angaladh_8" />
-      <template name="NPCCharacter.spc_notable_angaladh_9" />
-      <template name="NPCCharacter.spc_notable_angaladh_gl1" />
-      <template name="NPCCharacter.spc_notable_angaladh_10" />
-      <template name="NPCCharacter.spc_notable_angaladh_11" />
-      <template name="NPCCharacter.spc_notable_angaladh_gl4" />
-      <template name="NPCCharacter.spc_notable_angaladh_12" />
-      <template name="NPCCharacter.spc_notable_angaladh_13" />
-      <template name="NPCCharacter.spc_notable_angaladh_21" />
-      <template name="NPCCharacter.spc_notable_angaladh_22" />
-      <template name="NPCCharacter.spc_angaladh_headman_1" />
-      <template name="NPCCharacter.spc_angaladh_headman_2" />
-      <template name="NPCCharacter.spc_angaladh_headman_3" />
-      <template name="NPCCharacter.spc_wanderer_angaladh_0" />
-      <template name="NPCCharacter.spc_wanderer_angaladh_1" />
-      <template name="NPCCharacter.spc_wanderer_angaladh_2" />
-      <template name="NPCCharacter.spc_wanderer_angaladh_3" />
-      <template name="NPCCharacter.spc_wanderer_angaladh_4" />
-      <template name="NPCCharacter.spc_wanderer_angaladh_5" />
-      <template name="NPCCharacter.spc_wanderer_angaladh_6" />
-      <template name="NPCCharacter.spc_wanderer_angaladh_7" />
-      <template name="NPCCharacter.spc_wanderer_angaladh_8" />
-      <template name="NPCCharacter.spc_wanderer_angaladh_9" />
-    </notable_templates>
-    <vassal_reward_items>
-      <item id="Item.dale_longbow_a" />
-    </vassal_reward_items>
-    <caravan_party_templates>
-      <caravan_party_template id="PartyTemplate.caravan_template_angaladh" />
-    </caravan_party_templates>
-    <elite_caravan_party_templates>
-      <caravan_party_template id="PartyTemplate.elite_caravan_template_angaladh" />
-    </elite_caravan_party_templates>
-    <available_ship_hulls/>
-    <banner_bearer_replacement_weapons>
-      <item id="Item.sturgia_sword_1_t2" />
-      <item id="Item.sturgia_sword_2_t3" />
-      <item id="Item.sturgia_sword_4_t4" />
-      <item id="Item.sturgia_sword_5_t5" />
-    </banner_bearer_replacement_weapons>
-    <default_policies>
-      <policy id="policy_lawspeakers" />
-      <policy id="policy_precarial_land_tenure" />
-    </default_policies>
     <male_names>
       <name name="{=aom_angaladh_male_name_1}Vidugavia" />
       <name name="{=aom_angaladh_male_name_2}Vinitharya" />
@@ -7383,6 +7325,64 @@
       <name name="{=aom_angaladh_clan_11}Keepers of the Woodmen-road" />
       <name name="{=aom_angaladh_clan_12}Folk of the Black Mere" />
     </clan_names>
+    <notable_templates>
+      <template name="NPCCharacter.spc_notable_angaladh_0" />
+      <template name="NPCCharacter.spc_notable_angaladh_0b" />
+      <template name="NPCCharacter.spc_notable_angaladh_1" />
+      <template name="NPCCharacter.spc_notable_angaladh_1b" />
+      <template name="NPCCharacter.spc_notable_angaladh_2" />
+      <template name="NPCCharacter.spc_notable_angaladh_2b" />
+      <template name="NPCCharacter.spc_notable_angaladh_3" />
+      <template name="NPCCharacter.spc_notable_angaladh_3b" />
+      <template name="NPCCharacter.spc_notable_angaladh_4" />
+      <template name="NPCCharacter.spc_notable_angaladh_4b" />
+      <template name="NPCCharacter.spc_notable_angaladh_5" />
+      <template name="NPCCharacter.spc_notable_angaladh_6" />
+      <template name="NPCCharacter.spc_notable_angaladh_7" />
+      <template name="NPCCharacter.spc_notable_angaladh_8" />
+      <template name="NPCCharacter.spc_notable_angaladh_9" />
+      <template name="NPCCharacter.spc_notable_angaladh_gl1" />
+      <template name="NPCCharacter.spc_notable_angaladh_10" />
+      <template name="NPCCharacter.spc_notable_angaladh_11" />
+      <template name="NPCCharacter.spc_notable_angaladh_gl4" />
+      <template name="NPCCharacter.spc_notable_angaladh_12" />
+      <template name="NPCCharacter.spc_notable_angaladh_13" />
+      <template name="NPCCharacter.spc_notable_angaladh_21" />
+      <template name="NPCCharacter.spc_notable_angaladh_22" />
+      <template name="NPCCharacter.spc_angaladh_headman_1" />
+      <template name="NPCCharacter.spc_angaladh_headman_2" />
+      <template name="NPCCharacter.spc_angaladh_headman_3" />
+      <template name="NPCCharacter.spc_wanderer_angaladh_0" />
+      <template name="NPCCharacter.spc_wanderer_angaladh_1" />
+      <template name="NPCCharacter.spc_wanderer_angaladh_2" />
+      <template name="NPCCharacter.spc_wanderer_angaladh_3" />
+      <template name="NPCCharacter.spc_wanderer_angaladh_4" />
+      <template name="NPCCharacter.spc_wanderer_angaladh_5" />
+      <template name="NPCCharacter.spc_wanderer_angaladh_6" />
+      <template name="NPCCharacter.spc_wanderer_angaladh_7" />
+      <template name="NPCCharacter.spc_wanderer_angaladh_8" />
+      <template name="NPCCharacter.spc_wanderer_angaladh_9" />
+    </notable_templates>
+    <vassal_reward_items>
+      <item id="Item.dale_longbow_a" />
+    </vassal_reward_items>
+    <caravan_party_templates>
+      <caravan_party_template id="PartyTemplate.caravan_template_angaladh" />
+    </caravan_party_templates>
+    <elite_caravan_party_templates>
+      <caravan_party_template id="PartyTemplate.elite_caravan_template_angaladh" />
+    </elite_caravan_party_templates>
+    <available_ship_hulls/>
+    <banner_bearer_replacement_weapons>
+      <item id="Item.sturgia_sword_1_t2" />
+      <item id="Item.sturgia_sword_2_t3" />
+      <item id="Item.sturgia_sword_4_t4" />
+      <item id="Item.sturgia_sword_5_t5" />
+    </banner_bearer_replacement_weapons>
+    <default_policies>
+      <policy id="policy_lawspeakers" />
+      <policy id="policy_precarial_land_tenure" />
+    </default_policies>
         <cultural_feats>
             <feat id="taom_dale_plain_speed" />
             <feat id="taom_dale_loyalty" />
@@ -7521,64 +7521,6 @@
     weapon_practice_stage_2="NPCCharacter.weapon_practice_stage_2_dorwinion"
     weapon_practice_stage_3="NPCCharacter.weapon_practice_stage_3_dorwinion"
     gear_dummy="NPCCharacter.gear_dummy_dorwinion">
-    <notable_templates>
-      <template name="NPCCharacter.spc_notable_dorwinion_0" />
-      <template name="NPCCharacter.spc_notable_dorwinion_0b" />
-      <template name="NPCCharacter.spc_notable_dorwinion_1" />
-      <template name="NPCCharacter.spc_notable_dorwinion_1b" />
-      <template name="NPCCharacter.spc_notable_dorwinion_2" />
-      <template name="NPCCharacter.spc_notable_dorwinion_2b" />
-      <template name="NPCCharacter.spc_notable_dorwinion_3" />
-      <template name="NPCCharacter.spc_notable_dorwinion_3b" />
-      <template name="NPCCharacter.spc_notable_dorwinion_4" />
-      <template name="NPCCharacter.spc_notable_dorwinion_4b" />
-      <template name="NPCCharacter.spc_notable_dorwinion_5" />
-      <template name="NPCCharacter.spc_notable_dorwinion_6" />
-      <template name="NPCCharacter.spc_notable_dorwinion_7" />
-      <template name="NPCCharacter.spc_notable_dorwinion_8" />
-      <template name="NPCCharacter.spc_notable_dorwinion_9" />
-      <template name="NPCCharacter.spc_notable_dorwinion_gl1" />
-      <template name="NPCCharacter.spc_notable_dorwinion_10" />
-      <template name="NPCCharacter.spc_notable_dorwinion_11" />
-      <template name="NPCCharacter.spc_notable_dorwinion_gl4" />
-      <template name="NPCCharacter.spc_notable_dorwinion_12" />
-      <template name="NPCCharacter.spc_notable_dorwinion_13" />
-      <template name="NPCCharacter.spc_notable_dorwinion_21" />
-      <template name="NPCCharacter.spc_notable_dorwinion_22" />
-      <template name="NPCCharacter.spc_dorwinion_headman_1" />
-      <template name="NPCCharacter.spc_dorwinion_headman_2" />
-      <template name="NPCCharacter.spc_dorwinion_headman_3" />
-      <template name="NPCCharacter.spc_wanderer_dorwinion_0" />
-      <template name="NPCCharacter.spc_wanderer_dorwinion_1" />
-      <template name="NPCCharacter.spc_wanderer_dorwinion_2" />
-      <template name="NPCCharacter.spc_wanderer_dorwinion_3" />
-      <template name="NPCCharacter.spc_wanderer_dorwinion_4" />
-      <template name="NPCCharacter.spc_wanderer_dorwinion_5" />
-      <template name="NPCCharacter.spc_wanderer_dorwinion_6" />
-      <template name="NPCCharacter.spc_wanderer_dorwinion_7" />
-      <template name="NPCCharacter.spc_wanderer_dorwinion_8" />
-      <template name="NPCCharacter.spc_wanderer_dorwinion_9" />
-    </notable_templates>
-    <vassal_reward_items>
-      <item id="Item.dale_longbow_a" />
-    </vassal_reward_items>
-    <caravan_party_templates>
-      <caravan_party_template id="PartyTemplate.caravan_template_dorwinion" />
-    </caravan_party_templates>
-    <elite_caravan_party_templates>
-      <caravan_party_template id="PartyTemplate.elite_caravan_template_dorwinion" />
-    </elite_caravan_party_templates>
-    <available_ship_hulls/>
-    <banner_bearer_replacement_weapons>
-      <item id="Item.sturgia_sword_1_t2" />
-      <item id="Item.sturgia_sword_2_t3" />
-      <item id="Item.sturgia_sword_4_t4" />
-      <item id="Item.sturgia_sword_5_t5" />
-    </banner_bearer_replacement_weapons>
-    <default_policies>
-      <policy id="policy_lawspeakers" />
-      <policy id="policy_precarial_land_tenure" />
-    </default_policies>
     <male_names>
       <name name="{=aom_dorwinion_male_name_1}Alboin" />
       <name name="{=aom_dorwinion_male_name_2}Audoin" />
@@ -7661,6 +7603,64 @@
       <name name="{=aom_dorwinion_clan_11}Folk of the Vineyards" />
       <name name="{=aom_dorwinion_clan_12}House of the Elf-wine" />
     </clan_names>
+    <notable_templates>
+      <template name="NPCCharacter.spc_notable_dorwinion_0" />
+      <template name="NPCCharacter.spc_notable_dorwinion_0b" />
+      <template name="NPCCharacter.spc_notable_dorwinion_1" />
+      <template name="NPCCharacter.spc_notable_dorwinion_1b" />
+      <template name="NPCCharacter.spc_notable_dorwinion_2" />
+      <template name="NPCCharacter.spc_notable_dorwinion_2b" />
+      <template name="NPCCharacter.spc_notable_dorwinion_3" />
+      <template name="NPCCharacter.spc_notable_dorwinion_3b" />
+      <template name="NPCCharacter.spc_notable_dorwinion_4" />
+      <template name="NPCCharacter.spc_notable_dorwinion_4b" />
+      <template name="NPCCharacter.spc_notable_dorwinion_5" />
+      <template name="NPCCharacter.spc_notable_dorwinion_6" />
+      <template name="NPCCharacter.spc_notable_dorwinion_7" />
+      <template name="NPCCharacter.spc_notable_dorwinion_8" />
+      <template name="NPCCharacter.spc_notable_dorwinion_9" />
+      <template name="NPCCharacter.spc_notable_dorwinion_gl1" />
+      <template name="NPCCharacter.spc_notable_dorwinion_10" />
+      <template name="NPCCharacter.spc_notable_dorwinion_11" />
+      <template name="NPCCharacter.spc_notable_dorwinion_gl4" />
+      <template name="NPCCharacter.spc_notable_dorwinion_12" />
+      <template name="NPCCharacter.spc_notable_dorwinion_13" />
+      <template name="NPCCharacter.spc_notable_dorwinion_21" />
+      <template name="NPCCharacter.spc_notable_dorwinion_22" />
+      <template name="NPCCharacter.spc_dorwinion_headman_1" />
+      <template name="NPCCharacter.spc_dorwinion_headman_2" />
+      <template name="NPCCharacter.spc_dorwinion_headman_3" />
+      <template name="NPCCharacter.spc_wanderer_dorwinion_0" />
+      <template name="NPCCharacter.spc_wanderer_dorwinion_1" />
+      <template name="NPCCharacter.spc_wanderer_dorwinion_2" />
+      <template name="NPCCharacter.spc_wanderer_dorwinion_3" />
+      <template name="NPCCharacter.spc_wanderer_dorwinion_4" />
+      <template name="NPCCharacter.spc_wanderer_dorwinion_5" />
+      <template name="NPCCharacter.spc_wanderer_dorwinion_6" />
+      <template name="NPCCharacter.spc_wanderer_dorwinion_7" />
+      <template name="NPCCharacter.spc_wanderer_dorwinion_8" />
+      <template name="NPCCharacter.spc_wanderer_dorwinion_9" />
+    </notable_templates>
+    <vassal_reward_items>
+      <item id="Item.dale_longbow_a" />
+    </vassal_reward_items>
+    <caravan_party_templates>
+      <caravan_party_template id="PartyTemplate.caravan_template_dorwinion" />
+    </caravan_party_templates>
+    <elite_caravan_party_templates>
+      <caravan_party_template id="PartyTemplate.elite_caravan_template_dorwinion" />
+    </elite_caravan_party_templates>
+    <available_ship_hulls/>
+    <banner_bearer_replacement_weapons>
+      <item id="Item.sturgia_sword_1_t2" />
+      <item id="Item.sturgia_sword_2_t3" />
+      <item id="Item.sturgia_sword_4_t4" />
+      <item id="Item.sturgia_sword_5_t5" />
+    </banner_bearer_replacement_weapons>
+    <default_policies>
+      <policy id="policy_lawspeakers" />
+      <policy id="policy_precarial_land_tenure" />
+    </default_policies>
         <cultural_feats>
             <feat id="taom_dale_plain_speed" />
             <feat id="taom_dale_loyalty" />

@@ -6,5 +6,8 @@ namespace TAOM.Features.Encyclopedia;
 /// </summary>
 public class EncyclopediaSettingsProvider : IEncyclopediaSettingsProvider
 {
-    public bool ShowAllEncyclopediaCharacters => TaomSettings.Instance?.ShowAllEncyclopediaCharacters ?? true;
+    private TaomSettings? _settings;
+    private TaomSettings? Settings => _settings ??= TaomSettings.Instance;
+
+    public bool ShowAllEncyclopediaCharacters => Settings?.ShowAllEncyclopediaCharacters ?? true;
 }

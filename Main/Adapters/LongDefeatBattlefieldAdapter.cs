@@ -441,9 +441,8 @@ internal sealed partial class LongDefeatBattlefieldAdapter : ILongDefeatBattlefi
         if (count <= 0)
             return 0;
 
-        var main = _mission.MainAgent;
-        var mainStands = main != null && main.IsActive();
-        var owner = mainStands ? main : StandingDefenders().FirstOrDefault(a => a.Formation != null) ?? StandingDefenders().FirstOrDefault();
+        var owner = LivingOwner();
+        var mainStands = owner != null && owner == _mission.MainAgent;
         if (owner == null)
         {
             _logger.LogWarning("[LongDefeat][Wave] no defender stands to own a felled straggler's death; nobody was felled");
@@ -486,6 +485,13 @@ internal sealed partial class LongDefeatBattlefieldAdapter : ILongDefeatBattlefi
         }
 
         return left.Count;
+    }
+
+    // The player's body while it stands, else a standing defender with a formation, else any standing defender; null when no defender stands.
+    private Agent? LivingOwner()
+    {
+        var main = _mission.MainAgent;
+        return main != null && main.IsActive() ? main : StandingDefenders().FirstOrDefault(a => a.Formation != null) ?? StandingDefenders().FirstOrDefault();
     }
 
     private IEnumerable<Agent> StandingDefenders() => _mission.DefenderTeam.ActiveAgents.Where(a => a.IsHuman && a.IsActive());

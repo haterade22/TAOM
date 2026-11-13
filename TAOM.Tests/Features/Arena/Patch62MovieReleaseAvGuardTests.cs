@@ -41,13 +41,13 @@ public class Patch62MovieReleaseAvGuardTests
     }
 
     [TestMethod]
-    public void Finalizer_NonAvException_PropagatesUntouched()
+    public void Finalizer_NonAvException_IsHandedBack()
     {
         var nre = new NullReferenceException("unrelated");
 
         var result = GauntletMovie_Release_AvGuard_Patch.Finalizer(null, nre);
 
-        Assert.AreSame(nre, result, "Non-AV exceptions must propagate untouched.");
+        Assert.AreSame(nre, result, "Non-AV exceptions must propagate.");
         _logger.DidNotReceive().LogWarning(Arg.Any<string>());
     }
 

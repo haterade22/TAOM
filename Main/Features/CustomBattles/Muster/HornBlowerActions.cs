@@ -5,6 +5,7 @@ using TaleWorlds.Core;
 using TaleWorlds.Engine;
 using TaleWorlds.Library;
 using TaleWorlds.MountAndBlade;
+using TAOM.Adapters;
 
 namespace TAOM.Features.CustomBattles.Muster;
 
@@ -127,8 +128,8 @@ internal static class HornBlowerActions
     /// <summary>TAOM's horn of the blower's people at his position; the game's attack horn when there is none.</summary>
     private static void Sound(Mission mission, Agent a)
     {
-        var culture = a.Character?.Culture?.Name?.ToString() ?? "";
-        if (culture.Length == 0) culture = a.Character?.Culture?.StringId ?? "";
+        var culture = CharacterCulture.Of(a.Character)?.Name?.ToString() ?? "";
+        if (culture.Length == 0) culture = CharacterCulture.IdOf(a.Character) ?? "";
         string name =
             Has(culture, "rohan", "rohirrim") ? "LOTR/Rohan/Alert/horn_1.wav" :
             Has(culture, "gondor", "dol amroth", "arnor", "arthedain", "dale", "barding", "rhovanion", "woodmen", "beorning") ? "LOTR/Rohan/Alert/french_horn_1.wav" :
