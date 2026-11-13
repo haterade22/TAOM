@@ -18,10 +18,12 @@ namespace TAOM.Adapters;
 /// Reads the lord's hall for Hall Seats (docs/features/hall-seats.md). Called from the prefix of
 /// <c>MissionAgentHandler.SpawnDefaultLocationCharacter</c> on the first spawn of a <c>SpawnLocationCharacters</c> pass, so
 /// <c>LocationCharactersAreReadyToSpawn</c> has already added the guards and musicians, and nothing of this pass has
-/// spawned yet. The lord ladder (<c>sp_notable</c>, then <c>npc_common_limited</c>, then <c>npc_common</c>, then the first
-/// usable point of any tag, never marked used) is vanilla's <c>MissionAgentHandler.SpawnWanderingAgent</c>.
-/// The conversation target is the private <c>MissionConversationLogic._teleportNearCharacter</c>, pinned by
-/// <c>Patch148HallSeatsBindingTests</c> and the reflection-sites catalogue.
+/// spawned yet. The lord ladder (<c>sp_notable</c>, then <c>npc_common_limited</c>, then <c>npc_common</c>, then a
+/// fallback onto one shared point that is never marked used) is vanilla's <c>MissionAgentHandler.SpawnWanderingAgent</c>.
+/// The seats are the distinct unused usable machines under those tags (<see cref="HallSeatRules.CountSeats"/>): vanilla
+/// lists a machine under every tag its entity carries and one spawn marks the whole machine used. Two private fields are
+/// read, <c>MissionConversationLogic._teleportNearCharacter</c> and <c>MissionAgentHandler._usedSpawnPoints</c>, both
+/// pinned by <c>Patch148HallSeatsBindingTests</c> and the reflection-sites catalogue.
 /// </summary>
 internal sealed class HallSeatsAdapter : IHallSeatsAdapter
 {
@@ -31,6 +33,9 @@ internal sealed class HallSeatsAdapter : IHallSeatsAdapter
 
     private static readonly AccessTools.FieldRef<MissionConversationLogic, CharacterObject>? TeleportNearCharacter =
         TryFieldRef();
+
+    private static readonly AccessTools.FieldRef<MissionAgentHandler, HashSet<UsableMachine>>? UsedSpawnPoints =
+        TryUsedSpawnPoints();
 
     public HallSeatSnapshot? ReadLordsHall(object missionAgentHandler)
     {
@@ -42,7 +47,7 @@ internal sealed class HallSeatsAdapter : IHallSeatsAdapter
             return null;
 
         var mission = Mission.Current;
-        if (mission == null || Campaign.Current == null)
+        if (mission == null || Campaign.Current == null || UsedSpawnPoints == null)
             return null;
 
         var settlement = PlayerEncounter.LocationEncounter?.Settlement ?? Settlement.CurrentSettlement;
@@ -51,7 +56,7 @@ internal sealed class HallSeatsAdapter : IHallSeatsAdapter
 
         var spawned = new HashSet<IAgentOriginBase>(mission.Agents.Where(a => a.Origin != null).Select(a => a.Origin));
         var talkTarget = ConversationTarget(mission);
-        var freeSpots = FreeLordSpots(handler.FindUnusedUsablePointCount());
+        var freeSpots = FreeLordSpots(handler, UsedSpawnPoints(handler));
 
         var lords = new List<HallSeatCandidate>();
         var takenByOthers = 0;
@@ -74,16 +79,18 @@ internal sealed class HallSeatsAdapter : IHallSeatsAdapter
         return new HallSeatSnapshot(mission.SceneName, lords, freeSpots, takenByOthers);
     }
 
-    internal static int FreeLordSpots(IReadOnlyDictionary<string, int> unused)
+    private static int FreeLordSpots(MissionAgentHandler handler, HashSet<UsableMachine> used)
     {
-        var total = 0;
+        var perTag = new List<IReadOnlyList<HallSeatMachine>>();
         foreach (var tag in LordSpotTags)
         {
-            if (unused.TryGetValue(tag, out var count) && count > 0)
-                total += count;
+            perTag.Add(handler.GetAllUsablePointsWithTag(tag)
+                .Where(machine => !used.Contains(machine))
+                .Select(machine => new HallSeatMachine(machine, MissionAgentHandler.GetPointCountOfUsableMachine(machine, checkForUnusedOnes: true)))
+                .ToList());
         }
 
-        return total;
+        return HallSeatRules.CountSeats(perTag);
     }
 
     private static bool LandsOnALordSpot(LocationCharacter character, MissionAgentHandler handler)
@@ -93,6 +100,7 @@ internal sealed class HallSeatsAdapter : IHallSeatsAdapter
         var tag = character.SpecialTargetTag;
         if (string.IsNullOrEmpty(tag) || Array.IndexOf(LordSpotTags, tag) >= 0)
             return true;
+        // HasUsablePointWithTag only says the tag exists, not that a free machine is left (docs/features/hall-seats.md "Known limits").
         return !handler.HasUsablePointWithTag(tag);
     }
 
@@ -102,13 +110,15 @@ internal sealed class HallSeatsAdapter : IHallSeatsAdapter
         var ownerClan = settlement.OwnerClan;
         var quests = Campaign.Current.QuestManager;
 
-        var mustKeep = (clan != null && clan == Clan.PlayerClan)
-                       || (ownerClan != null && ownerClan.Leader == hero)
-                       || hero.IsKingdomLeader
-                       || (hero.GovernorOf != null && hero.GovernorOf == settlement.Town)
-                       || (talkTarget != null && hero.CharacterObject == talkTarget)
-                       || hero.Issue != null
-                       || (quests != null && (quests.IsQuestGiver(hero) || quests.TrackedObjects.ContainsKey(hero)));
+        var mustKeep = HallSeatRules.IsMustKeep(
+            playerClan: clan != null && clan == Clan.PlayerClan,
+            settlementOwner: ownerClan != null && ownerClan.Leader == hero,
+            kingdomLeader: hero.IsKingdomLeader,
+            governor: hero.GovernorOf != null && hero.GovernorOf == settlement.Town,
+            conversationTarget: talkTarget != null && hero.CharacterObject == talkTarget,
+            hasIssue: hero.Issue != null,
+            questGiver: quests != null && quests.IsQuestGiver(hero),
+            questTarget: quests != null && quests.TrackedObjects.ContainsKey(hero));
 
         return new HallSeatCandidate(
             character,
@@ -124,6 +134,19 @@ internal sealed class HallSeatsAdapter : IHallSeatsAdapter
     {
         var logic = mission.GetMissionBehavior<MissionConversationLogic>();
         return logic == null || TeleportNearCharacter == null ? null : TeleportNearCharacter(logic);
+    }
+
+    private static AccessTools.FieldRef<MissionAgentHandler, HashSet<UsableMachine>>? TryUsedSpawnPoints()
+    {
+        try
+        {
+            return AccessTools.FieldRefAccess<MissionAgentHandler, HashSet<UsableMachine>>("_usedSpawnPoints");
+        }
+        catch (Exception)
+        {
+            // Engine drift: without the used set the free seats are unknown, so the hall is not read and every lord spawns as in vanilla.
+            return null;
+        }
     }
 
     private static AccessTools.FieldRef<MissionConversationLogic, CharacterObject>? TryFieldRef()

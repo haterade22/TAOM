@@ -9,8 +9,8 @@ namespace TAOM.Features.HallSeats.Hooks;
 /// Patch148 (Hall Seats, docs/features/hall-seats.md): opens and closes one spawn pass around
 /// <c>MissionAgentHandler.SpawnLocationCharacters</c>, the method every indoor, town and village mission calls once to
 /// spawn its location's characters. The void prefix opens the pass when the switch is on; the void finalizer closes it on
-/// every exit, the throwing one included, and only when this call opened it (<c>__state</c>). A void finalizer keeps
-/// Harmony on <c>rethrow</c>, so a vanilla throw keeps its stack. Notes: docs/reference/harmony-patch-registry.md
+/// every exit, the throwing one included, and only when this call opened it (<c>__state</c>). While every finalizer on
+/// the method is void, Harmony keeps <c>rethrow</c>, so a vanilla throw keeps its stack. Notes: docs/reference/harmony-patch-registry.md
 /// "Patch148_HallSeats".
 /// </summary>
 [HarmonyPatch(typeof(MissionAgentHandler), nameof(MissionAgentHandler.SpawnLocationCharacters))]

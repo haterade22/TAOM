@@ -55,7 +55,7 @@ public sealed class HallSeatPlan
 
     public bool IsHeldBack(object token) => token != null && ((HashSet<object>)HeldBack).Contains(token);
 
-    private sealed class ReferenceEqualityComparer : IEqualityComparer<object>
+    internal sealed class ReferenceEqualityComparer : IEqualityComparer<object>
     {
         public static readonly ReferenceEqualityComparer Instance = new ReferenceEqualityComparer();
 

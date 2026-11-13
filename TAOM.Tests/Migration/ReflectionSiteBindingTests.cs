@@ -240,7 +240,9 @@ public class ReflectionSiteBindingTests
     // --- Siege Retreat Loot (Patch146, #1121): vanilla's private casualty-loot step, called by name when a defender's assault ends by attacker retreat. Missing: the adapter answers false, the service logs an error and the retreat gives no loot, as in vanilla.
     [DataRow("TaleWorlds.CampaignSystem.MapEvents.MapEvent", "MapEvent", "LootDefeatedPartyCasualties", "Method", "SiegeRetreatLootAdapter.cs:28")]
     // --- Hall Seats (Patch148): the lord the player asked to see from the settlement overlay, read so that lord always spawns in the lord's hall. Missing: the field ref is null and that lord is ranked like any other.
-    [DataRow("SandBox.Conversation.MissionLogics.MissionConversationLogic", "MissionConversationLogic", "_teleportNearCharacter", "Field", "HallSeatsAdapter.cs:133")]
+    [DataRow("SandBox.Conversation.MissionLogics.MissionConversationLogic", "MissionConversationLogic", "_teleportNearCharacter", "Field", "HallSeatsAdapter.cs:156")]
+    // --- Hall Seats (Patch148): the machines vanilla has already marked used, so the seat count skips them. Missing: the field ref is null, the adapter reads no hall and every lord spawns as in vanilla.
+    [DataRow("SandBox.Missions.MissionLogics.MissionAgentHandler", "MissionAgentHandler", "_usedSpawnPoints", "Field", "HallSeatsAdapter.cs:143")]
     public void ReflectionSite_ResolvesAgainstInstalledEngine(string fullName, string simpleName, string member, string kind, string source)
     {
         if (!_gameLoaded)

@@ -10,7 +10,7 @@ namespace TAOM.Tests.Features.HallSeats;
 
 /// <summary>
 /// Drift-guards for Patch148 (Hall Seats). Both hooks bind the targets' parameters by NAME, the skip hook returns the
-/// target's own value, and the adapter reads the private <c>MissionConversationLogic._teleportNearCharacter</c>, so a rename
+/// target's own value, and the adapter reads the private <c>MissionConversationLogic._teleportNearCharacter</c> and <c>MissionAgentHandler._usedSpawnPoints</c>, so a rename
 /// or a changed signature on an engine bump would otherwise turn the feature into a silent no-op. The decisions are
 /// covered by <c>HallSeatPlannerTests</c> and <c>HallSeatsServiceTests</c>.
 /// </summary>
@@ -84,10 +84,24 @@ public class Patch148HallSeatsBindingTests
 
     [TestMethod]
     [TestCategory("BindingVerification")]
+    public void UsedSpawnPoints_PrivateField_StillResolves_AsASetOfUsableMachines()
+    {
+        var handler = Engine("SandBox.Missions.MissionLogics.MissionAgentHandler");
+        var field = handler.GetField("_usedSpawnPoints", BindingFlags.Instance | BindingFlags.NonPublic);
+        Assert.IsNotNull(field, "_usedSpawnPoints is gone: the adapter cannot tell which machines are taken, reads no hall and holds nobody back.");
+        var machine = Engine("TaleWorlds.MountAndBlade.UsableMachine");
+        Assert.IsTrue(field.FieldType.IsGenericType && field.FieldType.GetGenericTypeDefinition() == typeof(System.Collections.Generic.HashSet<>)
+                      && field.FieldType.GetGenericArguments()[0] == machine, "_usedSpawnPoints is no longer a HashSet<UsableMachine>.");
+    }
+
+    [TestMethod]
+    [TestCategory("BindingVerification")]
     public void SpotCountingMembers_StayPublic()
     {
         var handler = Engine("SandBox.Missions.MissionLogics.MissionAgentHandler");
-        Assert.IsNotNull(handler.GetMethod("FindUnusedUsablePointCount", BindingFlags.Instance | BindingFlags.Public, null, Type.EmptyTypes, null));
+        var machine = Engine("TaleWorlds.MountAndBlade.UsableMachine");
+        Assert.IsNotNull(handler.GetMethod("GetAllUsablePointsWithTag", BindingFlags.Instance | BindingFlags.Public, null, new[] { typeof(string) }, null));
+        Assert.IsNotNull(handler.GetMethod("GetPointCountOfUsableMachine", BindingFlags.Static | BindingFlags.Public, null, new[] { machine, typeof(bool) }, null));
         Assert.IsNotNull(handler.GetMethod("HasUsablePointWithTag", BindingFlags.Instance | BindingFlags.Public, null, new[] { typeof(string) }, null));
 
         var character = Engine("TaleWorlds.CampaignSystem.Settlements.Locations.LocationCharacter");

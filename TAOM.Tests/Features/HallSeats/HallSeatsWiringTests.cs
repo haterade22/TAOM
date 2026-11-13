@@ -115,18 +115,6 @@ public class HallSeatsWiringTests
         Assert.AreEqual("lordshall", HallSeatsAdapter.LordsHallId);
     }
 
-    [TestMethod]
-    public void FreeLordSpots_SumsOnlyTheLadderTags()
-    {
-        var unused = new System.Collections.Generic.Dictionary<string, int>
-        {
-            ["sp_notable"] = 4, ["npc_common_limited"] = 2, ["npc_common"] = 3, ["sp_guard"] = 9, ["sp_throne"] = 1,
-        };
-
-        Assert.AreEqual(9, HallSeatsAdapter.FreeLordSpots(unused));
-        Assert.AreEqual(0, HallSeatsAdapter.FreeLordSpots(new System.Collections.Generic.Dictionary<string, int>()));
-    }
-
     private static object? StaticField(System.Type type, string name) =>
         type.GetField(name, BindingFlags.NonPublic | BindingFlags.Static)!.GetValue(null);
 }

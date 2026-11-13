@@ -167,6 +167,8 @@ public class CampaignHotPathSettingsProvidersTests
     [DataRow(typeof(TAOM.Features.SpecialResources.SpecialResourceSettingsProvider))]
     // #1111: the diplomacy model asks the switch at every AI join, defection and mercenary score of the daily clan tick.
     [DataRow(typeof(TAOM.Features.KingdomAllegiance.KingdomAllegianceSettingsProvider))]
+    // Hall Seats: not a hot path (read once per spawn pass, when a hall spawns its characters); the accessor still takes the settings once.
+    [DataRow(typeof(TAOM.Features.HallSeats.HallSeatsSettingsProvider))]
     public void OnlyTheLazySettingsAccessor_ReadsTheMcmInstance(Type provider)
     {
         var accessor = provider.GetProperty("Settings", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static)
