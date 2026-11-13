@@ -2705,7 +2705,8 @@ never FAIL. The manifest header also named one list while its fail patterns judg
 The plan 050 refactor said in its trailer that a source pin holds the text of the raw party equality,
 the map event and `IsPlayerAvailable()` in `HandleArrivedMessenger`. The pin asserted the party
 equality and the reader's cast only. `playerAvailable: true`, or `MapEvent == null` in place of
-`!= null` (every messenger then waits for ever), left all 39,278 tests green. A recurrence of the
+`!= null` (the battle test then inverts: a messenger waits while its target is out of battle and is
+delivered while the target's party is in one), left all 39,278 tests green. A recurrence of the
 #1110 lesson above, from the other side: the pin was right for what it named, and the commit text
 claimed more.
 - **Why missed:** the plan drafted the trailer and the pin specification in two places, naming four

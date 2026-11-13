@@ -71,7 +71,8 @@ and inactive wanderers.
   `TheArrival_AsksTheServiceForItsVerdict_WithTheRawPartyEqualityAndTheEngineState` asserted only the
   service call, the party equality, the absence of `IsInPlayerParty` and the reader cast. The lead
   proved the gap by mutation: with `targetPartyInMapEvent: target.PartyBelongedTo?.MapEvent == null`
-  (every messenger waits for ever) and with `playerAvailable: true`, the old pin would stay green. Two
+  (the battle test inverts: a messenger waits while its target is out of battle and is delivered
+  while the target's party is in one) and with `playerAvailable: true`, the old pin would stay green. Two
   assertions were added (`MessengerCampaignBehaviorSourceTests.cs:153-154`); each mutation then failed
   the pin ("Failed! - Failed: 1, Passed: 13, Skipped: 0, Total: 14" both times), and the production
   file was restored by hand edit (`git diff Main` empty afterwards).
@@ -138,3 +139,34 @@ the lens findings:
 ### Codex lessons (pending)
 
 None: Codex did not run, so there is no false-positive pattern or missed category to record.
+
+## Convergence round 1
+
+Scope: `0848c47e2..3014400f8`. Two LOW findings, both checked against the code and the repo rules.
+
+1. **The follow-up commit's type (LOW): NOT FIXED, left to the maintainer at merge.** CONFIRMED.
+   `3014400f8` changes one test file and four `docs/reviews` files, and
+   `docs/ai-includes/git-and-commits.md` gives those paths `test:` and `docs:`. As `fix(messengers)`,
+   `tools/changelog_from_commits.py` would list it under "Fixes" although its body opens with "No
+   change in game". The fix is a message reword of that commit, which rewrites the branch, and this
+   pass may not rewrite history. Suggested reword at merge, with the body and `Refs #1132` kept and
+   "would make every messenger wait for ever" replaced by the wording of finding 2:
+   `test(messengers): v2.0.38 - Pin the arrival's player and battle reads`. The convergence commit
+   that adds this section is typed `docs:` for the same reason.
+2. **The `MapEvent == null` mutation's effect (LOW): FIXED in the convergence commit that adds this
+   section.** CONFIRMED. `MessengerService.cs:83-87` returns Lost and Confused before the wait test at
+   :89, so the mutated argument cannot hold those messengers. With the mutation, a target whose party
+   is in a battle gets Ready at :92 and the behavior shows the "Messenger Arrived" inquiry
+   (`MessengerCampaignBehavior.cs:306-312`), and only a target out of battle, or with no party, waits.
+   The lesson (`lessons/testing-qa.md`) and this record (Agent 5 flow 3) now say the battle test
+   inverts. The optional part of the finding (no full-suite log for "left all 39,278 tests green")
+   is now evidenced, so the lesson keeps that wording: with the old pin restored (the two assertions
+   removed), each mutant was run alone over the full suite and each gave
+   `Passed!  - Failed:     0, Passed: 39278, Skipped:     9, Total: 39287`. Both files were then
+   restored by hand edit and `git status` was clean.
+
+False positives: none.
+
+Verification for this round: the full suite before any edit at `3014400f8` gave
+`Passed!  - Failed:     0, Passed: 39278, Skipped:     9, Total: 39287`; the result after the edits is
+in the convergence commit body. No gate changed, so no differential sweep ran.
