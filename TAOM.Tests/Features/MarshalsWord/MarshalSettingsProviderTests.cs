@@ -15,7 +15,7 @@ public class MarshalSettingsProviderTests
         Assert.IsTrue(MarshalSettingsProvider.DefaultEnabled);
         Assert.IsTrue(MarshalSettingsProvider.DefaultKeepArray);
         Assert.IsTrue(MarshalSettingsProvider.DefaultArriveTogether);
-        Assert.IsTrue(MarshalSettingsProvider.DefaultOutlines);
+        Assert.IsFalse(MarshalSettingsProvider.DefaultOutlines);
         Assert.IsTrue(MarshalSettingsProvider.DefaultHollowSquare);
         Assert.IsTrue(MarshalSettingsProvider.DefaultSpacingRepair);
         Assert.IsTrue(MarshalSettingsProvider.DefaultThrowersFirst);
@@ -29,7 +29,7 @@ public class MarshalSettingsProviderTests
         Assert.AreEqual(MarshalSettingsProvider.DefaultEnabled, settings.MarshalEnabled);
         Assert.AreEqual(MarshalSettingsProvider.DefaultKeepArray, settings.MarshalKeepArray);
         Assert.AreEqual(MarshalSettingsProvider.DefaultArriveTogether, settings.MarshalArriveTogether);
-        Assert.AreEqual(MarshalSettingsProvider.DefaultOutlines, settings.MarshalOutlines);
+        Assert.AreEqual(MarshalSettingsProvider.DefaultOutlines, settings.MarshalShowOutlines);
         Assert.AreEqual(MarshalSettingsProvider.DefaultHollowSquare, settings.MarshalHollowSquare);
         Assert.AreEqual(MarshalSettingsProvider.DefaultSpacingRepair, settings.MarshalSpacingRepair);
         Assert.AreEqual(MarshalSettingsProvider.DefaultThrowersFirst, settings.MarshalThrowersFirst);
@@ -38,7 +38,7 @@ public class MarshalSettingsProviderTests
     [TestMethod]
     public void EachValue_ReadsThroughToItsOwnProperty()
     {
-        var settings = new TaomSettings { MarshalEnabled = false, MarshalKeepArray = true, MarshalArriveTogether = false, MarshalOutlines = false, MarshalHollowSquare = false, MarshalSpacingRepair = false, MarshalThrowersFirst = false };
+        var settings = new TaomSettings { MarshalEnabled = false, MarshalKeepArray = true, MarshalArriveTogether = false, MarshalShowOutlines = false, MarshalHollowSquare = false, MarshalSpacingRepair = false, MarshalThrowersFirst = false };
         var sut = new MarshalSettingsProvider(settings);
 
         Assert.IsFalse(sut.Enabled);

@@ -12,7 +12,7 @@
 | **taom-moduledata** | Project | Query TAOM ModuleData integrity (validate, item/troop/culture exists, find-references, list cultures/schemas) — wraps `tools/taom_query.py`. Needs the `mcp` SDK; restart Claude to load. Its registries are a snapshot from server start, so after a data edit trust `python tools/validate_moduledata.py`. See `docs/features/moduledata-validation.md`. | `.mcp.json` |
 | **imagine** | Project | AI image generation for TAOM's 2D work (`https://mcp.imagine.art`, HTTP; needs auth, so unauthenticated sessions can't use it) | `.mcp.json` |
 | **elevenlabs** | Project | Voice design and generation into `.voice-scratch/` ([kingdom-voices.md](../features/kingdom-voices.md)) | `.mcp.json` |
-| **blender** | Local (`E:\repos\TAOM` only) | Live Blender session for creature animation ([workflow](../ai-includes/creature-animation-blender-mcp-workflow.md)) | `~/.claude.json` |
+| **blender** | Local (`E:\repos\TAOM` only) | Live Blender session for creature animation ([workflow](../ai-includes/creature-animation-blender-mcp-workflow.md)) and mesh work (session rules: [`/blender-asset`](../../.claude/skills/blender-asset/SKILL.md)) | `~/.claude.json` |
 | **substance-painter** | Local (`E:\repos\TAOM` only) | Live Substance Painter session for texturing | `~/.claude.json` |
 | **davinci-resolve** | User | DaVinci Resolve control; machine-local, no TAOM skill, agent or rule calls it | `~/.claude.json` |
 

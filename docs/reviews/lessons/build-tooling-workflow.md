@@ -5005,3 +5005,19 @@ that only use its process and path helpers.
   "all", "only" and "the N that" in the surrounding paragraph against its output, by script where
   you can. Name an exception rather than keep a universal claim.
 - **Source:** [rca-tools-dead-scripts-and-test-speed-2026-11-13.md](../rca-tools-dead-scripts-and-test-speed-2026-11-13.md) F3, `/deep-review` Agent 5 and the Tooling lens.
+
+### A new mesh gate is calibrated on an approved asset, and its canary runs every branch (#1153, 2026-11-13)
+
+The first run of `tools/blender/mesh_preflight.py` failed the approved `erebor_dwarf_house_01`: 0.99%
+of its surface is seen only from behind, the limit copied from `unwrap_texture_sets.py` was 0.1%, and
+the 36 faces are thin trim slabs wound inward with a face right behind each, so no hole shows. The
+canary (one good file, one broken copy) then passed, and review still found two faults in paths it
+never took: the views cropped any mesh taller than three quarters of its box diagonal, and the
+sampling path for meshes over 200,000 faces used a stepped bmesh slice, which Blender refuses.
+- **Why missed:** the limit came from a tool built for one icon, and the canary's file was wide, low
+  and small, so the picture height and the face cap never came into play.
+- **Prevent:** before a new geometric check gets a fail limit, run it on an asset Mike has approved
+  and set the limit from that number. Give the canary one case per branch of the Blender-side code:
+  a tall mesh, a mesh over each size cap (force the cap low), a hidden object. A branch no canary
+  ran is unproven, whatever the unit tests say about the pure rules.
+- **Source:** [adopt-blender-skills-2026-11-13.md](../adopt-blender-skills-2026-11-13.md), "What changed against the plan" and "Review of the change set".
