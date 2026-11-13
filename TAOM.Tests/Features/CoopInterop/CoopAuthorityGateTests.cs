@@ -185,6 +185,62 @@ public class CoopAuthorityGateTests
         service.Received(1).EnforcePermanentAlliances();
     }
 
+    // A first-time co-op joiner builds a local campaign for character creation, so the new-game
+    // follow-up runs there too. Coop's StartAlliance prefix on a client asks the server instead of
+    // forming the alliance; today each request stops at Coop's kingdom id lookup and logs an error.
+
+    [TestMethod]
+    public void Diplomacy_OnNewGameCreatedFollowUp_CoopClient_DoesNotEstablishInitialAlliances()
+    {
+        var service = Substitute.For<IDiplomacyService>();
+        var sut = new DiplomacyBehavior(service, Substitute.For<IModLogger>(), Client());
+
+        sut.OnNewGameCreatedFollowUp(0);
+
+        service.DidNotReceive().EstablishInitialAlliances();
+    }
+
+    [TestMethod]
+    public void Diplomacy_OnNewGameCreatedFollowUp_CoopHost_EstablishesInitialAlliances()
+    {
+        var service = Substitute.For<IDiplomacyService>();
+        var sut = new DiplomacyBehavior(service, Substitute.For<IModLogger>(), Authority());
+
+        sut.OnNewGameCreatedFollowUp(0);
+
+        service.Received(1).EstablishInitialAlliances();
+    }
+
+    [TestMethod]
+    public void Diplomacy_OnNewGameCreatedFollowUp_Solo_EstablishesInitialAlliancesOnTheFirstStepOnly()
+    {
+        var service = Substitute.For<IDiplomacyService>();
+        var sut = new DiplomacyBehavior(service, Substitute.For<IModLogger>(), Solo());
+
+        sut.OnNewGameCreatedFollowUp(0);
+        sut.OnNewGameCreatedFollowUp(1);
+
+        service.Received(1).EstablishInitialAlliances();
+    }
+
+    [TestMethod]
+    public void Diplomacy_OnNewGameCreatedFollowUp_UnprobeableCoopModWithNoSession_EstablishesInitialAlliances()
+    {
+        // A co-op mod TAOM cannot probe makes ShouldDeferToHost true on every peer, solo included.
+        // A new campaign there has no host save to carry the alliances, so only a Coop client skips.
+        var coop = Substitute.For<ICoopSessionProvider>();
+        coop.IsAuthority.Returns(true);
+        coop.IsCoopClient.Returns(false);
+        coop.IsSessionActive.Returns(false);
+        coop.ShouldDeferToHost.Returns(true);
+        var service = Substitute.For<IDiplomacyService>();
+        var sut = new DiplomacyBehavior(service, Substitute.For<IModLogger>(), coop);
+
+        sut.OnNewGameCreatedFollowUp(0);
+
+        service.Received(1).EstablishInitialAlliances();
+    }
+
     // --- Messengers -----------------------------------------------------------------------------
 
     [TestMethod]
