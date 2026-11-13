@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using HarmonyLib;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using TAOM.Adapters;
 using TAOM.Features.CombatMechanics.Hooks;
 using TAOM.Tests.Migration;
 using TaleWorlds.Core;
@@ -48,7 +49,8 @@ public class MountChargeDamageBindingTests
         var called = CalledSequence(method!);
 
         CollectionAssert.IsSubsetOf(
-            new[] { "get_IsMount", "get_RiderAgent", "get_Character", "get_Culture", "get_StringId" },
+            // IdOf reads a hero's own culture (#1157), so the rider's character goes to it, not to get_Culture.
+            new[] { "get_IsMount", "get_RiderAgent", "get_Character", nameof(CharacterCulture.IdOf) },
             called.Distinct().ToList(),
             "the mount's culture lookup no longer hops through Agent.RiderAgent; a mount's own Character is null.");
 
