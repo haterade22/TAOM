@@ -2708,6 +2708,7 @@ older comment in `RefugeServiceTests.cs`, so the overclaim spread from one test 
 - **Why missed:** the executor checked the code the plan supplied and copied its comments as given. A word like "the one", "only" or
   "never" is a claim about every constructor, factory and operator of the type, and it was checked against the factories alone.
 - **Prevent:** before committing a plan-supplied comment that states an engine fact, open the type with `pwsh tools/taom-src.ps1 path
-  <Type>` and test the claim against every public member that returns the type. Narrow the wording to what was checked ("the only
-  public factory that ...").
+  <Type>` and test the claim against every public member that returns the type, over each member's argument range, non-finite
+  floats included. Narrow the wording to what was checked. The first narrowing here, "the only public factory that is nonzero",
+  was still false: `Hours(float.NaN)` multiplies NaN by a zero tick static and the unchecked cast gives long.MinValue ticks.
 - **Source:** [rca-refuge-load-repair-unit-2026-11-13.md](../rca-refuge-load-repair-unit-2026-11-13.md) F1, `/deep-review` Agent 2.

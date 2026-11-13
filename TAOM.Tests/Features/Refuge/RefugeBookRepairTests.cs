@@ -200,9 +200,9 @@ public class RefugeBookRepairTests
     [TestCategory("RequiresGame")]
     public void Repair_BuildingRowStartedInTheFuture_ResetsToNow()
     {
-        // CampaignTime.Never is the only public factory that is nonzero without a campaign: the
-        // Hours and Days factories multiply by tick statics that CampaignTime.Initialize sets.
-        // It and Equals are engine members, which is why this method needs the game.
+        // Never (long.MaxValue ticks) reads no tick static. Hours and Days multiply by the statics
+        // CampaignTime.Initialize sets, so with no campaign they give Zero for every finite argument.
+        // Never and Equals are engine members, which is why this method needs the game.
         _days = -41.0;
         _now = CampaignTime.Never;
         var row = new RefugeData { PartyId = "r1", Established = true, Building = true, BuildTargetHours = 6f };

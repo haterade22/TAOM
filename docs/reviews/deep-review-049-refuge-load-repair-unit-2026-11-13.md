@@ -17,7 +17,8 @@ Waves:   Tier 1 (the save-load path of a campaign behaviour's SyncData). One wav
          Agent 2 Engine compatibility. No CRITICAL or HIGH, so no second wave.
 
 STANDARDS:     SKIPPED BY TIER
-COMPATIBILITY: PASS - 0 incompatible, 0 unverified (10 verified); 1 LOW comment finding, confirmed and fixed
+COMPATIBILITY: PASS - 0 incompatible, 0 unverified (10 verified); 1 LOW comment finding, confirmed;
+               fixed in convergence round 1 (the review's first fix was still too wide)
 EFFICIENCY:    SKIPPED BY TIER
 COMPLETENESS:  SKIPPED BY TIER
 DATA FLOW:     PASS - 0 gaps, 0 inconsistencies (13 flows traced)
@@ -43,11 +44,13 @@ TOOLING:       NOT IN SCOPE
 - **Finding L2-1 (LOW), CONFIRMED:** the comment at `RefugeBookRepairTests.cs:203-205` said
   `CampaignTime.Never` "is the one nonzero CampaignTime a test can build without a campaign". That is
   false as written: `operator -` (CampaignTime.cs:347-350) on `Zero` and `Never` builds another nonzero
-  value with no campaign. What holds is narrower: `Never` (CampaignTime.cs:72) is the only public
-  factory that is nonzero without a campaign, because `Milliseconds` to `Years` (CampaignTime.cs:272-339)
-  multiply by tick statics (CampaignTime.cs:39-47) that only `Initialize` (CampaignTime.cs:178-198) sets,
-  and the `*FromNow` factories and `DeltaTime` read `Campaign.Current`. The text came from the plan
-  (`plans/049-refuge-load-repair-unit.md:603`). Fixed: the comment now states the narrower claim.
+  value with no campaign. What holds is narrower: `Never` (CampaignTime.cs:72) reads no tick static,
+  and `Milliseconds` to `Years` (CampaignTime.cs:272-339) multiply by tick statics (CampaignTime.cs:39-53)
+  that only `Initialize` (CampaignTime.cs:178-198) sets, so with no campaign they give `Zero` for every
+  finite argument; the `*FromNow` factories and `DeltaTime` read `Campaign.Current`. The text came from
+  the plan (`plans/049-refuge-load-repair-unit.md:603`). The first fix narrowed the comment to "the only
+  public factory", which was still too wide (`Hours(NaN)` and `Days(NaN)` are nonzero); convergence
+  round 1 below corrected it.
 - **FOLLOW-UP (pre-existing text, moved verbatim):** the comments at `RefugeBookRepair.cs:50-53` and
   `:72-73` still say a NaN target never reaches `BuildProgress >= 1`. `RefugeData.BuildProgress` already
   returns 1 for NaN and negative infinity (`RefugeData.cs:61-62`); only positive infinity never finishes.
@@ -55,7 +58,9 @@ TOOLING:       NOT IN SCOPE
   line for line against the base, and a reword in the same commit would defeat it. no issue: an
   /improve agent files none; the orchestrator decides at wrap-up.
 - **FOLLOW-UP (pre-existing, unchanged file):** `RefugeServiceTests.cs:1268-1270` carries the same loose
-  "only ... nonzero CampaignTime a test can construct" wording. no issue: same reason.
+  "only ... nonzero CampaignTime a test can construct" wording. A reword should use the corrected L2-1
+  text (Never reads no tick static; Hours and Days give Zero for every finite argument with no
+  campaign), not "the only public factory". no issue: same reason.
 
 ### Agent 5, Data flow
 
@@ -125,3 +130,32 @@ Lens 2 rounds stand in for it. Phase 3d assessment:
 None. No Codex pass ran, so there is no new false-positive pattern and no missed category to record.
 
 RCA: [rca-refuge-load-repair-unit-2026-11-13.md](rca-refuge-load-repair-unit-2026-11-13.md).
+
+## Convergence round 1
+
+Reviewed diff: `9b783ca9a..2b3fe6915`. Two LOW findings, both confirmed against the v1.5.7 taom-src
+cache (`v1.5.7-202611101605`, `TaleWorlds.CampaignSystem.CampaignTime.cs`) and fixed in this round's
+commit, "fix(refuge): v2.0.38 - convergence fixes for plan 049".
+
+- **C1-1 (LOW), fixed.** The L2-1 fix still made a universal claim: "CampaignTime.Never is the only
+  public factory that is nonzero without a campaign". `Hours` (CampaignTime.cs:302-305) and `Days`
+  (:312-315) compute `(long)(value * (float)TimeTicksPerHour)` and the same for days. With the tick
+  statics at 0, a NaN or infinite argument gives NaN, and the unchecked cast gives long.MinValue ticks,
+  which is nonzero. Checked here: the source lines and the IEEE rule (NaN or infinity times 0 is NaN).
+  The reviewer's PowerShell probe of the installed DLL (ticks -9223372036854775808 for `Hours(NaN)`) was
+  not re-run. Also, `CampWorkMenuHookTests.cs:40-41` sets `TimeTicksPerHour` by reflection in this
+  test assembly. The comment at `RefugeBookRepairTests.cs:203-205` now says only what holds: `Never`
+  reads no tick static, and `Hours` and `Days` give `Zero` for every finite argument with no campaign.
+  The L2-1 text above, the RCA F1 row and the REVIEW-LOG F1 row now say the same, the FOLLOW-UP for
+  `RefugeServiceTests.cs:1268-1270` names the corrected wording, and the lesson's Prevent line in
+  `lessons/testing-qa.md` now asks for each member's argument range, non-finite floats included.
+- **C1-2 (LOW), fixed.** The evidence cited the tick statics as CampaignTime.cs:39-47, which ends at
+  `TimeTicksPerDay`. `TimeTicksPerWeek` (:49), `TimeTicksPerSeason` (:51) and `TimeTicksPerYear` (:53)
+  are outside it, and `Weeks` and `Years` read two of them. The citation is now CampaignTime.cs:39-53 in
+  the L2-1 text and the RCA.
+
+Verification: the full suite before the edits gave `Passed!  - Failed:     0, Passed: 39266,
+Skipped:     9, Total: 39275`; after the edits, the same: `Passed!  - Failed:     0, Passed: 39266,
+Skipped:     9, Total: 39275`. `python tools/lint_docs.py --fail-on-drift`: exit 0. The change is
+comments and review records only, so the RefAsm step is unaffected. No hook, gate or validator changed,
+so no differential sweep and no hook suite run.

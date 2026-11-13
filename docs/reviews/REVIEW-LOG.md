@@ -5666,6 +5666,6 @@ Scope: review A covered the night batch `d4fb51a50..c2c3a6f28` (unattended game 
 
 | # | Bug | Category | Why missed | Preventive action |
 |---|-----|----------|-----------|-------------------|
-| F1 | A new test comment said `CampaignTime.Never` is the one nonzero `CampaignTime` a test can build without a campaign; `operator -` builds another | Other: comment against engine source | The comment came word for word from the plan and was not re-derived | Comment narrowed to "the only public factory"; lesson in `lessons/testing-qa.md` |
+| F1 | A new test comment said `CampaignTime.Never` is the one nonzero `CampaignTime` a test can build without a campaign; `operator -` builds another | Other: comment against engine source | The comment came word for word from the plan and was not re-derived | Comment narrowed to what holds: `Never` reads no tick static, and `Hours` and `Days` give `Zero` for every finite argument with no campaign (the first narrowing, "the only public factory", missed NaN and infinity, convergence round 1); lesson in `lessons/testing-qa.md` |
 
 - **In-game:** nothing was run; another session held the game install.
