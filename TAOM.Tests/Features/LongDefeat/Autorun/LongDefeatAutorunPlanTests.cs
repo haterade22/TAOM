@@ -375,6 +375,44 @@ public class LongDefeatAutorunPlanTests
     }
 
     [TestMethod]
+    public void Resolve_BreakEngines_DefaultsToNone_SoNoEngineIsBroken()
+    {
+        var plan = Resolve(Out);
+
+        Assert.IsNull(plan.BreakEngines);
+        Assert.IsNull(plan.ToSetup("helms").Options.BreakEnginesAtClear);
+        StringAssert.Contains(plan.Describe(), "break_engines=-");
+    }
+
+    [DataTestMethod]
+    [DataRow("1", 1)]
+    [DataRow("4", 4)]
+    [DataRow("100", 100)]
+    public void Resolve_BreakEngines_TakesAClearFromOneToOneHundred(string value, int expected)
+    {
+        var plan = Resolve(Out + "break_engines=" + value + "\n");
+
+        Assert.AreEqual(expected, plan.BreakEngines);
+        Assert.AreEqual(expected, plan.ToSetup("helms").Options.BreakEnginesAtClear);
+        Assert.AreEqual(0, plan.Warnings.Count);
+        StringAssert.Contains(plan.Describe(), "break_engines=" + expected);
+    }
+
+    [DataTestMethod]
+    [DataRow("0")]
+    [DataRow("101")]
+    [DataRow("-1")]
+    [DataRow("once")]
+    [DataRow("")]
+    public void Resolve_BreakEngines_OutOfRangeIsNoneWithAWarning(string value)
+    {
+        var plan = Resolve(Out + "break_engines=" + value + "\n");
+
+        Assert.IsNull(plan.BreakEngines);
+        Assert.AreEqual(1, plan.Warnings.Count(w => w.Contains("break_engines")));
+    }
+
+    [TestMethod]
     public void Describe_NamesTheSeedStartWaveAndRerolls()
     {
         var text = Resolve(Out + "seed=7\nstart_wave=3\nstart_rerolls=1\nclass=archer\n").Describe();

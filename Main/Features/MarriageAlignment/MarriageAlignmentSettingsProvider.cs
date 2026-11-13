@@ -12,17 +12,20 @@ public sealed class MarriageAlignmentSettingsProvider : IMarriageAlignmentSettin
 {
     private readonly MarriageAlignmentConfig _defaults;
 
+    private TaomSettings? _settings;
+    private TaomSettings? Settings => _settings ??= TaomSettings.Instance;
+
     public MarriageAlignmentSettingsProvider(IMarriageAlignmentConfigProvider configProvider)
     {
         _defaults = configProvider.GetConfig();
     }
 
-    public bool IsEnabled => TaomSettings.Instance?.EnableMarriageAlignment ?? _defaults.Enabled;
+    public bool IsEnabled => Settings?.EnableMarriageAlignment ?? _defaults.Enabled;
 
-    public bool ApplyToAi => TaomSettings.Instance?.EnableMarriageAlignmentAi ?? _defaults.ApplyToAi;
+    public bool ApplyToAi => Settings?.EnableMarriageAlignmentAi ?? _defaults.ApplyToAi;
 
-    public bool ApplyToPlayer => TaomSettings.Instance?.EnableMarriageAlignmentPlayer ?? _defaults.ApplyToPlayer;
+    public bool ApplyToPlayer => Settings?.EnableMarriageAlignmentPlayer ?? _defaults.ApplyToPlayer;
 
     public bool SteerAiPartnerSearch =>
-        TaomSettings.Instance?.MarriageAlignmentSteerAiSearch ?? _defaults.SteerAiPartnerSearch;
+        Settings?.MarriageAlignmentSteerAiSearch ?? _defaults.SteerAiPartnerSearch;
 }
