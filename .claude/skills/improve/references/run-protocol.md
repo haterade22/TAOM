@@ -36,35 +36,46 @@ Record each result in PROGRESS.md. A broken environment is reported, not fixed
 ## Launching a workflow and waiting for it
 
 1. Write the items file with the Write tool, then
-   `python tools/improve_ctl.py args <name> --items "<items.json>" --run-root "<run folder>" --scratch
-   "<root>\scratch" --tmp "<root>\scratch\tmp" --out "<root>\scratch\<label>-args.json" --wrap
-   "<root>\scratch\wf\<label>.js"`. The wrapper embeds the args and calls the workflow script, because
-   the Workflow tool takes args by value and they hold the dispatch rules. Read the args back (pool,
-   models, items) before you launch.
-2. Launch the wrapper with the Workflow tool (`scriptPath`), and write its run id and transcript
-   folder into the PROGRESS.md row at once.
-3. Wait in the turn: `python tools/improve_ctl.py watch --dir "<transcript folder>" [--dir "<second
-   folder>"] --wait 570` blocks until an agent finishes, an agent is flagged STALLED-ASK or STALE, no
-   agent runs, or the limit passes (keep it under the Bash tool's 600 s), and says which. `--step N`
-   waits for N more agents. Use each return for work: the spec check of an executor that finished, the
-   next items file, the records.
+   `python -B tools/improve_ctl.py args <name> --items "<items.json>" --run-root "<run folder>"
+   --scratch "<root>\scratch" --tmp "<root>\scratch\tmp" --out "<root>\scratch\<label>-args.json" --wrap
+   "<root>\scratch\wf\<label>.js"`. `<label>` names the launch (`lanes`, `verify`, `plans`, `exec`,
+   `review-a`). The wrapper embeds the args and calls the workflow script, because the Workflow tool
+   takes args by value and they hold the dispatch rules. The tool reads the dispatch rules, the
+   workflow scripts and the version from the checkout it runs in: run it from the checkout whose skill
+   files the agents must get (branch mode: `cd "<root>\wt-run" && python -B tools/improve_ctl.py ...`,
+   one call, so no directory change persists). Read the args back (pool, models, items) before you
+   launch.
+2. Launch the wrapper with the Workflow tool (`scriptPath`). Its launch result names the run id and
+   the transcript folder: write both into the PROGRESS.md row at once.
+3. Wait in the turn: `python -B tools/improve_ctl.py watch --dir "<transcript folder>" [--dir "<second
+   folder>"] --wait 570`, as a Bash call with `timeout: 600000` (the tool's maximum; its default of
+   120000 kills the wait after two minutes). It blocks until an agent finishes, an agent is newly
+   flagged STALLED-ASK or STALE, no agent has been at work for two looks in a row, or the limit
+   passes, and says which. `--step N` waits for N more agents. A flag that stood before the wait does
+   not end it, so a wait still blocks while an ask waits for the maintainer; the exit code stays 1.
+   "No agent is running" is not "the workflow is done": between two waves a workflow has none. Use
+   each return for work: the spec check of an executor that finished, the next items file, the
+   records.
 4. When the workflow's own completion notice arrives, read the result from its task output, not from
    memory of the watch lines.
 
 ## Models
 
 The scripts default every role to `claude-opus-5-5`. The maintainer asked on 2026-11-12 for a model
-and an effort per task. What worked on that run (67 agents, about 12.5 M subagent tokens):
+and an effort per task. What worked on that run:
 
 | Role | Model, effort | Set with |
 |---|---|---|
-| Lanes that need cross-cutting judgment (architecture, performance, harness) | Opus, high | the item's `model` and `effort` |
-| Lanes that read widely against clear criteria (tests, tools, docs) | Sonnet, high | the item's `model` and `effort` |
-| Refuters, plan writers, cold reviewers, revisers | Opus, high | `--model role=id` |
-| Executors of mechanical or test-only plans | Sonnet, medium or high | the item's `model` and `effort` in `execute.js` |
+| Lanes that need cross-cutting judgment (architecture, performance, harness) | Opus, high | the fanout item's `model` and `effort` |
+| Lanes that read widely against clear criteria (tests, tools, docs) | Sonnet, high | the fanout item's `model` and `effort` |
+| Refuters (fanout items, role `lane`) | Opus, high | the fanout item's `model` and `effort` |
+| Critic (the fanout `checker`) | Opus, xhigh by default | `--model checker=id`; the checker's `effort` |
+| Plan writers, cold reviewers, revisers | Opus; effort fixed at high | `--model writer=id reviewer=id reviser=id` |
+| Executors of mechanical or test-only plans | Sonnet, medium or high | the execute item's `model` and `effort` |
 | Executors of production C# refactors | Opus, high | the same |
 | Review lenses | the `deep-reviewer` definition | never passed |
-| Lead, convergence, fix | Opus (the scripts' default) | |
+| Lead and fix pass | Opus; effort fixed at high | `--model lead=id fix=id` |
+| Convergence reviewer | Opus; effort fixed at max | `--model convergence=id` |
 
 One retry at the next tier up when a result is wrong or confused, never at the same tier.
 
@@ -72,18 +83,29 @@ One retry at the next tier up when a result is wrong or confused, never at the s
 
 When the maintainer wants every change on a branch that he merges later:
 
+- The baseline is the SHA of `origin/<trunk>` after `git fetch origin`; local trunk commits that
+  are not pushed are other sessions' work and are not in it.
 - Make the run branch and its worktree before the first run file:
   `git worktree add -b improve/<date>-run "<root>\wt-run" <baseline sha>`. The run folder, the plans,
   the index and your own small items are committed there, never in the main checkout.
 - Plan worktrees branch from the plans commit on the run branch. Each reviewed branch merges into
-  the run branch with `integrate_branch.py --worktree "<root>\wt-run"` ("Merge" below, steps 5 and 6).
+  the run branch with `integrate_branch.py --worktree "<root>\wt-run"`; that merge is part of the
+  run and needs no further word. The tool refuses a dirty tree, so commit the run folder's files
+  (explicit paths) before each call.
+- Of "Merge" below, steps 1, 5, 6 and 11 apply as written, with `<root>\wt-run` as the integration
+  worktree. Steps 2 and 3 are replaced by the two bullets around this one. Steps 7 to 10 apply only
+  after the maintainer's word for the trunk. For the cleanup, list the merged plan branches with
+  `git -C "<root>\wt-run" branch --merged HEAD --list "improve/0*"` and delete them from there.
 - The trunk moves during a run. Before the final verification, fetch and merge `origin/<trunk>` into
   the run branch; repeat it before a push when the left count of
   `git rev-list --left-right --count origin/<trunk>...HEAD` is not 0.
 - On the maintainer's word the trunk takes the run branch as one fast-forward:
-  `git push origin HEAD:<trunk>`. Without that word, push only the run branch, or nothing.
+  `git push origin HEAD:<trunk>`. Without that word, push nothing: the branch is local, and the final
+  message gives him the commands to merge it.
 - An in-game smoke (`/game-run`) deploys from `<root>\wt-run` and needs his word; a co-op session
   goes first. Say in the report that the game folder now holds that build.
+- Wrap-up without a trunk merge: leave `<root>\wt-run` and the run branch, write the memory resume
+  card (the work is not pushed), and list his commands in the final message.
 
 ## Run folder
 
@@ -373,9 +395,15 @@ checkout by the pull, so back it up byte for byte before he pulls; ports to the 
 
 ## Budget
 
+**A reasonable run** (the shape to use when the maintainer asks to hold the agent count down): one
+wave of lanes, six at most; one batch refuter per lane pair and no critic; ten items at most; a
+`tier` on every review item, `--stop-on-low`, two convergence rounds at most. The 2026-11-12 run had
+that shape, except that it ran without `--stop-on-low`: 67 agents and about 12.5 M subagent tokens
+(lanes 1.5 M, refuters 0.8 M, plans 3.3 M, executors 0.9 M, reviews 6.0 M; the figures are in
+`plans/_audit/2026-11-12-fable/PROGRESS.md`, "Log"). Say in PROGRESS.md which shape you chose.
+
 Review is the largest cost of a run: about two thirds of the 2026-09-23 sprint's workflow tokens, and
-6.0 M of the 12.5 M subagent tokens of the 2026-11-12 run (lanes 1.5 M, refuters 0.8 M, plans 3.3 M,
-executors 0.9 M). To hold it down:
+nearly half of the 2026-11-12 run's. To hold it down:
 
 - Give every review item its deep-review risk `tier`; `improve_ctl.py args review` then routes one or
   two lenses, not six.
@@ -386,6 +414,7 @@ executors 0.9 M). To hold it down:
 - Batch a branch's decisions into one follow-up and one second review, and commit per chunk or stage
   so a limit costs little.
 
-The refuters are the cheapest agents of a run for what they prevent: three of them narrowed or cut 22
-of 27 findings before any plan was written. Expect the weekly limit on a multi-day run. Codex bills
+The refuters are the cheapest agents of a run for what they prevent: on 2026-11-12 three of them
+checked 27 findings, narrowed 21 and refuted part of one before any plan was written
+(`plans/_audit/2026-11-12-fable/REPORT.md`, "Summary"). Expect the weekly limit on a multi-day run. Codex bills
 outside the Claude budget but runs only when asked.

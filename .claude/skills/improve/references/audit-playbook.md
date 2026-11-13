@@ -46,7 +46,7 @@ audited". In such a run a lane still reports a bug it meets, marked `Plan candid
 change)`, so that it becomes an issue.
 
 **What a lane prompt must hold** (the lanes that had these returned findings a refuter could check):
-the scope with its file counts; the method ("start from measurements": the commands to count and
+the item's `wt`, the baseline worktree that holds the code; the scope with its file counts; the method ("start from measurements": the commands to count and
 rank); where earlier runs and other clients left leads; a cap on findings (12 to 15, ranked); the
 tools it may run and the ones that write; for performance, the profiler logs already on disk, to be
 read before any code (the lane then found that the whole mission tick was 0.39 ms of an 8.69 ms
@@ -263,8 +263,8 @@ and **Confidence** is how grounded the evidence is. Their plans are usually desi
 
 ## Verify and critic (phase 3)
 
-- **Refuters** default to overturning: every HIGH and every P1 gets a design refuter (is it by design?)
-  and a repro refuter (does it reproduce?); the rest go to batch verifiers. Impacts are recalibrated,
+- **Refuters** default to overturning. In `deep`: every HIGH and every P1 gets a design refuter (is it
+  by design?) and a repro refuter (does it reproduce?); the rest go to batch verifiers. Impacts are recalibrated,
   and the report ranks on the checker's impact, not the lane's.
 - **A batch refuter per lane or lane pair** is the default below `deep`: one agent answers both
   questions for every plan candidate of its lanes, and a third: can an executor make the change with
@@ -273,10 +273,9 @@ and **Confidence** is how grounded the evidence is. Their plans are usually desi
   test subclasses a moved method must still serve, the settings each shared instance was built with).
   Give it a result schema with one row per finding: `verdict` (CONFIRMED, NARROWED, REFUTED),
   `behaviour_preserving` (yes, no, only-with-conditions), `corrections`, `conditions`, and the
-  recalibrated impact, effort and risk. Its conditions go into the plan brief word for word: on
-  2026-11-12 three refuters narrowed or cut 22 of 27 findings, and two of the conditions they found (a
-  lazy clock seam, an arrival rule that does not do what its comment says) were the difference between
-  a refactor and a behaviour change.
+  recalibrated impact, effort and risk. Its conditions go into the plan brief word for word: a
+  condition (a clock seam that must stay lazy, a rule that does not do what its comment says) is the
+  difference between a refactor and a behaviour change.
 - **The critic** reads the lanes and verdicts for coverage gaps (folders no lane cited, categories only
   partly covered, backlog issues that overlap findings) and asks at most one question whose answer could
   change the top ten; one follow-up agent answers it.

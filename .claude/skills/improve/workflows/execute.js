@@ -165,7 +165,7 @@ DECISIONS TO APPLY (taken by the maintainer; each is binding; if one turns out i
 ${it.decisions.map((d, i) => `${i + 1}. ${d}`).join('\n')}
 BASELINE: before your first edit, run the full suite once and record the base's own totals and failing tests (standing rule "Build and test"); at the end, match them.${knownFailures(it)}
 Every behaviour change is TDD. Update the branch's docs, and append a section "## Maintainer decisions applied (${args.date})" to the review record listing each decision and the commit that applies it.
-COMMIT (standing rule "Commit"): subject 'fix(<scope>): ${args.version} - apply maintainer decisions for ${refOf(it)}' (at most 72 characters; adjust the scope, shorten the tail if needed), a body that lists each decision${it.issue ? ` and names ${issueOf(it)}` : ''}.
+COMMIT (standing rule "Commit"): subject '<type>(<scope>): ${args.version} - apply maintainer decisions for ${refOf(it)}' (at most 72 characters; set the scope and the type that names what the commit changes, shorten the tail if needed), a body that lists each decision${it.issue ? ` and names ${issueOf(it)}` : ''}.
 ${RETURN}`
 
 const stagePrompt = (it, st, i, prior) => `ROLE: a BUILDER for stage ${i + 1} of ${it.stages.length} ("${st.title || st.key}") of ${refOf(it)}. Each stage is one TDD commit on the branch, and a later stage builds on it.

@@ -45,9 +45,10 @@ the review loop with its stop rule, stopped plans, decisions, and reconciling th
    an Opus plan. In the `note`, tell each executor that other executors share the machine (a suite run
    takes two to four times its usual time, so each dotnet call gets a 900 s timeout) and which trailer
    its commit bodies end with.
-2. `python tools/improve_ctl.py args execute --items "<items.json>" --run-root "<run folder>"
-   --scratch "<root>\scratch" --tmp "<root>\scratch\tmp" --out "<args.json>"`, then the Workflow tool on
-   `.claude/skills/improve/workflows/execute.js` with that args JSON. Top-level fields such as
+2. `python -B tools/improve_ctl.py args execute --items "<items.json>" --run-root "<run folder>"
+   --scratch "<root>\scratch" --tmp "<root>\scratch\tmp" --out "<root>\scratch\<label>-args.json" --wrap
+   "<root>\scratch\wf\<label>.js"`, then the Workflow tool with the wrapper as `scriptPath`
+   (run-protocol "Launching a workflow and waiting for it"). Top-level fields such as
    `knownFailures` ride in an items object, `{"items": [...], "knownFailures": [...]}` (the script's
    header comment lists them).
 3. Each result: `status` DONE, BLOCKED, PARTIAL or FAILED (a dead agent), with the commit, tests, RED
@@ -126,7 +127,13 @@ FOR-MIKE.md, and look for the shared cause before any plan is amended.
    gets every lens deep-review routes by file type, from `git diff --name-only base..head` in its
    worktree: that is a full review, for when the maintainer asks for one. Any `lenses` the item lists
    are added in both cases. File types cannot show changed text that states engine behaviour, so list
-   lens 2 in the item yourself for that. An item whose `base..head` changes no file is refused, and every
+   lens 2 in the item yourself for that. Read stderr before you launch: "no tier" there means a full
+   review. Tier 3 (docs, comments and harness text only) has no `review.js` item, and `args` refuses
+   it: run `lint_docs.py --fail-on-drift` and read the diff yourself. **Second wave:** when a tier's
+   first wave reports a CRITICAL or HIGH, deep-review owes the lenses the tier left out. After the
+   lead's fix, run one more `review.js` item for the branch with the same `tier`, `"wave": 2` and
+   `"tag": "wave2"`: the tool then routes exactly the lenses the first wave left out. Say so in
+   PROGRESS.md. An item whose `base..head` changes no file is refused, and every
    revision is checked as a revision, never read as a git option. In an items object, a field such
    as `pool`, `model` or `maxRounds` stands unless you pass its flag.
 3. **Codex, only when the maintainer asked for it this run**:
@@ -162,12 +169,14 @@ FOR-MIKE.md, and look for the shared cause before any plan is amended.
    convergence reviewer finds a LOW in the last round's prose nearly every time, so a loop that chases
    them does not end.
 3. **Residual findings** after the last round go to the maintainer, never to a third round unasked:
-   **Ship now, track it (Recommended)**, with an issue or FOR-MIKE line per finding, or **One more
+   **Ship and track (Recommended)**, with an issue or FOR-MIKE line per finding, or **One more
    round**. For a residual HIGH (a CRITICAL or a Codex P1 counts), recommend one more round instead;
    if he ships it, record the deferral the way deep-review's "HIGH findings" section requires (an
    issue, a `Deferred:` trailer or a `Known limitation:` paragraph in the commit body), never only in
    FOR-MIKE.md. A residual LOW in a record or doc (not code, not a gate) you may fix yourself without a
-   round.
+   round. **Maintainer away:** a branch with only LOW residuals merges into the run branch with each
+   one fixed or listed in FOR-MIKE.md; a branch with a residual HIGH stays unmerged, first in
+   FOR-MIKE.md, and gets no third round.
 4. **Behaviour-changing proposals** are never applied unattended; they go to DECISIONS.md or FOR-MIKE.md.
 5. **A gate change** (hook, validator): the lead or fix pass runs a differential sweep of the
    old gate (`git show <base>:<path>`) against the new, over a corpus seeded from the fix's own mechanism,

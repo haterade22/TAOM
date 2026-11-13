@@ -288,6 +288,47 @@ class ArgsTests(FixtureRepo):
             self.assertIn("SKIPPED BY TIER", item["note"])
             self.assertIn(", ".join(item["skippedByTier"]), item["note"])
 
+    def test_a_second_wave_gets_the_lenses_the_tier_s_first_wave_left_out(self):
+        # deep-review "Second wave": owed when the first wave reports a CRITICAL or HIGH.
+        items = self.write(self.tmp, "wave.json", json.dumps(
+            [{"num": "043", "wt": str(self.wt), "base": self.base, "tier": 1, "wave": 2, "tag": "wave2"}]))
+        (item,) = self.args_json("review", "--items", items)["items"]
+        self.assertEqual(item["lenses"], ["1", "3", "4", "6"])
+        self.assertNotIn("skippedByTier", item)
+        self.assertIn("second wave", item["note"])
+        self.assertIn("(2, 5, 7, tooling)", item["note"])
+        for bad, needle in (({"wave": 2}, b"needs the item's"), ({"tier": 1, "wave": 3}, b"wave must be 1 or 2")):
+            with self.subTest(bad=bad):
+                again = self.write(self.tmp, "bad-wave.json", json.dumps(
+                    [dict({"num": "043", "wt": str(self.wt), "base": self.base}, **bad)]))
+                proc = self.run_args("review", "--items", again)
+                self.assertEqual(proc.returncode, 2, proc.stdout)
+                self.assertIn(needle, proc.stderr)
+
+    def test_an_args_output_fed_back_as_items_is_refused(self):
+        # An output item carries the first wave's lenses, note sentence and skipped list. As a wave 2
+        # item it would run every first-wave lens again under a false SKIPPED BY TIER sentence.
+        items = self.write(self.tmp, "once.json", json.dumps(
+            [{"num": "042", "wt": str(self.wt), "base": self.base, "head": self.hook_only, "tier": 2}]))
+        first = self.args_json("review", "--items", items)["items"]
+        again = self.write(self.tmp, "twice.json", json.dumps([dict(first[0], wave=2)]))
+        proc = self.run_args("review", "--items", again)
+        self.assertEqual(proc.returncode, 2, proc.stdout)
+        self.assertIn(b"output of an earlier args call", proc.stderr)
+
+    def test_a_tier_or_a_wave_is_a_whole_number_never_a_bool_or_a_fraction(self):
+        for field, value in (("tier", True), ("tier", 1.9), ("tier", 2.5), ("wave", True), ("wave", 1.5)):
+            with self.subTest(field=field, value=value):
+                item = {"num": "043", "wt": str(self.wt), "base": self.base, "tier": 1}
+                item[field] = value
+                items = self.write(self.tmp, "level.json", json.dumps([item]))
+                proc = self.run_args("review", "--items", items)
+                self.assertEqual(proc.returncode, 2, proc.stdout)
+                self.assertIn(field.encode(), proc.stderr)
+        items = self.write(self.tmp, "text-level.json", json.dumps(
+            [{"num": "043", "wt": str(self.wt), "base": self.base, "tier": "1", "wave": "2"}]))
+        self.assertEqual(self.args_json("review", "--items", items)["items"][0]["lenses"], ["1", "3", "4", "6"])
+
     def test_a_review_item_without_a_tier_says_it_is_a_full_review(self):
         proc = self.run_args("review", "--items", self.items, "--out", self.tmp / "full.json")
         self.assertEqual(proc.returncode, 0, proc.stderr.decode("utf-8", "replace"))
@@ -329,17 +370,47 @@ class ArgsTests(FixtureRepo):
         self.assertEqual(json.loads(literal), json.loads(out.read_text(encoding="utf-8")))
         self.assertIn("Caf\\u00e9", literal)
         (call,) = [line for line in text.splitlines() if "workflow(" in line]
-        path = call.split("scriptPath: '")[1].split("'")[0]
+        path = json.loads(call.split("scriptPath: ")[1].split(" }, A)")[0])
         self.assertNotIn("\\", path)
         self.assertTrue(same_path(path, script), path)
         self.assertIn("return await workflow(", call)
         self.assertIn(b"review-a.js", proc.stdout)
+
+    def test_the_wrapper_quotes_a_path_and_names_only_plain_item_labels(self):
+        text = ctl.wrapper_script("fanout", Path("C:/it's here/fanout.js"),
+                                  {"items": [{"key": "lane'; drop"}, {"num": "046"}, "not an item"]})
+        (call,) = [line for line in text.splitlines() if "workflow(" in line]
+        self.assertEqual(json.loads(call.split("scriptPath: ")[1].split(" }, A)")[0]), "C:/it's here/fanout.js")
+        (described,) = [line for line in text.splitlines() if line.startswith("  description: ")]
+        self.assertEqual(described, "  description: 'improve fanout: lane drop, 046',")
 
     def test_wrap_refuses_a_workflow_script_that_is_not_in_the_checkout(self):
         proc = self.run_args("plans", "--items", self.items, "--wrap", self.tmp / "p.js")
         self.assertEqual(proc.returncode, 2, proc.stdout)
         self.assertIn(b"plans.js", proc.stderr)
         self.assertFalse((self.tmp / "p.js").exists())
+
+    def test_wrap_never_replaces_the_args_file_or_a_workflow_script(self):
+        script = self.write(self.main, ".claude/skills/improve/workflows/review.js", "// stub\n")
+        same = self.tmp / "one.json"
+        proc = self.run_args("review", "--items", self.items, "--out", same, "--wrap", same)
+        self.assertEqual(proc.returncode, 2, proc.stdout)
+        self.assertIn(b"same file", proc.stderr)
+        self.assertFalse(same.exists())
+        for target in (script, script.with_name("mine.js")):
+            with self.subTest(target=target.name):
+                proc = self.run_args("review", "--items", self.items, "--wrap", target)
+                self.assertEqual(proc.returncode, 2, proc.stdout)
+                self.assertIn(b"workflows", proc.stderr)
+        self.assertEqual(script.read_text(encoding="utf-8"), "// stub\n")
+
+    def test_wrap_alone_prints_the_wrapper_path_and_no_args(self):
+        self.write(self.main, ".claude/skills/improve/workflows/review.js", "// stub\n")
+        wrap = self.tmp / "alone.js"
+        proc = self.run_args("review", "--items", self.items, "--wrap", wrap)
+        self.assertEqual(proc.returncode, 0, proc.stderr.decode("utf-8", "replace"))
+        (line,) = proc.stdout.decode("utf-8").splitlines()
+        self.assertTrue(same_path(line, wrap), line)
 
     def test_a_review_item_whose_range_changes_no_file_is_refused(self):
         items = self.write(self.tmp, "empty.json", json.dumps(
@@ -774,18 +845,82 @@ class WatchTests(unittest.TestCase):
         self.assertIn("7 transcript(s), 3 running", text)
         self.assertEqual(self.watch("--dir", str(self.dir / "absent")).returncode, 2)
 
-    def test_wait_returns_at_once_when_no_agent_runs_or_one_is_flagged(self):
-        # A flag (a1 is stale) ends the wait: the orchestrator must read it now.
-        started = time.monotonic()
-        proc = self.watch("--wait", "60")
-        self.assertEqual(proc.returncode, 1, proc.stdout)
-        # No agent running: nothing to wait for.
+    def waiting(self, *extra, on_sleep=None, directory=None):
+        """watch --wait in process, with time.sleep replaced: each sleep runs on_sleep(n) (n counts
+        from 1) and returns at once, so a wait is as long as its looks, never as the clock."""
+        sleeps = []
+
+        def fake_sleep(_seconds):
+            sleeps.append(_seconds)
+            if on_sleep:
+                on_sleep(len(sleeps))
+
+        out = io.StringIO()
+        with mock.patch.object(ctl.time, "sleep", fake_sleep), contextlib.redirect_stdout(out):
+            code = ctl.main(["watch", "--dir", str(directory or self.wf), "--wait", "3600", *extra])
+        return code, out.getvalue(), len(sleeps)
+
+    def journal_row(self, **row):
+        with open(self.wf / "journal.jsonl", "a", encoding="utf-8") as handle:
+            handle.write("\n" + json.dumps(row) + "\n")
+
+    def test_wait_ends_when_an_agent_finishes(self):
+        self.transcript(self.wf / "agent-a1.jsonl", 1)
+        code, text, sleeps = self.waiting(on_sleep=lambda n: n == 2 and self.journal_row(
+            type="result", key="k1", agentId="a1", result={}))
+        self.assertEqual((code, sleeps), (0, 2), text)
+        self.assertIn("WAIT: finished agents went from 3 to 4", text)
+        (a1,) = [line for line in text.splitlines() if "agent-a1.jsonl" in line]
+        self.assertIn("done", a1)
+
+    def test_wait_counts_steps_and_never_a_retry_as_a_finish(self):
+        # a2 done and a3, a7 failed are finished; a5 is superseded, which finishes nothing. A retry of
+        # k1 during the wait supersedes a1: the count must stay, and only two real results end the wait.
+        self.transcript(self.wf / "agent-a1.jsonl", 1)
+
+        def events(n):
+            if n == 1:
+                self.journal_row(type="started", key="k1", agentId="a9", label="review-011")
+                self.transcript(self.wf / "agent-a9.jsonl", 0)
+            if n == 2:
+                self.journal_row(type="result", key="k3", agentId="a4", result={})
+            if n == 4:
+                self.journal_row(type="result", key="k5", agentId="a6", result={})
+
+        code, text, sleeps = self.waiting("--step", "2", on_sleep=events)
+        self.assertEqual((code, sleeps), (0, 4), text)
+        self.assertIn("WAIT: finished agents went from 3 to 5", text)
+
+    def test_wait_needs_two_idle_looks_before_it_says_no_agent_runs(self):
+        # Right after a launch, and between a lens wave and its lead, a workflow has no agent for a
+        # moment. One idle look must not end the wait; a start in between resets the count.
         for agent in ("a1", "a4", "a6"):
             (self.wf / f"agent-{agent}.jsonl").unlink()
-        proc = self.watch("--wait", "60")
-        self.assertLess(time.monotonic() - started, 20)
-        self.assertEqual(proc.returncode, 0, proc.stdout)
-        self.assertIn(b"WAIT: no agent is running", proc.stdout)
+
+        def start_then_finish(n):
+            if n == 1:
+                self.journal_row(type="started", key="k8", agentId="a8", label="lead-011")
+                self.transcript(self.wf / "agent-a8.jsonl", 0)
+            if n == 3:
+                (self.wf / "agent-a8.jsonl").unlink()
+
+        code, text, sleeps = self.waiting(on_sleep=start_then_finish)
+        self.assertEqual((code, sleeps), (0, 4), text)
+        self.assertIn("WAIT: no agent is running (two looks in a row)", text)
+        code, text, sleeps = self.waiting()
+        self.assertEqual((code, sleeps), (0, 1), text)
+
+    def test_a_flag_that_already_stands_does_not_end_every_wait_at_once(self):
+        # a1 is stale before the wait begins: the wait goes on (the exit code still says 1), and it
+        # ends when a second agent becomes flagged.
+        code, text, sleeps = self.waiting(
+            on_sleep=lambda n: n == 3 and self.transcript(self.wf / "agent-a4.jsonl", 45))
+        self.assertEqual((code, sleeps), (1, 3), text)
+        self.assertIn("WAIT: an agent is newly flagged", text)
+        self.assertEqual(len(self.flagged_text(text, "STALE")), 2)
+
+    def flagged_text(self, text, flag):
+        return [line for line in text.splitlines() if line.startswith(flag + " ")]
 
     def test_wait_ends_at_its_limit_while_agents_still_run(self):
         self.transcript(self.wf / "agent-a1.jsonl", 1)
@@ -793,18 +928,36 @@ class WatchTests(unittest.TestCase):
         self.assertEqual(proc.returncode, 0, proc.stdout)
         self.assertIn(b"WAIT: the limit of 2 s passed", proc.stdout)
 
-    def test_wait_ends_when_an_agent_finishes(self):
-        self.transcript(self.wf / "agent-a1.jsonl", 1)
-        proc = subprocess.Popen([sys.executable, "-B", str(TOOL), "watch", "--dir", str(self.wf),
-                                 "--wait", "60", "--poll", "1"], stdout=subprocess.PIPE)
-        time.sleep(1.5)
-        with open(self.wf / "journal.jsonl", "a", encoding="utf-8") as handle:
-            handle.write("\n" + json.dumps({"type": "result", "key": "k1", "agentId": "a1", "result": {}}) + "\n")
-        out, _ = proc.communicate(timeout=30)
-        self.assertEqual(proc.returncode, 0, out)
-        self.assertIn(b"WAIT: finished agents went from 4 to 5", out)
-        (a1,) = [line for line in out.decode("utf-8").splitlines() if "agent-a1.jsonl" in line]
-        self.assertIn("done", a1)
+    def test_a_fresh_direct_spawn_counts_as_an_agent_at_work_for_a_wait(self):
+        # A direct spawn has no journal. Its transcript, written a moment ago, must hold the wait.
+        spawns = self.dir / "direct"
+        spawns.mkdir()
+        self.transcript(spawns / "agent-d1.jsonl", 0)
+        aged = lambda n: n == 2 and self.transcript(spawns / "agent-d1.jsonl", 5)  # noqa: E731
+        code, text, sleeps = self.waiting(on_sleep=aged, directory=spawns)
+        self.assertEqual((code, sleeps), (0, 3), text)
+        self.assertIn("WAIT: no agent is running", text)
+
+    def test_a_transcript_removed_during_a_look_is_skipped(self):
+        real = ctl.pending_ask
+
+        def vanish(path):
+            if path.name == "agent-a4.jsonl":
+                raise FileNotFoundError(path)
+            return real(path)
+
+        out = io.StringIO()
+        with mock.patch.object(ctl, "pending_ask", vanish), contextlib.redirect_stdout(out):
+            code = ctl.main(["watch", "--dir", str(self.wf)])
+        self.assertEqual(code, 1, out.getvalue())
+        self.assertIn("6 transcript(s)", out.getvalue())
+
+    def test_the_same_folder_twice_is_watched_once_and_bad_wait_values_are_refused(self):
+        proc = self.watch("--dir", str(self.wf))
+        self.assertIn(b"7 transcript(s), 3 running", proc.stdout)
+        for extra in (("--wait", "5", "--step", "0"), ("--wait", "-5"), ("--wait", "5", "--poll", "0")):
+            with self.subTest(extra=extra):
+                self.assertEqual(self.watch(*extra).returncode, 2)
 
     def test_a_session_folder_is_watched_without_its_workflows_folder(self):
         # self.dir is a session's subagents folder: a direct spawn beside workflows/wf_1, whose

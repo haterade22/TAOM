@@ -276,12 +276,13 @@ and tip) | PARTIAL | MERGED (commit, issue) | BLOCKED | REJECTED.
   RED step builds the project" and "A plan's RED check names the diagnostics").
 - A deletion's RED lives in the log, and an "untestable" waiver covers only the engine-bound lines
   ([lessons](../../../../docs/reviews/lessons/testing-qa.md), "A deletion's RED step lives in the log"
-  and "A boundary's 'untestable' waiver").
+  and `A boundary's "untestable" waiver`).
 - Retiring a duty searches for the duty, not its phrases ([lesson](../../../../docs/reviews/lessons/build-tooling-workflow.md),
   "Retiring a duty").
 - A dependent plan is re-anchored after its prerequisite's review lands.
-- Every verification command can pass as written. The cold reviews of 2026-11-13 found 13 blocking
-  items in six plans, most of this kind: a `git grep` that must see a file created in an earlier step
+- Every verification command can pass as written. The cold reviews of the 2026-11-12 run found 13
+  blocking items in six plans (`plans/_audit/2026-11-12-fable/plan-review-04*.md` and
+  `plan-review-05*.md`), most of this kind: a `git grep` that must see a file created in an earlier step
   needs `--untracked`, or runs after the step that stages the file; a check that a diff holds no
   `class` or `SaveableField` line greps only its added and removed lines (`grep '^[+-]'`), because a
   hunk header names the enclosing class; proof that a named test class ran is a filtered run with its

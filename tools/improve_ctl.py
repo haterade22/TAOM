@@ -160,6 +160,15 @@ def tier_lenses(tier: int, paths) -> list:
 
 # --- args ---------------------------------------------------------------------------------------
 
+def level_of(value, allowed: tuple, what: str) -> int:
+    """A small whole number from JSON, as an int or a digit string; never a bool or a float, which
+    int() would turn into a level nobody wrote."""
+    text = str(value).strip() if isinstance(value, (int, str)) and not isinstance(value, bool) else ""
+    if text not in {str(level) for level in allowed}:
+        raise Fail(f"{what} must be {' or '.join(str(level) for level in allowed if level != 3)}, not {value!r}")
+    return int(text)
+
+
 def review_item(number: int, item, notes: list) -> dict:
     """A review item with its head, its changed files by kind, and its lenses. With a "tier" (1 or
     2, the orchestrator's reading of deep-review's risk tier table) the lenses are that tier's wave
@@ -169,6 +178,11 @@ def review_item(number: int, item, notes: list) -> dict:
     where = f"review item {number}"
     if not isinstance(item, dict) or not item.get("wt") or not item.get("base"):
         raise Fail(f"{where} needs \"wt\" (its worktree) and \"base\"")
+    # An args output carries the lenses, the note sentence and the skipped list of its own run; fed
+    # back in (for a second wave, say) they would be read as the orchestrator's own choices.
+    if "files" in item or "skippedByTier" in item:
+        raise Fail(f"{where} carries \"files\" or \"skippedByTier\", so it is the output of an "
+                   "earlier args call: pass the items file you wrote")
     own = item.get("lenses", [])
     if not isinstance(own, list):
         raise Fail(f"{where}: lenses must be a list")
@@ -182,26 +196,35 @@ def review_item(number: int, item, notes: list) -> dict:
         raise Fail(f"{where}: {rng} changes no file, so there is nothing to review")
     routed = set(lenses_for(names))
     out = dict(item, head=head, files=group_files(names))
+    wave = level_of(item.get("wave", 1), (1, 2), f"{where}: wave")
     if item.get("tier") is None:
+        if wave != 1:
+            raise Fail(f"{where}: a second wave needs the item's \"tier\"")
         wanted = routed | {str(lens) for lens in own}
         notes.append(f"{where}: no tier, so every lens in scope runs (a full review); set \"tier\" "
                      "to 1 or 2 for the wave deep-review's risk tier table launches")
     else:
-        try:
-            tier = int(item["tier"])
-        except (TypeError, ValueError):
-            tier = None
+        tier = level_of(item["tier"], (1, 2, 3), f"{where}: tier")
         if tier == 3:
             raise Fail(f"{where}: tier 3 (docs, comments, harness text only) gets no lens: run "
                        "lint_docs.py --fail-on-drift and read the diff")
-        if tier not in TIER_LENSES:
-            raise Fail(f"{where}: tier must be 1 or 2, not {item['tier']!r}")
-        wanted = set(tier_lenses(tier, names)) | {str(lens) for lens in own}
-        skipped = [lens for lens in LENS_ORDER if lens in routed - wanted]
-        out.update(tier=tier, skippedByTier=skipped)
-        if skipped:
+        first = tier_lenses(tier, names)
+        out["tier"] = tier
+        if wave == 2:
+            # deep-review "Second wave": after a CRITICAL or HIGH, the lenses the first wave left out.
+            wanted = (routed - set(first)) | {str(lens) for lens in own}
+            if not wanted:
+                raise Fail(f"{where}: the tier {tier} wave already ran every lens in scope, so "
+                           "there is no second wave")
+            sentence = (f"This is the second wave after a CRITICAL or HIGH: the tier {tier} first wave "
+                        f"({', '.join(first)}) ran earlier and its findings are fixed on the branch.")
+        else:
+            wanted = set(first) | {str(lens) for lens in own}
+            skipped = [lens for lens in LENS_ORDER if lens in routed - wanted]
+            out["skippedByTier"] = skipped
             sentence = (f"Lenses skipped by the deep-review tier {tier} rule: {', '.join(skipped)}. "
-                        "Report each as SKIPPED BY TIER, never as run and never as dropped.")
+                        "Report each as SKIPPED BY TIER, never as run and never as dropped.") if skipped else ""
+        if sentence:
             out["note"] = f"{str(item.get('note') or '').rstrip()} {sentence}".strip()
     out["lenses"] = [lens for lens in LENS_ORDER if lens in wanted] + sorted(wanted - set(LENS_ORDER))
     return out
@@ -220,7 +243,8 @@ def wrapper_script(workflow: str, script: Path, args: dict) -> str:
             f"  description: 'improve {workflow}: {listed or 'no item'}',\n"
             "}\n"
             f"const A = {json.dumps(args, ensure_ascii=True)}\n"
-            f"return await workflow({{ scriptPath: '{script.as_posix()}' }}, A)\n")
+            # A JSON string is a JavaScript string, whatever the checkout's path holds.
+            f"return await workflow({{ scriptPath: {json.dumps(script.as_posix(), ensure_ascii=True)} }}, A)\n")
 
 
 def cmd_args(a) -> int:
@@ -238,8 +262,14 @@ def cmd_args(a) -> int:
     if a.stop_on_low and a.workflow != "review":
         raise Fail("--stop-on-low applies to the review workflow only")
     script = Path(top) / WORKFLOW_DIR / f"{a.workflow}.js"
-    if a.wrap and not script.is_file():
-        raise Fail(f"--wrap: {WORKFLOW_DIR}/{a.workflow}.js is not in this checkout ({top})")
+    if a.wrap:
+        if not script.is_file():
+            raise Fail(f"--wrap: {WORKFLOW_DIR}/{a.workflow}.js is not in this checkout ({top})")
+        wrap = Path(a.wrap).resolve()
+        if a.out and wrap == Path(a.out).resolve():
+            raise Fail("--wrap and --out name the same file; the wrapper would replace the args")
+        if wrap.parent == script.parent.resolve():
+            raise Fail(f"--wrap must not be a file in {WORKFLOW_DIR}: it would shadow or replace a workflow script")
     model = None
     for pair in a.model or []:
         role, _, model_id = pair.partition("=")
@@ -581,13 +611,19 @@ def transcripts(root: Path) -> list:
     return sorted(found)
 
 
-FINISHED_STATES = ("done", "failed", "superseded")
+OVER_STATES = ("done", "failed", "superseded")
+# A direct spawn has no journal, so its state is unknown: a transcript written this recently counts
+# as an agent at work for a wait, never for the STALE verdict.
+FRESH_MINUTES = 2.0
 
 
 def watch_snapshot(roots, stale_min: float) -> tuple:
-    """One line per agent transcript under the roots, and the counts the verdict and the wait read."""
-    now, journals, lines = time.time(), {}, []
-    counts = {"total": 0, "running": 0, "stale": 0, "asking": 0, "finished": 0}
+    """One line per agent transcript under the roots, the counts the verdict and the wait read, and
+    the set of flagged transcripts. "finished" counts done and failed agents only: a superseded one
+    was started again and has finished nothing. "active" adds fresh transcripts with no journal state
+    to the running ones."""
+    now, journals, lines, flagged = time.time(), {}, [], set()
+    counts = {"total": 0, "running": 0, "stale": 0, "asking": 0, "finished": 0, "active": 0}
     for root in roots:
         for transcript in transcripts(root):
             if transcript.parent not in journals:
@@ -595,44 +631,65 @@ def watch_snapshot(roots, stale_min: float) -> tuple:
             states = journals[transcript.parent]
             agent = transcript.stem[len("agent-"):] if transcript.stem.startswith("agent-") else transcript.stem
             state, label = ("no journal", "") if states is None else states.get(agent, ("not in journal", ""))
-            age = (now - transcript.stat().st_mtime) / 60
-            # A finished, failed or superseded agent waits on nothing, whatever its transcript ends with.
-            ask = pending_ask(transcript) if state not in FINISHED_STATES else None
+            try:
+                age = (now - transcript.stat().st_mtime) / 60
+                # A finished, failed or superseded agent waits on nothing, whatever its transcript ends with.
+                ask = pending_ask(transcript) if state not in OVER_STATES else None
+            except OSError:
+                continue  # removed between the listing and this look
             flag = "STALLED-ASK" if ask else "STALE" if state == "running" and age > stale_min else ""
             counts["total"] += 1
             counts["running"] += state == "running"
-            counts["finished"] += state in FINISHED_STATES
+            counts["active"] += state == "running" or (state in ("no journal", "not in journal")
+                                                       and age < FRESH_MINUTES)
+            counts["finished"] += state in ("done", "failed")
             counts["stale"] += flag == "STALE"
             counts["asking"] += flag == "STALLED-ASK"
+            if flag:
+                flagged.add(str(transcript))
             lines.append(f"{flag:<12}{age:8.1f} min  {state:<14}  {label or '-':<24}  {transcript}"
                          + (f"  ask: {ask[:120]}" if ask else ""))
-    return lines, counts
+    return lines, counts, flagged
 
 
 def cmd_watch(a) -> int:
-    roots = [Path(folder) for folder in a.dir]
-    for root in roots:
+    roots = []
+    for folder in a.dir:
+        root = Path(folder)
         if not root.is_dir():
             raise Fail(f"no such folder: {root}")
-    lines, counts = watch_snapshot(roots, a.stale_min)
+        if root.resolve() not in [seen.resolve() for seen in roots]:
+            roots.append(root)
+    if a.wait < 0 or a.step < 1 or a.poll < 0.5:
+        raise Fail("--wait must not be negative, --step must be 1 or more, --poll 0.5 or more")
+    lines, counts, flagged = watch_snapshot(roots, a.stale_min)
     reason = ""
     if a.wait:
         # The orchestrator has no blocking wait of its own, and ending its turn while agents run is
         # forbidden (SKILL.md hard rule 4). This holds one shell call until there is something to read.
-        start, deadline = counts["finished"], time.monotonic() + a.wait
+        start, known, deadline = counts["finished"], flagged, time.monotonic() + a.wait
+        idle = 0
         while True:
-            if counts["stale"] or counts["asking"]:
-                reason = "an agent is flagged"
-            elif not counts["running"]:
-                reason = "no agent is running"
+            # A flag that already stood when the wait began (an ask nobody has answered yet) must not
+            # end every later wait at once: only a new one does. The exit code still says it stands.
+            if flagged - known:
+                reason = "an agent is newly flagged"
             elif counts["finished"] >= start + a.step:
                 reason = f"finished agents went from {start} to {counts['finished']}"
             elif time.monotonic() >= deadline:
                 reason = f"the limit of {a.wait:g} s passed"
+            elif not counts["active"]:
+                # Between two waves, and right after a launch, a workflow has no agent for a moment:
+                # only two looks in a row without one end the wait.
+                idle += 1
+                if idle >= 2:
+                    reason = "no agent is running (two looks in a row); a workflow's own completion notice says whether it is done"
+            else:
+                idle = 0
             if reason:
                 break
             time.sleep(max(0.1, min(a.poll, deadline - time.monotonic())))
-            lines, counts = watch_snapshot(roots, a.stale_min)
+            lines, counts, flagged = watch_snapshot(roots, a.stale_min)
     for line in lines:
         print(line)
     print(f"{counts['total']} transcript(s), {counts['running']} running, {counts['asking']} stalled "
@@ -680,7 +737,8 @@ def build_parser() -> argparse.ArgumentParser:
                         "all LOW ends the loop and hands them to the orchestrator")
     p.add_argument("--wrap", metavar="SCRIPT.js",
                    help="also write a Workflow script that embeds these args and runs the workflow; "
-                        "pass it to the Workflow tool as scriptPath")
+                        "pass it to the Workflow tool as scriptPath (the wrapper holds the args; add "
+                        "--out for a readable copy)")
     p.add_argument("--rules", help=f"rules file (default: {RULES_PATH} in this checkout)")
     p.add_argument("--out", help="output file (default: stdout)")
     p.set_defaults(func=cmd_args)
@@ -725,8 +783,12 @@ def build_parser() -> argparse.ArgumentParser:
                        "no journal). STALE: a running agent silent for over --stale-min minutes. In "
                        "a workflow folder, an agent whose journal key was started again later is "
                        "superseded, not running. Exit 1 on any STALLED-ASK or STALE. With --wait the "
-                       "call blocks until an agent finishes, an agent is flagged, no agent runs, or "
-                       "the limit passes, and its last line says which.")
+                       "call blocks until --step more agents finish (done or failed; a retry "
+                       "finishes nothing), an agent is newly flagged (a flag that stood before the "
+                       "wait does not end it, but still gives exit 1), no agent has been at work for "
+                       "two looks in a row (a workflow has none for a moment between waves), or the "
+                       "limit passes; its last line says which. A direct spawn's transcript written "
+                       "in the last two minutes counts as an agent at work.")
     p.add_argument("--dir", required=True, action="append",
                    help="a folder to watch; repeat it to watch concurrent workflows as one")
     p.add_argument("--stale-min", type=float, default=30.0, help="minutes (default 30)")

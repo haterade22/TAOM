@@ -5031,7 +5031,7 @@ The skill said to build a workflow's args with `improve_ctl.py args --out <file>
 ### An orchestrator that may not end its turn needs a wait that blocks (/improve, 2026-11-12)
 SKILL.md forbids ending a turn while agents run, and the harness has no blocking wait, so the run wrote three scratch scripts that polled `improve_ctl.py watch` in a loop. The liveness watch was a separate background loop that could be forgotten.
 - **Why missed:** the rule said what not to do, and no tool gave the allowed form.
-- **Prevent:** `improve_ctl.py watch --dir <folder> [--dir <folder>] --wait 570 [--step N]` blocks until an agent finishes, an agent is flagged, no agent runs or the limit passes. Every wait is then also a liveness check. Use each return for the spec check of what finished.
+- **Prevent:** `improve_ctl.py watch --dir <folder> [--dir <folder>] --wait 570 [--step N]` blocks until an agent finishes, an agent is newly flagged, no agent has been at work for two looks in a row, or the limit passes. Every wait is then also a liveness check. Use each return for the spec check of what finished. The first version of the wait ended on any state that already held (a flag that stood, the moment between two waves with no agent), so it did not block when it mattered: a wait ends on a change, never on a state.
 - **Source:** `plans/_audit/2026-11-12-fable/PROGRESS.md`.
 
 
