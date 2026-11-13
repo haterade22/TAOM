@@ -32,20 +32,20 @@ public class Patch65FinalizerTests
         var ioe = new InvalidOperationException("Sequence contains no matching element");
         MobileParty result = null;
 
-        var returned = Patch65_LandlessCultureSpawnGuard.Finalizer(ioe, null, ref result);
+        var returned = Patch65_LandlessCultureSpawnGuard.Finalizer(ioe, null, ref result, null);
 
         Assert.IsNull(returned, "InvalidOperationException must be suppressed (finalizer returns null).");
         Assert.IsNull(result, "The suppressed path must leave a null party — the caller null-checks it.");
     }
 
     [TestMethod]
-    public void Finalizer_OtherException_PropagatesUntouched()
+    public void Finalizer_OtherException_IsHandedBack()
     {
         // An NRE out of SpawnLordParty is a different bug and must stay visible.
         var nre = new NullReferenceException("unrelated");
         MobileParty result = null;
 
-        var returned = Patch65_LandlessCultureSpawnGuard.Finalizer(nre, null, ref result);
+        var returned = Patch65_LandlessCultureSpawnGuard.Finalizer(nre, null, ref result, null);
 
         Assert.AreSame(nre, returned, "Only InvalidOperationException is suppressed; everything else propagates.");
     }
@@ -55,7 +55,7 @@ public class Patch65FinalizerTests
     {
         MobileParty result = null;
 
-        var returned = Patch65_LandlessCultureSpawnGuard.Finalizer(null, null, ref result);
+        var returned = Patch65_LandlessCultureSpawnGuard.Finalizer(null, null, ref result, null);
 
         Assert.IsNull(returned, "The success path must not invent an exception.");
     }

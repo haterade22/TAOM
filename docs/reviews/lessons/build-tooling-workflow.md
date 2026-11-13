@@ -5061,3 +5061,9 @@ The run's baseline showed nine failing tool tests on the trunk, and the run file
 - **Why missed:** the dedupe step searched open issues, not the commits made since the baseline.
 - **Prevent:** before filing a failure the baseline shows on the trunk, fetch and read `git log --oneline <baseline>..origin/<trunk>` (run-protocol "Issues").
 - **Source:** #1135.
+
+### Before you write "by design", search the decision records, not only the docs (#1155, 2026-11-13)
+PatchShield's protected-owner list does not match TAOM's own Harmony id `com.taom.mod`, so its rescue strips TAOM's patches too. Asked to decide what to do, the main session found four feature docs that describe the strip as the rescue, concluded "by design", told the maintainer so, and wrote it into two comments, a pin test, an RCA line and a public issue. Decision D13 (`plans/_audit/2026-10-02-perf/DECISIONS.md`, with the scope in `FOR-MIKE.md` item 15) had already settled it the other way: strip only the owner whose patch threw, then protect the id; the plan is owed. A review lens found the record.
+- **Why missed:** feature docs describe what the code does, and four of them agreeing read as intent. The search covered `docs/features`, `docs/reviews/lessons` and the git history, not `plans/`. Codex confirmed the same pin, because its prompt named only those four docs.
+- **Prevent:** before "by design", "decided" or "do not change" goes into a comment, a test or an issue, run `git grep -n "<symbol or id>" -- plans docs/adrs` and read every `DECISIONS.md` and `FOR-MIKE.md` hit. If a decision exists, cite it with its date; if none exists, write "current behaviour" and say that the reason is not recorded. A prompt that asks a reviewer to confirm a decision names the decision records as well as the docs.
+- **Source:** [rca-finalizer-rethrow-and-wotr-repair-2026-11-13.md](../rca-finalizer-rethrow-and-wotr-repair-2026-11-13.md) row 2; `/deep-review` Agent 5.
