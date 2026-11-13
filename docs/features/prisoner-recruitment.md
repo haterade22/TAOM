@@ -82,7 +82,10 @@ One override therefore covers all three, and the displayed cost cannot desync fr
 
 **No new alignment table.** Side data is reused from the Execution feature's `IAlignmentService`. This
 feature is the mirror image of `AlignmentDesertion`: desertion sheds troops whose culture *opposes* the
-owner's side; this waives the cost of taking on troops whose culture *shares* it.
+owner's side; this waives the cost of taking on troops whose culture *shares* it. The same model also
+overrides `IsPrisonerRecruitable` and `CalculateRecruitableNumber` (13 Nov 2026): a prisoner that alignment
+desertion would take from a lord party or the main party is not recruitable, so AI lords stop paying morale
+for troops that leave the next day. See [alignment-desertion.md](alignment-desertion.md).
 
 **`AreEnemyAlignments` is deliberately not used** — its Neutral semantics are inverted (it treats
 Neutral as enemy-of-everyone). Three other consumers route around it too.

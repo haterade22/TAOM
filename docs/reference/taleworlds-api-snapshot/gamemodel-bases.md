@@ -352,8 +352,10 @@ Models: 69. Regenerate after any patch, GameModel or engine change: `pwsh tools/
 ## TaomPrisonerRecruitmentCalculationModel : DefaultPrisonerRecruitmentCalculationModel
 `Base: TaleWorlds.CampaignSystem.GameComponents.DefaultPrisonerRecruitmentCalculationModel`
 
+- `Int32 CalculateRecruitableNumber(PartyBase party, CharacterObject character)`
 - `ExplainedNumber GetConformityChangePerHour(PartyBase party, CharacterObject character)`
 - `Single GetPrisonerRecruitmentMoraleEffect(PartyBase party, CharacterObject character, Int32 num)`
+- `Boolean IsPrisonerRecruitable(PartyBase party, CharacterObject character, ref Int32 conformityNeeded)`
 
 ## TaomRaidModel : DefaultRaidModel
 `Base: TaleWorlds.CampaignSystem.GameComponents.DefaultRaidModel`
@@ -467,5 +469,6 @@ Models: 69. Regenerate after any patch, GameModel or engine change: `pwsh tools/
 - `Int32 get_MaxVolunteerTier()`
 - `CharacterObject GetBasicVolunteer(Hero hero)`
 - `Single GetDailyVolunteerProductionProbability(Hero hero, Int32 index, Settlement settlement)`
+- `Int32 MaximumIndexGarrisonCanRecruitFromHero(Settlement settlement, Hero sellerHero)`
 - `Int32 MaximumIndexHeroCanRecruitFromHero(Hero buyerHero, Hero sellerHero, Int32 useValueAsRelation)`
 
