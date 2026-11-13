@@ -157,7 +157,7 @@ public class SupplyGoodsSearchTests
     [TestMethod]
     public void Create_NoName_FallsBackToTheId()
     {
-        // SupplyGoodRowVM shows the id when the name is empty; the search matches the same text.
+        // SupplyRowVM shows the id when the name is empty; the search matches the same text.
         var entry = Entry(Source("a", "Bree"), 10f, Line("grain", null!, 5, 10));
 
         var hits = SupplyGoodsSearch.Search(Catalogue(entry), "gr", out _);

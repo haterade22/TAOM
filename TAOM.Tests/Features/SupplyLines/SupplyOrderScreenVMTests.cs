@@ -190,6 +190,31 @@ public class SupplyOrderScreenVMTests
     }
 
     [TestMethod]
+    public void Populate_GoodsAndTroopRows_EachUseTheirOwnLabel()
+    {
+        // Both lists hold SupplyRowVM, so the compiler no longer tells a goods row from a troop row:
+        // these labels are what would show a list built with the other factory.
+        var vm = CreateVM();
+
+        Assert.AreEqual("Grain - 5 in stock, 10 denars", vm.Goods[0].Label);
+        Assert.AreEqual("Fish - 3 in stock, 20 denars", vm.Goods[1].Label);
+        Assert.AreEqual("Militia - 4 available, 50 denars", vm.Troops[0].Label);
+    }
+
+    [TestMethod]
+    public void SearchHitSelect_PromotedGood_KeepsTheGoodsLabel()
+    {
+        _sourceService.GetGoods(_townB).Returns(new List<SupplyLineItem> { Line("wine", "Wine", 2, 30), DaleGrain() });
+        var vm = CreateVM();
+        vm.SearchText = "gr";
+
+        vm.SearchHits[1].ExecuteSelect();
+
+        Assert.AreEqual("Grain - 9 in stock, 4 denars", vm.Goods[0].Label);
+        Assert.AreEqual("Wine - 2 in stock, 30 denars", vm.Goods[1].Label);
+    }
+
+    [TestMethod]
     public void ExecuteSelect_LockedRow_DoesNotChangeSelection()
     {
         var vm = CreateVM();
