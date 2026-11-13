@@ -17754,7 +17754,7 @@
             <!--face_key
 			value="00282b5fd7fc23c299c2761c4ac1a5954778548899a66659788878746a9d96290006165d06a7699c0000000000000000000000000000000000000000011c7140"
 			/-->
-            <BodyProperties version="4" weight="0.6" build="0.85" key="0028280FD7FC23C299C2761C4AC1A5954778548899A66659788878746A9D9629000F16530FA7699C000000000000000000000000000000000000000000F47140" />
+            <BodyProperties version="4" weight="0.6" build="0.85" key="00022801D7FC23C299C2761C4AC1A5954778548899A66659788878746A9D9629000F16530FA7699C0000000000000000000000000000000000000000015C7140" />
             <hair_tags>
                 <hair_tag name="battania" />
             </hair_tags>
@@ -17807,7 +17807,7 @@
     </NPCCharacter>
     <NPCCharacter id="lord_L2_1" race="elf" name="{=aom_lord_L2_1_name}Caurmínas" age="25" voice="curt" culture="Culture.lothlorien" occupation="Lord" is_hero="true" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.taom_elf_warrior_skills">
         <face>
-            <BodyProperties version="4" age="22.01" weight="0.0294" build="0.128" key="0005B40A400000028771188F38770004088D88778888888888886F8D546AF01100F206030FE8888800000000000000000000000000000000000000007FF43005" />
+            <BodyProperties version="4" age="22.01" weight="0.0294" build="0.128" key="0005B403C00000028771188F38770004088D88778888888888886F8D546AF01100F206030FE8888800000000000000000000000000000000000000007FF43005" />
             <hair_tags>
                 <hair_tag name="battania" />
             </hair_tags>
@@ -17903,7 +17903,7 @@
     </NPCCharacter>
     <NPCCharacter id="lord_L2_3" race="elf" name="{=aom_lord_L2_3_name}Baranthir" age="27" voice="curt" is_hero="true" is_female="false" culture="Culture.lothlorien" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.taom_elf_warrior_skills">
         <face>
-            <BodyProperties version="4" age="27.0" weight="0.25" build="0.45" key="0028280FD7FC23C299C2761C4AC1A5954778548899A66659788878746A9D9629000F16530FA7699C000000000000000000000000000000000000000000F47140" />
+            <BodyProperties version="4" age="27.0" weight="0.25" build="0.45" key="00022801D7FC23C299C2761C4AC1A5954778548899A66659788878746A9D9629000F16530FA7699C0000000000000000000000000000000000000000015C7140" />
             <hair_tags>
                 <hair_tag name="battania" />
             </hair_tags>
@@ -17951,7 +17951,7 @@
     </NPCCharacter>
     <NPCCharacter id="lord_L2_4" race="elf" name="{=aom_lord_L2_4_name}Aeglossen" age="23" voice="softspoken" is_hero="true" is_female="false" culture="Culture.lothlorien" occupation="Lord" default_group="Ranged" face_mesh_cache="true" skill_template="SkillSet.taom_elf_archer_skills">
         <face>
-            <BodyProperties version="4" age="23.0" weight="0.25" build="0.45" key="0005B40A400000028771188F38770004088D88778888888888886F8D546AF01100F206030FE8888800000000000000000000000000000000000000007FF43005" />
+            <BodyProperties version="4" age="23.0" weight="0.25" build="0.45" key="0005B403C00000028771188F38770004088D88778888888888886F8D546AF01100F206030FE8888800000000000000000000000000000000000000007FF43005" />
             <hair_tags>
                 <hair_tag name="battania" />
             </hair_tags>
@@ -49816,7 +49816,7 @@
   <!-- TAOM-LINDON-EXPANSION:BEGIN -->
     <NPCCharacter id="lord_LN3_1" race="elf" name="{=aom_lord_LN3_1_name}Maicasáma" age="48" voice="earnest" is_hero="true" is_female="false" culture="Culture.lindon" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.taom_elf_lord_skills">
         <face>
-            <BodyProperties version="4" age="22.01" weight="0.5" build="0.4" key="0011CC0597BC034694A8C26585AAA93992D5A78776779C82329B657437695D35000005A60DE9BA6200001105000030A30000001F000000000000000000000000" />
+            <BodyProperties version="4" age="22.01" weight="0.5" build="0.4" key="0002CC0597BC034694A8C26585AAA93992D5A78776779C82329B657437695D35000005A60DE9BA6200001105000030A30000001F000000000000000001400000" />
             <hair_tags>
                 <hair_tag name="battania" />
             </hair_tags>
@@ -49909,7 +49909,7 @@
     </NPCCharacter>
     <NPCCharacter id="lord_LN3_3" race="elf" name="{=aom_lord_LN3_3_name}Talanthir" age="26" voice="earnest" is_hero="true" is_female="false" culture="Culture.lindon" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.taom_elf_archer_skills">
         <face>
-            <BodyProperties version="4" age="22.01" weight="0.6932" build="0.7221" key="000510014000224232731956310564E637157818708138648CEB5D2873357035046BA04606571C8200000000000000000000000000000000000000004AD88081" />
+            <BodyProperties version="4" age="22.01" weight="0.6932" build="0.7221" key="000510014000224232731956310564E637157818708138648CEB5D2873357035046BA04606571C8200000000000000000000000000000000000000004B408081" />
             <hair_tags>
                 <hair_tag name="battania" />
             </hair_tags>
@@ -49957,7 +49957,7 @@
     </NPCCharacter>
     <NPCCharacter id="lord_LN3_4" race="elf" name="{=aom_lord_LN3_4_name}Nimlothel" age="22" voice="softspoken" is_hero="true" is_female="true" culture="Culture.lindon" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.taom_elf_lady_skills">
         <face>
-            <BodyProperties version="4" age="22.01" weight="0.5" build="0.5" key="000B600440E4100289989588AC8A337984A876A61A98466778D755B2B5B813830177761307695AB1000000000000000000000000000000000000000042F40083" />
+            <BodyProperties version="4" age="22.01" weight="0.5" build="0.5" key="0002600440E4100289989588AC8A337984A876A61A98466778D755B2B5B813830177761307695AB10000000000000000000000000000000000000000435C0083" />
             <hair_tags>
                 <hair_tag name="battania" />
             </hair_tags>
@@ -50002,7 +50002,7 @@
     </NPCCharacter>
     <NPCCharacter id="lord_LN4_1" race="elf" name="{=aom_lord_LN4_1_name}Anrod" age="44" voice="curt" is_hero="true" is_female="false" culture="Culture.lindon" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.taom_elf_lord_skills">
         <face>
-            <BodyProperties version="4" age="22.01" weight="0.7" build="0.9" key="0011700FC0FC028F96938148227587B6674886898A943687452B87978A7875940007565A0F889888000000000000000000000000000000000000000000F48040" />
+            <BodyProperties version="4" age="22.01" weight="0.7" build="0.9" key="0002700FC0FC028F96938148227587B6674886898A943687452B87978A7875940007565A0F8898880000000000000000000000000000000000000000015C8040" />
             <hair_tags>
                 <hair_tag name="battania" />
             </hair_tags>
@@ -50050,7 +50050,7 @@
     </NPCCharacter>
     <NPCCharacter id="lord_LN4_2" race="elf" name="{=aom_lord_LN4_2_name}Adanel" age="41" voice="earnest" is_hero="true" is_female="true" culture="Culture.lindon" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.taom_elf_lady_skills">
         <face>
-            <BodyProperties version="4" age="22.01" weight="0.5" build="0.5" key="0016500CD1A00010945948899A9B8C7844DAC78467D87565AB5466784889A58501A776130A83B7BA00000000000000000000000000000000000000004B5C1003" />
+            <BodyProperties version="4" age="22.01" weight="0.5" build="0.5" key="0002500CD1A00010945948899A9B8C7844DAC78467D87565AB5466784889A58501A776130A83B7BA00000000000000000000000000000000000000004B5C1003" />
             <hair_tags>
                 <hair_tag name="battania" />
             </hair_tags>
@@ -50095,7 +50095,7 @@
     </NPCCharacter>
     <NPCCharacter id="lord_LN4_3" race="elf" name="{=aom_lord_LN4_3_name}Megilhir" age="32" voice="earnest" is_hero="true" is_female="false" culture="Culture.lindon" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.taom_elf_warrior_skills">
         <face>
-            <BodyProperties version="4" age="22.01" weight="0.5" build="0.5" key="000DAC0014BC300DCAC3B86636658DA2496C32AA369D8DA659D498889759587C000004230BA9C63700001105000030A30000001F000000000000000000007000" />
+            <BodyProperties version="4" age="22.01" weight="0.5" build="0.5" key="0002AC0014BC300DCAC3B86636658DA2496C32AA369D8DA659D498889759587C000004230BA9C63700001105000030A30000001F000000000000000001407000" />
             <hair_tags>
                 <hair_tag name="battania" />
             </hair_tags>
@@ -50143,7 +50143,7 @@
     </NPCCharacter>
     <NPCCharacter id="lord_LN5_1" race="elf" name="{=aom_lord_LN5_1_name}Luinor" age="50" voice="curt" is_hero="true" is_female="false" culture="Culture.lindon" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.taom_elf_lord_skills">
         <face>
-            <BodyProperties version="4" age="22.01" weight="0.5" build="0.4" key="0022740000003385B478815CE898CB34AC8A23954C63417D77A7894B7D57B4970000069306B6674800001105000030A30000001F000000000000000000045000" />
+            <BodyProperties version="4" age="22.01" weight="0.5" build="0.4" key="0002740000003385B478815CE898CB34AC8A23954C63417D77A7894B7D57B4970000069306B6674800001105000030A30000001F000000000000000001445000" />
             <hair_tags>
                 <hair_tag name="battania" />
             </hair_tags>
@@ -50191,7 +50191,7 @@
     </NPCCharacter>
     <NPCCharacter id="lord_LN5_2" race="elf" name="{=aom_lord_LN5_2_name}Celebwen" age="46" voice="softspoken" is_hero="true" is_female="true" culture="Culture.lindon" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.taom_elf_lady_skills">
         <face>
-            <BodyProperties version="4" age="22.01" weight="0.2" build="0.3" key="0005E80700000002996697B5ADAB959A78999668743273447AB68778A75696920007B008059879880000000000000FFE00000000000000000000000000C80004" />
+            <BodyProperties version="4" age="22.01" weight="0.2" build="0.3" key="0005E80700000002996697B5ADAB959A78999668743273447AB68778A75696920007B008059879880000000000000FFE00000000000000000000000001780004" />
             <hair_tags>
                 <hair_tag name="battania" />
             </hair_tags>
@@ -50236,7 +50236,7 @@
     </NPCCharacter>
     <NPCCharacter id="lord_LN5_3" race="elf" name="{=aom_lord_LN5_3_name}Lothron" age="30" voice="earnest" is_hero="true" is_female="false" culture="Culture.lindon" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.taom_elf_archer_skills">
         <face>
-            <BodyProperties version="4" age="22.01" weight="0.5" build="0.5" key="0000F40580000005A65878789BB045948B55D5787DB57345A7EB59688555658400000003088779A60000000000000FFE00000000000000000000000000000000" />
+            <BodyProperties version="4" age="22.01" weight="0.5" build="0.5" key="0000F40580000005A65878789BB045948B55D5787DB57345A7EB59688555658400000003088779A60000000000000FFE00000000000000000000000001400000" />
             <hair_tags>
                 <hair_tag name="battania" />
             </hair_tags>
@@ -50332,7 +50332,7 @@
     </NPCCharacter>
     <NPCCharacter id="lord_LN6_2" race="elf" name="{=aom_lord_LN6_2_name}Gwaeriel" age="38" voice="softspoken" is_hero="true" is_female="true" culture="Culture.lindon" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.taom_elf_lady_skills">
         <face>
-            <BodyProperties version="4" age="22.01" weight="0.2" build="0.2" key="0005B8071070000A987877861A2999B848987C68EA6BB7869423371443C8EA4801377613036AB66200000000000000000000000000000000000000005A6C3003" />
+            <BodyProperties version="4" age="22.01" weight="0.2" build="0.2" key="0005B8071070000A987877861A2999B848987C68EA6BB7869423371443C8EA4801377613036AB66200000000000000000000000000000000000000005B643003" />
             <hair_tags>
                 <hair_tag name="battania" />
             </hair_tags>
@@ -50377,7 +50377,7 @@
     </NPCCharacter>
     <NPCCharacter id="lord_LN6_3" race="elf" name="{=aom_lord_LN6_3_name}Rínthal" age="28" voice="curt" is_hero="true" is_female="false" culture="Culture.lindon" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.taom_elf_warrior_skills">
         <face>
-            <BodyProperties version="4" age="22.01" weight="0.5" build="0.5" key="000C7002DA0003CD33BD62C7862239599C824998719E7EB543B588B88B13688B000522A4055A1122000000000000000000000000000000000000000000780000" />
+            <BodyProperties version="4" age="22.01" weight="0.5" build="0.5" key="00027002DA0003CD33BD62C7862239599C824998719E7EB543B588B88B13688B000522A4055A1122000000000000000000000000000000000000000001700000" />
             <hair_tags>
                 <hair_tag name="battania" />
             </hair_tags>
