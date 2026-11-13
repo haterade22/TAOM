@@ -75,7 +75,8 @@ public class ArmyTargetingService : IArmyTargetingService
             {
                 int total = cultureIndex.Count;
                 float t = total > 1 ? idx / (float)(total - 1) : 0f;
-                float boost = _settings.MaxPriorityBoost - t * (_settings.MaxPriorityBoost - 1.0f);
+                float maxBoost = _settings.MaxPriorityBoost;
+                float boost = maxBoost - t * (maxBoost - 1.0f);
                 multiplier *= boost;
             }
         }

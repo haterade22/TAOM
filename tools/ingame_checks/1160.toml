@@ -1,0 +1,38 @@
+# In-game checks for #1160 (The Long Defeat: the siege engines a player destroys come back for the next wave), read by tools/ingame_verdict.py. Both [Check] lines come from
+# Main/Features/LongDefeat/LongDefeatDirector.Engines.cs, key w<N> for the wave whose start restored an engine. engine-restore is written at that wave start, only when an engine came back or the
+# restore met a problem: each engine reads <kind><index>=ok, or the faults it still has (destroyed, disabled, hp, moved, lane, and for a tower ladders and wait), and problem= names a reset that was
+# not found or threw. engine-use is written at that wave's clear: each engine reads used (5 m or more along its path), arrived, or fell (destroyed again after 5 m), each with its metres, or idle,
+# or gone. fell-early (destroyed again before 5 m) and done (a ram whose gate was already down at the restore) count for nothing, and a wave of only those is a skip with reason=unjudged; a run
+# that ends inside the wave makes an idle engine a skip with reason=run-ended. A session whose only engine-use lines are skips reads NOT REACHED, never FAIL.
+# The bot never attacks an engine, so the unattended proof is a run with --break-engines, which destroys every ram and tower at that clear; --start-gold 5000 makes the bot repair a broken gate,
+# so the ram has a gate to strike again. run_long_defeat.py owes a pass of each that names the wave after the break once the report echoes breakEngines and cleared a wave past it. The break comes
+# at a clear, when no attacker formation ticks, so it does not cover a player's destroy in the middle of a wave: the [[human]] rows below do.
+issue = 1160
+title = "The Long Defeat: siege engines the player destroys come back for the next wave"
+fixed_in = "54819b067"   # trunk before the fix: the manifest ships with the emitter
+logs = ["taom"]
+
+[[check]]
+id = "taom.long-defeat.engine-restore"
+needs = "a Long Defeat wave that starts after a ram or siege tower was destroyed: python tools/run_long_defeat.py --waves 2 --garrison-scale 1.3 --start-gold 5000 --break-engines 1, or a player who destroys an engine and plays the next wave"
+reached = ['\[Check\] id=taom\.long-defeat\.engine-restore result=']
+pass = ['\[Check\] id=taom\.long-defeat\.engine-restore result=pass w=[0-9]+ restored=[1-9][0-9]*( (tower|ram)[0-9]+=ok)+$']
+fail = ['\[Check\] id=taom\.long-defeat\.engine-restore result=fail']
+
+[[check]]
+id = "taom.long-defeat.engine-use"
+needs = "the clear of a Long Defeat wave whose start restored an engine (the same run as engine-restore)"
+reached = ['\[Check\] id=taom\.long-defeat\.engine-use result=']
+pass = ['\[Check\] id=taom\.long-defeat\.engine-use result=pass w=[0-9]+ restored=[1-9][0-9]* ']
+fail = ['\[Check\] id=taom\.long-defeat\.engine-use result=fail']
+# A ram whose gate is down (done), an engine destroyed again before it moved (fell-early) and a run lost inside the wave (run-ended) all skip, and a skip shows nothing either way.
+absence = "not-reached"
+
+[[human]]
+claim = "after the player destroys a siege tower or a ram in a wave, it stands again at the start of its path when the next wave begins, with no jump or flicker, and that wave's attackers push it to the wall (a ram whose gate is already down has nothing to strike and stays)"
+
+[[human]]
+claim = "in a wave of 100 attackers or fewer, destroy a siege tower in the middle of the wave: in the next wave a formation follows the restored tower, pushes it and climbs it once it reaches the wall"
+
+[[human]]
+claim = "a restored siege tower that had reached the wall before it fell: no attacker climbs it before it reaches the wall again, and its waiting attackers gather at the lower wait point, not the upper one"

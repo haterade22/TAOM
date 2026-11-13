@@ -38,14 +38,15 @@ public static class Patch77_BodyGeneratorView_OnFinalize
     /// postfix would silently skip all of that and leave the statics pointing at a dead view.
     /// A finalizer runs either way.
     ///
-    /// It returns <paramref name="__exception"/> unchanged, so a vanilla failure still propagates.
-    /// Swallowing it here would convert an engine bug into a silent leak somewhere else.
+    /// It is <c>void</c>, so a vanilla failure still propagates, with the trace Harmony keeps for a
+    /// method whose finalizers are all void (#1155). Swallowing it here would convert an engine bug
+    /// into a silent leak somewhere else.
     /// </summary>
     [HarmonyFinalizer]
-    public static Exception? Finalizer(BodyGeneratorView __instance, Exception? __exception)
+    public static void Finalizer(BodyGeneratorView __instance)
     {
         if (Patch77_BodyGeneratorView_Constructor.HostView != __instance)
-            return __exception;
+            return;
 
         try
         {
@@ -62,8 +63,6 @@ public static class Patch77_BodyGeneratorView_OnFinalize
             Patch77_BodyGeneratorView_Constructor.ViewModel = null;
             Patch77_BodyGeneratorView_Constructor.WeLoadedSpriteCategory = false;
         }
-
-        return __exception;
     }
 
     private static void Release(BodyGeneratorView view)
