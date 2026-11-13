@@ -17,13 +17,25 @@ when the maintainer asks, drive execution, review and merge through agents. The 
 - **`execute`** authorizes executors on `improve/NNN-<slug>` branches in worktrees outside the repo, and
   the plans commit they branch from (explicit `plans/` paths, never pushed). You may make a small
   verified fix yourself in a plan's worktree, under the same tests, gates and review.
+- **Small items are yours.** An item that is text or a few exact lines a refuter already listed (a
+  doc correction, a skill sentence, a hook parse) costs more as a plan, a cold review and an executor
+  than as your own edit. Make it yourself on the run branch, under the same gates, with an index row
+  and no plan file ([model-effort-selection](../../rules/model-effort-selection.md): the main session
+  does most of the work). C# and XML still get `/deep-review`.
+- **Branch mode** (the maintainer wants every change on a branch): the run folder, the plans and
+  your own items live on a run branch in a worktree outside the repo, the plan branches merge into
+  it, and the trunk takes it as one fast-forward on his word ([run-protocol.md](references/run-protocol.md)
+  "Branch mode"). Rule 3's "main checkout" then means that worktree.
 - **Needs the maintainer's word this run:** merge and push; filing, commenting on or closing issues
   (`--issues` is the word to file); any paid call (Codex, the translator); protected-file edits;
-  deleting what this run did not create. Ports to the other trunk are his. Record every approval in
-  PROGRESS.md "Authorizations" with its scope. Never ask him to paste a key: a paid step reads it from
-  an environment variable he sets.
-- **Models:** every role defaults to `claude-opus-5-5` (maintainer, 2026-09-27); `deep-reviewer` spawns
-  never pass `model`. PROGRESS.md records any other choice.
+  deleting what this run did not create; a deploy or a game run (`/game-run`), where a co-op session
+  always goes first and the other sessions are told before and after. Ports to the other trunk are
+  his. Record every approval in PROGRESS.md "Authorizations" with its scope. Never ask him to paste a
+  key: a paid step reads it from an environment variable he sets.
+- **Models:** the scripts default every role to `claude-opus-5-5`. Choose a model and an effort per
+  role and per item by [model-effort-selection](../../rules/model-effort-selection.md) (maintainer,
+  2026-11-12; the table that worked is in run-protocol "Models"), and write the choice into
+  PROGRESS.md. `deep-reviewer` spawns never pass `model`.
 - READY FOR COMMIT or CLEAN is an AI verdict, never approval ([AGENTS.md](../../../AGENTS.md) "Reviews").
 
 ## Hard rules
@@ -31,7 +43,7 @@ when the maintainer asks, drive execution, review and merge through agents. The 
 1. Build and test only in non-deploying forms: both `-p:DisableModuleCopy=true -p:ModuleId=` on every `dotnet build` and `dotnet test` (the no-game replay in .ai/verification.md adds its own flags); never `./build.ps1` (AGENTS.md "Commands").
 2. Every agent prompt starts with [references/dispatch-rules.md](references/dispatch-rules.md): `improve_ctl.py args` embeds it for the workflows; a direct Agent spawn pastes it.
 3. In the main checkout, touch only this run's `plans/` files. Worktrees, scratch and temp live outside the repo and off C:; read other revisions with `git show`, never a clone or archive extraction (dispatch rules "Workspace", "Disk").
-4. At most four agents in flight plus one checker ([CLAUDE.md](../../../CLAUDE.md) "Subagents"). The pool is per workflow: run one at a time, or give concurrent workflows pools that sum to four. Never stop a turn while agents run (it kills them); typing is safe.
+4. At most four agents in flight plus one checker ([CLAUDE.md](../../../CLAUDE.md) "Subagents"). The pool is per workflow: run one at a time, or give concurrent workflows pools that sum to four. Never stop a turn while agents run (it kills them); typing is safe. Wait with `python tools/improve_ctl.py watch --dir "<workflow folder>" --wait 570`, which blocks until an agent finishes or is flagged, and use the wait for the spec check of whatever finished.
 5. HOOK-ASK binds you too: never discard or sweep with git (dispatch rule 5 lists the forms that ask); such text only in files run by path. An ask outlasts any timeout, so run the liveness watch while agents run ([run-protocol.md](references/run-protocol.md) "Liveness watch").
 6. No read-only role runs a tool that writes by default (`rebalance_ranged_ladders.py`, `derive_armor_tiers.py`, `audit_armory_refs.py` except `--report -`, any `remap_*`, `apply_*`, `generate_*`, `--apply`) ([lesson](../../../docs/reviews/lessons/build-tooling-workflow.md) "A reviewer brief names the tools that write by default").
 7. Secrets: the type and `file:line`, never the value; stream archives, since grep cannot read a `.tar.gz` ([lesson](../../../docs/reviews/lessons/build-tooling-workflow.md) "An absence check must run where the thing lives").
@@ -68,41 +80,49 @@ exists (run-protocol "Resume").
 | `resume`; `reconcile` | the protocol above; 1 and the index | where PROGRESS says; a report |
 | `--issues` | modifier: file this run's issues | issue numbers |
 
-`quick`: one or two lanes, the top six HIGH-confidence findings, no critic. `deep`: every lane, a refuter
-per candidate, the critic. Non-interactive default selection: the top six plus every P1, recorded.
+`quick`: one or two lanes, the top six HIGH-confidence findings, no critic. Bare: the lanes the request
+names (cut them in BRIEF.md and say what is not audited), one refuter per lane or lane pair, no critic.
+`deep`: every lane, a refuter per candidate, the critic. Non-interactive default selection: every
+finding a refuter left provable by the suites, bundled into at most about ten items, plus every P1,
+recorded in DECISIONS.md.
 
 ## Phases
 
-Workflows run through the Workflow tool: `scriptPath` `.claude/skills/improve/workflows/<name>.js` (LF
-files inside the working directory), args from `python tools/improve_ctl.py args <name> --items
-"<items.json>" --run-root "<run folder>" --scratch "<root>\scratch" --tmp "<root>\scratch\tmp" --out
-"<args.json>"`, `<root>` being the worktree root in the PROGRESS.md header (quote every path: Git Bash
-drops an unquoted one's backslashes, and `args` refuses a root, scratch or tmp that is not absolute).
-Each script's header comment lists its args and item fields. Top-level fields ride in an items
-object, whose fields stand unless a flag overrides them: `{"items": [...], "base", "baseline", "planDir"}` for `plans.js`,
-`{"items": [...], "checker": {...}}` for a `fanout.js` checker (a plain array runs none). A run cut
-short resumes with the same `scriptPath` and `resumeFromRunId`. A null agent result is a failure you
-report.
+Workflows run through the Workflow tool. It takes args by value, and the args hold the 9 KB dispatch
+rules, so never type them: `python tools/improve_ctl.py args <name> --items "<items.json>" --run-root
+"<run folder>" --scratch "<root>\scratch" --tmp "<root>\scratch\tmp" --out "<args.json>" --wrap
+"<root>\scratch\wf\<label>.js"` writes the args and a wrapper script that carries them into
+`.claude/skills/improve/workflows/<name>.js`; pass the wrapper as `scriptPath`. `<root>` is the
+worktree root in the PROGRESS.md header (quote every path: Git Bash drops an unquoted one's
+backslashes, and `args` refuses a root, scratch or tmp that is not absolute). Each script's header
+comment lists its args and item fields. Top-level fields ride in an items object, whose fields stand
+unless a flag overrides them: `{"items": [...], "base", "baseline", "planDir", "codeRoot"}` for
+`plans.js`, `{"items": [...], "checker": {...}}` for a `fanout.js` checker (a plain array runs none),
+`{"items": [...], "knownFailures": [...]}` for `execute.js`. A run cut short resumes with the same
+wrapper and `resumeFromRunId`. A null agent result is a failure you report.
 
 | # | Phase | How | Read |
 |---|---|---|---|
-| 0 | Preflight, recon, baseline | you; baseline in a detached worktree at a pinned SHA | run-protocol |
+| 0 | Preflight, recon, baseline | you; earlier runs' records and other sessions' work in flight first; baseline in a detached worktree at a pinned SHA | run-protocol |
 | 1 | Reconcile the last backlog | `fanout.js`: reconcile, triage, one checker | execute-and-review "Reconcile" |
 | 2 | Audit lanes | `fanout.js`, waves of four, a file per lane | audit-playbook |
-| 3 | Verify, critic | `fanout.js`: refuters, a critic, at most one follow-up | audit-playbook "Verify" |
+| 3 | Verify, critic | `fanout.js`: refuters (they cut or narrowed 22 of 27 findings on 2026-11-12), a critic in `deep`, at most one follow-up | audit-playbook "Verify" |
 | 4 | REPORT, selection | you: one question, or the default | run-protocol "REPORT.md" |
-| 5 | Plans | `plans.js`: your verified brief, writer, cold reviewer, reviser | plan-template |
+| 5 | Plans | `plans.js`: your verified brief, writer, cold reviewer, reviser; small items are yours and skip 5 to 9 | plan-template |
 | 6 | Plans commit, issues | pathspec commit; `draft-issues.js`, `check_public_text.py`, `improve_ctl.py file-issue` | run-protocol "Issues" |
-| 7 | Execute | worktrees from the plans commit; `execute.js` | execute-and-review |
-| 8 | Spec check, review | you check the spec; `improve_ctl.py codex-prompt` if Codex was asked; `review.js` | execute-and-review |
+| 7 | Execute | worktrees from the plans commit; `execute.js`, a `model` per item | execute-and-review |
+| 8 | Spec check, review | you check the spec as each executor finishes; `improve_ctl.py codex-prompt` if Codex was asked; `review.js` with a `tier` per item | execute-and-review |
 | 9 | Decisions, follow-ups | DECISIONS.md; `execute.js` (decisions); a tagged `review.js` | execute-and-review |
-| 10 | Merge | `integrate_branch.py` merges and stages in an integration worktree; you run the commit it prints through Bash, so every commit gate judges it | run-protocol "Merge" |
+| 10 | Merge | `integrate_branch.py` merges and stages in an integration worktree; you verify the staged merge, then run the commit it prints through Bash, so every commit gate judges it | run-protocol "Merge" |
 | 11 | Wrap-up | `improve_ctl.py status`, issues, cleanup, Codex lessons, REVIEW-LOG numbers | run-protocol "Wrap-up" |
 
 ## Review stop rule
 
-Your spec check first; then lenses and a lead who fixes; then at most two convergence rounds (a
-convergence reviewer on the fix diff and, while it reports defects and a round remains, a fix pass).
+Your spec check first; then the lenses of the item's deep-review risk tier (never all six unasked) and
+a lead who fixes; then at most two convergence rounds (a convergence reviewer on the fix diff and,
+while it reports defects and a round remains, a fix pass). With `--stop-on-low`, a round whose
+findings are all LOW ends the loop and they come to you: fix the ones in code, tests and comments
+yourself, and track the ones in review records.
 Residual findings go to the maintainer as **ship and track (Recommended)** or one more round; never a
 third round unasked. For a residual HIGH (a CRITICAL or Codex P1 counts), recommend one more round; if
 he ships it, record it as deep-review requires (an issue, a `Deferred:` trailer or a `Known

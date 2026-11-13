@@ -14,6 +14,14 @@ Record each result in PROGRESS.md. A broken environment is reported, not fixed
   read `w/lf`, because the Workflow tool refuses a script with CR bytes.
 - `git worktree list`: prunable trees, and any tree on C:. `git config core.hooksPath`, if set, points
   at a folder that exists.
+- **Earlier work on the same request.** Read `plans/README.md` and the earlier runs' REPORT.md, and
+  ask where any other AI client's run left its record (a session log outside the repo counts: the Kimi
+  run of 2026-11-07 was found only in its client's session folder). What it did goes into BRIEF.md
+  "Already done"; its open leads go to the lanes as leads.
+- **Other sessions' work in flight**, for the BRIEF's skip list: `git worktree list`; for each local
+  branch ahead of the trunk, `git diff --name-only <trunk>...<branch>`; for each sibling worktree,
+  `git -C "<wt>" status --short`. A session that announced a live game run owns that feature's folders
+  for the night.
 - A gate proven live this session: an observed deny, or a headless probe ("Live probe" below).
 - `gh auth status` when issues are in scope; `codex login status` when the maintainer asked for Codex.
 - The run's date (`date +%F`), version (`<Version value=...>` in `Main/_Module/SubModule.xml`) and
@@ -24,6 +32,58 @@ Record each result in PROGRESS.md. A broken environment is reported, not fixed
   `TAOM_IMPROVE_ROOT`; without either it exits 2). Quote every path in a command: Git Bash drops the
   backslashes of an unquoted one, and `args` refuses a `--run-root`, `--scratch`, `--tmp` or
   `TAOM_IMPROVE_ROOT` that is not absolute (exit 2).
+
+## Launching a workflow and waiting for it
+
+1. Write the items file with the Write tool, then
+   `python tools/improve_ctl.py args <name> --items "<items.json>" --run-root "<run folder>" --scratch
+   "<root>\scratch" --tmp "<root>\scratch\tmp" --out "<root>\scratch\<label>-args.json" --wrap
+   "<root>\scratch\wf\<label>.js"`. The wrapper embeds the args and calls the workflow script, because
+   the Workflow tool takes args by value and they hold the dispatch rules. Read the args back (pool,
+   models, items) before you launch.
+2. Launch the wrapper with the Workflow tool (`scriptPath`), and write its run id and transcript
+   folder into the PROGRESS.md row at once.
+3. Wait in the turn: `python tools/improve_ctl.py watch --dir "<transcript folder>" [--dir "<second
+   folder>"] --wait 570` blocks until an agent finishes, an agent is flagged STALLED-ASK or STALE, no
+   agent runs, or the limit passes (keep it under the Bash tool's 600 s), and says which. `--step N`
+   waits for N more agents. Use each return for work: the spec check of an executor that finished, the
+   next items file, the records.
+4. When the workflow's own completion notice arrives, read the result from its task output, not from
+   memory of the watch lines.
+
+## Models
+
+The scripts default every role to `claude-opus-5-5`. The maintainer asked on 2026-11-12 for a model
+and an effort per task. What worked on that run (67 agents, about 12.5 M subagent tokens):
+
+| Role | Model, effort | Set with |
+|---|---|---|
+| Lanes that need cross-cutting judgment (architecture, performance, harness) | Opus, high | the item's `model` and `effort` |
+| Lanes that read widely against clear criteria (tests, tools, docs) | Sonnet, high | the item's `model` and `effort` |
+| Refuters, plan writers, cold reviewers, revisers | Opus, high | `--model role=id` |
+| Executors of mechanical or test-only plans | Sonnet, medium or high | the item's `model` and `effort` in `execute.js` |
+| Executors of production C# refactors | Opus, high | the same |
+| Review lenses | the `deep-reviewer` definition | never passed |
+| Lead, convergence, fix | Opus (the scripts' default) | |
+
+One retry at the next tier up when a result is wrong or confused, never at the same tier.
+
+## Branch mode
+
+When the maintainer wants every change on a branch that he merges later:
+
+- Make the run branch and its worktree before the first run file:
+  `git worktree add -b improve/<date>-run "<root>\wt-run" <baseline sha>`. The run folder, the plans,
+  the index and your own small items are committed there, never in the main checkout.
+- Plan worktrees branch from the plans commit on the run branch. Each reviewed branch merges into
+  the run branch with `integrate_branch.py --worktree "<root>\wt-run"` ("Merge" below, steps 5 and 6).
+- The trunk moves during a run. Before the final verification, fetch and merge `origin/<trunk>` into
+  the run branch; repeat it before a push when the left count of
+  `git rev-list --left-right --count origin/<trunk>...HEAD` is not 0.
+- On the maintainer's word the trunk takes the run branch as one fast-forward:
+  `git push origin HEAD:<trunk>`. Without that word, push only the run branch, or nothing.
+- An in-game smoke (`/game-run`) deploys from `<root>\wt-run` and needs his word; a co-op session
+  goes first. Say in the report that the game folder now holds that build.
 
 ## Run folder
 
@@ -82,7 +142,8 @@ Codex: <asked | not asked>. Second Codex pass on fix diffs: <run | replaced by c
 - One row per phase or batch, updated in place: TODO, RUNNING, DONE, STOPPED, BLOCKED. Never leave a
   second RUNNING row behind a DONE one.
 - Write the workflow run id into the row when you launch it: resume needs it.
-- Next and Blockers are rewritten at every state change; the Log is append-only.
+- Next and Blockers are rewritten at every state change; the Log is append-only. Take each Log time
+  from `date "+%F %H:%M"` when you write the line, never from memory: a run crosses midnight.
 - Dead ends is append-only: one line per approach that failed, with why and the evidence path, so a
   resumed session does not try it again.
 - A standing approval ("continue through the night", "merge what is ready") goes under Authorizations
@@ -141,6 +202,10 @@ runs, and whenever you check on one:
 
 `python tools/improve_ctl.py watch --dir "<transcript dir>" [--stale-min N]` (N defaults to 30)
 
+Repeat `--dir` to watch concurrent workflows as one. With `--wait <seconds>` the same call blocks
+until there is something to read ("Launching a workflow and waiting for it"), so the watch runs
+every time you wait and needs no loop of its own.
+
 Point it at the running workflow's own folder, `<session>\subagents\workflows\<run id>` (no trailing
 backslash, which would escape the closing quote), or for direct
 spawns at the session's `subagents` folder. It never looks inside a folder named `workflows` below
@@ -190,6 +255,11 @@ merge" below).
   "Documentation duty"). Filing, commenting and closing are public: only on the maintainer's word
   (`--issues`, or a recorded authorization).
 - **Dedupe** against open issues first: the label query and `gh issue list --state open --search "<words>"`.
+  For a failure that the baseline shows on the trunk, fetch and read
+  `git log --oneline <baseline>..origin/<trunk>` first: another session may have fixed it since (#1135
+  was filed and closed within two hours for that reason).
+- **One issue for one run's refactor items** is enough when they are behaviour-preserving clean-ups
+  with a shared record; a bug lead gets its own issue.
 - **Draft** with `draft-issues.js` (one `TITLE:`/`LABEL:` file per issue, the `/issue` bug or feature
   sections, `## Status`, `## Decisions needed`), or write a short one yourself from the plan. Never use
   the plan file as the body: it holds executor instructions and local paths. No line that asks for the
@@ -224,6 +294,10 @@ merge" below).
    only in the real merge), and the same without `--dry-run` merges. The tool never commits, and its
    leftover-marker check runs on every file of every merge. A fix that makes the merged tree green is
    its own commit.
+   - **Verify before the commit.** The tool stages and never commits, so run the build and the full
+     C# suite on the staged merge (and the touched tool tests when `tools/` changed) and commit only
+     on green: a red merge then never becomes a commit. Expect the total to be the last total plus
+     the branch's new tests.
    - **Exit 0**: merged and staged, with lessons and REVIEW-LOG unioned. The union takes a conflict
      block only when both sides start with the common base lines (it keeps ours, then theirs' lines
      after the base); any other block sends its path to exit 2. It prints
@@ -299,7 +373,19 @@ checkout by the pull, so back it up byte for byte before he pulls; ports to the 
 
 ## Budget
 
-Review is the largest cost of a run (about two thirds of the 2026-09-23 sprint's workflow tokens). Size
-each lens set by the diff (`improve_ctl.py args review` does), batch a branch's decisions into one
-follow-up and one second review, commit per chunk or stage so a limit costs little, and expect the weekly
-limit on a multi-day run. Codex bills outside the Claude budget but runs only when asked.
+Review is the largest cost of a run: about two thirds of the 2026-09-23 sprint's workflow tokens, and
+6.0 M of the 12.5 M subagent tokens of the 2026-11-12 run (lanes 1.5 M, refuters 0.8 M, plans 3.3 M,
+executors 0.9 M). To hold it down:
+
+- Give every review item its deep-review risk `tier`; `improve_ctl.py args review` then routes one or
+  two lenses, not six.
+- Pass `--stop-on-low` unless the maintainer asked for a full review. On 2026-11-12 every round 1
+  finding on six branches was LOW, most of them wording in the review's own records, and each cost a
+  fix pass and a second round at max effort.
+- Make small text items yourself (SKILL.md "Small items are yours").
+- Batch a branch's decisions into one follow-up and one second review, and commit per chunk or stage
+  so a limit costs little.
+
+The refuters are the cheapest agents of a run for what they prevent: three of them narrowed or cut 22
+of 27 findings before any plan was written. Expect the weekly limit on a multi-day run. Codex bills
+outside the Claude budget but runs only when asked.

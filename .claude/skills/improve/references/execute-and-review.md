@@ -39,8 +39,12 @@ the review loop with its stop rule, stopped plans, decisions, and reconciling th
 ## The executor
 
 1. Items file: one entry per plan, `{num, slug, wt, branch, base, contract, decisions?, stages?, note?,
-   issue?}`, with `contract` one of `plan`, `decisions` (a follow-up) or `stages` (ordered, a commit per
-   stage, stopping at the first stage not DONE).
+   issue?, model?, effort?}`, with `contract` one of `plan`, `decisions` (a follow-up) or `stages`
+   (ordered, a commit per stage, stopping at the first stage not DONE). `model` and `effort` set the
+   item's tier (run-protocol "Models"), so one workflow with one pool of four runs a Sonnet plan beside
+   an Opus plan. In the `note`, tell each executor that other executors share the machine (a suite run
+   takes two to four times its usual time, so each dotnet call gets a 900 s timeout) and which trailer
+   its commit bodies end with.
 2. `python tools/improve_ctl.py args execute --items "<items.json>" --run-root "<run folder>"
    --scratch "<root>\scratch" --tmp "<root>\scratch\tmp" --out "<args.json>"`, then the Workflow tool on
    `.claude/skills/improve/workflows/execute.js` with that args JSON. Top-level fields such as
@@ -59,10 +63,15 @@ the review loop with its stop rule, stopped plans, decisions, and reconciling th
 ## Stage 1: the spec check (you)
 
 The executor's report is a claim, not evidence ([evidence-over-claims](../../../rules/evidence-over-claims.md)
-section B). Before any quality review ([agent-teams.md](../../../../docs/ai-includes/agent-teams.md) "Subagent
+section B). Do it as each executor finishes, while the others still run, so that the wait is not
+idle. Before any quality review ([agent-teams.md](../../../../docs/ai-includes/agent-teams.md) "Subagent
 review ordering"):
 
-1. Re-run every done criterion in the worktree.
+1. Re-run every done criterion in the worktree. The core is one script you write once per run and run
+   in the background per branch: `git -C "<wt>" status --porcelain` (empty), the build, and the full
+   suite with both non-deploying flags; its total must be the base's total plus the new tests the
+   executor reports. For a `tools/` plan, also ruff, `lint_docs.py --fail-on-drift` and the touched test
+   modules.
 2. Scope: `git -C "<wt>" diff --stat <base>..HEAD` against the plan's in-scope list; a file outside it
    fails the check.
 3. Read the whole diff as untrusted until every hunk traces to a plan step.
@@ -100,13 +109,24 @@ FOR-MIKE.md, and look for the shared cause before any plan is amended.
    `python "<root>\wt-NNN\tools\graphify_taom.py" refresh --if-stale`, then
    `python "<root>\wt-NNN\tools\graphify_taom.py" affected "<Type>" --depth 2` for each C# type the branch
    changes (a relative `tools/...` from the main checkout builds and reads the main checkout's graph);
-   put callers outside the diff in the item's `note`.
+   put callers outside the diff in the item's `note`. A refresh in a linked worktree builds a graph of
+   its own and took 7 to 10 minutes on 2026-11-12 (one was killed), so start it in the background when
+   the executor finishes; when `graphify_taom.py status --brief` is still not fresh at review time,
+   list the callers with `git -C "<wt>" grep -n -w "<Type>"` and say so in the note. Write the note as
+   questions for the lenses to answer from the code, with the facts you read, never as conclusions.
 2. **Args**: `python tools/improve_ctl.py args review --items "<items.json>" --run-root "<run folder>"
-   --scratch "<root>\scratch" --tmp "<root>\scratch\tmp" --max-rounds 2 --out "<args.json>"`. Each item
-   gains its changed files by kind and the lenses `.claude/skills/deep-review/SKILL.md` Step 2 routes
-   by file type, from `git diff --name-only base..head` in its worktree, unioned with any `lenses` the
-   item already lists. File types cannot show changed text that states engine behaviour, so list lens
-   2 in the item yourself for that. An item whose `base..head` changes no file is refused, and every
+   --scratch "<root>\scratch" --tmp "<root>\scratch\tmp" --max-rounds 2 --stop-on-low --out "<args.json>"
+   --wrap "<root>\scratch\wf\<label>.js"`. Give each item its `tier`, your reading of the risk tier
+   table in `.claude/skills/deep-review/SKILL.md` ("Pick the highest tier any file in scope reaches":
+   1 for a Harmony patch, a GameModel, save data, co-op authority, composition, engine calls or a tick;
+   2 for gates and tests, tooling, moves between assemblies, UI that reads game state), and say the tier
+   and why in PROGRESS.md. The item then gets that tier's one wave (lens 5, plus 2 at tier 1, plus 7
+   for XML and Tooling for scripts), and the lenses the tier leaves out are named in its
+   `skippedByTier` and its note, so the lead reports them SKIPPED BY TIER. Without a `tier` the item
+   gets every lens deep-review routes by file type, from `git diff --name-only base..head` in its
+   worktree: that is a full review, for when the maintainer asks for one. Any `lenses` the item lists
+   are added in both cases. File types cannot show changed text that states engine behaviour, so list
+   lens 2 in the item yourself for that. An item whose `base..head` changes no file is refused, and every
    revision is checked as a revision, never read as a git option. In an items object, a field such
    as `pool`, `model` or `maxRounds` stands unless you pass its flag.
 3. **Codex, only when the maintainer asked for it this run**:
@@ -134,7 +154,13 @@ FOR-MIKE.md, and look for the shared cause before any plan is amended.
    it tries to refute each finding before reporting it; the maintainer's decisions bind it and are not
    findings.
 2. **Round 2.** If round 1 reported defects, a fix pass fixes the confirmed ones test first, then a
-   second convergence reviewer reads that fix diff. `maxRounds` is 2.
+   second convergence reviewer reads that fix diff. `maxRounds` is 2. With `stopOnLow`
+   (`--stop-on-low`), a round whose findings are all LOW ends the loop with no fix pass, and the
+   findings come back as residual: fix the ones in code, tests and comments yourself in the branch's
+   worktree (a commit typed for what it changes), add a "Convergence round N" note to the review
+   record, and list the ones that are only wording in the review's own records in FOR-MIKE.md. A
+   convergence reviewer finds a LOW in the last round's prose nearly every time, so a loop that chases
+   them does not end.
 3. **Residual findings** after the last round go to the maintainer, never to a third round unasked:
    **Ship now, track it (Recommended)**, with an issue or FOR-MIKE line per finding, or **One more
    round**. For a residual HIGH (a CRITICAL or a Codex P1 counts), recommend one more round instead;

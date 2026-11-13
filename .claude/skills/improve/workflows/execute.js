@@ -10,7 +10,8 @@ export const meta = {
 //   rules, repo, scratch, tmp, date, version, model { executor }, pool (default 4)
 //   knownFailures (optional): ["<test>: <why it is expected to fail on this base>", ...]
 //   items: [{ num, slug, wt, branch, base, contract: 'plan'|'decisions'|'stages', decisions?, stages?,
-//             note?, issue?, ref?, knownFailures?, effort? }]
+//             note?, issue?, ref?, knownFailures?, effort?, model? }]
+//     model: this item's executor model, over model.executor, so one pool runs plans of two tiers;
 //     wt and branch already exist (the orchestrator made them); decisions: the maintainer's decision
 //     texts; stages: [{ key, title?, prompt, effort? }]; note: binding orchestrator text (an
 //     amendment, a resume from uncommitted work); ref: how commits name the work (default "plan <num>").
@@ -95,7 +96,7 @@ function runValues(o) {
     `- <scratch>: ${args.scratch}; <your label>: ${o.label}; your scratch folder: ${join(args.scratch, o.label)}`,
     `- <tmp>: ${args.tmp}`,
     `- <version>: ${args.version}; today: ${args.date}`,
-    '- ORCHESTRATOR NOTE (it overrides the standing rule "Workspace" for these paths only): a file or folder this prompt names as yours to write may lie inside the main checkout, where the run folder lives; write it there, and touch nothing else in the main checkout.',
+    '- ORCHESTRATOR NOTE (it overrides the standing rule "Workspace" for these paths only): a file or folder this prompt names as yours to write may lie inside the main checkout or the run worktree, where the run folder lives; write it there, and touch nothing else in that checkout.',
   ].join('\n')
 }
 
@@ -104,7 +105,7 @@ function runValues(o) {
 // (a null result) or a failed call is reported, never passed on as data.
 function runAgent(role, text, o) {
   return limited(() => agent(`${RULES}\n\n${runValues(o)}\n\n${text}`, {
-    label: o.label, phase: o.phase, schema: o.schema, model: modelFor(role), effort: o.effort || 'high',
+    label: o.label, phase: o.phase, schema: o.schema, model: o.model || modelFor(role), effort: o.effort || 'high',
   })).then(
     v => (v === null || v === undefined ? { ok: false, failure: `${o.label}: ${NO_RESULT}` } : { ok: true, value: v }),
     e => ({ ok: false, failure: `${o.label}: the agent call failed: ${String(e)}` }),
@@ -186,7 +187,7 @@ async function executeOne(it) {
       const st = it.stages[i]
       const prior = results.map(r => `- ${r.stage}: ${r.status} ${r.commit || ''} :: ${String(r.summary || '').slice(0, 600)}\n  tests: ${String(r.tests || '').slice(0, 300)}`).join('\n')
       const r = await runAgent('executor', stagePrompt(it, st, i, prior), {
-        label: `stage-${it.num}-${st.key}`, phase: 'Execute', schema: SCHEMA, effort: st.effort || it.effort, editing: true, worktree: it.wt, base: it.base,
+        label: `stage-${it.num}-${st.key}`, phase: 'Execute', schema: SCHEMA, effort: st.effort || it.effort, model: it.model, editing: true, worktree: it.wt, base: it.base,
       })
       const res = r.ok ? { stage: st.key, ...r.value } : { stage: st.key, status: 'FAILED', failure: r.failure }
       results.push(res)
@@ -199,7 +200,7 @@ async function executeOne(it) {
   }
   const prompt = it.contract === 'plan' ? planPrompt(it) : decisionsPrompt(it)
   const label = `${it.contract === 'plan' ? 'exec' : 'decide'}-${it.num}`
-  const r = await runAgent('executor', prompt, { label, phase: 'Execute', schema: SCHEMA, effort: it.effort, editing: true, worktree: it.wt, base: it.base })
+  const r = await runAgent('executor', prompt, { label, phase: 'Execute', schema: SCHEMA, effort: it.effort, model: it.model, editing: true, worktree: it.wt, base: it.base })
   const res = r.ok ? { num: it.num, contract: it.contract, ...r.value } : { num: it.num, contract: it.contract, status: 'FAILED', failure: r.failure }
   log(`${refOf(it)}: ${res.status} ${res.commit || res.failure || ''}`)
   return res

@@ -268,6 +268,79 @@ class ArgsTests(FixtureRepo):
         data = self.args_json("review", "--items", items)
         self.assertEqual(data["items"][0]["lenses"], ["1", "2", "3", "4", "5", "6", "7", "tooling"])
 
+    def test_a_review_item_with_a_tier_gets_that_tier_s_lenses(self):
+        # deep-review SKILL.md "Risk tier": tier 1 launches 5 and 2, tier 2 launches 5; each adds 7
+        # for XML and Tooling for scripts. The other lenses in scope are named, never dropped silently.
+        items = self.write(self.tmp, "tier.json", json.dumps(
+            [{"num": "042", "wt": str(self.wt), "base": self.base, "head": self.hook_only, "tier": 2},
+             {"num": "043", "wt": str(self.wt), "base": self.base, "tier": 1, "note": "KEEP THIS."},
+             {"num": "044", "wt": str(self.wt), "base": self.base, "head": self.hook_only, "tier": "2",
+              "lenses": ["4"]}]))
+        proc = self.run_args("review", "--items", items, "--out", self.tmp / "tier-args.json")
+        self.assertEqual(proc.returncode, 0, proc.stderr.decode("utf-8", "replace"))
+        self.assertEqual(proc.stderr, b"")
+        hook, full, own = json.loads((self.tmp / "tier-args.json").read_text(encoding="utf-8"))["items"]
+        self.assertEqual((hook["lenses"], hook["skippedByTier"]), (["5", "tooling"], ["1", "3", "4", "6"]))
+        self.assertEqual((full["lenses"], full["skippedByTier"]), (["2", "5", "7", "tooling"], ["1", "3", "4", "6"]))
+        self.assertEqual((own["lenses"], own["skippedByTier"]), (["4", "5", "tooling"], ["1", "3", "6"]))
+        self.assertTrue(full["note"].startswith("KEEP THIS. "), full["note"])
+        for item in (hook, full, own):
+            self.assertIn("SKIPPED BY TIER", item["note"])
+            self.assertIn(", ".join(item["skippedByTier"]), item["note"])
+
+    def test_a_review_item_without_a_tier_says_it_is_a_full_review(self):
+        proc = self.run_args("review", "--items", self.items, "--out", self.tmp / "full.json")
+        self.assertEqual(proc.returncode, 0, proc.stderr.decode("utf-8", "replace"))
+        self.assertIn(b"no tier", proc.stderr)
+        first = json.loads((self.tmp / "full.json").read_text(encoding="utf-8"))["items"][0]
+        self.assertNotIn("skippedByTier", first)
+        self.assertNotIn("note", first)
+
+    def test_a_review_item_with_tier_three_or_an_unknown_tier_is_refused(self):
+        for tier, needle in ((3, b"tier 3"), (0, b"tier"), ("high", b"tier")):
+            with self.subTest(tier=tier):
+                items = self.write(self.tmp, "bad-tier.json", json.dumps(
+                    [{"num": "042", "wt": str(self.wt), "base": self.base, "tier": tier}]))
+                proc = self.run_args("review", "--items", items)
+                self.assertEqual(proc.returncode, 2, proc.stdout)
+                self.assertIn(needle, proc.stderr)
+
+    def test_stop_on_low_is_a_review_field(self):
+        data = self.args_json("review", "--items", self.items, "--stop-on-low")
+        self.assertIs(data["stopOnLow"], True)
+        self.assertNotIn("stopOnLow", self.args_json("review", "--items", self.items))
+        proc = self.run_args("execute", "--items", self.items, "--stop-on-low")
+        self.assertEqual(proc.returncode, 2, proc.stdout)
+        self.assertIn(b"--stop-on-low", proc.stderr)
+
+    def test_wrap_writes_a_workflow_script_that_carries_the_args(self):
+        # The Workflow tool takes args by value, and an args file holds the 9 KB dispatch rules, so
+        # typing it into a tool call costs tokens and risks a slip. The wrapper embeds the JSON and
+        # runs the workflow script through workflow().
+        script = self.write(self.main, ".claude/skills/improve/workflows/review.js", "// stub\n")
+        out, wrap = self.tmp / "wrapped-args.json", self.tmp / "wf" / "review-a.js"
+        proc = self.run_args("review", "--items", self.items, "--out", out, "--wrap", wrap)
+        self.assertEqual(proc.returncode, 0, proc.stderr.decode("utf-8", "replace"))
+        raw = wrap.read_bytes()
+        self.assertNotIn(b"\r", raw)
+        text = raw.decode("ascii")  # the approval check refuses anything else
+        self.assertTrue(text.startswith("export const meta = {\n"), text[:80])
+        (literal,) = [line[len("const A = "):] for line in text.splitlines() if line.startswith("const A = ")]
+        self.assertEqual(json.loads(literal), json.loads(out.read_text(encoding="utf-8")))
+        self.assertIn("Caf\\u00e9", literal)
+        (call,) = [line for line in text.splitlines() if "workflow(" in line]
+        path = call.split("scriptPath: '")[1].split("'")[0]
+        self.assertNotIn("\\", path)
+        self.assertTrue(same_path(path, script), path)
+        self.assertIn("return await workflow(", call)
+        self.assertIn(b"review-a.js", proc.stdout)
+
+    def test_wrap_refuses_a_workflow_script_that_is_not_in_the_checkout(self):
+        proc = self.run_args("plans", "--items", self.items, "--wrap", self.tmp / "p.js")
+        self.assertEqual(proc.returncode, 2, proc.stdout)
+        self.assertIn(b"plans.js", proc.stderr)
+        self.assertFalse((self.tmp / "p.js").exists())
+
     def test_a_review_item_whose_range_changes_no_file_is_refused(self):
         items = self.write(self.tmp, "empty.json", json.dumps(
             [{"num": "042", "wt": str(self.wt), "base": self.hook_only, "head": self.hook_only}]))
@@ -683,6 +756,55 @@ class WatchTests(unittest.TestCase):
 
     def test_a_missing_folder_is_an_error(self):
         self.assertEqual(self.watch(directory=self.dir / "absent").returncode, 2)
+
+    def test_several_folders_are_watched_as_one(self):
+        # Concurrent workflows are watched together: one call, one summary.
+        other = self.dir / "workflows" / "wf_2"
+        other.mkdir()
+        (other / "journal.jsonl").write_text(
+            json.dumps({"type": "started", "key": "k9", "agentId": "b1", "label": "exec-046"}) + "\n",
+            encoding="utf-8")
+        self.transcript(other / "agent-b1.jsonl", 1)
+        (self.wf / "agent-a1.jsonl").unlink()
+        proc = self.watch("--dir", str(other))
+        self.assertEqual(proc.returncode, 0, proc.stdout)
+        text = proc.stdout.decode("utf-8")
+        self.assertIn("exec-046", text)
+        self.assertIn("lens-5", text)
+        self.assertIn("7 transcript(s), 3 running", text)
+        self.assertEqual(self.watch("--dir", str(self.dir / "absent")).returncode, 2)
+
+    def test_wait_returns_at_once_when_no_agent_runs_or_one_is_flagged(self):
+        # A flag (a1 is stale) ends the wait: the orchestrator must read it now.
+        started = time.monotonic()
+        proc = self.watch("--wait", "60")
+        self.assertEqual(proc.returncode, 1, proc.stdout)
+        # No agent running: nothing to wait for.
+        for agent in ("a1", "a4", "a6"):
+            (self.wf / f"agent-{agent}.jsonl").unlink()
+        proc = self.watch("--wait", "60")
+        self.assertLess(time.monotonic() - started, 20)
+        self.assertEqual(proc.returncode, 0, proc.stdout)
+        self.assertIn(b"WAIT: no agent is running", proc.stdout)
+
+    def test_wait_ends_at_its_limit_while_agents_still_run(self):
+        self.transcript(self.wf / "agent-a1.jsonl", 1)
+        proc = self.watch("--wait", "2", "--poll", "1")
+        self.assertEqual(proc.returncode, 0, proc.stdout)
+        self.assertIn(b"WAIT: the limit of 2 s passed", proc.stdout)
+
+    def test_wait_ends_when_an_agent_finishes(self):
+        self.transcript(self.wf / "agent-a1.jsonl", 1)
+        proc = subprocess.Popen([sys.executable, "-B", str(TOOL), "watch", "--dir", str(self.wf),
+                                 "--wait", "60", "--poll", "1"], stdout=subprocess.PIPE)
+        time.sleep(1.5)
+        with open(self.wf / "journal.jsonl", "a", encoding="utf-8") as handle:
+            handle.write("\n" + json.dumps({"type": "result", "key": "k1", "agentId": "a1", "result": {}}) + "\n")
+        out, _ = proc.communicate(timeout=30)
+        self.assertEqual(proc.returncode, 0, out)
+        self.assertIn(b"WAIT: finished agents went from 4 to 5", out)
+        (a1,) = [line for line in out.decode("utf-8").splitlines() if "agent-a1.jsonl" in line]
+        self.assertIn("done", a1)
 
     def test_a_session_folder_is_watched_without_its_workflows_folder(self):
         # self.dir is a session's subagents folder: a direct spawn beside workflows/wf_1, whose
