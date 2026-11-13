@@ -13,8 +13,6 @@ namespace TAOM.Features.DevConsole.Cheats;
 /// </summary>
 public static class DiagnosticCheats
 {
-    private const string TaomHarmonyId = "com.taom.mod";
-
     private const string PatchesUsage =
         "Format is \"taom.print_patches [filter]\".\n"
         + "Lists every [HarmonyPatchCategory] TAOM declares and whether Harmony actually applied it.\n"
@@ -34,7 +32,7 @@ public static class DiagnosticCheats
         TaomConsole.RunAnywhere(strings, PatchesUsage, args =>
         {
             var filter = args.Count > 0 ? args[0] : null;
-            var result = HarmonyPatchInspector.Collect(TaomHarmonyId, TAOM.Composition.ClientComposition.LoadedTaomAssemblies());
+            var result = HarmonyPatchInspector.Collect(CrashGuardHarmony.TaomOwnerIds, TAOM.Composition.ClientComposition.LoadedTaomAssemblies());
 
             return PatchReportFormatter.Format(
                 result.Declared, result.AppliedCounts, result.Uncategorized,

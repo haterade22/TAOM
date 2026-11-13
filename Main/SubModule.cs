@@ -100,6 +100,8 @@ namespace TAOM;
 public class SubModule : MBSubModuleBase
 {
     private Harmony _harmony;
+    // Crash guards that share a method with a feature patch, kept out of PatchShield's strip (CrashGuardHarmony).
+    private Harmony _guardHarmony;
     private PatchCategoryApplier _patches;
     private ITimeAccelerationService? _timeAccelerationService;
     private static float _shaderTickAccumulator;
@@ -223,10 +225,11 @@ public class SubModule : MBSubModuleBase
         // The index reads core, then TAOM.Client when it loaded (ADR-013), so a client patch class
         // joins its category like a core one. On a dedicated server it leaves out every [ClientOnly]
         // class before reading that class's attributes, and the applier says so in one line.
-        _harmony = new Harmony("com.taom.mod");
+        _harmony = new Harmony(CrashGuardHarmony.MainId);
+        _guardHarmony = new Harmony(CrashGuardHarmony.Id);
         var categoryIndex = PatchCategoryIndex.Build(ClientComposition.IsDedicatedServer(), ClientComposition.LoadedTaomAssemblies());
         _patches = new PatchCategoryApplier(
-            category => categoryIndex.Apply(_harmony, category),
+            category => categoryIndex.Apply(CrashGuardHarmony.IsCrashGuard(category) ? _guardHarmony : _harmony, category),
             IoC.Resolve<IModLogger>());
         _patches.RecordSkippedClasses(categoryIndex.SkippedClasses);
         _patches.RecordClientOnlyClasses(categoryIndex.ClientOnlyClasses);
@@ -2386,7 +2389,8 @@ public class SubModule : MBSubModuleBase
         try { IoC.Resolve<TAOM.Features.CrashReport.Hooks.AppDomainExceptionHook>()?.Unsubscribe(); }
         catch { /* IoC may already be torn down — best-effort */ }
 
-        _harmony?.UnpatchAll("com.taom.mod");
+        _harmony?.UnpatchAll(CrashGuardHarmony.MainId);
+        _guardHarmony?.UnpatchAll(CrashGuardHarmony.Id);
         IoC.Dispose();
 
         // Codex review #46 (2026-05-25) HIGH-01: clear the static service cache in
