@@ -221,4 +221,44 @@ public class CareerAbilityServiceTests
     {
         Assert.IsFalse(_sut.IsAbilityActive("nobody"));
     }
+
+    // #1046: a saved career id the registry no longer defines. The battle HUD asks every frame,
+    // so the miss must log once per hero and career, not once per call.
+    [TestMethod]
+    public void GetOrCreateAbility_UnknownCareer_WarnsOncePerHeroAndCareer()
+    {
+        var logger = Substitute.For<IModLogger>();
+        var sut = new CareerAbilityService(_config, logger);
+        _dataService.GetCareerStringId(HeroId).Returns("retired_career");
+
+        for (var i = 0; i < 5; i++)
+            Assert.IsNull(sut.GetOrCreateAbility(HeroId, _registry, _dataService));
+
+        logger.Received(1).LogWarning(Arg.Is<string>(m => m.Contains("retired_career")));
+    }
+
+    [TestMethod]
+    public void GetOrCreateAbility_UnknownCareer_DoesNotCacheTheMiss()
+    {
+        // A free career switch replaces the dead id mid-session; the next call must see it.
+        _dataService.GetCareerStringId(HeroId).Returns("retired_career");
+        Assert.IsNull(_sut.GetOrCreateAbility(HeroId, _registry, _dataService));
+
+        _dataService.GetCareerStringId(HeroId).Returns(CareerId);
+        Assert.IsNotNull(_sut.GetOrCreateAbility(HeroId, _registry, _dataService));
+    }
+
+    [TestMethod]
+    public void GetOrCreateAbility_UnknownCareer_WarnsAgainAfterClearAll()
+    {
+        var logger = Substitute.For<IModLogger>();
+        var sut = new CareerAbilityService(_config, logger);
+        _dataService.GetCareerStringId(HeroId).Returns("retired_career");
+
+        sut.GetOrCreateAbility(HeroId, _registry, _dataService);
+        sut.ClearAll();
+        sut.GetOrCreateAbility(HeroId, _registry, _dataService);
+
+        logger.Received(2).LogWarning(Arg.Is<string>(m => m.Contains("retired_career")));
+    }
 }
