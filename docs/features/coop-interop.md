@@ -34,6 +34,7 @@ still stands.
 |---|---|
 | BannerlordTogether specifics, its no-decompile policy, its boot matrix | [`bannerlord-together-compat.md`](bannerlord-together-compat.md) |
 | BannerlordCoop internals — Harmony ids, tick model, policies, object identity, integration surface | [`../research/bannerlordcoop-internals.md`](../research/bannerlordcoop-internals.md) |
+| Filing a BannerlordCoop issue or PR, or merging `development` into `bannerlord-1.5.x` (the Coop team's rules) | [`/coop-upstream`](../../.claude/skills/coop-upstream/SKILL.md) |
 | Staging, booting, stopping and diagnosing TAOM on the dedicated server | [`coop-dedicated-server.md`](coop-dedicated-server.md) |
 | What happens to the hero a joiner created, and how TAOM's character-creation grants get re-applied | [`player-possession.md`](player-possession.md) |
 | Why a TAOM-less host can corrupt every hero's race on a full client | [`hero-race.md`](hero-race.md) — the degenerate-legend capture guard |
