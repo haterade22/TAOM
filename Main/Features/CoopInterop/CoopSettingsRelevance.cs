@@ -235,6 +235,9 @@ public static class CoopSettingsRelevance
         // Loremaster's Line (#877): a marker on the character screen's skill bar and one tooltip line. It reads the learning
         // rate and writes nothing.
         "EnableLoremastersLine",
+        // Hall Seats (Patch148): which lords get an agent in this client's own lord's hall mission. It reads the hall and
+        // writes no campaign state: the held-back lords keep their location.
+        "EnableHallSeats",
         // Hearth Roll (#906): the red tint on a companion's row of the clan screen's Members list, drawn on this client only.
         "EnableUnhappyCompanionTint",
         // Prisoner Banners (#902): the clan and kingdom banners and the noble icon on a captive hero's party screen row, drawn on this client only.

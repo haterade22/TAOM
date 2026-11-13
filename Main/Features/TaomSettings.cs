@@ -862,6 +862,13 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
         HintText = "Lets you talk to the governor of a town or castle your clan owns, inside that fief, and pay silver to the watch to raise its loyalty. Each offer shows its price, and there is a ceiling on how far silver can raise loyalty. When off, the line is hidden. Single-player only. Default: on.")]
     public bool EnableWatchSilver { get; set; } = true;
 
+    // GroupOrder 6 sorts it after the Watch-Silver group (5); the group's first property carries it. Ships ON and is read
+    // once per spawn pass, so a change applies from the next visit to a lord's hall.
+    [SettingPropertyGroup("Fief Management/Hall Seats", GroupOrder = 6)]
+    [SettingPropertyBool("Hall Seats", Order = 0, RequireRestart = false,
+        HintText = "A lord's hall shows only as many lords as it has places for, instead of packing every lord in the town or castle onto one spot. The settlement's owner, the ruler, the governor, your own clan, quest givers and the lord you open a conversation with from the town menu always appear; the other places go to the owner's clan first, then clan leaders, then the strongest clans. The lords left out are still in the settlement. Takes effect from the next visit. Default: on.")]
+    public bool EnableHallSeats { get; set; } = true;
+
     // --- Character Screen / Loremaster's Line (#877) ---
 
     // GroupOrder 44 orders the "Loremaster's Line" subgroup inside "Character Screen"; the group's first property carries it.

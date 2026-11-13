@@ -71,7 +71,7 @@ public class ReevesLedgerSettingsProviderTests
 
         CollectionAssert.AreEquivalent(
             new[] { "Fief Management/Postern Gate=0", "Fief Management/From the Ashes=1", "Fief Management/Reeve's Ledger=2", "Fief Management/Namegiving=3", "Fief Management/Keep Wardens=4",
-                "Fief Management/Watch-Silver=5" }, orders);
+                "Fief Management/Watch-Silver=5", "Fief Management/Hall Seats=6" }, orders);
     }
 
     [TestMethod]
