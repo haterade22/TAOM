@@ -622,7 +622,7 @@
 			age="48.09"
 			weight="0.2317"
 			build="0.2165"
-			key="0000AC08C070048A97C1188A94689057B8CC8886C9713F764B47547759A578C6062320460C1CA3463305300000C00000000000000000004C0000000019884000" />
+			key="0000AC058070048A97C1188A94689057B8CC8886C9713F764B47547759A578C6062320460C1CA3463305300000C00000000000000000004C0000000019884000" />
     <hair_tags>
       <hair_tag
 				name="empire" />
@@ -661,7 +661,7 @@
 			age="39.5"
 			weight="0.2152"
 			build="0.5720"
-			key="0026EC0D80001000DD79E69067DD7DD7DD9E85D68ED46DDDBEDCC6DDBCD9BCCD02D736240DDEF7EF00000000000000000000000000000000000000003FAC0000"  />
+			key="0009EC0D80001000DD79E69067DD7DD7DD9E85D68ED46DDDBEDCC6DDBCD9BCCD02D736240DDEF7EF00000000000000000000000000000000000000003FAC0000"  />
     <hair_tags>
       <hair_tag
 				name="TiedAcrossBack" />
@@ -707,13 +707,13 @@
 		id="fighter_rivendell">
     <BodyPropertiesMin
 			version="4"
-			age="33.95"
+			age="22.00"
 			weight="0.2104"
 			build="0.2711"
 			key="0000080B802C000204701A108BA18776A7C89BDA86301E7B54977A7A49737757444536240D4C589C4302B10010700103000000000000002D0000000069AC1000" />
     <BodyPropertiesMax
 			version="4"
-			age="50.26"
+			age="30.00"
 			weight="0.2721"
 			build="0.3946"
 			key="0005AC0F002C0004047018198BA1377397AD9BDA86301E7B9AD79A5B68CAAC63454746460DB79A8A6402B10010800003000000000000004D0000000069BC80C0" />
@@ -743,16 +743,55 @@
     </tattoo_tags>
   </BodyProperty>
   <BodyProperty
+		id="fighter_lothlorien">
+    <BodyPropertiesMin
+			version="4"
+			age="22.00"
+			weight="0.2104"
+			build="0.2711"
+			key="00000801002C000204701A108BA18776A7C89BDA86301E7B54977A7A49737757444536240D4C589C4302B10010700103000000000000002D0000000069AC1000" />
+    <BodyPropertiesMax
+			version="4"
+			age="30.00"
+			weight="0.2721"
+			build="0.3946"
+			key="0005AC04C02C0004047018198BA1377397AD9BDA86301E7B9AD79A5B68CAAC63454746460DB79A8A6402B10010800003000000000000004D0000000069BC80C0" />
+    <hair_tags>
+      <hair_tag
+				name="empire" />
+      <hair_tag
+				name="sturgia" />
+      <hair_tag
+				name="battania" />
+      <hair_tag
+				name="khuzait" />
+    </hair_tags>
+    <beard_tags>
+      <beard_tag
+				name="empire" />
+      <beard_tag
+				name="sturgia" />
+      <beard_tag
+				name="battania" />
+      <beard_tag
+				name="khuzait" />
+    </beard_tags>
+    <tattoo_tags>
+      <tattoo_tag
+				name="Cleanface" />
+    </tattoo_tags>
+  </BodyProperty>
+  <BodyProperty
 		id="fighter_mirkwood">
     <BodyPropertiesMin
 			version="4"
-			age="32.13"
+			age="22.00"
 			weight="0.1836"
 			build="0.25"
 			key="0000000000000002578014070530796057AC8835D8701893587B76BB6881A576043446240D8889AA4300900000A00000000000000000002D000000004BAC10C0" />
     <BodyPropertiesMax
 			version="4"
-			age="45.63"
+			age="30.00"
 			weight="0.1836"
 			build="0.25"
 			key="000584034000000457801407053079608785AA35D8701893587B76BB7A716669043546350D8889AA4300B00000B00000000000000000003D0000000059BC6100" />
