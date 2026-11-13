@@ -9,8 +9,11 @@
        (MBObjectManager.CreateMergedXmlFile, v1.5.3), so lords.xslt turns each stub into the full
        character: name, race, face, skills and equipment all come from the template, none from here.
        The culture is repeated only because NPCCharacters.xsd requires the attribute.
-       Add an id here only when custom_battle/custom_battle_commanders.json lists it and
-       characters/lords.xml does not define it; CustomBattleLordStubsTests checks both. -->
+       Add an id here only when custom_battle/custom_battle_commanders.json or
+       fords_of_war/factions.json lists it and characters/lords.xml does not define it;
+       CustomBattleLordStubsTests checks both. Ten of these came in with #648, when their
+       characters/lords.xml rows (which had been the Custom Battle definition) were folded into the
+       lords.xslt templates. -->
 
   <!-- Mordor -->
   <NPCCharacter id="lord_1_17" culture="Culture.mordor" />
@@ -34,6 +37,7 @@
   <NPCCharacter id="lord_1_71" culture="Culture.gondor" />
   <NPCCharacter id="lord_1_52" culture="Culture.gondor" />
   <NPCCharacter id="lord_1_53" culture="Culture.gondor" />
+  <NPCCharacter id="lord_WE9_l" culture="Culture.gondor" />
 
   <!-- Rohan (culture id vlandia) -->
   <NPCCharacter id="lord_4_1" culture="Culture.vlandia" />
@@ -41,5 +45,16 @@
   <NPCCharacter id="lord_4_16" culture="Culture.vlandia" />
   <NPCCharacter id="lord_4_6" culture="Culture.vlandia" />
   <NPCCharacter id="lord_4_28" culture="Culture.vlandia" />
+  <NPCCharacter id="lord_4_3_1" culture="Culture.vlandia" />
+
+  <!-- Fords of War heroes (fords_of_war/factions.json) -->
+  <NPCCharacter id="lord_A9_u" culture="Culture.aserai" />
+  <NPCCharacter id="lord_A9_l" culture="Culture.aserai" />
+  <NPCCharacter id="lord_3_3_1" culture="Culture.aserai" />
+  <NPCCharacter id="lord_2_7_1" culture="Culture.sturgia" />
+  <NPCCharacter id="lord_S9_u" culture="Culture.sturgia" />
+  <NPCCharacter id="lord_S9_l" culture="Culture.sturgia" />
+  <NPCCharacter id="lord_K8_u" culture="Culture.khuzait" />
+  <NPCCharacter id="lord_K9_l" culture="Culture.khuzait" />
 
 </NPCCharacters>

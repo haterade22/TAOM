@@ -85,15 +85,18 @@ public class CustomBattleLordStubsTests
     [TestMethod]
     public void EveryStub_IsACuratedCommander_NotDefinedInLordsXml()
     {
-        var config = File.ReadAllText(Path.Combine(ModuleData(), "custom_battle", "custom_battle_commanders.json"));
+        // Fords of War heroes need a stub too: since #648 a vanilla lord has no characters/lords.xml row that
+        // would define it in a Custom Battle.
+        var config = File.ReadAllText(Path.Combine(ModuleData(), "custom_battle", "custom_battle_commanders.json"))
+            + File.ReadAllText(Path.Combine(ModuleData(), "fords_of_war", "factions.json"));
         var lordsXml = XDocument.Load(Path.Combine(ModuleData(), "characters", "lords.xml"));
         var native = new HashSet<string>(
             lordsXml.Descendants("NPCCharacter").Select(c => (string)c.Attribute("id")), StringComparer.OrdinalIgnoreCase);
 
         foreach (var id in StubIds())
         {
-            // A stub loads a vanilla lord into every Custom Battle; only a curated commander needs one.
-            StringAssert.Contains(config, $"\"{id}\"", $"Stub '{id}' is not a curated commander.");
+            // A stub loads a vanilla lord into every Custom Battle; only a curated commander or a Fords hero needs one.
+            StringAssert.Contains(config, $"\"{id}\"", $"Stub '{id}' is not a curated commander or a Fords of War hero.");
             Assert.IsFalse(native.Contains(id), $"Stub '{id}' duplicates a TAOM lord in characters/lords.xml.");
         }
     }

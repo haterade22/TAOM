@@ -71,7 +71,7 @@ Main/
 │   ├── AgentAdapter.cs
 │   ├── ICareerHeroAdapter.cs
 │   ├── CareerHeroAdapter.cs
-│   └── Models/                  # adapter-facing DTOs (MovementOrderType, NearbyAgentSnapshot)
+│   └── Models/                  # adapter-facing DTOs (NearbyAgentSnapshot)
 ├── BehaviorTrees/               # behavior-tree runtime
 ├── BehaviorTreeWrapper/
 ├── Composition/                 # feature modules, ModuleRunner, ClientComposition (the TAOM.Client slot)

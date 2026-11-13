@@ -17,17 +17,27 @@ The encyclopedia shows the name and the biography side by side, so a player read
 ## Load order, and what "wins" actually means
 
 `Main/_Module/SubModule.xml`: line 131 `lords.xslt`, line 141 `heroes.xslt`, line 190
-`characters/heroes.xml`, line 199 `characters/lords.xml`. 176 ids are defined in both lords files
-(179 until #644 removed three); their names agree on 175, the one deliberate exception being
-`lord_WE9_l`, where `lords.xml` has the fuller "Duinhir, Lord of Morthond".
+`characters/heroes.xml`, line 199 `characters/lords.xml`. No id is defined in both lords files any
+more. 179 were until #644 removed three, and #648 folded the other 176 (the seven with a Dunland kit
+first). The names already agreed on all of them (`lord_WE9_l` included: both said
+`{=aom_lord_WE9_l_name}Duinhir`).
 
 **None of them should be.** Mike, 2026-09-23: "If the lords are vanilla they should be in the xslt.
 If they are created new, they should be in lords.xml." A second definition is not an override
 layer, for two reasons below: the row silently wins every attribute it states, and its equipment
-sets are ADDED to the template's. The 176 are #648; #644 moved the three Nazgul (`lord_1_48_1/2/3`)
+sets are ADDED to the template's. #644 moved the three Nazgul (`lord_1_48_1/2/3`)
 as the worked example: each value the engine used to take from the row (race, age 20, face age
-22.19) went into the template, then the row was deleted. `NazgulRaceDataTests` pins that none of
-the Nine is defined in `lords.xml` again.
+22.19) went into the template, then the row was deleted. #648's first step did the same for the seven
+whose row added a Dunland kit to a Gondor or Mordor lord (`lord_1_45_1`, `lord_1_57_1`, `lord_1_57_2`,
+`lord_1_73_1`, `lord_1_62_1`, `lord_1_30_2`, `lord_1_30_3`): the row's age, skill template, face and
+skills moved into the template, the template's own kit is the only one, and `LordDoubleDefinitionTests`
+pins it. The other 169 followed the same way: every value the game took from the row (faces on all of
+them; ages, skill templates, skills, traits, race uruk on fourteen Mordor lords, culture on nine, voice
+on six) moved into the template, the template's kit stayed as the only kit (106 of them had a second
+kit of the same culture in the row), and the row was deleted. A tool reproducing the engine's merge
+compared every lord the game builds before and after: identical apart from the dropped second kits.
+`LordDoubleDefinitionTests.NoLordIsDefinedInBothLordsFiles` is the gate, and `NazgulRaceDataTests` pins
+that none of the Nine is defined in `lords.xml` again.
 
 **The plain XML wins per ATTRIBUTE, not per node.** `MBObjectManager.MergeElementAttributes` sets
 only the attributes the later document actually declares:
@@ -51,7 +61,7 @@ set whose id the template does not carry is appended rather than replacing anyth
 `BasicCharacterObject.Deserialize` then keeps every set, and `Hero.SetInitialValuesFromCharacter`
 (v1.5.3 `Hero.cs:2315`) takes `GetRandomElement()` of the battle and the civilian lists
 (`:2352`, `:2356`). A lord defined twice with different set ids is dressed in one kit or the other
-at random on every new campaign: 113 of the 176 (#648), and the Nazgul trio until #644, whose
+at random on every new campaign: 113 of the 176 until #648, and the Nazgul trio until #644, whose
 Nazgul kit showed up only some of the time.
 
 **The stylesheet is also not fed `lords.xml` alone.** `GetMergedXmlForManaged` groups by the
