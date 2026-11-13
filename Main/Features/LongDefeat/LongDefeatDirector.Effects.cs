@@ -66,6 +66,7 @@ internal sealed partial class LongDefeatDirector
             BeginAffixes(start.Wave);
             BeginCommander();
             OpenPostsWatches(start.Wave);
+            LogSplitStand($"wave {start.Wave} starts");
         }
 
         if (fx.Sally == SallyMove.Out)
@@ -82,7 +83,10 @@ internal sealed partial class LongDefeatDirector
         }
 
         if (fx.OrderCharge)
+        {
+            DropSplitForCharge();
             _field.OrderCharge();
+        }
         if (fx.RestoreDefenderTactic)
             _field.RestoreDefenderTactic();
         if (fx.MoralePulse is { } pulse)
@@ -250,6 +254,7 @@ internal sealed partial class LongDefeatDirector
     {
         JudgeGateAttacked(false);
         JudgePosts(false);
+        CloseSplit(e.Wave, "no-contact");
         CloseVolleyWatch("wave");
         _volleyByBot = false;
         FlushScale();
@@ -290,6 +295,7 @@ internal sealed partial class LongDefeatDirector
         JudgeFieldCare(null);
         JudgeGateAttacked(true);
         JudgePosts(true);
+        CloseSplit(SplitWave(), "run-ended");
         FinishVolleys();
         if (_chargedWave != 0)
             LongDefeatChecks.Record(_outcomes, LongDefeatChecks.StaleId, "w" + _chargedWave, LongDefeatChecks.StaleStranded(result.Reason, _run.GetView().DefendersStanding));

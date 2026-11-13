@@ -116,6 +116,16 @@ public class LongDefeatShippedConfigTests
         Assert.IsTrue(helms.Shop.Offers.Any(o => o.TroopId == towers.Troop), "the shop already sells him, so the roster and its boon group are known");
     }
 
+    [TestMethod]
+    public void ShippedHelms_SplitsTheDefenders_WallHeavy()
+    {
+        var (catalog, _) = Load();
+        catalog.TryGetFortress("helms", out var helms);
+        var plan = catalog.BuildPlan(helms, RunOptions.Default);
+
+        Assert.AreEqual(new SplitShares(0.7f, 0.7f), plan.Split, "Mike, 2026-11-12: 70/30 for the wall and for the lower archers");
+    }
+
     // The tower rows are sold only against a recorded post; the test follows the fortress file, so it holds with or without recorded posts.
     [TestMethod]
     public void ShippedHelms_SellsTheTowerRowExactlyWhenAPostIsRecorded()

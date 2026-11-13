@@ -527,6 +527,61 @@ class ManifestTests(unittest.TestCase):
         self.assertEqual(code, 0, why)
         self.assertIn(f"build {FIXTURE_HEAD[:9]}.dirty", why)
 
+    SPLIT_MADE_LINE = "[2026-11-12 10:00:00] [INFO] [LongDefeat][Split] preparation: wall 88 at (226.8, 147.7, 9.9), gate 38 at (168.9, 221.4, 20.7), lower archers 19 at (228.7, 132.4, 1.7), high archers 8 at (155.5, 206.2, 29.7); lanes 0,0,0"
+    SPLIT_DETAIL = ("w=1 wall=88 wall_median=6.5 wall_high=80 gate=38 gate_median=3.2 gate_high=0 low=19 low_median=12.0 low_high=3 "
+                    "high=8 high_median=8.4 high_high=8 held_s=95.0 released=4 kept=0 lanes=1,0,0")
+
+    def judge_real_run(self, *extra):
+        ld.target_waves, ld.tree_head = 2, FIXTURE_HEAD
+        self.addCleanup(setattr, ld, "target_waves", None)
+        self.addCleanup(setattr, ld, "tree_head", None)
+        text = "\n".join([FIXTURE.read_text(encoding="utf-8"), CLASS_LINE, *extra])
+        return ld.judge({"reason": "final"}, cleared(2, wavesFelled=0), text)
+
+    def test_a_split_that_was_made_owes_a_split_pass(self):
+        code, why = self.judge_real_run(self.SPLIT_MADE_LINE)
+
+        self.assertEqual(code, 1)
+        self.assertIn("taom.long-defeat.split", why)
+
+    def test_a_split_pass_pays_it(self):
+        line = "[2026-11-12 10:02:00] [INFO] [Check] id=taom.long-defeat.split result=pass " + self.SPLIT_DETAIL
+        code, why = self.judge_real_run(self.SPLIT_MADE_LINE, line)
+
+        self.assertEqual(code, 0, why)
+
+    def test_only_skips_do_not_pay_it_and_the_message_names_their_reasons(self):
+        line = "[2026-11-12 10:02:00] [INFO] [Check] id=taom.long-defeat.split result=skip " + self.SPLIT_DETAIL + " reason=no-contact"
+        code, why = self.judge_real_run(self.SPLIT_MADE_LINE, line)
+
+        self.assertEqual(code, 1)
+        self.assertIn("read only skips: no-contact", why)
+
+    def test_a_log_with_no_split_owes_nothing(self):
+        self.assertEqual(self.judge_real_run()[0], 0)
+
+    def test_owes_split_needs_the_block_a_cleared_wave_and_a_split_line(self):
+        self.assertTrue(ld.owes_split({"fortress": "helms", "wavesCleared": 1}, self.SPLIT_MADE_LINE))
+        self.assertFalse(ld.owes_split({"fortress": "helms", "wavesCleared": 0}, self.SPLIT_MADE_LINE), "no wave cleared")
+        self.assertFalse(ld.owes_split({"fortress": "helms", "wavesCleared": True}, self.SPLIT_MADE_LINE), "a bool is no count")
+        self.assertFalse(ld.owes_split({"fortress": "helms", "wavesCleared": 1}, ""), "no split was made")
+        self.assertFalse(ld.owes_split({"fortress": "helms", "wavesCleared": 1}, self.SPLIT_MADE_LINE.replace("preparation:", "a pack mustered:")), "only a calm's split counts")
+        with mock.patch.object(ld, "fortress_has", return_value=False):
+            self.assertFalse(ld.owes_split({"fortress": "helms", "wavesCleared": 1}, self.SPLIT_MADE_LINE), "a row with no split block")
+
+    def test_a_split_fail_fails_the_run_and_the_message_keeps_the_reason(self):
+        line = "[2026-11-12 10:00:00] [INFO] [Check] id=taom.long-defeat.split result=fail w=1 reason=no-places problem=the_scene_gives_no_pair_of_places"
+        code, why = self.judge_real_run(line)
+
+        self.assertEqual(code, 1)
+        self.assertIn("reason=no-places", why)
+
+    def test_the_manifest_reads_a_no_places_line_as_a_fail(self):
+        row = next(r for r in iv.load_manifest(REPO / "tools" / "ingame_checks" / "1079.toml", 1079).checks if r.id == "taom.long-defeat.split")
+        line = "[2026-11-12 10:00:00] [INFO] [Check] id=taom.long-defeat.split result=fail w=1 reason=no-places problem=no_gate"
+
+        self.assertEqual(iv.judge_segment(row, self.fixture_lines([line]), []).verdict, iv.FAIL)
+
     def test_the_affix_effect_row_judges_the_blades_line_the_game_writes(self):
         # The line is LongDefeatAffixChecks.Blades' detail under the affix-effect id, keyed by power (see LongDefeatBladesChecksTests for the exact text).
         manifest = iv.load_manifest(REPO / "tools" / "ingame_checks" / "1079.toml", 1079)
@@ -558,10 +613,22 @@ class ManifestTests(unittest.TestCase):
             if row.id in ("taom.long-defeat.wave", "taom.long-defeat.player-death", "taom.long-defeat.scale", "taom.long-defeat.affix", "taom.long-defeat.affix-effect",
                           "taom.long-defeat.boon", "taom.long-defeat.reroll", "taom.long-defeat.commander", "taom.long-defeat.summon",
                           "taom.long-defeat.sally", "taom.long-defeat.sally-return", "taom.long-defeat.sally-contact", "taom.long-defeat.field-care",
-                          "taom.long-defeat.fort-points", "taom.long-defeat.gate-level", "taom.long-defeat.gate-repair", "taom.long-defeat.gate-attacked", "taom.long-defeat.volley", "taom.long-defeat.posts", "taom.long-defeat.tower-volley"):
+                          "taom.long-defeat.fort-points", "taom.long-defeat.gate-level", "taom.long-defeat.gate-repair", "taom.long-defeat.gate-attacked", "taom.long-defeat.volley", "taom.long-defeat.posts", "taom.long-defeat.tower-volley",
+                          "taom.long-defeat.split"):
                 self.assertEqual(result, iv.NOT_REACHED, row.id)
             else:
                 self.assertEqual(result, iv.PASS, row.id)
+
+    def test_the_split_row_reads_the_directors_own_line(self):
+        # The detail LongDefeatSplitChecks.Stand writes: w=, four groups, then the hold.
+        row = next(r for r in iv.load_manifest(REPO / "tools" / "ingame_checks" / "1079.toml", 1079).checks if r.id == "taom.long-defeat.split")
+        detail = ("w=1 wall=88 wall_median=6.5 wall_high=80 gate=38 gate_median=3.2 gate_high=0 low=19 low_median=12.0 low_high=3 "
+                  "high=8 high_median=8.4 high_high=8 held_s=95.0 released=4 kept=0 lanes=1,0,0")
+        line = "[2026-11-12 10:00:00] [INFO] [Check] id=taom.long-defeat.split result={} " + detail
+
+        self.assertEqual(iv.judge_segment(row, self.fixture_lines([line.format("pass")]), []).verdict, iv.PASS)
+        self.assertEqual(iv.judge_segment(row, self.fixture_lines([line.format("skip") + " reason=short-hold"]), []).verdict, iv.NOT_REACHED)
+        self.assertEqual(iv.judge_segment(row, self.fixture_lines([line.format("fail")]), []).verdict, iv.FAIL)
 
     def test_an_injected_failure_flips_the_judge_and_its_row(self):
         manifest = iv.load_manifest(REPO / "tools" / "ingame_checks" / "1079.toml", 1079)

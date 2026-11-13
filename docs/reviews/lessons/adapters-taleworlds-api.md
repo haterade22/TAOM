@@ -1923,3 +1923,9 @@ The first text on siege walls said that `FindRightMostWall` is safe with one or 
 - **Why missed:** both members were used for what their names say; the code that produces the spot and the flag's one reader were not read. The run log showed the stacking before any reviewer did.
 - **Prevent:** before a move or a guard relies on an engine member, read the body that produces its value and every branch that can return Invalid or a shared value. Log both ends of every engine write, so a run shows what a name hid.
 - **Source:** docs/reviews/rca-lost-footing-rescue-2026-11-10.md rows 2 to 4 (#894)
+
+### Holding formations off AI: every caller of the reset is a hand-back (#1128, 2026-11-12)
+The Long Defeat's opening split takes four defender formations off AI control and holds them until contact. The design listed the hand-backs its own code causes (`OrderCharge`, `AdoptMain`), but in v1.5.7 `Mission.OnAgentRemoved` also calls `Team.DelegateCommandToAI` when the main agent is removed, after every behaviour's `OnAgentRemoved` has run. The groups went back to the AI with the director still holding them, and the check judged the tactic's placement. A held order with no navmesh had a second trap: `MovementOrder.GetPosition` returns a substitute point that follows the formation, so "the order moved" no longer meant "the player ordered it".
+- **Why missed:** the hand-backs were listed from TAOM's call sites, not from the engine's callers of `SetControlledByAI(true)` and `DelegateCommandToAI`.
+- **Prevent:** before holding engine state that another system resets, grep the decompile for every caller of the reset and decide each one (re-apply on the next tick, never inside the callback that precedes the reset). Before comparing an order's position, require a navmesh and the boundary at the stored point.
+- **Source:** docs/reviews/rca-long-defeat-split-2026-11-12.md rows 2 and 3 (#1128)

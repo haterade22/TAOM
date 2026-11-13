@@ -76,7 +76,7 @@ internal sealed partial class SurvivalRun
     public Purse Purse => _purse;
     public RunStats Stats => _stats;
 
-    private int PendingDefenders => _musterFoot.Count - _musterEmitted + _packs.Sum(p => p.PackSize) + _pendingPosts;
+    public int PendingDefenders => _musterFoot.Count - _musterEmitted + _packs.Sum(p => p.PackSize) + _pendingPosts;
 
     private int QueueLeft => _queue.Count - _queueHead;
 

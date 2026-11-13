@@ -166,6 +166,7 @@ internal sealed partial class LongDefeatDirector
         if (_run.Result != null)
             return;
 
+        TickSplit(dt, fx.DefenderBatches.Count > 0);
         TickVolleyWatch(dt);
         TickPosts(dt);
         if (_plan.Options.Autoplay)
@@ -203,6 +204,7 @@ internal sealed partial class LongDefeatDirector
                 case LdRemovalKind.Player:
                     _run.PlayerDown();
                     _deathPending = true;
+                    NoteEngineTookSplit("the lord fell");
                     break;
             }
         });
@@ -257,6 +259,7 @@ internal sealed partial class LongDefeatDirector
 
         _adoptedBody = _mainBody;
         _field.AdoptMain(_plan.Options.Autoplay);
+        NoteEngineTookSplit("a new body");
         DressNewBody();
         _logger.LogInfo($"{Tag}[General] {_field.DescribeFormations()}");
         LongDefeatChecks.Record(_outcomes, LongDefeatChecks.GeneralId, _mission, LongDefeatChecks.General(_field.BootFacts()));

@@ -80,6 +80,9 @@ internal sealed record RunPlan(
     /// <summary>The recorded engineer's yard place, or null. Nothing reads it yet; a later slice hides the yard when it is null.</summary>
     public MusterFrame? YardPoint { get; init; }
 
+    /// <summary>The shares of the opening split of the defenders, or null for a fortress that plays with no split.</summary>
+    public SplitShares? Split { get; init; }
+
     /// <summary>The places this build can deliver (D46). Nothing in Slice 1, so every row of shop.json stays hidden; a test sets what it needs.</summary>
     public LocationOffer Locations { get; init; } = LocationOffer.Offered;
 
