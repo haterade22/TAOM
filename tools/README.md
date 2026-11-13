@@ -681,15 +681,20 @@ See `docs/localization/TRANSLATOR_GUIDE.md` for the translator-facing workflow +
 
 **Game install: set `BANNERLORD_GAME_DIR`.** `README.md` lists it as a prerequisite and
 `setup-dev-env.ps1` sets it. `git grep -l BANNERLORD_GAME_DIR -- 'tools/*.py' ':!tools/tests'` lists
-every tool that names it (50 files on 2026-11-13, some only in a help line), and
-`analyze_armor_balance.py`, `apply_settlement_buildings.py` and `derive_armor_tiers.py` inherit it by
-importing one that does. Every one falls back to `E:\Steam\steamapps\common\Mount & Blade II Bannerlord`, so leaving it unset changes
-nothing on a machine where that literal is correct. **The two decompile scripts opt out** — neither
+every tool that names it (50 files on 2026-11-13). Some name it only in a help or error line, among them
+`analyze_armor_balance.py`, `apply_settlement_buildings.py` and `derive_armor_tiers.py`, which get the
+path by importing a tool that resolves it. Most tools that import `tools/_gamedir.py` (below) honour the variable
+without naming it. Of the 50, all but `weapon_xml/config.py` carry the fallback
+`E:\Steam\steamapps\common\Mount & Blade II Bannerlord` themselves or get it through an import (checked
+2026-11-13), so leaving the variable unset changes nothing on a machine where that literal is correct;
+`weapon_xml/config.py` has no fallback, and its interactive module scan finds nothing while the
+variable is unset. **The two decompile scripts opt out**: neither
 `decompile_bannerlord.ps1` nor `decompile_to_folder.ps1` reads the variable; see the note under
 "PowerShell Scripts" above.
 
 **Resolve it through `tools/_gamedir.py`**: `git grep -lE "(from|import) +_gamedir|from tools\._gamedir|import tools\._gamedir" -- 'tools/*.py' ':!tools/tests'`
-lists the tools that do (90 files on 2026-11-13). `game_dir(default)` treats a set-but-blank
+lists the tools that import it (90 files on 2026-11-13; six of them import only `game_or_kit_running`
+or `ensure_exists`). `game_dir(default)` treats a set-but-blank
 variable as unset, which `os.environ.get(VAR, default)` does not: it returns `""`, `Path("")` is `.`, and
 the tool then reports every file missing rather than the root being wrong. `game_modules(default)` adds
 the `BANNERLORD_GAME_MODULES` precedence, and `ensure_exists(path, what=...)` exits 2 naming the path,

@@ -2699,3 +2699,17 @@ never FAIL. The manifest header also named one list while its fail patterns judg
   same literals in a Python test that judges them on the real manifest (pass, fail, pass beside a fail, nothing). Do not end a
   pass pattern with `$`. State in the manifest header what a fail pattern fails on, because fail patterns are not gated on `reached`.
 - **Source:** [rca-mission-start-defer-2026-11-12.md](../rca-mission-start-defer-2026-11-12.md) "Follow-up review", `/deep-review` Agent 5.
+
+### A refactor's parity test pins values from the old code, and goes through every caller it changed (plan 051, 2026-11-13)
+
+Plan 051 hoisted the sibling-file parse of `translate_with_claude.py` into `sibling_string_ids` and
+let `skip_ids_for(..., siblings=None)` call it. The new test compared the hoisted call with the
+per-call one, but both now ran through `sibling_string_ids`, so a collector that dropped every id
+kept the test green. No test called `discover_entries`, the one caller the hoist rewired, and a
+mutant handing it empty siblings kept all 420 translator tests green.
+- **Why missed:** the plan's oracle, "hoisted equals per-call", was a real equivalence before the
+  refactor and nobody re-asked which side still held the old code.
+- **Prevent:** for a behaviour-preserving refactor, compute the expected values with the base code
+  (`git show <base>:<path>` into scratch, then import it) and pin them as literals; then add one test
+  through each caller whose call the diff changed, with a mutant of the new wiring that turns it red.
+- **Source:** [rca-tools-dead-scripts-and-test-speed-2026-11-13.md](../rca-tools-dead-scripts-and-test-speed-2026-11-13.md) F1 and F2, `/deep-review` Agent 5 and the Tooling lens.

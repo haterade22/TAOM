@@ -469,6 +469,11 @@ class SiblingIdsHoistTests(unittest.TestCase):
         owners = t.key_owners([module_src, xslt_src])
         return [(module_src, module_tgt), (xslt_src, xslt_tgt)], owners, lang
 
+    # Computed with the per-call skip_ids_for of 664f19c5b, before the hoist. Both forms now run through
+    # sibling_string_ids, so comparing them with each other alone could not catch a collector that loses ids.
+    EXPECTED = {"std_taom_module_strings_deu-DE.xml": {"0CsbbwtN", "k_mod", "k_xslt"},
+                "std_taom_xslt_strings_deu-DE.xml": {"0CsbbwtN", "k_mod", "k_shared"}}
+
     def test_hoisted_siblings_give_the_per_call_skip_set_for_every_target(self):
         import tempfile
         with tempfile.TemporaryDirectory() as d:
@@ -477,7 +482,8 @@ class SiblingIdsHoistTests(unittest.TestCase):
             for src, tgt in pairs:
                 with self.subTest(tgt.name):
                     self.assertEqual(t.skip_ids_for(src, tgt, owners, lang, siblings=siblings),
-                                     t.skip_ids_for(src, tgt, owners, lang))
+                                     self.EXPECTED[tgt.name])
+                    self.assertEqual(t.skip_ids_for(src, tgt, owners, lang), self.EXPECTED[tgt.name])
 
     def test_a_hoisted_sibling_that_does_not_parse_stops_the_run(self):
         import tempfile
@@ -496,7 +502,44 @@ class SiblingIdsHoistTests(unittest.TestCase):
             src, tgt = pairs[0]
             tgt.write_text("<base><strings>", encoding="utf-8")
             self.assertEqual(t.skip_ids_for(src, tgt, owners, lang, siblings=t.sibling_string_ids(lang)),
-                             t.skip_ids_for(src, tgt, owners, lang))
+                             self.EXPECTED[tgt.name])
+            self.assertEqual(t.skip_ids_for(src, tgt, owners, lang), self.EXPECTED[tgt.name])
+
+    def _discover_tree(self, d):
+        """One English source declaring k_moved and k_new; k_moved's German row lives only in another
+        file of the language, and the target itself is empty."""
+        d = Path(d)
+        src = d / "taom_global_strings.xml"
+        src.write_text('<strings><string id="a" text="{=k_moved}Moved" />'
+                       '<string id="b" text="{=k_new}New" /></strings>', encoding="utf-8")
+        lang = d / "DE"
+        lang.mkdir()
+        (lang / "std_taom_module_strings_deu-DE.xml").write_text(
+            '<base><strings><string id="k_moved" text="Verschoben" /></strings></base>', encoding="utf-8")
+        (lang / "std_taom_global_strings_deu-DE.xml").write_text("<base><strings></strings></base>",
+                                                                  encoding="utf-8")
+        return src, lang
+
+    def _discover(self, d, src):
+        from unittest import mock
+        with mock.patch.object(t, "english_source_files",
+                               lambda module: [("TAOM", src, "std_taom_global_strings_{locale}.xml")]), \
+                mock.patch.object(t, "TAOM_LANG_DIR", Path(d)):
+            return {e.string_id for e in t.discover_entries("DE", "TAOM")}
+
+    def test_discover_entries_skips_a_key_another_file_of_the_language_carries(self):
+        import tempfile
+        with tempfile.TemporaryDirectory() as d:
+            src, _ = self._discover_tree(d)
+            self.assertEqual(self._discover(d, src), {"k_new"})
+
+    def test_discover_entries_stops_on_a_sibling_that_does_not_parse(self):
+        import tempfile
+        with tempfile.TemporaryDirectory() as d:
+            src, lang = self._discover_tree(d)
+            (lang / "std_taom_module_strings_deu-DE.xml").write_text("<base><strings>", encoding="utf-8")
+            with self.assertRaises(SystemExit):
+                self._discover(d, src)
 
 
 class ShippedKeyCoverageTests(unittest.TestCase):

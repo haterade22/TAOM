@@ -105,7 +105,6 @@ class EligibilityTests(unittest.TestCase):
 class FailureTextTests(unittest.TestCase):
     def run_main(self, orphans):
         import io
-        from unittest import mock
         with tempfile.TemporaryDirectory() as tmp:
             base = Path(tmp) / "baseline.json"
             base.write_text(json.dumps({"orphans": 1, "components": 1}), encoding="utf-8")

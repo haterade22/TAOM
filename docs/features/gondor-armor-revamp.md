@@ -107,7 +107,7 @@ When the artist ships new gear, this file is updated and the two phase-2 scripts
 ## Tests
 
 - `TAOM.Tests/Features/TroopProgression/VolunteerRecruitmentServiceTests.cs` — 84 tests, all pass after the `_noble` → `_axebearer` rewiring. No new tests added (the change is data-only ID swap).
-- Cross-reference validation (`python tools/validate_all_troop_refs.py`), equivalent to a runtime smoke test for the underwear bug. Expected: the `gondor` row reads `missing=0` and `PASS`, and the run ends `PASS: all armor refs resolve across all cultures.`
+- Cross-reference validation (`python tools/validate_all_troop_refs.py`), equivalent to a runtime smoke test for the underwear bug. Expected: the `gondor` row reads `missing=0` and `PASS`, and the run prints `PASS: all armor refs resolve across all cultures.` (two scope lines follow it).
 
 ## How to add a new region
 
