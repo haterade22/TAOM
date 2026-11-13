@@ -330,6 +330,8 @@ public class CoopVetoClassificationTests
             "NRE — and vanilla is already throwing there."),
         ["Patch30_FormationGetOrderPositionOfUnit"] = new(CoopVeto.ReviewedSafe,
             "Mission-scoped formation positioning. Not campaign state."),
+        ["MissionAgentHandler_SpawnDefaultLocationCharacter_HallSeats_Patch"] = new(CoopVeto.ReviewedSafe,
+            "Hall Seats: skips building one lord's agent in the local lord's hall mission. Presentation/spawn only; the location character, the hero and every campaign field are untouched."),
         ["GuardsCampaignBehavior_GetSuitableSpear_Patch"] = new(CoopVeto.ReviewedSafe,
             "Settlement-guard equipment selection at spawn. Presentation/spawn only."),
         ["GuardsCampaignBehavior_TakeGuardAgentData_Patch"] = new(CoopVeto.ReviewedSafe,
