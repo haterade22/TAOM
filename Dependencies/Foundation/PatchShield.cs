@@ -524,8 +524,10 @@ public static class PatchShield
                 // Refuse to unpatch protected infrastructure owners (Codex S1 HIGH fix
                 // 2026-05-27): every id that starts with "TAOM" (the shields, the guard and the few
                 // feature patches with their own Harmony instance), the vendored BUTR/MCM/Harmony ones
-                // and the co-op ids. TAOM's patch categories run under com.taom.mod, which is not
-                // protected yet (D13: culprit-only strip first, plan owed; see PatchShieldPolicy).
+                // and the co-op ids. The crash guards run under TAOM.CrashGuards (CrashGuardHarmony),
+                // which the "TAOM" prefix protects; TAOM's other patch categories run under
+                // com.taom.mod, which is not protected yet (D13: culprit-only strip first, plan owed;
+                // see PatchShieldPolicy).
                 if (PatchShieldPolicy.IsProtectedOwner(owner, protectedPrefixes))
                 {
                     DiagLog.Log(Tag, $"refusing to unpatch protected owner '{owner}' on {targetKey}");
