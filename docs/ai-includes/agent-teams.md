@@ -115,7 +115,7 @@ the original sources. RCAs: `rca-herorace-patch72-2026-08-21.md`, `rca-yotthani-
 
 > Moved verbatim from `.claude/rules/harness-facts.md` 2026-08-05 (eager-context diet round 2) —
 > these fire only when spawning parallel agents, so they belong here, not in the every-turn load.
-> harness-facts keeps a one-row pointer. This is the section its pointers cite.
+> `harness-skills-agents.md` keeps a pointer. This is the section its pointers cite.
 
 
 ### Parallel-port build watcher (EMPIRICAL: TAOM 2026-05-06)

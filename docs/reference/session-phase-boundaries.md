@@ -30,7 +30,7 @@ Work from the top. The first yes wins.
 
 A `/compact` or a handoff replaces the session as it happened with a summary of it, and a summary can
 flatten a decision. What survives a compaction is listed in
-[harness-facts.md](../../.claude/rules/harness-facts.md) "Context loading": skill bodies come back capped
+[harness-loading.md](../../.claude/rules/harness-loading.md) "Context loading": skill bodies come back capped
 and path rules come back only on the next matching file access.
 
 Upstream gives about 150k tokens as the point where a model stops reasoning sharply. TAOM has not measured

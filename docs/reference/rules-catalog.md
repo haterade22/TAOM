@@ -9,7 +9,7 @@
 
 A rule with `paths:` loads when Claude reads, writes or edits a matching file in the repo; a rule without it loads in
 every session and subagent. The details and their sources (never for a file outside the repo, the
-`/compact` behaviour, a frontmatter that fails to parse) are in `.claude/rules/harness-facts.md`
+`/compact` behaviour, a frontmatter that fails to parse) are in `.claude/rules/harness-loading.md`
 "Rule loader (memory) semantics" and "Context loading".
 
 ## Always-load rules (no `paths:`)
@@ -37,9 +37,12 @@ _(7 rules; `python tools/lint_docs.py --context-budget-json` gives their sizes. 
 | `data-scripts.md` | Scripts under `tools/`: the XML I/O convention, backups, dry run, parse before write; model the deserializer when reading what a troop carries |
 | `external-skill-ports.md` | Authoring a skill from scratch, and the per-field checklist for porting one from an external suite |
 | `gamemodels.md` | GameModel override pattern, base-class rules, registration |
-| `gui-ui.md` | Sprite verification, UIExtenderEx safety, ViewModel bindings |
+| `gui-ui.md` | Sprite and brush verification, prefab clones, UIExtenderEx safety, GauntletLayer input, ViewModel bindings, file locations |
+| `gui-vm-properties.md` | C# that writes a TaleWorlds-owned ViewModel property: guarded setters, the public setter over a reflected field |
 | `harmony-patches.md` | Patch types, thin entry points, thread-local state, the shared deferred `MovementOrder` category |
-| `harness-facts.md` | Verified Claude Code load semantics, hook lifecycle and visibility, frontmatter schema, with sources |
+| `harness-facts.md` | Verified Claude Code hook lifecycle and visibility, the PreToolUse output contract, settings, with sources |
+| `harness-loading.md` | Verified load semantics: what a session, a subagent and a compaction load; the rule loader and its globs; MEMORY.md |
+| `harness-skills-agents.md` | Verified skill and agent frontmatter allowlists, model and effort resolution, spawn limits |
 | `hook-authoring.md` | Hook conventions: sibling-mirroring, the two-stage git-commit matcher, amend handling, fail open but never silent, timeouts, prove a gate live, log rotation |
 | `moduledata-validation.md` | Run `python tools/validate_moduledata.py` before committing ModuleData; the gate per file kind; the codes are in [moduledata-validator-codes.md](moduledata-validator-codes.md) |
 | `native-cpp-ports.md` | The 6-point C++ port audit (hot-path logging, SEH specificity, offsets, atomics, SRWLock, C++ review) |

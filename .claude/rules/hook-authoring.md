@@ -5,24 +5,23 @@ paths:
 
 # Hook Authoring Conventions
 
-Loads when a `.claude/hooks/` script is being written or edited. The durable harness facts
-(hook lifecycle, fail-open mandate, JSON output contract) live in `harness-facts.md`; this rule
-holds the authoring-time conventions. The incidents behind them are lessons in
-`docs/reviews/lessons/build-tooling-workflow.md`, named below.
+The durable harness facts (hook lifecycle, fail-open mandate, JSON output contract) live in
+`harness-facts.md`; this rule holds the authoring-time conventions. The incidents behind them are
+lessons in `docs/reviews/lessons/build-tooling-workflow.md`, named below.
 
 ## Mirror the sibling's FULL convention set (EMPIRICAL: TAOM 2026-05-29)
 
 When you add a hook to an existing category (a Stop reminder, a PreToolUse gate, a PostToolUse logger), do NOT copy only the part you're focused on. Enumerate and consciously **match-or-deviate** on the sibling hooks' entire convention set:
 
-| Convention | Where to copy it from | Past miss |
-|---|---|---|
-| Detection (git state vs stdin JSON) | the nearest sibling in the same event | (got this right) |
-| **Muting / idempotency** (early-exit when already-handled) | `check-verification-evidence.sh` keeps a streak marker and clears it when its condition clears | `check-verification-evidence.sh` shipped without muting → re-nagged on every Stop while `.cs` stayed dirty (MED) |
-| **I/O preamble** (`INPUT=$(cat)` etc.) | copy a sibling's verbatim | `mark-verification-run.sh` hand-wrote `cat 2>/dev/null` + `printf`, diverging from 13 siblings (LOW) |
-| Exit semantics (`exit 0` non-blocking vs `exit 2`/JSON `deny`) | the sibling in the same event | (got this right) |
-| **Output channel** (what Claude actually reads) | Stop: `_stop_reminder.sh`; PreToolUse: `block-dangerous-git.sh` (`hookSpecificOutput`); PostToolUse: `check-polearm-shield-parity.sh` (`additionalContext`) | the four Stop reminders wrote to stderr, which Claude never sees, until plan 011; the polearm gate did the same until 2026-09-29 |
+| Convention | Where to copy it from |
+|---|---|
+| Detection (git state vs stdin JSON) | the nearest sibling in the same event |
+| **Muting / idempotency** (early-exit when already-handled) | `check-verification-evidence.sh` keeps a streak marker and clears it when its condition clears |
+| **I/O preamble** (`INPUT=$(cat)` etc.) | copy a sibling's verbatim |
+| Exit semantics (`exit 0` non-blocking vs `exit 2`/JSON `deny`) | the sibling in the same event |
+| **Output channel** (what Claude actually reads) | Stop: `_stop_reminder.sh`; PreToolUse: `block-dangerous-git.sh` (`hookSpecificOutput`); PostToolUse: `check-polearm-shield-parity.sh` (`additionalContext`) |
 
-The fix is a pre-flight pass over the sibling's whole body, not just the lines you need (lesson "Authoring a new hook: mirror the sibling's FULL convention set").
+The fix is a pre-flight pass over the sibling's whole body, not just the lines you need (lesson "Authoring a new hook: mirror the sibling's FULL convention set"; each bold row shipped wrong once).
 
 ## Git invocation forms hooks must handle
 
@@ -30,10 +29,7 @@ When writing a PreToolUse hook that filters on git subcommands, enumerate explic
 
 | Form | Purpose | Handled by `*"git commit"*` substring? |
 |------|---------|----------------------------------------|
-| `git commit` | Bare commit | YES |
-| `git commit -m "msg"` | Commit with message | YES |
-| `git commit --amend` | Amend (must NOT blanket-skip — see "amend exemptions" below) | YES |
-| `git commit -F file.txt` | Commit with message file | YES |
+| `git commit`, alone or with `-m "msg"`, `-F file.txt` or `--amend` | Bare commit, message, message file, amend (must NOT blanket-skip: see "amend exemptions" below) | YES |
 | `git -C /path commit` | Run as if from /path (no leading `cd`) | NO — needs `*"git -"*" commit"*` |
 | `git -c key=val commit` | One-time config override | NO — same |
 | `git --git-dir=/path commit` | Operate on a specific git-dir | NO for this substring; the reference pattern catches it |
@@ -72,7 +68,7 @@ sources `_pybin.sh`. Never skip a payload holding a `\u` escape. Each hook's wor
 
 ## Amend exemptions in pre-commit hooks (recursion-risk pattern)
 
-Do NOT blanket-skip `git commit --amend` in pre-commit hooks. `amend` is commonly used as a workflow ("oops, forgot a file, amend it in"), which is exactly the case the hook needs to catch (two gates exempted it until the 2026-04-26 Codex review, `docs/reviews/REVIEW-LOG.md`).
+Do NOT blanket-skip `git commit --amend` in pre-commit hooks. `amend` is commonly used as a workflow ("oops, forgot a file, amend it in"), which is exactly the case the hook needs to catch (`docs/reviews/REVIEW-LOG.md`, 2026-04-26).
 
 Two correct patterns depending on what the hook checks:
 
@@ -88,8 +84,7 @@ For a hook whose job is to **detect and warn**, fail-open is only half the contr
 those, **no output is itself a claim**. A drift check that prints nothing is read as "no drift", not
 as "never ran".
 
-The v1.4.7 to v1.4.8 bump printed no drift banner: `"${VAR:-<literal>}/..."` covers an unset or empty
-variable, never a set but wrong one (lesson "A fail-open guard whose failure mode is silence").
+The v1.4.7 to v1.4.8 bump printed no drift banner (lesson "A fail-open guard whose failure mode is silence").
 
 **When writing or reviewing a detect-and-warn hook:**
 
@@ -98,9 +93,9 @@ variable, never a set but wrong one (lesson "A fail-open guard whose failure mod
 | Probe candidates in order and **always** fall through to the known-good literal | `:-` covers unset/empty, not *wrong*. A set-but-broken value is the common case, not the rare one. |
 | When no candidate resolves, print an explicit **"unchecked, not absent"** line | Silence is indistinguishable from a clean result. Name which inputs were tried. |
 | Ask "what does this hook print when its input is missing?" before shipping | If the answer is "nothing", the hook has no failure signal at all. |
-| Test the broken-input path, not just the happy path | Export a bogus value and run the hook. The 2026-08-10 bug reproduced in one command. |
+| Test the broken-input path, not just the happy path | Export a bogus value and run the hook. |
 
-Still `exit 0`, but loud about not knowing. Applies to any hook whose value is the warning it emits.
+Still `exit 0`, but loud about not knowing.
 
 ## A timeout must be measured against the SLOW path (EMPIRICAL: TAOM 2026-08-31)
 
@@ -108,10 +103,7 @@ A harness timeout is a **kill**, and a kill cannot speak: the harness discards a
 output. For a gate, "killed" and "passed cleanly" are the same observable event, so a timeout sized
 against the fast path makes the gate **silently dead**.
 
-On 2026-08-31 a pass that added timeouts to all 27 registrations killed two gates on every run
-(lesson "A gate the harness kills is not a gate").
-
-**The rules that follow from it:**
+**The rules that follow from it** (lesson "A gate the harness kills is not a gate"):
 
 | Do | Why |
 |---|---|
@@ -156,11 +148,8 @@ or state files stay covered by this rule and review.
 `jq` is not on PATH here, so a hook's fallback must be Python: a grep+sed one truncates a value at the
 first escaped quote.
 
-On the dev machine `python3` resolves only to
-`C:\Users\mikew\AppData\Local\Microsoft\WindowsApps\python3`, a Microsoft Store App Execution
-Alias. Run from Git Bash it prints nothing, never exits, and **ignores SIGTERM**. Guarding with
-`command -v python3` does not help: it succeeds, because a file really does exist at that name.
-It wedged every JSON-parsing hook on 2026-08-31 (the `command -v` lesson).
+On the dev machine `python3` is a Microsoft Store alias under `WindowsApps` that never exits and
+**ignores SIGTERM**, and `command -v python3` succeeds on it (the `command -v` lesson).
 
 **Inside a hook:** `source "$(dirname "${BASH_SOURCE[0]}")/_pybin.sh"` after any raw-payload
 prefilter and above the first `"$PYBIN"` use, then honour
@@ -168,11 +157,8 @@ prefilter and above the first `"$PYBIN"` use, then honour
 #680). Below the first use it leaves `PYBIN` empty: `validate-push.sh`'s force-push block was
 unreachable that way on 2026-08-31.
 
-**Outside a hook:** just write `python`. It resolves to real CPython here and is the repo
-convention. A portable candidate list may still include `python3` provided the loop rejects any
+**Outside a hook:** just write `python` (CLAUDE.md "MCP and shell"). A portable candidate list may still include `python3` provided the loop rejects any
 resolved path matching `*[Ww]indows[Aa]pps*` first.
-
-**No file may use bare `python3`.**
 
 ## Log-appending hooks: size-cap rotation (EMPIRICAL: TAOM 2026-07-12)
 
