@@ -26,6 +26,17 @@ public class AlignmentDesertionService : IAlignmentDesertionService
     public bool ShouldEvaluate(string ownerKingdomId, bool isPlayerOwned, bool isGarrison)
         => TryGetPurge(ownerKingdomId, isPlayerOwned, isGarrison, out _, out _);
 
+    public bool WouldDesert(string ownerKingdomId, bool isPlayerOwned, bool isGarrison, string troopCultureId)
+        => TryGetPurge(ownerKingdomId, isPlayerOwned, isGarrison, out var ownerSide, out _)
+           && IsOpposed(ownerSide, troopCultureId);
+
+    // Neutral troops (mercenary cultures) and same-side troops stay.
+    private bool IsOpposed(FactionSide ownerSide, string troopCultureId)
+    {
+        var troopSide = _alignment.GetCultureSide(troopCultureId);
+        return troopSide != FactionSide.Neutral && troopSide != ownerSide;
+    }
+
     public IReadOnlyList<TroopDesertionResult> CalculateDesertion(
         string ownerKingdomId, bool isPlayerOwned, bool isGarrison, IReadOnlyList<DesertionTroopInfo> troops)
     {
@@ -41,8 +52,7 @@ public class AlignmentDesertionService : IAlignmentDesertionService
             if (troop == null || troop.IsHero || troop.Count <= 0)
                 continue;
 
-            var troopSide = _alignment.GetCultureSide(troop.CultureId);
-            if (troopSide == FactionSide.Neutral || troopSide == ownerSide)
+            if (!IsOpposed(ownerSide, troop.CultureId))
                 continue; // loyal (same side) or mercenary-culture (Neutral) -- stays
 
             var desertCount = Math.Max(1, (int)(troop.Count * rate));
@@ -73,6 +83,10 @@ public class AlignmentDesertionService : IAlignmentDesertionService
         // NOTE: a mercenary clan keeps Clan.Kingdom set to its employer, so it resolves to the
         // employer's side and DOES purge opposed troops -- it is not exempt here. (Codex #2.)
         if (ownerSide == FactionSide.Neutral) return false;
+
+        // "Only Good Rejects Evil" (Recruitment Alignment) lets Evil recruiters take Free troops, so an Evil owner
+        // keeps them here too; otherwise the troops it was allowed to recruit desert the next day.
+        if (ownerSide == FactionSide.Evil && _settings.GoodRejectsEvilOnly) return false;
 
         rate = _settings.Rate;
         // Rate 0 = no desertion. The master toggle is the off switch, but a 0% slider must also mean

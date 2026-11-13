@@ -9,5 +9,6 @@ public static class AlignmentDesertionIoC
         container.Register<IAlignmentDesertionConfigProvider, AlignmentDesertionConfigProvider>(Reuse.Singleton);
         container.Register<IAlignmentDesertionSettingsProvider, AlignmentDesertionSettingsProvider>(Reuse.Singleton);
         container.Register<IAlignmentDesertionService, AlignmentDesertionService>(Reuse.Singleton);
+        container.Register<IDesertionRecruitGuard, DesertionRecruitGuard>(Reuse.Singleton);
     }
 }

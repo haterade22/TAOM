@@ -555,7 +555,8 @@ in a state dump.
 - **Then calibrate against a real session and turn the volume down.** First-pass thresholds are
   guesses: `drift > 1f` fired on 291 of 299 warnings because true drift is ~1.8, and a
   per-world-map-event INFO line contributed 3674 lines to a 6001-line log. Diagnostics that fire
-  constantly bury the signal they were added to surface, and INFO flushes synchronously.
+  constantly bury the signal they were added to surface, and INFO flushes synchronously (since PR #1170,
+  2026-11-13: only INFO lines with a durable tag do).
 
 **Source:** live play-test 2026-08-07 against #406. Sibling lessons above cover why the test suite
 could not see any of it (mocked adapters) and why checking return values was not enough.
@@ -2776,6 +2777,11 @@ Check 11 failed `hits` once 20 tower missiles flew with no hit. Tower missiles h
 - **Prevent:** before a rule fails on "N tries and no success", read the success rate from the stored reports and count the trials that are independent; choose N so a false FAIL is under 1 percent at the lowest rate on file, and confirm the shortest run that should be judged reaches N. Grep the feature doc for the old number in the same change.
 - **Source:** #1152, `/deep-review` Agent 5 (data flow), findings 3 to 5.
 
+### Count a source pin's hits in the pinned file: a substring that occurs twice guards nothing (#1133, 2026-11-13)
+A source test asserted that the messenger target reader contains `hero.PartyBelongedTo != null`, to pin the "in the player's party" test. The same text is in the reader's same-army expression, so deleting the pinned line left the assertion green. Two behaviour tests in the same change repeated other tests' inputs under a scenario name.
+- **Why missed:** the pin was chosen by reading the line it should guard, not by searching the file for it; the tests were named for the story, not for what they pass in.
+- **Prevent:** after writing a `StringAssert.Contains` pin, count the substring's occurrences in the pinned file (`grep -o -F '<pin>' <file> | wc -l`, since `-c` counts lines); more than one means a longer pin or a regex over the whole expression. Before adding a test, search the class for the same call with the same arguments.
+- **Source:** [rca-messenger-arrival-1133-2026-11-13.md](../rca-messenger-arrival-1133-2026-11-13.md), finding 4.
 ### A mutation restored in the same second leaves the mutant's bytecode in force (#1160, 2026-11-13)
 A mutation script swapped two lines of `tools/run_long_defeat.py`, ran one test, and wrote the original bytes back. The swap kept the file's size and the restore came in the same second, so the `.pyc` that the mutant run wrote still matched (Python checks the source's size and its mtime in whole seconds). The next full tool suite ran the mutant and failed a test on correct source; the disassembly of `main` showed the swapped call order.
 - **Why missed:** the restore was checked byte for byte, and the bytecode cache was not considered.

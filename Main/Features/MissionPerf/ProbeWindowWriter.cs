@@ -4,7 +4,7 @@ namespace TAOM.Features.MissionPerf;
 
 /// <summary>
 /// Writes the Patch98 window lines for <c>MissionTickProfilerBehavior</c>, keeping it thin (ADR-002). Every
-/// line is INFO (FileLogger flushes it synchronously), at most one window per 5 s. The window's top lists are
+/// line is INFO (queued; FileLogger's writer thread flushes it within about a third of a second), at most one window per 5 s. The window's top lists are
 /// empty when its mission does not attribute (<see cref="MissionTickProfiler.TakeExtrasWindow"/>), so they read
 /// <c>none</c> with no second check here.
 /// </summary>

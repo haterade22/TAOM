@@ -168,9 +168,11 @@ mods (see the decisions below on a player-facing switch).
 
 All lines go to `taom_debug.log` through `IModLogger`, with the `[XmlMerge]` prefix; numbers are written with the
 invariant culture and milliseconds are rounded to whole numbers. `XmlMergeLinesTests` pins every format literally.
-INFO, WARNING and ERROR flush synchronously, so a hang inside a merge still leaves the last completed type on disk.
-DEBUG lines are queued for the logger's writer thread instead (it wakes every 50 ms, and the next INFO or WARNING
-drains the queue too), so the one DEBUG line below is lost only if the process dies inside that window.
+WARNING and ERROR lines are on disk when the call returns. The `[XmlMerge]` tag is not in `FileLogger.DurableInfoTags`, so
+INFO and DEBUG lines are queued for the logger's writer thread, which flushes them within about a third of a second
+(the next WARNING or ERROR drains the queue too). A hang inside a merge leaves the writer thread running, so the last
+completed type reaches the disk; a hard crash can lose the lines of the last third of a second, the one DEBUG line below
+included.
 
 | When | Level | Format |
 |---|---|---|

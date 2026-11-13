@@ -672,7 +672,8 @@ def owes_summon(report_json):
 MAX_PRICE = 1_000_000
 FORT_OFFERED = {"gate": 3, "towers": 3, "fieldCare": True, "volley": 2}  # field care landed in Slice 4, the gate in Slice 5, the Elven Volley in Slice 6, tower levels 1 and 2 in Slice 7 and level 3, the tower volley, in Slice 8; each later slice raises its kind here and in FortOffer.Offered
 PURCHASE_KINDS = ("pack", "gateLevel", "gateRepair", "towerLevel", "fieldCare", "volleyLevel")
-SPENT_ON = ("packs", "gate", "towers", "fieldCare", "volley")
+# "upgrades" is the sink of the shop's troop upgrades (#1161); its purchase kind is not judged yet, so a report that bought one is refused until that check lands.
+SPENT_ON = ("packs", "gate", "towers", "fieldCare", "volley", "upgrades")
 KIND_SINK = {"pack": "packs", "gateLevel": "gate", "gateRepair": "gate", "towerLevel": "towers", "fieldCare": "fieldCare", "volleyLevel": "volley"}
 SHARE_TOLERANCE = 0.0005
 

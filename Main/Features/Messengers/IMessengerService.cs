@@ -10,11 +10,8 @@ public interface IMessengerService
     /// <summary>The whole look at one target: the verdict against this trip's quote, the price and the days.</summary>
     MessengerOffer GetOffer(HeroSnapshot? target, MessengerQuoteInput trip, int playerGold, bool inPerson);
 
-    /// <summary>
-    /// What to do with an arrived messenger. <paramref name="sharesMainHeroParty"/> is the raw party equality, true when
-    /// both parties are null, not <see cref="HeroSnapshot.IsInPlayerParty"/>.
-    /// </summary>
-    MessengerArrivalVerdict ClassifyArrival(HeroSnapshot target, bool sharesMainHeroParty, bool playerAvailable, bool targetPartyInMapEvent);
+    /// <summary>What to do with an arrived messenger: lose it, report the mix-up, wait an hour, or deliver it.</summary>
+    MessengerArrivalVerdict ClassifyArrival(HeroSnapshot target, bool playerAvailable, bool targetPartyInMapEvent);
 
     /// <summary>The denars one messenger costs: the base price plus the trip, raised for war, a stranger and a siege.</summary>
     int QuoteCost(MessengerQuoteInput input);

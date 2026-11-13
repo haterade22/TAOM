@@ -134,6 +134,7 @@ OUT=$(timeout -k 2 45 "$PY" tools/validate_moduledata.py \
         --code SCHEMA_INVALID --code ARMOUR_ACQUISITION_REF \
         --code CREATURE_GEAR_OBTAINABLE --code BROKEN_FACTION_REF \
         --code TROOP_ID_REMOVED --code BROKEN_ROSTER_REF --code BROKEN_SETTLEMENT_REF \
+        --code PRISON_SCENE_NOT_STEALTH \
         2>"$ERR_FILE")
 RC=$?
 
