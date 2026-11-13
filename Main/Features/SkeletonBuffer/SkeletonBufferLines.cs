@@ -18,10 +18,10 @@ internal static class SkeletonBufferLines
 
     private const string OverNinety = ", over 90 %";
 
-    internal static string GuardOn(int pool, long siteRva, long resumeRva, long cave, long counter, double scanMs) =>
+    internal static string GuardOn(int pool, long siteRva, long resumeRva, long cave, long counter, double scanMs, string scanPath) =>
         string.Format(CultureInfo.InvariantCulture,
-            "{0} guard ON pool {1}: site=0x{2:X} resume=0x{3:X} cave=0x{4:X} counter=0x{5:X} scanMs={6:0.0}",
-            Tag, pool, siteRva, resumeRva, cave, counter, scanMs);
+            "{0} guard ON pool {1}: site=0x{2:X} resume=0x{3:X} cave=0x{4:X} counter=0x{5:X} scanMs={6:0.0} scan={7}",
+            Tag, pool, siteRva, resumeRva, cave, counter, scanMs, scanPath);
 
     internal static string GuardOffPool(int pool, string reason) =>
         string.Format(CultureInfo.InvariantCulture, "{0} guard OFF pool {1}: {2}", Tag, pool, reason);

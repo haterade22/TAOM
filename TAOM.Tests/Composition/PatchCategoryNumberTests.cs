@@ -48,6 +48,9 @@ public class PatchCategoryNumberTests
         ["Patch89_MapLoadDiagnostics_MapScreen"] = "sub-category documented under ## Patch89_MapLoadDiagnostics",
         ["Patch89_MapLoadDiagnostics_SceneReady"] = "sub-category documented under ## Patch89_MapLoadDiagnostics",
         ["Patch98_HitchProbe_Camera"] = "sub-category documented under ## Patch98_HitchProbe",
+        ["Patch_MissionTime_SmartCavalryAI"] = "documented under ## Patch_MissionTime_SetMovementOrder (split 2026-11-13)",
+        ["Patch_MissionTime_CompanionTactics"] = "documented under ## Patch_MissionTime_SetMovementOrder (split 2026-11-13)",
+        ["Patch_MissionTime_MarshalsWord"] = "documented under ## Patch_MissionTime_SetMovementOrder (split 2026-11-13)",
         ["Patch101_MapFrameProfiler_Views"] = "sub-category documented under ## Patch101_MapFrameProfiler",
         ["Patch101_MapFrameProfiler_Menu"] = "sub-category documented under ## Patch101_MapFrameProfiler",
     };
@@ -56,7 +59,7 @@ public class PatchCategoryNumberTests
     private static readonly Dictionary<string, string> RowCitesAnotherFeature = new Dictionary<string, string>(StringComparer.Ordinal)
     {
         ["SettlementNameplateRelation Patch38"] = "its sliders go through SettlementNameplateFade's postfix",
-        ["SmartCavalryAI Patch31"] = "applied through the shared Patch_MissionTime_SetMovementOrder category",
+        ["SmartCavalryAI Patch31"] = "applied through the deferred Patch_MissionTime_SmartCavalryAI category",
     };
 
     private static bool _gameLoaded;

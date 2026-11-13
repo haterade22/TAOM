@@ -5,6 +5,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
 using TAOM.Adapters;
 using TAOM.Features.CoopInterop;
+using TAOM.Features.MissionPerf.AnimMemory;
 using TAOM.Features.SkeletonBuffer;
 using TAOM.Tests.Features.LoadTimeStamps;
 using TAOM.Tests.Features.MissionPerf.AnimMemory;
@@ -82,7 +83,8 @@ public class SkeletonBufferGuardServiceTests
         _memory.MakeExecutable(Arg.Any<long>(), Arg.Any<int>()).Returns(true);
         _memory.PatchCode(Arg.Any<long>(), Arg.Any<byte[]>(), Arg.Any<byte[]>()).Returns(EngineCodePatchResult.Written);
 
-        _sut = new SkeletonBufferGuardService(_settings, _memory, _server, _logger);
+        _sut = new SkeletonBufferGuardService(_settings, _memory, _server, _logger,
+            new EngineSignatureCache(Substitute.For<IEngineSignatureCacheAdapter>(), _logger));
     }
 
     private static byte[] BuildText(bool watch = true, bool guard = true, bool foreign = false, int guardOffset = GuardOffset,
@@ -230,6 +232,75 @@ public class SkeletonBufferGuardServiceTests
     }
 
     [TestMethod]
+    public void Install_SecondLaunchOfTheSameDll_UsesTheCachedAddresses()
+    {
+        var file = new SharedCacheFile();
+        var firstLogger = new RecordingLogger();
+        var first = new SkeletonBufferGuardService(_settings, _memory, _server, firstLogger,
+            new EngineSignatureCache(file, firstLogger));
+        first.Install();
+        var secondLogger = new RecordingLogger();
+        var second = new SkeletonBufferGuardService(_settings, _memory, _server, secondLogger,
+            new EngineSignatureCache(file, secondLogger));
+
+        second.Install();
+
+        StringAssert.EndsWith(firstLogger.Lines[0], " scan=scanned");
+        Assert.AreEqual(2, secondLogger.Lines.Count, string.Join(" | ", secondLogger.Lines));
+        StringAssert.EndsWith(secondLogger.Lines[0], " scan=cached");
+        StringAssert.EndsWith(secondLogger.Lines[1], " scan=cached");
+        Assert.AreEqual(first.Target!.GlobalAddress, second.Target!.GlobalAddress);
+        Assert.AreEqual(first.Target.Pool1Guarded, second.Target.Pool1Guarded);
+        Assert.AreEqual(first.Target.WatchPool2, second.Target.WatchPool2);
+    }
+
+    [TestMethod]
+    public void Install_ThenTheClipProbeArms_TheOneFileHoldsAllFiveEntriesAndTheNextGuardIsCached()
+    {
+        const int ClipOffset = 0x360;
+        SyntheticNativeImage.PutSite(_text, ClipOffset, GlobalRva, 0x2020, TextRva);
+        var file = new SharedCacheFile();
+        var guardLogger = new RecordingLogger();
+        new SkeletonBufferGuardService(_settings, _memory, _server, guardLogger, new EngineSignatureCache(file, guardLogger)).Install();
+        var native = Substitute.For<INativeModuleMemoryAdapter>();
+        native.GetModuleBase("TaleWorlds.Native.dll").Returns(Base);
+        native.Copy(Base, 4096).Returns(SyntheticNativeImage.Headers(Sections));
+        native.Copy(Base + TextRva, 0x400).Returns(_text);
+        native.ReadInt32(Base + 0x2020).Returns(0x4B400000);
+        native.ReadInt32(Base + GlobalRva).Returns(5000000);
+        var probeLogger = new RecordingLogger();
+        var probe = new AnimMemoryProbe(native, Substitute.For<IAnimationLoadingAdapter>(), probeLogger,
+            new EngineSignatureCache(file, probeLogger));
+
+        Assert.IsTrue(probe.EnsureArmed(), string.Join(" | ", probeLogger.Lines));
+
+        foreach (var id in new[] { "skeleton.watch#", "skeleton.guard#", "skeleton.pool2#", "skeleton.guard2#", "animmem.clip#" })
+            StringAssert.Contains(file.Text, id);
+        var nextLogger = new RecordingLogger();
+        new SkeletonBufferGuardService(_settings, _memory, _server, nextLogger, new EngineSignatureCache(file, nextLogger)).Install();
+        StringAssert.EndsWith(nextLogger.Lines[0], " scan=cached");
+    }
+
+    [TestMethod]
+    public void Install_CachedSiteNowHoldsAnotherModulesJump_ScansAndSeesTheJump()
+    {
+        var file = new SharedCacheFile();
+        var firstLogger = new RecordingLogger();
+        new SkeletonBufferGuardService(_settings, _memory, _server, firstLogger, new EngineSignatureCache(file, firstLogger)).Install();
+        _text = BuildText(foreign: true);
+        var secondLogger = new RecordingLogger();
+        var second = new SkeletonBufferGuardService(_settings, _memory, _server, secondLogger,
+            new EngineSignatureCache(file, secondLogger));
+
+        second.Install();
+
+        Assert.IsTrue(secondLogger.Lines.Any(l => l.Contains("guard OFF pool 1") && l.Contains("already guarded by another module")),
+            string.Join(" | ", secondLogger.Lines));
+        Assert.IsTrue(second.Target!.Pool1Guarded);
+        Assert.IsTrue(secondLogger.Lines.Any(l => l.Contains("guard ON pool 2") && l.EndsWith(" scan=scanned")));
+    }
+
+    [TestMethod]
     public void Install_EverythingMatches_LogsOneConfigurationLinePerPoolAndExposesTheTarget()
     {
         _sut.Install();
@@ -237,6 +308,7 @@ public class SkeletonBufferGuardServiceTests
         Assert.AreEqual(2, _logger.Lines.Count, string.Join(" | ", _logger.Lines));
         StringAssert.StartsWith(_logger.Lines[0],
             "INFO [SkeletonBuffer] guard ON pool 1: site=0x1073 resume=0x1080 cave=0x7FF5FFF00000 counter=0x7FF5FFF01000 scanMs=");
+        StringAssert.EndsWith(_logger.Lines[0], " scan=scanned");
         StringAssert.StartsWith(_logger.Lines[1],
             "INFO [SkeletonBuffer] guard ON pool 2: site=0x1240 resume=0x124D cave=0x7FF5FFF00040 counter=0x7FF5FFF01040 scanMs=");
         var target = _sut.Target;

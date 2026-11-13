@@ -34,7 +34,8 @@ public class AnimMemoryProbeTests
         _memory.Copy(Base + 0x1000, 0x200).Returns(SyntheticNativeImage.TextWithSiteAt(0x40, 0x3010, 0x2020));
         _memory.ReadInt32(Base + 0x2020).Returns(0x4B400000);
         _memory.ReadInt32(Base + 0x3010).Returns(5000000);
-        _probe = new AnimMemoryProbe(_memory, _loading, _logger);
+        _probe = new AnimMemoryProbe(_memory, _loading, _logger,
+            new EngineSignatureCache(Substitute.For<IEngineSignatureCacheAdapter>(), _logger));
     }
 
     [TestMethod]
@@ -45,8 +46,35 @@ public class AnimMemoryProbeTests
         var armed = _probe.EnsureArmed();
 
         Assert.IsTrue(armed);
-        _logger.Received(1).LogInfo(Arg.Is<string>(s => s.StartsWith(prefix) && Regex.IsMatch(s, @"scanMs=\d+\.\d$")));
+        _logger.Received(1).LogInfo(Arg.Is<string>(s => s.StartsWith(prefix) && Regex.IsMatch(s, @"scanMs=\d+\.\d scan=scanned$")));
         _logger.Received(1).LogInfo(Arg.Any<string>());
+    }
+
+    [TestMethod]
+    public void EnsureArmed_SecondLaunchOnTheSameCacheFile_LogsScanCached()
+    {
+        var file = new SharedCacheFile();
+        var firstLogger = Substitute.For<IModLogger>();
+        new AnimMemoryProbe(_memory, _loading, firstLogger, new EngineSignatureCache(file, firstLogger)).EnsureArmed();
+        var secondLogger = Substitute.For<IModLogger>();
+        var second = new AnimMemoryProbe(_memory, _loading, secondLogger, new EngineSignatureCache(file, secondLogger));
+
+        Assert.IsTrue(second.EnsureArmed());
+
+        firstLogger.Received(1).LogInfo(Arg.Is<string>(s => s.EndsWith(" scan=scanned")));
+        secondLogger.Received(1).LogInfo(Arg.Is<string>(s => s.StartsWith("[AnimMem] armed: ") && s.EndsWith(" scan=cached")));
+    }
+
+    [TestMethod]
+    public void EnsureArmed_CacheFileUnreadable_StillArmsAndWritesNothing()
+    {
+        var file = new SharedCacheFile { ThrowOnRead = true };
+        var logger = Substitute.For<IModLogger>();
+        var probe = new AnimMemoryProbe(_memory, _loading, logger, new EngineSignatureCache(file, logger));
+
+        Assert.IsTrue(probe.EnsureArmed());
+
+        Assert.IsNull(file.Text);
     }
 
     [TestMethod]

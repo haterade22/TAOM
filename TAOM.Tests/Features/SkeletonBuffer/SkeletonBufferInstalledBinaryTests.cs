@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TAOM.Features.MissionPerf.AnimMemory;
 using TAOM.Features.SkeletonBuffer;
@@ -91,6 +92,43 @@ public class SkeletonBufferInstalledBinaryTests
         Array.Copy(rawText.Bytes, at2, actual2, 0, 13);
         CollectionAssert.AreEqual(OriginalSite2, actual2);
     }
+
+    /// <summary>
+    /// The address cache skips the whole-code foreign-jump scan for a cached guard site. That is exact only while each foreign
+    /// shape's fixed tail occurs once in .text, at its guard site plus 13 bytes (the jump replaces the 13 bytes before it).
+    /// </summary>
+    [TestMethod]
+    public void InstalledNativeDll_ForeignShapeTails_OccurOnlyRightAfterTheirGuardSites()
+    {
+        var image = LoadInstalled(out _);
+        var result = Resolve(image, out _, out _, out var rawText);
+
+        var tail1 = ClipBudgetSignature.Find(rawText.Bytes, SkeletonBufferSignature.Parse(ForeignTail(SkeletonBufferSignature.ForeignGuardPattern)), 3);
+        var tail2 = ClipBudgetSignature.Find(rawText.Bytes, SkeletonBufferSignature.Parse(ForeignTail(SkeletonBufferSignature.Pool2ForeignGuardPattern)), 3);
+
+        Assert.AreEqual(1, tail1.Count, "pool 1 foreign tail");
+        Assert.AreEqual(result.ResumeRva, rawText.VirtualAddress + tail1[0], "pool 1 tail sits at the resume address");
+        Assert.AreEqual(1, tail2.Count, "pool 2 foreign tail");
+        Assert.AreEqual(result.Pool2ResumeRva, rawText.VirtualAddress + tail2[0], "pool 2 tail sits at the resume address");
+    }
+
+    /// <summary>The cache key reads the real header: each field is checked against the value of the v1.5.7 file read by hand.</summary>
+    [TestMethod]
+    public void InstalledNativeDll_CacheKey_HoldsTheHeaderFieldsOfTheFile()
+    {
+        var image = LoadInstalled(out var length);
+        if (length != 14219104)
+            Assert.Inconclusive($"TaleWorlds.Native.dll is {length} bytes, not the v1.5.7 file the key fields were read from.");
+        var headers = new byte[4096];
+        Array.Copy(image, headers, headers.Length);
+
+        var key = EngineSignatureCache.BuildKey("stamp", headers, 0x1000, 0xA2616C);
+
+        Assert.AreEqual("stamp|6AF2FF4C|D9D10B|ED3000|A26A00|9D9ED4|1000|A2616C", key);
+    }
+
+    /// <summary>The fixed tail of a foreign pattern: the tokens after the 13-byte jump (E9, four wildcards, eight NOPs).</summary>
+    private static string ForeignTail(string foreignPattern) => string.Join(" ", foreignPattern.Split(' ').Skip(13));
 
     private static byte[] LoadInstalled(out long length)
     {

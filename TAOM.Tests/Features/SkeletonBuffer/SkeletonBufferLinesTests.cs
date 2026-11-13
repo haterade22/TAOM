@@ -12,11 +12,11 @@ public class SkeletonBufferLinesTests
     public void Lines_GuardOn_ListsTheConfigurationOfEachPool()
     {
         Assert.AreEqual(
-            "[SkeletonBuffer] guard ON pool 1: site=0x69D14 resume=0x69D21 cave=0x7FF5FFF00000 counter=0x7FF5FFF01000 scanMs=12.3",
-            SkeletonBufferLines.GuardOn(1, 0x69D14, 0x69D21, 0x7FF5FFF00000, 0x7FF5FFF01000, 12.34));
+            "[SkeletonBuffer] guard ON pool 1: site=0x69D14 resume=0x69D21 cave=0x7FF5FFF00000 counter=0x7FF5FFF01000 scanMs=12.3 scan=cached",
+            SkeletonBufferLines.GuardOn(1, 0x69D14, 0x69D21, 0x7FF5FFF00000, 0x7FF5FFF01000, 12.34, "cached"));
         Assert.AreEqual(
-            "[SkeletonBuffer] guard ON pool 2: site=0x6AF50 resume=0x6AF5D cave=0x7FF5FFF00040 counter=0x7FF5FFF01040 scanMs=12.3",
-            SkeletonBufferLines.GuardOn(2, 0x6AF50, 0x6AF5D, 0x7FF5FFF00040, 0x7FF5FFF01040, 12.34));
+            "[SkeletonBuffer] guard ON pool 2: site=0x6AF50 resume=0x6AF5D cave=0x7FF5FFF00040 counter=0x7FF5FFF01040 scanMs=12.3 scan=scanned",
+            SkeletonBufferLines.GuardOn(2, 0x6AF50, 0x6AF5D, 0x7FF5FFF00040, 0x7FF5FFF01040, 12.34, "scanned"));
     }
 
     [TestMethod]

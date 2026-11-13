@@ -215,8 +215,8 @@ co-op settings fingerprint (225 `TaomSettings` properties, 180 simulation-releva
 | `CavalryPathPlannerTests.cs` (13) | Reroute filters and waypoint math; NaN target. |
 | `SmartCavalryAIBindingTests.cs` (4, `BindingVerification`) | `SetMovementOrder`'s and `SetTargetFormation`'s parameter names; enum values 2/3/7/9; every engine member the two postfix bodies and the adapters read (arrangement slots, facing order, native target, re-issue comparison, team queries). |
 
-`SharedMovementOrderPostfixTests` (CompanionTactics) pins that Patch31 stays in the shared
-`Patch_MissionTime_SetMovementOrder` category and never touches Patch35's stance state.
+`SharedMovementOrderPostfixTests` (CompanionTactics) pins that Patch31 stays in its own deferred
+`Patch_MissionTime_SmartCavalryAI` category and never touches Patch35's stance state.
 
 ## Known limitations
 
@@ -265,6 +265,10 @@ compare and one lock; for a charge order it scans the enemy formations once for 
 
 ## History
 
+- 2026-11-13: Patch31 and Patch31b moved to their own deferred category, `Patch_MissionTime_SmartCavalryAI`,
+  so a SmartCavalry class that fails after a game update no longer turns off the classes that
+  followed it in the old shared category (Marshal's Word's two thrower classes and Companion Tactics' Patch35).
+  A failure in the old category was logged, not silent.
 - 2026-09-13, #586: state machine v2. Move-based line-up, arrangement-slot alignment, frozen-direction
   contact, reform point past the live enemy, hit-and-run loop, dwell budgets and HandOff, charge-now
   on a second F3, cancel on other orders and on AI-controlled formations, identical-re-issue test,
