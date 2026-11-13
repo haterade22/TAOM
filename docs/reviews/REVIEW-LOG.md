@@ -5690,3 +5690,18 @@ Report `docs/reviews/deep-review-047-fold-safe-twins-2026-11-13.md`; RCA `docs/r
 - **Confirmed:** 0. 0 false positives. Lens 5 traced 13 flows with no gap; the lead re-checked the engine call site of the weapon toggle and the Patch0 and Patch21 comment claims. Two pre-existing LOW items are recorded as follow-ups in `docs/reviews/deep-review-048-delete-dead-members-2026-11-13.md`. No RCA: nothing was confirmed.
 - **Suite:** `Passed!  - Failed:     0, Passed: 39250, Skipped:     9, Total: 39259`, equal to the base.
 - **In-game:** nothing was run, and the diff owes none.
+
+## Review (number assigned at merge): plan 049 refuge save-load repair unit (Refs #1132), tier-1 deep review (Lens 5, Lens 2), Codex not run (2026-11-13)
+
+- **Scope:** branch `improve/049-refuge-load-repair-unit`, diff `664f19c5b..9b783ca9a`: the new `Domain/RefugeBookRepair.cs`, the
+  shortened `RefugeService.LoadFrom`, and the new `RefugeBookRepairTests.cs`. A behaviour-preserving move; no save format change.
+- **Codex:** not run. Codex is out of usage and a paid call needs the maintainer's word; the lens rounds stand in for it.
+- **Lenses:** Data flow, 13 flows, 0 gaps; Engine compatibility, 10 verified, 0 incompatible, and 1 LOW. 0 false positives.
+- **Confirmed:** 1 row in `docs/reviews/rca-refuge-load-repair-unit-2026-11-13.md`, fixed. Four pre-existing items are listed as
+  follow-ups in `docs/reviews/deep-review-049-refuge-load-repair-unit-2026-11-13.md`.
+
+| # | Bug | Category | Why missed | Preventive action |
+|---|-----|----------|-----------|-------------------|
+| F1 | A new test comment said `CampaignTime.Never` is the one nonzero `CampaignTime` a test can build without a campaign; `operator -` builds another | Other: comment against engine source | The comment came word for word from the plan and was not re-derived | Comment narrowed to what holds: `Never` reads no tick static, and `Hours` and `Days` give `Zero` for every finite argument with no campaign (the first narrowing, "the only public factory", missed NaN and infinity, convergence round 1); lesson in `lessons/testing-qa.md` |
+
+- **In-game:** nothing was run; another session held the game install.

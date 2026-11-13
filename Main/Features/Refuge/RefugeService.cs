@@ -110,9 +110,6 @@ public class RefugeService : IRefugeService, IRefugeBook
 {
     private const string RefugeIdPrefix = "taom_refuge_";
 
-    /// <summary>Floor on a build's target hours so BuildProgress never divides by ~zero.</summary>
-    private const float MinBuildTargetHours = 0.1f;
-
     /// <summary>Frame work runs at most this often, in game hours (~36 game-seconds): builds,
     /// the hold-nearby rule and visual retries stay responsive without per-frame party scans.</summary>
     private const float FrameWorkIntervalHours = 0.01f;
@@ -643,22 +640,9 @@ public class RefugeService : IRefugeService, IRefugeBook
     public void LoadFrom(Dictionary<string, RefugeData> refuges, int counter)
     {
         _refuges = refuges ?? new Dictionary<string, RefugeData>();
-        // A partially recovered or externally modified save can carry null rows; every tick path
-        // dereferences the value, so scrub here rather than crash on the first FrameTick.
-        List<string> nullKeys = null;
-        foreach (var pair in _refuges)
-        {
-            if (pair.Value == null)
-                (nullKeys ?? (nullKeys = new List<string>())).Add(pair.Key);
-        }
-        if (nullKeys != null)
-        {
-            foreach (var key in nullKeys)
-                _refuges.Remove(key);
-            _logger.LogWarning($"[Refuge] dropped {nullKeys.Count} null book row(s) from the loaded save.");
-        }
-        foreach (var pair in _refuges)
-            RepairLoadedRow(pair.Key, pair.Value);
+        // The seams go in as method groups, so the test subclass's overrides apply; the repair
+        // calls each only where it needs the clock, so a load of idle rows reads none.
+        RefugeBookRepair.Repair(_refuges, DaysSince, NowTime, _logger);
         _counter = counter < 0 ? 0 : counter;
         _visualShown.Clear();
         _holdNoteShown.Clear();
@@ -744,50 +728,6 @@ public class RefugeService : IRefugeService, IRefugeBook
     }
 
     // --- internals ---
-
-    /// <summary>Canonicalizes and validates one persisted row (hostile or damaged saves). The
-    /// DICTIONARY KEY is the identity every lookup resolves and every distance check measures, so
-    /// a divergent inner PartyId would make Dismantle/visuals act on a DIFFERENT party than the
-    /// one the player stands at -- cross-party destruction. Numeric repair kills the absorbing
-    /// states: a non-finite BuildTargetHours on a Building row could otherwise never reach
-    /// BuildProgress >= 1 (NaN fails every comparison; Infinity divides to 0) and the row eats a
-    /// cap slot forever.</summary>
-    private void RepairLoadedRow(string key, RefugeData data)
-    {
-        if (!string.Equals(data.PartyId, key, StringComparison.Ordinal))
-        {
-            _logger.LogWarning(
-                $"[Refuge] loaded row keyed '{key}' carried inner PartyId '{data.PartyId}'; canonicalized to the key.");
-            data.PartyId = key;
-        }
-        if (data.Tier != (int)RefugeTier.Refuge && data.Tier != (int)RefugeTier.Stronghold)
-        {
-            _logger.LogWarning($"[Refuge] row '{key}' had unknown tier {data.Tier}; reset to Refuge.");
-            data.TierEnum = RefugeTier.Refuge;
-        }
-        // Only NON-FINITE targets are absorbing (Infinity never divides to >= 1; NaN fails every
-        // comparison). Zero and negative targets already resolve as "done" in BuildProgress's
-        // positive-requirement gate, so they are left alone.
-        if (data.Building && !FiniteFloatValidator.IsFinite(data.BuildTargetHours))
-        {
-            _logger.LogWarning(
-                $"[Refuge] row '{key}' had non-finite BuildTargetHours {data.BuildTargetHours}; floored so the build can finish.");
-            data.BuildTargetHours = MinBuildTargetHours;
-        }
-        // A FUTURE BuildStartTime is the same absorbing-state class from the other side: the
-        // elapsed numerator stays negative for the whole offset, the build never finishes, and
-        // the row is neither ready nor dismantlable while it eats a cap slot.
-        if (data.Building && DaysSince(data.BuildStartTime) < 0.0)
-        {
-            _logger.LogWarning(
-                $"[Refuge] row '{key}' had a future BuildStartTime; reset to now so the build can finish.");
-            data.BuildStartTime = NowTime();
-        }
-        if (data.MilitiaAdded < 0)
-            data.MilitiaAdded = 0;
-        if (data.MilitiaPreRallyCount < 0)
-            data.MilitiaPreRallyCount = 0;
-    }
 
     private void FinishBuild(string partyId, RefugeData data)
     {
@@ -875,8 +815,8 @@ public class RefugeService : IRefugeService, IRefugeBook
         float hours = _settings.BuildHours;
         // Belt over the provider's validation: a degenerate target would make BuildProgress
         // divide by ~zero or never finish; the floor makes it finish almost immediately instead.
-        if (!FiniteFloatValidator.IsFinite(hours) || hours < MinBuildTargetHours)
-            return MinBuildTargetHours;
+        if (!FiniteFloatValidator.IsFinite(hours) || hours < RefugeBookRepair.MinBuildTargetHours)
+            return RefugeBookRepair.MinBuildTargetHours;
         return hours;
     }
 
