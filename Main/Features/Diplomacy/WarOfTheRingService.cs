@@ -281,8 +281,11 @@ public class WarOfTheRingService : IWarOfTheRingService
     }
 
     // #772: in FullWar, declares every Phase 2 / Hostile-pair war whose stored stance is not War
-    // (idempotent). Only pairs the model calls at war (ShouldBlockPeace) are declared: a peace made
-    // legitimately, or with blockPeaceBetweenHostileTiers off, is never undone by a reload.
+    // (idempotent). Only pairs the model calls at war (ShouldBlockPeace) are declared: a peace the
+    // model allows (a scripted pair that is not Hostile), or one made with
+    // blockPeaceBetweenHostileTiers off, is never undone by a reload. The exception (#819): a peace
+    // a Hostile pair made while the War of the Ring was switched off does not last. Once the switch
+    // is on again the model holds the pair at war, and this declares that war at the next launch.
     public void ReconcileDeclaredWars()
     {
         if (CurrentPhase != WarPhase.FullWar) return;
