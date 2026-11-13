@@ -2,6 +2,7 @@ using System;
 using HarmonyLib;
 using TaleWorlds.GauntletUI.Data;
 using TAOM.Core.Logging;
+using TAOM.Dependencies.Foundation;
 
 namespace TAOM.Features.Arena.Hooks;
 
@@ -28,7 +29,7 @@ namespace TAOM.Features.Arena.Hooks;
 /// Patch60's catch saw the first AV).
 ///
 /// The Finalizer suppresses ONLY <see cref="AccessViolationException"/>; any other exception
-/// propagates untouched. Mirrors the Patch50 vanilla-crash-guard pattern. Release() runs once
+/// is handed back with its trace kept. Mirrors the Patch50 vanilla-crash-guard pattern. Release() runs once
 /// per movie lifetime — cold path, no per-frame cost.
 /// </summary>
 [HarmonyPatch(typeof(GauntletMovie), nameof(GauntletMovie.Release))]
@@ -43,7 +44,7 @@ public static class GauntletMovie_Release_AvGuard_Patch
     [HarmonyFinalizer]
     public static Exception? Finalizer(GauntletMovie? __instance, Exception? __exception)
     {
-        if (__exception is not AccessViolationException) return __exception;
+        if (__exception is not AccessViolationException) return RethrowStackPreserver.PreserveForRethrow(__exception, null);
 
         string movieName = "<unknown>";
         try { movieName = __instance?.MovieName ?? "<unknown>"; }

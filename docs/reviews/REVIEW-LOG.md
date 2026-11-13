@@ -5739,3 +5739,21 @@ Report `docs/reviews/deep-review-047-fold-safe-twins-2026-11-13.md`; RCA `docs/r
 
 - **Gate sweep:** the removed generator spec held 137 ids, of which the old gate refused 0; the deleted Gondor gate refuses 0 of 313 refs today. Only an `sk_gd_*` id defined outside `LOTRLOME_items/gondor/` passes now where it failed before (intended).
 - **In-game:** not applicable (tools and docs only).
+
+## Review (number assigned at merge): finalizer rethrow class (#1155), War of the Ring daily repair (#1163) and the 2026-11-13 PR batch, Codex ultra then high, deep review with two lenses (2026-11-13)
+
+- **Scope:** uncommitted work on `fix/finalizer-rethrow-class` over `eeb664f4a`, plus, for Codex only, the Patch147 rework (`372cab396`) and pull requests #1144, #1145, #1146, #1148, #1149 and #1150, which had merged that day with no Codex pass.
+- **Codex:** first pass at `ultra`: 0 P1, 1 P2 (#1149's re-enable edge, fixed as #1163), 1 P3 (#1146 partial strip count, not applied), no finding in the Patch147 rework or in #1144, #1145, #1148, #1150. Fix pass at `high`: 0 P1, 0 P2, 0 P3. 0 false positives. One miss: it confirmed a "by design" pin that decision D13 contradicts; Agent 5 found the record.
+- **Lenses:** Data flow and Engine compatibility on #1155 (tier 1): 0 CRITICAL, 0 HIGH, 4 MEDIUM, the rest LOW, all confirmed and fixed. Data flow again on the fix diff at `high`: 9 LOW text items, fixed.
+- **Report:** RCA `docs/reviews/rca-finalizer-rethrow-and-wotr-repair-2026-11-13.md`; prompts `codex-adversarial-harmony-guards-batch-2026-11-13.prompt.md` and `codex-fixreview-harmony-guards-batch-2026-11-13.prompt.md`.
+
+| # | Bug | Category | Why missed | Preventive action |
+|---|-----|----------|-----------|-------------------|
+| 1 | Resumed wars undeclared after the War of the Ring is switched off and on (#1163) | Stale state / lifecycle | The state was documented as a limit; nobody asked whether the launch-time repair could run daily | Daily repair on the host; lesson in `lessons/campaign-mechanics.md` |
+| 2 | "By design" written for PatchShield's treatment of `com.taom.mod`, against decision D13 | Other: decision record not searched | Feature docs were read as intent; `plans/` was not searched | Texts name D13; lesson in `lessons/build-tooling-workflow.md`; a Codex lesson line |
+| 3 | Four observe-only finalizers given the preserver instead of `void` | Convention inconsistency | A script fixed a statement; no finalizer was classified by role | Converted; pin test; real-Harmony premise test |
+| 4 | The finalizer gate saw one spelling | Other: source-scan gate | Written from the nine sites it had to catch | Five alternations over comment-stripped text; blind spots named |
+| 5 | Stale claims left in the registry, docs, comments and a test after each fix | Other: scope sweep | Sweeps grepped the changed sentence, not the claim | Corrected |
+
+- **In-game:** #1163 owed (`triage-needs-ingame`). #1155 only keeps a stack trace: not applicable.
+- **Metrics:** not recomputed here.

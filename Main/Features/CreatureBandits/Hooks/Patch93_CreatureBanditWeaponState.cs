@@ -47,11 +47,11 @@ public static class Patch93_CreatureBanditWeaponState
         __result.SetAgentFlags(CreatureBanditRules.BuildFlags(__result.GetAgentFlags()));
     }
 
-    public static Exception? Finalizer(Exception? __exception)
+    // void: it reports and never changes the outcome, so Harmony keeps the trace itself (#1155).
+    public static void Finalizer(Exception? __exception)
     {
         if (__exception != null && CreatureWeaponStateScope.TakeCreated())
             CreatureBanditLog.Logger?.LogError("[CreatureBandits] CreateAgent threw after a creature was " +
                 $"created with CanWieldWeapon; the flag could not be stripped: {__exception.GetType().Name}: {__exception.Message}");
-        return __exception;
     }
 }

@@ -196,15 +196,16 @@ public class Patch88LordPartyTemplateTests
     // ---- the behaviour reachable without a campaign ---------------------------------------
 
     [TestMethod]
-    public void Finalizers_ReturnTheExceptionUntouched_AndRestoreTheSavedOwner()
+    public void Finalizers_AreVoid_AndRestoreTheSavedOwner()
     {
-        // Patch65 finalizes SpawnLordParty too and decides what is swallowed; this one must be
-        // transparent or it overwrites that decision in the shared exception slot.
-        var ex = new InvalidOperationException("vanilla");
+        // Patch65 finalizes SpawnLordParty too and decides what is swallowed. A void finalizer
+        // cannot write the shared exception slot, so these scopes stay out of that decision (#1155).
+        Assert.AreEqual(typeof(void), typeof(Patch88_SpawnLordPartyScope).GetMethod("Finalizer")!.ReturnType);
+        Assert.AreEqual(typeof(void),
+            typeof(Patch88_InitializeLordPartyPropertiesScope).GetMethod("Finalizer")!.ReturnType);
 
-        Assert.AreSame(ex, Patch88_SpawnLordPartyScope.Finalizer(ex, null));
-        Assert.IsNull(Patch88_SpawnLordPartyScope.Finalizer(null, null));
-        Assert.AreSame(ex, Patch88_InitializeLordPartyPropertiesScope.Finalizer(ex, null));
+        Patch88_SpawnLordPartyScope.Finalizer(null);
+        Patch88_InitializeLordPartyPropertiesScope.Finalizer(null);
         Assert.IsNull(Patch88_LordPartyTemplate.AmbientOwner);
     }
 
