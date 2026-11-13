@@ -3,6 +3,7 @@ using System.Linq;
 using TaleWorlds.Core;
 using TaleWorlds.MountAndBlade;
 using TaleWorlds.ObjectSystem;
+using TAOM.Adapters;
 
 namespace TAOM.Features.CustomBattles.Muster;
 
@@ -61,7 +62,7 @@ internal static class CustomBattleRoleAssigner
 
     private static ItemObject? BannerFor(Team team)
     {
-        var culture = team.Leader?.Character?.Culture ?? team.ActiveAgents.FirstOrDefault()?.Character?.Culture;
+        var culture = CharacterCulture.Of(team.Leader?.Character) ?? CharacterCulture.Of(team.ActiveAgents.FirstOrDefault()?.Character);
         var banners = MBObjectManager.Instance.GetObjectTypeList<ItemObject>().Where(BannerBearerLogic.IsBannerItem).ToList();
         return banners.FirstOrDefault(i => i.Culture == culture) ?? banners.FirstOrDefault();
     }

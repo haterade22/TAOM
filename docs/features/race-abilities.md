@@ -67,8 +67,11 @@ spawn (Custom Battle spawns its armies after the first tick, so there nearly eve
 
 A profile comes from `RaceAbilityProfileResolver`: the soldier's race profile when his race has one; otherwise, for
 a soldier of the human race only, his culture's profile. A troll in Mordor's ranks is not one of Mordor's men. The
-culture is the troop's own (`Character.Culture`); for a hero that is his template's culture, which can differ from
-`Hero.Culture` for a born child. Culture Doctrine reads it the same way.
+culture is the troop's own, and for a hero `Hero.Culture` (`CharacterCulture.IdOf`, #1157); a hero whose
+`Hero.Culture` is null gets the character's own. An agent's raw `Character.Culture` can hold the culture the character
+got from ModuleData or from its template instead: `main_hero`'s `Culture.battania` for the player's hero, whatever
+culture the player picked. Culture Doctrine, mount charges, banner heraldry and formation routing read it the same
+way, and `CharacterCultureGateTests` fails on a read of the raw field outside its list of raw readers.
 
 The tree, the same for every profile:
 
