@@ -79,16 +79,5 @@
     <string id="taom_wc_gondor_fell" text="{TARGET} kapıları kırılır ve Ak Şehir Mordor'un eline düşer." />
     <string id="taom_wc_blackgate_title" text="Kara Kapı Açılıyor" />
     <string id="taom_wc_blackgate_occurred" text="Batı'nın Komutanları, Göz'ü Yüzük Taşıyıcı'dan uzaklaştırmak için Morannon'a yürür. Savaşın kaderi artık Yüzük'e bağlıdır." />
-    <string id="taom_event_category_chronicle" text="Savaş Vakayinamesi" />
-    <string id="taom_event_category_coronation" text="Taç Giyme" />
-    <string id="taom_event_effects" text="Etkiler" />
-    <string id="taom_event_effect_days" text="{DAYS} gün boyunca" />
-    <string id="taom_event_side_free" text="Hür Halklar" />
-    <string id="taom_event_side_evil" text="Gölge" />
-    <string id="taom_event_effect_volunteers" text="Gönüllü toplama oranı" />
-    <string id="taom_event_effect_escape" text="Ek kaçış zarı" />
-    <string id="taom_event_effect_momentum" text="Yüzük Savaşı momentumu" />
-    <string id="taom_event_effect_note" text="Değerler, bu olayın sınırlardan önceki katkılarıdır; sınırlar tek bir etkiye bile uygulanır. Kendi klanınızın tımarları ve lordları asla etkilenmez." />
-    <string id="taom_event_effect_escape_note" text="Ek kaçış zarının şansı, bir lordun olağan kaçış şansının gösterilen yüzdesidir." />
   </strings>
 </base>

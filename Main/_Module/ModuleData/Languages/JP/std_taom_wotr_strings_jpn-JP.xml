@@ -79,16 +79,5 @@
     <string id="taom_wc_gondor_fell" text="{TARGET}の門は破られ、白の都はモルドールの手に落ちた。" />
     <string id="taom_wc_blackgate_title" text="黒門開く" />
     <string id="taom_wc_blackgate_occurred" text="西軍の総大将たちは、指輪所持者から「目」をそらすためモランノンへ進軍した。今や戦の運命は指輪に委ねられている。" />
-    <string id="taom_event_category_chronicle" text="戦争年代記" />
-    <string id="taom_event_category_coronation" text="戴冠" />
-    <string id="taom_event_effects" text="効果" />
-    <string id="taom_event_effect_days" text="{DAYS}日間" />
-    <string id="taom_event_side_free" text="自由の民" />
-    <string id="taom_event_side_evil" text="影" />
-    <string id="taom_event_effect_volunteers" text="志願兵の募集率" />
-    <string id="taom_event_effect_escape" text="追加の脱走判定" />
-    <string id="taom_event_effect_momentum" text="指輪戦争の勢力" />
-    <string id="taom_event_effect_note" text="数値は上限適用前のこのイベントによる寄与分で、上限は単一の効果にも適用されます。自分の氏族の領地と領主は影響を受けません。" />
-    <string id="taom_event_effect_escape_note" text="追加の脱走判定の確率は、領主の通常の脱走確率に表示された割合を掛けたものです。" />
   </strings>
 </base>

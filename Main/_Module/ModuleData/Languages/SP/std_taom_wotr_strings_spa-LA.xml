@@ -79,16 +79,5 @@
     <string id="taom_wc_gondor_fell" text="Las puertas de {TARGET} son derribadas, y la Ciudad Blanca cae ante Mordor." />
     <string id="taom_wc_blackgate_title" text="La Puerta Negra se abre" />
     <string id="taom_wc_blackgate_occurred" text="Los Capitanes del Oeste marchan al Morannon para apartar el Ojo del Portador del Anillo. La suerte de la guerra depende ahora del Anillo." />
-    <string id="taom_event_category_chronicle" text="Crónica de la Guerra" />
-    <string id="taom_event_category_coronation" text="Coronación" />
-    <string id="taom_event_effects" text="Efectos" />
-    <string id="taom_event_effect_days" text="Durante {DAYS} días" />
-    <string id="taom_event_side_free" text="Pueblos Libres" />
-    <string id="taom_event_side_evil" text="La Sombra" />
-    <string id="taom_event_effect_volunteers" text="Tasa de reclutamiento de voluntarios" />
-    <string id="taom_event_effect_escape" text="Tirada de fuga adicional" />
-    <string id="taom_event_effect_momentum" text="Impulso de la Guerra del Anillo" />
-    <string id="taom_event_effect_note" text="Los valores son las contribuciones de este evento antes de los límites, que se aplican incluso a un solo efecto. Los feudos y señores de tu propio clan nunca se ven afectados." />
-    <string id="taom_event_effect_escape_note" text="La probabilidad de la tirada de fuga adicional es el porcentaje mostrado de la probabilidad de fuga habitual de un señor." />
   </strings>
 </base>

@@ -79,16 +79,5 @@
     <string id="taom_wc_gondor_fell" text="Bramy {TARGET} zostają rozbite, a Białe Miasto pada łupem Mordoru." />
     <string id="taom_wc_blackgate_title" text="Czarna Brama się otwiera" />
     <string id="taom_wc_blackgate_occurred" text="Wodzowie Zachodu maszerują ku Morannon, by odciągnąć Oko od Powiernika Pierścienia. Los wojny spoczywa teraz w Pierścieniu." />
-    <string id="taom_event_category_chronicle" text="Kronika Wojny" />
-    <string id="taom_event_category_coronation" text="Koronacja" />
-    <string id="taom_event_effects" text="Efekty" />
-    <string id="taom_event_effect_days" text="Przez {DAYS} dni" />
-    <string id="taom_event_side_free" text="Wolne Ludy" />
-    <string id="taom_event_side_evil" text="Cień" />
-    <string id="taom_event_effect_volunteers" text="Tempo werbunku ochotników" />
-    <string id="taom_event_effect_escape" text="Dodatkowy rzut na ucieczkę" />
-    <string id="taom_event_effect_momentum" text="Rozpęd Wojny o Pierścień" />
-    <string id="taom_event_effect_note" text="Wartości to wkład tego wydarzenia przed limitami, które dotyczą nawet pojedynczego efektu. Lenna i lordowie twojego klanu nigdy nie są objęci." />
-    <string id="taom_event_effect_escape_note" text="Szansa dodatkowego rzutu na ucieczkę to pokazany procent zwykłej szansy ucieczki lorda." />
   </strings>
 </base>

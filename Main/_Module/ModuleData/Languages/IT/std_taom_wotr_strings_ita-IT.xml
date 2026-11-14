@@ -79,16 +79,5 @@
     <string id="taom_wc_gondor_fell" text="Le porte di {TARGET} sono infrante, e la Città Bianca cade in mano a Mordor." />
     <string id="taom_wc_blackgate_title" text="Il Nero Cancello si apre" />
     <string id="taom_wc_blackgate_occurred" text="I Capitani dell'Ovest marciano verso il Morannon per distogliere l'Occhio dal Portatore dell'Anello. Il destino della guerra ora dipende dall'Anello." />
-    <string id="taom_event_category_chronicle" text="Cronaca della Guerra" />
-    <string id="taom_event_category_coronation" text="Incoronazione" />
-    <string id="taom_event_effects" text="Effetti" />
-    <string id="taom_event_effect_days" text="Per {DAYS} giorni" />
-    <string id="taom_event_side_free" text="Popoli Liberi" />
-    <string id="taom_event_side_evil" text="L'Ombra" />
-    <string id="taom_event_effect_volunteers" text="Tasso di reclutamento dei volontari" />
-    <string id="taom_event_effect_escape" text="Tiro di fuga aggiuntivo" />
-    <string id="taom_event_effect_momentum" text="Slancio della Guerra dell'Anello" />
-    <string id="taom_event_effect_note" text="I valori sono i contributi di questo evento prima dei limiti, che si applicano anche a un singolo effetto. I feudi e i signori del tuo clan non sono mai interessati." />
-    <string id="taom_event_effect_escape_note" text="La probabilità del tiro di fuga aggiuntivo è la percentuale indicata della normale probabilità di fuga di un signore." />
   </strings>
 </base>

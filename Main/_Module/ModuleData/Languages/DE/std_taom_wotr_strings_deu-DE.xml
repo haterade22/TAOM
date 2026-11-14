@@ -79,16 +79,5 @@
     <string id="taom_wc_gondor_fell" text="Die Tore von {TARGET} sind zerbrochen, und die Weiße Stadt fällt an Mordor." />
     <string id="taom_wc_blackgate_title" text="Das Schwarze Tor öffnet sich" />
     <string id="taom_wc_blackgate_occurred" text="Die Hauptleute des Westens ziehen zum Morannon, um das Auge vom Ringträger abzulenken. Das Schicksal des Krieges ruht nun auf dem Ring." />
-    <string id="taom_event_category_chronicle" text="Kriegschronik" />
-    <string id="taom_event_category_coronation" text="Krönung" />
-    <string id="taom_event_effects" text="Auswirkungen" />
-    <string id="taom_event_effect_days" text="Für {DAYS} Tage" />
-    <string id="taom_event_side_free" text="Freie Völker" />
-    <string id="taom_event_side_evil" text="Der Schatten" />
-    <string id="taom_event_effect_volunteers" text="Rekrutierungsrate für Freiwillige" />
-    <string id="taom_event_effect_escape" text="Zusätzlicher Fluchtwurf" />
-    <string id="taom_event_effect_momentum" text="Schwung im Krieg um den Ring" />
-    <string id="taom_event_effect_note" text="Die Werte sind die Beiträge dieses Ereignisses vor den Obergrenzen, die auch für einen einzelnen Effekt gelten. Lehen und Fürsten deines eigenen Clans sind nie betroffen." />
-    <string id="taom_event_effect_escape_note" text="Die Chance des zusätzlichen Fluchtwurfs ist der angezeigte Prozentsatz der üblichen Fluchtchance eines Fürsten." />
   </strings>
 </base>

@@ -79,16 +79,5 @@
     <string id="taom_wc_gondor_fell" text="{TARGET} 的城門被攻破，白城落入魔多之手。" />
     <string id="taom_wc_blackgate_title" text="黑門開啟" />
     <string id="taom_wc_blackgate_occurred" text="西方的將領們進軍魔拉南，欲引開魔眼對持戒人的注視。戰爭的命運如今繫於至尊魔戒。" />
-    <string id="taom_event_category_chronicle" text="戰爭編年史" />
-    <string id="taom_event_category_coronation" text="加冕" />
-    <string id="taom_event_effects" text="效果" />
-    <string id="taom_event_effect_days" text="持續{DAYS}天" />
-    <string id="taom_event_side_free" text="自由民族" />
-    <string id="taom_event_side_evil" text="魔影" />
-    <string id="taom_event_effect_volunteers" text="志願兵招募速率" />
-    <string id="taom_event_effect_escape" text="額外逃脫判定" />
-    <string id="taom_event_effect_momentum" text="魔戒聖戰聲勢" />
-    <string id="taom_event_effect_note" text="數值為本事件在上限之前的貢獻，上限對單一效果同樣適用。你自己家族的封地和領主永遠不受影響。" />
-    <string id="taom_event_effect_escape_note" text="額外逃脫判定的機率為領主通常逃脫機率的所示百分比。" />
   </strings>
 </base>
