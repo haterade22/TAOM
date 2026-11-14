@@ -7,6 +7,7 @@ using HarmonyLib;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
 using TAOM.Client;
+using TAOM.Core.Diagnostics;
 using TAOM.Core.Logging;
 using TAOM.Features.SeatOfSeeing;
 using TAOM.Features.SeatOfSeeing.Hooks;
@@ -291,6 +292,28 @@ public class SeatFightPatchWiringTests
 
         CollectionAssert.AreEqual(original.Select(c => c.opcode).ToList(), result.Select(c => c.opcode).ToList());
         logger.Received(1).LogError(Arg.Is<string>(m => m.StartsWith("[SeatOfSeeing]") && m.Contains("found 0")));
+    }
+
+    [TestMethod]
+    public void TheTranspiler_WithNoRead_ReportsTheSeatOfSeeing()
+    {
+        var saved = SelfDisables.Ledger;
+        SelfDisables.Ledger = new SelfDisableLedger();
+        try
+        {
+            var original = new List<CodeInstruction> { new(OpCodes.Ldarg_0), new(OpCodes.Ret) };
+
+            SeatOrderPanelTranspiler.LetTheHandedHeroOpenIt(original, Substitute.For<IModLogger>()).ToList();
+
+            var taken = SelfDisables.Ledger.Take();
+            Assert.AreEqual(1, taken.Count);
+            Assert.AreEqual("Patch140_SeatOfSeeing", taken[0].Id);
+            StringAssert.Contains(taken[0].Reason, "found 0");
+        }
+        finally
+        {
+            SelfDisables.Ledger = saved;
+        }
     }
 
     [TestMethod]

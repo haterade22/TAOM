@@ -1,7 +1,10 @@
 using System;
+using System.Linq;
+using System.Reflection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;
+using TAOM.Core.Diagnostics;
 using TAOM.Core.Logging;
 using TAOM.Features.HiddenHosts;
 
@@ -16,16 +19,23 @@ namespace TAOM.Tests.Features.HiddenHosts;
 public class HiddenHostsFaultBudgetTests
 {
     private IModLogger _logger = null!;
+    private SelfDisableLedger _savedLedger = null!;
 
     [TestInitialize]
     public void Setup()
     {
         _logger = Substitute.For<IModLogger>();
         HiddenHostsCalls.Initialize(null, null, _logger);
+        _savedLedger = SelfDisables.Ledger;
+        SelfDisables.Ledger = new SelfDisableLedger();
     }
 
     [TestCleanup]
-    public void Cleanup() => HiddenHostsCalls.Initialize(null, null);
+    public void Cleanup()
+    {
+        HiddenHostsCalls.Initialize(null, null);
+        SelfDisables.Ledger = _savedLedger;
+    }
 
     [TestMethod]
     public void ReportFault_LogsOncePerHookAndExceptionType()
@@ -74,6 +84,39 @@ public class HiddenHostsFaultBudgetTests
     }
 
     [TestMethod]
+    public void ReportFault_WithinTheBudget_ReportsNoSelfDisable()
+    {
+        for (int i = 0; i < HiddenHostsCalls.FaultBudget - 1; i++)
+            HiddenHostsCalls.ReportFault("hook", new InvalidOperationException());
+
+        Assert.IsFalse(SelfDisables.Ledger.HasPending);
+    }
+
+    [TestMethod]
+    public void ReportFault_TheBudgetIsReached_ReportsTheSelfDisableOnce()
+    {
+        // #1185: the hooks are off from here, so the player is told. The faults after the budget add nothing.
+        for (int i = 0; i < HiddenHostsCalls.FaultBudget + 5; i++)
+            HiddenHostsCalls.ReportFault("hook", new InvalidOperationException());
+
+        var taken = SelfDisables.Ledger.Take();
+        Assert.AreEqual(1, taken.Count);
+        Assert.AreEqual("Patch105_HiddenHosts", taken[0].Id);
+        Assert.AreEqual("32 hook faults", taken[0].Reason);
+    }
+
+    [TestMethod]
+    public void ReportFault_TheBudgetIsReachedAndTheLoggerThrows_StillReportsTheSelfDisable()
+    {
+        _logger.When(l => l.LogError(Arg.Any<string>())).Throw(new InvalidOperationException("log down"));
+
+        for (int i = 0; i < HiddenHostsCalls.FaultBudget; i++)
+            HiddenHostsCalls.ReportFault("hook", new InvalidOperationException());
+
+        Assert.AreEqual("Patch105_HiddenHosts", SelfDisables.Ledger.Take().Single().Id);
+    }
+
+    [TestMethod]
     public void Initialize_ResetsTheBudgetAndTheReportedSet()
     {
         for (int i = 0; i < HiddenHostsCalls.FaultBudget; i++)
@@ -107,5 +150,60 @@ public class HiddenHostsFaultBudgetTests
             HiddenHostsCalls.ReportFault("hook", new InvalidOperationException());
 
         Assert.IsTrue(HiddenHostsCalls.Stopped);
+    }
+}
+
+/// <summary>
+/// #1185: a hook whose engine field does not bind does nothing for the rest of the process, yet it counts one fault,
+/// so the fault budget alone never reports it. Each bind miss reports Patch105 itself, once.
+/// </summary>
+[TestClass]
+[TestCategory("RequiresGame")]
+public class HiddenHostsBindMissSelfDisableTests
+{
+    private SelfDisableLedger _savedLedger = null!;
+
+    [ClassInitialize]
+    public static void Init(Microsoft.VisualStudio.TestTools.UnitTesting.TestContext _) => TAOM.Tests.Migration.GameAssemblies.EnsureLoaded();
+
+    [TestInitialize]
+    public void Setup()
+    {
+        HiddenHostsCalls.Initialize(null, null, Substitute.For<IModLogger>());
+        _savedLedger = SelfDisables.Ledger;
+        SelfDisables.Ledger = new SelfDisableLedger();
+    }
+
+    [TestCleanup]
+    public void Cleanup()
+    {
+        HiddenHostsCalls.Initialize(null, null);
+        SelfDisables.Ledger = _savedLedger;
+    }
+
+    [DataTestMethod]
+    [DataRow(typeof(TAOM.Features.HiddenHosts.Hooks.PartyNameplateVM_RefreshBinding_HiddenHosts_Patch))]
+    [DataRow(typeof(TAOM.Features.HiddenHosts.Hooks.PropertyBasedTooltipVM_OnPeriodicRefresh_HiddenHosts_Patch))]
+    public void ReportMissingField_ReportsPatch105Once(Type hook)
+    {
+        var flag = hook.GetField("_bindReported", BindingFlags.NonPublic | BindingFlags.Static)!;
+        var report = hook.GetMethod("ReportMissingField", BindingFlags.NonPublic | BindingFlags.Static)!;
+        var saved = flag.GetValue(null);
+        flag.SetValue(null, false);
+        try
+        {
+            report.Invoke(null, null);
+            report.Invoke(null, null);
+
+            var taken = SelfDisables.Ledger.Take();
+            Assert.AreEqual(1, taken.Count);
+            Assert.AreEqual(HiddenHostsModule.PatchCategory, taken[0].Id);
+            StringAssert.Contains(taken[0].Reason, "lacks");
+            Assert.IsFalse(HiddenHostsCalls.Stopped, "one fault does not spend the budget: the report is the bind miss's own");
+        }
+        finally
+        {
+            flag.SetValue(null, saved);
+        }
     }
 }

@@ -410,12 +410,81 @@ Re-checked after the passes:
   already 14,804 lines out of sync with the committed roster before any of this work, measured
   against `HEAD`. Patching their hardcoded weapon tables would be work on dead code and would
   imply they are safe to re-run, which they are not.
+- A test re-renders each live troop generator this pass touched. `test_generator_regions_in_sync.py`
+  runs `--check` for each realm in `generate_new_faction_kingdoms.REGENERATABLE` (Cardolan and
+  Rhudaur among them), and `test_generated_files.py` requires `troops_lothlorien.xml` to equal the
+  `generate_lothlorien_troops.py` render with the placed skills carried over. A roster swap on one
+  of their troops goes into the generator's table, or the test fails.
+- After a pass 2 restat, re-run `generate_starter_kit.py --apply`: a crafted starter is capped at
+  the melee DPS of its weakest same-culture shop sibling, so moving a sibling moves the cap.
+  `--verify` compares the whole starter blade block with the plan, so a stale factor shows as drift.
 - `generate_enlistment_rosters.py`: its hand-authored `DEFAULT_ROSTER_ITEMS` ships as the
   `neutral_culture` last-resort rosters, and 14 of its weapon entries now sit under the band
   their rank implies. Ten cannot be fixed from that family at all: Rohan's one-handed swords
   top out at 43 DPS and a sergeant's band starts at 58. Documented in the file rather than
   patched, because the fix is a decision (widen the culture-neutral table past one kingdom, or
   author Rohirric weapons) rather than a substitution.
+
+### Upgrade paths: 2026-11-13
+
+The band check judges each troop alone, so a troop can sit inside its band and still carry less
+than the troop it upgrades from (#631). A one-off walker followed every `upgrade_target` path. It
+built each battle set the way `BasicCharacterObject.Deserialize` builds it and priced Armory and
+vanilla weapons with `melee_catalogue`. It counts a pair when a troop's melee DPS sits 5 or more
+below an ancestor's, in two ways:
+
+- **Best set**: each troop's strongest weapon over all its battle sets.
+- **Weakest set**: each troop's weakest set. The engine draws each slot from its own battle set
+  (`Equipment.cs:573-578`), so a troop with one weak set carries the weak weapon in some spawns.
+  The best-set count hides that.
+
+Mike's rule for the fix: lower tiers take vanilla weapons, unique weapons stay with the higher tiers.
+Applied as roster swaps, never as new items, and in every battle set of the troop:
+
+1. The higher troop takes a stronger weapon of the same class that its culture already fields
+   (the pass 1 pool), no higher than its band's top, not a hero blade, shield-safe.
+2. Failing that, the lower troop drops to a vanilla weapon of the same class whose id prefix its
+   culture already fields (`empire_` for Gondor, `vlandia_` for Rohan, `khuzait_` for Rhun), never a
+   `_blunt` tournament weapon and never below its own band.
+
+Three of the swaps took the one-handed Berserker sword off three tier-1 Isengard troops
+(`urukhai_recruit`, `isengard_orc_warg_scout_v2`, `isengard_orc_brawler`). A pass 2 run
+(`--culture isengard --culture gundabad --culture anduinvale`) could then anchor its blade at the
+champions' tier: `wm_isengard_berserker_sword_a01_blade` went from swing 1.21 to 2.44, and the
+two-handed Berserker sword from 34 to 69 DPS. A raise in the item's tier and price follows from the
+higher damage; nobody measured it. The same run lowered `wm_gundabad_sword_a01_blade` from
+2.88 / 1.03 to 2.37 / 0.85.
+
+The run also lowered four Dale blades (`wm_dale_ws_1h_axe_a01` to `a03`, `wm_dale_ws_sword_a02`),
+and those were put back. `--culture` labels an item with its first wearer's culture, and
+`troops_anduinvale.xml` loads before the Dale file, so Dale's own weapons were labelled `anduinvale`
+(#1241). Until that is fixed, read a `--culture` dry run's blade list before `--apply`.
+
+Measured on 2026-11-13 with the live Armory pieces on both sides, `HEAD` rosters against the working
+tree:
+
+| Count (gap of 5 DPS or more) | Before | After |
+|---|---|---|
+| Best-set pairs | 69 | 38 |
+| Best-set troops | 51 | 25 |
+| Weakest-set pairs | 133 | 101 |
+| Weakest-set troops | 91 | 64 |
+
+No pair is new. `validate_moduledata.py` reports 129 `MELEE_LADDER_INVERSION` warnings after the
+pass, and no longer warns the Anduin Vale and Angaladh woodman archers or the Dorwinion vintner
+archer. The Cardolan, Rhudaur and Lorien swaps are also in their generators' tables
+(`generate_cardolan_troops.py`, `generate_rhudaur_troops.py`, `generate_lothlorien_troops.py`).
+
+Four troops now carry a vanilla weapon above their band's top: the Gondor Har conscript and three
+Westfold troops. The gate cannot see them, since it prices Armory items only (#1242, which also
+covers per-set scoring and `civilian="true"` rosters).
+
+Left on purpose: the lance and spear role changes (couched damage is outside this model; a spear
+trades DPS for reach). Left for a decision under #631, the class changes no roster swap can fix, each needing a
+stronger weapon the culture does not own: the Gondor Pavise line's maces (54 to 58 DPS under a
+crossbowman's 80 sword), the Gundabad Chosen and Ironfang maces (43 under 60), the Gundabad Guardian's
+pike, the Knight of Arthedain and the Captain of Cameth Brin with a 71 bastard sword under an 80
+poleaxe, and the Kharaghul Karash Keshig's sword under its parent's 116 vanilla polearm.
 
 ### What is left
 

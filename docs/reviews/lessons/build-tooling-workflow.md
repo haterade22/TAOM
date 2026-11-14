@@ -5085,3 +5085,15 @@ yotthani's `MithrilForge.Crowd` tool builds every output file or folder name tha
 - **Why missed:** an id read from a package looks like a plain string, and the write path is built a few lines later.
 - **Prevent:** a tool that writes files named by data it did not author joins them under a fixed root with the three rules above, and has a test for `..`, a drive letter and a separator in the name. Check `tools/` for such writers before the next tool is added.
 - **Source:** yotthani, MithrilForge `CrowdCommand.cs` and `SafePathTests.cs`@ea7a7bfb; commit `5f72986`.
+
+### A scoped tool run can change data outside its scope (restat `--culture`, 2026-11-13)
+`restat_melee_blades.py --culture anduinvale` lowered four Dale blades. The tool labels an item with its first wearer's culture, and `troops_anduinvale.xml` loads before the Dale file, so Dale's own weapons were in scope. 54 troops of four cultures carry them. The report listed the blades, and nobody read the list against the scope (#1241).
+- **Why missed:** the operator trusted the flag's name, and the check after the run priced only the cultures in scope.
+- **Prevent:** before `--apply` of a scoped run on shared data (a blade, an item, a roster), read the dry run's list of objects it changes and name every other owner of each one. After the run, measure every consumer of the changed objects, not only the scope.
+- **Source:** [rca-starter-cap-upgrade-paths-2026-11-13.md](../rca-starter-cap-upgrade-paths-2026-11-13.md), finding 4.
+
+### A gate that checks ids passes stale values (starter kit `--verify`, 2026-11-13)
+`generate_starter_kit.py --verify` checked that every starter id existed. Once the starter's blade factor depended on other blades (the sibling cap), a restat of a sibling could bring #1224 back while the gate printed "OK: no drift".
+- **Why missed:** the gate was written when a starter's stats depended only on its donor, and the change that made them depend on other data did not revisit it.
+- **Prevent:** when a generated value starts to depend on new inputs, make the reversion gate compare the generated text with the plan, not only the ids, and add a test that moves an input and expects drift.
+- **Source:** [rca-starter-cap-upgrade-paths-2026-11-13.md](../rca-starter-cap-upgrade-paths-2026-11-13.md), finding 6.

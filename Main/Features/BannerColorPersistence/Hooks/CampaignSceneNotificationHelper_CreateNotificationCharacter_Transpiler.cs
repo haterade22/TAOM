@@ -4,6 +4,7 @@ using System.Reflection.Emit;
 using HarmonyLib;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.SceneInformationPopupTypes;
+using TAOM.Core.Diagnostics;
 
 namespace TAOM.Features.BannerColorPersistence.Hooks;
 
@@ -36,6 +37,9 @@ public static class CampaignSceneNotificationHelper_CreateNotificationCharacter_
                 replacements++;
             }
         }
+
+        if (replacements == 0)
+            SelfDisables.Report("Patch23_BannerColorPersistence.SceneNotification", "no Hero.MapFaction read in CreateNotificationCharacterFromHero");
 
         return list;
     }

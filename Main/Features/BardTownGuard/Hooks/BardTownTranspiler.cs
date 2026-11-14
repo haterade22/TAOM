@@ -5,6 +5,7 @@ using System.Reflection.Emit;
 using HarmonyLib;
 using TaleWorlds.CampaignSystem.Settlements;
 using TaleWorlds.Library;
+using TAOM.Core.Diagnostics;
 using TAOM.Core.Logging;
 
 namespace TAOM.Features.BardTownGuard.Hooks;
@@ -24,6 +25,7 @@ public static class BardTownTranspiler
         if (sites.Count != 1)
         {
             logger?.LogWarning($"[BardTownGuard] expected exactly one GetRandomElementWithPredicate<Settlement> call, found {sites.Count}: the musician fix is not applied");
+            SelfDisables.Report(BardTownGuardModule.PatchCategory, $"found {sites.Count} GetRandomElementWithPredicate<Settlement> calls, expected 1");
             return list;
         }
 

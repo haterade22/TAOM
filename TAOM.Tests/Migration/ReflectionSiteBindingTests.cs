@@ -148,7 +148,7 @@ public class ReflectionSiteBindingTests
     // --- Seat of Seeing (S2), the field trial only: the focus step reads the handler's reference point (MissionFormationTargetSelectionHandler.cs:36) to see that the pointer reached it. Missing: the step reads NaN and fails.
     [DataRow("TaleWorlds.MountAndBlade.View.MissionViews.MissionFormationTargetSelectionHandler", "MissionFormationTargetSelectionHandler", "_centerOfScreen", "Field", "CommandTrialHost.Seat.cs:23, Patch140_FormationFocusPoint.cs:23")]
     // --- Seat of Seeing (S4): the order panel's transpiler finds the one read of Agent.IsPlayerControlled by its getter, and the classifier asks a view type whether it declares UpdateOverridenCamera. Each is a compile-checked nameof of a public member; a miss fails safe.
-    [DataRow("TaleWorlds.MountAndBlade.Agent", "Agent", "get_IsPlayerControlled", "Method", "SeatOrderPanelGate.cs:20")]
+    [DataRow("TaleWorlds.MountAndBlade.Agent", "Agent", "get_IsPlayerControlled", "Method", "SeatOrderPanelGate.cs:21")]
     [DataRow("TaleWorlds.MountAndBlade.View.MissionViews.MissionView", "MissionView", "UpdateOverridenCamera", "Method", "SeatMissionClassifier.cs:72")]
     // --- Seat of Seeing (S2): the two equipment-view key ticks are skipped while seated, and each prefix clears the view's pending press and hold time through injected ____ parameters. Missing: Harmony refuses the prefix at apply time.
     [DataRow("TaleWorlds.MountAndBlade.GauntletUI.Mission.MissionGauntletMainAgentEquipmentControllerView", "MissionGauntletMainAgentEquipmentControllerView", "_prevDropKeyDown", "Field", "Patch140_EquipmentViewDropTick.cs:20")]
@@ -200,15 +200,15 @@ public class ReflectionSiteBindingTests
     [DataRow("SandBox.ViewModelCollection.Nameplate.SettlementNameplateVM", "SettlementNameplateVM", "_worldPos", "Field", "NameplateCullAdapter.cs:51")]
     // --- HiddenHosts (Patch105): four protected bind fields of the party nameplate, read and written through AccessTools.FieldRefAccess.
     // A miss leaves the bind null: the nameplate prefix reports it once, does nothing, and vanilla counts show.
-    [DataRow("SandBox.ViewModelCollection.Nameplate.PartyNameplateVM", "PartyNameplateVM", "_countBind", "Field", "PartyNameplateVM_RefreshBinding_HiddenHosts_Patch.cs:25")]
-    [DataRow("SandBox.ViewModelCollection.Nameplate.PartyNameplateVM", "PartyNameplateVM", "_extraInfoTextBind", "Field", "PartyNameplateVM_RefreshBinding_HiddenHosts_Patch.cs:26")]
-    [DataRow("SandBox.ViewModelCollection.Nameplate.PartyNameplateVM", "PartyNameplateVM", "_fullNameBind", "Field", "PartyNameplateVM_RefreshBinding_HiddenHosts_Patch.cs:27")]
-    [DataRow("SandBox.ViewModelCollection.Nameplate.PartyNameplateVM", "PartyNameplateVM", "_isVisibleOnMapBind", "Field", "PartyNameplateVM_RefreshBinding_HiddenHosts_Patch.cs:28")]
+    [DataRow("SandBox.ViewModelCollection.Nameplate.PartyNameplateVM", "PartyNameplateVM", "_countBind", "Field", "PartyNameplateVM_RefreshBinding_HiddenHosts_Patch.cs:26")]
+    [DataRow("SandBox.ViewModelCollection.Nameplate.PartyNameplateVM", "PartyNameplateVM", "_extraInfoTextBind", "Field", "PartyNameplateVM_RefreshBinding_HiddenHosts_Patch.cs:27")]
+    [DataRow("SandBox.ViewModelCollection.Nameplate.PartyNameplateVM", "PartyNameplateVM", "_fullNameBind", "Field", "PartyNameplateVM_RefreshBinding_HiddenHosts_Patch.cs:28")]
+    [DataRow("SandBox.ViewModelCollection.Nameplate.PartyNameplateVM", "PartyNameplateVM", "_isVisibleOnMapBind", "Field", "PartyNameplateVM_RefreshBinding_HiddenHosts_Patch.cs:29")]
     // --- HiddenHosts tooltips (Patch105): the two protected fields of the tooltip base view model that name the subject a
     // tooltip was opened for, read through AccessTools.FieldRefAccess by the OnPeriodicRefresh bracket.
     // A miss leaves the bind null: the bracket reports it once and opens no frame, and the periodic refresh shows vanilla counts.
-    [DataRow("TaleWorlds.Library.TooltipBaseVM", "TooltipBaseVM", "_invokedType", "Field", "PropertyBasedTooltipVM_OnPeriodicRefresh_HiddenHosts_Patch.cs:22")]
-    [DataRow("TaleWorlds.Library.TooltipBaseVM", "TooltipBaseVM", "_invokedArgs", "Field", "PropertyBasedTooltipVM_OnPeriodicRefresh_HiddenHosts_Patch.cs:23")]
+    [DataRow("TaleWorlds.Library.TooltipBaseVM", "TooltipBaseVM", "_invokedType", "Field", "PropertyBasedTooltipVM_OnPeriodicRefresh_HiddenHosts_Patch.cs:23")]
+    [DataRow("TaleWorlds.Library.TooltipBaseVM", "TooltipBaseVM", "_invokedArgs", "Field", "PropertyBasedTooltipVM_OnPeriodicRefresh_HiddenHosts_Patch.cs:24")]
     // --- MissionStartGuard (Patch103): the six start calls the transpiler swaps, found by AccessTools.Method at install.
     // A miss makes AccessTools.Method return null; Rewrite's fit check rejects the null target, so Mission.AfterStart stays vanilla.
     [DataRow("TaleWorlds.MountAndBlade.MBSubModuleBase", "MBSubModuleBase", "OnBeforeMissionBehaviorInitialize", "Method", "MissionStartGuardSwaps.cs:23")]

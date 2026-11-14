@@ -10,6 +10,7 @@ using TaleWorlds.Engine;
 using TaleWorlds.Library;
 using TaleWorlds.MountAndBlade;
 using TAOM.Adapters;
+using TAOM.Core.Diagnostics;
 using TAOM.Core.Logging;
 using TAOM.Dependencies.Foundation;
 using TAOM.Features.MarshalsWord;
@@ -400,6 +401,52 @@ public class MarshalPatchTests
 
         MarshalHooks.Begin(sink);
         Assert.IsTrue(MarshalHooks.KeepArray, "a new mission starts with the takeover available again");
+    }
+
+    [TestMethod]
+    public void Array_ALatchedFault_ReportsTheArrayLayoutOnce()
+    {
+        var saved = SelfDisables.Ledger;
+        SelfDisables.Ledger = new SelfDisableLedger();
+        try
+        {
+            MarshalHooks.Begin(new Sink());
+
+            MarshalHooks.LatchArrayOff(new InvalidOperationException("layout broke"));
+            MarshalHooks.LatchArrayOff(new InvalidOperationException("layout broke again"));
+
+            var taken = SelfDisables.Ledger.Take();
+            Assert.AreEqual(1, taken.Count);
+            Assert.AreEqual("Patch141_MarshalsWord.ArrayLayout", taken[0].Id);
+            Assert.AreEqual(nameof(InvalidOperationException), taken[0].Reason);
+        }
+        finally
+        {
+            SelfDisables.Ledger = saved;
+        }
+    }
+
+    [TestMethod]
+    public void Thrower_ALatchedFault_ReportsTheThrowerStandOnce()
+    {
+        var saved = SelfDisables.Ledger;
+        SelfDisables.Ledger = new SelfDisableLedger();
+        try
+        {
+            MarshalHooks.Begin(new Sink());
+
+            MarshalHooks.LatchThrowerFault(new InvalidOperationException("stand broke"));
+            MarshalHooks.LatchThrowerFault(new InvalidOperationException("stand broke again"));
+
+            var taken = SelfDisables.Ledger.Take();
+            Assert.AreEqual(1, taken.Count);
+            Assert.AreEqual("Patch141_MarshalsWord.ThrowerStand", taken[0].Id);
+            Assert.AreEqual(nameof(InvalidOperationException), taken[0].Reason);
+        }
+        finally
+        {
+            SelfDisables.Ledger = saved;
+        }
     }
 
     // ---- the array prefix's own latch ----

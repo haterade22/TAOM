@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using HarmonyLib;
 using TaleWorlds.MountAndBlade;
+using TAOM.Core.Diagnostics;
 using TAOM.Core.Logging;
 using TAOM.Features.CoopInterop;
 using TAOM.Features.MarshalsWord.Domain;
@@ -75,6 +76,7 @@ public static class MarshalSpacingPatch
 
     private static void LogDegraded(string detail)
     {
+        SelfDisables.Report(MarshalsWordModule.PatchCategory + ".SpacingRepair", detail);
         try
         {
             IoC.Resolve<IModLogger>()?.LogError("[MarshalsWord] the spacing repair " + detail);

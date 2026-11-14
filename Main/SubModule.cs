@@ -2346,6 +2346,7 @@ public class SubModule : MBSubModuleBase
     protected override void OnApplicationTick(float dt)
     {
         Core.Logging.Outcomes.Tick(); // the 10-minute [Session] heartbeat: one clock compare per tick
+        Core.Diagnostics.SelfDisableNotice.Tick(); // #1185: a fix that turned itself off, shown once on the main thread
         _timeAccelerationService?.OnTick();
         _factionUiTicker?.Tick(dt);
 

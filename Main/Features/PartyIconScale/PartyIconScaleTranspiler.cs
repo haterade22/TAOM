@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Reflection.Emit;
 using HarmonyLib;
+using TAOM.Core.Diagnostics;
 using TAOM.Core.Logging;
 
 namespace TAOM.Features.PartyIconScale;
@@ -27,6 +28,8 @@ namespace TAOM.Features.PartyIconScale;
 /// </summary>
 internal static class PartyIconScaleTranspiler
 {
+    private const string SelfDisableId = "Patch53_PartyIconScale";
+
     // v1.5.0 split the three scale sites across TWO methods, so there are now two entry points.
     //
     // AddCharacterToPartyIcon keeps the MOUNT site (ldc.r4 0.3 -> mul) and gained a NEW hardcoded
@@ -41,12 +44,18 @@ internal static class PartyIconScaleTranspiler
         if (!GuardGetScale(getScale, logger)) return list;
 
         if (!TrySwapZeroPointThree(list, getScale!, NextIsMul))
+        {
             logger?.LogWarning(
                 "[PartyIconScale] mount scale site (ldc.r4 0.3 -> mul) not found, left vanilla");
+            SelfDisables.Report(SelfDisableId, "mount scale site not found");
+        }
 
         if (!TrySwapZeroPointThree(list, getScale!, NextIsApplyScaleLocal))
+        {
             logger?.LogWarning(
                 "[PartyIconScale] human frame scale site (ldc.r4 0.3 -> call ApplyScaleLocal) not found, left vanilla");
+            SelfDisables.Report(SelfDisableId, "human frame scale site not found");
+        }
 
         return list;
     }
@@ -62,8 +71,11 @@ internal static class PartyIconScaleTranspiler
         if (!GuardGetScale(getScale, logger)) return list;
 
         if (!TrySwapZeroPointThree(list, getScale!, NextIsScaleCall))
+        {
             logger?.LogWarning(
                 "[PartyIconScale] people scale site (ldc.r4 0.3 -> callvirt Scale) not found, left vanilla");
+            SelfDisables.Report(SelfDisableId, "people scale site not found");
+        }
 
         return list;
     }
@@ -73,6 +85,7 @@ internal static class PartyIconScaleTranspiler
         if (getScale != null) return true;
         logger?.LogWarning(
             "[PartyIconScale] GetScale lookup failed, party-icon scale not patched (vanilla 0.3 preserved)");
+        SelfDisables.Report(SelfDisableId, "GetScale lookup failed");
         return false;
     }
 

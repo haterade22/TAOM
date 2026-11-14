@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Reflection.Emit;
 using HarmonyLib;
+using TAOM.Core.Diagnostics;
 using TAOM.Core.Logging;
 using TaleWorlds.Core;
 
@@ -61,6 +62,7 @@ public static class Banner_TryGetBannerDataFromCode_Transpiler
         if (removeRangeIdx < 0)
         {
             _logger?.LogWarning("[BannerColor] Transpiler: RemoveRange not found — layer limit patch not applied");
+            SelfDisables.Report("Patch15_BannerLayerLimit", "RemoveRange not found");
             return list;
         }
 
@@ -78,6 +80,7 @@ public static class Banner_TryGetBannerDataFromCode_Transpiler
         if (bleIdx < 0)
         {
             _logger?.LogWarning("[BannerColor] Transpiler: Ble_S guard not found — layer limit patch not applied");
+            SelfDisables.Report("Patch15_BannerLayerLimit", "Ble_S guard not found");
             return list;
         }
 

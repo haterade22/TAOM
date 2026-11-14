@@ -8,6 +8,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
 using TaleWorlds.CampaignSystem.Settlements;
 using TaleWorlds.Library;
+using TAOM.Core.Diagnostics;
 using TAOM.Core.Logging;
 using TAOM.Features.BardTownGuard;
 using TAOM.Features.BardTownGuard.Hooks;
@@ -141,6 +142,29 @@ public class BardTownGuardBindingTests
 
         CollectionAssert.AreEqual(original, result);
         logger.Received(1).LogWarning(Arg.Any<string>());
+    }
+
+    [TestMethod]
+    public void TheTranspiler_WithNoMatchingCall_ReportsTheBardTownGuardOnce()
+    {
+        var saved = SelfDisables.Ledger;
+        SelfDisables.Ledger = new SelfDisableLedger();
+        try
+        {
+            var original = new List<CodeInstruction> { new CodeInstruction(System.Reflection.Emit.OpCodes.Ret) };
+
+            BardTownTranspiler.SwapPick(original, Substitute.For<IModLogger>()).ToList();
+            BardTownTranspiler.SwapPick(original, Substitute.For<IModLogger>()).ToList();
+
+            var taken = SelfDisables.Ledger.Take();
+            Assert.AreEqual(1, taken.Count);
+            Assert.AreEqual("Patch110_BardTownGuard", taken[0].Id);
+            StringAssert.Contains(taken[0].Reason, "found 0");
+        }
+        finally
+        {
+            SelfDisables.Ledger = saved;
+        }
     }
 
     [TestMethod]

@@ -1316,7 +1316,7 @@
         </upgrade_targets>
         <Equipments>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.sm_rh_loke_1h_sword_b" />
+                <equipment slot="Item0" id="Item.khuzait_noble_sword_3_t5" />
                 <equipment slot="Item1" id="Item.sm_rh_loke_shield_med_a" />
                 <equipment slot="Item2" id="Item.eastern_javelin_3_t4" />
                 <equipment slot="Head" id="Item.sk_rh_loke_helmet_cult_elite_a" />
@@ -1326,7 +1326,7 @@
                 <equipment slot="Leg" id="Item.sk_rh_loke_grvs_scale_heavy_a" />
             </EquipmentRoster>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.sm_rh_loke_1h_sword_b" />
+                <equipment slot="Item0" id="Item.khuzait_noble_sword_3_t5" />
                 <equipment slot="Item1" id="Item.sm_rh_loke_shield_med_a" />
                 <equipment slot="Item2" id="Item.eastern_javelin_3_t4" />
                 <equipment slot="Head" id="Item.sk_rh_loke_helmet_cult_elite_b" />
@@ -1413,7 +1413,7 @@
                 <equipment slot="Item0" id="Item.ladder_rhun_new_xbow_t6" />
                 <equipment slot="Item1" id="Item.bolt_c" />
                 <equipment slot="Item2" id="Item.bolt_c" />
-                <equipment slot="Item3" id="Item.sm_rh_loke_1h_sword_b" />
+                <equipment slot="Item3" id="Item.khuzait_noble_sword_3_t5" />
                 <equipment slot="Head" id="Item.sk_rh_drag_helmet_arch_heavy_a" />
                 <equipment slot="Body" id="Item.sk_rh_drag_scalemail_med_a" />
                 <equipment slot="Cape" id="Item.sk_rh_drag_pauldron_scale_heavy_a" />
@@ -1424,7 +1424,7 @@
                 <equipment slot="Item0" id="Item.ladder_rhun_new_xbow_t6" />
                 <equipment slot="Item1" id="Item.bolt_c" />
                 <equipment slot="Item2" id="Item.bolt_c" />
-                <equipment slot="Item3" id="Item.sm_rh_loke_1h_sword_b" />
+                <equipment slot="Item3" id="Item.khuzait_noble_sword_3_t5" />
                 <equipment slot="Head" id="Item.sk_rh_drag_helmet_arch_heavy_b" />
                 <equipment slot="Body" id="Item.sk_rh_drag_scalemail_med_b" />
                 <equipment slot="Cape" id="Item.sk_rh_drag_pauldron_scale_heavy_a" />

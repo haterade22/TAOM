@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading;
 using TaleWorlds.MountAndBlade;
 using TAOM.Adapters;
+using TAOM.Core.Diagnostics;
 using TAOM.Features.MarshalsWord.Domain;
 
 namespace TAOM.Features.MarshalsWord;
@@ -90,7 +91,11 @@ internal static class MarshalHooks
     internal static Exception? ThrowerFault => Volatile.Read(ref _throwerFault);
 
     /// <summary>Keeps the first exception only, and writes no log line: the patch runs on the AI thread.</summary>
-    internal static void LatchThrowerFault(Exception exception) => Interlocked.CompareExchange(ref _throwerFault, exception, null);
+    internal static void LatchThrowerFault(Exception exception)
+    {
+        Interlocked.CompareExchange(ref _throwerFault, exception, null);
+        SelfDisables.Report(MarshalsWordModule.PatchCategory + ".ThrowerStand", exception?.GetType().Name);
+    }
 
     internal static void Begin(IMarshalHookSink sink)
     {
@@ -119,6 +124,7 @@ internal static class MarshalHooks
     internal static void LatchArrayOff(Exception exception)
     {
         _arrayFaulted = true;
+        SelfDisables.Report(MarshalsWordModule.PatchCategory + ".ArrayLayout", exception?.GetType().Name);
         _sink?.ArrayFault(exception);
     }
 
