@@ -13,6 +13,7 @@ BOM, a file written into a folder the Armory never registers.
 import os
 import sys
 import tempfile
+import types
 import unittest
 import xml.etree.ElementTree as ET
 from pathlib import Path
@@ -181,6 +182,74 @@ SUBMODULE = """<Module>
 </Module>"""
 
 
+def _crafted(iid: str, blade: str, culture: str = "gondor", template: str = "OneHandedSword",
+             merchandise: bool = True) -> str:
+    cult = f' culture="Culture.{culture}"' if culture else ""
+    return (f'<CraftedItem id="{iid}" name="{{=n_{iid}}}x" crafting_template="{template}" '
+            f'is_merchandise="{"true" if merchandise else "false"}"{cult}><Pieces>'
+            f'<Piece id="{blade}" Type="Blade" scale_factor="100" /></Pieces></CraftedItem>')
+
+
+def _caps(donor, items, pieces, prices):
+    """sibling_caps with the sibling build_plan would pass it."""
+    return gk.sibling_caps(donor, gk.shop_sibling(donor, items, prices), pieces, prices)
+
+
+def _blade(pid: str, swing: float | None, thrust: float | None) -> str:
+    sw = f'<Swing damage_type="Cut" damage_factor="{swing}" />' if swing is not None else ""
+    th = f'<Thrust damage_type="Pierce" damage_factor="{thrust}" />' if thrust is not None else ""
+    return f'<CraftingPiece id="{pid}" tier="2" piece_type="Blade"><BladeData>{th}{sw}</BladeData></CraftingPiece>'
+
+
+DONOR = "wm_gondor_sword_a01"     # SWORD: blade swing 4.18, thrust 3.26
+
+# (swing DPS, thrust DPS) as melee_catalogue prices them. Every decoy is weaker than the real
+# weakest sibling (gondor_weak_sword, best 20), so a decoy that counted would lower the target.
+PRICES = {
+    DONOR: (40.0, 30.0),
+    "gondor_weak_sword": (20.0, 10.0),
+    "gondor_mid_sword": (30.0, 15.0),            # stronger, and listed after the weakest
+    "gondor_no_thrust": (25.0, 0.0),
+    "starter_gondor_weakest": (1.0, 1.0),
+    "rohan_weak_sword": (2.0, 2.0),
+    "gondor_weak_axe": (3.0, 3.0),
+    "loose_weak_sword": (4.0, 4.0),
+    "gondor_sparring_sword_blunt": (5.0, 5.0),
+    "gondor_unsold_sword": (6.0, 6.0),
+    "gondor_knight_lance": (7.0, 7.0),
+}
+
+# id -> the item XML of each decoy a shop sibling must never be
+DECOYS = {
+    "starter_gondor_weakest": _crafted("starter_gondor_weakest", "b_any"),
+    "rohan_weak_sword": _crafted("rohan_weak_sword", "b_any", culture="vlandia"),
+    "gondor_weak_axe": _crafted("gondor_weak_axe", "b_any", template="OneHandedAxe"),
+    "loose_weak_sword": _crafted("loose_weak_sword", "b_any", culture=None),
+    "gondor_sparring_sword_blunt": _crafted("gondor_sparring_sword_blunt", "b_any"),
+    "gondor_unsold_sword": _crafted("gondor_unsold_sword", "b_any", merchandise=False),
+    "gondor_unpriced_sword": _crafted("gondor_unpriced_sword", "b_any"),
+    "gondor_knight_lance": _crafted("gondor_knight_lance", "b_any"),
+}
+
+
+def _world(*extra: str):
+    """items and pieces for the strong Gondor donor sword plus the given item XML."""
+    with tempfile.TemporaryDirectory() as tmp:
+        ip, pp = Path(tmp) / "i.xml", Path(tmp) / "p.xml"
+        ip.write_text("\n".join(["<Items>", SWORD, *extra, "</Items>"]), encoding="utf-8")
+        pp.write_text("\n".join(["<CraftingPieces>", BLADE, _blade("b_any", 1.0, 1.0), "</CraftingPieces>"]),
+                      encoding="utf-8")
+        items = gk.index_items([ip])
+        pieces = {p.get("id"): p for p in ET.parse(pp).getroot().iter("CraftingPiece")}
+    return items, pieces
+
+
+def _sibling_world():
+    """The donor, its real siblings (weakest first, then a stronger one) and every decoy."""
+    return _world(_crafted("gondor_weak_sword", "b_any"), _crafted("gondor_mid_sword", "b_any"),
+                  _crafted("gondor_no_thrust", "b_any"), *DECOYS.values())
+
+
 class TestAnchors(unittest.TestCase):
     def test_anchor_never_exceeds_donor(self):
         weak = el(BLADE.replace('damage_factor="4.18"', 'damage_factor="2.0"'))
@@ -191,6 +260,81 @@ class TestAnchors(unittest.TestCase):
         out = gk.clone_blade(el(BLADE), "starter_x_blade", gk.anchor_for("OneHandedSword"))
         self.assertEqual(out.find("BladeData/Swing").get("damage_factor"), "2.5")
         self.assertEqual(out.find("BladeData/Thrust").get("damage_factor"), "1.7")
+
+    def test_shop_sibling_is_the_lowest_best_dps_whatever_the_order(self):
+        items, _ = _sibling_world()
+        self.assertEqual(gk.shop_sibling(items[DONOR].element, items, PRICES), ("gondor_weak_sword", 20.0))
+
+    def test_shop_sibling_skips_each_decoy(self):
+        for iid, xml in DECOYS.items():
+            with self.subTest(decoy=iid):
+                items, _ = _world(xml)
+                self.assertIsNone(gk.shop_sibling(items[DONOR].element, items, PRICES))
+
+    def test_the_donor_is_not_its_own_sibling(self):
+        items, _ = _world()
+        self.assertIsNone(gk.shop_sibling(items[DONOR].element, items, PRICES))
+
+    def test_sibling_without_thrust_counts_by_its_swing(self):
+        items, _ = _world(_crafted("gondor_no_thrust", "b_any"))
+        self.assertEqual(gk.shop_sibling(items[DONOR].element, items, PRICES), ("gondor_no_thrust", 25.0))
+
+    def test_donor_without_a_culture_has_no_siblings(self):
+        items, pieces = _sibling_world()
+        nameless = el(_crafted("mystery_sword", "b_any", culture=None))
+        self.assertIsNone(gk.shop_sibling(nameless, items, PRICES))
+        self.assertEqual(_caps(nameless, items, pieces, PRICES), {})
+
+    def test_sibling_caps_empty_for_a_plain_item(self):
+        items, pieces = _sibling_world()
+        self.assertEqual(_caps(el(BOW), items, pieces, PRICES), {})
+
+    def test_sibling_caps_empty_without_prices(self):
+        items, pieces = _sibling_world()
+        self.assertEqual(_caps(items[DONOR].element, items, pieces, {}), {})
+
+    def test_caps_scale_each_factor_to_the_sibling_dps_and_round_down(self):
+        items, pieces = _sibling_world()
+        caps = _caps(items[DONOR].element, items, pieces, PRICES)
+        # swing 4.18 * 20 / 40 = 2.09; thrust 3.26 * 20 / 30 = 2.1733, rounded down to 2.17
+        self.assertEqual(caps, {"swing": 2.09, "thrust": 2.17})
+
+    def test_a_stat_the_donor_cannot_use_is_not_capped(self):
+        items, pieces = _sibling_world()
+        prices = dict(PRICES, **{DONOR: (40.0, 0.0)})
+        self.assertEqual(_caps(items[DONOR].element, items, pieces, prices), {"swing": 2.09})
+
+    def test_a_stat_already_under_the_target_is_not_capped(self):
+        items, pieces = _sibling_world()
+        prices = dict(PRICES, **{DONOR: (15.0, 30.0)})   # swing 15 is under the target 20
+        self.assertEqual(_caps(items[DONOR].element, items, pieces, prices), {"thrust": 2.17})
+
+    def test_load_melee_prices_maps_swing_then_thrust_from_the_armory_and_vanilla_only(self):
+        seen = {}
+
+        class FakeCatalogue:
+            @staticmethod
+            def load(modules, item_modules=None):
+                seen["item_modules"] = item_modules
+                return "catalogue"
+
+            @staticmethod
+            def price_all(cat):
+                return {"x": types.SimpleNamespace(swing_dps=3.0, thrust_dps=7.0)}, []
+
+        with mock.patch.dict(sys.modules, {"melee_catalogue": FakeCatalogue}):
+            prices = gk.load_melee_prices(Path("Modules"))
+        self.assertEqual(prices, {"x": (3.0, 7.0)})
+        self.assertEqual(seen["item_modules"], set(gk.PRICE_MODULES))
+
+    def test_a_shared_blade_takes_the_strictest_floors(self):
+        merged = gk.merge_blade_floors([("b1", {"swing": 2.5, "thrust": 1.0}), ("b2", {"swing": 2.0}),
+                                        ("b1", {"swing": 1.5, "thrust": 1.7})])
+        self.assertEqual(merged, {"b1": {"swing": 1.5, "thrust": 1.0}, "b2": {"swing": 2.0}})
+
+    def test_floors_use_the_lower_of_anchor_and_sibling_cap(self):
+        floors = gk.cap_floors(gk.anchor_for("OneHandedSword"), {"swing": 1.2, "thrust": 3.0})
+        self.assertEqual(floors, {"swing": 1.2, "thrust": 1.7})
 
     def test_missing_anchor_for_class_raises(self):
         with self.assertRaises(gk.StarterKitError) as ctx:
@@ -668,14 +812,27 @@ class TestIo(unittest.TestCase):
             self.assertEqual((Path(tmp) / "f.xml.bak-test").read_bytes(), b"<a>1</a>")
 
 
-def _plan_in(tmp: Path) -> "gk.Plan":
-    """A miniature Armory + roster layout for the end-to-end planning tests."""
+def _plan_in(tmp: Path, weak_sibling: bool = False, shared_blade: bool = False) -> "gk.Plan":
+    """A miniature Armory + roster layout for the end-to-end planning tests.
+    `weak_sibling` adds a second Gondor sword whose blade is weaker than the donor's.
+    `shared_blade` adds a Rivendell donor on the Gondor donor's blade, listed after it in the
+    roster, with a weak Rivendell sibling, so only the second donor is capped."""
+    extra_items, extra_pieces, roster_text = "", "", ROSTERS
+    if shared_blade:
+        extra_items += (_crafted("riv_shared_sword", "wm_gondor_sword_a01_blade", culture="rivendell")
+                        + _crafted("riv_weak_sword", "b_riv_weak", culture="rivendell"))
+        extra_pieces += _blade("b_riv_weak", 1.0, 0.5)
+        roster_text = ROSTERS.replace(
+            '<Equipment slot="Item1" id="Item.wm_elven_shield_a" />',
+            '<Equipment slot="Item1" id="Item.wm_elven_shield_a" />\n'
+            '            <Equipment slot="Item2" id="Item.riv_shared_sword" />', 1)
     md = tmp / "LOTRLOME_Armory" / "ModuleData"
     (md / "LOTRLOME_items" / "gondor").mkdir(parents=True)
     (md / "LOTRLOME_items" / "rivendell").mkdir(parents=True)
     (md / "LOTRLOME_items" / "mercenary").mkdir(parents=True)
     (md / "LOTRLOME_items" / "LOTRAOM_weapons.xml").write_text(
-        "<Items>\n" + SWORD + "\n" + BOW + "\n"
+        "<Items>\n" + SWORD + "\n" + (_crafted("gondor_weak_sword", "b_weak") if weak_sibling else "") + "\n"
+        + extra_items + "\n" + BOW + "\n"
         + BOW.replace('id="wm_gondor_bow"', 'id="gondor_steel_bow_starter"').replace("aom_bow_name", "aom_sbs_name")
         + "\n" + SHIELD + "\n</Items>\n", encoding="utf-8")
     (md / "LOTRLOME_items" / "gondor" / "body_armors.xml").write_text(
@@ -683,7 +840,8 @@ def _plan_in(tmp: Path) -> "gk.Plan":
         + "\n" + CHEST.replace('id="mkwd_inf3_chest"', 'id="civilian_only_coat"').replace("aom_c_name", "aom_cc_name")
         .replace('culture="Culture.mirkwood"', 'culture="Culture.gondor"') + "\n</Items>\n", encoding="utf-8")
     (md / "LOTRLOME_crafting_pieces.xml").write_text(
-        "<CraftingPieces>\n" + BLADE + "\n"
+        "<CraftingPieces>\n" + BLADE + "\n" + (_blade("b_weak", 1.5, 0.9) if weak_sibling else "") + "\n"
+        + extra_pieces + "\n"
         + '<CraftingPiece id="wm_gondor_sword_a01_guard" tier="3" piece_type="Guard" />\n'
         + '<CraftingPiece id="wm_gondor_sword_a01_hilt" tier="3" piece_type="Handle" />\n'
         + '<CraftingPiece id="wm_gondor_sword_a01_pommel" tier="3" piece_type="Pommel" />\n'
@@ -694,7 +852,7 @@ def _plan_in(tmp: Path) -> "gk.Plan":
         .replace("AvailablePiece id=", "UsablePiece piece_id="), encoding="utf-8")
     (tmp / "LOTRLOME_Armory" / "SubModule.xml").write_text(SUBMODULE, encoding="utf-8")
     roster = tmp / "rosters.xml"
-    roster.write_text(ROSTERS, encoding="utf-8")
+    roster.write_text(roster_text, encoding="utf-8")
     native = tmp / "native_wd.xml"
     native.write_text(NATIVE_WD, encoding="utf-8")
     native_ct = tmp / "native_ct.xml"
@@ -702,8 +860,14 @@ def _plan_in(tmp: Path) -> "gk.Plan":
                          .replace("AvailablePieces", "UsablePieces").replace("AvailablePiece id=", "UsablePiece piece_id="),
                          encoding="utf-8")
     sources = gk.Sources(rosters=[roster], armory=tmp / "LOTRLOME_Armory", vanilla_item_files=[],
-                         native_pieces=None, native_descriptions=native, native_templates=native_ct)
+                         native_pieces=None, native_descriptions=native, native_templates=native_ct,
+                         melee_prices=PLAN_PRICES)
     return gk.build_plan(sources)
+
+
+# The donor sword and the weak sibling `_plan_in(weak_sibling=True)` adds, as melee_catalogue prices them.
+PLAN_PRICES = {"wm_gondor_sword_a01": (40.0, 30.0), "gondor_weak_sword": (12.0, 6.0),
+               "riv_shared_sword": (40.0, 30.0), "riv_weak_sword": (8.0, 4.0)}
 
 
 class TestPlan(unittest.TestCase):
@@ -750,6 +914,37 @@ class TestPlan(unittest.TestCase):
         self.assertEqual(sword.tier, 2)          # blade 1 + fittings 3, 3, 3
         self.assertAlmostEqual(sword.ratios["swing"], 2.5 / 4.18, places=4)
         self.assertAlmostEqual(sword.ratios["thrust"], 1.7 / 3.26, places=4)
+
+    def test_starter_never_out_dps_a_weaker_same_culture_shop_sibling(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            plan = _plan_in(Path(tmp), weak_sibling=True)
+        blade = next(b for b in plan.pieces if b.get("id") == "starter_wm_gondor_sword_a01_blade")
+        # the sibling's best DPS is 12: swing 4.18 * 12 / 40 = 1.254 -> 1.25, thrust 3.26 * 12 / 30 = 1.304 -> 1.3
+        self.assertEqual(blade.find("BladeData/Swing").get("damage_factor"), "1.25")
+        self.assertEqual(blade.find("BladeData/Thrust").get("damage_factor"), "1.3")
+        sword = next(c for c in plan.clones if c.new_id == "starter_wm_gondor_sword_a01")
+        self.assertAlmostEqual(sword.ratios["swing"], 1.25 / 4.18, places=4)
+        self.assertTrue(any("gondor_weak_sword" in n for n in plan.notes), "the report names the capping sibling")
+
+    def test_a_shared_blade_takes_the_later_donors_stricter_cap(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            plan = _plan_in(Path(tmp), shared_blade=True)
+        blade = next(b for b in plan.pieces if b.get("id") == "starter_wm_gondor_sword_a01_blade")
+        # riv_weak_sword best 8: swing 4.18 * 8 / 40 = 0.836 -> 0.83, thrust 3.26 * 8 / 30 = 0.869 -> 0.86
+        self.assertEqual(blade.find("BladeData/Swing").get("damage_factor"), "0.83")
+        self.assertEqual(blade.find("BladeData/Thrust").get("damage_factor"), "0.86")
+
+    def test_verify_reports_a_starter_blade_whose_factor_drifted(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            tmp = Path(tmp)
+            plan = _plan_in(tmp, weak_sibling=True)
+            md = tmp / "LOTRLOME_Armory" / "ModuleData"
+            gk.apply_plan(plan, md, write=True)
+            self.assertEqual(gk.verify_plan(plan, md), [])
+            pieces = md / gk.PIECES_FILE
+            pieces.write_bytes(pieces.read_bytes().replace(b'damage_factor="1.25"', b'damage_factor="2.5"', 1))
+            drift = gk.verify_plan(plan, md)
+        self.assertTrue(any(gk.PIECES_FILE in d and "differs" in d for d in drift), drift)
 
     def test_apply_then_verify_then_revert(self):
         with tempfile.TemporaryDirectory() as tmp:
