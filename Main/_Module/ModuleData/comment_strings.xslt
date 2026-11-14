@@ -10,7 +10,9 @@
 	</xsl:template>
 
 	<!-- ============================================================ -->
-	<!-- Remove "the" before faction/kingdom/clan names               -->
+	<!-- Lord self-introductions: "the" removal before faction and    -->
+	<!-- clan names, and Middle-earth lore for the retagged cultures  -->
+	<!-- (Dale, Khand, Rohan, Harad, Rhun: taom_lord_intro_* keys)    -->
 	<!-- ============================================================ -->
 
 	<xsl:template match="string[@id='str_comment_vassal_introduces_self.default']">
@@ -32,7 +34,7 @@
 	<xsl:template match="string[@id='str_comment_noble_introduces_self_and_clan.sturgia']">
 		<xsl:copy>
 			<xsl:apply-templates select="@*[local-name() != 'text']"/>
-			<xsl:attribute name="text">{=dlkg2jQf}I am {CONVERSATION_CHARACTER.LINK}, of {CLAN_NAME}, one of the ancient lineages of the Sturgians.</xsl:attribute>
+			<xsl:attribute name="text">{=taom_lord_intro_dale_1}I am {CONVERSATION_CHARACTER.LINK}, of {CLAN_NAME}, one of the old houses of Dale.</xsl:attribute>
 		<xsl:apply-templates select="node()"/>
 		</xsl:copy>
 	</xsl:template>
@@ -40,7 +42,7 @@
 	<xsl:template match="string[@id='str_comment_noble_introduces_self_and_clan.sturgia_boasting']">
 		<xsl:copy>
 			<xsl:apply-templates select="@*[local-name() != 'text']"/>
-			<xsl:attribute name="text">{=Nq2dyiO1}I am {CONVERSATION_CHARACTER.LINK}, of {CLAN_NAME}, a name you will have heard many times in the sagas of the Sturgians.</xsl:attribute>
+			<xsl:attribute name="text">{=taom_lord_intro_dale_2}I am {CONVERSATION_CHARACTER.LINK}, of {CLAN_NAME}. Our name is known in every hall of Dale and on every quay of the Long Lake.</xsl:attribute>
 		<xsl:apply-templates select="node()"/>
 		</xsl:copy>
 	</xsl:template>
@@ -48,7 +50,7 @@
 	<xsl:template match="string[@id='str_comment_noble_introduces_self_and_clan.sturgia_boasting_2']">
 		<xsl:copy>
 			<xsl:apply-templates select="@*[local-name() != 'text']"/>
-			<xsl:attribute name="text">{=PBgLvyOa}I am {CONVERSATION_CHARACTER.LINK}, of {CLAN_NAME}. Our ancestors were among those who came from the far north to take the princes' denar and swear an oath to defend these lands, and we have held true to that oath.</xsl:attribute>
+			<xsl:attribute name="text">{=taom_lord_intro_dale_3}I am {CONVERSATION_CHARACTER.LINK}, of {CLAN_NAME}. My forefathers came home to Dale when the dragon was slain, and swore to hold the vale beneath the Mountain. We have kept that oath.</xsl:attribute>
 		<xsl:apply-templates select="node()"/>
 		</xsl:copy>
 	</xsl:template>
@@ -64,7 +66,7 @@
 	<xsl:template match="string[@id='str_comment_noble_introduces_self_and_clan.battania']">
 		<xsl:copy>
 			<xsl:apply-templates select="@*[local-name() != 'text']"/>
-			<xsl:attribute name="text">{=Ua0T0A7t}I am {CONVERSATION_CHARACTER.LINK}, of {CLAN_NAME}, one of the ancient lineages of the Battanians.</xsl:attribute>
+			<xsl:attribute name="text">{=taom_lord_intro_khand_1}I am {CONVERSATION_CHARACTER.LINK}, of {CLAN_NAME}, one of the old blood-lines of Khand.</xsl:attribute>
 		<xsl:apply-templates select="node()"/>
 		</xsl:copy>
 	</xsl:template>
@@ -72,7 +74,7 @@
 	<xsl:template match="string[@id='str_comment_noble_introduces_self_and_clan.battania_boasting']">
 		<xsl:copy>
 			<xsl:apply-templates select="@*[local-name() != 'text']"/>
-			<xsl:attribute name="text">{=U770Bvy8}I am {CONVERSATION_CHARACTER.LINK}, of {CLAN_NAME}. The fame of our family is second to none in the songs of the Battanians.</xsl:attribute>
+			<xsl:attribute name="text">{=taom_lord_intro_khand_2}I am {CONVERSATION_CHARACTER.LINK}, of {CLAN_NAME}. No clan of the Variags is more feared, from the borders of Mordor to the southern sands.</xsl:attribute>
 		<xsl:apply-templates select="node()"/>
 		</xsl:copy>
 	</xsl:template>
@@ -80,7 +82,7 @@
 	<xsl:template match="string[@id='str_comment_noble_introduces_self_and_clan.battania_boasting_harsh']">
 		<xsl:copy>
 			<xsl:apply-templates select="@*[local-name() != 'text']"/>
-			<xsl:attribute name="text">{=rhTUDKhJ}I am {CONVERSATION_CHARACTER.LINK}, of {CLAN_NAME}. There's not a clan of the Battanians who hasn't contributed the skull of one of their champions to our collection of drinking cups.</xsl:attribute>
+			<xsl:attribute name="text">{=taom_lord_intro_khand_3}I am {CONVERSATION_CHARACTER.LINK}, of {CLAN_NAME}. There is hardly a tribe in Khand that has not left a chieftain's skull in our tents.</xsl:attribute>
 		<xsl:apply-templates select="node()"/>
 		</xsl:copy>
 	</xsl:template>
@@ -88,7 +90,7 @@
 	<xsl:template match="string[@id='str_comment_noble_introduces_self_and_clan.battania_boasting_ironic']">
 		<xsl:copy>
 			<xsl:apply-templates select="@*[local-name() != 'text']"/>
-			<xsl:attribute name="text">{=JJAWbuNT}I am {CONVERSATION_CHARACTER.LINK}, of {CLAN_NAME}. They say our ancestor was among those who came in the golden ships that came to this land from the West, in the Time of the Heroes. Of course, if you believe that everyone said to be on those boats was on those boats, they'd have capsized from the weight.</xsl:attribute>
+			<xsl:attribute name="text">{=taom_lord_intro_khand_4}I am {CONVERSATION_CHARACTER.LINK}, of {CLAN_NAME}. The tale goes that our first chieftain rode out of the east on a horse that never tired. If every clan that tells that tale were telling the truth, the plains would have run out of horses long ago.</xsl:attribute>
 		<xsl:apply-templates select="node()"/>
 		</xsl:copy>
 	</xsl:template>
@@ -104,7 +106,7 @@
 	<xsl:template match="string[@id='str_comment_noble_introduces_self_and_clan.vlandia']">
 		<xsl:copy>
 			<xsl:apply-templates select="@*[local-name() != 'text']"/>
-			<xsl:attribute name="text">{=eyxfHmCU}I am {CONVERSATION_CHARACTER.LINK}, of {CLAN_NAME}. Our family has served the kings of the Vlandians for generations.</xsl:attribute>
+			<xsl:attribute name="text">{=taom_lord_intro_rohan_1}I am {CONVERSATION_CHARACTER.LINK}, of {CLAN_NAME}. My house has ridden for the Kings of the Mark since the days of Eorl.</xsl:attribute>
 		<xsl:apply-templates select="node()"/>
 		</xsl:copy>
 	</xsl:template>
@@ -120,7 +122,7 @@
 	<xsl:template match="string[@id='str_comment_noble_introduces_self_and_clan.vlandia_boasting']">
 		<xsl:copy>
 			<xsl:apply-templates select="@*[local-name() != 'text']"/>
-			<xsl:attribute name="text">{=FFXqPFwl}I am {CONVERSATION_CHARACTER.LINK}, of {CLAN_NAME}, one of the most illustrious families in the annals of the Vlandian kingdom.</xsl:attribute>
+			<xsl:attribute name="text">{=taom_lord_intro_rohan_2}I am {CONVERSATION_CHARACTER.LINK}, of {CLAN_NAME}, a house well remembered in the songs of the Riddermark.</xsl:attribute>
 		<xsl:apply-templates select="node()"/>
 		</xsl:copy>
 	</xsl:template>
@@ -128,7 +130,7 @@
 	<xsl:template match="string[@id='str_comment_noble_introduces_self_and_clan.vlandia_boasting_ironic']">
 		<xsl:copy>
 			<xsl:apply-templates select="@*[local-name() != 'text']"/>
-			<xsl:attribute name="text">{=pn79h0aj}I am {CONVERSATION_CHARACTER.LINK}, of {CLAN_NAME}. We received our title from the Emperor Vortios himself. Not that he had much choice about it, as he was held captive in one of our raiding ships at the time, but I'm sure he recognized the nobility of our blood.</xsl:attribute>
+			<xsl:attribute name="text">{=taom_lord_intro_rohan_3}I am {CONVERSATION_CHARACTER.LINK}, of {CLAN_NAME}. They say our founder won his lands by outriding a king's messenger to the Golden Hall. He never did tell us what the message was.</xsl:attribute>
 		<xsl:apply-templates select="node()"/>
 		</xsl:copy>
 	</xsl:template>
@@ -144,7 +146,7 @@
 	<xsl:template match="string[@id='str_comment_noble_introduces_self_and_clan.aserai']">
 		<xsl:copy>
 			<xsl:apply-templates select="@*[local-name() != 'text']"/>
-			<xsl:attribute name="text">{=S1vGzr8z}I am {CONVERSATION_CHARACTER.LINK}, of {CLAN_NAME}, a clan of the Aserai.</xsl:attribute>
+			<xsl:attribute name="text">{=taom_lord_intro_harad_1}I am {CONVERSATION_CHARACTER.LINK}, of {CLAN_NAME}, a house of the Haradrim.</xsl:attribute>
 		<xsl:apply-templates select="node()"/>
 		</xsl:copy>
 	</xsl:template>
@@ -152,7 +154,7 @@
 	<xsl:template match="string[@id='str_comment_noble_introduces_self_and_clan.aserai_boasting']">
 		<xsl:copy>
 			<xsl:apply-templates select="@*[local-name() != 'text']"/>
-			<xsl:attribute name="text">{=zZ9FQJRI}I am {CONVERSATION_CHARACTER.LINK}, of {CLAN_NAME}, the most ancient and noble of the Aserai lineages.</xsl:attribute>
+			<xsl:attribute name="text">{=taom_lord_intro_harad_2}I am {CONVERSATION_CHARACTER.LINK}, of {CLAN_NAME}, the oldest and proudest line under the sun of Harad.</xsl:attribute>
 		<xsl:apply-templates select="node()"/>
 		</xsl:copy>
 	</xsl:template>
@@ -168,7 +170,7 @@
 	<xsl:template match="string[@id='str_comment_noble_introduces_self_and_clan.khuzait_boasting']">
 		<xsl:copy>
 			<xsl:apply-templates select="@*[local-name() != 'text']"/>
-			<xsl:attribute name="text">{=a8584KD0}I am {CONVERSATION_CHARACTER.LINK}, of {CLAN_NAME}. I am sure you have heard the name of our clan in the epics of the steppe. We carry the name of one the 12 sons of the great she-wolf, mother of the Khuzaits.</xsl:attribute>
+			<xsl:attribute name="text">{=taom_lord_intro_rhun_1}I am {CONVERSATION_CHARACTER.LINK}, of {CLAN_NAME}. Our name is sung at every wagon-fire in Rhun, from the shores of the inland sea to the far plains.</xsl:attribute>
 		<xsl:apply-templates select="node()"/>
 		</xsl:copy>
 	</xsl:template>
@@ -176,10 +178,156 @@
 	<xsl:template match="string[@id='str_comment_noble_introduces_self_and_clan.khuzait']">
 		<xsl:copy>
 			<xsl:apply-templates select="@*[local-name() != 'text']"/>
-			<xsl:attribute name="text">{=z2yr4mc6}I am {CONVERSATION_CHARACTER.LINK}, of {CLAN_NAME}. Our clan has loyally served the Khuzait Khanate for generations.</xsl:attribute>
+			<xsl:attribute name="text">{=taom_lord_intro_rhun_2}I am {CONVERSATION_CHARACTER.LINK}, of {CLAN_NAME}. My clan has served the lords of Rhun for generations.</xsl:attribute>
 		<xsl:apply-templates select="node()"/>
 		</xsl:copy>
 	</xsl:template>
+
+	<!-- ============================================================ -->
+	<!-- Dunland (empire) self-introductions: the last 5 of the 19        -->
+	<!-- taom_lord_intro_* rows. Vanilla rows named Calradian peoples or  -->
+	<!-- places. New TAOM keys, so no language keeps the old Calradian    -->
+	<!-- translation (CommentStringLoreTests).                            -->
+	<!-- ============================================================ -->
+
+	<xsl:template match="string[@id='str_comment_noble_introduces_self_and_clan.empire']">
+		<xsl:copy>
+			<xsl:apply-templates select="@*[local-name() != 'text']"/>
+			<xsl:attribute name="text">{=taom_lord_intro_dunland_1}I am {CONVERSATION_CHARACTER.LINK}, of the house of {CLAN_NAME}. My kin held these hills long before the horse-lords came.</xsl:attribute>
+		<xsl:apply-templates select="node()"/>
+		</xsl:copy>
+	</xsl:template>
+
+	<xsl:template match="string[@id='str_comment_noble_introduces_self_and_clan.empire_honor']">
+		<xsl:copy>
+			<xsl:apply-templates select="@*[local-name() != 'text']"/>
+			<xsl:attribute name="text">{=taom_lord_intro_dunland_2}I am {CONVERSATION_CHARACTER.LINK}, of the house of {CLAN_NAME}. My family keeps its word and its feuds alike, as the old ways of Dunland demand.</xsl:attribute>
+		<xsl:apply-templates select="node()"/>
+		</xsl:copy>
+	</xsl:template>
+
+	<xsl:template match="string[@id='str_comment_noble_introduces_self_and_clan.empire_mercy']">
+		<xsl:copy>
+			<xsl:apply-templates select="@*[local-name() != 'text']"/>
+			<xsl:attribute name="text">{=taom_lord_intro_dunland_3}I am {CONVERSATION_CHARACTER.LINK}, of the house of {CLAN_NAME}. I take no great pride in my lineage, but we have always stood between our hill-folk and those who would harm them.</xsl:attribute>
+		<xsl:apply-templates select="node()"/>
+		</xsl:copy>
+	</xsl:template>
+
+	<xsl:template match="string[@id='str_comment_noble_introduces_self_and_clan.empire_boasting']">
+		<xsl:copy>
+			<xsl:apply-templates select="@*[local-name() != 'text']"/>
+			<xsl:attribute name="text">{=taom_lord_intro_dunland_4}I am {CONVERSATION_CHARACTER.LINK}, of the house of {CLAN_NAME}, one of the proudest clans of Dunland.</xsl:attribute>
+		<xsl:apply-templates select="node()"/>
+		</xsl:copy>
+	</xsl:template>
+
+	<xsl:template match="string[@id='str_comment_noble_introduces_self_and_clan.empire_boasting_cruel']">
+		<xsl:copy>
+			<xsl:apply-templates select="@*[local-name() != 'text']"/>
+			<xsl:attribute name="text">{=taom_lord_intro_dunland_5}I am {CONVERSATION_CHARACTER.LINK}, of the house of {CLAN_NAME}, one of the proudest clans of Dunland. No house has put more horse-thieves of the Mark into the ground.</xsl:attribute>
+		<xsl:apply-templates select="node()"/>
+		</xsl:copy>
+	</xsl:template>
+
+	<!-- ============================================================ -->
+	<!-- Minor-faction first-meeting lines (taom_clan_intro_* keys).  -->
+	<!-- PlayerMeetLordLogEntry picks str_comment_special_clan_intro_ -->
+	<!-- plus the clan id; TAOM keeps the vanilla minor clan ids, so  -->
+	<!-- the vanilla rows named the old Calradian clans. forest_people -->
+	<!-- names none and stays vanilla; the skolderbroda and           -->
+	<!-- karakhergit rows match no clan id and never show.            -->
+	<!-- ============================================================ -->
+
+	<xsl:template match="string[@id='str_comment_special_clan_intro_company_of_the_boar.default']">
+		<xsl:copy>
+			<xsl:apply-templates select="@*[local-name() != 'text']"/>
+			<xsl:attribute name="text">{=taom_clan_intro_company_of_the_boar}If you're ever looking for stout fighters, friend, you should think about hiring the Corsair Blades. The hardest crossbowmen ever to sail out of Umbar march under our banner. Because if you don't hire us, your enemy might.</xsl:attribute>
+		<xsl:apply-templates select="node()"/>
+		</xsl:copy>
+	</xsl:template>
+
+	<xsl:template match="string[@id='str_comment_special_clan_intro_legion_of_the_betrayed.default']">
+		<xsl:copy>
+			<xsl:apply-templates select="@*[local-name() != 'text']"/>
+			<xsl:attribute name="text">{=taom_clan_intro_legion_of_the_betrayed}If you ever find yourself in a position to hire warriors, you should consider the Grey Company. Our fathers were the lords of Arnor, and we have kept watch over the North since their kingdom fell. Pay us, and you will have the word of the Dúnedain with our swords.</xsl:attribute>
+		<xsl:apply-templates select="node()"/>
+		</xsl:copy>
+	</xsl:template>
+
+	<xsl:template match="string[@id='str_comment_special_clan_intro_ghilman.default']">
+		<xsl:copy>
+			<xsl:apply-templates select="@*[local-name() != 'text']"/>
+			<xsl:attribute name="text">{=taom_clan_intro_ghilman}Perhaps one day we shall see each other on a battlefield. You shall know the Serpent Guard by the speed of our horses and the sting of our arrows. If we are on your side, you may rejoice. If we are your enemy, you may save yourself a great deal of trouble by running away before the fighting starts.</xsl:attribute>
+		<xsl:apply-templates select="node()"/>
+		</xsl:copy>
+	</xsl:template>
+
+	<xsl:template match="string[@id='str_comment_special_clan_intro_brotherhood_of_woods.default']">
+		<xsl:copy>
+			<xsl:apply-templates select="@*[local-name() != 'text']"/>
+			<xsl:attribute name="text">{=taom_clan_intro_brotherhood_of_woods}The Strawheads took our fathers' valleys and drove us up into the hills. Whatever we take back from a horse-lord or a king's man was ours to begin with. You'll hear us called robbers and reavers. Don't believe a word of it.</xsl:attribute>
+		<xsl:apply-templates select="node()"/>
+		</xsl:copy>
+	</xsl:template>
+
+	<xsl:template match="string[@id='str_comment_special_clan_intro_hidden_hand.default']">
+		<xsl:copy>
+			<xsl:apply-templates select="@*[local-name() != 'text']"/>
+			<xsl:attribute name="text">{=taom_clan_intro_hidden_hand}When you walk these roads, my friend, know that nothing escapes the notice of the Dark Tower. Lords and kings come and go, but the servants of the Mouth remain.</xsl:attribute>
+		<xsl:apply-templates select="node()"/>
+		</xsl:copy>
+	</xsl:template>
+
+	<xsl:template match="string[@id='str_comment_special_clan_intro_lakepike.default']">
+		<xsl:copy>
+			<xsl:apply-templates select="@*[local-name() != 'text']"/>
+			<xsl:attribute name="text">{=taom_clan_intro_lakepike}They call us the Wreckers, but we prefer to be known as the free folk of the reed-beds. No Master of Lake-town and no King in Dale can make us bow our heads and scrape our knees. Know that, and we can probably get along fine.</xsl:attribute>
+		<xsl:apply-templates select="node()"/>
+		</xsl:copy>
+	</xsl:template>
+
+	<xsl:template match="string[@id='str_comment_special_clan_intro_wolfskins.default']">
+		<xsl:copy>
+			<xsl:apply-templates select="@*[local-name() != 'text']"/>
+			<xsl:attribute name="text">{=taom_clan_intro_wolfskins}Perhaps you've heard of the Ravagers, traveller. We are beasts. Know that so long as we eat no cooked meat and sleep under no roof, the laws of Khand cannot touch us. So tread carefully with us.</xsl:attribute>
+		<xsl:apply-templates select="node()"/>
+		</xsl:copy>
+	</xsl:template>
+
+	<xsl:template match="string[@id='str_comment_special_clan_intro_eleftheroi.default']">
+		<xsl:copy>
+			<xsl:apply-templates select="@*[local-name() != 'text']"/>
+			<xsl:attribute name="text">{=taom_clan_intro_eleftheroi}You may have heard of us: the Beornings. We keep the High Pass and the Ford of Carrock, and no Orc crosses our lands and lives. Honest travellers pay their toll and go in peace. Those who come to raid will learn that we have very large teeth.</xsl:attribute>
+		<xsl:apply-templates select="node()"/>
+		</xsl:copy>
+	</xsl:template>
+
+	<xsl:template match="string[@id='str_comment_special_clan_intro_jawwal.default']">
+		<xsl:copy>
+			<xsl:apply-templates select="@*[local-name() != 'text']"/>
+			<xsl:attribute name="text">{=taom_clan_intro_jawwal}Perhaps you have not heard of the Sand-Riders. Well, when you cross the deep desert of Harad, far from well and spring, in a land that the city-lords scorn, then you are in our domain.</xsl:attribute>
+		<xsl:apply-templates select="node()"/>
+		</xsl:copy>
+	</xsl:template>
+
+	<xsl:template match="string[@id='str_comment_special_clan_intro_beni_zilal.default']">
+		<xsl:copy>
+			<xsl:apply-templates select="@*[local-name() != 'text']"/>
+			<xsl:attribute name="text">{=taom_clan_intro_beni_zilal}The Blind Eye sees what others miss. We keep the secrets of Harad, and we watch from the shadows. Make foes of us at your peril.</xsl:attribute>
+		<xsl:apply-templates select="node()"/>
+		</xsl:copy>
+	</xsl:template>
+
+	<xsl:template match="string[@id='str_comment_special_clan_intro_embers_of_flame.default']">
+		<xsl:copy>
+			<xsl:apply-templates select="@*[local-name() != 'text']"/>
+			<xsl:attribute name="text">{=taom_clan_intro_embers_of_flame}You may have heard whispers of us. Men call us the Cult of the Lidless Eye. Long ago, in Númenor, our forefathers bent the knee to the Dark Lord. Until his day comes, we keep our silence. But when it comes, all who scorned him will answer for it.</xsl:attribute>
+		<xsl:apply-templates select="node()"/>
+		</xsl:copy>
+	</xsl:template>
+
+	<!-- Default noble and minor-faction introductions: "the" removal only (vanilla keys) -->
 
 	<xsl:template match="string[@id='str_comment_noble_introduces_self_and_clan.default']">
 		<xsl:copy>

@@ -25,7 +25,7 @@ The rules are large (succession laws, claims, unions, offices, chronicle, grants
 - **Domain** (`Main/Features/Realms/Domain`, the former TAOM.Realms.Core): every rule, with no game references, fully unit tested. `RealmsService` is the facade.
 - **Campaign coordinator** (`RealmsCampaign`, four partial files): the engine-facing layer. It reads the world into snapshots, calls the service, applies the resulting events through TaleWorlds actions and reports them. It is owned by the thin entry point `RealmsCampaignBehavior` (ADR-002), which registers its listeners and its save data. The class name `RealmsCampaignBehavior` is the save key and matches the old module, so old saves keep their titles.
 - **Hooks** (`Hooks/`): `PartyNames` (lord party names, patched at GameInit) and `LiegeArmyDiscount` (a liege calls vassals for half the influence, patched at session launch). The client's `ConversationNames` styles the speaker's name.
-- **Client** (`Client/Features/Realms`): the encyclopedia mixins and prefab extensions (settlement, hero and kingdom pages), the Titles encyclopedia category and its title pages (`RealmsTitle`, a client-side `MBObjectBase` per title, unregistered), the title tree, and the claimants and coronation popups. `RealmsClient` is called from `ClientSubModule` (game start and tick). Core shows the coronation through `IRealmsPopupAdapter`; core registers a null adapter and TAOM.Client replaces it. The banner crosses the seam as its serialized code (ServiceSignature gate).
+- **Client** (`Client/Features/Realms`): the encyclopedia mixins and prefab extensions (settlement, hero and kingdom pages), the Titles encyclopedia category and its title pages (`RealmsTitle`, a client-side `MBObjectBase` per title, unregistered), the title tree and the claimants popup. `RealmsClient` is called from `ClientSubModule` (game start and tick). Core shows the coronation through `IRealmsPopupAdapter`; core registers a null adapter and TAOM.Client replaces it. The client queues the coronation in TAOM's story event window (`TaomEventWindow.xml`, `Client/Features/EventWindow`), which the War Chronicle's announcements share: one window at a time, opened on a frame when the UI queue had nothing to run, and pausing the game. The banner crosses the seam as its serialized code (ServiceSignature gate).
 - **Save data**: chunked and versioned (`taom_realms_chunks`, `taom_realms_chunk_<i>`, header `TAOM.Realms`). Data from a newer version is kept unchanged and the ledger turns off.
 - **Co-op**: host only (see [coop-interop.md](coop-interop.md)). Every listener and every player action checks `ICoopSessionProvider.IsAuthority`; a client keeps the ledger it loaded with the host's save, read only, and never creates one.
 
@@ -113,7 +113,8 @@ The file sets the prices and amounts; the MCM group scales or switches them in p
 | `Main/Features/Realms/Cheats/RealmsConsole.cs` | Console commands |
 | `Client/Features/Realms/RealmsClient.cs` | Client start and tick: conversation names, the Titles page patch, the UI queue |
 | `Client/Features/Realms/Encyclopedia/*` | Title rows on the themed encyclopedia pages, the Titles category (`TitleEncyclopediaPage`) and the title page (`TitleEncyclopediaPageVM`) |
-| `Client/Features/Realms/Popups/*` | Title tree, claimants and coronation windows |
+| `Client/Features/Realms/Popups/*` | Title tree and claimants windows, and the popup layer the story event window opens in |
+| `Client/Features/EventWindow/*`, `Main/_Module/GUI/PreFabs/EventWindow/TaomEventWindow.xml` | The story event window the coronation shows in, shared with the War Chronicle |
 | `Main/_Module/GUI/PreFabs/Realms/*.xml` | The title page (`RealmsEncyclopediaTitlePage.xml`) and the popup prefabs (placeholder art) |
 
 ## Dependencies
@@ -163,7 +164,9 @@ The weekly tick is one sweep over the AI clans that own a town or castle. Formin
 
 ## Changelog
 
+- 2026-11-13: the Gondor coronation window shows its picture, `taom_event_coronation_gondor.png` in `GUI/EventArt`: a `<Coronation image>` names a file there, no longer a sprite (left out, or a missing file: the new house's banner).
 - 2026-11-12: a town or castle your clan owns can be claimed and then usurped even inside your own realm, when its title stayed with its holder by right (a fief taken, or granted by your liege, without its title). A fief of another clan of the realm is still refused. AI lords follow the same rule. Tribute was already limited to the same realm in both directions; a test now pins that.
+- 2026-11-12: the coronation window became TAOM's story event window (`TaomEventWindow`, replacing `RealmsCoronationPopup`), which the War Chronicle's announcements now share; the layout and sprites are the prefab's, every text the event's.
 - 2026-11-12: playing as Aragorn, restoring Gondor's throne crowns you: your own clan is renamed House of Telcontar and becomes the ruling house, with Minas Tirith, Anórien and the Telcontar banner, and a mercenary contract ends. Before, the player hero was left out of the coronation and held the crown in name only while Denethor's house still ruled.
 - 2026-11-12: tribute is a daily share of the vassal clan's income from fiefs, 5% by default, instead of a weekly percentage of a fixed amount per rank (Denethor drew about 100 gold a week). It is part of each clan's gold change, shown in the map bar's expected change and the clan screen instead of a chat message. Four mod options replace Tribute (%): Tribute From Vassals and Tribute To Liege, each with a percentage from 1 to 25. `<Consequences tribute_rank>` replaces the per-rank `<Rank tribute>` amounts. Host only in co-op.
 

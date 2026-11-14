@@ -23,7 +23,10 @@ public sealed class PlayerCharacterCreationChoices
     /// <summary>FaceGen race index chosen in CC, or -1 when the race stage did not resolve one.</summary>
     public int RaceId { get; }
 
-    /// <summary>The career pick, or null when the player made none.</summary>
+    /// <summary>
+    /// The career the hero held at the capture: the menu pick, or the career character creation
+    /// auto-assigned without one. Null when the hero has none.
+    /// </summary>
     public string CareerId { get; }
 
     public PlayerCharacterCreationChoices(string heroId, string cultureId, int raceId, string careerId)

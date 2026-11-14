@@ -11,11 +11,11 @@ namespace TAOM.Features.MissionPerf.AnimMemory;
 internal static class AnimMemLine
 {
     internal static string Armed(long moduleBase, int textRva, int textSize, int loadSiteRva, int budgetSiteRva,
-        int counterRva, int budgetRva, int budgetBytes, double scanMs) =>
+        int counterRva, int budgetRva, int budgetBytes, double scanMs, string scanPath) =>
         string.Format(CultureInfo.InvariantCulture,
-            "[AnimMem] armed: {0} base=0x{1:X} text=0x{2:X}+0x{3:X} loadSite=0x{4:X} budgetSite=0x{5:X} counter=0x{6:X} budget=0x{7:X} budgetBytes={8} scanMs={9:0.0}",
+            "[AnimMem] armed: {0} base=0x{1:X} text=0x{2:X}+0x{3:X} loadSite=0x{4:X} budgetSite=0x{5:X} counter=0x{6:X} budget=0x{7:X} budgetBytes={8} scanMs={9:0.0} scan={10}",
             ClipBudgetSignature.ModuleName, moduleBase, textRva, textSize, loadSiteRva, budgetSiteRva,
-            counterRva, budgetRva, budgetBytes, scanMs);
+            counterRva, budgetRva, budgetBytes, scanMs, scanPath);
 
     internal static string Disabled(string reason) =>
         "[AnimMem] disabled for this process: " + reason

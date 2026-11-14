@@ -39,14 +39,17 @@ public class ShippedCultureAlignmentCoverageTests
     }
 
     /// <summary>
-    /// Derived from lords.xml rather than hardcoded, so a newly-authored culture is covered
-    /// automatically. A hardcoded list would itself go stale.
+    /// Derived from lords.xml and the lords.xslt templates rather than hardcoded, so a newly-authored
+    /// culture is covered automatically. A hardcoded list would itself go stale. The templates count
+    /// because since #648 the vanilla-id lords live there alone, and every Harad, Khand and Dunland
+    /// lord is one of them.
     /// </summary>
     private static List<string> CultureIdsUsedByLords()
     {
         var xml = File.ReadAllText(Path.Combine(ModuleDataPath, "characters", "lords.xml"));
-        return Regex.Matches(xml, "culture\\s*=\\s*\"Culture\\.([A-Za-z_0-9]+)\"")
-            .Cast<Match>()
+        var xslt = File.ReadAllText(Path.Combine(ModuleDataPath, "lords.xslt"));
+        return Regex.Matches(xml, "culture\\s*=\\s*\"Culture\\.([A-Za-z_0-9]+)\"").Cast<Match>()
+            .Concat(Regex.Matches(xslt, "<xsl:attribute name=\"culture\">Culture\\.([A-Za-z_0-9]+)</xsl:attribute>").Cast<Match>())
             .Select(m => m.Groups[1].Value)
             .Distinct(StringComparer.OrdinalIgnoreCase)
             .OrderBy(id => id, StringComparer.OrdinalIgnoreCase)

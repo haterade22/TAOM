@@ -1826,7 +1826,7 @@
 		is_template="true">
 		<face>
 			<face_key_template
-				value="BodyProperty.fighter_rivendell" />
+				value="BodyProperty.fighter_lothlorien" />
 		</face>
 		<skills />
 		<Equipments>
@@ -1855,7 +1855,7 @@
 		is_template="true">
 		<face>
 			<face_key_template
-				value="BodyProperty.fighter_rivendell" />
+				value="BodyProperty.fighter_lothlorien" />
 		</face>
 		<skills />
 		<Equipments>
@@ -1887,7 +1887,7 @@
 		is_template="true">
 		<face>
 			<face_key_template
-				value="BodyProperty.fighter_rivendell" />
+				value="BodyProperty.fighter_lothlorien" />
 		</face>
 		<skills />
 		<Equipments>
@@ -1916,7 +1916,7 @@
 		is_template="true">
 		<face>
 			<face_key_template
-				value="BodyProperty.fighter_rivendell" />
+				value="BodyProperty.fighter_lothlorien" />
 		</face>
 		<skills />
 		<Equipments>
@@ -1945,7 +1945,7 @@
 		is_template="true">
 		<face>
 			<face_key_template
-				value="BodyProperty.fighter_rivendell" />
+				value="BodyProperty.fighter_lothlorien" />
 		</face>
 		<skills />
 		<Equipments>
@@ -1974,7 +1974,7 @@
 		is_template="true">
 		<face>
 			<face_key_template
-				value="BodyProperty.fighter_rivendell" />
+				value="BodyProperty.fighter_lothlorien" />
 		</face>
 		<skills />
 		<Equipments>
@@ -2006,7 +2006,7 @@
 		is_template="true">
 		<face>
 			<face_key_template
-				value="BodyProperty.fighter_gondor" />
+				value="BodyProperty.fighter_umbar" />
 		</face>
 		<skills />
 		<Equipments>
@@ -2034,7 +2034,7 @@
 		is_template="true">
 		<face>
 			<face_key_template
-				value="BodyProperty.fighter_gondor" />
+				value="BodyProperty.fighter_umbar" />
 		</face>
 		<skills />
 		<Equipments>
@@ -2065,7 +2065,7 @@
 		is_template="true">
 		<face>
 			<face_key_template
-				value="BodyProperty.fighter_gondor" />
+				value="BodyProperty.fighter_umbar" />
 		</face>
 		<skills />
 		<Equipments>
@@ -2093,7 +2093,7 @@
 		is_template="true">
 		<face>
 			<face_key_template
-				value="BodyProperty.fighter_gondor" />
+				value="BodyProperty.fighter_umbar" />
 		</face>
 		<skills />
 		<Equipments>
@@ -2121,7 +2121,7 @@
 		is_template="true">
 		<face>
 			<face_key_template
-				value="BodyProperty.fighter_gondor" />
+				value="BodyProperty.fighter_umbar" />
 		</face>
 		<skills />
 		<Equipments>
@@ -2149,7 +2149,7 @@
 		is_template="true">
 		<face>
 			<face_key_template
-				value="BodyProperty.fighter_gondor" />
+				value="BodyProperty.fighter_umbar" />
 		</face>
 		<skills />
 		<Equipments>

@@ -45,28 +45,44 @@ public sealed class ChronicleOutcomeService
         _logger = logger;
     }
 
-    public void Apply(ChronicleEventDefinition definition, ChronicleEventState outcome, double nowHours)
+    /// <summary>Writes the outcome and returns what it wrote, for the event window (<see cref="ChronicleOutcomeReport"/>).</summary>
+    public ChronicleOutcomeReport Apply(ChronicleEventDefinition definition, ChronicleEventState outcome, double nowHours)
     {
+        var report = ChronicleOutcomeReport.None;
         var block = definition.OutcomeFor(outcome);
         if (block != null)
         {
+            var applied = new List<ChronicleAppliedEffect>();
+            ChronicleAppliedMomentum? momentum = null;
             var live = new HashSet<string>(_alliance.GetAllKingdomIds() ?? new List<string>(), StringComparer.Ordinal);
             for (var row = 0; row < block.Effects.Count; row++)
             {
                 var effect = block.Effects[row];
                 var source = $"chronicle:{definition.Id}:{outcome}:{row}";
+                var reached = new List<string>();
                 foreach (var kingdom in Expand(definition, effect.Target, live))
+                {
                     _effects.Apply(new WarEffect(source, kingdom, effect.Kind, effect.Magnitude, nowHours + effect.DurationDays * 24d));
+                    reached.Add(kingdom);
+                }
+
+                if (reached.Count > 0)
+                    applied.Add(new ChronicleAppliedEffect(effect.Target, reached, effect.Kind, effect.Magnitude, effect.DurationDays));
             }
 
-            if (block.Momentum != null
-                && !_momentum.TryAwardScripted(block.Momentum.Side, block.Momentum.Units, _text.Localize(definition.Title ?? string.Empty), nowHours))
+            if (block.Momentum != null)
             {
-                _logger.LogInfo($"[WarChronicle] '{definition.Id}' {outcome}: the {block.Momentum.Side} momentum award was refused (momentum off, or the war not running).");
+                if (_momentum.TryAwardScripted(block.Momentum.Side, block.Momentum.Units, _text.Localize(definition.Title ?? string.Empty), nowHours))
+                    momentum = new ChronicleAppliedMomentum(block.Momentum.Side, block.Momentum.Units);
+                else
+                    _logger.LogInfo($"[WarChronicle] '{definition.Id}' {outcome}: the {block.Momentum.Side} momentum award was refused (momentum off, or the war not running).");
             }
+
+            report = new ChronicleOutcomeReport(applied, momentum);
         }
 
         _ledger.LogChronicleResolution(definition.Id, outcome.ToString());
+        return report;
     }
 
     /// <summary>The kingdom ids an effect target names, limited to the live ones.</summary>

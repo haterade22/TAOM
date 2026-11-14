@@ -48,10 +48,53 @@ public class CareerButtonClickTests
         var tokens = Fingerprint(Postfix());
 
         var close = tokens.IndexOf("callvirt CharacterDeveloperVM::ExecuteDone()");
-        var open = tokens.IndexOf("call GauntletCareerScreen::OpenCareerScreen(Boolean)");
+        var open = tokens.IndexOf("call GauntletCareerScreen::OpenCareerScreen(Boolean,Boolean)");
         Assert.IsTrue(close >= 0, "The postfix must close the character developer: " + string.Join(" | ", tokens));
         Assert.IsTrue(open > close, "The developer must close before the career screen opens: " + string.Join(" | ", tokens));
         CollectionAssert.Contains(tokens, "ldstr \"" + CommandName + "\"");
+        // The button opens the normal tree (switchMode false) and asks for the character page back on close.
+        Assert.AreEqual("ldc.i4 0", tokens[open - 2], string.Join(" | ", tokens));
+        Assert.AreEqual("ldc.i4 1", tokens[open - 1], "The button's screen must return to the character page: " + string.Join(" | ", tokens));
+    }
+
+    [TestMethod]
+    public void CareerScreenClose_ChecksTheLatchAndTheActiveState_ReadsTheFlagBeforeThePop_ThenReopensTheCharacterPage()
+    {
+        // Close runs once, never pops another state, and rebuilds the character page only after its own pop.
+        RequireGame();
+        var close = AccessTools.Method(typeof(GauntletCareerScreen), "CloseScreen");
+        Assert.IsNotNull(close, "GauntletCareerScreen.CloseScreen is gone.");
+        var tokens = Fingerprint(close!);
+        var all = string.Join(" | ", tokens);
+
+        var latch = tokens.IndexOf("ldfld GauntletCareerScreen::_closed");
+        var active = tokens.FindIndex(t => t.StartsWith("callvirt GameStateManager::get_ActiveState(", StringComparison.Ordinal));
+        var flag = tokens.IndexOf("callvirt CareerScreenGameState::get_ReturnToCharacter()");
+        var release = tokens.FindIndex(t => t.Contains("::ReleaseMovie("));
+        var finalize = tokens.FindIndex(t => t == "callvirt ViewModel::OnFinalize()");
+        var pop = tokens.FindIndex(t => t.StartsWith("callvirt GameStateManager::PopState(", StringComparison.Ordinal));
+        var create = tokens.FindIndex(t => t.StartsWith("callvirt GameStateManager::CreateState<CharacterDeveloperState>(", StringComparison.Ordinal));
+        var push = tokens.FindLastIndex(t => t.StartsWith("callvirt GameStateManager::PushState(", StringComparison.Ordinal));
+
+        Assert.IsTrue(latch >= 0 && active > latch, "The once latch and the active-state check come first: " + all);
+        Assert.IsTrue(flag > active && flag < pop, "ReturnToCharacter is read before the pop: " + all);
+        Assert.IsTrue(release > active && release < pop && finalize > active && finalize < pop, "Cleanup precedes the pop: " + all);
+        Assert.IsTrue(create > pop && push > create, "The character page is pushed after the pop: " + all);
+    }
+
+    [TestMethod]
+    public void CareerScreenOnFinalize_CleansUpWithoutReopeningTheCharacterPage()
+    {
+        // The engine's own teardown (leaving the campaign) must never push a state.
+        RequireGame();
+        var finalize = AccessTools.Method(typeof(GauntletCareerScreen), "OnFinalize");
+        Assert.IsNotNull(finalize, "GauntletCareerScreen.OnFinalize is gone.");
+        var tokens = Fingerprint(finalize!);
+        var all = string.Join(" | ", tokens);
+
+        Assert.IsTrue(tokens.Exists(t => t.Contains("::ReleaseMovie(")), "OnFinalize releases the movie: " + all);
+        Assert.IsTrue(tokens.Exists(t => t == "callvirt ViewModel::OnFinalize()"), "OnFinalize finalizes the view model: " + all);
+        Assert.IsFalse(tokens.Exists(t => t.Contains("GameStateManager::")), "OnFinalize touches no game state: " + all);
     }
 
     [TestMethod]
@@ -103,7 +146,7 @@ public class CareerButtonClickTests
 
         var guarded = Fingerprint(postfix, clause.TryOffset, clause.TryLength);
         var close = guarded.IndexOf("callvirt CharacterDeveloperVM::ExecuteDone()");
-        var open = guarded.IndexOf("call GauntletCareerScreen::OpenCareerScreen(Boolean)");
+        var open = guarded.IndexOf("call GauntletCareerScreen::OpenCareerScreen(Boolean,Boolean)");
         Assert.IsTrue(close >= 0 && open > close, "The try must hold the close, then the open: " + string.Join(" | ", guarded));
 
         var handler = Fingerprint(postfix, clause.HandlerOffset, clause.HandlerLength);
@@ -120,7 +163,7 @@ public class CareerButtonClickTests
         RequireGame();
         var postfix = Postfix();
         var tokens = Fingerprint(postfix);
-        var open = tokens.IndexOf("call GauntletCareerScreen::OpenCareerScreen(Boolean)");
+        var open = tokens.IndexOf("call GauntletCareerScreen::OpenCareerScreen(Boolean,Boolean)");
         var top = tokens.IndexOf(TopScreen);
         var pass = tokens.IndexOf(PassCall);
         Assert.IsTrue(open >= 0 && top > open, "The top screen is read after the open: " + string.Join(" | ", tokens));

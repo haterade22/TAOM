@@ -1586,3 +1586,19 @@ The Long Defeat's kill feed doc said the feed "names who killed whom, with the p
 - **Why missed:** the sentence came from the view model's field names (`MurdererName`, `VictimName`), not from the gate beside them, the option's default or the prefab. The search for other mentions was by identifier, and the stale comment named the feed in prose.
 - **Prevent:** a doc line that tells a player or tester what they will see quotes three things: the line that sets each shown value, the option's default, and the prefab line that places it. When a change adds a thing, grep its prose name repo-wide (`grep -rn -i "kill feed"`) for comments that say it is absent.
 - **Source:** [rca-long-defeat-kill-feed-2026-11-13.md](../rca-long-defeat-kill-feed-2026-11-13.md), findings 1 and 2 (#1159). Repeat of the pattern in row 16 of [rca-long-defeat-split-2026-11-12.md](../rca-long-defeat-split-2026-11-12.md).
+
+### One single-segment prefab path silently disables the whole nameplate fade (yotthani's TAOM_UI, game version not stated, TAOM check on v1.5.7, 2026-11-13)
+
+yotthani's TAOM_UI nameplate module wrote one widget path with a single segment while the parties grid sat one level deeper in an unnamed container. The engine's fade routine returned early, and the whole fade and cull logic stopped with no error the player could see (`HoN/TAOM_UI/RELEASE-NOTES.md`@c45d8374 v1.1.0 "Fixed"; the author's cause statement, no log quoted). TAOM read the v1.5.7 routine: `SettlementNameplateWidget.cs:499-513` needs eight widgets and, when any is null, raises a `Debug.FailedAssert` and returns before `base.IsVisible = false` and before `DetermineTargetAlphaValue`.
+
+- **Why missed:** a path that resolves to nothing is not an error in a prefab; the only trace is a debug assert, and the visible symptom (plates that do not fade) looks like a tuning problem.
+- **Prevent:** after editing a `SettlementNameplateItem*` prefab, resolve every bound path segment by segment over direct children by `Id` (a path is not a search), and check the log for "Related widget null on UpdateNameplateTransparencyAndBrightness!". TAOM's three prefabs resolved all eight paths on a static walk on 2026-11-13; not run in game.
+- **Source:** [gauntletui-viewmodel-screen.md](../../reference/engine/gauntletui-viewmodel-screen.md) "Nameplate prefabs: the fade routine needs all eight widgets"; yotthani, `yotthani/bannerlord` `HoN/TAOM_UI/RELEASE-NOTES.md`@c45d8374 lines 16-19 (v1.1.0); TAOM's check of the three prefabs is recorded in [adopt-yotthani-2026-11-13.md](../adopt-yotthani-2026-11-13.md).
+
+### Custom Gauntlet widget rules from LOTRAOM_FactionMap (game version not stated, author-experienced, not re-checked on v1.5.7)
+
+The older LOTRAOM_FactionMap project (`LOTRAOM_FactionMap/CLAUDE.md`@c45d8374:76-85, 131-134 and 158-163, "learned through painful debugging", no test PC named) records four widget rules that TAOM's `Client/Features/FactionMap/Widgets` inherits. TAOM has not re-read them on v1.5.7.
+
+- **Why missed:** each looks like a layout or art defect, not an engine rule: an image that darkens for good, offsets that double only on a 4K screen, a pulse that stops after a return to the main menu. The rules and TAOM's lines are in [gauntletui-viewmodel-screen.md](../../reference/engine/gauntletui-viewmodel-screen.md) "Gauntlet 2D draw limits, input and tooltip facts".
+- **Prevent:** in a custom widget, set `OverrideDefaultStateSwitchingEnabled` first; take scaled and unscaled sizes from the same side; hold no static widget state, or reset it per session; draw with `DrawSprite`. Check the property and the scale rule against v1.5.7 before relying on them.
+- **Source:** yotthani/bannerlord `LOTRAOM_FactionMap/CLAUDE.md`@c45d8374:76-85, 131-134, 158-163. The older `README.md` there describes a binary hit-map approach and is stale against the CLAUDE.md.

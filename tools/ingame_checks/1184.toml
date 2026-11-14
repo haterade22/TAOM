@@ -1,0 +1,26 @@
+# In-game check for #1184, read by tools/ingame_verdict.py. The [Check] line comes from
+# Client/Features/CustomBattles/Muster/TcbVM.cs (ExecuteStart, when Player Type is Captain): a pass line once
+# CustomBattleHelper.StartGame has returned, a fail line from the catch around the start. The id and the detail
+# text are in Main/Features/CustomBattles/Muster/MusterChecks.cs.
+#
+# The defect was a field battle (Battle or Village): the engine reads the general's name there and threw on a null
+# one. So only a field battle passes this check. A siege as Captain writes type=Siege, which is neither a pass nor a
+# fail here: with nothing else in the session the check is NOT REACHED. The fail pattern names the [Check] line, so
+# it fails on any Captain start that threw, a siege included.
+issue = 1184
+title = "Custom Battle muster: Captain player type cannot start a field battle (null general)"
+fixed_in = "ca983c043"   # trunk before the fix: the manifest ships with the emitter
+logs = ["taom"]
+
+[[check]]
+id = "taom.muster.captain-start"
+needs = "on the Custom Battle muster screen set Player Type to Captain and Game Type to Battle, then press Start"
+pass = ['\[Check\] id=taom\.muster\.captain-start result=pass type=(Battle|Village) general=[^ ]+']
+fail = ['\[Check\] id=taom\.muster\.captain-start result=fail']
+absence = "not-reached"
+
+[[human]]
+claim = "the battle opens, and the other lord, not the player, gives the army its orders"
+
+[[human]]
+claim = "a siege as Captain still starts"

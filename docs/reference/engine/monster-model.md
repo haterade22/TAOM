@@ -20,6 +20,13 @@ creature feature — render, animation, ragdoll, IK grounding, mounting, AI — 
 
 Each `monsters.xml` attribute maps to a field. Grouped:
 
+**Which table reads the rows.** The managed monster table (what `FaceGen.GetBaseMonsterFromRace` and `AgentVisuals` use) is filled
+from the `Monsters` XmlNode in a module's `SubModule.xml`; `soln_monsters` in `project.mbproj` feeds only the native table
+[yotthani, `HoN/DwarfScaleTest` commit `7f0e30e6` of 15.10.2026, game version not stated; without the node a new race had no monster and
+`AgentVisuals` threw a null reference for the main party icon]. TAOM's own `SubModule.xml` has none (TAOM-verified on the
+v1.5.7 tree); the 12 nodes are in the live `LOTRLOME_Armory/SubModule.xml`. Details and hedges:
+[body-properties.md](../../modding/body-properties.md) (`bone_scale` and `Monsters` bullets).
+
 ### Identity / animation binding
 | Attr | Field | Role |
 |---|---|---|
@@ -96,7 +103,7 @@ names in `monsters.xml` MUST exactly match the creature's skeleton** — and why
 
 ## Evidence (file:line, v1.4.5)
 - `TaleWorlds.Core/Monster.cs` `Deserialize`: action_set/female/monster_usage @304-318; weight/hit_points/num_paces/speeds/jump @327-367; arm/jump/charge/family_type @470-495; the full bone map @496-559 (`DeserializeBoneIndex`/`DeserializeBoneIndexArray`, `validateHasParentBone`); foot-IK @523-530; rein bones @531-559; capsules/flags/eye-heights sub-nodes parsed in the same method.
-- Consumed: `Monster.FillAnimationSystemData` (`TaleWorlds.MountAndBlade.cs`:101588) + `CreateAgent` (`Mission.cs`:4040-4053) + `FillCapsuleData`/`FillSpawnData`.
+- Consumed: `MonsterExtensions.FillAnimationSystemData` (extension on `Monster`; v1.5.3 dump `TaleWorlds.MountAndBlade.cs`:101588) + `CreateAgent` (`Mission.cs`:4040-4053) + `FillCapsuleData`/`FillSpawnData`.
 
 ---
 

@@ -145,7 +145,8 @@ public sealed class HarmonyCensusReportBuilder
 
     /// <summary>
     /// TAOM's own Harmony ids: "com.taom.mod" (Main) plus the "TAOM.*" ids owned by
-    /// TAOM.Dependencies, and the per-module id UIExtenderEx registers on TAOM's behalf
+    /// TAOM.Dependencies, the Realms patches and the crash guards ("TAOM.CrashGuards"), and the per-module
+    /// id UIExtenderEx registers on TAOM's behalf
     /// ("bannerlord.uiextender.ex.viewmodels.TAOM") — without that last one, a method carrying only
     /// a TAOM mixin plus a TAOM patch reads as a cross-mod conflict.
     /// </summary>

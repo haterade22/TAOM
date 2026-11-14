@@ -201,6 +201,9 @@ public static class CoopSettingsRelevance
         // Bandit Voices (#900): the greeting is text drawn in the player's own conversation on this client. The feature reads the
         // meeting record and the encounter, writes nothing, and rolls on TAOM's own random source, never the shared stream.
         "EnableBanditGreetings",
+        // Encounter Lines (Patch149): text drawn in the player's own conversation on this client, from conversation tags and
+        // text variables; it writes no campaign state and rolls on TAOM's own random source.
+        "EnableEncounterLines",
         "EnableShaderPrecompileScenePasses", "EnableShaderPrecompilation",
         // Already suppressed under co-op — TimeAcceleration's UI carries
         // [CoopSuppressedUi("BannerlordTogether owns campaign time under co-op")].

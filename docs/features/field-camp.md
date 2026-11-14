@@ -348,6 +348,11 @@ A co-op guest gets no camp. `ICampMenuActivationQuery.DefersToCoopHost` (`MapScr
   degraded label. Keep the catch when adding consumers.
 - `CampLayoutBuilder` placement helpers remove their half-built `GameEntity` in the catch block:
   it is not in `outEntities` yet when a native call throws, so nothing else can ever release it.
+- **`IsDisorganized` is a normal transient state; never use it as a camp-ending condition.** It appears after a move
+  order or a nearby battle. [yotthani, `yotthani/bannerlord` `HoN/FieldCamp/Logic/CampManager.cs`@c45d8374 lines 85-91:
+  breaking on it tore the camp down on the hourly tick right after the player chose "Stay camped"; the fix breaks only on
+  `CurrentSettlement != null`.] TAOM's service breaks the camp on captivity and on settlement entry only
+  (`CampService.cs:348-359`) and uses `SetDisorganized(true)` only for the ambush strike.
 
 ## Owed
 

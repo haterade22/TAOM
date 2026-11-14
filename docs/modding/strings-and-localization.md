@@ -137,26 +137,26 @@ One name, three files. This is the whole shape of a translated string in TAOM.
 
 The reference site, an inline `{=KEY}Fallback` on a data entry:
 
-<!-- example file="Main/_Module/ModuleData/characters/lords.xml" id="lord_1_1_10" -->
+<!-- example file="Main/_Module/ModuleData/characters/lords.xml" id="lord_1_9_1" -->
 
 ```xml
-    <NPCCharacter id="lord_1_1_10" name="{=aom_lord_1_1_10_name}Haldis Redmist" default_group="Cavalry" age="21" voice="curt" is_hero="true" is_female="true" culture="Culture.empire" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dunland_young_lady_skills">
+    <NPCCharacter id="lord_1_9_1" name="{=aom_lord_1_9_1_name}Elphir" age="13" voice="ironic" default_group="Cavalry" is_hero="true" culture="Culture.gondor" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_faris_skills_rookie">
 ```
 
 The registry row, in a `GameText`-registered strings file:
 
-<!-- example file="Main/_Module/ModuleData/taom_xslt_strings.xml" id="aom_lord_1_1_10_name" -->
+<!-- example file="Main/_Module/ModuleData/taom_lord_name_strings.xml" id="aom_lord_1_9_1_name" -->
 
 ```xml
-	<string id="aom_lord_1_1_10_name" text="{=aom_lord_1_1_10_name}Haldis Redmist" />
+	<string id="aom_lord_1_9_1_name" text="{=aom_lord_1_9_1_name}Elphir" />
 ```
 
 And one of the twelve translated twins:
 
-<!-- example file="Main/_Module/ModuleData/Languages/RU/std_taom_xslt_strings_rus-RU.xml" id="aom_lord_1_1_10_name" -->
+<!-- example file="Main/_Module/ModuleData/Languages/RU/std_taom_lord_name_strings_rus-RU.xml" id="aom_lord_1_9_1_name" -->
 
 ```xml
-    <string id="aom_lord_1_1_10_name" text="Халдис Алый Туман" />
+    <string id="aom_lord_1_9_1_name" text="Эльфир" />
 ```
 
 What you change first:

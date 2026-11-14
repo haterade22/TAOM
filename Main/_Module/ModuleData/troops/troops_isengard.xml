@@ -778,16 +778,13 @@
                     id="Item.wm_isengard_shield_a02" />
                 <equipment
                     slot="Head"
-                    id="Item.sk_uruk_hai_helmet_sword_med_a2" />
+                    id="Item.sk_uruk_hai_helmet_officer_a2" />
                 <equipment
                     slot="Body"
-                    id="Item.sk_uruk_hai_plate_med_b1" />
-                <equipment
-                    slot="Cape"
-                    id="Item.sk_uruk_hai_pauldron_med_a1" />
+                    id="Item.sk_uruk_hai_skirt_a1" />
                 <equipment
                     slot="Gloves"
-                    id="Item.sk_uruk_hai_bracer_medium_a2" />
+                    id="Item.sk_uruk_hai_bracer_medium_a3" />
                 <equipment
                     slot="Leg"
                     id="Item.sk_uruk_hai_greaves_medium_a3" />
@@ -1195,7 +1192,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.isengard_spear_a" />
+                    id="Item.isengard_spear_b" />
                 <equipment
                     slot="Item1"
                     id="Item.wm_isengard_shield_c01" />
@@ -1336,13 +1333,16 @@
                     id="Item.isengard_berserker_sword_2h" />
                 <equipment
                     slot="Head"
-                    id="Item.sk_uruk_hai_helmet_officer_a2" />
+                    id="Item.sk_uruk_hai_helmet_sword_med_a2" />
                 <equipment
                     slot="Body"
-                    id="Item.sk_uruk_hai_skirt_a1" />
+                    id="Item.sk_uruk_hai_plate_med_b1" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_uruk_hai_pauldron_med_a1" />
                 <equipment
                     slot="Gloves"
-                    id="Item.sk_uruk_hai_bracer_medium_a3" />
+                    id="Item.sk_uruk_hai_bracer_medium_a2" />
                 <equipment
                     slot="Leg"
                     id="Item.sk_uruk_hai_greaves_medium_a3" />
@@ -2135,7 +2135,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.isengard_berserker_sword" />
+                    id="Item.isengard_1h_sword_a" />
                 <equipment
                     slot="Item1"
                     id="Item.wm_isengard_shield_a02" />
@@ -2158,7 +2158,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.isengard_berserker_sword" />
+                    id="Item.isengard_1h_sword_a" />
                 <equipment
                     slot="Item1"
                     id="Item.wm_isengard_shield_a02" />
@@ -2181,7 +2181,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.isengard_berserker_sword" />
+                    id="Item.isengard_1h_sword_a" />
                 <equipment
                     slot="Item1"
                     id="Item.wm_isengard_shield_a02" />
@@ -2204,7 +2204,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.isengard_berserker_sword" />
+                    id="Item.isengard_1h_sword_a" />
                 <equipment
                     slot="Item1"
                     id="Item.wm_isengard_shield_a02" />
@@ -2276,7 +2276,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.isengard_berserker_sword" />
+                    id="Item.isengard_1h_sword_a" />
                 <equipment
                     slot="Item1"
                     id="Item.wm_isengard_shield_a02" />
@@ -2299,7 +2299,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.isengard_berserker_sword" />
+                    id="Item.isengard_1h_sword_a" />
                 <equipment
                     slot="Item1"
                     id="Item.wm_isengard_shield_a02" />
@@ -2322,7 +2322,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.isengard_berserker_sword" />
+                    id="Item.isengard_1h_sword_a" />
                 <equipment
                     slot="Item1"
                     id="Item.wm_isengard_shield_a02" />
@@ -2345,7 +2345,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.isengard_berserker_sword" />
+                    id="Item.isengard_1h_sword_a" />
                 <equipment
                     slot="Item1"
                     id="Item.wm_isengard_shield_a02" />
@@ -2368,7 +2368,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.isengard_berserker_sword" />
+                    id="Item.isengard_1h_sword_a" />
                 <equipment
                     slot="Item1"
                     id="Item.wm_isengard_shield_a02" />
@@ -2391,7 +2391,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.isengard_berserker_sword" />
+                    id="Item.isengard_1h_sword_a" />
                 <equipment
                     slot="Item1"
                     id="Item.wm_isengard_shield_a02" />
@@ -2414,7 +2414,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.isengard_berserker_sword" />
+                    id="Item.isengard_1h_sword_a" />
                 <equipment
                     slot="Item1"
                     id="Item.wm_isengard_shield_a02" />
@@ -2483,7 +2483,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.isengard_1h_sword_b" />
+                    id="Item.isengard_1h_sword_a" />
                 <equipment
                     slot="Item1"
                     id="Item.wm_isengard_shield_a02" />

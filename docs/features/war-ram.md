@@ -236,6 +236,15 @@ and the five `new_animation_clip*` clips in the Kit the same day.
 player-rideable culture mount with a career built around it, so it is deliberately not gated. This
 matches the chariot, which is also left remountable on purpose.
 
+**A dwarf can ride a free warg, spider, elephant or chariot (2026-11-14).** With no mount-lock, a dwarf whose ram dies
+looks for any riderless mount, and the game crashed when one mounted a free warg (owner report; the crash point was
+not logged). The engine looks the mount's usage actions up in the rider's set for the rider's pose, and the Armory
+gives the warg, spider, elephant and chariot rider rows to `as_human_warrior` only; `as_dwarf_warrior` has no
+`base_set` and had none. TAOM's own `Main/_Module/ModuleData/action_sets.xml` now merges the same rows (the human
+rider clips, which the dwarf set already plays for horses) into `as_dwarf_warrior` and `as_dwarf_female_warrior`.
+The Armory xslt's `act_horse_jump_*` and `act_howdah_*` rows stay out: they would replace the dwarf's horse jumps.
+`DwarfMountRiderRowsTests` pins the rows to the Armory's. Not yet seen in game.
+
 **Patch47 covers the ram (2026-11-08).** The ram was left out on the reasoning that
 `base_monster="horse"` gives it vanilla's rider-death surface, an inference never tested in game.
 A v2.0.29.5 player CTD then died inside native `Agent.Die` from a warg bite in a battle of 122 wargs

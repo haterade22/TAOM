@@ -136,8 +136,9 @@ every run while shipping as vanilla's female "Icratia" long after TAOM had renam
 son of Golasgil, and `lord_1_46_1` passed while shipping Malrior's wife as a bearded man. Nor does
 `BROKEN_BODY_PROPERTY_REF` help: it fires only on a `BodyProperty.*` reference, and every Gondor lord
 carries an inline `<BodyProperties key=>` instead, so a female body key worn by a man resolves to
-nothing to check. `TAOM.Tests/Core/LordNameAndSexConsistencyTests.cs` owns this pair, asserting that
-every inline English name fallback matches `taom_xslt_strings.xml` and that no `is_female="true"` lord
+nothing to check. Two tests own this pair: `LordIdentityConsistencyTests.EveryLordNameInLordsXsltMatchesTheRegistry`
+asserts that every inline English name fallback in `lords.xslt` matches `taom_xslt_strings.xml`, and
+`LordNameAndSexConsistencyTests` that no `is_female="true"` lord in `characters/lords.xml` or `lords.xslt`
 carries `<beard_tags>`. Same complementary split as above: the validator catches a bad id, the test
 catches a good id describing the wrong person. Clothing that must follow sex is the same class:
 `TAOM.Tests/Core/DwarfDressWearerTests.cs` keeps every dwarf dress where only a woman draws it, after

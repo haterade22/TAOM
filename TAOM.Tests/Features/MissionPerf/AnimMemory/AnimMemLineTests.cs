@@ -12,8 +12,8 @@ public class AnimMemLineTests
     public void Armed_FormatsHeader()
     {
         Assert.AreEqual(
-            "[AnimMem] armed: TaleWorlds.Native.dll base=0x7FFB12340000 text=0x1000+0xA240CC loadSite=0x21E00F budgetSite=0x21E034 counter=0xDABE40 budget=0xB2E2DC budgetBytes=12582912 scanMs=23.4",
-            AnimMemLine.Armed(0x7FFB12340000L, 0x1000, 0xA240CC, 0x21E00F, 0x21E034, 0xDABE40, 0xB2E2DC, 12582912, 23.44));
+            "[AnimMem] armed: TaleWorlds.Native.dll base=0x7FFB12340000 text=0x1000+0xA240CC loadSite=0x21E00F budgetSite=0x21E034 counter=0xDABE40 budget=0xB2E2DC budgetBytes=12582912 scanMs=23.4 scan=cached",
+            AnimMemLine.Armed(0x7FFB12340000L, 0x1000, 0xA240CC, 0x21E00F, 0x21E034, 0xDABE40, 0xB2E2DC, 12582912, 23.44, "cached"));
     }
 
     [TestMethod]

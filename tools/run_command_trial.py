@@ -13,7 +13,7 @@ controls in order, and writes one line per step:
 Exit 0 means every step in --steps has a PASS line and no FAIL line, the done file says reason=final, the log has no CrashReport block,
 no failed Seat or Marshal's Word check line, no [ERROR] line of the Seat or its trial (a Seat patch that failed to apply and the thread guard's
 line for a trial or Seat site count), no [ERROR] line of Marshal's Word (a hotkey registration that failed, a session that could not start, a patch
-class of its category that failed or was skipped, the shared Patch_MissionTime_SetMovementOrder category that failed to apply (the two thrower patches), the thrower stand that failed, the order panel's registration failure, the spacing repair's degraded method, and the thread guard's line for one of its adapters' sites), and a clean module unload line, the game left by itself, and the log's [BuildStamp] is this checkout, read at the moment the run
+class of its category that failed or was skipped, the Patch_MissionTime_MarshalsWord category that failed to apply (the two thrower patches), the thrower stand that failed, the order panel's registration failure, the spacing repair's degraded method, and the thread guard's line for one of its adapters' sites), and a clean module unload line, the game left by itself, and the log's [BuildStamp] is this checkout, read at the moment the run
 is judged: the stamp's sha is HEAD, no tier of the stamp says MISMATCH, its .dirty mark agrees with the tree (dirty with uncommitted files,
 clean without), and no uncommitted file under the build's own pathspec (WATCHED_PATHS) is newer than the stamp's build time. A deploy made before the last edit fails the run when
 the edited file is still uncommitted (docs/features/seat-of-seeing.md names the cases only a content hash in the stamp could close),
@@ -115,12 +115,12 @@ SEAT_ERROR = re.compile(
     r"\] \[ERROR\] (?:\[Seat(?:OfSeeing|Trial)\]|\[PatchApply\] \S*Patch140_|\[TAOM\] (?:CommandTrialHost|SeatHeroAdapter|SeatScreenAdapter)\.\w+ ran off the main mission thread)")
 # An [ERROR] line of Marshal's Word: its own tag (the hotkey registration that failed, which leaves every key unbound, a session that could not
 # start, the order panel's registration that failed, the spacing repair's transpiler that left a method as it was, and the thrower stand that failed); the category Patch141 or the
-# shared Patch_MissionTime_SetMovementOrder (the two thrower patches) that failed to apply (the applier writes the category name, one line is the whole category off) or a class of its
+# Patch_MissionTime_MarshalsWord (the two thrower patches) that failed to apply (the applier writes the category name, one line is the whole category off) or a class of its
 # namespace that was skipped (the applier writes the class's full name, which holds no "Patch141_"); and the thread guard's line for one of its
 # adapters' native writes. Its fault and its array fault also write a failed check line, which MARSHAL_CHECK_FAIL reads.
 MARSHAL_ERROR = re.compile(
     r"\] \[ERROR\] (?:\[MarshalsWord\]"
-    r"|\[PatchApply\] (?:\S*Patch141_\S*|Patch_MissionTime_SetMovementOrder|TAOM\.Features\.MarshalsWord\.\S+) (?:FAILED|SKIPPED)"
+    r"|\[PatchApply\] (?:\S*Patch141_\S*|Patch_MissionTime_MarshalsWord|TAOM\.Features\.MarshalsWord\.\S+) (?:FAILED|SKIPPED)"
     r"|\[TAOM\] Marshal(?:Order|Fire|Outline)Adapter\.\w+ ran off the main mission thread)")
 SESSION_SUMMARY = re.compile(r"\[Session\] summary reason=\S+ .*?\bswallowed=(\d+) shield_swallowed=(\d+)(?:.*?\berrors=(\d+))?")
 SESSION_SITE = re.compile(r"\[Session\] swallowed feature=(\S+) site=(\S+) n=(\d+)")

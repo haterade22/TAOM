@@ -36,6 +36,7 @@ public static class WarChronicleIoC
         container.Register<ChronicleStateStore>(Reuse.Singleton);
         container.Register<IChronicleConfigProvider, ChronicleConfigProvider>(Reuse.Singleton);
         container.Register<IChronicleWorldAdapter, ChronicleWorldAdapter>(Reuse.Singleton);
+        container.Register<IEventWindowAdapter, NullEventWindowAdapter>(Reuse.Singleton); // TAOM.Client replaces it
         container.Register<IChroniclePresenter, ChroniclePresenter>(Reuse.Singleton);
         container.Register<ChronicleAnnouncementQueue>(Reuse.Singleton);
         container.Register<ChronicleOutcomeService>(Reuse.Singleton);

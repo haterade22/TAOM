@@ -141,6 +141,8 @@ For a bulk display-name change (for one or two ids a targeted write is simpler, 
 
 Out of scope for this doc. See `tools/Generate-Settlements.ps1` (operates on the TAOM repo snapshot — you'd need to manually mirror the result to the external module).
 
+Two engine traps bite a new or edited settlement entry, both with their mechanism in [settlements.md](../modding/settlements.md) "Gotchas": a comment that is a direct child of `<Components>` nulls the component and leaves that settlement and every later one unready (the live file's 59 comments are all top-level, counted 2026-11-13), and a settlement with no map-scene entity of its own name falls back to a prefab of that name, and throws in `SettlementVisual.OnStartup` if there is none.
+
 ## Reassigning Settlement Ownership (distinct from renaming)
 
 Ownership is the `owner="Faction.clan_<culture>_N"` attribute on each `<Settlement>` opening tag of a **town or castle**. It is the **initial** owner at campaign start (applies to new games; existing saves keep their world state).

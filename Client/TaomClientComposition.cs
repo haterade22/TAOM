@@ -2,6 +2,7 @@ using DryIoc;
 using TAOM.Adapters;
 using TAOM.Client.Adapters;
 using TAOM.Client.Features.CustomBattles;
+using TAOM.Client.Features.EventWindow;
 using TAOM.Client.Features.FordsOfWar;
 using TAOM.Client.Features.FiefManagement;
 using TAOM.Client.Features.HallOfFire;
@@ -66,5 +67,6 @@ internal sealed class TaomClientComposition : IClientComposition
         registrator.Register<IQuestJournalAdapter, QuestJournalAdapter>(Reuse.Singleton);
         registrator.Register<ICampaignPresentationAdapter, CampaignPresentationAdapter>(Reuse.Singleton);
         registrator.Register<IRealmsPopupAdapter, RealmsPopupAdapter>(Reuse.Singleton);
+        registrator.Register<IEventWindowAdapter, EventWindowAdapter>(Reuse.Singleton);
     }
 }

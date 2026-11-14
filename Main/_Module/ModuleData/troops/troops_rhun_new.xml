@@ -1671,6 +1671,7 @@
                 <equipment slot="Item0" id="Item.ladder_rhun_new_bow_t2" />
                 <equipment slot="Item1" id="Item.bodkin_arrows_b" />
                 <equipment slot="Item2" id="Item.bodkin_arrows_b" />
+                <equipment slot="Item3" id="Item.aserai_sword_3_t3" />
                 <equipment slot="Head" id="Item.sk_rh_loke_helmet_east_med_a" />
                 <equipment slot="Body" id="Item.sk_rh_drag_chainmail_a" />
                 <equipment slot="Gloves" id="Item.sk_rh_loke_bracer_light_a" />
@@ -1745,6 +1746,7 @@
                 <equipment slot="Item0" id="Item.ladder_rhun_new_bow_t3" />
                 <equipment slot="Item1" id="Item.bodkin_arrows_b" />
                 <equipment slot="Item2" id="Item.bodkin_arrows_b" />
+                <equipment slot="Item3" id="Item.aserai_sword_3_t3" />
                 <equipment slot="Head" id="Item.sk_rh_loke_helmet_east_med_c" />
                 <equipment slot="Body" id="Item.sk_rh_loke_chest_light_d" />
                 <equipment slot="Cape" id="Item.sk_rh_loke_pauldron_light_b" />
@@ -4147,6 +4149,7 @@
                 <equipment slot="Item0" id="Item.ladder_rhun_new_bow_t4" />
                 <equipment slot="Item1" id="Item.bodkin_arrows_b" />
                 <equipment slot="Item2" id="Item.bodkin_arrows_b" />
+                <equipment slot="Item3" id="Item.sm_rh_drag_1h_axe_b" />
                 <equipment slot="Head" id="Item.sk_rh_drag_hood_med_a" />
                 <equipment slot="Body" id="Item.sk_rh_drag_chest_light_b" />
                 <equipment slot="Cape" id="Item.sk_rh_drag_pauldron_light_a" />
@@ -4221,6 +4224,7 @@
                 <equipment slot="Item0" id="Item.ladder_rhun_new_bow_t5" />
                 <equipment slot="Item1" id="Item.bodkin_arrows_b" />
                 <equipment slot="Item2" id="Item.bodkin_arrows_b" />
+                <equipment slot="Item3" id="Item.sm_rh_drag_1h_axe_b" />
                 <equipment slot="Head" id="Item.sk_rh_drag_hood_heavy_a" />
                 <equipment slot="Body" id="Item.sk_rh_drag_chest_light_b" />
                 <equipment slot="Cape" id="Item.sk_rh_drag_pauldron_med_a" />

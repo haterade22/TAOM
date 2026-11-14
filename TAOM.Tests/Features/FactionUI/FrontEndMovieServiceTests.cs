@@ -38,6 +38,8 @@ public class FrontEndMovieServiceTests
     private StubSettings _settings = null!;
     private IFrontEndStateAdapter _state = null!;
     private IModLogger _logger = null!;
+    private FactionUIPaths _paths = null!;
+    private FrontEndSpriteService _sprites = null!;
     private FrontEndMovieService _sut = null!;
 
     [TestInitialize]
@@ -46,7 +48,7 @@ public class FrontEndMovieServiceTests
         var pathService = Substitute.For<IPathService>();
         pathService.ModuleRootPath.Returns(Root);
         pathService.ModuleDataPath.Returns(Path.Combine(Root, "ModuleData"));
-        var paths = new FactionUIPaths(pathService);
+        var paths = _paths = new FactionUIPaths(pathService);
         _adapter = new FakeFrontEndResourceAdapter();
         _adapter.AddFile(Path.Combine(paths.RuntimeSprites, "mm_logo.png"));
         _adapter.AddFile(Path.Combine(paths.RuntimeSprites, "cc_panel_bg.png"));
@@ -55,11 +57,11 @@ public class FrontEndMovieServiceTests
         _adapter.AddFile(Path.Combine(paths.ConfigDirectory, "sprite_overrides.json"),
             "{ \"gui_skills_icon_bow\": \"SPGeneral\\\\Skills\\\\gui_skills_icon_bow\" }");
         _logger = Substitute.For<IModLogger>();
-        var sprites = new FrontEndSpriteService(_adapter, paths, _logger);
+        _sprites = new FrontEndSpriteService(_adapter, paths, _logger);
         _settings = new StubSettings();
         _state = Substitute.For<IFrontEndStateAdapter>();
         _state.IsInCharacterCreation().Returns(true);
-        _sut = new FrontEndMovieService(sprites, _settings, _state, _adapter, _logger);
+        _sut = new FrontEndMovieService(_sprites, _settings, _state, _adapter, _logger);
     }
 
     private object LoadThemed(string movie, string viewModel)
@@ -92,7 +94,7 @@ public class FrontEndMovieServiceTests
     [DataRow("EscapeMenu", "EscapeMenuVM", FrontEndImageGroups.CharacterCreation | FrontEndImageGroups.MainMenu)]
     [DataRow("CampaignOptions", "CampaignOptionsVM", CharacterCreation)]
     [DataRow("MapBar", "MapBarVM", CharacterCreation)]
-    [DataRow("CharacterDeveloper", "CharacterDeveloperVM", CharacterCreation)]
+    [DataRow("CharacterDeveloper", "CharacterDeveloperVM", CharacterCreation | FrontEndImageGroups.FactionArt)]
     [DataRow("EncyclopediaHeroPage", "EncyclopediaHeroPageVM", CharacterCreation)]
     [DataRow("EncyclopediaUnitPage", "EncyclopediaUnitPageVM", CharacterCreation)]
     [DataRow("EncyclopediaFactionPage", "EncyclopediaFactionPageVM", CharacterCreation)]
@@ -107,6 +109,53 @@ public class FrontEndMovieServiceTests
         Assert.AreEqual(expectedGroups, swap.Holds);
         Assert.IsTrue(swap.HasVanillaFallback);
         Assert.IsTrue(_adapter.IsSpriteRegistered("cc_panel_bg"));
+    }
+
+    [TestMethod]
+    public void BeginLoad_CharacterDeveloper_RegistersOnlyTheValleyBeforeTheMovieLoads()
+    {
+        _adapter.AddFile(Path.Combine(_paths.RuntimeSprites, "fs_bg_default.png"));
+        _adapter.AddFile(Path.Combine(_paths.RuntimeSprites, "fs_bg_gondor.png"));
+
+        _sut.BeginLoad("CharacterDeveloper", "CharacterDeveloperVM");
+
+        Assert.IsTrue(_adapter.IsSpriteRegistered("fs_bg_default"), "the page draws the valley by name, so it must exist before the movie binds it");
+        Assert.IsFalse(_adapter.IsSpriteRegistered("fs_bg_gondor"), "faction art loads one image at a time, never the whole group");
+    }
+
+    [TestMethod]
+    public void BeginLoad_CareerScreen_KeepsItsOwnMovieAndHoldsTheChromeAndOnlyTheValley()
+    {
+        // The Career screen is TAOM's own movie: no swap of name, only the holds its stone, buttons and
+        // valley draw from (the chrome group re-reads the Character and Encyclopedia brushes it uses).
+        _adapter.AddFile(Path.Combine(_paths.RuntimeSprites, "fs_bg_default.png"));
+        _adapter.AddFile(Path.Combine(_paths.RuntimeSprites, "fs_bg_gondor.png"));
+
+        var swap = _sut.BeginLoad("CareerScreen", "CareerScreenVM");
+
+        Assert.AreEqual("CareerScreen", swap!.TargetName);
+        Assert.AreEqual(CharacterCreation | FrontEndImageGroups.FactionArt, swap.Holds);
+        Assert.IsTrue(_adapter.IsSpriteRegistered("cc_panel_bg"), "the chrome group is loaded");
+        Assert.IsTrue(_adapter.IsSpriteRegistered("fs_bg_default"), "the valley exists before the movie binds it");
+        Assert.IsFalse(_adapter.IsSpriteRegistered("fs_bg_gondor"), "faction art loads one image at a time");
+        // The Career brushes name the FS fonts, which register with the chrome: the file is re-read after them.
+        CollectionAssert.Contains(_adapter.BrushFileLoads, "CareerSystem");
+    }
+
+    [TestMethod]
+    public void Tick_CharacterDeveloperReleased_ReleasesTheValleyAfterTheDelay()
+    {
+        _adapter.AddFile(Path.Combine(_paths.RuntimeSprites, "fs_bg_default.png"));
+        var movie = LoadThemed("CharacterDeveloper", "CharacterDeveloperVM");
+        for (var i = 0; i < FrontEndSpriteService.ReleaseDelayTicks; i++)
+            _sprites.Tick(_sut.Tick());
+        Assert.IsTrue(_adapter.IsSpriteRegistered("fs_bg_default"), "held while the character page is open");
+
+        _state.IsMovieReleased(movie).Returns(true);
+        for (var i = 0; i < FrontEndSpriteService.ReleaseDelayTicks; i++)
+            _sprites.Tick(_sut.Tick());
+
+        Assert.IsFalse(_adapter.IsSpriteRegistered("fs_bg_default"));
     }
 
     [TestMethod]

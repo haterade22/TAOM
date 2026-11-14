@@ -3184,7 +3184,7 @@
       <EquipmentRoster>
         <equipment slot="Item0" id="Item.wm_swan_knight_lance_b" />
         <equipment slot="Item1" id="Item.sm_gd_shield_a3" />
-        <equipment slot="Item2" id="Item.wm_gondor_sword_a03" />
+        <equipment slot="Item2" id="Item.wm_swan_knight_swordb" />
         <equipment slot="Head" id="Item.sk_gd_dol_cav_helmet_elite_a" />
         <equipment slot="Body" id="Item.sk_gd_dol_chest_elite_a" />
         <equipment slot="Cape" id="Item.sk_gd_dol_pauld_cape_noble_elite_a" />
@@ -3194,7 +3194,7 @@
       <EquipmentRoster>
         <equipment slot="Item0" id="Item.wm_swan_knight_lance_b" />
         <equipment slot="Item1" id="Item.sm_gd_shield_a3" />
-        <equipment slot="Item2" id="Item.wm_gondor_sword_a03" />
+        <equipment slot="Item2" id="Item.wm_swan_knight_swordb" />
         <equipment slot="Head" id="Item.sk_gd_dol_cav_helmet_elite_b" />
         <equipment slot="Body" id="Item.sk_gd_dol_chest_elite_b" />
         <equipment slot="Cape" id="Item.sk_gd_dol_pauld_cape_noble_elite_a" />
@@ -3204,7 +3204,7 @@
       <EquipmentRoster>
         <equipment slot="Item0" id="Item.wm_swan_knight_lance_b" />
         <equipment slot="Item1" id="Item.sm_gd_shield_a4" />
-        <equipment slot="Item2" id="Item.wm_gondor_sword_a03" />
+        <equipment slot="Item2" id="Item.wm_swan_knight_swordb" />
         <equipment slot="Head" id="Item.sk_gd_dol_cav_helmet_elite_c" />
         <equipment slot="Body" id="Item.sk_gd_dol_chest_elite_a" />
         <equipment slot="Cape" id="Item.sk_gd_dol_pauld_cape_noble_elite_a" />
@@ -3214,7 +3214,7 @@
       <EquipmentRoster>
         <equipment slot="Item0" id="Item.wm_swan_knight_lance_b" />
         <equipment slot="Item1" id="Item.sm_gd_shield_a4" />
-        <equipment slot="Item2" id="Item.wm_gondor_sword_a03" />
+        <equipment slot="Item2" id="Item.wm_swan_knight_swordb" />
         <equipment slot="Head" id="Item.sk_gd_dol_cav_helmet_elite_d" />
         <equipment slot="Body" id="Item.sk_gd_dol_chest_elite_b" />
         <equipment slot="Cape" id="Item.sk_gd_dol_pauld_cape_noble_elite_a" />
@@ -4257,7 +4257,7 @@
         <equipment slot="Item0" id="Item.ladder_gondor_bow_t5" />
         <equipment slot="Item1" id="Item.bodkin_arrows_a" />
         <equipment slot="Item2" id="Item.bodkin_arrows_a" />
-        <equipment slot="Item3" id="Item.wm_gondor_spear_b" />
+        <equipment slot="Item3" id="Item.numenorean_poleaxe_heavy" />
         <equipment slot="Head" id="Item.sk_gd_pin_arc_helmet_heavy_a" />
         <equipment slot="Body" id="Item.sk_gd_pin_inf_chest_heavy_a" />
         <equipment slot="Cape" id="Item.sk_gd_ano_pauld_inf_heavy_a" />
@@ -4268,7 +4268,7 @@
         <equipment slot="Item0" id="Item.ladder_gondor_bow_t5" />
         <equipment slot="Item1" id="Item.bodkin_arrows_a" />
         <equipment slot="Item2" id="Item.bodkin_arrows_a" />
-        <equipment slot="Item3" id="Item.wm_gondor_spear_b" />
+        <equipment slot="Item3" id="Item.numenorean_poleaxe_heavy" />
         <equipment slot="Head" id="Item.sk_gd_pin_arc_helmet_heavy_b" />
         <equipment slot="Body" id="Item.sk_gd_pin_inf_chest_heavy_b" />
         <equipment slot="Cape" id="Item.sk_gd_ano_pauld_inf_heavy_a" />
@@ -4279,7 +4279,7 @@
         <equipment slot="Item0" id="Item.ladder_gondor_bow_t5" />
         <equipment slot="Item1" id="Item.bodkin_arrows_a" />
         <equipment slot="Item2" id="Item.bodkin_arrows_a" />
-        <equipment slot="Item3" id="Item.wm_gondor_spear_b_pg" />
+        <equipment slot="Item3" id="Item.numenorean_poleaxe_medium" />
         <equipment slot="Head" id="Item.sk_gd_pin_arc_helmet_heavy_a" />
         <equipment slot="Body" id="Item.sk_gd_pin_inf_chest_heavy_a" />
         <equipment slot="Cape" id="Item.sk_gd_ano_pauld_inf_heavy_a" />
@@ -4290,7 +4290,7 @@
         <equipment slot="Item0" id="Item.ladder_gondor_bow_t5" />
         <equipment slot="Item1" id="Item.bodkin_arrows_a" />
         <equipment slot="Item2" id="Item.bodkin_arrows_a" />
-        <equipment slot="Item3" id="Item.wm_gondor_spear_b_pg" />
+        <equipment slot="Item3" id="Item.numenorean_poleaxe_medium" />
         <equipment slot="Head" id="Item.sk_gd_pin_arc_helmet_heavy_b" />
         <equipment slot="Body" id="Item.sk_gd_pin_inf_chest_heavy_b" />
         <equipment slot="Cape" id="Item.sk_gd_ano_pauld_inf_heavy_a" />
@@ -9813,6 +9813,7 @@
         <equipment slot="Item0" id="Item.ladder_gondor_bow_t2" />
         <equipment slot="Item1" id="Item.default_arrows" />
         <equipment slot="Item2" id="Item.default_arrows" />
+        <equipment slot="Item3" id="Item.wm_gondor_sword_a07" />
         <equipment slot="Body" id="Item.sk_gd_ano_chainmail_half_b" />
         <equipment slot="Head" id="Item.sk_gd_ano_inf_helmet_med_a" />
         <equipment slot="Gloves" id="Item.sk_gd_ano_gloves_a" />
@@ -9822,6 +9823,7 @@
         <equipment slot="Item0" id="Item.ladder_gondor_bow_t2" />
         <equipment slot="Item1" id="Item.default_arrows" />
         <equipment slot="Item2" id="Item.default_arrows" />
+        <equipment slot="Item3" id="Item.wm_gondor_sword_a07" />
         <equipment slot="Body" id="Item.sk_gd_cair_chainmail_half_b" />
         <equipment slot="Head" id="Item.sk_gd_ano_inf_helmet_med_a" />
         <equipment slot="Gloves" id="Item.sk_gd_ano_gloves_a" />

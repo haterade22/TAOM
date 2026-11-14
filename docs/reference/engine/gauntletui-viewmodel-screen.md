@@ -132,6 +132,11 @@ replacing whole screens (forward-compatible across patches, as long as the bound
   setters call `OnPropertyChangedWithValue` (`KingdomSettlementVM.cs`:65-77 and the `KingdomClanVM` setter); the third,
   `AiPartySizeSettingsWatcher.cs`:70, is a plain `PropertyChanged` on MCM settings, not a vanilla view model. TAOM has no
   subscription to a bool, int or float vanilla property. A mixin that adds one must read that property's setter first.
+- **Bind a float widget property to a float view-model property** [yotthani, commit `02d50733` of the FieldCamp module
+  in `yotthani/bannerlord`, body text, 2026-06-13; the game build is not named; not re-checked by TAOM]. `MarginLeft`,
+  `MarginTop` and `SuggestedWidth` are float; bound to an int property, the binding wrote a `Single` into an `Int32` setter and
+  threw "Object of type 'System.Single' cannot be converted to type 'System.Int32'" every frame. TAOM's
+  `FieldCampOverlayVM.ProgressFillWidth` is a float (`FieldCampOverlayVM.cs:199`).
 - **A `DataSource` on the prefab root is ignored** [yotthani, on the party window per the commit message, which names neither a game build nor a test; no code line cited]. The commit c656a782 (2026-10-23): "Gauntlet binds the movie root to the movie VM, so the root's DataSource was
   ignored", and `{..}` on the child "climbed above it to nothing". TAOM has not checked its own movie roots (Career,
   SupplyOrder, the FactionUI movies, the PartyScreen clones) for a root `DataSource`; bind through the view model passed to
@@ -196,6 +201,161 @@ replacing whole screens (forward-compatible across patches, as long as the bound
   `bigwindows_vm_map.md`@6265f4a2:14-15]. `ViewModel.ExecuteCommand` finds methods with `Instance|Public|NonPublic`
   (`ViewModel.cs:497`), so a private `Execute*` binds, but only on the object that owns it. Properties are collected with
   `Dictionary.Add` by name (`:621-624`), so a subclass that re-declares a property name with `new` throws.
+
+### GUI resource override rules (four rules TAOM-verified on v1.5.7)
+
+Source: yotthani, `docs/realm-ui/research/ui-inventory.md`@c45d8374 lines 527-601 (section G), read from the
+1.5.3 decompile, "a run was not made" (the author's words, translated). On 2026-11-13 TAOM read the same methods in
+the installed v1.5.7 source and the four rules below hold; the line numbers are v1.5.7. Whole-file replacement (the
+depot key is the lowercased module-relative path, and a later module's file with that path replaces the earlier one
+whole) is in [menu-link-colors.md](../../features/menu-link-colors.md) "The load-order hazard".
+
+- **`OverrideBrush="X"` rebuilds brush X in place; `BaseBrush` copies under a new name.** `BrushFactory.cs:469-487`
+  queues a brush that names `OverrideBrush`, and asserts if it also names a `BaseBrush`. When the file has loaded
+  (`:912-931`) each queued brush runs `FillForOverride` on the current X, applies its attributes, and is stored back
+  under X (`_brushes[key] = value2`), so overrides chain. `FillForOverride` keeps the old brush as `OverriddenBrush`
+  and copies it, `Name` included (`Brush.cs:348-356`). The queue is cleared per file (`:931`), so an override acts on
+  the X that exists when its own file finishes loading. A missing X asserts "Failed to find brush for override". It is
+  the one way to restyle a vanilla brush without owning the whole vanilla file; TAOM uses `BaseBrush` and no
+  `OverrideBrush` (yotthani's count in D.2 of the same file, not recounted). The `BaseBrush` style-fallback trap is in
+  [localization-ui.md](../../reviews/lessons/localization-ui.md).
+- **`SpriteData` merges per entry across files, later name wins.** `SpriteData.cs:105` (categories), `:120` (parts),
+  `:144` (sprites) each assign `[name] = ...` into one accumulator. A category is a new object and is replaced whole.
+  yotthani adds that parts loaded earlier then point at the replaced category object (decompile reading, not run;
+  TAOM did not re-check that consequence).
+- **A prefab is named by its file name without the folder, and the name dictionary is case-sensitive.**
+  `WidgetFactory.cs:78-96` keys on `Path.GetFileNameWithoutExtension`; a repeat asserts "This prefab has already been
+  added" and the later directory wins. `ResourceDepot.GetFiles` returns the original-case path (`ResourceDepot.cs:60-76`)
+  and every `WidgetFactory` dictionary uses the default case-sensitive comparer (`:38-41`, `:81`). TAOM's own case:
+  `Main/_Module/GUI/PreFabs/FactionUI/TAOMFieldCampOverlay.xml` and `.../FieldCamp/TaomFieldCampOverlay.xml` differ
+  only by letter case and are both live. `Client/Features/FieldCamp/UI/FieldCampMapView.cs:61` loads `TaomFieldCampOverlay`;
+  `Main/Features/FactionUI/Menus/FrontEndMovieService.cs:129-130` swaps in the themed `TAOMFieldCampOverlay`, and
+  `Hooks/GauntletLayerLoadMoviePatch.cs:38` skips the swap under co-op, as does a failed themed build. The files
+  differ in content. They cannot collide today (different folders, different lowercased depot keys, two distinct
+  stems). A future engine build with a case-insensitive comparer would assert and keep one of them.
+- **A second `.fnt` with the same stem under a different path throws.** `FontFactory.LoadAllFonts` (`:83-90`) calls
+  `TryAddFontDefinition` per file with no try, and that runs `_bitmapFonts.Add(fontName, font)` (`:114-122`). The same
+  module-relative path in a later module replaces the earlier file in the depot first, so only a repeated stem under
+  another path reaches the `Add`. Among the 16 installed `.fnt` files under the game's `Modules/` and `GUI/` folders one stem
+  repeats: `FiraSansExtraCondensed-Regular` in `GUI/GauntletUI/Fonts` and in `Modules/Native/LauncherGUI/Fonts`; whether the
+  Gauntlet depot reads the launcher folder was not read (counted 2026-11-13, one PC).
+- **Read by yotthani, not re-checked on v1.5.7.** A widget class of the same name in two assemblies resolves to the
+  assembly later in `assemblyOrder` (`WidgetFactory.Initialize` :63-70). The order in which `GauntletMovie.Load` tries
+  a generated prefab is in the "Generated (precompiled) prefabs" bullet above (:144-174). Sprite-sheet textures come
+  from engine assets (tpac), not from the GUI folder. A brush resolves its `Sprite` once, at parse time
+  (`BrushFactory.cs:217` on v1.5.7, TAOM read), so a sprite swapped in `SpriteData` later does not reach brushes that
+  already hold the old object; open widgets also keep the brush object they were built with (`BrushWidget`
+  `_originalBrush`/`_clonedBrush`, yotthani, ui-inventory.md section E, 1.5.3, "in-game unconfirmed"). TAOM changes
+  brushes at run time in `FrontEndResourceAdapter.cs:102` (`LoadBrushFile`) and
+  `CultureStageProgressionService.cs:52`; any new run-time change reaches only widgets built afterwards.
+- **215 TAOM brushes carry the name of a vanilla brush** [yotthani's census, `census/mod_additions.md`@c45d8374; TAOM
+  recounted 2026-11-13 by walking `Main/_Module/GUI/Brushes` and comparing `<Brush Name=` with the Native, SandBox,
+  SandBoxCore, StoryMode and NavalDLC GUI folders; no tool prints it]. Each such brush shadows vanilla's by the
+  name rule above, and a mod loaded after TAOM that defines the same name wins whole.
+- **The engine appends "(Clone)" to a widget's brush name when the widget makes its own copy** [yotthani, code comment
+  `RealmUI/Game/Inventory/Core/PopupInk.cs`@c45d8374:24, game 1.5.5, not re-checked by TAOM]. Code that compares
+  `widget.Brush.Name` with a brush name fails after the widget cloned its brush. TAOM did not grep its own comparisons.
+
+### Nameplate prefabs: the fade routine needs all eight widgets (TAOM-verified, v1.5.7)
+
+- **`SettlementNameplateWidget.UpdateNameplateTransparencyAndBrightness` returns at once when any of eight widgets is
+  missing.** installed v1.5.7 `SettlementNameplateWidget.cs:499-513` reads `NameplateItem`, then from it
+  `SettlementNameTextWidget`, `SettlementBannerWidget`, `SettlementPartiesGridWidget`, `InspectedIconWidget`,
+  `PortIconWidget` and `ParleyIconWidget`, plus `_eventsListPanel`. If any is null it calls `Debug.FailedAssert("Related
+  widget null on UpdateNameplateTransparencyAndBrightness!", ...)` and returns. The early return also skips
+  `base.IsVisible = false` (`:543`) and the only call of `DetermineTargetAlphaValue` (`:519`), the method TAOM's
+  [SettlementNameplateFade](../../features/settlement-nameplate-fade.md) patch targets. The fade therefore depends on
+  every path resolving.
+- **Prefab paths resolve segment by segment over direct children by `Id`** (decompile dump `Widget.cs:1607-1629`,
+  v1.5.7). yotthani, `HoN/TAOM_UI/RELEASE-NOTES.md`@c45d8374 v1.1.0 "Fixed" (the author's cause statement, no log
+  quoted, build not named): one path written with a single segment, while the parties grid sat one level deeper in an
+  unnamed container, silently disabled the whole fade and cull logic.
+- **TAOM's three prefabs bind all eight.** `Main/_Module/GUI/PreFabs/Nameplate/SettlementNameplateItem{Large,Medium,Small}.xml`
+  (lines 39 and 72 in each) plus `NotificationListPanel` and `MapEventVisualWidget`. A static resolver that walks
+  `<Children>` by `Id` resolved every path in all three to a widget of the expected tag. Not run in game; a nested
+  prefab include on a path would defeat the static check, and none was hit. After editing any of the three prefabs,
+  re-run that walk or check the log for the FailedAssert text above.
+- **Other nameplate facts from the same release notes** (yotthani, game 1.5.x, build not named, not re-checked by
+  TAOM beyond the routine above): `SettlementNameplateEventsVM.UnloadEvents` clears every event whose type is not
+  `Production`, so a custom notice made through the production constructor, the only one that takes a custom icon id,
+  never leaves the plate. The fade touches only the hard-coded parts above (consistent with the v1.5.7 read), so a
+  widget added beside them keeps full brightness. `IsVisible="@ShowBar"` on a list panel binds against the list's own
+  `DataSource`, not the nameplate view model. Map nameplates fire no `HoverBegin`; yotthani's `FactionHintWidget`
+  hit-tests every frame (`ui-inventory.md`@c45d8374:190). The game refills its party nameplate list every frame, so removing
+  entries from it did not hold (code comment in `RealmUI/Game/Map/QuietMapMode.cs`@c45d8374, version unstated).
+
+### Gauntlet 2D draw limits, input and tooltip facts (yotthani, version-bound, not re-checked on v1.5.7)
+
+- **The 2D draw API cannot do these** [yotthani, `docs/realm-ui/research/engine-2d-gauntlet.md`@c45d8374:9-43, read
+  in the 1.5.3 decompile, not run]: arbitrary triangles for images (`DrawPolygon` exists only in the standalone
+  launcher renderer), shear or perspective (the matrix is position, pivot, scale and Z rotation), blend modes
+  (`Material.Blending` and `RenderOrder` are not read on the engine path, so no additive glow), depth (draw order is
+  call order), letter spacing, text on a path. A `Sprite` subclass can address any UV sub-rectangle; a circular mask
+  (`SetCircualMask`), stacked scissors (`PushScissor`/`PopScissor`, axis-aligned) and a second overlay texture with
+  an offset (the only scrolling mechanism) exist. The source lists as unmeasured: mipmaps and size limits of
+  file-loaded textures, wrap mode outside 0..1, rotated text, and the shader meaning of `ColorFactor`/`ValueFactor`.
+  The older LOTRAOM_FactionMap notes say the same of `DrawPolygon`: "Does NOT exist in the actual game DLL despite
+  appearing in decompiled code. Only `DrawSprite` available." (`yotthani/bannerlord` `LOTRAOM_FactionMap/CLAUDE.md`@c45d8374:131;
+  game version not stated, the file's decompile reference folder is 1.3, line 15).
+- **Custom `ImageWidget` rules from the older LOTRAOM_FactionMap** [`LOTRAOM_FactionMap/CLAUDE.md`@c45d8374:76-85, 132-134 and
+  160-163, "learned through painful debugging", game version not stated, not re-checked on v1.5.7]: any `Brush` access on an
+  `ImageWidget`, or a call to `base.OnHoverBegin()`, starts `BrushWidget` state switching and darkens the image for good;
+  `OverrideDefaultStateSwitchingEnabled = true` in the constructor prevents it (TAOM's `BannerWidget.cs:46` and
+  `FactionImageWidget.cs:22` set it). `ParentWidget.Size` is scaled while `PositionXOffset` and `MarginLeft` are not, so mixing
+  them doubles offsets on a 4K screen (scale is screen height over 1080; set `ScaledPositionXOffset` in `OnLateUpdate`). Static
+  widget fields survive a return to the main menu and must be reset when a new session starts.
+- **A widget's `OnPreviewMouseScroll` must return true to receive the wheel** (`Widget.cs:2479-2482`), and
+  `OnMouseMove` goes to `LatestMouseDownWidget` while a button is held (`EventManager.cs:690-695`) [yotthani, same
+  file, 1.5.3, read not run]. Read both against v1.5.7 `Widget.cs` before building a scroll or drag widget.
+- **Tooltip pipeline** [yotthani, `docs/realm-ui/research/tooltips.md`@c45d8374:4-34, game 1.5.5, code reading]: a
+  hover calls `InformationManager.ShowTooltip(typeof(X), args)`, which `GauntletInformationView` serves on a layer
+  named "Tooltip" at order 115000 by loading the registered `{view model type, refresher, movie}`. `ExplainedNumber`
+  uses "RundownTooltip". The inventory item tooltip is a different pipeline (`ItemMenuVM`, `InventoryTooltip.xml`).
+  Query popups are on `GauntletQueryManager` layer 19300 (movies "SingleQueryPopup", "TextQueryPopup",
+  "MultiSelectionQueryPopup"). `TooltipProperty` row flags: MultiLine 1, BattleMode 2/4, War/Ally/Neutral 8 to 256,
+  RundownSeperator 0x200, DefaultSeperator 0x400, Cost 0x800, Title 0x1000, RundownResult 0x2000, TraitTitle 0x4000.
+  A row with `TextHeight` 0 and both labels is two columns; below 0 with no definition it is sub-text; both labels
+  empty is a spacer. Row layout is C# in `TooltipPropertyWidget.RefreshText` (:642-811) with hard-coded child paths, so
+  a different layout needs its own row widget. Read the flag values from v1.5.7 `TooltipProperty` before a new row
+  uses one by number.
+
+### Screens and the map: quiet map, and what exists before `MapScreen`
+
+- **Quiet map** (a live map screen used as a backdrop) [yotthani, code comments in `RealmUI/Game/Map/QuietMapMode.cs`
+  @c45d8374:10-110, game build not stated, author's observation, no test shown; TAOM has not checked these on
+  v1.5.7]. Suspending the engine's global layers (loading window, fades, tooltips) "kills the game", so the code
+  suspends only layers of `MapScreen.Layers` and layers named `Map*`, never `MapReadyBlocker` or `MapSave`.
+  `MapScreen.MapCameraView.OnEscapeMenuToggled(true)` switches off map clicks and camera keys ("the switch the escape
+  menu uses") and `MapCameraView.OnExit()` undoes it. Time stops with `Campaign.TimeControlMode = Stop` plus
+  `SetTimeControlModeLock(true)`. The player party's visual is redrawn whenever the hero changes (culture, banner,
+  figure), so the code resets its entity visibility every 10 frames. A TAOM screen over the live map (SupplyOrder
+  suspends only its own layer: `GauntletSupplyOrderScreen.cs:110,119`) can start from these; first confirm that
+  `OnEscapeMenuToggled` and `OnExit` exist on v1.5.7 (`taom-src path SandBox.View.Map.MapCameraView`).
+- **Before `MapScreen` exists** [yotthani, `docs/realm-ui/research/engine-3d-scene.md`@c45d8374:1-60, game 1.5.3,
+  "read in code, not run in game", three questions listed as needing an in-game test]. At character creation the map
+  scene is loaded and `Settlement.All`, `Clan.All` and `Kingdom.All` are filled, but no `MapScreen` exists and no
+  campaign tick runs; `MBObjectManager.GetObjectTypeList<Kingdom>()` is gone, so read `Kingdom.All`. Vanilla stages
+  show 3D through a `SceneLayer` at input order -100, below Gauntlet's 1. Stage views are chosen by attribute and the
+  last registered wins, so a mod can replace a stage without Harmony. Drawing the map scene without `MapScreen` needed
+  `Utilities.SetAllocationAlwaysValidScene(null)` before `SetScene`, a view enabled 5 frames late, and
+  `clearSceneOnFinalize: false`. The second-view terrain loss that follows is in [map-view-release.md](../../features/map-view-release.md).
+  TAOM has not re-read these lines on v1.5.7.
+
+### Big-window view models (yotthani, game 1.5.5, code reading, not run)
+
+Source: `docs/realm-ui/research/bigwindows_vm_map.md`@c45d8374 sections 1, 4 and 5 (pitfalls 1, 2, 6, 7, 8, 10). TAOM
+has not re-read any of it on v1.5.7; read the named code before editing the Patch80 seams that depend on (d) below.
+
+- `CharacterTableauWidget` needs `SelectedCharacter.IsTableauEnabled = true` set by the screen after `LoadMovie`
+  (`GauntletPartyScreen.cs:108`), and `PartyVM` replaces `SelectedCharacter` itself (:1909, :3055), so a wrapper that
+  caches it breaks.
+- The game calls `OnFinalize` on the inner view model only, never on a wrapper.
+- `GauntletKingdomScreen` has no precompiled prefab class in either SandBox generated assembly, so Kingdom is built
+  from XML; precompiled classes register on (movie name, view model type name), so a differently named movie never
+  matches one.
+- Kingdom decision popup contract: `IsVisible="@IsActive"`; the only caller of `ExecuteDone` is
+  `KingdomDecisionPopupWidget.FinalDone` after a 5 s timer; the screen sets `MapScreen.NavigationHandler.IsNavigationLocked`
+  while `Decision.IsActive`. yotthani read this from TAOM's own Patch80 seams.
 
 ### Map conversation + encyclopedia: two layers on one `MapScreen` (read 2026-09-22, #635)
 A conversation started from a settlement menu's character overlay, or from a map encounter, is a **map

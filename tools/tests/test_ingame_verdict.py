@@ -336,6 +336,30 @@ class RepoManifestGateTests(unittest.TestCase):
                                 f"#{m.issue} names [Check] id={check_id}, which no .cs file under Main, Client or CoopCompat "
                                 "holds as a string literal outside a comment")
 
+    def test_970_stance_check_fails_on_the_companion_tactics_category_and_its_patch_class(self):
+        """Patch35's postfix is applied through Patch_MissionTime_CompanionTactics. The applier writes FAILED with the category and SKIPPED with the class (PatchCategoryApplier.cs)."""
+        applier = (REPO / "Main" / "PatchCategoryApplier.cs").read_text(encoding="utf-8")
+        self.assertIn("[PatchApply] {category} FAILED", applier)
+        self.assertIn("[PatchApply] {name} SKIPPED", applier)
+        source = (REPO / "Main" / "Features" / "CompanionTactics" / "BattleActionBar" / "Hooks" / "Patch35_Formation_SetMovementOrder.cs").read_text(encoding="utf-8")
+        self.assertIn('[HarmonyPatchCategory("Patch_MissionTime_CompanionTactics")]', source)
+        self.assertIn("namespace TAOM.Features.CompanionTactics.BattleActionBar.Hooks;", source)
+        patterns = iv.load_manifest(TOOLS / "ingame_checks" / "970.toml", 970).checks[1].fails
+        prefix = "[2026-11-05 14:00:30] [ERROR] [PatchApply] "
+        for line in (prefix + "Patch_MissionTime_CompanionTactics FAILED (Harmony stops a category at its first failing class): x",
+                     prefix + "TAOM.Features.CompanionTactics.BattleActionBar.Hooks.Patch35_Formation_SetMovementOrder SKIPPED (its attributes cannot be read)"):
+            with self.subTest(line=line[:100]):
+                self.assertTrue(any(p.search(line) for p in patterns))
+        for line in (prefix + "Patch_MissionTime_SmartCavalryAI FAILED (x)", prefix + "Patch_MissionTime_MarshalsWord FAILED (x)"):
+            with self.subTest(line=line[:100]):
+                self.assertFalse(any(p.search(line) for p in patterns))
+
+    def test_970_stance_check_still_fails_on_the_old_shared_category_name(self):
+        """A log from a build before #1175 (fixed_in still binds it) names the shared category."""
+        patterns = iv.load_manifest(TOOLS / "ingame_checks" / "970.toml", 970).checks[1].fails
+        line = "[2026-11-05 14:00:30] [ERROR] [PatchApply] Patch_MissionTime_SetMovementOrder FAILED (x)"
+        self.assertTrue(any(p.search(line) for p in patterns))
+
     def test_970_names_the_attach_and_stance_checks(self):
         m = iv.load_manifest(TOOLS / "ingame_checks" / "970.toml", 970)
         self.assertEqual([c.id for c in m.checks], ["taom.battle-action-bar.attach", "taom.battle-action-bar.stance"])
@@ -1042,6 +1066,50 @@ class Issue971Tests(unittest.TestCase):
         self.assertEqual(verdict_of(out, self.OPEN), "NOT REACHED")
         self.assertEqual(verdict_of(out, self.INIT), "NOT REACHED")
         self.assertIn("no line matched", out)
+
+
+class Issue1184Tests(unittest.TestCase):
+    """The real #1184 manifest: the muster screen starts a field battle with the player as a captain. The fixtures hold
+    the lines MusterChecksTests renders through the real OutcomeLog, so a change to the line format fails one of the two."""
+
+    START = "taom.muster.captain-start"
+
+    def setUp(self):
+        self.t = Tree(self)
+        self.t.real_manifest("1184.toml")
+
+    def judge(self, fixture):
+        self.t.taom(fixture, "2026-11-14_10-00-00")
+        return self.t.run(["--issue", "1184"])
+
+    def test_a_field_battle_that_starts_as_captain_passes(self):
+        code, out, _ = self.judge("muster_captain_pass.txt")
+        self.assertEqual(code, 0, out)
+        self.assertEqual(verdict_of(out, self.START), "PASS")
+        self.assertIn("the other lord, not the player, gives the army its orders", out)
+
+    def test_a_start_that_throws_fails(self):
+        code, out, _ = self.judge("muster_captain_threw.txt")
+        self.assertEqual(code, 1, out)
+        self.assertEqual(verdict_of(out, self.START), "FAIL")
+        self.assertIn("reason=NullReferenceException", out)
+
+    def test_a_pass_beside_a_later_fail_fails(self):
+        # The fail pattern judges every Captain start, so a siege that threw fails the check beside a field pass.
+        code, out, _ = self.judge("muster_captain_pass_and_fail.txt")
+        self.assertEqual(code, 1, out)
+        self.assertEqual(verdict_of(out, self.START), "FAIL")
+
+    def test_a_siege_as_captain_alone_is_not_reached(self):
+        # The defect was the field battle; a siege start proves nothing about it.
+        code, out, _ = self.judge("muster_captain_siege_only.txt")
+        self.assertEqual(code, 4, out)
+        self.assertEqual(verdict_of(out, self.START), "NOT REACHED")
+
+    def test_a_session_with_no_captain_start_is_not_reached(self):
+        code, out, _ = self.judge("career_open_pass.txt")
+        self.assertEqual(code, 4, out)
+        self.assertEqual(verdict_of(out, self.START), "NOT REACHED")
 
 
 class Issue1028Tests(unittest.TestCase):
@@ -2136,7 +2204,7 @@ class MarshalsWordManifestTests(unittest.TestCase):
         self.assertEqual(verdict_of(out, self.THROWERS_STAND), "FAIL", out)
         self.assertEqual(verdict_of(out, self.CAPTURED), "FAIL", out)
 
-    def test_the_shared_category_failing_to_apply_fails_the_captured_check(self):
+    def test_the_mission_time_category_failing_to_apply_fails_the_captured_check(self):
         code, out, _ = self.judge("marshal_throwers_category_failed.txt")
         self.assertEqual(code, 1, out)
         self.assertEqual(verdict_of(out, self.CAPTURED), "FAIL", out)
@@ -2210,12 +2278,53 @@ class MarshalsWordManifestTests(unittest.TestCase):
         for calls in ("300", "999", "1000", "52000"):
             self.assertTrue(pattern.search(line % calls), "calls=" + calls)
 
-    def test_every_thrower_check_names_the_postfix_fault_and_the_shared_category_in_its_fail_list(self):
+    THROWER_APPLY = (r"\[PatchApply\] (?:Patch_MissionTime_(?:MarshalsWord|SetMovementOrder) FAILED"
+                     r"|TAOM\.Features\.MarshalsWord\.Hooks\.MarshalThrower\w+ SKIPPED)")
+
+    def test_every_thrower_check_names_the_postfix_fault_and_the_mission_time_category_in_its_fail_list(self):
         for check_id in (self.THROWERS_STAND, self.THROWERS_THROW, self.THROWERS_MELEE, self.THROWERS_COST):
             patterns = [p.pattern for p in self.check(check_id).fails]
             with self.subTest(check_id=check_id):
                 self.assertIn(r"\[MarshalsWord\] the thrower stand failed", patterns)
-                self.assertIn(r"\[PatchApply\] Patch_MissionTime_SetMovementOrder (?:FAILED|SKIPPED)", patterns)
+                self.assertIn(self.THROWER_APPLY, patterns)
+
+    def test_an_old_name_category_failure_fails_the_captured_check(self):
+        """A log from a build before #1175 names the shared category Patch_MissionTime_SetMovementOrder, and its session still binds as evidence."""
+        code, out, _ = self.judge("marshal_throwers_old_category_failed.txt")
+        self.assertEqual(code, 1, out)
+        self.assertEqual(verdict_of(out, self.CAPTURED), "FAIL", out)
+
+    def test_the_thrower_apply_patterns_match_the_lines_the_applier_writes_and_no_other_feature_category(self):
+        """FAILED is written with the category and SKIPPED with the class's full name (PatchCategoryApplier.cs), so each line is built from those two formats."""
+        applier = (REPO / "Main" / "PatchCategoryApplier.cs").read_text(encoding="utf-8")
+        failed_format = "[PatchApply] {category} FAILED (Harmony stops a category at its first failing class): {ex}"
+        skipped_format = "[PatchApply] {name} SKIPPED (its attributes cannot be read, so its patches are off; every other class still applies): {entry.Value}"
+        self.assertIn(failed_format, applier)
+        self.assertIn(skipped_format, applier)
+        prefix = "[2026-11-05 14:00:30] [ERROR] "
+
+        def failed(category):
+            return prefix + failed_format.replace("{category}", category).replace("{ex}", "System.Exception: x")
+
+        def skipped(name):
+            return prefix + skipped_format.replace("{name}", name).replace("{entry.Value}", "System.Exception: x")
+
+        hooks = REPO / "Main" / "Features" / "MarshalsWord" / "Hooks"
+        classes = sorted(m.group(1) for path in hooks.glob("*.cs") for m in re.finditer(
+            r'HarmonyPatchCategory\("Patch_MissionTime_MarshalsWord"\)\]\s*public static class (\w+)', path.read_text(encoding="utf-8")))
+        self.assertEqual(classes, ["MarshalThrowerPatch", "MarshalThrowerTimer"])
+        hits = [failed("Patch_MissionTime_MarshalsWord"), failed("Patch_MissionTime_SetMovementOrder")]
+        hits += [skipped("TAOM.Features.MarshalsWord.Hooks." + name) for name in classes]
+        misses = [failed("Patch_MissionTime_SmartCavalryAI"), failed("Patch_MissionTime_CompanionTactics"),
+                  skipped("TAOM.Features.CompanionTactics.BattleActionBar.Hooks.Patch35_Formation_SetMovementOrder")]
+        for check_id in (self.THROWERS_STAND, self.THROWERS_THROW, self.THROWERS_MELEE, self.THROWERS_COST):
+            patterns = self.check(check_id).fails
+            for line in hits:
+                with self.subTest(check_id=check_id, line=line[:90]):
+                    self.assertTrue(any(p.search(line) for p in patterns))
+            for line in misses:
+                with self.subTest(check_id=check_id, miss=line[:90]):
+                    self.assertFalse(any(p.search(line) for p in patterns))
 
 
 

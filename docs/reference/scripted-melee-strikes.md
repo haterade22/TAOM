@@ -249,6 +249,8 @@ The decision is Mike's; these are the trade-offs as the facts stand.
   crowd.
 - **Banner bearers**: the `ExtraWeaponSlot` and off-hand facts in section 6 explain why the AI never sheathes a
   banner.
+- **Mounted riders**: two crash causes and the rider strike numbers are in
+  [mount-and-rider-runtime.md](engine/mount-and-rider-runtime.md#mounted-dual-wield-strikes-two-crash-causes-and-the-rider-strike-numbers).
 
 ---
 

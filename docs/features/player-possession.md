@@ -126,6 +126,22 @@ and earned Mirkwood's package; arriving under the host's culture is the bug, not
 truth. The hero's LIVE kingdom is still used for the special-resource seed, because only the host
 knows which kingdom the joining hero landed in.
 
+**The captured career is the one the hero received, not the career menu's pick (#1207).** With no
+pick, character creation auto-assigns the first career eligible for the culture and leaves the menu
+empty, so a capture from the menu recorded no career and the join re-applied none. Phase 9 runs after
+character creation's final effects, so `ICareerDataService.GetCareerStringId` already returns the
+assigned career there. After a Player Switcher hand-over the phase-9 hero is the lord, so the capture
+reads the lord's career; with no menu pick the switcher gives the lord none (#1217). A no-pick creation
+comes from BannerlordCoop's character-creation skip, which only a DEBUG Coop build runs (the live-test
+harness).
+
+**A hero that already has a career keeps it (#1207).** A joined hero arrives with no career on its
+peer: the join's load replaces the career store with the host's, which holds no joined player's career.
+A hero that has one is a wrong fire (#1183, for example a lord loaded after a character creation).
+`OnCareerSelected` would set the new career id and keep the old career's choices, and the next session
+launch refunds those choices (`CareerCampaignBehavior.RepairForeignChoices`). So the re-apply skips the
+career for such a hero and still applies the other grants.
+
 `OnCareerSelected` also stamps the career's tree version (`CareerTreeVersion.Stamp`, the `career_tree_vN` hero flag), so a joiner restored this way is not read as an old save and refunded by the next `MigrateAllTreeVersions` (a version-1 career carries no flag).
 
 **Each grant is independently guarded.** A joiner losing their career because the gold grant threw
@@ -164,6 +180,9 @@ Unit-tested end to end at the service layer. The tests that matter most are the 
   `TryConsumePossession_JoinAfterACompletedCharacterCreation_StillFires`
 - `OnPlayerCharacterChanged_WhenTheCheckThrows_LogsTheErrorAndReturns`, and a source pin for the three
   listeners inside `RegisterEvents` (`PlayerPossessionSwitchTests`)
+- `ChoicesFor_ACareerAutoAssignedWithNoMenuPick_CapturesThatCareer` and
+  `ChoicesFor_APlayerSwitcherLord_CapturesTheLordsCareerNotTheCreationHeros` (`PlayerPossessionCaptureTests`)
+- `Reapply_HeroAlreadyHasACareer_KeepsItAndAppliesTheOtherGrants`
 
 **Not unit-testable (requires a live multiplayer session):** the hand-off itself. Verifying this
 end to end needs a two-client co-op session where a joiner creates a non-human character of a culture

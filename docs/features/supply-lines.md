@@ -278,6 +278,13 @@ localization-key sweeps that gate every feature.
 
 - The caravan party is **teleported**; anything else that moves that party fights the service.
   While the caravan is in a MapEvent its position is left alone.
+- **The caravan never stands off walkable land (#1104).** When no land path exists, for example to a
+  player at sea, the route is a straight line over water and impassable ground. `TickPositions` writes
+  a point only when `CampaignVec2.IsValid()` holds (a land face whose terrain a land party may use);
+  otherwise the caravan waits at its last land position and the log says so once per session
+  (`playerAtSea=`). Delivery still comes when the player is within 1.2 or at `ForceDeliverFraction`.
+  Patch57 records a native crash for a party at sea on TAOM_Map (#296); no crash bundle proves that
+  a land party on water crashes, so this is a guard, not a proven fix for the reported delivery crash.
 - **Routes follow vanilla's land rules, and the arrows check the heightmap first.**
   `SupplyCaravanService.ComputeNavPathPoints` hands
   `PartyNavigationModel.GetInvalidTerrainTypesForNavigationType(Default)` and both

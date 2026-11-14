@@ -68,8 +68,8 @@ The highest-trust category: real bugs found by reading, not speculation.
 - Harmony patch correctness: private-field injection underscore counts (`____match` is `___` plus
   `_match`), patch signatures against the installed engine (AGENTS.md "Target"; bindings are verified
   in the committed API snapshot by the binding gate), Prefixes returning `false` that drop a vanilla
-  safety gate buried in a helper, patches with `MovementOrder` in their signature outside the deferred
-  `Patch_MissionTime_SetMovementOrder` category.
+  safety gate buried in a helper, patches with `MovementOrder` in their signature outside a deferred
+  `Patch_MissionTime_<Feature>` category (one per feature).
 - Threads: engine `_MT` callers mean patches fire from worker threads; mutable service state without
   locks; `static` counters touched from hook bodies; thread-static flags never reset on an exception path.
   Off-thread callbacks write through `RunOrDefer`, and nothing keys on `Agent.Index` (orientation.md

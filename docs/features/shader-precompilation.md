@@ -151,6 +151,17 @@ change, shaders built on first use in the same frame gave 150-290 ms frames in a
 `hair_shader_aniso`, `bow_deformer_shadowmap`) about 108 times per session. For TAOM this suggests changing
 graphics options on the map and not in a siege, and a precompile walk run under one set of graphics options may leave shaders that another setting needs to build on first use (TAOM's reading, UNVERIFIED).
 
+**A doubled, flickering shadow near troops** [yotthani, MithrilForge `docs/engine/bugs.md`@ea7a7bfb lines 49-65 and
+`docs/perf-audit/taom-reports.md` lines 61-85; observation by one tester, game 1.5.3, TAOM_Map 2.0.32 installed 2026-10-01]. With
+dynamic shadows a second shadow flickers next to troops (riders worst); it disappears with shadow type "static" and stays with all
+of yotthani's mods off. The engine log of that session held 108 `pbr_metallic_shadowmap` lines. The source's own
+words are "Ursache: offen. Hinweise, kein Beleg" (cause open, hints, no proof), and it adds that vanilla without TAOM was not
+tested. Its one mechanism guess, labelled a guess: full agent meshes go only into shadow cascades 0 and 1, and some cascades
+refresh every second frame (see "Distant shadows" in
+[agent-spawn-and-render-pipeline.md](../reference/engine/agent-spawn-and-render-pipeline.md)). The draft report to TAOM was never
+sent. TAOM has not reproduced the symptom and has not tried v1.5.7; the check belongs in #1103 (dynamic shadow cost): one run with
+shadow type static against dynamic, once after the shader walk has finished.
+
 ## Configuration
 
 **MCM toggles** (group "Graphics/Shader Precompilation", GroupOrder 15, both `RequireRestart = false`): **Enable Shader Precompilation** (property `EnableShaderPrecompilation`; master; default on) live-hides the main-menu option via its `isHidden` callback when off, no relaunch, and blocks new walks (a walk already running finishes). **Include Scene Passes (can crash some GPUs)** (property `EnableShaderPrecompileScenePasses`; **default off**) gates the terrain/atmosphere scene passes; the runner reads it in `Begin()` with a `false` fallback, so an unreadable settings page never turns scenes on. **Why the property was renamed instead of defaulted off:** `TaomSettings` persists as json2 and MCM loads that file over the compiled default, so every install where a TAOM option was confirmed while the old attribute was live (2026-06-25 to 2026-08-20) could have `EnableScenePassPrecompilation = true` on disk, and a changed default would never have reached it. MCM's json2 reader hands the file to its settings converter, which fills only the properties the class currently declares and ignores the rest, so the orphaned key is ignored on load and dropped by the next save. Rule for the next time: rename, never flip, a persisted MCM default. `python tools/check_mcm_default_flips.py` fails on a flip against any release tag reachable from HEAD, resolving constant defaults and keeping reasoned `Class.Name` allowlist entries (#1017; the first catch was `BanditInitialHideoutsPerFaction`, now `BanditStartingHideoutsPerFaction`). The co-op exclusion list in `CoopSettingsRelevance` follows the rename; the rename leaves the settable-property count pinned by `SettingsFingerprintTests` unchanged.

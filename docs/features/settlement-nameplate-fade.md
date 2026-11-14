@@ -16,6 +16,8 @@ Fades settlement nameplates (the banner-style labels floating above towns/castle
 
 `DetermineTargetAlphaValue` is a `private` method on a sealed-by-default engine widget called every frame from `OnParallelUpdate` (multi-threaded). Hot-path constraints: ~3000 calls/second on a populated map. The patch must not allocate, must be thread-safe, and must early-out cleanly for the common cases.
 
+The engine routine beside this patch returns early when any of its eight widgets is missing, so a nameplate prefab that drops one loses all fade and cull logic: see [the engine note](../reference/engine/gauntletui-viewmodel-screen.md#nameplate-prefabs-the-fade-routine-needs-all-eight-widgets-taom-verified-v157).
+
 ### Solution Approach
 
 Harmony Postfix on `SettlementNameplateWidget.DetermineTargetAlphaValue()`. The postfix multiplies the vanilla `__result` (target alpha) by a fade multiplier in [0, 1] computed from `__instance.DistanceToCamera`. Vanilla's lerp toward the new target then smooths visual transitions automatically — no `OnTick` choreography needed.

@@ -409,10 +409,10 @@ text the engine ever reads. Rename something in a strings source and run the tra
 languages follow while English keeps the old literal; treat the English default as a thirteenth
 translation that no tool updates for you. `LanguageFileCoverageTests` cannot see this drift, because it
 checks that a key has a row, not what the row says. Lord names have a gate:
-`LordNameAndSexConsistencyTests.EveryLordNameFallbackMatchesTheRegisteredEnglishText` compares every
-`characters/lords.xml` fallback with `taom_xslt_strings.xml`, and
-`python tools/oneoff/sync_lord_name_fallbacks.py --apply` repairs a mismatch (dry run without
-`--apply`). Other kinds of text have no such gate yet. <!-- verified 2026-11-03: the Languages folder listing, language_data.xml, the test and the script all exist -->
+`LordIdentityConsistencyTests.EveryLordNameInLordsXsltMatchesTheRegistry` compares every
+`lords.xslt` fallback with `taom_xslt_strings.xml`. Since #648 no `characters/lords.xml` row carries one
+of those keys, so `tools/oneoff/sync_lord_name_fallbacks.py`, which reads only that file, has nothing to
+sync; fix a `lords.xslt` mismatch by hand. Other kinds of text have no such gate yet. <!-- verified 2026-11-13: the Languages folder listing, language_data.xml, the test and the script all exist -->
 
 ### Rewording a vanilla key: English only
 
@@ -605,7 +605,7 @@ pipeline ships as its English fallback in all 12 languages, silently, with no er
 4. Run `generate_translation_template.py --all --apply`.
 5. Add a `<LanguageFile>` entry to all 12 `Languages/*/language_data.xml`.
 6. Bump the count in `LanguageDataXmlTests.AllLanguageDirs_HaveExactly…LanguageFiles`.
-7. Run `translate_with_claude.py --lang <L> --module TAOM --apply` per language (add `--sync-ids` for new keys). When translation is deferred, seed the rows without the paid translate phase: `python tools/translate_with_claude.py --lang <L> --module TAOM --sync-ids --seed-only --apply`, run per language. Without `--module TAOM` the module defaults to `all` and the run also writes the live Armory's language files (#1056).
+7. Run `translate_with_claude.py --lang <L> --module TAOM --apply` per language (add `--sync-ids` for new keys). When translation is deferred, seed the rows without the paid translate phase: `python tools/translate_with_claude.py --lang <L> --module TAOM --sync-ids --seed-only --apply`, run per language. `--module` is required: `--module all` also writes the live Armory's language files (#1056), so pass `--module TAOM`.
 
 **Step 1 must complete before step 4.** `generate_translation_template.py --apply` overwrites each
 per-language file with a fresh English template, discarding whatever translation is in it. The

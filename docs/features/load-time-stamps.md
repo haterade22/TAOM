@@ -67,7 +67,7 @@ own writes, so the steps add up to the total less those writes and any work afte
 |---|---|---|
 | `OnGameStart` | `session_snapshot`, `hand_wired` (every hand-wired model and behavior), `feature_modules` | every game start |
 | `OnGameInitializationFinished` | `save_load_stamp`, `monster_size`, `armour_gate` | every game initialization, before the once-per-process guard |
-| `GameInitOnce` | `patch_categories`, `manual_patches`; the Harmony census is the rest of the total | the first game initialization only |
+| `GameInitOnce` | `patch_categories`, `manual_patches`, `patch_shield` (TAOM's PatchShield pass after the batch; the mark names the step and is written whether the pass ran, was skipped for co-op or the disable flag, or failed, so read diag.log for which); the Harmony census is the rest of the total | the first game initialization only |
 
 ### The toggle
 

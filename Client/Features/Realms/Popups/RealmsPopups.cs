@@ -37,11 +37,16 @@ internal static class RealmsPopups
     /// <summary>Closes the open popup, if any (a tree card opening a title's page closes the tree first).</summary>
     public static void Close() => _layer?.Close();
 
-    /// <summary>The coronation's event window (<see cref="CoronationPopupVM"/>).</summary>
-    public static void OpenCoronation(Func<Action, CoronationPopupVM> build) =>
-        Open("RealmsCoronationPopup", close => build(close));
+    /// <summary>A popup is open; a second one waits (event windows) or is not opened (the title popups).</summary>
+    public static bool IsOpen => _layer != null;
 
-    private static void Open(string movie, Func<Action, ViewModel> build)
+    /// <summary>
+    /// A story event window (<see cref="EventWindow.EventWindows"/>), which pauses the campaign while it shows, as the
+    /// inquiry it replaced did.
+    /// </summary>
+    public static void OpenEvent(string movie, Func<Action, ViewModel> build) => Open(movie, build, pausesGame: true);
+
+    private static void Open(string movie, Func<Action, ViewModel> build, bool pausesGame = false)
     {
         if (_layer != null)
             return;
@@ -51,7 +56,7 @@ internal static class RealmsPopups
         RealmsPopupLayer? layer = null;
         try
         {
-            layer = new RealmsPopupLayer(host, Closed);
+            layer = new RealmsPopupLayer(host, Closed, pausesGame);
             _layer = layer;
             layer.Show(movie, build);
         }

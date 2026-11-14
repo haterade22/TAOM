@@ -651,6 +651,21 @@ public class CareerScreenVM : ViewModel
         set { if (_choiceGroupsTier3 != value) { _choiceGroupsTier3 = value; OnPropertyChangedWithValue(value, nameof(ChoiceGroupsTier3)); } }
     }
 
+    /// <summary>The sidebar heading above the career's root passive.</summary>
+    [DataSourceProperty]
+    public string PassiveLabel =>
+        new TextObject("{=taom_career_passive_label}Passive").ToString();
+
+    /// <summary>The sidebar heading above the career ability; the same text as <see cref="AbilityLabel"/>.</summary>
+    [DataSourceProperty]
+    public string CareerAbilityHeading =>
+        new TextObject("{=taom_career_ability_label}Career Ability").ToString();
+
+    /// <summary>The word above each tier numeral in the grid's gutter.</summary>
+    [DataSourceProperty]
+    public string TierWordText =>
+        new TextObject("{=taom_career_tier_word}Tier").ToString();
+
     /// <summary>Issue #388 — header above the Active Effects panel.</summary>
     [DataSourceProperty]
     public string ActiveEffectsLabel =>

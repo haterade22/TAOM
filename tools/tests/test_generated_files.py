@@ -105,5 +105,21 @@ class ExistingSkillsTests(unittest.TestCase):
         self.assertEqual(glt.existing_skills(Path(tempfile.gettempdir()) / "no_such_troops_file.xml"), {})
 
 
+class LothlorienFaceTemplateTests(unittest.TestCase):
+    """Every troop the Lorien generator writes uses fighter_lothlorien, and the shipped file is its exact output."""
+
+    def test_every_rendered_troop_uses_the_lothlorien_face_template(self):
+        xml = glt.render(glt.TROOPS, {})
+        self.assertIn('BodyProperty.fighter_lothlorien', xml)
+        self.assertNotIn('BodyProperty.fighter_rivendell', xml)
+        self.assertEqual(xml.count('<face_key_template'), xml.count('BodyProperty.fighter_lothlorien'))
+
+    def test_the_shipped_file_is_the_generator_output(self):
+        # Line endings differ by checkout (autocrlf), so compare with CRLF folded to LF.
+        shipped = glt.OUTPUT.read_bytes().replace(b"\r\n", b"\n")
+        rendered = glt.render(glt.TROOPS, glt.existing_skills(glt.OUTPUT)).encode("utf-8").replace(b"\r\n", b"\n")
+        self.assertEqual(rendered, shipped)
+
+
 if __name__ == "__main__":
     unittest.main()

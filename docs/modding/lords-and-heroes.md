@@ -305,9 +305,9 @@ Code: No code changes needed
    vanilla, the lord belongs in `lords.xslt`: edit the `<xsl:attribute name="name">` there. A
    vanilla id should have no `characters/lords.xml` row at all (Mike, 2026-09-23: vanilla lords in
    the XSLT, new ones in `lords.xml`), because a second definition wins per attribute and unions
-   its equipment sets with the template's, a random kit per campaign. 176 ids still have both
-   (#648); for one of those, a template-only edit does not show until the row's value moves into
-   the template and the row goes, as #644 did for three of the Nine.
+   its equipment sets with the template's, a random kit per campaign. Since #648 no id has both,
+   and `LordDoubleDefinitionTests.NoLordIsDefinedInBothLordsFiles` fails on a row for any id with a
+   `match="NPCCharacter[@id='x']"` template (the form every lord template uses on 2026-11-13).
 2. Keep the key stable and change only the literal after `}`. Changing the key orphans twelve
    translations.
 3. If the key is registered in `taom_xslt_strings.xml`, update the row there too, then run the
@@ -317,7 +317,7 @@ Code: No code changes needed
    biographies mention lords by name.
    `grep -rn "Old Name" Main/_Module/ModuleData/`
 
-Check: `python tools/oneoff/sync_lord_name_fallbacks.py`
+Check: `dotnet test TAOM.Tests --filter EveryLordNameInLordsXsltMatchesTheRegistry -p:DisableModuleCopy=true -p:ModuleId=`
 Takes effect: new campaign only (`Name` is copied onto the hero once, at hero creation, `Hero.cs:2243`)
 Code: No code changes needed
 
@@ -405,11 +405,13 @@ For content retirement across the mod, see [Retire content](recipe-retire-conten
 - **A vanilla id carries its sex until you change three things.** `is_female`, `<beard_tags>` and the
   `<BodyProperties key>` travel as one unit. Flipping the attribute alone gives a bearded woman;
   the biography in `heroes.xslt` saying son, daughter or wife is the cheapest spec to check against.
-  `LordNameAndSexConsistencyTests` pins the female-with-beard half.
+  `LordNameAndSexConsistencyTests` pins the female-with-beard half, in both lords files.
   [lord skills authoring](../ai-includes/lord-skills-authoring.md).
 - **`tools/complete_lords_xslt.py --apply` only adds templates for vanilla lords `lords.xslt` lacks** (#959). It never
   rewrites an existing template, so a deleted `is_female` line stays deleted and every `race`, `<Equipments>` and hand block
-  is safe; on the shipped file it is a no-op. `characters/lords.xml` has no regenerator and is never at risk.
+  is safe; on the shipped file it is a no-op. It never writes `characters/lords.xml`; `generate_new_faction_kingdoms.py`
+  (its `TAOM-NEWFACTIONS` regions), `apply_culture_skills_traits.py --apply`, `sync_lord_inline_skills.py --apply` and
+  several older fixers do.
   Contract: [tools/README.md](../../tools/README.md).
   [lord identity reconciliation](../features/lord-identity-reconciliation.md).
 - **Lord names reach the pipeline through THREE tiers, and since 2026-10-01 hero biographies do too.** Names edited in the stylesheets touch keys registered in `taom_xslt_strings.xml`

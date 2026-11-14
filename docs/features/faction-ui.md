@@ -296,9 +296,8 @@ Kysaro's data asks (`TAOM_special_character_requests.md`), as decided on 2026-10
   look. A one-lord trial on Denethor II was added and then reverted for that reason. If a lord looks
   bald, the hair index inside his key is the cause, which is a face-key edit.
 - The Mouth of Sauron keeps TAOM's helm (Mike).
-- Eomer (`lord_4_3_1`) is defined in both `lords.xslt` and `characters/lords.xml`. The engine merges the
-  two today (same equipment ids, `lords.xml` wins the scalars), but if their equipment ids ever diverge
-  the engine would union both kits. Reported, not changed.
+- Eomer (`lord_4_3_1`) was defined in both `lords.xslt` and `characters/lords.xml`. #648 folded the row
+  into the template, so the two kits can no longer union.
 
 ## Tests
 
@@ -399,6 +398,16 @@ career page and into the game. Owed:
   culture's generated clan name and the default banner, since those stages were skipped; Player
   Switcher says so on screen ("You could not take the place of ...").
 - **The last loading painting** stays in memory until the next loading screen (see Performance).
+- **Run-time textures with one file name in two folders: unexplained observation, TAOM not affected today.**
+  `FrontEndResourceAdapter.LoadTexture` (line 80-86 in the v1.5.7 tree) calls `Texture.LoadTextureFromPath(fileName,
+  directory)`. yotthani reports that the engine "knows a texture by its file name" and that two same-named files in
+  different folders both drew the first (`RealmUI/Game/Theme/Themes.cs`@c45d8374:187-188 and :589-591, code comments,
+  observed result "the peoples' inlays came out swapped", no date, version or test shown). TAOM-verified, v1.5.7 native
+  pseudo-C: `ITexture.LoadTextureFromPath` (0x510B80) calls helper `FUN_1800a0400`, which caches by name AND full path, so two
+  such files load as two textures; they do share `Texture.Name`, the bare file name. No name-keyed lookup was found in
+  managed `TwoDimensionEnginePlatform` (its `_textMaterials` is keyed by the `Texture` object). The cause of yotthani's swap
+  is therefore open (yotthani's own sprite-name stripping or a native path TAOM did not read). A two-file test in a dev
+  build would settle it. TAOM's FactionUI PNG names had no duplicates when counted on 2026-11-13; no gate enforces that.
 
 ### In-game checklist
 

@@ -10,8 +10,8 @@ using TAOM.Tests.Core;
 namespace TAOM.Tests.Features.CustomBattles;
 
 /// <summary>
-/// The curated Custom Battle commanders that are vanilla SandBox lords rebuilt by lords.xslt (Sauron, Boromir,
-/// Théoden and the rest) exist in a Custom Battle only through characters/custom_battle_lords.xml. SandBox
+/// The vanilla SandBox lords rebuilt by lords.xslt (Sauron, Boromir, Théoden and the rest) exist in a Custom Battle
+/// only through characters/custom_battle_lords.xml. SandBox
 /// registers its lords.xml for Campaign only, so that file supplies a bare stub per id, and the engine applies
 /// lords.xslt to it because MBObjectManager.CreateMergedXmlFile (v1.5.3, :962-976) runs each node's XSLT over
 /// everything merged before it. These tests pin both halves: the load order, and what the transform makes of
@@ -83,18 +83,103 @@ public class CustomBattleLordStubsTests
     }
 
     [TestMethod]
-    public void EveryStub_IsACuratedCommander_NotDefinedInLordsXml()
+    public void EveryStub_HasAWholeLordTemplate_AndNoLordsXmlRow()
     {
-        var config = File.ReadAllText(Path.Combine(ModuleData(), "custom_battle", "custom_battle_commanders.json"));
-        var lordsXml = XDocument.Load(Path.Combine(ModuleData(), "characters", "lords.xml"));
-        var native = new HashSet<string>(
-            lordsXml.Descendants("NPCCharacter").Select(c => (string)c.Attribute("id")), StringComparer.OrdinalIgnoreCase);
+        // Since #648 a vanilla-id lord has no characters/lords.xml row, so a stub is its only way into a Custom Battle.
+        var templates = WholeLordTemplateIds(XDocument.Load(Path.Combine(ModuleData(), "lords.xslt")));
+        Assert.IsTrue(templates.Count > 300, $"only {templates.Count} whole-lord templates found; the reader no longer matches lords.xslt");
+        var lordsXmlIds = XDocument.Load(Path.Combine(ModuleData(), "characters", "lords.xml"))
+            .Descendants("NPCCharacter").Select(c => (string)c.Attribute("id")).ToList();
 
-        foreach (var id in StubIds())
+        var problems = StubRuleViolations(StubIds(), templates, lordsXmlIds);
+
+        Assert.AreEqual(0, problems.Count, string.Join("; ", problems));
+    }
+
+    [TestMethod]
+    public void StubRule_StubWithNoTemplate_IsAViolation()
+    {
+        var problems = StubRuleViolations(new[] { "lord_X_1" }, new HashSet<string> { "lord_Y_1" }, new string[0]);
+
+        Assert.AreEqual(1, problems.Count);
+        StringAssert.Contains(problems[0], "lord_X_1");
+    }
+
+    [TestMethod]
+    public void StubRule_StubWithALordsXmlRow_IsAViolation()
+    {
+        var problems = StubRuleViolations(new[] { "lord_X_1" }, new HashSet<string> { "lord_X_1" }, new[] { "lord_X_1" });
+
+        Assert.AreEqual(1, problems.Count);
+        StringAssert.Contains(problems[0], "characters/lords.xml");
+    }
+
+    [TestMethod]
+    public void StubRule_StubWithATemplateAndNoRow_IsAllowed()
+    {
+        var problems = StubRuleViolations(new[] { "lord_X_1" }, new HashSet<string> { "lord_X_1" }, new[] { "lord_Y_1" });
+
+        Assert.AreEqual(0, problems.Count, string.Join("; ", problems));
+    }
+
+    [TestMethod]
+    public void WholeLordTemplateIds_TemplatePassingVanillaAttributesThrough_IsNotAWholeLord()
+    {
+        // A template that keeps the vanilla attributes (@*) only patches a lord, so on a bare stub it would build none.
+        // lord_patch writes its id too, so only the @* clause can exclude it; lord_noid pins the writes-id clause.
+        const string xsl = "http://www.w3.org/1999/XSL/Transform";
+        var x = XNamespace.Get(xsl);
+        var doc = new XDocument(new XElement(x + "stylesheet",
+            new XElement(x + "template", new XAttribute("match", "NPCCharacter[@id='lord_whole']"),
+                new XElement(x + "copy", new XElement(x + "attribute", new XAttribute("name", "id"), "lord_whole"))),
+            new XElement(x + "template", new XAttribute("match", "NPCCharacter[@id='lord_patch']"),
+                new XElement(x + "copy",
+                    new XElement(x + "attribute", new XAttribute("name", "id"), "lord_patch"),
+                    new XElement(x + "apply-templates", new XAttribute("select", "@*|node()")))),
+            new XElement(x + "template", new XAttribute("match", "NPCCharacter[@id='lord_noid']"),
+                new XElement(x + "copy", new XElement(x + "attribute", new XAttribute("name", "name"), "No Id")))));
+
+        CollectionAssert.AreEquivalent(new[] { "lord_whole" }, WholeLordTemplateIds(doc).ToList());
+    }
+
+    /// <summary>
+    /// The ids lords.xslt rebuilds as a whole lord: a <c>NPCCharacter[@id='x']</c> template whose xsl:copy writes the
+    /// id itself and passes no vanilla attribute through, so it turns a bare stub into the full character.
+    /// </summary>
+    internal static HashSet<string> WholeLordTemplateIds(XDocument stylesheet)
+    {
+        XNamespace x = "http://www.w3.org/1999/XSL/Transform";
+        var ids = new HashSet<string>(StringComparer.Ordinal);
+        foreach (var template in stylesheet.Descendants(x + "template"))
         {
-            // A stub loads a vanilla lord into every Custom Battle; only a curated commander needs one.
-            StringAssert.Contains(config, $"\"{id}\"", $"Stub '{id}' is not a curated commander.");
-            Assert.IsFalse(native.Contains(id), $"Stub '{id}' duplicates a TAOM lord in characters/lords.xml.");
+            var match = System.Text.RegularExpressions.Regex.Match(
+                (string)template.Attribute("match") ?? "", @"^NPCCharacter\[@id='([^']+)'\]$");
+            var copy = template.Element(x + "copy");
+            if (!match.Success || copy == null) continue;
+            var writesId = copy.Elements(x + "attribute").Any(a => (string)a.Attribute("name") == "id");
+            var keepsVanillaAttributes = copy.Descendants(x + "apply-templates")
+                .Any(a => ((string)a.Attribute("select") ?? "").Contains("@*"));
+            if (writesId && !keepsVanillaAttributes) ids.Add(match.Groups[1].Value);
         }
+        return ids;
+    }
+
+    /// <summary>
+    /// The stub rule: an id may have a stub only when lords.xslt rebuilds it as a whole lord (else the stub loads bare)
+    /// and characters/lords.xml has no row for it (else the id is a TAOM lord that already loads, or a double definition).
+    /// </summary>
+    internal static List<string> StubRuleViolations(
+        IEnumerable<string> stubIds, ISet<string> wholeLordTemplateIds, IEnumerable<string> lordsXmlIds)
+    {
+        var rows = new HashSet<string>(lordsXmlIds, StringComparer.OrdinalIgnoreCase);
+        var problems = new List<string>();
+        foreach (var id in stubIds)
+        {
+            if (!wholeLordTemplateIds.Contains(id))
+                problems.Add($"stub '{id}' has no whole-lord template in lords.xslt, so it would load bare");
+            if (rows.Contains(id))
+                problems.Add($"stub '{id}' also has a row in characters/lords.xml");
+        }
+        return problems;
     }
 }

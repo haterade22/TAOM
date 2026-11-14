@@ -2,15 +2,24 @@
 <NPCCharacters>
 
   <!-- Custom Battle only (SubModule.xml registers this file for CustomGame, before the lords node).
-       Each entry is a bare stub for a curated Custom Battle commander that TAOM builds from a vanilla
-       SandBox lord in lords.xslt. SandBox registers its lords.xml for Campaign and CampaignStoryMode
-       only, so in a Custom Battle those lords do not exist and the lords.xslt template has nothing to
-       rebuild. The engine applies each node's XSLT to everything merged before it
-       (MBObjectManager.CreateMergedXmlFile, v1.5.3), so lords.xslt turns each stub into the full
-       character: name, race, face, skills and equipment all come from the template, none from here.
-       The culture is repeated only because NPCCharacters.xsd requires the attribute.
-       Add an id here only when custom_battle/custom_battle_commanders.json lists it and
-       characters/lords.xml does not define it; CustomBattleLordStubsTests checks both. -->
+       Each entry is a bare stub for a vanilla SandBox lord that TAOM rebuilds in lords.xslt. SandBox
+       registers its lords.xml for Campaign and CampaignStoryMode only, so in a Custom Battle those lords
+       do not exist and the lords.xslt template has nothing to rebuild. The engine applies each node's
+       XSLT to everything merged before it (MBObjectManager.CreateMergedXmlFile, v1.5.7), so lords.xslt
+       turns each stub into the full character: name, race, face, skills and equipment all come from the
+       template, none from here. The culture is repeated only because NPCCharacters.xsd requires the
+       attribute; keep it equal to the template's.
+       An id may have a stub when lords.xslt has a whole-lord template for it and characters/lords.xml
+       has no row for it; CustomBattleLordStubsTests checks both. Outside a campaign these lords are
+       named by custom_battle/custom_battle_commanders.json, fords_of_war/factions.json,
+       long_defeat/fortresses.json (playerTroop lord_4_1), hero_auras/hero_auras.json and
+       SeatTrialRoster.Hero (lord_1_9), among others; the default commanders and the muster hero
+       lists pick the rest by culture.
+       Until #648, 176 vanilla-id lords reached Custom Battle through their characters/lords.xml rows.
+       When those rows were folded into the lords.xslt templates, each got a stub here (ten in the
+       sections above, the rest in the last section), so Custom Battle keeps every lord it had.
+       CustomBattleCommandersShippedDataTests checks that every culture it offers resolves a commander
+       of its own. -->
 
   <!-- Mordor -->
   <NPCCharacter id="lord_1_17" culture="Culture.mordor" />
@@ -34,6 +43,7 @@
   <NPCCharacter id="lord_1_71" culture="Culture.gondor" />
   <NPCCharacter id="lord_1_52" culture="Culture.gondor" />
   <NPCCharacter id="lord_1_53" culture="Culture.gondor" />
+  <NPCCharacter id="lord_WE9_l" culture="Culture.gondor" />
 
   <!-- Rohan (culture id vlandia) -->
   <NPCCharacter id="lord_4_1" culture="Culture.vlandia" />
@@ -41,5 +51,201 @@
   <NPCCharacter id="lord_4_16" culture="Culture.vlandia" />
   <NPCCharacter id="lord_4_6" culture="Culture.vlandia" />
   <NPCCharacter id="lord_4_28" culture="Culture.vlandia" />
+  <NPCCharacter id="lord_4_3_1" culture="Culture.vlandia" />
+
+  <!-- Fords of War heroes (fords_of_war/factions.json) -->
+  <NPCCharacter id="lord_A9_u" culture="Culture.aserai" />
+  <NPCCharacter id="lord_A9_l" culture="Culture.aserai" />
+  <NPCCharacter id="lord_3_3_1" culture="Culture.aserai" />
+  <NPCCharacter id="lord_2_7_1" culture="Culture.sturgia" />
+  <NPCCharacter id="lord_S9_u" culture="Culture.sturgia" />
+  <NPCCharacter id="lord_S9_l" culture="Culture.sturgia" />
+  <NPCCharacter id="lord_K8_u" culture="Culture.khuzait" />
+  <NPCCharacter id="lord_K9_l" culture="Culture.khuzait" />
+
+  <!-- Vanilla-id lords whose characters/lords.xml rows were folded into lords.xslt (#648),
+       grouped by the culture of the template -->
+
+  <!-- Gondor -->
+  <NPCCharacter id="lord_1_46_1" culture="Culture.gondor" />
+  <NPCCharacter id="lord_1_45_1" culture="Culture.gondor" />
+  <NPCCharacter id="lord_1_57_1" culture="Culture.gondor" />
+  <NPCCharacter id="lord_1_57_2" culture="Culture.gondor" />
+  <NPCCharacter id="lord_WE8_c" culture="Culture.gondor" />
+  <NPCCharacter id="lord_WE8_u" culture="Culture.gondor" />
+  <NPCCharacter id="lord_1_73_1" culture="Culture.gondor" />
+  <NPCCharacter id="lord_1_62_1" culture="Culture.gondor" />
+  <NPCCharacter id="lord_WE9_u" culture="Culture.gondor" />
+  <NPCCharacter id="lord_WE9_u2" culture="Culture.gondor" />
+  <NPCCharacter id="lord_1_40_1" culture="Culture.gondor" />
+  <NPCCharacter id="lord_1_45_2" culture="Culture.gondor" />
+  <NPCCharacter id="lord_1_45_3" culture="Culture.gondor" />
+  <NPCCharacter id="lord_1_52_1" culture="Culture.gondor" />
+  <NPCCharacter id="lord_1_52_2" culture="Culture.gondor" />
+
+  <!-- Mordor -->
+  <NPCCharacter id="lord_1_30_2" culture="Culture.mordor" />
+  <NPCCharacter id="lord_1_30_3" culture="Culture.mordor" />
+  <NPCCharacter id="lord_1_27_1" culture="Culture.mordor" />
+  <NPCCharacter id="lord_1_27_2" culture="Culture.mordor" />
+  <NPCCharacter id="lord_1_27_3" culture="Culture.mordor" />
+  <NPCCharacter id="lord_1_47_1" culture="Culture.mordor" />
+  <NPCCharacter id="lord_1_47_2" culture="Culture.mordor" />
+  <NPCCharacter id="lord_1_47_3" culture="Culture.mordor" />
+  <NPCCharacter id="lord_1_49_1" culture="Culture.mordor" />
+  <NPCCharacter id="lord_1_49_2" culture="Culture.mordor" />
+  <NPCCharacter id="lord_1_30_1" culture="Culture.mordor" />
+  <NPCCharacter id="lord_1_54_1" culture="Culture.mordor" />
+  <NPCCharacter id="lord_1_55_1" culture="Culture.mordor" />
+  <NPCCharacter id="lord_1_63_1" culture="Culture.mordor" />
+  <NPCCharacter id="lord_1_63_2" culture="Culture.mordor" />
+  <NPCCharacter id="lord_1_63_3" culture="Culture.mordor" />
+  <NPCCharacter id="lord_1_68_1" culture="Culture.mordor" />
+  <NPCCharacter id="lord_1_69_1" culture="Culture.mordor" />
+  <NPCCharacter id="lord_1_69_2" culture="Culture.mordor" />
+  <NPCCharacter id="lord_1_72_1" culture="Culture.mordor" />
+  <NPCCharacter id="lord_SE8_c" culture="Culture.mordor" />
+  <NPCCharacter id="lord_1_74_1" culture="Culture.mordor" />
+  <NPCCharacter id="lord_SE9_l" culture="Culture.mordor" />
+  <NPCCharacter id="lord_SE9_s" culture="Culture.mordor" />
+  <NPCCharacter id="lord_SE9_c1" culture="Culture.mordor" />
+  <NPCCharacter id="lord_SE9_c2" culture="Culture.mordor" />
+
+  <!-- Rohan (culture id vlandia) -->
+  <NPCCharacter id="lord_4_6_1" culture="Culture.vlandia" />
+  <NPCCharacter id="lord_4_16_1" culture="Culture.vlandia" />
+  <NPCCharacter id="lord_4_20_1" culture="Culture.vlandia" />
+  <NPCCharacter id="lord_4_22_1" culture="Culture.vlandia" />
+  <NPCCharacter id="lord_4_23_1" culture="Culture.vlandia" />
+  <NPCCharacter id="lord_4_23_2" culture="Culture.vlandia" />
+  <NPCCharacter id="lord_4_23_3" culture="Culture.vlandia" />
+  <NPCCharacter id="lord_4_25_1" culture="Culture.vlandia" />
+  <NPCCharacter id="lord_4_27_1" culture="Culture.vlandia" />
+  <NPCCharacter id="lord_4_28_1" culture="Culture.vlandia" />
+  <NPCCharacter id="lord_4_28_2" culture="Culture.vlandia" />
+  <NPCCharacter id="lord_V11_l" culture="Culture.vlandia" />
+  <NPCCharacter id="lord_4_26_1" culture="Culture.vlandia" />
+
+  <!-- Dunland (culture id empire) -->
+  <NPCCharacter id="lord_1_1_1" culture="Culture.empire" />
+  <NPCCharacter id="lord_1_1_2" culture="Culture.empire" />
+  <NPCCharacter id="lord_1_1_3" culture="Culture.empire" />
+  <NPCCharacter id="lord_1_1_4" culture="Culture.empire" />
+  <NPCCharacter id="lord_1_1_5" culture="Culture.empire" />
+  <NPCCharacter id="lord_1_1_6" culture="Culture.empire" />
+  <NPCCharacter id="lord_1_1_7" culture="Culture.empire" />
+  <NPCCharacter id="lord_1_1_8" culture="Culture.empire" />
+  <NPCCharacter id="lord_1_1_9" culture="Culture.empire" />
+  <NPCCharacter id="lord_1_1_10" culture="Culture.empire" />
+  <NPCCharacter id="lord_1_1_11" culture="Culture.empire" />
+  <NPCCharacter id="lord_1_1_15" culture="Culture.empire" />
+  <NPCCharacter id="lord_1_1_16" culture="Culture.empire" />
+  <NPCCharacter id="lord_1_1_12" culture="Culture.empire" />
+  <NPCCharacter id="lord_1_1_13" culture="Culture.empire" />
+  <NPCCharacter id="lord_1_1_14" culture="Culture.empire" />
+  <NPCCharacter id="lord_1_1_17" culture="Culture.empire" />
+  <NPCCharacter id="lord_NE7_u" culture="Culture.empire" />
+  <NPCCharacter id="lord_1_56_1" culture="Culture.empire" />
+  <NPCCharacter id="lord_1_56_2" culture="Culture.empire" />
+  <NPCCharacter id="lord_NE8_l" culture="Culture.empire" />
+  <NPCCharacter id="lord_NE8_s" culture="Culture.empire" />
+  <NPCCharacter id="lord_NE8_c1" culture="Culture.empire" />
+  <NPCCharacter id="lord_NE8_c2" culture="Culture.empire" />
+  <NPCCharacter id="lord_NE9_l" culture="Culture.empire" />
+  <NPCCharacter id="lord_NE9_s" culture="Culture.empire" />
+  <NPCCharacter id="lord_NE9_d" culture="Culture.empire" />
+
+  <!-- Harad (culture id aserai) -->
+  <NPCCharacter id="lord_3_13_1" culture="Culture.aserai" />
+  <NPCCharacter id="lord_3_13_2" culture="Culture.aserai" />
+  <NPCCharacter id="lord_3_14_1" culture="Culture.aserai" />
+  <NPCCharacter id="lord_3_15_1" culture="Culture.aserai" />
+  <NPCCharacter id="lord_3_15_2" culture="Culture.aserai" />
+  <NPCCharacter id="lord_3_16_1" culture="Culture.aserai" />
+  <NPCCharacter id="lord_3_17_1" culture="Culture.aserai" />
+  <NPCCharacter id="lord_3_17_2" culture="Culture.aserai" />
+  <NPCCharacter id="lord_3_18_1" culture="Culture.aserai" />
+  <NPCCharacter id="lord_3_18_2" culture="Culture.aserai" />
+  <NPCCharacter id="lord_3_18_3" culture="Culture.aserai" />
+  <NPCCharacter id="lord_3_18_4" culture="Culture.aserai" />
+  <NPCCharacter id="lord_3_19_1" culture="Culture.aserai" />
+  <NPCCharacter id="lord_3_19_2" culture="Culture.aserai" />
+  <NPCCharacter id="lord_3_19_3" culture="Culture.aserai" />
+  <NPCCharacter id="lord_3_20_1" culture="Culture.aserai" />
+  <NPCCharacter id="lord_3_20_2" culture="Culture.aserai" />
+  <NPCCharacter id="lord_3_21_1" culture="Culture.aserai" />
+  <NPCCharacter id="lord_3_22_1" culture="Culture.aserai" />
+  <NPCCharacter id="lord_3_22_2" culture="Culture.aserai" />
+  <NPCCharacter id="lord_3_22_3" culture="Culture.aserai" />
+  <NPCCharacter id="lord_3_22_4" culture="Culture.aserai" />
+  <NPCCharacter id="lord_3_23_1" culture="Culture.aserai" />
+  <NPCCharacter id="lord_A9_s" culture="Culture.aserai" />
+  <NPCCharacter id="lord_A9_c" culture="Culture.aserai" />
+
+  <!-- Rhun (culture id khuzait) -->
+  <NPCCharacter id="lord_6_15_1" culture="Culture.khuzait" />
+  <NPCCharacter id="lord_6_15_2" culture="Culture.khuzait" />
+  <NPCCharacter id="lord_6_16_1" culture="Culture.khuzait" />
+  <NPCCharacter id="lord_6_16_2" culture="Culture.khuzait" />
+  <NPCCharacter id="lord_6_17_1" culture="Culture.khuzait" />
+  <NPCCharacter id="lord_6_17_2" culture="Culture.khuzait" />
+  <NPCCharacter id="lord_6_18_1" culture="Culture.khuzait" />
+  <NPCCharacter id="lord_6_18_2" culture="Culture.khuzait" />
+  <NPCCharacter id="lord_6_19_1" culture="Culture.khuzait" />
+  <NPCCharacter id="lord_6_19_2" culture="Culture.khuzait" />
+  <NPCCharacter id="lord_6_20_1" culture="Culture.khuzait" />
+  <NPCCharacter id="lord_6_21_1" culture="Culture.khuzait" />
+  <NPCCharacter id="lord_6_22_1" culture="Culture.khuzait" />
+  <NPCCharacter id="lord_K9_s" culture="Culture.khuzait" />
+  <NPCCharacter id="lord_K9_c1" culture="Culture.khuzait" />
+  <NPCCharacter id="lord_K9_c2" culture="Culture.khuzait" />
+  <NPCCharacter id="lord_6_23" culture="Culture.khuzait" />
+  <NPCCharacter id="lord_6_24" culture="Culture.khuzait" />
+
+  <!-- Dale (culture id sturgia) -->
+  <NPCCharacter id="lord_2_4_1" culture="Culture.sturgia" />
+  <NPCCharacter id="lord_2_13_1" culture="Culture.sturgia" />
+  <NPCCharacter id="lord_2_13_2" culture="Culture.sturgia" />
+  <NPCCharacter id="lord_2_13_3" culture="Culture.sturgia" />
+  <NPCCharacter id="lord_2_13_4" culture="Culture.sturgia" />
+  <NPCCharacter id="lord_2_14_1" culture="Culture.sturgia" />
+  <NPCCharacter id="lord_2_14_2" culture="Culture.sturgia" />
+  <NPCCharacter id="lord_2_14_3" culture="Culture.sturgia" />
+  <NPCCharacter id="lord_2_15_1" culture="Culture.sturgia" />
+  <NPCCharacter id="lord_2_15_2" culture="Culture.sturgia" />
+  <NPCCharacter id="lord_2_15_3" culture="Culture.sturgia" />
+  <NPCCharacter id="lord_2_15_4" culture="Culture.sturgia" />
+  <NPCCharacter id="lord_2_16_1" culture="Culture.sturgia" />
+  <NPCCharacter id="lord_2_17_1" culture="Culture.sturgia" />
+  <NPCCharacter id="lord_2_18_1" culture="Culture.sturgia" />
+  <NPCCharacter id="lord_2_19_1" culture="Culture.sturgia" />
+  <NPCCharacter id="lord_2_20_1" culture="Culture.sturgia" />
+  <NPCCharacter id="lord_S8_u" culture="Culture.sturgia" />
+  <NPCCharacter id="lord_2_21_1" culture="Culture.sturgia" />
+  <NPCCharacter id="lord_2_22_1" culture="Culture.sturgia" />
+  <NPCCharacter id="lord_2_23_1" culture="Culture.sturgia" />
+  <NPCCharacter id="lord_2_24_1" culture="Culture.sturgia" />
+  <NPCCharacter id="lord_S9_m" culture="Culture.sturgia" />
+  <NPCCharacter id="lord_S9_c" culture="Culture.sturgia" />
+
+  <!-- Khand (culture id battania) -->
+  <NPCCharacter id="lord_5_1_1" culture="Culture.battania" />
+  <NPCCharacter id="lord_5_3_1" culture="Culture.battania" />
+  <NPCCharacter id="lord_5_3_2" culture="Culture.battania" />
+  <NPCCharacter id="lord_5_5_1" culture="Culture.battania" />
+  <NPCCharacter id="lord_5_13_1" culture="Culture.battania" />
+  <NPCCharacter id="lord_5_15_1" culture="Culture.battania" />
+  <NPCCharacter id="lord_5_15_2" culture="Culture.battania" />
+  <NPCCharacter id="lord_5_15_3" culture="Culture.battania" />
+  <NPCCharacter id="lord_5_14_1" culture="Culture.battania" />
+  <NPCCharacter id="lord_5_16_1" culture="Culture.battania" />
+  <NPCCharacter id="lord_5_16_2" culture="Culture.battania" />
+  <NPCCharacter id="lord_5_17_1" culture="Culture.battania" />
+  <NPCCharacter id="lord_5_18_1" culture="Culture.battania" />
+  <NPCCharacter id="lord_5_21_1" culture="Culture.battania" />
+  <NPCCharacter id="lord_5_21_2" culture="Culture.battania" />
+  <NPCCharacter id="lord_B8_l" culture="Culture.battania" />
+  <NPCCharacter id="lord_B8_s" culture="Culture.battania" />
+  <NPCCharacter id="lord_B8_c" culture="Culture.battania" />
 
 </NPCCharacters>

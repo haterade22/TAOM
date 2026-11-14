@@ -5012,6 +5012,14 @@
 	<!-- TaomSettings.cs -->
 	<string id="taom_battlehud_mcm_colour_mode" text="{=taom_battlehud_mcm_colour_mode}Battle HUD Colours" />
 	<string id="taom_battlehud_mcm_colour_mode_hint" text="{=taom_battlehud_mcm_colour_mode_hint}Changes only three rings of the round battle HUD: your player health, mount health and shield. Default keeps their stone look and colours. Each other choice draws those rings in flat colours that are easier to tell apart for that type of colour vision, on a dark track. The rings keep their order and fill as before, so their place and length also tell them apart. The career ability centre, the ammo count and all other screens do not change. A change applies in the current battle, with no restart." />
+	<string id="taom_char_title" text="{=taom_char_title}Character" />
+	<string id="taom_char_perk_or" text="{=taom_char_perk_or}or" />
+	<string id="taom_char_attribute_points" text="{=taom_char_attribute_points}Attribute Points" />
+	<string id="taom_char_next_perk_tier" text="{=taom_char_next_perk_tier}Skill {LEVEL}: next perk tier {TIER}, {COUNT} skill levels away" />
+	<string id="taom_char_next_perk_tier_one" text="{=taom_char_next_perk_tier_one}Skill {LEVEL}: next perk tier {TIER}, 1 skill level away" />
+	<string id="taom_char_all_perk_tiers" text="{=taom_char_all_perk_tiers}Skill {LEVEL}: every perk tier reached" />
+	<string id="taom_char_perk_tier_locked" text="{=taom_char_perk_tier_locked}Locked" />
+	<string id="taom_char_no_traits" text="{=taom_char_no_traits}No notable traits" />
 	<!-- InformationManagerSettingsNotice -->
 	<string id="taom_coopcompat_settings_differ" text="{=taom_coopcompat_settings_differ}Your TAOM settings differ from the host's in: {GROUPS}. Co-op may behave differently for you." />
 	<string id="taom_coopcompat_build_mismatch" text="{=taom_coopcompat_build_mismatch}Your TAOM build is not the host's build. Co-op can desync or misbehave. Install the same TAOM download as the host." />

@@ -479,7 +479,7 @@ public sealed class ChronicleService : IChronicleStoryPort
         record.Assaulted = false;
         MarkAssaultIfBesieged(definition, record);
         _announcements.Enqueue(new ChronicleAnnouncement(
-            definition.Id, definition.Title, definition.OpenText, definition.TargetSettlementId, definition.WindowDays));
+            definition.Id, definition.Title, definition.OpenText, definition.TargetSettlementId, definition.WindowDays, definition.Image));
         _logger.LogInfo($"[WarChronicle] '{definition.Id}' opened on day {Day(now)}: {definition.TargetSettlementId}, "
                         + $"{string.Join("+", definition.Attackers)} against {definition.Defender}, closes day {Day(record.CloseDay)}.");
         return true;
@@ -686,11 +686,12 @@ public sealed class ChronicleService : IChronicleStoryPort
     {
         record.State = outcome;
         record.ResolvedDay = now;
-        _outcomes.Apply(definition, outcome, _world.GetNowHours());
+        var applied = _outcomes.Apply(definition, outcome, _world.GetNowHours());
         if (announce)
         {
             _announcements.Enqueue(new ChronicleAnnouncement(
-                definition.Id, definition.Title, text ?? TextFor(definition, outcome), definition.TargetSettlementId, definition.WindowDays));
+                definition.Id, definition.Title, text ?? TextFor(definition, outcome), definition.TargetSettlementId, definition.WindowDays,
+                definition.Image, applied));
         }
 
         _logger.LogInfo($"[WarChronicle] '{definition.Id}' {outcome} on day {Day(now)} ({why}).");

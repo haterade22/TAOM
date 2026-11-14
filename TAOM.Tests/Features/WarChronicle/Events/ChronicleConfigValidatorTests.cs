@@ -683,6 +683,35 @@ public class ChronicleConfigValidatorTests
     }
 
     [TestMethod]
+    public void Parse_AnImage_IsTheEventWindowsSprite_AndABlankOneIsNone()
+    {
+        var narrative = Narrative();
+        narrative["image"] = "taom_event_khazaddum";
+        var siege = Siege();
+        siege["image"] = "  ";
+
+        var events = Parse(narrative, siege, Narrative("breaking", offset: 30));
+
+        Assert.AreEqual(0, _warnings.Count, string.Join("\n", _warnings));
+        Assert.AreEqual("taom_event_khazaddum", events[0].Image);
+        Assert.IsNull(events[1].Image);
+        Assert.IsNull(events[2].Image);
+    }
+
+    [TestMethod]
+    public void Parse_AnImageThatIsNotAString_WarnsAndLoadsTheEventWithoutOne()
+    {
+        var bad = Narrative();
+        bad["image"] = 3;
+
+        var events = Parse(bad);
+
+        Assert.AreEqual(1, events.Count);
+        Assert.IsNull(events[0].Image);
+        AssertWarned("image");
+    }
+
+    [TestMethod]
     public void Parse_ATextThatIsNotAString_Warns()
     {
         var bad = Siege();
