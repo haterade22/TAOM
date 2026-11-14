@@ -261,6 +261,61 @@ public class LordFaceVarietyServiceTests
         Assert.AreEqual(0, adapter.Calls.Count);
     }
 
+    // Colour-only twins (#1221): keys that differ only in the colour fields of the first part share a face.
+
+    // Key parts 2 to 8 of the dwarf women's face in lords.xml (lord_E5_2).
+    private const string FaceTail = "67867061100A07F77BF8877718F181F184CD43B6886870FC"
+        + "00766603078BA5AA000000000000000000000000000000000000000042F43080";
+
+    private static string EngineKey(ulong part1) => "key=\"" + part1.ToString("X16") + FaceTail + "\"";
+
+    [TestMethod]
+    public void FaceShapeKey_ClearsOnlyTheColourBitsOfTheFirstPart()
+    {
+        Assert.AreEqual(EngineKey(0xFFC000003FFFFFFFUL), LordFaceVarietyService.FaceShapeKey(EngineKey(ulong.MaxValue)));
+        Assert.AreEqual("key:" + 0x0000000000002005UL.ToString("X16") + FaceTail,
+            LordFaceVarietyService.FaceShapeKey("key:" + 0x0003A80FC0002005UL.ToString("X16") + FaceTail));
+    }
+
+    [TestMethod]
+    public void FaceShapeKey_TextWithoutAKey_IsUnchanged()
+    {
+        Assert.AreEqual("SHARED", LordFaceVarietyService.FaceShapeKey("SHARED"));
+        Assert.AreEqual("min:BodyProperty.fighter_x", LordFaceVarietyService.FaceShapeKey("min:BodyProperty.fighter_x"));
+        Assert.AreEqual("", LordFaceVarietyService.FaceShapeKey(""));
+    }
+
+    [TestMethod]
+    public void Run_KeysDifferingOnlyInColour_AreGroupedAndRolled()
+    {
+        // lord_E5_2 and lord_E1_3, lord_E1_6, lord_E4_4: one face, different hair, skin and bits 36-47.
+        var adapter = new FakeHeroFaceAdapter()
+            .Add(Hero("lord_E5_2", key: EngineKey(0x0003800C40002005UL), race: "dwarf", female: true))
+            .Add(Hero("lord_E1_3", key: EngineKey(0x0003A80FC0002005UL), race: "dwarf", female: true))
+            .Add(Hero("lord_E1_6", key: EngineKey(0x0003A80400002005UL), race: "dwarf", female: true))
+            .Add(Hero("lord_E4_4", key: EngineKey(0x0003800080002005UL), race: "dwarf", female: true));
+
+        var report = Build(adapter).Run();
+
+        CollectionAssert.AreEqual(new[] { "lord_E1_6", "lord_E4_4", "lord_E5_2" }, RolledIds(adapter).ToArray());
+        Assert.AreEqual(3, report.RolledAroundOwnFace);
+    }
+
+    [TestMethod]
+    public void Run_KeysDifferingJustOutsideTheColourBits_AreNotGrouped()
+    {
+        const ulong face = 0x0003800C40002005UL;
+        var adapter = new FakeHeroFaceAdapter()
+            .Add(Hero("a", key: EngineKey(face)))
+            .Add(Hero("b", key: EngineKey(face ^ (1UL << 29))))
+            .Add(Hero("c", key: EngineKey(face ^ (1UL << 54))));
+
+        var report = Build(adapter).Run();
+
+        Assert.AreEqual(0, adapter.Calls.Count);
+        Assert.AreEqual(0, report.StillShared.Count);
+    }
+
     [TestMethod]
     public void Run_UniqueFaces_ProduceNoRolls()
     {

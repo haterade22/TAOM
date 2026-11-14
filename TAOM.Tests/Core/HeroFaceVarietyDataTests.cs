@@ -23,8 +23,11 @@ namespace TAOM.Tests.Core;
 [TestClass]
 public class HeroFaceVarietyDataTests
 {
-    /// <summary>Rule B count on the data of 2026-10-20, after the Harad, Umbar and creature groups moved to templates.</summary>
-    private const int MaxRolledAroundOwnFace = 213;
+    /// <summary>
+    /// Rule B count: 216 on the data of 2026-11-14, when rule B started to ignore the colour fields and took
+    /// in the six colour-only twins of #1221 (210 before).
+    /// </summary>
+    private const int MaxRolledAroundOwnFace = 216;
 
     private sealed record Npc(string Id, string Culture, string Race, bool IsFemale, string Key, bool Spread, bool Explicit);
 
@@ -136,6 +139,32 @@ public class HeroFaceVarietyDataTests
             + "shared group onto its culture's template. Lower the ceiling when a group moves; raise it only "
             + "on purpose.");
         Console.WriteLine($"[HeroFaceVariety] heroes={heroes.Count} ruleA={report.RolledInRange} ruleB={report.RolledAroundOwnFace}");
+    }
+
+    /// <summary>
+    /// Heroes whose key differs from another hero's only in colour (#1221): before rule B ignored the colour
+    /// fields, each counted as a unique face and kept the other's face in other colours.
+    /// </summary>
+    [TestMethod]
+    public void Data_ColourOnlyTwins_AreRolledAroundTheirOwnFace()
+    {
+        var (heroes, leaders) = LoadCampaignHeroes();
+        var adapter = BuildAdapter(heroes, leaders);
+
+        new LordFaceVarietyService(adapter, Substitute.For<IModLogger>()).Run();
+
+        var rolled = new HashSet<string>(adapter.Calls.Where(c => c.Kind == "own").Select(c => c.Id), StringComparer.Ordinal);
+        var groups = new[]
+        {
+            new[] { "lord_E1_3", "lord_E1_6", "lord_E4_4", "lord_E5_2", "lord_E6_2", "lord_E6_3", "lord_E7_11" },
+            new[] { "lord_E1_11", "lord_E2_2", "lord_E3_2", "lord_E3_4", "lord_E3_5", "lord_E4_2" },
+            new[] { "lord_1_9_5", "lord_AN4_3", "lord_1_45_4" },
+        };
+        foreach (var group in groups)
+        {
+            var kept = group.Where(id => !rolled.Contains(id)).ToList();
+            Assert.AreEqual(1, kept.Count, "one anchor should keep the face, the rest be rolled; kept: " + string.Join(", ", kept));
+        }
     }
 
     [TestMethod]
