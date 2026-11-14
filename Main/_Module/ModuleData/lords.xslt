@@ -15573,7 +15573,7 @@
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
                 <BodyProperties version="4" weight="0.5" build="0.5" key="00064005802C100244849395E765385463ABA4846AA46E7A788D797974658C8901777613077C2D3C00000000000000000000000000000000000000002CEC40C3" age="21" />
-                <BodyPropertiesMax version="4" age="22" weight="0.6" build="0.6" key="00164005802C100244849395E765385463ABA4846AA46E7A788D797974658C8901777613077C2D3C00000000000000000000000000000000000000002CEC40C3" />
+                <BodyPropertiesMax version="4" age="22" weight="0.6" build="0.6" key="00064005802C100244849395E765385463ABA4846AA46E7A788D797974658C8901777613077C2D3C00000000000000000000000000000000000000002CEC40C3" />
                 <hair_tags>
                     <hair_tag name="vlandia" />
                 </hair_tags>

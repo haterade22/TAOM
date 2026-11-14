@@ -68,6 +68,13 @@ public class CommentStringLoreTests
         ["str_comment_special_clan_intro_embers_of_flame.default"] = "taom_clan_intro_embers_of_flame",
     };
 
+    // Vanilla first-meeting rows a minor clan can reach that TAOM keeps because they name no Calradian clan, people
+    // or place (the Druedain's forest line). Any other row a minor clan id reaches must be one of MinorClanIntros.
+    private static readonly string[] KeptVanillaClanIntros =
+    {
+        "str_comment_special_clan_intro_forest_people.default",
+    };
+
     // Peoples, places and the Senate match in any case. The Empire words are case-sensitive and whole-word
     // ("forgotten empires" is TAOM prose), and the coin is the singular "denar" (TAOM's own rows say "denars").
     // The vanilla minor-faction names are full names, so TAOM's own "brotherhood" and "hidden" stay unflagged.
@@ -260,7 +267,9 @@ public class CommentStringLoreTests
     }
 
     // The engine looks a row up by the clan's id, so this reads the installed clan list, not a TAOM list:
-    // a minor faction or intro row an engine update adds fails here until it gets a Middle-earth line.
+    // every row a minor clan can say must be one TAOM replaced or one it approved in KeptVanillaClanIntros, and none
+    // may name a Calradian clan. A minor clan or intro row an engine update adds fails here until it gets a
+    // Middle-earth line.
     [TestMethod]
     [TestCategory("LiveInstall")]
     public void VanillaSpecialClanIntros_EveryRowAMinorClanCanSay_NamesNoCalradianClan()
@@ -277,8 +286,14 @@ public class CommentStringLoreTests
                 && minorClanIds.Contains(p.Key.Substring(SpecialClanIntroPrefix.Length).Split('.')[0]))
             .ToList();
         var offenders = said.Where(p => CalradianWord.IsMatch(WithoutKey(p.Value))).Select(p => $"{p.Key}: '{p.Value}'").ToList();
+        var unapproved = said.Select(p => p.Key)
+            .Where(k => !MinorClanIntros.ContainsKey(k) && !KeptVanillaClanIntros.Contains(k, StringComparer.Ordinal))
+            .ToList();
 
         Assert.IsTrue(said.Count >= MinorClanIntros.Count, $"only {said.Count} special clan intro rows match a minor clan id");
+        Assert.AreEqual(0, unapproved.Count,
+            "rows a minor clan can say with no TAOM line (replace them in comment_strings.xslt, or approve one that names "
+            + "no Calradian clan in KeptVanillaClanIntros): " + string.Join(", ", unapproved));
         Assert.AreEqual(0, offenders.Count, string.Join(Environment.NewLine, offenders));
     }
 

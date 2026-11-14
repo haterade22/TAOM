@@ -92,7 +92,7 @@ public class EncounterLinesScoreTests
 
         var wanted = EncounterLinesDataTests.Load(EncounterLinesDataTests.LordFile)
             .SelectMany(r => r.Tags.Select(t => t.Name)).Distinct().ToList();
-        Assert.AreEqual(9 + 5 + 1 + 4, wanted.Count, "tag names in the lord rows: " + string.Join(", ", wanted));
+        Assert.AreEqual(9 + 5 + 1 + 5, wanted.Count, "tag names in the lord rows: " + string.Join(", ", wanted));
         foreach (var name in wanted)
             Assert.IsTrue(known.Contains(name), name + " is no ConversationTag StringId: the engine asserts and the row never matches");
     }

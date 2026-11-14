@@ -116,7 +116,7 @@ No runtime configuration. All data is in the XSLT and string table. To change a 
 - `TAOM.Tests/Features/Execution/ShippedClanSideCoverageTests.cs` (`LiveInstall`): the data gate for the clans' sides, troops, leader clones and the migration's targets, described once in [alignment-aware-execution.md](alignment-aware-execution.md) ("Tests")
 - `TAOM.Tests/Features/MinorClanMigration/MinorClanMigrationServiceTests.cs` (old culture to new, already new, missing clone, unknown clan, a refusing adapter, a second run) and `MinorClanMigrationWiringTests.cs` (the module line, no hand wiring, the guarded load handler)
 - `TAOM.Tests/Core/CustomBattleTroopFilterTests.cs`: the filter marks the four clans' troops obsolete in Custom Battle, leaves leaders, clones and other troops alone, keeps the Harad rule, and is registered for `CustomGame` only
-- `TAOM.Tests/Core/CommentStringLoreTests.cs`: each of the 11 first-meeting rows comes out with its own `taom_clan_intro_*` key, keeps its `<tags>` child and names no Calradian clan; on the installed game (`LiveInstall`), every row exists, and every special clan intro row a minor clan id can reach names no Calradian clan
+- `TAOM.Tests/Core/CommentStringLoreTests.cs`: each of the 11 first-meeting rows comes out with its own `taom_clan_intro_*` key, keeps its `<tags>` child and names no Calradian clan; on the installed game (`LiveInstall`), every row exists, and every special clan intro row a minor clan id can reach is either one of the 11 replaced rows or the approved `forest_people` line, and names no Calradian clan (a clan or row an engine update adds fails until it gets a line)
 - `tools/tests/test_complete_lords_xslt.py`: `--apply` leaves the shipped `lords.xslt` (retags and clone template included) byte-identical
 - XSLT passthrough validation (all vanilla attributes preserved); string key format matches TAOM conventions
 
@@ -126,7 +126,7 @@ No runtime configuration. All data is in the XSLT and string table. To change a 
 2. An old save, loaded after the update: the log carries one `[MinorClanMigration]` line for the Grey Company and one for the Corsair Blades (and one for each clan whose templates were swapped); a second load of the same save logs none. Save, reload, and check that the Grey Company still prefers Arthedain-side contracts.
 3. Custom Battle: the Arthedain, Umbar, Dale and Dunland troop pickers do not offer the Grey Company, Corsair Blades, Beornings or Dunlending Reavers troops.
 4. Hire the Grey Company with a Free kingdom, then fight a battle: its troops carry the Arthedain banner and fight with the Arthedain ability profile, and none desert at the next daily tick.
-5. Meet a hero of the Sand-Riders, the Serpent Guard or the Wreckers for the first time: the line after the introduction names the TAOM faction, not the Jawwal, the Ghilman or the Lake Rats.
+5. Precondition: the hero's clan does not serve your kingdom (`PlayerMeetLordLogEntry` uses the special row only when `talkTroop.Clan.MapFaction != Hero.MainHero.MapFaction`, else the generic `str_comment_intro`) and you have not met the hero. Talk to a Sand-Riders, Serpent Guard, Wreckers or Dunlending Reavers hero: the line after "I am ..." is the TAOM line, not the Jawwal, the Ghilman or the Lake Rats (visual only, a person must read it). A Drúedain hero says vanilla's forest line; an Axemen of Erebor or Wild Easterlings hero says a generic line.
 
 ## Changelog
 
