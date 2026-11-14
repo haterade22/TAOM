@@ -7,10 +7,13 @@ insert_rows must leave exactly one blank line before </strings> however many bla
 had and however many times it runs, in LF and CRLF files, without touching any existing row. The
 expected text is compared whole, so a fix that overwrites the row above </strings> also fails.
 """
+import contextlib
+import io
 import os
 import sys
 import tempfile
 import unittest
+from unittest import mock
 import xml.etree.ElementTree as ET
 from pathlib import Path
 
@@ -41,6 +44,59 @@ def _block(prefix):
     return [f"  <!-- {h.MARKER} -->", "  <!-- Foo -->",
             f'  <string id="taom_{prefix}_a" text="{{=taom_{prefix}_a}}Alpha" />',
             f'  <string id="taom_{prefix}_b" text="{{=taom_{prefix}_b}}Beta" />']
+
+
+class ControlCharacterRefusalTests(unittest.TestCase):
+    """#702: a C# default with \\n, \\r or \\t would land raw in the XML attribute, which XML reads back
+    as a space, so the registered English would differ from the inline default."""
+
+    def test_unescape_CSharpNewlineEscape_BecomesARealNewline(self):
+        # The refusal exists because of this: the escape reaches the row as a control character.
+        self.assertEqual("a\n\nb", h.unescape("a\\n\\nb", interpolated=False))
+
+    def test_unescape_EscapedBackslashBeforeN_StaysABackslashAndN(self):
+        # C# "a\\nb" is a backslash and an n, not a newline, so the refusal must not fire on it.
+        self.assertEqual("a\\nb", h.unescape("a\\\\nb", interpolated=False))
+        self.assertEqual([], h.control_character_rows([("taom_x", h.unescape("a\\\\nb", False), "A.cs", 1)]))
+
+    def test_control_character_rows_NewlineTabOrCarriageReturn_AreListed(self):
+        rows = [("taom_n", "a\nb", "Main/A.cs", 3), ("taom_t", "a\tb", "Main/B.cs", 4),
+                ("taom_r", "a\rb", "Main/C.cs", 5), ("taom_ok", "a{newline}b", "Main/D.cs", 6)]
+        self.assertEqual(["taom_n", "taom_t", "taom_r"], [r[0] for r in h.control_character_rows(rows)])
+
+    def test_control_character_rows_PlainDefaults_ListNothing(self):
+        self.assertEqual([], h.control_character_rows(_rows("x")))
+
+    def _main(self, mode, declared):
+        out, err = io.StringIO(), io.StringIO()
+        with mock.patch.object(sys, "argv", ["harvest_literal_loc_keys.py", mode]), \
+             mock.patch.object(h, "declared_keys", return_value=declared), \
+             mock.patch.object(h, "registered_keys", return_value=set()), \
+             mock.patch.object(h, "insert_rows") as insert, \
+             contextlib.redirect_stdout(out), contextlib.redirect_stderr(err):
+            code = h.main()
+        return code, insert, err.getvalue()
+
+    def test_main_ApplyWithANewlineDefault_RefusesAndWritesNothing(self):
+        declared = {"taom_ok": ("Fine", "Main/Features/Foo/Foo.cs", 1),
+                    "taom_nl": ("a\n\nb", "Main/Features/Foo/Foo.cs", 9)}
+        code, insert, err = self._main("--apply", declared)
+        self.assertEqual(1, code)
+        insert.assert_not_called()
+        self.assertIn("taom_nl", err)
+        self.assertIn("Main/Features/Foo/Foo.cs:9", err)
+        self.assertIn("{newline}", err)
+        self.assertNotIn("taom_ok", err)
+
+    def test_main_DryRunWithATabDefault_Refuses(self):
+        code, _insert, err = self._main("--dry-run", {"taom_tab": ("a\tb", "Main/A.cs", 2)})
+        self.assertEqual(1, code)
+        self.assertIn("taom_tab", err)
+
+    def test_main_ApplyWithPlainDefaults_Writes(self):
+        code, insert, _err = self._main("--apply", {"taom_ok": ("Fine", "Main/Features/Foo/Foo.cs", 1)})
+        self.assertEqual(0, code)
+        insert.assert_called_once()
 
 
 class InsertRowsBlankLineTests(unittest.TestCase):

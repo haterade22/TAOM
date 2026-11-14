@@ -918,4 +918,57 @@ public class LongDefeatShippedConfigTests
         Assert.AreEqual(4, offer.Count);
         Assert.IsTrue(offer.All(c => c.LoadoutFor(helms.DefenderCulture) != null));
     }
+
+    // The fow_ copies and the campaign troops past them, by id: an upgrade line climbs into troops_rohan.xml, which loads in a CustomGame too (SubModule.xml).
+    private static Dictionary<string, XElement> LineTroops() =>
+        new[] { Path.Combine(ModuleData, "fords_of_war", "fords_troops.xml"), Path.Combine(ModuleData, "troops", "troops_rohan.xml") }
+            .SelectMany(path => XDocument.Load(path).Descendants("NPCCharacter"))
+            .GroupBy(e => (string)e.Attribute("id")!)
+            .ToDictionary(g => g.Key, g => g.First());
+
+    private static string CampaignId(string troopId) => troopId.StartsWith("fow_", StringComparison.Ordinal) ? troopId.Substring(4) : troopId;
+
+    [TestMethod]
+    public void ShippedShop_EveryUpgradeStep_IsAStepOfTheCampaignTree_UpALevel_InTheDefenderCulture_FromATroopTheRunCanHave()
+    {
+        var (catalog, _) = Load();
+        Assert.IsTrue(catalog.TryGetFortress("helms", out var helms));
+        var steps = helms.Shop.Upgrades;
+        Assert.AreEqual(9, steps.Count, "the Rohan lines: five Westfold steps, two Eastfold, two Edoras");
+
+        var troops = LineTroops();
+        var reachable = new HashSet<string>(helms.Garrison.Select(g => g.TroopId).Concat(helms.Shop.Offers.Select(o => o.TroopId)), StringComparer.OrdinalIgnoreCase);
+        for (var grew = true; grew;)
+        {
+            grew = false;
+            foreach (var step in steps.Where(s => reachable.Contains(s.FromTroop)))
+                grew |= reachable.Add(step.ToTroop);
+        }
+
+        var wrong = new List<string>();
+        foreach (var step in steps)
+        {
+            if (!troops.TryGetValue(step.FromTroop, out var from) || !troops.TryGetValue(step.ToTroop, out var to))
+            {
+                wrong.Add(step.Id + ": a troop is in neither troop file");
+                continue;
+            }
+
+            if (Culture(from) != helms.DefenderCulture || Culture(to) != helms.DefenderCulture)
+                wrong.Add(step.Id + ": not the " + helms.DefenderCulture + " culture");
+            if (!((int)to.Attribute("level")! > (int)from.Attribute("level")!))
+                wrong.Add(step.Id + ": the level does not rise");
+            var targets = troops.TryGetValue(CampaignId(step.FromTroop), out var campaign)
+                ? campaign.Descendants("upgrade_target").Select(t => ((string)t.Attribute("id")!).Replace("NPCCharacter.", "")).ToList()
+                : new List<string>();
+            if (!targets.Contains(CampaignId(step.ToTroop)))
+                wrong.Add(step.Id + ": not a step of the campaign tree");
+            if (!reachable.Contains(step.FromTroop))
+                wrong.Add(step.Id + ": no garrison row, pack or earlier step gives its troop");
+            if (!step.Name.StartsWith("{=TAOM_LD_Up_", StringComparison.Ordinal))
+                wrong.Add(step.Id + ": the name is not a TAOM_LD_Up_ key");
+        }
+
+        CollectionAssert.AreEqual(Array.Empty<string>(), wrong, string.Join("; ", wrong));
+    }
 }

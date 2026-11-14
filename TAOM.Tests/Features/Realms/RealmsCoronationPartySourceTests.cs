@@ -30,8 +30,10 @@ public class RealmsCoronationPartySourceTests
     {
         var body = LeadPartyBody();
 
+        StringAssert.Matches(body, new Regex(@"var current = hero\.PartyBelongedTo;"),
+            "the party he rides in is whatever party holds him, not only the main party");
         StringAssert.Matches(body, new Regex(
-            @"if \(current != null && current\.LeaderHero != hero\)\s*current\.MemberRoster\.AddToCounts\(hero\.CharacterObject, -1\);"));
+            @"if \(current != null && current\.LeaderHero != hero\)\s*\{?\s*current\.MemberRoster\.AddToCounts\(hero\.CharacterObject, -1\);"));
         Assert.IsFalse(body.Contains("hero.PartyBelongedTo == MobileParty.MainParty"),
             "the main party is only one of the parties he can ride in without leading it");
     }
@@ -41,7 +43,8 @@ public class RealmsCoronationPartySourceTests
     {
         var body = LeadPartyBody();
 
-        StringAssert.Matches(body, new Regex(@"var spawnAt = current\?\.Position \?\? MobileParty\.MainParty\.Position;"));
+        // Hero.GetCampaignPosition: the gate of the town he stays in, or the position of the party he rides in.
+        StringAssert.Matches(body, new Regex(@"var spawnAt = hero\.GetCampaignPosition\(\);"));
         StringAssert.Matches(body, new Regex(@"LordPartyComponent\.CreateLordParty\([^;]*spawnAt,"));
     }
 
@@ -51,5 +54,16 @@ public class RealmsCoronationPartySourceTests
         var body = LeadPartyBody();
 
         StringAssert.Matches(body, new Regex(@"party\.ActualClan = clan;"));
+    }
+
+    [TestMethod]
+    public void LeadParty_WithNoHome_LeavesTheClaimantInHisParty()
+    {
+        // With no seat and no home settlement no lord party can be made; removing him first would leave him partyless.
+        var body = LeadPartyBody();
+        var guard = body.IndexOf("if (home == null", System.StringComparison.Ordinal);
+        var removal = body.IndexOf("current.MemberRoster.AddToCounts(", System.StringComparison.Ordinal);
+
+        Assert.IsTrue(guard >= 0 && removal > guard, "the no-home return must come before he leaves his party");
     }
 }

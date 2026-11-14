@@ -698,10 +698,13 @@ PRISON_CODE = "PRISON_SCENE_NOT_STEALTH"
 _PRISON_SCENE_TAGS = ("stealth_agent", "prison_break_reinforcement_point")
 
 
-def _scene_files(game_modules: Path) -> dict:
-    """Lower-cased scene name -> its scene.xscene, across every module's SceneObj folder."""
+def _scene_files(game_modules: Path, only_modules=None) -> dict:
+    """Lower-cased scene name -> its scene.xscene, across every module's SceneObj folder, or across
+    only the modules named in `only_modules`."""
     out = {}
     for scene_obj in sorted(Path(game_modules).glob("*/SceneObj")):
+        if only_modules is not None and scene_obj.parent.name not in only_modules:
+            continue
         for folder in scene_obj.iterdir():
             xscene = folder / "scene.xscene"
             if xscene.is_file():

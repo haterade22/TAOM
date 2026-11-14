@@ -81,6 +81,7 @@ public class LongDefeatDirectorUpgradeTests
         Assert.AreEqual(("fow_militia", "fow_axe", 30, 1f), rig.Field.Replaces[0]);
         Assert.IsTrue(rig.Outcomes.Has("pass", LongDefeatUpgradeChecks.Id), string.Join("\n", rig.Outcomes.Lines));
         StringAssert.Contains(rig.Outcomes.Of(LongDefeatUpgradeChecks.Id).Single(), "from=fow_militia to=fow_axe ordered=30 found=30 replaced=30 read=30");
+        StringAssert.StartsWith(rig.Outcomes.Of(LongDefeatUpgradeChecks.Id).Single(), "m1u1 ", "the key names the mission: the outcome log is one per process and writes a key once");
         Assert.AreEqual(3000 - 30 * 15, rig.Session.GetView()!.Gold);
         Assert.AreEqual(0, rig.Session.GetView()!.Upgrades.Count, "no militia is left to upgrade");
         Assert.IsTrue(rig.Log.Lines.Any(l => l.StartsWith("INFO ") && l.Contains("[Upgrade]") && l.Contains("replaced 30")), string.Join("\n", rig.Log.Lines));
@@ -103,18 +104,36 @@ public class LongDefeatDirectorUpgradeTests
     }
 
     [TestMethod]
-    public void ANewSoldierThatDoesNotReadBack_Fails()
+    public void ANewSoldierThatDoesNotReadBack_Fails_AndTheLogNamesTheFirstMiss()
     {
         var rig = NewRig();
         rig.Field.StandingByTroop["fow_militia"] = 30;
         Assert.IsTrue(rig.Director.Start());
         rig.Director.Tick(0.1f);
         rig.Session.TryUpgrade(MilitiaToAxe.Id);
-        rig.Field.ReplaceAnswer = new LdUpgradeReport(30, 30, 29, null);
+        rig.Field.ReplaceAnswer = new LdUpgradeReport(30, 30, 29, null, "(1.0, 2.0, 3.0) stood at (5.0, 2.0, 3.0)");
 
         rig.Director.Tick(0.1f);
 
         Assert.IsTrue(rig.Outcomes.Has("fail", LongDefeatUpgradeChecks.Id), string.Join("\n", rig.Outcomes.Lines));
+        Assert.IsTrue(rig.Log.Lines.Any(l => l.Contains("[Upgrade]") && l.Contains(", first miss (1.0, 2.0, 3.0) stood at (5.0, 2.0, 3.0)")), string.Join("\n", rig.Log.Lines));
+    }
+
+    [TestMethod]
+    public void ASoldierFadedButNotReplaced_FailsTheCheck_AndHisGoldIsPaidBack()
+    {
+        var rig = NewRig();
+        rig.Field.StandingByTroop["fow_militia"] = 30;
+        Assert.IsTrue(rig.Director.Start());
+        rig.Director.Tick(0.1f);
+        rig.Session.TryUpgrade(MilitiaToAxe.Id);
+        rig.Field.ReplaceAnswer = new LdUpgradeReport(30, 29, 29, null);
+
+        rig.Director.Tick(0.1f);
+
+        Assert.IsTrue(rig.Outcomes.Has("fail", LongDefeatUpgradeChecks.Id), "found 30 and replaced 29: one new soldier was not active. " + string.Join("\n", rig.Outcomes.Lines));
+        Assert.AreEqual(3000 - 29 * 15, rig.Session.GetView()!.Gold);
+        Assert.IsTrue(rig.Log.Lines.Any(l => l.Contains("[Upgrade]") && l.Contains("replaced 29") && l.Contains("paid 435")), string.Join("\n", rig.Log.Lines));
     }
 
     [TestMethod]

@@ -2705,8 +2705,35 @@ class PurchaseJudgeTests(unittest.TestCase):
         return {"fortress": "helms", "purchases": list(purchases), "boons": list(boons), "waves": list(waves), "fortifications": levels,
                 "gold": {"spent": sum(spent_on.values()), "spentOn": spent_on}, **more}
 
+    UPGRADES = {"a>b": 15}
+
     def problem(self, report):
-        return ld.purchase_problem(report, "helms", fort=self.PLAN, offers=self.OFFERS, percents=self.PERCENTS)
+        return ld.purchase_problem(report, "helms", fort=self.PLAN, offers=self.OFFERS, percents=self.PERCENTS, upgrades=self.UPGRADES)
+
+    def upgrade(self, wave, base, price, count, id="a>b"):
+        return {**self.buy(wave, "upgrade", base, price, id=id), "count": count}
+
+    def test_an_upgrade_replays_at_its_step_price_times_its_count_with_no_boon_factor(self):
+        pick = {"pick": 1, "taken": "haggler", "takenBeforeWave": 2}
+
+        self.assertIsNone(self.problem(self.report([self.upgrade(2, 15, 45, 3)])))
+        self.assertIsNone(self.problem(self.report([self.upgrade(2, 15, 45, 3)], boons=[pick])), "a price boon does not touch an upgrade")
+        self.assertIn("paid 36", self.problem(self.report([self.upgrade(2, 15, 36, 3)], boons=[pick])))
+        self.assertIn("paid 44", self.problem(self.report([self.upgrade(2, 15, 44, 3)])))
+
+    def test_an_upgrade_needs_a_step_of_the_shop_its_price_for_one_and_a_count(self):
+        self.assertIn("basePrice", self.problem(self.report([self.upgrade(2, 15, 15, 1, id="x>y")])))
+        self.assertIn("basePrice", self.problem(self.report([self.upgrade(2, 20, 20, 1)])))
+        self.assertIn("count", self.problem(self.report([self.upgrade(2, 15, 15, 0)])))
+        self.assertIn("count", self.problem(self.report([self.buy(2, "upgrade", 15, 15, id="a>b")])), "a row with no count")
+        self.assertIn("count", self.problem(self.report([self.upgrade(2, 15, 15, True)])), "a bool is no count")
+
+    def test_upgrade_gold_belongs_in_the_upgrades_sink(self):
+        report = self.report([self.upgrade(2, 15, 45, 3)])
+        report["gold"]["spentOn"]["upgrades"] = 0
+        report["gold"]["spentOn"]["packs"] = 45
+
+        self.assertIn("gold.spentOn", self.problem(report))
 
     def row(self, wave, volley=None, tower=None):
         return {"wave": wave, "volley": volley or dict(NO_VOLLEYS["volley"]), "towerVolley": tower or dict(NO_VOLLEYS["towerVolley"])}
@@ -3187,6 +3214,131 @@ class EngineManifestTests(unittest.TestCase):
         for detail in (self.RESTORE_PASS, self.USE_PASS, self.UNJUDGED):
             self.assertIn('"' + detail + '"', text)
         self.assertIn('" reason=run-ended"', text)
+
+
+class UpgradeManifestTests(unittest.TestCase):
+    """tools/ingame_checks/1161.toml judges the line LongDefeatUpgradeChecks writes (#1161): the detail its C# tests pin, a fail, and the none-found skip, which reads NOT REACHED."""
+
+    TEST_FILE = REPO / "TAOM.Tests" / "Features" / "LongDefeat" / "LongDefeatDirectorUpgradeTests.cs"
+    PINNED = "from=fow_militia to=fow_axe ordered=30 found=30 replaced=30 read=30"
+
+    def setUp(self):
+        self.manifest = iv.load_manifest(REPO / "tools" / "ingame_checks" / "1161.toml", 1161)
+
+    def verdict(self, result, detail):
+        row = next(c for c in self.manifest.checks if c.id == "taom.long-defeat.upgrade")
+        line = f"[2026-11-13 10:00:00] [INFO] [Check] id={row.id} result={result} {detail}"
+        return iv.judge_segment(row, [(None, 1, line)], []).verdict
+
+    def test_the_pinned_pass_passes_and_a_fail_fails(self):
+        self.assertEqual(self.verdict("pass", "w=1 " + self.PINNED), iv.PASS)
+        self.assertEqual(self.verdict("fail", "w=1 from=fow_militia to=fow_axe ordered=30 found=30 replaced=30 read=29"), iv.FAIL)
+
+    def test_a_none_found_skip_is_not_reached(self):
+        self.assertEqual(self.verdict("skip", "w=1 from=fow_militia to=fow_axe ordered=30 found=0 replaced=0 read=0 reason=none-found"), iv.NOT_REACHED)
+
+    def test_the_detail_is_the_one_the_game_tests_pin(self):
+        self.assertIn('"' + self.PINNED + '"', self.TEST_FILE.read_text(encoding="utf-8"))
+
+
+class ShippedUpgradesTests(unittest.TestCase):
+    """shipped_upgrades reads the steps of the fortress's shop as the game's UpgradesReader keeps them (#1161)."""
+
+    def test_the_shipped_shop_lists_the_nine_rohan_steps(self):
+        steps = ld.shipped_upgrades("helms")
+
+        self.assertEqual(9, len(steps))
+        self.assertEqual(15, steps["fow_rohan_westfold_militiaman>fow_rohan_westfold_axeman"])
+        self.assertEqual(90, steps["rohan_edoras_golden_hall_kings_own_rider>fow_rohan_edoras_golden_hall_supreme_rider"])
+
+    def test_a_repeated_step_keeps_the_first_and_a_row_with_no_whole_price_is_skipped(self):
+        with tempfile.TemporaryDirectory() as folder:
+            path = Path(folder) / "shop.json"
+            path.write_text(json.dumps({"shops": {"rohan": {"upgrades": [
+                {"from": "a", "to": "b", "price": 5}, {"from": "A", "to": "B", "price": 9}, {"from": "c", "to": "d", "price": "x"}, {"from": "e", "price": 5}]}}}), encoding="utf-8")
+
+            self.assertEqual({"a>b": 5}, ld.shipped_upgrades("helms", path=path))
+
+
+class UpgradeJudgeTests(unittest.TestCase):
+    """#1161: each upgrade purchase owes its own upgrade pass line (LongDefeatUpgradeChecks.Replaced, one line per order); a skip pays nothing."""
+
+    STEP = "fow_rohan_westfold_militiaman>fow_rohan_westfold_axeman"
+    DETAIL = "w=2 from=fow_rohan_westfold_militiaman to=fow_rohan_westfold_axeman ordered=3 found=3 replaced=3 read=3"
+    HEAD_LINE = "[2026-11-13 20:00:00] [INFO] [Check] id=taom.long-defeat.upgrade result={} "
+
+    def setUp(self):
+        ld.target_waves = 2
+        ld.tree_head = HEAD
+        ld.expected_report = {"startGold": 5000}
+        self.addCleanup(setattr, ld, "target_waves", None)
+        self.addCleanup(setattr, ld, "tree_head", None)
+        self.addCleanup(setattr, ld, "expected_report", {})
+
+    def report(self, orders=1):
+        bought = [{"beforeWave": 2, "kind": "upgrade", "id": self.STEP, "level": 0, "basePrice": 15, "price": 45, "share": 0.0, "count": 3} for _ in range(orders)]
+        spent = 45 * orders
+        return {**REPORT, "wavesCleared": 2, "wavesFelled": 0, "startGold": 5000, "waves": [wave_row(1), wave_row(2)], "purchases": bought,
+                "gold": {"spent": spent, "spentOn": {"packs": 0, "gate": 0, "towers": 0, "fieldCare": 0, "volley": 0, "upgrades": spent}}}
+
+    def log(self, *extra):
+        return log_of(ld.REQUIRED_CHECKS, 2) + "\n" + "\n".join(extra)
+
+    def line(self, result):
+        return self.HEAD_LINE.format(result) + self.DETAIL
+
+    def test_a_report_that_bought_an_upgrade_replays_from_the_shipped_shop(self):
+        self.assertIsNone(ld.purchase_problem(self.report()))
+
+    def test_a_run_that_bought_an_upgrade_owes_its_pass_line(self):
+        code, why = ld.judge(FINAL, self.report(), self.log())
+        self.assertEqual(code, 1)
+        self.assertIn("taom.long-defeat.upgrade", why)
+
+        code, why = ld.judge(FINAL, self.report(), self.log(self.line("pass")))
+        self.assertEqual(code, 0, why)
+        self.assertIn("upgrade", why)
+
+    def test_each_purchase_owes_its_own_pass_line(self):
+        code, why = ld.judge(FINAL, self.report(orders=2), self.log(self.line("pass"), self.line("skip") + " reason=none-found"))
+        self.assertEqual(code, 1)
+        self.assertIn("a pass with w=2 from=fow_rohan_westfold_militiaman to=fow_rohan_westfold_axeman replaced=3", why)
+
+        self.assertEqual(ld.judge(FINAL, self.report(orders=2), self.log(self.line("pass"), self.line("pass")))[0], 0)
+
+    def test_a_pass_of_another_wave_step_or_count_pays_nothing(self):
+        for detail in ("w=99 from=unrelated to=wrong ordered=1 found=1 replaced=1 read=1", "detail=1",
+                       "w=3 from=fow_rohan_westfold_militiaman to=fow_rohan_westfold_axeman ordered=3 found=3 replaced=3 read=3",
+                       "w=2 from=fow_rohan_westfold_militiaman to=fow_rohan_westfold_axeman ordered=3 found=2 replaced=2 read=2"):
+            with self.subTest(detail=detail):
+                code, why = ld.judge(FINAL, self.report(), self.log(self.HEAD_LINE.format("pass") + detail))
+                self.assertEqual(code, 1, detail)
+                self.assertIn("taom.long-defeat.upgrade", why)
+
+    def test_the_step_matches_with_case_ignored_as_the_game_reads_ids(self):
+        line = self.HEAD_LINE.format("pass") + self.DETAIL.replace("fow_rohan_westfold_axeman", "FOW_Rohan_Westfold_Axeman")
+        self.assertEqual(ld.judge(FINAL, self.report(), self.log(line))[0], 0)
+
+    def test_a_lost_run_that_bought_an_upgrade_owes_its_pass_line_too(self):
+        lost = {"reason": "lost_defenders", "expect": "lost"}
+        report = {**self.report(), "reason": "lost_defenders", "final": False, "wavesCleared": 0, "waves": []}
+
+        code, why = ld.judge(lost, report, LOSE_LOG)
+        self.assertEqual(code, 1)
+        self.assertIn("taom.long-defeat.upgrade", why)
+
+        self.assertEqual(ld.judge(lost, report, LOSE_LOG + "\n" + self.line("pass"))[0], 0)
+
+    def test_a_skip_does_not_pay_the_debt(self):
+        code, why = ld.judge(FINAL, self.report(), self.log(self.line("skip") + " reason=none-found"))
+
+        self.assertEqual(code, 1)
+        self.assertIn("taom.long-defeat.upgrade", why)
+
+    def test_a_run_that_bought_none_owes_none(self):
+        self.assertEqual(0, ld.upgrade_purchases(self.report(orders=0)))
+        self.assertEqual(ld.judge(FINAL, self.report(orders=0), self.log())[0], 0)
+        self.assertEqual(0, ld.upgrade_purchases({}))
 
 
 class FieldCareJudgeTests(unittest.TestCase):

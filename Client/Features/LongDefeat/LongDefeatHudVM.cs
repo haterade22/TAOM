@@ -81,12 +81,15 @@ public sealed class LongDefeatHudVM : LongDefeatViewModel
     private bool _isKeysLocked;
     private string _boonHintText = string.Empty;
     private bool _isBoonHintVisible;
+    private string _upgradesTitle = string.Empty;
+    private bool _hasUpgrades;
 
     internal LongDefeatHudVM(LongDefeatSession session, Action leave)
     {
         _session = session;
         _leave = leave;
         Offers = new MBBindingList<LongDefeatOfferVM>();
+        Upgrades = new MBBindingList<LongDefeatUpgradeVM>();
         Boons = new MBBindingList<LongDefeatBoonVM>();
         Speeds = new MBBindingList<LongDefeatSpeedVM>();
         Fort = new LongDefeatFortVM(BuyCare, BuyGate, RepairGate, BuyVolley, BuyTowers);
@@ -161,6 +164,16 @@ public sealed class LongDefeatHudVM : LongDefeatViewModel
 
     [DataSourceProperty]
     public LongDefeatFortVM Fort { get; }
+
+    /// <summary>The upgrade steps the shop offers now (#1161): one row per step whose troop has a soldier standing and not yet sold.</summary>
+    [DataSourceProperty]
+    public MBBindingList<LongDefeatUpgradeVM> Upgrades { get; }
+
+    [DataSourceProperty]
+    public string UpgradesTitle { get => _upgradesTitle; private set => Set(ref _upgradesTitle, value, nameof(UpgradesTitle)); }
+
+    [DataSourceProperty]
+    public bool HasUpgrades { get => _hasUpgrades; private set => Set(ref _hasUpgrades, value, nameof(HasUpgrades)); }
 
     [DataSourceProperty]
     public bool IsPickVisible { get => _isPickVisible; private set => Set(ref _isPickVisible, value, nameof(IsPickVisible)); }
@@ -390,6 +403,7 @@ public sealed class LongDefeatHudVM : LongDefeatViewModel
             HornText = LongDefeatHudText.Horn();
             CloseText = LongDefeatHudText.Close();
             ApplyOffers(view);
+            ApplyUpgrades(view);
             Fort.Update(view);
             ApplyShop(view);
         }
@@ -483,6 +497,28 @@ public sealed class LongDefeatHudVM : LongDefeatViewModel
 
         for (var i = 0; i < view.Offers.Count; i++)
             Offers[i].Update(view.Offers[i], view.Gold);
+    }
+
+    /// <summary>The upgrade group under the packs: its title and one row per step on offer.</summary>
+    private void ApplyUpgrades(RunView view)
+    {
+        HasUpgrades = view.Upgrades.Count > 0;
+        UpgradesTitle = HasUpgrades ? LongDefeatHudText.UpgradesTitle() : string.Empty;
+        if (Upgrades.Count != view.Upgrades.Count)
+        {
+            Upgrades.Clear();
+            for (var i = 0; i < view.Upgrades.Count; i++)
+                Upgrades.Add(new LongDefeatUpgradeVM(Upgrade));
+        }
+
+        for (var i = 0; i < view.Upgrades.Count; i++)
+            Upgrades[i].Update(view.Upgrades[i]);
+    }
+
+    private void Upgrade(string stepId)
+    {
+        Notify(LongDefeatHudText.Refusal(_session.TryUpgrade(stepId)));
+        Refresh();
     }
 
     /// <summary>The pick group shows with the open shop while a pick is open. An offer seen for the first time raises a notice, because the panel never opens by itself for it.</summary>

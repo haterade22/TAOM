@@ -179,8 +179,8 @@ internal interface ILongDefeatBattlefieldAdapter
     bool TryHitKeys(object? affected, object? affector, out AgentKey victim, out AgentKey attacker);
 
     /// <summary>
-    /// The defenders an upgrade may replace (#1161), counted by troop id without case: live humans on foot of the defending team, not the player, not a hero, not working an engine and not on a
-    /// tower post. Main thread.
+    /// The defenders an upgrade may replace (#1161), counted by troop id without case: live humans on foot of the defending team in a formation, not the player or the lord, not a hero, not
+    /// running away, not working an engine and not on a tower post. Main thread.
     /// </summary>
     IReadOnlyDictionary<string, int> StandingDefendersByTroop();
 

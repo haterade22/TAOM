@@ -94,6 +94,12 @@ class SelectionTests(unittest.TestCase):
         self.assertIn("armory-refs", ids)
         self.assertIn("polearm-shield", ids)
 
+    def test_the_action_files_the_mbproj_audit_reads_select_it(self):
+        for name in ("project.mbproj", "action_sets.xml", "action_types.xml"):
+            path = f"Main/_Module/ModuleData/{name}"
+            self.assertIn("mbproj", _ids(dg.select(dg.GATES, [path])), path)
+        self.assertNotIn("mbproj", _ids(dg.select(dg.GATES, [TROOPS])))
+
     def test_the_banner_sprite_folder_selects_banner_sheets(self):
         sprite = "Main/_Module/GUI/SpriteParts/ui_taom_bannericons/10000.png"
         self.assertIn("banner-sheets", [g.id for g in dg.select(dg.GATES, [sprite])])
@@ -219,6 +225,12 @@ class VerdictTests(unittest.TestCase):
 
     def test_exit_two_is_not_run(self):
         self.assertEqual(dg.verdict(2, "no install")[0], "NOT RUN")
+
+    def test_exit_two_names_the_tools_error_line(self):
+        # The output of a NOT RUN gate is not printed, so the reason must carry the file the tool names.
+        status, why = dg.verdict(2, "PASS: x\nERROR: DE/loc_settlements.xml does not parse (line 3)\n")
+        self.assertEqual("NOT RUN", status)
+        self.assertIn("DE/loc_settlements.xml does not parse", why)
 
     def test_skipped_output_is_not_run_even_at_exit_zero(self):
         status, why = dg.verdict(0, "PASS\ncheck_race_morph_channels: SKIPPED, no FBX")

@@ -34,6 +34,161 @@ def _lang(attrs: str, encoding="utf-8") -> str:
     return f'<?xml version="1.0" encoding="{encoding}"?>\n<LanguageData {attrs}>\n</LanguageData>\n'
 
 
+def _strings(rows) -> str:
+    body = "".join(f'  <string id="{sid}" text="{text}" />\n' for sid, text in rows)
+    return f'<?xml version="1.0" encoding="utf-8"?>\n<base><strings>\n{body}</strings></base>\n'
+
+
+def _coverage_tree(mods: Path, langs=None) -> None:
+    """A TAOM_Map and Armory pair the coverage half can measure: two settlement names and two Armory
+    rows, each language translating the first of each."""
+    _write(mods / "TAOM_Map/ModuleData/settlements.xml",
+           '<Settlements>\n  <Settlement id="town_a" name="{=sa}Alpha" />\n'
+           '  <Settlement id="town_b" name="{=sb}Beta" />\n</Settlements>\n')
+    _write(mods / "LOTRLOME_Armory/ModuleData/Languages/loc_x.xml",
+           _strings([("a1", "{=ka}Sword"), ("a2", "{=kb}Spear")]))
+    for lang in (cx.LANGUAGES if langs is None else langs):
+        _write(mods / "TAOM_Map/ModuleData/Languages" / lang / "loc_settlements.xml",
+               _strings([("sa", "Alfa"), ("sb", "Beta")]))
+        _write(mods / "LOTRLOME_Armory/ModuleData/Languages" / lang / "loc_x.xml",
+               _strings([("ka", "Spada"), ("kb", "Spear")]))
+
+
+class CoverageTests(unittest.TestCase):
+    """#815: the coverage half reads an absent file as untranslated and an unreadable tree as an error,
+    never as perfect coverage."""
+
+    def setUp(self):
+        self._tmp = tempfile.TemporaryDirectory()
+        self.mods = Path(self._tmp.name)
+
+    def tearDown(self):
+        self._tmp.cleanup()
+
+    def _untranslated(self, lang="IT"):
+        with contextlib.redirect_stderr(io.StringIO()):
+            return cx.untranslated(self.mods, lang)
+
+    def test_untranslated_healthy_tree_counts_the_rows_still_english(self):
+        _coverage_tree(self.mods)
+        self.assertEqual((1, 1), self._untranslated())
+
+    def test_untranslated_missing_language_folders_count_every_row(self):
+        _coverage_tree(self.mods, langs=[])
+        self.assertEqual((2, 2), self._untranslated())
+
+    def test_untranslated_missing_target_file_counts_every_row_of_its_source(self):
+        _coverage_tree(self.mods)
+        (self.mods / "TAOM_Map/ModuleData/Languages/IT/loc_settlements.xml").unlink()
+        (self.mods / "LOTRLOME_Armory/ModuleData/Languages/IT/loc_x.xml").unlink()
+        self.assertEqual((2, 2), self._untranslated())
+
+    def test_untranslated_missing_settlements_xml_exits_2(self):
+        _coverage_tree(self.mods)
+        (self.mods / "TAOM_Map/ModuleData/settlements.xml").unlink()
+        with self.assertRaises(SystemExit) as caught:
+            self._untranslated()
+        self.assertEqual(2, caught.exception.code)
+
+    def test_untranslated_no_armory_english_files_exits_2(self):
+        _coverage_tree(self.mods)
+        (self.mods / "LOTRLOME_Armory/ModuleData/Languages/loc_x.xml").unlink()
+        with self.assertRaises(SystemExit) as caught:
+            self._untranslated()
+        self.assertEqual(2, caught.exception.code)
+
+    def test_untranslated_unparseable_english_file_exits_2(self):
+        _coverage_tree(self.mods)
+        _write(self.mods / "LOTRLOME_Armory/ModuleData/Languages/loc_x.xml", "<strings><string")
+        with self.assertRaises(SystemExit) as caught:
+            self._untranslated()
+        self.assertEqual(2, caught.exception.code)
+
+    def test_untranslated_unparseable_target_file_exits_2(self):
+        _coverage_tree(self.mods)
+        _write(self.mods / "TAOM_Map/ModuleData/Languages/IT/loc_settlements.xml", "<strings><string")
+        with self.assertRaises(SystemExit) as caught:
+            self._untranslated()
+        self.assertEqual(2, caught.exception.code)
+
+    def test_untranslated_truncated_settlements_xml_exits_2(self):
+        # A cut file still holds some {=KEY} names, so a regex alone would count fewer rows and pass.
+        _coverage_tree(self.mods)
+        _write(self.mods / "TAOM_Map/ModuleData/settlements.xml",
+               '<Settlements>\n  <Settlement id="town_a" name="{=sa}Alpha" />\n  <Settle')
+        with self.assertRaises(SystemExit) as caught:
+            self._untranslated()
+        self.assertEqual(2, caught.exception.code)
+
+    def _update(self, baseline_json, current, argv=()):
+        baseline = self.mods / "baseline.json"
+        baseline.write_text(baseline_json, encoding="utf-8")
+        out, err = io.StringIO(), io.StringIO()
+        with mock.patch.object(sys, "argv", ["check_external_loc_coverage.py", "--update-baseline", *argv]), \
+             mock.patch.object(cx, "BASELINE", baseline), \
+             mock.patch.object(cx, "measure", lambda: (current, self.mods)), \
+             contextlib.redirect_stdout(out), contextlib.redirect_stderr(err):
+            code = cx.main()
+        return code, baseline.read_text(encoding="utf-8"), err.getvalue()
+
+    def _counts(self, **changed):
+        current = {lang: {"taom_map": 5, "armory": 5} for lang in cx.LANGUAGES}
+        for key, value in changed.items():
+            lang, module = key.split("__")
+            current[lang][module] = value
+        return current
+
+    def test_update_baseline_count_falling_to_zero_is_refused_and_writes_nothing(self):
+        before = '{"TR": {"armory": 58, "taom_map": 5}}'
+        code, written, err = self._update(before, self._counts(TR__armory=0))
+        self.assertEqual(1, code)
+        self.assertEqual(before, written)
+        self.assertIn("TR/armory: 58 -> 0", err)
+
+    def test_update_baseline_count_falling_to_zero_is_written_with_allow_drop(self):
+        code, written, _ = self._update('{"TR": {"armory": 58, "taom_map": 5}}',
+                                        self._counts(TR__armory=0), ["--allow-drop"])
+        self.assertEqual(0, code)
+        self.assertEqual(0, cx.json.loads(written)["TR"]["armory"])
+
+    def test_update_baseline_count_falling_above_zero_is_written(self):
+        code, written, _ = self._update('{"TR": {"armory": 58, "taom_map": 5}}', self._counts(TR__armory=3))
+        self.assertEqual(0, code)
+        self.assertEqual(3, cx.json.loads(written)["TR"]["armory"])
+
+    def test_update_baseline_unreadable_baseline_exits_2_and_writes_nothing(self):
+        before = '<<<<<<< HEAD\n{"TR": {"armory": 58, "taom_map": 5}}\n=======\n'
+        code, written, err = self._update(before, self._counts())
+        self.assertEqual(2, code)
+        self.assertEqual(before, written)
+        self.assertIn("baseline.json", err)
+
+    def _check(self, baseline_json, current):
+        baseline = self.mods / "baseline.json"
+        baseline.write_text(baseline_json, encoding="utf-8")
+        out, err = io.StringIO(), io.StringIO()
+        with mock.patch.object(sys, "argv", ["check_external_loc_coverage.py"]), \
+             mock.patch.object(cx, "BASELINE", baseline), \
+             mock.patch.object(cx, "measure", lambda: (current, self.mods)), \
+             mock.patch.object(cx, "processor_mismatches", lambda *a: []), \
+             mock.patch.object(cx, "tag_report", lambda *a: None), \
+             contextlib.redirect_stdout(out), contextlib.redirect_stderr(err):
+            code = cx.main()
+        return code, err.getvalue()
+
+    def test_main_armory_only_regression_hint_names_the_armory(self):
+        code, err = self._check('{"TR": {"armory": 5, "taom_map": 5}}', self._counts(TR__armory=9))
+        self.assertEqual(1, code)
+        self.assertIn("--module Armory", err)
+        self.assertNotIn("--module TAOM_Map", err)
+
+    def test_main_map_only_regression_hint_names_taom_map(self):
+        code, err = self._check('{"TR": {"armory": 5, "taom_map": 5}}', self._counts(TR__taom_map=9))
+        self.assertEqual(1, code)
+        self.assertIn("--module TAOM_Map", err)
+        self.assertNotIn("--module Armory", err)
+
+
 class ProcessorGateTests(unittest.TestCase):
     def setUp(self):
         self._tmp = tempfile.TemporaryDirectory()
@@ -160,6 +315,7 @@ class ProcessorGateTests(unittest.TestCase):
         self.assertEqual(1, len(cx.processor_mismatches(channel, self.mods)))
 
     def _run_main(self):
+        _coverage_tree(self.mods)
         baseline = self.mods / "baseline.json"
         baseline.write_text("{}", encoding="utf-8")
         with mock.patch.dict(os.environ, {"BANNERLORD_GAME_MODULES": str(self.mods)}), \
@@ -201,6 +357,7 @@ class ProcessorGateTests(unittest.TestCase):
         game = self.mods / "game"
         shutil.copytree(self.mods / "Native", game / "Modules" / "Native")
         channel = self.mods / "channel"
+        _coverage_tree(channel)
         _write(channel / "TAOM_Map/ModuleData/Languages/IT/language_data.xml",
                _lang('id="Italiano" name="Italiano"'))
         code, _, err = self._main(

@@ -41,33 +41,37 @@ internal sealed partial class SurvivalRun
         if (count <= 0 || !_purse.TrySpend(count * step.Price, PurseSink.Upgrades))
             return UpgradeResult.NoGold;
 
-        _upgrades.Add(new UpgradeOrder(step, count, DefenderHealth(new WaveSoldier(step.ToTroop, SlotOfLine(step.FromTroop)))));
+        _upgrades.Add(new UpgradeOrder(step, count, _wave + 1));
         _pendingEvents.Add(new RunEvent(RunEventKind.Bought, _wave, $"upgrade={step.Id} n={count}"));
         return UpgradeResult.Ok;
     }
 
     /// <summary>
     /// Books an order the field carried out: one purchase of the soldiers it replaced (none when it replaced nobody), the gold of the rest paid back, and the read moved from the old troop to the
-    /// new one so the view stays right until the next read. A count outside 0 to the order's count is clamped.
+    /// new one so the view stays right until the next read. A count outside 0 to the order's count is clamped; returns the count booked.
     /// </summary>
-    public void CompleteUpgrade(UpgradeOrder order, int replaced)
+    public int CompleteUpgrade(UpgradeOrder order, int replaced)
     {
         var done = Math.Max(0, Math.Min(order.Count, replaced));
         var price = order.Step.Price;
         if (done > 0)
-            _purchases.Add(new FortPurchase(_wave + 1, PurchaseKind.Upgrade, order.Step.Id, 0, price, price * done, 0f) { Count = done });
+            _purchases.Add(new FortPurchase(order.BeforeWave, PurchaseKind.Upgrade, order.Step.Id, 0, price, price * done, 0f) { Count = done });
         _purse.Refund((order.Count - done) * price, PurseSink.Upgrades);
 
         var from = order.Step.FromTroop;
         _standingByTroop[from] = Math.Max(0, (_standingByTroop.TryGetValue(from, out var left) ? left : 0) - done);
         _standingByTroop[order.Step.ToTroop] = (_standingByTroop.TryGetValue(order.Step.ToTroop, out var had) ? had : 0) + done;
+        return done;
     }
 
     private void EmitUpgrades(RunEffects fx)
     {
-        fx.Upgrades.AddRange(_upgrades);
+        foreach (var order in _upgrades)
+            fx.Upgrades.Add(order with { HealthFactor = UpgradeHealth(order.Step) });
         _upgrades.Clear();
     }
+
+    private float UpgradeHealth(UpgradeStep step) => DefenderHealth(new WaveSoldier(step.ToTroop, SlotOfLine(step.FromTroop)));
 
     private void ForgetStanding() => _standingByTroop.Clear();
 

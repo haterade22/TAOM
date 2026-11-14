@@ -213,7 +213,8 @@ GATES = (
     Gate("loc-tests", "language files, {=KEY} text", LANG_GLOBS,
          _dotnet("Infrastructure.Localization"), ("docs/reference/localization-map.md",), dotnet=True,
          note="LanguageDataXmlTests, LocalizationKeyConsistencyTests, LanguageTextIntegrityTests"),
-    Gate("mbproj", "project.mbproj", ("*project.mbproj",), ("python", "tools/audit_mbproj_registration.py"),
+    Gate("mbproj", "project.mbproj, action sets and types", ("*project.mbproj", "*/action_sets.xml", "*/action_types.xml"),
+         ("python", "tools/audit_mbproj_registration.py"),
          ("tools/audit_mbproj_registration.py",)),
     Gate("voice", "voice definitions, module sounds", ("*/voice_definitions.xml", "*/module_sounds.xml"),
          ("python", "tools/audit_voice_clip_lengths.py"), ("tools/audit_voice_clip_lengths.py",),
@@ -271,7 +272,10 @@ def verdict(returncode: int, output: str) -> tuple:
             return "NOT RUN", f"checked nothing: {line[:200]}"
         return "PASS", ""
     if returncode == 2:
-        return "NOT RUN", "exit 2 (no install, a missing dependency or bad input)"
+        reason = "exit 2 (no install, a missing dependency or bad input)"
+        # The output of a gate that did not run is not printed, so carry the line that names the file.
+        error = next((l.strip() for l in output.splitlines() if l.lstrip().startswith("ERROR")), None)
+        return "NOT RUN", f"{reason}: {error[:200]}" if error else reason
     return "FAIL", f"exit {returncode}"
 
 

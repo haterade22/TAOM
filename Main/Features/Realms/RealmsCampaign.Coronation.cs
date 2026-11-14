@@ -307,17 +307,21 @@ public sealed partial class RealmsCampaign
     private static void LeadParty(Hero hero, Clan clan, Settlement? seat, int troops)
     {
         var current = hero.PartyBelongedTo;
-        var spawnAt = current?.Position ?? MobileParty.MainParty.Position;
+        var home = seat ?? hero.HomeSettlement;
+        // With no home a new party cannot be made, so he stays where he rides rather than end with no party at all.
+        if (home == null && (current == null || current.LeaderHero != hero))
+            return;
+        // Where he is: his town's gate, or the party he rides in (Hero.GetCampaignPosition); the main party only as a fallback.
+        var spawnAt = hero.GetCampaignPosition();
+        if (!spawnAt.IsValid())
+            spawnAt = MobileParty.MainParty.Position;
         if (current != null && current.LeaderHero != hero)
             current.MemberRoster.AddToCounts(hero.CharacterObject, -1);
 
         var party = hero.PartyBelongedTo;
         if (party == null)
         {
-            var home = seat ?? hero.HomeSettlement;
-            if (home == null)
-                return;
-            party = LordPartyComponent.CreateLordParty(hero.CharacterObject.StringId, hero, spawnAt, 3f, home, hero);
+            party = LordPartyComponent.CreateLordParty(hero.CharacterObject.StringId, hero, spawnAt, 3f, home!, hero);
         }
         else
         {

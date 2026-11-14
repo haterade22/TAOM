@@ -16,7 +16,7 @@ How to rename map settlements (towns, castles, villages) safely. Covers the live
 
 ## One settlement file, and it is external
 
-TAOM's repo has no settlement file. Its two unloaded copies (`Main/_Module/ModuleData/settlements.xml` and `custom_settlements.xml`) were removed on 2026-11-14, and the live `TAOM_Map` file is the only one.
+TAOM's repo has no settlement file. Its two unloaded copies (`Main/_Module/ModuleData/settlements.xml` and `custom_settlements.xml`) were removed on 2026-11-14, and the live `TAOM_Map` file is the only one (last copy: `git show f705629c2^:Main/_Module/ModuleData/settlements.xml`).
 
 | Path | Status | Modified by |
 |---|---|---|

@@ -278,11 +278,16 @@ localization-key sweeps that gate every feature.
 
 - The caravan party is **teleported**; anything else that moves that party fights the service.
   While the caravan is in a MapEvent its position is left alone.
-- **The caravan never stands off walkable land (#1104).** When no land path exists, for example to a
-  player at sea, the route is a straight line over water and impassable ground. `TickPositions` writes
-  a point only when `CampaignVec2.IsValid()` holds (a land face whose terrain a land party may use);
-  otherwise the caravan waits at its last land position and the log says so once per session
-  (`playerAtSea=`). Delivery still comes when the player is within 1.2 or at `ForceDeliverFraction`.
+- **The movement pass never moves the caravan off walkable land (#1104).** Spawn and
+  `RespawnMissing` place a caravan with no check, and a caravan saved on water by an older build stays
+  there until a valid point comes, so only `TickPositions` is guarded. The triggers the game can reach
+  are the smoothed point cutting a bend, the glide after a repath, and the straight-line fallback
+  route over water and impassable ground (an endpoint face is invalid, or the path query fails or
+  returns fewer than two points). A player at sea is not a trigger while NavalTravel is parked.
+  `TickPositions` writes a point only when `CampaignVec2.IsValid()` holds (a land face whose terrain
+  a land party may use); otherwise the caravan waits at its last land position and the log says so
+  once per campaign session (the latch resets in `ClearTrackers`), with `pos=(x,y)`, `face=` and
+  `terrain=` of the rejected point beside `playerAtSea=`. The in-game check is owed on #1104. Delivery still comes when the player is within 1.2 or at `ForceDeliverFraction`.
   Patch57 records a native crash for a party at sea on TAOM_Map (#296); no crash bundle proves that
   a land party on water crashes, so this is a guard, not a proven fix for the reported delivery crash.
 - **Routes follow vanilla's land rules, and the arrows check the heightmap first.**

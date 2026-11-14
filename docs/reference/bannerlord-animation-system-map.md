@@ -636,7 +636,7 @@ not find animation", 0 "undefined action" and 0 "default action set" lines [Cert
   UNVERIFIED.
 - **Why the client tolerates a root-level `<action>`:** `MergeElements` throws `KeyNotFoundException`
   (`MBObjectManager.cs:830-833`) only when a *later* merge walks an accumulated document holding an element whose
-  path is not in the schema, and the Armory is the last module that contributes action sets [Certain for the code
+  path is not in the schema, and the Armory is the last module that contributes action sets (not so since 2026-11-12: TAOM registers soln_action_sets for the horn sets, and the dwarf rider block since 2026-11-14; in the normal list TAOM loads after the Armory, see coop-interop.md) [Certain for the code
   and the mbproj files; Likely as the explanation]. [armory-guide.md](armory-guide.md) blames the build numbers
   instead; the two explanations are not exclusive.
 

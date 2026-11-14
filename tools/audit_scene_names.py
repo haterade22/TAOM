@@ -13,8 +13,8 @@ Outputs:
   4. Vanilla-vs-TAOM diff (scenes TAOM uses that vanilla doesn't, and vice versa).
 
 Exits 2 when the install, TAOM_Map's settlements.xml or every SceneObj folder is missing: a run
-that read nothing must not print "(none)" as if it had checked (owner's PC, 2026-11-14, where the
-default root is not the install). Exits 0 otherwise, whatever it finds.
+that read nothing must not print "(none)" as if it had checked (a contributor's PC, 2026-11-14,
+where BANNERLORD_GAME_DIR was unset and the default root does not exist). Exits 0 otherwise, whatever it finds.
 """
 from __future__ import annotations
 import re

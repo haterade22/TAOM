@@ -69,13 +69,26 @@ def write_text(path: Path, text: str) -> None:
         f.write(text)
 
 
+CS_ESCAPES = {'"': '"', "\\": "\\", "n": "\n", "t": "\t", "r": "\r"}
+CS_ESCAPE = re.compile(r'\\(["\\ntr])')
+
+
 def unescape(body: str, interpolated: bool) -> str:
     """Turn a C# literal body into the string the compiler would produce."""
-    out = (body.replace('\\"', '"').replace("\\\\", "\\")
-               .replace("\\n", "\n").replace("\\t", "\t").replace("\\r", "\r"))
+    # One pass, so an escaped backslash before an n stays a backslash and an n.
+    out = CS_ESCAPE.sub(lambda m: CS_ESCAPES[m.group(1)], body)
     if interpolated:
         out = out.replace("{{", "{").replace("}}", "}")
     return out
+
+
+def control_character_rows(rows: list) -> list:
+    """Rows whose default holds a newline, carriage return or tab (from a C# \\n, \\r or \\t).
+
+    Written raw into the XML text attribute, XML attribute normalisation reads each one back as a
+    space, so the registered English would differ from the inline default (#702). A TAOM string
+    breaks a line with {newline}, which survives both XML and the engine's text processing."""
+    return [row for row in rows if any(c in row[1] for c in "\n\r\t")]
 
 
 def escape_xml_attr(text: str) -> str:
@@ -190,6 +203,14 @@ def main():
               f"a blank row a translator cannot work from:", file=sys.stderr)
         for k in blank:
             print(f"    {k}", file=sys.stderr)
+        return 1
+
+    raw = control_character_rows(missing)
+    if raw:
+        print(f"\n  REFUSING: {len(raw)} key(s) have a default with \\n, \\r or \\t, which the XML "
+              f"attribute would read back as a space. Write {{newline}} for a line break:", file=sys.stderr)
+        for k, _d, rel, line in raw:
+            print(f"    {k}  ({rel}:{line})", file=sys.stderr)
         return 1
 
     by_target = OrderedDict()

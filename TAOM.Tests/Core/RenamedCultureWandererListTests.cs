@@ -23,9 +23,6 @@ public class RenamedCultureWandererListTests
 {
     private static readonly string[] RenamedCultures = { "empire", "aserai", "vlandia", "khuzait", "sturgia", "battania" };
 
-    // Pre-existing, tracked in #762, so this set may only shrink.
-    private static readonly HashSet<string> KnownUnlisted = new(StringComparer.Ordinal) { "spc_wanderer_rohan_9" };
-
     [TestMethod]
     public void SpculturesXslt_RenamedCultures_ListEveryWandererOfTheirCulture()
     {
@@ -56,13 +53,41 @@ public class RenamedCultureWandererListTests
         var unlisted = wanderers
             .Where(w => !(listed.TryGetValue(w.Culture, out var names) && names.Contains(w.Id)))
             .Select(w => w.Id)
-            .Where(id => !KnownUnlisted.Contains(id))
-            .ToList();
-        var stale = KnownUnlisted
-            .Where(id => !wanderers.Any(w => w.Id == id) || wanderers.Any(w => w.Id == id && listed[w.Culture].Contains(id)))
             .ToList();
 
         Assert.AreEqual(0, unlisted.Count, "wanderers missing from their culture's notable_templates:\n" + string.Join("\n", unlisted));
-        Assert.AreEqual(0, stale.Count, "now listed or no longer a wanderer, remove from KnownUnlisted:\n" + string.Join("\n", stale));
+    }
+
+    /// <summary>
+    /// The same contract for the cultures TAOM defines itself in taom_spcultures.xml (#762: the ten Shaghana and ten
+    /// Abanissa wanderers were in no list).
+    /// </summary>
+    [TestMethod]
+    public void TaomSpcultures_OwnCultures_ListEveryWandererOfTheirCulture()
+    {
+        var moduleData = CultureDataFixture.ModuleDataPath();
+        var listed = XDocument.Load(Path.Combine(moduleData, "taom_spcultures.xml"))
+            .Descendants("Culture")
+            .ToDictionary(
+                c => (string)c.Attribute("id"),
+                c => new HashSet<string>(
+                    (c.Element("notable_templates")?.Elements("template") ?? Enumerable.Empty<XElement>())
+                        .Select(t => ((string)t.Attribute("name") ?? "").Replace("NPCCharacter.", "")),
+                    StringComparer.Ordinal));
+
+        var wanderers = XDocument.Load(Path.Combine(moduleData, "taom_wanderers.xml"))
+            .Descendants("NPCCharacter")
+            .Where(c => (string)c.Attribute("occupation") == "Wanderer")
+            .Select(c => (Id: (string)c.Attribute("id"), Culture: ((string)c.Attribute("culture") ?? "").Replace("Culture.", "")))
+            .Where(w => listed.ContainsKey(w.Culture))
+            .ToList();
+        Assert.IsTrue(wanderers.Count > 0, "no wanderers of a taom_spcultures.xml culture found: the check tested nothing");
+
+        var unlisted = wanderers
+            .Where(w => !listed[w.Culture].Contains(w.Id))
+            .Select(w => w.Id)
+            .ToList();
+
+        Assert.AreEqual(0, unlisted.Count, "wanderers missing from their culture's notable_templates:\n" + string.Join("\n", unlisted));
     }
 }

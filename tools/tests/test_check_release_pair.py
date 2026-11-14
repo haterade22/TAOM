@@ -204,6 +204,40 @@ class ReleasePairTests(unittest.TestCase):
         _write(self.map / "settlements.xml", SETTLEMENTS.replace("empire_dungeon_stealth", "none_such_dungeon"))
         self._assert_finds("PRISON_SCENE_NOT_STEALTH")
 
+    def test_a_prison_scene_only_a_non_official_installed_module_ships_is_not_passed(self):
+        # The install's TAOM_Map or a mod is not in the package: only the official modules stand in for vanilla.
+        _write(self.map / "settlements.xml", SETTLEMENTS.replace("empire_dungeon_stealth", "taom_orthanc_dungeon"))
+        for module in ("TAOM_Map", "AWOIAF_Map"):
+            _write(self.install / module / "SceneObj" / "taom_orthanc_dungeon" / "scene.xscene", STEALTH_SCENE)
+        self._assert_finds("PRISON_SCENE_NOT_STEALTH")
+
+    def test_a_prison_scene_an_official_installed_module_ships_is_passed(self):
+        _write(self.map / "settlements.xml", SETTLEMENTS.replace("empire_dungeon_stealth", "storymode_dungeon_stealth"))
+        _write(self.install / "StoryMode" / "SceneObj" / "storymode_dungeon_stealth" / "scene.xscene", STEALTH_SCENE)
+        code, out, _ = self._run()
+        self.assertEqual(code, 0, out)
+
+    def test_a_prison_finding_and_a_pair_finding_are_reported_together(self):
+        _write(self.map / "settlements.xml", SETTLEMENTS.replace("empire_dungeon_stealth", "empire_dungeon_a")
+               .replace("Faction.clan_a_1", "Faction.clan_b_1"))
+        code, out, _ = self._run()
+        self.assertEqual(code, 1, out)
+        self.assertIn("PRISON_SCENE_NOT_STEALTH", out)
+        self.assertIn("BROKEN_FACTION_REF", out)
+
+    def test_a_prison_finding_tells_the_operator_to_repair_the_live_map_not_the_channel(self):
+        _write(self.map / "settlements.xml", SETTLEMENTS.replace("empire_dungeon_stealth", "empire_dungeon_a"))
+        code, out, _ = self._run()
+        self.assertEqual(code, 1, out)
+        self.assertIn("remap_stale_scene_names.py --dry-run", out)
+        self.assertIn("never edit the channel", out)
+
+    def test_a_pair_finding_alone_does_not_print_the_prison_repair_line(self):
+        _write(self.map / "settlements.xml", SETTLEMENTS.replace("Faction.clan_a_1", "Faction.clan_b_1"))
+        code, out, _ = self._run()
+        self.assertEqual(code, 1, out)
+        self.assertNotIn("never edit the channel", out)
+
     def test_a_map_with_no_prison_rows_is_refused_not_passed(self):
         # The prison check would have judged nothing, which must not read as a pass.
         _write(self.map / "settlements.xml", SETTLEMENTS.replace('id="prison"', 'id="tavern"'))
