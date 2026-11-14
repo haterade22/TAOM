@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using TAOM.Adapters;
 using TAOM.Core.Logging;
+using TAOM.Features.FactionUI.FactionScreen;
 using TAOM.Features.FactionUI.Resources;
 
 namespace TAOM.Features.FactionUI.Menus;
@@ -109,10 +110,26 @@ public sealed class FrontEndMovieService
             case FactionScreenMovie when dataSourceTypeName == "FactionScreenVM":
                 return Themed(movieName, FactionScreenMovie, CreationFrame | FrontEndImageGroups.FactionArt);
 
+            // The character page draws the faction screen's misty valley behind its record. It holds the
+            // faction art group, which loads nothing on acquire, and registers that one image before the
+            // movie binds it by name; the group is released with the rest once the movie is gone.
+            case "CharacterDeveloper" when dataSourceTypeName == "CharacterDeveloperVM":
+                var character = Themed(movieName, "TAOM" + movieName, CreationFrame | FrontEndImageGroups.FactionArt);
+                if (character != null)
+                    _sprites.EnsureArt(FactionScreenArt.DefaultBackground);
+                return character;
+
+            // The Career screen (opened from the character page) draws the same valley and stone chrome. Its
+            // own movie keeps its name; the swap takes only the hold and registers the valley first.
+            case "CareerScreen" when dataSourceTypeName == "CareerScreenVM":
+                var career = Themed(movieName, movieName, CreationFrame | FrontEndImageGroups.FactionArt);
+                if (career != null)
+                    _sprites.EnsureArt(FactionScreenArt.DefaultBackground);
+                return career;
+
             case "EscapeMenu":
             case "CampaignOptions":
             case "MapBar" when dataSourceTypeName == "MapBarVM":
-            case "CharacterDeveloper" when dataSourceTypeName == "CharacterDeveloperVM":
             case "EncyclopediaBar":
             case "EncyclopediaHome":
             case "EncyclopediaItemList":

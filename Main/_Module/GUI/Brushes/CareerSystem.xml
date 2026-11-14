@@ -94,4 +94,91 @@
     </Styles>
   </Brush>
 
+  <!-- Career modal, mockup A (2026-11-13). The Character page's palette: ivory #E8DCC0, gold #CFAE6B,
+       dim #A39882, muted #7F766A. -->
+
+  <!-- A choice row: no fill at rest, a faint gold fill on hover. The left rule lights with it. -->
+  <Brush Name="CareerSystem.ChoiceRow" TransitionDuration="0.1">
+    <Layers><BrushLayer Name="Default" Sprite="BlankWhiteSquare_9" Color="#CFAE6BFF" /></Layers>
+    <Styles>
+      <Style Name="Default"><BrushLayer Name="Default" AlphaFactor="0" /></Style>
+      <Style Name="Hovered"><BrushLayer Name="Default" AlphaFactor="0.08" /></Style>
+      <Style Name="Pressed"><BrushLayer Name="Default" AlphaFactor="0.14" /></Style>
+    </Styles>
+  </Brush>
+  <Brush Name="CareerSystem.ChoiceAccent" TransitionDuration="0.1">
+    <Layers><BrushLayer Name="Default" Sprite="BlankWhiteSquare_9" Color="#CFAE6BFF" /></Layers>
+    <Styles>
+      <Style Name="Default"><BrushLayer Name="Default" AlphaFactor="0" /></Style>
+      <Style Name="Hovered"><BrushLayer Name="Default" AlphaFactor="1" /></Style>
+      <Style Name="Pressed"><BrushLayer Name="Default" AlphaFactor="1" /></Style>
+    </Styles>
+  </Brush>
+
+  <Brush Name="CareerSystem.ChoiceText" Font="FS_Garamond" FontSize="19" TextHorizontalAlignment="Left" TextVerticalAlignment="Center">
+    <Styles><Style Name="Default" FontColor="#E8DCC0FF" /></Styles>
+  </Brush>
+  <Brush Name="CareerSystem.ChoiceTextDim" Font="FS_Garamond" FontSize="19" TextHorizontalAlignment="Left" TextVerticalAlignment="Center">
+    <Styles><Style Name="Default" FontColor="#7F766AFF" /></Styles>
+  </Brush>
+  <Brush Name="CareerSystem.ChoiceBadge" Font="FS_CinzelWide" FontSize="11" TextHorizontalAlignment="Left" TextVerticalAlignment="Center">
+    <Styles><Style Name="Default" FontColor="#CFAE6BFF" /></Styles>
+  </Brush>
+
+  <Brush Name="CareerSystem.GroupName" Font="FS_CinzelWide" FontSize="15" TextHorizontalAlignment="Left" TextVerticalAlignment="Center">
+    <Styles><Style Name="Default" FontColor="#CFAE6BFF" /></Styles>
+  </Brush>
+  <Brush Name="CareerSystem.RuleText" Font="FS_CinzelWide" FontSize="11" TextHorizontalAlignment="Right" TextVerticalAlignment="Center">
+    <Styles><Style Name="Default" FontColor="#A39882FF" /></Styles>
+  </Brush>
+
+  <Brush Name="CareerSystem.TierWord" Font="FS_CinzelWide" FontSize="11" TextHorizontalAlignment="Center" TextVerticalAlignment="Center">
+    <Styles><Style Name="Default" FontColor="#A39882FF" /></Styles>
+  </Brush>
+  <Brush Name="CareerSystem.TierNumeral" Font="FS_CinzelWide" FontSize="24" TextHorizontalAlignment="Center" TextVerticalAlignment="Center">
+    <Styles><Style Name="Default" FontColor="#CFAE6BFF" TextAlphaFactor="0.9" /></Styles>
+  </Brush>
+  <Brush Name="CareerSystem.TierRequirement" Font="FS_Garamond" FontSize="13" TextHorizontalAlignment="Center" TextVerticalAlignment="Top">
+    <Styles><Style Name="Default" FontColor="#7F766AFF" /></Styles>
+  </Brush>
+
+  <Brush Name="CareerSystem.SidebarName" Font="FS_CinzelWide" FontSize="16" TextHorizontalAlignment="Center" TextVerticalAlignment="Center">
+    <Styles><Style Name="Default" FontColor="#CFAE6BFF" /></Styles>
+  </Brush>
+  <Brush Name="CareerSystem.SidebarHeading" Font="FS_CinzelWide" FontSize="12" TextHorizontalAlignment="Center" TextVerticalAlignment="Center">
+    <Styles><Style Name="Default" FontColor="#CFAE6BFF" /></Styles>
+  </Brush>
+  <Brush Name="CareerSystem.SidebarText" Font="FS_Garamond" FontSize="19" TextHorizontalAlignment="Center" TextVerticalAlignment="Center">
+    <Styles><Style Name="Default" FontColor="#E8DCC0FF" /></Styles>
+  </Brush>
+  <Brush Name="CareerSystem.SidebarNote" Font="FS_Garamond" FontSize="17" TextHorizontalAlignment="Center" TextVerticalAlignment="Center">
+    <Styles><Style Name="Default" FontColor="#A39882FF" /></Styles>
+  </Brush>
+  <Brush Name="CareerSystem.SidebarKeystone" Font="FS_Garamond" FontSize="17" TextHorizontalAlignment="Center" TextVerticalAlignment="Center">
+    <Styles><Style Name="Default" FontColor="#E0C27AFF" /></Styles>
+  </Brush>
+
+  <Brush Name="CareerSystem.FooterLabel" Font="FS_CinzelWide" FontSize="18" TextHorizontalAlignment="Left" TextVerticalAlignment="Center">
+    <Styles><Style Name="Default" FontColor="#CFAE6BFF" /></Styles>
+  </Brush>
+  <Brush Name="CareerSystem.FooterNote" Font="FS_Garamond" FontSize="17" TextHorizontalAlignment="Left" TextVerticalAlignment="Center">
+    <Styles><Style Name="Default" FontColor="#A39882FF" /></Styles>
+  </Brush>
+
+  <!-- Why a choice is locked, under its description. -->
+  <Brush Name="CareerSystem.ChoiceLockReason" Font="FS_Garamond" FontSize="16" TextHorizontalAlignment="Left" TextVerticalAlignment="Center">
+    <Styles><Style Name="Default" FontColor="#A39882FF" /></Styles>
+  </Brush>
+
+  <!-- Switch-mode picker cards. -->
+  <Brush Name="CareerSystem.PickerName" Font="FS_CinzelWide" FontSize="22" TextHorizontalAlignment="Left" TextVerticalAlignment="Center">
+    <Styles><Style Name="Default" FontColor="#CFAE6BFF" /></Styles>
+  </Brush>
+  <Brush Name="CareerSystem.PickerText" Font="FS_Garamond" FontSize="18" TextHorizontalAlignment="Left" TextVerticalAlignment="Center">
+    <Styles><Style Name="Default" FontColor="#E8DCC0FF" /></Styles>
+  </Brush>
+  <Brush Name="CareerSystem.PickerAbility" Font="FS_CinzelWide" FontSize="14" TextHorizontalAlignment="Left" TextVerticalAlignment="Center">
+    <Styles><Style Name="Default" FontColor="#A39882FF" /></Styles>
+  </Brush>
+
 </Brushes>

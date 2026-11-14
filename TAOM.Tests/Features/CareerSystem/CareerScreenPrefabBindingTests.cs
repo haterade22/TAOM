@@ -46,6 +46,18 @@ public class CareerScreenPrefabBindingTests
         return root!;
     }
 
+    // An element named after a prefab beside CareerScreen.xml (<CareerChoiceGroup />) is that prefab
+    // inlined in the current scope, so the walks continue into its Window.
+    private static IEnumerable<XElement> ChildrenOf(XElement element)
+    {
+        var path = RepoPath("Main", "_Module", "GUI", "PreFabs", "CareerSystem", element.Name.LocalName + ".xml");
+        if (element.Name.LocalName == "Prefab" || !File.Exists(path))
+            return element.Elements();
+        var window = XDocument.Load(path).Root?.Element("Window");
+        Assert.IsNotNull(window, $"{path} has no Window");
+        return window!.Elements();
+    }
+
     [TestMethod]
     public void Prefab_EveryBindingAndCommand_ResolvesOnTheVmItsScopeBindsTo()
     {
@@ -70,19 +82,21 @@ public class CareerScreenPrefabBindingTests
     [TestMethod]
     public void Prefab_ShowsTheRootPerkInTheHeaderGatedOnHasRootPerk()
     {
-        // #769: the root perk text is bound under the career description in the header bar, and an
-        // empty root hides its widget instead of leaving a blank line. The generic walk above proves
-        // both properties resolve.
+        // #769: the root perk text sits under its Passive heading in the sidebar, and an empty root
+        // hides that block instead of leaving a blank heading. The generic walk above proves the
+        // properties resolve.
         var widgets = LoadPrefabRoot().Descendants()
             .Where(e => (string?)e.Attribute("Text") == "@RootPerkDescription")
             .ToList();
 
         Assert.AreEqual(1, widgets.Count, "exactly one widget shows RootPerkDescription");
-        Assert.AreEqual("@HasRootPerk", (string?)widgets[0].Attribute("IsVisible"));
+        Assert.IsTrue(
+            widgets[0].AncestorsAndSelf().Any(e => (string?)e.Attribute("IsVisible") == "@HasRootPerk"),
+            "the root perk block is gated on HasRootPerk");
         Assert.AreEqual(
-            "@CareerDescription",
+            "@PassiveLabel",
             (string?)widgets[0].ElementsBeforeSelf().LastOrDefault()?.Attribute("Text"),
-            "the root perk sits directly under the career description");
+            "the root perk sits directly under its Passive heading");
     }
 
     private static void CollectScopes(XElement element, Type vmType, HashSet<Type> reached)
@@ -96,7 +110,7 @@ public class CareerScreenPrefabBindingTests
             if (match.Success && CollectionItemTypes.TryGetValue(match.Groups[1].Value, out var mapped))
                 childType = mapped;
         }
-        foreach (var child in element.Elements())
+        foreach (var child in ChildrenOf(element))
             CollectScopes(child, childType, reached);
     }
 
@@ -143,7 +157,7 @@ public class CareerScreenPrefabBindingTests
             }
         }
 
-        foreach (var child in element.Elements())
+        foreach (var child in ChildrenOf(element))
             Walk(child, childType, failures);
     }
 
