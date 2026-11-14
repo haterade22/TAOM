@@ -235,7 +235,7 @@
                                 <ListPanel Id="AlliesGridParent" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" MarginTop="12" StackLayout.LayoutMethod="VerticalTopToBottom">
                                   <Children>
                                     <NavigationScopeTargeter ScopeID="TAOMHeroAlliesScope" ScopeParent="..\AlliesViewport\AlliesGrid" ScopeMovements="Horizontal" AlternateScopeMovements="Vertical" AlternateMovementStepSize="3" DownNavigationScope="TAOMHeroAlliesPagingScope" />
-                                    <Widget Id="AlliesViewport" WidthSizePolicy="StretchToParent" SuggestedHeight="288" DoNotAcceptEvents="true"><Children><GridWidget Id="AlliesGrid" DataSource="{Items}" WidthSizePolicy="StretchToParent" SuggestedHeight="288" ColumnCount="3" DefaultCellWidth="149" DefaultCellHeight="144" IsVisible="@HasItems">
+                                    <Widget Id="AlliesViewport" WidthSizePolicy="StretchToParent" SuggestedHeight="288" DoNotAcceptEvents="true"><Children><!--RowCount is explicit: omitted, GridLayout defaults to 3 rows and splits the fixed 288 into 96 high cells, so the names run under the next row's portraits.--><GridWidget Id="AlliesGrid" DataSource="{Items}" WidthSizePolicy="StretchToParent" SuggestedHeight="288" ColumnCount="3" RowCount="2" DefaultCellWidth="149" DefaultCellHeight="144" IsVisible="@HasItems">
                                       <ItemTemplate>
                                         <ButtonWidget SuggestedHeight="144" Command.Click="ExecuteLink" Brush="TAOM.Encyclopedia.TextButton" DoNotPassEventsToChildren="true" UpdateChildrenStates="true" GamepadNavigationIndex="0" SuggestedWidth="149">
                                           <Children>
@@ -284,7 +284,7 @@
                                 <ListPanel Id="EnemiesGridParent" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" MarginTop="12" StackLayout.LayoutMethod="VerticalTopToBottom">
                                   <Children>
                                     <NavigationScopeTargeter ScopeID="TAOMHeroEnemiesScope" ScopeParent="..\EnemiesViewport\EnemiesGrid" ScopeMovements="Horizontal" AlternateScopeMovements="Vertical" AlternateMovementStepSize="3" DownNavigationScope="TAOMHeroEnemiesPagingScope" />
-                                    <Widget Id="EnemiesViewport" WidthSizePolicy="StretchToParent" SuggestedHeight="288" DoNotAcceptEvents="true"><Children><GridWidget Id="EnemiesGrid" DataSource="{Items}" WidthSizePolicy="StretchToParent" SuggestedHeight="288" ColumnCount="3" DefaultCellWidth="149" DefaultCellHeight="144" IsVisible="@HasItems">
+                                    <Widget Id="EnemiesViewport" WidthSizePolicy="StretchToParent" SuggestedHeight="288" DoNotAcceptEvents="true"><Children><GridWidget Id="EnemiesGrid" DataSource="{Items}" WidthSizePolicy="StretchToParent" SuggestedHeight="288" ColumnCount="3" RowCount="2" DefaultCellWidth="149" DefaultCellHeight="144" IsVisible="@HasItems">
                                       <ItemTemplate>
                                         <ButtonWidget SuggestedHeight="144" Command.Click="ExecuteLink" Brush="TAOM.Encyclopedia.TextButton" DoNotPassEventsToChildren="true" UpdateChildrenStates="true" GamepadNavigationIndex="0" SuggestedWidth="149">
                                           <Children>

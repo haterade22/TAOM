@@ -34,8 +34,9 @@ namespace TAOM.Features.FactionUI.Campaign
         private EncyclopediaEntryVM? _selected;
         private bool _orderDirty = true, _selectionDirty = true, _disposed;
         private bool _hasSelection, _showSortOptions, _isEmpty;
-        private bool _showHeroPreview, _showHeroRender, _showHeroSilhouette, _showIllustration = true;
+        private bool _showCharacterPreview, _showHeroRender, _showHeroSilhouette, _showTroopRender, _showIllustration = true;
         private ViewModel? _heroCharacter, _bannerIdentifier;
+        private CharacterViewModel? _troopCharacter;
         private bool _showBannerPreview, _isBannerDestroyed;
         private string _selectedName = "", _selectedSubtitle = "", _previewImageFile = "", _previewSpriteName = "", _sortLabel = "";
         internal string Category { get; private set; }
@@ -51,9 +52,11 @@ namespace TAOM.Features.FactionUI.Campaign
         [DataSourceProperty] public string PreviewSpriteName { get => _previewSpriteName; private set { _previewSpriteName = value; OnPropertyChangedWithValue(value); } }
         [DataSourceProperty] public string SortLabel { get => _sortLabel; private set { _sortLabel = value; OnPropertyChangedWithValue(value); } }
         [DataSourceProperty] public ViewModel? HeroCharacter { get => _heroCharacter; private set { _heroCharacter = value; OnPropertyChangedWithValue(value); } }
-        [DataSourceProperty] public bool ShowHeroPreview { get => _showHeroPreview; private set { _showHeroPreview = value; OnPropertyChangedWithValue(value); } }
+        [DataSourceProperty] public CharacterViewModel? TroopCharacter { get => _troopCharacter; private set { _troopCharacter = value; OnPropertyChangedWithValue(value); } }
+        [DataSourceProperty] public bool ShowCharacterPreview { get => _showCharacterPreview; private set { _showCharacterPreview = value; OnPropertyChangedWithValue(value); } }
         [DataSourceProperty] public bool ShowHeroRender { get => _showHeroRender; private set { _showHeroRender = value; OnPropertyChangedWithValue(value); } }
         [DataSourceProperty] public bool ShowHeroSilhouette { get => _showHeroSilhouette; private set { _showHeroSilhouette = value; OnPropertyChangedWithValue(value); } }
+        [DataSourceProperty] public bool ShowTroopRender { get => _showTroopRender; private set { _showTroopRender = value; OnPropertyChangedWithValue(value); } }
         [DataSourceProperty] public bool ShowIllustration { get => _showIllustration; private set { _showIllustration = value; OnPropertyChangedWithValue(value); } }
         [DataSourceProperty] public bool ShowBannerPreview { get => _showBannerPreview; private set { _showBannerPreview = value; OnPropertyChangedWithValue(value); } }
         [DataSourceProperty] public bool IsBannerDestroyed { get => _isBannerDestroyed; private set { _isBannerDestroyed = value; OnPropertyChangedWithValue(value); } }
@@ -138,15 +141,20 @@ namespace TAOM.Features.FactionUI.Campaign
             if (entry != null) { entry.IsSelected = true; Native.SetPropertyValue("LastSelectedItemId", entry.Id); }
             PreviewImageFile = Category == "settlements" && entry != null ? ResolvePicture(entry) : "";
             PreviewSpriteName = Category == "settlements" ? "fs_previewonly_encyclopedia_settlement" : Category == "heroes" ? "" : "ec_window_" + Category;
-            UpdateHeroPreview(entry);
+            UpdateCharacterPreview(entry);
             UpdateBannerPreview(entry);
-            ShowIllustration = !ShowHeroPreview && !ShowBannerPreview;
+            ShowIllustration = !ShowCharacterPreview && !ShowBannerPreview;
             SelectionVersion++;
         }
 
         internal static bool UsesBannerPreview(string category, bool hasSelection)
         {
             return hasSelection && (category == "kingdoms" || category == "clans");
+        }
+
+        internal static bool UsesCharacterPreview(string category, bool hasSelection)
+        {
+            return hasSelection && (category == "heroes" || category == "troops");
         }
 
         // The selected kingdom or clan's own Banner, built the way the native faction and clan pages
@@ -176,42 +184,73 @@ namespace TAOM.Features.FactionUI.Campaign
             BannerIdentifier = null;
         }
 
-        private void UpdateHeroPreview(EncyclopediaEntryVM? entry)
+        // Heroes and troops share the raised viewport and one release path; each keeps its own tableau,
+        // because only the hero view model has the IsDead the encyclopedia tableau desaturates on.
+        private void UpdateCharacterPreview(EncyclopediaEntryVM? entry)
         {
-            ReleaseHeroPreview();
-            ShowHeroPreview = Category == "heroes" && entry != null;
-            ShowHeroRender = false;
-            ShowHeroSilhouette = false;
-            if (!ShowHeroPreview || entry == null) return;
-            // Use the actual selected hero, as the native encyclopedia hero page does.
-            var hero = (Hero)((EncyclopediaListItemVM)entry.Native).Object;
-            var character = new HeroViewModel(CharacterViewModel.StanceTypes.EmphasizeFace);
+            ReleaseCharacterPreview();
+            if (entry == null || !UsesCharacterPreview(Category, true)) return;
+            // Use the actual selected hero or troop, as the native encyclopedia hero and unit pages do.
+            var source = ((EncyclopediaListItemVM)entry.Native).Object;
+            if (source is Hero hero) ShowHero(hero);
+            else if (source is CharacterObject troop) ShowTroop(troop);
+        }
+
+        private void ShowHero(Hero hero)
+        {
+            // None keeps the full-body inventory camera the tableau starts with, as SPInventoryVM's hero does;
+            // EmphasizeFace would reset it and move in on the face.
+            var character = new HeroViewModel(CharacterViewModel.StanceTypes.None);
             character.FillFrom(hero, -1, hero.IsNotable, useCharacteristicIdleAction: true);
-            if (!character.IsHidden && !string.IsNullOrEmpty(character.CharStringId))
+            bool known = !character.IsHidden && !string.IsNullOrEmpty(character.CharStringId);
+            if (known)
             {
                 character.SetEquipment(EquipmentIndex.Horse, default);
                 character.SetEquipment(EquipmentIndex.HorseHarness, default);
                 // Match the native encyclopedia portrait: keep the face visible.
                 character.SetEquipment(EquipmentIndex.Head, default);
                 SelectedSubtitle = hero.Culture?.Name.ToString() ?? "";
-                character.IsTableauEnabled = true;
             }
-            else
-            {
-                SelectedSubtitle = "";
-                character.IsTableauEnabled = false;
-            }
+            else SelectedSubtitle = "";
+            character.IsTableauEnabled = known;
             HeroCharacter = character;
-            ShowHeroSilhouette = Read<bool>(HeroCharacter, "IsHidden") || string.IsNullOrEmpty(Read<string>(HeroCharacter, "CharStringId"));
-            ShowHeroRender = !ShowHeroSilhouette;
+            ShowHeroSilhouette = !known;
+            ShowHeroRender = known;
+            ShowCharacterPreview = true;
         }
 
-        private void ReleaseHeroPreview()
+        private void ShowTroop(CharacterObject troop)
         {
-            if (HeroCharacter == null) return;
-            HeroCharacter.SetPropertyValue("IsTableauEnabled", false);
-            HeroCharacter.OnFinalize();
-            HeroCharacter = null;
+            var character = new CharacterViewModel(CharacterViewModel.StanceTypes.None);
+            character.FillFrom(troop);
+            // FillFrom fills nothing for a child-aged character; the troops illustration stays then.
+            if (string.IsNullOrEmpty(character.CharStringId)) { character.OnFinalize(); return; }
+            // FillFrom cloned the troop's equipment, so dropping the mount changes only this preview.
+            // The helmet stays: a troop is shown as it takes the field.
+            character.SetEquipment(EquipmentIndex.Horse, default);
+            character.SetEquipment(EquipmentIndex.HorseHarness, default);
+            character.IsTableauEnabled = true;
+            TroopCharacter = character;
+            SelectedSubtitle = troop.Culture?.Name?.ToString() ?? SelectedSubtitle;
+            ShowTroopRender = true;
+            ShowCharacterPreview = true;
+        }
+
+        // The character view models are created here, so they are finalized here, tableau first.
+        private void ReleaseCharacterPreview()
+        {
+            ShowCharacterPreview = false;
+            ShowHeroRender = false;
+            ShowHeroSilhouette = false;
+            ShowTroopRender = false;
+            if (HeroCharacter != null) { ReleaseTableau(HeroCharacter); HeroCharacter = null; }
+            if (TroopCharacter != null) { ReleaseTableau(TroopCharacter); TroopCharacter = null; }
+        }
+
+        private static void ReleaseTableau(ViewModel character)
+        {
+            character.SetPropertyValue("IsTableauEnabled", false);
+            character.OnFinalize();
         }
 
         private string ResolvePicture(EncyclopediaEntryVM entry)
@@ -237,7 +276,7 @@ namespace TAOM.Features.FactionUI.Campaign
         {
             if (_disposed) return;
             _disposed = true;
-            ReleaseHeroPreview();
+            ReleaseCharacterPreview();
             ReleaseBannerPreview();
             _nativeItems.ListChanged -= OnItemsChanged;
             Native.PropertyChangedWithBoolValue -= OnNativeBoolChanged;
