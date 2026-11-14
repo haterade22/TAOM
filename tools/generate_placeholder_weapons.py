@@ -123,7 +123,11 @@ def build(spec, cat, priced, troops, armory):
             raise PlaceholderError(f"donor {w['donor']} is not a priced Armory melee weapon")
         culture = w["cultures"][0]
         band = ladder.band(w["tier"], culture, lspec)
-        k = band.target / donor.best_dps
+        # blend < 1 (owner choice) lands part way: donor DPS + blend x (ladder target - donor DPS).
+        blend = float(w.get("blend", 1.0))
+        if not 0.0 < blend <= 1.0:
+            raise PlaceholderError(f"{wid}: blend must be in (0, 1]")
+        k = (donor.best_dps + blend * (band.target - donor.best_dps)) / donor.best_dps
         blade_id = donor.blade_piece
         new_blade = f"{wid}_blade"
         piece_xml = element_text(armory / "ModuleData" / "LOTRLOME_crafting_pieces.xml", "CraftingPiece", blade_id)
@@ -263,8 +267,13 @@ def main(argv=None) -> int:
               f"(T{w['tier']} band {band.low:.0f}-{band.high:.0f}, target {band.target:.0f}; x{k:.2f}); "
               f"swing {p.swing_damage}, thrust {p.thrust_damage}; {len(users)} troops: "
               + ", ".join(f"{t.id} T{t.tier}" for t in sorted(users, key=lambda t: (t.tier, t.id))))
-        if not band.low <= p.best_dps <= band.high:
-            raise PlaceholderError(f"{w['id']} prices at {p.best_dps:.1f}, outside its band")
+        if float(w.get("blend", 1.0)) == 1.0:
+            if not band.low <= p.best_dps <= band.high:
+                raise PlaceholderError(f"{w['id']} prices at {p.best_dps:.1f}, outside its band")
+        elif not donor.best_dps < p.best_dps <= band.high:
+            raise PlaceholderError(f"{w['id']} prices at {p.best_dps:.1f}: a blend must beat its donor and stay under the band top")
+        else:
+            print(f"    (blend {w['blend']}: deliberately below the band)")
         if not users:
             raise PlaceholderError(f"{w['id']} has no troop; remove it from the spec")
 

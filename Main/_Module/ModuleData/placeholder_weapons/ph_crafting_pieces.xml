@@ -38,7 +38,7 @@
         </Materials>
     </CraftingPiece>
 
-    <!-- taom_ph_erebor_spear_a_t4: donor blade sm_dwarf_erebor_spear_blade_a, damage_factor x2.936 -->
+    <!-- taom_ph_erebor_spear_a_t4: donor blade sm_dwarf_erebor_spear_blade_a, damage_factor x1.968 -->
     <CraftingPiece
         id="taom_ph_erebor_spear_a_t4_blade"
         name="{=taom_ph_erebor_spear_a_t4_blade_name}Erebor Spear Blade A (placeholder)"
@@ -58,10 +58,10 @@
             body_name="bo_sm_dwarf_erebor_spear_blade_a">
             <Thrust
                 damage_type="Pierce"
-                damage_factor="4.67" />
+                damage_factor="3.13" />
             <Swing
                 damage_type="Cut"
-                damage_factor="2.23" />
+                damage_factor="1.50" />
         </BladeData>
         <Flags>
             <Flag
@@ -89,7 +89,7 @@
         </Materials>
     </CraftingPiece>
 
-    <!-- taom_ph_erebor_spear_b_t4: donor blade sm_dwarf_erebor_spear_blade_b, damage_factor x2.718 -->
+    <!-- taom_ph_erebor_spear_b_t4: donor blade sm_dwarf_erebor_spear_blade_b, damage_factor x1.859 -->
     <CraftingPiece
         id="taom_ph_erebor_spear_b_t4_blade"
         name="{=taom_ph_erebor_spear_b_t4_blade_name}Erebor Spear Blade B (placeholder)"
@@ -109,10 +109,10 @@
             body_name="bo_sm_dwarf_erebor_spear_blade_b">
             <Thrust
                 damage_type="Pierce"
-                damage_factor="4.76" />
+                damage_factor="3.25" />
             <Swing
                 damage_type="Cut"
-                damage_factor="2.07" />
+                damage_factor="1.41" />
         </BladeData>
         <Flags>
             <Flag
@@ -140,7 +140,7 @@
         </Materials>
     </CraftingPiece>
 
-    <!-- taom_ph_erebor_spear_a_t8: donor blade sm_dwarf_erebor_spear_blade_a, damage_factor x4.697 -->
+    <!-- taom_ph_erebor_spear_a_t8: donor blade sm_dwarf_erebor_spear_blade_a, damage_factor x2.849 -->
     <CraftingPiece
         id="taom_ph_erebor_spear_a_t8_blade"
         name="{=taom_ph_erebor_spear_a_t8_blade_name}Erebor Spear Blade A (placeholder)"
@@ -160,10 +160,10 @@
             body_name="bo_sm_dwarf_erebor_spear_blade_a">
             <Thrust
                 damage_type="Pierce"
-                damage_factor="7.47" />
+                damage_factor="4.53" />
             <Swing
                 damage_type="Cut"
-                damage_factor="3.57" />
+                damage_factor="2.16" />
         </BladeData>
         <Flags>
             <Flag
@@ -191,7 +191,7 @@
         </Materials>
     </CraftingPiece>
 
-    <!-- taom_ph_erebor_spear_b_t8: donor blade sm_dwarf_erebor_spear_blade_b, damage_factor x4.349 -->
+    <!-- taom_ph_erebor_spear_b_t8: donor blade sm_dwarf_erebor_spear_blade_b, damage_factor x2.675 -->
     <CraftingPiece
         id="taom_ph_erebor_spear_b_t8_blade"
         name="{=taom_ph_erebor_spear_b_t8_blade_name}Erebor Spear Blade B (placeholder)"
@@ -211,10 +211,10 @@
             body_name="bo_sm_dwarf_erebor_spear_blade_b">
             <Thrust
                 damage_type="Pierce"
-                damage_factor="7.61" />
+                damage_factor="4.68" />
             <Swing
                 damage_type="Cut"
-                damage_factor="3.31" />
+                damage_factor="2.03" />
         </BladeData>
         <Flags>
             <Flag

@@ -62,12 +62,14 @@ that no troop carries.
 | `tiers` | `[lo, hi]` troop tiers (the melee ladder's tier, noble bump included) that get it |
 | `cultures` | Troop culture ids |
 | `name` | English display name |
+| `blend` | Optional, default 1. The blade lands at donor DPS + blend x (target - donor). Below 1 it sits under the band on purpose |
 
 ### Current Values
 
 16 weapons:
 - Isengard 1H sword T7: 87 DPS.
-- Erebor spears, a and b, at T4 (63) and T8 (100-102).
+- Erebor spears, a and b, at half the boost (`blend` 0.5, owner choice: at full target the dwarf spear troops
+  reached 1.5 to 2 times their tier peers): T4 42-44 DPS, T8 61-63 DPS, below the band on purpose.
 - Gondor heavy spears in four heraldic variants at T5 (71-72) and T8 (99-100).
 - Gondor Fountain Guard spear T8: 100.
 - Mirkwood sword T8 (100) and T10 (119).

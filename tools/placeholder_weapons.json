@@ -10,7 +10,7 @@
     "",
     "Fields: id (item id, must start with the tag), donor (Armory CraftedItem to clone), tier (ladder tier",
     "the DPS target is taken from), tiers ([lo, hi] troop tiers that get it), cultures (troop culture ids),",
-    "name (English display name; the {=id} key is added by the tool)."
+    "name (English display name; the {=id} key is added by the tool), blend (optional, default 1; 0.5 lands halfway between the donor and the ladder target, owner choice for Erebor 14 Nov 2026)."
   ],
   "tag": "taom_ph_",
   "weapons": [
@@ -18,13 +18,13 @@
      "cultures": ["isengard"], "name": "[Isengard] Orthanc Sword"},
 
     {"id": "taom_ph_erebor_spear_a_t4", "donor": "sm_dwarf_erebor_spear_a", "tier": 4, "tiers": [4, 5],
-     "cultures": ["erebor"], "name": "[Erebor] War Spear I"},
+     "cultures": ["erebor"], "blend": 0.5, "name": "[Erebor] War Spear I"},
     {"id": "taom_ph_erebor_spear_b_t4", "donor": "sm_dwarf_erebor_spear_b", "tier": 4, "tiers": [4, 5],
-     "cultures": ["erebor"], "name": "[Erebor] War Spear II"},
+     "cultures": ["erebor"], "blend": 0.5, "name": "[Erebor] War Spear II"},
     {"id": "taom_ph_erebor_spear_a_t8", "donor": "sm_dwarf_erebor_spear_a", "tier": 8, "tiers": [6, 9],
-     "cultures": ["erebor"], "name": "[Erebor] Royal War Spear I"},
+     "cultures": ["erebor"], "blend": 0.5, "name": "[Erebor] Royal War Spear I"},
     {"id": "taom_ph_erebor_spear_b_t8", "donor": "sm_dwarf_erebor_spear_b", "tier": 8, "tiers": [6, 9],
-     "cultures": ["erebor"], "name": "[Erebor] Royal War Spear II"},
+     "cultures": ["erebor"], "blend": 0.5, "name": "[Erebor] Royal War Spear II"},
 
     {"id": "taom_ph_gondor_spear_b_t5", "donor": "wm_gondor_spear_b", "tier": 5, "tiers": [4, 6],
      "cultures": ["gondor"], "name": "[Gondor] Heavy Spear, Tempered"},
