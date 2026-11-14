@@ -360,7 +360,7 @@ def render(troops, skills_by_id):
             f'      occupation="{"Mercenary" if src else "Soldier"}"',
             f'      culture="Culture.lothlorien"{basic}>',
             "    <face>",
-            '      <face_key_template value="BodyProperty.fighter_rivendell" />',
+            '      <face_key_template value="BodyProperty.fighter_lothlorien" />',
             "    </face>",
             "    <skills>",
         ]

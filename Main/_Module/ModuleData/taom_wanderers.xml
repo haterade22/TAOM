@@ -3403,7 +3403,7 @@
 		occupation="Wanderer"
 		skill_template="SkillSet.spc_wanderer_umbar_0_skills">
 		<face>
-			<face_key_template value="BodyProperty.fighter_gondor" />
+			<face_key_template value="BodyProperty.fighter_umbar" />
 		</face>
 		<Traits>
 			<Trait id="Calculating" value="1" />
@@ -3426,7 +3426,7 @@
 		occupation="Wanderer"
 		skill_template="SkillSet.spc_wanderer_umbar_1_skills">
 		<face>
-			<face_key_template value="BodyProperty.fighter_gondor" />
+			<face_key_template value="BodyProperty.fighter_umbar" />
 		</face>
 		<Traits>
 			<Trait id="Valor" value="1" />
@@ -3449,7 +3449,7 @@
 		occupation="Wanderer"
 		skill_template="SkillSet.spc_wanderer_umbar_2_skills">
 		<face>
-			<face_key_template value="BodyProperty.fighter_gondor" />
+			<face_key_template value="BodyProperty.fighter_umbar" />
 		</face>
 		<Traits>
 			<Trait id="Calculating" value="1" />
@@ -3472,7 +3472,7 @@
 		occupation="Wanderer"
 		skill_template="SkillSet.spc_wanderer_umbar_3_skills">
 		<face>
-			<face_key_template value="BodyProperty.fighter_gondor" />
+			<face_key_template value="BodyProperty.fighter_umbar" />
 		</face>
 		<Traits>
 			<Trait id="Mercy" value="1" />
@@ -3495,7 +3495,7 @@
 		occupation="Wanderer"
 		skill_template="SkillSet.spc_wanderer_umbar_4_skills">
 		<face>
-			<face_key_template value="BodyProperty.fighter_gondor" />
+			<face_key_template value="BodyProperty.fighter_umbar" />
 		</face>
 		<Traits>
 			<Trait id="Calculating" value="1" />
@@ -3518,7 +3518,7 @@
 		occupation="Wanderer"
 		skill_template="SkillSet.spc_wanderer_umbar_5_skills">
 		<face>
-			<face_key_template value="BodyProperty.fighter_gondor" />
+			<face_key_template value="BodyProperty.fighter_umbar" />
 		</face>
 		<Traits>
 			<Trait id="Calculating" value="1" />
@@ -3541,7 +3541,7 @@
 		occupation="Wanderer"
 		skill_template="SkillSet.spc_wanderer_umbar_6_skills">
 		<face>
-			<face_key_template value="BodyProperty.fighter_gondor" />
+			<face_key_template value="BodyProperty.fighter_umbar" />
 		</face>
 		<Traits>
 			<Trait id="Valor" value="1" />
@@ -3564,7 +3564,7 @@
 		occupation="Wanderer"
 		skill_template="SkillSet.spc_wanderer_umbar_7_skills">
 		<face>
-			<face_key_template value="BodyProperty.fighter_gondor" />
+			<face_key_template value="BodyProperty.fighter_umbar" />
 		</face>
 		<Traits>
 			<Trait id="Honor" value="1" />
@@ -3587,7 +3587,7 @@
 		occupation="Wanderer"
 		skill_template="SkillSet.spc_wanderer_umbar_8_skills">
 		<face>
-			<face_key_template value="BodyProperty.fighter_gondor" />
+			<face_key_template value="BodyProperty.fighter_umbar" />
 		</face>
 		<Traits>
 			<Trait id="Valor" value="1" />
@@ -3610,7 +3610,7 @@
 		occupation="Wanderer"
 		skill_template="SkillSet.spc_wanderer_umbar_9_skills">
 		<face>
-			<face_key_template value="BodyProperty.fighter_gondor" />
+			<face_key_template value="BodyProperty.fighter_umbar" />
 		</face>
 		<Traits>
 			<Trait id="Calculating" value="1" />
