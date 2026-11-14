@@ -192,9 +192,15 @@ pinned (#1186 holds the follow-up).
   `"EquipPresets_HeroPresets"`, the base id and the class ids 101 and 102 match on both sides, and so do the six properties of
   `HoNEquipmentPreset`. `HoNPresetItemReference` does not: TAOM saves `SlotIndex` as property 1 and `ItemStringId` as property 2
   (`Main/Features/EquipPresets/Models/HoNPresetItemReference.cs`:26-29), and the standalone mod saves them the other way round
-  (`HoN/EquipPresets/Data/HoNPresetItemReference.cs@c45d8374`:9-13, its release of 2026-04-29). What the engine does with a preset
-  of the other layout on load was not read. TAOM's layout stays, because TAOM's saves have used it since 2026-05-07; an import of
-  the standalone mod's presets is not supported (#1194).
+  (`HoN/EquipPresets/Data/HoNPresetItemReference.cs@c45d8374`:9-13, its release of 2026-04-29). A save with the standalone mod's presets
+  loads without an error, and the item ids are lost [TAOM-verified, v1.5.7, code read 2026-11-13; no such save was loaded]. The
+  loader matches a saved member by its id alone and sets a property only when the saved value fits the property's type or
+  converts to it (`PropertyLoadData.FillObject`, `LoadContext.TryConvertType`: number to number, number to string). So the saved
+  string under id 1 is not written into TAOM's `int SlotIndex`, which stays 0, and the saved slot number under id 2 becomes TAOM's
+  `ItemStringId` as text ("5", "9"). Such a preset shows under its name, equips nothing and reports the slot numbers as missing
+  items; the first TAOM save then writes that state, so the original item ids are gone for good. TAOM's layout stays, because
+  TAOM's saves have used it since 2026-05-07, and a repair at load could only help a save that TAOM has not saved since then
+  (#1194).
 
 ## RTS Camera
 
