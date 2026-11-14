@@ -36,6 +36,31 @@ main_checkout_name() {
   basename "${common:-$PWD}"
 }
 
+# Work claims (#1248). Two sessions once ran the same fix at once: the later one could not see that
+# the first already owned it. Before each task or sub-task a session claims it with
+# tools/work_claims.py; this lists the live claims of the other sessions, on a fresh start, after
+# a compaction, a resume or a /clear, so a session that starts later or moves on to its next task sees them. The payload's
+# session_id leaves out the session's own claims. Bounded by $1 seconds; fail open, never silent.
+ss_claims() {
+  local budget=${1:-3} claims rc
+  [[ -f tools/work_claims.py ]] || return 0
+  [[ -n "${PYBIN:-}" ]] || source "$(dirname "${BASH_SOURCE[0]}")/_pybin.sh" 2>/dev/null
+  echo "DECONFLICT: before each task or sub-task, run python tools/work_claims.py claim <issue or key> --note \"<what>\"; HELD (exit 3) means another session owns it: stop and ask that session or Mike. Also ask whether the result you just got back matters to the job in hand; if not, go on."
+  if [[ -z "${PYBIN:-}" ]]; then
+    echo "NOTE: work claims UNCHECKED this session (no safe python)."
+    return 0
+  fi
+  TAOM_SID=""
+  source "$(dirname "${BASH_SOURCE[0]}")/_session_ledger.sh" 2>/dev/null && taom_session_id "$INPUT"
+  claims=$(timeout -k 0.5 "$budget" "$PYBIN" tools/work_claims.py list --others --brief ${TAOM_SID:+--session "$TAOM_SID"} 2>/dev/null)
+  rc=$?
+  if (( rc != 0 )); then
+    echo "NOTE: work claims UNCHECKED this session (tools/work_claims.py exited $rc)."
+  elif [[ -n "$claims" ]]; then
+    printf '%s\n' "$claims"
+  fi
+}
+
 # After compaction, re-surface recent Dead ends (run-protocol.md; CLAUDE.md item 8). SessionStart is
 # the only compact-time hook whose stdout reaches Claude (harness-facts.md "Visibility"). One find
 # bounded at 3 s, run folders and memory cards edited in the last two days,
@@ -46,6 +71,14 @@ if [[ "$SOURCE" == compact ]]; then
        -type f \( -name PROGRESS.md -o -path '*/features/*.md' \) -mmin -2880 \
        -exec awk 'FNR==1{s=0} /^## /{s=/^## Dead ends/; next} /^\*\*[^*]+\*\*/{s=/^\*\*Dead ends/} s&&NF{print FILENAME": "$0; if(++n>=40) exit}' {} + 2>/dev/null)
   [[ -n "$DE" ]] && printf 'Dead ends recorded in the last two days (do not retry these):\n%s\n' "$DE"
+  ss_claims 3
+  exit 0
+fi
+
+# A /clear or a resume starts the next task, so it gets the claim list too (#1248), and nothing else.
+if [[ "$SOURCE" == resume || "$SOURCE" == clear ]]; then
+  cd "${CLAUDE_PROJECT_DIR:-$(pwd)}" || exit 0
+  ss_claims 3
   exit 0
 fi
 
@@ -57,6 +90,11 @@ fi
 cd "${CLAUDE_PROJECT_DIR:-$(pwd)}" || exit 0
 
 echo "=== TAOM Session Context ==="
+if ss_probe_budget; then
+  ss_claims "$SS_PROBE_BUDGET"
+else
+  echo "NOTE: work claims UNCHECKED this session (session-start time budget spent)."
+fi
 
 # No branch line and no recent-commit list here: the harness puts the branch, the status and the
 # last five commits into every main session as gitStatus, and again after a compaction.

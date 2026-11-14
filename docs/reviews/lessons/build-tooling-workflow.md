@@ -5097,3 +5097,9 @@ yotthani's `MithrilForge.Crowd` tool builds every output file or folder name tha
 - **Why missed:** the gate was written when a starter's stats depended only on its donor, and the change that made them depend on other data did not revisit it.
 - **Prevent:** when a generated value starts to depend on new inputs, make the reversion gate compare the generated text with the plan, not only the ids, and add a test that moves an input and expects drift.
 - **Source:** [rca-starter-cap-upgrade-paths-2026-11-13.md](../rca-starter-cap-upgrade-paths-2026-11-13.md), finding 6.
+
+### A harness tool that reads an undocumented harness file must say when it cannot confirm (#1248, 2026-11-13)
+`tools/work_claims.py` ties a claim to a live session through `~/.claude/sessions/<pid>.json`, a file the harness writes and does not document. A claim whose row was missing, or named another session, still returned exit 0 "claimed", and every other session then read it as ended, so the tool built to stop duplicate work could fail with no word. The rule it serves also told every AI client to claim, and only a Claude session has the id a claim needs.
+- **Why missed:** every test and the hand run used a registry where each row matched; nobody read the rule as Codex would.
+- **Prevent:** after a write that a later reader judges by an outside file, read it back through that reader's own test (`is_live`) and give a distinct exit when it fails; give the consumer hook a sandbox test with a fake of the outside file. Before an AGENTS.md rule names a tool, run the tool without the Claude environment.
+- **Source:** [rca-work-claims-2026-11-13.md](../rca-work-claims-2026-11-13.md), findings 1 to 3.
