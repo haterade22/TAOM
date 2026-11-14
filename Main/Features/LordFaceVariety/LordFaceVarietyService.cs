@@ -2,6 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
+using NumberStyles = System.Globalization.NumberStyles;
+using Invariant = System.Globalization.CultureInfo;
 using TAOM.Adapters;
 using TAOM.Core.Logging;
 
@@ -19,8 +22,8 @@ public sealed record FaceVarietyReport(
 /// Lord Face Variety (#952, docs/features/lord-face-variety.md): one pass at campaign creation that stops
 /// campaign heroes from sharing a face. Rule A: a hero still holding the minimum of a range that has spread
 /// (a <c>face_key_template</c>) is rolled inside that range, the way the engine rolls a hero born from a
-/// template. Rule B: heroes of one race and sex that still share an explicit face key keep it for one anchor
-/// and are rolled near their own face. Rule C: a hero generated at campaign creation (not an original character,
+/// template. Rule B: heroes of one race and sex that still share an explicit face key, compared without its
+/// colour fields (<see cref="FaceShapeKey"/>), keep it for one anchor and are rolled near their own face. Rule C: a hero generated at campaign creation (not an original character,
 /// such as an initial child cloned from a lord) whose range is flat is rolled near its own face too. All decisions are here; the engine is reached through
 /// <see cref="IHeroFaceAdapter"/>.
 /// </summary>
@@ -48,6 +51,15 @@ public sealed class LordFaceVarietyService
     /// <summary>Heroes whose shared face is the point: Elladan and Elrohir are identical twins.</summary>
     public static IReadOnlyCollection<string> SharedByDesignIds { get; } = new[] { "lord_R1_3", "lord_R1_4" };
 
+    /// <summary>
+    /// Bits of the key's first 64-bit part that rule B ignores: hair colour (30-35), two fields the recoloured
+    /// heroes of #1221 also differ in (36-47, not decoded; eye colour is a guess) and skin colour (48-53). A
+    /// hero whose key differs from another's only here shows the same face in other colours.
+    /// </summary>
+    public const ulong ColourBits = 0x003FFFFFC0000000UL;
+
+    private static readonly Regex HexKey = new("[0-9A-Fa-f]{128}", RegexOptions.CultureInvariant);
+
     private const string LogPrefix = "[LordFaceVariety]";
 
     private readonly IHeroFaceAdapter _adapter;
@@ -73,6 +85,21 @@ public sealed class LordFaceVarietyService
         }
 
         return (int)(hash & 0x7FFFFFFFu);
+    }
+
+    /// <summary>
+    /// The face key with the <see cref="ColourBits"/> of its first part cleared, for grouping. The key is the
+    /// first run of 128 hex digits in <paramref name="staticKey"/> (v1.5.7 <c>StaticBodyProperties.ToString()</c>
+    /// writes <c>key="</c> and the eight parts as 16 upper-case digits each). Text without such a run comes back
+    /// unchanged.
+    /// </summary>
+    public static string FaceShapeKey(string staticKey)
+    {
+        var match = HexKey.Match(staticKey ?? string.Empty);
+        if (!match.Success) return staticKey;
+        var part1 = ulong.Parse(match.Value.Substring(0, 16), NumberStyles.HexNumber, Invariant.InvariantCulture) & ~ColourBits;
+        return staticKey.Substring(0, match.Index) + part1.ToString("X16", Invariant.InvariantCulture)
+            + staticKey.Substring(match.Index + 16);
     }
 
     public FaceVarietyReport Run()
@@ -150,7 +177,7 @@ public sealed class LordFaceVarietyService
 
     private static IEnumerable<List<HeroFaceSnapshot>> SharedGroups(IEnumerable<HeroFaceSnapshot> heroes) =>
         heroes
-            .GroupBy(h => (h.RaceKey, h.IsFemale, h.StaticKey))
+            .GroupBy(h => (h.RaceKey, h.IsFemale, FaceShapeKey(h.StaticKey)))
             .Where(g => g.Count() > 1)
             .Select(g => g.OrderBy(h => h.Id, StringComparer.Ordinal).ToList());
 
