@@ -10,7 +10,7 @@ using TAOM.Tests.Infrastructure;
 namespace TAOM.Tests.Features.EncounterLines;
 
 /// <summary>
-/// Patch149: the two shipped strings files against the SPEC-lines.md matrix and the engine's scoring. The loader keeps only
+/// Patch149: the two shipped strings files against the matrix in docs/features/encounter-lines.md and the engine's scoring. The loader keeps only
 /// the text before and after the first dot of an id, the dialog lookup stops scoring a row at its first failing tag, and
 /// vanilla's robbery code needs all four lines of a variation, so each of those is pinned here. The English is held to the
 /// writing rules: no gendered address, no placeholder or dash, never the listener's people, no Calradian name.
@@ -59,8 +59,7 @@ public class EncounterLinesDataTests
     internal static List<Row> Load(string file)
     {
         var path = ModuleData(file);
-        if (!File.Exists(path))
-            Assert.Inconclusive(file + " is not in ModuleData yet (the lead generates it)");
+        Assert.IsTrue(File.Exists(path), file + " is missing from ModuleData");
 
         return XDocument.Load(path).Descendants("string").Select(e =>
         {
@@ -115,18 +114,20 @@ public class EncounterLinesDataTests
                         Add("str_robbery_" + kind, $"{c}_{b}_{n}", "robbery_" + kind, $"{c}_{b}_{n}");
                     Add("str_taom_enc_bandit_greet", $"{c}_{b}_{n}", "bandit_greet", $"{c}_{b}_{n}");
                 }
-                Add("str_taom_enc_hideout_boss", $"{c}_{b}", "hideout_boss", $"{c}_{b}");
+                // Looters never hold a hideout (BanditSpawnCampaignBehavior spawns them on the map), so they have no boss rows.
+                if (c != "looters")
+                    Add("str_taom_enc_hideout_boss", $"{c}_{b}", "hideout_boss", $"{c}_{b}");
             }
         }
         return ids;
     }
 
     [TestMethod]
-    public void TheSpecMatrix_Is681Ids_243ForLordsAnd438Keyed()
+    public void TheSpecMatrix_Is678Ids_243ForLordsAnd435Keyed()
     {
         var ids = ExpectedIds();
 
-        Assert.AreEqual(681, ids.Count);
+        Assert.AreEqual(678, ids.Count);
         Assert.AreEqual(243, ids.Keys.Count(k => k.Contains(".taom_")));
     }
 
@@ -140,9 +141,9 @@ public class EncounterLinesDataTests
         var extra = actual.Select(r => r.Id).Except(expected.Keys).ToList();
         Assert.AreEqual(0, missing.Count, "missing: " + string.Join(", ", missing.Take(20)));
         Assert.AreEqual(0, extra.Count, "extra: " + string.Join(", ", extra.Take(20)));
-        Assert.AreEqual(681, actual.Count, "an id appears twice");
+        Assert.AreEqual(678, actual.Count, "an id appears twice");
         Assert.AreEqual(243, LordRows.Value.Count);
-        Assert.AreEqual(438, KeyedRows.Value.Count);
+        Assert.AreEqual(435, KeyedRows.Value.Count);
         foreach (var row in actual)
             Assert.AreEqual(expected[row.Id], row.Key, row.Id + " key");
     }
@@ -273,9 +274,28 @@ public class EncounterLinesDataTests
                 expected.Add(("CombatantTag", 1));
             if (row.TextId == "str_context_line" || row.TextId == "hero_leave")
                 expected.Add(("RomanticallyInvolvedTag", -1));
+            if ((row.TextId == "str_context_line" || row.TextId == "hero_leave") && row.Variation.Contains("_kin"))
+                expected.Add(("PlayerIsEnemyTag", -1));
 
             CollectionAssert.AreEqual(expected, tail, row.Id + " tags after the bucket: " + string.Join(", ", tail));
         }
+    }
+
+    [TestMethod]
+    public void EveryKinGreetingAndFarewell_IsWrittenForPeace_SoItFailsAtWar()
+    {
+        // The kin bucket also wins at war on the same side (EncounterBuckets.Lord), and these 27 rows are peace text.
+        // PlayerIsEnemyTag weight -1 drops the row when the speaker's realm is at war with the player; vanilla's war
+        // greeting and farewell then show.
+        var kin = LordRows.Value
+            .Where(r => (r.TextId == "str_context_line" || r.TextId == "hero_leave") && r.Variation.Contains("_kin"))
+            .ToList();
+
+        Assert.AreEqual(27, kin.Count);
+        foreach (var row in kin)
+            CollectionAssert.Contains(row.Tags.ToList(), ("PlayerIsEnemyTag", -1), row.Id);
+        Assert.AreEqual(0, LordRows.Value.Except(kin).Count(r => r.Tags.Any(t => t.Name == "PlayerIsEnemyTag")),
+            "a row outside the kin greetings and farewells carries PlayerIsEnemyTag");
     }
 
     [TestMethod]

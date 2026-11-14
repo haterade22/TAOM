@@ -164,7 +164,8 @@ public class CustomBattleTroopFilterTests
     }
 
     // TAOM has no Khand (Culture.battania) soldiers of its own, so the vanilla Battanian line is the whole Khand
-    // Custom Battle roster; hiding it would empty the Khand ranged and cavalry slots.
+    // Custom Battle roster; hiding it would empty the Khand ranged and cavalry slots. No vanilla-line rule names
+    // battanian_ or wolfskins_, which is what keeps them: a rule that did would fail these rows.
     [TestMethod]
     [DataRow("battanian_fian")]
     [DataRow("battanian_horseman")]
@@ -177,12 +178,17 @@ public class CustomBattleTroopFilterTests
     }
 
     // The vanilla CustomBattle module's Calradian commanders are heroes of reused cultures, so the muster screen
-    // offered them as Rohan, Rhun, Dale and Harwan commanders next to TAOM's lords.
+    // offered them as commanders next to TAOM's lords. Dunland (empire) and Khand (battania) have TAOM lords in
+    // Custom Battle too (custom_battle_lords.xml), so theirs are hidden like the rest.
     [TestMethod]
     [DataRow("commander_2", "vlandia")]
     [DataRow("commander_7", "khuzait")]
     [DataRow("commander_6", "aserai")]
     [DataRow("commander_24", "sturgia")]
+    [DataRow("commander_1", "empire")]
+    [DataRow("commander_23", "empire")]
+    [DataRow("commander_4", "battania")]
+    [DataRow("commander_16", "battania")]
     public void VanillaCustomBattleCommanders_AreObsoleteInCustomBattle(string id, string culture)
     {
         var doc = Run(Doc($"<NPCCharacter id=\"{id}\" culture=\"Culture.{culture}\" is_hero=\"true\"/>"));
@@ -192,20 +198,28 @@ public class CustomBattleTroopFilterTests
         Assert.AreEqual("true", attrs[0].Value);
     }
 
-    // TAOM has no Custom Battle heroes of Dunland (Culture.empire) or Khand (Culture.battania), so the vanilla
-    // commanders stay their only ones; other commander-like ids are not vanilla's.
+    // Vanilla's trader hero of Dunland is offered by the muster as a commander too (SandBoxCore spnpccharacters.xml:
+    // merchant_empire, is_hero=true, occupation GoodsTrader). The other merchant_* are not heroes.
     [TestMethod]
-    public void DunlandAndKhandCommandersAndOtherCommanderLikeIds_AreLeftAlone()
+    public void TheDunlandTraderHero_IsObsoleteInCustomBattle()
     {
         var doc = Run(Doc(
-            "<NPCCharacter id=\"commander_1\" culture=\"Culture.empire\" is_hero=\"true\"/>",
-            "<NPCCharacter id=\"commander_4\" culture=\"Culture.battania\" is_hero=\"true\"/>",
+            "<NPCCharacter id=\"merchant_empire\" culture=\"Culture.empire\" is_hero=\"true\" occupation=\"GoodsTrader\"/>",
+            "<NPCCharacter id=\"merchant_vlandia\" culture=\"Culture.vlandia\" is_hero=\"false\" occupation=\"GoodsTrader\"/>"));
+
+        Assert.AreEqual("true", Obsolete(doc, "merchant_empire"));
+        Assert.IsNull(Obsolete(doc, "merchant_vlandia"));
+    }
+
+    // Other commander-like ids are not vanilla's.
+    [TestMethod]
+    public void OtherCommanderLikeIds_AreLeftAlone()
+    {
+        var doc = Run(Doc(
             "<NPCCharacter id=\"commander_aragorn\" culture=\"Culture.gondor\" is_hero=\"true\"/>",
             "<NPCCharacter id=\"commander_\" culture=\"Culture.gondor\" is_hero=\"true\"/>",
             Troop("commander_7", "khuzait")));
 
-        Assert.IsNull(Obsolete(doc, "commander_1"));
-        Assert.IsNull(Obsolete(doc, "commander_4"));
         Assert.IsNull(Obsolete(doc, "commander_aragorn"));
         Assert.IsNull(Obsolete(doc, "commander_"));
         Assert.IsNull(Obsolete(doc, "commander_7"));
