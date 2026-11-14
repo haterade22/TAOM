@@ -788,7 +788,7 @@
                     id="Item.ornate_adarga" />
                 <equipment
                     slot="Item2"
-                    id="Item.aserai_sword_6_t4" />
+                    id="Item.wm_harad_sword_a01" />
                 <equipment
                     slot="Head"
                     id="Item.brass_aserai_helmet_b_open" />
@@ -853,7 +853,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.southern_spear_3_t3" />
+                    id="Item.wm_harad_spear_b01" />
                 <equipment
                     slot="Item1"
                     id="Item.desert_round_shield" />
@@ -1428,7 +1428,7 @@
                     id="Item.ornate_adarga" />
                 <equipment
                     slot="Item2"
-                    id="Item.aserai_sword_6_t4" />
+                    id="Item.wm_harad_sword_a01" />
                 <equipment
                     slot="Head"
                     id="Item.brass_aserai_helmet_b_open" />
@@ -1493,7 +1493,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.southern_spear_3_t3" />
+                    id="Item.wm_harad_spear_b01" />
                 <equipment
                     slot="Item1"
                     id="Item.desert_round_shield" />
