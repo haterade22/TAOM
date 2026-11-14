@@ -162,9 +162,9 @@ public class LordIdentityConsistencyTests
         // MBObjectManager.MergeElementAttributes merges PER ATTRIBUTE, not per node: only the
         // attributes the later file actually declares overwrite the accumulated element, and
         // anything it omits survives from the stylesheet's output. So a lord defined in both files
-        // keeps lords.xslt's is_female whenever characters/lords.xml does not state one. Seventeen
-        // ids are in exactly that position today; all seventeen happen to say "false" on both
-        // sides, but modelling this as a whole-node replace would read the next one wrong.
+        // keeps lords.xslt's is_female whenever characters/lords.xml does not state one. No id is in
+        // both files since #648 (LordDoubleDefinitionTests), but modelling this as a whole-node
+        // replace would read the next one wrong.
         var xml = ReadModuleData(root, "characters", "lords.xml");
         foreach (Match m in Regex.Matches(xml, @"<NPCCharacter\b(?<attrs>[^>]*)>"))
         {

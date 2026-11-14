@@ -600,10 +600,10 @@ unchanged; the archer lord becomes a horse archer. A hero's formation class read
 equipment, not `default_group`, but the attribute was made to agree anyway: all 16 lords binding a
 BN roster now carry `default_group="Cavalry"`. Eight read `Infantry` before (`lord_1_27_1`,
 `lord_1_27_2`, `lord_SE9_l`, `lord_SE9_c2` in `characters/lords.xml`, and in `lords.xslt` those four
-again plus `lord_1_14` Mouth of Sauron, `lord_1_27`, `lord_1_29`, `lord_1_47`). Note the overlap:
-`lords.xslt` carries a template for every one of the 16, including the ten defined in
-`characters/lords.xml`, so a lord attribute has to be changed in BOTH files or the two copies
-disagree. Nobody binds the archer rosters.
+again plus `lord_1_14` Mouth of Sauron, `lord_1_27`, `lord_1_29`, `lord_1_47`). `lords.xslt` carries a
+template for every one of the 16. Ten of them also had a `characters/lords.xml` row until #648 folded
+those rows into the templates, so a lord attribute is now changed in `lords.xslt` only. Nobody binds the
+archer rosters.
 
 Two things deliberately not done:
 

@@ -296,9 +296,8 @@ Kysaro's data asks (`TAOM_special_character_requests.md`), as decided on 2026-10
   look. A one-lord trial on Denethor II was added and then reverted for that reason. If a lord looks
   bald, the hair index inside his key is the cause, which is a face-key edit.
 - The Mouth of Sauron keeps TAOM's helm (Mike).
-- Eomer (`lord_4_3_1`) is defined in both `lords.xslt` and `characters/lords.xml`. The engine merges the
-  two today (same equipment ids, `lords.xml` wins the scalars), but if their equipment ids ever diverge
-  the engine would union both kits. Reported, not changed.
+- Eomer (`lord_4_3_1`) was defined in both `lords.xslt` and `characters/lords.xml`. #648 folded the row
+  into the template, so the two kits can no longer union.
 
 ## Tests
 

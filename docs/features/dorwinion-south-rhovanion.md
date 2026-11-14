@@ -152,7 +152,8 @@ at prosperity 800 in both realms.
 
 Dorwinion's lords use Dale's template pair `lord_S10_1` and `lord_S10_2`, the `taom_dale_*` skill
 sets and `fighter_sturgia` faces, and each lady carries `<hair_tag name="sturgia" />`. South
-Rhovanion's lords use a new Rohan pair, `lord_4_21_1` (knight) and `lord_4_16_1` (lady), the
+Rhovanion's lords use a new Rohan pair, `lord_4_21_1` (knight) and `lord_4_16_1` (lady; since #648 the
+generator reads her frozen row from `tools/data/new_faction_kingdom_templates.json`), the
 `taom_rohan_knight` and `taom_rohan_lady` skill sets and TAOM's `fighter_rohan` faces; its ladies
 carry `<hair_tag name="vlandia" />`.
 

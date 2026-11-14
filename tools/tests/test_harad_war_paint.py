@@ -51,8 +51,9 @@ MALE_DESIGN_INDEXES = range(31, 39)
 FEMALE_DESIGN_INDEXES = range(34, 41)
 # A key stores the colour as 0 to 63, a position along the merged palette. Indexes 12 to 23 are the Harad colours.
 HARAD_COLOUR_VALUES = range(33, 64)
-# Lords with a fixed key when the design was written: 28 in lords.xml and 53 in lords.xslt.
-FIXED_KEY_HARAD_LORDS = 81
+# Lords with a fixed key, each counted once. All 53 are in lords.xslt: #648 folded the 28 that also had a
+# characters/lords.xml row into their templates.
+FIXED_KEY_HARAD_LORDS = 53
 TATTOO_KEY_BITS = (0x3F << 24) | (0x3F << 18)
 # The native skin stores gradient points in a fixed array: 0x3C4 to 0x5C4, 16 bytes each (FUN_180578810, v1.5.6).
 NATIVE_PALETTE_CAPACITY = 32
@@ -131,7 +132,12 @@ def fixed_key_characters():
 
 
 def fixed_key_harad_lords():
-    return [(lord, female, face) for lord, culture, female, face in fixed_key_characters() if culture in HARAD_CULTURES]
+    """(id, is_female, face) of each fixed-key Harad lord, once: the first definition fixed_key_characters yields."""
+    lords = {}
+    for lord, culture, female, face in fixed_key_characters():
+        if culture in HARAD_CULTURES:
+            lords.setdefault(lord, (lord, female, face))
+    return list(lords.values())
 
 
 def harad_culture_characters():
@@ -317,7 +323,7 @@ class FixedKeyLordTests(unittest.TestCase):
     def setUpClass(cls):
         cls.lords = list(fixed_key_harad_lords())
 
-    def test_the_scan_finds_the_lords_in_both_files(self):
+    def test_the_scan_finds_every_fixed_key_lord(self):
         self.assertGreaterEqual(len(self.lords), FIXED_KEY_HARAD_LORDS)
 
     def test_each_key_holds_a_design_for_the_lords_gender(self):
@@ -332,24 +338,17 @@ class FixedKeyLordTests(unittest.TestCase):
                 self.assertIn(tattoo_bits(face.find("BodyProperties").get("key"))[1], HARAD_COLOUR_VALUES)
 
     def test_each_lord_is_tagged_harad(self):
-        # Children and the face variety pass roll from the tags, not from the key.
+        # Children and the face variety pass roll from the tags, not from the key. A set: 28 templates hold the tag
+        # twice, the engine's merge of their template and old characters/lords.xml row, copied in by #648.
         for lord_id, _, face in self.lords:
             with self.subTest(lord=lord_id):
-                self.assertEqual(["harad"], tattoo_tags(face))
-
-    def test_a_lord_in_both_files_has_the_same_design_and_colour(self):
-        seen = {}
-        for lord_id, _, face in self.lords:
-            seen.setdefault(lord_id, set()).add(tattoo_bits(face.find("BodyProperties").get("key")))
-        self.assertEqual({}, {lord_id: bits for lord_id, bits in seen.items() if len(bits) != 1})
+                self.assertEqual({"harad"}, set(tattoo_tags(face)))
 
     def test_lords_with_one_face_also_share_one_key(self):
         # LordFaceVariety groups on the whole key, so two lords with one face must hold the same paint to be separated.
-        winners = {}
-        for lord_id, is_female, face in self.lords:
-            winners.setdefault(lord_id, (is_female, face.find("BodyProperties").get("key")))
         faces = {}
-        for is_female, key in winners.values():
+        for _, is_female, face in self.lords:
+            key = face.find("BodyProperties").get("key")
             faces.setdefault((is_female, int(key[:16], 16) & ~TATTOO_KEY_BITS, key[16:]), set()).add(key)
         self.assertEqual([], [keys for keys in faces.values() if len(keys) > 1])
 

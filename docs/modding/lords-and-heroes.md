@@ -306,7 +306,8 @@ Code: No code changes needed
    vanilla id should have no `characters/lords.xml` row at all (Mike, 2026-09-23: vanilla lords in
    the XSLT, new ones in `lords.xml`), because a second definition wins per attribute and unions
    its equipment sets with the template's, a random kit per campaign. Since #648 no id has both,
-   and `LordDoubleDefinitionTests.NoLordIsDefinedInBothLordsFiles` fails on a new one.
+   and `LordDoubleDefinitionTests.NoLordIsDefinedInBothLordsFiles` fails on a row for any id with a
+   `match="NPCCharacter[@id='x']"` template (the form every lord template uses on 2026-11-13).
 2. Keep the key stable and change only the literal after `}`. Changing the key orphans twelve
    translations.
 3. If the key is registered in `taom_xslt_strings.xml`, update the row there too, then run the
@@ -404,11 +405,12 @@ For content retirement across the mod, see [Retire content](recipe-retire-conten
 - **A vanilla id carries its sex until you change three things.** `is_female`, `<beard_tags>` and the
   `<BodyProperties key>` travel as one unit. Flipping the attribute alone gives a bearded woman;
   the biography in `heroes.xslt` saying son, daughter or wife is the cheapest spec to check against.
-  `LordNameAndSexConsistencyTests` pins the female-with-beard half.
+  `LordNameAndSexConsistencyTests` pins the female-with-beard half, in both lords files.
   [lord skills authoring](../ai-includes/lord-skills-authoring.md).
 - **`tools/complete_lords_xslt.py --apply` only adds templates for vanilla lords `lords.xslt` lacks** (#959). It never
   rewrites an existing template, so a deleted `is_female` line stays deleted and every `race`, `<Equipments>` and hand block
-  is safe; on the shipped file it is a no-op. `characters/lords.xml` has no regenerator and is never at risk.
+  is safe; on the shipped file it is a no-op. It never writes `characters/lords.xml`; `generate_new_faction_kingdoms.py`
+  (its `TAOM-NEWFACTIONS` regions) and `apply_culture_skills_traits.py --apply` do.
   Contract: [tools/README.md](../../tools/README.md).
   [lord identity reconciliation](../features/lord-identity-reconciliation.md).
 - **Lord names reach the pipeline through THREE tiers, and since 2026-10-01 hero biographies do too.** Names edited in the stylesheets touch keys registered in `taom_xslt_strings.xml`

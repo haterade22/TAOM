@@ -69,18 +69,6 @@ public class LordDoubleDefinitionTests
     }
 
     [TestMethod]
-    public void LordsXml_DefinesNoneOfTheFormerlyCrossFactionLords()
-    {
-        var lords = XDocument.Load(Path.Combine(CultureDataFixture.ModuleDataPath(), "characters", "lords.xml"));
-
-        var duplicates = FormerlyCrossFactionKits.Select(x => x.Id).Where(id => Lord(lords.Root, id) != null).ToArray();
-
-        Assert.AreEqual(0, duplicates.Length,
-            "characters/lords.xml defines a lord that lords.xslt already rebuilds, so its kit is merged with the " +
-            "template's and one is picked at random per campaign: " + string.Join(", ", duplicates));
-    }
-
-    [TestMethod]
     public void LordsXslt_FormerlyCrossFactionLords_WearOnlyTheirSidesKit()
     {
         var output = TransformStub(FormerlyCrossFactionKits.Select(x => x.Id).ToArray());

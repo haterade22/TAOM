@@ -181,7 +181,7 @@ Key points:
 
 ### TAOM current state — direct lords.xml
 
-`Main/_Module/ModuleData/characters/lords.xml`, `lord_3_3_1` (Tariq, custom Harad lord — culture is `aserai` because Harad uses the aserai XSLT culture):
+`Main/_Module/ModuleData/characters/lords.xml`, `lord_3_3_1` (Tariq, a Harad lord; culture is `aserai` because Harad uses the aserai XSLT culture), as the row stood before #648 folded every vanilla-id row into its `lords.xslt` template. TAOM-only lords keep this row shape:
 
 ```xml
 <NPCCharacter id="lord_3_3_1" name="{=aom_lord_3_3_1_name}Tariq" age="19" voice="curt"

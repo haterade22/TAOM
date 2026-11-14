@@ -9,7 +9,7 @@ A named lord is defined in two places, and nothing before 2026-08-29 checked tha
 
 | Half | Files | Carries |
 |---|---|---|
-| Who he is | `Main/_Module/ModuleData/characters/lords.xml` (1346 `<NPCCharacter>`), `Main/_Module/ModuleData/lords.xslt` (396 templates over vanilla `SandBox/ModuleData/lords.xml`) | `name`, `is_female`, `race`, `age`, `culture`, `BodyProperties`, `beard_tags`, skills, equipment |
+| Who he is | `Main/_Module/ModuleData/characters/lords.xml` (1170 `<NPCCharacter>` on 2026-11-13), `Main/_Module/ModuleData/lords.xslt` (396 templates over vanilla `SandBox/ModuleData/lords.xml`) | `name`, `is_female`, `race`, `age`, `culture`, `BodyProperties`, `beard_tags`, skills, equipment |
 | What the player is told | `Main/_Module/ModuleData/characters/heroes.xml` (1167 `<Hero>`), `Main/_Module/ModuleData/heroes.xslt` (396 templates over vanilla `SandBox/ModuleData/heroes.xml`) | `faction`, `father`, `mother`, `spouse`, and the encyclopedia `text` |
 
 The encyclopedia shows the name and the biography side by side, so a player reads both at once.
@@ -34,8 +34,16 @@ skills moved into the template, the template's own kit is the only one, and `Lor
 pins it. The other 169 followed the same way: every value the game took from the row (faces on all of
 them; ages, skill templates, skills, traits, race uruk on fourteen Mordor lords, culture on nine, voice
 on six) moved into the template, the template's kit stayed as the only kit (106 of them had a second
-kit of the same culture in the row), and the row was deleted. A tool reproducing the engine's merge
-compared every lord the game builds before and after: identical apart from the dropped second kits.
+kit in the row), and the row was deleted. A model of the engine's merge (the installed v1.5.7
+`MBObjectManager` run over every `NPCCharacters` node, 2026-11-13; the script is not in the repo)
+compared every character before and after. Campaign: the same 6,332 ids, identical apart from the
+dropped second kits of 113 lords. Custom Battle: those rows had been the whole definition there, since
+SandBox loads its `lords.xml` for the campaign only, so each of the 176 got a
+`characters/custom_battle_lords.xml` stub that `lords.xslt` rebuilds. The same 5,790 ids with the same
+culture, hero flag and name; 113 lords wear the template's kit (their campaign kit) instead of the
+row's, 28 Harad lords hold the `harad` tattoo tag twice as they already did in the campaign, and 16
+state `is_female="false"`, which the engine also reads for a missing attribute. EditorGame loads no
+stub, so the 176 are gone from it; nothing in the repo uses them there.
 `LordDoubleDefinitionTests.NoLordIsDefinedInBothLordsFiles` is the gate, and `NazgulRaceDataTests` pins
 that none of the Nine is defined in `lords.xml` again.
 
@@ -50,10 +58,10 @@ foreach (XAttribute item in element2.Attributes())
 So an attribute `characters/lords.xml` omits survives from the stylesheet's output rather than
 being cleared. Only `_replaceWhileMerging="true"` wipes the element first, and the lords pipeline
 does not use it (the one TAOM file that does is the player-start override,
-[starting-equipment-tuning.md](starting-equipment-tuning.md)). Seventeen ids take their
-`is_female` from `lords.xslt` because the plain XML never states one;
-all seventeen read `false` on both sides today. Both new tests model the merge this way, because a
-whole-node model reads the eighteenth one wrong.
+[starting-equipment-tuning.md](starting-equipment-tuning.md)). Until #648, seventeen ids took their
+`is_female` from `lords.xslt` because the plain XML never stated one (all seventeen read `false`). No id
+is in both files now, but `LordIdentityConsistencyTests` still models the merge this way, because a
+whole-node model would read the next one wrong.
 
 **Child elements merge by key, and equipment UNIONS.** `<Equipments>` is `AlwaysPreferMerge` in
 `XmlSchemas/NPCCharacters.xsd`, with `EquipmentSet` unique on `id` + `civilian` + `stealth`, so a
@@ -80,7 +88,7 @@ that if a future vanilla patch adds ids in those files.
 |---|---|---|---|
 | `lords.xslt` names | 396 | all, in `taom_xslt_strings.xml` | yes |
 | `heroes.xslt` biographies | 396 | all, in `taom_xslt_strings.xml` | yes |
-| `characters/lords.xml` names | 1346 | 176 in `taom_xslt_strings.xml` + 1153 in `taom_lord_name_strings.xml` (added 2026-09-17 by `tools/generate_name_localization_strings.py`, excludes the 176 overlap); the 17 `aom_lord_AB*` and `aom_lord_SH*` keys are in neither file | yes, all 1346 ids in each of the 12 language folders |
+| `characters/lords.xml` names | 1170 (2026-11-13) | 1153 in `taom_lord_name_strings.xml` (added 2026-09-17 by `tools/generate_name_localization_strings.py`); none in `taom_xslt_strings.xml` since #648 folded the 176 vanilla-id rows into `lords.xslt`; the 17 `aom_lord_AB*` and `aom_lord_SH*` keys are in neither file | yes, all 1170 ids in each of the 12 language folders |
 | `characters/heroes.xml` biographies | 475 | 469 in `taom_hero_text_strings.xml` (2026-10-01), 6 in `taom_xslt_strings.xml` | yes |
 
 Through 2026-09-16 an edit confined to `characters/lords.xml` had zero locale ripple. As of
@@ -190,8 +198,9 @@ being needed:
 
 `tools/complete_lords_xslt.py --apply` only inserts templates for vanilla lords `lords.xslt` lacks (#959; the contract is in
 [tools/README.md](../../tools/README.md)), so it never rewrites an existing template. A deleted `is_female` line on a
-vanilla-female id stays deleted, and the `race` attributes and `<Equipments>` blocks are safe. `characters/lords.xml` has no
-regenerator and is never at risk. Before #959 the same command rebuilt the whole file: it copied vanilla's `true` back over a
+vanilla-female id stays deleted, and the `race` attributes and `<Equipments>` blocks are safe. It never writes
+`characters/lords.xml`; two tools do: `generate_new_faction_kingdoms.py` (its `TAOM-NEWFACTIONS` regions) and
+`apply_culture_skills_traits.py --apply` (skills and traits by culture). Before #959 the same command rebuilt the whole file: it copied vanilla's `true` back over a
 deleted line unless the id sat in a `GENDER_OVERRIDES` table (since removed), and it dropped every `race` attribute and
 `<Equipments>` block.
 
