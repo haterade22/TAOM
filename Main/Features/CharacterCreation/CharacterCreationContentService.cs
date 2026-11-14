@@ -35,6 +35,7 @@ public class CharacterCreationContentService : ICharacterCreationContentService
     // (banned IoC.Resolve in service body). Both used by AssignCareer.
     private readonly CareerSystem.ICareerCreationHandler _careerHandler;
     private readonly CareerSystem.ICareerRegistry _careerRegistry;
+    private readonly CareerSystem.ICareerDataService _careerData;
     private readonly IModLogger _logger;
 
     // Vanilla cultures already registered by SandBox handler — skip these
@@ -55,6 +56,7 @@ public class CharacterCreationContentService : ICharacterCreationContentService
         ICareerStartingEquipmentService careerStartingEquipmentService,
         CareerSystem.ICareerCreationHandler careerHandler,
         CareerSystem.ICareerRegistry careerRegistry,
+        CareerSystem.ICareerDataService careerData,
         IModLogger logger)
     {
         _dataProvider = dataProvider;
@@ -68,6 +70,7 @@ public class CharacterCreationContentService : ICharacterCreationContentService
         _careerStartingEquipmentService = careerStartingEquipmentService;
         _careerHandler = careerHandler;
         _careerRegistry = careerRegistry;
+        _careerData = careerData;
         _logger = logger;
     }
 
@@ -221,18 +224,25 @@ public class CharacterCreationContentService : ICharacterCreationContentService
         }
 
         // Career-archetype equipment overrides the culture-default roster applied above.
-        // AssignCareer just persisted the career on line 185; the menu-service property is
-        // the direct input that drove that persistence, so reading from it here is
-        // equivalent and avoids re-resolving via ICareerDataService.
         try
         {
-            var careerId = _careerMenuService.SelectedCareerStringId;
-            _careerStartingEquipmentService.ApplyCareerStartingEquipment(cultureId, careerId, careerIsFemale, heroId);
+            ApplyCareerStartingEquipment(cultureId, heroId, careerIsFemale);
         }
         catch (Exception ex)
         {
             _logger.LogError($"CC Finalize: career starting equipment failed: {ex.Message}");
         }
+    }
+
+    /// <summary>
+    /// Applies the kit of the career the hero holds after AssignCareer. That is not always the career
+    /// menu's pick: with no pick, AssignCareer gives the culture's first eligible career and the menu
+    /// stays empty (#1217).
+    /// </summary>
+    internal void ApplyCareerStartingEquipment(string cultureId, string heroId, bool isFemale)
+    {
+        var careerId = _careerData?.GetCareerStringId(heroId);
+        _careerStartingEquipmentService.ApplyCareerStartingEquipment(cultureId, careerId, isFemale, heroId);
     }
 
     private void AssignCareer(string cultureId, string heroStringId)

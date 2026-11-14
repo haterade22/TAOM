@@ -1,7 +1,7 @@
 using TaleWorlds.CampaignSystem.CharacterCreationContent;
 using TAOM.Adapters;
 using TAOM.Core.Logging;
-using TAOM.Features.CharacterCreation;
+using TAOM.Features.CareerSystem;
 using TAOM.Features.PlayerSwitcher.Domain;
 
 namespace TAOM.Features.PlayerSwitcher;
@@ -32,7 +32,8 @@ public class PlayerSwitchContentHandler : ICharacterCreationContentHandler
     private readonly IPlayerSwitchSession _session;
     private readonly IPlayerSwitchSessionWriter _sessionWriter;
     private readonly IPlayerSwitchPolicyProvider _policy;
-    private readonly ICareerMenuService _careerMenu;
+    private readonly ICareerDataService _careerData;
+    private readonly IPlayerPartyAdapter _mainHero;
     private readonly IInquiryAdapter _inquiry;
     private readonly IPlayerIdentityAdapter _identity;
     private readonly IModLogger _logger;
@@ -43,7 +44,8 @@ public class PlayerSwitchContentHandler : ICharacterCreationContentHandler
         IPlayerSwitchSession session,
         IPlayerSwitchSessionWriter sessionWriter,
         IPlayerSwitchPolicyProvider policy,
-        ICareerMenuService careerMenu,
+        ICareerDataService careerData,
+        IPlayerPartyAdapter mainHero,
         IInquiryAdapter inquiry,
         IPlayerIdentityAdapter identity,
         IModLogger logger)
@@ -53,7 +55,8 @@ public class PlayerSwitchContentHandler : ICharacterCreationContentHandler
         _session = session;
         _sessionWriter = sessionWriter;
         _policy = policy;
-        _careerMenu = careerMenu;
+        _careerData = careerData;
+        _mainHero = mainHero;
         _inquiry = inquiry;
         _identity = identity;
         _logger = logger;
@@ -82,7 +85,10 @@ public class PlayerSwitchContentHandler : ICharacterCreationContentHandler
         // selection is cleared below; the toast still has to name the lord afterwards.
         var heroName = _session.SelectedRow.Name ?? string.Empty;
 
-        var plan = _planner.Plan(_session.SelectedRow, _policy.Current, _careerMenu.SelectedCareerStringId);
+        // The career the created hero holds, which TAOM's 1050 handler assigned: the career menu's pick,
+        // or the culture's first eligible career when there was no pick (#1217).
+        var careerId = _careerData.GetCareerStringId(_mainHero.GetMainHeroId());
+        var plan = _planner.Plan(_session.SelectedRow, _policy.Current, careerId);
         var outcome = _switchService.Execute(plan);
 
         if (outcome != SwitchOutcome.Switched)

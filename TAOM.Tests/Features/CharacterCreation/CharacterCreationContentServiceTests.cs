@@ -20,6 +20,8 @@ public class CharacterCreationContentServiceTests
     private ICareerMenuService _careerMenuService;
     private IPlayerStartupGoldService _playerStartupGoldService;
     private IPlayerEquipmentService _playerEquipmentService;
+    private ICareerStartingEquipmentService _careerStartingEquipmentService;
+    private TAOM.Features.CareerSystem.ICareerDataService _careerData;
     private IModLogger _logger;
     private CharacterCreationContentService _sut;
 
@@ -34,7 +36,8 @@ public class CharacterCreationContentServiceTests
         _careerMenuService = Substitute.For<ICareerMenuService>();
         _playerStartupGoldService = Substitute.For<IPlayerStartupGoldService>();
         _playerEquipmentService = Substitute.For<IPlayerEquipmentService>();
-        var careerStartingEquipmentService = Substitute.For<ICareerStartingEquipmentService>();
+        _careerStartingEquipmentService = Substitute.For<ICareerStartingEquipmentService>();
+        _careerData = Substitute.For<TAOM.Features.CareerSystem.ICareerDataService>();
         _logger = Substitute.For<IModLogger>();
         // Phase 9b #125 — career deps constructor-injected (formerly IoC.Resolve).
         var careerHandler = Substitute.For<TAOM.Features.CareerSystem.ICareerCreationHandler>();
@@ -49,10 +52,49 @@ public class CharacterCreationContentServiceTests
             _careerMenuService,
             _playerStartupGoldService,
             _playerEquipmentService,
-            careerStartingEquipmentService,
+            _careerStartingEquipmentService,
             careerHandler,
             careerRegistry,
+            _careerData,
             _logger);
+    }
+
+    // #1217: with no career-menu pick, AssignCareer gives the hero the culture's first eligible
+    // career and the menu stays empty, so the kit must follow the career the hero holds.
+    [TestMethod]
+    public void ApplyCareerStartingEquipment_NoMenuPickAndAnAutoAssignedCareer_UsesTheAssignedCareer()
+    {
+        _careerMenuService.SelectedCareerStringId.Returns((string)null);
+        _careerData.GetCareerStringId("h").Returns("avanc_luth_raider");
+
+        _sut.ApplyCareerStartingEquipment("empire", "h", isFemale: false);
+
+        _careerStartingEquipmentService.Received(1)
+            .ApplyCareerStartingEquipment("empire", "avanc_luth_raider", false, "h");
+    }
+
+    [TestMethod]
+    public void ApplyCareerStartingEquipment_MenuPickTheHeroDoesNotHold_UsesTheHeldCareer()
+    {
+        _careerMenuService.SelectedCareerStringId.Returns("gondor_picked");
+        _careerData.GetCareerStringId("h").Returns("gondor_held");
+
+        _sut.ApplyCareerStartingEquipment("gondor", "h", isFemale: true);
+
+        _careerStartingEquipmentService.Received(1)
+            .ApplyCareerStartingEquipment("gondor", "gondor_held", true, "h");
+    }
+
+    [TestMethod]
+    public void ApplyCareerStartingEquipment_HeroHoldsNoCareer_PassesNoCareer()
+    {
+        _careerMenuService.SelectedCareerStringId.Returns("gondor_picked");
+        _careerData.GetCareerStringId("h").Returns((string)null);
+
+        _sut.ApplyCareerStartingEquipment("gondor", "h", isFemale: false);
+
+        _careerStartingEquipmentService.Received(1)
+            .ApplyCareerStartingEquipment("gondor", null, false, "h");
     }
 
     [TestMethod]
