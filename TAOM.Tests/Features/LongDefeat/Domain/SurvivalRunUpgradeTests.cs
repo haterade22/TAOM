@@ -243,6 +243,64 @@ public class SurvivalRunUpgradeTests
     }
 
     [TestMethod]
+    public void AnOrderBoughtOnTheLastTickOfACalm_HoldsTheWaveATick_AndIsBookedForThatWave()
+    {
+        var run = Begun(Plan(rules: RunRules.Default with { PreparationSeconds = 1f, IntermissionSeconds = 10f }), ("fow_m", 30));
+        Assert.AreEqual(UpgradeResult.Ok, run.TryUpgrade(MilitiaToAxe.Id));
+
+        var fx = run.Tick(Snap());
+
+        var order = fx.Upgrades.Single();
+        Assert.AreEqual(1, order.BeforeWave);
+        Assert.AreEqual(RunPhase.Preparation, run.Phase, "the timer ran out, but the wave waits for the order");
+        Assert.IsNull(fx.StartWave);
+        run.CompleteUpgrade(order, 30);
+        Assert.AreEqual(1, run.FortSummary().Purchases.Single(p => p.Kind == PurchaseKind.Upgrade).BeforeWave);
+        run.Tick(Snap());
+        Assert.AreEqual(RunPhase.Wave, run.Phase);
+    }
+
+    [TestMethod]
+    public void AnOrderBeforeTheHorn_RunsBeforeTheWavesFirstBatch_AndIsBookedForThatWave()
+    {
+        var run = Begun(Plan(), ("fow_m", 30));
+        run.TryUpgrade(MilitiaToAxe.Id);
+        Assert.AreEqual(StartResult.Ok, run.TryStartWave());
+
+        var fx = run.Tick(Snap());
+
+        Assert.AreEqual(1, fx.Upgrades.Single().BeforeWave);
+        Assert.IsNull(fx.StartWave, "the wave's first batch waits a tick for the order");
+        Assert.AreEqual(0, fx.AttackerBatches.Count);
+        run.CompleteUpgrade(fx.Upgrades[0], 30);
+        Assert.AreEqual(1, run.FortSummary().Purchases.Single(p => p.Kind == PurchaseKind.Upgrade).BeforeWave);
+        Assert.IsNotNull(run.Tick(Snap()).StartWave);
+    }
+
+    [TestMethod]
+    public void Order_ReadsTheHealthFactorWhenItGoesOut_SoABoonPickedAfterTheBuyCounts()
+    {
+        var boon = new BoonRow("hardy", BoonCategory.WarChest, "{=K_h}h", "{=T_h}h", new[] { new BoonEffect(BoonKeys.HealthPercent, 50f, BoonTarget.Archers) });
+        var plan = Plan(gold: 5000, rules: RunRules.Default with { PreparationSeconds = 1f, IntermissionSeconds = 10f }) with { Boons = new BoonPlan(new[] { boon }, 1) };
+        var run = Begun(plan);
+        for (var i = 0; i < 5000 && run.GetView().BoonOffer.Count == 0 && run.Result == null; i++)
+        {
+            if (run.GetView().Phase == RunPhase.Intermission)
+                run.TryStartWave();
+            run.Tick(Snap());
+        }
+
+        Assert.AreEqual(RunPhase.Intermission, run.Phase, "the run never reached a boon offer");
+        run.ObserveStanding(new Dictionary<string, int> { ["fow_b"] = 8 });
+        Assert.AreEqual(UpgradeResult.Ok, run.TryUpgrade(BowToVeteran.Id));
+        Assert.AreEqual(PickResult.Ok, run.TryPickBoon("hardy"));
+
+        var order = run.Tick(Snap()).Upgrades.Single();
+
+        Assert.AreEqual(1.5f, order.HealthFactor, 1e-4f);
+    }
+
+    [TestMethod]
     public void TryUpgrade_EmitsABoughtEvent_ThatNamesTheStepAndTheCount()
     {
         var run = Begun(Plan(gold: 1000), ("fow_m", 30));

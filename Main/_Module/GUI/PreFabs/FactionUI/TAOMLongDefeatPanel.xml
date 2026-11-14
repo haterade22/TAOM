@@ -52,23 +52,42 @@
             <!-- Reinforcements: the run's packs for this faction and map, in a bounded scroll. -->
             <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="404" MarginLeft="8" MarginRight="14" MarginTop="190" IsVisible="@IsReinforcementsTab">
               <Children>
-                <ScrollablePanel Id="OfferScroll" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" MarginRight="14" InnerPanel="OfferClip\Offers" ClipRect="OfferClip"
+                <ScrollablePanel Id="OfferScroll" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" MarginRight="14" InnerPanel="OfferClip\ShopRows" ClipRect="OfferClip"
                                  VerticalScrollbar="..\OfferScrollbar" MouseScrollAxis="Vertical" AutoHideScrollBars="true" AutoHideScrollBarHandle="true">
                   <Children>
                     <Widget Id="OfferClip" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" ClipContents="true">
                       <Children>
-                        <ListPanel Id="Offers" DataSource="{Offers}" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" StackLayout.LayoutMethod="VerticalTopToBottom">
-                          <ItemTemplate>
-                            <ButtonWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="76" Brush="TAOM.LD.Row" IsEnabled="@CanAfford" Command.Click="ExecuteBuy"
-                                          DoNotPassEventsToChildren="true" UpdateChildrenStates="true">
-                              <Children>
-                                <ScrollingTextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="32" MarginLeft="22" MarginRight="150" MarginTop="8" Brush="TAOM.LD.RowName" Text="@Name" DoNotAcceptEvents="true" />
-                                <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="26" MarginLeft="22" MarginRight="150" MarginTop="40" Brush="TAOM.LD.RowDetail" Text="@PackText" DoNotAcceptEvents="true" />
-                                <TextWidget WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent" SuggestedWidth="140" HorizontalAlignment="Right" MarginRight="18" Brush="TAOM.LD.RowPrice" Text="@PriceText" DoNotAcceptEvents="true" />
-                                <ImageWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="1" VerticalAlignment="Bottom" MarginLeft="18" MarginRight="10" Brush="TAOM.LD.RowRule" DoNotAcceptEvents="true" />
-                              </Children>
-                            </ButtonWidget>
-                          </ItemTemplate>
+                        <!-- The packs, then the upgrade steps (#1161) in the same scroll: a step row shows only while its troop has a soldier standing. -->
+                        <ListPanel Id="ShopRows" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" StackLayout.LayoutMethod="VerticalTopToBottom">
+                          <Children>
+                            <ListPanel Id="Offers" DataSource="{Offers}" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" StackLayout.LayoutMethod="VerticalTopToBottom">
+                              <ItemTemplate>
+                                <ButtonWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="76" Brush="TAOM.LD.Row" IsEnabled="@CanAfford" Command.Click="ExecuteBuy"
+                                              DoNotPassEventsToChildren="true" UpdateChildrenStates="true">
+                                  <Children>
+                                    <ScrollingTextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="32" MarginLeft="22" MarginRight="150" MarginTop="8" Brush="TAOM.LD.RowName" Text="@Name" DoNotAcceptEvents="true" />
+                                    <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="26" MarginLeft="22" MarginRight="150" MarginTop="40" Brush="TAOM.LD.RowDetail" Text="@PackText" DoNotAcceptEvents="true" />
+                                    <TextWidget WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent" SuggestedWidth="140" HorizontalAlignment="Right" MarginRight="18" Brush="TAOM.LD.RowPrice" Text="@PriceText" DoNotAcceptEvents="true" />
+                                    <ImageWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="1" VerticalAlignment="Bottom" MarginLeft="18" MarginRight="10" Brush="TAOM.LD.RowRule" DoNotAcceptEvents="true" />
+                                  </Children>
+                                </ButtonWidget>
+                              </ItemTemplate>
+                            </ListPanel>
+                            <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="36" MarginLeft="22" MarginRight="22" MarginTop="14" Brush="TAOM.LD.Subtitle" Text="@UpgradesTitle" IsVisible="@HasUpgrades" DoNotAcceptEvents="true" />
+                            <ListPanel Id="Upgrades" DataSource="{Upgrades}" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" StackLayout.LayoutMethod="VerticalTopToBottom">
+                              <ItemTemplate>
+                                <ButtonWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="76" Brush="TAOM.LD.Row" IsEnabled="@CanAfford" Command.Click="ExecuteUpgrade"
+                                              DoNotPassEventsToChildren="true" UpdateChildrenStates="true">
+                                  <Children>
+                                    <ScrollingTextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="32" MarginLeft="22" MarginRight="150" MarginTop="8" Brush="TAOM.LD.RowName" Text="@Name" DoNotAcceptEvents="true" />
+                                    <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="26" MarginLeft="22" MarginRight="150" MarginTop="40" Brush="TAOM.LD.RowDetail" Text="@DetailText" DoNotAcceptEvents="true" />
+                                    <TextWidget WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent" SuggestedWidth="140" HorizontalAlignment="Right" MarginRight="18" Brush="TAOM.LD.RowPrice" Text="@PriceText" DoNotAcceptEvents="true" />
+                                    <ImageWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="1" VerticalAlignment="Bottom" MarginLeft="18" MarginRight="10" Brush="TAOM.LD.RowRule" DoNotAcceptEvents="true" />
+                                  </Children>
+                                </ButtonWidget>
+                              </ItemTemplate>
+                            </ListPanel>
+                          </Children>
                         </ListPanel>
                       </Children>
                     </Widget>

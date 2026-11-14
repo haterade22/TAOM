@@ -10,7 +10,8 @@ namespace TAOM.Tests.Features.LongDefeat;
 
 /// <summary>
 /// The two decisions the Long Defeat adapters make that need no engine: which attacker the late <c>scale</c> sample reads (a roster soldier, never the commander or a summoned one), and the health
-/// a felled soldier is brought to so <c>KillAgentCheat</c>'s blow of 2000 is lethal. The engine calls themselves are tied to these by source.
+/// a felled soldier is brought to so <c>KillAgentCheat</c>'s blow of 2000 is lethal. The engine calls themselves are tied to these by source, and so is the wiring of the upgrade's filter and
+/// tally (#1161), whose decisions are tested in <c>UpgradeTallyTests</c>.
 /// </summary>
 [TestClass]
 public class LongDefeatAdapterRulesTests
@@ -100,6 +101,31 @@ public class LongDefeatAdapterRulesTests
         var readBack = rest.IndexOf("after += agent.Health / limit", System.StringComparison.Ordinal);
         Assert.IsTrue(write >= 0 && readBack > write, "the mean after comes from the engine's stored health, not from the value written");
         StringAssert.Contains(rest, "Math.Min(limit, health + share * (limit - health))");
+    }
+
+    [TestMethod]
+    public void Upgradable_SkipsRunnersAndPostArchers_AndBothUpgradeReadsGoThroughIt()
+    {
+        var body = Body("Main/Adapters/LongDefeatBattlefieldAdapter.Upgrades.cs", "private IEnumerable<Agent> Upgradable()");
+
+        StringAssert.Contains(body, "!a.IsRunningAway", "Agent.OnFleeing nulls the formation and keeps the state, so a runner is still active");
+        StringAssert.Contains(body, "a.Formation != null");
+        StringAssert.Contains(body, "!_postedByAgent.ContainsKey(a)", "the posts hold their archers by agent, and a strayed one leaves the posts formation");
+        StringAssert.Contains(Body("Main/Adapters/LongDefeatBattlefieldAdapter.Upgrades.cs", "public IReadOnlyDictionary<string, int> StandingDefendersByTroop()"), "in Upgradable()",
+            "the shop counts the soldiers the replace may take");
+        StringAssert.Contains(Body("Main/Adapters/LongDefeatBattlefieldAdapter.Upgrades.cs", "public LdUpgradeReport ReplaceDefenders("), "= Upgradable().Where(",
+            "the replace takes only the soldiers the shop counted");
+    }
+
+    [TestMethod]
+    public void ReplaceDefenders_HandsEachSpawnToTheTally_WithItsActivityAndDistance()
+    {
+        var body = Body("Main/Adapters/LongDefeatBattlefieldAdapter.Upgrades.cs", "public LdUpgradeReport ReplaceDefenders(");
+
+        StringAssert.Contains(body, "var active = fresh.IsActive();");
+        StringAssert.Contains(body, "spawns.Add(new UpgradeSpawn(active, stood.Distance(at), ",
+            "the tally decides replaced and read back; the troop id cannot fail, because the engine copies it from the same object, and the place can");
+        StringAssert.Contains(body, "return UpgradeTally.Of(old.Count, spawns, FramePointRadius);");
     }
 
     private static string Body(string relative, string header)

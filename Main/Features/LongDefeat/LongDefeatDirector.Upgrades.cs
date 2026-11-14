@@ -7,7 +7,7 @@ namespace TAOM.Features.LongDefeat;
 
 /// <summary>
 /// Upgrading the soldiers the player has (#1161). Between waves the director reads the standing defenders by troop on the first tick of a calm, then every <see cref="StandingReadSeconds"/> and on
-/// any tick that spawned or replaced soldiers, and hands the counts to the run, so the shop sells only soldiers who stand. Each order is carried out on the tick after its buy, before field care, and
+/// any tick that spawned soldiers, and hands the counts to the run (an order moves its own counts), so the shop sells only soldiers who stand. Each order is carried out on the tick after its buy, before field care, and
 /// writes one <c>upgrade</c> line.
 /// </summary>
 internal sealed partial class LongDefeatDirector
@@ -27,7 +27,7 @@ internal sealed partial class LongDefeatDirector
         }
 
         _standingClock -= dt;
-        if (_standingRead && _standingClock > 0f && fx.DefenderBatches.Count == 0 && fx.Upgrades.Count == 0)
+        if (_standingRead && _standingClock > 0f && fx.DefenderBatches.Count == 0)
             return;
 
         _standingRead = true;
@@ -40,12 +40,13 @@ internal sealed partial class LongDefeatDirector
         foreach (var order in orders)
         {
             var report = _field.ReplaceDefenders(order.Step.FromTroop, order.Step.ToTroop, order.Count, order.HealthFactor);
-            _run.CompleteUpgrade(order, report.Replaced);
-            var beforeWave = _run.Wave + 1;
-            LongDefeatChecks.Record(_outcomes, LongDefeatUpgradeChecks.Id, "u" + ++_upgradeOrders, LongDefeatUpgradeChecks.Replaced(beforeWave, order, report));
-            var paid = order.Step.Price * Math.Max(0, Math.Min(order.Count, report.Replaced));
-            _logger.LogInfo($"{Tag}[Upgrade] before wave {beforeWave}: {order.Step.FromTroop} to {order.Step.ToTroop}, ordered {order.Count}, found {report.Found}, replaced {report.Replaced}, " +
-                $"read back {report.ReadBack}, paid {paid}" + (report.Problem != null ? $", {report.Problem}" : ""));
+            var paid = order.Step.Price * _run.CompleteUpgrade(order, report.Replaced);
+            // A fade that empties a held split group hands it to the AI (Formation.RemoveUnit, Formation.cs:2376-2379), and the replacement joining it does not take it back.
+            if (report.Replaced > 0)
+                NoteEngineTookSplit("an upgrade");
+            LongDefeatChecks.Record(_outcomes, LongDefeatUpgradeChecks.Id, _mission + "u" + ++_upgradeOrders, LongDefeatUpgradeChecks.Replaced(order, report));
+            _logger.LogInfo($"{Tag}[Upgrade] before wave {order.BeforeWave}: {order.Step.FromTroop} to {order.Step.ToTroop}, ordered {order.Count}, found {report.Found}, replaced {report.Replaced}, " +
+                $"read back {report.ReadBack}, paid {paid}" + (report.Problem != null ? $", {report.Problem}" : "") + (report.Miss != null ? $", first miss {report.Miss}" : ""));
         }
     }
 }

@@ -18,7 +18,7 @@ internal sealed partial class LongDefeatDirector
     private float _splitHeldSeconds;
 
     // Set when the engine hands every formation to the AI under a hold: the lord's fall (Mission.OnAgentRemoved calls Team.DelegateCommandToAI after the behaviours run, so never split inside
-    // that callback) and a new body (AdoptMain). The next split tick splits again.
+    // that callback), a new body (AdoptMain) and an upgrade that empties a group (ApplyUpgrades). The next split tick splits again.
     private string? _resplitWhy;
 
     // A pack can muster inside one tick, so the batches this tick spawned count as mustering, as the soldiers still to come do.

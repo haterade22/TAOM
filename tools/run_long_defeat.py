@@ -27,6 +27,7 @@ The tower volley's proof run is --waves 3 --garrison-scale 1.3 --start-gold 5000
 The high towers' proof run is --waves 2 --garrison-scale 1.3 --start-gold 5000 at a fortress with recorded tower posts (phase3-plan.md Slice 7, spike S6; Helm's Deep records none until 2026-11-06, and then the tower row is not for sale): the bot buys tower level 1 in the preparation and level 2 at clear 1. A report that bought a tower level before a wave the run played owes a posts pass line (the posted archers stood, held their posts 30 s in and loosed an arrow), and one with level 2 owes a pass with level=2 (the wave it filled). --posts-variant A, B or C names how the archers are held (A scripted position, B with a speed limit of 0, C with the formation not splittable by AI) by setting TAOM_LD_POSTS_VARIANT for the game, and then the pass lines must name that variant; run it once per variant, and Mike picks from the lines.
 A fortress row with a split block owes one split pass once the log shows a calm's split ([LongDefeat][Split] preparation: or intermission:) and a wave cleared (#1128); a skip does not pay it.
 The engines' restore proof run is --waves 2 --garrison-scale 1.3 --start-gold 5000 --break-engines 1 (#1160): at clear 1 the game destroys every ram and tower, the bot repairs a broken gate, and the start of wave 2 brings the engines back. --break-engines N must be below --waves, the report must echo it as breakEngines (a run armed with none must report null), and a report that cleared a wave past N, a lost run included, owes an engine-restore and an engine-use pass that name the wave after the break (w=startWave+N); a skip, or a pass of another wave, does not pay either.
+The upgrades' proof run is --waves 2 --garrison-scale 1.3 --start-gold 5000 (#1161): the bot buys an upgrade step with the gold no pack and no fortification wants, an upgrade purchase's basePrice is its shop.json step's price for one soldier and its price is that times its count (no boon factor), and each upgrade purchase owes its own upgrade pass line.
 A cavalry run also owes sally and sally-return, except that both read skip with reason=no-sally-point while no sally point is recorded in fortresses.json (the run rides from Begin): the judge accepts that skip for that reason alone, and only while this tree's fortress row holds no sally key at all (sally_recorded: the game writes the same reason when it drops a malformed block), and sally-return is owed only once a wave was cleared (sally_waived, owes_return).
 A report with a wave row whose healthFactor or damageFactor is above 1 (a wave past the authored list, as in --start-wave 12 --waves 2) also owes the scale check.
 A wave row's affixes must replay from the report's seed (affix_roll, the same SplitMix64 draw as the game's AffixPlan.Roll, cut by the Legend boons taken before that wave: affix_cut), and a run that cleared 5 waves or whose report shows a wave with affixes also owes the affix check, and a row with a stat power, hide, hammer, terror or blades an affix-effect line (pass or skip).
@@ -671,10 +672,10 @@ def owes_summon(report_json):
 # purchase_problem replays rules 8, 19 and 20 of leaderboard-plan.md over a report.
 MAX_PRICE = 1_000_000
 FORT_OFFERED = {"gate": 3, "towers": 3, "fieldCare": True, "volley": 2}  # field care landed in Slice 4, the gate in Slice 5, the Elven Volley in Slice 6, tower levels 1 and 2 in Slice 7 and level 3, the tower volley, in Slice 8; each later slice raises its kind here and in FortOffer.Offered
-PURCHASE_KINDS = ("pack", "gateLevel", "gateRepair", "towerLevel", "fieldCare", "volleyLevel")
-# "upgrades" is the sink of the shop's troop upgrades (#1161); its purchase kind is not judged yet, so a report that bought one is refused until that check lands.
+PURCHASE_KINDS = ("pack", "gateLevel", "gateRepair", "towerLevel", "fieldCare", "volleyLevel", "upgrade")
+# "upgrades" is the sink of the shop's troop upgrades (#1161): one "upgrade" purchase per order the field carried out, its count the soldiers it replaced.
 SPENT_ON = ("packs", "gate", "towers", "fieldCare", "volley", "upgrades")
-KIND_SINK = {"pack": "packs", "gateLevel": "gate", "gateRepair": "gate", "towerLevel": "towers", "fieldCare": "fieldCare", "volleyLevel": "volley"}
+KIND_SINK = {"pack": "packs", "gateLevel": "gate", "gateRepair": "gate", "towerLevel": "towers", "fieldCare": "fieldCare", "volleyLevel": "volley", "upgrade": "upgrades"}
 SHARE_TOLERANCE = 0.0005
 
 
@@ -1008,6 +1009,23 @@ def shipped_offers(fortress_id=None, path=None):
     return {o["id"]: o["price"] for o in offers if isinstance(o, dict) and isinstance(o.get("id"), str) and _is_int(o.get("price"))}
 
 
+def shipped_upgrades(fortress_id=None, path=None):
+    """{step id: price for one soldier} of the upgrade steps of the fortress's shop in this tree's shop.json (#1161). A step's id is "from>to", as UpgradesReader writes it. The shipped file
+    is held valid by LongDefeatShippedConfigTests, so a row is taken as it stands; the first of two steps that differ only in case wins, as in the game."""
+    fortress = next((f for f in _json_object(FORTRESS_FILE).get("fortresses", []) if isinstance(f, dict) and f.get("id") == (fortress_id or DEFAULT_FORTRESS)), None)
+    shops = _json_object(path or SHOP_FILE).get("shops", {})
+    shop = shops.get(fortress.get("shop")) if fortress is not None and isinstance(shops, dict) else None
+    steps = shop.get("upgrades", []) if isinstance(shop, dict) else []
+    out, seen = {}, set()
+    for s in steps if isinstance(steps, list) else []:
+        if isinstance(s, dict) and isinstance(s.get("from"), str) and isinstance(s.get("to"), str) and _is_int(s.get("price")):
+            step = f"{s['from']}>{s['to']}"
+            if step.lower() not in seen:
+                seen.add(step.lower())
+                out[step] = s["price"]
+    return out
+
+
 def shipped_price_percents(path=None):
     """{boon id: the sum of its pricePercent effects and drawbacks} of this tree's boons.json, for the boons that change a price."""
     rows = _json_object(path or BOON_FILE).get("boons", [])
@@ -1053,18 +1071,19 @@ def repair_total(whole, shares):
     return range(sum(r.start for r in ranges), sum(r.stop - 1 for r in ranges) + 1)
 
 
-def purchase_problem(report_json, fortress_id=None, fort=None, offers=None, percents=None):
+def purchase_problem(report_json, fortress_id=None, fort=None, offers=None, percents=None, upgrades=None):
     """None when the report's gold books and purchases replay from the shop, else what is wrong (leaderboard-plan.md rules 8, 19 and 20, phase3-plan.md section 7).
 
     Rule 8: gold.spent equals the sum of gold.spentOn, and each spentOn part equals the prices of its purchases. Rule 19: each purchase's basePrice is shop.json's for its kind and level
     (the offer's for a pack), its price is max(1, the base through the price factor of the boons owned before that wave) and, for a repair, max(1, ceil(that * share)); levels are bought in order,
     this build offers the kind and level (FORT_OFFERED), care is bought at most perIntermission times a wave, and the final levels are the highest bought. A boon taken in the same intermission may
     come before or after a purchase, so a price is accepted at any factor that intermission could have held. Rule 20: a wave row's volley counts are 0 before the first level and
-    never above the arrows of the level in force."""
+    never above the arrows of the level in force. An upgrade (#1161) takes no boon price factor: its basePrice is its shop.json step's price for one soldier and its price is that times its count."""
     fortress_id = fortress_id or report_json.get("fortress")
     fortress_id = fortress_id if isinstance(fortress_id, str) else None
     plan = (shipped_fortifications(fortress_id) if fort is None else fort) or {}
     offers = shipped_offers(fortress_id) if offers is None else offers
+    upgrades = shipped_upgrades(fortress_id) if upgrades is None else upgrades
     percents = shipped_price_percents() if percents is None else percents
     purchases, gold, final = report_json.get("purchases"), report_json.get("gold"), report_json.get("fortifications")
     if not isinstance(purchases, list):
@@ -1104,6 +1123,15 @@ def purchase_problem(report_json, fortress_id=None, fort=None, offers=None, perc
         if kind == "pack":
             if offers.get(p.get("id")) != base:
                 return f"{where}: pack {p.get('id')!r} has basePrice {base}, shop.json's offer is {offers.get(p.get('id'))!r}"
+        elif kind == "upgrade":
+            count = p.get("count")
+            if upgrades.get(p.get("id")) != base:
+                return f"{where}: upgrade {p.get('id')!r} has basePrice {base}, shop.json's step is {upgrades.get(p.get('id'))!r}"
+            if not (_is_int(count) and count >= 1):
+                return f"{where}: upgrade {p.get('id')!r} has count {count!r}, wanted the soldiers it replaced, at least 1"
+            if price != base * count:
+                return f"{where}: upgrade {p.get('id')!r} paid {price} for {count} soldiers at {base}, wanted {base * count} (an upgrade takes no boon price factor)"
+            continue
         elif kind == "fieldCare":
             care = plan.get("care")
             if not FORT_OFFERED["fieldCare"] or not care:
@@ -1200,6 +1228,40 @@ def owes_field_care(report_json):
     """The field-care check is owed once the report's purchases hold field care."""
     purchases = report_json.get("purchases")
     return isinstance(purchases, list) and any(isinstance(p, dict) and p.get("kind") == "fieldCare" for p in purchases)
+
+
+# Upgrades (#1161): the game writes one upgrade line per order on the tick after the buy (LongDefeatUpgradeChecks, key <mission>u<N>) and books a purchase only for an order that replaced a
+# soldier, in the statement before the line, so every way a run ends owes it. Each purchase is paid by its own pass line that names its wave, its step and its count; a skip
+# (reason=none-found) books no purchase, so it pays no debt.
+UPGRADE_CHECK = "upgrade"
+UPGRADE_PASS = re.compile(r"\[Check\] id=" + re.escape("taom.long-defeat." + UPGRADE_CHECK) + r" result=pass w=(\d+) from=(\S+) to=(\S+) ordered=\d+ found=\d+ replaced=(\d+) read=\d+")
+
+
+def upgrade_purchases(report_json):
+    """The number of upgrade purchases in the report."""
+    purchases = report_json.get("purchases")
+    return sum(1 for p in purchases if isinstance(p, dict) and p.get("kind") == "upgrade") if isinstance(purchases, list) else 0
+
+
+def owed_upgrade_passes(report_json, log_text):
+    """The upgrade purchases no pass line pays, one entry each. A purchase is paid by a pass line of its own with its wave (w=), its step (from= and to=, case ignored, as the game reads
+    ids) and replaced= equal to its count; a line pays one purchase."""
+    purchases = report_json.get("purchases")
+    lines = {}
+    for w, frm, to, n in UPGRADE_PASS.findall(log_text or ""):
+        key = (int(w), frm.lower(), to.lower(), int(n))
+        lines[key] = lines.get(key, 0) + 1
+    owed = []
+    for p in purchases if isinstance(purchases, list) else []:
+        if not isinstance(p, dict) or p.get("kind") != "upgrade":
+            continue
+        frm, _, to = str(p.get("id", "")).partition(">")
+        key = (p.get("beforeWave"), frm.lower(), to.lower(), p.get("count"))
+        if lines.get(key, 0) > 0:
+            lines[key] -= 1
+        else:
+            owed.append(f"{UPGRADE_CHECK} (a pass with w={p.get('beforeWave')} from={frm} to={to} replaced={p.get('count')})")
+    return owed
 
 
 # The gates (Slice 5). The game writes gate-level (key l<N>) after each level it writes, gate-repair (key w<N>) after each repair and gate-attacked (key w<N>) at the next clear or the run's end for the
@@ -1593,11 +1655,15 @@ def judge(done, report_json, log_text=None):
                        (owes_volley, VOLLEY_CHECK), (owes_posts, POSTS_CHECK), (owes_tower_volley, TOWER_VOLLEY_CHECK)):
         if not lose and owed(report_json) and name not in required:
             required = required + (name,)
+    if upgrade_purchases(report_json) and UPGRADE_CHECK not in required:
+        required = required + (UPGRADE_CHECK,)
     if not lose and owes_split(report_json, log_text) and SPLIT_CHECK not in required:
         required = required + (SPLIT_CHECK,)
     if not lose and posts_variant and not owes_posts(report_json):
         return 1, f"reason={reason} but --posts-variant {posts_variant} was armed and the report bought no tower level before a wave it played, so the variant was never tried (does the fortress record tower posts?)"
     missing = [name for name in required if not check_pattern(name, "pass").search(log_text)]
+    if UPGRADE_CHECK not in missing:
+        missing.extend(owed_upgrade_passes(report_json, log_text))
     if not lose and posts_variant and not posts_variant_pattern(posts_variant).search(log_text):
         missing.append(POSTS_CHECK + f" (a pass with variant={posts_variant}: {POSTS_VARIANT_ENV} never took effect)")
     if not lose and owes_posts_level2(report_json) and not POSTS_LEVEL2_PASS.search(log_text):
