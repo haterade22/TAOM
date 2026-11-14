@@ -295,7 +295,7 @@ public class LanguageTextIntegrityTests
         var files = Directory.GetFiles(LanguagesPath, "std_taom_*.xml", SearchOption.AllDirectories);
         Assert.IsTrue(files.Length > 100, $"Only {files.Length} language files found; the scan is broken.");
 
-        var english = LocalizationKeyConsistencyTests.RegisteredEnglish();
+        var english = LocalizationKeyConsistencyTests.EnglishPlaceholders();
         var offenders = new List<string>();
         foreach (var file in files)
         {

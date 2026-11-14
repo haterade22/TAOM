@@ -1699,5 +1699,35 @@
     <string id="aom_khand_clan_name_08" text="{.MN}Copper Bows" />
     <string id="aom_khand_clan_name_09" text="{.MN}Dune Hawks" />
     <string id="aom_khand_clan_name_10" text="{.MN}Iron Bridles" />
+    <string id="taom_lord_intro_dale_1" text="I am {CONVERSATION_CHARACTER.LINK}, of {CLAN_NAME}, one of the old houses of Dale." />
+    <string id="taom_lord_intro_dale_2" text="I am {CONVERSATION_CHARACTER.LINK}, of {CLAN_NAME}. Our name is known in every hall of Dale and on every quay of the Long Lake." />
+    <string id="taom_lord_intro_dale_3" text="I am {CONVERSATION_CHARACTER.LINK}, of {CLAN_NAME}. My forefathers came home to Dale when the dragon was slain, and swore to hold the vale beneath the Mountain. We have kept that oath." />
+    <string id="taom_lord_intro_khand_1" text="I am {CONVERSATION_CHARACTER.LINK}, of {CLAN_NAME}, one of the old blood-lines of Khand." />
+    <string id="taom_lord_intro_khand_2" text="I am {CONVERSATION_CHARACTER.LINK}, of {CLAN_NAME}. No clan of the Variags is more feared, from the borders of Mordor to the southern sands." />
+    <string id="taom_lord_intro_khand_3" text="I am {CONVERSATION_CHARACTER.LINK}, of {CLAN_NAME}. There is hardly a tribe in Khand that has not left a chieftain's skull in our tents." />
+    <string id="taom_lord_intro_khand_4" text="I am {CONVERSATION_CHARACTER.LINK}, of {CLAN_NAME}. The tale goes that our first chieftain rode out of the east on a horse that never tired. If every clan that tells that tale were telling the truth, the plains would have run out of horses long ago." />
+    <string id="taom_lord_intro_rohan_1" text="I am {CONVERSATION_CHARACTER.LINK}, of {CLAN_NAME}. My house has ridden for the Kings of the Mark since the days of Eorl." />
+    <string id="taom_lord_intro_rohan_2" text="I am {CONVERSATION_CHARACTER.LINK}, of {CLAN_NAME}, a house well remembered in the songs of the Riddermark." />
+    <string id="taom_lord_intro_rohan_3" text="I am {CONVERSATION_CHARACTER.LINK}, of {CLAN_NAME}. They say our founder won his lands by outriding a king's messenger to the Golden Hall. He never did tell us what the message was." />
+    <string id="taom_lord_intro_harad_1" text="I am {CONVERSATION_CHARACTER.LINK}, of {CLAN_NAME}, a house of the Haradrim." />
+    <string id="taom_lord_intro_harad_2" text="I am {CONVERSATION_CHARACTER.LINK}, of {CLAN_NAME}, the oldest and proudest line under the sun of Harad." />
+    <string id="taom_lord_intro_rhun_1" text="I am {CONVERSATION_CHARACTER.LINK}, of {CLAN_NAME}. Our name is sung at every wagon-fire in Rhun, from the shores of the inland sea to the far plains." />
+    <string id="taom_lord_intro_rhun_2" text="I am {CONVERSATION_CHARACTER.LINK}, of {CLAN_NAME}. My clan has served the lords of Rhun for generations." />
+    <string id="taom_lord_intro_dunland_1" text="I am {CONVERSATION_CHARACTER.LINK}, of the house of {CLAN_NAME}. My kin held these hills long before the horse-lords came." />
+    <string id="taom_lord_intro_dunland_2" text="I am {CONVERSATION_CHARACTER.LINK}, of the house of {CLAN_NAME}. My family keeps its word and its feuds alike, as the old ways of Dunland demand." />
+    <string id="taom_lord_intro_dunland_3" text="I am {CONVERSATION_CHARACTER.LINK}, of the house of {CLAN_NAME}. I take no great pride in my lineage, but we have always stood between our hill-folk and those who would harm them." />
+    <string id="taom_lord_intro_dunland_4" text="I am {CONVERSATION_CHARACTER.LINK}, of the house of {CLAN_NAME}, one of the proudest clans of Dunland." />
+    <string id="taom_lord_intro_dunland_5" text="I am {CONVERSATION_CHARACTER.LINK}, of the house of {CLAN_NAME}, one of the proudest clans of Dunland. No house has put more horse-thieves of the Mark into the ground." />
+    <string id="taom_clan_intro_company_of_the_boar" text="If you're ever looking for stout fighters, friend, you should think about hiring the Corsair Blades. The hardest crossbowmen ever to sail out of Umbar march under our banner. Because if you don't hire us, your enemy might." />
+    <string id="taom_clan_intro_legion_of_the_betrayed" text="If you ever find yourself in a position to hire warriors, you should consider the Grey Company. Our fathers were the lords of Arnor, and we have kept watch over the North since their kingdom fell. Pay us, and you will have the word of the Dúnedain with our swords." />
+    <string id="taom_clan_intro_ghilman" text="Perhaps one day we shall see each other on a battlefield. You shall know the Serpent Guard by the speed of our horses and the sting of our arrows. If we are on your side, you may rejoice. If we are your enemy, you may save yourself a great deal of trouble by running away before the fighting starts." />
+    <string id="taom_clan_intro_brotherhood_of_woods" text="The Strawheads took our fathers' valleys and drove us up into the hills. Whatever we take back from a horse-lord or a king's man was ours to begin with. You'll hear us called robbers and brigands. Don't believe a word of it." />
+    <string id="taom_clan_intro_hidden_hand" text="When you walk these roads, my friend, know that nothing escapes the notice of the Dark Tower. Lords and kings come and go, but the servants of the Mouth remain." />
+    <string id="taom_clan_intro_lakepike" text="They call us the Wreckers, but we prefer to be known as the free folk of the reed-beds. No Master of Lake-town and no King in Dale can make us bow our heads and scrape our knees. Know that, and we can probably get along fine." />
+    <string id="taom_clan_intro_wolfskins" text="Perhaps you've heard of the Ravagers, traveller. We are beasts. Know that so long as we eat no cooked meat and sleep under no roof, the laws of Khand cannot touch us. So tread carefully with us." />
+    <string id="taom_clan_intro_eleftheroi" text="You may have heard of us: the Beornings. We keep the High Pass and the Ford of Carrock, and no Orc crosses our lands and lives. Honest travellers pay their toll and go in peace. Those who come to raid will learn that we have very large teeth." />
+    <string id="taom_clan_intro_jawwal" text="Perhaps you have not heard of the Sand-Riders. Well, when you cross the deep desert of Harad, far from well and spring, in a land that the city-lords scorn, then you are in our domain." />
+    <string id="taom_clan_intro_beni_zilal" text="The Blind Eye sees what others miss. We keep the secrets of Harad, and we watch from the shadows. Make foes of us at your peril." />
+    <string id="taom_clan_intro_embers_of_flame" text="You may have heard whispers of us. Men call us the Cult of the Lidless Eye. Long ago, in Númenor, our forefathers bent the knee to the Dark Lord. Until his day comes, we keep our silence. But when it comes, all who scorned him will answer for it." />
   </strings>
 </base>

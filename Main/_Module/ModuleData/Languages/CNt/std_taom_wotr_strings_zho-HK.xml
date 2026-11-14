@@ -79,5 +79,17 @@
     <string id="taom_wc_gondor_fell" text="{TARGET} 的城門被攻破，白城落入魔多之手。" />
     <string id="taom_wc_blackgate_title" text="黑門開啟" />
     <string id="taom_wc_blackgate_occurred" text="西方的將領們進軍魔拉南，欲引開魔眼對持戒人的注視。戰爭的命運如今繫於至尊魔戒。" />
+    <string id="taom_wc_hornburg_fate" text="The host of Isengard storms {TARGET} through the night, and at dawn the Hornburg still stands." />
+    <string id="taom_event_category_chronicle" text="War Chronicle" />
+    <string id="taom_event_category_coronation" text="Coronation" />
+    <string id="taom_event_effects" text="Effects" />
+    <string id="taom_event_effect_days" text="For {DAYS} days" />
+    <string id="taom_event_side_free" text="Free Peoples" />
+    <string id="taom_event_side_evil" text="The Shadow" />
+    <string id="taom_event_effect_volunteers" text="Volunteer recruitment rate" />
+    <string id="taom_event_effect_escape" text="Additional escape roll" />
+    <string id="taom_event_effect_momentum" text="War of the Ring momentum" />
+    <string id="taom_event_effect_note" text="Values are this event's contributions before caps, and the caps apply even to a single effect. Your own clan's fiefs and lords are never affected." />
+    <string id="taom_event_effect_escape_note" text="The additional escape roll's chance is the shown percentage of a lord's usual escape chance." />
   </strings>
 </base>
