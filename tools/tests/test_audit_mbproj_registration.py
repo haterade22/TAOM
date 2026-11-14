@@ -424,7 +424,7 @@ class ExistingChecks(AuditCase):
 
 class SiblingActionTypes(AuditCase):
     """A binding may resolve against another TAOM module's action_types.xml: the engine merges every
-    loaded module's action types, and TAOM's dwarf sets bind rows the Armory declares."""
+    loaded module's action types, so a set in one module may bind rows that another module declares."""
 
     ROW = '<file id="soln_skins" name="ModuleData/a.xml"/>'
 

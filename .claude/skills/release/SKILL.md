@@ -37,7 +37,7 @@ characters to players. Full contract: [`docs/reference/release-process.md`](../.
 5. `git grep -l taom_test_ -- Main/_Module` prints nothing. Custom-Battle test riders show in every player's
    Custom Battle picker; delete them (with their SubModule node and their ladder and recruitment exemptions)
    before a release. The Animalia ones (#646) were removed for v2.0.31.
-**Items 6 and 6a check Mike's packages, and the packages and release folders are his** (Mike,
+**Items 6, 6a and 6c check Mike's packages, and the packages and release folders are his** (Mike,
 2026-10-27: "Dont worry about the packaged or release folders!!! I will do that later"). Run them only
 when he asks; otherwise list them as owed for his packaging pass in the hand-over, and never write a
 release note around what a channel folder holds.
@@ -48,6 +48,9 @@ release note around what a channel folder holds.
 6a. For the channel this release ships to, `BANNERLORD_GAME_MODULES="E:/LOTRAOM_Releases/<channel>/Modules" python tools/check_external_loc_coverage.py --processors-only` (PowerShell: set `$env:BANNERLORD_GAME_MODULES` first). Any exit other than 0 blocks the release: the TAOM_Map and Armory packages must carry Native's text processor ([`release-process.md`](../../../docs/reference/release-process.md), #1026).
 6b. `python tools/check_mcm_default_flips.py` exits 0 before the tag: a changed MCM default under an
    unchanged name reaches no player who saved settings (rename it, or allowlist it with a reason).
+6c. The channel's Armory carries the dwarf rows TAOM does not: `python tools/bind_dwarf_attack_actions.py --check
+   --armory E:/LOTRAOM_Releases/<channel>/Modules/LOTRLOME_Armory/ModuleData` exits 0 (#1087), and the rider-rows
+   test in [`release-process.md`](../../../docs/reference/release-process.md) ("Since #1226") reports `Passed: 1`.
 7. **Owed in-game checks (never blocks):** `python tools/ingame_ledger.py` lists the issues closed since
    the last tag that still carry `triage-needs-ingame`. Tell Mike the count; Phase 5 hands the list to
    the testers. Exit 3 is a `gh` or `git` failure: report it, and note in the release note that the

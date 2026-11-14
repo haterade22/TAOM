@@ -13,7 +13,7 @@ namespace TAOM.Tests.Features.Warg;
 /// Every rider set holds every fall action of every mount usage (#1101). A rider who dies or falls on a mount plays
 /// the usage's fall action from his own set; issue #1101's native Agent.Die fault and two v2.0.29.5 player crashes
 /// (Discord, 4 and 13 Oct 2026, last line "as_dwarf_warrior does not contain act_warg_fall_roll") point at a rider set
-/// without them. Before TAOM's dwarf rows the dwarf sets had none of the warg or spider falls.
+/// without them. Before the dwarf rider rows (#1226) the dwarf sets had none of the warg or spider falls.
 /// The sets are resolved statically: base_set chain plus every same-id declaration (Native, LOTRLOME_Armory, the
 /// Armory's action_sets.xslt rows for as_human_warrior, TAOM). The engine copies a base when a set is defined, so this
 /// can pass where load order would still leave a gap; it cannot fail where the data is complete. LiveInstall: Native

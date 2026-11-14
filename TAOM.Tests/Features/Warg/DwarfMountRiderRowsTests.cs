@@ -10,39 +10,68 @@ using TAOM.Tests.Infrastructure;
 namespace TAOM.Tests.Features.Warg;
 
 /// <summary>
-/// Pins TAOM's dwarf rider rows (Main/_Module/ModuleData/action_sets.xml) to the Armory's human ones. A dwarf whose
-/// mount died mounted a free warg and the game crashed (owner report, 2026-11-14): LOTRLOME_Armory gives the warg,
-/// spider, elephant and chariot rider rows to as_human_warrior only, and as_dwarf_warrior has no base_set. TAOM merges
-/// the same rows into both dwarf warrior sets. The female copy is a guard, not a need: the managed loader
-/// (Module.CreateProcessedActionSetsXMLForNative) merges TAOM's rows into the Armory's as_dwarf_warrior element before
-/// native parses the document (the Armory loads before TAOM in the normal list), so as_dwarf_female_warrior
-/// (base_set="as_dwarf_warrior") inherits them anyway (native side per the review's native decompile). It can go once
-/// in-game step 2 of issue #1226 passes. The repo's Armory snapshot checks the warg and spider rows always; the
-/// elephant and chariot rows come from the live action_sets.xslt, which the snapshot does not hold (LiveInstall).
+/// Pins the dwarf rider rows in LOTRLOME_Armory's action_sets.xml (the repo's snapshot always, the live install as
+/// LiveInstall) to the Armory's human ones. A dwarf whose mount died mounted a free warg and the game crashed (owner
+/// report, 2026-11-14, issue #1226): the Armory gave the warg, spider, elephant and chariot rider rows to
+/// as_human_warrior only, and as_dwarf_warrior has no base_set. The rows now live in the Armory's as_dwarf_warrior
+/// element. as_dwarf_female_warrior (base_set="as_dwarf_warrior") inherits them: v1.5.7 native FUN_180591470 (0x591470)
+/// copies the base's slots when it parses the child, and its driver FUN_180590080 (0x590080) parses the sets in
+/// document order, so the male set must be declared first. Until the move, TAOM's own action_sets.xml held the rows
+/// (PR #1209); it must not declare the dwarf sets again, or the copies drift. The snapshot does not hold the Armory's
+/// action_sets.xslt, so the 101 elephant and chariot rows are pinned offline by their family counts and compared with
+/// the xslt only in the live test. The live test also serves as the release-channel check
+/// (docs/reference/release-process.md): point BANNERLORD_GAME_DIR at a channel folder.
 /// </summary>
 [TestClass]
 public class DwarfMountRiderRowsTests
 {
     private const string TaomFile = "Main/_Module/ModuleData/action_sets.xml";
-    private static readonly string[] DwarfSets = { "as_dwarf_warrior", "as_dwarf_female_warrior" };
+    private const string DwarfSet = "as_dwarf_warrior";
+    private const string FemaleSet = "as_dwarf_female_warrior";
+
+    // The creature mount rider action types: the warg, spider, elephant and chariot rows, the chariot mounts and the elephant dismounts.
+    private static readonly Regex RiderType = new Regex("^act_(mount_|dismount_)?(warg|spider|elephant|chariot)_", RegexOptions.CultureInvariant);
 
     [TestMethod]
-    public void TaomFile_GivesBothDwarfWarriorSetsTheSameRows()
+    public void TaomFile_DeclaresNoDwarfWarriorSet()
     {
-        var male = TaomDwarfRows("as_dwarf_warrior");
-        var female = TaomDwarfRows("as_dwarf_female_warrior");
-        Assert.IsTrue(male.Count > 0, "as_dwarf_warrior has no rider rows in TAOM's action_sets.xml");
-        CollectionAssert.AreEquivalent(male, female, "the female guard block must hold the same rows as the male block (#1226)");
+        var ids = XDocument.Load(RepoPaths.RepoPath(TaomFile.Split('/'))).Root!.Elements("action_set")
+            .Select(s => (string?)s.Attribute("id")).Where(id => id != null && id.StartsWith("as_dwarf_")).ToList();
+        Assert.AreEqual(0, ids.Count, "the dwarf rider rows live in LOTRLOME_Armory now (#1226): " + string.Join(", ", ids));
     }
 
     [TestMethod]
-    public void TaomFile_DwarfRows_CarryOnlyCreatureMountActions()
+    public void Snapshot_DwarfWarriorSet_BindsEveryHumanWargAndSpiderRow()
     {
-        // The xslt's act_horse_jump_* rows would replace the dwarf's horse jump clips with an elephant clip.
-        foreach (var set in DwarfSets)
-            foreach (var row in TaomDwarfRows(set))
-                StringAssert.Matches(row.Type, new Regex("^(?!act_horse_|act_howdah_|act_ride)act_"),
-                    $"{set} carries {row.Type}");
+        string snapshot = SnapshotActionSets();
+        var human = HumanPartialRows(snapshot);
+        Assert.AreEqual(122, human.Count, "the snapshot's as_human_warrior partial changed size: refresh the dwarf rows");
+        AssertEachBoundToItsClip(human, DwarfRows(snapshot), "snapshot as_dwarf_warrior", "");
+    }
+
+    [DataTestMethod]
+    [DataRow("^act_warg_", 75)]
+    [DataRow("^act_spider_", 47)]
+    [DataRow("^act_elephant_", 72)]
+    [DataRow("^act_chariot_", 23)]
+    [DataRow("^act_mount_chariot_", 4)]
+    [DataRow("^act_dismount_elephant_", 2)]
+    public void Snapshot_DwarfWarriorSet_BindsTheCreatureFamilyRows(string typePattern, int count)
+    {
+        // The elephant and chariot rows come from the Armory's xslt, which the snapshot does not hold: this pin keeps them offline.
+        var rows = DwarfRows(SnapshotActionSets());
+        Assert.AreEqual(count, rows.Count(r => Regex.IsMatch(r.Type, typePattern)),
+            $"as_dwarf_warrior binds a different number of {typePattern} rows: refresh the dwarf rows and this pin together");
+    }
+
+    [TestMethod]
+    public void Snapshot_DwarfWarriorSet_BindsEachCreatureTypeOnce()
+    {
+        // A repeated type is the state a copy-paste of the human rows leaves behind; native keeps the last row of a type.
+        var types = DwarfRows(SnapshotActionSets()).Where(r => RiderType.IsMatch(r.Type)).Select(r => r.Type).ToList();
+        Assert.AreEqual(223, types.Count, "the dwarf set must hold 223 creature rider rows");
+        var repeated = types.GroupBy(t => t).Where(g => g.Count() > 1).Select(g => g.Key).ToList();
+        Assert.AreEqual(0, repeated.Count, "as_dwarf_warrior binds a creature type twice: " + string.Join(", ", repeated));
     }
 
     [DataTestMethod]
@@ -51,63 +80,78 @@ public class DwarfMountRiderRowsTests
     [DataRow("act_spider_idle", "rider_warg_idle")]
     [DataRow("act_chariot_forward_walk", "chariot_rider_forward_walk_stand")]
     [DataRow("act_elephant_forward_walk", "elephant_rider_walk")]
-    public void TaomFile_DwarfRows_IncludeTheWalkAndAttackRows(string type, string clip)
+    public void Snapshot_DwarfWarriorSet_IncludesTheWalkAndAttackRows(string type, string clip)
     {
-        foreach (var set in DwarfSets)
-            CollectionAssert.Contains(TaomDwarfRows(set), (type, clip), $"{set} lacks {type}");
+        CollectionAssert.Contains(DwarfRows(SnapshotActionSets()), (type, clip), $"{DwarfSet} lacks {type}");
     }
 
     [TestMethod]
-    public void Snapshot_EveryHumanWargAndSpiderRow_IsInTheDwarfRows()
+    public void Snapshot_FemaleDwarfSet_InheritsFromTheMaleSetDeclaredBeforeIt()
     {
-        var human = HumanPartialRows(Path.Combine(RepoPaths.RepoPath("docs", "reference", "lotrlome-armory-snapshot"), "action_sets.xml"));
-        Assert.AreEqual(122, human.Count, "the snapshot's as_human_warrior partial changed size: refresh TAOM's dwarf rows");
-        CollectionAssert.IsSubsetOf(human, TaomDwarfRows("as_dwarf_warrior"));
+        var sets = XDocument.Load(SnapshotActionSets()).Root!.Elements("action_set").ToList();
+        Assert.AreEqual(1, sets.Count(s => (string?)s.Attribute("id") == FemaleSet), $"{FemaleSet} must be declared once");
+        int female = sets.FindIndex(s => (string?)s.Attribute("id") == FemaleSet);
+        int male = sets.FindIndex(s => (string?)s.Attribute("id") == DwarfSet);
+        Assert.AreEqual(DwarfSet, (string?)sets[female].Attribute("base_set"), $"{FemaleSet} must inherit the rider rows through base_set");
+        Assert.IsTrue(male >= 0 && male < female,
+            "native copies a base into its child when it parses the child, in document order: the male set must come first");
     }
 
     [TestMethod]
     [TestCategory("LiveInstall")]
-    public void LiveArmory_DwarfRows_EqualTheHumanCreatureRiderRows()
+    public void LiveArmory_DwarfWarriorSet_BindsTheHumanCreatureRiderRows()
     {
         string live = ArmoryModuleData();
-        var expected = HumanPartialRows(Path.Combine(live, "action_sets.xml"))
-            .Concat(XsltCreatureRows(Path.Combine(live, "action_sets.xslt"))).ToList();
-        const string refresh = "TAOM's dwarf rider rows drifted from the Armory's as_human_warrior rows. Refresh: copy the " +
-            "Armory as_human_warrior partial rows (action_sets.xml) and its action_sets.xslt creature rows, without " +
-            "act_horse_jump_* and act_howdah_*, into TAOM's dwarf block in Main/_Module/ModuleData/action_sets.xml (both sets).";
-        foreach (var set in DwarfSets)
-            CollectionAssert.AreEquivalent(expected, TaomDwarfRows(set), $"{set}: {refresh}");
+        var partial = HumanPartialRows(Path.Combine(live, "action_sets.xml"));
+        var template = XsltCreatureRows(Path.Combine(live, "action_sets.xslt"));
+        Assert.IsTrue(partial.Count > 0 && template.Count > 0, "the Armory's human creature rider rows were not found: nothing to compare");
+        AssertEachBoundToItsClip(partial.Concat(template).ToList(), DwarfRows(Path.Combine(live, "action_sets.xml")), "live as_dwarf_warrior",
+            "Copy the creature rider rows of as_human_warrior into the dwarf set, without act_horse_jump_* and act_howdah_* " +
+            "(the horse jumps would replace the dwarf's own jump clips).");
     }
 
     [TestMethod]
     [TestCategory("LiveInstall")]
-    public void LiveArmory_DwarfWarriorSetsHaveNoRiderRowsOfTheirOwn()
+    public void LiveArmory_DwarfWarriorRows_EqualTheSnapshot()
     {
-        // If the Armory ever gives the dwarves these rows, TAOM's copy is redundant and should go.
-        var sets = XDocument.Load(Path.Combine(ArmoryModuleData(), "action_sets.xml")).Descendants("action_set");
-        foreach (var set in sets.Where(s => DwarfSets.Contains((string?)s.Attribute("id"))))
-            Assert.IsFalse(set.Elements("action").Any(a => ((string?)a.Attribute("type"))?.StartsWith("act_warg_") == true),
-                $"{(string?)set.Attribute("id")} now binds warg rows in the Armory");
+        // The snapshot is the only tracked copy; a live edit that skips it reverts on reinstall. Only the dwarf rows are compared:
+        // other sessions edit the rest of the 4.5 MB file, and the README allows the snapshot to lag there.
+        var live = DwarfRows(Path.Combine(ArmoryModuleData(), "action_sets.xml"));
+        var snapshot = DwarfRows(SnapshotActionSets());
+        var onlyLive = live.Except(snapshot).ToList();
+        var onlySnapshot = snapshot.Except(live).ToList();
+        Assert.IsTrue(onlyLive.Count == 0 && onlySnapshot.Count == 0,
+            $"as_dwarf_warrior rows differ: {onlyLive.Count} only in live (first: {string.Join(", ", onlyLive.Take(3))}), " +
+            $"{onlySnapshot.Count} only in the snapshot (first: {string.Join(", ", onlySnapshot.Take(3))}). " +
+            "If live is newer, refresh docs/reference/lotrlome-armory-snapshot/action_sets.xml; after a reinstall, restore live from it (the snapshot README, \"How to restore\").");
     }
 
-    [TestMethod]
-    [TestCategory("LiveInstall")]
-    public void LiveArmory_DwarfWarriorSet_BindsNoTypeThatTaomsRowsAlsoBind()
+    private static string SnapshotActionSets() =>
+        Path.Combine(RepoPaths.RepoPath("docs", "reference", "lotrlome-armory-snapshot"), "action_sets.xml");
+
+    // Every as_dwarf_warrior declaration in the file, merged the way the engine merges same-id sets.
+    private static List<(string Type, string Clip)> DwarfRows(string actionSetsPath)
     {
-        // A shared type would be replaced by TAOM's row, changing a clip the dwarf set already plays.
-        var armory = XDocument.Load(Path.Combine(ArmoryModuleData(), "action_sets.xml")).Root!.Elements("action_set")
-            .Where(s => (string?)s.Attribute("id") == "as_dwarf_warrior").SelectMany(s => Rows(s).Select(r => r.Type)).ToHashSet();
-        var shared = TaomDwarfRows("as_dwarf_warrior").Select(r => r.Type).Where(armory.Contains).ToList();
-        Assert.AreEqual(0, shared.Count, "TAOM's dwarf rows replace Armory bindings: " + string.Join(", ", shared));
+        var sets = XDocument.Load(actionSetsPath).Root!.Elements("action_set")
+            .Where(s => (string?)s.Attribute("id") == DwarfSet).ToList();
+        Assert.IsTrue(sets.Count > 0, $"{DwarfSet} is not declared in {actionSetsPath}");
+        return sets.SelectMany(Rows).ToList();
     }
 
-    private static List<(string Type, string Clip)> TaomDwarfRows(string setId)
+    // Each expected type is bound once to its clip. A conflicting second row would replace it in native, so it fails here.
+    private static void AssertEachBoundToItsClip(IReadOnlyCollection<(string Type, string Clip)> expected,
+        List<(string Type, string Clip)> actual, string what, string hint)
     {
-        var sets = XDocument.Load(RepoPaths.RepoPath(TaomFile.Split('/'))).Root!.Elements("action_set")
-            .Where(s => (string?)s.Attribute("id") == setId).ToList();
-        Assert.AreEqual(1, sets.Count, $"{setId} must be declared once in {TaomFile}");
-        Assert.IsNull(sets[0].Attribute("base_set"), $"{setId} in {TaomFile} is a merge, not a new set");
-        return Rows(sets[0]);
+        Assert.IsTrue(expected.Count > 0, $"{what}: no expected rows to compare");
+        var bad = new List<string>();
+        foreach (var (type, clip) in expected)
+        {
+            var clips = actual.Where(r => r.Type == type).Select(r => r.Clip).ToList();
+            if (clips.Count != 1 || clips[0] != clip)
+                bad.Add($"{type}: wants {clip}, has [{string.Join(", ", clips)}]");
+        }
+        Assert.AreEqual(0, bad.Count, $"{what}: {bad.Count} of {expected.Count} rows missing or conflicting (#1226). {hint} " +
+            string.Join("; ", bad.Take(8)));
     }
 
     // The partial as_human_warrior at the top of the Armory's action_sets.xml: its warg and spider rider rows.

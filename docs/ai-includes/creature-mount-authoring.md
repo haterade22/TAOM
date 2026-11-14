@@ -397,8 +397,9 @@ The native dispatch is **TYPE-driven**. Declare, exactly:
    `Module.CreateProcessedActionSetsXMLForNative` folds every same-id `as_human_warrior` block into Native's element,
    which comes first, before native parses the document, so the position likely does not matter
    (bannerlord-animation-system-map.md). The engine merges same-id sets across modules
-   (the Armory's warg file leads with exactly such a partial). Also copy the rows into TAOM's dwarf block in
-   `Main/_Module/ModuleData/action_sets.xml` (`as_dwarf_warrior` has no `base_set`; `DwarfMountRiderRowsTests`).
+   (the Armory's warg file leads with exactly such a partial). Also copy the rows into the Armory's `as_dwarf_warrior`
+   element, in the live file and in the snapshot `docs/reference/lotrlome-armory-snapshot/action_sets.xml`
+   (`as_dwarf_warrior` has no `base_set`; `DwarfMountRiderRowsTests`).
 4. **Registration truth:** native animation XML loads ONLY via `project.mbproj` `<file>` entries
    with the standard ids (`soln_action_sets` / `soln_action_types` / `soln_monster_usage_sets`)
    → the module-root `action_sets.xml` / `action_types.xml` / `monster_usage_sets.xml` are live;

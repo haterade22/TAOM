@@ -208,6 +208,16 @@ Since #1087 (2026-11-06) the TAOM build plays two dwarf attacks from the Armory:
 errors and no dwarf ever uses either attack. Check each channel:
 `python tools/bind_dwarf_attack_actions.py --check --armory E:/LOTRAOM_Releases/<channel>/Modules/LOTRLOME_Armory/ModuleData`
 must exit 0.
+Since #1226 (2026-11-14) the dwarf creature rider rows (the warg, spider, elephant and chariot rows of
+`as_human_warrior`, 223 rows) live in the Armory's `as_dwarf_warrior`, no longer in TAOM's `action_sets.xml`. TAOM
+2.0.39 carried them itself, so a TAOM build released with an older Armory package leaves the dwarves without them,
+and the missing rows are the leading hypothesis for the free-warg crash of #1226. Check each channel after a normal
+build:
+`BANNERLORD_GAME_DIR=E:/LOTRAOM_Releases/<channel> dotnet test TAOM.Tests --no-build -p:DisableModuleCopy=true -p:ModuleId= --settings TAOM.Tests/binding-gate.runsettings --filter "FullyQualifiedName~LiveArmory_DwarfWarriorSet_BindsTheHumanCreatureRiderRows"`,
+or in PowerShell `$env:BANNERLORD_GAME_DIR = "E:/LOTRAOM_Releases/<channel>"` first. It must report `Passed: 1`. The
+settings file turns a missing channel folder into a failure, where the default run would skip the test and print
+nothing wrong. On 2026-11-14 it failed for `public`, `testing` and `patreon`: their Armory packages (dated 2026-11-06
+and 2026-09-26) predate the rows, so the next release needs a new Armory package from Mike's packaging pass.
 
 **TAOM and TAOM_Map ship as a pair.** They are separate packages that name each other's rows: the map's settlements name TAOM's cultures and clans, and TAOM's clans and kingdoms name the map's settlements. A map ahead of its TAOM points settlements at undefined cultures and clans. A TAOM ahead of its map names home settlements the map lacks and can leave a culture owning no settlement, the daily-tick crash `LANDLESS_CULTURE` reports (#374). Every realm since Arthedain carries this coupling, among them the Dale lord expansion, Ered Luin, Anduin Vale, Angáladh and the Feral Orcs. Check each channel before publishing: `python tools/check_release_pair.py E:/LOTRAOM_Releases/<channel>/Modules`. Pass means exit 0 and a `PASS:` line. Exit 1 lists each disagreement with its code, file and line, including a prison scene no module ships, which the validator only warns about. Exit 2 means a file the check needs is missing or does not parse, or the map has no settlement or prison row; exit 3 means the tool crashed: neither judged anything. It compares the pair with each other: a pair that agrees can still lag the current build. It counts no rows, so a map holding part of a realm passes when every reference resolves, and it does not read the bare ids in TAOM's JSON files (`war_chronicle.json`, `army_targeting.json`, `named_companion_config.json`). Vanilla's cultures and clans come from the install, because a channel holds no SandBox.
 
