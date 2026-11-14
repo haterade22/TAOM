@@ -317,7 +317,7 @@ Code: No code changes needed
    biographies mention lords by name.
    `grep -rn "Old Name" Main/_Module/ModuleData/`
 
-Check: `python tools/oneoff/sync_lord_name_fallbacks.py`
+Check: `dotnet test TAOM.Tests --filter EveryLordNameInLordsXsltMatchesTheRegistry -p:DisableModuleCopy=true -p:ModuleId=`
 Takes effect: new campaign only (`Name` is copied onto the hero once, at hero creation, `Hero.cs:2243`)
 Code: No code changes needed
 
@@ -410,7 +410,8 @@ For content retirement across the mod, see [Retire content](recipe-retire-conten
 - **`tools/complete_lords_xslt.py --apply` only adds templates for vanilla lords `lords.xslt` lacks** (#959). It never
   rewrites an existing template, so a deleted `is_female` line stays deleted and every `race`, `<Equipments>` and hand block
   is safe; on the shipped file it is a no-op. It never writes `characters/lords.xml`; `generate_new_faction_kingdoms.py`
-  (its `TAOM-NEWFACTIONS` regions) and `apply_culture_skills_traits.py --apply` do.
+  (its `TAOM-NEWFACTIONS` regions), `apply_culture_skills_traits.py --apply`, `sync_lord_inline_skills.py --apply` and
+  several older fixers do.
   Contract: [tools/README.md](../../tools/README.md).
   [lord identity reconciliation](../features/lord-identity-reconciliation.md).
 - **Lord names reach the pipeline through THREE tiers, and since 2026-10-01 hero biographies do too.** Names edited in the stylesheets touch keys registered in `taom_xslt_strings.xml`

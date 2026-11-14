@@ -199,8 +199,8 @@ being needed:
 `tools/complete_lords_xslt.py --apply` only inserts templates for vanilla lords `lords.xslt` lacks (#959; the contract is in
 [tools/README.md](../../tools/README.md)), so it never rewrites an existing template. A deleted `is_female` line on a
 vanilla-female id stays deleted, and the `race` attributes and `<Equipments>` blocks are safe. It never writes
-`characters/lords.xml`; two tools do: `generate_new_faction_kingdoms.py` (its `TAOM-NEWFACTIONS` regions) and
-`apply_culture_skills_traits.py --apply` (skills and traits by culture). Before #959 the same command rebuilt the whole file: it copied vanilla's `true` back over a
+`characters/lords.xml`; `generate_new_faction_kingdoms.py` (its `TAOM-NEWFACTIONS` regions),
+`apply_culture_skills_traits.py --apply`, `sync_lord_inline_skills.py --apply` and several older fixers do. Before #959 the same command rebuilt the whole file: it copied vanilla's `true` back over a
 deleted line unless the id sat in a `GENDER_OVERRIDES` table (since removed), and it dropped every `race` attribute and
 `<Equipments>` block.
 
