@@ -1098,7 +1098,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.wm_rohan_spear_a" />
+                    id="Item.wm_rohan_ws_spear_a02" />
                 <equipment
                     slot="Item1"
                     id="Item.wm_rohan_shield_a03_rgw" />

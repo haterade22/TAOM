@@ -4,11 +4,16 @@
 	     the dwarf sets. When an agent rides, the engine looks the mount's usage actions up in the rider's set for the
 	     rider's pose. LOTRLOME_Armory adds them to as_human_warrior only (the warg and spider rows in a partial at the
 	     top of its action_sets.xml, the elephant and chariot rows through action_sets.xslt), and as_dwarf_warrior has
-	     no base_set, so a dwarf on a free warg had none (the game crashed when one mounted, owner report 2026-11-14;
+	     no base_set, so a dwarf on a free warg had none (the game crashed when one mounted, owner report 2026-11-14, cause unproven: #1226;
 	     the crash point itself is not logged). The dwarf set already plays the human horse-rider clips (rider_horse_*),
-	     so the human rider clips are used as they are. The female set took its base_set copy before this merge and
-	     gets the same block. The xslt's act_horse_jump_* and act_howdah_* rows are left out: they would replace the
-	     dwarf's horse jumps. DwarfMountRiderRowsTests pins these rows to the Armory's. -->
+	     so the human rider clips are used as they are. The female block is a guard, not a need: the managed loader
+	     (Module.CreateProcessedActionSetsXMLForNative) merges these rows into the Armory's as_dwarf_warrior element
+	     before native parses the document (the Armory loads before TAOM in the normal list), and native copies a base into a child set when it parses the child (per the
+	     review's native decompile), so as_dwarf_female_warrior (base_set="as_dwarf_warrior") inherits them anyway. The
+	     female block can be deleted once in-game step 2 of issue #1226 passes. Left out of both blocks: the xslt's 8
+	     act_horse_jump_* rows, which would replace the dwarf's horse jump clips with an elephant clip, and
+	     act_howdah_stand_bow, which nothing plays (TaomHowdahStandingPoint.cs sets no action channel).
+	     DwarfMountRiderRowsTests pins these rows to the Armory's. -->
 	<action_set id="as_dwarf_warrior">
 		<action type="act_spider_idle" animation="rider_warg_idle" />
 		<action type="act_spider_idle_1" animation="rider_warg_idle" />

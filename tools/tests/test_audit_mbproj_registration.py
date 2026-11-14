@@ -422,6 +422,45 @@ class ExistingChecks(AuditCase):
         self.assertIn("action_sets.xml", self.errors(findings, "BAD-FILE")[0])
 
 
+class SiblingActionTypes(AuditCase):
+    """A binding may resolve against another TAOM module's action_types.xml: the engine merges every
+    loaded module's action types, and TAOM's dwarf sets bind rows the Armory declares."""
+
+    ROW = '<file id="soln_skins" name="ModuleData/a.xml"/>'
+
+    def audit_with_sibling(self, bound, declared):
+        sets = f'<action_sets><action_set id="s"><action type="{bound}"/></action_set></action_sets>'
+        with tempfile.TemporaryDirectory() as tmp:
+            module = os.path.join(tmp, "Mod")
+            sibling = os.path.join(tmp, "Sibling")
+            put(os.path.join(module, "ModuleData", "project.mbproj"), self.wrap(self.ROW))
+            put(os.path.join(module, "ModuleData", "a.xml"), "<base/>")
+            put(os.path.join(module, "ModuleData", "action_sets.xml"), sets)
+            put(os.path.join(sibling, "ModuleData", "action_types.xml"),
+                f'<action_types><action name="{declared}"/></action_types>')
+            put(os.path.join(tmp, "game", "Modules", "Native", "ModuleData", "action_types.xml"), NATIVE_TYPES)
+            return audit.audit_module(module, os.path.join(tmp, "game"), extra_type_dirs=[sibling])
+
+    def test_a_binding_declared_by_a_sibling_module_is_clean(self):
+        self.assertEqual([], self.audit_with_sibling("act_sib", "act_sib"))
+
+    def test_a_name_no_module_declares_is_still_undeclared(self):
+        findings = self.audit_with_sibling("act_ghost", "act_sib")
+        self.assertEqual(1, len(self.errors(findings, "UNDECLARED")), findings)
+
+    def test_an_absent_sibling_is_skipped(self):
+        sets = '<action_sets><action_set id="s"><action type="act_native"/></action_set></action_sets>'
+        with tempfile.TemporaryDirectory() as tmp:
+            module = os.path.join(tmp, "Mod")
+            put(os.path.join(module, "ModuleData", "project.mbproj"), self.wrap(self.ROW))
+            put(os.path.join(module, "ModuleData", "a.xml"), "<base/>")
+            put(os.path.join(module, "ModuleData", "action_sets.xml"), sets)
+            put(os.path.join(tmp, "game", "Modules", "Native", "ModuleData", "action_types.xml"), NATIVE_TYPES)
+            findings = audit.audit_module(module, os.path.join(tmp, "game"),
+                                          extra_type_dirs=[os.path.join(tmp, "nope")])
+        self.assertEqual([], findings)
+
+
 class NativeActionTypesNeeded(AuditCase):
     """#987 item 2: Native's action_types.xml is what an action_sets.xml binding resolves against, so
     a module with one cannot be audited without it; that is exit 2, never a pile of false UNDECLAREDs."""
@@ -495,6 +534,18 @@ class MainEntry(unittest.TestCase):
                 contextlib.redirect_stdout(out):
             code = audit.main()
         return code, out.getvalue() if isinstance(out, io.StringIO) else ""
+
+    def test_a_narrowed_audit_still_counts_a_sibling_modules_action_types(self):
+        sets = '<action_sets><action_set id="s"><action type="act_sib"/></action_set></action_sets>'
+        with tempfile.TemporaryDirectory() as tmp:
+            game = self.game(tmp, '<file id="soln_skins" name="ModuleData/a.xml"/>',
+                             extra={"ModuleData/action_sets.xml": sets})
+            put(os.path.join(tmp, "Modules", "Sib", "ModuleData", "action_types.xml"),
+                '<action_types><action name="act_sib"/></action_types>')
+            with mock.patch.object(audit, "TAOM_MODULES", ("Mod", "Sib")):
+                code, out = self.run_main(game)
+        self.assertEqual(0, code, out)
+        self.assertIn("0 error(s)", out)
 
     def test_an_error_exits_1(self):
         with tempfile.TemporaryDirectory() as tmp:
