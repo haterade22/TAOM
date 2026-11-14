@@ -224,9 +224,11 @@ The career button's click handler on the character developer: closes the develop
 
 ## Patch28_SettlementGuards
 
-**Target:** `GuardsCampaignBehavior.TakeGuardAgentDataFromGarrisonTroopList` (manual), `GuardsCampaignBehavior.GetSuitableSpear` (manual), `GuardsCampaignBehavior.InitializeGarrisonCharacters` (manual, Postfix)
+**Target:** `GuardsCampaignBehavior.TakeGuardAgentDataFromGarrisonTroopList` (manual), `GuardsCampaignBehavior.GetSuitableSpear` (manual), `GuardsCampaignBehavior.InitializeGarrisonCharacters` (manual, Postfix), `GuardsCampaignBehavior.conversation_guard_start_on_condition` / `conversation_disguised_start_on_condition` / `conversation_disguised_start_on_condition_alt` (manual, Postfix, `GuardsCampaignBehavior_HideoutNoGuards_Patch`)
 
 Per-settlement guard troop injection + per-culture spear mapping (manual patches). The `InitializeGarrisonCharacters` Postfix (#346, 2026-07-14) scrubs excluded-race troops (cave troll) out of the private `_garrisonTroops` guard candidate list — vanilla draws guards from it weighted by troop LEVEL, so the L51 troll dominated the pick in any settlement without a configured pool. Field read via cached `AccessTools.Field`, fail-open warn-once; garrison roster/siege defense untouched. See `docs/features/settlement-guards.md` "Guard-Duty Race Exclusions".
+
+**Hideout no-guards Postfix (regression of #258).** The three private start-line conditions return `false` while `Mission.Current` has a `HideoutMissionController` or `HideoutAmbushMissionController` (decision: `HideoutGuardDialogRule`), so vanilla's guard and disguise lines cannot shadow `bandit_hideout_start_defender` when the boss agent is a Soldier-occupation fallback. Postfix only, `ref bool __result`; a vanilla `false` is untouched; no finalizer of its own (PatchShield may add one). Applied by `ManualPatchApplicator` with a startup warning when fewer than three targets resolve. Binding tests: `HideoutGuardDialogPatchBindingTests`. See `docs/features/settlement-guards.md`.
 
 ## Patch29_CCBodyProperties
 

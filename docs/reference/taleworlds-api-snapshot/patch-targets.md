@@ -357,6 +357,7 @@ Patches: 415. Regenerate after any patch, GameModel or engine change: `pwsh tool
 | `TAOM.Features.SeatOfSeeing.Hooks.Patch140_RangedSiegeInput` | `TaleWorlds.MountAndBlade.View.MissionViews.SiegeWeapon.RangedSiegeWeaponView.Void HandleUserInput(Single dt)` |
 | `TAOM.Features.SeatOfSeeing.Hooks.Patch140_TakeControlOfAgent` | `TaleWorlds.MountAndBlade.Mission.Boolean CanTakeControlOfAgent(Agent agentToTakeControlOf)` |
 | `TAOM.Features.SettlementGuards.Hooks.GuardsCampaignBehavior_GetSuitableSpear_Patch` | `SandBox.CampaignBehaviors.GuardsCampaignBehavior.ItemObject GetSuitableSpear(CultureObject culture)` |
+| `TAOM.Features.SettlementGuards.Hooks.GuardsCampaignBehavior_HideoutNoGuards_Patch` | `SandBox.CampaignBehaviors.GuardsCampaignBehavior.Boolean conversation_guard_start_on_condition()` |
 | `TAOM.Features.SettlementGuards.Hooks.GuardsCampaignBehavior_InitializeGarrisonCharacters_Patch` | `SandBox.CampaignBehaviors.GuardsCampaignBehavior.Void InitializeGarrisonCharacters(Settlement settlement)` |
 | `TAOM.Features.SettlementGuards.Hooks.GuardsCampaignBehavior_TakeGuardAgentData_Patch` | `SandBox.CampaignBehaviors.GuardsCampaignBehavior.AgentData TakeGuardAgentDataFromGarrisonTroopList(CultureObject culture, Boolean overrideWeaponWithSpear, Boolean unarmed)` |
 | `TAOM.Features.SettlementNameplateFade.Hooks.SettlementNameplateWidget_DetermineTargetAlphaValue_Patch` | `TaleWorlds.MountAndBlade.GauntletUI.Widgets.Nameplate.SettlementNameplateWidget.Single DetermineTargetAlphaValue()` |

@@ -18,13 +18,15 @@ The guard spawning pipeline in `GuardsCampaignBehavior` (SandBox.dll) has no ext
 
 ### Solution Approach
 
-Three Harmony patches on private methods, manually patched (not via PatchCategory since the target methods require `AccessTools.Method`):
+Four Harmony patches on private methods, manually patched (not via PatchCategory since the target methods require `AccessTools.Method`):
 
 1. **TakeGuardAgentData Prefix** -- Intercepts troop selection. If the settlement has a custom guard pool in the XML config, resolves a troop ID via weighted random selection, then delegates to vanilla's `PrepareGuardAgentDataFromGarrison` (called via cached reflection) for equipment assembly. Falls back to vanilla behavior if no config exists.
 
 2. **GetSuitableSpear Prefix** -- Replaces the vanilla hardcode (`battania -> northern_spear_2_t3`, else `western_spear_3_t3`) with a per-culture lookup from the XML config.
 
 3. **InitializeGarrisonCharacters Postfix** -- Scrubs excluded-race troops (cave troll) out of vanilla's private `_garrisonTroops` guard candidate list right after vanilla builds it. See "Guard-Duty Race Exclusions" below.
+
+4. **Hideout no-guards Postfix** (`GuardsCampaignBehavior_HideoutNoGuards_Patch`, regression of #258) -- Forces `false` from the three private start-line conditions `conversation_guard_start_on_condition` (`guard_start`), `conversation_disguised_start_on_condition` (`disguise_start_conversation`) and `conversation_disguised_start_on_condition_alt` (`disguise_start_conversation_alt`) while the current mission has a `HideoutMissionController` or `HideoutAmbushMissionController`. A hideout has no guards. Why: when `HideoutMissionController.SelectBossAgent` falls back to the highest-level agent (the `<culture>_boss` troop missing or wounded), that agent is an `Occupation.Soldier` troop in 8 of the 9 hideout cultures. `guard_start` (condition: Soldier and `PlayerEncounter.InsideSettlement`) shares priority 100 with `bandit_hideout_start_defender`, and `GuardsCampaignBehavior` registers after `HideoutConversationsCampaignBehavior` in `SandBoxSubModule`, so the guard line won, went to `close_window`, and the boss fight (teams turn hostile only in the boss line's consequence) never started: "Can't talk right now" (v1.5.7 `GuardsCampaignBehavior.cs` :585, :584, :612 registration, :743, :965, :986 conditions). The #258 data fix (dedicated `<culture>_boss` troops) is unchanged; the Soldier troops are shared with kingdom rosters, so this fixes the fallback in code. The decision is the pure `HideoutGuardDialogRule`; a vanilla `false` is left alone. A missing target logs one `[SettlementGuards] hideout guard-dialog suppression` warning at startup. Not verified in game (offline tests only).
 
 ### Component Diagram
 
