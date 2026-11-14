@@ -11,7 +11,10 @@ alongside the external edit" -- this is that gate for the localization half.
 It measures what the translator would consider untranslated (target text still byte-identical
 to its English source) and compares against a checked-in baseline. Coverage may improve freely;
 a REGRESSION -- more untranslated entries than the baseline records -- exits 1 and names the
-language, because that is what a reinstall looks like from in here.
+language, because that is what a reinstall looks like from in here. A missing language folder or
+target file counts every source row as untranslated (#815); a missing TAOM_Map settlements.xml, no
+Armory English loc_*.xml, or a file that does not parse exits 2, since the count would measure nothing.
+--update-baseline refuses to record a count that falls from above 0 to 0 unless --allow-drop is given.
 
 It also runs the processor check (#1026): a live TAOM_Map or LOTRLOME_Armory `language_data.xml` (root
 or per language) with a `name` whose `text_processor` differs from Native's resets the language's
@@ -24,7 +27,7 @@ why, rather than reporting perfect coverage it never measured.
 
 Usage:
     python tools/check_external_loc_coverage.py                  # check against the baseline
-    python tools/check_external_loc_coverage.py --update-baseline
+    python tools/check_external_loc_coverage.py --update-baseline [--allow-drop]
     python tools/check_external_loc_coverage.py --processors-only   # the release check, no baseline
 """
 
@@ -48,13 +51,17 @@ INLINE_KEY = re.compile(r'\w+="\{=([^}]+)\}([^"]*)"')
 
 
 def _rows(path, strip_keys):
-    """{key: text} for a <strings> file. Mirrors translate_with_claude._parse_string_xml."""
+    """{key: text} for a <strings> file. Mirrors translate_with_claude._parse_string_xml.
+
+    A missing file is {}: the caller then counts every source row as untranslated. A file that does
+    not parse exits 2 naming it, because an empty read would count nothing (#815)."""
     if not path.exists():
         return {}
     try:
         tree = ET.parse(path)
-    except ET.ParseError:
-        return {}
+    except (ET.ParseError, OSError) as exc:
+        print(f"ERROR: {path} does not parse ({exc}); the coverage check cannot read it.", file=sys.stderr)
+        raise SystemExit(2)
     out = {}
     for el in tree.iter("string"):
         sid, text = el.get("id", ""), el.get("text", "") or ""
@@ -70,25 +77,32 @@ def _rows(path, strip_keys):
 def untranslated(modules_root, lang):
     """(taom_map_count, armory_count) of entries whose target text is still the English."""
     # TAOM_Map: settlements.xml carries inline {=KEY}default; the target mirrors it.
+    # A missing target (or language folder) leaves tgt empty, so every source row counts (#815).
     settlements = modules_root / "TAOM_Map" / "ModuleData" / "settlements.xml"
     target = modules_root / "TAOM_Map" / "ModuleData" / "Languages" / lang / "loc_settlements.xml"
-    map_count = 0
-    if settlements.exists() and target.exists():
-        src = {}
-        for key, default in INLINE_KEY.findall(settlements.read_text(encoding="utf-8")):
-            src.setdefault(key, default)
-        tgt = _rows(target, strip_keys=False)
-        # A name that is still English stays untranslated once it carries a grammar tag (#1023).
-        map_count = sum(1 for k, v in src.items() if name_tags.strip_leading_tags(tgt.get(k, v)) == v)
+    if not settlements.exists():
+        print(f"ERROR: no {settlements}; the coverage check would measure nothing for TAOM_Map.",
+              file=sys.stderr)
+        raise SystemExit(2)
+    src = {}
+    for key, default in INLINE_KEY.findall(settlements.read_text(encoding="utf-8")):
+        src.setdefault(key, default)
+    tgt = _rows(target, strip_keys=False)
+    # A name that is still English stays untranslated once it carries a grammar tag (#1023).
+    map_count = sum(1 for k, v in src.items() if name_tags.strip_leading_tags(tgt.get(k, v)) == v)
 
     # Armory: root loc_*.xml are the English side, the per-language dir mirrors them.
     armory_root = modules_root / "LOTRLOME_Armory" / "ModuleData" / "Languages"
+    sources = sorted(armory_root.glob("loc_*.xml"))
+    if not sources:
+        print(f"ERROR: no loc_*.xml under {armory_root}; the coverage check would measure nothing for "
+              "the Armory.", file=sys.stderr)
+        raise SystemExit(2)
     armory_count = 0
-    if (armory_root / lang).is_dir():
-        for src_file in armory_root.glob("loc_*.xml"):
-            src = _rows(src_file, strip_keys=True)
-            tgt = _rows(armory_root / lang / src_file.name, strip_keys=False)
-            armory_count += sum(1 for k, v in src.items() if tgt.get(k, v) == v)
+    for src_file in sources:
+        src = _rows(src_file, strip_keys=True)
+        tgt = _rows(armory_root / lang / src_file.name, strip_keys=False)
+        armory_count += sum(1 for k, v in src.items() if tgt.get(k, v) == v)
     return map_count, armory_count
 
 
@@ -238,11 +252,25 @@ def measure():
              for lang in LANGUAGES}, modules)
 
 
+def drops_to_zero(baseline, current):
+    """Lines for each count that falls from above 0 to 0: a reinstall that empties the tree reads that
+    way, so --update-baseline records it only with --allow-drop (#815)."""
+    return [f"  {lang}/{module}: {baseline[lang][module]} -> 0"
+            for lang in LANGUAGES for module in ("taom_map", "armory")
+            if (baseline.get(lang, {}).get(module) or 0) > 0 and current[lang][module] == 0]
+
+
+# The translator's --module value for each counted module, for the re-apply hint.
+TRANSLATE_MODULE = {"taom_map": "TAOM_Map", "armory": "Armory"}
+
+
 def main(argv=None):
     p = argparse.ArgumentParser(description=__doc__,
                                 formatter_class=argparse.RawDescriptionHelpFormatter)
     p.add_argument("--update-baseline", action="store_true",
                    help="record current coverage as the new baseline")
+    p.add_argument("--allow-drop", action="store_true",
+                   help="with --update-baseline, also record a count that falls from above 0 to 0")
     p.add_argument("--processors-only", action="store_true",
                    help="run only the text-processor check (exit 0 clean, 1 mismatch, 2 not found); "
                         "reads no baseline")
@@ -261,10 +289,19 @@ def main(argv=None):
         return 0
 
     if args.update_baseline:
+        if BASELINE.exists() and not args.allow_drop:
+            drops = drops_to_zero(json.loads(BASELINE.read_text(encoding="utf-8")), current)
+            if drops:
+                print("REFUSING: these counts fall to 0, which is what a tree the check cannot read "
+                      "looks like:", file=sys.stderr)
+                print("\n".join(drops), file=sys.stderr)
+                print("Check the live files, then re-run with --allow-drop to record it. Nothing written.",
+                      file=sys.stderr)
+                return 1
         BASELINE.write_text(json.dumps(current, indent=2, sort_keys=True) + "\n",
                             encoding="utf-8")
         total = sum(v["taom_map"] + v["armory"] for v in current.values())
-        print(f"Baseline written: {BASELINE.relative_to(REPO_ROOT)} "
+        print(f"Baseline written: {BASELINE.name} "
               f"({total} untranslated entries across {len(current)} languages)")
         return 0
 
@@ -291,7 +328,7 @@ def main(argv=None):
     tag_failures = tags_failure(reports) if args.require_tags else []
 
     baseline = json.loads(BASELINE.read_text(encoding="utf-8"))
-    regressions, improvements = [], []
+    regressions, improvements, regressed_modules = [], [], set()
     for lang in LANGUAGES:
         for module in ("taom_map", "armory"):
             was = baseline.get(lang, {}).get(module)
@@ -301,6 +338,7 @@ def main(argv=None):
             if now > was:
                 regressions.append(f"  {lang}/{module}: {was} -> {now} untranslated "
                                    f"(+{now - was})")
+                regressed_modules.add(module)
             elif now < was:
                 improvements.append(f"  {lang}/{module}: {was} -> {now} (-{was - now})")
 
@@ -313,11 +351,14 @@ def main(argv=None):
         print("\nFAIL: external-module translations went backwards.", file=sys.stderr)
         print("\n".join(regressions), file=sys.stderr)
         print("\nThese files live in the game install and are not tracked here, so a module "
-              "reinstall silently reverts them. Re-apply with:\n"
-              "  python tools/translate_with_claude.py --lang <L> --module TAOM_Map --apply --allow-live-write\n"
-              "then re-tag the BR and IT names with:\n"
-              "  python tools/name_tags.py --target live-map --apply --allow-live-write",
-              file=sys.stderr)
+              "reinstall silently reverts them. Re-apply with:", file=sys.stderr)
+        for module in ("taom_map", "armory"):
+            if module in regressed_modules:
+                print(f"  python tools/translate_with_claude.py --lang <L> --module {TRANSLATE_MODULE[module]} "
+                      "--apply --allow-live-write", file=sys.stderr)
+        if "taom_map" in regressed_modules:
+            print("then re-tag the BR and IT names with:\n"
+                  "  python tools/name_tags.py --target live-map --apply --allow-live-write", file=sys.stderr)
 
     if regressions or bad:
         return 1

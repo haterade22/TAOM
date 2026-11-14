@@ -35,6 +35,18 @@ def write_loc(modules: Path, lang: str, rows):
     return f
 
 
+def readable_tree(modules: Path):
+    """The two sources the coverage count must read (#815: a missing one exits 2), each with no rows, so they
+    add nothing to the count. A settlements.xml a test wrote first is kept."""
+    s = modules / "TAOM_Map" / "ModuleData" / "settlements.xml"
+    if not s.exists():
+        s.parent.mkdir(parents=True, exist_ok=True)
+        s.write_text("<Settlements />", encoding="utf-8")
+    a = modules / "LOTRLOME_Armory" / "ModuleData" / "Languages" / "loc_x.xml"
+    a.parent.mkdir(parents=True, exist_ok=True)
+    a.write_text("<base><strings></strings></base>", encoding="utf-8")
+
+
 class TagReportTests(unittest.TestCase):
     def test_tag_report_UntaggedLiveFile_ListsEveryMissingTag(self):
         with tempfile.TemporaryDirectory() as td:
@@ -90,6 +102,7 @@ class TagReportTests(unittest.TestCase):
             s.parent.mkdir(parents=True, exist_ok=True)
             s.write_text(f'<S><Settlement name="{{={P}town_A}}Alpha" /></S>', encoding="utf-8")
             write_loc(m, "BR", [(P + "town_A", "{.NS}Alpha")])
+            readable_tree(m)
             self.assertEqual(chk.untranslated(m, "BR")[0], 1)
 
 
@@ -151,6 +164,7 @@ class RequireTagsMainTests(unittest.TestCase):
         modules = Path(td) / "Modules"
         for lang, rows in rows_by_lang.items():
             write_loc(modules, lang, rows)
+        readable_tree(modules)
         baseline = Path(td) / "baseline.json"
         baseline.write_text(json.dumps({lang: {"taom_map": 0, "armory": 0} for lang in chk.LANGUAGES}), encoding="utf-8")
         old = os.environ.get("BANNERLORD_GAME_MODULES")
