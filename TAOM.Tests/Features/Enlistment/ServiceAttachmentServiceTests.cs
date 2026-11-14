@@ -306,7 +306,44 @@ public class ServiceAttachmentServiceTests
         Assert.AreEqual(AttachmentStatus.AttachRequired, result.Status);
     }
 
-    // ---- The presence hold while a battle encounter is live (#577) ----------------------------
+    /// <summary>
+    /// A stale pass must not walk the player back in. Vanilla's town "Leave" walks the player out
+    /// and stops time; the pump revokes the pass on its next expensive pass, but an hourly
+    /// reconcile can run first. Following then puts the player back inside with the pass still
+    /// held, and the pump only revokes a pass for a player outside. When the commander marches,
+    /// the pass branch keeps the player in the town until a battle changes the state.
+    /// </summary>
+    [TestMethod]
+    public void Assess_OnLeaveButOutsideAnySettlement_CommanderInTown_DoesNotFollowBackIn()
+    {
+        var result = _service.Assess(
+            EnlistmentState.EnlistedAttached, CommanderIn("town_EW1"), Player(parked: false),
+            onTownLeave: true);
+
+        Assert.AreEqual(AttachmentStatus.AttachRequired, result.Status);
+    }
+
+    [TestMethod]
+    public void Assess_OnLeaveButOutsideAnySettlement_CommanderInTown_AlreadyParked_StaysParked()
+    {
+        var result = _service.Assess(
+            EnlistmentState.EnlistedAttached, CommanderIn("town_EW1"), Player(parked: true),
+            onTownLeave: true);
+
+        Assert.AreEqual(AttachmentStatus.Attached, result.Status);
+    }
+
+    [TestMethod]
+    public void Assess_NoLeaveOutsideAnySettlement_CommanderInTown_FollowsAsBefore()
+    {
+        var result = _service.Assess(
+            EnlistmentState.EnlistedAttached, CommanderIn("town_EW1"), Player(parked: true),
+            onTownLeave: false);
+
+        Assert.AreEqual(AttachmentStatus.SettlementFollowRequired, result.Status);
+    }
+
+    // ---- The presence hold while a battle encounter is live (#577)----------------------------
     //
     // A live PlayerEncounter in EnlistedBattle is the battle itself, its loot and aftermath window,
     // or the join gap between EnsureEncounterAgainst and JoinBattle. The trap is any moment with

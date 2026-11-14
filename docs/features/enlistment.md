@@ -1699,6 +1699,21 @@ set until the next stop elsewhere or a session reset.
 `TownLeavePolicy.ShouldRevokeLeave` is unchanged: it already revokes exactly when the player is no
 longer inside the settlement, which is the wanted behaviour. Only the exit sweep needed teaching.
 
+### A pass the player walked out of is not followed back in
+
+Tester report, 14 Nov 2026: after shore leave, trading and the town's "Leave", the player sometimes
+stayed in the town while the commander marched off, until his next battle. Vanilla's "Leave"
+(`game_menu_settlement_leave_on_consequence`, v1.5.7) walks the player out, and
+`PlayerEncounter.Finish` stops time. The pump revokes the pass on its next expensive pass, but the
+hourly reconcile can run first. `Assess` then saw a commander still in the town and returned
+`SettlementFollowRequired`, so the follow put the player back inside with the pass still held.
+`ShouldRevokeLeave` does not revoke for a player inside, and once the commander left, the pass
+branch returned `Attached` on every reconcile. A battle (state `EnlistedBattle`) revoked it.
+
+`Assess` no longer follows on a pass while the player is outside every settlement: it returns the
+march verdict (`AttachRequired`, or `Attached` when already parked). The pump then revokes the pass,
+and the next reconcile follows the commander in with no pass held.
+
 ### Still open
 
 Crash bundle `d7d9f7d3` shows the same FOLLOW/EXIT pair oscillating on a 6 to 7 second period for
