@@ -54,6 +54,11 @@ class ControlCharacterRefusalTests(unittest.TestCase):
         # The refusal exists because of this: the escape reaches the row as a control character.
         self.assertEqual("a\n\nb", h.unescape("a\\n\\nb", interpolated=False))
 
+    def test_unescape_EscapedBackslashBeforeN_StaysABackslashAndN(self):
+        # C# "a\\nb" is a backslash and an n, not a newline, so the refusal must not fire on it.
+        self.assertEqual("a\\nb", h.unescape("a\\\\nb", interpolated=False))
+        self.assertEqual([], h.control_character_rows([("taom_x", h.unescape("a\\\\nb", False), "A.cs", 1)]))
+
     def test_control_character_rows_NewlineTabOrCarriageReturn_AreListed(self):
         rows = [("taom_n", "a\nb", "Main/A.cs", 3), ("taom_t", "a\tb", "Main/B.cs", 4),
                 ("taom_r", "a\rb", "Main/C.cs", 5), ("taom_ok", "a{newline}b", "Main/D.cs", 6)]

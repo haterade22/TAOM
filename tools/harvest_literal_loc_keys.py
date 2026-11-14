@@ -69,10 +69,14 @@ def write_text(path: Path, text: str) -> None:
         f.write(text)
 
 
+CS_ESCAPES = {'"': '"', "\\": "\\", "n": "\n", "t": "\t", "r": "\r"}
+CS_ESCAPE = re.compile(r'\\(["\\ntr])')
+
+
 def unescape(body: str, interpolated: bool) -> str:
     """Turn a C# literal body into the string the compiler would produce."""
-    out = (body.replace('\\"', '"').replace("\\\\", "\\")
-               .replace("\\n", "\n").replace("\\t", "\t").replace("\\r", "\r"))
+    # One pass, so an escaped backslash before an n stays a backslash and an n.
+    out = CS_ESCAPE.sub(lambda m: CS_ESCAPES[m.group(1)], body)
     if interpolated:
         out = out.replace("{{", "{").replace("}}", "}")
     return out
