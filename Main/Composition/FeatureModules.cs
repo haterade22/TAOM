@@ -76,6 +76,7 @@ internal static class FeatureModules
         new Features.ArmyTargeting.HoldTheWalls.HoldTheWallsModule(),
         new Features.UnderTheEaves.UnderTheEavesModule(),
         new Features.AlignmentRecruitment.AlignmentRecruitmentModule(),
+        new Features.AlignmentDesertion.AlignmentDesertionModule(),
         new Features.UnlookedForAid.UnlookedForAidModule(),
         new Features.SwornAnew.SwornAnewModule(),
         new Features.Provender.ProvenderModule(),

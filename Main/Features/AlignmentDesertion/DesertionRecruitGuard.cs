@@ -11,7 +11,8 @@ namespace TAOM.Features.AlignmentDesertion;
 /// Keeps recruiting in step with alignment desertion: a party or garrison is not offered a troop that
 /// <see cref="IAlignmentDesertionService"/> would remove on the next daily tick. Used by
 /// <c>TaomPrisonerRecruitmentCalculationModel</c> (prisoners), <c>TaomVolunteerModel</c> (volunteers and garrison
-/// auto-recruit) and <c>Patch114_AiVolunteerEstimate_Postfix</c> (the AI trip estimate).
+/// auto-recruit), <c>Patch114_AiVolunteerEstimate_Postfix</c> (the AI trip estimate) and
+/// <c>Patch150_ConformityTick_Prefix</c> (the prisoner conformity tick).
 /// </summary>
 public interface IDesertionRecruitGuard
 {
