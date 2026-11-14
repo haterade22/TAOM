@@ -4337,6 +4337,79 @@ note_none "$(lr_rec "$(nh_gb "$S6")" "$NP")" "is silent for the user's .claude f
 NR="C:/Users/someone/repos/proj/.claude/hooks/h.sh"
 nrec "$S5" "$NR" >/dev/null
 note_check "$(nrec "$S6" "$NR")" "still notes a repo's own .claude folder under the home folder" "(55555555)"
+# The same repo file in two worktrees of one checkout (#1248): two absolute paths, one file. The
+# note names the other worktree's path and work_claims.py. A session started in the sibling keeps
+# its ledger there, so that folder is read too. Paths in the -m form git itself prints.
+NW_M="$SANDBOX/nw-main"
+NW_W="$SANDBOX/nw-sibling"
+git init -q "$NW_M" \
+    && git -C "$NW_M" -c user.name=t -c user.email=t@t commit -q --allow-empty -m base \
+    && git -C "$NW_M" worktree add -q "$NW_W" 2>/dev/null
+mkdir -p "$NW_M/Main" "$NW_W/Main"
+NW_MM=$(cygpath -m "$NW_M" 2>/dev/null || echo "$NW_M")
+NW_WM=$(cygpath -m "$NW_W" 2>/dev/null || echo "$NW_W")
+S7=77777777-0000-4000-8000-000000000017
+S8=88888888-0000-4000-8000-000000000018
+S9=99999999-0000-4000-8000-000000000019
+S10=aaaa0000-0000-4000-8000-000000000020
+nwrec() { lr_rec "$(lr_pl "$1" "$2")" "$3"; }  # $1 session, $2 file, $3 project dir
+note_none "$(nwrec "$S7" "$NW_MM/Main/Twin.cs" "$NW_MM")" "is silent for the first session to edit a file in one worktree"
+note_check "$(nwrec "$S8" "$NW_WM/Main/Twin.cs" "$NW_MM")" "notes the same repo file edited in another worktree" \
+    "record-session-edit: the same repo file in another worktree: 77777777 edited $NW_MM/Main/Twin.cs at " "read git diff"
+NW_OUT=$(nwrec "$S8" "$NW_WM/Main/Twin.cs" "$NW_MM")
+note_none "$NW_OUT" "gives the cross-worktree note once per file and session"
+note_check "$(nwrec "$S8" "$NW_WM/Main/Twin.cs" "$NW_MM" >/dev/null; nwrec "$S7" "$NW_MM/Main/Twin.cs" "$NW_MM")" \
+    "gives the cross-worktree note to the first session too" "work_claims.py list"
+note_none "$(nwrec "$S8" "$NW_WM/Main/Other.cs" "$NW_MM")" "is silent for another relative path in the other worktree"
+nwrec "$S9" "$NW_WM/Main/Far.cs" "$NW_WM" >/dev/null
+note_check "$(nwrec "$S10" "$NW_MM/Main/Far.cs" "$NW_MM")" "reads the ledger of a session started in the other worktree" \
+    "99999999 edited $NW_WM/Main/Far.cs"
+S11=bbbb0000-0000-4000-8000-000000000021
+S12=cccc0000-0000-4000-8000-000000000022
+nwrec "$S11" "$NW_MM/Main/Both.cs" "$NW_MM" >/dev/null
+nwrec "$S12" "$NW_WM/Main/Both.cs" "$NW_MM" >/dev/null
+NW_BOTH=$(nwrec "$S10" "$NW_MM/Main/Both.cs" "$NW_MM")
+note_check "$NW_BOTH" "names a same-path session and a twin-path session in one note" \
+    "another session (bbbb0000) edited $NW_MM/Main/Both.cs"
+[[ "$NW_BOTH" == *"Also the same repo file in another worktree: cccc0000"* ]] \
+    && ok "record-session-edit adds the twin-path session to the same note" \
+    || bad "record-session-edit left the twin-path session out: ${NW_BOTH:0:300}"
+rm -rf "$NW_W" "$NW_M"
+# session-start's claim list (#1248): another session's live claim prints a CLAIM: line, the
+# payload session's own claim prints nothing, and a missing registry prints UNCHECKED. On /clear and
+# resume too. Two sleeping processes stand in for live sessions: their Windows pids read as running.
+CS_R="$SANDBOX/claims-repo"
+CS_REG="$SANDBOX/claims-registry"
+mkdir -p "$CS_R/tools" "$CS_REG"
+git init -q "$CS_R" && cp "$REPO/tools/work_claims.py" "$CS_R/tools/"
+sleep 120 & CS_P1=$!
+sleep 120 & CS_P2=$!
+CS_W1=$(cat "/proc/$CS_P1/winpid" 2>/dev/null || echo "$CS_P1")
+CS_W2=$(cat "/proc/$CS_P2/winpid" 2>/dev/null || echo "$CS_P2")
+CS_STORE="$CS_R/.git/taom-work-claims"
+mkdir -p "$CS_STORE"
+printf '{"pid":%s,"sessionId":"sid-other","name":"taom-zz"}' "$CS_W1" > "$CS_REG/$CS_W1.json"
+printf '{"pid":%s,"sessionId":"sid-self","name":"taom-me"}' "$CS_W2" > "$CS_REG/$CS_W2.json"
+printf '{"key":"issue-77","session":"sid-other","pid":%s,"name":"taom-zz","worktree":"E:/x","branch":"b","since":1,"note":"the other task"}' "$CS_W1" > "$CS_STORE/issue-77.json"
+printf '{"key":"issue-78","session":"sid-self","pid":%s,"name":"taom-me","worktree":"E:/y","branch":"b","since":1,"note":"my task"}' "$CS_W2" > "$CS_STORE/issue-78.json"
+cs_start() {  # $1 source, $2 registry folder
+    printf '{"source":"%s","session_id":"sid-self"}' "$1" | CLAUDE_PROJECT_DIR="$CS_R" TAOM_CLAIMS_REGISTRY="$2" timeout -k 2 20 \
+        bash "$REPO/.claude/hooks/session-start.sh" 2>/dev/null
+}
+for cs_src in clear resume; do
+    CS_OUT=$(cs_start "$cs_src" "$CS_REG")
+    if [[ "$CS_OUT" == *"DECONFLICT:"* && "$CS_OUT" == *"CLAIM: #77 held by taom-zz (sid-othe)"*"the other task"* && "$CS_OUT" != *"#78"* ]]; then
+        ok "session-start ($cs_src) lists another session's claim and leaves out its own"
+    else
+        bad "session-start ($cs_src) claim list wrong: ${CS_OUT:0:300}"
+    fi
+done
+CS_OUT=$(cs_start clear "$SANDBOX/no-such-registry")
+[[ "$CS_OUT" == *"work claims UNCHECKED"* && "$CS_OUT" != *"CLAIM:"* ]] \
+    && ok "session-start says the claims are UNCHECKED when the tool cannot judge them" \
+    || bad "session-start without a registry printed: ${CS_OUT:0:300}"
+kill "$CS_P1" "$CS_P2" 2>/dev/null
+rm -rf "$CS_R" "$CS_REG"
 # A ledger line is file data: its epoch reaches bash arithmetic only as digits (hook-authoring.md).
 printf '%s%s\t%s\n' "$(date +%s)" "$PROBE" "C:/proj/Probe.cs" > "$NL/cccccccc-probe.edits"
 nrec "$SD" "C:/proj/Probe.cs" >/dev/null
