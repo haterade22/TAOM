@@ -53,6 +53,7 @@ import argparse
 import copy
 import glob
 import json
+import math
 import os
 import re
 import sys
@@ -736,6 +737,95 @@ def factor_distribution(items: dict[str, ItemRec], pieces: dict[str, ET.Element]
     return dist
 
 
+# Ids a shop never sells as a real weapon: vanilla's sparring and practice copies.
+NOT_SHOP_ID_MARKERS = ("_blunt", "tournament", "practice")
+# A lance shares the spear's template and usage modes, so only its id tells it apart. Its worth is
+# the couched hit, which the DPS model leaves out (melee-damage-model.md, guard 1): priced on foot it
+# is the weakest polearm and would cap every starter spear below the culture's real spears.
+NOT_COMPARABLE_ID_MARKERS = ("lance",)
+
+# item id -> (swing DPS, thrust DPS), as melee_catalogue prices the item
+MeleePrices = dict[str, tuple[float, float]]
+
+
+def shop_sibling(donor: ET.Element, items: dict[str, ItemRec], prices: MeleePrices) -> tuple[str, float] | None:
+    """The donor's weakest shop sibling and its best DPS: a crafted item with the donor's culture
+    and crafting_template that a shop can sell (not a starter, not is_merchandise="false", not a
+    blunt, tournament or practice copy) and that melee_catalogue priced. A starter must not
+    out-damage such a weapon (#1224: the Isengard starter sword beat the Isengard swords in shops).
+    None for a plain item, a donor with no culture (the items without one are not a family), or a
+    donor with no priced sibling."""
+    culture, template, donor_id = donor.get("culture"), donor.get("crafting_template"), donor.get("id")
+    if donor.tag != "CraftedItem" or not culture:
+        return None
+    weakest: tuple[str, float] | None = None
+    for iid, rec in items.items():
+        el = rec.element
+        if el.tag != "CraftedItem" or iid == donor_id or iid.startswith(STARTER_PREFIX):
+            continue
+        if el.get("culture") != culture or el.get("crafting_template") != template:
+            continue
+        if el.get("is_merchandise") == "false" or any(m in iid for m in NOT_SHOP_ID_MARKERS):
+            continue
+        if any(m in iid for m in NOT_COMPARABLE_ID_MARKERS):
+            continue
+        best = max(prices.get(iid, (0.0, 0.0)))
+        if best > 0 and (weakest is None or best < weakest[1]):
+            weakest = (iid, best)
+    return weakest
+
+
+def sibling_caps(donor: ET.Element, sibling: tuple[str, float] | None, pieces: dict[str, ET.Element],
+                 prices: MeleePrices) -> dict[str, float]:
+    """Per-stat blade factor caps that keep the starter's best DPS at or under its weakest shop
+    sibling's (`shop_sibling`), to within the engine's rounding of damage to whole points. The
+    starter keeps the donor's other pieces and DPS is linear in the factor (melee-damage-model.md),
+    so each cap is factor * target / the donor's DPS on that attack, rounded down to the engine's
+    two decimals. An attack the donor lacks, or one already at or under the target, is not capped."""
+    donor_dps = prices.get(donor.get("id") or "")
+    if sibling is None or donor_dps is None:
+        return {}
+    caps: dict[str, float] = {}
+    factors = _blade_factors(donor, pieces)
+    for stat, dps in (("swing", donor_dps[0]), ("thrust", donor_dps[1])):
+        if stat in factors and dps > sibling[1]:
+            caps[stat] = math.floor(factors[stat] * sibling[1] / dps * 100 + 1e-9) / 100
+    return caps
+
+
+def cap_floors(anchor: dict[str, float], caps: dict[str, float]) -> dict[str, float]:
+    """The class anchor, lowered per stat to the sibling cap where the cap is lower."""
+    return {stat: min(floor, caps.get(stat, floor)) for stat, floor in anchor.items()}
+
+
+def merge_blade_floors(pairs: list[tuple[str, dict[str, float]]]) -> dict[str, dict[str, float]]:
+    """blade id -> the per-stat lowest floors of every donor built on it. One starter blade
+    serves every donor that shares the donor blade, so it takes the strictest donor's floors,
+    whatever the roster order."""
+    merged: dict[str, dict[str, float]] = {}
+    for blade_id, floors in pairs:
+        out = merged.setdefault(blade_id, {})
+        for stat, value in floors.items():
+            out[stat] = min(value, out.get(stat, value))
+    return merged
+
+
+# The item modules the plan indexes (index_items): the Armory and the three vanilla item modules.
+# Pricing others would let a module that sorts first (AWOIAF_Armoury) price an id the Armory defines.
+PRICE_MODULES = frozenset({DEFAULT_ARMORY.name, "Native", "SandBox", "SandBoxCore"})
+
+
+def load_melee_prices(modules: Path) -> MeleePrices:
+    """Every melee item of PRICE_MODULES, priced by melee_catalogue. An item it cannot price is
+    left out, so a donor it fails on keeps the class anchor."""
+    import melee_catalogue as mc  # the game data model; only the live run needs it
+    try:
+        priced, _failures = mc.price_all(mc.load(modules, item_modules=set(PRICE_MODULES)))
+    except mc.CatalogueError as exc:
+        raise StarterKitError(f"cannot price the melee items for the sibling cap: {exc}") from exc
+    return {iid: (p.swing_dps, p.thrust_dps) for iid, p in priced.items()}
+
+
 def percentile(values: list[float], value: float) -> float | None:
     if not values:
         return None
@@ -755,6 +845,7 @@ class Sources:
     native_templates: Path | None = None
     menus_dir: Path | None = None
     crafted_value: int | None = CRAFTED_STARTER_VALUE
+    melee_prices: MeleePrices | None = None    # None: no sibling cap, the class anchor alone
 
 
 @dataclass
@@ -880,6 +971,27 @@ def build_plan(sources: Sources) -> Plan:
     }
     distribution = factor_distribution(items, pieces)
 
+    prices = sources.melee_prices or {}
+    donor_floors: dict[str, dict[str, float]] = {}
+    blade_pairs: list[tuple[str, dict[str, float]]] = []
+    for donor_id in donors:
+        rec = items.get(donor_id)
+        if rec is None:
+            continue                     # the main loop below refuses it with the full message
+        kind, key = classify(rec.element)
+        anchor = anchor_for(key)
+        floors = anchor
+        if kind == "crafted":
+            sibling = shop_sibling(rec.element, items, prices)
+            floors = cap_floors(anchor, sibling_caps(rec.element, sibling, pieces, prices))
+            if sibling and floors != anchor:
+                notes.append(f"{starter_id(donor_id)}: capped at the {sibling[1]:.1f} DPS of {sibling[0]}")
+            blade_id = next((p.get("id") for p in rec.element.iter("Piece") if p.get("Type") == "Blade"), None)
+            if blade_id:
+                blade_pairs.append((blade_id, floors))
+        donor_floors[donor_id] = floors
+    blade_floors = merge_blade_floors(blade_pairs)
+
     clones: list[Clone] = []
     blades: "OrderedDict[str, ET.Element]" = OrderedDict()
     registrations: dict[str, dict[str, list[str]]] = {kind: OrderedDict() for kind in XSLT_FILES}
@@ -891,7 +1003,7 @@ def build_plan(sources: Sources) -> Plan:
                 f"roster item {donor_id!r} (slots {sorted(slots)}) is not defined in the Armory or the "
                 "vanilla item files; repoint the roster or restore the item before cloning")
         kind, key = classify(rec.element)
-        floors = anchor_for(key)
+        floors = donor_floors[donor_id]
         new_id = starter_id(donor_id)
         if new_id in items:
             raise StarterKitError(f"{new_id} already exists as an item; the id scheme collided on {donor_id}")
@@ -907,8 +1019,10 @@ def build_plan(sources: Sources) -> Plan:
             if not blade_piece_id or blade_piece_id not in pieces:
                 raise StarterKitError(f"{donor_id}: Blade piece {blade_piece_id!r} is not defined in any crafting pieces file")
             blade_new_id = starter_id(blade_piece_id)
-            blade = blades.get(blade_new_id) or clone_blade(pieces[blade_piece_id], blade_new_id, floors)
-            blades[blade_new_id] = blade
+            blade = blades.get(blade_new_id)
+            if blade is None:
+                blade = clone_blade(pieces[blade_piece_id], blade_new_id, blade_floors[blade_piece_id])
+                blades[blade_new_id] = blade
             element = clone_crafted_item(rec.element, new_id, blade_new_id, sources.crafted_value)
             fitted = []
             for piece in rec.element.iter("Piece"):
@@ -1083,6 +1197,9 @@ def verify_plan(plan: Plan, md: Path) -> list[str]:
         for piece in plan.pieces:
             if f'id="{piece.get("id")}"' not in text:
                 drift.append(f"{PIECES_FILE}: piece {piece.get('id')} missing")
+        if not drift and apply_pieces(text, plan.pieces)[1] != "noop":
+            # ids alone miss a stale damage_factor: a restat moved a donor or a sibling (#1224)
+            drift.append(f"{PIECES_FILE}: the starter blade block differs from the plan; re-run --apply")
     for kind, name in XSLT_FILES.items():
         path = md / name
         if not path.exists():
@@ -1200,6 +1317,9 @@ def main() -> int:
         # --verify with nothing to check is a gate that passed vacuously
         return 2 if args.verify else 0
     try:
+        modules = Path(args.game_modules)
+        if (modules / "Native").exists():    # without vanilla data, no sibling cap: the class anchor alone
+            sources.melee_prices = load_melee_prices(modules)
         plan = build_plan(sources)
     except (StarterKitError, OSError, ET.ParseError) as exc:
         print(f"ERROR: {exc}")

@@ -135,7 +135,7 @@ def build():
 
     # Knights: the horse realm's long cavalry line, ending in the mounted capstone.
     t.append(Troop("cardolan_rider", "Rider of Cardolan", 16, "Cavalry", "cavalry",
-                   paired(SPEAR, SHIELD_MID, "wm_gondor_sword_a07"),
+                   paired(SPEAR, SHIELD_MID, "wm_gondor_sword_a03"),
                    armour(ab("anf_inf_helmet_med"), ab("anf_inf_chest_med"), one("ano_grvs_inf_med_a"),
                           one("ano_gloves_a"), ab("ano_pauld_inf_med")),
                    ["cardolan_lancer"], horse=HORSE_LIGHT))
@@ -162,7 +162,7 @@ def build():
 
     # Bowmen of Minhiriath: bow in Item0 and arrows in Item1/Item2 in BOTH rosters, sword in Item3.
     t.append(Troop("cardolan_bowman", "Minhiriath Bowman", 16, "Ranged", "ranged",
-                   same(bow(16), ARROWS, ARROWS, "wm_gondor_sword_a07"),
+                   same(bow(16), ARROWS, ARROWS, "wm_gondor_sword_a03"),
                    armour(one("pin_inf_helmet_med_a"), ab("pin_chainmail"), one("ano_grvs_inf_light_a"),
                           one("ano_gloves_a"), ab("ano_pauld_inf_med")),
                    ["cardolan_minhiriath_bowman"]))
