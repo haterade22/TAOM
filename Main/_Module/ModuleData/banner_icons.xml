@@ -164,6 +164,7 @@
       <Icon id="31017" material_name="taom_banners_elven_alpha_01" texture_index="1" />
       <Icon id="31018" material_name="taom_banners_elven_alpha_01" texture_index="2" />
       <Icon id="31019" material_name="taom_banners_elven_alpha_01" texture_index="3" />
+      <Icon id="31021" material_name="taom_banners_elven_alpha_01" texture_index="5" />
     </BannerIconGroup>
 
     <BannerIconGroup id="180" name="{=taom_banner_category_evil}Forces of Evil" is_pattern="false">

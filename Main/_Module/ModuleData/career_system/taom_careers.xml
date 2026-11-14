@@ -717,7 +717,7 @@
           ability_template_id="rivendell_knight_ability"
           min_clan_tier="0"
           root_choice_id="rivendell_knight_root"
-          keystone_icon="15002">
+          keystone_icon="15008">
     <EligibleCultures>
       <Culture id="rivendell" />
     </EligibleCultures>
@@ -1383,7 +1383,7 @@
           ability_sprite="rivendell_knight_ability"
           min_clan_tier="0"
           root_choice_id="falathrim_mariner_root"
-          keystone_icon="15002">
+          keystone_icon="15008">
     <EligibleCultures>
       <Culture id="lindon" />
     </EligibleCultures>
