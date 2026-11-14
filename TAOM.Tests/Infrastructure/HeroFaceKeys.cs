@@ -20,6 +20,8 @@ internal sealed record HeroFace(string Id, string File, string Race, string Cult
 /// definition in an xml file or an lords.xslt rebuild (which replaces a lord's face), with race, culture and
 /// sex merged over all of the hero's definitions (an xslt rebuild wins, since the game uses it). A file that
 /// does not parse throws, so a broken file cannot shrink the hero set silently. Fields are value / 63.
+/// The custom (non-book) named companions in <see cref="CustomCharacters"/> are left out: their creators decide how
+/// they look, so no people-wide look gate or pass covers them.
 /// </summary>
 internal static class HeroFaceKeys
 {
@@ -76,7 +78,7 @@ internal static class HeroFaceKeys
         }
 
         return defs
-            .Where(d => d.Keys.Count > 0)
+            .Where(d => d.Keys.Count > 0 && !CustomCharacters.Contains(d.Id))
             .Select(d => (d, m: merged[d.Id]))
             .Where(x => string.Equals(Get(x.m, "is_hero"), "true", StringComparison.OrdinalIgnoreCase))
             .Select(x => new HeroFace(x.d.Id, x.d.File, Get(x.m, "race") ?? "human",

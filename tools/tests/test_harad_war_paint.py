@@ -95,6 +95,16 @@ def tattoo_tags(element):
     return [tag.get("name") for tag in element.iter("tattoo_tag")]
 
 
+# LordFaceVarietyService.ColourBits: hair colour (bits 30 to 35) through skin colour (48 to 53) of the first part.
+COLOUR_BITS = 0x003FFFFFC0000000
+
+
+def face_shape_key(key):
+    """The key LordFaceVariety rule B groups on: the first 64-bit part with its colour fields cleared."""
+    part = int(key[:16], 16) & ~COLOUR_BITS
+    return "%016X" % part + key[16:]
+
+
 def tattoo_bits(key):
     """(design index, colour value) from a face key: KeyPart1 bits 24 to 29 and 18 to 23 (FUN_18057b4e0, v1.5.6)."""
     key_part_1 = int(key[:16], 16)
@@ -293,11 +303,22 @@ class CharacterTests(unittest.TestCase):
 
     def test_igor_stays_in_aragorns_face_group_and_rolls_from_the_tag(self):
         # LordFaceVariety rolls a group member from its tags. A painted key would take him out of the group.
+        # Rule B groups keys with the colour fields cleared (LordFaceVarietyService.FaceShapeKey), so Igor keeps
+        # his authored colours: he is a custom character, and Aragorn's skin pass (#1190) does not reach him.
         companions = parse(MODULE_DATA / "named_companions" / "named_companions.xml")
         faces = {character.get("id"): character.find("face") for character in companions.iter("NPCCharacter")}
         igor, aragorn = faces["named_companion_igor"], faces["named_companion_aragorn"]
-        self.assertEqual(aragorn.find("BodyProperties").get("key"), igor.find("BodyProperties").get("key"))
+        self.assertEqual(
+            face_shape_key(aragorn.find("BodyProperties").get("key")),
+            face_shape_key(igor.find("BodyProperties").get("key")),
+        )
         self.assertEqual(["harad"], tattoo_tags(igor))
+
+    def test_face_shape_key_clears_only_the_colour_fields(self):
+        key = "0015000D80001342" + "F" * 112
+        self.assertEqual("0000000000001342" + "F" * 112, face_shape_key(key))
+        self.assertEqual(face_shape_key(key), face_shape_key("0005000D80001342" + "F" * 112))
+        self.assertNotEqual(face_shape_key(key), face_shape_key("0015000D80001343" + "F" * 112))
 
     def test_preset_lords_leave_the_tattoo_tag_to_the_preset(self):
         offenders = [

@@ -25,9 +25,10 @@ public class HeroFaceVarietyDataTests
 {
     /// <summary>
     /// Rule B count: 216 on the data of 2026-11-14, when rule B started to ignore the colour fields and took
-    /// in the six colour-only twins of #1221 (210 before).
+    /// in the six colour-only twins of #1221 (210 before). 217 when Eohart (named_companion_hart), a custom
+    /// character, went back from the fighter_rohan template to his authored key in Aragorn's group.
     /// </summary>
-    private const int MaxRolledAroundOwnFace = 216;
+    private const int MaxRolledAroundOwnFace = 217;
 
     private sealed record Npc(string Id, string Culture, string Race, bool IsFemale, string Key, bool Spread, bool Explicit);
 
