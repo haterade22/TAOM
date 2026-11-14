@@ -1,6 +1,5 @@
 ---
 paths:
-  - "**/settlements.xml"
   - "**/sp_battle_scenes.xml"
   - "**/taom_spcultures.xml"
   - "**/*.xslt"

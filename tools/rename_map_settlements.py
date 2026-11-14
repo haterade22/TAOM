@@ -167,7 +167,7 @@ def rename_json_ids(text, old, new):
 
 def repo_references(root, ids):
     """{id: [repo-relative paths]} of every Main/**/*.cs, Client/**/*.cs and Main/_Module/ModuleData/**/*.json that
-    names the id as a whole token. The settlements.xml shadow is XML and deliberately outside it."""
+    names the id as a whole token."""
     root = Path(root)
     files = (list((root / "Main").rglob("*.cs")) + list((root / "Client").rglob("*.cs"))
              + list((root / "Main" / "_Module" / "ModuleData").rglob("*.json")))

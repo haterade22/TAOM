@@ -10,8 +10,10 @@ realm in docs/reference/release-process.md (rca-ered-luin-2026-10-27.md row 2).
 It also checks the map's prison scenes (PRISON_SCENE_NOT_STEALTH). TAOM_Map is in no repo, so a
 repair to one install's settlements.xml reaches players only through a package that carries it:
 Orthanc and Orthanc Gate shipped the pre-stealth empire_dungeon_a (2026-11-13), and this is where a
-package that still holds it is stopped. Scenes are looked up in the channel first, then the install,
-which holds the vanilla dungeons in SandBox.
+package that still holds it is stopped. Scenes are looked up in the channel and in the install's
+official modules (Native, SandBoxCore, SandBox, StoryMode, CustomBattle), which hold the vanilla
+dungeons. Another module in the install is not in the package, so its scenes do not count. Which copy
+the game loads when a scene name is in both is not verified.
 
 A channel holds TAOM's modules and no vanilla module, so vanilla's clans come from the install.
 Only the pair's own codes are reported: with no vanilla items in the channel, the validator's
@@ -19,9 +21,10 @@ other codes would read as a flood of false findings. Read-only.
 
 Usage: python tools/check_release_pair.py E:/LOTRAOM_Releases/<channel>/Modules
 
-Exit code: 0 the pair agrees, 1 a disagreement, 2 a folder or file it needs is missing or does not
-parse, so nothing was judged, 3 the tool crashed (the traceback is on stderr), so nothing was judged
-either. Never read 2 or 3 as a pass.
+Exit code: 0 the pair agrees, 1 a disagreement (a prison scene no module ships is one, although the
+validator only warns), 2 a folder or file it needs is missing or does not parse, or the map has no
+settlement or prison row, so nothing was judged, 3 the tool crashed (the traceback is on stderr), so
+nothing was judged either. Never read 2 or 3 as a pass.
 """
 from __future__ import annotations
 
@@ -37,8 +40,8 @@ import taom_schema as ts  # noqa: E402
 from validate_moduledata import (  # noqa: E402
     DEFAULT_GAME_MODULES, PRISON_CODE, _scene_files, build_extra_ref_roots, prison_scene_issues)
 
-PAIR_CODES = frozenset({"UNKNOWN_CULTURE", "BROKEN_FACTION_REF", "BROKEN_SETTLEMENT_REF", "LANDLESS_CULTURE",
-                        PRISON_CODE})
+PAIR_CODES = frozenset({"UNKNOWN_CULTURE", "BROKEN_FACTION_REF", "BROKEN_SETTLEMENT_REF", "LANDLESS_CULTURE"})
+OFFICIAL_MODULES = frozenset({"Native", "SandBoxCore", "SandBox", "StoryMode", "CustomBattle"})
 
 
 def main(argv=None) -> int:
@@ -84,12 +87,18 @@ def main(argv=None) -> int:
     validator = ts.Validator(moduledata, [], registries, extra_ref_roots=build_extra_ref_roots(args.modules))
     issues = [i for i in validator._ref_sweep() + validator._broken_settlement_xslt_refs()
               + validator._landless_cultures() if i.code in PAIR_CODES]
-    # The channel's own scenes win over the install's, as a module the game loads later would.
-    scenes = {**_scene_files(args.vanilla_modules), **_scene_files(args.modules)}
-    issues += prison_scene_issues(args.modules, scene_files=lambda _modules: scenes)
+    # The install stands in for vanilla only: a mod or a TAOM module in the install is not in the package.
+    # This merge lets the channel's copy win; whether the game does the same is not verified, and no test pins it.
+    scenes = {**_scene_files(args.vanilla_modules, OFFICIAL_MODULES), **_scene_files(args.modules)}
+    prison_issues = prison_scene_issues(args.modules, scene_files=lambda _modules: scenes)
+    issues += prison_issues
     issues.sort(key=lambda i: i.sort_key())
     if issues:
         print(ts.format_report(issues))
+        if any(i.code == PRISON_CODE for i in prison_issues):
+            print("The channel is Mike's package: repair the live TAOM_Map as each finding says (a name "
+                  "in SCENE_REMAP: python tools/remap_stale_scene_names.py --dry-run, then --apply), "
+                  "then repackage TAOM_Map; never edit the channel.")
         return 1
     print(f"PASS: TAOM and TAOM_Map agree: {len(registries.settlements)} settlements, "
           f"{len(registries.cultures)} cultures, {len(registries.factions)} clans; every prison scene "
