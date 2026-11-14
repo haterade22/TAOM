@@ -52,6 +52,31 @@ public class MessengerCampaignBehaviorSourceTests
     }
 
     [TestMethod]
+    public void TheSettlementBranch_FallsBackToTheFieldConversation_WhenTheTargetHasNoLocationThere()
+    {
+        // HeroAgentLocationModel.GetLocationForHero places only some heroes in a settlement scene (ruler, partyless
+        // heroes, player-clan lords, main-party companions, notables, party leaders). A hero riding as a plain member of
+        // another party in that town gets no location, GetLocationOfCharacter returns null, and
+        // TownEncounter/CastleEncounter/VillageEncounter.CreateAndOpenMissionController dereference it: the Speak click
+        // threw out of the inquiry callback. Vanilla's party-screen talk (PartyVM.ExecuteOpenConversation) opens a
+        // conversation mission for exactly that null, so the messenger does the same.
+        var src = RepoPaths.ReadSource(Path, stripComments: true);
+        var body = Regex.Match(src, @"void StartMessengerConversation\([\s\S]*?\n    \}").Value;
+
+        Assert.IsTrue(body.Length > 0, "StartMessengerConversation not found");
+        StringAssert.Matches(body, new Regex(
+            @"targetLocation = LocationComplex\.Current\?\.GetLocationOfCharacter\(target\);\s*if \(targetLocation == null\)\s*targetParty = target\.PartyBelongedTo\?\.Party \?\? targetParty;"));
+        // Only a found location opens the settlement scene; everything else (the field, the army-attach case and the
+        // no-location fallback) reaches the one conversation-mission call.
+        StringAssert.Matches(body, new Regex(
+            @"if \(targetLocation != null\)\s*\{[^}]*CreateAndOpenMissionController\([^}]*\}\s*else\s*_currentMission = \(Mission\)Campaign\.Current\.CampaignMissionManager\.OpenConversationMission\("));
+        Assert.AreEqual(1, Regex.Matches(body, @"OpenConversationMission\(").Count,
+            "one conversation-mission call serves the field branch and the no-location fallback");
+        Assert.IsFalse(body.Contains("LocationComplex.Current.GetLocationOfCharacter(target)"),
+            "LocationComplex.Current is null for a settlement without a location complex; read it with ?.");
+    }
+
+    [TestMethod]
     public void TheButtonAndTheSend_ReadTheSameOffer_FromTheOneTargetReader()
     {
         var behavior = RepoPaths.ReadSource(Path, stripComments: true);
