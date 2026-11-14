@@ -57,7 +57,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.mirkwood_sword_a01" />
+                    id="Item.taom_ph_mirkwood_sword_t8" />
                 <equipment
                     slot="Item1"
                     id="Item.wm_mirkwood_shield_a01" />
@@ -198,7 +198,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.mirkwood_sword_a01" />
+                    id="Item.taom_ph_mirkwood_sword_t8" />
                 <equipment
                     slot="Item1"
                     id="Item.wm_mirkwood_shield_a01" />
@@ -351,7 +351,7 @@
                     id="Item.wm_mirkwood_arrow_a02" />
                 <equipment
                     slot="Item3"
-                    id="Item.mirkwood_sword_a01" />
+                    id="Item.taom_ph_mirkwood_sword_t8" />
                 <equipment
                     slot="Head"
                     id="Item.mkwd_inf1_t2_helmet_silver_hc" />
@@ -426,7 +426,7 @@
                     id="Item.wm_mirkwood_shield_a01" />
                 <equipment
                     slot="Item3"
-                    id="Item.mirkwood_sword_a01" />
+                    id="Item.taom_ph_mirkwood_sword_t8" />
                 <equipment
                     slot="Head"
                     id="Item.mkwd_inf2_t3_helmet_silver_hc" />
@@ -504,7 +504,7 @@
                     id="Item.wm_mirkwood_shield_a01" />
                 <equipment
                     slot="Item3"
-                    id="Item.mirkwood_sword_a01" />
+                    id="Item.taom_ph_mirkwood_sword_t10" />
                 <equipment
                     slot="Head"
                     id="Item.mkwd_inf2_t4_helmet_silver_hc" />
@@ -588,7 +588,7 @@
                     id="Item.wm_mirkwood_arrow_a01" />
                 <equipment
                     slot="Item3"
-                    id="Item.mirkwood_sword_a01" />
+                    id="Item.taom_ph_mirkwood_sword_t10" />
                 <equipment
                     slot="Head"
                     id="Item.mkwd_inf1_t3_helmet_silver_hc" />
@@ -792,7 +792,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.mirkwood_sword_a01" />
+                    id="Item.taom_ph_mirkwood_sword_t10" />
                 <equipment
                     slot="Item1"
                     id="Item.wm_mirkwood_shield_a01" />
@@ -939,7 +939,7 @@
                     id="Item.wm_mirkwood_arrow_a02" />
                 <equipment
                     slot="Item3"
-                    id="Item.mirkwood_sword_a01" />
+                    id="Item.taom_ph_mirkwood_sword_t10" />
                 <equipment
                     slot="Head"
                     id="Item.mkwd_inf1_t4_helmet_silver_hc" />
@@ -1517,7 +1517,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.mirkwood_sword_a01" />
+                    id="Item.taom_ph_mirkwood_sword_t8" />
                 <equipment
                     slot="Item1"
                     id="Item.wm_mirkwood_shield_a01" />

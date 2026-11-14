@@ -33,6 +33,11 @@
     <DependedModuleMetadata id="SandBoxCore" order="LoadBeforeThis" />
     <DependedModuleMetadata id="Sandbox" order="LoadBeforeThis" />
     <DependedModuleMetadata id="CustomBattle" order="LoadBeforeThis" />
+    <!-- LOTRLOME_Armory's weapon_descriptions.xslt and crafting_templates.xslt replace the piece lists that
+         placeholder_weapons/ph_*.xslt append to, so TAOM must load after it (docs/features/placeholder-weapons.md).
+         BUTR/BLSE launchers sort by this line; the vanilla launcher ignores it. Optional, so TAOM still starts
+         without the Armory. -->
+    <DependedModuleMetadata id="LOTRLOME_Armory" order="LoadBeforeThis" optional="true" />
     <!-- Co-op interop (2026-07-31). BUTR/BLSE launchers read this block; the VANILLA launcher does
          not — `TaleWorlds.ModuleManager.ModuleInfo.LoadWithFullPath` (installed v1.5.7) parses only
          DependedModules, ModulesToLoadAfterThis, IncompatibleModules and SubModules, with no branch
@@ -1435,6 +1440,32 @@
       <IncludedGameTypes>
         <GameType value="CustomGame"/>
       </IncludedGameTypes>
+    </XmlNode>
+    <!-- Placeholder melee weapons (tools/generate_placeholder_weapons.py): ids start with taom_ph_ -->
+    <XmlNode>
+      <XmlName id="CraftingPieces" path="placeholder_weapons/ph_crafting_pieces"/>
+      <IncludedGameTypes>
+        <GameType value="Campaign"/>
+        <GameType value="CampaignStoryMode"/>
+        <GameType value="CustomGame"/>
+        <GameType value="EditorGame"/>
+      </IncludedGameTypes>
+    </XmlNode>
+    <XmlNode>
+      <XmlName id="Items" path="placeholder_weapons/ph_items"/>
+      <IncludedGameTypes>
+        <GameType value="Campaign"/>
+        <GameType value="CampaignStoryMode"/>
+        <GameType value="CustomGame"/>
+        <GameType value="EditorGame"/>
+      </IncludedGameTypes>
+    </XmlNode>
+    <!-- Stylesheet-only rows (no .xml): they must apply after LOTRLOME_Armory's, which replace these lists -->
+    <XmlNode>
+      <XmlName id="WeaponDescriptions" path="placeholder_weapons/ph_weapon_descriptions"/>
+    </XmlNode>
+    <XmlNode>
+      <XmlName id="CraftingTemplates" path="placeholder_weapons/ph_crafting_templates"/>
     </XmlNode>
     <!-- Custom Game only, so every Custom Battle loads them and is_obsolete hides them there: the mode's own troops, so a balance edit can never reach a campaign. -->
     <XmlNode>
