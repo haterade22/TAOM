@@ -15,13 +15,20 @@
 
         <TextWidget DoNotAcceptEvents="true" DataSource="{MapTimeControl}" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" VerticalAlignment="Bottom" MarginBottom="150" Brush="Map.Paused.Text" Text="@PausedText" AutoHideIfEmpty="true" />
 
-        <!-- TAOM illustrated navigation; the native time and information panels remain below. -->
-        <TAOMCampaignNavigation DataSource="{MapNavigation}" />
+        <!-- Hides the three bars while a native screen or a full-screen map overlay is open (CampaignBarsWidget).
+             The bars stay siblings, so the muster plate's ..\InfoBarWidget path still resolves. The Id is required:
+             FindChildrenWithType, which CampaignPresentation.OnLoaded uses to attach the model, skips unnamed widgets. -->
+        <CampaignBarsWidget Id="CampaignBars" DoNotAcceptEvents="true" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent">
+          <Children>
+            <!-- TAOM illustrated navigation; the native time and information panels remain below. -->
+            <TAOMCampaignNavigation DataSource="{MapNavigation}" />
 
-        <!-- TAOM time controls keep the native MapTimeControl VM and commands. -->
-        <TAOMCampaignTime DataSource="{MapTimeControl}" />
-        <TAOMCampaignStats Id="InfoBarWidget" DataSource="{MapInfo}" />
-        <TAOMCampaignMuster Id="MapGatherArmyButton" />
+            <!-- TAOM time controls keep the native MapTimeControl VM and commands. -->
+            <TAOMCampaignTime DataSource="{MapTimeControl}" />
+            <TAOMCampaignStats Id="InfoBarWidget" DataSource="{MapInfo}" />
+            <TAOMCampaignMuster Id="MapGatherArmyButton" />
+          </Children>
+        </CampaignBarsWidget>
       </Children>
     </Widget>
   </Window>

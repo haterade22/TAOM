@@ -81,6 +81,9 @@ internal static class CampaignPresentation
         else if (source is CharacterScreenVM character)
             foreach (var widget in root.FindChildrenWithType<CharacterScreenWidget>(true))
                 widget.Model = character;
+        else if (source is MapBarVM map)
+            foreach (var widget in root.FindChildrenWithType<CampaignBarsWidget>(true))
+                widget.Model = map;
         else if (movie.MovieName == "TAOMEncyclopediaSettlementPage" && source is EncyclopediaSettlementPageVM page &&
             page.Obj is Settlement settlement && root.FindChild("SettlementIllustration", true) is EncyclopediaPictureWidget picture)
         {
