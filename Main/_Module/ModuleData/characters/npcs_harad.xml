@@ -38,6 +38,8 @@
 		</upgrade_targets>
 		<Equipments>
 			<EquipmentRoster>
+				<equipment slot="Item0" id="Item.peasant_pitchfork_1_t1" />
+				<equipment slot="Item1" id="Item.throwing_stone" />
 				<equipment slot="Body" id="Item.aserai_civil_b" />
 				<equipment slot="Leg" id="Item.sk_hr_st_grvs_light_a" />
 			</EquipmentRoster>
@@ -66,10 +68,14 @@
 				<equipment slot="Leg" id="Item.sk_hr_st_grvs_light_a" />
 			</EquipmentRoster>
 			<EquipmentRoster>
+				<equipment slot="Item0" id="Item.peasant_sickle_1_t1" />
+				<equipment slot="Item1" id="Item.throwing_stone" />
 				<equipment slot="Body" id="Item.aserai_civil_a" />
 				<equipment slot="Leg" id="Item.sk_hr_st_grvs_light_a" />
 			</EquipmentRoster>
 			<EquipmentRoster>
+				<equipment slot="Item0" id="Item.peasant_pitchfork_1_t1" />
+				<equipment slot="Item1" id="Item.throwing_stone" />
 				<equipment slot="Body" id="Item.aserai_civil_b" />
 				<equipment slot="Leg" id="Item.sk_hr_st_grvs_light_a" />
 			</EquipmentRoster>

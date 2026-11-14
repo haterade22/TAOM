@@ -146,6 +146,8 @@
 		<skills></skills>
 		<Equipments>
 			<EquipmentRoster>
+				<equipment slot="Item0" id="Item.peasant_pitchfork_1_t1" />
+				<equipment slot="Item1" id="Item.throwing_stone" />
 				<equipment slot="Body" id="Item.padded_leather_overcoat" />
 				<equipment slot="Leg" id="Item.strapped_leather_boots" />
 			</EquipmentRoster>
@@ -175,10 +177,14 @@
 				<equipment slot="Leg" id="Item.ragged_boots" />
 			</EquipmentRoster>
 			<EquipmentRoster>
+				<equipment slot="Item0" id="Item.peasant_sickle_1_t1" />
+				<equipment slot="Item1" id="Item.throwing_stone" />
 				<equipment slot="Body" id="Item.fur_skirt" />
 				<equipment slot="Leg" id="Item.strapped_leather_boots" />
 			</EquipmentRoster>
 			<EquipmentRoster>
+				<equipment slot="Item0" id="Item.peasant_pitchfork_1_t1" />
+				<equipment slot="Item1" id="Item.throwing_stone" />
 				<equipment slot="Body" id="Item.nordic_padded_cloth" />
 				<equipment slot="Cape" id="Item.fur_cloak_a" />
 				<equipment slot="Leg" id="Item.ragged_boots" />

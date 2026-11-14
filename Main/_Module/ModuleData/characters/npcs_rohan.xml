@@ -250,14 +250,20 @@
                 <equipment slot="Leg" id="Item.cts_rohan_boots4" />
             </EquipmentRoster>
             <EquipmentRoster>
+                <equipment slot="Item0" id="Item.peasant_pitchfork_1_t1" />
+                <equipment slot="Item1" id="Item.throwing_stone" />
                 <equipment slot="Body" id="Item.rohan_militia_tunic_a" />
                 <equipment slot="Leg" id="Item.cts_rohan_boots1" />
             </EquipmentRoster>
             <EquipmentRoster>
+                <equipment slot="Item0" id="Item.peasant_hatchet_1_t1" />
+                <equipment slot="Item1" id="Item.throwing_stone" />
                 <equipment slot="Body" id="Item.rohan_militia_tunic_b" />
                 <equipment slot="Leg" id="Item.cts_rohan_boots3" />
             </EquipmentRoster>
             <EquipmentRoster>
+                <equipment slot="Item0" id="Item.peasant_polearm_1_t1" />
+                <equipment slot="Item1" id="Item.throwing_stone" />
                 <equipment slot="Body" id="Item.rohan_militia_tunic_c" />
                 <equipment slot="Leg" id="Item.cts_rohan_boots4" />
             </EquipmentRoster>
@@ -284,10 +290,14 @@
                 <equipment slot="Leg" id="Item.cts_rohan_boots4" />
             </EquipmentRoster>
             <EquipmentRoster>
+                <equipment slot="Item0" id="Item.peasant_sickle_1_t1" />
+                <equipment slot="Item1" id="Item.throwing_stone" />
                 <equipment slot="Body" id="Item.rohan_militia_tunic_a" />
                 <equipment slot="Leg" id="Item.cts_rohan_boots3" />
             </EquipmentRoster>
             <EquipmentRoster>
+                <equipment slot="Item0" id="Item.peasant_pitchfork_1_t1" />
+                <equipment slot="Item1" id="Item.throwing_stone" />
                 <equipment slot="Body" id="Item.rohan_militia_tunic_b" />
                 <equipment slot="Leg" id="Item.cts_rohan_boots4" />
             </EquipmentRoster>

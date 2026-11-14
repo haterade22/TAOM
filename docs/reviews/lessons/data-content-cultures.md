@@ -2414,3 +2414,9 @@ The first starter cap limited the blade `damage_factor` to the weakest sibling's
 - **Why missed:** the proxy agreed with the real quantity on the reported case (the Isengard sword), and the tests checked the proxy.
 - **Prevent:** when a rule says "must not out-damage" or "must not cost more", compute that quantity with the model the repo already has (`melee_catalogue` for melee DPS) and test the quantity. Define the comparison set by what the player can reach (merchandise, not a tournament or practice weapon), and write one decoy per exclusion.
 - **Source:** [rca-starter-cap-upgrade-paths-2026-11-13.md](../rca-starter-cap-upgrade-paths-2026-11-13.md), findings 5, 8 to 10.
+
+### A character that fights needs a weapon in every battle roster, and a role is not an occupation (#1273, 2026-11-14)
+Every TAOM villager shipped with battle rosters that held clothes only, so a villager party fought with its fists. Vanilla's villager carries a farm tool in every battle roster. The first fix then missed six village women, because it selected on `occupation="Villager"` and those six are `occupation="Townsfolk"`.
+- **Why missed:** the validator checks that references resolve, and an empty weapon slot has none. The earlier lesson asks only for a battle twin of the civilian roster. The fix's own rescan used the same filter as the edit, so it could only agree.
+- **Prevent:** when a culture's `villager`, `village_woman` or a party template stack names a character, give every battle roster of that adult a weapon (a vanilla farm tool in `Item0`, `throwing_stone` in `Item1`). Pick characters by the culture field or the id family, never by `occupation`. Check an edit with a rule that does not share its filter.
+- **Source:** [rca-villager-weapons-2026-11-14.md](../rca-villager-weapons-2026-11-14.md), finding 1.

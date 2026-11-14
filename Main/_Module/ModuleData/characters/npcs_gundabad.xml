@@ -42,6 +42,8 @@
 		</upgrade_targets>
 		<Equipments>
 			<EquipmentRoster>
+				<equipment slot="Item0" id="Item.peasant_hatchet_1_t1" />
+				<equipment slot="Item1" id="Item.throwing_stone" />
 				<equipment slot="Body" id="Item.sk_gb_uruk_chest_light_b" />
 				<equipment slot="Leg" id="Item.sk_gb_uruk_boots_light_a" />
 			</EquipmentRoster>
@@ -1144,6 +1146,8 @@
 				<equipment slot="Leg" id="Item.sk_gb_uruk_boots_light_a" />
 			</EquipmentRoster>
 			<EquipmentRoster>
+				<equipment slot="Item0" id="Item.peasant_hatchet_1_t1" />
+				<equipment slot="Item1" id="Item.throwing_stone" />
 				<equipment slot="Body" id="Item.sk_gb_uruk_chest_light_a" />
 				<equipment slot="Leg" id="Item.sk_gb_uruk_boots_light_a" />
 			</EquipmentRoster>

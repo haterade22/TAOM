@@ -54,6 +54,8 @@
 		</upgrade_targets>
 		<Equipments>
 			<EquipmentRoster>
+				<equipment slot="Item0" id="Item.peasant_hatchet_1_t1" />
+				<equipment slot="Item1" id="Item.throwing_stone" />
 				<equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_light_a" />
 				<equipment slot="Leg" id="Item.sk_uruk_mordor_boots_a" />
 			</EquipmentRoster>
@@ -86,10 +88,14 @@
 				<equipment slot="Leg" id="Item.sk_uruk_mordor_boots_a" />
 			</EquipmentRoster>
 			<EquipmentRoster>
+				<equipment slot="Item0" id="Item.peasant_hatchet_1_t1" />
+				<equipment slot="Item1" id="Item.throwing_stone" />
 				<equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_light_a" />
 				<equipment slot="Leg" id="Item.sk_uruk_mordor_boots_a" />
 			</EquipmentRoster>
 			<EquipmentRoster>
+				<equipment slot="Item0" id="Item.peasant_polearm_1_t1" />
+				<equipment slot="Item1" id="Item.throwing_stone" />
 				<equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_light_b" />
 				<equipment slot="Leg" id="Item.sk_uruk_mordor_boots_a" />
 			</EquipmentRoster>
