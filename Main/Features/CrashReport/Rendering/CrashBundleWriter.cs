@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.IO.Compression;
 using System.Text;
+using TAOM.Features.CrashReport.BugReport;
 using TAOM.Features.CrashReport.Domain;
 
 namespace TAOM.Features.CrashReport.Rendering;
@@ -26,13 +27,35 @@ public sealed class CrashBundleWriter
         string jsonReport,
         string outputDirectory)
     {
+        string sig8 = context.CrashSignature.Length >= 8 ? context.CrashSignature.Substring(0, 8) : context.CrashSignature;
+        return WriteZip(context, plainTextReport, jsonReport, outputDirectory, $"taom_crash_{{0}}_{sig8}.zip", null);
+    }
+
+    // The player's bug report (BugReportStartup): the same contents with no crash, plus the previous session's files.
+    public string? WriteReport(
+        ExceptionContext context,
+        string plainTextReport,
+        string jsonReport,
+        string outputDirectory,
+        BugReportSources sources)
+    {
+        return WriteZip(context, plainTextReport, jsonReport, outputDirectory, "taom_report_{0}.zip", sources);
+    }
+
+    private string? WriteZip(
+        ExceptionContext context,
+        string plainTextReport,
+        string jsonReport,
+        string outputDirectory,
+        string fileNameFormat,
+        BugReportSources? sources)
+    {
         string zipPath;
         try
         {
             Directory.CreateDirectory(outputDirectory);
             string stamp = context.CapturedAtUtc.ToString("yyyyMMdd_HHmmss");
-            string sig8 = context.CrashSignature.Length >= 8 ? context.CrashSignature.Substring(0, 8) : context.CrashSignature;
-            zipPath = Path.Combine(outputDirectory, $"taom_crash_{stamp}_{sig8}.zip");
+            zipPath = Path.Combine(outputDirectory, string.Format(fileNameFormat, stamp));
         }
         catch { return null; }
 
@@ -46,8 +69,11 @@ public sealed class CrashBundleWriter
             TryCopyFile(zip, "taom_debug.log", context.Logs?.TaomDebugLogPath);
             TryCopyFile(zip, "rgl_log.txt", context.Logs?.RglLogPath);
             TryCopyFile(zip, "diag.log", context.Logs?.DiagLogPath);
+            foreach (var file in sources?.Files ?? Array.Empty<BugReportFile>())
+                TryCopyFile(zip, file.EntryName, file.SourcePath);
 
             var manifest = BuildManifest(context, plainTextReport, jsonReport);
+            if (sources != null) manifest = BuildReportManifest(manifest, sources);
             WriteText(zip, "manifest.txt", manifest);
         }
         catch (Exception)
@@ -95,6 +121,26 @@ public sealed class CrashBundleWriter
             fs.CopyTo(es);
         }
         catch { }
+    }
+
+    // File names only: the source folder can carry the Windows user name.
+    internal static string BuildReportManifest(string crashManifest, BugReportSources sources)
+    {
+        var sb = new StringBuilder(crashManifest.Length + 512);
+        sb.AppendLine("TAOM bug report (made by the player; no crash was caught, so Exception reads (unknown))");
+        sb.Append(crashManifest);
+        foreach (var file in sources.Files)
+        {
+            long size = -1;
+            try { if (File.Exists(file.SourcePath)) size = new FileInfo(file.SourcePath).Length; } catch { }
+            sb.AppendLine(size < 0
+                ? $"{file.EntryName}  not found ({Path.GetFileName(file.SourcePath)})"
+                : $"{file.EntryName}  {size} bytes from {Path.GetFileName(file.SourcePath)}");
+        }
+        sb.AppendLine();
+        sb.AppendLine("--- Notes ---");
+        foreach (var note in sources.Notes) sb.AppendLine(note);
+        return sb.ToString();
     }
 
     // internal (not private) for direct unit testing via InternalsVisibleTo("TAOM.Tests").

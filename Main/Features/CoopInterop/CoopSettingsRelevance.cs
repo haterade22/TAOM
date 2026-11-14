@@ -96,6 +96,8 @@ public static class CoopSettingsRelevance
         "EnableSwingAlternativeProbe",
         // Shadowfax Screens: the [ScreenOpen] timer lines (docs/features/shadowfax-screens.md); log lines only.
         "LogScreenOpenTimes",
+        // The bug report offer after an unexpected end (docs/features/crash-report.md): a main-menu notice, never a computation.
+        "OfferBugReportAfterUnexpectedEnd",
     };
 
     /// <summary>
@@ -109,7 +111,7 @@ public static class CoopSettingsRelevance
     /// </summary>
     private static readonly HashSet<string> ActionButtons = new HashSet<string>(StringComparer.Ordinal)
     {
-        "RebuildDistanceCacheAction", "ApplyRecommendedBattleSettingsAction",
+        "RebuildDistanceCacheAction", "ApplyRecommendedBattleSettingsAction", "MakeBugReportAction",
     };
 
     /// <summary>Player-local convenience: the player acts, the co-op layer replicates the result.</summary>

@@ -2399,6 +2399,17 @@
 	<string id="taom_bld_stall_dismiss" text="{=taom_bld_stall_dismiss}Dismiss" />
 	<string id="taom_bld_stall_openfolder" text="{=taom_bld_stall_openfolder}Open log folder" />
 
+	<!-- Crash Report: the player's bug report and the offer after an unexpected end (BugReportNotifier) -->
+	<string id="taom_bugreport_offer_title" text="{=taom_bugreport_offer_title}TAOM: the last game ended unexpectedly" />
+	<string id="taom_bugreport_offer_text" text="{=taom_bugreport_offer_text}Your last game closed without TAOM's normal shutdown. That happens after a crash, after a freeze you had to close, or when the game was stopped some other way.{newline}{newline}Make a bug report now? TAOM puts the logs from that game into one zip file that you can attach to your report." />
+	<string id="taom_bugreport_offer_yes" text="{=taom_bugreport_offer_yes}Make bug report" />
+	<string id="taom_bugreport_offer_no" text="{=taom_bugreport_offer_no}No" />
+	<string id="taom_bugreport_done_title" text="{=taom_bugreport_done_title}TAOM bug report" />
+	<string id="taom_bugreport_done_text" text="{=taom_bugreport_done_text}Your bug report is ready:{newline}{PATH}{newline}{newline}Attach this file to your bug report and say what you were doing when the problem happened." />
+	<string id="taom_bugreport_failed_text" text="{=taom_bugreport_failed_text}The bug report could not be written. Please attach the newest taom_debug log from this folder instead:{newline}{PATH}" />
+	<string id="taom_bugreport_close" text="{=taom_bugreport_close}Close" />
+	<string id="taom_bugreport_open_folder" text="{=taom_bugreport_open_folder}Open folder" />
+
 	<!-- Settlement Food — labeled line in the town food-breakdown tooltip (TaomSettlementFoodModel) -->
 	<string id="taom_settlement_food_adjustment" text="{=taom_settlement_food_adjustment}Settlement food (TAOM)" />
 

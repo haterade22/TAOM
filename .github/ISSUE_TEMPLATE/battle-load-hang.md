@@ -37,13 +37,20 @@ usually `<Bannerlord install>\bin\Win64_Shipping_Client\Logs\` (that's where TAO
 writes its diagnostic log + crash bundles). The **Open log folder** button on the
 "last battle load may not have finished" startup popup opens it for you.
 
+Quickest, on builds from 2026-11-14 on: start the game again, open Mod Options,
+page **TAOM — Crash Report**, and press **Make Bug Report**. It writes one
+`taom_report_*.zip` in that folder with the TAOM logs and the full rgl logs below,
+the previous session's ones included, and shows you where it is. Attach that zip,
+plus the newest `rgl_log_errors_*.txt` (item 3) and your save (item 4).
+
 1. **`taom_debug_*.log`** — the newest one. **Required.** This phase-stamps
    the load; the last line tells us where it stalled. If TAOM showed you a
    "last battle load may not have finished" message on startup, the **Open log
    folder** button took you straight here.
 2. **`taom_crash_*.zip`**: only if TAOM wrote one. It does when the game throws an
    error. A load that only hangs writes none (TAOM builds before 2026-11-12 wrote
-   one after about 5 minutes). It already bundles the logs below.
+   one after about 5 minutes). It already bundles the newest full rgl log below
+   (not the errors file).
 3. **`rgl_log_*.txt` and `rgl_log_errors_*.txt`**: the newest of each, from your engine log folder:
    usually `C:\ProgramData\Mount and Blade II Bannerlord\logs\`, or
    `%USERPROFILE%\Documents\Mount and Blade II Bannerlord\logs\` on some installs
