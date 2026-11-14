@@ -86,34 +86,34 @@ Every bool here goes through `Convert.ToBoolean` on the raw attribute string. Bo
 
 ## Worked example
 
-The first group in TAOM's file, verbatim. Sixteen emblems on one sheet, ids in a reserved block, all sharing one `material_name` and taking cells 0 to 15.
+The start of the first group in TAOM's file. Gondor's emblems on one sheet, ids in a reserved block, all sharing one `material_name`; cell 2 belongs to an Orcish icon since 10002 was deleted on 2026-11-14, because the rows, not the sheet, set the editor order; the group goes on with more Dúnedain icons on other sheets.
 
 <!-- example file="Main/_Module/ModuleData/banner_icons.xml" id="100" -->
 
 ```xml
-    <BannerIconGroup id="100" name="{=!}TAOM Gondor Alpha 01" is_pattern="false">
-      <Icon id="10000" material_name="taom_banners_gondor_alpha_01" texture_index="0" />
-      <Icon id="10001" material_name="taom_banners_gondor_alpha_01" texture_index="1" />
-      <Icon id="10002" material_name="taom_banners_gondor_alpha_01" texture_index="2" />
-      <Icon id="10003" material_name="taom_banners_gondor_alpha_01" texture_index="3" />
-      <Icon id="10004" material_name="taom_banners_gondor_alpha_01" texture_index="4" />
-      <Icon id="10005" material_name="taom_banners_gondor_alpha_01" texture_index="5" />
-      <Icon id="10006" material_name="taom_banners_gondor_alpha_01" texture_index="6" />
-      <Icon id="10007" material_name="taom_banners_gondor_alpha_01" texture_index="7" />
-      <Icon id="10008" material_name="taom_banners_gondor_alpha_01" texture_index="8" />
-      <Icon id="10009" material_name="taom_banners_gondor_alpha_01" texture_index="9" />
-      <Icon id="10010" material_name="taom_banners_gondor_alpha_01" texture_index="10" />
-      <Icon id="10011" material_name="taom_banners_gondor_alpha_01" texture_index="11" />
-      <Icon id="10012" material_name="taom_banners_gondor_alpha_01" texture_index="12" />
-      <Icon id="10013" material_name="taom_banners_gondor_alpha_01" texture_index="13" />
-      <Icon id="10014" material_name="taom_banners_gondor_alpha_01" texture_index="14" />
-      <Icon id="10015" material_name="taom_banners_gondor_alpha_01" texture_index="15" />
+    <BannerIconGroup id="100" name="{=taom_banner_category_dunedain}Dúnedain" is_pattern="false">
+      <!-- Gondor Icons -->
+      <Icon id="10000" material_name="taom_banners_01" texture_index="0" />
+      <Icon id="10001" material_name="taom_banners_01" texture_index="1" />
+      <Icon id="10003" material_name="taom_banners_01" texture_index="3" />
+      <Icon id="10004" material_name="taom_banners_01" texture_index="4" />
+      <Icon id="10005" material_name="taom_banners_01" texture_index="5" />
+      <Icon id="10006" material_name="taom_banners_01" texture_index="6" />
+      <Icon id="10007" material_name="taom_banners_01" texture_index="7" />
+      <Icon id="10008" material_name="taom_banners_01" texture_index="8" />
+      <Icon id="10009" material_name="taom_banners_01" texture_index="9" />
+      <Icon id="10010" material_name="taom_banners_01" texture_index="10" />
+      <Icon id="10011" material_name="taom_banners_01" texture_index="11" />
+      <Icon id="10012" material_name="taom_banners_01" texture_index="12" />
+      <Icon id="10013" material_name="taom_banners_01" texture_index="13" />
+      <Icon id="10014" material_name="taom_banners_01" texture_index="14" />
+      <Icon id="10015" material_name="taom_banners_01" texture_index="15" />
     </BannerIconGroup>
 ```
 
 1. `id` on the group and `id` on each `<Icon>` are the two you pick first, and both have to be free across every module. TAOM's convention is group id equal to the faction block times ten, a second sheet at plus one, and icon ids in blocks of a hundred ([banner-icon-generation.md](../reference/banner-icon-generation.md) step 3).
 2. `material_name` names the sheet, `texture_index` names the cell on it. Get the pair wrong and the wrong emblem renders, with no error.
-3. `is_pattern="false"` is what makes `<Icon>` children legal here. Flip it to `true` and all sixteen load into a dictionary nothing ever reads.
+3. `is_pattern="false"` is what makes `<Icon>` children legal here. Flip it to `true` and every icon loads into a dictionary nothing ever reads.
 
 One palette row, from the `<BannerColors>` block that closes the file:
 
@@ -142,8 +142,8 @@ Erebor's key is 90 numbers, so 9 layers:
 | 0 | `11` | 100, 75 | 4345 x 4345 | 764, 764 | 1, 0, 0 | Native's base cloth `banner_background_test_11`, scaled well past the canvas, in a dark blue and a pale blue |
 | 1 to 3 | `521` | 172, 100 | 62, 54, 42 | left of centre | 0, 0, 268 | Native's shape icon 521, three sizes running down the left |
 | 4 to 6 | `521` | 172, 100 | 62, 54, 42 | right of centre | 0, 1, 88 | the same three, mirrored and rotated to match |
-| 7 | `24019` | 31, 240 | 400 x 400 | 765, 873 | 1, 0, 0 | TAOM icon 24019, group 241, cell 3 of `taom_banners_packed_alpha_01` (on `taom_banners_dwarves_alpha_02` before #1047) |
-| 8 | `24510` | 31, 240 | 200 x 200 | 765, 556 | 1, 0, 0 | TAOM icon 24510, group 245, cell 10 of `taom_banners_packed_alpha_04` (of `taom_banners_dwarves_ornaments_01` before #1047) |
+| 7 | `24019` | 31, 240 | 400 x 400 | 765, 873 | 1, 0, 0 | TAOM icon 24019, group 241, cell 12 of `taom_banners_03` (cell 3 of `taom_banners_17`, earlier `taom_banners_packed_alpha_01`, until 2026-11-14; `taom_banners_dwarves_alpha_02` before #1047) |
+| 8 | `24510` | 31, 240 | 200 x 200 | 765, 556 | 1, 0, 0 | TAOM icon 24510, group 245, cell 10 of `taom_banners_12` (`taom_banners_packed_alpha_04` until 2026-11-14, `taom_banners_dwarves_ornaments_01` before #1047) |
 
 Colour 240 in layers 7 and 8 is one of the 46 ids TAOM redefines over Native. Native declares 240 as `0xff5c6868`, a grey; TAOM declares it as `0xffd48806`, an amber, and TAOM's is the one that renders. Change TAOM's row and you have changed the outline of both dwarf sigils here and of every other key that names 240.
 
@@ -153,9 +153,9 @@ Colour 240 in layers 7 and 8 is one of the 46 ids TAOM redefines over Native. Na
 
 **Add a sheet of emblems.**
 
-1. Author the art as one sheet with sixteen cells and place the source under `Main/_Module/AssetSources/BannerIcons/` as `taom_banners_<faction>_alpha_NN.psd`. Slice one PNG per emblem into `Main/_Module/GUI/SpriteParts/ui_taom_bannericons/` named `<Icon id>.png`, one file per id.
+1. Author the art as one sheet with sixteen cells and place the source under `Main/_Module/AssetSources/BannerIcons/` as `taom_banners_NN.psd`, the next free number (sheets carry no faction name; the group in the XML decides where the emblems show in the picker). Slice one PNG per emblem into `Main/_Module/GUI/SpriteParts/ui_taom_bannericons/` named `<Icon id>.png`, one file per id.
 2. Add one `<BannerIconGroup>` to [`Main/_Module/ModuleData/banner_icons.xml`](../../Main/_Module/ModuleData/banner_icons.xml), before `<BannerColors>`. Give it a free group id, `is_pattern="false"`, a `{=!}` name, and one `<Icon>` per cell with a free id block.
-3. Compile the banner material in the Modding Kit so `taom_banners_<faction>_alpha_NN_mtl.tpac` and `_tex.tpac` land in `Main/_Module/Assets/BannerIcons/`. Without this the sigil renders blank no matter what the XML says.
+3. Compile the banner material in the Modding Kit so `taom_banners_NN_mtl.tpac` and `_tex.tpac` land in `Main/_Module/Assets/BannerIcons/`. Without this the sigil renders blank no matter what the XML says.
 4. Run the sprite generator against the game install, then pull the bake back with `pwsh tools/sync_sprite_bake.ps1 -WhatIf` first and without `-WhatIf` once the preview looks right. It copies only the manifest and the two `GauntletUI` directories, so it cannot revert source edits ([gui-sprite-system.md](../features/gui-sprite-system.md) line 169).
 5. Fully exit and relaunch the game. A re-bake repacks the whole category, so sprites that moved render from the wrong part of the old texture in a running client.
 

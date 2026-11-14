@@ -79,8 +79,8 @@ def write_module(root, rows, art=None, sprites=None, with_packages=True, extra_a
         (root / pbs.SPRITE_PNGS / f"{i}.png").write_bytes(b"png")
 
 
-FULL = [(str(100 + t), "taom_banners_full_alpha_01", t) for t in range(16)]
-PACKED1 = [(str(200 + t), "taom_banners_packed_alpha_01", t) for t in range(12)]   # 4 free cells
+FULL = [(str(100 + t), "taom_banners_01", t) for t in range(16)]
+PACKED1 = [(str(200 + t), "taom_banners_02", t) for t in range(12)]   # 4 free cells
 
 
 class TreeTest(unittest.TestCase):
@@ -104,19 +104,19 @@ class AuditFindsEachKindTests(TreeTest):
 
     def test_an_icon_naming_a_missing_sheet(self):
         write_module(self.root, FULL + PACKED1)
-        (self.root / pbs.SOURCES / "taom_banners_packed_alpha_01.png").unlink()
+        (self.root / pbs.SOURCES / "taom_banners_02.png").unlink()
         self.assertIn("missing_sheet", self.findings())
 
     def test_an_icon_on_a_placeholder_cell(self):
-        write_module(self.root, FULL + PACKED1, art={"taom_banners_packed_alpha_01": set(range(11))})
+        write_module(self.root, FULL + PACKED1, art={"taom_banners_02": set(range(11))})
         self.assertEqual(set(self.findings()), {"empty_cell"})
 
     def test_two_icons_on_one_cell(self):
-        write_module(self.root, FULL + PACKED1 + [("299", "taom_banners_packed_alpha_01", 3)])
+        write_module(self.root, FULL + PACKED1 + [("299", "taom_banners_02", 3)])
         self.assertIn("shared_cell", self.findings())
 
     def test_art_in_a_cell_no_icon_names(self):
-        write_module(self.root, FULL + PACKED1, extra_art={"taom_banners_packed_alpha_01": {14}})
+        write_module(self.root, FULL + PACKED1, extra_art={"taom_banners_02": {14}})
         self.assertEqual(set(self.findings()), {"unnamed_art"})
 
     def test_an_icon_missing_from_the_sprite_data(self):
@@ -131,27 +131,27 @@ class AuditFindsEachKindTests(TreeTest):
 
     def test_a_texture_imported_from_another_source_file(self):
         write_module(self.root, FULL + PACKED1)
-        packages(self.root, "taom_banners_full_alpha_01", source_name="taom_banners_full_alpha_01.psd")
+        packages(self.root, "taom_banners_01", source_name="taom_banners_01.psd")
         self.assertEqual(set(self.findings()), {"stale_package"})
 
     def test_two_rows_with_one_id(self):
-        write_module(self.root, FULL + PACKED1 + [("200", "taom_banners_packed_alpha_01", 12)])
+        write_module(self.root, FULL + PACKED1 + [("200", "taom_banners_02", 12)])
         self.assertIn("duplicate_id", self.findings())
 
     def test_a_material_without_its_packages(self):
         write_module(self.root, FULL + PACKED1)
-        (self.root / pbs.PACKAGES / "taom_banners_full_alpha_01_mtl.tpac").unlink()
+        (self.root / pbs.PACKAGES / "taom_banners_01_mtl.tpac").unlink()
         self.assertEqual(set(self.findings()), {"missing_package"})
 
     def test_a_source_changed_after_the_kit_import(self):
         write_module(self.root, FULL + PACKED1)
-        sheet_png(self.root / pbs.SOURCES / "taom_banners_packed_alpha_01.png", set(range(12)) | {12})
+        sheet_png(self.root / pbs.SOURCES / "taom_banners_02.png", set(range(12)) | {12})
         rep = self.findings()
         self.assertIn("stale_package", rep)
 
     def test_a_material_that_names_another_texture(self):
         write_module(self.root, FULL + PACKED1)
-        mtl = self.root / pbs.PACKAGES / "taom_banners_full_alpha_01_mtl.tpac"
+        mtl = self.root / pbs.PACKAGES / "taom_banners_01_mtl.tpac"
         mtl.write_bytes(mtl.read_bytes()[:-16] + uuid.uuid4().bytes_le)
         self.assertEqual(set(self.findings()), {"stale_package"})
 
@@ -160,14 +160,18 @@ class AuditFindsEachKindTests(TreeTest):
         sheet_png(self.root / pbs.SOURCES / "taom_banners_old_alpha_01.png", {0})
         self.assertEqual(set(self.findings()), {"unused_sheet"})
 
-    def test_a_partly_used_sheet_that_fits_a_free_packed_cell_is_mergeable(self):
-        write_module(self.root, FULL + PACKED1 + [("300", "taom_banners_new_alpha_01", 0)])
-        self.assertEqual(self.findings(), {"mergeable": ["taom_banners_new_alpha_01"]})
+    def test_a_partly_used_sheet_that_fits_free_cells_of_another_is_mergeable(self):
+        write_module(self.root, FULL + PACKED1 + [("300", "taom_banners_03", 0)])
+        self.assertEqual(self.findings(), {"mergeable": ["taom_banners_03"]})
 
     def test_sheets_that_cannot_merge_are_not_a_finding(self):
-        rows = [(str(400 + 16 * s + t), f"taom_banners_x{s}_alpha_01", t) for s in range(3) for t in range(9)]
+        rows = [(str(400 + 16 * s + t), f"taom_banners_{s + 3:02d}", t) for s in range(3) for t in range(9)]
         write_module(self.root, FULL + rows)
         self.assertNotIn("mergeable", self.findings())
+
+    def test_a_sheet_not_named_taom_banners_nn_has_a_legacy_name(self):
+        write_module(self.root, FULL + [(str(300 + t), "taom_banners_gondor_alpha_01", t) for t in range(16)])
+        self.assertEqual(self.findings(), {"legacy_name": ["taom_banners_gondor_alpha_01"]})
 
     def test_a_file_with_no_icon_rows_stops_the_audit(self):
         write_module(self.root, FULL)
@@ -181,40 +185,67 @@ class PlanTests(unittest.TestCase):
     def icons(counts):
         return [(f"{m}{t}", m, t) for m, n in counts.items() for t in range(n)]
 
-    def test_full_and_packed_sheets_never_move(self):
-        moves = pbs.plan(self.icons({"full": 16, "taom_banners_packed_alpha_01": 10, "a": 3}))
-        self.assertEqual({m for m, _, _, _ in moves.values()}, {"a"})
+    def test_full_and_well_named_sheets_never_move(self):
+        moves = pbs.plan(self.icons({"taom_banners_01": 16, "taom_banners_02": 10, "taom_banners_03": 3}))
+        self.assertEqual({m for m, _, _, _ in moves.values()}, {"taom_banners_03"})
 
-    def test_a_small_sheet_fills_free_cells_of_a_packed_sheet(self):
-        moves = pbs.plan(self.icons({"taom_banners_packed_alpha_01": 10, "a": 3}))
+    def test_a_small_sheet_fills_free_cells_of_a_bigger_one(self):
+        moves = pbs.plan(self.icons({"taom_banners_02": 10, "taom_banners_05": 3}))
         self.assertEqual(sorted((s, c) for _, _, s, c in moves.values()),
-                         [("taom_banners_packed_alpha_01", 10), ("taom_banners_packed_alpha_01", 11),
-                          ("taom_banners_packed_alpha_01", 12)])
+                         [("taom_banners_02", 10), ("taom_banners_02", 11), ("taom_banners_02", 12)])
 
-    def test_a_new_packed_sheet_is_named_past_every_taken_name(self):
-        moves = pbs.plan(self.icons({"a": 5, "b": 4}), taken={"Taom_Banners_Packed_Alpha_01"})
-        self.assertEqual({s for _, _, s, _ in moves.values()}, {"taom_banners_packed_alpha_02"})
+    def test_legacy_names_are_numbered_in_order_of_first_appearance(self):
+        moves = pbs.plan(self.icons({"zeta": 16, "alpha": 16}))
+        self.assertEqual({m: s for m, _, s, _ in moves.values()}, {"zeta": "taom_banners_01", "alpha": "taom_banners_02"})
+        self.assertTrue(all(t == c for _, t, _, c in moves.values()))
 
-    def test_a_plan_that_saves_no_sheet_is_empty(self):
-        self.assertEqual(pbs.plan(self.icons({"a": 10, "b": 9})), {})
+    def test_a_new_name_skips_every_taken_name(self):
+        moves = pbs.plan(self.icons({"a": 5, "b": 4}), taken={"Taom_Banners_01", "taom_banners_03"})
+        self.assertEqual({s for _, _, s, _ in moves.values()}, {"taom_banners_02"})
 
-    def test_a_sheet_that_would_sit_alone_in_a_new_sheet_stays_put(self):
-        moves = pbs.plan(self.icons({"taom_banners_packed_alpha_01": 13, "a": 10, "c": 9, "b": 3}))
-        self.assertEqual({m for m, _, _, _ in moves.values()}, {"b"})
+    def test_a_well_named_sheet_keeps_its_name_and_others_number_around_it(self):
+        moves = pbs.plan(self.icons({"taom_banners_01": 16, "a": 16}))
+        self.assertEqual({s for _, _, s, _ in moves.values()}, {"taom_banners_02"})
+
+    def test_a_non_png_sheet_that_receives_cells_is_written_under_a_new_name(self):
+        moves = pbs.plan(self.icons({"taom_banners_01": 9, "taom_banners_02": 5}), non_png={"TAOM_banners_01"})
+        self.assertEqual({m for m, _, _, _ in moves.values()}, {"taom_banners_01", "taom_banners_02"})
+        self.assertEqual({s for _, _, s, _ in moves.values()}, {"taom_banners_03"})
+
+    def test_a_non_png_sheet_that_receives_nothing_stays(self):
+        self.assertEqual(pbs.plan(self.icons({"taom_banners_01": 16}), non_png={"taom_banners_01"}), {})
+
+    def test_a_plan_that_saves_no_sheet_and_renames_nothing_is_empty(self):
+        self.assertEqual(pbs.plan(self.icons({"taom_banners_01": 10, "taom_banners_02": 9})), {})
+
+    def test_a_sheet_that_fits_nowhere_stays_put(self):
+        moves = pbs.plan(self.icons({"taom_banners_02": 13, "taom_banners_04": 10,
+                                     "taom_banners_05": 9, "taom_banners_06": 3}))
+        self.assertEqual({m for m, _, _, _ in moves.values()}, {"taom_banners_06"})
 
     def test_packing_the_packed_tree_again_moves_nothing(self):
-        counts = {f"taom_banners_packed_alpha_{n:02d}": c for n, c in enumerate([16, 15, 16, 15, 15], 1)}
+        counts = {f"taom_banners_{n:02d}": c for n, c in enumerate([16, 15, 16, 15, 15], 1)}
         self.assertEqual(pbs.plan(self.icons(counts)), {})
 
-    def test_the_plan_is_the_same_whatever_the_input_order(self):
+    def test_the_merges_are_the_same_whatever_the_input_order(self):
         icons = self.icons({"x": 7, "y": 7, "z": 2, "w": 15, "v": 1})
-        self.assertEqual(pbs.plan(icons), pbs.plan(list(reversed(icons))))
+        self.assertEqual(pbs.merges(icons), pbs.merges(list(reversed(icons))))
 
     def test_the_twenty_shipped_partial_sheets_packed_into_ten(self):
         counts = dict(zip("abcdefghijklmnopqrst", [7, 7, 2, 1, 4, 11, 15, 11, 15, 7, 4, 5, 4, 6, 10, 4, 11, 9, 10, 7]))
-        moves = pbs.plan(self.icons(counts))
-        moved = {m for m, _, _, _ in moves.values()}
-        self.assertEqual(len({s for _, _, s, _ in moves.values()}) + len(set(counts) - moved), 10)
+        moved = {m for m, _, _, _ in pbs.merges(self.icons(counts)).values()}
+        self.assertEqual(len(set(counts) - moved), 10)
+
+    def test_a_pure_rename_is_a_copy_and_a_merge_is_not(self):
+        icons = self.icons({"taom_banners_01": 9, "x": 16, "y": 5})
+        moves = pbs.plan(icons)
+        self.assertEqual(pbs.renames(icons, moves), {"taom_banners_02": "x"})
+
+    def test_a_kept_sheet_receiving_cells_at_matching_indices_is_not_a_copy(self):
+        icons = [(f"a{t}", "taom_banners_01", t) for t in range(9)] + [("b10", "b", 10)]
+        moves = pbs.plan(icons)
+        self.assertEqual({s for _, _, s, _ in moves.values()}, {"taom_banners_01"})
+        self.assertEqual(pbs.renames(icons, moves), {})
 
 
 class RewriteTests(unittest.TestCase):
@@ -257,17 +288,17 @@ class SheetTests(unittest.TestCase):
 
 class PackTests(TreeTest):
     def test_pack_moves_a_small_sheet_into_free_packed_cells_with_its_art(self):
-        write_module(self.root, FULL + PACKED1 + [("300", "taom_banners_new_alpha_01", 2)])
-        before = np.asarray(Image.open(self.root / pbs.SOURCES / "taom_banners_new_alpha_01.png"))
+        write_module(self.root, FULL + PACKED1 + [("300", "taom_banners_03", 2)])
+        before = np.asarray(Image.open(self.root / pbs.SOURCES / "taom_banners_03.png"))
         self.assertEqual(pbs.pack(self.root, None, write=True), 0)
         rows = {i: (m, t) for i, m, t in pbs.read_icons((self.root / pbs.XML).read_bytes())}
-        self.assertEqual(rows["300"], ("taom_banners_packed_alpha_01", 12))
-        after = np.asarray(Image.open(self.root / pbs.SOURCES / "taom_banners_packed_alpha_01.png"))
+        self.assertEqual(rows["300"], ("taom_banners_02", 12))
+        after = np.asarray(Image.open(self.root / pbs.SOURCES / "taom_banners_02.png"))
         self.assertTrue(np.array_equal(after[3 * C:4 * C, 0:C], before[0:C, 2 * C:3 * C]))
         self.assertTrue(np.array_equal(after[0:C, 0:C][4:12, 4:12, 1], np.full((8, 8), 200, np.uint8)))
 
     def test_a_second_pack_writes_nothing(self):
-        write_module(self.root, FULL + PACKED1 + [("300", "taom_banners_new_alpha_01", 2)])
+        write_module(self.root, FULL + PACKED1 + [("300", "taom_banners_03", 2)])
         pbs.pack(self.root, None, write=True)
         snapshot = {p: p.read_bytes() for p in (self.root / pbs.SOURCES).iterdir()} | {
             self.root / pbs.XML: (self.root / pbs.XML).read_bytes()}
@@ -275,36 +306,66 @@ class PackTests(TreeTest):
         self.assertEqual({p: p.read_bytes() for p in snapshot}, snapshot)
 
     def test_pack_refuses_on_each_blocking_finding(self):
-        new = [("300", "taom_banners_new_alpha_01", 2)]
+        new = [("300", "taom_banners_03", 2)]
         cases = {
-            "missing_sheet": (FULL + PACKED1 + new + [("301", "taom_banners_gone_alpha_01", 0)], None),
-            "empty_cell": (FULL + PACKED1 + new, {"taom_banners_packed_alpha_01": set(range(11))}),
-            "shared_cell": (FULL + PACKED1 + new + [("302", "taom_banners_packed_alpha_01", 3)], None),
-            "duplicate_id": (FULL + PACKED1 + [("200", "taom_banners_new_alpha_01", 2)], None),
+            "missing_sheet": (FULL + PACKED1 + new + [("301", "taom_banners_09", 0)], None),
+            "empty_cell": (FULL + PACKED1 + new, {"taom_banners_02": set(range(11))}),
+            "shared_cell": (FULL + PACKED1 + new + [("302", "taom_banners_02", 3)], None),
+            "duplicate_id": (FULL + PACKED1 + [("200", "taom_banners_03", 2)], None),
         }
         for kind, (rows, art) in cases.items():
             with self.subTest(kind):
                 root = self.root.parent / kind
                 write_module(root, rows, art=art)
                 if kind == "missing_sheet":
-                    (root / pbs.SOURCES / "taom_banners_gone_alpha_01.png").unlink()
+                    (root / pbs.SOURCES / "taom_banners_09.png").unlink()
                 xml = (root / pbs.XML).read_bytes()
                 self.assertIn(kind, self.findings(root))
                 self.assertEqual(pbs.pack(root, None, write=True), 1)
                 self.assertEqual((root / pbs.XML).read_bytes(), xml)
 
     def test_pack_refuses_to_drop_unnamed_art(self):
-        write_module(self.root, FULL + PACKED1 + [("300", "taom_banners_new_alpha_01", 2)],
-                     extra_art={"taom_banners_new_alpha_01": {5}})
+        write_module(self.root, FULL + PACKED1 + [("300", "taom_banners_03", 2)],
+                     extra_art={"taom_banners_03": {5}})
         xml = (self.root / pbs.XML).read_bytes()
         self.assertEqual(pbs.pack(self.root, None, write=True), 1)
         self.assertEqual((self.root / pbs.XML).read_bytes(), xml)
 
     def test_pack_writes_the_install_sources_too(self):
-        write_module(self.root, FULL + PACKED1 + [("300", "taom_banners_new_alpha_01", 2)])
+        write_module(self.root, FULL + PACKED1 + [("300", "taom_banners_03", 2)])
         (self.install / pbs.SOURCES).mkdir(parents=True)
         pbs.pack(self.root, self.install, write=True)
-        self.assertTrue((self.install / pbs.SOURCES / "taom_banners_packed_alpha_01.png").exists())
+        self.assertTrue((self.install / pbs.SOURCES / "taom_banners_02.png").exists())
+
+    def as_psd(self, mat):
+        """The sheet's PNG renamed .psd (Pillow reads by content), standing in for an editor PSD."""
+        src = self.root / pbs.SOURCES / f"{mat}.png"
+        return src.rename(src.with_suffix(".psd"))
+
+    def test_a_legacy_sheet_is_renamed_by_copying_its_source_bytes(self):
+        legacy = [(str(300 + t), "taom_banners_gondor_alpha_01", t) for t in range(16)]
+        write_module(self.root, legacy + PACKED1)
+        data = self.as_psd("taom_banners_gondor_alpha_01").read_bytes()
+        self.assertEqual(pbs.pack(self.root, None, write=True), 0)
+        rows = {i: (m, t) for i, m, t in pbs.read_icons((self.root / pbs.XML).read_bytes())}
+        self.assertEqual({rows[i] for i, _, _ in legacy}, {("taom_banners_01", t) for t in range(16)})
+        self.assertEqual((self.root / pbs.SOURCES / "taom_banners_01.psd").read_bytes(), data)
+        self.assertFalse((self.root / pbs.SOURCES / "taom_banners_01.png").exists())
+        self.assertTrue((self.root / pbs.SOURCES / "taom_banners_gondor_alpha_01.psd").exists())  # prune deletes it
+
+    def test_two_psd_sheets_merge_into_a_new_png(self):
+        a = [(str(300 + t), "taom_banners_dwarves_alpha_02", t) for t in range(9)]
+        b = [(str(400 + t), "taom_banners_elven_alpha_01", t) for t in range(5)]
+        write_module(self.root, FULL + a + b)
+        self.as_psd("taom_banners_dwarves_alpha_02")
+        before = pbs.load_cells(self.as_psd("taom_banners_elven_alpha_01"))
+        self.assertEqual(pbs.pack(self.root, None, write=True), 0)
+        rows = {i: (m, t) for i, m, t in pbs.read_icons((self.root / pbs.XML).read_bytes())}
+        self.assertEqual(rows["300"], ("taom_banners_02", 0))
+        self.assertEqual(rows["404"], ("taom_banners_02", 13))
+        after = pbs.load_cells(self.root / pbs.SOURCES / "taom_banners_02.png")
+        self.assertTrue(np.array_equal(after[13], before[4]))
+        self.assertEqual(set(self.findings()) & set(pbs.BLOCKING), set())
 
 
 class PruneTests(TreeTest):
@@ -356,14 +417,14 @@ class PruneTests(TreeTest):
         self.assertEqual(len(self.old_files(self.root)), 3)
 
     def test_prune_keeps_a_named_sheet_written_in_another_case(self):
-        src = self.root / pbs.SOURCES / "taom_banners_full_alpha_01.png"
-        src.rename(src.with_name("TAOM_banners_full_alpha_01.png"))
+        src = self.root / pbs.SOURCES / "taom_banners_01.png"
+        src.rename(src.with_name("TAOM_banners_01.png"))
         with mock.patch.object(pbs, "audit", return_value={"unused_sheet": ["x"]}):
             pbs.prune(self.root, self.install, self.backup, write=True)
-        self.assertTrue((self.root / pbs.SOURCES / "TAOM_banners_full_alpha_01.png").exists())
+        self.assertTrue((self.root / pbs.SOURCES / "TAOM_banners_01.png").exists())
 
     def test_prune_refuses_while_the_audit_has_other_findings(self):
-        (self.root / pbs.PACKAGES / "taom_banners_full_alpha_01_mtl.tpac").unlink()
+        (self.root / pbs.PACKAGES / "taom_banners_01_mtl.tpac").unlink()
         self.assertEqual(pbs.prune(self.root, self.install, self.backup, write=True), 1)
         self.assertEqual(len(self.old_files(self.root)), 3)
 
