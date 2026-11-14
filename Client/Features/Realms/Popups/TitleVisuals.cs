@@ -9,9 +9,15 @@ namespace TAOM.Client.Features.Realms.Popups;
 /// <summary>The banner a title is drawn with and the link to its encyclopedia page.</summary>
 internal static class TitleVisuals
 {
-    /// <summary>The holder's house banner; for a vacant title the realm's banner, else the fief owner's house banner.</summary>
+    /// <summary>
+    /// The title's own banner (its <c>banner</c> in realms_titles.xml); without one the holder's house banner, for a
+    /// vacant title the realm's banner, else the fief owner's house banner.
+    /// </summary>
     public static Banner Banner(RealmsCampaign b, TitleDefinition title)
     {
+        if (b.Service.Config.TitleBanners.TryGetValue(title.Id, out var code))
+            return new Banner(code);
+
         var holder = Hero.Find(b.Service.Ledger.HolderOf(title.Id) ?? string.Empty);
         var banner = TAOM.Features.Realms.Hooks.HouseBanners.HouseBannerOf(holder?.Clan)
             ?? Kingdom(title.KingdomId)?.Banner

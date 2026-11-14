@@ -228,7 +228,8 @@
       A save made before this setting existed has the throne vacated on its next load.
     -->
     <!-- The line of Durin: father to son. -->
-    <Kingdom id="erebor" succession="Primogeniture" gender="Agnatic" />
+    <Kingdom id="erebor" succession="Primogeniture" gender="Agnatic"
+             banner="11.273.273.1528.1528.764.764.1.0.0.31022.46.46.481.481.764.764.0.0.0.31023.152.200.146.146.764.763.1.0.0.503.172.172.46.46.764.763.0.0.0" />
     <Kingdom id="eredluin" succession="Primogeniture" gender="Agnatic" />
     <!-- The heirs of Isildur. -->
     <Kingdom id="arthedain" succession="Primogeniture" gender="Agnatic" />
@@ -311,7 +312,7 @@
     Title banners: banner="(banner code)" on a Kingdom, HighTitle, Union or Realm. A kingdom flies it while its ruler's
     primary title is that title (the one they chose on its page from those of their highest rank, else their highest, the
     realm's own title first on a tie), and its own banner again when that changes. The ruling house keeps its own banner
-    either way. Lindon, Gondor (empire_w) and Mordor (empire_s) carry their kingdom's starting banner.
+    either way. Lindon, Gondor (empire_w) and Mordor (empire_s) carry their kingdom's starting banner; Erebor has a title banner of its own.
   -->
   <TitularRealms>
     <!-- The dwarves' lost mansion: taken back from the orcs of Moria by the sword, never restored by a claim of blood. -->
