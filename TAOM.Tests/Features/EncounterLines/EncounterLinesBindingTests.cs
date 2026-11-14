@@ -131,6 +131,48 @@ public class EncounterLinesBindingTests
     }
 
     [TestMethod]
+    [TestCategory("RequiresGameIL")]
+    [TestCategory("BindingVerification")]
+    public void TheFiveLordTextIds_AreStillReadByLiteral_InVanillasLordConversations()
+    {
+        RequireGame();
+        var lordTypes = new[] { typeof(LordConversationsCampaignBehavior) }
+            .Concat(typeof(LordConversationsCampaignBehavior).GetNestedTypes(BindingFlags.NonPublic | BindingFlags.Public));
+        var literals = new HashSet<string>();
+        var farewellLineAdded = false;
+        foreach (var method in lordTypes.SelectMany(t => AccessTools.GetDeclaredMethods(t)).Where(m => !m.IsAbstract))
+        {
+            var strings = Strings(method);
+            foreach (var literal in strings)
+                literals.Add(literal);
+
+            // AddDialogLineWithVariation("hero_leave", "hero_leave", "close_window", ...): the line id, then the input token, then the output token.
+            // "hero_leave" is also an output token of three player lines, so the bare literal would survive a rename of the line itself.
+            for (var i = 0; i + 2 < strings.Count; i++)
+                farewellLineAdded |= strings[i] == "hero_leave" && strings[i + 1] == "hero_leave" && strings[i + 2] == "close_window";
+        }
+        Assert.IsTrue(farewellLineAdded, "the hero_leave farewell line (id, input and output token) is no longer added by LordConversationsCampaignBehavior");
+
+        // Vanilla asks for these ids only by literal, so a rename would strand the 243 lord rows without any other failure.
+        foreach (var id in new[] { "hero_leave", "str_surrender_demand_hero", "str_context_line", "str_surrender_offer", "str_prisoner_released" })
+            Assert.IsTrue(literals.Contains(id), id + " is no longer a literal in LordConversationsCampaignBehavior");
+    }
+
+    [TestMethod]
+    [TestCategory("RequiresGameIL")]
+    [TestCategory("BindingVerification")]
+    public void ProcessSentence_StillCallsUpdateCurrentSentenceText_InInstalledEngine()
+    {
+        var processSentence = Method(typeof(ConversationManager), "ProcessSentence");
+        var seam = SeamTarget();
+
+        var calls = PatchProcessor.GetOriginalInstructions(processSentence)
+            .Count(ci => (ci.opcode == OpCodes.Call || ci.opcode == OpCodes.Callvirt) && ci.operand is MethodBase called && called.MetadataToken == seam.MetadataToken && called.Module == seam.Module);
+
+        Assert.AreEqual(1, calls, "ProcessSentence no longer calls UpdateCurrentSentenceText: the text seam would never run");
+    }
+
+    [TestMethod]
     [TestCategory("BindingVerification")]
     public void TheConversationManagerFields_BindWithTheTypesTheSeamReads()
     {
