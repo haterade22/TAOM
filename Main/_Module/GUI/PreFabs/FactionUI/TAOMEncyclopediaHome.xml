@@ -2,7 +2,7 @@
   <Window>
     <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" DoNotAcceptEvents="true">
       <Children>
-        <Widget SuggestedWidth="1728" SuggestedHeight="972" HorizontalAlignment="Center" VerticalAlignment="Center" DoNotAcceptEvents="true">
+        <EncyclopediaFrameAnchorWidget Id="HomeCanvas" SuggestedWidth="1728" SuggestedHeight="972" HorizontalAlignment="Center" VerticalAlignment="Top" PositionYOffset="54" FrameOffset="0" DoNotAcceptEvents="true">
           <Children>
             <NavigationScopeTargeter ScopeID="EncyclopediaHomeScope" ScopeParent="..\EncyclopediaHomeList" ScopeMovements="Horizontal" IsDefaultNavigationScope="true" HasCircularMovement="false" />
             <NavigatableListPanel Id="EncyclopediaHomeList" DataSource="{Lists}" WidthSizePolicy="Fixed" SuggestedWidth="1400" HeightSizePolicy="StretchToParent" HorizontalAlignment="Center" MarginLeft="0" MarginRight="0" MarginTop="144" MarginBottom="64">
@@ -15,7 +15,7 @@
               </ItemTemplate>
             </NavigatableListPanel>
           </Children>
-        </Widget>
+        </EncyclopediaFrameAnchorWidget>
       </Children>
     </Widget>
   </Window>

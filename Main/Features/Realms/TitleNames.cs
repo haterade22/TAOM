@@ -55,16 +55,15 @@ internal static class TitleNames
     }
 
     /// <summary>
-    /// The title the hero is known by: their highest title held by right, unless a lower one keeps its own style over it
-    /// (a prefix's <c>known_over</c>, Dol Amroth's Prince). Null when they hold none or titles are off.
+    /// The title the hero is known by: the one they chose on its page, else their highest title held by right,
+    /// unless a lower one keeps its own style over it (a prefix's <c>known_over</c>, Dol Amroth's Prince). Null when they
+    /// hold none or titles are off.
     /// </summary>
     public static TitleDefinition? KnownBy(Hero hero, RealmsCampaign behavior)
     {
         if (behavior.IsDisabled || !behavior.Service.IsInitialized || hero.StringId == null)
             return null;
-        var catalog = behavior.Service.Catalog;
-        var held = behavior.Service.Ledger.TitlesHeldBy(hero.StringId).Select(catalog.Get).Where(t => t != null).Select(t => t!);
-        return behavior.Config.RankNames.KnownBy(held, catalog, hero.Culture?.StringId);
+        return behavior.Service.KnownByTitleOf(hero.StringId, hero.Culture?.StringId);
     }
 
     private static (TextObject Style, TextObject? Place)? Known(Hero hero, RealmsCampaign behavior)

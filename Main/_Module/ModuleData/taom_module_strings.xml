@@ -5051,5 +5051,8 @@
 	<!-- harvested by tools/harvest_literal_loc_keys.py -->
 	<!-- StoryMissions -->
 	<string id="taom_story_offer_later" text="{=taom_story_offer_later}Not now" />
+	<!-- Realms: primary title -->
+	<string id="realms_ui_primary" text="{=realms_ui_primary}Make primary title" />
+	<string id="realms_ui_primary_ask" text="{=realms_ui_primary_ask}Be known by the {TITLE} from now on? Your style and party name follow your primary title, and so does your realm's banner where the title has one." />
 
 </strings>

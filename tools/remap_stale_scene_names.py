@@ -14,7 +14,7 @@ Every replacement is verified to exist as a SceneObj folder (case-insensitive) b
 
 Usage:
     python remap_stale_scene_names.py --dry-run
-    python remap_stale_scene_names.py --apply [--shadow]
+    python remap_stale_scene_names.py --apply
 
 --apply refuses while the game or the Modding Kit runs, writes a timestamped
 <name>.bak_scenes_YYYYMMDD-HHMMSS beside each file it changes, keeps its BOM and line endings, and
@@ -34,7 +34,6 @@ from _gamedir import ensure_exists, game_dir, game_or_kit_running
 GAME = Path(game_dir(r"E:\Steam\steamapps\common\Mount & Blade II Bannerlord"))
 MODULES = GAME / "Modules"
 LIVE = MODULES / "TAOM_Map" / "ModuleData" / "settlements.xml"
-SHADOW = Path(__file__).resolve().parent.parent / "Main" / "_Module" / "ModuleData" / "settlements.xml"
 
 REMAP = {
     # vanilla house-interior renames (v1.4.5)
@@ -97,7 +96,6 @@ def main() -> int:
     ap.add_argument("--apply", action="store_true")
     ap.add_argument("--backup", action="store_true",
                     help="accepted and ignored: --apply always writes a timestamped backup first")
-    ap.add_argument("--shadow", action="store_true", help="also remap the repo shadow settlements.xml")
     args = ap.parse_args()
     if not (args.dry_run or args.apply):
         ap.error("pass --dry-run or --apply")
@@ -137,8 +135,6 @@ def main() -> int:
         return 1
 
     targets = [LIVE]
-    if args.shadow:
-        targets.append(SHADOW)
 
     # Compute and parse-check every output before any file is written.
     pending = []  # (path, raw bytes, new bytes)

@@ -187,8 +187,9 @@ REF_KINDS = [
             "factions", Severity.ERROR, "BROKEN_FACTION_REF", "clan", "Faction.", {"neutral"}),
     # Settlement.X: a clan's or kingdom's home, a village's bound town. Most of these cross from TAOM
     # into the unversioned TAOM_Map, and a package pair that disagrees points them at nothing. TAOM's
-    # own two settlement files are in no SubModule.xml row, so the game never reads them
-    # (docs/modding/file-catalogue.md), and custom_settlements.xml names towns no map holds.
+    # repo dropped its two settlement files on 2026-11-14 (no SubModule.xml row ever loaded them), but
+    # deploys never delete, so an install or channel built before still holds them; the game never reads
+    # them, and custom_settlements.xml names towns no map holds, so they are still never swept.
     RefKind("settlement", re.compile(r'="Settlement\.([A-Za-z0-9_.\-]+)"'),
             "settlements", Severity.ERROR, "BROKEN_SETTLEMENT_REF", "settlement", "Settlement.",
             skip_files=frozenset({"settlements.xml", "custom_settlements.xml"})),

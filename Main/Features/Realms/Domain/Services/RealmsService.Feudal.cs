@@ -240,9 +240,9 @@ public sealed partial class RealmsService
     /// <summary>
     /// The title a realm is named after while its ruler holds it: the highest of the ruler's titles of kingdom rank or
     /// higher that stands above the realm's own title (Durin's Folk over Erebor, the Reunited Kingdom over Gondor), on a
-    /// tie the first by id. A realm without a title of its own (a kingdom made in the campaign) takes the highest such
-    /// title that is no other realm's own (a dwarf lord's kingdom that holds Khazad-dûm). Null: the realm keeps its own
-    /// name. A title elsewhere (Mordor holding Arnor) never renames a realm.
+    /// tie the one the ruler chose as primary, else the first by id. A realm without a title of its own (a kingdom made in
+    /// the campaign) takes the highest such title that is no other realm's own (a dwarf lord's kingdom that holds
+    /// Khazad-dûm). Null: the realm keeps its own name. A title elsewhere (Mordor holding Arnor) never renames a realm.
     /// </summary>
     public TitleDefinition? RealmNameTitle(string kingdomId, string? rulerId)
     {
@@ -250,11 +250,12 @@ public sealed partial class RealmsService
             return null;
         var own = Catalog.Get(Generation.TitleGenerator.KingdomPrefix + kingdomId);
         var above = own != null ? new HashSet<string>(Catalog.AncestorsOf(own.Id).Select(t => t.Id), StringComparer.Ordinal) : null;
+        var chosen = Ledger.ChosenPrimaryOf(rulerId);
         return Ledger.TitlesHeldBy(rulerId).Select(Catalog.Get)
             .Where(t => t != null && t.Rank >= TitleRank.Kingdom
                         && (above != null ? above.Contains(t.Id) : t.KingdomId == null || t.KingdomId == kingdomId))
             .Select(t => t!)
-            .OrderByDescending(t => t.Rank).ThenBy(t => t.Id, StringComparer.Ordinal).FirstOrDefault();
+            .OrderByDescending(t => t.Rank).ThenByDescending(t => t.Id == chosen).ThenBy(t => t.Id, StringComparer.Ordinal).FirstOrDefault();
     }
 
     /// <summary>The name a realm takes from <paramref name="title"/>: its <c>realm_name</c>, else the title's own name.</summary>

@@ -246,9 +246,8 @@ or a debug console command that calls `Clan.CreateClan` without `SetInitialHomeS
 | `tools/taom_schema.py` | `LANDLESS_CULTURE` + `build_settled_cultures` |
 
 **Live-file note:** the retag targets
-`<game>/Modules/TAOM_Map/ModuleData/settlements.xml`. The repo's
-`Main/_Module/ModuleData/settlements.xml` is a stale shadow — editing it changes nothing
-([trap index](../ai-includes/orientation.md)).
+`<game>/Modules/TAOM_Map/ModuleData/settlements.xml`. TAOM's repo has no settlement file (its two
+unloaded copies were removed on 2026-11-14) ([trap index](../ai-includes/orientation.md)).
 
 ---
 

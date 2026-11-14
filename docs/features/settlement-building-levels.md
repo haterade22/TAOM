@@ -67,8 +67,8 @@ Applied 2026-07-08: 221 fiefs, 1,363 building levels altered. Reviewed by a 7-bl
 
 ## Dependencies
 
-- The LIVE `TAOM_Map/ModuleData/settlements.xml` (external, not in repo). The repo's
-  `Main/_Module/ModuleData/settlements.xml` is a stale shadow — never edited here.
+- The LIVE `TAOM_Map/ModuleData/settlements.xml` (external, not in repo). TAOM's repo has no
+  settlement file (its two unloaded copies were removed on 2026-11-14).
 - Building type ids + max levels grounded in installed vanilla `DefaultBuildingTypes` (per
   `.claude/rules/vanilla-data-comparison.md`).
 - Independent of, but coexists with, the #317 prosperity rebaseline on the same file (feature-named `.bak`

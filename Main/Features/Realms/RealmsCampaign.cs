@@ -26,8 +26,10 @@ public sealed partial class RealmsCampaign
     private const string ChunkCountKey = "taom_realms_chunks";
     private const string ChunkKeyPrefix = "taom_realms_chunk_";
     private const string KingdomNamesKey = "taom_realms_kingdom_names";
+    private const string KingdomBannersKey = "taom_realms_kingdom_banners";
 
     private readonly KingdomNames _kingdomNames = new();
+    private readonly KingdomBanners _kingdomBanners = new();
 
     private readonly IRealmsPopupAdapter _popups;
     private readonly IRealmsSettingsProvider _settings;
@@ -66,6 +68,7 @@ public sealed partial class RealmsCampaign
         _renamed = TellRenamed;
         _service.Clock = () => CampaignTime.Now.ToDays;
         LiegeArmyDiscount.Behavior = this;
+        HouseBanners.Behavior = this;
     }
 
     /// <summary>The running campaign's titles, or null outside a campaign.</summary>
@@ -115,6 +118,7 @@ public sealed partial class RealmsCampaign
     {
         LiegeArmyDiscount.Patch();
         Upgrade();
+        HouseBanners.Decouple();
         if (_service.IsInitialized && _isAuthority())
         {
             ApplyFormerBannersOnLoad();
@@ -209,7 +213,8 @@ public sealed partial class RealmsCampaign
     /// <summary>
     /// Moves a titular realm's lands to it or back (<see cref="RealmsService.SyncTitularLands"/>: Khazad-dûm formed, or
     /// fallen vacant), then names each kingdom after the higher title its ruler holds, or gives it its own name back
-    /// (<see cref="KingdomNames"/>).
+    /// (<see cref="KingdomNames"/>), and gives it the banner of
+    /// its ruler's primary title or its own back (<see cref="KingdomBanners"/>).
     /// </summary>
     private void UpdateKingdomNames()
     {
@@ -222,6 +227,7 @@ public sealed partial class RealmsCampaign
             Debug.Print($"[TAOM.Realms] {moved} titles moved to or from a titular realm.");
         }
         _kingdomNames.Update(_service, Config, _renamed);
+        _kingdomBanners.Update(_service);
     }
 
     private void TellRenamed(string kingdomId)
@@ -401,6 +407,8 @@ public sealed partial class RealmsCampaign
 
         var names = _kingdomNames.Save();
         dataStore.SyncData(KingdomNamesKey, ref names);
+        var banners = _kingdomBanners.Save();
+        dataStore.SyncData(KingdomBannersKey, ref banners);
     }
 
     private void Load(IDataStore dataStore)
@@ -408,6 +416,9 @@ public sealed partial class RealmsCampaign
         var names = string.Empty;
         dataStore.SyncData(KingdomNamesKey, ref names);
         _kingdomNames.Load(names);
+        var banners = string.Empty;
+        dataStore.SyncData(KingdomBannersKey, ref banners);
+        _kingdomBanners.Load(banners);
 
         var count = 0;
         dataStore.SyncData(ChunkCountKey, ref count);

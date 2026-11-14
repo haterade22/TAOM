@@ -156,7 +156,7 @@ public class BannerInjectionServiceTests
     }
 
     [TestMethod]
-    public void InjectBanners_RulingClan_Skips()
+    public void InjectBanners_RulingClan_InjectsItsOwnBanner()
     {
         _configProvider.GetClanBannerKeys().Returns(new Dictionary<string, string>
         {
@@ -169,7 +169,8 @@ public class BannerInjectionServiceTests
 
         _sut.InjectBanners();
 
-        _clanAdapter.DidNotReceive().SetBanner(Arg.Any<string>(), Arg.Any<string>());
+        // The adapter reads a ruling clan's own banner, which Realms' HouseBanners shows apart from its realm's.
+        _clanAdapter.Received(1).SetBanner("clan_ruling", "11.92.92.3000.3000.764.764.1.0.0");
     }
 
     [TestMethod]

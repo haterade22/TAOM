@@ -2,7 +2,7 @@
   <Window>
     <BrushWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Brush="Encyclopedia.Page.SoundBrush" DoNotAcceptEvents="true">
       <Children>
-        <Widget Id="HeroLedger" SuggestedWidth="1728" SuggestedHeight="780" HorizontalAlignment="Center" PositionYOffset="184" DoNotAcceptEvents="true">
+        <EncyclopediaFrameAnchorWidget Id="HeroLedger" SuggestedWidth="1728" SuggestedHeight="780" HorizontalAlignment="Center" VerticalAlignment="Top" PositionYOffset="184" FrameOffset="130" BottomClearance="78" DoNotAcceptEvents="true">
           <Children>
             <EncyclopediaStonePanelWidget SuggestedWidth="350" SuggestedHeight="780" Sprite="ec_portrait_panel" DoNotAcceptEvents="true" PositionXOffset="12" />
             <Widget SuggestedWidth="374" SuggestedHeight="780" DoNotAcceptEvents="true">
@@ -373,7 +373,7 @@
             </ScrollbarWidget>
             <ImageWidget SuggestedWidth="913" SuggestedHeight="3" PositionXOffset="430" PositionYOffset="722" Sprite="fs_divider_thin" DoNotAcceptEvents="true" />
           </Children>
-        </Widget>
+        </EncyclopediaFrameAnchorWidget>
         <!--Previous and Next page: the shared row, detached below the page canvas in the full-window root, identical on every detail page.-->
         <TAOMEncyclopediaPageNavigation />
       </Children>

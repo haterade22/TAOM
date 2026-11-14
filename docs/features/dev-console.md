@@ -405,8 +405,7 @@ printed as a replacement coordinate the engine computed rather than a value to g
 
 **The corrected coordinates do not exist yet.** The auditor ships; producing them takes one in-game
 campaign run, and applying them is a separate edit against the LIVE
-`TAOM_Map/ModuleData/settlements.xml` — the repo's `Main/_Module/ModuleData/settlements.xml` is a stale
-shadow, which the command's own output says. The three destinations reported as wedging AI parties are
+`TAOM_Map/ModuleData/settlements.xml` (the repo has no settlement file since 2026-11-14). The three destinations reported as wedging AI parties are
 `town_MM2` (the only one of the three with a gate position), `hideout_desert_7` and
 `castle_village_MM1_2`; all three ids resolve in the live map file.
 

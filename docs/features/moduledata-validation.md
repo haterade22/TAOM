@@ -41,7 +41,8 @@ TAOM repeatedly ships the same data-integrity bug classes, each previously caugh
   into the unversioned `TAOM_Map`, so a pair of packages that disagree points it at nothing. The registry is the world the
   game builds: `TAOM_Map`'s rows, since its `settlements.xslt` strips vanilla's. TAOM's two unregistered settlement files
   are not read, and TAOM's `.xslt` files are, because `spclans.xslt` writes homes as element text. (`BROKEN_SETTLEMENT_REF`). `tools/check_release_pair.py` runs this code, `UNKNOWN_CULTURE`,
-  `BROKEN_FACTION_REF` and `LANDLESS_CULTURE` against a release channel, which holds no vanilla module.
+  `BROKEN_FACTION_REF`, `LANDLESS_CULTURE` and `PRISON_SCENE_NOT_STEALTH` against a release channel, which
+  holds no vanilla module.
 - **A lord's culture owns no settlement** — vanilla `SpawnLordParty` ends with an unguarded
   `Settlement.All.First(x => x.Culture == hero.Culture)`, so a landless culture on an
   `Occupation.Lord` hero is a latent `InvalidOperationException` on the daily clan tick.
@@ -875,9 +876,9 @@ the directory holds 88 files in all, the other 43 being 39 `.bak*`/`.prev` copie
 `settlements.xml`. TAOM_Map appears in no other root list, not `item_roots`, not `npc_roots`, not
 `pt_roots`, not `culture_files`, and not `extra_ref_roots`.
 
-The consequence is an inversion worth stating plainly. **The validator checks the dead file's refs
-and trusts the live one's.** The repo's `Main/_Module/ModuleData/settlements.xml` is a stale shadow
-that contributes to no registry, yet its `Culture.` refs are checked on every run. The live
+The consequence is an inversion worth stating plainly. **The validator checked the dead file's refs
+and trusts the live one's.** The repo's `Main/_Module/ModuleData/settlements.xml` was a stale shadow
+that contributed to no registry, yet its `Culture.` refs were checked on every run (the file was removed on 2026-11-14). The live
 `TAOM_Map/ModuleData/settlements.xml` is the *sole* source of `settled_cultures` and
 `settlement_economy`, and its **1,012 `Culture.` references (30 distinct) are never checked for
 `UNKNOWN_CULTURE`**. Since that same file is what decides which cultures count as settled, a bad id

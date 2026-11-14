@@ -2,7 +2,7 @@
 
 ## What this module is
 
-`TAOM_Map` supplies Middle-earth itself: one baked campaign-map scene, the 997 settlements that sit
+`TAOM_Map` supplies Middle-earth itself: one baked campaign-map scene, the 1,266 settlements that sit
 on it, and the art the two of them need. It ships no C# at all, so everything inside it is authored
 either in the Bannerlord Modding Kit or typed into XML. It is also the one TAOM module that is not in
 the git repo, which changes how you edit it, how you back it up, and what happens when the module is
@@ -19,13 +19,11 @@ the csproj's `CopyModule` target, and `TAOM.Dependencies` out of `Dependencies/_
 has no source tree anywhere: an edit to the live folder *is* the deployment. That cuts both ways.
 Your change is live the next time the game boots, and nothing in git records that you made it.
 
-**The repo copy is a dead shadow.** `Main/_Module/ModuleData/settlements.xml` exists, holds 863
-`<Settlement>` rows against the live file's 988, and was last written on 2026-05-26. It is not
-registered: `grep -n 'Settlements' Main/_Module/SubModule.xml` returns nothing at all.
-<!-- measured: grep -c '<Settlement ' Main/_Module/ModuleData/settlements.xml ; grep -n 'Settlements' Main/_Module/SubModule.xml 2026-09-05 -->
-Editing it changes nothing in game. Three older tools (`tools/Generate-Settlements.ps1`,
-`tools/Apply-SettlementNames.ps1`, `tools/Settlement-Breakdown.ps1`) still target that stale copy, so
-their output is a repo snapshot, not a live change. The full history of the split is in
+**TAOM's repo has no settlement file.** Its two unloaded copies (`settlements.xml` and
+`custom_settlements.xml`) were removed on 2026-11-14, and the live `TAOM_Map` file is the only one.
+`grep -n 'Settlements' Main/_Module/SubModule.xml` returns nothing: only `TAOM_Map` registers settlements.
+<!-- measured: grep -n 'Settlements' Main/_Module/SubModule.xml 2026-09-05 -->
+An install built before the removal may still hold the old copies; the game ignores them. The full history of the split is in
 [taom-map-settlement-naming.md](../reference/taom-map-settlement-naming.md).
 
 Three authoring surfaces, three different tools:
@@ -50,7 +48,7 @@ Sizes and counts measured on 2026-09-05 against the live install.
 |---|---|---|---|
 | `TAOM_Map/SubModule.xml` | The manifest: ids, version, dependencies, an empty `<SubModules/>`, 8 `<XmlNode>` rows | yes | 81 lines |
 | `TAOM_Map/ModuleData/` | All XML data | yes | 23 entries |
-| `TAOM_Map/ModuleData/settlements.xml` | The 997 settlements. UTF-8 **with BOM**, CRLF | yes | 1,161,107 bytes, 15,589 lines (2026-09-11, after #562) |
+| `TAOM_Map/ModuleData/settlements.xml` | The 1,266 settlements. UTF-8 **with BOM**, CRLF | yes | 1,453,047 bytes, 19,889 lines (2026-11-14) |
 | `TAOM_Map/ModuleData/settlements.xslt` | Deletes vanilla Calradia from the merge buffer | yes | 15 lines |
 | `TAOM_Map/ModuleData/DistanceCaches/` | `settlements_distance_cache_Default.bin`, `settlements_snapshot.json`, `last_rebuild_report.json` | no (but see below) | 3 files, 10.4 MB |
 | `TAOM_Map/ModuleData/Languages/` | Root `language_data.xml` plus 12 language folders, each with `loc_settlements.xml` | no | 13 entries, 25 XML |
@@ -277,7 +275,7 @@ crashes map load**, which is why `tools/add_bluecraig_castles.py` adds only ids 
 An identity template plus one empty template. The empty one deletes every `<Settlement>` it matches.
 `MBObjectManager.CreateMergedXmlFile` applies `xsltList[i]` to the **accumulated** document and only
 then merges file `i` into it (`MBObjectManager.cs:966-980`), so this stylesheet runs against
-whatever SandBox already contributed and wipes vanilla's 494 Calradian settlements before TAOM's 988
+whatever SandBox already contributed and wipes vanilla's 494 Calradian settlements before TAOM's 1,266
 are added. `HandleXsltList` (`MBObjectManager.cs:949-963`) finds the file by convention: for a
 registered `path="settlements"` it looks for `settlements.xsl`, then `settlements.xslt`. You never
 name it in `SubModule.xml`.
@@ -612,11 +610,11 @@ come from.
   harmless or double-registers the distance-cache system is undocumented. Flag it, do not copy it.
   <!-- measured: grep -o 'SettlementPositionScript' SceneObj/Main_map/scene.xscene | wc -l 2026-09-05 -->
 - **What `gate_rotation` and the settlement-level `type` attribute do.** Both are in TAOM's data
-  (`gate_rotation` on 221 `<Town>`, 159 `<Hideout>` and 131 `<Village>` nodes; `type="Hideout"` on
-  159 settlements) and both are declared by `<game>/XmlSchemas/Settlements.xsd`, but neither is read
+  (`gate_rotation` on 280 `<Town>`, 181 `<Hideout>` and 131 `<Village>` nodes; `type="Hideout"` on
+  181 settlements) and both are declared by `<game>/XmlSchemas/Settlements.xsd`, but neither is read
   by `Settlement.Deserialize` or the component deserializers, and a grep of the shipping-client and
   editor v1.4.8 decompiles finds no reader. Treat them as native or legacy and copy vanilla's values.
-  <!-- measured: grep -o '<Town [^>]*gate_rotation=' ModuleData/settlements.xml | wc -l (and the Village/Hideout siblings) 2026-09-05 -->
+  <!-- measured: grep -o '<Town [^>]*gate_rotation=' ModuleData/settlements.xml | wc -l (and the Village/Hideout siblings) 2026-11-14 -->
 - **How the 8 `Atmospheres/` presets bind to the 46 scenes.** Every scene's own `atmosphere.xml` is
   named `scene_atmosphere`, the preset filenames end `_forceatmo`, and the lookup is undocumented.
 - **Which module wins when two ship the same `SceneObj/<name>/`.** The last-active-module rule is
@@ -632,13 +630,12 @@ All measured 2026-09-05 against the live install and, where noted, the repo.
 
 | Number | Command |
 |---|---|
-| 997 settlements | `grep -c '<Settlement id=' TAOM_Map/ModuleData/settlements.xml`, 2026-09-11 |
-| 78 towns, 143 castles, 616 villages, 159 hideouts | `grep -c 'is_castle="false"'`, `grep -c 'is_castle="true"'`, `grep -c '<Village '`, `grep -c '<Hideout '` on the same file |
-| 221 settlements with `gate_posX` | `grep -c 'gate_posX=' TAOM_Map/ModuleData/settlements.xml` |
-| `gate_rotation` on 221 `<Town>`, 159 `<Hideout>`, 131 `<Village>`; `type="Hideout"` on 159 | `grep -o '<Town [^>]*gate_rotation=' <file> \| wc -l` and its siblings |
+| 1,266 settlements | `grep -c '<Settlement id=' TAOM_Map/ModuleData/settlements.xml`, 2026-11-14 |
+| 100 towns, 180 castles, 804 villages, 181 hideouts, 1 custom (`retirement_retreat`) | `grep -c 'is_castle="false"'`, `grep -c 'is_castle="true"'`, `grep -c '<Village '`, `grep -c '<Hideout '` on the same file, 2026-11-14 |
+| 280 settlements with `gate_posX` (2026-11-14) | `grep -c 'gate_posX=' TAOM_Map/ModuleData/settlements.xml` |
+| `gate_rotation` on 280 `<Town>`, 181 `<Hideout>`, 131 `<Village>`; `type="Hideout"` on 181 (2026-11-14) | `grep -o '<Town [^>]*gate_rotation=' <file> \| wc -l` and its siblings |
 | Terrain node 16 by 16 at `node_size="100.000"` here, `53.000` in SandBox | `grep -o '<terrain [^>]*>' <scene> \| head -1` |
-| 1,153,217 bytes, 15,472 lines, BOM present, CRLF endings | `wc -c`, `wc -l`, and `head -c 3 settlements.xml \| od -c` for the BOM |
-| 863 settlements in the repo shadow | `grep -c '<Settlement ' Main/_Module/ModuleData/settlements.xml` |
+| 1,453,047 bytes, 19,889 lines, BOM present, CRLF endings (2026-11-14) | `wc -c`, `wc -l`, and `head -c 3 settlements.xml \| od -c` for the BOM |
 | 0 registrations of `Settlements` in the repo module | `grep -n 'Settlements' Main/_Module/SubModule.xml` (exit 1, no output) |
 | 494 vanilla settlements deleted by the XSLT | `python -c "import re;print(len(re.findall(r'<Settlement[\s>]', open('SandBox/ModuleData/settlements.xml',encoding='utf-8-sig').read())))"` |
 | 81 lines in `SubModule.xml`, 15 in `settlements.xslt`, 11 in `project.mbproj` | `wc -l` on each |
