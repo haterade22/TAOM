@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Xml.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace TAOM.Tests.Core;
 
 /// <summary>
-/// Two invariants over the lord roster that nothing else in the repo checks.
+/// The female-with-beard invariant over the lord roster, in both lords files.
 ///
 /// Why this exists: `lord_WE8_c` shipped as vanilla's female "Icratia" long after TAOM had renamed
 /// him to Pelendur, son of Golasgil. The registry said Pelendur, all 12 language files said
@@ -23,21 +24,15 @@ namespace TAOM.Tests.Core;
 /// former has no rule touching names or sex; the latter checks that a key HAS a row, not what the
 /// row says, so renaming under an existing key stays green.
 ///
+/// The name half is LordIdentityConsistencyTests.EveryLordNameInLordsXsltMatchesTheRegistry. Since #648 no
+/// characters/lords.xml row carries a name key that taom_xslt_strings.xml registers (those were the
+/// vanilla-id rows), so the copy of that check over lords.xml compared no row and was removed.
+///
 /// Data-only, needs no game, runs in milliseconds.
 /// </summary>
 [TestClass]
 public class LordNameAndSexConsistencyTests
 {
-    /// <summary>
-    /// Name keys where lords.xml deliberately differs from the registry.
-    /// Keep this list tiny and justify every entry.
-    /// </summary>
-    private static readonly HashSet<string> AcceptedNameDifferences = new(StringComparer.Ordinal)
-    {
-        // Empty since 2026-09-25: Duinhir's title ("Duinhir, Lord of Morthond") is registered and translated
-        // everywhere (Mike), so lords.xml and the registry agree again.
-    };
-
     private static string FindRepoRoot()
     {
         var dir = new DirectoryInfo(Directory.GetCurrentDirectory());
@@ -51,50 +46,6 @@ public class LordNameAndSexConsistencyTests
         var path = Path.Combine(new[] { root, "Main", "_Module", "ModuleData" }.Concat(parts).ToArray());
         Assert.IsTrue(File.Exists(path), $"not found at {path}");
         return File.ReadAllText(path);
-    }
-
-    [TestMethod]
-    public void EveryLordNameFallbackMatchesTheRegisteredEnglishText()
-    {
-        var root = FindRepoRoot();
-        var strings = ReadModuleData(root, "taom_xslt_strings.xml");
-        var lords = ReadModuleData(root, "characters", "lords.xml");
-
-        var registry = new Dictionary<string, string>(StringComparer.Ordinal);
-        foreach (Match m in Regex.Matches(
-            strings, @"<string id=""(?<id>aom_lord_[^""]+_name)"" text=""\{=\k<id>\}(?<text>[^""]*)"""))
-        {
-            registry[m.Groups["id"].Value] = m.Groups["text"].Value;
-        }
-
-        Assert.IsTrue(registry.Count > 0, "parsed no lord name strings; taom_xslt_strings.xml shape changed");
-
-        var drift = new List<string>();
-        // Attribute-order independent on purpose. The original pattern required id first and name
-        // second, which silently skipped the 600 entries written `<NPCCharacter id="..." race="..."
-        // name="...">` - the whole Dol Guldur roster among them.
-        foreach (Match m in Regex.Matches(lords, @"<NPCCharacter\b(?<attrs>[^>]*)>"))
-        {
-            var attrs = m.Groups["attrs"].Value;
-            var idMatch = Regex.Match(attrs, @"\bid=""(?<v>[^""]*)""");
-            var nameMatch = Regex.Match(attrs, @"\bname=""\{=(?<key>aom_lord_[^}]+)\}(?<literal>[^""]*)""");
-            if (!idMatch.Success || !nameMatch.Success) continue;
-
-            var key = nameMatch.Groups["key"].Value;
-            if (AcceptedNameDifferences.Contains(key)) continue;
-            if (!registry.TryGetValue(key, out var registered)) continue;
-
-            var literal = nameMatch.Groups["literal"].Value;
-            if (!string.Equals(literal, registered, StringComparison.Ordinal))
-                drift.Add($"  {idMatch.Groups["v"].Value}: lords.xml says \"{literal}\", registry says \"{registered}\"");
-        }
-
-        Assert.AreEqual(0, drift.Count,
-            "The English name fallback in characters/lords.xml disagrees with taom_xslt_strings.xml.\n" +
-            "There is no English language folder, so the literal IS what English players see, while\n" +
-            "the other 12 locales render the registry text. Sync with\n" +
-            "tools/oneoff/sync_lord_name_fallbacks.py --apply\n" +
-            string.Join("\n", drift));
     }
 
     [TestMethod]
@@ -119,6 +70,27 @@ public class LordNameAndSexConsistencyTests
             if (lords.IndexOf("<beard_tags>", m.Index, close - m.Index, StringComparison.Ordinal) >= 0)
                 offenders.Add("  " + id.Groups["v"].Value);
         }
+
+        // A vanilla-id lord exists only as its lords.xslt template since #648, and reusing a vanilla male id
+        // for a woman is how this shipped. The template's xsl:copy writes every attribute and the face itself.
+        XNamespace xsl = "http://www.w3.org/1999/XSL/Transform";
+        var templates = XDocument.Parse(ReadModuleData(root, "lords.xslt")).Descendants(xsl + "template")
+            .Select(t => (Match: Regex.Match((string)t.Attribute("match") ?? "", @"^NPCCharacter\[@id='(?<id>[^']+)'\]$"),
+                          Copy: t.Element(xsl + "copy")))
+            .Where(t => t.Match.Success && t.Copy != null)
+            .ToList();
+        Assert.IsTrue(templates.Count > 300, $"only {templates.Count} lord templates found; the pattern no longer matches lords.xslt");
+        var femaleTemplates = 0;
+        foreach (var (match, copy) in templates)
+        {
+            var female = copy.Elements(xsl + "attribute").FirstOrDefault(a => (string)a.Attribute("name") == "is_female");
+            if (female == null || !string.Equals(female.Value.Trim(), "true", StringComparison.OrdinalIgnoreCase))
+                continue;
+            femaleTemplates++;
+            if (copy.Descendants("beard_tags").Any())
+                offenders.Add("  " + match.Groups["id"].Value + " (lords.xslt)");
+        }
+        Assert.IsTrue(femaleTemplates > 100, $"only {femaleTemplates} female lord templates found; the is_female reader no longer matches lords.xslt");
 
         Assert.AreEqual(0, offenders.Count,
             "These lords are is_female=\"true\" but still carry a <beard_tags> block, which is what\n" +

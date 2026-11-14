@@ -446,8 +446,8 @@ it states, and `<Equipments>` is `AlwaysPreferMerge` with `EquipmentSet` unique 
 stealth, so a set whose id differs is ADDED and `Hero.SetInitialValuesFromCharacter` then picks one at
 random per campaign (v1.5.3 `Hero.cs:2315`, picks at `:2352`, `:2356`). Three of the Nine wore the
 Nazgul kit or a generic Mordor kit by coin flip, and their age of 20 came only from the row (the
-templates carried the vanilla children's ages, 9 and 11). 176 vanilla ids still have both, 113 of them
-with differing kits (#648).
+templates carried the vanilla children's ages, 9 and 11). Until #648, 176 vanilla ids had both, 113 of
+them with differing kits; #648 folded every row into its template.
 
 - **Why missed:** the #644 plan read "three are race uruk in characters/lords.xml" from a doc, grepped
   `lords.xslt` only for the six ids it expected there, and edited the row. Either file alone looks
@@ -557,4 +557,22 @@ On v1.5.7 a comment node inside `<Components>` reaches `CreateObjectFromXmlNode`
 - **Why missed:** a strict validator passes the file (yotthani's report; TAOM's validator was not tried on a commented component), the exception is swallowed, and the visible symptom (a missing settlement) is far from the XML.
 - **Prevent:** keep comments out of `<Settlement>` and `<Components>`; put them between settlements. TAOM_Map's 59 comments are all children of the root (counted 2026-11-13, live file), so nothing is exposed today. A settlement that is missing from the map starts with `Null object reference found` in `rgl_log`, then the comments around it.
 - **Source:** yotthani, `yotthani/bannerlord` `TAOM_POI/docs/CONFIG-GUIDE.md`@c45d8374:322-327; TAOM's v1.5.7 reading in [settlements.md](../../modding/settlements.md) "Gotchas" and [adopt-yotthani-2026-11-13.md](../adopt-yotthani-2026-11-13.md).
+### Deleting a vanilla-id lord's `characters/lords.xml` row deletes him from Custom Battle (#648, 2026-11-13)
+
+SandBox registers its `lords.xml` for `Campaign` and `CampaignStoryMode` only, so in a Custom Battle a
+`lords.xslt` template has no vanilla node to rebuild and the `characters/lords.xml` row was the whole
+definition. #648 folded 176 such rows into their templates and stubbed only the ten that a config named, so
+166 lords left Custom Battle, Dunland and Khand had no commander of their own, and the Easterlings' default
+commanders changed. The same fold left `generate_new_faction_kingdoms.py` reading two template rows and the
+Gondor faces that were gone.
+
+- **Why missed:** the merge model that proved the fold ran the campaign pipeline only, and the stub rule
+  allowed a stub only for an id a config lists, so a lord the default commanders pick by culture had no way
+  in.
+- **Prevent:** prove a lords change on every game type that loads `characters/lords.xml` (Campaign,
+  CustomGame, EditorGame) and grep `tools/` for the ids a deleted row carries. Gates:
+  `CustomBattleCommandersShippedDataTests.ShippedData_EveryOfferedCulture_ResolvesAnOwnCultureCommander`,
+  `CustomBattleLordStubsTests` (a stub for any whole-lord template without a row) and
+  `tools/tests/test_generate_new_faction_kingdoms_inputs.py`.
+- **Source:** the #1171 and #1172 reviews, findings XLE-F1, XLC-F1, XLE-F2, XLC-F2, XLC-F3.
 

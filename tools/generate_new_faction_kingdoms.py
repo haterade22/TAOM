@@ -18,6 +18,9 @@ from _marker_region import replace_region  # noqa: E402
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 MD = os.path.join(ROOT, "Main", "_Module", "ModuleData")
 CH = os.path.join(MD, "characters")
+# Inputs #648 removed from characters/lords.xml (two template rows, the Gondor faces Arthedain was generated
+# from), frozen so the generated blocks stay byte-identical. Never edit them or swap in another shipped lord.
+TEMPLATES_FIXTURE = os.path.join(ROOT, "tools", "data", "new_faction_kingdom_templates.json")
 
 # ---------- design data ----------
 # `name` is the bare realm name, as every shipped kingdom has it; "Kingdom of X" goes in `title` (and on the
@@ -372,6 +375,23 @@ LEADER_BLURB = {
 }
 # lords per clan: ruling clan (first) 6, vassals 4
 LORDS_RULING, LORDS_VASSAL = 6, 4
+# (male, female) template lord per `lords` kind, by id: a characters/lords.xml row, or TEMPLATES_FIXTURE's copy.
+LORD_TEMPLATES = {
+    "orc": ("lord_G1_1", "lord_G1_9"),
+    "elf": ("lord_R1_1", "lord_R1_2"),
+    # Human lords (Arthedain): a Gondor knight and a Gondor lady, both on the generic
+    # *_bat_template_medium_* rosters the equipment rewrite below expects.
+    "human": ("lord_WE9_l_1", "lord_1_57_1"),
+    # Dwarf lords (Ered Luin): Erebor's Náin and Dísa, both race="dwarf" on the generic
+    # erebor_*_template_* rosters.
+    "dwarf": ("lord_E1_4", "lord_E1_3"),
+    # Dale lords (Anduin Vale, Angáladh): a Dale lord and lady on the generic
+    # dale_*_template_* rosters, with Dale's own skill sets.
+    "dale": ("lord_S10_1", "lord_S10_2"),
+    # Rohan lords (South Rhovanion): a Rohan knight and lady on the generic rohan_*_template_* rosters,
+    # with Rohan's own skill sets.
+    "rohan": ("lord_4_21_1", "lord_4_16_1"),
+}
 
 ORC_M = ["Grishnák", "Muzgash", "Lugdush", "Radbug", "Gorbag", "Shagrat", "Ufthak", "Lagduf", "Orcobal",
          "Yazneg", "Narzug", "Grukhash", "Mauhur", "Uglûk", "Bûrzum", "Throkmaw", "Skarsnik", "Gnashrak",
@@ -409,6 +429,27 @@ def get_block(text, pattern):
     if not m:
         raise RuntimeError("not found: " + pattern[:70])
     return m.group(0)
+
+
+def load_fixture(path=TEMPLATES_FIXTURE):
+    with open(path, "rb") as f:
+        return json.loads(f.read().decode("utf-8"))
+
+
+def template_lord(lords, fixture, lord_id):
+    """The template lord's row text: TEMPLATES_FIXTURE's frozen copy when it holds the id, else the lords.xml row."""
+    if lord_id in fixture["lords"]:
+        return fixture["lords"][lord_id]
+    return get_block(lords, r'<NPCCharacter\b[^>]*\bid="%s".*?</NPCCharacter>' % lord_id)
+
+
+def pinned_faces(fixture, culture):
+    """(male faces, female faces) in the order a `faces_from` realm hands them out, from TEMPLATES_FIXTURE: the
+    shipped lords whose faces Arthedain took have no characters/lords.xml row since #648."""
+    pool = fixture["face_pools"].get(culture)
+    if pool is None:
+        raise RuntimeError(f"faces_from={culture}: no face pool in {os.path.basename(TEMPLATES_FIXTURE)}")
+    return pool["male"], pool["female"]
 
 
 def upsert(text, close_tag, payload, marker):
@@ -475,46 +516,10 @@ def main():
     k_gund = get_block(spk, r'<Kingdom\b[^>]*\bid="gundabad".*?</Kingdom>')
     k_riven = get_block(spk, r'<Kingdom\b[^>]*\bid="rivendell".*?</Kingdom>')
     clan_gund = get_block(clans, r'<Faction\b\s*\n\s*id="clan_gundabad_1".*?/>')
-    lord_orc_m = get_block(lords, r'<NPCCharacter\b[^>]*\bid="lord_G1_1".*?</NPCCharacter>')
-    lord_orc_f = get_block(lords, r'<NPCCharacter\b[^>]*\bid="lord_G1_9".*?</NPCCharacter>')
-    lord_elf_m = get_block(lords, r'<NPCCharacter\b[^>]*\bid="lord_R1_1".*?</NPCCharacter>')
-    lord_elf_f = get_block(lords, r'<NPCCharacter\b[^>]*\bid="lord_R1_2".*?</NPCCharacter>')
-    # Human lords (Arthedain): a Gondor knight and a Gondor lady, both on the generic
-    # *_bat_template_medium_* rosters the equipment rewrite below expects.
-    lord_human_m = get_block(lords, r'<NPCCharacter\b[^>]*\bid="lord_WE9_l_1".*?</NPCCharacter>')
-    lord_human_f = get_block(lords, r'<NPCCharacter\b[^>]*\bid="lord_1_57_1".*?</NPCCharacter>')
-    # Dwarf lords (Ered Luin): Erebor's Náin and Dísa, both race="dwarf" on the generic
-    # erebor_*_template_* rosters.
-    lord_dwarf_m = get_block(lords, r'<NPCCharacter\b[^>]*\bid="lord_E1_4".*?</NPCCharacter>')
-    lord_dwarf_f = get_block(lords, r'<NPCCharacter\b[^>]*\bid="lord_E1_3".*?</NPCCharacter>')
-    # Dale lords (Anduin Vale, Angáladh): a Dale lord and lady on the generic
-    # dale_*_template_* rosters, with Dale's own skill sets.
-    lord_dale_m = get_block(lords, r'<NPCCharacter\b[^>]*\bid="lord_S10_1".*?</NPCCharacter>')
-    lord_dale_f = get_block(lords, r'<NPCCharacter\b[^>]*\bid="lord_S10_2".*?</NPCCharacter>')
-    # Rohan lords (South Rhovanion): a Rohan knight and lady on the generic rohan_*_template_* rosters,
-    # with Rohan's own skill sets.
-    lord_rohan_m = get_block(lords, r'<NPCCharacter\b[^>]*\bid="lord_4_21_1".*?</NPCCharacter>')
-    lord_rohan_f = get_block(lords, r'<NPCCharacter\b[^>]*\bid="lord_4_16_1".*?</NPCCharacter>')
-    lord_templates = {"orc": (lord_orc_m, lord_orc_f), "elf": (lord_elf_m, lord_elf_f),
-                      "human": (lord_human_m, lord_human_f), "dwarf": (lord_dwarf_m, lord_dwarf_f),
-                      "dale": (lord_dale_m, lord_dale_f), "rohan": (lord_rohan_m, lord_rohan_f)}
+    fixture = load_fixture()
+    lord_templates = {kind: tuple(template_lord(lords, fixture, i) for i in ids) for kind, ids in LORD_TEMPLATES.items()}
 
     new_kingdoms, new_clans, new_lords, new_heroes = {}, {}, {}, {}
-
-    def face_pool(culture):
-        """(male faces, female faces) of the shipped lords of a culture, generated blocks excluded."""
-        shipped = re.sub(r"<!-- TAOM-NEWFACTIONS:[a-z]+:BEGIN -->.*?<!-- TAOM-NEWFACTIONS:[a-z]+:END -->", "",
-                         lords, flags=re.DOTALL)
-        pools, seen = ([], []), set()
-        for m in re.finditer(r'<NPCCharacter\b([^>]*\bculture="Culture\.%s"[^>]*)>(.*?)</NPCCharacter>' % culture,
-                             shipped, re.DOTALL):
-            face = re.search(r"<face>.*?</face>", m.group(2), re.DOTALL)
-            key = re.search(r'\bkey="([0-9A-Fa-f]+)"', face.group(0)) if face else None
-            # Shipped lords share placeholder faces among themselves; one copy of each.
-            if face and key and key.group(1) not in seen and 'occupation="Lord"' in m.group(1):
-                seen.add(key.group(1))
-                pools[1 if re.search(r'is_female="true"', m.group(1), re.I) else 0].append(face.group(0))
-        return pools
 
     sib = list(KINGDOMS.keys())
     for kid, k in KINGDOMS.items():
@@ -566,7 +571,7 @@ def main():
         # One pass over each pool per realm: names in order and never repeated, a distinct face per
         # lord. Running out of either is an error, never a wrap-around.
         names = {False: iter(k.get("male_names", ())), True: iter(k.get("female_names", ()))}
-        faces = face_pool(k["faces_from"]) if k.get("faces_from") else None
+        faces = pinned_faces(fixture, k["faces_from"]) if k.get("faces_from") else None
         next_face = {False: iter(faces[0]), True: iter(faces[1])} if faces else None
 
         # ---- clans ----
