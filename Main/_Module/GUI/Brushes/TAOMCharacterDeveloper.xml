@@ -1,32 +1,117 @@
 <Brushes>
+  <!-- Character page, layout D. Ivory #E8DCC0, gold #CFAE6B, dim #A39882, muted #7F766A. -->
   <Brush Name="TAOM.Character.Text" TextHorizontalAlignment="Left" Font="FS_Garamond" FontSize="22" TextVerticalAlignment="Center">
-    <Styles><Style Name="Default" FontColor="#E7DFC8FF" /><Style Name="Disabled" TextAlphaFactor="0.45" /></Styles>
+    <Styles><Style Name="Default" FontColor="#E8DCC0FF" /><Style Name="Disabled" TextAlphaFactor="0.45" /></Styles>
   </Brush>
-  <Brush Name="TAOM.Character.CenterText" Font="FS_Garamond" FontSize="22" TextHorizontalAlignment="Center" TextVerticalAlignment="Center">
-    <Styles><Style Name="Default" FontColor="#E7DFC8FF" /><Style Name="Hovered" FontColor="#E8C77AFF" /><Style Name="Selected" FontColor="#E8C77AFF" /><Style Name="Disabled" TextAlphaFactor="0.45" /></Styles>
+  <Brush Name="TAOM.Character.Name" Font="FS_CinzelWide" FontSize="30" TextHorizontalAlignment="Center" TextVerticalAlignment="Center">
+    <Styles><Style Name="Default" FontColor="#CFAE6BFF" /></Styles>
   </Brush>
-  <Brush Name="TAOM.Character.Panel"><Layers><BrushLayer Name="Default" Sprite="cs_character_backplate" ColorFactor="0.82" SaturationFactor="-12" /></Layers></Brush>
-  <Brush Name="TAOM.Character.Stone"><Layers><BrushLayer Name="Default" Sprite="ld_bar_stone" ColorFactor="0.65" /></Layers></Brush>
-  <Brush Name="TAOM.Character.Rail"><Layers><BrushLayer Name="Default" Sprite="cs_tab_rail_9" ColorFactor="0.84" /></Layers></Brush>
-  <Brush Name="TAOM.Character.Card" TransitionDuration="0.1">
-    <Layers><BrushLayer Name="Default" Sprite="cs_skill_card" /></Layers>
-    <Styles><Style Name="Default"><BrushLayer Name="Default" Sprite="cs_skill_card" /></Style><Style Name="Hovered"><BrushLayer Name="Default" Sprite="cs_skill_card_selected" ColorFactor="0.85" /></Style><Style Name="Selected"><BrushLayer Name="Default" Sprite="cs_skill_card_selected" /></Style><Style Name="Disabled"><BrushLayer Name="Default" Sprite="cs_skill_card" AlphaFactor="0.45" /></Style></Styles>
+  <Brush Name="TAOM.Character.Heading" Font="FS_CinzelWide" FontSize="26" TextHorizontalAlignment="Left" TextVerticalAlignment="Center">
+    <Styles><Style Name="Default" FontColor="#CFAE6BFF" /></Styles>
   </Brush>
-  <Brush Name="TAOM.Character.Tab" TransitionDuration="0.1">
-    <Layers><BrushLayer Name="Default" Sprite="BlankWhiteSquare" Color="#CBA653FF" /></Layers>
-    <Styles><Style Name="Default"><BrushLayer Name="Default" AlphaFactor="0" /></Style><Style Name="Hovered"><BrushLayer Name="Default" AlphaFactor="0.08" /></Style><Style Name="Pressed"><BrushLayer Name="Default" AlphaFactor="0.14" /></Style><Style Name="Selected"><BrushLayer Name="Default" AlphaFactor="0.11" /></Style></Styles>
+  <!-- Attribute names in the strip: dim, ivory on hover, gold when selected. -->
+  <Brush Name="TAOM.Character.Label" Font="FS_CinzelWide" FontSize="17" TextHorizontalAlignment="Center" TextVerticalAlignment="Center">
+    <Styles><Style Name="Default" FontColor="#A39882FF" /><Style Name="Hovered" FontColor="#E8DCC0FF" /><Style Name="Selected" FontColor="#CFAE6BFF" /><Style Name="Disabled" TextAlphaFactor="0.45" /></Styles>
   </Brush>
-  <Brush Name="TAOM.Character.Perk" TransitionDuration="0.1">
-    <Layers><BrushLayer Name="Rim" Sprite="cs_circle" Color="#826F4CFF" /><BrushLayer Name="Stone" Sprite="cs_circle" Color="#161714FF" ExtendLeft="-2" ExtendRight="-2" ExtendTop="-2" ExtendBottom="-2" /></Layers>
-    <Styles><Style Name="Default" /><Style Name="Hovered"><BrushLayer Name="Rim" Color="#E3C074FF" /></Style><Style Name="Pressed"><BrushLayer Name="Rim" Color="#BA9349FF" /></Style><Style Name="Selected"><BrushLayer Name="Rim" Color="#E3C074FF" /><BrushLayer Name="Stone" Color="#28251AFF" /></Style></Styles>
+  <Brush Name="TAOM.Character.Value" Font="FS_CinzelWide" FontSize="20" TextHorizontalAlignment="Center" TextVerticalAlignment="Center">
+    <Styles><Style Name="Default" FontColor="#E8DCC0FF" /><Style Name="Selected" FontColor="#CFAE6BFF" /><Style Name="Disabled" TextAlphaFactor="0.45" /></Styles>
   </Brush>
+  <!-- The attribute value beside its name: dim at rest, ivory when hovered or selected. -->
+  <Brush Name="TAOM.Character.TabValue" Font="FS_CinzelWide" FontSize="18" TextHorizontalAlignment="Center" TextVerticalAlignment="Center">
+    <Styles><Style Name="Default" FontColor="#A39882FF" /><Style Name="Hovered" FontColor="#E8DCC0FF" /><Style Name="Pressed" FontColor="#E8DCC0FF" /><Style Name="Selected" FontColor="#E8DCC0FF" /></Styles>
+  </Brush>
+  <Brush Name="TAOM.Character.SkillName" Font="FS_CinzelWide" FontSize="17" TextHorizontalAlignment="Left" TextVerticalAlignment="Center">
+    <Styles><Style Name="Default" FontColor="#A39882FF" /><Style Name="Hovered" FontColor="#E8DCC0FF" /><Style Name="Pressed" FontColor="#E8DCC0FF" /><Style Name="Selected" FontColor="#CFAE6BFF" /></Styles>
+  </Brush>
+  <Brush Name="TAOM.Character.SkillLevel" Font="FS_CinzelWide" FontSize="28" TextHorizontalAlignment="Right" TextVerticalAlignment="Center">
+    <Styles><Style Name="Default" FontColor="#E8DCC0FF" TextAlphaFactor="0.75" /><Style Name="Hovered" FontColor="#E8DCC0FF" TextAlphaFactor="0.95" /><Style Name="Pressed" FontColor="#E8DCC0FF" TextAlphaFactor="0.95" /><Style Name="Selected" FontColor="#CFAE6BFF" TextAlphaFactor="1" /></Styles>
+  </Brush>
+  <!-- The allocation row: small dim labels on the left, values in ivory on the right. -->
+  <Brush Name="TAOM.Character.AllocLabel" Font="FS_CinzelWide" FontSize="13" TextHorizontalAlignment="Left" TextVerticalAlignment="Center">
+    <Styles><Style Name="Default" FontColor="#A39882FF" /></Styles>
+  </Brush>
+  <Brush Name="TAOM.Character.AllocValue" Font="FS_CinzelWide" FontSize="19" TextHorizontalAlignment="Right" TextVerticalAlignment="Center">
+    <Styles><Style Name="Default" FontColor="#E8DCC0FF" /></Styles>
+  </Brush>
+  <!-- A pool value while points are unspent: bright gold and a size larger. -->
+  <Brush Name="TAOM.Character.AllocValueReady" Font="FS_CinzelWide" FontSize="21" TextHorizontalAlignment="Right" TextVerticalAlignment="Center">
+    <Styles><Style Name="Default" FontColor="#CFAE6BFF" /></Styles>
+  </Brush>
+  <!-- The badge on an attribute tab or skill card: the medallion's fine gold rim around an ivory plus. -->
+  <Brush Name="TAOM.Character.BadgeRim">
+    <Layers><BrushLayer Name="Default" Sprite="cs_skill_icon_rim" /></Layers>
+    <Styles><Style Name="Default"><BrushLayer Name="Default" AlphaFactor="0.9" /></Style></Styles>
+  </Brush>
+  <!-- One stroke of a plus, drawn as a square instead of a font glyph so it sits on the exact centre of its circle.
+       Ivory at rest, gold on hover and press, faded when disabled: the colours of TAOM.Character.ButtonText. -->
+  <Brush Name="TAOM.Character.PlusStroke" TransitionDuration="0.1">
+    <Layers><BrushLayer Name="Ivory" Sprite="BlankWhiteSquare" Color="#E8DCC0FF" /><BrushLayer Name="Gold" Sprite="BlankWhiteSquare" Color="#CFAE6BFF" /></Layers>
+    <Styles>
+      <Style Name="Default"><BrushLayer Name="Gold" IsHidden="true" /></Style>
+      <Style Name="Hovered"><BrushLayer Name="Ivory" IsHidden="true" /></Style>
+      <Style Name="Pressed"><BrushLayer Name="Ivory" IsHidden="true" /></Style>
+      <Style Name="Disabled"><BrushLayer Name="Ivory" AlphaFactor="0.45" /><BrushLayer Name="Gold" IsHidden="true" /></Style>
+    </Styles>
+  </Brush>
+  <!-- Tier levels above the rail: gold when reached, muted with the word Locked when not. -->
+  <Brush Name="TAOM.Character.TierReached" Font="FS_CinzelWide" FontSize="18" TextHorizontalAlignment="Center" TextVerticalAlignment="Center">
+    <Styles><Style Name="Default" FontColor="#CFAE6BFF" /></Styles>
+  </Brush>
+  <Brush Name="TAOM.Character.PerkLevel" Font="FS_CinzelWide" FontSize="18" TextHorizontalAlignment="Center" TextVerticalAlignment="Center">
+    <Styles><Style Name="Default" FontColor="#7F766AFF" /></Styles>
+  </Brush>
+  <Brush Name="TAOM.Character.Marker" Font="FS_CinzelWide" FontSize="14" TextHorizontalAlignment="Left" TextVerticalAlignment="Center">
+    <Styles><Style Name="Default" FontColor="#E8DCC0FF" /></Styles>
+  </Brush>
+  <Brush Name="TAOM.Character.Or" Font="FS_Garamond" FontSize="15" TextHorizontalAlignment="Center" TextVerticalAlignment="Center">
+    <Styles><Style Name="Default" FontColor="#7F766AFF" /></Styles>
+  </Brush>
+  <!-- Perk names under the medallions. The state dims the widget in code; hover changes only the rim. -->
+  <Brush Name="TAOM.Character.PerkName" Font="FS_Garamond" FontSize="19" TextHorizontalAlignment="Center" TextVerticalAlignment="Center">
+    <Styles><Style Name="Default" FontColor="#E8DCC0FF" /></Styles>
+  </Brush>
+  <Brush Name="TAOM.Character.ButtonText" Font="FS_CinzelWide" FontSize="19" TextHorizontalAlignment="Center" TextVerticalAlignment="Center">
+    <Styles><Style Name="Default" FontColor="#E8DCC0FF" /><Style Name="Hovered" FontColor="#CFAE6BFF" /><Style Name="Pressed" FontColor="#CFAE6BFF" /><Style Name="Disabled" TextAlphaFactor="0.45" /></Styles>
+  </Brush>
+  <!-- The attribute strip's understated outline: the ec_panel rim with its transparent centre. -->
+  <Brush Name="TAOM.Character.StripRim">
+    <Layers><BrushLayer Name="Default" Sprite="ec_panel_9" /></Layers>
+    <Styles><Style Name="Default"><BrushLayer Name="Default" AlphaFactor="0.6" /></Style></Styles>
+  </Brush>
+  <!-- A skill tab's rim: faint at rest, lighter on hover, full when selected. -->
+  <Brush Name="TAOM.Character.TabRim" TransitionDuration="0.1">
+    <Layers><BrushLayer Name="Default" Sprite="ec_panel_9" /></Layers>
+    <Styles><Style Name="Default"><BrushLayer Name="Default" AlphaFactor="0.45" /></Style><Style Name="Hovered"><BrushLayer Name="Default" AlphaFactor="0.75" /></Style><Style Name="Pressed"><BrushLayer Name="Default" AlphaFactor="0.85" /></Style><Style Name="Selected"><BrushLayer Name="Default" AlphaFactor="1" /></Style><Style Name="Disabled"><BrushLayer Name="Default" AlphaFactor="0.25" /></Style></Styles>
+  </Brush>
+  <!-- The small allocation button keeps the cc_card face; it is a control, not a card. While the native control
+       is enabled (a point to spend and room under the cap) it shows the gold-edged cc_card_sel face; disabled, the
+       plain face at half alpha. -->
+  <Brush Name="TAOM.Character.Plus" TransitionDuration="0.1">
+    <Layers><BrushLayer Name="Default" Sprite="cc_card_9" /><BrushLayer Name="Gold" Sprite="cc_card_sel_9" /></Layers>
+    <Styles>
+      <Style Name="Default"><BrushLayer Name="Default" IsHidden="true" /><BrushLayer Name="Gold" ColorFactor="1" /></Style>
+      <Style Name="Hovered"><BrushLayer Name="Default" IsHidden="true" /><BrushLayer Name="Gold" ColorFactor="1.25" /></Style>
+      <Style Name="Pressed"><BrushLayer Name="Default" IsHidden="true" /><BrushLayer Name="Gold" ColorFactor="0.85" /></Style>
+      <Style Name="Disabled"><BrushLayer Name="Default" AlphaFactor="0.5" /><BrushLayer Name="Gold" IsHidden="true" /></Style>
+    </Styles>
+  </Brush>
+  <!-- Every button on the page: the thin fs_confirm ornament, drawn at its 1280:176 source aspect. -->
   <Brush Name="TAOM.Character.Action" TransitionDuration="0.1">
     <Layers><BrushLayer Name="Default" Sprite="fs_confirm" /></Layers>
-    <Styles><Style Name="Default"><BrushLayer Name="Default" ColorFactor="0.9" /></Style><Style Name="Hovered"><BrushLayer Name="Default" ColorFactor="1.2" /></Style><Style Name="Pressed"><BrushLayer Name="Default" ColorFactor="0.7" /></Style><Style Name="Disabled"><BrushLayer Name="Default" AlphaFactor="0.35" /></Style></Styles>
+    <Styles><Style Name="Default" /><Style Name="Hovered"><BrushLayer Name="Default" ColorFactor="1.25" /></Style><Style Name="Pressed"><BrushLayer Name="Default" ColorFactor="0.8" /></Style><Style Name="Disabled"><BrushLayer Name="Default" AlphaFactor="0.4" /></Style></Styles>
   </Brush>
   <Brush Name="TAOM.Character.Previous"><Layers><BrushLayer Name="Default" Sprite="cc_arrow_l" ImageFit.Type="Contain" /></Layers><Styles><Style Name="Default" /><Style Name="Hovered"><BrushLayer Name="Default" ColorFactor="1.4" /></Style><Style Name="Disabled"><BrushLayer Name="Default" AlphaFactor="0.25" /></Style></Styles></Brush>
   <Brush Name="TAOM.Character.Next"><Layers><BrushLayer Name="Default" Sprite="cc_arrow_r" ImageFit.Type="Contain" /></Layers><Styles><Style Name="Default" /><Style Name="Hovered"><BrushLayer Name="Default" ColorFactor="1.4" /></Style><Style Name="Disabled"><BrushLayer Name="Default" AlphaFactor="0.25" /></Style></Styles></Brush>
+  <!-- The full-screen valley: the widget sets the sprite (fs_bg_default), the layer covers the screen at the
+       image's aspect, lifted 1.12. -->
+  <Brush Name="TAOM.Character.Backdrop"><Layers><BrushLayer Name="Default" ImageFit.Type="StretchToFit" ColorFactor="1.12" /></Layers></Brush>
+  <!-- The Career link: the rim and the gold label lift on hover; no box. -->
+  <Brush Name="TAOM.Character.CareerRim" TransitionDuration="0.1">
+    <Layers><BrushLayer Name="Default" Sprite="cs_skill_icon_rim" /></Layers>
+    <Styles><Style Name="Default"><BrushLayer Name="Default" AlphaFactor="0.85" /></Style><Style Name="Hovered"><BrushLayer Name="Default" AlphaFactor="1" ColorFactor="1.3" /></Style><Style Name="Pressed"><BrushLayer Name="Default" AlphaFactor="1" ColorFactor="0.85" /></Style><Style Name="Disabled"><BrushLayer Name="Default" AlphaFactor="0.4" /></Style></Styles>
+  </Brush>
+  <Brush Name="TAOM.Character.CareerLink" Font="FS_CinzelWide" FontSize="16" TextHorizontalAlignment="Left" TextVerticalAlignment="Center">
+    <Styles><Style Name="Default" FontColor="#CFAE6BFF" /><Style Name="Hovered" FontColor="#E8DCC0FF" /><Style Name="Pressed" FontColor="#E8DCC0FF" /><Style Name="Disabled" TextAlphaFactor="0.45" /></Styles>
+  </Brush>
   <Brush Name="TAOM.Character.ScrollRail"><Layers><BrushLayer Name="Default" Sprite="cs_scroll_rail" /></Layers></Brush>
 </Brushes>
-
-

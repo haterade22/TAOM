@@ -41,6 +41,22 @@ public class CareerChoiceGroupObjectVM : ViewModel
     [DataSourceProperty]
     public int Tier => _group.Tier;
 
+    /// <summary>The group header's pick rule: "Choose one" for a one-pick fork, "Choose N" for a larger
+    /// fork, and empty for a group without a limit (MaxPicks 0), which states no rule.</summary>
+    [DataSourceProperty]
+    public string SelectionRuleText
+    {
+        get
+        {
+            if (_group.MaxPicks <= 0)
+                return string.Empty;
+            if (_group.MaxPicks == 1)
+                return new TextObject("{=taom_career_choose_one}Choose one").ToString();
+            return new TextObject("{=taom_career_choose_count}Choose {COUNT}")
+                .SetTextVariable("COUNT", _group.MaxPicks).ToString();
+        }
+    }
+
     [DataSourceProperty]
     public MBBindingList<CareerChoiceObjectVM> Choices
     {

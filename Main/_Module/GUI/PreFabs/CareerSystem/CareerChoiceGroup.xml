@@ -1,0 +1,74 @@
+<Prefab>
+  <Window>
+    <!-- One choice group (CareerChoiceGroupObjectVM) in a CareerScreen tier band: 584 by 204, two per band.
+         The header names the group and its rule; the rows below scroll if the descriptions run long.
+         Each row is one button for the whole width and is never disabled, so a locked row still hovers.
+         The row shows the full description, the keystone scope and the lock reason inline.
+         TaomCareerDiamondWidget covers the row; it needs DiamondGlow and DiamondTooltip as children
+         and tints IconFree and IconTaken for keystones. -->
+    <Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="584" SuggestedHeight="204" MarginRight="40">
+      <Children>
+        <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="26" MarginRight="170" Brush="CareerSystem.GroupName" Text="@GroupName" DoNotAcceptEvents="true" />
+        <TextWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="164" SuggestedHeight="26" HorizontalAlignment="Right" MarginRight="8" Brush="CareerSystem.RuleText" Text="@SelectionRuleText" DoNotAcceptEvents="true" />
+        <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="1" PositionYOffset="28" Sprite="BlankWhiteSquare_9" Color="#CFAE6B40" DoNotAcceptEvents="true" />
+
+        <ScrollablePanel Id="ChoiceScroll" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="574" SuggestedHeight="170" PositionYOffset="34" AutoHideScrollBars="true" ClipRect="ChoiceClip" InnerPanel="ChoiceClip\ChoiceList" VerticalScrollbar="..\ChoiceScrollbar">
+          <Children>
+            <Widget Id="ChoiceClip" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" ClipContents="true">
+              <Children>
+                <ListPanel Id="ChoiceList" DataSource="{Choices}" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" StackLayout.LayoutMethod="VerticalTopToBottom">
+                  <ItemTemplate>
+                    <ButtonWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" MarginBottom="4" Brush="CareerSystem.ChoiceRow" UpdateChildrenStates="true" DoNotPassEventsToChildren="true" Command.Click="ExecuteToggleChoice">
+                      <Children>
+                        <!-- Minimum row height 44. -->
+                        <Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="1" SuggestedHeight="44" DoNotAcceptEvents="true" />
+                        <!-- Hover: a faint gold fill (the button's brush) and this gold rule on the left edge.
+                             The rule and the diamond widget below are Fixed 44 and centred: a StretchToParent child
+                             of this CoverChildren row measures to the whole clip and grows every row to 170. -->
+                        <BrushWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="2" SuggestedHeight="44" VerticalAlignment="Center" Brush="CareerSystem.ChoiceAccent" DoNotAcceptEvents="true" />
+
+                        <!-- The full description wraps; dim when the choice is unavailable. Keystones add their scope. -->
+                        <ListPanel WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" VerticalAlignment="Center" MarginLeft="50" MarginRight="8" MarginTop="8" MarginBottom="8" StackLayout.LayoutMethod="VerticalTopToBottom">
+                          <Children>
+                            <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" Brush="CareerSystem.ChoiceText" Text="@Description" IsHidden="@IsUnavailable" DoNotAcceptEvents="true" />
+                            <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" Brush="CareerSystem.ChoiceTextDim" Text="@Description" IsVisible="@IsUnavailable" DoNotAcceptEvents="true" />
+                            <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" MarginTop="2" Brush="CareerSystem.ChoiceBadge" Text="@EffectScopeBadge" IsVisible="@IsKeystone" DoNotAcceptEvents="true" />
+                            <!-- The lock reason sits in the row, so the group's scroll clip can never hide it. -->
+                            <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" MarginTop="2" Brush="CareerSystem.ChoiceLockReason" Text="@LockReasonText" IsVisible="@HasLockReason" DoNotAcceptEvents="true" />
+                          </Children>
+                        </ListPanel>
+
+                        <TaomCareerDiamondWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="44" VerticalAlignment="Center" IsTakenState="@IsTaken" IsKeystoneState="@IsKeystone">
+                          <Children>
+                            <!-- Taken: a lit ring behind the gold ring, and a tick inside it. -->
+                            <Widget Id="DiamondGlow" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="38" SuggestedHeight="38" PositionXOffset="3" VerticalAlignment="Center" Sprite="cs_skill_icon_rim" Color="#FFE3A0FF" AlphaFactor="0.55" IsVisible="false" DoNotAcceptEvents="true" />
+                            <Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="32" SuggestedHeight="32" PositionXOffset="6" VerticalAlignment="Center" Sprite="cs_skill_icon_rim" Color="#CFAE6BFF" IsVisible="@IsFreeToTake" DoNotAcceptEvents="true" />
+                            <Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="32" SuggestedHeight="32" PositionXOffset="6" VerticalAlignment="Center" Sprite="cs_skill_icon_rim" Color="#E8C77EFF" IsVisible="@IsTaken" DoNotAcceptEvents="true" />
+                            <!-- Unavailable: a dim ring; a fork lock (the other choice of the group is taken) reads red. -->
+                            <Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="32" SuggestedHeight="32" PositionXOffset="6" VerticalAlignment="Center" Sprite="cs_skill_icon_rim" Color="#7F766AFF" AlphaFactor="0.6" IsVisible="@IsUnavailable" DoNotAcceptEvents="true" />
+                            <Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="32" SuggestedHeight="32" PositionXOffset="6" VerticalAlignment="Center" Sprite="cs_skill_icon_rim" Color="#8A3B32FF" AlphaFactor="0.8" IsVisible="@IsForkLocked" DoNotAcceptEvents="true" />
+                            <Widget Id="IconFree" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="12" SuggestedHeight="12" PositionXOffset="16" VerticalAlignment="Center" Sprite="fs_diamond" Color="#CFAE6BFF" IsVisible="@IsFreeToTake" DoNotAcceptEvents="true" />
+                            <!-- Native lock (NativeSpriteData ui_group1, AlwaysLoad), 47 px square drawn at 16. -->
+                            <Widget Id="IconLocked" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="16" SuggestedHeight="16" PositionXOffset="14" VerticalAlignment="Center" Sprite="StdAssets\lock_closed" Color="#A39882FF" AlphaFactor="0.85" IsVisible="@IsUnavailable" DoNotAcceptEvents="true" />
+                            <Widget Id="IconTaken" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="18" SuggestedHeight="18" PositionXOffset="13" VerticalAlignment="Center" Sprite="ec_list_tick" Color="#E8C77EFF" IsVisible="@IsTaken" DoNotAcceptEvents="true" />
+
+                            <!-- Empty anchor: the diamond widget needs a DiamondTooltip child before it latches
+                                 DiamondGlow. The row text carries the whole explanation, so nothing draws here. -->
+                            <Widget Id="DiamondTooltip" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="0" SuggestedHeight="0" IsVisible="false" DoNotAcceptEvents="true" />
+                          </Children>
+                        </TaomCareerDiamondWidget>
+                      </Children>
+                    </ButtonWidget>
+                  </ItemTemplate>
+                </ListPanel>
+              </Children>
+            </Widget>
+          </Children>
+        </ScrollablePanel>
+        <ScrollbarWidget Id="ChoiceScrollbar" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="4" SuggestedHeight="170" PositionXOffset="578" PositionYOffset="34" AlignmentAxis="Vertical" Handle="ChoiceHandle" MinValue="0" MaxValue="100" Sprite="BlankWhiteSquare_9" Color="#00000066">
+          <Children><Widget Id="ChoiceHandle" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="4" SuggestedHeight="20" HorizontalAlignment="Center" Sprite="BlankWhiteSquare_9" Color="#CFAE6BCC" /></Children>
+        </ScrollbarWidget>
+      </Children>
+    </Widget>
+  </Window>
+</Prefab>

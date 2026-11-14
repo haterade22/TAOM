@@ -1,154 +1,418 @@
-<?xml version="1.0" encoding="utf-8"?>
 <Prefab>
   <Window>
-    <CharacterScreenWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Id="CharacterScreen">
+    <!-- Character page, layout D: an 1800 by 850 record on the misty valley (fs_bg_default), contained and
+         centred on the near-black surround, lifted 1.12 under a 0.12 dark overlay; its sides fade into the
+         surround. FrontEndMovieService registers the image before this movie loads; the near-black surround
+         beneath shows if it is missing. The stone
+         draws only inside the header, the identity arch and the content panel. Every investment, perk choice and
+         close action goes to the native CharacterDeveloperVM through CharacterScreenVM. -->
+    <CharacterScreenWidget Id="CharacterScreen" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent">
       <Children>
-        <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Sprite="cs_charcoal" ColorFactor="0.65" DoNotAcceptEvents="true" />
-        <Widget Id="CharacterRecord" SuggestedWidth="1440" SuggestedHeight="830" HorizontalAlignment="Center" VerticalAlignment="Center">
+        <Widget Id="Surround" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Sprite="BlankWhiteSquare_9" Color="#0B0A09FF" DoNotAcceptEvents="true" />
+        <!-- The valley is contained, centred and capped at 1.25 physical pixels per source pixel by
+             CharacterBackdropWidget (2560 by 1440 on 5120 by 1440); the surround fills the rest. The fs_scrim
+             ramps fade an eighth of the image on each side into the surround, tinted from (4,4,6) to its
+             #0B0A09 by Color and ColorFactor. When the image is letterboxed (3840 by 2160, 16:10), the same
+             ramps turned 90 degrees about their centre fade an eighth of its height at the top and bottom. -->
+        <CharacterBackdropWidget Id="Valley" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" HorizontalAlignment="Center" VerticalAlignment="Center" Brush="TAOM.Character.Backdrop" Sprite="fs_bg_default" LeftFadeWidget="LeftFade" RightFadeWidget="RightFade" TopFadeWidget="TopFade" BottomFadeWidget="BottomFade" DoNotAcceptEvents="true">
           <Children>
-            <ImageWidget SuggestedWidth="1440" SuggestedHeight="746" Brush="TAOM.Character.Panel" DoNotAcceptEvents="true" />
-            <Widget DataSource="{CurrentCharacter}" SuggestedWidth="340" SuggestedHeight="480" PositionXOffset="18" PositionYOffset="45" ClipContents="true">
+            <Widget Id="LeftFade" WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent" HorizontalAlignment="Left" Sprite="fs_scrim_l" Color="#FFE88BFF" ColorFactor="2.75" DoNotAcceptEvents="true" />
+            <Widget Id="RightFade" WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent" HorizontalAlignment="Right" Sprite="fs_scrim_r" Color="#FFE88BFF" ColorFactor="2.75" DoNotAcceptEvents="true" />
+            <Widget Id="TopFade" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" HorizontalAlignment="Center" VerticalAlignment="Center" Rotation="90" PivotX="0.5" PivotY="0.5" IsVisible="false" Sprite="fs_scrim_l" Color="#FFE88BFF" ColorFactor="2.75" DoNotAcceptEvents="true" />
+            <Widget Id="BottomFade" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" HorizontalAlignment="Center" VerticalAlignment="Center" Rotation="90" PivotX="0.5" PivotY="0.5" IsVisible="false" Sprite="fs_scrim_r" Color="#FFE88BFF" ColorFactor="2.75" DoNotAcceptEvents="true" />
+          </Children>
+        </CharacterBackdropWidget>
+        <Widget Id="ValleyShade" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Sprite="BlankWhiteSquare_9" Color="#0605041F" DoNotAcceptEvents="true" />
+
+        <Widget Id="CharacterRecord" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="1800" SuggestedHeight="850" HorizontalAlignment="Center" VerticalAlignment="Center">
+          <Children>
+
+            <!-- Title: the ec_header stone from the arch's left rim (79) to the content panel's right rim (1780),
+                 so the title sits on the centre of the visible union, 929.5. A diamond and a thin line on each
+                 side, mirrored about that centre. -->
+            <Widget Id="TitleHeader" SuggestedWidth="1701" SuggestedHeight="60" PositionXOffset="79" PositionYOffset="2" DoNotAcceptEvents="true">
               <Children>
-                <CharacterTableauWidget DataSource="{HeroCharacter}" SuggestedWidth="460" SuggestedHeight="830" HorizontalAlignment="Center" PositionYOffset="-20" BannerCodeText="@BannerCodeText" BodyProperties="@BodyProperties" CharStringId="@CharStringId" EquipmentCode="@EquipmentCode" IsFemale="@IsFemale" MountCreationKey="@MountCreationKey" StanceIndex="@StanceIndex" ArmorColor1="@ArmorColor1" ArmorColor2="@ArmorColor2" Race="@Race" IsEnabled="false" DoNotUseCustomScale="true" Id="CharacterPortrait" />
+                <EncyclopediaStonePanelWidget Id="TitleStone" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Sprite="ec_header" DoNotAcceptEvents="true" />
+                <ImageWidget SuggestedWidth="220" SuggestedHeight="2" PositionXOffset="487.5" PositionYOffset="29" Sprite="fs_divider_thin" DoNotAcceptEvents="true" />
+                <ImageWidget SuggestedWidth="12" SuggestedHeight="12" PositionXOffset="715.5" PositionYOffset="24" Sprite="fs_diamond" DoNotAcceptEvents="true" />
+                <FrontEndTextWidget Id="TitleLabel" SuggestedWidth="378" SuggestedHeight="48" HorizontalAlignment="Center" PositionYOffset="6" Brush="TAOM.Encyclopedia.Title" LocalizedText="{=taom_char_title}Character" DoNotAcceptEvents="true" />
+                <ImageWidget SuggestedWidth="12" SuggestedHeight="12" PositionXOffset="973.5" PositionYOffset="24" Sprite="fs_diamond" DoNotAcceptEvents="true" />
+                <ImageWidget SuggestedWidth="220" SuggestedHeight="2" PositionXOffset="993.5" PositionYOffset="29" Sprite="fs_divider_thin" DoNotAcceptEvents="true" />
               </Children>
             </Widget>
-            <Widget SuggestedWidth="320" SuggestedHeight="178" PositionXOffset="28" PositionYOffset="536" Id="CharacterIdentity">
+
+            <!-- Identity: the encyclopedia hero page's arch (ec_portrait_panel rim, ec_portrait_mask) at its source
+                 aspect. At 312 by 696 the narrow stone covers at 0.4875 layout units per pixel, never enlarged. -->
+            <EncyclopediaStonePanelWidget Id="IdentityFrame" SuggestedWidth="312" SuggestedHeight="696" PositionXOffset="79" PositionYOffset="68" Sprite="ec_portrait_panel" DoNotAcceptEvents="true" />
+
+            <!-- 430 wide so the member arrows lie inside it for hit testing; the arch spans 59 to 371. -->
+            <Widget Id="IdentityPanel" SuggestedWidth="430" SuggestedHeight="696" PositionXOffset="20" PositionYOffset="68">
               <Children>
-                <Widget SuggestedWidth="350" SuggestedHeight="26" PositionXOffset="-15" PositionYOffset="-23" Sprite="cs_nameplate_separator" DoNotAcceptEvents="true" Id="NameplateSeparator" />
-                <TextWidget SuggestedWidth="224" SuggestedHeight="40" PositionXOffset="48" Brush="TAOM.Character.CenterText" Brush.FontSize="@NameFontSize" Text="@NameText" PositionYOffset="-3" Id="MemberName" />
-                <ButtonWidget Id="PreviousCharacterButton" SuggestedWidth="36" SuggestedHeight="36" PositionYOffset="2" Brush="TAOM.Character.Previous" Command.Click="ExecutePreviousMember" DoNotPassEventsToChildren="true" IsEnabled="@CanSwitchMember" />
-                <ButtonWidget Id="NextCharacterButton" SuggestedWidth="36" SuggestedHeight="36" PositionXOffset="284" PositionYOffset="2" Brush="TAOM.Character.Next" Command.Click="ExecuteNextMember" DoNotPassEventsToChildren="true" IsEnabled="@CanSwitchMember" />
-                <Widget DataSource="{CurrentCharacter}" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" DoNotAcceptEvents="true">
+                <TextWidget Id="MemberName" SuggestedWidth="280" SuggestedHeight="38" PositionXOffset="75" PositionYOffset="92" Brush="TAOM.Character.Name" Brush.FontSize="@NameFontSize" Text="@NameText" />
+                <TextWidget Id="MemberLevel" SuggestedWidth="280" SuggestedHeight="24" PositionXOffset="75" PositionYOffset="130" Brush="TAOM.Character.Label" Text="@LevelText" />
+
+                <!-- The live hero as in the encyclopedia: a 1.3x tableau bottom-centred in a 354:324 viewport, and
+                     no frame of its own inside the arch rim. -->
+                <Widget Id="PortraitClip" DataSource="{CurrentCharacter}" SuggestedWidth="284" SuggestedHeight="260" PositionXOffset="73" PositionYOffset="160" ClipContents="true">
                   <Children>
-                    <CharacterProgressWidget SuggestedWidth="264" SuggestedHeight="12" PositionXOffset="28" PositionYOffset="77" InitialAmount="@CurrentTotalXp" MaxAmount="@XpRequiredForNextLevel" ContainerWidget="Track" FillWidget="Fill" FillInset="3">
-                      <Children>
-                        <Widget Id="Fill" SuggestedWidth="264" Sprite="cs_xp_fill" SuggestedHeight="6" PositionXOffset="3" PositionYOffset="3" />
-                        <Widget Id="Track" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Sprite="cs_xp_track" />
-                      </Children>
-                    </CharacterProgressWidget>
-                    <TextWidget SuggestedWidth="320" SuggestedHeight="26" PositionYOffset="92" Brush="TAOM.Character.CenterText" Brush.FontSize="17" Text="@LevelProgressText" />
+                    <CharacterTableauWidget DataSource="{HeroCharacter}" SuggestedWidth="369" SuggestedHeight="338" HorizontalAlignment="Center" VerticalAlignment="Bottom" BannerCodeText="@BannerCodeText" BodyProperties="@BodyProperties" CharStringId="@CharStringId" EquipmentCode="@EquipmentCode" IsFemale="@IsFemale" MountCreationKey="@MountCreationKey" StanceIndex="@StanceIndex" ArmorColor1="@ArmorColor1" ArmorColor2="@ArmorColor2" Race="@Race" IsEnabled="false" DoNotUseCustomScale="true" Id="CharacterPortrait" />
                   </Children>
                 </Widget>
-                <ButtonWidget SuggestedWidth="145" SuggestedHeight="32" PositionXOffset="7" PositionYOffset="138" Command.Click="ExecuteToggleTraits" DoNotPassEventsToChildren="true" UpdateChildrenStates="true">
+                <ButtonWidget Id="PreviousCharacterButton" SuggestedWidth="28" SuggestedHeight="36" PositionXOffset="4" PositionYOffset="272" Brush="TAOM.Character.Previous" Command.Click="ExecutePreviousMember" IsEnabled="@CanSwitchMember" />
+                <ButtonWidget Id="NextCharacterButton" SuggestedWidth="28" SuggestedHeight="36" PositionXOffset="398" PositionYOffset="272" Brush="TAOM.Character.Next" Command.Click="ExecuteNextMember" IsEnabled="@CanSwitchMember" />
+
+                <Widget SuggestedWidth="272" SuggestedHeight="20" PositionXOffset="79" PositionYOffset="424" Sprite="cs_nameplate_separator" DoNotAcceptEvents="true" />
+                <TextWidget DataSource="{CurrentCharacter}" SuggestedWidth="272" SuggestedHeight="24" PositionXOffset="79" PositionYOffset="446" Brush="TAOM.Character.Label" Brush.FontSize="15" Text="@LevelProgressText" />
+                <CharacterProgressWidget DataSource="{CurrentCharacter}" SuggestedWidth="264" SuggestedHeight="12" PositionXOffset="83" PositionYOffset="474" InitialAmount="@CurrentTotalXp" MaxAmount="@XpRequiredForNextLevel" ContainerWidget="Track" FillWidget="Fill" FillInset="3" DoNotAcceptEvents="true">
                   <Children>
-                    <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Brush="TAOM.Character.CenterText" Text="Traits" PositionYOffset="-3" />
+                    <Widget Id="Fill" SuggestedWidth="258" SuggestedHeight="6" PositionXOffset="3" PositionYOffset="3" Sprite="cs_xp_fill" />
+                    <Widget Id="Track" SuggestedWidth="264" SuggestedHeight="12" Sprite="cs_xp_track" />
                   </Children>
-                </ButtonWidget>
-                <ButtonWidget DataSource="{Native}" SuggestedWidth="145" SuggestedHeight="32" PositionXOffset="168" PositionYOffset="138" Command.Click="ExecuteOpenCareerScreen" IsVisible="@HasCareer" DoNotPassEventsToChildren="true" UpdateChildrenStates="true">
+                </CharacterProgressWidget>
+
+                <!-- Mockup A: the member's nonzero native traits in two columns, the native icon, level name and
+                     signed value per cell, the native effect tooltip on hover. Two rows show the four personality
+                     traits; more, or a long translated name, scroll and clip inside the area. -->
+                <Widget Id="TraitsArea" SuggestedWidth="268" SuggestedHeight="86" PositionXOffset="81" PositionYOffset="490">
                   <Children>
-                    <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Brush="TAOM.Character.CenterText" Text="Career" PositionYOffset="-3" />
-                  </Children>
-                </ButtonWidget>
-                <TextWidget SuggestedWidth="320" SuggestedHeight="28" PositionYOffset="40" Brush="TAOM.Character.CenterText" Text="@LevelText" Id="MemberLevel" />
-              </Children>
-            </Widget>
-            <ImageWidget SuggestedWidth="984" SuggestedHeight="50" PositionXOffset="405" PositionYOffset="108" Brush="TAOM.Character.Rail" DoNotAcceptEvents="true" />
-            <ListPanel Id="AttributeTabs" DataSource="{Tabs}" SuggestedWidth="972" SuggestedHeight="42" PositionXOffset="411" PositionYOffset="112" StackLayout.LayoutMethod="HorizontalLeftToRight">
-              <ItemTemplate>
-                <ButtonWidget SuggestedWidth="162" SuggestedHeight="42" IsSelected="@IsSelected" Command.Click="ExecuteSelect" Brush="TAOM.Character.Tab" UpdateChildrenStates="true" DoNotPassEventsToChildren="true">
-                  <Children>
-                    <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Brush="TAOM.Character.CenterText" Brush.FontSize="23" Text="@NameText" PositionYOffset="-3" />
-                    <Widget SuggestedWidth="1" SuggestedHeight="16" HorizontalAlignment="Right" VerticalAlignment="Center" Sprite="BlankWhiteSquare" Color="#776444FF" />
-                    <Widget SuggestedWidth="16" SuggestedHeight="16" HorizontalAlignment="Center" IsVisible="@IsSelected" Sprite="cs_tab_diamond" PositionYOffset="38" DoNotAcceptEvents="true" Id="SelectedAttributeDiamond" />
-                  </Children>
-                </ButtonWidget>
-              </ItemTemplate>
-            </ListPanel>
-            <ListPanel Id="SkillCards" DataSource="{Skills}" SuggestedWidth="984" SuggestedHeight="115" PositionXOffset="405" PositionYOffset="192" StackLayout.LayoutMethod="HorizontalLeftToRight">
-              <ItemTemplate>
-                <ButtonWidget SuggestedWidth="322" SuggestedHeight="115" MarginRight="6" Command.Click="ExecuteSelect" IsSelected="@IsSelected" Brush="TAOM.Character.Card" DoNotPassEventsToChildren="true" UpdateChildrenStates="true">
-                  <Children>
-                    <Widget SuggestedWidth="70" SuggestedHeight="70" PositionXOffset="16" PositionYOffset="22" Sprite="cs_skill_icon_rim" DoNotAcceptEvents="true" Id="SkillIconRing" />
-                    <Widget SuggestedWidth="52" SuggestedHeight="52" PositionXOffset="25" PositionYOffset="31" Sprite="@IconSprite" Id="SkillIcon" />
-                    <Widget DataSource="{Native}" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent">
+                    <TextWidget Id="TraitsHeading" DataSource="{Native}" SuggestedWidth="268" SuggestedHeight="18" Brush="TAOM.Character.Heading" Brush.FontSize="14" Text="@TraitsText" DoNotAcceptEvents="true" />
+                    <Widget SuggestedWidth="268" SuggestedHeight="2" PositionYOffset="20" Sprite="fs_divider_thin" DoNotAcceptEvents="true" />
+                    <ScrollablePanel Id="TraitScroll" SuggestedWidth="262" SuggestedHeight="62" PositionYOffset="24" AutoHideScrollBars="true" ClipRect="TraitClip" InnerPanel="TraitClip\TraitGrid" VerticalScrollbar="..\TraitScrollbar">
                       <Children>
-                        <TextWidget SuggestedWidth="165" SuggestedHeight="38" PositionXOffset="95" PositionYOffset="18" Text="@NameText" Brush="TAOM.Character.Text" Brush.FontSize="24" />
-                        <TextWidget SuggestedWidth="44" SuggestedHeight="38" PositionXOffset="266" PositionYOffset="18" IntText="@Level" Brush="TAOM.Character.CenterText" Brush.FontSize="30" />
-                        <CharacterFocusWidget SuggestedWidth="180" SuggestedHeight="28" PositionXOffset="101" PositionYOffset="65" Focus="@CurrentFocusLevel" DoNotAcceptEvents="true" UseSlotSprites="true">
+                        <Widget Id="TraitClip" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" ClipContents="true">
                           <Children>
-                            <Widget SuggestedWidth="16" SuggestedHeight="28" Sprite="cs_focus_empty" PositionXOffset="0" />
-                            <Widget SuggestedWidth="16" SuggestedHeight="28" PositionXOffset="26" Sprite="cs_focus_empty" />
-                            <Widget SuggestedWidth="16" SuggestedHeight="28" PositionXOffset="52" Sprite="cs_focus_empty" />
-                            <Widget SuggestedWidth="16" SuggestedHeight="28" PositionXOffset="78" Sprite="cs_focus_empty" />
-                            <Widget SuggestedWidth="16" SuggestedHeight="28" PositionXOffset="104" Sprite="cs_focus_empty" />
-                          </Children>
-                        </CharacterFocusWidget>
-                      </Children>
-                    </Widget>
-                  </Children>
-                </ButtonWidget>
-              </ItemTemplate>
-            </ListPanel>
-            <TextWidget DataSource="{CurrentSkill}" SuggestedWidth="984" SuggestedHeight="28" PositionXOffset="405" PositionYOffset="316" Text="@CurrentLearningRateText" Brush="TAOM.Character.Text" Brush.FontSize="18" Brush.TextHorizontalAlignment="Right" />
-            <Widget SuggestedWidth="984" SuggestedHeight="1" PositionXOffset="405" PositionYOffset="352" Sprite="BlankWhiteSquare" Color="#786645FF" DoNotAcceptEvents="true" />
-            <Widget SuggestedWidth="984" SuggestedHeight="42" PositionXOffset="405" PositionYOffset="366">
-              <Children>
-                <Widget DataSource="{SelectedAttribute}" SuggestedWidth="440" SuggestedHeight="42">
-                  <Children>
-                    <TextWidget SuggestedWidth="140" SuggestedHeight="36" Brush="TAOM.Character.Text" Text="@NameText" />
-                    <Widget DataSource="{Native}" SuggestedWidth="440" SuggestedHeight="42">
-                      <Children>
-                        <TextWidget SuggestedWidth="40" SuggestedHeight="36" PositionXOffset="145" IntText="@AttributeValue" Brush="TAOM.Character.CenterText" />
-                        <ButtonWidget SuggestedWidth="38" SuggestedHeight="38" PositionXOffset="195" IsEnabled="@CanAddPoint" Command.Click="ExecuteAddAttributePoint" UpdateChildrenStates="true" DoNotPassEventsToChildren="true">
-                          <Children>
-                            <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Text="+" Brush="TAOM.Character.CenterText" Brush.FontSize="32" PositionYOffset="-3" />
-                          </Children>
-                        </ButtonWidget>
-                      </Children>
-                    </Widget>
-                  </Children>
-                </Widget>
-                <TextWidget SuggestedWidth="165" SuggestedHeight="36" PositionXOffset="250" Text="Attribute points" Brush="TAOM.Character.Text" Brush.FontSize="20" />
-                <TextWidget DataSource="{CurrentCharacter}" SuggestedWidth="36" SuggestedHeight="36" PositionXOffset="416" IntText="@UnspentAttributePoints" Brush="TAOM.Character.CenterText" />
-                <TextWidget SuggestedWidth="165" SuggestedHeight="36" PositionXOffset="493" Text="Focus points" Brush="TAOM.Character.Text" Brush.FontSize="20" />
-                <TextWidget DataSource="{CurrentCharacter}" SuggestedWidth="36" SuggestedHeight="36" PositionXOffset="655" IntText="@UnspentCharacterPoints" Brush="TAOM.Character.CenterText" />
-                <Widget DataSource="{CurrentSkill}" SuggestedWidth="270" SuggestedHeight="42" PositionXOffset="704">
-                  <Children>
-                    <CharacterFocusWidget SuggestedWidth="190" SuggestedHeight="34" Focus="@CurrentFocusLevel" DoNotAcceptEvents="true">
-                      <Children>
-                        <Widget SuggestedWidth="12" SuggestedHeight="12" PositionYOffset="12" Sprite="cs_circle" Color="#D6B56AFF" />
-                        <Widget SuggestedWidth="12" SuggestedHeight="12" PositionXOffset="32" PositionYOffset="12" Sprite="cs_circle" Color="#D6B56AFF" />
-                        <Widget SuggestedWidth="12" SuggestedHeight="12" PositionXOffset="64" PositionYOffset="12" Sprite="cs_circle" Color="#D6B56AFF" />
-                        <Widget SuggestedWidth="12" SuggestedHeight="12" PositionXOffset="96" PositionYOffset="12" Sprite="cs_circle" Color="#D6B56AFF" />
-                        <Widget SuggestedWidth="12" SuggestedHeight="12" PositionXOffset="128" PositionYOffset="12" Sprite="cs_circle" Color="#D6B56AFF" />
-                      </Children>
-                    </CharacterFocusWidget>
-                    <ButtonWidget SuggestedWidth="40" SuggestedHeight="38" PositionXOffset="224" IsEnabled="@CanAddFocus" Command.Click="ExecuteAddFocus" UpdateChildrenStates="true" DoNotPassEventsToChildren="true">
-                      <Children>
-                        <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Text="+" Brush="TAOM.Character.CenterText" Brush.FontSize="32" PositionYOffset="-3" />
-                      </Children>
-                    </ButtonWidget>
-                  </Children>
-                </Widget>
-              </Children>
-            </Widget>
-            <Widget SuggestedWidth="984" SuggestedHeight="218" PositionXOffset="405" PositionYOffset="430">
-              <Children>
-                <ScrollablePanel Id="PerkScroll" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" AutoHideScrollBars="true" ClipRect="ClipRect" InnerPanel="ClipRect\PerkContent" HorizontalScrollbar="..\PerkScrollbar">
-                  <Children>
-                    <Widget Id="ClipRect" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" ClipContents="true" MarginBottom="24">
-                      <Children>
-                        <Widget Id="PerkContent" SuggestedWidth="@PerkWidth" SuggestedHeight="198">
-                          <Children>
-                            <Widget WidthSizePolicy="StretchToParent" SuggestedHeight="1" PositionYOffset="64" Sprite="BlankWhiteSquare" Color="#776443FF" DoNotAcceptEvents="true" />
-                            <Widget WidthSizePolicy="StretchToParent" SuggestedHeight="1" PositionYOffset="136" Sprite="BlankWhiteSquare" Color="#776443FF" DoNotAcceptEvents="true" />
-                            <Widget DataSource="{Perks}" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent">
+                            <GridWidget Id="TraitGrid" DataSource="{Traits}" SuggestedWidth="262" HeightSizePolicy="CoverChildren" DefaultCellWidth="131" DefaultCellHeight="31" ColumnCount="2">
                               <ItemTemplate>
-                                <Widget SuggestedWidth="72" SuggestedHeight="72" PositionXOffset="@X" PositionYOffset="@Y">
+                                <Widget SuggestedWidth="131" SuggestedHeight="31">
                                   <Children>
-                                    <Widget SuggestedWidth="72" SuggestedHeight="26" PositionYOffset="-30" DoNotAcceptEvents="true" IsVisible="@ShowLevel">
+                                    <Widget Id="TraitNameClip" SuggestedWidth="72" SuggestedHeight="31" PositionXOffset="35" ClipContents="true" DoNotAcceptEvents="true">
                                       <Children>
-                                        <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Brush="TAOM.Character.CenterText" Brush.FontSize="19" Text="@LevelText" DataSource="{Native}" />
+                                        <TextWidget Id="TraitName" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Brush="TAOM.Character.Text" Brush.FontSize="15" Brush.TextHorizontalAlignment="Left" Text="@NameText" DoNotAcceptEvents="true" />
                                       </Children>
                                     </Widget>
-                                    <CharacterPerkButtonWidget SuggestedWidth="64" SuggestedHeight="64" PositionXOffset="4" PerkState="@State" Command.Click="ExecuteSelect" Command.HoverBegin="ExecuteInspect" Brush="TAOM.Character.Perk" IconWidget="Icon" DoNotPassEventsToChildren="true" Command.HoverEnd="ExecuteEndInspect">
+                                    <TextWidget Id="TraitValuePositive" SuggestedWidth="20" SuggestedHeight="31" PositionXOffset="109" Brush="TAOM.Character.Value" Brush.FontSize="15" Brush.TextHorizontalAlignment="Right" Text="@ValueText" IsHidden="@IsNegative" DoNotAcceptEvents="true" />
+                                    <TextWidget Id="TraitValueNegative" SuggestedWidth="20" SuggestedHeight="31" PositionXOffset="109" Brush="TAOM.Character.Label" Brush.FontSize="15" Brush.TextHorizontalAlignment="Right" Text="@ValueText" IsVisible="@IsNegative" DoNotAcceptEvents="true" />
+                                    <Widget DataSource="{Native}" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" DoNotPassEventsToChildren="true">
                                       <Children>
-                                        <Widget Id="Icon" DataSource="{Native}" SuggestedWidth="32" SuggestedHeight="32" HorizontalAlignment="Center" VerticalAlignment="Center" Sprite="@PerkId" />
+                                        <EncyclopediaHeroTraitVisualWidget Id="TraitIcon" SuggestedWidth="30" SuggestedHeight="30" TraitId="@TraitId" TraitValue="@Value" />
+                                        <HintWidget DataSource="{Hint}" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Command.HoverBegin="ExecuteBeginHint" Command.HoverEnd="ExecuteEndHint" />
                                       </Children>
-                                    </CharacterPerkButtonWidget>
+                                    </Widget>
                                   </Children>
                                 </Widget>
                               </ItemTemplate>
+                            </GridWidget>
+                          </Children>
+                        </Widget>
+                      </Children>
+                    </ScrollablePanel>
+                    <ScrollbarWidget Id="TraitScrollbar" SuggestedWidth="4" SuggestedHeight="62" PositionXOffset="264" PositionYOffset="24" AlignmentAxis="Vertical" Handle="TraitHandle" MinValue="0" MaxValue="100" Sprite="BlankWhiteSquare_9" Color="#00000066">
+                      <Children><Widget Id="TraitHandle" SuggestedWidth="4" SuggestedHeight="20" HorizontalAlignment="Center" Sprite="BlankWhiteSquare_9" Color="#CFAE6BCC" /></Children>
+                    </ScrollbarWidget>
+                    <FrontEndTextWidget Id="NoTraitsText" SuggestedWidth="268" SuggestedHeight="31" PositionYOffset="24" Brush="TAOM.Character.Label" Brush.FontSize="15" Brush.TextHorizontalAlignment="Left" LocalizedText="{=taom_char_no_traits}No notable traits" IsVisible="@HasNoTraits" DoNotAcceptEvents="true" />
+                  </Children>
+                </Widget>
+
+                <!-- The native party role label and the member's native role lines (governor, party roles);
+                     hidden for a member with none. -->
+                <Widget Id="PartyRoleArea" SuggestedWidth="268" SuggestedHeight="44" PositionXOffset="81" PositionYOffset="582" IsVisible="@HasPartyRole">
+                  <Children>
+                    <TextWidget DataSource="{Native}" SuggestedWidth="268" SuggestedHeight="16" Brush="TAOM.Character.Label" Brush.FontSize="13" Brush.TextHorizontalAlignment="Left" Text="@PartyRoleText" DoNotAcceptEvents="true" />
+                    <Widget DataSource="{CurrentCharacter}" SuggestedWidth="268" SuggestedHeight="26" PositionYOffset="18">
+                      <Children>
+                        <ScrollablePanel Id="StatsScroll" SuggestedWidth="262" SuggestedHeight="26" AutoHideScrollBars="true" ClipRect="StatsClip" InnerPanel="StatsClip\StatsList" VerticalScrollbar="..\StatsScrollbar">
+                          <Children>
+                            <Widget Id="StatsClip" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" ClipContents="true">
+                              <Children>
+                                <ListPanel Id="StatsList" DataSource="{CharacterStats}" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" StackLayout.LayoutMethod="VerticalTopToBottom">
+                                  <ItemTemplate>
+                                    <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" Brush="TAOM.Character.Text" Brush.FontSize="17" Brush.TextHorizontalAlignment="Left" Text="@Definition" />
+                                  </ItemTemplate>
+                                </ListPanel>
+                              </Children>
+                            </Widget>
+                          </Children>
+                        </ScrollablePanel>
+                        <ScrollbarWidget Id="StatsScrollbar" SuggestedWidth="4" SuggestedHeight="26" PositionXOffset="264" AlignmentAxis="Vertical" Handle="StatsHandle" MinValue="0" MaxValue="100" Sprite="BlankWhiteSquare_9" Color="#00000066">
+                          <Children><Widget Id="StatsHandle" SuggestedWidth="4" SuggestedHeight="12" HorizontalAlignment="Center" Sprite="BlankWhiteSquare_9" Color="#CFAE6BCC" /></Children>
+                        </ScrollbarWidget>
+                      </Children>
+                    </Widget>
+                  </Children>
+                </Widget>
+
+                <!-- The Career link: a 48 cs_skill_icon_rim around the leadership skill icon (a navigation motif, not a
+                     career emblem), the label and a cc_arrow_r chevron, centred on the arch axis as one target. It spans
+                     632 to 680, 6 px below the party role lines (bottom 626) and inside the 696 arch. Hover lifts only the
+                     rim, label and chevron. -->
+                <ButtonWidget Id="CareerButton" DataSource="{Native}" WidthSizePolicy="CoverChildren" SuggestedHeight="48" HorizontalAlignment="Center" PositionYOffset="632" Command.Click="ExecuteOpenCareerScreen" IsVisible="@HasCareer" UpdateChildrenStates="true" DoNotPassEventsToChildren="true">
+                  <Children>
+                    <ListPanel WidthSizePolicy="CoverChildren" HeightSizePolicy="StretchToParent" StackLayout.LayoutMethod="HorizontalLeftToRight" UpdateChildrenStates="true">
+                      <Children>
+                        <BrushWidget Id="CareerRim" SuggestedWidth="48" SuggestedHeight="48" VerticalAlignment="Center" Brush="TAOM.Character.CareerRim">
+                          <Children><Widget Id="CareerIcon" SuggestedWidth="28" SuggestedHeight="28" HorizontalAlignment="Center" VerticalAlignment="Center" Sprite="SPGeneral\Skills\gui_skills_icon_leadership" /></Children>
+                        </BrushWidget>
+                        <FrontEndTextWidget Id="CareerLabel" WidthSizePolicy="CoverChildren" HeightSizePolicy="StretchToParent" MarginLeft="14" Brush="TAOM.Character.CareerLink" LocalizedText="{=taom_career}Career" />
+                        <BrushWidget Id="CareerChevron" SuggestedWidth="12" SuggestedHeight="16" MarginLeft="14" VerticalAlignment="Center" Brush="TAOM.Character.Next" />
+                      </Children>
+                    </ListPanel>
+                  </Children>
+                </ButtonWidget>
+              </Children>
+            </Widget>
+
+            <!-- Content: the arch's top and bottom, the header's right rim. 1316 by 696 takes the landscape stone
+                 at 1.046 at a 1440p screen scale (approved for layout D). -->
+            <Widget Id="ContentPanel" SuggestedWidth="1316" SuggestedHeight="696" PositionXOffset="464" PositionYOffset="68">
+              <Children>
+                <EncyclopediaStonePanelWidget Id="ContentStone" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Sprite="ec_panel_9" DoNotAcceptEvents="true" />
+
+                <!-- Attribute strip: six equal cells in one understated ec_panel outline with short gold separators;
+                     name and native value on one centred line, a small diamond before the selected attribute. -->
+                <BrushWidget Id="AttributeStripRim" SuggestedWidth="1260" SuggestedHeight="48" PositionXOffset="28" PositionYOffset="18" Brush="TAOM.Character.StripRim" DoNotAcceptEvents="true" />
+                <ListPanel Id="AttributeTabs" DataSource="{Tabs}" SuggestedWidth="1260" SuggestedHeight="48" PositionXOffset="28" PositionYOffset="18" StackLayout.LayoutMethod="HorizontalLeftToRight">
+                  <ItemTemplate>
+                    <ButtonWidget SuggestedWidth="210" SuggestedHeight="48" IsSelected="@IsSelected" Command.Click="ExecuteSelect" UpdateChildrenStates="true" DoNotPassEventsToChildren="true">
+                      <Children>
+                        <ListPanel WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" VerticalAlignment="Center" StackLayout.LayoutMethod="HorizontalLeftToRight" UpdateChildrenStates="true" DoNotAcceptEvents="true">
+                          <Children>
+                            <Widget SuggestedWidth="20" SuggestedHeight="20" VerticalAlignment="Center" DoNotAcceptEvents="true">
+                              <Children><Widget Id="AttributeSelectedMark" SuggestedWidth="12" SuggestedHeight="12" VerticalAlignment="Center" Sprite="fs_diamond" IsVisible="@IsSelected" DoNotAcceptEvents="true" /></Children>
+                            </Widget>
+                            <TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" VerticalAlignment="Center" Brush="TAOM.Character.Label" Brush.FontSize="15" Text="@NameText" />
+                            <TextWidget DataSource="{Native}" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" VerticalAlignment="Center" MarginLeft="12" Brush="TAOM.Character.TabValue" IntText="@AttributeValue" />
+                            <Widget SuggestedWidth="20" SuggestedHeight="20" VerticalAlignment="Center" DoNotAcceptEvents="true" />
+                          </Children>
+                        </ListPanel>
+                        <!-- A point can be spent on this attribute: a dark disc with a fine gold rim and a +
+                             on the cell's upper right, only while the native VM allows a point. Display only;
+                             the tab click still selects. The + is a vertical bar and two arms that meet it without
+                             overlapping (a faded overlap would draw darker), centred in the 26 px badge. -->
+                        <Widget Id="AttributeSpendIndicator" DataSource="{Native}" SuggestedWidth="26" SuggestedHeight="26" PositionXOffset="179" PositionYOffset="-15" IsVisible="@CanAddPoint" DoNotAcceptEvents="true">
+                          <Children>
+                            <Widget SuggestedWidth="23" SuggestedHeight="23" HorizontalAlignment="Center" VerticalAlignment="Center" Sprite="cs_circle" Color="#0D0B09F0" DoNotAcceptEvents="true" />
+                            <BrushWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Brush="TAOM.Character.BadgeRim" DoNotAcceptEvents="true" />
+                            <BrushWidget SuggestedWidth="4" SuggestedHeight="2" PositionXOffset="8" VerticalAlignment="Center" Brush="TAOM.Character.PlusStroke" DoNotAcceptEvents="true" />
+                            <BrushWidget SuggestedWidth="2" SuggestedHeight="10" HorizontalAlignment="Center" VerticalAlignment="Center" Brush="TAOM.Character.PlusStroke" DoNotAcceptEvents="true" />
+                            <BrushWidget SuggestedWidth="4" SuggestedHeight="2" PositionXOffset="14" VerticalAlignment="Center" Brush="TAOM.Character.PlusStroke" DoNotAcceptEvents="true" />
+                          </Children>
+                        </Widget>
+                      </Children>
+                    </ButtonWidget>
+                  </ItemTemplate>
+                </ListPanel>
+                <Widget SuggestedWidth="1" SuggestedHeight="18" PositionXOffset="238" PositionYOffset="33" Sprite="BlankWhiteSquare_9" Color="#CFAE6B66" DoNotAcceptEvents="true" />
+                <Widget SuggestedWidth="1" SuggestedHeight="18" PositionXOffset="448" PositionYOffset="33" Sprite="BlankWhiteSquare_9" Color="#CFAE6B66" DoNotAcceptEvents="true" />
+                <Widget SuggestedWidth="1" SuggestedHeight="18" PositionXOffset="658" PositionYOffset="33" Sprite="BlankWhiteSquare_9" Color="#CFAE6B66" DoNotAcceptEvents="true" />
+                <Widget SuggestedWidth="1" SuggestedHeight="18" PositionXOffset="868" PositionYOffset="33" Sprite="BlankWhiteSquare_9" Color="#CFAE6B66" DoNotAcceptEvents="true" />
+                <Widget SuggestedWidth="1" SuggestedHeight="18" PositionXOffset="1078" PositionYOffset="33" Sprite="BlankWhiteSquare_9" Color="#CFAE6B66" DoNotAcceptEvents="true" />
+
+                <!-- Skill tabs: three low ec_panel tabs. Icon left, name above the focus pips, level right; the
+                     selected tab has the full rim and a cs_tab_diamond on its bottom edge. -->
+                <ListPanel Id="SkillCards" DataSource="{Skills}" SuggestedWidth="1278" SuggestedHeight="72" PositionXOffset="28" PositionYOffset="82" StackLayout.LayoutMethod="HorizontalLeftToRight">
+                  <ItemTemplate>
+                    <ButtonWidget SuggestedWidth="408" SuggestedHeight="72" MarginRight="18" IsSelected="@IsSelected" Command.Click="ExecuteSelect" UpdateChildrenStates="true" DoNotPassEventsToChildren="true">
+                      <Children>
+                        <BrushWidget Id="SkillTabRim" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Brush="TAOM.Character.TabRim" DoNotAcceptEvents="true" />
+                        <Widget Id="SkillSelectedMark" SuggestedWidth="16" SuggestedHeight="16" PositionXOffset="196" PositionYOffset="64" Sprite="cs_tab_diamond" IsVisible="@IsSelected" DoNotAcceptEvents="true" />
+                        <Widget DataSource="{Native}" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" UpdateChildrenStates="true">
+                          <Children>
+                            <SkillIconVisualWidget Id="SkillIcon" SuggestedWidth="52" SuggestedHeight="52" PositionXOffset="14" PositionYOffset="10" SkillId="@SkillId" UseSmallVariation="true" DoNotAcceptEvents="true" />
+                            <TextWidget Id="SkillName" SuggestedWidth="200" SuggestedHeight="23" PositionXOffset="78" PositionYOffset="16" Brush="TAOM.Character.SkillName" Text="@NameText" />
+                            <CharacterFocusWidget Id="SkillFocus" SuggestedWidth="56" SuggestedHeight="14" PositionXOffset="78" PositionYOffset="41" Focus="@CurrentFocusLevel" DoNotAcceptEvents="true" UseSlotSprites="true">
+                              <Children>
+                                <Widget SuggestedWidth="8" SuggestedHeight="14" Sprite="cs_focus_empty" />
+                                <Widget SuggestedWidth="8" SuggestedHeight="14" PositionXOffset="12" Sprite="cs_focus_empty" />
+                                <Widget SuggestedWidth="8" SuggestedHeight="14" PositionXOffset="24" Sprite="cs_focus_empty" />
+                                <Widget SuggestedWidth="8" SuggestedHeight="14" PositionXOffset="36" Sprite="cs_focus_empty" />
+                                <Widget SuggestedWidth="8" SuggestedHeight="14" PositionXOffset="48" Sprite="cs_focus_empty" />
+                              </Children>
+                            </CharacterFocusWidget>
+                            <TextWidget Id="SkillLevel" SuggestedWidth="100" SuggestedHeight="38" PositionXOffset="290" PositionYOffset="19" Brush="TAOM.Character.SkillLevel" IntText="@Level" />
+                          </Children>
+                        </Widget>
+                        <!-- A perk can be chosen in this skill: a + on the tab's upper right above the level, hidden
+                             with no open tier. A + rather than a count: OpenTierCount counts only the tiers selectable now. -->
+                        <Widget Id="SkillOpenTierBadge" SuggestedWidth="26" SuggestedHeight="26" PositionXOffset="378" PositionYOffset="-9" IsVisible="@HasOpenTiers" DoNotAcceptEvents="true">
+                          <Children>
+                            <Widget SuggestedWidth="23" SuggestedHeight="23" HorizontalAlignment="Center" VerticalAlignment="Center" Sprite="cs_circle" Color="#0D0B09F0" DoNotAcceptEvents="true" />
+                            <BrushWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Brush="TAOM.Character.BadgeRim" DoNotAcceptEvents="true" />
+                            <BrushWidget SuggestedWidth="4" SuggestedHeight="2" PositionXOffset="8" VerticalAlignment="Center" Brush="TAOM.Character.PlusStroke" DoNotAcceptEvents="true" />
+                            <BrushWidget SuggestedWidth="2" SuggestedHeight="10" HorizontalAlignment="Center" VerticalAlignment="Center" Brush="TAOM.Character.PlusStroke" DoNotAcceptEvents="true" />
+                            <BrushWidget SuggestedWidth="4" SuggestedHeight="2" PositionXOffset="14" VerticalAlignment="Center" Brush="TAOM.Character.PlusStroke" DoNotAcceptEvents="true" />
+                          </Children>
+                        </Widget>
+                      </Children>
+                    </ButtonWidget>
+                  </ItemTemplate>
+                </ListPanel>
+
+                <!-- Allocation: four equal segments between hairlines, short separators; each a small label on the
+                     left and its value on the right, with a + where the native VM allows one. -->
+                <Widget SuggestedWidth="1260" SuggestedHeight="1" PositionXOffset="28" PositionYOffset="172" Sprite="fs_divider_thin" AlphaFactor="0.55" DoNotAcceptEvents="true" />
+                <Widget Id="AllocationRow" SuggestedWidth="1260" SuggestedHeight="40" PositionXOffset="28" PositionYOffset="172">
+                  <Children>
+                    <Widget SuggestedWidth="1" SuggestedHeight="20" PositionXOffset="315" PositionYOffset="10" Sprite="BlankWhiteSquare_9" Color="#CFAE6B59" DoNotAcceptEvents="true" />
+                    <Widget SuggestedWidth="1" SuggestedHeight="20" PositionXOffset="630" PositionYOffset="10" Sprite="BlankWhiteSquare_9" Color="#CFAE6B59" DoNotAcceptEvents="true" />
+                    <Widget SuggestedWidth="1" SuggestedHeight="20" PositionXOffset="945" PositionYOffset="10" Sprite="BlankWhiteSquare_9" Color="#CFAE6B59" DoNotAcceptEvents="true" />
+                    <Widget DataSource="{SelectedAttribute}" SuggestedWidth="315" SuggestedHeight="40" PositionXOffset="0">
+                      <Children>
+                        <TextWidget SuggestedWidth="200" SuggestedHeight="18" PositionXOffset="14" PositionYOffset="13" Brush="TAOM.Character.AllocLabel" Text="@NameText" />
+                        <Widget DataSource="{Native}" SuggestedWidth="315" SuggestedHeight="40">
+                          <Children>
+                            <TextWidget SuggestedWidth="50" SuggestedHeight="26" PositionXOffset="221" PositionYOffset="9" Brush="TAOM.Character.AllocValue" IntText="@AttributeValue" />
+                            <ButtonWidget SuggestedWidth="24" SuggestedHeight="24" PositionXOffset="279" PositionYOffset="8" Brush="TAOM.Character.Plus" IsEnabled="@CanAddPoint" Command.Click="ExecuteAddAttributePoint" UpdateChildrenStates="true" DoNotPassEventsToChildren="true">
+                              <Children>
+                                <BrushWidget SuggestedWidth="5" SuggestedHeight="2" PositionXOffset="6" VerticalAlignment="Center" Brush="TAOM.Character.PlusStroke" />
+                                <BrushWidget SuggestedWidth="2" SuggestedHeight="12" HorizontalAlignment="Center" VerticalAlignment="Center" Brush="TAOM.Character.PlusStroke" />
+                                <BrushWidget SuggestedWidth="5" SuggestedHeight="2" PositionXOffset="13" VerticalAlignment="Center" Brush="TAOM.Character.PlusStroke" />
+                              </Children>
+                            </ButtonWidget>
+                          </Children>
+                        </Widget>
+                      </Children>
+                    </Widget>
+                    <Widget SuggestedWidth="315" SuggestedHeight="40" PositionXOffset="315">
+                      <Children>
+                        <!-- The pool value: bright gold while points are unspent, ivory at zero. -->
+                        <Widget SuggestedWidth="50" SuggestedHeight="26" PositionXOffset="251" PositionYOffset="9" IsVisible="@HasAttributePoints" DoNotAcceptEvents="true">
+                          <Children><TextWidget DataSource="{CurrentCharacter}" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Brush="TAOM.Character.AllocValueReady" IntText="@UnspentAttributePoints" DoNotAcceptEvents="true" /></Children>
+                        </Widget>
+                        <Widget SuggestedWidth="50" SuggestedHeight="26" PositionXOffset="251" PositionYOffset="9" IsHidden="@HasAttributePoints" DoNotAcceptEvents="true">
+                          <Children><TextWidget DataSource="{CurrentCharacter}" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Brush="TAOM.Character.AllocValue" IntText="@UnspentAttributePoints" DoNotAcceptEvents="true" /></Children>
+                        </Widget>
+                        <Widget DataSource="{Native}" SuggestedWidth="315" SuggestedHeight="40" DoNotPassEventsToChildren="true">
+                          <Children>
+                            <FrontEndTextWidget SuggestedWidth="230" SuggestedHeight="18" PositionXOffset="14" PositionYOffset="13" Brush="TAOM.Character.AllocLabel" LocalizedText="{=taom_char_attribute_points}Attribute Points" />
+                            <HintWidget DataSource="{UnspentAttributePointsHint}" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Command.HoverBegin="ExecuteBeginHint" Command.HoverEnd="ExecuteEndHint" />
+                          </Children>
+                        </Widget>
+                      </Children>
+                    </Widget>
+                    <Widget SuggestedWidth="315" SuggestedHeight="40" PositionXOffset="630">
+                      <Children>
+                        <Widget SuggestedWidth="50" SuggestedHeight="26" PositionXOffset="221" PositionYOffset="9" IsVisible="@HasFocusPoints" DoNotAcceptEvents="true">
+                          <Children><TextWidget DataSource="{CurrentCharacter}" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Brush="TAOM.Character.AllocValueReady" IntText="@UnspentCharacterPoints" DoNotAcceptEvents="true" /></Children>
+                        </Widget>
+                        <Widget SuggestedWidth="50" SuggestedHeight="26" PositionXOffset="221" PositionYOffset="9" IsHidden="@HasFocusPoints" DoNotAcceptEvents="true">
+                          <Children><TextWidget DataSource="{CurrentCharacter}" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Brush="TAOM.Character.AllocValue" IntText="@UnspentCharacterPoints" DoNotAcceptEvents="true" /></Children>
+                        </Widget>
+                        <Widget DataSource="{Native}" SuggestedWidth="271" SuggestedHeight="40" DoNotPassEventsToChildren="true">
+                          <Children>
+                            <TextWidget DataSource="{CurrentCharacter}" SuggestedWidth="200" SuggestedHeight="18" PositionXOffset="14" PositionYOffset="13" Brush="TAOM.Character.AllocLabel" Text="@FocusPointsText" />
+                            <HintWidget DataSource="{UnspentCharacterPointsHint}" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Command.HoverBegin="ExecuteBeginHint" Command.HoverEnd="ExecuteEndHint" />
+                          </Children>
+                        </Widget>
+                        <Widget DataSource="{CurrentSkill}" SuggestedWidth="44" SuggestedHeight="40" PositionXOffset="271">
+                          <Children>
+                            <ButtonWidget SuggestedWidth="24" SuggestedHeight="24" PositionXOffset="8" PositionYOffset="8" Brush="TAOM.Character.Plus" IsEnabled="@CanAddFocus" Command.Click="ExecuteAddFocus" UpdateChildrenStates="true" DoNotPassEventsToChildren="true">
+                              <Children>
+                                <BrushWidget SuggestedWidth="5" SuggestedHeight="2" PositionXOffset="6" VerticalAlignment="Center" Brush="TAOM.Character.PlusStroke" />
+                                <BrushWidget SuggestedWidth="2" SuggestedHeight="12" HorizontalAlignment="Center" VerticalAlignment="Center" Brush="TAOM.Character.PlusStroke" />
+                                <BrushWidget SuggestedWidth="5" SuggestedHeight="2" PositionXOffset="13" VerticalAlignment="Center" Brush="TAOM.Character.PlusStroke" />
+                              </Children>
+                            </ButtonWidget>
+                          </Children>
+                        </Widget>
+                      </Children>
+                    </Widget>
+                    <Widget DataSource="{CurrentSkill}" SuggestedWidth="315" SuggestedHeight="40" PositionXOffset="945" DoNotPassEventsToChildren="true">
+                      <Children>
+                        <TextWidget WidthSizePolicy="StretchToParent" SuggestedHeight="18" PositionYOffset="13" MarginLeft="14" MarginRight="14" Brush="TAOM.Character.AllocLabel" Text="@CurrentLearningRateText" />
+                        <HintWidget DataSource="{LearningRateTooltip}" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Command.HoverBegin="ExecuteBeginHint" Command.HoverEnd="ExecuteEndHint" />
+                      </Children>
+                    </Widget>
+                  </Children>
+                </Widget>
+                <Widget SuggestedWidth="1260" SuggestedHeight="1" PositionXOffset="28" PositionYOffset="212" Sprite="fs_divider_thin" AlphaFactor="0.55" DoNotAcceptEvents="true" />
+
+                <!-- Perks: the native skill name as a small gold heading, then five tier columns under one rail.
+                     Each column holds the tier's round medallions (cs_skill_icon_rim around the native SPPerks icon),
+                     a pair stacked with a short connector broken around "or". Choosing a medallion goes to the
+                     native selection; hovering one shows the native perk effect tooltip. -->
+                <TextWidget Id="PerkHeading" DataSource="{CurrentSkill}" SuggestedWidth="600" SuggestedHeight="19" PositionXOffset="28" PositionYOffset="236" Brush="TAOM.Character.Heading" Brush.FontSize="14" Text="@NameText" />
+                <ScrollablePanel Id="PerkScroll" SuggestedWidth="1260" SuggestedHeight="384" PositionXOffset="28" PositionYOffset="262" AutoHideScrollBars="true" ClipRect="ClipRect" InnerPanel="ClipRect\PerkContent" HorizontalScrollbar="..\PerkScrollbar">
+                  <Children>
+                    <Widget Id="ClipRect" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" ClipContents="true">
+                      <Children>
+                        <Widget Id="PerkContent" SuggestedWidth="@PerkWidth" SuggestedHeight="384">
+                          <Children>
+                            <!-- The rail: a dim hairline over the full span and the gold fill to the hero's exact
+                                 skill level (SkillVM.Level), placed between the native tiers in proportion. -->
+                            <Widget Id="PerkTrack" WidthSizePolicy="StretchToParent" SuggestedHeight="2" PositionYOffset="45" MarginLeft="24" MarginRight="24" Sprite="fs_divider_thin" AlphaFactor="0.95" DoNotAcceptEvents="true" />
+                            <Widget Id="PerkProgressFill" SuggestedWidth="@ProgressWidth" SuggestedHeight="6" PositionXOffset="24" PositionYOffset="43" Sprite="cs_xp_fill" DoNotAcceptEvents="true" />
+                            <Widget DataSource="{Perks}" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent">
+                              <ItemTemplate>
+                                <Widget SuggestedWidth="252" SuggestedHeight="284" PositionXOffset="@X" PositionYOffset="@Y" DoNotAcceptEvents="true">
+                                  <Children>
+                                    <!-- The tier label, once per tier: the level in gold when reached; muted with the
+                                         word Locked when not, so the state is never carried by colour alone. -->
+                                    <Widget SuggestedWidth="252" SuggestedHeight="24" PositionYOffset="7" IsVisible="@ShowLevel" DoNotAcceptEvents="true">
+                                      <Children>
+                                        <!-- An open tier adds a small diamond after the label; the empty slot before it
+                                             has the same width, so the label stays centred over the column. -->
+                                        <Widget Id="PerkTierReached" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" IsVisible="@IsTierReached" DoNotAcceptEvents="true">
+                                          <Children>
+                                            <ListPanel WidthSizePolicy="CoverChildren" HeightSizePolicy="StretchToParent" HorizontalAlignment="Center" StackLayout.LayoutMethod="HorizontalLeftToRight" DoNotAcceptEvents="true">
+                                              <Children>
+                                                <Widget SuggestedWidth="20" HeightSizePolicy="StretchToParent" DoNotAcceptEvents="true" />
+                                                <TextWidget DataSource="{Native}" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" VerticalAlignment="Center" Brush="TAOM.Character.TierReached" Text="@LevelText" DoNotAcceptEvents="true" />
+                                                <Widget SuggestedWidth="20" HeightSizePolicy="StretchToParent" DoNotAcceptEvents="true">
+                                                  <Children><Widget Id="PerkTierOpenMark" SuggestedWidth="12" SuggestedHeight="12" HorizontalAlignment="Right" VerticalAlignment="Center" Sprite="fs_diamond" IsVisible="@IsTierOpen" DoNotAcceptEvents="true" /></Children>
+                                                </Widget>
+                                              </Children>
+                                            </ListPanel>
+                                          </Children>
+                                        </Widget>
+                                        <ListPanel Id="PerkTierLocked" WidthSizePolicy="CoverChildren" HeightSizePolicy="StretchToParent" HorizontalAlignment="Center" StackLayout.LayoutMethod="HorizontalLeftToRight" IsVisible="@IsTierLocked" DoNotAcceptEvents="true">
+                                          <Children>
+                                            <TextWidget DataSource="{Native}" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" VerticalAlignment="Center" Brush="TAOM.Character.PerkLevel" Text="@LevelText" DoNotAcceptEvents="true" />
+                                            <TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" VerticalAlignment="Center" MarginLeft="10" PositionYOffset="2" Brush="TAOM.Character.PerkLevel" Brush.FontSize="11" Text="@LockedText" DoNotAcceptEvents="true" />
+                                          </Children>
+                                        </ListPanel>
+                                      </Children>
+                                    </Widget>
+                                    <!-- The tier's node on the rail: a solid diamond when reached, a small hollow one when locked. -->
+                                    <Widget Id="PerkNodeReached" SuggestedWidth="12" SuggestedHeight="12" PositionXOffset="120" PositionYOffset="40" Sprite="fs_diamond" IsVisible="@IsTierReached" DoNotAcceptEvents="true" />
+                                    <Widget Id="PerkNodeLocked" SuggestedWidth="10" SuggestedHeight="10" PositionXOffset="121" PositionYOffset="41" Sprite="cs_tab_diamond" AlphaFactor="0.9" IsVisible="@IsTierLocked" DoNotAcceptEvents="true" />
+                                    <!-- The medallion: rim, native icon, name and the state mark. The native state and hover
+                                         set the look in CharacterPerkButtonWidget. -->
+                                    <CharacterPerkButtonWidget Id="PerkButton" SuggestedWidth="240" SuggestedHeight="96" PositionXOffset="6" PositionYOffset="104" PerkState="@State" Command.Click="ExecuteSelect" Command.HoverBegin="ExecuteBeginHint" Command.HoverEnd="ExecuteEndHint" RimWidget="PerkMedallion" IconWidget="PerkIcon" NameWidget="PerkName" SelectedWidget="PerkChosenMark" AvailableWidget="PerkAvailableMark" UpdateChildrenStates="true" DoNotPassEventsToChildren="true">
+                                      <Children>
+                                        <Widget Id="PerkMedallion" SuggestedWidth="64" SuggestedHeight="64" PositionXOffset="88" Sprite="cs_skill_icon_rim" DoNotAcceptEvents="true" />
+                                        <Widget Id="PerkIcon" DataSource="{Native}" SuggestedWidth="36" SuggestedHeight="36" PositionXOffset="102" PositionYOffset="14" Sprite="@PerkId" DoNotAcceptEvents="true" />
+                                        <TextWidget Id="PerkName" SuggestedWidth="236" SuggestedHeight="25" PositionXOffset="2" PositionYOffset="69" Brush="TAOM.Character.PerkName" Text="@NameText" DoNotAcceptEvents="true" />
+                                        <Widget Id="PerkChosenMark" SuggestedWidth="18" SuggestedHeight="18" PositionXOffset="151" PositionYOffset="1" Sprite="ec_list_tick" IsVisible="false" DoNotAcceptEvents="true" />
+                                        <Widget Id="PerkAvailableMark" SuggestedWidth="11" SuggestedHeight="11" PositionXOffset="154.5" PositionYOffset="4.5" Sprite="cs_tab_diamond" IsVisible="false" DoNotAcceptEvents="true" />
+                                      </Children>
+                                    </CharacterPerkButtonWidget>
+                                    <!-- A pair's connector from the first medallion's name down to the second medallion,
+                                         broken around a muted "or"; quieter in a locked tier. -->
+                                    <Widget Id="PerkConnector" SuggestedWidth="252" SuggestedHeight="80" PositionYOffset="202" IsVisible="@HasAlternativeBelow" DoNotAcceptEvents="true">
+                                      <Children>
+                                        <Widget SuggestedWidth="1" SuggestedHeight="11" PositionXOffset="125.5" PositionYOffset="2" Sprite="BlankWhiteSquare_9" Color="#CFAE6B73" AlphaFactor="@ConnectorAlpha" DoNotAcceptEvents="true" />
+                                        <FrontEndTextWidget Id="PerkOr" SuggestedWidth="252" SuggestedHeight="20" PositionYOffset="15" Brush="TAOM.Character.Or" AlphaFactor="@ConnectorAlpha" LocalizedText="{=taom_char_perk_or}or" DoNotAcceptEvents="true" />
+                                        <Widget SuggestedWidth="1" SuggestedHeight="41" PositionXOffset="125.5" PositionYOffset="37" Sprite="BlankWhiteSquare_9" Color="#CFAE6B73" AlphaFactor="@ConnectorAlpha" DoNotAcceptEvents="true" />
+                                      </Children>
+                                    </Widget>
+                                  </Children>
+                                </Widget>
+                              </ItemTemplate>
+                            </Widget>
+                            <!-- The hero's skill level below the rail: a short drop line and a diamond where the fill
+                                 ends, the number beside them, so the level never sits on a tier node or its label.
+                                 The number moves to the diamond's left at the far end. -->
+                            <Widget Id="PerkProgressMarker" WidthSizePolicy="StretchToParent" SuggestedHeight="30" PositionYOffset="50" DoNotAcceptEvents="true">
+                              <Children>
+                                <Widget Id="PerkMarkerDrop" SuggestedWidth="12" SuggestedHeight="22" PositionXOffset="@MarkerDiamondLeft" DoNotAcceptEvents="true">
+                                  <Children>
+                                    <Widget SuggestedWidth="2" SuggestedHeight="12" PositionXOffset="5" Sprite="BlankWhiteSquare_9" Color="#CFAE6BE6" DoNotAcceptEvents="true" />
+                                    <Widget Id="PerkMarkerDiamond" SuggestedWidth="12" SuggestedHeight="12" PositionYOffset="10" Sprite="cs_tab_diamond" DoNotAcceptEvents="true" />
+                                  </Children>
+                                </Widget>
+                                <TextWidget Id="PerkMarkerNumber" SuggestedWidth="40" SuggestedHeight="19" PositionXOffset="@MarkerLabelLeft" PositionYOffset="8" Brush="TAOM.Character.Marker" Brush.TextHorizontalAlignment="Left" IsHidden="@IsMarkerLabelFlipped" Text="@SkillLevelText" DoNotAcceptEvents="true" />
+                                <TextWidget Id="PerkMarkerNumberFlipped" SuggestedWidth="40" SuggestedHeight="19" PositionXOffset="@MarkerLabelLeft" PositionYOffset="8" Brush="TAOM.Character.Marker" Brush.TextHorizontalAlignment="Right" IsVisible="@IsMarkerLabelFlipped" Text="@SkillLevelText" DoNotAcceptEvents="true" />
+                              </Children>
                             </Widget>
                           </Children>
                         </Widget>
@@ -156,75 +420,28 @@
                     </Widget>
                   </Children>
                 </ScrollablePanel>
-                <CharacterPerkScrollbarWidget Id="PerkScrollbar" WidthSizePolicy="StretchToParent" SuggestedHeight="18" VerticalAlignment="Bottom" AlignmentAxis="Horizontal" Handle="Handle" MinValue="0" MaxValue="100" MarginLeft="40" MarginRight="40" Brush="TAOM.Character.ScrollRail" DoNotUpdateHandleSize="true">
-                  <Children>
-                    <Widget Id="Handle" SuggestedWidth="20" SuggestedHeight="18" Sprite="cs_scroll_thumb" />
-                  </Children>
+                <!-- Only a skill with more than five tiers scrolls; the arrows and bar show only then. -->
+                <CharacterPerkScrollButtonWidget Id="PreviousPerkPage" SuggestedWidth="22" SuggestedHeight="24" PositionXOffset="28" PositionYOffset="649" Brush="TAOM.Character.Previous" Direction="-1" Scrollbar="..\PerkScrollbar" IsVisible="@CanScrollPerks" />
+                <CharacterPerkScrollbarWidget Id="PerkScrollbar" SuggestedWidth="1192" SuggestedHeight="18" PositionXOffset="62" PositionYOffset="652" AlignmentAxis="Horizontal" Handle="Handle" MinValue="0" MaxValue="100" Brush="TAOM.Character.ScrollRail" DoNotUpdateHandleSize="true" ScrollFraction="@PerkScrollFraction" ScrollRequest="@PerkScrollRequest">
+                  <Children><Widget Id="Handle" SuggestedWidth="20" SuggestedHeight="18" VerticalAlignment="Center" Sprite="cs_scroll_thumb" /></Children>
                 </CharacterPerkScrollbarWidget>
-                <CharacterPerkScrollButtonWidget SuggestedWidth="32" SuggestedHeight="26" VerticalAlignment="Bottom" HorizontalAlignment="Left" Direction="-1" Scrollbar="..\PerkScrollbar" Brush="TAOM.Character.Previous" DoNotPassEventsToChildren="true" Id="PreviousPerkPage" />
-                <CharacterPerkScrollButtonWidget SuggestedWidth="32" SuggestedHeight="26" VerticalAlignment="Bottom" HorizontalAlignment="Right" Direction="1" Scrollbar="..\PerkScrollbar" Brush="TAOM.Character.Next" DoNotPassEventsToChildren="true" Id="NextPerkPage" />
+                <CharacterPerkScrollButtonWidget Id="NextPerkPage" SuggestedWidth="22" SuggestedHeight="24" PositionXOffset="1266" PositionYOffset="649" Brush="TAOM.Character.Next" Direction="1" Scrollbar="..\PerkScrollbar" IsVisible="@CanScrollPerks" />
               </Children>
             </Widget>
-            <Widget SuggestedWidth="984" SuggestedHeight="1" PositionXOffset="405" PositionYOffset="657" Sprite="BlankWhiteSquare" Color="#786645FF" DoNotAcceptEvents="true" />
-            <TextWidget SuggestedWidth="984" SuggestedHeight="32" PositionXOffset="405" PositionYOffset="667" Text="@DetailTitle" Brush="TAOM.Character.Text" Brush.FontSize="26" />
-            <Widget SuggestedWidth="984" SuggestedHeight="40" PositionXOffset="405" PositionYOffset="701" ClipContents="true">
-              <Children>
-                <TextWidget SuggestedWidth="984" SuggestedHeight="92" Text="@DetailText" Brush="TAOM.Character.Text" Brush.FontSize="17" ClipContents="true" Brush.TextVerticalAlignment="Top" />
-              </Children>
-            </Widget>
-            <Widget DataSource="{Native}" SuggestedWidth="720" SuggestedHeight="46" HorizontalAlignment="Center" PositionYOffset="778">
-              <Children>
-                <ButtonWidget SuggestedWidth="270" SuggestedHeight="46" Command.Click="ExecuteCancel" Brush="TAOM.Character.Action" DoNotPassEventsToChildren="true" UpdateChildrenStates="true">
-                  <Children>
-                    <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Text="@CancelLbl" Brush="TAOM.Character.CenterText" PositionYOffset="-3" />
-                  </Children>
-                </ButtonWidget>
-                <ButtonWidget SuggestedWidth="270" SuggestedHeight="46" PositionXOffset="450" Command.Click="ExecuteDone" Brush="TAOM.Character.Action" DoNotPassEventsToChildren="true" UpdateChildrenStates="true">
-                  <Children>
-                    <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Text="@DoneLbl" Brush="TAOM.Character.CenterText" PositionYOffset="-3" />
-                  </Children>
-                </ButtonWidget>
-              </Children>
-            </Widget>
-            <ButtonWidget SuggestedWidth="120" SuggestedHeight="40" HorizontalAlignment="Center" PositionYOffset="780" Command.Click="ExecuteReset" DoNotPassEventsToChildren="true" UpdateChildrenStates="true">
-              <Children>
-                <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Text="Reset" Brush="TAOM.Character.CenterText" PositionYOffset="-3" />
-              </Children>
+
+            <!-- Footer: the native cancel and done, the screen's reset, on the thin fs_confirm ornament button at
+                 its source aspect (1280:176) and the arch's width. Cancel on the arch centre (235), Reset on the
+                 visible union's centre (929.5), Done mirrored (1624). Each label is centred on the opaque face
+                 (x 299 to 982, y 31 to 121 of the source), above the texture centre because the pendant hangs below. -->
+            <ButtonWidget Id="CancelButton" DataSource="{Native}" SuggestedWidth="312" SuggestedHeight="43" PositionXOffset="79" PositionYOffset="784" Brush="TAOM.Character.Action" Command.Click="ExecuteCancel" UpdateChildrenStates="true" DoNotPassEventsToChildren="true">
+              <Children><TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" MarginLeft="73" MarginRight="73" MarginTop="6" MarginBottom="11" Brush="TAOM.Character.ButtonText" Text="@CancelLbl" /></Children>
             </ButtonWidget>
-            <Widget Id="TraitsPopup" SuggestedWidth="660" SuggestedHeight="340" HorizontalAlignment="Center" VerticalAlignment="Center" IsVisible="@ShowTraits">
-              <Children>
-                <ImageWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Brush="TAOM.Character.Rail" />
-                <TextWidget SuggestedWidth="660" SuggestedHeight="40" PositionYOffset="22" Brush="TAOM.Character.CenterText" Text="Traits and party roles" />
-                <Widget DataSource="{CurrentCharacter}" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent">
-                  <Children>
-                    <ListPanel DataSource="{Traits}" WidthSizePolicy="CoverChildren" SuggestedHeight="80" HorizontalAlignment="Center" PositionYOffset="85" StackLayout.LayoutMethod="HorizontalLeftToRight">
-                      <ItemTemplate>
-                        <EncyclopediaHeroTraitVisualWidget SuggestedWidth="74" SuggestedHeight="75" TraitId="@TraitId" TraitValue="@Value">
-                          <Children>
-                            <HintWidget DataSource="{Hint}" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Command.HoverBegin="ExecuteBeginHint" Command.HoverEnd="ExecuteEndHint" />
-                          </Children>
-                        </EncyclopediaHeroTraitVisualWidget>
-                      </ItemTemplate>
-                    </ListPanel>
-                    <ListPanel DataSource="{CharacterStats}" SuggestedWidth="540" HeightSizePolicy="CoverChildren" PositionXOffset="60" PositionYOffset="175" StackLayout.LayoutMethod="VerticalTopToBottom">
-                      <ItemTemplate>
-                        <Widget WidthSizePolicy="StretchToParent" SuggestedHeight="28">
-                          <Children>
-                            <TextWidget SuggestedWidth="420" SuggestedHeight="28" Text="@Definition" Brush="TAOM.Character.Text" Brush.FontSize="19" />
-                            <TextWidget SuggestedWidth="110" SuggestedHeight="28" PositionXOffset="420" Text="@Value" Brush="TAOM.Character.CenterText" Brush.FontSize="19" />
-                          </Children>
-                        </Widget>
-                      </ItemTemplate>
-                    </ListPanel>
-                  </Children>
-                </Widget>
-                <ButtonWidget SuggestedWidth="120" SuggestedHeight="38" HorizontalAlignment="Center" VerticalAlignment="Bottom" MarginBottom="12" Command.Click="ExecuteToggleTraits" DoNotPassEventsToChildren="true" UpdateChildrenStates="true">
-                  <Children>
-                    <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Brush="TAOM.Character.CenterText" Text="Close" PositionYOffset="-3" />
-                  </Children>
-                </ButtonWidget>
-              </Children>
-            </Widget>
+            <ButtonWidget Id="ResetButton" SuggestedWidth="312" SuggestedHeight="43" PositionXOffset="773.5" PositionYOffset="784" Brush="TAOM.Character.Action" Command.Click="ExecuteReset" UpdateChildrenStates="true" DoNotPassEventsToChildren="true">
+              <Children><TextWidget DataSource="{Native}" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" MarginLeft="73" MarginRight="73" MarginTop="6" MarginBottom="11" Brush="TAOM.Character.ButtonText" Text="@ResetLbl" /></Children>
+            </ButtonWidget>
+            <ButtonWidget Id="DoneButton" DataSource="{Native}" SuggestedWidth="312" SuggestedHeight="43" PositionXOffset="1468" PositionYOffset="784" Brush="TAOM.Character.Action" Command.Click="ExecuteDone" UpdateChildrenStates="true" DoNotPassEventsToChildren="true">
+              <Children><TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" MarginLeft="73" MarginRight="73" MarginTop="6" MarginBottom="11" Brush="TAOM.Character.ButtonText" Text="@DoneLbl" /></Children>
+            </ButtonWidget>
           </Children>
         </Widget>
       </Children>
