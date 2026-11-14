@@ -1029,7 +1029,8 @@ public class SubModule : MBSubModuleBase
             IoC.Resolve<TAOM.Features.PlayerSwitcher.IPlayerSwitchSession>(),
             IoC.Resolve<TAOM.Features.PlayerSwitcher.IPlayerSwitchSessionWriter>(),
             IoC.Resolve<TAOM.Features.PlayerSwitcher.IPlayerSwitchPolicyProvider>(),
-            IoC.Resolve<ICareerMenuService>(),
+            IoC.Resolve<Features.CareerSystem.ICareerDataService>(),
+            IoC.Resolve<TAOM.Adapters.IPlayerPartyAdapter>(),
             IoC.Resolve<TAOM.Adapters.IInquiryAdapter>(),
             IoC.Resolve<TAOM.Adapters.IPlayerIdentityAdapter>(),
             ccLogger));

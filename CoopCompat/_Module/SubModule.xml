@@ -5,7 +5,7 @@
   <Name value="TAOM.CoopCompat" />
   <!-- Equal to Main/_Module/SubModule.xml's Version: Coop's join check compares every peer's module
        versions exactly. A test pins the equality. -->
-  <Version value="v2.0.38" />
+  <Version value="v2.0.39" />
   <DefaultModule value="false" />
   <ModuleCategory value="Singleplayer"/>
   <ModuleType value="Community" />
@@ -18,7 +18,7 @@
     <DependedModule Id="Coop" />
   </DependedModules>
   <DependedModuleMetadatas>
-    <DependedModuleMetadata id="TAOM" order="LoadBeforeThis" version="v2.0.38" />
+    <DependedModuleMetadata id="TAOM" order="LoadBeforeThis" version="v2.0.39" />
     <DependedModuleMetadata id="Coop" order="LoadBeforeThis" />
   </DependedModuleMetadatas>
   <SubModules>
