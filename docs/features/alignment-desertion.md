@@ -39,9 +39,10 @@ Neutral and they would never desert.
   and `DailyTickSettlementEvent` (garrisons). It does only engine I/O: ask the service whether this owner
   can lose anyone today (`ShouldEvaluate`, the gates `CalculateDesertion` applies, in the same order, so a
   Neutral owner or a switched-off toggle skips the roster copy; plan 037), snapshot the roster into POCOs,
-  call the pure service, apply the returned removals via `TroopRoster.AddToCounts`. No Harmony patch, no
-  GameModel, no adapter (the roster I/O stays in the thin behavior, mirroring the SpecialResources
-  desertion precedent), no `SyncData` (desertion is recomputed daily from live rosters).
+  call the pure service, apply the returned removals via `TroopRoster.AddToCounts`. No GameModel, no adapter
+  (the roster I/O stays in the thin behavior, mirroring the SpecialResources desertion precedent), no
+  `SyncData` (desertion is recomputed daily from live rosters). Its one Harmony patch, Patch150, belongs to the
+  recruit seams below.
 - A pure `AlignmentDesertionService` owns the decision matrix and is 100% unit-tested.
 - Side resolution reuses the Execution `IAlignmentService`: owner side via `GetKingdomSide`, troop side
   via a new `GetCultureSide` (same id→side table). `gondor`/`mordor` were added to `alignment.json` so
@@ -128,6 +129,8 @@ culture-id keys whose ids differ from their kingdom id:
 | `Main/Features/AlignmentDesertion/AlignmentDesertionIoC.cs` | DryIoc registration (4 singletons) |
 | `Main/Features/AlignmentDesertion/DesertionRecruitGuard.cs` | Recruit seams ask whether a troop would desert (engine boundary) |
 | `Main/Features/AlignmentDesertion/DesertionRecruitCap.cs` | Pure volunteer slot caps for the guard |
+| `Main/Features/AlignmentDesertion/Hooks/Patch150_ConformityTick_Prefix.cs` | Skips the prisoner conformity tick for a stack the guard blocks (#1189) |
+| `Main/Features/AlignmentDesertion/AlignmentDesertionModule.cs` | Declares Patch150 (GameInit) |
 | `Main/Features/Execution/AlignmentService.cs` | Added `GetCultureSide` (shares the id→side table) |
 | `Main/_Module/ModuleData/alignment_desertion/alignment_desertion_config.json` | Defaults |
 | `Main/Features/TaomSettings.cs` | MCM group "World/Alignment Desertion" (GroupOrder 38) |
@@ -146,6 +149,7 @@ the two together), and `DesertionRecruitGuard` asks it at these recruit seams (t
 | Volunteers | `TaomVolunteerModel.MaximumIndexHeroCanRecruitFromHero` | Index capped before the notable's first slot that would desert |
 | Garrison auto-recruit | `TaomVolunteerModel.MaximumIndexGarrisonCanRecruitFromHero` | Slot count capped the same way, under the garrison switches |
 | AI trip estimate | `Patch114_AiVolunteerEstimate_Postfix` | Estimate recounted without those volunteers, so no trip for nothing |
+| Prisoner conformity | `Patch150_ConformityTick_Prefix` (#1189) | A blocked stack gets no conformity and the tick moves on to the next stack |
 
 The owner is resolved as the behavior does (leader's clan, owner clan for a garrison, the co-op skips of
 `DesertionOwnerPolicy`), so every switch (master, player, AI, parties, garrisons, rate 0) turns the guard off
@@ -171,9 +175,6 @@ AI trip estimate counts the same slots.
   `CharacterObject.OneToOneConversationCharacter` to the roster (`BuyMercenaries`, line 812). The troop comes
   from the town culture's `BasicMercenaryTroops` (line 362). None of these asks a model whether the troop may be recruited (only `PartyWageModel`, for the price), so no
   model override can refuse them.
-- A prisoner stack that would desert returns a recruitable count of 0, but the conformity tick in
-  `RecruitPrisonersCampaignBehavior` (line 73: `num2 < elementNumber`) still picks it, so other stacks convert
-  more slowly.
 - A volunteer slot locked by the cap shows vanilla's relation tooltip with a required relation of 0, and stays
   locked until the notable's volunteers change (culture conversion).
 - The player index is inclusive and the AI bound exclusive (see Volunteer index convention); the cap follows
@@ -220,6 +221,9 @@ The decision was to skip, not to relay: a remote player gets no desertion popup,
   shed Evil ones).
 - `TAOM.Tests/Features/AlignmentDesertion/DesertionRecruitCapTests.cs`: 6 tests for the slot caps (first
   deserter slot, inclusive hero index, garrison slot count, AI estimate window; never raises vanilla's value).
+- `TAOM.Tests/Features/AlignmentDesertion/DesertionConformityPatchTests.cs`: Patch150 (#1189): blocked, allowed,
+  co-op, null and throw paths, and the vanilla seam on the installed engine (signature and parameter names,
+  the constant true return, both prisoner ticks calling it, the category attaching only this prefix).
 - `TAOM.Tests/Features/AlignmentDesertion/AlignmentDesertionBehaviorTests.cs`: 4 `RequiresGame` tests, 13
   runs: one that stages a lord party and a garrison from uninitialized engine objects, in and out of a
   map event, and checks that only the party out of battle reaches the owner check (four runs), an
@@ -257,6 +261,7 @@ roster is scanned once into a small POCO list, decided, and written back.
   four MCM gates + rate slider; added `gondor`/`mordor` to `alignment.json` + `IAlignmentService.GetCultureSide`.
 - 2026-11-13: recruiting no longer offers a troop that would desert (prisoners, volunteers, garrison
   auto-recruit, AI trip estimate); "Only Good Rejects Evil" also makes desertion one-sided.
+- 2026-11-14: a prisoner stack that would desert no longer takes the party's conformity tick (Patch150, #1189).
 
 ## GitHub Issue
 

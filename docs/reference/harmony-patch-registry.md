@@ -2029,6 +2029,18 @@ Applied from `SubModule.cs` in the standard `OnGameInitializationFinished` batch
 
 **Tests:** `ItemIconRaceMatcherTests` (matching, row keys, slot map, parameter-name binding against the installed engine), icon cases in `RacePositionTuningParserTests` and `ShippedRacePositionConfigTests`. **ACTIVE**. Checked in game 2026-10-29: dwarf helmets centred with a 0/0/0 row, armour (V 0.2) and capes (V 0.25) framed; boots and gloves have no row.
 
+## Patch150_DesertionConformity
+
+**Target (v1.5.7, read on the installed DLL 2026-11-14):** `private bool TaleWorlds.CampaignSystem.CampaignBehaviors.RecruitPrisonersCampaignBehavior.GenerateConformityForTroop(MobileParty mobileParty, CharacterObject troop, int hours = 1)`, one prefix class `Patch150_ConformityTick_Prefix` in `Main/Features/AlignmentDesertion/Hooks/`, category `Patch150_DesertionConformity` (GameInit, declared by `AlignmentDesertionModule`). #1189, 2026-11-14. Feature: [alignment-desertion.md](../features/alignment-desertion.md).
+
+**Why.** The prisoner ticks (`HourlyTickMainParty`, one hour of conformity, and `DailyTickAIMobileParty`, 24 hours) walk the prison roster from a random stack and give conformity to the first regular stack whose `CalculateRecruitableNumber` is below its size, then stop: vanilla's method adds the conformity and always returns true. `TaomPrisonerRecruitmentCalculationModel` returns 0 for a stack that would desert the party (`IDesertionRecruitGuard.WouldDesertFromParty`), so a blocked stack always qualified and took the tick whenever the walk reached it first; same-side prisoners converted more slowly. For a blocked stack the prefix sets `__result = false` and skips vanilla: no conformity is added, the loop's flag stays false and the walk goes on to the next stack. Every other stack runs vanilla. The vanilla body has no gate to replicate: it reads `GetConformityChangePerHour`, calls `PrisonRoster.AddXpToTroop` and returns true.
+
+**Callers and thread.** `HourlyTickMainParty` (main party, once an hour) and `DailyTickAIMobileParty` (every AI lord party, once a day), each at most until one stack takes the tick; main thread. In the AI tick the recruit branch for the same stack runs after the call and is unchanged (`IsPrisonerRecruitable` already refuses a blocked stack).
+
+**PatchShield.** `TaleWorlds.CampaignSystem.CampaignBehaviors` is not an excluded namespace and the method is not on `ExcludedTargetMethods`, so the shield's finalizer can wrap it from a process's first game start; it does not install while a co-op module is active. The prefix catches what its body throws, logs the exception type once and lets vanilla run.
+
+**Co-op.** The prefix skips a replicated mutation (prisoner XP), and the guard reads per-peer settings, so it is `GatedForCoop` in `CoopVetoClassificationTests`: while `ICoopSessionProvider.ShouldDeferToHost` holds, every stack runs vanilla. **Tests:** `DesertionConformityPatchTests` (blocked, allowed, co-op, null and throw paths; target signature and parameter names, the constant true return, both prisoner ticks still calling it, the category attaching only this prefix and the JIT). **ACTIVE**, not yet checked in game.
+
 <!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
 
 ## Referenced by
