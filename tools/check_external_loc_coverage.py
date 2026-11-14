@@ -84,8 +84,16 @@ def untranslated(modules_root, lang):
         print(f"ERROR: no {settlements}; the coverage check would measure nothing for TAOM_Map.",
               file=sys.stderr)
         raise SystemExit(2)
+    # Parse before the regex: a cut file still holds some names, and a count of fewer rows would pass.
+    try:
+        text = settlements.read_text(encoding="utf-8")
+        ET.fromstring(text.lstrip("\ufeff"))
+    except (ET.ParseError, OSError, ValueError) as exc:
+        print(f"ERROR: {settlements} does not parse ({exc}); the coverage check cannot read it.",
+              file=sys.stderr)
+        raise SystemExit(2)
     src = {}
-    for key, default in INLINE_KEY.findall(settlements.read_text(encoding="utf-8")):
+    for key, default in INLINE_KEY.findall(text):
         src.setdefault(key, default)
     tgt = _rows(target, strip_keys=False)
     # A name that is still English stays untranslated once it carries a grammar tag (#1023).
@@ -290,7 +298,13 @@ def main(argv=None):
 
     if args.update_baseline:
         if BASELINE.exists() and not args.allow_drop:
-            drops = drops_to_zero(json.loads(BASELINE.read_text(encoding="utf-8")), current)
+            try:
+                old = json.loads(BASELINE.read_text(encoding="utf-8"))
+            except ValueError as exc:
+                print(f"ERROR: {BASELINE.name} is not valid JSON ({exc}); resolve it (a merge conflict?), "
+                      "then re-run. Nothing written.", file=sys.stderr)
+                return 2
+            drops = drops_to_zero(old, current)
             if drops:
                 print("REFUSING: these counts fall to 0, which is what a tree the check cannot read "
                       "looks like:", file=sys.stderr)

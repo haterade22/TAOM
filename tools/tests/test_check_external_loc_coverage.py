@@ -111,6 +111,15 @@ class CoverageTests(unittest.TestCase):
             self._untranslated()
         self.assertEqual(2, caught.exception.code)
 
+    def test_untranslated_truncated_settlements_xml_exits_2(self):
+        # A cut file still holds some {=KEY} names, so a regex alone would count fewer rows and pass.
+        _coverage_tree(self.mods)
+        _write(self.mods / "TAOM_Map/ModuleData/settlements.xml",
+               '<Settlements>\n  <Settlement id="town_a" name="{=sa}Alpha" />\n  <Settle')
+        with self.assertRaises(SystemExit) as caught:
+            self._untranslated()
+        self.assertEqual(2, caught.exception.code)
+
     def _update(self, baseline_json, current, argv=()):
         baseline = self.mods / "baseline.json"
         baseline.write_text(baseline_json, encoding="utf-8")
@@ -146,6 +155,13 @@ class CoverageTests(unittest.TestCase):
         code, written, _ = self._update('{"TR": {"armory": 58, "taom_map": 5}}', self._counts(TR__armory=3))
         self.assertEqual(0, code)
         self.assertEqual(3, cx.json.loads(written)["TR"]["armory"])
+
+    def test_update_baseline_unreadable_baseline_exits_2_and_writes_nothing(self):
+        before = '<<<<<<< HEAD\n{"TR": {"armory": 58, "taom_map": 5}}\n=======\n'
+        code, written, err = self._update(before, self._counts())
+        self.assertEqual(2, code)
+        self.assertEqual(before, written)
+        self.assertIn("baseline.json", err)
 
     def _check(self, baseline_json, current):
         baseline = self.mods / "baseline.json"

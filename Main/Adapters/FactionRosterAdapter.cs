@@ -68,8 +68,9 @@ public sealed class FactionRosterAdapter : IFactionRosterAdapter
     }
 
     // The culture's wanderers are the notable templates of that occupation (CultureObject.NotableTemplates,
-    // v1.5.3 :208). The campaign does not spawn from this list: it pools every wanderer template (#758), so a
-    // wanderer missing here still spawns and only this tab misses him (#762).
+    // v1.5.3 :208). The campaign does not spawn wanderers from this list: it pools every wanderer template
+    // (#758), so a wanderer missing here still spawns and this tab misses him (#762). The Advanced Start trader
+    // option also reads the list, by gender only, and copies the picked template's gear.
     public IReadOnlyList<RosterEntry> Wanderers(string cultureId)
     {
         var culture = Culture(cultureId);

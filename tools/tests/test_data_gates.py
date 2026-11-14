@@ -226,6 +226,12 @@ class VerdictTests(unittest.TestCase):
     def test_exit_two_is_not_run(self):
         self.assertEqual(dg.verdict(2, "no install")[0], "NOT RUN")
 
+    def test_exit_two_names_the_tools_error_line(self):
+        # The output of a NOT RUN gate is not printed, so the reason must carry the file the tool names.
+        status, why = dg.verdict(2, "PASS: x\nERROR: DE/loc_settlements.xml does not parse (line 3)\n")
+        self.assertEqual("NOT RUN", status)
+        self.assertIn("DE/loc_settlements.xml does not parse", why)
+
     def test_skipped_output_is_not_run_even_at_exit_zero(self):
         status, why = dg.verdict(0, "PASS\ncheck_race_morph_channels: SKIPPED, no FBX")
         self.assertEqual(status, "NOT RUN")
