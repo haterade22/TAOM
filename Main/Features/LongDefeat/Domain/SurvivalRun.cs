@@ -125,7 +125,7 @@ internal sealed partial class SurvivalRun
         fx.Events.AddRange(_pendingEvents);
         _pendingEvents.Clear();
         TakePendingBoon(fx);
-        var holdStart = TakePendingFort(fx);
+        var holdStart = TakePendingFort(fx) || _upgrades.Count > 0;
         var loss = _lossThisTick;
         _lossThisTick = false;
 

@@ -15,14 +15,18 @@ internal sealed record SoldierBatch(string TroopId, FormationSlot Slot, int Coun
 /// <summary>A wave begins: how many soldiers its first batch holds by class. The wave's factors ride <see cref="SoldierBatch.HealthFactor"/> and <see cref="RunEffects.PublishStats"/>, and the director reads its spec for the log.</summary>
 internal sealed record WaveStart(int Wave, int Foot, int Ranged);
 
-/// <summary>An upgrade to carry out (#1161): replace up to <c>Count</c> standing soldiers of the step's troop with its target, each new soldier's health limit scaled by <c>HealthFactor</c>.</summary>
-internal sealed record UpgradeOrder(UpgradeStep Step, int Count, float HealthFactor);
+/// <summary>
+/// An upgrade to carry out (#1161): replace up to <c>Count</c> standing soldiers of the step's troop with its target; booked for the wave it was bought before, <c>BeforeWave</c>. Each new
+/// soldier's health limit is scaled by <c>HealthFactor</c>, set when the order goes out.
+/// </summary>
+internal sealed record UpgradeOrder(UpgradeStep Step, int Count, int BeforeWave, float HealthFactor = 1f);
 
 /// <summary>
-/// What the field did with an upgrade order: <c>Found</c> soldiers of the old troop it could replace, <c>Replaced</c> new soldiers it spawned (an old one faded for each), <c>ReadBack</c> of them that read
-/// as the target troop and live right after the spawn, and a <c>Problem</c> that stopped it (no such troop), else null.
+/// What the field did with an upgrade order: <c>Found</c> soldiers of the old troop it could replace, <c>Replaced</c> new soldiers that stood active after the spawn (an old one faded for each),
+/// <c>ReadBack</c> of them that stood within a metre of the old soldier's place, a <c>Problem</c> that stopped it (no such troop), else null, and <c>Miss</c>, the first soldier who stood elsewhere
+/// (his place and where he stood), else null.
 /// </summary>
-internal sealed record LdUpgradeReport(int Found, int Replaced, int ReadBack, string? Problem);
+internal sealed record LdUpgradeReport(int Found, int Replaced, int ReadBack, string? Problem, string? Miss = null);
 
 internal enum RunEventKind
 {

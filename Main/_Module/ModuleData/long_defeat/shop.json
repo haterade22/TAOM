@@ -9,6 +9,17 @@
         { "id": "bowmen", "name": "{=TAOM_LD_Offer_Bowmen}Eastfold Bowmen", "troop": "fow_rohan_eastfold_bowman", "class": "Ranged", "packSize": 8, "price": 200 },
         { "id": "kings_knights", "name": "{=TAOM_LD_Offer_Knights}King's Knights, on foot", "troop": "fow_rohan_edoras_golden_hall_eorlingas_rider", "class": "Infantry", "packSize": 6, "price": 360 }
       ],
+      "upgrades": [
+        { "from": "fow_rohan_westfold_militiaman", "to": "fow_rohan_westfold_axeman", "price": 15, "name": "{=TAOM_LD_Up_Axemen}Militia to Westfold Axemen" },
+        { "from": "fow_rohan_westfold_axeman", "to": "rohan_westfold_veteran_axeman", "price": 25, "name": "{=TAOM_LD_Up_VeteranAxemen}Axemen to Veteran Axemen" },
+        { "from": "fow_rohan_westfold_axeman", "to": "rohan_westfold_2h_axeman", "price": 25, "name": "{=TAOM_LD_Up_HeavyAxemen}Axemen to Heavy Axemen" },
+        { "from": "rohan_westfold_veteran_axeman", "to": "rohan_westfold_helmingas_axeman", "price": 40, "name": "{=TAOM_LD_Up_Helmingas}Veteran Axemen to Helmingas Axemen" },
+        { "from": "rohan_westfold_2h_axeman", "to": "rohan_westfold_veteran_2h_axeman", "price": 40, "name": "{=TAOM_LD_Up_HelmingasHeavy}Heavy Axemen to Helmingas Heavy Axemen" },
+        { "from": "fow_rohan_eastfold_skirmisher", "to": "fow_rohan_eastfold_bowman", "price": 15, "name": "{=TAOM_LD_Up_Bowmen}Yeomen to Eastfold Bowmen" },
+        { "from": "fow_rohan_eastfold_bowman", "to": "rohan_eastfold_veteran_bowman", "price": 25, "name": "{=TAOM_LD_Up_VeteranBowmen}Bowmen to Veteran Bowmen" },
+        { "from": "fow_rohan_edoras_golden_hall_eorlingas_rider", "to": "rohan_edoras_golden_hall_kings_own_rider", "price": 60, "name": "{=TAOM_LD_Up_RoyalGuard}King's Knights to the King's Royal Guard" },
+        { "from": "rohan_edoras_golden_hall_kings_own_rider", "to": "fow_rohan_edoras_golden_hall_supreme_rider", "price": 90, "name": "{=TAOM_LD_Up_Riders}Royal Guard to the Riders of Rohan" }
+      ],
       "fortifications": {
         "gate": {
           "repairPrice": 200,

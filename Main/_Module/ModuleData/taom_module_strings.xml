@@ -4828,6 +4828,15 @@
 	<string id="TAOM_LD_Offer_Knights" text="{=TAOM_LD_Offer_Knights}King's Knights, on foot" />
 	<string id="TAOM_LD_Offer_Militia" text="{=TAOM_LD_Offer_Militia}Westfold Militia" />
 	<string id="TAOM_LD_Offer_Yeomen" text="{=TAOM_LD_Offer_Yeomen}Eastfold Yeomen" />
+	<string id="TAOM_LD_Up_Axemen" text="{=TAOM_LD_Up_Axemen}Militia to Westfold Axemen" />
+	<string id="TAOM_LD_Up_VeteranAxemen" text="{=TAOM_LD_Up_VeteranAxemen}Axemen to Veteran Axemen" />
+	<string id="TAOM_LD_Up_HeavyAxemen" text="{=TAOM_LD_Up_HeavyAxemen}Axemen to Heavy Axemen" />
+	<string id="TAOM_LD_Up_Helmingas" text="{=TAOM_LD_Up_Helmingas}Veteran Axemen to Helmingas Axemen" />
+	<string id="TAOM_LD_Up_HelmingasHeavy" text="{=TAOM_LD_Up_HelmingasHeavy}Heavy Axemen to Helmingas Heavy Axemen" />
+	<string id="TAOM_LD_Up_Bowmen" text="{=TAOM_LD_Up_Bowmen}Yeomen to Eastfold Bowmen" />
+	<string id="TAOM_LD_Up_VeteranBowmen" text="{=TAOM_LD_Up_VeteranBowmen}Bowmen to Veteran Bowmen" />
+	<string id="TAOM_LD_Up_RoyalGuard" text="{=TAOM_LD_Up_RoyalGuard}King's Knights to the King's Royal Guard" />
+	<string id="TAOM_LD_Up_Riders" text="{=TAOM_LD_Up_Riders}Royal Guard to the Riders of Rohan" />
 	<string id="TAOM_LD_Prompt_Cancel" text="{=TAOM_LD_Prompt_Cancel}Cancel" />
 	<string id="TAOM_LD_Prompt_ChoiceBest" text="{=TAOM_LD_Prompt_ChoiceBest}{NAME}, best run: waves cleared {WAVES}, kills {KILLS}" />
 	<string id="TAOM_LD_Prompt_ChoiceClass" text="{=TAOM_LD_Prompt_ChoiceClass}{NAME}: {TEXT}" />
@@ -4909,6 +4918,11 @@
 	<string id="TAOM_LD_Hud_NextWaveIn" text="{=TAOM_LD_Hud_NextWaveIn}Next wave in {TIME}" />
 	<string id="TAOM_LD_Hud_ShopHint" text="{=TAOM_LD_Hud_ShopHint}Select a row to recruit" />
 	<string id="TAOM_LD_Hud_NoOffers" text="{=TAOM_LD_Hud_NoOffers}No reinforcements are for sale here." />
+	<string id="TAOM_LD_Hud_UpgradesTitle" text="{=TAOM_LD_Hud_UpgradesTitle}Upgrade your soldiers" />
+	<string id="TAOM_LD_Hud_UpgradeDetail" text="{=TAOM_LD_Hud_UpgradeDetail}{STANDING} standing, gold for {AFFORDABLE}" />
+	<string id="TAOM_LD_Hud_UpgradePrice" text="{=TAOM_LD_Hud_UpgradePrice}{PRICE} gold each" />
+	<string id="TAOM_LD_Notice_UnknownUpgrade" text="{=TAOM_LD_Notice_UnknownUpgrade}That upgrade is not for sale." />
+	<string id="TAOM_LD_Notice_NoneToUpgrade" text="{=TAOM_LD_Notice_NoneToUpgrade}No soldier of that troop is left to upgrade." />
 	<string id="TAOM_LD_Hud_PickSubtitle" text="{=TAOM_LD_Hud_PickSubtitle}Select one blessing" />
 	<string id="TAOM_LD_Hud_KeyHorn" text="{=TAOM_LD_Hud_KeyHorn}Sound the horn" />
 	<string id="TAOM_LD_Hud_KeySpeed" text="{=TAOM_LD_Hud_KeySpeed}Speed {SPEED}x" />

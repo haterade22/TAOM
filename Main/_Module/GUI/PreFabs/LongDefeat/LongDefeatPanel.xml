@@ -85,6 +85,38 @@
                         </ButtonWidget>
                       </ItemTemplate>
                     </ListPanel>
+                    <ListPanel WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" MarginTop="6" IsVisible="@HasUpgrades"
+                               StackLayout.LayoutMethod="VerticalTopToBottom">
+                      <Children>
+                        <TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" MarginBottom="6"
+                                    Brush="Tooltip.Text" Brush.FontSize="22" Brush.FontColor="#E9B84AFF"
+                                    Text="@UpgradesTitle" DoNotAcceptEvents="true" />
+                        <ListPanel DataSource="{Upgrades}" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
+                                   StackLayout.LayoutMethod="VerticalTopToBottom">
+                          <ItemTemplate>
+                            <ButtonWidget DoNotPassEventsToChildren="true" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" MarginBottom="4"
+                                          Brush="ButtonBrush2" UpdateChildrenStates="true" IsEnabled="@CanAfford" Command.Click="ExecuteUpgrade">
+                              <Children>
+                                <ListPanel WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" MarginLeft="12" MarginRight="12" MarginTop="6" MarginBottom="6"
+                                           DoNotAcceptEvents="true" StackLayout.LayoutMethod="VerticalTopToBottom">
+                                  <Children>
+                                    <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
+                                                Brush="Popup.Button.Text" Brush.FontSize="18" Brush.FontColor="#FFFFFFFF"
+                                                Text="@Name" DoNotAcceptEvents="true" />
+                                    <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
+                                                Brush="Popup.Button.Text" Brush.FontSize="14" Brush.FontColor="#CCCCCCFF"
+                                                Text="@DetailText" DoNotAcceptEvents="true" />
+                                    <TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Right" MarginTop="2"
+                                                Brush="Popup.Button.Text" Brush.FontSize="16" Brush.FontColor="#E9B84AFF"
+                                                Text="@PriceText" DoNotAcceptEvents="true" />
+                                  </Children>
+                                </ListPanel>
+                              </Children>
+                            </ButtonWidget>
+                          </ItemTemplate>
+                        </ListPanel>
+                      </Children>
+                    </ListPanel>
                     <ListPanel DataSource="{Fort}" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" MarginTop="6" IsVisible="@IsVisible"
                                StackLayout.LayoutMethod="VerticalTopToBottom">
                       <Children>

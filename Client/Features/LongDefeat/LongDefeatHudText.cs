@@ -310,6 +310,34 @@ internal static class LongDefeatHudText
         }
     }
 
+    internal static string UpgradesTitle() => new TextObject("{=TAOM_LD_Hud_UpgradesTitle}Upgrade your soldiers").ToString();
+
+    /// <summary>An upgrade row's line: the soldiers of the step's troop that stand and are not yet sold, and how many of them the gold pays for. A buy takes all of those.</summary>
+    internal static string UpgradeDetail(int standing, int affordable) => new TextObject("{=TAOM_LD_Hud_UpgradeDetail}{STANDING} standing, gold for {AFFORDABLE}")
+        .SetTextVariable("STANDING", Math.Max(0, standing)).SetTextVariable("AFFORDABLE", Math.Max(0, affordable)).ToString();
+
+    internal static string UpgradePrice(int price) => new TextObject("{=TAOM_LD_Hud_UpgradePrice}{PRICE} gold each").SetTextVariable("PRICE", price).ToString();
+
+    /// <summary>The refusal line for an upgrade the run turned down; empty for Ok.</summary>
+    internal static string Refusal(UpgradeResult result)
+    {
+        switch (result)
+        {
+            case UpgradeResult.Ok:
+                return string.Empty;
+            case UpgradeResult.NotOpen:
+                return new TextObject("{=TAOM_LD_Notice_ShopClosed}The shop is closed during a wave.").ToString();
+            case UpgradeResult.UnknownStep:
+                return new TextObject("{=TAOM_LD_Notice_UnknownUpgrade}That upgrade is not for sale.").ToString();
+            case UpgradeResult.NoneStanding:
+                return new TextObject("{=TAOM_LD_Notice_NoneToUpgrade}No soldier of that troop is left to upgrade.").ToString();
+            case UpgradeResult.NoGold:
+                return new TextObject("{=TAOM_LD_Notice_NoGold}Not enough gold.").ToString();
+            default:
+                return new TextObject("{=TAOM_LD_Notice_RunOver}The run is over.").ToString();
+        }
+    }
+
     internal static string FortTitle() => new TextObject("{=TAOM_LD_Fort_Title}Fortifications").ToString();
 
     internal static string CareName() => new TextObject("{=TAOM_LD_Fort_Care}Field care").ToString();

@@ -56,14 +56,14 @@ public class LongDefeatDirectorSplitTests
         }
     }
 
-    private static Rig NewRig(SplitShares? split = null, bool noSplit = false, RunRules? rules = null)
+    private static Rig NewRig(SplitShares? split = null, bool noSplit = false, RunRules? rules = null, IReadOnlyList<UpgradeStep>? upgrades = null)
     {
         var rig = new Rig();
         var plan = new RunPlan(
             "helms",
             new[] { new GarrisonRow("fow_militia", FormationSlot.Infantry, 30), new GarrisonRow("fow_yeomen", FormationSlot.Ranged, 10) },
             new WavePlan(new[] { new WaveSpec(60, new[] { new WaveTroop("orc", FormationSlot.Infantry, 75), new WaveTroop("skirm", FormationSlot.Ranged, 25) }) }, new WaveScaling(10, 300)),
-            new ShopPlan(3000, new[] { new ShopOffer("militia", "Militia", "fow_militia", FormationSlot.Infantry, 12, 180) }),
+            new ShopPlan(3000, new[] { new ShopOffer("militia", "Militia", "fow_militia", FormationSlot.Infantry, 12, 180) }) { Upgrades = upgrades ?? System.Array.Empty<UpgradeStep>() },
             (rules ?? RunRules.Default) with { PreparationSeconds = 60f, IntermissionSeconds = 60f },
             new RunOptions { Autoplay = false })
         {
@@ -264,6 +264,42 @@ public class LongDefeatDirectorSplitTests
         StringAssert.Contains(rig.SplitLines().Last(), "[Split] a new body:");
         Assert.IsTrue(rig.Field.Index("Split") < rig.Field.Calls.LastIndexOf("Split"));
         Assert.IsTrue(rig.Field.Calls.LastIndexOf("Adopt:False") < rig.Field.Calls.LastIndexOf("Split"), "the split follows the adoption that released it");
+    }
+
+    [TestMethod]
+    public void AnUpgrade_WhileHeld_SplitsAgain()
+    {
+        var step = new UpgradeStep("fow_militia>fow_axe", "{=K_A}Axemen", "fow_militia", "fow_axe", 15);
+        var rig = NewRig(upgrades: new[] { step });
+        rig.Field.StandingByTroop["fow_militia"] = 30;
+        Assert.IsTrue(rig.Director.Start());
+        rig.InPreparationWithTheGarrison();
+        var splits = rig.Field.Count("Split");
+
+        Assert.AreEqual(UpgradeResult.Ok, rig.Session.TryUpgrade(step.Id));
+        rig.Ticks(1, 0.1f);
+
+        Assert.AreEqual(1, rig.Field.Replaces.Count);
+        Assert.AreEqual(splits + 1, rig.Field.Count("Split"), "a fade can empty a held group, and Formation.RemoveUnit then hands it to the AI");
+        StringAssert.Contains(rig.SplitLines().Last(), "[Split] an upgrade:");
+    }
+
+    [TestMethod]
+    public void AnUpgradeThatReplacedNobody_WhileHeld_DoesNotSplitAgain()
+    {
+        var step = new UpgradeStep("fow_militia>fow_axe", "{=K_A}Axemen", "fow_militia", "fow_axe", 15);
+        var rig = NewRig(upgrades: new[] { step });
+        rig.Field.StandingByTroop["fow_militia"] = 30;
+        Assert.IsTrue(rig.Director.Start());
+        rig.InPreparationWithTheGarrison();
+        var splits = rig.Field.Count("Split");
+        rig.Field.ReplaceAnswer = new LdUpgradeReport(0, 0, 0, null);
+
+        Assert.AreEqual(UpgradeResult.Ok, rig.Session.TryUpgrade(step.Id));
+        rig.Ticks(1, 0.1f);
+
+        Assert.AreEqual(1, rig.Field.Replaces.Count);
+        Assert.AreEqual(splits, rig.Field.Count("Split"), "no soldier faded, so no group was emptied");
     }
 
     [TestMethod]
