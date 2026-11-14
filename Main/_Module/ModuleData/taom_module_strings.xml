@@ -5070,5 +5070,10 @@
 	<!-- Realms: primary title -->
 	<string id="taom_realms_ui_primary" text="{=taom_realms_ui_primary}Make primary title" />
 	<string id="taom_realms_ui_primary_ask" text="{=taom_realms_ui_primary_ask}Be known by the {TITLE} from now on? Your style and party name follow your primary title, and so does your realm's banner where the title has one." />
+	<!-- Realms: title tree details panel (#1255) -->
+	<string id="taom_realms_tree_selected" text="{=taom_realms_tree_selected}Selected title" />
+	<string id="taom_realms_tree_holder" text="{=taom_realms_tree_holder}Holder" />
+	<string id="taom_realms_tree_liege" text="{=taom_realms_tree_liege}Liege" />
+	<string id="taom_realms_tree_subordinates" text="{=taom_realms_tree_subordinates}Subordinate titles" />
 
 </strings>
