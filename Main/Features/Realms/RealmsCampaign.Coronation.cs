@@ -254,9 +254,10 @@ public sealed partial class RealmsCampaign
             && _service.Ledger.HolderOf(coronation.TitleId) == coronation.HeroId);
 
     /// <summary>
-    /// The crowned house's banner (&lt;Coronation banner&gt;) on the realm as well: a ruling clan is seen with its realm's
-    /// banner (Clan.Banner returns Kingdom.Banner for it), so its own alone would never show. Nothing to do without one,
-    /// or when the realm already has it.
+    /// The crowned house's banner (&lt;Coronation banner&gt;) on the realm as well. Written when the engine still showed a
+    /// ruling clan with its realm's banner; the house's parties now fly its own (<see cref="Hooks.HouseBanners"/>), and the realm
+    /// still takes the crowned banner here, unless a title banner (<see cref="KingdomBanners"/>) applies after it. Nothing
+    /// to do without one, or when the realm already has it.
     /// </summary>
     private static void ApplyCrownedBanner(Kingdom kingdom, Clan clan, CoronationConfig coronation)
     {

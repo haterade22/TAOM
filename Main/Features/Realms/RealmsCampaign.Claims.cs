@@ -6,6 +6,7 @@ using TaleWorlds.CampaignSystem.Actions;
 using TaleWorlds.Core;
 using TaleWorlds.Library;
 using TAOM.Features.Realms.Domain.Services;
+using TAOM.Features.Realms.Hooks;
 
 namespace TAOM.Features.Realms;
 
@@ -24,6 +25,27 @@ public sealed partial class RealmsCampaign
 
     public ClaimQuote QuoteUsurp(Hero hero, string titleId) =>
         _service.QuoteUsurp(hero.StringId, hero.Clan?.StringId, titleId, _claimWorld, Config.Claims);
+
+    /// <summary>The player may be known by this title: they hold it by right and none of their titles outranks it.</summary>
+    public bool CanPlayerChoosePrimary(string titleId) =>
+        Hero.MainHero?.StringId is { } heroId && !IsDisabled && _service.IsInitialized && _service.CanChoosePrimary(heroId, titleId);
+
+    /// <summary>The player is known by this title now, chosen or by default (<see cref="TitleNames.KnownBy"/>).</summary>
+    public bool IsPlayerKnownBy(string titleId) => Hero.MainHero is { } hero && TitleNames.KnownBy(hero, this)?.Id == titleId;
+
+    /// <summary>
+    /// The player is known by this title from now on: their style and party name follow it, and so do their realm's name
+    /// and banner where it lends one. Laws keep following their highest title. False when it is not allowed.
+    /// </summary>
+    public bool PlayerChoosePrimary(string titleId)
+    {
+        var hero = Hero.MainHero;
+        if (hero == null || !MayWrite() || !_service.ChoosePrimary(hero.StringId, titleId))
+            return false;
+        PartyNames.Refresh();
+        UpdateKingdomNames();
+        return true;
+    }
 
     /// <summary>The player buys a claim, paying in their special resource. False when it is not allowed or not affordable.</summary>
     public bool PlayerBuyClaim(string titleId)
