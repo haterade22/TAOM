@@ -237,7 +237,8 @@
     <!-- Elven realms: the eldest of the house leads, man or woman. -->
     <Kingdom id="rivendell" succession="Seniority" gender="Absolute" />
     <Kingdom id="lothlorien" succession="Seniority" gender="Absolute" />
-    <Kingdom id="lindon" succession="Seniority" gender="Absolute" />
+    <Kingdom id="lindon" succession="Seniority" gender="Absolute"
+             banner="11.293.293.1528.1528.764.764.1.0.0.505.2018.2018.410.410.764.764.0.0.45.505.293.293.390.390.764.764.0.0.45.15000.2022.2022.443.441.764.763.0.0.0" />
     <Kingdom id="mirkwood" succession="Primogeniture" gender="AgnaticCognatic" />
     <!-- Might makes right: the realm's titles follow whoever rules it. -->
     <Kingdom id="isengard" succession="Elective" gender="Absolute" />
@@ -251,9 +252,11 @@
     <Kingdom id="anduinvale" succession="Seniority" gender="AgnaticCognatic" />
     <!-- TAOM keeps the vanilla ids for these realms: empire_w = Gondor, vlandia = Rohan, empire_s = Mordor. -->
     <!-- Gondor: no king has sat on the throne since Eärnur; the Ruling Stewards govern until the King returns. -->
-    <Kingdom id="empire_w" succession="Primogeniture" gender="Agnatic" capital="town_EW1" throne="vacant" />
+    <Kingdom id="empire_w" succession="Primogeniture" gender="Agnatic" capital="town_EW1" throne="vacant"
+             banner="11.149.149.1528.1528.764.764.1.0.0.10000.172.2000.580.580.765.825.0.0.0" />
     <Kingdom id="vlandia" succession="Primogeniture" gender="Agnatic" />
-    <Kingdom id="empire_s" succession="Elective" gender="Absolute" />
+    <Kingdom id="empire_s" succession="Elective" gender="Absolute"
+             banner="11.2000.166.1528.1528.764.764.1.0.0.19015.142.116.800.800.759.755.1.0.0" />
   </Kingdoms>
 
   <HighTitles>
@@ -304,6 +307,11 @@
     Realm names: a kingdom whose ruler holds a higher title above its own (Durin's Folk over Erebor) takes that title's
     name, or its realm_name when it sets one (HighTitle, Union and Realm), and gets its own name back when the title is
     lost. A kingdom made in the campaign takes the name of the highest such title its ruler holds.
+
+    Title banners: banner="(banner code)" on a Kingdom, HighTitle, Union or Realm. A kingdom flies it while its ruler's
+    primary title is that title (the one they chose on its page from those of their highest rank, else their highest, the
+    realm's own title first on a tie), and its own banner again when that changes. The ruling house keeps its own banner
+    either way. Lindon, Gondor (empire_w) and Mordor (empire_s) carry their kingdom's starting banner.
   -->
   <TitularRealms>
     <!-- The dwarves' lost mansion: taken back from the orcs of Moria by the sword, never restored by a claim of blood. -->

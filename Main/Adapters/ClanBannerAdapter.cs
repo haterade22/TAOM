@@ -7,12 +7,16 @@ namespace TAOM.Adapters;
 
 public class ClanBannerAdapter : IClanBannerAdapter
 {
+    /// <summary>
+    /// Each clan's own banner (<c>ClanOriginalBanner</c>), also for a ruling clan, whose <c>Banner</c> the engine hands its
+    /// kingdom's banner unless Realms keeps the house banner apart. <see cref="SetBanner"/> writes that same own banner.
+    /// </summary>
     public IReadOnlyList<ClanBannerInfo> GetAllClans()
     {
         return Clan.All
             .Select(c => new ClanBannerInfo(
                 c.StringId,
-                c.Banner?.BannerCode ?? string.Empty,
+                c.ClanOriginalBanner?.BannerCode ?? string.Empty,
                 c.Kingdom?.RulingClan == c))
             .ToList();
     }

@@ -74,9 +74,6 @@ public class BannerInjectionService : IBannerInjectionService
 
         foreach (var clan in clans)
         {
-            if (clan.IsRulingClan)
-                continue;
-
             if (!clanKeys.TryGetValue(clan.StringId, out var expectedKey))
                 continue;
 
