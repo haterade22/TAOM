@@ -5115,3 +5115,9 @@ PR #1209 kept 223 rider rows in TAOM's tracked `action_sets.xml`, where a reinst
 - **Why missed:** the audit checked names, cells, sprites and source hashes, never the channels; the Kit gives no warning; nobody looked at a rendered banner after the repack.
 - **Prevent:** a tool that rewrites an engine source keeps every channel the engine reads, and its gate checks the property the compiler keys on (`no_alpha` in the audit). After a bulk asset rewrite, look at one rendered result in the game or the Kit before the commit.
 - **Source:** issue #1272.
+
+### Bring a generator's output back with the tool that mirrors its folders, never file by file (sprite regeneration, #1272, 2026-11-14)
+The Kit's sprite generation re-saved all 13 GUI `_tex.tpac` files. I copied back only the 3 banner files I expected to change, so the 3 `ui_custom_fonts_*_tex.tpac` headers stayed old in the repo, ready to go back over the install at the next build beside caches compiled for the new ones. `tools/sync_sprite_bake.ps1` mirrors exactly the generator's folders, and four docs named it, but not the banner doc I followed.
+- **Why missed:** I chose the files from what their sources should change, not from a diff of the output folders; no gate compares the repo's GauntletUI packages with the install's.
+- **Prevent:** after any Kit generation, run its sync tool (`sync_sprite_bake.ps1 -WhatIf`, then for real) and diff the output folders; a doc for a workflow that ends in a generator names that tool in its own steps.
+- **Source:** [rca-banner-sprite-regen-2026-11-14.md](../rca-banner-sprite-regen-2026-11-14.md), finding 1.
