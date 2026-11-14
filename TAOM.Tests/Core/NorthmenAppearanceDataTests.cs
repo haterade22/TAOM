@@ -8,7 +8,7 @@ using static TAOM.Tests.Infrastructure.HeroFaceKeys;
 namespace TAOM.Tests.Core;
 
 /// <summary>
-/// Rohirrim and Northmen hero looks gate over the repo's own ModuleData (lords.xml, named companions and the
+/// Rohirrim and Northmen hero looks gate over the repo's own ModuleData (lords.xml, the book named companions and the
 /// lords.xslt rebuilds, which replace a lord's face). The Rohirrim, Bardings, Beornings, Woodmen, Northmen of
 /// Rhovanion and the Men of Dorwinion are fair; the Rohirrim are mostly blond. Skin is bits 48-53 and hair
 /// colour bits 30-35 of the face key's first 64-bit part (value / 63; hair 0 is platinum blond, 63 black).

@@ -8,7 +8,7 @@ using static TAOM.Tests.Infrastructure.HeroFaceKeys;
 namespace TAOM.Tests.Core;
 
 /// <summary>
-/// Gondor and Arnor hero looks gate over the repo's own ModuleData (lords.xml, named companions and the
+/// Gondor and Arnor hero looks gate over the repo's own ModuleData (lords.xml, the book named companions and the
 /// lords.xslt rebuilds, which replace a lord's face). Men of Gondor and the Dunedain of Arthedain, Cardolan and
 /// Rhudaur are fair-skinned in the books and films. Skin is bits 48-53 of the face key's first 64-bit part
 /// (value / 63; vanilla Sturgian and Vlandian lords average about 6, Aserai 37). A Gondor or Arthedain hero stays at

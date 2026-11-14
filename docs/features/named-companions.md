@@ -89,6 +89,19 @@ Controls which companions spawn, where, and their race.
 | Balakhor, the Lore-Grandmaster | elf | town_R1 | rivendell |
 | Elegost, a Ranger of the North | human | town_AN3 (Bree) | arthedain |
 
+### Custom characters keep their creators' look
+
+Aragorn, Legolas and Gimli are from the books. The other 15 named companions are custom characters made by and for
+the dev team and supporters (`TAOM.Tests/Infrastructure/CustomCharacters.cs`). Their creators decide how they look, so
+people-wide look passes and the look gates leave them out (owner, 2026-11-14). `HeroFaceKeys` skips them, and
+`CustomCharacterLookTests` pins each one's face (key with age, weight and build, or template) as a literal. A look change
+a creator asks for updates that literal in the same PR.
+
+Swan, Igor, Thyrell, Eohart and Belecthar share one authored face key with other colours than Aragorn's current one.
+Lord Face Variety groups keys with the colour fields cleared, so the humans among them stay in Aragorn's face group:
+Aragorn is the anchor and the others are rolled close to their own face. Thyrell is an elf, alone in his group, and keeps
+his face as authored.
+
 ## Key Files
 
 | File | Purpose |
@@ -117,6 +130,7 @@ Controls which companions spawn, where, and their race.
 
 ## Tests
 
+- `TAOM.Tests/Core/CustomCharacterLookTests.cs`: each custom companion keeps its authored face; the custom list is every named companion but Aragorn, Legolas and Gimli; the look gates (`HeroFaceKeys`) read none of them but still read Aragorn.
 - `TAOM.Tests/Features/NamedCompanions/NamedCompanionConfigProviderTests.cs` — 7 tests: JSON parsing, missing file, malformed JSON, caching, disabled entries, default enabled, empty array
 - `TAOM.Tests/Features/NamedCompanions/NamedCompanionShippedDataTests.cs`: every configured companion has its character, a neutral `Hero` row and all seven backstory strings; Elegost waits in Bree as an Arthedain Ranger.
 - `TAOM.Tests/Features/NamedCompanions/NamedCompanionServiceTests.cs` — 13 tests: spawn placement, mark-as-met, race setting, disabled skip, missing hero warning, multiple companions, idempotent spawn, load re-placement, recruited-companion guard, already-placed skip, dead hero skip, missing hero skip, disabled skip on load
@@ -128,6 +142,7 @@ Controls which companions spawn, where, and their race.
    - Include a `<face>` (an inline `<BodyProperties>` key, or a `face_key_template` that Lord Face
      Variety rolls once per new campaign), `<skills>`, `<Traits>`, `<Equipments>` with inline `<EquipmentRoster>`
    - Verify all item IDs exist in LOTRLOME_Armory
+   - A character not from the books goes into `CustomCharacters.Ids` with its face pinned in `CustomCharacterLookTests`
 
 2. Add entry to `named_companions/named_companion_config.json`:
    - `character_id` must match the XML `id`
@@ -159,6 +174,7 @@ A companion's JSON entry can carry `hire_terms` (gold, items, flags), `topics` a
 
 ## Changelog
 
+- 2026-11-14: the custom companions are back to their authored faces (owner: "i meant to not touch the custom non lotr characters"). The look passes of #1181, #1190, #1191 and #1261 had recoloured Thyrell, Swan, Belecthar and Eohart, and #1231 gave Igor Aragorn's new colours. Look gates skip the 15 custom ids, and their faces are pinned.
 - 2026-10-29: the backstory strings are now shown (#1061). TAOM sets `HasMet` at placement, which closed vanilla's first-meeting chain, so `OathIntroDialog` plays the seven strings once to an unrecruited companion.
 - 2026-10-29: Elegost, a Dúnedain Ranger of the North, waits in Bree in new campaigns (#1060, player
   feedback; a save made before him never loads the new hero): the Arthedain Ranger's kit without the helm, a face rolled once from `fighter_gondor`, and a TAOM-original backstory (translations in #763).
