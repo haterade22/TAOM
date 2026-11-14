@@ -1963,5 +1963,9 @@
     <string id="taom_crca_t3_b_p2" text="-15% 병력 급료." />
     <string id="taom_crca_t3_b_p3" text="+15% 부대 이동 속도." />
     <string id="taom_crca_t3_b_p4" text="+9 최대 체력." />
+    <string id="taom_career_passive_label" text="Passive" />
+    <string id="taom_career_tier_word" text="Tier" />
+    <string id="taom_career_choose_one" text="Choose one" />
+    <string id="taom_career_choose_count" text="Choose {COUNT}" />
   </strings>
 </base>

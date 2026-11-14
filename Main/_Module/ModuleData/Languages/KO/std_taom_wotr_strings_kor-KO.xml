@@ -79,5 +79,17 @@
     <string id="taom_wc_gondor_fell" text="{TARGET}의 성문이 부서지고, 백색도시가 모르도르에 함락되었다." />
     <string id="taom_wc_blackgate_title" text="검은 문이 열리다" />
     <string id="taom_wc_blackgate_occurred" text="서부의 대장들이 반지의 사자로부터 그 눈을 돌리기 위해 모란논으로 진군한다. 이제 전쟁의 운명은 반지에 달렸다." />
+    <string id="taom_wc_hornburg_fate" text="The host of Isengard storms {TARGET} through the night, and at dawn the Hornburg still stands." />
+    <string id="taom_event_category_chronicle" text="War Chronicle" />
+    <string id="taom_event_category_coronation" text="Coronation" />
+    <string id="taom_event_effects" text="Effects" />
+    <string id="taom_event_effect_days" text="For {DAYS} days" />
+    <string id="taom_event_side_free" text="Free Peoples" />
+    <string id="taom_event_side_evil" text="The Shadow" />
+    <string id="taom_event_effect_volunteers" text="Volunteer recruitment rate" />
+    <string id="taom_event_effect_escape" text="Additional escape roll" />
+    <string id="taom_event_effect_momentum" text="War of the Ring momentum" />
+    <string id="taom_event_effect_note" text="Values are this event's contributions before caps, and the caps apply even to a single effect. Your own clan's fiefs and lords are never affected." />
+    <string id="taom_event_effect_escape_note" text="The additional escape roll's chance is the shown percentage of a lord's usual escape chance." />
   </strings>
 </base>

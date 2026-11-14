@@ -53,9 +53,9 @@ internal static class ClaimActions
 
         // A title of the player's highest rank they are not yet known by: their style, party name and realm banner follow it.
         if (b.CanPlayerChoosePrimary(title.Id) && !b.IsPlayerKnownBy(title.Id))
-            options.Add(new ClaimOption(Text("{=realms_ui_primary}Make primary title"), string.Empty, string.Empty, () => Confirm(
-                Text("{=realms_ui_primary}Make primary title"),
-                Ask("{=realms_ui_primary_ask}Be known by the {TITLE} from now on? Your style and party name follow your primary title, and so does your realm's banner where the title has one.", name, string.Empty),
+            options.Add(new ClaimOption(Text("{=taom_realms_ui_primary}Make primary title"), string.Empty, string.Empty, () => Confirm(
+                Text("{=taom_realms_ui_primary}Make primary title"),
+                Ask("{=taom_realms_ui_primary_ask}Be known by the {TITLE} from now on? Your style and party name follow your primary title, and so does your realm's banner where the title has one.", name, string.Empty),
                 () => { if (!b.PlayerChoosePrimary(title.Id)) Message(Failed()); },
                 afterYes, afterNo)));
 
