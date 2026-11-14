@@ -167,12 +167,24 @@ run it for that culture only (`--culture <name>`), apply, then sync.
 
 - `clan_empire_south_10-15` (Mordor-named, in `Kingdom.empire_s`) were re-cultured from the stale
   `Culture.empire` to `Culture.mordor`, so they now field Mordor troops + heraldry.
-- Vanilla minor mercenary/outlaw factions (ghilman, skolderbrotva, wolfskins, …) left at vanilla colours.
+- `player_faction` (the player's clan), `looters` and `deserters` (bandit clans the game hardcodes) keep
+  their vanilla colours. The other 14 vanilla minor factions got hand-set lore pairs on 2026-11-14 (see Changelog).
+- A save keeps the `Clan.Color` and `Clan.Color2` it saved (`MinorClanMigrationService` does not touch colours),
+  so a changed pair shows on a new campaign only.
 - Khand per-clan rosters await a dedicated Khand troop tree.
 - Non-Gondor clan colours are systematic (lore base + variation), not individually hand-named heraldry.
 
 ## Changelog
 
+- 2026-11-14: gave the 14 minor factions in `spclans.xslt` a hand-set lore `color`/`color2`, edited in that file
+  because no `clan_heraldry/*.json` spec owns them. Serpent Guard (`ghilman`) Harad red and black; Grey Company
+  (`legion_of_the_betrayed`) grey and Ranger green; Axemen of Erebor (`skolderbrotva`) Durin blue and steel;
+  Corsair Blades (`company_of_the_boar`) night navy and silver; The Blind Eye (`beni_zilal`) shadow violet and
+  dust; Variag Ravagers (`wolfskins`) Khand rust and bone; Dunlending Reavers (`brotherhood_of_woods`) hill brown
+  and blood; Mouth's Servants (`hidden_hand`) Mordor black and red; Wreckers of the Long Lake (`lakepike`) lake
+  murk and reed; Cult of the Lidless Eye (`embers_of_flame`) black and fire; Sand-Riders (`jawwal`) desert ochre;
+  Wild Easterlings (`karakhuzaits`) steppe earth and Rhun teal; Druedain (`forest_people`) moss and earth;
+  Beornings (`eleftheroi`) bear brown and honey.
 - 2026-09-02: repointed all 14 Gondor clans' `color`/`color2` to derive from their own `banner_key`, and corrected the "armour follows the kingdom" claim above: `Patch23_BannerColorPersistence` makes it follow the clan.
 - 2026-06-04 — Gave 192 clans distinct heraldry `color`/`color2`, 176 clans their own `default_party_template`, and repainted all 8 vanilla-renamed kingdoms to lore palettes via 4 new tools + per-culture spec files; `validate_moduledata` PASS (462 party templates), data-only.
 

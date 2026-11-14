@@ -576,3 +576,11 @@ Gondor faces that were gone.
   `tools/tests/test_generate_new_faction_kingdoms_inputs.py`.
 - **Source:** the #1171 and #1172 reviews, findings XLE-F1, XLC-F1, XLE-F2, XLC-F2, XLC-F3.
 
+### A clan colour lives in four places, so a recolour reads the heraldry doc first (minor-faction colours, 2026-11-14)
+
+A clan's tint is set in `spclans.xslt` or `clans.xml`, but the same colour also sits in the clan's `banner_key`, in its `clan_heraldry/<culture>.json` spec and in `docs/reviews/_clan_registry.json`. Recolouring 14 minor factions in the XSLT alone left their banners vanilla, left the spec generator and its test blind to them, left the registry on vanilla values and made a Known Limitations line in `clan-heraldry.md` false. Every gate passed.
+
+- **Why missed:** the request named troop colour, and no validator, test or build compares the four stores.
+- **Prevent:** before a clan colour change, read `docs/features/clan-heraldry.md`, compare the clan's `banner_key` colours with the new pair, grep `docs/features/` for the limitation the change removes, and prefer a spec entry over a hand edit of the XSLT. A save keeps its saved `Clan.Color`, so say "new campaign only" in the commit body.
+- **Source:** [rca-minor-faction-colors-2026-11-14.md](../rca-minor-faction-colors-2026-11-14.md) F1 to F5.
+
