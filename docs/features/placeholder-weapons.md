@@ -91,8 +91,9 @@ that no troop carries.
 
 - **TAOM must load after LOTRLOME_Armory** (the documented launcher order). The Armory's
   `weapon_descriptions.xslt` and `crafting_templates.xslt` replace the piece lists. If TAOM loads first, its
-  additions are wiped and the placeholders get no weapon usage. TAOM's SubModule.xml declares no order
-  against the Armory today.
+  additions are wiped and the placeholders get no weapon usage. TAOM's SubModule.xml declares
+  `<DependedModuleMetadata id="LOTRLOME_Armory" order="LoadBeforeThis" optional="true" />`: BUTR/BLSE
+  launchers sort by it, the vanilla launcher ignores it.
 - The installed Armory (donors are read from it) and lxml (the shared `melee_catalogue`).
 
 ## Tests
@@ -102,7 +103,9 @@ that no troop carries.
   these sheets:
   - weapon_descriptions: 5230 to 5285 AvailablePiece entries (55 placeholders, every Armory entry kept);
   - crafting_templates: 2968 to 2984 (16 placeholders).
-- No C# test covers this yet.
+- `PlaceholderWeaponStylesheetChainLiveTests` (LiveInstall) runs the same chain on the installed Native and
+  Armory files: every `taom_ph_` blade must be listed and every Armory entry kept. Inconclusive without
+  the Armory.
 - The validator's `MELEE_LADDER_INVERSION` prices Armory items only, so it does not see the placeholders.
 
 ## How to verify in game

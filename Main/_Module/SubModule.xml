@@ -33,6 +33,11 @@
     <DependedModuleMetadata id="SandBoxCore" order="LoadBeforeThis" />
     <DependedModuleMetadata id="Sandbox" order="LoadBeforeThis" />
     <DependedModuleMetadata id="CustomBattle" order="LoadBeforeThis" />
+    <!-- LOTRLOME_Armory's weapon_descriptions.xslt and crafting_templates.xslt replace the piece lists that
+         placeholder_weapons/ph_*.xslt append to, so TAOM must load after it (docs/features/placeholder-weapons.md).
+         BUTR/BLSE launchers sort by this line; the vanilla launcher ignores it. Optional, so TAOM still starts
+         without the Armory. -->
+    <DependedModuleMetadata id="LOTRLOME_Armory" order="LoadBeforeThis" optional="true" />
     <!-- Co-op interop (2026-07-31). BUTR/BLSE launchers read this block; the VANILLA launcher does
          not — `TaleWorlds.ModuleManager.ModuleInfo.LoadWithFullPath` (installed v1.5.7) parses only
          DependedModules, ModulesToLoadAfterThis, IncompatibleModules and SubModules, with no branch
