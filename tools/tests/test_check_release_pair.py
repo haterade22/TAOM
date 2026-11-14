@@ -20,9 +20,17 @@ import check_release_pair as crp  # noqa: E402
 CULTURES = '<SPCultures>\n  <Culture id="realm_a" />\n</SPCultures>\n'
 CLANS = ('<Factions>\n  <Faction id="clan_a_1" culture="Culture.realm_a" '
          'initial_home_settlement="Settlement.town_a1" />\n</Factions>\n')
-SETTLEMENTS = ('<Settlements>\n  <Settlement id="town_a1" owner="Faction.clan_a_1" culture="Culture.realm_a" />\n'
+SETTLEMENTS = ('<Settlements>\n  <Settlement id="town_a1" owner="Faction.clan_a_1" culture="Culture.realm_a">\n'
+               '    <Locations complex_template="LocationComplexTemplate.town_complex">\n'
+               '      <Location id="prison" scene_name="empire_dungeon_stealth" />\n'
+               '    </Locations>\n  </Settlement>\n'
                '</Settlements>\n')
 VANILLA_CLANS = '<Factions>\n  <Faction id="clan_vanilla_1" culture="Culture.empire" />\n</Factions>\n'
+# A 1.5.x prison break spawns its guards on stealth_agent and its reinforcements on
+# prison_break_reinforcement_point; the pre-stealth *_dungeon_a scenes carry neither.
+STEALTH_SCENE = ('<scene><entity><tag name="stealth_agent"/></entity><entity>'
+                 '<variable name="SpawnGroupTag" value="prison_break_reinforcement_point"/></entity></scene>\n')
+OLD_SCENE = '<scene><entity name="chair"><tag name="npc_common"/></entity></scene>\n'
 STRIP = ('<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0">\n'
          '  <xsl:template match="Settlement"/>\n</xsl:stylesheet>\n')
 
@@ -45,6 +53,9 @@ class ReleasePairTests(unittest.TestCase):
         _write(self.map / "settlements.xml", SETTLEMENTS)
         _write(self.map / "settlements.xslt", STRIP)
         _write(self.install / "SandBox" / "ModuleData" / "spclans.xml", VANILLA_CLANS)
+        # The channel holds no SandBox, so the vanilla dungeon scenes come from the install.
+        _write(self.install / "SandBox" / "SceneObj" / "empire_dungeon_stealth" / "scene.xscene", STEALTH_SCENE)
+        _write(self.install / "SandBox" / "SceneObj" / "empire_dungeon_a" / "scene.xscene", OLD_SCENE)
 
     def tearDown(self):
         self._tmp.cleanup()
@@ -164,6 +175,38 @@ class ReleasePairTests(unittest.TestCase):
                '</xsl:stylesheet>\n')
         code, out, _ = self._run()
         self.assertEqual(code, 0, out)
+
+    def test_a_prison_on_a_pre_stealth_scene_is_found(self):
+        # Orthanc and Orthanc Gate shipped empire_dungeon_a (2026-11-13); every package must carry the repair.
+        _write(self.map / "settlements.xml", SETTLEMENTS.replace("empire_dungeon_stealth", "empire_dungeon_a"))
+        code, out, _ = self._run()
+        self.assertEqual(code, 1, out)
+        self.assertIn("PRISON_SCENE_NOT_STEALTH", out)
+        self.assertIn("town_a1", out)
+        self.assertIn("empire_dungeon_a", out)
+        self.assertNotIn("PASS:", out)
+
+    def test_a_pre_stealth_prison_in_a_higher_level_slot_is_found(self):
+        _write(self.map / "settlements.xml", SETTLEMENTS.replace(
+            'scene_name="empire_dungeon_stealth"',
+            'scene_name="empire_dungeon_stealth" scene_name_2="empire_dungeon_a"'))
+        self._assert_finds("PRISON_SCENE_NOT_STEALTH")
+
+    def test_a_prison_scene_the_channel_ships_itself_is_read_from_the_channel(self):
+        _write(self.map / "settlements.xml", SETTLEMENTS.replace("empire_dungeon_stealth", "taom_orthanc_dungeon"))
+        _write(self.modules / "TAOM_Map" / "SceneObj" / "taom_orthanc_dungeon" / "scene.xscene", STEALTH_SCENE)
+        code, out, _ = self._run()
+        self.assertEqual(code, 0, out)
+        self.assertIn("PASS:", out)
+
+    def test_a_prison_scene_no_module_ships_is_not_passed(self):
+        _write(self.map / "settlements.xml", SETTLEMENTS.replace("empire_dungeon_stealth", "none_such_dungeon"))
+        self._assert_finds("PRISON_SCENE_NOT_STEALTH")
+
+    def test_a_map_with_no_prison_rows_is_refused_not_passed(self):
+        # The prison check would have judged nothing, which must not read as a pass.
+        _write(self.map / "settlements.xml", SETTLEMENTS.replace('id="prison"', 'id="tavern"'))
+        self._assert_refused("prison")
 
     def _assert_refused(self, needle):
         code, out, err = self._run()
