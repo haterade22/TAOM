@@ -14,7 +14,7 @@
   marked obsolete here by id prefix (CustomBattleTroopFilterTests).
   taom_vanilla_troop_obsolete_overrides.xml already hides the main vanilla Aserai line everywhere.
   Vanilla soldiers of the other reused cultures (empire Dunland, sturgia Dale, vlandia Rohan, khuzait Rhun)
-  were still offered in those slots: 88 on v1.5.7 (main lines, militia, and the vanilla minor clans
+  were still offered in those slots: 88 counted on the v1.5.7 install (main lines, militia, and the vanilla minor clans
   hidden_hand, embers_of_flame, lakepike, karakhuzaits). Training dummies and training-yard opponents
   (gear_practice_dummy_*, gear_dummy_*, weapon_dummy_*, weapon_practice_stage_*) are Soldier-occupation in most
   TAOM cultures and were offered too. Both are marked obsolete here by id. No TAOM troop uses these prefixes;

@@ -1137,8 +1137,8 @@
         <GameType value="CampaignStoryMode"/>
       </IncludedGameTypes>
     </XmlNode>
-    <!-- Custom Battle only, after every NPCCharacters node: hide non-army Aserai/Shaghana characters (Jawwal,
-         Beni Zilal, militia, caravan guards, practice dummies...) so only the harad_* troops are offered. -->
+    <!-- Custom Battle only, after every NPCCharacters node but fords_troops (all obsolete): hide non-army characters
+         (non-harad_ Aserai/Shaghana, vanilla Calradian lines, dummies, vanilla commanders); list in its header. -->
     <XmlNode>
       <XmlName id="NPCCharacters" path="custom_battle/custom_battle_harad_troop_filter"/>
       <IncludedGameTypes>
