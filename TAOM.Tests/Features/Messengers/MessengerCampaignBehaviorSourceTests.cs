@@ -69,7 +69,7 @@ public class MessengerCampaignBehaviorSourceTests
         // Only a found location opens the settlement scene; everything else (the field, the army-attach case and the
         // no-location fallback) reaches the one conversation-mission call.
         StringAssert.Matches(body, new Regex(
-            @"if \(targetLocation != null\)\s*\{[^}]*CreateAndOpenMissionController\([^}]*\}\s*else\s*_currentMission = \(Mission\)Campaign\.Current\.CampaignMissionManager\.OpenConversationMission\("));
+            @"if \(targetLocation != null\)\s*\{[^}]*CreateAndOpenMissionController\([^}]*\}\s*else\s*\{?\s*_currentMission = \(Mission\)Campaign\.Current\.CampaignMissionManager\.OpenConversationMission\("));
         Assert.AreEqual(1, Regex.Matches(body, @"OpenConversationMission\(").Count,
             "one conversation-mission call serves the field branch and the no-location fallback");
         Assert.IsFalse(body.Contains("LocationComplex.Current.GetLocationOfCharacter(target)"),

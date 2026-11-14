@@ -146,8 +146,10 @@ The throttle latch resets with the wait origin, so a chained second mission spea
 rather than waiting out the first mission's interval. Nothing is emitted before the origin is armed
 at `MissionInitializeDone`: `TickLoading` can run earlier, and a line there would be a fabricated
 measurement rather than a short one. `FinishMissionLoadingBegin` disarms the origin again, because
-the wait is over there. Until 2026-11-14 it stayed armed, so the next mission's early `TickLoading`
-frames read it against the restarted stopwatch: a player log (2026-11-13) shows a conversation opened
+the wait is over there (#1236). Release builds up to the v2.0.38 tag (5579a59a6) left it armed; the
+fix ships in the next release. Exactly one `TickLoading` prefix of the next mission could read it
+(the first, before that frame's `LoadMission` calls `Mission.Initialize`, whose prefix resets the
+origin), against the restarted stopwatch, and its `polls=` is the previous load's count plus one: a player log (2026-11-13) shows a conversation opened
 42.7 s after a battle's exit writing `WaitingForSceneLoad scene='battle_terrain_J' polls=12
 waitMs=31273`, a wait that never happened, named after the battle. On logs from builds before that
 fix, a heartbeat placed BEFORE its own mission's `LoadMissionBegin`/`MissionInitialize` lines is
