@@ -17,6 +17,30 @@ public class StagedSiegeRecordFragmentTests
 
     private const string Facing = ",\"fx\":0,\"fy\":1";
 
+    [DataTestMethod]
+    [DataRow("nb-NO")]
+    [DataRow("de-DE")]
+    [DataRow("en-US")]
+    public void ParseLine_ThreadCulture_ReadsTheUtcTime(string culture)
+    {
+        // Json.NET reads the ISO string as a date. Formatting it back with the thread culture and parsing it with the
+        // invariant culture lost the time on a nb-NO or de-DE Windows, so "newest record wins" compared zero times.
+        var previous = System.Threading.Thread.CurrentThread.CurrentCulture;
+        try
+        {
+            System.Threading.Thread.CurrentThread.CurrentCulture = new System.Globalization.CultureInfo(culture);
+            var r = StagedSiegeRecordFragment.ParseLine(Line("s1", "b", "defender", 1.5, 7, Facing));
+
+            Assert.IsNotNull(r);
+            Assert.AreEqual(new System.DateTime(2026, 10, 29, 10, 0, 7, System.DateTimeKind.Utc), r!.Utc);
+            Assert.AreEqual(System.DateTimeKind.Utc, r.Utc.Kind);
+        }
+        finally
+        {
+            System.Threading.Thread.CurrentThread.CurrentCulture = previous;
+        }
+    }
+
     [TestMethod]
     public void ParseLine_Valid_Record()
     {
