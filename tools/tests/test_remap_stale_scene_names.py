@@ -127,6 +127,15 @@ class RemapStaleSceneNamesTests(unittest.TestCase):
         self.assertEqual(self.live.read_bytes(), original)
         self.assertEqual(self._backups(), [])
 
+    def test_a_missing_live_file_exits_2_not_0(self):
+        # "0 of N remaps match" with exit 0 would read as "already remapped" when nothing was looked at.
+        for flag in ("--dry-run", "--apply"):
+            with self.subTest(flag=flag):
+                code, out = self._run(flag)
+                self.assertEqual(code, 2, out)
+                self.assertIn("settlements.xml", out)
+                self.assertEqual(self._backups(), [])
+
     def test_mixed_case_old_name_is_replaced(self):
         self.live.write_bytes(_doc("Empire_Dungeon_A", "\r\n"))
         self._run("--apply")

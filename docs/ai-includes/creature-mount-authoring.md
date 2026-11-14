@@ -393,10 +393,12 @@ The native dispatch is **TYPE-driven**. Declare, exactly:
    `as_horse`; do not author one believing it prevents a crash.
 3. **The rider partial**: a partial `<action_set id="as_human_warrior">` block mapping every
    creature usage-set action to a RIDER overlay clip (`rider_warg_*` + vanilla `rider_fall_*`).
-   **It MUST sit at the TOP of the file** — `base_set` inheritance snapshots at definition time,
-   so the partial must precede every race set or riders inherit nothing (the goblin
-   "thrust-loop", 2026-06-11). The engine merges same-id sets across modules
-   (the Armory's warg file leads with exactly such a partial).
+   **Keep it at the top of the file** (the habit since the goblin thrust-loop, 2026-06-11, cause UNVERIFIED):
+   `Module.CreateProcessedActionSetsXMLForNative` folds every same-id `as_human_warrior` block into Native's element,
+   which comes first, before native parses the document, so the position likely does not matter
+   (bannerlord-animation-system-map.md). The engine merges same-id sets across modules
+   (the Armory's warg file leads with exactly such a partial). Also copy the rows into TAOM's dwarf block in
+   `Main/_Module/ModuleData/action_sets.xml` (`as_dwarf_warrior` has no `base_set`; `DwarfMountRiderRowsTests`).
 4. **Registration truth:** native animation XML loads ONLY via `project.mbproj` `<file>` entries
    with the standard ids (`soln_action_sets` / `soln_action_types` / `soln_monster_usage_sets`)
    → the module-root `action_sets.xml` / `action_types.xml` / `monster_usage_sets.xml` are live;

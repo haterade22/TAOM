@@ -87,7 +87,8 @@ class WriterTests(unittest.TestCase):
 
 
 class ShippedModuleStringsPinTests(unittest.TestCase):
-    """Every key of the shipped taom_module_strings.xml is a TAOM key or an 8-character vanilla-shaped id.
+    """Every key of the shipped taom_module_strings.xml is a TAOM key (taom_, TAOM_, aom_ or the Realms realms_) or an
+    8-character vanilla-shaped id.
 
     english_only_override_ids treats the second kind as an English-only override, so a key that is neither
     would be skipped by --sync-ids without being one."""
@@ -98,7 +99,7 @@ class ShippedModuleStringsPinTests(unittest.TestCase):
         keys = t._parse_string_xml(source, strip_keys=True)
         self.assertGreater(len(keys), 1000, "the shipped file was not found")
         odd = sorted(k for k in keys
-                     if not k.startswith(("taom_", "TAOM_", "aom_")) and not t.VANILLA_ID_SHAPE.fullmatch(k))
+                     if not k.startswith(("taom_", "TAOM_", "aom_", "realms_")) and not t.VANILLA_ID_SHAPE.fullmatch(k))
         self.assertEqual(odd, [], "neither a TAOM key nor an 8-character vanilla id")
 
 

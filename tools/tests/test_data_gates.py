@@ -94,6 +94,12 @@ class SelectionTests(unittest.TestCase):
         self.assertIn("armory-refs", ids)
         self.assertIn("polearm-shield", ids)
 
+    def test_the_action_files_the_mbproj_audit_reads_select_it(self):
+        for name in ("project.mbproj", "action_sets.xml", "action_types.xml"):
+            path = f"Main/_Module/ModuleData/{name}"
+            self.assertIn("mbproj", _ids(dg.select(dg.GATES, [path])), path)
+        self.assertNotIn("mbproj", _ids(dg.select(dg.GATES, [TROOPS])))
+
     def test_the_banner_sprite_folder_selects_banner_sheets(self):
         sprite = "Main/_Module/GUI/SpriteParts/ui_taom_bannericons/10000.png"
         self.assertIn("banner-sheets", [g.id for g in dg.select(dg.GATES, [sprite])])

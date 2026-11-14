@@ -51,8 +51,8 @@ as proof that `<YourModule>` is sound.
 - `python tools/audit_mbproj_registration.py --module <YourId>` is the one gate that takes a module
   id directly and needs nothing else (a module that is not installed, or has no `project.mbproj`,
   exits 2).
-- `python tools/audit_scene_names.py` takes no arguments at all and reads four hardcoded settlement
-  files (`tools/audit_scene_names.py:25-30`). Stage 16 says what that leaves uncovered.
+- `python tools/audit_scene_names.py` takes no arguments at all and reads three hardcoded settlement
+  files (`tools/audit_scene_names.py:30-34`). Stage 16 says what that leaves uncovered.
 
 Nothing in this repo validates a new module end to end. Where a stage's check cannot reach your
 files, the stage says so rather than implying it passed.
@@ -497,8 +497,9 @@ Chapters: [settlements](settlements.md), [module-map](module-map.md),
 
 **Check:** there is no gate for the crash this stage warns about, and running one that looks like
 it covers it is worse than running none. `python tools/audit_scene_names.py` takes no arguments,
-reads four hardcoded settlement files and compares their interior `scene_name` values against
-`SceneObj` folders (`tools/audit_scene_names.py:25-30`, `84-102`). It never opens your settlement
+reads three hardcoded settlement files and compares their interior `scene_name` values against
+`SceneObj` folders (`tools/audit_scene_names.py:30-34`, `102-118`). It exits 2 when the install or
+TAOM_Map's `settlements.xml` is missing. It never opens your settlement
 file and it never looks at `Main_map` entities, so it can print a clean report immediately before
 the map-load crash. What actually proves this stage: extract the `id` of every `<Settlement>` in
 your file and confirm each one appears as an entity name in your `Main_map/scene.xscene`, then run

@@ -11,8 +11,7 @@ player pulls the camera back, which is how it can ship unnoticed.
 ## Where the settings live
 
 One element, `<terrain>`, in the **LIVE** `Modules/TAOM_Map/SceneObj/Main_map/scene.xscene`. The
-repo carries no copy of the scene at all, so unlike `settlements.xml` there is not even a stale
-shadow to confuse matters. See the "TAOM_Map settlements" trap in [orientation.md](../ai-includes/orientation.md) for the general rule
+repo carries no copy of the scene, as it carries none of `settlements.xml`. See the "TAOM_Map settlements" trap in [orientation.md](../ai-includes/orientation.md) for the general rule
 about editing live module data.
 
 Read the current values without opening the Modding Kit:

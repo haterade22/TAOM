@@ -38,7 +38,7 @@ history and the gate. A new trap for this area is a new row here, never a row in
 |---|---|---|
 | Horse-skeleton mounts | `act_horse_kick` is the engine's rear kick; own attack, own action; a HorseHarness per Horse slot (gated) | [war ram](../../../docs/features/war-ram.md) |
 | Mount size, seat | Resize on the Monster (`taom_body_length`); the usage's rider clip seats a rider, never `rider_sit_bone` | [size](../../../docs/features/monster-size.md) |
-| Rider rows per race set | The engine looks a mount's usage actions up in the rider's set; a set without them (dwarf on a warg crashed) needs the human rider rows merged in, as TAOM's `action_sets.xml` does for the dwarves | [war ram](../../../docs/features/war-ram.md) |
+| Creature rider rows | Rows given only to `as_human_warrior` miss the dwarf sets (no `base_set`): copy them into TAOM's dwarf block; `DwarfMountRiderRowsTests` | [war ram](../../../docs/features/war-ram.md) |
 | Riderless creatures | Soldiers ignore a riderless `Mountable` with no weapon state; fading a mount a soldier holds or chose CTDs | [bandits](../../../docs/features/creature-bandits.md) |
 | Animation | Engine skeleton: engine frames, rest pose at frame 0, list order; own skeleton: retarget the clips too | [skeleton](../../../docs/reference/bannerlord-skeleton-authoring.md) |
 | Kit clip rename | Corrupts the clip: keep the name, close the Kit, `rename_anim_clip_tpac.py`. A rope-flagged copy lacking `{clip}_weapon` CTDs | [tools](../../../tools/README.md) |

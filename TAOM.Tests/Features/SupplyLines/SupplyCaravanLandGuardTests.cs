@@ -6,10 +6,11 @@ using TAOM.Tests.Infrastructure;
 namespace TAOM.Tests.Features.SupplyLines;
 
 /// <summary>
-/// #1104: a supply caravan is a land party, so the movement pass never places it on a point that is not walkable
-/// land. The straight-line fallback route (no land path, for example to a player at sea) crosses water and
-/// impassable ground. The write itself goes through engine statics, so the order of the check and the write is pinned
-/// on the method body with comments stripped.
+/// #1104: a supply caravan is a land party, and the movement pass never moves it off walkable land. Spawn and
+/// RespawnMissing place a caravan without this check, so only the movement pass is guarded. The reachable triggers are
+/// the smoothed point cutting a bend, the glide after a repath, and the straight-line fallback route (an endpoint face
+/// is invalid or the path query fails or returns fewer than two points). The write itself goes through engine
+/// statics, so its placement inside the check is pinned on the method body with comments stripped.
 /// </summary>
 [TestClass]
 public class SupplyCaravanLandGuardTests
@@ -37,9 +38,9 @@ public class SupplyCaravanLandGuardTests
             Regex.IsMatch(body, @"party\s*\.\s*Position\s*=\s*position\s*;"),
             "the write must use the checked position, not a new one");
 
-        var check = Regex.Match(body, @"if\s*\(\s*position\s*\.\s*IsValid\s*\(\s*\)\s*\)");
-        Assert.IsTrue(check.Success, "the position must pass CampaignVec2.IsValid (land face, walkable terrain)");
-        Assert.IsTrue(check.Index < writes[0].Index, "the land check must come before the write");
+        Assert.IsTrue(
+            Regex.IsMatch(body, @"if\s*\(\s*position\s*\.\s*IsValid\s*\(\s*\)\s*\)\s*\{\s*party\s*\.\s*Position\s*=\s*position\s*;"),
+            "the write must be the first statement inside the CampaignVec2.IsValid block (land face, walkable terrain)");
     }
 
     [TestMethod]
@@ -49,12 +50,39 @@ public class SupplyCaravanLandGuardTests
 
         var bearing = Regex.Match(body, @"if\s*\(\s*placed\s*&&[^)]*\)\s*ApplyBearing\s*\(");
         Assert.IsTrue(bearing.Success, "a caravan held off a non-land point must keep its bearing");
+        Assert.IsTrue(
+            Regex.IsMatch(body, @"bool\s+placed\s*=\s*false\s*;"),
+            "placed must start false so only a written point turns the caravan");
+    }
+
+    [TestMethod]
+    public void ClearTrackers_ResetsTheOffLandLatch_SoTheLineIsOncePerCampaignSession()
+    {
+        string source = RepoPaths.ReadSource(ServicePath, stripComments: true);
+        int start = source.IndexOf("public void ClearTrackers()", System.StringComparison.Ordinal);
+        Assert.IsTrue(start >= 0, "ClearTrackers not found in " + ServicePath);
+        int end = source.IndexOf("\n    }\n", start, System.StringComparison.Ordinal);
+        string body = source.Substring(start, end - start);
+
+        Assert.IsTrue(Regex.IsMatch(body, @"_offLandWarned\s*=\s*false\s*;"),
+            "a new or loaded campaign must be able to log the off-land line again");
+    }
+
+    [TestMethod]
+    public void OffLandWarning_CarriesPositionFaceAndTerrain()
+    {
+        string line = SupplyCaravanService.OffLandWarning("taom_so_7", false, 123.456f, 78.9f, 4521, "Water");
+
+        StringAssert.Contains(line, "pos=(123.46,78.90)");
+        StringAssert.Contains(line, "face=4521");
+        StringAssert.Contains(line, "terrain=Water");
+        StringAssert.Contains(line, "once per campaign session");
     }
 
     [TestMethod]
     public void OffLandWarning_PlayerAtSea_NamesTheOrderAndTheSea()
     {
-        string line = SupplyCaravanService.OffLandWarning("taom_so_7", playerAtSea: true);
+        string line = SupplyCaravanService.OffLandWarning("taom_so_7", true, 1f, 2f, -1, "unknown");
 
         StringAssert.StartsWith(line, "[SupplyLines] ");
         StringAssert.Contains(line, "order taom_so_7");
@@ -64,7 +92,7 @@ public class SupplyCaravanLandGuardTests
     [TestMethod]
     public void OffLandWarning_PlayerOnLand_SaysSo()
     {
-        string line = SupplyCaravanService.OffLandWarning("taom_so_7", playerAtSea: false);
+        string line = SupplyCaravanService.OffLandWarning("taom_so_7", false, 1f, 2f, -1, "unknown");
 
         StringAssert.Contains(line, "playerAtSea=False");
     }

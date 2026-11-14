@@ -45,7 +45,7 @@ back into `Main/_Module/Prefabs/` (`HowdahPrefabTests` fails if it does). It nee
 
 ## Loading status — DO NOT REGISTER
 
-These files **must not** be referenced by `Main/_Module/SubModule.xml` or moved into `Main/_Module/ModuleData/`. Bannerlord auto-loads `<module>/ModuleData/{action_sets,monsters,skins}.xml` from every enabled module's root, so duplicating these into TAOM's ModuleData would cause double-load conflicts (same IDs in two modules) — exactly the dead-duplicate state we cleaned up on 2026-05-04 (commit `307df40`).
+These files **must not** be referenced by `Main/_Module/SubModule.xml` or moved into `Main/_Module/ModuleData/`. Bannerlord auto-loads `<module>/ModuleData/{action_sets,monsters,skins}.xml` from every enabled module's root, so duplicating these into TAOM's ModuleData would cause double-load conflicts (same IDs in two modules): exactly the dead-duplicate state we cleaned up on 2026-05-04 (commit `307df40`). A partial same-id set that merges rows, such as TAOM's dwarf rider block in `Main/_Module/ModuleData/action_sets.xml`, is not a copy and is intended.
 
 ## CC parent fix — required action_sets checklist
 

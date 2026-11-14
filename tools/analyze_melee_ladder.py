@@ -122,10 +122,20 @@ class Troop:
         return min(tier + 1, MAX_TIER) if self.id in NOBLE_TROOPS else tier
 
 
+def _is_civilian_roster(roster) -> bool:
+    """Mirrors MBEquipmentRoster.InitEquipment (v1.5.7): an `equipmentType` attribute decides
+    the kind; only a roster without one is Civilian through `civilian="true"`."""
+    kind = roster.get("equipmentType")
+    if kind is not None:
+        return kind == "Civilian"
+    return (roster.get("civilian") or "").lower() == "true"
+
+
 def load_troops(root: Path) -> list[Troop]:
     """Every `<NPCCharacter>` with its BATTLE equipment item ids.
 
-    Civilian sets are skipped: a townsfolk dagger is not a statement about the troop tree.
+    Civilian sets (`equipmentType="Civilian"` or an inline `civilian="true"`) are skipped: a
+    townsfolk dagger is not a statement about the troop tree.
 
     Both `<equipment>` and `<Equipment>` casings are matched. That is not cosmetic. Inline
     troop rosters spell the child lowercase and standalone roster files spell it uppercase,
@@ -157,7 +167,7 @@ def load_troops(root: Path) -> list[Troop]:
             slots: dict[str, set[str]] = {}
             for block in node.iter("Equipments"):
                 for roster in block.iter("EquipmentRoster"):
-                    if (roster.get("equipmentType") or "") == "Civilian":
+                    if _is_civilian_roster(roster):
                         continue
                     for eq in roster.iter("equipment", "Equipment"):
                         ref = eq.get("id")
