@@ -6,8 +6,10 @@ using TAOM.Dependencies.Foundation;
 namespace TAOM.Dependencies;
 
 /// <summary>
-/// Loaded by each of the four BUTR alias stub SubModule.xml files
-/// (Bannerlord.Harmony / .UIExtenderEx / .ButterLib / .MBOptionScreen).
+/// Named by each of the four BUTR alias stub SubModule.xml files
+/// (Bannerlord.Harmony / .UIExtenderEx / .ButterLib / .MBOptionScreen). Since #969 each
+/// entry carries the IsNoRenderModeElement skip tag, so the engine never constructs this
+/// class; the entry exists for BLSE's reordering, and Dependencies/SubModule runs the early phase.
 /// Performs idempotent installation of the AssemblyResolve handler via an
 /// Interlocked.Exchange gate. All work is try/catch-wrapped so a LauncherEx-time
 /// exception is logged but never escapes — BetaDeps's v0.7.2 → v0.7.5 evolution

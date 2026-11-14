@@ -272,7 +272,7 @@ modules under `Stubs/`, one folder each for `Bannerlord.Harmony`, `Bannerlord.UI
 <!-- measured: ls -d Stubs/*/ | wc -l 2026-09-05 -->
 Each stub declares the standard BUTR id, `<DefaultModule value="true"/>`,
 `<DependedModule Id="TAOM.Dependencies"/>` so the real DLLs construct first, and one `<SubModule>`
-pointing at `TAOM.Dependencies.AliasStubSubModule` (`Stubs/Bannerlord.Harmony/_Module/SubModule.xml:42-72`).
+pointing at `TAOM.Dependencies.AliasStubSubModule` (`Stubs/Bannerlord.Harmony/_Module/SubModule.xml:42-78`).
 
 **The v99 version rule.** Each stub is the shipped minor plus `.99.0`.
 `X.Y` is the minor of the version actually shipped (the csproj pin for the three NuGet packages, the
@@ -288,24 +288,28 @@ stub's own comment warns that a legacy mod pinning a strict `v2.4.0.*` wildcard 
 metadata-only and its drag-to-reorder breaks with "Missing Bannerlord.Harmony a0.0.0.0 to a0.0.0.0"
 (`Stubs/Bannerlord.Harmony/_Module/SubModule.xml:27-33`). `AliasStubSubModule` therefore exists, and
 every call in its constructor is wrapped in `TrySwallow` because an uncaught exception in a stub
-constructor breaks reordering for every other mod (`Dependencies/AliasStubSubModule.cs:29-52, 66-80`).
+constructor breaks reordering for every other mod (`Dependencies/AliasStubSubModule.cs:31-54, 68-82`).
 
-**Where they deploy, and the problem with it.** `DeployTAOMDependenciesStubs` copies
-`Stubs/**\SubModule.xml` into the game's `Modules/` folder preserving the relative directory
-(`Dependencies/TAOM.Dependencies.csproj:97-110`), so each file lands at
-`Modules/<Id>/_Module/SubModule.xml`. On this machine each of the four deployed stub folders contains
-exactly that one file and nothing at its root. <!-- measured: find "<game>/Modules/Bannerlord.Harmony" -type f (and the three siblings) 2026-09-05 -->
-Those deployed folders live in the game install, not the repo; a module reinstall reverts hand edits,
-so land a repo-side change and redeploy rather than editing them in place.
+**Where they deploy.** The engine reads a module only at `Modules/<Id>/SubModule.xml`:
 `ModuleHelper.GetPhysicalModules` looks for `SubModule.xml` at the folder root and skips the folder
-otherwise (`ModuleHelper.cs:364-376, v1.5.5`), and vanilla `Native/SubModule.xml` sits at the root. So
-the vanilla engine does not see the four stubs at all. That matches the observation recorded at
-`Dependencies/SubModule.cs:205-211` that the launcher never constructs `AliasStubSubModule`, and it
-means the "auto-tick so third-party mods are not greyed out" purpose in
-[dr3-maintenance.md](../migration/dr3-maintenance.md) line 215 is not what the vanilla engine does with
-the files as deployed. Whether BLSE scans `_Module/` was not checked here; it is listed as an open
-question. The `_Module/` destination is documented as intended at
-[dr3-maintenance.md](../migration/dr3-maintenance.md) line 207.
+otherwise (`ModuleHelper.cs:364-376, v1.5.7`). So both paths that place the stubs drop the `_Module/`
+segment of the source tree. On a dev machine `DeployTAOMDependenciesStubs` copies exactly
+`Stubs/*/_Module/SubModule.xml` and rewrites each destination to `Modules/<Id>/SubModule.xml`
+(`Dependencies/TAOM.Dependencies.csproj`, pinned by `AliasStubDeployTests`). For a release,
+`tools/package_release.py` writes the four to `<dest>/<Id>/SubModule.xml` whenever it packages
+TAOM.Dependencies, and reports whether the source already holds each one. Until #969 the target kept
+`_Module/` and no release carried the stubs, so no player or dev install ever showed them.
+Deployed folders live in the game install, not the repo; land a repo-side change and redeploy rather
+than editing them in place.
+
+**Why a visible stub shows no error box.** Each stub's `<SubModule>` names `TAOM.Dependencies.dll`,
+which no stub folder holds. `Module.LoadSubModules` would look for it in the stub's own `bin/` and the
+game's managed folder, find neither, and show a "Cannot find" message box per stub. The entry carries
+`<Tag key="IsNoRenderModeElement" value="true" />`, which fails `Module.CheckIfSubmoduleCanBeLoadable`
+in every mode (that tag passes only for `false`, v1.5.7), so the engine skips the entry before the
+lookup; BLSE's `ModuleInfoHelper.GetSubModuleTagValiditiy` reads the tag the same way. The entry stays
+for BLSE's reordering (above), and `AliasStubSubModule` is never constructed: TAOM.Dependencies' own
+SubModule runs the early phase (`Dependencies/SubModule.cs:222-228`).
 
 ## Worked example
 
@@ -568,7 +572,7 @@ comment quoted in the pairing section above, not reproduced because line 11 carr
    `cc1713eb` removed the TAOM.Dependencies row and `95085de30` restored it.
 
 <!-- example file="Stubs/Bannerlord.Harmony/_Module/SubModule.xml" id="Bannerlord.Harmony" -->
-The Harmony alias stub, lines 40-73 (its 39-line header comment is summarised in the stub section):
+The Harmony alias stub, lines 40-79 (its 39-line header comment is summarised in the stub section):
 
 ```xml
 <Module xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -601,7 +605,13 @@ The Harmony alias stub, lines 40-73 (its 39-line header comment is summarised in
             <Name value="Bannerlord.Harmony Alias Stub" />
             <DLLName value="TAOM.Dependencies.dll" />
             <SubModuleClassType value="TAOM.Dependencies.AliasStubSubModule" />
-            <Tags />
+            <Tags>
+                <!-- Fails Module.CheckIfSubmoduleCanBeLoadable in every mode (v1.5.7, and BLSE's
+                     ModuleInfoHelper agrees), so the engine skips this entry before it looks for
+                     TAOM.Dependencies.dll in this folder's bin and shows "Cannot find" (#969).
+                     The entry stays: BLSE treats a module with no SubModule as metadata-only. -->
+                <Tag key="IsNoRenderModeElement" value="true" />
+            </Tags>
         </SubModule>
     </SubModules>
 </Module>
@@ -610,6 +620,7 @@ The Harmony alias stub, lines 40-73 (its 39-line header comment is summarised in
 7. `<Version value="v2.4.99.0" />` (line 44) tracks the minor of the `Lib.Harmony` pin.
 8. `<SingleplayerModule>`, `<MultiplayerModule>` and `<Official>` (lines 51-53) are older spellings
    kept for launcher compatibility; `LoadWithFullPath` reads none of them (first engine table).
+   The `<Tag>` (line 75) makes the engine skip the SubModule entry, so no DLL is looked up.
 
 <!-- excerpt file="Dependencies/_Module/coop-modules.txt" -->
 The `[modules]` section of the co-op list, lines 10-15 (line 18 adds `Coop` after a two-line comment):
@@ -714,9 +725,10 @@ The three runtime pins, lines 70-72, and the Unsafe pin with its comment, lines 
    files. <!-- measured: ls Dependencies/Foundation/*.cs | wc -l 2026-11-03 -->
 8. Write `_Module/THIRD-PARTY-LICENSES.txt` in the shape of TAOM's: one paragraph per binary family
    with exact version, holder, licence and URL, then the licence texts.
-9. Add the four stubs under `Stubs/<Id>/_Module/SubModule.xml` and the `DeployTAOMDependenciesStubs`
-   target (`Dependencies/TAOM.Dependencies.csproj:97-110`), knowing the deployed depth problem
-   described above.
+9. Add the four stubs under `Stubs/<Id>/_Module/SubModule.xml`, each `<SubModule>` with the
+   `IsNoRenderModeElement` skip tag, and the `DeployTAOMDependenciesStubs` target
+   (`Dependencies/TAOM.Dependencies.csproj`), which must write each to `Modules/<Id>/SubModule.xml`;
+   ship them in the release beside TAOM.Dependencies (`tools/package_release.py` does).
 10. Copy `BundledDependencyManifestTests.cs` (11 tests), `DependenciesPairingTests.cs` (2) and
     `AssemblyRedirectListTests.cs` (5) and point them at your paths; they assert relationships
     between declarations, never version literals (`BundledDependencyManifestTests.cs:20-22`).
@@ -797,10 +809,11 @@ Code: No code changes needed
 
 ## Gotchas: what fails silently and what crashes
 
-- **The four alias stubs deploy to `Modules/<Id>/_Module/SubModule.xml`, one level too deep for the
-  engine**, which requires `Modules/<Id>/SubModule.xml` and skips the folder otherwise. On the vanilla
-  launcher the stubs are invisible (`ModuleHelper.cs:364-376, v1.5.5`; `Dependencies/TAOM.Dependencies.csproj:106-108`;
-  the deployed folders listed on this machine).
+- **An alias stub one folder too deep is invisible.** The engine requires `Modules/<Id>/SubModule.xml`
+  and skips the folder otherwise (`ModuleHelper.cs:364-376, v1.5.7`); until #969 every stub sat at
+  `Modules/<Id>/_Module/SubModule.xml`. Old `_Module/` folders left in an install are harmless.
+- **A visible stub without its skip tag shows a "Cannot find" box at every launch**, one per stub,
+  because no stub folder holds the DLL its `<SubModule>` names (see the stub section).
 - **`-p:DisableModuleCopy=true` does not stop deployment.** `CopyBinariesWindows` and `CopyModule`
   fire regardless; the game holds `0Harmony.dll` and `Bannerlord.ButterLib.dll`, so a build with the
   game open fails with `UnauthorizedAccessException`. Use `-p:ModuleId=` to skip all three
