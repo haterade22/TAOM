@@ -432,6 +432,32 @@ class PruneTests(TreeTest):
         names = [Path(line.split(" ", 2)[-1]).name for line in install_lines]
         self.assertLess(names.index(self.rdc.name), names.index("taom_banners_old_alpha_01_tex.tpac"))
 
+    def test_prune_deletes_install_sprite_pngs_the_repo_dropped(self):
+        orphan = self.install / pbs.SPRITE_PNGS / "999.png"
+        orphan.write_bytes(b"png")
+        pbs.prune(self.root, self.install, None, write=False)
+        self.assertTrue(orphan.exists())
+        self.assertEqual(pbs.prune(self.root, self.install, self.backup, write=True), 0)
+        self.assertFalse(orphan.exists())
+        self.assertTrue((self.backup / "install" / pbs.SPRITE_PNGS / "999.png").exists())
+        self.assertTrue((self.install / pbs.SPRITE_PNGS / "100.png").exists())  # a named icon stays
+
+    def test_prune_keeps_an_install_sprite_the_repo_still_has(self):
+        for r in (self.root, self.install):
+            (r / pbs.SPRITE_PNGS / "998.png").write_bytes(b"png")  # no icon row, but tracked in the repo
+        pbs.prune(self.root, self.install, self.backup, write=True)
+        self.assertTrue((self.install / pbs.SPRITE_PNGS / "998.png").exists())
+
+    def test_prune_keeps_an_install_sprite_the_deployed_xml_names(self):
+        (self.install / pbs.SPRITE_PNGS / "900.png").write_bytes(b"png")
+        rows = FULL + PACKED1 + [("900", "taom_banners_02", 0)]
+        (self.install / pbs.XML).write_bytes("".join(
+            ['<base><BannerIconGroup id="1">']
+            + [f'<Icon id="{i}" material_name="{m}" texture_index="{t}" />' for i, m, t in rows]
+            + ["</BannerIconGroup></base>"]).encode())
+        pbs.prune(self.root, self.install, self.backup, write=True)
+        self.assertTrue((self.install / pbs.SPRITE_PNGS / "900.png").exists())
+
     def test_prune_keeps_sheets_the_deployed_xml_still_names(self):
         rows = FULL + PACKED1 + [("900", "taom_banners_old_alpha_01", 0)]
         (self.install / pbs.XML).write_bytes("".join(

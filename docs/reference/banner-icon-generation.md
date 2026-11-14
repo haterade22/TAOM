@@ -135,7 +135,10 @@ is not a PNG it gets a new number, so the old PSD stays as it was until the prun
 4. `python tools/pack_banner_sheets.py --prune` lists every sheet that neither `banner_icons.xml`
    names, in the repo (source, `.tpac`) and the install (the same, plus the texture's
    `RuntimeDataCache/<GUID>.rdc`, read from bytes 8 to 23 of its `_tex.tpac`, deleted before the
-   texture). `--prune --apply --backup-dir <dir>` deletes them, each backed up first. It refuses
+   texture). It also lists each install sprite PNG in `GUI/SpriteParts/ui_taom_bannericons` that the
+   repo does not have and no `banner_icons.xml` names: the editor's sprite generation packs every loose
+   PNG it finds, so an icon deleted in the repo comes back into the picker atlas until the install copy
+   goes. Prune before you regenerate the sprites. `--prune --apply --backup-dir <dir>` deletes them, each backed up first. It refuses
    while the audit has any other finding and while the game or the Kit runs.
 
 `python tools/pack_banner_sheets.py --audit` is the gate (`tools/tests/test_pack_banner_sheets.py`):

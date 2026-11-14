@@ -392,6 +392,13 @@ def prune(root, install, backup, write):
                 if rdc.exists():
                     doomed.append((label, r, rdc))
             doomed.append((label, r, p))
+    if install and (install / SPRITE_PNGS).is_dir():
+        # a sprite PNG the repo deleted stays in the install, and the editor's sprite generation packs
+        # it back into the picker atlas (#1272): keep what the repo has or either XML names
+        ids = {i for r in (root, install) if (r / XML).exists() for i, _, _ in read_icons((r / XML).read_bytes())}
+        tracked = {p.name.casefold() for p in (root / SPRITE_PNGS).glob("*")} if (root / SPRITE_PNGS).is_dir() else set()
+        doomed += [("install", install, p) for p in sorted((install / SPRITE_PNGS).glob("*.png"))
+                   if p.name.casefold() not in tracked and p.stem not in ids]
     if held := sorted(deployed - named):
         print(f"kept: the install's banner_icons.xml still names {held}; build, then prune again")
     for _, _, p in doomed:
