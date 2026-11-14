@@ -24,8 +24,7 @@ public class InquiryPresenterAdapter : IInquiryPresenterAdapter
             new TextObject("{=taom_fc_decline}Not Yet").ToString(),
             onAccept,
             onDecline),
-            true,
-            false);
+            pauseGameActiveState: true);
     }
 
     public void ShowNoCompanionRoom(string troopName, Action onAcknowledge)
@@ -43,8 +42,7 @@ public class InquiryPresenterAdapter : IInquiryPresenterAdapter
             null,
             onAcknowledge,
             null),
-            true,
-            false);
+            pauseGameActiveState: true);
     }
 
     public void ShowRenamePrompt(string troopName, Action<string> onConfirm, Action onSkip)
@@ -67,8 +65,9 @@ public class InquiryPresenterAdapter : IInquiryPresenterAdapter
             textCondition: null,
             soundEventPath: string.Empty,
             defaultInputText: troopName ?? string.Empty),
-            false,
-            false);
+            // Paused like the offer before it: unpaused, the party kept moving on the map while
+            // the player typed a name. Pinned by InquiryPresenterPauseTests.
+            pauseGameActiveState: true);
     }
 
     public void ShowDismissPicker(IReadOnlyList<DismissCandidate> candidates, Action<string> onChosen)
@@ -104,7 +103,8 @@ public class InquiryPresenterAdapter : IInquiryPresenterAdapter
                     return;
                 onChosen?.Invoke(heroId);
             },
-            negativeAction: _ => { }));
+            negativeAction: _ => { }),
+            pauseGameActiveState: true);
     }
 
     public void ShowDismissConfirm(string heroName, string troopName, Action onConfirm, Action onCancel)
@@ -123,8 +123,7 @@ public class InquiryPresenterAdapter : IInquiryPresenterAdapter
             new TextObject("{=taom_fc_cancel}Cancel").ToString(),
             onConfirm,
             onCancel),
-            true,
-            false);
+            pauseGameActiveState: true);
     }
 
     public void ShowDismissed(string heroName, string troopName)
