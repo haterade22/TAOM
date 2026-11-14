@@ -64,6 +64,19 @@ def loc_name(loc, sid):
     return m.group(1).strip() if m else None
 
 
+def without_look(key):
+    """A face key, upper-cased, with skin colour, hair colour and height cleared. The key is eight 64-bit parts of 16
+    hex characters: skin colour is bits 48 to 53 of part 1, hair colour bits 30 to 35 of part 1, and height bits 19 to
+    24 of part 8. The elf look fix (#1181) changes only these, so a donor or twin match ignores them and binds on every
+    other bit. A key of another length is returned unmasked."""
+    key = key.upper()
+    if len(key) != 128:
+        return key
+    part1 = int(key[:16], 16) & ~((63 << 48) | (63 << 30))
+    part8 = int(key[112:], 16) & ~(63 << 19)
+    return "%016X%s%016X" % (part1, key[16:112], part8)
+
+
 def read(path):
     return Path(path).read_bytes().decode("utf-8")
 
@@ -197,11 +210,12 @@ class LindonClanExpansionDataTests(unittest.TestCase):
 
     @unittest.skipUnless(all(p.is_dir() for p in VANILLA_MD), f"vanilla ModuleData not found under {GAME}")
     def test_new_lord_faces_exist_nowhere_else(self):
-        """A face key in the block appears nowhere else in TAOM or vanilla SandBox/SandBoxCore, except on
-        vanilla rows that lords.xslt replaces (so the vanilla face never loads)."""
+        """A face key in the block (skin colour, hair colour and height cleared, see
+        without_look) appears nowhere else in TAOM or vanilla SandBox/SandBoxCore, except on vanilla
+        rows that lords.xslt replaces (so the vanilla face never loads)."""
         lords_text = read(MD / "characters" / "lords.xml")
         mine = block(MD / "characters" / "lords.xml")
-        keys = [k.upper() for k in re.findall(r'<BodyProperties[^>]*?key="([0-9A-Fa-f]+)"', mine)]
+        keys = [without_look(k) for k in re.findall(r'<BodyProperties[^>]*?key="([0-9A-Fa-f]+)"', mine)]
         self.assertEqual(NEW_LORDS, len(keys))
         self.assertEqual(NEW_LORDS, len(set(keys)), "a face key is used by two new lords")
 
@@ -209,7 +223,7 @@ class LindonClanExpansionDataTests(unittest.TestCase):
         for f in MD.rglob("*"):
             if f.is_file() and f.suffix.lower() in (".xml", ".xslt", ".json", ".txt"):
                 text = lords_text.replace(mine, "") if f == MD / "characters" / "lords.xml" else read(f)
-                rest.update(k.upper() for k in HEX_KEY.findall(text))
+                rest.update(without_look(k) for k in HEX_KEY.findall(text))
         self.assertEqual([], [k for k in keys if rest[k]], "key reused inside Main/_Module/ModuleData")
 
         # The same rule the one-off picked donors by: a lords.xslt template for the id that writes its own face.
@@ -221,17 +235,40 @@ class LindonClanExpansionDataTests(unittest.TestCase):
         for root in VANILLA_MD:
             for f in root.rglob("*.xml"):
                 text = read_loose(f)
-                upper = text.upper()
-                found = [k for k in keys if k in upper]
+                found = {without_look(x) for x in HEX_KEY.findall(text)} & owners.keys()
                 if not found:
                     continue
-                rows = [(lid, body.upper()) for lid, body in npc_rows(text)]
+                rows = [(lid, {without_look(k) for k in HEX_KEY.findall(body)}) for lid, body in npc_rows(text)]
                 for k in found:
                     owners[k].extend([lid for lid, b in rows if k in b]
                                      or [f"{f.name} (outside an NPCCharacter)"])
         self.assertEqual([], [k for k, o in owners.items() if not o], "a key has no vanilla donor: nothing was scanned")
         bad = {k: o for k, o in owners.items() if any(x not in replaced for x in o)}
         self.assertEqual({}, bad)
+
+    def test_without_look_ignores_only_skin_hair_and_height(self):
+        key = "0123456789ABCDEF" + "FEDCBA9876543210" * 6 + "0F0F0F0F0F0F0F0F"
+        base = without_look(key)
+        parts = [int(key[i:i + 16], 16) for i in range(0, 128, 16)]
+
+        def with_parts(changed):
+            return "".join("%016X" % p for p in changed)
+
+        # The three look fields may differ freely.
+        for index, shift in ((0, 48), (0, 30), (7, 19)):
+            for value in (0, 2, 63):
+                moved = list(parts)
+                moved[index] = (moved[index] & ~(63 << shift)) | (value << shift)
+                self.assertEqual(base, without_look(with_parts(moved)), (index, shift, value))
+        # Any single other bit still changes the masked key.
+        look = {0: (63 << 48) | (63 << 30), 7: 63 << 19}
+        for index in range(8):
+            for bit in range(64):
+                if look.get(index, 0) >> bit & 1:
+                    continue
+                moved = list(parts)
+                moved[index] ^= 1 << bit
+                self.assertNotEqual(base, without_look(with_parts(moved)), (index, bit))
 
 
 if __name__ == "__main__":
