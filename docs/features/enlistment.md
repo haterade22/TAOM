@@ -1890,6 +1890,21 @@ the player on the commander:
 Nothing was changed for either. Recorded so the next report can be matched against them, and so any
 decision to shorten the dwell is made against a repro rather than a hunch.
 
+### Walking out of a pass re-attaches at once
+
+Tester report, 14 Nov 2026: the player's own party sometimes showed on the map beside the lord's.
+One path that does it: vanilla's town "Leave" (`game_menu_settlement_leave_on_consequence`, v1.5.7)
+leaves the main party active and visible at the gate. The pump revoked the pass but nothing parked
+the party until the hourly reconcile, and the cheap tier's `SyncPositionCached` moved the visible
+party onto the commander every pass in between. `PlayerEncounter.Finish` also stops time, so a
+player who stays paused sees it for as long as he likes.
+
+When the pump revokes a pass and the player is `EnlistedAttached`, outside every settlement and in
+no map event, it now calls `ReconcileNow("shore leave ended")` and ends that pass, so the reconciler
+parks him or follows the commander in straight away. A revoke from a state change inside the town
+(`Finish(true)` walks him out) and a revoke by a battle are left as before. This is a third
+re-attach trigger beside the two edges above; it fires only when a pass ends.
+
 ### Known gap: the mask still disarms outside `EnlistedAttached` (#511)
 
 The invariant above is enforced at the two sites that hand over a vanilla menu. It does NOT cover

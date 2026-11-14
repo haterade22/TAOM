@@ -954,4 +954,76 @@ public class ServiceMaintenanceServiceTests
 
         _encounter.DidNotReceive().Finish(Arg.Any<bool>());
     }
+
+    // ---- A pass that ends with the player outside re-attaches at once (player case, 14 Nov 2026) ----
+    // Vanilla's town "Leave" puts the player on the map active and visible. Nothing re-parks him
+    // until the hourly reconcile, and the cheap tier moves that visible party onto the commander
+    // every pass, so it shows beside the lord's party until then.
+
+    [TestMethod]
+    public void Pump_ShoreLeaveEndedOutsideTheSettlement_ReconcilesAtOnce()
+    {
+        MakeEnlisted();
+        _store.Record.OnTownLeave = true;
+        Presence(parked: false, settlementId: null);
+        Encounter(none: true);
+
+        PumpExpensive(nowHours: 48.0);
+
+        Assert.IsFalse(_store.Record.OnTownLeave);
+        _reconciler.Received(1).ReconcileNow(2.0, Arg.Any<string>());
+    }
+
+    [TestMethod]
+    public void Pump_ShoreLeaveStillValid_DoesNotReconcile()
+    {
+        MakeEnlisted();
+        _store.Record.OnTownLeave = true;
+        Presence(parked: false, encounter: true, settlementId: "town_EW1");
+        Encounter();
+
+        PumpExpensive();
+
+        _reconciler.DidNotReceive().ReconcileNow(Arg.Any<double>(), Arg.Any<string>());
+    }
+
+    [TestMethod]
+    public void Pump_ShoreLeaveEndedByAStateChangeInsideTheSettlement_DoesNotReconcile()
+    {
+        // Revoked by the state, not by walking out: Finish(true) walks the player out itself, and
+        // the reconciler has its own rules for a lost commander.
+        MakeEnlisted(EnlistmentState.CommanderUnavailable);
+        _store.Record.OnTownLeave = true;
+        Presence(parked: false, settlementId: "town_EW1");
+        _encounter.IsInsideSettlement.Returns(true);
+        Encounter();
+
+        PumpExpensive();
+
+        _reconciler.DidNotReceive().ReconcileNow(Arg.Any<double>(), Arg.Any<string>());
+    }
+
+    [TestMethod]
+    public void Pump_ShoreLeaveEndedByABattle_DoesNotReconcile()
+    {
+        MakeEnlisted(EnlistmentState.EnlistedBattle);
+        _store.Record.OnTownLeave = true;
+        Presence(parked: false, inMapEvent: true, encounter: true, settlementId: null);
+        Encounter(partyShaped: true, playerInMapEvent: true);
+
+        PumpExpensive();
+
+        _reconciler.DidNotReceive().ReconcileNow(Arg.Any<double>(), Arg.Any<string>());
+    }
+
+    [TestMethod]
+    public void Pump_NoShoreLeave_DoesNotReconcile()
+    {
+        MakeEnlisted();
+        Presence(parked: false, settlementId: null);
+
+        PumpExpensive();
+
+        _reconciler.DidNotReceive().ReconcileNow(Arg.Any<double>(), Arg.Any<string>());
+    }
 }
