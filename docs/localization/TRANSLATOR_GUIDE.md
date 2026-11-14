@@ -580,7 +580,7 @@ That script is a ratchet for the two modules outside the repo (`TAOM_Map` and `L
 
 ## Known Limitations
 
-Owed translations go in the open translation backlog (#1129; #763 closed on 2026-11-12 after the lead's pass); the paid run needs the maintainer's word; close a feature issue once only translation remains (Mike, 2026-10-19).
+Owed translations go in the open translation backlog (#1129; #763 closed on 2026-11-12 after the lead's pass), with each pending string's keys and English in [translation-backlog.md](translation-backlog.md); the paid run needs the maintainer's word; close a feature issue once only translation remains (Mike, 2026-10-19).
 
 - **Career choice/group display names** (e.g. specific tier choice names in the career screen) currently fall back to internal IDs. Adding display names requires schema additions.
 - **`CareerButtonPrefab` "Career" label** — embedded directly in a prefab XML and not currently routed through the localization system.
