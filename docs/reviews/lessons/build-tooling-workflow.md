@@ -5109,3 +5109,9 @@ PR #1209 kept 223 rider rows in TAOM's tracked `action_sets.xml`, where a reinst
 - **Why missed:** the plan covered the data and the reinstall, not the release path or the tests' new inputs. I ran the rewritten tests only against good data.
 - **Prevent:** before a move, list what guarded the old home (a test, a gate, a release check, a doc claim) and where each lives afterwards. Run every rewritten test against the bad data it exists to catch (delete a row, add a conflicting one, point it at a stale channel folder) and keep the run in the review. A presence check on rows the engine resolves by position compares the effective binding, not membership. Grep the old home's claims ("guard", "can be deleted", "at the end of"), not only its names, and exclude `.tmp/` first.
 - **Source:** [rca-dwarf-rider-rows-move-2026-11-14.md](../rca-dwarf-rider-rows-move-2026-11-14.md), findings 1 to 5 and 7.
+
+### An image tool that drops a channel changes what the Kit compiles (banner sheets, #1272, 2026-11-14)
+`tools/pack_banner_sheets.py` read every sheet with `convert("RGB")` and wrote repacked sheets as RGB. The Kit's `Albedo (DXT1/DXT5)` type picks DXT1 for a source with no alpha channel, and the banner material draws a DXT1 sheet as speckled dots, so the v2.0.40 repack broke every sheet it wrote. Two renamed PSDs were already RGB, and the authoring doc named `DXT1, 8.000 Mb` as the expected result.
+- **Why missed:** the audit checked names, cells, sprites and source hashes, never the channels; the Kit gives no warning; nobody looked at a rendered banner after the repack.
+- **Prevent:** a tool that rewrites an engine source keeps every channel the engine reads, and its gate checks the property the compiler keys on (`no_alpha` in the audit). After a bulk asset rewrite, look at one rendered result in the game or the Kit before the commit.
+- **Source:** issue #1272.
