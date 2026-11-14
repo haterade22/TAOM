@@ -284,6 +284,9 @@ literal, and those two must describe the same game.
 - `TAOM.Tests/Features/FieldCommission/FieldCommissionDismissServiceTests.cs`: one test per entity state in the
   dismissal matrix, remove-before-refund ordering, nothing partially applied on any refusal, the picker and
   confirm chain (#540).
+- `TAOM.Tests/Features/FieldCommission/InquiryPresenterPauseTests.cs`: every popup in
+  `InquiryPresenterAdapter` that waits for an answer is raised with `pauseGameActiveState: true`
+  (source-text pin, one row per method).
 - `TAOM.Tests/Features/FieldCommission/FieldCommissionSettingsProviderTests.cs` — the MCM-over-JSON
   merge (per-knob override, NaN/infinity revert, both clamp directions), snapshot value equality, the
   tick-path caching contract, and the compiled-default-vs-JSON-default pin.
@@ -352,6 +355,12 @@ ever fielded — not a concern at any realistic party size.
   character creation join it. An existing evil-faction save already holds banked merit, so it
   starts offering on its next won fair battle, capped by `maxOffersPerBattle`.
 - 2026-09-22: `RegisterKill` takes a lock (#634). Its caller, `FieldCommissionMissionLogic.OnAgentRemoved`, runs on whichever thread native raised the removal, and a v1.4.8 player log caught one off the main thread. `BeginBattle` and `EndBattle` run on the campaign map, never beside a mission's removals. Not a `ConcurrentDictionary`: `EndBattle` breaks kill ties in the map's insertion order, which a hash-ordered map would scramble.
+- 2026-11-14: every Battlefield Promotion popup pauses the campaign. The offer itself already did,
+  but the rename prompt that follows "Promote" was raised with `pauseGameActiveState: false` and the
+  discharge picker with the default (false), so the party kept moving on the map while the player
+  typed a name (player report). Closing a paused popup resumes the speed the map had (v1.5.6
+  `GauntletQueryManager.HandleQueryCreated`/`CloseQuery`); no `TimeControlMode` is touched.
+  Pinned by `InquiryPresenterPauseTests`. Not verified in game.
 
 ## Firing a promoted companion (#486)
 
