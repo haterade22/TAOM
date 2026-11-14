@@ -243,9 +243,10 @@ public sealed class BattleLoadDiagnosticsService : IBattleLoadDiagnosticsService
     {
         var polls = Interlocked.CompareExchange(ref _loadingPolls, 0, 0);
         // The async wait ends here, so disarm its origin before the gate. Left armed, the next
-        // mission's first TickLoading frames (they run before its MissionInitializeDone re-arms)
-        // read this load's origin against the restarted stopwatch and log a wait that never
-        // happened, on this load's scene name (player log 2026-11-13, a conversation after a battle).
+        // mission's first TickLoading prefix reads this load's origin against the restarted
+        // stopwatch and logs a wait that never happened, on this load's scene name (player log
+        // 2026-11-13, a conversation after a battle). Exactly one prefix can: that frame's
+        // LoadMission calls Mission.Initialize, whose prefix resets the origin.
         var startedAt = Interlocked.Exchange(ref _waitStartMs, -1L);
         if (!IsEnabled) return;
 

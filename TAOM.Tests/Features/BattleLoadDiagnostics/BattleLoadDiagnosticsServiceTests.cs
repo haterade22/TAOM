@@ -1076,8 +1076,9 @@ public class BattleLoadDiagnosticsServiceTests
     public void EmitSceneLoadWaitIfDue_AfterThePreviousLoadFinished_EmitsNothing()
     {
         // Player log 2026-11-13: a battle on battle_terrain_J finished loading at t=+11861ms. The
-        // stopwatch restarted at the battle's exit, and 42.7 s later the first TickLoading frames of
-        // a conversation mission read that battle's origin and wrote
+        // stopwatch restarted at the battle's exit, and 42.7 s later the first TickLoading prefix of
+        // a conversation mission (before that frame's LoadMission calls Mission.Initialize) read
+        // that battle's origin and wrote
         // "WaitingForSceneLoad scene='battle_terrain_J' polls=12 waitMs=31273", a wait that never
         // happened, on a scene that was not loading. The wait ends at FinishMissionLoadingBegin.
         _sut.LogMissionInitialize("battle_terrain_J");
@@ -1088,6 +1089,24 @@ public class BattleLoadDiagnosticsServiceTests
 
         Assert.AreEqual(0, InfoLines().Count(s => s.Contains("phase=WaitingForSceneLoad")),
             "a finished load has no scene-load wait left to report");
+    }
+
+    [TestMethod]
+    public void LogFinishMissionLoadingBegin_WhenDisabled_StillDisarmsTheOrigin()
+    {
+        // Latch rule: the disarm is a state transition, so it runs before the toggle gate. A player
+        // who switches the feature off before a load finishes and on before the next mission must
+        // not get the old load's stale heartbeat.
+        _settings.IsEnabled.Returns(false);
+        _sut.LogMissionInitialize("battle_terrain_J");
+        _sut.LogMissionInitializeDone("battle_terrain_J");
+        _sut.LogFinishMissionLoadingBegin();
+        _settings.IsEnabled.Returns(true);
+
+        _sut.EmitSceneLoadWaitIfDue(12, 42702L);
+
+        Assert.AreEqual(0, InfoLines().Count(s => s.Contains("phase=WaitingForSceneLoad")),
+            "the disarm must not depend on the toggle");
     }
 
     [TestMethod]
