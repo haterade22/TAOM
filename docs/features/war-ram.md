@@ -77,9 +77,10 @@ identical count to vanilla `as_human_warrior`**, so inheriting the horse usage s
 rider a complete authored overlay for free. Any custom usage set would have meant hand-authoring a
 second rider partial into a 4,843-action set.
 
-That statement is about the Armory's files. Since 2026-11-14 TAOM's own `action_sets.xml` merges the same 223
-creature-rider rows (warg, spider, elephant, chariot) into `as_dwarf_warrior`; see "A dwarf can mount a free warg
-or chariot" below.
+That paragraph describes the Armory's files before 2026-11-14, and its numbers did not match them even then: the
+dwarf set held 4,711 rows, 189 of them `act_horse_*` / `act_ride*`, the same 189 as Native's `as_human_warrior`. Since
+the move the Armory's own `as_dwarf_warrior` holds 4,934 rows, among them 223 creature-rider rows (warg, spider,
+elephant, chariot); see "A dwarf can mount a free warg or chariot" below.
 
 **The dwarf eye and camera correction belongs on the ram, not on the dwarf.** Because the ram is ridden only by
 dwarves, `rider_eye_height_adder`, `rider_body_capsule_height_adder` and `rider_camera_height_adder`
@@ -253,10 +254,12 @@ What is fact:
 - The Armory gives the warg, spider, elephant and chariot rider rows to `as_human_warrior` only (the warg and spider
   rows in a partial at the top of its `action_sets.xml`, the elephant and chariot rows through
   `action_sets.xslt`). `as_dwarf_warrior` has no `base_set`.
-- Since 2026-11-14 TAOM's `Main/_Module/ModuleData/action_sets.xml` merges the same 223 rows into `as_dwarf_warrior`,
-  and keeps a copy in `as_dwarf_female_warrior` as a guard (the managed loader merges the rows into the Armory's
-  `as_dwarf_warrior` element before native parses it, so the female set, a child of that one through `base_set`,
-  gets them anyway; the female block can go once step 11 below passes; this holds with the Armory loading before TAOM, as in the normal list). The human rider clips are what the dwarf set
+- Since 2026-11-14 the same 223 rows are in the Armory's `as_dwarf_warrior` (live `action_sets.xml` and the repo
+  snapshot). PR #1209 first put them in TAOM's `Main/_Module/ModuleData/action_sets.xml`, with a guard copy in
+  `as_dwarf_female_warrior`; the rows moved to the Armory (#1226) and TAOM declares no dwarf set now. The female set
+  has `base_set="as_dwarf_warrior"` and gets the rows from it (v1.5.7 native `FUN_180591470` at 0x591470 copies the
+  base's slots when it parses the child, and `FUN_180590080` at 0x590080 parses the sets in document order); step 11
+  below checks it in game. The human rider clips are what the dwarf set
   already plays for horses. Left out: the 8 `act_horse_jump_*` rows, which would replace the dwarf's horse jump
   clips with an elephant clip, and `act_howdah_stand_bow`, which nothing plays
   (`Main/Features/Elephant/TaomHowdahStandingPoint.cs` near line 233 sets no action channel).
@@ -264,8 +267,8 @@ What is fact:
   "as_dwarf_warrior does not contain act_warg_*" before a native null read.
 
 What is a hypothesis: that the missing rows caused the crash (a competing explanation is the pre-Patch47 rider-death crash, see #1226). It stays one until the in-game check below passes
-([#1226](https://github.com/haterade22/TAOM/issues/1226)). `DwarfMountRiderRowsTests` pins TAOM's rows to the
-Armory's.
+([#1226](https://github.com/haterade22/TAOM/issues/1226)). `DwarfMountRiderRowsTests` pins the Armory's dwarf rows to
+its human ones.
 
 **Patch47 covers the ram (2026-11-08).** The ram was left out on the reasoning that
 `base_monster="horse"` gives it vanilla's rider-death surface, an inference never tested in game.
@@ -291,8 +294,8 @@ The head-butt fires under ANY rider, the player included, as the warg's bite doe
 | `Main/Features/WarRam/WarRamAttackService.cs` | Ram-tuned damage bands over the shared service |
 | `Main/Features/WarRam/WarRamCombat.cs` | Static `ElephantLikeCombatProfile` wiring `act_war_ram_butt` into all four slots |
 | `TAOM.Tests/Features/WarRam/WarRamConfigTests.cs` | Pins the action name, the four equal slots and cooldown > clip length |
-| `Main/_Module/ModuleData/action_sets.xml` | The dwarf creature-rider block: 223 rows in `as_dwarf_warrior`, a guard copy in `as_dwarf_female_warrior` |
-| `TAOM.Tests/Features/Warg/DwarfMountRiderRowsTests.cs` | Pins that block to the Armory's human rider rows (snapshot always, live install under `LiveInstall`) |
+| `docs/reference/lotrlome-armory-snapshot/action_sets.xml` (and the live Armory file) | The dwarf creature-rider rows: 223 rows in `as_dwarf_warrior`; the female set inherits them |
+| `TAOM.Tests/Features/Warg/DwarfMountRiderRowsTests.cs` | Pins those rows to the Armory's human rider rows (snapshot always, live install under `LiveInstall`) |
 | `tools/blender/transfer_clip_to_engine_rig.py` | Authors the head-butt FBX on the engine rig (frames, order, rest frame 0, hold) |
 | `tools/wire_anim_master_clip.ps1` | Re-points the clip and sets the master skeleton after a fresh reimport |
 | `Main/Features/WarRam/WarRamBehaviorTree.cs` | Mumakil shell with only the butt branch wired, no new node classes |
@@ -540,9 +543,9 @@ side: `EreborRamCavalry_IsNotOfferedByAnyVolunteerPool` (the five armoured ids s
 two `HighestRoll_ReturnsRamHerder` cases for the herder band. `TroopUpgradeSkillMonotonicityTests`
 is what pins the dwarf cavalry curve, including the forced TwoHanded and Throwing floors.
 
-`TAOM.Tests/Features/Warg/DwarfMountRiderRowsTests.cs` pins the dwarf rider rows: both dwarf sets hold the same rows,
-carry no horse or howdah action, and equal the Armory's `as_human_warrior` creature rows (the live-install tests
-read the installed Armory and are skipped when it is absent).
+`TAOM.Tests/Features/Warg/DwarfMountRiderRowsTests.cs` pins the dwarf rider rows: the Armory's `as_dwarf_warrior` holds every human warg and spider row once,
+the female set copies none, TAOM declares no dwarf set, and the live Armory holds the xslt creature rows and equals the
+snapshot (the live-install tests read the installed Armory and are skipped when it is absent).
 
 Per ADR-008 the BT nodes and mission behavior are not unit-tested; they are tested in game.
 
@@ -571,7 +574,9 @@ The dwarf creature-rider rows ([#1226](https://github.com/haterade22/TAOM/issues
 
 10. Custom battle: a dwarf ram rider against wargs. Kill his ram and let him mount a free warg. Expect no crash
     and a seated rider pose; the log must not read "as_dwarf_warrior does not contain act_warg_*"
-11. The same with a female dwarf. If it passes, the guard block in `as_dwarf_female_warrior` can be deleted
+11. The same with a female dwarf. Her set gets the rows through `base_set` and holds no copy (#1226); a miss means
+    it needs its own copy. Deploy TAOM first: an older deploy still declares the dwarf sets and hands her the rows as
+    her own, which hides the inheritance this step checks
 12. A dwarf horse jump on a normal horse. Expect the vanilla jump clip, not an elephant clip
 
 Any CTD goes to `/native-crash-triage`, never a blind retry.

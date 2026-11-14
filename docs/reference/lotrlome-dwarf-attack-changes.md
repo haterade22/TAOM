@@ -9,7 +9,7 @@ Armory drops all of it; the tools below rebuild each file, and their checks fail
 | `Assets/Race Test/dwarf/animations/dwarf_head_butt_geo.tpac`, `dwarf_drop_kick_geo.tpac` | The Kit's import of the FBX: masters `dwarf_head_butt` (37 frames) and `dwarf_drop_kick` (55 frames) on `dwarf_skeleton_a` (`0099bfb2-09c4-4291-b225-3d24bdb14715`) | a Kit import of the FBX |
 | `Assets/Race Test/dwarf/animations/dwarf_head_butt_anm.tpac`, `dwarf_drop_kick_anm.tpac` | The clips, cloned from vanilla `kick_right_leg` by `tools/gen_dwarf_attack_clips.ps1`, then saved in the Kit so each has its `RuntimeDataCache` entry | `gen_dwarf_attack_clips.ps1 -Verify`; `python tools/check_rdc_entries.py --under "Race Test/dwarf"` |
 | `ModuleData/action_types.xml` | `act_dwarf_head_butt` and `act_dwarf_drop_kick`, both `type="actt_kick"`, after `act_troll_brute_force` | `python tools/bind_dwarf_attack_actions.py --check` |
-| `ModuleData/action_sets.xml` | The two rows at the end of `as_dwarf_warrior`, on the clips above | the same `--check` |
+| `ModuleData/action_sets.xml` | The two rows in `as_dwarf_warrior` (the 223 dwarf rider rows of #1226 follow them), on the clips above | the same `--check` |
 
 The two XML edits are mirrored byte for byte in `docs/reference/lotrlome-armory-snapshot/`; `--check` reads all four
 files. Backups of the pre-edit Armory files: `action_types.xml.bak-dwarf-attacks-20261106-124630` and
