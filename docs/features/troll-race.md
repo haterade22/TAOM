@@ -55,6 +55,9 @@ LOTRLOME_Armory already ships two troll races — **the ready-made data template
   that TAOM's hill troll has the same keys, which he blames for its "fat belly", and he fixed his race by setting every
   scale to 1. Offline Blender renders sit at scale 1, so he checks the race `bone_scales` before comparing an offline
   shape with the in-game one. TAOM's own hill troll keys were not read here.
+  A `bone_type` selects the bone by its position in a native 28-name list, not by name, and the length axis acts
+  inverted: both in [body-properties.md](../modding/body-properties.md) (`bone_scale` bullet), where the 28-entry
+  table and the "shorten the thigh, not the calf" observation sit with their sources and hedges.
 
 > ⚠ Verify these entries against the live files before editing — paths/keys must be confirmed, not
 > assumed. They are the copy-from template, not a spec.

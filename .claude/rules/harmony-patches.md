@@ -39,7 +39,7 @@ ALWAYS decompile the target method with `ilspycmd` (`pwsh tools/taom-src.ps1 pat
 - **Transpiler** — Modifies IL instructions. Most fragile — use sparingly.
 - **Finalizer**: runs after the original on every call, with a null `__exception` when nothing threw. `return null` swallows. Returning the exception makes Harmony `throw` it (whenever any finalizer on the method returns a value), which erases the throw site, so hand it back as `return RethrowStackPreserver.PreserveForRethrow(__exception, null);` (gate: `FinalizerRethrowGateTests`). An observe-only finalizer should be `void`, which keeps Harmony's `rethrow` and the trace. Why: `lessons/harmony-il.md` "A value-returning finalizer that hands back its exception erases the throw site". Before a finalizer or shield rethrows what it used to swallow, follow the exception to its next catcher: out of any `OnMissionTick` a rethrow hangs the next frame (`lessons/harmony-il.md`, co-op safety nets 2026-10-21).
 - **Prefix and finalizer pair**: the link between them is Harmony's `__state` (one zeroed local per call, set by the prefix before anything can throw or return early), never a static, a count or a thread-keyed flag. Harmony reruns every finalizer when a later one throws, and PatchShield strips prefixes but never finalizers, so a finalizer can run without its prefix. Test the pair through real Harmony. Why: `lessons/harmony-il.md` "a bracket must survive its prefix being stripped".
-- **No finalizer of your own is not "no finalizer"**: a patch on an engine method usually also carries PatchShield's finalizer (a late-batch patch from the second game start; never under co-op or on an excluded target). Word a "nothing is swallowed" or rethrow claim for the method's whole finalizer set. Why: `lessons/harmony-il.md` "A new patch on an engine method also gets PatchShield's finalizer".
+- **No finalizer of your own is not "no finalizer"**: a patch on an engine method usually also carries PatchShield's finalizer (from the first game start for TAOM's GameInit batch, from the next game start for later patches such as first-mission categories; never under co-op or on an excluded target). Word a "nothing is swallowed" or rethrow claim for the method's whole finalizer set. Why: `lessons/harmony-il.md` "A new patch on an engine method also gets PatchShield's finalizer".
 
 ## Architecture Requirements
 - Patches are **thin entry points**: delegate ALL logic to a service, directly or through an `IOnXxx` hook interface when the patch needs a narrow seam or a test fake
@@ -55,11 +55,14 @@ ALWAYS decompile the target method with `ilspycmd` (`pwsh tools/taom-src.ps1 pat
 - A new patch number names one feature, and its category gets a `## <category>` heading in the registry: `PatchCategoryNumberTests` pins both.
 - Register in a `SubModule.cs` patch category (`[HarmonyPatchCategory]` + the SubModule apply batch — verify the apply TIMING fits the target: most apply in `OnGameInitializationFinished`, but targets that fire during new-game load/main menu need `OnSubModuleLoad`, e.g. `Patch58`/`Patch61`; see the registry)
 
-## MovementOrder postfixes: use the shared deferred category (MANDATORY)
-Any patch with `MovementOrder` in its postfix signature MUST join `Patch_MissionTime_SetMovementOrder`
-(applied once from `OnMissionBehaviorInitialize`), because `MovementOrder.cctor` reads
-`Mission.Current.CurrentTime`: null in `OnSubModuleLoad`/`OnGameInitializationFinished`. Its members are listed in
-`docs/reference/harmony-patch-registry.md`, section `Patch_MissionTime_SetMovementOrder`; add yours there, never a fresh category.
+## MovementOrder postfixes: use a deferred mission-time category (MANDATORY)
+Any patch with `MovementOrder` in its postfix signature MUST go in its feature's own `Patch_MissionTime_<Feature>`
+category, applied at the first mission (`OnMissionBehaviorInitialize`) because `MovementOrder.cctor` reads `Mission.Current.CurrentTime`: null in
+`OnSubModuleLoad`/`OnGameInitializationFinished`. One category per feature, so a class that fails turns off only its own
+feature (split 2026-11-13). A feature module declares its category at `ApplyPhase.FirstMission`, as `MarshalsWordModule` does:
+that is the default route. `SubModule.cs` is single-owner and applies only the two existing ones, `Patch_MissionTime_SmartCavalryAI`
+and `Patch_MissionTime_CompanionTactics`. Document it under its own `## <category>` registry heading, or in the section `Patch_MissionTime_SetMovementOrder`
+plus a `NoRegistryHeading` row in `PatchCategoryNumberTests`; otherwise that test fails.
 
 ## Common Pitfalls
 - Collection modification during iteration — use `.ToList()` copy

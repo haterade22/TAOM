@@ -74,8 +74,8 @@ native loads + simulates it.
   (Phase 16) → this chain → `Mission.SpawnAgent` spawns it (Phase 1). The
   **`BattleLoadDiagnostics`** (TAOM) instruments exactly this chain — the spider crash evidence (the last phase line, `phase=MissionInitialize scene='battle_terrain_020'`) is *step 6* (scene load / agent build) stalling.
 - **TAOM mission behaviors are added from `SubModule.OnMissionBehaviorInitialize`** (Phase 4; `AddTaomMissionBehaviors`, which calls
-  `AddTaomBehavior(new BehaviorTreeMissionLogic())` and `AddTaomBehavior(new SpiderMissionBehavior())`, SubModule.cs:2183 and :2186), not from step 5's handler. SmartCavalry adds `SmartCavalryAIMissionBehavior` the same way (:2197), and its Formation patches use `Patch_MissionTime_SetMovementOrder`. CompanionTactics adds no behavior in this method and applies `Patch35_CompanionTactics` (:1841). The
-  **deferred-patch category** (`Patch_MissionTime_SetMovementOrder`, Phase 13) applies during
+  `AddTaomBehavior(new BehaviorTreeMissionLogic())` and `AddTaomBehavior(new SpiderMissionBehavior())`, SubModule.cs:2183 and :2186), not from step 5's handler. SmartCavalry adds `SmartCavalryAIMissionBehavior` the same way (:2197), and its Formation patches use `Patch_MissionTime_SmartCavalryAI`. CompanionTactics adds no behavior in this method and applies `Patch35_CompanionTactics` (:1841). The
+  **deferred-patch categories** (`Patch_MissionTime_SmartCavalryAI`, `Patch_MissionTime_CompanionTactics` and `Patch_MissionTime_MarshalsWord`, Phase 13) apply during
   `OnMissionBehaviorInitialize` *because* `MovementOrder.cctor` reads `Mission.Current.CurrentTime`, which is only valid
   once this chain has created the mission ([harmony-il lessons](../../reviews/lessons/harmony-il.md), "Defer patches whose parameter types have Mission/Campaign-dependent cctors").
 - **`CreateState`+`PushState` is mandatory** (Phase 11; [gamemodels-services lessons](../../reviews/lessons/gamemodels-services.md), "Push custom GameStates via `GameStateManager.CreateState<T>()`, never `new`"): vanilla opens the
@@ -87,6 +87,40 @@ native loads + simulates it.
 - **AI battles skip the mission** — `MapEvent` auto-resolves via `StrengthOfSide` when no player is present; a TAOM
   feature that must affect *every* battle (not just player-watched ones) belongs in a GameModel/campaign hook, not a
   `MissionBehavior` (which only runs for missions the player actually loads).
+
+## Custom Battle driven without a player [yotthani, spike on v1.5.6]
+
+Custom Battle is the one mission entry that needs no campaign. yotthani's night spike (29.10.2026, Bannerlord v1.5.6, TAOM 2.0.35; record
+`docs/balance-sim/app-0.3-spike.md@c45d8374`, "Calls that work on 1.5.6", "Hit data (S5, C12)" and "C11 finding"; code `HoN/BattlePresets/**`
+and `HoN/CampaignProbe/Integration/Battles/BattleDriver.cs@c45d8374:306-307, 321-324, 395-398`) ran 50 against 50 battles unattended, about 110 s of wall time each. It is code that ran
+on one PC; none of it is re-run on v1.5.7.
+- **Start:** from the main menu, `MBGameManager.StartNewGame(new CustomGameManager())` at `InitialState`, wait for `CustomBattleState` plus 3 s, then
+  `BattleStarter.TryStart`. **Deployment:** after 600 mission ticks a pending action on the next `OnApplicationTick` calls
+  `DeploymentMissionController.FinishDeployment()`. **AI handover:** `Mission.PlayerTeam.DelegateCommandToAI()`, every formation
+  `SetControlledByAI(true)`, `Agent.Main.Controller = AgentControllerType.AI`; watch mode sets `Mission.MainAgent = null` afterwards (S7 partial, no human check).
+- **End:** count `IsHuman && IsActive() && Team != null` agents per side every 30 ticks. `Mission.EndMission()` returns to `CustomBattleState` in 0.6 s
+  with no results screen, and `Utilities.QuitGame()` after a done marker exits the game.
+- **Traps in the hit data** (yotthani's findings; not re-checked by TAOM): (a) if the player character has the same troop id as the player side's rows,
+  only one agent spawns on that side, all rows of that id vanish (51 against 50 works with a different troop id; the record says the cause is not
+  located in the engine source); (b) friendly hits carry `int.MinValue` in `InflictedDamage` and `AbsorbedByArmor` (62 rows in one battle);
+  (c) shield-blocked hits (`AttackBlockedWithShield`) have `through` and `absorbed` filled but `blow.InflictedDamage = 0`
+  (106 of 398 cross hits in one battle; on v1.5.7 both values hold the shield damage, `MissionCombatMechanicsHelper.cs:214-218`).
+  yotthani lists `MissileBlockedWithWeapon` with them; that flag zeroes both values and its managed path registers no blow, see
+  [combat-mechanics.md](../../features/combat-mechanics.md#missile-blocked-with-a-weapon) [TAOM-verified, v1.5.7]; (d) hits on a riderless horse have no troop, and hits without a weapon item (charge, kick, fall) were
+  73 to 175 of about 500 in a cavalry battle; (e) `Hero.MainHero` reads `Game.Current.PlayerTroop`, which is null in a custom battle
+  (`Hero.cs:958`, `CharacterObject.cs:256`), so it throws a NullReferenceException; (f) `CustomBattleAgentStatCalculateModel` returns 1 for the
+  difficulty factors (commit `a21cbea0`). TAOM's [blow-diagnostics.md](../../features/blow-diagnostics.md) explains `int.MinValue` as a NaN damage
+  multiplier cast to `int` on net472; whether yotthani's friendly-fire value is the same cast is not checked.
+- **The sergeant's commander is found by display name.** `GeneralsAndCaptainsAssignmentLogic.SetGeneralAgentOfTeam` (`:180-205`): unless the player
+  is the team's general, it takes the one agent whose `Character.GetName()` equals the passed name (`TextObject.Equals` compares value and
+  attributes, `TextObject.cs:269-281`); with no name, or not exactly one match, it takes the strongest non-main hero (`MaxBy(CharacterPowerCached)`),
+  or none [TAOM-verified, v1.5.7 cache]. Vanilla passes a name only for the player's side as sergeant (`BannerlordMissions.cs:144`); the enemy side
+  gets null. In Custom Battle the player's side holds the player (excluded as the main agent) and one general, so a name clash falls back to the
+  strongest other hero, which is that general if he is a hero. yotthani's note "the engine may not find him"
+  (`HoN/BattlePresets/Core/PresetCheck.cs@c45d8374:225-229`, read from code, no version stated) is too strong for this flow. The same preset
+  code says `MaxBattleSize` is a hard per-side cap that counts leaders (`ICatalog.cs@c45d8374:35-36`), and that when both sides together
+  exceed `BannerlordConfig.GetRealBattleSize()` the rest arrive as reinforcement waves, so a player who is not a hero may spawn in a
+  later wave (`PresetCheck.cs@c45d8374:234-247`; not re-checked).
 
 ## The native boundary
 **Managed:** the entire campaign side (`MapEvent`, `PlayerEncounter`, `EncounterManager`, `StartBattleAction`,

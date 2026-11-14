@@ -23,7 +23,7 @@ namespace TAOM.Features.SmartCavalryAI.Hooks;
 [HarmonyPatch(typeof(Formation), nameof(Formation.SetTargetFormation), new[] { typeof(Formation) })]
 // Shares Patch31's deferred category so the pair is applied together, once, from
 // OnMissionBehaviorInitialize; this target has no Mission-dependent cctor of its own.
-[HarmonyPatchCategory("Patch_MissionTime_SetMovementOrder")]
+[HarmonyPatchCategory("Patch_MissionTime_SmartCavalryAI")]
 public static class Patch31b_FormationSetTargetFormation
 {
     private static ISmartCavalryAISettingsProvider? _settings;

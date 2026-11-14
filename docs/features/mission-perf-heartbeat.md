@@ -350,8 +350,8 @@ decision D13 (2026-10-03) took them off once plan 034 had made PatchShield's fin
 rescue the exclusion gave up. They are shielded like any other patched method again, from the pass that sees them. A foreign mod's load-time patch on either is covered from
 a process's first game (pass 1, or pass 2 for a patch applied after it). TAOM's own patches on the four shielded
 targets (Patch23 on `SpawnAgent`, Patch97, and both Patch98 categories, the camera's included) apply in the first
-game's late batch, after both passes, so these targets are covered from the second game start, when pass 2
-attaches what was patched since the last pass; with a co-op module active PatchShield installs nothing at all. The
+game's late batch, after both passes, and TAOM runs its own pass right after that batch (2026-11-13), so these targets are
+covered from the first game start; with a co-op module active PatchShield installs nothing at all. The
 finalizer then runs on `OnPreTick`, `OnTick` and the camera once per frame (and on `SpawnAgent` once per spawn), alongside `Mission.Tick` (Patch37), `MissionState.TickMissionAux`
 (Patch91) and `MissionState.OnTick` (Patch43), which already carried it.
 
@@ -391,7 +391,7 @@ vanilla frame between `Mission.OnTick` and the engine catches it (`MissionState`
 
 - PatchShield's finalizer on `Mission.OnTick`, and above it on `MissionState.TickMissionAux` (Patch91) and
   `MissionState.OnTick` (Patch43): a missing-API exception only, on the timing described above for
-  `Mission.OnTick`, and from a process's second game start for the two `MissionState` methods.
+  `Mission.OnTick`, and, since 2026-11-13, from a process's first game start for the two `MissionState` methods.
 - Patch37's crash capture on `Module.OnApplicationTick`, and again two frames up on `Managed.ApplicationTick`
   (`CrashReportPatchHelper.HandleAndSwallow`): any exception, in any game, while crash capture is on (the default).
   The outer one gets its own try at what the inner one hands back. Native's other tick entry,
@@ -403,8 +403,8 @@ vanilla frame between `Mission.OnTick` and the engine catches it (`MissionState`
 
 So an ordinary exception in that stretch, a null reference from any module's `OnMissionTick` for one, freezes
 the next frame in any game while crash capture is on, with no shield involved. That path is not new with
-D13: from a process's second game start the shielded `MissionState` methods already swallowed a missing-API
-exception one level higher, and in a process's first game, before D13, TAOM's own patches on the callers
+D13: the shielded `MissionState` methods already swallowed (from a process's second game start until 2026-11-13, from the first since) a missing-API
+exception one level higher, and in a process's first game, before D13 and until 2026-11-13, TAOM's own patches on the callers
 above `OnTick` had no shield yet, so the exception unwound the application tick instead, up to
 `Module.OnApplicationTick`'s finalizers (every module's `OnApplicationTick`, `JobManager.OnTick`, the avatar
 services, and `Game.OnTick`'s game handlers, `AfterTick` and save-completion handoff skipped for that frame, and,
@@ -516,7 +516,7 @@ the first explicit interface method TAOM patches; `HitchProbePrefixGuardTests` r
 implementation through real Harmony.
 
 The bracket costs one Harmony prefix and one finalizer per call, plus PatchShield's finalizer (the target is
-shielded from a process's second game start, see the PatchShield section), around two `Stopwatch.GetTimestamp()`
+shielded from a process's first game start, see the PatchShield section), around two `Stopwatch.GetTimestamp()`
 calls. The Cost section measures the probe's own prefix and finalizer only; the figures for PatchShield's
 finalizer are in `PatchShieldPolicy`'s `ExcludedTargetNamespacePrefixes` comment. Another mod's patch on the same
 method is inside the bracket and counts as camera time. A mod that re-implements `IMissionSystemHandler` on its
@@ -533,7 +533,7 @@ TAOM skips the camera class at load (a `[PatchApply] ... SKIPPED` ERROR, named i
 category then applies nothing, so no `camera bracket not installed` WARNING is written and the install line
 still lists `MissionScreen.UpdateCamera`. At an engine bump,
 `CameraTarget_IsMissionScreensSealedExplicitUpdateCamera` fails first. Decision (2026-10-15): the target stays
-shielded by PatchShield, from a process's second game start (see the PatchShield section), like `Mission.OnTick`
+shielded by PatchShield, from a process's first game start (see the PatchShield section), like `Mission.OnTick`
 under D13; a swallowed missing-API exception there skips the rest of `CameraTick` and the managed `PreDisplay()`
 call that frame; the engine's frame function calls the same once-per-frame pre-display before it displays (on the
 v1.5.5 client, native 0x344A0 calls 0x7D800 in one of its branches, and 0x7D800's latch at +8, cleared by the
@@ -746,8 +746,8 @@ exception and its strip of the offending patch are given up.
 method: plan 028 had excluded the first two and plan 041 the third, for cost, and maintainer decision
 D13 (2026-10-03) took them off once plan 034 had made PatchShield's finalizer cheap (the figures are in `PatchShieldPolicy`'s `ExcludedTargetNamespacePrefixes` comment), at
 two calls per frame and one per spawn. `MissionScreen.UpdateCamera` was never on the exclusion list: it is
-shielded by the decision of 2026-10-15 (#809). All four are shielded from a process's second game start (TAOM
-applies their patches after PatchShield's second pass; see the PatchShield section). A shield finalizer runs
+shielded by the decision of 2026-10-15 (#809). All four are shielded from a process's first game start (TAOM
+applies their patches after PatchShield's second pass, then runs its own pass right after its batch; see the PatchShield section). A shield finalizer runs
 inside those four brackets like every other patch on the method (the bracket's prefix is `Priority.First` and its finalizer `Priority.Last`).
 
 What that gives, and what it costs. A MissingMethod, MissingField or TypeLoad exception that escapes
@@ -775,6 +775,20 @@ holder was found; `calls=` shows when other scenes tick), and per-type attributi
 script blocks (they run on workers; the block totals are kept). Unverified until the first player
 log: whether the JIT inlines `WaitTickCompletion` (the self-check line), which thread ticks script
 components (the thread line), and the native cost of the clip-loading call (the sample line).
+
+## Probe techniques TAOM does not have [yotthani, `yotthani/bannerlord` `HoN/PerfProbe`@c45d8374]
+
+Two probes in yotthani's PerfProbe have no TAOM counterpart. Neither is re-checked by TAOM, and both were written for yotthani's runs (game version not stated in the file; 1.5.3 is the PerfProbe era).
+- **A GC pause meter without ETW** (`HoN/PerfProbe/Core/PauseMeter.cs`, tests in `PauseMeterTests.cs`). A thread of its own, at the highest priority,
+  does nothing but read a `Stopwatch`. Two readings further apart than the threshold (default 0.2 ms) mean the runtime suspended every managed thread, which it
+  does for a blocking collection; the sum of the gaps is the stop-the-world time, and gaps of at least `LongPauseMs` (50 by default) are kept one by one. It
+  needs no ETW, which did not work on yotthani's measuring machine. It occupies one core while it runs, so its own remarks say to use it for seconds, not for a
+  session. Its readers in yotthani's probe are `PauseWatch.cs` and `SaveDiagnostics.cs`; the pauses after a save are in [save-system.md](../reference/engine/save-system.md).
+- **A per-patch-shape cost table** (`HoN/PerfProbe/Integration/PatchCost.cs`:10-14, 35-76). Once, when the map probe starts, it measures time and allocated
+  bytes per call for each Harmony shape on empty methods inside the game: plain, prefix, skipping prefix, `__originalMethod`, `__state`, transpiler, a boxing
+  call and a slot probe. The reason in the source: on 04.10.2026 a patch that saved allocation in an offline bench cost about 200 bytes per patched call in
+  the game, and nothing explained it. The `__originalMethod` figures (85 ns, 241 bytes per call) are in
+  [submodule-lifecycle-and-harmony.md](../reference/engine/submodule-lifecycle-and-harmony.md). TAOM has no equivalent table for its own patches.
 
 ## Animation clip memory probe
 
@@ -816,8 +830,9 @@ the counter address is cached once armed). Outside every check is the engine's o
 record while a mission callback walks it was not traced (**UNVERIFIED**; see the engine notes). A
 managed `catch` cannot help there: an access violation is a corrupted-state exception on .NET Framework.
 
-**Cost.** One scan of about 10 MB once per process, inside the first mission's loading screen
-(`scanMs` in the header), plus one read of the budget float. Then, per mission, one aligned 32-bit read
+**Cost.** One copy of about 10 MB once per process, inside the first mission's loading screen, plus a search of it on a
+launch with no usable address cache (`scanMs` in the header spans both, and the cache file work), plus one read of the
+budget float. Then, per mission, one aligned 32-bit read
 of the counter and one `MBAnimation.IsAnyAnimationLoadingFromDisk()` call per second (a native walk
 over every clip record, not only the on-demand ones, stopping at the first one loading; it takes no
 lock), one log line every 5 s, and one or two lines at mission end. Each INFO line is queued by the
@@ -825,7 +840,9 @@ calling thread (the main thread here) and written by the logger's writer thread,
 of a second; no tag of this feature is in `FileLogger.DurableInfoTags`, so a hard crash can lose the last fraction of a second.
 **Not yet measured in a battle:** what one `IsAnyAnimationLoadingFromDisk()` call costs against the
 full clip table, and what each queued log line costs a frame. The scan reports its own cost
-(`scanMs`); nothing else is timed.
+(`scanMs`); nothing else is timed. The scan is skipped on a launch whose `TaleWorlds.Native.dll` is unchanged: the
+address comes from the shared address cache (docs/features/skeleton-buffer-guard.md, "Address cache") after its signature
+bytes are checked in memory, and the `armed` line ends `scan=cached` instead of `scan=scanned`.
 
 **Measuring that cost.** The heartbeat's A/B ("Reading an A/B": the toggle off against on, five runs
 per group) cannot resolve either one. At 60 fps the sample lands on one frame in sixty and the 5 s line
@@ -875,7 +892,7 @@ a percentage is floored. The formats are pinned literally by `AnimMemLineTests`.
 
 | Line | When | Fields | Example |
 |---|---|---|---|
-| armed | once per process, when the scan succeeds | module base address; `.text` RVA and size; the RVAs of the load site, the budget site, the counter and the budget float; the budget in bytes; the scan's cost in ms | `[AnimMem] armed: TaleWorlds.Native.dll base=0x7FFB12340000 text=0x1000+0xA240CC loadSite=0x21E00F budgetSite=0x21E034 counter=0xDABE40 budget=0xB2E2DC budgetBytes=12582912 scanMs=23.4` |
+| armed | once per process, when the scan succeeds | module base address; `.text` RVA and size; the RVAs of the load site, the budget site, the counter and the budget float; the budget in bytes; the scan's cost in ms; the scan path, `cached` or `scanned` | `[AnimMem] armed: TaleWorlds.Native.dll base=0x7FFB12340000 text=0x1000+0xA240CC loadSite=0x21E00F budgetSite=0x21E034 counter=0xDABE40 budget=0xB2E2DC budgetBytes=12582912 scanMs=23.4 scan=scanned` |
 | disabled | once per process, when a check fails or the counter later reads negative | the reason | `[AnimMem] disabled for this process: TaleWorlds.Native.dll is not loaded in this process. No further [AnimMem] samples will be taken; [MissionPerf] is unaffected.` |
 | off | each mission start with the toggle off | none | `[AnimMem] off for this mission: 'Enable Animation Clip Memory Probe' is off (Battle Load Diagnostics page).` |
 | mission start | each mission start with the probe armed | first sample in KB, budget in KB, percent of budget, whether a clip is loading (0 or 1) | `[AnimMem] mission start: sample every 1 s, line every 5 s, startKB=10240 budgetKB=12288 pctOfBudget=83 loadingNow=0` |

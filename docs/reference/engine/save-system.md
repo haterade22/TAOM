@@ -110,12 +110,46 @@ objects.
   dropped it." The source gives no reason, so TAOM draws one conclusion only: a save-path rewrite needs an in-game
   measurement before its offline result is believed (TAOM's reading). The same section also says "Skipping or
   deferring the final collect moved the pause to later."
-- **Save bytes are not deterministic:** string ids depend on the order the parallel workers reach
+- **Save bytes are not deterministic** [yotthani, MithrilForge `docs/engine/perf.md`@ea7a7bfb lines 997-1002, observation
+  on yotthani's PC, game 1.5.3; the lock claim is not re-checked by TAOM]: string ids depend on the order the parallel workers reach
   `AddOrGetStringId`, so two saves of one state differ. Compare a save-path patch in sequential mode or after a
   load, never byte for byte.
-- **A save loaded offline without its load callbacks gives every `TextObject` a hash of 0** (`GetHashCode`
-  returns an id only the callback assigns), so the save's object dictionary degenerates (`CollectObjects` 3.5 s
-  instead of 0.2 s).
+- **A save loaded offline without its load callbacks gives every `TextObject` a hash of 0** [yotthani, same lines,
+  151,902 objects, game 1.5.3: `CollectObjects` 3.5 s instead of 0.2 s; those timings are not re-checked by TAOM]. TAOM read the
+  mechanism on v1.5.7 [TAOM-verified, `TextObject.cs:64-76, 164-168, 264-267`]: the private parameterless constructor sets
+  `_internalId = 0`, the public constructor takes `_internalIdCounter++`, the `[LoadInitializationCallback] OnLoad` assigns a
+  fresh id, and `GetHashCode()` returns `_internalId`. The game runs the callbacks through `loadResult.InitializeObjects()`
+  (`Game.cs:171`). A tool that deserializes a save without that call gets every `TextObject` in one hash bucket. Any TAOM
+  save bench that loads outside the game must run the callbacks first.
+- **ButterLib may replace the engine's container rule.** `Bannerlord.ButterLib.Implementation.1.5.1.dll` in `TAOM.Dependencies` holds
+  `SaveSystem.Patches.TypeExtensionsPatch`, a prefix on `TaleWorlds.SaveSystem.TypeExtensions.IsContainer(Type, out ContainerType)`
+  that returns false after its own rule (generic type to its definition, then Array, `IDictionary`, `IList`, `Queue`);
+  `SaveSystemSubSystem.Enable` (`:33-48`) installs it [TAOM-verified, v1.5.7 ilspy of the shipped DLL]. UNVERIFIED: that this
+  implementation is the one loaded on v1.5.7 and that the subsystem is on by default (one `Harmony.GetPatchInfo` log in game
+  settles it). The v1.5.7 engine rule returns `CustomList` (5) for `MBList<>` and `CustomReadOnlyList` (6) for `MBReadOnlyList<>`;
+  ButterLib's prefix returns `List` (1) for both, because `MBReadOnlyList<T> : List<T>` and `MBList<T> : MBReadOnlyList<T>`; what
+  that changes in a save is not measured. yotthani reports that a yotthani prefix forcing the game's rule back made saving twice
+  as slow in game (`HoN/VanillaTuning/Integration/SaveFastPatch.cs@c45d8374:109`, 04.10.2026, game 1.5.3) and that an offline
+  bench without ButterLib "is not the game" (`HoN/SaveBench/Program.cs`, option `--no-butterlib`). Before a save-path patch or
+  bench, check who else patches `IsContainer`.
+- **`HashSet<T>` is not a save container.** The v1.5.7 `ContainerType` enum is `None, List, Dictionary, Array, Queue, CustomList,
+  CustomReadOnlyList`, and `IsContainer` matches `Dictionary<,>`, `List<>`, `MBList<>`, `MBReadOnlyList<>`, `Queue<>` and arrays only;
+  ButterLib's prefix would not match a `HashSet<T>` either [TAOM-verified, v1.5.7 ilspy]. yotthani's statements that such a member
+  "silently corrupts the load" (RingSystem specification, `HoN/RingSystem/Docs/RING_SYSTEM_SPECIFICATION.md@c45d8374:326`; the
+  SupplyLines design says the same of a `[SaveableField]`) carry no measurement. Persist a `List<T>` and rebuild the set. TAOM has
+  no saved `HashSet`: Grep of `Main/**/*.cs` found none on a `[SaveableField]` or `[SaveableProperty]` line (or the line after), and
+  no `SyncData(..., ref x)` target declared as one (two scans, 56 and 50 names; a property or a non-`ref` form is not covered).
+  `BannerExclusionService` keeps a `HashSet<string>` in memory but copies it to a `List<string>` before `SyncData`
+  (`Main/Features/BannerInjection/BannerExclusionService.cs`:8, 33-45).
+
+## One unexplained load hang across a build change [yotthani, single report, cause not found]
+yotthani's probe notes (`docs/smithing/2026-11-06-probe-teil2abc-ergebnis.md@c45d8374`, "Alte Saves hängen") say a save made on
+TAOM_Map 2.0.34 and game build 125053 hung when loaded on build 125270 (v1.5.6.125270, line 3; the note names no version for 125053) with TAOM_Map 2.0.36, installed since 04.11.2026:
+the main thread sat in an engine PInvoke at the log line `Ticking map scene for first initialization`, memory grew from 9 to 15 GB,
+and the process was killed after 10 minutes. New campaigns on the same build loaded in 50 ms. The note says the hang lies before any
+mod code (SmithingExtended is not the cause) and calls the old probe saves probably unusable. One save, a module list with many foreign
+mods, no cause found. TAOM has not reproduced it, and no TAOM doc mentions that log line. The check is a pre-2.0.36 save loaded on
+current trunk; if it hangs, it is a TAOM_Map migration problem.
 
 ## The native boundary
 The save *serializer* is largely managed (`TaleWorlds.SaveSystem` — `IDataStore`, `TypeDefinition`,

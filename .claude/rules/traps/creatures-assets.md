@@ -44,3 +44,4 @@ history and the gate. A new trap for this area is a new row here, never a row in
 | New race rigs | LOD0 head/eye/mouth: 101 morphs, eyes following their sockets; release/blocked codes: vanilla or self-keyed clip. Else CTD | [troll](../../../docs/features/troll-race.md) |
 | UE clip export | The root node carries pelvis height above bind; keep root height, drop only travel and yaw | [pipeline](../../../docs/reference/ue-to-bannerlord-asset-pipeline.md) |
 | Kit FBX materials | Bound by name module-wide, reset on every re-import; a same-named older material wins silently | [troll](../../../docs/features/troll-race.md) |
+| Override by name | A package that overrides an item by name needs new GUIDs: a registered GUID is silently ignored (yotthani, not checked by TAOM) | [props](../../../docs/reference/tpac-static-prop-authoring.md) |

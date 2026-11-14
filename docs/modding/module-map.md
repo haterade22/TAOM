@@ -586,7 +586,16 @@ come from.
   face-group painting for land, which matters because `GetFaceTerrainType` returns
   `(TerrainType)FaceGroupIndex`, the fallback signal for battle-scene selection
   ([worldmap-battle-scene-grid.md](../reference/worldmap-battle-scene-grid.md)). The baked answer is
-  `SceneObj/Main_map/navmesh.bin`, and nobody has read it back out.
+  `SceneObj/Main_map/navmesh.bin`, and nobody at TAOM has read it back out. One outside reading
+  exists: yotthani's map generator read a run-time dump of TAOM's map and reports that "TAOM's map
+  types its sea (CoastalSea, OpenSea), vanilla 1.5.3 does not" (yotthani, `yotthani/bannerlord`
+  `docs/realm-ui/feasibility.md`@c45d8374 lines 305-306, one sentence from a dump, game version of
+  that run not stated; not seen by TAOM). That fits the two ocean numbers above, if 18 and 19 are
+  those two types, which TAOM has not checked against the v1.5.7 `TerrainType` enum. For vanilla
+  Calradia the same tool found neither type in the data: the open sea is typed `Plain` with a
+  height near 0, and `Water` (10) is only a band of about 4 to 6 cells along the coast
+  (`docs/realm-ui/research/map-from-dump.md`@c45d8374 lines 8-13, a 512-cell grid of a run-time
+  dump; the game version, 1.5.3, is from `feasibility.md`).
 - **How the 1600 by 1600 terrain was generated and imported.** `AssetSources/Support/` holds the
   candidate PNGs and [minas-tirith-plan.md](../scenes/minas-tirith-plan.md) section 1.3 names a
   heightmap workflow for a *battle* scene, but no doc records which file is the live height source,

@@ -146,6 +146,8 @@ The legal ids are the 20 defined in `Native/ModuleData/item_modifiers_groups.xml
 
 `legendary_plate` and its siblings are **ItemModifier ids, not group ids**. The armour a legendary roll adds is `plate` +12, `chain` +9, `shield` +8, `leather` +7, `cloth` +5, `cloth_unarmoured` +3, applied flat and independently to every non-zero stat, so a two-stat cape takes the bonus twice and a stat of exactly `0` is immune ([armor-balance](../features/armor-balance.md) "two-tier invariant").
 
+**Membership and drop scores sit on the modifier, not the group** [TAOM-verified, v1.5.7 ilspy]. `ItemModifierGroup.Deserialize` reads only the attributes `no_modifier_loot_score` and `no_modifier_production_score` (`ItemModifierGroup.cs:43-49`); child nodes are ignored. Each `ItemModifier` reads `loot_drop_score`, `production_drop_score` and `modifier_group` (`ItemModifier.cs:73-76`) and adds itself to that group, so a `<ItemModifierGroup>` written with children is an empty pool and rolls nothing. yotthani hit this in the RingSystem module (`yotthani/bannerlord`, commit `b5003131`, body text; the cause read from `ItemModifier.cs`). yotthani also reports that `IsNotUsable` is not an item flag in 1.4 or 1.5.5 (the 1.5.5 schema check logged 20 errors; the commit is `4f9fb8a3` of 2026-10-26, "fix(RingSystem): drop the undeclared IsNotUsable item flag"); the v1.5.7 `TaleWorlds.Core.Item*.cs` files hold no such name, a search of those files only.
+
 ## Child elements
 
 <!-- engine-table type="TaleWorlds.Core.ItemObject" file="Core/TaleWorlds.Core/TaleWorlds.Core/ItemObject.cs" method="Deserialize" inert="using_arm_band,lod_atlas_index" -->

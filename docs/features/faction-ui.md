@@ -399,6 +399,16 @@ career page and into the game. Owed:
   culture's generated clan name and the default banner, since those stages were skipped; Player
   Switcher says so on screen ("You could not take the place of ...").
 - **The last loading painting** stays in memory until the next loading screen (see Performance).
+- **Run-time textures with one file name in two folders: unexplained observation, TAOM not affected today.**
+  `FrontEndResourceAdapter.LoadTexture` (line 80-86 in the v1.5.7 tree) calls `Texture.LoadTextureFromPath(fileName,
+  directory)`. yotthani reports that the engine "knows a texture by its file name" and that two same-named files in
+  different folders both drew the first (`RealmUI/Game/Theme/Themes.cs`@c45d8374:187-188 and :589-591, code comments,
+  observed result "the peoples' inlays came out swapped", no date, version or test shown). TAOM-verified, v1.5.7 native
+  pseudo-C: `ITexture.LoadTextureFromPath` (0x510B80) calls helper `FUN_1800a0400`, which caches by name AND full path, so two
+  such files load as two textures; they do share `Texture.Name`, the bare file name. No name-keyed lookup was found in
+  managed `TwoDimensionEnginePlatform` (its `_textMaterials` is keyed by the `Texture` object). The cause of yotthani's swap
+  is therefore open (yotthani's own sprite-name stripping or a native path TAOM did not read). A two-file test in a dev
+  build would settle it. TAOM's FactionUI PNG names had no duplicates when counted on 2026-11-13; no gate enforces that.
 
 ### In-game checklist
 

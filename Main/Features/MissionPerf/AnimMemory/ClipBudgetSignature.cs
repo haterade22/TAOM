@@ -53,9 +53,13 @@ internal static class ClipBudgetSignature
     /// Scans <paramref name="text"/> (the module's code, mapped at <paramref name="textRva"/>) for the
     /// eviction-pass site. Only a single match carries RVAs; zero or two leave them 0.
     /// </summary>
-    internal static SignatureMatch Resolve(byte[] text, int textRva)
+    internal static SignatureMatch Resolve(byte[] text, int textRva) =>
+        Resolve(text, textRva, SignatureScanSession.Disabled);
+
+    /// <summary>The same search, answering from <paramref name="scan"/>'s address cache where the bytes at the remembered address still match.</summary>
+    internal static SignatureMatch Resolve(byte[] text, int textRva, SignatureScanSession scan)
     {
-        var hits = Find(text, Parse(Pattern), 2);
+        var hits = scan.Find("animmem.clip", text, Parse(Pattern), 2);
         if (hits.Count != 1)
             return new SignatureMatch(hits.Count, 0, 0, 0, 0);
 

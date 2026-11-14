@@ -23,6 +23,13 @@ count of the work it did (agents spawned, ticks run, items processed) next to th
 change it between attempts; `compare` refuses groups whose `[PerfContext]` build or texture quality
 differ.
 
+Before each timing run, list the busiest processes (`Get-Process | Sort CPU -desc | select -first 8`) and end or wait out
+anything that is not the game. A stray `python` started through the Store alias by a `python3` call ran 26 hours on one
+core and made the numbers of a whole day of yotthani's runs provisional, while the structural findings stayed valid (yotthani, `yotthani/MithrilForge` `docs/perf-audit/profiling.md`@ea7a7bfb
+lines 72-74, 83-84 and 86-87; [lesson](../reviews/lessons/build-tooling-workflow.md), "A stray process that eats a core"). When kernel
+(ETW) sampling loses events, the same file's fallback is a Very Sleepy user-mode capture with module load addresses saved,
+mapped to Ghidra function ranges (`python tools/native_decompile.py` is TAOM's side of that lookup).
+
 ## 3. The metric
 
 The median of at least 5 runs per side, A and B alternated (A, B, A, B), never one run. The tool
@@ -36,6 +43,13 @@ python tools/perf_runs.py compare --a <logs without the change...> --b <logs wit
 ```
 
 A gap inside the run-to-run range is no measurable difference.
+
+Measure TAOM's own run-to-run spread before trusting a window that is fixed in time: two identical runs of one scene, same
+build. yotthani's two identical runs of 01.10.2026 were 25 % apart in a fixed window because the clash came at different times, and
+4 % apart when compared per fight phase (ms per frame, bucketed by active agents: 900 to 1000, 700 to 899, 500 to 699, under
+500; a phase counts when every run holds at least 10 s of it) (`docs/perf-audit/scenarios/s1.md`@ea7a7bfb line 30, one scenario,
+game 1.5.3). `tools/perf_runs.py` cuts its steady windows from `t >= 30 s` with `active > 0` and does not bucket by agent
+count (its header describes no phase bucket). TAOM's own spread is not recorded in this repo's docs.
 
 ## 4. Prove the work ran
 

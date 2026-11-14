@@ -72,6 +72,21 @@ unknown previous model.
   ([gamemodels-services lessons](../../reviews/lessons/gamemodels-services.md), "GameModel override bodies allow no inline decision logic...").
 - **Register after defaults** (OnGameStart) — registering too early (before the base model exists) means yours is
   *before* the default in `_models` and the default wins.
+- **Non-virtual setters on a model.** `AgentStatCalculateModel.SetAILevelMultiplier(float)` and `ResetAILevelMultiplier()` are not
+  virtual; they write a private `_AILevelMultiplier` that the same class reads when it computes the AI level
+  (`AgentStatCalculateModel.cs:12, 138-146, 171-172` [TAOM-verified, v1.5.7 cache]). A decorator model (the `AddModel<T>` form above)
+  that forwards to `BaseModel` keeps the value its callers set on the wrapper, while `BaseModel` computes from its own field.
+  yotthani's SmithingExtended `WearAgentStatModel` reads the private field with a compiled expression and copies it into `BaseModel`
+  before each delegation (`HoN/SmithingExtended/Integration/Wear/WearAgentStatModel.cs@c45d8374:14`, tournaments call the setters;
+  read from code, not run). TAOM's own models are not hit: `TaomAgentStatCalculateModel : SandboxAgentStatCalculateModel`
+  (`CareerSystem/Models/TaomAgentStatCalculateModel.cs:28`) and `TaomCustomBattleAgentStatCalculateModel :
+  CustomBattleAgentStatCalculateModel` (`CultureDoctrine/Models/...:30`) inherit and call `base`, and neither vanilla base has a
+  `BaseModel` reference. Only another mod that wraps a TAOM model is exposed, and SmithingExtended already copies the field.
+- **A decorator's `BaseModel` can be null.** yotthani's TroopStatus falls back to a new `Default` model when `BaseModel` is null
+  ("registration ordering, non-generic AddModel overload") and returns a constant when `Campaign.Current` is null, because models can run
+  during character creation (`HoN/TroopStatus/TroopStatusPartyMoraleModel.cs@c45d8374:22-37, 87-92`, read from code). TAOM has no site
+  for the first half: Grep of `\bBaseModel\b` in `Main/` and `Client/` `*.cs` on 2026-11-13 gave 5 hits, all comments, so no TAOM code
+  dereferences it. The `Campaign.Current == null` half was not checked.
 
 ## The native boundary
 The GameModel system is **managed** — registration, resolution, and the model methods are all C# (the formulas are

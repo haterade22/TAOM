@@ -86,13 +86,13 @@ public class MarshalThrowerPatchTests
     // ---- wiring and bindings ----
 
     [TestMethod]
-    public void BothClasses_JoinTheSharedDeferredCategory_BecauseTheirParametersCarryAMovementOrder()
+    public void BothClasses_JoinTheMarshalsWordDeferredCategory_BecauseTheirParametersCarryAMovementOrder()
     {
         foreach (var patch in PatchClasses)
         {
             var categories = patch.GetCustomAttributes<HarmonyPatchCategory>(inherit: false).ToList();
             Assert.AreEqual(1, categories.Count, patch.Name);
-            Assert.AreEqual("Patch_MissionTime_SetMovementOrder", categories[0].info.category, patch.Name);
+            Assert.AreEqual("Patch_MissionTime_MarshalsWord", categories[0].info.category, patch.Name);
             Assert.AreEqual("TAOM.Features.MarshalsWord.Hooks", patch.Namespace);
         }
     }

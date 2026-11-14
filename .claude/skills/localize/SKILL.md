@@ -15,7 +15,7 @@ Get new player-facing text into all 12 supported languages (BR, CNs, CNt, DE, FR
 ## Case A — new C# text shown to the player
 1. Wrap the string: `new TextObject("{=taom_my_feature_label}My Feature")` (always `{=KEY}default` form).
 2. Register it: `python tools/harvest_literal_loc_keys.py --apply` lifts the default out of the literal into `taom_module_strings.xml` (or the feature's own file). Idempotent, so a hand-tuned row survives.
-3. **(project lead only)** Seed: `python tools/translate_with_claude.py --lang <L> --module TAOM --sync-ids --seed-only --apply` (one language per run: repeat for each of BR CNs CNt DE FR IT JP KO PL RU SP TR; overrides in `tools/translation_overrides/<lang>.json` always win). **`--sync-ids` is not optional for a new key**: the translator substitutes by id, so without a seeded row the translation is paid for and discarded. Add a row to backlog issue #763 (source issue, keys, module), and close the feature issue once only translation remains; an issue body edit needs no ask. The paid run is the same command without `--seed-only`, and it needs the maintainer's word.
+3. **(project lead only)** Seed: `python tools/translate_with_claude.py --lang <L> --module TAOM --sync-ids --seed-only --apply` (one language per run: repeat for each of BR CNs CNt DE FR IT JP KO PL RU SP TR; overrides in `tools/translation_overrides/<lang>.json` always win). **`--sync-ids` is not optional for a new key**: the translator substitutes by id, so without a seeded row the translation is paid for and discarded. Add a row to the open translation backlog issue (#1129 since 2026-11-12; TRANSLATOR_GUIDE.md names the current one) with the source issue, the keys and the module, and close the feature issue once only translation remains; an issue body edit needs no ask. The paid run is the same command without `--seed-only`, and it needs the maintainer's word.
 
 ## Case B — new SOURCE XML file containing in-game text
 1. Add its row to `tools/_loc_sources.py` (the one ordered table the translator, template and name generators read; `tools/tests/test_loc_sources.py` fails until it matches the files).
@@ -32,7 +32,7 @@ Get new player-facing text into all 12 supported languages (BR, CNs, CNt, DE, FR
 1. `git status` the source files first: the generator reads the working tree, other sessions' edits included.
 2. `python tools/generate_name_localization_strings.py --apply` (one pass; `--check` and `tools/tests` fail while a source is ahead of its generated file).
 3. A hero, NPC or culture key that two sites share with different English needs its own key first (`EveryNameKey_InTheNameGeneratorsSources_HasOneEnglishDefault`). Heroes' `text=` is saved with the hero, so give **both** sites new keys and retire the old one, or old saves show the other hero's text.
-4. **(project lead only)** Seed per language, and add the #763 row, as in Case A step 3.
+4. **(project lead only)** Seed per language, and add the backlog row, as in Case A step 3.
 5. **(project lead only)** A new kingdom, clan, culture or town name also needs its BR and IT grammar tag: `python tools/generate_name_tags.py --write`, then `python tools/name_tags.py --lang all --apply` ([name-grammar-tags.md](../../../docs/features/name-grammar-tags.md)).
 
 ## Case E: changing English that is already translated

@@ -73,6 +73,14 @@ idle, for perf).
   scripts (Phase-0 lookup order).
 - `<script name>` must exactly match the class name, and the class must be in a loaded module assembly, or the prefab
   silently has no script.
+- **A run-time prop on the campaign map is not saved.** Map `GameEntity` objects are not serialized, so recreate them
+  on load and after map re-entry from your own saved state. [yotthani, `yotthani/bannerlord`
+  `TAOM_POI/docs/2026-07-06-feasibility-runtime-map-props.md`@c45d8374, read from the 1.4 decompile and said to be proven in
+  `HoN/FieldCamp`; not re-checked by TAOM.] The public path in that memo: `MapScreen.Instance?.MapScene`,
+  `MetaMesh.GetCopy(name, false, true)`, `GameEntity.CreateEmpty(scene)`, `AddMultiMesh`, `SetGlobalFrame` with the terrain
+  height from `MapSceneWrapper.GetHeightAtPoint`, and `e.Remove(0)` to clean up. The prop has no interaction: selection
+  and encounter need a settlement or proximity anchor. TAOM's own map-scene entity user is `BorderRenderAdapter.AddEntity`
+  (`BorderRenderAdapter.cs:474`, `GameEntity.CreateEmpty`).
 
 ## Siege walls: two child scripts the set-up reads with no null check
 
@@ -146,6 +154,16 @@ rest is Kysaro's (TAOM's lead scener) from his scene tool notes, unverified in T
 - **`ManagedMeshEditOperations.Create(mesh)` needs `FinalizeEditing()` before any `AddEditDataUser()` or
   `LockEditDataWrite()` on the same mesh.** Without it the engine deadlocks with no exception and no log; he hit it
   twice (his note `scenes/project_vertex_paint_module.md`, 2026-09-17). Wrap the operations in try/finally.
+- **`MetaMesh.GetMeshAtIndex` is said to count only the active entries of the metamesh's mesh list** [yotthani, read from
+  code, no in-game observation: `yotthani/MithrilForge` commit `854acad` ("keys meshes by ordinal among the ACTIVE metamesh
+  entries (= engine GetMeshAtIndex)", cache format 2 to 3) and `SkinCacheFile.cs@ea7a7bfb:12`; the same statement in
+  `yotthani/bannerlord` `HoN/RaceArmorFit` README, German, "liefert nur aktive Entries"]. A tool that indexes by raw entry
+  position drifts as soon as an entry in the middle is inactive. **Not re-checked by TAOM:** on v1.5.7 the managed method is
+  only `EngineApplicationInterface.IMetaMesh.GetMeshAtIndex(base.Pointer, meshIndex)` (`TaleWorlds.Engine.MetaMesh.cs:208-210`
+  in the `taom-src` cache), so whether inactive entries count is native. Next check:
+  `python tools/native_decompile.py --engine-method IMetaMesh.GetMeshAtIndex`. Neither `tools/validate_mesh_refs.py` (TOC
+  only) nor TAOM's `Main` code indexes a metamesh's meshes by entry order today as far as this doc's searches went (scope:
+  `docs`, `tools`, `.claude`, `Main`).
 - **Vertex colour is four independent grayscale mask channels, not an RGB tint.** `Mesh.SetEditDataFaceCornerVertexColor`
   takes a packed uint: R ambient occlusion, G diffuse occlusion, B second material mask, A vertex alpha. Only R was
   confirmed live (R=0 darkens, R=255 is neutral); the packing order `(a<<24)|(r<<16)|(g<<8)|b` is his assumption (same

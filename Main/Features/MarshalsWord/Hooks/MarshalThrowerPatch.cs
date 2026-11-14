@@ -14,7 +14,7 @@ namespace TAOM.Features.MarshalsWord.Hooks;
 /// thread, the main thread in fast-forward and rarely a worker: one volatile table, no lock, no allocation, no log line. A throw latches it off.
 /// </summary>
 [HarmonyPatch(typeof(MovementOrder), "GetPositionAux", typeof(Formation), typeof(WorldPosition.WorldPositionEnforcedCache))]
-[HarmonyPatchCategory("Patch_MissionTime_SetMovementOrder")]
+[HarmonyPatchCategory("Patch_MissionTime_MarshalsWord")]
 public static class MarshalThrowerPatch
 {
     [HarmonyPostfix]
