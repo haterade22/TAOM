@@ -315,6 +315,34 @@ def test_blade_fan_out_reports_what_one_edit_moves():
 # --- troop loading ----------------------------------------------------------------------------
 
 
+def test_load_troops_skips_inline_civilian_true_rosters(tmp_path):
+    """MBEquipmentRoster.InitEquipment (v1.5.7) reads `civilian="true"` as Civilian when the
+    roster has no `equipmentType`. Skipping only equipmentType="Civilian" let a civilian
+    weapon pose as the troop's battle kit. An explicit equipmentType wins, as in the engine."""
+    d = tmp_path / "troops"
+    d.mkdir()
+    (d / "troops_x.xml").write_text(
+        """<NPCCharacters>
+             <NPCCharacter id="t1" level="21" name="{=k}Tee One" culture="Culture.gondor">
+               <Equipments>
+                 <EquipmentRoster>
+                   <equipment slot="Item0" id="Item.battle_sword" />
+                 </EquipmentRoster>
+                 <EquipmentRoster civilian="true">
+                   <equipment slot="Item0" id="Item.inline_civilian_sword" />
+                 </EquipmentRoster>
+                 <EquipmentRoster equipmentType="Battle" civilian="true">
+                   <equipment slot="Item0" id="Item.explicit_battle_axe" />
+                 </EquipmentRoster>
+               </Equipments>
+             </NPCCharacter>
+           </NPCCharacters>""",
+        encoding="utf-8",
+    )
+    got = ml.load_troops(d)[0]
+    assert got.items == {"battle_sword", "explicit_battle_axe"}
+
+
 def test_load_troops_reads_both_equipment_casings_and_skips_civilian(tmp_path):
     """Inline rosters spell it lowercase, standalone files uppercase. Missing one hides a category."""
     d = tmp_path / "troops"
