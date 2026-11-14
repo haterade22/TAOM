@@ -1083,7 +1083,7 @@
         <EquipmentSet>
             <Equipment slot="Item0" id="Item.ladder_rhudaur_bow_t2" />
             <Equipment slot="Item1" id="Item.bodkin_arrows_a" />
-            <Equipment slot="Item2" id="Item.dunland_caerdh_axe_1h_a" />
+            <Equipment slot="Item2" id="Item.dunland_caerdh_axe_1h_b" />
             <Equipment slot="Body" id="Item.sk_ar_art_chainmail_half_a" />
             <Equipment slot="Leg" id="Item.sk_ar_art_boots_a" />
         </EquipmentSet>
@@ -1093,7 +1093,7 @@
         <EquipmentSet>
             <Equipment slot="Item0" id="Item.ladder_rhudaur_bow_t2" />
             <Equipment slot="Item1" id="Item.bodkin_arrows_a" />
-            <Equipment slot="Item2" id="Item.dunland_caerdh_axe_1h_a" />
+            <Equipment slot="Item2" id="Item.dunland_caerdh_axe_1h_b" />
             <Equipment slot="Body" id="Item.sk_ar_art_chainmail_half_a" />
             <Equipment slot="Leg" id="Item.sk_ar_art_boots_a" />
         </EquipmentSet>
@@ -1105,7 +1105,7 @@
         <EquipmentSet>
             <Equipment slot="Item0" id="Item.wm_gondor_spear_a" />
             <Equipment slot="Item1" id="Item.dunland_wulf_shield_light_a" />
-            <Equipment slot="Item2" id="Item.dunland_caerdh_axe_1h_a" />
+            <Equipment slot="Item2" id="Item.dunland_caerdh_axe_1h_b" />
             <Equipment slot="Body" id="Item.sk_ar_art_chainmail_half_a" />
             <Equipment slot="Leg" id="Item.sk_ar_art_boots_a" />
             <Equipment slot="Horse" id="Item.saddle_horse" />
@@ -1117,7 +1117,7 @@
         <EquipmentSet>
             <Equipment slot="Item0" id="Item.wm_gondor_spear_a" />
             <Equipment slot="Item1" id="Item.dunland_wulf_shield_light_a" />
-            <Equipment slot="Item2" id="Item.dunland_caerdh_axe_1h_a" />
+            <Equipment slot="Item2" id="Item.dunland_caerdh_axe_1h_b" />
             <Equipment slot="Body" id="Item.sk_ar_art_chainmail_half_a" />
             <Equipment slot="Leg" id="Item.sk_ar_art_boots_a" />
             <Equipment slot="Horse" id="Item.saddle_horse" />
@@ -1129,7 +1129,7 @@
 
     <EquipmentRoster id="player_career_rhudaur_infantry_m" culture="Culture.rhudaur">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.dunland_caerdh_axe_1h_a" />
+            <Equipment slot="Item0" id="Item.dunland_caerdh_axe_1h_b" />
             <Equipment slot="Item1" id="Item.dunland_wulf_shield_light_a" />
             <Equipment slot="Item2" id="Item.wm_gondor_spear_a" />
             <Equipment slot="Body" id="Item.sk_ar_art_chainmail_half_a" />
@@ -1139,7 +1139,7 @@
 
     <EquipmentRoster id="player_career_rhudaur_infantry_f" culture="Culture.rhudaur">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.dunland_caerdh_axe_1h_a" />
+            <Equipment slot="Item0" id="Item.dunland_caerdh_axe_1h_b" />
             <Equipment slot="Item1" id="Item.dunland_wulf_shield_light_a" />
             <Equipment slot="Item2" id="Item.wm_gondor_spear_a" />
             <Equipment slot="Body" id="Item.sk_ar_art_chainmail_half_a" />
