@@ -400,7 +400,7 @@
       <EquipmentRoster>
         <equipment slot="Item0" id="Item.wm_gondor_spear_b_cardolan" />
         <equipment slot="Item1" id="Item.sm_gd_shield_a3" />
-        <equipment slot="Item2" id="Item.wm_gondor_sword_a07" />
+        <equipment slot="Item2" id="Item.wm_gondor_sword_a03" />
         <equipment slot="Head" id="Item.sk_gd_anf_inf_helmet_med_a" />
         <equipment slot="Body" id="Item.sk_gd_anf_inf_chest_med_a" />
         <equipment slot="Cape" id="Item.sk_gd_ano_pauld_inf_med_a" />
@@ -412,7 +412,7 @@
       <EquipmentRoster>
         <equipment slot="Item0" id="Item.wm_gondor_spear_b_cardolan" />
         <equipment slot="Item1" id="Item.sm_gd_shield_a4" />
-        <equipment slot="Item2" id="Item.wm_gondor_sword_a07" />
+        <equipment slot="Item2" id="Item.wm_gondor_sword_a03" />
         <equipment slot="Head" id="Item.sk_gd_anf_inf_helmet_med_b" />
         <equipment slot="Body" id="Item.sk_gd_anf_inf_chest_med_b" />
         <equipment slot="Cape" id="Item.sk_gd_ano_pauld_inf_med_b" />
@@ -659,7 +659,7 @@
         <equipment slot="Item0" id="Item.ladder_cardolan_bow_t3" />
         <equipment slot="Item1" id="Item.bodkin_arrows_a" />
         <equipment slot="Item2" id="Item.bodkin_arrows_a" />
-        <equipment slot="Item3" id="Item.wm_gondor_sword_a07" />
+        <equipment slot="Item3" id="Item.wm_gondor_sword_a03" />
         <equipment slot="Head" id="Item.sk_gd_pin_inf_helmet_med_a" />
         <equipment slot="Body" id="Item.sk_gd_pin_chainmail_a" />
         <equipment slot="Cape" id="Item.sk_gd_ano_pauld_inf_med_a" />
@@ -670,7 +670,7 @@
         <equipment slot="Item0" id="Item.ladder_cardolan_bow_t3" />
         <equipment slot="Item1" id="Item.bodkin_arrows_a" />
         <equipment slot="Item2" id="Item.bodkin_arrows_a" />
-        <equipment slot="Item3" id="Item.wm_gondor_sword_a07" />
+        <equipment slot="Item3" id="Item.wm_gondor_sword_a03" />
         <equipment slot="Head" id="Item.sk_gd_pin_inf_helmet_med_a" />
         <equipment slot="Body" id="Item.sk_gd_pin_chainmail_b" />
         <equipment slot="Cape" id="Item.sk_gd_ano_pauld_inf_med_b" />

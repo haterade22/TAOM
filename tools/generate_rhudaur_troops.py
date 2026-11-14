@@ -185,11 +185,11 @@ def build():
                    armour(one("helmet_inf_light_a"), ab("chainmail_half"), one("boots_a"), None, ab("cape")),
                    ["rhudaur_militia_veteran_archer"]))
     t.append(Troop("rhudaur_militia_veteran_spearman", "Veteran Militia Spearman", 16, "Infantry", "spear",
-                   paired(SPEAR, HILL_SHIELD_MID, "dunland_caerdh_axe_1h_a"),
+                   paired(SPEAR, HILL_SHIELD_MID, "dunland_caerdh_axe_1h_b"),
                    armour(ab("helmet_inf_med"), ab("chainmail_full"), one("grvs_inf_med_a"),
                           one("gloves_a"), ab("pauld_inf_med"))))
     t.append(Troop("rhudaur_militia_veteran_archer", "Veteran Militia Archer", 16, "Ranged", "ranged",
-                   same(bow(16), ARROWS, ARROWS, "dunland_caerdh_axe_1h_a"),
+                   same(bow(16), ARROWS, ARROWS, "dunland_caerdh_axe_1h_b"),
                    armour(ab("helmet_inf_med"), ab("chainmail_full"), one("grvs_inf_med_a"),
                           one("gloves_a"), ab("cape"))))
     return t

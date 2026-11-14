@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using HarmonyLib;
+using TAOM.Core.Diagnostics;
 using TAOM.Features.MissionPerf;
 using TaleWorlds.MountAndBlade;
 
@@ -40,6 +41,8 @@ public static class Mission_AfterStart_MissionStartGuard_Patch
     {
         var result = TickProfilerTranspiler.Rewrite(instructions, MissionStartGuardSwaps.Build(), "Mission.AfterStart", null, out var swapped);
         MissionStartGuardSwaps.LastSwapped = swapped;
+        if (swapped != MissionStartGuardService.ExpectedSites)
+            SelfDisables.Report(MissionStartGuardModule.PatchCategory, $"wrapped {swapped} of {MissionStartGuardService.ExpectedSites} start calls in Mission.AfterStart");
         return result;
     }
 

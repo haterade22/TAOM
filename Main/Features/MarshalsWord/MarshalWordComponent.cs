@@ -4,6 +4,7 @@ using TaleWorlds.Core;
 using TaleWorlds.Engine;
 using TaleWorlds.Library;
 using TaleWorlds.MountAndBlade;
+using TAOM.Core.Diagnostics;
 using TAOM.Core.Logging;
 using TAOM.Features.MarshalsWord.Domain;
 
@@ -17,6 +18,7 @@ internal sealed class MarshalWordComponent : AgentComponent
     private static readonly OutcomeCounter Releases = Outcomes.Counter(MarshalChecks.ReleaseCounterId);
     private static readonly OutcomeCounter Clamps = Outcomes.Counter(MarshalChecks.ClampCounterId);
     private static volatile bool _faulted;
+    private const string SelfDisableId = MarshalsWordModule.PatchCategory + ".SoldierCallback";
 
     private readonly double _jitter = Jitter.NextDouble() * MarshalTuning.WordJitter;
     private double _since;
@@ -164,6 +166,7 @@ internal sealed class MarshalWordComponent : AgentComponent
         {
             _faulted = true;
             Outcomes.Swallowed("MarshalsWord", "MarshalWordComponent.OnAIInputSet", ex);
+            SelfDisables.Report(SelfDisableId, ex.GetType().Name);
         }
     }
 

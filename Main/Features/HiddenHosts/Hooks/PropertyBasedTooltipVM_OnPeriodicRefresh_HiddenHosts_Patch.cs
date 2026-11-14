@@ -1,5 +1,6 @@
 using System;
 using HarmonyLib;
+using TAOM.Core.Diagnostics;
 using TaleWorlds.Core.ViewModelCollection.Information;
 using TaleWorlds.Library;
 
@@ -61,6 +62,8 @@ public static class PropertyBasedTooltipVM_OnPeriodicRefresh_HiddenHosts_Patch
     {
         if (_bindReported) return;
         _bindReported = true;
+        // #1185: the hook does nothing from here on, and one fault never spends the budget, so report it here.
+        SelfDisables.Report(HiddenHostsModule.PatchCategory, "TooltipBaseVM lacks _invokedType or _invokedArgs");
         HiddenHostsCalls.ReportFault(nameof(PropertyBasedTooltipVM_OnPeriodicRefresh_HiddenHosts_Patch),
             new MissingFieldException("TooltipBaseVM lacks _invokedType or _invokedArgs"));
     }

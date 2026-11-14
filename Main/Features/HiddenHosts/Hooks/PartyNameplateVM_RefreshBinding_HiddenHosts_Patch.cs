@@ -1,5 +1,6 @@
 using System;
 using HarmonyLib;
+using TAOM.Core.Diagnostics;
 using SandBox.ViewModelCollection.Nameplate;
 
 namespace TAOM.Features.HiddenHosts.Hooks;
@@ -83,6 +84,8 @@ public static class PartyNameplateVM_RefreshBinding_HiddenHosts_Patch
     {
         if (_bindReported) return;
         _bindReported = true;
+        // #1185: the hook does nothing from here on, and one fault never spends the budget, so report it here.
+        SelfDisables.Report(HiddenHostsModule.PatchCategory, "PartyNameplateVM lacks one of _countBind, _extraInfoTextBind, _fullNameBind, _isVisibleOnMapBind");
         HiddenHostsCalls.ReportFault(nameof(PartyNameplateVM_RefreshBinding_HiddenHosts_Patch),
             new MissingFieldException("PartyNameplateVM lacks one of _countBind, _extraInfoTextBind, _fullNameBind, _isVisibleOnMapBind"));
     }

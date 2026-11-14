@@ -1,4 +1,5 @@
 using System;
+using TAOM.Core.Diagnostics;
 using TAOM.Core.Logging;
 
 namespace TAOM.Features.TaomBuildings.Hooks;
@@ -38,6 +39,7 @@ internal static class TaomBuildingUiHooks
                 // The icon and the effect line fall back to the engine's. The likely fault is a failed IoC resolve,
                 // which can fail the logger's resolve as well, so the log line has a catch of its own.
                 _failed = true;
+                SelfDisables.Report(TaomBuildingsModule.PatchCategory + ".UiHook", ex.GetType().Name + ": " + ex.Message);
                 try { TAOM.IoC.Resolve<IModLogger>()?.LogWarning($"[TaomBuildings] UI hook could not be built ({ex.GetType().Name}: {ex.Message}); the default icon and effect line stand"); } catch { }
                 return null;
             }

@@ -5,6 +5,7 @@ using System.Reflection.Emit;
 using HarmonyLib;
 using TaleWorlds.Core;
 using TaleWorlds.MountAndBlade;
+using TAOM.Core.Diagnostics;
 
 namespace TAOM.Features.CreatureBandits.Hooks;
 
@@ -38,6 +39,8 @@ public static class Patch93_CreatureBanditWeaponState
             yield return new CodeInstruction(OpCodes.Call, hook);
             injected++;
         }
+        if (injected == 0)
+            SelfDisables.Report(CreatureBanditsConfig.PatchCategory + ".WeaponState", "no Monster.Flags read in Mission.CreateAgent");
         Diagnostics.CreatureBanditDiag.CreationHookSites = injected;
     }
 

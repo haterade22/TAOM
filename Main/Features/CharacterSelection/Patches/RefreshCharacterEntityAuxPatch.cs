@@ -6,6 +6,7 @@ using System.Reflection.Emit;
 using TaleWorlds.Core;
 using TaleWorlds.MountAndBlade;
 using TaleWorlds.MountAndBlade.GauntletUI.BodyGenerator;
+using TAOM.Core.Diagnostics;
 using TAOM.Core.Logging;
 using TAOM.Features.HeroRace.Diagnostics;
 
@@ -109,6 +110,7 @@ public class RefreshCharacterEntityAuxPatch
 
     private static void LogTranspilerDegradation(string detail)
     {
+        SelfDisables.Report("Late_Transpiler", detail);
         try
         {
             IoC.Resolve<IModLogger>()?.LogError(

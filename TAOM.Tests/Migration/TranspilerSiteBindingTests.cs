@@ -4,10 +4,13 @@ using System.Reflection;
 using HarmonyLib;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
+using TAOM.Core.Diagnostics;
 using TAOM.Core.Logging;
 using TAOM.Features.BannerColorPersistence;
 using TAOM.Features.BannerColorPersistence.Hooks;
 using TAOM.Features.CastleRecruitment.Hooks;
+using TAOM.Features.CharacterSelection.Patches;
+using TAOM.Features.Enlistment.Hooks;
 using TAOM.Features.PartyIconScale;
 using TAOM.Features.PartyIconScale.Hooks;
 
@@ -136,5 +139,99 @@ public class TranspilerSiteBindingTests
         var toggle = AccessTools.Method(typeof(CastleAiToggle), nameof(CastleAiToggle.IsExcludedFromRecruitScoring));
         Assert.AreEqual(1, rewritten.Count(ci => ci.operand is MethodInfo mi && mi == toggle),
             "Expected exactly one IsCastle gate to be swapped for CastleAiToggle.IsExcludedFromRecruitScoring.");
+    }
+
+    // #1185: a transpiler that misses its anchor now names its fix in a red chat line for every player, so each
+    // transpiler that reports must find its anchor in the installed engine and report nothing. These four had no
+    // test on the real IL; the others above and in their feature's binding tests cover the rest.
+
+    private static IReadOnlyList<SelfDisable> RunOnInstalledIl(System.Type patch, System.Func<List<CodeInstruction>, IEnumerable<CodeInstruction>> transpile)
+    {
+        var info = HarmonyMethodExtensions.GetFromType(patch).Single(m => m.methodName != null);
+        var target = AccessTools.Method(info.declaringType, info.methodName, info.argumentTypes);
+        Assert.IsNotNull(target, patch.Name + ": its target did not resolve");
+        var saved = SelfDisables.Ledger;
+        SelfDisables.Ledger = new SelfDisableLedger();
+        try
+        {
+            transpile(PatchProcessor.GetOriginalInstructions(target).ToList()).ToList();
+            return SelfDisables.Ledger.Take();
+        }
+        finally
+        {
+            SelfDisables.Ledger = saved;
+        }
+    }
+
+    private static void AssertNothingReported(IReadOnlyList<SelfDisable> taken) =>
+        Assert.AreEqual(0, taken.Count, "reported on v1.5.7: " + string.Join("; ", taken.Select(t => t.Id + ": " + t.Reason)));
+
+    [TestMethod]
+    [TestCategory("RequiresGameIL")]
+    [TestCategory("BindingVerification")]
+    public void SceneNotificationTranspiler_FindsItsMapFactionRead_AndReportsNothing_InInstalledEngine()
+    {
+        if (!_gameLoaded) Assert.Inconclusive("Game assemblies unavailable.");
+
+        AssertNothingReported(RunOnInstalledIl(typeof(CampaignSceneNotificationHelper_CreateNotificationCharacter_Transpiler),
+            il => CampaignSceneNotificationHelper_CreateNotificationCharacter_Transpiler.Transpiler(il)));
+    }
+
+    [TestMethod]
+    [TestCategory("RequiresGameIL")]
+    [TestCategory("BindingVerification")]
+    public void BodyGeneratorTranspiler_FindsItsAgentVisualsDataNewobj_AndReportsNothing_InInstalledEngine()
+    {
+        if (!_gameLoaded) Assert.Inconclusive("Game assemblies unavailable.");
+        var transpiler = typeof(RefreshCharacterEntityAuxPatch).GetMethod("Transpiler", BindingFlags.NonPublic | BindingFlags.Static)!;
+
+        AssertNothingReported(RunOnInstalledIl(typeof(RefreshCharacterEntityAuxPatch),
+            il => (IEnumerable<CodeInstruction>)transpiler.Invoke(null, new object?[] { il, null })!));
+    }
+
+    [TestMethod]
+    [TestCategory("RequiresGameIL")]
+    [TestCategory("BindingVerification")]
+    public void OrderBannerTranspiler_FindsItsToStringCall_AndReportsNothing_InInstalledEngine()
+    {
+        if (!_gameLoaded) Assert.Inconclusive("Game assemblies unavailable.");
+        var target = BehaviorComponent_OnBehaviorActivated_Transpiler.TargetMethod();
+        Assert.IsNotNull(target);
+        var saved = SelfDisables.Ledger;
+        SelfDisables.Ledger = new SelfDisableLedger();
+        try
+        {
+            BehaviorComponent_OnBehaviorActivated_Transpiler.Transpiler(PatchProcessor.GetOriginalInstructions(target).ToList()).ToList();
+            AssertNothingReported(SelfDisables.Ledger.Take());
+        }
+        finally
+        {
+            SelfDisables.Ledger = saved;
+        }
+    }
+
+    /// <summary>Off by default (banner_color_config.json): the transpiler returns before it looks for RemoveRange.</summary>
+    [TestMethod]
+    [TestCategory("RequiresGameIL")]
+    [TestCategory("BindingVerification")]
+    public void LayerLimitTranspiler_WithTheDefaultConfig_ReportsNothing_InInstalledEngine()
+    {
+        if (!_gameLoaded) Assert.Inconclusive("Game assemblies unavailable.");
+        var provider = Substitute.For<IBannerColorConfigProvider>();
+        provider.GetConfig().Returns(new BannerColorConfig());
+        Banner_TryGetBannerDataFromCode_Transpiler.Initialize(provider, Substitute.For<IModLogger>());
+        var saved = SelfDisables.Ledger;
+        SelfDisables.Ledger = new SelfDisableLedger();
+        try
+        {
+            var target = Banner_TryGetBannerDataFromCode_Transpiler.TargetMethod();
+            Banner_TryGetBannerDataFromCode_Transpiler.Transpiler(PatchProcessor.GetOriginalInstructions(target).ToList()).ToList();
+            AssertNothingReported(SelfDisables.Ledger.Take());
+        }
+        finally
+        {
+            SelfDisables.Ledger = saved;
+            Banner_TryGetBannerDataFromCode_Transpiler.Initialize(null!, null!);
+        }
     }
 }

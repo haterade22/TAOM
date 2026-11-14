@@ -4,6 +4,7 @@ using System.Reflection.Emit;
 using HarmonyLib;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
+using TAOM.Core.Diagnostics;
 using TAOM.Core.Logging;
 using TAOM.Features.PartyIconScale;
 
@@ -50,8 +51,77 @@ public class PartyIconScaleTranspilerTests
 
     private IModLogger _logger = null!;
 
+    private SelfDisableLedger _savedLedger = null!;
+
     [TestInitialize]
-    public void Setup() => _logger = Substitute.For<IModLogger>();
+    public void Setup()
+    {
+        _logger = Substitute.For<IModLogger>();
+        _savedLedger = SelfDisables.Ledger;
+        SelfDisables.Ledger = new SelfDisableLedger();
+    }
+
+    [TestCleanup]
+    public void Cleanup() => SelfDisables.Ledger = _savedLedger;
+
+    // Issue #1185: the four degrade branches share one id, so each test reads a fresh ledger.
+    private static void AssertReportedPatch53Once()
+    {
+        var taken = SelfDisables.Ledger.Take();
+        Assert.AreEqual(1, taken.Count);
+        Assert.AreEqual("Patch53_PartyIconScale", taken[0].Id);
+        Assert.IsTrue(taken[0].Reason.Length > 0);
+    }
+
+    [TestMethod]
+    public void IconSites_NullGetScale_ReportsPatch53()
+    {
+        PartyIconScaleTranspiler.RewriteIconSites(IconStream(), null, _logger);
+
+        AssertReportedPatch53Once();
+    }
+
+    [TestMethod]
+    public void IconSites_NoMountSite_ReportsPatch53()
+    {
+        var input = new List<CodeInstruction>
+        {
+            new CodeInstruction(OpCodes.Ldc_R4, 0.3f),
+            new CodeInstruction(OpCodes.Call, ApplyScaleLocalStub),
+        };
+
+        PartyIconScaleTranspiler.RewriteIconSites(input, GetScale, _logger);
+
+        AssertReportedPatch53Once();
+    }
+
+    [TestMethod]
+    public void IconSites_NoFrameSite_ReportsPatch53()
+    {
+        var input = new List<CodeInstruction>
+        {
+            new CodeInstruction(OpCodes.Ldc_R4, 0.3f),
+            new CodeInstruction(OpCodes.Mul),
+        };
+
+        PartyIconScaleTranspiler.RewriteIconSites(input, GetScale, _logger);
+
+        AssertReportedPatch53Once();
+    }
+
+    [TestMethod]
+    public void HumanVisualSite_Missing_ReportsPatch53()
+    {
+        var input = new List<CodeInstruction>
+        {
+            new CodeInstruction(OpCodes.Ldc_R4, 0.3f),
+            new CodeInstruction(OpCodes.Div),
+        };
+
+        PartyIconScaleTranspiler.RewriteHumanVisualSite(input, GetScale, _logger);
+
+        AssertReportedPatch53Once();
+    }
 
     // A stream shaped like v1.5.0's AddCharacterToPartyIcon: mount site, then human frame site.
     private static List<CodeInstruction> IconStream() => new List<CodeInstruction>
