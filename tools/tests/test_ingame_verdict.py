@@ -1068,6 +1068,50 @@ class Issue971Tests(unittest.TestCase):
         self.assertIn("no line matched", out)
 
 
+class Issue1184Tests(unittest.TestCase):
+    """The real #1184 manifest: the muster screen starts a field battle with the player as a captain. The fixtures hold
+    the lines MusterChecksTests renders through the real OutcomeLog, so a change to the line format fails one of the two."""
+
+    START = "taom.muster.captain-start"
+
+    def setUp(self):
+        self.t = Tree(self)
+        self.t.real_manifest("1184.toml")
+
+    def judge(self, fixture):
+        self.t.taom(fixture, "2026-11-14_10-00-00")
+        return self.t.run(["--issue", "1184"])
+
+    def test_a_field_battle_that_starts_as_captain_passes(self):
+        code, out, _ = self.judge("muster_captain_pass.txt")
+        self.assertEqual(code, 0, out)
+        self.assertEqual(verdict_of(out, self.START), "PASS")
+        self.assertIn("the other lord, not the player, gives the army its orders", out)
+
+    def test_a_start_that_throws_fails(self):
+        code, out, _ = self.judge("muster_captain_threw.txt")
+        self.assertEqual(code, 1, out)
+        self.assertEqual(verdict_of(out, self.START), "FAIL")
+        self.assertIn("reason=NullReferenceException", out)
+
+    def test_a_pass_beside_a_later_fail_fails(self):
+        # The fail pattern judges every Captain start, so a siege that threw fails the check beside a field pass.
+        code, out, _ = self.judge("muster_captain_pass_and_fail.txt")
+        self.assertEqual(code, 1, out)
+        self.assertEqual(verdict_of(out, self.START), "FAIL")
+
+    def test_a_siege_as_captain_alone_is_not_reached(self):
+        # The defect was the field battle; a siege start proves nothing about it.
+        code, out, _ = self.judge("muster_captain_siege_only.txt")
+        self.assertEqual(code, 4, out)
+        self.assertEqual(verdict_of(out, self.START), "NOT REACHED")
+
+    def test_a_session_with_no_captain_start_is_not_reached(self):
+        code, out, _ = self.judge("career_open_pass.txt")
+        self.assertEqual(code, 4, out)
+        self.assertEqual(verdict_of(out, self.START), "NOT REACHED")
+
+
 class Issue1028Tests(unittest.TestCase):
     """The real #1028 manifest, judged on the lines MissionStartGuardService writes (MissionStartGuardChecks.cs). The literals are
     the ones MissionStartGuardManifestTests renders through the real OutcomeLog, so a change to the line format fails one of the two."""

@@ -53,6 +53,8 @@ The roster lists the faction's troops (`CaptainResolver`: defined by a non-vanil
 
 **Start.** `ExecuteStart` refuses with a status line when a faction, a unit on either side, or the map is missing, or `ArmySpec.Validate` fails. Otherwise it stores the army in `CustomBattleMuster.Pending` and calls vanilla `GetCustomBattleParties`, `PrepareBattleData` and `StartGame`. `CustomBattleHelper_GetCustomBattleParties_Patch` (postfix) then runs `MusterArmyBuilder.Apply`: it consumes `Pending` once and rebuilds each side with its commander, the exact unit numbers (a captain comes out of his unit's number: the troop's upgrade, else the culture's elite with the closest weapon) and the exact banner. It records the roles in `CustomBattleMuster.Plan` and sets `Applied`. A battle started from the vanilla screen has no `Pending`, so it keeps vanilla's sides and gets no roles.
 
+**Player type Captain.** A captain serves under another lord. `MusterGeneralChoice.ForStart` takes the whole decision: the general is the first lord of the faction, in the screen's order, who is not the player's own character, not a hero unit of either army and not the enemy's commander (vanilla's own screen also keeps both commanders out). Start passes him to both vanilla calls as the side's general; `MusterArmyBuilder` keeps him. The engine reads the general's name for every field battle (`BannerlordMissions.OpenCustomBattleMission`, v1.5.7 line 144), so with no such lord Start refuses a field battle with a status line. A siege takes no general argument and starts without one; when a lord is free he joins the siege too, as one more man who leads the side (#1184).
+
 **In the mission.** The two `BannerlordMissions_*` postfixes call `CustomBattleMuster.AddMissionBehaviors`, which adds two behaviors only when `Applied` is set:
 
 - `CustomBattleRolesBehavior` hands out the roles once the armies stand: the captain leads his unit's formation, the banner bearer gets the banner through the engine's `BannerBearerLogic`, and the horn blower is marked.
@@ -177,6 +179,7 @@ A Custom Battle registers cultures as plain `BasicCultureObject` (`CustomGame.On
 | `Client/Features/CustomBattles/Muster/TcbSprites.cs`, `BannerPalette.cs` | Map preview sprites; nearest palette colour for culture banners |
 | `Main/Features/CustomBattles/Muster/CustomBattleMuster.cs`, `ArmySpec.cs` | Hand-over from the screen to the battle; the army spec and its validation |
 | `Main/Features/CustomBattles/Muster/MusterBannerDesign.cs` | One army's banner code and its edits |
+| `Main/Features/CustomBattles/Muster/MusterGeneralChoice.cs`, `MusterChecks.cs` | The general a captain serves under; the `[Check]` line of a Captain start |
 | `Main/Features/CustomBattles/Muster/CustomBattleRolesBehavior.cs`, `CustomBattleRoleAssigner.cs` | Captain, banner bearer and horn blower roles in the mission |
 | `Main/Features/CustomBattles/Muster/CustomBattleHornCallBehavior.cs`, `HornBlowerActions.cs` | Horn calls on new orders |
 | `Main/Features/BannerInjection/BannerConfigProvider.cs` | `GetCultureKingdomBannerKeys`: culture to its kingdom's banner key |
@@ -213,6 +216,8 @@ A Custom Battle registers cultures as plain `BasicCultureObject` (`CustomGame.On
 | `TAOM.Tests/Features/CustomBattles/MusterBannerDesignTests.cs` | 15 | Kingdom code kept exactly until an edit; background, emblem colour and emblem edits on simple and multilayer banners; non-palette colour ignored; reset; sides independent; `ExactCode`; `KingdomCode` |
 | `TAOM.Tests/Features/CustomBattles/MusterKingdomBannerShippedDataTests.cs` | 3 | Shipped kingdom data gives whole banners for the main cultures, Gondor and Mordor included |
 | `TAOM.Tests/Features/CustomBattles/TcbSwatchVMTests.cs` | 2 | The open palette frames the army's current colour |
+| `TAOM.Tests/Features/CustomBattles/MusterGeneralChoiceTests.cs` | 14 | The captain's general: the next free lord, none when no lord is left; the Start decision for a commander, a field battle and a siege; and the view model takes that decision and passes the general to both engine calls, in order |
+| `TAOM.Tests/Features/CustomBattles/MusterChecksTests.cs` | 5 | The `[Check]` lines of a Captain start as `tools/ingame_checks/1184.toml` and its fixtures read them |
 | `TAOM.Tests/Features/FactionUI/CustomBattleMovieSwapTests.cs` | 9 | `TaomCustomBattle` hold on the menu and chrome groups, brush file order, reopen, wrong VM, missing or failed prefab, no placeholder sprite |
 | `TAOM.Tests/Features/BannerInjection/BannerConfigProviderTests.cs` | (extended) | `GetCultureKingdomBannerKeys` |
 
@@ -230,6 +235,7 @@ Not yet verified in game for the 2026-11-11 polish (portraits, banners); the ear
 6. Start a siege the same way: it loads with a ram and two towers.
 7. Leave the battle and reopen Custom Battle: the muster opens again. **OLD SCREEN** shows the vanilla screen, and a battle started there keeps vanilla's sides.
 8. Pick Rohan, Dunland, Dale and Rhun in turn: the roster has no Calradian troops (Vlandian, Imperial, Sturgian, Khuzait) and no training dummies or practice opponents; Rohan, Dale and Rhun offer no Calradian commanders. Khand still shows the Battanian line and Dunland and Khand still show the vanilla commanders (by design until TAOM has its own).
+9. Not yet run (#1184): set Player Type to Captain and Game Type to Battle, then Start. The battle opens, another lord of the faction leads the army, and the log has `[Check] id=taom.muster.captain-start result=pass type=Battle general=<id>`. A siege as Captain still starts. With a faction that has one lord only, Start refuses the field battle with "A captain needs another lord of the faction to lead the army". `python tools/ingame_verdict.py --issue 1184` judges the log line.
 
 ## How-To
 
@@ -266,9 +272,11 @@ The formation mapping reads the culture's troop attributes (in Custom Battle fro
 
 - [#709](https://github.com/haterade22/TAOM/issues/709): the 2026-10-02 Start crash, missing named commanders and ignored default troops.
 - Muster screen: no issue, waived by Mike for this work (2026-11-11).
+- [#1184](https://github.com/haterade22/TAOM/issues/1184): a field battle could not start with Player Type Captain.
 
 ## Changelog
 
+- 2026-11-13: a field battle now starts with Player Type Captain. The muster screen passed no general, and the engine reads the general's name for every field battle, so Start ended with "Could not start: Object reference not set to an instance of an object". The screen now picks another lord of the faction as the general (#1184).
 - 2026-11-11: Custom Battle opens TAOM's muster screen over the vanilla one. Each army gets a faction, a commander and its kingdom's banner, which the player can recolour or give another emblem. The roster musters exact unit numbers, heroes and a banner bearer, captain and horn blower per unit. The Battlefield tab picks map, settings and siege options with map previews. Start builds the sides exactly as mustered, and the horn blower sounds when his formation gets a new order. **OLD SCREEN** keeps the vanilla screen available.
 
 - 2026-10-26: the custom battle screen's three panels slide in with vanilla's ease (`EaseType="EaseOut" EaseFunction="Quint"`, the same 0.45 s): they start fast and settle into place instead of moving at constant speed. TAOM's copy of the screen had carried a dead `EaseIn` attribute in their place (#1027, after #1024). In-game check: open Custom Battle; the side panels slide in and decelerate into place over about 0.45 s.

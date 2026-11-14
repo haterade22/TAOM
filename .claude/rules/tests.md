@@ -43,6 +43,8 @@ Every decision path in a service or engine has a test, judged by the two-edit te
 
 A test comment or failure message that states an effect (what breaks, what imports, what the engine then does) rests on the line that produces the effect, read at both ends of the data flow. A production comment, a plan or a report is a claim, not that line (`docs/reviews/rca-external-mod-contract-tests-2026-11-13.md`).
 
+A source-text test pins wiring only: this entry point calls that function, with these inputs, in this order. The decision itself goes in a pure type with behaviour tests. Check each pin against the cheapest edit that brings the defect back and keeps the pinned text (`docs/reviews/rca-muster-captain-2026-11-13.md`).
+
 ## Skip-Guard Exhaustion (MANDATORY)
 
 When a service method has `if (condition) continue/return` guard clauses, write a test for **every entity state that should be skipped**, not just the obvious ones.

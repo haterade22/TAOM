@@ -1,4 +1,5 @@
 using System;
+using TAOM.Core.Logging;
 using TAOM.Features.CustomBattles.Muster;
 using System.Collections.Generic;
 using System.Linq;
@@ -107,10 +108,21 @@ namespace TAOM.Client.Features.CustomBattles.Muster
                 var playerCmd = Player.Commander ?? CustomBattleMuster.CommanderOf(Player.Culture);
                 var enemyCmd = Enemy.Commander ?? CustomBattleMuster.CommanderOf(Enemy.Culture);
                 if (playerCmd == null || enemyCmd == null) { Status = "No commander found for a faction"; return; }
+                // A captain serves under another lord. The engine reads that lord's name for every field battle and
+                // throws on a null one (#1184); a siege starts without him.
+                var (generalId, refused) = MusterGeneralChoice.ForStart(Field.PlayerType == CustomBattlePlayerType.Sergeant, Field.IsSiege,
+                    Player.LordIds, playerCmd.StringId, Player.HeroUnitIds.Concat(Enemy.HeroUnitIds).Append(enemyCmd.StringId));
+                if (refused)
+                {
+                    Status = "A captain needs another lord of the faction to lead the army";
+                    Activate(Player);
+                    return;
+                }
+                var general = generalId == null ? null : Player.Lord(generalId);
                 CustomBattleMuster.Pending = spec;
                 var counts = new[] { 1, 0, 0, 0 };   // replaced by the spec in ArmyPatch
                 bool attacker = Field.Side == CustomBattlePlayerSide.Attacker;
-                var parties = CustomBattleHelper.GetCustomBattleParties(playerCmd, null, enemyCmd, Player.Culture, counts, null,
+                var parties = CustomBattleHelper.GetCustomBattleParties(playerCmd, general, enemyCmd, Player.Culture, counts, null,
                     Enemy.Culture, (int[])counts.Clone(), null, attacker);
                 List<MissionSiegeWeapon>? attackerEngines = null, defenderEngines = null;
                 float[]? walls = null;
@@ -120,13 +132,21 @@ namespace TAOM.Client.Features.CustomBattles.Muster
                     walls = CustomBattleHelper.GetWallHitpointPercentages(Field.BreachedWalls);
                     CustomBattleMuster.Log($"KCB siege: attacker engines [{string.Join(", ", attackerEngines.Select(w => w.Type.StringId))}], defender [{string.Join(", ", defenderEngines.Select(w => w.Type.StringId))}]");
                 }
-                var data = CustomBattleHelper.PrepareBattleData(playerCmd, null, parties[0], parties[1], Field.Side,
+                var data = CustomBattleHelper.PrepareBattleData(playerCmd, general, parties[0], parties[1], Field.Side,
                     Field.PlayerType, Field.GameType, Field.SceneId, Field.Season, Field.TimeOfDay,
                     attackerEngines, defenderEngines, walls, Field.SceneLevel, false, Field.ForcedSceneLevel);
-                CustomBattleMuster.Log($"KCB start: {Player.Culture.StringId} ({playerCmd.StringId}) vs {Enemy.Culture.StringId} ({enemyCmd.StringId}); {Field.GameType} on {Field.SceneId}, {Field.Season}, {Field.TimeOfDay}h, player {Field.Side}" + (Field.IsSiege ? $", {Field.BreachedWalls} walls breached, level {Field.SceneLevel}" : ""));
+                CustomBattleMuster.Log($"KCB start: {Player.Culture.StringId} ({playerCmd.StringId}) vs {Enemy.Culture.StringId} ({enemyCmd.StringId}); {Field.GameType} on {Field.SceneId}, {Field.Season}, {Field.TimeOfDay}h, player {Field.Side} as {Field.PlayerType}" + (general != null ? $" under {general.StringId}" : "") + (Field.IsSiege ? $", {Field.BreachedWalls} walls breached, level {Field.SceneLevel}" : ""));
                 CustomBattleHelper.StartGame(data);
+                if (Field.PlayerType == CustomBattlePlayerType.Sergeant)
+                    Outcomes.Pass(MusterChecks.CaptainStartId, Field.GameType, MusterChecks.StartedDetail(Field.GameType, general?.StringId));
             }
-            catch (Exception e) { Status = "Could not start: " + e.Message; CustomBattleMuster.Log("KCB start failed: " + e); }
+            catch (Exception e)
+            {
+                Status = "Could not start: " + e.Message;
+                CustomBattleMuster.Log("KCB start failed: " + e);
+                if (Field.PlayerType == CustomBattlePlayerType.Sergeant)
+                    Outcomes.Fail(MusterChecks.CaptainStartId, Field.GameType, MusterChecks.FailedDetail(Field.GameType, e));
+            }
         }
 
         internal static ImageIdentifierVM? Portrait(BasicCharacterObject? c)
@@ -217,6 +237,12 @@ namespace TAOM.Client.Features.CustomBattles.Muster
         public BasicCultureObject? Culture => _faction?.Culture;
         public BasicCharacterObject? Commander => _commander?.Character;
         public int Total => Units.Sum(u => u.Count);
+
+        // What MusterGeneralChoice needs to pick a captain's general: the faction's lords in the screen's order, the
+        // heroes already mustered as units, and a lord by id.
+        public IReadOnlyList<string> LordIds => _heroes.Select(h => h.StringId).ToList();
+        public IEnumerable<string> HeroUnitIds => Units.Where(u => u.Troop.IsHero).Select(u => u.Troop.StringId);
+        public BasicCharacterObject Lord(string id) => _heroes.First(h => h.StringId == id);
 
         [DataSourceProperty] public string Label { get; }
         [DataSourceProperty] public bool IsPlayer { get; }
