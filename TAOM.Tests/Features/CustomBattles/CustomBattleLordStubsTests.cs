@@ -126,13 +126,18 @@ public class CustomBattleLordStubsTests
     public void WholeLordTemplateIds_TemplatePassingVanillaAttributesThrough_IsNotAWholeLord()
     {
         // A template that keeps the vanilla attributes (@*) only patches a lord, so on a bare stub it would build none.
+        // lord_patch writes its id too, so only the @* clause can exclude it; lord_noid pins the writes-id clause.
         const string xsl = "http://www.w3.org/1999/XSL/Transform";
         var x = XNamespace.Get(xsl);
         var doc = new XDocument(new XElement(x + "stylesheet",
             new XElement(x + "template", new XAttribute("match", "NPCCharacter[@id='lord_whole']"),
                 new XElement(x + "copy", new XElement(x + "attribute", new XAttribute("name", "id"), "lord_whole"))),
             new XElement(x + "template", new XAttribute("match", "NPCCharacter[@id='lord_patch']"),
-                new XElement(x + "copy", new XElement(x + "apply-templates", new XAttribute("select", "@*|node()"))))));
+                new XElement(x + "copy",
+                    new XElement(x + "attribute", new XAttribute("name", "id"), "lord_patch"),
+                    new XElement(x + "apply-templates", new XAttribute("select", "@*|node()")))),
+            new XElement(x + "template", new XAttribute("match", "NPCCharacter[@id='lord_noid']"),
+                new XElement(x + "copy", new XElement(x + "attribute", new XAttribute("name", "name"), "No Id")))));
 
         CollectionAssert.AreEquivalent(new[] { "lord_whole" }, WholeLordTemplateIds(doc).ToList());
     }

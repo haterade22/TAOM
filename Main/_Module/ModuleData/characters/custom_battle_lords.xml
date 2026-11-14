@@ -12,8 +12,9 @@
        An id may have a stub when lords.xslt has a whole-lord template for it and characters/lords.xml
        has no row for it; CustomBattleLordStubsTests checks both. Outside a campaign these lords are
        named by custom_battle/custom_battle_commanders.json, fords_of_war/factions.json,
-       long_defeat/fortresses.json (playerTroop lord_4_1) and SeatTrialRoster.Hero (lord_1_9); the
-       default commanders and the muster hero lists pick the rest by culture.
+       long_defeat/fortresses.json (playerTroop lord_4_1), hero_auras/hero_auras.json and
+       SeatTrialRoster.Hero (lord_1_9), among others; the default commanders and the muster hero
+       lists pick the rest by culture.
        Until #648, 176 vanilla-id lords reached Custom Battle through their characters/lords.xml rows.
        When those rows were folded into the lords.xslt templates, each got a stub here (ten in the
        sections above, the rest in the last section), so Custom Battle keeps every lord it had.

@@ -88,7 +88,7 @@ For each hit, classify the layer:
 
 | Symptom | Layer to fix | Tool |
 |---|---|---|
-| Wrong displayed name | lords.xml `name="..."` attribute | Manual edit OR the apply script's culture entry. **If only ENGLISH is wrong, it is fallback drift, not a rename:** `tools/oneoff/sync_lord_name_fallbacks.py` |
+| Wrong displayed name | lords.xml `name="..."` attribute | Manual edit OR the apply script's culture entry. **If only ENGLISH is wrong, it is fallback drift, not a rename:** `LordIdentityConsistencyTests.EveryLordNameInLordsXsltMatchesTheRegistry` finds it; fix the `lords.xslt` literal by hand |
 | Wrong sex (bearded woman, female lord) | lords.xml `is_female` + `<beard_tags>` + `<BodyProperties key=>`, all three | Manual edit; see the vanilla-id-reuse trap below |
 | Wrong culture shown in Info panel | lords.xml `culture="Culture.X"` attribute | Manual edit |
 | Wrong race / `race=` attribute | lords.xml `race="..."` attribute | Manual edit |
