@@ -1967,4 +1967,10 @@
 	<string id="taom_crca_t3_b_p4" text="{=taom_crca_t3_b_p4}+9 max health." />
 	<!-- 1850 entries -->
 
+	<!-- Career screen labels (layout A modal) -->
+	<string id="taom_career_passive_label" text="{=taom_career_passive_label}Passive" />
+	<string id="taom_career_tier_word" text="{=taom_career_tier_word}Tier" />
+	<string id="taom_career_choose_one" text="{=taom_career_choose_one}Choose one" />
+	<string id="taom_career_choose_count" text="{=taom_career_choose_count}Choose {COUNT}" />
+
 </strings>

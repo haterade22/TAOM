@@ -1,5 +1,6 @@
 using System;
 using TaleWorlds.CampaignSystem;
+using TaleWorlds.CampaignSystem.GameState;
 using TaleWorlds.Core;
 using TaleWorlds.Engine.GauntletUI;
 using TaleWorlds.InputSystem;
@@ -45,6 +46,9 @@ public class GauntletCareerScreen : ScreenBase, IGameStateListener
     private readonly CareerScreenGameState _state;
     private bool _isSwitchMode;
     private ICareerHeroAdapter _heroAdapter;
+    // Set once, before any cleanup, by CloseScreen or OnFinalize: a second close, or an inquiry answered
+    // after the screen went away, does nothing.
+    private bool _closed;
 
     public GauntletCareerScreen(CareerScreenGameState state)
     {
@@ -66,10 +70,10 @@ public class GauntletCareerScreen : ScreenBase, IGameStateListener
         // DO NOT read state.IsSwitchMode here -- see Codex Review #32 comment block above.
     }
 
-    public static void OpenCareerScreen(bool switchMode = false)
+    public static void OpenCareerScreen(bool switchMode = false, bool returnToCharacter = false)
     {
         var logger = IoC.Resolve<IModLogger>();
-        logger?.LogInfo($"CareerSystem: OpenCareerScreen called (switchMode={switchMode})");
+        logger?.LogInfo($"CareerSystem: OpenCareerScreen called (switchMode={switchMode}, returnToCharacter={returnToCharacter})");
 
         var hero = Hero.MainHero;
         if (hero == null)
@@ -84,6 +88,7 @@ public class GauntletCareerScreen : ScreenBase, IGameStateListener
         // Setting state.IsSwitchMode here is too late for the ctor but in time for OnInitialize,
         // which reads it when the screen activates after PushState (Codex Review #32).
         state.IsSwitchMode = switchMode;
+        state.ReturnToCharacter = returnToCharacter;
         Game.Current.GameStateManager.PushState(state);
     }
 
@@ -144,6 +149,9 @@ public class GauntletCareerScreen : ScreenBase, IGameStateListener
 
     private void SwitchAndClose(string newCareerId, int cost)
     {
+        // The confirm inquiry can be answered after the screen closed: change nothing then.
+        if (_closed)
+            return;
         var result = _switchService.SwitchCareer(_heroStringId, _heroAdapter, newCareerId);
         switch (result)
         {
@@ -178,6 +186,8 @@ public class GauntletCareerScreen : ScreenBase, IGameStateListener
 
     private void ConfirmRetrain(int cost)
     {
+        if (_closed)
+            return;
         var result = _lifecycle.TryRetrain(_heroStringId, _heroLevel);
         _logger?.LogInfo($"CareerSystem: Retrain for hero '{_heroStringId}' -> {result}");
         switch (result)
@@ -227,30 +237,49 @@ public class GauntletCareerScreen : ScreenBase, IGameStateListener
     {
         base.OnFrameTick(dt);
 
-        if (_gauntletLayer.Input.IsKeyPressed(InputKey.Escape))
+        if (_gauntletLayer != null && _gauntletLayer.Input.IsKeyPressed(InputKey.Escape))
         {
             CloseScreen();
         }
     }
 
+    // Done, Close, Escape and the switch picker's paths. Only an explicit close reopens the character page.
     private void CloseScreen()
     {
         // A late callback (an inquiry answered after Escape, say) must never pop whatever state is
         // on top now: PopState pops by level, not by identity.
-        if (Game.Current?.GameStateManager?.ActiveState != _state) return;
+        var states = Game.Current?.GameStateManager;
+        if (_closed || states == null || states.ActiveState != _state) return;
+        _closed = true;
+        // Read before the pop: the state is gone from the stack afterwards.
+        var returnToCharacter = _state.ReturnToCharacter;
 
-        _logger?.LogInfo("CareerSystem: Closing career screen");
+        _logger?.LogInfo($"CareerSystem: Closing career screen (returnToCharacter={returnToCharacter})");
         _gauntletLayer?.InputRestrictions.ResetInputRestrictions();
         if (_movie != null)
             _gauntletLayer?.ReleaseMovie(_movie);
+        _movie = null;
         _viewModel?.OnFinalize();
-        Game.Current.GameStateManager.PopState();
+        _viewModel = null;
+        states.PopState();
+        // The career click closed the character page before this screen opened (Patch27), so it is
+        // rebuilt fresh; the previously selected skill is not kept.
+        if (returnToCharacter)
+            states.PushState(states.CreateState<CharacterDeveloperState>());
     }
 
+    // The engine finalizes the screen after the pop, or on its own (leaving the campaign). The same
+    // cleanup runs once whichever path came first; this path never reopens the character page.
     protected override void OnFinalize()
     {
-        base.OnFinalize();
+        _closed = true;
+        _gauntletLayer?.InputRestrictions.ResetInputRestrictions();
+        if (_movie != null)
+            _gauntletLayer?.ReleaseMovie(_movie);
+        _movie = null;
+        _viewModel?.OnFinalize();
         _viewModel = null;
+        base.OnFinalize();
         _gauntletLayer = null;
     }
 
