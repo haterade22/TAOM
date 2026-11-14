@@ -1,22 +1,26 @@
 #!/usr/bin/env python3
-"""Pack the partly used banner icon sheets into as few sheets as they fit, and audit the result (#1047).
+"""Pack the partly used banner icon sheets into as few sheets as they fit, name every sheet
+taom_banners_NN, and audit the result (#1047).
 
 A banner key names an icon id. Main/_Module/ModuleData/banner_icons.xml maps each id to a material
 (one 4096 x 4096 green-on-black sheet of 16 cells, source in AssetSources/BannerIcons) and a
 texture_index. Keys, saved banners and the UI sprites (named by icon id) never name a sheet, so moving
 an icon to another sheet changes only its <Icon> row. All TAOM banner materials share one shader
-(their _mtl.tpac files differ only in GUIDs, name and checksum, measured 2026-10-28).
+(their _mtl.tpac files differ only in GUIDs, name and checksum, measured 2026-10-28), and the in-game
+order comes from the rows, so a sheet's name says nothing about its icons.
 
-Packed sheets (taom_banners_packed_alpha_NN) stay where they are. Every other sheet that uses fewer
-than 16 cells is moved whole, largest first, into the free cells of an existing packed sheet, or into
-a new packed sheet (the first taom_banners_packed_alpha_NN no file or row uses) when it shares that
-sheet with another moved sheet. A sheet that would sit alone stays put, so a second run is a no-op.
-Cells are copied verbatim (two-colour cells keep their red ink); free cells keep the red and green
-placeholder checkerboard.
+Every sheet that uses fewer than 16 cells is taken whole, largest first (ties by name), and moved into
+the free cells of an earlier partly used sheet with room; one that fits nowhere stays put and takes
+later sheets itself. Then every sheet that is not yet named taom_banners_NN, or that receives cells
+while its source is not a PNG, takes the first free taom_banners_NN, in the order its first icon
+appears in banner_icons.xml. A renamed sheet that only changes name is copied byte for byte (a PSD
+keeps its layers); a sheet that receives cells is written as a PNG. The old files stay until --prune,
+and a second run is a no-op. Cells are copied verbatim (two-colour cells keep their red ink); free
+cells keep the red and green placeholder checkerboard.
 
 Usage:
-    python tools/pack_banner_sheets.py                 # dry run: the plan and the free packed cells
-    python tools/pack_banner_sheets.py --apply         # write the packed sources (repo and install) and rows
+    python tools/pack_banner_sheets.py                 # dry run: the plan and the free cells
+    python tools/pack_banner_sheets.py --apply         # write the packed/renamed sources (repo and install) and rows
     python tools/pack_banner_sheets.py --audit         # the gate: exit 1 on any finding
     python tools/pack_banner_sheets.py --prune         # list the sheets no icon names
     python tools/pack_banner_sheets.py --prune --apply --backup-dir <dir>   # delete them, backed up first
@@ -24,8 +28,9 @@ Usage:
 Steps (docs/reference/banner-icon-generation.md "Packing partly used sheets"):
   1. --apply. It refuses while the audit reports a missing sheet, an empty or shared cell, or unnamed
      art, because it copies only the cells an icon row names.
-  2. Modding Kit: import each new or changed packed sheet (Albedo DXT1, Do Not Generate Mips), make a
-     banner material of the same name for a new one, save, copy both .tpac into Main/_Module/Assets/BannerIcons.
+  2. Compile each new or changed sheet: the TAOM Banner Studio's Build game resources, or the Modding
+     Kit (import it as Albedo DXT1, Do Not Generate Mips, make a banner material of the same name for a
+     new one, save, copy both .tpac into Main/_Module/Assets/BannerIcons).
   3. ./build.ps1 with the game and the Kit closed, so the install's banner_icons.xml names the packed sheets.
   4. --prune, then --prune --apply --backup-dir <dir>: deletes, in the repo and the install, every sheet
      that neither banner_icons.xml names (source, _mtl/_tex.tpac, and the texture's RuntimeDataCache .rdc).
@@ -66,8 +71,8 @@ SPRITE_CATEGORY = "ui_taom_bannericons"
 
 CELLS, GRID = 16, 4
 SHEET_PX = 4096  # read at call time, so tests can patch a small sheet
-PACKED = "taom_banners_packed_alpha_{:02d}"
-PACKED_RE = re.compile(r"taom_banners_packed_alpha_\d+")
+SHEET = "taom_banners_{:02d}"
+SHEET_RE = re.compile(r"taom_banners_\d+")
 ICON = re.compile(r'(<Icon id=")(\d+)(" material_name=")([^"]+)(" texture_index=")(\d+)(" />)')
 RED, GREEN = (255, 0, 0), (0, 255, 0)
 # Bytes 0x34-0x43 of a _tex.tpac are its texture GUID, which its _mtl.tpac names; the source path the
@@ -106,34 +111,62 @@ def sources(root):
     return {sheet_name(p): p for p in sheet_files(root) if p.suffix.lower() in (".png", ".psd")}
 
 
-def plan(icons, taken=frozenset()):
-    """{icon id: (old material, old index, sheet, cell)} for every icon to move; {} when nothing saves a sheet.
-
-    Sheets that are not packed and use fewer than 16 cells move whole, largest first (ties by name), into
-    the free cells of the first packed sheet with room, else into a new packed sheet: the first
-    taom_banners_packed_alpha_NN that no file or row uses (`taken` and the rows, casefolded). A new sheet
-    that would hold one sheet alone is only a rename, so that sheet stays put. Packed sheets never move,
-    so their textures stay valid. Ids are assumed unique (the audit's duplicate_id blocks packing)."""
+def cells_by_sheet(icons):
     cells = defaultdict(dict)
     for i, m, t in icons:
         cells[m][t] = i
-    packed = sorted(m for m in cells if PACKED_RE.fullmatch(m))
-    bins = [[m, sorted(set(range(CELLS)) - set(cells[m])), []] for m in packed]
-    movers = sorted((m for m in cells if m not in packed and len(cells[m]) < CELLS),
-                    key=lambda m: (-len(cells[m]), m))
-    used = {n.casefold() for n in taken} | {m.casefold() for m in cells}
-    fresh = (n for n in map(PACKED.format, itertools.count(1)) if n.casefold() not in used)
-    for m in movers:
+    return cells
+
+
+def merges(icons):
+    """{icon id: (old material, old index, target material, cell)} for the rows of every sheet that moves
+    into another one, the target named by its current material.
+
+    Sheets with fewer than 16 cells are taken largest first (ties by name, so row order does not matter);
+    each moves whole into the free cells (in order) of the first earlier one with room, and one that fits
+    nowhere stays and takes later ones. Two sheets left apart never fit together, so a second run finds
+    nothing: a sheet that stayed did not fit any earlier one, whose free cells only shrank since."""
+    cells = cells_by_sheet(icons)
+    bins = []  # [material, free cells, [(id, old material, old index, new index)]]
+    for m in sorted((m for m in cells if len(cells[m]) < CELLS), key=lambda m: (-len(cells[m]), m)):
         b = next((b for b in bins if len(b[1]) >= len(cells[m])), None)
         if b is None:
-            b = [next(fresh), list(range(CELLS)), []]
-            bins.append(b)
-        b[2] += [(cells[m][t], m, t, b[1].pop(0)) for t in sorted(cells[m])]
+            bins.append([m, sorted(set(range(CELLS)) - set(cells[m])), []])
+        else:
+            b[2] += [(cells[m][t], m, t, b[1].pop(0)) for t in sorted(cells[m])]
+    return {i: (m, t, b[0], c) for b in bins for i, m, t, c in b[2]}
+
+
+def plan(icons, taken=frozenset(), non_png=frozenset()):
+    """{icon id: (old material, old index, sheet, cell)} for every row that changes; {} when every sheet is
+    packed and named taom_banners_NN.
+
+    Sheets merge as `merges` says. A sheet then keeps its name when it is taom_banners_NN and, if it
+    receives cells, its source is a PNG (`non_png` names the others), so a write never stands next to a
+    source of another format under one name. Every other sheet takes the first taom_banners_NN that no
+    file or row uses (`taken` and the rows, casefolded), in the order its first icon (its own or one
+    moved into it) appears in `icons`. Ids are assumed unique (the audit's duplicate_id blocks packing)."""
+    cells, merged = cells_by_sheet(icons), merges(icons)
+    first = {}
+    for n, (i, m, _) in enumerate(icons):
+        s = merged[i][2] if i in merged else m
+        first.setdefault(s, n)
+    receives = {s for _, _, s, _ in merged.values()}
+    non_png = {n.casefold() for n in non_png}
+
+    def keeps(s):
+        return SHEET_RE.fullmatch(s) and not (s in receives and s.casefold() in non_png)
+
+    used = {n.casefold() for n in taken} | {m.casefold() for m in cells}
+    fresh = (n for n in map(SHEET.format, itertools.count(1)) if n.casefold() not in used)
+    name = {s: s if keeps(s) else next(fresh) for s in sorted(first, key=first.get)}
     moves = {}
-    for name, _, placed in bins:
-        if name not in packed and len({m for _, m, _, _ in placed}) < 2:
-            continue
-        moves.update({i: (m, t, name, c) for i, m, t, c in placed})
+    for i, m, t in icons:
+        if i in merged:
+            _, _, s, c = merged[i]
+            moves[i] = (m, t, name[s], c)
+        elif name[m] != m:
+            moves[i] = (m, t, name[m], t)
     return moves
 
 
@@ -240,7 +273,8 @@ def audit(root):
     names = {p.name for p in sheet_files(root)}
     parts = sprite_parts(root)
     rep = {k: [] for k in ("missing_sheet", "empty_cell", "shared_cell", "unnamed_art", "duplicate_id",
-                           "missing_sprite", "missing_package", "stale_package", "unused_sheet", "mergeable")}
+                           "missing_sprite", "missing_package", "stale_package", "unused_sheet", "mergeable",
+                           "legacy_name")}
     rep["duplicate_id"] = sorted(i for i, n in Counter(i for i, _, _ in icons).items() if n > 1)
     by_mat = defaultdict(lambda: defaultdict(list))
     for i, m, t in icons:
@@ -261,17 +295,31 @@ def audit(root):
                               if not 0 <= t < CELLS or not is_art(cells[t])]
         rep["unnamed_art"] += [(mat, t) for t, cell in enumerate(cells) if t not in used and is_art(cell)]
     rep["unused_sheet"] = sorted({sheet_name(p) for p in sheet_files(root)} - set(by_mat))
-    rep["mergeable"] = sorted({m for m, _, _, _ in plan(icons, {sheet_name(p) for p in sheet_files(root)}).values()})
+    rep["mergeable"] = sorted({m for m, _, _, _ in merges(icons).values()})
+    rep["legacy_name"] = sorted(m for m in by_mat if not SHEET_RE.fullmatch(m))
     return rep
 
 
 def free_cells(icons):
-    """{packed sheet: [free cell indices]}, where a new emblem goes before any new sheet is started."""
-    used = defaultdict(set)
-    for _, m, t in icons:
-        used[m].add(t)
-    return {m: sorted(set(range(CELLS)) - u) for m, u in sorted(used.items())
-            if PACKED_RE.fullmatch(m) and len(u) < CELLS}
+    """{sheet: [free cell indices]} of every partly used sheet, where a new emblem can go."""
+    return {m: sorted(set(range(CELLS)) - set(c)) for m, c in sorted(cells_by_sheet(icons).items())
+            if len(c) < CELLS}
+
+
+def renames(icons, moves):
+    """{target: old material} for each new sheet that only takes one whole sheet's rows at the same cells,
+    so its source can be copied byte for byte (a PSD keeps its layers). A sheet that already exists and
+    receives cells is never a rename, even when the cells line up."""
+    cells = cells_by_sheet(icons)
+    by_target = defaultdict(set)
+    for m, t, s, c in moves.values():
+        by_target[s].add((m, t == c))
+    out = {}
+    for s, v in by_target.items():
+        (m, same), = v if len(v) == 1 else ((None, False),)
+        if same and s not in cells and sum(x[0] == m for x in moves.values()) == len(cells[m]):
+            out[s] = m
+    return out
 
 
 def findings(rep):
@@ -282,18 +330,20 @@ def pack(root, install, write):
     text = (root / XML).read_bytes().decode("utf-8")  # binary round trip keeps BOM and CRLF
     icons = read_icons(text.encode("utf-8"))
     taken = {sheet_name(p) for r in (root, install) for p in sheet_files(r)}
-    moves = plan(icons, taken)
-    print("free packed cells: " + (", ".join(f"{m} {c}" for m, c in free_cells(icons).items()) or "none"))
+    srcs = sources(root)
+    moves = plan(icons, taken, {m for m, p in srcs.items() if p.suffix.lower() != ".png"})
+    print("free cells: " + (", ".join(f"{m} {c}" for m, c in free_cells(icons).items()) or "none"))
     if not moves:
-        print("nothing to pack: moving the partly used sheets would not save a sheet")
+        print("nothing to do: every sheet is packed and named taom_banners_NN")
         return 0
     targets = defaultdict(set)
     for mat, _, sheet, _ in moves.values():
         targets[sheet].add(mat)
-    srcs = sources(root)
+    copies = renames(icons, moves)
     for sheet, mats in sorted(targets.items()):
-        print(f"{sheet} ({'re-import' if sheet in srcs else 'new'}): " + ", ".join(sorted(mats)))
-    print(f"{len(moves)} icons move")
+        how = "rename" if sheet in copies else "re-import" if sheet in srcs else "new"
+        print(f"{sheet} ({how}): " + ", ".join(sorted(mats)))
+    print(f"{len(moves)} rows change")
     blocking = {k: v for k, v in findings(audit(root)).items() if k in BLOCKING}
     if blocking:
         print(f"refusing: packing copies only the named cells of sheets it can read: {blocking}")
@@ -301,14 +351,17 @@ def pack(root, install, write):
     if not write:
         print("dry run: nothing written (--apply to write)")
         return 0
-    sheets = build_sheets(moves, srcs)
+    sheets = build_sheets({i: v for i, v in moves.items() if v[2] not in copies}, srcs)
     out_text = rewrite_icons(text, moves)
     dirs = [root / SOURCES] + ([install / SOURCES] if install and (install / SOURCES).is_dir() else [])
-    for sheet, a in sheets.items():
-        for d in dirs:
+    for d in dirs:
+        for sheet, old in copies.items():
+            data = srcs[old].read_bytes()
+            (d / f"{sheet}{srcs[old].suffix.lower()}").write_bytes(data)
+        for sheet, a in sheets.items():
             Image.fromarray(a, "RGB").save(d / f"{sheet}.png")
     (root / XML).write_bytes(out_text.encode("utf-8"))
-    print(f"wrote {len(sheets)} sheets to {', '.join(map(str, dirs))} and {root / XML}")
+    print(f"wrote {len(copies) + len(sheets)} sheets to {', '.join(map(str, dirs))} and {root / XML}")
     if install is None:
         print("no install found: copy the new sheets into the install's AssetSources/BannerIcons before the Kit import")
     return 0

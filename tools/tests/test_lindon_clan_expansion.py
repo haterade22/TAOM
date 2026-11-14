@@ -110,7 +110,7 @@ def faction_attrs(text, cid):
 
 def elven_sheet_icons():
     """{icon id: its group's name} of TAOM's banner icons. The group, not the sheet: #1047 packed the
-    elven icons onto shared taom_banners_packed_* sheets."""
+    elven icons onto shared sheets (taom_banners_NN since 2026-11-14)."""
     return {i.get("id"): g.get("name") for g in ET.parse(MD / "banner_icons.xml").iter("BannerIconGroup")
             for i in g.iter("Icon")}
 
