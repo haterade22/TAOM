@@ -580,7 +580,7 @@ That script is a ratchet for the two modules outside the repo (`TAOM_Map` and `L
 
 ## Known Limitations
 
-Owed translations go in the open translation backlog (#1129; #763 closed on 2026-11-12 after the lead's pass); the paid run needs the maintainer's word; close a feature issue once only translation remains (Mike, 2026-10-19).
+Owed translations go in the open translation backlog (#1129; #763 closed on 2026-11-12 after the lead's pass), and each pending feature lists its keys in [translation-backlog.md](translation-backlog.md); the paid run needs the maintainer's word; close a feature issue once only translation remains (Mike, 2026-10-19).
 
 - **Career choice/group display names** (e.g. specific tier choice names in the career screen) currently fall back to internal IDs. Adding display names requires schema additions.
 - **`CareerButtonPrefab` "Career" label** — embedded directly in a prefab XML and not currently routed through the localization system.
@@ -600,14 +600,14 @@ pipeline ships as its English fallback in all 12 languages, silently, with no er
    RUNTIME from data ids (`DutyText.KeyFor`, `"taom_enlist_duty_" + id + "_title"`) are invisible to a
    literal `{=key}` grep, so the English is written once in the data file and a harvester registers
    it: see `tools/harvest_duty_strings.py`.
-2. Add the file to `SOURCES` in `tools/generate_translation_template.py`.
-3. Add it to the TAOM tuple list in `tools/translate_with_claude.py`.
-4. Run `generate_translation_template.py --all --apply`.
+2. Add the file to the ordered table `TAOM_SOURCES` in `tools/_loc_sources.py` (the order decides which source owns a key). Both `generate_translation_template.py` and `translate_with_claude.py` read that table; neither has a list of its own.
+3. Pick how the language files are filled. A new source is seeded, not templated: add its file name to `NOT_TEMPLATED` in `tools/generate_translation_template.py`, so no template run ever rewrites its files.
+4. Create one language file per language by hand, named by the rule in `LanguageManifests_EveryEnglishSource_HasExactlyOneLanguageFile` (`taom_encounter_strings.xml` becomes `std_taom_encounter_strings_<locale>.xml`). Copy the header of a sibling file in that language and put `<strings>` and `</strings>` on separate lines with no rows between. `--sync-ids` writes nothing for a missing file, and a self-closing `<strings />` seeds nothing. Do not run `generate_translation_template.py --all --apply` to create them: it rewrites every templated file in every language as English, and a seed-only run afterwards does not bring the translations back.
 5. Add a `<LanguageFile>` entry to all 12 `Languages/*/language_data.xml`.
-6. Bump the count in `LanguageDataXmlTests.AllLanguageDirs_HaveExactly…LanguageFiles`.
+6. No count needs a bump: `LanguageManifests_EveryEnglishSource_HasExactlyOneLanguageFile` derives the expected files from the English sources and fails until every language lists the new one.
 7. Run `translate_with_claude.py --lang <L> --module TAOM --apply` per language (add `--sync-ids` for new keys). When translation is deferred, seed the rows without the paid translate phase: `python tools/translate_with_claude.py --lang <L> --module TAOM --sync-ids --seed-only --apply`, run per language. `--module` is required: `--module all` also writes the live Armory's language files (#1056), so pass `--module TAOM`.
 
-**Step 1 must complete before step 4.** `generate_translation_template.py --apply` overwrites each
+**Step 1 must complete before any template run.** `generate_translation_template.py --apply` overwrites each
 per-language file with a fresh English template, discarding whatever translation is in it. The
 cache makes recovery free (re-run the translator; everything returns from cache), but doing it in
 the wrong order costs a full re-run — as it did on 2026-08-08, when 84 late-registered duty keys

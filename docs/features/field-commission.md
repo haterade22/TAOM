@@ -286,7 +286,8 @@ literal, and those two must describe the same game.
   confirm chain (#540).
 - `TAOM.Tests/Features/FieldCommission/InquiryPresenterPauseTests.cs`: every popup in
   `InquiryPresenterAdapter` that waits for an answer is raised with `pauseGameActiveState: true`
-  (source-text pin, one row per method).
+  (source-text pin: the file's inquiry calls and its `pauseGameActiveState: true` arguments must be
+  equal in number, and at least five, so a new popup with the default flag fails and an empty scan fails).
 - `TAOM.Tests/Features/FieldCommission/FieldCommissionSettingsProviderTests.cs` — the MCM-over-JSON
   merge (per-knob override, NaN/infinity revert, both clamp directions), snapshot value equality, the
   tick-path caching contract, and the compiled-default-vs-JSON-default pin.
@@ -358,9 +359,14 @@ ever fielded — not a concern at any realistic party size.
 - 2026-11-14: every Battlefield Promotion popup pauses the campaign. The offer itself already did,
   but the rename prompt that follows "Promote" was raised with `pauseGameActiveState: false` and the
   discharge picker with the default (false), so the party kept moving on the map while the player
-  typed a name (player report). Closing a paused popup resumes the speed the map had (v1.5.6
-  `GauntletQueryManager.HandleQueryCreated`/`CloseQuery`); no `TimeControlMode` is touched.
-  Pinned by `InquiryPresenterPauseTests`. Not verified in game.
+  typed a name (player report). Closing a paused popup resumes the speed the map had (v1.5.7
+  `GauntletQueryManager.HandleQueryCreated` :244-259 and `CloseQuery` :261-294, read on the v1.5.7
+  install); no `TimeControlMode` is touched. Pinned by `InquiryPresenterPauseTests`. Not verified in
+  game. Owed at play or fast-forward speed: wait for an offer and click Promote, type a new name in
+  the rename box and confirm (typing under the engine pause is unproven: every vanilla text inquiry
+  is raised unpaused), then check that the companion carries that name, that the map stays still
+  while the box is open, and that it resumes at the old speed when the box closes. If typing is
+  blocked, put the rename prompt back to unpaused and hold the clock another way.
 
 ## Firing a promoted companion (#486)
 

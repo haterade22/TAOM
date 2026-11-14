@@ -1,4 +1,4 @@
-﻿# Module TAOM: the code-and-data module
+# Module TAOM: the code-and-data module
 
 ## What this module is
 
