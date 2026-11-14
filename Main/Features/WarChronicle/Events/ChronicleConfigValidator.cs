@@ -59,10 +59,10 @@ public static class ChronicleConfigValidator
     internal const string TargetFree = "free";
     internal const string TargetEvil = "evil";
 
-    private static readonly string[] NarrativeKeys = { "id", "kind", "anchor", "anchorEvent", "requiresOutcome", "offsetDays", "title", "outcomes" };
+    private static readonly string[] NarrativeKeys = { "id", "kind", "anchor", "anchorEvent", "requiresOutcome", "offsetDays", "title", "image", "outcomes" };
     private static readonly string[] SiegeKeys =
     {
-        "id", "kind", "anchor", "anchorEvent", "requiresOutcome", "offsetDays", "title", "outcomes",
+        "id", "kind", "anchor", "anchorEvent", "requiresOutcome", "offsetDays", "title", "image", "outcomes",
         "windowDays", "target", "attackers", "defender", "openText", "lapsedText",
     };
 
@@ -194,6 +194,8 @@ public static class ChronicleConfigValidator
         definition.Title = Text(e["title"]) ?? string.Empty;
         if (string.IsNullOrWhiteSpace(definition.Title))
             return Skip("it has no title");
+        var image = OptionalText(e, "image", $"event '{id}'", warnings);
+        definition.Image = string.IsNullOrWhiteSpace(image) ? null : image;
 
         var fullWar = anchor == ChronicleAnchor.Phase2
                       || (anchor == ChronicleAnchor.Event && reachesFullWar.TryGetValue(anchorEvent!, out var parent) && parent);

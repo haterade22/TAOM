@@ -340,8 +340,8 @@
       former_banner the banner code the former ruling house takes once it no longer rules (as ruling house it showed
                     the realm's banner, which the new house keeps); left out, its banner is not changed
       heading, text, image, button   the event window the player sees: its heading, story text ({HERO}, {CLAN},
-                    {REALM} and {SEAT} are filled in, {newline} breaks a line), an illustration sprite (left out: the
-                    new house's banner) and the button's text. Placeholders until the event art is made.
+                    {REALM} and {SEAT} are filled in, {newline} breaks a line), an illustration file in GUI/EventArt
+                    (left out: the new house's banner) and the button's text.
     He leaves the player's clan and his house becomes the realm's ruling clan. The former ruling house keeps its other
     fiefs and titles. When the player plays the hero and restores the title, the player's own clan is renamed and
     becomes the ruling clan instead (no new clan, party, gold or relation), with the banner, fiefs and titles.
@@ -354,7 +354,7 @@
                 titles="d_anorien" office="steward_gondor" influence="2500" tier="5" troops="60"
                 banner="11.149.149.1528.1528.764.764.1.0.0.31006.172.2000.580.580.764.798.0.0.0"
                 former_banner="11.172.149.1528.1528.764.764.1.0.0.10000.2000.2000.580.580.765.825.0.0.0"
-                heading="{=realms_coronation_heading}The Return of the King"
+                heading="{=realms_coronation_heading}The Return of the King" image="taom_event_coronation_gondor.png"
                 text="{=realms_coronation_text}Before the gate of Minas Tirith the Steward of Gondor offers up the white rod of his office, and the King gives it back to him. Then the ancient crown of the kings is set upon the head of {HERO}.{newline}After long years an heir of Isildur sits upon the throne of Gondor, and the {CLAN} rules the realm from {SEAT}."
                 button="{=realms_coronation_button}Long live the King!" />
   </Coronations>

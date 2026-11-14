@@ -1,0 +1,144 @@
+<Prefab>
+	<!--
+		TAOM's story event window: the War Chronicle's announcements (Boromir's fall, the Bridge of Khazad-dûm...) and the
+		Realms coronation. Bound to EventWindowVM (Client/Features/EventWindow), loaded by RealmsPopupLayer at layer order
+		320, one window at a time (EventWindows). The layout and its sprites live here; every text is the event's own.
+		The approved design (event-window-design-v1) as a compact popup: a centred 690x432 encyclopedia stone panel
+		(ec_panel_9: the stone at its native scale inside the panel mask, under the gold rim). The sizes are logical units,
+		scaled by the player's UI scale.
+		A small gold diamond sits on the rim at its top and bottom centre. On the left the 270x360 (3:4) illustration (the
+		event's picture from GUI/EventArt) in a narrow gold rim, its top level with the category or, without a picture, the
+		banner as TAOM's encyclopedia pennant; with neither, the text column alone, centred. On the right the category, the
+		heading, the diamond rule, the story, the coronation's lines and what the event applied (stacked entries and their
+		shared duration), above the fixed button, which closes the window like the gold X and Escape. Nothing scrolls: the
+		column is sized for the shipped English events at readable sizes, so a new event or a longer translation is checked
+		in game. Event text keeps its brushes' zero outline: ivory on the dark stone.
+	-->
+	<Window>
+		<Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent">
+			<Children>
+
+				<!--Dim: covers and holds the mouse for the whole screen-->
+				<Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Sprite="BlankWhiteSquare_9" Color="#000000CC"/>
+
+				<Widget Id="EventPanel" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="690" SuggestedHeight="432" HorizontalAlignment="Center" VerticalAlignment="Center">
+					<Children>
+						<EncyclopediaStonePanelWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="690" SuggestedHeight="432" Sprite="ec_panel_9" DoNotAcceptEvents="true"/>
+
+						<!--The rim's diamonds, top and bottom centre, square like fs_diamond (24x24) and centred on the gold rim line about
+							5 px inside the edge (the nine-patch rim keeps its width at any panel size). fs_diamond is runtime chrome, the
+							same group as ec_panel_9, so it adds no sprite category.-->
+						<ImageWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="9" SuggestedHeight="9" HorizontalAlignment="Center" VerticalAlignment="Top" PositionYOffset="1" Sprite="fs_diamond" DoNotAcceptEvents="true"/>
+						<ImageWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="9" SuggestedHeight="9" HorizontalAlignment="Center" VerticalAlignment="Bottom" PositionYOffset="-1" Sprite="fs_diamond" DoNotAcceptEvents="true"/>
+
+						<!--Illustration and text side by side, centred (270 + 30 + 330 = 630, 30 to each side): a hidden illustration takes no room-->
+						<ListPanel WidthSizePolicy="CoverChildren" HeightSizePolicy="Fixed" SuggestedHeight="360" HorizontalAlignment="Center" VerticalAlignment="Center" StackLayout.LayoutMethod="HorizontalLeftToRight">
+							<Children>
+
+								<!--Illustration: the event art, or the banner in its place; its top is the category's top-->
+								<Widget WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent" SuggestedWidth="270" MarginRight="30" IsVisible="@HasIllustration" DoNotAcceptEvents="true">
+									<Children>
+										<Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="270" SuggestedHeight="360" VerticalAlignment="Top" Sprite="BlankWhiteSquare_9" Color="#AD8849FF" DoNotAcceptEvents="true">
+											<Children>
+												<Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" MarginLeft="1" MarginRight="1" MarginTop="1" MarginBottom="1" Sprite="BlankWhiteSquare_9" Color="#0B0A08FF" DoNotAcceptEvents="true"/>
+												<!--The event's 3:4 picture, a loose PNG from GUI/EventArt: covered into the rim, never stretched-->
+												<EncyclopediaPictureWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" MarginLeft="1" MarginRight="1" MarginTop="1" MarginBottom="1" PictureFile="@ImageFile" FrameMask="BlankWhiteSquare" IsVisible="@HasImage" DoNotAcceptEvents="true"/>
+												<Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="130" SuggestedHeight="212" HorizontalAlignment="Center" VerticalAlignment="Center" IsVisible="@HasBanner" DoNotAcceptEvents="true">
+													<Children>
+														<Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" DoNotAcceptEvents="true" ClipContents="true">
+															<Children>
+																<EncyclopediaMaskedImageWidget DataSource="{Banner}" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" ImageId="@Id" AdditionalArgs="@AdditionalArgs" TextureProviderName="@TextureProviderName" DoNotAcceptEvents="true" Brush="TAOM.Encyclopedia.HeroClanMask" Zoom="1.35"/>
+															</Children>
+														</Widget>
+														<ImageWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Sprite="ec_hero_clan_drape" DoNotAcceptEvents="true"/>
+														<ImageWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Sprite="ec_hero_clan_rim" DoNotAcceptEvents="true"/>
+													</Children>
+												</Widget>
+											</Children>
+										</Widget>
+									</Children>
+								</Widget>
+
+								<!--Text column: the story stack from the top, the button fixed at the bottom; 318 of the 360 above the button's 8 px gap-->
+								<Widget WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent" SuggestedWidth="330">
+									<Children>
+										<ListPanel Id="StoryList" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" VerticalAlignment="Top" StackLayout.LayoutMethod="VerticalTopToBottom" DoNotAcceptEvents="true">
+											<Children>
+
+												<!--War Chronicle, Coronation: gold capitals, level with the picture's top-->
+												<TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" Brush="TAOM.Encyclopedia.Title" Brush.FontSize="11" Brush.FontColor="#CBA45CFF" Brush.TextHorizontalAlignment="Left" Brush.TextVerticalAlignment="Top" Text="@Category" IsVisible="@HasCategory" DoNotAcceptEvents="true"/>
+												<TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" MarginTop="3" Brush="TAOM.Encyclopedia.PreviewName" Brush.FontSize="21" Brush.FontColor="#EFE4C8FF" Brush.TextHorizontalAlignment="Left" Brush.TextVerticalAlignment="Top" Text="@Heading" DoNotAcceptEvents="true"/>
+												<!--The diamond rule: two thin gold lines and fs_diamond at its square shape, 312 wide inside the 330 column-->
+												<ListPanel WidthSizePolicy="CoverChildren" HeightSizePolicy="Fixed" SuggestedHeight="8" MarginTop="4" MarginBottom="6" HorizontalAlignment="Center" StackLayout.LayoutMethod="HorizontalLeftToRight" DoNotAcceptEvents="true">
+													<Children>
+														<Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="150" SuggestedHeight="1" VerticalAlignment="Center" Sprite="BlankWhiteSquare_9" Color="#AD8849CC" DoNotAcceptEvents="true"/>
+														<ImageWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="6" SuggestedHeight="6" MarginLeft="3" MarginRight="3" VerticalAlignment="Center" Sprite="fs_diamond" DoNotAcceptEvents="true"/>
+														<Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="150" SuggestedHeight="1" VerticalAlignment="Center" Sprite="BlankWhiteSquare_9" Color="#AD8849CC" DoNotAcceptEvents="true"/>
+													</Children>
+												</ListPanel>
+
+												<TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" Brush="TAOM.Encyclopedia.ListText" Brush.FontSize="15" Brush.FontColor="#E9E0C8FF" Brush.TextHorizontalAlignment="Left" Brush.TextVerticalAlignment="Top" Text="@Text" DoNotAcceptEvents="true"/>
+
+												<!--What changed hands: the coronation's lines-->
+												<Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="1" MarginTop="10" MarginBottom="6" Sprite="BlankWhiteSquare_9" Color="#AD884999" IsVisible="@HasLines" DoNotAcceptEvents="true"/>
+												<ListPanel DataSource="{Lines}" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" StackLayout.LayoutMethod="VerticalTopToBottom" IsVisible="@HasLines">
+													<ItemTemplate>
+														<TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" MarginBottom="4" Brush="TAOM.Encyclopedia.ListValue" Brush.FontSize="13" Brush.TextHorizontalAlignment="Left" Brush.TextVerticalAlignment="Top" Text="@Text" DoNotAcceptEvents="true"/>
+													</ItemTemplate>
+												</ListPanel>
+
+												<!--What the event applied: one stacked entry per effect. Line one: who (left, wrapping) and the signed value
+													(right, in a reserved 64 px slot the name never enters); line two: the effect at full width; line three: the
+													row's own duration, only when the rows differ. Then the shared duration.-->
+												<ListPanel WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" MarginTop="10" StackLayout.LayoutMethod="VerticalTopToBottom" IsVisible="@HasEffects">
+													<Children>
+														<TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" Brush="TAOM.Encyclopedia.Title" Brush.FontSize="11" Brush.FontColor="#CBA45CFF" Brush.TextHorizontalAlignment="Left" Brush.TextVerticalAlignment="Top" Text="@EffectsHeading" DoNotAcceptEvents="true"/>
+														<Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="1" MarginTop="5" Sprite="BlankWhiteSquare_9" Color="#AD8849CC" DoNotAcceptEvents="true"/>
+														<ListPanel DataSource="{Effects}" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" StackLayout.LayoutMethod="VerticalTopToBottom">
+															<ItemTemplate>
+																<ListPanel WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" StackLayout.LayoutMethod="VerticalTopToBottom" DoNotAcceptEvents="true">
+																	<Children>
+																		<Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" MarginTop="5" DoNotAcceptEvents="true">
+																			<Children>
+																				<TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" MarginLeft="2" MarginRight="70" Brush="TAOM.Encyclopedia.ListText" Brush.FontSize="15" Brush.FontColor="#E9E0C8FF" Brush.TextHorizontalAlignment="Left" Brush.TextVerticalAlignment="Top" Text="@Target" DoNotAcceptEvents="true"/>
+																				<TextWidget WidthSizePolicy="Fixed" HeightSizePolicy="CoverChildren" SuggestedWidth="64" HorizontalAlignment="Right" MarginRight="2" Brush="TAOM.Encyclopedia.ListText" Brush.FontSize="16" Brush.FontColor="#E8C886FF" Brush.TextHorizontalAlignment="Right" Brush.TextVerticalAlignment="Top" Text="@Value" DoNotAcceptEvents="true"/>
+																			</Children>
+																		</Widget>
+																		<TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" MarginLeft="2" MarginRight="2" MarginTop="1" Brush="TAOM.Encyclopedia.ListText" Brush.FontSize="13" Brush.FontColor="#CDBF9FFF" Brush.TextHorizontalAlignment="Left" Brush.TextVerticalAlignment="Top" Text="@Label" DoNotAcceptEvents="true"/>
+																		<TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" MarginLeft="2" MarginRight="2" MarginTop="1" Brush="TAOM.Encyclopedia.ListValue" Brush.FontSize="12" Brush.TextHorizontalAlignment="Left" Brush.TextVerticalAlignment="Top" Text="@Duration" IsVisible="@HasDuration" DoNotAcceptEvents="true"/>
+																		<Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="1" MarginTop="5" Sprite="BlankWhiteSquare_9" Color="#AD884973" DoNotAcceptEvents="true"/>
+																	</Children>
+																</ListPanel>
+															</ItemTemplate>
+														</ListPanel>
+														<TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" MarginTop="5" MarginLeft="2" MarginRight="2" Brush="TAOM.Encyclopedia.ListValue" Brush.FontSize="12" Brush.TextHorizontalAlignment="Left" Brush.TextVerticalAlignment="Top" Text="@EffectsDuration" IsVisible="@HasEffectsDuration" DoNotAcceptEvents="true"/>
+													</Children>
+												</ListPanel>
+
+											</Children>
+										</ListPanel>
+
+										<!--Continue, Long live the King...: fixed at the bottom, its bottom level with the picture's. The label is centred
+											both ways with even side margins, then lifted 2 px: the font's glyphs sit low in their line box.-->
+										<ButtonWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="34" VerticalAlignment="Bottom" Command.Click="ExecuteClose" Brush="TAOM.Encyclopedia.OpenEntry" DoNotPassEventsToChildren="true" UpdateChildrenStates="true">
+											<Children>
+												<TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" MarginLeft="8" MarginRight="8" PositionYOffset="-2" Brush="TAOM.Encyclopedia.OpenEntryText" Brush.FontSize="16" Brush.TextHorizontalAlignment="Center" Brush.TextVerticalAlignment="Center" Text="@ButtonText"/>
+											</Children>
+										</ButtonWidget>
+									</Children>
+								</Widget>
+
+							</Children>
+						</ListPanel>
+
+						<!--Close button: the shared TAOM close (ec_close, a gold cross in a gold-edged dark square), as on the career screen,
+							the encyclopedia bar and the Long Defeat panel. 28x28, 12 px in from the top and right edges, so it is centred
+							26 px in from each edge, clear of the chamfered corner.-->
+						<ButtonWidget Id="ClosePopupWidget" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="28" SuggestedHeight="28" HorizontalAlignment="Right" VerticalAlignment="Top" MarginRight="12" MarginTop="12" Brush="TAOM.Encyclopedia.Close" Command.Click="ExecuteClose" DoNotPassEventsToChildren="true" UpdateChildrenStates="true"/>
+					</Children>
+				</Widget>
+
+			</Children>
+		</Widget>
+	</Window>
+</Prefab>

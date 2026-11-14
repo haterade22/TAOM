@@ -7,6 +7,7 @@
       "anchor": "CampaignStart",
       "offsetDays": 20,
       "title": "{=taom_wc_fellowship_title}The Fellowship Sets Out",
+      "image": "taom_event_fellowship.png",
       "outcomes": {
         "occurred": {
           "text": "{=taom_wc_fellowship_occurred}Nine walkers leave Rivendell in secret, bearing the One Ring south. The house of Elrond gathers its strength.",
@@ -28,6 +29,7 @@
       "anchorEvent": "fellowship",
       "offsetDays": 6,
       "title": "{=taom_wc_khazaddum_title}The Bridge of Khazad-dûm",
+      "image": "taom_event_khazaddum.png",
       "outcomes": {
         "occurred": {
           "text": "{=taom_wc_khazaddum_occurred}In the deeps of Moria the Grey Pilgrim falls with the Balrog. The orcs of the Misty Mountains swarm, and the Free Peoples mourn.",
@@ -54,6 +56,7 @@
       "anchor": "Phase1",
       "offsetDays": 0,
       "title": "{=taom_wc_breaking_title}The Breaking of the Fellowship",
+      "image": "taom_event_breaking.png",
       "outcomes": {
         "occurred": {
           "text": "{=taom_wc_breaking_occurred}At Parth Galen the Uruk-hai fall upon the Company. Boromir dies defending the hobbits, and Gondor loses its heir.",
@@ -80,6 +83,7 @@
       "anchor": "Phase1",
       "offsetDays": 7,
       "title": "{=taom_wc_theoden_title}Théoden King",
+      "image": "taom_event_theoden.png",
       "outcomes": {
         "occurred": {
           "text": "{=taom_wc_theoden_occurred}Freed from the counsel of Wormtongue, Théoden takes up his sword. The Riddermark musters to its king.",
@@ -107,6 +111,7 @@
       ],
       "defender": "vlandia",
       "title": "{=taom_wc_hornburg_title}The Battle of the Hornburg",
+      "image": "taom_event_hornburg.png",
       "openText": "{=taom_wc_hornburg_open}The host of Isengard and the hillmen of Dunland march on {TARGET}. The battle must be decided within {DAYS} days.",
       "lapsedText": "{=taom_wc_hornburg_lapsed}No assault comes to {TARGET}. The muster of Isengard turns elsewhere.",
       "outcomes": {
@@ -158,6 +163,7 @@
       "requiresOutcome": "Held",
       "offsetDays": 2,
       "title": "{=taom_wc_ents_title}The Last March of the Ents",
+      "image": "taom_event_ents.png",
       "outcomes": {
         "occurred": {
           "text": "{=taom_wc_ents_occurred}The Ents of Fangorn come down upon Isengard and drown the pits of Saruman. The forges of the White Hand fall silent.",
@@ -184,6 +190,7 @@
       ],
       "defender": "lothlorien",
       "title": "{=taom_wc_lorien_title}Lothlórien Assailed",
+      "image": "taom_event_lorien.png",
       "openText": "{=taom_wc_lorien_open}Out of Dol Guldur the Shadow assails the Golden Wood. {TARGET} must stand for {DAYS} days.",
       "lapsedText": "{=taom_wc_lorien_lapsed}The armies of Dol Guldur never reach {TARGET}.",
       "outcomes": {
@@ -239,6 +246,7 @@
       ],
       "defender": "empire_w",
       "title": "{=taom_wc_osgiliath_title}The Fall of Osgiliath",
+      "image": "taom_event_osgiliath.png",
       "openText": "{=taom_wc_osgiliath_open}The Morgul host crosses the Anduin toward {TARGET}. Gondor must hold the ruined city for {DAYS} days.",
       "lapsedText": "{=taom_wc_osgiliath_lapsed}Mordor does not come against {TARGET}, and the river stays quiet.",
       "outcomes": {
@@ -295,6 +303,7 @@
       ],
       "defender": "sturgia",
       "title": "{=taom_wc_dale_title}The Battle of Dale",
+      "image": "taom_event_dale.png",
       "openText": "{=taom_wc_dale_open}Easterlings and the servants of Dol Guldur march against the realm of Dale. {TARGET} must hold for {DAYS} days.",
       "lapsedText": "{=taom_wc_dale_lapsed}The Easterlings turn aside, and {TARGET} is spared.",
       "outcomes": {
@@ -357,6 +366,7 @@
       ],
       "defender": "empire_w",
       "title": "{=taom_wc_corsairs_title}The Corsairs of Umbar",
+      "image": "taom_event_corsairs.png",
       "openText": "{=taom_wc_corsairs_open}The black sails of Umbar come up the Anduin toward {TARGET}. Gondor must hold the port for {DAYS} days.",
       "lapsedText": "{=taom_wc_corsairs_lapsed}The Corsairs linger at sea, and {TARGET} is left in peace.",
       "outcomes": {
@@ -413,6 +423,7 @@
       ],
       "defender": "arthedain",
       "title": "{=taom_wc_north_title}War in the North",
+      "image": "taom_event_north.png",
       "openText": "{=taom_wc_north_open}Orcs of Gundabad and the hillmen of Dunland come down on the North. {TARGET} must hold for {DAYS} days.",
       "lapsedText": "{=taom_wc_north_lapsed}The northern war passes {TARGET} by.",
       "outcomes": {
@@ -469,6 +480,7 @@
       ],
       "defender": "empire_w",
       "title": "{=taom_wc_gondor_title}The Siege of Gondor",
+      "image": "taom_event_gondor.png",
       "openText": "{=taom_wc_gondor_open}The Lord of the Nazgûl leads the hosts of Mordor against {TARGET}. The city must hold for {DAYS} days.",
       "lapsedText": "{=taom_wc_gondor_lapsed}The great host of Mordor holds back, and {TARGET} waits under a darkened sky.",
       "outcomes": {
@@ -520,6 +532,7 @@
       "requiresOutcome": "Held",
       "offsetDays": 5,
       "title": "{=taom_wc_blackgate_title}The Black Gate Opens",
+      "image": "taom_event_blackgate.png",
       "outcomes": {
         "occurred": {
           "text": "{=taom_wc_blackgate_occurred}The Captains of the West march to the Morannon to draw the Eye from the Ring-bearer. The fate of the war now rests with the Ring.",

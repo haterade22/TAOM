@@ -62,6 +62,9 @@ public sealed class ChronicleEventDefinition
     /// <summary>A <c>{=taom_wc_*}English</c> text.</summary>
     public string Title { get; set; } = string.Empty;
 
+    /// <summary>The event window's illustration: a sprite name, the same for every announcement of the event. Null shows the text alone.</summary>
+    public string? Image { get; set; }
+
     /// <summary>Siege only: the line shown when the window opens; may name {TARGET} and {DAYS}.</summary>
     public string? OpenText { get; set; }
 
