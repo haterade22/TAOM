@@ -57,6 +57,17 @@ public class ElfAppearanceDataTests
         AssertNone(Elves().Where(h => h.Culture == "lothlorien" && h.Keys.Any(k => Hair(k) > MaxGaladhrimHair))
             .Select(h => $"{h.Id} ({h.File}) hair {h.Values(Hair)}/63"), "Galadhrim heroes with hair darker than " + MaxGaladhrimHair);
 
+    /// <summary>Heroes named for golden hair, outside Lorien (#1181 review: Thyrell held hair 54, near black).</summary>
+    [TestMethod]
+    public void GoldenNamedHeroes_HaveGoldenHair()
+    {
+        var golden = new[] { "named_companion_thyrell" };
+        var found = Elves().Where(h => golden.Contains(h.Id)).ToList();
+        Assert.AreEqual(golden.Length, found.Select(h => h.Id).Distinct().Count(), "A golden-named hero is missing.");
+        AssertNone(found.Where(h => h.Keys.Any(k => Hair(k) > MaxGaladhrimHair))
+            .Select(h => $"{h.Id} ({h.File}) hair {h.Values(Hair)}/63"), "Golden-named heroes with hair darker than " + MaxGaladhrimHair);
+    }
+
     [TestMethod]
     public void ElfHeroes_AreNotShorterThanAnAverageMan() =>
         AssertNone(Elves().Where(h => h.Keys.Any(k => Height(k) < MinElfHeight))
