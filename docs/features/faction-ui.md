@@ -481,6 +481,10 @@ career page and into the game. Owed:
   keys (`haldir_lothlorien_description`, `orophin_lothlorien_description`) with no language rows until
   the language pass. That pass keeps the 12 rows of the old keys `haldir_description` and
   `orophin_description`: a hero text is saved with the hero, so existing saves still show them.
+- 2026-11-14: the Wanderer tab lists the ten Shaghana and ten Abanissa wanderers and
+  `spc_wanderer_rohan_9` (#762). They spawned before, but their culture's `notable_templates` did not name
+  them, and the tab reads that list. `RenamedCultureWandererListTests` now checks every culture,
+  the ones `taom_spcultures.xml` defines as well.
 
 ## GitHub Issue
 
