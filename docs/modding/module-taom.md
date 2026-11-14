@@ -1,4 +1,4 @@
-﻿# Module TAOM: the code-and-data module
+# Module TAOM: the code-and-data module
 
 ## What this module is
 
@@ -215,7 +215,7 @@ Of the 42 subfolders under `ModuleData/`, 4 are reached through `<XmlNode>` rows
 | `startup_resources/` | `StartupResources/StartupResourcesConfigProvider.cs` |
 | `uncapturable_heroes/` | `UncapturableHeroes/UncapturableHeroesConfigProvider.cs` |
 
-Two loose root files are registered nowhere and loaded by nothing: `settlements.xml` (1,023,041 bytes) and `custom_settlements.xml` (51,752 bytes). <!-- measured: wc -c Main/_Module/ModuleData/settlements.xml Main/_Module/ModuleData/custom_settlements.xml; rg -n "settlements" Main/_Module/SubModule.xml 2026-09-05 --> The live `Settlements` registration belongs to `TAOM_Map/SubModule.xml`; the repo copy is the stale shadow the [settlements](settlements.md) chapter warns about, and it ships only because `CopyModule` copies everything.
+TAOM's repo has no settlement file: its two unloaded copies, `settlements.xml` and `custom_settlements.xml`, were removed on 2026-11-14. <!-- measured: rg -n "settlements" Main/_Module/SubModule.xml 2026-09-05 --> The live `Settlements` registration belongs to `TAOM_Map/SubModule.xml`; see the [settlements](settlements.md) chapter. A build never deletes, so an install built earlier may still hold the old copies, which the game ignores.
 
 MCM settings are not in the module either. `TaomSettings.FolderName` is `"TAOM"` (`Main/Features/TaomSettings.cs:15`), which places the persisted values under the player's `Documents\Mount and Blade II Bannerlord\Configs\ModSettings\Global\TAOM\`. MCM itself ships from TAOM.Dependencies, and TAOM adds no MCM file to its tree (`docs/features/mcm.md:7, 45-47`). A persisted MCM value survives a reinstall of this module.
 
@@ -386,7 +386,7 @@ Code: No code changes needed
 - **The folder form globs `*.xml`,** so `x.bak.xml` is data and `x.xml.bak-topic` is invisible (`MBObjectManager.cs:903`). The repo tree holds 9 sidecars right now, 1 of them git-tracked (`sp_battle_scenes.xml.bak_scenes`); all 9 redeploy on the next build because `CopyModule` copies everything, and `.gitignore:24` hides them from `git status` (`docs/reference/module-backup-sweep.md:43-53`). <!-- measured: find Main/_Module/ModuleData -name '*.bak*' | wc -l; git ls-files Main/_Module/ModuleData | grep -c bak 2026-09-05 -->
 - **`project.mbproj` is a runtime file.** Excluding it from a release removes every custom voice, `module_sounds.xml` and the Harad tattoos (`skins.xml`) with no error anywhere (`Module.cs:1031`, `tools/package_release.py:126-135`). An invented `soln_*` id is inert and unlogged (`Module.cs:1446-1584`); `python tools/audit_mbproj_registration.py` is the gate (`docs/reference/lotrlome-soln-id-fix.md`).
 - **A new data file loads only at process launch** (`Module.cs:1029-1033`). A green validator with a naked troop in game means the file was not loaded, not that the data is wrong (`docs/ai-includes/agent-operating-manual.md:38`).
-- **`settlements.xml` in this module is a shadow.** Nothing registers it; `TAOM_Map` owns `Settlements` (`Main/_Module/SubModule.xml`, no match for `settlements`).
+- **This module has no `settlements.xml`.** `TAOM_Map` owns `Settlements` (`Main/_Module/SubModule.xml`, no match for `settlements`); the two unloaded repo copies were removed on 2026-11-14.
 - **`Languages/` paths are relative to `ModuleData/Languages`** (`LanguageData.cs:130`). A wrong path fails as `Could not parse: ...` in the log (`LocalizedTextManager.cs:216`) and the language simply stays English. English `<string>` rows are never deserialized (`LocalizedTextManager.cs:235`). The root `language_data.xml` with no rows is harmless but adds nothing: discovery is the recursive file search at `LocalizedTextManager.cs:92-99`.
 - **`GUI/SpriteData/FactionMap/` is not sprites.** Editing those PNGs in the repo changes nothing in game until they are copied to the install, and a baked sprite needs the generator plus a full relaunch (`docs/features/gui-sprite-system.md:59-84, 138`). Sync the bake back with `pwsh tools/sync_sprite_bake.ps1`; a wider install-to-repo copy reverts uncommitted work (`docs/features/gui-sprite-system.md:168-169`).
 - **`ExcludeSourceFilesFromModule=false` deploys 551 MB of `AssetSources` to every dev install** (`Main/TAOM.csproj:12`, `Basic.targets:155`); the packager removes it again (`tools/package_release.py:116-117`).
@@ -413,7 +413,7 @@ All measured 2026-09-05 from the repo at `Main/_Module/` and the installed `Modu
 | 8 `.xslt` files, all without an `.xml` sibling | `for x in Main/_Module/ModuleData/*.xslt; do test -f "${x%.xslt}.xml" \|\| echo xslt-only; done` |
 | `GUI/`: 11, 6, 51, 227, 1,023 per subfolder; 428,445-byte manifest; 563/369/78/9/3 PNGs per sprite category; 226 FactionMap PNGs | `for d in Main/_Module/GUI/*/; do find "$d" -type f \| wc -l; done; wc -c Main/_Module/GUI/TAOMSpriteData.xml; for d in Main/_Module/GUI/SpriteParts/*/; do find "$d" -name '*.png' \| wc -l; done; find Main/_Module/GUI/SpriteData/FactionMap -type f \| wc -l` |
 | 4 `AssetPackages` tpac; 342 wav, 93 mp3, 1 ogg; no `Prefabs/` folder | `ls Main/_Module/AssetPackages; find Main/_Module/ModuleSounds -type f \| sed 's/.*\.//' \| sort \| uniq -c; ls Main/_Module` |
-| 1,023,041 and 51,752 bytes for the two unregistered settlement files; 2,589 bytes `global_strings.xml` | `wc -c Main/_Module/ModuleData/settlements.xml Main/_Module/ModuleData/custom_settlements.xml Main/_Module/ModuleData/global_strings.xml` |
+| 2,589 bytes `global_strings.xml` | `wc -c Main/_Module/ModuleData/global_strings.xml` |
 | 9 sidecars, 1 tracked | `find Main/_Module/ModuleData -name '*.bak*' \| wc -l; git ls-files Main/_Module/ModuleData \| grep -c bak` |
 | 371 install-side `ModuleData` files, 4 extras | `find "<game>/Modules/TAOM/ModuleData" -type f \| wc -l; diff <(cd Main/_Module/ModuleData && find . -type f \| sort) <(cd "<game>/Modules/TAOM/ModuleData" && find . -type f \| sort)` |
 | Install `bin/`: 10 client, 10 server, 12 wEditor files (an install built before 2026-10-22 also holds a stale 4-file Gaming.Desktop folder) | `for d in "<game>/Modules/TAOM"/bin/*/; do ls "$d" \| wc -l; done` |

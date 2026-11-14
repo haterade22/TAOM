@@ -37,7 +37,9 @@ internal sealed class RealmsModule : TaomFeatureModule
 
     public override void OnPhase(ApplyPhase phase, IResolver resolver)
     {
-        if (phase == ApplyPhase.GameInit)
-            PartyNames.Patch();
+        if (phase != ApplyPhase.GameInit)
+            return;
+        PartyNames.Patch();
+        HouseBanners.Patch();
     }
 }

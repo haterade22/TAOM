@@ -74,12 +74,13 @@ public class StoryMissionsWiringTests
     }
 
     [TestMethod]
-    public void Module_DeclaresOnlyTheDevMenu_NoMissionBehaviorModelPatchOrSaveData()
+    public void Module_DeclaresTheDevMenuAndTheStoryOffer_NoMissionBehaviorModelPatchOrSaveData()
     {
         var module = new StoryMissionsModule();
 
-        Assert.AreEqual(1, module.CampaignBehaviors.Count);
+        Assert.AreEqual(2, module.CampaignBehaviors.Count);
         Assert.AreEqual(typeof(StoryDevMenuBehavior), module.CampaignBehaviors[0].BehaviorType);
+        Assert.AreEqual(typeof(StoryOfferBehavior), module.CampaignBehaviors[1].BehaviorType);
         Assert.AreEqual(0, module.MissionBehaviors.Count, "the mission behaviors are built by the launcher, as Host Review's are");
         Assert.AreEqual(0, module.GameModels.Count);
         Assert.AreEqual(0, module.PatchCategories.Count);

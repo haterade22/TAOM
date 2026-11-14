@@ -44,6 +44,7 @@ release note around what a channel folder holds.
 6. Every release channel's `TAOM` and `TAOM_Map` agree: `python tools/check_release_pair.py
    E:/LOTRAOM_Releases/<channel>/Modules` exits 0 and prints `PASS:` (exit 2 or 3 judged nothing). See
    [`release-process.md`](../../../docs/reference/release-process.md) ("TAOM and TAOM_Map ship as a pair").
+   It also fails a map whose prisons name a pre-stealth dungeon (`PRISON_SCENE_NOT_STEALTH`, Orthanc).
 6a. For the channel this release ships to, `BANNERLORD_GAME_MODULES="E:/LOTRAOM_Releases/<channel>/Modules" python tools/check_external_loc_coverage.py --processors-only` (PowerShell: set `$env:BANNERLORD_GAME_MODULES` first). Any exit other than 0 blocks the release: the TAOM_Map and Armory packages must carry Native's text processor ([`release-process.md`](../../../docs/reference/release-process.md), #1026).
 6b. `python tools/check_mcm_default_flips.py` exits 0 before the tag: a changed MCM default under an
    unchanged name reaches no player who saved settings (rename it, or allowlist it with a reason).

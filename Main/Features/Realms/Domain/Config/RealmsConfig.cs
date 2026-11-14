@@ -50,6 +50,12 @@ public sealed class RealmsConfig
     /// </summary>
     public Dictionary<string, string> RealmNames { get; } = new(StringComparer.Ordinal);
 
+    /// <summary>
+    /// The banner code a kingdom flies while its ruler's primary title is this one, by title id, from <c>banner</c>. The
+    /// ruling house keeps its own banner. A title without one leaves the kingdom its own banner.
+    /// </summary>
+    public Dictionary<string, string> TitleBanners { get; } = new(StringComparer.Ordinal);
+
     public List<StartingClaimConfig> StartingClaims { get; } = new();
 
     public List<CoronationConfig> Coronations { get; } = new();

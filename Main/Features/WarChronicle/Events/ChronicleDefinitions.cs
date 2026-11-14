@@ -80,6 +80,9 @@ public sealed class ChronicleEventDefinition
     /// <summary>Siege only.</summary>
     public ChronicleOutcomeDefinition? Fell { get; set; }
 
+    /// <summary>Siege only, optional: the story mission the window offers to the player (#1105), and how it ends without one.</summary>
+    public ChronicleStoryDefinition? Story { get; set; }
+
     public bool IsSiege => Kind == ChronicleEventKind.Siege;
 
     /// <summary>The outcome block for a resolution state; null for Lapsed, Skipped and the open states.</summary>
@@ -93,6 +96,45 @@ public sealed class ChronicleEventDefinition
             default: return null;
         }
     }
+}
+
+/// <summary>
+/// A siege window's story offer (#1105 slice 4): the Story Missions id it offers while Active, and the fate of a window that closes with no
+/// assault: Held (the book's ending, announced with <see cref="FateText"/>) or Lapsed (the window's own lapsed line, as with no story).
+/// </summary>
+public sealed class ChronicleStoryDefinition
+{
+    public string MissionId { get; set; } = string.Empty;
+
+    /// <summary>Held or Lapsed only.</summary>
+    public ChronicleEventState Fate { get; set; } = ChronicleEventState.Held;
+
+    /// <summary>A <c>{=taom_wc_*}English</c> line for a Held fate; null falls back to the Held outcome's text.</summary>
+    public string? FateText { get; set; }
+}
+
+/// <summary>An Active story window the player has not declined: what the offer shows and launches.</summary>
+public sealed class ChronicleStoryOffer
+{
+    public ChronicleStoryOffer(string eventId, string missionId, string title, string? targetSettlementId, IReadOnlyList<string> attackers)
+    {
+        EventId = eventId;
+        MissionId = missionId;
+        Title = title;
+        TargetSettlementId = targetSettlementId;
+        Attackers = attackers;
+    }
+
+    /// <summary>The window's attacking kingdoms in configuration order: a lost mission gives the target to the first that can take it.</summary>
+    public IReadOnlyList<string> Attackers { get; }
+
+    public string EventId { get; }
+
+    public string MissionId { get; }
+
+    public string Title { get; }
+
+    public string? TargetSettlementId { get; }
 }
 
 /// <summary>What one resolution announces and pays.</summary>

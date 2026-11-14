@@ -254,9 +254,10 @@ public sealed partial class RealmsCampaign
             && _service.Ledger.HolderOf(coronation.TitleId) == coronation.HeroId);
 
     /// <summary>
-    /// The crowned house's banner (&lt;Coronation banner&gt;) on the realm as well: a ruling clan is seen with its realm's
-    /// banner (Clan.Banner returns Kingdom.Banner for it), so its own alone would never show. Nothing to do without one,
-    /// or when the realm already has it.
+    /// The crowned house's banner (&lt;Coronation banner&gt;) on the realm as well. Written when the engine still showed a
+    /// ruling clan with its realm's banner; the house's parties now fly its own (<see cref="Hooks.HouseBanners"/>), and the realm
+    /// still takes the crowned banner here, unless a title banner (<see cref="KingdomBanners"/>) applies after it. Nothing
+    /// to do without one, or when the realm already has it.
     /// </summary>
     private static void ApplyCrownedBanner(Kingdom kingdom, Clan clan, CoronationConfig coronation)
     {
@@ -296,11 +297,19 @@ public sealed partial class RealmsCampaign
             clan.AddRenown(renown - clan.Renown, shouldNotify: false);
     }
 
-    /// <summary>As the game does for a companion made lord: out of the player's party into his own, filled with troops.</summary>
+    /// <summary>
+    /// As the game does for a companion made lord: out of the party he rides in into his own, filled with troops; a party
+    /// he already leads becomes the new house's. Vanilla (CompanionRolesCampaignBehavior.ClanNameSelectionIsDone) only
+    /// meets the main party there, because it runs face to face. The titles screen reaches any member of the player's
+    /// clan, so one riding in a companion's party must leave it too, or that party and its leader's command would move
+    /// into the new ruling house. Removing him from the roster clears PartyBelongedTo (PartyBase.OnHeroRemoved).
+    /// </summary>
     private static void LeadParty(Hero hero, Clan clan, Settlement? seat, int troops)
     {
-        if (hero.PartyBelongedTo == MobileParty.MainParty)
-            MobileParty.MainParty.MemberRoster.AddToCounts(hero.CharacterObject, -1);
+        var current = hero.PartyBelongedTo;
+        var spawnAt = current?.Position ?? MobileParty.MainParty.Position;
+        if (current != null && current.LeaderHero != hero)
+            current.MemberRoster.AddToCounts(hero.CharacterObject, -1);
 
         var party = hero.PartyBelongedTo;
         if (party == null)
@@ -308,7 +317,7 @@ public sealed partial class RealmsCampaign
             var home = seat ?? hero.HomeSettlement;
             if (home == null)
                 return;
-            party = LordPartyComponent.CreateLordParty(hero.CharacterObject.StringId, hero, MobileParty.MainParty.Position, 3f, home, hero);
+            party = LordPartyComponent.CreateLordParty(hero.CharacterObject.StringId, hero, spawnAt, 3f, home, hero);
         }
         else
         {

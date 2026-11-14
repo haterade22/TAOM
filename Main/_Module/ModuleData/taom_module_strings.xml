@@ -5035,5 +5035,26 @@
 	<!-- harvested by tools/harvest_literal_loc_keys.py -->
 	<!-- SelfDisableNotice -->
 	<string id="taom_patch_self_disabled" text="{=taom_patch_self_disabled}TAOM: some fixes turned themselves off: {FEATURES}. They stay off for the rest of this battle or this session; the TAOM log names the cause." />
+	<!-- StoryMissions -->
+	<string id="taom_story_offer_body" text="{=taom_story_offer_body}The hour of {TARGET} has come. Will you ride to its walls and fight the battle yourself, or let fate decide?" />
+	<string id="taom_story_offer_ride" text="{=taom_story_offer_ride}Ride to {TARGET}" />
+	<string id="taom_story_offer_fate" text="{=taom_story_offer_fate}Let fate decide" />
+	<string id="taom_story_offer_defend" text="{=taom_story_offer_defend}Defend the walls" />
+	<string id="taom_story_offer_continue" text="{=taom_story_offer_continue}Continue" />
+	<string id="taom_story_offer_none" text="{=taom_story_offer_none}The moment has passed." />
+	<string id="taom_story_offer_won" text="{=taom_story_offer_won}The walls of {TARGET} held, and the host breaks against them." />
+	<string id="taom_story_offer_lost" text="{=taom_story_offer_lost}The walls of {TARGET} are lost." />
+	<string id="taom_story_offer_undecided" text="{=taom_story_offer_undecided}The battle for {TARGET} is not decided. The call may come again." />
+	<string id="taom_story_offer_menu" text="{=taom_story_offer_menu}The host of the enemy gathers before {TARGET}. Time stands until you choose." />
+	<string id="taom_story_offer_failed" text="{=taom_story_offer_failed}The story battle could not open. The taom log says why." />
+	<!-- TaomSettings.cs -->
+	<string id="taom_wc_mcm_story" text="{=taom_wc_mcm_story}Offer Story Missions" />
+	<string id="taom_wc_mcm_story_hint" text="{=taom_wc_mcm_story_hint}When a great siege opens (the Battle of the Hornburg), offers you its battle to fight yourself. A win holds the fortress; a loss gives it to the attackers. If you let fate decide, the map decides, and a siege that nobody attacks ends as in the book. Off: no offer, and the map and fate decide. Not offered in co-op or while enlisted. Default on." />
+	<!-- harvested by tools/harvest_literal_loc_keys.py -->
+	<!-- StoryMissions -->
+	<string id="taom_story_offer_later" text="{=taom_story_offer_later}Not now" />
+	<!-- Realms: primary title -->
+	<string id="realms_ui_primary" text="{=realms_ui_primary}Make primary title" />
+	<string id="realms_ui_primary_ask" text="{=realms_ui_primary_ask}Be known by the {TITLE} from now on? Your style and party name follow your primary title, and so does your realm's banner where the title has one." />
 
 </strings>

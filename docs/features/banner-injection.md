@@ -21,7 +21,7 @@ current file set only.
 
 ### Solution Approach
 - `BannerConfigProvider` reads `banner_key` attributes from `taom_spkingdoms.xml`, `spkingdoms.xslt`, `characters/clans.xml`, and `spclans.xslt`. Both plain XML element attributes and XSLT template match-attribute patterns are parsed.
-- `BannerInjectionService` iterates all kingdoms and non-ruling clans, compares live `BannerCode` against the expected key, skips player-modified entries, then calls the adapter to set and invalidate visuals. Ruling clans are skipped deliberately, because vanilla re-paints a ruling clan's banner from its kingdom every time. The consequence worth knowing: `clan_<kingdom>_1` displays the kingdom banner while its `color`/`color2` still tint its own troops (see [clan-heraldry.md](clan-heraldry.md)).
+- `BannerInjectionService` iterates all kingdoms and clans, compares live `BannerCode` against the expected key, skips player-modified entries, then calls the adapter to set and invalidate visuals. Ruling clans are included: Realms keeps a ruling house's own banner apart from its kingdom's (`ClanOriginalBanner`, see "House and realm banners" in [realms.md](realms.md)), and `ClanBannerAdapter` compares against that, so `clan_<kingdom>_1` shows its own `banner_key` on its map parties and encyclopedia page while the kingdom, and the house's settlements, show the kingdom's. Before 2026-11-14 ruling clans were skipped, because the base game showed a ruling clan its kingdom's banner.
 - `BannerExclusionService` maintains a `HashSet<string>` of player-modified entity IDs. It is serialised into save data via `IDataStore.SyncData` under the key `_taom_playerModifiedBanners`.
 - `GauntletBannerEditorScreen_OnDone_Patch` (Harmony Postfix on `GauntletBannerEditorScreen.OnDone`) detects when the player saves a banner edit and records `Clan.PlayerClan.StringId` into `BannerExclusionService`.
 - `BannerInjectionBehavior` (`CampaignBehaviorBase`) calls `InjectBanners()` on `CampaignEvents.OnNewGameCreatedEvent` and `CampaignEvents.OnGameLoadedEvent` (fires exactly once per game start or save load), and delegates `SyncData` to the service.
@@ -77,7 +77,7 @@ Banner keys are declared in:
 ## Tests
 | Test File | Coverage |
 |-----------|---------|
-| `TAOM.Tests/Features/BannerInjection/BannerInjectionServiceTests.cs` | Injection logic: mismatch injects, already-correct skips, player-modified skips, ruling-clan skips, `InvalidateVisuals` called on update, summary log emitted, multi-kingdom batch |
+| `TAOM.Tests/Features/BannerInjection/BannerInjectionServiceTests.cs` | Injection logic: mismatch injects, already-correct skips, player-modified skips, a ruling clan gets its own banner, `InvalidateVisuals` called on update, summary log emitted, multi-kingdom batch |
 | `TAOM.Tests/Features/BannerInjection/BannerExclusionServiceTests.cs` | `MarkAsPlayerModified`, `IsPlayerModified`, `SyncData` round-trip |
 | `TAOM.Tests/Features/BannerInjection/BannerConfigProviderTests.cs` | XML attribute parsing, XSLT template match parsing, missing file warnings |
 

@@ -442,11 +442,11 @@ class RunTests(_Tree):
         self.assertEqual(report["not_registered"], [], "SubModule.xml itself is not a data file")
 
     def test_unregistered_file_is_named_not_silently_dropped(self):
-        stray = self.md / "custom_settlements.xml"
+        stray = self.md / "unregistered_data.xml"
         _write(stray, GOOD_CLANS)
         report = vx.run([self.module], self.schemas, only=[stray])
         self.assertEqual(report["checked"], [])
-        self.assertEqual([Path(p).name for p in report["not_registered"]], ["custom_settlements.xml"])
+        self.assertEqual([Path(p).name for p in report["not_registered"]], ["unregistered_data.xml"])
 
     def test_path_through_a_link_matches_its_registration(self):
         """A path spelled through a symlink or junction is the same file as its
@@ -538,7 +538,7 @@ class CliTests(_Tree):
                 self.assertNotIn("PASS", text)
 
     def test_summary_counts_files_not_registered(self):
-        stray = self.md / "custom_settlements.xml"
+        stray = self.md / "unregistered_data.xml"
         _write(stray, GOOD_CLANS)
         code, text = self._cli(str(stray))
         self.assertEqual(code, 0, "an unregistered file is named, not failed")
@@ -575,7 +575,7 @@ class CliTests(_Tree):
     def test_a_file_its_own_module_does_not_register_stays_not_registered(self):
         """The other direction of module inference: finding the module is not the same
         as registering the file."""
-        stray = self.md / "custom_settlements.xml"
+        stray = self.md / "unregistered_data.xml"
         _write(stray, BROKEN_CLANS)
         code, text = self._cli(str(stray))
         self.assertEqual(code, 0, text)

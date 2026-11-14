@@ -40,7 +40,7 @@ only when no sheet's files reach the work.
 | Sheet: missions | Mission logic, agents, formations, siege ladders, moving platforms, native calls | [mission](../../.claude/rules/traps/mission.md) |
 | Sheet: creatures, assets | Mounts, creatures, race rigs, skeletons, animation clips, Kit and UE imports | [creatures](../../.claude/rules/traps/creatures-assets.md) |
 | Sheet: troop, culture data | Troop and character XML, equipment sets, start kits, culture files, ranged ladders | [data](../../.claude/rules/traps/data.md) |
-| TAOM_Map settlements | Edit the live `TAOM_Map` `settlements.xml`, not the repo shadow; no comment inside `<Components>` | [naming](../reference/taom-map-settlement-naming.md) |
+| TAOM_Map settlements | Edit the live `TAOM_Map` `settlements.xml` (the repo has none); no comment inside `<Components>` | [naming](../reference/taom-map-settlement-naming.md) |
 | Prefab entity cap | The 131,072 queue is global across modules; `check_prefab_budget.py` counts TAOM_Map only | [module map](../modding/module-map.md) |
 | Unversioned modules | A fix in the live Armory or TAOM_Map reverts on reinstall; land an in-repo gate with it | [coverage](../features/moduledata-validation.md) |
 | Artist commit ports | Base: mirror revision nearest the file, not the commit parent: `merge_live_file.py --base-search` | [lesson](../reviews/lessons/data-content-cultures.md) |

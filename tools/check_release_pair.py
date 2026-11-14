@@ -7,6 +7,12 @@ home settlements the map lacks and can leave a culture with no settlement, the d
 crash LANDLESS_CULTURE reports (#374). This one check replaces the hand-written grep lines per
 realm in docs/reference/release-process.md (rca-ered-luin-2026-10-27.md row 2).
 
+It also checks the map's prison scenes (PRISON_SCENE_NOT_STEALTH). TAOM_Map is in no repo, so a
+repair to one install's settlements.xml reaches players only through a package that carries it:
+Orthanc and Orthanc Gate shipped the pre-stealth empire_dungeon_a (2026-11-13), and this is where a
+package that still holds it is stopped. Scenes are looked up in the channel first, then the install,
+which holds the vanilla dungeons in SandBox.
+
 A channel holds TAOM's modules and no vanilla module, so vanilla's clans come from the install.
 Only the pair's own codes are reported: with no vanilla items in the channel, the validator's
 other codes would read as a flood of false findings. Read-only.
@@ -28,16 +34,19 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 import taom_schema as ts  # noqa: E402
-from validate_moduledata import DEFAULT_GAME_MODULES, build_extra_ref_roots  # noqa: E402
+from validate_moduledata import (  # noqa: E402
+    DEFAULT_GAME_MODULES, PRISON_CODE, _scene_files, build_extra_ref_roots, prison_scene_issues)
 
-PAIR_CODES = frozenset({"UNKNOWN_CULTURE", "BROKEN_FACTION_REF", "BROKEN_SETTLEMENT_REF", "LANDLESS_CULTURE"})
+PAIR_CODES = frozenset({"UNKNOWN_CULTURE", "BROKEN_FACTION_REF", "BROKEN_SETTLEMENT_REF", "LANDLESS_CULTURE",
+                        PRISON_CODE})
 
 
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("modules", type=Path, help="The channel's Modules folder")
     ap.add_argument("--vanilla-modules", type=Path, default=DEFAULT_GAME_MODULES,
-                    help="A Modules folder that holds SandBox, for vanilla's clans (default: the install)")
+                    help="A Modules folder that holds SandBox, for vanilla's clans and dungeon scenes "
+                         "(default: the install)")
     args = ap.parse_args(argv)
 
     moduledata = args.modules / "TAOM" / "ModuleData"
@@ -65,15 +74,26 @@ def main(argv=None) -> int:
         print("No verdict: the pair was not checked.", file=sys.stderr)
         return 2
 
+    # prison_scene_issues reports a map with no prison rows as a finding; here it is no verdict, like
+    # every other check that judged nothing.
+    if not any(loc.get("id") == "prison" for loc in ET.parse(settlements_xml).iter("Location")):
+        print(f"ERROR: no prison Location row in {settlements_xml}", file=sys.stderr)
+        print("No verdict: the prison scenes were not checked.", file=sys.stderr)
+        return 2
+
     validator = ts.Validator(moduledata, [], registries, extra_ref_roots=build_extra_ref_roots(args.modules))
     issues = [i for i in validator._ref_sweep() + validator._broken_settlement_xslt_refs()
               + validator._landless_cultures() if i.code in PAIR_CODES]
+    # The channel's own scenes win over the install's, as a module the game loads later would.
+    scenes = {**_scene_files(args.vanilla_modules), **_scene_files(args.modules)}
+    issues += prison_scene_issues(args.modules, scene_files=lambda _modules: scenes)
     issues.sort(key=lambda i: i.sort_key())
     if issues:
         print(ts.format_report(issues))
         return 1
     print(f"PASS: TAOM and TAOM_Map agree: {len(registries.settlements)} settlements, "
-          f"{len(registries.cultures)} cultures, {len(registries.factions)} clans.")
+          f"{len(registries.cultures)} cultures, {len(registries.factions)} clans; every prison scene "
+          f"has the prison break spawn points.")
     return 0
 
 

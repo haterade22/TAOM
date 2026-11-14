@@ -114,7 +114,7 @@ public class ShippedHallOfFireNativeAtmosphereTests
 }
 
 /// <summary>
-/// Reads the live, unversioned TAOM_Map settlements.xml (the repo copy is a stale shadow): a culture that owns a
+/// Reads the live, unversioned TAOM_Map settlements.xml (TAOM_Map is in no repo): a culture that owns a
 /// non-hideout settlement and has neither a row nor a vanilla id would show a stale backdrop in its towns.
 /// Inconclusive on a machine without the module.
 /// </summary>

@@ -1073,6 +1073,24 @@ public class BattleLoadDiagnosticsServiceTests
     }
 
     [TestMethod]
+    public void EmitSceneLoadWaitIfDue_AfterThePreviousLoadFinished_EmitsNothing()
+    {
+        // Player log 2026-11-13: a battle on battle_terrain_J finished loading at t=+11861ms. The
+        // stopwatch restarted at the battle's exit, and 42.7 s later the first TickLoading frames of
+        // a conversation mission read that battle's origin and wrote
+        // "WaitingForSceneLoad scene='battle_terrain_J' polls=12 waitMs=31273", a wait that never
+        // happened, on a scene that was not loading. The wait ends at FinishMissionLoadingBegin.
+        _sut.LogMissionInitialize("battle_terrain_J");
+        _sut.LogMissionInitializeDone("battle_terrain_J");
+        _sut.LogFinishMissionLoadingBegin();
+
+        _sut.EmitSceneLoadWaitIfDue(12, 42702L);
+
+        Assert.AreEqual(0, InfoLines().Count(s => s.Contains("phase=WaitingForSceneLoad")),
+            "a finished load has no scene-load wait left to report");
+    }
+
+    [TestMethod]
     public void EmitSceneLoadWaitIfDue_PastTheThreshold_NamesTheSceneAndCarriesTheWaitPair()
     {
         _sut.LogMissionInitialize("battle_terrain_biome_094");

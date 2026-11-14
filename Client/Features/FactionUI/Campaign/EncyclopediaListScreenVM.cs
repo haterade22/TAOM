@@ -167,7 +167,7 @@ namespace TAOM.Features.FactionUI.Campaign
             Banner? banner = null;
             bool destroyed = false;
             if (source is Kingdom kingdom) { banner = kingdom.Banner; destroyed = kingdom.IsEliminated; }
-            else if (source is Clan clan) { banner = clan.Banner; destroyed = clan.IsEliminated; }
+            else if (source is Clan clan) { banner = TAOM.Features.Realms.Hooks.HouseBanners.HouseBannerOf(clan); destroyed = clan.IsEliminated; }
             if (banner == null) return;
             IsBannerDestroyed = destroyed;
             BannerIdentifier = new BannerImageIdentifierVM(banner, nineGrid: true);

@@ -43,11 +43,67 @@ public sealed partial class RealmsService
     }
 
     /// <summary>
-    /// The title a hero is known by: the highest rank they hold by right, on a tie the first by id. Null when they hold none.
+    /// The hero's highest title: the highest rank they hold by right, on a tie the first by id. Null when they hold none.
+    /// Laws follow it; the name and banner follow <see cref="KnownByTitleOf"/> and <see cref="KingdomBannerOf"/>, which a
+    /// chosen primary title can change.
     /// </summary>
     public TitleDefinition? PrimaryTitleOf(string heroId) =>
         Ledger.TitlesHeldBy(heroId).Select(Catalog.Get).Where(t => t != null).Select(t => t!)
             .OrderByDescending(t => t.Rank).ThenBy(t => t.Id, System.StringComparer.Ordinal).FirstOrDefault();
+
+    /// <summary>
+    /// The title the hero chose to be known by (<see cref="ChoosePrimary"/>), while the choice still counts: they hold it
+    /// by right and none of their titles outranks it. Null otherwise. Laws and succession never look at the choice.
+    /// </summary>
+    public TitleDefinition? ChosenPrimaryOf(string heroId)
+    {
+        var id = heroId != null ? Ledger.ChosenPrimaryOf(heroId) : null;
+        return id != null && CanChoosePrimary(heroId!, id) ? Catalog.Get(id) : null;
+    }
+
+    /// <summary>The hero holds the title by right and it is of their highest rank, so they may be known by it.</summary>
+    public bool CanChoosePrimary(string heroId, string titleId)
+    {
+        if (heroId == null || Ledger.HolderOf(titleId) != heroId)
+            return false;
+        var title = Catalog.Get(titleId);
+        var highest = PrimaryTitleOf(heroId);
+        return title != null && highest != null && title.Rank >= highest.Rank;
+    }
+
+    /// <summary>The hero is known by this title from now on (<see cref="ChosenPrimaryOf"/>). False when they may not choose it.</summary>
+    public bool ChoosePrimary(string heroId, string titleId)
+    {
+        if (!CanChoosePrimary(heroId, titleId))
+            return false;
+        Ledger.SetChosenPrimary(heroId, titleId);
+        return true;
+    }
+
+    /// <summary>
+    /// The title the hero is known by: the one they chose (<see cref="ChosenPrimaryOf"/>), else their highest unless a
+    /// lower one keeps its style over it (<see cref="RankNameTable.KnownBy"/>). Null when they hold none.
+    /// </summary>
+    public TitleDefinition? KnownByTitleOf(string heroId, string? cultureId) =>
+        ChosenPrimaryOf(heroId)
+        ?? Config.RankNames.KnownBy(Ledger.TitlesHeldBy(heroId).Select(Catalog.Get).Where(t => t != null).Select(t => t!), Catalog, cultureId);
+
+    /// <summary>
+    /// The banner code the kingdom flies under its ruler: the <c>banner</c> of the ruler's chosen primary title, else of
+    /// their highest title, the realm's own title first on a tie. Null when that title has no banner: the kingdom keeps
+    /// its own.
+    /// </summary>
+    public string? KingdomBannerOf(string kingdomId, string? rulerId)
+    {
+        if (rulerId == null || !IsInitialized || Config.TitleBanners.Count == 0)
+            return null;
+        var own = TitleGenerator.KingdomPrefix + kingdomId;
+        var title = ChosenPrimaryOf(rulerId)
+                    ?? Ledger.TitlesHeldBy(rulerId).Select(Catalog.Get).Where(t => t != null).Select(t => t!)
+                        .OrderByDescending(t => t.Rank).ThenByDescending(t => t.Id == own)
+                        .ThenBy(t => t.Id, System.StringComparer.Ordinal).FirstOrDefault();
+        return title != null && Config.TitleBanners.TryGetValue(title.Id, out var code) ? code : null;
+    }
 
     /// <summary>The title's own laws, else the nearest parent's, else the campaign default.</summary>
     public TitleLaws EffectiveLaws(string titleId)
@@ -72,6 +128,7 @@ public sealed partial class RealmsService
         var ancestral = Ledger.ClaimsOf(heroId).Where(c => c.Kind == ClaimKind.Ancestral).Select(c => c.TitleId).ToList();
         Ledger.RemoveAllClaimsOf(heroId);
         VacateOfficesOf(heroId, events);
+        Ledger.SetChosenPrimary(heroId, null);
         var held = Ledger.TitlesHeldBy(heroId).Select(Catalog.Get).Where(t => t != null).Select(t => t!)
             .OrderByDescending(t => t.Rank).ThenBy(t => t.Id).ToList();
         var clanId = family.Get(heroId)?.ClanId;

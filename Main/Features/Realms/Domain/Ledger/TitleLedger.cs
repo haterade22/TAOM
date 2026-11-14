@@ -22,6 +22,7 @@ public sealed class TitleLedger
     private readonly Dictionary<string, List<ChronicleEntry>> _chronicle = new();
     private readonly Dictionary<string, string> _offices = new();
     private readonly HashSet<string> _knownOffices = new(System.StringComparer.Ordinal);
+    private readonly Dictionary<string, string> _primary = new(System.StringComparer.Ordinal);
 
     public TitleLaws DefaultLaws { get; set; } = TitleLaws.Default;
 
@@ -148,4 +149,18 @@ public sealed class TitleLedger
 
     /// <summary>Offices this campaign has made already, held or vacant; a new office in the config is made once.</summary>
     public ISet<string> KnownOffices => _knownOffices;
+
+    /// <summary>The title a hero chose to be known by, or null when they made no choice. Whether it still counts is the service's call.</summary>
+    public string? ChosenPrimaryOf(string heroId) => heroId != null && _primary.TryGetValue(heroId, out var title) ? title : null;
+
+    /// <summary>Sets the title a hero chose to be known by; null clears the choice.</summary>
+    public void SetChosenPrimary(string heroId, string? titleId)
+    {
+        if (titleId == null)
+            _primary.Remove(heroId);
+        else
+            _primary[heroId] = titleId;
+    }
+
+    public IEnumerable<KeyValuePair<string, string>> ChosenPrimaries => _primary;
 }

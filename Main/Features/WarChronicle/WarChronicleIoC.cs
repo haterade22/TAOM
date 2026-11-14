@@ -41,5 +41,7 @@ public static class WarChronicleIoC
         container.Register<ChronicleAnnouncementQueue>(Reuse.Singleton);
         container.Register<ChronicleOutcomeService>(Reuse.Singleton);
         container.Register<ChronicleService>(Reuse.Singleton);
+        // Story Missions settles a story window through this seam (#1105 slice 4): the same singleton.
+        container.RegisterMapping<IChronicleStoryPort, ChronicleService>();
     }
 }

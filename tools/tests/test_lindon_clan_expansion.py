@@ -116,18 +116,19 @@ def elven_sheet_icons():
 
 
 def sigil_layers(case, owner, key, icons):
-    """The sigil icon ids of a banner key, after asserting it has at least one elven icon and that every TAOM icon
-    in it is elven. A layered banner (72715c417) may put vanilla shapes (505, 515), which are not TAOM icons, under
-    its sigil, as Rivendell's does with 503; another TAOM group's icon, such as the orc crest, still fails."""
+    """The sigil icon ids of a banner key, after asserting it has a sigil and that every TAOM icon in it is elven or
+    a neutral charge. A layered banner (72715c417) may put vanilla shapes (505, 515), which are not TAOM icons, under
+    its sigil, as Rivendell's does with 503. The Realms in Exile rebuild (df605a1e0) adds charges from the
+    Miscellaneous group (31014, 31015) and draws Nos Inglor (clan_lindon_6) from vanilla shapes only; another
+    faction group's icon, such as the orc crest, still fails."""
     parts = key.split(".")
     case.assertEqual(0, len(parts) % 10, owner)
     layers = [parts[i:i + 10] for i in range(0, len(parts), 10)]
     case.assertGreater(len(layers), 1, f"{owner} flies no sigil")
-    elven = r"^\{=taom_banner_category_elven\}"
+    allowed = r"^\{=taom_banner_category_(elven|misc)\}"
     for layer in layers[1:]:
         if layer[0] in icons:
-            case.assertRegex(icons[layer[0]], elven, (owner, layer[0]))
-    case.assertTrue(any(layer[0] in icons for layer in layers[1:]), f"{owner} flies no elven sigil")
+            case.assertRegex(icons[layer[0]], allowed, (owner, layer[0]))
     return tuple(layer[0] for layer in layers[1:])
 
 

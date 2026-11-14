@@ -11,11 +11,16 @@ Outputs:
   2. All scene_names referenced by TAOM_Map settlements.
   3. CRASH SUSPECTS: scene_names referenced anywhere that have NO scene folder on disk.
   4. Vanilla-vs-TAOM diff (scenes TAOM uses that vanilla doesn't, and vice versa).
+
+Exits 2 when the install, TAOM_Map's settlements.xml or every SceneObj folder is missing: a run
+that read nothing must not print "(none)" as if it had checked (owner's PC, 2026-11-14, where the
+default root is not the install). Exits 0 otherwise, whatever it finds.
 """
 from __future__ import annotations
 import re
+import sys
 from pathlib import Path
-from _gamedir import game_dir
+from _gamedir import ensure_exists, game_dir
 
 # BANNERLORD_GAME_DIR is the install path README.md requires and setup-dev-env.ps1 sets.
 # The literal stays as the fallback so behaviour is unchanged where it is not set.
@@ -26,7 +31,6 @@ SETTLEMENT_FILES = {
     "vanilla_SandBox": MODULES / "SandBox" / "ModuleData" / "settlements.xml",
     "vanilla_NavalDLC": MODULES / "NavalDLC" / "ModuleData" / "settlements.xml",
     "TAOM_Map": MODULES / "TAOM_Map" / "ModuleData" / "settlements.xml",
-    "TAOM_shadow": MODULES / "TAOM" / "ModuleData" / "settlements.xml",
 }
 
 # Match every scene slot: scene_name="X" AND the lord's-hall level slots
@@ -76,8 +80,14 @@ def all_sceneeditdata() -> set[str]:
     return folders
 
 
-def main() -> None:
+def main() -> int:
+    ensure_exists(MODULES, "the Bannerlord Modules folder")
+    ensure_exists(SETTLEMENT_FILES["TAOM_Map"], "TAOM_Map's settlements.xml")
     folders = all_scene_folders()
+    if not folders:
+        print(f"ERROR: no SceneObj folder holds a scene.xscene under {MODULES}; nothing was checked",
+              file=sys.stderr)
+        return 2
     editdata = all_sceneeditdata()
     print(f"On-disk SceneObj folders: {len(folders)} | SceneEditData (WIP): {len(editdata)} (case-insensitive)\n")
 
@@ -94,7 +104,7 @@ def main() -> None:
     print("CRASH SUSPECTS — scene_name referenced but NO matching SceneObj folder")
     print("=" * 70)
     any_missing = False
-    for label in ("vanilla_SandBox", "vanilla_NavalDLC", "TAOM_Map", "TAOM_shadow"):
+    for label in ("vanilla_SandBox", "vanilla_NavalDLC", "TAOM_Map"):
         d = refs[label]
         missing = sorted(s for s in d if s.lower() not in folders)
         if missing:
@@ -122,7 +132,8 @@ def main() -> None:
     for s in sorted(vanilla):
         present = "OK " if s.lower() in folders else "MISSING"
         print(f"  [{present}] {s}")
+    return 0
 
 
 if __name__ == "__main__":
-    main()
+    sys.exit(main())

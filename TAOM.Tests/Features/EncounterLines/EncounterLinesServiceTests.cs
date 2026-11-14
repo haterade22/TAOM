@@ -272,6 +272,31 @@ public class EncounterLinesServiceTests
     }
 
     [TestMethod]
+    public void TheTradeLines_WithNoConversationParty_LeaveVanilla()
+    {
+        _adapter.ConversationParty().Returns((PartyFacts?)null);
+
+        AssertEveryTradeLineLeavesVanilla();
+    }
+
+    [TestMethod]
+    public void TheTradeLines_WithNoPlayer_LeaveVanilla()
+    {
+        _adapter.Player().Returns((PlayerFacts?)null);
+
+        AssertEveryTradeLineLeavesVanilla();
+    }
+
+    private void AssertEveryTradeLineLeavesVanilla()
+    {
+        Assert.IsFalse(_service.TryCaravanGreeting(true));
+        Assert.IsFalse(_service.TryVillagerGreeting(true));
+        Assert.IsFalse(_service.TrySetSentenceLine(EncounterLinesService.CaravanDefySentence));
+        Assert.IsFalse(_service.TrySetSentenceLine(EncounterLinesService.VillagerDefySentence));
+        AssertNothingSet();
+    }
+
+    [TestMethod]
     public void TryCaravanGreeting_ThePlayersOwnCaravan_LeavesVanilla()
     {
         _adapter.ConversationParty().Returns(new PartyFacts("gondor", false, false, true));

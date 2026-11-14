@@ -19,7 +19,6 @@ Distribution rules (user-chosen conflict policy = "Land every high clan"):
 
 Targets ONLY the LIVE engine-loaded file:
     E:\\Steam\\...\\Modules\\TAOM_Map\\ModuleData\\settlements.xml
-(The repo's Main/_Module/ModuleData/settlements.xml is a stale shadow -- never edited here.)
 
 Properties (mirror Apply-MapVillageNames.py / Assign-RhunSettlementOwners.py):
   - Idempotent, regex anchored on the unique Settlement id (trailing '"' prevents

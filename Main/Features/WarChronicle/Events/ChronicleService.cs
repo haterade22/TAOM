@@ -38,7 +38,7 @@ namespace TAOM.Features.WarChronicle.Events;
 /// keeps the saved states. The caller has checked that this peer may run world work; a throwing engine
 /// read is logged and the step skipped, so the campaign tick never fails here.
 /// </summary>
-public sealed class ChronicleService
+public sealed class ChronicleService : IChronicleStoryPort
 {
     /// <summary>
     /// What a window says when the target changed hands to neither side: a third kingdom took it, or its clan
@@ -572,10 +572,99 @@ public sealed class ChronicleService
         return false;
     }
 
-    /// <summary>The close: Step's <see cref="CheckOwner"/> has just confirmed the defender holds the target.</summary>
-    private void Close(ChronicleEventDefinition definition, ChronicleEventRecord record, double now) =>
-        Resolve(definition, record, record.Assaulted ? ChronicleEventState.Held : ChronicleEventState.Lapsed, now, true,
-            record.Assaulted ? "assaulted and held" : "never assaulted");
+    /// <summary>
+    /// The close: Step's <see cref="CheckOwner"/> has just confirmed the defender holds the target. A window with a story offer that was never
+    /// assaulted ends by its fate (#1105 slice 4): Held with the fate line, or Lapsed as a window without a story.
+    /// </summary>
+    private void Close(ChronicleEventDefinition definition, ChronicleEventRecord record, double now)
+    {
+        if (record.Assaulted)
+        {
+            Resolve(definition, record, ChronicleEventState.Held, now, true, "assaulted and held");
+            return;
+        }
+
+        if (definition.Story is { Fate: ChronicleEventState.Held } story)
+        {
+            Resolve(definition, record, ChronicleEventState.Held, now, true, "never assaulted; held by fate", story.FateText);
+            return;
+        }
+
+        Resolve(definition, record, ChronicleEventState.Lapsed, now, true, "never assaulted");
+    }
+
+    /// <summary>Every Active story window the player has not declined, in configuration order (#1105 slice 4).</summary>
+    public IReadOnlyList<ChronicleStoryOffer> GetStoryOffers()
+    {
+        var offers = new List<ChronicleStoryOffer>();
+        // War Ended: a window stays Active in the store until the next guarded step skips it, and no story battle may open after the war.
+        // A queued announcement shows first: the window's opening line explains the offer.
+        if (!_settings.ChronicleEnabled || !_settings.StoryOffersEnabled || _wotr.CurrentPhase == WarPhase.WarEnded || _announcements.Count > 0)
+            return offers;
+
+        foreach (var definition in _config.GetEvents())
+        {
+            var record = _store.Get(definition.Id);
+            // The map decides first: no offer once an attacker has besieged the target or the defender no longer holds it (an owner
+            // change can raise no event, so the owner is read live, as the daily step's CheckOwner reads it).
+            if (definition.Story != null && record is { State: ChronicleEventState.Active, StoryDeclined: false, Assaulted: false }
+                && !AttackerBesieges(definition)
+                && string.Equals(_world.GetOwnerKingdomId(definition.TargetSettlementId!), definition.Defender, StringComparison.Ordinal))
+                offers.Add(new ChronicleStoryOffer(definition.Id, definition.Story.MissionId, definition.Title, definition.TargetSettlementId, definition.Attackers));
+        }
+
+        return offers;
+    }
+
+    /// <summary>"Let fate decide": the window stays open and the map or its fate decides it. False when no Active story window has this id.</summary>
+    public bool DeclineStory(string? eventId)
+    {
+        var record = ActiveStoryWindow(eventId, out _);
+        if (record == null)
+            return false;
+
+        record.StoryDeclined = true;
+        _logger.LogInfo($"[WarChronicle] '{eventId}': the player let fate decide the story offer.");
+        return true;
+    }
+
+    /// <summary>
+    /// The player won the window's story mission: Held at once, with its effects. False when no Active story window has this id, or the
+    /// chronicle step was skipped (switched off, War Ended, a bad clock). A lost mission needs no call: the transfer to the attacker
+    /// resolves the window Fell through <see cref="OnTargetOwnerChanged"/>.
+    /// </summary>
+    public bool ResolveStoryWon(string? eventId)
+    {
+        var resolved = false;
+        Guarded("story result", now =>
+        {
+            var record = ActiveStoryWindow(eventId, out var definition);
+            if (record == null || CheckOwner(definition!, record, now))
+                return;
+
+            Resolve(definition!, record, ChronicleEventState.Held, now, true, "the player won the story mission");
+            resolved = true;
+        });
+        return resolved;
+    }
+
+    public bool ConfirmStoryWindow(string? eventId)
+    {
+        var open = false;
+        Guarded("story transfer", now =>
+        {
+            var record = ActiveStoryWindow(eventId, out var definition);
+            open = record != null && !CheckOwner(definition!, record, now);
+        });
+        return open;
+    }
+
+    private ChronicleEventRecord? ActiveStoryWindow(string? eventId, out ChronicleEventDefinition? definition)
+    {
+        definition = _config.GetEvents().FirstOrDefault(d => d.Story != null && string.Equals(d.Id, eventId, StringComparison.Ordinal));
+        var record = definition == null ? null : _store.Get(definition.Id);
+        return record?.State == ChronicleEventState.Active ? record : null;
+    }
 
     private void MarkAssaultIfBesieged(ChronicleEventDefinition definition, ChronicleEventRecord record)
     {

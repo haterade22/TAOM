@@ -399,6 +399,11 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
         HintText = "During a siege window, how much more the attackers' armies want to besiege the target and the defender's armies want to defend it once it is attacked. 1 turns the focus off. Needs AI Strategic Intelligence on. Default 1.4.")]
     public float WarChronicleArmyFocus { get; set; } = 1.4f;
 
+    [SettingPropertyGroup("War of the Ring/War Chronicle")]
+    [SettingPropertyBool("{=taom_wc_mcm_story}Offer Story Missions", Order = 3, RequireRestart = false,
+        HintText = "{=taom_wc_mcm_story_hint}When a great siege opens (the Battle of the Hornburg), offers you its battle to fight yourself. A win holds the fortress; a loss gives it to the attackers. If you let fate decide, the map decides, and a siege that nobody attacks ends as in the book. Off: no offer, and the map and fate decide. Not offered in co-op or while enlisted. Default on.")]
+    public bool WarChronicleStoryMissions { get; set; } = true;
+
     // --- War of the Ring / War Pledge (#1113) ---
 
     [SettingPropertyGroup("War of the Ring/War Pledge")]
@@ -1301,7 +1306,7 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
     // GroupOrder 78 is used by no other group (77 is Notable Services, 76 War of the Ring/Armies; checked 2026-10-26).
     [SettingPropertyGroup("World/Bandit Voices", GroupOrder = 78)]
     [SettingPropertyBool("Enable Bandit Clan Greetings", Order = 0, RequireRestart = false,
-        HintText = "When enabled, if you attack on land a bandit party you have not dealt with before and it belongs to one of the eight talking clans (Dunlending, Rhun, Haradrim, Gundabad, Umbar, Gondor deserters, Blacklocks, Mirkwood Stalkers), there is a one in four chance that it greets you in its own words, and your ultimatum is vanilla's reply to that kind of greeting. With Encounter Lines also on, these clans greet you in a line chosen by your people and your side on half of these meetings, and keep vanilla's greeting on the other quarter. Feral Orcs and looters, which have no greetings of their own, greet you that way on three meetings in four. Spiders and wild trolls are unchanged. Applies to the next bandit conversation. Text only: nothing else about the encounter changes. When off, every greeting is vanilla's. The lines bandits use when they rob you are separate data and always apply. Default: on.")]
+        HintText = "When enabled, if you attack on land a bandit party you have not dealt with before and it belongs to one of the eight talking clans (Dunlending, Rhun, Haradrim, Gundabad, Umbar, Gondor deserters, Blacklocks, Mirkwood Stalkers), there is a one in four chance that it greets you in its own words, and your ultimatum is vanilla's reply to that kind of greeting. With Encounter Lines also on, these clans greet you in a line chosen by your people and your side on half of these meetings, and keep vanilla's greeting on the other quarter. Feral Orcs and looters, which have no greetings of their own, greet you that way on three meetings in four. Spiders and wild trolls are unchanged. Applies to the next bandit conversation. Text only: nothing else about the encounter changes. When off, every greeting is vanilla's. The lines bandits use when they rob you are separate data; with Encounter Lines on, half of these robberies use its lines instead. Default: on.")]
     public bool EnableBanditGreetings { get; set; } = true;
 
     // --- World / Encounter Lines (Patch149) ---
@@ -1309,7 +1314,7 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
     // GroupOrder 89 is used by no other group (78 is Bandit Voices; 0-5, 9, 10, 15, 19-88 and 100 were taken on 2026-11-13).
     [SettingPropertyGroup("World/Encounter Lines", GroupOrder = 89)]
     [SettingPropertyBool("Enable Encounter Lines", Order = 0, RequireRestart = false,
-        HintText = "When enabled, lords you meet on the map speak in the voice of their people and by who you are to them: their liege, an ally, a rival, a foe, or one of their own. Caravans and villagers greet you this way half of the time on a first meeting on land, and speak their own words when they surrender to a robbery. Bandit clans rob you with their own threats, and a hideout boss challenges you in the clan's own words. Bandit greetings when you attack a bandit party also need Enable Bandit Clan Greetings (World/Bandit Voices) on. Lords in your clan, companions, wanderers and notables, and conversations inside a settlement, keep vanilla's lines. Applies to the next conversation. Text only: nothing else about the encounter changes. When off, every line is vanilla's. Default: on.")]
+        HintText = "When enabled, lords you meet on the map speak in the voice of their people and by who you are to them: their liege, an ally, a rival, a foe, or one of their own. Caravans and villagers greet you this way half of the time on a first meeting on land, and speak their own words when they surrender to a robbery. Bandit clans rob you with their own threats, and a hideout boss challenges you in the clan's own words. Bandit greetings when you attack a bandit party also need Enable Bandit Clan Greetings (World/Bandit Voices) on. Lords in your clan, companions, wanderers and notables keep vanilla's lines, and so do lords you speak to inside a settlement; the hideout boss still speaks the clan's own words. Applies to the next conversation. Text only: nothing else about the encounter changes, but TAOM's lines are not voiced, so a line that replaces a voiced vanilla line is silent. When off, every line is vanilla's. Default: on.")]
     public bool EnableEncounterLines { get; set; } = true;
 
     // --- World / Inn Rounds (#901) ---
