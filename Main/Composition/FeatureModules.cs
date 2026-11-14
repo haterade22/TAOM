@@ -110,5 +110,6 @@ internal static class FeatureModules
         new Features.Realms.RealmsModule(),
         new Features.HeroAuras.HeroAurasModule(),
         new Features.HallSeats.HallSeatsModule(),
+        new Features.CheatMenu.CheatMenuModule(),
     };
 }

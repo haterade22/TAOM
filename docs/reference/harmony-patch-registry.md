@@ -2041,6 +2041,16 @@ Applied from `SubModule.cs` in the standard `OnGameInitializationFinished` batch
 
 **Co-op.** The prefix skips a replicated mutation (prisoner XP), and the guard reads per-peer settings, so it is `GatedForCoop` in `CoopVetoClassificationTests`: while `ICoopSessionProvider.ShouldDeferToHost` holds, every stack runs vanilla. **Tests:** `DesertionConformityPatchTests` (blocked, allowed, co-op, null and throw paths; target signature and parameter names, the constant true return, both prisoner ticks still calling it, the category attaching only this prefix and the JIT). **ACTIVE**, not yet checked in game.
 
+## Patch151_CheatMenu
+
+**Target (v1.5.6 decompile; the same method Patch36 patches):** `protected virtual INavigationElement[] SandBox.View.Map.Navigation.MapNavigationHandler.OnCreateElements()`, one postfix class `Patch151_CheatMenuNavigation` in `Main/Features/CheatMenu/Hooks/`, category `Patch151_CheatMenu` (GameInit, declared by `CheatMenuModule`), `[ClientOnly]`. 2026-11-14. Feature: [cheat-menu.md](../features/cheat-menu.md).
+
+**Why.** Appends the "Cheats" navigation element after vanilla's (and after Patch36's Fiefs button) while `CheatMenuOpener.IsShown` holds: the MCM switch Enable Cheat Menu is on and `CoopSessionPolicy.IsSinglePlayerAuthority`. Otherwise the array is returned unchanged, so a player with the switch off never sees the button. The decision is the pure `AppendWhenShown` (no duplicate id, a null element from the factory leaves the bar). The element comes from `ICheatMenuNavigationElementFactory`, resolved at use: TAOM.Client's on a client, the null factory on a dedicated server.
+
+**Callers and thread.** The `MapNavigationHandler` constructor (NavalDLC's override calls the base), once per map screen; main thread. The postfix runs inside the constructor, reads no handler state and never throws out of it: a failure is logged once and leaves `__result` as vanilla built it.
+
+**Co-op.** Reads the co-op providers live through `CheatMenuService.IsSinglePlayer`; in a co-op session the bar stays vanilla. **Tests:** `CheatMenuWiringTests` (append, not shown, duplicate, null element, module and category). **ACTIVE**, not yet checked in game.
+
 <!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
 
 ## Referenced by

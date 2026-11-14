@@ -1,0 +1,145 @@
+using TAOM.Adapters;
+using TAOM.Core.Logging;
+using TAOM.Features.CoopInterop;
+using TAOM.Features.SpecialResources;
+
+namespace TAOM.Features.CheatMenu;
+
+/// <summary>What a cheat did, for the menu (CheatMenuTexts) and the console (CheatMenuCheats) to word.</summary>
+public enum CheatOutcomeKind
+{
+    Done,
+    CoopRefused,
+    BadAmount,
+    UnknownTarget,
+    NothingToDo,
+    TeleportRefused,
+}
+
+/// <param name="Name">What was given or reached (a troop, a resource, a kingdom, a settlement), when there is one.</param>
+/// <param name="Number">The result's number: gold now, troops added, soldiers healed, lords changed, the resource's new balance.</param>
+public sealed record CheatOutcome(CheatOutcomeKind Kind, string? Name = null, float Number = 0, TeleportRefusal Refusal = TeleportRefusal.None)
+{
+    public bool Ok => Kind == CheatOutcomeKind.Done;
+}
+
+/// <summary>
+/// The cheats behind both the menu buttons and the <c>taom.cheat_*</c> console commands (docs/features/cheat-menu.md). Every
+/// action refuses in co-op (<see cref="CoopSessionPolicy.IsSinglePlayerAuthority"/>): TAOM has no message that carries a cheat
+/// to the host, and a write on one peer desyncs the campaign. Amounts are checked here, before any engine call.
+/// </summary>
+public sealed class CheatMenuService
+{
+    public const int MaxGold = 1_000_000;
+    public const int MaxInfluenceOrRenown = 10_000;
+    public const int MaxTroops = 500;
+    public const int MaxRelation = 100;
+    public const float MaxResource = 10_000f;
+
+    private readonly ICheatWorldAdapter _world;
+    private readonly ISpecialResourceService _resources;
+    private readonly ICoopSessionProvider _coop;
+    private readonly IDedicatedServerProvider _dedicated;
+    private readonly IModLogger _logger;
+
+    public CheatMenuService(ICheatWorldAdapter world, ISpecialResourceService resources, ICoopSessionProvider coop,
+        IDedicatedServerProvider dedicated, IModLogger logger)
+    {
+        _world = world;
+        _resources = resources;
+        _coop = coop;
+        _dedicated = dedicated;
+        _logger = logger;
+    }
+
+    /// <summary>Read live on every call (ICoopSessionProvider's contract).</summary>
+    public bool IsSinglePlayer => CoopSessionPolicy.IsSinglePlayerAuthority(_coop, _dedicated);
+
+    public CheatOutcome GiveGold(int amount)
+    {
+        if (!IsSinglePlayer) return Refused();
+        if (amount < 1 || amount > MaxGold) return new CheatOutcome(CheatOutcomeKind.BadAmount, Number: MaxGold);
+        var now = _world.GiveGold(amount);
+        return now == null ? new CheatOutcome(CheatOutcomeKind.NothingToDo) : Log("gold", new CheatOutcome(CheatOutcomeKind.Done, Number: now.Value));
+    }
+
+    public CheatOutcome AddInfluence(int amount)
+    {
+        if (!IsSinglePlayer) return Refused();
+        if (amount < 1 || amount > MaxInfluenceOrRenown) return new CheatOutcome(CheatOutcomeKind.BadAmount, Number: MaxInfluenceOrRenown);
+        return _world.AddInfluence(amount)
+            ? Log("influence", new CheatOutcome(CheatOutcomeKind.Done, Number: amount))
+            : new CheatOutcome(CheatOutcomeKind.NothingToDo);
+    }
+
+    public CheatOutcome AddRenown(int amount)
+    {
+        if (!IsSinglePlayer) return Refused();
+        if (amount < 1 || amount > MaxInfluenceOrRenown) return new CheatOutcome(CheatOutcomeKind.BadAmount, Number: MaxInfluenceOrRenown);
+        return _world.AddRenown(amount)
+            ? Log("renown", new CheatOutcome(CheatOutcomeKind.Done, Number: amount))
+            : new CheatOutcome(CheatOutcomeKind.NothingToDo);
+    }
+
+    public CheatOutcome AddTroops(bool elite, int count)
+    {
+        if (!IsSinglePlayer) return Refused();
+        if (count < 1 || count > MaxTroops) return new CheatOutcome(CheatOutcomeKind.BadAmount, Number: MaxTroops);
+        var troop = _world.AddCultureTroops(elite, count);
+        return troop == null
+            ? new CheatOutcome(CheatOutcomeKind.NothingToDo)
+            : Log("troops", new CheatOutcome(CheatOutcomeKind.Done, troop, count));
+    }
+
+    public CheatOutcome Heal()
+    {
+        if (!IsSinglePlayer) return Refused();
+        return Log("heal", new CheatOutcome(CheatOutcomeKind.Done, Number: _world.HealMainParty()));
+    }
+
+    public CheatOutcome AddRelation(string? kingdomId, int amount)
+    {
+        if (!IsSinglePlayer) return Refused();
+        if (amount == 0 || amount < -MaxRelation || amount > MaxRelation) return new CheatOutcome(CheatOutcomeKind.BadAmount, Number: MaxRelation);
+        if (string.IsNullOrWhiteSpace(kingdomId)) return new CheatOutcome(CheatOutcomeKind.UnknownTarget);
+        var lords = _world.AddRelationWithKingdom(kingdomId!, amount);
+        return lords == null
+            ? new CheatOutcome(CheatOutcomeKind.UnknownTarget, kingdomId)
+            : Log("relation", new CheatOutcome(CheatOutcomeKind.Done, kingdomId, lords.Value));
+    }
+
+    /// <summary>
+    /// The main hero's own resource (special resources are per hero and resolved by kingdom, then culture), through the
+    /// service's capped grant: never above the resource's cap, never below 0.
+    /// </summary>
+    public CheatOutcome AddSpecialResource(float amount)
+    {
+        if (!IsSinglePlayer) return Refused();
+        if (float.IsNaN(amount) || amount < 1f || amount > MaxResource) return new CheatOutcome(CheatOutcomeKind.BadAmount, Number: MaxResource);
+        var (heroId, kingdomId, cultureId) = _world.MainHeroIds();
+        if (heroId == null) return new CheatOutcome(CheatOutcomeKind.NothingToDo);
+        var result = _resources.GrantAmount(heroId, kingdomId, cultureId, amount);
+        return result.Resolved
+            ? Log("special resource", new CheatOutcome(CheatOutcomeKind.Done, result.DisplayName, result.After))
+            : new CheatOutcome(CheatOutcomeKind.NothingToDo);
+    }
+
+    public CheatOutcome Teleport(string? settlementId)
+    {
+        if (!IsSinglePlayer) return Refused();
+        var refusal = CheatMenuPolicy.CheckTeleport(_world.ReadTeleportState());
+        if (refusal != TeleportRefusal.None) return new CheatOutcome(CheatOutcomeKind.TeleportRefused, Refusal: refusal);
+        var name = string.IsNullOrWhiteSpace(settlementId) ? null : _world.SettlementName(settlementId!);
+        if (name == null) return new CheatOutcome(CheatOutcomeKind.UnknownTarget, settlementId);
+        _world.TeleportToGate(settlementId!);
+        return Log("teleport", new CheatOutcome(CheatOutcomeKind.Done, name));
+    }
+
+    private static CheatOutcome Refused() => new(CheatOutcomeKind.CoopRefused);
+
+    private CheatOutcome Log(string what, CheatOutcome outcome)
+    {
+        _logger.LogInfo($"[CheatMenu] {what}: {outcome.Name ?? "-"} {outcome.Number:0.##}");
+        return outcome;
+    }
+}

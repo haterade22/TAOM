@@ -3192,4 +3192,11 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
         HintText = "{=taom_battlehud_mcm_colour_mode_hint}Changes only three rings of the round battle HUD: your player health, mount health and shield. Default keeps their stone look and colours. Each other choice draws those rings in flat colours that are easier to tell apart for that type of colour vision, on a dark track. The rings keep their order and fill as before, so their place and length also tell them apart. The career ability centre, the ammo count and all other screens do not change. A change applies in the current battle, with no restart.")]
     public Dropdown<string> BattleHudColourMode { get; set; } = new Dropdown<string>(
         TAOM.Features.BattleHud.UI.BattleHudColourPalette.Choices, 0);
+
+    // --- Cheat Menu (docs/features/cheat-menu.md) ---
+
+    [SettingPropertyGroup("{=taom_cheat_mcm_group}Cheat Menu", GroupOrder = 90)]
+    [SettingPropertyBool("{=taom_cheat_mcm_enable}Enable Cheat Menu", Order = 0, RequireRestart = false,
+        HintText = "{=taom_cheat_mcm_enable_hint}Adds a Cheats button to the bottom bar of the campaign map. It opens a menu that teleports your party to a settlement and gives gold, troops, your special resource, influence, renown and relations, and heals your party. Cheats change your save, and most cannot be undone. The button appears the next time the campaign map opens, for example after loading a save. Single-player only. Default: off.")]
+    public bool EnableCheatMenu { get; set; } = false;
 }

@@ -2410,6 +2410,51 @@
 	<string id="taom_bugreport_close" text="{=taom_bugreport_close}Close" />
 	<string id="taom_bugreport_open_folder" text="{=taom_bugreport_open_folder}Open folder" />
 
+	<!-- Cheat Menu (docs/features/cheat-menu.md) -->
+	<string id="taom_cheat_bad_amount" text="{=taom_cheat_bad_amount}That amount is not allowed. The limit is {MAX}." />
+	<string id="taom_cheat_coop" text="{=taom_cheat_coop}Cheats are not available in co-op." />
+	<string id="taom_cheat_failed" text="{=taom_cheat_failed}That cheat failed. The TAOM log has the details." />
+	<string id="taom_cheat_done" text="{=taom_cheat_done}Done: {NAME} {NUMBER}" />
+	<string id="taom_cheat_mcm_enable" text="{=taom_cheat_mcm_enable}Enable Cheat Menu" />
+	<string id="taom_cheat_mcm_enable_hint" text="{=taom_cheat_mcm_enable_hint}Adds a Cheats button to the bottom bar of the campaign map. It opens a menu that teleports your party to a settlement and gives gold, troops, your special resource, influence, renown and relations, and heals your party. Cheats change your save, and most cannot be undone. The button appears the next time the campaign map opens, for example after loading a save. Single-player only. Default: off." />
+	<string id="taom_cheat_mcm_group" text="{=taom_cheat_mcm_group}Cheat Menu" />
+	<string id="taom_cheat_menu_text" text="{=taom_cheat_menu_text}TAOM cheat menu. Cheats change your save, and most cannot be undone." />
+	<string id="taom_cheat_nav_busy" text="{=taom_cheat_nav_busy}The cheat menu opens from the free campaign map." />
+	<string id="taom_cheat_nav_label" text="{=taom_cheat_nav_label}Cheats" />
+	<string id="taom_cheat_nothing" text="{=taom_cheat_nothing}Nothing changed: your hero has nothing this cheat can give to." />
+	<string id="taom_cheat_opt_back" text="{=taom_cheat_opt_back}Back" />
+	<string id="taom_cheat_opt_close" text="{=taom_cheat_opt_close}Close" />
+	<string id="taom_cheat_opt_gold" text="{=taom_cheat_opt_gold}Gold: +10,000 denars" />
+	<string id="taom_cheat_opt_heal" text="{=taom_cheat_opt_heal}Heal your party and your heroes" />
+	<string id="taom_cheat_opt_influence" text="{=taom_cheat_opt_influence}Influence: +100" />
+	<string id="taom_cheat_opt_relation" text="{=taom_cheat_opt_relation}Relations: +20 with every lord of a kingdom..." />
+	<string id="taom_cheat_opt_renown" text="{=taom_cheat_opt_renown}Renown: +100" />
+	<string id="taom_cheat_opt_resource" text="{=taom_cheat_opt_resource}Special resource: +1,000" />
+	<string id="taom_cheat_opt_teleport" text="{=taom_cheat_opt_teleport}Teleport to a settlement..." />
+	<string id="taom_cheat_opt_troops" text="{=taom_cheat_opt_troops}Troops..." />
+	<string id="taom_cheat_pick_cancel" text="{=taom_cheat_pick_cancel}Cancel" />
+	<string id="taom_cheat_pick_kingdom" text="{=taom_cheat_pick_kingdom}Choose a kingdom" />
+	<string id="taom_cheat_pick_ok" text="{=taom_cheat_pick_ok}Choose" />
+	<string id="taom_cheat_pick_settlement" text="{=taom_cheat_pick_settlement}Choose where to teleport" />
+	<string id="taom_cheat_teleport_text" text="{=taom_cheat_teleport_text}Teleport to a settlement's gate. You arrive outside and enter as usual." />
+	<string id="taom_cheat_tp_army" text="{=taom_cheat_tp_army}Leave the army first. Only an army's leader can teleport it." />
+	<string id="taom_cheat_tp_camp" text="{=taom_cheat_tp_camp}Break camp first, then teleport." />
+	<string id="taom_cheat_tp_castles" text="{=taom_cheat_tp_castles}Castles..." />
+	<string id="taom_cheat_tp_encounter" text="{=taom_cheat_tp_encounter}Finish the battle or encounter first." />
+	<string id="taom_cheat_tp_mission" text="{=taom_cheat_tp_mission}You cannot teleport during a battle or a scene." />
+	<string id="taom_cheat_tp_nocampaign" text="{=taom_cheat_tp_nocampaign}Start or load a campaign first." />
+	<string id="taom_cheat_tp_parked" text="{=taom_cheat_tp_parked}You cannot teleport while you serve in another lord's party." />
+	<string id="taom_cheat_tp_prisoner" text="{=taom_cheat_tp_prisoner}You cannot teleport while you are a prisoner." />
+	<string id="taom_cheat_tp_sea" text="{=taom_cheat_tp_sea}Go ashore first, then teleport." />
+	<string id="taom_cheat_tp_settlement" text="{=taom_cheat_tp_settlement}Leave the settlement first, then teleport." />
+	<string id="taom_cheat_tp_siege" text="{=taom_cheat_tp_siege}End the siege first." />
+	<string id="taom_cheat_tp_towns" text="{=taom_cheat_tp_towns}Towns..." />
+	<string id="taom_cheat_tp_villages" text="{=taom_cheat_tp_villages}Villages..." />
+	<string id="taom_cheat_troops_basic" text="{=taom_cheat_troops_basic}+10 basic recruits" />
+	<string id="taom_cheat_troops_elite" text="{=taom_cheat_troops_elite}+10 elite recruits" />
+	<string id="taom_cheat_troops_text" text="{=taom_cheat_troops_text}Add recruits of your culture to your party." />
+	<string id="taom_cheat_unknown" text="{=taom_cheat_unknown}Nothing called &quot;{NAME}&quot; was found." />
+
 	<!-- Settlement Food — labeled line in the town food-breakdown tooltip (TaomSettlementFoodModel) -->
 	<string id="taom_settlement_food_adjustment" text="{=taom_settlement_food_adjustment}Settlement food (TAOM)" />
 
