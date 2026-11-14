@@ -1,9 +1,14 @@
-# NOTE: this reads the REPO copy of settlements.xml, which CLAUDE.md flags as a stale
-# shadow -- the file the game loads is <game>\Modules\TAOM_Map\ModuleData\settlements.xml.
-# Pass -SettlementsXml to point at the live one.
+# Reads the file the game loads, <game>\Modules\TAOM_Map\ModuleData\settlements.xml, under
+# $env:BANNERLORD_GAME_DIR (README.md). Pass -SettlementsXml to read another copy.
 param(
-    [string]$SettlementsXml = (Join-Path (Split-Path -Parent $PSScriptRoot) 'Main\_Module\ModuleData\settlements.xml')
+    [string]$SettlementsXml = $(if ($env:BANNERLORD_GAME_DIR -and $env:BANNERLORD_GAME_DIR.Trim()) {
+        Join-Path $env:BANNERLORD_GAME_DIR 'Modules\TAOM_Map\ModuleData\settlements.xml' } else { '' })
 )
+
+if (-not $SettlementsXml) {
+    Write-Error "BANNERLORD_GAME_DIR is not set. Set it to your Bannerlord install root, or pass -SettlementsXml."
+    exit 2
+}
 
 if (-not (Test-Path $SettlementsXml)) {
     Write-Error "settlements.xml not found at $SettlementsXml. Pass -SettlementsXml with the path you mean."

@@ -924,7 +924,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.aserai_lance_1_t5" />
+                    id="Item.wm_harad_spear_b01" />
                 <equipment
                     slot="Item1"
                     id="Item.ornate_adarga" />
@@ -1564,7 +1564,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.aserai_lance_1_t5" />
+                    id="Item.wm_harad_spear_b01" />
                 <equipment
                     slot="Item1"
                     id="Item.ornate_adarga" />

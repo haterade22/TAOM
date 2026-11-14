@@ -3,6 +3,7 @@ using System.Reflection;
 using DryIoc;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
+using TAOM.Core.Diagnostics;
 using TAOM.Core.Logging;
 using TAOM.Features.TaomBuildings.Hooks;
 using Arg = NSubstitute.Arg;
@@ -55,5 +56,32 @@ public class TaomBuildingUiHooksTests
 
         Assert.AreEqual(1, calls, "a failed factory is not re-invoked");
         logger.Received(1).LogWarning(Arg.Is<string>(s => s.Contains("UI hook could not be built")));
+    }
+
+    [TestMethod]
+    public void Hook_FactoryThrows_ReportsTheUiHookOnce()
+    {
+        var saved = SelfDisables.Ledger;
+        SelfDisables.Ledger = new SelfDisableLedger();
+        try
+        {
+            using var container = new Container();
+            container.RegisterInstance(Substitute.For<IModLogger>());
+            ContainerField!.SetValue(null, container);
+            TaomBuildingUiHooks.Initialize(() => throw new InvalidOperationException("config read failed"));
+
+            Assert.IsNull(TaomBuildingUiHooks.Hook);
+            Assert.IsNull(TaomBuildingUiHooks.Hook);
+            Assert.IsNull(TaomBuildingUiHooks.Hook);
+
+            var taken = SelfDisables.Ledger.Take();
+            Assert.AreEqual(1, taken.Count);
+            Assert.AreEqual("Patch108_TaomBuildings.UiHook", taken[0].Id);
+            StringAssert.Contains(taken[0].Reason, "config read failed");
+        }
+        finally
+        {
+            SelfDisables.Ledger = saved;
+        }
     }
 }

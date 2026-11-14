@@ -13,7 +13,7 @@ namespace TAOM.Features.WarChronicle;
 
 /// <summary>
 /// The War Chronicle payload as JSON: <c>{"v":1,"effects":[{"s","k","kind","m","end"}],"baselines":{},
-/// "rally":{"tiers":{}},"chronicle":[{"id","s","open","close","a","res"}],"phases":{"IsengardWar":day,"FullWar":day},
+/// "rally":{"tiers":{}},"chronicle":[{"id","s","open","close","a","res","sd"}],"phases":{"IsengardWar":day,"FullWar":day},
 /// "daily":{"tick":day,"chronicle":day}}</c>. Pure. Parsing is forgiving by
 /// section: a bad section resets alone with a warning, a bad row inside a section is skipped alone, and
 /// nothing here throws on save content. Effect kinds are saved by name; an unknown name (a kind from a
@@ -131,6 +131,8 @@ internal static class WarChronicleSaveCodec
             if (record.Assaulted)
                 row["a"] = true;
             Day(row, "res", record.ResolvedDay);
+            if (record.StoryDeclined)
+                row["sd"] = true;
             rows.Add(row);
         }
 
@@ -365,7 +367,11 @@ internal static class WarChronicleSaveCodec
         }
 
         var assaulted = row["a"] is JValue { Type: JTokenType.Boolean } a && (bool)a.Value!;
-        record = new ChronicleEventRecord(id, state) { OpenDay = open, CloseDay = close, Assaulted = assaulted, ResolvedDay = resolved };
+        var declined = row["sd"] is JValue { Type: JTokenType.Boolean } sd && (bool)sd.Value!;
+        record = new ChronicleEventRecord(id, state)
+        {
+            OpenDay = open, CloseDay = close, Assaulted = assaulted, ResolvedDay = resolved, StoryDeclined = declined,
+        };
         return true;
     }
 

@@ -1,8 +1,10 @@
 <Prefab>
   <Window>
-    <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Sprite="BlankWhiteSquare" Color="#00000099">
+    <!--The overlay keeps this movie above each page movie and moves EncyclopediaBackdrop under all of them (#1212).-->
+    <EncyclopediaOverlayWidget Id="EncyclopediaOverlay" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" BackdropWidget="EncyclopediaBackdrop" DoNotAcceptEvents="true">
       <Children>
-        <Widget Id="EncyclopediaFrame" SuggestedWidth="1728" SuggestedHeight="972" HorizontalAlignment="Center" VerticalAlignment="Center" DoNotAcceptEvents="true">
+        <Widget Id="EncyclopediaBackdrop" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Sprite="BlankWhiteSquare" Color="#00000099" />
+        <EncyclopediaFrameAnchorWidget Id="EncyclopediaFrame" SuggestedWidth="1728" SuggestedHeight="972" HorizontalAlignment="Center" VerticalAlignment="Top" PositionYOffset="54" FrameOffset="0" DoNotAcceptEvents="true">
           <Children>
             <EncyclopediaStonePanelWidget Id="EncyclopediaHeader" WidthSizePolicy="StretchToParent" SuggestedHeight="60" PositionYOffset="12" Sprite="ec_header" DoNotAcceptEvents="true" />
             <ImageWidget SuggestedWidth="146" SuggestedHeight="2" PositionXOffset="1068" PositionYOffset="42" Sprite="fs_divider_thin" DoNotAcceptEvents="true" />
@@ -64,8 +66,8 @@
               </Children>
             </ButtonWidget>
           </Children>
-        </Widget>
+        </EncyclopediaFrameAnchorWidget>
       </Children>
-    </Widget>
+    </EncyclopediaOverlayWidget>
   </Window>
 </Prefab>

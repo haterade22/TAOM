@@ -28,4 +28,7 @@ public interface IWarChronicleSettingsProvider
     /// value falls back to the default 1.4).
     /// </summary>
     float ArmyFocusMultiplier { get; }
+
+    /// <summary>Whether a story window offers its mission to the player (#1105 slice 4). Off: no offer; the map and the fate still decide.</summary>
+    bool StoryOffersEnabled { get; }
 }

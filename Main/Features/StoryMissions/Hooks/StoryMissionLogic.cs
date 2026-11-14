@@ -20,16 +20,21 @@ public sealed class StoryMissionLogic : MissionLogic
     private readonly LongDefeatSession _session;
     private readonly StoryEndWatch _watch;
     private readonly IModLogger _logger;
+    private readonly Action<StoryOutcome>? _onVerdict;
     private bool _cueShown;
     private bool _faultLogged;
+    private bool _verdictReported;
 
-    internal StoryMissionLogic(LongDefeatSession session, StorySide side, IModLogger logger, IOutcomeLog outcomes, string missionKey, string? music)
+    /// <param name="onVerdict">Called once, on the main thread, with the mission's verdict: when the run has one, or at an exit before it.</param>
+    internal StoryMissionLogic(LongDefeatSession session, StorySide side, IModLogger logger, IOutcomeLog outcomes, string missionKey, string? music,
+        Action<StoryOutcome>? onVerdict = null)
     {
         _session = session;
         _logger = logger;
         _watch = new StoryEndWatch(side, logger, outcomes, missionKey);
         MissionKey = missionKey;
         Music = music;
+        _onVerdict = onVerdict;
     }
 
     /// <summary>The launcher's serial for this mission, the key of its check lines.</summary>
@@ -49,6 +54,7 @@ public sealed class StoryMissionLogic : MissionLogic
             {
                 _cueShown = true;
                 InformationManager.DisplayMessage(new InformationMessage(new TextObject(CueText(verdict)).ToString()));
+                ReportVerdict();
             }
         }
         catch (Exception ex)
@@ -63,12 +69,30 @@ public sealed class StoryMissionLogic : MissionLogic
     {
         base.OnEndMission();
         _watch.Left(_session.Result, _session.Fault != null);
+        ReportVerdict();
     }
 
     public override void OnRemoveBehavior()
     {
         base.OnRemoveBehavior();
         _watch.Left(_session.Result, _session.Fault != null);
+        ReportVerdict();
+    }
+
+    private void ReportVerdict()
+    {
+        if (_verdictReported || _onVerdict == null || !(_watch.Verdict is { } verdict))
+            return;
+
+        _verdictReported = true;
+        try
+        {
+            _onVerdict(verdict);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError($"[StoryMissions] the verdict callback failed ({ex.GetType().Name}: {ex.Message}) {ex.StackTrace}");
+        }
     }
 
     private static string CueText(StoryOutcome verdict) => verdict switch

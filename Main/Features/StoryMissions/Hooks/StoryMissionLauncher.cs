@@ -20,8 +20,9 @@ namespace TAOM.Features.StoryMissions.Hooks;
 
 /// <summary>
 /// Opens a story mission (#1105) inside a loaded campaign: the Long Defeat's siege behavior list (a cut-down copy of vanilla's, see
-/// <see cref="LongDefeatMissionLauncher"/>) under <c>MissionState.OpenNew</c> with no map event, as Host Review opens its mission. Its only caller is the
-/// dev menu, which refuses an encounter, a map event, enlistment and any other open menu, so the mission opens from the campaign map. It never
+/// <see cref="LongDefeatMissionLauncher"/>) under <c>MissionState.OpenNew</c> with no map event, as Host Review opens its mission. Its callers are the
+/// dev menu and the story offer menu (<see cref="StoryOfferBehavior"/>); both open it from a menu option on the campaign map, after
+/// refusing an encounter, a map event and enlistment. It never
 /// assigns <c>Game.PlayerTroop</c>, which in a campaign is the player's hero, and each launch gets its own <see cref="LongDefeatSession"/>.
 /// The run ends the mission, not the game, so the player lands back on the map. Writes nothing to the campaign. Never throws.
 /// </summary>
@@ -40,7 +41,8 @@ internal sealed class StoryMissionLauncher
     }
 
     /// <summary>True once the mission is open. An unknown id, the attacking side, no campaign, a missing culture or troop, or an engine failure logs an error and returns false.</summary>
-    public bool Launch(string missionId, bool autoplay)
+    /// <param name="onVerdict">Optional: called once on the main thread with the mission's verdict (the story offer applies it after the mission).</param>
+    public bool Launch(string missionId, bool autoplay, Action<StoryOutcome>? onVerdict = null)
     {
         try
         {
@@ -64,7 +66,7 @@ internal sealed class StoryMissionLauncher
             var attacker = Combatant("{=!}Story mission, attackers", attackerCulture, BattleSideEnum.Attacker);
             var key = "story" + Interlocked.Increment(ref _missions);
             _logger.LogInfo($"[StoryMissions] launching {definition.Scene} for '{definition.Id}' ({key}, autoplay {autoplay})");
-            var opened = MissionState.OpenNew(StoryMission.MissionName, Record(definition.Scene), opening => CreateBehaviors(opening, plan, session, definition.Side, defender, attacker, key, definition.Music));
+            var opened = MissionState.OpenNew(StoryMission.MissionName, Record(definition.Scene), opening => CreateBehaviors(opening, plan, session, definition.Side, defender, attacker, key, definition.Music, onVerdict));
 
             // Both are needed: a dead player may take a soldier, and IsFriendlyMission true makes Tab end the mission and leaves the order bar empty.
             opened.SetPlayerCanTakeControlOfAnotherAgentWhenDead();
@@ -85,7 +87,7 @@ internal sealed class StoryMissionLauncher
     }
 
     private IReadOnlyList<MissionBehavior> CreateBehaviors(Mission mission, RunPlan plan, LongDefeatSession session, StorySide side, CustomBattleCombatant defender,
-        CustomBattleCombatant attacker, string key, string? music) =>
+        CustomBattleCombatant attacker, string key, string? music, Action<StoryOutcome>? onVerdict) =>
         new MissionBehavior[]
         {
             new BattleSpawnLogic("battle_set"),
@@ -103,7 +105,7 @@ internal sealed class StoryMissionLauncher
             new MissionSiegeEnginesLogic(Weapons(DefaultSiegeEngineTypes.Catapult, 4, DefaultSiegeEngineTypes.Trebuchet, 2),
                 Weapons(DefaultSiegeEngineTypes.Ram, 1, DefaultSiegeEngineTypes.SiegeTower, 2)),
             new LongDefeatMissionLogic(plan, session, _logger, new HostedRunOutcomeLog(_outcomes), mission.EndMission, key),
-            new StoryMissionLogic(session, side, _logger, _outcomes, key, music),
+            new StoryMissionLogic(session, side, _logger, _outcomes, key, music, onVerdict),
         };
 
     private static List<MissionSiegeWeapon> Weapons(SiegeEngineType first, int firstCount, SiegeEngineType second, int secondCount) =>

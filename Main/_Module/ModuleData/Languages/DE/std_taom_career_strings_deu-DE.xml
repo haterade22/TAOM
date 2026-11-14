@@ -1963,5 +1963,9 @@
     <string id="taom_crca_t3_b_p2" text="-15% Truppensold." />
     <string id="taom_crca_t3_b_p3" text="+15% Gruppenbewegungsgeschwindigkeit." />
     <string id="taom_crca_t3_b_p4" text="+9 maximale Gesundheit." />
+    <string id="taom_career_passive_label" text="Passive" />
+    <string id="taom_career_tier_word" text="Tier" />
+    <string id="taom_career_choose_one" text="Choose one" />
+    <string id="taom_career_choose_count" text="Choose {COUNT}" />
   </strings>
 </base>

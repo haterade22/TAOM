@@ -78,6 +78,41 @@ public class WarChronicleSaveCodecTests
     }
 
     [TestMethod]
+    public void RoundTrip_ADeclinedStoryOffer_KeepsItsFlag()
+    {
+        var payload = new WarChroniclePayload();
+        payload.Chronicle.Add(new ChronicleEventRecord("hornburg", ChronicleEventState.Active) { OpenDay = 49, CloseDay = 69, StoryDeclined = true });
+
+        var json = WarChronicleSaveCodec.Serialize(payload);
+        var back = WarChronicleSaveCodec.Parse(json);
+
+        Assert.IsTrue((bool)JObject.Parse(json)["chronicle"]![0]!["sd"]!);
+        Assert.IsTrue(back.Chronicle.Single().StoryDeclined);
+    }
+
+    [TestMethod]
+    public void Parse_ARowWithoutTheStoryFlag_IsNotDeclined()
+    {
+        var back = WarChronicleSaveCodec.Parse("{\"v\":1,\"chronicle\":[{\"id\":\"hornburg\",\"s\":1,\"open\":49,\"close\":69}]}");
+
+        Assert.IsFalse(back.Chronicle.Single().StoryDeclined);
+        Assert.IsNull(JObject.Parse(WarChronicleSaveCodec.Serialize(back))["chronicle"]![0]!["sd"], "a row not declined writes no flag");
+    }
+
+    [TestMethod]
+    [DataRow("\"yes\"")]
+    [DataRow("1")]
+    [DataRow("null")]
+    [DataRow("false")]
+    public void Parse_AStoryFlagThatIsNotTrue_IsNotDeclined(string flag)
+    {
+        var back = WarChronicleSaveCodec.Parse("{\"v\":1,\"chronicle\":[{\"id\":\"hornburg\",\"s\":1,\"open\":49,\"close\":69,\"sd\":" + flag + "}]}");
+
+        Assert.IsFalse(back.Chronicle.Single().StoryDeclined);
+        Assert.AreEqual("hornburg", back.Chronicle.Single().Id, "a bad flag keeps the row");
+    }
+
+    [TestMethod]
     public void Serialize_EmptyPayload_WritesEmptySectionsThatParseAsPresent()
     {
         var back = WarChronicleSaveCodec.Parse(WarChronicleSaveCodec.Serialize(new WarChroniclePayload()));

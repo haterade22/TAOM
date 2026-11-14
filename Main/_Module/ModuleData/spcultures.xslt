@@ -859,6 +859,7 @@
 				<template name="NPCCharacter.spc_wanderer_rohan_6" />
 				<template name="NPCCharacter.spc_wanderer_rohan_7" />
 				<template name="NPCCharacter.spc_wanderer_rohan_8" />
+				<template name="NPCCharacter.spc_wanderer_rohan_9" />
 				<template name="NPCCharacter.spc_notable_rohan_0" />
 				<template name="NPCCharacter.spc_notable_rohan_0b" />
 				<template name="NPCCharacter.spc_notable_rohan_1" />

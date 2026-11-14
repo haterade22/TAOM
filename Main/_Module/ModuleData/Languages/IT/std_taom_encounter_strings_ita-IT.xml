@@ -1,0 +1,445 @@
+<?xml version="1.0" encoding="utf-8"?>
+<base xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+      type="string">
+  <tags>
+    <tag language="Italian" />
+  </tags>
+  <strings>
+    <string id="taom_enc_caravan_greet_west_kin" text="A friendly face on the road is a rare thing these days. We carry grain and good cloth to the markets downriver, and you are welcome at our fire tonight." />
+    <string id="taom_enc_caravan_greet_west_friend" text="Greetings, traveller. Ours is honest trade under the protection of the realm, and if you mean us no harm, we wish you a safe road." />
+    <string id="taom_enc_caravan_greet_west_foe" text="Keep your distance. These goods are bound for our own towns, and our guards are well paid to see that they arrive." />
+    <string id="taom_enc_caravan_defy_west_kin" text="You would rob your own? Take it, then, and may the shame of it ride with you all the way home." />
+    <string id="taom_enc_caravan_defy_west_friend" text="This is a lawful caravan of the realm. Take what you will, but every lord between here and the Sea will learn your name." />
+    <string id="taom_enc_caravan_defy_west_foe" text="Take the goods and be cursed for it. Our captains will hunt you down before the season turns." />
+    <string id="taom_enc_villager_greet_west_kin" text="Good day to you. It does the heart good to meet one of our own on the market road." />
+    <string id="taom_enc_villager_greet_west_friend" text="Good day, traveller. We are only taking our harvest to the town, and we have no quarrel with anyone." />
+    <string id="taom_enc_villager_greet_west_foe" text="Please, let us pass. We have a cart of turnips and a few sacks of barley, and nothing here is worth a soldier's time." />
+    <string id="taom_enc_villager_defy_west_kin" text="Our grain feeds your own towns. Take it if you must, and the hearths will be colder this winter for it." />
+    <string id="taom_enc_villager_defy_west_friend" text="We have done you no wrong. Take the cart, then, and may your conscience weigh more than our grain." />
+    <string id="taom_enc_villager_defy_west_foe" text="Take it and be gone. The lord of these lands will hear of this, and so will the rangers in the hills." />
+    <string id="taom_enc_caravan_greet_rohirrim_kin" text="Well met on the road. We carry wool and leather down to Aldburg, and it is good to see one of our own along the way." />
+    <string id="taom_enc_caravan_greet_rohirrim_friend" text="Greetings, rider. We are bound for Edoras with hides and good saddlery, and we want no trouble on the way." />
+    <string id="taom_enc_caravan_greet_rohirrim_foe" text="Ride wide of us. The road to Edoras is watched by the éoreds of the Mark, and they ride fast." />
+    <string id="taom_enc_caravan_defy_rohirrim_kin" text="Riding down your own neighbours on the road? Take it, then, and carry the shame of it back to your hall." />
+    <string id="taom_enc_caravan_defy_rohirrim_friend" text="We trusted you on this road. Take what you want, but the Riddermark will hear of it." />
+    <string id="taom_enc_caravan_defy_rohirrim_foe" text="Take it, thief. The riders of the Mark will hunt you down before you reach the Fords of Isen." />
+    <string id="taom_enc_villager_greet_rohirrim_kin" text="Good day to you. We are taking barley and cheese to market at Aldburg, if the weather holds." />
+    <string id="taom_enc_villager_greet_rohirrim_friend" text="Peace on you, traveller. We are only bringing our harvest to market, and we want no quarrel." />
+    <string id="taom_enc_villager_greet_rohirrim_foe" text="Stay back from us. One blast of our horn will bring the riders down on you." />
+    <string id="taom_enc_villager_defy_rohirrim_kin" text="You would take bread from your own neighbours? Then take it, and may no good horse ever carry you again." />
+    <string id="taom_enc_villager_defy_rohirrim_friend" text="We took you for a friend of the Mark. Take what you came for and be gone." />
+    <string id="taom_enc_villager_defy_rohirrim_foe" text="Take it, then. The Westfold remembers every raid, and so will the riders who come after you." />
+    <string id="taom_enc_caravan_greet_northmen_kin" text="Ho there, neighbour! Good cloth, dried fish and a cask or two from the south, and a fair price for one of our own." />
+    <string id="taom_enc_caravan_greet_northmen_friend" text="Good day to you. We carry honest wares down the river roads and want no trouble, though we will gladly do some trade." />
+    <string id="taom_enc_caravan_greet_northmen_foe" text="That is near enough. My guards have strung their bows, and there is no trade for you today." />
+    <string id="taom_enc_caravan_defy_northmen_kin" text="Every market from the Lake to the Sea of Rhûn will hear who robbed their own." />
+    <string id="taom_enc_caravan_defy_northmen_friend" text="We dealt fairly with you, and this is how you repay it? Take what you will, then, and be named a thief in every hall of the North." />
+    <string id="taom_enc_caravan_defy_northmen_foe" text="Take it, then, and choke on it. Our kin will come for it before the snows." />
+    <string id="taom_enc_villager_greet_northmen_kin" text="Well met, neighbour! We are taking the season's honey and wool to market. Walk with us a way, if you like." />
+    <string id="taom_enc_villager_greet_northmen_friend" text="Good day. We are only taking our harvest to market, and we would be glad of a peaceful road." />
+    <string id="taom_enc_villager_greet_northmen_foe" text="Leave us be. There is nothing on these carts but grain and wool, and we have families waiting on them." />
+    <string id="taom_enc_villager_defy_northmen_kin" text="From you, of all people? Our children will go hungry this winter, and it will be your doing." />
+    <string id="taom_enc_villager_defy_northmen_friend" text="We showed you nothing but kindness. Take it and go, and may your own fields fail." />
+    <string id="taom_enc_villager_defy_northmen_foe" text="Take it, then. We have rebuilt after worse than you, and we will do it again." />
+    <string id="taom_enc_caravan_greet_dunlendings_kin" text="Good to see a hill face on this road. We carry wool and hides down to the valley markets, so take what you need for the journey." />
+    <string id="taom_enc_caravan_greet_dunlendings_friend" text="Wool, furs and good hill iron, stranger. Fair coin buys fair goods, and we do not haggle long." />
+    <string id="taom_enc_caravan_greet_dunlendings_foe" text="Keep your distance and your hands where we can see them. We carry little worth taking and have less patience." />
+    <string id="taom_enc_caravan_defy_dunlendings_kin" text="You would rob your own? The clan chiefs will hear of this, and they will not speak your name kindly again." />
+    <string id="taom_enc_caravan_defy_dunlendings_friend" text="So your fair words were a lie. Take it, then, and know that Dunland keeps count of every theft." />
+    <string id="taom_enc_caravan_defy_dunlendings_foe" text="One more thief on our roads. Take what you will, and the clans will take it back in blood." />
+    <string id="taom_enc_villager_greet_dunlendings_kin" text="Welcome, friend of the hills. We are bringing barley and cheese to market, and you may share our bread tonight." />
+    <string id="taom_enc_villager_greet_dunlendings_friend" text="We are bound for market with what the hills gave us this year, which is little enough. Pass in peace." />
+    <string id="taom_enc_villager_greet_dunlendings_foe" text="We have nothing for you but sheep and hard words. Let us go on to market." />
+    <string id="taom_enc_villager_defy_dunlendings_kin" text="Shame on you, robbing your own hearth-kin. The elders of the clan will hear of it, and so will the whole glen." />
+    <string id="taom_enc_villager_defy_dunlendings_friend" text="Take it, then. Another hungry winter, and one more name to curse by the fireside." />
+    <string id="taom_enc_villager_defy_dunlendings_foe" text="Thieves on our roads again. Take it and go; the hills will know your face next time." />
+    <string id="taom_enc_caravan_greet_southrons_kin" text="Peace, friend from home. Our beasts carry spice and silk, and the road is easier in good company." />
+    <string id="taom_enc_caravan_greet_southrons_friend" text="Greetings, traveller. We trade fairly and travel peacefully, and we hope you will let us do both." />
+    <string id="taom_enc_caravan_greet_southrons_foe" text="Come no nearer. Our guards are well paid and they know their spears." />
+    <string id="taom_enc_caravan_defy_southrons_kin" text="The whole South will hear of this, and no well will give you water." />
+    <string id="taom_enc_caravan_defy_southrons_friend" text="So this is what your friendship is worth. Take it, then, but every merchant from the havens of Umbar to the far jungles will know your face." />
+    <string id="taom_enc_caravan_defy_southrons_foe" text="Take the goods and choke on them. The serpent banner will have its due for every coin you steal." />
+    <string id="taom_enc_villager_greet_southrons_kin" text="Peace to you. We take dates and grain to market, and it gladdens us to meet one of our own on the road." />
+    <string id="taom_enc_villager_greet_southrons_friend" text="Good day, traveller. We are only farmers on the way to market, with nothing worth a quarrel." />
+    <string id="taom_enc_villager_greet_southrons_foe" text="Please, we are only taking our harvest to market. We have no part in the wars of the great houses." />
+    <string id="taom_enc_villager_defy_southrons_kin" text="The elders will hear of this, and the sun will see it too." />
+    <string id="taom_enc_villager_defy_southrons_friend" text="We greeted you kindly, and this is how you repay us. May the sun burn your road dry." />
+    <string id="taom_enc_villager_defy_southrons_foe" text="Take it, then, and may the heat strike you down before you reach home." />
+    <string id="taom_enc_caravan_greet_easterlings_kin" text="Well met on the road! Come, look over the wagons, and drink the first cup of brew as a guest of my clan." />
+    <string id="taom_enc_caravan_greet_easterlings_friend" text="Greetings, traveller. We carry bronze, hides and steppe horses, and we trade fairly with those who keep the peace." />
+    <string id="taom_enc_caravan_greet_easterlings_foe" text="Keep your hands from your weapons. My guards are riders of the East, and they have killed for less." />
+    <string id="taom_enc_caravan_defy_easterlings_kin" text="From the Sea of Rhûn to the far steppe, the clans will hear how you treat your own wagons." />
+    <string id="taom_enc_caravan_defy_easterlings_friend" text="So your peace was a lie. Take what you want, but the one we serve will come asking for every coin of it." />
+    <string id="taom_enc_caravan_defy_easterlings_foe" text="The wagons will not be given up while one guard still stands. Come and take them if you can." />
+    <string id="taom_enc_villager_greet_easterlings_kin" text="A face from home! We are bound for market with grain and wool. Ride with us a while if you wish." />
+    <string id="taom_enc_villager_greet_easterlings_friend" text="Good day to you. We are only farmers of the eastern fields, taking our harvest to sell." />
+    <string id="taom_enc_villager_greet_easterlings_foe" text="We have no quarrel with you, and nothing worth the taking. Let us pass to the market." />
+    <string id="taom_enc_villager_defy_easterlings_kin" text="Thieving from your own blood? The elders will spit on your name at every fire in the East." />
+    <string id="taom_enc_villager_defy_easterlings_friend" text="We took you for a friend. Our chieftain protects these fields, and you will pay for this." />
+    <string id="taom_enc_villager_defy_easterlings_foe" text="We may be farmers, but our people were warriors first. You will bleed for every sack." />
+    <string id="taom_enc_caravan_greet_elves_kin" text="A familiar face on a weary road. We carry wine, fine cloth and the work of our smiths, at the price we keep for our own." />
+    <string id="taom_enc_caravan_greet_elves_friend" text="Greetings, traveller. Our wares are few but made with care: cloth, wine and blades of old craft, should any please you." />
+    <string id="taom_enc_caravan_greet_elves_foe" text="We know whose banner you follow. Keep your hands from your weapons, and we will pass you by in silence." />
+    <string id="taom_enc_caravan_defy_elves_kin" text="This from one of our own? Take it, then, and carry the shame of it for longer than you can imagine." />
+    <string id="taom_enc_caravan_defy_elves_friend" text="We had thought better of you. Our goods you may seize, but the trust you break today will not be given again." />
+    <string id="taom_enc_caravan_defy_elves_foe" text="Take what you will. Our wardens will learn of this, and they are swift and patient both." />
+    <string id="taom_enc_villager_greet_elves_kin" text="Be welcome among us. We carry honey, herbs and the gleanings of the woods to market; walk with us a while if you wish." />
+    <string id="taom_enc_villager_greet_elves_friend" text="Peace to you, traveller. We are bound for market with what the woods have given us this season." />
+    <string id="taom_enc_villager_greet_elves_foe" text="We are no soldiers, only keepers of the woods and gardens. Let us pass quietly, and we will trouble you not at all." />
+    <string id="taom_enc_villager_defy_elves_kin" text="You would rob your own kin of the little the woods have given? Then take it, and may the trees remember your face." />
+    <string id="taom_enc_villager_defy_elves_friend" text="We offered you peace and you answer with this. Take the baskets, and go from our sight." />
+    <string id="taom_enc_villager_defy_elves_foe" text="Robbing gatherers of herbs and honey is a poor sort of victory. Take them; the woods will grow more long after you are dust." />
+    <string id="taom_enc_caravan_greet_dwarves_kin" text="Hail, cousin! Iron from the deep mines and good work from the forges, bound for honest markets. Ride with us a while if you like." />
+    <string id="taom_enc_caravan_greet_dwarves_friend" text="Good day, traveller. These wagons carry worked steel and silver from the mountains, fair goods for fair coin." />
+    <string id="taom_enc_caravan_greet_dwarves_foe" text="Stay back. We know whose banner you ride under, and every guard here is spoiling for a reason." />
+    <string id="taom_enc_caravan_defy_dwarves_kin" text="You would rob your own kin? The clans will hear of it, and no forge in the mountains will serve you again." />
+    <string id="taom_enc_caravan_defy_dwarves_friend" text="So this is how you repay honest trade. Take it, then, and know the debt will be collected with interest." />
+    <string id="taom_enc_caravan_defy_dwarves_foe" text="Take the goods if you can carry them. Every ingot you steal will be paid back in blood before the year is out." />
+    <string id="taom_enc_villager_greet_dwarves_kin" text="Well met, cousin. We are taking ore and smithwork down to market, and the road is lighter for a familiar face." />
+    <string id="taom_enc_villager_greet_dwarves_friend" text="Good day to you. Coal, ore and a few sound blades for the market, if you are buying." />
+    <string id="taom_enc_villager_greet_dwarves_foe" text="We are only miners carrying ore to market. Leave us be and go about your business." />
+    <string id="taom_enc_villager_defy_dwarves_kin" text="Our elders will speak your name in the halls, and they will not speak it kindly." />
+    <string id="taom_enc_villager_defy_dwarves_friend" text="We trusted you on this road. Take what you want, but every one of us will remember your face." />
+    <string id="taom_enc_villager_defy_dwarves_foe" text="Take it and be cursed. The mountain keeps a long account of thieves, and yours is opened today." />
+    <string id="taom_enc_caravan_greet_orcs_kin" text="Keep your claws off the cargo, every sack is tribute and every sack is counted. Walk with us a while if you like, the road's safer in a crowd." />
+    <string id="taom_enc_caravan_greet_orcs_friend" text="Hold there. These wagons haul tribute for the masters, so say your business and keep moving." />
+    <string id="taom_enc_caravan_greet_orcs_foe" text="Get back, you, or the drivers turn their whips on you instead of the slaves." />
+    <string id="taom_enc_caravan_defy_orcs_kin" text="Robbing your own lot? The overseers will hear of this, and they'll skin us both for it." />
+    <string id="taom_enc_caravan_defy_orcs_friend" text="Take it, then, thief. When the masters count the tribute short, they'll come hunting for whoever thinned it." />
+    <string id="taom_enc_caravan_defy_orcs_foe" text="Grab it and choke on it. Every crate bears the mark, and the masters never forget a theft." />
+    <string id="taom_enc_villager_greet_orcs_kin" text="You know the whip as well as we do. Let us by, we're late with the grain and the overseers count the hours." />
+    <string id="taom_enc_villager_greet_orcs_friend" text="Please, let us pass. If this grain reaches the overseers late, it's our backs that pay." />
+    <string id="taom_enc_villager_greet_orcs_foe" text="Don't hurt us! We only work the fields, and the masters own every sack and every one of us." />
+    <string id="taom_enc_villager_defy_orcs_kin" text="You know what happens when the tribute comes up short. May the whip find you before it finds us." />
+    <string id="taom_enc_villager_defy_orcs_friend" text="Take it. We get the lash either way, and one more beating hardly matters now." />
+    <string id="taom_enc_villager_defy_orcs_foe" text="Take it and be cursed. The masters will flay us for this, and then they'll come looking for you." />
+    <string id="taom_enc_robbery_threat_dunland_raiders_kin_1" text="Easy now, traveller. You have the look of someone who has known a hungry winter, so you know why we ask for your silver." />
+    <string id="taom_enc_robbery_pay_agreement_dunland_raiders_kin_1" text="There is sense in you. Half of what you carry will do, and you keep the rest for your own hearth." />
+    <string id="taom_enc_robbery_conclusion_dunland_raiders_kin_1" text="That will feed the clan until the thaw. Walk safe, and if the horse-lords ask, you saw nobody in these hills." />
+    <string id="taom_enc_robbery_start_fight_dunland_raiders_kin_1" text="So be it. We bleed the same as you, and we will soon see who bleeds first." />
+    <string id="taom_enc_robbery_threat_dunland_raiders_kin_2" text="We take no joy in robbing our own sort, but the clan comes first. Lay your purse on that stone and walk on." />
+    <string id="taom_enc_robbery_pay_agreement_dunland_raiders_kin_2" text="That is the sensible road. A fair share for the clan's pot, and nobody need draw a blade." />
+    <string id="taom_enc_robbery_conclusion_dunland_raiders_kin_2" text="Kindly done. There is a fire up by the old cairn if the cold catches you on the road." />
+    <string id="taom_enc_robbery_start_fight_dunland_raiders_kin_2" text="Stubborn as a hill goat, then. Draw, and let the heather judge it." />
+    <string id="taom_enc_robbery_threat_dunland_raiders_side_1" text="We may fight the same war, but the war does not feed my clan. Your coin, or we settle it here." />
+    <string id="taom_enc_robbery_pay_agreement_dunland_raiders_side_1" text="Good, we keep the peace between us. Give what is fair and our war-chiefs need never hear of it." />
+    <string id="taom_enc_robbery_conclusion_dunland_raiders_side_1" text="Done. Go back to your camp, and keep your band clear of our sheepfolds." />
+    <string id="taom_enc_robbery_start_fight_dunland_raiders_side_1" text="Then the Shadow will have one servant fewer by nightfall. Take them!" />
+    <string id="taom_enc_robbery_threat_dunland_raiders_side_2" text="We march against the same enemies when the war-horns sound, but this pass belongs to the clan. Pay the toll like any other." />
+    <string id="taom_enc_robbery_pay_agreement_dunland_raiders_side_2" text="Wise. A share for the toll, and we go back to hating the same enemies." />
+    <string id="taom_enc_robbery_conclusion_dunland_raiders_side_2" text="Paid in full. When our banners next march the same way, remember the hill clans dealt fairly with you." />
+    <string id="taom_enc_robbery_start_fight_dunland_raiders_side_2" text="Banner or no banner, nobody shames the clan on its own ground. At them!" />
+    <string id="taom_enc_robbery_threat_dunland_raiders_foe_1" text="You ride through hills that were stolen from us once already. Every coin you carry is owed to Dunland twice over." />
+    <string id="taom_enc_robbery_pay_agreement_dunland_raiders_foe_1" text="So you can bargain. Empty that purse, all of it, and count yourself lucky we leave you your boots." />
+    <string id="taom_enc_robbery_conclusion_dunland_raiders_foe_1" text="Go, and tell whoever you serve that the hill clans still remember." />
+    <string id="taom_enc_robbery_start_fight_dunland_raiders_foe_1" text="Good. I would rather take your silver off a corpse. Bring them down!" />
+    <string id="taom_enc_robbery_threat_dunland_raiders_foe_2" text="A long way from home, stranger, and far from any help. The clans have waited years to make one of you pay." />
+    <string id="taom_enc_robbery_pay_agreement_dunland_raiders_foe_2" text="Then it will cost you dearly. Every coin in that purse, and be glad we ask no more." />
+    <string id="taom_enc_robbery_conclusion_dunland_raiders_foe_2" text="One purse does not pay off an old grievance. Get out of the hills before we change our minds." />
+    <string id="taom_enc_robbery_start_fight_dunland_raiders_foe_2" text="We hoped you would say that. For Dunland and the old wrongs!" />
+    <string id="taom_enc_bandit_greet_dunland_raiders_kin_1" text="Hold your blade! We are only hungry hill clans, and we have done you no wrong. Leave us be and go your way." />
+    <string id="taom_enc_bandit_greet_dunland_raiders_kin_2" text="Why turn on us? We share the same cold and the same short years, and there is nothing here worth the killing." />
+    <string id="taom_enc_bandit_greet_dunland_raiders_side_1" text="You strike at those who fight your own war? The war-chiefs will hear of this treachery." />
+    <string id="taom_enc_bandit_greet_dunland_raiders_side_2" text="Back off! We answer the same war-horns as you. Turn your blades on the horse-lords instead." />
+    <string id="taom_enc_bandit_greet_dunland_raiders_foe_1" text="So someone sends their dogs into our hills now. Come on, then, and learn how the clans fight." />
+    <string id="taom_enc_bandit_greet_dunland_raiders_foe_2" text="Spare us your fine words. We know why you came, and the heather will hide your bones as well as any." />
+    <string id="taom_enc_hideout_boss_dunland_raiders_kin" text="Enough of my clan has died today. Face me alone, blade to blade, and let the winner take what is left." />
+    <string id="taom_enc_hideout_boss_dunland_raiders_side" text="We fight the same war, yet here you stand in my hold with my clan's blood on your blade. Fight me alone and settle it." />
+    <string id="taom_enc_hideout_boss_dunland_raiders_foe" text="You have come deep into Dunland to die. Step forward and face the chief of this clan alone, if you have the stomach." />
+    <string id="taom_enc_robbery_threat_rhun_raiders_kin_1" text="Rein in, traveller. The grass is wide, but every trail across it has a keeper, and the keeper of this one wants your silver." />
+    <string id="taom_enc_robbery_pay_agreement_rhun_raiders_kin_1" text="You see sense. A third of your purse, and we will not trouble your wagons." />
+    <string id="taom_enc_robbery_conclusion_rhun_raiders_kin_1" text="It is enough. Ride on, and drink to us if you ever reach the vineyards of Dorwinion." />
+    <string id="taom_enc_robbery_start_fight_rhun_raiders_kin_1" text="Then we ride. Make your peace with the sky." />
+    <string id="taom_enc_robbery_threat_rhun_raiders_kin_2" text="The herds were thin this year and the camp must eat. Hand down your silver and we part without a quarrel." />
+    <string id="taom_enc_robbery_pay_agreement_rhun_raiders_kin_2" text="A good answer. Give what a herder gives a neighbour in a bad season, and we call it even." />
+    <string id="taom_enc_robbery_conclusion_rhun_raiders_kin_2" text="The camp will eat tonight because of you. Go in peace while the wind is at your back." />
+    <string id="taom_enc_robbery_start_fight_rhun_raiders_kin_2" text="A pity. Strike the drums, and let the steppe decide." />
+    <string id="taom_enc_robbery_threat_rhun_raiders_side_1" text="We fight the same war in the end, but the Warlord takes a share of everything that crosses these plains. Pay it." />
+    <string id="taom_enc_robbery_pay_agreement_rhun_raiders_side_1" text="Good. A fair tithe, and the Eye need not hear that two of its servants quarrelled." />
+    <string id="taom_enc_robbery_conclusion_rhun_raiders_side_1" text="Paid. Take your band on, and keep it clear of our herds." />
+    <string id="taom_enc_robbery_start_fight_rhun_raiders_side_1" text="Then the Dark Lord will have a few servants fewer by dusk. Loose!" />
+    <string id="taom_enc_robbery_threat_rhun_raiders_side_2" text="Our wagons roll west under the same Shadow as yours, yet these plains keep their own law. Silver for the crossing." />
+    <string id="taom_enc_robbery_pay_agreement_rhun_raiders_side_2" text="Spoken like a sensible ally. Name a sum worth my time and we will not haggle long." />
+    <string id="taom_enc_robbery_conclusion_rhun_raiders_side_2" text="Our quarrel is settled. Save your anger for the Free Peoples and their walls." />
+    <string id="taom_enc_robbery_start_fight_rhun_raiders_side_2" text="Allies who will not pay are no allies of mine. Ride them down!" />
+    <string id="taom_enc_robbery_threat_rhun_raiders_foe_1" text="A stranger on the Warlord's steppe, and alone. Your silver first, and then we will see what else you are worth." />
+    <string id="taom_enc_robbery_pay_agreement_rhun_raiders_foe_1" text="You bargain like a captive already. Everything in your purse, and the finest thing in your pack besides." />
+    <string id="taom_enc_robbery_conclusion_rhun_raiders_foe_1" text="Crawl back the way you came and tell them the East is stirring." />
+    <string id="taom_enc_robbery_start_fight_rhun_raiders_foe_1" text="Good. The Warlord pays well for enemy heads. Surround them!" />
+    <string id="taom_enc_robbery_threat_rhun_raiders_foe_2" text="You wandered too far from your friends. Leave your silver here, and perhaps the vultures go hungry today." />
+    <string id="taom_enc_robbery_pay_agreement_rhun_raiders_foe_2" text="Then pay as an enemy pays: every coin, and quickly." />
+    <string id="taom_enc_robbery_conclusion_rhun_raiders_foe_2" text="Take your empty purse and go. When next we meet, there will be no bargaining." />
+    <string id="taom_enc_robbery_start_fight_rhun_raiders_foe_2" text="Then the drums speak for us. For Rhûn and the Warlord!" />
+    <string id="taom_enc_bandit_greet_rhun_raiders_kin_1" text="Hold! We are horse herders with lean ponies and empty bellies, like any who live by the road. Let us pass." />
+    <string id="taom_enc_bandit_greet_rhun_raiders_kin_2" text="Why draw on us? The same sun burns us and the same winters starve us. There is no glory in this." />
+    <string id="taom_enc_bandit_greet_rhun_raiders_side_1" text="Lower your weapons! We ride under the same Shadow, and the Warlord will hear who broke faith." />
+    <string id="taom_enc_bandit_greet_rhun_raiders_side_2" text="You would spill the blood of the Dark Lord's own riders? Turn back before this becomes a feud." />
+    <string id="taom_enc_bandit_greet_rhun_raiders_foe_1" text="So you come hunting on our grass. Good, my bow has been idle too long." />
+    <string id="taom_enc_bandit_greet_rhun_raiders_foe_2" text="A long ride for a short life, stranger. Every rider here has sworn to bring your head to the Warlord." />
+    <string id="taom_enc_hideout_boss_rhun_raiders_kin" text="You have fought well enough to earn my respect. Meet me alone, as the old riders did, and the winner keeps the camp." />
+    <string id="taom_enc_hideout_boss_rhun_raiders_side" text="We stand on the same side of this war, and still you burn my camp. Face me alone, and let the steppe judge which of us is stronger." />
+    <string id="taom_enc_hideout_boss_rhun_raiders_foe" text="Your road ends at my fire, stranger. Leave your riders and face me alone, as the steppe has always settled such things." />
+    <string id="taom_enc_robbery_threat_harad_raiders_kin_1" text="Peace, child of the long road. You thirst under the same sun as we do, so you know how this goes. A share of your silver, and we part as friends." />
+    <string id="taom_enc_robbery_pay_agreement_harad_raiders_kin_1" text="Good. Between travellers of the same hard road there is no need for spears. Offer what is fair and we will not haggle long." />
+    <string id="taom_enc_robbery_conclusion_harad_raiders_kin_1" text="It is done, and no blood spilled under the sun. Drink at the oasis to the east and tell them the raiders sent you." />
+    <string id="taom_enc_robbery_start_fight_harad_raiders_kin_1" text="Then you have chosen badly. Spears level, and let it be quick." />
+    <string id="taom_enc_robbery_threat_harad_raiders_kin_2" text="Rest your beasts a moment, traveller. We have little but our spears and a long thirst, and you look like someone who knows what that is. Leave a share of your coin with us." />
+    <string id="taom_enc_robbery_pay_agreement_harad_raiders_kin_2" text="I thought you would understand. Count it out in the shade, and we will call it a fair share." />
+    <string id="taom_enc_robbery_conclusion_harad_raiders_kin_2" text="May your wells run sweet and your road stay free of serpents. We take no more than we need from our own." />
+    <string id="taom_enc_robbery_start_fight_harad_raiders_kin_2" text="I offered you the courtesy of the road and you spat on it. Then we settle this as the desert settles everything." />
+    <string id="taom_enc_robbery_threat_harad_raiders_side_1" text="The same Eye watches over us both, so we will be gentle about it. Coin for the road, and nobody needs to tell the Tower anything." />
+    <string id="taom_enc_robbery_pay_agreement_harad_raiders_side_1" text="Good. Those who fight the same war should not quarrel over trifles. Name a sum and we will call it tribute." />
+    <string id="taom_enc_robbery_conclusion_harad_raiders_side_1" text="Go on, then. If the captains of the Black Land ask, we never crossed paths." />
+    <string id="taom_enc_robbery_start_fight_harad_raiders_side_1" text="Then you can explain to the Tower why its servants killed each other in the sand. Spears!" />
+    <string id="taom_enc_robbery_threat_harad_raiders_side_2" text="You march in the same war as we do, yet this stretch of desert belongs to the raiders. Every band that crosses it pays, whatever its errand." />
+    <string id="taom_enc_robbery_pay_agreement_harad_raiders_side_2" text="So you are no fool. Give us something worth the trouble and we will forget your face before sundown." />
+    <string id="taom_enc_robbery_conclusion_harad_raiders_side_2" text="Pass, and do not linger near our camps. The sand forgets quickly, and so shall we." />
+    <string id="taom_enc_robbery_start_fight_harad_raiders_side_2" text="Allies in the war, and still you bare steel at us over a little silver? So be it. Bring them down." />
+    <string id="taom_enc_robbery_threat_harad_raiders_foe_1" text="You are far from any friendly banner, and the desert is wide. Empty your packs into the sand and you may live to curse us." />
+    <string id="taom_enc_robbery_pay_agreement_harad_raiders_foe_1" text="So the proud can bend after all. Give generously, for your life is priced high in Harad." />
+    <string id="taom_enc_robbery_conclusion_harad_raiders_foe_1" text="Crawl back the way you came. The next time the crimson banners find you, there will be no bargaining." />
+    <string id="taom_enc_robbery_start_fight_harad_raiders_foe_1" text="So be it. Ride them down!" />
+    <string id="taom_enc_robbery_threat_harad_raiders_foe_2" text="Look what the wind blew across our sands. A stranger with full packs and no friends within a hundred leagues. Your gold, all of it." />
+    <string id="taom_enc_robbery_pay_agreement_harad_raiders_foe_2" text="Fear makes everyone sensible. Pour it out where I can see it, and do not hide a single coin." />
+    <string id="taom_enc_robbery_conclusion_harad_raiders_foe_2" text="Go, and tell whoever you serve that Harad guards its roads with spears. The next toll will be your head." />
+    <string id="taom_enc_robbery_start_fight_harad_raiders_foe_2" text="Then the sun will bleach your bones before the next moon. At them!" />
+    <string id="taom_enc_bandit_greet_harad_raiders_kin_1" text="Hold your hand! We are only hungry travellers of the sands, the same as you, and nothing in our packs is worth your blood." />
+    <string id="taom_enc_bandit_greet_harad_raiders_kin_2" text="Think before you charge. We have both bled under the same sun, and there is easier prey than us on this road." />
+    <string id="taom_enc_bandit_greet_harad_raiders_side_1" text="Have you lost your wits? We fight for the same Eye. Turn your blades on its enemies and leave us be." />
+    <string id="taom_enc_bandit_greet_harad_raiders_side_2" text="Come on, then, if you think the Tower will thank you for it. The raiders of Harad do not die quietly." />
+    <string id="taom_enc_bandit_greet_harad_raiders_foe_1" text="You ride against the spears of Harad? Many have tried, and the sand keeps every one of them." />
+    <string id="taom_enc_bandit_greet_harad_raiders_foe_2" text="Turn back while you still have water. Our riders know every well and hollow in this waste, and you know none of them." />
+    <string id="taom_enc_hideout_boss_harad_raiders_kin" text="You fight well, for one who shares our sun and our thirst. Face me alone, and let the winner keep the camp without more of my riders dying." />
+    <string id="taom_enc_hideout_boss_harad_raiders_side" text="Enough. The Eye gains nothing if we bleed each other dry. Fight me blade to blade, and the camp goes to whoever is left standing." />
+    <string id="taom_enc_hideout_boss_harad_raiders_foe" text="The sand has swallowed better than you. Come out from behind your spears and face me alone." />
+    <string id="taom_enc_robbery_threat_gundabad_raiders_kin_1" text="Hold there, ratling. Even kin pay the toll on Gundabad's road, and the chieftain counts every coin." />
+    <string id="taom_enc_robbery_pay_agreement_gundabad_raiders_kin_1" text="Sensible. A handful of silver for the chieftain's pot and a bit for us, and nobody tells the wargs you passed." />
+    <string id="taom_enc_robbery_conclusion_gundabad_raiders_kin_1" text="Go on, then. Tell your own warband the Mountain's toll was fair this time." />
+    <string id="taom_enc_robbery_start_fight_gundabad_raiders_kin_1" text="Too proud to pay your own? Then the wargs eat well tonight, kin or no kin." />
+    <string id="taom_enc_robbery_threat_gundabad_raiders_kin_2" text="You smell like one of ours, but you walk heavy with plunder. Share it out, or we take the lot." />
+    <string id="taom_enc_robbery_pay_agreement_gundabad_raiders_kin_2" text="Good. Half of what you carry, and we forget we saw you creeping past the watch-holes." />
+    <string id="taom_enc_robbery_conclusion_gundabad_raiders_kin_2" text="Off with you, quick and quiet. Same cold, same hunger, and today you fed us." />
+    <string id="taom_enc_robbery_start_fight_gundabad_raiders_kin_2" text="Greedy little rat. Hold it down and pick its pockets clean!" />
+    <string id="taom_enc_robbery_threat_gundabad_raiders_side_1" text="We fight for the same Shadow, but this pass belongs to Gundabad. Pay the toll like any other traveller." />
+    <string id="taom_enc_robbery_pay_agreement_gundabad_raiders_side_1" text="A purse of silver will do. Your masters can spare it, and ours never feed us enough." />
+    <string id="taom_enc_robbery_conclusion_gundabad_raiders_side_1" text="Pass, then. When the war-drums call, we will remember who paid." />
+    <string id="taom_enc_robbery_start_fight_gundabad_raiders_side_1" text="Allies, you say? Allies bleed the same as anyone. Take them!" />
+    <string id="taom_enc_robbery_threat_gundabad_raiders_side_2" text="Stop where you are. We bow to the same dark power, but up here the Mountain bites first. Gold, or we bite." />
+    <string id="taom_enc_robbery_pay_agreement_gundabad_raiders_side_2" text="Fair is fair. A pouch of gold and the food in your packs, and we part as servants of the same Shadow." />
+    <string id="taom_enc_robbery_conclusion_gundabad_raiders_side_2" text="Take the low path out and keep to it. The high caves are ours." />
+    <string id="taom_enc_robbery_start_fight_gundabad_raiders_side_2" text="No toll? Then you can explain it to the chieftain's trolls. At them!" />
+    <string id="taom_enc_robbery_threat_gundabad_raiders_foe_1" text="Look what crawled up from the valleys. Every scrap you carry, sniveller, or we leave you for the crows." />
+    <string id="taom_enc_robbery_pay_agreement_gundabad_raiders_foe_1" text="Begging already? Good. All your gold and the boots off your feet, and maybe we let you limp home." />
+    <string id="taom_enc_robbery_conclusion_gundabad_raiders_foe_1" text="Limp away, then. Tell the valleys Gundabad is coming back for the rest." />
+    <string id="taom_enc_robbery_start_fight_gundabad_raiders_foe_1" text="Hoped you would say that. Slit their throats and drag the bodies to the caves!" />
+    <string id="taom_enc_robbery_threat_gundabad_raiders_foe_2" text="You stand in Gundabad's shadow, worm. Pay the price of the pass, or pay with your hide." />
+    <string id="taom_enc_robbery_pay_agreement_gundabad_raiders_foe_2" text="Ha! It squeals for terms. Every coin in that purse, and quick, before the wargs grow bored." />
+    <string id="taom_enc_robbery_conclusion_gundabad_raiders_foe_2" text="Crawl off and count your fingers. We may come back for them." />
+    <string id="taom_enc_robbery_start_fight_gundabad_raiders_foe_2" text="Then we take it from your corpse. Wargs, feed!" />
+    <string id="taom_enc_bandit_greet_gundabad_raiders_kin_1" text="Hold your blade! The same caves bred us both, so why feed our blood to the crows?" />
+    <string id="taom_enc_bandit_greet_gundabad_raiders_kin_2" text="Easy, easy. We only took a few sheep from the valley. Share the meat, and nobody needs to bleed." />
+    <string id="taom_enc_bandit_greet_gundabad_raiders_side_1" text="Wait! We answer to the same dark lords. Strike us and the Mountain will hear of it." />
+    <string id="taom_enc_bandit_greet_gundabad_raiders_side_2" text="You turn your blades on Gundabad? Your own masters will hang you for breaking the pact, fool." />
+    <string id="taom_enc_bandit_greet_gundabad_raiders_foe_1" text="Come up the slope then, valley-rat. Every rock up here hides another of us." />
+    <string id="taom_enc_bandit_greet_gundabad_raiders_foe_2" text="Ha! It thinks it can fight Gundabad. We have eaten tougher warriors than you for supper." />
+    <string id="taom_enc_hideout_boss_gundabad_raiders_kin" text="You fought through my warren like one of the deep-born. Face me alone, and the stronger of us keeps the cave." />
+    <string id="taom_enc_hideout_boss_gundabad_raiders_side" text="Allies who raid my caves? Fine. You and me, blade to blade, and the winner takes the spoils." />
+    <string id="taom_enc_hideout_boss_gundabad_raiders_foe" text="You came all this way into the Mountain's gut. Fight me alone, and I will hang your hide over the door." />
+    <string id="taom_enc_robbery_threat_umbar_corsairs_kin_1" text="Easy there, shipmate. You and I both know the price of bread on a hard road. Share your purse with a few honest corsairs and we all eat tonight." />
+    <string id="taom_enc_robbery_pay_agreement_umbar_corsairs_kin_1" text="There, I knew you had sense. Lay it on the barrel head and we will split it fair." />
+    <string id="taom_enc_robbery_conclusion_umbar_corsairs_kin_1" text="Done, and no hard words between us. If you ever want a berth on a fast ship, ask along the quays of Umbar." />
+    <string id="taom_enc_robbery_start_fight_umbar_corsairs_kin_1" text="A shame. I would sooner have shared a cup with you than bled you. Cutlasses out!" />
+    <string id="taom_enc_robbery_threat_umbar_corsairs_kin_2" text="Hold up, traveller. We are a long way from the sea, the rations are short, and you look like someone who knows how that feels. A little silver keeps us all friends." />
+    <string id="taom_enc_robbery_pay_agreement_umbar_corsairs_kin_2" text="Spoken like someone who has stood a hard watch. Make it a fair share and we will not search your packs." />
+    <string id="taom_enc_robbery_conclusion_umbar_corsairs_kin_2" text="That will see us back to the ships. May the tide run your way, wherever your road goes." />
+    <string id="taom_enc_robbery_start_fight_umbar_corsairs_kin_2" text="Pity. I took you for one of us. Over the side with you, then!" />
+    <string id="taom_enc_robbery_threat_umbar_corsairs_side_1" text="We answer to no Tower and no White City, and I hear the same is true of you. Still, the coast road takes a toll from everyone who walks it." />
+    <string id="taom_enc_robbery_pay_agreement_umbar_corsairs_side_1" text="Good. Those who bow to nobody ought to be able to strike a bargain. Name the sum." />
+    <string id="taom_enc_robbery_conclusion_umbar_corsairs_side_1" text="A clean deal between free blades. If the Captain ever needs hired hands, you know where the ships put in." />
+    <string id="taom_enc_robbery_start_fight_umbar_corsairs_side_1" text="Then you are no wiser than the kings who would see us both in chains. Have at them!" />
+    <string id="taom_enc_robbery_threat_umbar_corsairs_side_2" text="Neither the ships of Gondor nor the whips of Mordor have tamed us, and I doubt they tamed you. That makes us near friends, and friends share their silver." />
+    <string id="taom_enc_robbery_pay_agreement_umbar_corsairs_side_2" text="I knew we would see eye to eye. Pay what is fair and we will drink to your health tonight." />
+    <string id="taom_enc_robbery_conclusion_umbar_corsairs_side_2" text="Smooth sailing on dry land, then. The corsairs remember who dealt square with them." />
+    <string id="taom_enc_robbery_start_fight_umbar_corsairs_side_2" text="So you would rather fight than pay a friend. Then we fight, and the gulls can judge it." />
+    <string id="taom_enc_robbery_threat_umbar_corsairs_foe_1" text="Well now, a fat prize walking the coast road alone. Hand over your purse and your boots, and we may let you keep the rest." />
+    <string id="taom_enc_robbery_pay_agreement_umbar_corsairs_foe_1" text="Striking your colours already? Wise. Pile it up here, every coin, and be quick about it." />
+    <string id="taom_enc_robbery_conclusion_umbar_corsairs_foe_1" text="Off with you, and pray our ships never sight your shore." />
+    <string id="taom_enc_robbery_start_fight_umbar_corsairs_foe_1" text="Then we take the prize by force, as Umbar always has. Cut them down!" />
+    <string id="taom_enc_robbery_threat_umbar_corsairs_foe_2" text="You have the look of someone who has never been robbed by real corsairs. Today you learn how it is done. Everything you carry, now." />
+    <string id="taom_enc_robbery_pay_agreement_umbar_corsairs_foe_2" text="Ha! Not even a fight. Throw it all on the sand, and do not make me count twice." />
+    <string id="taom_enc_robbery_conclusion_umbar_corsairs_foe_2" text="A rich haul. Go and tell your friends the corsairs come ashore whenever they please." />
+    <string id="taom_enc_robbery_start_fight_umbar_corsairs_foe_2" text="Good, a fight! Our blades have been dry since the last landfall." />
+    <string id="taom_enc_bandit_greet_umbar_corsairs_kin_1" text="Steady, steady! We are only sailors ashore with empty bellies. Keep your sword in its sheath and we will keep ours." />
+    <string id="taom_enc_bandit_greet_umbar_corsairs_kin_2" text="Think twice, friend. We have both known hard roads and harder captains, and there is no gold here worth the bleeding." />
+    <string id="taom_enc_bandit_greet_umbar_corsairs_side_1" text="You strike at us? We serve no Tower and no White City, and neither do you. Save your steel for those who would chain us both." />
+    <string id="taom_enc_bandit_greet_umbar_corsairs_side_2" text="Mind your aim! The free blades of this coast have few enough friends without cutting each other down." />
+    <string id="taom_enc_bandit_greet_umbar_corsairs_foe_1" text="Come and try it! Every corsair here learned to fight on a pitching deck, and solid ground makes it easy." />
+    <string id="taom_enc_bandit_greet_umbar_corsairs_foe_2" text="A bold charge against the corsairs of Umbar. The sea has drowned bolder, and we sent most of them there." />
+    <string id="taom_enc_hideout_boss_umbar_corsairs_kin" text="Enough of my crew lies bleeding. Face me alone, the way corsairs settle a quarrel, and the winner takes the hold and all in it." />
+    <string id="taom_enc_hideout_boss_umbar_corsairs_side" text="We both keep clear of the great war, so let us settle this freely. One against one, and the cove goes to whoever walks away." />
+    <string id="taom_enc_hideout_boss_umbar_corsairs_foe" text="So you found our cove. Draw and face me alone, and we will see which of us feeds the crabs." />
+    <string id="taom_enc_robbery_threat_gondor_soldiers_kin_1" text="Easy now, and keep your hand from your sword. You have the look of someone who has stood a long watch too, so pay what you can spare and we part without blood." />
+    <string id="taom_enc_robbery_pay_agreement_gondor_soldiers_kin_1" text="I thought you might see sense. We held the fords while better-fed captains slept, and have nothing to show for it. Name a sum that shames neither of us." />
+    <string id="taom_enc_robbery_conclusion_gondor_soldiers_kin_1" text="That buys bread and a dry barn for a week. Go safely, and if anyone asks, the road was empty." />
+    <string id="taom_enc_robbery_start_fight_gondor_soldiers_kin_1" text="Then draw, and may whoever falls be forgiven. I had hoped someone who knows a hard life would spare us this." />
+    <string id="taom_enc_robbery_threat_gondor_soldiers_kin_2" text="Hold there. Ten years we stood against the Shadow on the river, and the Steward's clerks forgot our names. Share a little coin with old soldiers, and we all see tomorrow." />
+    <string id="taom_enc_robbery_pay_agreement_gondor_soldiers_kin_2" text="Good. You know what an empty belly does to tired soldiers. Offer something fair and we will not haggle long." />
+    <string id="taom_enc_robbery_conclusion_gondor_soldiers_kin_2" text="Our thanks. When you sit to your next meal, face west a moment for the comrades we left on the river." />
+    <string id="taom_enc_robbery_start_fight_gondor_soldiers_kin_2" text="So it comes to blades between the likes of us. Shields together, and finish it quickly." />
+    <string id="taom_enc_robbery_threat_gondor_soldiers_side_1" text="Stop there, friend of the West. We have no quarrel with any who stand against the Shadow, only with empty purses. Lighten yours a little and go on your way." />
+    <string id="taom_enc_robbery_pay_agreement_gondor_soldiers_side_1" text="Kindly done. We fought for the same cause as you once, before it stopped feeding us. What will you give?" />
+    <string id="taom_enc_robbery_conclusion_gondor_soldiers_side_1" text="The thanks of Gondor, such as it is from the likes of us. Go on, and may your road stay clear of orcs." />
+    <string id="taom_enc_robbery_start_fight_gondor_soldiers_side_1" text="You would rather fight old allies over a few coins? Then guard yourself, and do not expect us to be gentle." />
+    <string id="taom_enc_robbery_threat_gondor_soldiers_side_2" text="A moment, traveller. We once held the line so that travellers like you could sleep at night. Call it back pay owed, and hand over some silver." />
+    <string id="taom_enc_robbery_pay_agreement_gondor_soldiers_side_2" text="Fair of you. The Steward's treasury never was. Name your sum and we will hear it." />
+    <string id="taom_enc_robbery_conclusion_gondor_soldiers_side_2" text="That is more than the Tower ever sent us. Go in peace, and may your own lords pay their soldiers better than ours did." />
+    <string id="taom_enc_robbery_start_fight_gondor_soldiers_side_2" text="Then we take it. We are long past caring which side anyone stands on. Steel out!" />
+    <string id="taom_enc_robbery_threat_gondor_soldiers_foe_1" text="You there, halt! We may have thrown off the Steward's colours, but we still know an enemy when we see one. Your purse, and quickly." />
+    <string id="taom_enc_robbery_pay_agreement_gondor_soldiers_foe_1" text="You would buy your way past us? Fine, an enemy's coin spends like any other. Make it a heavy offer." />
+    <string id="taom_enc_robbery_conclusion_gondor_soldiers_foe_1" text="Take your road and do not look back. If we meet again, we may not be so hungry." />
+    <string id="taom_enc_robbery_start_fight_gondor_soldiers_foe_1" text="Good. I have missed fighting an honest enemy. At them!" />
+    <string id="taom_enc_robbery_threat_gondor_soldiers_foe_2" text="Halt. Our banners are gone, but our swords still remember the enemy. Empty your saddlebags, or we empty them for you." />
+    <string id="taom_enc_robbery_pay_agreement_gondor_soldiers_foe_2" text="So you will pay rather than bleed. Clever. Let us see how much your hide is worth to you." />
+    <string id="taom_enc_robbery_conclusion_gondor_soldiers_foe_2" text="Done. Ride on before some of us decide the coin was not enough." />
+    <string id="taom_enc_robbery_start_fight_gondor_soldiers_foe_2" text="Then we finish this as we did in the old days in Ithilien. No quarter for those who cross us!" />
+    <string id="taom_enc_bandit_greet_gondor_soldiers_kin_1" text="Wait! We have bled for the same lands you ride through. Must it end with us killing each other?" />
+    <string id="taom_enc_bandit_greet_gondor_soldiers_kin_2" text="Put up your swords. We are tired, hungry and few, and none of us wants to die on a muddy road for nothing." />
+    <string id="taom_enc_bandit_greet_gondor_soldiers_side_1" text="Steady! We once fought beside allies such as you against the Dark Lord. Is this how the Free Peoples repay us?" />
+    <string id="taom_enc_bandit_greet_gondor_soldiers_side_2" text="Turn back. We still know how to hold a shield wall, and you will break on it before you break us." />
+    <string id="taom_enc_bandit_greet_gondor_soldiers_foe_1" text="So the enemy comes looking for us now. We held against worse on the river, and we will hold here." />
+    <string id="taom_enc_bandit_greet_gondor_soldiers_foe_2" text="Come on, then. Gondor taught us to fight before it forgot us, and we remember every lesson." />
+    <string id="taom_enc_hideout_boss_gondor_soldiers_kin" text="Enough of this slaughter between soldiers. Face me alone, sword to sword, and let my company live or die by how it ends." />
+    <string id="taom_enc_hideout_boss_gondor_soldiers_side" text="I was a captain once, with a banner and a good name. Meet me alone and let the outcome settle this, as was done in the old wars." />
+    <string id="taom_enc_hideout_boss_gondor_soldiers_foe" text="You have come far into our camp, enemy. I will meet you alone, blade to blade, and show you what a captain of the Tower was worth." />
+    <string id="taom_enc_robbery_threat_erebor_warriors_kin_1" text="Well met, cousin of the deep places. Even kin pay toll on this road, though we take less from you than from the rest. Open your purse." />
+    <string id="taom_enc_robbery_pay_agreement_erebor_warriors_kin_1" text="Good. No need for axes between those who know the dark under the mountains. Weigh out a fair share." />
+    <string id="taom_enc_robbery_conclusion_erebor_warriors_kin_1" text="The debt is settled and no beard is bloodied. Go, and do not speak of the Blacklocks in your own halls." />
+    <string id="taom_enc_robbery_start_fight_erebor_warriors_kin_1" text="So you would raise an axe against your own blood over a little gold. Then you are no better than the ones who drove us out." />
+    <string id="taom_enc_robbery_threat_erebor_warriors_kin_2" text="Stop, kin. The halls that turned us out have done the same to others, maybe to you. Share your gold with the outcast, and we part friends." />
+    <string id="taom_enc_robbery_pay_agreement_erebor_warriors_kin_2" text="Spoken like one who knows what it is to lose a hall. Show us the gold and we will be fair with it." />
+    <string id="taom_enc_robbery_conclusion_erebor_warriors_kin_2" text="May the Maker keep you, since the Maker has forgotten us. Walk on, and stay clear of the eastern passes." />
+    <string id="taom_enc_robbery_start_fight_erebor_warriors_kin_2" text="Then let the old grudge between our houses grow one line longer. Axes!" />
+    <string id="taom_enc_robbery_threat_erebor_warriors_side_1" text="We bend the knee to no king, and you keep out of the Dark Lord's war as we do. That makes us neighbours, and neighbours pay toll." />
+    <string id="taom_enc_robbery_pay_agreement_erebor_warriors_side_1" text="A neighbourly answer. Show us the coin, and do not hide the good pieces at the bottom." />
+    <string id="taom_enc_robbery_conclusion_erebor_warriors_side_1" text="Counted and found honest. Go, and if anyone's soldiers come asking, you met no one in these hills." />
+    <string id="taom_enc_robbery_start_fight_erebor_warriors_side_1" text="We kept out of everyone's wars to keep our gold. Do not think we will lose it to you now. Shields locked, axes high!" />
+    <string id="taom_enc_robbery_threat_erebor_warriors_side_2" text="You there. You owe nothing to the great powers, much like us. Still, the road is ours, and the road takes its share in gold." />
+    <string id="taom_enc_robbery_pay_agreement_erebor_warriors_side_2" text="Sensible. Those who stay out of the great war have to look after their own purses. What have you got?" />
+    <string id="taom_enc_robbery_conclusion_erebor_warriors_side_2" text="A clean bargain. Remember that the Blacklocks dealt fairly with you, and deal fairly with us next time." />
+    <string id="taom_enc_robbery_start_fight_erebor_warriors_side_2" text="Your mistake. We have outlasted kings and worms, and one stubborn traveller will not trouble us long." />
+    <string id="taom_enc_robbery_threat_erebor_warriors_foe_1" text="Hold! You march under a banner, and banners mean wars that were never ours. Pay for passing through our hills, and pay well." />
+    <string id="taom_enc_robbery_pay_agreement_erebor_warriors_foe_1" text="So the proud will pay after all. Weigh it out, and we will tell you when it is enough." />
+    <string id="taom_enc_robbery_conclusion_erebor_warriors_foe_1" text="Taken and written in the book. Go, and tell your lords the hills of the east answer to no one." />
+    <string id="taom_enc_robbery_start_fight_erebor_warriors_foe_1" text="Good. Our axes have gone too long without work. Break them!" />
+    <string id="taom_enc_robbery_threat_erebor_warriors_foe_2" text="Stand fast, stranger. The Blacklocks keep long memories for those who serve the great powers. Your gold, or your blood on the stones." />
+    <string id="taom_enc_robbery_pay_agreement_erebor_warriors_foe_2" text="Coin from an enemy is still coin. Set it on the rock where we can see it." />
+    <string id="taom_enc_robbery_conclusion_erebor_warriors_foe_2" text="That pays for this road and nothing more. Cross our hills again and the price will be dearer." />
+    <string id="taom_enc_robbery_start_fight_erebor_warriors_foe_2" text="Close ranks. We stopped counting enemies the day our halls were taken, and we will not start again with you." />
+    <string id="taom_enc_bandit_greet_erebor_warriors_kin_1" text="Stay your hand! We are of the same stone and the same blood, whatever our banners say." />
+    <string id="taom_enc_bandit_greet_erebor_warriors_kin_2" text="Think on it before you strike. The halls cast us out, but we still swing axes as well as any who stayed." />
+    <string id="taom_enc_bandit_greet_erebor_warriors_side_1" text="Back off. We have no master and no quarrel with you, and you would do well to leave it so." />
+    <string id="taom_enc_bandit_greet_erebor_warriors_side_2" text="Attack the Blacklocks in our own hills? The stones here have drunk better blood than yours." />
+    <string id="taom_enc_bandit_greet_erebor_warriors_foe_1" text="Come then. Every axe in this clan has a grudge to spend, and you will do." />
+    <string id="taom_enc_bandit_greet_erebor_warriors_foe_2" text="Strike, if you dare. The Blacklocks have stood against greater armies than yours and are still here." />
+    <string id="taom_enc_hideout_boss_erebor_warriors_kin" text="You found our hold, kin. Then let it be settled the old way, you and I alone, axe to axe, with the clan as witness." />
+    <string id="taom_enc_hideout_boss_erebor_warriors_side" text="Far enough. I am chief of the Blacklocks, and I will meet you alone before my clan, if you have the stomach for it." />
+    <string id="taom_enc_hideout_boss_erebor_warriors_foe" text="You have broken into the last hall the Blacklocks own. Stand before me alone and earn the right to take it." />
+    <string id="taom_enc_robbery_threat_mirkwood_stalkers_kin_1" text="Stand still. You walk with the light step of our own, but exiles cannot live on remembered songs, so your silver comes to us." />
+    <string id="taom_enc_robbery_pay_agreement_mirkwood_stalkers_kin_1" text="You remember that the woodland shares what it has. Half of what you carry will do, and we will not count the rest." />
+    <string id="taom_enc_robbery_conclusion_mirkwood_stalkers_kin_1" text="It is done, and without grief. If the King's wardens ask, you met no one beneath these boughs." />
+    <string id="taom_enc_robbery_start_fight_mirkwood_stalkers_kin_1" text="So be it. Let the trees see which of us forgot the old songs first." />
+    <string id="taom_enc_robbery_threat_mirkwood_stalkers_kin_2" text="Rest your bow, wanderer. We were cast out of the King's halls long ago and our courtesy went with us, so set down your silver." />
+    <string id="taom_enc_robbery_pay_agreement_mirkwood_stalkers_kin_2" text="There is still some sense in the old blood. A fair share and no more, for we have no wish to strip one of our own." />
+    <string id="taom_enc_robbery_conclusion_mirkwood_stalkers_kin_2" text="Go, and keep to the paths where the light still reaches. Some of us remember how to be kind, though it comes slowly now." />
+    <string id="taom_enc_robbery_start_fight_mirkwood_stalkers_kin_2" text="Then let the trees bear witness. We will sing for you when it is over." />
+    <string id="taom_enc_robbery_threat_mirkwood_stalkers_side_1" text="Halt there. You owe nothing to any great banner and neither do we, which makes this a plain matter of silver." />
+    <string id="taom_enc_robbery_pay_agreement_mirkwood_stalkers_side_1" text="Sensible. Lay a fair portion on that stone, and we will judge whether it is fair." />
+    <string id="taom_enc_robbery_conclusion_mirkwood_stalkers_side_1" text="Enough. Go your way, and if the Elvenking's wardens find you, you saw only birds in the branches." />
+    <string id="taom_enc_robbery_start_fight_mirkwood_stalkers_side_1" text="You bargain with blades, then. We have lived too long to fear one more fool in the dark." />
+    <string id="taom_enc_robbery_threat_mirkwood_stalkers_side_2" text="Neither the King nor the Shadow rules this part of the forest. We do, and the toll is paid in silver." />
+    <string id="taom_enc_robbery_pay_agreement_mirkwood_stalkers_side_2" text="No great power stands behind either of us, so let us keep this small. A third of your purse will settle it." />
+    <string id="taom_enc_robbery_conclusion_mirkwood_stalkers_side_2" text="That will serve. Follow the stream until the trees thin, and do not leave the water after dusk." />
+    <string id="taom_enc_robbery_start_fight_mirkwood_stalkers_side_2" text="A poor choice. Your bones will be green with moss before the moon is full." />
+    <string id="taom_enc_robbery_threat_mirkwood_stalkers_foe_1" text="You walk this forest uninvited, under a banner we have no love for. Pay for every step, or lie here until the leaves cover you." />
+    <string id="taom_enc_robbery_pay_agreement_mirkwood_stalkers_foe_1" text="Then pay well, for we have little mercy left for the cause you serve. All the gold you carry, and quickly." />
+    <string id="taom_enc_robbery_conclusion_mirkwood_stalkers_foe_1" text="Go before we think better of it. If your banner passes beneath these trees again, no gold will save it." />
+    <string id="taom_enc_robbery_start_fight_mirkwood_stalkers_foe_1" text="Then the forest will have you. Loose!" />
+    <string id="taom_enc_robbery_threat_mirkwood_stalkers_foe_2" text="The spiders took our kin and the King took our homes, so we take what we please from strangers. Coin now, or blood." />
+    <string id="taom_enc_robbery_pay_agreement_mirkwood_stalkers_foe_2" text="A coward's bargain, but we will take it. Empty your purse to the last coin and step back from it." />
+    <string id="taom_enc_robbery_conclusion_mirkwood_stalkers_foe_2" text="Begone. The forest forgets nothing, and neither do we." />
+    <string id="taom_enc_robbery_start_fight_mirkwood_stalkers_foe_2" text="Then learn why travellers fear the dark under the trees. Shoot!" />
+    <string id="taom_enc_bandit_greet_mirkwood_stalkers_kin_1" text="Would you hunt your own beneath the trees? Lower your blade, and we will forget you ever came." />
+    <string id="taom_enc_bandit_greet_mirkwood_stalkers_kin_2" text="We were sent out of the King's halls once already. Must you finish what the King began?" />
+    <string id="taom_enc_bandit_greet_mirkwood_stalkers_side_1" text="We have no quarrel with you and no master to send after you. Ride on and leave us to the dark." />
+    <string id="taom_enc_bandit_greet_mirkwood_stalkers_side_2" text="Careful. We know every root and hollow of this forest, and you know none of them." />
+    <string id="taom_enc_bandit_greet_mirkwood_stalkers_foe_1" text="Come, then. We have fought worse than you in this darkness, and outlived them all." />
+    <string id="taom_enc_bandit_greet_mirkwood_stalkers_foe_2" text="Strike if you dare. This forest has swallowed armies, and it will hardly notice you." />
+    <string id="taom_enc_hideout_boss_mirkwood_stalkers_kin" text="Enough of our blood has stained these roots. Face me alone, one exile against one wanderer, and let the trees judge between us." />
+    <string id="taom_enc_hideout_boss_mirkwood_stalkers_side" text="You found our hollow, which few ever do. Meet me alone beneath the great oak, and whoever falls, the rest go free." />
+    <string id="taom_enc_hideout_boss_mirkwood_stalkers_foe" text="I have kept this hollow since long before you drew breath. Face me alone if you have the nerve, and let the others watch." />
+    <string id="taom_enc_robbery_threat_feral_orcs_kin_1" text="Hungry, hungry. You are one of us, so we ask nice once. Give food and shiny, or we eat yours." />
+    <string id="taom_enc_robbery_pay_agreement_feral_orcs_kin_1" text="Good, good. Throw down the meat bag and a fistful of coin. Den shares, den lives." />
+    <string id="taom_enc_robbery_conclusion_feral_orcs_kin_1" text="Go, go. No whips out here, no masters. Come back when you are hungry too." />
+    <string id="taom_enc_robbery_start_fight_feral_orcs_kin_1" text="Not sharing? Then the den eats you, bones and all!" />
+    <string id="taom_enc_robbery_threat_feral_orcs_kin_2" text="We smell it on you, the whip-scars and the hunger. Out here nobody owns us. Pay the den or bleed for it." />
+    <string id="taom_enc_robbery_pay_agreement_feral_orcs_kin_2" text="Yes. Half your bread, all your shiny. Then we let you run." />
+    <string id="taom_enc_robbery_conclusion_feral_orcs_kin_2" text="Gone now. Tell the other runaways the den is fat this season." />
+    <string id="taom_enc_robbery_start_fight_feral_orcs_kin_2" text="Thinks it is bigger than us! Bite it! Biggest gets first pick!" />
+    <string id="taom_enc_robbery_threat_feral_orcs_side_1" text="Stop! Your masters in their towers mean nothing here. In the wild we eat what we catch, and we caught you." />
+    <string id="taom_enc_robbery_pay_agreement_feral_orcs_side_1" text="Meat and coin, lots of it. Drop it on the ground and back away slow." />
+    <string id="taom_enc_robbery_conclusion_feral_orcs_side_1" text="Run back to your masters, then. Tell them the dens bow to nobody." />
+    <string id="taom_enc_robbery_start_fight_feral_orcs_side_1" text="No pay? Good! Coin is cold and flesh is warm. Get it!" />
+    <string id="taom_enc_robbery_threat_feral_orcs_side_2" text="You march for the Shadow? We do not. Out here only the strongest rules, and the strongest says pay." />
+    <string id="taom_enc_robbery_pay_agreement_feral_orcs_side_2" text="Leave the pack beasts and the purse. We are not greedy, only hungry." />
+    <string id="taom_enc_robbery_conclusion_feral_orcs_side_2" text="Walk now, while the den is busy eating. Do not look back." />
+    <string id="taom_enc_robbery_start_fight_feral_orcs_side_2" text="Then we take beasts, purse and you. Rip!" />
+    <string id="taom_enc_robbery_threat_feral_orcs_foe_1" text="Food! Food walking in the wild! Throw down everything, or we pull you down and eat." />
+    <string id="taom_enc_robbery_pay_agreement_feral_orcs_foe_1" text="It wants to bargain. All the food, all the shiny, every last crumb, and maybe we only bite a little." />
+    <string id="taom_enc_robbery_conclusion_feral_orcs_foe_1" text="Run, run far. Next time the den is hungrier." />
+    <string id="taom_enc_robbery_start_fight_feral_orcs_foe_1" text="Good, it fights! Hot blood tastes better!" />
+    <string id="taom_enc_robbery_threat_feral_orcs_foe_2" text="No road here, no lord, no law. Just the den, and the den wants what you carry." />
+    <string id="taom_enc_robbery_pay_agreement_feral_orcs_foe_2" text="Clever. Empty the sacks, drop the blades, and crawl past on your belly." />
+    <string id="taom_enc_robbery_conclusion_feral_orcs_foe_2" text="Crawl on, then. We know your scent now, and we will smell you coming." />
+    <string id="taom_enc_robbery_start_fight_feral_orcs_foe_2" text="Too slow to pay, too slow to run. Pull it down!" />
+    <string id="taom_enc_bandit_greet_feral_orcs_kin_1" text="No, no! Same blood, same hunger! Why hunt your own when the valleys are full of fat prey?" />
+    <string id="taom_enc_bandit_greet_feral_orcs_kin_2" text="Put it down! We ran from the whips and the pits, same as any of us would. Let the den be." />
+    <string id="taom_enc_bandit_greet_feral_orcs_side_1" text="Hah, the Shadow sends its hounds after us now? We bow to no tower. Come and bleed." />
+    <string id="taom_enc_bandit_greet_feral_orcs_side_2" text="Leave the den alone! We took nothing of your masters'. Only sheep, only stragglers." />
+    <string id="taom_enc_bandit_greet_feral_orcs_foe_1" text="You come to the den? Good. The den was hungry, and now the food comes by itself." />
+    <string id="taom_enc_bandit_greet_feral_orcs_foe_2" text="Wait! Wait! Take bones, shinies, anything! Just do not burn the den!" />
+    <string id="taom_enc_hideout_boss_feral_orcs_kin" text="You smell strong. The den follows the strongest, so fight me alone, and whoever stands keeps the den." />
+    <string id="taom_enc_hideout_boss_feral_orcs_side" text="No master I bow to sent you here. Fight me, just you and me, and the den eats the loser." />
+    <string id="taom_enc_hideout_boss_feral_orcs_foe" text="Biggest in the den, me. You want the den, you beat me, one on one, teeth and iron." />
+    <string id="taom_enc_robbery_threat_looters_kin_1" text="Easy now, we were farmers before the war burned the barns. Hand over a little coin and nobody bleeds on this road." />
+    <string id="taom_enc_robbery_pay_agreement_looters_kin_1" text="You look like you have known lean winters too. A few coins and a loaf if you have one, that is all we ask." />
+    <string id="taom_enc_robbery_conclusion_looters_kin_1" text="That will keep the children fed a while. Go on, and may the road treat you better than it treated us." />
+    <string id="taom_enc_robbery_start_fight_looters_kin_1" text="Then you are no better than the raiders who took everything. Get at them!" />
+    <string id="taom_enc_robbery_threat_looters_kin_2" text="Stop there, friend. The war took our fields and our lord forgot us, so the road is the only field we have left to reap." />
+    <string id="taom_enc_robbery_pay_agreement_looters_kin_2" text="We are not thieves by trade. Give what you can spare and we will call it fair." />
+    <string id="taom_enc_robbery_conclusion_looters_kin_2" text="Thank you, truly. Watch the ford ahead, other raiders have been about." />
+    <string id="taom_enc_robbery_start_fight_looters_kin_2" text="We buried too many this winter to fear one more grave. Come on, then!" />
+    <string id="taom_enc_robbery_threat_looters_side_1" text="Hold up! Nobody rides to avenge anyone out here, and we have not eaten in two days, so give us your coin." />
+    <string id="taom_enc_robbery_pay_agreement_looters_side_1" text="No need for blades. Some silver and whatever food you carry, and we will let you be." />
+    <string id="taom_enc_robbery_conclusion_looters_side_1" text="Go on, then. Mind the burned village past the hill, there are worse than us sleeping in its cellars." />
+    <string id="taom_enc_robbery_start_fight_looters_side_1" text="Hunger makes a body brave. At them!" />
+    <string id="taom_enc_robbery_threat_looters_side_2" text="We care nothing for whose banner you follow, or whether you follow any. An empty belly takes no side, so pay up." />
+    <string id="taom_enc_robbery_pay_agreement_looters_side_2" text="That is more like it. Half of what jingles in your purse, and keep the rest for your own troubles." />
+    <string id="taom_enc_robbery_conclusion_looters_side_2" text="Fair enough. The roads have gone bad everywhere since the Shadow rose, so keep your eyes open." />
+    <string id="taom_enc_robbery_start_fight_looters_side_2" text="Stubborn, are you? We have nothing left to lose but our lives, and those are not worth much." />
+    <string id="taom_enc_robbery_threat_looters_foe_1" text="Your war burned our homes and left us to starve by the roadside. Now you can pay for some of it." />
+    <string id="taom_enc_robbery_pay_agreement_looters_foe_1" text="Pay, then, and pay heavy. Every coin you hand over is one your lords owe us." />
+    <string id="taom_enc_robbery_conclusion_looters_foe_1" text="Take your road and your war away from here. We have nothing left for either." />
+    <string id="taom_enc_robbery_start_fight_looters_foe_1" text="Then we take it from your corpse! For the farms they burned!" />
+    <string id="taom_enc_robbery_threat_looters_foe_2" text="Armies marched through our valley and left only ash, and you ride under their banners. Empty your purse." />
+    <string id="taom_enc_robbery_pay_agreement_looters_foe_2" text="Smart. Everything you carry, the food first, then the coin." />
+    <string id="taom_enc_robbery_conclusion_looters_foe_2" text="Get out of our sight before we think better of it. Hunger makes poor judges." />
+    <string id="taom_enc_robbery_start_fight_looters_foe_2" text="Better to die fighting than starve in a ditch. Have at them!" />
+    <string id="taom_enc_bandit_greet_looters_kin_1" text="Mercy! We are only hungry folk who lost our farms, the same as half the realm." />
+    <string id="taom_enc_bandit_greet_looters_kin_2" text="Wait, we are no raiders! Just poor farmers driven off our land, and we would sooner run than fight you." />
+    <string id="taom_enc_bandit_greet_looters_side_1" text="We have nothing worth taking, only rags and an empty pot. Leave us be and go your way." />
+    <string id="taom_enc_bandit_greet_looters_side_2" text="Come no closer! We starved through one winter already, and we will not die easy in this one." />
+    <string id="taom_enc_bandit_greet_looters_foe_1" text="Back off! Your armies took our harvest, and you will not take our lives as well." />
+    <string id="taom_enc_bandit_greet_looters_foe_2" text="Go on, then, cut us down. It is quicker than hunger." />
+  </strings>
+</base>

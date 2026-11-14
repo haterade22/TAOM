@@ -2402,3 +2402,15 @@ The Elite Emissary's resource price was first written as `merchant_cost` times t
 - **Why missed:** the multiplier sat on the resource because the charge methods already held one. Every test, and every row in shipped data, had the troop's resource and the owner's resource agree, so no check could fail.
 - **Prevent:** when a number is derived from a runtime lookup (a resolved faction, culture or resource) and the same number is shown or charged somewhere else, fold it into the data row at load and have every reader use the row. Write one test where the lookup returns something other than the row's own value, and gate the largest value against the smallest limit any lookup result could carry.
 - **Source:** [rca-special-resource-pricing-2026-11-12.md](../rca-special-resource-pricing-2026-11-12.md), finding 1.
+
+### Score a troop's weapon per battle set, not by its best set (upgrade paths, #631, 2026-11-13)
+The engine draws each equipment slot from its own random battle set (`Equipment.cs:573-578` on v1.5.7), so a troop with a strong sword in set 1 and a weak one in set 2 carries the weak one in about half its spawns. The upgrade-path walker, and the `MELEE_LADDER_INVERSION` gate, scored each troop by its best weapon over all sets. Three roster swaps changed one set only (the Galadhrim Marksman, the Fountain Guard, the Pinnath Gelin footman), and every check the work ran stayed green.
+- **Why missed:** the swap planner keyed its change on one `(slot, item)` pair, and the only score the work had was the best set, which a one-set change already raises.
+- **Prevent:** a script or gate that compares what troops carry reports the weakest battle set as well as the best one, and a swap changes the slot in every battle set of the troop. After a roster pass, run both scores and quote both.
+- **Source:** [rca-starter-cap-upgrade-paths-2026-11-13.md](../rca-starter-cap-upgrade-paths-2026-11-13.md), findings 1 to 3.
+
+### Cap the quantity the bug is about, not a proxy for it (starter cap, #1224, 2026-11-13)
+The first starter cap limited the blade `damage_factor` to the weakest sibling's factor. Damage is the donor's geometry magnitude times the factor (`Crafting.cs:374`, `:380`), and a starter keeps its donor's pieces, so 15 of 44 capped starters still out-hit a sibling, and spears lost thrust they did not need to lose. The family was also too wide: unsold items, `_blunt` tournament weapons and lances counted as "what the shops sell".
+- **Why missed:** the proxy agreed with the real quantity on the reported case (the Isengard sword), and the tests checked the proxy.
+- **Prevent:** when a rule says "must not out-damage" or "must not cost more", compute that quantity with the model the repo already has (`melee_catalogue` for melee DPS) and test the quantity. Define the comparison set by what the player can reach (merchandise, not a tournament or practice weapon), and write one decoy per exclusion.
+- **Source:** [rca-starter-cap-upgrade-paths-2026-11-13.md](../rca-starter-cap-upgrade-paths-2026-11-13.md), findings 5, 8 to 10.

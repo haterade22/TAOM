@@ -71,7 +71,7 @@ diplomacy file lists no pair. An unlisted pair is Neutral; `Natural` is an allia
 the wrong word here.
 
 **Prefixes.** `AND` begins with Arthedain's `AN`, but every prefix reader takes all the leading
-capitals (`Generate-Settlements.ps1` `'^([A-Z]+)'`, `Settlement-Breakdown.ps1`,
+capitals (`Settlement-Breakdown.ps1`,
 `generate_new_faction_kingdoms.py`), so no tool reads `AND` as `AN`.
 
 ### Component Diagram

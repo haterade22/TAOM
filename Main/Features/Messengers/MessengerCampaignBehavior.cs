@@ -393,30 +393,30 @@ public class MessengerCampaignBehavior : CampaignBehaviorBase, IMissionListener
             PlayerEncounter.Current.SetupFields(mainParty, targetParty ?? mainParty);
             Campaign.Current.CurrentConversationContext = ConversationContext.Default;
 
+            _originalPosition = Vec2.Invalid;
+            Location targetLocation = null;
             if (currentSettlement != null && !WouldAttachToArmy(currentSettlement))
             {
                 _originalPosition = Hero.MainHero.GetMapPoint().Position.ToVec2();
                 PlayerEncounter.EnterSettlement();
-
-                var targetLocation = LocationComplex.Current.GetLocationOfCharacter(target);
-                var playerLocation = LocationComplex.Current.GetLocationOfCharacter(Hero.MainHero);
-
+                // A hero with no place in the scene talks in a conversation mission, as on vanilla's party screen (messengers.md).
+                targetLocation = LocationComplex.Current?.GetLocationOfCharacter(target);
+                if (targetLocation == null)
+                    targetParty = target.PartyBelongedTo?.Party ?? targetParty;
+            }
+            if (targetLocation != null)
+            {
                 CampaignEventDispatcher.Instance.OnPlayerStartTalkFromMenu(target);
                 _currentMission = (Mission)PlayerEncounter.LocationEncounter.CreateAndOpenMissionController(
-                    targetLocation, playerLocation, target.CharacterObject, null);
+                    targetLocation, LocationComplex.Current.GetLocationOfCharacter(Hero.MainHero), target.CharacterObject, null);
             }
             else
-            {
-                _originalPosition = Vec2.Invalid;
                 _currentMission = (Mission)Campaign.Current.CampaignMissionManager.OpenConversationMission(
                     new ConversationCharacterData(Hero.MainHero.CharacterObject, mainParty, true, false, false, false, false, false),
                     new ConversationCharacterData(target.CharacterObject, targetParty, true, false, false, false, false, false),
                     "", "");
-            }
 
-            // Phase 9b #123 P1: null-guard `_currentMission`. If OpenConversationMission returns null,
-            // AddListener no-ops → OnEndMission never fires → `_processingArrivedMessenger` stays stuck
-            // true forever → all future arrived-messenger processing silently blocked for the session.
+            // #123: a null mission never fires OnEndMission, so without the abort `_processingArrivedMessenger` stays stuck.
             if (_currentMission != null)
             {
                 _currentMission.AddListener(this);

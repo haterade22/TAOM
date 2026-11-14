@@ -172,8 +172,9 @@ questionnaire for a character who was about to be thrown away.
 `Patch78_PlayerSwitcher_CareerFastPath` postfixes `CharacterCreationManager.StartNarrativeStage()`
 and, when `IPlayerSwitchSession.HasSelection` is true, walks the menu chain forward to the career
 menu. The career menu is where the walk stops because it is the one choice in the stage that
-survives: `SwitchPlanner` reads `ICareerMenuService.SelectedCareerStringId` and `HeroSwitchService`
-re-keys it onto the lord.
+survives: the 1100 handler plans the career the created hero holds
+(`ICareerDataService.GetCareerStringId`; the menu pick, or with no pick the career `AssignCareer`
+auto-assigned, #1217) and `HeroSwitchService` re-keys it onto the lord.
 
 Three things make this safe rather than clever:
 

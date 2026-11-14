@@ -9,7 +9,7 @@ fortifications. The final values are read from the repo's own tables (add_map_fo
 fortification's owner and culture, add_map_villages.VILLAGES for each village's culture), never restated here,
 so the script and `add_map_*.py --check` cannot disagree.
 
-TARGET IS THE LIVE FILE (the repo's settlements.xml is a stale shadow). Save-compat as in
+TARGET IS THE LIVE FILE (TAOM_Map is in no repo). Save-compat as in
 retag_khand_to_variag.py: `Settlement.Culture` is re-read from XML on every load.
 
 Refuses, writing nothing, unless every table row exists in the file and sits on its interim culture (and the

@@ -1112,6 +1112,66 @@ class Issue1184Tests(unittest.TestCase):
         self.assertEqual(verdict_of(out, self.START), "NOT REACHED")
 
 
+class Issue1185Tests(unittest.TestCase):
+    """The real #1185 manifest: a fix that switched itself off is named in a red chat line. The fixtures hold the lines
+    SelfDisableNoticeTests renders through the real OutcomeLog, so a change to the line format fails one of the two."""
+
+    NOTICE = "taom.patch-notice.self-disable"
+
+    def setUp(self):
+        self.t = Tree(self)
+        self.t.real_manifest("1185.toml")
+
+    def judge(self, fixture):
+        self.t.taom(fixture, "2026-11-14_10-00-00")
+        return self.t.run(["--issue", "1185"])
+
+    def test_the_layer_limit_fix_named_in_chat_passes(self):
+        code, out, _ = self.judge("self_disable_pass.txt")
+        self.assertEqual(code, 0, out)
+        self.assertEqual(verdict_of(out, self.NOTICE), "PASS")
+        self.assertIn("one red chat line names Patch15_BannerLayerLimit", out)
+
+    def test_a_drain_that_threw_fails(self):
+        code, out, _ = self.judge("self_disable_tick_threw.txt")
+        self.assertEqual(code, 1, out)
+        self.assertEqual(verdict_of(out, self.NOTICE), "FAIL")
+
+    def test_a_pass_beside_a_later_throw_fails(self):
+        code, out, _ = self.judge("self_disable_pass_and_threw.txt")
+        self.assertEqual(code, 1, out)
+        self.assertEqual(verdict_of(out, self.NOTICE), "FAIL")
+
+    def test_another_fix_named_in_chat_is_not_a_pass(self):
+        # The check needs the Patch15 flag: a line for another fix proves nothing about that run.
+        code, out, _ = self.judge("self_disable_other_feature.txt")
+        self.assertEqual(code, 4, out)
+        self.assertEqual(verdict_of(out, self.NOTICE), "NOT REACHED")
+        # Judged, not dropped: the session bound to its build and the line was read.
+        self.assertIn("reached, but no line matched pass pattern", out)
+        self.assertIn("feature=Patch110_BardTownGuard shown=chat", out)
+
+    def test_a_dedicated_server_skip_is_not_a_pass(self):
+        # Only a dedicated server writes this skip; the manifest reads the taom log, so the pattern is what is pinned.
+        code, out, _ = self.judge("self_disable_server_skip.txt")
+        self.assertEqual(code, 4, out)
+        self.assertEqual(verdict_of(out, self.NOTICE), "NOT REACHED")
+        self.assertIn("result=skip feature=Patch15_BannerLayerLimit reason=dedicated-server", out)
+
+    def test_a_sub_site_pass_and_another_sites_swallow_are_not_reached(self):
+        # The pass needs the exact Patch15 id followed by shown=chat; the fail needs this notice's own site.
+        code, out, _ = self.judge("self_disable_near_misses.txt")
+        self.assertEqual(code, 4, out)
+        self.assertEqual(verdict_of(out, self.NOTICE), "NOT REACHED")
+        self.assertIn("feature=Patch15_BannerLayerLimit.Probe shown=chat", out)
+
+    def test_a_session_with_no_notice_is_not_reached(self):
+        code, out, _ = self.judge("career_open_pass.txt")
+        self.assertEqual(code, 4, out)
+        self.assertEqual(verdict_of(out, self.NOTICE), "NOT REACHED")
+        self.assertIn("no line matched a reached or pass pattern", out)
+
+
 class Issue1028Tests(unittest.TestCase):
     """The real #1028 manifest, judged on the lines MissionStartGuardService writes (MissionStartGuardChecks.cs). The literals are
     the ones MissionStartGuardManifestTests renders through the real OutcomeLog, so a change to the line format fails one of the two."""

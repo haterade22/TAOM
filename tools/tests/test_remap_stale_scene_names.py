@@ -34,11 +34,9 @@ class RemapStaleSceneNamesTests(unittest.TestCase):
         (self.modules / "SandBox" / "SceneObj" / "empire_dungeon_stealth").mkdir(parents=True)
         self.live = self.modules / "TAOM_Map" / "ModuleData" / "settlements.xml"
         self.live.parent.mkdir(parents=True)
-        self.shadow = Path(self._tmp.name) / "shadow.xml"
         self.running = False
         for patch in (mock.patch.object(rm, "MODULES", self.modules),
                       mock.patch.object(rm, "LIVE", self.live),
-                      mock.patch.object(rm, "SHADOW", self.shadow),
                       mock.patch.object(rm, "game_or_kit_running", lambda: self.running)):
             patch.start()
             self.addCleanup(patch.stop)
@@ -128,6 +126,15 @@ class RemapStaleSceneNamesTests(unittest.TestCase):
         self.assertEqual(code, 0)
         self.assertEqual(self.live.read_bytes(), original)
         self.assertEqual(self._backups(), [])
+
+    def test_a_missing_live_file_exits_2_not_0(self):
+        # "0 of N remaps match" with exit 0 would read as "already remapped" when nothing was looked at.
+        for flag in ("--dry-run", "--apply"):
+            with self.subTest(flag=flag):
+                code, out = self._run(flag)
+                self.assertEqual(code, 2, out)
+                self.assertIn("settlements.xml", out)
+                self.assertEqual(self._backups(), [])
 
     def test_mixed_case_old_name_is_replaced(self):
         self.live.write_bytes(_doc("Empire_Dungeon_A", "\r\n"))

@@ -89,6 +89,7 @@ internal sealed class ChronicleFixture
         Settings.ChronicleEnabled.Returns(true);
         Settings.ChronicleAnnouncements.Returns(true);
         Settings.ArmyFocusMultiplier.Returns(1.4f);
+        Settings.StoryOffersEnabled.Returns(true);
 
         Coop = Substitute.For<ICoopSessionProvider>();
         Coop.IsAuthority.Returns(true);

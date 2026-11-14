@@ -1029,7 +1029,8 @@ public class SubModule : MBSubModuleBase
             IoC.Resolve<TAOM.Features.PlayerSwitcher.IPlayerSwitchSession>(),
             IoC.Resolve<TAOM.Features.PlayerSwitcher.IPlayerSwitchSessionWriter>(),
             IoC.Resolve<TAOM.Features.PlayerSwitcher.IPlayerSwitchPolicyProvider>(),
-            IoC.Resolve<ICareerMenuService>(),
+            IoC.Resolve<Features.CareerSystem.ICareerDataService>(),
+            IoC.Resolve<TAOM.Adapters.IPlayerPartyAdapter>(),
             IoC.Resolve<TAOM.Adapters.IInquiryAdapter>(),
             IoC.Resolve<TAOM.Adapters.IPlayerIdentityAdapter>(),
             ccLogger));
@@ -1061,7 +1062,7 @@ public class SubModule : MBSubModuleBase
         campaignStarter.AddBehavior(new TAOM.Features.PlayerPossession.PlayerPossessionBehavior(
             IoC.Resolve<TAOM.Features.PlayerPossession.IPlayerPossessionService>(),
             IoC.Resolve<TAOM.Features.PlayerPossession.IJoinReconciliationService>(),
-            IoC.Resolve<ICareerMenuService>(),
+            IoC.Resolve<ICareerDataService>(),
             ccLogger));
 
         campaignStarter.RemoveBehaviors<InitialChildGenerationCampaignBehavior>();
@@ -2346,6 +2347,7 @@ public class SubModule : MBSubModuleBase
     protected override void OnApplicationTick(float dt)
     {
         Core.Logging.Outcomes.Tick(); // the 10-minute [Session] heartbeat: one clock compare per tick
+        Core.Diagnostics.SelfDisableNotice.Tick(); // #1185: a fix that turned itself off, shown once on the main thread
         _timeAccelerationService?.OnTick();
         _factionUiTicker?.Tick(dt);
 

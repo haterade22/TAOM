@@ -241,10 +241,12 @@ def _dead_id_hint(twin: str | None) -> str:
     return "Fold its content into the\n             standard-id file, or register it where its manager asks for it."
 
 
-def audit_module(module_dir: str, game_dir: str, name: str | None = None) -> list[tuple[str, str]]:
+def audit_module(module_dir: str, game_dir: str, name: str | None = None,
+                 extra_type_dirs: tuple[str, ...] | list[str] = ()) -> list[tuple[str, str]]:
     """Return (severity, message) pairs for one module. Severity is ERROR or WARN. `name` labels the
     findings and keys UNDECLARED_BASELINE (default: the folder name). Raises AuditUnavailable when an
-    action_sets.xml needs Native's action_types.xml and it cannot be read."""
+    action_sets.xml needs Native's action_types.xml and it cannot be read. `extra_type_dirs` are other
+    modules whose action_types.xml also declares names (the engine merges them all)."""
     name = name or os.path.basename(module_dir.rstrip("\\/"))
     mbproj = os.path.join(module_dir, "ModuleData", "project.mbproj")
     if not os.path.exists(mbproj):
@@ -305,6 +307,8 @@ def audit_module(module_dir: str, game_dir: str, name: str | None = None) -> lis
         declared, bad = action_attrs(own_types, "name")
         available.update(declared)
         parse_problems += bad
+        for other in extra_type_dirs:  # the engine merges every loaded module's action types
+            available.update(action_attrs(os.path.join(other, "ModuleData", "action_types.xml"), "name")[0])
         bound, bad = action_attrs(sets_path, "type")
         parse_problems += bad
         for problem in parse_problems:
@@ -319,6 +323,13 @@ def audit_module(module_dir: str, game_dir: str, name: str | None = None) -> lis
             ))
 
     return [(sev, f"[{name}] {msg}") for sev, msg in findings]
+
+
+def sibling_dirs(entry: str, modules_dir: str) -> list[str]:
+    """The other TAOM modules' folders (TAOM from the repo), whose action_types.xml also declares the
+    names this module binds. Kept when --module narrows the audit to one module."""
+    return [os.path.join(REPO_ROOT, "Main", "_Module") if other == "TAOM" else os.path.join(modules_dir, other)
+            for other in TAOM_MODULES if other != entry]
 
 
 def is_official(module_dir: str) -> bool:
@@ -417,7 +428,7 @@ def main() -> int:
                                          f"             audit judged the repo copy; build to deploy it."))
             print(f"TAOM: {note}\n")
         try:
-            findings.extend(audit_module(path, args.game_dir, label))
+            findings.extend(audit_module(path, args.game_dir, label, sibling_dirs(entry, modules_dir)))
         except AuditUnavailable as exc:
             print(f"ERROR: {exc}")
             return 2

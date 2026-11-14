@@ -870,7 +870,7 @@
       <EquipmentRoster>
         <equipment slot="Item0" id="Item.wm_gondor_spear_a" />
         <equipment slot="Item1" id="Item.dunland_wulf_shield_medium_a" />
-        <equipment slot="Item2" id="Item.dunland_caerdh_axe_1h_a" />
+        <equipment slot="Item2" id="Item.dunland_caerdh_axe_1h_b" />
         <equipment slot="Head" id="Item.sk_ar_art_helmet_inf_med_a" />
         <equipment slot="Body" id="Item.sk_ar_art_chainmail_full_a" />
         <equipment slot="Cape" id="Item.sk_ar_art_pauld_inf_med_a" />
@@ -880,7 +880,7 @@
       <EquipmentRoster>
         <equipment slot="Item0" id="Item.wm_gondor_spear_a" />
         <equipment slot="Item1" id="Item.dunland_wulf_shield_medium_b" />
-        <equipment slot="Item2" id="Item.dunland_caerdh_axe_1h_a" />
+        <equipment slot="Item2" id="Item.dunland_caerdh_axe_1h_b" />
         <equipment slot="Head" id="Item.sk_ar_art_helmet_inf_med_b" />
         <equipment slot="Body" id="Item.sk_ar_art_chainmail_full_b" />
         <equipment slot="Cape" id="Item.sk_ar_art_pauld_inf_med_b" />
@@ -917,7 +917,7 @@
         <equipment slot="Item0" id="Item.ladder_rhudaur_bow_t3" />
         <equipment slot="Item1" id="Item.bodkin_arrows_a" />
         <equipment slot="Item2" id="Item.bodkin_arrows_a" />
-        <equipment slot="Item3" id="Item.dunland_caerdh_axe_1h_a" />
+        <equipment slot="Item3" id="Item.dunland_caerdh_axe_1h_b" />
         <equipment slot="Head" id="Item.sk_ar_art_helmet_inf_med_a" />
         <equipment slot="Body" id="Item.sk_ar_art_chainmail_full_a" />
         <equipment slot="Cape" id="Item.sk_ar_art_cape_a" />
@@ -928,7 +928,7 @@
         <equipment slot="Item0" id="Item.ladder_rhudaur_bow_t3" />
         <equipment slot="Item1" id="Item.bodkin_arrows_a" />
         <equipment slot="Item2" id="Item.bodkin_arrows_a" />
-        <equipment slot="Item3" id="Item.dunland_caerdh_axe_1h_a" />
+        <equipment slot="Item3" id="Item.dunland_caerdh_axe_1h_b" />
         <equipment slot="Head" id="Item.sk_ar_art_helmet_inf_med_b" />
         <equipment slot="Body" id="Item.sk_ar_art_chainmail_full_b" />
         <equipment slot="Cape" id="Item.sk_ar_art_cape_b" />

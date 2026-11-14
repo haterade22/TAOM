@@ -231,14 +231,6 @@ class DataTextCategoriesTests(unittest.TestCase):
         # files translate; a TAOM row would load later and replace that translation.
         self.assertNotIn("taom_vanilla_troop_obsolete_overrides.xml", names)
 
-    def test_CategorySources_NeverIncludeUnloadedSettlementFiles(self):
-        # settlements.xml in the repo shadows TAOM_Map's live file; custom_settlements.xml is
-        # registered nowhere in SubModule.xml. Neither reaches the engine.
-        for cat, spec in gen.CATEGORIES.items():
-            names = {p.name for p in spec["sources"]()}
-            self.assertNotIn("settlements.xml", names, cat)
-            self.assertNotIn("custom_settlements.xml", names, cat)
-
 
 class BuildXmlTests(unittest.TestCase):
     def test_BuildXml_Entries_ProducesBareStringsRoot(self):

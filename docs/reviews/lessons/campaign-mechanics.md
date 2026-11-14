@@ -1222,6 +1222,37 @@ The #1141 follow-up reused `PlayerClanCheck` for the War Chronicle volunteer mul
 - **Prevent:** when a new caller adopts a shared "is this a player's" check, read the helper's stated reason and rewrite it to cover the new caller, or give that caller its own rule. When a doc states what a player-scoped setting does, name the scope of each seam (clan, hero, faction, global).
 - **Source:** [rca-coop-mainhero-audit-2026-11-13.md](../rca-coop-mainhero-audit-2026-11-13.md), findings R12 and R13.
 
+### A second path to a map outcome reuses the owner's checks, never a subset of them (#1105, 2026-11-13)
+Story Missions' story result settles a War Chronicle window beside the chronicle's own paths. Its first draft checked only that
+the window was listed: a Lost verdict could land after War Ended (the guard lives in `ChronicleService.Guarded`), overwrite an
+owner change that raised no event (`CheckOwner` catches a clan that leaves its kingdom with its fiefs), and a win could pay Held
+while an AI siege of the same fortress went on (`Assaulted`, `AttackerBesieges`).
+- **Why missed:** the new path was written from the decision text ("the map decides first"), not from the list of checks the
+  owner already runs on its own paths.
+- **Prevent:** before a new caller changes state that another service owns, list every guard the owner runs on its own writes
+  and route the new write through the same method (`ConfirmStoryWindow` runs `Guarded` and `CheckOwner`), with one test per
+  guard.
+- **Source:** [rca-story-missions-slice4-2026-11-13.md](../rca-story-missions-slice4-2026-11-13.md), rows S1, 2, 3.
+
+### A result that waits for a menu click is lost at a save: apply it in the init the return runs (#1105, 2026-11-13)
+The story offer held a mission's verdict in a field until the player clicked "Continue" on the menu the mission returned to. The
+engine saves the open menu id and restores the menu on load (`MapStateData`, `SandBoxGameManager`), and the save menu is open on
+that screen, so a save there kept the menu and dropped the verdict, and the battle could be replayed.
+- **Why missed:** the menu was treated as a moment between two clicks; a behavior with an empty `SyncData` has nothing to save.
+- **Prevent:** a behavior that saves nothing applies a mission's result in the menu init that `MapState.OnActivate` runs on the
+  return (once, behind a flag), and its "Continue" only leaves. If the result cannot be applied there, save it.
+- **Source:** [rca-story-missions-slice4-2026-11-13.md](../rca-story-missions-slice4-2026-11-13.md), row 1.
+
+### A popup's button revalidates the map: the rest of the tick that raised it can open an encounter (#1105, 2026-11-13)
+`CampaignEventDispatcher.Tick` raises `TickEvent` at v1.5.7 `Campaign.cs:980`; periodic events (`:988`) and
+`EncounterManager.Tick` (`:994`) run after it in the same frame, and the popup's pause takes effect only on the next frame. A
+popup raised from `TickEvent` behind `MapPopupGate.IsMapFree` can therefore have an encounter or a map conversation under it when
+its button is clicked.
+- **Why missed:** the free-map check ran when the popup opened, and the click was assumed to see the same map. The earlier
+  lesson "A modal opened from a game menu must pause the game, and its callback must revalidate" covered menus only.
+- **Prevent:** a popup button that opens a menu or changes the map checks `MapPopupGate.IsMapFreeUnderPopup` first, and leaves
+  the offer pending when it fails.
+- **Source:** [rca-story-missions-slice4-2026-11-13.md](../rca-story-missions-slice4-2026-11-13.md), row 6.
 ### A labelled finance line was a suspect in a NavalDLC clan-screen crash, later called unproven (yotthani, TAOM_POI v1.3.4 to v1.3.10, game version not stated)
 yotthani's TAOM_POI release notes (v1.3.4, v1.3.5, `TAOM_POI/RELEASE-NOTES.md@c45d8374`) say NavalDLC's clan screen reads both `CalculateClanIncome` and `CalculateClanGoldChange` and maps every itemized line of the `ExplainedNumber` to a source object (a settlement, a workshop). The mod's "Points of Interest" line had none, and opening the clan screen after a POI was bought crashed natively (evidence: `rgl_log_3380`, not in the repo, NavalDLC loaded; v1.3.5, lines 139-143). v1.3.5 dropped the label and added the amount as a plain number. v1.3.10 then says the crash is still there, that the finance assumption behind v1.3.3 to v1.3.5 "was wrong, or at least unproven", and ships switches that turn off the finance line, the owner banner and the bonus icon one at a time, with the older `.tpac` packages as a fourth suspect (lines 3-42). In yotthani's code the mod augments only `CalculateClanGoldChange` and "DELIBERATELY does NOT override `CalculateClanIncome`" (`POIClanFinanceModel.cs@c45d8374:35-45`).
 - **TAOM's exposure** [TAOM-verified, v2.0.38, by reading; not run]: `TaomClanFinanceModel.AddServiceWageLine` adds a labelled line, `result.Add(wage, new TextObject("{=taom_enlist_wage_line}Service wages"))` (`:123`), and is called from both `CalculateClanGoldChange` (`:48`) and `CalculateClanIncome` (`:88`), for the player clan when the enlisted wage is above 0. TAOM declares NavalDLC incompatible (`Main/_Module/SubModule.xml:53-55`), and the manifest comment gives another reason (the `nordinvasion` start handler). So the risk applies only to a player who forces War Sails on.

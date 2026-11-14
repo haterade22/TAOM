@@ -440,8 +440,7 @@ Four things to know:
 
 1. **The target file is `Modules/TAOM_Map/ModuleData/settlements.xml`, which this repo does not
    track.** A module reinstall silently reverts the edit. Re-run the check after any TAOM_Map update.
-   The repo's `Main/_Module/ModuleData/settlements.xml` is the stale shadow (863 settlements against
-   the live file's 988) and editing it does nothing.
+   TAOM's repo has no settlement file (its two unloaded copies were removed on 2026-11-14).
 2. **New campaigns only.** Settlement ownership is engine-saved, unlike `Settlement.Culture`.
 3. **Villages are untouched.** None of the 616 villages carries an explicit `owner`; each follows its
    bound fortification.

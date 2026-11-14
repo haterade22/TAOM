@@ -86,7 +86,7 @@ hand edits, so land a repo-side validator gate with any fix.
 | `python tools/analyze_settlement_prosperity.py` | starting prosperity, live map against vanilla, with flat-cluster flags | the economy after day one |
 | `python tools/dump_settlement_buildings.py` | per-fief starting building levels from the live map | levels players reach later |
 | `python tools/analyze_war_theaters.py` | which kingdoms have no enemy inside their march radius | real pathing distance; its numbers are straight-line estimates |
-| `pwsh tools/Settlement-Breakdown.ps1 -SettlementsXml "<install>/Modules/TAOM_Map/ModuleData/settlements.xml"` | settlement counts by region and type | pass the live path; the default is the repo's stale shadow |
+| `pwsh tools/Settlement-Breakdown.ps1 -SettlementsXml "<install>/Modules/TAOM_Map/ModuleData/settlements.xml"` | settlement counts by region and type | defaults to `$env:BANNERLORD_GAME_DIR\Modules\TAOM_Map\ModuleData\settlements.xml` (exit 2 if that is unset and no path is given); `-SettlementsXml` overrides |
 | `pwsh tools/Generate-SceneEntitiesDoc.ps1` | the world-map scene's settlement entities as a doc | it reads the scene only, never ModuleData |
 | `python tools/clan_registry.py` | every clan that exists after `spclans.xslt` runs, with culture and kingdom | whether that clan has lords |
 

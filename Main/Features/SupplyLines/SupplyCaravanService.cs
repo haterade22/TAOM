@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Reflection;
 using HarmonyLib;
 using TAOM.Core.Logging;
@@ -98,6 +99,31 @@ public sealed class SupplyCaravanService : ISupplyCaravanService
     private readonly Dictionary<string, CaravanTracker> _caravans = new Dictionary<string, CaravanTracker>();
 
     private bool _positionSetWarned;
+    private bool _offLandWarned;
+
+    /// <summary>The once-per-campaign-session line when the movement pass holds a caravan off a point that is not walkable land (#1104).</summary>
+    internal static string OffLandWarning(string orderId, bool playerAtSea, float x, float y, int faceIndex, string terrain) =>
+        string.Format(CultureInfo.InvariantCulture,
+            "[SupplyLines] caravan of order {0} held at its last land position: the next point is not walkable land, playerAtSea={1} pos=({2:F2},{3:F2}) face={4} terrain={5} (logged once per campaign session)",
+            orderId, playerAtSea, x, y, faceIndex, terrain);
+
+    // The face index and terrain of the rejected point, for the #1104 log line. A bad face must not throw out of the movement pass.
+    private static void DescribeFace(CampaignVec2 position, out int faceIndex, out string terrain)
+    {
+        faceIndex = -1;
+        terrain = "unknown";
+        try
+        {
+            var face = position.Face;
+            faceIndex = face.FaceIndex;
+            if (face.IsValid())
+                terrain = Campaign.Current.MapSceneWrapper.GetFaceTerrainType(face).ToString();
+        }
+        catch (Exception)
+        {
+            // Diagnostics only: keep the defaults.
+        }
+    }
 
     public SupplyCaravanService(ISupplyLinesSettingsProvider settings, IModLogger logger)
     {
@@ -286,6 +312,7 @@ public sealed class SupplyCaravanService : ISupplyCaravanService
     public void ClearTrackers()
     {
         _caravans.Clear();
+        _offLandWarned = false;
     }
 
     public float DistanceToPlayer(SupplyOrder order)
@@ -357,13 +384,33 @@ public sealed class SupplyCaravanService : ISupplyCaravanService
             bool moved = !tracker.HasAppliedPos
                 || tracker.SmoothPos.Distance(tracker.LastAppliedPos) >= MinPositionDelta;
 
+            bool placed = false;
             if (moved)
             {
                 try
                 {
-                    party.Position = new CampaignVec2(tracker.SmoothPos, isOnLand: true);
-                    tracker.LastAppliedPos = tracker.SmoothPos;
-                    tracker.HasAppliedPos = true;
+                    // A caravan is a land party. The smoothed point can cut a bend, the glide after a repath can
+                    // cross a gap, and when an endpoint face is invalid or the path query fails or returns fewer
+                    // than two points the route is a straight line over water and impassable ground. The
+                    // movement pass never moves the caravan off walkable land: a point that is not
+                    // walkable land is skipped and the caravan waits at its last land position; delivery still
+                    // comes in range or at ForceDeliverFraction. Patch57 records a native crash for a party at
+                    // sea on TAOM_Map (#296), and a land party on such a face is not known to be safe (#1104).
+                    var position = new CampaignVec2(tracker.SmoothPos, isOnLand: true);
+                    if (position.IsValid())
+                    {
+                        party.Position = position;
+                        tracker.LastAppliedPos = tracker.SmoothPos;
+                        tracker.HasAppliedPos = true;
+                        placed = true;
+                    }
+                    else if (!_offLandWarned)
+                    {
+                        _offLandWarned = true;
+                        DescribeFace(position, out int faceIndex, out string terrain);
+                        _logger.LogWarning(OffLandWarning(order.OrderId, mainParty.IsCurrentlyAtSea,
+                            tracker.SmoothPos.x, tracker.SmoothPos.y, faceIndex, terrain));
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -375,7 +422,7 @@ public sealed class SupplyCaravanService : ISupplyCaravanService
                 }
             }
 
-            if (moved && fraction < BearingSuppressedPastFraction)
+            if (placed && fraction < BearingSuppressedPastFraction)
                 ApplyBearing(party, tracker, previous, tracker.Origin);
         }
     }

@@ -1963,5 +1963,9 @@
     <string id="taom_crca_t3_b_p2" text="部隊維持費-15%。" />
     <string id="taom_crca_t3_b_p3" text="部隊移動速度+15%。" />
     <string id="taom_crca_t3_b_p4" text="最大体力+9。" />
+    <string id="taom_career_passive_label" text="Passive" />
+    <string id="taom_career_tier_word" text="Tier" />
+    <string id="taom_career_choose_one" text="Choose one" />
+    <string id="taom_career_choose_count" text="Choose {COUNT}" />
   </strings>
 </base>

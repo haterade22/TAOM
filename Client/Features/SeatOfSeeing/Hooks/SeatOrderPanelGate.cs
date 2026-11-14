@@ -4,6 +4,7 @@ using System.Reflection;
 using System.Reflection.Emit;
 using HarmonyLib;
 using TaleWorlds.MountAndBlade;
+using TAOM.Core.Diagnostics;
 using TAOM.Core.Logging;
 
 namespace TAOM.Features.SeatOfSeeing.Hooks;
@@ -26,6 +27,7 @@ public static class SeatOrderPanelTranspiler
         if (sites.Count != 1)
         {
             logger?.LogError($"[SeatOfSeeing] expected exactly one Agent.IsPlayerControlled read in MissionOrderVM.CheckCanBeOpened, found {sites.Count}: a hero who fights on cannot open the order panel");
+            SelfDisables.Report(SeatOfSeeingModule.PatchCategory, $"found {sites.Count} Agent.IsPlayerControlled reads in MissionOrderVM.CheckCanBeOpened, expected 1");
             return list;
         }
 

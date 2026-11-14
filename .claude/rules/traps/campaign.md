@@ -45,4 +45,5 @@ history and the gate. A new trap for this area is a new row here, never a row in
 | MarriageModel | One slot: `AddModel` does not compose, so every marriage rule goes in `TaomMarriageModel` | [marriage](../../../docs/features/marriage-alignment.md) |
 | Player Switcher | Register at priority 1100; reassign the player clan before removing the created hero | [switcher](../../../docs/features/player-switcher.md) |
 | Settlement menus | Need an encounter; only `IEncounterAdapter.EnsureSettlementEncounter` places the player | [enlistment](../../../docs/features/enlistment.md) |
+| Popups and menu hotkeys | Escape runs an inquiry's option B and a menu hotkey its first leave option: never a saved choice; a popup button rechecks the map | [lessons](../../../docs/reviews/lessons/localization-ui.md) |
 | Options on a vanilla menu | Add them from an `OnSessionLaunched` listener, never `OnGameStart`: `UnregisterNonReadyObjects` drops the uninitialised menu | [events](../../../docs/reference/engine/campaignevents-and-campaignbehavior.md) |

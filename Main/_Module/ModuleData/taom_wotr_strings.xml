@@ -52,6 +52,7 @@
 	<string id="taom_wc_hornburg_title" text="The Battle of the Hornburg" />
 	<string id="taom_wc_hornburg_open" text="The host of Isengard and the hillmen of Dunland march on {TARGET}. The battle must be decided within {DAYS} days." />
 	<string id="taom_wc_hornburg_lapsed" text="No assault comes to {TARGET}. The muster of Isengard turns elsewhere." />
+	<string id="taom_wc_hornburg_fate" text="The host of Isengard storms {TARGET} through the night, and at dawn the Hornburg still stands." />
 	<string id="taom_wc_hornburg_held" text="The Hornburg holds through the night, and the host of Isengard breaks against its walls." />
 	<string id="taom_wc_hornburg_fell" text="{TARGET} falls, and the White Hand rules the Westfold." />
 	<string id="taom_wc_ents_title" text="The Last March of the Ents" />

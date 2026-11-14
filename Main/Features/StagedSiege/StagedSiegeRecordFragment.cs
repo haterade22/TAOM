@@ -86,7 +86,16 @@ internal static class StagedSiegeRecordFragment
                 record.Radius = radius;
             }
 
-            if (o["utc"] != null && DateTime.TryParse(o["utc"]!.ToString(), CultureInfo.InvariantCulture,
+            // Json.NET already reads an ISO string as a Date token. Its ToString() formats with the thread culture, which the
+            // invariant parse below cannot read on a nb-NO or de-DE Windows, so a Date token is taken as it is.
+            var utcToken = o["utc"];
+            if (utcToken?.Type == JTokenType.Date)
+            {
+                // Same rule as AssumeUniversal below: a time without a zone is UTC.
+                var date = utcToken.Value<DateTime>();
+                record.Utc = date.Kind == DateTimeKind.Unspecified ? DateTime.SpecifyKind(date, DateTimeKind.Utc) : date.ToUniversalTime();
+            }
+            else if (utcToken != null && DateTime.TryParse(utcToken.ToString(), CultureInfo.InvariantCulture,
                     DateTimeStyles.AdjustToUniversal | DateTimeStyles.AssumeUniversal, out var utc))
                 record.Utc = utc;
 

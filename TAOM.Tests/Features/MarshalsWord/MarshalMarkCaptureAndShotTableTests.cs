@@ -414,7 +414,8 @@ public class MarshalMarkCaptureAndShotTableTests
         var body = code.Substring(code.IndexOf("public override void OnAIInputSet(", StringComparison.Ordinal));
 
         StringAssert.Contains(body, "if (_faulted) return; try {");
-        StringAssert.Contains(body, "catch (Exception ex) { _faulted = true; Outcomes.Swallowed(\"MarshalsWord\", \"MarshalWordComponent.OnAIInputSet\", ex); }");
+        StringAssert.Contains(body, "catch (Exception ex) { _faulted = true; Outcomes.Swallowed(\"MarshalsWord\", \"MarshalWordComponent.OnAIInputSet\", ex); SelfDisables.Report(SelfDisableId, ex.GetType().Name); }");
+        StringAssert.Contains(code, "private const string SelfDisableId = MarshalsWordModule.PatchCategory + \".SoldierCallback\";");
     }
 
     [TestMethod]

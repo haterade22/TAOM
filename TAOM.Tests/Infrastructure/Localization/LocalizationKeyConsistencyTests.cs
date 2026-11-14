@@ -237,6 +237,30 @@ public class LocalizationKeyConsistencyTests
         return registered;
     }
 
+    /// <summary>
+    /// The English an untranslated language row keeps, by id: the default of a <c>{=key}Default</c> row, and the whole
+    /// text of a plain GameText row (<c>taom_wotr_strings.xml</c> holds only plain rows, which code looks up by id).
+    /// The first source that has an id wins, as in <see cref="RegisteredEnglish"/>.
+    /// </summary>
+    internal static Dictionary<string, string> EnglishPlaceholders()
+    {
+        var english = new Dictionary<string, string>(StringComparer.Ordinal);
+        foreach (var file in EnglishSources())
+        {
+            foreach (var row in XDocument.Load(file).Descendants("string"))
+            {
+                var text = (string)row.Attribute("text") ?? string.Empty;
+                var m = EmbeddedKey.Match(text);
+                var key = m.Success ? m.Groups[1].Value : (string)row.Attribute("id");
+                if (!string.IsNullOrEmpty(key) && !english.ContainsKey(key))
+                {
+                    english[key] = m.Success ? m.Groups[2].Value : text;
+                }
+            }
+        }
+        return english;
+    }
+
     [TestMethod]
     public void CSharpDefault_PlainLiteral_IsMatchedAndUnescaped()
     {

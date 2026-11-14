@@ -39,6 +39,7 @@ internal sealed class ClaimOption
 /// The player's claim actions on a title, shared by the encyclopedia and the titles window. "Buy a claim" is paid in the
 /// player's special resource and "Usurp", once the player claims the title, in influence. An action that does not apply
 /// to the title (not for sale, held or claimed already, no claim to press) is left out; a refused one carries its reason.
+/// On a title of their highest rank the player is not yet known by, "Make primary title" comes first.
 /// </summary>
 internal static class ClaimActions
 {
@@ -49,6 +50,14 @@ internal static class ClaimActions
         if (hero?.Clan == null || !hero.IsAlive)
             return options;
         var name = TitleNames.Of(title, b);
+
+        // A title of the player's highest rank they are not yet known by: their style, party name and realm banner follow it.
+        if (b.CanPlayerChoosePrimary(title.Id) && !b.IsPlayerKnownBy(title.Id))
+            options.Add(new ClaimOption(Text("{=taom_realms_ui_primary}Make primary title"), string.Empty, string.Empty, () => Confirm(
+                Text("{=taom_realms_ui_primary}Make primary title"),
+                Ask("{=taom_realms_ui_primary_ask}Be known by the {TITLE} from now on? Your style and party name follow your primary title, and so does your realm's banner where the title has one.", name, string.Empty),
+                () => { if (!b.PlayerChoosePrimary(title.Id)) Message(Failed()); },
+                afterYes, afterNo)));
 
         var buy = b.QuoteBuyClaim(hero, title.Id);
         if (buy.Refusal is not (ClaimRefusal.NotForSale or ClaimRefusal.Held or ClaimRefusal.Claimed))

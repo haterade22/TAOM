@@ -9,6 +9,8 @@
   <LanguageFile xml_path="FR/std_taom_lotr_issue_strings_fre-FR.xml" />
   <LanguageFile xml_path="FR/std_taom_xslt_strings_fre-FR.xml" />
   <LanguageFile xml_path="FR/std_taom_emissary_strings_fre-FR.xml" />
+  <LanguageFile xml_path="FR/std_taom_encounter_strings_fre-FR.xml" />
+  <LanguageFile xml_path="FR/std_taom_encounter_lord_strings_fre-FR.xml" />
   <LanguageFile xml_path="FR/std_taom_wotr_strings_fre-FR.xml" />
   <LanguageFile xml_path="FR/std_taom_enlistment_strings_fre-FR.xml" />
   <LanguageFile xml_path="FR/std_taom_keybind_strings_fre-FR.xml" />

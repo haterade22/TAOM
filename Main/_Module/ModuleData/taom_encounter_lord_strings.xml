@@ -79,6 +79,7 @@
 			<tag tag_name="taom_player_kin" weight="100" />
 			<tag tag_name="FirstMeetingTag" weight="1" />
 			<tag tag_name="RomanticallyInvolvedTag" weight="-1" />
+			<tag tag_name="PlayerIsEnemyTag" weight="-1" />
 		</tags>
 	</string>
 	<string id="str_context_line.taom_west_kin_met" text="{=taom_enc_context_line_west_kin_met}Well met again. Sit with me a while if you can; there is news from the North and the South both, and little of it good.">
@@ -87,6 +88,7 @@
 			<tag tag_name="taom_player_kin" weight="100" />
 			<tag tag_name="MetBeforeTag" weight="1" />
 			<tag tag_name="RomanticallyInvolvedTag" weight="-1" />
+			<tag tag_name="PlayerIsEnemyTag" weight="-1" />
 		</tags>
 	</string>
 	<string id="str_surrender_demand_hero.taom_west_rival_1" text="{=taom_enc_surrender_demand_west_rival_1}You have overstepped, and the law of this realm is plain. Lay down your arms and you will be held with honour until terms are made.">
@@ -203,6 +205,7 @@
 			<tag tag_name="taom_speaker_west" weight="100" />
 			<tag tag_name="taom_player_kin" weight="100" />
 			<tag tag_name="RomanticallyInvolvedTag" weight="-1" />
+			<tag tag_name="PlayerIsEnemyTag" weight="-1" />
 		</tags>
 	</string>
 
@@ -255,7 +258,7 @@
 			<tag tag_name="RomanticallyInvolvedTag" weight="-1" />
 		</tags>
 	</string>
-	<string id="str_context_line.taom_rohirrim_foe_first" text="{=taom_enc_context_line_rohirrim_foe_first}You have come into the Mark with your sword drawn against it. Every rider here is sworn to drive you back the way you came.">
+	<string id="str_context_line.taom_rohirrim_foe_first" text="{=taom_enc_context_line_rohirrim_foe_first}You stand with the enemies of the Mark. Every rider here is sworn to drive you back the way you came.">
 		<tags>
 			<tag tag_name="taom_speaker_rohirrim" weight="100" />
 			<tag tag_name="taom_player_foe" weight="100" />
@@ -277,6 +280,7 @@
 			<tag tag_name="taom_player_kin" weight="100" />
 			<tag tag_name="FirstMeetingTag" weight="1" />
 			<tag tag_name="RomanticallyInvolvedTag" weight="-1" />
+			<tag tag_name="PlayerIsEnemyTag" weight="-1" />
 		</tags>
 	</string>
 	<string id="str_context_line.taom_rohirrim_kin_met" text="{=taom_enc_context_line_rohirrim_kin_met}It does me good to see a friendly face out here. Share the ale skin and tell me what you have seen along the Entwash.">
@@ -285,6 +289,7 @@
 			<tag tag_name="taom_player_kin" weight="100" />
 			<tag tag_name="MetBeforeTag" weight="1" />
 			<tag tag_name="RomanticallyInvolvedTag" weight="-1" />
+			<tag tag_name="PlayerIsEnemyTag" weight="-1" />
 		</tags>
 	</string>
 	<string id="str_surrender_demand_hero.taom_rohirrim_rival_1" text="{=taom_enc_surrender_demand_rohirrim_rival_1}We have run you down, and no one outrides my éored on open ground. Lay down your arms and you will be treated fairly.">
@@ -401,6 +406,7 @@
 			<tag tag_name="taom_speaker_rohirrim" weight="100" />
 			<tag tag_name="taom_player_kin" weight="100" />
 			<tag tag_name="RomanticallyInvolvedTag" weight="-1" />
+			<tag tag_name="PlayerIsEnemyTag" weight="-1" />
 		</tags>
 	</string>
 
@@ -461,7 +467,7 @@
 			<tag tag_name="RomanticallyInvolvedTag" weight="-1" />
 		</tags>
 	</string>
-	<string id="str_context_line.taom_northmen_foe_met" text="{=taom_enc_context_line_northmen_foe_met}Back in our vales, are you? You have burned enough of our harvests, and I mean to see that you pay for them.">
+	<string id="str_context_line.taom_northmen_foe_met" text="{=taom_enc_context_line_northmen_foe_met}Back in our vales, are you? Your side has burned enough of our harvests, and I mean to see that you pay for them.">
 		<tags>
 			<tag tag_name="taom_speaker_northmen" weight="100" />
 			<tag tag_name="taom_player_foe" weight="100" />
@@ -475,6 +481,7 @@
 			<tag tag_name="taom_player_kin" weight="100" />
 			<tag tag_name="FirstMeetingTag" weight="1" />
 			<tag tag_name="RomanticallyInvolvedTag" weight="-1" />
+			<tag tag_name="PlayerIsEnemyTag" weight="-1" />
 		</tags>
 	</string>
 	<string id="str_context_line.taom_northmen_kin_met" text="{=taom_enc_context_line_northmen_kin_met}There you are again. Sit a while if you can spare it, there is bread and honey in the wagon and news from home.">
@@ -483,6 +490,7 @@
 			<tag tag_name="taom_player_kin" weight="100" />
 			<tag tag_name="MetBeforeTag" weight="1" />
 			<tag tag_name="RomanticallyInvolvedTag" weight="-1" />
+			<tag tag_name="PlayerIsEnemyTag" weight="-1" />
 		</tags>
 	</string>
 	<string id="str_surrender_demand_hero.taom_northmen_rival_1" text="{=taom_enc_surrender_demand_northmen_rival_1}You are outnumbered and far from help. Give up your arms and you will be treated fairly, as is our custom.">
@@ -599,6 +607,7 @@
 			<tag tag_name="taom_speaker_northmen" weight="100" />
 			<tag tag_name="taom_player_kin" weight="100" />
 			<tag tag_name="RomanticallyInvolvedTag" weight="-1" />
+			<tag tag_name="PlayerIsEnemyTag" weight="-1" />
 		</tags>
 	</string>
 
@@ -673,6 +682,7 @@
 			<tag tag_name="taom_player_kin" weight="100" />
 			<tag tag_name="FirstMeetingTag" weight="1" />
 			<tag tag_name="RomanticallyInvolvedTag" weight="-1" />
+			<tag tag_name="PlayerIsEnemyTag" weight="-1" />
 		</tags>
 	</string>
 	<string id="str_context_line.taom_dunlendings_kin_met" text="{=taom_enc_context_line_dunlendings_kin_met}Well met again. The fires in the high glens have burned low since you went away, and it is good to see a face from home.">
@@ -681,6 +691,7 @@
 			<tag tag_name="taom_player_kin" weight="100" />
 			<tag tag_name="MetBeforeTag" weight="1" />
 			<tag tag_name="RomanticallyInvolvedTag" weight="-1" />
+			<tag tag_name="PlayerIsEnemyTag" weight="-1" />
 		</tags>
 	</string>
 	<string id="str_surrender_demand_hero.taom_dunlendings_rival_1" text="{=taom_enc_surrender_demand_dunlendings_rival_1}My spears hem you in on three sides. Lay down your arms and you walk away from this alive.">
@@ -797,6 +808,7 @@
 			<tag tag_name="taom_speaker_dunlendings" weight="100" />
 			<tag tag_name="taom_player_kin" weight="100" />
 			<tag tag_name="RomanticallyInvolvedTag" weight="-1" />
+			<tag tag_name="PlayerIsEnemyTag" weight="-1" />
 		</tags>
 	</string>
 
@@ -871,6 +883,7 @@
 			<tag tag_name="taom_player_kin" weight="100" />
 			<tag tag_name="FirstMeetingTag" weight="1" />
 			<tag tag_name="RomanticallyInvolvedTag" weight="-1" />
+			<tag tag_name="PlayerIsEnemyTag" weight="-1" />
 		</tags>
 	</string>
 	<string id="str_context_line.taom_southrons_kin_met" text="{=taom_enc_context_line_southrons_kin_met}Again our roads meet, and I am glad of it. There is shade enough here for two who share a homeland.">
@@ -879,6 +892,7 @@
 			<tag tag_name="taom_player_kin" weight="100" />
 			<tag tag_name="MetBeforeTag" weight="1" />
 			<tag tag_name="RomanticallyInvolvedTag" weight="-1" />
+			<tag tag_name="PlayerIsEnemyTag" weight="-1" />
 		</tags>
 	</string>
 	<string id="str_surrender_demand_hero.taom_southrons_rival_1" text="{=taom_enc_surrender_demand_southrons_rival_1}You have strayed into the reach of the South, and my riders outnumber yours. Lay down your arms and I will be merciful.">
@@ -995,6 +1009,7 @@
 			<tag tag_name="taom_speaker_southrons" weight="100" />
 			<tag tag_name="taom_player_kin" weight="100" />
 			<tag tag_name="RomanticallyInvolvedTag" weight="-1" />
+			<tag tag_name="PlayerIsEnemyTag" weight="-1" />
 		</tags>
 	</string>
 
@@ -1069,6 +1084,7 @@
 			<tag tag_name="taom_player_kin" weight="100" />
 			<tag tag_name="FirstMeetingTag" weight="1" />
 			<tag tag_name="RomanticallyInvolvedTag" weight="-1" />
+			<tag tag_name="PlayerIsEnemyTag" weight="-1" />
 		</tags>
 	</string>
 	<string id="str_context_line.taom_easterlings_kin_met" text="{=taom_enc_context_line_easterlings_kin_met}The road brings you back to my wagons. Sit, and tell me what news comes from the camps.">
@@ -1077,6 +1093,7 @@
 			<tag tag_name="taom_player_kin" weight="100" />
 			<tag tag_name="MetBeforeTag" weight="1" />
 			<tag tag_name="RomanticallyInvolvedTag" weight="-1" />
+			<tag tag_name="PlayerIsEnemyTag" weight="-1" />
 		</tags>
 	</string>
 	<string id="str_surrender_demand_hero.taom_easterlings_rival_1" text="{=taom_enc_surrender_demand_easterlings_rival_1}Your little band is ringed by my riders. Throw down your arms and I will remember you were sensible.">
@@ -1193,6 +1210,7 @@
 			<tag tag_name="taom_speaker_easterlings" weight="100" />
 			<tag tag_name="taom_player_kin" weight="100" />
 			<tag tag_name="RomanticallyInvolvedTag" weight="-1" />
+			<tag tag_name="PlayerIsEnemyTag" weight="-1" />
 		</tags>
 	</string>
 
@@ -1267,6 +1285,7 @@
 			<tag tag_name="taom_player_kin" weight="100" />
 			<tag tag_name="FirstMeetingTag" weight="1" />
 			<tag tag_name="RomanticallyInvolvedTag" weight="-1" />
+			<tag tag_name="PlayerIsEnemyTag" weight="-1" />
 		</tags>
 	</string>
 	<string id="str_context_line.taom_elves_kin_met" text="{=taom_enc_context_line_elves_kin_met}Again our paths cross, and the years between are as nothing. Come, share what you have seen since we parted.">
@@ -1275,6 +1294,7 @@
 			<tag tag_name="taom_player_kin" weight="100" />
 			<tag tag_name="MetBeforeTag" weight="1" />
 			<tag tag_name="RomanticallyInvolvedTag" weight="-1" />
+			<tag tag_name="PlayerIsEnemyTag" weight="-1" />
 		</tags>
 	</string>
 	<string id="str_surrender_demand_hero.taom_elves_rival_1" text="{=taom_enc_surrender_demand_elves_rival_1}Our arrows are on the string and your company is ringed about. Lay down your arms, and no blood need stain this ground.">
@@ -1391,6 +1411,7 @@
 			<tag tag_name="taom_speaker_elves" weight="100" />
 			<tag tag_name="taom_player_kin" weight="100" />
 			<tag tag_name="RomanticallyInvolvedTag" weight="-1" />
+			<tag tag_name="PlayerIsEnemyTag" weight="-1" />
 		</tags>
 	</string>
 
@@ -1443,7 +1464,7 @@
 			<tag tag_name="RomanticallyInvolvedTag" weight="-1" />
 		</tags>
 	</string>
-	<string id="str_context_line.taom_dwarves_foe_first" text="{=taom_enc_context_line_dwarves_foe_first}Stand where you are. You make war on the halls of my people, and I have sworn on my grandsires' tombs to answer it.">
+	<string id="str_context_line.taom_dwarves_foe_first" text="{=taom_enc_context_line_dwarves_foe_first}Stand where you are. Your cause is the enemy of the halls of my people, and I have sworn on my grandsires' tombs to answer it.">
 		<tags>
 			<tag tag_name="taom_speaker_dwarves" weight="100" />
 			<tag tag_name="taom_player_foe" weight="100" />
@@ -1465,6 +1486,7 @@
 			<tag tag_name="taom_player_kin" weight="100" />
 			<tag tag_name="FirstMeetingTag" weight="1" />
 			<tag tag_name="RomanticallyInvolvedTag" weight="-1" />
+			<tag tag_name="PlayerIsEnemyTag" weight="-1" />
 		</tags>
 	</string>
 	<string id="str_context_line.taom_dwarves_kin_met" text="{=taom_enc_context_line_dwarves_kin_met}Hail again, cousin. There is ale in the wagon and news from home, if you can spare the time to hear it.">
@@ -1473,6 +1495,7 @@
 			<tag tag_name="taom_player_kin" weight="100" />
 			<tag tag_name="MetBeforeTag" weight="1" />
 			<tag tag_name="RomanticallyInvolvedTag" weight="-1" />
+			<tag tag_name="PlayerIsEnemyTag" weight="-1" />
 		</tags>
 	</string>
 	<string id="str_surrender_demand_hero.taom_dwarves_rival_1" text="{=taom_enc_surrender_demand_dwarves_rival_1}Your road ends at my shield-wall. Lay down your arms and you will be held fairly until your ransom is paid in full.">
@@ -1589,6 +1612,7 @@
 			<tag tag_name="taom_speaker_dwarves" weight="100" />
 			<tag tag_name="taom_player_kin" weight="100" />
 			<tag tag_name="RomanticallyInvolvedTag" weight="-1" />
+			<tag tag_name="PlayerIsEnemyTag" weight="-1" />
 		</tags>
 	</string>
 
@@ -1609,7 +1633,7 @@
 			<tag tag_name="RomanticallyInvolvedTag" weight="-1" />
 		</tags>
 	</string>
-	<string id="str_context_line.taom_orcs_ally_first" text="{=taom_enc_context_line_orcs_ally_first}Hold your spears, you lot, this one marches on our side. Stay where my scouts can see you and we'll get along fine.">
+	<string id="str_context_line.taom_orcs_ally_first" text="{=taom_enc_context_line_orcs_ally_first}Hold your spears, you lot, this one is no enemy of ours today. Stay where my scouts can see you and we'll get along fine.">
 		<tags>
 			<tag tag_name="taom_speaker_orcs" weight="100" />
 			<tag tag_name="taom_player_ally" weight="100" />
@@ -1663,6 +1687,7 @@
 			<tag tag_name="taom_player_kin" weight="100" />
 			<tag tag_name="FirstMeetingTag" weight="1" />
 			<tag tag_name="RomanticallyInvolvedTag" weight="-1" />
+			<tag tag_name="PlayerIsEnemyTag" weight="-1" />
 		</tags>
 	</string>
 	<string id="str_context_line.taom_orcs_kin_met" text="{=taom_enc_context_line_orcs_kin_met}Still alive, you old gutter-rat? Grab a bone, there's meat left on this one.">
@@ -1671,6 +1696,7 @@
 			<tag tag_name="taom_player_kin" weight="100" />
 			<tag tag_name="MetBeforeTag" weight="1" />
 			<tag tag_name="RomanticallyInvolvedTag" weight="-1" />
+			<tag tag_name="PlayerIsEnemyTag" weight="-1" />
 		</tags>
 	</string>
 	<string id="str_surrender_demand_hero.taom_orcs_rival_1" text="{=taom_enc_surrender_demand_orcs_rival_1}Same masters or no, you've crossed my band once too often. Throw down your blades, or we settle it the old way.">
@@ -1787,6 +1813,7 @@
 			<tag tag_name="taom_speaker_orcs" weight="100" />
 			<tag tag_name="taom_player_kin" weight="100" />
 			<tag tag_name="RomanticallyInvolvedTag" weight="-1" />
+			<tag tag_name="PlayerIsEnemyTag" weight="-1" />
 		</tags>
 	</string>
 

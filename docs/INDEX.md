@@ -139,7 +139,7 @@ Codex, Claude, Kimi and other models use the same policy and evidence records.
 - **Shield beside an unusable weapon:** a polearm absent from `OneHandedPolearm` is never drawn, silently. Gate: `python tools/audit_polearm_shield_parity.py`, run by `check-polearm-shield-parity.sh`. Mechanism: [weapon-xml-pipeline](features/weapon-xml-pipeline.md).
 - [armory-shield-audit](reference/armory-shield-audit.md) — shield `item_usage` reference: `hand_shield` vs `shield` grip, the offhand-bone flag each requires, block-arc cost, and the two `body_name`s that look mistyped but must not be corrected
 - See also: [armory-guide](reference/armory-guide.md) for the canonical folder per item-ID prefix
-- See also: [taom-map-settlement-naming](reference/taom-map-settlement-naming.md) for the live-versus-shadow `settlements.xml` trap
+- See also: [taom-map-settlement-naming](reference/taom-map-settlement-naming.md) for why the live `TAOM_Map` `settlements.xml` is the only settlement file
 
 ### Sieges
 - [siege](features/siege.md) — vanilla siege overrides
@@ -271,6 +271,7 @@ TAOM ships no multiplayer of its own; these cover behaving correctly when a thir
 - [bannerlord-together-compat](features/bannerlord-together-compat.md) — multiplayer mod compat surface
 
 ### Infrastructure & tooling
+- [features/patch-failure-notice.md](features/patch-failure-notice.md): the notice for a patch group that fails to apply, and the ledger that names a fix which switched itself off at run time (a transpiler with no anchor, a tripped latch), with the id table and how to add a site (#1185).
 - [reference/development-machines.md](reference/development-machines.md). **Two machines, and every `E:\` path in these docs is the desktop's.** Which machine is authoritative for content, the three env vars that carry the difference (`BANNERLORD_GAME_DIR`, `TAOM_DECOMPILE_ROOT`, `TAOM_PYBIN`), what ignores them (`.mcp.json`, `.codex/config.toml` and the decompile scripts), and why a red validator on the incomplete laptop is the laptop rather than the repo
 - [reference/mcp-servers.md](reference/mcp-servers.md) — full MCP server table, TaleWorlds research lookup-order detail, `.mcp.json` configuration, plugin-overlap routing; CLAUDE.md keeps the usage guide + a 4-line summary
 - [reference/navmesh-prefab-source/README.md](reference/navmesh-prefab-source/README.md): the Modding Kit navmesh export kept as the only valid `NMG9` structure TAOM did not author, and how the Mumakil platform navmesh was made from it
@@ -429,6 +430,7 @@ Written for players, not developers — these are the posts that go out to the c
 engineering detail in `features/` and link outward from here.
 
 - [releases/v2.0.38-discord.md](releases/v2.0.38-discord.md): v2.0.38 Patreon build notes: the circular battle HUD with its ammo counter, Kingdom Allegiance (AI lords stay on their own side of the Free/Evil line) and Sworn Anew judging a captured lord by their own clan. Covers only the changes since v2.0.37 and points to the 28 October summary for the rest. The checklist for testers is [releases/v2.0.38-testers.md](releases/v2.0.38-testers.md)
+- [releases/v2.0.39-discord.md](releases/v2.0.39-discord.md): v2.0.39 public build notes: Realms (titles, claims and the Return of the King), hero auras, the Helm's Deep story mission, encounter lines by people and side, the layered banner editor and the Custom Battle muster screen, the troop weapon ladder and starter caps, and DualWield v0.10.7 in the package. The checklist for testers is [releases/v2.0.39-testers.md](releases/v2.0.39-testers.md)
 - [releases/v2.0.37-discord.md](releases/v2.0.37-discord.md): v2.0.37 tester build notes for Bannerlord v1.5.7 (the party size fix that lets a new campaign start, then everything merged since v2.0.36: Fords of War, The Long Defeat, Seat of Seeing, Marshal's Word, Staged Siege, five new realms, Lothlorien, dire wolves, dwarf attacks, the career changes). Its bullets were checked against the commit bodies on 2026-11-10; a line that says "not tested in game" means no person has seen it work. The checklist for testers is [releases/v2.0.37-testers.md](releases/v2.0.37-testers.md)
 - [releases/2026-11-10-since-oct-28-discord.md](releases/2026-11-10-since-oct-28-discord.md): the v2.0.37 changelog for Discord, 28 Oct to 10 Nov, two paste-ready messages (4,000 character cap) grouped by category, not by build. Its Sources section names what was not verified: nothing on v1.5.7 ran in game, and two of its lines may be stale
 - [releases/v2.0.34-discord.md](releases/v2.0.34-discord.md): v2.0.34 tester build notes (race and culture battle abilities with their glow and sparks, the Ring loading screen, field-battle terrain per region, Custom Battle commanders and default troops, the Uruk-hai skirt, 313 strings no longer in English, faster loading). Written against the untagged v2.0.33 tester build of 2 October; the v2.0.33 tag's code was renumbered v2.0.34, so no v2.0.33 note exists
@@ -474,7 +476,7 @@ Written for a content author editing the XML without writing C#: attribute table
 - [modding/party-templates.md](modding/party-templates.md): what min_value and max_value really do, and why an unbound template is dead data
 - [modding/clans.md](modding/clans.md): the Faction element: tier, colours, banner, party template, home settlement
 - [modding/kingdoms.md](modding/kingdoms.md): kingdom attributes, relationships and policies, and the configs that enumerate kingdom ids
-- [modding/settlements.md](modding/settlements.md): the live map file: positions, owners, cultures, buildings, scenes, and the stale repo shadow
+- [modding/settlements.md](modding/settlements.md): the live map file: positions, owners, cultures, buildings, scenes, and why the repo has no copy
 - [modding/banners-and-heraldry.md](modding/banners-and-heraldry.md): icon sheets, the palette, what a banner_key encodes, and how clan colour becomes armour tint
 - [modding/strings-and-localization.md](modding/strings-and-localization.md): the {=KEY}Fallback rule, which file owns which prefix, and the cache that silently reverts an edited string
 - [modding/configs-balance.md](modding/configs-balance.md): the balance configs: troop weights, resource costs, food, economy, revolt, combat, race age

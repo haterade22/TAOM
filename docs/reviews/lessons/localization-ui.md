@@ -1237,6 +1237,13 @@ runs option A, the deliberate confirm.
 - **Prevent:** before wiring a `ShowTwoOptionInquiry`, decide which choice is harmless when dismissed and
   make that option B. Name the Escape option in the feature doc and pin which callback is B in a test.
 - **Source:** `docs/reviews/rca-enlistment-term-end-2026-10-23.md` F1.
+### Repeat: Escape ran a saved decline, and a menu hotkey ran the first leave option (#1105, 2026-11-13)
+The story offer's popup put "Let fate decide", a saved decline, in option B, and its menu made the same decline the first leave
+option, which the menu's leave hotkey runs (v1.5.7 `MapScreen.cs`, `GameMenu.cs`). Either reflex declined the battle for good.
+- **Why missed:** the 2026-10-23 entry above was in no trap sheet, and no path rule fires in a sibling worktree.
+- **Prevent:** option B of an inquiry and the first leave option of a menu are harmless (a snooze, a leave); a saved choice is
+  never either. The rule is now a line in `.claude/rules/traps/campaign.md`.
+- **Source:** [rca-story-missions-slice4-2026-11-13.md](../rca-story-missions-slice4-2026-11-13.md), row 4.
 ### A StretchToParent child of a CoverChildren panel fills the whole offered space (fief-vote count row, #866, 2026-10-23)
 The fief-count row was a `CoverChildren` `ListPanel` holding a `TextWidget` and a `HintWidget` with
 `StretchToParent` on both axes. A `StretchToParent` child of a `CoverChildren` stack panel is measured against the space the
@@ -1595,3 +1602,9 @@ The older LOTRAOM_FactionMap project (`LOTRAOM_FactionMap/CLAUDE.md`@c45d8374:76
 - **Why missed:** each looks like a layout or art defect, not an engine rule: an image that darkens for good, offsets that double only on a 4K screen, a pulse that stops after a return to the main menu. The rules and TAOM's lines are in [gauntletui-viewmodel-screen.md](../../reference/engine/gauntletui-viewmodel-screen.md) "Gauntlet 2D draw limits, input and tooltip facts".
 - **Prevent:** in a custom widget, set `OverrideDefaultStateSwitchingEnabled` first; take scaled and unscaled sizes from the same side; hold no static widget state, or reset it per session; draw with `DrawSprite`. Check the property and the scale rule against v1.5.7 before relying on them.
 - **Source:** yotthani/bannerlord `LOTRAOM_FactionMap/CLAUDE.md`@c45d8374:76-85, 131-134, 158-163. The older `README.md` there describes a binary hit-map approach and is stale against the CLAUDE.md.
+
+### A notice that writes `shown` names the engine's display filter (#1185, 2026-11-13)
+The self-disable notice called `InformationManager.DisplayMessage`, then wrote `[Check] ... result=pass shown=chat`. In v1.5.7 `DisplayMessage` only invokes a delegate. `MPChatVM.OnDisplayMessageReceived` then adds the line only when `IsChatAllowedByOptions()` holds (MPChatVM.cs 704-710, 1181-1195): never with `BannerlordConfig.EnableSingleplayerChatBox` off, and never in a mission with `BannerlordConfig.HideBattleUI` on. A dropped line leaves no copy, so the manifest read PASS for a line the player did not see. On a new campaign the same gate opened on character creation, where the line fades before the map.
+- **Why missed:** the call returned normally in every case, and the tests faked the notice's own interfaces, so the chat view model was outside every test.
+- **Prevent:** before a line claims that the player saw something, read the engine consumer past the call and gate on its filter (for chat: the two options and the active `GameState`). Write the log line at once and the display later, in two steps, so a held or dropped display never costs the log. A display that the options forbid writes `result=skip` with the reason, never `pass`.
+- **Source:** [rca-patch-self-disable-2026-11-13.md](../rca-patch-self-disable-2026-11-13.md) rows 1, 2 and 6, `/deep-review` Agents 5 and 2.

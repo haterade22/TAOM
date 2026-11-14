@@ -114,6 +114,11 @@
       "image": "taom_event_hornburg.png",
       "openText": "{=taom_wc_hornburg_open}The host of Isengard and the hillmen of Dunland march on {TARGET}. The battle must be decided within {DAYS} days.",
       "lapsedText": "{=taom_wc_hornburg_lapsed}No assault comes to {TARGET}. The muster of Isengard turns elsewhere.",
+      "story": {
+        "mission": "helms_deep_defend",
+        "fate": "Held",
+        "fateText": "{=taom_wc_hornburg_fate}The host of Isengard storms {TARGET} through the night, and at dawn the Hornburg still stands."
+      },
       "outcomes": {
         "held": {
           "text": "{=taom_wc_hornburg_held}The Hornburg holds through the night, and the host of Isengard breaks against its walls.",

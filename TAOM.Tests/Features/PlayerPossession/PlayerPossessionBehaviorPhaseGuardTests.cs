@@ -1,7 +1,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
 using TAOM.Core.Logging;
-using TAOM.Features.CharacterCreation;
+using TAOM.Features.CareerSystem;
 using TAOM.Features.PlayerPossession;
 
 namespace TAOM.Tests.Features.PlayerPossession;
@@ -25,7 +25,7 @@ public class PlayerPossessionBehaviorPhaseGuardTests
         _sut = new PlayerPossessionBehavior(
             _possession,
             Substitute.For<IJoinReconciliationService>(),
-            Substitute.For<ICareerMenuService>(),
+            Substitute.For<ICareerDataService>(),
             Substitute.For<IModLogger>());
     }
 

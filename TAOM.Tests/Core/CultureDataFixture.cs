@@ -19,8 +19,8 @@ internal static class CultureDataFixture
     /// <summary>
     /// Minor cultures whose only settlements are hideouts, so no town or village reader can reach them.
     ///
-    /// NOT "landless" — every one of these owns settlements (159 between them in
-    /// <c>TAOM_Map/ModuleData/settlements.xml</c>), and all 159 are <c>&lt;Hideout&gt;</c>. Every
+    /// NOT "landless": every one of these owns settlements (181 between them in
+    /// <c>TAOM_Map/ModuleData/settlements.xml</c>), and all 181 are <c>&lt;Hideout&gt;</c>. Every
     /// exemption built on this list rests on that, and each needs to stay true:
     ///
     /// <list type="bullet">

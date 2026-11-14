@@ -7832,6 +7832,31 @@
     <string id="taom_hero_auras_mcm_strength" text="英雄のオーラの強さ" />
     <string id="taom_hero_auras_mcm_strength_hint" text="すべてのオーラのボーナスに乗算します。1.0 は hero_auras.json に記述されたままの値、0 はすべてのオーラを無効にします。士気の下限値や、ひるみ耐性のようなオン・オフ式の効果は変化しません。デフォルト: 1.0。" />
     <string id="taom_messenger_waiting" text="Your messenger cannot find {HERO_NAME} yet and will wait until they can be reached." />
+    <string id="taom_char_title" text="Character" />
+    <string id="taom_char_perk_or" text="or" />
+    <string id="taom_char_attribute_points" text="Attribute Points" />
+    <string id="taom_char_next_perk_tier" text="Skill {LEVEL}: next perk tier {TIER}, {COUNT} skill levels away" />
+    <string id="taom_char_next_perk_tier_one" text="Skill {LEVEL}: next perk tier {TIER}, 1 skill level away" />
+    <string id="taom_char_all_perk_tiers" text="Skill {LEVEL}: every perk tier reached" />
+    <string id="taom_char_perk_tier_locked" text="Locked" />
+    <string id="taom_char_no_traits" text="No notable traits" />
+    <string id="taom_story_offer_body" text="The hour of {TARGET} has come. Will you ride to its walls and fight the battle yourself, or let fate decide?" />
+    <string id="taom_story_offer_ride" text="Ride to {TARGET}" />
+    <string id="taom_story_offer_fate" text="Let fate decide" />
+    <string id="taom_story_offer_defend" text="Defend the walls" />
+    <string id="taom_story_offer_continue" text="Continue" />
+    <string id="taom_story_offer_none" text="The moment has passed." />
+    <string id="taom_story_offer_won" text="The walls of {TARGET} held, and the host breaks against them." />
+    <string id="taom_story_offer_lost" text="The walls of {TARGET} are lost." />
+    <string id="taom_story_offer_undecided" text="The battle for {TARGET} is not decided. The call may come again." />
+    <string id="taom_story_offer_menu" text="The host of the enemy gathers before {TARGET}. Time stands until you choose." />
+    <string id="taom_story_offer_failed" text="The story battle could not open. The taom log says why." />
+    <string id="taom_wc_mcm_story" text="Offer Story Missions" />
+    <string id="taom_wc_mcm_story_hint" text="When a great siege opens (the Battle of the Hornburg), offers you its battle to fight yourself. A win holds the fortress; a loss gives it to the attackers. If you let fate decide, the map decides, and a siege that nobody attacks ends as in the book. Off: no offer, and the map and fate decide. Not offered in co-op or while enlisted. Default on." />
+    <string id="taom_story_offer_later" text="Not now" />
+    <string id="taom_realms_ui_primary" text="Make primary title" />
+    <string id="taom_realms_ui_primary_ask" text="Be known by the {TITLE} from now on? Your style and party name follow your primary title, and so does your realm's banner where the title has one." />
+    <string id="taom_patch_self_disabled" text="TAOM: some fixes turned themselves off: {FEATURES}. They stay off for the rest of this battle or this session; the TAOM log names the cause." />
   </strings>
 
 </base>

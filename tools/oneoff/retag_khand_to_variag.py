@@ -19,8 +19,7 @@ Two consequences, one cosmetic and one fatal:
 castle_K4 is deliberately EXCLUDED: it belongs to clan_khuzait_1, a genuine Easterling holding.
 
 TARGET IS THE LIVE FILE. `<game>/Modules/TAOM_Map/ModuleData/settlements.xml` is what the game
-reads; the repo's `Main/_Module/ModuleData/settlements.xml` is a stale shadow and editing it
-changes nothing (orientation.md trap index).
+reads; no repo holds it (orientation.md trap index).
 
 Save-compat: this applies to EXISTING SAVES, not just new campaigns. `Settlement.Culture` is a bare
 `public CultureObject Culture;` (installed v1.4.7 `Settlement.cs:70`) with NO `[SaveableField]`, it

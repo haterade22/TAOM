@@ -14,7 +14,7 @@ Every replacement is verified to exist as a SceneObj folder (case-insensitive) b
 
 Usage:
     python remap_stale_scene_names.py --dry-run
-    python remap_stale_scene_names.py --apply [--shadow]
+    python remap_stale_scene_names.py --apply
 
 --apply refuses while the game or the Modding Kit runs, writes a timestamped
 <name>.bak_scenes_YYYYMMDD-HHMMSS beside each file it changes, keeps its BOM and line endings, and
@@ -34,7 +34,6 @@ from _gamedir import ensure_exists, game_dir, game_or_kit_running
 GAME = Path(game_dir(r"E:\Steam\steamapps\common\Mount & Blade II Bannerlord"))
 MODULES = GAME / "Modules"
 LIVE = MODULES / "TAOM_Map" / "ModuleData" / "settlements.xml"
-SHADOW = Path(__file__).resolve().parent.parent / "Main" / "_Module" / "ModuleData" / "settlements.xml"
 
 REMAP = {
     # vanilla house-interior renames (v1.4.5)
@@ -97,7 +96,6 @@ def main() -> int:
     ap.add_argument("--apply", action="store_true")
     ap.add_argument("--backup", action="store_true",
                     help="accepted and ignored: --apply always writes a timestamped backup first")
-    ap.add_argument("--shadow", action="store_true", help="also remap the repo shadow settlements.xml")
     args = ap.parse_args()
     if not (args.dry_run or args.apply):
         ap.error("pass --dry-run or --apply")
@@ -108,6 +106,7 @@ def main() -> int:
     # "0 of N remaps match the live file" and exits 0, which reads as "already remapped"
     # rather than "looked in the wrong place".
     ensure_exists(MODULES, what="the Bannerlord Modules folder")
+    ensure_exists(LIVE, what="TAOM_Map's settlements.xml")
 
     folders = scene_folders_lower()
     # Only require a replacement scene to exist for entries that ACTUALLY match the
@@ -116,12 +115,12 @@ def main() -> int:
     # value was itself renamed away. (e.g. the Osgiliath typo entry: old ref long
     # gone from the file; its replacement scene was deleted in a later wave.)
     try:
-        live_check_text = read_xml_bytes(LIVE)[2] if LIVE.exists() else ""
+        raw, had_bom, text = read_xml_bytes(LIVE)
     except UnicodeDecodeError as exc:
         print(f"ABORT: {LIVE} is not valid UTF-8 ({exc}); nothing was read or written.")
         return 1
 
-    active = {old: new for old, new in REMAP.items() if _pattern(old).search(live_check_text)}
+    active = {old: new for old, new in REMAP.items() if _pattern(old).search(text)}
     bad = [new for new in set(active.values()) if new.lower() not in folders]
     if bad:
         print("ABORT: replacement scene(s) for matched remaps not found on disk:")
@@ -136,56 +135,39 @@ def main() -> int:
               "close it and run again. Nothing was written.")
         return 1
 
-    targets = [LIVE]
-    if args.shadow:
-        targets.append(SHADOW)
-
-    # Compute and parse-check every output before any file is written.
-    pending = []  # (path, raw bytes, new bytes)
-    for path in targets:
-        if not path.exists():
-            print(f"skip (missing): {path}")
-            continue
-        try:
-            raw, had_bom, text = read_xml_bytes(path)
-        except UnicodeDecodeError as exc:
-            print(f"ABORT: {path} is not valid UTF-8 ({exc}); nothing was written.")
-            return 1
-        total = 0
-        print(f"== {path} ==")
-        for old, new in REMAP.items():
-            pat = _pattern(old)
-            n = len(pat.findall(text))
-            if n:
-                text = pat.sub(lambda m: m.group(1) + new + '"', text)
-                total += n
-                print(f"  {old} -> {new}  ({n})")
-        print(f"  total replacements: {total}")
-        if not total:
-            continue
-        out = (b"\xef\xbb\xbf" if had_bom else b"") + text.encode("utf-8")
+    # Compute and parse-check the output before the file is written.
+    total = 0
+    print(f"== {LIVE} ==")
+    for old, new in REMAP.items():
+        pat = _pattern(old)
+        n = len(pat.findall(text))
+        if n:
+            text = pat.sub(lambda m: m.group(1) + new + '"', text)
+            total += n
+            print(f"  {old} -> {new}  ({n})")
+    print(f"  total replacements: {total}")
+    out = (b"\xef\xbb\xbf" if had_bom else b"") + text.encode("utf-8")
+    if total:
         try:
             ET.fromstring(out)
         except ET.ParseError as exc:
-            print(f"ABORT: the remapped {path.name} would not parse as XML ({exc}); nothing was written.")
+            print(f"ABORT: the remapped {LIVE.name} would not parse as XML ({exc}); nothing was written.")
             return 1
-        pending.append((path, raw, out))
 
-    if args.apply:
-        stamp = datetime.now().strftime("%Y%m%d-%H%M%S")
-        for path, raw, out in pending:
-            # The suffix comes last: the engine globs *.xml, and tools/sweep_module_backups.ps1
-            # matches .bak_<anything>.
-            backup = path.with_name(f"{path.name}.bak_scenes_{stamp}")
-            if backup.exists():
-                print(f"ABORT: backup {backup} already exists; wait a second and run again.")
-                return 1
-            backup.write_bytes(raw)
-            print(f"  backup: {backup}")
-            path.write_bytes(out)
-            print(f"  [APPLIED] {path}")
-    else:
+    if not args.apply:
         print("  [DRY RUN]")
+    elif total:
+        stamp = datetime.now().strftime("%Y%m%d-%H%M%S")
+        # The suffix comes last: the engine globs *.xml, and tools/sweep_module_backups.ps1
+        # matches .bak_<anything>.
+        backup = LIVE.with_name(f"{LIVE.name}.bak_scenes_{stamp}")
+        if backup.exists():
+            print(f"ABORT: backup {backup} already exists; wait a second and run again.")
+            return 1
+        backup.write_bytes(raw)
+        print(f"  backup: {backup}")
+        LIVE.write_bytes(out)
+        print(f"  [APPLIED] {LIVE}")
     return 0
 
 
