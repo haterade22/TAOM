@@ -7948,6 +7948,7 @@
     <string id="taom_story_offer_later" text="Not now" />
     <string id="taom_realms_ui_primary" text="Make primary title" />
     <string id="taom_realms_ui_primary_ask" text="Be known by the {TITLE} from now on? Your style and party name follow your primary title, and so does your realm's banner where the title has one." />
+    <string id="taom_patch_self_disabled" text="TAOM: some fixes turned themselves off: {FEATURES}. They stay off for the rest of this battle or this session; the TAOM log names the cause." />
   </strings>
 
 </base>
