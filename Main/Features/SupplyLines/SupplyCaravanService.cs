@@ -98,6 +98,11 @@ public sealed class SupplyCaravanService : ISupplyCaravanService
     private readonly Dictionary<string, CaravanTracker> _caravans = new Dictionary<string, CaravanTracker>();
 
     private bool _positionSetWarned;
+    private bool _offLandWarned;
+
+    /// <summary>The once-per-session line when the movement pass holds a caravan off a point that is not walkable land (#1104).</summary>
+    internal static string OffLandWarning(string orderId, bool playerAtSea) =>
+        $"[SupplyLines] caravan of order {orderId} held at its last land position: the next point is not walkable land, playerAtSea={playerAtSea} (logged once)";
 
     public SupplyCaravanService(ISupplyLinesSettingsProvider settings, IModLogger logger)
     {
@@ -357,13 +362,29 @@ public sealed class SupplyCaravanService : ISupplyCaravanService
             bool moved = !tracker.HasAppliedPos
                 || tracker.SmoothPos.Distance(tracker.LastAppliedPos) >= MinPositionDelta;
 
+            bool placed = false;
             if (moved)
             {
                 try
                 {
-                    party.Position = new CampaignVec2(tracker.SmoothPos, isOnLand: true);
-                    tracker.LastAppliedPos = tracker.SmoothPos;
-                    tracker.HasAppliedPos = true;
+                    // A caravan is a land party. When no land path exists (for example to a player at sea),
+                    // the route is a straight line over water and impassable ground. A point that is not
+                    // walkable land is skipped and the caravan waits at its last land position; delivery still
+                    // comes in range or at ForceDeliverFraction. Patch57 records a native crash for a party at
+                    // sea on TAOM_Map (#296), and a land party on such a face is not known to be safe (#1104).
+                    var position = new CampaignVec2(tracker.SmoothPos, isOnLand: true);
+                    if (position.IsValid())
+                    {
+                        party.Position = position;
+                        tracker.LastAppliedPos = tracker.SmoothPos;
+                        tracker.HasAppliedPos = true;
+                        placed = true;
+                    }
+                    else if (!_offLandWarned)
+                    {
+                        _offLandWarned = true;
+                        _logger.LogWarning(OffLandWarning(order.OrderId, mainParty.IsCurrentlyAtSea));
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -375,7 +396,7 @@ public sealed class SupplyCaravanService : ISupplyCaravanService
                 }
             }
 
-            if (moved && fraction < BearingSuppressedPastFraction)
+            if (placed && fraction < BearingSuppressedPastFraction)
                 ApplyBearing(party, tracker, previous, tracker.Origin);
         }
     }
