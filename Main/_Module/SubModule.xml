@@ -1230,7 +1230,7 @@
         <GameType value="CampaignStoryMode"/>
       </IncludedGameTypes>
     </XmlNode>
-    <!-- XSLT: "the" removal in action/comment strings, Middle-earth lord self-introductions and liege titles -->
+    <!-- XSLT: "the" removal in action/comment strings, Middle-earth lord and minor-faction introductions, liege titles -->
     <XmlNode>
       <XmlName id="GameText" path="action_strings"/>
       <IncludedGameTypes>

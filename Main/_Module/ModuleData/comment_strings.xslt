@@ -230,6 +230,103 @@
 		</xsl:copy>
 	</xsl:template>
 
+	<!-- ============================================================ -->
+	<!-- Minor-faction first-meeting lines (taom_clan_intro_* keys).  -->
+	<!-- PlayerMeetLordLogEntry picks str_comment_special_clan_intro_ -->
+	<!-- plus the clan id; TAOM keeps the vanilla minor clan ids, so  -->
+	<!-- the vanilla rows named the old Calradian clans. forest_people -->
+	<!-- names none and stays vanilla; the skolderbroda and           -->
+	<!-- karakhergit rows match no clan id and never show.            -->
+	<!-- ============================================================ -->
+
+	<xsl:template match="string[@id='str_comment_special_clan_intro_company_of_the_boar.default']">
+		<xsl:copy>
+			<xsl:apply-templates select="@*[local-name() != 'text']"/>
+			<xsl:attribute name="text">{=taom_clan_intro_company_of_the_boar}If you're ever looking for stout fighters, friend, you should think about hiring the Corsair Blades. The hardest crossbowmen ever to sail out of Umbar march under our banner. Because if you don't hire us, your enemy might.</xsl:attribute>
+		<xsl:apply-templates select="node()"/>
+		</xsl:copy>
+	</xsl:template>
+
+	<xsl:template match="string[@id='str_comment_special_clan_intro_legion_of_the_betrayed.default']">
+		<xsl:copy>
+			<xsl:apply-templates select="@*[local-name() != 'text']"/>
+			<xsl:attribute name="text">{=taom_clan_intro_legion_of_the_betrayed}If you ever find yourself in a position to hire warriors, you should consider the Grey Company. Our fathers were the lords of Arnor, and we have kept watch over the North since their kingdom fell. Pay us, and you will have the word of the Dúnedain with our swords.</xsl:attribute>
+		<xsl:apply-templates select="node()"/>
+		</xsl:copy>
+	</xsl:template>
+
+	<xsl:template match="string[@id='str_comment_special_clan_intro_ghilman.default']">
+		<xsl:copy>
+			<xsl:apply-templates select="@*[local-name() != 'text']"/>
+			<xsl:attribute name="text">{=taom_clan_intro_ghilman}Perhaps one day we shall see each other on a battlefield. You shall know the Serpent Guard by the speed of our horses and the sting of our arrows. If we are on your side, you may rejoice. If we are your enemy, you may save yourself a great deal of trouble by running away before the fighting starts.</xsl:attribute>
+		<xsl:apply-templates select="node()"/>
+		</xsl:copy>
+	</xsl:template>
+
+	<xsl:template match="string[@id='str_comment_special_clan_intro_brotherhood_of_woods.default']">
+		<xsl:copy>
+			<xsl:apply-templates select="@*[local-name() != 'text']"/>
+			<xsl:attribute name="text">{=taom_clan_intro_brotherhood_of_woods}The Strawheads took our fathers' valleys and drove us up into the hills. Whatever we take back from a horse-lord or a king's man was ours to begin with. You'll hear us called robbers and reavers. Don't believe a word of it.</xsl:attribute>
+		<xsl:apply-templates select="node()"/>
+		</xsl:copy>
+	</xsl:template>
+
+	<xsl:template match="string[@id='str_comment_special_clan_intro_hidden_hand.default']">
+		<xsl:copy>
+			<xsl:apply-templates select="@*[local-name() != 'text']"/>
+			<xsl:attribute name="text">{=taom_clan_intro_hidden_hand}When you walk these roads, my friend, know that nothing escapes the notice of the Dark Tower. Lords and kings come and go, but the servants of the Mouth remain.</xsl:attribute>
+		<xsl:apply-templates select="node()"/>
+		</xsl:copy>
+	</xsl:template>
+
+	<xsl:template match="string[@id='str_comment_special_clan_intro_lakepike.default']">
+		<xsl:copy>
+			<xsl:apply-templates select="@*[local-name() != 'text']"/>
+			<xsl:attribute name="text">{=taom_clan_intro_lakepike}They call us the Wreckers, but we prefer to be known as the free folk of the reed-beds. No Master of Lake-town and no King in Dale can make us bow our heads and scrape our knees. Know that, and we can probably get along fine.</xsl:attribute>
+		<xsl:apply-templates select="node()"/>
+		</xsl:copy>
+	</xsl:template>
+
+	<xsl:template match="string[@id='str_comment_special_clan_intro_wolfskins.default']">
+		<xsl:copy>
+			<xsl:apply-templates select="@*[local-name() != 'text']"/>
+			<xsl:attribute name="text">{=taom_clan_intro_wolfskins}Perhaps you've heard of the Ravagers, traveller. We are beasts. Know that so long as we eat no cooked meat and sleep under no roof, the laws of Khand cannot touch us. So tread carefully with us.</xsl:attribute>
+		<xsl:apply-templates select="node()"/>
+		</xsl:copy>
+	</xsl:template>
+
+	<xsl:template match="string[@id='str_comment_special_clan_intro_eleftheroi.default']">
+		<xsl:copy>
+			<xsl:apply-templates select="@*[local-name() != 'text']"/>
+			<xsl:attribute name="text">{=taom_clan_intro_eleftheroi}You may have heard of us: the Beornings. We keep the High Pass and the Ford of Carrock, and no Orc crosses our lands and lives. Honest travellers pay their toll and go in peace. Those who come to raid will learn that we have very large teeth.</xsl:attribute>
+		<xsl:apply-templates select="node()"/>
+		</xsl:copy>
+	</xsl:template>
+
+	<xsl:template match="string[@id='str_comment_special_clan_intro_jawwal.default']">
+		<xsl:copy>
+			<xsl:apply-templates select="@*[local-name() != 'text']"/>
+			<xsl:attribute name="text">{=taom_clan_intro_jawwal}Perhaps you have not heard of the Sand-Riders. Well, when you cross the deep desert of Harad, far from well and spring, in a land that the city-lords scorn, then you are in our domain.</xsl:attribute>
+		<xsl:apply-templates select="node()"/>
+		</xsl:copy>
+	</xsl:template>
+
+	<xsl:template match="string[@id='str_comment_special_clan_intro_beni_zilal.default']">
+		<xsl:copy>
+			<xsl:apply-templates select="@*[local-name() != 'text']"/>
+			<xsl:attribute name="text">{=taom_clan_intro_beni_zilal}The Blind Eye sees what others miss. We keep the secrets of Harad, and we watch from the shadows. Make foes of us at your peril.</xsl:attribute>
+		<xsl:apply-templates select="node()"/>
+		</xsl:copy>
+	</xsl:template>
+
+	<xsl:template match="string[@id='str_comment_special_clan_intro_embers_of_flame.default']">
+		<xsl:copy>
+			<xsl:apply-templates select="@*[local-name() != 'text']"/>
+			<xsl:attribute name="text">{=taom_clan_intro_embers_of_flame}You may have heard whispers of us. Men call us the Cult of the Lidless Eye. Long ago, in Númenor, our forefathers bent the knee to the Dark Lord. Until his day comes, we keep our silence. But when it comes, all who scorned him will answer for it.</xsl:attribute>
+		<xsl:apply-templates select="node()"/>
+		</xsl:copy>
+	</xsl:template>
+
 	<!-- Default noble and minor-faction introductions: "the" removal only (vanilla keys) -->
 
 	<xsl:template match="string[@id='str_comment_noble_introduces_self_and_clan.default']">
