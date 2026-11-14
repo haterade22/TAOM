@@ -95,15 +95,30 @@
             <Widget SuggestedWidth="400" SuggestedHeight="764" PositionXOffset="1240" PositionYOffset="125" IsVisible="@HasSelection" DoNotAcceptEvents="true">
               <Children>
                 <EncyclopediaPictureWidget Id="EntryPicture" SuggestedWidth="330" SuggestedHeight="590" HorizontalAlignment="Center" PictureFile="@PreviewImageFile" PictureSprite="@PreviewSpriteName" PortraitFrame="true" FrameZoom="1.22" FrameFocusY="0.61" SpriteFrameCrops="ec_window_:1.12:0.55" IsVisible="@ShowIllustration" DoNotAcceptEvents="true" />
-                <Widget Id="HeroPreview" SuggestedWidth="330" SuggestedHeight="590" HorizontalAlignment="Center" IsVisible="@ShowHeroPreview" DoNotAcceptEvents="true">
+                <!--Heroes and troops: the selected entry's live tableau in one raised viewport (top 35, 290 by 540, bottom 575) inside the 330 by 590 portrait frame, drawn on a shared 348 by 648 render host clipped to it. The hero tableau keeps IsDead; the troop tableau is a plain one bound to the base CharacterViewModel.-->
+                <Widget Id="CharacterPreview" SuggestedWidth="330" SuggestedHeight="590" HorizontalAlignment="Center" IsVisible="@ShowCharacterPreview" DoNotAcceptEvents="true">
                   <Children>
-                    <EncyclopediaStonePanelWidget Id="HeroWindow" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Sprite="ec_portrait_panel" DoNotAcceptEvents="true" />
-                    <Widget Id="HeroRenderClip" SuggestedWidth="290" SuggestedHeight="470" HorizontalAlignment="Center" PositionYOffset="105" ClipContents="true" IsVisible="@ShowHeroRender" DoNotAcceptEvents="true">
+                    <EncyclopediaStonePanelWidget Id="CharacterWindow" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Sprite="ec_portrait_panel" DoNotAcceptEvents="true" />
+                    <Widget Id="CharacterRenderClip" SuggestedWidth="290" SuggestedHeight="540" HorizontalAlignment="Center" PositionYOffset="35" ClipContents="true" DoNotAcceptEvents="true">
                       <Children>
-                        <EncyclopediaCharacterTableauWidget Id="HeroPortrait" DataSource="{HeroCharacter}" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" BodyProperties="@BodyProperties" IsFemale="@IsFemale" EquipmentCode="@EquipmentCode" CharStringId="@CharStringId" StanceIndex="@StanceIndex" BannerCodeText="@BannerCodeText" MountCreationKey="@MountCreationKey" IsEnabled="false" IsDead="@IsDead" ArmorColor1="@ArmorColor1" ArmorColor2="@ArmorColor2" IdleAction="@IdleAction" IdleFaceAnim="@IdleFaceAnim" Race="@Race" IsHidden="@IsHidden" IsTableauEnabled="@IsTableauEnabled" IsBannerShownInBackground="false" DoNotUseCustomScale="true" />
+                        <!--Shared render target, exactly 1.2 times the clip (same aspect), centred and 15 px lower; the clip trims the overflow to the portrait bounds.-->
+                        <Widget Id="CharacterRenderScale" SuggestedWidth="348" SuggestedHeight="648" HorizontalAlignment="Center" VerticalAlignment="Center" PositionYOffset="15" DoNotAcceptEvents="true">
+                          <Children>
+                            <Widget Id="HeroRender" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" IsVisible="@ShowHeroRender" DoNotAcceptEvents="true">
+                              <Children>
+                                <EncyclopediaCharacterTableauWidget Id="HeroPortrait" DataSource="{HeroCharacter}" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" BodyProperties="@BodyProperties" IsFemale="@IsFemale" EquipmentCode="@EquipmentCode" CharStringId="@CharStringId" StanceIndex="@StanceIndex" BannerCodeText="@BannerCodeText" MountCreationKey="@MountCreationKey" IsEnabled="false" IsDead="@IsDead" ArmorColor1="@ArmorColor1" ArmorColor2="@ArmorColor2" IdleAction="@IdleAction" IdleFaceAnim="@IdleFaceAnim" Race="@Race" IsHidden="@IsHidden" IsTableauEnabled="@IsTableauEnabled" IsBannerShownInBackground="false" DoNotUseCustomScale="true" />
+                              </Children>
+                            </Widget>
+                            <Widget Id="TroopRender" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" IsVisible="@ShowTroopRender" DoNotAcceptEvents="true">
+                              <Children>
+                                <CharacterTableauWidget Id="TroopPortrait" DataSource="{TroopCharacter}" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" BodyProperties="@BodyProperties" IsFemale="@IsFemale" EquipmentCode="@EquipmentCode" CharStringId="@CharStringId" StanceIndex="@StanceIndex" BannerCodeText="@BannerCodeText" MountCreationKey="@MountCreationKey" IsEnabled="false" ArmorColor1="@ArmorColor1" ArmorColor2="@ArmorColor2" IdleAction="@IdleAction" IdleFaceAnim="@IdleFaceAnim" Race="@Race" IsTableauEnabled="@IsTableauEnabled" IsBannerShownInBackground="false" DoNotUseCustomScale="true" />
+                              </Children>
+                            </Widget>
+                          </Children>
+                        </Widget>
                       </Children>
                     </Widget>
-                    <ImageWidget Id="HeroSilhouette" SuggestedWidth="245" SuggestedHeight="410" HorizontalAlignment="Center" PositionYOffset="150" Sprite="@HeroSilhouetteSprite" IsVisible="@ShowHeroSilhouette" AlphaFactor="0.45" DoNotAcceptEvents="true" />
+                    <ImageWidget Id="HeroSilhouette" SuggestedWidth="287" SuggestedHeight="480" HorizontalAlignment="Center" PositionYOffset="80" Sprite="@HeroSilhouetteSprite" IsVisible="@ShowHeroSilhouette" AlphaFactor="0.45" DoNotAcceptEvents="true" />
                   </Children>
                 </Widget>
                 <!--Kingdoms and clans: the selected entry's live banner in the detail pages' pennant stack (mask, 1.35 zoom, drape, rim) at its 408:664 aspect, no rod or nameplate.-->
