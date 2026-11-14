@@ -59,6 +59,19 @@ internal static class ManualPatchApplicator
         else
             IoC.Resolve<IModLogger>().LogWarning("[SettlementGuards] InitializeGarrisonCharacters not found — excluded-race garrison scrub will not apply (#346)");
 
+        // Regression of #258: a hideout has no guards; vanilla's guard/disguise start lines must not answer there.
+        int hideoutGuardTargets = 0;
+        foreach (var target in GuardsCampaignBehavior_HideoutNoGuards_Patch.TargetMethods())
+        {
+            harmony.Patch(target, postfix: new HarmonyMethod(
+                typeof(GuardsCampaignBehavior_HideoutNoGuards_Patch),
+                nameof(GuardsCampaignBehavior_HideoutNoGuards_Patch.Postfix)));
+            hideoutGuardTargets++;
+        }
+        if (hideoutGuardTargets != GuardsCampaignBehavior_HideoutNoGuards_Patch.TargetNames.Length)
+            IoC.Resolve<IModLogger>().LogWarning("[SettlementGuards] hideout guard-dialog suppression: " +
+                $"{hideoutGuardTargets} of {GuardsCampaignBehavior_HideoutNoGuards_Patch.TargetNames.Length} GuardsCampaignBehavior conditions found; the hideout boss fight can be blocked by the guard line again (#258)");
+
         if (!ClientComposition.IsDedicatedServer())
             ApplyVisualPatches(harmony);
     }
