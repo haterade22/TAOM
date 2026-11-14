@@ -373,6 +373,30 @@ public class ChronicleServiceTests
         StringAssert.Contains(shown.Text, "taom_wc_hornburg_open");
     }
 
+    [TestMethod]
+    public void RunChronicleDay_TheAnnouncements_CarryTheEventsImage()
+    {
+        var narrative = Narrative("khazaddum", offset: 20);
+        narrative.Image = "taom_event_khazaddum";
+        var siege = SiegeDef();
+        siege.Image = "taom_event_hornburg";
+        _f.Events.Add(narrative);
+        _f.Events.Add(siege);
+        Launch(0);
+        ChronicleAnnouncement? shown = null;
+        _f.Presenter.When(p => p.Show(Arg.Any<ChronicleAnnouncement>())).Do(c => shown = c.Arg<ChronicleAnnouncement>());
+
+        Day(20);
+        _f.Queue.TryShowNext();
+        Assert.AreEqual("khazaddum", shown?.EventId);
+        Assert.AreEqual("taom_event_khazaddum", shown!.Image, "a narrative's announcement");
+
+        Day(49);
+        _f.Queue.TryShowNext();
+        Assert.AreEqual("hornburg", shown?.EventId);
+        Assert.AreEqual("taom_event_hornburg", shown!.Image, "a siege's opening");
+    }
+
     [DataTestMethod]
     [DataRow("rivendell")]
     [DataRow(null)]

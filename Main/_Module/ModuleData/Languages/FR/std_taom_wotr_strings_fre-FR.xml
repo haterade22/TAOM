@@ -79,5 +79,16 @@
     <string id="taom_wc_gondor_fell" text="Les portes de {TARGET} sont brisées, et la Cité Blanche tombe aux mains du Mordor." />
     <string id="taom_wc_blackgate_title" text="La Porte Noire s'ouvre" />
     <string id="taom_wc_blackgate_occurred" text="Les Capitaines de l'Ouest marchent vers le Morannon pour détourner l'Œil du Porteur de l'Anneau. Le sort de la guerre repose désormais sur l'Anneau." />
+    <string id="taom_event_category_chronicle" text="Chronique de la Guerre" />
+    <string id="taom_event_category_coronation" text="Couronnement" />
+    <string id="taom_event_effects" text="Effets" />
+    <string id="taom_event_effect_days" text="Pendant {DAYS} jours" />
+    <string id="taom_event_side_free" text="Peuples Libres" />
+    <string id="taom_event_side_evil" text="L'Ombre" />
+    <string id="taom_event_effect_volunteers" text="Taux de recrutement des volontaires" />
+    <string id="taom_event_effect_escape" text="Jet d'évasion supplémentaire" />
+    <string id="taom_event_effect_momentum" text="Élan de la Guerre de l'Anneau" />
+    <string id="taom_event_effect_note" text="Les valeurs sont les contributions de cet événement avant plafonnement, et les plafonds s'appliquent même à un effet isolé. Les fiefs et seigneurs de votre propre clan ne sont jamais affectés." />
+    <string id="taom_event_effect_escape_note" text="La chance du jet d'évasion supplémentaire est le pourcentage indiqué de la chance d'évasion habituelle d'un seigneur." />
   </strings>
 </base>

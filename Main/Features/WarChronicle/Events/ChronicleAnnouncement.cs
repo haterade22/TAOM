@@ -7,13 +7,16 @@ namespace TAOM.Features.WarChronicle.Events;
 /// </summary>
 public sealed class ChronicleAnnouncement
 {
-    public ChronicleAnnouncement(string eventId, string title, string? text, string? targetSettlementId, int days)
+    public ChronicleAnnouncement(string eventId, string title, string? text, string? targetSettlementId, int days,
+        string? image = null, ChronicleOutcomeReport? outcome = null)
     {
         EventId = eventId;
         Title = title;
         Text = text;
         TargetSettlementId = targetSettlementId;
         Days = days;
+        Image = image;
+        Outcome = outcome ?? ChronicleOutcomeReport.None;
     }
 
     public string EventId { get; }
@@ -28,4 +31,10 @@ public sealed class ChronicleAnnouncement
 
     /// <summary>Fills <c>{DAYS}</c>.</summary>
     public int Days { get; }
+
+    /// <summary>The event's <c>image</c>: the illustration's file name in GUI/EventArt; null shows the text alone.</summary>
+    public string? Image { get; }
+
+    /// <summary>What the resolution applied, listed under the story; empty for an opening, a lapse or an outcome without effects.</summary>
+    public ChronicleOutcomeReport Outcome { get; }
 }

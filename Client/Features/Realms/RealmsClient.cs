@@ -1,5 +1,6 @@
 using System;
 using TaleWorlds.Library;
+using TAOM.Client.Features.EventWindow;
 using TAOM.Client.Features.Realms.Encyclopedia;
 using TAOM.Client.Features.Realms.Hooks;
 
@@ -22,14 +23,19 @@ internal static class RealmsClient
     {
         ConversationNames.Patch();
         TitleEncyclopediaPage.Patch();
+        EventWindows.Clear();
     }
 
-    /// <summary>Per frame: one queued action at most. Never throws into the engine's tick.</summary>
+    /// <summary>
+    /// Per frame: one queued action at most, and on a frame without one the next story event window. Never throws into
+    /// the engine's tick.
+    /// </summary>
     public static void Tick()
     {
         try
         {
-            UiQueue.Run();
+            if (!UiQueue.Run())
+                EventWindows.Tick();
         }
         catch (Exception ex)
         {

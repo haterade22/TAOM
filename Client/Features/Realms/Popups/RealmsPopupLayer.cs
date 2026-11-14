@@ -23,17 +23,24 @@ internal sealed class RealmsPopupLayer : GauntletLayer
 
     private readonly ScreenBase _host;
     private readonly Action<RealmsPopupLayer> _onClosed;
+    private readonly bool _pausesGame;
     private GauntletMovieIdentifier? _movie;
     private ViewModel? _vm;
     private bool _subscribed;
+    private bool _paused;
     private bool _tornDown;
     private bool _closeRequested;
 
-    public RealmsPopupLayer(ScreenBase host, Action<RealmsPopupLayer> onClosed)
+    /// <param name="pausesGame">
+    /// Holds the active game state (the campaign map's time) while open, the way an inquiry shown with
+    /// <c>pauseGameActiveState</c> does: an event window. The title popups open over the encyclopedia, which already pauses.
+    /// </param>
+    public RealmsPopupLayer(ScreenBase host, Action<RealmsPopupLayer> onClosed, bool pausesGame = false)
         : base("TaomRealmsPopup", LayerOrder, false)
     {
         _host = host;
         _onClosed = onClosed;
+        _pausesGame = pausesGame;
     }
 
     /// <summary>Adds the layer, builds the whole view model (given the close action), loads the movie and takes focus.</summary>
@@ -47,6 +54,12 @@ internal sealed class RealmsPopupLayer : GauntletLayer
         IsFocusLayer = true;
         // Added first: whatever throws below, Close can then remove the layer and nothing is left on the host.
         _host.AddLayer(this);
+        if (_pausesGame && GameStateManager.Current != null)
+        {
+            GameStateManager.Current.RegisterActiveStateDisableRequest(this);
+            _paused = true;
+        }
+
         _vm = buildViewModel(RequestClose);
         _movie = LoadMovie(movieName, _vm);
         Game.Current.EventManager.RegisterEvent<EncyclopediaPageChangedEvent>(OnEncyclopediaPageChanged);
@@ -99,6 +112,12 @@ internal sealed class RealmsPopupLayer : GauntletLayer
             {
                 Game.Current?.EventManager.UnregisterEvent<EncyclopediaPageChangedEvent>(OnEncyclopediaPageChanged);
                 _subscribed = false;
+            }
+
+            if (_paused)
+            {
+                _paused = false;
+                GameStateManager.Current?.UnregisterActiveStateDisableRequest(this);
             }
 
             InputRestrictions.ResetInputRestrictions();

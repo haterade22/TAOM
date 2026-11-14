@@ -79,5 +79,16 @@
     <string id="taom_wc_gondor_fell" text="Врата {TARGET} сокрушены, и Белый Город пал перед Мордором." />
     <string id="taom_wc_blackgate_title" text="Чёрные Врата отворяются" />
     <string id="taom_wc_blackgate_occurred" text="Вожди Запада идут к Мораннону, чтобы отвлечь Око от Хранителя Кольца. Исход войны теперь в руках Кольца." />
+    <string id="taom_event_category_chronicle" text="Летопись войны" />
+    <string id="taom_event_category_coronation" text="Коронация" />
+    <string id="taom_event_effects" text="Эффекты" />
+    <string id="taom_event_effect_days" text="В течение {DAYS} дней" />
+    <string id="taom_event_side_free" text="Свободные народы" />
+    <string id="taom_event_side_evil" text="Тень" />
+    <string id="taom_event_effect_volunteers" text="Темп набора добровольцев" />
+    <string id="taom_event_effect_escape" text="Дополнительный бросок на побег" />
+    <string id="taom_event_effect_momentum" text="Импульс Войны Кольца" />
+    <string id="taom_event_effect_note" text="Значения показывают вклад этого события до ограничений; ограничения действуют даже на одиночный эффект. Владения и лорды вашего клана никогда не затрагиваются." />
+    <string id="taom_event_effect_escape_note" text="Шанс дополнительного броска на побег равен показанному проценту от обычного шанса побега лорда." />
   </strings>
 </base>

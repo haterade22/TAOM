@@ -79,5 +79,16 @@
     <string id="taom_wc_gondor_fell" text="Os portões de {TARGET} são arrombados, e a Cidade Branca cai diante de Mordor." />
     <string id="taom_wc_blackgate_title" text="O Portão Negro se Abre" />
     <string id="taom_wc_blackgate_occurred" text="Os Capitães do Oeste marcham para o Morannon para desviar o Olho do Portador do Anel. O destino da guerra agora repousa sobre o Anel." />
+    <string id="taom_event_category_chronicle" text="Crônica da Guerra" />
+    <string id="taom_event_category_coronation" text="Coroação" />
+    <string id="taom_event_effects" text="Efeitos" />
+    <string id="taom_event_effect_days" text="Por {DAYS} dias" />
+    <string id="taom_event_side_free" text="Povos Livres" />
+    <string id="taom_event_side_evil" text="A Sombra" />
+    <string id="taom_event_effect_volunteers" text="Taxa de recrutamento de voluntários" />
+    <string id="taom_event_effect_escape" text="Rolagem de fuga adicional" />
+    <string id="taom_event_effect_momentum" text="Ímpeto da Guerra do Anel" />
+    <string id="taom_event_effect_note" text="Os valores são as contribuições deste evento antes dos limites, e os limites se aplicam até a um único efeito. Os feudos e senhores do seu próprio clã nunca são afetados." />
+    <string id="taom_event_effect_escape_note" text="A chance da rolagem de fuga adicional é a porcentagem mostrada da chance de fuga habitual de um senhor." />
   </strings>
 </base>

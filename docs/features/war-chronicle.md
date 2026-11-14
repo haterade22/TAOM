@@ -130,7 +130,11 @@ Each resolution goes through `ChronicleOutcomeService` (`Events/ChronicleOutcome
 
 ### Announcements
 
-`ChronicleAnnouncementQueue` (`Events/ChronicleAnnouncementQueue.cs`) holds texts and their `{TARGET}` and `{DAYS}` values in memory, not in the save, at most 16 (the oldest drop). The router's `TickEvent` listener calls `TryShowNext`, which returns at once on an empty queue, drops what is queued when the chronicle or its announcements are switched off, needs the map free, and then re-checks `IsAuthority` (the co-op probe uses reflection, so the cheap map test goes first). `ChroniclePresenter.IsMapFree` is `MapPopupGate.IsMapFree` (`Main/Adapters/MapPopupGate.cs`, #929, shared with the hunt news and the Hidden Hosts hint): a main party, no encounter, the map state not at a menu, and no inquiry open (`InformationManager.IsAnyInquiryActive`), the chronicle's own included: that is what keeps popups from stacking, so the queue holds no latch of its own and a popup closed without its button action (`InformationManager.HideInquiry`) cannot stall it. The presenter shows a one-button `InquiryData` ("Continue") with the event title and line; never a scene notification, which NREs for custom races. A show that throws is logged and the item dropped, so the queue never sticks. Openings, narratives, Held, Fell and Lapsed are announced; Skipped is silent. With Show Announcements off nothing is queued, and what was queued is dropped unshown. Co-op clients see no announcements, as with the momentum meter.
+`ChronicleAnnouncementQueue` (`Events/ChronicleAnnouncementQueue.cs`) holds texts and their `{TARGET}` and `{DAYS}` values in memory, not in the save, at most 16 (the oldest drop). The router's `TickEvent` listener calls `TryShowNext`, which returns at once on an empty queue, drops what is queued when the chronicle or its announcements are switched off, needs the map free, and then re-checks `IsAuthority` (the co-op probe uses reflection, so the cheap map test goes first). `ChroniclePresenter.IsMapFree` is `MapPopupGate.IsMapFree` (`Main/Adapters/MapPopupGate.cs`, #929, shared with the hunt news and the Hidden Hosts hint): a main party, no encounter, the map state not at a menu, and no inquiry open (`InformationManager.IsAnyInquiryActive`), the chronicle's own included; and no story event window open or waiting (`IEventWindowAdapter.IsOpen`). That is what keeps popups from stacking, so the queue holds no latch of its own and a popup closed without its button action (`InformationManager.HideInquiry`) cannot stall it.
+
+The presenter shows the event in TAOM's story event window, the one the Realms coronation uses (`TaomEventWindow.xml`, `Client/Features/EventWindow`): the event title as the heading, the line as the story text, the event's `image` picture from `GUI/EventArt` as the illustration (none, or a missing file: the story column alone, centred) and a "Continue" button. The layout and its sprites live in the prefab; every text is the event's own. The window pauses the game like an inquiry. Core talks to it through `IEventWindowAdapter` (`Main/Adapters/IEventWindowAdapter.cs`): core registers `NullEventWindowAdapter` and TAOM.Client replaces it with `EventWindowAdapter`, which queues the window (at most 8, cleared at game start) and opens it on a client frame with no other Realms popup open and a game running. Without the client (`Show` returns false) the presenter falls back to a one-button `InquiryData` with the same title and line. Never a scene notification, which NREs for custom races. A show that throws is logged and the item dropped, so the queue never sticks. Openings, narratives, Held, Fell and Lapsed are announced; Skipped is silent. With Show Announcements off nothing is queued, and what was queued is dropped unshown. Co-op clients see no announcements, as with the momentum meter.
+
+A resolution's window also lists what it applied (`ChronicleEffectFormatter`, from the `ChronicleOutcomeReport` on the announcement): the target, the kind and a signed value, with one shared duration line or one per row, and a momentum award as `+units`. A value is this event's contribution, magnitude times War Effect Strength, before the registry's clamps; the clamps bind a single effect too (volunteers 0.4 at strength 2 shows +80% and applies +50%), and the window never computes a net value. The escape row is labelled "Additional escape roll": `WarEscapeService` rolls a second chance of `p x (multiplier - 1)`, so +20% at p = 4% is an extra 0.8% roll, 4.768% combined. The formatter also builds a note for a timed list (values before the caps, the player's own clan never affected, and an escape sentence only when an escape row shows), and the view model carries it as `EffectsNote`, but the window does not show it (`EventWindowTests`).
 
 ### Momentum awards
 
@@ -165,7 +169,7 @@ SessionLaunched, DailyTick, OwnerChanged, SiegeStarted -> WarChronicleEventsBeha
         IChronicleWorldAdapter, IAllianceAdapter, IWarOfTheRingService (phase days)
         ChronicleOutcomeService -> IWarEffectService, IMomentumAwardService, WarLedgerService
         ChronicleService -> ArmyTargetFocusRegistry <- ArmyTargetingService (TaomTargetScoreModel)
-        ChronicleAnnouncementQueue -> IChroniclePresenter (TickEvent, one inquiry at a time)
+        ChronicleAnnouncementQueue -> IChroniclePresenter (TickEvent, one popup at a time) -> IEventWindowAdapter (TAOM.Client), or an inquiry
 ```
 
 ## Configuration
@@ -189,6 +193,8 @@ Loaded by `ChronicleConfigProvider` (`Events/ChronicleConfigProvider.cs`) throug
 ```
 
 Every text is `{=taom_wc_<event>_<part>}English`, registered in `taom_wotr_strings.xml`.
+
+An event may name an `image`: the file name of a loose PNG in the module's `GUI/EventArt` folder, which the story event window shows as its illustration (for example `"image": "taom_event_khazaddum.png"`). The picture is a 720x960 (3:4) 8-bit RGBA PNG with alpha 255, never 24-bit RGB: `Texture.LoadTextureFromPath` showed the RGB art with red and blue exchanged (blue skin, cyan leaves), while RGBA pictures in the same widget keep their colours; `EncyclopediaPictureWidget` loads it through `EncyclopediaPictureCache` and covers it into the 270x360 frame of the 690x432 window without stretching. It is no sprite and needs no sprite sheet entry. It is optional; a blank one is none, and one that is not a string warns and the event loads without it. A name holding a path separator, or a file that is missing, shows no picture. The validator does not check the file; `EventArtTests` does for the shipped content, where all 13 events name their picture. A siege event shows the same picture at its opening and at each resolution.
 
 #### Validation rules
 
@@ -323,6 +329,8 @@ Use the War of the Ring test mode (Phase 1 on day 1, Phase 2 on day 3) on a new 
 | `Main/Features/WarChronicle/Ledger/` | Ledger service and formatter |
 | `Main/Features/WarChronicle/Cheats/` | Console commands and their report text |
 | `Main/Features/WarChronicle/Events/` | The event chain: definitions, validator and provider, state store, service, outcome service, announcement queue, presenter, router behavior |
+| `Main/Adapters/IEventWindowAdapter.cs` | The story event window seam (`EventWindow`, `NullEventWindowAdapter`) |
+| `Client/Features/EventWindow/`, `Main/_Module/GUI/PreFabs/EventWindow/TaomEventWindow.xml` | The story event window: queue, client adapter, view model and prefab, shared with the Realms coronation |
 | `Main/Adapters/ChronicleWorldAdapter.cs`, `IChronicleWorldAdapter.cs` | Clock, settlement and kingdom ids, target owner and besieger |
 | `Main/Features/ArmyTargeting/ArmyTargetFocusRegistry.cs`, `ArmyTargetFocus.cs` | The army focus windows read by `ArmyTargetingService` |
 | `Main/Features/WarOfTheRingMomentum/MomentumAwardService.cs` | The `Chronicle` momentum award |
@@ -377,8 +385,8 @@ Counts measured by grepping `[TestMethod]` and `[DataTestMethod]` attribute line
 | `WarChronicleWiringTests` | same | 5 |
 | `VolunteerProductionServiceTests` | `TAOM.Tests/Features/TroopProgression/` | 21 |
 | `VolunteerProductionWiringTests` | same | 1 |
-| `ChronicleServiceTests` | `.../WarChronicle/Events/` | 86 |
-| `ChronicleConfigValidatorTests` | same | 55 |
+| `ChronicleServiceTests` | `.../WarChronicle/Events/` | 90 (2026-11-14) |
+| `ChronicleConfigValidatorTests` | same | 57 |
 | `ChronicleConfigProviderTests` | same | 5 |
 | `ChronicleAnnouncementQueueTests` | same | 12 |
 | `ChronicleShippedContentTests` | same | 9 |
@@ -386,6 +394,8 @@ Counts measured by grepping `[TestMethod]` and `[DataTestMethod]` attribute line
 | `ChroniclePersistenceTests` | same | 5 |
 | `ChroniclePhaseAnchorTests` | same | 10 |
 | `WarChronicleEventsWiringTests` | same | 5 |
+| `ChronicleEffectFormatterTests` | same | 17 (2026-11-14) |
+| `ChronicleOutcomeReportTests` | same | 13 (2026-11-14) |
 | `ChronicleCheatReportTests` | `.../WarChronicle/Cheats/` | 13 |
 | `WarChronicleEventSettingsTests` | `.../WarChronicle/` | 5 |
 | `ArmyTargetFocusRegistryTests` | `TAOM.Tests/Features/ArmyTargeting/` | 19 |
@@ -394,6 +404,8 @@ Counts measured by grepping `[TestMethod]` and `[DataTestMethod]` attribute line
 | `WarOfTheRingPhaseDayTests` | `TAOM.Tests/Features/Diplomacy/` | 5 |
 | `PrisonerEscapeAdapterTests` | `TAOM.Tests/Adapters/` | 9 |
 | `KingdomWarSnapshotAdapterTests` | same | 11 |
+| `EventWindowTests` | `TAOM.Tests/Features/EventWindow/` | 10 (2026-11-14) |
+| `EventArtTests` | same | 5 (2026-11-14) |
 
 `WarChronicleSettingsProvider` is also a row in `CampaignHotPathSettingsProvidersTests`, and `CastleRecruitmentServiceTests` covers the castle consumer. The analyzer has 116 Python tests (`def test_` count, 2026-11-10) in `tools/tests/test_analyze_war_ledger.py`, the load-marker cases among them (`LoadMarkerTests`).
 
@@ -423,6 +435,8 @@ Counts measured by grepping `[TestMethod]` and `[DataTestMethod]` attribute line
 
 ## Changelog
 
+- 2026-11-13: every event shows its picture: 13 loose 720x960 PNGs in `GUI/EventArt`, named by each event's `image` and drawn by `EncyclopediaPictureWidget`; `image` is now a file name, no longer a sprite. Dale's picture is provisional.
+- 2026-11-12: announcements show in TAOM's story event window (`TaomEventWindow`, shared with the Realms coronation), with an optional per-event `image`; the inquiry stays as the fallback without TAOM.Client.
 - 2026-11-10: the ledger and the analyzer know `ev=pledge`, the line War Pledge writes when a Neutral realm joins a side (#1113).
 - 2026-10-08: first slice (#765): the timed-effect registry with its volunteer and escape consumers, the rally, the war ledger and analyzer, the save payload and four console commands.
 - 2026-10-08: the event chain (M3: 13 events, siege windows, adoption, announcements, `taom.chronicle_status`, `taom.chronicle_open`), the army focus (M4) and the `Chronicle` momentum award (M6), with the MCM group `War of the Ring/War Chronicle` (#765).

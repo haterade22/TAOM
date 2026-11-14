@@ -79,5 +79,16 @@
     <string id="taom_wc_gondor_fell" text="{TARGET}의 성문이 부서지고, 백색도시가 모르도르에 함락되었다." />
     <string id="taom_wc_blackgate_title" text="검은 문이 열리다" />
     <string id="taom_wc_blackgate_occurred" text="서부의 대장들이 반지의 사자로부터 그 눈을 돌리기 위해 모란논으로 진군한다. 이제 전쟁의 운명은 반지에 달렸다." />
+    <string id="taom_event_category_chronicle" text="전쟁 연대기" />
+    <string id="taom_event_category_coronation" text="대관식" />
+    <string id="taom_event_effects" text="효과" />
+    <string id="taom_event_effect_days" text="{DAYS}일 동안" />
+    <string id="taom_event_side_free" text="자유 민족" />
+    <string id="taom_event_side_evil" text="어둠" />
+    <string id="taom_event_effect_volunteers" text="지원병 모집률" />
+    <string id="taom_event_effect_escape" text="추가 탈출 판정" />
+    <string id="taom_event_effect_momentum" text="반지 전쟁 기세" />
+    <string id="taom_event_effect_note" text="수치는 상한 적용 전 이 사건의 기여분이며, 상한은 단일 효과에도 적용됩니다. 자신의 가문의 영지와 영주는 절대 영향을 받지 않습니다." />
+    <string id="taom_event_effect_escape_note" text="추가 탈출 판정의 확률은 영주의 평소 탈출 확률에 표시된 백분율을 곱한 값입니다." />
   </strings>
 </base>

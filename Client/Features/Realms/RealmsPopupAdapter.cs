@@ -1,16 +1,18 @@
-using TaleWorlds.Core;
-using TAOM.Client.Features.Realms.Popups;
+using TaleWorlds.Localization;
+using TAOM.Client.Features.EventWindow;
 using TAOM.Features.Realms;
 
 namespace TAOM.Client.Features.Realms;
 
-/// <summary>The client's Realms windows (ADR-013): replaces core's NullRealmsPopupAdapter in TaomClientComposition.</summary>
+/// <summary>
+/// The client's Realms windows (ADR-013): replaces core's NullRealmsPopupAdapter in TaomClientComposition. The coronation
+/// is a story event window, queued with the War Chronicle's so neither replaces the other, under its own category.
+/// </summary>
 internal sealed class RealmsPopupAdapter : IRealmsPopupAdapter
 {
-    public void ShowCoronation(CoronationPopup popup)
-    {
-        var banner = popup.BannerCode != null ? new Banner(popup.BannerCode) : new Banner();
-        UiQueue.PostPopup(() => RealmsPopups.OpenCoronation(close =>
-            new CoronationPopupVM(popup.Heading, popup.Text, popup.Image, popup.Button, banner, popup.Lines, close)));
-    }
+    internal const string Category = "{=taom_event_category_coronation}Coronation";
+
+    public void ShowCoronation(CoronationPopup popup) =>
+        EventWindows.Enqueue(new TAOM.Adapters.EventWindow(popup.Heading, popup.Text, popup.Image, popup.Button, popup.BannerCode, popup.Lines,
+            category: new TextObject(Category).ToString()));
 }

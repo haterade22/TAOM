@@ -225,7 +225,7 @@ public class ConfigXmlTests
         StringAssert.EndsWith(coronation.Event.Heading, "The Return of the King");
         StringAssert.EndsWith(coronation.Event.Button, "Long live the King!");
         StringAssert.Contains(coronation.Event.Text, "{HERO}");
-        Assert.IsNull(coronation.Event.Image);
+        Assert.AreEqual("taom_event_coronation_gondor.png", coronation.Event.Image);
     }
 
     [TestMethod]

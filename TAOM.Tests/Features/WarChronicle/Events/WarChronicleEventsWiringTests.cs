@@ -92,6 +92,9 @@ public class WarChronicleEventsWiringTests
         container.RegisterInstance(Substitute.For<IAllianceAdapter>());
         container.RegisterInstance(Substitute.For<IMomentumAwardService>());
         container.RegisterInstance(Substitute.For<ITextLocalizerAdapter>());
+        // The presenter reads the chronicle momentum duration and names the kingdoms in the event window's effects.
+        container.RegisterInstance(Substitute.For<IMomentumConfigProvider>());
+        container.RegisterInstance(Substitute.For<IKingdomJoinAdapter>());
         // The real ArmyTargeting registration: the chronicle (writer) and the scoring path (reader) must share
         // one focus registry, which only its Reuse.Singleton guarantees.
         ArmyTargetingIoC.RegisterArmyTargetingFeature(container);
