@@ -185,7 +185,7 @@
 	<string id="str_robbery_pay_agreement.rhun_raiders_side_2" text="{=taom_enc_robbery_pay_agreement_rhun_raiders_side_2}Spoken like a sensible ally. Name a sum worth my time and we will not haggle long." />
 	<string id="str_robbery_conclusion.rhun_raiders_side_2" text="{=taom_enc_robbery_conclusion_rhun_raiders_side_2}Our quarrel is settled. Save your anger for the Free Peoples and their walls." />
 	<string id="str_robbery_start_fight.rhun_raiders_side_2" text="{=taom_enc_robbery_start_fight_rhun_raiders_side_2}Allies who will not pay are no allies of mine. Ride them down!" />
-	<string id="str_robbery_threat.rhun_raiders_foe_1" text="{=taom_enc_robbery_threat_rhun_raiders_foe_1}An enemy of the Warlord, alone on the steppe. Your silver first, and then we will see what else you are worth." />
+	<string id="str_robbery_threat.rhun_raiders_foe_1" text="{=taom_enc_robbery_threat_rhun_raiders_foe_1}A stranger on the Warlord's steppe, and alone. Your silver first, and then we will see what else you are worth." />
 	<string id="str_robbery_pay_agreement.rhun_raiders_foe_1" text="{=taom_enc_robbery_pay_agreement_rhun_raiders_foe_1}You bargain like a captive already. Everything in your purse, and the finest thing in your pack besides." />
 	<string id="str_robbery_conclusion.rhun_raiders_foe_1" text="{=taom_enc_robbery_conclusion_rhun_raiders_foe_1}Crawl back the way you came and tell them the East is stirring." />
 	<string id="str_robbery_start_fight.rhun_raiders_foe_1" text="{=taom_enc_robbery_start_fight_rhun_raiders_foe_1}Good. The Warlord pays well for enemy heads. Surround them!" />
@@ -201,7 +201,7 @@
 	<string id="str_taom_enc_bandit_greet.rhun_raiders_foe_2" text="{=taom_enc_bandit_greet_rhun_raiders_foe_2}A long ride for a short life, stranger. Every rider here has sworn to bring your head to the Warlord." />
 	<string id="str_taom_enc_hideout_boss.rhun_raiders_kin" text="{=taom_enc_hideout_boss_rhun_raiders_kin}You have fought well enough to earn my respect. Meet me alone, as the old riders did, and the winner keeps the camp." />
 	<string id="str_taom_enc_hideout_boss.rhun_raiders_side" text="{=taom_enc_hideout_boss_rhun_raiders_side}We stand on the same side of this war, and still you burn my camp. Face me alone, and let the steppe judge which of us is stronger." />
-	<string id="str_taom_enc_hideout_boss.rhun_raiders_foe" text="{=taom_enc_hideout_boss_rhun_raiders_foe}Your road ends at my fire, enemy of the Warlord. Leave your riders and face me alone, as the steppe has always settled such things." />
+	<string id="str_taom_enc_hideout_boss.rhun_raiders_foe" text="{=taom_enc_hideout_boss_rhun_raiders_foe}Your road ends at my fire, stranger. Leave your riders and face me alone, as the steppe has always settled such things." />
 
 	<!-- harad_raiders -->
 	<string id="str_robbery_threat.harad_raiders_kin_1" text="{=taom_enc_robbery_threat_harad_raiders_kin_1}Peace, child of the long road. You thirst under the same sun as we do, so you know how this goes. A share of your silver, and we part as friends." />
@@ -332,7 +332,7 @@
 	<string id="str_robbery_threat.gondor_soldiers_foe_2" text="{=taom_enc_robbery_threat_gondor_soldiers_foe_2}Halt. Our banners are gone, but our swords still remember the enemy. Empty your saddlebags, or we empty them for you." />
 	<string id="str_robbery_pay_agreement.gondor_soldiers_foe_2" text="{=taom_enc_robbery_pay_agreement_gondor_soldiers_foe_2}So you will pay rather than bleed. Clever. Let us see how much your hide is worth to you." />
 	<string id="str_robbery_conclusion.gondor_soldiers_foe_2" text="{=taom_enc_robbery_conclusion_gondor_soldiers_foe_2}Done. Ride on before some of us decide the coin was not enough." />
-	<string id="str_robbery_start_fight.gondor_soldiers_foe_2" text="{=taom_enc_robbery_start_fight_gondor_soldiers_foe_2}Then we finish this as we did in the old days in Ithilien. No quarter for the enemy!" />
+	<string id="str_robbery_start_fight.gondor_soldiers_foe_2" text="{=taom_enc_robbery_start_fight_gondor_soldiers_foe_2}Then we finish this as we did in the old days in Ithilien. No quarter for those who cross us!" />
 	<string id="str_taom_enc_bandit_greet.gondor_soldiers_kin_1" text="{=taom_enc_bandit_greet_gondor_soldiers_kin_1}Wait! We have bled for the same lands you ride through. Must it end with us killing each other?" />
 	<string id="str_taom_enc_bandit_greet.gondor_soldiers_kin_2" text="{=taom_enc_bandit_greet_gondor_soldiers_kin_2}Put up your swords. We are tired, hungry and few, and none of us wants to die on a muddy road for nothing." />
 	<string id="str_taom_enc_bandit_greet.gondor_soldiers_side_1" text="{=taom_enc_bandit_greet_gondor_soldiers_side_1}Steady! We once fought beside allies such as you against the Dark Lord. Is this how the Free Peoples repay us?" />
@@ -449,13 +449,13 @@
 	<string id="str_taom_enc_hideout_boss.feral_orcs_foe" text="{=taom_enc_hideout_boss_feral_orcs_foe}Biggest in the den, me. You want the den, you beat me, one on one, teeth and iron." />
 
 	<!-- looters -->
-	<string id="str_robbery_threat.looters_kin_1" text="{=taom_enc_robbery_threat_looters_kin_1}Easy now, we were farmers before the orcs burned the barns. Hand over a little coin and nobody bleeds on this road." />
+	<string id="str_robbery_threat.looters_kin_1" text="{=taom_enc_robbery_threat_looters_kin_1}Easy now, we were farmers before the war burned the barns. Hand over a little coin and nobody bleeds on this road." />
 	<string id="str_robbery_pay_agreement.looters_kin_1" text="{=taom_enc_robbery_pay_agreement_looters_kin_1}You look like you have known lean winters too. A few coins and a loaf if you have one, that is all we ask." />
 	<string id="str_robbery_conclusion.looters_kin_1" text="{=taom_enc_robbery_conclusion_looters_kin_1}That will keep the children fed a while. Go on, and may the road treat you better than it treated us." />
 	<string id="str_robbery_start_fight.looters_kin_1" text="{=taom_enc_robbery_start_fight_looters_kin_1}Then you are no better than the raiders who took everything. Get at them!" />
 	<string id="str_robbery_threat.looters_kin_2" text="{=taom_enc_robbery_threat_looters_kin_2}Stop there, friend. The war took our fields and our lord forgot us, so the road is the only field we have left to reap." />
 	<string id="str_robbery_pay_agreement.looters_kin_2" text="{=taom_enc_robbery_pay_agreement_looters_kin_2}We are not thieves by trade. Give what you can spare and we will call it fair." />
-	<string id="str_robbery_conclusion.looters_kin_2" text="{=taom_enc_robbery_conclusion_looters_kin_2}Thank you, truly. Watch the ford ahead, the hill raiders have been about." />
+	<string id="str_robbery_conclusion.looters_kin_2" text="{=taom_enc_robbery_conclusion_looters_kin_2}Thank you, truly. Watch the ford ahead, other raiders have been about." />
 	<string id="str_robbery_start_fight.looters_kin_2" text="{=taom_enc_robbery_start_fight_looters_kin_2}We buried too many this winter to fear one more grave. Come on, then!" />
 	<string id="str_robbery_threat.looters_side_1" text="{=taom_enc_robbery_threat_looters_side_1}Hold up! Nobody rides to avenge anyone out here, and we have not eaten in two days, so give us your coin." />
 	<string id="str_robbery_pay_agreement.looters_side_1" text="{=taom_enc_robbery_pay_agreement_looters_side_1}No need for blades. Some silver and whatever food you carry, and we will let you be." />
@@ -474,13 +474,10 @@
 	<string id="str_robbery_conclusion.looters_foe_2" text="{=taom_enc_robbery_conclusion_looters_foe_2}Get out of our sight before we think better of it. Hunger makes poor judges." />
 	<string id="str_robbery_start_fight.looters_foe_2" text="{=taom_enc_robbery_start_fight_looters_foe_2}Better to die fighting than starve in a ditch. Have at them!" />
 	<string id="str_taom_enc_bandit_greet.looters_kin_1" text="{=taom_enc_bandit_greet_looters_kin_1}Mercy! We are only hungry folk who lost our farms, the same as half the realm." />
-	<string id="str_taom_enc_bandit_greet.looters_kin_2" text="{=taom_enc_bandit_greet_looters_kin_2}Wait, we are no orcs or hill raiders! Just poor farmers driven off our land, and we would sooner run than fight you." />
+	<string id="str_taom_enc_bandit_greet.looters_kin_2" text="{=taom_enc_bandit_greet_looters_kin_2}Wait, we are no raiders! Just poor farmers driven off our land, and we would sooner run than fight you." />
 	<string id="str_taom_enc_bandit_greet.looters_side_1" text="{=taom_enc_bandit_greet_looters_side_1}We have nothing worth taking, only rags and an empty pot. Leave us be and go your way." />
 	<string id="str_taom_enc_bandit_greet.looters_side_2" text="{=taom_enc_bandit_greet_looters_side_2}Come no closer! We starved through one winter already, and we will not die easy in this one." />
 	<string id="str_taom_enc_bandit_greet.looters_foe_1" text="{=taom_enc_bandit_greet_looters_foe_1}Back off! Your armies took our harvest, and you will not take our lives as well." />
 	<string id="str_taom_enc_bandit_greet.looters_foe_2" text="{=taom_enc_bandit_greet_looters_foe_2}Go on, then, cut us down. It is quicker than hunger." />
-	<string id="str_taom_enc_hideout_boss.looters_kin" text="{=taom_enc_hideout_boss_looters_kin}You found what is left of us. I was a smith in a village that no longer stands, so fight me alone, and if I fall, let the others go." />
-	<string id="str_taom_enc_hideout_boss.looters_side" text="{=taom_enc_hideout_boss_looters_side}No sense killing everyone for a few rags. Face me alone, and whoever stands at the end takes this sorry camp." />
-	<string id="str_taom_enc_hideout_boss.looters_foe" text="{=taom_enc_hideout_boss_looters_foe}You took our homes, and now you come for this hole in the ground too. Fight me alone, and let these hungry souls watch me try." />
 
 </strings>

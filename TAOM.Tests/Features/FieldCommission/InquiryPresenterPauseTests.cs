@@ -1,4 +1,4 @@
-using System;
+using System.Text.RegularExpressions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using static TAOM.Tests.Infrastructure.RepoPaths;
 
@@ -6,7 +6,7 @@ namespace TAOM.Tests.Features.FieldCommission;
 
 /// <summary>
 /// Every Battlefield Promotion popup that waits for the player must hold the campaign clock.
-/// v1.5.6 GauntletQueryManager.HandleQueryCreated (:244-259) registers an active-state disable
+/// v1.5.7 GauntletQueryManager.HandleQueryCreated (:244-259) registers an active-state disable
 /// request and pauses the engine only when the inquiry was raised with
 /// pauseGameActiveState: true, and CloseQuery (:261-273) releases both, so the map resumes at the
 /// speed it had. The rename prompt was raised with false, so after "Promote" the party kept
@@ -18,29 +18,25 @@ public class InquiryPresenterPauseTests
 {
     private const string AdapterPath = "Main/Adapters/InquiryPresenterAdapter.cs";
 
+    // The adapter raises five inquiries today (offer, no-room notice, rename prompt, discharge picker, discharge
+    // confirm). The floor makes an empty scan (a renamed call, a moved file) fail instead of pass.
+    private const int InquiriesToday = 5;
+
     [TestMethod]
-    [DataRow("ShowPromotionOffer")]
-    [DataRow("ShowNoCompanionRoom")]
-    [DataRow("ShowRenamePrompt")]
-    [DataRow("ShowDismissPicker")]
-    [DataRow("ShowDismissConfirm")]
-    public void PopupMethod_WaitsForPlayer_PausesTheCampaign(string method)
-    {
-        var body = MethodBody(method);
-
-        StringAssert.Contains(body, "pauseGameActiveState: true",
-            $"{method} must raise its inquiry with pauseGameActiveState: true; without it the "
-            + "campaign map keeps running while the popup waits for an answer");
-        Assert.IsFalse(body.Contains("pauseGameActiveState: false"),
-            $"{method} raises an inquiry that leaves the campaign running");
-    }
-
-    private static string MethodBody(string method)
+    public void EveryInquiryCall_PausesTheCampaign()
     {
         var src = ReadSource(AdapterPath, stripComments: true);
-        int start = src.IndexOf("public void " + method + "(", StringComparison.Ordinal);
-        Assert.IsTrue(start >= 0, $"InquiryPresenterAdapter no longer declares {method}");
-        int next = src.IndexOf("public void ", start + 1, StringComparison.Ordinal);
-        return next < 0 ? src.Substring(start) : src.Substring(start, next - start);
+
+        int inquiries = Regex.Matches(src, @"\bShow(Text|MultiSelection)?Inquiry\(").Count;
+        int paused = Regex.Matches(src, @"pauseGameActiveState:\s*true").Count;
+
+        Assert.IsTrue(inquiries >= InquiriesToday,
+            $"found {inquiries} inquiry calls in {AdapterPath}, expected at least {InquiriesToday}: "
+            + "the scan is empty or a popup was removed; update the pin");
+        Assert.AreEqual(inquiries, paused,
+            $"{inquiries} inquiry calls but {paused} with pauseGameActiveState: true; an inquiry raised "
+            + "with the default flag leaves the campaign map running while the popup waits for an answer");
+        Assert.IsFalse(src.Contains("pauseGameActiveState: false"),
+            "an inquiry is raised with pauseGameActiveState: false");
     }
 }

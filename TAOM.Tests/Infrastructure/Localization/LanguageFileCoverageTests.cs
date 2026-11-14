@@ -184,6 +184,10 @@ public class LanguageFileCoverageTests
             string.Join("\n", failures) +
             "\n\nFix (free, seeds the English rows only): python tools/translate_with_claude.py " +
             "--lang <L> --module TAOM --sync-ids --seed-only --apply\n" +
+            "This writes only into language files that already exist. A source with no language " +
+            "file yet needs one empty stub per language first (docs/localization/TRANSLATOR_GUIDE.md, " +
+            "new-source steps 2 to 5); do not run generate_translation_template.py --all --apply " +
+            "for it, which rewrites every templated file as English.\n" +
             "Translating the seeded rows is a separate paid run.");
     }
 }

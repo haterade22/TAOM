@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  Custom Battle only (SubModule.xml registers this for CustomGame, after every NPCCharacters node).
+  Custom Battle only (SubModule.xml registers this for CustomGame, after every NPCCharacters node but fords_troops, which is all obsolete).
   Custom Battle fills each formation slot from every Soldier-occupation character that is not obsolete,
   of the slot's culture and formation class (ArmyCompositionGroupVM, ArmyCompositionItemVM.IsValidUnitItem).
   TAOM reuses Culture.aserai for Harwan and has Shaghana on Culture.shaghana, so the Harwan/Shaghana
@@ -19,15 +19,18 @@
   (gear_practice_dummy_*, gear_dummy_*, weapon_dummy_*, weapon_practice_stage_*) are Soldier-occupation in most
   TAOM cultures and were offered too. Both are marked obsolete here by id. No TAOM troop uses these prefixes;
   campaigns, which read the dummies and stages by id from culture data, never load this file.
-  Culture.battania (Khand) is left out of the vanilla-troop rule: TAOM has no Khand soldiers of its own, so its
-  Custom Battle slots are still the vanilla Battanian line, and hiding it would leave the ranged and cavalry
-  slots empty. Aserai/Shaghana characters stay with the Harad rule below.
+  Culture.battania (Khand) keeps its vanilla Battanian line: TAOM has no Khand soldiers of its own, and no rule
+  below names battanian_ or wolfskins_, so the ranged and cavalry slots stay filled. A new rule that names one of
+  those prefixes empties them (CustomBattleTroopFilterLiveTests.Khand_StillOffersInfantryArchersAndCavalry).
+  Aserai/Shaghana characters stay with the Harad rule below.
   The vanilla CustomBattle module's 24 Calradian commanders (commander_1 to commander_24) sit on reused
-  cultures, so the muster screen (TcbVM: IsHero, culture, not obsolete) offered them as commanders of Rohan,
-  Rhun, Dale and Harwan next to TAOM's lords. Those are marked obsolete too. Vanilla reads commander_N only by
-  id (CustomBattleData.Characters, which TAOM replaces, and the CPU benchmark), and an obsolete object still
-  resolves by id. Culture.empire (Dunland) and Culture.battania (Khand) keep theirs: TAOM has no Custom Battle
-  heroes of those cultures, so the vanilla commanders are their only ones.
+  cultures, so the muster screen (TcbVM: IsHero, culture, not obsolete) offered them as commanders next to TAOM's
+  lords. All 24 are marked obsolete, Dunland (Culture.empire) and Khand (Culture.battania) included: characters/
+  custom_battle_lords.xml stubs TAOM lords for both, lords.xslt rebuilds them, and
+  CustomBattleCommandersShippedDataTests requires a commander of its own for every offered culture. The vanilla
+  trader merchant_empire (SandBoxCore, a hero of Culture.empire) is hidden by the same rule: the muster offered
+  it as a Dunland commander. Vanilla reads commander_N only by id (CustomBattleData.Characters, which TAOM
+  replaces, and the CPU benchmark), and an obsolete object still resolves by id.
 -->
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 	<xsl:output omit-xml-declaration="no" indent="yes"/>
@@ -46,7 +49,7 @@
 		</xsl:copy>
 	</xsl:template>
 
-	<xsl:template match="NPCCharacter[not(@is_hero='true') and not(@culture='Culture.aserai' or @culture='Culture.shaghana') and (starts-with(@id, 'gear_practice_dummy_') or starts-with(@id, 'gear_dummy_') or starts-with(@id, 'weapon_dummy_') or starts-with(@id, 'weapon_practice_stage_') or (not(@culture='Culture.battania') and (starts-with(@id, 'imperial_') or starts-with(@id, 'sturgian_') or starts-with(@id, 'vlandian_') or starts-with(@id, 'khuzait_') or starts-with(@id, 'hidden_hand_tier_') or starts-with(@id, 'embers_of_flame_tier_') or starts-with(@id, 'lakepike_tier_') or starts-with(@id, 'karakhuzaits_tier_') or @id='bucellarii' or @id='varyag' or @id='varyag_veteran' or @id='druzhinnik' or @id='druzhinnik_champion')))]">
+	<xsl:template match="NPCCharacter[not(@is_hero='true') and not(@culture='Culture.aserai' or @culture='Culture.shaghana') and (starts-with(@id, 'gear_practice_dummy_') or starts-with(@id, 'gear_dummy_') or starts-with(@id, 'weapon_dummy_') or starts-with(@id, 'weapon_practice_stage_') or starts-with(@id, 'imperial_') or starts-with(@id, 'sturgian_') or starts-with(@id, 'vlandian_') or starts-with(@id, 'khuzait_') or starts-with(@id, 'hidden_hand_tier_') or starts-with(@id, 'embers_of_flame_tier_') or starts-with(@id, 'lakepike_tier_') or starts-with(@id, 'karakhuzaits_tier_') or @id='bucellarii' or @id='varyag' or @id='varyag_veteran' or @id='druzhinnik' or @id='druzhinnik_champion')]">
 		<xsl:copy>
 			<xsl:apply-templates select="@*[name() != 'is_obsolete']"/>
 			<xsl:attribute name="is_obsolete">true</xsl:attribute>
@@ -54,7 +57,7 @@
 		</xsl:copy>
 	</xsl:template>
 
-	<xsl:template match="NPCCharacter[@is_hero='true' and not(@culture='Culture.empire' or @culture='Culture.battania') and starts-with(@id, 'commander_') and string-length(@id) &gt; 10 and translate(substring(@id, 11), '0123456789', '') = '']">
+	<xsl:template match="NPCCharacter[@is_hero='true' and ((starts-with(@id, 'commander_') and string-length(@id) &gt; 10 and translate(substring(@id, 11), '0123456789', '') = '') or @id='merchant_empire')]">
 		<xsl:copy>
 			<xsl:apply-templates select="@*[name() != 'is_obsolete']"/>
 			<xsl:attribute name="is_obsolete">true</xsl:attribute>

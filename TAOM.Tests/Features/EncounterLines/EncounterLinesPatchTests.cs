@@ -23,7 +23,8 @@ namespace TAOM.Tests.Features.EncounterLines;
 /// <summary>
 /// The patch bodies and the tag gate of Encounter Lines (Patch149), with no campaign: each does nothing when vanilla's condition
 /// said no, a stripped greeting prefix leaves the postfix idle, the gate answers false with no service and on a fault, and every
-/// fault leaves vanilla's text and warns once. The two GameText nodes are pinned because a file registered for the wrong game
+/// fault leaves vanilla's text and warns once. The text seam's postfix needs the engine types and is run in
+/// EncounterSentenceTextPatchTests. The two GameText nodes are pinned because a file registered for the wrong game
 /// types loads as "ERROR: Text with id" rows.
 /// </summary>
 [TestClass]
@@ -180,8 +181,7 @@ public class EncounterLinesPatchTests
     {
         var subModule = XDocument.Load(RepoPaths.RepoPath("Main", "_Module", "SubModule.xml"));
         var nodes = subModule.Descendants("XmlNode").Where(n => (string?)n.Element("XmlName")?.Attribute("path") == path).ToList();
-        if (nodes.Count == 0)
-            Assert.Inconclusive(path + " is not registered in SubModule.xml yet (the lead registers it)");
+        Assert.AreEqual(1, nodes.Count, path + " must be registered exactly once in SubModule.xml");
 
         var node = nodes.Single();
         Assert.AreEqual("GameText", (string?)node.Element("XmlName")?.Attribute("id"));

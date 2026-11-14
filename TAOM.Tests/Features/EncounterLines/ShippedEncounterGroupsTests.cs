@@ -16,7 +16,7 @@ namespace TAOM.Tests.Features.EncounterLines;
 
 /// <summary>
 /// Pins the shipped <c>encounter_lines/encounter_groups.json</c>. The provider is fail-soft, so a dropped row would only make
-/// a people fall silent to vanilla; these tests make that loud, and hold the table to SPEC-lines.md (13 Nov 2026).
+/// a people fall silent to vanilla; these tests make that loud, and hold the table to docs/features/encounter-lines.md (13 Nov 2026).
 /// </summary>
 [TestClass]
 public class ShippedEncounterGroupsTests

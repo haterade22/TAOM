@@ -266,7 +266,7 @@
 	<xsl:template match="string[@id='str_comment_special_clan_intro_brotherhood_of_woods.default']">
 		<xsl:copy>
 			<xsl:apply-templates select="@*[local-name() != 'text']"/>
-			<xsl:attribute name="text">{=taom_clan_intro_brotherhood_of_woods}The Strawheads took our fathers' valleys and drove us up into the hills. Whatever we take back from a horse-lord or a king's man was ours to begin with. You'll hear us called robbers and reavers. Don't believe a word of it.</xsl:attribute>
+			<xsl:attribute name="text">{=taom_clan_intro_brotherhood_of_woods}The Strawheads took our fathers' valleys and drove us up into the hills. Whatever we take back from a horse-lord or a king's man was ours to begin with. You'll hear us called robbers and brigands. Don't believe a word of it.</xsl:attribute>
 		<xsl:apply-templates select="node()"/>
 		</xsl:copy>
 	</xsl:template>
