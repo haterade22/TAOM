@@ -111,8 +111,8 @@ fiefs and it passes every gate. Everything above that is ambition: Misty Mountai
 and 150 heroes off the same 13 files.
 
 `settlements.xml` lives in the game install, not the repo; a module reinstall reverts hand edits, so
-land a repo-side validator gate with any fix. The repo's own
-`Main/_Module/ModuleData/settlements.xml` is a stale shadow and edits to it never reach the game.
+land a repo-side validator gate with any fix. TAOM's repo has no
+settlement file (its two unloaded copies were removed on 2026-11-14).
 
 ## The config fan-out
 

@@ -142,8 +142,9 @@ Three consequences, each with its file-level detail in [File catalogue](file-cat
   The reverse case sits in the same folder: `settlement_tracks.xml` (7,390 bytes of `<MusicTrack>`
   rows) and `settlement_track_instruments.xml` (3,346 bytes of `<MusicInstrument>` rows) are real
   content that neither `SubModule.xml` nor `project.mbproj` mentions at all. <!-- measured: wc -c on both files; grep -c settlement_track over TAOM_Map/SubModule.xml and TAOM_Map/ModuleData/project.mbproj, 0 and 0 2026-09-05 -->
-- **The repo's `settlements.xml` is a dead copy.** `id="Settlements"` occurs 0 times in
-  `Main/_Module/SubModule.xml`; the repo file holds 863 `<Settlement>` elements in 1,023,041 bytes, the
+- **The repo has no `settlements.xml`.** `id="Settlements"` occurs 0 times in
+  `Main/_Module/SubModule.xml`; the two unloaded repo copies were removed on 2026-11-14. On 2026-09-05 the
+  repo file held 863 `<Settlement>` elements in 1,023,041 bytes, the
   live `TAOM_Map/ModuleData/settlements.xml` 988 in 1,153,217 bytes ([orientation.md](../ai-includes/orientation.md) trap index,
   "TAOM_Map settlements"). <!-- measured: grep -c 'id="Settlements"' Main/_Module/SubModule.xml; python re.findall(rb'<Settlement\s') over both files 2026-09-05 -->
 - **`TAOM_Map`'s `project.mbproj` is inert.** 9 `<Module id=...>` rows and 0 `<file>` rows, and
@@ -555,7 +556,7 @@ All measured 2026-09-05 on this machine, except the repo manifest and ModuleData
 - `project.mbproj` rows: `TAOM` 5 `<file>` (4 voice definitions, 1 module sound), `LOTRLOME_Armory` 11 `<file>`, `TAOM_Map` 0 `<file>` and 9 `<Module>`, `Native` 50 `<file>`, `SandBox` 0 `<file>`; `SandBoxCore`, `CustomBattle` and `TAOM.Dependencies` have no `project.mbproj` at all: `grep -c '<file '` and `grep -c '<Module '` over each, and `test -f`.
 - 39 distinct `soln_*` ids in `Native/ModuleData/project.mbproj` (`grep -o 'id="[^"]*"' <file> | sort -u | wc -l`), which the audit no longer uses as its vocabulary (#987): it checks rows against the 13 ids of `REQUESTED_IDS` in `audit_mbproj_registration.py`, and a row of one of the thirteen `NATIVE_BY_TYPE` types loads whatever its id (several of Native's own 39 ids, such as `soln_monsters`, are asked for by nothing); the audit reports 0 errors and 5 warnings (2026-10-24): `python tools/audit_mbproj_registration.py`.
 - `TAOM_Map` stub data files 197 to 245 bytes: `wc -c` on the seven files its manifest names. Its two unregistered music files are 7,390 and 3,346 bytes, and `grep -c settlement_track` returns 0 for both its manifest and its `project.mbproj`.
-- Settlements: repo shadow 863 elements in 1,023,041 bytes, live 988 in 1,153,217 bytes: Python `re.findall(rb'<Settlement\s', data)` and `len(data)`; 0 `id="Settlements"` rows in `Main/_Module/SubModule.xml`: `grep -c`.
+- Settlements (2026-09-05, before the repo copy was removed): repo shadow 863 elements in 1,023,041 bytes, live 988 in 1,153,217 bytes: Python `re.findall(rb'<Settlement\s', data)` and `len(data)`; 0 `id="Settlements"` rows in `Main/_Module/SubModule.xml`: `grep -c`.
 - `ModuleData` file counts: repo 367 (567 on 2026-11-03), deployed 371 (`find -type f | wc -l`); XML / XSLT: `Main` 451 / 11 (2026-11-03), `LOTRLOME_Armory` 425 / 8, `TAOM_Map` 44 / 1 (`find -name "*.xml" | wc -l`, `-name "*.xslt"`).
 - Repo module folders: `Main/_Module/bin` 7 files, `Dependencies/_Module/bin` 44, 4 stub manifests under `Stubs/`, and no `TAOM_Map` or `LOTRLOME_Armory` module directory anywhere under the repo root: `find <path> -type f | wc -l`, `find Stubs -name SubModule.xml | wc -l`, `find . -type d -name <name>`.
 - Modules owning a `SceneObj/Main_map`: 3 (`NavalDLC`, `SandBox`, `TAOM_Map`): a `test -d "$d/SceneObj/Main_map"` loop over `<game>/Modules`.

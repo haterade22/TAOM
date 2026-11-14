@@ -23,7 +23,6 @@ saves are covered by the C# regen knob (Main/Features/SettlementEconomy/, #317).
 
 Targets ONLY the LIVE engine-loaded file:
     E:\\Steam\\...\\Modules\\TAOM_Map\\ModuleData\\settlements.xml
-(The repo's Main/_Module/ModuleData/settlements.xml is a stale shadow -- never edited here.)
 Vanilla SandBox settlements.xml is a READ-ONLY comparison input. `hearth=`, bindings, owners and
 every other byte are untouched.
 

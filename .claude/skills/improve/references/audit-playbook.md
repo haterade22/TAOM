@@ -239,8 +239,8 @@ fixes.
   exist.
 - Balance and consistency: tiers against wage, weight and resource tables; deleted troops still
   referenced; rosters drawing from the wrong culture's pool.
-- Stale shadows: edits landing in known-dead copies (the repo's `settlements.xml`; orientation.md
-  "TAOM_Map settlements").
+- Stale shadows: edits landing in known-dead copies (the repo's `settlements.xml` was one until it was
+  removed on 2026-11-14; orientation.md "TAOM_Map settlements").
 
 ## 10. Direction: features and where to take this next
 

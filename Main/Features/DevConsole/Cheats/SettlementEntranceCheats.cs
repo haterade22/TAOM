@@ -131,8 +131,7 @@ public static class SettlementEntranceCheats
         }
 
         sb.AppendLine();
-        sb.AppendLine("Apply these to the LIVE TAOM_Map\\ModuleData\\settlements.xml — the copy under");
-        sb.AppendLine("Main/_Module/ModuleData/ is a stale shadow and edits there never reach the game.");
+        sb.AppendLine("Apply these to the LIVE TAOM_Map\\ModuleData\\settlements.xml, the only copy the game reads.");
         return sb.ToString().TrimEnd();
     }
 

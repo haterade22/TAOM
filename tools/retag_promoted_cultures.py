@@ -12,9 +12,8 @@ FOUR of the five targets are in this repo. The fifth is not:
 
     <game>/Modules/TAOM_Map/ModuleData/settlements.xml
 
-is the LIVE settlement file and the authoritative one — the repo's own
-Main/_Module/ModuleData/settlements.xml is a stale shadow whose edits never reach the game. The live
-file is unversioned, so a module reinstall silently reverts anything written here. That is why
+is the LIVE settlement file and the only one the game reads. It is
+unversioned, so a module reinstall silently reverts anything written here. That is why
 `LANDLESS_CULTURE` in tools/validate_moduledata.py is the gate that matters: it fails in-repo if the
 external edit is missing or has been reverted, which is the only thing that makes an unversioned
 edit safe to depend on.

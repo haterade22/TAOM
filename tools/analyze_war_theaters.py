@@ -48,8 +48,7 @@ is ``Modules/TAOM_Map/ModuleData/DistanceCaches/settlements_distance_cache_Defau
 pairwise path distances and the fortification neighbour graph. Reading it is the correct upgrade for
 this tool.
 
-Data sources are the LIVE module installs, not the repo shadows. ``Main/_Module/ModuleData/
-settlements.xml`` is 125 settlements stale and must not be used here.
+Data sources are the LIVE module installs; TAOM_Map is in no repo.
 """
 
 from __future__ import annotations

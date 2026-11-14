@@ -416,7 +416,7 @@ Every registry object writes its `StringId` and its `MBGUID` into the save (`MBO
 
 - **Heroes, clans, kingdoms and mobile parties are temporary types** (`Campaign.cs:1536, 1543, 1545, 1555`, `isTemporary: true`). A saved campaign never re-reads the `Heroes`, `Kingdoms` or `Factions` XML (`SandBoxManager.cs:360-375`) and `RemoveTemporaryTypes` unregisters whatever the XML did create (`SandBoxManager.cs:344-347`, `MBObjectManager.cs:655-669`). Edits to `heroes.xml`, `clans.xml`, `taom_spkingdoms.xml` and `spkingdoms.xslt` reach a **new campaign only**; the save carries its own copies.
 - **Troop ids never change and troops are never deleted**: orphan the troop by removing it from every `upgrade_targets` and keep the element, or mark it `is_obsolete="true"` (`BasicCharacterObject.cs:336`), the flag vanilla uses for its own `obsolete_characters.xml` ([troops rule](../../.claude/rules/troops.md), lines 149-151).
-- **Settlement ids are save-bound; never rename one** ([xslt-moduledata lesson](../reviews/lessons/xslt-moduledata.md), line 11). The live file is `TAOM_Map/ModuleData/settlements.xml`; the repo copy under `Main/_Module/ModuleData/` is a stale shadow that is not registered.
+- **Settlement ids are save-bound; never rename one** ([xslt-moduledata lesson](../reviews/lessons/xslt-moduledata.md), line 11). The live file is `TAOM_Map/ModuleData/settlements.xml`; TAOM's repo has no settlement file (its two unloaded copies were removed on 2026-11-14).
 - **Race integers are positions, not ids**, so a save written before a race was inserted mid-file would remap every later race; TAOM persists hero races by name for that reason ([hero-race](../features/hero-race.md)).
 
 ## Worked example
