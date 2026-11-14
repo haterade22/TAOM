@@ -183,13 +183,70 @@ A body with a skeleton and meshes but no `Agent` can be built and animated by ha
 
 | Fact | Evidence |
 |---|---|
-| `GameEntity.CreateAgentSkeleton(skeletonName, isHumanoid: true, actionSet, usage, monster)` works on an empty entity made with `GameEntity.CreateEmpty(scene, false, false, false)`; no agent is needed | `CrowdProxy.cs` 908-911, 971 |
+| `CreateAgentSkeleton(this GameEntity, skeletonName, isHumanoid: true, actionSet, usage, monster)` works on an empty entity made with `GameEntity.CreateEmpty(scene, false, false, false)`; no agent is needed. [TAOM-verified, v1.5.7] The two skeleton builders and `FillAnimationSystemData` are extension methods; their classes and signatures are in [animation-binding-and-playback.md](animation-binding-and-playback.md), paragraph "Step size and gait speed". `MBAgentVisuals` is `TaleWorlds.MountAndBlade.MBAgentVisuals`. `CreateEmpty` is `GameEntity.CreateEmpty(Scene, bool isModifiableFromEditor = true, bool createPhysics = true, bool callScriptCallbacks = true)`. `CreateAgentSkeleton` uses step size 1.0 (same doc). Every other call in the lab's chain also exists on v1.5.7: `MBAgentVisuals.CreateAgentVisuals(Scene, string, Vec3)`, `SetEntity`, `SetSkeleton`, `SetVisible`, `SetAgentLocalSpeed(Vec2)`, `Tick(MBAgentVisuals, float, bool, float)`, `Reset()`, `Agent.AgentVisuals` and `Agent.SetRenderCheckEnabled(bool)` (decompile of the installed v1.5.7 DLLs; vanilla's `AnimationPoint` builds a skeleton the same way, and `MobilePartyVisual` ticks the campaign map's visuals through `AgentVisuals.Tick`) | `CrowdProxy.cs` 908-911, 971 |
 | A mesh added to the skeleton after the body was handed over to the engine's visuals object was not drawn ("weapons fought in the air near the player, no bodies"), so every mesh goes on first | comment at 920-921, seen in game 10.10.2026 |
 | The engine's own way to move a body that is no agent is an `MBAgentVisuals` made with `CreateAgentVisuals`, then `SetEntity` and `SetSkeleton`, told the local speed and ticked (the campaign map's parties, the editor's `CharacterDebugSpawner`) | 949-955 and 1137-1145 |
 | The lab animates such a skeleton itself; whether the engine would is not shown (one of the lab's test modes leaves a raw clip "to the engine", `CrowdLab.cs` 251, and its result is not recorded). The lab sets the action progress itself (a walk clip "may be driven by movement, which a plain skeleton does not have", a hedge in `CrowdLab.cs` 250-251), ticks the action channels while one action blends into the next (`CrowdProxy.cs` 1130-1136), and calls `TickAnimations` or `TickAnimationsAndForceUpdate` (1146-1147). A figure not ticked within 0.35 s of an action change stayed between the two actions | 1130-1148 |
 | A mesh cannot be added to a body the visuals object already holds, so adding one (a head) means giving the whole figure up with `Visuals.Reset()` and building it anew | comment at 966-967, code 968 |
 | Give a body held by a visuals object up through `Reset()`, never by removing its entity: removing the entity under it crashed the game some time later (10.10.2026, 23:45). The lab's teardown also detaches borrowed skeletons before removing entities, so an entity does not take a master's skeleton with it | `CrowdProxy.cs` 1776-1779; `CrowdLab.cs` 835-837 |
 | Five extra draw calls for the game's own weapon meshes cost 1.8 ms a frame with 2,000 figures (measured 10.10.2026). The figure is a proxy; this is not an agent cost | `CrowdProxy.cs` 683-685 |
+
+**A figure mirrors one real agent, so the method cannot pass the agent cap.** In `CrowdProxy` every figure holds its
+real `Agent` (`Figure.Agent`, `CrowdProxy.cs` 92), the selection walks `Mission.Agents` (1674), and the figure is dropped
+the moment `!a.IsActive()` (1772-1784). The real soldier keeps its movement, AI, hits and death; the figure only changes
+how it is drawn (class summary, 13-17; "the soldier fights for real in the engine", 665-669). The 2,040 slots
+(`mission-frame-threads-and-native-costs.md` section 3) therefore stay the ceiling. The only 10,000 drawn in yotthani's
+material is the lab's flip-book test, K still pose meshes per figure ("10000 figures +2.9 ms at 5120x2160", `docs/engine/crowd-rendering.md`@ea7a7bfb
+line 58, measured, one PC); `CrowdLab.cs` clamps its stage count to 20,000 (line 70). TAOM's reading, from a search of
+`yotthani/bannerlord`@c45d8374 for in-game code (not re-run by TAOM): no pushed code gives an agent-less unit its own
+position, hit or death. `CrowdProxy.cs`@c45d8374 is byte-identical to the @784fef93 cited above, so those line numbers hold.
+
+**Cost per 1000 figures** (yotthani, `yotthani/MithrilForge` `docs/engine/crowd-rendering.md`@ea7a7bfb lines 11-13, 20-26, 28-42;
+measured in game 1.5.5 with TAOM 2.0.34 on one PC: Core Ultra 7 265KF, RTX 5070 Ti, 2560x1080, no v-sync; the run logs are not
+in that repo; yotthani estimates a typical PC at 55 to 70 % of these frame rates, "assumption, not measured"):
+
+| What is drawn | Cost per 1000 | Skeleton-buffer entries |
+|---|---|---|
+| Engine soldier, fully armoured (through `Mission.AgentVisualCreator`) | 8.5 ms | 28 each |
+| The same, naked | 4.5 ms | none |
+| Armour alone / weapons alone | about 3.3 ms / about 0.8 ms | |
+| Baked one-mesh figure on a plain skeleton | 0.3 to 0.4 ms | none |
+| "Plain" figure (the game's own meshes on a plain skeleton) | as much as the engine soldier | |
+
+A hidden agent (`SetRenderCheckEnabled(false)` plus `AgentVisuals.SetVisible(false)`) takes no skeleton-buffer entry;
+in every figure mode the buffer stayed at 40 to 100 of 2,340 where real soldiers filled it (lines 41-42). Entries per unit
+type, and the 2,000-soldier split between simulation and drawing, are in
+[mission-frame-threads-and-native-costs.md](mission-frame-threads-and-native-costs.md) sections 9 and 10. Gains in whole
+battles: 1000 v 1000 uruks 61-64 to 108-117 fps and 700 v 700 (Isengard against Erebor) 87 to 128-130 fps with the
+whole army in view; in a ground-level melee nothing, because the engine poses only the 500 to 1,100 skeletons it draws.
+
+**Tried and unusable** (same file, lines 44-60, same PC; measured, except the missing instancing API, which is a code reading): no engine API takes a mesh and a list of positions
+(no instancing); `entity.Skeleton = otherSkeleton` is accepted and does not crash, but the sharing entities are not drawn;
+`Mesh.MorphTime` costs about 70 us a call (1000 figures at 10 steps a second add 70 ms, and 10,000 meshes with their own
+morph time hang the game); merging at run time with `Mesh.AddMesh(mesh, frame)` took 67 s for 200 figures of 84 meshes and
+drew no frame afterwards; forcing a coarser LOD or leaving out weapons does not make a plain figure cheaper.
+
+**Small facts from the lab** (same file, measured unless noted): `MBAgentVisuals.Tick(null, dt, moving, speed)` and no
+ticking give the same forward pace, while `Tick(null, dt, false, 0)` steps at a constant 1.07 s whatever the speed
+(line 327). Team colour is `Mesh.Color` and `Mesh.Color2` per mesh plus the material flag
+`use_double_colormap_with_mask_texture`; `MetaMesh.SetFactor1/2` has no effect (103-106). `Agent.ActionCodeType` `Idle`
+(35) and `Guard` (36) are not "Other" (280). Bone frames read from managed code are not exact per frame, and real skeletons
+beyond about 20 m are updated less often (336-338; it agrees with the pose rule at the top of this page).
+
+**Dated crash, freeze and fault notes** (yotthani, comments in `CrowdProxy.cs`@c45d8374 and `CrowdLab.cs`, seen in game in
+October 2026; engine version and mod list not stated; observations, none re-run by TAOM):
+
+| Note | Where |
+|---|---|
+| A figure built while the armies were still deployed hung the game (12.10.2026, 14:11); nothing runs before `Mission.IsDeploymentFinished`, and the first mode starts 5 s after the battle begins | `CrowdProxy.cs` 223-224, 260 |
+| A faster start (0.3 s, three steps at once) froze the game twice with 2,000 soldiers and a full skeleton buffer (12.10.2026) | 256-259 |
+| 1,700 figures with a head froze the game three times, some seconds after they stood there; 1,000 did not (12.10.2026) | 931-933 |
+| Until a figure's meshes had loaded it showed as a head with a weapon and a shield (12.10.2026); the real soldier stays drawn while it waits; the figure's visuals object still drew its body over the soldier and helmets flickered (12.10.2026), so the figure is hidden through that object too, every frame it waits | 1724-1731, 1833-1836 |
+| A walk action does not run by itself on a skeleton without an agent (measured 09.10.2026), and walking is not an action (`act_none`), so the figures floated (seen 09.10.2026) | `CrowdProxy.cs`@c45d8374 667-669, 1053-1056 |
+| A formation that sets off does so in one frame and the whole line lifted the same foot (12.10.2026); a start phase of `(a.Index * 0.618) % 1` fixes it | 1035-1049 |
+| Within one frame the engine gives no new pose (clip stride probe 0.00 m, 10.10.2026) | 1490-1491 |
+| Faults going backward were 18 to 36 % of all backward movement (measured 10.10.2026) | 1066-1067, 1077-1078 |
+| Weapons re-checked three times a second showed up to a third of a second off, so they are re-checked every frame during an equip or unequip action | 996-1002 |
 
 The gait step size is a separate finding and lives in [animation binding](animation-binding-and-playback.md) under `FillAnimationSystemData`.
 

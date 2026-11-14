@@ -390,7 +390,7 @@ public class PatchCategoryApplierTests
         var subModule = CommentPattern.Replace(File.ReadAllText(RepoPaths.RepoPath("Main", "SubModule.cs")), string.Empty);
         StringAssert.Matches(subModule, new Regex(
             @"var (\w+) = PatchCategoryIndex\.Build\(ClientComposition\.IsDedicatedServer\(\), ClientComposition\.LoadedTaomAssemblies\(\)\);\s*"
-            + @"_patches = new PatchCategoryApplier\(\s*category => \1\.Apply\(_harmony, category\),[^;]+;\s*"
+            + @"_patches = new PatchCategoryApplier\(\s*category => \1\.Apply\(CrashGuardHarmony\.IsCrashGuard\(category\) \? _guardHarmony : _harmony, category\),[^;]+;\s*"
             + @"_patches\.RecordSkippedClasses\(\1\.SkippedClasses\);\s*"
             + @"_patches\.RecordClientOnlyClasses\(\1\.ClientOnlyClasses\);"));
     }

@@ -1230,7 +1230,7 @@
         <GameType value="CampaignStoryMode"/>
       </IncludedGameTypes>
     </XmlNode>
-    <!-- XSLT to remove "the" before faction names in action/comment strings -->
+    <!-- XSLT: "the" removal in action/comment strings, Middle-earth lord self-introductions and liege titles -->
     <XmlNode>
       <XmlName id="GameText" path="action_strings"/>
       <IncludedGameTypes>
@@ -1282,6 +1282,20 @@
     </XmlNode>
     <XmlNode>
       <XmlName id="GameText" path="taom_bandit_voice_strings"/>
+      <IncludedGameTypes>
+        <GameType value="Campaign"/>
+        <GameType value="CampaignStoryMode"/>
+      </IncludedGameTypes>
+    </XmlNode>
+    <XmlNode>
+      <XmlName id="GameText" path="taom_encounter_lord_strings"/>
+      <IncludedGameTypes>
+        <GameType value="Campaign"/>
+        <GameType value="CampaignStoryMode"/>
+      </IncludedGameTypes>
+    </XmlNode>
+    <XmlNode>
+      <XmlName id="GameText" path="taom_encounter_strings"/>
       <IncludedGameTypes>
         <GameType value="Campaign"/>
         <GameType value="CampaignStoryMode"/>

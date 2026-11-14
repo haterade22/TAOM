@@ -394,8 +394,8 @@ The rules are in [tests.md](../.claude/rules/tests.md); the AAA structure is in
 Every category registered in `Main/SubModule.cs` is an intentional patch: do not flag one as an
 unauthorized modification. The list, with feature, target, status and history, is
 [harmony-patch-registry.md](../docs/reference/harmony-patch-registry.md); grep the category there.
-Any postfix with `MovementOrder` in its signature must join the shared deferred category
-`Patch_MissionTime_SetMovementOrder`.
+Any postfix with `MovementOrder` in its signature must go in its feature's own deferred
+`Patch_MissionTime_<Feature>` category (today `SmartCavalryAI`, `CompanionTactics` and `MarshalsWord`).
 
 ---
 

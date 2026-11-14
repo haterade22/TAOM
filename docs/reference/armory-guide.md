@@ -181,6 +181,66 @@ FBX files on 2026-10-22, and `armor/project_bannerlord_armor_factory.md`, 2026-1
 - **After a sim topology change the reimport fails with "Unable to update cloth mapping data (RDC)".** His fix: unlink
   the sim (set it to None), save, reimport, relink, then re-cook.
 
+### What the engine does with a cloth item (yotthani's findings, not re-checked by TAOM)
+
+All of this is from yotthani's race-fit work, measured on installed game data around game 1.5.5 to 1.5.6 (the sources do
+not name a build or a PC), and TAOM has checked none of it on v1.5.7. Sources: `yotthani/MithrilForge`
+`src/MithrilForge.TpacFormat/Assets/ClothMapping.cs@ea7a7bfb:9-70`, `docs/engine/modding-kit.md@ea7a7bfb:421-441`,
+`src/MithrilForge.Crowd/CrowdCommand.ClothRefit.cs@ea7a7bfb`, and `yotthani/bannerlord` `HoN/RaceArmorFit` (README, commits).
+
+- **A render vertex whose colour alpha is above 0 is drawn from the simulation; alpha 0 is an ordinary skinned vertex.**
+  yotthani rebuilt the cloth vertex shader (`rgl_cloth_transform`) on the CPU from the game's shader sources: such a vertex
+  takes three particles and four weights from the cloth map, at `sum(b*P) + w*normalize(sum(b*N))`, with that normal as its
+  shading normal (negated when index 0 is above index 1). Particles below `normal_update_start_index` keep their rest
+  normal. The identification of buffer 8 (painted weight, 0 on pins; the leash is `max_distances x multiplier`) and buffer
+  9 (1 / summed triangle area) is "by elimination from the shader, not from the engine's binding code" in the source.
+- **The cloth map is indexed by edit-data face corner**: one entry per corner, as three u16 particle indices and four floats
+  (three barycentrics and `w`). Corners with alpha 0 need an entry too, because the engine asserts the map length. Rebuilt at
+  rest it reproduces the edit data to a p95 of 0.13 to 0.29 mm when `w` runs along the sim mesh's authored corner normals; with
+  the engine's computed normals the awnings drifted to a p95 of 6 to 7 mm. A changed sim mesh therefore needs a new map, not only
+  a new cook. A double-sided cloth mesh holds each triangle twice with reversed winding, so an offline renderer shows facets
+  (`docs/engine/modding-kit.md@ea7a7bfb:431-441`, commit `d81dd7e`).
+- **Particle indices are 16 bits**, so a sim mesh has at most 65,536 particles (`ClothCooker.cs@ea7a7bfb:55`); the cape
+  already has 1,363 at vanilla resolution. A 1:4 subdivision reaches the ceiling quickly. TAOM's sims (about 800 triangles
+  above) are far from it.
+- **Not every cloth item has a separate `clo_` metamesh.** The Erebor chain mail keeps its cook in its visible mesh (commit
+  `1b4122a`; `CrowdCommand.ClothSelfCarrier.cs@ea7a7bfb:12-17`). Check the mesh's cloth flags (`uses_cloth_simulation`,
+  `force_enable_cloth`) before assuming a `clo_` sim. A sim metamesh that stores no cook (`clo_mirkwood_shoulder`) is cooked
+  by the engine from its geometry on load; that the engine orders the particles as the kit cooker does is marked ASSUMPTION
+  in the source (`ClothRefit.cs:406-409`), supported only by the cooker reproducing the stored cooks byte for byte.
+- **At run time `MetaMesh.HasClothData()` recognises cloth garments reliably and `Mesh.HasCloth()` is true for every mesh**
+  (RaceArmorFit README, the later of two contradicting commits; see
+  [head-mesh-and-groom-authoring.md](head-mesh-and-groom-authoring.md) "Run-time edits of armour meshes").
+- **The simulation pulls a fitted garment back to the human shape stored in the item's cloth asset** after a civilian/battle
+  view switch (commit `b91e53cd`, seen in game 16 to 18 October 2026). Pinning every cloth simulator of the agent's skeleton
+  fixed the look: `SetMaxDistanceMultiplier(0)` (pinned) or `0.3` (loose) plus `SetResetRequired()`, as vanilla pins capes
+  (`Agent.CheckEquipmentForCapeClothSimulationStateChange`, `FieldFit.cs@c45d8374:257-258`). Because every `12D6` crash involved a fitted cloth item,
+  the mod later stopped editing meshes flagged for cloth simulation and set its cloth-sim taming (`ClothSimMode`: none, reset,
+  pin, loose) to `none` by default (commit `6502bd15`; `FieldFit.cs@c45d8374:141-143`). Its spec adds that cloth bodies bind to
+  a skeleton through `owner_skeleton` and that vanilla meshes carry a 200-particle map; a refined cook needs a cloth map per LOD.
+- **A carrier metamesh for a race fit** [yotthani, `ClothRefit.cs@ea7a7bfb:257-259, 364-376`]: the race's cook goes in as
+  `clo_<name>_<race>` next to a carrier `<visible>_<race>_cloth` that holds only the smallest LOD and points at that cook; the
+  original coat stays untouched for the other races. The engine knows only its own metamesh flags, and yotthani removed an
+  unknown flag as a "load risk" (commit `1478d8d`). A simulated LOD0 is not what such a fit moves, so yotthani's coat QA
+  evaluates LOD1 "as the game fits them" unless `--lod0 yes` is given (`CrowdCommand.CoatQa.cs@ea7a7bfb:64, 73`).
+
+### Fitting human armour to another build: eight failure mechanisms
+
+yotthani met these fitting dwarf armour to the human body and back (commit bodies in `yotthani/MithrilForge`, history up to @ea7a7bfb, game version
+and PC not stated, sizes as given; "user 18.10." in the code comments marks an in-game report). TAOM fits
+human armour to dwarves, orcs and uruks, and has verified none of this.
+
+| Commit | Symptom | Cause | Fix |
+|---|---|---|---|
+| `6180d2d` | Rim vertices of Erebor scale and chain mail up to 10 mm inside the human wrist at a closed sleeve end | Min-gap smoothing: the cap joins the opposite rim, whose push points the other way | A vertex keeps its own push when the smoothed push would leave it under the gap |
+| `e8fcca4` | Sleeve rim swings into the wrist when the hand bends | A dwarf sleeve end hangs about 20 % on the hand bone while the human skin under it follows the forearm | Take the body skin weights (`<BodySkin>`) for the rim |
+| `71219c5` | Dark holes in a skirt modelled with thickness (15 pairs below the belt) | A shrinking field pushes the back side of a closed two-sided layer through the front | Keep half the original thickness for opposite-facing vertices within 15 mm |
+| `eab99ee` | Streaks of light on a robe in game | The robe cook bent 11 to 16 degrees at every particle row between belt and hands (human: 2 to 5) | Gaussian z-smoothing of the field |
+| `1ae2991`, `208f0eb` | Capes stand off and fold when walking; skirt back panel stands off | Cape trunk-depth scale 1.18; skirt hip-depth scale 1.14 | A `--depth-scale` option on both fields (cape heights are also mapped piecewise along ankle, knee, hip, waist, thorax, clavicle and head); the skirt hangs closer at 1.03 |
+| `c4b75e1` ("Diagnosis 17.10.") | Knee-pit fold of the Gondor trousers | It comes from the human bone weights, not the leg heights: the "legz" mode leaves it, dwarf weights smooth it | None stated: the commit adds `--dwarf-weights` as a diagnosis switch |
+| `eea07dc` | Nothing drawn between trousers and a lower boot | Trousers that end under a dwarf knee end too high on the longer human shin, and with `covers_body` the gap stays bare | Lower the girth meshes' leg ends, faded over a ramp (not at the midline, where a crotch flap would become a sheet), and pull the lower half of the band to the leg's own skin so the cuff goes into the boot |
+| `9c9cc66` | Boots whose shaft is part of the main shell (no shaft plates) leave the leg bare: shaft cut by 7 to 12 cm (elite b: top 0.295 instead of 0.419 m) | When the shaft is part of the main shell, the shell blended from the foot map by mapped height up to 36 cm, and the foot map's height scale cut the shaft | The shell hands over from 8 to 23 cm original height above the sole |
+
 ---
 
 <!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->

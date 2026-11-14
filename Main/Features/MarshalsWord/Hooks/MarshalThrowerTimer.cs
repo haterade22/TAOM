@@ -11,7 +11,7 @@ namespace TAOM.Features.MarshalsWord.Hooks;
 /// The whole call is timed: vanilla's method, the thrower postfix, the caller's navmesh lookup and any wait for the position lock. No try, no log line.
 /// </summary>
 [HarmonyPatch(typeof(MovementOrder), nameof(MovementOrder.CreateNewOrderWorldPositionMT))]
-[HarmonyPatchCategory("Patch_MissionTime_SetMovementOrder")]
+[HarmonyPatchCategory("Patch_MissionTime_MarshalsWord")]
 public static class MarshalThrowerTimer
 {
     [HarmonyPrefix]

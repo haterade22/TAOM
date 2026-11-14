@@ -78,10 +78,13 @@ public class MarshalsWordWiringTests
     {
         var decls = new MarshalsWordModule().PatchCategories;
 
-        Assert.AreEqual(1, decls.Count);
-        Assert.AreEqual("Patch141_MarshalsWord", decls[0].Category);
+        Assert.AreEqual(2, decls.Count);
+        Assert.AreEqual("Patch_MissionTime_MarshalsWord", decls[0].Category);
+        Assert.AreEqual("Patch_MissionTime_MarshalsWord", MarshalsWordModule.ThrowerPatchCategory);
+        Assert.AreEqual("Patch141_MarshalsWord", decls[1].Category);
         Assert.AreEqual("Patch141_MarshalsWord", MarshalsWordModule.PatchCategory);
         Assert.AreEqual(ApplyPhase.FirstMission, decls[0].Phase);
+        Assert.AreEqual(ApplyPhase.FirstMission, decls[1].Phase);
     }
 
     [TestMethod]

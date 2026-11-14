@@ -24,8 +24,9 @@ public static class PatchShieldPolicy
     ///
     /// "TAOM" covers the ids that start with it: the shields, the shim and the Harmony guard
     /// ("TAOM.Dependencies.Foundation.*", "TAOM.HarmonyGuard") and the feature patches that create
-    /// their own Harmony instance ("TAOM.Realms.*", "taom.factionui.campaign-time"). It does NOT
-    /// cover TAOM's patch categories, which run under "com.taom.mod": after a missing-API exception
+    /// their own Harmony instance ("TAOM.Realms.*", "taom.factionui.campaign-time") and the crash
+    /// guards that CrashGuardHarmony applies under "TAOM.CrashGuards" (Patch143). It does NOT
+    /// cover TAOM's other patch categories, which run under "com.taom.mod": after a missing-API exception
     /// the rescue strips every unprotected owner's prefixes, postfixes and transpilers on that
     /// method, TAOM's included, whichever owner's patch threw (finalizers stay). Decision D13
     /// (plans/_audit/2026-10-02-perf/DECISIONS.md) is to strip only the owner that threw and

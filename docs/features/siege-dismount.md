@@ -129,6 +129,8 @@ State is mission-local and minimal (one snapshot, one bool). No per-tick overhea
 
 **No known limitations on modifier preservation.** Earlier Phase 1 docs flagged `ItemModifier` loss as a known limitation; Codex review #1 (2026-05-06) caught that the modifier-aware [`ItemRoster.AddToCounts(EquipmentElement, int)`](../../Main/Adapters/PartyMountInventoryAdapter.cs) overload exists in the current engine API, and the snapshot was switched to carry the full `EquipmentElement`. A "Sharp" or "Damaged" horse round-trips correctly.
 
+**Known limitation: crash recovery (read from code, not tested).** In `AutoRemountAfter` the service clears the equipment slot and deposits the mount in the party inventory at mission start (`SiegeDismountService.cs:91-93`), and restores it only in `OnMissionEnd`. The snapshot and `_pendingRemount` are plain instance fields (`:15-16`), so a game exit between the two leaves the mount in the inventory with the slot empty. The player re-equips by hand; nothing is lost. The same shape was spotted in yotthani's release module (static `_pendingRemount`, restored only in `OnEndMission`; `yotthani/bannerlord` `HoN/SiegeDismount/SiegeDismountBehavior.cs`@c45d8374), where the question is open. Check: kill the game during an `AutoRemountAfter` siege and reload the autosave.
+
 ## Verification
 
 In-game golden path:

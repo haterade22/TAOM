@@ -27,11 +27,14 @@ public sealed class AnimMemoryProbe : IAnimClipMemoryProbe
     private readonly INativeModuleMemoryAdapter _memory;
     private readonly IAnimationLoadingAdapter _loading;
     private readonly IModLogger _logger;
+    private readonly EngineSignatureCache _cache;
     private State _state = State.NotTried;
     private long _counterAddress;
 
-    public AnimMemoryProbe(INativeModuleMemoryAdapter memory, IAnimationLoadingAdapter loading, IModLogger logger)
+    public AnimMemoryProbe(INativeModuleMemoryAdapter memory, IAnimationLoadingAdapter loading, IModLogger logger,
+        EngineSignatureCache cache)
     {
+        _cache = cache;
         _memory = memory;
         _loading = loading;
         _logger = logger;
@@ -69,7 +72,8 @@ public sealed class AnimMemoryProbe : IAnimClipMemoryProbe
 
             // Read on trust: GetModuleHandleW found the module mapped, and the first page of a mapped
             // image holds its headers. Nothing pins the module, and nothing here could detect it going.
-            var sections = PeSectionTable.Parse(_memory.Copy(moduleBase, HeaderBytes));
+            var headers = _memory.Copy(moduleBase, HeaderBytes);
+            var sections = PeSectionTable.Parse(headers);
             if (sections == null)
             {
                 Disable("the module's PE headers did not parse");
@@ -84,8 +88,10 @@ public sealed class AnimMemoryProbe : IAnimClipMemoryProbe
 
             // The code copy is about 10 MB, once per process; it is dropped as soon as it is scanned. Its
             // range is the section table just parsed from the same module: trusted, not independent.
+            var session = _cache.Begin(ClipBudgetSignature.ModuleName, headers, text.VirtualAddress, text.VirtualSize);
             var match = ClipBudgetSignature.Resolve(
-                _memory.Copy(moduleBase + text.VirtualAddress, text.VirtualSize), text.VirtualAddress);
+                _memory.Copy(moduleBase + text.VirtualAddress, text.VirtualSize), text.VirtualAddress, session);
+            session.Complete();
             if (match.MatchCount == 0)
             {
                 Disable("the eviction-pass signature matched nothing in .text, so this engine build differs from the one it was written for");
@@ -130,7 +136,7 @@ public sealed class AnimMemoryProbe : IAnimClipMemoryProbe
             BudgetBytes = (int)ClipBudgetSignature.ExpectedBudgetBytes;
             _state = State.Armed;
             _logger.LogInfo(AnimMemLine.Armed(moduleBase, text.VirtualAddress, text.VirtualSize, match.LoadSiteRva,
-                match.BudgetSiteRva, match.CounterRva, match.BudgetRva, BudgetBytes, watch.Elapsed.TotalMilliseconds));
+                match.BudgetSiteRva, match.CounterRva, match.BudgetRva, BudgetBytes, watch.Elapsed.TotalMilliseconds, session.Path));
         }
         catch (Exception ex)
         {

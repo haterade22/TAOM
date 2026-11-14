@@ -83,6 +83,14 @@ GUID repeats, and every package is structurally sound. It cannot see whether the
    vanilla package). Until then do not copy either side's sign into a prop that has a real normal map.
 6. **UV is not flipped.** tpac UV is top-down, the same as glTF. The note "tpac is bottom-up" in older material is
    about image rows, not the UV convention. A flip mirrors the texture on the model and only shows in game.
+   **Open disagreement between two of yotthani's documents; this doc does not decide it.** The POI prop design says
+   "UV V-flip. tpac UV is bottom-up; PNG/glTF are top-down. `dumpobj` compensates with `v_out = 1 - Uv1.Y`, and `exporttex`
+   emits V-flipped PNGs ... in-game does not [hide the error]" (`yotthani/bannerlord`
+   `TAOM_POI/docs/2026-07-16-poi-prop-import-design.md@c45d8374:233-236`, listed under "Traps already paid for" from two older notes). The donor
+   spike measured the opposite on game 1.4.6: "UV: no flip. tpac and glTF are both top-down", derived from `dumpobj`'s
+   `1 - Uv1.Y` export and settled by one in-game screenshot where exactly one flip had come out mirrored
+   (`yotthani/MithrilForge` `docs/donor-findings.md@ea7a7bfb` section 10), which explains the older warning as a conflation. This doc's rule follows the spike (a measurement
+   in game); TAOM has not rendered either variant.
 7. **Build textures from scratch; do not clone a texture.** The donor's diffuse is a 4096x4096 BC7 texture streamed
    from the tile store (`UnknownUlong2 != 0`); a module must ship embedded pixels (`UnknownUlong2 == 0`). A new
    `Texture` needs `GeneratedAssets` and `BillboardMaterial` set, or `Texture.WriteMetadata` throws on save. Raw
@@ -97,6 +105,14 @@ GUID repeats, and every package is structurally sound. It cannot see whether the
 10. **Fresh GUIDs** for the metamesh, the mesh and every data segment's owner, or the clone collides with the donor.
     **A zero item checksum is tolerated** in MithrilForge's 1.4.6 tests; TAOM has not seen it load without an RDC
     entry (below).
+    **An override of an existing item by name needs new GUIDs too** [yotthani, `yotthani/MithrilForge`
+    `src/MithrilForge.Crowd/CrowdCommand.ClothRefit.cs@ea7a7bfb:243-246`, repeated at `CrowdCommand.MeshOverride.cs:11-14`,
+    commit `544b15b`; found in game with test packages, engine version and PC not stated]: "The engine ignores an item whose
+    guid is already registered and overrides by name only with a new guid". The rgl log line "Overriding item <name>" shows
+    that an override worked. An item that points at another item by guid (a coat points at its cloth metamesh) needs that
+    target in the package as well, under new GUIDs, or the pointer still reaches the old one. **UNVERIFIED by TAOM:** the
+    check is native, no managed code shows it, and no v1.5.7 rgl log has been searched for "Overriding item" (the cheapest
+    check). The silent ignore matters here because there is no error to read.
 11. **Round-trip every write** before claiming it loads: reload the package and compare vertex count, positions, UV,
     channel lengths and the material's diffuse against the source. MithrilForge's `PropVerifier` deletes a package
     that fails.
@@ -123,6 +139,14 @@ engine is known to load in four ways, so a success in game proves all four harml
 Do not rewrite these packages with `tpac_clone_metamesh.serialize` as a fix: packed is the layout vanilla uses, but a
 rewrite is an unreviewed change to commissioned art. It is a fair experiment if the delivery fix still shows the
 fallback.
+
+**A rebuilt mesh keeps the stored triangle order** [yotthani, `yotthani/MithrilForge`
+`CrowdCommand.MeshOverride.cs@ea7a7bfb:98` and `CrowdCommand.ClothRefit.cs:239, 313, 483`, commit `e180052`]. When yotthani
+moves a mesh it rebuilds only the vertex streams from the edit data and keeps the stored index order, because that order is
+"cache-optimised" (yotthani's word for vanilla's order) while its stream builder writes plain face order. No frame-time
+difference is cited, so this is a design choice, not a measurement. The "stream equals edit data" check compares streams,
+not triangle order. TAOM has not checked `tools/tpac_clone_metamesh.py` or any other TAOM write that rebuilds streams
+against this.
 
 ## Names
 

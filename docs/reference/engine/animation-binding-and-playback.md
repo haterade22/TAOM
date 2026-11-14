@@ -20,7 +20,7 @@ Two linked sub-processes:
 
 ## HOW it works — binding
 
-### `Monster.FillAnimationSystemData(...)` (MountAndBlade.cs:101588 / overload :101595) ⭐
+### `MonsterExtensions.FillAnimationSystemData(this Monster, ...)` (v1.5.3 dump MountAndBlade.cs:101588 / overload :101595) ⭐
 Builds an `AnimationSystemData` from the Monster:
 ```
 ActionSet            = monster.MonsterMissionData.ActionSet  (or FemaleActionSet)   // from Monster.ActionSetCode
@@ -33,7 +33,27 @@ Biped = { ragdoll stationary-check bones, foot-IK bones, ... }
 ```
 So `AnimationSystemData` = **action set + monster usage + speed limits + step size + the full bone-index map**.
 
-**Step size and gait speed.** The step size sets the speed up to which the engine lengthens the stride before it quickens the step, about 3.4 m/s times the step size. `CreateAgentSkeleton` uses 1.0; with 1.0 a figure at 4.5 m/s took 0.66 s per cycle against 0.83 s for real soldiers, and 1.3 matched them. (yotthani, `yotthani/bannerlord` `HoN/PerfProbe/Integration/CrowdProxy.cs`@784fef93 lines 899-903, probe of 11.10.2026 on an agent-less figure; engine version not stated in the source; the "about" is upstream's.)
+**Step size and gait speed.** The step size sets the speed up to which the engine lengthens the stride before it quickens the step, about 3.4 m/s times the step size. `CreateAgentSkeleton` uses 1.0; with 1.0 a figure at 4.5 m/s took 0.66 s per cycle against 0.83 s for real soldiers, and 1.3 matched them. (yotthani, `yotthani/bannerlord` `HoN/PerfProbe/Integration/CrowdProxy.cs`@784fef93 lines 899-903, probe of 11.10.2026 on an agent-less figure; engine version not stated in the source; the "about" is upstream's.) The figure was built from a `GameEntity` with no agent: the crowd code called
+`monster.FillAnimationSystemData(actionSet, stepSize, false)` and `entity.CreateSkeletonWithActionSet(ref system)` with 1.3, or
+`entity.CreateAgentSkeleton(...)` for 1.0 (`CrowdProxy.cs@c45d8374:899-911`). [TAOM-verified, v1.5.7 `taom-src` cache and ilspy of
+the installed DLLs, 2026-11-13] The 1.0 is real: `CreateAgentSkeleton(this GameEntity, string skeletonName, bool isHumanoid,
+MBActionSet actionSet, string monsterUsageSetName, Monster monster)` is an extension in `TaleWorlds.MountAndBlade.GameEntityExtensions`
+(not a `GameEntity` member) and its body calls `monster.FillAnimationSystemData(actionSet, 1f, hasClippingPlane: false)`;
+`CreateSkeletonWithActionSet(this GameEntity, ref AnimationSystemData)` sits in the same class. `FillAnimationSystemData` itself is an
+extension in `TaleWorlds.MountAndBlade.MonsterExtensions` on v1.5.7, with overloads `(MBActionSet, float stepSize, bool hasClippingPlane)`
+and `(float stepSize, bool hasClippingPlane, bool isFemale)`, so look it up by that class name, not on `Monster`. The 0.66 s
+and 0.83 s cycle times are yotthani's measurement; TAOM has not repeated them.
+
+Step cycle in seconds by forward speed, for real soldiers and for four step sizes (yotthani, MithrilForge `docs/engine/crowd-rendering.md`@ea7a7bfb lines 316-324;
+measured with a probe: bodies under the ground, 7 s per speed, passings of the feet counted; the document's header gives game 1.5.4 to 1.5.5, TAOM 2.0.34, one Core Ultra 7 265KF PC, measured 2026-10-09/10; section 8a is dated 10./11.10.2026):
+
+| forward m/s | real soldiers | step 0.8 | step 1.0 | step 1.3 | step 1.7 |
+|---|---|---|---|---|---|
+| 1.5 | 1.06 s | 0.91 | 0.94 | 0.97 | 0.99 |
+| 2.5 | 0.85 - 0.89 s | 0.84 | 0.87 | 0.92 | 0.94 |
+| 3.5 | 0.85 s | 0.69 | 0.82 | 0.86 | 0.90 |
+| 4.5 | 0.80 - 0.84 s | 0.53 | 0.66 | 0.82 | 0.86 |
+| 5.5 | (no data) | 0.44 | 0.55 | 0.71 | 0.83 |
 
 - `ActionSetCode` (the `action_set="…"` attribute, e.g. `as_spider`/`as_elephant`/`as_adod_wolf`) is read from
   `monsters.xml` (`TaleWorlds.Core` Monster, Core.cs:19126/19395) and resolved to an `MBActionSet` via
@@ -107,7 +127,7 @@ So "the creature won't animate" decomposes into: action set invalid? monster_usa
 missing `_anm`? clip flags unset? — check in that order.
 
 ## Evidence (file:line, v1.4.5 shipping decompile)
-- `Monster.FillAnimationSystemData` — `_shipping_build/TaleWorlds.MountAndBlade.cs`:101588 (+ overload :101595): bundles ActionSet/MonsterUsageSetIndex/speed limits/StepSize/bone map into `AnimationSystemData`.
+- `MonsterExtensions.FillAnimationSystemData` (extension on `Monster`, v1.5.3 dump): `_shipping_build/TaleWorlds.MountAndBlade.cs`:101588 (+ overload :101595): bundles ActionSet/MonsterUsageSetIndex/speed limits/StepSize/bone map into `AnimationSystemData`.
 - `Monster.ActionSetCode`/`FemaleActionSetCode` — `_shipping_build/TaleWorlds.Core.cs`:19126/19128 (read from XML :19395/19400).
 - `Agent.ActionSet` — `Agent.cs`:696 (native `GetActionSetNo`); `SetActionSet` — `Agent.cs`:2574 (native + suffixed-set swap, used by `SpawnTroop` Mission.cs:4480); `SetActionChannel` — `Agent.cs`:2368-2372 (native pass-through; index + `(ulong)AnimFlags`); `GetCurrentAction` — `Agent.cs`:2748.
 - Consumed at creation: `CreateAgent` — `Mission.cs`:4042 (`monster.FillAnimationSystemData(stepSize, false, isFemale)`); initial action played in `BuildAgent` — `Mission.cs`:4026-4030 (`SetActionChannel`).

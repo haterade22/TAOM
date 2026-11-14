@@ -29,6 +29,26 @@ A separate `TrySwitchToNextMenu_Patch` guards the vanilla next-menu transition t
 
 **Another screen can take the stage (#704).** Before loading `CharacterCreationCultureStage`, `OnCreated` asks `ICultureStageMovieOverride.TryLoad(layer, factionVm, regions, factions)` for a replacement movie, and loads its own only when that returns null. FactionUI's `FactionScreenLauncher` is the one implementation: when Kysaro's faction screen is switched on it loads `TAOMFactionScreen` on the same `FactionSelectionVM`, and confirms through `FactionSelectionVM.ConfirmRegion(regionName)`, which selects the region and runs `ExecuteConfirm` exactly as a map click followed by Confirm would. `CultureStageViewFinalizeHook` calls `OnCultureStageClosed()` first, so the replacement lets go of its screen and view model before the faction map's own view model is finalized. Kysaro's module did the same by releasing this feature's movie from a later Harmony postfix and calling into its view model by reflection.
 
+**What a replacement culture-stage view must do** [yotthani, `docs/realm-ui/research/taom-culture-stage.md`@c45d8374:1-70,
+"read in code, not run", against TAOM 7bbe6f4d of 2026-10-04; its own RealmUI view orders the calls in
+`RealmUI/Game/Flow/MapFirst.cs`@c45d8374:153-161; not re-checked by TAOM on v1.5.7]:
+
+- A view that replaces the vanilla stage view skips TAOM's constructor, tick and finalize postfixes without any error,
+  but `SetSelectedCulture` still runs TAOM's body, so the replacement must call it. On confirm the order is
+  `Hero.MainHero.Culture`, then vanilla's default body, then `SetSelectedCulture` last (the code comment: "the order
+  matters for mods that hook SetSelectedCulture"). That matches the explicit culture assignment described above.
+- `GetCultures()` is a superset that also lists unplayable cultures (yotthani names `shaghana` and `abanissa`). A
+  playable culture is an entry in `factionmap/factions.json` with `"playable": true` and a `game_faction`.
+- Clan names for `vlandia` (Rohan) need a settlement of that culture (see #301 above).
+- yotthani warns that a mod's movie must not be named `CharacterCreationCultureStage`; the review records no
+  mechanism, and TAOM's own movie carries that name.
+
+**Escape and Back in this stage: consistent with "dead", not run.** yotthani notes that Escape and Back do nothing in
+TAOM's culture stage (`docs/realm-ui/research/engine-2d-gauntlet.md`@c45d8374:70-72, game 1.5.3, read from code). A Grep
+of `Main/Features/FactionMap` on 2026-11-13 finds no Escape, Cancel, Back or `IsActive` handling; the folder has only the
+confirm hooks and `TrySwitchToNextMenu_Patch`. One in-game check is owed: open the stage, press Escape and Back, and if
+both do nothing, file an issue.
+
 Data flow:
 - `FactionConfigProvider` loads `factionmap/factions.json` (faction lore) and `factionmap/regions.json` (normalized bounding boxes and capital positions) at view creation time.
 - `FactionRegistryService` stores the loaded data and exposes lookup by region key and faction id.

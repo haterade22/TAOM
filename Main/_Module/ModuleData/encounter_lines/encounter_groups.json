@@ -1,0 +1,42 @@
+{
+  "groups": {
+    "west": { "family": "man", "cultures": ["gondor", "arthedain", "cardolan", "rhudaur"] },
+    "rohirrim": { "family": "man", "cultures": ["vlandia"] },
+    "northmen": { "family": "man", "cultures": ["sturgia", "anduinvale", "angaladh", "southrhovanion", "dorwinion"] },
+    "dunlendings": { "family": "man", "cultures": ["empire"] },
+    "southrons": { "family": "man", "cultures": ["aserai", "abanissa", "shaghana", "umbar"] },
+    "easterlings": { "family": "man", "cultures": ["khuzait", "battania"] },
+    "elves": { "family": "elf", "cultures": ["rivendell", "mirkwood", "lothlorien", "lindon"] },
+    "dwarves": { "family": "dwarf", "cultures": ["erebor", "eredluin"] },
+    "orcs": { "family": "orc", "cultures": ["mordor", "isengard", "gundabad", "dolguldur", "goblin", "mistymountainorcs", "bluecraig"] }
+  },
+  "races": {
+    "human": "man",
+    "elf": "elf",
+    "dwarf": "dwarf",
+    "orc": "orc",
+    "uruk": "orc",
+    "uruk_hai": "orc",
+    "pale_uruk": "orc",
+    "dg_uruk": "orc",
+    "goblin": "orc",
+    "berserker": "orc",
+    "nazghul": "none",
+    "cave_troll": "none",
+    "hill_troll": "none",
+    "saruman": "none",
+    "sauron": "none"
+  },
+  "bandits": {
+    "dunland_raiders": { "side": "evil", "family": "man", "home_group": "dunlendings" },
+    "rhun_raiders": { "side": "evil", "family": "man", "home_group": "easterlings" },
+    "harad_raiders": { "side": "evil", "family": "man", "home_group": "southrons" },
+    "gundabad_raiders": { "side": "evil", "family": "orc" },
+    "feral_orcs": { "side": "evil", "family": "orc" },
+    "gondor_soldiers": { "side": "free", "family": "man", "home_group": "west" },
+    "umbar_corsairs": { "side": "neutral", "family": "man", "home_group": "southrons" },
+    "erebor_warriors": { "side": "neutral", "family": "dwarf" },
+    "mirkwood_stalkers": { "side": "neutral", "family": "elf" },
+    "looters": { "side": "neutral", "family": "man" }
+  }
+}

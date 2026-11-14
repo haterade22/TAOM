@@ -100,6 +100,8 @@ namespace TAOM;
 public class SubModule : MBSubModuleBase
 {
     private Harmony _harmony;
+    // Crash guards that share a method with a feature patch, kept out of PatchShield's strip (CrashGuardHarmony).
+    private Harmony _guardHarmony;
     private PatchCategoryApplier _patches;
     private ITimeAccelerationService? _timeAccelerationService;
     private static float _shaderTickAccumulator;
@@ -223,10 +225,11 @@ public class SubModule : MBSubModuleBase
         // The index reads core, then TAOM.Client when it loaded (ADR-013), so a client patch class
         // joins its category like a core one. On a dedicated server it leaves out every [ClientOnly]
         // class before reading that class's attributes, and the applier says so in one line.
-        _harmony = new Harmony("com.taom.mod");
+        _harmony = new Harmony(CrashGuardHarmony.MainId);
+        _guardHarmony = new Harmony(CrashGuardHarmony.Id);
         var categoryIndex = PatchCategoryIndex.Build(ClientComposition.IsDedicatedServer(), ClientComposition.LoadedTaomAssemblies());
         _patches = new PatchCategoryApplier(
-            category => categoryIndex.Apply(_harmony, category),
+            category => categoryIndex.Apply(CrashGuardHarmony.IsCrashGuard(category) ? _guardHarmony : _harmony, category),
             IoC.Resolve<IModLogger>());
         _patches.RecordSkippedClasses(categoryIndex.SkippedClasses);
         _patches.RecordClientOnlyClasses(categoryIndex.ClientOnlyClasses);
@@ -584,11 +587,10 @@ public class SubModule : MBSubModuleBase
         {
             logger.LogWarning($"[BannerBearers] Patch63 spawn guard failed to apply: {ex.Message}");
         }
-        // Patch_MissionTime_SetMovementOrder (shared by Patch31_SmartCavalryAI,
-        // Patch35_CompanionTactics' Formation.SetMovementOrder hook, and the MovementOrder
-        // hooks MarshalThrowerPatch and MarshalThrowerTimer) is applied in
-        // OnMissionBehaviorInitialize — MovementOrder.cctor reads Mission.Current.CurrentTime,
-        // which is null during OnSubModuleLoad and would crash JIT prep with NRE.
+        // Patch_MissionTime_SmartCavalryAI (Patch31, Patch31b) and Patch_MissionTime_CompanionTactics
+        // (Patch35's Formation.SetMovementOrder hook) are applied in OnMissionBehaviorInitialize, and
+        // Marshal's Word's thrower category by its module at the FirstMission phase, because MovementOrder.cctor
+        // reads Mission.Current.CurrentTime, which is null during OnSubModuleLoad and would crash JIT prep with NRE.
 
         var bannerColorConfig = IoC.Resolve<IBannerColorConfigProvider>();
         var bannerColorService = IoC.Resolve<IBannerColorService>();
@@ -2041,6 +2043,16 @@ public class SubModule : MBSubModuleBase
         ManualPatchApplicator.ApplyAll(_harmony);
         onceStamp?.Mark("manual_patches");
 
+        // PatchShield pass after TAOM's batch. TAOM.Dependencies runs its second pass in its own
+        // OnGameInitializationFinished, which the engine calls before this one, so that pass never saw the batch
+        // above: those methods stayed unshielded for the first game of each session, and the next game start's pass
+        // attached them. Install attaches only methods it has not seen and checks the co-op and flag skips itself.
+        // The attach cost is not measured for this pass. It moves to the first load, so a session of one game pays it once, at that load. The diag line
+        // marks the pass like passes 1 and 2. A fault here must never stop the game loading.
+        try { TAOM.Dependencies.Foundation.DiagLog.Log("TAOM", "OnGameInitializationFinished: → PatchShield.Install (pass after TAOM GameInit batch)"); TAOM.Dependencies.Foundation.PatchShield.Install(); }
+        catch (System.Exception ex) { IoC.Resolve<IModLogger>().LogWarning($"[PatchShield] pass after TAOM's game-initialization batch failed: {ex.Message}"); }
+        onceStamp?.Mark("patch_shield");
+
         // Harmony census — LAST, so it sees every patch TAOM and every other mod has applied.
         // Only runs when a co-op module is active: it is the substitute for decompiling that mod
         // (which its licence forbids and TAOM does not do), and solo players should not pay the
@@ -2160,7 +2172,12 @@ public class SubModule : MBSubModuleBase
         if (!_missionTimePatchesApplied)
         {
             _missionTimePatchesApplied = true;
-            TryPatchCategory("Patch_MissionTime_SetMovementOrder");
+            // One category per feature, so a class that fails after a game update turns off only its own
+            // feature. SmartCavalry before Companion Tactics, as when they shared one category (assembly
+            // order): both put a postfix on Formation.SetMovementOrder. Marshal's Word's thrower category
+            // targets MovementOrder members and is applied by its module in the FirstMission phase below.
+            TryPatchCategory("Patch_MissionTime_SmartCavalryAI");
+            TryPatchCategory("Patch_MissionTime_CompanionTactics");
             FeatureModuleHooks.RunPhase(ApplyPhase.FirstMission, TryPatchCategory);
             _patches.EndPhase("Mission");
             _patches.WriteHeldCategoryLines(Features.LoadTimeStamps.LoadTimeStampsHooks.DetailEnabled);
@@ -2372,7 +2389,8 @@ public class SubModule : MBSubModuleBase
         try { IoC.Resolve<TAOM.Features.CrashReport.Hooks.AppDomainExceptionHook>()?.Unsubscribe(); }
         catch { /* IoC may already be torn down — best-effort */ }
 
-        _harmony?.UnpatchAll("com.taom.mod");
+        _harmony?.UnpatchAll(CrashGuardHarmony.MainId);
+        _guardHarmony?.UnpatchAll(CrashGuardHarmony.Id);
         IoC.Dispose();
 
         // Codex review #46 (2026-05-25) HIGH-01: clear the static service cache in

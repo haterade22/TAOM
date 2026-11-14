@@ -4116,7 +4116,13 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.6213" build="0.5278" key="000DB0054F14200F777D66238AC2D652B789B895A5C5A788785C677564695D840068960306654796000000000000000000000000000000000000000042CC30C3"/>
+                <BodyProperties version="4" weight="0.6213" build="0.5278" key="000DB0054F14200F777D66238AC2D652B789B895A5C5A788785C677564695D840068960306654796000000000000000000000000000000000000000042CC30C3" age="22.01" />
+                <hair_tags>
+                    <hair_tag name="empire" />
+                </hair_tags>
+                <tattoo_tags>
+                    <tattoo_tag name="Cleanface" />
+                </tattoo_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="245" />
@@ -4171,7 +4177,13 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.2051" build="0.2259" key="0018400781140004A7B67379AA5D43AB9A8574A83CB8794A545964E544A185CC0073360307A6835A00000000000000000000000000000000000000002EF44083"/>
+                <BodyProperties version="4" weight="0.2051" build="0.2259" key="0018400781140004A7B67379AA5D43AB9A8574A83CB8794A545964E544A185CC0073360307A6835A00000000000000000000000000000000000000002EF44083" age="22.01" />
+                <hair_tags>
+                    <hair_tag name="empire" />
+                </hair_tags>
+                <tattoo_tags>
+                    <tattoo_tag name="Cleanface" />
+                </tattoo_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="40" />
@@ -4226,7 +4238,13 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.3278" build="0.5208" key="0018400FCE2C300153BC5AEB293A86574795A8AAA94684B62987569589672E26007856030767353900000000000000000000000000000000000000002EDC20C3"/>
+                <BodyProperties version="4" weight="0.3278" build="0.5208" key="0018400FCE2C300153BC5AEB293A86574795A8AAA94684B62987569589672E26007856030767353900000000000000000000000000000000000000002EDC20C3" age="22.01" />
+                <hair_tags>
+                    <hair_tag name="empire" />
+                </hair_tags>
+                <tattoo_tags>
+                    <tattoo_tag name="Cleanface" />
+                </tattoo_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="40" />
@@ -4271,46 +4289,52 @@
         <xsl:copy>
             <xsl:attribute name="id">lord_1_1_4</xsl:attribute>
             <xsl:attribute name="name">{=aom_lord_1_1_4_name}Thyra Bloodtusk</xsl:attribute>
-            <xsl:attribute name="age">32</xsl:attribute>
+            <xsl:attribute name="age">24</xsl:attribute>
             <xsl:attribute name="voice">softspoken</xsl:attribute>
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.empire</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.taom_dunland_lady_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_dunland_young_lady_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.3278" build="0.5208" key="0018A40FCE2C000551C968762E626B3BBA56396A8CCE86366B478689697773B900785603072B7F7800000000000000000000000000000000000000002EDC1083"/>
+                <BodyProperties version="4" weight="0.3278" build="0.5208" key="0018A40FCE2C000551C968762E626B3BBA56396A8CCE86366B478689697773B900785603072B7F7800000000000000000000000000000000000000002EDC1083" age="22.01" />
+                <hair_tags>
+                    <hair_tag name="empire" />
+                </hair_tags>
+                <tattoo_tags>
+                    <tattoo_tag name="Cleanface" />
+                </tattoo_tags>
             </face>
             <skills>
-                <skill id="OneHanded" value="60" />
-                <skill id="TwoHanded" value="30" />
-                <skill id="Polearm" value="50" />
+                <skill id="OneHanded" value="40" />
+                <skill id="TwoHanded" value="20" />
+                <skill id="Polearm" value="30" />
                 <skill id="Bow" value="70" />
-                <skill id="Crossbow" value="50" />
-                <skill id="Throwing" value="50" />
-                <skill id="Riding" value="140" />
-                <skill id="Athletics" value="110" />
-                <skill id="Crafting" value="140" />
-                <skill id="Scouting" value="110" />
-                <skill id="Tactics" value="130" />
-                <skill id="Roguery" value="60" />
-                <skill id="Charm" value="240" />
-                <skill id="Leadership" value="80" />
-                <skill id="Trade" value="180" />
-                <skill id="Steward" value="240" />
-                <skill id="Medicine" value="210" />
-                <skill id="Engineering" value="130" />
+                <skill id="Crossbow" value="40" />
+                <skill id="Throwing" value="40" />
+                <skill id="Riding" value="120" />
+                <skill id="Athletics" value="100" />
+                <skill id="Crafting" value="110" />
+                <skill id="Scouting" value="90" />
+                <skill id="Tactics" value="100" />
+                <skill id="Roguery" value="50" />
+                <skill id="Charm" value="180" />
+                <skill id="Leadership" value="55" />
+                <skill id="Trade" value="130" />
+                <skill id="Steward" value="170" />
+                <skill id="Medicine" value="150" />
+                <skill id="Engineering" value="100" />
             </skills>
             <Traits>
-                <Trait id="Honor" value="2" />
-                <Trait id="Generosity" value="2" />
+                <Trait id="Honor" value="1" />
+                <Trait id="Generosity" value="1" />
                 <Trait id="Calculating" value="1" />
                 <Trait id="Mercy" value="2" />
                 <Trait id="Valor" value="0" />
                 <Trait id="Egalitarian" value="1" />
-                <Trait id="Oligarchic" value="1" />
+                <Trait id="Oligarchic" value="0" />
                 <Trait id="Authoritarian" value="0" />
             </Traits>
             <Equipments>
@@ -4336,7 +4360,13 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.6389" build="0.9861" key="00155C0FCA2C300D3C6B797D7726C92756836865445B388DC6588889AB94CCC500BFA6030B29C34A00000000000000000000000000000000000000002F7C4103"/>
+                <BodyProperties version="4" weight="0.6389" build="0.9861" key="00155C0FCA2C300D3C6B797D7726C92756836865445B388DC6588889AB94CCC500BFA6030B29C34A00000000000000000000000000000000000000002F7C4103" age="22.01" />
+                <hair_tags>
+                    <hair_tag name="empire" />
+                </hair_tags>
+                <tattoo_tags>
+                    <tattoo_tag name="Cleanface" />
+                </tattoo_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="40" />
@@ -4391,7 +4421,13 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.4676" build="0.5023" key="0015840E4C2C300C48E753769785B8663E48599D438E731B1D578153584559560068760306B6967600000000000000000000000000000000000000002EBC00C3"/>
+                <BodyProperties version="4" weight="0.4676" build="0.5023" key="0015840E4C2C300C48E753769785B8663E48599D438E731B1D578153584559560068760306B6967600000000000000000000000000000000000000002EBC00C3" age="22.01" />
+                <hair_tags>
+                    <hair_tag name="empire" />
+                </hair_tags>
+                <tattoo_tags>
+                    <tattoo_tag name="Cleanface" />
+                </tattoo_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="235" />
@@ -4436,7 +4472,7 @@
         <xsl:copy>
             <xsl:attribute name="id">lord_1_1_7</xsl:attribute>
             <xsl:attribute name="name">{=aom_lord_1_1_7_name}Freydis Oxmane</xsl:attribute>
-            <xsl:attribute name="age">46</xsl:attribute>
+            <xsl:attribute name="age">26</xsl:attribute>
             <xsl:attribute name="voice">curt</xsl:attribute>
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
@@ -4446,7 +4482,13 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.4676" build="0.4745" key="000A9006CA44300A9A99991D9C769875AD89C74564583655C8A8A9DD949AB9CA0067760306C46DA800000000000000000000000000000000000000002ED400C3"/>
+                <BodyProperties version="4" weight="0.4676" build="0.4745" key="000A9006CA44300A9A99991D9C769875AD89C74564583655C8A8A9DD949AB9CA0067760306C46DA800000000000000000000000000000000000000002ED400C3" age="22.01" />
+                <hair_tags>
+                    <hair_tag name="empire" />
+                </hair_tags>
+                <tattoo_tags>
+                    <tattoo_tag name="Cleanface" />
+                </tattoo_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="245" />
@@ -4501,7 +4543,13 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.5" build="0.5" key="00165C000014000EE93966A9966848AA5746E9558867A392654767867CA775120197761309B278C50000000000000000000000000000000000000000593C30C3"/>
+                <BodyProperties version="4" weight="0.5" build="0.5" key="00165C000014000EE93966A9966848AA5746E9558867A392654767867CA775120197761309B278C50000000000000000000000000000000000000000593C30C3" age="22" />
+                <hair_tags>
+                    <hair_tag name="empire" />
+                </hair_tags>
+                <tattoo_tags>
+                    <tattoo_tag name="Cleanface" />
+                </tattoo_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="235" />
@@ -4546,7 +4594,7 @@
         <xsl:copy>
             <xsl:attribute name="id">lord_1_1_9</xsl:attribute>
             <xsl:attribute name="name">{=aom_lord_1_1_9_name}Sifra Bonewalker</xsl:attribute>
-            <xsl:attribute name="age">46</xsl:attribute>
+            <xsl:attribute name="age">36</xsl:attribute>
             <xsl:attribute name="voice">curt</xsl:attribute>
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
@@ -4556,7 +4604,13 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.5" build="0.5" key="0011980E40B400053A8CBE5B2B965C4467898ACEB6A65CBA147249983692C3950167761306B469D400000000000000000000000000000000000000005AD40083"/>
+                <BodyProperties version="4" weight="0.5" build="0.5" key="0011980E40B400053A8CBE5B2B965C4467898ACEB6A65CBA147249983692C3950167761306B469D400000000000000000000000000000000000000005AD40083" age="26" />
+                <hair_tags>
+                    <hair_tag name="empire" />
+                </hair_tags>
+                <tattoo_tags>
+                    <tattoo_tag name="Cleanface" />
+                </tattoo_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="60" />
@@ -4611,7 +4665,13 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.5" build="0.5" key="000BEC0E51143006C8BA78AAC869CA6992CA8461387A78A63736488C67497CC9013776130357449200000000000000000000000000000000000000003C642084"/>
+                <BodyProperties version="4" weight="0.5" build="0.5" key="000BEC0E51143006C8BA78AAC869CA6992CA8461387A78A63736488C67497CC9013776130357449200000000000000000000000000000000000000003C642084" age="21" />
+                <hair_tags>
+                    <hair_tag name="empire" />
+                </hair_tags>
+                <tattoo_tags>
+                    <tattoo_tag name="Cleanface" />
+                </tattoo_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="40" />
@@ -4666,7 +4726,13 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.4" build="0.4" key="0016280B40A0000DB8DDDB4B342988B1C25BA5786832765C997877AB8579697401B776130B78386A00000000000000000000000000000000000000001D7C00C3"/>
+                <BodyProperties version="4" weight="0.4" build="0.4" key="0016280B40A0000DB8DDDB4B342988B1C25BA5786832765C997877AB8579697401B776130B78386A00000000000000000000000000000000000000001D7C00C3" age="20" />
+                <hair_tags>
+                    <hair_tag name="empire" />
+                </hair_tags>
+                <tattoo_tags>
+                    <tattoo_tag name="Cleanface" />
+                </tattoo_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="40" />
@@ -4711,7 +4777,7 @@
         <xsl:copy>
             <xsl:attribute name="id">lord_1_1_15</xsl:attribute>
             <xsl:attribute name="name">{=aom_lord_1_1_15_name}Aelwyn Hawkeye</xsl:attribute>
-            <xsl:attribute name="age">41</xsl:attribute>
+            <xsl:attribute name="age">21</xsl:attribute>
             <xsl:attribute name="voice">softspoken</xsl:attribute>
             <xsl:attribute name="default_group">HorseArcher</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
@@ -4721,7 +4787,13 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.2685" build="0.2662" key="00001004C9A0100D2BC272AA728143CDC46386D689785734584896A7987613AC00744603078AC199000000000000000000000000000000000000000042E41083"/>
+                <BodyProperties version="4" weight="0.2685" build="0.2662" key="00001004C9A0100D2BC272AA728143CDC46386D689785734584896A7987613AC00744603078AC199000000000000000000000000000000000000000042E41083" age="22.01" />
+                <hair_tags>
+                    <hair_tag name="empire" />
+                </hair_tags>
+                <tattoo_tags>
+                    <tattoo_tag name="Cleanface" />
+                </tattoo_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="235" />
@@ -4776,7 +4848,13 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.2685" build="0.2662" key="00001004CAA000032B4A77BC993C89497B2786D689785734DA946A6D4229EA9300544603057983BB000000000000000000000000000000000000000042AC1103"/>
+                <BodyProperties version="4" weight="0.2685" build="0.2662" key="00001004CAA000032B4A77BC993C89497B2786D689785734DA946A6D4229EA9300544603057983BB000000000000000000000000000000000000000042AC1103" age="22.01" />
+                <hair_tags>
+                    <hair_tag name="empire" />
+                </hair_tags>
+                <tattoo_tags>
+                    <tattoo_tag name="Cleanface" />
+                </tattoo_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="235" />
@@ -4832,6 +4910,12 @@
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
                 <BodyProperties version="4" age="37" weight="0.0046" build="0.3356" key="0002380E40003001AA3A8B51DBB48F28899A93883962A9A018F638625568155500A506030A27D9CB00000000000000000000000000000000000000003F5C40C2" />
+                <hair_tags>
+                    <hair_tag name="empire" />
+                </hair_tags>
+                <tattoo_tags>
+                    <tattoo_tag name="Cleanface" />
+                </tattoo_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="140" />
@@ -4887,6 +4971,15 @@
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
                 <BodyProperties version="4" age="18" weight="0.0046" build="0.8032" key="0002880D000039022DC5B5A6AA987BD9B565579889B7A4B38655868BCBEC8D7700FC06030F78666400000000000000000000000000000000000000003FF41042" />
+                <hair_tags>
+                    <hair_tag name="empire" />
+                </hair_tags>
+                <beard_tags>
+                    <beard_tag name="empire" />
+                </beard_tags>
+                <tattoo_tags>
+                    <tattoo_tag name="Cleanface" />
+                </tattoo_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="255" />
@@ -4942,6 +5035,12 @@
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
                 <BodyProperties version="4" age="18" weight="0.0046" build="0.3356" key="0002380E40002002AA574556B8A39774899A93883962A9A018F638625568155500A506030A27D9CB00000000000000000000000000000000000000003F5C40C2" />
+                <hair_tags>
+                    <hair_tag name="empire" />
+                </hair_tags>
+                <tattoo_tags>
+                    <tattoo_tag name="Cleanface" />
+                </tattoo_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="255" />
@@ -4986,7 +5085,7 @@
         <xsl:copy>
             <xsl:attribute name="id">lord_1_47_1</xsl:attribute>
             <xsl:attribute name="name">{=aom_lord_1_47_1_name_bn}Zimrabêth</xsl:attribute>
-            <xsl:attribute name="age">38</xsl:attribute>
+            <xsl:attribute name="age">28</xsl:attribute>
             <xsl:attribute name="voice">earnest</xsl:attribute>
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
@@ -4997,6 +5096,12 @@
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
                 <BodyProperties version="4" age="28" weight="0.0046" build="0.3356" key="0002980FC00010066C868C8A52DB7ED8A2570B75A64CB46A87B8873AA888A49E00A506030A69657400000000000000000000000000000000000000003F5C2042" />
+                <hair_tags>
+                    <hair_tag name="empire" />
+                </hair_tags>
+                <tattoo_tags>
+                    <tattoo_tag name="Cleanface" />
+                </tattoo_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="140" />
@@ -5052,6 +5157,12 @@
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
                 <BodyProperties version="4" age="14" weight="0.0046" build="0.3356" key="0002580A4000300B56D673AAC72565DC7669B34AA98874A997625A783B1972B200A506030A48598800000000000000000000000000000000000000003F5C1102" />
+                <hair_tags>
+                    <hair_tag name="empire" />
+                </hair_tags>
+                <tattoo_tags>
+                    <tattoo_tag name="Cleanface" />
+                </tattoo_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="255" />
@@ -5107,6 +5218,12 @@
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
                 <BodyProperties version="4" age="17" weight="0.0046" build="0.3356" key="00029C06C000000A58888868764953D5697535277667DB885693A977B47BC7B400A506030A6C586700000000000000000000000000000000000000003F5C20C2" />
+                <hair_tags>
+                    <hair_tag name="empire" />
+                </hair_tags>
+                <tattoo_tags>
+                    <tattoo_tag name="Cleanface" />
+                </tattoo_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="255" />
@@ -5151,7 +5268,7 @@
         <xsl:copy>
             <xsl:attribute name="id">lord_1_49_1</xsl:attribute>
             <xsl:attribute name="name">{=aom_lord_1_49_1_name}Tristania</xsl:attribute>
-            <xsl:attribute name="age">37</xsl:attribute>
+            <xsl:attribute name="age">27</xsl:attribute>
             <xsl:attribute name="voice">ironic</xsl:attribute>
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
@@ -5160,8 +5277,15 @@
             <xsl:attribute name="skill_template">SkillSet.taom_orc_female_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
+            <xsl:attribute name="race">uruk</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.5" build="0.5" key="0000200FD170300DB38B674C24E68B77237687A658475B47BC78592D78C593BB01C776130C2C8799000000000000000000000000000000000000000031840003"/>
+                <BodyProperties version="4" weight="0.5" build="0.5" key="0000200FD170300DB38B674C24E68B77237687A658475B47BC78592D78C593BB01C776130C2C8799000000000000000000000000000000000000000031840003" />
+                <hair_tags>
+                    <hair_tag name="empire" />
+                </hair_tags>
+                <tattoo_tags>
+                    <tattoo_tag name="Cleanface" />
+                </tattoo_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="170" />
@@ -5215,8 +5339,15 @@
             <xsl:attribute name="skill_template">SkillSet.taom_orc_warrior_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
+            <xsl:attribute name="race">uruk</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.5" build="0.5" key="0011B00CD2A03006743ADC795BA745B786DABD951B876537A8C6AA5B96B893590167761306485E6600000000000000000000000000000000000000004ACC00C3"/>
+                <BodyProperties version="4" weight="0.5" build="0.5" key="0011B00CD2A03006743ADC795BA745B786DABD951B876537A8C6AA5B96B893590167761306485E6600000000000000000000000000000000000000004ACC00C3" age="25.84" />
+                <hair_tags>
+                    <hair_tag name="empire" />
+                </hair_tags>
+                <tattoo_tags>
+                    <tattoo_tag name="Cleanface" />
+                </tattoo_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="235" />
@@ -5271,7 +5402,13 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.3171" build="0.331" key="0008780E42FC30076B9BCC4B879C2322B95787ECA9B959838E7C94A8754CD83800955603096BB79F000000000000000000000000000000000000000043340083"/>
+                <BodyProperties version="4" weight="0.3171" build="0.331" key="0008780E42FC30076B9BCC4B879C2322B95787ECA9B959838E7C94A8754CD83800955603096BB79F000000000000000000000000000000000000000043340083" age="22.01" />
+                <hair_tags>
+                    <hair_tag name="empire" />
+                </hair_tags>
+                <tattoo_tags>
+                    <tattoo_tag name="Cleanface" />
+                </tattoo_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="245" />
@@ -5326,7 +5463,13 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.3171" build="0.2245" key="0008E00FC8FC20087589847271756C397A5E664B96794B555718B95CE9C357830083560308938B28000000000000000000000000000000000000000043043083"/>
+                <BodyProperties version="4" weight="0.3171" build="0.2245" key="0008E00FC8FC20087589847271756C397A5E664B96794B555718B95CE9C357830083560308938B28000000000000000000000000000000000000000043043083" age="22.01" />
+                <hair_tags>
+                    <hair_tag name="empire" />
+                </hair_tags>
+                <tattoo_tags>
+                    <tattoo_tag name="Cleanface" />
+                </tattoo_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="245" />
@@ -5381,7 +5524,13 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.2685" build="0.2662" key="00001007835810122BC272AA728143CDC46386D689785734584896A7987613AC00744603078AC199000000000000000000000000000000000000000042E41083"/>
+                <BodyProperties version="4" weight="0.2685" build="0.2662" key="00001007835810122BC272AA728143CDC46386D689785734584896A7987613AC00744603078AC199000000000000000000000000000000000000000042E41083" age="22.01" />
+                <hair_tags>
+                    <hair_tag name="empire" />
+                </hair_tags>
+                <tattoo_tags>
+                    <tattoo_tag name="Cleanface" />
+                </tattoo_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="40" />
@@ -5436,7 +5585,16 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.2685" build="0.2662" key="00087C07835809538579765AA95984A5844298548A747A34548663635992CD7B0074460307A8E449000000000000000000000000000000000000000042E41102"/>
+                <BodyProperties version="4" weight="0.2685" build="0.2662" key="00087C07835809538579765AA95984A5844298548A747A34548663635992CD7B0074460307A8E449000000000000000000000000000000000000000042E41102" age="22.01" />
+                <hair_tags>
+                    <hair_tag name="empire" />
+                </hair_tags>
+                <beard_tags>
+                    <beard_tag name="empire" />
+                </beard_tags>
+                <tattoo_tags>
+                    <tattoo_tag name="Cleanface" />
+                </tattoo_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="230" />
@@ -5481,7 +5639,7 @@
         <xsl:copy>
             <xsl:attribute name="id">lord_1_40_1</xsl:attribute>
             <xsl:attribute name="name">{=aom_lord_1_40_1_name}Lindariel</xsl:attribute>
-            <xsl:attribute name="age">63</xsl:attribute>
+            <xsl:attribute name="age">33</xsl:attribute>
             <xsl:attribute name="voice">earnest</xsl:attribute>
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
@@ -5491,7 +5649,13 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.4" build="0.4" key="000BAC089200100DB976648E6774B835537D86629511323BDCB177278A84F667017776130748B49500000000000000000000000000000000000000003EFC4003"/>
+                <BodyProperties version="4" weight="0.4" build="0.4" key="00153806C000000F9158384479AAA669CD8B367B4918A49378EA83A9CC4A9A3500883603083C678E00000000000000000000000000000000000000003F041002" />
+                <hair_tags>
+                    <hair_tag name="empire" />
+                </hair_tags>
+                <tattoo_tags>
+                    <tattoo_tag name="Cleanface" />
+                </tattoo_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="60" />
@@ -5537,7 +5701,7 @@
             <xsl:attribute name="id">lord_1_46_1</xsl:attribute>
             <xsl:attribute name="name">{=aom_lord_1_46_1_name}Thorwen</xsl:attribute>
             <xsl:attribute name="age">39</xsl:attribute>
-            <xsl:attribute name="voice">softspoken</xsl:attribute>
+            <xsl:attribute name="voice">ironic</xsl:attribute>
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
@@ -5546,7 +5710,13 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.4" build="0.5" key="000B500A1114300BB69199998669E37568754C66A53693B2BA7A9855C96751D601677613062B368C000000000000000000000000000000000000000040CC4083"/>
+                <BodyProperties version="4" weight="0.4" build="0.5" key="000B500A1114300BB69199998669E37568754C66A53693B2BA7A9855C96751D601677613062B368C000000000000000000000000000000000000000040CC4083" />
+                <hair_tags>
+                    <hair_tag name="empire" />
+                </hair_tags>
+                <tattoo_tags>
+                    <tattoo_tag name="Cleanface" />
+                </tattoo_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="60" />
@@ -5591,7 +5761,7 @@
         <xsl:copy>
             <xsl:attribute name="id">lord_1_45_1</xsl:attribute>
             <xsl:attribute name="name">{=aom_lord_1_45_1_name}Berethiel</xsl:attribute>
-            <xsl:attribute name="age">53</xsl:attribute>
+            <xsl:attribute name="age">40</xsl:attribute>
             <xsl:attribute name="voice">earnest</xsl:attribute>
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
@@ -5601,7 +5771,13 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.0023" build="0.5116" key="000AF80010FC0005B0801020FC60E000A74780010BBD1001654A350A7FFE930400A806030A97B6481F6410605020004000000000000017670000000045441003"/>
+                <BodyProperties version="4" weight="0.0023" build="0.5116" key="0015780FC000000B5BA6B6479BC8D64868798769E4627AB4189C98C73DB8566800883603088427A500000000000000000000000000000000000000003F040002" age="40.11" />
+                <hair_tags>
+                    <hair_tag name="empire" />
+                </hair_tags>
+                <tattoo_tags>
+                    <tattoo_tag name="Cleanface" />
+                </tattoo_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="60" />
@@ -5656,7 +5832,16 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.1782" build="0.4236" key="0010D808C00010063E8415A71000FF529EC9833001BCE003075810017F905E52009636030980A70600000000000000000000000000000000000000003B2C4002"/>
+                <BodyProperties version="4" weight="0.1782" build="0.4236" key="0010D808C00010063E8415A71000FF529EC9833001BCE003075810017F905E52009636030980A70600000000000000000000000000000000000000003B2C4002" age="25.11" />
+                <hair_tags>
+                    <hair_tag name="empire" />
+                </hair_tags>
+                <beard_tags>
+                    <beard_tag name="empire" />
+                </beard_tags>
+                <tattoo_tags>
+                    <tattoo_tag name="Cleanface" />
+                </tattoo_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="180" />
@@ -5701,8 +5886,8 @@
         <xsl:copy>
             <xsl:attribute name="id">lord_1_45_3</xsl:attribute>
             <xsl:attribute name="name">{=aom_lord_1_45_3_name}Rúmil</xsl:attribute>
-            <xsl:attribute name="age">53</xsl:attribute>
-            <xsl:attribute name="voice">softspoken</xsl:attribute>
+            <xsl:attribute name="age">25</xsl:attribute>
+            <xsl:attribute name="voice">earnest</xsl:attribute>
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">false</xsl:attribute>
@@ -5711,7 +5896,16 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.4236" build="0.4236" key="000AD806C00011420E8015A716F0F012E910830001B90601675810067F9A5C04007666030720804000000000000000000000000000000000000000003AF43002"/>
+                <BodyProperties version="4" weight="0.4236" build="0.4236" key="000AD806C00011420E8015A716F0F012E910830001B90601675810067F9A5C04007666030720804000000000000000000000000000000000000000003AF43002" age="38.11" />
+                <hair_tags>
+                    <hair_tag name="empire" />
+                </hair_tags>
+                <beard_tags>
+                    <beard_tag name="empire" />
+                </beard_tags>
+                <tattoo_tags>
+                    <tattoo_tag name="Cleanface" />
+                </tattoo_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="200" />
@@ -5756,7 +5950,7 @@
         <xsl:copy>
             <xsl:attribute name="id">lord_1_57_1</xsl:attribute>
             <xsl:attribute name="name">{=aom_lord_1_57_1_name}Calathiel</xsl:attribute>
-            <xsl:attribute name="age">25</xsl:attribute>
+            <xsl:attribute name="age">24</xsl:attribute>
             <xsl:attribute name="voice">curt</xsl:attribute>
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
@@ -5766,7 +5960,13 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.5" build="0.5" key="000BD80B5114300AC8832858A669275A3AB4CAA26D66686547C4969575DA72990177761307A39755000000000000000000000000000000000000000042E40003"/>
+                <BodyProperties version="4" weight="0.5" build="0.5" key="0015580A4000000D94255675D562A945CD8B4547EBCC549678EA83A9CC4A9A3500883603083C678E00000000000000000000000000000000000000003F041002" />
+                <hair_tags>
+                    <hair_tag name="empire" />
+                </hair_tags>
+                <tattoo_tags>
+                    <tattoo_tag name="Cleanface" />
+                </tattoo_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="40" />
@@ -5817,13 +6017,38 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.gondor</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_tactician_skills_rookie</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.spc_matriarch_skills_rookie</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.5" build="0.5" key="00003C02D0CC200FCECB7755385C79B87764EA7A87439E635759266A4A5A653B01177613012CB56100000000000000000000000000000000000000004A344043"/>
+                <BodyProperties version="4" weight="0.5" build="0.5" key="00003C02D0CC200FCECB7755385C79B87764EA7A87439E635759266A4A5A653B01177613012CB56100000000000000000000000000000000000000004A344043" />
+                <hair_tags>
+                    <hair_tag name="empire" />
+                </hair_tags>
+                <tattoo_tags>
+                    <tattoo_tag name="Cleanface" />
+                </tattoo_tags>
             </face>
-            <skills/>
+            <skills>
+                <skill id="OneHanded" value="80" />
+                <skill id="TwoHanded" value="60" />
+                <skill id="Polearm" value="50" />
+                <skill id="Bow" value="75" />
+                <skill id="Crossbow" value="65" />
+                <skill id="Throwing" value="25" />
+                <skill id="Riding" value="100" />
+                <skill id="Athletics" value="70" />
+                <skill id="Crafting" value="55" />
+                <skill id="Scouting" value="80" />
+                <skill id="Tactics" value="110" />
+                <skill id="Roguery" value="40" />
+                <skill id="Charm" value="130" />
+                <skill id="Leadership" value="140" />
+                <skill id="Trade" value="95" />
+                <skill id="Steward" value="125" />
+                <skill id="Medicine" value="120" />
+                <skill id="Engineering" value="60" />
+            </skills>
             <Traits>
             </Traits>
             <Equipments>
@@ -5839,7 +6064,7 @@
         <xsl:copy>
             <xsl:attribute name="id">lord_1_52_1</xsl:attribute>
             <xsl:attribute name="name">{=aom_lord_1_52_1_name}Anariel</xsl:attribute>
-            <xsl:attribute name="age">43</xsl:attribute>
+            <xsl:attribute name="age">23</xsl:attribute>
             <xsl:attribute name="voice">ironic</xsl:attribute>
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
@@ -5849,7 +6074,13 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.2269" build="0.7361" key="0008700E4000138897700694F0015167328081FFB2570E00756880008F96C80300AB36030A39320100000000000000000000000000000000000000003D3C1002"/>
+                <BodyProperties version="4" weight="0.5" build="0.5" key="0015580A4000000D94255675D562A945CD8B4547EBCC549678EA83A9CC4A9A3500883603083C678E00000000000000000000000000000000000000003F041002" />
+                <hair_tags>
+                    <hair_tag name="empire" />
+                </hair_tags>
+                <tattoo_tags>
+                    <tattoo_tag name="Cleanface" />
+                </tattoo_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="140" />
@@ -5894,8 +6125,8 @@
         <xsl:copy>
             <xsl:attribute name="id">lord_1_52_2</xsl:attribute>
             <xsl:attribute name="name">{=aom_lord_1_52_2_name}Barandor</xsl:attribute>
-            <xsl:attribute name="age">33</xsl:attribute>
-            <xsl:attribute name="voice">earnest</xsl:attribute>
+            <xsl:attribute name="age">22</xsl:attribute>
+            <xsl:attribute name="voice">ironic</xsl:attribute>
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">false</xsl:attribute>
@@ -5904,7 +6135,16 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.3981" build="0.4861" key="0020FC0980001282248414071B75011484C884CF8169800109FA00017FF95EA2009766030971A00800000000000000000000000000000000000000003B2C4002"/>
+                <BodyProperties version="4" weight="0.3981" build="0.4861" key="0020FC0980001282248414071B75011484C884CF8169800109FA00017FF95EA2009766030971A00800000000000000000000000000000000000000003B2C4002" age="38.11" />
+                <hair_tags>
+                    <hair_tag name="empire" />
+                </hair_tags>
+                <beard_tags>
+                    <beard_tag name="empire" />
+                </beard_tags>
+                <tattoo_tags>
+                    <tattoo_tag name="Cleanface" />
+                </tattoo_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="180" />
@@ -5959,7 +6199,13 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.5" build="0.5" key="0022CC0580CC100B5867B786DC6B9968B4367A58547AB48D79EAB69452B75745016776130655B895000000000000000000000000000000000000000030C40083"/>
+                <BodyProperties version="4" weight="0.5" build="0.5" key="0015780FC000000B5BA6B6479BC8D64868798769E4627AB4189C98C73DB8566800883603088427A500000000000000000000000000000000000000003F040002" />
+                <hair_tags>
+                    <hair_tag name="empire" />
+                </hair_tags>
+                <tattoo_tags>
+                    <tattoo_tag name="Cleanface" />
+                </tattoo_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="60" />
@@ -6014,7 +6260,13 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.5" build="0.5" key="0011AC071100300FA554C37EA53BA67A8B6E7AA94D9BAE666B76EB5953835CAB01977613097C478900000000000000000000000000000000000000004D243043"/>
+                <BodyProperties version="4" weight="0.5" build="0.5" key="0015BC0E40000006C45AC7B638DC687A68794B86835B7987189C98C73DB8566800883603088427A500000000000000000000000000000000000000003F042002" age="25.84" />
+                <hair_tags>
+                    <hair_tag name="empire" />
+                </hair_tags>
+                <tattoo_tags>
+                    <tattoo_tag name="Cleanface" />
+                </tattoo_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="60" />
@@ -6068,8 +6320,15 @@
             <xsl:attribute name="skill_template">SkillSet.taom_canonical_lord_1_30_1_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
+            <xsl:attribute name="race">uruk</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.5" build="0.5" key="0011A40CC0B4300AA943DB689A336188B8984B56679A5AB8497A4CB9D8A6232501877613088C45970000000000000000000000000000000000000000350C1003"/>
+                <BodyProperties version="4" weight="0.5" build="0.5" key="0011A40CC0B4300AA943DB689A336188B8984B56679A5AB8497A4CB9D8A6232501877613088C45970000000000000000000000000000000000000000350C1003" />
+                <hair_tags>
+                    <hair_tag name="empire" />
+                </hair_tags>
+                <tattoo_tags>
+                    <tattoo_tag name="Cleanface" />
+                </tattoo_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="255" />
@@ -6120,13 +6379,38 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_phalanx_skills_rookie</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.spc_chatelaine_skills_rookie</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.2" build="0.3" key="00117C0E50CC200D73C3265E79C3998BBE65798569D73495C6D87BD3AA57B6D501C776130CD465380000000000000000000000000000000000000000358C20C3"/>
+                <BodyProperties version="4" weight="0.2" build="0.3" key="00117C0E50CC200D73C3265E79C3998BBE65798569D73495C6D87BD3AA57B6D501C776130CD465380000000000000000000000000000000000000000358C20C3" age="25.84" />
+                <hair_tags>
+                    <hair_tag name="empire" />
+                </hair_tags>
+                <tattoo_tags>
+                    <tattoo_tag name="Cleanface" />
+                </tattoo_tags>
             </face>
-            <skills/>
+            <skills>
+                <skill id="OneHanded" value="62" />
+                <skill id="TwoHanded" value="80" />
+                <skill id="Polearm" value="50" />
+                <skill id="Bow" value="60" />
+                <skill id="Crossbow" value="50" />
+                <skill id="Throwing" value="55" />
+                <skill id="Riding" value="100" />
+                <skill id="Athletics" value="60" />
+                <skill id="Crafting" value="100" />
+                <skill id="Scouting" value="80" />
+                <skill id="Tactics" value="95" />
+                <skill id="Roguery" value="45" />
+                <skill id="Charm" value="125" />
+                <skill id="Leadership" value="120" />
+                <skill id="Trade" value="100" />
+                <skill id="Steward" value="130" />
+                <skill id="Medicine" value="115" />
+                <skill id="Engineering" value="90" />
+            </skills>
             <Traits>
             </Traits>
             <Equipments>
@@ -6148,13 +6432,41 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">false</xsl:attribute>
             <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_artisan_skills_rookie</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.spc_knight_skills_rookie</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.4" build="0.3" key="00117C0E50CC200D73C3265E79C3998BBE65798569D73495C6D87BD3AA57B6D501C776130CD465380000000000000000000000000000000000000000358C20C3"/>
+                <BodyProperties version="4" weight="0.4" build="0.3" key="00117C0E50CC200D73C3265E79C3998BBE65798569D73495C6D87BD3AA57B6D501C776130CD465380000000000000000000000000000000000000000358C20C3" age="25.84" />
+                <hair_tags>
+                    <hair_tag name="empire" />
+                </hair_tags>
+                <beard_tags>
+                    <beard_tag name="empire" />
+                </beard_tags>
+                <tattoo_tags>
+                    <tattoo_tag name="Cleanface" />
+                </tattoo_tags>
             </face>
-            <skills/>
+            <skills>
+                <skill id="OneHanded" value="110" />
+                <skill id="TwoHanded" value="90" />
+                <skill id="Polearm" value="125" />
+                <skill id="Bow" value="60" />
+                <skill id="Crossbow" value="55" />
+                <skill id="Throwing" value="55" />
+                <skill id="Riding" value="130" />
+                <skill id="Athletics" value="90" />
+                <skill id="Crafting" value="40" />
+                <skill id="Scouting" value="85" />
+                <skill id="Tactics" value="100" />
+                <skill id="Roguery" value="15" />
+                <skill id="Charm" value="95" />
+                <skill id="Leadership" value="115" />
+                <skill id="Trade" value="30" />
+                <skill id="Steward" value="70" />
+                <skill id="Medicine" value="60" />
+                <skill id="Engineering" value="25" />
+            </skills>
             <Traits>
             </Traits>
             <Equipments>
@@ -6347,8 +6659,15 @@
             <xsl:attribute name="skill_template">SkillSet.taom_orc_female_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
+            <xsl:attribute name="race">uruk</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.5" build="0.5" key="0000780450B40005274C088C838671B78588B5549A7B79D979386C9D75A83863016776130698556700000000000000000000000000000000000000003ACC4083"/>
+                <BodyProperties version="4" weight="0.5" build="0.5" key="0000780450B40005274C088C838671B78588B5549A7B79D979386C9D75A83863016776130698556700000000000000000000000000000000000000003ACC4083" />
+                <hair_tags>
+                    <hair_tag name="empire" />
+                </hair_tags>
+                <tattoo_tags>
+                    <tattoo_tag name="Cleanface" />
+                </tattoo_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="170" />
@@ -6402,8 +6721,15 @@
             <xsl:attribute name="skill_template">SkillSet.taom_orc_female_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
+            <xsl:attribute name="race">uruk</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.5" build="0.5" key="000B5C070058300454262B4CA6A899758988B348E4A3854B7B2BD7728796946401A776130A3359560000000000000000000000000000000000000000375410C3"/>
+                <BodyProperties version="4" weight="0.5" build="0.5" key="000B5C070058300454262B4CA6A899758988B348E4A3854B7B2BD7728796946401A776130A3359560000000000000000000000000000000000000000375410C3" />
+                <hair_tags>
+                    <hair_tag name="empire" />
+                </hair_tags>
+                <tattoo_tags>
+                    <tattoo_tag name="Cleanface" />
+                </tattoo_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="170" />
@@ -6457,8 +6783,15 @@
             <xsl:attribute name="skill_template">SkillSet.taom_orc_female_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
+            <xsl:attribute name="race">uruk</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.7" build="0.8" key="001C700CC0CC30106C969C364498D4369D8A57A9A772768983E88354BB2B1BCE0167761306D7CD8B000000000000000000000000000000000000000050DC4083"/>
+                <BodyProperties version="4" weight="0.7" build="0.8" key="001C700CC0CC30106C969C364498D4369D8A57A9A772768983E88354BB2B1BCE0167761306D7CD8B000000000000000000000000000000000000000050DC4083" />
+                <hair_tags>
+                    <hair_tag name="empire" />
+                </hair_tags>
+                <tattoo_tags>
+                    <tattoo_tag name="Cleanface" />
+                </tattoo_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="170" />
@@ -6509,13 +6842,39 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_diplomat_skills_rookie</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.spc_chatelaine_skills_rookie</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
+            <xsl:attribute name="race">uruk</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.5" build="0.5" key="001C580892B400107792D84678A387599DAA67447A8C77C9D7D366699576C7CB0167761306D83BB700000000000000000000000000000000000000005CDC0003"/>
+                <BodyProperties version="4" weight="0.5" build="0.5" key="001C580892B400107792D84678A387599DAA67447A8C77C9D7D366699576C7CB0167761306D83BB700000000000000000000000000000000000000005CDC0003" />
+                <hair_tags>
+                    <hair_tag name="empire" />
+                </hair_tags>
+                <tattoo_tags>
+                    <tattoo_tag name="Cleanface" />
+                </tattoo_tags>
             </face>
-            <skills/>
+            <skills>
+                <skill id="OneHanded" value="62" />
+                <skill id="TwoHanded" value="80" />
+                <skill id="Polearm" value="50" />
+                <skill id="Bow" value="60" />
+                <skill id="Crossbow" value="50" />
+                <skill id="Throwing" value="55" />
+                <skill id="Riding" value="100" />
+                <skill id="Athletics" value="60" />
+                <skill id="Crafting" value="100" />
+                <skill id="Scouting" value="80" />
+                <skill id="Tactics" value="95" />
+                <skill id="Roguery" value="45" />
+                <skill id="Charm" value="125" />
+                <skill id="Leadership" value="120" />
+                <skill id="Trade" value="100" />
+                <skill id="Steward" value="130" />
+                <skill id="Medicine" value="115" />
+                <skill id="Engineering" value="90" />
+            </skills>
             <Traits>
             </Traits>
             <Equipments>
@@ -6537,13 +6896,39 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_healer_scholar_skills_rookie</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.spc_matriarch_skills_rookie</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
+            <xsl:attribute name="race">uruk</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.5" build="0.5" key="00168C0CD3E4300B746DA4A836974259CA53A496D7AA6425822AA1429A5CACCA01677613063C365E00000000000000000000000000000000000000003CC42043"/>
+                <BodyProperties version="4" weight="0.5" build="0.5" key="00168C0CD3E4300B746DA4A836974259CA53A496D7AA6425822AA1429A5CACCA01677613063C365E00000000000000000000000000000000000000003CC42043" />
+                <hair_tags>
+                    <hair_tag name="empire" />
+                </hair_tags>
+                <tattoo_tags>
+                    <tattoo_tag name="Cleanface" />
+                </tattoo_tags>
             </face>
-            <skills/>
+            <skills>
+                <skill id="OneHanded" value="80" />
+                <skill id="TwoHanded" value="60" />
+                <skill id="Polearm" value="50" />
+                <skill id="Bow" value="75" />
+                <skill id="Crossbow" value="65" />
+                <skill id="Throwing" value="25" />
+                <skill id="Riding" value="100" />
+                <skill id="Athletics" value="70" />
+                <skill id="Crafting" value="55" />
+                <skill id="Scouting" value="80" />
+                <skill id="Tactics" value="110" />
+                <skill id="Roguery" value="40" />
+                <skill id="Charm" value="130" />
+                <skill id="Leadership" value="140" />
+                <skill id="Trade" value="95" />
+                <skill id="Steward" value="125" />
+                <skill id="Medicine" value="120" />
+                <skill id="Engineering" value="60" />
+            </skills>
             <Traits>
             </Traits>
             <Equipments>
@@ -6559,7 +6944,7 @@
         <xsl:copy>
             <xsl:attribute name="id">lord_1_56_1</xsl:attribute>
             <xsl:attribute name="name">{=aom_lord_1_56_1_name}Gwenna</xsl:attribute>
-            <xsl:attribute name="age">37</xsl:attribute>
+            <xsl:attribute name="age">22</xsl:attribute>
             <xsl:attribute name="voice">curt</xsl:attribute>
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
@@ -6569,7 +6954,13 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.5" build="0.5" key="0005240892FC1005B69C29549444BE8759679A7778478C8D78BA785C77A5C7880177761307D8873D000000000000000000000000000000000000000054F40083"/>
+                <BodyProperties version="4" weight="0.5" build="0.5" key="0005240892FC1005B69C29549444BE8759679A7778478C8D78BA785C77A5C7880177761307D8873D000000000000000000000000000000000000000054F40083" />
+                <hair_tags>
+                    <hair_tag name="empire" />
+                </hair_tags>
+                <tattoo_tags>
+                    <tattoo_tag name="Cleanface" />
+                </tattoo_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="245" />
@@ -6624,7 +7015,13 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.5" build="0.5" key="0011440CD000000F85883C187A9326A926589A94B9889854776498DB88864ED701877613084688A80000000000000000000000000000000000000000411410C3"/>
+                <BodyProperties version="4" weight="0.5" build="0.5" key="0011440CD000000F85883C187A9326A926589A94B9889854776498DB88864ED701877613084688A80000000000000000000000000000000000000000411410C3" />
+                <hair_tags>
+                    <hair_tag name="empire" />
+                </hair_tags>
+                <tattoo_tags>
+                    <tattoo_tag name="Cleanface" />
+                </tattoo_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="245" />
@@ -6678,8 +7075,15 @@
             <xsl:attribute name="skill_template">SkillSet.taom_orc_warrior_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
+            <xsl:attribute name="race">uruk</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.5" build="0.5" key="00115C0890B42010C486966CA6A39396395EBC15947764737B762A7963D6584201A776130A5A596B00000000000000000000000000000000000000005B544003"/>
+                <BodyProperties version="4" weight="0.5" build="0.5" key="00115C0890B42010C486966CA6A39396395EBC15947764737B762A7963D6584201A776130A5A596B00000000000000000000000000000000000000005B544003" />
+                <hair_tags>
+                    <hair_tag name="empire" />
+                </hair_tags>
+                <tattoo_tags>
+                    <tattoo_tag name="Cleanface" />
+                </tattoo_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="235" />
@@ -6733,8 +7137,15 @@
             <xsl:attribute name="skill_template">SkillSet.taom_orc_female_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
+            <xsl:attribute name="race">uruk</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.3" build="0.4" key="000BBC0FC0143010E1789C45A6A4429352B8238BB9B683DBAB95A8778B89BAC501977613097656360000000000000000000000000000000000000000372410C3"/>
+                <BodyProperties version="4" weight="0.3" build="0.4" key="000BBC0FC0143010E1789C45A6A4429352B8238BB9B683DBAB95A8778B89BAC501977613097656360000000000000000000000000000000000000000372410C3" />
+                <hair_tags>
+                    <hair_tag name="empire" />
+                </hair_tags>
+                <tattoo_tags>
+                    <tattoo_tag name="Cleanface" />
+                </tattoo_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="170" />
@@ -6788,10 +7199,36 @@
             <xsl:attribute name="skill_template">SkillSet.spc_chatelaine_skills_rookie</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
+            <xsl:attribute name="race">uruk</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.3" build="0.4" key="0000900A10143006685D493BBC780A4686D18674A5379AA596B62D5A727BC485017776130799B93A000000000000000000000000000000000000000068FC4083"/>
+                <BodyProperties version="4" weight="0.3" build="0.4" key="0000900A10143006685D493BBC780A4686D18674A5379AA596B62D5A727BC485017776130799B93A000000000000000000000000000000000000000068FC4083" />
+                <hair_tags>
+                    <hair_tag name="empire" />
+                </hair_tags>
+                <tattoo_tags>
+                    <tattoo_tag name="Cleanface" />
+                </tattoo_tags>
             </face>
-            <skills/>
+            <skills>
+                <skill id="OneHanded" value="62" />
+                <skill id="TwoHanded" value="80" />
+                <skill id="Polearm" value="50" />
+                <skill id="Bow" value="60" />
+                <skill id="Crossbow" value="50" />
+                <skill id="Throwing" value="55" />
+                <skill id="Riding" value="100" />
+                <skill id="Athletics" value="60" />
+                <skill id="Crafting" value="100" />
+                <skill id="Scouting" value="80" />
+                <skill id="Tactics" value="95" />
+                <skill id="Roguery" value="45" />
+                <skill id="Charm" value="125" />
+                <skill id="Leadership" value="120" />
+                <skill id="Trade" value="100" />
+                <skill id="Steward" value="130" />
+                <skill id="Medicine" value="115" />
+                <skill id="Engineering" value="90" />
+            </skills>
             <Traits>
             </Traits>
             <Equipments>
@@ -6816,8 +7253,15 @@
             <xsl:attribute name="skill_template">SkillSet.taom_orc_female_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
+            <xsl:attribute name="race">uruk</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.5" build="0.5" key="00055C0E40CC3010AB37736CB777CA594C4C561A72B5767D2385A776BA71778B015776130579877A00000000000000000000000000000000000000003CAC40C3"/>
+                <BodyProperties version="4" weight="0.5" build="0.5" key="00055C0E40CC3010AB37736CB777CA594C4C561A72B5767D2385A776BA71778B015776130579877A00000000000000000000000000000000000000003CAC40C3" />
+                <hair_tags>
+                    <hair_tag name="empire" />
+                </hair_tags>
+                <tattoo_tags>
+                    <tattoo_tag name="Cleanface" />
+                </tattoo_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="170" />
@@ -6871,8 +7315,15 @@
             <xsl:attribute name="skill_template">SkillSet.taom_orc_female_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
+            <xsl:attribute name="race">uruk</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.5" build="0.5" key="00115C0FD1A0000E3A7C7A85CC64D75ABE9B4974647554498CAA97499766E5860147761304B85D0800000000000000000000000000000000000000005C943003"/>
+                <BodyProperties version="4" weight="0.5" build="0.5" key="00115C0FD1A0000E3A7C7A85CC64D75ABE9B4974647554498CAA97499766E5860147761304B85D0800000000000000000000000000000000000000005C943003" />
+                <hair_tags>
+                    <hair_tag name="empire" />
+                </hair_tags>
+                <tattoo_tags>
+                    <tattoo_tag name="Cleanface" />
+                </tattoo_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="170" />
@@ -6986,7 +7437,7 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.4526" build="0.5473" key="000A08044070300E4976245366B465B59A4B8308619547498764AA1275284A240898768909675A3A00000000000000000000000000000000000000006F3C2084"/>
+                <BodyProperties version="4" weight="0.4526" build="0.5473" key="000608044070300E4976245366B465B59A4B8308619547498764AA1275284A240898768909675A3A00000000000000000000000000000000000000006F3C2084"/>
             </face>
             <skills>
                 <skill id="OneHanded" value="60" />
@@ -7747,7 +8198,7 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.7" build="0.7" key="000B0005807015843C72310F67D8F06E801C853C01B5813CE9923E7C7F70530C009AA602096E8FE00000000000000000000000000000000000000000012C4042"/>
+                <BodyProperties version="4" weight="0.7" build="0.7" key="00070005807015843C72310F67D8F06E801C853C01B5813CE9923E7C7F70530C009AA602096E8FE00000000000000000000000000000000000000000012C4042"/>
             </face>
             <skills>
                 <skill id="OneHanded" value="215" />
@@ -8342,7 +8793,13 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.4" build="0.6" key="000B100151141010627A8278C8B6825989B65558B77AAC5795A778895979A76301C776130C385387000000000000000000000000000000000000000043A400C4"/>
+                <BodyProperties version="4" weight="0.4" build="0.6" key="0007100151141010627A8278C8B6825989B65558B77AAC5795A778895979A76301C776130C385387000000000000000000000000000000000000000043A400C4" />
+                <hair_tags>
+                    <hair_tag name="sturgia" />
+                </hair_tags>
+                <tattoo_tags>
+                    <tattoo_tag name="Cleanface" />
+                </tattoo_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="215" />
@@ -8397,7 +8854,16 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.5089" build="0.4047" key="0000500440B4008E9E895C86B34CA389699869B8B28B576979538AC46CB4C7740076880307C60384000000000000000000000000000000000000000000F05000"/>
+                <BodyProperties version="4" weight="0.5089" build="0.4047" key="0000500440B4008E9E895C86B34CA389699869B8B28B576979538AC46CB4C7740076880307C60384000000000000000000000000000000000000000000F05000" />
+                <hair_tags>
+                    <hair_tag name="sturgia" />
+                </hair_tags>
+                <beard_tags>
+                    <beard_tag name="sturgia" />
+                </beard_tags>
+                <tattoo_tags>
+                    <tattoo_tag name="Cleanface" />
+                </tattoo_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="160" />
@@ -8452,7 +8918,13 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.5" build="0.5" key="001108000070200FD33892A397AC34867B393C86ADDA750B66EE13B68C999CD90157761305747845000000000000000000000000000000000000000034A40083"/>
+                <BodyProperties version="4" weight="0.5" build="0.5" key="000708000070200FD33892A397AC34867B393C86ADDA750B66EE13B68C999CD90157761305747845000000000000000000000000000000000000000034A40083" />
+                <hair_tags>
+                    <hair_tag name="sturgia" />
+                </hair_tags>
+                <tattoo_tags>
+                    <tattoo_tag name="Cleanface" />
+                </tattoo_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="40" />
@@ -8507,7 +8979,13 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.5" build="0.5" key="0005B002D0CC101077CA5CE759465522795799844375862757BAB56484A9788E0157761305DBD96A00000000000000000000000000000000000000005C9C4043"/>
+                <BodyProperties version="4" weight="0.5" build="0.5" key="0005B002D0CC101077CA5CE759465522795799844375862757BAB56484A9788E0157761305DBD96A00000000000000000000000000000000000000005C9C4043" />
+                <hair_tags>
+                    <hair_tag name="sturgia" />
+                </hair_tags>
+                <tattoo_tags>
+                    <tattoo_tag name="Cleanface" />
+                </tattoo_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="40" />
@@ -8562,7 +9040,13 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.5" build="0.5" key="00059C02D070300374CAA96A797A77C79CE76A5875B54198B5561928897C487E01D776130DD75BC500000000000000000000000000000000000000001BAC2083"/>
+                <BodyProperties version="4" weight="0.5" build="0.5" key="00059C02D070300374CAA96A797A77C79CE76A5875B54198B5561928897C487E01D776130DD75BC500000000000000000000000000000000000000001BAC2083" />
+                <hair_tags>
+                    <hair_tag name="sturgia" />
+                </hair_tags>
+                <tattoo_tags>
+                    <tattoo_tag name="Cleanface" />
+                </tattoo_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="40" />
@@ -8617,7 +9101,13 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.5" build="0.5" key="0005400151143004747C738A7A775752715CC25D4B5787956D76849495A949330177761307C5ADB800000000000000000000000000000000000000002EEC2043"/>
+                <BodyProperties version="4" weight="0.5" build="0.5" key="0005400151143004747C738A7A775752715CC25D4B5787956D76849495A949330177761307C5ADB800000000000000000000000000000000000000002EEC2043" />
+                <hair_tags>
+                    <hair_tag name="sturgia" />
+                </hair_tags>
+                <tattoo_tags>
+                    <tattoo_tag name="Cleanface" />
+                </tattoo_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="40" />
@@ -8672,7 +9162,13 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.5" build="0.5" key="0000400891A0200FDD78477A6AB5556B977C4D59CBAD8427CD47DE9AB8BC887A01B776130BC9A5B80000000000000000000000000000000000000000517C20C3"/>
+                <BodyProperties version="4" weight="0.5" build="0.5" key="0000400891A0200FDD78477A6AB5556B977C4D59CBAD8427CD47DE9AB8BC887A01B776130BC9A5B80000000000000000000000000000000000000000517C20C3" />
+                <hair_tags>
+                    <hair_tag name="sturgia" />
+                </hair_tags>
+                <tattoo_tags>
+                    <tattoo_tag name="Cleanface" />
+                </tattoo_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="215" />
@@ -8727,7 +9223,13 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.5" build="0.5" key="0000400890A03003DDC8CA9988D94DBA7A554D59CBAD8427C8146BB6B8B9587801B776130B553C280000000000000000000000000000000000000000517C2083"/>
+                <BodyProperties version="4" weight="0.5" build="0.5" key="0000400890A03003DDC8CA9988D94DBA7A554D59CBAD8427C8146BB6B8B9587801B776130B553C280000000000000000000000000000000000000000517C2083" />
+                <hair_tags>
+                    <hair_tag name="sturgia" />
+                </hair_tags>
+                <tattoo_tags>
+                    <tattoo_tag name="Cleanface" />
+                </tattoo_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="160" />
@@ -8782,7 +9284,13 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.5" build="0.5" key="0000400890A0300A4A768CA3AAA5765D7A55444685D6AC2A856B544CB8B9587801B776130BC746C60000000000000000000000000000000000000000517C1003"/>
+                <BodyProperties version="4" weight="0.5" build="0.5" key="0000400890A0300A4A768CA3AAA5765D7A55444685D6AC2A856B544CB8B9587801B776130BC746C60000000000000000000000000000000000000000517C1003" age="25.84" />
+                <hair_tags>
+                    <hair_tag name="sturgia" />
+                </hair_tags>
+                <tattoo_tags>
+                    <tattoo_tag name="Cleanface" />
+                </tattoo_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="160" />
@@ -8837,7 +9345,13 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.5" build="0.5" key="001C68070FE40009776A7BC4C8767889A85B469799583A24DB916477A389668101C776130C89899300000000000000000000000000000000000000005B8C30C3"/>
+                <BodyProperties version="4" weight="0.5" build="0.5" key="000668070FE40009776A7BC4C8767889A85B469799583A24DB916477A389668101C776130C89899300000000000000000000000000000000000000005B8C30C3" />
+                <hair_tags>
+                    <hair_tag name="sturgia" />
+                </hair_tags>
+                <tattoo_tags>
+                    <tattoo_tag name="Cleanface" />
+                </tattoo_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="40" />
@@ -8892,7 +9406,13 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.5" build="0.5" key="001C680710E4200777476D84B87649B77CC4469799583A24967922B69496277B01C776130CB42C5D00000000000000000000000000000000000000005B8C30C3"/>
+                <BodyProperties version="4" weight="0.5" build="0.5" key="0006680710E4200777476D84B87649B77CC4469799583A24967922B69496277B01C776130CB42C5D00000000000000000000000000000000000000005B8C30C3" />
+                <hair_tags>
+                    <hair_tag name="sturgia" />
+                </hair_tags>
+                <tattoo_tags>
+                    <tattoo_tag name="Cleanface" />
+                </tattoo_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="40" />
@@ -8947,7 +9467,13 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.5" build="0.5" key="000B4C0710E4100D9BB5B85867759DB27C84967BC8BB966AF371F5599496277B00C776030CE4B6C500000000000000000000000000000000000000005B8C3043"/>
+                <BodyProperties version="4" weight="0.5" build="0.5" key="00074C0710E4100D9BB5B85867759DB27C84967BC8BB966AF371F5599496277B00C776030CE4B6C500000000000000000000000000000000000000005B8C3043" />
+                <hair_tags>
+                    <hair_tag name="sturgia" />
+                </hair_tags>
+                <tattoo_tags>
+                    <tattoo_tag name="Cleanface" />
+                </tattoo_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="40" />
@@ -9002,7 +9528,16 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.6" build="0.6" key="00164C02C0882342BAB7B9566DA53AD368A6628171B9A586A7883546559D974501977613094979CE000000000000000000000000000000000000000041341002"/>
+                <BodyProperties version="4" weight="0.6" build="0.6" key="00064C02C0882342BAB7B9566DA53AD368A6628171B9A586A7883546559D974501977613094979CE000000000000000000000000000000000000000041341002" />
+                <hair_tags>
+                    <hair_tag name="sturgia" />
+                </hair_tags>
+                <beard_tags>
+                    <beard_tag name="sturgia" />
+                </beard_tags>
+                <tattoo_tags>
+                    <tattoo_tag name="Cleanface" />
+                </tattoo_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="160" />
@@ -9057,7 +9592,13 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.5" build="0.5" key="000B2802D088000AC4886AA8789859A797CAD63996786A57CBB8885895D177B60197761309D8CA7600000000000000000000000000000000000000002B2C1083"/>
+                <BodyProperties version="4" weight="0.5" build="0.5" key="00072802D088000AC4886AA8789859A797CAD63996786A57CBB8885895D177B60197761309D8CA7600000000000000000000000000000000000000002B2C1083" />
+                <hair_tags>
+                    <hair_tag name="sturgia" />
+                </hair_tags>
+                <tattoo_tags>
+                    <tattoo_tag name="Cleanface" />
+                </tattoo_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="40" />
@@ -9112,7 +9653,13 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.5" build="0.5" key="000B78071114200E8D1723DA7A67949A66266E8653525564594C4368786D87B30187761308288EC7000000000000000000000000000000000000000031143003"/>
+                <BodyProperties version="4" weight="0.5" build="0.5" key="000778071114200E8D1723DA7A67949A66266E8653525564594C4368786D87B30187761308288EC7000000000000000000000000000000000000000031143003" />
+                <hair_tags>
+                    <hair_tag name="sturgia" />
+                </hair_tags>
+                <tattoo_tags>
+                    <tattoo_tag name="Cleanface" />
+                </tattoo_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="60" />
@@ -9167,7 +9714,13 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.5" build="0.5" key="000B740A11001001583A7894D487CE78C5AA46B87A7486657B1B789866D6823901277613028B77670000000000000000000000000000000000000000623C3003"/>
+                <BodyProperties version="4" weight="0.5" build="0.5" key="0007740A11001001583A7894D487CE78C5AA46B87A7486657B1B789866D6823901277613028B77670000000000000000000000000000000000000000623C3003" />
+                <hair_tags>
+                    <hair_tag name="sturgia" />
+                </hair_tags>
+                <tattoo_tags>
+                    <tattoo_tag name="Cleanface" />
+                </tattoo_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="40" />
@@ -9222,7 +9775,13 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.5" build="0.5" key="0005680000882007AD47C86E48547C993A35BCC45C5A3488EB979A9B364B66A701377613031CB39B00000000000000000000000000000000000000002C5C3003"/>
+                <BodyProperties version="4" weight="0.5" build="0.5" key="0005680000882007AD47C86E48547C993A35BCC45C5A3488EB979A9B364B66A701377613031CB39B00000000000000000000000000000000000000002C5C3003" />
+                <hair_tags>
+                    <hair_tag name="sturgia" />
+                </hair_tags>
+                <tattoo_tags>
+                    <tattoo_tag name="Cleanface" />
+                </tattoo_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="40" />
@@ -9277,7 +9836,13 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.5" build="0.5" key="000B080150CC30064899E76527D86898746C92BAB8DAA66B7B8B3698896A983101B776130BB47BA900000000000000000000000000000000000000005B6C0083"/>
+                <BodyProperties version="4" weight="0.5" build="0.5" key="0007080150CC30064899E76527D86898746C92BAB8DAA66B7B8B3698896A983101B776130BB47BA900000000000000000000000000000000000000005B6C0083" />
+                <hair_tags>
+                    <hair_tag name="sturgia" />
+                </hair_tags>
+                <tattoo_tags>
+                    <tattoo_tag name="Cleanface" />
+                </tattoo_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="40" />
@@ -9332,7 +9897,13 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.5" build="0.5" key="000B0C02D2B410069419993888AD9C89477AB8686789AB88845B929CA6AC5C670197761309E3999800000000000000000000000000000000000000002D341003"/>
+                <BodyProperties version="4" weight="0.5" build="0.5" key="00070C02D2B410069419993888AD9C89477AB8686789AB88845B929CA6AC5C670197761309E3999800000000000000000000000000000000000000002D341003" />
+                <hair_tags>
+                    <hair_tag name="sturgia" />
+                </hair_tags>
+                <tattoo_tags>
+                    <tattoo_tag name="Cleanface" />
+                </tattoo_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="60" />
@@ -9387,7 +9958,13 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.6097" build="0.6476" key="00004803800002C4867232085784BBA666987367C530B7547972892A88150405049A904609888D01000000000000000000000000000000000000000073381041"/>
+                <BodyProperties version="4" weight="0.6097" build="0.6476" key="00004803800002C4867232085784BBA666987367C530B7547972892A88150405049A904609888D01000000000000000000000000000000000000000073381041" />
+                <hair_tags>
+                    <hair_tag name="sturgia" />
+                </hair_tags>
+                <tattoo_tags>
+                    <tattoo_tag name="Cleanface" />
+                </tattoo_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="40" />
@@ -9442,7 +10019,13 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.5" build="0.5" key="0005BC001114200DEA72114080326643E10B706785AD15119FF6AFA17086F0510137761303105059000000000000000000000000000000000000000020641044"/>
+                <BodyProperties version="4" weight="0.5" build="0.5" key="0005BC001114200DEA72114080326643E10B706785AD15119FF6AFA17086F0510137761303105059000000000000000000000000000000000000000020641044" />
+                <hair_tags>
+                    <hair_tag name="sturgia" />
+                </hair_tags>
+                <tattoo_tags>
+                    <tattoo_tag name="Cleanface" />
+                </tattoo_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="40" />
@@ -9497,7 +10080,13 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.5" build="0.5" key="00054C0140B400039659749D884A5B5E6754C9967C75966FAF9645C8B6BA9BC5015776130587C7630000000000000000000000000000000000000000629C0083"/>
+                <BodyProperties version="4" weight="0.5" build="0.5" key="00054C0140B400039659749D884A5B5E6754C9967C75966FAF9645C8B6BA9BC5015776130587C7630000000000000000000000000000000000000000629C0083" />
+                <hair_tags>
+                    <hair_tag name="sturgia" />
+                </hair_tags>
+                <tattoo_tags>
+                    <tattoo_tag name="Cleanface" />
+                </tattoo_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="215" />
@@ -9551,7 +10140,7 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" key="0016200140BC140143FBBB8747BD9C66A9446A946C85E738A778E765678CA9B4000BD8350BB5C64C0000037F0000000F00000037049140010000000001903000"/>
+                <BodyProperties version="4" key="0006200140BC140143FBBB8747BD9C66A9446A946C85E738A778E765678CA9B4000BD8350BB5C64C0000037F0000000F00000037049140010000000001903000"/>
             </face>
             <skills>
                 <skill id="OneHanded" value="215" />
@@ -9602,7 +10191,7 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" key="001C900580BC3004946A9B5AA87AD8B3C9B53ACB38775717464D46BA9D9767A50004AB1804BB8A6D0000037F0000000F00000037049140010000000001E00000"/>
+                <BodyProperties version="4" key="0006900580BC3004946A9B5AA87AD8B3C9B53ACB38775717464D46BA9D9767A50004AB1804BB8A6D0000037F0000000F00000037049140010000000001E00000"/>
             </face>
             <skills>
                 <skill id="OneHanded" value="40" />
@@ -11025,10 +11614,17 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0" build="0" key="001C900FE6A4180886899931423946DB88E588765AA3947958825CAD467C7D4701E006890E57A12A000000000000000000000000000000000000000000843044"/>
+                <BodyProperties version="4" weight="0" build="0" key="001C900FE6A4180886899931423946DB88E588765AA3947958825CAD467C7D4701E006890E57A12A000000000000000000000000000000000000000000843044" age="30.2" />
                 <tattoo_tags>
                     <tattoo_tag name="harad" />
+                    <tattoo_tag name="harad" />
                 </tattoo_tags>
+                <hair_tags>
+                    <hair_tag name="aserai" />
+                </hair_tags>
+                <beard_tags>
+                    <beard_tag name="aserai" />
+                </beard_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="160" />
@@ -11083,10 +11679,14 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.5" build="0.5" key="0022880E65A430048D6DA84AA9B668434696F8AC7F826778683B65553B844B7A01A776130A85794900000000000000000000000000000000000000005D542044"/>
+                <BodyProperties version="4" weight="0.5" build="0.5" key="0022880E65A430048D6DA84AA9B668434696F8AC7F826778683B65553B844B7A01A776130A85794900000000000000000000000000000000000000005D542044" />
                 <tattoo_tags>
                     <tattoo_tag name="harad" />
+                    <tattoo_tag name="harad" />
                 </tattoo_tags>
+                <hair_tags>
+                    <hair_tag name="aserai" />
+                </hair_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="60" />
@@ -11141,10 +11741,14 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.5" build="0.5" key="0028D40B66B0000279615D88977453634B8B895C74B382164C93D947647785A7016776130625634100000000000000000000000000000000000000006ACC40C3"/>
+                <BodyProperties version="4" weight="0.5" build="0.5" key="002D700CE6B01003A5C589888A5675AAC7B2869B794AB978A79C47747B19B58801577613057CC3E6000000000000000000000000000000000000000042B41003" />
                 <tattoo_tags>
                     <tattoo_tag name="harad" />
+                    <tattoo_tag name="harad" />
                 </tattoo_tags>
+                <hair_tags>
+                    <hair_tag name="aserai" />
+                </hair_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="235" />
@@ -11199,10 +11803,14 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.5" build="0.5" key="002D700CE6B01003A5C589888A5675AAC7B2869B794AB978A79C47747B19B58801577613057CC3E6000000000000000000000000000000000000000042B41003"/>
+                <BodyProperties version="4" weight="0.5" build="0.5" key="002D700CE6B01003A5C589888A5675AAC7B2869B794AB978A79C47747B19B58801577613057CC3E6000000000000000000000000000000000000000042B41003" />
                 <tattoo_tags>
                     <tattoo_tag name="harad" />
+                    <tattoo_tag name="harad" />
                 </tattoo_tags>
+                <hair_tags>
+                    <hair_tag name="aserai" />
+                </hair_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="235" />
@@ -11257,10 +11865,14 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.5" build="0.5" key="00288C0CE8C40004A395E7AA463A6E1C4BAA43633B1986E5A89857745CAB736C0167761306667684000000000000000000000000000000000000000066C410C3"/>
+                <BodyProperties version="4" weight="0.5" build="0.5" key="00288C0CE8C40004A395E7AA463A6E1C4BAA43633B1986E5A89857745CAB736C0167761306667684000000000000000000000000000000000000000066C410C3" />
                 <tattoo_tags>
                     <tattoo_tag name="harad" />
+                    <tattoo_tag name="harad" />
                 </tattoo_tags>
+                <hair_tags>
+                    <hair_tag name="aserai" />
+                </hair_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="210" />
@@ -11311,16 +11923,39 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.aserai</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_courtier_skills_rookie</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.spc_matriarch_skills_rookie</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.5" build="0.5" key="0022500CE2D0000457A8EAA7469C9552DEABB756A9349BC76A7768A8D898CA880187761308BAA6890000000000000000000000000000000000000000731C0083"/>
+                <BodyProperties version="4" weight="0.5" build="0.5" key="0022500CE2D0000457A8EAA7469C9552DEABB756A9349BC76A7768A8D898CA880187761308BAA6890000000000000000000000000000000000000000731C0083" />
                 <tattoo_tags>
                     <tattoo_tag name="harad" />
+                    <tattoo_tag name="harad" />
                 </tattoo_tags>
+                <hair_tags>
+                    <hair_tag name="aserai" />
+                </hair_tags>
             </face>
-            <skills/>
+            <skills>
+                <skill id="OneHanded" value="80" />
+                <skill id="TwoHanded" value="60" />
+                <skill id="Polearm" value="50" />
+                <skill id="Bow" value="75" />
+                <skill id="Crossbow" value="65" />
+                <skill id="Throwing" value="25" />
+                <skill id="Riding" value="100" />
+                <skill id="Athletics" value="70" />
+                <skill id="Crafting" value="55" />
+                <skill id="Scouting" value="80" />
+                <skill id="Tactics" value="110" />
+                <skill id="Roguery" value="40" />
+                <skill id="Charm" value="130" />
+                <skill id="Leadership" value="140" />
+                <skill id="Trade" value="95" />
+                <skill id="Steward" value="125" />
+                <skill id="Medicine" value="120" />
+                <skill id="Engineering" value="60" />
+            </skills>
             <Traits>
             </Traits>
             <Equipments>
@@ -11346,10 +11981,14 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.5" build="0.5" key="001CA80CE3DC3007A555B462CE8A55A6578B58BB799A8ACCAA7D8CC7765CB31201277613025AAA3B0000000000000000000000000000000000000000583C4043"/>
+                <BodyProperties version="4" weight="0.5" build="0.5" key="001CA80CE3DC3007A555B462CE8A55A6578B58BB799A8ACCAA7D8CC7765CB31201277613025AAA3B0000000000000000000000000000000000000000583C4043" />
                 <tattoo_tags>
                     <tattoo_tag name="harad" />
+                    <tattoo_tag name="harad" />
                 </tattoo_tags>
+                <hair_tags>
+                    <hair_tag name="aserai" />
+                </hair_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="235" />
@@ -11404,10 +12043,14 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.5" build="0.5" key="003F880FE4E8000D22AA8868B68367A9346A54A66984B75BB1AA59782B2B6773015776130586542600000000000000000000000000000000000000003E9C2043"/>
+                <BodyProperties version="4" weight="0.5" build="0.5" key="003F880FE4E8000D22AA8868B68367A9346A54A66984B75BB1AA59782B2B6773015776130586542600000000000000000000000000000000000000003E9C2043" />
                 <tattoo_tags>
                     <tattoo_tag name="harad" />
+                    <tattoo_tag name="harad" />
                 </tattoo_tags>
+                <hair_tags>
+                    <hair_tag name="aserai" />
+                </hair_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="60" />
@@ -11458,16 +12101,39 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.aserai</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_tribal_warrior_skills_rookie</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.spc_matriarch_skills_rookie</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.5" build="0.5" key="0028A40FE5F0200D7BA421B1984A6141392DDD94B48251365E6857BBD67B978B01C776130C9683850000000000000000000000000000000000000000338C3003"/>
+                <BodyProperties version="4" weight="0.5" build="0.5" key="0028A40FE5F0200D7BA421B1984A6141392DDD94B48251365E6857BBD67B978B01C776130C9683850000000000000000000000000000000000000000338C3003" />
                 <tattoo_tags>
                     <tattoo_tag name="harad" />
+                    <tattoo_tag name="harad" />
                 </tattoo_tags>
+                <hair_tags>
+                    <hair_tag name="aserai" />
+                </hair_tags>
             </face>
-            <skills/>
+            <skills>
+                <skill id="OneHanded" value="80" />
+                <skill id="TwoHanded" value="60" />
+                <skill id="Polearm" value="50" />
+                <skill id="Bow" value="75" />
+                <skill id="Crossbow" value="65" />
+                <skill id="Throwing" value="25" />
+                <skill id="Riding" value="100" />
+                <skill id="Athletics" value="70" />
+                <skill id="Crafting" value="55" />
+                <skill id="Scouting" value="80" />
+                <skill id="Tactics" value="110" />
+                <skill id="Roguery" value="40" />
+                <skill id="Charm" value="130" />
+                <skill id="Leadership" value="140" />
+                <skill id="Trade" value="95" />
+                <skill id="Steward" value="125" />
+                <skill id="Medicine" value="120" />
+                <skill id="Engineering" value="60" />
+            </skills>
             <Traits>
             </Traits>
             <Equipments>
@@ -11493,10 +12159,14 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.5" build="0.5" key="00333C0E66FC10107A75B5227776955DAA32B8696C098CE8698934134582A37801A776130AC954A5000000000000000000000000000000000000000031440003"/>
+                <BodyProperties version="4" weight="0.5" build="0.5" key="00333C0E66FC10107A75B5227776955DAA32B8696C098CE8698934134582A37801A776130AC954A5000000000000000000000000000000000000000031440003" />
                 <tattoo_tags>
                     <tattoo_tag name="harad" />
+                    <tattoo_tag name="harad" />
                 </tattoo_tags>
+                <hair_tags>
+                    <hair_tag name="aserai" />
+                </hair_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="235" />
@@ -11551,10 +12221,14 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.5" build="0.5" key="00281C0B678410014495955AC76645777ACE633B7A944788995887A99C8DDBA50157761305557C45000000000000000000000000000000000000000030B410C3"/>
+                <BodyProperties version="4" weight="0.5" build="0.5" key="00281C0B678410014495955AC76645777ACE633B7A944788995887A99C8DDBA50157761305557C45000000000000000000000000000000000000000030B410C3" />
                 <tattoo_tags>
                     <tattoo_tag name="harad" />
+                    <tattoo_tag name="harad" />
                 </tattoo_tags>
+                <hair_tags>
+                    <hair_tag name="aserai" />
+                </hair_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="235" />
@@ -11609,10 +12283,14 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.5" build="0.5" key="0033640B68903011677343968A67954791464A7576DB8A4BD358B8497D53B6AB0187761308C59A69000000000000000000000000000000000000000031042003"/>
+                <BodyProperties version="4" weight="0.5" build="0.5" key="0033640B68903011677343968A67954791464A7576DB8A4BD358B8497D53B6AB0187761308C59A69000000000000000000000000000000000000000031042003" />
                 <tattoo_tags>
                     <tattoo_tag name="harad" />
+                    <tattoo_tag name="harad" />
                 </tattoo_tags>
+                <hair_tags>
+                    <hair_tag name="aserai" />
+                </hair_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="160" />
@@ -11663,16 +12341,42 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">false</xsl:attribute>
             <xsl:attribute name="culture">Culture.aserai</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_intriguer_skills_rookie</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.spc_knight_skills_rookie</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.5" build="0.5" key="0028580E5FDC130D755797AA334A25ED82C384356C3687C239B7CAA5876879580137761303A69CA6000000000000000000000000000000000000000030541002"/>
+                <BodyProperties version="4" weight="0.5" build="0.5" key="0028580E5FDC130D755797AA334A25ED82C384356C3687C239B7CAA5876879580137761303A69CA6000000000000000000000000000000000000000030541002" />
                 <tattoo_tags>
                     <tattoo_tag name="harad" />
+                    <tattoo_tag name="harad" />
                 </tattoo_tags>
+                <hair_tags>
+                    <hair_tag name="aserai" />
+                </hair_tags>
+                <beard_tags>
+                    <beard_tag name="aserai" />
+                </beard_tags>
             </face>
-            <skills/>
+            <skills>
+                <skill id="OneHanded" value="110" />
+                <skill id="TwoHanded" value="90" />
+                <skill id="Polearm" value="125" />
+                <skill id="Bow" value="60" />
+                <skill id="Crossbow" value="55" />
+                <skill id="Throwing" value="55" />
+                <skill id="Riding" value="130" />
+                <skill id="Athletics" value="90" />
+                <skill id="Crafting" value="40" />
+                <skill id="Scouting" value="85" />
+                <skill id="Tactics" value="100" />
+                <skill id="Roguery" value="15" />
+                <skill id="Charm" value="95" />
+                <skill id="Leadership" value="115" />
+                <skill id="Trade" value="30" />
+                <skill id="Steward" value="70" />
+                <skill id="Medicine" value="60" />
+                <skill id="Engineering" value="25" />
+            </skills>
             <Traits>
             </Traits>
             <Equipments>
@@ -11698,10 +12402,14 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.4784" build="0.5191" key="0016C808A2981597BA83341737814FC43B578027A2557115ABB98E678A0A6867049870460979E5240000000000000000000000000000000000000000253850C0"/>
+                <BodyProperties version="4" weight="0.4784" build="0.5191" key="0016C808A2981597BA83341737814FC43B578027A2557115ABB98E678A0A6867049870460979E5240000000000000000000000000000000000000000253850C0" />
                 <tattoo_tags>
                     <tattoo_tag name="harad" />
+                    <tattoo_tag name="harad" />
                 </tattoo_tags>
+                <hair_tags>
+                    <hair_tag name="aserai" />
+                </hair_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="230" />
@@ -11756,10 +12464,14 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.5" build="0.5" key="0028780FE3A40004C774C93FC6B607A25B78358D77AA3A167785D8575938737C0167761306A6AB4600000000000000000000000000000000000000004ABC10C4"/>
+                <BodyProperties version="4" weight="0.5" build="0.5" key="0028780FE3A40004C774C93FC6B607A25B78358D77AA3A167785D8575938737C0167761306A6AB4600000000000000000000000000000000000000004ABC10C4" />
                 <tattoo_tags>
                     <tattoo_tag name="harad" />
+                    <tattoo_tag name="harad" />
                 </tattoo_tags>
+                <hair_tags>
+                    <hair_tag name="aserai" />
+                </hair_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="230" />
@@ -11814,10 +12526,14 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.5" build="0.5" key="001C240FE4B010037AC4EAE9849538381157953AB4819A17898B5984272D3C660187761308B6393700000000000000000000000000000000000000002F0440C4"/>
+                <BodyProperties version="4" weight="0.5" build="0.5" key="001C240FE4B010037AC4EAE9849538381157953AB4819A17898B5984272D3C660187761308B6393700000000000000000000000000000000000000002F0440C4" />
                 <tattoo_tags>
                     <tattoo_tag name="harad" />
+                    <tattoo_tag name="harad" />
                 </tattoo_tags>
+                <hair_tags>
+                    <hair_tag name="aserai" />
+                </hair_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="230" />
@@ -11872,10 +12588,14 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.5" build="0.5" key="0028A40CE6C410068A9277BB6B3788C8B8A9C36AB6AAC46A436AB719877B887401B776130BA539B70000000000000000000000000000000000000000197C3003"/>
+                <BodyProperties version="4" weight="0.5" build="0.5" key="0028A40CE6C410068A9277BB6B3788C8B8A9C36AB6AAC46A436AB719877B887401B776130BA539B70000000000000000000000000000000000000000197C3003" />
                 <tattoo_tags>
                     <tattoo_tag name="harad" />
+                    <tattoo_tag name="harad" />
                 </tattoo_tags>
+                <hair_tags>
+                    <hair_tag name="aserai" />
+                </hair_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="60" />
@@ -11930,10 +12650,14 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.5" build="0.5" key="0028540FE7D0000ABB6D8984A3778C5557A97866E85A9D87A87587757CA534BB0187761308A5866B00000000000000000000000000000000000000006D042003"/>
+                <BodyProperties version="4" weight="0.5" build="0.5" key="0028540FE7D0000ABB6D8984A3778C5557A97866E85A9D87A87587757CA534BB0187761308A5866B00000000000000000000000000000000000000006D042003" />
                 <tattoo_tags>
                     <tattoo_tag name="harad" />
+                    <tattoo_tag name="harad" />
                 </tattoo_tags>
+                <hair_tags>
+                    <hair_tag name="aserai" />
+                </hair_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="60" />
@@ -11988,10 +12712,14 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.5" build="0.5" key="0039580CE8DC000598A7094768948C7BBC777A3B9939A865A968C3CE8A95D3CA0137761303865A560000000000000000000000000000000000000000587440C3"/>
+                <BodyProperties version="4" weight="0.5" build="0.5" key="0039580CE8DC000598A7094768948C7BBC777A3B9939A865A968C3CE8A95D3CA0137761303865A560000000000000000000000000000000000000000587440C3" />
                 <tattoo_tags>
                     <tattoo_tag name="harad" />
+                    <tattoo_tag name="harad" />
                 </tattoo_tags>
+                <hair_tags>
+                    <hair_tag name="aserai" />
+                </hair_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="40" />
@@ -12046,10 +12774,14 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.5" build="0.5" key="0022640A22E820064A37ACFE612B9A4AACB69A98683BB57DB7965D8AC65346250187761308627CDB0000000000000000000000000000000000000000270C3043"/>
+                <BodyProperties version="4" weight="0.5" build="0.5" key="0022640A22E820064A37ACFE612B9A4AACB69A98683BB57DB7965D8AC65346250187761308627CDB0000000000000000000000000000000000000000270C3043" />
                 <tattoo_tags>
                     <tattoo_tag name="harad" />
+                    <tattoo_tag name="harad" />
                 </tattoo_tags>
+                <hair_tags>
+                    <hair_tag name="aserai" />
+                </hair_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="60" />
@@ -12104,10 +12836,14 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.5" build="0.5" key="0028540E63F03001722BD61A88448B8B8985B5B635BF97A4BABEA16D8882527C0167761306957C88000000000000000000000000000000000000000048D400C3"/>
+                <BodyProperties version="4" weight="0.5" build="0.5" key="0028540E63F03001722BD61A88448B8B8985B5B635BF97A4BABEA16D8882527C0167761306957C88000000000000000000000000000000000000000048D400C3" />
                 <tattoo_tags>
                     <tattoo_tag name="harad" />
+                    <tattoo_tag name="harad" />
                 </tattoo_tags>
+                <hair_tags>
+                    <hair_tag name="aserai" />
+                </hair_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="160" />
@@ -12162,10 +12898,14 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.5" build="0.5" key="0022700CE4FC101263B8C87941868498779B3D75E97B5678C27788B8C8AE759501B776130B95A6650000000000000000000000000000000000000000396C00C3"/>
+                <BodyProperties version="4" weight="0.5" build="0.5" key="0022700CE4FC101263B8C87941868498779B3D75E97B5678C27788B8C8AE759501B776130B95A6650000000000000000000000000000000000000000396C00C3" />
                 <tattoo_tags>
                     <tattoo_tag name="harad" />
+                    <tattoo_tag name="harad" />
                 </tattoo_tags>
+                <hair_tags>
+                    <hair_tag name="aserai" />
+                </hair_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="40" />
@@ -12216,16 +12956,39 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.aserai</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_spy_master_skills_rookie</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.spc_matriarch_skills_rookie</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.5" build="0.5" key="0028240E63BC200E38B5E59AB258BA6668952E7A5AD5B8797BC7A8E8796233690177761307C6896400000000000000000000000000000000000000003EEC10C3"/>
+                <BodyProperties version="4" weight="0.5" build="0.5" key="0028240E63BC200E38B5E59AB258BA6668952E7A5AD5B8797BC7A8E8796233690177761307C6896400000000000000000000000000000000000000003EEC10C3" />
                 <tattoo_tags>
                     <tattoo_tag name="harad" />
+                    <tattoo_tag name="harad" />
                 </tattoo_tags>
+                <hair_tags>
+                    <hair_tag name="aserai" />
+                </hair_tags>
             </face>
-            <skills/>
+            <skills>
+                <skill id="OneHanded" value="80" />
+                <skill id="TwoHanded" value="60" />
+                <skill id="Polearm" value="50" />
+                <skill id="Bow" value="75" />
+                <skill id="Crossbow" value="65" />
+                <skill id="Throwing" value="25" />
+                <skill id="Riding" value="100" />
+                <skill id="Athletics" value="70" />
+                <skill id="Crafting" value="55" />
+                <skill id="Scouting" value="80" />
+                <skill id="Tactics" value="110" />
+                <skill id="Roguery" value="40" />
+                <skill id="Charm" value="130" />
+                <skill id="Leadership" value="140" />
+                <skill id="Trade" value="95" />
+                <skill id="Steward" value="125" />
+                <skill id="Medicine" value="120" />
+                <skill id="Engineering" value="60" />
+            </skills>
             <Traits>
             </Traits>
             <Equipments>
@@ -12251,10 +13014,14 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.5" build="0.5" key="0022700CE690300258D8AD87875435B9EA4385AA274487967CCCCB676A89755A0137761303B03A99000000000000000000000000000000000000000038643004"/>
+                <BodyProperties version="4" weight="0.5" build="0.5" key="0022700CE690300258D8AD87875435B9EA4385AA274487967CCCCB676A89755A0137761303B03A99000000000000000000000000000000000000000038643004" />
                 <tattoo_tags>
                     <tattoo_tag name="harad" />
+                    <tattoo_tag name="harad" />
                 </tattoo_tags>
+                <hair_tags>
+                    <hair_tag name="aserai" />
+                </hair_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="40" />
@@ -12476,7 +13243,7 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.4706" build="0.6001" key="0005180A00CC00049172105733863178A76987A967716698AB94AE398C6A5582036976350666486B00000000000000000000000000000000000000002EDC2042"/>
+                <BodyProperties version="4" weight="0.4706" build="0.6001" key="0005180140CC00049172105733863178A76987A967716698AB94AE398C6A5582036976350666486B00000000000000000000000000000000000000002EDC2042"/>
             </face>
             <skills>
                 <skill id="OneHanded" value="60" />
@@ -12531,7 +13298,7 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.5517" build="0.5949" key="000B60014000234665734C57613665A5354588837351AC1455E8373672131432037980350768BB63000000000000000000000000000000000000000026E01082"/>
+                <BodyProperties version="4" weight="0.5517" build="0.5949" key="000760014000234665734C57613665A5354588837351AC1455E8373672131432037980350768BB63000000000000000000000000000000000000000026E01082"/>
             </face>
             <skills>
                 <skill id="OneHanded" value="235" />
@@ -12856,7 +13623,7 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" key="00127C04403C3004B7D8465988D98C845A24288FAD8AB786279B9CAA78AA48B500059A43059AA965000000000000000000000000000000000000000000282000"/>
+                <BodyProperties version="4" key="00027C04403C3004B7D8465988D98C845A24288FAD8AB786279B9CAA78AA48B500059A43059AA965000000000000000000000000000000000000000000282000"/>
             </face>
             <skills>
                 <skill id="OneHanded" value="40" />
@@ -13019,7 +13786,7 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.6404" build="0.6682" key="0005B008800039CD48802D04476A22F69E19714BC2BB1B05FF6F00777B853103027AA0240759705000000000000000000000000000000000000000007CE82001"/>
+                <BodyProperties version="4" weight="0.6404" build="0.6682" key="0005B004800039CD48802D04476A22F69E19714BC2BB1B05FF6F00777B853103027AA0240759705000000000000000000000000000000000000000007CE82001"/>
             </face>
             <skills>
                 <skill id="OneHanded" value="230" />
@@ -13127,7 +13894,7 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.6561" build="0.7254" key="000A1C044000200213731F53422567A40340782A62818C5644865A2982340431017BA01307534CA3000000000000000000000000000000000000000024F070C4"/>
+                <BodyProperties version="4" weight="0.6561" build="0.7254" key="00061C044000200213731F53422567A40340782A62818C5644865A2982340431017BA01307534CA3000000000000000000000000000000000000000024F070C4"/>
             </face>
             <skills>
                 <skill id="OneHanded" value="160" />
@@ -13235,7 +14002,7 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="1" build="0.6157" key="000AD40000001343EE7E000F4AAB0022AB5E70F090EDE6067446100F8B5B0F080099F60309F6E0FE00000000000000000000000000000000000000003D2C7002"/>
+                <BodyProperties version="4" weight="1" build="0.6157" key="0006D40000001343EE7E000F4AAB0022AB5E70F090EDE6067446100F8B5B0F080099F60309F6E0FE00000000000000000000000000000000000000003D2C7002"/>
             </face>
             <skills>
                 <skill id="OneHanded" value="265" />
@@ -13344,7 +14111,7 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" key="00055C0880BC0245678789A8C8B6C2728588854B98886843B5DCD6C879C689370005676409844933000000000000000000000000000000000000000000F08000"/>
+                <BodyProperties version="4" key="00055C0480BC0245678789A8C8B6C2728588854B98886843B5DCD6C879C689370005676409844933000000000000000000000000000000000000000000F08000"/>
             </face>
             <skills>
                 <skill id="OneHanded" value="200" />
@@ -13398,7 +14165,7 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" key="00055C0880BC0245678789A8C8B6C2728588854B98886843B5DCD6C879C689370005676409844933000000000000000000000000000000000000000000F08000"/>
+                <BodyProperties version="4" key="00055C0480BC0245678789A8C8B6C2728588854B98886843B5DCD6C879C689370005676409844933000000000000000000000000000000000000000000F08000"/>
             </face>
             <skills>
                 <skill id="OneHanded" value="230" />
@@ -13722,7 +14489,7 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.38" build="0.1644" key="0000500FC0CC100378A061BC61A180068D4BA177F0C1E601B0FF1B008FE78B00007276030720F81100000000000000000000000000000000000000003AF40102"/>
+                <BodyProperties version="4" weight="0.38" build="0.1644" key="0000500240CC100378A061BC61A180068D4BA177F0C1E601B0FF1B008FE78B00007276030720F81100000000000000000000000000000000000000003AF40102"/>
             </face>
             <skills>
                 <skill id="OneHanded" value="230" />
@@ -13830,7 +14597,7 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" key="000B48058FFC300578E42AAB88C6A5BD924B6988339398973D8EA8676AA7686500056D2507336C86000000000000000000000000000000000000000000C81000"/>
+                <BodyProperties version="4" key="000748058FFC300578E42AAB88C6A5BD924B6988339398973D8EA8676AA7686500056D2507336C86000000000000000000000000000000000000000000C81000"/>
             </face>
             <skills>
                 <skill id="OneHanded" value="250" />
@@ -13884,7 +14651,7 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.4491" build="0.7222" key="000A14080000168200800A1F0530F00E660F8960B08860020019011F8E0BA101008B76030805E60600000000000000000000000000000000000000003F049002"/>
+                <BodyProperties version="4" weight="0.4491" build="0.7222" key="000614040000168200800A1F0530F00E660F8960B08860020019011F8E0BA101008B76030805E60600000000000000000000000000000000000000003F049002"/>
             </face>
             <skills>
                 <skill id="OneHanded" value="230" />
@@ -13938,7 +14705,7 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0" build="0.5" key="0008D40A400010149E70FF0790609008AB9D709070EF9600744D70098DB2D404007706030707A09500000000000000000000000000000000000000003CF47042"/>
+                <BodyProperties version="4" weight="0" build="0.5" key="0008D401800010149E70FF0790609008AB9D709070EF9600744D70098DB2D404007706030707A09500000000000000000000000000000000000000003CF47042"/>
             </face>
             <skills>
                 <skill id="OneHanded" value="235" />
@@ -13983,7 +14750,7 @@
         <xsl:copy>
             <xsl:attribute name="id">lord_4_3_1</xsl:attribute>
             <xsl:attribute name="name">{=aom_lord_4_3_1_name}Éomer Eoforing</xsl:attribute>
-            <xsl:attribute name="age">22</xsl:attribute>
+            <xsl:attribute name="age">21</xsl:attribute>
             <xsl:attribute name="voice">ironic</xsl:attribute>
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
@@ -13993,7 +14760,16 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.1" build="0.5" key="0002B404000011826B700D6F80961035305E80B2BFEB0E00775161048C771F0400AB36030A62AA0300000000000000000000000000000000000000003D447002"/>
+                <BodyProperties version="4" weight="0.1" build="0.5" key="0002B404000011826B700D6F80961035305E80B2BFEB0E00775161048C771F0400AB36030A62AA0300000000000000000000000000000000000000003D447002" />
+                <hair_tags>
+                    <hair_tag name="vlandia" />
+                </hair_tags>
+                <beard_tags>
+                    <beard_tag name="vlandia" />
+                </beard_tags>
+                <tattoo_tags>
+                    <tattoo_tag name="Cleanface" />
+                </tattoo_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="285" />
@@ -14038,7 +14814,7 @@
         <xsl:copy>
             <xsl:attribute name="id">lord_4_6_1</xsl:attribute>
             <xsl:attribute name="name">{=aom_lord_4_6_1_name}Déorwyn Grimingas</xsl:attribute>
-            <xsl:attribute name="age">22</xsl:attribute>
+            <xsl:attribute name="age">18</xsl:attribute>
             <xsl:attribute name="voice">curt</xsl:attribute>
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
@@ -14048,7 +14824,13 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.5" build="0.5" key="000B040B4070300A59453CA886740D767888B63281AA8878BC957C5659C2945701777613078AB58600000000000000000000000000000000000000006AF420C3"/>
+                <BodyProperties version="4" weight="0.5" build="0.5" key="000704028070300A59453CA886740D767888B63281AA8878BC957C5659C2945701777613078AB58600000000000000000000000000000000000000006AF420C3" />
+                <hair_tags>
+                    <hair_tag name="vlandia" />
+                </hair_tags>
+                <tattoo_tags>
+                    <tattoo_tag name="Cleanface" />
+                </tattoo_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="210" />
@@ -14093,8 +14875,8 @@
         <xsl:copy>
             <xsl:attribute name="id">lord_4_16_1</xsl:attribute>
             <xsl:attribute name="name">{=aom_lord_4_16_1_name}Mérthú Felánding</xsl:attribute>
-            <xsl:attribute name="age">18</xsl:attribute>
-            <xsl:attribute name="voice">softspoken</xsl:attribute>
+            <xsl:attribute name="age">41</xsl:attribute>
+            <xsl:attribute name="voice">ironic</xsl:attribute>
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
@@ -14103,7 +14885,13 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.4524" build="0.5804" key="0005340140CC00017071527435736265B7BE7A79B0614997BAB7F9397C2A987203597635053CBA5A00000000000000000000000000000000000000005CB41044"/>
+                <BodyProperties version="4" weight="0.4524" build="0.5804" key="0005340140CC00017071527435736265B7BE7A79B0614997BAB7F9397C2A987203597635053CBA5A00000000000000000000000000000000000000005CB41044" />
+                <hair_tags>
+                    <hair_tag name="vlandia" />
+                </hair_tags>
+                <tattoo_tags>
+                    <tattoo_tag name="Cleanface" />
+                </tattoo_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="60" />
@@ -14158,7 +14946,13 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.5" build="0.5" key="000B680A1070000AB27B84CD4CC38B9CBA75B4AABB9AC152965A9D22CEADBE45019776130998732700000000000000000000000000000000000000001B2C2084"/>
+                <BodyProperties version="4" weight="0.5" build="0.5" key="000768015070000AB27B84CD4CC38B9CBA75B4AABB9AC152965A9D22CEADBE45019776130998732700000000000000000000000000000000000000001B2C2084" age="25.84" />
+                <hair_tags>
+                    <hair_tag name="vlandia" />
+                </hair_tags>
+                <tattoo_tags>
+                    <tattoo_tag name="Cleanface" />
+                </tattoo_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="60" />
@@ -14203,7 +14997,7 @@
         <xsl:copy>
             <xsl:attribute name="id">lord_4_22_1</xsl:attribute>
             <xsl:attribute name="name">{=aom_lord_4_22_1_name}Sunnifa Celmunding</xsl:attribute>
-            <xsl:attribute name="age">27</xsl:attribute>
+            <xsl:attribute name="age">35</xsl:attribute>
             <xsl:attribute name="voice">softspoken</xsl:attribute>
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
@@ -14213,7 +15007,13 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.2639" build="0.7222" key="000D3C0140FC0001E08010E3E2E7E2117EF887621E988104A009041F8A870A07009B4603090CE6F500000000000000000000000000000000000000003F1C2003"/>
+                <BodyProperties version="4" weight="0.2639" build="0.7222" key="00033C0140FC0001E08010E3E2E7E2117EF887621E988104A009041F8A870A07009B4603090CE6F500000000000000000000000000000000000000003F1C2003" age="40.15" />
+                <hair_tags>
+                    <hair_tag name="vlandia" />
+                </hair_tags>
+                <tattoo_tags>
+                    <tattoo_tag name="Cleanface" />
+                </tattoo_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="60" />
@@ -14258,7 +15058,7 @@
         <xsl:copy>
             <xsl:attribute name="id">lord_4_23_1</xsl:attribute>
             <xsl:attribute name="name">{=aom_lord_4_23_1_name}Wulfwynn Marhad</xsl:attribute>
-            <xsl:attribute name="age">24</xsl:attribute>
+            <xsl:attribute name="age">61</xsl:attribute>
             <xsl:attribute name="voice">curt</xsl:attribute>
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
@@ -14268,7 +15068,13 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="1" build="1" key="0002A8001114300AE08F900FBB63021176F8806C1F970104A009F01B8A87009A009FF603090FE7FC00000000000000000000000000000000000000003F1C2003"/>
+                <BodyProperties version="4" weight="1" build="1" key="0002A8001114300AE08F900FBB63021176F8806C1F970104A009F01B8A87009A009FF603090FE7FC00000000000000000000000000000000000000003F1C2003" age="60.15" />
+                <hair_tags>
+                    <hair_tag name="vlandia" />
+                </hair_tags>
+                <tattoo_tags>
+                    <tattoo_tag name="Cleanface" />
+                </tattoo_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="60" />
@@ -14313,7 +15119,7 @@
         <xsl:copy>
             <xsl:attribute name="id">lord_4_23_2</xsl:attribute>
             <xsl:attribute name="name">{=aom_lord_4_23_2_name}Eleduran Marhad</xsl:attribute>
-            <xsl:attribute name="age">22</xsl:attribute>
+            <xsl:attribute name="age">19</xsl:attribute>
             <xsl:attribute name="voice">curt</xsl:attribute>
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
@@ -14323,7 +15129,16 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.5" build="0.5" key="0000740E4044000B3969339927553498A84BB8A877D96D6645597984592A439501477613046A3907000000000000000000000000000000000000000050942043"/>
+                <BodyProperties version="4" weight="0.5" build="0.5" key="00007400C044000B3969339927553498A84BB8A877D96D6645597984592A439501477613046A3907000000000000000000000000000000000000000050942043" />
+                <hair_tags>
+                    <hair_tag name="vlandia" />
+                </hair_tags>
+                <beard_tags>
+                    <beard_tag name="vlandia" />
+                </beard_tags>
+                <tattoo_tags>
+                    <tattoo_tag name="Cleanface" />
+                </tattoo_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="180" />
@@ -14378,7 +15193,16 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.5" build="0.5" key="0000740E4044000B3969339927553498A84BB8A877D96D6645597984592A439501477613046A3907000000000000000000000000000000000000000050942043"/>
+                <BodyProperties version="4" weight="0.5" build="0.5" key="00007400C044000B3969339927553498A84BB8A877D96D6645597984592A439501477613046A3907000000000000000000000000000000000000000050942043" />
+                <hair_tags>
+                    <hair_tag name="vlandia" />
+                </hair_tags>
+                <beard_tags>
+                    <beard_tag name="vlandia" />
+                </beard_tags>
+                <tattoo_tags>
+                    <tattoo_tag name="Cleanface" />
+                </tattoo_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="170" />
@@ -14433,7 +15257,13 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.5" build="0.5" key="0000540E4070100B9D95A3A74EA8C8B848778365688C85437456344D43777968014776130475B2940000000000000000000000000000000000000000268C30C4"/>
+                <BodyProperties version="4" weight="0.5" build="0.5" key="00005400C070100B9D95A3A74EA8C8B848778365688C85437456344D43777968014776130475B2940000000000000000000000000000000000000000268C30C4" />
+                <hair_tags>
+                    <hair_tag name="vlandia" />
+                </hair_tags>
+                <tattoo_tags>
+                    <tattoo_tag name="Cleanface" />
+                </tattoo_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="40" />
@@ -14478,46 +15308,52 @@
         <xsl:copy>
             <xsl:attribute name="id">lord_4_27_1</xsl:attribute>
             <xsl:attribute name="name">{=aom_lord_4_27_1_name}Wærburg Æthellafing</xsl:attribute>
-            <xsl:attribute name="age">23</xsl:attribute>
+            <xsl:attribute name="age">49</xsl:attribute>
             <xsl:attribute name="voice">curt</xsl:attribute>
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.vlandia</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.taom_rohan_young_lady_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_rohan_lady_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.4769" build="0.6042" key="000D3006D014200A8E8000120BC13021A78A806C0FC77034A4591B1C8A87119900797603070CEF0C00000000000000000000000000000000000000003EFC2003"/>
+                <BodyProperties version="4" weight="0.4769" build="0.6042" key="00033006D014200A8E8000120BC13021A78A806C0FC77034A4591B1C8A87119900797603070CEF0C00000000000000000000000000000000000000003EFC2003" age="45.15" />
+                <hair_tags>
+                    <hair_tag name="vlandia" />
+                </hair_tags>
+                <tattoo_tags>
+                    <tattoo_tag name="Cleanface" />
+                </tattoo_tags>
             </face>
             <skills>
-                <skill id="OneHanded" value="40" />
-                <skill id="TwoHanded" value="20" />
-                <skill id="Polearm" value="30" />
+                <skill id="OneHanded" value="60" />
+                <skill id="TwoHanded" value="30" />
+                <skill id="Polearm" value="50" />
                 <skill id="Bow" value="70" />
-                <skill id="Crossbow" value="40" />
-                <skill id="Throwing" value="40" />
-                <skill id="Riding" value="120" />
-                <skill id="Athletics" value="100" />
-                <skill id="Crafting" value="110" />
-                <skill id="Scouting" value="90" />
-                <skill id="Tactics" value="123" />
-                <skill id="Roguery" value="50" />
-                <skill id="Charm" value="180" />
-                <skill id="Leadership" value="132" />
-                <skill id="Trade" value="130" />
-                <skill id="Steward" value="177" />
-                <skill id="Medicine" value="150" />
-                <skill id="Engineering" value="100" />
+                <skill id="Crossbow" value="50" />
+                <skill id="Throwing" value="50" />
+                <skill id="Riding" value="140" />
+                <skill id="Athletics" value="110" />
+                <skill id="Crafting" value="140" />
+                <skill id="Scouting" value="110" />
+                <skill id="Tactics" value="153" />
+                <skill id="Roguery" value="60" />
+                <skill id="Charm" value="240" />
+                <skill id="Leadership" value="172" />
+                <skill id="Trade" value="180" />
+                <skill id="Steward" value="247" />
+                <skill id="Medicine" value="210" />
+                <skill id="Engineering" value="130" />
             </skills>
             <Traits>
-                <Trait id="Honor" value="1" />
-                <Trait id="Generosity" value="1" />
+                <Trait id="Honor" value="2" />
+                <Trait id="Generosity" value="2" />
                 <Trait id="Calculating" value="1" />
                 <Trait id="Mercy" value="2" />
                 <Trait id="Valor" value="0" />
                 <Trait id="Egalitarian" value="1" />
-                <Trait id="Oligarchic" value="0" />
+                <Trait id="Oligarchic" value="1" />
                 <Trait id="Authoritarian" value="0" />
             </Traits>
             <Equipments>
@@ -14533,47 +15369,60 @@
         <xsl:copy>
             <xsl:attribute name="id">lord_4_28_1</xsl:attribute>
             <xsl:attribute name="name">{=aom_lord_4_28_1_name}Morcar</xsl:attribute>
-            <xsl:attribute name="age">20</xsl:attribute>
+            <xsl:attribute name="age">9</xsl:attribute>
             <xsl:attribute name="voice">curt</xsl:attribute>
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">false</xsl:attribute>
             <xsl:attribute name="culture">Culture.vlandia</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.taom_rohan_young_lord_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.spc_faris_skills_rookie</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0" build="0.5" key="0008240D800013820E70FF0790680008AB9D709079EF9B01744D7B098942D474007706030707A3F500000000000000000000000000000000000000003CF45042"/>
+                <BodyProperties version="4" weight="0" build="0.5" key="00082404C00013820E70FF0790680008AB9D709079EF9B01744D7B098942D474007706030707A3F500000000000000000000000000000000000000003CF45042" age="12.16" />
+                <hair_tags>
+                    <hair_tag name="vlandia" />
+                </hair_tags>
+                <beard_tags>
+                    <beard_tag name="vlandia" />
+                </beard_tags>
+                <tattoo_tags>
+                    <tattoo_tag name="Cleanface" />
+                </tattoo_tags>
             </face>
             <skills>
-                <skill id="OneHanded" value="160" />
-                <skill id="TwoHanded" value="120" />
-                <skill id="Polearm" value="140" />
-                <skill id="Bow" value="90" />
-                <skill id="Crossbow" value="70" />
-                <skill id="Throwing" value="100" />
-                <skill id="Riding" value="190" />
-                <skill id="Athletics" value="180" />
-                <skill id="Crafting" value="60" />
-                <skill id="Scouting" value="140" />
-                <skill id="Tactics" value="153" />
-                <skill id="Roguery" value="60" />
-                <skill id="Charm" value="140" />
-                <skill id="Leadership" value="132" />
-                <skill id="Trade" value="80" />
-                <skill id="Steward" value="117" />
-                <skill id="Medicine" value="80" />
-                <skill id="Engineering" value="80" />
+                <skill id="OneHanded" value="85" />
+                <skill id="TwoHanded" value="55" />
+                <skill id="Polearm" value="100" />
+                <skill id="Bow" value="130" />
+                <skill id="Crossbow" value="10" />
+                <skill id="Throwing" value="75" />
+                <skill id="Riding" value="130" />
+                <skill id="Athletics" value="110" />
+                <skill id="Crafting" value="30" />
+                <skill id="Scouting" value="120" />
+                <skill id="Tactics" value="115" />
+                <skill id="Roguery" value="65" />
+                <skill id="Charm" value="90" />
+                <skill id="Leadership" value="100" />
+                <skill id="Trade" value="45" />
+                <skill id="Steward" value="35" />
+                <skill id="Medicine" value="40" />
+                <skill id="Engineering" value="25" />
             </skills>
             <Traits>
                 <Trait id="Honor" value="2" />
                 <Trait id="Generosity" value="1" />
                 <Trait id="Calculating" value="0" />
-                <Trait id="Mercy" value="1" />
+                <Trait id="Mercy" value="0" />
                 <Trait id="Valor" value="2" />
-                <Trait id="Egalitarian" value="0" />
-                <Trait id="Oligarchic" value="1" />
-                <Trait id="Authoritarian" value="0" />
+                <Trait id="Egalitarian" value="1" />
+                <Trait id="Oligarchic" value="0" />
+                <Trait id="Authoritarian" value="1" />
+                <Trait id="KnightFightingSkills" value="8" />
+                <Trait id="Commander" value="5" />
+                <Trait id="Manager" value="2" />
+                <Trait id="Politician" value="8" />
             </Traits>
             <Equipments>
                 <EquipmentSet id="rohan_bat_template_medium_a" />
@@ -14588,7 +15437,7 @@
         <xsl:copy>
             <xsl:attribute name="id">lord_4_28_2</xsl:attribute>
             <xsl:attribute name="name">{=aom_lord_4_28_2_name}Hereswith</xsl:attribute>
-            <xsl:attribute name="age">18</xsl:attribute>
+            <xsl:attribute name="age">6</xsl:attribute>
             <xsl:attribute name="voice">curt</xsl:attribute>
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
@@ -14598,7 +15447,13 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.1574" build="0.5602" key="000A200150B4000A6E8000100BC79001A269846C0A811013A579051C89F71BA6007826030703760000000000000000000000000000000000000000003EE40003"/>
+                <BodyProperties version="4" weight="0.1574" build="0.5602" key="0006200150B4000A6E8000100BC79001A269846C0A811013A579051C89F71BA6007826030703760000000000000000000000000000000000000000003EE40003" age="10.15" />
+                <hair_tags>
+                    <hair_tag name="vlandia" />
+                </hair_tags>
+                <tattoo_tags>
+                    <tattoo_tag name="Cleanface" />
+                </tattoo_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="40" />
@@ -14643,7 +15498,7 @@
         <xsl:copy>
             <xsl:attribute name="id">lord_V11_l</xsl:attribute>
             <xsl:attribute name="name">{=aom_lord_V11_l_name}Léomund Deáfringas</xsl:attribute>
-            <xsl:attribute name="age">48</xsl:attribute>
+            <xsl:attribute name="age">45</xsl:attribute>
             <xsl:attribute name="voice">curt</xsl:attribute>
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
@@ -14653,7 +15508,16 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.4306" build="0.4699" key="0005CC0D800013436E8F6EF11905A009717CC2604DB77E03C01904008E50E60400776603075AC59900000000000000000000000000000000000000003EFC1002"/>
+                <BodyProperties version="4" weight="0.4306" build="0.4699" key="0005CC04C00013436E8F6EF11905A009717CC2604DB77E03C01904008E50E60400776603075AC59900000000000000000000000000000000000000003EFC1002" age="40.16" />
+                <hair_tags>
+                    <hair_tag name="vlandia" />
+                </hair_tags>
+                <beard_tags>
+                    <beard_tag name="vlandia" />
+                </beard_tags>
+                <tattoo_tags>
+                    <tattoo_tag name="Cleanface" />
+                </tattoo_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="240" />
@@ -14708,7 +15572,14 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.5" build="0.5" key="00164005802C100244849395E765385463ABA4846AA46E7A788D797974658C8901777613077C2D3C00000000000000000000000000000000000000002CEC40C3"/>
+                <BodyProperties version="4" weight="0.5" build="0.5" key="00064005802C100244849395E765385463ABA4846AA46E7A788D797974658C8901777613077C2D3C00000000000000000000000000000000000000002CEC40C3" age="21" />
+                <BodyPropertiesMax version="4" age="22" weight="0.6" build="0.6" key="00164005802C100244849395E765385463ABA4846AA46E7A788D797974658C8901777613077C2D3C00000000000000000000000000000000000000002CEC40C3" />
+                <hair_tags>
+                    <hair_tag name="vlandia" />
+                </hair_tags>
+                <tattoo_tags>
+                    <tattoo_tag name="Cleanface" />
+                </tattoo_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="240" />
@@ -14763,7 +15634,7 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.5" build="0.5" key="00052C089314100B599B39385A8372459867775D8A397A98773789A84B355847019776130946854400000000000000000000000000000000000000003F1C3044"/>
+                <BodyProperties version="4" weight="0.5" build="0.5" key="00052C049314100B599B39385A8372459867775D8A397A98773789A84B355847019776130946854400000000000000000000000000000000000000003F1C3044"/>
             </face>
             <skills>
                 <skill id="OneHanded" value="250" />
@@ -14818,7 +15689,7 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.5" build="0.5" key="00052C089314100B599B39385A8372459867775D8A397A98773789A84B355847019776130946854400000000000000000000000000000000000000003F1C3044"/>
+                <BodyProperties version="4" weight="0.5" build="0.5" key="00052C049314100B599B39385A8372459867775D8A397A98773789A84B355847019776130946854400000000000000000000000000000000000000003F1C3044"/>
             </face>
             <skills>
                 <skill id="OneHanded" value="60" />
@@ -14873,7 +15744,7 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.5" build="0.5" key="00052C089314100B599B39385A8372459867775D8A397A98773789A84B355847019776130946854400000000000000000000000000000000000000003F1C3044"/>
+                <BodyProperties version="4" weight="0.5" build="0.5" key="00052C049314100B599B39385A8372459867775D8A397A98773789A84B355847019776130946854400000000000000000000000000000000000000003F1C3044"/>
             </face>
             <skills>
                 <skill id="OneHanded" value="40" />
@@ -14928,7 +15799,7 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.5" build="0.5" key="00052C089314100B599B39385A8372459867775D8A397A98773789A84B355847019776130946854400000000000000000000000000000000000000003F1C3044"/>
+                <BodyProperties version="4" weight="0.5" build="0.5" key="00052C049314100B599B39385A8372459867775D8A397A98773789A84B355847019776130946854400000000000000000000000000000000000000003F1C3044"/>
             </face>
             <skills>
                 <skill id="OneHanded" value="240" />
@@ -15037,7 +15908,7 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.4" build="0.5" key="00113C0891880002654AAC95A9972C89D33975D5959CC9D4C9754C08398B35770177761307A5606700000000000000000000000000000000000000003EDC0083"/>
+                <BodyProperties version="4" weight="0.4" build="0.5" key="00073C0491880002654AAC95A9972C89D33975D5959CC9D4C9754C08398B35770177761307A5606700000000000000000000000000000000000000003EDC0083"/>
             </face>
             <skills>
                 <skill id="OneHanded" value="40" />
@@ -15091,7 +15962,7 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.4" build="0.5" key="00113C0891880002654AAC95A9972C89D33975D5959CC9D4C9754C08398B35770177761307A5606700000000000000000000000000000000000000003EDC0083"/>
+                <BodyProperties version="4" weight="0.4" build="0.5" key="00073C0491880002654AAC95A9972C89D33975D5959CC9D4C9754C08398B35770177761307A5606700000000000000000000000000000000000000003EDC0083"/>
             </face>
             <skills>
                 <skill id="OneHanded" value="160" />
@@ -15145,7 +16016,7 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.7" build="0.7" key="00113C0891880002654AAC95A9972C89D33975D5959CC9D4C9754C08398B35770177761307A5606700000000000000000000000000000000000000003EDC0083"/>
+                <BodyProperties version="4" weight="0.7" build="0.7" key="00073C0491880002654AAC95A9972C89D33975D5959CC9D4C9754C08398B35770177761307A5606700000000000000000000000000000000000000003EDC0083"/>
             </face>
             <skills>
                 <skill id="OneHanded" value="240" />
@@ -15199,7 +16070,7 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" age="40" weight="0.4766" build="0.5592" key="000D4C0A40CC034D45537629596A6586645E5A74B6B7A9557EABA7C88A714A6603887635084E64880000000000000000000000000000000000000000711C8102"/>
+                <BodyProperties version="4" age="40" weight="0.4766" build="0.5592" key="00034C0180CC034D45537629596A6586645E5A74B6B7A9557EABA7C88A714A6603887635084E64880000000000000000000000000000000000000000711C8102"/>
             </face>
             <skills>
                 <skill id="OneHanded" value="240" />
@@ -16497,13 +17368,38 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.battania</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_fian_skills_rookie</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.spc_chatelaine_skills_rookie</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.5" build="0.5" key="0005A80A11002011D329A8667A46389A549D8877684B673EB664968A87B0D94901477613048EB3AC0000000000000000000000000000000000000000467C2084"/>
+                <BodyProperties version="4" weight="0.5" build="0.5" key="0005A80A11002011D329A8667A46389A549D8877684B673EB664968A87B0D94901477613048EB3AC0000000000000000000000000000000000000000467C2084" />
+                <hair_tags>
+                    <hair_tag name="battania" />
+                </hair_tags>
+                <tattoo_tags>
+                    <tattoo_tag name="Cleanface" />
+                </tattoo_tags>
             </face>
-            <skills/>
+            <skills>
+                <skill id="OneHanded" value="62" />
+                <skill id="TwoHanded" value="80" />
+                <skill id="Polearm" value="50" />
+                <skill id="Bow" value="60" />
+                <skill id="Crossbow" value="50" />
+                <skill id="Throwing" value="55" />
+                <skill id="Riding" value="100" />
+                <skill id="Athletics" value="60" />
+                <skill id="Crafting" value="100" />
+                <skill id="Scouting" value="80" />
+                <skill id="Tactics" value="95" />
+                <skill id="Roguery" value="45" />
+                <skill id="Charm" value="125" />
+                <skill id="Leadership" value="120" />
+                <skill id="Trade" value="100" />
+                <skill id="Steward" value="130" />
+                <skill id="Medicine" value="115" />
+                <skill id="Engineering" value="90" />
+            </skills>
             <Traits>
             </Traits>
             <Equipments>
@@ -16529,7 +17425,13 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.5" build="0.5" key="0000240FD100300D453C497C68747AA8916C58A9C85518B98B75847C3A1893520197761309AB86730000000000000000000000000000000000000000472420C3"/>
+                <BodyProperties version="4" weight="0.5" build="0.5" key="0000240FD100300D453C497C68747AA8916C58A9C85518B98B75847C3A1893520197761309AB86730000000000000000000000000000000000000000472420C3" />
+                <hair_tags>
+                    <hair_tag name="battania" />
+                </hair_tags>
+                <tattoo_tags>
+                    <tattoo_tag name="Cleanface" />
+                </tattoo_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="160" />
@@ -16582,8 +17484,15 @@
             <xsl:attribute name="culture">Culture.battania</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_variag_lord_skills</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.5" build="0.5" key="0000240FD100300D453C497C68747AA8916C58A9C85518B98B75847C3A1893520197761309AB86730000000000000000000000000000000000000000472420C3"/>
+                <BodyProperties version="4" weight="0.5" build="0.5" key="0000240FD100300D453C497C68747AA8916C58A9C85518B98B75847C3A1893520197761309AB86730000000000000000000000000000000000000000472420C3" />
+                <hair_tags>
+                    <hair_tag name="battania" />
+                </hair_tags>
+                <tattoo_tags>
+                    <tattoo_tag name="Cleanface" />
+                </tattoo_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="240" />
@@ -16638,7 +17547,13 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.5" build="0.5" key="001C580FC058100F59AB88926A889A68AA779A998D8ED4767782AC7E2256AA740167761306A4744300000000000000000000000000000000000000003AC42003"/>
+                <BodyProperties version="4" weight="0.5" build="0.5" key="001C580FC058100F59AB88926A889A68AA779A998D8ED4767782AC7E2256AA740167761306A4744300000000000000000000000000000000000000003AC42003" />
+                <hair_tags>
+                    <hair_tag name="battania" />
+                </hair_tags>
+                <tattoo_tags>
+                    <tattoo_tag name="Cleanface" />
+                </tattoo_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="40" />
@@ -16693,7 +17608,13 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.5" build="0.5" key="000BB80893A02008B8C78A899993B688B48B5878B837C8B57B879938C5B85B14019776130989CA850000000000000000000000000000000000000000452C0004"/>
+                <BodyProperties version="4" weight="0.5" build="0.5" key="000BB80893A02008B8C78A899993B688B48B5878B837C8B57B879938C5B85B14019776130989CA850000000000000000000000000000000000000000452C0004" />
+                <hair_tags>
+                    <hair_tag name="battania" />
+                </hair_tags>
+                <tattoo_tags>
+                    <tattoo_tag name="Cleanface" />
+                </tattoo_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="40" />
@@ -16748,7 +17669,13 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.5" build="0.5" key="0005300E4B2C10106286C88D999368A86A9678899D4447A323667BC9A844A3BA01877613083838690000000000000000000000000000000000000000430410C3"/>
+                <BodyProperties version="4" weight="0.5" build="0.5" key="0005300E4B2C10106286C88D999368A86A9678899D4447A323667BC9A844A3BA01877613083838690000000000000000000000000000000000000000430410C3" />
+                <hair_tags>
+                    <hair_tag name="battania" />
+                </hair_tags>
+                <tattoo_tags>
+                    <tattoo_tag name="Cleanface" />
+                </tattoo_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="240" />
@@ -16803,7 +17730,16 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.5" build="0.5" key="00112C0A0FA0000A72557A7C9B879A8897CB1947DBA9DA87A53D947974F6DCB70167761306E83DA3000000000000000000000000000000000000000010CC0083"/>
+                <BodyProperties version="4" weight="0.5" build="0.5" key="00112C0A0FA0000A72557A7C9B879A8897CB1947DBA9DA87A53D947974F6DCB70167761306E83DA3000000000000000000000000000000000000000010CC0083" />
+                <hair_tags>
+                    <hair_tag name="battania" />
+                </hair_tags>
+                <beard_tags>
+                    <beard_tag name="battania" />
+                </beard_tags>
+                <tattoo_tags>
+                    <tattoo_tag name="Cleanface" />
+                </tattoo_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="240" />
@@ -16858,7 +17794,13 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.5" build="0.5" key="000B1C0154440001B544487899A76DA897C66DA64B699855366D7BA96969758401577613059EA3A8000000000000000000000000000000000000000042AC3043"/>
+                <BodyProperties version="4" weight="0.5" build="0.5" key="000B1C0154440001B544487899A76DA897C66DA64B699855366D7BA96969758401577613059EA3A8000000000000000000000000000000000000000042AC3043" />
+                <hair_tags>
+                    <hair_tag name="battania" />
+                </hair_tags>
+                <tattoo_tags>
+                    <tattoo_tag name="Cleanface" />
+                </tattoo_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="240" />
@@ -16913,7 +17855,13 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.5" build="0.5" key="0005880A07CC0008B68B4646A8A6554A7A3983E856C787A768A8682A9457427301C776130C6CA4680000000000000000000000000000000000000000238C2043"/>
+                <BodyProperties version="4" weight="0.5" build="0.5" key="0005880A07CC0008B68B4646A8A6554A7A3983E856C787A768A8682A9457427301C776130C6CA4680000000000000000000000000000000000000000238C2043" />
+                <hair_tags>
+                    <hair_tag name="battania" />
+                </hair_tags>
+                <tattoo_tags>
+                    <tattoo_tag name="Cleanface" />
+                </tattoo_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="40" />
@@ -16968,7 +17916,13 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.5" build="0.5" key="0005600A002C2004569443C64645995CDA6B7ABA5BC4357B7C8694BC995E487801A776130A87872B00000000000000000000000000000000000000001B443083"/>
+                <BodyProperties version="4" weight="0.5" build="0.5" key="0005600A002C2004569443C64645995CDA6B7ABA5BC4357B7C8694BC995E487801A776130A87872B00000000000000000000000000000000000000001B443083" />
+                <hair_tags>
+                    <hair_tag name="battania" />
+                </hair_tags>
+                <tattoo_tags>
+                    <tattoo_tag name="Cleanface" />
+                </tattoo_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="60" />
@@ -17023,7 +17977,13 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.5" build="0.5" key="0005E0070000000D976577688DC974CDB7648B819B9E7598D9BC69B331354EA40187761308552777000000000000000000000000000000000000000022FC1004"/>
+                <BodyProperties version="4" weight="0.5" build="0.5" key="0005E0070000000D976577688DC974CDB7648B819B9E7598D9BC69B331354EA40187761308552777000000000000000000000000000000000000000022FC1004" age="25.84" />
+                <hair_tags>
+                    <hair_tag name="battania" />
+                </hair_tags>
+                <tattoo_tags>
+                    <tattoo_tag name="Cleanface" />
+                </tattoo_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="160" />
@@ -17078,7 +18038,13 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.5" build="0.5" key="0005600CC0FC300B799DA3319A46DB4C77497515CB8AB436568CB7A5B9CA676801B776130B4BAA360000000000000000000000000000000000000000236C4003"/>
+                <BodyProperties version="4" weight="0.5" build="0.5" key="0005600CC0FC300B799DA3319A46DB4C77497515CB8AB436568CB7A5B9CA676801B776130B4BAA360000000000000000000000000000000000000000236C4003" age="25.84" />
+                <hair_tags>
+                    <hair_tag name="battania" />
+                </hair_tags>
+                <tattoo_tags>
+                    <tattoo_tag name="Cleanface" />
+                </tattoo_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="40" />
@@ -17133,7 +18099,13 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" build="0.5" key="000B900145882012209D8E3BA67B69A87A486958763A58B9B675C3C78686798901977613091866AB000000000000000000000000000000000000000071241083"/>
+                <BodyProperties version="4" build="0.5" key="000B900145882012209D8E3BA67B69A87A486958763A58B9B675C3C78686798901977613091866AB000000000000000000000000000000000000000071241083" />
+                <hair_tags>
+                    <hair_tag name="battania" />
+                </hair_tags>
+                <tattoo_tags>
+                    <tattoo_tag name="Cleanface" />
+                </tattoo_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="40" />
@@ -17188,7 +18160,13 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.7257" build="0.8089" key="00025C07000024CAB77216196072AAE6728B78827641ED973887AC168234162503ACB0350A99E955000000000000000000000000000000000000000005405082"/>
+                <BodyProperties version="4" weight="0.7257" build="0.8089" key="00025C07000024CAB77216196072AAE6728B78827641ED973887AC168234162503ACB0350A99E955000000000000000000000000000000000000000005405082" />
+                <hair_tags>
+                    <hair_tag name="battania" />
+                </hair_tags>
+                <tattoo_tags>
+                    <tattoo_tag name="Cleanface" />
+                </tattoo_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="60" />
@@ -17243,7 +18221,13 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.5" build="0.5" key="000B2402C4CC000F46983AA68546B58A13047B958748D17A5AA943439A5AA44B018776130835D45200000000000000000000000000000000000000004F1C30C3"/>
+                <BodyProperties version="4" weight="0.5" build="0.5" key="000B2402C4CC000F46983AA68546B58A13047B958748D17A5AA943439A5AA44B018776130835D45200000000000000000000000000000000000000004F1C30C3" />
+                <hair_tags>
+                    <hair_tag name="battania" />
+                </hair_tags>
+                <tattoo_tags>
+                    <tattoo_tag name="Cleanface" />
+                </tattoo_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="235" />
@@ -18567,46 +19551,55 @@
         <xsl:copy>
             <xsl:attribute name="id">lord_6_23</xsl:attribute>
             <xsl:attribute name="name">{=aom_lord_6_23_name}Hûz-Margôz Hûz</xsl:attribute>
-            <xsl:attribute name="age">30</xsl:attribute>
-            <xsl:attribute name="voice">softspoken</xsl:attribute>
+            <xsl:attribute name="age">48</xsl:attribute>
+            <xsl:attribute name="voice">curt</xsl:attribute>
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.khuzait</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.taom_knight_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_easterling_lord_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.4676" build="0.4954" key="0011F00CC0B423940888751A1794B0496099B698B7A4AD33C63BA5535D78938903677635065B7912000000000000000000000000000000000000000000CC3042"/>
+                <BodyProperties version="4" weight="0.5" build="0.5" key="0016FC0FC000274D9EBF61FFB762A46EA4959AF6F9A58E3DC8756149D64B84A8000C265309B1E944000000000000000000000000000000000000000000F07080" />
+                <hair_tags>
+                    <hair_tag name="khuzait" />
+                </hair_tags>
+                <beard_tags>
+                    <beard_tag name="khuzait" />
+                </beard_tags>
+                <tattoo_tags>
+                    <tattoo_tag name="Cleanface" />
+                </tattoo_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="230" />
-                <skill id="TwoHanded" value="180" />
-                <skill id="Polearm" value="220" />
-                <skill id="Bow" value="100" />
-                <skill id="Crossbow" value="70" />
-                <skill id="Throwing" value="120" />
-                <skill id="Riding" value="250" />
-                <skill id="Athletics" value="240" />
-                <skill id="Crafting" value="60" />
-                <skill id="Scouting" value="140" />
-                <skill id="Tactics" value="180" />
-                <skill id="Roguery" value="60" />
-                <skill id="Charm" value="160" />
-                <skill id="Leadership" value="160" />
-                <skill id="Trade" value="90" />
-                <skill id="Steward" value="130" />
-                <skill id="Medicine" value="90" />
-                <skill id="Engineering" value="100" />
+                <skill id="TwoHanded" value="170" />
+                <skill id="Polearm" value="235" />
+                <skill id="Bow" value="260" />
+                <skill id="Crossbow" value="110" />
+                <skill id="Throwing" value="180" />
+                <skill id="Riding" value="275" />
+                <skill id="Athletics" value="235" />
+                <skill id="Crafting" value="120" />
+                <skill id="Scouting" value="240" />
+                <skill id="Tactics" value="235" />
+                <skill id="Roguery" value="170" />
+                <skill id="Charm" value="190" />
+                <skill id="Leadership" value="235" />
+                <skill id="Trade" value="180" />
+                <skill id="Steward" value="200" />
+                <skill id="Medicine" value="140" />
+                <skill id="Engineering" value="170" />
             </skills>
             <Traits>
-                <Trait id="Honor" value="2" />
-                <Trait id="Generosity" value="1" />
-                <Trait id="Calculating" value="0" />
-                <Trait id="Mercy" value="1" />
-                <Trait id="Valor" value="2" />
-                <Trait id="Egalitarian" value="0" />
+                <Trait id="Honor" value="-2" />
+                <Trait id="Generosity" value="-1" />
+                <Trait id="Calculating" value="1" />
+                <Trait id="Mercy" value="-2" />
+                <Trait id="Valor" value="1" />
+                <Trait id="Egalitarian" value="-1" />
                 <Trait id="Oligarchic" value="1" />
-                <Trait id="Authoritarian" value="0" />
+                <Trait id="Authoritarian" value="1" />
             </Traits>
             <Equipments>
                 <EquipmentSet id="rhun_bat_template_medium_a" />
@@ -18621,36 +19614,45 @@
         <xsl:copy>
             <xsl:attribute name="id">lord_6_24</xsl:attribute>
             <xsl:attribute name="name">{=aom_lord_6_24_name}Nikath Adekig</xsl:attribute>
-            <xsl:attribute name="age">26</xsl:attribute>
-            <xsl:attribute name="voice">softspoken</xsl:attribute>
+            <xsl:attribute name="age">48</xsl:attribute>
+            <xsl:attribute name="voice">curt</xsl:attribute>
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.khuzait</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.taom_knight_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_easterling_lord_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" key="0016FC0FC000274D9EBF61FFB762A46EA4959AF6F9A58E3DC8756149D64B84A8000C265309B1E944000000000000000000000000000000000000000000F07080"/>
+                <BodyProperties version="4" key="0016FC0FC000274D9EBF61FFB762A46EA4959AF6F9A58E3DC8756149D64B84A8000C265309B1E944000000000000000000000000000000000000000000F07080" weight="0.4" build="0.45" />
+                <hair_tags>
+                    <hair_tag name="khuzait" />
+                </hair_tags>
+                <beard_tags>
+                    <beard_tag name="khuzait" />
+                </beard_tags>
+                <tattoo_tags>
+                    <tattoo_tag name="Cleanface" />
+                </tattoo_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="230" />
-                <skill id="TwoHanded" value="180" />
-                <skill id="Polearm" value="220" />
-                <skill id="Bow" value="100" />
-                <skill id="Crossbow" value="70" />
-                <skill id="Throwing" value="120" />
-                <skill id="Riding" value="250" />
-                <skill id="Athletics" value="240" />
-                <skill id="Crafting" value="60" />
-                <skill id="Scouting" value="140" />
-                <skill id="Tactics" value="180" />
-                <skill id="Roguery" value="60" />
-                <skill id="Charm" value="160" />
-                <skill id="Leadership" value="160" />
-                <skill id="Trade" value="90" />
-                <skill id="Steward" value="130" />
-                <skill id="Medicine" value="90" />
-                <skill id="Engineering" value="100" />
+                <skill id="TwoHanded" value="170" />
+                <skill id="Polearm" value="235" />
+                <skill id="Bow" value="260" />
+                <skill id="Crossbow" value="110" />
+                <skill id="Throwing" value="180" />
+                <skill id="Riding" value="275" />
+                <skill id="Athletics" value="235" />
+                <skill id="Crafting" value="120" />
+                <skill id="Scouting" value="240" />
+                <skill id="Tactics" value="235" />
+                <skill id="Roguery" value="170" />
+                <skill id="Charm" value="190" />
+                <skill id="Leadership" value="235" />
+                <skill id="Trade" value="180" />
+                <skill id="Steward" value="200" />
+                <skill id="Medicine" value="140" />
+                <skill id="Engineering" value="170" />
             </skills>
             <Traits>
                 <Trait id="Honor" value="2" />
@@ -18659,8 +19661,8 @@
                 <Trait id="Mercy" value="1" />
                 <Trait id="Valor" value="2" />
                 <Trait id="Egalitarian" value="0" />
-                <Trait id="Oligarchic" value="1" />
-                <Trait id="Authoritarian" value="0" />
+                <Trait id="Oligarchic" value="0" />
+                <Trait id="Authoritarian" value="-1" />
             </Traits>
             <Equipments>
                 <EquipmentSet id="rhun_bat_template_medium_b" />
@@ -18685,7 +19687,13 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.5" build="0.5" key="0016FC0E5000100158708BD6CDC852299D4AB89EB77F390E84269783AA69586C017776130756C3A900000000000000000000000000000000000000003EF43083"/>
+                <BodyProperties version="4" weight="0.5" build="0.5" key="0016FC0E5000100158708BD6CDC852299D4AB89EB77F390E84269783AA69586C017776130756C3A900000000000000000000000000000000000000003EF43083" />
+                <hair_tags>
+                    <hair_tag name="khuzait" />
+                </hair_tags>
+                <tattoo_tags>
+                    <tattoo_tag name="Cleanface" />
+                </tattoo_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="60" />
@@ -18740,7 +19748,13 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.5" build="0.5" key="0016F80E5000200EB8708BD6CDC85229D3698B3ABDFE344CD22D3DD538898868017776130796723B00000000000000000000000000000000000000003EF41003"/>
+                <BodyProperties version="4" weight="0.5" build="0.5" key="0016F80E5000200EB8708BD6CDC85229D3698B3ABDFE344CD22D3DD538898868017776130796723B00000000000000000000000000000000000000003EF41003" />
+                <hair_tags>
+                    <hair_tag name="khuzait" />
+                </hair_tags>
+                <tattoo_tags>
+                    <tattoo_tag name="Cleanface" />
+                </tattoo_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="160" />
@@ -18795,7 +19809,13 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.805" build="0.6475" key="0016E00B400006D3507044293BC820482534773EE5DE57546D6B291183394315056AC05706556766000000000000000000000000000000000000000028C82104"/>
+                <BodyProperties version="4" weight="0.805" build="0.6475" key="0016E00B400006D3507044293BC820482534773EE5DE57546D6B291183394315056AC05706556766000000000000000000000000000000000000000028C82104" />
+                <hair_tags>
+                    <hair_tag name="khuzait" />
+                </hair_tags>
+                <tattoo_tags>
+                    <tattoo_tag name="Cleanface" />
+                </tattoo_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="60" />
@@ -18850,7 +19870,13 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.5" build="0.5" key="0011D40FD4CC300BCF7616D8AD922604F4116550F7EF4310E0C91E1974071056016776130600120E000000000000000000000000000000000000000034C42083"/>
+                <BodyProperties version="4" weight="0.5" build="0.5" key="0011D40FD4CC300BCF7616D8AD922604F4116550F7EF4310E0C91E1974071056016776130600120E000000000000000000000000000000000000000034C42083" />
+                <hair_tags>
+                    <hair_tag name="khuzait" />
+                </hair_tags>
+                <tattoo_tags>
+                    <tattoo_tag name="Cleanface" />
+                </tattoo_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="160" />
@@ -18905,7 +19931,13 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.5" build="0.5" key="0016F80E4000200AB8B5A8AB37C5891C4BA88B3ABDFE344C5ADD18434234CBA6017776130746491E00000000000000000000000000000000000000003EF410C3"/>
+                <BodyProperties version="4" weight="0.5" build="0.5" key="0016F80E4000200AB8B5A8AB37C5891C4BA88B3ABDFE344C5ADD18434234CBA6017776130746491E00000000000000000000000000000000000000003EF410C3" />
+                <hair_tags>
+                    <hair_tag name="khuzait" />
+                </hair_tags>
+                <tattoo_tags>
+                    <tattoo_tag name="Cleanface" />
+                </tattoo_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="60" />
@@ -18960,7 +19992,13 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.5" build="0.5" key="0011D40FC0003001E9761DA0AD922600C2226C60F0EF0710F7DA1E1A740E10500167761306634C0A000000000000000000000000000000000000000034C44083"/>
+                <BodyProperties version="4" weight="0.5" build="0.5" key="0011D40FC0003001E9761DA0AD922600C2226C60F0EF0710F7DA1E1A740E10500167761306634C0A000000000000000000000000000000000000000034C44083" />
+                <hair_tags>
+                    <hair_tag name="khuzait" />
+                </hair_tags>
+                <tattoo_tags>
+                    <tattoo_tag name="Cleanface" />
+                </tattoo_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="160" />
@@ -19015,7 +20053,13 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.5" build="0.5" key="0016F80CD400100318B5A8AB37C5891C4BA88B3A22AF3A4C6388C1954234CBA601777613076B5C2300000000000000000000000000000000000000003EF41003"/>
+                <BodyProperties version="4" weight="0.5" build="0.5" key="0016F80CD400100318B5A8AB37C5891C4BA88B3A22AF3A4C6388C1954234CBA601777613076B5C2300000000000000000000000000000000000000003EF41003" />
+                <hair_tags>
+                    <hair_tag name="khuzait" />
+                </hair_tags>
+                <tattoo_tags>
+                    <tattoo_tag name="Cleanface" />
+                </tattoo_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="60" />
@@ -19070,7 +20114,13 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.5" build="0.5" key="0011DC0FD3FC300E488386A697AAB55B61978D49E9FE8438EC731556996786800137761303C76C170000000000000000000000000000000000000000426C4083"/>
+                <BodyProperties version="4" weight="0.5" build="0.5" key="0011DC0FD3FC300E488386A697AAB55B61978D49E9FE8438EC731556996786800137761303C76C170000000000000000000000000000000000000000426C4083" />
+                <hair_tags>
+                    <hair_tag name="khuzait" />
+                </hair_tags>
+                <tattoo_tags>
+                    <tattoo_tag name="Cleanface" />
+                </tattoo_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="160" />
@@ -19125,7 +20175,13 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.3" build="0.4" key="000BF80CD100100318B664517CBB94C8D5398B3A22AF3A4C5B2C76989C692815017776130799894800000000000000000000000000000000000000003EF41043"/>
+                <BodyProperties version="4" weight="0.3" build="0.4" key="000BF80CD100100318B664517CBB94C8D5398B3A22AF3A4C5B2C76989C692815017776130799894800000000000000000000000000000000000000003EF41043" />
+                <hair_tags>
+                    <hair_tag name="khuzait" />
+                </hair_tags>
+                <tattoo_tags>
+                    <tattoo_tag name="Cleanface" />
+                </tattoo_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="60" />
@@ -19180,7 +20236,13 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.4" build="0.4" key="0011C80E50E410026053AA569B16689986BA77528958D98CA8622BA78AC9695201577613052AB956000000000000000000000000000000000000000042B41084"/>
+                <BodyProperties version="4" weight="0.4" build="0.4" key="0011C80E50E410026053AA569B16689986BA77528958D98CA8622BA78AC9695201577613052AB956000000000000000000000000000000000000000042B41084" />
+                <hair_tags>
+                    <hair_tag name="khuzait" />
+                </hair_tags>
+                <tattoo_tags>
+                    <tattoo_tag name="Cleanface" />
+                </tattoo_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="210" />
@@ -19235,7 +20297,13 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.5" build="0.5" key="000BC80FD1000010185895BAB8A7A974AA7C383AE2FF3A45868B383997479BD70177761307BB856400000000000000000000000000000000000000003EF410C3"/>
+                <BodyProperties version="4" weight="0.5" build="0.5" key="000BC80FD1000010185895BAB8A7A974AA7C383AE2FF3A45868B383997479BD70177761307BB856400000000000000000000000000000000000000003EF410C3" />
+                <hair_tags>
+                    <hair_tag name="khuzait" />
+                </hair_tags>
+                <tattoo_tags>
+                    <tattoo_tag name="Cleanface" />
+                </tattoo_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="60" />
@@ -19290,7 +20358,16 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.7" build="0.7" key="0026F80E40002343B8708B896D682237D5D88B3D557E344C17243FB5B88988680077760307967D3B00000000000000000000000000000000000000003EF41002"/>
+                <BodyProperties version="4" weight="0.7" build="0.7" key="0026F80E40002343B8708B896D682237D5D88B3D557E344C17243FB5B88988680077760307967D3B00000000000000000000000000000000000000003EF41002" />
+                <hair_tags>
+                    <hair_tag name="khuzait" />
+                </hair_tags>
+                <beard_tags>
+                    <beard_tag name="khuzait" />
+                </beard_tags>
+                <tattoo_tags>
+                    <tattoo_tag name="Cleanface" />
+                </tattoo_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="230" />
@@ -19345,7 +20422,13 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.5" build="0.5" key="0011FC0FC0B4300AF97613A1E4410600CB306C0A60EF0500F3B81E14741610460167761306016000000000000000000000000000000000000000000034C42083"/>
+                <BodyProperties version="4" weight="0.5" build="0.5" key="0011FC0FC0B4300AF97613A1E4410600CB306C0A60EF0500F3B81E14741610460167761306016000000000000000000000000000000000000000000034C42083" />
+                <hair_tags>
+                    <hair_tag name="khuzait" />
+                </hair_tags>
+                <tattoo_tags>
+                    <tattoo_tag name="Cleanface" />
+                </tattoo_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="40" />
@@ -19400,7 +20483,13 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.3" build="0.3" key="000BF80CD100300418762BAD894AB3A687C58B3A22AF3A4C5B2C769832963D44017776130799894800000000000000000000000000000000000000003EF41043"/>
+                <BodyProperties version="4" weight="0.3" build="0.3" key="000BF80CD100300418762BAD894AB3A687C58B3A22AF3A4C5B2C769832963D44017776130799894800000000000000000000000000000000000000003EF41043" />
+                <hair_tags>
+                    <hair_tag name="khuzait" />
+                </hair_tags>
+                <tattoo_tags>
+                    <tattoo_tag name="Cleanface" />
+                </tattoo_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="40" />
@@ -19445,7 +20534,7 @@
         <xsl:copy>
             <xsl:attribute name="id">lord_K9_l</xsl:attribute>
             <xsl:attribute name="name">{=aom_lord_K9_l_name}Valathmir Mashakian</xsl:attribute>
-            <xsl:attribute name="age">53</xsl:attribute>
+            <xsl:attribute name="age">37</xsl:attribute>
             <xsl:attribute name="voice">softspoken</xsl:attribute>
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
@@ -19455,7 +20544,16 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.5" build="0.5" key="000BF80CD100300418762BAD894AB3A687C58B3A22AF3A4C5B2C769832963D44017776130799894800000000000000000000000000000000000000003EF41043"/>
+                <BodyProperties version="4" weight="0.5" build="0.5" key="000BF80CD100300418762BAD894AB3A687C58B3A22AF3A4C5B2C769832963D44017776130799894800000000000000000000000000000000000000003EF41043" />
+                <hair_tags>
+                    <hair_tag name="khuzait" />
+                </hair_tags>
+                <beard_tags>
+                    <beard_tag name="khuzait" />
+                </beard_tags>
+                <tattoo_tags>
+                    <tattoo_tag name="Cleanface" />
+                </tattoo_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="230" />
@@ -19510,7 +20608,13 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.5" build="0.5" key="000C100E007C03CD7748DA3B57429988D86DBD6945B4B664644589C5283414BC000427330A7661CB0000037F0000000F00000037049140010000000000288002"/>
+                <BodyProperties version="4" weight="0.5" build="0.5" key="000C100E007C03CD7748DA3B57429988D86DBD6945B4B664644589C5283414BC000427330A7661CB0000037F0000000F00000037049140010000000000288002" />
+                <hair_tags>
+                    <hair_tag name="khuzait" />
+                </hair_tags>
+                <tattoo_tags>
+                    <tattoo_tag name="Cleanface" />
+                </tattoo_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="230" />
@@ -19565,7 +20669,16 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.3781" build="0.5478" key="000AB40CC0141840AD48BBECA574462983C78887724DBABB65D6686C8527AA8800D866030D8459A5000000000000000000000000000000000000000063AC10C6"/>
+                <BodyProperties version="4" weight="0.3781" build="0.5478" key="000AB40CC0141840AD48BBECA574462983C78887724DBABB65D6686C8527AA8800D866030D8459A5000000000000000000000000000000000000000063AC10C6" />
+                <hair_tags>
+                    <hair_tag name="khuzait" />
+                </hair_tags>
+                <beard_tags>
+                    <beard_tag name="khuzait" />
+                </beard_tags>
+                <tattoo_tags>
+                    <tattoo_tag name="Cleanface" />
+                </tattoo_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="160" />
@@ -19620,7 +20733,13 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.142" build="0.5648" key="001EC00CC0FC100463B8C87941868498779B3336466B8678C67EEEDEC8AE75950088260308C7A5050000000000000000000000000000000000000000711C10C3"/>
+                <BodyProperties version="4" weight="0.142" build="0.5648" key="001EC00CC0FC100463B8C87941868498779B3336466B8678C67EEEDEC8AE75950088260308C7A5050000000000000000000000000000000000000000711C10C3" />
+                <hair_tags>
+                    <hair_tag name="khuzait" />
+                </hair_tags>
+                <tattoo_tags>
+                    <tattoo_tag name="Cleanface" />
+                </tattoo_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="230" />
@@ -19880,10 +20999,14 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.6389" build="0.5926" key="0023840E62B010059AB8C8794186849896635A43A91AA68AC27788B88A37A6B600C9A6030C95A6650000000000000000000000000000000000000000478C00C3"/>
+                <BodyProperties version="4" weight="0.6389" build="0.5926" key="0023840E62B010059AB8C8794186849896635A43A91AA68AC27788B88A37A6B600C9A6030C95A6650000000000000000000000000000000000000000478C00C3" />
                 <tattoo_tags>
                     <tattoo_tag name="harad" />
+                    <tattoo_tag name="harad" />
                 </tattoo_tags>
+                <hair_tags>
+                    <hair_tag name="aserai" />
+                </hair_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="235" />
@@ -19928,7 +21051,7 @@
         <xsl:copy>
             <xsl:attribute name="id">lord_A9_l</xsl:attribute>
             <xsl:attribute name="name">{=aom_lord_A9_l_name}Caradan</xsl:attribute>
-            <xsl:attribute name="age">43</xsl:attribute>
+            <xsl:attribute name="age">19</xsl:attribute>
             <xsl:attribute name="voice">earnest</xsl:attribute>
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
@@ -19938,10 +21061,17 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.7" build="0.8" key="0022700CE4E8300258D8AD87875435B9EA4385AA274487967CCCCB676A89755A0137761303B03A99000000000000000000000000000000000000000038643004"/>
+                <BodyProperties version="4" weight="0.7" build="0.8" key="0022700CE4E8300258D8AD87875435B9EA4385AA274487967CCCCB676A89755A0137761303B03A99000000000000000000000000000000000000000038643004" />
                 <tattoo_tags>
                     <tattoo_tag name="harad" />
+                    <tattoo_tag name="harad" />
                 </tattoo_tags>
+                <hair_tags>
+                    <hair_tag name="aserai" />
+                </hair_tags>
+                <beard_tags>
+                    <beard_tag name="aserai" />
+                </beard_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="235" />
@@ -19996,10 +21126,14 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.5" build="0.5" key="0028240E63BC200E38B5E59AB258BA6668952E7A5AD5B8797BC7A8E8796233690177761307C6896400000000000000000000000000000000000000003EEC10C3"/>
+                <BodyProperties version="4" weight="0.5" build="0.5" key="0028240E63BC200E38B5E59AB258BA6668952E7A5AD5B8797BC7A8E8796233690177761307C6896400000000000000000000000000000000000000003EEC10C3" />
                 <tattoo_tags>
                     <tattoo_tag name="harad" />
+                    <tattoo_tag name="harad" />
                 </tattoo_tags>
+                <hair_tags>
+                    <hair_tag name="aserai" />
+                </hair_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="235" />
@@ -20054,10 +21188,17 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.5" build="0.5" key="0022700CE5F0101263B8C87941868498779B3D75E97B5678C27788B8C8AE759501B776130B95A6650000000000000000000000000000000000000000396C00C3"/>
+                <BodyProperties version="4" weight="0.5" build="0.5" key="0022700CE5F0101263B8C87941868498779B3D75E97B5678C27788B8C8AE759501B776130B95A6650000000000000000000000000000000000000000396C00C3" />
                 <tattoo_tags>
                     <tattoo_tag name="harad" />
+                    <tattoo_tag name="harad" />
                 </tattoo_tags>
+                <hair_tags>
+                    <hair_tag name="aserai" />
+                </hair_tags>
+                <beard_tags>
+                    <beard_tag name="aserai" />
+                </beard_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="230" />
@@ -20112,7 +21253,16 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.5" build="0.5" key="00058C02C03C07C249A67962000F269EE3EFFE7528914639236B99548BFBD5A5010006890F9CA7B60000000000000000000000000000000000000000019C5104"/>
+                <BodyProperties version="4" weight="0.5" build="0.5" key="00058C02C03C07C249A67962000F269EE3EFFE7528914639236B99548BFBD5A5010006890F9CA7B60000000000000000000000000000000000000000019C5104" />
+                <hair_tags>
+                    <hair_tag name="battania" />
+                </hair_tags>
+                <beard_tags>
+                    <beard_tag name="battania" />
+                </beard_tags>
+                <tattoo_tags>
+                    <tattoo_tag name="Cleanface" />
+                </tattoo_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="240" />
@@ -20167,7 +21317,16 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.7901" build="0.7686" key="0011F40FC00015C31F80050E3578F78FC00E740704D0F71BF0C8EC145B060A4F013006440385C177000000000000000000000000000000000000000000143144"/>
+                <BodyProperties version="4" weight="0.5" build="0.5" key="00112C0A0FA0000A72557A7C9B879A8897CB1947DBA9DA87A53D947974F6DCB70167761306E83DA3000000000000000000000000000000000000000010CC0083" />
+                <hair_tags>
+                    <hair_tag name="battania" />
+                </hair_tags>
+                <beard_tags>
+                    <beard_tag name="battania" />
+                </beard_tags>
+                <tattoo_tags>
+                    <tattoo_tag name="Cleanface" />
+                </tattoo_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="240" />
@@ -20222,7 +21381,13 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.5" build="0.5" key="000B2402C4CC000F46983AA68546B58A13047B958748D17A5AA943439A5AA44B018776130835D45200000000000000000000000000000000000000004F1C30C3"/>
+                <BodyProperties version="4" weight="0.5" build="0.5" key="0000240FD100300D453C497C68747AA8916C58A9C85518B98B75847C3A1893520197761309AB86730000000000000000000000000000000000000000472420C3" />
+                <hair_tags>
+                    <hair_tag name="battania" />
+                </hair_tags>
+                <tattoo_tags>
+                    <tattoo_tag name="Cleanface" />
+                </tattoo_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="240" />
@@ -20267,7 +21432,7 @@
         <xsl:copy>
             <xsl:attribute name="id">lord_NE7_u</xsl:attribute>
             <xsl:attribute name="name">{=aom_lord_NE7_u_name}Haldric the Black Fang</xsl:attribute>
-            <xsl:attribute name="age">41</xsl:attribute>
+            <xsl:attribute name="age">21</xsl:attribute>
             <xsl:attribute name="voice">softspoken</xsl:attribute>
             <xsl:attribute name="default_group">HorseArcher</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
@@ -20277,7 +21442,16 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.5" build="0.5" key="0000D40E4000228BED6277444258C875446A17B9ED8932923B61997568A479EB0000047303395E480000000000000FFE00000000000000000000000000004000"/>
+                <BodyProperties version="4" weight="0.5" build="0.5" key="0000D40E4000228BED6277444258C875446A17B9ED8932923B61997568A479EB0000047303395E480000000000000FFE00000000000000000000000000004000" />
+                <hair_tags>
+                    <hair_tag name="empire" />
+                </hair_tags>
+                <beard_tags>
+                    <beard_tag name="empire" />
+                </beard_tags>
+                <tattoo_tags>
+                    <tattoo_tag name="Cleanface" />
+                </tattoo_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="245" />
@@ -20332,7 +21506,16 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.5" build="0.5" key="0000D40FC0CC12C897B8079E76258849839B767CB9CA744999BBA2614817BB7801377613037A459900000000000000000000000000000000000000006A642102"/>
+                <BodyProperties version="4" weight="0.5" build="0.5" key="0000D40FC0CC12C897B8079E76258849839B767CB9CA744999BBA2614817BB7801377613037A459900000000000000000000000000000000000000006A642102" />
+                <hair_tags>
+                    <hair_tag name="empire" />
+                </hair_tags>
+                <beard_tags>
+                    <beard_tag name="empire" />
+                </beard_tags>
+                <tattoo_tags>
+                    <tattoo_tag name="Cleanface" />
+                </tattoo_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="160" />
@@ -20387,7 +21570,13 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.5" build="0.5" key="0000D40FD0CC100497B8079E76258849839B767CB9CA744999BBA2614817BB7801377613037A459900000000000000000000000000000000000000006A6420C3"/>
+                <BodyProperties version="4" weight="0.5" build="0.5" key="0000D40FD0CC100497B8079E76258849839B767CB9CA744999BBA2614817BB7801377613037A459900000000000000000000000000000000000000006A6420C3" />
+                <hair_tags>
+                    <hair_tag name="empire" />
+                </hair_tags>
+                <tattoo_tags>
+                    <tattoo_tag name="Cleanface" />
+                </tattoo_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="40" />
@@ -20432,37 +21621,46 @@
         <xsl:copy>
             <xsl:attribute name="id">lord_NE8_l</xsl:attribute>
             <xsl:attribute name="name">{=aom_lord_NE8_l_name}Eadric, The Swift</xsl:attribute>
-            <xsl:attribute name="age">46</xsl:attribute>
+            <xsl:attribute name="age">22</xsl:attribute>
             <xsl:attribute name="voice">earnest</xsl:attribute>
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">false</xsl:attribute>
             <xsl:attribute name="culture">Culture.empire</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.taom_dunland_knight_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_dunland_young_lord_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.6" build="0.75" key="00009C0FC0CC3286677834B57545557BA665A4BB733C359B45DA64699C84577801377613034C439C00000000000000000000000000000000000000006A644002"/>
+                <BodyProperties version="4" weight="0.6" build="0.75" key="00009C0FC0CC3286677834B57545557BA665A4BB733C359B45DA64699C84577801377613034C439C00000000000000000000000000000000000000006A644002" />
+                <hair_tags>
+                    <hair_tag name="empire" />
+                </hair_tags>
+                <beard_tags>
+                    <beard_tag name="empire" />
+                </beard_tags>
+                <tattoo_tags>
+                    <tattoo_tag name="Cleanface" />
+                </tattoo_tags>
             </face>
             <skills>
-                <skill id="OneHanded" value="230" />
-                <skill id="TwoHanded" value="180" />
-                <skill id="Polearm" value="220" />
-                <skill id="Bow" value="100" />
+                <skill id="OneHanded" value="160" />
+                <skill id="TwoHanded" value="120" />
+                <skill id="Polearm" value="140" />
+                <skill id="Bow" value="90" />
                 <skill id="Crossbow" value="70" />
-                <skill id="Throwing" value="120" />
-                <skill id="Riding" value="250" />
-                <skill id="Athletics" value="240" />
+                <skill id="Throwing" value="100" />
+                <skill id="Riding" value="190" />
+                <skill id="Athletics" value="180" />
                 <skill id="Crafting" value="60" />
                 <skill id="Scouting" value="140" />
-                <skill id="Tactics" value="180" />
+                <skill id="Tactics" value="130" />
                 <skill id="Roguery" value="60" />
-                <skill id="Charm" value="160" />
-                <skill id="Leadership" value="90" />
-                <skill id="Trade" value="90" />
-                <skill id="Steward" value="130" />
-                <skill id="Medicine" value="90" />
-                <skill id="Engineering" value="100" />
+                <skill id="Charm" value="140" />
+                <skill id="Leadership" value="55" />
+                <skill id="Trade" value="80" />
+                <skill id="Steward" value="110" />
+                <skill id="Medicine" value="80" />
+                <skill id="Engineering" value="80" />
             </skills>
             <Traits>
                 <Trait id="Honor" value="2" />
@@ -20487,46 +21685,52 @@
         <xsl:copy>
             <xsl:attribute name="id">lord_NE8_s</xsl:attribute>
             <xsl:attribute name="name">{=aom_lord_NE8_s_name}Aeloria</xsl:attribute>
-            <xsl:attribute name="age">38</xsl:attribute>
+            <xsl:attribute name="age">19</xsl:attribute>
             <xsl:attribute name="voice">earnest</xsl:attribute>
             <xsl:attribute name="default_group">HorseArcher</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.empire</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.taom_dunland_lady_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_dunland_young_lady_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.4" build="0.5" key="0000200FD0CC200E978EB857E594B2FE6929595C8998514499BBA261B3BB76B201377613037A459900000000000000000000000000000000000000006A6400C3"/>
+                <BodyProperties version="4" weight="0.4" build="0.5" key="0000200FD0CC200E978EB857E594B2FE6929595C8998514499BBA261B3BB76B201377613037A459900000000000000000000000000000000000000006A6400C3" />
+                <hair_tags>
+                    <hair_tag name="empire" />
+                </hair_tags>
+                <tattoo_tags>
+                    <tattoo_tag name="Cleanface" />
+                </tattoo_tags>
             </face>
             <skills>
-                <skill id="OneHanded" value="60" />
-                <skill id="TwoHanded" value="30" />
-                <skill id="Polearm" value="50" />
+                <skill id="OneHanded" value="40" />
+                <skill id="TwoHanded" value="20" />
+                <skill id="Polearm" value="30" />
                 <skill id="Bow" value="70" />
-                <skill id="Crossbow" value="50" />
-                <skill id="Throwing" value="50" />
-                <skill id="Riding" value="140" />
-                <skill id="Athletics" value="110" />
-                <skill id="Crafting" value="140" />
-                <skill id="Scouting" value="110" />
-                <skill id="Tactics" value="130" />
-                <skill id="Roguery" value="60" />
-                <skill id="Charm" value="240" />
-                <skill id="Leadership" value="80" />
-                <skill id="Trade" value="180" />
-                <skill id="Steward" value="240" />
-                <skill id="Medicine" value="210" />
-                <skill id="Engineering" value="130" />
+                <skill id="Crossbow" value="40" />
+                <skill id="Throwing" value="40" />
+                <skill id="Riding" value="120" />
+                <skill id="Athletics" value="100" />
+                <skill id="Crafting" value="110" />
+                <skill id="Scouting" value="90" />
+                <skill id="Tactics" value="100" />
+                <skill id="Roguery" value="50" />
+                <skill id="Charm" value="180" />
+                <skill id="Leadership" value="55" />
+                <skill id="Trade" value="130" />
+                <skill id="Steward" value="170" />
+                <skill id="Medicine" value="150" />
+                <skill id="Engineering" value="100" />
             </skills>
             <Traits>
-                <Trait id="Honor" value="2" />
-                <Trait id="Generosity" value="2" />
+                <Trait id="Honor" value="1" />
+                <Trait id="Generosity" value="1" />
                 <Trait id="Calculating" value="1" />
                 <Trait id="Mercy" value="2" />
                 <Trait id="Valor" value="0" />
                 <Trait id="Egalitarian" value="1" />
-                <Trait id="Oligarchic" value="1" />
+                <Trait id="Oligarchic" value="0" />
                 <Trait id="Authoritarian" value="0" />
             </Traits>
             <Equipments>
@@ -20552,7 +21756,13 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.6" build="0.5" key="00009C0FC0CC3286677834B57545557BA665A4BB733C359B45DA64699C84577801377613034C439C00000000000000000000000000000000000000006A644002"/>
+                <BodyProperties version="4" weight="0.6" build="0.5" key="00009C0FC0CC3286677834B57545557BA665A4BB733C359B45DA64699C84577801377613034C439C00000000000000000000000000000000000000006A644002" age="22" />
+                <hair_tags>
+                    <hair_tag name="empire" />
+                </hair_tags>
+                <tattoo_tags>
+                    <tattoo_tag name="Cleanface" />
+                </tattoo_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="40" />
@@ -20597,37 +21807,46 @@
         <xsl:copy>
             <xsl:attribute name="id">lord_NE9_l</xsl:attribute>
             <xsl:attribute name="name">{=aom_lord_NE9_l_name}Valthor Scalecleaver</xsl:attribute>
-            <xsl:attribute name="age">51</xsl:attribute>
+            <xsl:attribute name="age">25</xsl:attribute>
             <xsl:attribute name="voice">ironic</xsl:attribute>
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">false</xsl:attribute>
             <xsl:attribute name="culture">Culture.empire</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.taom_dunland_knight_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_dunland_young_lord_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.6" build="0.75" key="000AAC080000165AB989A184241CB80B537D86629511323BDCB177278A49B6A7007776030748B49500000000000000000000000000000000000000003EFC5002"/>
+                <BodyProperties version="4" weight="0.6" build="0.75" key="000AAC080000165AB989A184241CB80B537D86629511323BDCB177278A49B6A7007776030748B49500000000000000000000000000000000000000003EFC5002" age="51" />
+                <hair_tags>
+                    <hair_tag name="empire" />
+                </hair_tags>
+                <beard_tags>
+                    <beard_tag name="empire" />
+                </beard_tags>
+                <tattoo_tags>
+                    <tattoo_tag name="Cleanface" />
+                </tattoo_tags>
             </face>
             <skills>
-                <skill id="OneHanded" value="230" />
-                <skill id="TwoHanded" value="180" />
-                <skill id="Polearm" value="220" />
-                <skill id="Bow" value="100" />
+                <skill id="OneHanded" value="160" />
+                <skill id="TwoHanded" value="120" />
+                <skill id="Polearm" value="140" />
+                <skill id="Bow" value="90" />
                 <skill id="Crossbow" value="70" />
-                <skill id="Throwing" value="120" />
-                <skill id="Riding" value="250" />
-                <skill id="Athletics" value="240" />
+                <skill id="Throwing" value="100" />
+                <skill id="Riding" value="190" />
+                <skill id="Athletics" value="180" />
                 <skill id="Crafting" value="60" />
                 <skill id="Scouting" value="140" />
-                <skill id="Tactics" value="180" />
+                <skill id="Tactics" value="130" />
                 <skill id="Roguery" value="60" />
-                <skill id="Charm" value="160" />
-                <skill id="Leadership" value="90" />
-                <skill id="Trade" value="90" />
-                <skill id="Steward" value="130" />
-                <skill id="Medicine" value="90" />
-                <skill id="Engineering" value="100" />
+                <skill id="Charm" value="140" />
+                <skill id="Leadership" value="55" />
+                <skill id="Trade" value="80" />
+                <skill id="Steward" value="110" />
+                <skill id="Medicine" value="80" />
+                <skill id="Engineering" value="80" />
             </skills>
             <Traits>
                 <Trait id="Honor" value="2" />
@@ -20662,7 +21881,16 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.5" build="0.5" key="000AAC0800001001B957635424174307567986659534566BDCB5774788493637008776030848B59500000000000000000000000000000000000000003F0C5002"/>
+                <BodyProperties version="4" weight="0.5" build="0.5" key="000AAC0800001001B957635424174307567986659534566BDCB5774788493637008776030848B59500000000000000000000000000000000000000003F0C5002" age="24" />
+                <hair_tags>
+                    <hair_tag name="empire" />
+                </hair_tags>
+                <beard_tags>
+                    <beard_tag name="empire" />
+                </beard_tags>
+                <tattoo_tags>
+                    <tattoo_tag name="Cleanface" />
+                </tattoo_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="160" />
@@ -20717,7 +21945,16 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.5" build="0.5" key="0015C8054044068CB7A388848DA2B46798378B58269B28772C23873661A7A63600477603042744BE000000000000000000000000000000000000000030940102"/>
+                <BodyProperties version="4" weight="0.5" build="0.5" key="0005C8054044068CB7A388848DA2B46798378B58269B28772C23873661A7A63600477603042744BE000000000000000000000000000000000000000030940102" />
+                <hair_tags>
+                    <hair_tag name="sturgia" />
+                </hair_tags>
+                <beard_tags>
+                    <beard_tag name="sturgia" />
+                </beard_tags>
+                <tattoo_tags>
+                    <tattoo_tag name="Cleanface" />
+                </tattoo_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="215" />
@@ -20772,7 +22009,16 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.5" build="0.5" key="00054C0140B400039659749D884A5B5E6754C9967C75966FAF9645C8B6BA9BC5015776130587C7630000000000000000000000000000000000000000629C0083"/>
+                <BodyProperties version="4" weight="0.5" build="0.5" key="00054C0140B400039659749D884A5B5E6754C9967C75966FAF9645C8B6BA9BC5015776130587C7630000000000000000000000000000000000000000629C0083" />
+                <hair_tags>
+                    <hair_tag name="sturgia" />
+                </hair_tags>
+                <beard_tags>
+                    <beard_tag name="sturgia" />
+                </beard_tags>
+                <tattoo_tags>
+                    <tattoo_tag name="Cleanface" />
+                </tattoo_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="160" />
@@ -20817,7 +22063,7 @@
         <xsl:copy>
             <xsl:attribute name="id">lord_S9_l</xsl:attribute>
             <xsl:attribute name="name">{=aom_lord_S9_l_name}Orvar</xsl:attribute>
-            <xsl:attribute name="age">52</xsl:attribute>
+            <xsl:attribute name="age">25</xsl:attribute>
             <xsl:attribute name="voice">ironic</xsl:attribute>
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
@@ -20827,7 +22073,16 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.696" build="0.9" key="00054C0140B409C39659749D884A5B5E98B6C9967C75966FAF9645C85A918D950068A6030687C763000000000000000000000000000000000000000062BC2083"/>
+                <BodyProperties version="4" weight="0.696" build="0.9" key="00054C0140B409C39659749D884A5B5E98B6C9967C75966FAF9645C85A918D950068A6030687C763000000000000000000000000000000000000000062BC2083" />
+                <hair_tags>
+                    <hair_tag name="sturgia" />
+                </hair_tags>
+                <beard_tags>
+                    <beard_tag name="sturgia" />
+                </beard_tags>
+                <tattoo_tags>
+                    <tattoo_tag name="Cleanface" />
+                </tattoo_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="215" />
@@ -20872,7 +22127,7 @@
         <xsl:copy>
             <xsl:attribute name="id">lord_S9_m</xsl:attribute>
             <xsl:attribute name="name">{=aom_lord_S9_m_name}Dakhila</xsl:attribute>
-            <xsl:attribute name="age">73</xsl:attribute>
+            <xsl:attribute name="age">33</xsl:attribute>
             <xsl:attribute name="voice">curt</xsl:attribute>
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
@@ -20882,7 +22137,13 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.5" build="0.5" key="00054C0140B400039659749D884A5B5E6754C9967C75966FAF9645C8B6BA9BC5015776130587C7630000000000000000000000000000000000000000629C0083"/>
+                <BodyProperties version="4" weight="0.5" build="0.5" key="00054C0140B400039659749D884A5B5E6754C9967C75966FAF9645C8B6BA9BC5015776130587C7630000000000000000000000000000000000000000629C0083" />
+                <hair_tags>
+                    <hair_tag name="sturgia" />
+                </hair_tags>
+                <tattoo_tags>
+                    <tattoo_tag name="Cleanface" />
+                </tattoo_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="50" />
@@ -20937,7 +22198,16 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.696" build="0.5478" key="00054C0280B432419636BC4C477176F96754C9967C75966FAF9645C8B6BA9BC500A8A6030A87C7630000000000000000000000000000000000000000633C2083"/>
+                <BodyProperties version="4" weight="0.696" build="0.5478" key="00054C0280B432419636BC4C477176F96754C9967C75966FAF9645C8B6BA9BC500A8A6030A87C7630000000000000000000000000000000000000000633C2083" />
+                <hair_tags>
+                    <hair_tag name="sturgia" />
+                </hair_tags>
+                <beard_tags>
+                    <beard_tag name="sturgia" />
+                </beard_tags>
+                <tattoo_tags>
+                    <tattoo_tag name="Cleanface" />
+                </tattoo_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="215" />
@@ -20987,42 +22257,49 @@
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
-            <xsl:attribute name="culture">Culture.empire</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.taom_dunland_young_lady_skills</xsl:attribute>
+            <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_orc_female_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
+            <xsl:attribute name="race">uruk</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.5" build="0.7" key="0011B40B402410088733440E80468F1FFF4F9274C862B448941B5637963E5D3E000E08830B7247A6000000000000000000000000000000000000000000003101"/>
+                <BodyProperties version="4" weight="0.5" build="0.7" key="0011B40B402410088733440E80468F1FFF4F9274C862B448941B5637963E5D3E000E08830B7247A6000000000000000000000000000000000000000000003101" />
+                <hair_tags>
+                    <hair_tag name="empire" />
+                </hair_tags>
+                <tattoo_tags>
+                    <tattoo_tag name="Cleanface" />
+                </tattoo_tags>
             </face>
             <skills>
-                <skill id="OneHanded" value="40" />
-                <skill id="TwoHanded" value="20" />
-                <skill id="Polearm" value="30" />
-                <skill id="Bow" value="70" />
-                <skill id="Crossbow" value="40" />
-                <skill id="Throwing" value="40" />
-                <skill id="Riding" value="120" />
-                <skill id="Athletics" value="100" />
-                <skill id="Crafting" value="110" />
-                <skill id="Scouting" value="90" />
-                <skill id="Tactics" value="100" />
-                <skill id="Roguery" value="50" />
-                <skill id="Charm" value="180" />
-                <skill id="Leadership" value="55" />
+                <skill id="OneHanded" value="170" />
+                <skill id="TwoHanded" value="160" />
+                <skill id="Polearm" value="160" />
+                <skill id="Bow" value="160" />
+                <skill id="Crossbow" value="110" />
+                <skill id="Throwing" value="140" />
+                <skill id="Riding" value="110" />
+                <skill id="Athletics" value="200" />
+                <skill id="Crafting" value="180" />
+                <skill id="Scouting" value="170" />
+                <skill id="Tactics" value="160" />
+                <skill id="Roguery" value="210" />
+                <skill id="Charm" value="130" />
+                <skill id="Leadership" value="150" />
                 <skill id="Trade" value="130" />
-                <skill id="Steward" value="170" />
-                <skill id="Medicine" value="150" />
-                <skill id="Engineering" value="100" />
+                <skill id="Steward" value="180" />
+                <skill id="Medicine" value="120" />
+                <skill id="Engineering" value="160" />
             </skills>
             <Traits>
-                <Trait id="Honor" value="1" />
-                <Trait id="Generosity" value="1" />
-                <Trait id="Calculating" value="1" />
-                <Trait id="Mercy" value="2" />
-                <Trait id="Valor" value="0" />
-                <Trait id="Egalitarian" value="1" />
+                <Trait id="Honor" value="-2" />
+                <Trait id="Generosity" value="-2" />
+                <Trait id="Calculating" value="2" />
+                <Trait id="Mercy" value="-2" />
+                <Trait id="Valor" value="1" />
+                <Trait id="Egalitarian" value="-1" />
                 <Trait id="Oligarchic" value="0" />
-                <Trait id="Authoritarian" value="0" />
+                <Trait id="Authoritarian" value="1" />
             </Traits>
             <Equipments>
                 <EquipmentSet id="mordor_bat_template_medium_c" />
@@ -21042,12 +22319,21 @@
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">false</xsl:attribute>
-            <xsl:attribute name="culture">Culture.empire</xsl:attribute>
+            <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
             <xsl:attribute name="skill_template">SkillSet.taom_black_numenorean_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
                 <BodyProperties version="4" age="26" weight="0.0046" build="0.8032" key="0002780E40001603685C3C9329356424C68B4AD33377895A6A69692453B178A800FC06030FF3D56B00000000000000000000000000000000000000003FF46042" />
+                <hair_tags>
+                    <hair_tag name="empire" />
+                </hair_tags>
+                <beard_tags>
+                    <beard_tag name="empire" />
+                </beard_tags>
+                <tattoo_tags>
+                    <tattoo_tag name="Cleanface" />
+                </tattoo_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="255" />
@@ -21070,14 +22356,14 @@
                 <skill id="Engineering" value="240" />
             </skills>
             <Traits>
-                <Trait id="Honor" value="2" />
-                <Trait id="Generosity" value="1" />
-                <Trait id="Calculating" value="0" />
-                <Trait id="Mercy" value="1" />
+                <Trait id="Honor" value="-2" />
+                <Trait id="Generosity" value="-1" />
+                <Trait id="Calculating" value="2" />
+                <Trait id="Mercy" value="-2" />
                 <Trait id="Valor" value="2" />
-                <Trait id="Egalitarian" value="0" />
-                <Trait id="Oligarchic" value="1" />
-                <Trait id="Authoritarian" value="0" />
+                <Trait id="Egalitarian" value="-2" />
+                <Trait id="Oligarchic" value="2" />
+                <Trait id="Authoritarian" value="2" />
             </Traits>
             <Equipments>
             	<EquipmentSet id="mordor_num_bat_template_lord_cav" />
@@ -21097,12 +22383,18 @@
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
-            <xsl:attribute name="culture">Culture.empire</xsl:attribute>
+            <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
             <xsl:attribute name="skill_template">SkillSet.taom_bn_sorceress_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
                 <BodyProperties version="4" age="24" weight="0.0046" build="0.3356" key="0002A806C0000010CBD7CB989B8A41D5DAADA6D7DB9243548A5A4C587688468800A506030AB5D86300000000000000000000000000000000000000003F5C0042" />
+                <hair_tags>
+                    <hair_tag name="empire" />
+                </hair_tags>
+                <tattoo_tags>
+                    <tattoo_tag name="Cleanface" />
+                </tattoo_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="140" />
@@ -21125,14 +22417,14 @@
                 <skill id="Engineering" value="210" />
             </skills>
             <Traits>
-                <Trait id="Honor" value="1" />
-                <Trait id="Generosity" value="1" />
-                <Trait id="Calculating" value="1" />
-                <Trait id="Mercy" value="2" />
-                <Trait id="Valor" value="0" />
-                <Trait id="Egalitarian" value="1" />
-                <Trait id="Oligarchic" value="0" />
-                <Trait id="Authoritarian" value="0" />
+                <Trait id="Honor" value="-2" />
+                <Trait id="Generosity" value="-2" />
+                <Trait id="Calculating" value="2" />
+                <Trait id="Mercy" value="-2" />
+                <Trait id="Valor" value="1" />
+                <Trait id="Egalitarian" value="-2" />
+                <Trait id="Oligarchic" value="2" />
+                <Trait id="Authoritarian" value="2" />
             </Traits>
             <Equipments>
             	<EquipmentSet id="mordor_num_bat_template_lord_inf" />
@@ -21147,17 +22439,26 @@
         <xsl:copy>
             <xsl:attribute name="id">lord_SE9_l</xsl:attribute>
             <xsl:attribute name="name">{=aom_lord_SE9_l_name_bn}Zagarkhôr</xsl:attribute>
-            <xsl:attribute name="age">58</xsl:attribute>
+            <xsl:attribute name="age">30</xsl:attribute>
             <xsl:attribute name="voice">ironic</xsl:attribute>
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">false</xsl:attribute>
-            <xsl:attribute name="culture">Culture.empire</xsl:attribute>
+            <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
             <xsl:attribute name="skill_template">SkillSet.taom_black_numenorean_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
                 <BodyProperties version="4" age="30" weight="0.0046" build="0.8032" key="0002940E40003A434868B38BD5266AA769489CA8213C7BCB79B7967577B9294800FC06030F7A927400000000000000000000000000000000000000003FF41142" />
+                <hair_tags>
+                    <hair_tag name="empire" />
+                </hair_tags>
+                <beard_tags>
+                    <beard_tag name="empire" />
+                </beard_tags>
+                <tattoo_tags>
+                    <tattoo_tag name="Cleanface" />
+                </tattoo_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="255" />
@@ -21180,14 +22481,14 @@
                 <skill id="Engineering" value="240" />
             </skills>
             <Traits>
-                <Trait id="Honor" value="2" />
-                <Trait id="Generosity" value="1" />
-                <Trait id="Calculating" value="0" />
-                <Trait id="Mercy" value="1" />
+                <Trait id="Honor" value="-2" />
+                <Trait id="Generosity" value="-1" />
+                <Trait id="Calculating" value="2" />
+                <Trait id="Mercy" value="-2" />
                 <Trait id="Valor" value="2" />
-                <Trait id="Egalitarian" value="0" />
+                <Trait id="Egalitarian" value="-1" />
                 <Trait id="Oligarchic" value="1" />
-                <Trait id="Authoritarian" value="0" />
+                <Trait id="Authoritarian" value="2" />
             </Traits>
             <Equipments>
             	<EquipmentSet id="mordor_num_bat_template_lord_inf" />
@@ -21207,12 +22508,18 @@
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
-            <xsl:attribute name="culture">Culture.empire</xsl:attribute>
+            <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
             <xsl:attribute name="skill_template">SkillSet.taom_bn_sorceress_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
                 <BodyProperties version="4" age="46" weight="0.0046" build="0.3356" key="0002C006C000300DBB819D7BA4AAAA86A5A83867A3769C666827A32B6C74B51700A506030ADD775B00000000000000000000000000000000000000003F5C0102" />
+                <hair_tags>
+                    <hair_tag name="empire" />
+                </hair_tags>
+                <tattoo_tags>
+                    <tattoo_tag name="Cleanface" />
+                </tattoo_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="140" />
@@ -21235,14 +22542,14 @@
                 <skill id="Engineering" value="210" />
             </skills>
             <Traits>
-                <Trait id="Honor" value="2" />
-                <Trait id="Generosity" value="2" />
-                <Trait id="Calculating" value="1" />
-                <Trait id="Mercy" value="2" />
-                <Trait id="Valor" value="0" />
-                <Trait id="Egalitarian" value="1" />
-                <Trait id="Oligarchic" value="1" />
-                <Trait id="Authoritarian" value="0" />
+                <Trait id="Honor" value="-2" />
+                <Trait id="Generosity" value="-2" />
+                <Trait id="Calculating" value="2" />
+                <Trait id="Mercy" value="-2" />
+                <Trait id="Valor" value="1" />
+                <Trait id="Egalitarian" value="-2" />
+                <Trait id="Oligarchic" value="2" />
+                <Trait id="Authoritarian" value="2" />
             </Traits>
             <Equipments>
             	<EquipmentSet id="mordor_num_bat_template_lord_cav" />
@@ -21266,7 +22573,16 @@
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.2534" build="0.5733" key="00057C0D0000131AC186C84D4697AC7356B46C8983BEB92A379743C66986654300B946030BACA5A60000000000000000000000000000000000000000676C6082"/>
+                <BodyProperties version="4" weight="0.2534" build="0.5733" key="00057C0D0000131AC186C84D4697AC7356B46C8983BEB92A379743C66986654300B946030BACA5A60000000000000000000000000000000000000000676C6082" />
+                <hair_tags>
+                    <hair_tag name="empire" />
+                </hair_tags>
+                <beard_tags>
+                    <beard_tag name="empire" />
+                </beard_tags>
+                <tattoo_tags>
+                    <tattoo_tag name="Cleanface" />
+                </tattoo_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="180" />
@@ -21289,11 +22605,11 @@
                 <skill id="Engineering" value="100" />
             </skills>
             <Traits>
-                <Trait id="Honor" value="1" />
+                <Trait id="Honor" value="2" />
                 <Trait id="Generosity" value="1" />
-                <Trait id="Calculating" value="1" />
-                <Trait id="Mercy" value="2" />
-                <Trait id="Valor" value="0" />
+                <Trait id="Calculating" value="0" />
+                <Trait id="Mercy" value="1" />
+                <Trait id="Valor" value="2" />
                 <Trait id="Egalitarian" value="1" />
                 <Trait id="Oligarchic" value="0" />
                 <Trait id="Authoritarian" value="0" />
@@ -21311,46 +22627,55 @@
         <xsl:copy>
             <xsl:attribute name="id">lord_WE8_u</xsl:attribute>
             <xsl:attribute name="name">{=aom_lord_WE8_u_name}Barandil</xsl:attribute>
-            <xsl:attribute name="age">33</xsl:attribute>
+            <xsl:attribute name="age">35</xsl:attribute>
             <xsl:attribute name="voice">earnest</xsl:attribute>
             <xsl:attribute name="default_group">HorseArcher</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">false</xsl:attribute>
-            <xsl:attribute name="culture">Culture.empire</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.taom_dunland_knight_skills</xsl:attribute>
+            <xsl:attribute name="culture">Culture.gondor</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_canonical_lord_WE8_u_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.5" build="0.5" key="000A80034014168D54C4BC37777515B7D845A4BA65A0A9BB59628895AB9747530077760307872A4A000000000000000000000000000000000000000052DC30C2"/>
+                <BodyProperties version="4" weight="0.5" build="0.5" key="000A80034014168D54C4BC37777515B7D845A4BA65A0A9BB59628895AB9747530077760307872A4A000000000000000000000000000000000000000052DC30C2" />
+                <hair_tags>
+                    <hair_tag name="empire" />
+                </hair_tags>
+                <beard_tags>
+                    <beard_tag name="empire" />
+                </beard_tags>
+                <tattoo_tags>
+                    <tattoo_tag name="Cleanface" />
+                </tattoo_tags>
             </face>
             <skills>
-                <skill id="OneHanded" value="230" />
-                <skill id="TwoHanded" value="180" />
-                <skill id="Polearm" value="220" />
-                <skill id="Bow" value="100" />
-                <skill id="Crossbow" value="70" />
-                <skill id="Throwing" value="120" />
-                <skill id="Riding" value="250" />
-                <skill id="Athletics" value="240" />
-                <skill id="Crafting" value="60" />
-                <skill id="Scouting" value="140" />
-                <skill id="Tactics" value="180" />
-                <skill id="Roguery" value="60" />
-                <skill id="Charm" value="160" />
-                <skill id="Leadership" value="90" />
-                <skill id="Trade" value="90" />
-                <skill id="Steward" value="130" />
-                <skill id="Medicine" value="90" />
-                <skill id="Engineering" value="100" />
+                <skill id="OneHanded" value="215" />
+                <skill id="TwoHanded" value="165" />
+                <skill id="Polearm" value="205" />
+                <skill id="Bow" value="215" />
+                <skill id="Crossbow" value="135" />
+                <skill id="Throwing" value="160" />
+                <skill id="Riding" value="180" />
+                <skill id="Athletics" value="235" />
+                <skill id="Crafting" value="90" />
+                <skill id="Scouting" value="245" />
+                <skill id="Tactics" value="235" />
+                <skill id="Roguery" value="100" />
+                <skill id="Charm" value="180" />
+                <skill id="Leadership" value="226" />
+                <skill id="Trade" value="200" />
+                <skill id="Steward" value="188" />
+                <skill id="Medicine" value="120" />
+                <skill id="Engineering" value="140" />
             </skills>
             <Traits>
                 <Trait id="Honor" value="2" />
                 <Trait id="Generosity" value="1" />
-                <Trait id="Calculating" value="0" />
+                <Trait id="Calculating" value="1" />
                 <Trait id="Mercy" value="1" />
                 <Trait id="Valor" value="2" />
-                <Trait id="Egalitarian" value="0" />
-                <Trait id="Oligarchic" value="1" />
+                <Trait id="Egalitarian" value="1" />
+                <Trait id="Oligarchic" value="0" />
                 <Trait id="Authoritarian" value="0" />
             </Traits>
             <Equipments>
@@ -21366,46 +22691,55 @@
         <xsl:copy>
             <xsl:attribute name="id">lord_WE9_l</xsl:attribute>
             <xsl:attribute name="name">{=aom_lord_WE9_l_name}Duinhir</xsl:attribute>
-            <xsl:attribute name="age">63</xsl:attribute>
+            <xsl:attribute name="age">50</xsl:attribute>
             <xsl:attribute name="voice">curt</xsl:attribute>
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">false</xsl:attribute>
-            <xsl:attribute name="culture">Culture.empire</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.taom_elder_lord_skills</xsl:attribute>
+            <xsl:attribute name="culture">Culture.gondor</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_canonical_lord_WE9_l_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.3588" build="0.4884" key="000A580E401403C201810D5A6209FC0C85E4826975040B007556440C6BC8A90200B756030B13BA9100000000000000000000000000000000000000003B643002"/>
+                <BodyProperties version="4" weight="0.3588" build="0.4884" key="000A580E401403C201810D5A6209FC0C85E4826975040B007556440C6BC8A90200B756030B13BA9100000000000000000000000000000000000000003B643002" age="35" />
+                <hair_tags>
+                    <hair_tag name="empire" />
+                </hair_tags>
+                <beard_tags>
+                    <beard_tag name="empire" />
+                </beard_tags>
+                <tattoo_tags>
+                    <tattoo_tag name="Cleanface" />
+                </tattoo_tags>
             </face>
             <skills>
-                <skill id="OneHanded" value="200" />
-                <skill id="TwoHanded" value="150" />
-                <skill id="Polearm" value="190" />
-                <skill id="Bow" value="90" />
-                <skill id="Crossbow" value="70" />
-                <skill id="Throwing" value="90" />
-                <skill id="Riding" value="180" />
-                <skill id="Athletics" value="160" />
-                <skill id="Crafting" value="110" />
-                <skill id="Scouting" value="180" />
-                <skill id="Tactics" value="295" />
-                <skill id="Roguery" value="80" />
-                <skill id="Charm" value="220" />
-                <skill id="Leadership" value="286" />
-                <skill id="Trade" value="180" />
-                <skill id="Steward" value="248" />
-                <skill id="Medicine" value="160" />
-                <skill id="Engineering" value="190" />
+                <skill id="OneHanded" value="205" />
+                <skill id="TwoHanded" value="172" />
+                <skill id="Polearm" value="177" />
+                <skill id="Bow" value="290" />
+                <skill id="Crossbow" value="177" />
+                <skill id="Throwing" value="177" />
+                <skill id="Riding" value="177" />
+                <skill id="Athletics" value="177" />
+                <skill id="Crafting" value="177" />
+                <skill id="Scouting" value="255" />
+                <skill id="Tactics" value="202" />
+                <skill id="Roguery" value="177" />
+                <skill id="Charm" value="177" />
+                <skill id="Leadership" value="203" />
+                <skill id="Trade" value="177" />
+                <skill id="Steward" value="185" />
+                <skill id="Medicine" value="177" />
+                <skill id="Engineering" value="177" />
             </skills>
             <Traits>
                 <Trait id="Honor" value="2" />
-                <Trait id="Generosity" value="2" />
-                <Trait id="Calculating" value="2" />
-                <Trait id="Mercy" value="1" />
+                <Trait id="Generosity" value="1" />
+                <Trait id="Calculating" value="1" />
+                <Trait id="Mercy" value="0" />
                 <Trait id="Valor" value="2" />
                 <Trait id="Egalitarian" value="0" />
-                <Trait id="Oligarchic" value="2" />
+                <Trait id="Oligarchic" value="1" />
                 <Trait id="Authoritarian" value="1" />
             </Traits>
             <Equipments>
@@ -21421,46 +22755,56 @@
         <xsl:copy>
             <xsl:attribute name="id">lord_WE9_u</xsl:attribute>
             <xsl:attribute name="name">{=aom_lord_WE9_u_name}Duilin</xsl:attribute>
-            <xsl:attribute name="age">33</xsl:attribute>
+            <xsl:attribute name="age">26</xsl:attribute>
             <xsl:attribute name="voice">earnest</xsl:attribute>
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
-            <xsl:attribute name="culture">Culture.empire</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.taom_gondor_knight_skills</xsl:attribute>
+            <xsl:attribute name="culture">Culture.gondor</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_canonical_lord_WE9_u_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
+            <xsl:attribute name="is_female">false</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.5" build="0.5" key="0000AC001170000E68844A7B5955A69256989B97A185847C36C937ABA3698C8C01977613097BD71A000000000000000000000000000000000000000061341003"/>
+                <BodyProperties version="4" weight="0.5" build="0.5" key="000A80034014168D54C4BC37777515B7D845A4BA65A0A9BB59628895AB9747530077760307872A4A000000000000000000000000000000000000000052DC30C2" />
+                <hair_tags>
+                    <hair_tag name="empire" />
+                </hair_tags>
+                <beard_tags>
+                    <beard_tag name="empire" />
+                </beard_tags>
+                <tattoo_tags>
+                    <tattoo_tag name="Cleanface" />
+                </tattoo_tags>
             </face>
             <skills>
-                <skill id="OneHanded" value="230" />
-                <skill id="TwoHanded" value="180" />
-                <skill id="Polearm" value="220" />
-                <skill id="Bow" value="100" />
-                <skill id="Crossbow" value="70" />
-                <skill id="Throwing" value="120" />
-                <skill id="Riding" value="250" />
-                <skill id="Athletics" value="240" />
-                <skill id="Crafting" value="60" />
-                <skill id="Scouting" value="140" />
-                <skill id="Tactics" value="205" />
-                <skill id="Roguery" value="60" />
-                <skill id="Charm" value="160" />
-                <skill id="Leadership" value="186" />
-                <skill id="Trade" value="90" />
-                <skill id="Steward" value="138" />
-                <skill id="Medicine" value="90" />
-                <skill id="Engineering" value="100" />
+                <skill id="OneHanded" value="200" />
+                <skill id="TwoHanded" value="150" />
+                <skill id="Polearm" value="190" />
+                <skill id="Bow" value="275" />
+                <skill id="Crossbow" value="130" />
+                <skill id="Throwing" value="160" />
+                <skill id="Riding" value="170" />
+                <skill id="Athletics" value="255" />
+                <skill id="Crafting" value="100" />
+                <skill id="Scouting" value="255" />
+                <skill id="Tactics" value="240" />
+                <skill id="Roguery" value="90" />
+                <skill id="Charm" value="170" />
+                <skill id="Leadership" value="236" />
+                <skill id="Trade" value="120" />
+                <skill id="Steward" value="178" />
+                <skill id="Medicine" value="130" />
+                <skill id="Engineering" value="120" />
             </skills>
             <Traits>
                 <Trait id="Honor" value="2" />
-                <Trait id="Generosity" value="2" />
-                <Trait id="Calculating" value="2" />
-                <Trait id="Mercy" value="2" />
-                <Trait id="Valor" value="0" />
+                <Trait id="Generosity" value="1" />
+                <Trait id="Calculating" value="0" />
+                <Trait id="Mercy" value="1" />
+                <Trait id="Valor" value="2" />
                 <Trait id="Egalitarian" value="1" />
-                <Trait id="Oligarchic" value="1" />
-                <Trait id="Authoritarian" value="1" />
+                <Trait id="Oligarchic" value="0" />
+                <Trait id="Authoritarian" value="0" />
             </Traits>
             <Equipments>
                 <EquipmentSet id="gondor_lord_blackroot_1" />
@@ -21475,17 +22819,23 @@
         <xsl:copy>
             <xsl:attribute name="id">lord_WE9_u2</xsl:attribute>
             <xsl:attribute name="name">{=aom_lord_WE9_u2_name}Rosfin</xsl:attribute>
-            <xsl:attribute name="age">53</xsl:attribute>
+            <xsl:attribute name="age">37</xsl:attribute>
             <xsl:attribute name="voice">curt</xsl:attribute>
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
-            <xsl:attribute name="culture">Culture.empire</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.taom_dunland_lady_skills</xsl:attribute>
+            <xsl:attribute name="culture">Culture.gondor</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_gondor_lady_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
-                <BodyProperties version="4" weight="0.5" build="0.5" key="0000AC001170000E68844A7B5955A69256989B97A185847C36C937ABA3698C8C01977613097BD71A000000000000000000000000000000000000000061341003"/>
+                <BodyProperties version="4" weight="0.4" build="0.5" key="000B500A1114300BB69199998669E37568754C66A53693B2BA7A9855C96751D601677613062B368C000000000000000000000000000000000000000040CC4083" />
+                <hair_tags>
+                    <hair_tag name="empire" />
+                </hair_tags>
+                <tattoo_tags>
+                    <tattoo_tag name="Cleanface" />
+                </tattoo_tags>
             </face>
             <skills>
                 <skill id="OneHanded" value="60" />
@@ -21498,12 +22848,12 @@
                 <skill id="Athletics" value="110" />
                 <skill id="Crafting" value="140" />
                 <skill id="Scouting" value="110" />
-                <skill id="Tactics" value="130" />
+                <skill id="Tactics" value="155" />
                 <skill id="Roguery" value="60" />
                 <skill id="Charm" value="240" />
-                <skill id="Leadership" value="80" />
+                <skill id="Leadership" value="186" />
                 <skill id="Trade" value="180" />
-                <skill id="Steward" value="240" />
+                <skill id="Steward" value="248" />
                 <skill id="Medicine" value="210" />
                 <skill id="Engineering" value="130" />
             </skills>

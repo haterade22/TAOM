@@ -228,7 +228,7 @@ fail = [
   '\[MarshalsWord\] order panel registration failed',
   '\[MarshalsWord\] giving back a soldier',
   '\[MarshalsWord\] the thrower stand failed',
-  '\[PatchApply\] (?:\S*Patch141_\S*|Patch_MissionTime_SetMovementOrder|TAOM\.Features\.MarshalsWord\.\S+) (?:FAILED|SKIPPED)',
+  '\[PatchApply\] (?:\S*Patch141_\S*|Patch_MissionTime_(?:MarshalsWord|SetMovementOrder)|TAOM\.Features\.MarshalsWord\.\S+) (?:FAILED|SKIPPED)',
 ]
 # A full queue needs twelve captures first, so its log already holds a pass line and this check passes. A session that never went live
 # (Enable off, or a mission it does not run in) writes one skip line with reason=setting-off or reason=mission-refused: NOT REACHED, with that reason.
@@ -517,6 +517,9 @@ fail = [
 absence = "not-reached"
 
 # Throwers on an advance (build-spec 9.4). MarshalThrowerDriver.cs writes every line of the four checks below, from the mission tick, keyed by mission and run.
+# The thrower category apply failure: a build before #1175 logs the category as Patch_MissionTime_SetMovementOrder (FAILED, written with the
+# category name); a build from #1175 logs Patch_MissionTime_MarshalsWord. A SKIPPED line names the class, never the category (PatchCategoryApplier).
+# An old-name line is read as the throwers off, even when only Patch35 failed (it came after them).
 [[check]]
 id = "taom.marshals-word.throwers-stand"
 needs = "in a field battle, give an Advance to a company of javelin infantry in Line, at fire at will, with an enemy company ahead: the company stops short of the enemy at a gap of 24 to 32 metres and does not walk past the point it was sent to by more than 6 metres"
@@ -526,7 +529,7 @@ fail = [
   '\[Check\] id=taom\.marshals-word\.fault result=fail',
   '\[MarshalsWord\] the thrower stand failed',
   '\[Check\] id=taom\.marshals-word\.throwers-stand result=fail',
-  '\[PatchApply\] Patch_MissionTime_SetMovementOrder (?:FAILED|SKIPPED)',
+  '\[PatchApply\] (?:Patch_MissionTime_(?:MarshalsWord|SetMovementOrder) FAILED|TAOM\.Features\.MarshalsWord\.Hooks\.MarshalThrower\w+ SKIPPED)',
 ]
 # Judged when a run ends, by a release or by the end of the Advance. A skip (reason=released-before-stand, with why= the release reason) means the run ended before the company stood: NOT REACHED.
 # reason=closed-before-stand is a gap of 8 metres or less before the first stand (a company that starts within 12 metres of the enemy starts no run and writes no stand check), reason=walked-in is an overshoot past 6 metres, whether or not the company stood (one that walks through its point without stopping never stands), reason=fault is the postfix having thrown. A fail stops the stage (build-spec 9.4).
@@ -541,7 +544,7 @@ fail = [
   '\[Check\] id=taom\.marshals-word\.fault result=fail',
   '\[MarshalsWord\] the thrower stand failed',
   '\[Check\] id=taom\.marshals-word\.throwers-throw result=fail',
-  '\[PatchApply\] Patch_MissionTime_SetMovementOrder (?:FAILED|SKIPPED)',
+  '\[PatchApply\] (?:Patch_MissionTime_(?:MarshalsWord|SetMovementOrder) FAILED|TAOM\.Features\.MarshalsWord\.Hooks\.MarshalThrower\w+ SKIPPED)',
 ]
 # Judged at the release. shots counts the company's shots from its first stand to the release, whatever its fire mode; throws on the approach or after the release do not count. A fail (reason=few-throws) needs ten seconds stood: the soldiers stood and did not throw.
 # A skip (reason=never-stood or reason=short-stand) is NOT REACHED. The scoring that should make the soldiers throw is a decompile read, so a fail here is the finding that stops the stage (build-spec 9.4).
@@ -556,7 +559,7 @@ fail = [
   '\[Check\] id=taom\.marshals-word\.fault result=fail',
   '\[MarshalsWord\] the thrower stand failed',
   '\[Check\] id=taom\.marshals-word\.throwers-melee result=fail',
-  '\[PatchApply\] Patch_MissionTime_SetMovementOrder (?:FAILED|SKIPPED)',
+  '\[PatchApply\] (?:Patch_MissionTime_(?:MarshalsWord|SetMovementOrder) FAILED|TAOM\.Features\.MarshalsWord\.Hooks\.MarshalThrower\w+ SKIPPED)',
 ]
 # Written only for a release by a rule (spent, enemy-close, stand-time, run-time); a release by a gate reason writes none. reason=no-advance is blows with the company short of 3 metres toward the enemy (an enemy walking into a company that stayed at its stand); reason=no-melee is no blows. A skip (reason=order-changed, reason=new-advance, reason=emptied or reason=ai-control): NOT REACHED.
 absence = "not-reached"
@@ -570,7 +573,7 @@ fail = [
   '\[Check\] id=taom\.marshals-word\.fault result=fail',
   '\[MarshalsWord\] the thrower stand failed',
   '\[Check\] id=taom\.marshals-word\.throwers-cost result=fail',
-  '\[PatchApply\] Patch_MissionTime_SetMovementOrder (?:FAILED|SKIPPED)',
+  '\[PatchApply\] (?:Patch_MissionTime_(?:MarshalsWord|SetMovementOrder) FAILED|TAOM\.Features\.MarshalsWord\.Hooks\.MarshalThrower\w+ SKIPPED)',
 ]
 # Judged at the end of each epoch, which begins when the table goes from null to a table and ends when it goes back to null. The [Marshal] throwers-cost line beside it carries the published bucket, the bucket of every other Advance and the counts.
 # reason=mean or reason=max is a fail; a skip with reason=too-few-calls is NOT REACHED. If the first run fails it, an exclusion of the target from the patch shield is the first thing to try (build-spec 9.4).

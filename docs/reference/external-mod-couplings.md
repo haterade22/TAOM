@@ -19,6 +19,13 @@ nothing in TAOM marks these members as externally read. What the other mod does 
 
 Before renaming, retyping or moving a member in the tables, grep this file, and say so in the commit body.
 
+The sections for SmithingExtended, RingSystem, TAOM_UI, DynamicPOIs, ThemeSwitcher, the standalone HoN modules, RTS Camera,
+RaceArmorFit and ArmoryBalance_TAOM, and the added CampaignProbe and RealmUI rows, were read in yotthani's source at
+`yotthani/bannerlord` `c45d8374` (cited `@c45d8374`). Each TAOM member in them was re-checked against trunk at v2.0.38 with
+Grep on 2026-11-13 [TAOM-verified, names only; no mod was run]. How the other mod behaves on a miss is its source's claim.
+Two couplings read an enum as an integer. Reordering or inserting a member in `FactionSide` or `WarPhase` shifts the meaning in
+the other mod and breaks nothing in TAOM's build; `ExternalModContractTests` (`TAOM.Tests/Infrastructure/ExternalModContractTests.cs`, tests `FactionSide_KeepsTheValuesOtherModsRead` and `WarPhase_KeepsTheValuesOtherModsAndSavesRead`; #1186) pins the values. Append a new value at the end.
+
 ## Armory_TAOM (armor and auto-resolve for TAOM's scripted attacks)
 
 | TAOM member | How it is reached | Upstream line | TAOM path (lines re-read 2026-11-03) |
@@ -66,12 +73,30 @@ Moving a `PlayAs` or `PresetBridge` target type into `TAOM.Client` (the ADR-013 
 because the lookup needs `IoC` and the type in one assembly. `FieldCampMapView` already lives in `TAOM.Client` and still
 resolves, because `TypeByName` scans every assembly.
 
+More RealmUI rows, read at `@c45d8374` and re-checked on trunk v2.0.38 (names only):
+
+| TAOM member | How it is reached | Upstream line | TAOM path |
+|---|---|---|---|
+| `ModuleData/factionmap/factions.json` keys `game_faction`, `playable`, `name`, `side`, `description`, `difficulty`, `strengths`, `weaknesses`, `bonuses[]`, `special_units[]`, `perks[]` | parsed as data; only entries with `playable: true` and a `game_faction` are kept, keyed by `game_faction`; a missing file logs "faction sheets: none" and nothing else | `RealmUI/Game/Data/RealmInfo.cs@c45d8374`:55-92 | `Main/_Module/ModuleData/factionmap/factions.json` |
+| Gauntlet layer and movie named `TaomRealmNames` | RealmUI finds the layer by that name to shrink every `TextWidget` font size in quiet map mode and to show or hide it | `RealmUI/Game/Map/QuietMapMode.cs@c45d8374`:48-83; `Flow/FlowController.cs`:184; `Map/MapCam.cs`:350, 358, 475-476 | `Client/Features/RealmBorders/UI/RealmBordersMapView.cs`:52-53 |
+| Menu option ids `taom_armoury_visit`, `taom_sl_order`, `taom_sl_order_supplies`, `taom_castle_recruit_volunteers`, `taom_emissary_speak`, `taom_fc_dismiss_menu` | keys of an icon-group table | `RealmUI/Game/ModuleData/menu_groups.json@c45d8374`:29-36 | `ArmouryMenuBehavior`, `SupplyOrderTownMenu`, `CastleRecruitmentBehavior`, `EliteEmissaryBehavior`, `FieldCommissionDismissMenuBehavior` under `Main/Features/` |
+
+The table lists both `taom_sl_order` and `taom_sl_order_supplies`. TAOM's option id is `taom_sl_order_supplies`
+(`Main/Features/SupplyLines/Hooks/SupplyOrderTownMenu.cs`:16); `taom_sl_order` survives only inside a localization key there.
+The table maps each id to a group and an icon, so a renamed id loses its icon group.
+
 ## CampaignProbe (unattended campaign runner)
 
 | TAOM member | How it is reached | Upstream line | TAOM path |
 |---|---|---|---|
 | `TaomMilitaryPowerModel._settings` (private readonly `IBattleBalanceSettingsProvider`) | reflection on the field, after unwrapping the probe's own model through `BaseModel` | `HoN/CampaignProbe/Integration/TaomPowerSettingsReader.cs`:23-28 | `Main/Features/BattleBalance/Models/TaomMilitaryPowerModel.cs`:9 |
 | `EnableCustomTroopPower`, `OverrideVanillaTierPower`, `Tier7Power` to `Tier10Power`, `MountedMultiplier`, `HeroMultiplier` | property reflection on that object | `:35-40` and the lines after | `Main/Features/BattleBalance/BattleBalanceSettingsProvider.cs`:20-27 |
+| `TroopWeight.TroopWeightService.ApplyPartySizeWeightPenalty(PartyBase, ref ExplainedNumber, bool)` | Harmony prefix found by `AccessTools.TypeByName` and exact parameter types; it snapshots the pre-penalty party size limit, so it relies on being the LAST step of `TaomPartySizeModel.GetPartyMemberSizeLimit` | `HoN/CampaignProbe/Integration/Levers/TroopWeightPatch.cs@c45d8374`:8-35 | `Main/Features/TroopWeight/TroopWeightService.cs`:103; called last at `Main/Features/CulturalFeats/Models/TaomPartySizeModel.cs`:106 |
+| `TaomMilitaryPowerModel.GetDefaultTroopPower`, `TaomCombatSimulationModel` (its `SimulateHit` override calls `base`), `TaomPartySizeModel`, `TaomPartyMoraleModel.GetEffectivePartyMorale` | the probe registers its own wrapper models with `AddModel` after TAOM's, so the wrapper's `BaseModel` is TAOM's model | `HoN/CampaignProbe/Integration/CampaignProbeSubModule.cs@c45d8374`:174-207; `HoN/CampaignProbe/Core/CallSiteCensus.cs@c45d8374`:21 (the type name as a string) | `BattleBalance/Models/TaomMilitaryPowerModel.cs`:7, 19; `TaomCombatSimulationModel.cs`:10, 30; `CulturalFeats/Models/TaomPartySizeModel.cs`:18; `TaomPartyMoraleModel.cs`:10, 21 (all under `Main/Features/`) |
+| `ModuleData/execution/alignment.json` of the TAOM module | read as a file by the lever applier | `HoN/CampaignProbe/Integration/Levers/LeverApplier.cs@c45d8374`:162-166 | `Main/_Module/ModuleData/execution/alignment.json` |
+
+Changing the parameter list of `ApplyPartySizeWeightPenalty`, or calling it before the other size feats in `TaomPartySizeModel`,
+makes the probe report "not found" and end the lever run (read from its source, not run).
 
 ## VanillaTuning_TAOM (optional side rules)
 
@@ -79,6 +104,124 @@ It reads TAOM's side table as a file, `Modules/TAOM/ModuleData/execution/alignme
 empty file switches its rules off with a log line. TAOM's copy is `Main/_Module/ModuleData/execution/alignment.json`. It also
 prefixes `MakePeaceAction.ApplyInternal` next to TAOM's own prefix; see [diplomacy.md](../features/diplomacy.md)
 "Free/Shadow side boundary".
+
+## SmithingExtended (camp-smith repair and gear wear)
+
+| TAOM member | How it is reached | Upstream line (`@c45d8374`) | TAOM path |
+|---|---|---|---|
+| `TAOM.IoC` (type found by name in the `TAOM` assembly), then `Resolve<T>()` for `Features.FieldCamp.ICampService` | reflection: `GetType("TAOM.IoC")`, `GetType("TAOM.Features.FieldCamp.ICampService")` | `HoN/SmithingExtended/Integration/Repair/CampProbe.cs`:116-122 | `Main/IoC.cs`:278; `Main/Features/FieldCamp/ICampService.cs`:4 (namespace), 31 |
+| `ICampService.PlayerCamp` (property), `CampState.IsReady` (property; the probe also tries a field of that name) | `GetProperty("PlayerCamp")`, `GetProperty("IsReady") ?? GetField("IsReady")`; the player party only | `CampProbe.cs`:116-122 | `ICampService.cs`:31; `Main/Features/FieldCamp/Domain/CampState.cs`:64 |
+| `TaomAgentStatCalculateModel`, `TaomBattleRewardModel` | SmithingExtended registers `WearAgentStatModel` and `WearBattleRewardModel` after TAOM's models, so each wrapper's `BaseModel` is TAOM's; its `SubModule.xml` lists `TAOM` and `Armory_TAOM` as optional `LoadBeforeThis` | `Integration/Wear/WearAgentStatModel.cs`:14; `WearBattleRewardModel.cs`:24, 35 | `Main/Features/CareerSystem/Models/TaomAgentStatCalculateModel.cs`:28; `Main/Features/CulturalFeats/Models/TaomBattleRewardModel.cs`:15 |
+
+A rename of `PlayerCamp` or `IsReady` turns the camp-smith repair off without a build error. Replacing either TAOM model class in its
+`AddModel` slot moves the wrapper's base. The wrapper copies the non-virtual AI level multiplier into `BaseModel` itself; see
+[gamemodel-system.md](engine/gamemodel-system.md) "Non-virtual setters on a model".
+
+## RingSystem (hunter war and culture alignment)
+
+| TAOM member | How it is reached | Upstream line (`@c45d8374`) | TAOM path |
+|---|---|---|---|
+| `TAOM.IoC`, `Diplomacy.IWarOfTheRingService`, `Execution.IAlignmentService` | `Type.GetType("TAOM.IoC, TAOM")` and the two interface names with `, TAOM`; the resolved service is cached statically and cleared at campaign end | `HoN/RingSystem.Threat/TaomHunterWarProvider.cs`:21-22, 29-48; `HoN/RingSystem/RingCultureAlignment.cs`:52-58 | `Main/IoC.cs`:278; `Main/Features/Diplomacy/IWarOfTheRingService.cs`:5; `Main/Features/Execution/IAlignmentService.cs`:3 |
+| `IWarOfTheRingService.IsWarOfTheRingActive` (bool, FullWar only) | property reflection | `TaomHunterWarProvider.cs`:30-36 | `IWarOfTheRingService.cs`:8 |
+| `IWarOfTheRingService.CurrentPhase`, read with `Convert.ToInt32` | **enum as int**: upstream lists Peace 0, IsengardWar 1, FullWar 2 (`TaomHunterWarProvider.cs`:39) | `TaomHunterWarProvider.cs`:39-51 | `IWarOfTheRingService.cs`:7; `Main/Features/Diplomacy/Models/WarPhase.cs` |
+| `IAlignmentService.GetKingdomSide(string)`, read as `FactionSide` | **enum as int**: Free 0, Evil 1, Neutral 2 | `RingCultureAlignment.cs`:52-58; `TaomHunterWarProvider.cs`:101-122 | `IAlignmentService.cs`:5; `Main/Features/Execution/FactionSide.cs` (no explicit values) |
+
+`WarPhase` has a fourth value, `WarEnded` = 3, appended for saves that hold the older ints (comment in `WarPhase.cs`); upstream
+lists only 0 to 2. Whether RingSystem handles 3 was not read [TAOM-verified, v2.0.38: the enum; RingSystem's handling is open].
+A reorder or an insertion in either enum remaps values in RingSystem and in TAOM_UI (below) and fails `ExternalModContractTests` (#1186).
+
+## TAOM_UI (nameplate re-skin, `HoN/TAOM_UI` v1.1.0)
+
+| TAOM member | How it is reached | Upstream line (`@c45d8374`) | TAOM path |
+|---|---|---|---|
+| `IoC.Resolve<IAlignmentService>().GetKingdomSide(string)` | reflection; the result is mapped by ordinal, **enum as int**: `FactionSide` Free 0, Evil 1, Neutral 2 | `HoN/TAOM_UI/AlignmentProvider.cs`:8-16, 91-150 | `IoC.cs`:278; `IAlignmentService.cs`:3-5; `FactionSide.cs`:3-8 |
+| `ModuleData/execution/alignment.json` | fallback reader of a flat `{"kingdomId": "free\|evil\|neutral"}` map that pairs quoted tokens in order; a nested object or array would shift the pairing | `AlignmentProvider.cs`:190-262 | `Main/_Module/ModuleData/execution/alignment.json` (flat on trunk v2.0.38) |
+| `GUI/PreFabs/Nameplate/SettlementNameplateItemLarge.xml`, `Medium`, `Small` | replaced by the same relative path; its source says TAOM is `LoadBeforeThis`, so its prefab wins | `docs/realm-ui/research/ui-inventory.md`:500 | `Main/_Module/GUI/PreFabs/Nameplate/SettlementNameplateItem{Large,Medium,Small}.xml` |
+| Harmony postfix on `SettlementNameplatesVM.Update`, and on `SettlementNameplateWidget.UpdateNameplateTransparencyAndBrightness` | TAOM patches the same `Update`: its cull prefix returns false once its own update ran, and Harmony still runs postfixes on a skipped original, so TAOM_UI's postfix runs every frame (cost not measured) | `HoN/TAOM_UI/SettlementNameplatesVMPatch.cs`:8-50; `SettlementNameplateWidgetPatch.cs`:10-40 | `Main/Features/NameplateCull/Hooks/SettlementNameplatesVM_Update_NameplateCull_Patch.cs`:14; `Main/Features/SettlementNameplateFade/Hooks/SettlementNameplateWidget_DetermineTargetAlphaValue_Patch.cs`:27 (TAOM patches `DetermineTargetAlphaValue`, which `UpdateNameplateTransparencyAndBrightness` calls, `SettlementNameplateWidget.cs:519` on v1.5.7) |
+
+A TAOM edit to the three nameplate prefabs is hidden while TAOM_UI is loaded. Reordering `FactionSide` swaps good and evil plates.
+
+## DynamicPOIs (`TAOM_POI`)
+
+DynamicPOIs adds two styles to the brush `Settlement.Event.Type.Image` with `BaseBrush="Settlement.Event.Type.Image"`, so the new brush
+inherits the existing brush of that name and adds to it (`TAOM_POI/GUI/Brushes/dynamicpois_brushes.xml@c45d8374`:1-25). The header
+comment says the last module loaded wins, so the inheritance includes another module's styles only if TAOM_POI loads after it.
+TAOM defines the same brush name in `Main/_Module/GUI/Brushes/Nameplates.xml`:276 [TAOM-verified, v2.0.38], so TAOM_POI must load
+after TAOM to extend TAOM's copy. A rename of that brush in TAOM breaks the inheritance (read from the XML, not run).
+
+## ThemeSwitcher (`BannerlordThemeSwitcher`)
+
+Its theme manifests bind to vanilla culture and kingdom ids (Gondor: `BaseCulture empire`, `BoundKingdoms empire`; Erebor `sturgia`;
+Harad `aserai`; Lothlorien `battania`; Rhun `khuzait`): `Themes/<Theme>/ThemeManifest.xml@c45d8374`:7-10. TAOM reuses the ids for other
+peoples (`empire` is Dunland, `sturgia` Dale, `aserai` Harad, `khuzait` Rhun, `battania` Khand; Gondor is `empire_w`), see
+[id-cheatsheet.md](../modding/id-cheatsheet.md). With both mods installed a Dunland player would get the Gondor theme and a Gondor player
+none. yotthani's inventory finds no in-game test result of the ThemeSwitcher on 1.5.3 in the files it searched (`ui-inventory.md`:611). Not a TAOM defect; the id table is the check
+if TAOM ever lists ThemeSwitcher as compatible.
+
+## yotthani's standalone HoN modules (SiegeDismount, SmartCavalryAI, MixedFormations, CompanionTactics, EquipPresets, FiefManagement, TransferbuttonMenu)
+
+Each carries a `TaomGuard` (`HoN/<Module>/TaomGuard.cs@c45d8374`, seven files): `Utilities.GetModulesNames().Contains("TAOM")`. When
+true the module applies no Harmony patch, adds no behaviour, registers no save definition and shows one notice. If the module list is
+unreadable it re-checks later. CompanionTactics and EquipPresets also skip their save definitions because TAOM uses the same SaveBaseIds;
+their commit bodies (`c775dd30`, `6a52a281`) say a duplicate save id throws; `c775dd30` names `DefinitionContext`.
+
+| TAOM value | Where | Pinned by a test? [TAOM-verified, v2.0.38] |
+|---|---|---|
+| Module id `TAOM` | `Main/_Module/SubModule.xml`:4 | Yes, `ExternalModContractTests.SubModuleXml_DeclaresTheModuleIdTaom` (`TAOM.Tests/Infrastructure/ExternalModContractTests.cs`, no game needed; #1186) |
+| SaveBaseId 726900501 (EquipPresets; class ids 101 and 102) | `PresetSaveableTypeDefiner` | The base id only: `TAOM.Tests/Features/EquipPresets/PresetSaveableTypeDefinerTests.cs`:15-25 asserts it; the test is `RequiresGame`, so it runs only where the game DLLs load |
+| SaveBaseId 726900601 (FormationPreset, class id 101) | `Main/Features/CompanionTactics/FormationPresets/Models/FormationPresetSaveableTypeDefiner.cs`:18 | Yes, `FormationPresetSaveableTypeDefinerTests.BaseId_Is726900601` (`TAOM.Tests/Features/CompanionTactics/FormationPresets/FormationPresetSaveableTypeDefinerTests.cs`, #1186); it is `RequiresGame`, so it runs only where the game DLLs load |
+
+The two tests pin the base ids only. The class ids, the SyncData keys, the behaviour class names and the saved property ids are not
+pinned (#1186 holds the follow-up).
+
+**What each value protects** [TAOM-verified, v2.0.38 and v1.5.7, code read 2026-11-13; no save was loaded]:
+
+- **The module id.** Only the module id switches the standalone modules on: their guard reads nothing else. A rename lets both copies
+  of a feature activate and patch the same targets, and CompanionTactics and EquipPresets then register the save ids TAOM already
+  registered (a save id is base id plus class id, v1.5.7 `SaveableTypeDefiner.cs:87-90`; upstream's own comment says a second
+  definition throws at save-system init).
+- **The base ids.** A changed base id does not switch a standalone module on. It changes where TAOM's own saves find their types:
+  an older save's preset then has no definition, the engine creates no object for it (v1.5.7 `ObjectHeaderLoadData.cs:40-48`), and
+  for formation presets the list loads as null and TAOM substitutes an empty one (Codex's source trace, not run).
+- **Formation presets are never imported from the standalone mod.** TAOM reads the key `"TAOM_FormationPresets"`
+  (`Main/Features/CompanionTactics/FormationPresets/Hooks/FormationPresetCampaignBehavior.cs`:59); the standalone mod wrote
+  `"FormationPresets"` (`HoN/CompanionTactics/FormationPresets/FormationPresetCampaignBehavior.cs@c45d8374`:52). The same type id does
+  not bridge two keys. TAOM's definer comment (`FormationPresetSaveableTypeDefiner.cs`:9-10) still says the opposite.
+- **EquipPresets meet, but not field for field.** The behaviour class name `EquipmentPresetCampaignBehavior` (a behaviour's store
+  record is keyed by `StringId`, which defaults to the type name, v1.5.7 `CampaignBehaviorBase.cs:12-15`), the key
+  `"EquipPresets_HeroPresets"`, the base id and the class ids 101 and 102 match on both sides, and so do the six properties of
+  `HoNEquipmentPreset`. `HoNPresetItemReference` does not: TAOM saves `SlotIndex` as property 1 and `ItemStringId` as property 2
+  (`Main/Features/EquipPresets/Models/HoNPresetItemReference.cs`:26-29), and the standalone mod saves them the other way round
+  (`HoN/EquipPresets/Data/HoNPresetItemReference.cs@c45d8374`:9-13, its release of 2026-04-29). What the engine does with a preset
+  of the other layout on load was not read. TAOM's layout stays, because TAOM's saves have used it since 2026-05-07; an import of
+  the standalone mod's presets is not supported (#1194).
+
+## RTS Camera
+
+RTS Camera / Command System v5.4.16 (built for Bannerlord 1.4.8, read from a decompile on 23.09.2026, not run;
+`docs/analyse-rbm-rtscamera.md@c45d8374`:3-5, 66) detects TAOM and then switches off its own patch on
+`Formation.CalculateHasSignificantNumberOfMounted` (a getter). How it detects TAOM is not in that file. TAOM's `MarshalSpacingPatch`
+(`Main/Features/MarshalsWord/Hooks/MarshalSpacingPatch.cs`:13-17, 50-69) does not patch that getter. It rewrites the one `HasAnyMountedUnit`
+call in each of seven `Formation` methods (the four spacing-limit getters and the public `GetUnitPositionWithIndexAccordingToNewOrder`
+overloads) into a call of `CalculateHasSignificantNumberOfMounted`, leaves a method unchanged (log only) when it finds other than one call,
+and applies only with Marshal's Word on and neither co-op nor a dedicated server [TAOM-verified, v2.0.38, by reading]. So the two mods
+touch different methods: with RTS Camera's patch on, TAOM's seven methods route through it; with it off, nothing overlaps.
+
+## RaceArmorFit and ArmoryBalance_TAOM (reach TAOM and Armory assets by name)
+
+RaceArmorFit's config (`HoN/RaceArmorFit/README.md@c45d8374`, "Konfiguration" and "Per-item settings"; `ModuleData/racearmorfit.xml`)
+names Armory items, meshes and skeletons: item prefixes `sk_dwarf_` and `sm_dwarf_`; skeletons `dwarf_skeleton_a`, `human_skeleton`; body
+meshes `sm_dwarf_basemesh_a1_body`, `_shoulder`, `_arms`, `_legs`, `body_male_a`, `feet_male_a`, `hands_male_a`; per-item override files
+for `sk_gd_ano_boots_a`, `sk_dwarf_dain_boots_*`, `sk_dwarf_erebor_chest_*`, `gondor_noble_coat_a`, `mirkwood_shoulder`. It ships its own
+`cloth_bodies.xml` and `*_dwarf_cloth.tpac`, and its cloth carriers follow a naming pattern: the race's cook is `clo_<name>_<race>` next
+to a carrier `<visible>_<race>_cloth` ([armory-guide.md](armory-guide.md) "A carrier metamesh for a race fit"). A rename of any of these
+can make the fit skip an item: with no pair configured for the item's mesh, `FieldFit.cs@c45d8374:433-437` returns without a log line (read from code, not run; what a renamed body mesh does was not read). `sm_dwarf_basemesh_a1_body` resolves in the live
+`LOTRLOME_Armory/ModuleData/skins.xml`, checked 2026-11-13; the other names were not each looked up.
+
+`HoN/ArmoryBalance_TAOM` (`BalanceSubModule.cs`; `armory_balance.xml`, `armory_item_grades_balance.xml`) overrides item values after the
+data load by item id, for example `sk_uruk_hai_helmet_spear_med_a4` (`check:head` 20, per the sim record
+`docs/balance-sim/app-0.4-acceptance.md@c45d8374`). That id is in `Main/_Module/ModuleData/armour_acquisition/armour_classes.xml`
+[TAOM-verified, v2.0.38]. A renamed TAOM or Armory item id makes its override row fail.
 
 ## Kysaro's modules (TAOM_Kysaro_Diplomacy, KysaroMod, TAOM_FactionUI, TAOM_CustomBattleUI)
 

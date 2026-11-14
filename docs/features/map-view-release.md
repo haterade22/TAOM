@@ -245,6 +245,19 @@ predates TAOM's v1.5.5 bump and the file names no engine version. TAOM's release
 for a hang or a missing terrain on returning to the map. TAOM adds no scene view to the map: its map views add Gauntlet
 layers only (`FieldCampMapView.cs:48`, `RealmBordersMapView.cs:52`, `MomentumIndicatorMapView.cs:40`, all under `Client/Features/`).
 
+## Two more map-screen leaks, suspected upstream (yotthani, 1.5.3)
+
+`HoN/PerfProbe/Integration/MenuProbe.cs`@c45d8374 (suspicion plus an address-space census, game 1.5.3, 05.10.2026; not confirmed
+by yotthani or TAOM) names two further leaks next to the map view. Lines 584-590: the census found about five blocks of 20 to
+25 MB left behind per character preview (`CharacterTableau`). Lines 141-148: the two banner material caches
+(`MapScreen.Instance.CharacterBannerMaterialCache` and `ViewSubModule.BannerTexturedMaterialCache`) may never hit, because their
+key is `(Material, Banner)` and the material comes from a fresh mesh copy, so entries keep a native material and banner texture
+until the map screen is finalized (about ten `Material` wrappers per round). The probe's experiments `clearall`
+(`SceneView.ClearAll(false, false)`, as `MapConversationTableau` does on finalize) and `delete` are in the code; the code does not
+state what they showed, and a map-view step in the same probe crashed the game after step 2 (06.10.2026, line 129). TAOM has not
+run any of this. TAOM's banner-heavy UI makes the banner cache the relevant one (see
+[banner-color-persistence.md](banner-color-persistence.md)); a TAOM run would come before any change.
+
 ## Performance
 
 The handler adds a type test to each layer activation change (screen changes, layers added or removed); a deactivated
