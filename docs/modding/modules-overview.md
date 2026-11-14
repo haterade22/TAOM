@@ -342,7 +342,7 @@ block is marked as an excerpt rather than an example.
   <ModuleCategory value="Singleplayer"/>
   <ModuleType value="Community" />
   <DependedModules>
-    <!-- Issue #371. TAOM does not merely call into TAOM.Dependencies — Main/TAOM.csproj takes a
+    <!-- Issue #371. TAOM does not merely call into TAOM.Dependencies: Main/TAOM.csproj takes a
          ProjectReference on it and resolves HarmonyLib AND Bannerlord.UIExtenderEx THROUGH that
          assembly. A missing or stale copy therefore fails at the member level during patch
          application, the preview patches never attach, and every character renders in bind pose.

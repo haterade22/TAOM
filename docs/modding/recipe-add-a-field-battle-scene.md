@@ -28,7 +28,8 @@ Which cell belongs to which region, and how that was measured, is the region tab
 1. **Build the scene** in the Modding Kit under `TAOM_Map/SceneObj/<id>/`. Name it
    `taom_<region>_battle_<name>_forceatmo`: the `forceatmo` substring is what
    `AtmosphereOverrideService.RequiresAtmosphereOverride` keys on (case-insensitive), see
-   [atmosphere-persistence.md](../features/atmosphere-persistence.md).
+   [atmosphere-persistence.md](../features/atmosphere-persistence.md). A module reinstall reverts hand
+   edits in a live `TAOM_Map` folder, so keep a copy of the scene folder outside the game install.
 2. **Load it once in Custom Battle before it goes near the campaign.** Add a `<Scene ... is_siege_map="false" />`
    row under `<!--Battle Scenes-->` in `Main/_Module/ModuleData/custom_battle_scenes.xml`, with a name of the
    form `{=aom_<id>_name}[Region] Name`, register that string in `taom_battle_scene_strings.xml`, and run
