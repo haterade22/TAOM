@@ -151,7 +151,13 @@ public class ServiceAttachmentService : IServiceAttachmentService
         if (onTownLeave && playerIsSomewhere)
             return new AttachmentAssessment(AttachmentStatus.Attached);
 
-        if (!string.IsNullOrEmpty(commanderSettlement))
+        // A pass still held out here is one the player has already walked out of, and the pump
+        // has not revoked yet: vanilla's town "Leave" stops time, and the hourly reconcile can run
+        // before the pump's next expensive pass. Following now would put the player back inside
+        // with the pass held, and ShouldRevokeLeave only revokes for a player outside, so the pass
+        // branch above would keep him in that town after the column marches, until a battle
+        // changes the state. Park instead; the pump revokes the pass, and the next pass follows.
+        if (!string.IsNullOrEmpty(commanderSettlement) && !onTownLeave)
             return new AttachmentAssessment(AttachmentStatus.SettlementFollowRequired);
 
         return player.LooksParked
