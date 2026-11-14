@@ -1,0 +1,53 @@
+{
+  "_comment": [
+    "Placeholder melee weapons (owner request, 14 Nov 2026). Stand-ins for weapons the Armory does not",
+    "have yet: each is a clone of a donor weapon with the SAME look and a cloned blade piece whose",
+    "damage_factor is raised to the melee ladder target (tools/melee_ladders.json) for its tier and culture.",
+    "Every generated id starts with the tag below, so a real weapon can replace a placeholder later:",
+    "  git grep taom_ph_   lists every placeholder piece, item and troop that carries one.",
+    "To replace one: give its troops the new Armory weapon, then delete its entry here and rerun",
+    "tools/generate_placeholder_weapons.py --apply (it rewrites the generated files without it).",
+    "",
+    "Fields: id (item id, must start with the tag), donor (Armory CraftedItem to clone), tier (ladder tier",
+    "the DPS target is taken from), tiers ([lo, hi] troop tiers that get it), cultures (troop culture ids),",
+    "name (English display name; the {=id} key is added by the tool)."
+  ],
+  "tag": "taom_ph_",
+  "weapons": [
+    {"id": "taom_ph_isengard_1h_sword_t7", "donor": "isengard_1h_sword_a", "tier": 7, "tiers": [6, 8],
+     "cultures": ["isengard"], "name": "[Isengard] Orthanc Sword"},
+
+    {"id": "taom_ph_erebor_spear_a_t4", "donor": "sm_dwarf_erebor_spear_a", "tier": 4, "tiers": [4, 5],
+     "cultures": ["erebor"], "name": "[Erebor] War Spear I"},
+    {"id": "taom_ph_erebor_spear_b_t4", "donor": "sm_dwarf_erebor_spear_b", "tier": 4, "tiers": [4, 5],
+     "cultures": ["erebor"], "name": "[Erebor] War Spear II"},
+    {"id": "taom_ph_erebor_spear_a_t8", "donor": "sm_dwarf_erebor_spear_a", "tier": 8, "tiers": [6, 9],
+     "cultures": ["erebor"], "name": "[Erebor] Royal War Spear I"},
+    {"id": "taom_ph_erebor_spear_b_t8", "donor": "sm_dwarf_erebor_spear_b", "tier": 8, "tiers": [6, 9],
+     "cultures": ["erebor"], "name": "[Erebor] Royal War Spear II"},
+
+    {"id": "taom_ph_gondor_spear_b_t5", "donor": "wm_gondor_spear_b", "tier": 5, "tiers": [4, 6],
+     "cultures": ["gondor"], "name": "[Gondor] Heavy Spear, Tempered"},
+    {"id": "taom_ph_gondor_spear_b_gondor_t5", "donor": "wm_gondor_spear_b_gondor", "tier": 5, "tiers": [4, 6],
+     "cultures": ["gondor"], "name": "[Gondor] Heavy Spear, Tempered - Gondor"},
+    {"id": "taom_ph_gondor_spear_b_pg_t5", "donor": "wm_gondor_spear_b_pg", "tier": 5, "tiers": [4, 6],
+     "cultures": ["gondor"], "name": "[Gondor] Heavy Spear, Tempered - Pinnath Gelin"},
+    {"id": "taom_ph_gondor_spear_b_swan_t5", "donor": "wm_gondor_spear_b_swan", "tier": 5, "tiers": [4, 6],
+     "cultures": ["gondor"], "name": "[Gondor] Heavy Spear, Tempered - Swan Knight"},
+    {"id": "taom_ph_gondor_spear_b_t8", "donor": "wm_gondor_spear_b", "tier": 8, "tiers": [7, 9],
+     "cultures": ["gondor"], "name": "[Gondor] Guard Spear"},
+    {"id": "taom_ph_gondor_spear_b_gondor_t8", "donor": "wm_gondor_spear_b_gondor", "tier": 8, "tiers": [7, 9],
+     "cultures": ["gondor"], "name": "[Gondor] Guard Spear - Gondor"},
+    {"id": "taom_ph_gondor_spear_b_pg_t8", "donor": "wm_gondor_spear_b_pg", "tier": 8, "tiers": [7, 9],
+     "cultures": ["gondor"], "name": "[Gondor] Guard Spear - Pinnath Gelin"},
+    {"id": "taom_ph_gondor_spear_b_swan_t8", "donor": "wm_gondor_spear_b_swan", "tier": 8, "tiers": [7, 9],
+     "cultures": ["gondor"], "name": "[Gondor] Guard Spear - Swan Knight"},
+    {"id": "taom_ph_gondor_spear_a_t8", "donor": "wm_gondor_spear_a", "tier": 8, "tiers": [7, 9],
+     "cultures": ["gondor"], "name": "[Gondor] Fountain Guard Spear, Tempered"},
+
+    {"id": "taom_ph_mirkwood_sword_t8", "donor": "mirkwood_sword_a01", "tier": 8, "tiers": [7, 8],
+     "cultures": ["mirkwood"], "name": "[Mirkwood] Guard Sword"},
+    {"id": "taom_ph_mirkwood_sword_t10", "donor": "mirkwood_sword_a01", "tier": 10, "tiers": [9, 10],
+     "cultures": ["mirkwood"], "name": "[Mirkwood] Royal Sword"}
+  ]
+}

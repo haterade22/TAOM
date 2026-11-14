@@ -1436,6 +1436,32 @@
         <GameType value="CustomGame"/>
       </IncludedGameTypes>
     </XmlNode>
+    <!-- Placeholder melee weapons (tools/generate_placeholder_weapons.py): ids start with taom_ph_ -->
+    <XmlNode>
+      <XmlName id="CraftingPieces" path="placeholder_weapons/ph_crafting_pieces"/>
+      <IncludedGameTypes>
+        <GameType value="Campaign"/>
+        <GameType value="CampaignStoryMode"/>
+        <GameType value="CustomGame"/>
+        <GameType value="EditorGame"/>
+      </IncludedGameTypes>
+    </XmlNode>
+    <XmlNode>
+      <XmlName id="Items" path="placeholder_weapons/ph_items"/>
+      <IncludedGameTypes>
+        <GameType value="Campaign"/>
+        <GameType value="CampaignStoryMode"/>
+        <GameType value="CustomGame"/>
+        <GameType value="EditorGame"/>
+      </IncludedGameTypes>
+    </XmlNode>
+    <!-- Stylesheet-only rows (no .xml): they must apply after LOTRLOME_Armory's, which replace these lists -->
+    <XmlNode>
+      <XmlName id="WeaponDescriptions" path="placeholder_weapons/ph_weapon_descriptions"/>
+    </XmlNode>
+    <XmlNode>
+      <XmlName id="CraftingTemplates" path="placeholder_weapons/ph_crafting_templates"/>
+    </XmlNode>
     <!-- Custom Game only, so every Custom Battle loads them and is_obsolete hides them there: the mode's own troops, so a balance edit can never reach a campaign. -->
     <XmlNode>
       <XmlName id="NPCCharacters" path="fords_of_war/fords_troops"/>
