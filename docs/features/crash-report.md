@@ -19,11 +19,28 @@ After CrashReport, every crash produces a structured `Logs/taom_debug_*.log` ent
 - `report.txt` — full diagnostic dump (sectioned plain text)
 - `report.json` — machine-parseable equivalent
 - `taom_debug.log` — current session's TAOM log
-- `rgl_log.txt` — current session's TaleWorlds RGL log
+- `rgl_log.txt` — current session's TaleWorlds RGL log (the main `rgl_log_<n>.txt`, never `rgl_log_errors_<n>.txt`, which holds only the error lines)
 - `diag.log`: TAOM.Dependencies' log, carrying PatchShield's swallowed `MissingMethod` / `MissingField` / `TypeLoad` exceptions (the engine-mismatch signature) when the path resolves
 - `manifest.txt` — file inventory + size + SHA1
 
 Players upload one ZIP, we reproduce locally without playing twenty questions.
+
+## Bug report (player-made)
+
+A native crash (the log just ends), a freeze the player closes, or a bug with no crash never reaches the capture above. For those the player makes the zip:
+
+- **MCM button** "Make Bug Report" (page TAOM — Crash Report, group Bug Report). MCM is where TAOM's other player tools live and is reachable from the main menu and in a game; a new main-menu or Esc-menu button would need a prefab change and a look in game for a tool used once per problem.
+- **Offer on the next start.** On the first main menu of a launch, `BugReportStartup.CheckPreviousSession` reads the end of the previous `taom_debug_*.log`. If it lacks `[Shutdown] clean module unload` (written by `OnSubModuleUnloaded` on every quit to desktop), the previous session died, and an inquiry asks "Make bug report" / "No". It runs only when no battle-load stall notice was shown (that notice covers its own case), once per launch, and the MCM toggle "Offer A Bug Report After An Unexpected End" turns it off.
+
+`CrashReportService.WriteBugReport` runs the crash report's collectors with no exception (the Exception section of `report.txt` reads `(no exception captured)`, and the origin is `BugReport:button` or `BugReport:after-unexpected-end`) and writes `Logs/taom_report_<utc>.zip`: the crash bundle's files plus, from `BugReportSources`,
+
+- `taom_debug_previous.log`: the newest `taom_debug_*.log` other than this session's.
+- `rgl_log_previous.txt`: the main rgl log before the newest.
+- `crash/<file>`: the files of the newest folder in the engine's `crashes` folder (the `logs` folder's sibling under `%ProgramData%\Mount and Blade II Bannerlord`, `TaleWorlds.Library.Watchdog`) written at or after the previous session's start, read from its log's file name. A file over 64 MB (a large minidump) stays out, and the manifest says so.
+
+The manifest starts with "TAOM bug report" and names each added file by file name only, with notes: the previous log's name and whether it ended cleanly, and the crash folder used. A result inquiry shows the zip's absolute path with "Open folder".
+
+**Personal data in the zip**, the same kinds the crash bundle already carries: the PC's name (`[MissionDiag]` in the TAOM logs), install and log folder paths (which hold the Windows user name when the game or Documents is under the user folder), the hero's and clan's names, hardware and OS, and TAOM's settings. A minidump in `crash/` holds a slice of the game's memory. No save file.
 
 ## Architecture
 
@@ -112,6 +129,8 @@ Settings live on a dedicated MCM page **TAOM — Crash Report** (separate from t
 | Master | Skeleton Buffer Guard | true | Bounds-checks both of the engine's per-frame skeleton pools, so a crowded battle no longer freezes when either of them fills (the engine has more unbounded per-frame pools, which are not guarded: [skeleton-buffer-guard.md](skeleton-buffer-guard.md)). Restart: installed once at the first main menu. |
 | Master | Skeleton Buffer Watch | true | Logs each mission's peak fill of both skeleton pools ([skeleton-buffer-guard.md](skeleton-buffer-guard.md)). Live: read at each mission start. |
 | Bundle | Write Crash Bundle ZIP | true | Produces `Logs/taom_crash_*.zip`. Set false if you only want the log line. |
+| Bug Report | Make Bug Report (button) | | Writes `Logs/taom_report_*.zip` and shows its path ("Bug report" above). |
+| Bug Report | Offer A Bug Report After An Unexpected End | true | On the first main menu after a session whose log lacks the clean unload line, ask whether to make a bug report. Live. |
 | QA — Dev Triggers | Throw On Next Mission Tick | false | Throws `TaomDevTriggerException` on the next `MissionLogic.OnMissionTick`. Auto-resets. |
 | QA — Dev Triggers | Throw On Next Application Tick | false | Throws `TaomDevTriggerException` on the next `Module.OnApplicationTick`. Auto-resets. Works on the main menu (no mission needed). |
 | `QA — Dev Triggers` | Throw On Next Mission AfterStart | false | Throws `TaomDevTriggerException` from a TAOM behaviour's `AfterStart` on the next mission start (#699's shape). Auto-resets before it throws. With "Survive Mission Start Failures" on, the battle starts and one message shows; with it off, the throw escapes once, TAOM's crash capture writes a bundle and shows its crash dialog, and the engine loads the mission again. Needs Enable Crash Capture on. |
@@ -203,7 +222,9 @@ Both `CrashReportService` call sites use the same overload, the cheap early one 
 | [Main/Features/CrashReport/CrashReportIoC.cs](../../Main/Features/CrashReport/CrashReportIoC.cs) | DryIoc singleton registrations |
 | [Main/Features/CrashReport/CrashReportSettings.cs](../../Main/Features/CrashReport/CrashReportSettings.cs) | MCM settings page |
 | [Main/Features/CrashReport/DevTriggers/](../../Main/Features/CrashReport/DevTriggers) | QA-only throw triggers + tagged `TaomDevTriggerException` |
-| [Main/Features/CrashReport/UI/CrashNotifier.cs](../../Main/Features/CrashReport/UI/CrashNotifier.cs) | `InformationManager.ShowInquiry` 2-button dialog (Continue / Open Bundle Folder) |
+| [Main/Features/CrashReport/UI/CrashNotifier.cs](../../Main/Features/CrashReport/UI/CrashNotifier.cs) | `InformationManager.ShowInquiry` 2-button dialog (Continue / Open Bundle Folder); the log path is shown absolute |
+| [Main/Features/CrashReport/BugReport/](../../Main/Features/CrashReport/BugReport) | Player bug report: `BugReportFiles` (pure rules), `BugReportSources` (files from the previous session), `BugReportStartup` (MCM button, next-start offer) |
+| [Main/Features/CrashReport/UI/BugReportNotifier.cs](../../Main/Features/CrashReport/UI/BugReportNotifier.cs) | The offer and result inquiries; English rows `taom_bugreport_*` in `taom_module_strings.xml` |
 
 ## Dependencies
 
@@ -317,6 +338,7 @@ No restart is needed before TAOM's first capture of the session: TAOM's finalize
 
   Not combat, left out: `Agent_OnDismount` and `Agent_OnMount` (`Mission.OnAgentDismount`/`OnAgentMount`: `WargMissionBehavior`, `BehaviorTreeMissionLogic`) and `Agent_OnAgentAlarmedStateChanged` (`BehaviorTreeMissionLogic`). `Mission_GetAgentState` reaches no TAOM override.
 - **Crash UI re-entry.** A throw in our own collector or renderer would loop. Two layers of thread-static `_handling` flags break the loop and let the original exception bubble out to vanilla.
+- **Unexpected-end offer, limits.** It reads only the previous log: an Alt-F4 or a process killed by Steam or Windows also lacks the unload line, so the offer says "ended unexpectedly", not "crashed". A session that never wrote a log offers nothing. Two game copies sharing one `Logs` folder would compare each other's logs. Discord takes files of 10 MB without Nitro; a zip with a crash dump can be larger, and the player then needs another host.
 - **ZIP bundle write to `Logs/`.** If `Logs/` is read-only or full, only the log line lands (no bundle). Bundle write is wrapped in try/catch.
 - **Frame timing buffer not yet populated.** v1 instantiates the `FrameTimingBuffer` singleton but no hook pushes into it. v2 will add a `Mission.Tick` / `ScreenManager.Tick` Postfix that samples `dt`. For now the section shows 0 samples.
 - **TAOM-state collectors are stubs.** `CareerStateSnapshot`, `SpecialResourceEntry`, etc. are part of the DTO but the collector returns null/empty until each feature wires a state-provider lambda. Comprehensive captures of these will land per-feature as PRs ship.
@@ -328,11 +350,12 @@ No restart is needed before TAOM's first capture of the session: TAOM's finalize
 - Per-feature state providers (career, resources, feats, messengers, revolt) wired into `TaomStateCollector`
 - Gauntlet overlay replacing the InquiryData dialog (richer formatting, copyable sections, screenshot button)
 - Per-section MCM disable toggles
-- Save-game attachment toggle (currently the player attaches manually)
+- Save-game attachment toggle (currently the player attaches manually; the bug report leaves saves out too)
 - Crash signature de-dup ring buffer (suppress duplicate-signature crashes after N within a session)
 
 ## Changelog
 
+- 2026-11-14: **Player bug report.** MCM button "Make Bug Report" and an offer on the first main menu after a session whose log lacks `[Shutdown] clean module unload`; both write `Logs/taom_report_<utc>.zip` with the crash bundle's files, the previous session's TAOM log and rgl log, and the engine's crash folder from that session. The crash bundle's `rgl_log.txt` is now always the main rgl log (the `rgl_log_*.txt` pattern also matched `rgl_log_errors_*.txt`), and the crash dialog shows the log path absolute.
 - 2026-10-31: **Swallowed exceptions reported, silent catch ratchet** (#1073). The behaviour tree wrapper, the enlistment lord-conversation gate, character creation, hero race, order of battle and army targeting catches report through `Outcomes.Swallowed`. The enlistment menu and detach hooks already logged their failures, so only the guards around their log calls gained a `swallow-ok:` comment. `SilentCatchRatchetTests` holds every other silent catch in a patch file to its baseline.
 - 2026-10-31: **Session summary in the bundle** (#1071). An admitted crash writes the `[Session] summary reason=crash` lines before the log tail is collected.
 - 2026-10-23: **Third-party settings are not collected, by design** (#982). `McmSettingsCollector.Collect` enumerates only TAOM's own assembly, so no third-party settings class is read inside crash handling and no third-party value is copied (TAOM's own getters still ask MCM, which can consult other mods' external providers: a known limitation); `ResolveInstance` looks up only an `Instance` the class declares itself (`DeclaredOnly`) as a second guard. The `DiscoveryType` row is removed from the listing. `FlattenHierarchy` is not used: it throws `AmbiguousMatchException` on TAOM's classes.

@@ -59,6 +59,18 @@ public sealed class CrashReportSettings : AttributeGlobalSettings<CrashReportSet
         HintText = "Produces Logs/taom_crash_<timestamp>_<sig>.zip containing report.txt, report.json, taom_debug.log, rgl_log.txt, manifest.txt. Default ON.")]
     public bool WriteCrashBundle { get; set; } = true;
 
+    // --- Bug report ---
+
+    [SettingPropertyGroup("Bug Report")]
+    [SettingPropertyButton("Make Bug Report", Order = 0, RequireRestart = false, Content = "Make",
+        HintText = "Writes one zip in the Logs folder with what a bug report needs: this game's and the previous game's TAOM logs, the game's own logs, the game's crash folder from the previous game (files up to 64 MB), the module list, the TAOM settings and, in a campaign, the campaign details. Then shows where the zip is. It carries your PC's name, your hero's name and folder paths of your install.")]
+    public System.Action MakeBugReportAction { get; set; } = static () => BugReport.BugReportStartup.MakeAndShow("button");
+
+    [SettingPropertyGroup("Bug Report")]
+    [SettingPropertyBool("Offer A Bug Report After An Unexpected End", Order = 1, RequireRestart = false,
+        HintText = "On the first main menu after a game that closed without TAOM's normal shutdown (a crash, a freeze you had to close, or a stopped game), ask whether to make a bug report from that game's logs. Default ON.")]
+    public bool OfferBugReportAfterUnexpectedEnd { get; set; } = true;
+
     // --- QA ---
 
     [SettingPropertyGroup("QA — Dev Triggers")]

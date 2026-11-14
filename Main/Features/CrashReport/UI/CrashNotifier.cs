@@ -1,5 +1,6 @@
 using System;
 using System.Diagnostics;
+using System.IO;
 using TaleWorlds.Core;
 using TaleWorlds.Library;
 using TaleWorlds.Localization;
@@ -37,29 +38,36 @@ public static class CrashNotifier
         }
     }
 
-    private static string BuildMessage(string exceptionType, string? bundlePath, string? logPath)
+    internal static string BuildMessage(string exceptionType, string? bundlePath, string? logPath)
     {
         var lines = new System.Text.StringBuilder();
         lines.AppendLine($"Exception: {exceptionType}");
         lines.AppendLine();
         lines.AppendLine("A full diagnostic report has been written to disk:");
-        if (!string.IsNullOrEmpty(logPath)) lines.AppendLine($"  Log:    {logPath}");
+        // FileLogger's path is relative to the game's working folder; a player cannot find "Logs\..." on their own.
+        if (!string.IsNullOrEmpty(logPath)) lines.AppendLine($"  Log:    {FullPath(logPath!)}");
         if (!string.IsNullOrEmpty(bundlePath)) lines.AppendLine($"  Bundle: {bundlePath}");
         lines.AppendLine();
         lines.AppendLine("Continuing may produce additional errors if game state is corrupted. If you can, save and exit cleanly.");
         return lines.ToString();
     }
 
-    private static void TryOpenInExplorer(string? path)
+    private static string FullPath(string path)
+    {
+        try { return Path.GetFullPath(path); }
+        catch { return path; }
+    }
+
+    // select: highlight the file in its folder; otherwise open the path as a folder. Shared with BugReportNotifier.
+    internal static void TryOpenInExplorer(string? path, bool select = true)
     {
         if (string.IsNullOrEmpty(path)) return;
         try
         {
-            // /select highlights the file in the explorer window.
             Process.Start(new ProcessStartInfo
             {
                 FileName = "explorer.exe",
-                Arguments = $"/select,\"{path}\"",
+                Arguments = select ? $"/select,\"{path}\"" : $"\"{path}\"",
                 UseShellExecute = true,
             });
         }
