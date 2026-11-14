@@ -238,7 +238,7 @@ release the key and click land while at sea — it disembarks on the coast.
   `settlement_patrol_template_coastal` and `fishing_party_template`; **no TAOM culture sets either**.
   That is currently harmless only because the readers are unreachable: `Settlement.HasPort` comes
   solely from a `port_posX`/`port_posY` pair, and there are ZERO occurrences of `port_posX` in either
-  `Main/_Module/ModuleData/settlements.xml` or the live `TAOM_Map/ModuleData/settlements.xml`
+  the repo's `Main/_Module/ModuleData/settlements.xml` (removed 2026-11-14) or the live `TAOM_Map/ModuleData/settlements.xml`
   (verified 2026-08-12). Give a settlement a port and this becomes a crash, not a gap:
   NavalDLC's `NavalPatrolPartiesCampaignBehavior.SpawnPatrolParty` passes the template straight into
   `PatrolPartyComponent.CreatePatrolParty`, which dereferences `template.ShipHulls` with no null

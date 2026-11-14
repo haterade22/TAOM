@@ -3,7 +3,7 @@
     <BrushWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Brush="Encyclopedia.Page.SoundBrush" DoNotAcceptEvents="true">
       <Children>
         <!--Kingdom folio: the overview (top left), the Clans and Fiefs galleries below it, and the History column at full height on the right. Each is its own stone plate; nothing is drawn behind or between them.-->
-        <Widget Id="KingdomFolio" SuggestedWidth="1728" SuggestedHeight="780" HorizontalAlignment="Center" PositionYOffset="184" DoNotAcceptEvents="true">
+        <EncyclopediaFrameAnchorWidget Id="KingdomFolio" SuggestedWidth="1728" SuggestedHeight="780" HorizontalAlignment="Center" VerticalAlignment="Top" PositionYOffset="184" FrameOffset="130" BottomClearance="78" DoNotAcceptEvents="true">
           <Children>
             <EncyclopediaStonePanelWidget Id="KingdomOverviewPanel" SuggestedWidth="1330" SuggestedHeight="300" Sprite="ec_panel_9" DoNotAcceptEvents="true">
               <Children>
@@ -252,7 +252,7 @@
             </ScrollbarWidget>
 
           </Children>
-        </Widget>
+        </EncyclopediaFrameAnchorWidget>
         <!--Previous and Next page: the shared row, detached below the page canvas in the full-window root, identical on every detail page.-->
         <TAOMEncyclopediaPageNavigation />
       </Children>

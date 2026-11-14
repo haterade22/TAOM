@@ -10,7 +10,6 @@ before/after verification diff for the applier.
 
 Targets ONLY the LIVE engine-loaded file:
     E:\\Steam\\...\\Modules\\TAOM_Map\\ModuleData\\settlements.xml
-(The repo's Main/_Module/ModuleData/settlements.xml is a stale shadow -- never read for truth.)
 
 Building levels are the STARTING levels a new campaign seeds (Town.Deserialize, consumed once at
 campaign creation). Valid range 0-3; fortifications floors at 1. Towns carry 12 building_settlement_*

@@ -17,7 +17,7 @@ namespace TAOM.Tests.Features.FireAndTribute;
 /// #870: the shipped host data against the shipped ModuleData (like HuntTroopListsDataTests). An unknown troop id would
 /// make the top-up silently add nobody, and an unknown clan would skip the host at run time with one log line, so both
 /// fail here instead. The anchor settlements live in the unversioned TAOM_Map install: they are checked against it when
-/// it is present (the repo's own settlements.xml is a stale shadow), under the LiveInstall category.
+/// it is present (TAOM_Map is in no repo), under the LiveInstall category.
 /// </summary>
 [TestClass]
 public class FireAndTributeDataTests

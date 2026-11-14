@@ -8,10 +8,6 @@ in the LIVE TAOM_Map module, replacing the single-clan monopoly
 Targets ONLY the LIVE engine-loaded file:
     E:\\Steam\\...\\Modules\\TAOM_Map\\ModuleData\\settlements.xml
 
-Do NOT confuse with the TAOM repo's Main/_Module/ModuleData/settlements.xml, which is a
-stale shadow last touched 2026-04-06 and is NOT registered in SubModule.xml.
-(See docs/reference/taom-map-settlement-naming.md + memory feedback_taom_map_live_vs_stale_shadow.md.)
-
 Lore-mapping: Rhûn == the Khuzait kingdom (Kingdom.khuzait, Culture.khuzait). "Rank" == clan `tier`.
 
 Distribution rules (per user request):

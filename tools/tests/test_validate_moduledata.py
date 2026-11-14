@@ -3788,6 +3788,7 @@ class BrokenSettlementRefTests(unittest.TestCase):
         self.assertEqual(self._found(), [])
 
     def test_the_two_settlement_files_the_game_never_loads_are_not_read(self):
+        # The repo dropped them on 2026-11-14, but deploys never delete, so older installs keep them.
         for name in ("custom_settlements.xml", "settlements.xml"):
             _write(self.md / name, self.CLAN.format(ref="town_none"))
         self.assertEqual(self._found(), [])

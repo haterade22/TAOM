@@ -64,6 +64,8 @@ public static class RealmsConfigXml
                 config.VacantThrones.Add(id);
             else if (throne != null)
                 warnings.Add($"<Kingdom id=\"{id}\"> throne '{throne}' is not 'vacant'; ignored.");
+            if (id != null)
+                ReadBanner(kingdom, "k_" + id, config);
         }
 
         ReadFeudal(root, config.Feudal, warnings);
@@ -75,6 +77,7 @@ public static class RealmsConfigXml
             {
                 config.Unions.Add(new UnionConfig(id, (string?)union.Attribute("name") ?? id, members));
                 ReadRealmName(union, "u_" + id, config);
+                ReadBanner(union, "u_" + id, config);
             }
         }
 
@@ -94,6 +97,7 @@ public static class RealmsConfigXml
                 (string?)realm.Attribute("liege"), lands, Words(realm, "cultures"), ReadLaws(realm, config.DefaultLaws, warnings));
             config.TitularRealms.Add(titular);
             ReadRealmName(realm, titular.TitleId, config);
+            ReadBanner(realm, titular.TitleId, config);
         }
 
         foreach (var claim in Children(root, "StartingClaims", "Claim"))
@@ -170,6 +174,7 @@ public static class RealmsConfigXml
             {
                 config.HighTitles.Add(new HighTitleConfig(id, (string?)high.Attribute("name") ?? id, members, ReadLaws(high, config.DefaultLaws, warnings)));
                 ReadRealmName(high, "e_" + id, config);
+                ReadBanner(high, "e_" + id, config);
             }
         }
 
@@ -453,6 +458,14 @@ public static class RealmsConfigXml
         var name = (string?)element.Attribute("realm_name");
         if (!string.IsNullOrWhiteSpace(name))
             config.RealmNames[titleId] = name!;
+    }
+
+    /// <summary>A banner attribute: the banner code a kingdom flies while its ruler's primary title is this one.</summary>
+    private static void ReadBanner(XElement element, string titleId, RealmsConfig config)
+    {
+        var code = (string?)element.Attribute("banner");
+        if (!string.IsNullOrWhiteSpace(code))
+            config.TitleBanners[titleId] = code!.Trim();
     }
 
     /// <summary>The settlement ids of a duchy's &lt;County settlement="..."/&gt; or &lt;Barony settlement="..."/&gt; children.</summary>

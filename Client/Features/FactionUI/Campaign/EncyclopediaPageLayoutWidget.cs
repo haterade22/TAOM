@@ -134,6 +134,9 @@ namespace TAOM.Features.FactionUI.Campaign
         protected override void OnLateUpdate(float dt)
         {
             base.OnLateUpdate(dt);
+            // Same frame anchor as the TAOM detail pages, so the header stays clear (#1212).
+            if (EncyclopediaFrameAnchorWidget.TryLogicalHeight(EventManager.PageSize.Y, _inverseScaleToUse, out float height))
+                _canvas.PositionYOffset = EncyclopediaFrameAnchorWidget.Offset(height, EncyclopediaFrameAnchorWidget.PageTop, CanvasHeight, EncyclopediaFrameAnchorWidget.PageClearance);
             if (_body.Size.X <= 0) return;
             Fit(_leftPlate, _left, 0f, CanvasHeight);
             Fit(_bodyPlate, _body, 0f, CanvasHeight);

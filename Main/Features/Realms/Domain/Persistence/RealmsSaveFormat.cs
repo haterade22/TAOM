@@ -66,6 +66,8 @@ public static class RealmsSaveFormat
                 lines.Add(Join("R", chronicle.Key, e.CampaignDay.ToString("R", CultureInfo.InvariantCulture), e.Reason.ToString(), e.HeroId, e.PreviousHolderId));
         foreach (var office in ledger.KnownOffices.OrderBy(o => o, StringComparer.Ordinal))
             lines.Add(Join("O", office, ledger.OfficeHolderOf(office)));
+        foreach (var primary in ledger.ChosenPrimaries.OrderBy(p => p.Key, StringComparer.Ordinal))
+            lines.Add(Join("M", primary.Key, primary.Value));
         return string.Join("\n", lines);
     }
 
@@ -125,6 +127,9 @@ public static class RealmsSaveFormat
             case "O" when f.Length >= 3 && f[1] != null:
                 ledger.KnownOffices.Add(f[1]!);
                 ledger.SetOfficeHolder(f[1]!, f[2]);
+                return true;
+            case "M" when f.Length >= 3 && f[1] != null && f[2] != null:
+                ledger.SetChosenPrimary(f[1]!, f[2]);
                 return true;
             default:
                 return false;

@@ -52,8 +52,8 @@ public class StoryMissionWiringPinTests
         var logic = Source("Main/Features/StoryMissions/Hooks/StoryMissionLogic.cs");
 
         StringAssert.Contains(logic, "if (_watch.Step(dt, _session.Result, _session.Fault != null)) Mission.EndMission();");
-        StringAssert.Contains(logic, "OnEndMission() { base.OnEndMission(); _watch.Left(_session.Result, _session.Fault != null); }");
-        StringAssert.Contains(logic, "OnRemoveBehavior() { base.OnRemoveBehavior(); _watch.Left(_session.Result, _session.Fault != null); }");
+        StringAssert.Contains(logic, "OnEndMission() { base.OnEndMission(); _watch.Left(_session.Result, _session.Fault != null); ReportVerdict(); }");
+        StringAssert.Contains(logic, "OnRemoveBehavior() { base.OnRemoveBehavior(); _watch.Left(_session.Result, _session.Fault != null); ReportVerdict(); }");
     }
 
     [TestMethod]
@@ -63,7 +63,7 @@ public class StoryMissionWiringPinTests
         var launcher = Source("Main/Features/StoryMissions/Hooks/StoryMissionLauncher.cs");
 
         StringAssert.Contains(launcher, "new LongDefeatMissionLogic(plan, session, _logger, new HostedRunOutcomeLog(_outcomes), mission.EndMission, key)");
-        StringAssert.Contains(launcher, "new StoryMissionLogic(session, side, _logger, _outcomes, key, music)");
+        StringAssert.Contains(launcher, "new StoryMissionLogic(session, side, _logger, _outcomes, key, music, onVerdict)");
     }
 
     [TestMethod]
@@ -109,5 +109,18 @@ public class StoryMissionWiringPinTests
         var dismount = Source("Main/Features/SiegeDismount/Hooks/SiegeDismountMissionBehavior.cs");
 
         StringAssert.Contains(dismount, "var isSiegeBattle = (mission?.IsSiegeBattle ?? false) && mission?.GetMissionBehavior<StoryMissionLogic>() == null;");
+    }
+
+    [TestMethod]
+    public void TheStoryOffer_SnoozesOnEscape_DeclinesOnlyByChoice_AndAppliesTheVerdictBeforeASave()
+    {
+        // #1105 slice 4 review: Escape runs a popup's negative action and a menu hotkey runs its first leave option, so neither may be the
+        // saved decline; the behavior saves nothing, so the verdict is applied in the init the engine runs when the mission returns.
+        var offer = Source("Main/Features/StoryMissions/Hooks/StoryOfferBehavior.cs");
+
+        StringAssert.Contains(offer, "() => { if (MapPopupGate.IsMapFreeUnderPopup()) _menus.EnsureMenuOpen(MenuId); }, Later), true, false);");
+        StringAssert.Contains(offer, "OfferCondition, _ => { Decline(); _menus.ExitToLast(); }, isLeave: false, index: 1);");
+        StringAssert.Contains(offer, "private void OnInit(MenuCallbackArgs args) { if (_offer != null && _verdict is { } verdict && _result == null) _result = _service.Apply(_offer, verdict);");
+        StringAssert.Contains(offer, "private void Continue(MenuCallbackArgs args) { Clear(); _menus.ExitToLast(); }");
     }
 }

@@ -131,13 +131,18 @@ public class MainPartyNullCheckScanTests
     public void MapPopupGate_IsMapFree_ChecksTheStoredMainParty()
     {
         // The hunt popup's guard: `PartyBase.MainParty != null` threw while the main party was null.
+        // IsMapFree is IsMapFreeUnderPopup plus the inquiry term (#1105 slice 4), so the guard lives in the second body.
         var source = RepoPaths.ReadSource("Main/Adapters/MapPopupGate.cs", stripComments: true);
-        var start = source.IndexOf("bool IsMapFree()", StringComparison.Ordinal);
-        Assert.IsTrue(start >= 0, "MapPopupGate.IsMapFree() not found");
-        var end = source.IndexOf(';', start);
-        var body = source.Substring(start, end - start);
+        string Body(string signature)
+        {
+            var start = source.IndexOf(signature, StringComparison.Ordinal);
+            Assert.IsTrue(start >= 0, "MapPopupGate." + signature + " not found");
+            return source.Substring(start, source.IndexOf(';', start) - start);
+        }
 
+        StringAssert.StartsWith(Body("bool IsMapFree()").Replace(" ", ""), "boolIsMapFree()=>IsMapFreeUnderPopup()&&");
+        var body = Body("bool IsMapFreeUnderPopup()");
         StringAssert.Contains(body, "Campaign.Current?.MainParty != null");
-        Assert.IsFalse(body.Contains("PartyBase"), "IsMapFree must not read the computed PartyBase.MainParty: " + body);
+        Assert.IsFalse(body.Contains("PartyBase"), "the gate must not read the computed PartyBase.MainParty: " + body);
     }
 }

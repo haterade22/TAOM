@@ -170,8 +170,8 @@ public sealed class CampVisualService : ICampVisualService
         try
         {
             if (party != null && party == MobileParty.MainParty)
-                return Clan.PlayerClan?.Banner;
-            return party?.LeaderHero?.Clan?.Banner;
+                return TAOM.Features.Realms.Hooks.HouseBanners.HouseBannerOf(Clan.PlayerClan);
+            return TAOM.Features.Realms.Hooks.HouseBanners.HouseBannerOf(party?.LeaderHero?.Clan);
         }
         catch
         {

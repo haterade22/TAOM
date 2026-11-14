@@ -170,7 +170,7 @@ idempotent; add the culture's picks to its `PICKS` table).
 - After adding: run `python tools/rebalance_lords.py --apply` to balance skills
 
 ### 9. Settlements (REQUIRED if has territory)
-**File:** `Main/_Module/ModuleData/settlements.xml` or `Main/_Module/ModuleData/custom_settlements.xml`
+**File:** the live `<game>/Modules/TAOM_Map/ModuleData/settlements.xml` (external, not in this repo; TAOM's repo has no settlement file since 2026-11-14)
 - Each settlement needs `culture="Culture.{culture}"` attribute
 - Settlements also need scene/map entities (separate map work)
 
@@ -220,7 +220,7 @@ Cardolan, Rhudaur, Ered Luin, Anduin Vale, Angáladh, Dorwinion and South Rhovan
 | 7 | `characters/clans.xml` | Add clan entries |
 | 8 | `characters/lords.xml` | Add lord NPCCharacters |
 | 9 | `characters/heroes.xml` | Add hero biographical entries |
-| 10 | `settlements.xml` / `custom_settlements.xml` | Assign settlements to culture |
+| 10 | `TAOM_Map/ModuleData/settlements.xml` (external) | Assign settlements to culture |
 | 11 | `SubModule.xml` | Register new XML files |
 | 12 | `taom_module_strings.xml` | Add localization strings |
 

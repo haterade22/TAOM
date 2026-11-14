@@ -741,4 +741,109 @@ public class ChronicleConfigValidatorTests
         Assert.AreEqual(1, Parse(bad).Count);
         AssertWarned("outcomes");
     }
+
+    // ---- The story block (#1105 slice 4) ------------------------------------------------------------
+
+    private static JObject StorySiege(JToken story)
+    {
+        var siege = Siege();
+        siege["story"] = story;
+        return siege;
+    }
+
+    [TestMethod]
+    public void Parse_ASiegeWithAStoryBlock_ReadsTheMissionTheFateAndItsText()
+    {
+        var story = Parse(StorySiege(new JObject
+        {
+            ["mission"] = "helms_deep_defend",
+            ["fate"] = "Held",
+            ["fateText"] = "{=taom_wc_test_fate}Fate",
+        })).Single().Story!;
+
+        Assert.AreEqual(0, _warnings.Count, string.Join("\n", _warnings));
+        Assert.AreEqual("helms_deep_defend", story.MissionId);
+        Assert.AreEqual(ChronicleEventState.Held, story.Fate);
+        Assert.AreEqual("{=taom_wc_test_fate}Fate", story.FateText);
+    }
+
+    [TestMethod]
+    public void Parse_AStoryBlockWithoutAFate_DefaultsToHeld()
+    {
+        var story = Parse(StorySiege(new JObject { ["mission"] = "helms_deep_defend" })).Single().Story!;
+
+        Assert.AreEqual(ChronicleEventState.Held, story.Fate);
+        Assert.AreEqual(0, _warnings.Count, string.Join("\n", _warnings));
+    }
+
+    [TestMethod]
+    public void Parse_AStoryFateOfLapsed_IsKept()
+    {
+        var story = Parse(StorySiege(new JObject { ["mission"] = "helms_deep_defend", ["fate"] = "Lapsed" })).Single().Story!;
+
+        Assert.AreEqual(ChronicleEventState.Lapsed, story.Fate);
+    }
+
+    [DataTestMethod]
+    [DataRow("lapsed")]
+    [DataRow(" LAPSED ")]
+    public void Parse_AStoryFateInAnotherCaseWithPadding_IsRead(string fate)
+    {
+        // The same reading as requiresOutcome (EnumNames.TryParse).
+        var story = Parse(StorySiege(new JObject { ["mission"] = "helms_deep_defend", ["fate"] = fate })).Single().Story!;
+
+        Assert.AreEqual(ChronicleEventState.Lapsed, story.Fate);
+    }
+
+    [DataTestMethod]
+    [DataRow("Fell")]
+    [DataRow("Skipped")]
+    [DataRow("")]
+    public void Parse_AnUnknownStoryFate_FallsBackToHeldAndWarns(string fate)
+    {
+        var story = Parse(StorySiege(new JObject { ["mission"] = "helms_deep_defend", ["fate"] = fate })).Single().Story!;
+
+        Assert.AreEqual(ChronicleEventState.Held, story.Fate);
+        AssertWarned("fate");
+    }
+
+    [TestMethod]
+    public void Parse_AStoryBlockWithoutAMission_DropsTheStoryKeepsTheEventAndWarns()
+    {
+        var events = Parse(StorySiege(new JObject { ["fate"] = "Held" }));
+
+        Assert.AreEqual(1, events.Count);
+        Assert.IsNull(events[0].Story);
+        AssertWarned("story");
+    }
+
+    [TestMethod]
+    public void Parse_AStoryThatIsNotAnObject_DropsTheStoryAndWarns()
+    {
+        var events = Parse(StorySiege("helms_deep_defend"));
+
+        Assert.IsNull(events.Single().Story);
+        AssertWarned("story");
+    }
+
+    [TestMethod]
+    public void Parse_AnUnknownStoryKey_WarnsAndKeepsTheStory()
+    {
+        var story = Parse(StorySiege(new JObject { ["mission"] = "helms_deep_defend", ["side"] = "Attack" })).Single().Story;
+
+        Assert.IsNotNull(story);
+        AssertWarned("'side' is not a known key");
+    }
+
+    [TestMethod]
+    public void Parse_AStoryOnANarrative_IsIgnoredWithAWarning()
+    {
+        var narrative = Narrative();
+        narrative["story"] = new JObject { ["mission"] = "helms_deep_defend" };
+
+        var events = Parse(narrative);
+
+        Assert.IsNull(events.Single().Story);
+        AssertWarned("'story' is not a known key");
+    }
 }

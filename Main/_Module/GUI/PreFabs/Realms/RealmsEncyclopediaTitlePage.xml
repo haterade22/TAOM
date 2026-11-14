@@ -9,7 +9,7 @@
   <Window>
     <BrushWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Brush="Encyclopedia.Page.SoundBrush" DoNotAcceptEvents="true">
       <Children>
-        <Widget Id="TitleFolio" SuggestedWidth="1728" SuggestedHeight="780" HorizontalAlignment="Center" PositionYOffset="184" DoNotAcceptEvents="true">
+        <EncyclopediaFrameAnchorWidget Id="TitleFolio" SuggestedWidth="1728" SuggestedHeight="780" HorizontalAlignment="Center" VerticalAlignment="Top" PositionYOffset="184" FrameOffset="130" BottomClearance="78" DoNotAcceptEvents="true">
           <Children>
             <EncyclopediaStonePanelWidget Id="TitleOverviewPanel" SuggestedWidth="1330" SuggestedHeight="300" Sprite="ec_panel_9" DoNotAcceptEvents="true">
               <Children>
@@ -243,7 +243,7 @@
             </ScrollbarWidget>
             <TextWidget SuggestedWidth="326" SuggestedHeight="204" PositionXOffset="1370" PositionYOffset="490" Text="@NoChronicleText" IsHidden="@HasChronicle" Brush="TAOM.Encyclopedia.ListMutedCentered" DoNotAcceptEvents="true" />
           </Children>
-        </Widget>
+        </EncyclopediaFrameAnchorWidget>
         <!--Previous and Next page: the shared row every detail page has.-->
         <TAOMEncyclopediaPageNavigation />
       </Children>

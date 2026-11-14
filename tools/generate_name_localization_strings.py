@@ -22,8 +22,7 @@ no BOM). The output is a function of the sources alone.
                 tools/tests runs the same comparison, so an unregenerated source fails CI
 
 A missing source file or an empty source glob stops the run with exit 2 and writes nothing: it would
-otherwise write an empty file over a registered one. The repo settlements.xml (a stale copy of
-TAOM_Map's) and custom_settlements.xml (registered nowhere in SubModule.xml) are never sources.
+otherwise write an empty file over a registered one.
 """
 
 from __future__ import annotations
@@ -82,8 +81,6 @@ CATEGORIES: dict[str, dict] = {
     # so a registered row is what the other twelve languages display: CultureObject.Deserialize
     # (culture names, descriptions, name lists), Hero.Deserialize (EncyclopediaText),
     # BasicCharacterObject.Deserialize (NPC names), the career VMs, CustomGame (battle scenes).
-    # The repo settlements.xml (a stale copy of TAOM_Map's) and custom_settlements.xml (registered
-    # nowhere in SubModule.xml) never reach the engine and are never sources.
     "culture_text": {
         "sources": lambda: [MODULE_DATA / "taom_spcultures.xml"],
         "output": MODULE_DATA / "taom_culture_text_strings.xml",

@@ -34,11 +34,9 @@ class RemapStaleSceneNamesTests(unittest.TestCase):
         (self.modules / "SandBox" / "SceneObj" / "empire_dungeon_stealth").mkdir(parents=True)
         self.live = self.modules / "TAOM_Map" / "ModuleData" / "settlements.xml"
         self.live.parent.mkdir(parents=True)
-        self.shadow = Path(self._tmp.name) / "shadow.xml"
         self.running = False
         for patch in (mock.patch.object(rm, "MODULES", self.modules),
                       mock.patch.object(rm, "LIVE", self.live),
-                      mock.patch.object(rm, "SHADOW", self.shadow),
                       mock.patch.object(rm, "game_or_kit_running", lambda: self.running)):
             patch.start()
             self.addCleanup(patch.stop)

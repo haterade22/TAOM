@@ -19,4 +19,7 @@ public sealed class ChronicleEventRecord
     public bool Assaulted { get; set; }
 
     public double? ResolvedDay { get; set; }
+
+    /// <summary>The player chose "Let fate decide" on this window's story offer: it is not offered again (#1105). Saved as <c>"sd"</c>.</summary>
+    public bool StoryDeclined { get; set; }
 }

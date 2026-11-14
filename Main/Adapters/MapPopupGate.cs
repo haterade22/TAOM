@@ -21,9 +21,15 @@ namespace TAOM.Adapters;
 /// </summary>
 internal static class MapPopupGate
 {
-    internal static bool IsMapFree() =>
+    internal static bool IsMapFree() => IsMapFreeUnderPopup() && !InformationManager.IsAnyInquiryActive();
+
+    /// <summary>
+    /// The same test from a popup's own button, where the popup is the open inquiry: the rest of the campaign tick that raised the popup
+    /// can still open an encounter, a map event or a map conversation under it (Story Missions' "Ride" button).
+    /// </summary>
+    internal static bool IsMapFreeUnderPopup() =>
         Campaign.Current?.MainParty != null
         && PlayerEncounter.Current == null
-        && GameStateManager.Current?.ActiveState is MapState { AtMenu: false }
-        && !InformationManager.IsAnyInquiryActive();
+        && Campaign.Current.MainParty.MapEvent == null
+        && GameStateManager.Current?.ActiveState is MapState { AtMenu: false, MapConversationActive: false };
 }

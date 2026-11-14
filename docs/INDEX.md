@@ -139,7 +139,7 @@ Codex, Claude, Kimi and other models use the same policy and evidence records.
 - **Shield beside an unusable weapon:** a polearm absent from `OneHandedPolearm` is never drawn, silently. Gate: `python tools/audit_polearm_shield_parity.py`, run by `check-polearm-shield-parity.sh`. Mechanism: [weapon-xml-pipeline](features/weapon-xml-pipeline.md).
 - [armory-shield-audit](reference/armory-shield-audit.md) — shield `item_usage` reference: `hand_shield` vs `shield` grip, the offhand-bone flag each requires, block-arc cost, and the two `body_name`s that look mistyped but must not be corrected
 - See also: [armory-guide](reference/armory-guide.md) for the canonical folder per item-ID prefix
-- See also: [taom-map-settlement-naming](reference/taom-map-settlement-naming.md) for the live-versus-shadow `settlements.xml` trap
+- See also: [taom-map-settlement-naming](reference/taom-map-settlement-naming.md) for why the live `TAOM_Map` `settlements.xml` is the only settlement file
 
 ### Sieges
 - [siege](features/siege.md) — vanilla siege overrides
@@ -474,7 +474,7 @@ Written for a content author editing the XML without writing C#: attribute table
 - [modding/party-templates.md](modding/party-templates.md): what min_value and max_value really do, and why an unbound template is dead data
 - [modding/clans.md](modding/clans.md): the Faction element: tier, colours, banner, party template, home settlement
 - [modding/kingdoms.md](modding/kingdoms.md): kingdom attributes, relationships and policies, and the configs that enumerate kingdom ids
-- [modding/settlements.md](modding/settlements.md): the live map file: positions, owners, cultures, buildings, scenes, and the stale repo shadow
+- [modding/settlements.md](modding/settlements.md): the live map file: positions, owners, cultures, buildings, scenes, and why the repo has no copy
 - [modding/banners-and-heraldry.md](modding/banners-and-heraldry.md): icon sheets, the palette, what a banner_key encodes, and how clan colour becomes armour tint
 - [modding/strings-and-localization.md](modding/strings-and-localization.md): the {=KEY}Fallback rule, which file owns which prefix, and the cache that silently reverts an edited string
 - [modding/configs-balance.md](modding/configs-balance.md): the balance configs: troop weights, resource costs, food, economy, revolt, combat, race age

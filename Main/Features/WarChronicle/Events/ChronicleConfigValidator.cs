@@ -63,8 +63,10 @@ public static class ChronicleConfigValidator
     private static readonly string[] SiegeKeys =
     {
         "id", "kind", "anchor", "anchorEvent", "requiresOutcome", "offsetDays", "title", "image", "outcomes",
-        "windowDays", "target", "attackers", "defender", "openText", "lapsedText",
+        "windowDays", "target", "attackers", "defender", "openText", "lapsedText", "story",
     };
+
+    private static readonly string[] StoryKeys = { "mission", "fate", "fateText" };
 
     private static readonly string[] OutcomeKeys = { "text", "effects", "momentum" };
     private static readonly string[] EffectKeys = { "target", "kind", "magnitude", "durationDays" };
@@ -280,6 +282,8 @@ public static class ChronicleConfigValidator
         definition.Attackers = attackers;
         definition.OpenText = OptionalText(e, "openText", $"event '{definition.Id}'", warnings);
         definition.LapsedText = OptionalText(e, "lapsedText", $"event '{definition.Id}'", warnings);
+        if (e["story"] != null && e["story"]!.Type != JTokenType.Null)
+            definition.Story = ReadStory(e["story"]!, definition.Id, warnings);
         if (outcomes != null)
         {
             if (outcomes["held"] != null)
@@ -290,6 +294,41 @@ public static class ChronicleConfigValidator
         }
 
         return true;
+    }
+
+    /// <summary>
+    /// A siege's optional story offer (#1105 slice 4). No mission id drops the story and keeps the event; a fate other than Held or Lapsed
+    /// falls back to Held with a warning. Whether the id names a loaded story mission is Story Missions' check, at offer time and in
+    /// <c>ShippedStoryOffersTests</c>, because this file loads without that catalog.
+    /// </summary>
+    private static ChronicleStoryDefinition? ReadStory(JToken token, string eventId, IList<string> warnings)
+    {
+        var where = $"event '{eventId}': story";
+        if (!(token is JObject o))
+        {
+            warnings.Add($"{where} is not an object, so the event offers no story mission");
+            return null;
+        }
+
+        WarnUnknownKeys(o, StoryKeys, where, warnings);
+        var mission = OptionalText(o, "mission", where, warnings);
+        if (string.IsNullOrWhiteSpace(mission))
+        {
+            warnings.Add($"{where} names no mission, so the event offers no story mission");
+            return null;
+        }
+
+        var story = new ChronicleStoryDefinition { MissionId = mission!, FateText = OptionalText(o, "fateText", where, warnings) };
+        if (o["fate"] != null && o["fate"]!.Type != JTokenType.Null)
+        {
+            // Read as requiresOutcome is read (EnumNames.TryParse: trimmed, any case).
+            if (EnumNames.TryParse<ChronicleEventState>(Text(o["fate"]), out var fate) && fate is ChronicleEventState.Held or ChronicleEventState.Lapsed)
+                story.Fate = fate;
+            else
+                warnings.Add($"{where}: fate '{o["fate"]}' is not Held or Lapsed, so it is Held");
+        }
+
+        return story;
     }
 
     private static void WarnUnreached(JObject outcomes, ChronicleEventDefinition definition, IList<string> warnings, params string[] known)

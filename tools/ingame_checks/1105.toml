@@ -105,3 +105,42 @@ claim = "the garrison and the Uruk wave look as they do in the Long Defeat on th
 # reinforcement frame), and no track (campaign music plays). Three use a stand-in scene: dale_defend a Dale castle, lorien_defend and north_defend two Gondor castles.
 [[human]]
 claim = "taom.story_open opens each of minas_tirith_defend, osgiliath_defend, pelargir_defend, dale_defend, lorien_defend and north_defend: the scene loads, both sides spawn, the attackers move on the wall, and the ended line follows. A scene that lacks a frame fails the boot with 'no spawn frame for' and the frames it lacks: report the row"
+
+# Slice 4: the War Chronicle's Hornburg window offers the Helm's Deep defence (Main/Features/StoryMissions/StoryOfferService.cs). The shown line is written
+# once per campaign and window when the popup opens; the result line once per campaign, window and verdict, when the menu returns from the mission.
+[[check]]
+id = "taom.story-missions.offer.shown"
+needs = "a campaign at the Full War: taom.chronicle_open hornburg confirm, then the popup appears on the free map"
+reached = ['\[Check\] id=taom\.story-missions\.offer\.shown result=']
+pass = ['\[Check\] id=taom\.story-missions\.offer\.shown result=pass mission=helms_deep_defend target=town_V2$']
+fail = ['\[Check\] id=taom\.story-missions\.offer\.shown result=fail']
+absence = "not-reached"
+
+[[check]]
+id = "taom.story-missions.offer.result"
+needs = "the same run: Ride to Helm's Deep, Defend the walls, end the wave by a win or a loss; the line is written when the menu returns"
+reached = ['\[Check\] id=taom\.story-missions\.offer\.result result=']
+pass = ['\[Check\] id=taom\.story-missions\.offer\.result result=pass verdict=(Won result=Held|Lost result=Fell taker=(isengard|empire))$']
+fail = ['\[Check\] id=taom\.story-missions\.offer\.result result=fail']
+absence = "not-reached"
+
+[[human]]
+claim = "a won Helm's Deep defence: taom.chronicle_status shows hornburg Held, and two days later The Last March of the Ents occurs"
+
+[[human]]
+claim = "a lost Helm's Deep defence: Helm's Deep belongs to Isengard with an empty garrison, taom.chronicle_status shows hornburg Fell, and no Rohan lord or the player is left inside"
+
+[[human]]
+claim = "Let fate decide, then no Isengard or Dunland siege until the close day: the popup reads 'at dawn the Hornburg still stands', and taom.chronicle_status shows hornburg Held"
+
+[[human]]
+claim = "Escape or Not now on the offer popup: no decline is saved, and the offer comes back on the next campaign day"
+
+[[human]]
+claim = "a save on the result menu after a won or lost defence, then a load: the menu reads 'The moment has passed.', and taom.chronicle_status already shows the result (Held or Fell), so the battle cannot be replayed"
+
+[[human]]
+claim = "a save and a reload after Let fate decide: the offer does not come back. A save and a reload with the offer not yet answered: the offer comes back"
+
+[[human]]
+claim = "War Chronicle MCM 'Offer Story Missions' off: no popup, and the window still ends Held by fate. Enlisted, a prisoner, or in co-op: no popup"

@@ -217,6 +217,8 @@ must exit 0.
 
 **Every siege wall in the packaged scenes needs its two child scripts.** A sided wall whose `solid_child` or `broken_child` has no `WallSegment` script makes the base game's siege set-up throw at every siege start on that scene; on 2026-11-10 Helm's Deep shipped that way to the testing channel after an art pass ([RCA](../reviews/rca-helms-deep-siege-wall-2026-11-10.md)). Check each channel before publishing: `python tools/check_siege_wall_scripts.py --scenes E:/LOTRAOM_Releases/<channel>/Modules/TAOM_Map/SceneObj` exits 0 and prints `PASS:`. Exit 2 means a scene file could not be read: not a pass.
 
+**TAOM_Map must carry the Orthanc prison repair.** Orthanc (`town_isengard`) and Orthanc Gate (`castle_orthanc_gate`) named the pre-stealth `empire_dungeon_a` as their prison scene, the only two of 280 prisons that did; a 1.5.x prison break needs a `*_dungeon_stealth` scene, so a prison break there is expected to fail (not verified in game). The repair (`python tools/remap_stale_scene_names.py --apply`, #1156) changes one install's live file only; players get it only from a package that carries it. `check_release_pair.py` (above) fails a channel that still holds it with `PRISON_SCENE_NOT_STEALTH` and names each settlement.
+
 **Step 8 is the one that gets skipped**, which is why
 [`session-start.sh`](../../.claude/hooks/session-start.sh) prints a banner at the next startup
 whenever the version in `SubModule.xml` has no tag pointing at any commit. That single condition
