@@ -3,7 +3,7 @@
     <BrushWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Brush="Encyclopedia.Page.SoundBrush" DoNotAcceptEvents="true">
       <Children>
         <!--Clan folio (approved option C): the leader plate (left, full height), the Members roster above the Fiefs gallery (middle), and History at full height (right). Each is its own stone plate; nothing is drawn behind or between them.-->
-        <Widget Id="ClanFolio" SuggestedWidth="1728" SuggestedHeight="780" HorizontalAlignment="Center" PositionYOffset="184" DoNotAcceptEvents="true">
+        <EncyclopediaFrameAnchorWidget Id="ClanFolio" SuggestedWidth="1728" SuggestedHeight="780" HorizontalAlignment="Center" VerticalAlignment="Top" PositionYOffset="184" FrameOffset="130" BottomClearance="78" DoNotAcceptEvents="true">
           <Children>
             <EncyclopediaStonePanelWidget Id="ClanLeaderPanel" SuggestedWidth="440" SuggestedHeight="714" Sprite="ec_panel_9" DoNotAcceptEvents="true">
               <Children>
@@ -371,7 +371,7 @@
             </ScrollbarWidget>
 
           </Children>
-        </Widget>
+        </EncyclopediaFrameAnchorWidget>
         <!--Previous and Next page: the shared row, detached below the page canvas in the full-window root, identical on every detail page.-->
         <TAOMEncyclopediaPageNavigation />
       </Children>

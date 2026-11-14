@@ -2,7 +2,7 @@
   <Window>
     <BrushWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Brush="Encyclopedia.Page.SoundBrush" DoNotAcceptEvents="true">
       <Children>
-        <Widget Id="TroopPage" SuggestedWidth="1728" SuggestedHeight="780" HorizontalAlignment="Center" PositionYOffset="184" DoNotAcceptEvents="true">
+        <EncyclopediaFrameAnchorWidget Id="TroopPage" SuggestedWidth="1728" SuggestedHeight="780" HorizontalAlignment="Center" VerticalAlignment="Top" PositionYOffset="184" FrameOffset="130" BottomClearance="78" DoNotAcceptEvents="true">
           <Children>
             <EncyclopediaStonePanelWidget SuggestedWidth="350" SuggestedHeight="780" Sprite="ec_portrait_panel" DoNotAcceptEvents="true" />
             <Widget Id="TroopPortrait" SuggestedWidth="350" SuggestedHeight="780" DoNotAcceptEvents="true">
@@ -171,7 +171,7 @@
               </Children>
             </Widget>
           </Children>
-        </Widget>
+        </EncyclopediaFrameAnchorWidget>
         <!--Previous and Next page: the shared row, detached below the page canvas in the full-window root, identical on every detail page.-->
         <TAOMEncyclopediaPageNavigation />
       </Children>

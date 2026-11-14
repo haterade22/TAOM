@@ -2,7 +2,7 @@
   <Window>
     <EncyclopediaListScreenWidget Id="EncyclopediaListScreen" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" EntryList="ListCanvas\EntryScroll\EntryClip\Entries" EntryScroll="ListCanvas\EntryScroll" DoNotAcceptEvents="true">
       <Children>
-        <Widget Id="ListCanvas" SuggestedWidth="1728" SuggestedHeight="972" HorizontalAlignment="Center" VerticalAlignment="Center" DoNotAcceptEvents="true">
+        <EncyclopediaFrameAnchorWidget Id="ListCanvas" SuggestedWidth="1728" SuggestedHeight="972" HorizontalAlignment="Center" VerticalAlignment="Top" PositionYOffset="54" FrameOffset="0" DoNotAcceptEvents="true">
           <Children>
             <EncyclopediaStonePanelWidget Id="FilterPanel" SuggestedWidth="384" SuggestedHeight="798" PositionXOffset="42" PositionYOffset="110" Sprite="ec_panel_9" DoNotAcceptEvents="true"><Children></Children></EncyclopediaStonePanelWidget>
             <EncyclopediaStonePanelWidget Id="EntriesPanel" SuggestedWidth="772" SuggestedHeight="798" PositionXOffset="450" PositionYOffset="110" Sprite="ec_panel_9" DoNotAcceptEvents="true"><Children></Children></EncyclopediaStonePanelWidget>
@@ -170,7 +170,7 @@
             </ScrollablePanel>
             <ScrollbarWidget Id="SortScrollbar" SuggestedWidth="8" SuggestedHeight="252" PositionXOffset="1180" PositionYOffset="178" IsVisible="@ShowSortOptions" AlignmentAxis="Vertical" MinValue="0" MaxValue="100" Handle="Handle"><Children><ImageWidget Id="Handle" SuggestedWidth="4" SuggestedHeight="40" Sprite="ec_list_scroll" /></Children></ScrollbarWidget>
           </Children>
-        </Widget>
+        </EncyclopediaFrameAnchorWidget>
       </Children>
     </EncyclopediaListScreenWidget>
   </Window>

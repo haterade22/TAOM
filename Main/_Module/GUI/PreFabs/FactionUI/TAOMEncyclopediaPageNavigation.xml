@@ -1,7 +1,7 @@
 <Prefab>
   <Window>
-    <!--Shared Previous Page / Next Page row for every encyclopedia detail page. Each page includes it once in its full-window root, after the 1728x780 page canvas, so the row is detached from the panels: at a 1080 logical viewport it sits at y 1010..1058, 46 below the tallest panel end (184 + 780 = 964), centred on the same 1728 column. Two 190x48 hit boxes with a 16 gap; native commands, labels, hints and disabled states.-->
-    <Widget Id="PageNavigation" WidthSizePolicy="Fixed" SuggestedWidth="1728" HorizontalAlignment="Center" HeightSizePolicy="Fixed" SuggestedHeight="48" VerticalAlignment="Bottom" MarginBottom="22" DoNotAcceptEvents="true">
+    <!--Shared Previous Page / Next Page row for every encyclopedia detail page. Each page includes it once in its full-window root, after the 1728x780 page canvas, so the row is detached from the panels. The anchor puts it 956 below the encyclopedia frame top and never closer than 22 to the viewport bottom: at a 1080 logical viewport it sits at y 1010..1058, 46 below the tallest panel end (184 + 780 = 964), centred on the same 1728 column. Two 190x48 hit boxes with a 16 gap; native commands, labels, hints and disabled states.-->
+    <EncyclopediaFrameAnchorWidget Id="PageNavigation" WidthSizePolicy="Fixed" SuggestedWidth="1728" HorizontalAlignment="Center" HeightSizePolicy="Fixed" SuggestedHeight="48" VerticalAlignment="Top" PositionYOffset="1010" FrameOffset="956" BottomClearance="22" DoNotAcceptEvents="true">
       <Children>
         <ListPanel Id="PageNavigationRow" WidthSizePolicy="CoverChildren" HeightSizePolicy="StretchToParent" HorizontalAlignment="Center" StackLayout.LayoutMethod="HorizontalLeftToRight" DoNotAcceptEvents="true">
           <Children>
@@ -30,6 +30,6 @@
           </Children>
         </ListPanel>
       </Children>
-    </Widget>
+    </EncyclopediaFrameAnchorWidget>
   </Window>
 </Prefab>
