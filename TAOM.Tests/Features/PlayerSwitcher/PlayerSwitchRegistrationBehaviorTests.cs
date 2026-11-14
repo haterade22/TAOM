@@ -2,7 +2,6 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
 using TAOM.Adapters;
 using TAOM.Core.Logging;
-using TAOM.Features.CharacterCreation;
 using TAOM.Features.PlayerSwitcher;
 using TAOM.Features.PlayerSwitcher.Domain;
 
@@ -25,7 +24,8 @@ public class PlayerSwitchRegistrationBehaviorTests
         session.RecordOutcome(SwitchOutcome.Switched, SwitchPath.AssumeIdentity, "lord_1_75", 18500);
         var sut = new PlayerSwitchRegistrationBehavior(
             Substitute.For<IHeroSwitchService>(), Substitute.For<ISwitchPlanner>(), session, session,
-            Substitute.For<IPlayerSwitchPolicyProvider>(), Substitute.For<ICareerMenuService>(),
+            Substitute.For<IPlayerSwitchPolicyProvider>(), Substitute.For<TAOM.Features.CareerSystem.ICareerDataService>(),
+            Substitute.For<IPlayerPartyAdapter>(),
             Substitute.For<IInquiryAdapter>(), Substitute.For<IPlayerIdentityAdapter>(), Substitute.For<IModLogger>());
 
         // A null manager makes the registration throw, the path the catch turns into "unavailable".
