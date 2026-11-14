@@ -1237,6 +1237,13 @@ runs option A, the deliberate confirm.
 - **Prevent:** before wiring a `ShowTwoOptionInquiry`, decide which choice is harmless when dismissed and
   make that option B. Name the Escape option in the feature doc and pin which callback is B in a test.
 - **Source:** `docs/reviews/rca-enlistment-term-end-2026-10-23.md` F1.
+### Repeat: Escape ran a saved decline, and a menu hotkey ran the first leave option (#1105, 2026-11-13)
+The story offer's popup put "Let fate decide", a saved decline, in option B, and its menu made the same decline the first leave
+option, which the menu's leave hotkey runs (v1.5.7 `MapScreen.cs`, `GameMenu.cs`). Either reflex declined the battle for good.
+- **Why missed:** the 2026-10-23 entry above was in no trap sheet, and no path rule fires in a sibling worktree.
+- **Prevent:** option B of an inquiry and the first leave option of a menu are harmless (a snooze, a leave); a saved choice is
+  never either. The rule is now a line in `.claude/rules/traps/campaign.md`.
+- **Source:** [rca-story-missions-slice4-2026-11-13.md](../rca-story-missions-slice4-2026-11-13.md), row 4.
 ### A StretchToParent child of a CoverChildren panel fills the whole offered space (fief-vote count row, #866, 2026-10-23)
 The fief-count row was a `CoverChildren` `ListPanel` holding a `TextWidget` and a `HintWidget` with
 `StretchToParent` on both axes. A `StretchToParent` child of a `CoverChildren` stack panel is measured against the space the

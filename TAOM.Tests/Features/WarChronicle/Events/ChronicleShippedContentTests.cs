@@ -122,9 +122,10 @@ public class ChronicleShippedContentTests
 
         var texts = JToken.Parse(Json).SelectTokens("$..title").Concat(JToken.Parse(Json).SelectTokens("$..text"))
             .Concat(JToken.Parse(Json).SelectTokens("$..openText")).Concat(JToken.Parse(Json).SelectTokens("$..lapsedText"))
+            .Concat(JToken.Parse(Json).SelectTokens("$..fateText"))
             .Select(t => (string)t!).ToList();
 
-        Assert.AreEqual(47, texts.Count);
+        Assert.AreEqual(48, texts.Count);
         foreach (var text in texts)
         {
             var match = keyed.Match(text);

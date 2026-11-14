@@ -35,6 +35,8 @@ public class WarChronicleSettingsProvider : IWarChronicleSettingsProvider
 
     public bool ChronicleAnnouncements => Settings?.WarChronicleAnnouncements ?? true;
 
+    public bool StoryOffersEnabled => Settings?.WarChronicleStoryMissions ?? true;
+
     public float ArmyFocusMultiplier =>
         SettingClamp.Clamp(Settings?.WarChronicleArmyFocus, ArmyFocusDefault, ArmyFocusMin, ArmyFocusMax);
 }

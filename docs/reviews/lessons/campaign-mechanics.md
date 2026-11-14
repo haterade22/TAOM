@@ -1221,3 +1221,35 @@ The #1141 follow-up reused `PlayerClanCheck` for the War Chronicle volunteer mul
 - **Why missed:** the helper and the setting were read at the level of the first caller and the first lever.
 - **Prevent:** when a new caller adopts a shared "is this a player's" check, read the helper's stated reason and rewrite it to cover the new caller, or give that caller its own rule. When a doc states what a player-scoped setting does, name the scope of each seam (clan, hero, faction, global).
 - **Source:** [rca-coop-mainhero-audit-2026-11-13.md](../rca-coop-mainhero-audit-2026-11-13.md), findings R12 and R13.
+
+### A second path to a map outcome reuses the owner's checks, never a subset of them (#1105, 2026-11-13)
+Story Missions' story result settles a War Chronicle window beside the chronicle's own paths. Its first draft checked only that
+the window was listed: a Lost verdict could land after War Ended (the guard lives in `ChronicleService.Guarded`), overwrite an
+owner change that raised no event (`CheckOwner` catches a clan that leaves its kingdom with its fiefs), and a win could pay Held
+while an AI siege of the same fortress went on (`Assaulted`, `AttackerBesieges`).
+- **Why missed:** the new path was written from the decision text ("the map decides first"), not from the list of checks the
+  owner already runs on its own paths.
+- **Prevent:** before a new caller changes state that another service owns, list every guard the owner runs on its own writes
+  and route the new write through the same method (`ConfirmStoryWindow` runs `Guarded` and `CheckOwner`), with one test per
+  guard.
+- **Source:** [rca-story-missions-slice4-2026-11-13.md](../rca-story-missions-slice4-2026-11-13.md), rows S1, 2, 3.
+
+### A result that waits for a menu click is lost at a save: apply it in the init the return runs (#1105, 2026-11-13)
+The story offer held a mission's verdict in a field until the player clicked "Continue" on the menu the mission returned to. The
+engine saves the open menu id and restores the menu on load (`MapStateData`, `SandBoxGameManager`), and the save menu is open on
+that screen, so a save there kept the menu and dropped the verdict, and the battle could be replayed.
+- **Why missed:** the menu was treated as a moment between two clicks; a behavior with an empty `SyncData` has nothing to save.
+- **Prevent:** a behavior that saves nothing applies a mission's result in the menu init that `MapState.OnActivate` runs on the
+  return (once, behind a flag), and its "Continue" only leaves. If the result cannot be applied there, save it.
+- **Source:** [rca-story-missions-slice4-2026-11-13.md](../rca-story-missions-slice4-2026-11-13.md), row 1.
+
+### A popup's button revalidates the map: the rest of the tick that raised it can open an encounter (#1105, 2026-11-13)
+`CampaignEventDispatcher.Tick` raises `TickEvent` at v1.5.7 `Campaign.cs:980`; periodic events (`:988`) and
+`EncounterManager.Tick` (`:994`) run after it in the same frame, and the popup's pause takes effect only on the next frame. A
+popup raised from `TickEvent` behind `MapPopupGate.IsMapFree` can therefore have an encounter or a map conversation under it when
+its button is clicked.
+- **Why missed:** the free-map check ran when the popup opened, and the click was assumed to see the same map. The earlier
+  lesson "A modal opened from a game menu must pause the game, and its callback must revalidate" covered menus only.
+- **Prevent:** a popup button that opens a menu or changes the map checks `MapPopupGate.IsMapFreeUnderPopup` first, and leaves
+  the offer pending when it fails.
+- **Source:** [rca-story-missions-slice4-2026-11-13.md](../rca-story-missions-slice4-2026-11-13.md), row 6.

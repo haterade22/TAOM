@@ -399,6 +399,11 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
         HintText = "During a siege window, how much more the attackers' armies want to besiege the target and the defender's armies want to defend it once it is attacked. 1 turns the focus off. Needs AI Strategic Intelligence on. Default 1.4.")]
     public float WarChronicleArmyFocus { get; set; } = 1.4f;
 
+    [SettingPropertyGroup("War of the Ring/War Chronicle")]
+    [SettingPropertyBool("{=taom_wc_mcm_story}Offer Story Missions", Order = 3, RequireRestart = false,
+        HintText = "{=taom_wc_mcm_story_hint}When a great siege opens (the Battle of the Hornburg), offers you its battle to fight yourself. A win holds the fortress; a loss gives it to the attackers. If you let fate decide, the map decides, and a siege that nobody attacks ends as in the book. Off: no offer, and the map and fate decide. Not offered in co-op or while enlisted. Default on.")]
+    public bool WarChronicleStoryMissions { get; set; } = true;
+
     // --- War of the Ring / War Pledge (#1113) ---
 
     [SettingPropertyGroup("War of the Ring/War Pledge")]
