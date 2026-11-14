@@ -106,7 +106,8 @@ class ReleasePairTests(unittest.TestCase):
         self._assert_finds("BROKEN_FACTION_REF")
 
     def test_a_file_the_game_never_loads_is_not_read(self):
-        # custom_settlements.xml and TAOM's own settlements.xml are in no SubModule.xml row.
+        # TAOM's old settlements.xml and custom_settlements.xml were in no SubModule.xml row. The repo
+        # dropped them on 2026-11-14; a channel built before still holds them and must not fail on them.
         for name in ("custom_settlements.xml", "settlements.xml"):
             _write(self.taom / name, '<Settlements><Village bound="Settlement.town_none" /></Settlements>\n')
         code, out, _ = self._run()

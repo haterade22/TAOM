@@ -875,9 +875,9 @@ the directory holds 88 files in all, the other 43 being 39 `.bak*`/`.prev` copie
 `settlements.xml`. TAOM_Map appears in no other root list, not `item_roots`, not `npc_roots`, not
 `pt_roots`, not `culture_files`, and not `extra_ref_roots`.
 
-The consequence is an inversion worth stating plainly. **The validator checks the dead file's refs
-and trusts the live one's.** The repo's `Main/_Module/ModuleData/settlements.xml` is a stale shadow
-that contributes to no registry, yet its `Culture.` refs are checked on every run. The live
+The consequence is an inversion worth stating plainly. **The validator checked the dead file's refs
+and trusts the live one's.** The repo's `Main/_Module/ModuleData/settlements.xml` was a stale shadow
+that contributed to no registry, yet its `Culture.` refs were checked on every run (the file was removed on 2026-11-14). The live
 `TAOM_Map/ModuleData/settlements.xml` is the *sole* source of `settled_cultures` and
 `settlement_economy`, and its **1,012 `Culture.` references (30 distinct) are never checked for
 `UNKNOWN_CULTURE`**. Since that same file is what decides which cultures count as settled, a bad id

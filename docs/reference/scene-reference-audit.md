@@ -17,7 +17,7 @@ This is a data-reference bug, not an engine bug. **Check the references before s
 
 | Tool | What it does |
 |---|---|
-| [`tools/audit_scene_names.py`](../../tools/audit_scene_names.py) | Extracts every settlement `scene_name` (live `TAOM_Map`, vanilla `SandBox`/`NavalDLC`, repo shadow), cross-references vs all `Modules/*/SceneObj/` folders (case-insensitive), classifies missing-everywhere vs WIP-in-`SceneEditData`, and diffs TAOM vs vanilla. |
+| [`tools/audit_scene_names.py`](../../tools/audit_scene_names.py) | Extracts every settlement `scene_name` (live `TAOM_Map`, vanilla `SandBox`/`NavalDLC`), cross-references vs all `Modules/*/SceneObj/` folders (case-insensitive), classifies missing-everywhere vs WIP-in-`SceneEditData`, and diffs TAOM vs vanilla. |
 | [`tools/audit_battle_scenes.py`](../../tools/audit_battle_scenes.py) | Compares TAOM's `sp_battle_scenes.xml` Scene ids vs vanilla + on-disk SceneObj; flags ids with no folder; checks 0–255 `map_indices` coverage (an uncovered index = no battle scene). |
 | [`tools/build_battle_scenes.py`](../../tools/build_battle_scenes.py) `--check` | Exits 1 when `sp_battle_scenes.xml` differs from its `REGIONS` table, a scene id has no SceneObj folder, or a listed vanilla id left SandBox's live list. Needs the install; `tools/tests/test_build_battle_scenes.py` checks the committed file against `REGIONS` without one. |
 | [`tools/remap_stale_scene_names.py`](../../tools/remap_stale_scene_names.py) | Verified `scene_name` remap (every replacement confirmed present on disk before writing); backs up the external file. Edit its `REMAP` dict for new renames. |
@@ -31,7 +31,7 @@ python tools/remap_stale_scene_names.py --dry-run   # preview fixes; --apply to 
 ## Key gotchas
 
 - **Case-insensitive.** Windows resolves `HART_ISENGARD` vs `HART_isengard`. An exact-case audit false-flags these; the tools lower-case both sides.
-- **Live vs shadow.** The loaded map is `<game>/Modules/TAOM_Map/ModuleData/settlements.xml` (external). The repo's `Main/_Module/ModuleData/settlements.xml` is a stale, unregistered shadow — fixing it is cosmetic. See [`taom-map-settlement-naming.md`](taom-map-settlement-naming.md).
+- **Live file only.** The loaded map is `<game>/Modules/TAOM_Map/ModuleData/settlements.xml` (external). TAOM's repo has no settlement file (its two unloaded copies were removed on 2026-11-14). See [`taom-map-settlement-naming.md`](taom-map-settlement-naming.md).
 - **Custom-scene typo vs vanilla fallback.** If a missing scene has a near-match in `TAOM_Map/SceneObj` (a real custom scene referenced with a typo, e.g. `lotraom_e_osgiliath` vs on-disk `lotrtaom_e_osgiliath`), repoint to the real custom scene. Only fall back to a vanilla scene of the matching settlement type when no custom scene exists.
 - **Packed scenes.** Scenes can in principle be packed (`.tpac`) rather than `SceneObj/` folders; the folder check could false-negative. In practice TAOM/vanilla scenes are folders.
 - **No duplicate Scene ids in `sp_battle_scenes.xml`.** Vanilla never reuses a `<Scene id>`, and the engine counts elements, so a duplicate doubles that scene's odds. The file is generated now: repoint a broken battle terrain in `REGIONS` (`tools/build_battle_scenes.py`), which writes each id once.

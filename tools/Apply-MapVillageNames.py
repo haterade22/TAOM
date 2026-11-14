@@ -7,9 +7,6 @@ Targets the LIVE engine-loaded files at:
     E:\\Steam\\...\\Modules\\TAOM_Map\\ModuleData\\settlements.xml
     E:\\Steam\\...\\Modules\\TAOM_Map\\ModuleData\\Languages\\<LANG>\\loc_settlements.xml  (x12)
 
-Do NOT confuse with TAOM repo's Main/_Module/ModuleData/settlements.xml, which is a
-stale snapshot last touched 2026-04-06 and is NOT registered in SubModule.xml.
-
 The NAMES dict below maps Settlement IDs to display-name defaults. The script:
   1. Updates `name="{=key}DEFAULT"` in the master settlements.xml (EN fallback)
   2. Updates `<string ... text="..."/>` in 12 per-language loc_settlements.xml files
@@ -38,7 +35,6 @@ Usage:
 See docs/reference/taom-map-settlement-naming.md for:
   - Region-prefix → culture → linguistic idiom mapping
   - How to add new mappings safely
-  - Why the TAOM repo settlements.xml is NOT the source of truth
 
 Last bulk-applied: 2026-08-29 (423 entries). The 2026-05-26 run covered 345 village display
 names across 15 regions; 2026-08-29 added the two CASTLES that had shipped unnamed,

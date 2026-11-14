@@ -264,7 +264,7 @@ Engine authority is the installed DLLs: `pwsh tools/taom-src.ps1 path <Type>` (v
 - [features/battle-scenes.md](../features/battle-scenes.md): the `Patch0_BattleScenes` feature and its history
 - [modding/recipe-add-a-field-battle-scene.md](../modding/recipe-add-a-field-battle-scene.md): adding a custom field-battle scene
 - [scene-reference-audit.md](scene-reference-audit.md) — validates `sp_battle_scenes.xml` Scene ids vs on-disk SceneObj
-- [taom-map-settlement-naming.md](taom-map-settlement-naming.md) — TAOM_Map is a live external module, not a repo shadow
+- [taom-map-settlement-naming.md](taom-map-settlement-naming.md): TAOM_Map is a live external module, with no repo copy of its settlements
 - [.claude/rules/vanilla-data-comparison.md](../../.claude/rules/vanilla-data-comparison.md) — diff vs installed vanilla before editing mirrored data
 
 <!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->

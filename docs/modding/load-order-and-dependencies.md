@@ -277,7 +277,7 @@ The scope of each gate, and what none of them can see, is in [validation-and-tes
 - `Heroes`, `Kingdoms` and `Factions` never reload into a saved campaign, so testing a new clan or lord on an old save proves nothing. `SandBoxManager.cs:344-347`, `363-375`.
 - `Settlement.Culture` is re-read from XML on every load, so a culture retag lands on every existing save. `Settlement.cs:961`; [lord-spawn-guard](../features/lord-spawn-guard.md), lines 194-204.
 - A JSON config cached by a `Reuse.Singleton` provider needs a process restart; MCM values in `TAOM.json` beat the JSON on an existing install. [character-creation-body-properties](../features/character-creation-body-properties.md), lines 127-129; [bandit-management](../features/bandit-management.md), line 81.
-- The repo's `Main/_Module/ModuleData/settlements.xml` is a stale shadow; `Settlements` is registered only by `TAOM_Map/SubModule.xml:73`. [xslt-moduledata lessons](../reviews/lessons/xslt-moduledata.md), lines 10-14.
+- TAOM's repo has no settlement file (its two unloaded copies were removed on 2026-11-14); `Settlements` is registered only by `TAOM_Map/SubModule.xml:73`. [xslt-moduledata lessons](../reviews/lessons/xslt-moduledata.md), lines 10-14.
 
 ## Numbers in this chapter
 

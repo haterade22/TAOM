@@ -134,7 +134,7 @@ A new TAOM clan is one `<Faction>` row, but it only works if five things it poin
 3. **`owner` must already exist as a `Hero`.** A clan with a dangling owner does not throw at load; the reference becomes a hollow placeholder that the engine later deletes with `Null object reference found with ID:` in the log (`MBObjectManager.cs:1455`). Author the lord first, per [lords-and-heroes](lords-and-heroes.md).
 4. **`culture` must own at least one settlement.** This is the `LANDLESS_CULTURE` error and it is a real daily-tick crash, not a warning: see `docs/features/lord-spawn-guard.md`.
 5. **`super_faction` if the clan is a vassal.** Leave it out for an independent house or a gang.
-6. **`initial_home_settlement` must be an id in the LIVE map file** `TAOM_Map/ModuleData/settlements.xml`, not the stale shadow copy in this repo. Settlements load after clans, so a typo here is never caught at clan-load time.
+6. **`initial_home_settlement` must be an id in the LIVE map file** `TAOM_Map/ModuleData/settlements.xml`, (this repo has no settlement file since 2026-11-14). Settlements load after clans, so a typo here is never caught at clan-load time.
 7. **`default_party_template`** pointing at a real id in `taom_partyTemplates.xml`, or leave it out and inherit the culture's.
 8. **`banner_key`, `color`, `color2`.** Copy a working key from a sibling clan rather than inventing one. For a bandit gang add `is_bandit="true" is_outlaw="true"`, point `initial_home_settlement` at a hideout of the clan's own culture, and read the bandit paragraph under "Gotchas" first.
 
