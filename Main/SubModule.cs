@@ -1061,7 +1061,7 @@ public class SubModule : MBSubModuleBase
         campaignStarter.AddBehavior(new TAOM.Features.PlayerPossession.PlayerPossessionBehavior(
             IoC.Resolve<TAOM.Features.PlayerPossession.IPlayerPossessionService>(),
             IoC.Resolve<TAOM.Features.PlayerPossession.IJoinReconciliationService>(),
-            IoC.Resolve<ICareerMenuService>(),
+            IoC.Resolve<ICareerDataService>(),
             ccLogger));
 
         campaignStarter.RemoveBehaviors<InitialChildGenerationCampaignBehavior>();

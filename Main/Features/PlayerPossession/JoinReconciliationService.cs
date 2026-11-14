@@ -15,6 +15,7 @@ public sealed class JoinReconciliationService : IJoinReconciliationService
     private readonly IRaceManager _raceManager;
     private readonly IPlayerStartupGoldService _startupGold;
     private readonly ICareerCreationHandler _careerHandler;
+    private readonly ICareerDataService _careerData;
     private readonly ISpecialResourceService _specialResources;
     private readonly IModLogger _logger;
 
@@ -23,6 +24,7 @@ public sealed class JoinReconciliationService : IJoinReconciliationService
         IRaceManager raceManager,
         IPlayerStartupGoldService startupGold,
         ICareerCreationHandler careerHandler,
+        ICareerDataService careerData,
         ISpecialResourceService specialResources,
         IModLogger logger)
     {
@@ -30,6 +32,7 @@ public sealed class JoinReconciliationService : IJoinReconciliationService
         _raceManager = raceManager;
         _startupGold = startupGold;
         _careerHandler = careerHandler;
+        _careerData = careerData;
         _specialResources = specialResources;
         _logger = logger;
     }
@@ -95,6 +98,15 @@ public sealed class JoinReconciliationService : IJoinReconciliationService
     private bool ApplyCareer(string careerId, string heroId)
     {
         if (string.IsNullOrEmpty(careerId) || _careerHandler == null) return false;
+
+        // A joined hero arrives with no career on this peer. One that has a career is a wrong fire
+        // (#1183): OnCareerSelected would keep that career's choices, and the next session launch
+        // refunds them (CareerCampaignBehavior.RepairForeignChoices).
+        if (_careerData != null && _careerData.HasCareer(heroId))
+        {
+            _logger.LogInfo($"[Possession] '{heroId}' already has a career; kept it instead of '{careerId}'.");
+            return false;
+        }
 
         _careerHandler.OnCareerSelected(heroId, careerId);
         _logger.LogInfo($"[Possession] Restored character-creation career '{careerId}' on '{heroId}'.");

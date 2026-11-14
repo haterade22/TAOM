@@ -1,7 +1,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
 using TAOM.Core.Logging;
-using TAOM.Features.CharacterCreation;
+using TAOM.Features.CareerSystem;
 using TAOM.Features.PlayerPossession;
 using TAOM.Tests.Infrastructure;
 
@@ -34,7 +34,7 @@ public class PlayerPossessionSwitchTests
         var sut = new PlayerPossessionBehavior(
             Substitute.For<IPlayerPossessionService>(),
             Substitute.For<IJoinReconciliationService>(),
-            Substitute.For<ICareerMenuService>(),
+            Substitute.For<ICareerDataService>(),
             logger);
 
         // No game runs here, so Hero.MainHero throws inside the check.

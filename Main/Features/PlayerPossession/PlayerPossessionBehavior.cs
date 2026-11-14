@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using TAOM.Core.Logging;
-using TAOM.Features.CharacterCreation;
+using TAOM.Features.CareerSystem;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Party;
 
@@ -20,7 +20,7 @@ public class PlayerPossessionBehavior : CampaignBehaviorBase
 {
     private readonly IPlayerPossessionService _possession;
     private readonly IJoinReconciliationService _reconciliation;
-    private readonly ICareerMenuService _careerMenu;
+    private readonly ICareerDataService _careerData;
     private readonly IModLogger _logger;
 
     /// <summary>
@@ -32,12 +32,12 @@ public class PlayerPossessionBehavior : CampaignBehaviorBase
     public PlayerPossessionBehavior(
         IPlayerPossessionService possession,
         IJoinReconciliationService reconciliation,
-        ICareerMenuService careerMenu,
+        ICareerDataService careerData,
         IModLogger logger)
     {
         _possession = possession;
         _reconciliation = reconciliation;
-        _careerMenu = careerMenu;
+        _careerData = careerData;
         _logger = logger;
     }
 
@@ -85,12 +85,17 @@ public class PlayerPossessionBehavior : CampaignBehaviorBase
         var hero = Hero.MainHero;
         if (hero == null) return;
 
-        _possession.CaptureCharacterCreationChoices(new PlayerCharacterCreationChoices(
-            hero.StringId,
-            hero.Culture?.StringId,
-            hero.CharacterObject?.Race ?? -1,
-            _careerMenu?.SelectedCareerStringId));
+        _possession.CaptureCharacterCreationChoices(
+            ChoicesFor(hero.StringId, hero.Culture?.StringId, hero.CharacterObject?.Race ?? -1, _careerData));
     }
+
+    /// <summary>
+    /// The career is the one the hero received, not the career menu's pick: with no pick, character
+    /// creation auto-assigns the first eligible career and leaves the menu empty.
+    /// </summary>
+    internal static PlayerCharacterCreationChoices ChoicesFor(
+        string heroId, string cultureId, int raceId, ICareerDataService careerData)
+        => new PlayerCharacterCreationChoices(heroId, cultureId, raceId, careerData?.GetCareerStringId(heroId));
 
     // Runs inside Coop's HeroInterface.SwitchToPlayer, before Coop's own work after the switch (captivity,
     // camera, fog of war, the SwitchedPlayer message). The event dispatch catches nothing, so an escaping

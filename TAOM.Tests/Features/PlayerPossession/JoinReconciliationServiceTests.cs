@@ -19,6 +19,7 @@ public class JoinReconciliationServiceTests
     private IRaceManager _raceManager;
     private IPlayerStartupGoldService _startupGold;
     private ICareerCreationHandler _careerHandler;
+    private ICareerDataService _careerData;
     private ISpecialResourceService _specialResources;
     private IModLogger _logger;
     private JoinReconciliationService _sut;
@@ -30,6 +31,7 @@ public class JoinReconciliationServiceTests
         _raceManager = Substitute.For<IRaceManager>();
         _startupGold = Substitute.For<IPlayerStartupGoldService>();
         _careerHandler = Substitute.For<ICareerCreationHandler>();
+        _careerData = Substitute.For<ICareerDataService>();
         _specialResources = Substitute.For<ISpecialResourceService>();
         _logger = Substitute.For<IModLogger>();
 
@@ -40,7 +42,7 @@ public class JoinReconciliationServiceTests
                 "Elven Wine", "icon", 400f, 20f, 0.5f, 6f, 3f, 15f, 1f));
 
         _sut = new JoinReconciliationService(
-            _heroRoster, _raceManager, _startupGold, _careerHandler, _specialResources, _logger);
+            _heroRoster, _raceManager, _startupGold, _careerHandler, _careerData, _specialResources, _logger);
     }
 
     private static PlayerCharacterCreationChoices Choices(int raceId = 3, string careerId = "ranger") =>
@@ -56,6 +58,21 @@ public class JoinReconciliationServiceTests
         _startupGold.Received(1).GrantPlayerStartupGold("mirkwood", "joined_hero");
         _careerHandler.Received(1).OnCareerSelected("joined_hero", "ranger");
         _specialResources.Received(1).InitializeHero("joined_hero", "woodland_realm", "mirkwood");
+    }
+
+    [TestMethod]
+    public void Reapply_HeroAlreadyHasACareer_KeepsItAndAppliesTheOtherGrants()
+    {
+        // A wrong fire (#1183: a lord or heir loaded after a character creation) must not put the
+        // creation career over a career the hero already has: OnCareerSelected keeps the old
+        // career's choices, and the next session launch refunds them.
+        _careerData.HasCareer("joined_hero").Returns(true);
+
+        var applied = _sut.ReapplyCharacterCreationPackage(Choices(), "joined_hero", "woodland_realm");
+
+        Assert.IsTrue(applied);
+        _careerHandler.DidNotReceive().OnCareerSelected(Arg.Any<string>(), Arg.Any<string>());
+        _heroRoster.Received(1).SetHeroRace("joined_hero", 3);
     }
 
     [TestMethod]
