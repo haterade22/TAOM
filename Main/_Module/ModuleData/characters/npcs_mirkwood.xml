@@ -42,6 +42,8 @@
 		</upgrade_targets>
 		<Equipments>
 			<EquipmentRoster>
+				<equipment slot="Item0" id="Item.peasant_sickle_1_t1" />
+				<equipment slot="Item1" id="Item.throwing_stone" />
 				<equipment slot="Body" id="Item.mirkwood_body" />
 				<equipment slot="Leg" id="Item.mirkwood_boots" />
 			</EquipmentRoster>
@@ -1007,6 +1009,8 @@
 				<equipment slot="Leg" id="Item.mirkwood_boots" />
 			</EquipmentRoster>
 			<EquipmentRoster>
+				<equipment slot="Item0" id="Item.peasant_sickle_1_t1" />
+				<equipment slot="Item1" id="Item.throwing_stone" />
 				<equipment slot="Body" id="Item.mirkwood_body" />
 				<equipment slot="Leg" id="Item.mirkwood_boots" />
 			</EquipmentRoster>

@@ -38,6 +38,8 @@
 		</upgrade_targets>
 		<Equipments>
 			<EquipmentRoster>
+				<equipment slot="Item0" id="Item.peasant_pitchfork_1_t1" />
+				<equipment slot="Item1" id="Item.throwing_stone" />
 				<equipment slot="Body" id="Item.khuzait_civil_coat" />
 				<equipment slot="Leg" id="Item.sk_rh_loke_grvs_plate_light_a" />
 			</EquipmentRoster>
@@ -66,10 +68,14 @@
 				<equipment slot="Leg" id="Item.sk_rh_loke_grvs_light_b" />
 			</EquipmentRoster>
 			<EquipmentRoster>
+				<equipment slot="Item0" id="Item.peasant_sickle_1_t1" />
+				<equipment slot="Item1" id="Item.throwing_stone" />
 				<equipment slot="Body" id="Item.khuzait_civil_coat_b" />
 				<equipment slot="Leg" id="Item.sk_rh_loke_grvs_plate_light_a" />
 			</EquipmentRoster>
 			<EquipmentRoster>
+				<equipment slot="Item0" id="Item.peasant_pitchfork_1_t1" />
+				<equipment slot="Item1" id="Item.throwing_stone" />
 				<equipment slot="Body" id="Item.khuzait_civil_coat" />
 				<equipment slot="Leg" id="Item.sk_rh_loke_grvs_light_b" />
 			</EquipmentRoster>

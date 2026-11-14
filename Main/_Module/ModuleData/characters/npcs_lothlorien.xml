@@ -19,6 +19,8 @@
 		</upgrade_targets>
 		<Equipments>
 			<EquipmentRoster>
+				<equipment slot="Item0" id="Item.peasant_sickle_1_t1" />
+				<equipment slot="Item1" id="Item.throwing_stone" />
 				<equipment slot="Body" id="Item.sk_ll_rg_chest_light_a" />
 				<equipment slot="Leg" id="Item.sk_ll_rg_boots_light_a" />
 			</EquipmentRoster>

@@ -40,6 +40,8 @@
 		</upgrade_targets>
 		<Equipments>
 			<EquipmentRoster>
+				<equipment slot="Item0" id="Item.peasant_hammer_1_t1" />
+				<equipment slot="Item1" id="Item.throwing_stone" />
 				<equipment slot="Body" id="Item.sk_dwarf_tunic_normal_a" />
 				<equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_light_a" />
 			</EquipmentRoster>
@@ -208,6 +210,8 @@
 				<equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_light_b" />
 			</EquipmentRoster>
 			<EquipmentRoster>
+				<equipment slot="Item0" id="Item.peasant_hammer_1_t1" />
+				<equipment slot="Item1" id="Item.throwing_stone" />
 				<equipment slot="Body" id="Item.sk_dwarf_dress_normal_f" />
 				<equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_light_b" />
 			</EquipmentRoster>
