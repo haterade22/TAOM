@@ -271,6 +271,7 @@ TAOM ships no multiplayer of its own; these cover behaving correctly when a thir
 - [bannerlord-together-compat](features/bannerlord-together-compat.md) — multiplayer mod compat surface
 
 ### Infrastructure & tooling
+- [features/patch-failure-notice.md](features/patch-failure-notice.md): the notice for a patch group that fails to apply, and the ledger that names a fix which switched itself off at run time (a transpiler with no anchor, a tripped latch), with the id table and how to add a site (#1185).
 - [reference/development-machines.md](reference/development-machines.md). **Two machines, and every `E:\` path in these docs is the desktop's.** Which machine is authoritative for content, the three env vars that carry the difference (`BANNERLORD_GAME_DIR`, `TAOM_DECOMPILE_ROOT`, `TAOM_PYBIN`), what ignores them (`.mcp.json`, `.codex/config.toml` and the decompile scripts), and why a red validator on the incomplete laptop is the laptop rather than the repo
 - [reference/mcp-servers.md](reference/mcp-servers.md) — full MCP server table, TaleWorlds research lookup-order detail, `.mcp.json` configuration, plugin-overlap routing; CLAUDE.md keeps the usage guide + a 4-line summary
 - [reference/navmesh-prefab-source/README.md](reference/navmesh-prefab-source/README.md): the Modding Kit navmesh export kept as the only valid `NMG9` structure TAOM did not author, and how the Mumakil platform navmesh was made from it

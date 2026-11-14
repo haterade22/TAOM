@@ -5,6 +5,7 @@ using System.Reflection.Emit;
 using HarmonyLib;
 using TaleWorlds.Localization;
 using TaleWorlds.MountAndBlade;
+using TAOM.Core.Diagnostics;
 
 namespace TAOM.Features.Enlistment.Hooks;
 
@@ -84,6 +85,9 @@ public static class BehaviorComponent_OnBehaviorActivated_Transpiler
         // SELF-BAIL, per the transpiler convention: if the pattern is gone after an engine bump,
         // hand back the untouched instructions. The banner reverts to vanilla's cosmetic bug rather
         // than the patch throwing inside Harmony's IL pass and taking the mission with it.
+        if (replaced == 0)
+            SelfDisables.Report("Patch66_Enlistment.OrderBanner", "no ToString() call in BehaviorComponent.OnBehaviorActivated");
+
         return replaced > 0 ? list : instructions;
     }
 

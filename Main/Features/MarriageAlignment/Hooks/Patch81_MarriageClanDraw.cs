@@ -1,7 +1,9 @@
+using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Reflection.Emit;
 using HarmonyLib;
+using TAOM.Core.Diagnostics;
 using TAOM.Core.Logging;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.CampaignBehaviors;
@@ -29,6 +31,8 @@ namespace TAOM.Features.MarriageAlignment.Hooks;
 [HarmonyPatchCategory("Patch81_MarriageAlignment")]
 public static class Patch81_MarriageClanDraw
 {
+    private const string SelfDisableId = "Patch81_MarriageAlignment";
+
     private static readonly MethodInfo? CandidatePoolMethod =
         AccessTools.Method(typeof(Patch81_MarriageClanDraw), nameof(CandidateClansFor));
 
@@ -126,15 +130,17 @@ public static class Patch81_MarriageClanDraw
         {
             _service = IoC.Resolve<IMarriageAlignmentService>();
         }
-        catch
+        catch (Exception ex)
         {
             _serviceResolveFailed = true;
+            SelfDisables.Report(SelfDisableId, "IMarriageAlignmentService could not be resolved: " + ex.GetType().Name);
         }
         return _service;
     }
 
     private static void LogDegradation(string detail)
     {
+        SelfDisables.Report(SelfDisableId, detail);
         try
         {
             IoC.Resolve<IModLogger>()?.LogWarning(

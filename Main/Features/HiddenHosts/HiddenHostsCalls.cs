@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using TAOM.Adapters;
+using TAOM.Core.Diagnostics;
 using TAOM.Core.Logging;
 
 namespace TAOM.Features.HiddenHosts;
@@ -58,6 +59,8 @@ internal static class HiddenHostsCalls
         bool wasSpent = _faults >= FaultBudget;
         if (!wasSpent) _faults++;
         bool spent = _faults >= FaultBudget;
+        // #1185: the player is told once, outside the try, so a log that fails cannot hide it.
+        if (spent && !wasSpent) SelfDisables.Report(HiddenHostsModule.PatchCategory, FaultBudget + " hook faults");
         try
         {
             if (Reported.Add(hook + ": " + ex.GetType().Name))

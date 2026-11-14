@@ -1,0 +1,18 @@
+# In-game checks for #1185 (a fix that switches itself off at run time is named in a red chat line),
+# read by tools/ingame_verdict.py. The [Check] line comes from Main/Core/Diagnostics/SelfDisableNotice.cs
+# (Drain), key = the site id, written once per id after the chat line is sent.
+issue = 1185
+title = "Patch failure notice: report patches that switch themselves off at run time"
+fixed_in = "ca983c043"   # on origin, before the fix; the emitter ships in the fix commit itself
+logs = ["taom"]
+
+[[check]]
+id = "taom.patch-notice.self-disable"
+needs = 'close the game, set "EnableLayerLimitTranspiler": true in Modules/TAOM/ModuleData/configs/banner_color_config.json, then start the game and load a saved campaign'
+reached = ['\[Check\] id=taom\.patch-notice\.self-disable result=']
+pass = ['\[Check\] id=taom\.patch-notice\.self-disable result=pass feature=Patch15_BannerLayerLimit shown=chat']
+fail = ['\[Swallowed\] feature=PatchNotice site=SelfDisableNotice\.Tick ']
+absence = "not-reached"
+
+[[human]]
+claim = "with the Patch15 flag on, one red chat line names Patch15_BannerLayerLimit once after the campaign map appears, and it does not repeat at the next battle or the next load in the same session"

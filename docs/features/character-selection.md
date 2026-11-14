@@ -25,7 +25,7 @@ A Harmony Transpiler (`RefreshCharacterEntityAuxPatch`) finds the `newobj AgentV
 2. `Call GetActionSet` — call the static helper which reads `bodyGeneratorView.BodyGen.Race`, looks up the base monster via `FaceGen.GetBaseMonsterFromRace`, and returns the race-appropriate `_facegen` action set via `MBGlobals.GetActionSetWithSuffix`
 3. `Callvirt AgentVisualsData.ActionSet` — chain the action-set setter onto the just-constructed `AgentVisualsData`
 
-The patch is registered under the `Late_Transpiler` Harmony category, ensuring it runs after other patches that may alter the same method. The class carries `[ClientOnly]` (`RefreshCharacterEntityAuxPatch.cs:16`), so a dedicated server leaves it out. When the race has no base monster, `GetActionSet` falls back to the human one, and it logs an error through `TableauDiagnostics` when the resulting action set is invalid (the bind-pose case).
+The patch is registered under the `Late_Transpiler` Harmony category, ensuring it runs after other patches that may alter the same method. The class carries `[ClientOnly]` (`RefreshCharacterEntityAuxPatch.cs:17`), so a dedicated server leaves it out. When the race has no base monster, `GetActionSet` falls back to the human one, and it logs an error through `TableauDiagnostics` when the resulting action set is invalid (the bind-pose case).
 
 ### Component Diagram
 ```

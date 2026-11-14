@@ -4,6 +4,7 @@ using System.Reflection;
 using System.Reflection.Emit;
 using HarmonyLib;
 using TaleWorlds.CampaignSystem.Settlements;
+using TAOM.Core.Diagnostics;
 using TAOM.Core.Logging;
 
 namespace TAOM.Features.CastleRecruitment.Hooks;
@@ -25,6 +26,7 @@ internal static class CastleAiTranspiler
     private const int AnchorWindow = 24;
     private const string AnchorMethod = "GetAvailableWageBudget";
     private const string Label = "AiHourlyTick";
+    private const string SelfDisableId = "Patch42_CastleRecruitment";
 
     internal static List<CodeInstruction> SwapIsCastleGate(IEnumerable<CodeInstruction> instructions, IModLogger? logger)
     {
@@ -35,6 +37,7 @@ internal static class CastleAiTranspiler
         if (getIsCastle == null || replacement == null)
         {
             logger?.LogWarning($"[CastleRecruitment] {Label}: reflection lookup failed — AI castle gate not patched (vanilla behaviour preserved)");
+            SelfDisables.Report(SelfDisableId, "reflection lookup failed");
             return list;
         }
 
@@ -51,6 +54,7 @@ internal static class CastleAiTranspiler
         if (firstIsCastle < 0)
         {
             logger?.LogWarning($"[CastleRecruitment] {Label}: no get_IsCastle found — AI castle gate not patched (vanilla behaviour preserved)");
+            SelfDisables.Report(SelfDisableId, "no get_IsCastle found");
             return list;
         }
 
@@ -70,6 +74,7 @@ internal static class CastleAiTranspiler
         if (!anchored)
         {
             logger?.LogWarning($"[CastleRecruitment] {Label}: first get_IsCastle not followed by anchor '{AnchorMethod}' — AI castle gate not patched (vanilla behaviour preserved)");
+            SelfDisables.Report(SelfDisableId, "first get_IsCastle not followed by GetAvailableWageBudget");
             return list;
         }
 

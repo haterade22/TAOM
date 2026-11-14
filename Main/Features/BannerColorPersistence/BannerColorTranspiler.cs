@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Reflection.Emit;
 using HarmonyLib;
+using TAOM.Core.Diagnostics;
 using TAOM.Core.Logging;
 
 namespace TAOM.Features.BannerColorPersistence;
@@ -31,6 +32,8 @@ namespace TAOM.Features.BannerColorPersistence;
 /// </summary>
 internal static class BannerColorTranspiler
 {
+    internal const string SelfDisableId = "Patch23_BannerColorPersistence.PartyIcon";
+
     internal static List<CodeInstruction> Rewrite(
         IEnumerable<CodeInstruction> instructions,
         MethodInfo? resolveColor1,
@@ -43,16 +46,23 @@ internal static class BannerColorTranspiler
         {
             logger?.LogWarning(
                 "[BannerColor] resolver lookup failed, party-icon clan colours not patched (vanilla faction colours preserved)");
+            SelfDisables.Report(SelfDisableId, "resolver lookup failed");
             return list;
         }
 
         if (!TryAppendResolver(list, "get_Color", resolveColor1))
+        {
             logger?.LogWarning(
                 "[BannerColor] primary colour site (callvirt IFaction::get_Color) not found, left vanilla");
+            SelfDisables.Report(SelfDisableId, "primary colour site (IFaction.get_Color) not found");
+        }
 
         if (!TryAppendResolver(list, "get_Color2", resolveColor2))
+        {
             logger?.LogWarning(
                 "[BannerColor] secondary colour site (callvirt IFaction::get_Color2) not found, left vanilla");
+            SelfDisables.Report(SelfDisableId, "secondary colour site (IFaction.get_Color2) not found");
+        }
 
         return list;
     }
