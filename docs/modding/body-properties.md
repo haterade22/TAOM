@@ -109,7 +109,7 @@ A per-character `<face>` block may override the three tag lists but not the rang
 			age="39.5"
 			weight="0.2152"
 			build="0.5720"
-			key="0026EC0D80001000DD79E69067DD7DD7DD9E85D68ED46DDDBEDCC6DDBCD9BCCD02D736240DDEF7EF00000000000000000000000000000000000000003FAC0000"  />
+			key="0009EC0D80001000DD79E69067DD7DD7DD9E85D68ED46DDDBEDCC6DDBCD9BCCD02D736240DDEF7EF00000000000000000000000000000000000000003FAC0000"  />
     <hair_tags>
       <hair_tag
 				name="TiedAcrossBack" />
@@ -255,6 +255,7 @@ Code: No code changes needed.
 
 ## Gotchas: what fails silently and what crashes
 
+- **Two limits of the Lothlorien and elf face templates.** Lothlorien's culture block in `taom_spcultures.xml` borrows 35 Rivendell townsfolk, guard, caravan and tavern roles (`NPCCharacter.*_rivendell`) that stay on `fighter_rivendell`, so those townsfolk keep dark hair. The face age cap on the elf templates reaches troops and townsfolk only: notables and wanderers take their face age from their campaign age.
 - **A lady on a human face template starts bald half the time unless she carries her own hair tag.** The human templates here carry men's hair tags (`fighter_gondor`: TiedAcrossBack, LongAndBushy and others), which match no adult female hair in vanilla `skins.xml`. With no match the native roll falls back to the hair indices of the template's min and max keys, and a woman's index 0 is the nameless Bald mesh. A lord's face is rolled once at new-game creation, so the result stays for the campaign. Give every human lady on a template `<hair_tags><hair_tag name="empire" /></hair_tags>` inside her `<face>` (10 of the 22 adult female hairs, none bald), as the Harad ladies carry `aserai`. `FemaleLordHairDataTests` gates it; `HeroFaceVarietyDataTests` and `CharacterFaceCoverageTests` cover the other two `<face>` traps (#978 review, 2026-10-23).
 - **One bad entry silently deletes every entry after it.** `MBObjectManager.LoadXML` wraps the whole entry loop in `try { ... } catch (Exception) { }` with an empty body, so any exception aborts the loop and is discarded with no log line. Entries before the bad one load; the bad one and everything below it do not, and the only symptom is a batch of characters with default faces. `MBObjectManager.cs:790-796`.
 - **Three ways to trigger that.** A `<BodyProperty>` with no `id=` (`MBObjectManager.cs:1391`), a Min or Max node with no `key=` (`StaticBodyProperties.cs:104`), and a `<hair_tag>`, `<beard_tag>` or `<tattoo_tag>` with no `name=` (`MBBodyProperty.cs:75`, `:82`, `:93`). If faces go generic from one entry onwards, look above the first broken one.
