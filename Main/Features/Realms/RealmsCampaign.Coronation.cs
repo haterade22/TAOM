@@ -297,11 +297,19 @@ public sealed partial class RealmsCampaign
             clan.AddRenown(renown - clan.Renown, shouldNotify: false);
     }
 
-    /// <summary>As the game does for a companion made lord: out of the player's party into his own, filled with troops.</summary>
+    /// <summary>
+    /// As the game does for a companion made lord: out of the party he rides in into his own, filled with troops; a party
+    /// he already leads becomes the new house's. Vanilla (CompanionRolesCampaignBehavior.ClanNameSelectionIsDone) only
+    /// meets the main party there, because it runs face to face. The titles screen reaches any member of the player's
+    /// clan, so one riding in a companion's party must leave it too, or that party and its leader's command would move
+    /// into the new ruling house. Removing him from the roster clears PartyBelongedTo (PartyBase.OnHeroRemoved).
+    /// </summary>
     private static void LeadParty(Hero hero, Clan clan, Settlement? seat, int troops)
     {
-        if (hero.PartyBelongedTo == MobileParty.MainParty)
-            MobileParty.MainParty.MemberRoster.AddToCounts(hero.CharacterObject, -1);
+        var current = hero.PartyBelongedTo;
+        var spawnAt = current?.Position ?? MobileParty.MainParty.Position;
+        if (current != null && current.LeaderHero != hero)
+            current.MemberRoster.AddToCounts(hero.CharacterObject, -1);
 
         var party = hero.PartyBelongedTo;
         if (party == null)
@@ -309,7 +317,7 @@ public sealed partial class RealmsCampaign
             var home = seat ?? hero.HomeSettlement;
             if (home == null)
                 return;
-            party = LordPartyComponent.CreateLordParty(hero.CharacterObject.StringId, hero, MobileParty.MainParty.Position, 3f, home, hero);
+            party = LordPartyComponent.CreateLordParty(hero.CharacterObject.StringId, hero, spawnAt, 3f, home, hero);
         }
         else
         {
