@@ -65,7 +65,7 @@ public sealed class BattleCheatMenuView : MissionView
         catch (Exception ex)
         {
             _godModeFailed = true;
-            try { IoC.Resolve<IModLogger>()?.LogError($"[CheatMenu] BattleCheatMenuView stopped keeping god mode: {ex.GetType().Name} 0x{ex.HResult:X8}"); }
+            try { IoC.Resolve<IModLogger>()?.LogError($"[CheatMenu] BattleCheatMenuView stopped keeping god mode: {ex}"); }
             catch { /* swallow-ok: never throw out of the mission tick */ }
         }
     }

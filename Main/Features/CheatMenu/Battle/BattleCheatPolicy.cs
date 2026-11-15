@@ -20,7 +20,7 @@ public enum BattleCheatAction
 /// <param name="MissionRunning">A mission exists.</param>
 /// <param name="Ending">The mission has ended or is ending, or a side has retreated.</param>
 /// <param name="HasPlayerTeam">The mission has a player team (the player's side to heal, copy or fight).</param>
-/// <param name="MissionKey">Tells one mission from the next (0 with no mission), so god mode never outlives its mission.</param>
+/// <param name="MissionKey">Tells one mission from the next (0 with no mission), so god mode does not outlive its mission. It is the mission's identity hash, which .NET does not guarantee unique.</param>
 public sealed record BattleCheatState(bool MissionRunning, bool Ending, bool HasPlayerTeam, int MissionKey = 0);
 
 /// <summary>One active soldier (no mount) of a side: its character's id, and whether that character is a hero.</summary>

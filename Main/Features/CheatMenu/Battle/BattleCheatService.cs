@@ -39,7 +39,7 @@ public sealed class BattleCheatService
     public bool IsSinglePlayer => CoopSessionPolicy.IsSinglePlayerAuthority(_coop, _dedicated);
 
     /// <summary>
-    /// God mode is on: the main agent and the mount it rides take no damage. It never carries over to another mission
+    /// God mode is on: the main agent and the mount it rides take no damage. It does not carry over to another mission
     /// (<see cref="BattleCheatState.MissionKey"/>), and <see cref="TickGodMode"/> turns it off once the battle ends or a side retreats.
     /// </summary>
     public bool GodModeOn { get; private set; }

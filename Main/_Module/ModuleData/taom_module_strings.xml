@@ -2412,8 +2412,8 @@
 
 	<!-- Cheat Menu (docs/features/cheat-menu.md) -->
 	<string id="taom_cheat_bad_amount" text="{=taom_cheat_bad_amount}That amount is not allowed. The limit is {MAX}." />
-	<string id="taom_cheat_battle_done_god_off" text="{=taom_cheat_battle_done_god_off}God mode is off. You and your horse take damage again." />
-	<string id="taom_cheat_battle_done_god_on" text="{=taom_cheat_battle_done_god_on}God mode is on. You and the horse you ride take no damage until you turn it off or the battle ends." />
+	<string id="taom_cheat_battle_done_god_off" text="{=taom_cheat_battle_done_god_off}God mode is off. You and any mount you ride take damage again." />
+	<string id="taom_cheat_battle_done_god_on" text="{=taom_cheat_battle_done_god_on}God mode is on. You and any mount you ride take no damage until you turn it off or the battle ends." />
 	<string id="taom_cheat_battle_done_heal_self" text="{=taom_cheat_battle_done_heal_self}You are back to full health, and so is your mount if you ride one." />
 	<string id="taom_cheat_battle_done_heal_side" text="{=taom_cheat_battle_done_heal_side}{NUMBER} soldiers and mounts of your side are back to full health." />
 	<string id="taom_cheat_battle_done_kill" text="{=taom_cheat_battle_done_kill}{NUMBER} enemies were killed." />

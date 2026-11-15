@@ -274,6 +274,22 @@ public class BattleCheatServiceTests
     }
 
     [TestMethod]
+    public void TickGodMode_CoopStartsWhileOn_TurnsOffAndReleasesBoth()
+    {
+        // The tick-time co-op term (TickGodMode's !IsSinglePlayer), not the switch-time refusal.
+        _battle.GodModeTargets().Returns(RiderAndHorse);
+        _service.ToggleGodMode();
+        HeldReadsAs(AgentMortality.Immortal);
+        _coop.IsSessionActive.Returns(true);
+
+        _service.TickGodMode();
+
+        Assert.IsFalse(_service.GodModeOn);
+        _battle.Received(1).SetImmortal(1, false);
+        _battle.Received(1).SetImmortal(2, false);
+    }
+
+    [TestMethod]
     public void GodMode_TurnedOn_MakesTheRiderAndHorseImmortal()
     {
         _battle.GodModeTargets().Returns(RiderAndHorse);
