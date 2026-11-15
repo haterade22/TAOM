@@ -10,9 +10,45 @@ menus:
 |---|---|
 | TAOM cheat menu | Teleport to a settlement..., Gold +10,000 denars, Special resource +1,000, Influence +100, Renown +100, Troops..., Relations +20 with every lord of a kingdom..., Heal your party and your heroes, Close |
 | Teleport | Towns..., Castles..., Villages... (each opens a searchable list), Back |
-| Troops | +10 basic recruits, +10 elite recruits (the culture's `basic_troop` and `elite_basic_troop`), Back |
+| Troops | +10 basic recruits, +10 elite recruits (the culture's `basic_troop` and `elite_basic_troop`), +10 of any troop of your faction... (a searchable list, see Troops below), Every troop (party screen)... (the game's own cheat party screen, see below), Back |
 
-Every button calls `CheatMenuService`, the same code as the console commands below, and shows its result as a message. Gold, influence, renown and heal results name what they gave (`CheatGiven`): gold shows the new total in denars, heal the number of soldiers healed (#1297).
+Every button calls `CheatMenuService`, the same code as the console commands below, and shows its result as a message. Gold, influence, renown, heal, relation and teleport results name what they did (`CheatGiven`): gold shows the new total in denars, heal the number of soldiers healed (#1297), relation the kingdom's display name and the number of lords changed, and teleport the settlement (#1317).
+
+## Troops
+
+"+10 of any troop of your faction..." opens a searchable list of every regular troop of the faction, from recruit to top
+tier, each shown as "Tier N: name", sorted by tier, then name. A pick adds 10 of that troop to the main party.
+
+- The faction's culture is the player's kingdom's culture, or the clan's culture without a kingdom. The two quick entries
+  above it still use the main hero's own culture, as before.
+- `CheatWorldAdapter.ReadFactionTroops` gathers the sources and `CheatTroopList.Select` (pure) decides. The list starts from:
+  - the culture's own lists, whatever culture each troop carries: its basic and elite basic troop, its four militia
+    troops, the troops of its vassal reward template, its tavern mercenaries (`basic_mercenary_troops`), its TAOM
+    recruitment pool (`IVolunteerRecruitmentService.GetCulturePoolTroopIds`) and its Elite Emissary offers;
+  - every troop that carries the culture and that a TAOM recruitment pool offers anywhere (`AllPooledTroopIds`, settlement,
+    clan and culture pools, Gondor's JSON pools included) or a clan's party template holds.
+- From there it follows every upgrade, and keeps only regular field soldiers: occupation Soldier or Mercenary, not a hero,
+  not a template, not obsolete. Lords, wanderers, companions, the custom dev and supporter characters (all heroes),
+  villagers, caravan guards and bandits stay out.
+- A troop that only carries the culture's tag is not listed: Rohan, Dale, Dunland and Rhun reuse vanilla culture ids
+  (vlandia, sturgia, empire, khuzait), and vanilla's own troops of those cultures stay loaded in the campaign; training
+  dummies and town guards carry the tag too. Troops the arachnophobia option hides are left out.
+- The service checks a pick against the list again before it adds anything, so an id from elsewhere is refused.
+
+"Every troop (party screen)..." opens the game's own cheat party screen (`PartyScreenHelper.OpenScreenAsCheat`, v1.5.7).
+In vanilla it replaces the normal party screen (the P key, the party button) when the engine's cheat mode is on
+(`cheat_mode` in the engine config). It lists every valid encyclopedia troop, 10 of each, sorted by name, on the left;
+the player moves the ones he wants into his party (arrows: 1, shift 5, ctrl all), sees the selected troop's model, and
+presses Done. It is a dismiss-mode screen, as in vanilla: troops moved to the left are dismissed, and prisoners moved to
+the left are released.
+- With the engine's cheat mode on, `CheatWorldAdapter.OpenCheatPartyScreen` calls vanilla's method. Without it (vanilla
+  then refuses with "Cheat mode is not enabled!"), it opens the same `PartyState` with the same initialization data, field
+  for field, and vanilla's own list from the private `PartyScreenHelper.GetRosterWithAllGameTroops` (read with
+  `AccessTools`; the binding gate `ReflectionSiteBindingTests` pins it). Its Done handler does what vanilla's private
+  `PartyScreenHelper.DefaultDoneHandler` does: it releases the prisoners moved to the left
+  (`EndCaptivityAction.ApplyByReleasedByChoice`). Without that, a lord moved left stays a prisoner with no captor. If a game update renames that method, the entry says there is nothing to do.
+- No faction or culture filter: vanilla's call takes no roster (project owner, 2026-11-15: "just look at the games own
+  cheat mode"). Going over the party-size limit is allowed there, as in vanilla.
 
 ## Map key
 
@@ -144,6 +180,7 @@ capped `ISpecialResourceService.GrantAmount`, for the main hero's own resource.
 |---|---|
 | `Main/Features/CheatMenu/CheatMenuPolicy.cs` | Pure rules: when the menu shows, when a teleport is refused |
 | `Main/Features/CheatMenu/CheatMenuService.cs` | The cheats, with amount limits and the co-op refusal |
+| `Main/Features/CheatMenu/CheatTroopList.cs` | Pure rule: which troops the faction troop list shows, and their order |
 | `Main/Adapters/CheatWorldAdapter.cs` | The engine calls (vanilla actions, the roster, the teleport) |
 | `Main/Features/CheatMenu/CheatMenuOpener.cs` | Switch, single player and free map; opens the root menu (button and key) |
 | `Main/Features/CheatMenu/TaomCheatMenuHotKeyCategory.cs` | The rebindable map key (default H, id 550), registered at process load |
@@ -164,6 +201,13 @@ capped `ISpecialResourceService.GrantAmount`, for the main hero's own resource.
 2. Turn on Enable Cheat Menu in Mod Options, then load the save again: the Cheats button (gold icon) shows after Fiefs.
 3. Click it on the free map: the cheat menu opens. Try Gold, Influence, Renown, Heal and both Troops buttons, and check the
    message and the change on the party screen and the map bar.
+   In Troops, open "+10 of any troop of your faction...": the list runs from tier 1 recruits to the faction's top troops,
+   with cavalry and archers; type a name in the search box, choose it, and 10 of it join the party. As a vassal of
+   another culture's kingdom, the list is that kingdom's.
+   Then "Every troop (party screen)...": the party screen opens with every troop, 10 of each, on the left; click one to see
+   its model, move some to your party, press Done; they stay in the party. Cancel leaves the party as it was.
+   With the engine's cheat mode off and a lord in your prison, open it again, move the lord to the left and press Done:
+   the release notice shows, and the lord is free afterwards (his encyclopedia page no longer says prisoner).
 4. Teleport: Towns..., type a town name in the search box, choose it. The menu closes and the party stands outside that
    town's gate with the camera on it. Enter the town and leave again, and the village or town menus work as usual (the case
    12 crash path).
@@ -192,6 +236,7 @@ capped `ISpecialResourceService.GrantAmount`, for the main hero's own resource.
   "Nothing changed".
 - Not tested in game (14 Nov 2026): the button, the map key, the menus, the lists and the camera after a teleport;
   the Esc item, the battle key, the battle list and every battle cheat. God mode (15 Nov 2026) is not tested in game either.
+- The faction troop list (15 Nov 2026) is not tested in game: its content was checked only on the repo's data, for Gondor.
 - God mode is kept by `BattleCheatMenuView`'s tick. A mission without the game's default views would get god mode only at the
   moment it is switched, with no remount follow-up and no switch-off at the battle's end; the next mission still starts with
   it off.
@@ -214,3 +259,7 @@ capped `ISpecialResourceService.GrantAmount`, for the main hero's own resource.
 - 2026-11-15: Rebindable battle key "Open Battle Cheat Menu (TAOM)", default H, through the Esc item's gate.
 - 2026-11-15: God mode in the battle list ("God mode: off / on") and `taom.cheat_battle_god [on|off]`: the player and
   any mount they ride take no damage (engine Immortal state) until it is switched off or the battle ends.
+- 2026-11-15: Troops page: "+10 of any troop of your faction...", a searchable list of every regular troop of the
+  faction's culture (kingdom, else clan), sorted by tier then name (`CheatTroopList`).
+- 2026-11-15: Troops page: "Every troop (party screen)...", the game's own cheat party screen (every troop, 10 of each),
+  opened without the engine's cheat mode.

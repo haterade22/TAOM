@@ -2015,6 +2015,13 @@ PR #1304's doc said god mode stays on while the player walks the field after the
 **Prevent:** before calling an engine action silent, list the campaign events it fires and read each SandBox listener, not only the branch the flag guards.
 
 **Source:** `docs/reviews/rca-pr1323-refuge-warden-ranks-2026-11-15.md`
+### Two engine methods share a name; cite the one the call site binds (cheat party screen, PR #1321, 2026-11-15)
+
+**Why missed:** the hand-built copy of `PartyScreenHelper.OpenScreenAsCheat` used a Done handler that only returned true, citing "DefaultDoneHandler returns true". That is `PartyScreenLogic.DefaultDoneHandler`. The method `OpenScreenAsCheat` binds is the private `PartyScreenHelper.DefaultDoneHandler`, which releases the prisoners moved to the left first. Without it a released lord became a prisoner with no captor.
+
+**Prevent:** when copying an engine setup field by field, read each delegate it binds at that exact line (the IL `ldftn` names the declaring type), never a method found by name search.
+
+**Source:** `docs/reviews/rca-pr1321-cheat-troop-list-2026-11-15.md`
 ### A Coop id is an object key, not a StringId; an engine member is what its source says, not its name (#1329, 2026-11-15)
 
 **Why missed:** guest trade passed Coop's `Player.HeroId` to `CampaignObjectManager.Find<Hero>`. Coop builds that id with `ObjectManager.TryGetId`, which returns the key it registered, `"Hero_" + StringId` (`HeroInterface.RegisterPrimary`), and `Find` compares `StringId` only, so the host refused every real guest. The same change read `MobileParty.SiegeEvent` as any siege; it is `BesiegerCamp?.SiegeEvent`, the besieger's side only. Both were read from their names, and the transport test faked the lookup with the string `"hero_1"`.

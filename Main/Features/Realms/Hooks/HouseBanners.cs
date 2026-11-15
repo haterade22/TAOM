@@ -30,6 +30,7 @@ internal static class HouseBanners
 {
     internal static RealmsCampaign? Behavior;
     private static bool _patched;
+    private static bool _bannerPatched;
 
     // Depth of the scopes that show the house banner. Per thread: a scope on one thread never leaks into another.
     [ThreadStatic]
@@ -51,6 +52,7 @@ internal static class HouseBanners
             }
 
             harmony.Patch(getter, prefix: new HarmonyMethod(typeof(HouseBanners), nameof(BannerPrefix)));
+            _bannerPatched = true;
 
             var initialize = AccessTools.Method(typeof(Kingdom), nameof(Kingdom.InitializeKingdom));
             if (initialize != null)
@@ -91,7 +93,7 @@ internal static class HouseBanners
     }
 
     /// <summary>The house banner and realm banner are apart: the patch is in and Realms is on.</summary>
-    public static bool IsActive => _patched && Behavior is { IsDisabled: false };
+    public static bool IsActive => _bannerPatched && Behavior is { IsDisabled: false };
 
     /// <summary>
     /// The banner the clan's house flies: its own, even when it rules a realm (where <c>Clan.Banner</c> gives the

@@ -2975,6 +2975,26 @@
   <Item id="sm_md_num_inf_pauld_elite_b" class="elite" />
   <Item id="sm_md_num_inf_pauld_heavy_a" class="elite" />
   <Item id="sm_md_num_inf_pauld_med_a" class="heavy" next="sm_md_num_inf_pauld_elite_a" />
+  <Item id="taom_lord_mirkwood_body" class="named" />
+  <Item id="taom_lord_mirkwood_boots" class="named" />
+  <Item id="taom_lord_mkwd_inf3_chest" class="named" />
+  <Item id="taom_lord_mkwd_inf3_chest_bronze" class="named" />
+  <Item id="taom_lord_mkwd_inf3_greaves" class="named" />
+  <Item id="taom_lord_mkwd_inf3_greaves_bronze" class="named" />
+  <Item id="taom_lord_mkwd_inf3_pauldrons_bronze" class="named" />
+  <Item id="taom_lord_sk_hr_st_chest_cav_heavy_b" class="named" />
+  <Item id="taom_lord_sk_hr_st_chest_inf_chest_heavy_b" class="named" />
+  <Item id="taom_lord_sk_hr_st_chest_inf_chest_light_a" class="named" />
+  <Item id="taom_lord_sk_hr_st_chest_inf_chest_med_a" class="named" />
+  <Item id="taom_lord_sk_hr_st_chest_inf_chest_med_b" class="named" />
+  <Item id="taom_lord_sk_hr_st_grvs_light_a" class="named" />
+  <Item id="taom_lord_sk_hr_st_grvs_med_a" class="named" />
+  <Item id="taom_lord_sk_hr_st_helmet_heavy_a" class="named" />
+  <Item id="taom_lord_sk_hr_st_helmet_heavy_b" class="named" />
+  <Item id="taom_lord_sk_hr_st_helmet_heavy_c" class="named" />
+  <Item id="taom_lord_sk_hr_st_helmet_heavy_d" class="named" />
+  <Item id="taom_lord_sk_hr_st_pauld_inf_med_a" class="named" />
+  <Item id="taom_lord_sk_sg_st_helmet_heavy_d" class="named" />
   <Item id="thenn_armor1" class="medium" next="thenn_armor_heavy1" />
   <Item id="thenn_armor2" class="medium" next="thenn_armor_heavy1" />
   <Item id="thenn_armor3" class="medium" next="thenn_armor_heavy1" />
