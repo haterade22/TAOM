@@ -93,6 +93,9 @@ class TreeTest(unittest.TestCase):
         p = mock.patch.object(pbs, "SHEET_PX", PX)
         p.start()
         self.addCleanup(p.stop)
+        k = mock.patch.object(pbs, "KNOWN_ORPHAN_SPRITES", frozenset())  # the shipped list names no fixture id
+        k.start()
+        self.addCleanup(k.stop)
         tmp = tempfile.TemporaryDirectory()
         self.addCleanup(tmp.cleanup)
         self.root = Path(tmp.name) / "repo"
@@ -133,6 +136,30 @@ class AuditFindsEachKindTests(TreeTest):
         write_module(self.root, FULL + PACKED1)
         (self.root / pbs.SPRITE_PNGS / "211.png").unlink()
         self.assertEqual(self.findings(), {"missing_sprite": ["211"]})
+
+    def test_a_sprite_part_no_icon_names(self):
+        write_module(self.root, FULL + PACKED1, sprites=[i for i, _, _ in FULL + PACKED1] + ["999"])
+        self.assertEqual(self.findings(), {"orphan_sprite": ["999"]})
+
+    def test_a_sprite_png_no_icon_names(self):
+        write_module(self.root, FULL + PACKED1)
+        (self.root / pbs.SPRITE_PNGS / "998.png").write_bytes(b"png")  # a loose PNG the Kit would pack (#1274)
+        self.assertEqual(self.findings(), {"orphan_sprite": ["998"]})
+
+    def test_a_known_orphan_is_no_finding_while_its_sprite_exists(self):
+        write_module(self.root, FULL + PACKED1, sprites=[i for i, _, _ in FULL + PACKED1] + ["999"])
+        with mock.patch.object(pbs, "KNOWN_ORPHAN_SPRITES", frozenset({"999"})):
+            self.assertEqual(self.findings(), {})
+
+    def test_a_known_orphan_whose_sprite_is_gone_is_a_finding(self):
+        write_module(self.root, FULL + PACKED1)
+        with mock.patch.object(pbs, "KNOWN_ORPHAN_SPRITES", frozenset({"999"})):
+            self.assertEqual(self.findings(), {"stale_known_orphan": ["999"]})
+
+    def test_a_known_orphan_an_icon_names_again_is_a_finding(self):
+        write_module(self.root, FULL + PACKED1)
+        with mock.patch.object(pbs, "KNOWN_ORPHAN_SPRITES", frozenset({"211"})):
+            self.assertEqual(self.findings(), {"stale_known_orphan": ["211"]})
 
     def test_a_texture_imported_from_another_source_file(self):
         write_module(self.root, FULL + PACKED1)
