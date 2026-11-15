@@ -64,6 +64,9 @@ Usage:
         # append-only: adds ONLY rosters whose ids are absent (preserves hand edits)
     python tools/generate_enlistment_rosters.py --apply --culture aserai --reseed
         # replace ONE culture's rosters in place (needs --culture and --apply)
+    python tools/generate_enlistment_rosters.py --repair-ranks [--culture c] [--apply]
+        # replace the pieces of a kit weaker than the kit issued before it (#1290); then
+        # promote_borrowed_cultures.py --only <c> --apply for each promoted culture
     ... --out <path>   # edit another copy of the roster file (proof runs)
 
 XML I/O per tools/README.md "XML I/O convention": UTF-8 (BOM-preserving on
@@ -73,6 +76,7 @@ destructive write.
 """
 
 import argparse
+import collections
 import os
 import re
 import sys
@@ -231,8 +235,10 @@ DEFAULT_ROSTER_ITEMS = {
         ('Body', 'rohan_militia_tunic_b'),
         ('Leg', 'cts_rohan_boots4'),
     ],
+    # The longbow stays from soldier up: highland_ranger_bow (damage 47 against 57) made the
+    # veteran's kit weaker than the soldier's (ENLISTMENT_KIT_RANK_REGRESSION, #1290).
     ('archer', 'veteran'): [
-        ('Item0', 'highland_ranger_bow'),
+        ('Item0', 'lowland_longbow'),
         ('Item1', 'barbed_arrows'),
         ('Item2', 'wm_rohan_ws_sword_a02'),
         ('Head', 'sk_dale_helmet_infrantry_a01'),
@@ -241,7 +247,7 @@ DEFAULT_ROSTER_ITEMS = {
         ('Gloves', 'sk_dale_gauntlet_infrantry_a01'),
     ],
     ('archer', 'sergeant'): [
-        ('Item0', 'highland_ranger_bow'),
+        ('Item0', 'lowland_longbow'),
         ('Item1', 'barbed_arrows'),
         ('Item2', 'wm_rohan_ws_sword_a02'),
         ('Head', 'cts_rohan_helmet1b'),
@@ -765,6 +771,438 @@ def strip_culture_rosters(text, culture):
 
 
 # =============================================================================
+# The rank rule and its repair (#1290)
+# =============================================================================
+# The resolver hands every kit into the party inventory and takes none back, so the player holds
+# every kit of his chain. A promotion kit must not total less armour than any of them, nor carry a
+# weaker weapon in a category one of them holds. The donor floor in pick_donor holds the armour half
+# only for the values of the day a kit was seeded; a later restat of the Armory moves the pieces under
+# the shipped kits, so the validator re-checks the file (ENLISTMENT_KIT_RANK_REGRESSION).
+
+ARMOUR_STAT_KEYS = ('head_armor', 'body_armor', 'arm_armor', 'leg_armor')
+LAUNCHER_CATEGORIES = ('bow', 'crossbow')
+ROSTER_ID_RE = re.compile(rf'enlist_(.+)_({"|".join(ASSIGNMENTS)})_({"|".join(RANKS)})')
+DEFAULT_KITS = 'default'
+
+# A weapon may be this share weaker than the best of its category drawn before it counts. Shared by
+# the gate and the repair, so neither reports nor repairs a difference no player can feel, and a
+# small reprice does not churn the kits. Armour has none: a lower total is always a finding.
+WEAPON_TOLERANCE = 0.03
+
+# One weapon a kit can carry: the maintainer's category, its output (melee damage per second, a
+# launcher's damage), its kind (the weapon description, so a sword is told from an axe of the same
+# category), whether the engine bars it from the saddle (a launcher whose usage set carries
+# requires_no_mount, the long_bow set) and whether it can couch (a polearm with a couch usage).
+KitWeapon = collections.namedtuple('KitWeapon', 'category output kind foot_only couchable')
+
+
+def weapon_category(item_class, description):
+    """The maintainer's weapon category (melee-damage-model.md, "A troop keeps its weapon category").
+
+    Read from the item class and, for two handed weapons and polearms, the primary weapon
+    description the crafting template gives. A bastard sword (primary usage OneHandedBastardSword)
+    is one handed: it is swung in one hand beside a shield, whatever its two handed alternate. A
+    couchable lance is a spear for comparing outputs, and the couch is a constraint of its own
+    (KitWeapon.couchable). A longbow is a bow; the saddle bar is a constraint on the repair
+    (KitWeapon.foot_only). Thrown weapons, shields and ammunition have no category, so they are
+    never compared; kit_weapon_outputs drops a polearm with a thrown usage for the same reason.
+    """
+    if item_class == 'Bow':
+        return 'bow'
+    if item_class == 'Crossbow':
+        return 'crossbow'
+    if item_class == 'OneHanded' or (item_class == 'TwoHanded' and description == 'OneHandedBastardSword'):
+        return 'one handed'
+    if item_class == 'TwoHanded':
+        return 'two handed sword' if description == 'TwoHandedSword' else 'two handed axe or mace'
+    if item_class == 'Polearm':
+        return {'TwoHandedPolearm': 'swinging polearm', 'TwoHandedPolearm_Pike': 'pike'}.get(description, 'spear')
+    return None
+
+
+def kit_weapon_outputs(classes, launchers, priced, mount_barred=frozenset(), thrown=frozenset()):
+    """item id -> KitWeapon for every weapon of a compared category, or None when it has no price.
+
+    Melee output is melee_catalogue's best_dps, the number the melee ladder ranks a troop by; a
+    launcher's is ranged_ladder's damage. `mount_barred` is the usage ids flagged requires_no_mount.
+    `thrown` is the melee-classed ids with a thrown usage (a pilum such as imperial_throwing_spear_1_t4,
+    TwoHandedPolearm_Thrown): thrown weapons are not compared, so they get no entry. A None entry is
+    never compared and is reported as unresolved, rather than guessed.
+    """
+    out = {}
+    for iid, cls in classes.items():
+        if cls in ('Bow', 'Crossbow'):
+            launcher = launchers.get(iid)
+            out[iid] = KitWeapon(weapon_category(cls, None), launcher.damage, cls,
+                                 launcher.usage in mount_barred, False) if launcher else None
+        elif cls in ('OneHanded', 'TwoHanded', 'Polearm') and iid not in thrown:
+            p = priced.get(iid)
+            out[iid] = KitWeapon(weapon_category(cls, p.description), p.best_dps, p.description, False,
+                                 any('couch' in u.features for u in p.usages)) if p else None
+    return out
+
+
+def kit_armour(kit, armour_stats):
+    """A kit's (head, body, arm, leg) armour, summed over its armour slots."""
+    total = [0, 0, 0, 0]
+    for slot, item in kit.items():
+        if slot in ARMOR_SLOTS:
+            stats = armour_stats.get(item, {})
+            for i, key in enumerate(ARMOUR_STAT_KEYS):
+                total[i] += stats.get(key, 0)
+    return tuple(total)
+
+
+def best_by_category(kit, weapon_info):
+    """{category: (output, item id, slot)} of the strongest weapon the kit holds in each category."""
+    best = {}
+    for slot, item in kit.items():
+        info = weapon_info.get(item) if slot in WEAPON_SLOTS else None
+        if info is not None and (info.category not in best or info.output > best[info.category][0]):
+            best[info.category] = (info.output, item, slot)
+    return best
+
+
+def _lance(kit, weapon_info):
+    """A couchable spear the kit holds, or None."""
+    return next((i for s, i in sorted(kit.items()) if s in WEAPON_SLOTS and weapon_info.get(i) is not None
+                 and weapon_info[i].category == 'spear' and weapon_info[i].couchable), None)
+
+
+def drawn_before(earlier, armour_stats, weapon_info):
+    """What the kits drawn before give the player: (strongest armour cell, {category: (output, item,
+    cell)} of the best weapon of each category, (lance id, cell) or None). Ties go to the later kit."""
+    armour_cell, best, lance = None, {}, None
+    for cell, kit in earlier:
+        if armour_cell is None or sum(kit_armour(kit, armour_stats)) >= sum(kit_armour(dict(earlier)[armour_cell],
+                                                                                          armour_stats)):
+            armour_cell = cell
+        for category, (output, item, _slot) in best_by_category(kit, weapon_info).items():
+            if category not in best or output >= best[category][0]:
+                best[category] = (output, item, cell)
+        found = _lance(kit, weapon_info)
+        if found:
+            lance = (found, cell)
+    return armour_cell, best, lance
+
+
+def _rid(cell):
+    return 'enlist_' + '_'.join(cell)
+
+
+def weapon_holds(low_output, high_output):
+    return high_output >= low_output * (1 - WEAPON_TOLERANCE)
+
+
+def rank_regressions(earlier, upper, armour_stats, weapon_info, mounted=False):
+    """[(kind, text)] of why `upper` is weaker than what the player drew before it ([] when it is not). THE rank rule.
+
+    `earlier` is [(cell, kit)] in issue order, every kit the resolver handed out before `upper`.
+    'armour': the total over the four zones is under the strongest earlier total, so a kit may trade
+    a zone for a larger gain elsewhere.
+    'weapon': in a category `upper` holds, its best is more than WEAPON_TOLERANCE weaker than the best
+    of that category in any earlier kit.
+    'dropped': an earlier kit holds a category `upper` lacks, once per category; or, in a `mounted`
+    (cavalry) kit, an earlier kit holds a couchable spear and `upper` holds spears but none couchable
+    (the lance). Weapons of two categories are never compared (a spear's thrust and a sword's swing are
+    not one scale), so a dropped category is reported for the maintainer to decide per chain, and the
+    repair leaves it. The couch counts only in a cavalry kit: the engine's polearm_couch usage set
+    carries requires_mount.
+    """
+    reasons = []
+    armour_cell, best, lance = drawn_before(earlier, armour_stats, weapon_info)
+    if armour_cell is not None:
+        low, high = kit_armour(dict(earlier)[armour_cell], armour_stats), kit_armour(upper, armour_stats)
+        if sum(high) < sum(low):
+            reasons.append(('armour', f'armour total {sum(low)} -> {sum(high)} against {_rid(armour_cell)} '
+                                      f'(head, body, arm, leg {low} -> {high})'))
+    high_best = best_by_category(upper, weapon_info)
+    for category in sorted(best):
+        lo_out, lo_item, lo_cell = best[category]
+        if category not in high_best:
+            reasons.append(('dropped', f'drops the {category} ({lo_item}) of {_rid(lo_cell)}'))
+        elif not weapon_holds(lo_out, high_best[category][0]):
+            unit = 'damage' if category in LAUNCHER_CATEGORIES else 'damage per second'
+            reasons.append(('weapon', f'{category} ({unit}) {lo_item} {lo_out:.1f} -> {high_best[category][1]} '
+                                      f'{high_best[category][0]:.1f} against {_rid(lo_cell)}'))
+    if mounted and lance and 'spear' in high_best and _lance(upper, weapon_info) is None:
+        reasons.append(('dropped', f'drops the lance ({lance[0]}) of {_rid(lance[1])}'))
+    return reasons
+
+
+def resolve_kit(culture, assignment, rank, exists):
+    """The kit EnlistmentRosterResolver.Resolve issues, as (culture, assignment, rank), or None.
+
+    A mirror of Main/Features/Enlistment/Equipment/EnlistmentRosterResolver.cs: the requested culture
+    (lines 54 to 63), then the default kits (65 to 71); inside each, the requested assignment and then
+    infantry (AssignmentChain, line 82); inside each, the requested tier down to recruit (ProbeTiers,
+    line 95). ResolverMirrorTests pins it.
+    """
+    chain = [assignment] + ([] if assignment == 'infantry' else ['infantry'])
+    tiers = RANKS[:RANKS.index(rank) + 1][::-1]
+    for owner in ([culture] if culture else []) + [DEFAULT_KITS]:
+        for step in chain:
+            for tier in tiers:
+                if exists((owner, step, tier)):
+                    return owner, step, tier
+    return None
+
+
+def rank_chains(kits):
+    """[(upper cell, [earlier cells])]: each kit and every distinct kit the resolver issued before it.
+
+    For each culture and requested assignment the tiers are resolved in order; a kit's earlier kits
+    are the distinct kits issued at the tiers below it, so a cavalry enlistee who drew the infantry
+    recruit kit holds it at the cavalry soldier kit. A kit reached by several chains is listed once
+    (every chain issues it after the same kits: an infantry kit only leads another chain). Ordered by
+    the upper kit's tier, and every earlier kit has a lower tier, so a repair of an earlier kit is in
+    place before the kit above it is judged.
+    """
+    chains = {}
+    for culture in sorted({c for c, _a, _r in kits}):
+        for assignment in ASSIGNMENTS:
+            issued = list(dict.fromkeys(cell for cell in (resolve_kit(culture, assignment, r, kits.__contains__)
+                                                          for r in RANKS) if cell))
+            for i in range(1, len(issued)):
+                chains.setdefault(issued[i], issued[:i])
+    return sorted(chains.items(), key=lambda kv: (RANKS.index(kv[0][2]), kv[0]))
+
+
+def enlistment_kit_findings(kits, armour_stats, weapon_info):
+    """[(upper cell, [earlier cells], [(kind, text)])] for every kit weaker than what was drawn before it."""
+    found = []
+    for high, earlier in rank_chains(kits):
+        reasons = rank_regressions([(c, kits[c]) for c in earlier], kits[high], armour_stats, weapon_info,
+                                   mounted=high[1] == 'cavalry')
+        if reasons:
+            found.append((high, earlier, reasons))
+    return found
+
+
+def unresolved_kit_items(kits, armour_stats, weapon_info):
+    """Sorted ids a kit carries that the rule cannot judge: an armour piece with no armour values, or a
+    weapon of a compared category with no price. They count as nothing, so they are named, not hidden."""
+    out = set()
+    for kit in kits.values():
+        for slot, item in kit.items():
+            if (slot in ARMOR_SLOTS and item not in armour_stats) or \
+                    (slot in WEAPON_SLOTS and item in weapon_info and weapon_info[item] is None):
+                out.add(item)
+    return sorted(out)
+
+
+def read_kits(text):
+    """{(culture, assignment, rank): {slot: item id}} of the enlist_* rosters in a roster file's text."""
+    kits = {}
+    for roster in ET.fromstring(text).iter('EquipmentRoster'):
+        m = ROSTER_ID_RE.fullmatch(roster.get('id', ''))
+        if m:
+            kits[m.groups()] = {e.get('slot'): (e.get('id') or '').removeprefix('Item.')
+                                for e in roster.iter('Equipment')}
+    return kits
+
+
+def promoter_owned_cultures(text):
+    """The cultures whose enlist_* rosters sit in a promote_borrowed_cultures.py marker region."""
+    return set(re.findall(r'<!-- TAOM-NEWCULTURE:([a-z0-9_]+):BEGIN -->', text))
+
+
+def culture_troop_gear(troops_dir=TROOPS_DIR):
+    """{culture: {slot: set of item ids}} worn or carried in any battle set of the culture's line troops.
+
+    "The culture's troop gear" for the repair: every non-civilian EquipmentRoster of each non-hero
+    Soldier NPCCharacter in troops_*.xml, with the <equipment> rows directly under <Equipments> laid
+    over each set as the engine does, keyed by the troop's culture, and the TREE_ALIASES cultures
+    given their source tree's gear.
+    """
+    gear = {}
+    for fn in sorted(os.listdir(troops_dir)):
+        if not (fn.startswith('troops_') and fn.endswith('.xml')):
+            continue
+        try:
+            root = ET.parse(os.path.join(troops_dir, fn)).getroot()
+        except ET.ParseError as e:
+            print(f'  WARN: parse error in {fn}: {e}', file=sys.stderr)
+            continue
+        for npc in root.iter('NPCCharacter'):
+            raw = npc.get('culture', '')
+            if not raw.startswith('Culture.') or npc.get('is_hero') == 'true' \
+                    or npc.get('occupation', 'Soldier') != 'Soldier':
+                continue
+            slots = gear.setdefault(raw.split('.', 1)[1], {})
+            overrides = _slot_items(npc.findall('Equipments/equipment'))
+            for roster in npc.findall('.//EquipmentRoster'):
+                if rl.is_civilian(roster):
+                    continue
+                for slot, item in {**_slot_items(roster.findall('equipment')), **overrides}.items():
+                    if item:
+                        slots.setdefault(slot, set()).add(item)
+    for alias, source in TREE_ALIASES.items():
+        if alias not in gear and source in gear:
+            gear[alias] = gear[source]
+    return gear
+
+
+def _weapon_items(gear_slots):
+    return set().union(*(gear_slots.get(s, set()) for s in WEAPON_SLOTS))
+
+
+def _pick_weapon(replaced, low_best, upper, lower_item, same_culture, gear_slots, weapon_info, cavalry):
+    """The weapon that replaces `replaced` in its category, or None.
+
+    Candidates hold the rule and are not already in another weapon slot of the kit. A launcher barred
+    from the saddle (a long_bow) never goes into a kit that holds a Horse slot; a kit without one is a
+    foot soldier's and may take it (the maintainer's rule, 2026-11-15: the roster's own horse makes a
+    horse archer). In a cavalry kit a couchable lance is replaced only by a couchable one. Preference:
+    (a) the same kind as the replaced piece from the culture's troop gear, (b) another kind of the
+    category from it, (c) the earlier kit's own piece (`lower_item`), only when it is the same
+    culture's. Within (a) and (b) the id closest to the replaced one first (the same weapon line,
+    sm_rh_loke_1h_axe_a to sm_rh_loke_1h_sword_b, keeps the kit's look), then the weakest that holds,
+    so a repair is the smallest step that keeps the progression.
+    """
+    info = weapon_info[replaced]
+    held = {i for s, i in upper.items() if s in WEAPON_SLOTS}
+    rides = 'Horse' in upper
+    keep_couch = cavalry and info.couchable
+
+    def fits(item):
+        cand = weapon_info.get(item)
+        return (cand is not None and cand.category == info.category and weapon_holds(low_best, cand.output)
+                and item not in held and not (cand.foot_only and rides)
+                and not (keep_couch and not cand.couchable))
+
+    pool = sorted((-len(os.path.commonprefix((i, replaced))), weapon_info[i].output, i)
+                  for i in _weapon_items(gear_slots) if fits(i))
+    for tier in ([c for c in pool if weapon_info[c[2]].kind == info.kind], pool):
+        if tier:
+            return tier[0][2]
+    return lower_item if same_culture and fits(lower_item) else None
+
+
+def _pick_armour(slot, lower_item, same_culture, gear_slots, armour_stats):
+    """The piece that fills `slot` with at least the earlier kit's piece's armour, or None.
+
+    Preference: the earlier kit's piece when the culture's troops wear it; else the culture's own
+    piece for the slot that matches it most closely from above; else the earlier kit's piece, only
+    when it is the same culture's.
+    """
+    need = sum(kit_armour({slot: lower_item}, armour_stats))
+    own = gear_slots.get(slot, set())
+    if lower_item in own:
+        return lower_item
+    pool = sorted((sum(kit_armour({slot: i}, armour_stats)), i) for i in own
+                  if i in armour_stats and sum(kit_armour({slot: i}, armour_stats)) >= need)
+    if pool:
+        return pool[0][1]
+    return lower_item if same_culture else None
+
+
+def plan_rank_repairs(kits, armour_stats, weapon_info, skip=(), gear=None):
+    """(edits, left): [((culture, assignment, rank), slot, old id or None, new id)] that make every
+    kit obey rank_regressions, and the [(upper, [earlier], [(kind, text)])] the repair does not fix.
+
+    Walked in rank_chains order, so a repaired kit is the floor for the kits above it. A weapon under
+    the best of its category drawn before is replaced by _pick_weapon; an armour total under the
+    strongest earlier kit's takes _pick_armour pieces against that kit, the slots with the largest
+    deficit first, until it holds. A dropped category is never repaired. The default kits and the
+    `skip` cultures (the promoter's) are not edited. `gear` is culture_troop_gear(); without it the
+    earlier kit's piece is the only candidate.
+    """
+    gear = gear or {}
+    work = {cell: dict(kit) for cell, kit in kits.items()}
+    edits = []
+    for high, earlier_cells in rank_chains(work):
+        culture = high[0]
+        if culture in skip or culture == DEFAULT_KITS:
+            continue
+        earlier = [(c, work[c]) for c in earlier_cells]
+        upper, own = work[high], gear.get(culture, {})
+        armour_cell, best, _lance_held = drawn_before(earlier, armour_stats, weapon_info)
+        high_best = best_by_category(upper, weapon_info)
+        twice_before = _weapons_twice(upper)
+        for category in sorted(set(best) & set(high_best)):
+            (lo_out, lo_item, lo_cell), (hi_out, hi_item, hi_slot) = best[category], high_best[category]
+            if weapon_holds(lo_out, hi_out):
+                continue
+            new = _pick_weapon(hi_item, lo_out, upper, lo_item, lo_cell[0] == culture, own, weapon_info,
+                               high[1] == 'cavalry')
+            if new is not None:
+                edits.append((high, hi_slot, hi_item, new))
+                upper[hi_slot] = new
+        if _weapons_twice(upper) - twice_before:
+            raise SystemExit(f'ERROR: the repair would give {_rid(high)} one weapon twice: '
+                             f'{sorted(_weapons_twice(upper) - twice_before)}')
+        if armour_cell is None:
+            continue
+        lower, same = work[armour_cell], armour_cell[0] == culture
+        need = sum(kit_armour(lower, armour_stats))
+        deficits = []
+        for order, slot in enumerate(ARMOR_SLOTS):
+            if slot in lower:
+                held = {slot: upper[slot]} if slot in upper else {}
+                gain = sum(kit_armour({slot: lower[slot]}, armour_stats)) - sum(kit_armour(held, armour_stats))
+                if gain > 0:
+                    deficits.append((-gain, order, slot))
+        for _gain, _order, slot in sorted(deficits):
+            if sum(kit_armour(upper, armour_stats)) >= need:
+                break
+            new = _pick_armour(slot, lower[slot], same, own, armour_stats)
+            if new is not None:
+                edits.append((high, slot, upper.get(slot), new))
+                upper[slot] = new
+    return edits, enlistment_kit_findings(work, armour_stats, weapon_info)
+
+
+def repair_source(edit, gear, weapon_info):
+    """Where a planned piece came from: 'troop gear, same kind', 'troop gear, same category' or
+    'troop gear' (armour), else 'earlier kit' (the earlier kit's own piece)."""
+    (culture, _a, _r), slot, old, new = edit
+    own = gear.get(culture, {})
+    if slot in WEAPON_SLOTS:
+        if new not in _weapon_items(own):
+            return 'earlier kit'
+        same = old is not None and weapon_info.get(old) and weapon_info[old].kind == weapon_info[new].kind
+        return 'troop gear, same kind' if same else 'troop gear, same category'
+    return 'troop gear' if new in own.get(slot, set()) else 'earlier kit'
+
+
+def _weapons_twice(kit):
+    """The weapon ids a kit holds in more than one weapon slot."""
+    held = [i for s, i in kit.items() if s in WEAPON_SLOTS]
+    return {i for i in held if held.count(i) > 1}
+
+
+def repair_text(text, edits):
+    """The roster file's text with each edit applied in its own roster: a slot's id swapped, or a
+    missing slot added in emission order with the file's own indent and line ending. A plan made
+    against another text is refused, never applied in part."""
+    newline = '\r\n' if '\r\n' in text else '\n'
+    for (culture, assignment, rank), slot, old, new in edits:
+        rid = f'enlist_{culture}_{assignment}_{rank}'
+        m = re.search(rf'<EquipmentRoster id="{re.escape(rid)}"[^>]*>.*?</EquipmentRoster>', text, re.S)
+        if m is None:
+            raise SystemExit(f'ERROR: {rid} is not in the roster file; re-plan the repair')
+        block = m.group(0)
+        if old is not None:
+            line = f'slot="{slot}" id="Item.{old}"'
+            if block.count(line) != 1:
+                raise SystemExit(f'ERROR: {rid} has no {slot}={old}; re-plan the repair')
+            block = block.replace(line, f'slot="{slot}" id="Item.{new}"')
+        else:
+            if f'slot="{slot}"' in block:
+                raise SystemExit(f'ERROR: {rid} already fills {slot}; re-plan the repair')
+            lines = list(re.finditer(r'([ \t]*)<Equipment slot="([^"]+)"[^\n]*\n', block))
+            if not lines:
+                raise SystemExit(f'ERROR: {rid} has no Equipment line to place {slot} beside')
+            after = [ln for ln in lines if EMIT_SLOTS.index(ln.group(2)) > EMIT_SLOTS.index(slot)]
+            at = after[0].start() if after else lines[-1].end()
+            new_line = f'{lines[0].group(1)}<Equipment slot="{slot}" id="Item.{new}" />{newline}'
+            block = block[:at] + new_line + block[at:]
+        text = text[:m.start()] + block + text[m.end():]
+    return text
+
+
+# =============================================================================
 # XML emission
 # =============================================================================
 
@@ -913,6 +1351,75 @@ def build_indexes():
     return armory, universe, classes, zones
 
 
+def build_rank_indexes():
+    """(armour stats, weapon outputs) read as the validator reads them, so a repair is planned on
+    the numbers ENLISTMENT_KIT_RANK_REGRESSION judges."""
+    modules = game_modules(DEFAULT_GAME_ROOT)
+    if not modules.is_dir():
+        raise SystemExit(f'ERROR: Bannerlord Modules folder not found: {modules} (set ${ENV_VAR}).')
+    reg = ts.build_registries(MODULEDATA_DIR, modules)
+    if not reg.item_armour_stats:
+        raise SystemExit(f'ERROR: no armour values were read from {modules}.')
+    weapons, problem = ts.kit_weapon_info(MODULEDATA_DIR, modules, reg.launchers, reg.mount_barred_usages)
+    if problem:
+        raise SystemExit(f'ERROR: {problem}; a repair planned without weapon prices would be half a repair.')
+    return reg.item_armour_stats, weapons
+
+
+def repair_ranks(out_xml, culture, apply):
+    """Plan, print and (with apply) write the rank repairs of the generated cultures' kits.
+
+    The promoted cultures' kits are cloned from their source culture by promote_borrowed_cultures.py,
+    which runs after this, and the default kits are DEFAULT_ROSTER_ITEMS; neither is edited here.
+    """
+    with open(out_xml, 'rb') as fh:
+        text = fh.read().decode('utf-8-sig')
+    kits = read_kits(text)
+    promoted = promoter_owned_cultures(text)
+    if culture in promoted:
+        raise SystemExit(f'ERROR: the {culture} kits are cloned by promote_borrowed_cultures.py from its source '
+                         f'culture. Repair the source, then run promote_borrowed_cultures.py --only {culture} --apply.')
+    own = sorted({c for c, _a, _r in kits} - promoted - {DEFAULT_KITS})
+    if culture and culture not in own:
+        raise SystemExit(f'ERROR: --repair-ranks --culture {culture!r} names no culture this generator owns. '
+                         f'Known: {", ".join(own)}')
+    skip = promoted | {DEFAULT_KITS} | ({c for c in own if c != culture} if culture else set())
+    armour_stats, weapons = build_rank_indexes()
+    gear = culture_troop_gear()
+    edits, left = plan_rank_repairs(kits, armour_stats, weapons, skip=skip, gear=gear)
+    sources = [repair_source(edit, gear, weapons) for edit in edits]
+    print(f'Rank repairs ({len(edits)}):')
+    for ((c, a, r), slot, old, new), source in zip(edits, sources):
+        print(f'  enlist_{c}_{a}_{r} {slot} {old or "(empty)"} -> {new} ({source})')
+    if edits:
+        split = collections.Counter(sources)
+        print('  From: ' + ', '.join(f'{source} {split[source]}' for source in sorted(split)))
+
+    def owner(c):
+        return ('promote_borrowed_cultures.py, after its source' if c in promoted
+                else 'DEFAULT_ROSTER_ITEMS' if c == DEFAULT_KITS else 'not in this run' if c in skip else 'this run')
+
+    weaker = [(high, [t for k, t in reasons if k != 'dropped']) for high, _earlier, reasons in left]
+    weaker = [row for row in weaker if row[1]]
+    print(f'\nWeaker kits left after the repair ({len(weaker)}):')
+    for high, texts in weaker:
+        print(f'  {_rid(high)} [{owner(high[0])}]: {"; ".join(texts)}')
+    dropped = [(high, t) for high, _earlier, reasons in left for k, t in reasons if k == 'dropped']
+    print(f'\nDropped categories, never repaired by a tool ({len(dropped)}):')
+    for high, text_ in dropped:
+        print(f'  {_rid(high)}: {text_}')
+    if not apply:
+        print('\nDRY-RUN: no file written. Re-run with --apply.')
+        return
+    if not edits:
+        print('\n--repair-ranks: nothing to change.')
+        return
+    updated = repair_text(text, edits)
+    parse_written(updated)
+    write_xml(out_xml, updated)
+    print(f'\n--repair-ranks: wrote {len(edits)} change(s) to {out_xml}')
+
+
 def main():
     ap = argparse.ArgumentParser(description='Generate enlistment service kits (dry-run default).')
     ap.add_argument('--apply', action='store_true', help='write the XML (default: dry-run)')
@@ -923,12 +1430,33 @@ def main():
                     help='with --culture and --apply: replace that culture\'s rosters in place with '
                          'its freshly generated kits (appended under the seed marker only when '
                          'it had none)')
+    ap.add_argument('--repair-ranks', action='store_true',
+                    help='replace the pieces of every kit weaker than the kit issued before it '
+                         '(ENLISTMENT_KIT_RANK_REGRESSION); dry run unless --apply, all generated '
+                         'cultures unless --culture')
     ap.add_argument('--out', default=OUT_XML,
                     help='roster file to edit (default: the shipped file); for proof runs on a copy')
     args = ap.parse_args()
     out_xml = args.out
     if args.reseed and not (args.culture and args.apply):
         raise SystemExit('ERROR: --reseed requires both --culture and --apply.')
+    if args.repair_ranks:
+        if args.reseed or args.seed_missing:
+            raise SystemExit('ERROR: --repair-ranks edits the kits in place; run it alone.')
+        repair_ranks(out_xml, args.culture, args.apply)
+        return
+    if args.apply and os.path.exists(out_xml):
+        with open(out_xml, 'rb') as fh:
+            owned = promoter_owned_cultures(fh.read().decode('utf-8-sig'))
+        # The promoter's regions are the promoter's: a reseed would write generated kits inside one,
+        # and a full apply rewrites the whole file without them.
+        if args.reseed and args.culture in owned:
+            raise SystemExit(f'ERROR: the {args.culture} kits are cloned by promote_borrowed_cultures.py; '
+                             f'run promote_borrowed_cultures.py --only {args.culture} --apply instead.')
+        if owned and not (args.reseed or args.seed_missing or args.culture):
+            raise SystemExit(f'ERROR: --apply rewrites the whole file and would drop the promote_borrowed_cultures.py '
+                             f'regions ({", ".join(sorted(owned))}). Use --reseed --culture <id> --apply for one '
+                             'culture, --seed-missing --apply for absent ids, or --repair-ranks for the rank rule.')
 
     armory, universe, classes, zones = build_indexes()
     check_issue_launchers(universe)
@@ -1090,6 +1618,13 @@ def main():
         parse_written(updated)
         write_xml(out_xml, updated)
         print(f'\n{flag}: appended {len(new_blocks)} roster(s) to {out_xml}')
+        if args.reseed:
+            # Fresh donor kits know nothing of the rank rule on today's values. The plan is printed,
+            # not applied, so its candidates are read before they are written.
+            print('\nThe rank rule on the reseeded kits:')
+            repair_ranks(out_xml, args.culture, apply=False)
+            print(f'Next: read the plan above, then run python tools/generate_enlistment_rosters.py '
+                  f'--repair-ranks --culture {args.culture} --apply')
         return
 
     if args.culture:

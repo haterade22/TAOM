@@ -173,6 +173,11 @@ class SelectionTests(unittest.TestCase):
     def test_the_troop_id_baseline_selects_moduledata(self):
         self.assertIn("moduledata", _ids(dg.select(dg.GATES, ["tools/shipped_troop_ids.txt"])))
 
+    def test_the_tools_the_enlistment_rank_rule_reads_select_moduledata(self):
+        for path in ("tools/generate_enlistment_rosters.py", "tools/melee_catalogue.py",
+                     "tools/analyze_melee_ladder.py", "tools/ranged_ladder.py"):
+            self.assertIn("moduledata", _ids(dg.select(dg.GATES, [path])), path)
+
     def test_the_lord_skill_sets_and_their_generator_select_generator_regions(self):
         for path in ("Main/_Module/ModuleData/taom_lord_skill_sets.xml", "tools/apply_culture_skills_traits.py"):
             self.assertIn("generator-regions", _ids(dg.select(dg.GATES, [path])), path)

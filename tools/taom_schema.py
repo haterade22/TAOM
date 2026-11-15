@@ -245,6 +245,51 @@ def _armory_catalogue(modules: Path) -> tuple:
     return cat, priced
 
 
+@functools.lru_cache(maxsize=2)
+def _kit_weapon_catalogue(modules: Path) -> tuple:
+    """(catalogue, priced melee weapons) of the Armory and SandBoxCore: the enlistment kits issue
+    vanilla weapons as well (the aserai swords, the khuzait lance), which the Armory catalogue lacks."""
+    import sys as _sys
+    _sys.path.insert(0, str(Path(__file__).resolve().parent))
+    import melee_catalogue as mc
+    import analyze_melee_ladder as mr
+    cat = mc.load(modules, item_modules={mr.ARMORY_MODULE, "SandBoxCore"})
+    priced, _failures = mc.price_all(cat)
+    return cat, priced
+
+
+def kit_weapon_info(moduledata, game_modules, launchers, mount_barred=None) -> tuple:
+    """(item id -> generate_enlistment_rosters.KitWeapon, or None when unpriced, None) for every weapon
+    of a compared category, or ({}, why not). Shared by ENLISTMENT_KIT_RANK_REGRESSION and the
+    generator's --repair-ranks, so the repair is planned on the numbers the gate judges."""
+    import sys as _sys
+    _sys.path.insert(0, str(Path(__file__).resolve().parent))
+    try:
+        import analyze_melee_ladder as mr
+        import generate_enlistment_rosters as ger
+        import melee_catalogue as mc
+    except (ImportError, AssertionError) as exc:   # the generator asserts its tables at import
+        return {}, f"the melee tools cannot be imported ({exc!r})"
+    modules = Path(game_modules or mr.MODULES)
+    if not modules.is_dir():
+        return {}, f"no install at {modules}"
+    try:
+        cat, priced = _kit_weapon_catalogue(modules)
+        ph_priced, _problems = price_placeholders(cat, Path(moduledata) / PLACEHOLDER_DIR)
+    except (mc.CatalogueError, OSError) as exc:
+        return {}, f"the weapons could not be priced ({exc})"
+    classes = build_item_class_registry(moduledata, modules)
+    if mount_barred is None:
+        mount_barred = build_mount_barred_usages(modules)
+    if mount_barred is None:
+        return {}, "the install's item usage sets could not be read, so a longbow cannot be told from a bow"
+    # price() skips a usage that is not MeleeWeapon (a pilum's TwoHandedPolearm_Thrown), so the thrown
+    # weapons are found from the descriptions the item matches.
+    thrown = {iid for iid, p in priced.items()
+              if any("MeleeWeapon" not in d.flags for d in mc.matching_descriptions(cat, p.item))}
+    return ger.kit_weapon_outputs(classes, launchers, {**priced, **ph_priced}, mount_barred, thrown), None
+
+
 # The files tools/generate_placeholder_weapons.py writes into the repo module (a test pins the names to
 # the generator's). The taom_ph_ weapons are not in the install, so the melee gate reads them from the
 # tree it validates.
@@ -374,6 +419,13 @@ WORN_ARMOUR_CEILING_SEVERITY = Severity.WARNING
 # and .githooks/pre-commit (CommitGateCoverageTests reads this constant).
 TROOP_SKILL_KIT_MISMATCH_SEVERITY = Severity.WARNING
 
+# ENLISTMENT_KIT_RANK_REGRESSION judges the shipped kits on the armour and weapon values of the
+# installed Armory, so it is TRANSITIONAL like the ceiling above: an ERROR would block every
+# contributor whose Armory predates #1271. Flip it the same way, with the ceiling.
+ENLISTMENT_KIT_RANK_CODE = "ENLISTMENT_KIT_RANK_REGRESSION"
+ENLISTMENT_KIT_RANK_SEVERITY = Severity.WARNING
+ENLISTMENT_KITS_REL = "equipmentsets/taom_enlistment_equipment.xml"
+
 
 # --------------------------------------------------------------------------- #
 # Validator                                                                 #
@@ -428,6 +480,7 @@ class Validator:
         issues += self._upgrade_armour_regressions()
         issues += self._cross_culture_armour_inversions()
         issues += self._worn_armour_limits()
+        issues += self._enlistment_kit_rank_regressions()
         issues += self._armour_mesh_tier_ladder()
         issues += self._upgrade_tier_collapse()
         issues += self._ranged_ladder_inversions()
@@ -2382,6 +2435,122 @@ class Validator:
                     ),
                 ))
         return issues
+
+    # -- ENLISTMENT_KIT_RANK_REGRESSION -------------------------------------- #
+    # The player draws one enlistment kit per rank and keeps them all, so each kit is held against every
+    # kit the resolver issued before it (generate_enlistment_rosters.rank_chains mirrors
+    # EnlistmentRosterResolver). The
+    # rule is generate_enlistment_rosters.rank_regressions, which the generator's --repair-ranks
+    # applies too, so the gate and the repair cannot disagree (#1290). Armour comes from the install,
+    # so the pass is skipped without it, and weapons that cannot be priced are a stated warning while
+    # the armour half still runs.
+    def _kit_weapon_info(self):
+        return kit_weapon_info(self.moduledata, self.game_modules, getattr(self.reg, "launchers", None) or {},
+                               getattr(self.reg, "mount_barred_usages", None))
+
+    @staticmethod
+    def _promoted_source(culture):
+        """(source culture, True when the promoter's item map rewrites this file's clone), or (None, False)."""
+        import sys as _sys
+        _sys.path.insert(0, str(Path(__file__).resolve().parent))
+        try:
+            import promote_borrowed_cultures as pbc
+        except Exception:   # the promoter reads its layout file at import; any failure only loses the hint
+            return None, False
+        cfg = pbc.TARGETS.get(culture)
+        if not cfg:
+            return None, False
+        return pbc.block_cfg(cfg, ENLISTMENT_KITS_REL)["src"], (
+            ENLISTMENT_KITS_REL in cfg.get("item_map_files", ()) and bool(cfg.get("item_map")))
+
+    def _enlistment_kit_rank_regressions(self, weapon_info=None) -> list:
+        path = self.moduledata / ENLISTMENT_KITS_REL
+        stats = getattr(self.reg, "item_armour_stats", None) or {}
+        if not path.is_file() or not stats:
+            return []   # no kit file, or no install: skipped, and validate_moduledata.main announces the second
+        import sys as _sys
+        _sys.path.insert(0, str(Path(__file__).resolve().parent))
+        try:
+            import generate_enlistment_rosters as ger
+        except (ImportError, AssertionError) as exc:   # the generator asserts its tables at import
+            return [Issue(severity=Severity.WARNING, code=ENLISTMENT_KIT_RANK_CODE, file=self._rel(path), line=0,
+                          entry_id="(tooling)",
+                          message=(f"tools/generate_enlistment_rosters.py cannot be imported ({exc!r}), so no kit "
+                                   "was judged. Not checked is not clean."))]
+        text = path.read_bytes().decode("utf-8-sig")
+        try:
+            kits = ger.read_kits(text)
+        except ET.ParseError:
+            return []   # the schema pass reports a file that does not parse
+        issues = []
+        if weapon_info is None:
+            weapon_info, problem = self._kit_weapon_info()
+            if problem:
+                issues.append(Issue(
+                    severity=Severity.WARNING, code=ENLISTMENT_KIT_RANK_CODE, file=self._rel(path), line=0,
+                    entry_id="(weapons)",
+                    message=(f"{problem}, so no kit's weapons were compared with the kits before it; "
+                             "the armour totals were. Not checked is not clean."),
+                ))
+        unresolved = ger.unresolved_kit_items(kits, stats, weapon_info)
+        if unresolved:
+            issues.append(Issue(
+                severity=Severity.WARNING, code=ENLISTMENT_KIT_RANK_CODE, file=self._rel(path), line=0,
+                entry_id="(unresolved)",
+                message=("these kit pieces have no armour values or no weapon price, so the rank rule counts "
+                         f"them as nothing: {', '.join(unresolved)}"),
+            ))
+        promoted = ger.promoter_owned_cultures(text)
+        for high, earlier, reasons in ger.enlistment_kit_findings(kits, stats, weapon_info):
+            culture = high[0]
+            rid = "enlist_" + "_".join(high)
+            repairable = any(kind != "dropped" for kind, _text in reasons)
+            if culture in promoted:
+                repair = self._promoted_repair(ger, kits, stats, weapon_info, earlier, high)
+            elif culture == "default":
+                repair = ("the default kits are hand-authored: change DEFAULT_ROSTER_ITEMS in "
+                          "tools/generate_enlistment_rosters.py and the roster in this file together")
+            else:
+                repair = (f"python tools/generate_enlistment_rosters.py --repair-ranks --culture {culture} plans "
+                          "the change from the culture's troop gear, or says it found none; read it, then add --apply")
+            note = []
+            if repairable:
+                note.append(f"Repair: {repair}.")
+            if any(kind == "dropped" for kind, _text in reasons):
+                note.append("A dropped category is never repaired by a tool: decide whether this kit should carry it.")
+            at = text.find(f'id="{rid}"')
+            issues.append(Issue(
+                severity=ENLISTMENT_KIT_RANK_SEVERITY, code=ENLISTMENT_KIT_RANK_CODE, file=self._rel(path),
+                line=text.count("\n", 0, at) + 1 if at >= 0 else 0, entry_id=rid,
+                message=("the kit is weaker than what the player drew before it ("
+                         + ", ".join("enlist_" + "_".join(c) for c in earlier) + "): "
+                         + "; ".join(t for _kind, t in reasons) + ". " + " ".join(note)),
+            ))
+        return issues
+
+    def _promoted_repair(self, ger, kits, stats, weapon_info, earlier, high):
+        """The repair text for a promoted culture's finding: the source chain first, or the item map
+        when the source chain holds and the clone differs from it only where the map rewrote it."""
+        culture = high[0]
+        src, mapped = self._promoted_source(culture)
+        rerun = f"python tools/promote_borrowed_cultures.py --only {culture} --apply"
+        if not src:
+            return ("promote_borrowed_cultures.py clones this culture's kits from its source culture: repair "
+                    f"the source with --repair-ranks --culture <source> --apply, then run {rerun}")
+        pairs = [((src,) + c[1:] if c[0] == culture else c, c) for c in list(earlier) + [high]]
+        source_clean = (all(s in kits for s, _c in pairs)
+                        and not ger.rank_regressions([(s, kits[s]) for s, _c in pairs[:-1]], kits[pairs[-1][0]],
+                                                     stats, weapon_info, mounted=high[1] == "cavalry"))
+        if mapped and source_clean:
+            changed = [f"{slot} {kits[s][slot]} -> {kits[c][slot]}"
+                       for s, c in pairs
+                       for slot in sorted(set(kits[s]) | set(kits[c]))
+                       if kits[s].get(slot) and kits[c].get(slot) and kits[s][slot] != kits[c][slot]]
+            return (f"the source kits hold the rule, so the item_map of TARGETS['{culture}'] in "
+                    f"tools/promote_borrowed_cultures.py makes the difference ({'; '.join(changed)}): change the "
+                    f"row that maps a piece to a weaker one, then run {rerun}")
+        return (f"promote_borrowed_cultures.py clones this culture's kits from {src}: repair the source with "
+                f"python tools/generate_enlistment_rosters.py --repair-ranks --culture {src} --apply, then run {rerun}")
 
     # -- ARMOUR_MESH_TIER_LADDER --------------------------------------------- #
     # An item id carries the tier the artist modelled (_light_ ... _lord_); the ladder
