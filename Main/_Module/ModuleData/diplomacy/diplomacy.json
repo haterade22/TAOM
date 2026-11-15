@@ -59,7 +59,6 @@
     { "kingdomA": "mirkwood", "kingdomB": "isengard", "tier": "Hostile" },
     { "kingdomA": "empire", "kingdomB": "vlandia", "tier": "Hostile" },
     { "kingdomA": "empire_w", "kingdomB": "aserai", "tier": "Hostile" },
-    { "kingdomA": "empire_w", "kingdomB": "empire", "tier": "Hostile" },
     { "kingdomA": "vlandia", "kingdomB": "khuzait", "tier": "Hostile" },
     { "kingdomA": "erebor", "kingdomB": "khuzait", "tier": "Hostile" },
     { "kingdomA": "sturgia", "kingdomB": "khuzait", "tier": "Hostile" },

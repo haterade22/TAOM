@@ -100,9 +100,9 @@ so nothing matches. `fighter_erebor`'s keys carry hair indices 1 and 10, and a t
 no hair draws between them (native `FUN_18057c9f0`, v1.5.6), so no dwarf lady can start bald (index
 0 of the dwarf woman's skin is the Bald mesh). Each lady carries `<hair_tag name="TiedAcrossBack" />`
 as a style choice: it picks among the 8 tied styles (`dwarf_hair_c`, `_e` to `_k`) instead of `_a`
-to `_j`. The generator requires a tag on every face-template realm. Banners: dwarf
-icons 24000 to 24003 (`banner_icons.xml`, ones no clan flew) in silver on the slate blue of palette
-200.
+to `_j`. The generator requires a tag on every face-template realm. Banners: since #1265
+(2026-11-14) the House of Delingur flies dwarf icon 31007 in colour 110 on a field of colours 292 and 200, and the other
+three houses fly layered keys of their own (`clans.xml`, read 2026-11-15).
 
 Names come from the Old Norse dwarf-lists Tolkien drew on, avoiding every name Erebor's lords and
 bandits use and every canonical dwarf of the age. Two are also in Erebor's culture pool: Hanar, and
@@ -431,12 +431,12 @@ Restart Bannerlord fully, then start a new campaign.
     carries town spawn tags (48 `sp_` tags, 60 `npc_common`), but whether it works as a town (gates,
     alleys, siege entities) needs his editor check, and a bound scene must ship in every release
     channel's `TAOM_Map/SceneObj`.
-  - 77 elite-to-lord upgrade links in `armour_classes.xml`, all pre-existing, lead to a lord piece
-    that is no better on any armour value and worse on at least one. By kit: Rhûn 32, Rivendell 25,
-    Dol Guldur 16 (15 of them the Khamul line in the Armory's rhun folder, 1 an Uruk chest),
-    Gondor 2, Gundabad 1 and Rohan 1. 49 of them lose 1 to 5 points in total and 20 lose more than
-    20. This branch's armour-class fix exempts lord targets and left them alone: keep them, or
-    re-link them.
+  - 24 elite-to-lord upgrade links in `armour_classes.xml`, all pre-existing, lead to a lord piece
+    that is no better on any armour value and worse on at least one (counted with
+    `generate_armour_classes.build_rows` on the Armory as rewritten on 2026-11-14). By Armory folder: rhun
+    11, dol_guldur 10, rivendell 2 and rohan 1. Each loses 1 to 3 points in total; the rebalance
+    shrank the gaps (it was 77 links before, 20 of them losing more than 20 points). This branch's
+    armour-class fix exempts lord targets and left them alone: keep them, or re-link them.
 - The twelve wanderers carry the same Khuzdul surnames as Erebor's twelve, as Cardolan's keep
   Gondor's.
 - No art was made for Ered Luin: its faction card shows the dwarf-hall image the Ered Duin

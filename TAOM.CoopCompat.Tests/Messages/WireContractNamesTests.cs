@@ -38,6 +38,16 @@ public class WireContractNamesTests
         Layout(typeof(CoopCompatLdRunEnded)));
 
     [TestMethod]
+    public void TradeRequest_Layout() => Assert.AreEqual(
+        "TAOM.CoopCompat.Messages.CoopCompatTradeRequest: 1=ProtocolVersion, 2=RequestId, 3=Action, 4=SettlementId, 5=Subject, 6=Modifier, 7=Target, 8=Quantity",
+        Layout(typeof(CoopCompatTradeRequest)));
+
+    [TestMethod]
+    public void TradeReply_Layout() => Assert.AreEqual(
+        "TAOM.CoopCompat.Messages.CoopCompatTradeReply: 1=ProtocolVersion, 2=RequestId, 3=Action, 4=Refusal, 5=Status, 6=Quantity, 7=TotalCost, 8=ResourceName, 9=ResourceId, 10=HasBalance, 11=Balance, 12=HasArmouryLevel, 13=ArmouryLevel",
+        Layout(typeof(CoopCompatTradeReply)));
+
+    [TestMethod]
     public void EveryContractInTheNamespace_IsPinned()
     {
         var names = typeof(CoopCompatHello).Assembly.GetTypes()
@@ -50,6 +60,8 @@ public class WireContractNamesTests
             "TAOM.CoopCompat.Messages.CoopCompatHelloReply",
             "TAOM.CoopCompat.Messages.CoopCompatLdRunEnded",
             "TAOM.CoopCompat.Messages.CoopCompatMomentumSnapshot",
+            "TAOM.CoopCompat.Messages.CoopCompatTradeReply",
+            "TAOM.CoopCompat.Messages.CoopCompatTradeRequest",
         }, names);
     }
 
@@ -57,7 +69,8 @@ public class WireContractNamesTests
     public void Contracts_RunTheConstructorAndUseTheRightInterface()
     {
         // The constructor's initializers are what turn an empty repeated field back into an empty array.
-        foreach (var t in new[] { typeof(CoopCompatHello), typeof(CoopCompatHelloReply), typeof(CoopCompatMomentumSnapshot), typeof(CoopCompatLdRunEnded) })
+        foreach (var t in new[] { typeof(CoopCompatHello), typeof(CoopCompatHelloReply), typeof(CoopCompatMomentumSnapshot),
+                     typeof(CoopCompatLdRunEnded), typeof(CoopCompatTradeRequest), typeof(CoopCompatTradeReply) })
         {
             var attr = (ProtoContractAttribute)t.GetCustomAttributes(typeof(ProtoContractAttribute), false).Single();
             Assert.IsFalse(attr.SkipConstructor, t.Name);
@@ -67,5 +80,7 @@ public class WireContractNamesTests
         Assert.IsTrue(typeof(IEvent).IsAssignableFrom(typeof(CoopCompatHelloReply)));
         Assert.IsTrue(typeof(IEvent).IsAssignableFrom(typeof(CoopCompatMomentumSnapshot)));
         Assert.IsTrue(typeof(IEvent).IsAssignableFrom(typeof(CoopCompatLdRunEnded)));
+        Assert.IsTrue(typeof(ICommand).IsAssignableFrom(typeof(CoopCompatTradeRequest)));
+        Assert.IsTrue(typeof(IEvent).IsAssignableFrom(typeof(CoopCompatTradeReply)));
     }
 }

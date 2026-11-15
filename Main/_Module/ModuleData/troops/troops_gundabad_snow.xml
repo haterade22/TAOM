@@ -14,14 +14,14 @@
       <face_key_template value="BodyProperty.fighter_orc_mordor" />
     </face>
     <skills>
-      <skill id="Athletics" value="38" />
-      <skill id="Riding" value="0" />
-      <skill id="OneHanded" value="28" />
-      <skill id="TwoHanded" value="28" />
-      <skill id="Polearm" value="33" />
-      <skill id="Bow" value="0" />
-      <skill id="Crossbow" value="0" />
-      <skill id="Throwing" value="15" />
+      <skill id="Athletics" value="20" />
+      <skill id="Riding" value="10" />
+      <skill id="OneHanded" value="20" />
+      <skill id="TwoHanded" value="10" />
+      <skill id="Polearm" value="10" />
+      <skill id="Bow" value="10" />
+      <skill id="Crossbow" value="10" />
+      <skill id="Throwing" value="10" />
     </skills>
     <upgrade_targets>
       <upgrade_target id="NPCCharacter.gundabad_snow_savage" />
@@ -54,14 +54,14 @@
       <face_key_template value="BodyProperty.fighter_orc_mordor" />
     </face>
     <skills>
-      <skill id="Athletics" value="53" />
-      <skill id="Riding" value="5" />
-      <skill id="OneHanded" value="60" />
-      <skill id="TwoHanded" value="65" />
-      <skill id="Polearm" value="75" />
-      <skill id="Bow" value="0" />
-      <skill id="Crossbow" value="0" />
-      <skill id="Throwing" value="25" />
+      <skill id="Athletics" value="40" />
+      <skill id="Riding" value="15" />
+      <skill id="OneHanded" value="40" />
+      <skill id="TwoHanded" value="20" />
+      <skill id="Polearm" value="20" />
+      <skill id="Bow" value="15" />
+      <skill id="Crossbow" value="15" />
+      <skill id="Throwing" value="15" />
     </skills>
     <upgrade_targets>
       <upgrade_target id="NPCCharacter.gundabad_snow_warrior" />
@@ -100,14 +100,14 @@
       <face_key_template value="BodyProperty.fighter_orc_mordor" />
     </face>
     <skills>
-      <skill id="Athletics" value="85" />
-      <skill id="Riding" value="10" />
-      <skill id="OneHanded" value="90" />
-      <skill id="TwoHanded" value="95" />
-      <skill id="Polearm" value="100" />
-      <skill id="Bow" value="5" />
-      <skill id="Crossbow" value="0" />
-      <skill id="Throwing" value="35" />
+      <skill id="Athletics" value="70" />
+      <skill id="Riding" value="30" />
+      <skill id="OneHanded" value="70" />
+      <skill id="TwoHanded" value="35" />
+      <skill id="Polearm" value="35" />
+      <skill id="Bow" value="30" />
+      <skill id="Crossbow" value="30" />
+      <skill id="Throwing" value="30" />
     </skills>
     <upgrade_targets>
       <upgrade_target id="NPCCharacter.gundabad_snow_marauder" />
@@ -146,13 +146,13 @@
     </face>
     <skills>
       <skill id="Athletics" value="100" />
-      <skill id="Riding" value="10" />
-      <skill id="OneHanded" value="125" />
-      <skill id="TwoHanded" value="120" />
-      <skill id="Polearm" value="135" />
-      <skill id="Bow" value="5" />
-      <skill id="Crossbow" value="0" />
-      <skill id="Throwing" value="55" />
+      <skill id="Riding" value="40" />
+      <skill id="OneHanded" value="100" />
+      <skill id="TwoHanded" value="50" />
+      <skill id="Polearm" value="50" />
+      <skill id="Bow" value="40" />
+      <skill id="Crossbow" value="40" />
+      <skill id="Throwing" value="95" />
     </skills>
     <upgrade_targets>
       <upgrade_target id="NPCCharacter.gundabad_blackshield_infantry" />
@@ -192,14 +192,14 @@
       <face_key_template value="BodyProperty.fighter_orc_mordor" />
     </face>
     <skills>
-      <skill id="Athletics" value="105" />
-      <skill id="Riding" value="15" />
-      <skill id="OneHanded" value="190" />
-      <skill id="TwoHanded" value="165" />
-      <skill id="Polearm" value="160" />
-      <skill id="Bow" value="10" />
-      <skill id="Crossbow" value="5" />
-      <skill id="Throwing" value="75" />
+      <skill id="Athletics" value="135" />
+      <skill id="Riding" value="50" />
+      <skill id="OneHanded" value="130" />
+      <skill id="TwoHanded" value="65" />
+      <skill id="Polearm" value="65" />
+      <skill id="Bow" value="50" />
+      <skill id="Crossbow" value="50" />
+      <skill id="Throwing" value="120" />
     </skills>
     <Equipments>
       <EquipmentRoster>
@@ -236,14 +236,14 @@
       <face_key_template value="BodyProperty.fighter_orc_mordor" />
     </face>
     <skills>
-      <skill id="Athletics" value="85" />
-      <skill id="Riding" value="10" />
-      <skill id="OneHanded" value="75" />
-      <skill id="TwoHanded" value="95" />
-      <skill id="Polearm" value="115" />
-      <skill id="Bow" value="5" />
-      <skill id="Crossbow" value="0" />
-      <skill id="Throwing" value="35" />
+      <skill id="Athletics" value="70" />
+      <skill id="Riding" value="30" />
+      <skill id="OneHanded" value="40" />
+      <skill id="TwoHanded" value="35" />
+      <skill id="Polearm" value="70" />
+      <skill id="Bow" value="30" />
+      <skill id="Crossbow" value="30" />
+      <skill id="Throwing" value="30" />
     </skills>
     <upgrade_targets>
       <upgrade_target id="NPCCharacter.gundabad_snow_reaver" />
@@ -282,20 +282,20 @@
     </face>
     <skills>
       <skill id="Athletics" value="100" />
-      <skill id="Riding" value="10" />
-      <skill id="OneHanded" value="110" />
-      <skill id="TwoHanded" value="135" />
-      <skill id="Polearm" value="135" />
-      <skill id="Bow" value="5" />
-      <skill id="Crossbow" value="0" />
-      <skill id="Throwing" value="55" />
+      <skill id="Riding" value="40" />
+      <skill id="OneHanded" value="50" />
+      <skill id="TwoHanded" value="50" />
+      <skill id="Polearm" value="100" />
+      <skill id="Bow" value="40" />
+      <skill id="Crossbow" value="40" />
+      <skill id="Throwing" value="40" />
     </skills>
     <upgrade_targets>
       <upgrade_target id="NPCCharacter.gundabad_blackshield_spearman" />
     </upgrade_targets>
     <Equipments>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.wm_gundabad_spear_a02" />
+        <equipment slot="Item0" id="Item.taom_ph_gundabad_spear_a02_t4" />
         <equipment slot="Item1" id="Item.wm_gundabad_shield_a02" />
         <equipment slot="Head" id="Item.sk_md_mor_pik_helmet_med_b" />
         <equipment slot="Cape" id="Item.sk_md_mor_pik_pauld_med_a" />
@@ -304,7 +304,7 @@
         <equipment slot="Leg" id="Item.sk_md_mor_grvs_med_c" />
       </EquipmentRoster>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.wm_gundabad_spear_a02" />
+        <equipment slot="Item0" id="Item.taom_ph_gundabad_spear_a02_t4" />
         <equipment slot="Item1" id="Item.wm_gundabad_shield_a02" />
         <equipment slot="Head" id="Item.sk_md_mor_inf_helmet_med_a" />
         <equipment slot="Cape" id="Item.sk_md_mor_pik_pauld_med_a" />
@@ -326,18 +326,18 @@
       <face_key_template value="BodyProperty.fighter_orc_mordor" />
     </face>
     <skills>
-      <skill id="Athletics" value="105" />
-      <skill id="Riding" value="15" />
-      <skill id="OneHanded" value="160" />
-      <skill id="TwoHanded" value="165" />
-      <skill id="Polearm" value="190" />
-      <skill id="Bow" value="10" />
-      <skill id="Crossbow" value="5" />
-      <skill id="Throwing" value="75" />
+      <skill id="Athletics" value="135" />
+      <skill id="Riding" value="50" />
+      <skill id="OneHanded" value="65" />
+      <skill id="TwoHanded" value="65" />
+      <skill id="Polearm" value="135" />
+      <skill id="Bow" value="50" />
+      <skill id="Crossbow" value="50" />
+      <skill id="Throwing" value="50" />
     </skills>
     <Equipments>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.wm_gundabad_spear_a03" />
+        <equipment slot="Item0" id="Item.taom_ph_gundabad_spear_a03_t5" />
         <equipment slot="Item1" id="Item.wm_gundabad_shield_a03" />
         <equipment slot="Head" id="Item.sk_md_mor_pik_helmet_heavy_a" />
         <equipment slot="Cape" id="Item.sk_md_mor_pik_pauld_heavy_a" />
@@ -346,7 +346,7 @@
         <equipment slot="Leg" id="Item.sk_md_mor_grvs_heavy_b" />
       </EquipmentRoster>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.wm_gundabad_spear_a03" />
+        <equipment slot="Item0" id="Item.taom_ph_gundabad_spear_a03_t5" />
         <equipment slot="Item1" id="Item.wm_gundabad_shield_a03" />
         <equipment slot="Head" id="Item.sk_md_mor_pik_helmet_heavy_c" />
         <equipment slot="Cape" id="Item.sk_md_mor_pik_pauld_heavy_a" />
@@ -368,14 +368,14 @@
       <face_key_template value="BodyProperty.fighter_orc_mordor" />
     </face>
     <skills>
-      <skill id="Athletics" value="55" />
-      <skill id="Riding" value="5" />
+      <skill id="Athletics" value="40" />
+      <skill id="Riding" value="15" />
       <skill id="OneHanded" value="30" />
-      <skill id="TwoHanded" value="35" />
-      <skill id="Polearm" value="35" />
-      <skill id="Bow" value="35" />
-      <skill id="Crossbow" value="5" />
-      <skill id="Throwing" value="25" />
+      <skill id="TwoHanded" value="20" />
+      <skill id="Polearm" value="20" />
+      <skill id="Bow" value="36" />
+      <skill id="Crossbow" value="15" />
+      <skill id="Throwing" value="15" />
     </skills>
     <upgrade_targets>
       <upgrade_target id="NPCCharacter.gundabad_snow_skirmisher" />
@@ -417,14 +417,14 @@
       <face_key_template value="BodyProperty.fighter_orc_mordor" />
     </face>
     <skills>
-      <skill id="Athletics" value="90" />
-      <skill id="Riding" value="10" />
-      <skill id="OneHanded" value="70" />
-      <skill id="TwoHanded" value="55" />
-      <skill id="Polearm" value="50" />
-      <skill id="Bow" value="65" />
-      <skill id="Crossbow" value="15" />
-      <skill id="Throwing" value="35" />
+      <skill id="Athletics" value="70" />
+      <skill id="Riding" value="30" />
+      <skill id="OneHanded" value="55" />
+      <skill id="TwoHanded" value="35" />
+      <skill id="Polearm" value="35" />
+      <skill id="Bow" value="64" />
+      <skill id="Crossbow" value="30" />
+      <skill id="Throwing" value="30" />
     </skills>
     <upgrade_targets>
       <upgrade_target id="NPCCharacter.gundabad_snow_archer" />
@@ -468,13 +468,13 @@
     </face>
     <skills>
       <skill id="Athletics" value="100" />
-      <skill id="Riding" value="10" />
-      <skill id="OneHanded" value="100" />
-      <skill id="TwoHanded" value="75" />
-      <skill id="Polearm" value="75" />
-      <skill id="Bow" value="110" />
-      <skill id="Crossbow" value="20" />
-      <skill id="Throwing" value="45" />
+      <skill id="Riding" value="40" />
+      <skill id="OneHanded" value="80" />
+      <skill id="TwoHanded" value="50" />
+      <skill id="Polearm" value="50" />
+      <skill id="Bow" value="92" />
+      <skill id="Crossbow" value="40" />
+      <skill id="Throwing" value="40" />
     </skills>
     <Equipments>
       <EquipmentRoster>
@@ -513,14 +513,14 @@
       <face_key_template value="BodyProperty.fighter_orc_mordor" />
     </face>
     <skills>
-      <skill id="Athletics" value="105" />
-      <skill id="Riding" value="115" />
-      <skill id="OneHanded" value="115" />
-      <skill id="TwoHanded" value="70" />
-      <skill id="Polearm" value="150" />
-      <skill id="Bow" value="65" />
-      <skill id="Crossbow" value="15" />
-      <skill id="Throwing" value="35" />
+      <skill id="Athletics" value="70" />
+      <skill id="Riding" value="95" />
+      <skill id="OneHanded" value="100" />
+      <skill id="TwoHanded" value="50" />
+      <skill id="Polearm" value="50" />
+      <skill id="Bow" value="64" />
+      <skill id="Crossbow" value="40" />
+      <skill id="Throwing" value="40" />
     </skills>
     <upgrade_targets>
       <upgrade_target id="NPCCharacter.gundabad_blackshield_wolf_rider" />
@@ -562,18 +562,18 @@
       <face_key_template value="BodyProperty.fighter_orc_mordor" />
     </face>
     <skills>
-      <skill id="Athletics" value="120" />
-      <skill id="Riding" value="155" />
-      <skill id="OneHanded" value="185" />
-      <skill id="TwoHanded" value="90" />
-      <skill id="Polearm" value="185" />
-      <skill id="Bow" value="65" />
-      <skill id="Crossbow" value="15" />
-      <skill id="Throwing" value="45" />
+      <skill id="Athletics" value="70" />
+      <skill id="Riding" value="125" />
+      <skill id="OneHanded" value="115" />
+      <skill id="TwoHanded" value="65" />
+      <skill id="Polearm" value="135" />
+      <skill id="Bow" value="64" />
+      <skill id="Crossbow" value="50" />
+      <skill id="Throwing" value="120" />
     </skills>
     <Equipments>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.wm_gundabad_spear_a03" />
+        <equipment slot="Item0" id="Item.taom_ph_gundabad_spear_a03_t5" />
         <equipment slot="Item1" id="Item.wm_gundabad_shield_a03" />
         <equipment slot="Item2" id="Item.wm_gundabad_sword_a03" />
         <equipment slot="Item3" id="Item.wm_gundabad_javelin_a02" />
@@ -586,7 +586,7 @@
         <equipment slot="HorseHarness" id="Item.warg_saddle" />
       </EquipmentRoster>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.wm_gundabad_spear_a03" />
+        <equipment slot="Item0" id="Item.taom_ph_gundabad_spear_a03_t5" />
         <equipment slot="Item1" id="Item.wm_gundabad_shield_a03" />
         <equipment slot="Item2" id="Item.wm_gundabad_sword_a03" />
         <equipment slot="Item3" id="Item.wm_gundabad_javelin_a02" />

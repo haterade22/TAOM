@@ -1,0 +1,56 @@
+using System.Reflection;
+using HarmonyLib;
+using TAOM.Core.Logging;
+using TaleWorlds.MountAndBlade;
+using TaleWorlds.MountAndBlade.GauntletUI;
+
+namespace TAOM.Features.BattleShaderNotice.Hooks;
+
+// Patch155: writes BattleShaderNoticeService.LoadingScreenLine into the loading window's DescriptionText while the
+// notice is up and the current mission state is still in its render wait. TAOM's TAOMLoadingWindow.xml shows
+// DescriptionText in its bottom bar; in single player nothing else writes it (v1.5.7 LoadingWindowViewModel.SetForEmpty sets "" on every enable).
+//
+// v1.5.7: `internal void LoadingWindowViewModel.Update()`, called every frame from
+// GauntletDefaultLoadingWindowManager.OnLateTick, on the game thread. The line is set in the frames before the
+// shader compile stops the game thread, so it stays on screen through the stop. DescriptionText's setter skips an
+// equal value, so the per-frame write costs a string compare. The next enable's SetForEmpty clears it.
+[HarmonyPatch]
+[HarmonyPatchCategory(BattleShaderNoticeModule.PatchCategory)]
+[ClientOnly]
+public static class LoadingWindowViewModel_Update_BattleShaderLine_Patch
+{
+    private static BattleShaderNoticeService? _service;
+    private static IModLogger? _logger;
+    private static bool _reported;
+
+    public static void Initialize(BattleShaderNoticeService service, IModLogger logger)
+    {
+        _service = service;
+        _logger = logger;
+    }
+
+    static MethodBase TargetMethod() => AccessTools.Method(typeof(LoadingWindowViewModel), "Update");
+
+    [HarmonyPostfix]
+    public static void Postfix(LoadingWindowViewModel __instance)
+    {
+        try
+        {
+            var service = _service;
+            if (service?.LoadingScreenLine == null || __instance == null || !__instance.Enabled) return;
+            // The same render-wait test as the MissionState.OnTick hook (FirstMissionTickAfterLoading, set with the
+            // loading window in MissionState.OnInitialize and cleared at the end of TickMission).
+            var state = MissionState.Current;
+            var line = service.LineDuringRenderWait(state != null && state.FirstMissionTickAfterLoading
+                && state.CurrentMission?.CurrentState == Mission.State.Continuing);
+            if (line == null) return;
+            __instance.DescriptionText = line;
+        }
+        catch (System.Exception e)
+        {
+            if (_reported) return;
+            _reported = true;
+            _logger?.LogWarning($"[BattleShaderNotice] loading-screen line failed: {e.GetType().Name}");
+        }
+    }
+}

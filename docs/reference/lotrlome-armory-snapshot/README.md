@@ -475,7 +475,7 @@ TAOM installed the ModuleData half:
 
 | File | How |
 |---|---|
-| `ModuleData/LOTRLOME_crafting_pieces.xml`, `LOTRLOME_items/harad/body_armors.xml`, `crafting_templates.xslt` | his files verbatim (live equalled his parent revision) |
+| `ModuleData/LOTRLOME_crafting_pieces.xml`, `LOTRLOME_items/harad/body_armors.xml`, `crafting_templates.xslt` | his files verbatim (live equalled his parent revision); since 2026-11-14 the first two carry the #1271 rewrite (see the APPLIED EDIT for it below) |
 | `ModuleData/LOTRLOME_items/harad/weapons.xml`, `weapon_descriptions.xslt` | three-way merge from his parent `85b201c17`: his additions plus the three #805 edits above (longbows off the shelves, the `TAOM-HARAD-COUCH` block). Live is CRLF and his blobs LF, so merge on LF and write CRLF, or the whole file reads as one conflict |
 | `Languages/loc_harad.xml` | English rows for his 6 weapon and 14 barding and saddle names, under a `TAOM: English rows for KEYforce's lotraom-assets 03320a65` comment |
 | `Languages/loc_LOTRLOME_crafting_pieces.xml` | English rows for his 12 javelin and mace pieces, under the same comment |
@@ -493,6 +493,38 @@ TAOM installed the ModuleData half:
   `starter_kit.xml` names.
 - **Replay after a drop:** as for #805 above (the English rows by `register_armory_names.py --apply --prefix <his ids>`), then move the starter-kit markers in `OneHandedPolearm_JavelinAlternative`
   again if his file still wraps the whole template; the first test names the six pieces until it is done.
+
+### ⚠️ APPLIED EDIT: the Khamul spears couch and brace (#343, 2026-11-15)
+
+The Dol Guldur warg riders carry `sm_dg_khml_spear_a` and `sm_dg_khml_spear_b`, whose blades the Armory listed
+under `OneHandedPolearm` and `TwoHandedPolearm` only, so the spears could not be couched. On 2026-11-15
+`python tools/register_couch_brace_polearms.py --apply --backup-tag dgspear-20261115` added
+`sm_dg_khml_spear_blade_a` and `sm_dg_khml_spear_blade_b` to `TwoHandedPolearm_Couchable` and
+`TwoHandedPolearm_Bracing` in the live `ModuleData/weapon_descriptions.xslt`, inside
+`TAOM-COUCH-BRACE:BEGIN` / `:END` markers (eight lines). **A live edit that an Armory reinstall or an art drop
+WILL revert.** The spec is `tools/couch_brace_polearms.json`; the data gate `couch-brace`
+(`python tools/register_couch_brace_polearms.py --check`) fails on a reverted file, and the same `--apply` command
+repairs it. Live backup: `weapon_descriptions.xslt.bak-dgspear-20261115` (the pre-change file; sweep it before a
+release, [module-backup-sweep.md](../module-backup-sweep.md)). This snapshot's copy of the stylesheet was not
+refreshed for it. The mechanism and what else the change touches (the two spears' price rises) are in
+[weapon-xml-pipeline.md](../../features/weapon-xml-pipeline.md), "Couch and brace usages". A full game restart
+is needed, and the in-game check (a warg rider couches the spear) is owed.
+
+### ⚠️ APPLIED EDIT: the #1271 weapon and armour rebalance (2026-11-14)
+
+The #1271 tools rewrote armour stats, modifier groups and blade factors in the live Armory on 2026-11-14: the
+armour restat wrote 2,739 items in 83 files (plus 2 more in the repair loop), `LOTRLOME_crafting_pieces.xml`
+took new `damage_factor` values on 203 blade pieces, and the Lothlorien and Snow Orc generators, the ranged
+ladder tools and the starter kit tools wrote their own items. `LOTRLOME_crafting_pieces.xml` and the Harad
+`body_armors.xml`, listed above as KEYforce's verbatim files, are no longer verbatim.
+
+- **Replay after a drop:** the tools re-apply the numbers, in the order of "The apply sequence" in
+  [armor-balance.md](../../features/armor-balance.md) (`rebalance_armor.py` on the roster tiers, then
+  `restat_melee_blades.py`, then the generators). Dry run each first; a new KEYforce file reverts its
+  values until they run.
+- **Backups:** `E:/Backups/LOTRLOME_Armory-ModuleData-pre-rebalance-20261114` holds the whole `ModuleData` from
+  before the write, and 92 `*.bak-*` files sit beside the live XML files. The engine does not load them; sweep
+  them (`pwsh tools/sweep_module_backups.ps1`, then `-Apply`) before a mirror sync or a release package.
 
 ### ⚠️ APPLIED EDIT: shield-compatible polearms registered under `OneHandedPolearm` (2026-08-10, extended 2026-08-20)
 

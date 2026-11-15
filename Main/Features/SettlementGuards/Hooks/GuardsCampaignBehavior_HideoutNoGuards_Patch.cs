@@ -8,8 +8,8 @@ using TaleWorlds.MountAndBlade;
 namespace TAOM.Features.SettlementGuards.Hooks;
 
 // Regression of #258: a hideout has no guards, so vanilla's guard and disguise start lines must not answer there.
-// Postfix on the three private condition methods of GuardsCampaignBehavior (1.5.7 :743, :965, :986, registered
-// :585, :584, :612); applied by ManualPatchApplicator. The decision is HideoutGuardDialogRule. Thread: dialog
+// Postfix on the three private condition methods of GuardsCampaignBehavior (1.5.7 dump :743, :965, :986, registered
+// :612, :585, :584 in the same order); applied by ManualPatchApplicator. The decision is HideoutGuardDialogRule. Thread: dialog
 // conditions run on the main thread. A vanilla result of false is left alone.
 public static class GuardsCampaignBehavior_HideoutNoGuards_Patch
 {

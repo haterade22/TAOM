@@ -204,7 +204,7 @@ Process:
 
 To preserve compatibility with third-party Bannerlord mods that declare `<DependedModule Id="Bannerlord.Harmony"/>` (or `.ButterLib` / `.UIExtenderEx` / `.MBOptionScreen`) in their `SubModule.xml`, TAOM.Dependencies ships **four passive stub modules** at the standard BUTR IDs.
 
-Each stub is a single ~20-line `SubModule.xml` deployed to `Modules/<ID>/SubModule.xml`, for the four standard BUTR IDs: `Bannerlord.Harmony`, `Bannerlord.UIExtenderEx`, `Bannerlord.ButterLib`, `Bannerlord.MBOptionScreen`. Their `<Version>` values are NOT listed here — read `Stubs/<ID>/_Module/SubModule.xml`, and see the v99 rule below for how each is derived.
+Each stub is a single `SubModule.xml` (mostly comments; `wc -l Stubs/*/_Module/SubModule.xml` prints the sizes) deployed to `Modules/<ID>/SubModule.xml`, for the four standard BUTR IDs: `Bannerlord.Harmony`, `Bannerlord.UIExtenderEx`, `Bannerlord.ButterLib`, `Bannerlord.MBOptionScreen`. Their `<Version>` values are NOT listed here: read `Stubs/<ID>/_Module/SubModule.xml`, and see the v99 rule below for how each is derived.
 
 Source files live in `Stubs/<ID>/_Module/SubModule.xml`. Two paths put them in a Modules folder, and both drop the `_Module/` segment, because the launcher reads only `Modules/<dir>/SubModule.xml` (v1.5.7 `ModuleHelper.GetPhysicalModules`, one level deep) and never sees a stub inside `_Module/` (#969):
 
@@ -220,6 +220,8 @@ Each stub:
 **DR3 Phase 4 update (2026-05-27):** each stub now ships a real `<SubModule>` entry referencing `TAOM.Dependencies.AliasStubSubModule` (a try/catch-wrapped `MBSubModuleBase`), superseding the original empty-`<SubModules />` design described above — this is the early-phase install point for the defensive infrastructure (see "Defensive infrastructure" below). No BUTR DLLs load from the stub itself.
 
 **Skip tag (#969):** each stub's `<SubModule>` carries `<Tag key="IsNoRenderModeElement" value="true" />`. Without it, a visible stub would make `Module.LoadSubModules` look for `TAOM.Dependencies.dll` in the stub's own `bin/` and then the game's managed folder, find neither, and show a "Cannot find" message box per stub at every launch. A tag that fails `Module.CheckIfSubmoduleCanBeLoadable` makes it skip the entry before that lookup; `IsNoRenderModeElement` passes only for the value `false`, in every mode (v1.5.7 `Module.GetSubModuleValiditiy`), and BLSE's `ModuleInfoHelper.GetSubModuleTagValiditiy` agrees. The entry stays for BLSE's sake (see above). So `AliasStubSubModule` is never constructed; `TAOM.Dependencies`' own SubModule already runs the early phase, so nothing is lost.
+
+**Separate copies (2026-11-15):** a player who also has the real BUTR modules (Workshop or `Modules`) sees each id twice in the vanilla launcher, which stores ticks by Id, so the two copies can't be ticked apart. Over a Workshop copy the stub wins in game (`ModuleHelper.InitializeModules` takes the first module per Id, `Modules` before the Workshop); for BLSE that is not verified (below). A real copy in `Modules/<ID>/` replaces the stub's own `SubModule.xml`, so no stub exists for that Id, and the alert asks the player to reinstall TAOM rather than delete the folder. At the main menu TAOM lists each real copy in one inquiry and asks the player to remove it ([startup-alerts.md](../features/startup-alerts.md)). A maintainer machine that keeps the Workshop subscriptions to copy DLLs (Category 2 above) sees that inquiry on every launch.
 
 **Maintenance rule (v99 strategy, BetaDeps parity, DR3 Phase 4 — 2026-05-25):** stub `<Version>` values use the `vX.Y.99.0` pattern, where `X.Y` is the **minor** of the version we actually ship (the `PackageReference` pin for Harmony/UIExtenderEx/MCM; the vendored DLL's own version for ButterLib). They are deliberately NOT exact-match to the shipped DLL.
 
@@ -314,7 +316,7 @@ In a co-op session the `[PatchShield] shield pass` line is absent by design — 
 
 ### External Bannerlord.Harmony module conflict (HIGH)
 
-**Symptom:** User has the external standalone `Bannerlord.Harmony` module (e.g., from Steam Workshop) installed in `Modules/Bannerlord.Harmony/` AND TAOM.Dependencies's stub module is also deployed to the same path.
+**Symptom:** User has the external standalone `Bannerlord.Harmony` module installed (from the Steam Workshop, in the Workshop content folder, or copied by hand into `Modules/Bannerlord.Harmony/`) AND TAOM.Dependencies's stub module is deployed to `Modules/Bannerlord.Harmony/`.
 
 **Risk:** Two modules claim one id. The stub at `Modules/<ID>/SubModule.xml` does not overwrite a Workshop module's manifest, which lives in the Workshop content folder. `ModuleHelper.InitializeModules` (v1.5.7) lists the `Modules/` folders (`GetPhysicalModules`) before the Workshop ones (`GetPlatformModules`) and takes the first module per id, so the game loads the stub, and with it TAOM's bundled library versions; the Workshop copy is ignored. A real BUTR module copied into `Modules/<ID>/` by hand is overwritten by a dev deploy. How the vanilla launcher and BLSE's launcher list two modules with one id is not verified.
 

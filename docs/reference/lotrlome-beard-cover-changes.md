@@ -3,7 +3,8 @@
 The helmets below live in the external `LOTRLOME_Armory` module
 (`E:\Steam\steamapps\common\Mount & Blade II Bannerlord\Modules\LOTRLOME_Armory\`), which **this repo does not
 track**. A reinstall, an Armory sync or a regenerated file silently puts the old value back, and no validator
-reads `beard_cover_type`. This ledger records the edit, why it exists and how to redo it.
+reads `beard_cover_type`. This ledger records the edit and why it exists. Since 2026-11-14 the values are held in
+`tools/armour_cover_flags.json` and re-applied by a tool; see [Redo](#redo).
 
 ## The change
 
@@ -54,13 +55,44 @@ six of them back: `sk_gd_lon_helmet_{med,heavy,elite}_b`, `sk_gd_vale_helmet_{he
 | Path | Effect |
 |---|---|
 | Armory reinstall or sync from the lotraom-assets mirror or a release copy | All 47 back to `all`: on 2026-10-01 the mirror and the public, patreon and testing copies still held the pre-edit files |
+| An armour generator run | Safe for existing items: the append-only generators skip ids already in the file. `generate_lothlorien_armor.py` and `generate_starter_armor.py` rewrite their own items, from rules that already match the spec (checked 2026-11-14), and `--check` of the new tool reports any difference either way |
 | `generate_dale_armor.py`, `generate_rhun_armor.py`, `generate_gondor_armor_phase2.py` | Safe: each skips ids that already exist. The Dale generator rewrote all five Dale files with `beard_cover_type="all"` until 2026-10-01 (`tools/tests/test_generate_dale_armor_apply.py` pins the fix); an older copy of it would still revert the 4 Dale ids |
 
 ## Redo
 
-For each id above, inside its `<Item>` block, set `beard_cover_type="type1"`. Edit by hand or byte-faithfully
-(`tools/README.md` "XML I/O convention"): Gondor, Dale and Harad are CRLF, Rhûn is LF only, and none has a BOM.
-Restart the game afterwards; item XML loads only at launch.
+**The spec is the source of truth, not this ledger.** `tools/armour_cover_flags.json` holds every edit in this
+document as a rule (an id list, a reason and a date), plus a snapshot of the cover and visibility attributes of every
+armour item in the Armory (hair, beard, mane, `covers_head`, `covers_body`, `covers_hands`, `covers_legs`, so gloves
+and boots are held the same way as helmets). `tools/apply_armour_cover_flags.py` re-applies it; a rule wins over the
+snapshot.
+
+```
+python tools/apply_armour_cover_flags.py                              # dry run: every change it would make
+python tools/apply_armour_cover_flags.py --apply --backup-tag <tag>   # write, one <file>.xml.bak-<tag> per changed file
+python tools/apply_armour_cover_flags.py --check                      # exit 0 all match, 1 drift or a bad value, 2 no install (NOT RUN)
+python tools/apply_armour_cover_flags.py --snapshot --expect <N>      # lists every value it would change; writes only if N matches
+```
+
+**Run it** after every Armory reinstall, sync from the mirror, art drop or armour generator run. `python tools/data_gates.py`
+reports drift through the `armour-cover-flags` gate when a live Armory file is named on its command line. Restart the
+game afterwards; item XML loads only at launch.
+
+- **What `--apply` touches:** only the attribute token inside the item's own `<Armor ...>` tag. BOM and line endings
+  stay (Gondor, Dale and Arnor are CRLF, Rhun is LF only), an attribute the item lacks is added in the same tag, and
+  every output is parsed before any file is written. A second run writes nothing and takes no second backup.
+- **Absent means the engine default.** `ArmorComponent.Deserialize` reads a missing `hair_cover_type` or
+  `beard_cover_type` as `None` (`ArmorComponent.cs:190-191`), so an item without the attribute already complies with a
+  rule that says `none`, and the tool does not add one.
+- **Check first, snapshot second:** run `--check`, and if it reports drift correct the Armory with `--apply`.
+  `--snapshot` lists every value it would change (`SNAPSHOT-CHANGE`, `SNAPSHOT-ADDED`, `SNAPSHOT-REMOVED`) and writes
+  only when the total equals `--expect N`, so read the list before you pass N. After an Armory reinstall or a mirror
+  sync never run `--snapshot` before `--apply`: it would record the reset as the truth.
+- **To change a value on purpose:** edit the Armory, then either add a rule (when the reason should be on record) or run
+  `--snapshot --expect N` after reading its list. Until then `--check` calls the change drift.
+- **Rows of this ledger that are not rules:** `harad07_helmet` and `harad06_v1_helmet` (the 2026-10-01 list) are gone from
+  the Armory since the Harad rework (v2.0.34; the Harad helmets are now `sk_hr_st_*` and `sk_sg_st_*`), so a rule naming
+  them would fail `--check` for good. `sk_mordor_mouth_of_sauron_helm` is the reference the Sauron row copies, not an
+  edit of its own; the snapshot holds it.
 
 **Backups** of the four pre-edit files: `E:\Temp\claude\armory-backups\beard-2026-10-01\<folder>\head_armors.xml`,
 outside the module so the engine never loads them. Restoring one undoes only this edit. That folder no longer
@@ -127,6 +159,33 @@ Khamul line (27), `mercenary` Northern (2) and Thenn, where `thenn_helm6` was a 
   helmet name outside the two groups left.
 - **Reverts on** an Armory reinstall or sync, like the beard edit above; the cache entries survive, so
   `translate_with_claude.py --module Armory` would restore the translated numerals but not the English.
+
+## 2026-11-14: crowns and circlets show all hair and the full beard
+
+Mike: "When you are messing with the Armoury ensure you keep the beard and hair types. Crowns for example need to show
+all hair and beard." A crown or circlet is hair `none` and beard `none`. The rule lives in `tools/armour_cover_flags.json`
+(the 2026-11-14 rule) and `--apply` brings these items to it:
+
+| Item | Name | Was (hair, beard) | Now |
+|---|---|---|---|
+| `sk_ar_art_crown_king_a` | [Arnor] King's Crown | `all`, `none` | `none`, `none` |
+| `sk_dwarf_dain_crown_a` | [Erebor] Dáin Regal Crown Helmet A | `all`, `none` | `none`, `none` |
+| `rivendell_helmet_lord_circlet_silver` | [Noldor] Silver Lord Circlet I | `all`, `all` | `none`, `none` |
+| `rivendell_helmet_lord_circletmask_silver` | [Noldor] Silver Lord Circlet II | `all`, `all` | `none`, `none` |
+| `rivendell_helmet_lord_circletmask_silvergold` | [Noldor] Silver-Gold Lord Circlet II | `all`, `all` | `none`, `none` |
+
+Five more already complied and are in the rule so that a reset cannot change them: `gondor_king_crown`,
+`rivendell_helmet_lord_circlet`, `rivendell_helmet_lord_circletmask` and `thranduil_helmet` ([Mirkwood] Thranduil
+Crown), all `none`, `none`, and `sk_ll_gl_galad_crown_a`, which has neither attribute. The engine reads a missing attribute as `None`, so it complies
+and nothing is added there.
+
+- **Arnor ledger overlap:** the Arnor table of 2026-10-05 gave `crown_king_a` beard `none`. That agrees with the crown
+  rule on the beard; the crown rule also sets hair `none` and wins for this id, which is listed in the crown rule only.
+- **Ten ids in all:** the five in the table and the five above. `thranduil_helmet` was found by the 2026-11-14 scan
+  and added to the rule afterwards.
+- **Scan used:** every `HeadArmor` item in the live Armory whose id or English name contains crown, circlet, diadem,
+  tiara or coronet.
+- **Before the first `--apply`,** `--check` lists the eight attribute values in the table as drift.
 
 ## Still owed
 

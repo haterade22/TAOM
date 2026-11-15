@@ -128,6 +128,51 @@ public class CapturedFortHoldConfigTests
     }
 
     [TestMethod]
+    public void Defaults_ListNoFaction()
+    {
+        CollectionAssert.AreEqual(new string[0], new CapturedFortHoldConfig().Factions);
+    }
+
+    [TestMethod]
+    public void Validate_NullFactions_BecomesEmpty()
+    {
+        var result = _sut.Validate(With(h => h.Factions = null!));
+
+        Assert.IsNotNull(result.CapturedFortHold.Factions);
+        Assert.AreEqual(0, result.CapturedFortHold.Factions.Count);
+    }
+
+    [TestMethod]
+    public void Validate_BlankFactionIds_AreDroppedWithAWarning_TheRestStay()
+    {
+        var result = _sut.Validate(With(h => h.Factions = new List<string> { "empire_s", "", "  ", null! }));
+
+        CollectionAssert.AreEqual(new[] { "empire_s" }, result.CapturedFortHold.Factions);
+        _logger.Received(3).LogWarning(Arg.Is<string>(s => s.Contains("Factions")));
+    }
+
+    // Kingdom ids are case-sensitive StringIds, so only the spaces are trimmed.
+    [TestMethod]
+    public void Validate_FactionIds_AreTrimmedAndDeduplicated()
+    {
+        var result = _sut.Validate(With(h => h.Factions = new List<string> { " empire_s ", "empire_s", "isengard" }));
+
+        CollectionAssert.AreEqual(new[] { "empire_s", "isengard" }, result.CapturedFortHold.Factions);
+    }
+
+    [TestMethod]
+    public void HoldsArmy_HoldsAListedSideOrAListedRealm()
+    {
+        var hold = new CapturedFortHoldConfig { Sides = new List<string> { "Free" }, Factions = new List<string> { "empire_s" } };
+
+        Assert.IsTrue(hold.HoldsArmy("empire_w", FactionSide.Free), "listed side");
+        Assert.IsTrue(hold.HoldsArmy("empire_s", FactionSide.Evil), "listed realm");
+        Assert.IsFalse(hold.HoldsArmy("isengard", FactionSide.Evil), "neither listed");
+        Assert.IsFalse(hold.HoldsArmy("", FactionSide.Evil), "no realm");
+        Assert.IsFalse(hold.HoldsArmy(null, FactionSide.Evil), "no realm");
+    }
+
+    [TestMethod]
     public void HoldsSide_FollowsTheSidesList()
     {
         var hold = new CapturedFortHoldConfig { Sides = new List<string> { "Free", "Neutral" } };

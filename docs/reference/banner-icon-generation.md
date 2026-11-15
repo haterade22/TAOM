@@ -9,7 +9,7 @@ How to create new clan/faction banner **sigil icons** for TAOM with AI (imagine.
 
 Heraldry is sober Tolkien style with one bold plain motif; show designs before wiring (Mike, 2026-10-28).
 
-Prompt nano-banana-pro for a solid filled silhouette in "J.R.R. Tolkien's own hand-drawn heraldic devices" or "medieval heraldic charge" style, with the guards "NOT high fantasy, no flourishes, no sparkles, no thin outlines" and a pure-black background. After the first round of Lindon emblems Mike asked for a more realistic look in Tolkien's own style, not high fantasy, and approved the bold swan-wave (Nos Brithombar) as the model. Show him a design sheet (raw plus banner mock) and wait for his picks before you key or wire anything.
+Prompt nano-banana-pro for a solid filled silhouette in "J.R.R. Tolkien's own hand-drawn heraldic devices" or "medieval heraldic charge" style, with the guards "NOT high fantasy, no flourishes, no sparkles, no thin outlines" and a pure-black background. After the first round of Lindon emblems Mike asked for a more realistic look in Tolkien's own style, not high fantasy, and approved the bold swan-wave (Nos Brithombar, now Nos Eldalomril) as the model. Show him a design sheet (raw plus banner mock) and wait for his picks before you key or wire anything.
 
 ## The three id layers (all share the icon id)
 
@@ -73,6 +73,7 @@ The flag draws from the **material** (`_mtl.tpac`), which references the **textu
    - **Copy the saved `_tex.tpac` into the repo** (`Main/_Module/Assets/BannerIcons/`) before anyone builds. Every build deploys the repo's copy over the live one but leaves the live `RuntimeDataCache`, so a reverted header meets a recompiled cache: the sheet's sigils render blank, and the editor crashes on its next start while it recompiles (wEditor `TaleWorlds.Native.dll+0x4F626D`, a material with a null shader).
    - **A sheet compiled while the editor starts crashes it** (`rglIntrusive_ptr.h:151 px != nullptr`, right after `Compiled image taom_banners_NN` in the rgl log). The cache is written before the crash, so each restart gets one sheet further: restart until the editor opens, then save each re-imported texture so its `_tex.tpac` stores the new source hash. A reimport with the editor open cannot replace a cache file the editor has loaded ("Unable to write RDC"); close the editor and move that `.rdc` away instead.
    - A tpac with no `.rdc` is skipped whole (lesson: `animation-skeleton.md`). Check with `python tools/check_rdc_entries.py --under <Assets subfolder>`.
+   - **A sheet that changes size needs a clean install for players.** On 2026-11-15 the `ui_taom_bannericons_2` sheet grew from 4096x512 to 4096x1024, and the install kept the old `RuntimeDataCache` file. The game crashed at boot in the NVIDIA driver (`nvwgf2umx.dll+0x1681799`) until the two cache files were moved away ([RCA](../reviews/rca-scenario-event-window-2026-11-15.md)). An update copied over the old `Modules/TAOM` can keep that cache, so the release note of a build with such a change tells players to delete `Modules/TAOM` before they install (maintainer, 2026-11-15).
 2. **Material** — a **separate Kit step**: create a banner-icon **Material** named exactly `taom_banners_NN`, assign the banner shader, point it at the texture, save → writes `_mtl.tpac`. This is the step that was missing when icons showed in the picker but rendered **blank on the flag**. The existing sheets' shader uses flags `two_sided` + `modulate1` + `alpha_test` (from the `_mtl.tpac` binary).
 3. `material_name` in `banner_icons.xml` must match exactly. **Verify BOTH** `_mtl.tpac` **and** `_tex.tpac` exist per material — `_tex` alone = blank flag (the picker may still show it via the GauntletUI sprite).
 
@@ -110,9 +111,9 @@ Every sheet is named `taom_banners_NN` (two digits) with no culture in the name.
 to `_10`. On 2026-11-14 every sheet was renamed to `taom_banners_01` to `_25`, numbered in the order
 `banner_icons.xml` first names them, and `taom_banners_dwarves_alpha_02` and
 `taom_banners_elven_alpha_01` were merged into `taom_banners_11` (26 sheets became 25). The same day
-168 unused icons were deleted and sheets 16-25 moved into the freed cells (25 sheets became 15; see
+163 icons were deleted (389 became 235 with the 9 new ids 31022 to 31030) and sheets 16-25 moved into the freed cells (25 sheets became 15; see
 the inventory below). Four of those icons were still flown (17006 to 17008 and 10505), because their
-banner keys hold negative rotations that a digits-only key parse skips; #1284 repointed both banners.
+banner keys hold negative rotations that a digits-only key parse skips; #1284 repointed both banners, and on 2026-11-15 the four icons came back with their ids on `taom_banners_16` and both keys fly them again.
 Before you delete an `<Icon>` row, run `python -m pytest tools/tests/test_banner_icon_ids.py`: its
 key parser reads negative tokens, and a deleted icon that any shipped key names fails it.
 
@@ -156,12 +157,13 @@ sheet is named `taom_banners_NN`, every sheet source has an alpha channel (`no_a
 unused, and no packing plan would save a sheet. The tool writes every repacked sheet as RGBA with
 opaque alpha.
 
-## Current inventory (2026-11-14, #1047)
+## Current inventory (2026-11-15, after #1047 and #1265)
 
-15 sheets, 230 icons. On 2026-11-14 Tom deleted 168 icons that no shipped banner key or career
-screen used (rows, thumbnails and `banner-ai/credits.json` entries). Their cells became the
+16 sheets, 244 icons on 2026-11-15 (`grep -c '<Icon ' Main/_Module/ModuleData/banner_icons.xml`). On
+2026-11-14 Tom deleted 163 icons meant to be ones no shipped banner key or career screen used (rows,
+thumbnails and `banner-ai/credits.json` entries; four were still flown, see above). Their cells became the
 placeholder checkerboard, and sheets 16-25 moved into the free cells of 01-15 (06, 07 and 09 did
-not change); the free cells are the end of `taom_banners_15`. `banner_icons.xml` is the
+not change); the free cells are the end of `taom_banners_16`. `banner_icons.xml` is the
 authority; the dry run of `pack_banner_sheets.py` lists the free cells. Group names are the
 `<BannerIconGroup>` names.
 
@@ -174,14 +176,15 @@ authority; the dry run of `pack_banner_sheets.py` lists the free cells. Group na
 | `taom_banners_05` | 16 | Haradrim 13000-13004; Dwarven 24025; Dunlending 26000-26009 |
 | `taom_banners_06` | 16 | Haradrim 25000-25015 |
 | `taom_banners_07` | 16 | Easterling 14000-14015 |
-| `taom_banners_08` | 16 | Elven 15000-15009, 31003, 31005; Northmen 27500; Orcish 30001; Dwarven 24029-24030 |
+| `taom_banners_08` | 16 | Elven 15000-15009, 31003, 31005; Northmen 27500, 30001; Dwarven 24029-24030 |
 | `taom_banners_09` | 16 | Elven 16000-16009; Northmen 27000-27001; Orcish 23000-23003 |
-| `taom_banners_10` | 16 | Elven 17000-17005; Northmen 20000-20006; Orcish 30003-30005 |
-| `taom_banners_11` | 16 | Elven 31016-31019, 31021; Northmen 21006, 30011-30012, 30014-30015; Orcish 30006; Dwarven 31022, 31024-31026; Miscellaneous 30008 |
-| `taom_banners_12` | 16 | Forces of Evil 18000-18003; Northmen 21007; Orcish 22000-22002; Dwarven 24501, 24505-24510, 31007 |
+| `taom_banners_10` | 16 | Elven 17000-17005; Northmen 20000-20006, 30003-30005 |
+| `taom_banners_11` | 16 | Elven 31016-31018; Northmen 21006, 30006, 30011-30012, 30014-30015; Dwarven 31022, 31024-31026; Miscellaneous 30008, 31019, 31021 |
+| `taom_banners_12` | 16 | Forces of Evil 18000-18003, 22000-22002; Northmen 21007; Dwarven 24501, 24505-24507, 24510, 31007; Miscellaneous 24508-24509 |
 | `taom_banners_13` | 16 | Forces of Evil 19001-19015; Orcish 22003 |
 | `taom_banners_14` | 16 | Dwarven 24000-24014; Miscellaneous 31015 |
-| `taom_banners_15` | 6 | Northmen 21000-21005 |
+| `taom_banners_15` | 16 | Elven 31035; Northmen 21000-21005, 31031-31032; Dwarven 31023, 31027-31030, 31033-31034 |
+| `taom_banners_16` | 4 | Dúnedain 10505; Elven 17006-17008 |
 
 ## Related
 

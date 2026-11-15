@@ -672,15 +672,25 @@ public class SubModule : MBSubModuleBase
         // an inflight marker (phase-4 wrote it; phase-6/end never ran to clear it). If it
         // survived to this main menu, the previous load never finished — surface a notice so
         // the player knows to send the diagnostic log. See docs/features/battle-load-diagnostics.md.
+        bool stallShown = false;
         try
         {
             var stallMarker = IoC.Resolve<Features.BattleLoadDiagnostics.IBattleLoadStallMarker>();
             var stale = stallMarker?.TryConsumeStaleMarker();
             if (stale != null)
+            {
+                stallShown = true;
                 Features.BattleLoadDiagnostics.StallReportNotifier.Notify(stale);
-            // Any other session that ended without the clean unload line: offer the bug report (crash-report.md).
-            else
-                Features.CrashReport.BugReport.BugReportStartup.CheckPreviousSession(IoC.Resolve<IModLogger>());
+            }
+        }
+        catch { /* never block the main menu over a diagnostic */ }
+        // Any other session that ended without the clean unload line: offer the bug report (crash-report.md).
+        // Once per launch; a launch that showed the stall notice uses its turn here, so no later menu offers it.
+        // A try of its own, so a stall marker that throws does not skip the offer (#1297).
+        try
+        {
+            Features.CrashReport.BugReport.BugReportStartup.CheckPreviousSession(
+                IoC.Resolve<IModLogger>(), stallNoticeShown: stallShown);
         }
         catch { /* never block the main menu over a diagnostic */ }
 
@@ -1222,7 +1232,7 @@ public class SubModule : MBSubModuleBase
         var battleBalanceSettings = IoC.Resolve<IBattleBalanceSettingsProvider>();
         var battleBalanceConfig = IoC.Resolve<IBattleBalanceConfigProvider>();
         campaignStarter.AddModel(new TaomMilitaryPowerModel(battleBalanceSettings, battleBalanceConfig));
-        campaignStarter.AddModel(new TaomCombatSimulationModel(battleBalanceSettings, IoC.Resolve<Features.Refuge.IRefugeDefenseService>()));
+        campaignStarter.AddModel(new TaomCombatSimulationModel(battleBalanceSettings, IoC.Resolve<Features.Refuge.IRefugeDefenseService>(), battleBalanceConfig));
         campaignStarter.AddModel(new TaomPartyHealingModel(battleBalanceSettings, battleBalanceConfig, IoC.Resolve<ICareerPassiveService>(), IoC.Resolve<Features.FieldCamp.Activities.CampRestHealing>()));
 
         campaignStarter.AddModel(new TaomInformationRestrictionModel(IoC.Resolve<IEncyclopediaSettingsProvider>()));
@@ -1493,7 +1503,7 @@ public class SubModule : MBSubModuleBase
             IoC.Resolve<Features.EliteEmissary.IEliteEmissarySettingsProvider>(),
             IoC.Resolve<Features.EliteEmissary.IEliteEmissaryConfigProvider>(),
             IoC.Resolve<ISettlementOwnerAdapter>(),
-            IoC.Resolve<Features.CoopInterop.ICoopSessionProvider>(),
+            IoC.Resolve<Features.CoopInterop.GuestTrade.GuestTradeClient>(),
             IoC.Resolve<IModLogger>()));
 
         // CultureConversion — conquered cross-culture fiefs gradually adopt the new owner's culture

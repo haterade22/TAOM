@@ -1014,7 +1014,7 @@
             <Equipment slot="Item0" id="Item.ladder_cardolan_bow_t2" />
             <Equipment slot="Item1" id="Item.bodkin_arrows_a" />
             <Equipment slot="Item2" id="Item.wm_gondor_sword_a01" />
-            <Equipment slot="Body" id="Item.sk_gd_anf_inf_chainmail_a" />
+            <Equipment slot="Body" id="Item.gondor_noble_jerkin_b" />
             <Equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
         </EquipmentSet>
     </EquipmentRoster>
@@ -1024,7 +1024,7 @@
             <Equipment slot="Item0" id="Item.ladder_cardolan_bow_t2" />
             <Equipment slot="Item1" id="Item.bodkin_arrows_a" />
             <Equipment slot="Item2" id="Item.wm_gondor_sword_a01" />
-            <Equipment slot="Body" id="Item.sk_gd_anf_inf_chainmail_a" />
+            <Equipment slot="Body" id="Item.gondor_noble_jerkin_b" />
             <Equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
         </EquipmentSet>
     </EquipmentRoster>
@@ -1036,7 +1036,7 @@
             <Equipment slot="Item0" id="Item.wm_gondor_light_spear_cardolan" />
             <Equipment slot="Item1" id="Item.sm_gd_shield_a3" />
             <Equipment slot="Item2" id="Item.wm_gondor_sword_a01" />
-            <Equipment slot="Body" id="Item.sk_gd_anf_inf_chainmail_a" />
+            <Equipment slot="Body" id="Item.gondor_noble_jerkin_b" />
             <Equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
             <Equipment slot="Horse" id="Item.saddle_horse" />
             <Equipment slot="HorseHarness" id="Item.starter_cavalry_gondor_horse_armor_a" />
@@ -1048,7 +1048,7 @@
             <Equipment slot="Item0" id="Item.wm_gondor_light_spear_cardolan" />
             <Equipment slot="Item1" id="Item.sm_gd_shield_a3" />
             <Equipment slot="Item2" id="Item.wm_gondor_sword_a01" />
-            <Equipment slot="Body" id="Item.sk_gd_anf_inf_chainmail_a" />
+            <Equipment slot="Body" id="Item.gondor_noble_jerkin_b" />
             <Equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
             <Equipment slot="Horse" id="Item.saddle_horse" />
             <Equipment slot="HorseHarness" id="Item.starter_cavalry_gondor_horse_armor_a" />
@@ -1062,7 +1062,7 @@
             <Equipment slot="Item0" id="Item.wm_gondor_sword_a01" />
             <Equipment slot="Item1" id="Item.sm_gd_shield_a3" />
             <Equipment slot="Item2" id="Item.wm_gondor_light_spear_cardolan" />
-            <Equipment slot="Body" id="Item.sk_gd_anf_inf_chainmail_a" />
+            <Equipment slot="Body" id="Item.gondor_noble_jerkin_b" />
             <Equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
         </EquipmentSet>
     </EquipmentRoster>
@@ -1072,7 +1072,7 @@
             <Equipment slot="Item0" id="Item.wm_gondor_sword_a01" />
             <Equipment slot="Item1" id="Item.sm_gd_shield_a3" />
             <Equipment slot="Item2" id="Item.wm_gondor_light_spear_cardolan" />
-            <Equipment slot="Body" id="Item.sk_gd_anf_inf_chainmail_a" />
+            <Equipment slot="Body" id="Item.gondor_noble_jerkin_b" />
             <Equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
         </EquipmentSet>
     </EquipmentRoster>

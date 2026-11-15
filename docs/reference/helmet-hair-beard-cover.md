@@ -70,11 +70,21 @@ No helmet uses `type4` for either.
 ## Changing one
 
 The helmets live in the unversioned `LOTRLOME_Armory`, so a reinstall or sync reverts an edit silently and no
-validator reads these two attributes. Follow the pattern in [lotrlome-beard-cover-changes.md](lotrlome-beard-cover-changes.md):
-back up each `head_armors.xml` outside the module, edit only the attribute (keep the file's CRLF or LF, no BOM),
-diff against the backup, run `python tools/validate_moduledata.py`, and record every id, old and new value in
-that ledger. Generators that write cover types (for example `generate_mordor_armor.py`, which emits `all` for
-both) put the old value back for any id they regenerate.
+validator reads these two attributes. Since 2026-11-14 the values are held in the repo:
+`tools/armour_cover_flags.json` (rules with a reason and a date, plus a snapshot of every armour item) and
+`tools/apply_armour_cover_flags.py`, which re-applies it. To change one helmet, edit the Armory, then add a rule for it
+(or run the tool with `--snapshot --expect N` after reading the differences it lists), run
+`python tools/apply_armour_cover_flags.py --check`, and record the reason in
+[lotrlome-beard-cover-changes.md](lotrlome-beard-cover-changes.md). After any reinstall, sync, art drop or armour
+generator run, use that ledger's "Redo" commands: `--check` first, then `--apply` if it reports drift. Never run
+`--snapshot` before `--apply` after a reinstall or sync, because it would record the reset as the truth. Run
+`python tools/validate_moduledata.py` as well.
+
+- **Crowns and circlets are hair `none` and beard `none`** (Mike, 2026-11-14): they show all hair and the full beard.
+  The rule names the ten crowns and circlets known that day; a new crown needs a rule row.
+- **Generators:** the append-only armour generators leave an existing id alone. One that regenerates its own items
+  (`generate_lothlorien_armor.py`, `generate_starter_armor.py`) can put its values back, and `--check` shows it.
+  `generate_mordor_armor.py` emits `all` for both on a new helmet.
 
 ## See also
 

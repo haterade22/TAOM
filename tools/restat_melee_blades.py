@@ -25,7 +25,16 @@ LOTRLOME_Armory. There is no git backup there, so:
 
 A blade shared by several weapons moves all of them at once, so the plan reports the fan-out
 and prices a shared blade at the LOWEST target of the weapons on it, which is the same
-anchor-to-the-weakest rule the rest of the ladder uses.
+anchor-to-the-weakest rule the rest of the ladder uses. "Weakest" is read off the carriers
+themselves: each non-exempt troop that carries a weapon on the blade brings its own tier and
+craft row, and the blade takes the lowest target among them, not the row of
+whichever troop loaded first.
+
+A blade that backs both one handed and two handed weapons is NOT priced by tier: the weakest
+wearer is a one handed troop, and its target would take the two handed weapons down with it. Such a
+blade moves only when a weapon on it is above its CLASS limit, and then only as far as that limit
+needs. Every one is listed by name with each weapon, its class and its displayed damage, so a
+later change can clone the blades.
 
 HOW THE NUMBER IS DERIVED
 -------------------------
@@ -36,11 +45,38 @@ Both the swing and thrust factors are scaled by the same ratio, which moves the 
 without changing its character.
 
 A weapon's target is the ladder band's target for its ANCHOR tier, the lowest-tier troop that
-carries it (`melee_ladder.target`), the rule `derive_armor_tiers.py` established for armour.
+carries it (`melee_ladder.target`), the rule `derive_armor_tiers.py` established for armour. That
+target is per class: the weapon's crafting template, its attacks and the wearer's
+craft row decide it, so each class spreads over all ten tiers. A polearm whose thrust DPS beats
+its swing DPS is a spear and takes its class top from the thrust (`ladder.dominant_flags`). The
+wearer's craft row comes from `ladder.craft_key`, so a Black Numenorean is not rated as an orc.
+
+The LIMIT is read off every carrier: each factor is held to the tier limit (`ladder.tier_limit`,
+blow and DPS) of every non-exempt carrier of every weapon on the blade, and a weapon nobody
+carries is held at the blade's weakest carrier. A blade shared with an elite is therefore no
+stronger than its weakest wearer may carry. A blade whose wearers span many tiers leaves its
+upper wearers light (R2). The cure is a cloned blade for the upper wearers, as
+generate_placeholder_weapons.py makes; this tool does not clone.
+
+Each attack follows the weapon's PRIMARY attack, the one with the higher DPS. When the primary is
+held by its own limit, the other attack takes the primary's realized ratio and is never raised on
+its own to chase a target the primary cannot reach. Without that a swing held at its blow limit
+left the free thrust rising on every run. Every written factor is rounded DOWN to the two decimals
+the XML keeps, because the tier limit's DPS is the tier target and rounding to nearest could leave a
+weapon just above the limit that set the factor. A move under TOLERANCE, or under one point of
+displayed damage, is not planned; it is judged on the factor as written, after the rounding down, so a
+second run on its own output plans nothing.
+
+A hero blade has no tier target. One above its hero limit (class limit plus its maker group's
+bonus) is LOWERED to it; one below is left alone.
+
+`--limits-only` lowers only the weapons above a class or hero limit. It raises nothing and ignores
+the tier target and the ceiling, so older ladder drift does not ride along with a limit fix.
 
 Usage:
     python tools/restat_melee_blades.py                  # report the plan
-    python tools/restat_melee_blades.py --culture gondor
+    python tools/restat_melee_blades.py --culture gondor    # a craft row (ladder.craft_key), not an engine culture
+    python tools/restat_melee_blades.py --limits-only    # lower what breaks a limit, nothing else
     python tools/restat_melee_blades.py --apply
 """
 
@@ -126,6 +162,228 @@ class BladePlan:
         return self.target_dps / self.current_dps if self.current_dps else 1.0
 
 
+def class_ratios(p: mc.Priced, spec: dict, tier: int | None = None,
+                 culture: str | None = None) -> tuple[float, float]:
+    """(swing, thrust): the largest multiplier of each factor inside the weapon's limits.
+
+    Each attack has its own `damage_factor`, so each is held by its own limits. One ratio for
+    both would take swing damage off a sword because its thrust is at the thrust limit. A hero
+    blade is held to its hero limit.
+
+    With a `tier` and the wearer's craft key (`ladder.craft_key`) an ordinary weapon is held to
+    the tier limit instead of the class limit: the blade's anchor tier earns only a share of the
+    class's blow, so a recruit's sword cannot carry an elite's. Without them the class limit
+    holds, which is what `--limits-only` and the unworn pass want.
+    """
+    limit = ladder.limit_for(p.blade_piece, p.item.template, spec, tier, culture)
+    return (ladder.max_factor(limit, p.swing_damage, 0, p.swing_dps, 0.0),
+            ladder.max_factor(limit, 0, p.thrust_damage, 0.0, p.thrust_dps))
+
+
+def dps_after(p: mc.Priced, ratio_s: float, ratio_t: float) -> float:
+    return max(p.swing_dps * ratio_s, p.thrust_dps * ratio_t)
+
+
+def only_exempt(iid: str, placements: dict, spec: dict) -> bool:
+    """True when every troop that carries the weapon is ladder-exempt."""
+    wearers = placements[iid].wearers
+    return bool(wearers) and all(ladder.is_exempt_troop(t.id, spec) for t in wearers)
+
+
+def exempt_only_blade(items: list[str], placements: dict, spec: dict) -> bool:
+    """True when a blade has worn weapons and every troop that carries any of them is ladder-exempt.
+
+    `items` is every weapon on the blade. Editing such a blade changes an exempt troop's weapon, so
+    no pass may touch it, whatever sibling made it look worth lowering.
+    """
+    worn = [i for i in items if i in placements]
+    return bool(worn) and all(only_exempt(i, placements, spec) for i in worn)
+
+
+def blade_edit(blade: str, items: list[str], priced: dict[str, mc.Priced], cat: mc.Catalogue,
+               spec: dict, label: str, ceiling: float | None) -> BladePlan | None:
+    """A plan that only LOWERS the blade: each factor down to its own limits, and to `ceiling`.
+
+    `items` is every weapon the edit moves. None when the blade is not a blade piece in the
+    loaded Armory. The caller decides whether the plan is worth making.
+    """
+    piece = cat.pieces.get(blade)
+    if piece is None or piece.blade is None:
+        return None
+    current = max(priced[i].best_dps for i in items)
+    ratio = 1.0 if ceiling is None else min(1.0, ceiling / current)
+    ratio_s = min(ratio, min(class_ratios(priced[i], spec)[0] for i in items))
+    ratio_t = min(ratio, min(class_ratios(priced[i], spec)[1] for i in items))
+    old_s, old_t = piece.blade.swing_factor, piece.blade.thrust_factor
+    return BladePlan(
+        blade=blade, items=sorted(items), anchor_tier=-1, culture=label,
+        target_dps=max(dps_after(priced[i], ratio_s, ratio_t) for i in items),
+        current_dps=current,
+        old_swing=round(old_s, 2),
+        new_swing=ladder.floor_factor(clamp_factor(old_s, old_s * ratio_s)) if old_s > 0 else old_s,
+        old_thrust=round(old_t, 2),
+        new_thrust=ladder.floor_factor(clamp_factor(old_t, old_t * ratio_t)) if old_t > 0 else old_t,
+        wearers=0, clamped="",
+    )
+
+
+def breaks_a_limit(items: list[str], priced: dict[str, mc.Priced], spec: dict) -> bool:
+    """True when some weapon on the blade is above a class or hero limit by more than TOLERANCE."""
+    return any(min(class_ratios(priced[i], spec)) < 1.0 - TOLERANCE for i in items)
+
+
+def lower_to_limit(blade: str, items: list[str], priced: dict[str, mc.Priced], cat: mc.Catalogue,
+                   spec: dict, placements: dict, label: str, notes: list[str],
+                   ceiling: float | None = None) -> BladePlan | None:
+    """The plan that lowers a blade to its limits (and to `ceiling`), or None.
+
+    `items` is every weapon on the blade, so the plan lists them all and counts every wearer. A
+    blade only ladder-exempt troops carry is left alone with a note, in every pass.
+    """
+    if exempt_only_blade(items, placements, spec):
+        note = f"{blade}: only ladder-exempt troops carry it, left alone"
+        if note not in notes:
+            notes.append(note)
+        return None
+    plan = blade_edit(blade, items, priced, cat, spec, label, ceiling)
+    if plan is not None:
+        plan.wearers = sum(len(placements[i].wearers) for i in items if i in placements)
+    return plan
+
+
+def blades_to_weapons(priced: dict[str, mc.Priced]) -> dict[str, list[str]]:
+    """blade piece -> EVERY weapon built on it, since an edit moves all of them."""
+    out: dict[str, list[str]] = collections.defaultdict(list)
+    for iid, p in priced.items():
+        if p.blade_piece:
+            out[p.blade_piece].append(iid)
+    return out
+
+
+def build_limit_plans(
+    priced: dict[str, mc.Priced],
+    cat: mc.Catalogue,
+    troops: list[report.Troop],
+    spec: dict,
+) -> tuple[list[BladePlan], list[str]]:
+    """(plans, notes) for `--limits-only`: lower every blade above a class or hero limit.
+
+    Raises nothing and ignores the tier target and the ceiling. A couchable weapon is lowered
+    like any other, because lowering is safe (see COUCH_FEATURES). Troops matter only for the
+    ladder-exempt rule: a blade carried only by exempt troops is left alone.
+    """
+    placements = report.place(priced, troops)
+    plans: list[BladePlan] = []
+    notes: list[str] = []
+    for blade, items in sorted(blades_to_weapons(priced).items()):
+        if not breaks_a_limit(items, priced, spec):
+            continue
+        plan = lower_to_limit(blade, items, priced, cat, spec, placements, "(limits)", notes)
+        if plan is not None:
+            plans.append(plan)
+    plans.sort(key=lambda p: -abs(p.ratio - 1.0))
+    return plans, notes
+
+
+def handedness(template: str) -> str:
+    """"two handed" for the two handed and pike templates, else "one handed" (dagger and mace too)."""
+    return "two handed" if template.startswith("TwoHanded") or template == "Pike" else "one handed"
+
+
+@dataclass(frozen=True)
+class MixedBlade:
+    """A blade piece that backs both one handed and two handed weapons, with what each shows now."""
+
+    blade: str
+    weapons: tuple[tuple[str, str, int, int], ...]  # (item, template, swing, thrust) as displayed
+
+    def describe(self) -> str:
+        shown = "; ".join(
+            f"{item} ({template}, {handedness(template)}) shows swing {swing} thrust {thrust}"
+            for item, template, swing, thrust in self.weapons
+        )
+        return f"{self.blade}: {shown}"
+
+
+def mixed_blades(priced: dict[str, mc.Priced]) -> list[MixedBlade]:
+    """Every blade piece whose weapons span one handed and two handed templates.
+
+    One blade cannot be right for both: a one handed wearer's tier limit is far under what a two
+    handed weapon may swing, so pricing the blade for its weakest wearer took the Erebor two handed
+    axes down to their one handed twins' target. The restat leaves these blades alone and
+    reports them, so a later change can clone one blade per class.
+    """
+    out = []
+    for blade, items in sorted(blades_to_weapons(priced).items()):
+        if len({handedness(priced[i].item.template) for i in items}) < 2:
+            continue
+        out.append(MixedBlade(blade, tuple(
+            (i, priced[i].item.template, round(priced[i].swing_damage), round(priced[i].thrust_damage))
+            for i in sorted(items))))
+    return out
+
+
+def within_tolerance(ratio: float, damage: float) -> bool:
+    """True when a factor move is under TOLERANCE, or under one point of the displayed damage.
+    An attack no weapon on the blade can use (damage 0) never counts.
+
+    Damage shows as a whole number, so a move under one point changes nothing a player can see,
+    and chasing it would leave every second run with work to do.
+    """
+    if damage <= 0:
+        return True  # no weapon on the blade can use this attack, so its factor moves nothing
+    return abs(ratio - 1.0) <= max(TOLERANCE, 1.0 / damage)
+
+
+def clamp_factor(old: float, new: float) -> float:
+    """`new` inside [MIN_FACTOR, MAX_FACTOR], but never on the far side of `old` from `new`.
+
+    A piece already below MIN_FACTOR that must come down used to be pulled UP to MIN_FACTOR.
+    """
+    return min(max(new, min(MIN_FACTOR, old)), max(MAX_FACTOR, old))
+
+
+@dataclass(frozen=True)
+class Cap:
+    """The largest multiplier of one attack's factor, and the weapon and carrier that set it."""
+
+    ratio: float = float("inf")
+    by: str = ""
+
+
+def carrier_contexts(placements: dict, spec: dict) -> dict[str, list[tuple[int, str, str]]]:
+    """weapon -> its non-exempt carriers as (tier, craft key, a troop id), one per tier and craft row."""
+    out: dict[str, list[tuple[int, str, str]]] = {}
+    for iid, placement in placements.items():
+        seen: dict[tuple[int, str], str] = {}
+        for t in sorted(placement.wearers, key=lambda w: w.id):
+            if not ladder.is_exempt_troop(t.id, spec):
+                seen.setdefault((t.tier, ladder.craft_key(t.id, t.culture, spec)), t.id)
+        out[iid] = [(tier, craft, who) for (tier, craft), who in sorted(seen.items())]
+    return out
+
+
+def carrier_caps(items: list[str], priced: dict[str, mc.Priced], spec: dict,
+                 contexts: dict[str, list[tuple[int, str, str]]],
+                 fallback: tuple[int, str, str]) -> tuple[Cap, Cap]:
+    """(swing, thrust): the tightest tier limit over EVERY non-exempt carrier of EVERY weapon on the blade.
+
+    A weapon nobody non-exempt carries is held to the limit of `fallback`, the blade's weakest
+    carrier, so an unworn sibling is no stronger than the weakest wearer may carry.
+    """
+    swing, thrust = Cap(), Cap()
+    for iid in sorted(items):
+        p = priced[iid]
+        for tier, craft, who in contexts.get(iid) or [fallback]:
+            ratio_s, ratio_t = class_ratios(p, spec, tier, craft)
+            where = f"{iid} ({p.item.template}) at tier {tier} for {who}"
+            if ratio_s < swing.ratio:
+                swing = Cap(ratio_s, where)
+            if ratio_t < thrust.ratio:
+                thrust = Cap(ratio_t, where)
+    return swing, thrust
+
+
 def build_plans(
     priced: dict[str, mc.Priced],
     cat: mc.Catalogue,
@@ -135,56 +393,72 @@ def build_plans(
 ) -> tuple[list[BladePlan], list[str]]:
     """(plans, notes). One plan per blade piece that needs to move."""
     placements = report.place(priced, troops)
-    troop_culture = {}
-    for t in troops:
-        for iid in t.items:
-            troop_culture.setdefault(iid, t.culture)
+    contexts = carrier_contexts(placements, spec)
 
-    # A weapon reachable only by ladder-exempt troops is off the ladder by decision: the cave
-    # troll's club is scenery-scale and deliberately slow, and restatting it to a tier-10
-    # target would quadruple a monster's damage to fix a number nobody was reading.
-    def only_exempt(iid: str) -> bool:
-        wearers = placements[iid].wearers
-        return bool(wearers) and all(ladder.is_exempt_troop(t.id, spec) for t in wearers)
+    # A weapon reachable only by ladder-exempt troops is off the ladder by decision (`only_exempt`):
+    # the cave troll's club is scenery-scale and deliberately slow, and restatting it to a
+    # tier-10 target would quadruple a monster's damage to fix a number nobody was reading.
 
     # blade -> EVERY weapon built on it, and separately the ones troops carry.
     # The ratio must be computed against every weapon on the blade, because the edit moves all
     # of them: pricing from the worn ones alone sent an unworn Erebor axe sharing a blade to
     # 186 DPS while its worn sibling landed on target.
-    all_on_blade: dict[str, list[str]] = collections.defaultdict(list)
-    for iid, p in priced.items():
-        if p.blade_piece:
-            all_on_blade[p.blade_piece].append(iid)
+    all_on_blade = blades_to_weapons(priced)
     by_blade: dict[str, list[str]] = collections.defaultdict(list)
     for iid, p in priced.items():
         if p.blade_piece and iid in placements:
             by_blade[p.blade_piece].append(iid)
 
+    # A blade that backs one handed and two handed weapons is never priced by tier: its weakest
+    # wearer would set a target the other class cannot live with. It is lowered only when a weapon
+    # on it breaks its CLASS limit, and only as far as that limit needs.
+    mixed = {m.blade for m in mixed_blades(priced) if not ladder.is_hero_blade(m.blade, spec)}
+
     plans: list[BladePlan] = []
     notes: list[str] = []
-    for blade, items in sorted(by_blade.items()):
-        if ladder.is_hero_blade(blade, spec):
+    for blade in sorted(mixed):
+        items = all_on_blade[blade]
+        if not breaks_a_limit(items, priced, spec):
             continue
-        if all(only_exempt(i) for i in items):
+        plan = lower_to_limit(blade, items, priced, cat, spec, placements, "(class limit)", notes)
+        if plan is None:
+            continue
+        plans.append(plan)
+        bound = min(items, key=lambda i: (min(class_ratios(priced[i], spec)), i))
+        notes.append(
+            f"{blade}: one handed and two handed weapons share it, so it is not priced by tier; "
+            f"lowered only to the class limit of {bound} ({priced[bound].item.template})"
+        )
+
+    for blade, items in sorted(by_blade.items()):
+        if ladder.is_hero_blade(blade, spec) or blade in mixed:
+            continue
+        if exempt_only_blade(items, placements, spec):
             notes.append(f"{blade}: only ladder-exempt troops carry it, left alone")
             continue
-        # Price the blade for the weakest troop that can reach any weapon on it.
+        # The weapons a non-exempt troop carries decide the TARGET and the primary attack; every
+        # weapon on the blade decides the ratio and the limits.
+        owned = [i for i in items if contexts[i]]
+        # Price the blade for the weakest non-exempt carrier of any weapon on it, by its own tier
+        # and craft row (M2): the first troop loaded no longer decides either.
         worst = None
-        for iid in items:
-            pl = placements[iid]
-            culture = troop_culture.get(iid, "")
-            if cultures and culture not in cultures:
-                continue
-            tgt = ladder.target(pl.anchor_tier, culture, spec)
-            if worst is None or tgt < worst[0]:
-                worst = (tgt, pl.anchor_tier, culture, iid)
+        for iid in owned:
+            p = priced[iid]
+            flags = ladder.dominant_flags(p.item.template, p.swing_damage, p.thrust_damage,
+                                          p.swing_dps, p.thrust_dps, spec)
+            for tier, craft, who in contexts[iid]:
+                if cultures and craft not in cultures:
+                    continue
+                tgt = ladder.target(tier, craft, spec, p.item.template, *flags)
+                if worst is None or tgt < worst[0]:
+                    worst = (tgt, tier, craft, who)
         if worst is None:
             continue
-        target_dps, anchor, culture, _iid = worst
+        target_dps, anchor, culture, anchor_troop = worst
 
-        # The worn weapons decide the TARGET; every weapon on the blade decides the RATIO.
-        worn_dps = max(priced[i].best_dps for i in items)
         siblings = all_on_blade[blade]
+        worn_best = max(owned, key=lambda i: priced[i].best_dps)
+        worn_dps = priced[worn_best].best_dps
         current = max(priced[i].best_dps for i in siblings)
         if worn_dps <= 0 or current <= 0:
             notes.append(f"{blade}: every weapon on it has no usable attack, skipped")
@@ -199,30 +473,62 @@ def build_plans(
                 f"{blade}: capped at the ceiling because it also backs "
                 f"{max(siblings, key=lambda i: priced[i].best_dps)}"
             )
-        couched = [i for i in items if is_couchable(cat, priced[i].item)]
-        if couched and ratio > 1.0:
-            notes.append(
-                f"{blade}: {couched[0]} can be couched, so its standing-thrust DPS understates "
-                "it and RAISING it would multiply an already speed-amplified hit. Left alone; "
-                "price it by hand if it really is too weak"
-            )
-            continue
-        if abs(ratio - 1.0) <= TOLERANCE:
-            continue
-
+        # Nor past the tier limit of ANY carrier of ANY weapon on the blade: the class limit scaled
+        # to the carrier's tier and craft row, so a one handed blade is never raised to an elite's
+        # blow for a recruit.
+        cap_s, cap_t = carrier_caps(siblings, priced, spec, contexts, (anchor, culture, anchor_troop))
+        # The weapon's primary attack sets the common multiplier. When a raise is held by the
+        # primary's own limit, the other attack follows the primary's realized ratio and is never
+        # raised on its own to chase a target the primary cannot reach: that raised the free thrust
+        # again on every run. A primary that must come down does not drag the other attack
+        # below the ratio the target asks of it.
+        best = priced[worn_best]
+        primary = cap_s if best.swing_dps >= best.thrust_dps else cap_t
+        common = max(1.0, min(ratio, primary.ratio)) if ratio > 1.0 else ratio
+        ratio_s = min(common, cap_s.ratio)
+        ratio_t = min(common, cap_t.ratio)
         piece = cat.pieces.get(blade)
         if piece is None or piece.blade is None:
             notes.append(f"{blade}: not a blade piece in the loaded Armory, skipped")
             continue
-
         old_s, old_t = piece.blade.swing_factor, piece.blade.thrust_factor
-        new_s, new_t = old_s * ratio, old_t * ratio
+        # An attack the blade does not have has no factor to move and must not keep a plan alive.
+        ratio_s = ratio_s if old_s > 0 else 1.0
+        ratio_t = ratio_t if old_t > 0 else 1.0
+        if ratio_s < ratio or ratio_t < ratio:
+            target_dps = max(dps_after(priced[i], ratio_s, ratio_t) for i in siblings)
+            held = [
+                f"{name} held at the class limit set by {cap.by if r == cap.ratio else primary.by}"
+                for name, r, cap, old in (("swing", ratio_s, cap_s, old_s), ("thrust", ratio_t, cap_t, old_t))
+                if old > 0 and r < ratio
+            ]
+            notes.append(f"{blade}: " + "; ".join(held) + ", under its tier target")
+        couched = [i for i in items if is_couchable(cat, priced[i].item)]
+        if couched and max(ratio_s, ratio_t) > 1.0:
+            # Raising is refused, lowering is not (see COUCH_FEATURES). A plan that raises one
+            # attack and lowers the other keeps the lowering: dropping it whole left a couchable
+            # spear's thrust above its limit.
+            ratio_s, ratio_t = min(ratio_s, 1.0), min(ratio_t, 1.0)
+            target_dps = max(dps_after(priced[i], ratio_s, ratio_t) for i in siblings)
+            notes.append(
+                f"{blade}: {couched[0]} can be couched, so its standing-thrust DPS understates "
+                "it and RAISING it would multiply an already speed-amplified hit. Only lowered; "
+                "price it by hand if it really is too weak"
+            )
+        new_s, new_t = old_s * ratio_s, old_t * ratio_t
+        # Judge the move that gets written. Its factor is rounded down, which shrinks a small raise,
+        # so a run on its own output finds the weapon inside the tolerance and plans nothing.
+        if (within_tolerance(ladder.floor_factor(new_s) / old_s if old_s > 0 else 1.0,
+                             max(priced[i].swing_damage for i in siblings))
+                and within_tolerance(ladder.floor_factor(new_t) / old_t if old_t > 0 else 1.0,
+                                     max(priced[i].thrust_damage for i in siblings))):
+            continue
         clamped = ""
         for name, old, new in (("swing", old_s, new_s), ("thrust", old_t, new_t)):
-            if old > 0 and not (MIN_FACTOR <= new <= MAX_FACTOR):
+            if old > 0 and clamp_factor(old, new) != new:
                 clamped = f"{name} factor clamped into [{MIN_FACTOR}, {MAX_FACTOR}]"
-        new_s = min(max(new_s, MIN_FACTOR), MAX_FACTOR) if old_s > 0 else old_s
-        new_t = min(max(new_t, MIN_FACTOR), MAX_FACTOR) if old_t > 0 else old_t
+        new_s = ladder.floor_factor(clamp_factor(old_s, new_s)) if old_s > 0 else old_s
+        new_t = ladder.floor_factor(clamp_factor(old_t, new_t)) if old_t > 0 else old_t
 
         plans.append(
             BladePlan(
@@ -233,9 +539,9 @@ def build_plans(
                 target_dps=target_dps,
                 current_dps=current,
                 old_swing=round(old_s, 2),
-                new_swing=round(new_s, 2),
+                new_swing=new_s,
                 old_thrust=round(old_t, 2),
-                new_thrust=round(new_t, 2),
+                new_thrust=new_t,
                 wearers=sum(len(placements[i].wearers) for i in items),
                 clamped=clamped,
             )
@@ -244,31 +550,28 @@ def build_plans(
     # no tier target but they do get the ceiling. Without this a 153 DPS two-handed axe sits in
     # every Rohan market, above anything vanilla fields, and no roster-driven pass ever sees it.
     ceiling = spec["ceiling"]
-    planned = {p.blade for p in plans}
-    unworn: dict[str, list[str]] = collections.defaultdict(list)
-    for iid, p in priced.items():
-        if iid not in placements and p.blade_piece and p.best_dps > ceiling:
-            unworn[p.blade_piece].append(iid)
-    for blade, items in sorted(unworn.items()):
-        if blade in planned or ladder.is_hero_blade(blade, spec):
+    unworn_over = {
+        p.blade_piece for iid, p in priced.items()
+        if iid not in placements and p.blade_piece
+        and (p.best_dps > ceiling or min(class_ratios(p, spec)) < 1.0 - TOLERANCE)}
+    skip = {p.blade for p in plans} | mixed
+    for blade in sorted(unworn_over - skip):
+        if ladder.is_hero_blade(blade, spec):
             continue
-        piece = cat.pieces.get(blade)
-        if piece is None or piece.blade is None:
+        # This pass only lowers: each factor comes down to the ceiling and to its own limits, and
+        # the edit moves every weapon on the blade, so the plan covers them all.
+        plan = lower_to_limit(blade, all_on_blade[blade], priced, cat, spec, placements, "(unworn)",
+                              notes, ceiling)
+        if plan is not None:
+            plans.append(plan)
+    # A hero blade has no tier target, but it has a limit: the class limit plus its maker's
+    # bonus. One above it comes down to it, worn or not; one below is left alone, never raised.
+    for blade, items in sorted(all_on_blade.items()):
+        if not ladder.is_hero_blade(blade, spec) or not breaks_a_limit(items, priced, spec):
             continue
-        current = max(priced[i].best_dps for i in items)
-        ratio = ceiling / current
-        old_s, old_t = piece.blade.swing_factor, piece.blade.thrust_factor
-        plans.append(
-            BladePlan(
-                blade=blade, items=sorted(items), anchor_tier=-1, culture="(unworn)",
-                target_dps=ceiling, current_dps=current,
-                old_swing=round(old_s, 2),
-                new_swing=round(min(max(old_s * ratio, MIN_FACTOR), MAX_FACTOR), 2) if old_s > 0 else old_s,
-                old_thrust=round(old_t, 2),
-                new_thrust=round(min(max(old_t * ratio, MIN_FACTOR), MAX_FACTOR), 2) if old_t > 0 else old_t,
-                wearers=0, clamped="",
-            )
-        )
+        plan = lower_to_limit(blade, items, priced, cat, spec, placements, "(hero)", notes)
+        if plan is not None:
+            plans.append(plan)
 
     plans.sort(key=lambda p: -abs(p.ratio - 1.0))
     return plans, notes
@@ -343,10 +646,18 @@ def write_pieces(path: Path, edits: dict[str, tuple[float, float]], tag: str) ->
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     ap.add_argument("--apply", action="store_true", help="write the Armory (default: report)")
-    ap.add_argument("--culture", action="append", help="limit to these cultures (repeatable)")
+    ap.add_argument("--culture", action="append",
+                    help="limit the tier pass to these craft rows (repeatable): a troop's "
+                         "ladder.craft_key, which is its culture except for Black Numenoreans "
+                         "(mordor_numenorean). It is not the engine culture id; "
+                         "fix_melee_ladder.py takes that")
+    ap.add_argument("--limits-only", action="store_true",
+                    help="only lower weapons above a class or hero limit; raise nothing")
     ap.add_argument("--top", type=int, default=30)
     ap.add_argument("--pieces", default=str(PIECES_XML), help="crafting pieces XML to write")
     args = ap.parse_args(argv)
+    if args.limits_only and args.culture:
+        ap.error("--limits-only judges every blade; it cannot be combined with --culture")
 
     if not MODULES.is_dir():
         print(f"SKIPPED: no Bannerlord install at {MODULES}", file=sys.stderr)
@@ -362,14 +673,20 @@ def main(argv=None) -> int:
     troops = report.load_troops(report.TROOPS)
     cultures = set(args.culture) if args.culture else None
 
-    plans, notes = build_plans(priced, cat, troops, spec, cultures)
+    if args.limits_only:
+        plans, notes = build_limit_plans(priced, cat, troops, spec)
+    else:
+        plans, notes = build_plans(priced, cat, troops, spec, cultures)
 
-    print(f"melee blade restat (#631 pass 2): {len(priced)} weapons, {len(troops)} troops")
+    print(f"melee blade restat (#631 pass 2{', limits only' if args.limits_only else ''}): "
+          f"{len(priced)} weapons, {len(troops)} troops")
     if failures:
         print(f"  {len(failures)} weapon(s) could not be priced and were skipped")
     print(f"  {len(plans)} blade piece(s) to restat, reaching "
           f"{len({i for p in plans for i in p.items})} weapons and "
           f"{sum(p.wearers for p in plans)} troop slots")
+    raised = [p for p in plans if p.new_swing > p.old_swing or p.new_thrust > p.old_thrust]
+    print(f"  {len(raised)} raise a factor, {len(plans) - len(raised)} only lower")
     shared = [p for p in plans if len(p.items) > 1]
     print(f"  {len(shared)} of those blades back more than one weapon, so the edit moves all of them")
     clamped = [p for p in plans if p.clamped]
@@ -377,6 +694,13 @@ def main(argv=None) -> int:
         print(f"  {len(clamped)} hit the factor bounds and were clamped (listed below)")
     for n in notes[:10]:
         print(f"  note: {n}")
+    mixed = mixed_blades(priced)
+    if mixed:
+        moved = {p.blade for p in plans}
+        print(f"  {len(mixed)} blade(s) back both one handed and two handed weapons; none is priced "
+              "by tier, so a later change can clone them:")
+        for m in mixed:
+            print(f"    {m.describe()}" + ("  [lowered to a class or hero limit]" if m.blade in moved else ""))
     print()
     print(f"{'blade piece':38s} {'cult':10s} {'T':>2} {'now':>6} {'target':>7} {'swing':>13} {'thrust':>13} {'wpns':>4}")
     for p in plans[: args.top]:

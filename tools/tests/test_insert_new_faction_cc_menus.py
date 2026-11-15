@@ -49,8 +49,8 @@ DALE_CLONE_PLACES = {
     "anduinvale": ("Beorn's Hall", "Old Ford", "Carrock", "Grimbeorn", "Gladden", "High Pass",
                    "Eastbank", "Misty Mountains", "Mirkwood"),
     "angaladh": ("Woodmen-town", "Ironwood Hall", "Forest Gate", "Thornhold", "Emyn Duir",
-                 "Forest Road", "Ingomar", "Mirkwood"),
-    "dorwinion": ("Vineholm", "Redwater", "Seagate", "Sunwall", "Vinewatch", "Eastmarch", "Ostric",
+                 "Forest Road", "Theodemiro", "Mirkwood"),
+    "dorwinion": ("Vineholm", "Redwater", "Seagate", "Sunwall", "Vinewatch", "Eastmarch", "Hawin",
                   "Sea of Rhûn", "River Running"),
 }
 
@@ -60,7 +60,7 @@ ROHAN_IDENTITY = ("Rohan", "Rohirrim", "Edoras", "Meduseld", "Théoden", "Éomer
                   "Helm's Deep", "Westfold", "Eastfold", "Eorl", "Riddermark", "Aldburg", "Isengard",
                   "Saruman", "Dunlending", "Wold")
 SOUTH_RHOVANION_PLACES = ("Vidugard", "Horsemead", "Southwood", "Westmark", "Wainwatch", "Northmark",
-                          "Vidumar", "Mirkwood", "Wainrider")
+                          "Suniefredo", "Mirkwood", "Wainrider")
 NEW_REALMS = ("eredluin", "anduinvale", "angaladh", "dorwinion", "southrhovanion")
 
 # The shipped files, captured before any test patches cc.CC or cc.CC_STRINGS.

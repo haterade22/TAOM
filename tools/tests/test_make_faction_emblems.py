@@ -53,6 +53,21 @@ class SigilTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             mfe.sigil_icon(self.LAYERED, sprites={"31005"})
 
+    # A frame or a star field can sit under the sigil with a sprite of its own (Arthedain's 31026).
+    FRAMED = ("11.149.149.1528.1528.764.764.1.0.0.31026.110.110.387.387.764.636.0.0.0."
+              "11004.110.110.77.77.764.617.0.0.0")
+
+    def test_a_pinned_faction_takes_its_pinned_sigil(self):
+        pins = {"kingdom_of_x": "11004"}
+        self.assertEqual(mfe.faction_sigil("kingdom_of_x", self.FRAMED, {"31026", "11004"}, pins), "11004")
+
+    def test_an_unpinned_faction_takes_the_first_sprite_layer(self):
+        self.assertEqual(mfe.faction_sigil("kingdom_of_y", self.FRAMED, {"31026", "11004"}, {}), "31026")
+
+    def test_a_pin_with_no_sprite_is_refused(self):
+        with self.assertRaises(ValueError):
+            mfe.faction_sigil("kingdom_of_x", self.FRAMED, {"31026"}, {"kingdom_of_x": "11004"})
+
 
 class TargetTests(unittest.TestCase):
     def test_only_listed_factions_are_written(self):
@@ -74,6 +89,9 @@ class ShippedDataTests(unittest.TestCase):
             self.assertEqual(image.size, (256, 256), key)
             self.assertEqual(image.mode, "RGBA", key)
             self.assertIsNotNone(image.getchannel("A").getbbox(), key)
+
+    def test_every_pin_names_a_listed_faction(self):
+        self.assertLessEqual(set(mfe.SIGIL_PINS), set(mfe.FACTIONS))
 
     def test_the_shipped_emblems_match_the_shipped_banners(self):
         self.assertEqual(mfe.main(["--check"]), 0)

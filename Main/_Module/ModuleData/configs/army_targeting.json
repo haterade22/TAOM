@@ -144,6 +144,7 @@
   },
   "CapturedFortHold": {
     "Sides": ["Free"],
+    "Factions": ["empire_s"],
     "MinCohesionToHold": 45,
     "ReleaseCohesion": 40,
     "ReleaseFoodDays": 1,

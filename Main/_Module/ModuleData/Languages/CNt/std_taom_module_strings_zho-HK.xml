@@ -7940,6 +7940,29 @@
     <string id="taom_realms_tree_holder" text="Holder" />
     <string id="taom_realms_tree_liege" text="Liege" />
     <string id="taom_realms_tree_subordinates" text="Subordinate titles" />
+    <string id="taom_cheat_battle_done_god_off" text="God mode is off. You and any mount you ride take damage again." />
+    <string id="taom_cheat_battle_done_god_on" text="God mode is on. You and any mount you ride take no damage until you turn it off or the battle ends." />
+    <string id="taom_cheat_battle_opt_god_off" text="God mode: off" />
+    <string id="taom_cheat_battle_opt_god_on" text="God mode: on" />
+    <string id="taom_realms_mcm_rename_own" text="Your Realm Takes Your Title's Name" />
+    <string id="taom_realms_mcm_rename_own_hint" text="When on, a realm you rule is named after the higher title you hold, as Erebor becomes Durin's Folk, and takes its own name back when you lose that title. When off, your realm keeps its own name; one already renamed takes it back within a day. Default: on." />
+    <string id="taom_realms_mcm_rename_ai" text="AI Realms Take Their Titles' Names" />
+    <string id="taom_realms_mcm_rename_ai_hint" text="When on, a realm ruled by an AI lord is named after the higher title its ruler holds. When off, every such realm keeps its own name; one already renamed takes it back within a day. Default: on." />
+    <string id="taom_realms_mcm_own_banner" text="Your Realm's Banner" />
+    <string id="taom_realms_mcm_own_banner_hint" text="The banner of a realm you rule. Title banner (default): the banner of your primary title when it has one, such as the Kingdom of Gondor's, else the realm's own. Realm's own banner: the realm keeps the banner it has; a realm you founded keeps the banner you made. Your house banner: the realm flies your clan's own banner on its towns, in battle and on the clan screen, even a realm you inherit, and follows when you edit it. Your parties on the map fly your house banner either way. Only the title banner choice lets a coronation give your clan and realm the crowned house's banner. Changes show within a day." />
+    <string id="taom_realms_mcm_ai_banners" text="AI Realms Fly Title Banners" />
+    <string id="taom_realms_mcm_ai_banners_hint" text="When on, a realm ruled by an AI lord flies the banner of its ruler's primary title when it has one. When off, every such realm keeps its own banner; one already changed takes it back within a day. Default: on." />
+    <string id="taom_battle_shader_notice_title" text="Preparing this scene: {COUNT} shaders compiled" />
+    <string id="taom_battle_shader_notice_detail" text="The game is compiling shaders for this scene. It is not frozen. This can take a minute or two." />
+    <string id="taom_battle_shader_loading_line" text="Compiling shaders for this scene. This can take a minute or two; the game is not frozen." />
+    <string id="taom_startup_alert_war_sails" text="War Sails is loaded, but TAOM does not support it. Close the game, untick War Sails in the launcher, and start again." />
+    <string id="taom_bundled_library_copies_body" text="TAOM.Dependencies already provides Harmony, ButterLib, UIExtenderEx and MCM, so these separate copies are not needed:{NEWLINE}{NEWLINE}{LIST}{NEWLINE}{NEWLINE}Unsubscribe from a Steam Workshop copy. A copy in the Modules folder took the place of TAOM's own small module with that name: reinstall TAOM to put it back, and do not delete the folder, or mods that need the library stop loading." />
+    <string id="taom_bundled_library_copy_workshop" text="{NAME} {VERSION}, Steam Workshop" />
+    <string id="taom_bundled_library_copy_modules" text="{NAME} {VERSION}, folder {FOLDER}" />
+    <string id="taom_cheat_done_gold" text="Gold given. You now have {NUMBER} denars." />
+    <string id="taom_cheat_done_influence" text="Gained {NUMBER} influence." />
+    <string id="taom_cheat_done_renown" text="Gained {NUMBER} renown." />
+    <string id="taom_cheat_done_heal" text="Your party is healed. Soldiers healed: {NUMBER}." />
   </strings>
 
 </base>

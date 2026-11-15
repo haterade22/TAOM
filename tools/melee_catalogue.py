@@ -354,6 +354,33 @@ def load_pieces(modules: Path) -> dict[str, md.Piece]:
     return out
 
 
+def item_from_node(node, source: str) -> Item | None:
+    """The `Item` of one `<CraftedItem>` element (lxml or ElementTree), or None when it has no id."""
+    iid = node.get("id")
+    if not iid:
+        return None
+    pieces = []
+    for p in node.iter("Piece"):
+        pid = p.get("id")
+        slot = p.get("Type")
+        if not pid or slot not in md.PIECE_TYPES:
+            continue
+        raw = p.get("scale_factor")
+        try:
+            scale = int(raw) if raw else 100
+        except ValueError:
+            scale = 100
+        pieces.append((pid, slot, scale))
+    return Item(
+        id=iid,
+        name=strip_loc(node.get("name") or ""),
+        culture=(node.get("culture") or "").replace("Culture.", ""),
+        template=node.get("crafting_template") or "",
+        pieces=tuple(pieces),
+        source=source,
+    )
+
+
 def load_items(modules: Path, only: set[str] | None = None) -> dict[str, Item]:
     """Every `<CraftedItem>` under the given modules, keyed by id.
 
@@ -377,32 +404,9 @@ def load_items(modules: Path, only: set[str] | None = None) -> dict[str, Item]:
             if root is None:
                 continue
             for node in root.iter("CraftedItem"):
-                iid = node.get("id")
-                if not iid:
-                    continue
-                pieces = []
-                for p in node.iter("Piece"):
-                    pid = p.get("id")
-                    slot = p.get("Type")
-                    if not pid or slot not in md.PIECE_TYPES:
-                        continue
-                    raw = p.get("scale_factor")
-                    try:
-                        scale = int(raw) if raw else 100
-                    except ValueError:
-                        scale = 100
-                    pieces.append((pid, slot, scale))
-                out.setdefault(
-                    iid,
-                    Item(
-                        id=iid,
-                        name=strip_loc(node.get("name") or ""),
-                        culture=(node.get("culture") or "").replace("Culture.", ""),
-                        template=node.get("crafting_template") or "",
-                        pieces=tuple(pieces),
-                        source=f"{module.name}/{path.relative_to(data).as_posix()}",
-                    ),
-                )
+                item = item_from_node(node, f"{module.name}/{path.relative_to(data).as_posix()}")
+                if item is not None:
+                    out.setdefault(item.id, item)
     return out
 
 
@@ -684,6 +688,14 @@ def price(cat: Catalogue, item: Item) -> Priced:
         blade_piece=blade.piece.id if blade else "",
         tier=max((el.piece.tier for el in elements.values()), default=1),
     )
+
+
+def couchable_ids(priced: dict[str, Priced]) -> set[str]:
+    """Ids of the priced weapons with a couch usage. This is the one statement of "can be couched":
+    the writer (rebalance_troops --main-weapon-slots) and the validator (TROOP_MAIN_WEAPON_NOT_ITEM0)
+    both read it through taom_schema.couchable_item_ids. A description gives an item the usage when
+    every piece the item uses is in its AvailablePieces, so the usage list is the fit."""
+    return {iid for iid, p in priced.items() if any("couch" in u.features for u in p.usages)}
 
 
 def price_all(cat: Catalogue) -> tuple[dict[str, Priced], list[tuple[str, str]]]:

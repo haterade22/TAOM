@@ -502,7 +502,7 @@ There is a generator for both shapes. `python tools/build_weapon_xml.py --manife
 4. **Damage on a single-piece weapon: edit `<Weapon>` directly.** `thrust_damage` doubles as missile damage for anything ranged.
 5. **Price without touching damage: use `tier_override`, or `value`.** Price scales as `2.75` raised to the item's tier (`DefaultItemValueModel.cs:266`), so one whole tier of stats roughly triples the price; `value="..."` bypasses the formula outright.
 6. **Never rename an id to rename a weapon.** The display name is the `name` attribute. Renaming `id` breaks every roster reference and every save holding the item.
-7. **For a bulk damage pass**, `python tools/rebalance_weapons.py --dry-run` prints a points-based per-culture proposal. Read its paths before `--apply`: it targets a sibling `taommod` working copy plus a hard-coded install path for the crafting pieces, and it never writes `LOTRAOM_weapons.xml`, so bows and other single-piece weapons are outside its reach.
+7. **For a bulk damage pass**, run `python tools/restat_melee_blades.py` (a dry run until `--apply`; see [melee-damage-model.md](../features/melee-damage-model.md)). It sets blade `damage_factor` onto the tier targets and holds every weapon inside the class and tier limits of `tools/melee_ladders.json`. `tools/rebalance_weapons.py` is a second writer with no class limits, and it compounds on a second run, so do not use it for a damage pass. Neither tool reaches bows or other single-piece weapons.
 
 Check: `python tools/validate_moduledata.py` then `python tools/audit_polearm_shield_parity.py`
 Takes effect: full game restart

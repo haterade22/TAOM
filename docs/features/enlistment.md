@@ -1217,6 +1217,169 @@ otherwise descend to. The first cut of #525 shipped 15 such rosters, all Support
 the reported bug inside its own fix. Support now takes any melee sidearm (one weapon, still no
 shield) and a cell with no usable weapon is suppressed instead of emitted.
 
+### A rank's kit is never weaker than the kit before it (#1290)
+
+**What the player holds.** The resolver hands every kit into the party inventory and takes none
+back, so while he serves the player holds every kit he drew. Three limits: he draws a kit by hand at
+the quartermaster and nothing equips it; the ledger keeps only the highest tier drawn, so a tier he
+skipped is never issued; and the ledger does not record the assignment, so a soldier reassigned at
+his rank gets no kit of the new assignment at that tier (`rank_chains` does not model that case).
+The only removal is the reclaim at an honourable discharge. `resolve_kit` in
+`tools/generate_enlistment_rosters.py` mirrors `EnlistmentRosterResolver.Resolve`: the requested
+culture, then the default kits; inside each, the requested assignment, then infantry; inside each,
+the requested tier down to recruit. `rank_chains` lists, for each kit, every distinct kit issued at the
+tiers below it for one culture and requested assignment, so a cavalry enlistee of a culture with no
+cavalry recruit kit holds the infantry recruit kit at the cavalry soldier kit. `ResolverMirrorTests`
+pins the C# lines the mirror cites.
+
+**The rule.** `rank_regressions` holds a kit against everything drawn before it and gives three
+reasons:
+
+- **armour:** the total over head, body, arm and leg, read from the installed Armory, is under the
+  highest total of any earlier kit. Armour has no tolerance, so a kit may trade a zone for a larger
+  gain elsewhere but may not lose in total.
+- **weapon:** in a category the kit holds, its best weapon is more than 3% weaker than the best of that
+  category in any earlier kit (`WEAPON_TOLERANCE`, shared by the gate and the repair). Melee output is
+  damage per second from `melee_catalogue`, as the melee ladder reads a troop; a launcher's is its
+  damage.
+- **dropped:** an earlier kit holds a category the kit lacks, listed once per category against the
+  kit that holds the best of it. It is information, not a regression: the player still holds the
+  earlier kit's weapon ("What the player holds" above). The validator raises no warning for it, no
+  tool repairs it, and the dry run of `--repair-ranks` lists it. Weapons of two categories are never
+  compared (a spear's thrust and a sword's swing are not one scale).
+
+**The lance in a cavalry kit.** When a cavalry kit is judged, a couchable spear is a lance, a
+category of its own (`kit_category`; the maintainer's list names "a spear that lances" beside "spear
+and shield"). A rider's lance is worth its couch, so its thrust is held against earlier lances and
+not against a plain spear's. On foot nobody can couch (the engine's `polearm_couch` usage set carries
+`requires_mount`), so in every other kit the same item is a spear. The category assumes that a cavalry
+enlistee brings his own horse: no kit holds a Horse slot and the service promises none
+(`EnlistmentAssignmentDialogBehavior`), so on foot the lance is only a weaker spear, and the player
+still holds the earlier kit's spear. Until 2026-11-15 the lance was a
+spear in every kit, with the couch as a side rule, and a dropped category was a warning; both changed
+on the session's call under the maintainer's word to act on its recommendation.
+
+The categories are the maintainer's
+([melee-damage-model.md](./melee-damage-model.md#a-troop-keeps-its-weapon-category)): one handed, two
+handed sword, two handed axe or mace, spear, lance (cavalry kits only, above), swinging polearm, pike,
+bow and crossbow. A bastard sword
+(primary usage `OneHandedBastardSword`, such as `wm_gondor_lamedon_1h_sword_a` in the Umbar infantry and
+support soldier kits) is one handed, whatever its two handed alternate. A longbow is a bow; its `long_bow` usage set carries
+`requires_no_mount`, which binds the repair, not the category. A polearm with a thrown usage (a pilum
+such as `imperial_throwing_spear_1_t4`, `TwoHandedPolearm_Thrown`) is a thrown weapon, and thrown
+weapons, shields and ammunition are not compared.
+
+**The check.** `ENLISTMENT_KIT_RANK_REGRESSION` in `python tools/validate_moduledata.py`, a warning
+while the Armory is unversioned, as `WORN_ARMOUR_CEILING` is. Its message names the earlier kits, and
+each reason names the kit it is held against. Its `(unresolved)` row names a kit piece with no armour
+values or no weapon price, `(weapons)` says the weapons could not be priced, and `(tooling)` says the
+generator could not be imported or failed an assert at import. A promoted culture's finding names its
+source culture; when the source chain holds the rule, it names the promoter's `item_map` and the slots
+it rewrote.
+
+**The repair.** `python tools/generate_enlistment_rosters.py --repair-ranks` plans from the same
+function, walking the kits from recruit up so a repaired kit is part of the floor for the kits above
+it. Each planned slot prints where it came from, and a `From:` line totals them.
+
+- A weaker weapon is replaced in the slot of the kit's best of that category, against the best of that
+  category drawn before. The candidate comes from (a) the culture's troop gear, the same kind as the
+  replaced piece (sword, axe or mace by the weapon description); (b) the culture's troop gear, another
+  kind of the category; (c) the piece of the earlier kit that holds the best, only when that kit is
+  the same culture's. Within (a) and (b) the id closest to the replaced one comes first (the same weapon
+  line keeps the kit's look), then the weakest that holds.
+- "The culture's troop gear" is every battle set of the culture's non-hero Soldier troops in
+  `troops_*.xml`, with the rows under `<Equipments>` laid over each set; a `TREE_ALIASES` culture
+  (battania, abanissa) takes its source tree's gear.
+- The kit's own Horse slot decides the saddle (Mike, 2026-11-15): a kit whose roster holds a horse is
+  a horse archer's and needs a bow that can be shot from the saddle; a kit without one is a foot
+  archer's and may hold a longbow. So a launcher barred from the saddle (a `long_bow`) never goes into
+  a kit with a Horse slot, and may go into any other. The rule reads the kit, not the assignment, so a
+  cavalry kit without a Horse slot may take one too; no repair does so today. The kit file holds no
+  Horse slot (`grep -c 'slot="Horse"'` gives 0 on 2026-11-15), so every kit is a foot soldier's here.
+- In a cavalry kit a lance is replaced only by a lance and a plain spear only by a plain spear (the
+  category above, keyed on the assignment). A repair never puts one weapon id in two slots.
+- A lower armour total is held against the earlier kit with the highest total, and takes pieces for
+  the slots with the largest deficit first: that kit's piece when the culture's troops wear it, else
+  the culture's piece that matches it most closely from above, else that kit's piece when it is the
+  same culture's.
+- It never edits a promoter region or a default kit, and never a dropped category.
+
+**Guards.** A full `--apply` refuses a file that holds promoter regions and names `--reseed --culture`,
+`--seed-missing` and `--repair-ranks`. A reseed refuses a promoted culture, and ends by printing the
+rank repair plan for its culture with the `--apply` command to run: printed, not applied, so the
+candidates are read before they are written. `--repair-ranks --culture` with an unknown id or
+`default` exits and names the known ids.
+
+**Why the kits went stale.** The donor floor in `pick_donor` (`is_progression`) held the armour half
+only for the values of the day a kit was seeded, and only against the rank below. The restat of
+2026-11-14 (#1271) priced every Armory piece at the band of its lowest wearer and moved the pieces
+under the shipped kits; the Erebor infantry soldier fell to 67 armour against the recruit's 81.
+Nothing had checked the weapon half. On the ModuleData of 12b21d5e3,
+`python tools/validate_moduledata.py --moduledata <that tree> --code ENLISTMENT_KIT_RANK_REGRESSION`
+printed 152 kits under this rule on 2026-11-15. Counted from its messages, they carry 195 reasons: 16
+armour reasons in 16 kits, 91 weapon reasons in 89 kits, 85 dropped-category reasons in 80 kits and 3
+lance reasons in 3 kits.
+
+**Who owns which roster.** `promote_borrowed_cultures.py` owns the rosters of the eight promoted
+cultures (arthedain, cardolan, rhudaur, eredluin, anduinvale, angaladh, dorwinion, southrhovanion):
+it clones its source culture's `enlist_*` rosters into a `TAOM-NEWCULTURE:<culture>` region
+(`SHARED_FILES` and `extract_rosters`), and `test_generator_regions_in_sync` checks every region.
+The generator owns every other culture's rosters and the hand-authored `DEFAULT_ROSTER_ITEMS`. The
+promoter derives from the generator's output, so it runs second.
+
+**After any armour or weapon rebalance**, in this order:
+
+1. `python tools/validate_moduledata.py --code ENLISTMENT_KIT_RANK_REGRESSION` lists the weaker kits.
+2. `python tools/generate_enlistment_rosters.py --repair-ranks`, read the plan, then the same with
+   `--apply`. A second dry run plans nothing.
+3. For each promoted culture, `python tools/promote_borrowed_cultures.py --only <culture> --check`,
+   then `--apply` where it reports a change to the enlistment file and nothing else.
+4. A default kit is a hand edit of `DEFAULT_ROSTER_ITEMS` and the file together; a test pins the two
+   equal.
+5. Run step 1 again and `python -m unittest tools.tests.test_generator_regions_in_sync`.
+
+**The repair of 2026-11-15** started from the kit file of 12b21d5e3 and four hand edits: the default
+archer veteran and sergeant carry the soldier's `lowland_longbow` (57 against `highland_ranger_bow`'s
+47), and the Isengard cavalry veteran, which wore a Mordor chest and helmet no Isengard troop wears,
+wears `sk_uruk_hai_plate_heavy_a1` (46 against 42) and `sk_uruk_hai_helmet_officer_a2` (34, equal).
+Under the saddle rule above, `--repair-ranks` plans 66 slot changes from that file, by the source its
+dry run prints: 32 weapons from the culture's troop gear of the same kind, 21 weapons from its troop
+gear of another kind of the same category, 9 armour pieces from its troop gear, and 4 bows from an
+earlier kit (`wm_isengard_bow_a02` from the Dol Guldur archer soldier kit into the veteran's,
+`wm_mirkwood_bow_a01` from the Mirkwood archer recruit kit into the soldier's, and `woodland_longbow`
+from the Rohan archer soldier kit into the veteran's and the sergeant's, where Rohan's troop gear
+has no bow that holds). The first plan of the day inferred the saddle from what the culture's riders
+carry, refused the longbow to the two Rohan kits and planned 64; the other 64 slots are the same. The promoter's Arnor `item_map` (Mike, 2026-10-07; Rhudaur
+shares it) turned Gondor's cavalry sergeant helmet `sk_gd_pin_spear_helmet_heavy_a` (39) into
+`sk_ar_art_helmet_inf_hvy_b` (30) and left both Arnor cavalry sergeants 10 under their veterans. The
+map rewrites only the promoter's clones, and of the cloned files only the enlistment file holds that
+id (the Gondor cavalry sergeant kit), so the row now maps to `sk_ar_art_helmet_inf_elite_a` (48), a tier
+up, the strongest helmet of the same Arnor infantry line. Against 12b21d5e3 the kit file now differs in
+113 slots: 68 in generator kits, 2 in default kits and 43 in promoted kits.
+
+**Left after the repair.** Under the rule of the day, `python tools/validate_moduledata.py --code
+ENLISTMENT_KIT_RANK_REGRESSION` printed 82 kits on 2026-11-15 with no armour reason: two weapon reasons
+and 87 dropped reasons. Both kinds were settled the same day by the two rule changes above, and the
+command now prints `PASS: no validation issues found`:
+
+- The weapon pair was the Rohan cavalry sergeant and its South Rhovanion clone:
+  `enlist_vlandia_cavalry_sergeant` carries the lance `wm_rohan_ws_spear_a03` (28.9, couchable) after
+  the `eastern_spear_4_t4` (38.0, no couch) of the recruit, soldier and veteran kits. A stronger Rohan
+  lance in the Armory was the first idea and does not work: 11 troops carry that lance, the lowest at
+  level 11, and a weapon is priced at the tier of its lowest wearer (section 4 of
+  `python tools/analyze_melee_ladder.py --stdout`), so a lance strong enough for a sergeant would
+  break the limit of its tier 2 wearers. The lance is the sergeant's new
+  weapon and the player still holds the spear, so in a cavalry kit the lance is its own category.
+- The dropped categories are information. The dry run of `--repair-ranks` lists 94 on 2026-11-15
+  ("Dropped categories, for information"), eight of them a lance: for example the Rhun and Khand
+  cavalry veterans (`enlist_khuzait_cavalry_veteran`, `enlist_battania_cavalry_veteran`) carry
+  `eastern_spear_4_t4` after the soldier kit's `khuzait_lance_1_t3`. To carry a category up a chain,
+  edit the kit by hand; nothing requires it.
+- The Arnor cape row: `sk_gd_ano_cape_a` (23) maps to `sk_ar_art_cape_a` (2) in the Arthedain and
+  Rhudaur infantry and support recruit kits. It raises no finding, because a recruit kit has no kit
+  before it, and no Arnor cape is stronger (`sk_ar_art_cape_b` is also 2). Options: map it to an Arnor
+  pauldron (another look), accept the lighter recruit cape, or restat the Arnor capes in the Armory.
+
 **No mounts, at any assignment including cavalry.** The cavalry donor pools mount `taom_chariot_a`
 (the generator's `drop_creature_riders` keeps the spider, war elephant and Mumakil riders out of
 every pool, judging each troop by every battle set the engine builds for it, `<Equipments>`-level
@@ -1932,7 +2095,9 @@ player who stays paused sees it for as long as he likes.
 
 When the pump revokes a pass and the player is `EnlistedAttached`, outside every settlement and in
 no map event, it now calls `ReconcileNow("shore leave ended")` and ends that pass, so the reconciler
-parks him or follows the commander in straight away. A revoke from a state change inside the town
+parks him or follows the commander in on the first expensive pump pass after time moves (the pump
+runs from `TickEvent`, which `Campaign.Tick` does not raise while time is stopped, so a paused player
+still sees the party until he unpauses). A revoke from a state change inside the town
 (`Finish(true)` walks him out) and a revoke by a battle are left as before. This is a third
 re-attach trigger beside the two edges above; it fires only when a pass ends.
 

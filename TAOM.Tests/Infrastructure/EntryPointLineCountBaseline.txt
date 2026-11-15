@@ -1,5 +1,5 @@
 # Entry-point classes (ADR-002) at 150 lines or more: <namespace.Class> <most lines it may have>.
-# Entry point: a CampaignBehaviorBase, MissionBehavior, MissionLogic or MissionView subclass, a Taom*Model, or a Harmony patch class (attributed, or with a static Prefix, Postfix, Transpiler or Finalizer).
+# Entry point: a CampaignBehaviorBase, MissionBehavior, MissionLogic or MissionView subclass, a Taom*Model, or a Harmony patch class (attributed, with a static Prefix, Postfix, Transpiler or Finalizer, or with new HarmonyMethod(typeof(Self), ...)).
 # The list may only shrink. Never add a line: move the logic into a service. To prune: set TAOM_WRITE_ENTRY_POINT_BASELINE=1,
 # run EntryPointLineCountGateTests.Baseline_Regenerate_WhenAsked.
 # Entries: 18.

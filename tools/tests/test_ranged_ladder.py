@@ -15,6 +15,7 @@ and accuracy, plus the Bow or Crossbow the troop carries. Two rules per class an
 line a lower tier never beats a higher tier; at the same tier a better rank is never worse.
 """
 import json
+import math
 import os
 import re
 import sys
@@ -25,7 +26,9 @@ from pathlib import Path
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
+import melee_damage as md  # noqa: E402
 import ranged_ladder as rl  # noqa: E402
+import rebalance_armor as ra  # noqa: E402
 
 BOM = b"\xef\xbb\xbf"
 
@@ -265,10 +268,10 @@ class RepoSpecTests(unittest.TestCase):
 
     def test_the_headline_cells(self):
         s = self.spec
-        self.assertEqual(rl.cell("mirkwood", "Bow", 10, s), rl.Cell(speed=108, damage=133, accuracy=99))
+        self.assertEqual(rl.cell("mirkwood", "Bow", 10, s), rl.Cell(speed=108, damage=65, accuracy=99))
         self.assertEqual(rl.cell("mirkwood", "Bow", 9, s).accuracy, 98)
-        self.assertEqual(rl.skill_cell("mirkwood", 10, s), 410)
-        self.assertEqual(rl.cell("rivendell", "Bow", 2, s), rl.Cell(speed=85, damage=49, accuracy=87))
+        self.assertEqual(rl.skill_cell("mirkwood", 10, s), 320)   # the curve's 260 + 10 * (7 - 1)
+        self.assertEqual(rl.cell("rivendell", "Bow", 2, s), rl.Cell(speed=85, damage=46, accuracy=87))
         self.assertEqual(rl.cell("erebor", "Bow", 5, s).damage, rl.cell("rivendell", "Bow", 5, s).damage)
         self.assertEqual(rl.cell("dunland", "Bow", 6, s).speed, 66)
 
@@ -305,6 +308,45 @@ class RepoSpecTests(unittest.TestCase):
                 if cb == "Bow" and kb == kx and tb == tx:
                     self.assertGreater(hx, hb, f"T{tx} {lx} crossbow hits {hx:.1f}, {lb} bow {hb:.1f}")
                     self.assertLess(sx, sb, f"T{tx} {lx} crossbow spread {sx:.2f}, {lb} bow {sb:.2f}")
+
+    # The model armour the 2026-11-14 weapon and armour rebalance decided (PARAMS: slot_cap_ratio,
+    # band_ratio, band_ratio_per_slot). Pinned here so the guideline below is judged against the
+    # shipped design; test_kingdom_caps pins rebalance_armor to the same constants.
+    MODEL_SLOT_RATIO = {"head": 1.04, "body": 1.0, "shoulder": 0.28}
+    MODEL_BAND_RATIO = {"light": 0.16, "medium": 0.35, "heavy": 0.68, "elite": 1.0}
+    MODEL_HEAD_BAND_RATIO = {"light": 0.24, "heavy": 0.82}
+
+    def _model_armour(self, kingdom, tier):
+        """(head, body) a tier's plain gear sums to: helmet, and chest plus cape for the body."""
+        cap, band = ra.KINGDOM_CAPS[kingdom], ra.level_to_band(5 * tier + 1)
+
+        def piece(slot):
+            ratio = self.MODEL_HEAD_BAND_RATIO.get(band, self.MODEL_BAND_RATIO[band]) if slot == "head"                 else self.MODEL_BAND_RATIO[band]
+            return int(cap * self.MODEL_SLOT_RATIO[slot] * ratio + 0.5)
+        return piece("head"), piece("body") + piece("shoulder")
+
+    def test_ranged_cells_respect_the_one_shot_guideline(self):
+        # Maintainer, 2026-11-14: no body one-shot within two tiers (or by any cell of tier 5 or
+        # lower), and no same-tier helmeted head one-shot, against any of the 25 kingdoms. A missile
+        # hit is the pierce reduction times the bone multiplier (body 1.0, head 2.0), rounded up; a
+        # bow's magnitude carries the ammo (+4) and the 1 + 0.0011 x Bow skill, a crossbow bolt +5.
+        s = self.spec
+        limit = {"Bow": 95, "Crossbow": 105}
+        armour = {(k, t): self._model_armour(k, t) for k in ra.KINGDOM_CAPS for t in range(1, 11)}
+        for ln in s["lines"]:
+            for cls in rl.CLASSES:
+                for t in rl.tiers_for(ln["id"], cls, s):
+                    c = rl.cell(ln["id"], cls, t, s)
+                    self.assertLessEqual(c.damage, limit[cls], f"{ln['id']} {cls} T{t} cell {c.damage}")
+                    mag = ((c.damage + 4) * (1 + 0.0011 * rl.skill_cell(ln["id"], t, s))
+                           if cls == "Bow" else c.damage + 5)
+                    for (k, dt), (head, body) in armour.items():
+                        if t - dt <= 2 or t <= 5:
+                            hit = md.armour_reduction("Pierce", mag, body)
+                            self.assertLess(math.ceil(hit - 1e-9), 100, f"{ln['id']} {cls} T{t} one-shots {k} T{dt} body {body}")
+                        if dt == t:
+                            hit = md.armour_reduction("Pierce", mag, head) * 2.0
+                            self.assertLess(math.ceil(hit - 1e-9), 100, f"{ln['id']} {cls} T{t} one-shots {k} T{dt} head {head}")
 
     def test_one_item_per_listed_tier(self):
         self.assertEqual(len(rl.planned_items(self.spec)), 147)  # +1 harad bow tier 7 (#803); +4 cardolan, +5 rhudaur (#978) ; +6 lothlorien bows T4 to T9 and +2 T2, T3 (2026-11-05); +1 arthedain bow tier 7 (Steel Bowman, 2026-11-06)
@@ -773,8 +815,8 @@ class RebalanceTroopsAgreementTests(unittest.TestCase):
             recs = {r["id"]: r for r in rbt.process_file(str(path), item_classes={"ladder_rohan_bow_t4": "Bow",
                                                                                   "sword": "OneHanded"})}
         self.assertEqual(recs["rohan_test_archer"]["new"]["Bow"], rl.skill_cell("rohan", 4, spec))
-        self.assertEqual(rl.skill_cell("rohan", 4, spec), 100)                   # 130 + 10 * (7 - 10)
-        self.assertNotEqual(recs["rohan_test_foot"]["new"]["Bow"], 100)         # no launcher: the level curve
+        self.assertEqual(rl.skill_cell("rohan", 4, spec), 88)                    # 100 + 4 * (7 - 10)
+        self.assertNotEqual(recs["rohan_test_foot"]["new"]["Bow"], 88)          # no launcher: the role table
 
     def test_the_iron_hills_nobles_take_their_erebor_cell_in_a_rebaseline(self):
         # Second review (#617): #617 put the noble crossbow line on the Erebor cells (Mike,

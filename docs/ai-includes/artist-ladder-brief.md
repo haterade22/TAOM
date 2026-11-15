@@ -24,9 +24,9 @@ tier 1, level 46 to 50 is tier 9. Every ladder below is indexed by it.
 | Ladder | What it fixes | Where the numbers live |
 |---|---|---|
 | Skills | An upgrade must never make a troop worse at a skill (`UPGRADE_SKILL_REGRESSION`, an error) | The skill values in `troops_*.xml`; repair tool `rebalance_troops.py --fix-monotonicity` |
-| Armour | Each kingdom has a cap (its elite chest value, e.g. Gondor 57, Harad 44, Erebor 70); every slot and band is a fixed ratio of it, so kingdoms differ in armour power on purpose (#583). A second ladder keys armour meshes to levels via the id token `_light_`, `_med_`, `_heavy_`, `_elite_`, `_lord_` (#609) | `tools/rebalance_armor.py` (`KINGDOM_CAPS`), `tools/fix_armour_mesh_ladder.py` |
+| Armour | Each kingdom has a cap (its elite chest value, e.g. Gondor 46, Harad 40, Erebor 52, since 2026-11-14); every slot and band is a fixed ratio of it, so kingdoms differ in armour power on purpose (#583). A second ladder keys armour meshes to levels via the id token `_light_`, `_med_`, `_heavy_`, `_elite_`, `_lord_` (#609) | `tools/rebalance_armor.py` (`KINGDOM_CAPS`), `tools/fix_armour_mesh_ladder.py` |
 | Ranged | Reach, damage, accuracy and Bow/Crossbow skill climb with tier inside a line, and better-ranked kingdoms beat worse ones at the same tier. Every troop bow or crossbow is a generated item `ladder_<line>_<bow\|xbow>_t<tier>` (#582, #617) | `tools/ranged_ladders.json` |
-| Melee | Sustained damage per second (DPS, not one blow) must fit a band for the troop's tier and kingdom: a curve from 25 DPS at tier 0 to 114 at tier 10, band plus or minus 25%, ceiling 140 DPS (#631) | `tools/melee_ladders.json` |
+| Melee | Sustained damage per second (DPS, not one blow) must fit a band for the troop's tier, the weapon's class and the kingdom's smithing: the class top (vanilla's best weapon of that class) times the tier's share (0.58 at tier 0 to 1.0 at tier 10) times the kingdom's craft factor, band plus or minus 15%. Since 2026-11-14 the same factor also caps the blow and the DPS an ordinary troop may carry (the tier limit), so no ordinary one handed weapon shows 100 or more (#631, #1271) | `tools/melee_ladders.json` |
 
 Melee detail you need: Bannerlord stores no damage on a crafted weapon. Damage is simulated from its
 pieces, and it lives on the **blade piece's** `damage_factor`. One blade backs many weapons, so
@@ -94,6 +94,8 @@ troop's own Bow/Crossbow skill comes from the same cell. A raw bow on a troop br
     missing from it makes shield-carrying troops drop it for a sword when the fight starts, and a lance
     missing from Couchable cannot couch. Your Harad spears were left out of Couchable.
     `tools/register_one_handed_polearms.py` replays the `OneHandedPolearm` registration;
+    `tools/register_couch_brace_polearms.py` replays the couch and brace registration of the pieces in
+    `tools/couch_brace_polearms.json` (the two Khamul spear blades today);
     `tools/audit_polearm_shield_parity.py` is the gate.
 15. **Keep every mesh's own collision body and runtime cache.** A weapon or shield mesh `X` needs a
     `bo_X` body authored in its own FBX, never another kit's `bo_` (`COLLISION_BODY_BORROWED`, error).

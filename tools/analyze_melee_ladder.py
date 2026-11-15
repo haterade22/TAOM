@@ -41,6 +41,7 @@ sys.path.insert(0, str(REPO / "tools"))
 from _gamedir import game_dir  # noqa: E402
 import melee_catalogue as mc  # noqa: E402
 import melee_damage as md  # noqa: E402
+import melee_ladder as _ladder  # noqa: E402
 from ranged_ladder import MAX_TIER, TIER_NUMERAL, TIER_NUMERAL_RE, engine_tier  # noqa: E402
 import taom_schema as _ts  # noqa: E402
 
@@ -70,28 +71,19 @@ NUMERAL_RANK = {v: k for k, v in TIER_NUMERAL.items() if k}
 DPS_TOLERANCE = 0.5
 
 # Hero and named weapons are the sanctioned "specific use-case": they are meant to sit above
-# the curve. Carried over verbatim from tools/rebalance_weapons.py so the two agree on who is
-# exempt. Keyed by BLADE PIECE, because that is what a restat pass edits.
-HERO_BLADE_IDS = {
-    "wm_anduril_sword_blade",
-    "wm_glamdring_blade",
-    "wm_strider_sword_blade",
-    "wm_boromir_sword_blade",
-    "wm_faramir_sword_blade",
-    "wm_theoden_sword_blade",
-    "wm_eomer_blade",
-    "wm_eowyn_blade",
-    "wm_witch_king_sword_blade",
-    "wm_nazgul_sword_blade",
-    "wm_sauron_mace_blade",
-    "wm_galadriel_sword_blade",
-    "wm_aranruth_sword_blade",
-    "wm_aranruth_sword_ruby_blade",
-    "wm_aranruth_sword_topaz_blade",
-    "wm_legolas_sword_blade",
-    "wm_thranduil_sword_blade",
-    "wm_tuors_axe_blade",
-}
+# the curve. Read from tools/melee_ladders.json `hero_blades`, the list the restat and the gate
+# use, so the report cannot disagree with them (it listed 18 blades while the spec held 26).
+# Keyed by BLADE PIECE, because that is what a restat pass edits.
+def _spec_hero_blades() -> frozenset[str]:
+    try:
+        return frozenset(_ladder.load_spec()["hero_blades"])
+    except _ladder.LadderError as exc:
+        # The validator imports this module inside `except ImportError` and turns that into its
+        # "tools cannot be imported" warning; an unusable spec belongs to the same warning.
+        raise ImportError(f"the melee ladder spec is unusable: {exc}") from exc
+
+
+HERO_BLADE_IDS = _spec_hero_blades()
 
 
 class AnalysisError(Exception):
@@ -140,7 +132,9 @@ def load_troops(root: Path) -> list[Troop]:
     Both `<equipment>` and `<Equipment>` casings are matched. That is not cosmetic. Inline
     troop rosters spell the child lowercase and standalone roster files spell it uppercase,
     so matching one casing makes a gate structurally blind to a whole category while printing
-    a pass (the lesson `audit_polearm_shield_parity.rosters` records).
+    a pass (the lesson `audit_polearm_shield_parity.rosters` records). A troop-level override
+    directly under `<Equipments>` is matched lowercase only, as the engine reads it
+    (`BasicCharacterObject.cs:370`, v1.5.7: `childNode2.Name == "equipment"`).
     """
     if LET is None:
         raise AnalysisError("lxml is required")
@@ -178,6 +172,16 @@ def load_troops(root: Path) -> list[Troop]:
                         slot = eq.get("slot")
                         if slot:
                             slots.setdefault(item_id, set()).add(slot)
+                # A troop-level <equipment> directly under <Equipments> is laid over every battle set
+                # (BasicCharacterObject.Deserialize), so what it names is part of the kit (#1295).
+                for eq in block.findall("equipment"):
+                    ref = eq.get("id")
+                    if not ref:
+                        continue
+                    item_id = ref.split(".", 1)[-1]
+                    items.add(item_id)
+                    if eq.get("slot"):
+                        slots.setdefault(item_id, set()).add(eq.get("slot"))
             out.append(
                 Troop(
                     id=tid,

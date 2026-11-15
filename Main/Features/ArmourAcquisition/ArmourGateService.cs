@@ -105,6 +105,12 @@ public sealed class ArmourGateService : IArmourGateService
     public ArmourClass? GetClass(string itemId) =>
         itemId != null && _classById.TryGetValue(itemId, out var cls) ? cls : null;
 
+    public ArmourClass? GetTableClass(string itemId)
+    {
+        var cls = GetClass(itemId);
+        return cls == ArmourClass.Named || (itemId != null && _entries.ContainsKey(itemId)) ? cls : null;
+    }
+
     public string? GetNext(string itemId)
     {
         if (itemId == null || !_entries.TryGetValue(itemId, out var entry) || entry.NextItemId == null)

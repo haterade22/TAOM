@@ -37,6 +37,30 @@ public class DiplomacyShippedConfigTests
         new(rows.Where(r => r.Tier == AllianceTier.Hostile && (r.KingdomA == kingdom || r.KingdomB == kingdom))
                 .Select(r => r.KingdomA == kingdom ? r.KingdomB : r.KingdomA));
 
+    // The table is keyed on the two id strings (DiplomacyService.MakeKey) and nothing resolves them, so a row with a
+    // lore name ("rohan" for "vlandia") loads without error and never matches a live kingdom (#1291).
+    [TestMethod]
+    public void ShippedConfig_EveryKingdomId_IsARealKingdom()
+    {
+        var kingdoms = CultureDataFixture.KingdomIds();
+
+        var unknown = ShippedRelationships().SelectMany(r => new[] { r.KingdomA, r.KingdomB })
+            .Where(id => !kingdoms.Contains(id)).Distinct().OrderBy(id => id).ToList();
+
+        Assert.AreEqual(0, unknown.Count, $"diplomacy.json names ids that are no kingdom: {string.Join(", ", unknown)}");
+    }
+
+    // Dunland ("empire") fights Rohan for Isengard. A Hostile row with Gondor ("empire_w") made Full War
+    // declare that war and block its peace in every campaign.
+    [TestMethod]
+    public void ShippedConfig_Dunland_IsNotHostileToGondor()
+    {
+        var dunlandFoes = HostileTo(ShippedRelationships(), "empire");
+
+        Assert.IsTrue(dunlandFoes.Contains("vlandia"), "Dunland lost its Hostile row with Rohan");
+        Assert.IsFalse(dunlandFoes.Contains("empire_w"), "Dunland is Hostile to Gondor again");
+    }
+
     // Arthedain and Ered Luin, the free realms added after the core seven, carry the same Hostile rows.
     [DataTestMethod]
     [DataRow("arthedain")]

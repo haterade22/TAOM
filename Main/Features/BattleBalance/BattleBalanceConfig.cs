@@ -6,6 +6,17 @@ public class BattleBalanceConfig
 {
     public TroopPowerSection TroopPower { get; set; } = new();
     public CasualtyRatiosSection CasualtyRatios { get; set; } = new();
+    public AutoResolveSection AutoResolve { get; set; } = new();
+
+    /// <summary>Auto-resolve tuning (#1283). See <see cref="AutoResolveQualityMath"/>.</summary>
+    public class AutoResolveSection
+    {
+        /// <summary>
+        /// The exponent of the striker-to-struck power ratio in a simulated strike, in [0, 1]. Vanilla is 0.7, which makes a
+        /// side's strength N^1.6 x P^1.4; 0.5 makes it N^1.6 x P^1.0, so numbers outweigh quality. 0 ignores quality.
+        /// </summary>
+        public float PowerRatioExponent { get; set; } = 0.5f;
+    }
 
     public class TroopPowerSection
     {
@@ -29,11 +40,12 @@ public class BattleBalanceConfig
         {
             ["gondor"] = 0.3f,    ["vlandia"] = 0.2f,    ["lothlorien"] = 0.5f,
             ["erebor"] = 0.3f,    ["rivendell"] = 0.4f,  ["lindon"] = 0.4f,
+            ["mirkwood"] = 0.4f,
             ["arthedain"] = 0.3f, ["cardolan"] = 0.3f,  ["rhudaur"] = 0.2f,
             ["eredluin"] = 0.3f,
             ["anduinvale"] = 0.1f, ["angaladh"] = 0.1f,
             ["dorwinion"] = 0.1f, ["southrhovanion"] = 0.2f,
-            ["mordor"] = -0.2f,   ["gundabad"] = -0.1f,  ["dolguldur"] = -0.1f
+            ["gundabad"] = -0.1f,  ["dolguldur"] = -0.1f
         };
 
         public float GetCulturalSurvivalBonus(string cultureId) =>

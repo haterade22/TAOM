@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
-"""Unit tests for equipment-driven weapon specialization in
-tools/rebalance_troops.py + the item-class registry in tools/taom_schema.py.
+"""Unit tests for the equipment-driven role table in tools/rebalance_troops.py + the item-class
+registry in tools/taom_schema.py.
 
 Run:  python -m unittest discover -s tools/tests -p "test_*.py"
   or:  python tools/tests/test_rebalance_equipment.py
@@ -22,6 +22,7 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 import rebalance_troops as rb  # noqa: E402
 import taom_schema as ts       # noqa: E402
+import troop_purpose as tp     # noqa: E402
 
 
 class ItemClassRegistryTests(unittest.TestCase):
@@ -80,156 +81,110 @@ class WeaponClassExtractionTests(unittest.TestCase):
         self.assertEqual(wc, {"Crossbow", "Bolts", "OneHanded"})
 
 
-class CrossbowSwapTests(unittest.TestCase):
-    """The Bow<->Crossbow swap must fire on EQUIPMENT, not name."""
+def _kit(*sets):
+    return tp.kit_of([{f"Item{i}": c for i, c in enumerate(s)} for s in sets])
 
-    def test_sharpshooter_with_crossbow_swaps(self):
+
+class CrossbowTests(unittest.TestCase):
+    """Bow against Crossbow follows the EQUIPMENT, never the name (#340)."""
+
+    def test_sharpshooter_with_crossbow_is_crossbow_top(self):
         # The reported bug: "Sharpshooter" (no crossbow keyword) carrying a crossbow.
-        skills = rb.calculate_skills(
-            "gondor", 31, "Ranged", "tol_sharpshooter", "Tolfalas Sharpshooter",
-            weapon_classes={"Crossbow", "Bolts", "OneHanded"})
-        self.assertGreater(skills["Crossbow"], skills["Bow"],
-                           "crossbow-armed troop must be Crossbow-top")
+        skills = rb.calculate_skills("gondor", 31, "tol_sharpshooter", _kit(("Crossbow", "Bolts", "OneHanded")))
+        self.assertGreater(skills["Crossbow"], skills["Bow"], "crossbow-armed troop must be Crossbow-top")
 
-    def test_crossbowman_named_troop_with_bow_does_not_swap(self):
-        # Name says crossbow, equipment says bow -> equipment wins, no swap.
-        skills = rb.calculate_skills(
-            "gondor", 31, "Ranged", "x_crossbowman", "Crossbowman",
-            weapon_classes={"Bow", "Arrows"})
+    def test_crossbowman_named_troop_with_bow_is_bow_top(self):
+        skills = rb.calculate_skills("gondor", 31, "x_crossbowman", _kit(("Bow", "Arrows")))
         self.assertGreater(skills["Bow"], skills["Crossbow"])
 
-    def test_name_fallback_without_equipment_data(self):
-        # weapon_classes=None (no game install) -> name keywords still work.
-        skills = rb.calculate_skills(
-            "gondor", 31, "Ranged", "x_crossbowman", "Crossbowman", weapon_classes=None)
-        self.assertGreater(skills["Crossbow"], skills["Bow"])
-
-    def test_naffatun_keyword_removed_from_fallback(self):
-        # 'naffatun' wrongly swapped javelin throwers; it must not fire by name.
-        skills = rb.calculate_skills(
-            "rhun", 31, "Ranged", "sagarun_naffatun", "Naffatun",
-            weapon_classes={"OneHanded", "Throwing"})
-        self.assertGreater(skills["Bow"], skills["Crossbow"])
+    def test_a_thrower_carrying_no_launcher_leads_with_neither(self):
+        # 'naffatun' once swapped javelin throwers by name; with no launcher both are uncarried.
+        skills = rb.calculate_skills("rhun", 31, "sagarun_naffatun", _kit(("Throwing", "OneHanded")))
+        self.assertEqual(skills["Bow"], skills["Crossbow"])
 
 
-class MeleeSanitySwapTests(unittest.TestCase):
-    """A two-hander-only troop must not have Polearm as top melee skill."""
+class MeleeTests(unittest.TestCase):
+    """A two-hander-only troop must not have Polearm as top melee skill (#341)."""
 
-    def test_knight_with_two_hander_swaps(self):
+    def test_knight_with_two_hander_is_two_hander_top(self):
         # The reported bug: cavalry "Hill-Knight" carrying only a 2H sword.
-        base = rb.CAVALRY_BASELINES[41]
-        self.assertGreater(base["Polearm"], base["TwoHanded"],
-                           "precondition: cavalry baseline is polearm-biased")
-        skills = rb.calculate_skills(
-            "gondor", 41, "Cavalry", "arn_hill_knight", "Arndir Hill-Knight",
-            weapon_classes={"TwoHanded"})
+        skills = rb.calculate_skills("gondor", 41, "arn_hill_knight", _kit(("TwoHanded",)), mounted=True)
         self.assertGreater(skills["TwoHanded"], skills["Polearm"])
 
-    def test_swap_is_total_preserving(self):
-        with_swap = rb.calculate_skills(
-            "gondor", 41, "Cavalry", "arn_hill_knight", "Arndir Hill-Knight",
-            weapon_classes={"TwoHanded"})
-        without = rb.calculate_skills(
-            "gondor", 41, "Cavalry", "arn_hill_knight", "Arndir Hill-Knight",
-            weapon_classes=None)
-        self.assertEqual(sorted(with_swap.values()), sorted(without.values()))
-
-    def test_mixed_carrier_untouched(self):
-        # Carries both a 2H and a polearm -> baseline ordering stands.
-        skills = rb.calculate_skills(
-            "gondor", 41, "Cavalry", "t", "Mixed Guard",
-            weapon_classes={"TwoHanded", "Polearm"})
+    def test_mixed_carrier_follows_item0(self):
+        skills = rb.calculate_skills("gondor", 41, "t", _kit(("Polearm", "TwoHanded")), mounted=True)
         self.assertGreater(skills["Polearm"], skills["TwoHanded"])
 
-    def test_polearm_carrier_untouched(self):
-        skills = rb.calculate_skills(
-            "gondor", 41, "Cavalry", "t", "Lancer",
-            weapon_classes={"Polearm", "OneHanded", "Shield"})
+    def test_polearm_carrier(self):
+        skills = rb.calculate_skills("gondor", 41, "t", _kit(("Polearm", "OneHanded", "Shield")), mounted=True)
         self.assertGreater(skills["Polearm"], skills["TwoHanded"])
 
     def test_idempotent(self):
-        # The swap condition (Polearm > TwoHanded) is false after swapping, so
-        # recomputing from the same inputs yields the same output.
-        a = rb.calculate_skills("gondor", 41, "Cavalry", "t", "Knight",
-                                weapon_classes={"TwoHanded"})
-        b = rb.calculate_skills("gondor", 41, "Cavalry", "t", "Knight",
-                                weapon_classes={"TwoHanded"})
+        a = rb.calculate_skills("gondor", 41, "t", _kit(("TwoHanded",)), mounted=True)
+        b = rb.calculate_skills("gondor", 41, "t", _kit(("TwoHanded",)), mounted=True)
         self.assertEqual(a, b)
-        self.assertGreater(a["TwoHanded"], a["Polearm"])
+
+    def test_no_name_is_read(self):
+        # A "Spearman" holding a sword once took 15 points onto a spear he did not hold (#343).
+        sword = _kit(("OneHanded", "Shield"))
+        self.assertEqual(rb.calculate_skills("gondor", 31, "gondor_x_spearman", sword),
+                         rb.calculate_skills("gondor", 31, "gondor_x_guard", sword))
 
 
-if __name__ == "__main__":
-    unittest.main()
-class ThrowingArcherParityTests(unittest.TestCase):
-    """A troop whose ONLY ranged option is a thrown weapon takes the Bow curve on
-    Throwing (#554). The sibling Bow<->Crossbow swap above shipped with four tests
-    and this rule shipped with none, which is how the deep review found it."""
+class PurposeFormulaTests(unittest.TestCase):
+    """calculate_skills follows the kit (#343): the Item0 class takes the troop's highest melee or
+    launcher value."""
 
-    def test_thrown_primary_troop_takes_the_ranged_bow_curve(self):
-        skills = rb.calculate_skills(
-            "gondor", 26, "Infantry", "gondor_har_javelineer", "Harondor Javelineer",
-            weapon_classes={"Throwing", "OneHanded", "Shield"})
-        expected = rb.RANGED_BASELINES[26]["Bow"] + rb.CULTURAL_MODS["gondor"].get("Bow", 0)
-        self.assertEqual(skills["Throwing"], expected)
+    def test_a_sword_troop_of_a_polearm_culture_keeps_its_sword_on_top(self):
+        self.assertGreater(rb.CULTURE_PCT["rohan"]["Polearm"], rb.CULTURE_PCT["rohan"]["OneHanded"], "precondition")
+        s = rb.calculate_skills("rohan", 26, "rohan_x_guard", _kit(("OneHanded", "Shield")))
+        self.assertGreater(s["OneHanded"], s["Polearm"])
 
-    def test_parity_reaches_past_the_troops_own_group_table(self):
-        # The point of the rule: an Infantry troop's own Bow column is 15-25, so there
-        # is no ranged number in its own table to swap. Guards a regression to s["Bow"].
-        base = rb.INFANTRY_BASELINES[26]
-        skills = rb.calculate_skills(
-            "gondor", 26, "Infantry", "gondor_har_javelineer", "Harondor Javelineer",
-            weapon_classes={"Throwing", "OneHanded"})
-        self.assertGreater(skills["Throwing"], base["Throwing"])
-        self.assertGreater(skills["Throwing"], skills["Bow"])
+    def test_an_archer_with_a_two_hander_fights_with_its_second_skill(self):
+        s = rb.calculate_skills("rivendell", 31, "x_archer", _kit(("Bow", "Arrows", "TwoHanded")))
+        self.assertGreater(s["TwoHanded"], s["OneHanded"])
+        self.assertGreater(s["Bow"], s["TwoHanded"])
 
-    def test_borrowed_value_carries_the_bow_modifier_not_the_throwing_one(self):
-        # rhun is the discriminating culture: Bow -10, Throwing -5. Taking the wrong
-        # modifier yields 200 instead of 195 and no other test would notice.
-        self.assertEqual(rb.CULTURAL_MODS["rhun"]["Bow"], -10)
-        self.assertEqual(rb.CULTURAL_MODS["rhun"]["Throwing"], -5)
-        skills = rb.calculate_skills(
-            "rhun", 31, "Infantry", "sagarun_naffatun", "Sagarun Naffatun",
-            weapon_classes={"Throwing", "OneHanded"})
-        self.assertEqual(skills["Throwing"], rb.RANGED_BASELINES[31]["Bow"] - 10)
+    def test_alternative_side_weapons_tie_on_the_curve_too(self):
+        # One set carries a two handed sword where the other carries a one handed sword: both
+        # take the higher value, so --apply cannot undo what --fix-purpose writes.
+        s = rb.calculate_skills("lothlorien", 31, "x_archer",
+                                _kit(("Bow", "Arrows", "TwoHanded"), ("Bow", "Arrows", "OneHanded")))
+        self.assertEqual(s["TwoHanded"], s["OneHanded"])
+
+    def test_the_result_is_a_fixed_point_of_the_purpose_rule(self):
+        kit = _kit(("Polearm", "Shield", "OneHanded"), ("OneHanded", "Shield"))
+        s = rb.calculate_skills("dale", 36, "t", kit)
+        self.assertEqual(tp.tie_raise(tp.purpose_skills(s, kit), kit), s)
+        self.assertEqual(tp.kit_mismatches(s, kit), [])
+
+
+class ThrowerTests(unittest.TestCase):
+    """A troop whose ONLY ranged option is a thrown weapon takes the main number on Throwing
+    (#554). The trigger is an explicit id set (THROWN_PRIMARY_TROOP_IDS)."""
+
+    def test_thrown_primary_troop_takes_the_main_number(self):
+        s = rb.calculate_skills("gondor", 26, "gondor_har_javelineer", _kit(("OneHanded", "Throwing", "Shield")))
+        self.assertEqual(s["Throwing"], rb.round5(130 * rb.Fraction(95, 100)))
 
     def test_rule_does_not_fire_for_a_troop_outside_the_set(self):
-        # 87 other troops carry a thrown weapon. Until the Armory install is repaired
-        # (#555) the trigger is an explicit id set, so they must be untouched.
         self.assertNotIn("gondor_pel_anchor_guard", rb.THROWN_PRIMARY_TROOP_IDS)
-        skills = rb.calculate_skills(
-            "gondor", 26, "Infantry", "gondor_pel_anchor_guard", "Anchor Guard",
-            weapon_classes={"Throwing", "Polearm"})
-        expected = rb.INFANTRY_BASELINES[26]["Throwing"] + rb.CULTURAL_MODS["gondor"]["Throwing"]
-        self.assertEqual(skills["Throwing"], expected)
+        s = rb.calculate_skills("gondor", 26, "gondor_pel_anchor_guard", _kit(("Polearm", "Throwing")))
+        self.assertEqual(s["Throwing"], rb.round5(130 * rb.SIDEARM * rb.Fraction(95, 100)))
 
     def test_rule_stays_silent_when_the_javelin_did_not_classify(self):
-        # The crippled-registry case (#555): LOTRLOME_Armory ModuleData is empty on some
-        # installs, so a weapon can fail to classify. The rule must no-op rather than
+        # The crippled-registry case (#555): a weapon can fail to classify. The rule must not
         # write a number derived from a registry it could not read.
-        baseline = rb.INFANTRY_BASELINES[26]["Throwing"] + rb.CULTURAL_MODS["gondor"]["Throwing"]
-        for classes in ({"OneHanded"}, set(), None):
-            skills = rb.calculate_skills(
-                "gondor", 26, "Infantry", "gondor_har_javelineer", "Harondor Javelineer",
-                weapon_classes=classes)
-            self.assertEqual(skills["Throwing"], baseline,
-                             "rule fired with weapon_classes=%r" % (classes,))
+        s = rb.calculate_skills("gondor", 26, "gondor_har_javelineer", _kit(("OneHanded",)))
+        self.assertEqual(s["Throwing"], rb.round5(130 * rb.UNCARRIED_RANGED))
 
-    def test_every_thrown_primary_id_has_a_ranged_baseline_for_its_level(self):
-        # RANGED_BASELINES has no level 1 row while INFANTRY_BASELINES does, and the
-        # lookup fails soft. A level-1 thrown-primary troop would lose the rule with no
-        # error. This also catches an id renamed out from under the set.
-        levels = {}
+    def test_every_thrown_primary_id_names_a_troop(self):
+        # Catches an id renamed out from under the set.
+        ids = set()
         for path in sorted(Path(rb.TROOPS_DIR).glob("troops_*.xml")):
-            for npc in ET.parse(str(path)).getroot().iter("NPCCharacter"):
-                if npc.get("id") in rb.THROWN_PRIMARY_TROOP_IDS:
-                    levels[npc.get("id")] = int(npc.get("level"))
-        missing = sorted(set(rb.THROWN_PRIMARY_TROOP_IDS) - set(levels))
-        self.assertEqual(missing, [],
-                         "THROWN_PRIMARY_TROOP_IDS names a troop no file defines: %s" % missing)
-        for tid, level in sorted(levels.items()):
-            self.assertIn(level, rb.RANGED_BASELINES,
-                          "%s is level %d, which RANGED_BASELINES has no row for, so the "
-                          "archer-parity rule would silently no-op" % (tid, level))
+            ids.update(n.get("id") for n in ET.parse(str(path)).getroot().iter("NPCCharacter"))
+        missing = sorted(set(rb.THROWN_PRIMARY_TROOP_IDS) - ids)
+        self.assertEqual(missing, [], "THROWN_PRIMARY_TROOP_IDS names a troop no file defines: %s" % missing)
 
 
 class RespecializationExemptionMirrorTests(unittest.TestCase):
@@ -279,3 +234,7 @@ class RespecializationExemptionMirrorTests(unittest.TestCase):
             "The set of upgrade edges allowed to drop a parent skill changed. Each entry "
             "suppresses a real ladder regression, so add one only with a recorded reason "
             "and update this assertion deliberately.")
+
+
+if __name__ == "__main__":
+    unittest.main()

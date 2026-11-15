@@ -358,13 +358,13 @@ public sealed partial class RealmsService
     }
 
     /// <summary>
-    /// Adds the titular realms and unions in the config that this campaign's titles do not have yet (a save made before
+    /// Adds the unions and titular realms in the config that this campaign's titles do not have yet (a save made before
     /// they existed), putting a union's member titles under it. Returns how many titles were added.
     /// </summary>
     public int AddMissingTitles(List<string> warnings)
     {
-        var titular = Generation.TitleGenerator.WithTitularRealms(Catalog.All, Ledger, Config, warnings);
-        var definitions = Generation.TitleGenerator.WithUnions(titular, Ledger, Config, warnings);
+        var unions = Generation.TitleGenerator.WithUnions(Catalog.All, Ledger, Config, warnings);
+        var definitions = Generation.TitleGenerator.WithTitularRealms(unions, Ledger, Config, warnings);
         var added = definitions.Count - Catalog.Count;
         if (added <= 0)
             return 0;

@@ -94,6 +94,17 @@ class SelectionTests(unittest.TestCase):
         self.assertIn("armory-refs", ids)
         self.assertIn("polearm-shield", ids)
 
+    def test_a_weapon_description_sheet_or_the_couch_spec_selects_the_couch_gate(self):
+        sheet = LIVE_ARMORY.rsplit("/LOTRLOME_items", 1)[0] + "/weapon_descriptions.xslt"
+        for path in (sheet, "tools/couch_brace_polearms.json", "tools/register_couch_brace_polearms.py"):
+            self.assertIn("couch-brace", _ids(dg.select(dg.GATES, [path])), path)
+        self.assertNotIn("couch-brace", _ids(dg.select(dg.GATES, [TROOPS])))
+
+    def test_the_couch_gate_runs_check_and_watches_the_sibling_tool_it_imports(self):
+        gate = next(g for g in dg.GATES if g.id == "couch-brace")
+        self.assertEqual(gate.cmd, ("python", "tools/register_couch_brace_polearms.py", "--check"))
+        self.assertIn("couch-brace", _ids(dg.select(dg.GATES, ["tools/register_one_handed_polearms.py"])))
+
     def test_the_action_files_the_mbproj_audit_reads_select_it(self):
         for name in ("project.mbproj", "action_sets.xml", "action_types.xml"):
             path = f"Main/_Module/ModuleData/{name}"
@@ -173,9 +184,69 @@ class SelectionTests(unittest.TestCase):
     def test_the_troop_id_baseline_selects_moduledata(self):
         self.assertIn("moduledata", _ids(dg.select(dg.GATES, ["tools/shipped_troop_ids.txt"])))
 
+    def test_the_tools_the_enlistment_rank_rule_reads_select_moduledata(self):
+        for path in ("tools/generate_enlistment_rosters.py", "tools/melee_catalogue.py",
+                     "tools/analyze_melee_ladder.py", "tools/ranged_ladder.py"):
+            self.assertIn("moduledata", _ids(dg.select(dg.GATES, [path])), path)
+
     def test_the_lord_skill_sets_and_their_generator_select_generator_regions(self):
         for path in ("Main/_Module/ModuleData/taom_lord_skill_sets.xml", "tools/apply_culture_skills_traits.py"):
             self.assertIn("generator-regions", _ids(dg.select(dg.GATES, [path])), path)
+
+    def test_the_placeholder_inputs_select_the_placeholder_verify_gate(self):
+        """The placeholders are priced from the donors' blades, the carriers' tiers and the class
+        limits, so a change to any of them can leave a generated file stale (2026-11-14, #1271)."""
+        gate = next(g for g in dg.GATES if g.id == "placeholder-weapons")
+        self.assertEqual(gate.cmd, ("python", "tools/generate_placeholder_weapons.py", "--verify"))
+        for path in ("Main/_Module/ModuleData/placeholder_weapons/ph_items.xml",
+                     "Main/_Module/ModuleData/placeholder_weapons/ph_weapon_descriptions.xslt",
+                     "tools/placeholder_weapons.json", "tools/melee_ladders.json",
+                     "tools/generate_placeholder_weapons.py", "tools/melee_ladder.py", "tools/melee_damage.py",
+                     "tools/melee_catalogue.py", "tools/restat_melee_blades.py", "tools/fix_melee_ladder.py",
+                     "Main/_Module/ModuleData/troops/troops_gondor.xml", LIVE_ARMORY):
+            self.assertIn("placeholder-weapons", _ids(dg.select(dg.GATES, [path])), path)
+
+    def test_an_unrelated_tool_does_not_select_the_placeholder_verify_gate(self):
+        self.assertNotIn("placeholder-weapons", _ids(dg.select(dg.GATES, ["tools/data_gates.py"])))
+
+    def test_the_armour_curve_selects_every_generated_armour_check(self):
+        """generate_lothlorien_armor.py and generate_snow_orc_armor.py write item stats through
+        rebalance_armor.calculate_stats, so a change to the curve stales both live item sets."""
+        selected = dg.select(dg.GATES, ["tools/rebalance_armor.py"])
+        commands = [g.cmd for g in selected]
+        self.assertIn(("python", "tools/generate_lothlorien_armor.py", "--check"), commands)
+        self.assertIn(("python", "tools/generate_snow_orc_armor.py", "--check"), commands)
+
+    def test_the_armour_restat_check_reads_the_curve_the_roster_map_and_any_live_armour_file(self):
+        """A reinstall or a restat from a stale checkout reverts every value and loot table to the old curve,
+        and no other gate compares the live Armory with it."""
+        gate = next(g for g in dg.GATES if g.id == "armour-restat")
+        self.assertEqual(gate.cmd, ("python", "tools/rebalance_armor.py", "--check"))
+        live_arm = LIVE_ARMORY.replace("weapons.xml", "arm_armors.xml")
+        for path in ("tools/rebalance_armor.py", "tools/data/armor_roster_tiers.json",
+                     "tools/generate_lothlorien_armor.py", "tools/generate_snow_orc_armor.py", live_arm):
+            self.assertIn("armour-restat", _ids(dg.select(dg.GATES, [path])), path)
+        self.assertNotIn("armour-restat", _ids(dg.select(dg.GATES, [TROOPS])))
+        self.assertIn("--apply", gate.note)
+        self.assertIn("backup tag", gate.note)
+        self.assertIn("merge trunk", gate.note)
+        self.assertEqual(dg.verdict(2, "ERROR: SKIPPED, LOTRLOME_Armory is not installed")[0], "NOT RUN")
+        self.assertEqual(dg.verdict(2, "ERROR: SKIPPED, no armour file was read; nothing was checked")[0], "NOT RUN")
+        self.assertEqual(dg.verdict(1, "12 item(s) differ from the curve")[0], "FAIL")
+
+    def test_the_armour_cover_flags_gate_reads_the_spec_the_tool_and_any_live_armour_file(self):
+        """A reinstall resets the cover attributes of every armour slot, so the spec, its tool, a generator and
+        a named live Armory file all select the check, and exit 2 (no install) is NOT RUN."""
+        gate = next(g for g in dg.GATES if g.id == "armour-cover-flags")
+        self.assertEqual(gate.cmd, ("python", "tools/apply_armour_cover_flags.py", "--check"))
+        live_head = LIVE_ARMORY.replace("weapons.xml", "head_armors.xml")
+        live_legs = LIVE_ARMORY.replace("weapons.xml", "leg_armors.xml")
+        for path in ("tools/armour_cover_flags.json", "tools/apply_armour_cover_flags.py",
+                     "tools/generate_dale_armor.py", live_head, live_legs):
+            self.assertIn("armour-cover-flags", _ids(dg.select(dg.GATES, [path])), path)
+        self.assertNotIn("armour-cover-flags", _ids(dg.select(dg.GATES, [TROOPS])))
+        self.assertEqual(dg.verdict(2, "ERROR: SKIPPED, LOTRLOME_Armory is not installed")[0], "NOT RUN")
+        self.assertEqual(dg.verdict(1, "DRIFT ...")[0], "FAIL")
 
     def test_a_prefab_selects_the_sprite_test(self):
         selected = dg.select(dg.GATES, ["Main/_Module/GUI/PreFabs/X.xml"])

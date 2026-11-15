@@ -85,7 +85,7 @@ public static class TitleGenerator
         if (config.IncludeVillages)
             AddLordships(fiefs, definitions, ledger, warnings);
 
-        var catalog = new TitleCatalog(WithUnions(WithTitularRealms(definitions, ledger, config, warnings), ledger, config, warnings));
+        var catalog = new TitleCatalog(WithTitularRealms(WithUnions(definitions, ledger, config, warnings), ledger, config, warnings));
         warnings.AddRange(catalog.Problems);
         return new GenerationResult(catalog, ledger, warnings);
     }
@@ -131,7 +131,8 @@ public static class TitleGenerator
     /// <summary>
     /// The titles with the configured titular realms added that are not there yet (<see cref="TitularRealmConfig.TitleId"/>):
     /// each a vacant Kingdom title of no kingdom of the game, under its liege title when that exists and outranks a
-    /// kingdom. A realm whose lands title is missing is skipped. Titles already present are kept as they are.
+    /// kingdom. Unions are made first, so a union can be its liege (Durin's Folk over Khazad-dûm); a titular realm is
+    /// never a union member. A realm whose lands title is missing is skipped. Titles already present are kept as they are.
     /// </summary>
     public static List<TitleDefinition> WithTitularRealms(IEnumerable<TitleDefinition> titles, TitleLedger ledger, RealmsConfig config, List<string> warnings)
     {

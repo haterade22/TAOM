@@ -1,13 +1,14 @@
 #!/usr/bin/env python3
 """The elite (veteran) militia stand a step above the basic militia.
 
-Every militia slot a culture binds takes the level-21 baseline whatever the troop's level, which
-is deliberate (militia are siege and village defenders). Until 2026-09-13 the four slots shared
-it exactly, so a culture's militia archer (level 11) and veteran militia archer (level 16) had
-the same eight skills, and the party screen showed a promotion that changed nothing. The elite
-slots (`melee_elite_militia_troop`, `ranged_elite_militia_troop`, `elite_militia_troop`) now add
-MILITIA_ELITE_BONUS to every skill before cultural modifiers, and the binding reader keeps the
-elite ids apart from the basic ones so the bonus follows the binding, never the name.
+Every militia slot a culture binds takes the tier 4 row of the role table whatever the troop's
+level, which is deliberate (militia are siege and village defenders). Until 2026-09-13 the four
+slots shared it exactly, so a culture's militia archer (level 11) and veteran militia archer
+(level 16) had the same eight skills, and the party screen showed a promotion that changed
+nothing. The elite slots (`melee_elite_militia_troop`, `ranged_elite_militia_troop`,
+`elite_militia_troop`) now add MILITIA_ELITE_BONUS to every skill, and the binding reader keeps
+the elite ids apart from the basic ones so the bonus follows the binding, never the name. An
+archer's launcher is its ladder cell by its own tier, and its other weapons read that launcher.
 
 Run:  python -m unittest tools.tests.test_militia_elite_bonus
 """
@@ -19,6 +20,10 @@ import unittest
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 import rebalance_troops as rb  # noqa: E402
+import troop_purpose as tp     # noqa: E402
+
+ARCHER = tp.kit_of([{"Item0": "Bow", "Item1": "Arrows", "Item2": "OneHanded"}])
+SPEARMAN = tp.kit_of([{"Item0": "Polearm", "Item1": "Shield"}])
 
 
 class EliteMilitiaBindingTests(unittest.TestCase):
@@ -62,29 +67,43 @@ class EliteMilitiaBonusTests(unittest.TestCase):
     def test_the_veteran_is_the_basic_militia_plus_the_bonus_on_every_skill(self):
         self.assertIn("gondor_militia_veteran_archer", rb.elite_militia_troop_ids())
         self.assertNotIn("gondor_militia_archer", rb.elite_militia_troop_ids())
-        basic = rb.calculate_skills("gondor", 11, "Ranged", "gondor_militia_archer", "Gondor Militia Archer",
-                                    weapon_classes={"Bow", "Arrows", "OneHanded"})
-        vet = rb.calculate_skills("gondor", 16, "Ranged", "gondor_militia_veteran_archer",
-                                  "Gondor Veteran Militia Archer", weapon_classes={"Bow", "Arrows", "OneHanded"})
+        basic = rb.calculate_skills("gondor", 11, "gondor_militia_archer", ARCHER)
+        vet = rb.calculate_skills("gondor", 16, "gondor_militia_veteran_archer", ARCHER)
         self.assertTrue(10 <= rb.MILITIA_ELITE_BONUS <= 20, "the user asked for 10 to 20")
         for skill in rb.SKILL_NAMES:
-            self.assertEqual(vet[skill], basic[skill] + rb.MILITIA_ELITE_BONUS, skill)
+            if skill == "OneHanded":   # the archer's sword reads its bow
+                self.assertEqual(vet[skill], rb.floor5(vet["Bow"] * rb.ARCHER_SIDEARM), skill)
+            else:
+                self.assertEqual(vet[skill], basic[skill] + rb.MILITIA_ELITE_BONUS, skill)
 
     def test_the_melee_elite_slot_gets_the_same_step(self):
-        basic = rb.calculate_skills("gondor", 11, "Infantry", "gondor_militia_spearman", "Gondor Militia Spearman",
-                                    weapon_classes={"Polearm", "Shield"})
-        vet = rb.calculate_skills("gondor", 16, "Infantry", "gondor_militia_veteran_spearman",
-                                  "Gondor Veteran Militia Spearman", weapon_classes={"Polearm", "Shield"})
+        basic = rb.calculate_skills("gondor", 11, "gondor_militia_spearman", SPEARMAN)
+        vet = rb.calculate_skills("gondor", 16, "gondor_militia_veteran_spearman", SPEARMAN)
         for skill in rb.SKILL_NAMES:
             self.assertEqual(vet[skill], basic[skill] + rb.MILITIA_ELITE_BONUS, skill)
 
     def test_every_culture_on_disk_carries_the_step(self):
         """Against the committed troop files: each elite militia sits exactly the bonus above its
         basic sibling on every skill the sibling has above the floor (a basic skill floored at 0
-        hides part of the step, so there only 0 < diff <= bonus is provable)."""
+        hides part of the step, so there only 0 < diff <= bonus is provable). An archer's weapon
+        skills read its launcher's ladder cell, which steps by tier, so for an archer they only
+        may not fall. The role table reads the kit, so where the two carry different weapons of a
+        kind, the values of that kind only may not fall either."""
         sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
         import re
+        import xml.etree.ElementTree as ET
+        from pathlib import Path
         import ranged_ladder as rl
+        import taom_schema as ts
+        if not os.path.isdir(rb.DEFAULT_GAME_MODULES):
+            self.skipTest("game install not found: %s" % rb.DEFAULT_GAME_MODULES)
+        classes = ts.build_item_class_registry(rb.MODULEDATA_DIR, rb.DEFAULT_GAME_MODULES)
+        npcs = {n.get("id"): n for path in sorted(Path(rb.TROOPS_DIR).glob("troops_*.xml"))
+                for n in ET.parse(str(path)).getroot().iter("NPCCharacter")}
+
+        def carried(tid):
+            kit, _ = rb.troop_kit(npcs[tid], classes)
+            return {c for c in tp.WEAPON_CLASSES if kit.counts.get(c)}
         troops = rl.load_ranged_troops()
         spec = rl.load_spec()
         elite = rb.elite_militia_troop_ids()
@@ -102,16 +121,32 @@ class EliteMilitiaBonusTests(unittest.TestCase):
             self.assertIn(basic_id, troops, vet_id)
             vet, basic = troops[vet_id].skills, troops[basic_id].skills
             owned = ladder_skills(troops[vet_id]) | ladder_skills(troops[basic_id])
+            if owned:
+                owned |= set(tp.WEAPON_CLASSES)
+            differ = carried(vet_id) ^ carried(basic_id)
             for skill in sorted(owned):
                 for t in (troops[vet_id], troops[basic_id]):
                     if skill in ladder_skills(t):
                         line = rl.line_of(t, spec)
                         self.assertEqual(t.skills.get(skill, 0), rl.skill_cell(line, t.tier, spec), f"{t.id} {skill}")
                 self.assertGreaterEqual(vet.get(skill, 0), basic.get(skill, 0), f"{vet_id} {skill}")
-            for skill in rb.SKILL_NAMES:
-                if skill in owned:
+            # The purpose order (#343) deals each troop's melee and launcher values to its own kit,
+            # and a veteran may carry a sword its basic sibling does not: the step holds per kind.
+            pairs = []
+            for kind in (tp.MELEE, tp.LAUNCHERS):
+                if differ & set(kind):
                     continue
-                b, v = basic.get(skill, 0), vet.get(skill, 0)
+                same = [c for c in kind if c not in owned]
+                pairs += zip([f"{kind[0]} kind"] * len(same),
+                             sorted(basic.get(c, 0) for c in same),
+                             sorted(vet.get(c, 0) for c in same))
+            pairs += [(s, basic.get(s, 0), vet.get(s, 0)) for s in rb.SKILL_NAMES
+                      if s not in owned and s not in differ and s not in tp.MELEE + tp.LAUNCHERS]
+            # And no single class falls on the step up.
+            for c in tp.WEAPON_CLASSES:
+                if c not in owned:
+                    self.assertGreaterEqual(vet.get(c, 0), basic.get(c, 0), f'{vet_id} {c}')
+            for skill, b, v in pairs:
                 if b >= rb.MILITIA_ELITE_BONUS:
                     self.assertEqual(v, b + rb.MILITIA_ELITE_BONUS, f"{vet_id} {skill}")
                 else:
@@ -135,9 +170,8 @@ class EliteMilitiaBonusTests(unittest.TestCase):
             rb._elite_militia_ids_cache.clear(); rb._elite_militia_ids_cache.update(saved[1])
 
     def test_a_line_troop_at_the_same_level_is_untouched(self):
-        line = rb.calculate_skills("gondor", 16, "Ranged", "gondor_brv_bowman", "Blackroot Vale Bowman",
-                                   weapon_classes={"Bow", "Arrows", "OneHanded"})
-        self.assertEqual(line["Bow"], rb.RANGED_BASELINES[16]["Bow"] + rb.CULTURAL_MODS["gondor"].get("Bow", 0))
+        line = rb.calculate_skills("gondor", 16, "gondor_brv_bowman", ARCHER)
+        self.assertEqual(line["Bow"], rb.TIER_CURVE[3])   # its own tier, not the militia row
 
 
 if __name__ == "__main__":

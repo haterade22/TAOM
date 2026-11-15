@@ -81,13 +81,16 @@ A culture with no row gets nothing. There is no fallback culture.
 
 ### battle_balance_config.json
 
-<!-- engine-ref type="TAOM.Features.BattleBalance.BattleBalanceConfigProvider" file="Main/Features/BattleBalance/BattleBalanceConfigProvider.cs" lines="59-90" -->
+<!-- engine-ref type="TAOM.Features.BattleBalance.BattleBalanceConfigProvider" file="Main/Features/BattleBalance/BattleBalanceConfigProvider.cs" lines="58-146" -->
 
 | Field | Type | Required | Default when absent | What it does | Read at (file:line) |
 |---|---|---|---|---|---|
-| `TroopPower.TierPower.T0` to `T10` | float | no | `(2 + tier) * (10 + tier) * 0.02` | Base military power of a troop at that tier. Legal `[0.01, 1000]`, else reverts to the compiled default with a warning | `BattleBalanceConfigProvider.cs:66`, `BattleBalanceConfig.cs:20` |
+| `TroopPower.TierPower.T0` to `T10` | float | no | The compiled value (T7 to T10: 2.91, 3.26, 3.61, 3.96); `(2 + tier) * (10 + tier) * 0.02` for a tier with no compiled row (T11 and up) | Base military power of a troop at that tier. Legal `[0.01, 1000]`, else reverts to the compiled value with a warning; a bad tier with no compiled row is removed, so the formula decides | `BattleBalanceConfigProvider.cs:107-108, 122-146`, `BattleBalanceConfig.cs:20` |
 | `CasualtyRatios.EnableCulturalSurvivalBonuses` | bool | no | `true` | Second gate on the culture bonuses below | `Hooks/SurvivalChanceLine.cs` (`Apply`) |
-| `CasualtyRatios.CulturalSurvivalBonuses.<cultureId>` | float | no | 0 | `newDeathChance = vanillaDeathChance * (1 - bonus)`. Legal `[-1, 1]`, else reverts to 0 with a warning | `BattleBalanceConfigProvider.cs:82-85` |
+| `CasualtyRatios.CulturalSurvivalBonuses.<cultureId>` | float | no | The compiled row (the JSON merges into the compiled table, so deleting `"gondor"` leaves 0.3); 0 for a culture with no compiled row | `newDeathChance = vanillaDeathChance * (1 - bonus)`. Legal `[-1, 1]`, else reverts with a warning to the compiled row for that culture (Gundabad keeps its -0.1); a bad row with no compiled row is removed, which reads as 0 | `BattleBalanceConfigProvider.cs:113-114, 122-146` |
+| `AutoResolve.PowerRatioExponent` | float | no | 0.5 | Exponent of the striker-to-struck power ratio in a simulated strike (vanilla 0.7). In a field battle a side's strength goes as N^1.6 x P^(2e), so 0.5 makes numbers outweigh quality; 0 ignores quality. Applies to every simulated battle, the player's Send troops included. Legal `[0, 1]`, else reverts to 0.5 with a warning (#1283) | `BattleBalanceConfigProvider.cs:96-102`, `Models/TaomCombatSimulationModel.cs` (`SimulateHit`), `AutoResolveQualityMath.cs` |
+
+A `null` section or table (`"TroopPower": null`, `"CulturalSurvivalBonuses": null`, `"AutoResolve": null`) reverts to the compiled one with a warning (`BattleBalanceConfigProvider.cs:63-95`). A JSON `null` for one value (`"gondor": null`) fails the parse, and the whole file falls back to the compiled defaults with an error. After any reversion the provider writes one more warning, `BattleBalanceConfig: N value(s) reverted to compiled defaults; see the warnings above`, so search the log for that line first (#1291).
 
 **Read the tier block twice before you edit it.** `T7` to `T10` are never read while MCM is loaded: `CalculateTierPower` switches straight to the four MCM sliders for tier 7 and up (`TaomMilitaryPowerModel.cs:42-50`), whose defaults are 2.91 / 3.26 / 3.61 / 3.96 (`TaomSettings.cs:412-430`), the same numbers the JSON happens to carry. `T0` to `T6` are read only when "Override Vanilla Tiers (T1-T6)" is on, and it ships off (`TaomSettings.cs:410`). So out of the box every value in the `TierPower` block is inert and the tier curve you feel in play is vanilla's formula plus four sliders.
 
@@ -147,11 +150,12 @@ Inverting the two thresholds reverts **both** to defaults, not just the offender
 
 | Field | Type | Shipped | Legal range | Read at (file:line) |
 |---|---|---|---|---|
-| `crushThrough.extraCrushThroughEnergyThreshold` | float | 25.0 | `[1, 1000]` | `CombatMechanicsConfigProvider.cs:103` |
-| `crushThrough.skillTargetDelta` | int | 200 | `[1, 1000]` | `CombatMechanicsConfigProvider.cs:104` |
-| `crushThrough.skillDeadZone` | int | 30 | `[0, 1000]`, must be below `skillTargetDelta` | `CombatMechanicsConfigProvider.cs:105, 119` |
-| `crushThrough.maxSkillChance` | float | 0.5 | `[0, 1]` | `CombatMechanicsConfigProvider.cs:106` |
-| `crushThrough.nonOverheadPenaltyFactor` | float | 0.5 | `[0, 1]` | `CombatMechanicsConfigProvider.cs:109` |
+| `crushThrough.extraCrushThroughEnergyThreshold` | float | 25.0 | `[1, 1000]` | `CombatMechanicsConfigProvider.cs:105` |
+| `crushThrough.skillTargetDelta` | int | 135 | `[1, 1000]` | `CombatMechanicsConfigProvider.cs:106` |
+| `crushThrough.skillDeadZone` | int | 20 | `[0, 1000]`, must be below `skillTargetDelta` | `CombatMechanicsConfigProvider.cs:107, 122` |
+| `crushThrough.maxSkillChance` | float | 0.5 | `[0, 1]` | `CombatMechanicsConfigProvider.cs:108` |
+| `crushThrough.skillCurveExponent` | float | 0.01197 | above 0, at most 0.1 | `CombatMechanicsConfigProvider.cs:109` |
+| `crushThrough.nonOverheadPenaltyFactor` | float | 0.5 | `[0, 1]` | `CombatMechanicsConfigProvider.cs:111` |
 | `chargeKnockdown.neutralWeightRatio` | float | 6.0 | `[0.1, 1000]` | `CombatMechanicsConfigProvider.cs:147` |
 | `chargeKnockdown.autoKnockdownWeightRatio` | float | 8.0 | `[0.1, 1000]`, must be at least `neutralWeightRatio` | `CombatMechanicsConfigProvider.cs:148, 161` |
 | `chargeKnockdown.autoKnockdownMinSpeedFactor` | float | 0.4 | `[0, 1]` | `CombatMechanicsConfigProvider.cs:149` |
@@ -162,7 +166,7 @@ Inverting the two thresholds reverts **both** to defaults, not just the offender
 | `shieldBash.minChancePercent` / `maxChancePercent` | float | 10 / 75 | `[0, 100]`, min at most max (a swapped band reverts both) | `CombatMechanicsConfigProvider.cs:309-310, 318` |
 | `shieldBash.kickChanceFactor` / `playerVictimChanceFactor` | float | 0.5 / 0.5 | `[0, 1]` | `CombatMechanicsConfigProvider.cs:311-312` |
 | `creatures.unstoppableDamageThresholds.<monsterId>` | int | 5 entries, 10 to 30 | `[0, 500]`, else the entry is removed | `CombatMechanicsConfigProvider.cs:227` |
-| `raceModifiers.<race>.ctbAttackBonus` / `ctbDefenseBonus` | float | 15 to 20 | `[0, 300]` | `CombatMechanicsConfigProvider.cs:317-318` |
+| `raceModifiers.<race>.ctbAttackBonus` / `ctbDefenseBonus` | float | 10 to 13 (dwarf defence 10, elf and Sauron attack 13: scaled by 260/390 with the skill window, #343) | `[0, 300]` | `CombatMechanicsConfigProvider.cs:317-318` |
 | `raceModifiers.<race>.knockdownResistanceMultiplier` / `staggerThresholdMultiplier` | float | 1.25 to 3.0 | `[0, 100]` | `CombatMechanicsConfigProvider.cs:319-320` |
 | `raceModifiers.<race>.swingEnergyBonusFactor` | float | 0.10 to 0.20 | `[0, 10]` | `CombatMechanicsConfigProvider.cs:321` |
 

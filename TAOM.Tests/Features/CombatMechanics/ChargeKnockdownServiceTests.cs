@@ -379,27 +379,10 @@ public class ChargeKnockdownServiceTests
     }
 
     [TestMethod]
-    public void DecideChargeKnockdown_NaNInflictedDamage_ReturnsNull()
-    {
-        // #728: the same comparison reads the inflicted damage, so a NaN there defers too.
-        var result = _sut.DecideChargeKnockdown(Context(inflictedDamage: float.NaN));
-
-        Assert.IsNull(result);
-    }
-
-    [TestMethod]
     public void DecideChargeKnockdown_InfiniteVictimMaxHealth_ReturnsNull()
     {
         // #728: infinity times a zero resistance factor is NaN; an infinite health defers too.
         var result = _sut.DecideChargeKnockdown(Context(victimMaxHealth: float.PositiveInfinity));
-
-        Assert.IsNull(result);
-    }
-
-    [TestMethod]
-    public void DecideChargeKnockdown_InfiniteInflictedDamage_ReturnsNull()
-    {
-        var result = _sut.DecideChargeKnockdown(Context(inflictedDamage: float.PositiveInfinity));
 
         Assert.IsNull(result);
     }

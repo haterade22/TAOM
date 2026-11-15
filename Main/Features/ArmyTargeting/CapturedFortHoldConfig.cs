@@ -30,6 +30,12 @@ public sealed class CapturedFortHoldConfig
     /// <summary>Sides whose armies hold a captured fort, by <see cref="FactionSide"/> name. Free only by default.</summary>
     public List<string> Sides { get; set; } = new List<string> { "Free" };
 
+    /// <summary>
+    /// Realms whose armies hold whatever their side, by kingdom StringId (<c>empire_s</c> is Mordor). Empty by default; the
+    /// shipped file lists Mordor, whose armies took forts and marched off before the hold could keep them (#1283).
+    /// </summary>
+    public List<string> Factions { get; set; } = new List<string>();
+
     /// <summary>An army holds only with at least this much cohesion (0 to 100) when the hold would start.</summary>
     public float MinCohesionToHold { get; set; } = 45f;
 
@@ -50,6 +56,10 @@ public sealed class CapturedFortHoldConfig
 
     /// <summary>Longest hold, from the capture. At most <see cref="CodeCapHours"/>.</summary>
     public float MaxHours { get; set; } = 30f;
+
+    /// <summary>True when an army of realm <paramref name="kingdomId"/>, on <paramref name="side"/>, holds: its side or its realm is listed.</summary>
+    public bool HoldsArmy(string? kingdomId, FactionSide side) =>
+        HoldsSide(side) || (!string.IsNullOrEmpty(kingdomId) && Factions != null && Factions.Contains(kingdomId!));
 
     /// <summary>True when armies of <paramref name="side"/> hold. Reads the list by name, so a hand-built config works too.</summary>
     public bool HoldsSide(FactionSide side)

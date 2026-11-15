@@ -248,5 +248,56 @@ class NativeLadderTests(unittest.TestCase):
                              f"engine changed legendary_{group}: {shipped[group]} != {bonus}")
 
 
+def _native_modifier_rows():
+    """{group id: [armor deltas]} from the installed Native item_modifiers.xml, or None without it."""
+    import re
+    game_dir = os.environ.get('BANNERLORD_GAME_DIR') or \
+        r"E:\Steam\steamapps\common\Mount & Blade II Bannerlord"
+    path = os.path.join(game_dir, 'Modules', 'Native', 'ModuleData', 'item_modifiers.xml')
+    if not os.path.exists(path):
+        return None
+    with open(path, encoding='utf-8-sig', errors='ignore') as fh:
+        text = fh.read()
+    rows = {}
+    for block in re.findall(r'<ItemModifier\b.*?/>', text, re.S):
+        group = re.search(r'modifier_group="ItemModifierGroup\.([a-z_]+)"', block)
+        armor = re.search(r'\barmor="(-?\d+)"', block)
+        if group and armor:
+            rows.setdefault(group.group(1), []).append(int(armor.group(1)))
+    return rows
+
+
+class ExtremityLootTableTests(unittest.TestCase):
+    """The heavy, elite and lord arm, leg and shoulder pieces hold 7 to 28 points, not a chest's 30 to 60."""
+
+    # The worst roll an extremity may take. Chain's Rusty (-8) took a heavy pauldron of 9 to 1.
+    WORST_DOWN_ROLL = -3
+
+    def test_extremity_down_rolls_stay_small_enough_for_a_small_stat(self):
+        rows = _native_modifier_rows()
+        if rows is None:
+            self.skipTest("no game install")
+        for slot in ('arm', 'leg', 'shoulder'):
+            for tier in ('heavy', 'elite', 'lord'):
+                group = ra.modifier_group_for(slot, tier)
+                self.assertGreaterEqual(
+                    min(rows[group]), self.WORST_DOWN_ROLL,
+                    f"{slot}/{tier} rolls on {group}, whose worst roll is {min(rows[group])}")
+
+    def test_every_mapped_group_is_defined_by_native(self):
+        """A group id no module defines resolves to null on load, so the item never rolls a modifier."""
+        import re
+        game_dir = os.environ.get('BANNERLORD_GAME_DIR') or \
+            r"E:\Steam\steamapps\common\Mount & Blade II Bannerlord"
+        path = os.path.join(game_dir, 'Modules', 'Native', 'ModuleData', 'item_modifiers_groups.xml')
+        if not os.path.exists(path):
+            self.skipTest("no game install")
+        with open(path, encoding='utf-8-sig', errors='ignore') as fh:
+            defined = set(re.findall(r'<ItemModifierGroup\s+id="([^"]+)"', fh.read()))
+        mapped = {ra.modifier_group_for(slot, tier) for slot in ra.SLOT_BASELINES for tier in ra.TIERS}
+        mapped |= {row['modifier_group'] for row in ra.MATERIAL_MAP.values()}
+        self.assertEqual(set(), mapped - defined)
+
+
 if __name__ == '__main__':
     unittest.main()

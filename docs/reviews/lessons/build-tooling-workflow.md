@@ -5110,6 +5110,23 @@ PR #1209 kept 223 rider rows in TAOM's tracked `action_sets.xml`, where a reinst
 - **Prevent:** before a move, list what guarded the old home (a test, a gate, a release check, a doc claim) and where each lives afterwards. Run every rewritten test against the bad data it exists to catch (delete a row, add a conflicting one, point it at a stale channel folder) and keep the run in the review. A presence check on rows the engine resolves by position compares the effective binding, not membership. Grep the old home's claims ("guard", "can be deleted", "at the end of"), not only its names, and exclude `.tmp/` first.
 - **Source:** [rca-dwarf-rider-rows-move-2026-11-14.md](../rca-dwarf-rider-rows-move-2026-11-14.md), findings 1 to 5 and 7.
 
+### A coverage test that matches source text misses a severity held in a constant (`CommitGateCoverageTests`, #1271, 2026-11-14)
+The test that ties every ERROR code to the commit hooks scanned `severity=Severity.ERROR, code=...` in the validator's source. `WORN_ARMOUR_CEILING` takes its severity from `WORN_ARMOUR_CEILING_SEVERITY`, so flipping that constant to ERROR without a hook line would have passed the test.
+- **Why missed:** the scanner was written when every severity was a literal at its call site.
+- **Prevent:** a test that reads source text resolves the forms the code may use (a module constant, a code constant), and a test flips the real constant in memory and expects the code to become enforced (`test_a_severity_constant_flipped_to_error_makes_its_code_an_enforced_code`).
+- **Source:** [rca-weapon-armour-rebalance-2026-11-14.md](../rca-weapon-armour-rebalance-2026-11-14.md), finding 17.
+
+### Code written for data not applied yet says so, and is safe on today's data (#1271, 2026-11-14)
+The tournament prize rule, the arena doc and several comments described the Armory as the rebalance will leave it, while the Armory still holds today's values. The Tierf sentence was wrong for today's items, and a comment's counts held only for the planned data.
+- **Why missed:** the author wrote against the planned values and checked the text against them.
+- **Prevent:** a rule or comment that depends on a later data step names that step, and a test runs the rule on today's shipped values as well as the planned ones. Counts go in the feature doc with the command that prints them, not in code comments.
+- **Source:** [rca-weapon-armour-rebalance-2026-11-14.md](../rca-weapon-armour-rebalance-2026-11-14.md), findings 19 and 20.
+
+### A caller that derives a provenance flag needs its own test (tournament prizes, #1271, 2026-11-14)
+`TournamentPrizeRules.Fits` was pure and well tested, and every test passed the "from the class table" flag itself. The caller derived it as `GetClass(id).HasValue`, but the armour gate also gives an untabled piece a class from its engine tier, so a low-value untabled chest entered the regular prize pool.
+- **Why missed:** the rule's tests supplied the provenance, so the one line that computed it in production had no test.
+- **Prevent:** when a rule takes a flag about where a value came from, expose the provenance from its owner (`IArmourGateService.GetTableClass`), pass the value rather than a bool, and test the caller with the real owner on substituted adapters.
+- **Source:** [rca-weapon-armour-rebalance-2026-11-14.md](../rca-weapon-armour-rebalance-2026-11-14.md), findings 18 and 25.
 ### An image tool that drops a channel changes what the Kit compiles (banner sheets, #1272, 2026-11-14)
 `tools/pack_banner_sheets.py` read every sheet with `convert("RGB")` and wrote repacked sheets as RGB. The Kit's `Albedo (DXT1/DXT5)` type picks DXT1 for a source with no alpha channel, and the banner material draws a DXT1 sheet as speckled dots, so the v2.0.40 repack broke every sheet it wrote. Two renamed PSDs were already RGB, and the authoring doc named `DXT1, 8.000 Mb` as the expected result.
 - **Why missed:** the audit checked names, cells, sprites and source hashes, never the channels; the Kit gives no warning; nobody looked at a rendered banner after the repack.
@@ -5127,3 +5144,8 @@ The Kit's sprite generation re-saved all 13 GUI `_tex.tpac` files. I copied back
 - **Why missed:** the override that made the work possible was on every command, including the verify runs.
 - **Prevent:** before review, build once with no override. When the code needs a newer API, the project picks a stub by a marker file (`Exists()`), and both builds run in `/verify`.
 - **Source:** [rca-ld-coop-session-2026-11-15.md](../rca-ld-coop-session-2026-11-15.md), F2.
+### A launcher that reads HEAD once at launch also names that build in its PASS (#1075, 2026-11-15)
+`run_scenario.py` compared the build stamp with HEAD at judge time, so a commit during the run failed a good run. After the fix to read HEAD at launch, its PASS still named no build, so a later reader could quote it for another commit. An unknown HEAD failed only after the whole game had run.
+- **Why missed:** the wrapper copied the sibling's stamp check but not its timing (`run_long_defeat.py` reads HEAD once in `main`) or its report text. This repeats "An unattended wrapper binds its PASS to the build under test".
+- **Prevent:** when you copy a check from a sibling launcher, copy where it reads its reference, what it prints on PASS and when it refuses. Test each one: a commit during the run, a PASS text with the sha, a refusal before launch.
+- **Source:** [rca-scenario-event-window-2026-11-15.md](../rca-scenario-event-window-2026-11-15.md), findings 3, 4 and 6.

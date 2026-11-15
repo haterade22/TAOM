@@ -45,7 +45,7 @@ internal static class CheatMenuMenus
         Option(starter, CheatMenuIds.Root, "taom_cheat_opt_troops", "{=taom_cheat_opt_troops}Troops...", i++,
             Shown, () => GameMenu.SwitchToMenu(CheatMenuIds.Troops));
         Option(starter, CheatMenuIds.Root, "taom_cheat_opt_relation", "{=taom_cheat_opt_relation}Relations: +20 with every lord of a kingdom...", i++,
-            Shown, () => Pick("{=taom_cheat_pick_kingdom}Choose a kingdom", world.Kingdoms(),
+            Shown, () => Pick("taom_cheat_opt_relation", "{=taom_cheat_pick_kingdom}Choose a kingdom", world.Kingdoms(),
                 id => CheatMenuTexts.Show(service.AddRelation(id, RelationStep))));
         Option(starter, CheatMenuIds.Root, "taom_cheat_opt_heal", "{=taom_cheat_opt_heal}Heal your party and your heroes", i++,
             Shown, () => CheatMenuTexts.Show(service.Heal()));
@@ -64,7 +64,7 @@ internal static class CheatMenuMenus
         {
             var k = kind;
             Option(starter, CheatMenuIds.Teleport, id, label, i++, Shown,
-                () => Pick("{=taom_cheat_pick_settlement}Choose where to teleport", world.Settlements(k), TeleportTo(service)));
+                () => Pick(id, "{=taom_cheat_pick_settlement}Choose where to teleport", world.Settlements(k), TeleportTo(service)));
         }
         Leave(starter, CheatMenuIds.Teleport, "taom_cheat_tp_back", "{=taom_cheat_opt_back}Back", i,
             () => GameMenu.SwitchToMenu(CheatMenuIds.Root));
@@ -118,7 +118,7 @@ internal static class CheatMenuMenus
             args => { args.optionLeaveType = GameMenuOption.LeaveType.Leave; return true; },
             _ => act(), isLeave: true, index: index);
 
-    private static void Pick(string title, IReadOnlyList<(string Id, string Name)> choices, Action<string> onPicked)
+    private static void Pick(string optionId, string title, IReadOnlyList<(string Id, string Name)> choices, Action<string> onPicked)
     {
         var elements = choices.Select(c => new InquiryElement(c.Id, c.Name, null)).ToList();
         MBInformationManager.ShowMultiSelectionInquiry(new MultiSelectionInquiryData(
@@ -130,11 +130,11 @@ internal static class CheatMenuMenus
             maxSelectableOptionCount: 1,
             affirmativeText: new TextObject("{=taom_cheat_pick_ok}Choose").ToString(),
             negativeText: new TextObject("{=taom_cheat_pick_cancel}Cancel").ToString(),
-            affirmativeAction: chosen =>
+            affirmativeAction: chosen => Guarded(optionId, () =>
             {
                 if (chosen != null && chosen.Count > 0 && chosen[0].Identifier is string id)
                     onPicked(id);
-            },
+            }),
             negativeAction: _ => { },
             isSeachAvailable: true));
     }

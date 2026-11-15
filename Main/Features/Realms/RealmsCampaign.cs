@@ -118,7 +118,7 @@ public sealed partial class RealmsCampaign
     {
         LiegeArmyDiscount.Patch();
         Upgrade();
-        HouseBanners.Decouple();
+        KingdomBanners.Decouple();
         if (_service.IsInitialized && _isAuthority())
         {
             ApplyFormerBannersOnLoad();
@@ -226,9 +226,20 @@ public sealed partial class RealmsCampaign
             ForgetBonds();
             Debug.Print($"[TAOM.Realms] {moved} titles moved to or from a titular realm.");
         }
-        _kingdomNames.Update(_service, Config, _renamed);
-        _kingdomBanners.Update(_service);
+        _kingdomNames.Update(_service, Config, _renamed,
+            kingdom => IsRuledByAPlayer(kingdom) ? _settings.RenameOwnRealm : _settings.RenameAiRealms);
+        _kingdomBanners.Update(_service, BannerChoiceFor);
     }
+
+    /// <summary>A realm whose ruling clan is a player's (<see cref="IsAPlayersClan"/>; doubt counts as a player's).</summary>
+    private bool IsRuledByAPlayer(Kingdom kingdom) => kingdom.RulingClan != null && IsAPlayersClan(kingdom.RulingClan);
+
+    /// <summary>
+    /// The banner the MCM options give a realm: the player's choice for a realm a player rules, else the title banner
+    /// unless AI Realms Fly Title Banners is off.
+    /// </summary>
+    private RealmBanner BannerChoiceFor(Kingdom kingdom) =>
+        IsRuledByAPlayer(kingdom) ? _settings.OwnRealmBanner : _settings.AiRealmBanners ? RealmBanner.Title : RealmBanner.Own;
 
     private void TellRenamed(string kingdomId)
     {

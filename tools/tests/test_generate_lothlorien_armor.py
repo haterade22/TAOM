@@ -1,8 +1,12 @@
 #!/usr/bin/env python3
-"""The Lorien armour generator writes covers_legs="true" on every leg piece (Mike, 2026-11-06).
+"""The Lorien armour generator: leg pieces cover legs, and a worn piece is priced at its wearers' band.
 
-It wrote "false" at first, which left the leg skin drawn under every greave. The rendered leg file is parsed and
-compared with the eight pieces by name, so the set can neither shrink nor lose the attribute unnoticed.
+Leg pieces: it wrote covers_legs="false" at first (Mike, 2026-11-06), which left the leg skin drawn under every
+greave. The rendered leg file is parsed and compared with the eight pieces by name, so the set can neither shrink
+nor lose the attribute unnoticed.
+
+Band: a restat prices every other Armory piece at the band of its lowest wearer, so the generator must too, or a
+generator run undoes the restat and leaves the wearers under the worn armour floor (#1271).
 Needs no game install.
 """
 import os
@@ -13,6 +17,7 @@ import xml.etree.ElementTree as ET
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 import generate_lothlorien_armor as gen  # noqa: E402
+import rebalance_armor as ra  # noqa: E402
 
 EXPECTED_LEGS = {
     "sk_ll_rg_boots_light_a", "sk_ll_rg_grvs_med_a",
@@ -41,6 +46,60 @@ class LegPiecesCoverLegsTests(unittest.TestCase):
             root = ET.fromstring(gen.render(slot, by_file[slot]))
             for armor in root.iter("Armor"):
                 self.assertIsNone(armor.get("covers_legs"), slot)
+
+
+def _head_primary(item_id, band):
+    return gen.stats_for(item_id, "head", band)["head_armor"]
+
+
+class PricedBandTests(unittest.TestCase):
+    def test_a_worn_medium_word_piece_gets_the_elite_value_at_level_31(self):
+        item = "sk_ll_rg_helmet_med_b"
+        records = {item: {"anchorLevel": 31}}
+        self.assertEqual(gen.priced_band(item, records), "elite")
+        self.assertGreater(_head_primary(item, "elite"), _head_primary(item, "medium"))
+
+    def test_an_unworn_piece_keeps_the_band_its_id_word_names(self):
+        item = "sk_ll_rg_helmet_med_b"
+        self.assertEqual(gen.priced_band(item, {}), "medium")
+        self.assertEqual(gen.priced_band(item, {item: {"anchorLevel": None}}), "medium")
+
+    def test_a_worn_light_word_piece_follows_a_higher_wearer(self):
+        self.assertEqual(gen.priced_band("sk_ll_rg_chest_light_a", {"sk_ll_rg_chest_light_a": {"anchorLevel": 20}}),
+                         "heavy")
+
+    def test_a_worn_mallorn_piece_is_one_band_above_its_wearers(self):
+        item = "sk_ll_ml_helmet_med_a"
+        for level, band in ((10, "medium"), (16, "heavy"), (25, "elite"), (40, "lord")):
+            self.assertEqual(gen.priced_band(item, {item: {"anchorLevel": level}}), band, level)
+
+    def test_an_unworn_mallorn_piece_is_one_band_above_its_id_word(self):
+        self.assertEqual(gen.priced_band("sk_ll_ml_helmet_med_a", {}), "heavy")
+        self.assertEqual(gen.priced_band("sk_ll_ml_helmet_elite_a", {}), "lord")
+
+    def test_the_appearance_stays_with_the_id_word_when_the_price_moves(self):
+        item = "sk_ll_rg_helmet_med_b"
+        by_file, rows = gen.build({item: {"anchorLevel": 31}})
+        head = ET.fromstring(gen.render("head", by_file["head"]))
+        node = [i for i in head.iter("Item") if i.get("id") == item][0]
+        self.assertEqual(node.get("appearance"), str(gen.APPEARANCE["medium"]))
+        row = [r for r in rows if r[0] == item][0]
+        self.assertEqual(row[2], "elite")
+
+
+class ShippedRosterTests(unittest.TestCase):
+    def test_no_worn_piece_is_priced_below_the_band_of_its_lowest_wearer(self):
+        records, _ = ra.load_roster_records()
+        order = ra.MESH_TIER_ORDER
+        worn = 0
+        for item_id, _slot, _stem in gen.PIECES:
+            level = (records.get(item_id) or {}).get("anchorLevel")
+            if level is None:
+                continue
+            band = ra.level_to_band(int(level))
+            worn += 1
+            self.assertGreaterEqual(order.index(gen.priced_band(item_id, records)), order.index(band), item_id)
+        self.assertGreater(worn, 0)
 
 
 if __name__ == "__main__":

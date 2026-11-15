@@ -108,8 +108,8 @@ out-aims every bow at the same tier, compared as the engine applies them: a bow'
 bow against `x (1 - 0.0005 x Crossbow)` for a crossbow, ammo at the restat caps (arrows +4, bolts +5).
 Two spec values carry it: `crossbow_bonus` 9 (the most the 99 cap and the strict tier rise allow;
 every crossbow has at least 42% less spread than its kingdom's best bow at the same tier) and a
-crossbow damage curve that steps up at T7 and T8 (107 and 126), so Gondor's crossbowmen out-hit the
-Ithilien and Blackroot rangers (112 against 110 at T7, 131 against 128 at T8). The rule is not
+crossbow damage curve that steps up at T7 and T8 (77 and 82), so Gondor's crossbowmen out-hit the
+Ithilien and Blackroot rangers (82 against 80 at T7, 87 against 85 at T8, bolt and arrow included). The rule is not
 across kingdoms: a Mirkwood bow may out-hit a Dunland crossbow. Pinned by
 `RepoSpecTests.test_a_crossbow_out_hits_and_out_aims_its_kingdoms_bows`.
 
@@ -129,12 +129,26 @@ across kingdoms: a Mirkwood bow may out-hit a Dunland crossbow. Pinned by
 
 The anchor rank 7 is the Gondor group, standing in for vanilla's typical culture. Vanilla's own
 pattern (1.5.3 regulars) set the scale: its best archer culture, Battania, sits about 23% above the
-typical cultures at T4 to T6, and the damage step is 4% per rank at T1 to T6, so Mirkwood sits 24% over
-Gondor. From T7 (levels 36 to 51, where vanilla has no troops) the step grows to 5, 6, 7 and 8% per
-rank, so the top of the ladder separates sharply: Mirkwood T10 hits for about 90 on a T5 chest, an
-outright kill on anything at armour 36 or less. Accuracy cannot widen the same way under its ceiling
-without a lower rank's T7 dropping under its T6, so accuracy steps 1 per rank at every tier and the
-high-tier gap comes from damage and skill.
+typical cultures at T4 to T6. The damage step was 4% per rank at T1 to T6 and grew to 8% at T10. On
+2026-11-14 (#1271) it became 3% at every tier and the rows were lowered (Bow 38 to 55, Crossbow 50
+to 84), so Mirkwood sits 18% over Gondor at every tier and the top bow cell is 65 (Mirkwood T10), the
+top crossbow cell 82 (Gondor T8). The old rows let Mirkwood T10 hit for about 90 on a T5 chest.
+Accuracy cannot widen under its ceiling without a lower rank's T7 dropping under its T6, so accuracy
+steps 1 per rank at every tier and the high-tier gap comes from damage and skill.
+
+The skill anchor is the troop skill curve, `rebalance_troops.TIER_CURVE` (20 to 260), and the
+skill step is 4% of it, rounded (1 at T1 to 10 at T10), so an archer of the anchor rank holds the
+curve's number at its tier (#343; `LadderSpecTests` in `test_troop_skill_curve.py` pins both).
+
+The #1271 damage rows (2026-11-14) were fitted at the old Bow skills, before #343 lowered the
+curve, and were not refitted. A bow's hit carries `1 + 0.0011 x Bow` and its spread
+`1 - 0.0009 x Bow` (`tools/ranged_ladder.py`), so on the top bow cell (Mirkwood T10, Bow 410
+before, 320 now) the skill multiplier falls from 1.451 to 1.352, about 7% less hit, and the spread
+factor rises from 0.631 to 0.712, about 13% wider. A crossbow's hit does not read Crossbow. The #343
+design harness (body hits on 100 HP, the anchor rank 7 bow into same-tier armour) gives, T1 to T10,
+35, 37, 31, 21, 24, 15, 18, 22, 23, 25 before and 35, 37, 30, 20, 22, 14, 16, 17, 19, 21 after.
+Every bow cell hits less, so the R4 one-shot guideline below still holds; whether the bow rows
+should rise back is a #1271 question this change does not decide.
 
 The ranking, position 1 best: Mirkwood 1; Rivendell and Lindon 2; Ithilien 3 (`gondor_ith_*`,
 `gondor_ithilien_*`); Blackroot Vale (`gondor_brv_*`), Arthedain and Rhudaur 4; Black Numenoreans 5; Harad, Dale (whose line also claims `troops_anduinvale.xml`, `troops_angaladh.xml` and `troops_dorwinion.xml`) and Cardolan 6; Gondor,
@@ -158,10 +172,9 @@ flags are the donor's; a vanilla donor keeps its vanilla `culture=` (harmless wh
 `is_merchandise="false"` keeps the clones out of `DefaultTournamentModel.GetRegularRewardItems`).
 One path does hand a ladder bow to a hero: Field Commission (`HeroCommissionAdapter`) copies the
 troop's first battle set onto the new companion, so a commissioned archer keeps its ladder bow as
-saved hero equipment. Twelve cells sit above `hero_ceiling`: Mirkwood T8 to T10 (98 / 114 / 133),
-Rivendell T8 and T9 (94 / 108), Ithilien T9 and T10 (102 / 119), Mordor Numenorean T9 (91), and the
-crossbows of Erebor T6 (108), Gondor T7 and T8 (107 / 126) and Rhun T7 (107). Mike's decision
-(2026-09-18): swap it for the line's donor at commission (#625). The kept `difficulty` then gates only the player's
+saved hero equipment. Before the 2026-11-14 rows twelve cells sat above `hero_ceiling`; none does now (the top bow
+cell is 65, the top crossbow cell 82), but the Armory's own donors still reach 90 and 104. Mike's
+decision (2026-09-18): swap it for the line's donor at commission (#625). The kept `difficulty` then gates only the player's
 inventory screen (`CharacterHelper.CanUseItem`); no managed spawn, AI or loot code reads it, and
 `MissionWeapon.GetWeaponData` hands it to native, where its use is unverified.
 
@@ -300,11 +313,11 @@ tools/ranged_ladder.py     cell, skill_cell, rank, tiers_for, ladder_id, line_of
 ```json
 {"bands": {"E": [0, 2], "R": [3, 4], "V": [5, 6], "X": [7, 8], "C": [9, 10]},
  "stats": {"anchor_rank": 7,
-   "damage": {"Bow": {"1": 37, "...": 0, "10": 90}, "Crossbow": {"1": 68, "...": 0, "10": 142},
-              "step": {"1": 0.04, "...": 0, "10": 0.08}},
+   "damage": {"Bow": {"1": 38, "...": 0, "10": 55}, "Crossbow": {"1": 50, "...": 0, "10": 84},
+              "step": {"1": 0.03, "...": 0, "10": 0.03}},
    "accuracy": {"top": {"1": 85, "...": 0, "10": 99}, "rank_step": 1, "crossbow_bonus": 9, "max": 99},
    "speed": {"tier_base": {"0": 54, "...": 0, "10": 78}, "rank_step": 3},
-   "skill": {"anchor": {"1": 30, "...": 0, "10": 320}, "step": {"1": 10, "...": 0, "10": 15}, "min": 10}},
+   "skill": {"anchor": {"1": 20, "...": 0, "10": 260}, "step": {"1": 1, "...": 0, "10": 10}, "min": 10}},
  "hero_ceiling": {"Bow": 90, "Crossbow": 105},
  "lines": [
    {"id": "harad", "folder": "harad", "files": ["harad"],
@@ -324,40 +337,69 @@ Armory does not register (generator); a missing or wrong-class donor; a `files` 
 `troops_<token>.xml`; prefixes overlapping across lines; a `usage` for a non-ladder class or an empty
 one; `donor_stats` / `ammo_stats` / `hero_ceiling` values that are not positive integers.
 
+### The one-shot guideline (R4)
+
+The maintainer set it on 2026-11-14 for the weapon and armour rebalance (#1271); it is a guideline
+and the elite-into-recruit kill stays wanted. Against the model armour of all 25 kingdoms in
+`rebalance_armor.KINGDOM_CAPS` (head `cap x 1.04`, body chest plus cape, at the band of tier `t`'s
+level `5t + 1`), a cell's hit is `(damage + ammo) x (1 + 0.0011 x skill)` for a bow and `damage + 5`
+for a crossbow:
+
+- R4a: a bow cell is at most 95, a crossbow cell at most 105.
+- R4b: no body one-shot when the attacker's tier is at most two above the defender's, or when the
+  attacker's tier is 5 or lower.
+- R4c: no same-tier one-shot of a helmeted head (missile pierce doubles a head hit).
+- R4d: the spec's own rules (strict rise per line, a better damage rank never lower at a tier, a
+  crossbow out-hits and out-aims its kingdom's bows, a clean `validate_spec`).
+
+The one-shot rule is computed for a hit at launch speed against a still target; a target that charges
+takes more.
+
+Pinned by `RepoSpecTests.test_ranged_cells_respect_the_one_shot_guideline`, which holds the model
+armour constants itself; `test_kingdom_caps.py` pins `rebalance_armor` to the same numbers. Real
+troops are not covered: a troop under its armour band floor (`WORN_ARMOUR_FLOOR`) can still be
+one-shot, and a bow's t3 hit can kill a helmet of 8.
+
 ### Current Values
+
+These are the spec's cells. The live Armory carries them: on 2026-11-15
+`python tools/generate_ranged_ladder_items.py --verify` printed "OK: all 147 ladder items present
+with their speed, damage and accuracy in 1 tree(s)", so the 2026-11-14 damage rows (#1271) are in
+its `ranged_ladder.xml` items.
 
 | Line | Ranks (overall, damage, accuracy) | Class | Cells: tier speed / damage / accuracy / skill |
 |---|---|---|---|
-| mirkwood | 1, 1, 1 | Bow | T2 88/51/88/115; T3 90/57/91/145; T8 102/98/97/370; T9 105/114/98/390; T10 108/133/99/410 |
-| rivendell | 2, 2, 2 | Bow | T2 85/49/87/105; T3 87/55/90/135; T5 91/66/93/220; T6 93/71/94/255; T7 96/81/95/320; T8 99/94/96/355; T9 102/108/97/375 |
-| ithilien | 3, 3, 4 | Bow | T7 93/78/93/305; T8 96/89/94/340; T9 99/102/95/360; T10 102/119/96/380 |
-| blackroot | 4, 4, 5 | Bow | T3 81/52/87/115; T4 83/57/89/160; T5 85/62/90/200; T6 87/66/91/235; T7 90/75/92/290; T8 93/85/93/325 |
-| arthedain | 4, 5, 4 | Bow | T2 79/44/85/85; T3 81/50/88/115; T4 83/55/90/160; T5 85/59/91/200; T6 87/64/92/235; T7 90/72/93/290 |
-| rhudaur | 4, 5, 4 | Bow | T2 79/44/85/85; T3 81/50/88/115; T4 83/55/90/160; T5 85/59/91/200; T6 87/64/92/235 |
-| mordor_num | 5, 5, 6 | Bow | T6 84/64/90/225; T7 87/72/91/275; T8 90/81/92/310; T9 93/91/93/330 |
-| harad | 6, 6, 3 | Bow | T2 73/43/86/65; T3 75/48/89/95; T4 77/53/91/140; T5 79/57/92/180; T6 81/61/93/215 |
-| dale | 6, 6, 7 | Bow | T1 71/38/79/40; T3 75/48/85/95; T4 77/53/87/140; T5 79/57/88/180; T6 81/61/89/215 |
-| dale | 6, 6, 7 | Crossbow | T3 75/79/94/95; T4 77/83/96/140; T5 79/88/97/180; T6 81/94/98/215 |
-| cardolan | 6, 6, 7 | Bow | T2 73/43/82/65; T3 75/48/85/95; T4 77/53/87/140; T5 79/57/88/180 |
-| gondor | 7, 7, 8 | Bow | T2 70/41/81/55; T3 72/46/84/85; T4 74/51/86/130; T5 76/55/87/170; T6 78/59/88/205; T7 81/65/89/245; T8 84/72/90/280 |
-| gondor | 7, 7, 8 | Crossbow | T3 72/76/93/85; T4 74/80/95/130; T5 76/85/96/170; T6 78/90/97/205; T7 81/107/98/245; T8 84/126/99/280 |
-| rhun_new | 7, 7, 8 | Bow | T2 70/41/81/55; T3 72/46/84/85; T4 74/51/86/130; T5 76/55/87/170; T6 78/59/88/205; T7 81/65/89/245; T8 84/72/90/280; T9 87/80/91/300 |
-| rhun_new | 7, 7, 8 | Crossbow | T5 76/85/96/170; T6 78/90/97/205; T7 81/107/98/245 |
-| isengard | 7, 7, 8 | Bow | T3 72/46/84/85; T4 74/51/86/130; T5 76/55/87/170 |
-| isengard | 7, 7, 8 | Crossbow | T2 70/72/90/55; T3 72/76/93/85; T4 74/80/95/130; T5 76/85/96/170; T6 78/90/97/205 |
-| umbar | 7, 7, 8 | Bow | T3 72/46/84/85; T4 74/51/86/130; T5 76/55/87/170 |
-| umbar | 7, 7, 8 | Crossbow | T5 76/85/96/170 |
-| erebor | 8, 2, 9 | Bow | T2 67/49/80/45; T3 69/55/83/75; T4 71/61/85/120; T5 73/66/86/160; T6 75/71/87/195 |
-| erebor | 8, 2, 9 | Crossbow | T4 71/96/94/120; T5 73/102/95/160; T6 75/108/96/195 |
-| mordor_uruk | 8, 8, 9 | Bow | T4 71/49/85/120; T5 73/53/86/160; T6 75/57/87/195 |
-| mordor_uruk | 8, 8, 9 | Crossbow | T5 73/82/95/160; T6 75/86/96/195 |
-| gundabad | 9, 9, 10 | Bow | T2 64/38/79/35; T3 66/42/82/65; T4 68/47/84/110; T5 70/51/85/150 |
-| dolguldur | 9, 9, 10 | Bow | T2 64/38/79/35; T3 66/42/82/65; T4 68/47/84/110; T5 70/51/85/150; T6 72/54/86/185; T7 75/58/87/215; T8 78/63/88/250; T9 81/69/89/270 |
-| mordor | 9, 9, 10 | Bow | T2 64/38/79/35; T3 66/42/82/65; T4 68/47/84/110 |
-| goblin | 9, 9, 10 | Bow | T2 64/38/79/35; T3 66/42/82/65; T4 68/47/84/110; T5 70/51/85/150 |
-| rohan | 10, 10, 11 | Bow | T1 59/33/75/10; T2 61/36/78/25; T3 63/40/81/55; T4 65/45/83/100; T5 67/48/84/140; T6 69/52/85/175; T7 72/55/86/200 |
-| dunland | 11, 11, 12 | Bow | T2 58/34/77/15; T3 60/39/80/45; T4 62/43/82/90; T5 64/46/83/130; T6 66/50/84/165 |
-| dunland | 11, 11, 12 | Crossbow | T4 62/67/91/90; T5 64/71/92/130; T6 66/76/93/165 |
+| mirkwood | 1, 1, 1 | Bow | T2 88/47/88/52; T3 90/50/91/88; T8 102/61/97/256; T9 105/64/98/288; T10 108/65/99/320 |
+| rivendell | 2, 2, 2 | Bow | T2 85/46/87/50; T3 87/48/90/85; T5 91/53/93/155; T6 93/55/94/186; T7 96/57/95/217; T8 99/60/96/248; T9 102/62/97/279 |
+| lothlorien | 2, 2, 1 | Bow | T2 85/46/88/50; T3 87/48/91/85; T4 89/51/93/120; T5 91/53/94/155; T6 93/55/95/186; T7 96/57/96/217; T8 99/60/97/248; T9 102/62/98/279 |
+| ithilien | 3, 3, 4 | Bow | T7 93/56/93/210; T8 96/58/94/240; T9 99/60/95/270; T10 102/62/96/300 |
+| blackroot | 4, 4, 5 | Bow | T3 81/46/87/79; T4 83/48/89/112; T5 85/50/90/145; T6 87/52/91/174; T7 90/55/92/203; T8 93/57/93/232 |
+| arthedain | 4, 5, 4 | Bow | T2 79/42/85/46; T3 81/45/88/79; T4 83/47/90/112; T5 85/49/91/145; T6 87/51/92/174; T7 90/53/93/203 |
+| rhudaur | 4, 5, 4 | Bow | T2 79/42/85/46; T3 81/45/88/79; T4 83/47/90/112; T5 85/49/91/145; T6 87/51/92/174 |
+| mordor_num | 5, 5, 6 | Bow | T6 84/51/90/168; T7 87/53/91/196; T8 90/55/92/224; T9 93/57/93/252 |
+| harad | 6, 6, 3 | Bow | T2 73/41/86/42; T3 75/43/89/73; T4 77/45/91/104; T5 79/47/92/135; T6 81/49/93/162; T7 84/52/94/189 |
+| dale | 6, 6, 7 | Bow | T1 71/39/79/21; T3 75/43/85/73; T4 77/45/87/104; T5 79/47/88/135; T6 81/49/89/162 |
+| dale | 6, 6, 7 | Crossbow | T3 75/55/94/73; T4 77/60/96/104; T5 79/64/97/135; T6 81/69/98/162 |
+| cardolan | 6, 6, 7 | Bow | T2 73/41/82/42; T3 75/43/85/73; T4 77/45/87/104; T5 79/47/88/135 |
+| gondor | 7, 7, 8 | Bow | T2 70/40/81/40; T3 72/42/84/70; T4 74/44/86/100; T5 76/46/87/130; T6 78/48/88/156; T7 81/50/89/182; T8 84/52/90/208 |
+| gondor | 7, 7, 8 | Crossbow | T3 72/53/93/70; T4 74/58/95/100; T5 76/62/96/130; T6 78/67/97/156; T7 81/77/98/182; T8 84/82/99/208 |
+| rhun_new | 7, 7, 8 | Bow | T2 70/40/81/40; T3 72/42/84/70; T4 74/44/86/100; T5 76/46/87/130; T6 78/48/88/156; T7 81/50/89/182; T8 84/52/90/208; T9 87/54/91/234 |
+| rhun_new | 7, 7, 8 | Crossbow | T5 76/62/96/130; T6 78/67/97/156; T7 81/77/98/182 |
+| isengard | 7, 7, 8 | Bow | T3 72/42/84/70; T4 74/44/86/100; T5 76/46/87/130 |
+| isengard | 7, 7, 8 | Crossbow | T2 70/51/90/40; T3 72/53/93/70; T4 74/58/95/100; T5 76/62/96/130; T6 78/67/97/156 |
+| umbar | 7, 7, 8 | Bow | T3 72/42/84/70; T4 74/44/86/100; T5 76/46/87/130 |
+| umbar | 7, 7, 8 | Crossbow | T5 76/62/96/130 |
+| erebor | 8, 2, 9 | Bow | T2 67/46/80/38; T3 69/48/83/67; T4 71/51/85/96; T5 73/53/86/125; T6 75/55/87/150 |
+| erebor | 8, 2, 9 | Crossbow | T4 71/67/94/96; T5 73/71/95/125; T6 75/77/96/150 |
+| mordor_uruk | 8, 8, 9 | Bow | T4 71/43/85/96; T5 73/45/86/125; T6 75/47/87/150 |
+| mordor_uruk | 8, 8, 9 | Crossbow | T5 73/60/95/125; T6 75/65/96/150 |
+| gundabad | 9, 9, 10 | Bow | T2 64/38/79/36; T3 66/39/82/64; T4 68/41/84/92; T5 70/43/85/120 |
+| dolguldur | 9, 9, 10 | Bow | T2 64/38/79/36; T3 66/39/82/64; T4 68/41/84/92; T5 70/43/85/120; T6 72/45/86/144; T7 75/47/87/168; T8 78/49/88/192; T9 81/51/89/216 |
+| mordor | 9, 9, 10 | Bow | T2 64/38/79/36; T3 66/39/82/64; T4 68/41/84/92 |
+| goblin | 9, 9, 10 | Bow | T2 64/38/79/36; T3 66/39/82/64; T4 68/41/84/92; T5 70/43/85/120 |
+| rohan | 10, 10, 11 | Bow | T1 59/35/75/17; T2 61/36/78/34; T3 63/38/81/61; T4 65/40/83/88; T5 67/42/84/115; T6 69/44/85/138; T7 72/46/86/161 |
+| dunland | 11, 11, 12 | Bow | T2 58/35/77/32; T3 60/37/80/58; T4 62/39/82/84; T5 64/40/83/110; T6 66/42/84/132 |
+| dunland | 11, 11, 12 | Crossbow | T4 62/51/91/84; T5 64/55/92/110; T6 66/59/93/132 |
 
 ## Key Files
 
@@ -385,9 +427,10 @@ tools/tests/test_sync_ranged_ladder_translations.py tools/tests/test_militia_eli
 tools/tests/test_fix_upgrade_armour_regressions.py`: the
 cell and skill formulas and their caps and floors on a fixture spec; spec validation (ranks, tier
 lists, a falling curve, an uncovered tier, non-numeric values, structure, prefixes, files, donors);
-the shipped spec (validates, 22 lines, the approved ranks, Mirkwood T10 108/133/99 and Bow 410, no
+the shipped spec (validates, 23 lines, the approved ranks, Mirkwood T10 108/65/99 and Bow 320, the skill anchor on the troop curve, no
 better damage rank below a worse one at any tier, a crossbow out-hitting and out-aiming every bow of
-its kingdom at the same tier, 138 items, the donor table under the ceiling);
+its kingdom at the same tier, 147 items, the donor table under the ceiling, and the one-shot
+guideline R4 on every cell);
 the rules per stat (tier, same-tier rank, different tiers never compared, the worst set judged, ties,
 classes); unassigned and unlisted troops; planned items, slot edits (retired ids repointed, unlisted
 tier refused, mounted refusal, class refusal) and skill edits (cells, the clamp raising a non-ladder
@@ -431,6 +474,19 @@ every file before writing any.
    spread formula, so the crossbow's accuracy edge over its kingdom's bows shows only in a campaign
    battle.
 
+## How to verify in game
+
+Not verified in game for the 2026-11-14 damage rows (#1271), which are not yet in the Armory. After
+the apply (`generate_ranged_ladder_items.py --apply`, then `--verify`) and a full restart:
+
+1. In a Custom Battle, check the tooltip damage of a Mirkwood tier 10 bow (65) and a Gondor tier 8
+   crossbow (82).
+2. Field same-tier elite archers on both sides (Gondor against Mordor). A body hit must not kill in
+   one arrow. A helmeted head hit should not either, except on the real-troop cases the R4 section
+   names (a troop under its armour floor, a tier 3 bow into a helmet of 8).
+3. Field Mirkwood tier 10 archers against tier 1 to 3 recruits: a one-arrow kill there is wanted.
+4. Check that a hero's bow (`donor_stats`, unchanged) still out-hits the troop ladder.
+
 ## Performance
 
 Nothing at runtime: the items are ordinary `<Item>` rows and the rosters ordinary references. The
@@ -459,6 +515,13 @@ character files for hero kit.
   restat and sync validate the spec; `enlist_*` rosters under the hero ceiling; a templated ladder
   troop takes its cell (1.5.3 semantics); one militia regex and one class predicate across the
   writers and the gate. `docs/reviews/rca-ranged-rebalance-second-review-2026-09-18.md`.
+- 2026-11-14: damage rows lowered (#1271). `stats.damage.Bow` is 38, 40, 42, 44, 46, 48, 50, 52, 54, 55,
+  `Crossbow` is 50, 51, 53, 58, 62, 67, 77, 82, 83, 84 (T1 to T10) and `step` is 0.03 at every tier,
+  so no cell is above `hero_ceiling` and no cell one-shots a same-tier helmeted head or a body
+  within two tiers (rule R4, under Configuration). Skill, speed, accuracy, `hero_ceiling` and `donor_stats` did not
+  move, so `rebalance_ranged_ladders.py` plans 0 slot and 0 skill edits; the live Armory items need
+  `generate_ranged_ladder_items.py --apply`, and until then `--verify` reports the 142 items whose
+  damage changed.
 - 2026-10-15: KEYforce's Harad regular archers (lotraom-assets `db981663`) arrived carrying raw
   `hr_st_longbow_light/med/heavy` launchers; on their tiers a regular out-shot the tier-7 Serpent
   marksman. The port (#805) added tier 7 to the `harad` line (#803; `ladder_harad_bow_t7`, its
@@ -467,10 +530,15 @@ character files for hero kit.
   marksmen on `_t5`/`_t6`/`_t7`, with their Bow skill raised to the cells (12 values, Mike's choice).
   Inversions 398 to 0; no `RANGED_LADDER_INVERSION` remains in any culture. His three longbows ship as
   non-merchandise Armory items, waiting to become the line's `donor` art.
+- 2026-11-15: the skill curve joins the troop curve (#343). `stats.skill.anchor` is 20, 40, 70, 100,
+  130, 156, 182, 208, 234, 260 and `step` is 1 to 10 (T1 to T10), so Mirkwood T10 is Bow 320 (was
+  410) and Rohan T4 is 88. `rebalance_troops.py --apply` wrote the cells with the rest of the
+  restat; the roster tool plans 0 slot and 0 skill edits after it. The skill is not an item stat, so
+  no Armory item changes (`generate_ranged_ladder_items.py --verify`: OK).
 
 ## GitHub Issue
 
-[#582](https://github.com/haterade22/TAOM/issues/582), [#617](https://github.com/haterade22/TAOM/issues/617)
+[#582](https://github.com/haterade22/TAOM/issues/582), [#617](https://github.com/haterade22/TAOM/issues/617), [#1271](https://github.com/haterade22/TAOM/issues/1271), [#343](https://github.com/haterade22/TAOM/issues/343)
 
 ---
 

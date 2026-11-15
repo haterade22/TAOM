@@ -24,10 +24,41 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 import generate_arthedain_troops as gat  # noqa: E402
 import ranged_ladder as rl  # noqa: E402
 import realm_troops as rt  # noqa: E402
+import troop_purpose as tp  # noqa: E402
 
 
 def built():
     return gat.add_mercenary(gat.clamp_skills(gat.build()))
+
+
+def militia_step(basic, vet):
+    """The elite militia's skills, exactly (the rule test_realm_troops pins for the other realms):
+    the basic's plus the bonus, except on an archer, whose launcher is its ladder cell by its own
+    tier, its carried melee floor5(0.9 x that cell), an uncarried melee the lower of the two."""
+    rb = rt.rb
+    want = {k: basic.sk[k] + gat.MILITIA_ELITE_BONUS for k in gat.SKILLS}
+    kit, cells = rt.troop_kit(vet)
+    launcher = next((c for c in tp.LAUNCHERS if c in cells and kit.counts.get(c)), None)
+    if basic.role == "ranged" and launcher:
+        side = rb.floor5(cells[launcher] * rb.ARCHER_SIDEARM)
+        uncarried = rb.round5(rb.TIER_CURVE[rb.MILITIA_TIER] * rb.UNCARRIED_MELEE) + gat.MILITIA_ELITE_BONUS
+        want[launcher] = cells[launcher]
+        for c in tp.MELEE:
+            want[c] = side if kit.counts.get(c) else min(uncarried, side)
+        if kit.counts.get(tp.THROWING):
+            want[tp.THROWING] = side
+        for c in tp.LAUNCHERS:
+            if c != launcher and not kit.counts.get(c):
+                # A spare launcher is under the archer's own cell, which can bind on the basic.
+                want[c] = min(rb.round5(rb.TIER_CURVE[rb.MILITIA_TIER] * rb.UNCARRIED_RANGED)
+                              + gat.MILITIA_ELITE_BONUS, cells[launcher])
+    return want
+
+
+def setUpModule():
+    # clamp_skills classes every weapon through the install's item files (#343).
+    if not os.path.isdir(rt.GAME_MODULES):
+        raise unittest.SkipTest("game install not found: %s" % rt.GAME_MODULES)
 
 
 class DesignTests(unittest.TestCase):
@@ -47,10 +78,8 @@ class DesignTests(unittest.TestCase):
     def test_the_elite_militia_is_the_basic_plus_the_bonus(self):
         for basic_id, vet_id in gat.MILITIA.items():
             basic, vet = self.by_id[basic_id], self.by_id[vet_id]
-            for k in gat.SKILLS:
-                if k == "Bow" and basic.role == "ranged":
-                    continue  # the ladder owns a laddered archer's Bow
-                self.assertEqual(vet.sk[k], basic.sk[k] + gat.MILITIA_ELITE_BONUS, f"{vet_id} {k}")
+            for k, want in militia_step(basic, vet).items():
+                self.assertEqual(vet.sk[k], want, f"{vet_id} {k}")
 
     def test_the_mercenary_is_a_leaf_copy_of_the_rarest_pool_entry(self):
         merc = self.by_id[gat.MERC_SOURCE + "_merc"]

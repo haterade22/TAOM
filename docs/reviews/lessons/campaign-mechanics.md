@@ -1259,3 +1259,15 @@ yotthani's TAOM_POI release notes (v1.3.4, v1.3.5, `TAOM_POI/RELEASE-NOTES.md@c4
 - **Why missed:** no TAOM doc recorded how NavalDLC reads the finance breakdown; the manifest refusal was written for the start-option handler.
 - **Prevent:** if the NavalDLC refusal is ever lifted, open the clan screen with an enlisted hero first. If it crashes, test one change at a time as yotthani's v1.3.10 does, the unlabelled service wage first; do not take the labelled line as the cause without that test.
 - **Source:** yotthani, `yotthani/bannerlord` `TAOM_POI/RELEASE-NOTES.md`@c45d8374 lines 3-42 (v1.3.10) and 135-173 (v1.3.5, v1.3.4).
+
+### Taking a pair out of constant war reopens vanilla's ally filters: list who can call each realm in (#1283, 2026-11-14)
+Removing the Hostile row between Gondor and Dunland stops Full War from declaring that war. It also takes the pair out of `IsAtConstantWar`, and three vanilla filters read that state through `IsAtWarWith`: `AllianceCampaignBehavior.OnWarDeclared`, `AllianceCampaignBehavior.StartAlliance` and `ProposeCallToWarAgreementDecision.IsAllowed` (v1.5.7). With the pair at peace, a realm allied with Gondor and at war with Dunland can call Gondor in. For an AI realm the caller's vote alone starts the war (`ApplyChosenOutcome`), and the agreement lasts 42 days. Rivendell and Arthedain are both Hostile to Dunland and Natural with Gondor.
+- **Why missed:** the builder traced the call to war through Gondor's one Permanent ally and stopped. A Natural row adds 500 to the alliance score, so those realms can ally too. The first plan had already rejected an Isengard-Dunland row for this same mechanism, seen from the other side.
+- **Prevent:** when a diplomacy row changes tier, write the table of every realm that can be allied with either side (Permanent and Natural rows) against every realm at war with the other side. Read `DefaultAllianceModel.GetScoreOfCallingToWar` for the pairs that remain: it refuses a caller that is stronger than its target.
+- **Source:** [rca-faction-balance-data-2026-11-14.md](../rca-faction-balance-data-2026-11-14.md), finding 1, data-flow lens.
+
+### A list of what stops campaign time includes TAOM's own pause calls (#1075, 2026-11-15)
+The scenario driver handled every engine pause the slice review listed (inquiries, scene notifications, menus, the time lock, focus loss). The first unattended run still stood 9 minutes on day 2: a War Chronicle story window called `GameStateManager.RegisterActiveStateDisableRequest` (`RealmsPopupLayer.cs:57-61`), and the status read `screen=Map time_locked=0` the whole time.
+- **Why missed:** the review read the engine's pause sources and no lens grepped TAOM's own code for the same call.
+- **Prevent:** before you list what can stop time for a driver or a watchdog, grep the repo for `RegisterActiveStateDisableRequest` and `TimeControlModeLock` as well as the engine. Each caller is a pause the driver must see or close.
+- **Source:** [rca-scenario-event-window-2026-11-15.md](../rca-scenario-event-window-2026-11-15.md), finding 1, first game run.

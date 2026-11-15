@@ -31,13 +31,14 @@ public class BugReportWiringSourceTests
     }
 
     [TestMethod]
-    public void MainMenu_ChecksThePreviousSession_OnlyWhenNoStallNoticeWasShown()
+    public void MainMenu_ChecksThePreviousSession_AndAStallNoticeUsesTheTurn()
     {
         var src = RepoPaths.ReadSource("Main/SubModule.cs", stripComments: true);
 
+        // #1297: the offer has a try of its own, so a throw in the stall marker resolve does not skip it for the launch.
         StringAssert.Matches(src, new Regex(
-            @"if \(stale != null\)\s*Features\.BattleLoadDiagnostics\.StallReportNotifier\.Notify\(stale\);\s*" +
-            @"else\s*Features\.CrashReport\.BugReport\.BugReportStartup\.CheckPreviousSession\("));
+            @"if \(stale != null\)\s*\{\s*stallShown = true;\s*Features\.BattleLoadDiagnostics\.StallReportNotifier\.Notify\(stale\);\s*\}\s*\}\s*catch[^\n]*\n\s*" +
+            @"try\s*\{\s*Features\.CrashReport\.BugReport\.BugReportStartup\.CheckPreviousSession\(\s*IoC\.Resolve<IModLogger>\(\),\s*stallNoticeShown: stallShown\);\s*\}"));
     }
 
     [TestMethod]

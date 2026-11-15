@@ -1,0 +1,8 @@
+{
+  "comment": "Spears of the live LOTRLOME_Armory that must fit the couch and the brace weapon descriptions. tools/register_couch_brace_polearms.py reads each item's pieces from its own CraftedItem and lists those pieces under both descriptions in the Armory's weapon_descriptions.xslt. Add an item when a mounted troop carries it as a lance or a foot troop braces it.",
+  "descriptions": ["TwoHandedPolearm_Couchable", "TwoHandedPolearm_Bracing"],
+  "items": [
+    {"id": "sm_dg_khml_spear_a", "reason": "carried by the Dol Guldur warg riders dg_warg_raider and dg_warg_skirmisher, the maintainer asked for it to couch and brace"},
+    {"id": "sm_dg_khml_spear_b", "reason": "carried by dg_warg_red_fang and dg_fell_warg_rider, the maintainer asked for it to couch and brace"}
+  ]
+}

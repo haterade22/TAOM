@@ -88,7 +88,7 @@ Two extension points, both delegating to `ITournamentService`:
 | Override | Delegates to | Behavior |
 |---|---|---|
 | `GetParticipantArmor(CharacterObject)` | `ArmourDummyId` | Resolves a `gear_practice_dummy_<culture>` NPC by the participant's culture, returns its `RandomBattleEquipment`; falls through to base if not found. Practice fights only: in a tournament (a mission with a `TournamentFightMissionController`, played or skipped match) `ArmourDummyId` returns no dummy and the model returns the fighter's own `RandomBattleEquipment`. |
-| `GetRegularRewardItems(Town, …)` | `BuildPrizePool(culture, PrizeBand.Regular)` | Light, medium and civilian class (Tierf 2 and up) from `Items.All`, weapons and armour only, no horses: the town's culture, else every culture's. Base only if both are empty. See [Prize pools](#prize-pools). |
+| `GetRegularRewardItems(Town, …)` | `BuildPrizePool(culture, PrizeBand.Regular)` | Light, medium and civilian class from `Items.All` (a weapon or an unlisted piece also needs Tierf 2 and up, a listed armour piece a value of 750), weapons and armour only, no horses: the town's culture, else every culture's. Base only if both are empty. See [Prize pools](#prize-pools). |
 | `GetEliteRewardItems(Town, …)` | `BuildPrizePool(culture, PrizeBand.Elite)` | Same builder, heavy class only. |
 | `GetTournamentStartChance(Town)` | `CalculateStartChance` | Boundary computes lord count; service maps it: 0→0%, 1→45%, 2→75%, 3→90%, 4+→100%. Returns 0% if the town is under siege or outside a campaign. |
 | `GetTournamentEndChance(TournamentGame)` | `CalculateEndChance` | After a 20-day grace period, ramps end-chance by 3.3%/day elapsed. |
@@ -137,7 +137,8 @@ None for the Arena feature itself: its knobs are constants on `TournamentService
 
 | Constant | Location | Value | Meaning |
 |---|---|---|---|
-| `RegularMinTierf` | `TournamentPrizeRules` | `2f` | Junk floor of the regular prize band; the bands themselves are armour classes |
+| `RegularMinTierf` | `TournamentPrizeRules` | `2f` | Junk floor of the regular prize band for an item the class table does not list (weapons, shields, harness); the bands themselves are armour classes |
+| `RegularMinTableArmourValue` | `TournamentPrizeRules` | `750` | Floor on `ItemObject.Value` of the regular band for an armour piece the class table lists |
 | `TournamentStartChance1Lord` / `2Lords` / `3Lords` | `TournamentService` | `0.45f` / `0.75f` / `0.90f` | Start probability by lord count |
 | `TournamentEndChanceGraceDays` | `TournamentService` | `20f` | Grace before end-chance ramps |
 | `TournamentEndChanceRamp` | `TournamentService` | `0.033f` | Per-day end-chance increment after grace |
@@ -187,7 +188,7 @@ supplies both lists through [TournamentPrizeRules](../../Main/Features/Arena/Tou
 
 | Band | Accepts | Never |
 |---|---|---|
-| Regular | light, medium or civilian class, Tierf 2 and up | heavy and above |
+| Regular | light, medium or civilian class; value 750 and up for an armour piece the table lists, Tierf 2 and up for an item it does not | heavy and above |
 | Elite | heavy class | light, medium, and anything above heavy |
 | Both | weapons and armour of the band, from the town's culture, else every culture's | horses, elite, lord, named kit, anything `is_merchandise="false"` in its XML |
 
@@ -195,6 +196,19 @@ supplies both lists through [TournamentPrizeRules](../../Main/Features/Arena/Tou
   `IArmourGateService.GetClass`. A weapon, shield or harness has none, so it takes the class its engine
   tier implies (`ArmourClassRules.FromEngineTier`): Tier3 is medium, Tier4 heavy, Tier5 and Tier6
   elite and never a prize.
+  Whether a piece is in the table is `IArmourGateService.GetTableClass`, not whether `GetClass` has a
+  value: the gate also classes an unlisted piece of character armour by its engine tier, and that piece
+  keeps the Tierf floor.
+  The regular band's Tierf 2 junk floor therefore applies only to an item the table does not list. After
+  the armour rebalance (#1271) most light and medium armour sits below Tierf 2, some below 0; what still
+  reaches it is mostly helmets and capes, because the tier formula weighs head armour 1.2 x 1.2 and a cape
+  1.8. A listed armour piece is judged by its class and by `RegularMinTableArmourValue` (750 denars)
+  instead. The value floor is there because `FightTournamentGame.GetTournamentPrize` sorts the pool by `ItemObject.Value` and draws
+  from a quarter of it chosen by the number of heroes, so with no or one hero the draw would mostly
+  award pieces worth 100 to 400 denars (a light pauldron with 2 body armour is worth about 96). The old
+  Tierf 2 floor meant about 756 to 907 denars.
+  The Armory rewrite for the rebalance was applied on 2026-11-14, so the rule now reads the rewritten
+  values.
 - **Merchandise** is the XML value from before the armour gate flips heavy and above to
   `NotMerchandise`: the gate's record keeps it (`GetRecord(id).IsMerchandise`). That is how a gated
   heavy piece can still be a prize while the troll gear, which is `is_merchandise="false"` in the
@@ -307,6 +321,7 @@ If another custom-skeleton race is ever a tournament participant and clips insid
 
 ## Changelog
 
+- 2026-11-14: the regular band no longer applies the Tierf 2 junk floor to an armour piece the class table lists; it asks for a value of 750 instead (`RegularMinTableArmourValue`), because the armour rebalance (#1271) leaves almost all light and medium armour below Tierf 2. `Fits` takes the table class itself and computes the effective class inside, and `IArmourGateService.GetTableClass` reports real table membership, so an unlisted piece the gate classes by engine tier keeps the Tierf floor. Weapons, shields, harness and unlisted pieces are unchanged.
 - 2026-10-05: checked against Bannerlord v1.5.4: the seven `DefaultTournamentModel` overrides and the Patch46, 60, 62 and 69 targets are unchanged from v1.5.3 (decompile diff of both builds; strict binding gate on v1.5.4). No code change.
 - 2026-10-05: tournament fighters wear their own armour again (Mike). `GetParticipantArmor` now gives the culture practice kit only in arena practice fights; in a tournament mission, played or skipped match, it returns the fighter's own `RandomBattleEquipment` directly, because a skipped match never sets `MissionMode.Tournament` and base would give its simulation the host's kit. `TournamentService.ArmourDummyId` decides, with four tests.
 - 2026-10-05: corrected what vanilla's `GetParticipantArmor` does. Since this doc was written it said every tournament fighter wears the host culture's kit; vanilla does that only in arena practice fights, and a tournament fighter keeps his own armour (the `MissionMode.Tournament` check). TAOM's override applies in both, so in tournaments it swaps each fighter's own armour for his culture's practice kit. Found by the v1.5.4 check; the code was the same on v1.5.3.

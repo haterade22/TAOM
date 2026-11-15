@@ -87,7 +87,7 @@ public class TaomPartyHealingModelTests
     [DataRow(0.75f, 0.30f, 0.825f)]  // Gondor: +30% survival bonus
     [DataRow(0.75f, 0.20f, 0.80f)]   // Rohan: +20% survival bonus
     [DataRow(0.75f, 0.50f, 0.875f)]  // Lothlorien: +50% survival bonus
-    [DataRow(0.75f, -0.20f, 0.70f)]  // Mordor: -20% survival penalty
+    [DataRow(0.75f, -0.20f, 0.70f)]  // a -20% survival penalty (Mordor's until #1283; no culture ships it now)
     [DataRow(0.75f, -0.10f, 0.725f)] // Gundabad: -10% survival penalty
     public void ApplyCulturalSurvivalBonus_KnownValues_ReturnsExpected(
         float vanillaSurvival, float bonus, float expected)
@@ -161,10 +161,10 @@ public class BattleBalanceConfigCasualtyRatiosTests
         var config = new BattleBalanceConfig.CasualtyRatiosSection();
 
         // Act
-        float result = config.GetCulturalSurvivalBonus("mordor");
+        float result = config.GetCulturalSurvivalBonus("gundabad");
 
         // Assert
-        Assert.AreEqual(-0.2f, result, 0.001f);
+        Assert.AreEqual(-0.1f, result, 0.001f);
     }
 
     [TestMethod]
@@ -174,7 +174,7 @@ public class BattleBalanceConfigCasualtyRatiosTests
     [DataRow("erebor", 0.3f)]
     [DataRow("rivendell", 0.4f)]
     [DataRow("lindon", 0.4f)]
-    [DataRow("mordor", -0.2f)]
+    [DataRow("mirkwood", 0.4f)]
     [DataRow("gundabad", -0.1f)]
     [DataRow("dolguldur", -0.1f)]
     public void GetCulturalSurvivalBonus_AllDefinedCultures_ReturnExpectedBonus(
