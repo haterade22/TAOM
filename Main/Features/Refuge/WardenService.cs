@@ -444,7 +444,10 @@ public class WardenService : IWardenService
         try
         {
             KillCharacterAction.ApplyByRemove(hero);
-            return true;
+            // Inside a map or siege event the engine only adds a death mark and the hero lives
+            // on until the event ends; report that as not removed, so no soldier is added on
+            // top of a hero who is still there.
+            return !hero.IsAlive;
         }
         catch (Exception ex)
         {
