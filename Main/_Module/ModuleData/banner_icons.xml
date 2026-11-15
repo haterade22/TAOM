@@ -45,6 +45,8 @@
       <Icon id="11006" material_name="taom_banners_03" texture_index="6" />
       <Icon id="31008" material_name="taom_banners_03" texture_index="14" />
       <Icon id="31009" material_name="taom_banners_03" texture_index="15" />
+      <Icon id="31039" material_name="taom_banners_16" texture_index="7" />
+      <Icon id="31040" material_name="taom_banners_16" texture_index="8" />
     </BannerIconGroup>
 
     <BannerIconGroup id="120" name="{=taom_banner_category_adunaic}Adûnaic" is_pattern="false">
