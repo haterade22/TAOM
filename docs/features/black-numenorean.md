@@ -269,11 +269,15 @@ went stale at once, silently reverting a shipped shoulder fix (found 2026-07-31,
 `tools/tests/test_armor_curve_invariant.py::GeneratorCurveSyncTests`). Importing removes that failure
 mode, and applies Mordor's `protection: -1` / `weight_mult: 1.10` from `CULTURAL_MODS` rather than
 hardcoding the result. Since the kingdom-cap curve (#583, 2026-09-13) every call passes `item_id=`,
-because the cap is the LINE's (`mordor_numenorean`, 57, routed by the `sk_md_num_` / `sm_md_num_`
-prefixes), not the folder's (the orc kit at 38); `CULTURAL_MODS` now carries only the weight and the
-legacy proportions. The rows below are the legacy curve the generator wrote in August; the live
-values follow the 57 cap (elite chest 57, helmet 51, bracer and pauldron 34, greaves 29, the bands
-below at .40 / .64 / .84 of those).
+because the cap is the LINE's (`mordor_numenorean`, 46 since 2026-11-14, routed by the `sk_md_num_` /
+`sm_md_num_` prefixes), not the folder's (the orc kit at 36); `CULTURAL_MODS` now carries only the
+weight and the legacy proportions. The rows below are the legacy curve the generator wrote in August;
+the live values follow the 46 cap (elite chest 46, helmet 48, bracer 23, pauldron 13, greaves 21, the
+bands below at .16 / .35 / .68 of those, the helmet's light and heavy bands at .24 and .82, the lord
+band at 1.07, and arm and leg armour on a chest only from the heavy band). The same line prices the
+named kit of Mordor's lords (Sauron, the Nazgul, the Witch-king, Khamul) by id, so Sauron's torso is
+49 and not the orc cap's 39 ([armor-balance.md](armor-balance.md), "Bands, secondaries, hero kit and
+worn limits").
 
 Resulting rows at authoring time (mesh tier maps one-to-one onto the curve tier; superseded by the
 cap, see above):

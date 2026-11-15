@@ -1,6 +1,11 @@
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NSubstitute;
+using TAOM.Adapters;
+using TAOM.Core.Logging;
 using TAOM.Features.Arena;
+using TAOM.Features.ArmourAcquisition;
 using TAOM.Features.ArmourAcquisition.Domain;
 
 namespace TAOM.Tests.Features.Arena;
@@ -15,9 +20,13 @@ namespace TAOM.Tests.Features.Arena;
 public class TournamentPrizeRulesTests
 {
     // (int)ItemObject.Tier, Tier1 = 0 in v1.5.3.
+    private const int Tier1Index = 0;
     private const int Tier3Index = 2;
     private const int Tier4Index = 3;
     private const int Tier5Index = 4;
+
+    private const int CheapValue = 100;
+    private const int WorthAPrize = 2000;
 
     // --- PrizeClass ---
 
@@ -39,59 +48,126 @@ public class TournamentPrizeRulesTests
         Assert.AreEqual(ArmourClass.Elite, TournamentPrizeRules.PrizeClass(null, Tier5Index));
     }
 
-    // --- Fits: the regular band ---
+    // --- Fits: the regular band, an item the class table does not list ---
 
     [TestMethod]
-    public void Fits_RegularBand_LightMerchandise_Accepted()
+    public void Fits_RegularBand_NoTableClass_LightByTier_Accepted()
     {
-        Assert.IsTrue(TournamentPrizeRules.Fits(PrizeBand.Regular, ArmourClass.Light, 2.5f, xmlMerchandise: true));
+        Assert.IsTrue(TournamentPrizeRules.Fits(PrizeBand.Regular, null, Tier1Index, 2.5f, xmlMerchandise: true, itemValue: CheapValue));
     }
 
     [TestMethod]
-    public void Fits_RegularBand_MediumMerchandise_Accepted()
+    public void Fits_RegularBand_NoTableClass_MediumByTier_Accepted()
     {
-        Assert.IsTrue(TournamentPrizeRules.Fits(PrizeBand.Regular, ArmourClass.Medium, 3.2f, xmlMerchandise: true));
+        Assert.IsTrue(TournamentPrizeRules.Fits(PrizeBand.Regular, null, Tier3Index, 3.2f, xmlMerchandise: true, itemValue: CheapValue));
     }
 
     [TestMethod]
-    public void Fits_RegularBand_CivilianMerchandise_Accepted()
+    public void Fits_RegularBand_NoTableClass_BelowJunkFloor_Refused()
     {
-        Assert.IsTrue(TournamentPrizeRules.Fits(PrizeBand.Regular, ArmourClass.Civilian, 2.5f, xmlMerchandise: true));
+        Assert.IsFalse(TournamentPrizeRules.Fits(PrizeBand.Regular, null, Tier1Index, 1.9f, xmlMerchandise: true, itemValue: WorthAPrize));
     }
 
     [TestMethod]
-    public void Fits_RegularBand_BelowJunkFloor_Refused()
+    public void Fits_RegularBand_NoTableClass_AtJunkFloor_Accepted()
     {
-        Assert.IsFalse(TournamentPrizeRules.Fits(PrizeBand.Regular, ArmourClass.Light, 1.9f, xmlMerchandise: true));
+        Assert.IsTrue(TournamentPrizeRules.Fits(PrizeBand.Regular, null, Tier1Index, 2f, xmlMerchandise: true, itemValue: CheapValue));
     }
 
     [TestMethod]
-    public void Fits_RegularBand_AtJunkFloor_Accepted()
+    public void Fits_RegularBand_NoTableClass_Heavy_Refused()
     {
-        Assert.IsTrue(TournamentPrizeRules.Fits(PrizeBand.Regular, ArmourClass.Light, 2f, xmlMerchandise: true));
+        Assert.IsFalse(TournamentPrizeRules.Fits(PrizeBand.Regular, null, Tier4Index, 4f, xmlMerchandise: true, itemValue: WorthAPrize));
     }
 
     [TestMethod]
-    public void Fits_RegularBand_Heavy_Refused()
+    public void Fits_RegularBand_NoTableClass_NaNTierf_Refused()
     {
-        // Heavy belongs to the big tournaments' band; a small one stays light and medium.
-        Assert.IsFalse(TournamentPrizeRules.Fits(PrizeBand.Regular, ArmourClass.Heavy, 4f, xmlMerchandise: true));
+        Assert.IsFalse(TournamentPrizeRules.Fits(PrizeBand.Regular, null, Tier1Index, float.NaN, xmlMerchandise: true, itemValue: WorthAPrize));
     }
 
     [TestMethod]
-    public void Fits_RegularBand_NaNTier_Refused()
+    public void Fits_RegularBand_NoTableClass_WeaponAtTier1_Refused()
     {
-        Assert.IsFalse(TournamentPrizeRules.Fits(PrizeBand.Regular, ArmourClass.Light, float.NaN, xmlMerchandise: true));
+        Assert.IsFalse(TournamentPrizeRules.Fits(PrizeBand.Regular, null, Tier1Index, 1f, xmlMerchandise: true, itemValue: WorthAPrize));
+    }
+
+    // --- Fits: the regular band, an armour piece the class table lists ---
+
+    [TestMethod]
+    public void Fits_RegularBand_TableMedium_WorthEnough_LowTierf_Accepted()
+    {
+        Assert.IsTrue(TournamentPrizeRules.Fits(PrizeBand.Regular, ArmourClass.Medium, Tier1Index, 0.8f, xmlMerchandise: true, itemValue: 765));
+    }
+
+    [TestMethod]
+    public void Fits_RegularBand_TableLight_Worth162_Refused()
+    {
+        Assert.IsFalse(TournamentPrizeRules.Fits(PrizeBand.Regular, ArmourClass.Light, Tier1Index, 0.3f, xmlMerchandise: true, itemValue: 162));
+    }
+
+    [TestMethod]
+    public void Fits_RegularBand_TableMedium_Worth400_Refused()
+    {
+        Assert.IsFalse(TournamentPrizeRules.Fits(PrizeBand.Regular, ArmourClass.Medium, Tier1Index, 1.4f, xmlMerchandise: true, itemValue: 400));
+    }
+
+    [DataTestMethod]
+    [DataRow(ArmourClass.Light)]
+    [DataRow(ArmourClass.Medium)]
+    [DataRow(ArmourClass.Civilian)]
+    public void Fits_RegularBand_TableClass_AtMinimumValue_Accepted(ArmourClass cls)
+    {
+        Assert.IsTrue(TournamentPrizeRules.Fits(PrizeBand.Regular, cls, Tier1Index, 0.3f, xmlMerchandise: true,
+            itemValue: TournamentPrizeRules.RegularMinTableArmourValue));
+    }
+
+    [DataTestMethod]
+    [DataRow(ArmourClass.Light)]
+    [DataRow(ArmourClass.Medium)]
+    [DataRow(ArmourClass.Civilian)]
+    public void Fits_RegularBand_TableClass_JustBelowMinimumValue_Refused(ArmourClass cls)
+    {
+        Assert.IsFalse(TournamentPrizeRules.Fits(PrizeBand.Regular, cls, Tier1Index, 0.3f, xmlMerchandise: true,
+            itemValue: TournamentPrizeRules.RegularMinTableArmourValue - 1));
+    }
+
+    [TestMethod]
+    public void Fits_RegularBand_TableHeavy_Refused()
+    {
+        Assert.IsFalse(TournamentPrizeRules.Fits(PrizeBand.Regular, ArmourClass.Heavy, Tier1Index, 0.8f, xmlMerchandise: true, itemValue: WorthAPrize));
+    }
+
+    [TestMethod]
+    public void Fits_RegularBand_TableMedium_XmlNonMerchandise_Refused()
+    {
+        Assert.IsFalse(TournamentPrizeRules.Fits(PrizeBand.Regular, ArmourClass.Medium, Tier1Index, 0.8f, xmlMerchandise: false, itemValue: WorthAPrize));
+    }
+
+    [TestMethod]
+    public void Fits_RegularBand_TableClass_NaNTierf_Accepted()
+    {
+        Assert.IsTrue(TournamentPrizeRules.Fits(PrizeBand.Regular, ArmourClass.Medium, Tier1Index, float.NaN, xmlMerchandise: true, itemValue: WorthAPrize));
+    }
+
+    [TestMethod]
+    public void Fits_RegularBand_TableClass_BeatsTheEngineTier()
+    {
+        Assert.IsTrue(TournamentPrizeRules.Fits(PrizeBand.Regular, ArmourClass.Light, Tier5Index, 5f, xmlMerchandise: true, itemValue: WorthAPrize));
     }
 
     // --- Fits: the elite band ---
 
     [TestMethod]
-    public void Fits_EliteBand_HeavyMerchandise_Accepted()
+    public void Fits_EliteBand_TableHeavy_AnyValue_Accepted()
     {
-        // The armour gate flips heavy pieces to NotMerchandise at game init; the caller passes the XML
-        // value, so a gate-flipped heavy piece is still a prize.
-        Assert.IsTrue(TournamentPrizeRules.Fits(PrizeBand.Elite, ArmourClass.Heavy, 4.2f, xmlMerchandise: true));
+        Assert.IsTrue(TournamentPrizeRules.Fits(PrizeBand.Elite, ArmourClass.Heavy, Tier1Index, 4.2f, xmlMerchandise: true, itemValue: CheapValue));
+    }
+
+    [TestMethod]
+    public void Fits_EliteBand_NoTableClass_Tier4_Accepted()
+    {
+        Assert.IsTrue(TournamentPrizeRules.Fits(PrizeBand.Elite, null, Tier4Index, 4f, xmlMerchandise: true, itemValue: CheapValue));
     }
 
     [DataTestMethod]
@@ -100,7 +176,7 @@ public class TournamentPrizeRulesTests
     [DataRow(ArmourClass.Civilian)]
     public void Fits_EliteBand_BelowHeavy_Refused(ArmourClass cls)
     {
-        Assert.IsFalse(TournamentPrizeRules.Fits(PrizeBand.Elite, cls, 3.4f, xmlMerchandise: true));
+        Assert.IsFalse(TournamentPrizeRules.Fits(PrizeBand.Elite, cls, Tier1Index, 3.4f, xmlMerchandise: true, itemValue: WorthAPrize));
     }
 
     // --- Fits: refused in both bands ---
@@ -110,7 +186,7 @@ public class TournamentPrizeRulesTests
     [DataRow(PrizeBand.Elite)]
     public void Fits_EliteClass_RefusedInEveryBand(PrizeBand band)
     {
-        Assert.IsFalse(TournamentPrizeRules.Fits(band, ArmourClass.Elite, 5f, xmlMerchandise: true));
+        Assert.IsFalse(TournamentPrizeRules.Fits(band, ArmourClass.Elite, Tier5Index, 5f, xmlMerchandise: true, itemValue: WorthAPrize));
     }
 
     [DataTestMethod]
@@ -118,7 +194,7 @@ public class TournamentPrizeRulesTests
     [DataRow(PrizeBand.Elite)]
     public void Fits_LordClass_RefusedInEveryBand(PrizeBand band)
     {
-        Assert.IsFalse(TournamentPrizeRules.Fits(band, ArmourClass.Lord, 5.5f, xmlMerchandise: true));
+        Assert.IsFalse(TournamentPrizeRules.Fits(band, ArmourClass.Lord, Tier5Index, 5.5f, xmlMerchandise: true, itemValue: WorthAPrize));
     }
 
     [DataTestMethod]
@@ -126,7 +202,7 @@ public class TournamentPrizeRulesTests
     [DataRow(PrizeBand.Elite)]
     public void Fits_NamedClass_RefusedInEveryBand(PrizeBand band)
     {
-        Assert.IsFalse(TournamentPrizeRules.Fits(band, ArmourClass.Named, 3f, xmlMerchandise: true));
+        Assert.IsFalse(TournamentPrizeRules.Fits(band, ArmourClass.Named, Tier3Index, 3f, xmlMerchandise: true, itemValue: WorthAPrize));
     }
 
     [DataTestMethod]
@@ -134,37 +210,89 @@ public class TournamentPrizeRulesTests
     [DataRow(PrizeBand.Elite, ArmourClass.Heavy)]
     public void Fits_XmlNonMerchandise_RefusedInEveryBand(PrizeBand band, ArmourClass cls)
     {
-        // The troll gear: is_merchandise="false" in the Armory XML keeps it out whatever its class.
-        Assert.IsFalse(TournamentPrizeRules.Fits(band, cls, 3f, xmlMerchandise: false));
+        Assert.IsFalse(TournamentPrizeRules.Fits(band, cls, Tier3Index, 3f, xmlMerchandise: false, itemValue: WorthAPrize));
     }
 
-    // --- Weapons through PrizeClass + Fits ---
+    // --- Weapons through Fits: no table class, judged by engine tier ---
 
     [TestMethod]
-    public void Fits_Tier5WeaponWithNoClass_RefusedInEveryBand()
+    public void Fits_Tier5Weapon_RefusedInEveryBand()
     {
-        var cls = TournamentPrizeRules.PrizeClass(null, Tier5Index);
-
-        Assert.IsFalse(TournamentPrizeRules.Fits(PrizeBand.Regular, cls, 5f, xmlMerchandise: true));
-        Assert.IsFalse(TournamentPrizeRules.Fits(PrizeBand.Elite, cls, 5f, xmlMerchandise: true));
+        Assert.IsFalse(TournamentPrizeRules.Fits(PrizeBand.Regular, null, Tier5Index, 5f, xmlMerchandise: true, itemValue: WorthAPrize));
+        Assert.IsFalse(TournamentPrizeRules.Fits(PrizeBand.Elite, null, Tier5Index, 5f, xmlMerchandise: true, itemValue: WorthAPrize));
     }
 
     [TestMethod]
-    public void Fits_Tier4WeaponWithNoClass_EliteBandOnly()
+    public void Fits_Tier4Weapon_EliteBandOnly()
     {
-        var cls = TournamentPrizeRules.PrizeClass(null, Tier4Index);
-
-        Assert.IsFalse(TournamentPrizeRules.Fits(PrizeBand.Regular, cls, 4f, xmlMerchandise: true));
-        Assert.IsTrue(TournamentPrizeRules.Fits(PrizeBand.Elite, cls, 4f, xmlMerchandise: true));
+        Assert.IsFalse(TournamentPrizeRules.Fits(PrizeBand.Regular, null, Tier4Index, 4f, xmlMerchandise: true, itemValue: WorthAPrize));
+        Assert.IsTrue(TournamentPrizeRules.Fits(PrizeBand.Elite, null, Tier4Index, 4f, xmlMerchandise: true, itemValue: WorthAPrize));
     }
 
     [TestMethod]
-    public void Fits_Tier3WeaponWithNoClass_RegularBandOnly()
+    public void Fits_Tier3Weapon_RegularBandOnly()
     {
-        var cls = TournamentPrizeRules.PrizeClass(null, Tier3Index);
+        Assert.IsTrue(TournamentPrizeRules.Fits(PrizeBand.Regular, null, Tier3Index, 3f, xmlMerchandise: true, itemValue: WorthAPrize));
+        Assert.IsFalse(TournamentPrizeRules.Fits(PrizeBand.Elite, null, Tier3Index, 3f, xmlMerchandise: true, itemValue: WorthAPrize));
+    }
 
-        Assert.IsTrue(TournamentPrizeRules.Fits(PrizeBand.Regular, cls, 3f, xmlMerchandise: true));
-        Assert.IsFalse(TournamentPrizeRules.Fits(PrizeBand.Elite, cls, 3f, xmlMerchandise: true));
+    // --- Table membership from the gate service reaches Fits ---
+
+    [TestMethod]
+    public void GateToPrize_UntabledBodyArmourAtTier0_StaysUnderTheTierfFloor()
+    {
+        var gate = GateWith(
+            new[] { new ArmourItemRecord("untabled_body", ArmourSlot.Body, 0, true, "gondor", 900) },
+            new Dictionary<string, ArmourClassEntry>());
+
+        var tableClass = gate.GetTableClass("untabled_body");
+
+        Assert.AreEqual(ArmourClass.Light, gate.GetClass("untabled_body"), "the gate classes it by engine tier");
+        Assert.IsNull(tableClass);
+        Assert.IsFalse(TournamentPrizeRules.Fits(PrizeBand.Regular, tableClass, Tier1Index, 0.8f, xmlMerchandise: true, itemValue: 900));
+    }
+
+    [TestMethod]
+    public void GateToPrize_TabledBodyArmourAtTier0_IsJudgedByClassAndValue()
+    {
+        var gate = GateWith(
+            new[] { new ArmourItemRecord("tabled_body", ArmourSlot.Body, 0, true, "gondor", 900) },
+            new Dictionary<string, ArmourClassEntry> { ["tabled_body"] = new("tabled_body", ArmourClass.Light, null) });
+
+        var tableClass = gate.GetTableClass("tabled_body");
+
+        Assert.AreEqual(ArmourClass.Light, tableClass);
+        Assert.IsTrue(TournamentPrizeRules.Fits(PrizeBand.Regular, tableClass, Tier1Index, 0.8f, xmlMerchandise: true, itemValue: 900));
+    }
+
+    [TestMethod]
+    public void GateToPrize_NamedWeaponOutsideTheTable_IsNeverAPrize()
+    {
+        var gate = GateWith(
+            new[] { new ArmourItemRecord("anduril", ArmourSlot.None, 3, true, "gondor", 50000) },
+            new Dictionary<string, ArmourClassEntry>());
+
+        var tableClass = gate.GetTableClass("anduril");
+
+        Assert.AreEqual(ArmourClass.Named, tableClass);
+        Assert.IsFalse(TournamentPrizeRules.Fits(PrizeBand.Elite, tableClass, Tier4Index, 4f, xmlMerchandise: true, itemValue: 50000));
+        Assert.IsFalse(TournamentPrizeRules.Fits(PrizeBand.Regular, tableClass, Tier3Index, 3f, xmlMerchandise: true, itemValue: 50000));
+    }
+
+    private static ArmourGateService GateWith(ArmourItemRecord[] items, Dictionary<string, ArmourClassEntry> entries)
+    {
+        var catalog = Substitute.For<IArmourItemCatalogAdapter>();
+        catalog.CanWriteMerchandise.Returns(true);
+        catalog.ReadItems().Returns(items);
+        var table = Substitute.For<IArmourClassTableProvider>();
+        table.GetEntries().Returns(entries);
+        var config = Substitute.For<IArmourAcquisitionConfigProvider>();
+        config.GetConfig().Returns(ArmourAcquisitionConfig.Default);
+        var settings = Substitute.For<IArmourAcquisitionSettingsProvider>();
+        settings.IsEnabled.Returns(true);
+        var gate = new ArmourGateService(catalog, table, config, settings, Substitute.For<IModLogger>());
+        gate.ApplyGating(isCampaign: true);
+        return gate;
     }
 
     // --- XmlMerchandise: which merchandise flag the bands judge ---

@@ -2415,11 +2415,38 @@ The first starter cap limited the blade `damage_factor` to the weakest sibling's
 - **Prevent:** when a rule says "must not out-damage" or "must not cost more", compute that quantity with the model the repo already has (`melee_catalogue` for melee DPS) and test the quantity. Define the comparison set by what the player can reach (merchandise, not a tournament or practice weapon), and write one decoy per exclusion.
 - **Source:** [rca-starter-cap-upgrade-paths-2026-11-13.md](../rca-starter-cap-upgrade-paths-2026-11-13.md), findings 5, 8 to 10.
 
+### Limit one blow as well as sustained damage (melee ladder, #1271, 2026-11-14)
+The melee ladder was one DPS curve for every weapon class, and nothing limited one blow. A slow weapon meets a DPS target with a large blow, so a placeholder one handed sword reached its tier 10 target of 119 DPS with a 140 swing, which kills a 100 health troop outright.
+- **Why missed:** DPS ranks weapons of one class against each other well, and every check was a DPS band.
+- **Prevent:** a weapon spec holds a limit on the displayed blow as well as on DPS, per class, and the cap that raises a weapon stops at the smaller of the two (`melee_ladder.max_factor`). A gate reports the blow (`MELEE_BLOW_CEILING`) beside the band.
+- **Source:** [rca-weapon-armour-rebalance-2026-11-14.md](../rca-weapon-armour-rebalance-2026-11-14.md), finding 1.
+
+### Judge armour on what a troop wears in total (armour curve, #1271, 2026-11-14)
+Each armour item was priced against its own slot cap, and a pauldron at 0.6 of the chest put the best troop's body sum at 112 against vanilla's 67. A hit meets the sum of every piece on that body part, so weapons were raised to get through it.
+- **Why missed:** the curve and its tests judged one item at a time; no check added the pieces a troop wears.
+- **Prevent:** state an armour target as the worn sum per body part, pin the best troop's sum in a test, and gate every troop's worn sum (`WORN_ARMOUR_CEILING`, `WORN_ARMOUR_FLOOR`), with each slot drawn from any battle set as a seeded spawn draws it.
+- **Source:** [rca-weapon-armour-rebalance-2026-11-14.md](../rca-weapon-armour-rebalance-2026-11-14.md), finding 2.
+
+### Fit weapons and armour together, with every multiplier the engine applies (#1271, 2026-11-14)
+Weapons rose to beat inflated armour, so a fix to either alone would have broken the other. The first fits of one against the other used the displayed blow and left out the wielder's weapon skill, and the first DPS cap read a whole-number damage as exact, so six capped weapons ended over their limit after the engine rounded.
+- **Why missed:** each fit used the numbers the tools already priced, and those agreed with the engine on the cases checked.
+- **Prevent:** change weapons and armour in one plan and judge the pair (a blow against a worn sum). Before a fit, list every multiplier and rounding the engine applies between the number the tool prices and the damage that lands (skill, head, speed, whole-point rounding), and either model each or state the one left out beside the limit.
+- **Source:** [rca-weapon-armour-rebalance-2026-11-14.md](../rca-weapon-armour-rebalance-2026-11-14.md), findings 3 and 21.
 ### A character that fights needs a weapon in every battle roster, and a role is not an occupation (#1273, 2026-11-14)
 Every TAOM villager shipped with battle rosters that held clothes only, so a villager party fought with its fists. Vanilla's villager carries a farm tool in every battle roster. The first fix then missed six village women, because it selected on `occupation="Villager"` and those six are `occupation="Townsfolk"`.
 - **Why missed:** the validator checks that references resolve, and an empty weapon slot has none. The earlier lesson asks only for a battle twin of the civilian roster. The fix's own rescan used the same filter as the edit, so it could only agree.
 - **Prevent:** when a culture's `villager`, `village_woman` or a party template stack names a character, give every battle roster of that adult a weapon (a vanilla farm tool in `Item0`, `throwing_stone` in `Item1`). Pick characters by the culture field or the id family, never by `occupation`. Check an edit with a rule that does not share its filter.
 - **Source:** [rca-villager-weapons-2026-11-14.md](../rca-villager-weapons-2026-11-14.md), finding 1.
+### An edit to an unversioned module needs a repo-held spec and a re-apply tool with a check (Armory cover attributes, 2026-11-14)
+Mike corrected the hair and beard cover types on Armory helmets by hand several times (47 beards in October, the crowns on 2026-11-14), and each Armory reinstall, mirror sync or art drop put the old values back. The only record was a ledger with a manual redo, which someone had to remember to run. By the time of the latest redo, two of the 47 ids had already left the Armory.
+- **Why missed:** the Armory is outside the repo, so no gate read `beard_cover_type`, and a ledger describes an edit without making it reproducible.
+- **Prevent:** when a fix lands in an unversioned module, put the intended values in a spec in the repo, write the tool that re-applies them (dry run, backup tag, a no-op second run), and register its `--check` in `tools/data_gates.py` with exit 2 for a missing install. Hold the whole attribute family for every item, not only the items fixed that day, so a reset of a neighbour (gloves, boots, a mane) shows as drift too.
+- **Source:** [lotrlome-beard-cover-changes.md](../../reference/lotrlome-beard-cover-changes.md), "Redo"; `tools/armour_cover_flags.json`.
+### A tool that fits a troop to a number must hold the troop's weapon category fixed (melee ladder, #1271, 2026-11-14)
+The maintainer's rule: every troop was made for one weapon category (sword and shield, two handed sword or axe, spear and shield, couchable lance, polearm, pike, bow). The melee ladder fixer ranks candidates by damage per second and tier band, so its plan of 176 swaps replaced poleaxes with short spears, for example `rhudaur_lord_of_the_angle` from `numenorean_poleaxe_heavy` at 92 DPS to `dunland_caerdh_short_spear_e` at 33. Every swap fitted its number and none fitted the troop.
+- **Why missed:** the fixer's own class is the crafting template (step 2 of its candidate order), which is coarser than the category: the plan above passed it. Its other filters are numbers (tier limit, DPS band, culture), so a swap that landed in the band looked correct.
+- **Prevent:** a tool that swaps or restats a troop's weapon takes candidates only from the troop's own category (one handed with shield, two handed sword, two handed axe or mace, spear with shield, couchable lance, swinging polearm, pike, bow, crossbow), never moves a troop between a shield kit and a two handed one, and never lowers an under-armed troop's damage. Read the dry run's before and after weapon names for a change of kind, not only the DPS column. Until `fix_melee_ladder.py` does this it is not run with `--apply`.
+- **Source:** [melee-damage-model.md](../../features/melee-damage-model.md), "A troop keeps its weapon category".
 
 ### Read banner keys with the gate's parser: a rotation can be negative (#1284, 2026-11-14)
 The v2.0.40 repack deleted four icon rows as unused (17006 to 17008, 10505) while Nos Galengrim and `clan_shaghana_3` still flew them; both keys hold negative rotations such as `-134`, and a digits-only key parse skips those keys. This is the third miss of one kind: the Angáladh build's ten-field parser (above, "Check who else uses a reused id"), the repack, and a gallery script written while fixing the repack, which first called two used icons unused.

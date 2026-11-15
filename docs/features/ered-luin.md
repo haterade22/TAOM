@@ -431,12 +431,12 @@ Restart Bannerlord fully, then start a new campaign.
     carries town spawn tags (48 `sp_` tags, 60 `npc_common`), but whether it works as a town (gates,
     alleys, siege entities) needs his editor check, and a bound scene must ship in every release
     channel's `TAOM_Map/SceneObj`.
-  - 77 elite-to-lord upgrade links in `armour_classes.xml`, all pre-existing, lead to a lord piece
-    that is no better on any armour value and worse on at least one. By kit: Rhûn 32, Rivendell 25,
-    Dol Guldur 16 (15 of them the Khamul line in the Armory's rhun folder, 1 an Uruk chest),
-    Gondor 2, Gundabad 1 and Rohan 1. 49 of them lose 1 to 5 points in total and 20 lose more than
-    20. This branch's armour-class fix exempts lord targets and left them alone: keep them, or
-    re-link them.
+  - 24 elite-to-lord upgrade links in `armour_classes.xml`, all pre-existing, lead to a lord piece
+    that is no better on any armour value and worse on at least one (counted with
+    `generate_armour_classes.build_rows` on the Armory as rewritten on 2026-11-14). By Armory folder: rhun
+    11, dol_guldur 10, rivendell 2 and rohan 1. Each loses 1 to 3 points in total; the rebalance
+    shrank the gaps (it was 77 links before, 20 of them losing more than 20 points). This branch's
+    armour-class fix exempts lord targets and left them alone: keep them, or re-link them.
 - The twelve wanderers carry the same Khuzdul surnames as Erebor's twelve, as Cardolan's keep
   Gondor's.
 - No art was made for Ered Luin: its faction card shows the dwarf-hall image the Ered Duin

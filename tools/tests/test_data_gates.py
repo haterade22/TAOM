@@ -177,6 +177,44 @@ class SelectionTests(unittest.TestCase):
         for path in ("Main/_Module/ModuleData/taom_lord_skill_sets.xml", "tools/apply_culture_skills_traits.py"):
             self.assertIn("generator-regions", _ids(dg.select(dg.GATES, [path])), path)
 
+    def test_the_placeholder_inputs_select_the_placeholder_verify_gate(self):
+        """The placeholders are priced from the donors' blades, the carriers' tiers and the class
+        limits, so a change to any of them can leave a generated file stale (2026-11-14, #1271)."""
+        gate = next(g for g in dg.GATES if g.id == "placeholder-weapons")
+        self.assertEqual(gate.cmd, ("python", "tools/generate_placeholder_weapons.py", "--verify"))
+        for path in ("Main/_Module/ModuleData/placeholder_weapons/ph_items.xml",
+                     "Main/_Module/ModuleData/placeholder_weapons/ph_weapon_descriptions.xslt",
+                     "tools/placeholder_weapons.json", "tools/melee_ladders.json",
+                     "tools/generate_placeholder_weapons.py", "tools/melee_ladder.py", "tools/melee_damage.py",
+                     "tools/melee_catalogue.py", "tools/restat_melee_blades.py", "tools/fix_melee_ladder.py",
+                     "Main/_Module/ModuleData/troops/troops_gondor.xml", LIVE_ARMORY):
+            self.assertIn("placeholder-weapons", _ids(dg.select(dg.GATES, [path])), path)
+
+    def test_an_unrelated_tool_does_not_select_the_placeholder_verify_gate(self):
+        self.assertNotIn("placeholder-weapons", _ids(dg.select(dg.GATES, ["tools/data_gates.py"])))
+
+    def test_the_armour_curve_selects_every_generated_armour_check(self):
+        """generate_lothlorien_armor.py and generate_snow_orc_armor.py write item stats through
+        rebalance_armor.calculate_stats, so a change to the curve stales both live item sets."""
+        selected = dg.select(dg.GATES, ["tools/rebalance_armor.py"])
+        commands = [g.cmd for g in selected]
+        self.assertIn(("python", "tools/generate_lothlorien_armor.py", "--check"), commands)
+        self.assertIn(("python", "tools/generate_snow_orc_armor.py", "--check"), commands)
+
+    def test_the_armour_cover_flags_gate_reads_the_spec_the_tool_and_any_live_armour_file(self):
+        """A reinstall resets the cover attributes of every armour slot, so the spec, its tool, a generator and
+        a named live Armory file all select the check, and exit 2 (no install) is NOT RUN."""
+        gate = next(g for g in dg.GATES if g.id == "armour-cover-flags")
+        self.assertEqual(gate.cmd, ("python", "tools/apply_armour_cover_flags.py", "--check"))
+        live_head = LIVE_ARMORY.replace("weapons.xml", "head_armors.xml")
+        live_legs = LIVE_ARMORY.replace("weapons.xml", "leg_armors.xml")
+        for path in ("tools/armour_cover_flags.json", "tools/apply_armour_cover_flags.py",
+                     "tools/generate_dale_armor.py", live_head, live_legs):
+            self.assertIn("armour-cover-flags", _ids(dg.select(dg.GATES, [path])), path)
+        self.assertNotIn("armour-cover-flags", _ids(dg.select(dg.GATES, [TROOPS])))
+        self.assertEqual(dg.verdict(2, "ERROR: SKIPPED, LOTRLOME_Armory is not installed")[0], "NOT RUN")
+        self.assertEqual(dg.verdict(1, "DRIFT ...")[0], "FAIL")
+
     def test_a_prefab_selects_the_sprite_test(self):
         selected = dg.select(dg.GATES, ["Main/_Module/GUI/PreFabs/X.xml"])
         self.assertTrue(any("PrefabSpriteTests" in " ".join(g.cmd) for g in selected))

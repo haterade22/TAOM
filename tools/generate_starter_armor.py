@@ -3,9 +3,9 @@
 Mirrors the hand-authored Gondor pattern (LOTRLOME_items/gondor/starter_armors.xml):
 for each culture x archetype, clone the culture's chest + boots items (so mesh / material /
 cover flags / gender variations render correctly), strip their armor numbers, and re-set
-ONLY the slot's primary stat to the TAOM starter anchor:
+ONLY the slot's primary stat to the TAOM starter anchor, held to the culture's light band:
 
-    Ranged = ~5   Cavalry = ~7   Infantry = ~9
+    Ranged = ~5   Cavalry = ~7   Infantry = ~9   (each at most the culture's light band value)
 
 Only Body + Leg are authored: the starter kit is chest + legs + weapons (+ mount for
 cavalry) by design -- no helmet, shoulders/cape, or gloves. Items carry NO explicit value=,
@@ -24,7 +24,11 @@ Usage:
 import argparse
 import os
 import glob
+import sys
 import xml.etree.ElementTree as ET
+
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import rebalance_armor as ra  # noqa: E402
 
 DEFAULT_ARMORY = r"E:\Steam\steamapps\common\Mount & Blade II Bannerlord\Modules\LOTRLOME_Armory"
 
@@ -48,6 +52,7 @@ CULTURES = [
 ]
 
 # slot stat templates per archetype. body/cape = (body_armor, arm_armor); others = single stat.
+# These are ceilings, not targets: armor_overrides lowers each to the culture's light band.
 TEMPLATES = {
     "ranged":   {"head": 5, "body": (5, 2), "leg": 5, "cape": (4, 1), "gloves": 4},
     "cavalry":  {"head": 7, "body": (7, 3), "leg": 7, "cape": (5, 2), "gloves": 5},
@@ -111,19 +116,29 @@ def lowest_of_type(by_type, item_type, stat_key):
     return min(cands, key=lambda r: primary_stat(r, stat_key))
 
 
-def armor_overrides(slot, tmpl):
+# The armour curve's slot for each starter slot.
+CURVE_SLOT = {"head": "head", "body": "body", "leg": "leg", "cape": "shoulder", "gloves": "arm"}
+
+
+def starter_value(literal, line, slot):
+    """The smaller of the literal template value and the light band value of the culture's line: the
+    literals are ceilings, and some cultures' light band sits below them."""
+    curve_slot = CURVE_SLOT[slot]
+    return min(literal, ra.cap_value(ra.KINGDOM_CAPS[line], curve_slot, "light"))
+
+
+def armor_overrides(slot, tmpl, line):
+    """The stat attributes of one starter item. `line` is the culture's rebalance_armor.KINGDOM_CAPS key.
+    A second stat (a chest's arm armour, a cape's arm armour) keeps the literal's share of its primary
+    and goes through the curve's own rule, so it is 0 below the heavy band and capped from it."""
     v = tmpl[slot]
-    if slot == "head":
-        return {"head_armor": str(v)}
-    if slot == "leg":
-        return {"leg_armor": str(v)}
-    if slot == "gloves":
-        return {"arm_armor": str(v)}
-    if slot == "body":
-        return {"body_armor": str(v[0]), "arm_armor": str(v[1])}
-    if slot == "cape":
-        return {"body_armor": str(v[0]), "arm_armor": str(v[1])}
-    raise ValueError(slot)
+    if slot in ("body", "cape"):
+        primary = starter_value(v[0], line, slot)
+        curve_slot = CURVE_SLOT[slot]
+        second = min(v[1], ra.kingdom_secondary(curve_slot, "arm_armor", "light", primary, v[1] / v[0]))
+        return {"body_armor": str(primary), "arm_armor": str(second)}
+    stat = {"head": "head_armor", "leg": "leg_armor", "gloves": "arm_armor"}[slot]
+    return {stat: str(starter_value(v, line, slot))}
 
 
 def build_item_xml(donor, new_id, new_name, taom_culture, slot, overrides):
@@ -166,6 +181,27 @@ def build_item_xml(donor, new_id, new_name, taom_culture, slot, overrides):
     return "\n".join(lines)
 
 
+BOM = b"\xef\xbb\xbf"
+
+
+def write_generated(out_path, content):
+    """Write one generated file as bytes. The content is parsed first, so a malformed render never replaces
+    a good file. The file it replaces is kept once as .bak-startergear, and its BOM and line endings carry
+    over (tools/README.md "XML I/O convention")."""
+    ET.fromstring(content.encode("utf-8"))
+    bom, eol = b"", "\n"
+    if os.path.exists(out_path):
+        with open(out_path, "rb") as fh:
+            old = fh.read()
+        bom = BOM if old.startswith(BOM) else b""
+        eol = "\r\n" if b"\r\n" in old else "\n"
+        bak = out_path + ".bak-startergear"
+        if not os.path.exists(bak):
+            os.replace(out_path, bak)
+    with open(out_path, "wb") as fh:
+        fh.write(bom + content.replace("\n", eol).encode("utf-8"))
+
+
 def generate_culture(taom, folder, body_donor, leg_donor, armory):
     folder_path = os.path.join(armory, "ModuleData", "LOTRLOME_items", folder)
     if not os.path.isdir(folder_path):
@@ -193,7 +229,7 @@ def generate_culture(taom, folder, body_donor, leg_donor, armory):
             new_name = "{=%s}%s %s %s" % (new_id, CULTURE_DISPLAY[taom],
                                           ARCH_DISPLAY[arch], SLOT_DISPLAY[slot])
             blocks.append(build_item_xml(donor, new_id, new_name, taom, slot,
-                                         armor_overrides(slot, tmpl)))
+                                         armor_overrides(slot, tmpl, ra.kingdom_key(new_id, folder))))
 
     donor_summary = {s: (donors[s].attrib.get("id") if donors[s] else None)
                      for s in ("body", "leg")}
@@ -203,8 +239,9 @@ def generate_culture(taom, folder, body_donor, leg_donor, armory):
         '  TAOM career-archetype starter armor for %s. GENERATED by\n'
         '  tools/generate_starter_armor.py (do not hand-edit; re-run the generator).\n'
         '  Clones culture items (mesh/material/cover flags borrowed), armor re-set to the\n'
-        '  starter anchors Ranged~5 / Cavalry~7 / Infantry~9. No explicit value= -> trivial\n'
-        '  computed resale. Donors: %s\n'
+        '  starter anchors Ranged~5 / Cavalry~7 / Infantry~9, each held to the culture light\n'
+        '  band (rebalance_armor.cap_value). No explicit value= -> trivial computed resale.\n'
+        '  Donors: %s\n'
         '-->\n'
         '<Items>\n' % (CULTURE_DISPLAY[taom], donor_summary)
     )
@@ -232,12 +269,7 @@ def main():
         out_path = os.path.join(args.armory_path, "ModuleData", "LOTRLOME_items",
                                 folder, "starter_armors.xml")
         if args.apply:
-            if os.path.exists(out_path):
-                bak = out_path + ".bak-startergear"
-                if not os.path.exists(bak):
-                    os.replace(out_path, bak)
-            with open(out_path, "w", encoding="utf-8") as fh:
-                fh.write(content)
+            write_generated(out_path, content)
             print("  WROTE", out_path)
         else:
             # show first item as a sample

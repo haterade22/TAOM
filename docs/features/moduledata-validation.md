@@ -544,10 +544,11 @@ against the median of every OTHER culture's median two tiers lower. It warns whe
 than 20 points under that field and at least three other cultures hold a cell at that lower tier.
 The arithmetic is the pure `taom_schema.cross_culture_armour_inversions`, which
 `tools/analyze_kingdom_armour.py` also calls for its gate preview, so the report and the validator
-cannot disagree. Since the kingdom-cap curve (#583) every ITEM's value is first scaled to the 57
-reference cap of the line it belongs to (`scale_to_reference_cap`, `item_cap_for`: the item's
-`LOTRLOME_items` folder from `Registries.item_folder`, routed through `rebalance_armor.kingdom_key`
-so a Black Numenorean piece is 57-cap kit whoever wears it), because kingdoms differ in armour
+cannot disagree. Since the kingdom-cap curve (#583) every ITEM's value is first scaled to the
+reference cap of the line it belongs to (`REFERENCE_CAP`, Gondor's cap
+`rebalance_armor.KINGDOM_CAPS['gondor']`, 46 on 2026-11-14; a test pins the two; `scale_to_reference_cap`,
+`item_cap_for`: the item's `LOTRLOME_items` folder from `Registries.item_folder`, routed through
+`rebalance_armor.kingdom_key` so a Black Numenorean piece is that line's kit whoever wears it), because kingdoms differ in armour
 power by design and a goblin at 38 under a dwarf at 70 is not a finding; what remains is a troop
 dressed below the power of its own kit. Item level rather than culture level: the first draft
 scaled by the wearer's culture, and an Umbar noble in full Black Numenorean plate read 29% higher
@@ -559,6 +560,49 @@ riders, `gondor_ithilien_ranger`); a test fails when an exempt id no longer exis
 2026-09-12: four cells, `goblin/tier7`, `gondor/tier9`, `lindon/tier10`, `rivendell/tier10`. The
 repair is a roster, item or curve decision, not a script; the options are in
 `docs/features/armor-balance.md` "Kingdom armour ladder".
+
+## Worn armour ceiling and floor (`WORN_ARMOUR_CEILING`, `WORN_ARMOUR_FLOOR`)
+
+**WARNING now.** Added for #1271 (2026-11-14). The armour rebalance judges a troop on what it wears in
+total, so this pass adds up each troop's battle sets per region (head, body, arm, leg) and holds the sums
+against two tables in `tools/rebalance_armor.py`:
+
+- `WORN_ARMOUR_CEILING` (head 64, body 77, arm 69, leg 59): vanilla's best troop plus 10. No spawn may
+  reach past it, in any region.
+- `WORN_ARMOUR_FLOOR` (head and body only): medium 8/8, heavy 20/20, elite 30/30 by
+  `rebalance_armor.level_to_band`. A light troop has none. A troop in `_BODYLESS_BY_DESIGN` keeps the head
+  floor and is not held to the body floor. Under the floor a one-handed hit that the combat model clears
+  for plain gear can kill, as with a helmetless elite archer in a light chest.
+
+The reach is per slot. `Equipment.GetRandomEquipmentElements` re-rolls the set index inside its slot loop
+whenever the seed is not -1, and a troop spawn never passes -1 (v1.5.7 `TaleWorlds.Core.Equipment.cs:549-590`),
+so a campaign battle draws Head, Body, Cape, Gloves and Leg from five independent sets. The ceiling takes
+each slot from the set that fills it most and the floor from the set that fills it least; a per-set sum
+missed six floor cases that real spawns reach. The arithmetic is `rebalance_armor.worn_armour_extremes_per_slot`
+and `worn_armour_breaches`, the same calls as the "Worn floor and ceiling" section of
+`python tools/analyze_kingdom_armour.py`, so the report and the validator cannot disagree.
+
+Scope: troop files only (`troops/troops_*.xml`); battle sets only; `_ARMOUR_LADDER_EXEMPT` troops and ids
+containing `troll` or `creature` are left out. Item stats come from the install
+(`Registries.item_armour_stats`, built by `build_item_armour_stats`), so without it the pass is skipped and
+`validate_moduledata.py` says so on stderr. A `rebalance_armor` module that cannot be imported gives one
+`(tooling)` issue saying nothing was checked.
+
+**Severity.** The maintainer decided the ceiling is an error. The live Armory is unversioned and the validator
+reads the copy installed on each machine. Before the apply of 2026-11-14 it held the pre-#1271 item values and
+367 troops reached past the ceiling; the rewritten Armory leaves none, but a contributor who still has the
+old one would fail the commit hook on every ModuleData commit under an error. The floor is a warning: 42
+troops on 2026-11-14 before the apply, 203 in its dry run and 196 measured after the write (before the
+generator band fix), because the apply lowers the light and medium bands. Both the ceiling issue and the `(tooling)` issue read one constant,
+`taom_schema.WORN_ARMOUR_CEILING_SEVERITY`, and they must stay equal: the `(tooling)` issue means the
+ceiling was not checked, so a warning left beside an error ceiling would let a broken import pass the
+commit hook. Once every contributor has the rewritten Armory, in one change: set the constant to `Severity.ERROR`, add
+`--code WORN_ARMOUR_CEILING` to both hook lists, `.claude/hooks/check-moduledata-validation.sh` and
+`.githooks/pre-commit` (`CommitGateCoverageTests` fails until the first names the code, and `CodeList`
+in `tools/tests/test_githooks_pre_commit.py` fails until the second matches it), and update the row in
+[moduledata-validator-codes.md](../reference/moduledata-validator-codes.md). Repair: swap the piece that adds
+most for a lower one in its line, or reprice the item (`python tools/rebalance_armor.py`,
+[armor-balance.md](armor-balance.md)). Tests: `WornArmourLimitsTests` in `test_validate_moduledata.py`.
 
 ## Ranged ladder inversion (`RANGED_LADDER_INVERSION`)
 
@@ -936,6 +980,13 @@ rather than inferred from the numbers:
 NPC duplicate-id + enum coverage spans `troops/`, `characters/`, `named_companions/`, `taom_wanderers.xml`, and `taom_education_character_templates.xml` (the `taom_npccharacter.json` `applies_to` set — **add any new `<NPCCharacter>`-defining file there** or its dup/enum checks won't run; Codex review 2026-05-30 caught three uncovered files). The civilian-type rule treats `_civ*` and `child_template_*` rosters as civilian and checks every `<EquipmentSet>`, but **deliberately excludes** `child_education_*` education templates (0/784 are `Civilian`-tagged in real data — an unconfirmed convention; flagging them would be 784 false positives — confirm the convention before extending the rule).
 
 ## Changelog
+
+- 2026-11-14 (#1271): `WORN_ARMOUR_CEILING` and `WORN_ARMOUR_FLOOR` documented above. The two melee codes
+  (`MELEE_LADDER_INVERSION`, `MELEE_BLOW_CEILING`) now price the `taom_ph_` placeholders from the validated
+  tree's `placeholder_weapons/` files (`taom_schema.price_placeholders`) and judge each against its real
+  carriers; before this the sixteen placeholders were never judged. The ceiling and its `(tooling)` issue share
+  `WORN_ARMOUR_CEILING_SEVERITY`. `data_gates.py` gained a `placeholder-weapons` row (`--verify`), and the
+  Lorien and Snow Orc armour checks now also run when `rebalance_armor.py` changes.
 
 - 2026-10-23 (#980): `validate_xml_schemas.py` gains a NATIVE bucket and a by-name exit code. A file
   named by a `<file id name>` row of the module's `ModuleData/project.mbproj` (joined to the module

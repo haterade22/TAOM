@@ -60,8 +60,8 @@ public class TournamentService : ITournamentService
             if (item.ItemType == ItemObject.ItemTypeEnum.Horse) continue;
             var id = item.StringId;
             var xmlMerchandise = TournamentPrizeRules.XmlMerchandise(_armourGate.GetRecord(id)?.IsMerchandise, item.NotMerchandise);
-            var cls = TournamentPrizeRules.PrizeClass(_armourGate.GetClass(id), (int)item.Tier);
-            if (TournamentPrizeRules.Fits(band, cls, item.Tierf, xmlMerchandise))
+            var tableClass = _armourGate.GetTableClass(id);
+            if (TournamentPrizeRules.Fits(band, tableClass, (int)item.Tier, item.Tierf, xmlMerchandise, item.Value))
                 fitting.Add(item);
         }
         var pool = new MBList<ItemObject>();

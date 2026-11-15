@@ -80,7 +80,10 @@ BASTARD_HEAVY = ("numenorean_bastard_heavy_a", "numenorean_bastard_heavy_b")
 BASTARD_ELITE = ("numenorean_bastard_elite_a", "numenorean_bastard_elite_b")
 
 # Armour pieces (prefix sk_gd_), by band.
-LIGHT_FOOT = dict(head=None, body=ab("anf_inf_chainmail"), leg=one("ano_boots_a"), gloves=None, cape=None)
+# The levy wears the jerkin, not the Anfalas mail: the villager it upgrades from wears
+# gondor_noble_jerkin_b, and fix_upgrade_armour_regressions.py gave the levy the same piece so the
+# upgrade does not lower armour.
+LIGHT_FOOT = dict(head=None, body=one("=gondor_noble_jerkin_b"), leg=one("ano_boots_a"), gloves=None, cape=None)
 
 
 def build():

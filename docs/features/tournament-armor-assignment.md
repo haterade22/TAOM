@@ -90,7 +90,7 @@ cultures fight in, so it is a deliberate content decision rather than a typo rep
 
 | Method | Accepts | Approximate item quality |
 |--------|---------|--------------------------|
-| `GetRegularRewardItems` | light, medium or civilian class, Tierf 2 and up | Leather and mail, basic weapons |
+| `GetRegularRewardItems` | light, medium or civilian class; Value 750 and up for a piece the class table lists, Tierf 2 and up for any other item | Leather and mail, basic weapons |
 | `GetEliteRewardItems` | heavy class (Tier4 weapons) | Plate, good weapons; nothing elite, lord or named |
 
 A culture with no item in the band draws from every culture's items; `base` (vanilla) is the last resort. The full rules, and why the list may never be empty: [arena.md](arena.md#prize-pools). Called once per tournament, not a performance concern.
