@@ -2087,6 +2087,18 @@ Applied from `SubModule.cs` in the standard `OnGameInitializationFinished` batch
 
 **Co-op.** Same data on every peer (the same modules load the same table). The old-save repair, `CreatureSaddleSaveRepairBehavior`, is host-only (coop-interop.md). **Tests:** `CreatureSaddleFamiliesTests` (table by literal, families avoid 0 to 6, 8 and 10, unequip rule, the writer on real engine objects, both postfixes attached, module wiring), `CreatureSaddleRosterTests` (every TAOM roster pairs a creature mount with a harness of its family; the live Armory still has family 1). **ACTIVE**. Battle lab 2026-11-15: the four Monster lines and two saddle lines were logged at load; the inventory and the old-save repair are not checked in game.
 
+## Patch155_BattleShaderNotice
+
+**Targets (v1.5.7, read on the installed DLLs 2026-11-15):** `protected override void TaleWorlds.MountAndBlade.MissionState.OnTick(float realDt)`, bound by string (it is protected), one postfix class `MissionState_OnTick_BattleShaderNotice_Patch`; and `internal void TaleWorlds.MountAndBlade.GauntletUI.LoadingWindowViewModel.Update()`, bound through `TargetMethod` (it is internal), one postfix class `LoadingWindowViewModel_Update_BattleShaderLine_Patch`, `[ClientOnly]`. Both in `Main/Features/BattleShaderNotice/Hooks/`, category `Patch155_BattleShaderNotice` (GameInit, declared by `BattleShaderNoticeModule`). 2026-11-15. Feature: [battle-shader-notice.md](../features/battle-shader-notice.md).
+
+**Why.** A cold battle load stops the game thread inside one frame while its shaders compile (15 to 110 s on the dev PC), so the loading screen looks hung. The `OnTick` postfix tells `BattleShaderNoticeService` each frame whether the mission is in its render wait (`FirstMissionTickAfterLoading` and `Continuing`, the window Patch43's `MissionState_OnTick_RenderWait_Patch` measures) and, before the notice starts, the queued count; at 50 or more the service starts the startup notice's window on its own thread in `ShaderCompileNoticeMode.Battle` and sets a loading-screen line, which the `Update` postfix writes into `DescriptionText` while it is set. Postfix is load-bearing: on the frame the mission ticks, `TickMission` has already cleared the flag, so that frame stops the notice.
+
+**Callers and thread.** `MissionState.OnTick` from `GameStateManager` every frame of the active mission state (`OnIdleTick` instead while the user disables it); `LoadingWindowViewModel.Update` from `GauntletDefaultLoadingWindowManager.OnLateTick` every frame. Both on the main thread. The `OnTick` postfix returns after two property reads unless the mission is waiting or the notice is up, and reads the native count only on a waiting frame before the start. Neither postfix throws out: a failure is logged once.
+
+**PatchShield.** `MissionState.OnTick` already carries the shield's finalizer through Patch43 (namespace `TaleWorlds.MountAndBlade`, not excluded); this postfix adds none of its own. `TaleWorlds.MountAndBlade.GauntletUI` is an excluded namespace, so `Update` gets no shield finalizer.
+
+**Co-op and server.** The service never starts on a dedicated server (`IDedicatedServerProvider`); the core window host is the null host there anyway. **Tests:** `BattleShaderNoticeGateTests`, `BattleShaderNoticeServiceTests`, `ShaderCompileNoticeModeTests`; the targets are covered by `HarmonyPatchBindingTests`. **ACTIVE**, not yet checked in game.
+
 ## Realms manual patches (no category)
 
 **Targets (v1.5.7):** three classes in `Main/Features/Realms/Hooks/`, each applied by hand with its own Harmony id, outside any patch category, so `PatchShield` and the category list do not see them. Feature: [realms.md](../features/realms.md).
