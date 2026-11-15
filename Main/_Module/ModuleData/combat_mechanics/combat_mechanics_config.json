@@ -3,8 +3,8 @@
   "crushThrough": {
     "skillBasedEnabled": true,
     "extraCrushThroughEnergyThreshold": 25.0,
-    "skillDeadZone": 30,
-    "skillTargetDelta": 200,
+    "skillDeadZone": 20,
+    "skillTargetDelta": 135,
     "maxSkillChance": 0.5,
     "skillCurveExponent": 0.008097,
     "energyRampMarginFactor": 0.27,

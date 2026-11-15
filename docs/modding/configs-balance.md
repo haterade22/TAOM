@@ -151,8 +151,8 @@ Inverting the two thresholds reverts **both** to defaults, not just the offender
 | Field | Type | Shipped | Legal range | Read at (file:line) |
 |---|---|---|---|---|
 | `crushThrough.extraCrushThroughEnergyThreshold` | float | 25.0 | `[1, 1000]` | `CombatMechanicsConfigProvider.cs:103` |
-| `crushThrough.skillTargetDelta` | int | 200 | `[1, 1000]` | `CombatMechanicsConfigProvider.cs:104` |
-| `crushThrough.skillDeadZone` | int | 30 | `[0, 1000]`, must be below `skillTargetDelta` | `CombatMechanicsConfigProvider.cs:105, 119` |
+| `crushThrough.skillTargetDelta` | int | 135 | `[1, 1000]` | `CombatMechanicsConfigProvider.cs:104` |
+| `crushThrough.skillDeadZone` | int | 20 | `[0, 1000]`, must be below `skillTargetDelta` | `CombatMechanicsConfigProvider.cs:105, 119` |
 | `crushThrough.maxSkillChance` | float | 0.5 | `[0, 1]` | `CombatMechanicsConfigProvider.cs:106` |
 | `crushThrough.nonOverheadPenaltyFactor` | float | 0.5 | `[0, 1]` | `CombatMechanicsConfigProvider.cs:109` |
 | `chargeKnockdown.neutralWeightRatio` | float | 6.0 | `[0.1, 1000]` | `CombatMechanicsConfigProvider.cs:147` |

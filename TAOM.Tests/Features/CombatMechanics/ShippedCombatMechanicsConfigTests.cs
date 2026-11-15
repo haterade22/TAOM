@@ -75,6 +75,21 @@ public class ShippedCombatMechanicsConfigTests
     }
 
     [TestMethod]
+    public void ShippedConfig_SkillWindow_IsScaledToTheTroopSkillCurve()
+    {
+        // #343: the troop skill curve now tops out at 260 where it reached 390, so the skill window
+        // was scaled by 260/390 (dead zone 30 to 20, target delta 200 to 135). The compiled
+        // defaults are what an invalid file reverts to, so both surfaces agree.
+        var shipped = _sut.GetConfig().CrushThrough;
+        var compiled = new CombatMechanicsConfig().CrushThrough;
+
+        Assert.AreEqual(20, shipped.SkillDeadZone);
+        Assert.AreEqual(135, shipped.SkillTargetDelta);
+        Assert.AreEqual(compiled.SkillDeadZone, shipped.SkillDeadZone);
+        Assert.AreEqual(compiled.SkillTargetDelta, shipped.SkillTargetDelta);
+    }
+
+    [TestMethod]
     public void ShippedConfig_OnlyTrollsDwarvesAndSauronResistAHorse()
     {
         // Once the weight term stops protecting the 160-weight victims, the race rows are the

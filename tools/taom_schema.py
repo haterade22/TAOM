@@ -1715,9 +1715,9 @@ class Validator:
                 if all(f.cross_kind for f in found) and main == tp.THROWING:
                     listed = "in" if entry_id in THROWN_PRIMARY_TROOP_IDS else "not in"
                     head = (f"thrower below its melee skill: {head} Throwing keeps its value on disk; "
-                            f"the troop is {listed} THROWN_PRIMARY_TROOP_IDS, so the formula gives "
-                            f"Throwing {'the Ranged Bow curve' if listed == 'in' else 'its group curve'} "
-                            f"(the number is in rebalance_troops.py --fix-purpose). Decide the value (#343)")
+                            f"the troop is {listed} THROWN_PRIMARY_TROOP_IDS. A javelin in Item0 is the "
+                            f"main weapon, so the role table gives Throwing the main number, at the top "
+                            f"of its weapons (rebalance_troops.py --apply). Decide the value (#343)")
                 elif all(f.cross_kind for f in found):
                     head = (f"melee skill above the launcher's ladder cell: {head} Values never cross "
                             f"from melee to launcher, so no reorder fixes this; the launcher's value is "
@@ -1832,7 +1832,7 @@ class Validator:
     # A skill the target never declares reads as 0 in the engine (CharacterObject.GetSkillValue),
     # so an omitted <skill> element is a drop, not a "leave it alone". 34 troops shipped that way.
     #
-    # The one exemption is militia to militia. Militia are pinned to the level-21 baseline whatever
+    # The one exemption is militia to militia. Militia take the tier 4 row of the role table whatever
     # their real level so village defence stays costly, which makes a militia promotion flat by
     # design. The exemption is keyed off what a culture BINDS, never off the word "militia" in a
     # name -- name matching is what produced the bug.
@@ -3079,6 +3079,35 @@ def build_item_class_registry(moduledata, game_modules) -> dict:
                 if skill:
                     classes[mid.group(1)] = skill
     return classes
+
+
+_ATTR_DIFFICULTY_RE = re.compile(r'\bdifficulty="(\d+)"')
+
+
+def build_mount_difficulty_registry(moduledata, game_modules) -> dict:
+    """Map horse item id -> its XML difficulty, over the item roots build_item_class_registry reads.
+    The engine mounts an agent only when Riding >= that difficulty (Agent.CheckSkillForMounting,
+    ItemObject.Difficulty), so the troop writer floors a rider's Riding at it."""
+    moduledata = Path(moduledata)
+    game_modules = Path(game_modules) if game_modules else None
+    item_roots = []
+    if game_modules:
+        for name in ("SandBoxCore", "SandBox", "Native", "StoryMode", "CustomBattle",
+                     "LOTRLOME_Armory", "ADOD_Beasts", "NavalDLC"):
+            item_roots.append(game_modules / name / "ModuleData")
+    item_roots.append(moduledata)
+    mounts = {}
+    for root in item_roots:
+        if not root.exists():
+            continue
+        for xml in root.rglob("*.xml"):
+            for m in _ITEM_OPEN_RE.finditer(_read_stripped(xml)):
+                tag = m.group(0)
+                mid, mtype = _ATTR_ID_RE.search(tag), _ATTR_TYPE_RE.search(tag)
+                if mid and mtype and mtype.group(1) == "Horse":
+                    diff = _ATTR_DIFFICULTY_RE.search(tag)
+                    mounts[mid.group(1)] = int(diff.group(1)) if diff else 0
+    return mounts
 
 
 # --------------------------------------------------------------------------- #

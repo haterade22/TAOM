@@ -17,28 +17,28 @@
         <skills>
             <skill
                 id="Athletics"
-                value="58" />
+                value="40" />
             <skill
                 id="Riding"
-                value="5" />
+                value="15" />
             <skill
                 id="OneHanded"
-                value="73" />
+                value="40" />
             <skill
                 id="TwoHanded"
-                value="72" />
+                value="20" />
             <skill
                 id="Polearm"
-                value="82" />
+                value="40" />
             <skill
                 id="Bow"
-                value="10" />
+                value="15" />
             <skill
                 id="Crossbow"
-                value="5" />
+                value="15" />
             <skill
                 id="Throwing"
-                value="25" />
+                value="20" />
         </skills>
         <upgrade_targets>
             <upgrade_target id="NPCCharacter.mordor_uruk_fighter" />
@@ -369,25 +369,25 @@
                 value="105" />
             <skill
                 id="Riding"
-                value="10" />
+                value="40" />
             <skill
                 id="OneHanded"
-                value="142" />
+                value="105" />
             <skill
                 id="TwoHanded"
-                value="128" />
+                value="50" />
             <skill
                 id="Polearm"
-                value="137" />
+                value="50" />
             <skill
                 id="Bow"
-                value="15" />
+                value="40" />
             <skill
                 id="Crossbow"
-                value="10" />
+                value="40" />
             <skill
                 id="Throwing"
-                value="55" />
+                value="40" />
         </skills>
         <upgrade_targets>
             <upgrade_target id="NPCCharacter.mordor_uruk_infantry" />
@@ -646,28 +646,28 @@
         <skills>
             <skill
                 id="Athletics"
-                value="115" />
+                value="135" />
             <skill
                 id="Riding"
-                value="15" />
+                value="50" />
             <skill
                 id="OneHanded"
-                value="152" />
+                value="110" />
             <skill
                 id="TwoHanded"
-                value="103" />
+                value="65" />
             <skill
                 id="Polearm"
-                value="107" />
+                value="65" />
             <skill
                 id="Bow"
-                value="160" />
+                value="125" />
             <skill
                 id="Crossbow"
-                value="35" />
+                value="50" />
             <skill
                 id="Throwing"
-                value="55" />
+                value="50" />
         </skills>
         <upgrade_targets>
             <upgrade_target id="NPCCharacter.mordor_uruk_heavy_archer" />
@@ -902,28 +902,28 @@
         <skills>
             <skill
                 id="Athletics"
-                value="110" />
+                value="135" />
             <skill
                 id="Riding"
-                value="15" />
+                value="50" />
             <skill
                 id="OneHanded"
-                value="173" />
+                value="105" />
             <skill
                 id="TwoHanded"
-                value="167" />
+                value="65" />
             <skill
                 id="Polearm"
-                value="202" />
+                value="135" />
             <skill
                 id="Bow"
-                value="20" />
+                value="50" />
             <skill
                 id="Crossbow"
-                value="15" />
+                value="50" />
             <skill
                 id="Throwing"
-                value="75" />
+                value="50" />
         </skills>
         <upgrade_targets>
             <upgrade_target id="NPCCharacter.mordor_uruk_shieldguard" />
@@ -1050,28 +1050,28 @@
         <skills>
             <skill
                 id="Athletics"
-                value="110" />
+                value="135" />
             <skill
                 id="Riding"
-                value="15" />
+                value="50" />
             <skill
                 id="OneHanded"
-                value="187" />
+                value="135" />
             <skill
                 id="TwoHanded"
-                value="173" />
+                value="65" />
             <skill
                 id="Polearm"
-                value="182" />
+                value="65" />
             <skill
                 id="Bow"
-                value="20" />
+                value="50" />
             <skill
                 id="Crossbow"
-                value="15" />
+                value="50" />
             <skill
                 id="Throwing"
-                value="75" />
+                value="50" />
         </skills>
         <upgrade_targets>
             <upgrade_target id="NPCCharacter.mordor_uruk_vanguard" />
@@ -1281,28 +1281,28 @@
         <skills>
             <skill
                 id="Athletics"
-                value="130" />
+                value="165" />
             <skill
                 id="Riding"
-                value="20" />
+                value="60" />
             <skill
                 id="OneHanded"
-                value="247" />
+                value="165" />
             <skill
                 id="TwoHanded"
-                value="242" />
+                value="150" />
             <skill
                 id="Polearm"
-                value="228" />
+                value="80" />
             <skill
                 id="Bow"
-                value="25" />
+                value="60" />
             <skill
                 id="Crossbow"
-                value="20" />
+                value="60" />
             <skill
                 id="Throwing"
-                value="85" />
+                value="60" />
         </skills>
         <upgrade_targets>
             <upgrade_target id="NPCCharacter.mordor_uruk_captain" />
@@ -1515,28 +1515,28 @@
         <skills>
             <skill
                 id="Athletics"
-                value="130" />
+                value="165" />
             <skill
                 id="Riding"
-                value="20" />
+                value="60" />
             <skill
                 id="OneHanded"
-                value="232" />
+                value="105" />
             <skill
                 id="TwoHanded"
-                value="228" />
+                value="80" />
             <skill
                 id="Polearm"
-                value="257" />
+                value="165" />
             <skill
                 id="Bow"
-                value="25" />
+                value="60" />
             <skill
                 id="Crossbow"
-                value="20" />
+                value="60" />
             <skill
                 id="Throwing"
-                value="85" />
+                value="60" />
         </skills>
         <upgrade_targets>
             <upgrade_target id="NPCCharacter.mordor_uruk_baraddurguard" />
@@ -1678,28 +1678,28 @@
         <skills>
             <skill
                 id="Athletics"
-                value="150" />
+                value="190" />
             <skill
                 id="Riding"
-                value="25" />
+                value="75" />
             <skill
                 id="OneHanded"
-                value="287" />
+                value="190" />
             <skill
                 id="TwoHanded"
-                value="282" />
+                value="175" />
             <skill
                 id="Polearm"
-                value="268" />
+                value="90" />
             <skill
                 id="Bow"
-                value="30" />
+                value="75" />
             <skill
                 id="Crossbow"
-                value="25" />
+                value="75" />
             <skill
                 id="Throwing"
-                value="95" />
+                value="75" />
         </skills>
         <upgrade_targets />
         <Equipments>
@@ -1839,28 +1839,28 @@
         <skills>
             <skill
                 id="Athletics"
-                value="150" />
+                value="190" />
             <skill
                 id="Riding"
-                value="25" />
+                value="75" />
             <skill
                 id="OneHanded"
-                value="282" />
+                value="105" />
             <skill
                 id="TwoHanded"
-                value="268" />
+                value="90" />
             <skill
                 id="Polearm"
-                value="287" />
+                value="190" />
             <skill
                 id="Bow"
-                value="30" />
+                value="75" />
             <skill
                 id="Crossbow"
-                value="25" />
+                value="75" />
             <skill
                 id="Throwing"
-                value="95" />
+                value="75" />
         </skills>
         <upgrade_targets />
         <Equipments>
@@ -2190,28 +2190,28 @@
         <skills>
             <skill
                 id="Athletics"
-                value="90" />
+                value="95" />
             <skill
                 id="Riding"
-                value="10" />
+                value="40" />
             <skill
                 id="OneHanded"
-                value="110" />
+                value="50" />
             <skill
                 id="TwoHanded"
-                value="115" />
+                value="50" />
             <skill
                 id="Polearm"
-                value="140" />
+                value="95" />
             <skill
                 id="Bow"
-                value="10" />
+                value="40" />
             <skill
                 id="Crossbow"
-                value="5" />
+                value="40" />
             <skill
                 id="Throwing"
-                value="55" />
+                value="40" />
         </skills>
         <upgrade_targets></upgrade_targets>
         <Equipments>
@@ -2257,28 +2257,28 @@
         <skills>
             <skill
                 id="Athletics"
-                value="90" />
+                value="95" />
             <skill
                 id="Riding"
-                value="10" />
+                value="40" />
             <skill
                 id="OneHanded"
-                value="100" />
+                value="30" />
             <skill
                 id="TwoHanded"
-                value="70" />
+                value="30" />
             <skill
                 id="Polearm"
-                value="65" />
+                value="30" />
             <skill
                 id="Bow"
-                value="35" />
+                value="36" />
             <skill
                 id="Crossbow"
-                value="25" />
+                value="36" />
             <skill
                 id="Throwing"
-                value="45" />
+                value="40" />
         </skills>
         <upgrade_targets></upgrade_targets>
         <Equipments>
@@ -2329,25 +2329,25 @@
                 value="105" />
             <skill
                 id="Riding"
-                value="25" />
+                value="50" />
             <skill
                 id="OneHanded"
-                value="125" />
+                value="60" />
             <skill
                 id="TwoHanded"
-                value="130" />
+                value="60" />
             <skill
                 id="Polearm"
-                value="155" />
+                value="105" />
             <skill
                 id="Bow"
-                value="25" />
+                value="50" />
             <skill
                 id="Crossbow"
-                value="20" />
+                value="50" />
             <skill
                 id="Throwing"
-                value="70" />
+                value="50" />
         </skills>
         <upgrade_targets></upgrade_targets>
         <Equipments>
@@ -2399,25 +2399,25 @@
                 value="105" />
             <skill
                 id="Riding"
-                value="25" />
+                value="50" />
             <skill
                 id="OneHanded"
-                value="115" />
+                value="55" />
             <skill
                 id="TwoHanded"
-                value="85" />
+                value="55" />
             <skill
                 id="Polearm"
-                value="80" />
+                value="55" />
             <skill
                 id="Bow"
-                value="65" />
+                value="64" />
             <skill
                 id="Crossbow"
-                value="40" />
+                value="50" />
             <skill
                 id="Throwing"
-                value="60" />
+                value="50" />
         </skills>
         <upgrade_targets></upgrade_targets>
         <Equipments>
@@ -2470,13 +2470,13 @@
     </face>
     <skills>
       <skill id="Athletics" value="20" />
-      <skill id="OneHanded" value="25" />
-      <skill id="TwoHanded" value="20" />
-      <skill id="Polearm" value="15" />
-      <skill id="Bow" value="0" />
-      <skill id="Throwing" value="15" />
-      <skill id="Riding" value="0" />
-      <skill id="Crossbow" value="0" />
+      <skill id="OneHanded" value="20" />
+      <skill id="TwoHanded" value="10" />
+      <skill id="Polearm" value="10" />
+      <skill id="Bow" value="10" />
+      <skill id="Throwing" value="10" />
+      <skill id="Riding" value="10" />
+      <skill id="Crossbow" value="10" />
     </skills>
     <upgrade_targets>
       <upgrade_target id="NPCCharacter.mordor_orc_lackey" />
@@ -2503,14 +2503,14 @@
       <face_key_template value="BodyProperty.fighter_orc_mordor" />
     </face>
     <skills>
-      <skill id="Athletics" value="28" />
-      <skill id="OneHanded" value="28" />
-      <skill id="TwoHanded" value="23" />
-      <skill id="Polearm" value="23" />
-      <skill id="Bow" value="0" />
-      <skill id="Throwing" value="15" />
-      <skill id="Riding" value="0" />
-      <skill id="Crossbow" value="0" />
+      <skill id="Athletics" value="20" />
+      <skill id="OneHanded" value="20" />
+      <skill id="TwoHanded" value="10" />
+      <skill id="Polearm" value="10" />
+      <skill id="Bow" value="10" />
+      <skill id="Throwing" value="10" />
+      <skill id="Riding" value="10" />
+      <skill id="Crossbow" value="10" />
     </skills>
     <upgrade_targets>
       <upgrade_target id="NPCCharacter.mordor_orc_fighter" />
@@ -2539,14 +2539,14 @@
       <face_key_template value="BodyProperty.fighter_orc_mordor" />
     </face>
     <skills>
-      <skill id="Athletics" value="43" />
-      <skill id="OneHanded" value="65" />
-      <skill id="TwoHanded" value="60" />
-      <skill id="Polearm" value="60" />
-      <skill id="Throwing" value="25" />
-      <skill id="Riding" value="0" />
-      <skill id="Bow" value="0" />
-      <skill id="Crossbow" value="0" />
+      <skill id="Athletics" value="40" />
+      <skill id="OneHanded" value="40" />
+      <skill id="TwoHanded" value="20" />
+      <skill id="Polearm" value="20" />
+      <skill id="Throwing" value="15" />
+      <skill id="Riding" value="15" />
+      <skill id="Bow" value="15" />
+      <skill id="Crossbow" value="15" />
     </skills>
     <upgrade_targets>
       <upgrade_target id="NPCCharacter.mordor_orc_warrior" />
@@ -2577,14 +2577,14 @@
       <face_key_template value="BodyProperty.fighter_orc_mordor" />
     </face>
     <skills>
-      <skill id="Athletics" value="75" />
-      <skill id="OneHanded" value="90" />
-      <skill id="TwoHanded" value="90" />
-      <skill id="Polearm" value="90" />
-      <skill id="Throwing" value="35" />
-      <skill id="Riding" value="0" />
-      <skill id="Bow" value="0" />
-      <skill id="Crossbow" value="0" />
+      <skill id="Athletics" value="70" />
+      <skill id="OneHanded" value="70" />
+      <skill id="TwoHanded" value="35" />
+      <skill id="Polearm" value="35" />
+      <skill id="Throwing" value="30" />
+      <skill id="Riding" value="30" />
+      <skill id="Bow" value="30" />
+      <skill id="Crossbow" value="30" />
     </skills>
     <upgrade_targets>
       <upgrade_target id="NPCCharacter.mordor_orc_infantry" />
@@ -2614,14 +2614,14 @@
       <face_key_template value="BodyProperty.fighter_orc_mordor" />
     </face>
     <skills>
-      <skill id="Athletics" value="90" />
-      <skill id="OneHanded" value="125" />
-      <skill id="TwoHanded" value="115" />
-      <skill id="Polearm" value="125" />
-      <skill id="Throwing" value="55" />
-      <skill id="Riding" value="0" />
-      <skill id="Bow" value="0" />
-      <skill id="Crossbow" value="0" />
+      <skill id="Athletics" value="95" />
+      <skill id="OneHanded" value="100" />
+      <skill id="TwoHanded" value="50" />
+      <skill id="Polearm" value="50" />
+      <skill id="Throwing" value="40" />
+      <skill id="Riding" value="40" />
+      <skill id="Bow" value="40" />
+      <skill id="Crossbow" value="40" />
     </skills>
     <upgrade_targets />
     <Equipments>
@@ -2649,14 +2649,14 @@
       <face_key_template value="BodyProperty.fighter_orc_mordor" />
     </face>
     <skills>
-      <skill id="Athletics" value="75" />
-      <skill id="OneHanded" value="90" />
-      <skill id="TwoHanded" value="90" />
-      <skill id="Polearm" value="90" />
-      <skill id="Throwing" value="35" />
-      <skill id="Riding" value="0" />
-      <skill id="Bow" value="0" />
-      <skill id="Crossbow" value="0" />
+      <skill id="Athletics" value="70" />
+      <skill id="OneHanded" value="65" />
+      <skill id="TwoHanded" value="35" />
+      <skill id="Polearm" value="70" />
+      <skill id="Throwing" value="30" />
+      <skill id="Riding" value="30" />
+      <skill id="Bow" value="30" />
+      <skill id="Crossbow" value="30" />
     </skills>
     <upgrade_targets>
       <upgrade_target id="NPCCharacter.mordor_orc_reaver" />
@@ -2686,14 +2686,14 @@
       <face_key_template value="BodyProperty.fighter_orc_mordor" />
     </face>
     <skills>
-      <skill id="Athletics" value="90" />
-      <skill id="OneHanded" value="125" />
-      <skill id="TwoHanded" value="110" />
-      <skill id="Polearm" value="130" />
-      <skill id="Throwing" value="55" />
-      <skill id="Riding" value="0" />
-      <skill id="Bow" value="0" />
-      <skill id="Crossbow" value="0" />
+      <skill id="Athletics" value="95" />
+      <skill id="OneHanded" value="90" />
+      <skill id="TwoHanded" value="50" />
+      <skill id="Polearm" value="95" />
+      <skill id="Throwing" value="40" />
+      <skill id="Riding" value="40" />
+      <skill id="Bow" value="40" />
+      <skill id="Crossbow" value="40" />
     </skills>
     <upgrade_targets />
     <Equipments>
@@ -2721,14 +2721,14 @@
       <face_key_template value="BodyProperty.fighter_orc_mordor" />
     </face>
     <skills>
-      <skill id="Athletics" value="45" />
+      <skill id="Athletics" value="40" />
       <skill id="OneHanded" value="30" />
-      <skill id="Bow" value="35" />
-      <skill id="Throwing" value="25" />
-      <skill id="Riding" value="0" />
-      <skill id="TwoHanded" value="23" />
-      <skill id="Polearm" value="23" />
-      <skill id="Crossbow" value="0" />
+      <skill id="Bow" value="36" />
+      <skill id="Throwing" value="15" />
+      <skill id="Riding" value="15" />
+      <skill id="TwoHanded" value="20" />
+      <skill id="Polearm" value="20" />
+      <skill id="Crossbow" value="15" />
     </skills>
     <upgrade_targets>
       <upgrade_target id="NPCCharacter.mordor_orc_scout" />
@@ -2758,14 +2758,14 @@
       <face_key_template value="BodyProperty.fighter_orc_mordor" />
     </face>
     <skills>
-      <skill id="Athletics" value="80" />
-      <skill id="OneHanded" value="70" />
-      <skill id="Bow" value="65" />
-      <skill id="Throwing" value="35" />
-      <skill id="Riding" value="10" />
-      <skill id="TwoHanded" value="50" />
-      <skill id="Polearm" value="40" />
-      <skill id="Crossbow" value="20" />
+      <skill id="Athletics" value="70" />
+      <skill id="OneHanded" value="55" />
+      <skill id="Bow" value="64" />
+      <skill id="Throwing" value="30" />
+      <skill id="Riding" value="30" />
+      <skill id="TwoHanded" value="35" />
+      <skill id="Polearm" value="35" />
+      <skill id="Crossbow" value="30" />
     </skills>
     <upgrade_targets>
       <upgrade_target id="NPCCharacter.mordor_orc_archer" />
@@ -2796,14 +2796,14 @@
       <face_key_template value="BodyProperty.fighter_orc_mordor" />
     </face>
     <skills>
-      <skill id="Athletics" value="90" />
-      <skill id="OneHanded" value="100" />
-      <skill id="Bow" value="110" />
-      <skill id="Throwing" value="45" />
-      <skill id="Riding" value="10" />
-      <skill id="TwoHanded" value="70" />
-      <skill id="Polearm" value="65" />
-      <skill id="Crossbow" value="25" />
+      <skill id="Athletics" value="95" />
+      <skill id="OneHanded" value="80" />
+      <skill id="Bow" value="92" />
+      <skill id="Throwing" value="40" />
+      <skill id="Riding" value="40" />
+      <skill id="TwoHanded" value="50" />
+      <skill id="Polearm" value="50" />
+      <skill id="Crossbow" value="40" />
     </skills>
     <upgrade_targets />
     <Equipments>
@@ -2834,13 +2834,13 @@
     </face>
     <skills>
       <skill id="Athletics" value="20" />
-      <skill id="Riding" value="0" />
-      <skill id="OneHanded" value="25" />
-      <skill id="Polearm" value="15" />
-      <skill id="TwoHanded" value="0" />
-      <skill id="Bow" value="0" />
-      <skill id="Crossbow" value="0" />
-      <skill id="Throwing" value="0" />
+      <skill id="Riding" value="10" />
+      <skill id="OneHanded" value="20" />
+      <skill id="Polearm" value="10" />
+      <skill id="TwoHanded" value="10" />
+      <skill id="Bow" value="10" />
+      <skill id="Crossbow" value="10" />
+      <skill id="Throwing" value="10" />
     </skills>
     <upgrade_targets>
       <upgrade_target id="NPCCharacter.mordor_warg_rider" />
@@ -2867,14 +2867,14 @@
       <face_key_template value="BodyProperty.fighter_orc_mordor" />
     </face>
     <skills>
-      <skill id="Athletics" value="28" />
-      <skill id="Riding" value="0" />
-      <skill id="OneHanded" value="28" />
-      <skill id="Polearm" value="23" />
-      <skill id="TwoHanded" value="23" />
-      <skill id="Bow" value="0" />
-      <skill id="Crossbow" value="0" />
-      <skill id="Throwing" value="15" />
+      <skill id="Athletics" value="20" />
+      <skill id="Riding" value="10" />
+      <skill id="OneHanded" value="20" />
+      <skill id="Polearm" value="10" />
+      <skill id="TwoHanded" value="10" />
+      <skill id="Bow" value="10" />
+      <skill id="Crossbow" value="10" />
+      <skill id="Throwing" value="10" />
     </skills>
     <upgrade_targets>
       <upgrade_target id="NPCCharacter.mordor_warg_raider" />
@@ -2902,14 +2902,14 @@
       <face_key_template value="BodyProperty.fighter_orc_mordor" />
     </face>
     <skills>
-      <skill id="Athletics" value="55" />
-      <skill id="Riding" value="60" />
-      <skill id="OneHanded" value="55" />
-      <skill id="Polearm" value="55" />
-      <skill id="TwoHanded" value="40" />
-      <skill id="Bow" value="5" />
-      <skill id="Crossbow" value="0" />
-      <skill id="Throwing" value="20" />
+      <skill id="Athletics" value="20" />
+      <skill id="Riding" value="40" />
+      <skill id="OneHanded" value="40" />
+      <skill id="Polearm" value="20" />
+      <skill id="TwoHanded" value="20" />
+      <skill id="Bow" value="15" />
+      <skill id="Crossbow" value="15" />
+      <skill id="Throwing" value="15" />
     </skills>
     <upgrade_targets>
       <upgrade_target id="NPCCharacter.mordor_warg_reaver" />
@@ -2940,13 +2940,13 @@
       <face_key_template value="BodyProperty.fighter_orc_mordor" />
     </face>
     <skills>
-      <skill id="Athletics" value="80" />
-      <skill id="Riding" value="90" />
-      <skill id="OneHanded" value="95" />
-      <skill id="Polearm" value="70" />
-      <skill id="TwoHanded" value="65" />
-      <skill id="Bow" value="10" />
-      <skill id="Crossbow" value="5" />
+      <skill id="Athletics" value="35" />
+      <skill id="Riding" value="70" />
+      <skill id="OneHanded" value="70" />
+      <skill id="Polearm" value="60" />
+      <skill id="TwoHanded" value="35" />
+      <skill id="Bow" value="30" />
+      <skill id="Crossbow" value="30" />
       <skill id="Throwing" value="30" />
     </skills>
     <upgrade_targets>
@@ -2979,14 +2979,14 @@
       <face_key_template value="BodyProperty.fighter_orc_mordor" />
     </face>
     <skills>
-      <skill id="Athletics" value="95" />
-      <skill id="Riding" value="115" />
-      <skill id="OneHanded" value="140" />
-      <skill id="Polearm" value="115" />
-      <skill id="TwoHanded" value="70" />
-      <skill id="Bow" value="20" />
-      <skill id="Crossbow" value="10" />
-      <skill id="Throwing" value="35" />
+      <skill id="Athletics" value="50" />
+      <skill id="Riding" value="95" />
+      <skill id="OneHanded" value="100" />
+      <skill id="Polearm" value="85" />
+      <skill id="TwoHanded" value="50" />
+      <skill id="Bow" value="40" />
+      <skill id="Crossbow" value="40" />
+      <skill id="Throwing" value="40" />
     </skills>
     <upgrade_targets>
       <upgrade_target id="NPCCharacter.mordor_warg_beastmaster" />
@@ -3018,14 +3018,14 @@
       <face_key_template value="BodyProperty.fighter_orc_mordor" />
     </face>
     <skills>
-      <skill id="Athletics" value="110" />
-      <skill id="Riding" value="155" />
-      <skill id="OneHanded" value="190" />
-      <skill id="Polearm" value="170" />
-      <skill id="TwoHanded" value="85" />
-      <skill id="Bow" value="25" />
-      <skill id="Crossbow" value="15" />
-      <skill id="Throwing" value="45" />
+      <skill id="Athletics" value="65" />
+      <skill id="Riding" value="125" />
+      <skill id="OneHanded" value="130" />
+      <skill id="Polearm" value="115" />
+      <skill id="TwoHanded" value="65" />
+      <skill id="Bow" value="50" />
+      <skill id="Crossbow" value="50" />
+      <skill id="Throwing" value="50" />
     </skills>
     <upgrade_targets />
     <Equipments>
@@ -3056,14 +3056,14 @@
       <face_key_template value="BodyProperty.fighter_uruk_mordor" />
     </face>
     <skills>
-      <skill id="Athletics" value="90" />
-      <skill id="OneHanded" value="107" />
-      <skill id="TwoHanded" value="102" />
-      <skill id="Polearm" value="103" />
-      <skill id="Bow" value="15" />
-      <skill id="Crossbow" value="10" />
-      <skill id="Throwing" value="35" />
-      <skill id="Riding" value="5" />
+      <skill id="Athletics" value="75" />
+      <skill id="OneHanded" value="75" />
+      <skill id="TwoHanded" value="35" />
+      <skill id="Polearm" value="40" />
+      <skill id="Bow" value="30" />
+      <skill id="Crossbow" value="30" />
+      <skill id="Throwing" value="30" />
+      <skill id="Riding" value="30" />
     </skills>
     <upgrade_targets>
       <upgrade_target id="NPCCharacter.mordor_uruk_warrior" />
@@ -3095,13 +3095,13 @@
     </face>
     <skills>
       <skill id="Athletics" value="105" />
-      <skill id="OneHanded" value="112" />
-      <skill id="Bow" value="120" />
-      <skill id="Crossbow" value="30" />
-      <skill id="Throwing" value="45" />
-      <skill id="Riding" value="5" />
-      <skill id="TwoHanded" value="103" />
-      <skill id="Polearm" value="107" />
+      <skill id="OneHanded" value="85" />
+      <skill id="Bow" value="96" />
+      <skill id="Crossbow" value="40" />
+      <skill id="Throwing" value="40" />
+      <skill id="Riding" value="40" />
+      <skill id="TwoHanded" value="50" />
+      <skill id="Polearm" value="50" />
     </skills>
     <upgrade_targets>
       <upgrade_target id="NPCCharacter.mordor_uruk_archer" />
@@ -3133,14 +3133,14 @@
       <face_key_template value="BodyProperty.fighter_uruk_mordor" />
     </face>
     <skills>
-      <skill id="Athletics" value="125" />
-      <skill id="OneHanded" value="152" />
-      <skill id="TwoHanded" value="177" />
-      <skill id="Bow" value="195" />
-      <skill id="Throwing" value="65" />
-      <skill id="Riding" value="15" />
-      <skill id="Polearm" value="107" />
-      <skill id="Crossbow" value="35" />
+      <skill id="Athletics" value="165" />
+      <skill id="OneHanded" value="110" />
+      <skill id="TwoHanded" value="135" />
+      <skill id="Bow" value="150" />
+      <skill id="Throwing" value="60" />
+      <skill id="Riding" value="60" />
+      <skill id="Polearm" value="80" />
+      <skill id="Crossbow" value="60" />
     </skills>
     <upgrade_targets />
     <Equipments>
@@ -3169,14 +3169,14 @@
       <face_key_template value="BodyProperty.fighter_uruk_mordor" />
     </face>
     <skills>
-      <skill id="Athletics" value="115" />
-      <skill id="OneHanded" value="152" />
-      <skill id="Crossbow" value="160" />
-      <skill id="Throwing" value="55" />
-      <skill id="Riding" value="5" />
-      <skill id="TwoHanded" value="103" />
-      <skill id="Polearm" value="107" />
-      <skill id="Bow" value="130" />
+      <skill id="Athletics" value="135" />
+      <skill id="OneHanded" value="110" />
+      <skill id="Crossbow" value="125" />
+      <skill id="Throwing" value="50" />
+      <skill id="Riding" value="50" />
+      <skill id="TwoHanded" value="65" />
+      <skill id="Polearm" value="65" />
+      <skill id="Bow" value="96" />
     </skills>
     <upgrade_targets>
       <upgrade_target id="NPCCharacter.mordor_uruk_heavy_crossbow" />
@@ -3207,14 +3207,14 @@
       <face_key_template value="BodyProperty.fighter_uruk_mordor" />
     </face>
     <skills>
-      <skill id="Athletics" value="125" />
-      <skill id="OneHanded" value="177" />
-      <skill id="Crossbow" value="195" />
-      <skill id="Throwing" value="65" />
-      <skill id="Riding" value="5" />
-      <skill id="TwoHanded" value="103" />
-      <skill id="Polearm" value="107" />
-      <skill id="Bow" value="130" />
+      <skill id="Athletics" value="165" />
+      <skill id="OneHanded" value="135" />
+      <skill id="Crossbow" value="150" />
+      <skill id="Throwing" value="60" />
+      <skill id="Riding" value="60" />
+      <skill id="TwoHanded" value="80" />
+      <skill id="Polearm" value="80" />
+      <skill id="Bow" value="96" />
     </skills>
     <upgrade_targets />
     <Equipments>
@@ -3253,14 +3253,14 @@
       <face_key_template value="BodyProperty.fighter_orc_mordor" />
     </face>
     <skills>
-      <skill id="Athletics" value="30" />
-      <skill id="OneHanded" value="35" />
-      <skill id="TwoHanded" value="25" />
-      <skill id="Polearm" value="25" />
-      <skill id="Bow" value="15" />
-      <skill id="Throwing" value="20" />
-      <skill id="Riding" value="0" />
-      <skill id="Crossbow" value="0" />
+      <skill id="Athletics" value="20" />
+      <skill id="OneHanded" value="20" />
+      <skill id="TwoHanded" value="10" />
+      <skill id="Polearm" value="10" />
+      <skill id="Bow" value="10" />
+      <skill id="Throwing" value="10" />
+      <skill id="Riding" value="10" />
+      <skill id="Crossbow" value="10" />
     </skills>
     <upgrade_targets>
       <upgrade_target id="NPCCharacter.morannon_fighter" />
@@ -3291,14 +3291,14 @@
       <face_key_template value="BodyProperty.fighter_orc_mordor" />
     </face>
     <skills>
-      <skill id="Athletics" value="43" />
-      <skill id="OneHanded" value="65" />
-      <skill id="TwoHanded" value="60" />
-      <skill id="Polearm" value="60" />
-      <skill id="Throwing" value="25" />
-      <skill id="Riding" value="0" />
+      <skill id="Athletics" value="40" />
+      <skill id="OneHanded" value="40" />
+      <skill id="TwoHanded" value="20" />
+      <skill id="Polearm" value="20" />
+      <skill id="Throwing" value="15" />
+      <skill id="Riding" value="15" />
       <skill id="Bow" value="15" />
-      <skill id="Crossbow" value="0" />
+      <skill id="Crossbow" value="15" />
     </skills>
     <upgrade_targets>
       <upgrade_target id="NPCCharacter.morannon_warrior" />
@@ -3328,14 +3328,14 @@
       <face_key_template value="BodyProperty.fighter_orc_mordor" />
     </face>
     <skills>
-      <skill id="Athletics" value="45" />
-      <skill id="OneHanded" value="35" />
-      <skill id="Bow" value="35" />
-      <skill id="Throwing" value="25" />
-      <skill id="Riding" value="0" />
-      <skill id="TwoHanded" value="25" />
-      <skill id="Polearm" value="25" />
-      <skill id="Crossbow" value="0" />
+      <skill id="Athletics" value="40" />
+      <skill id="OneHanded" value="30" />
+      <skill id="Bow" value="36" />
+      <skill id="Throwing" value="15" />
+      <skill id="Riding" value="15" />
+      <skill id="TwoHanded" value="20" />
+      <skill id="Polearm" value="20" />
+      <skill id="Crossbow" value="15" />
     </skills>
     <upgrade_targets>
       <upgrade_target id="NPCCharacter.morannon_scout" />
@@ -3366,14 +3366,14 @@
       <face_key_template value="BodyProperty.fighter_orc_mordor" />
     </face>
     <skills>
-      <skill id="Athletics" value="75" />
-      <skill id="OneHanded" value="90" />
-      <skill id="TwoHanded" value="90" />
-      <skill id="Polearm" value="90" />
-      <skill id="Throwing" value="35" />
-      <skill id="Riding" value="0" />
-      <skill id="Bow" value="15" />
-      <skill id="Crossbow" value="0" />
+      <skill id="Athletics" value="70" />
+      <skill id="OneHanded" value="70" />
+      <skill id="TwoHanded" value="35" />
+      <skill id="Polearm" value="35" />
+      <skill id="Throwing" value="30" />
+      <skill id="Riding" value="30" />
+      <skill id="Bow" value="30" />
+      <skill id="Crossbow" value="30" />
     </skills>
     <upgrade_targets>
       <upgrade_target id="NPCCharacter.morannon_infantry" />
@@ -3404,14 +3404,14 @@
       <face_key_template value="BodyProperty.fighter_orc_mordor" />
     </face>
     <skills>
-      <skill id="Athletics" value="80" />
-      <skill id="OneHanded" value="70" />
-      <skill id="Bow" value="65" />
-      <skill id="Throwing" value="35" />
-      <skill id="Riding" value="10" />
-      <skill id="TwoHanded" value="50" />
-      <skill id="Polearm" value="40" />
-      <skill id="Crossbow" value="20" />
+      <skill id="Athletics" value="70" />
+      <skill id="OneHanded" value="55" />
+      <skill id="Bow" value="64" />
+      <skill id="Throwing" value="30" />
+      <skill id="Riding" value="30" />
+      <skill id="TwoHanded" value="35" />
+      <skill id="Polearm" value="35" />
+      <skill id="Crossbow" value="30" />
     </skills>
     <upgrade_targets>
       <upgrade_target id="NPCCharacter.morannon_archer" />
@@ -3442,14 +3442,14 @@
       <face_key_template value="BodyProperty.fighter_orc_mordor" />
     </face>
     <skills>
-      <skill id="Athletics" value="90" />
-      <skill id="OneHanded" value="125" />
-      <skill id="TwoHanded" value="115" />
-      <skill id="Polearm" value="125" />
-      <skill id="Throwing" value="55" />
-      <skill id="Riding" value="0" />
-      <skill id="Bow" value="15" />
-      <skill id="Crossbow" value="0" />
+      <skill id="Athletics" value="95" />
+      <skill id="OneHanded" value="100" />
+      <skill id="TwoHanded" value="50" />
+      <skill id="Polearm" value="50" />
+      <skill id="Throwing" value="40" />
+      <skill id="Riding" value="40" />
+      <skill id="Bow" value="40" />
+      <skill id="Crossbow" value="40" />
     </skills>
     <upgrade_targets>
       <upgrade_target id="NPCCharacter.morannon_heavy_infantry" />
@@ -3479,14 +3479,14 @@
       <face_key_template value="BodyProperty.fighter_orc_mordor" />
     </face>
     <skills>
-      <skill id="Athletics" value="90" />
-      <skill id="OneHanded" value="110" />
-      <skill id="TwoHanded" value="115" />
-      <skill id="Polearm" value="140" />
-      <skill id="Throwing" value="55" />
-      <skill id="Riding" value="0" />
-      <skill id="Bow" value="15" />
-      <skill id="Crossbow" value="0" />
+      <skill id="Athletics" value="95" />
+      <skill id="OneHanded" value="70" />
+      <skill id="TwoHanded" value="50" />
+      <skill id="Polearm" value="95" />
+      <skill id="Throwing" value="40" />
+      <skill id="Riding" value="40" />
+      <skill id="Bow" value="40" />
+      <skill id="Crossbow" value="40" />
     </skills>
     <upgrade_targets>
       <upgrade_target id="NPCCharacter.morannon_heavy_spearman" />
@@ -3515,14 +3515,14 @@
       <face_key_template value="BodyProperty.fighter_orc_mordor" />
     </face>
     <skills>
-      <skill id="Athletics" value="90" />
-      <skill id="OneHanded" value="100" />
-      <skill id="Bow" value="110" />
-      <skill id="Throwing" value="45" />
-      <skill id="Riding" value="10" />
-      <skill id="TwoHanded" value="70" />
-      <skill id="Polearm" value="65" />
-      <skill id="Crossbow" value="25" />
+      <skill id="Athletics" value="95" />
+      <skill id="OneHanded" value="80" />
+      <skill id="Bow" value="92" />
+      <skill id="Throwing" value="40" />
+      <skill id="Riding" value="40" />
+      <skill id="TwoHanded" value="50" />
+      <skill id="Polearm" value="50" />
+      <skill id="Crossbow" value="40" />
     </skills>
     <upgrade_targets />
     <Equipments>
@@ -3551,14 +3551,14 @@
       <face_key_template value="BodyProperty.fighter_orc_mordor" />
     </face>
     <skills>
-      <skill id="Athletics" value="95" />
-      <skill id="OneHanded" value="175" />
-      <skill id="TwoHanded" value="160" />
-      <skill id="Polearm" value="165" />
-      <skill id="Throwing" value="75" />
-      <skill id="Riding" value="0" />
-      <skill id="Bow" value="15" />
-      <skill id="Crossbow" value="0" />
+      <skill id="Athletics" value="125" />
+      <skill id="OneHanded" value="130" />
+      <skill id="TwoHanded" value="65" />
+      <skill id="Polearm" value="65" />
+      <skill id="Throwing" value="50" />
+      <skill id="Riding" value="50" />
+      <skill id="Bow" value="50" />
+      <skill id="Crossbow" value="50" />
     </skills>
     <upgrade_targets />
     <Equipments>
@@ -3586,14 +3586,14 @@
       <face_key_template value="BodyProperty.fighter_orc_mordor" />
     </face>
     <skills>
-      <skill id="Athletics" value="95" />
-      <skill id="OneHanded" value="160" />
-      <skill id="TwoHanded" value="160" />
-      <skill id="Polearm" value="180" />
-      <skill id="Throwing" value="75" />
-      <skill id="Riding" value="0" />
-      <skill id="Bow" value="15" />
-      <skill id="Crossbow" value="0" />
+      <skill id="Athletics" value="125" />
+      <skill id="OneHanded" value="70" />
+      <skill id="TwoHanded" value="65" />
+      <skill id="Polearm" value="125" />
+      <skill id="Throwing" value="50" />
+      <skill id="Riding" value="50" />
+      <skill id="Bow" value="50" />
+      <skill id="Crossbow" value="50" />
     </skills>
     <upgrade_targets />
     <Equipments>
@@ -3629,14 +3629,14 @@
       <face_key_template value="BodyProperty.fighter_gondor" />
     </face>
     <skills>
-      <skill id="Athletics" value="120" />
-      <skill id="Riding" value="35" />
-      <skill id="OneHanded" value="190" />
-      <skill id="TwoHanded" value="130" />
-      <skill id="Polearm" value="150" />
-      <skill id="Bow" value="25" />
-      <skill id="Crossbow" value="20" />
-      <skill id="Throwing" value="60" />
+      <skill id="Athletics" value="135" />
+      <skill id="Riding" value="50" />
+      <skill id="OneHanded" value="135" />
+      <skill id="TwoHanded" value="65" />
+      <skill id="Polearm" value="65" />
+      <skill id="Bow" value="50" />
+      <skill id="Crossbow" value="50" />
+      <skill id="Throwing" value="50" />
     </skills>
     <upgrade_targets>
       <upgrade_target id="NPCCharacter.mordor_num_cavalry" />
@@ -3672,14 +3672,14 @@
       <face_key_template value="BodyProperty.fighter_gondor" />
     </face>
     <skills>
-      <skill id="Athletics" value="140" />
-      <skill id="Riding" value="200" />
-      <skill id="OneHanded" value="235" />
-      <skill id="TwoHanded" value="145" />
-      <skill id="Polearm" value="225" />
-      <skill id="Bow" value="30" />
-      <skill id="Crossbow" value="20" />
-      <skill id="Throwing" value="65" />
+      <skill id="Athletics" value="135" />
+      <skill id="Riding" value="160" />
+      <skill id="OneHanded" value="165" />
+      <skill id="TwoHanded" value="80" />
+      <skill id="Polearm" value="145" />
+      <skill id="Bow" value="60" />
+      <skill id="Crossbow" value="60" />
+      <skill id="Throwing" value="60" />
     </skills>
     <upgrade_targets>
       <upgrade_target id="NPCCharacter.mordor_num_vet_cavalry" />
@@ -3723,14 +3723,14 @@
       <face_key_template value="BodyProperty.fighter_gondor" />
     </face>
     <skills>
-      <skill id="Athletics" value="160" />
-      <skill id="Riding" value="255" />
-      <skill id="OneHanded" value="295" />
-      <skill id="TwoHanded" value="165" />
-      <skill id="Polearm" value="270" />
-      <skill id="Bow" value="35" />
-      <skill id="Crossbow" value="25" />
-      <skill id="Throwing" value="70" />
+      <skill id="Athletics" value="135" />
+      <skill id="Riding" value="185" />
+      <skill id="OneHanded" value="190" />
+      <skill id="TwoHanded" value="90" />
+      <skill id="Polearm" value="170" />
+      <skill id="Bow" value="75" />
+      <skill id="Crossbow" value="75" />
+      <skill id="Throwing" value="75" />
     </skills>
     <upgrade_targets>
       <upgrade_target id="NPCCharacter.mordor_num_knight" />
@@ -3774,14 +3774,14 @@
       <face_key_template value="BodyProperty.fighter_gondor" />
     </face>
     <skills>
-      <skill id="Athletics" value="180" />
-      <skill id="Riding" value="310" />
-      <skill id="OneHanded" value="350" />
-      <skill id="TwoHanded" value="185" />
-      <skill id="Polearm" value="320" />
-      <skill id="Bow" value="40" />
-      <skill id="Crossbow" value="30" />
-      <skill id="Throwing" value="75" />
+      <skill id="Athletics" value="135" />
+      <skill id="Riding" value="215" />
+      <skill id="OneHanded" value="220" />
+      <skill id="TwoHanded" value="105" />
+      <skill id="Polearm" value="195" />
+      <skill id="Bow" value="85" />
+      <skill id="Crossbow" value="85" />
+      <skill id="Throwing" value="85" />
     </skills>
     <upgrade_targets>
       <upgrade_target id="NPCCharacter.mordor_num_temple_knight" />
@@ -3825,14 +3825,14 @@
       <face_key_template value="BodyProperty.fighter_gondor" />
     </face>
     <skills>
-      <skill id="Athletics" value="195" />
-      <skill id="Riding" value="350" />
-      <skill id="OneHanded" value="380" />
-      <skill id="TwoHanded" value="200" />
-      <skill id="Polearm" value="350" />
-      <skill id="Bow" value="45" />
-      <skill id="Crossbow" value="35" />
-      <skill id="Throwing" value="80" />
+      <skill id="Athletics" value="135" />
+      <skill id="Riding" value="240" />
+      <skill id="OneHanded" value="245" />
+      <skill id="TwoHanded" value="115" />
+      <skill id="Polearm" value="220" />
+      <skill id="Bow" value="95" />
+      <skill id="Crossbow" value="95" />
+      <skill id="Throwing" value="95" />
     </skills>
     <upgrade_targets />
     <Equipments>
@@ -3874,14 +3874,14 @@
       <face_key_template value="BodyProperty.fighter_gondor" />
     </face>
     <skills>
-      <skill id="Athletics" value="140" />
-      <skill id="Riding" value="35" />
-      <skill id="OneHanded" value="235" />
-      <skill id="TwoHanded" value="225" />
-      <skill id="Polearm" value="150" />
-      <skill id="Bow" value="25" />
-      <skill id="Crossbow" value="20" />
-      <skill id="Throwing" value="85" />
+      <skill id="Athletics" value="160" />
+      <skill id="Riding" value="60" />
+      <skill id="OneHanded" value="165" />
+      <skill id="TwoHanded" value="145" />
+      <skill id="Polearm" value="80" />
+      <skill id="Bow" value="60" />
+      <skill id="Crossbow" value="60" />
+      <skill id="Throwing" value="60" />
     </skills>
     <upgrade_targets>
       <upgrade_target id="NPCCharacter.mordor_num_vet_infantry" />
@@ -3921,14 +3921,14 @@
       <face_key_template value="BodyProperty.fighter_gondor" />
     </face>
     <skills>
-      <skill id="Athletics" value="155" />
-      <skill id="Riding" value="35" />
-      <skill id="OneHanded" value="280" />
-      <skill id="TwoHanded" value="270" />
-      <skill id="Polearm" value="190" />
-      <skill id="Bow" value="30" />
-      <skill id="Crossbow" value="20" />
-      <skill id="Throwing" value="95" />
+      <skill id="Athletics" value="185" />
+      <skill id="Riding" value="75" />
+      <skill id="OneHanded" value="190" />
+      <skill id="TwoHanded" value="170" />
+      <skill id="Polearm" value="90" />
+      <skill id="Bow" value="75" />
+      <skill id="Crossbow" value="75" />
+      <skill id="Throwing" value="75" />
     </skills>
     <upgrade_targets>
       <upgrade_target id="NPCCharacter.mordor_num_warden" />
@@ -3968,14 +3968,14 @@
       <face_key_template value="BodyProperty.fighter_gondor" />
     </face>
     <skills>
-      <skill id="Athletics" value="170" />
-      <skill id="Riding" value="35" />
-      <skill id="OneHanded" value="320" />
-      <skill id="TwoHanded" value="310" />
-      <skill id="Polearm" value="230" />
-      <skill id="Bow" value="30" />
-      <skill id="Crossbow" value="20" />
-      <skill id="Throwing" value="105" />
+      <skill id="Athletics" value="215" />
+      <skill id="Riding" value="85" />
+      <skill id="OneHanded" value="220" />
+      <skill id="TwoHanded" value="195" />
+      <skill id="Polearm" value="105" />
+      <skill id="Bow" value="85" />
+      <skill id="Crossbow" value="85" />
+      <skill id="Throwing" value="85" />
     </skills>
     <upgrade_targets>
       <upgrade_target id="NPCCharacter.mordor_num_temple_guard" />
@@ -4015,14 +4015,14 @@
       <face_key_template value="BodyProperty.fighter_gondor" />
     </face>
     <skills>
-      <skill id="Athletics" value="185" />
-      <skill id="Riding" value="35" />
-      <skill id="OneHanded" value="345" />
-      <skill id="TwoHanded" value="335" />
-      <skill id="Polearm" value="260" />
-      <skill id="Bow" value="35" />
-      <skill id="Crossbow" value="25" />
-      <skill id="Throwing" value="110" />
+      <skill id="Athletics" value="240" />
+      <skill id="Riding" value="95" />
+      <skill id="OneHanded" value="245" />
+      <skill id="TwoHanded" value="220" />
+      <skill id="Polearm" value="115" />
+      <skill id="Bow" value="95" />
+      <skill id="Crossbow" value="95" />
+      <skill id="Throwing" value="95" />
     </skills>
     <upgrade_targets />
     <Equipments>
@@ -4080,14 +4080,14 @@
       <face_key_template value="BodyProperty.fighter_gondor" />
     </face>
     <skills>
-      <skill id="Athletics" value="135" />
-      <skill id="Riding" value="35" />
-      <skill id="OneHanded" value="190" />
-      <skill id="TwoHanded" value="190" />
-      <skill id="Polearm" value="150" />
-      <skill id="Bow" value="225" />
-      <skill id="Crossbow" value="40" />
-      <skill id="Throwing" value="70" />
+      <skill id="Athletics" value="160" />
+      <skill id="Riding" value="60" />
+      <skill id="OneHanded" value="135" />
+      <skill id="TwoHanded" value="150" />
+      <skill id="Polearm" value="80" />
+      <skill id="Bow" value="168" />
+      <skill id="Crossbow" value="60" />
+      <skill id="Throwing" value="60" />
     </skills>
     <upgrade_targets>
       <upgrade_target id="NPCCharacter.mordor_num_vet_archer" />
@@ -4127,14 +4127,14 @@
       <face_key_template value="BodyProperty.fighter_gondor" />
     </face>
     <skills>
-      <skill id="Athletics" value="150" />
-      <skill id="Riding" value="35" />
-      <skill id="OneHanded" value="190" />
-      <skill id="TwoHanded" value="200" />
-      <skill id="Polearm" value="150" />
-      <skill id="Bow" value="275" />
-      <skill id="Crossbow" value="45" />
-      <skill id="Throwing" value="80" />
+      <skill id="Athletics" value="185" />
+      <skill id="Riding" value="75" />
+      <skill id="OneHanded" value="135" />
+      <skill id="TwoHanded" value="175" />
+      <skill id="Polearm" value="90" />
+      <skill id="Bow" value="196" />
+      <skill id="Crossbow" value="75" />
+      <skill id="Throwing" value="75" />
     </skills>
     <upgrade_targets>
       <upgrade_target id="NPCCharacter.mordor_num_marksman" />
@@ -4174,14 +4174,14 @@
       <face_key_template value="BodyProperty.fighter_gondor" />
     </face>
     <skills>
-      <skill id="Athletics" value="162" />
-      <skill id="Riding" value="35" />
-      <skill id="OneHanded" value="200" />
-      <skill id="TwoHanded" value="235" />
-      <skill id="Polearm" value="155" />
-      <skill id="Bow" value="310" />
-      <skill id="Crossbow" value="50" />
-      <skill id="Throwing" value="90" />
+      <skill id="Athletics" value="215" />
+      <skill id="Riding" value="85" />
+      <skill id="OneHanded" value="135" />
+      <skill id="TwoHanded" value="200" />
+      <skill id="Polearm" value="105" />
+      <skill id="Bow" value="224" />
+      <skill id="Crossbow" value="85" />
+      <skill id="Throwing" value="85" />
     </skills>
     <upgrade_targets>
       <upgrade_target id="NPCCharacter.mordor_num_shadowbow" />
@@ -4241,13 +4241,13 @@
       <face_key_template value="BodyProperty.fighter_gondor" />
     </face>
     <skills>
-      <skill id="Athletics" value="175" />
-      <skill id="Riding" value="35" />
-      <skill id="OneHanded" value="220" />
-      <skill id="TwoHanded" value="255" />
-      <skill id="Polearm" value="175" />
-      <skill id="Bow" value="330" />
-      <skill id="Crossbow" value="55" />
+      <skill id="Athletics" value="240" />
+      <skill id="Riding" value="95" />
+      <skill id="OneHanded" value="135" />
+      <skill id="TwoHanded" value="225" />
+      <skill id="Polearm" value="115" />
+      <skill id="Bow" value="252" />
+      <skill id="Crossbow" value="95" />
       <skill id="Throwing" value="95" />
     </skills>
     <upgrade_targets />
@@ -4317,28 +4317,28 @@
         <skills>
             <skill
                 id="Athletics"
-                value="58" />
+                value="40" />
             <skill
                 id="Riding"
-                value="5" />
+                value="15" />
             <skill
                 id="OneHanded"
-                value="73" />
+                value="40" />
             <skill
                 id="TwoHanded"
-                value="72" />
+                value="20" />
             <skill
                 id="Polearm"
-                value="82" />
+                value="40" />
             <skill
                 id="Bow"
-                value="10" />
+                value="15" />
             <skill
                 id="Crossbow"
-                value="5" />
+                value="15" />
             <skill
                 id="Throwing"
-                value="25" />
+                value="15" />
         </skills>
         <Equipments>
             <EquipmentRoster>
@@ -4660,14 +4660,14 @@
       <face_key_template value="BodyProperty.fighter_orc_mordor" />
     </face>
     <skills>
-      <skill id="Athletics" value="75" />
-      <skill id="OneHanded" value="90" />
-      <skill id="TwoHanded" value="90" />
-      <skill id="Polearm" value="90" />
-      <skill id="Throwing" value="35" />
-      <skill id="Riding" value="0" />
-      <skill id="Bow" value="0" />
-      <skill id="Crossbow" value="0" />
+      <skill id="Athletics" value="70" />
+      <skill id="OneHanded" value="65" />
+      <skill id="TwoHanded" value="35" />
+      <skill id="Polearm" value="70" />
+      <skill id="Throwing" value="30" />
+      <skill id="Riding" value="30" />
+      <skill id="Bow" value="30" />
+      <skill id="Crossbow" value="30" />
     </skills>
     <Equipments>
       <EquipmentRoster>
@@ -4694,14 +4694,14 @@
       <face_key_template value="BodyProperty.fighter_orc_mordor" />
     </face>
     <skills>
-      <skill id="Athletics" value="45" />
+      <skill id="Athletics" value="40" />
       <skill id="OneHanded" value="30" />
-      <skill id="Bow" value="35" />
-      <skill id="Throwing" value="25" />
-      <skill id="Riding" value="5" />
-      <skill id="TwoHanded" value="30" />
-      <skill id="Polearm" value="25" />
-      <skill id="Crossbow" value="10" />
+      <skill id="Bow" value="36" />
+      <skill id="Throwing" value="15" />
+      <skill id="Riding" value="15" />
+      <skill id="TwoHanded" value="20" />
+      <skill id="Polearm" value="20" />
+      <skill id="Crossbow" value="15" />
     </skills>
     <Equipments>
       <EquipmentRoster>
@@ -4729,13 +4729,13 @@
     </face>
     <skills>
       <skill id="Athletics" value="20" />
-      <skill id="Riding" value="0" />
-      <skill id="OneHanded" value="25" />
-      <skill id="Polearm" value="15" />
-      <skill id="TwoHanded" value="0" />
-      <skill id="Bow" value="0" />
-      <skill id="Crossbow" value="0" />
-      <skill id="Throwing" value="0" />
+      <skill id="Riding" value="10" />
+      <skill id="OneHanded" value="20" />
+      <skill id="Polearm" value="10" />
+      <skill id="TwoHanded" value="10" />
+      <skill id="Bow" value="10" />
+      <skill id="Crossbow" value="10" />
+      <skill id="Throwing" value="10" />
     </skills>
     <Equipments>
       <EquipmentRoster>

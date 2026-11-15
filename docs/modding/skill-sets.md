@@ -228,7 +228,7 @@ Code: No code changes needed.
 | 74 archetypes in `BASE_ARCHETYPES` (tool lines 29-330), 74 archetype sets and 72 canonical sets in the generated file | python key count inside the `BASE_ARCHETYPES` literal, and a prefix split of the generated ids | 2026-11-03 |
 | `MaxSkillLevels` appears once in the v1.4.8 dump, at its own declaration | `rg -rn --glob '*.cs' -c "MaxSkillLevels"` over the decompile root | 2026-09-05 |
 
-Two numbers this chapter deliberately does not print. The per-level, per-formation troop baselines live in `tools/rebalance_troops.py`: `INFANTRY_BASELINES` at lines 63-75, `RANGED_BASELINES` at 77-88, `CAVALRY_BASELINES` at 90-101, `HORSEARCHER_BASELINES` at 103-113, grouped by `GROUP_BASELINES` at 115-120 with `CULTURAL_MODS` at 126. Infantry, ranged and cavalry are keyed to levels 1 through 51 in steps of 5; horse archers stop at 46. <!-- measured: python listing the integer keys of each baseline dict in tools/rebalance_troops.py 2026-09-05 --> Those tables drive troop `<skills>` blocks, not skill sets, and they belong to [Troops](troops.md) and [Balance levers](balance-levers.md).
+Two numbers this chapter deliberately does not print. The troop skill curve lives in `tools/rebalance_troops.py` (#343): `TIER_CURVE` (the main weapon's number at each engine tier), the role table in `calculate_skills` and the percent rows in `CULTURE_PCT`; [troop-skill-balance.md](../features/troop-skill-balance.md) prints them. They drive troop `<skills>` blocks, not skill sets, and they belong to [Troops](troops.md) and [Balance levers](balance-levers.md).
 
 ## Read next
 

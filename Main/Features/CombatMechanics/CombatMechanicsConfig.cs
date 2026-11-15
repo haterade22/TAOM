@@ -45,8 +45,10 @@ public class CrushThroughConfig
 
     // Extra-CTB path only; the engine's base 58f overhead path is untouched (falls through to base).
     public float ExtraCrushThroughEnergyThreshold { get; set; } = 25f;
-    public int SkillDeadZone { get; set; } = 30;
-    public int SkillTargetDelta { get; set; } = 200;
+    // Weapon-skill gap, in troop skill points: scaled by 260/390 when the troop curve's top fell
+    // to vanilla's 260 (#343), so the same tier gap gives about the same chance.
+    public int SkillDeadZone { get; set; } = 20;
+    public int SkillTargetDelta { get; set; } = 135;
     public float MaxSkillChance { get; set; } = 0.5f;
     public float SkillCurveExponent { get; set; } = 0.008097f;
     public float EnergyRampMarginFactor { get; set; } = 0.27f;

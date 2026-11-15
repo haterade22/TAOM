@@ -24,13 +24,13 @@
 	<NPCCharacter id="villager_rhudaur" default_group="Infantry" level="1" name="{=aom_rhud_villager}Villager" occupation="Villager" culture="Culture.rhudaur">
 		<face><face_key_template value="BodyProperty.fighter_gondor" /></face>
 		<skills>
-			<skill id="Athletics" value="30" />
-			<skill id="Riding" value="0" />
-			<skill id="OneHanded" value="30" />
-			<skill id="TwoHanded" value="20" />
-			<skill id="Polearm" value="30" />
-			<skill id="Bow" value="0" />
-			<skill id="Crossbow" value="0" />
+			<skill id="Athletics" value="20" />
+			<skill id="Riding" value="10" />
+			<skill id="OneHanded" value="10" />
+			<skill id="TwoHanded" value="10" />
+			<skill id="Polearm" value="20" />
+			<skill id="Bow" value="10" />
+			<skill id="Crossbow" value="10" />
 			<skill id="Throwing" value="20" />
 		</skills>
 		<upgrade_targets>

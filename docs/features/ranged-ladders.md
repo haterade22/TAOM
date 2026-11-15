@@ -136,6 +136,20 @@ top crossbow cell 82 (Gondor T8). The old rows let Mirkwood T10 hit for about 90
 Accuracy cannot widen under its ceiling without a lower rank's T7 dropping under its T6, so accuracy
 steps 1 per rank at every tier and the high-tier gap comes from damage and skill.
 
+The skill anchor is the troop skill curve, `rebalance_troops.TIER_CURVE` (20 to 260), and the
+skill step is 4% of it, rounded (1 at T1 to 10 at T10), so an archer of the anchor rank holds the
+curve's number at its tier (#343; `LadderSpecTests` in `test_troop_skill_curve.py` pins both).
+
+The #1271 damage rows (2026-11-14) were fitted at the old Bow skills, before #343 lowered the
+curve, and were not refitted. A bow's hit carries `1 + 0.0011 x Bow` and its spread
+`1 - 0.0009 x Bow` (`tools/ranged_ladder.py`), so on the top bow cell (Mirkwood T10, Bow 410
+before, 320 now) the skill multiplier falls from 1.451 to 1.352, about 7% less hit, and the spread
+factor rises from 0.631 to 0.712, about 13% wider. A crossbow's hit does not read Crossbow. The #343
+design harness (body hits on 100 HP, the anchor rank 7 bow into same-tier armour) gives, T1 to T10,
+35, 37, 31, 21, 24, 15, 18, 22, 23, 25 before and 35, 37, 30, 20, 22, 14, 16, 17, 19, 21 after.
+Every bow cell hits less, so the R4 one-shot guideline below still holds; whether the bow rows
+should rise back is a #1271 question this change does not decide.
+
 The ranking, position 1 best: Mirkwood 1; Rivendell and Lindon 2; Ithilien 3 (`gondor_ith_*`,
 `gondor_ithilien_*`); Blackroot Vale (`gondor_brv_*`), Arthedain and Rhudaur 4; Black Numenoreans 5; Harad, Dale (whose line also claims `troops_anduinvale.xml`, `troops_angaladh.xml` and `troops_dorwinion.xml`) and Cardolan 6; Gondor,
 Rhun, Isengard and Umbar 7; Erebor (whose line also claims `troops_eredluin.xml`, so Ered Luin carries
@@ -303,7 +317,7 @@ tools/ranged_ladder.py     cell, skill_cell, rank, tiers_for, ladder_id, line_of
               "step": {"1": 0.03, "...": 0, "10": 0.03}},
    "accuracy": {"top": {"1": 85, "...": 0, "10": 99}, "rank_step": 1, "crossbow_bonus": 9, "max": 99},
    "speed": {"tier_base": {"0": 54, "...": 0, "10": 78}, "rank_step": 3},
-   "skill": {"anchor": {"1": 30, "...": 0, "10": 320}, "step": {"1": 10, "...": 0, "10": 15}, "min": 10}},
+   "skill": {"anchor": {"1": 20, "...": 0, "10": 260}, "step": {"1": 1, "...": 0, "10": 10}, "min": 10}},
  "hero_ceiling": {"Bow": 90, "Crossbow": 105},
  "lines": [
    {"id": "harad", "folder": "harad", "files": ["harad"],
@@ -355,37 +369,37 @@ rows (#1271): its `ranged_ladder.xml` items still carry the old damage, and
 
 | Line | Ranks (overall, damage, accuracy) | Class | Cells: tier speed / damage / accuracy / skill |
 |---|---|---|---|
-| mirkwood | 1, 1, 1 | Bow | T2 88/47/88/115; T3 90/50/91/145; T8 102/61/97/370; T9 105/64/98/390; T10 108/65/99/410 |
-| rivendell | 2, 2, 2 | Bow | T2 85/46/87/105; T3 87/48/90/135; T5 91/53/93/220; T6 93/55/94/255; T7 96/57/95/320; T8 99/60/96/355; T9 102/62/97/375 |
-| lothlorien | 2, 2, 1 | Bow | T2 85/46/88/105; T3 87/48/91/135; T4 89/51/93/180; T5 91/53/94/220; T6 93/55/95/255; T7 96/57/96/320; T8 99/60/97/355; T9 102/62/98/375 |
-| ithilien | 3, 3, 4 | Bow | T7 93/56/93/305; T8 96/58/94/340; T9 99/60/95/360; T10 102/62/96/380 |
-| blackroot | 4, 4, 5 | Bow | T3 81/46/87/115; T4 83/48/89/160; T5 85/50/90/200; T6 87/52/91/235; T7 90/55/92/290; T8 93/57/93/325 |
-| arthedain | 4, 5, 4 | Bow | T2 79/42/85/85; T3 81/45/88/115; T4 83/47/90/160; T5 85/49/91/200; T6 87/51/92/235; T7 90/53/93/290 |
-| rhudaur | 4, 5, 4 | Bow | T2 79/42/85/85; T3 81/45/88/115; T4 83/47/90/160; T5 85/49/91/200; T6 87/51/92/235 |
-| mordor_num | 5, 5, 6 | Bow | T6 84/51/90/225; T7 87/53/91/275; T8 90/55/92/310; T9 93/57/93/330 |
-| harad | 6, 6, 3 | Bow | T2 73/41/86/65; T3 75/43/89/95; T4 77/45/91/140; T5 79/47/92/180; T6 81/49/93/215; T7 84/52/94/260 |
-| dale | 6, 6, 7 | Bow | T1 71/39/79/40; T3 75/43/85/95; T4 77/45/87/140; T5 79/47/88/180; T6 81/49/89/215 |
-| dale | 6, 6, 7 | Crossbow | T3 75/55/94/95; T4 77/60/96/140; T5 79/64/97/180; T6 81/69/98/215 |
-| cardolan | 6, 6, 7 | Bow | T2 73/41/82/65; T3 75/43/85/95; T4 77/45/87/140; T5 79/47/88/180 |
-| gondor | 7, 7, 8 | Bow | T2 70/40/81/55; T3 72/42/84/85; T4 74/44/86/130; T5 76/46/87/170; T6 78/48/88/205; T7 81/50/89/245; T8 84/52/90/280 |
-| gondor | 7, 7, 8 | Crossbow | T3 72/53/93/85; T4 74/58/95/130; T5 76/62/96/170; T6 78/67/97/205; T7 81/77/98/245; T8 84/82/99/280 |
-| rhun_new | 7, 7, 8 | Bow | T2 70/40/81/55; T3 72/42/84/85; T4 74/44/86/130; T5 76/46/87/170; T6 78/48/88/205; T7 81/50/89/245; T8 84/52/90/280; T9 87/54/91/300 |
-| rhun_new | 7, 7, 8 | Crossbow | T5 76/62/96/170; T6 78/67/97/205; T7 81/77/98/245 |
-| isengard | 7, 7, 8 | Bow | T3 72/42/84/85; T4 74/44/86/130; T5 76/46/87/170 |
-| isengard | 7, 7, 8 | Crossbow | T2 70/51/90/55; T3 72/53/93/85; T4 74/58/95/130; T5 76/62/96/170; T6 78/67/97/205 |
-| umbar | 7, 7, 8 | Bow | T3 72/42/84/85; T4 74/44/86/130; T5 76/46/87/170 |
-| umbar | 7, 7, 8 | Crossbow | T5 76/62/96/170 |
-| erebor | 8, 2, 9 | Bow | T2 67/46/80/45; T3 69/48/83/75; T4 71/51/85/120; T5 73/53/86/160; T6 75/55/87/195 |
-| erebor | 8, 2, 9 | Crossbow | T4 71/67/94/120; T5 73/71/95/160; T6 75/77/96/195 |
-| mordor_uruk | 8, 8, 9 | Bow | T4 71/43/85/120; T5 73/45/86/160; T6 75/47/87/195 |
-| mordor_uruk | 8, 8, 9 | Crossbow | T5 73/60/95/160; T6 75/65/96/195 |
-| gundabad | 9, 9, 10 | Bow | T2 64/38/79/35; T3 66/39/82/65; T4 68/41/84/110; T5 70/43/85/150 |
-| dolguldur | 9, 9, 10 | Bow | T2 64/38/79/35; T3 66/39/82/65; T4 68/41/84/110; T5 70/43/85/150; T6 72/45/86/185; T7 75/47/87/215; T8 78/49/88/250; T9 81/51/89/270 |
-| mordor | 9, 9, 10 | Bow | T2 64/38/79/35; T3 66/39/82/65; T4 68/41/84/110 |
-| goblin | 9, 9, 10 | Bow | T2 64/38/79/35; T3 66/39/82/65; T4 68/41/84/110; T5 70/43/85/150 |
-| rohan | 10, 10, 11 | Bow | T1 59/35/75/10; T2 61/36/78/25; T3 63/38/81/55; T4 65/40/83/100; T5 67/42/84/140; T6 69/44/85/175; T7 72/46/86/200 |
-| dunland | 11, 11, 12 | Bow | T2 58/35/77/15; T3 60/37/80/45; T4 62/39/82/90; T5 64/40/83/130; T6 66/42/84/165 |
-| dunland | 11, 11, 12 | Crossbow | T4 62/51/91/90; T5 64/55/92/130; T6 66/59/93/165 |
+| mirkwood | 1, 1, 1 | Bow | T2 88/47/88/52; T3 90/50/91/88; T8 102/61/97/256; T9 105/64/98/288; T10 108/65/99/320 |
+| rivendell | 2, 2, 2 | Bow | T2 85/46/87/50; T3 87/48/90/85; T5 91/53/93/155; T6 93/55/94/186; T7 96/57/95/217; T8 99/60/96/248; T9 102/62/97/279 |
+| lothlorien | 2, 2, 1 | Bow | T2 85/46/88/50; T3 87/48/91/85; T4 89/51/93/120; T5 91/53/94/155; T6 93/55/95/186; T7 96/57/96/217; T8 99/60/97/248; T9 102/62/98/279 |
+| ithilien | 3, 3, 4 | Bow | T7 93/56/93/210; T8 96/58/94/240; T9 99/60/95/270; T10 102/62/96/300 |
+| blackroot | 4, 4, 5 | Bow | T3 81/46/87/79; T4 83/48/89/112; T5 85/50/90/145; T6 87/52/91/174; T7 90/55/92/203; T8 93/57/93/232 |
+| arthedain | 4, 5, 4 | Bow | T2 79/42/85/46; T3 81/45/88/79; T4 83/47/90/112; T5 85/49/91/145; T6 87/51/92/174; T7 90/53/93/203 |
+| rhudaur | 4, 5, 4 | Bow | T2 79/42/85/46; T3 81/45/88/79; T4 83/47/90/112; T5 85/49/91/145; T6 87/51/92/174 |
+| mordor_num | 5, 5, 6 | Bow | T6 84/51/90/168; T7 87/53/91/196; T8 90/55/92/224; T9 93/57/93/252 |
+| harad | 6, 6, 3 | Bow | T2 73/41/86/42; T3 75/43/89/73; T4 77/45/91/104; T5 79/47/92/135; T6 81/49/93/162; T7 84/52/94/189 |
+| dale | 6, 6, 7 | Bow | T1 71/39/79/21; T3 75/43/85/73; T4 77/45/87/104; T5 79/47/88/135; T6 81/49/89/162 |
+| dale | 6, 6, 7 | Crossbow | T3 75/55/94/73; T4 77/60/96/104; T5 79/64/97/135; T6 81/69/98/162 |
+| cardolan | 6, 6, 7 | Bow | T2 73/41/82/42; T3 75/43/85/73; T4 77/45/87/104; T5 79/47/88/135 |
+| gondor | 7, 7, 8 | Bow | T2 70/40/81/40; T3 72/42/84/70; T4 74/44/86/100; T5 76/46/87/130; T6 78/48/88/156; T7 81/50/89/182; T8 84/52/90/208 |
+| gondor | 7, 7, 8 | Crossbow | T3 72/53/93/70; T4 74/58/95/100; T5 76/62/96/130; T6 78/67/97/156; T7 81/77/98/182; T8 84/82/99/208 |
+| rhun_new | 7, 7, 8 | Bow | T2 70/40/81/40; T3 72/42/84/70; T4 74/44/86/100; T5 76/46/87/130; T6 78/48/88/156; T7 81/50/89/182; T8 84/52/90/208; T9 87/54/91/234 |
+| rhun_new | 7, 7, 8 | Crossbow | T5 76/62/96/130; T6 78/67/97/156; T7 81/77/98/182 |
+| isengard | 7, 7, 8 | Bow | T3 72/42/84/70; T4 74/44/86/100; T5 76/46/87/130 |
+| isengard | 7, 7, 8 | Crossbow | T2 70/51/90/40; T3 72/53/93/70; T4 74/58/95/100; T5 76/62/96/130; T6 78/67/97/156 |
+| umbar | 7, 7, 8 | Bow | T3 72/42/84/70; T4 74/44/86/100; T5 76/46/87/130 |
+| umbar | 7, 7, 8 | Crossbow | T5 76/62/96/130 |
+| erebor | 8, 2, 9 | Bow | T2 67/46/80/38; T3 69/48/83/67; T4 71/51/85/96; T5 73/53/86/125; T6 75/55/87/150 |
+| erebor | 8, 2, 9 | Crossbow | T4 71/67/94/96; T5 73/71/95/125; T6 75/77/96/150 |
+| mordor_uruk | 8, 8, 9 | Bow | T4 71/43/85/96; T5 73/45/86/125; T6 75/47/87/150 |
+| mordor_uruk | 8, 8, 9 | Crossbow | T5 73/60/95/125; T6 75/65/96/150 |
+| gundabad | 9, 9, 10 | Bow | T2 64/38/79/36; T3 66/39/82/64; T4 68/41/84/92; T5 70/43/85/120 |
+| dolguldur | 9, 9, 10 | Bow | T2 64/38/79/36; T3 66/39/82/64; T4 68/41/84/92; T5 70/43/85/120; T6 72/45/86/144; T7 75/47/87/168; T8 78/49/88/192; T9 81/51/89/216 |
+| mordor | 9, 9, 10 | Bow | T2 64/38/79/36; T3 66/39/82/64; T4 68/41/84/92 |
+| goblin | 9, 9, 10 | Bow | T2 64/38/79/36; T3 66/39/82/64; T4 68/41/84/92; T5 70/43/85/120 |
+| rohan | 10, 10, 11 | Bow | T1 59/35/75/17; T2 61/36/78/34; T3 63/38/81/61; T4 65/40/83/88; T5 67/42/84/115; T6 69/44/85/138; T7 72/46/86/161 |
+| dunland | 11, 11, 12 | Bow | T2 58/35/77/32; T3 60/37/80/58; T4 62/39/82/84; T5 64/40/83/110; T6 66/42/84/132 |
+| dunland | 11, 11, 12 | Crossbow | T4 62/51/91/84; T5 64/55/92/110; T6 66/59/93/132 |
 
 ## Key Files
 
@@ -413,7 +427,7 @@ tools/tests/test_sync_ranged_ladder_translations.py tools/tests/test_militia_eli
 tools/tests/test_fix_upgrade_armour_regressions.py`: the
 cell and skill formulas and their caps and floors on a fixture spec; spec validation (ranks, tier
 lists, a falling curve, an uncovered tier, non-numeric values, structure, prefixes, files, donors);
-the shipped spec (validates, 23 lines, the approved ranks, Mirkwood T10 108/65/99 and Bow 410, no
+the shipped spec (validates, 23 lines, the approved ranks, Mirkwood T10 108/65/99 and Bow 320, the skill anchor on the troop curve, no
 better damage rank below a worse one at any tier, a crossbow out-hitting and out-aiming every bow of
 its kingdom at the same tier, 147 items, the donor table under the ceiling, and the one-shot
 guideline R4 on every cell);
@@ -516,10 +530,15 @@ character files for hero kit.
   marksmen on `_t5`/`_t6`/`_t7`, with their Bow skill raised to the cells (12 values, Mike's choice).
   Inversions 398 to 0; no `RANGED_LADDER_INVERSION` remains in any culture. His three longbows ship as
   non-merchandise Armory items, waiting to become the line's `donor` art.
+- 2026-11-15: the skill curve joins the troop curve (#343). `stats.skill.anchor` is 20, 40, 70, 100,
+  130, 156, 182, 208, 234, 260 and `step` is 1 to 10 (T1 to T10), so Mirkwood T10 is Bow 320 (was
+  410) and Rohan T4 is 88. `rebalance_troops.py --apply` wrote the cells with the rest of the
+  restat; the roster tool plans 0 slot and 0 skill edits after it. The skill is not an item stat, so
+  no Armory item changes (`generate_ranged_ladder_items.py --verify`: OK).
 
 ## GitHub Issue
 
-[#582](https://github.com/haterade22/TAOM/issues/582), [#617](https://github.com/haterade22/TAOM/issues/617), [#1271](https://github.com/haterade22/TAOM/issues/1271)
+[#582](https://github.com/haterade22/TAOM/issues/582), [#617](https://github.com/haterade22/TAOM/issues/617), [#1271](https://github.com/haterade22/TAOM/issues/1271), [#343](https://github.com/haterade22/TAOM/issues/343)
 
 ---
 
