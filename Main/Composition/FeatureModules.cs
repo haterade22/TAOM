@@ -45,6 +45,7 @@ internal static class FeatureModules
         new Features.HardQuestions.HardQuestionsModule(),
         new Features.WatchfulHolds.WatchfulHoldsModule(),
         new Features.ShaderSourceInstall.ShaderSourceInstallModule(),
+        new Features.StartupAlerts.StartupAlertsModule(),
         new Features.HostReview.HostReviewModule(),
         new Features.VoiceAccents.VoiceAccentsModule(),
         new Features.HiddenHosts.HiddenHostsModule(),
