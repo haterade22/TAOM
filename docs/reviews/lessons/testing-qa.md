@@ -2811,3 +2811,11 @@ The battle balance provider's new tests built `BattleBalanceConfig` objects in C
 - **Why missed:** the tests were written per branch of `Validate`, so the loader around it and its input format were outside every test.
 - **Prevent:** a config provider's tests include at least one case through the real file and the real deserializer, and that case fails when the validate call is removed. A test of a fallback asserts the warning and the summary, not only the value.
 - **Source:** [rca-faction-balance-data-2026-11-14.md](../rca-faction-balance-data-2026-11-14.md), "#1291 review".
+
+### A change to a composition runs the composition tests before a push (#1075, 2026-11-15)
+
+**Why missed:** 02bd1e3d2 registered a new client service. `TaomClientComposition_RegisterServices_RegistersExactlyTheExpectedServices` lists every client registration, and the pre-push filter (`Autorun`, `GateTests`, `ServerJit`, `ClientWiring`) did not include it. The full `/verify` was skipped because the commit was rushed, and trunk went red until 7a0cd9311.
+
+**Prevent:** a push that skips the full suite adds `FullyQualifiedName~Composition` to its filter whenever it touches `TaomClientComposition`, `FeatureModules` or a feature module, and says in the commit body which suite ran.
+
+**Source:** `docs/reviews/rca-scenario-autorun-2026-11-15.md`

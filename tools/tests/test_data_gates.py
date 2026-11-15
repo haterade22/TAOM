@@ -94,6 +94,17 @@ class SelectionTests(unittest.TestCase):
         self.assertIn("armory-refs", ids)
         self.assertIn("polearm-shield", ids)
 
+    def test_a_weapon_description_sheet_or_the_couch_spec_selects_the_couch_gate(self):
+        sheet = LIVE_ARMORY.rsplit("/LOTRLOME_items", 1)[0] + "/weapon_descriptions.xslt"
+        for path in (sheet, "tools/couch_brace_polearms.json", "tools/register_couch_brace_polearms.py"):
+            self.assertIn("couch-brace", _ids(dg.select(dg.GATES, [path])), path)
+        self.assertNotIn("couch-brace", _ids(dg.select(dg.GATES, [TROOPS])))
+
+    def test_the_couch_gate_runs_check_and_watches_the_sibling_tool_it_imports(self):
+        gate = next(g for g in dg.GATES if g.id == "couch-brace")
+        self.assertEqual(gate.cmd, ("python", "tools/register_couch_brace_polearms.py", "--check"))
+        self.assertIn("couch-brace", _ids(dg.select(dg.GATES, ["tools/register_one_handed_polearms.py"])))
+
     def test_the_action_files_the_mbproj_audit_reads_select_it(self):
         for name in ("project.mbproj", "action_sets.xml", "action_types.xml"):
             path = f"Main/_Module/ModuleData/{name}"

@@ -98,8 +98,8 @@ to match their group's table. The keyword shifts and the pair swap were partial 
 
 No game check. Owed: the Lothlorien Marchwarden and Galadhrim lines and the Dale lake town line in
 the encyclopedia and in a battle, and a look at the `gondor_loss_noble` line's new values against
-the hand tune. The Mounted column of the table at the end reads Horse slots in the repo's battle
-rosters only; where the 11 `Cavalry` troops without one get a horse, if they do, was not checked.
+the hand tune. The Mounted column of the table at the end reads Horse slots inside the rosters only; the 11
+`Cavalry` troops without one carry a troop-level Horse row (checked on 2026-11-15).
 
 FOLLOW-UP #343: 89 launcher troops have a melee skill above the launcher's ladder cell and stay warnings: dunland 15, dolguldur 11, rohan 10, southrhovanion 6, eredluin 5, mordor 4, gundabad 3, two each in anduinvale, angaladh, arthedain, cardolan, dale, dorwinion, erebor, goblin, gondor, harad, isengard, lindon, lothlorien, mirkwood, rhudaur, rhun_new and rivendell, and gundabad_snow 1. Capping their melee would lower troops, so this belongs to the decision on the level of the curve.
 FOLLOW-UP #343: eight throwers have Throwing below their top melee skill and stay warnings; no value was invented. In `THROWN_PRIMARY_TROOP_IDS` (the formula gives Throwing the Ranged Bow curve): `gondor_har_skirmisher` Throwing 85 under OneHanded 100, `gondor_har_vet_skirmisher` 130 under 135, `gondor_har_javelineer` 170 under 185, `sagarun_naffatun` 195 under 250, `sagarun_storm_helmed_naffatun` 235 under 290; the formula gives each the value it already has. Not in it (the formula gives Throwing its group curve, again the value on disk): `gondor_loss_skirmisher` 20 under 100, `gondor_loss_axe_thrower` 40 under 135, `gondor_loss_vet_axe_thrower` 60 under 175. Decide whether the three `gondor_loss_*` throwers join the set and whether a thrower's Throwing should lead its melee.
@@ -107,66 +107,75 @@ FOLLOW-UP #343: the level of the curve against vanilla (recommendation B of the 
 FOLLOW-UP #343: Harad sits at about half of every other culture from tier 3 up (roster analysis, section 4).
 FOLLOW-UP #343: nine culture files have no `CULTURAL_MODS` row (`anduinvale`, `angaladh`, `arthedain`, `cardolan`, `dorwinion`, `eredluin`, `feral_orcs`, `rhudaur`, `southrhovanion`).
 FOLLOW-UP #343: `tools/fix_melee_ladder.py` still takes swap candidates outside the troop's weapon category (lesson "A tool that fits a troop to a number must hold the troop's weapon category fixed").
-FOLLOW-UP #343: troops whose Item0 class rose over a class they carry in every battle set (table below). The maintainer decides each line: keep the Item0 weapon as the main class, or exchange the slots so the weapon carried everywhere opens the kit. 54 rows: OneHanded over Polearm 33, Polearm over OneHanded 14, Polearm over TwoHanded 5, TwoHanded over OneHanded 2. 13 are mounted (a Horse slot in every battle set), 11 more are `Cavalry` with no Horse slot in their rosters, and 2 have a name that says spear (`gondor_lin_spearman`, `gondor_lin_vet_spearman`; no row says pike, lance or halberd). No data was changed for these.
+DONE #343: troops whose Item0 class rose over a class carried in every battle set (table below). The maintainer's words: "Its main weapon should be in item0 slot." The decision: the polearm goes into Item0 for lance cavalry (mounted Cavalry that carries a couchable polearm in every battle set) and for troops whose own name says spear, pike, lance or halberd; every other row stays, a swordsman with a spare spear. `python tools/rebalance_troops.py --main-weapon-slots --apply` exchanged the slots of 12 troops (29 battle sets) and the purpose order re-dealt their skills: rule A `dale_outrider`, `gondor_anf_cavalry`, `gondor_anf_vet_cavalry`, `mordor_warg_reaver`, `mordor_warg_ravager`, `mordor_warg_beastmaster` and the four `mordor_num_*` riders; rule B `gondor_lin_spearman`, `gondor_lin_vet_spearman`. The table's last column says what happened to each of its 54 rows: 12 changed, 19 where Item0 already holds the polearm (the Polearm over OneHanded rows were never a fault), 17 swordsmen with a spare polearm left by the decision, 4 Dol Guldur warg riders, changed in a second run on 2026-11-15 once their `sm_dg_khml_spear_*` could be couched (the Armory registration of `tools/register_couch_brace_polearms.py`), and 2 Dale lake town troops whose battle sets carry no polearm in every set. Ten horse archers carry a polearm behind another Item0 weapon and are reported, not touched: `gundabad_scout`, `gundabad_scout_merc`, `kharaghul_keshig` and the seven `rohan_wold_*` troops. The four riders wait for the Armory: `tools/register_couch_brace_polearms.py` makes `sm_dg_khml_spear_a` and `_b` couchable and braceable (the maintainer's request), and `--main-weapon-slots` then plans them. All 24 Cavalry rows are mounted: the 11 that the table first marked "no Horse slot" carry a troop-level Horse row outside their rosters. Whether a rider now starts with the lance in hand and still draws the sword in melee has not been checked in the game.
 FOLLOW-UP #343: `python tools/rebalance_troops.py --apply --dry-run` and the purpose result disagree. Of the 369 troops `--fix-purpose` wrote, `--apply` would move 131, and 45 of those sat exactly on the formula before; roster-wide it plans a change to 407 troops, against 327 on the commit before. Nothing was restatted. The gap closes with the decision on the level of the curve.
 FOLLOW-UP #343: `tools/generate_gondor_troops.py` is not the source of the Gondor skill values. A run of it changes 111 of the 188 Gondor troops and puts 22 of the troops #343 wrote back to their values before it, undoing their purpose order. The Dale, Lothlorien, Rhun and snow orc generators carry their own baselines too: a run changes every troop #343 wrote in their files (19, 15, 42 and 6), none back to the old values. Either make `rebalance_troops.py` their source, or retire their skill tables.
 FOLLOW-UP #343: 97 `TROOP_SKILL_KIT_MISMATCH` warnings stand (the 89 launcher and 8 thrower lines above), and the code becomes an error only at zero. The maintainer decides both: the 89 with the level of the curve, the 8 with the thrower question.
+FOLLOW-UP #343: the Fords of War roster is a second root of the slot rule only. Read as a troop file, 64 of its copies would be reordered by the purpose rule and 18 more have a launcher or thrower finding (`rebalance_troops.process_file(<fords_troops.xml>, purpose=True)` then `plan_fix_purpose`); no mode applies the purpose rule to them.
+FOLLOW-UP #343: `tools/generate_enlistment_rosters.py` on trunk keeps its own inline `any('couch' in u.features for u in p.usages)` (about line 841). Point it at `melee_catalogue.couchable_ids`, so the enlistment rule, the slot rule and the validator read one source.
+FOLLOW-UP #343: `tools/register_one_handed_polearms.py` has the same marker pattern (`block_re`, no count of markers) and a comment-blind item scan as `register_couch_brace_polearms.py` had before its review: a lone marker or a commented-out `<CraftedItem>` is not refused. Move it to `_marker_region.replace_region` and strip comments before scanning.
+FOLLOW-UP #343: `register_couch_brace_polearms.py --check` cannot see a region in a template the spec no longer names, a duplicated line outside the region, or a region made redundant because the Armory lists the pieces itself. Its `defined_pieces` does not read vanilla crafting pieces (two starter spears use them).
+FOLLOW-UP #343: the troop-level guard (a slot exchange that would move a troop-level row) lives only in `rebalance_troops.troop_kit_plan`. Move it into `troop_purpose.troop_main_weapon` and feed the writer and the validator the same XML in the parity test, which asserts only `len(found) == 1` today.
+FOLLOW-UP #343: `rebalance_troops.main` writes the skills of every file before the slot exchange can raise, so a failed exchange leaves a partial write (#979 reads every output before it writes any).
+FOLLOW-UP #343: `melee_catalogue.couchable_ids` reads the raw usage features, not the usage set the engine builds (`GetItemUsage` drops a feature a used piece excludes). No piece in the Armory, SandBoxCore or this repo excludes `couch` today (the excluded features are `long`, `swing`, `thrust` and `widegrip`).
+FOLLOW-UP #343: `taom_schema.couchable_item_ids` drops the pricing failures of the placeholders, the Armory and vanilla silently (`price_placeholders` returns its problems, the melee ladder pass reports them, this call does not).
+FOLLOW-UP #343: the validator's civilian-roster test accepts `civilian="True"` where `ranged_ladder.is_civilian` accepts only `"true"`; the two readings of a battle set can differ.
 
 Troops whose Item0 class rose over a class carried in every battle set (HEAD is `078b86761`; Mark: "name" for spear, pike, lance or halberd in the name, "mounted" for a Horse slot in every battle set):
 
-| Troop | Name | L | Group | Mounted | Item0 class, HEAD to now | Carried in every set, HEAD to now | Mark |
-|---|---|---|---|---|---|---|---|
-| `dale_outrider` | [Dale] Dalian Merchant Guard | 16 | Cavalry | yes | OneHanded 85 to 125 | Polearm 125 to 95 | mounted |
-| `dale_guardsman` | [Dale] Dalian Guardsman | 21 | Infantry | no | OneHanded 130 to 155 | Polearm 155 to 130 |  |
-| `dale_lake_town_mariner` | [Dale] Lake-Town Veteran Watchman | 21 | Infantry | no | TwoHanded 122 to 155 | OneHanded 130 to 122 |  |
-| `dale_lake_town_veteran` | [Dale] Lake-Town Officer of the Watch | 26 | Infantry | no | TwoHanded 167 to 195 | OneHanded 180 to 167 |  |
-| `dg_warg_raider` | [Dol Guldur] Warg Rider | 21 | Cavalry | yes | OneHanded 130 to 163 | Polearm 163 to 130 | mounted |
-| `dg_warg_skirmisher` | [Dol Guldur] Warg Ravager | 26 | Cavalry | yes | OneHanded 185 to 213 | Polearm 213 to 185 | mounted |
-| `dg_warg_red_fang` | [Dol Guldur] Warg Fang | 31 | Cavalry | yes | OneHanded 235 to 268 | Polearm 268 to 235 | mounted |
-| `dg_fell_warg_rider` | [Dol Guldur] Fell Ravager | 36 | Cavalry | yes | OneHanded 285 to 318 | Polearm 318 to 285 | mounted |
-| `ironpass_axeman` | [Ironpass] Axeman | 26 | Infantry | no | Polearm 180 to 190 | TwoHanded 190 to 180 |  |
-| `erebor_noble_guard` | [Erebor] Guard | 31 | Infantry | no | OneHanded 240 to 245 | Polearm 245 to 240 |  |
-| `iron_hills_noble_guard` | [Iron Hills] Guard | 31 | Infantry | no | OneHanded 245 to 255 | Polearm 255 to 245 |  |
-| `erebor_oathsworn` | [Erebor] Oathsworn | 36 | Infantry | no | OneHanded 280 to 285 | Polearm 285 to 280 |  |
-| `erebor_oathsworn_merc` | [Erebor] Hired Oathsworn | 36 | Infantry | no | OneHanded 280 to 285 | Polearm 285 to 280 |  |
-| `iron_hills_noble_gate_warden` | [Iron Hills] Gate Warden | 41 | Infantry | no | OneHanded 325 to 330 | Polearm 330 to 325 |  |
-| `iron_hills_noble_royal_warden` | [Iron Hills] Royal Warden | 46 | Infantry | no | OneHanded 345 to 350 | Polearm 350 to 345 |  |
-| `gondor_anf_cavalry` | [Gondor] Anfalas Cavalry | 21 | Cavalry | no Horse slot | OneHanded 125 to 150 | Polearm 150 to 125 |  |
-| `gondor_anf_vet_cavalry` | [Gondor] Anfalas Veteran Cavalry | 26 | Cavalry | no Horse slot | OneHanded 180 to 200 | Polearm 200 to 180 |  |
-| `gondor_ano_infantry` | [Gondor] Anórien Infantry | 26 | Infantry | no | Polearm 175 to 185 | OneHanded 185 to 175 |  |
-| `gondor_arn_cavalry` | [Gondor] Arndir Cavalry | 26 | Cavalry | no Horse slot | Polearm 135 to 200 | TwoHanded 200 to 180 |  |
-| `gondor_lin_spearman` | [Gondor] Linhir Spearman | 26 | Infantry | no | OneHanded 170 to 190 | Polearm 190 to 170 | name |
-| `gondor_arn_knight` | [Gondor] Arndir Knight | 31 | Cavalry | no Horse slot | Polearm 135 to 255 | TwoHanded 255 to 230 |  |
-| `gondor_lin_vet_spearman` | [Gondor] Linhir Veteran Spearman | 31 | Infantry | no | OneHanded 225 to 255 | Polearm 255 to 225 | name |
-| `gondor_arn_vet_knight` | [Gondor] Arndir Veteran Knight | 36 | Cavalry | no Horse slot | Polearm 135 to 305 | TwoHanded 305 to 280 |  |
-| `gondor_arn_hill_knight` | [Gondor] Arndir Hill-Knight | 41 | Cavalry | yes | Polearm 165 to 345 | TwoHanded 345 to 320 | mounted |
-| `harad_reg_horseman` | [Harwan] Harad Horseman | 16 | Cavalry | no Horse slot | Polearm 61 to 66 | OneHanded 66 to 61 |  |
-| `harad_reg_warrior` | [Harwan] Harad Warrior | 16 | Infantry | no | Polearm 61 to 66 | OneHanded 66 to 61 |  |
-| `harad_sreg_horseman` | [Shaghana] Southron Horseman | 16 | Cavalry | no Horse slot | Polearm 61 to 66 | OneHanded 66 to 61 |  |
-| `harad_sreg_warrior` | [Shaghana] Southron Warrior | 16 | Infantry | no | Polearm 61 to 66 | OneHanded 66 to 61 |  |
-| `harad_reg_footman` | [Harwan] Harad Footman | 21 | Infantry | no | Polearm 73 to 78 | OneHanded 78 to 73 |  |
-| `harad_reg_scout_cav` | [Harwan] Harad Scout | 21 | Cavalry | no Horse slot | Polearm 73 to 78 | OneHanded 78 to 73 |  |
-| `harad_sreg_footman` | [Shaghana] Southron Footman | 21 | Infantry | no | Polearm 73 to 78 | OneHanded 78 to 73 |  |
-| `harad_sreg_scout_cav` | [Shaghana] Southron Scout | 21 | Cavalry | no Horse slot | Polearm 73 to 78 | OneHanded 78 to 73 |  |
-| `harad_reg_cavalry` | [Harwan] Harad Cavalry | 26 | Cavalry | no Horse slot | Polearm 85 to 90 | OneHanded 90 to 85 |  |
-| `harad_reg_infantry` | [Harwan] Harad Infantry | 26 | Infantry | no | Polearm 85 to 90 | OneHanded 90 to 85 |  |
-| `harad_sreg_cavalry` | [Shaghana] Southron Cavalry | 26 | Cavalry | no Horse slot | Polearm 85 to 90 | OneHanded 90 to 85 |  |
-| `harad_sreg_infantry` | [Shaghana] Southron Infantry | 26 | Infantry | no | Polearm 85 to 90 | OneHanded 90 to 85 |  |
-| `mordor_warg_reaver` | [Mordor] Nurn Warg Reaver | 16 | Cavalry | yes | OneHanded 65 to 95 | Polearm 95 to 70 | mounted |
-| `mordor_warg_ravager` | [Mordor] Nurn Warg Ravager | 21 | Cavalry | yes | OneHanded 115 to 140 | Polearm 140 to 115 | mounted |
-| `mordor_warg_beastmaster` | [Mordor] Nurn Beast Master | 26 | Cavalry | yes | OneHanded 170 to 190 | Polearm 190 to 170 | mounted |
-| `mordor_num_cavalry` | [Mordor] Black Numenorean Cavalry | 31 | Cavalry | yes | OneHanded 225 to 235 | Polearm 235 to 225 | mounted |
-| `mordor_num_vet_cavalry` | [Mordor] Black Numenorean Veteran Cavalry | 36 | Cavalry | yes | OneHanded 270 to 295 | Polearm 295 to 270 | mounted |
-| `mordor_num_knight` | [Mordor] Black Numenorean Knight | 41 | Cavalry | yes | OneHanded 320 to 350 | Polearm 350 to 320 | mounted |
-| `mordor_num_temple_knight` | [Mordor] Black Numenorean Temple Knight | 46 | Cavalry | yes | OneHanded 350 to 380 | Polearm 380 to 350 | mounted |
-| `darkhun_infantry` | [Rhûn] Darkhûn Infantry | 21 | Infantry | no | OneHanded 125 to 145 | Polearm 145 to 125 |  |
-| `loke_rim_footman` | [Rhûn] Loke-Rim Footman | 21 | Infantry | no | OneHanded 125 to 145 | Polearm 145 to 125 |  |
-| `darkhun_veteran_infantry` | [Rhûn] Darkhûn Veteran Infantry | 26 | Infantry | no | OneHanded 175 to 185 | Polearm 185 to 175 |  |
-| `loke_rim_infantry` | [Rhûn] Loke-Rim Infantry | 26 | Infantry | no | OneHanded 175 to 185 | Polearm 185 to 175 |  |
-| `darkhun_guard` | [Rhûn] Darkhûn Guard | 31 | Infantry | no | OneHanded 230 to 250 | Polearm 250 to 230 |  |
-| `dragon_wrath_disciple` | [Rhûn] Dragon-Wrath Disciple | 31 | Infantry | no | OneHanded 230 to 250 | Polearm 250 to 230 |  |
-| `darkhun_ironbound` | [Rhûn] Darkhûn Ironbound | 36 | Infantry | no | OneHanded 270 to 290 | Polearm 290 to 270 |  |
-| `dragon_wrath_infantry` | [Rhûn] Dragon-Wrath Infantry | 36 | Infantry | no | OneHanded 270 to 290 | Polearm 290 to 270 |  |
-| `rohan_edoras_recruit` | [Rohan] Edoras Recruit | 6 | Infantry | no | OneHanded 28 to 38 | Polearm 38 to 28 |  |
-| `rohan_edoras_militia` | [Rohan] Edoras Militia | 11 | Infantry | no | OneHanded 60 to 80 | Polearm 80 to 60 |  |
-| `umbar_elite_root0000` | [Umbar] Naru n'Aru Royal Guard | 31 | Infantry | no | Polearm 235 to 240 | OneHanded 240 to 235 |  |
+| Troop | Name | L | Group | Mounted | Item0 class, HEAD to now | Carried in every set, HEAD to now | Mark | Result |
+|---|---|---|---|---|---|---|---|---|
+| `dale_outrider` | [Dale] Dalian Merchant Guard | 16 | Cavalry | yes | OneHanded 85 to 125 | Polearm 125 to 95 | mounted | changed, rule A |
+| `dale_guardsman` | [Dale] Dalian Guardsman | 21 | Infantry | no | OneHanded 130 to 155 | Polearm 155 to 130 |  | left: a swordsman with a spare polearm |
+| `dale_lake_town_mariner` | [Dale] Lake-Town Veteran Watchman | 21 | Infantry | no | TwoHanded 122 to 155 | OneHanded 130 to 122 |  | left: no polearm in every battle set (the pair is two melee classes) |
+| `dale_lake_town_veteran` | [Dale] Lake-Town Officer of the Watch | 26 | Infantry | no | TwoHanded 167 to 195 | OneHanded 180 to 167 |  | left: no polearm in every battle set (the pair is two melee classes) |
+| `dg_warg_raider` | [Dol Guldur] Warg Rider | 21 | Cavalry | yes | OneHanded 130 to 163 | Polearm 163 to 130 | mounted | changed in the second run: the spear was made couchable, and Polearm is the top skill again |
+| `dg_warg_skirmisher` | [Dol Guldur] Warg Ravager | 26 | Cavalry | yes | OneHanded 185 to 213 | Polearm 213 to 185 | mounted | changed in the second run: the spear was made couchable, and Polearm is the top skill again |
+| `dg_warg_red_fang` | [Dol Guldur] Warg Fang | 31 | Cavalry | yes | OneHanded 235 to 268 | Polearm 268 to 235 | mounted | changed in the second run: the spear was made couchable, and Polearm is the top skill again |
+| `dg_fell_warg_rider` | [Dol Guldur] Fell Ravager | 36 | Cavalry | yes | OneHanded 285 to 318 | Polearm 318 to 285 | mounted | changed in the second run: the spear was made couchable, and Polearm is the top skill again |
+| `ironpass_axeman` | [Ironpass] Axeman | 26 | Infantry | no | Polearm 180 to 190 | TwoHanded 190 to 180 |  | left: Item0 already holds the polearm |
+| `erebor_noble_guard` | [Erebor] Guard | 31 | Infantry | no | OneHanded 240 to 245 | Polearm 245 to 240 |  | left: a swordsman with a spare polearm |
+| `iron_hills_noble_guard` | [Iron Hills] Guard | 31 | Infantry | no | OneHanded 245 to 255 | Polearm 255 to 245 |  | left: a swordsman with a spare polearm |
+| `erebor_oathsworn` | [Erebor] Oathsworn | 36 | Infantry | no | OneHanded 280 to 285 | Polearm 285 to 280 |  | left: a swordsman with a spare polearm |
+| `erebor_oathsworn_merc` | [Erebor] Hired Oathsworn | 36 | Infantry | no | OneHanded 280 to 285 | Polearm 285 to 280 |  | left: a swordsman with a spare polearm |
+| `iron_hills_noble_gate_warden` | [Iron Hills] Gate Warden | 41 | Infantry | no | OneHanded 325 to 330 | Polearm 330 to 325 |  | left: a swordsman with a spare polearm |
+| `iron_hills_noble_royal_warden` | [Iron Hills] Royal Warden | 46 | Infantry | no | OneHanded 345 to 350 | Polearm 350 to 345 |  | left: a swordsman with a spare polearm |
+| `gondor_anf_cavalry` | [Gondor] Anfalas Cavalry | 21 | Cavalry | no Horse slot | OneHanded 125 to 150 | Polearm 150 to 125 |  | changed, rule A |
+| `gondor_anf_vet_cavalry` | [Gondor] Anfalas Veteran Cavalry | 26 | Cavalry | no Horse slot | OneHanded 180 to 200 | Polearm 200 to 180 |  | changed, rule A |
+| `gondor_ano_infantry` | [Gondor] Anórien Infantry | 26 | Infantry | no | Polearm 175 to 185 | OneHanded 185 to 175 |  | left: Item0 already holds the polearm |
+| `gondor_arn_cavalry` | [Gondor] Arndir Cavalry | 26 | Cavalry | no Horse slot | Polearm 135 to 200 | TwoHanded 200 to 180 |  | left: Item0 already holds the polearm |
+| `gondor_lin_spearman` | [Gondor] Linhir Spearman | 26 | Infantry | no | OneHanded 170 to 190 | Polearm 190 to 170 | name | changed, rule B |
+| `gondor_arn_knight` | [Gondor] Arndir Knight | 31 | Cavalry | no Horse slot | Polearm 135 to 255 | TwoHanded 255 to 230 |  | left: Item0 already holds the polearm |
+| `gondor_lin_vet_spearman` | [Gondor] Linhir Veteran Spearman | 31 | Infantry | no | OneHanded 225 to 255 | Polearm 255 to 225 | name | changed, rule B |
+| `gondor_arn_vet_knight` | [Gondor] Arndir Veteran Knight | 36 | Cavalry | no Horse slot | Polearm 135 to 305 | TwoHanded 305 to 280 |  | left: Item0 already holds the polearm |
+| `gondor_arn_hill_knight` | [Gondor] Arndir Hill-Knight | 41 | Cavalry | yes | Polearm 165 to 345 | TwoHanded 345 to 320 | mounted | left: Item0 already holds the polearm |
+| `harad_reg_horseman` | [Harwan] Harad Horseman | 16 | Cavalry | no Horse slot | Polearm 61 to 66 | OneHanded 66 to 61 |  | left: Item0 already holds the polearm |
+| `harad_reg_warrior` | [Harwan] Harad Warrior | 16 | Infantry | no | Polearm 61 to 66 | OneHanded 66 to 61 |  | left: Item0 already holds the polearm |
+| `harad_sreg_horseman` | [Shaghana] Southron Horseman | 16 | Cavalry | no Horse slot | Polearm 61 to 66 | OneHanded 66 to 61 |  | left: Item0 already holds the polearm |
+| `harad_sreg_warrior` | [Shaghana] Southron Warrior | 16 | Infantry | no | Polearm 61 to 66 | OneHanded 66 to 61 |  | left: Item0 already holds the polearm |
+| `harad_reg_footman` | [Harwan] Harad Footman | 21 | Infantry | no | Polearm 73 to 78 | OneHanded 78 to 73 |  | left: Item0 already holds the polearm |
+| `harad_reg_scout_cav` | [Harwan] Harad Scout | 21 | Cavalry | no Horse slot | Polearm 73 to 78 | OneHanded 78 to 73 |  | left: Item0 already holds the polearm |
+| `harad_sreg_footman` | [Shaghana] Southron Footman | 21 | Infantry | no | Polearm 73 to 78 | OneHanded 78 to 73 |  | left: Item0 already holds the polearm |
+| `harad_sreg_scout_cav` | [Shaghana] Southron Scout | 21 | Cavalry | no Horse slot | Polearm 73 to 78 | OneHanded 78 to 73 |  | left: Item0 already holds the polearm |
+| `harad_reg_cavalry` | [Harwan] Harad Cavalry | 26 | Cavalry | no Horse slot | Polearm 85 to 90 | OneHanded 90 to 85 |  | left: Item0 already holds the polearm |
+| `harad_reg_infantry` | [Harwan] Harad Infantry | 26 | Infantry | no | Polearm 85 to 90 | OneHanded 90 to 85 |  | left: Item0 already holds the polearm |
+| `harad_sreg_cavalry` | [Shaghana] Southron Cavalry | 26 | Cavalry | no Horse slot | Polearm 85 to 90 | OneHanded 90 to 85 |  | left: Item0 already holds the polearm |
+| `harad_sreg_infantry` | [Shaghana] Southron Infantry | 26 | Infantry | no | Polearm 85 to 90 | OneHanded 90 to 85 |  | left: Item0 already holds the polearm |
+| `mordor_warg_reaver` | [Mordor] Nurn Warg Reaver | 16 | Cavalry | yes | OneHanded 65 to 95 | Polearm 95 to 70 | mounted | changed, rule A |
+| `mordor_warg_ravager` | [Mordor] Nurn Warg Ravager | 21 | Cavalry | yes | OneHanded 115 to 140 | Polearm 140 to 115 | mounted | changed, rule A |
+| `mordor_warg_beastmaster` | [Mordor] Nurn Beast Master | 26 | Cavalry | yes | OneHanded 170 to 190 | Polearm 190 to 170 | mounted | changed, rule A |
+| `mordor_num_cavalry` | [Mordor] Black Numenorean Cavalry | 31 | Cavalry | yes | OneHanded 225 to 235 | Polearm 235 to 225 | mounted | changed, rule A |
+| `mordor_num_vet_cavalry` | [Mordor] Black Numenorean Veteran Cavalry | 36 | Cavalry | yes | OneHanded 270 to 295 | Polearm 295 to 270 | mounted | changed, rule A |
+| `mordor_num_knight` | [Mordor] Black Numenorean Knight | 41 | Cavalry | yes | OneHanded 320 to 350 | Polearm 350 to 320 | mounted | changed, rule A |
+| `mordor_num_temple_knight` | [Mordor] Black Numenorean Temple Knight | 46 | Cavalry | yes | OneHanded 350 to 380 | Polearm 380 to 350 | mounted | changed, rule A |
+| `darkhun_infantry` | [Rhûn] Darkhûn Infantry | 21 | Infantry | no | OneHanded 125 to 145 | Polearm 145 to 125 |  | left: a swordsman with a spare polearm |
+| `loke_rim_footman` | [Rhûn] Loke-Rim Footman | 21 | Infantry | no | OneHanded 125 to 145 | Polearm 145 to 125 |  | left: a swordsman with a spare polearm |
+| `darkhun_veteran_infantry` | [Rhûn] Darkhûn Veteran Infantry | 26 | Infantry | no | OneHanded 175 to 185 | Polearm 185 to 175 |  | left: a swordsman with a spare polearm |
+| `loke_rim_infantry` | [Rhûn] Loke-Rim Infantry | 26 | Infantry | no | OneHanded 175 to 185 | Polearm 185 to 175 |  | left: a swordsman with a spare polearm |
+| `darkhun_guard` | [Rhûn] Darkhûn Guard | 31 | Infantry | no | OneHanded 230 to 250 | Polearm 250 to 230 |  | left: a swordsman with a spare polearm |
+| `dragon_wrath_disciple` | [Rhûn] Dragon-Wrath Disciple | 31 | Infantry | no | OneHanded 230 to 250 | Polearm 250 to 230 |  | left: a swordsman with a spare polearm |
+| `darkhun_ironbound` | [Rhûn] Darkhûn Ironbound | 36 | Infantry | no | OneHanded 270 to 290 | Polearm 290 to 270 |  | left: a swordsman with a spare polearm |
+| `dragon_wrath_infantry` | [Rhûn] Dragon-Wrath Infantry | 36 | Infantry | no | OneHanded 270 to 290 | Polearm 290 to 270 |  | left: a swordsman with a spare polearm |
+| `rohan_edoras_recruit` | [Rohan] Edoras Recruit | 6 | Infantry | no | OneHanded 28 to 38 | Polearm 38 to 28 |  | left: a swordsman with a spare polearm |
+| `rohan_edoras_militia` | [Rohan] Edoras Militia | 11 | Infantry | no | OneHanded 60 to 80 | Polearm 80 to 60 |  | left: a swordsman with a spare polearm |
+| `umbar_elite_root0000` | [Umbar] Naru n'Aru Royal Guard | 31 | Infantry | no | Polearm 235 to 240 | OneHanded 240 to 235 |  | left: Item0 already holds the polearm |

@@ -60,11 +60,11 @@ See the linked feature docs for each file. The two new fields:
 
 ## How to verify in game
 
-No tool drives an unattended campaign yet ([unattended-game-runs.md](../reference/unattended-game-runs.md) "Scope today"), so a person plays the run.
+The [scenario autorun](scenario-autorun.md) plays the run with nobody at the keyboard. It starts the game unattended, so it needs Mike's word, and a first run is `--days 3`.
 
-1. Run `./build.ps1`, then start a new campaign. The clan tiers load only at the start of a campaign.
-2. Let the AI play to day 150. Keep your own party out of the wars.
-3. On days 45, 60, 100 and 150, record these items:
+1. Run `python tools/run_scenario.py --days 150`. It deploys the checkout, starts a new campaign (the clan tiers load only then), keeps your party out of the wars and quits at day 150.
+2. Read `ledger.txt` in the run folder under `E:\Temp\scenario-runs\`. The runner writes it with `analyze_war_ledger.py`.
+3. For a person's run instead, run `./build.ps1`, start a new campaign, keep your party out of the wars, and on days 45, 60, 100 and 150 record these items:
    - who holds East Osgiliath (`town_EW3`), Cair Andros (`castle_EW4`), Helm's Deep and Edoras;
    - Dunland's wars;
    - Isengard's party count;

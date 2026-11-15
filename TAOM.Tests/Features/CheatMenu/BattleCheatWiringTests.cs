@@ -65,10 +65,36 @@ public class BattleCheatWiringTests
         foreach (var call in new[]
                  {
                      "Service().HealSelf()", "Service().HealSide()", "Service().RoutEnemies()", "Service().KillEnemies()",
-                     "Service().SpawnTroops(ally, count)",
+                     "Service().SpawnTroops(ally, count)", "Service().ToggleGodMode()", "Service().SetGodMode(true)",
+                     "Service().SetGodMode(false)",
                  })
             StringAssert.Contains(src, call);
-        Assert.AreEqual(4, Regex.Matches(src, @"TaomConsole\.RunInMission\(").Count, "every battle command runs behind the mission gate");
+        Assert.AreEqual(5, Regex.Matches(src, @"TaomConsole\.RunInMission\(").Count, "every battle command runs behind the mission gate");
+    }
+
+    [TestMethod]
+    public void GodMode_TheBattleViewTicksIt_OutsideTheKeyGuard()
+    {
+        var src = Src("Client/Features/CheatMenu/UI/BattleCheatMenuView.cs");
+        var tick = src.IndexOf("base.OnMissionScreenTick(dt);", StringComparison.Ordinal);
+        var god = src.IndexOf("TickGodMode();", StringComparison.Ordinal);
+        var keyGuard = src.IndexOf("if (_failed ||", StringComparison.Ordinal);
+
+        Assert.IsTrue(tick >= 0 && god > tick && keyGuard > god, "god mode ticks every frame before, and apart from, the key reader's guard");
+        StringAssert.Contains(src, "_godMode?.TickGodMode();");
+        StringAssert.Contains(src, "_godModeFailed = true;");
+    }
+
+    [TestMethod]
+    public void GodMode_UsesTheEnginesImmortalState_AndOnlyInSetImmortal()
+    {
+        var src = Src("Main/Adapters/BattleCheatAdapter.cs");
+
+        StringAssert.Contains(src, "agent.SetMortalityState(immortal ? Agent.MortalityState.Immortal : Agent.MortalityState.Mortal);");
+        Assert.AreEqual(1, Regex.Matches(src, @"SetMortalityState\(").Count, "god mode writes mortality in one place");
+        Assert.IsFalse(src.Contains("ToggleInvulnerable"), "never vanilla's toggle: it would undo the game's own flag");
+        StringAssert.Contains(src, "MissionKey: RuntimeHelpers.GetHashCode(mission)");
+        StringAssert.Contains(src, "RuntimeHelpers.GetHashCode(agent) == held.Identity", "a reused index never passes for the held agent (#592)");
     }
 
     [TestMethod]

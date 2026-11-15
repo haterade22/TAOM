@@ -31,7 +31,7 @@ import re
 import copy
 import codecs
 import math
-from collections import defaultdict
+from collections import Counter, defaultdict
 from fractions import Fraction
 from pathlib import Path
 
@@ -226,47 +226,85 @@ def troop_weapon_classes(npc_elem, item_classes):
     return classes
 
 
-def troop_battle_sets(npc_elem, item_classes):
-    """[(roster ordinal among ALL the troop's EquipmentRoster elements, {slot: class})] for each
-    battle roster, troop-level <equipment> rows laid over every roster. The validator's
-    _battle_kits reads the same way, so the writer and TROOP_ITEM_ZERO_NOT_MAIN agree on a kit."""
-    def cls(eq):
-        return item_classes.get((eq.get('id') or '').replace('Item.', '', 1))
+def troop_battle_rows(npc_elem):
+    """([(roster ordinal among ALL the troop's EquipmentRoster elements, {slot: item id})] for each
+    battle roster, the slots that a troop-level <equipment> row fills). Troop-level rows lie over
+    every roster, an empty id clearing the slot, as _battle_kits in the validator reads them."""
+    def item(eq):
+        return (eq.get('id') or '').replace('Item.', '', 1)
     rosters = list(npc_elem.iter('EquipmentRoster'))
     inside = {id(eq) for r in rosters for eq in r.iter('equipment')}
-    loose = {eq.get('slot'): cls(eq) for eq in npc_elem.iter('equipment')
-             if id(eq) not in inside and eq.get('slot') in tp.WEAPON_SLOTS}
-    sets = []
+    loose = {eq.get('slot'): item(eq) for eq in npc_elem.iter('equipment') if id(eq) not in inside}
+    rows = []
     for ordinal, roster in enumerate(rosters):
         if rl.is_civilian(roster):
             continue
-        slots = {eq.get('slot'): cls(eq) for eq in roster.findall('equipment')
-                 if eq.get('slot') in tp.WEAPON_SLOTS}
-        slots.update(loose)
-        sets.append((ordinal, slots))
-    return sets
+        row = {eq.get('slot'): item(eq) for eq in roster.findall('equipment')}
+        row.update(loose)
+        rows.append((ordinal, row))
+    return rows, set(loose)
 
 
-def troop_kit(npc_elem, item_classes, fix_item0=False):
-    """(troop_purpose.Kit, item0 swaps) from the troop's battle sets (troop_battle_sets).
+def troop_battle_sets(npc_elem, item_classes):
+    """[(roster ordinal among ALL the troop's EquipmentRoster elements, {slot: class})] for each
+    battle roster, troop-level <equipment> rows laid over every roster (troop_battle_rows)."""
+    return [(ordinal, {s: item_classes.get(i) for s, i in row.items() if s in tp.WEAPON_SLOTS})
+            for ordinal, row in troop_battle_rows(npc_elem)[0]]
+
+
+def troop_kit(npc_elem, item_classes, fix_item0=False, couch_ids=None):
+    """(troop_purpose.Kit, item0 swaps); see troop_kit_plan."""
+    kit, swaps, _ = troop_kit_plan(npc_elem, item_classes, fix_item0, couch_ids)
+    return kit, swaps
+
+
+def troop_kit_plan(npc_elem, item_classes, fix_item0=False, couch_ids=None):
+    """(troop_purpose.Kit, swaps, detail) from the troop's battle sets (troop_battle_rows).
 
     swaps lists (roster ordinal among ALL the troop's EquipmentRoster elements, slot) for each
     battle set whose Item0 is a shield or ammunition beside a weapon
     (troop_purpose P2); apply_item0_swaps exchanges the two items. With fix_item0 the kit is read
     as if the swaps were made, which is what --fix-purpose writes; otherwise it is read as on disk
-    and no swap is planned."""
-    sets = troop_battle_sets(npc_elem, item_classes)
-    kit = tp.kit_of(s for _, s in sets)
+    and no swap is planned.
+
+    With couch_ids (the item ids whose weapon has a couch usage) the main weapon rule runs too
+    (troop_purpose P4, --main-weapon-slots) on the sets as P2 leaves them: its exchanges follow the P2
+    ones in swaps, and detail holds the plan with each battle roster's item ids before and after.
+    detail is None without couch_ids."""
+    rows, loose = troop_battle_rows(npc_elem)
+
+    def classes_of(row):
+        return {s: item_classes.get(i) for s, i in row.items() if s in tp.WEAPON_SLOTS}
+
     if not fix_item0:
-        return kit, []
-    launcher_troop = tp.is_launcher_troop(kit, npc_elem.get('default_group', 'Infantry'))
-    swaps, fixed = [], []
-    for ordinal, slots in sets:
-        slots, other = tp.fix_item0(slots, launcher_troop)
-        if other:
-            swaps.append((ordinal, other))
-        fixed.append(slots)
-    return tp.kit_of(fixed), swaps
+        return tp.kit_of(classes_of(row) for _, row in rows), [], None
+    plan, p2, ids = tp.troop_main_weapon(
+        [row for _, row in rows], item_classes, couch_ids, npc_elem.get('default_group', 'Infantry'),
+        (get_display_name(npc_elem.get('name', '')), npc_elem.get('id', '')))
+    swaps = [(ordinal, other) for (ordinal, _), other in zip(rows, p2) if other]
+    if couch_ids is None:
+        return tp.kit_of(classes_of(row) for row in ids), swaps, None
+    # apply_item0_swaps edits ids inside a roster; a weapon row shared by every roster has none to edit.
+    if plan.swaps and any(s in loose for s in ('Item0',) + tuple(slot for _, slot in plan.swaps)):
+        plan = tp.SlotPlan(left="the exchange would move a troop-level row, which no roster holds")
+    after = [dict(row) for row in ids]
+    for index, slot in plan.swaps:
+        after[index]['Item0'], after[index][slot] = after[index][slot], after[index]['Item0']
+    order = tp.WEAPON_SLOTS
+    detail = {
+        'plan': plan,
+        'before': [(o, {s: row[s] for s in order if row.get(s)}) for (o, _), row in zip(rows, ids)],
+        'after': [(o, {s: row[s] for s in order if row.get(s)}) for (o, _), row in zip(rows, after)],
+    }
+    return (tp.kit_of(classes_of(row) for row in after),
+            swaps + [(rows[i][0], slot) for i, slot in plan.swaps], detail)
+
+
+def load_couchable_ids(game_modules):
+    """The item ids that can be couched: taom_schema.couchable_item_ids, the source the validator
+    reads too. It prices the Armory, vanilla (SandBoxCore and SandBox) and this repo's placeholders; it
+    does not read the other installed modules, whose multiplayer lances no troop carries."""
+    return ts.couchable_item_ids(Path(game_modules), Path(MODULEDATA_DIR) / ts.PLACEHOLDER_DIR)
 
 
 _EQUIPMENT_ELEM_RE = re.compile(r'<equipment\b[^>]*?/>', re.S)
@@ -877,7 +915,8 @@ def plan_fix_purpose(all_changes):
     Returns (raises from settle_purpose, [(record, finding, formula value)] still cross-kind)."""
     for c in all_changes:
         c['tie_raises'] = []
-        if c.get('external') or c['id'] in SKIP_TROOP_IDS or c.get('kit') is None:
+        if c.get('external') or c['id'] in SKIP_TROOP_IDS or c.get('kit') is None or (
+                c.get('slots_only') and not (c.get('main_weapon') and c['main_weapon']['plan'].swaps)):
             c['formula'], c['new'] = c.get('new'), None
             continue
         c['formula'] = c.get('new')
@@ -896,12 +935,47 @@ def plan_fix_purpose(all_changes):
     return log, left
 
 
+def _shield_swaps(c):
+    """The P2 exchanges of a record: item0_swaps without the main weapon ones that follow them."""
+    swaps = c.get('item0_swaps', [])
+    main = len(c['main_weapon']['plan'].swaps) if c.get('main_weapon') else 0
+    return swaps[:len(swaps) - main]
+
+
+def _slot_order(row):
+    return ' '.join(f"{slot[-1]}:{item}" for slot, item in row.items())
+
+
+def print_main_weapon_report(all_changes):
+    """--main-weapon-slots: every troop the rule changes (each battle roster's slot order before and
+    after, and the skills), then every troop in scope that stays and why. Call it after the plan."""
+    tracked = [c for c in all_changes if c.get('main_weapon')]
+    planned = [c for c in tracked if c['main_weapon']['plan'].swaps]
+    sets = sum(len(c['main_weapon']['plan'].swaps) for c in planned)
+    print(f"\nMain weapon in Item0 (A: lance cavalry, B: named polearm troop): "
+          f"{sets} battle sets on {len(planned)} troops")
+    for c in planned:
+        d = c['main_weapon']
+        print(f"  {c['file']:<28} {c['id']:<36} rule {d['plan'].rule}  L{c['level']} {c['culture']}  {c['name']}")
+        for (ordinal, before), (_, after) in zip(d['before'], d['after']):
+            if before != after:
+                print(f"      roster {ordinal}: {_slot_order(before)}  ->  {_slot_order(after)}")
+        if c.get('final'):
+            diff = ', '.join(f"{s} {c['old'].get(s, 0)}->{c['final'][s]}" for s in SKILL_NAMES
+                             if c['old'].get(s, 0) != c['final'][s])
+            print(f"      skills: {diff or 'unchanged'}")
+    stays = [c for c in tracked if c['main_weapon']['plan'].left]
+    print(f"\nIn scope of the rule and left as they are ({len(stays)} troops):")
+    for c in stays:
+        print(f"  {c['file']:<28} {c['id']:<36} {c['group']:<12} L{c['level']}  {c['main_weapon']['plan'].left}")
+
+
 def print_purpose_report(all_changes, log, left):
-    swaps = [c for c in all_changes if c.get('item0_swaps')]
+    swaps = [c for c in all_changes if _shield_swaps(c)]
     print(f"\nItem0 holds a shield or ammunition beside a weapon: "
-          f"{sum(len(c['item0_swaps']) for c in swaps)} battle sets on {len(swaps)} troops")
+          f"{sum(len(_shield_swaps(c)) for c in swaps)} battle sets on {len(swaps)} troops")
     for c in swaps:
-        print(f"  {c['id']:<40} " + ", ".join(f"roster {o}: Item0 <-> {s}" for o, s in c['item0_swaps']))
+        print(f"  {c['id']:<40} " + ", ".join(f"roster {o}: Item0 <-> {s}" for o, s in _shield_swaps(c)))
     disputed = [c for c in all_changes if c.get('new') is not None and tp.main_disputed(c['kit'])]
     print(f"\nBattle sets disagree on the Item0 class ({len(disputed)} troops; the class most sets "
           f"hold is the main class, a tie goes to the higher skill):")
@@ -935,7 +1009,56 @@ def print_purpose_report(all_changes, log, left):
         print(f"  {c['file']:<28} {c['id']:<40} {f.text}; formula {f.cls} {value}{note}")
 
 
-def process_file(filepath, item_classes=None, purpose=False, mounts=None):
+# The second troop root (troop_purpose.EXTRA_TROOP_FILES) lives under this folder; a test points it
+# at a fixture.
+EXTRA_ROOT_DIR = MODULEDATA_DIR
+# A second-root troop named COPY_PREFIX + <id> is a copy of the campaign troop <id>.
+COPY_PREFIX = 'fow_'
+
+
+def extra_troop_paths():
+    """The second-root files that exist (troop_purpose.EXTRA_TROOP_FILES under EXTRA_ROOT_DIR)."""
+    paths = [os.path.join(EXTRA_ROOT_DIR, *rel.split('/')) for rel in tp.EXTRA_TROOP_FILES]
+    return [path for path in paths if os.path.isfile(path)]
+
+
+def file_culture(filename):
+    """'troops_gondor.xml' -> 'gondor', the culture token process_file reads from a file name."""
+    return filename.replace('troops_', '').replace('.xml', '')
+
+
+def copy_sources(records):
+    """What copy_source reads from the campaign records: each id, and for each culture attribute
+    the troop file most campaign troops with that attribute live in."""
+    files = defaultdict(Counter)
+    for c in records:
+        if c.get('culture_attr'):
+            files[c['culture_attr']][file_culture(c['file'])] += 1
+    return {'ids': {c['id']: c for c in records},
+            'attrs': {attr: count.most_common(1)[0][0] for attr, count in files.items()}}
+
+
+def copy_source(troop_id, culture_attr, sources):
+    """(culture row, ladder id, ladder file token) for a second-root troop, or None outside one.
+
+    A copy fights as the campaign troop it copies, so it takes that troop's routed culture and its
+    ranged ladder line; its own level and kit set the rest. A copy whose id names no campaign troop
+    takes the troop file its culture attribute points to (copy_sources), because the second root's
+    file name says no culture."""
+    if sources is None:
+        return None
+    bare = troop_id[len(COPY_PREFIX):] if troop_id.startswith(COPY_PREFIX) else troop_id
+    source = sources['ids'].get(bare)
+    if source is not None:
+        return source['culture'], source['id'], file_culture(source['file'])
+    token = sources['attrs'].get(culture_attr)
+    if token is None:
+        return None
+    return detect_culture(bare, token), bare, token
+
+
+def process_file(filepath, item_classes=None, purpose=False, mounts=None, couch_ids=None,
+                 slots_only=False, sources=None):
     """Process a single troop XML file. Returns list of change records.
 
     item_classes: item id -> skill class map from taom_schema.build_item_class_registry. The
@@ -944,7 +1067,14 @@ def process_file(filepath, item_classes=None, purpose=False, mounts=None):
     mounts: horse item id -> difficulty (taom_schema.build_mount_difficulty_registry), the
     floor of a rider's Riding.
     purpose: the --fix-purpose read. The kit is read as if Item0 were fixed and the planned
-    exchanges go in record['item0_swaps']."""
+    exchanges go in record['item0_swaps'].
+    couch_ids: with purpose, also plan the main weapon exchanges (--main-weapon-slots).
+    slots_only: a second-root file in a purpose mode: only a troop whose slots the rule changes
+    has its skills reordered (plan_fix_purpose).
+    sources: troop id -> campaign record, for a second-root file (troop_purpose.EXTRA_TROOP_FILES).
+    A copy named fow_<id> takes that campaign troop's culture row and ranged ladder line, because
+    the file's name says no culture and the copy fights as the troop it copies; its own level and
+    its own kit set the rest (copy_source)."""
     filename = os.path.basename(filepath)
     if filename in SKIP_FILES:
         return []
@@ -985,19 +1115,33 @@ def process_file(filepath, item_classes=None, purpose=False, mounts=None):
             'culture': culture,
             'old': old_skills,
             'upgrades': upgrades,
+            'culture_attr': npc.get('culture', ''),
         }
 
         if troop_id in SKIP_TROOP_IDS:
             record.update(status='SKIPPED (excluded: creature/hand-tuned)', new=None)
             changes.append(record)
             continue
+        if sources is not None:
+            record['path'] = filepath
+            if skills_elem is None:
+                # The writer changes values; adding a <skills> block to a copy is not a value.
+                record.update(status='SKIPPED (second root, no <skills> block)', new=None)
+                changes.append(record)
+                continue
 
         # Calculate new skills
         new_skills = None
         if item_classes:
             weapon_classes = troop_weapon_classes(npc, item_classes)
-            kit, swaps = troop_kit(npc, item_classes, fix_item0=purpose)
-            cells = ladder_cells(troop_id, filename_culture, level, weapon_classes)
+            kit, swaps, detail = troop_kit_plan(npc, item_classes, fix_item0=purpose, couch_ids=couch_ids)
+            record.update(main_weapon=detail, slots_only=slots_only)
+            ladder_id, ladder_file = troop_id, filename_culture
+            source = copy_source(troop_id, npc.get('culture', ''), sources)
+            if source is not None:
+                culture, ladder_id, ladder_file = source
+                record['culture'] = culture
+            cells = ladder_cells(ladder_id, ladder_file, level, weapon_classes)
             mounted, difficulty = troop_mount(npc, mounts)
             record.update(kit=kit, item0_swaps=swaps, ladder=cells)
             try:
@@ -1037,6 +1181,15 @@ def process_file(filepath, item_classes=None, purpose=False, mounts=None):
 CHARACTERS_DIR = os.path.join(MODULEDATA_DIR, 'characters')
 
 
+def promoted_npcs_sources():
+    """npcs file culture -> the culture tools/promote_borrowed_cultures.py copies it from, for each
+    promoter target whose copied files include its npcs file (no 'standalone' list copies them all)."""
+    import promote_borrowed_cultures as pr
+    npcs = 'characters/npcs_{c}.xml'
+    return {target: cfg['src'] for target, cfg in pr.TARGETS.items()
+            if 'standalone' not in cfg or npcs in cfg['standalone']}
+
+
 def load_external_sources(item_classes=None, mounts=None, cultures=None):
     """Upgrade sources that live OUTSIDE troops/ and feed into it.
 
@@ -1050,14 +1203,19 @@ def load_external_sources(item_classes=None, mounts=None, cultures=None):
 
     item_classes and mounts: as process_file. cultures: troop id -> culture, for a villager whose
     npcs file names no CULTURE_PCT row (it takes its first upgrade target's). Without
-    item_classes every villager stays read-only."""
+    item_classes every villager stays read-only.
+
+    A villager in an npcs file that tools/promote_borrowed_cultures.py copies from another culture
+    takes that source culture's row (promoted_npcs_sources): the promoter owns the file, and its
+    --check holds only while the copy's villager equals the source's."""
+    promoted = promoted_npcs_sources()
     records = []
     for filepath in sorted(glob.glob(os.path.join(CHARACTERS_DIR, 'npcs_*.xml'))):
         try:
             root = ET.parse(filepath).getroot()
         except ET.ParseError:
             continue
-        file_culture = os.path.basename(filepath)[len('npcs_'):-len('.xml')]
+        npcs_culture = os.path.basename(filepath)[len('npcs_'):-len('.xml')]
         for npc in root.findall('.//NPCCharacter'):
             upgrades = [(u.get('id') or '').replace('NPCCharacter.', '', 1)
                         for u in npc.findall('./upgrade_targets/upgrade_target')]
@@ -1082,8 +1240,8 @@ def load_external_sources(item_classes=None, mounts=None, cultures=None):
             }
             villager = record['id'].startswith('villager_') and npc.find('skills') is not None
             if villager and item_classes:
-                culture = (file_culture if file_culture in CULTURE_PCT
-                           else (cultures or {}).get(upgrades[0]))
+                own = promoted.get(npcs_culture, npcs_culture)
+                culture = own if own in CULTURE_PCT else (cultures or {}).get(upgrades[0])
                 kit, _ = troop_kit(npc, item_classes)
                 mounted, difficulty = troop_mount(npc, mounts)
                 new = calculate_skills(culture, record['level'], record['id'], kit, mounted=mounted,
@@ -1095,12 +1253,30 @@ def load_external_sources(item_classes=None, mounts=None, cultures=None):
     return records
 
 
-def load_roster(troop_files, item_classes, mounts, purpose=False):
-    """Every troop record and every upgrade source outside troops/, as main() plans them."""
+def load_roster(troop_files, item_classes, mounts, purpose=False, couch_ids=None):
+    """Every troop record, the second root and every upgrade source outside troops/, as main()
+    plans them.
+
+    The second root (extra_troop_paths, the Fords of War copies) is on the curve; in a purpose
+    mode only the slot rule reads it (process_file slots_only). An upgrade edge between the two
+    roots is not a clamp edge, in either direction: a copy is tuned to its own level, and a
+    campaign troop is never raised for a Fords of War or Long Defeat edge.
+    tools/tests/test_long_defeat_shop_skills.py reads the shop's edges instead."""
     records = []
     for filepath in troop_files:
         if os.path.basename(filepath) not in SKIP_FILES:
-            records += process_file(filepath, item_classes=item_classes, purpose=purpose, mounts=mounts)
+            records += process_file(filepath, item_classes=item_classes, purpose=purpose, mounts=mounts,
+                                    couch_ids=couch_ids)
+    sources = copy_sources(records)
+    for filepath in extra_troop_paths():
+        extra = process_file(filepath, item_classes=item_classes, purpose=purpose, mounts=mounts,
+                             couch_ids=couch_ids, slots_only=purpose, sources=sources)
+        second = {c['id'] for c in extra}
+        for c in extra:
+            c['upgrades'] = [u for u in c['upgrades'] if u in second]
+        for c in records:
+            c['upgrades'] = [u for u in c['upgrades'] if u not in second]
+        records += extra
     records += load_external_sources(item_classes, mounts, {c['id']: c['culture'] for c in records})
     return records
 
@@ -1220,26 +1396,33 @@ def main():
     if not args:
         args = ['--apply']  # bare --dry-run keeps its old meaning: preview the rebaseline
 
-    # --fix-purpose previews unless --apply is named with it: it is the narrow mode, so writing
-    # must be asked for.
-    if '--fix-purpose' in args:
+    # --fix-purpose and --main-weapon-slots preview unless --apply is named with them: they are the
+    # narrow modes, so writing must be asked for.
+    if '--fix-purpose' in args or '--main-weapon-slots' in args:
         dry_run = dry_run or '--apply' not in args
         args = [a for a in args if a != '--apply']
-    if len(args) != 1 or args[0] not in ('--apply', '--fix-monotonicity', '--fix-purpose') or (
-            restat_ids and args[0] == '--fix-purpose'):
-        print("Usage: python rebalance_troops.py (--apply|--fix-monotonicity|--fix-purpose) [--dry-run] "
+    purpose_modes = ('--fix-purpose', '--main-weapon-slots')
+    if len(args) != 1 or args[0] not in ('--apply', '--fix-monotonicity') + purpose_modes or (
+            restat_ids and args[0] in purpose_modes):
+        print("Usage: python rebalance_troops.py (--apply|--fix-monotonicity|--fix-purpose|--main-weapon-slots) "
+              "[--dry-run] "
               "[--restat <id,id>] [--game-modules <path>]\n"
               "  --apply             rebaseline the whole roster onto the curve, then clamp\n"
               "  --fix-monotonicity  clamp only: repair upgrade ladders without rebaselining\n"
               "  --fix-purpose       reorder on-disk skills to the kit and put a real weapon in Item0,\n"
               "                      then clamp; a dry run unless --apply is added\n"
-              "  --dry-run           preview either mode; write nothing\n"
+              "  --main-weapon-slots everything --fix-purpose does, and a lance rider or a troop named for\n"
+              "                      its polearm opens with that polearm (Item0 trades with it); a dry run\n"
+              "                      unless --apply is added\n"
+              "  --dry-run           preview a mode; write nothing\n"
               "  --restat            take the formula value for these ids even in clamp-only mode")
         sys.exit(1)
 
-    purpose = args[0] == '--fix-purpose'
+    purpose = args[0] in purpose_modes
+    slots_mode = args[0] == '--main-weapon-slots'
     base_on_curve = args[0] == '--apply'
-    label = ("purpose order + clamp" if purpose else
+    label = ("main weapon slots + purpose order + clamp" if slots_mode else
+             "purpose order + clamp" if purpose else
              "full rebaseline + clamp" if base_on_curve else "monotonicity clamp only")
     mode = f"{'DRY RUN' if dry_run else 'APPLYING CHANGES'} ({label})"
     print(f"\n*** {mode} ***\n")
@@ -1254,6 +1437,9 @@ def main():
     item_classes = ts.build_item_class_registry(MODULEDATA_DIR, game_modules)
     mounts = ts.build_mount_difficulty_registry(MODULEDATA_DIR, game_modules)
     print(f"Item-class registry: {len(item_classes):,} weapon-classed items, {len(mounts):,} horses")
+    couch_ids = load_couchable_ids(game_modules) if slots_mode else None
+    if slots_mode:
+        print(f"Couchable items (a weapon description with the couch feature): {len(couch_ids):,}")
 
     troop_files = sorted(glob.glob(os.path.join(TROOPS_DIR, 'troops_*.xml')))
     print(f"Found {len(troop_files)} troop files")
@@ -1271,8 +1457,13 @@ def main():
     for filepath in troop_files:
         filename = os.path.basename(filepath)
         print(f"  {'SKIPPING' if filename in SKIP_FILES else 'Processing'} {filename}...")
-    all_changes = load_roster(troop_files, item_classes, mounts, purpose=purpose)
-    external = [c for c in all_changes if c.get('path')]
+    # The second root (troop_purpose.EXTRA_TROOP_FILES, the Fords of War copies): on the curve in
+    # --apply and the clamp mode, the slot rule only in the purpose modes (process_file slots_only).
+    for rel in tp.EXTRA_TROOP_FILES:
+        print(f"  Processing {rel} (second root{', slot rule only' if purpose else ''})...")
+    all_changes = load_roster(troop_files, item_classes, mounts, purpose=purpose, couch_ids=couch_ids)
+    troop_files = troop_files + extra_troop_paths()
+    external = [c for c in all_changes if c.get('external') or c.get('villager')]
     villagers = [c for c in external if c.get('villager')]
     print(f"Upgrade sources outside troops/: {len(external)}; {len(villagers)} villagers on the curve "
           f"(written into characters/npcs_*.xml), the rest read-only")
@@ -1296,6 +1487,8 @@ def main():
 
     if purpose:
         log, left = plan_fix_purpose(all_changes)
+        if slots_mode:
+            print_main_weapon_report(all_changes)
         print_purpose_report(all_changes, log, left)
         if not dry_run:
             written = write_files(all_changes, troop_files)

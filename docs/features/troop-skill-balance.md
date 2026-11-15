@@ -41,11 +41,12 @@ Values round to the nearest 5, a half up, computed in exact fractions; an archer
 - **No name is read.** The old name shifts (a "Spearman" took 15 points onto Polearm) and the Bow and Crossbow swap are gone: the kit decides the main weapon and every other value follows from it.
 - **A kit with no weapon has no formula** (the troop is reported SKIPPED and keeps its values). The writer hard-fails without the game install (`--game-modules`, default resolved through `tools/_gamedir.py`), because the kit and the horses are read from the install's item files. The read-only analyzer warns instead and leaves every troop without a formula.
 - **`CULTURE_PCT`** has a row for every culture `detect_culture` returns; a missing row raises `MissingCultureRow` instead of putting the faction on the bare curve (the Lindon lesson, #522). `detect_culture` routes `iron_hills_*` ids (in the erebor file) to `iron_hills`, `rhun_new` to `rhun`, `gundabad_snow` to `gundabad`, `mordor_uruk*` to `mordor_uruk`, `mordor_num*` to `mordor_numenorean` and `orthanc*` to `isengard_orthanc`. A troop whose culture has no row stops `--apply` and the troops `--restat` names; `--fix-monotonicity` and `--fix-purpose` report it `SKIPPED (no culture row)` and go on, because they read what is on disk (`ClampOnlyRunTests`).
-- **Villagers.** The `villager_*` characters in `characters/npcs_*.xml` (level 1) upgrade into the tier 1 recruits. Each with a `<skills>` block takes the tier 1 row from its own kit (a farm tool and throwing stones) and its npcs file's culture row, and `--apply` writes only those skill values into the npcs file; the two with no `<skills>` block (`villager_rohan`, `villager_southrhovanion`) stay read-only sources. The clamp still lifts 17 recruit values from them, on the farm tool or the stone a recruit does not carry (`python tools/rebalance_troops.py --apply --dry-run` lists the edges, 2026-11-15).
+- **Villagers.** The `villager_*` characters in `characters/npcs_*.xml` (level 1) upgrade into the tier 1 recruits. Each with a `<skills>` block takes the tier 1 row from its own kit (a farm tool and throwing stones) and its npcs file's culture row, and `--apply` writes only those skill values into the npcs file. An npcs file that `tools/promote_borrowed_cultures.py` copies from another culture (Rhudaur, Arthedain and Cardolan from Gondor, Ered Luin from Erebor, Lindon from Rivendell, Blue Craig from the goblins, and four more whose villagers have no `<skills>` block; `rebalance_troops.promoted_npcs_sources`) gives its villager the source's row, because the promoter owns that file and its `--check` holds only while the copy equals the source (`test_a_promoted_villager_equals_its_source_villager`); the two with no `<skills>` block (`villager_rohan`, `villager_southrhovanion`) stay read-only sources. The clamp still lifts 17 recruit values from them, on the farm tool or the stone a recruit does not carry (`python tools/rebalance_troops.py --apply --dry-run` lists the edges, 2026-11-15).
+- **The Fords of War copies.** `--apply` reads `fords_of_war/fords_troops.xml` (`troop_purpose.EXTRA_TROOP_FILES`) as a second root. A copy `fow_<id>` takes campaign troop `<id>`'s culture row and ranged ladder line, and its own level and kit set the rest (`copy_source`); the two copies whose id names no campaign troop (`fow_rohan_westfold_spearman`, `fow_imladris_spearman`) take the troop file their culture attribute points to. Only skill values are written, and a copy with no `<skills>` block would be left. No upgrade edge between the two roots is a clamp edge, in either direction, so a campaign troop is never raised for a copy. The Long Defeat shop upgrades copies into campaign troops and back (`long_defeat/shop.json`, 9 edges on 2026-11-15); the clamp does not read it, and `tools/tests/test_long_defeat_shop_skills.py` checks that no shop upgrade lowers the main weapon skill. Since the restat (2026-11-15, 214 copies, 1656 values) every copy is a fixed point of the writer too.
 - **`SKIP_TROOP_IDS`**: troops excluded from the formula (trolls, the elephant and mumakil riders, the spider and wolf riders). They take part in the clamp, which only raises, so a skip protects a hand-tune without letting it read backwards in the tree. The restat lifted eight of them on uncarried skills only (Crossbow, Throwing), where their parents' new 0.4 N is higher.
 - **The ranged ladder** anchors on the same curve: `tools/ranged_ladders.json` `stats.skill.anchor` is `TIER_CURVE` and the step is 0.04 N (1 to 10), so a rank-1 line (Mirkwood) is N + 6 steps and the rank-11 line (Dunland) N - 4 steps.
 
-Contract tests: `tools/tests/test_troop_skill_curve.py` (the table, the culture rows and their order, the archer and militia rules, and the shipped roster as a fixed point of the writer: every value on disk, villagers included, is what `--apply` plans, so a hand edit or a drifted rule fails it), `tools/tests/test_rebalance_equipment.py` (the kit, never the name), `tools/tests/test_militia_elite_bonus.py`.
+Contract tests: `tools/tests/test_troop_skill_curve.py` (the table, the culture rows and their order, the archer and militia rules, and the shipped roster as a fixed point of the writer: every value on disk, villagers and Fords copies included, is what `--apply` plans, so a hand edit or a drifted rule fails it), `tools/tests/test_long_defeat_shop_skills.py` (the shop's upgrades), `tools/tests/test_rebalance_equipment.py` (the kit, never the name), `tools/tests/test_militia_elite_bonus.py`.
 
 ### The culture table (percent of N)
 
@@ -130,13 +131,35 @@ The old curve was keyed by formation group, not by kit. Its Infantry and Cavalry
 
 **The size of the change** (the troop files on commit `078b86761` against the #343 result, measured 2026-11-15): skills changed on 369 troops. On 297 of them the reorder kept the 8-skill total. On the other 72 the total moved by +1518 net: 21 by the tie rule (+712), 33 by the clamp cascade below a reordered parent (+601), and 18 by the regeneration of the Arthedain, Cardolan and Rhudaur realm files (+205; four of those went down). No troop's top weapon skill rose except through a tie. The RCA lists the troops whose Item0 class rose over a class they carry in every set ([rca](../reviews/rca-troop-skill-purpose-2026-11-15.md)).
 
+### Main weapon in Item0: lance cavalry and named polearm troops (#343, 2026-11-15)
+
+The engine wields the first weapon slot that is not held in the off hand (`Equipment.GetInitialWeaponIndicesToEquip`), so a troop starts the battle with its Item0 weapon in hand. The maintainer's rule: a troop's main weapon is in Item0. P4 in `tools/troop_purpose.py` (`main_weapon_slots`, called through `troop_main_weapon`) applies it to two kinds of troop and leaves every other kit as the designer made it.
+
+- **Rule A, lance cavalry:** `default_group` Cavalry, a Horse in every battle set (a Horse slot inside the roster, or a troop-level Horse row laid over every roster, as the validator's `_battle_kits` reads it), and a polearm in every battle set that can be couched. Item0 holds a one handed or two handed weapon.
+- **Rule B, named polearm troops:** a word in the English name or the id starts with `spear`, `pike`, `lance` or `halberd` (`names_a_polearm`; `veteranpikeman` counts, `Spiked` does not), the troop carries a polearm in every battle set, and Item0 holds a one handed or two handed weapon.
+- **The change:** in each battle set the Item0 item and the polearm item trade slots. Nothing else in the set moves, and no item is added, removed or replaced. The skills then follow through the purpose rule (Polearm takes the troop's top melee value) and the roster-wide clamp.
+- **Who is left:** a swordsman with a spare spear (the infantry rows of the RCA table), a horse archer, a rider whose spear cannot be couched, and any troop whose sets disagree (the polearm is missing from a set) or whose Item0 holds a launcher or a thrown weapon. The dry run lists each of them with the reason.
+- **One source for "can be couched".** `melee_catalogue.couchable_ids` reads the priced usages (a usage whose features include `couch`), and `taom_schema.couchable_item_ids` prices the Armory, vanilla (SandBoxCore and SandBox) and this repo's placeholders and returns the ids. The writer (`rebalance_troops.load_couchable_ids`) and the validator (`TROOP_MAIN_WEAPON_NOT_ITEM0`) both call it, so no rule of this pass keeps a second list. Trunk's `generate_enlistment_rosters.py` still has its own inline `any('couch' in u.features for u in p.usages)` on the same priced usages (about line 841); a FOLLOW-UP in the RCA points it at `couchable_ids`. A description gives an item a usage when every piece the item uses is in its AvailablePieces (`Crafting.GenerateCraftedItem`), so the usage list is the fit. Native defines the couch as `<WeaponDescription id="TwoHandedPolearm_Couchable" weapon_class="TwoHandedPolearm" item_usage_features="polearm:couch">` (`weapon_descriptions.xml`), whose usage set `polearm_couch` carries the `requires_mount` flag (`item_usage_sets.xml`). Ordinary spears are couchable too, not only items named lance. The couch is a mode a rider switches to; the item opens in its primary usage.
+- **Which files the tool reads.** The troop files `troops/troops_*.xml` and one second root, `fords_of_war/fords_troops.xml` (`troop_purpose.EXTRA_TROOP_FILES`): the Fords of War roster, whose troops are copies of campaign troops and which Long Defeat fields (`long_defeat/waves.json` names `fow_` troops). `--fix-purpose` and `--main-weapon-slots` read it for the slot rule only, so only a troop the rule changes has its skills reordered there; `--apply` puts it on the curve ([the Fords of War copies](#the-role-table-343)). Every other file with an `<NPCCharacter>` is not read: lords, notables, wanderers, companions, creature files, the education templates and the obsolete vanilla overrides are not troops that fight in a mode of their own. A new fighting roster file goes into `EXTRA_TROOP_FILES` and into the tests.
+- **Mode:** `python tools/rebalance_troops.py --main-weapon-slots` is a dry run that lists, for every troop it changes, each roster's slot order before and after and the skills before and after, then the troops in scope that stay and why; add `--apply` to write. A second run plans nothing, and `--fix-purpose` plans nothing after it.
+- **Validator:** `TROOP_MAIN_WEAPON_NOT_ITEM0` (warning) calls the same function for a troop the rule would still change. It reads the same two roots, needs the install for couchability, and is skipped without it.
+
+**Result of the first run (2026-11-15).** 13 troops, 31 battle sets. Rule A: `dale_outrider`, `gondor_anf_cavalry`, `gondor_anf_vet_cavalry`, `mordor_warg_reaver`, `mordor_warg_ravager`, `mordor_warg_beastmaster`, `mordor_num_cavalry`, `mordor_num_vet_cavalry`, `mordor_num_knight`, `mordor_num_temple_knight`, and the Fords copy `fow_mordor_num_knight`. Rule B: `gondor_lin_spearman`, `gondor_lin_vet_spearman`. On the 12 troops of the troop files OneHanded and Polearm trade values (the troop's own total is unchanged) and the clamp raised nothing; the Fords copy's OneHanded and Polearm are tied at 350, so its skills did not change. Left at that run, in scope: ten horse archers (`gundabad_scout`, `gundabad_scout_merc`, `kharaghul_keshig`, the seven `rohan_wold_*`) the four Dol Guldur warg riders and their two Fords copies below, and `fow_rohan_wold_veteran_horse_archer`: 17 troops in that dry run's "left as they are" list. The six Dol Guldur riders were changed in a second run the same day (next paragraph). The RCA table has the rest ([rca](../reviews/rca-troop-skill-purpose-2026-11-15.md)).
+
+**The Dol Guldur warg riders.** All six carry a shield in every battle set, so they can couch but cannot brace even on foot (brace needs no mount and no shield). `dg_warg_raider`, `dg_warg_skirmisher`, `dg_warg_red_fang` and `dg_fell_warg_rider` (and the Fords copies `fow_dg_warg_raider`, `fow_dg_fell_warg_rider`) carry `sm_dg_khml_spear_a` or `_b`, which could not be couched: the Armory listed their blades under `OneHandedPolearm` and `TwoHandedPolearm` only. The maintainer asked for both spears to couch and brace. `tools/register_couch_brace_polearms.py` writes that into the Armory ([pipeline](weapon-xml-pipeline.md#couch-and-brace-usages)). The Armory write and a second `--main-weapon-slots --apply` ran on 2026-11-15: all six now hold the spear in Item0, and on the four campaign riders OneHanded and Polearm traded values (`dg_fell_warg_rider` Polearm 285 to 318). On an install whose Armory lacks the registration the spear is no lance, so the rule and the validator say nothing about these six there.
+
+**Generators.** `generate_dale_troops.py` names other weapons for `dale_outrider` (`sturgia_sword_4_t4`, `northern_spear_3_t4`, which cannot be couched), so a run does not reproduce the shipped kit and the rule would not apply to its output. `generate_gondor_troops.py` already writes a spear alone as the Linhir weapon and is stale by its own header. `apply_mordor_troop_revamp.py` inserts a new troop only when its id is missing, and `apply_black_numenorean_troops.py` stops when its marker is present, so neither rewrites the shipped kits. The realm generators go through `realm_troops.py` and own none of these troops.
+
+**Enlistment kits.** The enlistment kit branch is on trunk (merge `7af8138ce`), and its cavalry kits hold the sword first: `enlist_mordor_cavalry_soldier` has `wm_mordor_set1_sword_a02` in Item0 and the polearm in Item1. The generator compares a kit's weapons by category (`best_by_category`) and never reads slot order, so a changed troop's new order does not reach the enlistment rosters and changes no behaviour there. A rule that moves a lance into the enlistment Item0 would read couchability from `taom_schema.couchable_item_ids`, the source above. `generate_career_kits.py --verify` and `generate_starter_kit.py --verify` pass on the new data.
+
 **What the formula no longer does:** the Polearm and TwoHanded swap, the Bow and Crossbow swap and the name shifts (`spear`, `sword`, `axe`, `shield` and the rest) are gone (the role table, #343 curve). The kit names the main weapon, and every value follows from it.
 
-**Two validator codes** ([codes](../reference/moduledata-validator-codes.md)):
+**Three validator codes** ([codes](../reference/moduledata-validator-codes.md)):
 
 | Code | Severity | Fires when |
 |---|---|---|
 | `TROOP_ITEM_ZERO_NOT_MAIN` | error | a battle set holds a shield or ammunition in Item0 beside a weapon, so the rule reads no main class from Item0. Commit-gated; no finding in today's data |
+| `TROOP_MAIN_WEAPON_NOT_ITEM0` | warning | a lance rider (rule A) or a troop named for its polearm (rule B) still opens a battle set with a one or two handed weapon. Reads `troops/troops_*.xml` and the Fords roster; couchability comes from `taom_schema.couchable_item_ids`, so a rider whose spear cannot be couched is not judged |
 | `TROOP_SKILL_KIT_MISMATCH` | warning | a melee or launcher class is above the main class, a class the troop does not carry is above a carried one of the same kind, or a launcher troop's battle set does not open with its launcher. It becomes an error when the count reaches zero (`TROOP_SKILL_KIT_MISMATCH_SEVERITY` in `tools/taom_schema.py`) |
 
 Three warning reasons are left after `--fix-purpose`, and the message names each. "launcher troop that does not open with its launcher": no tool repairs it, because vanilla ships the layout; a designer exchanges the slots by hand. "melee skill above the launcher's ladder cell": an archer whose Bow or Crossbow is a ranged ladder cell and whose melee is higher; moving a value between kinds is a decision on the level of the curve, so the writer leaves them. "thrower below its melee skill": a thrower whose Throwing is under its melee; the message says whether the troop is in `THROWN_PRIMARY_TROOP_IDS`; `--apply` gives a javelin main the top of its weapons, `--fix-purpose` invents no value. After the curve restat one troop is left, on the second reason: `dg_uruk_skirmisher` (Bow cell 92, OneHanded 105 from the clamp, its parent `dg_uruk_veteran_warrior` holding 105). The other reasons count 0 ([rca](../reviews/rca-troop-skill-curve-2026-11-15.md)).
@@ -184,6 +207,7 @@ Verification: `validate_moduledata` PASS (zero broken refs); diff perfectly bala
 | `--fix-monotonicity` | what is on disk | you are repairing upgrade ladders and nothing else |
 | `--restat <id,id>` | forces the formula for those ids in clamp-only mode | a specific troop was misclassified and needs to come back onto the curve |
 | `--fix-purpose` | what is on disk, reordered to the kit | a troop's skills or its Item0 break the purpose rule (#343). A dry run unless `--apply` is added; it writes any Item0 exchange and the reordered and tied skills, then the clamp and the purpose raise; it prints every tie raise. A second run plans nothing. Not combinable with `--restat` |
+| `--main-weapon-slots` | what is on disk, reordered to the kit as if the exchange were made | a lance rider or a troop named for its polearm opens with a one or two handed weapon (P4). Everything `--fix-purpose` does, plus the Item0 exchange; a dry run unless `--apply` is added. Not combinable with `--restat`. A second run plans nothing |
 | (every mode) | | the clamp and the purpose raise repeat until neither moves a value (`settle_purpose`), so a `--restat` child on a respecialising edge keeps its main class on top. In the clamp-only mode a troop the clamp leaves alone is never raised |
 | `--dry-run` | (modifier) | preview EITHER mode without writing. It used to be a third mutually exclusive mode, which meant the clamp-only path could only be inspected by letting it write and then reading `git diff` |
 
@@ -242,14 +266,16 @@ has a templated side today).
 
 ### The graph spans two directories
 
-Upgrade sources are not only in `troops/`. Each of the 21 `villager_<culture>` entries in
-`characters/npcs_*.xml` upgrades into its culture's tier-1 troop, and the engine treats any character
-with a non-empty `UpgradeTargets` array as upgradeable. Gating only `troops/` left 16 edges
-unchecked, six of them regressing, while `validate_moduledata.py` reported PASS. Those villagers now
-declare their skills explicitly, at exactly the values the vanilla template had been supplying, so
-the data is self-describing and every gate can read the whole graph: **865 edges, 844 of them inside
-`troops/` and 21 crossing in from `characters/`.** `rebalance_troops.py` loads the external sources
-read-only through `load_external_sources()`; they seed the clamp and are never written.
+Upgrade sources are not only in `troops/`. The `villager_<culture>` entries in
+`characters/npcs_*.xml` upgrade into their culture's tier-1 troops, and the engine treats any character
+with a non-empty `UpgradeTargets` array as upgradeable. Gating only `troops/` once left 16 edges
+unchecked, six of them regressing, while `validate_moduledata.py` reported PASS. Those villagers
+declare their skills explicitly, so every gate can read the whole graph: **891 edges inside
+`troops/` and 22 crossing in from 22 characters in `characters/`, 20 of them villagers that
+`--apply` writes** (`rebalance_troops.load_roster` over the shipped files, 2026-11-15).
+`load_external_sources()` loads them; the rest are read-only and only seed the clamp. The Fords of
+War file holds no upgrade edge, and the Long Defeat shop's 9 edges are not clamp edges (the
+role table section).
 
 ### Militia are a binding, not a name
 
@@ -297,8 +323,9 @@ every L21 Dunlending read as a downgrade, restatted to 22.
 
 | File | Purpose |
 |------|---------|
-| `tools/rebalance_troops.py` | Writes skills onto the curve. `TIER_CURVE` + `CULTURE_PCT` + `calculate_skills` + `troop_mount` + `SKIP_TROOP_IDS` + `detect_culture` + `militia_troop_ids` + `clamp_upgrade_monotonicity` + `insert_missing_skill_entries` + `settle_purpose` + `apply_item0_swaps`. `--dry-run` / `--apply` / `--fix-monotonicity` / `--fix-purpose`. |
-| `tools/troop_purpose.py` | The purpose rule (#343): main class, Item0 check and exchange, the reorder, the tie rule (`tie_raise`), the post-clamp raise, the findings. Pure functions on plain data; tests in `tools/tests/test_troop_purpose.py` and `tools/tests/test_fix_purpose.py`. |
+| `tools/rebalance_troops.py` | Writes skills onto the curve. `TIER_CURVE` + `CULTURE_PCT` + `calculate_skills` + `troop_mount` + `SKIP_TROOP_IDS` + `detect_culture` + `militia_troop_ids` + `clamp_upgrade_monotonicity` + `insert_missing_skill_entries` + `settle_purpose` + `apply_item0_swaps` + `load_roster` (the second root, `copy_source`) + `promoted_npcs_sources`. `--dry-run` / `--apply` / `--fix-monotonicity` / `--fix-purpose` / `--main-weapon-slots`. |
+| `tools/register_couch_brace_polearms.py` + `tools/couch_brace_polearms.json` | Lists the spec's spear pieces under the Armory's couch and brace weapon descriptions (dry run, `--apply --backup-tag`, `--check`); tests in `tools/tests/test_register_couch_brace_polearms.py`, gate `couch-brace` in `tools/data_gates.py`. |
+| `tools/troop_purpose.py` | The purpose rule (#343): main class, Item0 check and exchange, the reorder, the tie rule (`tie_raise`), the post-clamp raise, the findings. Pure functions on plain data (P4: `names_a_polearm`, `main_weapon_slots`, `apply_slot_swaps`); tests in `tools/tests/test_troop_purpose.py`, `tools/tests/test_fix_purpose.py` and `tools/tests/test_main_weapon_slots.py`. |
 | `tools/analyze_troop_balance.py` | Read-only overview generator. Imports the curve from `rebalance_troops.py`; emits HTML/MD/JSON. `--outlier-threshold N` / `--stdout`. Never writes troop XML. |
 | `tools/taom_schema.py` | `UPGRADE_SKILL_REGRESSION` (ERROR), the `validate_moduledata.py` half of the gate. `TROOP_ITEM_ZERO_NOT_MAIN` (ERROR) and `TROOP_SKILL_KIT_MISMATCH` (WARNING), fed by `Registries.item_classes`. Template parity is `SKILL_TEMPLATE_MISMATCH` in `validate_moduledata.py` (#626). |
 | `TAOM.Tests/Features/TroopProgression/TroopUpgradeSkillMonotonicityTests.cs` | 3 tests: no skill drops, all 8 skills declared, militia exemption pinned by identity (template parity is `TAOM.Tests/Core/LordInlineSkillParityTests.cs` since #626). Fails rather than going inconclusive when it cannot find ModuleData, since a data gate that cannot read its data has checked nothing. |
@@ -325,6 +352,13 @@ Save-compat: troop skills are read from XML at agent spawn, so a rebaseline appl
 
 ## Changelog
 
+- 2026-11-15: **The Fords of War copies on the curve, promoted villagers, the shop (#343).** The
+  merge of trunk's main weapon slot pass kept trunk's equipment lines and restated the four troop
+  files it touched. `--apply` now puts `fords_of_war/fords_troops.xml` on the curve: each `fow_`
+  copy by its own level and kit, on the row of the campaign troop it copies, skill values only
+  (214 copies, 1656 values). A villager in an npcs file the promoter copies takes its source's row,
+  so `promote_borrowed_cultures.py --only rhudaur --check` passes. A test holds the Long Defeat
+  shop's upgrades (`tools/tests/test_long_defeat_shop_skills.py`); no clamp reads them.
 - 2026-11-15: **The culture order, the Black Numenoreans, the villagers (#343, review round).** The
   culture table follows the maintainer's order (Elves, then Dwarves, then Men, the orcs under
   Men; Rohan the best riders), pinned as an order by `CultureTableTests`. `mordor_num_*` takes its
@@ -341,6 +375,15 @@ Save-compat: troop skills are read from XML at agent spawn, so a rebaseline appl
   skill spec now anchors on the same curve. Applied with `python tools/rebalance_troops.py
   --apply`; a second pass and `--fix-monotonicity` and `--fix-purpose` plan nothing
   ([rca](../reviews/rca-troop-skill-curve-2026-11-15.md)).
+- 2026-11-15: **A lance rider and a troop named for its polearm open with it (#343).** The maintainer: a
+  troop's main weapon is in Item0. Added P4 (`troop_purpose.main_weapon_slots`) and
+  `python tools/rebalance_troops.py --main-weapon-slots [--apply]`: where a troop is mounted
+  Cavalry with a couchable polearm in every battle set, or is named spear, pike, lance or halberd
+  with a polearm in every set, the polearm and the Item0 weapon trade slots and the skills follow.
+  12 troops changed in `troops_dale.xml`, `troops_gondor.xml` and `troops_mordor.xml` and one Fords
+  copy in `fords_troops.xml`; the rest of the sidearm table stays. One source says what can be
+  couched (`taom_schema.couchable_item_ids`), the validator warns with `TROOP_MAIN_WEAPON_NOT_ITEM0`,
+  and `register_couch_brace_polearms.py` holds the Dol Guldur spears' couch and brace usages.
 - 2026-11-15: **Skills follow the kit (#343).** The curve is keyed by formation group, so a
   swordsman could top out on Polearm and an archer with a two-handed sword on OneHanded. Added
   `tools/troop_purpose.py` (the purpose rule), `--fix-purpose`, the purpose step in

@@ -10,9 +10,9 @@ namespace TAOM.Adapters;
 
 public sealed class BattleCheatHostAdapter : IBattleCheatHostAdapter
 {
-    public void ShowList(IReadOnlyList<BattleCheatAction> actions, Action<BattleCheatAction> onPicked)
+    public void ShowList(IReadOnlyList<BattleCheatAction> actions, bool godModeOn, Action<BattleCheatAction> onPicked)
     {
-        var elements = actions.Select(a => new InquiryElement(a, BattleCheatTexts.Label(a).ToString(), null)).ToList();
+        var elements = actions.Select(a => new InquiryElement(a, BattleCheatTexts.Label(a, godModeOn).ToString(), null)).ToList();
         MBInformationManager.ShowMultiSelectionInquiry(new MultiSelectionInquiryData(
             titleText: new TextObject("{=taom_cheat_battle_title}Battle cheats").ToString(),
             descriptionText: new TextObject("{=taom_cheat_battle_text}Cheats change this battle. New troops are copies of soldiers already on that side.").ToString(),
