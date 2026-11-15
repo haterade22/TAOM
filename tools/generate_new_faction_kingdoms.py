@@ -103,6 +103,9 @@ KINGDOMS = {
         # its royal house fly the crown of Arnor (11004, Mike 2026-10-28); the White Tree went to clan 5.
         banner="11.190.190.1528.1528.764.764.1.0.0.{icon}.110.110.700.700.764.764.0.0.0",
         kingdom_icon=11004, clan_icons=[11004, 11001, 11002, 11003, 11000],
+        # The realm flies a hand-made layered banner (2026-11-15) with the crown (11004) and the White
+        # Tree (11000); realms_titles.xml gives the Arthedain title the same banner.
+        kingdom_banner_key="11.149.149.1528.1528.764.764.1.0.0.31026.110.110.387.387.764.636.0.0.0.11004.110.110.77.77.764.617.0.0.0.11000.110.110.318.318.764.839.0.0.0",
         # The Lómëar fly a hand-made layered banner (72715c417) the template cannot express.
         clan_banner_keys={"clan_arthedain_3": "11.176.176.1528.1528.764.764.1.0.0.31010.267.267.301.301.636.884.0.0.0.31010.267.267.301.301.893.884.0.1.0.31008.324.324.422.422.764.720.0.0.0.31009.332.332.95.95.686.795.0.0.0.31009.332.332.95.95.843.795.0.1.0"},
         clan_colors=[("FF4870B8", "FFC8CCD8"), ("FF3A6298", "FFC8CCD8"), ("FF5960A8", "FFD2D6D5"),

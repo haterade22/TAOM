@@ -101,12 +101,27 @@ public class TitularRealmTests
         var config = RealmsConfigXml.Parse(XDocument.Load(path)).Config;
 
         var khazadDum = config.TitularRealms.Single(r => r.Id == "khazad_dum");
-        Assert.AreEqual("e_durins_folk", khazadDum.LiegeTitleId);
+        Assert.AreEqual("u_durins_folk", khazadDum.LiegeTitleId);
         Assert.AreEqual("k_mistymountainorcs", khazadDum.LandsTitleId);
         Assert.IsTrue(khazadDum.Allows("erebor") && khazadDum.Allows("eredluin"));
         Assert.IsFalse(khazadDum.Allows("mistymountainorcs"), "the orcs of Moria do not form it");
         Assert.IsFalse(khazadDum.Allows(null));
         StringAssert.EndsWith(config.RealmNames["u_reunited"], "Reunited Kingdom");
+    }
+
+    [TestMethod]
+    public void The_shipped_file_puts_ered_luin_and_blue_craig_under_one_high_title_below_durins_folk()
+    {
+        var path = TAOM.Tests.Infrastructure.RepoPaths.RepoPath("Main", "_Module", "ModuleData", "realms_titles.xml");
+        var config = RealmsConfigXml.Parse(XDocument.Load(path)).Config;
+
+        var eredLuin = config.HighTitles.Single(h => h.Id == "eredluin");
+        CollectionAssert.AreEqual(new[] { "eredluin", "bluecraig" }, eredLuin.MemberKingdomIds.ToList());
+        Assert.IsFalse(config.HighTitles.Any(h => h.Id == "durins_folk"), "Durin's Folk is a union now");
+        Assert.IsFalse(config.HighTitles.Any(h => h.Id != "eredluin" && h.MemberKingdomIds.Contains("eredluin")));
+
+        var durinsFolk = config.Unions.Single(u => u.Id == "durins_folk");
+        CollectionAssert.AreEqual(new[] { "k_erebor", "e_eredluin" }, durinsFolk.MemberTitleIds.ToList());
     }
 
     // The title
@@ -125,6 +140,22 @@ public class TitularRealmTests
         Assert.IsNull(service.Ledger.HolderOf("k_deep"));
         Assert.AreEqual(0, service.Catalog.ChildrenOf("k_deep").Count, "it takes no lands from the realm it lies over");
         Assert.AreEqual("e_high", service.Catalog.Get("k_north")!.ParentId);
+    }
+
+    [TestMethod]
+    public void A_titular_realm_can_stand_under_a_union()
+    {
+        var config = RealmsConfig.Defaults();
+        config.HighTitles.Add(new HighTitleConfig("high", "High", new[] { "north" }, null));
+        config.Unions.Add(new UnionConfig("both", "Both", new[] { "e_high", "k_south" }));
+        config.TitularRealms.Add(Deep(liege: "u_both"));
+        var service = new RealmsService();
+        var warnings = service.Initialize(TestWorld.Build(), config);
+
+        Assert.AreEqual("u_both", service.Catalog.Get("k_deep")!.ParentId, string.Join("; ", warnings));
+        Assert.AreEqual("u_both", service.Catalog.Get("e_high")!.ParentId);
+        Assert.AreEqual("u_both", service.Catalog.Get("k_south")!.ParentId);
+        Assert.IsFalse(warnings.Any(w => w.Contains("deep")), string.Join("; ", warnings));
     }
 
     [TestMethod]

@@ -80,12 +80,14 @@
     <Holder rank="Barony" male="{=realms_holder_lord}Lord {NAME}" female="{=realms_holder_lady}Lady {NAME}" />
     <Holder rank="Lordship" male="{=realms_holder_lord}Lord {NAME}" female="{=realms_holder_lady}Lady {NAME}" />
 
-    <!-- Dwarves: Delving (castle), Hold (duchy), Mansion (realm); the high title stays a Kingship. -->
+    <!-- Dwarves: Delving (castle), Hold (duchy), Mansion (realm), Kingship (high title), High Kingship (union). -->
     <Culture id="erebor">
       <Rank rank="Barony" name="{=realms_rank_barony_dwarf}Delving of {NAME}" />
       <Rank rank="Duchy" name="{=realms_rank_duchy_dwarf}Hold of {NAME}" />
       <Rank rank="Kingdom" name="{=realms_rank_kingdom_dwarf}Mansion of {NAME}" />
       <Rank rank="Empire" name="{=realms_rank_empire_dwarf}Kingship of {NAME}" />
+      <Rank rank="Union" name="{=realms_rank_union_dwarf}High Kingship of {NAME}" />
+      <Holder rank="Union" male="{=realms_holder_lord_dwarf}Uzbad {NAME}" />
       <Holder rank="Empire" male="{=realms_holder_lord_dwarf}Uzbad {NAME}" />
       <Holder rank="Kingdom" male="{=realms_holder_lord_dwarf}Uzbad {NAME}" />
       <Holder rank="Duchy" male="{=realms_holder_lord_dwarf}Uzbad {NAME}" />
@@ -95,6 +97,8 @@
       <Rank rank="Duchy" name="{=realms_rank_duchy_dwarf}Hold of {NAME}" />
       <Rank rank="Kingdom" name="{=realms_rank_kingdom_dwarf}Mansion of {NAME}" />
       <Rank rank="Empire" name="{=realms_rank_empire_dwarf}Kingship of {NAME}" />
+      <Rank rank="Union" name="{=realms_rank_union_dwarf}High Kingship of {NAME}" />
+      <Holder rank="Union" male="{=realms_holder_lord_dwarf}Uzbad {NAME}" />
       <Holder rank="Empire" male="{=realms_holder_lord_dwarf}Uzbad {NAME}" />
       <Holder rank="Kingdom" male="{=realms_holder_lord_dwarf}Uzbad {NAME}" />
       <Holder rank="Duchy" male="{=realms_holder_lord_dwarf}Uzbad {NAME}" />
@@ -140,6 +144,30 @@
       <Holder rank="County" male="{=realms_holder_lord_elf}Hîr {NAME}" female="{=realms_holder_lady_elf}Híril {NAME}" />
       <Holder rank="Barony" male="{=realms_holder_lord_elf}Hîr {NAME}" female="{=realms_holder_lady_elf}Híril {NAME}" />
       <Holder rank="Lordship" male="{=realms_holder_lord_elf}Hîr {NAME}" female="{=realms_holder_lady_elf}Híril {NAME}" />
+    </Culture>
+
+    <!--
+      The Haradrim, by the Apysaic titles of Realms in Exile: Taskralan (realm), Autara (duchy), Tarba (town or
+      fief) under a Taskral, an Autarb and a Tarb; the one who rules all Haradwaith is the Chák Taskral. Castles and
+      lordships have no Haradric word there and stay Barony and Lordship, held by a Lord.
+    -->
+    <Culture id="aserai">
+      <Rank rank="County" name="{=realms_rank_county_harad}Tarba of {NAME}" />
+      <Rank rank="Duchy" name="{=realms_rank_duchy_harad}Autara of {NAME}" />
+      <Rank rank="Kingdom" name="{=realms_rank_kingdom_harad}Taskralan of {NAME}" />
+      <Holder rank="Empire" male="{=realms_holder_high_king_harad}Chák Taskral {NAME}" female="{=realms_holder_high_queen_harad}Chák Taskralah {NAME}" />
+      <Holder rank="Kingdom" male="{=realms_holder_king_harad}Taskral {NAME}" female="{=realms_holder_queen_harad}Taskralah {NAME}" />
+      <Holder rank="Duchy" male="{=realms_holder_duke_harad}Autarb {NAME}" female="{=realms_holder_duchess_harad}Autarbah {NAME}" />
+      <Holder rank="County" male="{=realms_holder_count_harad}Tarb {NAME}" female="{=realms_holder_countess_harad}Tarbah {NAME}" />
+    </Culture>
+    <Culture id="shaghana">
+      <Rank rank="County" name="{=realms_rank_county_harad}Tarba of {NAME}" />
+      <Rank rank="Duchy" name="{=realms_rank_duchy_harad}Autara of {NAME}" />
+      <Rank rank="Kingdom" name="{=realms_rank_kingdom_harad}Taskralan of {NAME}" />
+      <Holder rank="Empire" male="{=realms_holder_high_king_harad}Chák Taskral {NAME}" female="{=realms_holder_high_queen_harad}Chák Taskralah {NAME}" />
+      <Holder rank="Kingdom" male="{=realms_holder_king_harad}Taskral {NAME}" female="{=realms_holder_queen_harad}Taskralah {NAME}" />
+      <Holder rank="Duchy" male="{=realms_holder_duke_harad}Autarb {NAME}" female="{=realms_holder_duchess_harad}Autarbah {NAME}" />
+      <Holder rank="County" male="{=realms_holder_count_harad}Tarb {NAME}" female="{=realms_holder_countess_harad}Tarbah {NAME}" />
     </Culture>
 
     <!-- Orcs and goblins. Their chiefs and the Dark Lords keep their own names, with no style. -->
@@ -216,6 +244,12 @@
             known_over="Duchy" />
     <!-- Elessar's realm is simply the Reunited Kingdom. A prefix, so saves made with the older name show it too. -->
     <Prefix name="{=realms_prefix_reunited}Reunited Kingdom" title="u_reunited" priority="10" />
+    <!-- The realm of Harad is the Taskralan of Harwan, the Haradric name of its land. -->
+    <Prefix name="{=realms_prefix_harwan}Taskralan of Harwan" title="k_aserai" priority="10" />
+    <!-- The dwarves call all the Blue Mountains a Mansion, above the realm of Ered Luin itself. -->
+    <Prefix name="{=realms_prefix_ered_luin}Mansion of Ered Luin" title="e_eredluin" priority="10" />
+    <!-- The realm of Ered Luin itself is Gabilgathol, the dwarves' name for Belegost, its greatest mansion. -->
+    <Prefix name="{=realms_prefix_gabilgathol}Mansion of Gabilgathol" title="k_eredluin" priority="10" />
   </Prefixes>
 
   <Kingdoms>
@@ -233,7 +267,8 @@
     <Kingdom id="eredluin" succession="Primogeniture" gender="Agnatic"
              banner="11.146.146.1528.1528.764.764.1.0.0.31034.20.20.480.480.764.764.0.0.0.31033.228.228.428.428.764.764.0.0.0" />
     <!-- The heirs of Isildur. -->
-    <Kingdom id="arthedain" succession="Primogeniture" gender="Agnatic" />
+    <Kingdom id="arthedain" succession="Primogeniture" gender="Agnatic"
+             banner="11.149.149.1528.1528.764.764.1.0.0.31026.110.110.387.387.764.636.0.0.0.11004.110.110.77.77.764.617.0.0.0.11000.110.110.318.318.764.839.0.0.0" />
     <Kingdom id="cardolan" succession="Primogeniture" gender="Agnatic" />
     <Kingdom id="rhudaur" succession="Primogeniture" gender="Agnatic" />
     <!-- Elven realms: the eldest of the house leads, man or woman. -->
@@ -274,9 +309,11 @@
       <Member kingdom="cardolan" />
       <Member kingdom="rhudaur" />
     </HighTitle>
-    <HighTitle id="durins_folk" name="{=realms_title_durins_folk}Durin's Folk" succession="Primogeniture" gender="Agnatic">
-      <Member kingdom="erebor" />
+    <!-- All the Blue Mountains: the dwarves' realm and the goblins' Blue Craig. Vacant at the start: one ruler must hold
+         both. Durin's Folk (a union, below) stands above it and Erebor. -->
+    <HighTitle id="eredluin" name="{=realms_title_eredluin}Ered Luin" succession="Primogeniture" gender="Agnatic">
       <Member kingdom="eredluin" />
+      <Member kingdom="bluecraig" />
     </HighTitle>
     <!-- The free realms of Men east of Mirkwood. -->
     <HighTitle id="rhovanion" name="{=realms_title_rhovanion}Rhovanion" succession="Primogeniture" gender="AgnaticCognatic">
@@ -299,6 +336,12 @@
       <Member kingdom="goblin" />
       <Member kingdom="mistymountainorcs" />
     </HighTitle>
+    <!-- The realms of the Haradrim: Harwan (aserai) and Shaghana. Vacant at the start: one ruler must hold both. -->
+    <HighTitle id="haradwaith" name="{=realms_title_haradwaith}Haradwaith"
+               banner="11.211.211.1528.1528.764.764.1.0.0.500.0.0.466.466.764.764.0.0.0.500.0.0.393.393.764.764.0.0.0.13000.149.149.499.499.765.768.0.0.0">
+      <Member kingdom="aserai" />
+      <Member kingdom="shaghana" />
+    </HighTitle>
   </HighTitles>
 
   <!--
@@ -308,9 +351,15 @@
   -->
   <Unions>
     <!-- Elessar's realm of Gondor and Arnor, named "Reunited Kingdom" by its prefix. -->
-    <Union id="reunited" name="{=realms_title_reunited}Gondor and Arnor" realm_name="{=realms_realm_reunited}Reunited Kingdom">
+    <Union id="reunited" name="{=realms_title_reunited}Gondor and Arnor" realm_name="{=realms_realm_reunited}Reunited Kingdom"
+         banner="11.203.203.1528.1528.764.764.1.0.0.31026.172.172.387.387.764.636.0.0.0.11004.172.172.77.77.764.617.0.0.0.11000.172.172.318.318.764.839.0.0.0">
       <Member title="k_empire_w" />
       <Member title="e_arnor" />
+    </Union>
+    <!-- Durin's Folk: Erebor and all Ered Luin under one Uzbad, with Khazad-dûm when it is taken back. -->
+    <Union id="durins_folk" name="{=realms_title_durins_folk}Durin's Folk">
+      <Member title="k_erebor" />
+      <Member title="e_eredluin" />
     </Union>
   </Unions>
 
@@ -328,12 +377,12 @@
     primary title is that title (the one they chose on its page from those of their highest rank, else their highest, the
     realm's own title first on a tie), and its own banner again when that changes. The ruling house keeps its own banner
     either way. Lindon, Gondor (empire_w) and Mordor (empire_s) carry their kingdom's starting banner; Erebor, Ered Luin, Lasgalen
-    (mirkwood), Lothlórien, the Anduin Vale and Angáladh carry the same banner as their kingdom; Greenwood and Khazad-dûm have one of
-    their own.
+    (mirkwood), Lothlórien, the Anduin Vale, Angáladh and Arthedain carry the same banner as their kingdom; Greenwood, Khazad-dûm,
+    the Reunited Kingdom and Haradwaith have one of their own.
   -->
   <TitularRealms>
     <!-- The dwarves' lost mansion: taken back from the orcs of Moria by the sword, never restored by a claim of blood. -->
-    <Realm id="khazad_dum" name="{=realms_title_khazad_dum}Khazad-dûm" culture="erebor" liege="e_durins_folk"
+    <Realm id="khazad_dum" name="{=realms_title_khazad_dum}Khazad-dûm" culture="erebor" liege="u_durins_folk"
            lands="k_mistymountainorcs" cultures="erebor eredluin" succession="Primogeniture" gender="Agnatic"
            banner="11.201.201.1528.1528.764.764.1.0.0.24510.198.242.156.156.764.585.1.0.0.24019.328.198.366.366.764.865.1.0.0.24509.328.328.80.80.615.671.0.0.0.24509.328.328.80.80.913.671.0.0.0.24509.328.328.80.80.559.764.0.0.0.24509.328.328.80.80.969.764.0.0.0.24509.328.328.80.80.547.883.0.0.0.24509.328.328.80.80.981.883.0.0.0" />
   </TitularRealms>
