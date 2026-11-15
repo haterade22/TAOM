@@ -37,11 +37,35 @@ import promote_borrowed_cultures as promo  # noqa: E402
 import ranged_ladder as rl  # noqa: E402
 import realm_troops as rt  # noqa: E402
 import rebalance_armor as ra  # noqa: E402
+import rebalance_troops as rb_  # noqa: E402
 import troop_purpose as tp  # noqa: E402
 
 GENERATORS = (gct, grt, gelt, gavt, gaht, gdot, gsrt)
 DALE_REALMS = (gavt, gaht, gdot)
 LAUNCHER = {"ranged": "Bow", "crossbow": "Crossbow", "horsearcher": "Bow"}
+
+
+def militia_step(basic, vet):
+    """The elite militia's skills, exactly. Every skill is the basic's plus the bonus, except on
+    an archer: its launcher is its ladder cell by its own tier, its carried melee floor5(0.9 x that
+    cell), and an uncarried melee class the lower of that and the plus-bonus value."""
+    want = {k: basic.sk[k] + rt.MILITIA_ELITE_BONUS for k in rt.SKILLS}
+    kit, cells = rt.troop_kit(vet)
+    launcher = next((c for c in tp.LAUNCHERS if c in cells and kit.counts.get(c)), None)
+    if basic.role == "ranged" and launcher:
+        side = rb_.floor5(cells[launcher] * rb_.ARCHER_SIDEARM)
+        uncarried = rb_.round5(rb_.TIER_CURVE[rb_.MILITIA_TIER] * rb_.UNCARRIED_MELEE) + rt.MILITIA_ELITE_BONUS
+        want[launcher] = cells[launcher]
+        for c in tp.MELEE:
+            want[c] = side if kit.counts.get(c) else min(uncarried, side)
+        if kit.counts.get(tp.THROWING):
+            want[tp.THROWING] = side
+        for c in tp.LAUNCHERS:
+            if c != launcher and not kit.counts.get(c):
+                # A spare launcher is under the archer's own cell, which can bind on the basic.
+                want[c] = min(rb_.round5(rb_.TIER_CURVE[rb_.MILITIA_TIER] * rb_.UNCARRIED_RANGED)
+                              + rt.MILITIA_ELITE_BONUS, cells[launcher])
+    return want
 BANDS = ("light", "medium", "heavy", "elite")
 
 
@@ -145,10 +169,8 @@ class RealmDesignTests(unittest.TestCase):
             for basic_id, vet_id in gen.MILITIA.items():
                 basic, vet = by_id[basic_id], by_id[vet_id]
                 self.assertEqual(vet.level, 16, vet_id)
-                for k in rt.SKILLS:
-                    if k == "Bow" and basic.role == "ranged":
-                        continue  # the ladder owns a laddered archer's Bow
-                    self.assertEqual(vet.sk[k], basic.sk[k] + rt.MILITIA_ELITE_BONUS, f"{vet_id} {k}")
+                for k, want in militia_step(basic, vet).items():
+                    self.assertEqual(vet.sk[k], want, f"{vet_id} {k}")
 
     def test_the_mercenary_is_a_leaf_copy_of_the_rarest_pool_entry(self):
         for gen in GENERATORS:
@@ -437,7 +459,10 @@ class RohanRealmTests(unittest.TestCase):
         self.assertEqual(len(archers), 3)
         for t in archers:
             self.assertEqual(t.group, "HorseArcher", t.id)
-            self.assertGreaterEqual(t.sk["Riding"], rt.RIDING[t.level], t.id)
+            # The role table's mounted Riding, and never under the horse (Agent.CheckSkillForMounting).
+            n = rb_.TIER_CURVE[rl.engine_tier(t.level)]
+            self.assertGreaterEqual(t.sk["Riding"], rb_.round5(n * (1 + rb_.Fraction(rb_.CULTURE_PCT["southrhovanion"]["Riding"], 100))), t.id)
+            self.assertGreaterEqual(t.sk["Riding"], rt.mount_difficulties().get(t.horse[0], 0), t.id)
 
     def test_from_level_26_no_armory_rohan_blade_sits_under_the_band(self):
         for t in built(gsrt):

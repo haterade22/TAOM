@@ -12,6 +12,7 @@ using TAOM.Features.ArmourAcquisition;
 using TAOM.Features.ArmourAcquisition.Hooks;
 using TAOM.Features.CareerSystem;
 using TAOM.Features.CoopInterop;
+using TAOM.Features.CoopInterop.GuestTrade;
 using TAOM.Features.CultureMarketplace;
 using TAOM.Features.SpecialResources;
 using TAOM.Tests.Infrastructure;
@@ -79,6 +80,8 @@ public class ArmourAcquisitionWiringTests
         container.RegisterInstance(Substitute.For<IDedicatedServerProvider>());
         container.RegisterInstance(Substitute.For<ICultureMarketplaceConfigProvider>());
         container.RegisterInstance(Substitute.For<ISpecialResourceSpender>());
+        container.RegisterInstance(new GuestTradeClient(Substitute.For<ICoopSessionProvider>(), Substitute.For<IPlayerPartyAdapter>(),
+            Substitute.For<ISpecialResourceStorageService>(), Substitute.For<IModLogger>()));
         var module = new ArmourAcquisitionModule();
 
         module.RegisterServices(container);

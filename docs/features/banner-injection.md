@@ -24,6 +24,7 @@ current file set only.
 - `BannerInjectionService` iterates all kingdoms and clans, compares live `BannerCode` against the expected key, skips player-modified entries, then calls the adapter to set and invalidate visuals. Ruling clans are included: Realms keeps a ruling house's own banner apart from its kingdom's (`ClanOriginalBanner`, see "House and realm banners" in [realms.md](realms.md)), and `ClanBannerAdapter` compares against that, so `clan_<kingdom>_1` shows its own `banner_key` on its map parties and encyclopedia page while the kingdom, and the house's settlements, show the kingdom's. Before 2026-11-14 ruling clans were skipped, because the base game showed a ruling clan its kingdom's banner.
 - `BannerExclusionService` maintains a `HashSet<string>` of player-modified entity IDs. It is serialised into save data via `IDataStore.SyncData` under the key `_taom_playerModifiedBanners`.
 - `GauntletBannerEditorScreen_OnDone_Patch` (Harmony Postfix on `GauntletBannerEditorScreen.OnDone`) detects when the player saves a banner edit and records `Clan.PlayerClan.StringId` into `BannerExclusionService`.
+- `RemapRemovedIcons()` runs on a save load, before `InjectBanners()`, on the session authority only. The v2.0.40 banner repack removed 163 icon ids and #1284 restored 4, so 159 stay removed (`RemovedBannerIcons`); the engine draws nothing for a layer that names one. The pass reads every kingdom and clan banner, the player's own and player-edited ones included, and replaces each removed id with the nearest-id icon that the same `BannerIconGroup` id still holds (`BannerIconRemap` reads only the first of each layer's 10 numbers, the mesh id). The group is the people, so it wins over a closer id: the repack moved 30001 and 30003 to 30006 into the Northmen group, and the four removed orc icons beside them (30000, 30002, 30007, 30009) map to the orc icon 28110. Colours, size, position and rotation stay. `RemovedBannerIconsTests` fails if a removed id comes back to `banner_icons.xml` or a replacement leaves it, and `tools/tests/test_banner_icon_ids.py` fails if a culture's `possible_clan_banner_icon_ids` (the icons new rebel and companion clans draw from) names an icon that does not exist. Limits: Realms keeps its own copies of kingdom banner codes (a kingdom's banner before a title banner replaced it); a removed id in such a copy comes back when Realms restores it, and the next save load replaces it again. A kingdom that shares one banner object with its founding clan gets two separate objects after the pass; with Realms' house banners on, Realms splits them on load anyway, and with them off the kingdom's colours stop following the player's banner colour edits. A banner code pasted into the banner editor is not remapped until the next load.
 - `BannerInjectionBehavior` (`CampaignBehaviorBase`) calls `InjectBanners()` on `CampaignEvents.OnNewGameCreatedEvent` and `CampaignEvents.OnGameLoadedEvent` (fires exactly once per game start or save load), and delegates `SyncData` to the service.
 
 ### Component Diagram
@@ -31,6 +32,8 @@ current file set only.
 CampaignEvents.OnNewGameCreatedEvent  ─┐
 CampaignEvents.OnGameLoadedEvent      ─┘
   `-- BannerInjectionBehavior.RegisterEvents()
+        |-- IBannerInjectionService.RemapRemovedIcons()  [save load, authority only]
+        |     `-- BannerIconRemap.Remap(code, RemovedBannerIcons.Replacement)
         `-- IBannerInjectionService.InjectBanners()
               |-- IBannerConfigProvider.GetKingdomBannerKeys()  [parses XML + XSLT]
               |-- IBannerConfigProvider.GetClanBannerKeys()
@@ -57,8 +60,10 @@ Banner keys are declared in:
 | File | Purpose |
 |------|---------|
 | `Main/Features/BannerInjection/BannerInjectionBehavior.cs` | `CampaignBehaviorBase` entry point; hooks session launch event |
-| `Main/Features/BannerInjection/IBannerInjectionService.cs` | Service interface: `InjectBanners()`, `SyncData()` |
+| `Main/Features/BannerInjection/IBannerInjectionService.cs` | Service interface: `InjectBanners()`, `RemapRemovedIcons()`, `SyncData()` |
 | `Main/Features/BannerInjection/BannerInjectionService.cs` | Core injection logic; skips player-modified and already-correct banners |
+| `Main/Features/BannerInjection/RemovedBannerIcons.cs` | The 159 icon ids that stay removed after the v2.0.40 repack and #1284, each mapped to its replacement (generated from the two `banner_icons.xml` versions) |
+| `Main/Features/BannerInjection/BannerIconRemap.cs` | Replaces mapped mesh ids in a banner code |
 | `Main/Features/BannerInjection/IBannerExclusionService.cs` | Interface for tracking player-modified banner IDs |
 | `Main/Features/BannerInjection/BannerExclusionService.cs` | `HashSet`-backed exclusion list; serialised to save via `IDataStore` |
 | `Main/Features/BannerInjection/IBannerConfigProvider.cs` | Interface for reading expected banner keys from data files |
@@ -78,6 +83,7 @@ Banner keys are declared in:
 | Test File | Coverage |
 |-----------|---------|
 | `TAOM.Tests/Features/BannerInjection/BannerInjectionServiceTests.cs` | Injection logic: mismatch injects, already-correct skips, player-modified skips, a ruling clan gets its own banner, `InvalidateVisuals` called on update, summary log emitted, multi-kingdom batch |
+| `TAOM.Tests/Features/BannerInjection/RemovedBannerIconsTests.cs` | The table against `banner_icons.xml`, the mesh-id-only remap, malformed codes, and the load pass on kingdoms and clans |
 | `TAOM.Tests/Features/BannerInjection/BannerExclusionServiceTests.cs` | `MarkAsPlayerModified`, `IsPlayerModified`, `SyncData` round-trip |
 | `TAOM.Tests/Features/BannerInjection/BannerConfigProviderTests.cs` | XML attribute parsing, XSLT template match parsing, missing file warnings |
 
@@ -94,9 +100,17 @@ Restored banners, #1284 (Nos Galengrim and `clan_shaghana_3` lost icons in the v
 1. Build and deploy. Start a new campaign.
 2. Open the Encyclopedia page of Nos Galengrim (`clan_mirkwood_4`). Expected: a rayed sun sigil (ring of rays, rayed disc, small rayed ring) with no missing layer.
 3. Open the Encyclopedia page of `clan_shaghana_3`. Expected: a long-tailed star at the centre of its pennant, in the clan's colours.
-4. Load a save from before v2.0.40. Expected: both clans show the same banners as in steps 2 and 3, because `BannerInjectionBehavior` re-applies `clans.xml` keys on load. A banner the player edited keeps its saved icons (#1285).
+4. Load a save from before v2.0.40. Expected: both clans show the same banners as in steps 2 and 3, because `BannerInjectionBehavior` re-applies `clans.xml` keys on load.
+
+Removed icons in a save, #1285:
+
+1. Take a save from before v2.0.40 where the player's clan banner, made in the banner editor, uses an icon the repack removed. Before this fix that layer is blank.
+2. Build, deploy and load that save.
+3. Open the clan screen. Expected: the layer shows an icon from the same group, in the same colours, size and place. `Logs/taom_debug_*.log` has the line `BannerInjection: N banner(s) named a removed icon`.
+4. Save, load again. Expected: no `named a removed icon` line, because the banner now names only loaded icons.
 
 ## Changelog
+- 2026-11-15: on save load, the session authority replaces each icon id the v2.0.40 repack removed with the nearest surviving icon of its old group, in every kingdom and clan banner, the player's own included (#1285).
 - 2026-11-15: icons 17006 to 17008 and 10505 restored with their ids on `taom_banners_16`, and the `clan_mirkwood_4` and `clan_shaghana_3` banner keys fly them again in place of the 2026-11-14 replacements (#1284).
 - 2026-11-14: `clan_mirkwood_4` and `clan_shaghana_3` banner keys repointed from the icons the v2.0.40 repack removed (17006 to 17008, 10505) to 15007, 10017, 15009 and 10500 (#1284).
 - 2026-05-13 — Phase 9b: fixed `BannerExclusionService` singleton not resetting between campaigns; added `Reset()` + `OnNewGameCreatedEvent` reset before injection so canon banners re-inject in later campaigns (closes #124).

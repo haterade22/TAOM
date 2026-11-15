@@ -57,6 +57,19 @@ internal sealed class CampaignAutorunHost : ICampaignAutorunHost
 
     public void HideSceneNotification() => MBInformationManager.HideSceneNotification();
 
+    // The story event windows share the Realms popup slot and open one per frame from their queue. In Running, RealmsClient.Tick opens
+    // a queued window earlier in this same application tick (ClientSubModule.OnApplicationTick), so the driver closes it before the
+    // game state ticks again, outside any layer tick. RealmsPopups.Close runs the same RealmsPopupLayer.Close as the Continue button;
+    // its teardown lifts the campaign pause (UnregisterActiveStateDisableRequest).
+    public bool CloseEventWindow()
+    {
+        if (!TAOM.Client.Features.Realms.Popups.RealmsPopups.IsOpen)
+            return false;
+
+        TAOM.Client.Features.Realms.Popups.RealmsPopups.Close();
+        return true;
+    }
+
     // What the start options screen's Confirm does when nothing changed (GauntletCampaignStartingOptionsView.OnConfirm): the menu
     // button opens that screen whenever the options list is not empty (SandBoxViewSubModule.StartGame), and vanilla's provider fills it.
     public bool StartNewCampaign()

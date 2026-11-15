@@ -106,6 +106,9 @@ public sealed class ChronicleStoryDefinition
 {
     public string MissionId { get; set; } = string.Empty;
 
+    /// <summary>Optional (#1326): the Story Missions id of the same battle fought from the attackers' side. Null offers no attack.</summary>
+    public string? AttackMissionId { get; set; }
+
     /// <summary>Held or Lapsed only.</summary>
     public ChronicleEventState Fate { get; set; } = ChronicleEventState.Held;
 
@@ -116,16 +119,25 @@ public sealed class ChronicleStoryDefinition
 /// <summary>An Active story window the player has not declined: what the offer shows and launches.</summary>
 public sealed class ChronicleStoryOffer
 {
-    public ChronicleStoryOffer(string eventId, string missionId, string title, string? targetSettlementId, IReadOnlyList<string> attackers)
+    public ChronicleStoryOffer(string eventId, string missionId, string title, string? targetSettlementId, IReadOnlyList<string> attackers,
+        string defender, string? attackMissionId)
     {
         EventId = eventId;
         MissionId = missionId;
         Title = title;
         TargetSettlementId = targetSettlementId;
         Attackers = attackers;
+        Defender = defender;
+        AttackMissionId = attackMissionId;
     }
 
-    /// <summary>The window's attacking kingdoms in configuration order: a lost mission gives the target to the first that can take it.</summary>
+    /// <summary>The kingdom that holds the target: Story Missions reads its side to decide who may defend (#1326).</summary>
+    public string Defender { get; }
+
+    /// <summary>The attack mission of the window, or null when it has none.</summary>
+    public string? AttackMissionId { get; }
+
+    /// <summary>The window's attacking kingdoms in configuration order: fallen walls give the target to the first that can take it.</summary>
     public IReadOnlyList<string> Attackers { get; }
 
     public string EventId { get; }

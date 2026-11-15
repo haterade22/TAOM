@@ -1265,3 +1265,9 @@ Removing the Hostile row between Gondor and Dunland stops Full War from declarin
 - **Why missed:** the builder traced the call to war through Gondor's one Permanent ally and stopped. A Natural row adds 500 to the alliance score, so those realms can ally too. The first plan had already rejected an Isengard-Dunland row for this same mechanism, seen from the other side.
 - **Prevent:** when a diplomacy row changes tier, write the table of every realm that can be allied with either side (Permanent and Natural rows) against every realm at war with the other side. Read `DefaultAllianceModel.GetScoreOfCallingToWar` for the pairs that remain: it refuses a caller that is stronger than its target.
 - **Source:** [rca-faction-balance-data-2026-11-14.md](../rca-faction-balance-data-2026-11-14.md), finding 1, data-flow lens.
+
+### A list of what stops campaign time includes TAOM's own pause calls (#1075, 2026-11-15)
+The scenario driver handled every engine pause the slice review listed (inquiries, scene notifications, menus, the time lock, focus loss). The first unattended run still stood 9 minutes on day 2: a War Chronicle story window called `GameStateManager.RegisterActiveStateDisableRequest` (`RealmsPopupLayer.cs:57-61`), and the status read `screen=Map time_locked=0` the whole time.
+- **Why missed:** the review read the engine's pause sources and no lens grepped TAOM's own code for the same call.
+- **Prevent:** before you list what can stop time for a driver or a watchdog, grep the repo for `RegisterActiveStateDisableRequest` and `TimeControlModeLock` as well as the engine. Each caller is a pause the driver must see or close.
+- **Source:** [rca-scenario-event-window-2026-11-15.md](../rca-scenario-event-window-2026-11-15.md), finding 1, first game run.

@@ -1,6 +1,10 @@
 #!/usr/bin/env python3
 """Generate Main/_Module/ModuleData/troops/troops_gundabad_snow.xml, Gundabad's Snow Orc tree.
 
+The T4-T5 spears are taom_ph_gundabad_spear_a02_t4 and _a03_t5, placeholders of the Armory's
+wm_gundabad_spear_a02 and _a03 that tools/generate_placeholder_weapons.py owns (#1296). When one is
+retired, put the real spear back here.
+
 The tree, kit pools and weapon guide are KEYforce's (lotraom-assets tools/gundabad_armors_and_troops.md,
 "Snow Orc Armors and Troops"); tier T<n> is level 6 + (n-1)*5, so T1 is level 6 and T5 level 26.
 
@@ -131,13 +135,13 @@ TROOPS = [
        "Gloves": [mor("inf_bracer_med_a")], "Leg": [mor("grvs_med_a")]},
       ups=("gundabad_snow_reaver",)),
     T("gundabad_snow_reaver", "Snow Orc Reaver", 4, "Infantry",
-      shield_line(("wm_gundabad_spear_a02",), "wm_gundabad_shield_a02"),
+      shield_line(("taom_ph_gundabad_spear_a02_t4",), "wm_gundabad_shield_a02"),
       {"Head": [mor("pik_helmet_med_b"), mor("inf_helmet_med_a")], "Cape": [mor("pik_pauld_med_a")],
        "Body": [gb("inf_chest_med_b"), gb("inf_chest_med_a")],
        "Gloves": [mor("inf_bracer_med_b")], "Leg": [mor("grvs_med_c")]},
       ups=("gundabad_blackshield_spearman",)),
     T("gundabad_blackshield_spearman", "Blackshield Spearman", 5, "Infantry",
-      shield_line(("wm_gundabad_spear_a03",), "wm_gundabad_shield_a03"),
+      shield_line(("taom_ph_gundabad_spear_a03_t5",), "wm_gundabad_shield_a03"),
       {"Head": [mor("pik_helmet_heavy_a"), mor("pik_helmet_heavy_c")], "Cape": [mor("pik_pauld_heavy_a")],
        "Body": [gb("inf_chest_heavy_b"), gb("inf_chest_heavy_a")],
        "Gloves": [mor("inf_bracer_heavy_b")], "Leg": [mor("grvs_heavy_b")]}),
@@ -169,7 +173,7 @@ TROOPS = [
        "Gloves": [mor("arc_bracer_med_b")], "Leg": [mor("grvs_med_b")]},
       ups=("gundabad_blackshield_wolf_rider",), horse=WARG),
     T("gundabad_blackshield_wolf_rider", "Blackshield Wolf Rider", 5, "Cavalry",
-      shield_line(("wm_gundabad_spear_a03",), "wm_gundabad_shield_a03",
+      shield_line(("taom_ph_gundabad_spear_a03_t5",), "wm_gundabad_shield_a03",
                   ("wm_gundabad_sword_a03", "wm_gundabad_javelin_a02")),
       {"Head": [mor("inf_helmet_heavy_b"), mor("pik_helmet_heavy_a")], "Cape": [gb("inf_pauld_cape_heavy_b")],
        "Body": [gb("arc_chest_heavy_a"), gb("arc_chest_heavy_b")],

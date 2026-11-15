@@ -9,6 +9,17 @@ namespace TAOM.Tests.Features.LongDefeat;
 public class LongDefeatSessionTests
 {
     [TestMethod]
+    public void Fill_ClearsAPreviousCoopRunsSpeedLock()
+    {
+        var session = new LongDefeatSession { SpeedLocked = true };
+
+        session.Fill(NewRun());
+        session.SetSpeed(4);
+
+        Assert.AreEqual(4, session.Speed);
+    }
+
+    [TestMethod]
     public void LostInClearedWaves_OutlivesClear_AndANewRunStartsAtZero()
     {
         var session = new LongDefeatSession();

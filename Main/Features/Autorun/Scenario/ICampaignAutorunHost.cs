@@ -36,6 +36,10 @@ internal interface ICampaignAutorunHost
     /// the previous tick too: closing one whose scene does not exist yet throws (GauntletSceneNotification.CloseNotification).</summary>
     void HideSceneNotification();
 
+    /// <summary>Closes the open Realms popup: in an unattended run, a story event window (War Chronicle or coronation), which pauses
+    /// the campaign while it shows. Its button only closes it. True when one was open.</summary>
+    bool CloseEventWindow();
+
     /// <summary>
     /// Starts a new sandbox campaign with the default start options, as the start options screen's Confirm does when nothing changed, and stops focus loss from pausing the game (in memory, remembering the old value). False when it could not start.
     /// </summary>

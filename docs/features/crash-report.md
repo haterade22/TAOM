@@ -36,7 +36,7 @@ A native crash (the log just ends), a freeze the player closes, or a bug with no
 
 - `taom_debug_previous.log`: the newest `taom_debug_*.log` other than this session's.
 - `rgl_log_previous.txt`: the main rgl log before the newest.
-- `crash/<file>`: the files of the newest folder in the engine's `crashes` folder (the `logs` folder's sibling under `%ProgramData%\Mount and Blade II Bannerlord`, `TaleWorlds.Library.Watchdog`) written at or after the previous session's start, read from its log's file name. A file over 64 MB (a large minidump) stays out, and the manifest says so.
+- `crash/<file>`: the files of the newest folder in the engine's `crashes` folder (the `logs` folder's sibling under `%ProgramData%\Mount and Blade II Bannerlord`, `TaleWorlds.Library.Watchdog`) written at or after the previous session's start, read from its log's file name. A file over 64 MB (a large minidump) stays out, and the manifest says so. The crash files together take at most 128 MB (`BugReportFiles.MaxCrashFolderBytes`), smallest first, because the zip is written on the main thread and its size is a pause the player sees (#1297); a file past that total also stays out with a manifest note.
 
 The manifest starts with "TAOM bug report" and names each added file by file name only, with notes: the previous log's name and whether it ended cleanly, and the crash folder used. A result inquiry shows the zip's absolute path with "Open folder".
 

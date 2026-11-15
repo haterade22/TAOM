@@ -16,28 +16,28 @@
         <skills>
             <skill
                 id="Athletics"
-                value="53" />
+                value="40" />
             <skill
                 id="Riding"
-                value="5" />
+                value="15" />
             <skill
                 id="OneHanded"
-                value="75" />
+                value="40" />
             <skill
                 id="TwoHanded"
-                value="60" />
+                value="20" />
             <skill
                 id="Polearm"
-                value="65" />
+                value="20" />
             <skill
                 id="Bow"
-                value="0" />
+                value="15" />
             <skill
                 id="Crossbow"
-                value="0" />
+                value="15" />
             <skill
                 id="Throwing"
-                value="25" />
+                value="20" />
         </skills>
         <upgrade_targets>
       <upgrade_target id="NPCCharacter.gundabad_grunt" />
@@ -198,28 +198,28 @@
         <skills>
             <skill
                 id="Athletics"
-                value="55" />
+                value="40" />
             <skill
                 id="Riding"
-                value="5" />
+                value="15" />
             <skill
                 id="OneHanded"
-                value="35" />
-            <skill
-                id="TwoHanded"
-                value="35" />
-            <skill
-                id="Polearm"
                 value="30" />
             <skill
+                id="TwoHanded"
+                value="20" />
+            <skill
+                id="Polearm"
+                value="20" />
+            <skill
                 id="Bow"
-                value="35" />
+                value="36" />
             <skill
                 id="Crossbow"
-                value="5" />
+                value="15" />
             <skill
                 id="Throwing"
-                value="25" />
+                value="15" />
         </skills>
         <upgrade_targets>
             <upgrade_target
@@ -481,28 +481,28 @@
         <skills>
             <skill
                 id="Athletics"
-                value="85" />
+                value="70" />
             <skill
                 id="Riding"
-                value="10" />
+                value="30" />
             <skill
                 id="OneHanded"
-                value="100" />
+                value="70" />
             <skill
                 id="TwoHanded"
-                value="90" />
+                value="35" />
             <skill
                 id="Polearm"
-                value="95" />
+                value="35" />
             <skill
                 id="Bow"
-                value="5" />
+                value="30" />
             <skill
                 id="Crossbow"
-                value="0" />
+                value="30" />
             <skill
                 id="Throwing"
-                value="35" />
+                value="30" />
         </skills>
         <upgrade_targets>
       <upgrade_target id="NPCCharacter.gundabad_fighter" />
@@ -695,32 +695,32 @@
                 value="135" />
             <skill
                 id="Riding"
-                value="205" />
+                value="150" />
             <skill
                 id="OneHanded"
-                value="220" />
+                value="140" />
             <skill
                 id="TwoHanded"
-                value="165" />
+                value="80" />
             <skill
                 id="Polearm"
-                value="255" />
+                value="160" />
             <skill
                 id="Bow"
-                value="45" />
+                value="60" />
             <skill
                 id="Crossbow"
-                value="15" />
+                value="60" />
             <skill
                 id="Throwing"
-                value="75" />
+                value="60" />
         </skills>
         <upgrade_targets>
       <upgrade_target id="NPCCharacter.gundabad_tracker" />
     </upgrade_targets>
         <Equipments>
             <EquipmentRoster>
-              <equipment slot="Item0" id="Item.wm_gundabad_spear_a03" />
+              <equipment slot="Item0" id="Item.taom_ph_gundabad_spear_a03_t5" />
               <equipment slot="Item1" id="Item.wm_gundabad_shield_a02" />
               <equipment slot="Head" id="Item.sk_gb_uruk_helmet_heavy_d" />
               <equipment slot="Body" id="Item.sk_gb_uruk_chest_heavy_c" />
@@ -733,7 +733,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.wm_gundabad_spear_a03" />
+                    id="Item.taom_ph_gundabad_spear_a03_t5" />
                 <equipment
                     slot="Item1"
                     id="Item.wm_gundabad_shield_a01" />
@@ -765,7 +765,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.wm_gundabad_spear_a03" />
+                    id="Item.taom_ph_gundabad_spear_a03_t5" />
                 <equipment
                     slot="Item1"
                     id="Item.wm_gundabad_shield_a01" />
@@ -797,7 +797,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.wm_gundabad_spear_a03" />
+                    id="Item.taom_ph_gundabad_spear_a03_t5" />
                 <equipment
                     slot="Item1"
                     id="Item.wm_gundabad_shield_a01" />
@@ -829,7 +829,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.wm_gundabad_spear_a03" />
+                    id="Item.taom_ph_gundabad_spear_a03_t5" />
                 <equipment
                     slot="Item1"
                     id="Item.wm_gundabad_shield_a01" />
@@ -879,25 +879,25 @@
         <skills>
             <skill
                 id="Athletics"
-                value="155" />
+                value="135" />
             <skill
                 id="Riding"
-                value="265" />
+                value="175" />
             <skill
                 id="OneHanded"
-                value="270" />
-            <skill
-                id="TwoHanded"
                 value="165" />
             <skill
+                id="TwoHanded"
+                value="90" />
+            <skill
                 id="Polearm"
-                value="305" />
+                value="185" />
             <skill
                 id="Bow"
-                value="45" />
+                value="75" />
             <skill
                 id="Crossbow"
-                value="20" />
+                value="75" />
             <skill
                 id="Throwing"
                 value="75" />
@@ -907,7 +907,7 @@
     </upgrade_targets>
         <Equipments>
             <EquipmentRoster>
-              <equipment slot="Item0" id="Item.wm_gundabad_spear_a03" />
+              <equipment slot="Item0" id="Item.taom_ph_gundabad_spear_a03_t8" />
               <equipment slot="Item1" id="Item.wm_gundabad_shield_a03" />
               <equipment slot="Item2" id="Item.wm_gundabad_axe_a01" />
               <equipment slot="Head" id="Item.sk_gb_uruk_helmet_heavy_e" />
@@ -921,7 +921,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.wm_gundabad_spear_a03" />
+                    id="Item.taom_ph_gundabad_spear_a03_t8" />
                 <equipment
                     slot="Item1"
                     id="Item.wm_gundabad_shield_a02" />
@@ -953,7 +953,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.wm_gundabad_spear_a03" />
+                    id="Item.taom_ph_gundabad_spear_a03_t8" />
                 <equipment
                     slot="Item1"
                     id="Item.wm_gundabad_shield_a02" />
@@ -985,7 +985,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.wm_gundabad_spear_a03" />
+                    id="Item.taom_ph_gundabad_spear_a03_t8" />
                 <equipment
                     slot="Item1"
                     id="Item.wm_gundabad_shield_a02" />
@@ -1017,7 +1017,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.wm_gundabad_spear_a03" />
+                    id="Item.taom_ph_gundabad_spear_a03_t8" />
                 <equipment
                     slot="Item1"
                     id="Item.wm_gundabad_shield_a02" />
@@ -1067,28 +1067,28 @@
         <skills>
             <skill
                 id="Athletics"
-                value="115" />
+                value="50" />
             <skill
                 id="Riding"
-                value="145" />
+                value="95" />
             <skill
                 id="OneHanded"
-                value="85" />
+                value="50" />
             <skill
                 id="TwoHanded"
-                value="65" />
+                value="50" />
             <skill
                 id="Polearm"
-                value="100" />
+                value="80" />
             <skill
                 id="Bow"
-                value="110" />
+                value="92" />
             <skill
                 id="Crossbow"
-                value="10" />
+                value="40" />
             <skill
                 id="Throwing"
-                value="50" />
+                value="40" />
         </skills>
         <upgrade_targets>
             <upgrade_target
@@ -1104,7 +1104,7 @@
                     id="Item.steppe_arrows" />
                 <equipment
                     slot="Item2"
-                    id="Item.wm_gundabad_spear_a02" />
+                    id="Item.taom_ph_gundabad_spear_a02_t4" />
                 <equipment
                     slot="Head"
                     id="Item.sk_gb_uruk_helmet_med_a" />
@@ -1136,7 +1136,7 @@
                     id="Item.steppe_arrows" />
                 <equipment
                     slot="Item2"
-                    id="Item.wm_gundabad_spear_a02" />
+                    id="Item.taom_ph_gundabad_spear_a02_t4" />
                 <equipment
                     slot="Head"
                     id="Item.sk_gb_uruk_helmet_med_a" />
@@ -1168,7 +1168,7 @@
                     id="Item.steppe_arrows" />
                 <equipment
                     slot="Item2"
-                    id="Item.wm_gundabad_spear_a02" />
+                    id="Item.taom_ph_gundabad_spear_a02_t4" />
                 <equipment
                     slot="Head"
                     id="Item.sk_gb_uruk_helmet_med_a" />
@@ -1200,7 +1200,7 @@
                     id="Item.steppe_arrows" />
                 <equipment
                     slot="Item2"
-                    id="Item.wm_gundabad_spear_a02" />
+                    id="Item.taom_ph_gundabad_spear_a02_t4" />
                 <equipment
                     slot="Head"
                     id="Item.sk_gb_uruk_helmet_med_a" />
@@ -1232,7 +1232,7 @@
                     id="Item.steppe_arrows" />
                 <equipment
                     slot="Item2"
-                    id="Item.wm_gundabad_spear_a02" />
+                    id="Item.taom_ph_gundabad_spear_a02_t4" />
                 <equipment
                     slot="Head"
                     id="Item.sk_gb_uruk_helmet_med_a" />
@@ -1276,33 +1276,33 @@
         <skills>
             <skill
                 id="Athletics"
-                value="175" />
+                value="135" />
             <skill
                 id="Riding"
-                value="315" />
+                value="200" />
             <skill
                 id="OneHanded"
-                value="310" />
+                value="185" />
             <skill
                 id="TwoHanded"
-                value="170" />
+                value="105" />
             <skill
                 id="Polearm"
-                value="345" />
+                value="210" />
             <skill
                 id="Bow"
-                value="45" />
+                value="85" />
             <skill
                 id="Crossbow"
-                value="25" />
+                value="85" />
             <skill
                 id="Throwing"
-                value="75" />
+                value="85" />
         </skills>
         <upgrade_targets />
         <Equipments>
             <EquipmentRoster>
-              <equipment slot="Item0" id="Item.wm_gundabad_spear_a03" />
+              <equipment slot="Item0" id="Item.taom_ph_gundabad_spear_a03_t8" />
               <equipment slot="Item1" id="Item.wm_gundabad_shield_a03" />
               <equipment slot="Item2" id="Item.wm_gundabad_axe_a03" />
               <equipment slot="Head" id="Item.sk_gb_uruk_helmet_elite_d" />
@@ -1316,7 +1316,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.wm_gundabad_spear_a03" />
+                    id="Item.taom_ph_gundabad_spear_a03_t8" />
                 <equipment
                     slot="Item1"
                     id="Item.wm_gundabad_shield_a03" />
@@ -1348,7 +1348,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.wm_gundabad_spear_a03" />
+                    id="Item.taom_ph_gundabad_spear_a03_t8" />
                 <equipment
                     slot="Item1"
                     id="Item.wm_gundabad_shield_a03" />
@@ -1380,7 +1380,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.wm_gundabad_spear_a03" />
+                    id="Item.taom_ph_gundabad_spear_a03_t8" />
                 <equipment
                     slot="Item1"
                     id="Item.wm_gundabad_shield_a03" />
@@ -1412,7 +1412,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.wm_gundabad_spear_a03" />
+                    id="Item.taom_ph_gundabad_spear_a03_t8" />
                 <equipment
                     slot="Item1"
                     id="Item.wm_gundabad_shield_a03" />
@@ -1444,7 +1444,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.wm_gundabad_spear_a03" />
+                    id="Item.taom_ph_gundabad_spear_a03_t8" />
                 <equipment
                     slot="Item1"
                     id="Item.wm_gundabad_shield_a03" />
@@ -1491,14 +1491,14 @@
             <face_key_template value="BodyProperty.fighter_gundabad" />
         </face>
         <skills>
-            <skill id="Athletics" value="130" />
-            <skill id="Riding" value="195" />
-            <skill id="OneHanded" value="140" />
-            <skill id="TwoHanded" value="85" />
-            <skill id="Polearm" value="115" />
-            <skill id="Bow" value="150" />
-            <skill id="Crossbow" value="15" />
-            <skill id="Throwing" value="60" />
+            <skill id="Athletics" value="65" />
+            <skill id="Riding" value="125" />
+            <skill id="OneHanded" value="105" />
+            <skill id="TwoHanded" value="65" />
+            <skill id="Polearm" value="65" />
+            <skill id="Bow" value="120" />
+            <skill id="Crossbow" value="50" />
+            <skill id="Throwing" value="50" />
         </skills>
         <Equipments>
             <EquipmentRoster>
@@ -1532,28 +1532,28 @@
         <skills>
             <skill
                 id="Athletics"
-                value="130" />
+                value="65" />
             <skill
                 id="Riding"
-                value="195" />
+                value="125" />
             <skill
                 id="OneHanded"
-                value="140" />
+                value="105" />
             <skill
                 id="TwoHanded"
-                value="85" />
+                value="65" />
             <skill
                 id="Polearm"
-                value="115" />
+                value="80" />
             <skill
                 id="Bow"
-                value="150" />
+                value="120" />
             <skill
                 id="Crossbow"
-                value="15" />
+                value="50" />
             <skill
                 id="Throwing"
-                value="60" />
+                value="50" />
         </skills>
         <upgrade_targets />
         <Equipments>
@@ -1788,28 +1788,28 @@
         <skills>
             <skill
                 id="Athletics"
-                value="90" />
-            <skill
-                id="Riding"
-                value="10" />
-            <skill
-                id="OneHanded"
                 value="70" />
             <skill
-                id="TwoHanded"
+                id="Riding"
+                value="30" />
+            <skill
+                id="OneHanded"
                 value="55" />
             <skill
+                id="TwoHanded"
+                value="35" />
+            <skill
                 id="Polearm"
-                value="50" />
+                value="35" />
             <skill
                 id="Bow"
-                value="65" />
+                value="64" />
             <skill
                 id="Crossbow"
-                value="15" />
+                value="30" />
             <skill
                 id="Throwing"
-                value="35" />
+                value="30" />
         </skills>
         <upgrade_targets>
             <upgrade_target
@@ -1944,7 +1944,7 @@
                 value="65" />
             <skill
                 id="Crossbow"
-                value="15" />
+                value="30" />
             <skill
                 id="Throwing"
                 value="50" />
@@ -1955,7 +1955,7 @@
         </upgrade_targets>
         <Equipments>
             <EquipmentRoster>
-              <equipment slot="Item0" id="Item.wm_gundabad_spear_a02" />
+              <equipment slot="Item0" id="Item.taom_ph_gundabad_spear_a02_t4" />
               <equipment slot="Item1" id="Item.wm_gundabad_shield_a03" />
               <equipment slot="Head" id="Item.sk_gb_uruk_helmet_med_f" />
               <equipment slot="Body" id="Item.sk_gb_uruk_chest_med_d" />
@@ -1966,7 +1966,7 @@
               <equipment slot="HorseHarness" id="Item.dire_wolf_saddle" />
             </EquipmentRoster>
             <EquipmentRoster>
-              <equipment slot="Item0" id="Item.wm_gundabad_spear_a02" />
+              <equipment slot="Item0" id="Item.taom_ph_gundabad_spear_a02_t4" />
               <equipment slot="Item1" id="Item.wm_gundabad_shield_a03" />
               <equipment slot="Head" id="Item.sk_gb_uruk_helmet_med_f" />
               <equipment slot="Body" id="Item.sk_gb_uruk_chest_med_e" />
@@ -1977,7 +1977,7 @@
               <equipment slot="HorseHarness" id="Item.dire_wolf_saddle" />
             </EquipmentRoster>
             <EquipmentRoster>
-              <equipment slot="Item0" id="Item.wm_gundabad_spear_a02" />
+              <equipment slot="Item0" id="Item.taom_ph_gundabad_spear_a02_t4" />
               <equipment slot="Item1" id="Item.wm_gundabad_shield_a03" />
               <equipment slot="Head" id="Item.sk_gb_uruk_helmet_med_f" />
               <equipment slot="Body" id="Item.sk_gb_uruk_chest_med_f" />
@@ -2026,7 +2026,7 @@
                 value="65" />
             <skill
                 id="Crossbow"
-                value="15" />
+                value="30" />
             <skill
                 id="Throwing"
                 value="60" />
@@ -2037,7 +2037,7 @@
         </upgrade_targets>
         <Equipments>
             <EquipmentRoster>
-              <equipment slot="Item0" id="Item.wm_gundabad_spear_a03" />
+              <equipment slot="Item0" id="Item.taom_ph_gundabad_spear_a03_t5" />
               <equipment slot="Item1" id="Item.wm_gundabad_shield_a03" />
               <equipment slot="Head" id="Item.sk_gb_uruk_helmet_heavy_b" />
               <equipment slot="Body" id="Item.sk_gb_uruk_chest_heavy_b" />
@@ -2048,7 +2048,7 @@
               <equipment slot="HorseHarness" id="Item.dire_wolf_saddle" />
             </EquipmentRoster>
             <EquipmentRoster>
-              <equipment slot="Item0" id="Item.wm_gundabad_spear_a03" />
+              <equipment slot="Item0" id="Item.taom_ph_gundabad_spear_a03_t5" />
               <equipment slot="Item1" id="Item.wm_gundabad_shield_a03" />
               <equipment slot="Head" id="Item.sk_gb_uruk_helmet_heavy_e" />
               <equipment slot="Body" id="Item.sk_gb_uruk_chest_heavy_b" />
@@ -2059,7 +2059,7 @@
               <equipment slot="HorseHarness" id="Item.dire_wolf_saddle" />
             </EquipmentRoster>
             <EquipmentRoster>
-              <equipment slot="Item0" id="Item.wm_gundabad_spear_a03" />
+              <equipment slot="Item0" id="Item.taom_ph_gundabad_spear_a03_t5" />
               <equipment slot="Item1" id="Item.wm_gundabad_shield_a03" />
               <equipment slot="Head" id="Item.sk_gb_uruk_helmet_heavy_h" />
               <equipment slot="Body" id="Item.sk_gb_uruk_chest_heavy_b" />
@@ -2108,14 +2108,14 @@
                 value="65" />
             <skill
                 id="Crossbow"
-                value="15" />
+                value="30" />
             <skill
                 id="Throwing"
                 value="75" />
         </skills>
         <Equipments>
             <EquipmentRoster>
-              <equipment slot="Item0" id="Item.wm_gundabad_spear_a03" />
+              <equipment slot="Item0" id="Item.taom_ph_gundabad_spear_a03_t5" />
               <equipment slot="Item1" id="Item.wm_gundabad_shield_a03" />
               <equipment slot="Head" id="Item.sk_gb_uruk_helmet_heavy_d" />
               <equipment slot="Body" id="Item.sk_gb_uruk_chest_heavy_c" />
@@ -2126,7 +2126,7 @@
               <equipment slot="HorseHarness" id="Item.dire_wolf_saddle" />
             </EquipmentRoster>
             <EquipmentRoster>
-              <equipment slot="Item0" id="Item.wm_gundabad_spear_a03" />
+              <equipment slot="Item0" id="Item.taom_ph_gundabad_spear_a03_t5" />
               <equipment slot="Item1" id="Item.wm_gundabad_shield_a03" />
               <equipment slot="Head" id="Item.sk_gb_uruk_helmet_med_g" />
               <equipment slot="Body" id="Item.sk_gb_uruk_chest_heavy_a" />
@@ -2137,7 +2137,7 @@
               <equipment slot="HorseHarness" id="Item.dire_wolf_saddle" />
             </EquipmentRoster>
             <EquipmentRoster>
-              <equipment slot="Item0" id="Item.wm_gundabad_spear_a03" />
+              <equipment slot="Item0" id="Item.taom_ph_gundabad_spear_a03_t5" />
               <equipment slot="Item1" id="Item.wm_gundabad_shield_a03" />
               <equipment slot="Head" id="Item.sk_gb_uruk_helmet_med_g" />
               <equipment slot="Body" id="Item.sk_gb_uruk_chest_heavy_a" />
@@ -2171,25 +2171,25 @@
                 value="100" />
             <skill
                 id="Riding"
-                value="10" />
+                value="40" />
             <skill
                 id="OneHanded"
-                value="100" />
+                value="80" />
             <skill
                 id="TwoHanded"
-                value="75" />
+                value="50" />
             <skill
                 id="Polearm"
-                value="75" />
+                value="50" />
             <skill
                 id="Bow"
-                value="110" />
+                value="92" />
             <skill
                 id="Crossbow"
-                value="20" />
+                value="40" />
             <skill
                 id="Throwing"
-                value="45" />
+                value="40" />
         </skills>
         <upgrade_targets>
             <upgrade_target
@@ -2246,28 +2246,28 @@
         <skills>
             <skill
                 id="Athletics"
-                value="110" />
+                value="135" />
             <skill
                 id="Riding"
-                value="15" />
+                value="50" />
             <skill
                 id="OneHanded"
-                value="140" />
+                value="105" />
             <skill
                 id="TwoHanded"
-                value="95" />
+                value="65" />
             <skill
                 id="Polearm"
-                value="95" />
+                value="65" />
             <skill
                 id="Bow"
-                value="150" />
+                value="120" />
             <skill
                 id="Crossbow"
-                value="25" />
+                value="50" />
             <skill
                 id="Throwing"
-                value="55" />
+                value="50" />
         </skills>
         <upgrade_targets />
         <Equipments>
@@ -2411,25 +2411,25 @@
                 value="100" />
             <skill
                 id="Riding"
-                value="10" />
+                value="40" />
             <skill
                 id="OneHanded"
-                value="135" />
+                value="100" />
             <skill
                 id="TwoHanded"
-                value="120" />
+                value="50" />
             <skill
                 id="Polearm"
-                value="125" />
+                value="50" />
             <skill
                 id="Bow"
-                value="5" />
+                value="40" />
             <skill
                 id="Crossbow"
-                value="0" />
+                value="40" />
             <skill
                 id="Throwing"
-                value="55" />
+                value="40" />
         </skills>
         <upgrade_targets>
       <upgrade_target id="NPCCharacter.gundabad_brute" />
@@ -2469,32 +2469,32 @@
                 value="100" />
             <skill
                 id="Riding"
-                value="10" />
+                value="40" />
             <skill
                 id="OneHanded"
-                value="125" />
+                value="70" />
             <skill
                 id="TwoHanded"
-                value="120" />
+                value="50" />
             <skill
                 id="Polearm"
-                value="135" />
+                value="100" />
             <skill
                 id="Bow"
-                value="5" />
+                value="40" />
             <skill
                 id="Crossbow"
-                value="0" />
+                value="40" />
             <skill
                 id="Throwing"
-                value="55" />
+                value="40" />
         </skills>
         <upgrade_targets>
       <upgrade_target id="NPCCharacter.gundabad_spear_warrior" />
     </upgrade_targets>
         <Equipments>
             <EquipmentRoster>
-              <equipment slot="Item0" id="Item.wm_gundabad_spear_a02" />
+              <equipment slot="Item0" id="Item.taom_ph_gundabad_spear_a02_t4" />
               <equipment slot="Head" id="Item.sk_gb_uruk_helmet_light_c" />
               <equipment slot="Body" id="Item.sk_gb_uruk_chest_med_a" />
               <equipment slot="Cape" id="Item.sk_gb_uruk_cape_b" />
@@ -2522,28 +2522,28 @@
         <skills>
             <skill
                 id="Athletics"
-                value="105" />
+                value="135" />
             <skill
                 id="Riding"
-                value="15" />
+                value="50" />
             <skill
                 id="OneHanded"
-                value="175" />
+                value="130" />
             <skill
                 id="TwoHanded"
-                value="165" />
+                value="65" />
             <skill
                 id="Polearm"
-                value="175" />
+                value="65" />
             <skill
                 id="Bow"
-                value="10" />
+                value="50" />
             <skill
                 id="Crossbow"
-                value="5" />
+                value="50" />
             <skill
                 id="Throwing"
-                value="75" />
+                value="50" />
         </skills>
         <upgrade_targets>
       <upgrade_target id="NPCCharacter.gundabad_veteran_sword_warrior" />
@@ -2579,28 +2579,28 @@
         <skills>
             <skill
                 id="Athletics"
-                value="125" />
+                value="160" />
             <skill
                 id="Riding"
-                value="20" />
+                value="60" />
             <skill
                 id="OneHanded"
-                value="230" />
+                value="100" />
             <skill
                 id="TwoHanded"
-                value="240" />
+                value="155" />
             <skill
                 id="Polearm"
-                value="220" />
+                value="80" />
             <skill
                 id="Bow"
-                value="15" />
+                value="60" />
             <skill
                 id="Crossbow"
-                value="10" />
+                value="60" />
             <skill
                 id="Throwing"
-                value="85" />
+                value="145" />
         </skills>
         <upgrade_targets>
       <upgrade_target id="NPCCharacter.gundabad_veteran_berserker" />
@@ -2636,28 +2636,28 @@
         <skills>
             <skill
                 id="Athletics"
-                value="145" />
+                value="185" />
             <skill
                 id="Riding"
-                value="25" />
+                value="75" />
             <skill
                 id="OneHanded"
-                value="270" />
+                value="100" />
             <skill
                 id="TwoHanded"
-                value="280" />
+                value="180" />
             <skill
                 id="Polearm"
-                value="260" />
+                value="90" />
             <skill
                 id="Bow"
-                value="20" />
+                value="75" />
             <skill
                 id="Crossbow"
-                value="15" />
+                value="75" />
             <skill
                 id="Throwing"
-                value="95" />
+                value="170" />
         </skills>
         <upgrade_targets />
         <Equipments>
@@ -2807,28 +2807,28 @@
         <skills>
             <skill
                 id="Athletics"
-                value="105" />
+                value="135" />
             <skill
                 id="Riding"
-                value="15" />
+                value="50" />
             <skill
                 id="OneHanded"
-                value="165" />
+                value="100" />
             <skill
                 id="TwoHanded"
-                value="190" />
+                value="130" />
             <skill
                 id="Polearm"
-                value="160" />
+                value="65" />
             <skill
                 id="Bow"
-                value="10" />
+                value="50" />
             <skill
                 id="Crossbow"
-                value="5" />
+                value="50" />
             <skill
                 id="Throwing"
-                value="75" />
+                value="50" />
         </skills>
         <upgrade_targets>
       <upgrade_target id="NPCCharacter.gundabad_berserker" />
@@ -2863,28 +2863,28 @@
         <skills>
             <skill
                 id="Athletics"
-                value="125" />
+                value="160" />
             <skill
                 id="Riding"
-                value="20" />
+                value="60" />
             <skill
                 id="OneHanded"
-                value="245" />
+                value="155" />
             <skill
                 id="TwoHanded"
-                value="220" />
+                value="80" />
             <skill
                 id="Polearm"
-                value="225" />
+                value="80" />
             <skill
                 id="Bow"
-                value="15" />
+                value="60" />
             <skill
                 id="Crossbow"
-                value="10" />
+                value="60" />
             <skill
                 id="Throwing"
-                value="85" />
+                value="60" />
         </skills>
         <upgrade_targets>
       <upgrade_target id="NPCCharacter.gundabad_chosen_of_tharzog" />
@@ -2966,28 +2966,28 @@
         <skills>
             <skill
                 id="Athletics"
-                value="145" />
+                value="185" />
             <skill
                 id="Riding"
-                value="25" />
+                value="75" />
             <skill
                 id="OneHanded"
-                value="280" />
+                value="180" />
             <skill
                 id="TwoHanded"
-                value="260" />
+                value="90" />
             <skill
                 id="Polearm"
-                value="270" />
+                value="90" />
             <skill
                 id="Bow"
-                value="20" />
+                value="75" />
             <skill
                 id="Crossbow"
-                value="15" />
+                value="75" />
             <skill
                 id="Throwing"
-                value="95" />
+                value="75" />
         </skills>
         <upgrade_targets>
       <upgrade_target id="NPCCharacter.gundabad_bolgs_ironfang" />
@@ -3023,28 +3023,28 @@
         <skills>
             <skill
                 id="Athletics"
-                value="105" />
+                value="135" />
             <skill
                 id="Riding"
-                value="15" />
+                value="50" />
             <skill
                 id="OneHanded"
-                value="160" />
+                value="70" />
             <skill
                 id="TwoHanded"
-                value="165" />
+                value="65" />
             <skill
                 id="Polearm"
-                value="190" />
+                value="135" />
             <skill
                 id="Bow"
-                value="10" />
+                value="50" />
             <skill
                 id="Crossbow"
-                value="5" />
+                value="50" />
             <skill
                 id="Throwing"
-                value="75" />
+                value="50" />
         </skills>
         <upgrade_targets>
       <upgrade_target id="NPCCharacter.gundabad_warg_tamer" />
@@ -3052,7 +3052,7 @@
     </upgrade_targets>
         <Equipments>
             <EquipmentRoster>
-              <equipment slot="Item0" id="Item.wm_gundabad_spear_a02" />
+              <equipment slot="Item0" id="Item.taom_ph_gundabad_spear_a02_t4" />
               <equipment slot="Head" id="Item.sk_gb_uruk_helmet_med_c" />
               <equipment slot="Body" id="Item.sk_gb_uruk_chest_heavy_b" />
               <equipment slot="Cape" id="Item.sk_gb_uruk_cape_c" />
@@ -3080,28 +3080,28 @@
         <skills>
             <skill
                 id="Athletics"
-                value="125" />
+                value="160" />
             <skill
                 id="Riding"
-                value="20" />
+                value="60" />
             <skill
                 id="OneHanded"
-                value="235" />
+                value="140" />
             <skill
                 id="TwoHanded"
-                value="200" />
+                value="80" />
             <skill
                 id="Polearm"
-                value="255" />
+                value="160" />
             <skill
                 id="Bow"
-                value="15" />
+                value="60" />
             <skill
                 id="Crossbow"
-                value="10" />
+                value="60" />
             <skill
                 id="Throwing"
-                value="85" />
+                value="60" />
         </skills>
         <upgrade_targets>
       <upgrade_target id="NPCCharacter.gundabad_guardian_of_the_tower" />
@@ -3118,7 +3118,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.wm_gundabad_spear_a03" />
+                    id="Item.taom_ph_gundabad_spear_a03_t5" />
                 <equipment
                     slot="Item2"
                     id="Item.wm_gundabad_sword_a04" />
@@ -3141,7 +3141,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.wm_gundabad_spear_a03" />
+                    id="Item.taom_ph_gundabad_spear_a03_t5" />
                 <equipment
                     slot="Item2"
                     id="Item.wm_gundabad_sword_a04" />
@@ -3182,28 +3182,28 @@
         <skills>
             <skill
                 id="Athletics"
-                value="145" />
+                value="185" />
             <skill
                 id="Riding"
-                value="25" />
+                value="75" />
             <skill
                 id="OneHanded"
-                value="255" />
+                value="140" />
             <skill
                 id="TwoHanded"
-                value="260" />
+                value="90" />
             <skill
                 id="Polearm"
-                value="295" />
+                value="185" />
             <skill
                 id="Bow"
-                value="20" />
+                value="75" />
             <skill
                 id="Crossbow"
-                value="15" />
+                value="75" />
             <skill
                 id="Throwing"
-                value="95" />
+                value="75" />
         </skills>
         <upgrade_targets />
         <Equipments>
@@ -3241,25 +3241,25 @@
                 value="100" />
             <skill
                 id="Riding"
-                value="10" />
+                value="40" />
             <skill
                 id="OneHanded"
-                value="110" />
+                value="50" />
             <skill
                 id="TwoHanded"
-                value="120" />
+                value="50" />
             <skill
                 id="Polearm"
-                value="150" />
+                value="100" />
             <skill
                 id="Bow"
-                value="5" />
+                value="40" />
             <skill
                 id="Crossbow"
-                value="0" />
+                value="40" />
             <skill
                 id="Throwing"
-                value="55" />
+                value="40" />
         </skills>
         <upgrade_targets></upgrade_targets>
         <Equipments>
@@ -3344,25 +3344,25 @@
                 value="100" />
             <skill
                 id="Riding"
-                value="10" />
+                value="40" />
             <skill
                 id="OneHanded"
-                value="100" />
+                value="30" />
             <skill
                 id="TwoHanded"
-                value="75" />
+                value="30" />
             <skill
                 id="Polearm"
-                value="75" />
+                value="30" />
             <skill
                 id="Bow"
-                value="35" />
+                value="36" />
             <skill
                 id="Crossbow"
-                value="20" />
+                value="36" />
             <skill
                 id="Throwing"
-                value="45" />
+                value="40" />
         </skills>
         <upgrade_targets></upgrade_targets>
         <Equipments>
@@ -3456,28 +3456,28 @@
         <skills>
             <skill
                 id="Athletics"
-                value="115" />
+                value="110" />
             <skill
                 id="Riding"
-                value="25" />
+                value="50" />
             <skill
                 id="OneHanded"
-                value="135" />
+                value="100" />
             <skill
                 id="TwoHanded"
-                value="125" />
+                value="60" />
             <skill
                 id="Polearm"
-                value="165" />
+                value="110" />
             <skill
                 id="Bow"
-                value="20" />
+                value="50" />
             <skill
                 id="Crossbow"
-                value="15" />
+                value="50" />
             <skill
                 id="Throwing"
-                value="70" />
+                value="50" />
         </skills>
         <upgrade_targets></upgrade_targets>
         <Equipments>
@@ -3580,28 +3580,28 @@
         <skills>
             <skill
                 id="Athletics"
-                value="115" />
+                value="110" />
             <skill
                 id="Riding"
-                value="25" />
+                value="50" />
             <skill
                 id="OneHanded"
-                value="115" />
+                value="55" />
             <skill
                 id="TwoHanded"
-                value="90" />
+                value="55" />
             <skill
                 id="Polearm"
-                value="90" />
+                value="55" />
             <skill
                 id="Bow"
-                value="65" />
+                value="64" />
             <skill
                 id="Crossbow"
-                value="35" />
+                value="50" />
             <skill
                 id="Throwing"
-                value="60" />
+                value="50" />
         </skills>
         <upgrade_targets></upgrade_targets>
         <Equipments>
@@ -3702,14 +3702,14 @@
       <face_key_template value="BodyProperty.fighter_gundabad" />
     </face>
     <skills>
-      <skill id="Athletics" value="145" />
-      <skill id="Riding" value="25" />
-      <skill id="OneHanded" value="280" />
-      <skill id="TwoHanded" value="260" />
-      <skill id="Polearm" value="270" />
-      <skill id="Bow" value="20" />
-      <skill id="Crossbow" value="15" />
-      <skill id="Throwing" value="95" />
+      <skill id="Athletics" value="185" />
+      <skill id="Riding" value="75" />
+      <skill id="OneHanded" value="180" />
+      <skill id="TwoHanded" value="90" />
+      <skill id="Polearm" value="90" />
+      <skill id="Bow" value="75" />
+      <skill id="Crossbow" value="75" />
+      <skill id="Throwing" value="75" />
     </skills>
     <upgrade_targets />
     <Equipments>
@@ -3749,25 +3749,25 @@
                 value="100" />
             <skill
                 id="Riding"
-                value="10" />
+                value="40" />
             <skill
                 id="OneHanded"
-                value="135" />
+                value="100" />
             <skill
                 id="TwoHanded"
-                value="120" />
+                value="50" />
             <skill
                 id="Polearm"
-                value="125" />
+                value="50" />
             <skill
                 id="Bow"
-                value="5" />
+                value="40" />
             <skill
                 id="Crossbow"
-                value="0" />
+                value="40" />
             <skill
                 id="Throwing"
-                value="55" />
+                value="40" />
         </skills>
         <Equipments>
             <EquipmentRoster>
@@ -3800,28 +3800,28 @@
         <skills>
             <skill
                 id="Athletics"
-                value="115" />
+                value="50" />
             <skill
                 id="Riding"
-                value="145" />
+                value="95" />
             <skill
                 id="OneHanded"
-                value="85" />
+                value="50" />
             <skill
                 id="TwoHanded"
-                value="65" />
+                value="50" />
             <skill
                 id="Polearm"
-                value="100" />
+                value="80" />
             <skill
                 id="Bow"
-                value="110" />
+                value="92" />
             <skill
                 id="Crossbow"
-                value="10" />
+                value="40" />
             <skill
                 id="Throwing"
-                value="50" />
+                value="40" />
         </skills>
         <Equipments>
             <EquipmentRoster>
@@ -3833,7 +3833,7 @@
                     id="Item.steppe_arrows" />
                 <equipment
                     slot="Item2"
-                    id="Item.wm_gundabad_spear_a02" />
+                    id="Item.taom_ph_gundabad_spear_a02_t4" />
                 <equipment
                     slot="Head"
                     id="Item.sk_gb_uruk_helmet_med_a" />
@@ -3865,7 +3865,7 @@
                     id="Item.steppe_arrows" />
                 <equipment
                     slot="Item2"
-                    id="Item.wm_gundabad_spear_a02" />
+                    id="Item.taom_ph_gundabad_spear_a02_t4" />
                 <equipment
                     slot="Head"
                     id="Item.sk_gb_uruk_helmet_med_a" />
@@ -3897,7 +3897,7 @@
                     id="Item.steppe_arrows" />
                 <equipment
                     slot="Item2"
-                    id="Item.wm_gundabad_spear_a02" />
+                    id="Item.taom_ph_gundabad_spear_a02_t4" />
                 <equipment
                     slot="Head"
                     id="Item.sk_gb_uruk_helmet_med_a" />
@@ -3929,7 +3929,7 @@
                     id="Item.steppe_arrows" />
                 <equipment
                     slot="Item2"
-                    id="Item.wm_gundabad_spear_a02" />
+                    id="Item.taom_ph_gundabad_spear_a02_t4" />
                 <equipment
                     slot="Head"
                     id="Item.sk_gb_uruk_helmet_med_a" />
@@ -3961,7 +3961,7 @@
                     id="Item.steppe_arrows" />
                 <equipment
                     slot="Item2"
-                    id="Item.wm_gundabad_spear_a02" />
+                    id="Item.taom_ph_gundabad_spear_a02_t4" />
                 <equipment
                     slot="Head"
                     id="Item.sk_gb_uruk_helmet_med_a" />

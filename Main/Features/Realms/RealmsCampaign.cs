@@ -118,7 +118,7 @@ public sealed partial class RealmsCampaign
     {
         LiegeArmyDiscount.Patch();
         Upgrade();
-        HouseBanners.Decouple();
+        KingdomBanners.Decouple();
         if (_service.IsInitialized && _isAuthority())
         {
             ApplyFormerBannersOnLoad();

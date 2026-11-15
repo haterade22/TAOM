@@ -246,6 +246,19 @@ class SecondRootTests(unittest.TestCase):
         self.assertEqual(footman["final"], {s: footman["old"].get(s, 0) for s in rb.SKILL_NAMES},
                          "a troop the rule leaves alone keeps its skills")
 
+    def test_a_copy_without_a_skills_block_still_gets_its_slot_plan(self):
+        # The writer adds no <skills> block to a copy, but its Item0 still follows the slot rule.
+        bare = troop("fow_bare_lancer", "Lancer").replace(
+            '    <skills>\r\n      <skill id="OneHanded" value="200" />\r\n'
+            '      <skill id="Polearm" value="150" />\r\n    </skills>\r\n', '')
+        self.path.write_bytes(document(bare).encode("utf-8"))
+        records = rb.process_file(str(self.path), item_classes=CLASSES, purpose=True, couch_ids=COUCH,
+                                  slots_only=True, sources={"ids": {}, "attrs": {}})
+        rb.plan_fix_purpose(records)
+        record, = records
+        self.assertEqual(record["item0_swaps"], [(1, "Item2"), (2, "Item1")])
+        self.assertIsNone(record["new"])
+
     def test_without_the_flag_the_whole_file_is_reordered_as_for_the_troop_files(self):
         records = rb.process_file(str(self.path), item_classes=CLASSES, purpose=True, couch_ids=COUCH)
         rb.plan_fix_purpose(records)

@@ -18,7 +18,7 @@ public class ScenarioSupportTests
         ScenarioPlan.Resolve(n => n == ScenarioPlan.EnvVar ? @"E:\arm.txt" : null, _ => true, _ => "kind=campaign-new\nout=E:\\o\n" + extra);
 
     private static ScenarioRunFacts Facts(string reason = "ok") =>
-        new(reason, 10, 13, 2, 3, 4, "autosave off, held", 123.45, "2026-11-15T10:00:00", "2026-11-15T10:02:03");
+        new(reason, 10, 13, 2, 3, 5, 4, "autosave off, held", 123.45, "2026-11-15T10:00:00", "2026-11-15T10:02:03");
 
     [TestMethod]
     public void Text_WritesEveryKeyInOrder()
@@ -28,7 +28,7 @@ public class ScenarioSupportTests
         CollectionAssert.AreEqual(new[]
         {
             "reason", "kind", "scenario", "culture", "creation", "day_start", "day_end", "days_run", "days_wanted", "inquiries_hidden",
-            "notices_hidden", "time_resets", "prepared", "wall_seconds", "started", "ended",
+            "notices_hidden", "event_windows_closed", "time_resets", "prepared", "wall_seconds", "started", "ended",
         }, keys);
     }
 
@@ -43,6 +43,9 @@ public class ScenarioSupportTests
         StringAssert.Contains(text, "culture=gondor\n");
         StringAssert.Contains(text, "creation=skipped\n");
         StringAssert.Contains(text, "days_run=3\n");
+        StringAssert.Contains(text, "notices_hidden=3\n");
+        StringAssert.Contains(text, "event_windows_closed=5\n");
+        StringAssert.Contains(text, "time_resets=4\n");
         StringAssert.Contains(text, "prepared=autosave off, held\n");
         StringAssert.Contains(text, "wall_seconds=123.5\n");
         StringAssert.Contains(text, "ended=2026-11-15T10:02:03\n");
@@ -140,6 +143,7 @@ public class ScenarioSupportTests
         Assert.IsNull(host.HideInquiry());
         Assert.IsFalse(host.SceneNotificationActive);
         host.HideSceneNotification();
+        Assert.IsFalse(host.CloseEventWindow());
         Assert.IsFalse(host.StartNewCampaign());
         Assert.IsFalse(host.FinishVideo());
         Assert.IsFalse(host.TryFinishCreation("gondor", out var problem));
