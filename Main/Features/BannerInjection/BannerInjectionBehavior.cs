@@ -35,6 +35,8 @@ public class BannerInjectionBehavior : CampaignBehaviorBase
         // A co-op join is a save load: clan banners are shared state the server sets (#1086).
         if (!_coop.IsAuthority)
             return;
+        // A save from before v2.0.40 can name an icon the repack removed; the engine draws nothing for it (#1285).
+        _service.RemapRemovedIcons();
         _service.InjectBanners();
     }
 

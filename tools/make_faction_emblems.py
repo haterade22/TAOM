@@ -42,6 +42,14 @@ FACTIONS = (
     "kingdom_of_ered_duin",
 )
 
+# Factions whose emblem icon is not the first sprite layer of the banner. Arthedain's star field
+# (31026) and Ered Luin's ring frame (31034) gained sprites of their own in 2026-11, so the first
+# sprite layer stopped being the sigil. These pins keep the shipped crown and mountain emblems.
+SIGIL_PINS = {
+    "kingdom_of_arthedain": "11004",
+    "kingdom_of_ered_duin": "31007",
+}
+
 # Measured from the shipped fs_emblem_*.png: the one opaque colour each side's emblems use.
 SIDE_COLOURS = {
     "free": (236, 228, 206),
@@ -69,6 +77,16 @@ def sigil_icon(banner_key, sprites):
         if icon in sprites:
             return icon
     raise ValueError(f"banner key has no layer with a ui_taom_bannericons sprite: {banner_key!r}")
+
+
+def faction_sigil(faction, banner_key, sprites, pins):
+    """The emblem icon: the faction's pin when it has one, else the banner's sigil."""
+    pinned = pins.get(faction)
+    if pinned is None:
+        return sigil_icon(banner_key, sprites)
+    if pinned not in sprites:
+        raise ValueError(f"pinned sigil {pinned} has no ui_taom_bannericons sprite")
+    return pinned
 
 
 def _kingdom_banner_keys():
@@ -112,7 +130,7 @@ def build_emblems(only=None):
     for key in keys:
         kingdom = faction_kingdoms[key]
         try:
-            icon = sigil_icon(banner_keys[kingdom], sprites=rects)
+            icon = faction_sigil(key, banner_keys[kingdom], rects, SIGIL_PINS)
         except ValueError as error:
             raise ValueError(f"{key}: {error}") from error
         sheet, x, y, w, h = rects[icon]
