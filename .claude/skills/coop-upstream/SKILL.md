@@ -41,6 +41,9 @@ and "Unowned AI Contributions" parts above all. Clone and remotes: `E:\repos\Ban
    for players under it.
 7. `--assignee "@me"`; open as `--draft` until the build and tests pass.
 8. No maintainer actions unasked: no merging, approving, closing or reopening others' work.
+9. No size limit: one complete PR with its tests is fine (Mike, 2026-11-14). A PR into `development` needs one
+   reviewer and the code owners in `.github/CODEOWNERS`, then anyone can merge (Garrett, 2026-11-14). The
+   code owners do not apply to our `bannerlord-1.5.x`, which has no required checks (Mike, 2026-11-14).
 
 ## Keeping bannerlord-1.5.x current (Mike, 2026-11-13: "our branch")
 
