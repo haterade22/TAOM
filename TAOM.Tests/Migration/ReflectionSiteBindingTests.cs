@@ -275,6 +275,7 @@ public class ReflectionSiteBindingTests
     // the non-generic IDictionary (their value type is a private nested enum). A miss logs one warning and every first-meeting read
     // answers false, so the caravan and villager greetings stay vanilla.
     [DataRow("TaleWorlds.CampaignSystem.CampaignBehaviors.CaravansCampaignBehavior", "CaravansCampaignBehavior", "_interactedCaravans", "Field", "EncounterLinesAdapter.cs:34")]
+    [DataRow("Helpers.PartyScreenHelper", "PartyScreenHelper", "GetRosterWithAllGameTroops", "Method", "CheatWorldAdapter.cs:149")]
     [DataRow("TaleWorlds.CampaignSystem.CampaignBehaviors.VillagerCampaignBehavior", "VillagerCampaignBehavior", "_interactedVillagers", "Field", "EncounterLinesAdapter.cs:35")]
     // The text seam's three ConversationManager fields, bound once in Initialize. A miss logs one warning and the surrender and
     // hideout boss lines stay vanilla.

@@ -247,6 +247,10 @@ economy of the bands and needs the maintainer's call first.
 - `GetRelationCostOfDisbandingArmy` returns -(28 to 32) for an army's leader, so the player loses 28 to 32 relation with him (vanilla loses 4). A member keeps vanilla's -1.
 - `GetRelationChangeAfterClanLeaderIsDead` returns 0 for the player when a clan's leader changes (death, a leader changing clan, a member elected king), so an heir keeps the relation he earned himself, instead of inheriting 0.7 of the dead leader's.
 
+### War declaration lines
+
+`DeclareWarAction_ApplyInternal_Patch` writes `[Diplomacy] War declaration allowed: <a> -> <b> (<DeclareWarDetail>)` at INFO for each kingdom war it lets through, and `DiplomacyBehavior` writes `[Diplomacy] Call to war started: <caller> calls <called> against <target>` from the engine's `OnCallToWarAgreementStartedEvent`, which comes after the engine's ally check and before the declaration (#1283). A war between a kingdom and a rebel clan has no line. On a co-op peer that defers to the host, "allowed" means TAOM deferred, not that its rules passed, and a Coop client can log one war twice: once for its own attempt and once when the host's war replays.
+
 ## Configuration
 
 ### `Main/_Module/ModuleData/diplomacy/diplomacy.json`

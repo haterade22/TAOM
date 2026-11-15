@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using TAOM.Adapters;
 using TAOM.Core.Logging;
@@ -107,6 +109,39 @@ public sealed class CheatMenuService
         return troop == null
             ? new CheatOutcome(CheatOutcomeKind.NothingToDo)
             : Log("troops", new CheatOutcome(CheatOutcomeKind.Done, troop, count));
+    }
+
+    /// <summary>Every regular troop of the player's faction (CheatTroopList), sorted by tier then name; empty in co-op.</summary>
+    public IReadOnlyList<CheatTroopFacts> FactionTroops()
+    {
+        if (!IsSinglePlayer) return Array.Empty<CheatTroopFacts>();
+        var read = _world.ReadFactionTroops();
+        return read == null ? Array.Empty<CheatTroopFacts>() : CheatTroopList.Select(read.Value.Sources, read.Value.Troops);
+    }
+
+    /// <summary>Adds <paramref name="count"/> of one troop of the faction's list; any other id is refused.</summary>
+    public CheatOutcome AddFactionTroop(string? troopId, int count)
+    {
+        if (!IsSinglePlayer) return Refused();
+        if (count < 1 || count > MaxTroops) return new CheatOutcome(CheatOutcomeKind.BadAmount, Number: MaxTroops);
+        if (string.IsNullOrWhiteSpace(troopId) || !FactionTroops().Any(t => t.Id == troopId))
+            return new CheatOutcome(CheatOutcomeKind.UnknownTarget, troopId);
+        var name = _world.AddTroop(troopId!, count);
+        return name == null
+            ? new CheatOutcome(CheatOutcomeKind.UnknownTarget, troopId)
+            : Log("troop", new CheatOutcome(CheatOutcomeKind.Done, name, count));
+    }
+
+    /// <summary>
+    /// The game's own cheat party screen (every troop, 10 of each, move the ones you want). NothingToDo when it could not be
+    /// opened.
+    /// </summary>
+    public CheatOutcome OpenCheatPartyScreen()
+    {
+        if (!IsSinglePlayer) return Refused();
+        return _world.OpenCheatPartyScreen()
+            ? Log("cheat party screen", new CheatOutcome(CheatOutcomeKind.Done))
+            : new CheatOutcome(CheatOutcomeKind.NothingToDo);
     }
 
     public CheatOutcome Heal()
