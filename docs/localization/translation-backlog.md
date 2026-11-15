@@ -112,6 +112,10 @@ Record each pending feature's module, source file, exact keys and English text, 
 | `taom_ph_gondor_spear_a_t8_name` | [Gondor] Fountain Guard Spear, Tempered |
 | `taom_ph_mirkwood_sword_t8_name` | [Mirkwood] Guard Sword |
 | `taom_ph_mirkwood_sword_t10_name` | [Mirkwood] Royal Sword |
+| `taom_ph_gundabad_spear_a02_t4_name` | [Gundabad] War Spear (added by #1296) |
+| `taom_ph_gundabad_spear_a03_t5_name` | [Gundabad] Blackshield Spear (added by #1296) |
+| `taom_ph_gundabad_spear_a03_t8_name` | [Gundabad] Blackshield Spear, Tempered (added by #1296) |
+| `taom_ph_lothlorien_spear_t6_name` | [Lothlorien] Galadhrim Spear (added by #1296) |
 | `taom_ph_isengard_1h_sword_t7_blade_name` | Isengard Sword Blade A (placeholder) |
 | `taom_ph_erebor_spear_a_t4_blade_name` | Erebor Spear Blade A (placeholder) |
 | `taom_ph_erebor_spear_b_t4_blade_name` | Erebor Spear Blade B (placeholder) |
@@ -128,6 +132,10 @@ Record each pending feature's module, source file, exact keys and English text, 
 | `taom_ph_gondor_spear_a_t8_blade_name` | Gondor Spear Head D (placeholder) |
 | `taom_ph_mirkwood_sword_t8_blade_name` | [Mirkwood] Sword Blade (placeholder) |
 | `taom_ph_mirkwood_sword_t10_blade_name` | [Mirkwood] Sword Blade (placeholder) |
+| `taom_ph_gundabad_spear_a02_t4_blade_name` | Gundabad Orc Spear Blade II (placeholder) (added by #1296) |
+| `taom_ph_gundabad_spear_a03_t5_blade_name` | Gundabad Orc Spear Blade III (placeholder) (added by #1296) |
+| `taom_ph_gundabad_spear_a03_t8_blade_name` | Gundabad Orc Spear Blade III (placeholder) (added by #1296) |
+| `taom_ph_lothlorien_spear_t6_blade_name` | High Elven Spear Blade (placeholder) (added by #1296) |
 
 ## Momentum option hints (#1166)
 

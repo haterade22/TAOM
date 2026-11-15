@@ -88,6 +88,7 @@ class Registries:
     equipment_rosters: set = field(default_factory=set)       # defined <EquipmentRoster> ids (empty = unavailable)
     settlements: set = field(default_factory=set)             # <Settlement> ids of the world the game builds (empty = unavailable)
     item_classes: dict = field(default_factory=dict)          # weapon item id -> skill class, build_item_class_registry (empty = unavailable)
+    couchable_ids: frozenset = None                           # weapon item ids with a couch usage (None = read the install when a pass needs it)
 
 
 # --------------------------------------------------------------------------- #
@@ -246,6 +247,18 @@ def _armory_catalogue(modules: Path) -> tuple:
 
 
 @functools.lru_cache(maxsize=2)
+def _vanilla_priced(modules: Path) -> dict:
+    """The priced vanilla melee weapons (SandBoxCore and SandBox), once per install path. The melee
+    ladder prices only the Armory, but a vanilla lance can be couched too and a troop may carry one."""
+    import sys as _sys
+    _sys.path.insert(0, str(Path(__file__).resolve().parent))
+    import melee_catalogue as mc
+    import analyze_melee_ladder as mr
+    priced, _failures = mc.price_all(mc.load(modules, item_modules=mr.VANILLA_MODULES))
+    return priced
+
+
+@functools.lru_cache(maxsize=2)
 def _kit_weapon_catalogue(modules: Path) -> tuple:
     """(catalogue, priced melee weapons) of the Armory and SandBoxCore: the enlistment kits issue
     vanilla weapons as well (the aserai swords, the khuzait lance), which the Armory catalogue lacks."""
@@ -368,6 +381,18 @@ def price_placeholders(cat, ph_dir: Path) -> tuple:
         except (mc.CatalogueError, md.MeleeDamageError) as exc:
             problems.append((PLACEHOLDER_ITEMS, iid, str(exc)))
     return priced, problems
+
+
+def couchable_item_ids(modules: Path, ph_dir: Path) -> set:
+    """The item ids that can be couched, from the priced usages of the Armory, vanilla and the
+    placeholders of the tree at ph_dir (the validator's own pricing). The one source for the slot
+    rule: tools/rebalance_troops.py --main-weapon-slots and TROOP_MAIN_WEAPON_NOT_ITEM0 both call it,
+    so they cannot disagree on a lance. An item the catalogue cannot price is not couchable here, and
+    the pricing failures of the placeholders, the Armory and vanilla are dropped, not reported."""
+    import melee_catalogue as mc
+    cat, priced = _armory_catalogue(Path(modules))
+    ph_priced, _problems = price_placeholders(cat, Path(ph_dir))
+    return mc.couchable_ids({**_vanilla_priced(Path(modules)), **priced, **ph_priced})
 
 
 def melee_pass_rows(troops, priced, spec):
@@ -1657,6 +1682,26 @@ class Validator:
     # weapon slot not held in the off hand). The rule is tools/troop_purpose.py (#343). Weapon
     # classes come from the install, so the pass is skipped, never faked, without it. Troops on
     # rebalance_troops.SKIP_TROOP_IDS (creatures, bespoke mounts) and heroes are not judged.
+    def _couchable_ids(self, issues: list):
+        """The item ids that can be couched (couchable_item_ids), or None when the install is not
+        available and the slot rule is skipped, never faked. A registry that names the set (a test)
+        wins. A failure to price is one warning, so a rule that could not run is not read as clean."""
+        given = getattr(self.reg, "couchable_ids", None)
+        if given is not None:
+            return given
+        if not self.game_modules or not self.game_modules.is_dir():
+            return None
+        if not hasattr(self, "_couch_memo"):
+            try:
+                self._couch_memo = couchable_item_ids(self.game_modules, self.moduledata / PLACEHOLDER_DIR)
+            except Exception as exc:   # an install the catalogue cannot read: say so once
+                issues.append(Issue(
+                    severity=Severity.WARNING, code="TROOP_MAIN_WEAPON_NOT_ITEM0",
+                    file="troops/", line=0, entry_id="(install)",
+                    message=f"the Armory could not be priced ({exc}), so the main weapon slot rule was not checked"))
+                self._couch_memo = None
+        return self._couch_memo
+
     def _troop_purpose(self) -> list:
         classes = getattr(self.reg, "item_classes", None) or {}
         if not classes:
@@ -1664,10 +1709,14 @@ class Validator:
         import sys as _sys
         _sys.path.insert(0, str(Path(__file__).resolve().parent))
         import troop_purpose as tp
-        from rebalance_troops import SKIP_TROOP_IDS, THROWN_PRIMARY_TROOP_IDS
+        from rebalance_troops import SKIP_TROOP_IDS, THROWN_PRIMARY_TROOP_IDS, get_display_name
         issues = []
+        couch = self._couchable_ids(issues)
         for path in self._xml_files():
-            if not path.name.startswith("troops_"):
+            # troops/troops_*.xml get every check; the second root (troop_purpose.EXTRA_TROOP_FILES)
+            # gets the slot rule only, as tools/rebalance_troops.py --main-weapon-slots reads it.
+            second_root = path.relative_to(self.moduledata).as_posix() in tp.EXTRA_TROOP_FILES
+            if not path.name.startswith("troops_") and not second_root:
                 continue
             text = _COMMENT_RE.sub(lambda m: "\n" * m.group(0).count("\n"), self._read(path))
             rel = self._rel(path)
@@ -1679,14 +1728,32 @@ class Validator:
                 entry_id = idm.group(1) if idm else "(unnamed)"
                 if entry_id in SKIP_TROOP_IDS:
                     continue
+                id_kits = self._battle_kits(body)
                 kits = [{s: classes.get(v) for s, v in k.items() if s in self._WEAPON_SLOTS}
-                        for k in self._battle_kits(body)]
+                        for k in id_kits]
                 kit = tp.kit_of(kits)
                 if not kit.sets:
                     continue
                 gm = self._GROUP_ATTR_RE.search(attrs)
                 launcher_troop = tp.is_launcher_troop(kit, gm.group(1) if gm else "Infantry")
                 line = _lineno(text, m.start())
+                if couch is not None:
+                    nm = re.search(r'\bname="([^"]*)"', attrs)
+                    plan, _, _ = tp.troop_main_weapon(
+                        id_kits, classes, couch, gm.group(1) if gm else "Infantry",
+                        (get_display_name(nm.group(1)) if nm else "", entry_id))
+                    if plan.swaps:
+                        issues.append(Issue(
+                            severity=Severity.WARNING, code="TROOP_MAIN_WEAPON_NOT_ITEM0", file=rel, line=line,
+                            entry_id=entry_id,
+                            message=(f"rule {plan.rule}: {len(plan.swaps)} of {kit.sets} battle sets open with a "
+                                     f"one or two handed weapon while the troop carries "
+                                     f"{'a polearm that can be couched' if plan.rule == 'A' else 'a polearm its name calls for'}"
+                                     f"; the polearm is the troop's main weapon, so it belongs in Item0 "
+                                     f"(the engine wields the first weapon slot). Trade the two slots: "
+                                     f"python tools/rebalance_troops.py --main-weapon-slots --apply")))
+                if second_root:
+                    continue
                 bad = [p for p in (tp.item0_problem(k) for k in kits if k) if p]
                 if bad:
                     issues.append(Issue(

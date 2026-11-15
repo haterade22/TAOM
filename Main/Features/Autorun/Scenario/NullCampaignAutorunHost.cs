@@ -14,7 +14,11 @@ internal sealed class NullCampaignAutorunHost : ICampaignAutorunHost
 
     public string? HideInquiry() => null;
 
-    public bool HideSceneNotification() => false;
+    public bool SceneNotificationActive => false;
+
+    public void HideSceneNotification()
+    {
+    }
 
     public bool StartNewCampaign() => false;
 

@@ -53,6 +53,15 @@ public class ScenarioClientWiringTests
     }
 
     [TestMethod]
+    public void ClientSubModuleSource_RestoresTheFocusSettingAtEveryGameEnd()
+    {
+        var src = RepoPaths.ReadSource("Client/ClientSubModule.cs", stripComments: true);
+
+        StringAssert.Contains(src, "public override void OnGameEnd(Game game)");
+        StringAssert.Contains(src, "_scenarioAutorun?.GameEnded();");
+    }
+
+    [TestMethod]
     public void HostSource_TakesItsPlanByConstructor_AndResolvesNothingItself()
     {
         var src = RepoPaths.ReadSource("Client/Features/Autorun/CampaignAutorunHost.cs", stripComments: true);

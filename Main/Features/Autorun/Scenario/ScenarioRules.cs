@@ -12,7 +12,8 @@ internal static class ScenarioRules
     internal const double MapSettleSeconds = 5.0;
     internal const double CreationWaitSeconds = 600.0;
     internal const double MapWaitSeconds = 600.0;
-    internal const double ExitWaitSeconds = 120.0;
+    /// <summary>Under the launcher's 120 s exit grace (run_fords_autorun.py EXIT_GRACE_SECONDS), so the game quits before it is killed.</summary>
+    internal const double ExitWaitSeconds = 60.0;
     internal const double StatusSeconds = 5.0;
     internal const int TitleLogCap = 20;
     internal const int UnknownDay = -1;

@@ -29,12 +29,15 @@ internal interface ICampaignAutorunHost
     /// <summary>Hides an open inquiry without running either of its buttons. Its title ("" when it has none), or null when none was open.</summary>
     string? HideInquiry();
 
-    /// <summary>Hides an active scene notification. True when one was active.</summary>
-    bool HideSceneNotification();
+    /// <summary>A scene notification is active. The engine marks it active one layer tick before its scene exists.</summary>
+    bool SceneNotificationActive { get; }
+
+    /// <summary>Hides the active scene notification without running its buttons. Call it only for a notification that was active on
+    /// the previous tick too: closing one whose scene does not exist yet throws (GauntletSceneNotification.CloseNotification).</summary>
+    void HideSceneNotification();
 
     /// <summary>
-    /// Starts a new sandbox campaign with the default start options, past the options screen TAOM's start options provider adds to the
-    /// menu button. False when it could not start.
+    /// Starts a new sandbox campaign with the default start options, as the start options screen's Confirm does when nothing changed, and stops focus loss from pausing the game (in memory, remembering the old value). False when it could not start.
     /// </summary>
     bool StartNewCampaign();
 
@@ -49,8 +52,8 @@ internal interface ICampaignAutorunHost
     bool TryFinishCreation(string cultureId, out string? problem);
 
     /// <summary>
-    /// Once, on the map: turns autosave off for this process, stops focus loss from pausing the map (remembering the old value), makes
-    /// every other party ignore the main party and holds it in place. Returns what it did, for the log.
+    /// Once, on the map: turns autosave off for this campaign, makes every other party ignore the main party and holds it in place.
+    /// Returns what it did, for the log.
     /// </summary>
     string PrepareMap();
 
@@ -63,7 +66,7 @@ internal interface ICampaignAutorunHost
     /// <summary>Whole and part days since the campaign started; NaN when no campaign runs.</summary>
     double ElapsedDays { get; }
 
-    /// <summary>Puts back the focus-loss setting <see cref="PrepareMap"/> changed. Does nothing when it changed nothing.</summary>
+    /// <summary>Puts back the focus-loss setting <see cref="StartNewCampaign"/> changed. Does nothing when it changed nothing.</summary>
     void RestoreFocusSetting();
 
     /// <summary>Ends the running campaign and shows the main menu; does nothing when no campaign runs.</summary>
