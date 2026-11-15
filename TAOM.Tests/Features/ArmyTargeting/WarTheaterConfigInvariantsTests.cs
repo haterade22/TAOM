@@ -2,8 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text.RegularExpressions;
-using System.Xml.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json;
 using NSubstitute;
@@ -64,28 +62,7 @@ public class WarTheaterConfigInvariantsTests
     /// retagged by spkingdoms.xslt. Read from the data rather than hardcoded, so adding a kingdom
     /// makes this suite demand a theater decision for it.
     /// </summary>
-    private static HashSet<string> LoadKingdomIds()
-    {
-        var root = FindRepoRoot();
-        var ids = new HashSet<string>(StringComparer.Ordinal);
-
-        var newKingdoms = Path.Combine(root, "Main", "_Module", "ModuleData", "taom_spkingdoms.xml");
-        Assert.IsTrue(File.Exists(newKingdoms), $"taom_spkingdoms.xml not found at {newKingdoms}");
-        foreach (var element in XDocument.Load(newKingdoms).Descendants("Kingdom"))
-        {
-            var id = (string)element.Attribute("id");
-            if (!string.IsNullOrEmpty(id)) ids.Add(id);
-        }
-
-        // The XSLT overrides vanilla kingdoms via `<xsl:template match="Kingdom[@id='empire_w']">`.
-        var xslt = Path.Combine(root, "Main", "_Module", "ModuleData", "spkingdoms.xslt");
-        Assert.IsTrue(File.Exists(xslt), $"spkingdoms.xslt not found at {xslt}");
-        foreach (Match m in Regex.Matches(File.ReadAllText(xslt), @"Kingdom\[@id=['""]([a-z_]+)['""]\]"))
-            ids.Add(m.Groups[1].Value);
-
-        Assert.IsTrue(ids.Count >= 20, $"expected at least 20 kingdoms, parsed {ids.Count}");
-        return ids;
-    }
+    private static HashSet<string> LoadKingdomIds() => TAOM.Tests.Core.CultureDataFixture.KingdomIds();
 
     [TestMethod]
     public void EveryKingdomTheaterKey_ResolvesToARealKingdom()
@@ -125,6 +102,19 @@ public class WarTheaterConfigInvariantsTests
 
         Assert.AreEqual(0, dead.Count, $"FactionPriorityTargets has unresolvable keys: {string.Join(", ", dead)}");
         Assert.AreEqual(0, deadAggression.Count, $"FactionAggressionMultipliers has unresolvable keys: {string.Join(", ", deadAggression)}");
+    }
+
+    // #1283: a dead id here would silently leave that realm's armies marching off the forts they take.
+    [TestMethod]
+    public void EveryHoldTheWallsFaction_IsARealKingdom_AndMordorHolds()
+    {
+        var config = LoadShippedConfig();
+        var kingdoms = LoadKingdomIds();
+
+        var dead = config.CapturedFortHold.Factions.Where(k => !kingdoms.Contains(k)).ToList();
+
+        Assert.AreEqual(0, dead.Count, $"CapturedFortHold.Factions has ids that are no kingdom: {string.Join(", ", dead)}");
+        CollectionAssert.Contains(config.CapturedFortHold.Factions, "empire_s", "Mordor (empire_s) no longer holds its captured forts");
     }
 
     [TestMethod]

@@ -101,6 +101,16 @@ public class CheatMenuWiringTests
     }
 
     [TestMethod]
+    public void EveryPickListChoice_RunsInsideTheGuard()
+    {
+        // The teleport and relation cheats run when the player picks from the list, not on the menu click.
+        var src = RepoPaths.ReadSource("Main/Features/CheatMenu/Hooks/CheatMenuMenus.cs", stripComments: true);
+
+        StringAssert.Matches(src, new Regex(@"affirmativeAction: chosen =>\s*Guarded\(title, \(\) =>"));
+        Assert.IsFalse(Regex.IsMatch(src, @"affirmativeAction: chosen =>\s*\{"), "a pick list choice outside the guard");
+    }
+
+    [TestMethod]
     public void Guarded_AThrowingCheat_DoesNotEscapeTheMenuClick() =>
         CheatMenuMenus.Guarded("test", () => throw new System.InvalidOperationException("boom"));
 

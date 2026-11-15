@@ -61,7 +61,7 @@ Deferred:
 - FOLLOW-UP no issue: 46 troops (aserai, empire, shaghana, umbar) wear no Armory kingdom armour and are not on the curve; a content decision.
 - FOLLOW-UP #617: the hero ranged ceiling (Bow 90, Crossbow 105) sits above the new troop tops (65 and 84).
 - FOLLOW-UP no issue: horse harness has no curve or gate; out of this scope.
-- FOLLOW-UP no issue: the chain down-roll on heavy and elite extremities (a heavy pauldron of 9 can drop to 1) is the maintainer's decision (`armor-balance.md` "Open decisions").
+- BUILT AND REVIEWED 2026-11-15, #1271: heavy, elite and lord extremities roll `leather` (down-rolls -2 and -3), not `chain` (-6 and -8), so a heavy pauldron of 9 drops to 6 at worst on a new roll, not 1 (`armor-balance.md` "Open decisions", item 1). The group also sets what a troop spawns with in a campaign battle. The live Armory write (the restat, then both generators) and the in-game check in a campaign battle are owed.
 - FOLLOW-UP #631: `wm_gondor_boromir_sword`, a hero blade, is carried by ordinary Gondor t7 and t8 troops; the decided roster swap is not done.
 - FOLLOW-UP no issue: couch-skipped spears (`he_spear`, `dale_winged_spear_a` and `_b`) need hand pricing, the same couch rule as #812 but not its Harad spears.
 - FOLLOW-UP no issue: `characters/npcs_*.xml` fighters (soldiers, caravan guards) are read by none of derive, the restat or the worn gates; scope not decided.
@@ -71,6 +71,9 @@ Deferred:
 - FOLLOW-UP no issue: the `hero_makers` grouping is the author's reading of the lore and waits for the maintainer to correct it.
 - FOLLOW-UP no issue: `WORN_ARMOUR_FLOOR` stays a warning; whether it becomes an error after the apply is the maintainer's call.
 - FOLLOW-UP #631: retire the legacy melee curve (`kingdom_offset`, `band`, `ceiling`) once every template has a class limit.
+- FOLLOW-UP no issue: the Gondor starter greave in `LOTRLOME_items/gondor/starter_armors.xml` holds the dead modifier group `mail`, and no check proves that every live armour `modifier_group` is a defined group (`cloth_unarmoured` is its band's extremity group).
+- FOLLOW-UP no issue: no gate notices a stale roster map (`tools/data/armor_roster_tiers.json`) after a troop edit, so `armour-restat` can pass on an old curve; a `derive_armor_tiers.py --check` with a `data_gates.py` row would catch it.
+- FOLLOW-UP no issue: the restat writer rewrites every declared stat of a changed item and does not escape decoded values (pre-existing; the 2026-11-15 write was proven byte-safe on a copy of the live Armory).
 
 ## Root-cause patterns
 

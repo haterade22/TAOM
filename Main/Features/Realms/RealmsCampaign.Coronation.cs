@@ -54,14 +54,15 @@ public sealed partial class RealmsCampaign
             // A mercenary may restore (it serves the realm); a ruling house is a vassal of it.
             if (clan.IsUnderMercenaryService)
                 EndMercenaryServiceAction.EndByBecomingVassal(clan);
-            NameHouse(clan, coronation, null);
+            // The crowned house's banner replaces the one the player made only while their realm flies title banners.
+            NameHouse(clan, coronation, null, withBanner: _settings.OwnRealmBanner == RealmBanner.Title);
         }
         else
         {
             RemoveCompanionAction.ApplyByByTurningToLord(playerClan, hero);
             hero.SetNewOccupation(Occupation.Lord);
             clan = Clan.CreateClan(CrownedClanId(coronation));
-            NameHouse(clan, coronation, bannerOf?.Banner ?? kingdom.Banner);
+            NameHouse(clan, coronation, bannerOf?.Banner ?? kingdom.Banner, withBanner: true);
             clan.Culture = bannerOf?.Culture ?? hero.Culture;
             clan.Kingdom = kingdom;
             if (seat != null)
@@ -86,7 +87,8 @@ public sealed partial class RealmsCampaign
         }
 
         ChangeRulingClanAction.Apply(kingdom, clan);
-        ApplyCrownedBanner(kingdom, clan, coronation);
+        if (BannerChoiceFor(kingdom) == RealmBanner.Title)
+            ApplyCrownedBanner(kingdom, clan, coronation);
 
         // Titles the gift did not move (held by right by someone of the former house who did not own the fief).
         var formerHouse = new System.Collections.Generic.HashSet<string>(
@@ -114,12 +116,15 @@ public sealed partial class RealmsCampaign
 
     /// <summary>
     /// The crowned house's name and banner: its own (&lt;Coronation banner&gt;), else the one the former house is seen with
-    /// (a ruling clan shows its realm's banner). The player's clan keeps the banner they made when there is no own one.
+    /// (a ruling clan shows its realm's banner). The player's clan keeps the banner they made when there is no own one, or
+    /// when <paramref name="withBanner"/> is false (Your Realm's Banner set to anything but the title banner).
     /// </summary>
-    private static void NameHouse(Clan clan, CoronationConfig coronation, Banner? fallback)
+    private static void NameHouse(Clan clan, CoronationConfig coronation, Banner? fallback, bool withBanner)
     {
         var name = new TextObject(coronation.ClanName);
         clan.ChangeClanName(name, coronation.InformalName != null ? new TextObject(coronation.InformalName) : name);
+        if (!withBanner)
+            return;
         if (coronation.Banner != null)
             clan.Banner = new Banner(coronation.Banner);
         else if (fallback != null)
@@ -281,7 +286,7 @@ public sealed partial class RealmsCampaign
             var kingdomId = _service.Catalog.Get(coronation.TitleId)?.KingdomId;
             var kingdom = kingdomId != null ? FindKingdom(kingdomId) : null;
             var clan = kingdom?.RulingClan;
-            if (kingdom != null && clan != null && IsCrownedHouse(clan, coronation))
+            if (kingdom != null && clan != null && IsCrownedHouse(clan, coronation) && BannerChoiceFor(kingdom) == RealmBanner.Title)
                 ApplyCrownedBanner(kingdom, clan, coronation);
         }
     }

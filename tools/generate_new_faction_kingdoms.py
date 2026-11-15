@@ -278,7 +278,7 @@ KINGDOMS = {
                       "Gaila"],
         party_template="PartyTemplate.kingdom_hero_party_angaladh_template",
         # Icons no other clan flies (Mike 2026-10-28): Silvan 17000 and 17001 and the plain sun 20001.
-        # Mirkwood's Nos Galengrim flies 15007, 10017 and 15009. Off-white (palette 2022, the realm's
+        # Mirkwood's Nos Galengrim flies 17006, 17007 and 17008. Off-white (palette 2022, the realm's
         # color2 #F2F4F7, which the engine paints a clan's sigil in) on forest green (2021).
         banner="11.2021.2021.1528.1528.764.764.1.0.0.{icon}.{fg}.{fg}.700.700.764.764.0.0.0",
         kingdom_icon=17000, clan_icons=[17000, 17001, 20001],

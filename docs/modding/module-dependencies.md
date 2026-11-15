@@ -10,7 +10,7 @@ no `<Xmls>` block, only seven `<SubModule>` entries that boot other people's cla
 `TAOM.Dependencies`, beside `TAOM`, `TAOM_Map` and `LOTRLOME_Armory`; the standalone `Bannerlord.Harmony`,
 `Bannerlord.ButterLib`, `Bannerlord.UIExtenderEx` and `Bannerlord.MBOptionScreen` modules are not
 required and should be uninstalled (`Dependencies/_Module/SubModule.xml:124-126`,
-[dr3-maintenance.md](../migration/dr3-maintenance.md) line 297).
+[dr3-maintenance.md](../migration/dr3-maintenance.md) line 323).
 
 Add no new `DependedModule` row to a TAOM `SubModule.xml`, and open no issue proposing one, because the Modding Kit
 force-loads every module a row names (Mike, 2026-09-21). The rows #371 added stay. No test enforces this.
@@ -278,7 +278,7 @@ pointing at `TAOM.Dependencies.AliasStubSubModule` (`Stubs/Bannerlord.Harmony/_M
 `X.Y` is the minor of the version actually shipped (the csproj pin for the three NuGet packages, the
 vendored DLL's own FileVersion for ButterLib) and `.99.0` satisfies any reasonable `vX.Y.*` lower
 bound a third-party mod declares, without claiming a major jump. A minor bump needs a stub edit; a
-patch bump does not ([dr3-maintenance.md](../migration/dr3-maintenance.md) lines 219-226). Both
+patch bump does not ([dr3-maintenance.md](../migration/dr3-maintenance.md) lines 224-233). Both
 derivations are asserted by `StubVersions_NuGetPinnedDeps_TrackPackageMinorAs99` and
 `StubVersion_ButterLib_TracksVendoredDllMinorAs99` (`BundledDependencyManifestTests.cs:135-163`). The
 stub's own comment warns that a legacy mod pinning a strict `v2.4.0.*` wildcard will not match
@@ -288,7 +288,7 @@ stub's own comment warns that a legacy mod pinning a strict `v2.4.0.*` wildcard 
 metadata-only and its drag-to-reorder breaks with "Missing Bannerlord.Harmony a0.0.0.0 to a0.0.0.0"
 (`Stubs/Bannerlord.Harmony/_Module/SubModule.xml:27-33`). `AliasStubSubModule` therefore exists, and
 every call in its constructor is wrapped in `TrySwallow` because an uncaught exception in a stub
-constructor breaks reordering for every other mod (`Dependencies/AliasStubSubModule.cs:31-54, 68-82`).
+constructor breaks reordering for every other mod (`Dependencies/AliasStubSubModule.cs:30-52, 66-80`).
 
 **Where they deploy.** The engine reads a module only at `Modules/<Id>/SubModule.xml`:
 `ModuleHelper.GetPhysicalModules` looks for `SubModule.xml` at the folder root and skips the folder
@@ -849,11 +849,13 @@ Code: No code changes needed
   also enabled the standalone Harmony, ButterLib never built its service provider, and MCM's loader
   crashed on start with "Value cannot be null. Parameter name: provider" (`yotthani/bannerlord`
   commit `6d4cae84`, body text; the fix copies the optional block DualWield uses). Not reproduced by TAOM.
-- **A folder-name collision can overwrite a real BUTR module.** If a player has the standalone
-  Workshop `Bannerlord.Harmony` module, the stub deploy overwrites its manifest and a later Steam update
-  can overwrite the stub back ([dr3-maintenance.md](../migration/dr3-maintenance.md) lines 289-297).
+- **A stub shadows a Workshop BUTR module with the same id.** A Workshop copy is not overwritten (it
+  lives in the Workshop content folder), but `ModuleHelper.InitializeModules` lists `Modules/` before the
+  Workshop and takes the first module per id, so the stub and TAOM's bundled versions load. A real BUTR
+  module copied by hand into `Modules/<Id>/` is overwritten by a dev deploy
+  ([dr3-maintenance.md](../migration/dr3-maintenance.md) lines 315-323).
 - **A red `(!)` on a third-party mod is the launcher's unsigned-code warning, not a dependency error**
-  ([dr3-maintenance.md](../migration/dr3-maintenance.md) line 232).
+  ([dr3-maintenance.md](../migration/dr3-maintenance.md) line 237).
 - **Under a co-op module two shields go quiet with no flag file involved.** PatchShield skips install
   and SaveShield rethrows the save-load category; "the shield did not run" is then expected, and the
   skip reason is logged in `Modules/TAOM.Dependencies/diag.log`

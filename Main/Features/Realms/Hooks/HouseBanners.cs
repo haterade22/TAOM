@@ -16,7 +16,9 @@ namespace TAOM.Features.Realms.Hooks;
 /// (<c>ClanOriginalBanner</c>): the house's parties on the map (party nameplate, the banner a lord hangs at a town or
 /// siege camp, the party markers on a settlement's nameplate), the encyclopedia (clan page and faction cards) and the
 /// banner editor. Settlements, the clan screen and battles read the getter outside a scope and show the realm's.
-/// Runtime only: nothing is saved, and without the patch the game falls back to the shared banner.
+/// The getter scopes save nothing, but the separate kingdom banner objects that <see cref="Decouple"/> and the
+/// <c>InitializeKingdom</c> prefix create are saved with the kingdom (<c>Kingdom.Banner</c> is a saveable property).
+/// Without the patch the game falls back to the shared banner.
 /// <para>
 /// <c>KingdomManager.CreateKingdom</c> gives a new kingdom its founder's banner object itself, so editing one would
 /// edit both; <c>Kingdom.InitializeKingdom</c> gets a copy instead, and <see cref="Decouple"/> splits the kingdoms of

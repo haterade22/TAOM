@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Xml.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
@@ -166,6 +167,23 @@ public class CheatMenuHotKeyTests
         StringAssert.Contains(src, "mission.IsOrderMenuOpen");
         StringAssert.Contains(src, "InformationManager.IsAnyInquiryActive()");
         StringAssert.Contains(src, "MissionGauntletSingleplayerEscapeMenu");
+    }
+
+    [TestMethod]
+    public void BattleView_StaysOffTheKey_InTheModesThatReadRawH()
+    {
+        // Fords of War fields a hero on H (FordsCommandHotkeys) and The Long Defeat sounds the horn on H
+        // (LongDefeatPanelHost); a [DefaultView] is in their missions too, so one press would do both. The check names
+        // the views that read the key: story missions add LongDefeatMissionLogic but not LongDefeatHudView.
+        var view = RepoPaths.ReadSource("Client/Features/CheatMenu/UI/BattleCheatMenuView.cs", stripComments: true);
+        var busy = Regex.Match(view, @"private bool Busy\(\)[\s\S]*?\n    \}").Value;
+
+        StringAssert.Contains(busy, "GetMissionBehavior<FordsCommandView>() != null");
+        StringAssert.Contains(busy, "GetMissionBehavior<LongDefeatHudView>() != null");
+        Assert.IsFalse(busy.Contains("LongDefeatMissionLogic"), "story missions carry LongDefeatMissionLogic and no H reader");
+        foreach (var reader in new[] { "Client/Features/FordsOfWar/FordsCommandHotkeys.cs", "Client/Features/LongDefeat/LongDefeatPanelHost.cs" })
+            StringAssert.Contains(RepoPaths.ReadSource(reader, stripComments: true), "IsKeyPressed(InputKey.H)",
+                $"{reader} no longer reads H: drop its mode from Busy()");
     }
 
     [TestMethod]

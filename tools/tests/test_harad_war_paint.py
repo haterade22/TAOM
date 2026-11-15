@@ -366,11 +366,13 @@ class FixedKeyLordTests(unittest.TestCase):
                 self.assertEqual({"harad"}, set(tattoo_tags(face)))
 
     def test_lords_with_one_face_also_share_one_key(self):
-        # LordFaceVariety groups on the whole key, so two lords with one face must hold the same paint to be separated.
+        # LordFaceVariety groups on the key with the colour fields cleared (#1258) but the paint bits kept, so two lords
+        # with one face shape must hold the same paint to be separated, whatever their colours.
         faces = {}
         for _, is_female, face in self.lords:
             key = face.find("BodyProperties").get("key")
-            faces.setdefault((is_female, int(key[:16], 16) & ~TATTOO_KEY_BITS, key[16:]), set()).add(key)
+            shape = int(key[:16], 16) & ~TATTOO_KEY_BITS & ~COLOUR_BITS
+            faces.setdefault((is_female, shape, key[16:]), set()).add(int(key[:16], 16) & TATTOO_KEY_BITS)
         self.assertEqual([], [keys for keys in faces.values() if len(keys) > 1])
 
     def test_no_other_culture_holds_a_harad_design(self):
