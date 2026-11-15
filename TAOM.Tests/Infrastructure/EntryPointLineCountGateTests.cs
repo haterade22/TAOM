@@ -13,8 +13,8 @@ namespace TAOM.Tests.Infrastructure;
 /// ADR-002: entry points stay under 150 lines and delegate to a service. An entry point here is a class that derives
 /// (directly, or through another class in Main or Client) from CampaignBehaviorBase, MissionBehavior, MissionLogic or
 /// MissionView; a class named Taom*Model; or a Harmony patch class (a HarmonyPatch attribute on the class or on a member
-/// inside it, or a static method named Prefix, Postfix, Transpiler or Finalizer, which a patch applied by hand has in
-/// place of an attribute). The lines of a partial class add up across its files, and a class counts from its declaration
+/// inside it, a static method named Prefix, Postfix, Transpiler or Finalizer, which a patch applied by hand has in
+/// place of an attribute, or a <c>new HarmonyMethod(typeof(Self), ...)</c> that hands Harmony its own methods). The lines of a partial class add up across its files, and a class counts from its declaration
 /// line to its closing brace. A class of 150 lines or more fails, the same limit as FordsEntryPointLineCountTests.
 ///
 /// <c>EntryPointLineCountBaseline.txt</c> lists the classes that were over the limit when this gate landed, each with the
@@ -41,6 +41,10 @@ public class EntryPointLineCountGateTests
     private static readonly Regex ClassKeyword = new(@"\bclass\s+(\w+)", RegexOptions.Compiled);
     private static readonly Regex Namespace = new(@"\bnamespace\s+([\w.]+)", RegexOptions.Compiled);
     private static readonly Regex HarmonyMember = new(@"\[\s*Harmony(?:Patch|Prefix|Postfix|Transpiler|Finalizer)\b", RegexOptions.Compiled);
+    // A class that hands Harmony its own methods (new HarmonyMethod(typeof(Self), ...)) is a patch class whatever the
+    // methods are called (#1298: BannerPrefix, PagePrefix, CreatePagesPostfix).
+    private static readonly Regex SelfHarmonyMethod = new(@"new\s+HarmonyMethod\(\s*typeof\(\s*(\w+)\s*\)", RegexOptions.Compiled);
+
     private static readonly Regex ManualPatchMethod = new(@"\bstatic\b[^;={}()]*\b(?:Prefix|Postfix|Transpiler|Finalizer)\s*\(", RegexOptions.Compiled);
     private static readonly Regex TaomModelName = new(@"^Taom\w*Model$", RegexOptions.Compiled);
 
@@ -116,7 +120,7 @@ public class EntryPointLineCountGateTests
         var header = new[]
         {
             "# Entry-point classes (ADR-002) at " + Limit + " lines or more: <namespace.Class> <most lines it may have>.",
-            "# Entry point: a CampaignBehaviorBase, MissionBehavior, MissionLogic or MissionView subclass, a Taom*Model, or a Harmony patch class (attributed, or with a static Prefix, Postfix, Transpiler or Finalizer).",
+            "# Entry point: a CampaignBehaviorBase, MissionBehavior, MissionLogic or MissionView subclass, a Taom*Model, or a Harmony patch class (attributed, with a static Prefix, Postfix, Transpiler or Finalizer, or with new HarmonyMethod(typeof(Self), ...)).",
             "# The list may only shrink. Never add a line: move the logic into a service. To prune: set " + WriteEnvVar + "=1,",
             "# run EntryPointLineCountGateTests.Baseline_Regenerate_WhenAsked.",
             "# Entries: " + rows.Count + ".",
@@ -173,6 +177,22 @@ public class EntryPointLineCountGateTests
         var found = Offenders(new[] { postfix, finalizer, instance, lookalike }).Select(p => p.Key).OrderBy(k => k).ToList();
 
         CollectionAssert.AreEqual(new[] { "N.ManualFin", "N.ManualPost" }, found, string.Join(",", found));
+    }
+
+    [TestMethod]
+    public void Scan_TreatsAClassThatPatchesWithItsOwnMethodsAsAnEntryPoint()
+    {
+        // #1298: hand-applied patches with custom names (BannerPrefix, PagePrefix) are found by the class building a
+        // HarmonyMethod on itself, not by a name suffix, which would also take RealmsConfigXml.ReadPrefix.
+        var selfPatch = "namespace N;\nstatic class Banners\n{\nstatic void Patch(Harmony h) => h.Patch(m, prefix: new HarmonyMethod(typeof(Banners), nameof(BannerPrefix)));\n"
+            + "static bool BannerPrefix() => true;\n" + Filler(160) + "}\n";
+        var reader = "namespace N;\nstatic class ConfigXml\n{\nstatic string ReadPrefix(string s) => s;\n" + Filler(160) + "}\n";
+        var other = "namespace N;\nstatic class Applier\n{\nstatic void Patch(Harmony h) => h.Patch(m, prefix: new HarmonyMethod(typeof(Banners), nameof(Banners.BannerPrefix)));\n"
+            + Filler(160) + "}\n";
+
+        var found = Offenders(new[] { selfPatch, reader, other }).Select(p => p.Key).ToList();
+
+        CollectionAssert.AreEqual(new[] { "N.Banners" }, found, string.Join(",", found));
     }
 
     [TestMethod]
@@ -300,7 +320,8 @@ public class EntryPointLineCountGateTests
                 Key = ns + name,
                 Name = name,
                 Bases = bases,
-                Harmony = HarmonyMember.IsMatch(lead) || HarmonyMember.IsMatch(body) || ManualPatchMethod.IsMatch(body),
+                Harmony = HarmonyMember.IsMatch(lead) || HarmonyMember.IsMatch(body) || ManualPatchMethod.IsMatch(body)
+                    || SelfHarmonyMethod.Matches(body).Cast<Match>().Any(m => m.Groups[1].Value == name),
                 Lines = LineOf(masked, close) - LineOf(masked, match.Index) + 1,
             });
         }

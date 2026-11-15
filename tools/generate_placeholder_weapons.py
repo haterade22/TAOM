@@ -14,12 +14,13 @@ entry.
 WHAT IT WRITES (all in the repo; the unversioned Armory is only read)
 ---------------------------------------------------------------------
   Main/_Module/ModuleData/placeholder_weapons/ph_crafting_pieces.xml
-      one cloned blade piece per weapon: the donor blade with a new id and every damage_factor
-      multiplied by (ladder target DPS / donor DPS). DPS is linear in damage_factor
-      (restat_melee_blades.py, Crafting.cs:374, :380), so the clone lands on the target. The
-      multiplier stops at the tier limit (melee_ladders.json `class_limits` scaled to the
-      placeholder's tier and culture by `melee_ladder.tier_limit`: one blow and DPS per crafting
-      template), so a capped clone sits under its tier target. Run the tool AFTER
+      one cloned blade piece per weapon: the donor blade with a new id, its Swing damage_factor
+      multiplied by k_swing and its Thrust damage_factor by k_thrust. Both start at (ladder target
+      DPS / donor DPS); DPS is linear in damage_factor (restat_melee_blades.py, Crafting.cs:374,
+      :380), so the clone lands on the target. Each factor stops at that attack's own tier limit
+      (melee_ladders.json `class_limits` scaled to the placeholder's tier and culture by
+      `melee_ladder.tier_limit`: one blow and DPS per crafting template), so a thrust at its limit
+      leaves the swing free to rise, and a capped clone sits under its tier target. Run the tool AFTER
       restat_melee_blades.py: k is relative to the donor, and the restat moves the donor.
   Main/_Module/ModuleData/placeholder_weapons/ph_items.xml
       one CraftedItem per weapon: the donor item with the new id, the new name key, the cloned blade
@@ -100,10 +101,14 @@ def find_item_file(armory: Path, item_id: str) -> Path:
     raise PlaceholderError(f"donor {item_id} not found in the Armory items")
 
 
-def scale_factors(piece_xml: str, k: float) -> str:
+def scale_factors(piece_xml: str, k: float, k_thrust: float | None = None) -> str:
+    """Scale the blade's damage factors: the Swing one by `k`, the Thrust one by `k_thrust` (default `k`)."""
+    k_thrust = k if k_thrust is None else k_thrust
+
     def repl(m):
-        return f'{m.group(1)}{ladder.floor_factor(float(m.group(2)) * k):.2f}{m.group(3)}'
-    out, n = re.subn(r'(damage_factor=")([0-9.]+)(")', repl, piece_xml)
+        factor = k_thrust if m.group(2) == "Thrust" else k
+        return f'{m.group(1)}{ladder.floor_factor(float(m.group(3)) * factor):.2f}{m.group(4)}'
+    out, n = re.subn(r'(<(Thrust|Swing)\b[^>]*?damage_factor=")([0-9.]+)(")', repl, piece_xml)
     if n == 0:
         raise PlaceholderError("blade piece has no damage_factor")
     return out
@@ -182,20 +187,32 @@ def build(spec, cat, priced, troops, armory):
         # Run this tool after restat_melee_blades.py: k is relative to the donor's DPS, so a
         # restat that moves the donor moves k.
         # The cap is the tightest tier limit over every row of carrier_rows, not the spec's tier.
+        # Each attack has its own damage_factor and is held by its own limits (#1296, as
+        # restat_melee_blades.class_ratios does): one factor for both would stop a spear's swing
+        # because its thrust is at the thrust limit. An attack the donor lacks follows the other.
         users = carriers_of(w, troops)
-        k_max = min(ladder.max_factor(ladder.tier_limit(template, tier, craft, lspec),
-                                      donor.swing_damage, donor.thrust_damage,
-                                      donor.swing_dps, donor.thrust_dps)
-                    for tier, craft in carrier_rows(w, users, lspec))
-        capped = k > k_max
-        k = min(k, k_max)
+        rows = carrier_rows(w, users, lspec)
+
+        def attack_cap(swing, thrust, swing_dps, thrust_dps):
+            return min(ladder.max_factor(ladder.tier_limit(template, tier, craft, lspec),
+                                         swing, thrust, swing_dps, thrust_dps)
+                       for tier, craft in rows)
+        k_swing = min(k, attack_cap(donor.swing_damage, 0, donor.swing_dps, 0.0))
+        k_thrust = min(k, attack_cap(0, donor.thrust_damage, 0.0, donor.thrust_dps))
+        if not donor.swing_damage:
+            k_swing = k_thrust
+        if not donor.thrust_damage:
+            k_thrust = k_swing
+        effective = max(donor.swing_dps * k_swing, donor.thrust_dps * k_thrust) / donor.best_dps
+        capped = effective < k - 1e-9
+        k = effective
         blade_id = donor.blade_piece
         new_blade = f"{wid}_blade"
         piece_xml = element_text(armory / "ModuleData" / "LOTRLOME_crafting_pieces.xml", "CraftingPiece", blade_id)
         piece_xml = piece_xml.replace(f'id="{blade_id}"', f'id="{new_blade}"', 1)
         piece_xml = re.sub(r'name="\{=[^}]*\}([^"]*)"', lambda m: f'name="{{={new_blade}_name}}{m.group(1)} (placeholder)"',
                            piece_xml, count=1)
-        piece_xml = scale_factors(piece_xml, k)
+        piece_xml = scale_factors(piece_xml, k_swing, k_thrust)
         item_xml = element_text(find_item_file(armory, w["donor"]), "CraftedItem", w["donor"])
         item_xml = item_xml.replace(f'id="{w["donor"]}"', f'id="{wid}"', 1)
         item_xml = re.sub(r'name="[^"]*"', f'name="{{={wid}_name}}{w["name"]}"', item_xml, count=1)
@@ -212,7 +229,7 @@ def build(spec, cat, priced, troops, armory):
         for d in descs:
             desc_add.setdefault(d, []).append(new_blade)
         tmpl_add.setdefault(cat.items[w["donor"]].template, []).append(new_blade)
-        pieces.append(f"    <!-- {wid}: donor blade {blade_id}, damage_factor x{k:.3f} -->\n    {piece_xml}")
+        pieces.append(f"    <!-- {wid}: donor blade {blade_id}, damage_factor swing x{k_swing:.3f}, thrust x{k_thrust:.3f} -->\n    {piece_xml}")
         items.append(f"    <!-- PLACEHOLDER {wid}: look of {w['donor']}, tier {w['tier']} ladder target -->\n    {item_xml}")
         for t in users:
             if w["id"] not in t.items:  # not yet swapped by an earlier --apply

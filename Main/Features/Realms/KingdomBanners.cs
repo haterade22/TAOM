@@ -87,9 +87,31 @@ internal sealed class KingdomBanners
 
     private static string? NullIfEmpty(string? code) => string.IsNullOrEmpty(code) ? null : code;
 
+    /// <summary>
+    /// Gives each kingdom a banner object of its own where it still shares its ruling clan's (a kingdom founded before
+    /// this version), so editing the house banner no longer edits the realm's. Looks the same; safe to run on every peer.
+    /// </summary>
+    public static void Decouple()
+    {
+        if (!HouseBanners.IsActive)
+            return;
+        foreach (var kingdom in Kingdom.All)
+        {
+            var banner = kingdom?.Banner;
+            if (banner != null && ReferenceEquals(banner, kingdom!.RulingClan?.ClanOriginalBanner))
+                kingdom.Banner = new Banner(banner);
+        }
+    }
+
+    /// <summary>Marks the visuals of everything that shows a banner of the kingdom's clans for a redraw.</summary>
     private static void Redraw(Kingdom kingdom)
     {
         foreach (var clan in kingdom.Clans)
-            HouseBanners.Redraw(clan);
+        {
+            foreach (var party in clan.WarPartyComponents)
+                party?.MobileParty?.Party?.SetVisualAsDirty();
+            foreach (var settlement in clan.Settlements)
+                settlement?.Party?.SetVisualAsDirty();
+        }
     }
 }

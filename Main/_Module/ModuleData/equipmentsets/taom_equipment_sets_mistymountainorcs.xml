@@ -38,7 +38,7 @@
 			<Equipment slot="Head" id="Item.sk_md_orc_brt_helmet_heavy_a" />
 			<Equipment slot="Body" id="Item.sk_md_orc_arc_chest_heavy_a" />
 			<Equipment slot="Cape" id="Item.sk_md_orc_pauldron_med_a" />
-			<Equipment slot="Gloves" id="Item.sk_md_orc_bracer_med_a" />
+			<Equipment slot="Gloves" id="Item.sk_md_mor_arc_bracer_heavy_b" />
 			<Equipment slot="Leg" id="Item.sk_md_orc_boots_med_a" />
 			<Equipment slot="HorseHarness" id="Item.warg_saddle" />
 			<Equipment slot="Horse" id="Item.warg_brown" />

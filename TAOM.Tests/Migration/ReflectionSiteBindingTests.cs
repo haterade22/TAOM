@@ -56,6 +56,9 @@ public class ReflectionSiteBindingTests
     [DataRow("TaleWorlds.CampaignSystem.ViewModelCollection.Party.PartyCharacterVM", "PartyCharacterVM", "TypeIconData", "Property", "RoleTooltipDecorator.cs:40")]
     [DataRow("TaleWorlds.MountAndBlade.ViewModelCollection.OrderOfBattle.OrderOfBattleHeroItemVM", "OrderOfBattleHeroItemVM", "_cachedTooltipProperties", "Field", "RoleTooltipDecorator.cs:41")]
     [DataRow("TaleWorlds.MountAndBlade.ViewModelCollection.OrderOfBattle.OrderOfBattleHeroItemVM", "OrderOfBattleHeroItemVM", "GetCaptainTooltip", "Method", "ManualPatchApplicator.cs:85 (manual patch)")]
+    // --- Realms encyclopedia Titles page (TitleEncyclopediaPagePatch.cs) ---
+    [DataRow("TaleWorlds.CampaignSystem.Encyclopedia.EncyclopediaPage", "EncyclopediaPage", "_identifierTypes", "Field", "TitleEncyclopediaPagePatch.cs:28")]
+    [DataRow("TaleWorlds.CampaignSystem.Encyclopedia.EncyclopediaManager", "EncyclopediaManager", "_pages", "Field", "TitleEncyclopediaPagePatch.cs:29")]
     // --- CharacterCreation narrative mount guard, Patch20 prefix (CharacterCreationCampaignBehavior_GetYouthMenuArgs_Patch.cs) ---
     [DataRow("SandBox.GauntletUI.CharacterCreation.CharacterCreationNarrativeStageView", "CharacterCreationNarrativeStageView", "SpawnNonHumanNarrativeMenuCharacter", "Method", "CharacterCreationCampaignBehavior_GetYouthMenuArgs_Patch.cs:154 (TargetMethod)")]
     [DataRow("SandBox.GauntletUI.CharacterCreation.CharacterCreationNarrativeStageView", "CharacterCreationNarrativeStageView", "_characterScene", "Field", "CharacterCreationCampaignBehavior_GetYouthMenuArgs_Patch.cs:158 (____characterScene)")]
