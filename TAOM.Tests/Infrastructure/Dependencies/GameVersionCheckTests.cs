@@ -73,12 +73,13 @@ public class GameVersionCheckTests
     }
 
     [TestMethod]
-    public void ReadSubModule_ShippedTaomFile_PinsNative157()
+    public void ReadSubModule_ShippedTaomFile_PinsTheGameVersionTheRepoTargets()
     {
         var path = RepoPaths.RepoPath("Main", "_Module", "SubModule.xml");
         var (pin, version) = GameVersionCheck.ReadSubModule(File.ReadAllText(path));
 
-        Assert.AreEqual(Pin, pin);
+        var pinned = File.ReadAllText(RepoPaths.RepoPath(".claude", "pinned-game-version.txt")).Trim();
+        Assert.AreEqual(pinned + ".*", pin);
         Assert.AreEqual((string)XDocument.Load(path).Root!.Element("Version")!.Attribute("value")!, version);
     }
 
@@ -173,6 +174,8 @@ public class GameVersionCheckTests
         int box = run.IndexOf("ShowMessageBox(", StringComparison.Ordinal);
         Assert.IsTrue(guard >= 0 && mismatch > guard && skip > mismatch && box > skip,
             "server/test guard, then only on a mismatch: turn TAOM's code off, else the box");
+        int kit = run.IndexOf("IncompatibleModDetector.IsEditorBin(", StringComparison.Ordinal);
+        Assert.IsTrue(kit > guard && kit < mismatch, "the Modding Kit is skipped before anything is read or turned off");
         StringAssert.Contains(run, "taomSkipped: true");
         StringAssert.Contains(run, "taomSkipped: false");
 
@@ -196,6 +199,8 @@ public class GameVersionCheckTests
     }
 
     [TestMethod]
+    [TestCategory("RequiresGameIL")]
+    [TestCategory("BindingVerification")]
     public void Guard_Target_BindsOnTheReferencedEngine_WithThePrefixShape()
     {
         var target = typeof(TaleWorlds.MountAndBlade.Module).GetMethod("CheckIfSubmoduleCanBeLoadable",
@@ -225,7 +230,7 @@ public class GameVersionCheckTests
     public void InstalledGame_MatchesTheShippedPin()
     {
         string? env = Environment.GetEnvironmentVariable("BANNERLORD_GAME_DIR");
-        var game = string.IsNullOrWhiteSpace(env) ? @"C:\STEAM\steamapps\common\Mount & Blade II Bannerlord" : env!;
+        var game = string.IsNullOrWhiteSpace(env) ? @"E:\Steam\steamapps\common\Mount & Blade II Bannerlord" : env!;
         var versionFile = Path.Combine(game, "bin", "Win64_Shipping_Client", "Version.xml");
         if (!Directory.Exists(game))
             Assert.Inconclusive("Bannerlord install not found.");

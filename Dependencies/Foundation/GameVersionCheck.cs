@@ -124,8 +124,8 @@ public static class GameVersionCheck
     public const string Caption = "TAOM: wrong Bannerlord version";
 
     /// <summary>
-    /// The warning text. Plain English with no language key: TAOM's code, which reads its strings, is not
-    /// running. <paramref name="taomSkipped"/>: TAOM.Dependencies turned TAOM's code off and the game
+    /// The warning text. Plain English with no language key, so the text also works in the native fallback box
+    /// and when TAOM's own files are the problem. <paramref name="taomSkipped"/>: TAOM.Dependencies turned TAOM's code off and the game
     /// reached the main menu (the TAOM popup); otherwise the native box before the engine's own error box.
     /// </summary>
     public static string Text(string pin, string? taomVersion, int major, int minor, int revision, bool taomSkipped)

@@ -18,8 +18,8 @@ namespace TAOM.Dependencies;
 /// constructs every MBSubModuleBase in load order, and runs OnSubModuleLoad only after that loop. A
 /// TAOM.Client that fails there is a CriticalError: one "Error while loading TAOM" box, then
 /// MBDebug.AbortGame and a throw, so the game never reaches the main menu. TAOM.Dependencies loads
-/// first, so its SubModule constructor is the last TAOM code that runs before that. ModuleHelper is
-/// filled before the loop (Module.Initialize calls InitializeModules first).
+/// first, so its SubModule constructor runs before any other TAOM submodule loads and before the engine's
+/// box. ModuleHelper is filled before the loop (Module.Initialize calls InitializeModules first).
 ///
 /// On a mismatch this turns TAOM's code off for the session: a prefix on
 /// Module.CheckIfSubmoduleCanBeLoadable, which the same loop asks for every submodule before it loads
@@ -29,7 +29,7 @@ namespace TAOM.Dependencies;
 /// to close the game rather than play. If the prefix can't be installed, a native message box (the call
 /// the engine uses for its own box) says the same before the engine's box.
 ///
-/// Same guard as the engine's own box: not on a dedicated server, not in test mode. Runs once per
+/// Same guard as the engine's own box: not on a dedicated server, not in test mode; also not in the Modding Kit. Runs once per
 /// process. Never throws: a throw here would make the engine fail TAOM.Dependencies itself.
 /// </summary>
 internal static class GameVersionNotice
@@ -62,6 +62,14 @@ internal static class GameVersionNotice
         if (GameNetwork.IsDedicatedServer || TaleWorlds.Engine.MBDebug.TestModeEnabled)
         {
             DiagLog.Log(Tag, "skipped: dedicated server or test mode");
+            return;
+        }
+
+        // The Modding Kit loads TAOM.Dependencies too, and its engine can lag the client's: turning TAOM's
+        // code off there would break the Kit. IncompatibleModDetector.RunEarlyPhase skips it the same way.
+        if (IncompatibleModDetector.IsEditorBin(typeof(GameVersionNotice).Assembly.Location))
+        {
+            DiagLog.Log(Tag, "skipped: Modding Kit");
             return;
         }
 
