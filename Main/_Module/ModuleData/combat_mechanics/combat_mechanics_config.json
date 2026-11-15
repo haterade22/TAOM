@@ -6,7 +6,7 @@
     "skillDeadZone": 20,
     "skillTargetDelta": 135,
     "maxSkillChance": 0.5,
-    "skillCurveExponent": 0.008097,
+    "skillCurveExponent": 0.01197,
     "energyRampMarginFactor": 0.27,
     "nonOverheadPenaltyFactor": 0.5,
     "monsterAutoCrushEnabled": true,

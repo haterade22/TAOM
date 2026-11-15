@@ -66,7 +66,7 @@ public static class ChronicleConfigValidator
         "windowDays", "target", "attackers", "defender", "openText", "lapsedText", "story",
     };
 
-    private static readonly string[] StoryKeys = { "mission", "fate", "fateText" };
+    private static readonly string[] StoryKeys = { "mission", "attackMission", "fate", "fateText" };
 
     private static readonly string[] OutcomeKeys = { "text", "effects", "momentum" };
     private static readonly string[] EffectKeys = { "target", "kind", "magnitude", "durationDays" };
@@ -318,7 +318,13 @@ public static class ChronicleConfigValidator
             return null;
         }
 
-        var story = new ChronicleStoryDefinition { MissionId = mission!, FateText = OptionalText(o, "fateText", where, warnings) };
+        var attack = OptionalText(o, "attackMission", where, warnings);
+        var story = new ChronicleStoryDefinition
+        {
+            MissionId = mission!,
+            AttackMissionId = string.IsNullOrWhiteSpace(attack) ? null : attack,
+            FateText = OptionalText(o, "fateText", where, warnings),
+        };
         if (o["fate"] != null && o["fate"]!.Type != JTokenType.Null)
         {
             // Read as requiresOutcome is read (EnumNames.TryParse: trimmed, any case).

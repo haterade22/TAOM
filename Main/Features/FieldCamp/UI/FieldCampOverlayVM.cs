@@ -39,6 +39,7 @@ public sealed class FieldCampOverlayVM : ViewModel
     private readonly Func<string, ViewModel>? _captionHint;
 
     private ViewModel? _campButtonHint;
+    private string? _campButtonHintText;
     private bool _isCampActive;
     private bool _showCampButton;
     private bool _canMakeCamp;
@@ -148,8 +149,6 @@ public sealed class FieldCampOverlayVM : ViewModel
                 return;
             _campButtonText = value;
             OnPropertyChangedWithValue(value, nameof(CampButtonText));
-            if (_captionHint != null)
-                CampButtonHint = _captionHint(value);
         }
     }
 
@@ -217,6 +216,7 @@ public sealed class FieldCampOverlayVM : ViewModel
 
         var camp = _camps.PlayerCamp;
         CampButtonText = ResolveCaption(camp);
+        RefreshCampButtonHint();
 
         if (camp == null)
         {
@@ -258,14 +258,29 @@ public sealed class FieldCampOverlayVM : ViewModel
         _menus.Activate(FieldCampCampaignBehavior.BaseMenuId);
     }
 
+    // The same CampButtonBlocks.Pick that words the tooltip, so a blocked click always has a stated reason.
     private bool MayOpenCampMenu()
     {
         return !_activation.DefersToCoopHost
-            && _activation.IsMapScreenClear
-            && _activation.IsMainPartyStationary
-            && !_activation.IsMainPartyInSettlement
-            && !_activation.IsMainPartyInEncounter
-            && !_activation.IsMainPartyDisorganized;
+            && CampButtonBlocks.Pick(_activation) == CampButtonBlock.None;
+    }
+
+    /// <summary>The icon's tooltip: the caption, plus the reason while the button is blocked. Rebuilt only when its
+    /// text changes, so the 4 Hz refresh does not rebind it.</summary>
+    private void RefreshCampButtonHint()
+    {
+        if (_captionHint == null)
+            return;
+
+        var block = _settings.Enabled && !_activation.DefersToCoopHost
+            ? CampButtonBlocks.Pick(_activation)
+            : CampButtonBlock.None;
+        var text = CampButtonBlocks.Tooltip(_campButtonText, block);
+        if (text == _campButtonHintText)
+            return;
+
+        _campButtonHintText = text;
+        CampButtonHint = _captionHint(text);
     }
 
     private string ResolveCaption(CampState? camp)

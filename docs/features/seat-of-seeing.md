@@ -728,8 +728,10 @@ checkout when its sha is not HEAD, when the stamp line says `MISMATCH` (the word
 a deletion included), or when an uncommitted file under the build's own pathspec (`Main`, `Client`, `CoopCompat`, `Dependencies`, `Stubs`,
 `Directory.Build.props`, `GameReferences.targets`) is newer than the stamp's build time. It cannot tell a dirty deploy of a sibling
 worktree at the same HEAD from this one when this tree's edits are older than that build, a deletion made after a dirty build, or a file
-restored to HEAD after a dirty build while an older edit stays in the tree. Only a content hash in the stamp could close those three. The checkout is read when the run is judged, after the game exits, and not when it
-was launched, so an edit or a merge made in between is seen; a git that fails then is exit 1 with the reason. Its
+restored to HEAD after a dirty build while an older edit stays in the tree. Nor can it tell a dirty build redeployed between two runs of
+one `--runs` batch, because the edits read at launch are older than that build; each PASS names the build time, so the two builds read
+apart. Only a content hash in the stamp could close those four. The checkout is read once, in `main`, before the game starts, and not when the run is judged, so a commit or an edit made while the game runs does not fail a good run; a git that fails at launch is exit 1 with the reason and nothing is started.
+The check itself (`stale_build`, `checkout_state` and `build_label`) lives in `tools/autorun_build.py`, shared with `run_scenario.py` and `run_long_defeat.py`. Its
 PASS text names the build, the `[Session]` swallowed counts and `errors=` of the log's last summary line, and every swallow site that was written (a swallowed exception does not fail a run, and the number is beside the PASS).
 
 **What a PASS does not prove**, because only a person or a further run can:

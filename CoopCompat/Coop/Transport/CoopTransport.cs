@@ -5,6 +5,7 @@ using Common.Messaging;
 using Common.Network;
 using Coop.Core.Client.Messages;
 using GameInterface;
+using GameInterface.Services.Players;
 using LiteNetLib;
 using TAOM.CoopCompat.Messages;
 
@@ -21,16 +22,18 @@ namespace TAOM.CoopCompat.Transport;
 public sealed class CoopTransport : ICoopTransport
 {
     private readonly Action<Action> _runOnGameThread;
+    private readonly Func<NetPeer, string?> _heroOfPeer;
     private bool _started;
 
-    public CoopTransport() : this(action => GameThread.RunSafe(action, context: "TAOM.CoopCompat"))
+    public CoopTransport() : this(action => GameThread.RunSafe(action, context: "TAOM.CoopCompat"), HeroOfConnectedPeer)
     {
     }
 
-    /// <summary>Tests replace the game-thread marshal, which needs a running game loop.</summary>
-    internal CoopTransport(Action<Action> runOnGameThread)
+    /// <summary>Tests replace the game-thread marshal, which needs a running game loop, and the player lookup.</summary>
+    internal CoopTransport(Action<Action> runOnGameThread, Func<NetPeer, string?>? heroOfPeer = null)
     {
         _runOnGameThread = runOnGameThread;
+        _heroOfPeer = heroOfPeer ?? HeroOfConnectedPeer;
     }
 
     public event Action? ClientReady;
@@ -40,6 +43,10 @@ public sealed class CoopTransport : ICoopTransport
     public event Action<CoopCompatHelloReply>? HelloReplyReceived;
 
     public event Action<CoopCompatMomentumSnapshot>? SnapshotReceived;
+
+    public event Action<CoopPeer, string, CoopCompatTradeRequest>? TradeRequestReceived;
+
+    public event Action<CoopCompatTradeReply>? TradeReplyReceived;
 
     public CoopRole CurrentRole
     {
@@ -61,6 +68,8 @@ public sealed class CoopTransport : ICoopTransport
         broker.Subscribe<CoopCompatHello>(OnHello);
         broker.Subscribe<CoopCompatHelloReply>(OnHelloReply);
         broker.Subscribe<CoopCompatMomentumSnapshot>(OnSnapshot);
+        broker.Subscribe<CoopCompatTradeRequest>(OnTradeRequest);
+        broker.Subscribe<CoopCompatTradeReply>(OnTradeReply);
     }
 
     public bool SendToServer(CoopCompatHello message) => Send(CoopRole.Client, n => n.SendAll(message));
@@ -69,6 +78,11 @@ public sealed class CoopTransport : ICoopTransport
         peer.Handle is NetPeer target && Send(CoopRole.Server, n => n.Send(target, message));
 
     public bool SendToPeer(CoopPeer peer, CoopCompatMomentumSnapshot message) =>
+        peer.Handle is NetPeer target && Send(CoopRole.Server, n => n.Send(target, message));
+
+    public bool SendToServer(CoopCompatTradeRequest message) => Send(CoopRole.Client, n => n.SendAll(message));
+
+    public bool SendToPeer(CoopPeer peer, CoopCompatTradeReply message) =>
         peer.Handle is NetPeer target && Send(CoopRole.Server, n => n.Send(target, message));
 
     public bool Broadcast(CoopCompatMomentumSnapshot message) => Send(CoopRole.Server, n => n.SendAll(message));
@@ -112,5 +126,46 @@ public sealed class CoopTransport : ICoopTransport
 
         var snapshot = payload.What;
         _runOnGameThread(() => SnapshotReceived?.Invoke(snapshot));
+    }
+
+    private void OnTradeRequest(MessagePayload<CoopCompatTradeRequest> payload)
+    {
+        if (CurrentRole != CoopRole.Server || payload.Who is not NetPeer netPeer) return;
+
+        var request = payload.What;
+        _runOnGameThread(() =>
+        {
+            // The hero comes from the connection, read when the request is handled: a reconnect gives the player a
+            // new peer, and the old one then stands for nobody (after Sternab's TAOM-Coop request check).
+            var heroId = _heroOfPeer(netPeer) ?? "";
+            TradeRequestReceived?.Invoke(new CoopPeer(netPeer, netPeer.Id.ToString()), heroId, request);
+        });
+    }
+
+    private void OnTradeReply(MessagePayload<CoopCompatTradeReply> payload)
+    {
+        if (CurrentRole != CoopRole.Client) return;
+
+        var reply = payload.What;
+        _runOnGameThread(() => TradeReplyReceived?.Invoke(reply));
+    }
+
+    private static string? HeroOfConnectedPeer(NetPeer peer)
+    {
+        if (peer.ConnectionState != ConnectionState.Connected) return null;
+        return ContainerProvider.TryResolve<IPlayerManager>(out var players) ? HeroOfCurrentController(players, peer) : null;
+    }
+
+    /// <summary>
+    /// The StringId of the hero that the peer's current connection controls, or null. Player.HeroId is Coop's object
+    /// key ("Hero_" + StringId), which CampaignObjectManager.Find cannot resolve, so the hero comes from Coop's own
+    /// sender lookup. The controller check comes first: after a reconnect the old peer stands for nobody.
+    /// </summary>
+    internal static string? HeroOfCurrentController(IPlayerManager players, NetPeer peer)
+    {
+        if (!players.TryGetCurrentController(peer, out _)) return null;
+        if (!players.TryGetSenderHero(peer, out var hero) || hero == null) return null;
+
+        return string.IsNullOrEmpty(hero.StringId) ? null : hero.StringId;
     }
 }

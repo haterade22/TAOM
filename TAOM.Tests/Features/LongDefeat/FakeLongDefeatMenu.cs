@@ -53,5 +53,24 @@ internal sealed class FakeLongDefeatMenu : ILongDefeatMenuAdapter
         Messages.Add(message);
     }
 
+    /// <summary>The values of each notice that carried any, in order.</summary>
+    public List<IReadOnlyDictionary<string, string>> MessageValues { get; } = new();
+
+    public void Notify(string message, IReadOnlyDictionary<string, string> values)
+    {
+        Notify(message);
+        MessageValues.Add(values);
+    }
+
+    /// <summary>The lines a text prompt answers with, in order; an empty queue is Cancel.</summary>
+    public Queue<string> TextAnswers { get; } = new();
+
+    public void AskText(string title, string text, Action<string> onDone)
+    {
+        Prompts.Add(new Prompt(title, text, Array.Empty<LongDefeatChoice>()));
+        if (TextAnswers.Count > 0)
+            onDone(TextAnswers.Dequeue());
+    }
+
     public void EndGame() => EndGames++;
 }
