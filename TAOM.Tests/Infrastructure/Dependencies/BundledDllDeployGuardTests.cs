@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Xml.Linq;
 using System.Xml.XPath;
@@ -87,5 +89,38 @@ public class BundledDllDeployGuardTests
         StringAssert.Contains(condition, "!Exists('$(TargetDir)%(Identity)')");
         Assert.IsNotNull(error, $"{GuardName} raises no error.");
         Assert.AreEqual("'@(_TaomDepsMissingDll)' != ''", (string?)error!.Attribute("Condition"));
+    }
+
+    [TestMethod]
+    public void PinnedBuildResources_DeclaresTheGuardHostBeforeTheCleanAndIgnoresDisableModuleCopy()
+    {
+        // Arrange: the guard's scheduling and condition rest on facts of the pinned package's Basic.targets.
+        var csproj = XDocument.Load(RepoPaths.RepoPath("Dependencies", "TAOM.Dependencies.csproj"));
+        var version = csproj.Descendants("PackageReference")
+            .Where(r => (string?)r.Attribute("Include") == "Bannerlord.BuildResources")
+            .Select(r => (string?)r.Attribute("Version")).SingleOrDefault();
+        Assert.IsNotNull(version, "Dependencies/TAOM.Dependencies.csproj pins no Bannerlord.BuildResources.");
+        var profile = Environment.GetEnvironmentVariable("USERPROFILE") ?? "";
+        var targetsPath = Path.Combine(profile, ".nuget", "packages", "bannerlord.buildresources", version!, "build", "Basic.targets");
+        if (!File.Exists(targetsPath))
+        {
+            Assert.Inconclusive($"Bannerlord.BuildResources {version} is not in the NuGet cache ({targetsPath}).");
+        }
+
+        // Act
+        var targets = XDocument.Load(targetsPath).Descendants()
+            .Where(e => e.Name.LocalName == "Target").ToList();
+        var names = targets.Select(t => (string?)t.Attribute("Name")).ToList();
+        var clean = targets.Single(t => (string?)t.Attribute("Name") == "CopyBinariesWindows");
+
+        // Assert: (a) PostBuildCopyToModules is declared first, so BeforeTargets on it precedes the clean;
+        // (b) the clean does not look at DisableModuleCopy, so the guard's condition must not either.
+        var hostIndex = names.IndexOf("PostBuildCopyToModules");
+        Assert.IsTrue(hostIndex >= 0, "Basic.targets declares no PostBuildCopyToModules.");
+        Assert.IsTrue(hostIndex < names.IndexOf("CopyBinariesWindows"),
+            "PostBuildCopyToModules is no longer declared before CopyBinariesWindows.");
+        var condition = (string?)clean.Attribute("Condition") ?? "";
+        Assert.IsFalse(condition.Contains("DisableModuleCopy"),
+            $"CopyBinariesWindows now checks DisableModuleCopy: {condition}");
     }
 }

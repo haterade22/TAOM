@@ -86,7 +86,7 @@
 	     <game>\Modules\$(ModuleId)\bin\Win64_Shipping_Client (Basic.targets, CopyFolder Clean="true"), then
 	     copies only this project's output. The bundled third-party DLLs come back only through CopyModule
 	     copying _Module\bin\Win64_Shipping_Client. A checkout without them (a sparse checkout that skips
-	     *.dll, a partial clone) deploys a module the engine cannot load ("Cannot load:
+	     *.dll) deploys a module the engine cannot load ("Cannot load:
 	     Microsoft.Bcl.HashCode.dll", 2026-11-15). So fail before that clean when a DLL the module's
 	     SubModule.xml loads is neither built nor staged. CopyBinariesWindows' own condition, since it does
 	     not check DisableModuleCopy and a BeforeTargets runs whatever the host's condition. -->

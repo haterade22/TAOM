@@ -821,10 +821,10 @@ Code: No code changes needed
 - **A deploy first deletes every bundled DLL in the install's client bin.** `CopyBinariesWindows`
   cleans each `.dll`, `.pdb` and `.config` there (`Basic.targets:56`, `Clean="true"`) and copies only
   the build output; the 44 vendored DLLs come back only from `_Module/bin/Win64_Shipping_Client/` via
-  `CopyModule`. A checkout without them (a sparse checkout skipping `*.dll`, a partial clone) left the
+  `CopyModule`. A checkout without them (a sparse checkout skipping `*.dll`) left the
   module unloadable on 2026-11-15 ("Cannot load: Microsoft.Bcl.HashCode.dll"). `FailOnMissingBundledDlls`
   now fails such a deploy before the clean when a DLL named in `_Module/SubModule.xml` is neither built
-  nor staged (pinned by `BundledDllDeployGuardTests`). <!-- measured: git ls-files Dependencies/_Module/bin | wc -l 2026-11-16 -->
+  nor staged (pinned by `BundledDllDeployGuardTests`, which also reads the pinned package's `Basic.targets`). The guard checks only the DLLs named in `Dependencies/_Module/SubModule.xml` (9 names, 8 of them among the 44 vendored files; `TAOM.Dependencies.dll` is built); that catches the real failure, since a sparse checkout drops all 44 together, but not a partial set. <!-- measured: git ls-files Dependencies/_Module/bin | wc -l 2026-11-16 -->
 - **The build output overwrites the vendored files on every deploy.** That is how the Unsafe 6.0.0
   regression shipped: the vendored file was right and the csproj pin clobbered it
   (`TAOM.Tests/Infrastructure/DependenciesPairingTests.cs:70-71`).
