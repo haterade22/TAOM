@@ -25,8 +25,8 @@ Codex pass (`high`, on commit 5832fc5c6): no P1 or P2. Three P3 findings in the 
 | 8 | LOW | The commit body of 5832fc5c6 says an ally can call Gondor in "for 42 days at a time". Only the agreement and its peace block end after 42 days; `EndCallToWarAgreement` makes no peace, so the war goes on as an ordinary war. | Wording that implies an effect | The builder read `EndCallToWarAgreement` and shortened the sentence past what it does. | The follow-up commit body states it correctly. The docs and the issue already said "the agreement lasts 42 days". |
 | 9 | LOW | `docs/modding/configs-factions-and-world.md` still gave 153 rows and 79 Hostile. | Stale prose copy of data | The search for the old count used the words "Hostile pairs" and missed a table row that lists the totals. | Corrected to 152 and 78. Same repeat as finding 2. |
 
-- FOLLOW-UP (no issue: predates this change, for the maintainer's batch): `BattleBalanceConfigProvider.ValidateConfig` reverts an out-of-range survival value to 0, not to its compiled default, and prints no summary warning (`config-providers.md` items 5 and 6).
-- FOLLOW-UP (no issue: predates this change, for the maintainer's batch): no test asserts that both kingdom ids of every `diplomacy.json` row resolve (`xml-data.md`, "Config ID Cross-Reference"). Codex cross-checked the shipped rows and found no bad id.
+- FOLLOW-UP (#1291, fixed 2026-11-15): `BattleBalanceConfigProvider.ValidateConfig` (now `Validate`) reverted an out-of-range survival value to 0, not to its compiled default, and printed no summary warning (`config-providers.md` items 5 and 6).
+- FOLLOW-UP (#1291, fixed 2026-11-15): no test asserted that both kingdom ids of every `diplomacy.json` row resolve (`xml-data.md`, "Config ID Cross-Reference"). Codex cross-checked the shipped rows and found no bad id.
 
 Caught by the builder before the lens ran, recorded for the pattern:
 
@@ -55,3 +55,36 @@ Finding 1 is a different class: a change that removes state. `csharp-architectur
 
 - In game: the AI-only campaign named on #1283 (label `triage-needs-ingame`). It now also records whether an ally calls Gondor into a war with Dunland after day 44, and whether the two realms ally before day 30.
 - FOLLOW-UP (#1283): if that run shows a called war, decide whether the pair needs a relationship tier that refuses AI wars without making an alliance.
+
+## #1291 review (2026-11-15)
+
+The two FOLLOW-UP gaps above were fixed under #1291 and went through the tier 2 Data flow lens (Codex not run: the dispatch was refused in that session, so its pass is owed). The lens confirmed the fallback logic under Newtonsoft's merge and found no HIGH. Its confirmed findings, all fixed before the commit:
+
+| # | Sev | Finding | Fix |
+|---|---|---|---|
+| R1 | MED | No test called `GetConfig`, so deleting its `Validate` call left every test green, and the Newtonsoft merge and null-token paths were untested | Three tests through a temp file: an out-of-range penalty, a null section, a null value; the first two fail with the call removed |
+| R2 | MED | `configs-balance.md` gave 0 as the survival default when absent; the merge keeps the compiled row | Column rewritten, tier column too |
+| R3 | LOW | A bad tier key with no compiled row reverted to 1.0, while a missing key reads the formula (5.46 for T11) | A bad row with no compiled row is removed, for both tables, so the lookup's fallback decides |
+| R4 | LOW | The four null branches had no warning or summary asserts | Each null test asserts its warning and the summary |
+| R5 | LOW | `_cache` was assigned before `Validate` ran | Deserialized into a local, cached after `Validate` |
+
+Root cause of R1 and R4: the tests were written per branch of `Validate`, not per promise the provider makes to the player. Lesson: `docs/reviews/lessons/testing-qa.md`, "A validator test that builds its config in C# never meets the deserializer". R2 is the pattern above: a doc row edited without reading what produces its value.
+
+## #1283 batch 2 review (2026-11-15)
+
+Scope: Hold the Walls by realm (`CapturedFortHold.Factions`), seven Isengard clans raised from tier 3 to tier 5, and the auto-resolve power exponent (`AutoResolve.PowerRatioExponent`, 0.5). Tier 1 (a GameModel): Data flow and Engine compatibility lenses at max effort, plus the XML lens. Codex ultra is owed: the account's usage limit blocks it until 2026-11-20. No lens found a CRITICAL or HIGH, so no second wave ran. Confirmed findings, all fixed before the commit:
+
+| # | Sev | Lens | Finding | Fix |
+|---|---|---|---|---|
+| B1 | MED | Data flow | The wiring test pinned two bare method names; swapping the striker and struck powers, dropping `AddFactor` or passing a literal exponent kept the pinned text | `AutoResolveQualityMath.Apply(ref ExplainedNumber, ...)` holds the composition, with `RequiresGame` tests that fail on a swap (mutation run); the wiring test pins the full call and the exponent read |
+| B2 | MED | Engine compat | The docs stated the strength law `N^1.6 x P^1.4` for every battle; a siege assault on a town with more than 100 defenders or a castle with more than 30 uses another tick rule (`GetSimulationTicksForBattleRound`, lines 247-251) | Docs and comments name the field branch and state the siege rule |
+| B3 | MED | Engine compat | The docs did not say the factor reaches the player's Send troops and raids | Kept, so one battle has one rule; both docs say so, and the in-game check names it |
+| B4 | LOW | Both | "Reads the powers exactly as the base does" is false after a side's leader hero dies mid-event: the engine keeps its cached modifier | Wording fixed; a reflection read was rejected (a binding for a few percent) |
+| B5 | LOW | XML, both | `faction-balance.md` said each raised clan has exactly three adults (`clan_isengard_4` has four), gave +30 party size for a clan leader (+50), and left out the starting renown and influence the tier also raises | Corrected and added |
+| B6 | LOW | Engine compat, data flow | Stale citations: provider lines in `configs-balance.md`, the override line in `external-mod-couplings.md`, test counts and the `P^e` header; older text said troop power reads tier and mount only | Corrected against the current files |
+| B7 | LOW | Data flow | `INDEX.md`, `configs-factions-and-world.md` and two `hold-the-walls.md` lines still described a Free-only hold | Updated |
+| B8 | LOW | Engine compat | The 1- and 2-argument model constructors had no caller left | Removed |
+
+Declined: a per-clan adult-lord test (XML lens). It would copy the engine's age and occupation rules into a test for a one-time data change.
+
+Root cause of B2 and B4: a derived law was written from the one engine branch that was read, and the two other branches of the same method, and the hero-death path, were not opened. B1 repeats the existing lesson "A source-text test pins wiring, never the decision": the rule existed and the first draft did not follow it. Lesson: `docs/reviews/lessons/gamemodels-services.md`, "A law derived from one branch of an engine method holds only on that branch".

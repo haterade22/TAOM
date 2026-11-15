@@ -13,8 +13,8 @@ namespace TAOM.Client.Features.CustomBattles.Muster.Hooks;
 
 /// <summary>
 /// Opens the muster screen (movie TaomCustomBattle, <see cref="TcbVM"/>) over the Custom Battle screen when it opens.
-/// The vanilla screen (with TAOM's CustomBattleScreen.xml and Patch19 selectors) stays underneath: "Old screen"
-/// removes the muster layer. A failure leaves the old screen. Applied with Patch19_CustomBattles.
+/// The vanilla screen (with TAOM's CustomBattleScreen.xml and Patch19 selectors) stays underneath, as the fallback
+/// when the muster cannot open (#1293: the muster has no way back to it). Applied with Patch19_CustomBattles.
 /// The movie draws TAOM's shared front-end art, which only FrontEndMovieService registers and holds (its LoadMovie
 /// patch takes the hold before the movie binds and gives it back after the layer goes), so without that service the
 /// old screen stays too.
@@ -40,15 +40,8 @@ internal static class CustomBattleScreen_OnInitialize_Patch
                 return;
             }
             TcbSprites.Prepare(IoC.Resolve<IPathService>().ModuleRootPath);
-            GauntletLayer? layer = null;
-            var vm = new TcbVM(() =>
-            {
-                if (layer == null) return;
-                layer.InputRestrictions.ResetInputRestrictions();
-                __instance.RemoveLayer(layer);
-                layer = null;
-            }, KingdomBanners());
-            layer = new GauntletLayer(MovieName, LayerOrder);
+            var vm = new TcbVM(KingdomBanners());
+            var layer = new GauntletLayer(MovieName, LayerOrder);
             layer.LoadMovie(MovieName, vm);
             layer.InputRestrictions.SetInputRestrictions();
             layer.IsFocusLayer = true;

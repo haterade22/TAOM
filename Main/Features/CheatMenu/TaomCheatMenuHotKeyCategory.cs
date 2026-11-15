@@ -24,9 +24,10 @@ public sealed class TaomCheatMenuHotKeyCategory : GameKeyContext
         : base(CategoryId, RegisteredSlotCount, GameKeyContextType.Default)
     {
         // H is free on the v1.5.3 campaign map: MapHotKeyCategory and GenericCampaignPanelsGameKeyCategory do not bind
-        // it, and no TAOM key uses it. In battle vanilla binds H only in CheatsHotKeyCategory (Ctrl combos in game cheat
-        // mode); DualWield uses N. The RTS Camera and Command System defaults could not be checked (their code is not
-        // on the build PC), so the key is rebindable.
+        // it, and no TAOM map key uses it. In battle vanilla binds H in CheatsHotKeyCategory (Ctrl combos in game cheat
+        // mode); DualWield uses N; Fords of War and The Long Defeat read raw H, so BattleCheatMenuView stays off the key
+        // in their missions. The RTS Camera and Command System defaults could not be checked (their code is not on the
+        // build PC), so the key is rebindable.
         RegisterGameKey(new GameKey(OpenCheatMenuKeyId, "TaomOpenCheatMenu", CategoryId,
             InputKey.H, GameKeyMainCategories.CampaignMapCategory));
         // The battle key sits under Action, as the Seat's and Marshal's Word's battle keys do. A press with Ctrl or Alt held

@@ -679,8 +679,9 @@ public class SubModule : MBSubModuleBase
             if (stale != null)
                 Features.BattleLoadDiagnostics.StallReportNotifier.Notify(stale);
             // Any other session that ended without the clean unload line: offer the bug report (crash-report.md).
-            else
-                Features.CrashReport.BugReport.BugReportStartup.CheckPreviousSession(IoC.Resolve<IModLogger>());
+            // Once per launch; a launch that showed the stall notice uses its turn here, so no later menu offers it.
+            Features.CrashReport.BugReport.BugReportStartup.CheckPreviousSession(
+                IoC.Resolve<IModLogger>(), stallNoticeShown: stale != null);
         }
         catch { /* never block the main menu over a diagnostic */ }
 
@@ -1222,7 +1223,7 @@ public class SubModule : MBSubModuleBase
         var battleBalanceSettings = IoC.Resolve<IBattleBalanceSettingsProvider>();
         var battleBalanceConfig = IoC.Resolve<IBattleBalanceConfigProvider>();
         campaignStarter.AddModel(new TaomMilitaryPowerModel(battleBalanceSettings, battleBalanceConfig));
-        campaignStarter.AddModel(new TaomCombatSimulationModel(battleBalanceSettings, IoC.Resolve<Features.Refuge.IRefugeDefenseService>()));
+        campaignStarter.AddModel(new TaomCombatSimulationModel(battleBalanceSettings, IoC.Resolve<Features.Refuge.IRefugeDefenseService>(), battleBalanceConfig));
         campaignStarter.AddModel(new TaomPartyHealingModel(battleBalanceSettings, battleBalanceConfig, IoC.Resolve<ICareerPassiveService>(), IoC.Resolve<Features.FieldCamp.Activities.CampRestHealing>()));
 
         campaignStarter.AddModel(new TaomInformationRestrictionModel(IoC.Resolve<IEncyclopediaSettingsProvider>()));

@@ -100,9 +100,9 @@ so nothing matches. `fighter_erebor`'s keys carry hair indices 1 and 10, and a t
 no hair draws between them (native `FUN_18057c9f0`, v1.5.6), so no dwarf lady can start bald (index
 0 of the dwarf woman's skin is the Bald mesh). Each lady carries `<hair_tag name="TiedAcrossBack" />`
 as a style choice: it picks among the 8 tied styles (`dwarf_hair_c`, `_e` to `_k`) instead of `_a`
-to `_j`. The generator requires a tag on every face-template realm. Banners: dwarf
-icons 24000 to 24003 (`banner_icons.xml`, ones no clan flew) in silver on the slate blue of palette
-200.
+to `_j`. The generator requires a tag on every face-template realm. Banners: since #1265
+(2026-11-14) the House of Delingur flies dwarf icon 31007 in colour 110 on a field of colours 292 and 200, and the other
+three houses fly layered keys of their own (`clans.xml`, read 2026-11-15).
 
 Names come from the Old Norse dwarf-lists Tolkien drew on, avoiding every name Erebor's lords and
 bandits use and every canonical dwarf of the age. Two are also in Erebor's culture pool: Hanar, and

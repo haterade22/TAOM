@@ -69,8 +69,20 @@ class FindStaleTests(unittest.TestCase):
     def test_a_row_equal_to_the_new_english_passes(self):
         self.assertEqual(cs.find_stale({"k": "Old"}, {"k": "New"}, {"k": "New"}, {"k": "New"}, {}, {}), [])
 
-    def test_a_row_still_holding_the_old_english_is_untranslated_not_stale(self):
-        self.assertEqual(cs.find_stale({"k": "Old"}, {"k": "New"}, {"k": "Old"}, {"k": "Old"}, {}, {}), [])
+    def test_a_row_still_holding_the_old_english_is_stale(self):
+        # The translator picks a row only while it equals the CURRENT English (translate_with_claude
+        # _diff_files), so a row left on the old English shows the old wording forever (#1281: 147 rows).
+        self.assertEqual(cs.find_stale({"k": "Old"}, {"k": "New"}, {"k": "Old"}, {"k": "Old"}, {}, {}), ["k"])
+
+    def test_a_reset_row_whose_cache_entry_kept_the_old_wording_is_stale(self):
+        # The translator fills a picked-up row from the cache before the model, keyed by id alone
+        # (translate_with_claude.py:1117-1120), so the reset brings the old name back (the Bofur-for-Hauk case).
+        self.assertEqual(cs.find_stale({"k": "Ori"}, {"k": "Ask"}, {"k": "Ori"}, {"k": "Ask"},
+                                       {"k": "Ori"}, {"k": "Ori"}), ["k"])
+
+    def test_a_reset_row_with_its_cache_entry_evicted_passes(self):
+        self.assertEqual(cs.find_stale({"k": "Ori"}, {"k": "Ask"}, {"k": "Ori"}, {"k": "Ask"},
+                                       {"k": "Ori"}, {}), [])
 
     def test_a_changed_cache_entry_passes(self):
         self.assertEqual(cs.find_stale({"k": "Old"}, {"k": "New"}, {"k": "Velho"}, {"k": "Velho"},

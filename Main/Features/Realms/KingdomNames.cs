@@ -31,16 +31,18 @@ internal sealed class KingdomNames
 
     /// <summary>
     /// Renames the kingdoms whose naming title changed, telling <paramref name="renamed"/> each kingdom's id. Cheap: a few
-    /// title lookups per kingdom.
+    /// title lookups per kingdom. A kingdom <paramref name="renames"/> refuses (the MCM option for its ruler) keeps,
+    /// or takes back, its own name.
     /// </summary>
-    public void Update(RealmsService service, Domain.Config.RealmsConfig config, Action<string>? renamed = null)
+    public void Update(RealmsService service, Domain.Config.RealmsConfig config, Action<string>? renamed = null,
+        Func<Kingdom, bool>? renames = null)
     {
         foreach (var kingdom in Kingdom.All)
         {
             var id = kingdom?.StringId;
             if (id == null || kingdom!.IsEliminated)
                 continue;
-            var title = service.RealmNameTitle(id, kingdom.Leader?.StringId);
+            var title = renames == null || renames(kingdom) ? service.RealmNameTitle(id, kingdom.Leader?.StringId) : null;
             _applied.TryGetValue(id, out var current);
             if (title?.Id == current && (title != null || !_originals.ContainsKey(id)))
                 continue;

@@ -139,7 +139,7 @@ internal sealed class TitleTreeCanvas<T>
 /// Lays the title tree out top-down (#1255): the realm at the top centre, its great titles as pennants in a row below, and
 /// further down each title's vassals. A vassal with vassals of its own, or an only vassal, is a pennant with its text
 /// below, so a chain of titles runs straight down; the other vassals are compact rows stacked under their liege, at most
-/// <see cref="RowsPerStack"/> to a stack and evened out (as <c>TitleTreeLayout.Split</c> does). Every title is kept,
+/// <see cref="RowsPerStack"/> to a stack and evened out. Every title is kept,
 /// however wide or deep the tree: a tree narrower than the viewport is centred in it, a larger one grows the canvas,
 /// which the popup scrolls. Pure, so the preview and the tests run it without the game.
 /// </summary>

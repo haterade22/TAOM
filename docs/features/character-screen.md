@@ -102,8 +102,7 @@ No config file or MCM option. The visual tokens are brushes:
 - `TAOM.Tests/Features/CareerSystem/CareerScreenPrefabBindingTests.cs`, `CareerButtonClickTests.cs`,
   `CareerChoiceGroupObjectVMTests.cs`: Career bindings, the button path and the pick rule text.
 
-The new keys have English rows only. The language rows come with the project lead's translation pass,
-so `EveryLanguage_DeclaresARowForEveryEnglishKey` lists them until then.
+The language rows are English placeholders (08d76099a); the project lead's translation pass replaces them.
 
 ## How to verify in game
 

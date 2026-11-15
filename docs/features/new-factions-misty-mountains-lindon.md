@@ -220,17 +220,18 @@ bluecraig has its own `Culture.bluecraig` ones since its promotion (`child_templ
   key into the four new clans. The kingdom, cloned from Rivendell's, flew Rivendell's exact banner. Since #1047
   each house flies Lindon's own emblem (group 310, drawn for TAOM in a sober Tolkien heraldic style) in Mike's
   palette (`banner_icons.xml` 2016 to 2023). The houses took new names and banners in 72715c417 and 7b354bfe0:
-  Nos Nowë 15000, Gil-galad's lozenge of stars; Nos Artanor 31000 (wings and star); Nos Thavn a Minas Loss 31003
-  (twin towers) with two stars; Nos Eldalomril 31002 (swan and wave); Nos Nenwendil 31003; Nos Inglor 31004 (twin
-  swans). Each house's colours are in its `clans.xml` key. The kingdom flies the Nos Nowë key, and its banner
-  and map colours are Sea Mist `0xFF7FAFC9` and Silver `0xFFC9CED4` (the Lindon culture and its
-  `factionmap/factions.json` entry use the same pair), so Mithlond and the ruling house show the
-  lozenge of stars (a ruling clan shows its kingdom's banner). Banner Injection applies the keys to kingdoms and non-ruling
+  #1265 (2026-11-14) then redrew them. The `clans.xml` keys name these sigils (2026-11-15): Nos Nowë 15002 and
+  31021 over vanilla shapes; Nos Artanor 31015 and 15001; `clan_lindon_3` 31003 on two vanilla shapes; Nos
+  Eldalomril 15003 with 31014, 31017, 31018 and 31019; Nos Nenwendil 31011 to 31013 and 31016; Nos Inglor vanilla shapes only.
+  Each house's colours are in its key. The kingdom flies its own key in `taom_spkingdoms.xml` (Gil-galad's
+  lozenge of stars, 15000), and its banner and map colours are Sea Mist `0xFF7FAFC9` and Silver `0xFFC9CED4`
+  (the Lindon culture and its `factionmap/factions.json` entry use the same pair), so Mithlond shows the
+  lozenge of stars. Banner Injection applies the keys to kingdoms and non-ruling
   clans in existing saves at the next session ([banner-injection.md](banner-injection.md)); the deployed module
   needs a build first. Known limitation: in an older save, the clans keep the Gundabad banner colours they
   saved, which the engine uses only if a Lindon clan leaves its kingdom (until the next load).
   `test_every_lindon_clan_flies_its_own_elven_banner` and `test_the_lindon_kingdom_flies_an_elven_banner_of_its_own`
-  keep every sigil in the Noldor, Sindar, Silvan or Lindon icon groups.
+  keep every sigil in the Elven or Miscellaneous icon groups, with vanilla shapes allowed under it.
 - **Renames (display names only):** Gondor's `castle_EW1` is Harlond Quays, `village_LN1_1` is Eryn Lhûn and
   `village_LN1_3` is Ninglas, so no Lindon name repeats another on the map.
 - **Tests:** `tools/tests/test_lindon_clan_expansion.py` pins the owners, homes, lord-to-clan map, the renamed
@@ -246,13 +247,13 @@ After `/engine-bump`, with TAOM, TAOM_Map and LOTRLOME_Armory loaded:
 2. New campaign: Harlond is held by Nos Artanor, Forlond by Nos Thavn a Minas Loss, Ost Falas by Nos Eldalomril,
    Barad Luin by Nos Nenwendil and Tirith Aear by Nos Inglor; Nos Artanor's home is Harlond.
 3. The map shows Harlond Quays in Gondor and Eryn Lhûn and Ninglas by Mithlond; no Lindon name repeats.
-4. The 13 new lords have distinct adult elf faces, the ladies are not bald, Galdor's biography shows, and their
+4. The 13 new lords have distinct adult elf faces, the ladies are not bald, Maicasáma's (`lord_LN3_1`) biography shows, and their
    parties hold "[Lindon]" troops.
 5. Enter Harlond, Forlond, the three castles, and Brithlas, Hîthlin, Luinbar and Ram Luin (whose scenes were
    corrected); each loads.
 6. `taom.audit_settlement_entrances` reports no unreachable entrance among the new settlements.
 7. On the map, Harlond, Forlond and the three castles show elven sigils, each house its own (the keys in `clans.xml`),
-   not the dark Gundabad crest; Mithlond and Nos Nowë show the lozenge of stars, not Rivendell's banner.
+   not the dark Gundabad crest; Mithlond shows the kingdom's lozenge of stars, not Rivendell's banner.
 
 ## Key Files
 

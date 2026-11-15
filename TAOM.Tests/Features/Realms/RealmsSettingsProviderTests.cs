@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
+using MCM.Common;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TAOM.Features;
 using TAOM.Features.CoopInterop;
@@ -32,7 +33,8 @@ public class RealmsSettingsProviderTests
         Assert.AreEqual((5, 5), (provider.TributeReceivePercent, provider.TributePayPercent));
         Assert.AreEqual(100, provider.OfficeInfluencePercent);
         Assert.IsTrue(provider.AiClaims && provider.TributeReceive && provider.TributePay && provider.Resentment && provider.LiegePull && provider.LiegeArmyDiscount
-            && provider.FamilyGrants && provider.TitleStyles);
+            && provider.FamilyGrants && provider.TitleStyles && provider.RenameOwnRealm && provider.RenameAiRealms && provider.AiRealmBanners);
+        Assert.AreEqual(RealmBanner.Title, provider.OwnRealmBanner);
     }
 
     [TestMethod]
@@ -63,12 +65,17 @@ public class RealmsSettingsProviderTests
             RealmsLiegeArmyDiscount = false,
             RealmsFamilyGrants = false,
             RealmsTitleStyles = false,
+            RealmsRenameOwnRealm = false,
+            RealmsRenameAiRealms = false,
+            RealmsOwnRealmBanner = new Dropdown<string>(new[] { "a", "b", "c" }, 2),
+            RealmsAiRealmBanners = false,
         });
 
         Assert.AreEqual((50, 200, 12, 20, 150), (provider.ClaimPricePercent, provider.InfluenceCostPercent, provider.TributeReceivePercent,
             provider.TributePayPercent, provider.OfficeInfluencePercent));
         Assert.IsFalse(provider.AiClaims || provider.TributeReceive || provider.TributePay || provider.Resentment || provider.LiegePull || provider.LiegeArmyDiscount
-            || provider.FamilyGrants || provider.TitleStyles);
+            || provider.FamilyGrants || provider.TitleStyles || provider.RenameOwnRealm || provider.RenameAiRealms || provider.AiRealmBanners);
+        Assert.AreEqual(RealmBanner.House, provider.OwnRealmBanner);
     }
 
     [DataTestMethod]
@@ -110,6 +117,29 @@ public class RealmsSettingsProviderTests
 
         Assert.IsFalse(provider.TitleStyles);
         Assert.AreEqual(250, provider.ClaimPricePercent);
+    }
+
+    [DataTestMethod]
+    [DataRow(null, RealmBanner.Title)]
+    [DataRow(-1, RealmBanner.Title)]
+    [DataRow(0, RealmBanner.Title)]
+    [DataRow(1, RealmBanner.Own)]
+    [DataRow(2, RealmBanner.House)]
+    [DataRow(3, RealmBanner.Title)]
+    public void TheRealmBannerDropdown_MapsItsIndex_AndAnUnknownOneToTheTitleBanner(int? index, RealmBanner expected)
+    {
+        Assert.AreEqual(expected, RealmsSettingsProvider.BannerChoice(index));
+    }
+
+    [TestMethod]
+    public void TheRealmBannerDropdown_ListsItsChoicesInTheEnumOrder_AndDefaultsToTheTitleBanner()
+    {
+        var dropdown = new TaomSettings().RealmsOwnRealmBanner;
+
+        Assert.AreEqual(Enum.GetValues(typeof(RealmBanner)).Length, dropdown.Count);
+        Assert.AreEqual(0, dropdown.SelectedIndex);
+        for (var i = 0; i < dropdown.Count; i++)
+            Assert.AreEqual((RealmBanner)i, RealmsSettingsProvider.BannerChoice(i), dropdown[i]);
     }
 
     // --- the percentage ----------------------------------------------------------------------------------------------------
@@ -187,7 +217,7 @@ public class RealmsSettingsProviderTests
     private static PropertyInfo Property(string name) => typeof(TaomSettings).GetProperty(name)!;
 
     [TestMethod]
-    public void TaomSettings_DeclaresTheGroupOnceAtAnUnusedOrder_WithItsThirteenSettings()
+    public void TaomSettings_DeclaresTheGroupOnceAtAnUnusedOrder_WithItsSeventeenSettings()
     {
         var source = RepoPaths.ReadSource("Main/Features/TaomSettings.cs", stripComments: true);
 
@@ -195,13 +225,13 @@ public class RealmsSettingsProviderTests
         Assert.AreEqual(1, source.Split(new[] { "GroupOrder = 87" }, StringSplitOptions.None).Length - 1, "GroupOrder 87 is used by another group");
 
         var properties = GroupProperties();
-        Assert.AreEqual(13, properties.Length);
+        Assert.AreEqual(17, properties.Length);
         foreach (var property in properties)
         {
             Assert.AreEqual("World/Realms", Read(Attribute(property, "SettingPropertyGroupAttribute"), "GroupName"), property.Name);
             Assert.AreEqual(false, Read(ValueAttribute(property), "RequireRestart"), property.Name + " is read live");
         }
-        CollectionAssert.AreEquivalent(Enumerable.Range(0, 13).ToArray(),
+        CollectionAssert.AreEquivalent(Enumerable.Range(0, 17).ToArray(),
             properties.Select(p => Convert.ToInt32(Read(ValueAttribute(p), "Order"))).ToArray(), "each setting has its own order");
     }
 

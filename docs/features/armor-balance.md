@@ -88,7 +88,9 @@ slot and stat (chest arm 0.30, chest leg 0.40, cape arm 1.0), rounded half up
 armour on the next apply; a 0 stat is also modifier-immune, so no loot roll lifts it. Weights and
 `material_type` are not touched (`--keep-weights`, `--keep-material-type`); `modifier_group`
 follows the band, and the three extremity slots (arm, leg, shoulder) share one loot table:
-civilian, light and medium roll `cloth_unarmoured` (+3), heavy, elite and lord roll `chain` (+9).
+civilian, light and medium roll `cloth_unarmoured` (+3), heavy, elite and lord roll `leather` (+7;
+Worn -2, Battered -3). The group also sets what a troop spawns with in a campaign battle, not only
+what a looted piece rolls (open decision 1).
 At the 2026-11-14 bands a +5 cloth roll let a light cape pass a heavy one (15 shoulder cases) and a
 medium cape pass an elite one (5 cases). `analyze_armor_balance.check_kingdom_curve_invariant`
 reports 0 violations at +3 and 20 at +5 (a test pins the 0). That invariant is on the primary
@@ -376,14 +378,87 @@ plan by hand, not measured in game. Pricing is not re-balanced here, and these r
 
 ### Open decisions for the maintainer (2026-11-14, #1271)
 
-1. **The loot table of heavy, elite and lord extremities.** Bracers, greaves and pauldrons from the
-   heavy band up roll on the `chain` modifier group (`_EXTREMITY_MODIFIER_GROUPS`; light and medium
-   use `cloth_unarmoured`). Its down-rolls are Loose (-6) and Rusty (-8), flat on any stat above 0,
-   so a heavy Gondor pauldron of 9 can drop to 1 and a heavy bracer of 16 to 8. The group's loot
-   weights are 102 (the five modifiers add 57, no modifier is 45), and 40 of them are Loose or Rusty.
-   The legendary roll is +9. The two-tier gate was fitted with the chain group, so this change keeps
-   it. Alternatives: `plate` for those bands (Dented -4, Rusty -6, legendary +12, so 9 to 3 and 16 to
-   10, with the gate refitted), or a group of their own.
+1. **The loot table of heavy, elite and lord extremities: decided, `leather`.** Bracers, greaves and
+   pauldrons from the heavy band up rolled on `chain`, whose down-rolls are Loose (-6) and Rusty (-8),
+   flat on any stat above 0: a heavy Gondor pauldron of 9 could drop to 1 and a heavy bracer of 16 to
+   8. They now roll on the vanilla `leather` group (`_EXTREMITY_MODIFIER_GROUPS`; light and medium keep
+   `cloth_unarmoured`). Same five loot weights as `chain` (102 in all, 40 on the two down-rolls, no
+   modifier is 45), so the odds are unchanged and only the size changes: Battered -3 and Worn -2 below,
+   Waxed +3, Fine +5 and Legendary +7 above. The kingdom gate reads the loot table of the LOW side of a
+   judged pair (heavy over light, elite over medium), which stays `cloth_unarmoured`, so it keeps its 0
+   violations. Heavy and up are never the low side of a pair there, but that holds for the kingdom gate
+   only. `check_curve_invariant` also judges (lord, heavy) and so reads the heavy top roll: it reports 0
+   violations at `leather` (+7) and at `chain` (+9) and 16 at `plate` (+12). `_check_tier_inversions` in
+   `tools/analyze_armor_balance.py` reads each item's own live group, so it follows the write, not the
+   table. No new group was needed: a mod can define one (an `ItemModifier` names its group, so the
+   modifiers must be new ones too), but `leather` already meets the target, needs no new text (the names
+   are vanilla keys) and no `SubModule.xml` node.
+
+   **The group also decides what a troop spawns with.** `Mission.DecideAgentSpawnEquipment` builds the
+   equipment of an agent that has no fixed equipment with
+   `Equipment.GetRandomEquipmentElements(agentBuildData.AgentCharacter, !Game.Current.GameType.IsCoreOnlyGameMode, ...)`
+   (`TaleWorlds.MountAndBlade.Mission.cs:4108`, installed v1.5.7), and for each randomized piece
+   `GetRandomizedEquipment` sets the modifier from
+   `equipmentFromSlot.Item?.ItemComponent?.ItemModifierGroup?.GetRandomItemModifierLootScoreBased()`
+   when that flag is true (`TaleWorlds.Core.Equipment.cs:609`). `GameType.IsCoreOnlyGameMode` is `false`
+   (`TaleWorlds.Core.GameType.cs:36`) and only `CustomGame` overrides it to `true`
+   (`TaleWorlds.MountAndBlade.CustomBattle.CustomGame.cs:23`). Heroes are set to fixed equipment before
+   that call (`SpawnAgent`, `Mission.cs:4284-4286`). So in a campaign battle every heavy or elite
+   troop's bracers, greaves and pauldron roll on this group at spawn, and a Custom Battle does not roll.
+   Per piece, over the 102 loot weights, the mean roll moves from -2.08 on `chain` (-212 over 102) to
+   -0.35 on `leather` (-36 over 102), before the floor of 1, and the worst roll, one spawn in four (25 of
+   102), from -8 to -3.
+
+   Worst and best roll before and after (`max(1, base + delta)`, the engine's `ModifyArmor`):
+
+   | Piece | Base | `chain` | `leather` |
+   |---|---|---|---|
+   | Heavy pauldron, Gondor | 9 | 1 to 18 | 6 to 16 |
+   | Heavy pauldron, the lowest, 7 (Rohan, Dunland, Thenn, the orc lines and the Mordor Uruk line) | 7 | 1 to 16 | 4 to 14 |
+   | Heavy bracer, Gondor | 16 | 8 to 25 | 13 to 23 |
+   | Elite greave, Gondor | 21 | 13 to 30 | 18 to 28 |
+   | Elite greave, Erebor | 23 | 15 to 32 | 20 to 30 |
+   | Lord pauldron, bracer, greave, Erebor | 16, 28, 25 | 8 to 25, 20 to 37, 17 to 34 | 13 to 23, 25 to 35, 22 to 32 |
+   | Lord pauldron, bracer, greave, Rohan | 11, 20, 18 | 3 to 20, 12 to 29, 10 to 27 | 8 to 18, 17 to 27, 15 to 25 |
+
+   Across the 25 kingdom caps and the three extremity slots (75 heavy values), a Rusty roll on `chain`
+   lands on 1 in 21 and a Battered roll on `leather` in none. That counts the curve primaries only, and
+   the lowest is 4. A pauldron can also hold an `arm_armor` secondary of 4 or less (28 shoulder pieces on
+   `leather` in the dry run of 2026-11-15), and a Battered roll still takes those to 1. A heavy piece at
+   its best roll beat the elite base in 73 cases on `chain` and in 50 on `leather`, and the lord base in
+   60 and in 29. The adjacent band is allowed to be beaten; the kingdom gate does not judge the lord
+   over heavy pair (its comment calls that gap adjacent), so the 29 cases against the lord base are not
+   gated. The one name that reads oddly on plate is Waxed (10 of 102).
+
+   **Rolls already made stay.** A save keeps the modifiers its pieces rolled before, and the armoury
+   upgrade carries a piece's modifier onto the new piece (`ArmouryUpgradeService.cs:100`), so "drops to
+   6 at worst" holds for new rolls only.
+
+   **What the write reaches.** The dry run of 2026-11-15 plans 814 items (409 elite, 321 heavy and 84
+   lord; 364 pauldrons, 254 bracers and 196 greaves), and only their `modifier_group` changes: 755 from
+   `chain` and 59 from `plate`, to `leather`. Armour, weight and `material_type` do not move. 720 of
+   them are the heavy and elite pieces the troop curve restates. The other 94 (the 84 lord and 10 elite)
+   are hero-only kit and unworn merchandise without a keyword, which the clamp lowers and never
+   restates: for an arm, leg or shoulder piece that is still on `chain` or `plate` the clamp now writes
+   the table of its band too (lord for hero-only kit, elite for the unworn clamp), so a defeated
+   lord's bracer no longer drops with a -6 or -8 roll. A clamped piece on `cloth`, `cloth_unarmoured` or
+   `leather` is left alone, because a clamp must not raise a loot table, and head and body pieces keep
+   theirs. Two kinds of piece are not in the write:
+   - Generator-owned pieces. The restat skips them, and they move with the two generators' `--apply`:
+     27 Lothlorien items (8 bracers, 7 greaves, 12 pauldrons) and 4 Snow Orc pauldrons change their
+     `modifier_group` in the render of 2026-11-15.
+   - The troll bracer, skipped by design: troll kit stays on the legacy curve, and it is the one
+     arm, leg or shoulder piece still on `chain` or `plate` after the write.
+
+   To apply, write the live Armory only after this change is merged to trunk, from a checkout that
+   holds the merged change: every checkout shares the one Armory, so until the merge trunk's restat
+   and both generators put `chain` back and trunk's `lorien-armor` and `snow-orc-armor` gates read
+   FAIL. Then, in this order: the restat with a backup tag
+   (`python tools/rebalance_armor.py --apply --all --tier-source roster-first --keep-weights --keep-material-type --backup-tag <tag>`),
+   then `python tools/generate_lothlorien_armor.py --apply`, then
+   `python tools/generate_snow_orc_armor.py --apply`. Then `python tools/generate_lothlorien_armor.py --check`,
+   `python tools/generate_snow_orc_armor.py --check` and `python tools/rebalance_armor.py --check`
+   must each exit 0. The in-game check of the loot names is owed, in a campaign battle.
 2. **The seven hero-only items on a weaker line than their wearer** (previous section): route them
    or accept the lower cap.
 
@@ -413,7 +488,16 @@ close the game, the launcher and the dedicated server.
    command again must write 0.
 5. **LIVE ARMORY.** `python tools/generate_lothlorien_armor.py`, then `--apply`, then `--check`; the
    same three runs for `python tools/generate_snow_orc_armor.py`. Their 97 items belong to the
-   generators and take the new secondaries from `calculate_stats`; the restat leaves them alone.
+   generators and take the new secondaries from `calculate_stats`; the restat leaves them alone, so
+   their loot tables move only with this step (2026-11-15: 27 Lothlorien and 4 Snow Orc extremity
+   pieces go from `chain` to `leather`; run steps 4 and 5 from a checkout that has this change on
+   trunk, because the Armory is shared and trunk's restat and generators would put `chain` back).
+   After steps 4 and 5 the three checks must exit 0:
+   `python tools/rebalance_armor.py --check` (the same plan as step 3 with the step 4 flags fixed; it
+   prints the count and the first twenty differences, exits 1 when the plan is not empty and 2 when the
+   Armory is not installed, no armour file was read, or a `--cultures` or `--slots` value matches
+   nothing; `tools/data_gates.py` runs it as `armour-restat`),
+   `python tools/generate_lothlorien_armor.py --check` and `python tools/generate_snow_orc_armor.py --check`.
 6. **REPO, the repair loop.** Item armour is read from the install, so this runs after steps 4 and 5.
    `python tools/fix_upgrade_armour_regressions.py` reports the upgrade edges that now lower armour
    (14 on a copy after steps 4 and 5, against 4 today; for example `imladris_nobleman` head 53 to 20),
@@ -615,7 +699,7 @@ Three constants enforce it, all in `rebalance_armor.py`:
 | Constant | Purpose |
 |---|---|
 | `LEGENDARY_ARMOR` | The native ladder, mirrored from `Native/ModuleData/item_modifiers.xml`. Pinned against the live install by a test, so an engine bump can't move it silently. |
-| `SLOT_MODIFIER_GROUPS` | Per-slot loot-roll magnitude. Shoulders cap at `chain` (+9) instead of `plate` (+12): the native deltas are sized for chest-scale bases (30-60), not cape-scale (2-25). **`material_type` is deliberately NOT changed** — it drives hit sounds/FX and stays lore-correct; the engine reads the two attributes independently. |
+| `SLOT_MODIFIER_GROUPS` | Per-slot loot-roll magnitude. Capes, bracers and greaves roll `cloth_unarmoured` (+3) up to the medium band and `leather` (+7, down-rolls -2 and -3) from heavy, instead of `plate` (+12, down-rolls -4 and -6): the native deltas are sized for chest-scale bases (30-60), not 7 to 28 (the heavy to lord curve primaries). **`material_type` is deliberately NOT changed**: it drives hit sounds/FX and stays lore-correct; the engine reads the two attributes independently. |
 | `VARIANT_CAP` | `extract_variant_number()` maps roman numerals to `+0..+17` straight into the stat. Uncapped it eats the invariant margin, which runs as thin as +1. |
 
 `GOVERNED_STATS` replaces the single-stat view: shoulder now governs **both** `body_armor` and
@@ -1108,9 +1192,14 @@ loads at launch), each step pairs a check a tool can make with what only a perso
 5. A troop the dry run lists under `WORN_ARMOUR_FLOOR` (a helmetless elite archer). Tool:
    `python tools/validate_moduledata.py` lists it. Person only: that it dies to near-tier one-shots
    until its kit is fixed.
-6. A light or medium bracer with a modifier. Tool: `test_extremity_loot_tables_are_scoped` in
-   `test_kingdom_caps.py` pins `cloth_unarmoured` (+3, not `cloth` +5). Person only: the roll on a
-   looted piece.
+6. A heavy or elite bracer, greave or pauldron with a modifier, in a campaign battle (a Custom Battle
+   does not roll modifiers). Tool: `test_extremity_loot_tables_are_scoped` in
+   `test_kingdom_caps.py` pins `cloth_unarmoured` (+3, not `cloth` +5) and, from heavy up, `leather`;
+   `ExtremityLootTableTests` in `test_armor_curve_invariant.py` pins a worst roll of -3 on the installed
+   Native modifiers; `python tools/rebalance_armor.py --check` exits 0 once the write is done. Person
+   only: the roll and the name on a looted piece (the loot screen after a campaign battle), `Waxed`
+   included. No game screen shows the modifier of a spawned enemy's piece, so the spawn roll has no
+   in-game check.
 7. The armoury upgrade offer for a Gondor medium to heavy chest. Tool: the arithmetic above gives about
    2,900 gold (it was about 25,000). Person only: the price shown in the armoury screen.
 8. A Dol Guldur wanderer companion (`spc_wanderer_dolguldur_0`). Tool: `python tools/rebalance_armor.py --dry-run ...`
@@ -1118,6 +1207,10 @@ loads at launch), each step pairs a check a tool can make with what only a perso
 
 ## Changelog
 
+- 2026-11-15: Heavy, elite and lord arm, leg and shoulder pieces roll `leather`, not `chain` (open
+  decision 1 of #1271). The group sets the roll of a troop at spawn in a campaign battle as well as
+  loot. The clamp of hero-only and unworn kit moves its extremities off `chain` and `plate` too, and
+  `rebalance_armor.py --check` (gate `armour-restat`) compares the live Armory with the curve.
 - 2026-11-14: Bands, secondaries, hero clamps and worn limits for the vanilla armour range (#1271); the
   roster-first plan is one function; the wanderer templates count as heroes; the apply sequence gains
   the generator sync steps and the list of consumers outside the tools.
