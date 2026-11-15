@@ -213,7 +213,9 @@ TARGETS = {
             "sk_gd_ano_inf_helmet_med_a": "sk_ar_art_helmet_inf_med_a",
             "sk_gd_pin_inf_helmet_med_a": "sk_ar_art_helmet_inf_med_b",
             "sk_gd_ano_inf_helmet_heavy_a": "sk_ar_art_helmet_inf_hvy_a",
-            "sk_gd_pin_spear_helmet_heavy_a": "sk_ar_art_helmet_inf_hvy_b",
+            # A tier up on purpose: only the cavalry sergeant enlistment kit wears it, and the Arnor heavy
+            # infantry helmet (30 against Gondor's 39) left that kit under the veteran's (#1290).
+            "sk_gd_pin_spear_helmet_heavy_a": "sk_ar_art_helmet_inf_elite_a",
             "sk_gd_vale_helmet_heavy_a": "sk_ar_art_helmet_warden_heavy_a",
             "sk_gd_anf_cav_helmet_heavy_a": "sk_ar_art_helmet_cav_heavy_a",
             # Gondor's lord templates wear lord pieces since the lord kit pass (#1271), so each maps to

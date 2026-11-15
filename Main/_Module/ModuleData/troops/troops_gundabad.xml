@@ -22,13 +22,13 @@
                 value="5" />
             <skill
                 id="OneHanded"
-                value="60" />
+                value="75" />
             <skill
                 id="TwoHanded"
-                value="65" />
+                value="60" />
             <skill
                 id="Polearm"
-                value="75" />
+                value="65" />
             <skill
                 id="Bow"
                 value="0" />
@@ -204,13 +204,13 @@
                 value="5" />
             <skill
                 id="OneHanded"
-                value="30" />
+                value="35" />
             <skill
                 id="TwoHanded"
                 value="35" />
             <skill
                 id="Polearm"
-                value="35" />
+                value="30" />
             <skill
                 id="Bow"
                 value="35" />
@@ -487,13 +487,13 @@
                 value="10" />
             <skill
                 id="OneHanded"
-                value="90" />
+                value="100" />
             <skill
                 id="TwoHanded"
-                value="95" />
+                value="90" />
             <skill
                 id="Polearm"
-                value="100" />
+                value="95" />
             <skill
                 id="Bow"
                 value="5" />
@@ -720,7 +720,7 @@
     </upgrade_targets>
         <Equipments>
             <EquipmentRoster>
-              <equipment slot="Item0" id="Item.wm_gundabad_spear_a03" />
+              <equipment slot="Item0" id="Item.taom_ph_gundabad_spear_a03_t5" />
               <equipment slot="Item1" id="Item.wm_gundabad_shield_a02" />
               <equipment slot="Head" id="Item.sk_gb_uruk_helmet_heavy_d" />
               <equipment slot="Body" id="Item.sk_gb_uruk_chest_heavy_c" />
@@ -733,7 +733,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.wm_gundabad_spear_a03" />
+                    id="Item.taom_ph_gundabad_spear_a03_t5" />
                 <equipment
                     slot="Item1"
                     id="Item.wm_gundabad_shield_a01" />
@@ -765,7 +765,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.wm_gundabad_spear_a03" />
+                    id="Item.taom_ph_gundabad_spear_a03_t5" />
                 <equipment
                     slot="Item1"
                     id="Item.wm_gundabad_shield_a01" />
@@ -797,7 +797,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.wm_gundabad_spear_a03" />
+                    id="Item.taom_ph_gundabad_spear_a03_t5" />
                 <equipment
                     slot="Item1"
                     id="Item.wm_gundabad_shield_a01" />
@@ -829,7 +829,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.wm_gundabad_spear_a03" />
+                    id="Item.taom_ph_gundabad_spear_a03_t5" />
                 <equipment
                     slot="Item1"
                     id="Item.wm_gundabad_shield_a01" />
@@ -907,7 +907,7 @@
     </upgrade_targets>
         <Equipments>
             <EquipmentRoster>
-              <equipment slot="Item0" id="Item.wm_gundabad_spear_a03" />
+              <equipment slot="Item0" id="Item.taom_ph_gundabad_spear_a03_t8" />
               <equipment slot="Item1" id="Item.wm_gundabad_shield_a03" />
               <equipment slot="Item2" id="Item.wm_gundabad_axe_a01" />
               <equipment slot="Head" id="Item.sk_gb_uruk_helmet_heavy_e" />
@@ -921,7 +921,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.wm_gundabad_spear_a03" />
+                    id="Item.taom_ph_gundabad_spear_a03_t8" />
                 <equipment
                     slot="Item1"
                     id="Item.wm_gundabad_shield_a02" />
@@ -953,7 +953,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.wm_gundabad_spear_a03" />
+                    id="Item.taom_ph_gundabad_spear_a03_t8" />
                 <equipment
                     slot="Item1"
                     id="Item.wm_gundabad_shield_a02" />
@@ -985,7 +985,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.wm_gundabad_spear_a03" />
+                    id="Item.taom_ph_gundabad_spear_a03_t8" />
                 <equipment
                     slot="Item1"
                     id="Item.wm_gundabad_shield_a02" />
@@ -1017,7 +1017,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.wm_gundabad_spear_a03" />
+                    id="Item.taom_ph_gundabad_spear_a03_t8" />
                 <equipment
                     slot="Item1"
                     id="Item.wm_gundabad_shield_a02" />
@@ -1073,13 +1073,13 @@
                 value="145" />
             <skill
                 id="OneHanded"
-                value="100" />
+                value="85" />
             <skill
                 id="TwoHanded"
                 value="65" />
             <skill
                 id="Polearm"
-                value="85" />
+                value="100" />
             <skill
                 id="Bow"
                 value="110" />
@@ -1104,7 +1104,7 @@
                     id="Item.steppe_arrows" />
                 <equipment
                     slot="Item2"
-                    id="Item.wm_gundabad_spear_a02" />
+                    id="Item.taom_ph_gundabad_spear_a02_t4" />
                 <equipment
                     slot="Head"
                     id="Item.sk_gb_uruk_helmet_med_a" />
@@ -1136,7 +1136,7 @@
                     id="Item.steppe_arrows" />
                 <equipment
                     slot="Item2"
-                    id="Item.wm_gundabad_spear_a02" />
+                    id="Item.taom_ph_gundabad_spear_a02_t4" />
                 <equipment
                     slot="Head"
                     id="Item.sk_gb_uruk_helmet_med_a" />
@@ -1168,7 +1168,7 @@
                     id="Item.steppe_arrows" />
                 <equipment
                     slot="Item2"
-                    id="Item.wm_gundabad_spear_a02" />
+                    id="Item.taom_ph_gundabad_spear_a02_t4" />
                 <equipment
                     slot="Head"
                     id="Item.sk_gb_uruk_helmet_med_a" />
@@ -1200,7 +1200,7 @@
                     id="Item.steppe_arrows" />
                 <equipment
                     slot="Item2"
-                    id="Item.wm_gundabad_spear_a02" />
+                    id="Item.taom_ph_gundabad_spear_a02_t4" />
                 <equipment
                     slot="Head"
                     id="Item.sk_gb_uruk_helmet_med_a" />
@@ -1232,7 +1232,7 @@
                     id="Item.steppe_arrows" />
                 <equipment
                     slot="Item2"
-                    id="Item.wm_gundabad_spear_a02" />
+                    id="Item.taom_ph_gundabad_spear_a02_t4" />
                 <equipment
                     slot="Head"
                     id="Item.sk_gb_uruk_helmet_med_a" />
@@ -1302,7 +1302,7 @@
         <upgrade_targets />
         <Equipments>
             <EquipmentRoster>
-              <equipment slot="Item0" id="Item.wm_gundabad_spear_a03" />
+              <equipment slot="Item0" id="Item.taom_ph_gundabad_spear_a03_t8" />
               <equipment slot="Item1" id="Item.wm_gundabad_shield_a03" />
               <equipment slot="Item2" id="Item.wm_gundabad_axe_a03" />
               <equipment slot="Head" id="Item.sk_gb_uruk_helmet_elite_d" />
@@ -1316,7 +1316,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.wm_gundabad_spear_a03" />
+                    id="Item.taom_ph_gundabad_spear_a03_t8" />
                 <equipment
                     slot="Item1"
                     id="Item.wm_gundabad_shield_a03" />
@@ -1348,7 +1348,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.wm_gundabad_spear_a03" />
+                    id="Item.taom_ph_gundabad_spear_a03_t8" />
                 <equipment
                     slot="Item1"
                     id="Item.wm_gundabad_shield_a03" />
@@ -1380,7 +1380,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.wm_gundabad_spear_a03" />
+                    id="Item.taom_ph_gundabad_spear_a03_t8" />
                 <equipment
                     slot="Item1"
                     id="Item.wm_gundabad_shield_a03" />
@@ -1412,7 +1412,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.wm_gundabad_spear_a03" />
+                    id="Item.taom_ph_gundabad_spear_a03_t8" />
                 <equipment
                     slot="Item1"
                     id="Item.wm_gundabad_shield_a03" />
@@ -1444,7 +1444,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.wm_gundabad_spear_a03" />
+                    id="Item.taom_ph_gundabad_spear_a03_t8" />
                 <equipment
                     slot="Item1"
                     id="Item.wm_gundabad_shield_a03" />
@@ -1955,7 +1955,7 @@
         </upgrade_targets>
         <Equipments>
             <EquipmentRoster>
-              <equipment slot="Item0" id="Item.wm_gundabad_spear_a02" />
+              <equipment slot="Item0" id="Item.taom_ph_gundabad_spear_a02_t4" />
               <equipment slot="Item1" id="Item.wm_gundabad_shield_a03" />
               <equipment slot="Head" id="Item.sk_gb_uruk_helmet_med_f" />
               <equipment slot="Body" id="Item.sk_gb_uruk_chest_med_d" />
@@ -1966,7 +1966,7 @@
               <equipment slot="HorseHarness" id="Item.dire_wolf_saddle" />
             </EquipmentRoster>
             <EquipmentRoster>
-              <equipment slot="Item0" id="Item.wm_gundabad_spear_a02" />
+              <equipment slot="Item0" id="Item.taom_ph_gundabad_spear_a02_t4" />
               <equipment slot="Item1" id="Item.wm_gundabad_shield_a03" />
               <equipment slot="Head" id="Item.sk_gb_uruk_helmet_med_f" />
               <equipment slot="Body" id="Item.sk_gb_uruk_chest_med_e" />
@@ -1977,7 +1977,7 @@
               <equipment slot="HorseHarness" id="Item.dire_wolf_saddle" />
             </EquipmentRoster>
             <EquipmentRoster>
-              <equipment slot="Item0" id="Item.wm_gundabad_spear_a02" />
+              <equipment slot="Item0" id="Item.taom_ph_gundabad_spear_a02_t4" />
               <equipment slot="Item1" id="Item.wm_gundabad_shield_a03" />
               <equipment slot="Head" id="Item.sk_gb_uruk_helmet_med_f" />
               <equipment slot="Body" id="Item.sk_gb_uruk_chest_med_f" />
@@ -2037,7 +2037,7 @@
         </upgrade_targets>
         <Equipments>
             <EquipmentRoster>
-              <equipment slot="Item0" id="Item.wm_gundabad_spear_a03" />
+              <equipment slot="Item0" id="Item.taom_ph_gundabad_spear_a03_t5" />
               <equipment slot="Item1" id="Item.wm_gundabad_shield_a03" />
               <equipment slot="Head" id="Item.sk_gb_uruk_helmet_heavy_b" />
               <equipment slot="Body" id="Item.sk_gb_uruk_chest_heavy_b" />
@@ -2048,7 +2048,7 @@
               <equipment slot="HorseHarness" id="Item.dire_wolf_saddle" />
             </EquipmentRoster>
             <EquipmentRoster>
-              <equipment slot="Item0" id="Item.wm_gundabad_spear_a03" />
+              <equipment slot="Item0" id="Item.taom_ph_gundabad_spear_a03_t5" />
               <equipment slot="Item1" id="Item.wm_gundabad_shield_a03" />
               <equipment slot="Head" id="Item.sk_gb_uruk_helmet_heavy_e" />
               <equipment slot="Body" id="Item.sk_gb_uruk_chest_heavy_b" />
@@ -2059,7 +2059,7 @@
               <equipment slot="HorseHarness" id="Item.dire_wolf_saddle" />
             </EquipmentRoster>
             <EquipmentRoster>
-              <equipment slot="Item0" id="Item.wm_gundabad_spear_a03" />
+              <equipment slot="Item0" id="Item.taom_ph_gundabad_spear_a03_t5" />
               <equipment slot="Item1" id="Item.wm_gundabad_shield_a03" />
               <equipment slot="Head" id="Item.sk_gb_uruk_helmet_heavy_h" />
               <equipment slot="Body" id="Item.sk_gb_uruk_chest_heavy_b" />
@@ -2115,7 +2115,7 @@
         </skills>
         <Equipments>
             <EquipmentRoster>
-              <equipment slot="Item0" id="Item.wm_gundabad_spear_a03" />
+              <equipment slot="Item0" id="Item.taom_ph_gundabad_spear_a03_t5" />
               <equipment slot="Item1" id="Item.wm_gundabad_shield_a03" />
               <equipment slot="Head" id="Item.sk_gb_uruk_helmet_heavy_d" />
               <equipment slot="Body" id="Item.sk_gb_uruk_chest_heavy_c" />
@@ -2126,7 +2126,7 @@
               <equipment slot="HorseHarness" id="Item.dire_wolf_saddle" />
             </EquipmentRoster>
             <EquipmentRoster>
-              <equipment slot="Item0" id="Item.wm_gundabad_spear_a03" />
+              <equipment slot="Item0" id="Item.taom_ph_gundabad_spear_a03_t5" />
               <equipment slot="Item1" id="Item.wm_gundabad_shield_a03" />
               <equipment slot="Head" id="Item.sk_gb_uruk_helmet_med_g" />
               <equipment slot="Body" id="Item.sk_gb_uruk_chest_heavy_a" />
@@ -2137,7 +2137,7 @@
               <equipment slot="HorseHarness" id="Item.dire_wolf_saddle" />
             </EquipmentRoster>
             <EquipmentRoster>
-              <equipment slot="Item0" id="Item.wm_gundabad_spear_a03" />
+              <equipment slot="Item0" id="Item.taom_ph_gundabad_spear_a03_t5" />
               <equipment slot="Item1" id="Item.wm_gundabad_shield_a03" />
               <equipment slot="Head" id="Item.sk_gb_uruk_helmet_med_g" />
               <equipment slot="Body" id="Item.sk_gb_uruk_chest_heavy_a" />
@@ -2414,13 +2414,13 @@
                 value="10" />
             <skill
                 id="OneHanded"
-                value="125" />
+                value="135" />
             <skill
                 id="TwoHanded"
                 value="120" />
             <skill
                 id="Polearm"
-                value="135" />
+                value="125" />
             <skill
                 id="Bow"
                 value="5" />
@@ -2494,7 +2494,7 @@
     </upgrade_targets>
         <Equipments>
             <EquipmentRoster>
-              <equipment slot="Item0" id="Item.wm_gundabad_spear_a02" />
+              <equipment slot="Item0" id="Item.taom_ph_gundabad_spear_a02_t4" />
               <equipment slot="Head" id="Item.sk_gb_uruk_helmet_light_c" />
               <equipment slot="Body" id="Item.sk_gb_uruk_chest_med_a" />
               <equipment slot="Cape" id="Item.sk_gb_uruk_cape_b" />
@@ -2813,10 +2813,10 @@
                 value="15" />
             <skill
                 id="OneHanded"
-                value="190" />
+                value="165" />
             <skill
                 id="TwoHanded"
-                value="165" />
+                value="190" />
             <skill
                 id="Polearm"
                 value="160" />
@@ -2972,13 +2972,13 @@
                 value="25" />
             <skill
                 id="OneHanded"
-                value="270" />
+                value="280" />
             <skill
                 id="TwoHanded"
                 value="260" />
             <skill
                 id="Polearm"
-                value="280" />
+                value="270" />
             <skill
                 id="Bow"
                 value="20" />
@@ -3052,7 +3052,7 @@
     </upgrade_targets>
         <Equipments>
             <EquipmentRoster>
-              <equipment slot="Item0" id="Item.wm_gundabad_spear_a02" />
+              <equipment slot="Item0" id="Item.taom_ph_gundabad_spear_a02_t4" />
               <equipment slot="Head" id="Item.sk_gb_uruk_helmet_med_c" />
               <equipment slot="Body" id="Item.sk_gb_uruk_chest_heavy_b" />
               <equipment slot="Cape" id="Item.sk_gb_uruk_cape_c" />
@@ -3086,10 +3086,10 @@
                 value="20" />
             <skill
                 id="OneHanded"
-                value="200" />
+                value="235" />
             <skill
                 id="TwoHanded"
-                value="235" />
+                value="200" />
             <skill
                 id="Polearm"
                 value="255" />
@@ -3118,7 +3118,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.wm_gundabad_spear_a03" />
+                    id="Item.taom_ph_gundabad_spear_a03_t5" />
                 <equipment
                     slot="Item2"
                     id="Item.wm_gundabad_sword_a04" />
@@ -3141,7 +3141,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.wm_gundabad_spear_a03" />
+                    id="Item.taom_ph_gundabad_spear_a03_t5" />
                 <equipment
                     slot="Item2"
                     id="Item.wm_gundabad_sword_a04" />
@@ -3462,10 +3462,10 @@
                 value="25" />
             <skill
                 id="OneHanded"
-                value="125" />
+                value="135" />
             <skill
                 id="TwoHanded"
-                value="135" />
+                value="125" />
             <skill
                 id="Polearm"
                 value="165" />
@@ -3704,9 +3704,9 @@
     <skills>
       <skill id="Athletics" value="145" />
       <skill id="Riding" value="25" />
-      <skill id="OneHanded" value="270" />
+      <skill id="OneHanded" value="280" />
       <skill id="TwoHanded" value="260" />
-      <skill id="Polearm" value="280" />
+      <skill id="Polearm" value="270" />
       <skill id="Bow" value="20" />
       <skill id="Crossbow" value="15" />
       <skill id="Throwing" value="95" />
@@ -3752,13 +3752,13 @@
                 value="10" />
             <skill
                 id="OneHanded"
-                value="125" />
+                value="135" />
             <skill
                 id="TwoHanded"
                 value="120" />
             <skill
                 id="Polearm"
-                value="135" />
+                value="125" />
             <skill
                 id="Bow"
                 value="5" />
@@ -3806,13 +3806,13 @@
                 value="145" />
             <skill
                 id="OneHanded"
-                value="100" />
+                value="85" />
             <skill
                 id="TwoHanded"
                 value="65" />
             <skill
                 id="Polearm"
-                value="85" />
+                value="100" />
             <skill
                 id="Bow"
                 value="110" />
@@ -3833,7 +3833,7 @@
                     id="Item.steppe_arrows" />
                 <equipment
                     slot="Item2"
-                    id="Item.wm_gundabad_spear_a02" />
+                    id="Item.taom_ph_gundabad_spear_a02_t4" />
                 <equipment
                     slot="Head"
                     id="Item.sk_gb_uruk_helmet_med_a" />
@@ -3865,7 +3865,7 @@
                     id="Item.steppe_arrows" />
                 <equipment
                     slot="Item2"
-                    id="Item.wm_gundabad_spear_a02" />
+                    id="Item.taom_ph_gundabad_spear_a02_t4" />
                 <equipment
                     slot="Head"
                     id="Item.sk_gb_uruk_helmet_med_a" />
@@ -3897,7 +3897,7 @@
                     id="Item.steppe_arrows" />
                 <equipment
                     slot="Item2"
-                    id="Item.wm_gundabad_spear_a02" />
+                    id="Item.taom_ph_gundabad_spear_a02_t4" />
                 <equipment
                     slot="Head"
                     id="Item.sk_gb_uruk_helmet_med_a" />
@@ -3929,7 +3929,7 @@
                     id="Item.steppe_arrows" />
                 <equipment
                     slot="Item2"
-                    id="Item.wm_gundabad_spear_a02" />
+                    id="Item.taom_ph_gundabad_spear_a02_t4" />
                 <equipment
                     slot="Head"
                     id="Item.sk_gb_uruk_helmet_med_a" />
@@ -3961,7 +3961,7 @@
                     id="Item.steppe_arrows" />
                 <equipment
                     slot="Item2"
-                    id="Item.wm_gundabad_spear_a02" />
+                    id="Item.taom_ph_gundabad_spear_a02_t4" />
                 <equipment
                     slot="Head"
                     id="Item.sk_gb_uruk_helmet_med_a" />

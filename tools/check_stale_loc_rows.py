@@ -9,8 +9,12 @@ row and the key's entry in tools/translation_cache/<lang>.json is unchanged too:
 commit touches that translation, so the game keeps showing the old wording
 (docs/localization/TRANSLATOR_GUIDE.md, "Changing English Text That Is Already Translated").
 
-A row passes when it changed in the same commit, equals the new English (a reset the translator will
-redo), or still equals the OLD English (never translated). A changed or deleted cache entry passes. An
+A row passes when it changed in the same commit or equals the new English (a reset the translator will
+redo), unless the key's cache entry still holds an old translation: the translator fills a picked-up row
+from the cache before the model, keyed by id alone, so the old wording comes back. A row that still
+equals the OLD English is listed too: the translator picks a row only while it equals the current
+English, so it would show the old wording forever; reset it to the new English and evict its cache
+entry (#1281). A changed or deleted cache entry passes. An
 accent-only or number-only edit that the old translation already carries is also listed: read it, and
 leave it when the row is right.
 
@@ -76,13 +80,17 @@ def find_stale(old_en: dict, new_en: dict, old_row: dict, new_row: dict,
         if old_text is None or old_text == new_text:
             continue
         row = new_row.get(key)
-        if row is None or row != old_row.get(key):
-            continue            # no row, or the row changed in this commit
-        if row in (new_text, old_text):
-            continue            # reset to the new English, or never translated
-        if new_cache.get(key) != old_cache.get(key):
-            continue            # the cache was updated or the entry deleted
-        stale.append(key)
+        if row is None:
+            continue
+        cached = new_cache.get(key)
+        if row == new_text:
+            # A reset: the next translator run fills it from the cache before the model.
+            if cached is not None and cached == old_cache.get(key) and cached != new_text:
+                stale.append(key)
+            continue
+        if row != old_row.get(key) or cached != old_cache.get(key):
+            continue            # retranslated in this commit, or the cache entry was updated or deleted
+        stale.append(key)       # includes a row left on the old English, which is never picked up again
     return sorted(stale)
 
 

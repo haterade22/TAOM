@@ -61,7 +61,7 @@ Deferred:
 - FOLLOW-UP no issue: 46 troops (aserai, empire, shaghana, umbar) wear no Armory kingdom armour and are not on the curve; a content decision.
 - FOLLOW-UP #617: the hero ranged ceiling (Bow 90, Crossbow 105) sits above the new troop tops (65 and 84).
 - FOLLOW-UP no issue: horse harness has no curve or gate; out of this scope.
-- FOLLOW-UP no issue: the chain down-roll on heavy and elite extremities (a heavy pauldron of 9 can drop to 1) is the maintainer's decision (`armor-balance.md` "Open decisions").
+- BUILT AND REVIEWED 2026-11-15, #1271: heavy, elite and lord extremities roll `leather` (down-rolls -2 and -3), not `chain` (-6 and -8), so a heavy pauldron of 9 drops to 6 at worst on a new roll, not 1 (`armor-balance.md` "Open decisions", item 1). The group also sets what a troop spawns with in a campaign battle. The live Armory write (the restat, then both generators) and the in-game check in a campaign battle are owed.
 - FOLLOW-UP #631: `wm_gondor_boromir_sword`, a hero blade, is carried by ordinary Gondor t7 and t8 troops; the decided roster swap is not done.
 - FOLLOW-UP no issue: couch-skipped spears (`he_spear`, `dale_winged_spear_a` and `_b`) need hand pricing, the same couch rule as #812 but not its Harad spears.
 - FOLLOW-UP no issue: `characters/npcs_*.xml` fighters (soldiers, caravan guards) are read by none of derive, the restat or the worn gates; scope not decided.
@@ -71,6 +71,9 @@ Deferred:
 - FOLLOW-UP no issue: the `hero_makers` grouping is the author's reading of the lore and waits for the maintainer to correct it.
 - FOLLOW-UP no issue: `WORN_ARMOUR_FLOOR` stays a warning; whether it becomes an error after the apply is the maintainer's call.
 - FOLLOW-UP #631: retire the legacy melee curve (`kingdom_offset`, `band`, `ceiling`) once every template has a class limit.
+- FOLLOW-UP no issue: the Gondor starter greave in `LOTRLOME_items/gondor/starter_armors.xml` holds the dead modifier group `mail`, and no check proves that every live armour `modifier_group` is a defined group (`cloth_unarmoured` is its band's extremity group).
+- FOLLOW-UP no issue: no gate notices a stale roster map (`tools/data/armor_roster_tiers.json`) after a troop edit, so `armour-restat` can pass on an old curve; a `derive_armor_tiers.py --check` with a `data_gates.py` row would catch it.
+- FOLLOW-UP no issue: the restat writer rewrites every declared stat of a changed item and does not escape decoded values (pre-existing; the 2026-11-15 write was proven byte-safe on a copy of the live Armory).
 
 ## Root-cause patterns
 
@@ -131,7 +134,7 @@ Three reviews read the files the apply wrote. Each finding below carries its sta
   With the Umbar file restored, the repair's net diff is 146 changed equipment lines across 17 troops in 6
   files (`git diff --numstat` on `Main/_Module/ModuleData/troops`).
 - **Enlistment kits are not regenerated.** A full `generate_enlistment_rosters.py --apply` rewrites the `enlist_<culture>_*` rosters that `promote_borrowed_cultures.py` also owns for the eight promoted cultures, and their sync checks then fail; the run was reverted. With the new armour values 14 enlistment ranks give a weaker kit than the rank below (an Erebor recruit 81, the soldier 67).
-- FOLLOW-UP no issue: the enlistment kits need a reseed per culture (`--culture` with `--reseed`) with the promoted cultures regenerated after it; it waits for a maintainer decision on which tool owns those rosters.
+- FOLLOW-UP #1290, done 2026-11-15: not a reseed. A reseed redraws each culture's donors from today's troop trees and changes kit categories (the Erebor infantry soldier went from sword and shield to spear, shield and axe in its dry run), which the category rule forbids. The player keeps every kit, so the rule holds each kit against every kit drawn before it. On the ModuleData of 12b21d5e3, `python tools/validate_moduledata.py --moduledata <that tree> --code ENLISTMENT_KIT_RANK_REGRESSION` printed 152 kits on 2026-11-15 (16 armour, 91 weapon, 85 dropped-category and 3 lance reasons). After four hand edits (the default archer veteran and sergeant keep `lowland_longbow`; the Isengard cavalry veteran wears Isengard plate and helmet), `generate_enlistment_rosters.py --repair-ranks --apply` changed 66 slots under the maintainer's saddle rule (a kit with a Horse slot is a horse archer's, one without a foot archer's), by the source its dry run prints: 32 weapons from the culture's troop gear of the same kind, 21 from its troop gear of another kind of the same category, 9 armour pieces from its troop gear, and 4 bows from an earlier kit (`wm_isengard_bow_a02` into the Dol Guldur archer veteran, `wm_mirkwood_bow_a01` into the Mirkwood archer soldier, and the soldier kit's `woodland_longbow` into the Rohan archer veteran and sergeant). The Arnor `item_map` row for `sk_gd_pin_spear_helmet_heavy_a` now maps to `sk_ar_art_helmet_inf_elite_a`, and `promote_borrowed_cultures.py --only <c> --apply` re-derived the promoted cultures; `--check` reports no change for all eight. `python tools/validate_moduledata.py --code ENLISTMENT_KIT_RANK_REGRESSION` prints 82 kits now (2026-11-15), with no armour reason: 2 weapon reasons (the Rohan cavalry sergeant's lance after the veteran kit's spear, and its South Rhovanion clone) and 87 dropped reasons (85 categories and 2 lances), which wait for a maintainer decision per chain ([enlistment.md](../features/enlistment.md#a-ranks-kit-is-never-weaker-than-the-kit-before-it-1290)).
 
 Deferred:
 

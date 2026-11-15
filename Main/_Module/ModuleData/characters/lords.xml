@@ -46452,7 +46452,7 @@
     </NPCCharacter>
   <!-- TAOM-NEWFACTIONS:lindon:END -->
   <!-- TAOM-DALE-EXPANSION:BEGIN -->
-    <NPCCharacter id="lord_S10_1" name="{=aom_lord_S10_1_name}Halvard" age="46" voice="curt" default_group="Infantry" is_hero="true" culture="Culture.sturgia" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_lord_skills">
+    <NPCCharacter id="lord_S10_1" name="{=aom_lord_S10_1_name}Landroi" age="46" voice="curt" default_group="Infantry" is_hero="true" culture="Culture.sturgia" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_lord_skills">
         <face>
             <BodyProperties version="4" weight="0.5" build="0.5" key="0007B40597BC038E94A8C26585AAA93992D5A78776779C82329B657437695D35000005A80DE9BA6200001105000030A30000001F000000000000000000000000" />
             <hair_tags>
@@ -46500,7 +46500,7 @@
             <EquipmentSet id="dale_civ_template_default_a" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_S10_2" name="{=aom_lord_S10_2_name}Ragnhild" age="43" voice="earnest" is_female="true" default_group="Infantry" is_hero="true" culture="Culture.sturgia" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_lady_skills">
+    <NPCCharacter id="lord_S10_2" name="{=aom_lord_S10_2_name}Helga" age="43" voice="earnest" is_female="true" default_group="Infantry" is_hero="true" culture="Culture.sturgia" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_lady_skills">
         <face>
             <BodyProperties version="4" weight="0.1" build="0.3" key="0000AC0E50FC30045948A3188A41766557598897843A8925A7E38F398578987400070656077375210000000000000000000000000000000000000000011C1040" />
             <hair_tags>
@@ -46545,7 +46545,7 @@
             <EquipmentSet id="dale_civ_template_default_b" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_S10_3" name="{=aom_lord_S10_3_name}Arnkel" age="24" voice="ironic" default_group="Cavalry" is_hero="true" culture="Culture.sturgia" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_knight_skills">
+    <NPCCharacter id="lord_S10_3" name="{=aom_lord_S10_3_name}Ragnar" age="24" voice="ironic" default_group="Cavalry" is_hero="true" culture="Culture.sturgia" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_knight_skills">
         <face>
             <BodyProperties version="4" weight="0.5" build="0.5" key="0000EC0FD47C0001F6DC47AB897687B66CAA59A1E2E0A735DC984294BE4E665700066B8706AC733400001105000030A30000001F000000000000000000C85100" />
             <hair_tags>
@@ -46593,7 +46593,7 @@
             <EquipmentSet id="dale_civ_template_default_c" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_S10_4" name="{=aom_lord_S10_4_name}Torgrim" age="38" voice="curt" default_group="Ranged" is_hero="true" culture="Culture.sturgia" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_bowman_skills">
+    <NPCCharacter id="lord_S10_4" name="{=aom_lord_S10_4_name}Knut" age="38" voice="curt" default_group="Ranged" is_hero="true" culture="Culture.sturgia" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_bowman_skills">
         <face>
             <BodyProperties version="4" weight="0.5" build="0.5" key="0005800000FC000F66A89964658D25876585D896796876769A8899A987A7AB750000065703C578EB000000000000000000000000000000000000000000F46140" />
             <hair_tags>
@@ -46641,7 +46641,7 @@
             <EquipmentSet id="dale_civ_template_default_b" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_S10_5" name="{=aom_lord_S10_5_name}Eyvind" age="29" voice="earnest" default_group="Ranged" is_hero="true" culture="Culture.sturgia" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_bowman_skills">
+    <NPCCharacter id="lord_S10_5" name="{=aom_lord_S10_5_name}Jedvard" age="29" voice="earnest" default_group="Ranged" is_hero="true" culture="Culture.sturgia" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_bowman_skills">
         <face>
             <BodyProperties version="4" weight="0.5" build="0.5" key="0007E002C000220E72233A57C8658B97395B684B174BD5D7474584799D857BDD0005556609ADA5A9000000000000000000000000000000000000000000A04000" />
             <hair_tags>
@@ -46689,7 +46689,7 @@
             <EquipmentSet id="dale_civ_template_default_a" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_S10_6" name="{=aom_lord_S10_6_name}Sunniva" age="20" voice="softspoken" is_female="true" default_group="Infantry" is_hero="true" culture="Culture.sturgia" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_young_lady_skills">
+    <NPCCharacter id="lord_S10_6" name="{=aom_lord_S10_6_name}Maria" age="20" voice="softspoken" is_female="true" default_group="Infantry" is_hero="true" culture="Culture.sturgia" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_young_lady_skills">
         <face>
             <BodyProperties version="4" weight="0.3" build="0.6" key="0005500FC0BC000486C64A728933945971883D46C8A8A49B869A54A87478B784000536B30C4458AC0000000000000FFE00000000000000000000000000780000" />
             <hair_tags>
@@ -46734,7 +46734,7 @@
             <EquipmentSet id="dale_civ_template_default_f" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_S11_1" name="{=aom_lord_S11_1_name}Ketil" age="51" voice="curt" default_group="Cavalry" is_hero="true" culture="Culture.sturgia" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_knight_skills">
+    <NPCCharacter id="lord_S11_1" name="{=aom_lord_S11_1_name}Sigtrygg" age="51" voice="curt" default_group="Cavalry" is_hero="true" culture="Culture.sturgia" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_knight_skills">
         <face>
             <BodyProperties version="4" weight="0.7" build="0.6" key="0007800FC03C000D56C95A39982BA7946C65C77675B4C727B9A5987C94B6BA3B0007B47A0CDA898600001105000030A30000001F000000000000000001B89000" />
             <hair_tags>
@@ -46782,7 +46782,7 @@
             <EquipmentSet id="dale_civ_template_default_g" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_S11_2" name="{=aom_lord_S11_2_name}Gudrun" age="48" voice="earnest" is_female="true" default_group="Infantry" is_hero="true" culture="Culture.sturgia" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_lady_skills">
+    <NPCCharacter id="lord_S11_2" name="{=aom_lord_S11_2_name}Bothild" age="48" voice="earnest" is_female="true" default_group="Infantry" is_hero="true" culture="Culture.sturgia" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_lady_skills">
         <face>
             <BodyProperties version="4" weight="0.5" build="0.5" key="0007C80B5214300A7EE465888DC8A65436978A783956D896B377679DB8659936019776130986984800000000000000000000000000000000000000003F342003" />
             <hair_tags>
@@ -46827,7 +46827,7 @@
             <EquipmentSet id="dale_civ_template_default_h" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_S11_3" name="{=aom_lord_S11_3_name}Orm" age="27" voice="ironic" default_group="Cavalry" is_hero="true" culture="Culture.sturgia" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_knight_skills">
+    <NPCCharacter id="lord_S11_3" name="{=aom_lord_S11_3_name}Kolbjörn" age="27" voice="ironic" default_group="Cavalry" is_hero="true" culture="Culture.sturgia" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_knight_skills">
         <face>
             <BodyProperties version="4" weight="0.5" build="0.5" key="0007F40580FC334E8489486C8926E456A760CC57355354DBC67E4315618A3CAB000005E60977A7B900001105000030A30000001F000000000000000000002000" />
             <hair_tags>
@@ -46875,7 +46875,7 @@
             <EquipmentSet id="dale_civ_template_default_a" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_S11_4" name="{=aom_lord_S11_4_name}Skuli" age="33" voice="curt" default_group="Ranged" is_hero="true" culture="Culture.sturgia" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_bowman_skills">
+    <NPCCharacter id="lord_S11_4" name="{=aom_lord_S11_4_name}Asger" age="33" voice="curt" default_group="Ranged" is_hero="true" culture="Culture.sturgia" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_bowman_skills">
         <face>
             <BodyProperties version="4" weight="0.5" build="0.5" key="00001802C07C300D85B59A65AA3C9B459C37C864689775AC5549D695B8AADE8E000009A3014627C300001105000030A30000001F000000000000000000002000" />
             <hair_tags>
@@ -46923,7 +46923,7 @@
             <EquipmentSet id="dale_civ_template_default_b" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_S11_5" name="{=aom_lord_S11_5_name}Vigdis" age="22" voice="softspoken" is_female="true" default_group="Infantry" is_hero="true" culture="Culture.sturgia" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_young_lady_skills">
+    <NPCCharacter id="lord_S11_5" name="{=aom_lord_S11_5_name}Ingegerd" age="22" voice="softspoken" is_female="true" default_group="Infantry" is_hero="true" culture="Culture.sturgia" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_young_lady_skills">
         <face>
             <BodyProperties version="4" weight="0.5" build="0.5" key="00055C0711FC20017C6288996B4ACBD4813C389D5626C55CA7D5D3547CD775340177761307B36B4A000000000000000000000000000000000000000036F41003" />
             <hair_tags>
@@ -46968,7 +46968,7 @@
             <EquipmentSet id="dale_civ_template_default_c" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_S11_6" name="{=aom_lord_S11_6_name}Hrafn" age="19" voice="earnest" default_group="Infantry" is_hero="true" culture="Culture.sturgia" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_young_lord_skills">
+    <NPCCharacter id="lord_S11_6" name="{=aom_lord_S11_6_name}Bridofin" age="19" voice="earnest" default_group="Infantry" is_hero="true" culture="Culture.sturgia" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_young_lord_skills">
         <face>
             <BodyProperties version="4" weight="0.4" build="0.4" key="0007800FC03C034E9AC95A39982BA7946C658E785779C5BA8BA878A694B6BA3B0100047A0F39258900001105000030A30000001F000000000000000001B85100" />
             <hair_tags>
@@ -47016,7 +47016,7 @@
             <EquipmentSet id="dale_civ_template_default_d" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_S12_1" name="{=aom_lord_S12_1_name}Ottar" age="44" voice="earnest" default_group="Infantry" is_hero="true" culture="Culture.sturgia" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_lord_skills">
+    <NPCCharacter id="lord_S12_1" name="{=aom_lord_S12_1_name}Helgi" age="44" voice="earnest" default_group="Infantry" is_hero="true" culture="Culture.sturgia" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_lord_skills">
         <face>
             <BodyProperties version="4" weight="0.7299" build="0.7299" key="00009802C0FC1484848B7125A859DB558B675C76B79663B8DA84987576B6484D079BB97809BB5788000000000000000000000000000000000000000001308000" />
             <hair_tags>
@@ -47064,7 +47064,7 @@
             <EquipmentSet id="dale_civ_template_default_e" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_S12_2" name="{=aom_lord_S12_2_name}Asa" age="41" voice="softspoken" is_female="true" default_group="Infantry" is_hero="true" culture="Culture.sturgia" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_lady_skills">
+    <NPCCharacter id="lord_S12_2" name="{=aom_lord_S12_2_name}Erika" age="41" voice="softspoken" is_female="true" default_group="Infantry" is_hero="true" culture="Culture.sturgia" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_lady_skills">
         <face>
             <BodyProperties version="4" weight="0.5" build="0.5" key="0007E002D2B40004973B69A748A57AA68777CAB82AA578B2A64B79C774C69A7A01877613085A472A0000000000000000000000000000000000000000231C2083" />
             <hair_tags>
@@ -47109,7 +47109,7 @@
             <EquipmentSet id="dale_civ_template_default_f" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_S12_3" name="{=aom_lord_S12_3_name}Geirmund" age="22" voice="ironic" default_group="Infantry" is_hero="true" culture="Culture.sturgia" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_young_lord_skills">
+    <NPCCharacter id="lord_S12_3" name="{=aom_lord_S12_3_name}Fredrik" age="22" voice="ironic" default_group="Infantry" is_hero="true" culture="Culture.sturgia" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_young_lord_skills">
         <face>
             <BodyProperties version="4" weight="0.4" build="0.6" key="0007A00B40001008A43A8AB8557888874A6A94868B767788988844778A69247900058005079777A800001105000030A30000001F000000000000000000CC0000" />
             <hair_tags>
@@ -47157,7 +47157,7 @@
             <EquipmentSet id="dale_civ_template_default_g" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_S12_4" name="{=aom_lord_S12_4_name}Bjarni" age="35" voice="curt" default_group="Ranged" is_hero="true" culture="Culture.sturgia" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_bowman_skills">
+    <NPCCharacter id="lord_S12_4" name="{=aom_lord_S12_4_name}Brage" age="35" voice="curt" default_group="Ranged" is_hero="true" culture="Culture.sturgia" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_bowman_skills">
         <face>
             <BodyProperties version="4" weight="0.5" build="0.5" key="0007800B4000000D875C989A8860996A1879956888677896699A8679A86723690000000307A6889600001105000030A30000001F000000000000000000000000" />
             <hair_tags>
@@ -47205,7 +47205,7 @@
             <EquipmentSet id="dale_civ_template_default_b" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_S12_5" name="{=aom_lord_S12_5_name}Kolbein" age="30" voice="earnest" default_group="Cavalry" is_hero="true" culture="Culture.sturgia" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_knight_skills">
+    <NPCCharacter id="lord_S12_5" name="{=aom_lord_S12_5_name}Bengt" age="30" voice="earnest" default_group="Cavalry" is_hero="true" culture="Culture.sturgia" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_knight_skills">
         <face>
             <BodyProperties version="4" weight="0.5" build="0.5" key="0005780B513C12425EB3A9AA48B5487295C668767888682DDB89A87662A4415A000556A7057746E8000000000000000000000000000000000000000000A02000" />
             <hair_tags>
@@ -47253,7 +47253,7 @@
             <EquipmentSet id="dale_civ_template_default_a" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_S13_1" name="{=aom_lord_S13_1_name}Starkad" age="49" voice="curt" default_group="Cavalry" is_hero="true" culture="Culture.sturgia" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_knight_skills">
+    <NPCCharacter id="lord_S13_1" name="{=aom_lord_S13_1_name}Arne" age="49" voice="curt" default_group="Cavalry" is_hero="true" culture="Culture.sturgia" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_knight_skills">
         <face>
             <BodyProperties version="4" weight="0.8" build="0.5" key="0007AC0700000008975D98B886639678796AA5A76A87677859779A888658234A000430090497967900001105000030A30000001F000000000000000000A40000" />
             <hair_tags>
@@ -47301,7 +47301,7 @@
             <EquipmentSet id="dale_civ_template_default_b" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_S13_2" name="{=aom_lord_S13_2_name}Thora" age="46" voice="earnest" is_female="true" default_group="Infantry" is_hero="true" culture="Culture.sturgia" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_lady_skills">
+    <NPCCharacter id="lord_S13_2" name="{=aom_lord_S13_2_name}Luitgard" age="46" voice="earnest" is_female="true" default_group="Infantry" is_hero="true" culture="Culture.sturgia" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_lady_skills">
         <face>
             <BodyProperties version="4" weight="0.5" build="0.5" key="0000080FD0FC100D4776686376266B93426B9C989782C82458739F1CB876963401577613051867C8000000000000000000000000000000000000000022A420C3" />
             <hair_tags>
@@ -47346,7 +47346,7 @@
             <EquipmentSet id="dale_civ_template_default_c" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_S13_3" name="{=aom_lord_S13_3_name}Audun" age="26" voice="ironic" default_group="Ranged" is_hero="true" culture="Culture.sturgia" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_bowman_skills">
+    <NPCCharacter id="lord_S13_3" name="{=aom_lord_S13_3_name}Torfinn" age="26" voice="ironic" default_group="Ranged" is_hero="true" culture="Culture.sturgia" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_bowman_skills">
         <face>
             <BodyProperties version="4" weight="0.5" build="0.5" key="0007700E402C325968215CB4D9779D947BABE1EA12D7B9649975B5856DB7C355016776130655A58500000000000000000000000000000000000000002AD42042" />
             <hair_tags>
@@ -47394,7 +47394,7 @@
             <EquipmentSet id="dale_civ_template_default_b" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_S13_4" name="{=aom_lord_S13_4_name}Ingvar" age="31" voice="curt" default_group="Ranged" is_hero="true" culture="Culture.sturgia" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_bowman_skills">
+    <NPCCharacter id="lord_S13_4" name="{=aom_lord_S13_4_name}Sverker" age="31" voice="curt" default_group="Ranged" is_hero="true" culture="Culture.sturgia" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_bowman_skills">
         <face>
             <BodyProperties version="4" weight="0.3" build="0.4" key="0006AC0A1100000E923C3CC26AD6C61669788947438E9864A5439BCB447C584A0167761306C8B9A5000000000000000000000000000000000000000036C44003" />
             <hair_tags>
@@ -47442,7 +47442,7 @@
             <EquipmentSet id="dale_civ_template_default_a" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_S13_5" name="{=aom_lord_S13_5_name}Solveig" age="21" voice="softspoken" is_female="true" default_group="Infantry" is_hero="true" culture="Culture.sturgia" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_young_lady_skills">
+    <NPCCharacter id="lord_S13_5" name="{=aom_lord_S13_5_name}Ingfrid" age="21" voice="softspoken" is_female="true" default_group="Infantry" is_hero="true" culture="Culture.sturgia" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_young_lady_skills">
         <face>
             <BodyProperties version="4" weight="0.4" build="0.3" key="0007B80B40001003963657A49E536D58A75688678546525569688969855687D600043005049779870000000000000FFE00000000000000000000000000500000" />
             <hair_tags>
@@ -47487,7 +47487,7 @@
             <EquipmentSet id="dale_civ_template_default_f" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_S14_1" name="{=aom_lord_S14_1_name}Thormod" age="53" voice="curt" default_group="Infantry" is_hero="true" culture="Culture.sturgia" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_lord_skills">
+    <NPCCharacter id="lord_S14_1" name="{=aom_lord_S14_1_name}Sten" age="53" voice="curt" default_group="Infantry" is_hero="true" culture="Culture.sturgia" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_lord_skills">
         <face>
             <BodyProperties version="4" weight="0.6" build="0.9" key="0007D0058000100D785AA72917C606A54D469CDC9A3683A59A15AF927269E22C00070478065D7806000000000000000000000000000000000000000000001184" />
             <hair_tags>
@@ -47535,7 +47535,7 @@
             <EquipmentSet id="dale_civ_template_default_g" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_S14_2" name="{=aom_lord_S14_2_name}Helga" age="50" voice="earnest" is_female="true" default_group="Infantry" is_hero="true" culture="Culture.sturgia" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_lady_skills">
+    <NPCCharacter id="lord_S14_2" name="{=aom_lord_S14_2_name}Eadgifu" age="50" voice="earnest" is_female="true" default_group="Infantry" is_hero="true" culture="Culture.sturgia" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_lady_skills">
         <face>
             <BodyProperties version="4" weight="0.5" build="0.4" key="0000A008800000049A6A869356765374D67695669A8482546E75A699765777B50006600A0668A9880000000000000FFE00000000000000000000000000280000" />
             <hair_tags>
@@ -47580,7 +47580,7 @@
             <EquipmentSet id="dale_civ_template_default_h" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_S14_3" name="{=aom_lord_S14_3_name}Brynjar" age="28" voice="ironic" default_group="Cavalry" is_hero="true" culture="Culture.sturgia" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_knight_skills">
+    <NPCCharacter id="lord_S14_3" name="{=aom_lord_S14_3_name}Holger" age="28" voice="ironic" default_group="Cavalry" is_hero="true" culture="Culture.sturgia" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_knight_skills">
         <face>
             <BodyProperties version="4" weight="0.2" build="0.6" key="0007300CC000300DA4A56A443FB7AA9674A624797769AAA8D879575B59B825B9000777450745277900001105000030A30000001F000000000000000001403000" />
             <hair_tags>
@@ -47628,7 +47628,7 @@
             <EquipmentSet id="dale_civ_template_default_a" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_S14_4" name="{=aom_lord_S14_4_name}Valgard" age="36" voice="curt" default_group="Ranged" is_hero="true" culture="Culture.sturgia" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_bowman_skills">
+    <NPCCharacter id="lord_S14_4" name="{=aom_lord_S14_4_name}Stenar" age="36" voice="curt" default_group="Ranged" is_hero="true" culture="Culture.sturgia" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_bowman_skills">
         <face>
             <BodyProperties version="4" weight="0.5" build="0.7" key="00056801507C1404C37B6D89A64664B96727852B496B67A19757A65ADAA79924000008A20945845600001105000030A30000001F000000000000000000006000" />
             <hair_tags>
@@ -47676,7 +47676,7 @@
             <EquipmentSet id="dale_civ_template_default_b" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_S14_5" name="{=aom_lord_S14_5_name}Yrsa" age="23" voice="softspoken" is_female="true" default_group="Infantry" is_hero="true" culture="Culture.sturgia" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_young_lady_skills">
+    <NPCCharacter id="lord_S14_5" name="{=aom_lord_S14_5_name}Ingrid" age="23" voice="softspoken" is_female="true" default_group="Infantry" is_hero="true" culture="Culture.sturgia" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_young_lady_skills">
         <face>
             <BodyProperties version="4" weight="0.5" build="0.5" key="000730071014200B845CA2CD6B97D578576756477263BCB7C7664675989C2A94019776130944A9870000000000000000000000000000000000000000593440C3" />
             <hair_tags>
@@ -47723,7 +47723,7 @@
     </NPCCharacter>
   <!-- TAOM-DALE-EXPANSION:END -->
   <!-- TAOM-NEWFACTIONS:arthedain:BEGIN -->
-    <NPCCharacter id="lord_AN1_1" name="{=aom_lord_AN1_1_name}Arvegil II" age="33" voice="curt" default_group="Infantry" is_hero="true" culture="Culture.arthedain" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_gondor_knight_skills">
+    <NPCCharacter id="lord_AN1_1" name="{=aom_lord_AN1_1_name}Aranarth" age="33" voice="curt" default_group="Infantry" is_hero="true" culture="Culture.arthedain" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_gondor_knight_skills">
         <face>
             <BodyProperties version="4" weight="0.2534" build="0.5733" key="00057C0D0000131AC186C84D4697AC7356B46C8983BEB92A379743C66986654300B946030BACA5A60000000000000000000000000000000000000000676C6082" />
             <hair_tags>
@@ -47772,7 +47772,7 @@
             <equipment slot="Head" id="Item.sk_ar_art_crown_king_a" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_AN1_2" name="{=aom_lord_AN1_2_name}Malvegil" age="36" voice="curt" default_group="Infantry" is_hero="true" culture="Culture.arthedain" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_gondor_knight_skills">
+    <NPCCharacter id="lord_AN1_2" name="{=aom_lord_AN1_2_name}Aranbor" age="36" voice="curt" default_group="Infantry" is_hero="true" culture="Culture.arthedain" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_gondor_knight_skills">
         <face>
             <!-- Placeholder face-->
             <BodyProperties version="4" weight="0.5" build="0.5" key="000680034014168D54C4BC37777515B7D845A4BA65A0A9BB59628895AB9747530077760307872A4A000000000000000000000000000000000000000052DC30C2" />
@@ -47821,7 +47821,7 @@
             <EquipmentSet id="arthedain_civ_template_default_b" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_AN1_3" name="{=aom_lord_AN1_3_name}Gilraen" voice="curt" is_female="true" age="25" default_group="Cavalry" is_hero="true" culture="Culture.arthedain" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_gondor_young_lady_skills">
+    <NPCCharacter id="lord_AN1_3" name="{=aom_lord_AN1_3_name}Celebloth" voice="curt" is_female="true" age="25" default_group="Cavalry" is_hero="true" culture="Culture.arthedain" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_gondor_young_lady_skills">
         <face>
             <BodyProperties version="4" weight="0.4" build="0.5" key="0007500A1114300BB69199998669E37568754C66A53693B2BA7A9855C96751D601677613062B368C000000000000000000000000000000000000000040CC4083" />
             <hair_tags>
@@ -47866,7 +47866,7 @@
             <EquipmentSet id="arthedain_civ_template_default_c" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_AN1_4" name="{=aom_lord_AN1_4_name}Ivorwen" voice="curt" is_female="true" age="26" default_group="Cavalry" is_hero="true" culture="Culture.arthedain" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_gondor_young_lady_skills">
+    <NPCCharacter id="lord_AN1_4" name="{=aom_lord_AN1_4_name}Palurien" voice="curt" is_female="true" age="26" default_group="Cavalry" is_hero="true" culture="Culture.arthedain" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_gondor_young_lady_skills">
         <face>
             <BodyProperties version="4" age="40.11" weight="0.0023" build="0.5116" key="0005780FC000000B5BA6B6479BC8D64868798769E4627AB4189C98C73DB8566800883603088427A500000000000000000000000000000000000000003F040002" />
             <hair_tags>
@@ -47911,7 +47911,7 @@
             <EquipmentSet id="arthedain_civ_template_default_d" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_AN2_1" name="{=aom_lord_AN2_1_name}Amlaith" age="33" voice="curt" default_group="Infantry" is_hero="true" culture="Culture.arthedain" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_gondor_knight_skills">
+    <NPCCharacter id="lord_AN2_1" name="{=aom_lord_AN2_1_name}Eluchil" age="33" voice="curt" default_group="Infantry" is_hero="true" culture="Culture.arthedain" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_gondor_knight_skills">
         <face>
             <!-- Placeholder face value -->
             <BodyProperties version="4" weight="0.75" build="0.85" key="0007840B40CC12CBB7B2B8C953C76674299A5DC93264A4A938C659683379847901777613077D5972000000000000000000000000000000000000000040E42102" />
@@ -47960,7 +47960,7 @@
             <EquipmentSet id="arthedain_civ_template_default_a" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_AN2_2" name="{=aom_lord_AN2_2_name}Celepharn" age="36" voice="curt" default_group="Infantry" is_hero="true" culture="Culture.arthedain" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_gondor_knight_skills">
+    <NPCCharacter id="lord_AN2_2" name="{=aom_lord_AN2_2_name}Andunar" age="36" voice="curt" default_group="Infantry" is_hero="true" culture="Culture.arthedain" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_gondor_knight_skills">
         <face>
             <!--face_key
 			value="000b7da440bc300e669e57882765477b8bb7397b87a7a78b85a54998ac6579dc000c586609868975000000000000000000000000000000000000000000005040"
@@ -48011,7 +48011,7 @@
             <EquipmentSet id="arthedain_civ_template_default_b" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_AN2_3" name="{=aom_lord_AN2_3_name}Fíriel" voice="curt" is_female="true" age="25" default_group="Cavalry" is_hero="true" culture="Culture.arthedain" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_gondor_young_lady_skills">
+    <NPCCharacter id="lord_AN2_3" name="{=aom_lord_AN2_3_name}Serinde" voice="curt" is_female="true" age="25" default_group="Cavalry" is_hero="true" culture="Culture.arthedain" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_gondor_young_lady_skills">
         <face>
             <!--face_key
 			value="0016d52e407c334e269c3c75a7974761a6ae8c7b19959cab9cb685d9565bb66a00047bb4067385ab00001105000030a30000001f000000000000000000009000"
@@ -48059,7 +48059,7 @@
             <EquipmentSet id="arthedain_civ_template_default_c" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_AN2_4" name="{=aom_lord_AN2_4_name}Elanwen" voice="curt" is_female="true" age="26" default_group="Cavalry" is_hero="true" culture="Culture.arthedain" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_gondor_young_lady_skills">
+    <NPCCharacter id="lord_AN2_4" name="{=aom_lord_AN2_4_name}Borwen" voice="curt" is_female="true" age="26" default_group="Cavalry" is_hero="true" culture="Culture.arthedain" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_gondor_young_lady_skills">
         <face>
             <!--face_key
 			value="0016d52e407c334e269c3c75a7974761a6ae8c7b19959cab9cb685d9565bb66a00047bb4067385ab00001105000030a30000001f000000000000000000009000"
@@ -48107,7 +48107,7 @@
             <EquipmentSet id="arthedain_civ_template_default_d" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_AN3_1" name="{=aom_lord_AN3_1_name}Argeleb" age="33" voice="curt" default_group="Infantry" is_hero="true" culture="Culture.arthedain" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_gondor_knight_skills">
+    <NPCCharacter id="lord_AN3_1" name="{=aom_lord_AN3_1_name}Laurendil" age="33" voice="curt" default_group="Infantry" is_hero="true" culture="Culture.arthedain" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_gondor_knight_skills">
         <face>
             <BodyProperties version="4" age="22.11" weight="0.2431" build="0.9884" key="0000480FC000001C5870380D66C2D60A7B778AB2B7A80E5273593A0C86C04645008F46030805550300000000000000000000000000000000000000003D1C7002" />
             <hair_tags>
@@ -48155,7 +48155,7 @@
             <EquipmentSet id="arthedain_civ_template_default_a" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_AN3_2" name="{=aom_lord_AN3_2_name}Araphor" age="36" voice="curt" default_group="Infantry" is_hero="true" culture="Culture.arthedain" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_gondor_knight_skills">
+    <NPCCharacter id="lord_AN3_2" name="{=aom_lord_AN3_2_name}Castarion" age="36" voice="curt" default_group="Infantry" is_hero="true" culture="Culture.arthedain" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_gondor_knight_skills">
         <face>
             <!--face_key
 			value="000b7da440bc300e669e57882765477b8bb7397b87a7a78b85a54998ac6579dc000c586609868975000000000000000000000000000000000000000000005040"
@@ -48206,7 +48206,7 @@
             <EquipmentSet id="arthedain_civ_template_default_b" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_AN3_3" name="{=aom_lord_AN3_3_name}Meneliel" voice="curt" is_female="true" age="25" default_group="Cavalry" is_hero="true" culture="Culture.arthedain" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_gondor_young_lady_skills">
+    <NPCCharacter id="lord_AN3_3" name="{=aom_lord_AN3_3_name}Miryaiel" voice="curt" is_female="true" age="25" default_group="Cavalry" is_hero="true" culture="Culture.arthedain" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_gondor_young_lady_skills">
         <face>
             <!--face_key
 			value="000ba52cc03c300d658918a66a565a686aaab3a57a485991a57a63282749b75400056aa402ae984800001105000030a30000001f000000000000000000001000"
@@ -48254,7 +48254,7 @@
             <EquipmentSet id="arthedain_civ_template_default_c" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_AN3_4" name="{=aom_lord_AN3_4_name}Silivren" voice="curt" is_female="true" age="26" default_group="Cavalry" is_hero="true" culture="Culture.arthedain" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_gondor_young_lady_skills">
+    <NPCCharacter id="lord_AN3_4" name="{=aom_lord_AN3_4_name}Lindorie" voice="curt" is_female="true" age="26" default_group="Cavalry" is_hero="true" culture="Culture.arthedain" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_gondor_young_lady_skills">
         <face>
             <BodyProperties version="4" age="22.11" weight="0.2847" build="0.4352" key="0006580E50140004108730267EF0FB24C4B0881608638801789AF94F7FFF812400A746030A49B7081F64106050200040000000000000176700000000434C1003" />
             <hair_tags>
@@ -48299,7 +48299,7 @@
             <EquipmentSet id="arthedain_civ_template_default_d" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_AN4_1" name="{=aom_lord_AN4_1_name}Halbarad" age="33" voice="curt" default_group="Infantry" is_hero="true" culture="Culture.arthedain" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_gondor_knight_skills">
+    <NPCCharacter id="lord_AN4_1" name="{=aom_lord_AN4_1_name}Belegar" age="33" voice="curt" default_group="Infantry" is_hero="true" culture="Culture.arthedain" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_gondor_knight_skills">
         <face>
             <BodyProperties version="4" age="27.11" weight="0.0486" build="0.5741" key="0006240D8000368300802F541370F012ACFA80F5B172060707683B067F945E01009916030905C6140000000000000000000000000000000000000000331C9002" />
             <hair_tags>
@@ -48347,7 +48347,7 @@
             <EquipmentSet id="arthedain_civ_template_default_a" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_AN4_2" name="{=aom_lord_AN4_2_name}Aranuir" age="36" voice="curt" default_group="Infantry" is_hero="true" culture="Culture.arthedain" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_gondor_knight_skills">
+    <NPCCharacter id="lord_AN4_2" name="{=aom_lord_AN4_2_name}Telemmaite" age="36" voice="curt" default_group="Infantry" is_hero="true" culture="Culture.arthedain" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_gondor_knight_skills">
         <face>
             <BodyProperties version="4" age="25.11" weight="0.1782" build="0.4236" key="0006D808C00010063E8415A71000FF529EC9833001BCE003075810017F905E52009636030980A70600000000000000000000000000000000000000003B2C4002" />
             <hair_tags>
@@ -48395,7 +48395,7 @@
             <EquipmentSet id="arthedain_civ_template_default_b" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_AN4_3" name="{=aom_lord_AN4_3_name}Ithilwen" voice="curt" is_female="true" age="25" default_group="Cavalry" is_hero="true" culture="Culture.arthedain" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_gondor_young_lady_skills">
+    <NPCCharacter id="lord_AN4_3" name="{=aom_lord_AN4_3_name}Lorwend" voice="curt" is_female="true" age="25" default_group="Cavalry" is_hero="true" culture="Culture.arthedain" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_gondor_young_lady_skills">
         <face>
             <BodyProperties version="4" age="40.11" weight="0" build="0.2778" key="0005100FC00000109158384479AAA669CD8B367B4918A49378EA83A9CC4A9A3500883603083C678E00000000000000000000000000000000000000003F041002" />
             <hair_tags>
@@ -48440,7 +48440,7 @@
             <EquipmentSet id="arthedain_civ_template_default_c" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_AN4_4" name="{=aom_lord_AN4_4_name}Calwen" voice="curt" is_female="true" age="26" default_group="Cavalry" is_hero="true" culture="Culture.arthedain" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_gondor_young_lady_skills">
+    <NPCCharacter id="lord_AN4_4" name="{=aom_lord_AN4_4_name}Vardilme" voice="curt" is_female="true" age="26" default_group="Cavalry" is_hero="true" culture="Culture.arthedain" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_gondor_young_lady_skills">
         <face>
             <BodyProperties version="4" age="33.00" weight="0.4" build="0.5" key="0005B80D8000300AA47918D76753B24A6879516D792B7467189C98C73DB8566800883603088427A500000000000000000000000000000000000000003F040002" />
             <hair_tags>
@@ -48485,7 +48485,7 @@
             <EquipmentSet id="arthedain_civ_template_default_d" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_AN5_1" name="{=aom_lord_AN5_1_name}Celebrindor" age="33" voice="curt" default_group="Infantry" is_hero="true" culture="Culture.arthedain" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_gondor_knight_skills">
+    <NPCCharacter id="lord_AN5_1" name="{=aom_lord_AN5_1_name}Estelmo" age="33" voice="curt" default_group="Infantry" is_hero="true" culture="Culture.arthedain" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_gondor_knight_skills">
         <face>
             <BodyProperties version="4" age="38.11" weight="0.4236" build="0.4236" key="0006D806C00011420E8015A716F0F012E910830001B90601675810067F9A5C04007666030720804000000000000000000000000000000000000000003AF43002" />
             <hair_tags>
@@ -48533,7 +48533,7 @@
             <EquipmentSet id="arthedain_civ_template_default_a" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_AN5_2" name="{=aom_lord_AN5_2_name}Arveleg" age="36" voice="curt" default_group="Infantry" is_hero="true" culture="Culture.arthedain" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_gondor_knight_skills">
+    <NPCCharacter id="lord_AN5_2" name="{=aom_lord_AN5_2_name}Hermacil" age="36" voice="curt" default_group="Infantry" is_hero="true" culture="Culture.arthedain" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_gondor_knight_skills">
         <face>
             <BodyProperties version="4" age="38.11" weight="0.3981" build="0.4861" key="0004FC0980001282248414071B75011484C884CF8169800109FA00017FF95EA2009766030971A00800000000000000000000000000000000000000003B2C4002" />
             <hair_tags>
@@ -48581,7 +48581,7 @@
             <EquipmentSet id="arthedain_civ_template_default_b" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_AN5_3" name="{=aom_lord_AN5_3_name}Maethil" voice="curt" is_female="true" age="25" default_group="Cavalry" is_hero="true" culture="Culture.arthedain" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_gondor_young_lady_skills">
+    <NPCCharacter id="lord_AN5_3" name="{=aom_lord_AN5_3_name}Noliel" voice="curt" is_female="true" age="25" default_group="Cavalry" is_hero="true" culture="Culture.arthedain" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_gondor_young_lady_skills">
         <face>
             <BodyProperties version="4" age="22.11" weight="0.2731" build="0.6366" key="0005000D800010020F800A1A098007985FFD8660BE886A0167895C1885BB9A60008836030809B70500000000000000000000000000000000000000003F042002" />
             <hair_tags>
@@ -48626,7 +48626,7 @@
             <EquipmentSet id="arthedain_civ_template_default_c" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_AN5_4" name="{=aom_lord_AN5_4_name}Tirwen" voice="curt" is_female="true" age="26" default_group="Cavalry" is_hero="true" culture="Culture.arthedain" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_gondor_young_lady_skills">
+    <NPCCharacter id="lord_AN5_4" name="{=aom_lord_AN5_4_name}Finvain" voice="curt" is_female="true" age="26" default_group="Cavalry" is_hero="true" culture="Culture.arthedain" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_gondor_young_lady_skills">
         <face>
             <!--face_key
 			value="000ca12e00bc2005478d688968868296a6779bb376d6a724d866c7b9a9a97b7d000cc774ad629b660000000000000ffe00000000000000000000000000001080"
@@ -48676,7 +48676,7 @@
     </NPCCharacter>
   <!-- TAOM-NEWFACTIONS:arthedain:END -->
   <!-- TAOM-NEWFACTIONS:cardolan:BEGIN -->
-    <NPCCharacter id="lord_CA1_1" name="{=aom_lord_CA1_1_name}Aranthir" age="33" voice="curt" default_group="Infantry" is_hero="true" culture="Culture.cardolan" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_gondor_knight_skills">
+    <NPCCharacter id="lord_CA1_1" name="{=aom_lord_CA1_1_name}Osthir" age="33" voice="curt" default_group="Infantry" is_hero="true" culture="Culture.cardolan" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_gondor_knight_skills">
         <face>
             <face_key_template value="BodyProperty.fighter_gondor" />
           </face>
@@ -48715,7 +48715,7 @@
             <EquipmentSet id="cardolan_civ_template_default_a" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_CA1_2" name="{=aom_lord_CA1_2_name}Belethor" age="36" voice="curt" default_group="Infantry" is_hero="true" culture="Culture.cardolan" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_gondor_knight_skills">
+    <NPCCharacter id="lord_CA1_2" name="{=aom_lord_CA1_2_name}Tarvegil" age="36" voice="curt" default_group="Infantry" is_hero="true" culture="Culture.cardolan" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_gondor_knight_skills">
         <face>
             <face_key_template value="BodyProperty.fighter_gondor" />
           </face>
@@ -48754,7 +48754,7 @@
             <EquipmentSet id="cardolan_civ_template_default_b" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_CA1_3" name="{=aom_lord_CA1_3_name}Elendis" voice="curt" is_female="true" age="25" default_group="Cavalry" is_hero="true" culture="Culture.cardolan" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_gondor_young_lady_skills">
+    <NPCCharacter id="lord_CA1_3" name="{=aom_lord_CA1_3_name}Culurien" voice="curt" is_female="true" age="25" default_group="Cavalry" is_hero="true" culture="Culture.cardolan" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_gondor_young_lady_skills">
         <face>
             <face_key_template value="BodyProperty.fighter_gondor" />
             <hair_tags>
@@ -48796,7 +48796,7 @@
             <EquipmentSet id="cardolan_civ_template_default_c" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_CA1_4" name="{=aom_lord_CA1_4_name}Aerin" voice="curt" is_female="true" age="26" default_group="Cavalry" is_hero="true" culture="Culture.cardolan" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_gondor_young_lady_skills">
+    <NPCCharacter id="lord_CA1_4" name="{=aom_lord_CA1_4_name}Nuneth" voice="curt" is_female="true" age="26" default_group="Cavalry" is_hero="true" culture="Culture.cardolan" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_gondor_young_lady_skills">
         <face>
             <face_key_template value="BodyProperty.fighter_gondor" />
             <hair_tags>
@@ -48838,7 +48838,7 @@
             <EquipmentSet id="cardolan_civ_template_default_d" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_CA2_1" name="{=aom_lord_CA2_1_name}Caladhor" age="33" voice="curt" default_group="Infantry" is_hero="true" culture="Culture.cardolan" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_gondor_knight_skills">
+    <NPCCharacter id="lord_CA2_1" name="{=aom_lord_CA2_1_name}Aldamir" age="33" voice="curt" default_group="Infantry" is_hero="true" culture="Culture.cardolan" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_gondor_knight_skills">
         <face>
             <face_key_template value="BodyProperty.fighter_gondor" />
           </face>
@@ -48877,7 +48877,7 @@
             <EquipmentSet id="cardolan_civ_template_default_a" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_CA2_2" name="{=aom_lord_CA2_2_name}Anardil" age="36" voice="curt" default_group="Infantry" is_hero="true" culture="Culture.cardolan" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_gondor_knight_skills">
+    <NPCCharacter id="lord_CA2_2" name="{=aom_lord_CA2_2_name}Mirendur" age="36" voice="curt" default_group="Infantry" is_hero="true" culture="Culture.cardolan" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_gondor_knight_skills">
         <face>
             <face_key_template value="BodyProperty.fighter_gondor" />
           </face>
@@ -48916,7 +48916,7 @@
             <EquipmentSet id="cardolan_civ_template_default_b" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_CA2_3" name="{=aom_lord_CA2_3_name}Daeriel" voice="curt" is_female="true" age="25" default_group="Cavalry" is_hero="true" culture="Culture.cardolan" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_gondor_young_lady_skills">
+    <NPCCharacter id="lord_CA2_3" name="{=aom_lord_CA2_3_name}Gwaewen" voice="curt" is_female="true" age="25" default_group="Cavalry" is_hero="true" culture="Culture.cardolan" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_gondor_young_lady_skills">
         <face>
             <face_key_template value="BodyProperty.fighter_gondor" />
             <hair_tags>
@@ -48958,7 +48958,7 @@
             <EquipmentSet id="cardolan_civ_template_default_c" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_CA2_4" name="{=aom_lord_CA2_4_name}Eilinel" voice="curt" is_female="true" age="26" default_group="Cavalry" is_hero="true" culture="Culture.cardolan" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_gondor_young_lady_skills">
+    <NPCCharacter id="lord_CA2_4" name="{=aom_lord_CA2_4_name}Selerwen" voice="curt" is_female="true" age="26" default_group="Cavalry" is_hero="true" culture="Culture.cardolan" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_gondor_young_lady_skills">
         <face>
             <face_key_template value="BodyProperty.fighter_gondor" />
             <hair_tags>
@@ -49000,7 +49000,7 @@
             <EquipmentSet id="cardolan_civ_template_default_d" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_CA3_1" name="{=aom_lord_CA3_1_name}Baradhel" age="33" voice="curt" default_group="Infantry" is_hero="true" culture="Culture.cardolan" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_gondor_knight_skills">
+    <NPCCharacter id="lord_CA3_1" name="{=aom_lord_CA3_1_name}Elorn" age="33" voice="curt" default_group="Infantry" is_hero="true" culture="Culture.cardolan" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_gondor_knight_skills">
         <face>
             <face_key_template value="BodyProperty.fighter_gondor" />
           </face>
@@ -49039,7 +49039,7 @@
             <EquipmentSet id="cardolan_civ_template_default_a" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_CA3_2" name="{=aom_lord_CA3_2_name}Calenon" age="36" voice="curt" default_group="Infantry" is_hero="true" culture="Culture.cardolan" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_gondor_knight_skills">
+    <NPCCharacter id="lord_CA3_2" name="{=aom_lord_CA3_2_name}Telcrist" age="36" voice="curt" default_group="Infantry" is_hero="true" culture="Culture.cardolan" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_gondor_knight_skills">
         <face>
             <face_key_template value="BodyProperty.fighter_gondor" />
           </face>
@@ -49078,7 +49078,7 @@
             <EquipmentSet id="cardolan_civ_template_default_b" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_CA3_3" name="{=aom_lord_CA3_3_name}Gwaeren" voice="curt" is_female="true" age="25" default_group="Cavalry" is_hero="true" culture="Culture.cardolan" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_gondor_young_lady_skills">
+    <NPCCharacter id="lord_CA3_3" name="{=aom_lord_CA3_3_name}Laerwen" voice="curt" is_female="true" age="25" default_group="Cavalry" is_hero="true" culture="Culture.cardolan" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_gondor_young_lady_skills">
         <face>
             <face_key_template value="BodyProperty.fighter_gondor" />
             <hair_tags>
@@ -49120,7 +49120,7 @@
             <EquipmentSet id="cardolan_civ_template_default_c" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_CA3_4" name="{=aom_lord_CA3_4_name}Lindis" voice="curt" is_female="true" age="26" default_group="Cavalry" is_hero="true" culture="Culture.cardolan" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_gondor_young_lady_skills">
+    <NPCCharacter id="lord_CA3_4" name="{=aom_lord_CA3_4_name}Failivrin" voice="curt" is_female="true" age="26" default_group="Cavalry" is_hero="true" culture="Culture.cardolan" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_gondor_young_lady_skills">
         <face>
             <face_key_template value="BodyProperty.fighter_gondor" />
             <hair_tags>
@@ -49162,7 +49162,7 @@
             <EquipmentSet id="cardolan_civ_template_default_d" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_CA4_1" name="{=aom_lord_CA4_1_name}Dorthar" age="33" voice="curt" default_group="Infantry" is_hero="true" culture="Culture.cardolan" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_gondor_knight_skills">
+    <NPCCharacter id="lord_CA4_1" name="{=aom_lord_CA4_1_name}Maiandil" age="33" voice="curt" default_group="Infantry" is_hero="true" culture="Culture.cardolan" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_gondor_knight_skills">
         <face>
             <face_key_template value="BodyProperty.fighter_gondor" />
           </face>
@@ -49201,7 +49201,7 @@
             <EquipmentSet id="cardolan_civ_template_default_a" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_CA4_2" name="{=aom_lord_CA4_2_name}Hirluin" age="36" voice="curt" default_group="Infantry" is_hero="true" culture="Culture.cardolan" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_gondor_knight_skills">
+    <NPCCharacter id="lord_CA4_2" name="{=aom_lord_CA4_2_name}Gwindor" age="36" voice="curt" default_group="Infantry" is_hero="true" culture="Culture.cardolan" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_gondor_knight_skills">
         <face>
             <face_key_template value="BodyProperty.fighter_gondor" />
           </face>
@@ -49240,7 +49240,7 @@
             <EquipmentSet id="cardolan_civ_template_default_b" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_CA4_3" name="{=aom_lord_CA4_3_name}Mirwen" voice="curt" is_female="true" age="25" default_group="Cavalry" is_hero="true" culture="Culture.cardolan" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_gondor_young_lady_skills">
+    <NPCCharacter id="lord_CA4_3" name="{=aom_lord_CA4_3_name}Hiril" voice="curt" is_female="true" age="25" default_group="Cavalry" is_hero="true" culture="Culture.cardolan" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_gondor_young_lady_skills">
         <face>
             <face_key_template value="BodyProperty.fighter_gondor" />
             <hair_tags>
@@ -49282,7 +49282,7 @@
             <EquipmentSet id="cardolan_civ_template_default_c" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_CA4_4" name="{=aom_lord_CA4_4_name}Saelind" voice="curt" is_female="true" age="26" default_group="Cavalry" is_hero="true" culture="Culture.cardolan" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_gondor_young_lady_skills">
+    <NPCCharacter id="lord_CA4_4" name="{=aom_lord_CA4_4_name}Celebrindal" voice="curt" is_female="true" age="26" default_group="Cavalry" is_hero="true" culture="Culture.cardolan" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_gondor_young_lady_skills">
         <face>
             <face_key_template value="BodyProperty.fighter_gondor" />
             <hair_tags>
@@ -49326,7 +49326,7 @@
     </NPCCharacter>
   <!-- TAOM-NEWFACTIONS:cardolan:END -->
   <!-- TAOM-NEWFACTIONS:rhudaur:BEGIN -->
-    <NPCCharacter id="lord_RH1_1" name="{=aom_lord_RH1_1_name}Belegorn" age="33" voice="curt" default_group="Infantry" is_hero="true" culture="Culture.rhudaur" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_gondor_knight_skills">
+    <NPCCharacter id="lord_RH1_1" name="{=aom_lord_RH1_1_name}Elamarth" age="33" voice="curt" default_group="Infantry" is_hero="true" culture="Culture.rhudaur" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_gondor_knight_skills">
         <face>
             <face_key_template value="BodyProperty.fighter_gondor" />
           </face>
@@ -49365,7 +49365,7 @@
             <EquipmentSet id="rhudaur_civ_template_default_a" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_RH1_2" name="{=aom_lord_RH1_2_name}Cadorn" age="36" voice="curt" default_group="Infantry" is_hero="true" culture="Culture.rhudaur" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_gondor_knight_skills">
+    <NPCCharacter id="lord_RH1_2" name="{=aom_lord_RH1_2_name}Edhelion" age="36" voice="curt" default_group="Infantry" is_hero="true" culture="Culture.rhudaur" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_gondor_knight_skills">
         <face>
             <face_key_template value="BodyProperty.fighter_gondor" />
           </face>
@@ -49404,7 +49404,7 @@
             <EquipmentSet id="rhudaur_civ_template_default_b" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_RH1_3" name="{=aom_lord_RH1_3_name}Gilwen" voice="curt" is_female="true" age="25" default_group="Cavalry" is_hero="true" culture="Culture.rhudaur" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_gondor_young_lady_skills">
+    <NPCCharacter id="lord_RH1_3" name="{=aom_lord_RH1_3_name}Sídhwen" voice="curt" is_female="true" age="25" default_group="Cavalry" is_hero="true" culture="Culture.rhudaur" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_gondor_young_lady_skills">
         <face>
             <face_key_template value="BodyProperty.fighter_gondor" />
             <hair_tags>
@@ -49446,7 +49446,7 @@
             <EquipmentSet id="rhudaur_civ_template_default_c" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_RH1_4" name="{=aom_lord_RH1_4_name}Branwen" voice="curt" is_female="true" age="26" default_group="Cavalry" is_hero="true" culture="Culture.rhudaur" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_gondor_young_lady_skills">
+    <NPCCharacter id="lord_RH1_4" name="{=aom_lord_RH1_4_name}Mallien" voice="curt" is_female="true" age="26" default_group="Cavalry" is_hero="true" culture="Culture.rhudaur" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_gondor_young_lady_skills">
         <face>
             <face_key_template value="BodyProperty.fighter_gondor" />
             <hair_tags>
@@ -49488,7 +49488,7 @@
             <EquipmentSet id="rhudaur_civ_template_default_d" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_RH2_1" name="{=aom_lord_RH2_1_name}Corran" age="33" voice="curt" default_group="Infantry" is_hero="true" culture="Culture.rhudaur" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_gondor_knight_skills">
+    <NPCCharacter id="lord_RH2_1" name="{=aom_lord_RH2_1_name}Calatar" age="33" voice="curt" default_group="Infantry" is_hero="true" culture="Culture.rhudaur" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_gondor_knight_skills">
         <face>
             <face_key_template value="BodyProperty.fighter_gondor" />
           </face>
@@ -49527,7 +49527,7 @@
             <EquipmentSet id="rhudaur_civ_template_default_a" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_RH2_2" name="{=aom_lord_RH2_2_name}Eredhir" age="36" voice="curt" default_group="Infantry" is_hero="true" culture="Culture.rhudaur" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_gondor_knight_skills">
+    <NPCCharacter id="lord_RH2_2" name="{=aom_lord_RH2_2_name}Baragond" age="36" voice="curt" default_group="Infantry" is_hero="true" culture="Culture.rhudaur" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_gondor_knight_skills">
         <face>
             <face_key_template value="BodyProperty.fighter_gondor" />
           </face>
@@ -49566,7 +49566,7 @@
             <EquipmentSet id="rhudaur_civ_template_default_b" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_RH2_3" name="{=aom_lord_RH2_3_name}Eirlys" voice="curt" is_female="true" age="25" default_group="Cavalry" is_hero="true" culture="Culture.rhudaur" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_gondor_young_lady_skills">
+    <NPCCharacter id="lord_RH2_3" name="{=aom_lord_RH2_3_name}Taurien" voice="curt" is_female="true" age="25" default_group="Cavalry" is_hero="true" culture="Culture.rhudaur" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_gondor_young_lady_skills">
         <face>
             <face_key_template value="BodyProperty.fighter_gondor" />
             <hair_tags>
@@ -49608,7 +49608,7 @@
             <EquipmentSet id="rhudaur_civ_template_default_c" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_RH2_4" name="{=aom_lord_RH2_4_name}Heledd" voice="curt" is_female="true" age="26" default_group="Cavalry" is_hero="true" culture="Culture.rhudaur" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_gondor_young_lady_skills">
+    <NPCCharacter id="lord_RH2_4" name="{=aom_lord_RH2_4_name}Aerien" voice="curt" is_female="true" age="26" default_group="Cavalry" is_hero="true" culture="Culture.rhudaur" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_gondor_young_lady_skills">
         <face>
             <face_key_template value="BodyProperty.fighter_gondor" />
             <hair_tags>
@@ -49650,7 +49650,7 @@
             <EquipmentSet id="rhudaur_civ_template_default_d" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_RH3_1" name="{=aom_lord_RH3_1_name}Gorlan" age="33" voice="curt" default_group="Infantry" is_hero="true" culture="Culture.rhudaur" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_gondor_knight_skills">
+    <NPCCharacter id="lord_RH3_1" name="{=aom_lord_RH3_1_name}Orontor" age="33" voice="curt" default_group="Infantry" is_hero="true" culture="Culture.rhudaur" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_gondor_knight_skills">
         <face>
             <face_key_template value="BodyProperty.fighter_gondor" />
           </face>
@@ -49689,7 +49689,7 @@
             <EquipmentSet id="rhudaur_civ_template_default_a" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_RH3_2" name="{=aom_lord_RH3_2_name}Harnoth" age="36" voice="curt" default_group="Infantry" is_hero="true" culture="Culture.rhudaur" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_gondor_knight_skills">
+    <NPCCharacter id="lord_RH3_2" name="{=aom_lord_RH3_2_name}Aratan" age="36" voice="curt" default_group="Infantry" is_hero="true" culture="Culture.rhudaur" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_gondor_knight_skills">
         <face>
             <face_key_template value="BodyProperty.fighter_gondor" />
           </face>
@@ -49728,7 +49728,7 @@
             <EquipmentSet id="rhudaur_civ_template_default_b" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_RH3_3" name="{=aom_lord_RH3_3_name}Olwen" voice="curt" is_female="true" age="25" default_group="Cavalry" is_hero="true" culture="Culture.rhudaur" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_gondor_young_lady_skills">
+    <NPCCharacter id="lord_RH3_3" name="{=aom_lord_RH3_3_name}Oarwen" voice="curt" is_female="true" age="25" default_group="Cavalry" is_hero="true" culture="Culture.rhudaur" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_gondor_young_lady_skills">
         <face>
             <face_key_template value="BodyProperty.fighter_gondor" />
             <hair_tags>
@@ -49770,7 +49770,7 @@
             <EquipmentSet id="rhudaur_civ_template_default_c" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_RH3_4" name="{=aom_lord_RH3_4_name}Seren" voice="curt" is_female="true" age="26" default_group="Cavalry" is_hero="true" culture="Culture.rhudaur" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_gondor_young_lady_skills">
+    <NPCCharacter id="lord_RH3_4" name="{=aom_lord_RH3_4_name}Melenis" voice="curt" is_female="true" age="26" default_group="Cavalry" is_hero="true" culture="Culture.rhudaur" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_gondor_young_lady_skills">
         <face>
             <face_key_template value="BodyProperty.fighter_gondor" />
             <hair_tags>
@@ -51114,7 +51114,7 @@
             <EquipmentSet id="anduinvale_civ_template_default_a" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_AV1_2" name="{=aom_lord_AV1_2_name}Osbeorn" age="36" voice="curt" default_group="Infantry" is_hero="true" culture="Culture.anduinvale" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_lord_skills">
+    <NPCCharacter id="lord_AV1_2" name="{=aom_lord_AV1_2_name}Olbeorn" age="36" voice="curt" default_group="Infantry" is_hero="true" culture="Culture.anduinvale" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_lord_skills">
         <face>
             <face_key_template value="BodyProperty.fighter_sturgia" />
           </face>
@@ -51153,7 +51153,7 @@
             <EquipmentSet id="anduinvale_civ_template_default_b" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_AV1_3" name="{=aom_lord_AV1_3_name}Beornhild" age="25" voice="earnest" is_female="true" default_group="Infantry" is_hero="true" culture="Culture.anduinvale" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_lady_skills">
+    <NPCCharacter id="lord_AV1_3" name="{=aom_lord_AV1_3_name}Ermeneberga" age="25" voice="earnest" is_female="true" default_group="Infantry" is_hero="true" culture="Culture.anduinvale" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_lady_skills">
         <face>
             <face_key_template value="BodyProperty.fighter_sturgia" />
             <hair_tags>
@@ -51195,7 +51195,7 @@
             <EquipmentSet id="anduinvale_civ_template_default_c" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_AV1_4" name="{=aom_lord_AV1_4_name}Aldwyn" age="26" voice="earnest" is_female="true" default_group="Infantry" is_hero="true" culture="Culture.anduinvale" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_lady_skills">
+    <NPCCharacter id="lord_AV1_4" name="{=aom_lord_AV1_4_name}Winidilda" age="26" voice="earnest" is_female="true" default_group="Infantry" is_hero="true" culture="Culture.anduinvale" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_lady_skills">
         <face>
             <face_key_template value="BodyProperty.fighter_sturgia" />
             <hair_tags>
@@ -51237,7 +51237,7 @@
             <EquipmentSet id="anduinvale_civ_template_default_d" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_AV2_1" name="{=aom_lord_AV2_1_name}Hathbeorn" age="33" voice="curt" default_group="Infantry" is_hero="true" culture="Culture.anduinvale" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_lord_skills">
+    <NPCCharacter id="lord_AV2_1" name="{=aom_lord_AV2_1_name}Egico" age="33" voice="curt" default_group="Infantry" is_hero="true" culture="Culture.anduinvale" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_lord_skills">
         <face>
             <face_key_template value="BodyProperty.fighter_sturgia" />
           </face>
@@ -51276,7 +51276,7 @@
             <EquipmentSet id="anduinvale_civ_template_default_a" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_AV2_2" name="{=aom_lord_AV2_2_name}Eadbeorn" age="36" voice="curt" default_group="Infantry" is_hero="true" culture="Culture.anduinvale" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_lord_skills">
+    <NPCCharacter id="lord_AV2_2" name="{=aom_lord_AV2_2_name}Athanagildo" age="36" voice="curt" default_group="Infantry" is_hero="true" culture="Culture.anduinvale" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_lord_skills">
         <face>
             <face_key_template value="BodyProperty.fighter_sturgia" />
           </face>
@@ -51315,7 +51315,7 @@
             <EquipmentSet id="anduinvale_civ_template_default_b" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_AV2_3" name="{=aom_lord_AV2_3_name}Hildeburg" age="25" voice="earnest" is_female="true" default_group="Infantry" is_hero="true" culture="Culture.anduinvale" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_lady_skills">
+    <NPCCharacter id="lord_AV2_3" name="{=aom_lord_AV2_3_name}Argilo" age="25" voice="earnest" is_female="true" default_group="Infantry" is_hero="true" culture="Culture.anduinvale" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_lady_skills">
         <face>
             <face_key_template value="BodyProperty.fighter_sturgia" />
             <hair_tags>
@@ -51357,7 +51357,7 @@
             <EquipmentSet id="anduinvale_civ_template_default_c" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_AV2_4" name="{=aom_lord_AV2_4_name}Osgyth" age="26" voice="earnest" is_female="true" default_group="Infantry" is_hero="true" culture="Culture.anduinvale" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_lady_skills">
+    <NPCCharacter id="lord_AV2_4" name="{=aom_lord_AV2_4_name}Sibilia" age="26" voice="earnest" is_female="true" default_group="Infantry" is_hero="true" culture="Culture.anduinvale" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_lady_skills">
         <face>
             <face_key_template value="BodyProperty.fighter_sturgia" />
             <hair_tags>
@@ -51399,7 +51399,7 @@
             <EquipmentSet id="anduinvale_civ_template_default_d" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_AV3_1" name="{=aom_lord_AV3_1_name}Grimwulf" age="33" voice="curt" default_group="Infantry" is_hero="true" culture="Culture.anduinvale" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_lord_skills">
+    <NPCCharacter id="lord_AV3_1" name="{=aom_lord_AV3_1_name}Balecho" age="33" voice="curt" default_group="Infantry" is_hero="true" culture="Culture.anduinvale" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_lord_skills">
         <face>
             <face_key_template value="BodyProperty.fighter_sturgia" />
           </face>
@@ -51438,7 +51438,7 @@
             <EquipmentSet id="anduinvale_civ_template_default_a" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_AV3_2" name="{=aom_lord_AV3_2_name}Thurstan" age="36" voice="curt" default_group="Infantry" is_hero="true" culture="Culture.anduinvale" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_lord_skills">
+    <NPCCharacter id="lord_AV3_2" name="{=aom_lord_AV3_2_name}Diaco" age="36" voice="curt" default_group="Infantry" is_hero="true" culture="Culture.anduinvale" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_lord_skills">
         <face>
             <face_key_template value="BodyProperty.fighter_sturgia" />
           </face>
@@ -51477,7 +51477,7 @@
             <EquipmentSet id="anduinvale_civ_template_default_b" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_AV3_3" name="{=aom_lord_AV3_3_name}Eadwyn" age="25" voice="earnest" is_female="true" default_group="Infantry" is_hero="true" culture="Culture.anduinvale" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_lady_skills">
+    <NPCCharacter id="lord_AV3_3" name="{=aom_lord_AV3_3_name}Paterna" age="25" voice="earnest" is_female="true" default_group="Infantry" is_hero="true" culture="Culture.anduinvale" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_lady_skills">
         <face>
             <face_key_template value="BodyProperty.fighter_sturgia" />
             <hair_tags>
@@ -51519,7 +51519,7 @@
             <EquipmentSet id="anduinvale_civ_template_default_c" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_AV3_4" name="{=aom_lord_AV3_4_name}Wulfrun" age="26" voice="earnest" is_female="true" default_group="Infantry" is_hero="true" culture="Culture.anduinvale" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_lady_skills">
+    <NPCCharacter id="lord_AV3_4" name="{=aom_lord_AV3_4_name}Eldonza" age="26" voice="earnest" is_female="true" default_group="Infantry" is_hero="true" culture="Culture.anduinvale" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_lady_skills">
         <face>
             <face_key_template value="BodyProperty.fighter_sturgia" />
             <hair_tags>
@@ -51561,7 +51561,7 @@
             <EquipmentSet id="anduinvale_civ_template_default_d" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_AV4_1" name="{=aom_lord_AV4_1_name}Wulfhere" age="33" voice="curt" default_group="Infantry" is_hero="true" culture="Culture.anduinvale" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_lord_skills">
+    <NPCCharacter id="lord_AV4_1" name="{=aom_lord_AV4_1_name}Madrubal" age="33" voice="curt" default_group="Infantry" is_hero="true" culture="Culture.anduinvale" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_lord_skills">
         <face>
             <face_key_template value="BodyProperty.fighter_sturgia" />
           </face>
@@ -51600,7 +51600,7 @@
             <EquipmentSet id="anduinvale_civ_template_default_a" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_AV4_2" name="{=aom_lord_AV4_2_name}Brunwald" age="36" voice="curt" default_group="Infantry" is_hero="true" culture="Culture.anduinvale" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_lord_skills">
+    <NPCCharacter id="lord_AV4_2" name="{=aom_lord_AV4_2_name}Matago" age="36" voice="curt" default_group="Infantry" is_hero="true" culture="Culture.anduinvale" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_lord_skills">
         <face>
             <face_key_template value="BodyProperty.fighter_sturgia" />
           </face>
@@ -51639,7 +51639,7 @@
             <EquipmentSet id="anduinvale_civ_template_default_b" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_AV4_3" name="{=aom_lord_AV4_3_name}Mildgyth" age="25" voice="earnest" is_female="true" default_group="Infantry" is_hero="true" culture="Culture.anduinvale" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_lady_skills">
+    <NPCCharacter id="lord_AV4_3" name="{=aom_lord_AV4_3_name}Medbeorn" age="25" voice="earnest" is_female="true" default_group="Infantry" is_hero="true" culture="Culture.anduinvale" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_lady_skills">
         <face>
             <face_key_template value="BodyProperty.fighter_sturgia" />
             <hair_tags>
@@ -51681,7 +51681,7 @@
             <EquipmentSet id="anduinvale_civ_template_default_c" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_AV4_4" name="{=aom_lord_AV4_4_name}Hrothwyn" age="26" voice="earnest" is_female="true" default_group="Infantry" is_hero="true" culture="Culture.anduinvale" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_lady_skills">
+    <NPCCharacter id="lord_AV4_4" name="{=aom_lord_AV4_4_name}Egilona" age="26" voice="earnest" is_female="true" default_group="Infantry" is_hero="true" culture="Culture.anduinvale" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_lady_skills">
         <face>
             <face_key_template value="BodyProperty.fighter_sturgia" />
             <hair_tags>
@@ -51725,7 +51725,7 @@
     </NPCCharacter>
   <!-- TAOM-NEWFACTIONS:anduinvale:END -->
   <!-- TAOM-NEWFACTIONS:angaladh:BEGIN -->
-    <NPCCharacter id="lord_AND1_1" name="{=aom_lord_AND1_1_name}Ingomar" age="33" voice="curt" default_group="Infantry" is_hero="true" culture="Culture.angaladh" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_lord_skills">
+    <NPCCharacter id="lord_AND1_1" name="{=aom_lord_AND1_1_name}Theodemiro" age="33" voice="curt" default_group="Infantry" is_hero="true" culture="Culture.angaladh" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_lord_skills">
         <face>
             <face_key_template value="BodyProperty.fighter_sturgia" />
           </face>
@@ -51764,7 +51764,7 @@
             <EquipmentSet id="angaladh_civ_template_default_a" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_AND1_2" name="{=aom_lord_AND1_2_name}Ansila" age="36" voice="curt" default_group="Infantry" is_hero="true" culture="Culture.angaladh" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_lord_skills">
+    <NPCCharacter id="lord_AND1_2" name="{=aom_lord_AND1_2_name}Waldano" age="36" voice="curt" default_group="Infantry" is_hero="true" culture="Culture.angaladh" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_lord_skills">
         <face>
             <face_key_template value="BodyProperty.fighter_sturgia" />
           </face>
@@ -51803,7 +51803,7 @@
             <EquipmentSet id="angaladh_civ_template_default_b" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_AND1_3" name="{=aom_lord_AND1_3_name}Gudila" age="25" voice="earnest" is_female="true" default_group="Infantry" is_hero="true" culture="Culture.angaladh" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_lady_skills">
+    <NPCCharacter id="lord_AND1_3" name="{=aom_lord_AND1_3_name}Adosinda" age="25" voice="earnest" is_female="true" default_group="Infantry" is_hero="true" culture="Culture.angaladh" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_lady_skills">
         <face>
             <face_key_template value="BodyProperty.fighter_sturgia" />
             <hair_tags>
@@ -51845,7 +51845,7 @@
             <EquipmentSet id="angaladh_civ_template_default_c" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_AND1_4" name="{=aom_lord_AND1_4_name}Riquila" age="26" voice="earnest" is_female="true" default_group="Infantry" is_hero="true" culture="Culture.angaladh" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_lady_skills">
+    <NPCCharacter id="lord_AND1_4" name="{=aom_lord_AND1_4_name}Riciberga" age="26" voice="earnest" is_female="true" default_group="Infantry" is_hero="true" culture="Culture.angaladh" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_lady_skills">
         <face>
             <face_key_template value="BodyProperty.fighter_sturgia" />
             <hair_tags>
@@ -51887,7 +51887,7 @@
             <EquipmentSet id="angaladh_civ_template_default_d" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_AND2_1" name="{=aom_lord_AND2_1_name}Hrodiwar" age="33" voice="curt" default_group="Infantry" is_hero="true" culture="Culture.angaladh" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_lord_skills">
+    <NPCCharacter id="lord_AND2_1" name="{=aom_lord_AND2_1_name}Ambroz" age="33" voice="curt" default_group="Infantry" is_hero="true" culture="Culture.angaladh" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_lord_skills">
         <face>
             <face_key_template value="BodyProperty.fighter_sturgia" />
           </face>
@@ -51926,7 +51926,7 @@
             <EquipmentSet id="angaladh_civ_template_default_a" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_AND2_2" name="{=aom_lord_AND2_2_name}Gaisa" age="36" voice="curt" default_group="Infantry" is_hero="true" culture="Culture.angaladh" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_lord_skills">
+    <NPCCharacter id="lord_AND2_2" name="{=aom_lord_AND2_2_name}Arias" age="36" voice="curt" default_group="Infantry" is_hero="true" culture="Culture.angaladh" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_lord_skills">
         <face>
             <face_key_template value="BodyProperty.fighter_sturgia" />
           </face>
@@ -51965,7 +51965,7 @@
             <EquipmentSet id="angaladh_civ_template_default_b" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_AND2_3" name="{=aom_lord_AND2_3_name}Hildiwara" age="25" voice="earnest" is_female="true" default_group="Infantry" is_hero="true" culture="Culture.angaladh" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_lady_skills">
+    <NPCCharacter id="lord_AND2_3" name="{=aom_lord_AND2_3_name}Monniadomna" age="25" voice="earnest" is_female="true" default_group="Infantry" is_hero="true" culture="Culture.angaladh" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_lady_skills">
         <face>
             <face_key_template value="BodyProperty.fighter_sturgia" />
             <hair_tags>
@@ -52007,7 +52007,7 @@
             <EquipmentSet id="angaladh_civ_template_default_c" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_AND2_4" name="{=aom_lord_AND2_4_name}Sunilda" age="26" voice="earnest" is_female="true" default_group="Infantry" is_hero="true" culture="Culture.angaladh" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_lady_skills">
+    <NPCCharacter id="lord_AND2_4" name="{=aom_lord_AND2_4_name}Ingundis" age="26" voice="earnest" is_female="true" default_group="Infantry" is_hero="true" culture="Culture.angaladh" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_lady_skills">
         <face>
             <face_key_template value="BodyProperty.fighter_sturgia" />
             <hair_tags>
@@ -52049,7 +52049,7 @@
             <EquipmentSet id="angaladh_civ_template_default_d" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_AND3_1" name="{=aom_lord_AND3_1_name}Liudric" age="33" voice="curt" default_group="Infantry" is_hero="true" culture="Culture.angaladh" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_lord_skills">
+    <NPCCharacter id="lord_AND3_1" name="{=aom_lord_AND3_1_name}Oppas" age="33" voice="curt" default_group="Infantry" is_hero="true" culture="Culture.angaladh" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_lord_skills">
         <face>
             <face_key_template value="BodyProperty.fighter_sturgia" />
           </face>
@@ -52088,7 +52088,7 @@
             <EquipmentSet id="angaladh_civ_template_default_a" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_AND3_2" name="{=aom_lord_AND3_2_name}Wandil" age="36" voice="curt" default_group="Infantry" is_hero="true" culture="Culture.angaladh" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_lord_skills">
+    <NPCCharacter id="lord_AND3_2" name="{=aom_lord_AND3_2_name}Aoricho" age="36" voice="curt" default_group="Infantry" is_hero="true" culture="Culture.angaladh" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_lord_skills">
         <face>
             <face_key_template value="BodyProperty.fighter_sturgia" />
           </face>
@@ -52127,7 +52127,7 @@
             <EquipmentSet id="angaladh_civ_template_default_b" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_AND3_3" name="{=aom_lord_AND3_3_name}Wiliswintha" age="25" voice="earnest" is_female="true" default_group="Infantry" is_hero="true" culture="Culture.angaladh" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_lady_skills">
+    <NPCCharacter id="lord_AND3_3" name="{=aom_lord_AND3_3_name}Sisenanda" age="25" voice="earnest" is_female="true" default_group="Infantry" is_hero="true" culture="Culture.angaladh" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_lady_skills">
         <face>
             <face_key_template value="BodyProperty.fighter_sturgia" />
             <hair_tags>
@@ -52169,7 +52169,7 @@
             <EquipmentSet id="angaladh_civ_template_default_c" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_AND3_4" name="{=aom_lord_AND3_4_name}Ansiwara" age="26" voice="earnest" is_female="true" default_group="Infantry" is_hero="true" culture="Culture.angaladh" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_lady_skills">
+    <NPCCharacter id="lord_AND3_4" name="{=aom_lord_AND3_4_name}Gudilona" age="26" voice="earnest" is_female="true" default_group="Infantry" is_hero="true" culture="Culture.angaladh" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_lady_skills">
         <face>
             <face_key_template value="BodyProperty.fighter_sturgia" />
             <hair_tags>
@@ -52213,7 +52213,7 @@
     </NPCCharacter>
   <!-- TAOM-NEWFACTIONS:angaladh:END -->
   <!-- TAOM-NEWFACTIONS:dorwinion:BEGIN -->
-    <NPCCharacter id="lord_DO1_1" name="{=aom_lord_DO1_1_name}Ostric" age="33" voice="curt" default_group="Infantry" is_hero="true" culture="Culture.dorwinion" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_lord_skills">
+    <NPCCharacter id="lord_DO1_1" name="{=aom_lord_DO1_1_name}Hawin" age="33" voice="curt" default_group="Infantry" is_hero="true" culture="Culture.dorwinion" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_lord_skills">
         <face>
             <face_key_template value="BodyProperty.fighter_sturgia" />
           </face>
@@ -52252,7 +52252,7 @@
             <EquipmentSet id="dorwinion_civ_template_default_a" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_DO1_2" name="{=aom_lord_DO1_2_name}Halric" age="36" voice="curt" default_group="Infantry" is_hero="true" culture="Culture.dorwinion" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_lord_skills">
+    <NPCCharacter id="lord_DO1_2" name="{=aom_lord_DO1_2_name}Bladorthin" age="36" voice="curt" default_group="Infantry" is_hero="true" culture="Culture.dorwinion" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_lord_skills">
         <face>
             <face_key_template value="BodyProperty.fighter_sturgia" />
           </face>
@@ -52291,7 +52291,7 @@
             <EquipmentSet id="dorwinion_civ_template_default_b" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_DO1_3" name="{=aom_lord_DO1_3_name}Aldith" age="25" voice="earnest" is_female="true" default_group="Infantry" is_hero="true" culture="Culture.dorwinion" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_lady_skills">
+    <NPCCharacter id="lord_DO1_3" name="{=aom_lord_DO1_3_name}Sisewyn" age="25" voice="earnest" is_female="true" default_group="Infantry" is_hero="true" culture="Culture.dorwinion" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_lady_skills">
         <face>
             <face_key_template value="BodyProperty.fighter_sturgia" />
             <hair_tags>
@@ -52333,7 +52333,7 @@
             <EquipmentSet id="dorwinion_civ_template_default_c" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_DO1_4" name="{=aom_lord_DO1_4_name}Berta" age="26" voice="earnest" is_female="true" default_group="Infantry" is_hero="true" culture="Culture.dorwinion" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_lady_skills">
+    <NPCCharacter id="lord_DO1_4" name="{=aom_lord_DO1_4_name}Freja" age="26" voice="earnest" is_female="true" default_group="Infantry" is_hero="true" culture="Culture.dorwinion" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_lady_skills">
         <face>
             <face_key_template value="BodyProperty.fighter_sturgia" />
             <hair_tags>
@@ -52375,7 +52375,7 @@
             <EquipmentSet id="dorwinion_civ_template_default_d" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_DO2_1" name="{=aom_lord_DO2_1_name}Torvin" age="33" voice="curt" default_group="Infantry" is_hero="true" culture="Culture.dorwinion" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_lord_skills">
+    <NPCCharacter id="lord_DO2_1" name="{=aom_lord_DO2_1_name}Vidumarh" age="33" voice="curt" default_group="Infantry" is_hero="true" culture="Culture.dorwinion" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_lord_skills">
         <face>
             <face_key_template value="BodyProperty.fighter_sturgia" />
           </face>
@@ -52414,7 +52414,7 @@
             <EquipmentSet id="dorwinion_civ_template_default_a" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_DO2_2" name="{=aom_lord_DO2_2_name}Ostmar" age="36" voice="curt" default_group="Infantry" is_hero="true" culture="Culture.dorwinion" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_lord_skills">
+    <NPCCharacter id="lord_DO2_2" name="{=aom_lord_DO2_2_name}Godomar" age="36" voice="curt" default_group="Infantry" is_hero="true" culture="Culture.dorwinion" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_lord_skills">
         <face>
             <face_key_template value="BodyProperty.fighter_sturgia" />
           </face>
@@ -52453,7 +52453,7 @@
             <EquipmentSet id="dorwinion_civ_template_default_b" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_DO2_3" name="{=aom_lord_DO2_3_name}Gisela" age="25" voice="earnest" is_female="true" default_group="Infantry" is_hero="true" culture="Culture.dorwinion" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_lady_skills">
+    <NPCCharacter id="lord_DO2_3" name="{=aom_lord_DO2_3_name}Ariberga" age="25" voice="earnest" is_female="true" default_group="Infantry" is_hero="true" culture="Culture.dorwinion" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_lady_skills">
         <face>
             <face_key_template value="BodyProperty.fighter_sturgia" />
             <hair_tags>
@@ -52495,7 +52495,7 @@
             <EquipmentSet id="dorwinion_civ_template_default_c" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_DO2_4" name="{=aom_lord_DO2_4_name}Hilde" age="26" voice="earnest" is_female="true" default_group="Infantry" is_hero="true" culture="Culture.dorwinion" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_lady_skills">
+    <NPCCharacter id="lord_DO2_4" name="{=aom_lord_DO2_4_name}Vidusintha" age="26" voice="earnest" is_female="true" default_group="Infantry" is_hero="true" culture="Culture.dorwinion" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_lady_skills">
         <face>
             <face_key_template value="BodyProperty.fighter_sturgia" />
             <hair_tags>
@@ -52537,7 +52537,7 @@
             <EquipmentSet id="dorwinion_civ_template_default_d" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_DO3_1" name="{=aom_lord_DO3_1_name}Gerulf" age="33" voice="curt" default_group="Infantry" is_hero="true" culture="Culture.dorwinion" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_lord_skills">
+    <NPCCharacter id="lord_DO3_1" name="{=aom_lord_DO3_1_name}Swain" age="33" voice="curt" default_group="Infantry" is_hero="true" culture="Culture.dorwinion" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_lord_skills">
         <face>
             <face_key_template value="BodyProperty.fighter_sturgia" />
           </face>
@@ -52576,7 +52576,7 @@
             <EquipmentSet id="dorwinion_civ_template_default_a" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_DO3_2" name="{=aom_lord_DO3_2_name}Aldwin" age="36" voice="curt" default_group="Infantry" is_hero="true" culture="Culture.dorwinion" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_lord_skills">
+    <NPCCharacter id="lord_DO3_2" name="{=aom_lord_DO3_2_name}Harward" age="36" voice="curt" default_group="Infantry" is_hero="true" culture="Culture.dorwinion" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_lord_skills">
         <face>
             <face_key_template value="BodyProperty.fighter_sturgia" />
           </face>
@@ -52615,7 +52615,7 @@
             <EquipmentSet id="dorwinion_civ_template_default_b" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_DO3_3" name="{=aom_lord_DO3_3_name}Irmgard" age="25" voice="earnest" is_female="true" default_group="Infantry" is_hero="true" culture="Culture.dorwinion" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_lady_skills">
+    <NPCCharacter id="lord_DO3_3" name="{=aom_lord_DO3_3_name}Thorberta" age="25" voice="earnest" is_female="true" default_group="Infantry" is_hero="true" culture="Culture.dorwinion" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_lady_skills">
         <face>
             <face_key_template value="BodyProperty.fighter_sturgia" />
             <hair_tags>
@@ -52657,7 +52657,7 @@
             <EquipmentSet id="dorwinion_civ_template_default_c" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_DO3_4" name="{=aom_lord_DO3_4_name}Liutgard" age="26" voice="earnest" is_female="true" default_group="Infantry" is_hero="true" culture="Culture.dorwinion" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_lady_skills">
+    <NPCCharacter id="lord_DO3_4" name="{=aom_lord_DO3_4_name}Marhsintha" age="26" voice="earnest" is_female="true" default_group="Infantry" is_hero="true" culture="Culture.dorwinion" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_lady_skills">
         <face>
             <face_key_template value="BodyProperty.fighter_sturgia" />
             <hair_tags>
@@ -52699,7 +52699,7 @@
             <EquipmentSet id="dorwinion_civ_template_default_d" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_DO4_1" name="{=aom_lord_DO4_1_name}Berengar" age="33" voice="curt" default_group="Infantry" is_hero="true" culture="Culture.dorwinion" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_lord_skills">
+    <NPCCharacter id="lord_DO4_1" name="{=aom_lord_DO4_1_name}Ricchar" age="33" voice="curt" default_group="Infantry" is_hero="true" culture="Culture.dorwinion" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_lord_skills">
         <face>
             <face_key_template value="BodyProperty.fighter_sturgia" />
           </face>
@@ -52738,7 +52738,7 @@
             <EquipmentSet id="dorwinion_civ_template_default_a" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_DO4_2" name="{=aom_lord_DO4_2_name}Raedric" age="36" voice="curt" default_group="Infantry" is_hero="true" culture="Culture.dorwinion" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_lord_skills">
+    <NPCCharacter id="lord_DO4_2" name="{=aom_lord_DO4_2_name}Thalas" age="36" voice="curt" default_group="Infantry" is_hero="true" culture="Culture.dorwinion" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_lord_skills">
         <face>
             <face_key_template value="BodyProperty.fighter_sturgia" />
           </face>
@@ -52777,7 +52777,7 @@
             <EquipmentSet id="dorwinion_civ_template_default_b" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_DO4_3" name="{=aom_lord_DO4_3_name}Mathilde" age="25" voice="earnest" is_female="true" default_group="Infantry" is_hero="true" culture="Culture.dorwinion" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_lady_skills">
+    <NPCCharacter id="lord_DO4_3" name="{=aom_lord_DO4_3_name}Edith" age="25" voice="earnest" is_female="true" default_group="Infantry" is_hero="true" culture="Culture.dorwinion" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_lady_skills">
         <face>
             <face_key_template value="BodyProperty.fighter_sturgia" />
             <hair_tags>
@@ -52819,7 +52819,7 @@
             <EquipmentSet id="dorwinion_civ_template_default_c" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_DO4_4" name="{=aom_lord_DO4_4_name}Oda" age="26" voice="earnest" is_female="true" default_group="Infantry" is_hero="true" culture="Culture.dorwinion" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_lady_skills">
+    <NPCCharacter id="lord_DO4_4" name="{=aom_lord_DO4_4_name}Asta" age="26" voice="earnest" is_female="true" default_group="Infantry" is_hero="true" culture="Culture.dorwinion" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_lady_skills">
         <face>
             <face_key_template value="BodyProperty.fighter_sturgia" />
             <hair_tags>
@@ -52863,7 +52863,7 @@
     </NPCCharacter>
   <!-- TAOM-NEWFACTIONS:dorwinion:END -->
   <!-- TAOM-NEWFACTIONS:southrhovanion:BEGIN -->
-    <NPCCharacter id="lord_SRH1_1" name="{=aom_lord_SRH1_1_name}Vidumar" age="33" voice="earnest" default_group="Cavalry" is_hero="true" culture="Culture.southrhovanion" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_rohan_knight_skills">
+    <NPCCharacter id="lord_SRH1_1" name="{=aom_lord_SRH1_1_name}Suniefredo" age="33" voice="earnest" default_group="Cavalry" is_hero="true" culture="Culture.southrhovanion" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_rohan_knight_skills">
         <face>
             <face_key_template value="BodyProperty.fighter_rohan" />
           </face>
@@ -52902,7 +52902,7 @@
             <EquipmentSet id="southrhovanion_civ_template_default_a" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_SRH1_2" name="{=aom_lord_SRH1_2_name}Marhwin" age="36" voice="earnest" default_group="Cavalry" is_hero="true" culture="Culture.southrhovanion" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_rohan_knight_skills">
+    <NPCCharacter id="lord_SRH1_2" name="{=aom_lord_SRH1_2_name}Vidugild" age="36" voice="earnest" default_group="Cavalry" is_hero="true" culture="Culture.southrhovanion" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_rohan_knight_skills">
         <face>
             <face_key_template value="BodyProperty.fighter_rohan" />
           </face>
@@ -52941,7 +52941,7 @@
             <EquipmentSet id="southrhovanion_civ_template_default_b" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_SRH1_3" name="{=aom_lord_SRH1_3_name}Amalaberga" age="25" voice="ironic" default_group="Cavalry" is_hero="true" is_female="true" culture="Culture.southrhovanion" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_rohan_lady_skills">
+    <NPCCharacter id="lord_SRH1_3" name="{=aom_lord_SRH1_3_name}Onecca" age="25" voice="ironic" default_group="Cavalry" is_hero="true" is_female="true" culture="Culture.southrhovanion" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_rohan_lady_skills">
         <face>
             <face_key_template value="BodyProperty.fighter_rohan" />
             <hair_tags>
@@ -52983,7 +52983,7 @@
             <EquipmentSet id="southrhovanion_civ_template_default_c" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_SRH1_4" name="{=aom_lord_SRH1_4_name}Hildegund" age="26" voice="ironic" default_group="Cavalry" is_hero="true" is_female="true" culture="Culture.southrhovanion" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_rohan_lady_skills">
+    <NPCCharacter id="lord_SRH1_4" name="{=aom_lord_SRH1_4_name}Inger" age="26" voice="ironic" default_group="Cavalry" is_hero="true" is_female="true" culture="Culture.southrhovanion" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_rohan_lady_skills">
         <face>
             <face_key_template value="BodyProperty.fighter_rohan" />
             <hair_tags>
@@ -53025,7 +53025,7 @@
             <EquipmentSet id="southrhovanion_civ_template_default_d" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_SRH2_1" name="{=aom_lord_SRH2_1_name}Thrasaric" age="33" voice="earnest" default_group="Cavalry" is_hero="true" culture="Culture.southrhovanion" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_rohan_knight_skills">
+    <NPCCharacter id="lord_SRH2_1" name="{=aom_lord_SRH2_1_name}Alatheo" age="33" voice="earnest" default_group="Cavalry" is_hero="true" culture="Culture.southrhovanion" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_rohan_knight_skills">
         <face>
             <face_key_template value="BodyProperty.fighter_rohan" />
           </face>
@@ -53064,7 +53064,7 @@
             <EquipmentSet id="southrhovanion_civ_template_default_a" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_SRH2_2" name="{=aom_lord_SRH2_2_name}Videric" age="36" voice="earnest" default_group="Cavalry" is_hero="true" culture="Culture.southrhovanion" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_rohan_knight_skills">
+    <NPCCharacter id="lord_SRH2_2" name="{=aom_lord_SRH2_2_name}Obada" age="36" voice="earnest" default_group="Cavalry" is_hero="true" culture="Culture.southrhovanion" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_rohan_knight_skills">
         <face>
             <face_key_template value="BodyProperty.fighter_rohan" />
           </face>
@@ -53103,7 +53103,7 @@
             <EquipmentSet id="southrhovanion_civ_template_default_b" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_SRH2_3" name="{=aom_lord_SRH2_3_name}Swanhilda" age="25" voice="ironic" default_group="Cavalry" is_hero="true" is_female="true" culture="Culture.southrhovanion" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_rohan_lady_skills">
+    <NPCCharacter id="lord_SRH2_3" name="{=aom_lord_SRH2_3_name}Aragonte" age="25" voice="ironic" default_group="Cavalry" is_hero="true" is_female="true" culture="Culture.southrhovanion" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_rohan_lady_skills">
         <face>
             <face_key_template value="BodyProperty.fighter_rohan" />
             <hair_tags>
@@ -53145,7 +53145,7 @@
             <EquipmentSet id="southrhovanion_civ_template_default_c" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_SRH2_4" name="{=aom_lord_SRH2_4_name}Theodegotha" age="26" voice="ironic" default_group="Cavalry" is_hero="true" is_female="true" culture="Culture.southrhovanion" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_rohan_lady_skills">
+    <NPCCharacter id="lord_SRH2_4" name="{=aom_lord_SRH2_4_name}Urraca" age="26" voice="ironic" default_group="Cavalry" is_hero="true" is_female="true" culture="Culture.southrhovanion" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_rohan_lady_skills">
         <face>
             <face_key_template value="BodyProperty.fighter_rohan" />
             <hair_tags>
@@ -53187,7 +53187,7 @@
             <EquipmentSet id="southrhovanion_civ_template_default_d" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_SRH3_1" name="{=aom_lord_SRH3_1_name}Beremud" age="33" voice="earnest" default_group="Cavalry" is_hero="true" culture="Culture.southrhovanion" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_rohan_knight_skills">
+    <NPCCharacter id="lord_SRH3_1" name="{=aom_lord_SRH3_1_name}Eormenric" age="33" voice="earnest" default_group="Cavalry" is_hero="true" culture="Culture.southrhovanion" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_rohan_knight_skills">
         <face>
             <face_key_template value="BodyProperty.fighter_rohan" />
           </face>
@@ -53226,7 +53226,7 @@
             <EquipmentSet id="southrhovanion_civ_template_default_a" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_SRH3_2" name="{=aom_lord_SRH3_2_name}Gundric" age="36" voice="earnest" default_group="Cavalry" is_hero="true" culture="Culture.southrhovanion" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_rohan_knight_skills">
+    <NPCCharacter id="lord_SRH3_2" name="{=aom_lord_SRH3_2_name}Guthfrith" age="36" voice="earnest" default_group="Cavalry" is_hero="true" culture="Culture.southrhovanion" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_rohan_knight_skills">
         <face>
             <face_key_template value="BodyProperty.fighter_rohan" />
           </face>
@@ -53265,7 +53265,7 @@
             <EquipmentSet id="southrhovanion_civ_template_default_b" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_SRH3_3" name="{=aom_lord_SRH3_3_name}Rotrudis" age="25" voice="ironic" default_group="Cavalry" is_hero="true" is_female="true" culture="Culture.southrhovanion" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_rohan_lady_skills">
+    <NPCCharacter id="lord_SRH3_3" name="{=aom_lord_SRH3_3_name}Avina" age="25" voice="ironic" default_group="Cavalry" is_hero="true" is_female="true" culture="Culture.southrhovanion" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_rohan_lady_skills">
         <face>
             <face_key_template value="BodyProperty.fighter_rohan" />
             <hair_tags>
@@ -53307,7 +53307,7 @@
             <EquipmentSet id="southrhovanion_civ_template_default_c" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_SRH3_4" name="{=aom_lord_SRH3_4_name}Brunhildis" age="26" voice="ironic" default_group="Cavalry" is_hero="true" is_female="true" culture="Culture.southrhovanion" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_rohan_lady_skills">
+    <NPCCharacter id="lord_SRH3_4" name="{=aom_lord_SRH3_4_name}Judith" age="26" voice="ironic" default_group="Cavalry" is_hero="true" is_female="true" culture="Culture.southrhovanion" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_rohan_lady_skills">
         <face>
             <face_key_template value="BodyProperty.fighter_rohan" />
             <hair_tags>
@@ -53349,7 +53349,7 @@
             <EquipmentSet id="southrhovanion_civ_template_default_d" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_SRH4_1" name="{=aom_lord_SRH4_1_name}Hrodulf" age="33" voice="earnest" default_group="Cavalry" is_hero="true" culture="Culture.southrhovanion" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_rohan_knight_skills">
+    <NPCCharacter id="lord_SRH4_1" name="{=aom_lord_SRH4_1_name}Cerdic" age="33" voice="earnest" default_group="Cavalry" is_hero="true" culture="Culture.southrhovanion" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_rohan_knight_skills">
         <face>
             <face_key_template value="BodyProperty.fighter_rohan" />
           </face>
@@ -53388,7 +53388,7 @@
             <EquipmentSet id="southrhovanion_civ_template_default_a" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_SRH4_2" name="{=aom_lord_SRH4_2_name}Sigiric" age="36" voice="earnest" default_group="Cavalry" is_hero="true" culture="Culture.southrhovanion" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_rohan_knight_skills">
+    <NPCCharacter id="lord_SRH4_2" name="{=aom_lord_SRH4_2_name}Hlothere" age="36" voice="earnest" default_group="Cavalry" is_hero="true" culture="Culture.southrhovanion" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_rohan_knight_skills">
         <face>
             <face_key_template value="BodyProperty.fighter_rohan" />
           </face>
@@ -53427,7 +53427,7 @@
             <EquipmentSet id="southrhovanion_civ_template_default_b" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_SRH4_3" name="{=aom_lord_SRH4_3_name}Ansgard" age="25" voice="ironic" default_group="Cavalry" is_hero="true" is_female="true" culture="Culture.southrhovanion" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_rohan_lady_skills">
+    <NPCCharacter id="lord_SRH4_3" name="{=aom_lord_SRH4_3_name}Cyneburg" age="25" voice="ironic" default_group="Cavalry" is_hero="true" is_female="true" culture="Culture.southrhovanion" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_rohan_lady_skills">
         <face>
             <face_key_template value="BodyProperty.fighter_rohan" />
             <hair_tags>
@@ -53469,7 +53469,7 @@
             <EquipmentSet id="southrhovanion_civ_template_default_c" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_SRH4_4" name="{=aom_lord_SRH4_4_name}Gisla" age="26" voice="ironic" default_group="Cavalry" is_hero="true" is_female="true" culture="Culture.southrhovanion" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_rohan_lady_skills">
+    <NPCCharacter id="lord_SRH4_4" name="{=aom_lord_SRH4_4_name}Æthelburg" age="26" voice="ironic" default_group="Cavalry" is_hero="true" is_female="true" culture="Culture.southrhovanion" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_rohan_lady_skills">
         <face>
             <face_key_template value="BodyProperty.fighter_rohan" />
             <hair_tags>

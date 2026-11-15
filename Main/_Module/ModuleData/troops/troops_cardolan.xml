@@ -151,8 +151,8 @@
     <skills>
       <skill id="Athletics" value="95" />
       <skill id="Riding" value="0" />
-      <skill id="OneHanded" value="105" />
-      <skill id="TwoHanded" value="50" />
+      <skill id="OneHanded" value="80" />
+      <skill id="TwoHanded" value="105" />
       <skill id="Polearm" value="130" />
       <skill id="Bow" value="25" />
       <skill id="Crossbow" value="25" />
@@ -199,8 +199,8 @@
     <skills>
       <skill id="Athletics" value="105" />
       <skill id="Riding" value="0" />
-      <skill id="OneHanded" value="140" />
-      <skill id="TwoHanded" value="60" />
+      <skill id="OneHanded" value="80" />
+      <skill id="TwoHanded" value="140" />
       <skill id="Polearm" value="175" />
       <skill id="Bow" value="30" />
       <skill id="Crossbow" value="30" />
@@ -248,8 +248,8 @@
     <skills>
       <skill id="Athletics" value="120" />
       <skill id="Riding" value="0" />
-      <skill id="OneHanded" value="225" />
-      <skill id="TwoHanded" value="90" />
+      <skill id="OneHanded" value="90" />
+      <skill id="TwoHanded" value="225" />
       <skill id="Polearm" value="180" />
       <skill id="Bow" value="35" />
       <skill id="Crossbow" value="35" />
@@ -294,8 +294,8 @@
     <skills>
       <skill id="Athletics" value="120" />
       <skill id="Riding" value="0" />
-      <skill id="OneHanded" value="180" />
-      <skill id="TwoHanded" value="70" />
+      <skill id="OneHanded" value="80" />
+      <skill id="TwoHanded" value="180" />
       <skill id="Polearm" value="225" />
       <skill id="Bow" value="35" />
       <skill id="Crossbow" value="35" />
@@ -339,9 +339,9 @@
     <skills>
       <skill id="Athletics" value="52" />
       <skill id="Riding" value="0" />
-      <skill id="OneHanded" value="70" />
-      <skill id="TwoHanded" value="27" />
-      <skill id="Polearm" value="55" />
+      <skill id="OneHanded" value="55" />
+      <skill id="TwoHanded" value="70" />
+      <skill id="Polearm" value="27" />
       <skill id="Bow" value="15" />
       <skill id="Crossbow" value="15" />
       <skill id="Throwing" value="15" />
@@ -387,7 +387,7 @@
       <skill id="Athletics" value="70" />
       <skill id="Riding" value="90" />
       <skill id="OneHanded" value="80" />
-      <skill id="TwoHanded" value="40" />
+      <skill id="TwoHanded" value="70" />
       <skill id="Polearm" value="100" />
       <skill id="Bow" value="20" />
       <skill id="Crossbow" value="20" />
@@ -438,8 +438,8 @@
     <skills>
       <skill id="Athletics" value="85" />
       <skill id="Riding" value="120" />
-      <skill id="OneHanded" value="105" />
-      <skill id="TwoHanded" value="50" />
+      <skill id="OneHanded" value="80" />
+      <skill id="TwoHanded" value="105" />
       <skill id="Polearm" value="130" />
       <skill id="Bow" value="25" />
       <skill id="Crossbow" value="25" />
@@ -490,8 +490,8 @@
     <skills>
       <skill id="Athletics" value="95" />
       <skill id="Riding" value="160" />
-      <skill id="OneHanded" value="140" />
-      <skill id="TwoHanded" value="60" />
+      <skill id="OneHanded" value="80" />
+      <skill id="TwoHanded" value="140" />
       <skill id="Polearm" value="175" />
       <skill id="Bow" value="30" />
       <skill id="Crossbow" value="30" />
@@ -542,8 +542,8 @@
     <skills>
       <skill id="Athletics" value="110" />
       <skill id="Riding" value="205" />
-      <skill id="OneHanded" value="180" />
-      <skill id="TwoHanded" value="70" />
+      <skill id="OneHanded" value="80" />
+      <skill id="TwoHanded" value="180" />
       <skill id="Polearm" value="225" />
       <skill id="Bow" value="35" />
       <skill id="Crossbow" value="35" />
@@ -594,8 +594,8 @@
     <skills>
       <skill id="Athletics" value="130" />
       <skill id="Riding" value="250" />
-      <skill id="OneHanded" value="220" />
-      <skill id="TwoHanded" value="80" />
+      <skill id="OneHanded" value="80" />
+      <skill id="TwoHanded" value="220" />
       <skill id="Polearm" value="270" />
       <skill id="Bow" value="40" />
       <skill id="Crossbow" value="40" />
@@ -645,8 +645,8 @@
       <skill id="Athletics" value="80" />
       <skill id="Riding" value="0" />
       <skill id="OneHanded" value="80" />
-      <skill id="TwoHanded" value="40" />
-      <skill id="Polearm" value="55" />
+      <skill id="TwoHanded" value="70" />
+      <skill id="Polearm" value="40" />
       <skill id="Bow" value="95" />
       <skill id="Crossbow" value="20" />
       <skill id="Throwing" value="20" />
@@ -695,8 +695,8 @@
       <skill id="Athletics" value="95" />
       <skill id="Riding" value="0" />
       <skill id="OneHanded" value="105" />
-      <skill id="TwoHanded" value="50" />
-      <skill id="Polearm" value="55" />
+      <skill id="TwoHanded" value="70" />
+      <skill id="Polearm" value="50" />
       <skill id="Bow" value="140" />
       <skill id="Crossbow" value="25" />
       <skill id="Throwing" value="25" />
@@ -744,8 +744,8 @@
     <skills>
       <skill id="Athletics" value="105" />
       <skill id="Riding" value="0" />
-      <skill id="OneHanded" value="140" />
-      <skill id="TwoHanded" value="60" />
+      <skill id="OneHanded" value="105" />
+      <skill id="TwoHanded" value="140" />
       <skill id="Polearm" value="60" />
       <skill id="Bow" value="180" />
       <skill id="Crossbow" value="30" />
@@ -972,9 +972,9 @@
     <skills>
       <skill id="Athletics" value="52" />
       <skill id="Riding" value="0" />
-      <skill id="OneHanded" value="70" />
-      <skill id="TwoHanded" value="27" />
-      <skill id="Polearm" value="55" />
+      <skill id="OneHanded" value="55" />
+      <skill id="TwoHanded" value="70" />
+      <skill id="Polearm" value="27" />
       <skill id="Bow" value="15" />
       <skill id="Crossbow" value="15" />
       <skill id="Throwing" value="15" />

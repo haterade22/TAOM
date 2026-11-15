@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text.RegularExpressions;
 using System.Xml.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -95,6 +96,29 @@ internal static class CultureDataFixture
         foreach (var culture in XDocument.Load(Path.Combine(ModuleDataPath(), "taom_spcultures.xml")).Descendants("Culture"))
             if ((string)culture.Attribute("is_main_culture") == "true")
                 ids.Add((string)culture.Attribute("id"));
+        return ids;
+    }
+
+    /// <summary>
+    /// Every kingdom StringId, read from the data: the kingdoms <c>taom_spkingdoms.xml</c> declares plus the vanilla
+    /// kingdoms <c>spkingdoms.xslt</c> re-skins through a <c>Kingdom[@id='...']</c> template. One reader for every
+    /// config test keyed on kingdom ids, so a new kingdom needs no test edit.
+    /// </summary>
+    public static HashSet<string> KingdomIds()
+    {
+        var ids = new HashSet<string>(StringComparer.Ordinal);
+        foreach (var kingdom in XDocument.Load(Path.Combine(ModuleDataPath(), "taom_spkingdoms.xml")).Descendants("Kingdom"))
+        {
+            var id = (string)kingdom.Attribute("id");
+            if (!string.IsNullOrEmpty(id))
+                ids.Add(id);
+        }
+
+        var xslt = File.ReadAllText(Path.Combine(ModuleDataPath(), "spkingdoms.xslt"));
+        foreach (Match match in Regex.Matches(xslt, @"Kingdom\[@id=['""]([a-z_]+)['""]\]"))
+            ids.Add(match.Groups[1].Value);
+
+        Assert.IsTrue(ids.Count >= 20, $"expected at least 20 kingdoms, parsed {ids.Count}");
         return ids;
     }
 

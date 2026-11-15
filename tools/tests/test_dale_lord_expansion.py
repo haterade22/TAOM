@@ -77,11 +77,11 @@ class DaleLordExpansionDataTests(unittest.TestCase):
             r'id="(clan_sturgia_\d+)"\s+initial_home_settlement="Settlement\.(\w+)"\s+name="\{=([^}]+)\}([^"]+)"', text)}
         got = {cid: (m.group(2), m.group(3), m.group(4)) for cid, m in rows.items()}
         self.assertEqual({
-            "clan_sturgia_10": ("castle_S4", "aom_clan_sturgia_10_name", "House of the Running River"),
-            "clan_sturgia_11": ("castle_S1", "aom_clan_sturgia_11_name", "House of the Carnen"),
-            "clan_sturgia_12": ("castle_S3", "aom_clan_sturgia_12_name", "House of Ravenhill"),
-            "clan_sturgia_13": ("town_S4", "aom_clan_sturgia_13_name", "House of the Forest River"),
-            "clan_sturgia_14": ("town_S5", "aom_clan_sturgia_14_name", "House of the Long Marshes"),
+            "clan_sturgia_10": ("castle_S4", "aom_clan_sturgia_10_name", "Falkes"),
+            "clan_sturgia_11": ("castle_S1", "aom_clan_sturgia_11_name", "Calmar"),
+            "clan_sturgia_12": ("castle_S3", "aom_clan_sturgia_12_name", "Macher"),
+            "clan_sturgia_13": ("town_S4", "aom_clan_sturgia_13_name", "Foriking"),
+            "clan_sturgia_14": ("town_S5", "aom_clan_sturgia_14_name", "Hill"),
         }, got)
 
     @unittest.skipUnless(all(p.is_dir() for p in VANILLA_MD), f"vanilla ModuleData not found under {GAME}")

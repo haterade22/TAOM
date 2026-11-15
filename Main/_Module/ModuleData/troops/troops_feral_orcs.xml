@@ -136,8 +136,8 @@
         <skills>
             <skill id="Athletics" value="53" />
             <skill id="Riding" value="5" />
-            <skill id="OneHanded" value="60" />
-            <skill id="TwoHanded" value="65" />
+            <skill id="OneHanded" value="65" />
+            <skill id="TwoHanded" value="60" />
             <skill id="Polearm" value="50" />
             <skill id="Bow" value="0" />
             <skill id="Crossbow" value="0" />

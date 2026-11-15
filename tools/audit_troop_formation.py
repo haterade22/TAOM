@@ -6,7 +6,8 @@ default_group IS the battlefield formation the troop spawns in. A mounted bowman
 spawns in the infantry block on horseback; a foot archer tagged Cavalry rides with the horse.
 
 Battle sets mix per slot (see .claude/rules/troops.md), so a slot is "always" filled only when every
-battle set fills it. The expected group comes from what every set carries:
+battle set fills it. A launcher is guaranteed only when ONE slot holds a launcher in every set: a bow in
+Item0 of one set and Item2 of another can spawn with none. The expected group comes from what every set carries:
 
     mount in every set + bow/crossbow in every set  -> HorseArcher
     mount in every set                              -> Cavalry
@@ -40,7 +41,7 @@ MODULE_DATA = REPO / "Main" / "_Module" / "ModuleData"
 ITEM_MODULES = ("Native", "SandBoxCore", "SandBox", "LOTRLOME_Armory", "TA.Weapons_and_Shields",
                 "OpenSourceArmoryRBM", "OpenSourceWeaponryRBM", "OpenSourceSaddleryRBM", "TAOM_Map")
 
-LAUNCHER_TYPES = {"Bow", "Crossbow", "Musket", "Pistol"}
+LAUNCHER_TYPES = {"Bow", "Crossbow", "Sling", "Musket", "Pistol"}
 THROWN_TYPES = {"Thrown"}
 THROWN_TEMPLATE_RE = re.compile(r"javelin|throwing", re.I)
 WEAPON_SLOTS = {"Item0", "Item1", "Item2", "Item3"}
@@ -95,7 +96,10 @@ def _items_of(set_elem: ET.Element, keep_empty: bool = False) -> dict[str, str]:
     """slot -> item id. keep_empty keeps an empty id, which as a troop-level override clears the slot."""
     out = {}
     for eq in set_elem:
-        if _strip_ns(eq.tag) != "equipment":
+        # Troop rosters write <equipment>, standalone roster files <Equipment>. Inside a set the engine reads
+        # every child whatever its name (Equipment.cs:196-216); a troop-level override must be exactly
+        # <equipment> (BasicCharacterObject.cs:370), and no shipped override is spelled otherwise.
+        if not isinstance(eq.tag, str) or _strip_ns(eq.tag).lower() != "equipment":
             continue
         slot, ref = eq.get("slot", ""), eq.get("id", "")
         if slot and (ref or keep_empty):
@@ -107,15 +111,25 @@ def _overlay(base: dict[str, str], overrides: dict[str, str]) -> dict[str, str]:
     return {slot: ref for slot, ref in {**base, **overrides}.items() if ref}
 
 
-def load_standalone_rosters() -> dict[str, list[dict[str, str]]]:
+def _parse(path: Path, errors: list[str] | None) -> ET.Element | None:
+    """The file's root, or None after recording why it did not parse: a troop file that is skipped
+    silently turns the gate green (#1295)."""
+    try:
+        return ET.parse(path).getroot()
+    except (ET.ParseError, OSError) as exc:
+        if errors is not None:
+            errors.append(f"{path}: {exc}")
+        return None
+
+
+def load_standalone_rosters(errors: list[str] | None = None) -> dict[str, list[dict[str, str]]]:
     """EquipmentRoster id -> its battle sets (for <EquipmentSet id=.../> references)."""
     rosters: dict[str, list[dict[str, str]]] = {}
     for path in MODULE_DATA.rglob("*.xml"):
         if "Languages" in path.parts:
             continue
-        try:
-            root = ET.parse(path).getroot()
-        except ET.ParseError:
+        root = _parse(path, errors)
+        if root is None:
             continue
         for r in root.iter():
             if _strip_ns(r.tag) != "EquipmentRoster" or not r.get("id"):
@@ -158,10 +172,15 @@ def classify(sets, index) -> dict:
     n = len(sets)
     mount_n = sum(mounted(s) for s in sets)
     launch_n = sum(has(s, "launcher") for s in sets)
+    # A launcher is guaranteed only when one slot holds one in every set: each slot is drawn from its own
+    # set (Equipment.cs:571-590), so a bow in Item0 of one set and Item2 of another can spawn with none.
+    launch_all = bool(sets) and any(all(index.get(s.get(slot, "")) == "launcher" for s in sets)
+                                    for slot in WEAPON_SLOTS)
     thrown_n = sum(has(s, "thrown") for s in sets)
     unknown = sorted({ref for s in sets for slot, ref in s.items()
                       if slot in WEAPON_SLOTS and index.get(ref) is None})
-    return {"sets": n, "mount": mount_n, "launcher": launch_n, "thrown": thrown_n, "unknown": unknown}
+    return {"sets": n, "mount": mount_n, "launcher": launch_n, "launcher_all": launch_all, "thrown": thrown_n,
+            "unknown": unknown}
 
 
 def verdict(group: str, c: dict) -> tuple[str, str]:
@@ -170,9 +189,9 @@ def verdict(group: str, c: dict) -> tuple[str, str]:
     if n == 0:
         return "NOSETS", ""
     mixed_mount = 0 < c["mount"] < n
-    mixed_launch = 0 < c["launcher"] < n
+    mixed_launch = c["launcher"] > 0 and not c["launcher_all"]
     all_mount = c["mount"] == n
-    all_launch = c["launcher"] == n
+    all_launch = c["launcher_all"]
     if mixed_mount or mixed_launch:
         return "MIXED", ""
     if all_mount:
@@ -184,16 +203,16 @@ def verdict(group: str, c: dict) -> tuple[str, str]:
     return ("OK" if group in exp else "MISMATCH"), "/".join(sorted(exp))
 
 
-def scan(modules: Path):
+def scan(modules: Path, errors: list[str] | None = None):
+    """Every troop's verdict. A file that does not parse is appended to `errors` when one is given."""
     index = build_item_index(modules)
-    rosters = load_standalone_rosters()
+    rosters = load_standalone_rosters(errors)
     troops = {}
     for path in sorted(MODULE_DATA.rglob("*.xml")):
         if "Languages" in path.parts or path.name in SKIP_FILES:
             continue
-        try:
-            root = ET.parse(path).getroot()
-        except ET.ParseError:
+        root = _parse(path, errors)
+        if root is None:
             continue
         for npc in root.iter():
             if _strip_ns(npc.tag) != "NPCCharacter":
@@ -230,7 +249,13 @@ def main(argv=None) -> int:
     if modules is None or not Path(modules).is_dir():
         print("Set BANNERLORD_GAME_DIR to the Bannerlord install.", file=sys.stderr)
         return 2
-    troops = scan(Path(modules))
+    errors: list[str] = []
+    troops = scan(Path(modules), errors)
+    # The roster pass and the troop pass read the same files, so a broken one is recorded twice.
+    errors = sorted(set(errors))
+    if not troops:
+        print("no troops loaded: nothing checked", file=sys.stderr)
+        return 2
     counts: dict[str, int] = {}
     for t in troops.values():
         counts[t["status"]] = counts.get(t["status"], 0) + 1
@@ -252,7 +277,9 @@ def main(argv=None) -> int:
             w.writeheader()
             for t in troops.values():
                 w.writerow({**t, "ups": " ".join(t["ups"]), "unknown": " ".join(t["unknown"])})
-    return 1 if counts.get("MISMATCH") or counts.get("MIXED") else 0
+    for e in errors:
+        print(f"PARSE ERROR {e}", file=sys.stderr)
+    return 1 if counts.get("MISMATCH") or counts.get("MIXED") or errors else 0
 
 
 if __name__ == "__main__":

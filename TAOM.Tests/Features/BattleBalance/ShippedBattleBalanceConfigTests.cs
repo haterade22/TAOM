@@ -24,6 +24,20 @@ public class ShippedBattleBalanceConfigTests
         return config;
     }
 
+    // #1283: troop numbers outweigh troop quality in auto-resolve. Read from the raw JSON, because a missing key would
+    // load the compiled value and hide that the file lost it.
+    [TestMethod]
+    public void ShippedConfig_AutoResolvePowerRatioExponent_IsHalfAndMatchesTheCompiledDefault()
+    {
+        var path = Path.Combine(CultureDataFixture.ModuleDataPath(), "configs", "battle_balance_config.json");
+        var raw = Newtonsoft.Json.Linq.JObject.Parse(File.ReadAllText(path));
+
+        var shipped = (float?)raw["AutoResolve"]?["PowerRatioExponent"];
+
+        Assert.AreEqual(0.5f, shipped ?? float.NaN, 1e-6f, "the shipped file must carry the exponent");
+        Assert.AreEqual(0.5f, new BattleBalanceConfig().AutoResolve.PowerRatioExponent, 1e-6f);
+    }
+
     /// <summary>
     /// Lindon's troop tree is a clone of Rivendell's, so its parties survive like Rivendell's.
     /// </summary>
@@ -46,6 +60,48 @@ public class ShippedBattleBalanceConfigTests
 
         Assert.IsTrue(bonuses.TryGetValue("arthedain", out var arthedain), "battle_balance_config.json has no arthedain row");
         Assert.AreEqual(bonuses["gondor"], arthedain, 0.001f);
+    }
+
+    /// <summary>
+    /// Mirkwood is an elf realm like Rivendell and Lindon; it had no row at all until 2026-11-14 (#1283).
+    /// </summary>
+    [TestMethod]
+    public void ShippedConfig_Mirkwood_MatchesRivendellSurvivalBonus()
+    {
+        var bonuses = LoadShippedFileOnly().CasualtyRatios.CulturalSurvivalBonuses;
+
+        Assert.IsTrue(bonuses.TryGetValue("mirkwood", out var mirkwood), "battle_balance_config.json has no mirkwood row");
+        Assert.AreEqual(bonuses["rivendell"], mirkwood, 0.001f);
+    }
+
+    /// <summary>
+    /// Mordor carries no survival penalty (#1283). The -0.2 it shipped with multiplied the death chance of a
+    /// wounded regular by 1.2. With no Medicine bonus on either side (no surgeon skill in the party, no
+    /// Doctor's Oath in the enemy's) that chance is 1 / (1 + level x 0.02), so a troop of level 10 or below
+    /// then never survived a cut or pierce blow.
+    /// </summary>
+    [TestMethod]
+    public void ShippedConfig_Mordor_HasNoSurvivalPenalty()
+    {
+        var bonuses = LoadShippedFileOnly().CasualtyRatios.CulturalSurvivalBonuses;
+
+        Assert.IsFalse(bonuses.TryGetValue("mordor", out var mordor) && mordor < 0f,
+            $"battle_balance_config.json gives mordor a survival penalty again ({mordor})");
+    }
+
+    /// <summary>
+    /// The table is keyed on culture StringIds, and a key no culture carries is silent: the lookup finds
+    /// no row and returns 0, so that realm's parties keep the engine's roll.
+    /// </summary>
+    [TestMethod]
+    public void ShippedConfig_EverySurvivalBonusKey_IsAMainCultureId()
+    {
+        var cultures = CultureDataFixture.MainCultureIds();
+
+        var unknown = LoadShippedFileOnly().CasualtyRatios.CulturalSurvivalBonuses.Keys
+            .Where(key => !cultures.Contains(key)).OrderBy(key => key).ToList();
+
+        Assert.AreEqual(0, unknown.Count, $"survival bonus keys that are no playable culture: {string.Join(", ", unknown)}");
     }
 
     /// <summary>

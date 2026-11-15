@@ -2805,3 +2805,22 @@ The campaign-free session joined through a new path that skipped two client stat
 - **Why missed:** the new path was checked against what the tests could see, not against the side effects of the states it skipped; a message-order test sent fewer messages than the real sender does.
 - **Prevent:** when a new path skips states, list every side effect of those states (queue phase, registries, events) and check each on the new path with a real component, not a double. A message-order test sends what the real sender sends, in its order. Before a new guard stays, revert it once and see its test go red.
 - **Source:** [rca-coop-session-2026-11-14.md](../rca-coop-session-2026-11-14.md), findings 1, 2, R1, S1, S3.
+
+### A validator test that builds its config in C# never meets the deserializer (#1291, 2026-11-15)
+The battle balance provider's new tests built `BattleBalanceConfig` objects in C# and called `Validate` directly. All of them stayed green with the `Validate` call deleted from `GetConfig`, and none could show that Newtonsoft merges JSON keys into the compiled dictionaries or sets a section to null on a JSON `null`, the two facts the fallback design rests on. The Data flow lens found it, with three smaller gaps: the null-branch warnings had no asserts, a bad tier key with no compiled row reverted to 1.0 instead of the formula, and a doc column said "0 when absent" where the merge keeps the compiled row.
+- **Why missed:** the tests were written per branch of `Validate`, so the loader around it and its input format were outside every test.
+- **Prevent:** a config provider's tests include at least one case through the real file and the real deserializer, and that case fails when the validate call is removed. A test of a fallback asserts the warning and the summary, not only the value.
+- **Source:** [rca-faction-balance-data-2026-11-14.md](../rca-faction-balance-data-2026-11-14.md), "#1291 review".
+
+### A floor count the partial reader still meets proves nothing about coverage (PR #1306, 2026-11-15)
+`CreatureSaddleRosterTests` asserted more than 50 checked mount and harness pairs, to catch a reader that missed the rosters. It read only `<equipment>` children, skipped the 6,134 TAOM sets that use `<Equipment>`, and still found 81 pairs, so the floor passed.
+- **Why missed:** the floor was set from what the reader returned, not from an independent count of the data.
+- **Prevent:** take a gate's floor from a count the reader under test does not produce (a second parser, or a near-total such as "more than half of the sets with a creature mount"), and read element names the way the engine does (both spellings for ModuleData equipment).
+- **Source:** [rca-pr1306-creature-saddles-2026-11-15.md](../rca-pr1306-creature-saddles-2026-11-15.md) finding 1.
+### A change to a composition runs the composition tests before a push (#1075, 2026-11-15)
+
+**Why missed:** 02bd1e3d2 registered a new client service. `TaomClientComposition_RegisterServices_RegistersExactlyTheExpectedServices` lists every client registration, and the pre-push filter (`Autorun`, `GateTests`, `ServerJit`, `ClientWiring`) did not include it. The full `/verify` was skipped because the commit was rushed, and trunk went red until 7a0cd9311.
+
+**Prevent:** a push that skips the full suite adds `FullyQualifiedName~Composition` to its filter whenever it touches `TaomClientComposition`, `FeatureModules` or a feature module, and says in the commit body which suite ran.
+
+**Source:** `docs/reviews/rca-scenario-autorun-2026-11-15.md`

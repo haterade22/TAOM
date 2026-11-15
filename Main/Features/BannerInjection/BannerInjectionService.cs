@@ -38,6 +38,32 @@ public class BannerInjectionService : IBannerInjectionService
             $"BannerInjection: Injected {kingdomCount} kingdom(s), {clanCount} clan(s).");
     }
 
+    public int RemapRemovedIcons()
+    {
+        var changed = 0;
+        foreach (var kingdom in _kingdomAdapter.GetAllKingdoms())
+        {
+            var code = BannerIconRemap.Remap(kingdom.BannerCode, RemovedBannerIcons.Replacement);
+            if (code is null)
+                continue;
+            _kingdomAdapter.SetBanner(kingdom.StringId, code);
+            _kingdomAdapter.InvalidateVisuals(kingdom.StringId);
+            changed++;
+        }
+        foreach (var clan in _clanAdapter.GetAllClans())
+        {
+            var code = BannerIconRemap.Remap(clan.BannerCode, RemovedBannerIcons.Replacement);
+            if (code is null)
+                continue;
+            _clanAdapter.SetBanner(clan.StringId, code);
+            _clanAdapter.InvalidateVisuals(clan.StringId);
+            changed++;
+        }
+        if (changed > 0)
+            _logger.LogInfo($"BannerInjection: {changed} banner(s) named a removed icon; each now shows the nearest icon of its old group (#1285).");
+        return changed;
+    }
+
     public void SyncData(IDataStore dataStore)
     {
         _exclusionService.SyncData(dataStore);

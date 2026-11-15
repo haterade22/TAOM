@@ -494,6 +494,22 @@ TAOM installed the ModuleData half:
 - **Replay after a drop:** as for #805 above (the English rows by `register_armory_names.py --apply --prefix <his ids>`), then move the starter-kit markers in `OneHandedPolearm_JavelinAlternative`
   again if his file still wraps the whole template; the first test names the six pieces until it is done.
 
+### ⚠️ APPLIED EDIT: the Khamul spears couch and brace (#343, 2026-11-15)
+
+The Dol Guldur warg riders carry `sm_dg_khml_spear_a` and `sm_dg_khml_spear_b`, whose blades the Armory listed
+under `OneHandedPolearm` and `TwoHandedPolearm` only, so the spears could not be couched. On 2026-11-15
+`python tools/register_couch_brace_polearms.py --apply --backup-tag dgspear-20261115` added
+`sm_dg_khml_spear_blade_a` and `sm_dg_khml_spear_blade_b` to `TwoHandedPolearm_Couchable` and
+`TwoHandedPolearm_Bracing` in the live `ModuleData/weapon_descriptions.xslt`, inside
+`TAOM-COUCH-BRACE:BEGIN` / `:END` markers (eight lines). **A live edit that an Armory reinstall or an art drop
+WILL revert.** The spec is `tools/couch_brace_polearms.json`; the data gate `couch-brace`
+(`python tools/register_couch_brace_polearms.py --check`) fails on a reverted file, and the same `--apply` command
+repairs it. Live backup: `weapon_descriptions.xslt.bak-dgspear-20261115` (the pre-change file; sweep it before a
+release, [module-backup-sweep.md](../module-backup-sweep.md)). This snapshot's copy of the stylesheet was not
+refreshed for it. The mechanism and what else the change touches (the two spears' price rises) are in
+[weapon-xml-pipeline.md](../../features/weapon-xml-pipeline.md), "Couch and brace usages". A full game restart
+is needed, and the in-game check (a warg rider couches the spear) is owed.
+
 ### ⚠️ APPLIED EDIT: the #1271 weapon and armour rebalance (2026-11-14)
 
 The #1271 tools rewrote armour stats, modifier groups and blade factors in the live Armory on 2026-11-14: the

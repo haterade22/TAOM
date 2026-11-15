@@ -909,4 +909,94 @@ public class CampaignHotPathSettingsProvidersTests
         Assert.IsFalse(sut.IsEnabled);
         Assert.IsFalse(sut.IsAiEnabled);
     }
+
+    // The IL rule above proves WHERE MCM is resolved, not THAT the result is kept: a later `_x ??= Settings?.X`
+    // regression passes it, as would an accessor that pins a null read before MCM is up. These eight providers
+    // (the war check, army targeting, bandit scaling, culture conversion, marriage alignment, encyclopedia,
+    // settlement food and settlement gold) run against a counting stand-in for MCM's own provider: each keeps
+    // asking while MCM has nothing, takes the settings object the moment MCM has one, never asks again, and
+    // still sees an edit made to that object.
+    private static readonly System.Collections.Generic.Dictionary<Type, (Func<object> Create, string Getter, string Setting)> ReadThroughProbes = new()
+    {
+        [typeof(TAOM.Features.Diplomacy.TaomSettingsProvider)] = (() => new TAOM.Features.Diplomacy.TaomSettingsProvider(),
+            nameof(TAOM.Features.Diplomacy.TaomSettingsProvider.WarOfTheRingEnabled), nameof(TaomSettings.WarOfTheRingEnabled)),
+        [typeof(TAOM.Features.ArmyTargeting.ArmyTargetingSettingsProvider)] = (() => new TAOM.Features.ArmyTargeting.ArmyTargetingSettingsProvider(Substitute.For<IModLogger>()),
+            nameof(TAOM.Features.ArmyTargeting.ArmyTargetingSettingsProvider.EnableWarTheaters), nameof(TaomSettings.EnableWarTheaters)),
+        [typeof(TAOM.Features.BanditManagement.BanditScalingSettingsProvider)] = (() => new TAOM.Features.BanditManagement.BanditScalingSettingsProvider(),
+            nameof(TAOM.Features.BanditManagement.BanditScalingSettingsProvider.IsEnabled), nameof(TaomSettings.EnableBanditScaling)),
+        [typeof(TAOM.Features.CultureConversion.CultureConversionSettingsProvider)] = (() =>
+            {
+                var config = Substitute.For<TAOM.Features.CultureConversion.ICultureConversionConfigProvider>();
+                config.GetConfig().Returns(new TAOM.Features.CultureConversion.CultureConversionConfig());
+                return new TAOM.Features.CultureConversion.CultureConversionSettingsProvider(config);
+            },
+            nameof(TAOM.Features.CultureConversion.CultureConversionSettingsProvider.IsEnabled), nameof(TaomSettings.EnableCultureConversion)),
+        [typeof(TAOM.Features.MarriageAlignment.MarriageAlignmentSettingsProvider)] = (() =>
+            {
+                var config = Substitute.For<TAOM.Features.MarriageAlignment.IMarriageAlignmentConfigProvider>();
+                config.GetConfig().Returns(new TAOM.Features.MarriageAlignment.MarriageAlignmentConfig());
+                return new TAOM.Features.MarriageAlignment.MarriageAlignmentSettingsProvider(config);
+            },
+            nameof(TAOM.Features.MarriageAlignment.MarriageAlignmentSettingsProvider.IsEnabled), nameof(TaomSettings.EnableMarriageAlignment)),
+        [typeof(TAOM.Features.Encyclopedia.EncyclopediaSettingsProvider)] = (() => new TAOM.Features.Encyclopedia.EncyclopediaSettingsProvider(),
+            nameof(TAOM.Features.Encyclopedia.EncyclopediaSettingsProvider.ShowAllEncyclopediaCharacters), nameof(TaomSettings.ShowAllEncyclopediaCharacters)),
+        // The two settlement models keep the switch in a private Enabled property.
+        [typeof(TAOM.Features.SettlementFood.Models.TaomSettlementFoodModel)] = (
+            // The vanilla base constructor needs a running campaign, and the switch touches no field it sets.
+            () => System.Runtime.Serialization.FormatterServices.GetUninitializedObject(typeof(TAOM.Features.SettlementFood.Models.TaomSettlementFoodModel)),
+            "Enabled", nameof(TaomSettings.EnableSettlementFoodTuning)),
+        [typeof(TAOM.Features.SettlementEconomy.Models.TaomSettlementEconomyModel)] = (() =>
+            {
+                var config = Substitute.For<TAOM.Features.SettlementEconomy.ISettlementEconomyConfigProvider>();
+                config.GetConfig().Returns(new TAOM.Features.SettlementEconomy.SettlementEconomyConfig());
+                return new TAOM.Features.SettlementEconomy.Models.TaomSettlementEconomyModel(
+                    Substitute.For<TAOM.Features.SettlementEconomy.ISettlementEconomyService>(), config);
+            },
+            "Enabled", nameof(TaomSettings.EnableSettlementEconomyTuning)),
+    };
+
+    [DataTestMethod]
+    [DataRow(typeof(TAOM.Features.Diplomacy.TaomSettingsProvider))]
+    [DataRow(typeof(TAOM.Features.ArmyTargeting.ArmyTargetingSettingsProvider))]
+    [DataRow(typeof(TAOM.Features.BanditManagement.BanditScalingSettingsProvider))]
+    [DataRow(typeof(TAOM.Features.CultureConversion.CultureConversionSettingsProvider))]
+    [DataRow(typeof(TAOM.Features.MarriageAlignment.MarriageAlignmentSettingsProvider))]
+    [DataRow(typeof(TAOM.Features.Encyclopedia.EncyclopediaSettingsProvider))]
+    [DataRow(typeof(TAOM.Features.SettlementFood.Models.TaomSettlementFoodModel))]
+    [DataRow(typeof(TAOM.Features.SettlementEconomy.Models.TaomSettlementEconomyModel))]
+    public void Provider_AsksMcmUntilItHasTheSettings_ThenNeverAgain_AndReadsThrough(Type provider)
+    {
+        var probe = ReadThroughProbes[provider];
+        using var mcm = new TAOM.Tests.Infrastructure.CountingMcm();
+        var sut = probe.Create();
+        var getter = provider.GetProperty(probe.Getter, Declared)!;
+        bool Read() => (bool)getter.GetValue(sut)!;
+        void Set(object settings, bool value) => settings.GetType().GetProperty(probe.Setting)!.SetValue(settings, value);
+
+        // MCM is not up: the compiled fallback applies, and every read asks again.
+        bool fallback = Read();
+        Assert.IsTrue(mcm.Lookups >= 1, provider.Name + ": a read resolves the settings through MCM");
+        int whileDown = mcm.Lookups;
+        Read();
+        Assert.IsTrue(mcm.Lookups > whileDown,
+            provider.Name + ": a read while MCM has nothing must ask again, or a null is pinned for the session");
+
+        // MCM comes up holding a value that differs from the fallback: the next read takes it.
+        var settings = new TaomSettings();
+        Set(settings, !fallback);
+        mcm.Register(settings);
+        Assert.AreEqual(!fallback, Read(), provider.Name + ": the first read after MCM is up must use its settings, not the fallback");
+        int resolved = mcm.Lookups;
+
+        // Kept: further reads never ask MCM.
+        for (int i = 0; i < 5; i++)
+            Read();
+        Assert.AreEqual(resolved, mcm.Lookups,
+            provider.Name + ": once resolved, the settings object must be kept; every read walks MCM's containers otherwise");
+
+        // Read through: an edit to that same object shows on the next read, with no new lookup.
+        Set(settings, fallback);
+        Assert.AreEqual(fallback, Read(), provider.Name + ": an edit made to MCM's object must show on the next read");
+        Assert.AreEqual(resolved, mcm.Lookups, provider.Name + ": reading an edit must not look the object up again");
+    }
 }

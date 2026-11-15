@@ -19,8 +19,8 @@ namespace TAOM.Tests.Core;
 /// identical one, an approximation of the engine's merge by unique key. It keeps both copies of a merged child, so
 /// NoOfferedCharacter_ReferencesAHeroTheFilterHides can over-report a reference but never miss one.
 /// The old screen's troop picker offers a character when it is a non-obsolete Soldier (ArmyCompositionGroupVM:176);
-/// the muster also requires CaptainResolver.IsOffered (TcbVM:314). The muster's commander list is every non-obsolete,
-/// non-spc_ hero of the culture (TcbVM:319). An engine update that adds or renames a vanilla soldier, dummy or
+/// the muster also requires CaptainResolver.IsOffered (TcbVM, the army's _soldiers list). The muster's commander list
+/// is every non-obsolete, non-spc_ hero of the culture (TcbVM, the army's _heroes list). An engine update that adds or renames a vanilla soldier, dummy or
 /// commander id fails here.
 /// </summary>
 [TestClass]

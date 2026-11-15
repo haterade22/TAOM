@@ -30,6 +30,12 @@ def built():
     return gat.add_mercenary(gat.clamp_skills(gat.build()))
 
 
+def setUpModule():
+    # clamp_skills classes every weapon through the install's item files (#343).
+    if not os.path.isdir(rt.GAME_MODULES):
+        raise unittest.SkipTest("game install not found: %s" % rt.GAME_MODULES)
+
+
 class DesignTests(unittest.TestCase):
     def setUp(self):
         self.troops = built()

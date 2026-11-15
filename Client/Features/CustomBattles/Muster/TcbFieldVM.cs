@@ -14,8 +14,8 @@ namespace TAOM.Client.Features.CustomBattles.Muster
     /// The Battlefield tab (user's mockup 2026-11-07): a large preview of the chosen map with a strip of neighbouring maps
     /// (arrows = previous / next), and the battle settings as dropdowns: battle type (field battle / village / siege, split
     /// as the old screen's MapSelectionGroupVM does), player type (commander / captain), side, map, season, time of day
-    /// (CustomBattleTimeOfDay = the hour), and for a siege the breached walls and the town's level. Siege engines: ram +
-    /// two towers, as the game's own CPU benchmark siege. Previews: GUI/CustomBattleMuster/Maps/&lt;scene id&gt;.png (TcbSprites.MapSprite).
+    /// (CustomBattleTimeOfDay = the hour), and for a siege the breached walls and the town's level. Siege engines: three
+    /// dropdowns (attacker engines, attacker artillery, defender engines), ram and two towers by default. Previews: GUI/CustomBattleMuster/Maps/&lt;scene id&gt;.png (TcbSprites.MapSprite).
     /// </summary>
     public class TcbFieldVM : ViewModel
     {

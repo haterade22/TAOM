@@ -316,7 +316,7 @@ TEXT_REMAP = {
         ("Lancer of Dol Amroth", "Lancer of the North Downs"),
         ("Warden of the Bay", "Warden of Evendim"),
         ("Rider of the Silver Swan", "Rider of the Seven Stars"),
-        ("Shieldwall of Imrahil", "Shieldwall of Arvegil"),
+        ("Shieldwall of Imrahil", "Shieldwall of Aranarth"),
         ("Knight of the Swan-Prow", "Knight of the Silver Crown"),
         ("Charge of Dol Amroth", "Charge of Fornost"),
         ("charge of Dol Amroth", "charge of Fornost"),
@@ -326,7 +326,7 @@ TEXT_REMAP = {
         ("Osgiliath", "Fornost"),
         ("Ithilien", "Eriador"),
         ("Faramir", "Arvedui"),
-        ("Imrahil", "Arvegil"),
+        ("Imrahil", "Aranarth"),
         ("Gondorian", "Arthedain"),  # before the bare name, or "Gondorian" becomes "Arthedainian"
         ("Gondor", "Arthedain"),
     ],
@@ -354,7 +354,7 @@ TEXT_REMAP = {
         ("Warden of the East Bank", "Warden of the Downs"),
         ("Keeper of the Anduin Crossing", "Keeper of the Greyflood Crossing"),
         ("Vanguard of the Rammas", "Vanguard of the South Downs"),
-        ("Host of Faramir", "Host of Aranthir"),
+        ("Host of Faramir", "Host of Osthir"),
         ("Lord of the Dome of Stars", "Keeper of the Royal Barrows"),
         ("Squire of Dol Amroth", "Squire of Caras Gorthad"),
         ("Knight of the Silver Swan", "Knight of the Barrow-Kings"),
@@ -363,7 +363,7 @@ TEXT_REMAP = {
         ("Lancer of Dol Amroth", "Lancer of Minhiriath"),
         ("Warden of the Bay", "Warden of Tharbad"),
         ("Rider of the Silver Swan", "Rider of the Plains"),
-        ("Shieldwall of Imrahil", "Shieldwall of Aranthir"),
+        ("Shieldwall of Imrahil", "Shieldwall of Osthir"),
         ("Knight of the Swan-Prow", "Knight of the Greenway"),
         ("Charge of Dol Amroth", "Charge of Caras Gorthad"),
         ("charge of Dol Amroth", "charge of Caras Gorthad"),
@@ -372,8 +372,8 @@ TEXT_REMAP = {
         ("Belfalas", "Cardolan"),
         ("Osgiliath", "Tharbad"),
         ("Ithilien", "Minhiriath"),
-        ("Faramir", "Aranthir"),
-        ("Imrahil", "Aranthir"),
+        ("Faramir", "Osthir"),
+        ("Imrahil", "Osthir"),
         ("Gondorian", "Cardolan"),
         ("Gondor", "Cardolan"),
     ],
@@ -399,7 +399,7 @@ TEXT_REMAP = {
         ("Warden of the East Bank", "Warden of the Ettendale"),
         ("Keeper of the Anduin Crossing", "Keeper of the Hoarwell Crossing"),
         ("Vanguard of the Rammas", "Vanguard of the Coldfells"),
-        ("Host of Faramir", "Host of Belegorn"),
+        ("Host of Faramir", "Host of Elamarth"),
         ("Lord of the Dome of Stars", "Lord of the Tower of Cameth Brin"),
         ("Squire of Dol Amroth", "Squire of the Angle"),
         ("Knight of the Silver Swan", "Knight of the Fells"),
@@ -408,7 +408,7 @@ TEXT_REMAP = {
         ("Lancer of Dol Amroth", "Lancer of the Angle"),
         ("Warden of the Bay", "Warden of the Loudwater"),
         ("Rider of the Silver Swan", "Rider of the High Fells"),
-        ("Shieldwall of Imrahil", "Shieldwall of Belegorn"),
+        ("Shieldwall of Imrahil", "Shieldwall of Elamarth"),
         ("Knight of the Swan-Prow", "Knight of the Ettenmoors"),
         ("Charge of Dol Amroth", "Charge of Cameth Brin"),
         ("charge of Dol Amroth", "charge of Cameth Brin"),
@@ -417,8 +417,8 @@ TEXT_REMAP = {
         ("Belfalas", "Rhudaur"),
         ("Osgiliath", "the Last Bridge"),
         ("Ithilien", "the Angle"),
-        ("Faramir", "Belegorn"),
-        ("Imrahil", "Belegorn"),
+        ("Faramir", "Elamarth"),
+        ("Imrahil", "Elamarth"),
         ("Gondorian", "Rhudaur"),
         ("Gondor", "Rhudaur"),
     ],
@@ -509,7 +509,7 @@ CAREER_TEXT_REMAP = {
     "axe_warden_of_beorns_hall": [
         ("Plant your feet and hold the gate — boosts", "Plant your feet and hold the ford: boosts"),
         ("A stalwart protector of the rebuilt city of Dale who holds the gate against all comers with shield and spear.",
-         "A broad-shouldered axeman of the House of Beorn who holds the fords and passes of the Vales against goblin and wolf alike."),
+         "A broad-shouldered axeman of the Beornings who holds the fords and passes of the Vales against goblin and wolf alike."),
         ("Gate-Warden of Dale", "Vale Axeman"),
         ("Shieldman of Girion", "Axe-warden of Beorn's Hall"),
         ("Knight of Dale", "Champion of the Carrock"),
@@ -553,7 +553,7 @@ CAREER_TEXT_REMAP = {
         ("Courier of the Two Kings", "Courier of the Chieftain"),
         ("Trade Road Sprint", "Vale Gallop"),
     ],
-    # Angaladh: the Woodmen of western Mirkwood under King Ingomar, on foot only.
+    # Angaladh: the Woodmen of western Mirkwood under King Theodemiro, on foot only.
     # The spear career (Dale's guardsman keeps its shield and spear).
     "warden_of_the_forest_gate": [
         ("Plant your feet and hold the gate — boosts", "Set your spear in the path and hold the line: boosts"),
@@ -564,9 +564,9 @@ CAREER_TEXT_REMAP = {
         ("Knight of Dale", "Captain of Woodmen-town"),
         ("Gate Warden of Dale", "Spearman of Woodmen-town"),
         ("Shieldwall of Esgaroth", "Shieldwall of the Forest Gate"),
-        ("Spear of Girion", "Spear of Ingomar"),
+        ("Spear of Girion", "Spear of Theodemiro"),
         ("Bulwark of the Running", "Bulwark of the Forest Road"),
-        ("Vanguard of King Brand", "Vanguard of King Ingomar"),
+        ("Vanguard of King Brand", "Vanguard of King Theodemiro"),
         ("The Last Stand at Erebor", "The Last Stand at Thornhold"),
         ("Gate Hold", "Thornwall"),
     ],
@@ -582,7 +582,7 @@ CAREER_TEXT_REMAP = {
         ("Shieldwall of Esgaroth", "Splitter of the Forest Road"),
         ("Spear of Girion", "Axe of the Heartwood"),
         ("Bulwark of the Running", "Hewing of the Emyn Duir"),
-        ("Vanguard of King Brand", "Great-axe of King Ingomar"),
+        ("Vanguard of King Brand", "Great-axe of King Theodemiro"),
         ("The Last Stand at Erebor", "The Felling of the Dark Wood"),
         ("Gate Hold", "Heartwood Storm"),
     ],
@@ -599,11 +599,11 @@ CAREER_TEXT_REMAP = {
         ("Heir of the Black Arrow", "Heir of the Woodwards"),
         ("Thrush-Sighted Archer", "Owl-Sighted Archer"),
         ("Dragonslayer of Dale", "Spider-Slayer of the Emyn Duir"),
-        ("The Bow of Girion's Line", "The Bow of Ingomar's Line"),
+        ("The Bow of Girion's Line", "The Bow of Theodemiro's Line"),
         ("Black Arrow", "Ironwood Volley"),
     ],
 
-    # Dorwinion (#1062): the vintners and river-traders under King Ostric, on Dale's three careers
+    # Dorwinion (#1062): the vintners and river-traders under King Hawin, on Dale's three careers
     # (the same sources as Anduin Vale). A spear career, a bowman career and a river-rider career.
     "spear_warden_of_vinewatch": [
         ("Plant your feet and hold the gate — boosts", "Set your spear and hold the terrace wall: boosts"),
@@ -614,9 +614,9 @@ CAREER_TEXT_REMAP = {
         ("Knight of Dale", "Captain of Vineholm"),
         ("Gate Warden of Dale", "Vine-warden of the Redwater"),
         ("Shieldwall of Esgaroth", "Shieldwall of the Terraces"),
-        ("Spear of Girion", "Spear of King Ostric"),
+        ("Spear of Girion", "Spear of King Hawin"),
         ("Bulwark of the Running", "Bulwark of the Redwater"),
-        ("Vanguard of King Brand", "Vanguard of King Ostric"),
+        ("Vanguard of King Brand", "Vanguard of King Hawin"),
         ("The Last Stand at Erebor", "The Last Stand at Sunwall"),
         ("Gate Hold", "Terrace Wall"),
     ],
@@ -632,7 +632,7 @@ CAREER_TEXT_REMAP = {
         ("Heir of the Black Arrow", "Heir of the Redwater Bowmen"),
         ("Thrush-Sighted Archer", "Falcon-Sighted Archer"),
         ("Dragonslayer of Dale", "Raider-Bane of Seagate"),
-        ("The Bow of Girion's Line", "The Bow of King Ostric's Line"),
+        ("The Bow of Girion's Line", "The Bow of King Hawin's Line"),
         ("Black Arrow", "Seagate Volley"),
     ],
     "river_rider_of_seagate": [
@@ -652,7 +652,7 @@ CAREER_TEXT_REMAP = {
     ],
 
     # South Rhovanion (#1062): the Northmen horse-lords of the plains south of Mirkwood under King
-    # Vidumar, on Rohan's three careers (culture `vlandia`). The specific phrases come first; the
+    # Suniefredo, on Rohan's three careers (culture `vlandia`). The specific phrases come first; the
     # generic Rohan words are caught by TEXT_REMAP["southrhovanion"].
     # The cavalry lancer career (Rohan's windrider).
     "rider_of_vidugard": [

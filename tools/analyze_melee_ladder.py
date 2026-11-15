@@ -132,7 +132,9 @@ def load_troops(root: Path) -> list[Troop]:
     Both `<equipment>` and `<Equipment>` casings are matched. That is not cosmetic. Inline
     troop rosters spell the child lowercase and standalone roster files spell it uppercase,
     so matching one casing makes a gate structurally blind to a whole category while printing
-    a pass (the lesson `audit_polearm_shield_parity.rosters` records).
+    a pass (the lesson `audit_polearm_shield_parity.rosters` records). A troop-level override
+    directly under `<Equipments>` is matched lowercase only, as the engine reads it
+    (`BasicCharacterObject.cs:370`, v1.5.7: `childNode2.Name == "equipment"`).
     """
     if LET is None:
         raise AnalysisError("lxml is required")
@@ -170,6 +172,16 @@ def load_troops(root: Path) -> list[Troop]:
                         slot = eq.get("slot")
                         if slot:
                             slots.setdefault(item_id, set()).add(slot)
+                # A troop-level <equipment> directly under <Equipments> is laid over every battle set
+                # (BasicCharacterObject.Deserialize), so what it names is part of the kit (#1295).
+                for eq in block.findall("equipment"):
+                    ref = eq.get("id")
+                    if not ref:
+                        continue
+                    item_id = ref.split(".", 1)[-1]
+                    items.add(item_id)
+                    if eq.get("slot"):
+                        slots.setdefault(item_id, set()).add(eq.get("slot"))
             out.append(
                 Troop(
                     id=tid,
