@@ -137,6 +137,37 @@ Record each pending feature's module, source file, exact keys and English text, 
 | `taom_ph_gundabad_spear_a03_t8_blade_name` | Gundabad Orc Spear Blade III (placeholder) (added by #1296) |
 | `taom_ph_lothlorien_spear_t6_blade_name` | High Elven Spear Blade (placeholder) (added by #1296) |
 
+## Lord armour variant names (#1333)
+
+- Status: pending. The keys are not yet registered in an English master, so no gate or translator sees them; the same state as the placeholder weapon names above. Register them, then translate. Tracked in #1129, the open backlog after #763 (both #763 and #1294 are closed). Until then the 20 names show in English in all 12 languages; the Mirkwood source pieces beside them show translated names (the Armory's `Languages/<lang>/loc_mirkwood.xml`), while the Armory ships no translation of the Harad source names.
+- Source: issue #1333.
+- Module: TAOM.
+- English source: `Main/_Module/ModuleData/lord_armour/lord_armour_variants.xml` (written by `tools/generate_lord_armour_variants.py`; `tools/_loc_sources.py` does not list it).
+- Target languages: BR, CNs, CNt, DE, FR, IT, JP, KO, PL, RU, SP, TR.
+
+| Key | English source |
+| --- | --- |
+| `taom_lord_mkwd_inf3_chest_name` | [Mirkwood] Lord's Infantry Chestplate I |
+| `taom_lord_mkwd_inf3_greaves_name` | [Mirkwood] Lord's Greaves I |
+| `taom_lord_mkwd_inf3_chest_bronze_name` | [Mirkwood] Lord's Infantry Chestplate III |
+| `taom_lord_mkwd_inf3_pauldrons_bronze_name` | [Mirkwood] Lord's Pauldrons III |
+| `taom_lord_mkwd_inf3_greaves_bronze_name` | [Mirkwood] Lord's Greaves III |
+| `taom_lord_mirkwood_body_name` | [Mirkwood] Lord's Palace Guard Body Armor |
+| `taom_lord_mirkwood_boots_name` | [Mirkwood] Lord's Palace Guard Boots |
+| `taom_lord_sk_hr_st_chest_inf_chest_light_a_name` | [Harwan] Lord's Infantry Chest A I |
+| `taom_lord_sk_hr_st_chest_inf_chest_med_a_name` | [Harwan] Lord's Infantry Chest A II |
+| `taom_lord_sk_hr_st_chest_inf_chest_med_b_name` | [Harwan] Lord's Infantry Chest B I |
+| `taom_lord_sk_hr_st_chest_inf_chest_heavy_b_name` | [Harwan] Lord's Infantry Chest B II |
+| `taom_lord_sk_hr_st_chest_cav_heavy_b_name` | [Harwan] Lord's Cavalry Chest B |
+| `taom_lord_sk_hr_st_pauld_inf_med_a_name` | [Harwan] Lord's Infantry Pauldron A |
+| `taom_lord_sk_hr_st_grvs_light_a_name` | [Harwan] Lord's Greaves A I |
+| `taom_lord_sk_hr_st_grvs_med_a_name` | [Harwan] Lord's Greaves A II |
+| `taom_lord_sk_hr_st_helmet_heavy_c_name` | [Harwan] Lord's Helmet C |
+| `taom_lord_sk_hr_st_helmet_heavy_a_name` | [Harwan] Lord's Helmet A |
+| `taom_lord_sk_hr_st_helmet_heavy_d_name` | [Harwan] Lord's Helmet D |
+| `taom_lord_sk_hr_st_helmet_heavy_b_name` | [Harwan] Lord's Helmet B |
+| `taom_lord_sk_sg_st_helmet_heavy_d_name` | [Shaghana] Lord's Helmet D |
+
 ## Momentum option hints (#1166)
 
 - Status: pending. The two hints have no `{=KEY}` yet: add one, register it, then translate. Tracked in #1294.
