@@ -116,10 +116,19 @@ Read in the v1.5.7 source by the 2026-11-15 review:
 - In a default run `KingdomJoinOfferService` opens nothing (it needs a takeover), and `CampStartInCamp` is off by default. A run
   inherits the machine's MCM settings.
 
-UNVERIFIED until the first run: campaign days per wall minute at speed 15; that the native quit runs the managed shutdown (the
-`[Shutdown] clean module unload` line settles it); that the application tick's `dt` stays above 0 while a popup pauses the game (an
-`inquiry hidden ... phase=Running` line settles it); that a layer tick runs between two application ticks, which the second-sighting
-rule for scene notifications needs (a `notices_hidden` above 0 with no `driver_error` settles it).
+- **Story event windows:** TAOM's War Chronicle and coronation windows (`EventWindows`, in the Realms popup slot) pause the campaign
+  with `GameStateManager.RegisterActiveStateDisableRequest` while they show. Time stops, but the time mode stays unlocked and the
+  screen still reads `Map`. The host closes an open one with `RealmsPopups.Close()`, which runs the same `RealmsPopupLayer.Close`
+  as the Continue button, and the driver counts it in `event_windows_closed`. A window that opens in Running opens and closes
+  in the same application tick, so it never pauses the run. One that opens in WaitMap stays open until the first Running tick.
+
+The first run (`E:\Temp\scenario-runs\20261115-142426`, build cb470ab4e) settled three points. The native quit runs the managed
+shutdown (`[Shutdown] clean module unload`). The driver ticks while an inquiry pauses the game (`inquiry hidden n=2 phase=Running`).
+At speed 15 a campaign day took about 6 wall seconds, between 5 and 7 (day 1 at 14:26:16, day 2 at 14:26:22; the log has 1-second resolution). The War Chronicle's `breaking`
+window then stopped time on day 2 for 9 minutes, which the event window fix above addresses.
+
+UNVERIFIED: that a layer tick runs between two application ticks, which the second-sighting rule for scene notifications needs (a
+`notices_hidden` above 0 with no `driver_error` settles it; the first run met no scene notification).
 
 ## Key Files
 
@@ -145,7 +154,8 @@ rule for scene notifications needs (a `notices_hidden` above 0 with no `driver_e
 
 ## How to verify in game
 
-**Preconditions:** no game running, the idle gate passes, the checkout is deployed by the runner. A run starts the game unattended,
+**Preconditions:** no game running, the idle gate passes, and this checkout is deployed with `pwsh ./build.ps1` (the launcher does
+not build, and it judges the build against HEAD as read at launch). A run starts the game unattended,
 so it needs Mike's word.
 
 1. Run `python tools/run_scenario.py --days 3`. The TAOM log shows

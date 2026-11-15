@@ -10,9 +10,13 @@ Own arguments (everything else goes to the Fords runner, for example --dry-run, 
   --kind campaign-new   --days N (1 to 1000, default 3)   --culture ID (default gondor)   --speed X (above 0, at most 30, default 15)
   --scenario LABEL      --stall-seconds N (default 600)
 
+This tool does not build or deploy: deploy this tree with `pwsh ./build.ps1` first. It reads HEAD once, at launch, and refuses to
+start when git cannot say.
+
 Exit 0 needs reason=ok, days_run at least days_wanted, the [Check] pass line in the TAOM log, no CrashReport error block, the clean
-module unload line, a done file that echoes the armed plan, no arm file warning, a [BuildStamp] of this tree's HEAD, and a game
-that left by itself. Then the war ledger of the run is saved as ledger.txt in the run folder.
+module unload line, a done file that echoes the armed plan, no arm file warning, a [BuildStamp] of this tree's HEAD as read at
+launch, and a game that left by itself. The PASS line names that build. Then the war ledger of the run is saved as ledger.txt in
+the run folder.
 
 Run:  python tools/run_scenario.py --days 30 --dry-run
 Tests: python -m unittest tools.tests.test_run_scenario
@@ -158,28 +162,31 @@ def judge(done, report_json, log_text=None, armed=None, head=NOT_CHECKED):
         warning = next((line for line in log_text.splitlines() if ARM_WARNING in line), None)
         if warning is not None:
             problems.append("the game did not take the arm file as written: " + warning[:200])
-        if head is not NOT_CHECKED:
-            problem = build_problem(log_text, head)
-            if problem is not None:
-                problems.append(problem)
+    build = None
+    if log_text is not None and head is not NOT_CHECKED:
+        build, problem = build_check(log_text, head)
+        if problem is not None:
+            problems.append(problem)
     if problems:
         return 1, "; ".join(problems)
-    return 0, f"reason=ok, {days_run} of {days_wanted} days, pass line present, no CrashReport block, clean unload"
+    proved = f"build {build}, " if build else ""
+    return 0, f"{proved}reason=ok, {days_run} of {days_wanted} days, pass line present, no CrashReport block, clean unload"
 
 
-def build_problem(log_text, head):
-    """None when the log's [BuildStamp] names this tree's HEAD (.dirty allowed: a run under test is a working-tree build), else why not.
-    Copied from run_long_defeat.build_of: a stale deploy otherwise passes on the old build's data."""
+def build_check(log_text, head):
+    """(build label, problem). The label is the log's [BuildStamp] sha, cut to 9 characters, with .dirty when the build had local
+    edits; None without a stamp. The problem is None when that build is head (.dirty allowed: a run under test is a working-tree
+    build). Copied from run_long_defeat.build_of: a stale deploy otherwise passes on the old build's data."""
     stamp = next((s for s in (iv.parse_build_stamp(row) for row in log_text.splitlines() if "[BuildStamp]" in row) if s), None)
     if stamp is None:
-        return "the log has no [BuildStamp] line with a git sha"
+        return None, "the log has no [BuildStamp] line with a git sha"
     sha, dirty = stamp
     label = sha[:9] + (".dirty" if dirty else "")
     if not head:
-        return f"this tree's HEAD is unknown, so the build {label} cannot be matched"
+        return label, f"this tree's HEAD is unknown, so the build {label} cannot be matched"
     if not sha.startswith(head):
-        return f"the log's build {label} is not this tree's HEAD {head[:9]}: deploy this tree and run again"
-    return None
+        return label, f"the log's build {label} is not this tree's HEAD {head[:9]}: deploy this tree and run again"
+    return label, None
 
 
 def tree_head_sha():
@@ -240,7 +247,11 @@ def main(argv=None):
     runner.STATUS_FILE = STATUS_FILE
     runner.RUNS_ROOT = RUNS_ROOT
     runner.arm_text_for = armed_text
-    runner.judge = lambda done, report_json, log_text=None: judge(done, report_json, log_text, known, tree_head_sha())
+    head = tree_head_sha()  # read at launch: a commit made during the run is not the deployed build
+    if head is None:
+        print("cannot read this tree's HEAD with git, so no run could prove its build; nothing was started")
+        return 1
+    runner.judge = lambda done, report_json, log_text=None: judge(done, report_json, log_text, known, head)
     runner.show_results = show_results
     return runner.main(rest)
 

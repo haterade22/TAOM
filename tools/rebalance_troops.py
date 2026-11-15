@@ -2,20 +2,19 @@
 """
 Troop Skill Rebalancing Script for TAOM
 
-Applies uniform baseline + cultural modifier formula to all troops.
-Ensures cultures are within 5-10 skill points of each other per level/group,
-with elven factions 25-50 points above baseline.
+Applies the role table (#343) to every troop: the main carried weapon takes N x (1 + the
+culture's percent), where N is the tier's number on TIER_CURVE, and every other skill is a share
+of N (calculate_skills; docs/features/troop-skill-balance.md).
 
-Weapon specialization is EQUIPMENT-DRIVEN (2026-07-13): the tool reads each
-troop's actual weapon item classes (via tools/taom_schema.build_item_class_registry,
-which needs the game install for vanilla + Armory item definitions) and swaps
-Bow<->Crossbow / Polearm<->TwoHanded to match the carried weapons. Name keywords
-alone previously mis-statted crossbowmen named "Sharpshooter" and two-hander
-cavalry named "Knight" (issues #340/#341).
+The roles are read from the troop's equipment: the item classes of its battle sets (via
+tools/taom_schema.build_item_class_registry, which needs the game install for vanilla and Armory
+item definitions) and its horses' difficulty (build_mount_difficulty_registry). Name keywords
+once mis-statted crossbowmen named "Sharpshooter" and two-hander cavalry named "Knight"
+(issues #340/#341), so no name is read.
 
-The kit then decides the ORDER of the weapon skills (#343, tools/troop_purpose.py): the Item0
-class takes the troop's highest melee or launcher value, then the other carried classes, then the
-classes it does not carry.
+The kit decides the ORDER of the weapon skills (tools/troop_purpose.py): the Item0 class takes
+the troop's highest melee or launcher value, then the other carried classes, then the classes it
+does not carry.
 
 Usage:
     python rebalance_troops.py --dry-run    # Preview changes
@@ -31,7 +30,9 @@ import glob
 import re
 import copy
 import codecs
-from collections import defaultdict
+import math
+from collections import Counter, defaultdict
+from fractions import Fraction
 from pathlib import Path
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -103,182 +104,82 @@ RESPECIALIZATION_EXEMPT_EDGES = {
 }
 
 # =============================================================================
-# Baseline Skill Tables (center values per level per group)
+# The role table (#343): one curve on the vanilla range, spread over TAOM's ten tiers
 # =============================================================================
 
-INFANTRY_BASELINES = {
-    1:  {'Athletics': 25, 'Riding': 5,  'OneHanded': 25,  'TwoHanded': 15,  'Polearm': 20,  'Bow': 5,  'Crossbow': 0,  'Throwing': 10},
-    6:  {'Athletics': 33, 'Riding': 5,  'OneHanded': 28,  'TwoHanded': 18,  'Polearm': 28,  'Bow': 5,  'Crossbow': 0,  'Throwing': 10},
-    11: {'Athletics': 48, 'Riding': 10, 'OneHanded': 60,  'TwoHanded': 55,  'Polearm': 70,  'Bow': 10, 'Crossbow': 5,  'Throwing': 20},
-    16: {'Athletics': 80, 'Riding': 15, 'OneHanded': 90,  'TwoHanded': 85,  'Polearm': 95,  'Bow': 15, 'Crossbow': 10, 'Throwing': 30},
-    21: {'Athletics': 95, 'Riding': 15, 'OneHanded': 125, 'TwoHanded': 110, 'Polearm': 130, 'Bow': 15, 'Crossbow': 10, 'Throwing': 50},
-    26: {'Athletics': 100,'Riding': 20, 'OneHanded': 175, 'TwoHanded': 155, 'Polearm': 170, 'Bow': 20, 'Crossbow': 15, 'Throwing': 70},
-    31: {'Athletics': 120,'Riding': 25, 'OneHanded': 230, 'TwoHanded': 210, 'Polearm': 235, 'Bow': 25, 'Crossbow': 20, 'Throwing': 80},
-    36: {'Athletics': 140,'Riding': 30, 'OneHanded': 270, 'TwoHanded': 250, 'Polearm': 275, 'Bow': 30, 'Crossbow': 25, 'Throwing': 90},
-    41: {'Athletics': 160,'Riding': 35, 'OneHanded': 310, 'TwoHanded': 290, 'Polearm': 310, 'Bow': 35, 'Crossbow': 25, 'Throwing': 100},
-    46: {'Athletics': 175,'Riding': 40, 'OneHanded': 330, 'TwoHanded': 310, 'Polearm': 330, 'Bow': 40, 'Crossbow': 30, 'Throwing': 100},
-    51: {'Athletics': 190,'Riding': 40, 'OneHanded': 350, 'TwoHanded': 330, 'Polearm': 350, 'Bow': 40, 'Crossbow': 30, 'Throwing': 100},
+# N, the main weapon skill of a culture with no edge, by engine tier. Tiers 1 to 5 are vanilla's
+# grid (20, 40, 70, 100, 130); tiers 6 to 10 go on in even steps to 260. The ranged ladder anchors
+# its rank-7 line on the same numbers (tools/ranged_ladders.json stats.skill).
+TIER_CURVE = {1: 20, 2: 40, 3: 70, 4: 100, 5: 130, 6: 156, 7: 182, 8: 208, 9: 234, 10: 260}
+
+# Every other skill is a share of N, read off vanilla's troops (docs/features/troop-skill-balance.md).
+SIDEARM = Fraction(9, 10)             # a carried weapon that is not the main one
+UNCARRIED_MELEE = Fraction(1, 2)      # a melee class the troop does not carry
+UNCARRIED_RANGED = Fraction(2, 5)     # a launcher or Throwing the troop does not carry
+MOUNTED_ATHLETICS = Fraction(1, 2)
+FOOT_RIDING = Fraction(2, 5)
+ARCHER_SIDEARM = Fraction(9, 10)      # an archer's melee, of its own launcher value, rounded down
+
+# The culture's edge, in percent of N, on each skill. A culture with no row is an error: the Lindon
+# lesson (#522) was a missing key that put a whole faction on the bare curve with no word.
+CULTURE_PCT = {
+    'gondor': {'Athletics': 3, 'Riding': 3, 'OneHanded': 5, 'TwoHanded': 3, 'Polearm': 3, 'Bow': 0, 'Crossbow': 0, 'Throwing': -5},
+    'rohan': {'Athletics': -3, 'Riding': 15, 'OneHanded': 0, 'TwoHanded': 0, 'Polearm': 5, 'Bow': -3, 'Crossbow': -5, 'Throwing': 1},
+    'erebor': {'Athletics': 5, 'Riding': -10, 'OneHanded': 8, 'TwoHanded': 12, 'Polearm': 8, 'Bow': 0, 'Crossbow': 0, 'Throwing': 5},
+    'iron_hills': {'Athletics': 5, 'Riding': -3, 'OneHanded': 10, 'TwoHanded': 12, 'Polearm': 12, 'Bow': 0, 'Crossbow': 3, 'Throwing': 5},
+    'eredluin': {'Athletics': 5, 'Riding': -10, 'OneHanded': 8, 'TwoHanded': 12, 'Polearm': 8, 'Bow': 0, 'Crossbow': 0, 'Throwing': 5},
+    'rivendell': {'Athletics': 18, 'Riding': 12, 'OneHanded': 18, 'TwoHanded': 20, 'Polearm': 20, 'Bow': 20, 'Crossbow': 20, 'Throwing': 20},
+    # Lindon is a Rivendell twin: most of its troops have a rivendell_ or imladris_ counterpart.
+    'lindon': {'Athletics': 18, 'Riding': 12, 'OneHanded': 18, 'TwoHanded': 20, 'Polearm': 20, 'Bow': 20, 'Crossbow': 20, 'Throwing': 20},
+    'mirkwood': {'Athletics': 23, 'Riding': 3, 'OneHanded': 20, 'TwoHanded': 15, 'Polearm': 15, 'Bow': 25, 'Crossbow': 25, 'Throwing': 25},
+    'lothlorien': {'Athletics': 18, 'Riding': 10, 'OneHanded': 15, 'TwoHanded': 13, 'Polearm': 15, 'Bow': 18, 'Crossbow': 18, 'Throwing': 18},
+    'dale': {'Athletics': 3, 'Riding': -5, 'OneHanded': 3, 'TwoHanded': 6, 'Polearm': 13, 'Bow': 6, 'Crossbow': 6, 'Throwing': -3},
+    'dunland': {'Athletics': 10, 'Riding': -3, 'OneHanded': 3, 'TwoHanded': 3, 'Polearm': 0, 'Bow': 0, 'Crossbow': 0, 'Throwing': 8},
+    'rhun': {'Athletics': 3, 'Riding': 9, 'OneHanded': 0, 'TwoHanded': 0, 'Polearm': 8, 'Bow': -5, 'Crossbow': -5, 'Throwing': -3},
+    'umbar': {'Athletics': 5, 'Riding': -8, 'OneHanded': 5, 'TwoHanded': 3, 'Polearm': 0, 'Bow': 0, 'Crossbow': 0, 'Throwing': 0},
+    'harad': {'Athletics': 0, 'Riding': 8, 'OneHanded': 3, 'TwoHanded': -5, 'Polearm': -3, 'Bow': 5, 'Crossbow': 0, 'Throwing': 0},
+    'arthedain': {'Athletics': 5, 'Riding': 2, 'OneHanded': 3, 'TwoHanded': 2, 'Polearm': 2, 'Bow': 5, 'Crossbow': 0, 'Throwing': -3},
+    'cardolan': {'Athletics': 0, 'Riding': 5, 'OneHanded': 3, 'TwoHanded': 0, 'Polearm': 5, 'Bow': 0, 'Crossbow': 0, 'Throwing': -3},
+    'rhudaur': {'Athletics': 5, 'Riding': 0, 'OneHanded': 2, 'TwoHanded': 5, 'Polearm': 0, 'Bow': 2, 'Crossbow': 0, 'Throwing': 5},
+    'anduinvale': {'Athletics': 8, 'Riding': -10, 'OneHanded': 0, 'TwoHanded': 8, 'Polearm': 0, 'Bow': 3, 'Crossbow': 0, 'Throwing': 0},
+    'angaladh': {'Athletics': 5, 'Riding': -5, 'OneHanded': 0, 'TwoHanded': 3, 'Polearm': 3, 'Bow': 5, 'Crossbow': 0, 'Throwing': 0},
+    'dorwinion': {'Athletics': 0, 'Riding': 3, 'OneHanded': 0, 'TwoHanded': 0, 'Polearm': 3, 'Bow': 5, 'Crossbow': 0, 'Throwing': 0},
+    'southrhovanion': {'Athletics': 0, 'Riding': 8, 'OneHanded': 0, 'TwoHanded': 0, 'Polearm': 5, 'Bow': 3, 'Crossbow': 0, 'Throwing': 0},
+    'isengard': {'Athletics': 5, 'Riding': 3, 'OneHanded': 5, 'TwoHanded': 5, 'Polearm': 5, 'Bow': 0, 'Crossbow': 5, 'Throwing': 5},
+    # Orthanc guard (orthanc_*), Isengard's elite line, routed by detect_culture.
+    'isengard_orthanc': {'Athletics': 9, 'Riding': 3, 'OneHanded': 6, 'TwoHanded': 8, 'Polearm': 8, 'Bow': 0, 'Crossbow': 6, 'Throwing': 6},
+    # Black Uruks (mordor_uruk_*), Mordor's elite line, routed by detect_culture.
+    'mordor_uruk': {'Athletics': 5, 'Riding': -3, 'OneHanded': 5, 'TwoHanded': 6, 'Polearm': 5, 'Bow': 0, 'Crossbow': 0, 'Throwing': 3},
+    'dolguldur': {'Athletics': 6, 'Riding': -3, 'OneHanded': 5, 'TwoHanded': 6, 'Polearm': 6, 'Bow': -3, 'Crossbow': -3, 'Throwing': 5},
+    # Black Numenoreans (mordor_num_*), Men inside the mordor file, routed by detect_culture.
+    'mordor_numenorean': {'Athletics': 3, 'Riding': 3, 'OneHanded': 5, 'TwoHanded': 5, 'Polearm': 5, 'Bow': 0, 'Crossbow': 0, 'Throwing': 0},
+    'mordor': {'Athletics': -3, 'Riding': -3, 'OneHanded': 0, 'TwoHanded': 0, 'Polearm': -3, 'Bow': -3, 'Crossbow': -3, 'Throwing': 3},
+    'gundabad': {'Athletics': 2, 'Riding': -3, 'OneHanded': 0, 'TwoHanded': 0, 'Polearm': 2, 'Bow': -5, 'Crossbow': -5, 'Throwing': 3},
+    # Goblin-town: the weakest orc melee, and dangerous archers.
+    'goblin': {'Athletics': -5, 'Riding': -8, 'OneHanded': -4, 'TwoHanded': -3, 'Polearm': -4, 'Bow': 8, 'Crossbow': -8, 'Throwing': -3},
+    'mistymountainorcs': {'Athletics': 2, 'Riding': -3, 'OneHanded': 0, 'TwoHanded': 0, 'Polearm': 2, 'Bow': -5, 'Crossbow': -5, 'Throwing': 3},
+    'feral_orcs': {'Athletics': -6, 'Riding': -3, 'OneHanded': -3, 'TwoHanded': 0, 'Polearm': -6, 'Bow': -3, 'Crossbow': -3, 'Throwing': 3},
 }
 
-RANGED_BASELINES = {
-    6:  {'Athletics': 40, 'Riding': 5,  'OneHanded': 20,  'TwoHanded': 10,  'Polearm': 20,  'Bow': 30,  'Crossbow': 5,  'Throwing': 10},
-    11: {'Athletics': 50, 'Riding': 10, 'OneHanded': 30,  'TwoHanded': 25,  'Polearm': 30,  'Bow': 55,  'Crossbow': 15, 'Throwing': 20},
-    16: {'Athletics': 85, 'Riding': 15, 'OneHanded': 70,  'TwoHanded': 45,  'Polearm': 45,  'Bow': 85,  'Crossbow': 25, 'Throwing': 30},
-    21: {'Athletics': 95, 'Riding': 15, 'OneHanded': 100, 'TwoHanded': 65,  'Polearm': 70,  'Bow': 130, 'Crossbow': 30, 'Throwing': 40},
-    26: {'Athletics': 105,'Riding': 20, 'OneHanded': 140, 'TwoHanded': 85,  'Polearm': 90,  'Bow': 170, 'Crossbow': 35, 'Throwing': 50},
-    31: {'Athletics': 115,'Riding': 25, 'OneHanded': 165, 'TwoHanded': 100, 'Polearm': 100, 'Bow': 205, 'Crossbow': 40, 'Throwing': 60},
-    36: {'Athletics': 130,'Riding': 30, 'OneHanded': 195, 'TwoHanded': 120, 'Polearm': 120, 'Bow': 245, 'Crossbow': 50, 'Throwing': 70},
-    41: {'Athletics': 150,'Riding': 35, 'OneHanded': 220, 'TwoHanded': 140, 'Polearm': 140, 'Bow': 280, 'Crossbow': 55, 'Throwing': 80},
-    46: {'Athletics': 165,'Riding': 40, 'OneHanded': 240, 'TwoHanded': 160, 'Polearm': 160, 'Bow': 300, 'Crossbow': 60, 'Throwing': 80},
-    51: {'Athletics': 180,'Riding': 40, 'OneHanded': 260, 'TwoHanded': 170, 'Polearm': 170, 'Bow': 320, 'Crossbow': 65, 'Throwing': 80},
-}
 
-CAVALRY_BASELINES = {
-    6:  {'Athletics': 50, 'Riding': 50,  'OneHanded': 30,  'TwoHanded': 10,  'Polearm': 30,  'Bow': 5,  'Crossbow': 0,  'Throwing': 10},
-    11: {'Athletics': 60, 'Riding': 65,  'OneHanded': 55,  'TwoHanded': 35,  'Polearm': 60,  'Bow': 10, 'Crossbow': 5,  'Throwing': 15},
-    16: {'Athletics': 85, 'Riding': 95,  'OneHanded': 80,  'TwoHanded': 50,  'Polearm': 100, 'Bow': 15, 'Crossbow': 10, 'Throwing': 25},
-    21: {'Athletics': 100,'Riding': 120, 'OneHanded': 115, 'TwoHanded': 60,  'Polearm': 145, 'Bow': 25, 'Crossbow': 15, 'Throwing': 30},
-    26: {'Athletics': 115,'Riding': 160, 'OneHanded': 170, 'TwoHanded': 80,  'Polearm': 195, 'Bow': 30, 'Crossbow': 20, 'Throwing': 40},
-    31: {'Athletics': 130,'Riding': 210, 'OneHanded': 220, 'TwoHanded': 100, 'Polearm': 250, 'Bow': 35, 'Crossbow': 25, 'Throwing': 50},
-    36: {'Athletics': 150,'Riding': 270, 'OneHanded': 270, 'TwoHanded': 130, 'Polearm': 300, 'Bow': 45, 'Crossbow': 30, 'Throwing': 60},
-    41: {'Athletics': 170,'Riding': 320, 'OneHanded': 310, 'TwoHanded': 160, 'Polearm': 340, 'Bow': 50, 'Crossbow': 35, 'Throwing': 70},
-    46: {'Athletics': 185,'Riding': 360, 'OneHanded': 340, 'TwoHanded': 180, 'Polearm': 370, 'Bow': 55, 'Crossbow': 40, 'Throwing': 70},
-    51: {'Athletics': 200,'Riding': 400, 'OneHanded': 370, 'TwoHanded': 200, 'Polearm': 400, 'Bow': 60, 'Crossbow': 40, 'Throwing': 80},
-}
+class MissingCultureRow(KeyError):
+    """A troop's culture has no CULTURE_PCT row."""
 
-HORSEARCHER_BASELINES = {
-    6:  {'Athletics': 50,  'Riding': 50,  'OneHanded': 25,  'TwoHanded': 10,  'Polearm': 20,  'Bow': 40,  'Crossbow': 0,  'Throwing': 10},
-    11: {'Athletics': 65,  'Riding': 75,  'OneHanded': 40,  'TwoHanded': 25,  'Polearm': 40,  'Bow': 65,  'Crossbow': 10, 'Throwing': 20},
-    16: {'Athletics': 90,  'Riding': 110, 'OneHanded': 70,  'TwoHanded': 40,  'Polearm': 65,  'Bow': 100, 'Crossbow': 15, 'Throwing': 30},
-    21: {'Athletics': 110, 'Riding': 150, 'OneHanded': 100, 'TwoHanded': 55,  'Polearm': 80,  'Bow': 145, 'Crossbow': 20, 'Throwing': 45},
-    26: {'Athletics': 125, 'Riding': 200, 'OneHanded': 140, 'TwoHanded': 75,  'Polearm': 110, 'Bow': 195, 'Crossbow': 25, 'Throwing': 55},
-    31: {'Athletics': 145, 'Riding': 255, 'OneHanded': 180, 'TwoHanded': 95,  'Polearm': 140, 'Bow': 245, 'Crossbow': 30, 'Throwing': 65},
-    36: {'Athletics': 160, 'Riding': 310, 'OneHanded': 215, 'TwoHanded': 115, 'Polearm': 165, 'Bow': 290, 'Crossbow': 35, 'Throwing': 75},
-    41: {'Athletics': 175, 'Riding': 350, 'OneHanded': 250, 'TwoHanded': 140, 'Polearm': 200, 'Bow': 320, 'Crossbow': 40, 'Throwing': 85},
-    46: {'Athletics': 185, 'Riding': 380, 'OneHanded': 275, 'TwoHanded': 155, 'Polearm': 220, 'Bow': 345, 'Crossbow': 45, 'Throwing': 90},
-}
 
-GROUP_BASELINES = {
-    'Infantry': INFANTRY_BASELINES,
-    'Ranged': RANGED_BASELINES,
-    'Cavalry': CAVALRY_BASELINES,
-    'HorseArcher': HORSEARCHER_BASELINES,
-}
+def round5(x):
+    """To the nearest 5, a half rounding up. Exact on a Fraction, so no float lands on the wrong side."""
+    return int(math.floor(Fraction(x) / 5 + Fraction(1, 2))) * 5
 
-# =============================================================================
-# Cultural Modifiers
-# =============================================================================
 
-CULTURAL_MODS = {
-    'gondor': {
-        'Athletics': 5, 'Riding': 5, 'OneHanded': 10, 'TwoHanded': 5,
-        'Polearm': 5, 'Throwing': -10,
-    },
-    'rohan': {
-        'Riding': 20, 'Polearm': 10, 'Throwing': 2,
-        'Athletics': -5, 'Bow': -5, 'Crossbow': -10,
-    },
-    'erebor': {
-        'Athletics': 10, 'OneHanded': 10, 'TwoHanded': 20, 'Polearm': 10, 'Throwing': 10,
-        'Riding': -20,
-    },
-    'iron_hills': {
-        'Athletics': 10, 'OneHanded': 15, 'TwoHanded': 20, 'Polearm': 20, 'Crossbow': 5, 'Throwing': 10,
-        'Riding': -5,
-    },
-    'rivendell': {
-        'Athletics': 35, 'Riding': 30, 'OneHanded': 35, 'TwoHanded': 40,
-        'Polearm': 40, 'Bow': 40, 'Crossbow': 40, 'Throwing': 40,
-    },
-    'mirkwood': {
-        'Athletics': 45, 'Riding': 5, 'OneHanded': 40, 'TwoHanded': 30,
-        'Polearm': 30, 'Bow': 50, 'Crossbow': 50, 'Throwing': 50,
-    },
-    'lothlorien': {
-        'Athletics': 35, 'Riding': 25, 'OneHanded': 30, 'TwoHanded': 25,
-        'Polearm': 30, 'Bow': 35, 'Crossbow': 35, 'Throwing': 35,
-    },
-    'isengard': {
-        'Athletics': 10, 'Riding': 5, 'OneHanded': 10, 'TwoHanded': 15,
-        'Polearm': 15, 'Crossbow': 10, 'Throwing': 10,
-    },
-    # Orthanc guard (orthanc_* — Saruman's chosen fighting Uruk-hai) — Isengard's elite line,
-    # routed via detect_culture. Net +111: the best NON-elf troops in the game, a clear step
-    # above the regular uruk-hai (+75), still far below elves. Sword+shield melee (Bow baseline).
-    'isengard_orthanc': {
-        'Athletics': 18, 'Riding': 5, 'OneHanded': 22, 'TwoHanded': 22,
-        'Polearm': 20, 'Crossbow': 12, 'Throwing': 12,
-    },
-    'mordor': {
-        'TwoHanded': 5, 'Throwing': 5,
-        'Athletics': -5, 'Riding': -5, 'Polearm': -5, 'Bow': -5, 'Crossbow': -5,
-    },
-    # Mordor Black Uruks (mordor_uruk_* — heavy uruk-hai of Barad-dur) — elite line routed via
-    # detect_culture, NOT the weak Mordor-orc floor. Net +52: between Gundabad (0) and Dol Guldur
-    # (+65). Elite melee + competent ranged (Bow/Xbow left at baseline — they field real archers
-    # and crossbows, unlike the other orc cultures that nerf ranged). Uruks > Orcs > Goblins.
-    'mordor_uruk': {
-        'Athletics': 10, 'Riding': -5, 'OneHanded': 12, 'TwoHanded': 18,
-        'Polearm': 12, 'Throwing': 5,
-    },
-    'gundabad': {
-        'Athletics': 5, 'TwoHanded': 10, 'Polearm': 5, 'Throwing': 5,
-        'Riding': -5, 'Bow': -10, 'Crossbow': -10,
-    },
-    # Dol Guldur — Sauron's northern stronghold of elite dark uruks. Bumped to ~Isengard
-    # tier (net +65, 2H-heavy = brutal cleavers) so its uruks stay strong enough to contest
-    # the bordering elf realms (Lothlorien/Mirkwood/Rivendell) instead of dropping to a weak
-    # curve. Lands just under Isengard; still far below elf-tier (fights elves via numbers/wargs).
-    'dolguldur': {
-        'Athletics': 12, 'Riding': -5, 'OneHanded': 15, 'TwoHanded': 25,
-        'Polearm': 18, 'Bow': -5, 'Crossbow': -5, 'Throwing': 10,
-    },
-    'harad': {
-        'Riding': 15, 'OneHanded': 5, 'Bow': 10,
-        'TwoHanded': -10, 'Polearm': -5,
-    },
-    'rhun': {
-        'Athletics': 5, 'Riding': 18, 'Polearm': 15,
-        'Bow': -10, 'Crossbow': -10, 'Throwing': -5,
-    },
-    'dunland': {
-        'Athletics': 20, 'OneHanded': 5, 'TwoHanded': 5, 'Throwing': 15,
-        'Riding': -5,
-    },
-    'umbar': {
-        'Athletics': 10, 'OneHanded': 10, 'TwoHanded': 5,
-        'Riding': -15,
-    },
-    # Goblin-town goblins — throwaway foot swarm: the weakest orc MELEE in the game. EXCEPTION:
-    # their archers are very dangerous (Bow +15, above Dale's +12) — the Bow modifier only
-    # meaningfully lifts the Ranged-group troops (melee Bow baselines are tiny), so the swarm
-    # stays trash while the archers bite. Glass cannon. Uruks > Orcs > Goblins (melee).
-    'goblin': {
-        'Athletics': -10, 'Riding': -15, 'OneHanded': -8, 'TwoHanded': -5,
-        'Polearm': -8, 'Bow': 15, 'Crossbow': -15, 'Throwing': -5,
-    },
-    # Misty Mountain Orcs — cheap orc swarm, hardier than Goblin-town but sits just
-    # below gundabad in melee (Pol +3 vs gundabad +5); poor ranged, no real cavalry.
-    'mistymountainorcs': {
-        'Athletics': 5, 'Riding': -5, 'TwoHanded': 5, 'Polearm': 3,
-        'Bow': -10, 'Crossbow': -10, 'Throwing': 5,
-    },
-    # Lindon is a Rivendell twin, not a culture of its own: 27 of its 30 troops have a
-    # rivendell_/imladris_ counterpart carrying identical skill values, down to the Gondolin
-    # capstones. It was the only
-    # culture file with no entry here, so the formula ran against it with a zero modifier and would
-    # have stripped the high-elf tuning off all 30 troops the first time anyone ran --apply.
-    'lindon': {
-        'Athletics': 35, 'Riding': 30, 'OneHanded': 35, 'TwoHanded': 40,
-        'Polearm': 40, 'Bow': 40, 'Crossbow': 40, 'Throwing': 40,
-    },
-    # Dale / Esgaroth — Men of the North, polearm + two-handed + bow specialists.
-    # Best non-elf polearm nation (Pol +25 tops iron_hills +20); top Men archery.
-    'dale': {
-        'Athletics': 5, 'Riding': -10, 'OneHanded': 5, 'TwoHanded': 12,
-        'Polearm': 25, 'Bow': 12, 'Crossbow': 12, 'Throwing': -5,
-    },
-}
+def floor5(x):
+    return int(math.floor(Fraction(x) / 5)) * 5
+
+
+def culture_row(culture):
+    row = CULTURE_PCT.get(culture)
+    if row is None:
+        raise MissingCultureRow(f"culture {culture!r} has no CULTURE_PCT row in tools/rebalance_troops.py")
+    return row
 
 
 def detect_culture(troop_id, filename_culture):
@@ -297,6 +198,9 @@ def detect_culture(troop_id, filename_culture):
     # to their own elite modifier so they aren't dragged down to the weak Mordor-orc curve.
     if troop_id.startswith('mordor_uruk'):
         return 'mordor_uruk'
+    # The Black Numenoreans are Men; the plain orc row would put them under every mannish line.
+    if troop_id.startswith('mordor_num'):
+        return 'mordor_numenorean'
     # Orthanc guard (orthanc_*) is Isengard's elite line inside the isengard file — route to its
     # own elite modifier so Saruman's best out-class the regular uruk-hai.
     if troop_id.startswith('orthanc'):
@@ -454,103 +358,6 @@ def apply_item0_swaps(filepath, swaps_by_troop):
         f.write((codecs.BOM_UTF8 if bom else b'') + out)
 
 
-def detect_weapon_specialization(troop_id, troop_name, weapon_classes=None, main=None):
-    """
-    Detect weapon specialization. The Bow<->Crossbow swap is decided from the
-    troop's ACTUAL equipment when weapon_classes is provided (name keywords
-    mis-statted crossbowmen named "Sharpshooter"/"Marksman");
-    the name-keyword fallback exists only for callers without a game install.
-    The melee flavour shifts (±15) are name-based, so with the kit known a shift fires only when
-    it boosts the main class (or, with no main known, a carried class): a "Spearman" holding a
-    sword must not move 15 points onto a spear he does not hold (#343).
-    Returns a dict of skill swaps to apply on top of the base formula.
-    """
-    name_lower = (troop_name + ' ' + troop_id).lower()
-    swaps = {}
-
-    def kit_allows(cls):
-        if weapon_classes is None:
-            return True
-        return cls == main if main else cls in weapon_classes
-
-    # Crossbow specialists: swap Bow and Crossbow values
-    if weapon_classes is not None:
-        if 'Crossbow' in weapon_classes and 'Bow' not in weapon_classes:
-            swaps['_swap_bow_crossbow'] = True
-    elif any(kw in name_lower for kw in ['crossbow', 'arbalest']):
-        swaps['_swap_bow_crossbow'] = True
-
-    # Thrown-primary troops: give Throwing the Bow curve, exactly as the swap above hands a
-    # crossbowman the Bow value. The weapon_classes conjunct is a sanity check that the
-    # javelin really did classify, so a run against a registry too broken to see it does
-    # nothing instead of writing a number derived from nothing.
-    if (troop_id in THROWN_PRIMARY_TROOP_IDS
-            and weapon_classes and 'Throwing' in weapon_classes):
-        swaps['_throwing_archer_parity'] = True
-
-    # Pike/Halberd/Spear specialists: boost Polearm, reduce OneHanded
-    polearm_name = any(kw in name_lower for kw in ['pike', 'halberd', 'spear', 'lance', 'glaive', 'mattock'])
-    if polearm_name and kit_allows('Polearm'):
-        swaps['_boost_polearm'] = True
-
-    # Sword specialists: boost OneHanded, reduce Polearm
-    if any(kw in name_lower for kw in ['sword', 'blade']) and kit_allows('OneHanded'):
-        swaps['_boost_onehanded'] = True
-
-    # Axe specialists: boost TwoHanded
-    if any(kw in name_lower for kw in ['axe', 'hammer', 'reaver']) and kit_allows('TwoHanded'):
-        swaps['_boost_twohanded'] = True
-
-    # Shield specialists: boost OneHanded (shield implies 1H weapon)
-    if 'shield' in name_lower and not polearm_name and kit_allows('OneHanded'):
-        swaps['_boost_onehanded'] = True
-
-    return swaps
-
-
-def apply_specialization(skills, specialization, level=None, culture=None):
-    """Apply weapon specialization swaps to calculated skills."""
-    s = dict(skills)
-    swap_amount = 15  # How much to shift between primary/secondary
-
-    if specialization.get('_swap_bow_crossbow'):
-        # Swap Bow and Crossbow values
-        s['Bow'], s['Crossbow'] = s['Crossbow'], s['Bow']
-
-    if specialization.get('_throwing_archer_parity') and level is not None:
-        ranged = RANGED_BASELINES.get(level)
-        if ranged:
-            # Reaches into RANGED_BASELINES rather than using s['Bow']: these troops sit on the
-            # Infantry table, whose Bow column is 15 to 25, so there is no ranged number here to
-            # swap. The borrowed value carries the SOURCE skill's cultural modifier (Bow), not
-            # Throwing's, for the same reason the swap above does not re-apply the Crossbow
-            # modifier to a value already carrying Bow's. Throwing's modifiers were calibrated
-            # against a ceiling of 100, not against numbers reaching 320.
-            mods = CULTURAL_MODS.get(culture, {})
-            s['Throwing'] = max(0, ranged['Bow'] + mods.get('Bow', 0))
-
-    if specialization.get('_boost_polearm'):
-        shift = min(swap_amount, s['OneHanded'])
-        s['Polearm'] += shift
-        s['OneHanded'] -= shift
-
-    if specialization.get('_boost_onehanded'):
-        shift = min(swap_amount, s['Polearm'])
-        s['OneHanded'] += shift
-        s['Polearm'] -= shift
-
-    if specialization.get('_boost_twohanded'):
-        shift = min(swap_amount, s['OneHanded'])
-        s['TwoHanded'] += shift
-        s['OneHanded'] -= shift
-
-    # Ensure no negative values
-    for k in SKILL_NAMES:
-        s[k] = max(0, s[k])
-
-    return s
-
-
 # A culture binds its militia in one of two encodings: a plain attribute in taom_spcultures.xml
 # (militia_troop / melee_militia_troop / ranged_militia_troop / *_elite_militia_troop) and an
 # <xsl:attribute name="..."> element in spcultures.xslt. Dale and Rhun use only the second, so
@@ -561,11 +368,11 @@ MILITIA_BINDING_FILES = ('taom_spcultures.xml', 'spcultures.xslt')
 # hypothetical reserve_melee_militia_troop) from being read as a militia binding.
 # Group 1 is the `elite_` marker (empty for a basic slot), group 2 the troop id.
 MILITIA_BINDING_RE = ts.Validator._MILITIA_BINDING_RE
-# The elite (veteran) militia stand this much above the basic militia on every skill. Both
-# take the level-21 baseline whatever their level (militia are siege and village defenders by
-# design), and until 2026-09-13 the four slots shared it exactly, so a culture's militia archer
-# (level 11) and veteran militia archer (level 16) were the same troop on the party screen.
-MILITIA_ELITE_BONUS = 15
+# Militia take the tier 4 row whatever their level (siege and village defenders by design), and
+# the elite (veteran) slot stands MILITIA_ELITE_BONUS above the basic one on every skill, so the
+# two are not the same troop on the party screen.
+MILITIA_TIER = 4
+MILITIA_ELITE_BONUS = 10
 _XML_COMMENT_RE = re.compile(r'<!--.*?-->', re.S)
 
 
@@ -678,8 +485,8 @@ def undefined_ladder_ids(troop_files, item_classes):
 def ladder_cells(troop_id, filename_culture, level, battle_classes):
     """{Bow|Crossbow: cell} for a ladder troop (#617): the value tools/rebalance_ranged_ladders.py
     writes, so a full rebaseline never undoes the ranking. Only the classes the troop carries in
-    battle, only at a tier its line lists; militia included (the ladder ranks them by tier, not
-    by the level-21 militia baseline). The clamp refuses to raise a value named here."""
+    battle, only at a tier its line lists; militia included (the ladder ranks them by their own
+    tier, not by the militia row). The clamp refuses to raise a value named here."""
     if not battle_classes:
         return {}
     spec = _ladder_spec()
@@ -691,57 +498,81 @@ def ladder_cells(troop_id, filename_culture, level, battle_classes):
             if cls in battle_classes and tier in rl.tiers_for(line, cls, spec)}
 
 
-def calculate_skills(culture, level, group, troop_id, troop_name, weapon_classes=None, kit=None):
-    """Calculate balanced skills for a troop.
+def troop_mount(npc_elem, mounts=None):
+    """(mounted, the highest difficulty of its horses). Mounted as the ranged ladder reads it
+    (rl.load_ranged_troops): a Horse slot in any battle set, or a Cavalry or HorseArcher group.
+    mounts: horse item id -> difficulty (taom_schema.build_mount_difficulty_registry); a horse it
+    does not name counts 0."""
+    rosters = list(rl.battle_sets(npc_elem))
+    inside = {id(eq) for r in npc_elem.iter('EquipmentRoster') for eq in r.iter('equipment')}
+    inside |= {id(eq) for r in npc_elem.iter('EquipmentSet') for eq in r.iter('equipment')}
+    loose = [eq for eq in npc_elem.iter('equipment') if id(eq) not in inside]
+    horses = [(eq.get('id') or '').replace('Item.', '', 1).strip()
+              for es in rosters for eq in es.findall('equipment') if eq.get('slot') == 'Horse']
+    horses += [(eq.get('id') or '').replace('Item.', '', 1).strip() for eq in loose if eq.get('slot') == 'Horse']
+    horses = [h for h in horses if h]
+    mounted = bool(horses) or npc_elem.get('default_group', '') in ('Cavalry', 'HorseArcher')
+    return mounted, max([(mounts or {}).get(h, 0) for h in horses] + [0])
 
-    weapon_classes: set of skill classes the troop actually carries (from
-    troop_weapon_classes). When provided, drives the Bow<->Crossbow swap and the
-    purpose order; when None, falls back to name-only detection (no game install).
-    kit: the troop's troop_purpose.Kit (troop_kit), which adds the Item0 main class to the
-    order; without it the carried classes are ranked as equals."""
-    baselines = GROUP_BASELINES.get(group)
-    if not baselines:
+
+def calculate_skills(culture, level, troop_id, kit, ladder=None, mounted=False, mount_difficulty=0,
+                     militia=None, elite_militia=None):
+    """The role table (#343) for one troop, or None when its kit holds no weapon.
+
+    kit: the troop's troop_purpose.Kit (troop_kit). ladder: {Bow|Crossbow: cell} (ladder_cells),
+    which the troop takes as is. militia and elite_militia default to the culture bindings. Values
+    round to the nearest 5; an archer's melee rounds down so it stays under its launcher."""
+    weapons = [c for c in tp.WEAPON_CLASSES if kit is not None and kit.counts.get(c)]
+    if not weapons:
         return None
+    pct = culture_row(culture)
+    ladder = dict(ladder or {})
+    if militia is None:
+        militia = is_militia(troop_id)
+    if elite_militia is None:
+        elite_militia = militia and is_elite_militia(troop_id)
+    n = TIER_CURVE[MILITIA_TIER if militia else max(1, rl.engine_tier(level))]
 
-    baseline = baselines.get(level)
-    if not baseline:
-        return None
+    def share(skill, part=1):
+        return round5(n * part * (1 + Fraction(pct[skill], 100)))
 
-    # For militia: use the level 21 baseline of Infantry or Ranged. The Ranged/melee split comes
-    # from default_group, not from the word "archer" in the name (the two agree on all 96 bound
-    # militia today; the group is the one that stays true after a rename).
-    if is_militia(troop_id):
-        militia_baseline = RANGED_BASELINES.get(21) if group == 'Ranged' else INFANTRY_BASELINES.get(21)
-        if militia_baseline:
-            baseline = militia_baseline
-            if is_elite_militia(troop_id):
-                baseline = {k: v + MILITIA_ELITE_BONUS for k, v in baseline.items()}
-
-    # Get cultural modifiers
-    mods = CULTURAL_MODS.get(culture, {})
-
-    # Calculate final skills
-    skills = {}
-    for skill in SKILL_NAMES:
-        base_val = baseline[skill]
-        mod_val = mods.get(skill, 0)
-        skills[skill] = max(0, base_val + mod_val)
-
-    if kit is None and weapon_classes is not None:
-        kit = tp.kit_from_classes(weapon_classes)
-    main = tp.main_class(kit, skills) if kit else None
-
-    # Apply weapon specialization
-    specialization = detect_weapon_specialization(troop_id, troop_name, weapon_classes, main)
-    if specialization:
-        skills = apply_specialization(skills, specialization, level=level, culture=culture)
-
-    # The curve is keyed by formation group, not by kit; the purpose rule deals its values to the
-    # kit and ties alternative weapons (tools/troop_purpose.py).
-    if kit:
-        skills = tp.tie_raise(tp.purpose_skills(skills, kit), kit)
-
-    return skills
+    main = tp.main_class(kit, {c: share(c) for c in tp.WEAPON_CLASSES})
+    if main is None:   # no weapon in Item0: the class most sets carry
+        main = max(weapons, key=lambda c: (kit.counts[c], share(c), -tp.WEAPON_CLASSES.index(c)))
+    s = {'Athletics': share('Athletics', MOUNTED_ATHLETICS if mounted else 1),
+         'Riding': share('Riding') if mounted else round5(n * FOOT_RIDING)}
+    for c in tp.WEAPON_CLASSES:
+        if c == main:
+            s[c] = share(c)
+        elif c in weapons:
+            s[c] = share(c, SIDEARM)
+        else:
+            s[c] = round5(n * (UNCARRIED_MELEE if c in tp.MELEE else UNCARRIED_RANGED))
+    if troop_id in THROWN_PRIMARY_TROOP_IDS and tp.THROWING in weapons:
+        s[tp.THROWING] = share(tp.THROWING)
+    if elite_militia:
+        s = {k: v + MILITIA_ELITE_BONUS for k, v in s.items()}
+    s.update(ladder)
+    if main in tp.LAUNCHERS:
+        # The archer's own launcher value decides the rest, so nothing else tops it.
+        top = s[main]
+        sidearm = floor5(top * ARCHER_SIDEARM)
+        for c in tp.MELEE + (tp.THROWING,):
+            if c in weapons:
+                s[c] = sidearm
+            elif c in tp.MELEE:
+                s[c] = min(s[c], sidearm)
+        for c in tp.LAUNCHERS:
+            if c != main and c not in ladder:
+                s[c] = min(s[c], top)
+    if mounted:
+        s['Riding'] = max(s['Riding'], mount_difficulty)
+    pinned = set(ladder)
+    s = tp.purpose_skills(s, kit, pinned=pinned)
+    main = tp.main_class(kit, s) or main
+    if main not in pinned:
+        s[main] = max(s[c] for c in (main,) + tp.MELEE + tp.LAUNCHERS)
+    return tp.tie_raise(s, kit, pinned=pinned)
 
 
 def get_display_name(name_attr):
@@ -899,25 +730,22 @@ def clamp_upgrade_monotonicity(all_changes, base_on_curve=True, restat_ids=()):
 
     base_on_curve=True is the rebaseline path: start from the formula result, so --apply both
     rebaselines and clamps. base_on_curve=False is the --fix-monotonicity path: start from what is
-    on disk, so a run repairs the ladder WITHOUT rebaselining the roster. That distinction matters
-    because several lines are deliberately off-curve (the gondor_loss_noble line is documented as
-    do-not-apply-over, the Black Numenoreans and the dwarf ram riders are hand-authored), and
-    sweeping them into a bug fix is not the bug fix. restat_ids names the troops that should take
-    their formula value anyway, which is how a misclassified troop gets corrected on its own.
+    on disk, so a run repairs the ladder WITHOUT rebaselining the roster: a ladder repair moves only
+    the values an edge needs, and a troop someone has just tuned by hand is left for --apply to
+    judge. restat_ids names the troops that should take their formula value anyway, which is how a
+    misclassified troop gets corrected on its own.
 
     A player reads the troop tree as a ladder, so an upgrade that lowers a stat reads as a bug no
-    matter how it got there. Three separate causes produced them: the militia baseline leaking into
-    a real line, a default_group that contradicted the carried equipment, and the plain fact that
-    the Ranged table sits below the Infantry table on Polearm and TwoHanded, so an Infantry troop
-    branching into Ranged one tier up lost melee.
+    matter how it got there. The common cause is a respecialising edge: a swordsman upgrading to
+    an archer keeps his parent's sword, which the role table rates under the archer's own.
 
     Runs over the whole roster at once because upgrade targets cross files. Troops the formula
-    skipped (creatures, hand-tuned lines, off-grid levels) take part using their current values:
-    they can lift a child, and they can be lifted, but a clamp only ever raises, so a hand-tune is
-    never reverted.
+    skipped (creatures, hand-tuned lines, troops with no weapon) take part using their current
+    values: they can lift a child, and they can be lifted, but a clamp only ever raises, so a
+    hand-tune is never reverted.
 
-    Two exemptions. Militia to militia: militia are pinned to the level-21 baseline regardless
-    of level so village defence stays costly; the elite slot adds MILITIA_ELITE_BONUS on every
+    Two exemptions. Militia to militia: militia take the tier 4 row regardless of level so
+    village defence stays costly; the elite slot adds MILITIA_ELITE_BONUS on every
     skill, so a militia promotion is a fixed step, never a curve, and the clamp leaves it alone.
     And RESPECIALIZATION_EXEMPT_EDGES, per skill, for a child that drops a weapon its parent
     genuinely carried; without it the clamp puts back exactly what the writer just floored.
@@ -1087,7 +915,7 @@ def plan_fix_purpose(all_changes):
     Returns (raises from settle_purpose, [(record, finding, formula value)] still cross-kind)."""
     for c in all_changes:
         c['tie_raises'] = []
-        if c.get('external') or c['id'] in SKIP_TROOP_IDS or c.get('kit') is None or (
+        if c.get('external') or c.get('no_skills') or c['id'] in SKIP_TROOP_IDS or c.get('kit') is None or (
                 c.get('slots_only') and not (c.get('main_weapon') and c['main_weapon']['plan'].swaps)):
             c['formula'], c['new'] = c.get('new'), None
             continue
@@ -1181,19 +1009,88 @@ def print_purpose_report(all_changes, log, left):
         print(f"  {c['file']:<28} {c['id']:<40} {f.text}; formula {f.cls} {value}{note}")
 
 
-def process_file(filepath, item_classes=None, purpose=False, couch_ids=None, slots_only=False):
+# The second troop root (troop_purpose.EXTRA_TROOP_FILES) lives under this folder; a test points it
+# at a fixture.
+EXTRA_ROOT_DIR = MODULEDATA_DIR
+# A second-root troop named COPY_PREFIX + <id> is a copy of the campaign troop <id>.
+COPY_PREFIX = 'fow_'
+
+
+def extra_troop_paths():
+    """The second-root files that exist (troop_purpose.EXTRA_TROOP_FILES under EXTRA_ROOT_DIR). A
+    listed file that is missing is named, so a moved roster is not silently left off the curve."""
+    paths = []
+    for rel in tp.EXTRA_TROOP_FILES:
+        path = os.path.join(EXTRA_ROOT_DIR, *rel.split('/'))
+        if os.path.isfile(path):
+            paths.append(path)
+        else:
+            print(f"  WARNING: second troop root {rel} is listed in troop_purpose.EXTRA_TROOP_FILES "
+                  f"but not found under {EXTRA_ROOT_DIR}; it is not read")
+    return paths
+
+
+def bare_id(troop_id):
+    """A copy's campaign source id: its id without COPY_PREFIX. The id lists this tool keys by troop
+    id (SKIP_TROOP_IDS, the militia bindings, THROWN_PRIMARY_TROOP_IDS) name campaign troops."""
+    return troop_id[len(COPY_PREFIX):] if troop_id.startswith(COPY_PREFIX) else troop_id
+
+
+def file_culture(filename):
+    """'troops_gondor.xml' -> 'gondor', the culture token process_file reads from a file name."""
+    return filename.replace('troops_', '').replace('.xml', '')
+
+
+def copy_sources(records):
+    """What copy_source reads from the campaign records: each id, and for each culture attribute
+    the troop file most campaign troops with that attribute live in."""
+    files = defaultdict(Counter)
+    for c in records:
+        if c.get('culture_attr'):
+            files[c['culture_attr']][file_culture(c['file'])] += 1
+    return {'ids': {c['id']: c for c in records},
+            'attrs': {attr: count.most_common(1)[0][0] for attr, count in files.items()}}
+
+
+def copy_source(troop_id, culture_attr, sources):
+    """(culture row, source id, ladder file token) for a second-root troop, or None outside one.
+
+    A copy fights as the campaign troop it copies, so it takes that troop's routed culture, and the
+    source id keys its ranged ladder line and the rest of its rules; its own level and kit set the
+    rest. A copy whose id names no campaign troop
+    takes the troop file its culture attribute points to (copy_sources), because the second root's
+    file name says no culture."""
+    if sources is None:
+        return None
+    bare = bare_id(troop_id)
+    source = sources['ids'].get(bare)
+    if source is not None:
+        return source['culture'], source['id'], file_culture(source['file'])
+    token = sources['attrs'].get(culture_attr)
+    if token is None:
+        return None
+    return detect_culture(bare, token), bare, token
+
+
+def process_file(filepath, item_classes=None, purpose=False, mounts=None, couch_ids=None,
+                 slots_only=False, sources=None):
     """Process a single troop XML file. Returns list of change records.
 
-    item_classes: item id -> skill class map from
-    taom_schema.build_item_class_registry. Required for equipment-driven
-    specialization; main() always supplies it (hard-fails without the game
-    install).
-    purpose: the --fix-purpose read. The kit is read as if Item0 were fixed, the planned
-    exchanges go in record['item0_swaps'], and ladder cells are read even where the formula has
-    no row, because that mode reorders on-disk values and needs no formula.
+    item_classes: item id -> skill class map from taom_schema.build_item_class_registry. The
+    role table reads the kit from it, so without it no troop has a formula; main() always
+    supplies it (hard-fails without the game install).
+    mounts: horse item id -> difficulty (taom_schema.build_mount_difficulty_registry), the
+    floor of a rider's Riding.
+    purpose: the --fix-purpose read. The kit is read as if Item0 were fixed and the planned
+    exchanges go in record['item0_swaps'].
     couch_ids: with purpose, also plan the main weapon exchanges (--main-weapon-slots).
-    slots_only: a second-root file (troop_purpose.EXTRA_TROOP_FILES): only a troop whose slots the
-    rule changes has its skills reordered, because the file's other troops were never reordered."""
+    slots_only: a second-root file in a purpose mode: only a troop whose slots the rule changes
+    has its skills reordered (plan_fix_purpose).
+    sources: troop id -> campaign record, for a second-root file (troop_purpose.EXTRA_TROOP_FILES).
+    A copy named fow_<id> follows that campaign troop's rules: its culture row and ranged ladder
+    line, because the file's name says no culture and the copy fights as the troop it copies, and
+    its exclusion, militia row, elite bonus and thrown-primary status; its own level and its own
+    kit set the rest (copy_source)."""
     filename = os.path.basename(filepath)
     if filename in SKIP_FILES:
         return []
@@ -1234,27 +1131,53 @@ def process_file(filepath, item_classes=None, purpose=False, couch_ids=None, slo
             'culture': culture,
             'old': old_skills,
             'upgrades': upgrades,
+            'culture_attr': npc.get('culture', ''),
         }
 
-        if troop_id in SKIP_TROOP_IDS:
+        # A copy follows its campaign source's rule, so a copy of an excluded troop is excluded too.
+        if (bare_id(troop_id) if sources is not None else troop_id) in SKIP_TROOP_IDS:
             record.update(status='SKIPPED (excluded: creature/hand-tuned)', new=None)
             changes.append(record)
             continue
+        if sources is not None:
+            record['path'] = filepath
+        # The writer changes values; adding a <skills> block to a copy is not a value. Its slots
+        # still follow the slot rule, so the kit and the plan are read first.
+        no_skills = sources is not None and skills_elem is None
 
         # Calculate new skills
-        weapon_classes = troop_weapon_classes(npc, item_classes) if item_classes else None
-        kit = None
+        new_skills = None
         if item_classes:
+            weapon_classes = troop_weapon_classes(npc, item_classes)
             kit, swaps, detail = troop_kit_plan(npc, item_classes, fix_item0=purpose, couch_ids=couch_ids)
-            record.update(kit=kit, item0_swaps=swaps, main_weapon=detail, slots_only=slots_only)
-        new_skills = calculate_skills(culture, level, group, troop_id, troop_name, weapon_classes, kit)
-        if item_classes and (new_skills is not None or purpose):
-            cells = ladder_cells(troop_id, filename_culture, level, weapon_classes)
-            if new_skills is not None:
-                new_skills = dict(new_skills, **cells)
+            record.update(main_weapon=detail, slots_only=slots_only, kit=kit, item0_swaps=swaps)
+        if no_skills:
+            record.update(status='SKIPPED (second root, no <skills> block)', new=None, no_skills=True)
+            changes.append(record)
+            continue
+        if item_classes:
+            # rule_id: the id the troop's rules are keyed by. A copy takes its campaign source's
+            # militia row, elite bonus and thrown-primary status as well as its culture row and
+            # ladder line (copy_source); its own level and kit set the rest.
+            rule_id, ladder_file = troop_id, filename_culture
+            source = copy_source(troop_id, npc.get('culture', ''), sources)
+            if source is not None:
+                culture, rule_id, ladder_file = source
+                record['culture'] = culture
+            cells = ladder_cells(rule_id, ladder_file, level, weapon_classes)
+            mounted, difficulty = troop_mount(npc, mounts)
             record['ladder'] = cells
+            try:
+                new_skills = calculate_skills(culture, level, rule_id, kit, ladder=cells,
+                                              mounted=mounted, mount_difficulty=difficulty)
+            except MissingCultureRow:
+                # Only --apply and --restat need the formula; main() stops those on this record.
+                # The clamp and --fix-purpose read what is on disk, so they go on.
+                record.update(status='SKIPPED (no culture row)', new=None, missing_culture=culture)
+                changes.append(record)
+                continue
         if new_skills is None:
-            record.update(status='SKIPPED (no baseline for level/group)', new=None)
+            record.update(status='SKIPPED (no weapon in its battle sets)', new=None)
             changes.append(record)
             continue
 
@@ -1281,21 +1204,41 @@ def process_file(filepath, item_classes=None, purpose=False, couch_ids=None, slo
 CHARACTERS_DIR = os.path.join(MODULEDATA_DIR, 'characters')
 
 
-def load_external_sources():
+def promoted_npcs_sources():
+    """npcs file culture -> the culture tools/promote_borrowed_cultures.py copies it from, for each
+    promoter target whose copied files include its npcs file (no 'standalone' list copies them all)."""
+    import promote_borrowed_cultures as pr
+    npcs = next(rel for rel, _ in pr.STANDALONE_FILES if rel.startswith('characters/npcs_'))
+    return {target: cfg['src'] for target, cfg in pr.TARGETS.items()
+            if 'standalone' not in cfg or npcs in cfg['standalone']}
+
+
+def load_external_sources(item_classes=None, mounts=None, cultures=None):
     """Upgrade sources that live OUTSIDE troops/ and feed into it.
 
-    The 15 `villager_<culture>` entries in characters/npcs_*.xml each upgrade into their culture's
+    The `villager_<culture>` entries in characters/npcs_*.xml each upgrade into their culture's
     tier-1 troop. The engine treats any character with a non-empty UpgradeTargets array as
-    upgradeable, so these are real edges, and six of them regressed until this was covered. They
-    are read-only participants: they seed the clamp so their targets get raised, and write_files
-    never touches a file outside troops/.
-    """
+    upgradeable, so these are real edges. A villager with a <skills> block takes the role table
+    from its own kit (a farm tool and throwing stones) at its level, and the writer puts the values
+    in its npcs file; without that, their old 30s lifted the recruits above the curve through the
+    clamp. A villager with no <skills> block stays a read-only source: the writer would have to
+    add a block, which is a larger change than a value. Every other character is never written.
+
+    item_classes and mounts: as process_file. cultures: troop id -> culture, for a villager whose
+    npcs file names no CULTURE_PCT row (it takes its first upgrade target's). Without
+    item_classes every villager stays read-only.
+
+    A villager in an npcs file that tools/promote_borrowed_cultures.py copies from another culture
+    takes that source culture's row (promoted_npcs_sources): the promoter owns the file, and its
+    --check holds only while the copy's villager equals the source's."""
+    promoted = promoted_npcs_sources()
     records = []
     for filepath in sorted(glob.glob(os.path.join(CHARACTERS_DIR, 'npcs_*.xml'))):
         try:
             root = ET.parse(filepath).getroot()
         except ET.ParseError:
             continue
+        npcs_culture = os.path.basename(filepath)[len('npcs_'):-len('.xml')]
         for npc in root.findall('.//NPCCharacter'):
             upgrades = [(u.get('id') or '').replace('NPCCharacter.', '', 1)
                         for u in npc.findall('./upgrade_targets/upgrade_target')]
@@ -1304,8 +1247,9 @@ def load_external_sources():
                 continue
             skills = {s.get('id'): int(s.get('value', '0'))
                       for s in npc.findall('./skills/skill')}
-            records.append({
+            record = {
                 'file': os.path.basename(filepath),
+                'path': filepath,
                 'id': npc.get('id', ''),
                 'name': get_display_name(npc.get('name', '')),
                 'level': int(npc.get('level', '0')),
@@ -1316,7 +1260,49 @@ def load_external_sources():
                 'status': 'EXTERNAL SOURCE (read-only, outside troops/)',
                 'new': None,
                 'external': True,
-            })
+            }
+            villager = record['id'].startswith('villager_') and npc.find('skills') is not None
+            if villager and item_classes:
+                own = promoted.get(npcs_culture, npcs_culture)
+                culture = own if own in CULTURE_PCT else (cultures or {}).get(upgrades[0])
+                kit, _ = troop_kit(npc, item_classes)
+                mounted, difficulty = troop_mount(npc, mounts)
+                new = calculate_skills(culture, record['level'], record['id'], kit, mounted=mounted,
+                                       mount_difficulty=difficulty) if culture else None
+                if new is not None:
+                    record.update(culture=culture, kit=kit, ladder={}, new=new, external=False,
+                                  villager=True, status='VILLAGER (written, outside troops/)')
+            records.append(record)
+    return records
+
+
+def load_roster(troop_files, item_classes, mounts, purpose=False, couch_ids=None, extra_paths=None):
+    """Every troop record, the second root and every upgrade source outside troops/, as main()
+    plans them.
+
+    The second root (extra_paths, default extra_troop_paths(): the Fords of War copies) is on the
+    curve; in a purpose mode only the slot rule reads it (process_file slots_only), and only
+    --main-weapon-slots (couch_ids given) plans an Item0 exchange there: trunk's --fix-purpose never
+    read the second root, so it changes no equipment line in it. An upgrade edge between the two
+    roots is not a clamp edge, in either direction: a copy is tuned to its own level, and a
+    campaign troop is never raised for a Fords of War or Long Defeat edge.
+    tools/tests/test_long_defeat_shop_skills.py reads the shop's edges instead."""
+    records = []
+    for filepath in troop_files:
+        if os.path.basename(filepath) not in SKIP_FILES:
+            records += process_file(filepath, item_classes=item_classes, purpose=purpose, mounts=mounts,
+                                    couch_ids=couch_ids)
+    sources = copy_sources(records)
+    for filepath in (extra_troop_paths() if extra_paths is None else extra_paths):
+        extra = process_file(filepath, item_classes=item_classes, purpose=purpose and couch_ids is not None,
+                             mounts=mounts, couch_ids=couch_ids, slots_only=purpose, sources=sources)
+        second = {c['id'] for c in extra}
+        for c in extra:
+            c['upgrades'] = [u for u in c['upgrades'] if u in second]
+        for c in records:
+            c['upgrades'] = [u for u in c['upgrades'] if u not in second]
+        records += extra
+    records += load_external_sources(item_classes, mounts, {c['id']: c['culture'] for c in records})
     return records
 
 
@@ -1325,22 +1311,26 @@ def write_files(all_changes, troop_files):
 
     Final means after the monotonicity clamp, so this deliberately includes troops the formula
     skipped: a clamp only raises, so writing one cannot revert a hand-tune. External sources are
-    never written; they only feed the clamp.
+    never written; they only feed the clamp. Nor is a second-root copy with no <skills> block (the
+    writer adds no block). A villager is written into its npcs file (its record
+    carries the path), and only its skill values change there.
     """
     by_file = defaultdict(dict)
+    paths = {os.path.basename(f): f for f in troop_files}
     for c in all_changes:
         final = c.get('final')
-        if not final or c.get('external'):
+        if not final or c.get('external') or c.get('no_skills'):
             continue
         current = c['old']
         if any(current.get(s, 0) != final[s] for s in SKILL_NAMES) or any(s not in current for s in SKILL_NAMES):
             by_file[c['file']][c['id']] = final
+            if c.get('path'):
+                paths[c['file']] = c['path']
 
     written = 0
-    for filepath in troop_files:
-        troop_skill_map = by_file.get(os.path.basename(filepath))
-        if troop_skill_map:
-            apply_skills_via_regex(filepath, troop_skill_map)
+    for name, troop_skill_map in sorted(by_file.items()):
+        if name in paths:
+            apply_skills_via_regex(paths[name], troop_skill_map)
             written += 1
     return written
 
@@ -1463,17 +1453,16 @@ def main():
     mode = f"{'DRY RUN' if dry_run else 'APPLYING CHANGES'} ({label})"
     print(f"\n*** {mode} ***\n")
 
-    # Equipment-driven specialization needs the item-class registry from the
-    # game install (vanilla Type= + Armory crafting_template=). This is a
-    # WRITER tool — it must not silently degrade to the name-only heuristic
-    # that mis-statted crossbowmen/two-handers in the first place.
+    # The role table reads the kit from the item-class registry of the game install (vanilla
+    # Type= + Armory crafting_template=) and the horses' difficulty from the same files.
     if not os.path.isdir(game_modules):
         print(f"ERROR: Bannerlord Modules folder not found: {game_modules}\n"
-              f"       Equipment-driven weapon specialization needs the game install.\n"
+              f"       The role table reads each troop's weapons and horses from the game install.\n"
               f"       Pass --game-modules <path to .../Mount & Blade II Bannerlord/Modules>.")
         sys.exit(1)
     item_classes = ts.build_item_class_registry(MODULEDATA_DIR, game_modules)
-    print(f"Item-class registry: {len(item_classes):,} weapon-classed items")
+    mounts = ts.build_mount_difficulty_registry(MODULEDATA_DIR, game_modules)
+    print(f"Item-class registry: {len(item_classes):,} weapon-classed items, {len(mounts):,} horses")
     couch_ids = load_couchable_ids(game_modules) if slots_mode else None
     if slots_mode:
         print(f"Couchable items (a weapon description with the couch feature): {len(couch_ids):,}")
@@ -1489,31 +1478,33 @@ def main():
         sys.exit(1)
 
     print(f"Militia bound by culture: {len(militia_troop_ids())} troops "
-          f"(level-21 baseline, from {' + '.join(MILITIA_BINDING_FILES)})")
+          f"(the tier {MILITIA_TIER} row, from {' + '.join(MILITIA_BINDING_FILES)})")
 
-    all_changes = []
     for filepath in troop_files:
         filename = os.path.basename(filepath)
-        if filename in SKIP_FILES:
-            print(f"  SKIPPING {filename}")
-            continue
-        print(f"  Processing {filename}...")
-        all_changes.extend(process_file(filepath, item_classes=item_classes, purpose=purpose,
-                                        couch_ids=couch_ids))
-    # The second root: troop definitions outside troops/ that fight (troop_purpose.EXTRA_TROOP_FILES).
-    # Only the slot rule reads them, and only the troops it changes get their skills reordered.
-    if slots_mode:
-        for rel in tp.EXTRA_TROOP_FILES:
-            filepath = os.path.join(MODULEDATA_DIR, *rel.split('/'))
-            print(f"  Processing {rel} (second root, slot rule only)...")
-            all_changes.extend(process_file(filepath, item_classes=item_classes, purpose=True,
-                                            couch_ids=couch_ids, slots_only=True))
-            troop_files = troop_files + [filepath]
+        print(f"  {'SKIPPING' if filename in SKIP_FILES else 'Processing'} {filename}...")
+    # The second root (troop_purpose.EXTRA_TROOP_FILES, the Fords of War copies): on the curve in
+    # --apply and the clamp mode, the slot rule only in the purpose modes (process_file slots_only).
+    extra_paths = extra_troop_paths()
+    for path in extra_paths:
+        rel = os.path.relpath(path, EXTRA_ROOT_DIR).replace(os.sep, '/')
+        print(f"  Processing {rel} (second root{', slot rule only' if purpose else ''})...")
+    all_changes = load_roster(troop_files, item_classes, mounts, purpose=purpose, couch_ids=couch_ids,
+                              extra_paths=extra_paths)
+    troop_files = troop_files + extra_paths
+    external = [c for c in all_changes if c.get('external') or c.get('villager')]
+    villagers = [c for c in external if c.get('villager')]
+    print(f"Upgrade sources outside troops/: {len(external)}; {len(villagers)} villagers on the curve "
+          f"(written into characters/npcs_*.xml), the rest read-only")
 
-    external = load_external_sources()
-    all_changes.extend(external)
-    print(f"External upgrade sources outside troops/: {len(external)} "
-          f"(read-only; they seed the clamp, they are never written)")
+    # A missing CULTURE_PCT row is fatal only where the formula is the base: --apply, and the
+    # troops --restat names. The clamp-only modes read what is on disk.
+    no_row = sorted({c['missing_culture'] for c in all_changes if c.get('missing_culture')
+                     and (base_on_curve or c['id'] in restat_ids)})
+    if no_row:
+        print(f"ERROR: culture(s) {', '.join(no_row)} have no CULTURE_PCT row in tools/rebalance_troops.py, "
+              f"so the formula has nothing to apply. Add the row. Nothing was written.")
+        sys.exit(1)
 
     if restat_ids:
         known = {c['id'] for c in all_changes}

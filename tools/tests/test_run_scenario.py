@@ -69,6 +69,12 @@ def good_done(**overrides):
 
 
 GOOD_LOG = "\n".join([PASS_LINE, UNLOAD_LINE])
+STAMP_LINE = ("[2026-11-15 09:00:00] [INFO] [BuildStamp] TAOM=v2.0.0.0 build.20261115-090000Z+{} TAOM.Dependencies=v0.1.0.0"
+              " (pair OK)")
+
+
+def stamped_log(sha):
+    return GOOD_LOG + "\n" + STAMP_LINE.format(sha)
 
 
 class ArmTextTests(unittest.TestCase):
@@ -229,6 +235,14 @@ class JudgeTests(unittest.TestCase):
         self.assertEqual(code, 1)
         self.assertIn("BuildStamp", why)
 
+    def test_a_pass_names_the_build_it_proves(self):
+        head = "a" * 40
+        for sha, label in ((head, "aaaaaaaaa"), (head + ".dirty", "aaaaaaaaa.dirty")):
+            with self.subTest(sha=sha):
+                code, why = rs.judge(good_done(), None, stamped_log(sha), head=head)
+                self.assertEqual(code, 0)
+                self.assertTrue(why.startswith(f"build {label}, reason=ok, "), why)
+
     def test_driver_source_keeps_the_arm_warning_prefix(self):
         source = (Path(__file__).resolve().parents[2] / "Main/Features/Autorun/Scenario/ScenarioAutorunDriver.cs").read_text(encoding="utf-8")
         self.assertIn('"[Autorun][Scenario] "', source)
@@ -260,7 +274,7 @@ class MainWiringTests(unittest.TestCase):
         saved = {name: getattr(runner, name) for name in NAMES}
         self.addCleanup(lambda: [setattr(runner, name, value) for name, value in saved.items()])
 
-    def run_main(self, argv):
+    def run_main(self, argv, head="a" * 40):
         captured = {}
 
         def fake_main(rest):
@@ -280,7 +294,8 @@ class MainWiringTests(unittest.TestCase):
         saved = {name: getattr(runner, name) for name in names}
         try:
             runner.main = fake_main
-            code = rs.main(argv)
+            with mock.patch.object(rs, "tree_head_sha", return_value=head):
+                code = rs.main(argv)
         finally:
             for name, value in saved.items():
                 setattr(runner, name, value)
@@ -299,11 +314,24 @@ class MainWiringTests(unittest.TestCase):
 
     def test_runner_judge_holds_the_run_to_the_armed_plan_and_this_tree(self):
         _, got = self.run_main(["--days", "150"])
-        with mock.patch.object(rs, "tree_head_sha", return_value=None):
-            code, why = got["judge"](good_done(culture="gondor", scenario="campaign-new"), None, GOOD_LOG)
+        code, why = got["judge"](good_done(culture="gondor", scenario="campaign-new"), None, stamped_log("b" * 40))
         self.assertEqual(code, 1)
         self.assertIn("days_wanted=3", why)
-        self.assertIn("BuildStamp", why)
+        self.assertIn("is not this tree's HEAD aaaaaaaaa", why)
+
+    def test_unknown_head_is_refused_at_launch(self):
+        code, got = self.run_main(["--days", "3"], head=None)
+        self.assertEqual(code, 1)
+        self.assertNotIn("rest", got)
+
+    def test_runner_judge_compares_with_the_head_read_at_launch(self):
+        # A commit made while the game runs must not fail the run as a stale deploy.
+        _, got = self.run_main(["--days", "3"], head="a" * 40)
+        seen = {}
+        with mock.patch.object(rs, "tree_head_sha", return_value="b" * 40), \
+                mock.patch.object(rs, "judge", side_effect=lambda *a: seen.setdefault("head", a[4]) and (0, "")):
+            got["judge"](good_done(), None, GOOD_LOG)
+        self.assertEqual(seen["head"], "a" * 40)
 
     def test_help_names_this_tools_arguments(self):
         out = io.StringIO()

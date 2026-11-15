@@ -150,11 +150,12 @@ Inverting the two thresholds reverts **both** to defaults, not just the offender
 
 | Field | Type | Shipped | Legal range | Read at (file:line) |
 |---|---|---|---|---|
-| `crushThrough.extraCrushThroughEnergyThreshold` | float | 25.0 | `[1, 1000]` | `CombatMechanicsConfigProvider.cs:103` |
-| `crushThrough.skillTargetDelta` | int | 200 | `[1, 1000]` | `CombatMechanicsConfigProvider.cs:104` |
-| `crushThrough.skillDeadZone` | int | 30 | `[0, 1000]`, must be below `skillTargetDelta` | `CombatMechanicsConfigProvider.cs:105, 119` |
-| `crushThrough.maxSkillChance` | float | 0.5 | `[0, 1]` | `CombatMechanicsConfigProvider.cs:106` |
-| `crushThrough.nonOverheadPenaltyFactor` | float | 0.5 | `[0, 1]` | `CombatMechanicsConfigProvider.cs:109` |
+| `crushThrough.extraCrushThroughEnergyThreshold` | float | 25.0 | `[1, 1000]` | `CombatMechanicsConfigProvider.cs:105` |
+| `crushThrough.skillTargetDelta` | int | 135 | `[1, 1000]` | `CombatMechanicsConfigProvider.cs:106` |
+| `crushThrough.skillDeadZone` | int | 20 | `[0, 1000]`, must be below `skillTargetDelta` | `CombatMechanicsConfigProvider.cs:107, 122` |
+| `crushThrough.maxSkillChance` | float | 0.5 | `[0, 1]` | `CombatMechanicsConfigProvider.cs:108` |
+| `crushThrough.skillCurveExponent` | float | 0.01197 | above 0, at most 0.1 | `CombatMechanicsConfigProvider.cs:109` |
+| `crushThrough.nonOverheadPenaltyFactor` | float | 0.5 | `[0, 1]` | `CombatMechanicsConfigProvider.cs:111` |
 | `chargeKnockdown.neutralWeightRatio` | float | 6.0 | `[0.1, 1000]` | `CombatMechanicsConfigProvider.cs:147` |
 | `chargeKnockdown.autoKnockdownWeightRatio` | float | 8.0 | `[0.1, 1000]`, must be at least `neutralWeightRatio` | `CombatMechanicsConfigProvider.cs:148, 161` |
 | `chargeKnockdown.autoKnockdownMinSpeedFactor` | float | 0.4 | `[0, 1]` | `CombatMechanicsConfigProvider.cs:149` |
@@ -165,7 +166,7 @@ Inverting the two thresholds reverts **both** to defaults, not just the offender
 | `shieldBash.minChancePercent` / `maxChancePercent` | float | 10 / 75 | `[0, 100]`, min at most max (a swapped band reverts both) | `CombatMechanicsConfigProvider.cs:309-310, 318` |
 | `shieldBash.kickChanceFactor` / `playerVictimChanceFactor` | float | 0.5 / 0.5 | `[0, 1]` | `CombatMechanicsConfigProvider.cs:311-312` |
 | `creatures.unstoppableDamageThresholds.<monsterId>` | int | 5 entries, 10 to 30 | `[0, 500]`, else the entry is removed | `CombatMechanicsConfigProvider.cs:227` |
-| `raceModifiers.<race>.ctbAttackBonus` / `ctbDefenseBonus` | float | 15 to 20 | `[0, 300]` | `CombatMechanicsConfigProvider.cs:317-318` |
+| `raceModifiers.<race>.ctbAttackBonus` / `ctbDefenseBonus` | float | 10 to 13 (dwarf defence 10, elf and Sauron attack 13: scaled by 260/390 with the skill window, #343) | `[0, 300]` | `CombatMechanicsConfigProvider.cs:317-318` |
 | `raceModifiers.<race>.knockdownResistanceMultiplier` / `staggerThresholdMultiplier` | float | 1.25 to 3.0 | `[0, 100]` | `CombatMechanicsConfigProvider.cs:319-320` |
 | `raceModifiers.<race>.swingEnergyBonusFactor` | float | 0.10 to 0.20 | `[0, 10]` | `CombatMechanicsConfigProvider.cs:321` |
 

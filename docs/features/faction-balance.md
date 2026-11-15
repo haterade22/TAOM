@@ -62,7 +62,7 @@ See the linked feature docs for each file. The two new fields:
 
 The [scenario autorun](scenario-autorun.md) plays the run with nobody at the keyboard. It starts the game unattended, so it needs Mike's word, and a first run is `--days 3`.
 
-1. Run `python tools/run_scenario.py --days 150`. It deploys the checkout, starts a new campaign (the clan tiers load only then), keeps your party out of the wars and quits at day 150.
+1. Deploy the checkout with `pwsh ./build.ps1`; the launcher does not build. Then run `python tools/run_scenario.py --days 150`. It starts a new campaign (the clan tiers load only then), keeps your party out of the wars and quits at day 150.
 2. Read `ledger.txt` in the run folder under `E:\Temp\scenario-runs\`. The runner writes it with `analyze_war_ledger.py`.
 3. For a person's run instead, run `./build.ps1`, start a new campaign, keep your party out of the wars, and on days 45, 60, 100 and 150 record these items:
    - who holds East Osgiliath (`town_EW3`), Cair Andros (`castle_EW4`), Helm's Deep and Edoras;

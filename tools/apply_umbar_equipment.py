@@ -379,10 +379,6 @@ NOTABLES = REPO_ROOT / "Main" / "_Module" / "ModuleData" / "characters" / "npcs_
 # theirs, including the civilian and teen templates. Matching Harad's pair.
 MOUNT = {"HorseHarness": "chain_horse_harness", "Horse": "charger"}
 
-LORD_BATTLE = {
-    "Head": "sk_md_num_inf_helmet_lord_a", "Body": "ar_ardunian_elite_armour",
-    "Cape": "sm_md_num_inf_pauld_cape_elite_a", "Gloves": "sk_md_num_inf_bracer_lord_a",
-    "Leg": "sm_md_num_grvs_elite_a"}
 LORD_CIVILIAN = {
     "Head": "sk_md_num_hood_lord_a", "Body": "sm_md_num_inf_chest_med_a",
     "Cape": "sm_md_num_inf_pauld_med_a", "Gloves": "sk_md_num_inf_bracer_med_a",
@@ -406,6 +402,11 @@ LORD_ROSTER_KITS = {
     "umbar_civ_template_default_d": dict(LORD_CIVILIAN, Head="sk_md_num_hood_elite_b"),
     "umbar_civ_template_default_e": dict(LORD_CIVILIAN, Head="sk_md_num_hood_elite_c"),
 }
+
+# The lord and ruler battle rosters wear template _a's armour: the engine re-kits a new ruler and a
+# spawned lord from them, and tools/fix_lord_kits.py holds them to _a (lord kit, 2026-11-15), so a
+# separate spec here would undo that on its next run.
+LORD_BATTLE = dict(LORD_ROSTER_KITS["umbar_bat_template_medium_a"])
 
 # 26 notables plus 2 generic lords. Civilian townsfolk, so Harad cloth only --
 # no plate, nothing from a battle kit.

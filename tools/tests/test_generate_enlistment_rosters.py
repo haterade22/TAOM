@@ -600,6 +600,23 @@ class RankRuleTests(unittest.TestCase):
         # The engine's polearm_couch usage set carries requires_mount.
         self.assertEqual([], self.regressions({'Item0': 'lance_lo'}, {'Item0': 'spear_hi'}))
 
+    def test_in_a_cavalry_kit_a_lance_is_its_own_category_not_held_against_a_spears_thrust(self):
+        # The maintainer's list names "a spear that lances" beside "spear and shield". The Rohan cavalry
+        # sergeant draws a lance (28.9) after three kits with a plain spear (38.0): a new weapon, and
+        # the player still holds the spear.
+        found = self.regressions({'Item0': 'spear_hi'}, {'Item0': 'lance_lo'}, mounted=True)
+        self.assertEqual([('dropped', 'drops the spear (spear_hi) of enlist_x_infantry_recruit')], found)
+
+    def test_on_foot_the_same_lance_is_a_spear_and_its_thrust_is_compared(self):
+        found = self.regressions({'Item0': 'spear_hi'}, {'Item0': 'lance_lo'})
+        self.assertEqual(['weapon'], [kind for kind, _text in found])
+
+    def test_a_cavalry_lance_is_held_against_the_lances_drawn_before(self):
+        found = self.regressions({'Item0': 'lance_hi', 'Item1': 'spear_b'}, {'Item0': 'lance_lo', 'Item1': 'spear_hi'},
+                                 mounted=True)
+        self.assertEqual(['weapon'], [kind for kind, _text in found])
+        self.assertIn('lance (damage per second) lance_hi 40.0 -> lance_lo 28.0', found[0][1])
+
     def test_an_unpriced_weapon_is_never_compared(self):
         self.assertEqual([], self.regressions({'Item0': 'sword_b'}, {'Item0': 'mystery', 'Item1': 'sword_b'}))
         self.assertEqual([], self.regressions({'Item0': 'mystery'}, {}))
@@ -805,7 +822,23 @@ class RankRepairTests(unittest.TestCase):
         kits = rank_kits({'soldier': {'Item0': 'spear_hi'}, 'veteran': {'Item0': 'lance_lo'}}, assignment='cavalry')
         edits, left = self.plan(kits, gear={'x': {'Item0': {'spear_hi'}}})
         self.assertEqual([], edits)
-        self.assertEqual([['weapon']], [[k for k, _t in f[2]] for f in left])
+        # A rider's lance after a plain spear is a new category, not a weaker spear: nothing to repair.
+        self.assertEqual([['dropped']], [[k for k, _t in f[2]] for f in left])
+
+    def test_a_plain_spear_in_a_cavalry_kit_is_not_replaced_by_a_lance(self):
+        # In a cavalry kit the lance is another category, so the weaker spear takes the earlier kit's
+        # spear; in an infantry kit the same couchable item is a spear and the troop gear's piece wins.
+        chain = {'soldier': {'Item0': 'spear_a'}, 'veteran': {'Item0': 'spear_b'}}
+        gear = {'x': {'Item0': {'lance_hi'}}}
+        riders = rank_kits(chain, assignment='cavalry')
+        self.assertEqual([(('x', 'cavalry', 'veteran'), 'Item0', 'spear_b', 'spear_a')], self.plan(riders, gear=gear)[0])
+        self.assertEqual([(('x', 'infantry', 'veteran'), 'Item0', 'spear_b', 'lance_hi')],
+                         self.plan(rank_kits(chain), gear=gear)[0])
+
+    def test_only_armour_and_weapon_reasons_are_regressions(self):
+        self.assertEqual(('armour', 'weapon'), ger.REGRESSION_KINDS)
+        reasons = [('dropped', 'drops the spear'), ('weapon', 'weaker sword'), ('armour', 'less armour')]
+        self.assertEqual([('weapon', 'weaker sword'), ('armour', 'less armour')], ger.regression_reasons(reasons))
 
     def test_a_repair_never_gives_a_kit_one_weapon_twice(self):
         kits = rank_kits({'recruit': {'Item0': 'sword_b'}, 'soldier': {'Item0': 'sword_a', 'Item1': 'spear_a'}})
@@ -913,7 +946,7 @@ class RepairTextTests(unittest.TestCase):
                                     '<Equipment slot="Body" id="Item.chest_hi" />\r\n'
                                     '            <Equipment slot="Item1" id="Item.spear_a" />')
         _text, out = self.run_repair([], dropped)
-        self.assertIn('Dropped categories, never repaired by a tool (1):', out)
+        self.assertIn('Dropped categories, for information (the player keeps every earlier kit) (1):', out)
         self.assertIn('enlist_x_infantry_soldier: drops the spear (spear_a) of enlist_x_infantry_recruit', out)
 
     def test_the_repair_mode_refuses_a_culture_the_promoter_owns(self):

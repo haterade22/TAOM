@@ -188,3 +188,8 @@ number, a class that is not carried at about half, as vanilla does. This lowers 
 sword multiplier from 1.59 to 1.39 and its bow and riding skills with it, and the weapon and armour
 values of #1271 were fitted on today's skills, so the damage matrix must be run again on the new
 curve before anything is written. It also repairs Harad and the missing modifier rows in one pass.
+
+Built (#343): the curve is 20, 40, 70, 100, 130, 156, 182, 208, 234, 260, with a role table and a
+percent culture table in place of the group tables. The values, the damage tables and what differs
+from this sketch are in [troop-skill-balance](../features/troop-skill-balance.md) and the
+[RCA](rca-troop-skill-curve-2026-11-15.md).
