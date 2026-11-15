@@ -8,8 +8,10 @@ using TAOM.Core.Logging;
 using TAOM.CoopCompat.GuestTrade;
 using TAOM.CoopCompat.Handshake;
 using TAOM.CoopCompat.Momentum;
+using TAOM.CoopCompat.Sessions;
 using TAOM.CoopCompat.Transport;
 using TAOM.Features.CoopInterop;
+using TAOM.Features.LongDefeat.Coop;
 using TAOM.Features.CoopInterop.GuestTrade;
 using TAOM.Features.WarOfTheRingMomentum;
 
@@ -18,8 +20,8 @@ namespace TAOM.CoopCompat;
 /// <summary>
 /// Entry point of the TAOM.CoopCompat module. The engine scans every type of this DLL before any
 /// OnSubModuleLoad runs, when no Coop assembly is loaded yet, so every type that needs Coop to load
-/// lives in TAOM.CoopCompat.Coop.dll (TypeScanGateTests). The transport and the services live in
-/// fields because Coop holds its subscriptions weakly.
+/// lives in TAOM.CoopCompat.Coop.dll (TypeScanGateTests). The transport, the services, the session
+/// transport and its link live in fields because Coop holds its subscriptions weakly.
 /// </summary>
 public sealed class CoopCompatSubModule : MBSubModuleBase
 {
@@ -28,8 +30,33 @@ public sealed class CoopCompatSubModule : MBSubModuleBase
     private MomentumRelayService? _momentum;
     private GuestTradeRelayService? _guestTrade;
     private bool _startTried;
+    private ICoopSessionTransport? _sessions;
+    private LongDefeatSessionLink? _sessionLink;
+    private bool _sessionsTried;
 
     protected override void OnSubModuleLoad() => Log("[CoopCompat] module loaded");
+
+    // Long Defeat co-op (#1280) starts from the main menu, before any campaign, so the session launcher starts here,
+    // after every module's OnSubModuleLoad.
+    protected override void OnBeforeInitialModuleScreenSetAsRoot()
+    {
+        if (_sessionsTried) return;
+        _sessionsTried = true;
+        try
+        {
+            StartSessions();
+            var port = IoC.Resolve<ILongDefeatCoopPort>();
+            _sessionLink = new LongDefeatSessionLink(_sessions!, port);
+            port.Attach(_sessionLink);
+            Log("[CoopCompat] session launcher subscribed");
+        }
+        catch (Exception ex)
+        {
+            _sessions = null;
+            _sessionLink = null;
+            Log("[CoopCompat] sessions off, Coop is not usable: " + ex.GetType().Name + ": " + ex.Message);
+        }
+    }
 
     protected override void OnGameStart(Game game, IGameStarter gameStarterObject)
     {
@@ -64,13 +91,21 @@ public sealed class CoopCompatSubModule : MBSubModuleBase
         }
     }
 
-    // The only method that names a Coop-backed type; NoInlining keeps the JIT from resolving it at the call site.
+    // This and StartSessions are the only methods that name a Coop-backed type; NoInlining keeps the JIT from resolving it at the call site.
     [MethodImpl(MethodImplOptions.NoInlining)]
     private void StartTransport()
     {
         var transport = new CoopTransport();
         transport.Start();
         _transport = transport;
+    }
+
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    private void StartSessions()
+    {
+        var sessions = new CoopSessionTransport();
+        sessions.Start();
+        _sessions = sessions;
     }
 
     private void BuildServices(ICoopTransport transport)

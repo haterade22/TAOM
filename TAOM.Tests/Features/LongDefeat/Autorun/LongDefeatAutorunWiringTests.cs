@@ -52,7 +52,7 @@ public class LongDefeatAutorunWiringTests
         StringAssert.Contains(source, "setup.RecordsFolder");
         StringAssert.Contains(source, "LongDefeatRunRecords.ForFolder(");
         // The chosen records must reach the mission logic: without the argument CreateBehaviors falls back to the default folder.
-        StringAssert.Contains(source, "CreateBehaviors(plan, defender, attacker, records)");
+        StringAssert.Contains(source, "CreateBehaviors(plan, defender, attacker, records,");
     }
 
     [TestMethod]

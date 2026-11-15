@@ -3,6 +3,7 @@ using TAOM.Adapters;
 using TAOM.Core.Logging;
 using TAOM.Composition;
 using TAOM.Features.LongDefeat.Autorun;
+using TAOM.Features.LongDefeat.Coop;
 using TAOM.Features.LongDefeat.Hooks;
 
 namespace TAOM.Features.LongDefeat;
@@ -22,6 +23,13 @@ internal sealed class LongDefeatModule : TaomFeatureModule
         registrator.Register<LongDefeatSetupPrompt>(Reuse.Singleton);
         registrator.Register<LongDefeatMenuEntry>(Reuse.Singleton);
         registrator.Register<LongDefeatMissionLauncher>(Reuse.Singleton);
+        // Co-op (#1280): TAOM.CoopCompat resolves the port and attaches its Coop link. The start path is resolved at the call, because the
+        // launcher the prompt reaches takes the runs.
+        registrator.Register<LongDefeatCoopState>(Reuse.Singleton);
+        registrator.RegisterDelegate(r => new LongDefeatCoopRuns(r.Resolve<LongDefeatCoopState>(), setup => r.Resolve<LongDefeatSetupPrompt>().Start(setup),
+            r.Resolve<ILongDefeatMenuAdapter>(), r.Resolve<IModLogger>()), Reuse.Singleton);
+        registrator.RegisterDelegate<ILongDefeatCoopPort>(r => r.Resolve<LongDefeatCoopRuns>(), Reuse.Singleton);
+        registrator.Register<LongDefeatCoopMenuEntry>(Reuse.Singleton);
         registrator.RegisterDelegate(_ => LongDefeatAutorunPlan.Resolve(), Reuse.Singleton);
         registrator.Register<ILongDefeatAutorunHost, NullLongDefeatAutorunHost>(Reuse.Singleton);
         registrator.Register<LongDefeatAutorunDriver>(Reuse.Singleton);
@@ -32,7 +40,11 @@ internal sealed class LongDefeatModule : TaomFeatureModule
         // The engine calls the first-screen hook with no try and again on every tick while it throws (#807), so the step goes
         // through MainMenuStep. Adding the option is guarded by its id, so a repeat adds nothing.
         if (phase == ApplyPhase.MainMenu)
+        {
             MainMenuStep.Run("long defeat menu option", () => resolver.Resolve<LongDefeatMenuEntry>().Install(),
                 () => resolver.Resolve<IModLogger>());
+            MainMenuStep.Run("long defeat co-op menu option", () => resolver.Resolve<LongDefeatCoopMenuEntry>().Install(),
+                () => resolver.Resolve<IModLogger>());
+        }
     }
 }

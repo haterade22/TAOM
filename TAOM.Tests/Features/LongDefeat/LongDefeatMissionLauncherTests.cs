@@ -63,7 +63,11 @@ public class LongDefeatMissionLauncherTests
 
     private static LongDefeatMissionLauncher Launcher(LongDefeatConfigCatalog catalog, IModLogger logger, LongDefeatSession? session = null) =>
         new(catalog, session ?? new LongDefeatSession(), logger, Substitute.For<IOutcomeLog>(), Substitute.For<TAOM.Adapters.ILongDefeatMenuAdapter>(),
-            LongDefeatRunRecords.ForFolder(System.IO.Path.Combine(System.IO.Path.GetTempPath(), "taom-ld-unused"), null));
+            LongDefeatRunRecords.ForFolder(System.IO.Path.Combine(System.IO.Path.GetTempPath(), "taom-ld-unused"), null),
+            CoopRuns());
+
+    private static TAOM.Features.LongDefeat.Coop.LongDefeatCoopRuns CoopRuns() =>
+        new(new TAOM.Features.LongDefeat.Coop.LongDefeatCoopState(), _ => false, Substitute.For<TAOM.Adapters.ILongDefeatMenuAdapter>(), Substitute.For<IModLogger>());
 
     private static CustomBattleCombatant Combatant(BattleSideEnum side) =>
         new(new TextObject("{=!}test"), null, null) { Side = side };

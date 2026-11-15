@@ -33,6 +33,17 @@ internal static class ContractSamples
         Values = new[] { "1", "2" },
     };
 
+    public static CoopCompatLdRunEnded LdRunEnded() => new CoopCompatLdRunEnded
+    {
+        ProtocolVersion = 1,
+        SessionId = "session-1",
+        Epoch = 3,
+        Reason = 2,
+        Wave = 7,
+        WavesCleared = 6,
+        Kills = 412,
+    };
+
     public static CoopCompatTradeRequest TradeRequest() => new CoopCompatTradeRequest
     {
         ProtocolVersion = 1,
@@ -62,5 +73,5 @@ internal static class ContractSamples
         ArmouryLevel = 2,
     };
 
-    public static IMessage[] All() => new IMessage[] { Hello(), Reply(), Snapshot(), TradeRequest(), TradeReply() };
+    public static IMessage[] All() => new IMessage[] { Hello(), Reply(), Snapshot(), LdRunEnded(), TradeRequest(), TradeReply() };
 }
