@@ -5156,5 +5156,11 @@
 	<string id="taom_realms_tree_holder" text="{=taom_realms_tree_holder}Holder" />
 	<string id="taom_realms_tree_liege" text="{=taom_realms_tree_liege}Liege" />
 	<string id="taom_realms_tree_subordinates" text="{=taom_realms_tree_subordinates}Subordinate titles" />
+	<!-- harvested by tools/harvest_literal_loc_keys.py -->
+	<!-- CheatMenu -->
+	<string id="taom_cheat_done_gold" text="{=taom_cheat_done_gold}Gold given. You now have {NUMBER} denars." />
+	<string id="taom_cheat_done_influence" text="{=taom_cheat_done_influence}Gained {NUMBER} influence." />
+	<string id="taom_cheat_done_renown" text="{=taom_cheat_done_renown}Gained {NUMBER} renown." />
+	<string id="taom_cheat_done_heal" text="{=taom_cheat_done_heal}Your party is healed. Soldiers healed: {NUMBER}." />
 
 </strings>
