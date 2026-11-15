@@ -5,6 +5,7 @@ using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Actions;
 using TaleWorlds.CampaignSystem.Party;
 using TaleWorlds.CampaignSystem.Settlements;
+using TAOM.Features.Execution;
 
 namespace TAOM.Adapters;
 
@@ -21,7 +22,7 @@ public sealed class StoryCampaignAdapter : IStoryCampaignAdapter
 
     public bool IsMainPartyInMapEvent => MobileParty.MainParty?.MapEvent != null;
 
-    public string? PlayerKingdomId => Hero.MainHero?.MapFaction?.StringId;
+    public SideIds PlayerSide => FactionSides.OfPlayer();
 
     public string CampaignId => Campaign.Current?.UniqueGameId ?? string.Empty;
 

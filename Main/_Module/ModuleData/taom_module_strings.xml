@@ -5164,5 +5164,14 @@
 	<string id="taom_realms_tree_holder" text="{=taom_realms_tree_holder}Holder" />
 	<string id="taom_realms_tree_liege" text="{=taom_realms_tree_liege}Liege" />
 	<string id="taom_realms_tree_subordinates" text="{=taom_realms_tree_subordinates}Subordinate titles" />
+	<!-- harvested by tools/harvest_literal_loc_keys.py -->
+	<!-- StoryMissions -->
+	<string id="taom_story_offer_attack" text="{=taom_story_offer_attack}Storm the walls" />
+	<string id="taom_story_offer_body_both" text="{=taom_story_offer_body_both}The hour of {TARGET} has come. Will you ride there and choose your side of its walls, or let fate decide?" />
+	<string id="taom_story_offer_body_attack" text="{=taom_story_offer_body_attack}The hour of {TARGET} has come. Will you march on its walls and lead the assault yourself, or let fate decide?" />
+	<string id="taom_story_offer_march" text="{=taom_story_offer_march}March on {TARGET}" />
+	<string id="taom_story_offer_repulsed" text="{=taom_story_offer_repulsed}Your assault on {TARGET} is thrown back, and its walls hold." />
+	<string id="taom_story_offer_stormed" text="{=taom_story_offer_stormed}The walls of {TARGET} are stormed, and the fortress falls." />
+	<string id="taom_story_offer_menu_host" text="{=taom_story_offer_menu_host}A host gathers before the walls of {TARGET}. Time stands until you choose." />
 
 </strings>
