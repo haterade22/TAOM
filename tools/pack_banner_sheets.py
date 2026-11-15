@@ -80,6 +80,10 @@ RED, GREEN = (255, 0, 0), (0, 255, 0)
 TEX_GUID = slice(0x34, 0x44)
 SOURCE_PATH = re.compile(rb"\$BASE/Modules/[^/\x00]+/(AssetSources/BannerIcons/[^\x00]*?\.(?:png|psd))")
 BLOCKING = ("missing_sheet", "empty_cell", "shared_cell", "unnamed_art", "duplicate_id")
+# Picker sprites that no icon row names, held back until the sprite regeneration in the Kit removes them
+# (#1274: 22004 has had no row since March 2026). An entry that stops being an orphan is a finding of its own,
+# so the list goes when its reason does.
+KNOWN_ORPHAN_SPRITES = frozenset({"22004"})
 
 
 def read_icons(data):
@@ -248,6 +252,18 @@ def sprite_parts(root):
             if p.findtext("CategoryName") == SPRITE_CATEGORY}
 
 
+def sprite_pngs(root):
+    folder = root / SPRITE_PNGS
+    return {p.stem for p in folder.glob("*.png")} if folder.is_dir() else set()
+
+
+def orphan_sprites(icon_ids, sprite_ids, known):
+    """(orphans, stale): sprites no icon names and that `known` does not hold back, and `known` entries that
+    are no orphan any more (sprite gone, or an icon names it again). Both sorted."""
+    orphans = set(sprite_ids) - set(icon_ids)
+    return sorted(orphans - known), sorted(set(known) - orphans)
+
+
 def package_problems(root, mat, srcs):
     """Why the Kit packages of `mat` do not match its source: [] when they do."""
     tex, mtl = root / PACKAGES / f"{mat}_tex.tpac", root / PACKAGES / f"{mat}_mtl.tpac"
@@ -274,7 +290,7 @@ def audit(root):
     parts = sprite_parts(root)
     rep = {k: [] for k in ("missing_sheet", "empty_cell", "shared_cell", "unnamed_art", "duplicate_id",
                            "missing_sprite", "missing_package", "stale_package", "unused_sheet", "mergeable",
-                           "legacy_name", "no_alpha")}
+                           "legacy_name", "no_alpha", "orphan_sprite", "stale_known_orphan")}
     rep["duplicate_id"] = sorted(i for i, n in Counter(i for i, _, _ in icons).items() if n > 1)
     by_mat = defaultdict(lambda: defaultdict(list))
     for i, m, t in icons:
@@ -297,6 +313,8 @@ def audit(root):
         rep["empty_cell"] += [(mat, t, ids) for t, ids in sorted(used.items())
                               if not 0 <= t < CELLS or not is_art(cells[t])]
         rep["unnamed_art"] += [(mat, t) for t, cell in enumerate(cells) if t not in used and is_art(cell)]
+    rep["orphan_sprite"], rep["stale_known_orphan"] = orphan_sprites(
+        {i for i, _, _ in icons}, parts | sprite_pngs(root), KNOWN_ORPHAN_SPRITES)
     rep["unused_sheet"] = sorted({sheet_name(p) for p in sheet_files(root)} - set(by_mat))
     rep["mergeable"] = sorted({m for m, _, _, _ in merges(icons).values()})
     rep["legacy_name"] = sorted(m for m in by_mat if not SHEET_RE.fullmatch(m))

@@ -128,7 +128,7 @@ Beorn, 20004 bee, 20003 paw, 20002 horse trident) in honey gold (2024) on Beorni
 2007, `0xFF654D37`). Angáladh flies icons no other clan flies (Mike, 2026-10-28): Silvan 17000 for
 the realm and the House of Angáladh, 17001 for the Woodwards of the Forest Road and the plain sun
 20001 for the Wardens of Emyn Duir, in off-white (palette 2022, `#F2F4F7`, the kingdom's `color2`, which the engine paints a clan's sigil in) on forest green (palette 2021, `0xFF4F6F5A`).
-Mirkwood's Nos Galengrim flies 17006, 17007 and 17008.
+Mirkwood's Nos Galengrim flies 15007, 10017 and 15009.
 
 ### Settlements
 

@@ -47,5 +47,9 @@
     <string id="taom_key_seat_slow_desc" text="В бою понижает скорость времени на одну ступень, вплоть до четверти обычной. По умолчанию Page Down." />
     <string id="taom_key_seat_stay" text="Остановить время (TAOM)" />
     <string id="taom_key_seat_stay_desc" text="В бою отменяет ускорение и ставит сражение на паузу; нажмите снова, чтобы продолжить. Обзор Престола по-прежнему летает во время паузы. По умолчанию Home." />
+    <string id="taom_key_cheat_menu" text="Open Cheat Menu (TAOM)" />
+    <string id="taom_key_cheat_menu_desc" text="Opens the TAOM cheat menu on the campaign map, like the Cheats button. Works only while Enable Cheat Menu is on in Mod Options, in single player. Defaults to H." />
+    <string id="taom_key_battle_cheat_menu" text="Open Battle Cheat Menu (TAOM)" />
+    <string id="taom_key_battle_cheat_menu_desc" text="Opens the TAOM battle cheat list in a mission, like the Cheats item in the Esc menu. Works only while Enable Cheat Menu is on in Mod Options, in single player. Defaults to H." />
   </strings>
 </base>

@@ -111,7 +111,10 @@ to `_10`. On 2026-11-14 every sheet was renamed to `taom_banners_01` to `_25`, n
 `banner_icons.xml` first names them, and `taom_banners_dwarves_alpha_02` and
 `taom_banners_elven_alpha_01` were merged into `taom_banners_11` (26 sheets became 25). The same day
 168 unused icons were deleted and sheets 16-25 moved into the freed cells (25 sheets became 15; see
-the inventory below).
+the inventory below). Four of those icons were still flown (17006 to 17008 and 10505), because their
+banner keys hold negative rotations that a digits-only key parse skips; #1284 repointed both banners.
+Before you delete an `<Icon>` row, run `python -m pytest tools/tests/test_banner_icon_ids.py`: its
+key parser reads negative tokens, and a deleted icon that any shipped key names fails it.
 
 **Adding emblems.** Draw them on a new sheet (Step 2) named the next free `taom_banners_NN`, add their
 `<Icon>` rows (Step 3) and the sprites (Step 4b). The banner editor's atlas builder picks that number
@@ -145,7 +148,9 @@ is not a PNG it gets a new number, so the old PSD stays as it was until the prun
 `python tools/pack_banner_sheets.py --audit` is the gate (`tools/tests/test_pack_banner_sheets.py`):
 every icon names a sheet that exists and a cell that holds art, no two icons share a cell, no art
 cell is unnamed, every icon has a `ui_taom_bannericons` sprite part in `TAOMSpriteData.xml` and its
-PNG, every material has both packages, each `_mtl.tpac` names its `_tex.tpac` and each `_tex.tpac`
+PNG, every such sprite part or PNG is named by an icon row (`orphan_sprite`, #1274; `KNOWN_ORPHAN_SPRITES`
+holds back 22004 until the Kit regeneration removes it, and an entry that is no orphan any more is a
+`stale_known_orphan` finding), every material has both packages, each `_mtl.tpac` names its `_tex.tpac` and each `_tex.tpac`
 holds the hash of its current source (so a sheet changed after its Kit import is a finding), every
 sheet is named `taom_banners_NN`, every sheet source has an alpha channel (`no_alpha`), no sheet file is
 unused, and no packing plan would save a sheet. The tool writes every repacked sheet as RGBA with

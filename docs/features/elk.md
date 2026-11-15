@@ -320,7 +320,7 @@ Any CTD goes to `/native-crash-triage`, never a blind retry.
 - **Previews show the elk at horse size** (see Size): battle only, by Mike's choice.
 - **Item names are not translated.** The English rows are registered in the Armory's
   `Languages/loc_LOTRAOM_horses.xml` beside the ram's; the twelve languages need
-  `python tools/translate_with_claude.py --lang <L> --module Armory --sync-ids --apply` per language, which calls a
+  `python tools/translate_with_claude.py --lang <L> --module Armory --sync-ids --apply --allow-live-write` per language, which calls a
   paid API.
 - **The elk art's source and licence are not recorded.** It needs a row in
   [provenance-register.md](../reference/provenance-register.md) if it came from outside TAOM.

@@ -47,5 +47,9 @@
     <string id="taom_key_seat_slow_desc" text="戦闘中、ミッション時間を一段階下げます。最低で通常速度の4分の1まで。既定はPage Down。" />
     <string id="taom_key_seat_stay" text="時を止める (TAOM)" />
     <string id="taom_key_seat_stay_desc" text="戦闘中、加速を解除してミッションを一時停止します。もう一度押すと再開します。停止中も指揮席の視点は飛行できます。既定はHome。" />
+    <string id="taom_key_cheat_menu" text="Open Cheat Menu (TAOM)" />
+    <string id="taom_key_cheat_menu_desc" text="Opens the TAOM cheat menu on the campaign map, like the Cheats button. Works only while Enable Cheat Menu is on in Mod Options, in single player. Defaults to H." />
+    <string id="taom_key_battle_cheat_menu" text="Open Battle Cheat Menu (TAOM)" />
+    <string id="taom_key_battle_cheat_menu_desc" text="Opens the TAOM battle cheat list in a mission, like the Cheats item in the Esc menu. Works only while Enable Cheat Menu is on in Mod Options, in single player. Defaults to H." />
   </strings>
 </base>

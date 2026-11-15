@@ -449,8 +449,8 @@ every file before writing any.
    `python tools/validate_moduledata.py`.
 6. When item ids changed: `python tools/sync_ranged_ladder_translations.py --apply`, then `--verify`
    (it carries the existing translations and the translator cache across). Only for a name it cannot
-   derive, run `python tools/translate_with_claude.py --lang <L> --module Armory --sync-ids --apply`
-   per language (needs `ANTHROPIC_API_KEY`), then the sync tool again to drop the retired rows. Then
+   derive, run `python tools/translate_with_claude.py --lang <L> --module Armory --sync-ids --apply
+   --allow-live-write` per language (needs `ANTHROPIC_API_KEY`), then the sync tool again to drop the retired rows. Then
    `python tools/check_external_loc_coverage.py`.
 7. Commit the repo (spec, troop files, `tools/translation_cache`, the tracked HTML). Leave the
    `E:\repos\lotraom-assets` mirror alone: Mike syncs it himself in one pass (2026-09-22), so say in the

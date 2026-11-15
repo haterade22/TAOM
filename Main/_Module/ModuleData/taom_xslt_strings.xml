@@ -1054,7 +1054,7 @@
 
 	<string id="aom_dale_male_name_7" text="{=aom_dale_male_name_7}Sigvard" />
 
-	<string id="aom_dale_male_name_8" text="{=aom_dale_male_name_8}Torvald" />
+	<string id="aom_dale_male_name_8" text="{=aom_dale_male_name_8}Hrafnkel" />
 
 	<string id="aom_dale_male_name_9" text="{=aom_dale_male_name_9}Ulfrik" />
 
@@ -1140,7 +1140,7 @@
 
 	<string id="aom_dale_male_name_50" text="{=aom_dale_male_name_50}Hakon" />
 
-	<string id="aom_dale_female_name_1" text="{=aom_dale_female_name_1}Astrid" />
+	<string id="aom_dale_female_name_1" text="{=aom_dale_female_name_1}Hallveig" />
 
 	<string id="aom_dale_female_name_2" text="{=aom_dale_female_name_2}Bergljot" />
 
@@ -1148,7 +1148,7 @@
 
 	<string id="aom_dale_female_name_4" text="{=aom_dale_female_name_4}Eldrid" />
 
-	<string id="aom_dale_female_name_5" text="{=aom_dale_female_name_5}Freydis" />
+	<string id="aom_dale_female_name_5" text="{=aom_dale_female_name_5}Gunnvor" />
 
 	<string id="aom_dale_female_name_6" text="{=aom_dale_female_name_6}Gudny" />
 
@@ -1172,11 +1172,11 @@
 
 	<string id="aom_dale_female_name_16" text="{=aom_dale_female_name_16}Ranveig" />
 
-	<string id="aom_dale_female_name_17" text="{=aom_dale_female_name_17}Sigrun" />
+	<string id="aom_dale_female_name_17" text="{=aom_dale_female_name_17}Ingrun" />
 
 	<string id="aom_dale_female_name_18" text="{=aom_dale_female_name_18}Sigyn" />
 
-	<string id="aom_dale_female_name_19" text="{=aom_dale_female_name_19}Svala" />
+	<string id="aom_dale_female_name_19" text="{=aom_dale_female_name_19}Asgerd" />
 
 	<string id="aom_dale_female_name_20" text="{=aom_dale_female_name_20}Thurid" />
 
@@ -1284,7 +1284,7 @@
 
 	<string id="aom_khand_male_name_12" text="{=aom_khand_male_name_12}Mazar" />
 
-	<string id="aom_khand_male_name_13" text="{=aom_khand_male_name_13}Nogai" />
+	<string id="aom_khand_male_name_13" text="{=aom_khand_male_name_13}Arslan" />
 
 	<string id="aom_khand_male_name_14" text="{=aom_khand_male_name_14}Ozgan" />
 
@@ -1392,7 +1392,7 @@
 
 	<string id="aom_khand_female_name_16" text="{=aom_khand_female_name_16}Parisa" />
 
-	<string id="aom_khand_female_name_17" text="{=aom_khand_female_name_17}Qutlugh" />
+	<string id="aom_khand_female_name_17" text="{=aom_khand_female_name_17}Toregene" />
 
 	<string id="aom_khand_female_name_18" text="{=aom_khand_female_name_18}Roxana" />
 
