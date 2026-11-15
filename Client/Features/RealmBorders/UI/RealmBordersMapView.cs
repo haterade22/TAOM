@@ -55,6 +55,13 @@ public class RealmBordersMapView : MapView
         MapScreen.AddLayer(_layer);
     }
 
+    // MapScreen.OnResume calls this when a screen pushed over the map, such as the kingdom screen, closes.
+    protected override void OnResume()
+    {
+        base.OnResume();
+        _borders?.OnNamesMayHaveChanged();
+    }
+
     protected override void OnMapScreenUpdate(float dt)
     {
         base.OnMapScreenUpdate(dt);
