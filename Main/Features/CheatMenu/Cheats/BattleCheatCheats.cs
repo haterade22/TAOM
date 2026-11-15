@@ -15,6 +15,7 @@ namespace TAOM.Features.CheatMenu.Cheats;
 public static class BattleCheatCheats
 {
     private const string HealUsage = "Usage: taom.cheat_battle_heal [self|side, default self]";
+    private const string GodUsage = "Usage: taom.cheat_battle_god [on|off, default: switch it]";
     private const string RoutUsage = "Usage: taom.cheat_battle_rout";
     private const string KillUsage = "Usage: taom.cheat_battle_kill";
     private const string SpawnUsage = "Usage: taom.cheat_battle_spawn <count 1-200> [ally|enemy, default enemy]";
@@ -28,6 +29,18 @@ public static class BattleCheatCheats
             if (which == "self") return Say(BattleCheatAction.HealSelf, Service().HealSelf());
             if (which == "side") return Say(BattleCheatAction.HealSide, Service().HealSide());
             return HealUsage;
+        });
+
+    [CommandLineFunctionality.CommandLineArgumentFunction("cheat_battle_god", "taom")]
+    public static string CheatBattleGod(List<string> strings) =>
+        TaomConsole.RunInMission(strings, GodUsage, args =>
+        {
+            if (args.Count > 1) return GodUsage;
+            if (args.Count == 0) return Say(BattleCheatAction.GodMode, Service().ToggleGodMode());
+            var which = args[0].Trim().ToLowerInvariant();
+            if (which == "on") return Say(BattleCheatAction.GodMode, Service().SetGodMode(true));
+            if (which == "off") return Say(BattleCheatAction.GodMode, Service().SetGodMode(false));
+            return GodUsage;
         });
 
     [CommandLineFunctionality.CommandLineArgumentFunction("cheat_battle_rout", "taom")]
