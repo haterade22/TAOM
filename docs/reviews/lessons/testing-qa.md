@@ -2799,3 +2799,9 @@ The Long Defeat upgrade fades a soldier and then spawns his replacement. Every t
 - **Why missed:** the fake's default answer made found, replaced and read equal, so no test had a case where the rule could fail.
 - **Prevent:** for each count a check compares (found, replaced, read), add one test where only that count falls short, and confirm that deleting its clause turns a test red. Read a result back from a different signal than the call that produced it (here, the position, not the troop id the engine copies).
 - **Source:** [rca-ld-shop-upgrades-2026-11-13.md](../rca-ld-shop-upgrades-2026-11-13.md), findings 1, 3 to 5, 8 and 12.
+
+### A test double without the production gate passes a path that skips the gate (Coop #4691, 2026-11-14)
+The campaign-free session joined through a new path that skipped two client states. Those states opened the server's per-peer message queue and registered the item ids. The E2E network double has no queue and the unit test mocked the registry manager, so every test passed while a real server dropped every message to a session client and a real client had no Game to register items in. Across three review rounds, two fixes then added guards that existing code (an epoch watermark, an existing drain call) already gave; a revert run showed each test still green without them.
+- **Why missed:** the new path was checked against what the tests could see, not against the side effects of the states it skipped; a message-order test sent fewer messages than the real sender does.
+- **Prevent:** when a new path skips states, list every side effect of those states (queue phase, registries, events) and check each on the new path with a real component, not a double. A message-order test sends what the real sender sends, in its order. Before a new guard stays, revert it once and see its test go red.
+- **Source:** [rca-coop-session-2026-11-14.md](../rca-coop-session-2026-11-14.md), findings 1, 2, R1, S1, S3.
