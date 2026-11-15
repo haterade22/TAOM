@@ -2805,3 +2805,9 @@ The campaign-free session joined through a new path that skipped two client stat
 - **Why missed:** the new path was checked against what the tests could see, not against the side effects of the states it skipped; a message-order test sent fewer messages than the real sender does.
 - **Prevent:** when a new path skips states, list every side effect of those states (queue phase, registries, events) and check each on the new path with a real component, not a double. A message-order test sends what the real sender sends, in its order. Before a new guard stays, revert it once and see its test go red.
 - **Source:** [rca-coop-session-2026-11-14.md](../rca-coop-session-2026-11-14.md), findings 1, 2, R1, S1, S3.
+
+### A validator test that builds its config in C# never meets the deserializer (#1291, 2026-11-15)
+The battle balance provider's new tests built `BattleBalanceConfig` objects in C# and called `Validate` directly. All of them stayed green with the `Validate` call deleted from `GetConfig`, and none could show that Newtonsoft merges JSON keys into the compiled dictionaries or sets a section to null on a JSON `null`, the two facts the fallback design rests on. The Data flow lens found it, with three smaller gaps: the null-branch warnings had no asserts, a bad tier key with no compiled row reverted to 1.0 instead of the formula, and a doc column said "0 when absent" where the merge keeps the compiled row.
+- **Why missed:** the tests were written per branch of `Validate`, so the loader around it and its input format were outside every test.
+- **Prevent:** a config provider's tests include at least one case through the real file and the real deserializer, and that case fails when the validate call is removed. A test of a fallback asserts the warning and the summary, not only the value.
+- **Source:** [rca-faction-balance-data-2026-11-14.md](../rca-faction-balance-data-2026-11-14.md), "#1291 review".
