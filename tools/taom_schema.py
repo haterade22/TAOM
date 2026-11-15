@@ -2577,9 +2577,13 @@ class Validator:
             ))
         promoted = ger.promoter_owned_cultures(text)
         for high, earlier, reasons in ger.enlistment_kit_findings(kits, stats, weapon_info):
+            # A dropped category is no regression: the player keeps every earlier kit. The repair
+            # tool's dry run lists them; only a lower armour total or a weaker weapon is a finding.
+            reasons = ger.regression_reasons(reasons)
+            if not reasons:
+                continue
             culture = high[0]
             rid = "enlist_" + "_".join(high)
-            repairable = any(kind != "dropped" for kind, _text in reasons)
             if culture in promoted:
                 repair = self._promoted_repair(ger, kits, stats, weapon_info, earlier, high)
             elif culture == "default":
@@ -2588,18 +2592,13 @@ class Validator:
             else:
                 repair = (f"python tools/generate_enlistment_rosters.py --repair-ranks --culture {culture} plans "
                           "the change from the culture's troop gear, or says it found none; read it, then add --apply")
-            note = []
-            if repairable:
-                note.append(f"Repair: {repair}.")
-            if any(kind == "dropped" for kind, _text in reasons):
-                note.append("A dropped category is never repaired by a tool: decide whether this kit should carry it.")
             at = text.find(f'id="{rid}"')
             issues.append(Issue(
                 severity=ENLISTMENT_KIT_RANK_SEVERITY, code=ENLISTMENT_KIT_RANK_CODE, file=self._rel(path),
                 line=text.count("\n", 0, at) + 1 if at >= 0 else 0, entry_id=rid,
                 message=("the kit is weaker than what the player drew before it ("
                          + ", ".join("enlist_" + "_".join(c) for c in earlier) + "): "
-                         + "; ".join(t for _kind, t in reasons) + ". " + " ".join(note)),
+                         + "; ".join(t for _kind, t in reasons) + f". Repair: {repair}."),
             ))
         return issues
 
@@ -2614,8 +2613,9 @@ class Validator:
                     f"the source with --repair-ranks --culture <source> --apply, then run {rerun}")
         pairs = [((src,) + c[1:] if c[0] == culture else c, c) for c in list(earlier) + [high]]
         source_clean = (all(s in kits for s, _c in pairs)
-                        and not ger.rank_regressions([(s, kits[s]) for s, _c in pairs[:-1]], kits[pairs[-1][0]],
-                                                     stats, weapon_info, mounted=high[1] == "cavalry"))
+                        and not ger.regression_reasons(ger.rank_regressions(
+                            [(s, kits[s]) for s, _c in pairs[:-1]], kits[pairs[-1][0]],
+                            stats, weapon_info, mounted=high[1] == "cavalry")))
         if mapped and source_clean:
             changed = [f"{slot} {kits[s][slot]} -> {kits[c][slot]}"
                        for s, c in pairs
