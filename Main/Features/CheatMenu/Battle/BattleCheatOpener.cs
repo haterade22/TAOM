@@ -18,6 +18,7 @@ public sealed class BattleCheatOpener
     {
         BattleCheatAction.HealSelf,
         BattleCheatAction.HealSide,
+        BattleCheatAction.GodMode,
         BattleCheatAction.Rout,
         BattleCheatAction.Kill,
         BattleCheatAction.SpawnAllies,
@@ -41,7 +42,7 @@ public sealed class BattleCheatOpener
     public bool TryOpen()
     {
         if (!IsShown) return false;
-        _host.ShowList(Actions, Pick);
+        _host.ShowList(Actions, _service.GodModeOn, Pick);
         return true;
     }
 

@@ -19,6 +19,8 @@ namespace TAOM.Client.Features.CheatMenu.UI;
 /// asks <see cref="BattleCheatOpener.TryOpenOnKey"/>, which reads no key at all while the switch is off or outside single player.
 /// The press does not count with Ctrl or Alt held (vanilla's Ctrl+H cheat), nor while the Esc menu, the order panel, the radial
 /// menu, photo mode or another pop-up is open. Never throws out of the mission tick: a failure is logged once.
+/// The same tick keeps god mode on the player and the horse they ride (<see cref="BattleCheatService.TickGodMode"/>), whether it
+/// was turned on from the list or the console; that has its own guard, so a key failure does not stop it.
 /// </summary>
 [DefaultView]
 public sealed class BattleCheatMenuView : MissionView
@@ -28,10 +30,13 @@ public sealed class BattleCheatMenuView : MissionView
     private bool _resolved;
     private bool _failed;
     private Func<bool>? _pressed;
+    private BattleCheatService? _godMode;
+    private bool _godModeFailed;
 
     public override void OnMissionScreenTick(float dt)
     {
         base.OnMissionScreenTick(dt);
+        TickGodMode();
         if (_failed || MissionScreen == null || Mission == null)
             return;
         try
@@ -44,6 +49,23 @@ public sealed class BattleCheatMenuView : MissionView
         {
             _failed = true;
             try { IoC.Resolve<IModLogger>()?.LogError($"[CheatMenu] BattleCheatMenuView stopped reading its key: {ex}"); }
+            catch { /* swallow-ok: never throw out of the mission tick */ }
+        }
+    }
+
+    private void TickGodMode()
+    {
+        if (_godModeFailed || Mission == null)
+            return;
+        try
+        {
+            _godMode ??= IoC.Resolve<BattleCheatService>();
+            _godMode?.TickGodMode();
+        }
+        catch (Exception ex)
+        {
+            _godModeFailed = true;
+            try { IoC.Resolve<IModLogger>()?.LogError($"[CheatMenu] BattleCheatMenuView stopped keeping god mode: {ex}"); }
             catch { /* swallow-ok: never throw out of the mission tick */ }
         }
     }

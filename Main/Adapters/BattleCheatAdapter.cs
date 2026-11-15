@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using TaleWorlds.Core;
 using TaleWorlds.MountAndBlade;
 using TAOM.Features.CheatMenu.Battle;
@@ -22,7 +23,8 @@ public sealed class BattleCheatAdapter : IBattleCheatAdapter
         return new BattleCheatState(
             MissionRunning: true,
             Ending: mission.MissionEnded || mission.RetreatSide != BattleSideEnum.None,
-            HasPlayerTeam: mission.PlayerTeam != null);
+            HasPlayerTeam: mission.PlayerTeam != null,
+            MissionKey: RuntimeHelpers.GetHashCode(mission));
     }
 
     public int HealMainAgent()
@@ -95,6 +97,49 @@ public sealed class BattleCheatAdapter : IBattleCheatAdapter
 
     public int SpawnTroops(string troopId, int count, bool playerSide, int ringStart) =>
         MissionTroopSpawner.Spawn(troopId, count, playerSide, ringStart).Spawned;
+
+    public IReadOnlyList<GodModeAgent> GodModeTargets()
+    {
+        var main = Mission.Current?.MainAgent;
+        if (main == null || !main.IsActive()) return Array.Empty<GodModeAgent>();
+        var mount = main.MountAgent;
+        return mount != null && mount.IsActive()
+            ? new[] { Read(main), Read(mount) }
+            : new[] { Read(main) };
+    }
+
+    // Mission.FindAgentWithIndex returns the slot's current occupant (AgentSlotIdentity): the engine gives a deleted agent's
+    // index to a new one within the mission (#592), so the stamp must match too, or a new agent would be taken for the held one.
+    public IReadOnlyList<GodModeAgent> ReadAgents(IReadOnlyList<GodModeAgent> agents)
+    {
+        var mission = Mission.Current;
+        if (mission == null || agents.Count == 0) return Array.Empty<GodModeAgent>();
+        var found = new List<GodModeAgent>(agents.Count);
+        foreach (var held in agents)
+        {
+            var agent = mission.FindAgentWithIndex(held.Index);
+            if (agent != null && agent.IsActive() && RuntimeHelpers.GetHashCode(agent) == held.Identity) found.Add(Read(agent));
+        }
+        return found;
+    }
+
+    // God mode uses the engine's Immortal state. v1.5.7 Agent.HandleBlow zeroes the damage of every blow on an Immortal agent
+    // ("if (CurrentMortalityState == MortalityState.Immortal ...) num = 0f;"), TAOM's own creature blows included, while the blow
+    // still lands, so knockdowns and falls play as usual. Invulnerable is read only by the engine's melee, missile, charge and
+    // fall callbacks, so a blow registered directly (spider, trample) would still hurt.
+    public void SetImmortal(int index, bool immortal)
+    {
+        var agent = Mission.Current?.FindAgentWithIndex(index);
+        if (agent == null || !agent.IsActive()) return;
+        agent.SetMortalityState(immortal ? Agent.MortalityState.Immortal : Agent.MortalityState.Mortal);
+    }
+
+    private static GodModeAgent Read(Agent agent) => new(agent.Index, agent.CurrentMortalityState switch
+    {
+        Agent.MortalityState.Invulnerable => AgentMortality.Invulnerable,
+        Agent.MortalityState.Immortal => AgentMortality.Immortal,
+        _ => AgentMortality.Mortal,
+    }, RuntimeHelpers.GetHashCode(agent));
 
     // An active agent with a team that is not a mount: a soldier, a hero or a creature.
     private static bool IsSoldier(Agent agent) => agent != null && agent.IsActive() && !agent.IsMount && agent.Team != null;
