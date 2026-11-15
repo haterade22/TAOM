@@ -291,4 +291,84 @@
                 scale_factor="100" />
         </Pieces>
     </CraftedItem>
+
+    <!-- PLACEHOLDER taom_ph_gundabad_spear_a02_t4: look of wm_gundabad_spear_a02, tier 4 ladder target -->
+    <CraftedItem
+        id="taom_ph_gundabad_spear_a02_t4"
+        name="{=taom_ph_gundabad_spear_a02_t4_name}[Gundabad] War Spear"
+        crafting_template="TwoHandedPolearm"
+        culture="Culture.gundabad"
+        is_merchandise="false"
+        modifier_group="polearm">
+        <Pieces>
+            <Piece
+                id="taom_ph_gundabad_spear_a02_t4_blade"
+                Type="Blade"
+                scale_factor="100" />
+            <Piece
+                id="wm_gundabad_spear_a02_handle"
+                Type="Handle"
+                scale_factor="100" />
+        </Pieces>
+    </CraftedItem>
+
+    <!-- PLACEHOLDER taom_ph_gundabad_spear_a03_t5: look of wm_gundabad_spear_a03, tier 5 ladder target -->
+    <CraftedItem
+        id="taom_ph_gundabad_spear_a03_t5"
+        name="{=taom_ph_gundabad_spear_a03_t5_name}[Gundabad] Blackshield Spear"
+        crafting_template="TwoHandedPolearm"
+        culture="Culture.gundabad"
+        is_merchandise="false"
+        modifier_group="polearm">
+        <Pieces>
+            <Piece
+                id="taom_ph_gundabad_spear_a03_t5_blade"
+                Type="Blade"
+                scale_factor="100" />
+            <Piece
+                id="wm_gundabad_spear_a03_handle"
+                Type="Handle"
+                scale_factor="100" />
+        </Pieces>
+    </CraftedItem>
+
+    <!-- PLACEHOLDER taom_ph_gundabad_spear_a03_t8: look of wm_gundabad_spear_a03, tier 8 ladder target -->
+    <CraftedItem
+        id="taom_ph_gundabad_spear_a03_t8"
+        name="{=taom_ph_gundabad_spear_a03_t8_name}[Gundabad] Blackshield Spear, Tempered"
+        crafting_template="TwoHandedPolearm"
+        culture="Culture.gundabad"
+        is_merchandise="false"
+        modifier_group="polearm">
+        <Pieces>
+            <Piece
+                id="taom_ph_gundabad_spear_a03_t8_blade"
+                Type="Blade"
+                scale_factor="100" />
+            <Piece
+                id="wm_gundabad_spear_a03_handle"
+                Type="Handle"
+                scale_factor="100" />
+        </Pieces>
+    </CraftedItem>
+
+    <!-- PLACEHOLDER taom_ph_lothlorien_spear_t6: look of he_spear, tier 6 ladder target -->
+    <CraftedItem
+        id="taom_ph_lothlorien_spear_t6"
+        name="{=taom_ph_lothlorien_spear_t6_name}[Lothlorien] Galadhrim Spear"
+        crafting_template="TwoHandedPolearm"
+        culture="Culture.rivendell"
+        is_merchandise="false"
+        modifier_group="polearm">
+        <Pieces>
+            <Piece
+                id="taom_ph_lothlorien_spear_t6_blade"
+                Type="Blade"
+                scale_factor="100" />
+            <Piece
+                id="wm_elven_spear_shaft"
+                Type="Handle"
+                scale_factor="100" />
+        </Pieces>
+    </CraftedItem>
 </Items>

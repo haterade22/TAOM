@@ -58,6 +58,7 @@ public class ClientWorldWriteGateTests
         Invoke(behavior, "OnGameLoaded", new object?[] { null });
 
         service.Received(calls).InjectBanners();
+        service.Received(calls).RemapRemovedIcons();
     }
 
     [TestMethod]

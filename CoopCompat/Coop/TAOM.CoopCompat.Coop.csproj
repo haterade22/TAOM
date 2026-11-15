@@ -17,10 +17,15 @@
 		<TaomCoopCompatEnabled>false</TaomCoopCompatEnabled>
 		<TaomCoopCompatEnabled Condition="Exists('$(CoopBinDir)\Common.dll')">true</TaomCoopCompatEnabled>
 		<EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+		<!-- Coop's campaign-free session API (BannerlordCoop #4694) ships Missions.Sessions.dll, used here only as a marker file (the
+		     API itself is in GameInterface.dll; Exists() cannot test for a type). Without the marker the session transport
+		     is built from its stub, so this project still builds against an older Coop (ADR-005: no #if). -->
+		<TaomCoopSessionExclude>Sessions\CoopSessionTransport.NoSessionApi.cs</TaomCoopSessionExclude>
+		<TaomCoopSessionExclude Condition="!Exists('$(CoopBinDir)\Missions.Sessions.dll')">Sessions\CoopSessionTransport.cs</TaomCoopSessionExclude>
 	</PropertyGroup>
 
 	<ItemGroup Condition="'$(TaomCoopCompatEnabled)' == 'true'">
-		<Compile Include="**\*.cs" Exclude="obj\**;bin\**" />
+		<Compile Include="**\*.cs" Exclude="obj\**;bin\**;$(TaomCoopSessionExclude)" />
 	</ItemGroup>
 
 	<ItemGroup>

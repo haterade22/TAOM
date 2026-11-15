@@ -6,7 +6,7 @@ using TaleWorlds.Localization;
 using TAOM.Adapters;
 using TAOM.Core.Logging;
 using TAOM.Features.ArmourAcquisition.Domain;
-using TAOM.Features.CoopInterop;
+using TAOM.Features.CoopInterop.GuestTrade;
 using TAOM.Features.SpecialResources;
 
 namespace TAOM.Features.ArmourAcquisition.Hooks;
@@ -16,8 +16,9 @@ namespace TAOM.Features.ArmourAcquisition.Hooks;
 /// confirmation as engine inquiries, with the lord's gear ladder's rows above the upgrades
 /// (<see cref="LadderPresenter"/>). Every decision is a service's (<see cref="ArmouryUpgradeService"/>,
 /// <see cref="LordsLadderService"/>, <see cref="ArmouryLevelService"/>).
-/// A co-op guest is turned away before anything is charged: the host's next roster resync would erase the
-/// upgraded piece (the EliteEmissary "pay-real-get-phantom" finding).
+/// A co-op guest with TAOM.CoopCompat asks the host, which runs the upgrade for the guest's hero (#1329); the
+/// gear ladder stays the host's own. Without the relay a guest is turned away before anything is charged: the
+/// host's next roster resync would erase the upgraded piece (the EliteEmissary "pay-real-get-phantom" finding).
 /// </summary>
 public sealed class ArmouryPresenter
 {
@@ -29,12 +30,12 @@ public sealed class ArmouryPresenter
     private readonly IArmouryPlayerAdapter _player;
     private readonly ISpecialResourceSpender _spender;
     private readonly IArmourAcquisitionConfigProvider _config;
-    private readonly ICoopSessionProvider _coop;
+    private readonly GuestTradeClient _guestTrade;
     private readonly IModLogger _logger;
 
     public ArmouryPresenter(IArmourGateService gate, ArmouryLevelService levels, ArmouryUpgradeService upgrades,
         LadderPresenter ladder, IArmouryTownAdapter towns, IArmouryPlayerAdapter player, ISpecialResourceSpender spender,
-        IArmourAcquisitionConfigProvider config, ICoopSessionProvider coop, IModLogger logger)
+        IArmourAcquisitionConfigProvider config, GuestTradeClient guestTrade, IModLogger logger)
     {
         _gate = gate;
         _levels = levels;
@@ -44,22 +45,32 @@ public sealed class ArmouryPresenter
         _player = player;
         _spender = spender;
         _config = config;
-        _coop = coop;
+        _guestTrade = guestTrade;
         _logger = logger;
     }
 
     public void Open(string townId)
     {
-        if (_coop.ShouldDeferToHost)
+        if (_guestTrade.IsGuest)
+        {
+            AskHost(new GuestTradeRequest(GuestTradeAction.ArmouryBalance, townId), reply => Show(townId, guest: true, reply.ArmouryLevel));
+            return;
+        }
+        if (_guestTrade.IsGuestWithoutLink)
         {
             Notify(new TextObject("{=taom_armoury_coop_guest}The armourer works only for the host of this campaign.").ToString(), Colors.Red);
             return;
         }
-        var level = _levels.GetTownLevel(townId);
+        Show(townId, guest: false);
+    }
+
+    private void Show(string townId, bool guest, int? hostLevel = null)
+    {
+        var level = hostLevel ?? _levels.GetTownLevel(townId);
         var resourceName = _spender.GetBalance(_player.HeroId, _player.KingdomId, _player.CultureId)?.DisplayName;
         var config = _config.GetConfig();
 
-        var elements = new List<InquiryElement>(_ladder.Rows(level));
+        var elements = guest ? new List<InquiryElement>() : new List<InquiryElement>(_ladder.Rows(level));
         foreach (var offer in _upgrades.BuildOffers(level))
         {
             var price = ArmouryTexts.Price(offer, Name, resourceName);
@@ -79,10 +90,10 @@ public sealed class ArmouryPresenter
                 .SetTextVariable("ELITE", config.EliteLevel).SetTextVariable("LORD", config.LordLevel).ToString(),
             elements, isExitShown: true, minSelectableOptionCount: 1, maxSelectableOptionCount: 1,
             new TextObject("{=taom_armoury_choose}Choose").ToString(), new TextObject("{=taom_armoury_leave}Leave").ToString(),
-            selected => OnChosen(selected, resourceName), _ => { }), pauseGameActiveState: true);
+            selected => OnChosen(selected, resourceName, townId, guest), _ => { }), pauseGameActiveState: true);
     }
 
-    private void OnChosen(List<InquiryElement> selected, string? resourceName)
+    private void OnChosen(List<InquiryElement> selected, string? resourceName, string townId, bool guest)
     {
         var picked = selected.FirstOrDefault()?.Identifier;
         if (_ladder.TryHandle(picked) || picked is not UpgradeOffer offer)
@@ -93,12 +104,25 @@ public sealed class ArmouryPresenter
             new TextObject("{=taom_armoury_confirm_body}The armourer will rework it into {TARGET} for {PRICE}.")
                 .SetTextVariable("TARGET", Name(offer.TargetItemId)).SetTextVariable("PRICE", price).ToString(),
             true, true, new TextObject("{=taom_armoury_confirm_yes}Have it done").ToString(), new TextObject("{=taom_armoury_cancel}Cancel").ToString(),
-            () => Execute(offer), null), pauseGameActiveState: true);
+            () => Execute(offer, townId, guest), null), pauseGameActiveState: true);
     }
 
-    private void Execute(UpgradeOffer offer)
+    private void Execute(UpgradeOffer offer, string townId, bool guest)
     {
-        var outcome = _upgrades.Execute(offer);
+        if (guest)
+        {
+            AskHost(new GuestTradeRequest(GuestTradeAction.ArmouryUpgrade, townId, offer.SourceItemId, offer.ModifierId, offer.TargetItemId),
+                reply => ShowOutcome(offer, (UpgradeBlock)reply.Status));
+            return;
+        }
+        ShowOutcome(offer, _upgrades.Execute(offer));
+    }
+
+    private void AskHost(GuestTradeRequest request, System.Action<GuestTradeReply> onHandled) =>
+        GuestTradeTexts.AskHost(_guestTrade, request, onHandled, text => Notify(text, Colors.Red));
+
+    private void ShowOutcome(UpgradeOffer offer, UpgradeBlock outcome)
+    {
         _logger.LogInfo($"[ArmourAcquisition] Upgrade {offer.SourceItemId} -> {offer.TargetItemId}: {(outcome == UpgradeBlock.None ? "done" : outcome.ToString())}.");
         Notify(ArmouryTexts.Outcome(outcome, Name(offer.SourceItemId), Name(offer.TargetItemId)),
             outcome == UpgradeBlock.None ? Colors.Green : Colors.Red);

@@ -11,6 +11,8 @@
 		<TaomCoopCompatEnabled>false</TaomCoopCompatEnabled>
 		<TaomCoopCompatEnabled Condition="Exists('$(CoopBinDir)\Common.dll')">true</TaomCoopCompatEnabled>
 		<EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+		<!-- Tests that name Coop's session API compile only when CoopBinDir has it (Missions.Sessions.dll, BannerlordCoop #4694). -->
+		<TaomCoopSessionTestsExclude Condition="!Exists('$(CoopBinDir)\Missions.Sessions.dll')">Sessions\CoopSessionApiTests.cs</TaomCoopSessionTestsExclude>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -26,7 +28,7 @@
 	</ItemGroup>
 
 	<ItemGroup Condition="'$(TaomCoopCompatEnabled)' == 'true'">
-		<Compile Include="**\*.cs" Exclude="obj\**;bin\**" />
+		<Compile Include="**\*.cs" Exclude="obj\**;bin\**;$(TaomCoopSessionTestsExclude)" />
 		<ProjectReference Include="..\CoopCompat\TAOM.CoopCompat.csproj" />
 		<ProjectReference Include="..\CoopCompat\Coop\TAOM.CoopCompat.Coop.csproj" />
 		<ProjectReference Include="..\Main\TAOM.csproj" />

@@ -20,7 +20,9 @@ Usage:
 
 import argparse
 import datetime
+import glob
 import json
+import statistics
 import os
 import sys
 import xml.etree.ElementTree as ET
@@ -28,7 +30,7 @@ from collections import defaultdict
 
 # --- Reuse the reference formula from the existing rebalance tool (do NOT re-derive) ----
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-import rebalance_troops as rb  # noqa: E402  GROUP_BASELINES / CULTURAL_MODS / calculate_skills / ...
+import rebalance_troops as rb  # noqa: E402  CULTURE_PCT / calculate_skills / ...
 import troop_purpose as tp  # noqa: E402  the kit decides which skills are highest (#343)
 
 SKILL_NAMES = rb.SKILL_NAMES
@@ -123,11 +125,12 @@ def parse_resource_costs():
     return gated
 
 
-def parse_troop_file(filepath, item_classes=None):
+def parse_troop_file(filepath, item_classes=None, mounts=None):
     """Parse one troops_*.xml. Returns (filename_culture, [troop_record, ...]).
 
-    item_classes: item id -> skill class map (taom_schema.build_item_class_registry)
-    for equipment-driven specialization; None degrades to name-only detection."""
+    item_classes: item id -> skill class map (taom_schema.build_item_class_registry), from which
+    the role table reads the kit; None leaves every troop without a formula. mounts: horse id ->
+    difficulty (taom_schema.build_mount_difficulty_registry)."""
     filename = os.path.basename(filepath)
     filename_culture = filename.replace('troops_', '').replace('.xml', '')
     root = ET.parse(filepath).getroot()
@@ -174,6 +177,7 @@ def parse_troop_file(filepath, item_classes=None):
         sets = [s for _, s in rb.troop_battle_sets(npc, item_classes)] if item_classes else []
         kit, _ = rb.troop_kit(npc, item_classes, fix_item0=True) if item_classes else (None, [])
         exempt = troop_id in rb.SKIP_TROOP_IDS or kit is None
+        mounted, mount_difficulty = rb.troop_mount(npc, mounts)
         findings = []
         if not exempt:
             launcher_troop = tp.is_launcher_troop(kit, group)
@@ -189,6 +193,8 @@ def parse_troop_file(filepath, item_classes=None):
             'item0_sets': 0 if exempt else sum(1 for s in sets if s and tp.item0_problem(s)),
             'kit_findings': findings,
             'weapon_classes': weapon_classes,
+            'mounted': mounted,
+            'mount_difficulty': mount_difficulty,
             'file': filename,
             'file_culture': filename_culture,
             'id': troop_id,
@@ -209,19 +215,39 @@ def parse_troop_file(filepath, item_classes=None):
 # Analysis
 # =============================================================================
 
-def analyze(troops, weights, threshold):
-    """Decorate each troop record with reference skills + deltas. Returns the same list."""
+def settled_reference(item_classes, mounts):
+    """troop id -> the values rebalance_troops.py --apply writes: the formula after the upgrade
+    clamp and the purpose raise over the whole roster. Measured against the bare formula, every
+    value the clamp lifted read as an outlier. Troops the formula skips are left out."""
+    files = sorted(glob.glob(os.path.join(rb.TROOPS_DIR, 'troops_*.xml')))
+    records = rb.load_roster(files, item_classes, mounts)
+    rb.settle_purpose(records)
+    return {c['id']: c['final'] for c in records if c.get('new') is not None and not c.get('external')}
+
+
+def analyze(troops, weights, threshold, settled=None):
+    """Decorate each troop record with reference skills + deltas. Returns the same list.
+
+    settled: settled_reference(), the values the writer would put on disk. Without it the
+    reference is the bare formula, before the clamp."""
     for t in troops:
         special = is_creature_troop(t['id'], t['name'])
         t['special'] = special
         t['mount_rider'] = (not special) and is_mount_rider(t['id'], t['name'])
 
         fc = formula_culture(t['culture'])
-        ref = rb.calculate_skills(fc, t['level'], t['group'], t['id'], t['name'],
-                                  t.get('weapon_classes'), t.get('kit'))
-        if ref is not None and t.get('weapon_classes') is not None:
-            # A ladder troop's Bow/Crossbow is its ranked cell (#617), as rebalance_troops writes it.
-            ref = dict(ref, **rb.ladder_cells(t['id'], t['file_culture'], t['level'], t['weapon_classes']))
+        # A ladder troop's Bow/Crossbow is its ranked cell (#617), as rebalance_troops writes it.
+        cells = (rb.ladder_cells(t['id'], t['file_culture'], t['level'], t['weapon_classes'])
+                 if t.get('weapon_classes') is not None else {})
+        if settled is not None:
+            ref = settled.get(t['id'])
+        else:
+            try:
+                ref = rb.calculate_skills(fc, t['level'], t['id'], t.get('kit'), ladder=cells,
+                                          mounted=t.get('mounted', False),
+                                          mount_difficulty=t.get('mount_difficulty', 0))
+            except rb.MissingCultureRow:
+                ref = None   # reported under data quality; rebalance_troops.py --apply stops on it
         t['ref'] = ref
         t['off_grid'] = ref is None
 
@@ -238,7 +264,7 @@ def analyze(troops, weights, threshold):
             t['total_ref'] = total_ref
             t['delta'] = total_actual - total_ref
             t['skill_deltas'] = {s: t['actual'].get(s, 0) - ref[s] for s in SKILL_NAMES}
-            # Special/creature + off-grid troops are not judged against the humanoid formula.
+            # Special/creature troops are not judged against the humanoid formula.
             t['outlier'] = (not special) and abs(t['delta']) > threshold
 
         t['weight'] = weights.get(t['id'])
@@ -253,10 +279,10 @@ def data_quality(all_troops, file_cultures):
     """Return the structured stale-tooling / data-quality findings."""
     used = used_cultures(all_troops)
 
-    # Cultures with troops on disk but no CULTURAL_MODS identity. Keyed on the RESOLVED culture
+    # Cultures with troops on disk but no CULTURE_PCT identity. Keyed on the RESOLVED culture
     # (what detect_culture actually returns), so rhun_new->rhun is correctly counted as 'rhun'
     # and not falsely flagged once the modifier exists.
-    no_identity = sorted(c for c in used if c not in rb.CULTURAL_MODS)
+    no_identity = sorted(c for c in used if c not in rb.CULTURE_PCT)
 
     # Key-mismatch cases: a file culture that only balances correctly via the remap.
     remap_findings = []
@@ -265,11 +291,11 @@ def data_quality(all_troops, file_cultures):
             remap_findings.append({
                 'file_culture': fc_key,
                 'intended_modifier': target,
-                'in_mods': target in rb.CULTURAL_MODS,
+                'in_mods': target in rb.CULTURE_PCT,
             })
 
-    # Dead CULTURAL_MODS entries: defined but never produced by detect_culture across all troops.
-    dead_mods = sorted(k for k in rb.CULTURAL_MODS if k not in used)
+    # Dead CULTURE_PCT entries: defined but never produced by detect_culture across all troops.
+    dead_mods = sorted(k for k in rb.CULTURE_PCT if k not in used)
 
     specials = sorted(
         [{'id': t['id'], 'name': t['name'], 'file': t['file'], 'level': t['level']}
@@ -396,6 +422,17 @@ def fmt_delta(d):
     return f'{d:+d}' if d != 0 else '0'
 
 
+def formula_medians(by_culture, cultures, group, levels):
+    """{level: the median role-table total of the group's troops at that level, or None}. The role
+    table is keyed by kit and culture, not by group, so the reference row is read off the troops."""
+    out = {}
+    for lv in levels:
+        refs = [t['total_ref'] for c in cultures for t in by_culture[c]
+                if t['group'] == group and t['level'] == lv and not t['special'] and t.get('total_ref')]
+        out[lv] = int(statistics.median(refs)) if refs else None
+    return out
+
+
 def render_parity_matrix(by_culture, cultures):
     """One table per group: rows = culture, cols = level, cell = avg total skill."""
     out = []
@@ -412,12 +449,10 @@ def render_parity_matrix(by_culture, cultures):
         out.append(header)
         out.append(sep)
 
-        # Formula reference row (baseline only, no cultural modifier).
-        ref_cells = []
-        for lv in levels:
-            b = rb.GROUP_BASELINES.get(group, {}).get(lv)
-            ref_cells.append(str(sum(b.values())) if b else '·')
-        out.append('| **FORMULA baseline** | ' + ' | '.join(ref_cells) + ' |')
+        # Formula reference row: the median formula total of the group's troops at that level.
+        base = formula_medians(by_culture, cultures, group, levels)
+        ref_cells = [str(base[lv]) if base[lv] else '·' for lv in levels]
+        out.append('| **FORMULA median** | ' + ' | '.join(ref_cells) + ' |')
 
         for c in cultures:
             row_troops = [t for t in by_culture[c] if t['group'] == group and not t['special']]
@@ -438,14 +473,13 @@ def render_culture_section(culture, troops, all_ids, dq):
     no_identity = culture in dq['cultures_without_identity']
     remap = next((r for r in dq['remap_findings'] if r['file_culture'] == culture), None)
     if no_identity:
-        out.append('> ⚠ **No cultural identity defined** — this culture has no `CULTURAL_MODS` entry, '
-                   'so troops are measured against the **baseline only** (no faction flavour). '
-                   'Deltas below reflect deviation from a generic baseline, not a tuned culture.\n')
+        out.append('> ⚠ **No cultural identity defined** — this culture has no `CULTURE_PCT` entry, '
+                   'so its troops have **no formula** and `rebalance_troops.py` stops on them.\n')
     if remap:
         out.append(f'> ⚠ **Modifier key mismatch** — file culture `{culture}` does not match the '
-                   f'`CULTURAL_MODS` key `{remap["intended_modifier"]}`; the intended modifier is '
-                   f'**silently not applied** by `rebalance_troops.py`. Deltas here use the intended '
-                   f'`{remap["intended_modifier"]}` modifier for honesty.\n')
+                   f'`CULTURE_PCT` key `{remap["intended_modifier"]}`, so `rebalance_troops.py --apply` '
+                   f'stops on these troops (`MissingCultureRow`). Deltas here use the intended '
+                   f'`{remap["intended_modifier"]}` modifier.\n')
 
     # Tier histogram (level x group counts)
     levels = sorted({t['level'] for t in troops})
@@ -580,7 +614,7 @@ def render_report(by_culture, all_troops, all_ids, dq, threshold):
     L.append(f'- **Troops analysed:** {total}')
     L.append(f'- **Skill outliers** (>|{threshold}| total skill off formula, excl. creatures/off-grid): '
              f'**{outliers}**')
-    L.append(f'- **Off-formula-grid troops** (level not on the baseline grid {BASELINE_LEVELS}): '
+    L.append(f'- **Troops with no formula** (no weapon in a battle set, or no culture row): '
              f'{len(off_grid)}'
              + ('' if not off_grid else ' — ' + ', '.join(f"`{t['id']}` (L{t['level']})" for t in off_grid)))
     L.append(f'- **Data-quality / tooling findings:** {dq_count} (see next section)')
@@ -590,21 +624,21 @@ def render_report(by_culture, all_troops, all_ids, dq, threshold):
     L.append('## Data-quality & tooling findings\n')
     L.append('These gate any future rebalance run — `rebalance_troops.py` would currently mis-handle them.\n')
     if dq['cultures_without_identity']:
-        L.append('**Cultures with NO `CULTURAL_MODS` entry** (get baseline-only skills, no faction identity):')
+        L.append('**Cultures with NO `CULTURE_PCT` entry** (no formula; `rebalance_troops.py` stops on them):')
         for c in dq['cultures_without_identity']:
-            L.append(f'- `{c}` — add a modifier block to `rebalance_troops.py` `CULTURAL_MODS` to give it flavour.')
+            L.append(f'- `{c}` — add a modifier block to `rebalance_troops.py` `CULTURE_PCT` to give it a formula.')
         L.append('')
     if dq['remap_findings']:
-        L.append('**Modifier key mismatches** (the intended modifier is silently never applied):')
+        L.append('**Modifier key mismatches** (no row under the file culture, so `--apply` stops):')
         for r in dq['remap_findings']:
             status = 'exists' if r['in_mods'] else 'MISSING'
             L.append(f"- file culture `{r['file_culture']}` → intended key `{r['intended_modifier']}` "
-                     f"({status} in `CULTURAL_MODS`). The tool derives `{r['file_culture']}` from the "
+                     f"({status} in `CULTURE_PCT`). The tool derives `{r['file_culture']}` from the "
                      f"filename, so no modifier matches. Fix: rename the file to "
                      f"`troops_{r['intended_modifier']}.xml` **or** add a `{r['file_culture']}` key.")
         L.append('')
     if dq['dead_modifiers']:
-        L.append('**Dead `CULTURAL_MODS` entries** (defined but no troops ever resolve to them):')
+        L.append('**Dead `CULTURE_PCT` entries** (defined but no troops ever resolve to them):')
         for k in dq['dead_modifiers']:
             L.append(f'- `{k}` — no `troops_{k}.xml` on disk and `detect_culture` never returns it. '
                      f'Remove or wire up.')
@@ -680,13 +714,12 @@ def render_report(by_culture, all_troops, all_ids, dq, threshold):
     L.append('\n## Recommendations (NOT applied — proposals only)\n')
     recs = []
     for c in dq['cultures_without_identity']:
-        recs.append(f'Add a `CULTURAL_MODS["{c}"]` block so `{c}` troops get a faction identity '
-                    f'instead of generic baseline skills.')
+        recs.append(f'Add a `CULTURE_PCT["{c}"]` row so `{c}` troops get a formula.')
     for r in dq['remap_findings']:
         recs.append(f'Resolve the `{r["file_culture"]}` → `{r["intended_modifier"]}` key mismatch '
                     f'(rename file or add key) so the Rhûn-style modifier actually applies.')
     for k in dq['dead_modifiers']:
-        recs.append(f'Remove or wire up the dead `CULTURAL_MODS["{k}"]` entry.')
+        recs.append(f'Remove or wire up the dead `CULTURE_PCT["{k}"]` entry.')
     total_elite_unweighted = sum(
         1 for t in all_troops if t['level'] >= 41 and t['weight'] is None and not t['special'])
     if total_elite_unweighted:
@@ -808,11 +841,11 @@ def html_parity(by_culture, cultures):
         out.append(f'<h4>{group} — avg total skill by culture × level</h4>')
         out.append('<table><tr><th class="l">Culture</th>'
                    + ''.join(f'<th>L{lv}</th>' for lv in levels) + '</tr>')
-        base = {lv: (sum(rb.GROUP_BASELINES.get(group, {}).get(lv, {}).values()) or None) for lv in levels}
+        base = formula_medians(by_culture, cultures, group, levels)
         ref_cells = ''.join(
             f'<td style="background:#11141a;color:#cdd6e5">{base[lv]}</td>' if base[lv] else '<td class="cell-empty">·</td>'
             for lv in levels)
-        out.append(f'<tr><td class="l"><b>FORMULA baseline</b></td>{ref_cells}</tr>')
+        out.append(f'<tr><td class="l"><b>FORMULA median</b></td>{ref_cells}</tr>')
         for c in cultures:
             row_troops = [t for t in by_culture[c] if t['group'] == group and not t['special']]
             if not row_troops:
@@ -917,7 +950,7 @@ def render_html(by_culture, all_troops, all_ids, dq, threshold):
 
     H.append('<div class="summary">')
     for n, lbl in [(len(cultures), 'cultures'), (total, 'troops'),
-                   (outliers, f'outliers (&gt;|{threshold}|)'), (len(off_grid), 'off-grid'),
+                   (outliers, f'outliers (&gt;|{threshold}|)'), (len(off_grid), 'no formula'),
                    (dq_count, 'data-quality issues'), (len(dq['special_troops']), 'creatures (exempt)')]:
         H.append(f'<div class="card"><div class="n">{n}</div><div class="lbl">{lbl}</div></div>')
     H.append('</div>')
@@ -929,14 +962,15 @@ def render_html(by_culture, all_troops, all_ids, dq, threshold):
     H.append('<h2>Data-quality &amp; tooling findings</h2>')
     H.append('<p class="sub">These gate any future rebalance run.</p>')
     if dq['cultures_without_identity']:
-        H.append('<div class="callout bad"><b>No <code>CULTURAL_MODS</code> entry</b> (baseline-only skills): '
+        H.append('<div class="callout bad"><b>No <code>CULTURE_PCT</code> entry</b> (no formula): '
                  + ', '.join(f'<code>{_esc(c)}</code>' for c in dq['cultures_without_identity']) + '</div>')
     for r in dq['remap_findings']:
         H.append(f'<div class="callout bad"><b>Modifier key mismatch:</b> file culture '
                  f'<code>{_esc(r["file_culture"])}</code> → intended key <code>{_esc(r["intended_modifier"])}</code> '
-                 f'is silently never applied (tool derives the key from the filename). Rename file or add the key.</div>')
+                 f'has no row under the file culture, so --apply stops (the tool derives the key from the filename). '
+                 f'Rename the file or add the key.</div>')
     if dq['dead_modifiers']:
-        H.append('<div class="callout"><b>Dead <code>CULTURAL_MODS</code> entries</b> (never resolved): '
+        H.append('<div class="callout"><b>Dead <code>CULTURE_PCT</code> entries</b> (never resolved): '
                  + ', '.join(f'<code>{_esc(k)}</code>' for k in dq['dead_modifiers']) + '</div>')
     if dq['special_troops']:
         H.append('<div class="callout">Non-humanoid creature troops (formula-exempt): '
@@ -947,7 +981,7 @@ def render_html(by_culture, all_troops, all_ids, dq, threshold):
         H.append(f'<div class="callout">{len(dq["mount_riders"])} mount riders (warg/elephant/spider) are '
                  f'humanoid and judged on the formula; {flagged} read as outliers (possible hand-tuning).</div>')
     if off_grid:
-        H.append('<div class="callout">Off-formula-grid troops (level not on the baseline grid): '
+        H.append('<div class="callout">Troops with no formula (no weapon in a battle set, or no culture row): '
                  + ', '.join(f'<code>{_esc(t["id"])}</code> (L{t["level"]})' for t in off_grid) + '</div>')
 
     # Monotonicity
@@ -1017,13 +1051,13 @@ def render_html(by_culture, all_troops, all_ids, dq, threshold):
     H.append('<h2>Recommendations (proposals — not applied)</h2><ol>')
     recs = []
     for c in dq['cultures_without_identity']:
-        recs.append(f'Add a <code>CULTURAL_MODS["{_esc(c)}"]</code> block so <code>{_esc(c)}</code> '
-                    'troops get a faction identity instead of generic baseline skills.')
+        recs.append(f'Add a <code>CULTURE_PCT["{_esc(c)}"]</code> row so <code>{_esc(c)}</code> '
+                    'troops get a formula.')
     for r in dq['remap_findings']:
         recs.append(f'Resolve the <code>{_esc(r["file_culture"])}</code> → '
                     f'<code>{_esc(r["intended_modifier"])}</code> key mismatch so the modifier applies.')
     for k in dq['dead_modifiers']:
-        recs.append(f'Remove or wire up the dead <code>CULTURAL_MODS["{_esc(k)}"]</code> entry.')
+        recs.append(f'Remove or wire up the dead <code>CULTURE_PCT["{_esc(k)}"]</code> entry.')
     total_elite_unweighted = sum(1 for t in all_troops
                                  if t['level'] >= 41 and t['weight'] is None and not t['special'])
     if total_elite_unweighted:
@@ -1071,31 +1105,33 @@ def main():
 
     weights = parse_weights()
 
-    # Equipment-driven specialization (mirrors rebalance_troops.py). READ-ONLY
-    # tool, so a missing game install degrades to name-only detection with a
-    # loud warning instead of failing (per environment-failures.md).
+    # The role table reads the kit and the horses from the install (as rebalance_troops.py does).
+    # READ-ONLY tool, so a missing install leaves every troop without a formula, with a loud
+    # warning instead of failing (per environment-failures.md).
     import taom_schema as ts
     game_modules = rb.DEFAULT_GAME_MODULES
-    item_classes = None
+    item_classes = mounts = None
     if os.path.isdir(game_modules):
         item_classes = ts.build_item_class_registry(rb.MODULEDATA_DIR, game_modules)
+        mounts = ts.build_mount_difficulty_registry(rb.MODULEDATA_DIR, game_modules)
     else:
         print(f'WARNING: Bannerlord Modules folder not found: {game_modules}\n'
-              f'         Weapon specialization falls back to NAME-ONLY detection — the\n'
-              f'         "ideal" curve may mis-judge crossbow / two-hander troops.',
+              f'         The role table needs each troop\'s weapons, so no troop has a formula.',
               file=sys.stderr)
 
     by_culture = defaultdict(list)
     all_troops = []
     file_cultures = []
     for fp in files:
-        fc, troops = parse_troop_file(fp, item_classes)
+        fc, troops = parse_troop_file(fp, item_classes, mounts)
         file_cultures.append(fc)
         for t in troops:
             by_culture[t['culture']].append(t)
             all_troops.append(t)
 
-    analyze(all_troops, weights, args.outlier_threshold)
+    # The reference is what the writer would put on disk, the clamp included.
+    analyze(all_troops, weights, args.outlier_threshold,
+            settled=settled_reference(item_classes, mounts) if item_classes else None)
     all_ids = {t['id'] for t in all_troops}
     dq = data_quality(all_troops, file_cultures)
     dq['monotonicity'] = check_monotonicity(all_troops)

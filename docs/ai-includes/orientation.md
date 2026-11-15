@@ -48,6 +48,7 @@ only when no sheet's files reach the work.
 | Other mods | Other mods and tools reach TAOM by name; a rename passes the build and breaks them: grep the list | [couplings](../reference/external-mod-couplings.md) |
 | Armory | `LOTRLOME_Armory`: a root `<action>` kills a server, a second `LOTRLOME_items/*/` merges into an id, loose `Assets/**` wins | [armory](../reference/armory-guide.md) |
 | Co-op gating | Loaded, authority, dedicated server, human party; server X.Instance not null; `GameNetwork.IsSessionActive` false in co-op | [co-op](../features/coop-interop.md) |
+| Coop ids | `Player.HeroId` is `"Hero_" + StringId`: resolve it through Coop, never pass it to `Find` | [RCA](../reviews/rca-coop-guest-trade-2026-11-15.md) |
 | Server stop | A hard-killed launcher leaves its engine on UDP 4200: end both, or the next boot exits 3 | [server](../features/coop-dedicated-server.md) |
 | Culture ids | `empire` is Dunland, `battania` Khand; troops may carry another culture: read both from the data | [ids](../modding/id-cheatsheet.md) |
 | Armory art drops | A mesh rename strands XML refs and hangs preload; repoint refs, never restore a tpac | [ref audit](../features/armory-ref-audit.md) |

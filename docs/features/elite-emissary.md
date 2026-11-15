@@ -106,14 +106,20 @@ co-op refusal was added 2026-08-03 from field testing.
   only fires for the menu-launched conversation, never a normal notable chat) is cleared in both
   `GreetConsequence` AND on `CampaignEvents.ConversationEnded`, so it can never leak into a later
   conversation even if a higher-priority vanilla `start` line wins the emissary conversation.
-- **A co-op guest cannot buy** (2026-08-03). Where `ICoopSessionProvider.ShouldDeferToHost` is true,
+- **A co-op guest buys through the host** (#1329, 2026-11-15). With `TAOM.CoopCompat` loaded,
+  `GuestTradeClient.IsGuest` is true on a guest: opening the list first asks the host for the guest
+  hero's balance, and a purchase goes to the host, which runs this same `Purchase` for the guest's hero
+  with that hero's party and purse adapters. The troops and the charge happen on the host, and Coop
+  syncs them. See [coop-compat.md](coop-compat.md). The paragraph below is the behaviour without
+  `TAOM.CoopCompat`.
+- **Without TAOM.CoopCompat, a co-op guest cannot buy** (2026-08-03). Where
+  `GuestTradeClient.IsGuestWithoutLink` is true (a guest, `ShouldDeferToHost`, with no relay attached),
   `ExecutePurchase` refuses **before any charge** and prints
   `{=taom_emissary_coop_guest}` — *"The emissary only deals with the host of this campaign."* Charging
   there would stick, because TAOM's own `SyncData` carries the resource balance, while the purchased
   troops land in a client-side roster that the next resync overwrites; field testing confirmed the
-  pay-real-get-phantom outcome. Granting them authoritatively instead needs a message TAOM cannot send
-  without a compile-time dependency on one specific co-op mod, so declining is the chosen behaviour,
-  not a placeholder. **The refusal is at the last step, not at the menu:** `MenuCondition` and
+  pay-real-get-phantom outcome. TAOM.dll cannot send the message that asks the host (it names no
+  Coop type), so without the relay module declining is the chosen behaviour. **The refusal is at the last step, not at the menu:** `MenuCondition` and
   `BuyCondition` are not co-op-gated, so a guest still sees "Speak with the faction emissary", has the
   conversation, browses the offers and picks a quantity, and is turned away only on confirm — unlike
   the disguise/war gate above, which hides the option outright.
@@ -229,9 +235,9 @@ level 41, above Ered Luin's level 36 King's Guard, and Ered Luin fields no rams.
 ## Dependencies
 
 - [SpecialResources](special-resources.md) — resolution, balance, storage, the price table.
-- `ICoopSessionProvider` (CoopInterop) — the authority check on purchase. Taken by both
-  `EliteEmissaryBehavior` and `EliteEmissaryInquiryPresenter` (the behavior only forwards it to the
-  presenter it constructs).
+- `GuestTradeClient` (CoopInterop, #1329): whether this peer buys locally, asks the host, or refuses.
+  Taken by both `EliteEmissaryBehavior` and `EliteEmissaryInquiryPresenter` (the behavior only forwards
+  it to the presenter it constructs). It reads `ICoopSessionProvider.ShouldDeferToHost`.
 - `IArmouryPlayerAdapter` (the buyer's kingdom, culture and purse) and `ISpecialResourceSettingsProvider`: the gold-only option (#1108).
 - MCM (`TaomSettings`), `IPathService`, `IModLogger`, `IOutcomeLog`.
 - No Harmony patch, no GameModel override, no SyncData.
@@ -270,6 +276,7 @@ an offer scan. The config is `Reuse.Singleton`, loaded once per process (edits n
 
 ## Changelog
 
+- 2026-11-15 (#1329): with `TAOM.CoopCompat`, a co-op guest buys through the host, which runs the purchase for the guest's hero. Credit: minimalcash63 (`TAOM.CoopEmissaryArmory`). `EliteEmissaryBehavior` and the presenter take `GuestTradeClient` in place of `ICoopSessionProvider`. Owed in game.
 - 2026-11-09 (#1108 follow-up): with the option on, the emissary sells no more than the party's free slots. Owed in game.
 - 2026-11-09 (#1108): with the MCM option Elite Troops Cost Gold Only on, the emissary sells for gold and serves only a buyer who holds the settlement owner's resource. Owed in game.
 - 2026-08-03 — Purchases are declined on a non-authoritative co-op peer before the resource is charged, with a new `{=taom_emissary_coop_guest}` message (not yet registered in `taom_emissary_strings.xml`, not yet translated). `EliteEmissaryBehavior` and `EliteEmissaryInquiryPresenter` both gained an `ICoopSessionProvider` parameter.

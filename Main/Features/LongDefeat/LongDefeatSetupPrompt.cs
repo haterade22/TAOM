@@ -38,8 +38,11 @@ internal sealed class LongDefeatSetupPrompt
         _best = records.Best;
     }
 
-    /// <summary>Asks which fortress, then which class when the fortress offers one, and starts the run. Cancelling either question starts nothing.</summary>
-    public void Begin()
+    /// <summary>
+    /// Asks which fortress, then which class when the fortress offers one, and starts the run. Cancelling either question starts nothing.
+    /// <paramref name="start"/> takes the finished setup in place of <see cref="Start"/>: a co-op host (#1280) hosts it instead.
+    /// </summary>
+    public void Begin(Func<LongDefeatSetup, bool>? start = null)
     {
         try
         {
@@ -50,7 +53,7 @@ internal sealed class LongDefeatSetupPrompt
             }
 
             _menu.Choose(PromptTitle, PromptDescription, _catalog.Fortresses.Select(Choice).ToList(),
-                AskClass);
+                fortressId => AskClass(fortressId, start ?? Start));
         }
         catch (Exception ex)
         {
@@ -80,19 +83,19 @@ internal sealed class LongDefeatSetupPrompt
         }
     }
 
-    private void AskClass(string fortressId)
+    private void AskClass(string fortressId, Func<LongDefeatSetup, bool> start)
     {
         try
         {
             var classes = _catalog.TryGetFortress(fortressId, out var fortress) ? _catalog.ClassesFor(fortress) : Array.Empty<RunClass>();
             if (classes.Count == 0)
             {
-                Start(new LongDefeatSetup(fortressId, "menu", RunOptions.Default));
+                start(new LongDefeatSetup(fortressId, "menu", RunOptions.Default));
                 return;
             }
 
             _menu.Choose(ClassTitle, ClassDescription, classes.Select(ClassChoice).ToList(),
-                classId => Start(new LongDefeatSetup(fortressId, "menu", RunOptions.Default with { ClassId = classId })));
+                classId => start(new LongDefeatSetup(fortressId, "menu", RunOptions.Default with { ClassId = classId })));
         }
         catch (Exception ex)
         {

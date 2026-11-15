@@ -18,7 +18,8 @@
     "99 cap and the strict tier rise allow; the Crossbow curve steps up at T7 and T8 so Gondor's",
     "crossbowmen out-hit its Ithilien and Blackroot rangers. test_a_crossbow_out_hits_and_out_aims_its_kingdoms_bows pins it.",
     "2026-11-14 (#1271): the damage rows were lowered to the numbers in docs/features/ranged-ladders.md so no cell one-shots a",
-    "same-tier helmeted head or a body within two tiers against the model armour (test_ranged_cells_respect_the_one_shot_guideline)."
+    "same-tier helmeted head or a body within two tiers against the model armour (test_ranged_cells_respect_the_one_shot_guideline).",
+    "#343: skill.anchor is the troop skill curve (rebalance_troops.TIER_CURVE) and skill.step is 0.04 of it, rounded."
   ],
   "bands": {
     "E": [0, 2],
@@ -45,8 +46,8 @@
       "rank_step": 3
     },
     "skill": {
-      "anchor": {"1": 30, "2": 55, "3": 85, "4": 130, "5": 170, "6": 205, "7": 245, "8": 280, "9": 300, "10": 320},
-      "step": {"1": 10, "2": 10, "3": 10, "4": 10, "5": 10, "6": 10, "7": 15, "8": 15, "9": 15, "10": 15},
+      "anchor": {"1": 20, "2": 40, "3": 70, "4": 100, "5": 130, "6": 156, "7": 182, "8": 208, "9": 234, "10": 260},
+      "step": {"1": 1, "2": 2, "3": 3, "4": 4, "5": 5, "6": 6, "7": 7, "8": 8, "9": 9, "10": 10},
       "min": 10
     }
   },

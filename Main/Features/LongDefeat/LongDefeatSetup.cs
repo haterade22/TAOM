@@ -6,5 +6,6 @@ namespace TAOM.Features.LongDefeat;
 /// What starts one Long Defeat run: the fortress row's id, who asked for it ("menu", "console" or "autorun", for the log) and the
 /// run's options. The launcher refuses an id the config does not hold. <paramref name="RecordsFolder"/> is null for a player's run
 /// (their own folder) and the autorun's out folder for an unattended one, so a test run never touches the player's best.
+/// <paramref name="SessionId"/> is the BannerlordCoop session the run is played in (#1280), or null for a solo run.
 /// </summary>
-internal sealed record LongDefeatSetup(string FortressId, string Trigger, RunOptions Options, string? RecordsFolder = null);
+internal sealed record LongDefeatSetup(string FortressId, string Trigger, RunOptions Options, string? RecordsFolder = null, string? SessionId = null);

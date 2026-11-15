@@ -40,7 +40,10 @@ internal sealed class LongDefeatSession
     public BestRun? Best { get; private set; }
 
     /// <summary>The mission speed the player chose: 1, 2, 4 or 10. Held here, not in the run, so a wave or an intermission never changes it; 1 once the run has a <see cref="Result"/>, because a fight with no rules must not run fast behind the end panel; the next <c>Fill</c> resets it to 1.</summary>
-    public int Speed => Result != null ? 1 : _speed.Current;
+    public int Speed => Result != null || SpeedLocked ? 1 : _speed.Current;
+
+    /// <summary>A co-op run (#1280) plays at 1: every member's mission must run at the same time scale. The next <c>Fill</c> clears it.</summary>
+    internal bool SpeedLocked { get; set; }
 
     /// <summary>The highest speed set since the last <c>Fill</c>, for the run report. Outlives <see cref="Clear"/>.</summary>
     public int MaxSpeed { get; private set; } = 1;
@@ -84,6 +87,9 @@ internal sealed class LongDefeatSession
 
     internal void CycleSpeed()
     {
+        if (SpeedLocked)
+            return;
+
         _speed.Cycle();
         MaxSpeed = Math.Max(MaxSpeed, _speed.Current);
     }
@@ -91,6 +97,9 @@ internal sealed class LongDefeatSession
     /// <summary>Sets a speed; a value that is no level changes nothing.</summary>
     internal void SetSpeed(int speed)
     {
+        if (SpeedLocked)
+            return;
+
         _speed.Set(speed);
         MaxSpeed = Math.Max(MaxSpeed, _speed.Current);
     }
@@ -115,6 +124,7 @@ internal sealed class LongDefeatSession
         Best = null;
         _speed.Set(1);
         MaxSpeed = 1;
+        SpeedLocked = false;
         _run = run;
         _result = null;
         _boons = Array.Empty<BoonCard>();

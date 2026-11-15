@@ -501,6 +501,34 @@ class WriterTests(unittest.TestCase):
         # the tier-only map of --tier-source roster: no wearers are known, a lord tier counts as elite
         self.assertEqual(ra._roster_first_plan({"x": "lord"}, "x", "x", "gondor"), ("elite", "full"))
 
+    def test_hero_only_lord_kit_is_priced_at_the_lord_band_and_hero_named_kit_stays_clamped(self):
+        """Lord kit 2026-11-15: a lord line piece only heroes wear is restated AT the lord band (it can
+        rise), so a lettered lord chest a lord template takes is not left at a stale light value."""
+        hero_only = {"anchorLevel": None, "tier": "lord", "tierSource": "id-keyword", "heroWorn": True,
+                     "lordWorn": True}
+        for iid in ("sk_gd_x_chest_lord_b", "sk_gd_x_noble_chest_a", "roh_nbl_arm_b", "x_chainmail_captain_a1"):
+            self.assertEqual(ra._roster_first_plan({iid: hero_only}, iid, "Chest", "gondor"), ("lord", "full"), iid)
+        # a lord-line piece only a companion or wanderer wears is not lord kit: companions stay light
+        companion_only = dict(hero_only, lordWorn=False)
+        self.assertEqual(ra._roster_first_plan({"roh_nbl_shldr_s": companion_only}, "roh_nbl_shldr_s", "Shoulder",
+                                               "gondor"), ("lord", "clamp"))
+        # a hero-named piece keeps the lower-only clamp, and so does hero kit with no lord marker
+        self.assertEqual(ra._roster_first_plan({"sk_gd_x_chest_lord_c": hero_only}, "sk_gd_x_chest_lord_c",
+                                               "Boromir's Lord Chest", "gondor"), ("lord", "clamp"))
+        self.assertEqual(ra._roster_first_plan({"sk_gd_x_mail": hero_only}, "sk_gd_x_mail", "Mail", "gondor"),
+                         ("lord", "clamp"))
+        # unworn lord kit still prices as elite merchandise
+        unworn = {"anchorLevel": None, "tier": "lord", "tierSource": "id-keyword"}
+        self.assertEqual(ra._roster_first_plan({"sk_gd_x_chest_lord_b": unworn}, "sk_gd_x_chest_lord_b", "C", "gondor"),
+                         ("elite", "full"))
+
+    def test_the_lord_kit_marker_reads_whole_tokens(self):
+        for iid in ("x_chest_lord_a", "rivendell_torso_lord3_silver", "roh_nbl_arm_1", "sk_gd_lam_nob_helmet_a",
+                    "gondor_noble_coat_a", "cts_rohan_armor_captain", "x_king_helm"):
+            self.assertTrue(ra.is_lord_kit(iid), iid)
+        for iid in ("x_lordly_robe", "x_chest_elite_a", "cts_rohan_royal_guard_armor", "x_kingsfoil", "nobody_cap"):
+            self.assertFalse(ra.is_lord_kit(iid), iid)
+
     def test_hero_only_kit_is_clamped_to_the_lord_band_and_never_raised(self):
         by_id = {c["id"]: c for c in self._run("gondor", "body_armors.xml", "body")}
         c = by_id["boromir_jerkin"]
@@ -960,6 +988,42 @@ class HeroWearerTests(unittest.TestCase):
         self.assertEqual((recs["h_helm"]["anchorLevel"], recs["h_helm"]["tierSource"]), (None, "unworn"))
         self.assertFalse(recs["t_only"]["heroWorn"])
 
+    def test_lord_wearers_are_occupation_lord_heroes_and_never_companions_or_wanderers(self):
+        """Companions stay light (2026-11-15): only a lord's kit may be priced at the lord band."""
+        (self.root / "characters" / "lords.xml").write_text(
+            "<NPCCharacters>"
+            '<NPCCharacter id="lord_l" is_hero="true" occupation="Lord"><Equipments>'
+            '<EquipmentSet id="hero_bat_template" /></Equipments></NPCCharacter>'
+            '<NPCCharacter id="hero_x" is_hero="true"><Equipments><EquipmentRoster>'
+            '<equipment slot="Cape" id="Item.x_cape" /></EquipmentRoster></Equipments></NPCCharacter>'
+            "</NPCCharacters>", encoding="utf-8")
+        (self.root / "named_companions" / "named_companions.xml").write_text(
+            "<NPCCharacters>"
+            '<NPCCharacter id="comp_l" is_hero="true" occupation="Lord"><Equipments><EquipmentRoster>'
+            '<equipment slot="Cape" id="Item.c_cape" /></EquipmentRoster></Equipments></NPCCharacter>'
+            "</NPCCharacters>", encoding="utf-8")
+        Path(dat.WANDERERS_XML).write_text(
+            "<NPCCharacters>"
+            '<NPCCharacter id="spc_w_0" is_template="true" is_hero="false" occupation="Wanderer"><Equipments>'
+            '<EquipmentRoster><equipment slot="Head" id="Item.w_helm" /></EquipmentRoster></Equipments></NPCCharacter>'
+            "</NPCCharacters>", encoding="utf-8")
+        lords = dat.parse_lord_wearers()
+        self.assertEqual(lords["h_helm"], ["lord_l"])
+        self.assertTrue({"x_cape", "c_cape", "w_helm"}.isdisjoint(lords))
+        heroes = dat.parse_hero_wearers()
+        self.assertTrue({"x_cape", "c_cape", "w_helm"} <= set(heroes))   # heroWorn keeps its meaning
+        old_index = dat.build_armory_index
+        try:
+            dat.build_armory_index = lambda: ({
+                iid: {"folder": "gondor", "slot": slot, "primary": 20, "weight": 1.0, "name": "x"}
+                for iid, slot in (("h_helm", "head"), ("c_cape", "cape"))}, "fixture")
+            recs, _ = dat.derive()
+        finally:
+            dat.build_armory_index = old_index
+        self.assertTrue(recs["h_helm"]["lordWorn"])
+        self.assertTrue(recs["c_cape"]["heroWorn"])
+        self.assertFalse(recs["c_cape"]["lordWorn"])
+
     def test_wanderer_templates_are_heroes_but_other_templates_are_not(self):
         """CompanionsCampaignBehavior spawns a hero from every template with occupation Wanderer, though the
         file says is_hero="false"; the hero takes a battle set from the template's roster."""
@@ -1005,6 +1069,11 @@ class ShippedHeroWearerTests(unittest.TestCase):
             self.assertIn(iid, worn, iid)
         # the Arnor king's lord_AN1_1 carries the crown as a direct <equipment> override in lords.xml
         self.assertIn("sk_ar_art_crown_king_a", worn)
+
+    def test_a_named_companions_lord_line_cape_is_not_lord_kit(self):
+        """roh_nbl_shldr_s is worn only by the named companion Eohart, so the restat must not raise it."""
+        self.assertIn("roh_nbl_shldr_s", dat.parse_hero_wearers())
+        self.assertNotIn("roh_nbl_shldr_s", dat.parse_lord_wearers())
 
     def test_a_wanderer_template_helmet_is_hero_kit(self):
         """spc_wanderer_dolguldur_0 draws npc_companion_equipment_template_dolguldur, so the Uruk elite

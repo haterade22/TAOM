@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using TAOM.Features.Execution;
 
 namespace TAOM.Adapters;
 
@@ -11,14 +12,18 @@ public interface IStoryCampaignAdapter
     /// <summary>True when the main party is in a map event: the offer opens a menu, and only the battle menu may close that event.</summary>
     bool IsMainPartyInMapEvent { get; }
 
-    /// <summary>The string id of the player's map faction (<c>Hero.MainHero.MapFaction</c>): a kingdom, or the player's clan outside one.</summary>
-    string? PlayerKingdomId { get; }
+    /// <summary>
+    /// The player's clan map faction (his kingdom, or his clan outside one) with that faction's culture (<c>FactionSides.OfPlayer</c>):
+    /// its id is matched against a story window's kingdoms, and the alignment table resolves the pair to his side of the war (#1326).
+    /// <see cref="SideIds.None"/> with no campaign.
+    /// </summary>
+    SideIds PlayerSide { get; }
 
     /// <summary>The campaign's <c>UniqueGameId</c>, empty with no campaign: it keys the check lines per campaign.</summary>
     string CampaignId { get; }
 
     /// <summary>
-    /// A lost story mission: gives the settlement to the ruler of the first listed kingdom that exists and has a ruler, by
+    /// Fallen walls (a lost defence, or a won attack): gives the settlement to the ruler of the first listed kingdom that exists and has a ruler, by
     /// <c>ChangeOwnerOfSettlementAction.ApplyByDefault</c>. The old owner's garrison is emptied and <c>LastCapturedBy</c> set to the
     /// taker. False with <paramref name="result"/> as the reason when nothing changed; true with the taker's kingdom id.
     /// </summary>

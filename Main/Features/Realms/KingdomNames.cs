@@ -21,12 +21,23 @@ internal sealed class KingdomNames
     /// <summary>The title each kingdom was named after this session; not saved.</summary>
     private readonly Dictionary<string, string> _applied = new(StringComparer.Ordinal);
 
+    /// <summary>The name Realms gave each kingdom this session; not saved.</summary>
+    private readonly Dictionary<string, string> _appliedNames = new(StringComparer.Ordinal);
+
+    /// <summary>
+    /// True while the kingdom still has the name Realms set (or no name was set this session). False means the player
+    /// renamed it in the kingdom screen, and that name stays when the title is lost (#1297).
+    /// </summary>
+    internal static bool StillNamedByRealms(string? currentName, string? appliedName) =>
+        appliedName == null || string.Equals(currentName, appliedName, StringComparison.Ordinal);
+
     public string Save() => KingdomNameRecords.Write(_originals);
 
     public void Load(string? text)
     {
         _originals = KingdomNameRecords.Read(text);
         _applied.Clear();
+        _appliedNames.Clear();
     }
 
     /// <summary>
@@ -50,9 +61,16 @@ internal sealed class KingdomNames
             if (title == null)
             {
                 var own = _originals[id];
-                kingdom.ChangeKingdomName(new TextObject(own.Name), new TextObject(own.InformalName), new TextObject(own.FormalName));
+                _appliedNames.TryGetValue(id, out var appliedName);
                 _originals.Remove(id);
                 _applied.Remove(id);
+                _appliedNames.Remove(id);
+                if (!StillNamedByRealms(kingdom.Name?.Value, appliedName))
+                {
+                    Debug.Print($"[TAOM.Realms] {id} lost its naming title but keeps the name the player gave it.");
+                    continue;
+                }
+                kingdom.ChangeKingdomName(new TextObject(own.Name), new TextObject(own.InformalName), new TextObject(own.FormalName));
                 Debug.Print($"[TAOM.Realms] {id} takes its own name back.");
                 renamed?.Invoke(id);
                 continue;
@@ -65,6 +83,7 @@ internal sealed class KingdomNames
             kingdom.ChangeKingdomName(new TextObject(name), new TextObject(name),
                 new TextObject(TitleNames.Of(title, config, service.Catalog)));
             _applied[id] = title.Id;
+            _appliedNames[id] = name;
             Debug.Print($"[TAOM.Realms] {id} is named after {title.Id}.");
             renamed?.Invoke(id);
         }

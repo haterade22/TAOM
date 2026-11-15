@@ -1,21 +1,20 @@
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.GameMenus;
-using TaleWorlds.CampaignSystem.Settlements;
 using TaleWorlds.Core;
 using TaleWorlds.Library;
 using TaleWorlds.Localization;
 using TAOM.Adapters;
 using TAOM.Features.StoryMissions.Domain;
-using TAOM.Features.WarChronicle.Events;
 
 namespace TAOM.Features.StoryMissions.Hooks;
 
 /// <summary>
 /// The story offer's entry point (#1105 slice 4): on a free map it shows a two-button popup for the first open story window, then the menu
-/// <c>taom_story_offer</c>, whose "Defend" option opens the mission (a <c>LeaveType.Mission</c> option, as the dev menu's). The engine returns
-/// to this menu after the mission and runs its init again (<c>MapState.OnActivate</c>, <c>MenuContext.Refresh</c>); that init applies the
-/// verdict through <see cref="StoryOfferService"/> once, before the player can save, and "Continue" only leaves. Built new for every
-/// campaign, so its pending offer and verdict start clean, and its constructor resets the service's session state.
+/// <c>taom_story_offer</c>, whose "Defend" and "Storm" options open the mission for that side (<c>LeaveType.Mission</c> options, as the
+/// dev menu's); each shows only when the player may take that side (#1326). The engine returns to this menu after the mission and runs
+/// its init again (<c>MapState.OnActivate</c>, <c>MenuContext.Refresh</c>); that init applies the verdict through
+/// <see cref="StoryOfferService"/> once, before the player can save, and "Continue" only leaves. Built new for every campaign, so its
+/// pending offer and verdict start clean, and its constructor resets the service's session state.
 /// </summary>
 public sealed class StoryOfferBehavior : CampaignBehaviorBase
 {
@@ -26,7 +25,8 @@ public sealed class StoryOfferBehavior : CampaignBehaviorBase
     private readonly StoryOfferService _service;
     private readonly StoryMissionLauncher _launcher;
     private readonly IGameMenuAdapter _menus;
-    private ChronicleStoryOffer? _offer;
+    private StoryOffer? _offer;
+    private StorySide _side;
     private StoryOutcome? _verdict;
     private StoryResult? _result;
     private int _ticks;
@@ -72,30 +72,27 @@ public sealed class StoryOfferBehavior : CampaignBehaviorBase
 
         _offer = offer;
         _service.NoteShown(offer);
-        InformationManager.ShowInquiry(new InquiryData(
-            Text(offer.Title, offer).ToString(),
-            Text("{=taom_story_offer_body}The hour of {TARGET} has come. Will you ride to its walls and fight the battle yourself, or let fate decide?", offer).ToString(),
-            true, true,
-            Text("{=taom_story_offer_ride}Ride to {TARGET}", offer).ToString(),
-            new TextObject("{=taom_story_offer_later}Not now").ToString(),
-            () => { if (MapPopupGate.IsMapFreeUnderPopup()) _menus.EnsureMenuOpen(MenuId); }, // the rest of this tick can open an encounter
-            Later), true, false);
+        // The rest of this tick can open an encounter, so the accept button rechecks the map.
+        StoryOfferPopup.Show(offer, () => { if (MapPopupGate.IsMapFreeUnderPopup()) _menus.EnsureMenuOpen(MenuId); }, Later);
     }
 
     private void AddMenu(CampaignGameStarter starter)
     {
         starter.AddGameMenu(MenuId, "{=!}{" + BodyVariable + "}", OnInit, GameMenu.MenuOverlayType.None);
-        starter.AddGameMenuOption(MenuId, "taom_story_offer_defend", "{=taom_story_offer_defend}Defend the walls", DefendCondition, Defend, isLeave: false, index: 0);
-        starter.AddGameMenuOption(MenuId, "taom_story_offer_decline", "{=taom_story_offer_fate}Let fate decide", OfferCondition, _ => { Decline(); _menus.ExitToLast(); }, isLeave: false, index: 1);
-        starter.AddGameMenuOption(MenuId, "taom_story_offer_continue", "{=taom_story_offer_continue}Continue", ContinueCondition, Continue, isLeave: true, index: 2);
+        starter.AddGameMenuOption(MenuId, "taom_story_offer_defend", "{=taom_story_offer_defend}Defend the walls",
+            a => SideCondition(a, StorySide.Defending), _ => Launch(StorySide.Defending), isLeave: false, index: 0);
+        starter.AddGameMenuOption(MenuId, "taom_story_offer_attack", "{=taom_story_offer_attack}Storm the walls",
+            a => SideCondition(a, StorySide.Attacking), _ => Launch(StorySide.Attacking), isLeave: false, index: 1);
+        starter.AddGameMenuOption(MenuId, "taom_story_offer_decline", "{=taom_story_offer_fate}Let fate decide", OfferCondition, _ => { Decline(); _menus.ExitToLast(); }, isLeave: false, index: 2);
+        starter.AddGameMenuOption(MenuId, "taom_story_offer_continue", "{=taom_story_offer_continue}Continue", ContinueCondition, Continue, isLeave: true, index: 3);
     }
 
     private void OnInit(MenuCallbackArgs args)
     {
         // A behavior saves nothing, so a verdict still pending at a save would be lost: apply it on the first init after the mission.
         if (_offer != null && _verdict is { } verdict && _result == null)
-            _result = _service.Apply(_offer, verdict);
-        MBTextManager.SetTextVariable(BodyVariable, Text(StoryOfferService.MenuText(_offer != null, _result), _offer), false);
+            _result = _service.Apply(_offer.Window, _side, verdict);
+        MBTextManager.SetTextVariable(BodyVariable, StoryOfferPopup.Line(StoryOfferText.Menu(_offer?.Choices, _side, _result), _offer?.Window), false);
     }
 
     private bool OfferCondition(MenuCallbackArgs args)
@@ -104,9 +101,10 @@ public sealed class StoryOfferBehavior : CampaignBehaviorBase
         return _offer != null && _verdict == null;
     }
 
-    private bool DefendCondition(MenuCallbackArgs args)
+    // A side shows only while the offer is open and the player may take it (StorySideGate).
+    private bool SideCondition(MenuCallbackArgs args, StorySide side)
     {
-        var shown = OfferCondition(args);
+        var shown = OfferCondition(args) && (side == StorySide.Attacking ? _offer!.Choices.Attack : _offer!.Choices.Defend);
         args.optionLeaveType = GameMenuOption.LeaveType.Mission;
         return shown;
     }
@@ -117,9 +115,14 @@ public sealed class StoryOfferBehavior : CampaignBehaviorBase
         return _offer == null || _verdict != null;
     }
 
-    private void Defend(MenuCallbackArgs args)
+    private void Launch(StorySide side)
     {
-        if (_offer != null && !_launcher.Launch(_offer.MissionId, false, verdict => _verdict = verdict))
+        if (_offer == null)
+            return;
+
+        _side = side;
+        var missionId = side == StorySide.Attacking ? _offer.Window.AttackMissionId : _offer.Window.MissionId;
+        if (missionId == null || !_launcher.Launch(missionId, false, verdict => _verdict = verdict))
         {
             InformationManager.DisplayMessage(new InformationMessage(new TextObject("{=taom_story_offer_failed}The story battle could not open. The taom log says why.").ToString(), Colors.Red));
             _service.Snooze(_offer.EventId);
@@ -137,6 +140,7 @@ public sealed class StoryOfferBehavior : CampaignBehaviorBase
     private void Clear()
     {
         _offer = null;
+        _side = StorySide.Defending;
         _verdict = null;
         _result = null;
     }
@@ -152,15 +156,7 @@ public sealed class StoryOfferBehavior : CampaignBehaviorBase
     private void Decline()
     {
         if (_offer != null)
-            _service.Decline(_offer);
+            _service.Decline(_offer.Window);
         Clear();
-    }
-
-    private static TextObject Text(string text, ChronicleStoryOffer? offer)
-    {
-        var result = new TextObject(text);
-        var target = offer?.TargetSettlementId == null ? null : Settlement.Find(offer.TargetSettlementId);
-        result.SetTextVariable("TARGET", target?.Name ?? TextObject.GetEmpty());
-        return result;
     }
 }

@@ -15,6 +15,10 @@ public static class BugReportFiles
     // folder and the manifest says so; the rest of the report stays small enough to send.
     public const long MaxCrashFileBytes = 64L * 1024 * 1024;
 
+    // The whole crash folder's share of the zip. The zip is written on the main thread, so its size is a pause the
+    // player sees (#1297); the smallest files go in first, so the text files always fit.
+    public const long MaxCrashFolderBytes = 128L * 1024 * 1024;
+
     private const string TaomLogPrefix = "taom_debug_";
     private const string TaomLogStampFormat = "yyyy-MM-dd_HH-mm-ss";
 
