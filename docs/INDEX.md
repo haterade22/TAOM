@@ -191,6 +191,8 @@ Codex, Claude, Kimi and other models use the same policy and evidence records.
 - [lord-spawn-guard](features/lord-spawn-guard.md) — Patch65 + the Variag settlement retag: a landless culture CTDs the daily clan tick; Patch147: a merchant with no fitting caravan template sends no caravan instead of crashing
 - [map-event-guard](features/map-event-guard.md): Patch82, restoring the `BattleObserver`/`TroopUpgradeTracker` pairing that four unguarded engine dereferences rely on; and the hourly sweep that ends AI battles stuck at N vs 0 (#748)
 - [bard-town-guard](features/bard-town-guard.md): Patch110 (#824), a call-site swap that stops the tavern musician's conversation condition from throwing in a town whose culture owns no other town
+- [creature-saddles](features/creature-saddles.md): Patch154, the warg, dire wolf and spider rigs and their saddles get their own harness family, so the inventory refuses horse saddles on them; old saves lose such a pair at load
+- [mount-reins-guard](features/mount-reins-guard.md): Patch153, a call-site swap that builds a harness's cloth reins only on a mount whose Monster has a rein skeleton (the warg, fell warg, dire wolf and spider have none)
 - [lord-banners](features/lord-banners.md): lords of TAOM cultures receive banner items (#823) and a joining vassal a level 2 banner (#933), through two campaign models
 - [tavern-specialities](features/tavern-specialities.md): Patch111 (#937), a prefix that pre-sets default dishes for the tavern maid, which vanilla's seven culture branches overwrite
 - [crown-guard](features/crown-guard.md): Patch112 (#825), a postfix that gives the become-king scene's two guards a troop picked for the new kingdom's culture

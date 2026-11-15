@@ -341,6 +341,13 @@ mounted, and watch the deaths. The spider's 1.4.6 river battle covered rider dea
 deaths with no rein defect reported ([spider.md](../features/spider.md) "The v1.4.6 engine-bump
 campaign") — but that predates this native change.
 
+**The cloth reins (2026-11-15).** A separate path reads `rein_skeleton` at spawn, not at death:
+`MountVisualCreator.AddMountMesh` builds cloth reins for any harness with a `reins_mesh` at character detail above 2,
+and all 45 installed harnesses with reins are family 1, so they fit the spider, warg, fell warg and dire wolf. A
+player's hero on a dire wolf crashed at every mounted battle spawn (player case 2026-11-15). Patch153
+([mount-reins-guard.md](../features/mount-reins-guard.md)) makes that call only when the Monster has a rein skeleton.
+A new `Mountable` Monster without one is covered by it; one that gains a rein skeleton gets vanilla's cloth reins.
+
 **Nothing gates it.** `tools/audit_mount_parity.py` contains zero occurrences of "rein"
 (case-insensitive) and has no `sys.exit` at all — it always exits 0. Its Section A *does* print the
 elephant's five missing rein attributes, but as five unlabelled rows among 57 attribute-presence

@@ -56,6 +56,8 @@ internal static class FeatureModules
         new Features.KeepWardens.KeepWardensModule(),
         new Features.FromTheAshes.FromTheAshesModule(),
         new Features.BardTownGuard.BardTownGuardModule(),
+        new Features.MountReins.MountReinsModule(),
+        new Features.CreatureSaddles.CreatureSaddlesModule(),
         new Features.FellFoes.FellFoesModule(),
         new Features.TokensOfEsteem.TokensOfEsteemModule(),
         new Features.TavernSpecialities.TavernSpecialitiesModule(),
