@@ -2019,7 +2019,7 @@ Applied from `SubModule.cs` in the standard `OnGameInitializationFinished` batch
 
 ## Patch132_ItemIconRacePosition
 
-**Target:** `ItemThumbnailCache.GetItemPoseAndCamera(ItemObject, Scene, ref Camera, ref MatrixFrame itemFrame, ref MatrixFrame, ref MatrixFrame)` (private, Postfix), v1.5.5. Code: `Main/Features/HeroRace/Hooks/ItemThumbnailCache_GetItemPoseAndCamera_RacePatch.cs`, matching rules in `Main/Features/HeroRace/ItemIconRaceMatcher.cs`. Category applied in the GameInit preview loop in `SubModule.cs` next to Patch72. `[ClientOnly]`.
+**Target:** `ItemThumbnailCache.GetItemPoseAndCamera(ItemObject, Scene, ref Camera, ref MatrixFrame itemFrame, ref MatrixFrame, ref MatrixFrame)` (private, Postfix), v1.5.7 (`ItemThumbnailCache.cs:115`, signature unchanged). Code: `Main/Features/HeroRace/Hooks/ItemThumbnailCache_GetItemPoseAndCamera_RacePatch.cs`, matching rules in `Main/Features/HeroRace/ItemIconRaceMatcher.cs`. Category applied in the GameInit preview loop in `SubModule.cs` next to Patch72. `[ClientOnly]`.
 
 **Why:** vanilla renders every armour icon by placing the item's own mesh at a fixed scene tag (`helmet_frame`, `armor_frame`, `boot_frame`, `glove_frame`, `cape_frame`) and shooting it with the matching fixed camera (`<slot>_cam`). Both assume a human-proportioned mesh. Dwarven armour (LOTRLOME_Armory `sk_dwarf_erebor_*`, `sk_dwarf_iron_*`) is modelled in dwarf body space, so the helmet sits at dwarf head height and the camera aims above it. Same root cause as the portrait framing in Patch4 and Patch72.
 
@@ -2027,7 +2027,7 @@ Applied from `SubModule.cs` in the standard `OnGameInitializationFinished` batch
 
 **Tuning:** `taom.set_race_offset icon dwarf_helmet <h> <v> <z>` and `taom.nudge_race_offset icon ...` clear the thumbnail cache (`ThumbnailCacheManager.ForceClearAllCache(false)` through the client seam `IThumbnailCacheAdapter`, ADR-013: deferred release, because the inventory may still show those textures), so the icons re-render when the inventory is reopened. The console refuses icon rows for races `ItemIconRaceMatcher.Races` does not list, since nothing would read them. `taom.save_race_offsets` writes all three configs.
 
-**Tests:** `ItemIconRaceMatcherTests` (matching, row keys, slot map, parameter-name binding against the installed engine), icon cases in `RacePositionTuningParserTests` and `ShippedRacePositionConfigTests`. **ACTIVE**. Checked in game 2026-10-29: dwarf helmets centred with a 0/0/0 row, armour (V 0.2) and capes (V 0.25) framed; boots and gloves have no row.
+**Tests:** `ItemIconRaceMatcherTests` (matching, row keys, slot map, parameter-name binding against the installed engine), icon cases in `RacePositionTuningParserTests` and `ShippedRacePositionConfigTests`. **ACTIVE**. Checked in game 2026-10-29: dwarf helmets centred with a 0/0/0 row (centring runs only when a `<race>_helmet` row exists, so that row turns it on), armour (V 0.2) and capes (V 0.25) framed; boots and gloves have no row.
 
 ## Patch150_DesertionConformity
 
@@ -2035,7 +2035,7 @@ Applied from `SubModule.cs` in the standard `OnGameInitializationFinished` batch
 
 **Why.** The prisoner ticks (`HourlyTickMainParty`, one hour of conformity, and `DailyTickAIMobileParty`, 24 hours) walk the prison roster from a random stack and give conformity to the first regular stack whose `CalculateRecruitableNumber` is below its size, then stop: vanilla's method adds the conformity and always returns true. `TaomPrisonerRecruitmentCalculationModel` returns 0 for a stack that would desert the party (`IDesertionRecruitGuard.WouldDesertFromParty`), so a blocked stack always qualified and took the tick whenever the walk reached it first; same-side prisoners converted more slowly. For a blocked stack the prefix sets `__result = false` and skips vanilla: no conformity is added, the loop's flag stays false and the walk goes on to the next stack. Every other stack runs vanilla. The vanilla body has no gate to replicate: it reads `GetConformityChangePerHour`, calls `PrisonRoster.AddXpToTroop` and returns true.
 
-**Callers and thread.** `HourlyTickMainParty` (main party, once an hour) and `DailyTickAIMobileParty` (every AI lord party, once a day), each at most until one stack takes the tick; main thread. In the AI tick the recruit branch for the same stack runs after the call and is unchanged (`IsPrisonerRecruitable` already refuses a blocked stack).
+**Callers and thread.** `HourlyTickMainParty` (main party, once an hour) and `DailyTickAIMobileParty` (every AI lord party, once a day); main thread. The main-party tick stops at the first stack that takes the tick; the AI tick gives conformity to one stack but keeps walking for recruitment when the party recruits prisoners. In the AI tick the recruit branch for the same stack runs after the call and is unchanged (`IsPrisonerRecruitable` already refuses a blocked stack).
 
 **PatchShield.** `TaleWorlds.CampaignSystem.CampaignBehaviors` is not an excluded namespace and the method is not on `ExcludedTargetMethods`, so the shield's finalizer can wrap it from a process's first game start; it does not install while a co-op module is active. The prefix catches what its body throws, logs the exception type once and lets vanilla run.
 
@@ -2053,7 +2053,7 @@ Applied from `SubModule.cs` in the standard `OnGameInitializationFinished` batch
 
 ## Patch152_BattleCheatMenu
 
-**Target (v1.5.6 decompile, MissionGauntletSingleplayerEscapeMenu.cs:69; not yet checked on the v1.5.7 DLL):** `protected override List<EscapeMenuItemVM> TaleWorlds.MountAndBlade.GauntletUI.Mission.Singleplayer.MissionGauntletSingleplayerEscapeMenu.GetEscapeMenuItems()`, targeted by name (it is protected), one postfix class `Patch152_BattleCheatEscapeMenu` in `Client/Features/CheatMenu/Hooks/` (TAOM.Client, ADR-013: the target is client-only), category `Patch152_BattleCheatMenu` (GameInit, declared by `CheatMenuModule`). 2026-11-14. Feature: [cheat-menu.md](../features/cheat-menu.md), "Battle".
+**Target (v1.5.7, `MissionGauntletSingleplayerEscapeMenu.cs:69` read on the installed DLL 2026-11-15):** `protected override List<EscapeMenuItemVM> TaleWorlds.MountAndBlade.GauntletUI.Mission.Singleplayer.MissionGauntletSingleplayerEscapeMenu.GetEscapeMenuItems()`, targeted by name (it is protected), one postfix class `Patch152_BattleCheatEscapeMenu` in `Client/Features/CheatMenu/Hooks/` (TAOM.Client, ADR-013: the target is client-only), category `Patch152_BattleCheatMenu` (GameInit, declared by `CheatMenuModule`). 2026-11-14. Feature: [cheat-menu.md](../features/cheat-menu.md), "Battle".
 
 **Why.** Inserts one "Cheats" item into the single-player Esc menu just before Photo Mode (or at the end without one), where vanilla adds its gamepad "Cheat Menu" item, while `BattleCheatOpener.IsShown` holds: the MCM switch Enable Cheat Menu is on and `CoopSessionPolicy.IsSinglePlayerAuthority`. The place is the pure `BattleCheatOpener.EscapeItemIndex` (not shown or already there: no item; Photo Mode found by its shown text). A click closes the Esc menu through the public `OnEscape` (an open menu toggles shut, as "Return to the Game" does with the protected `OnEscapeMenuToggled(false)`) and calls `BattleCheatOpener.TryOpen`, which opens the battle list (`MBInformationManager.ShowMultiSelectionInquiry`); the click runs inside `CheatMenuMenus.Guarded`.
 
@@ -2062,6 +2062,16 @@ Applied from `SubModule.cs` in the standard `OnGameInitializationFinished` batch
 **PatchShield.** `TaleWorlds.MountAndBlade.GauntletUI` is an excluded namespace (`PatchShieldPolicy.ExcludedTargetNamespacePrefixes`), so the shield adds no finalizer here.
 
 **Co-op.** Reads the co-op providers live through `BattleCheatService.IsSinglePlayer`; in a co-op session the Esc menu stays vanilla and every battle cheat refuses. **Tests:** `BattleCheatPolicyTests` (place, not shown, already there, opener), `BattleCheatWiringTests` (target, category, insert after the decision, click order), `BattleCheatPatchBindingTests` (parameter names). **ACTIVE**, not yet checked in game.
+
+## Realms manual patches (no category)
+
+**Targets (v1.5.7):** three classes in `Main/Features/Realms/Hooks/`, each applied by hand with its own Harmony id, outside any patch category, so `PatchShield` and the category list do not see them. Feature: [realms.md](../features/realms.md).
+
+- `PartyNames` (`TAOM.Realms.PartyNames`): postfix on `LordPartyComponent.GetPartyName`, the party name styles. Applied at `ApplyPhase.GameInit` by `RealmsModule.OnPhase`.
+- `HouseBanners` (`TAOM.Realms.HouseBanners`, #1219): a prefix on the `Clan.Banner` getter returns `ClanOriginalBanner` inside a scope; a prefix on `Kingdom.InitializeKingdom` gives a new kingdom a copy of its founder's banner. The scopes are prefix and finalizer pairs on `WarPartyComponent.GetDefaultComponentBanner`, `CaravanPartyComponent.GetDefaultComponentBanner`, `MobilePartyVisual.RefreshPartyIcon` and `AddTentEntityForParty`, the `SettlementNameplatePartyMarkerItemVM(MobileParty)` constructor, `EncyclopediaClanPageVM.Refresh`, the `EncyclopediaFactionVM(IFaction)` constructor and the one-argument `GauntletBannerEditorScreen` constructor. Applied at `ApplyPhase.GameInit` by `RealmsModule.OnPhase`; a target not found is skipped with a log line.
+- `LiegeArmyDiscount` (`TAOM.Realms.LiegeArmyDiscount`): postfix on `CalculatePartyInfluenceCost(MobileParty, MobileParty)` of the campaign's own `ArmyManagementCalculationModel` type, patched once per type at `OnSessionLaunched` (`RealmsCampaign`).
+
+**Crash triage.** A stack with `HouseBanners.BannerPrefix`, `Enter` or `Leave` is this section. Each `Patch()` catches its own exception and logs `[TAOM.Realms] ... are off`.
 
 <!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
 

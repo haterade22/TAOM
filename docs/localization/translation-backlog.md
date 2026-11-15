@@ -13,7 +13,7 @@ Record each pending feature's module, source file, exact keys and English text, 
 - Target languages: BR, CNs, CNt, DE, FR, IT, JP, KO, PL, RU, SP, TR.
 - Preserve `{DAYS}` exactly; translate only the surrounding text.
 - The two note strings are retained in the formatter/model but hidden by the current prefab. They are listed for source completeness, not as currently visible UI.
-- The earlier language-file and cache additions have been removed from this PR. Missing-language-row checks for these keys are expected until the project lead completes the pass.
+- The earlier language-file and cache additions have been removed from this PR. The rows exist as English placeholders since 08d76099a; the project lead's pass replaces them.
 
 | Key | English source | Context |
 | --- | --- | --- |

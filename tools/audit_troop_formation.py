@@ -95,7 +95,10 @@ def _items_of(set_elem: ET.Element, keep_empty: bool = False) -> dict[str, str]:
     """slot -> item id. keep_empty keeps an empty id, which as a troop-level override clears the slot."""
     out = {}
     for eq in set_elem:
-        if _strip_ns(eq.tag) != "equipment":
+        # Troop rosters write <equipment>, standalone roster files <Equipment>. Inside a set the engine reads
+        # every child whatever its name (Equipment.cs:196-216); a troop-level override must be exactly
+        # <equipment> (BasicCharacterObject.cs:370), and no shipped override is spelled otherwise.
+        if not isinstance(eq.tag, str) or _strip_ns(eq.tag).lower() != "equipment":
             continue
         slot, ref = eq.get("slot", ""), eq.get("id", "")
         if slot and (ref or keep_empty):

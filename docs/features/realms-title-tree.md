@@ -98,8 +98,6 @@ None. The sizes are constants in `TitleTreeCanvasLayout`; the prefab's clip rect
   opens the page, the pennant and text fade through `Brush.GlobalAlphaFactor`, text stacks title, holder and folded
   count, a tree card selects and hints, the clip rect matches the layout viewport with both scrollbars and follows
   `SelectionVersion`, and the native frame is gone.
-- `TAOM.Tests/Features/Realms/TitleTreeLayoutTests.cs`: the domain `TitleTreeLayout.Split`, which the popup no longer
-  calls.
 
 ## How to verify in game
 
@@ -128,4 +126,4 @@ None. The sizes are constants in `TitleTreeCanvasLayout`; the prefab's clip rect
 ## GitHub Issue
 
 - **Issue:** #1255: [Realms title tree redesign](https://github.com/haterade22/TAOM/issues/1255)
-- **Status:** Open
+- **Status:** Closed (in-game check owed)

@@ -25,8 +25,11 @@ in `global_strings.xml`).
   gate, so the key opens nothing while a menu, an encounter or a screen holds the map.
 - A press with Ctrl or Alt held does not count.
 - Why H: free on the campaign map (`MapHotKeyCategory` and `GenericCampaignPanelsGameKeyCategory` do not bind it, no TAOM
-  key uses it). In battle vanilla binds H only in `CheatsHotKeyCategory` (Ctrl combinations in game cheat mode), and
-  DualWield uses N. The RTS Camera and Command System defaults could not be checked, so the key is rebindable.
+  key uses it). In battle vanilla binds H in `CheatsHotKeyCategory` (Ctrl combinations in game cheat mode), and
+  DualWield uses N. TAOM's Fords of War (field a hero) and The Long Defeat (sound the horn) read raw H in their own
+  missions, so the battle key does nothing while `FordsCommandView` or `LongDefeatHudView` (the views that read H) is in the
+  mission (a story mission has the Long Defeat logic but not its HUD, so the key works there); the Esc menu item still opens the list there. The RTS Camera and Command System defaults could not be
+  checked, so the key is rebindable.
 
 ## Why it exists
 
@@ -96,8 +99,8 @@ Every entry calls `BattleCheatService`, the same code as the console commands be
 
 The battle commands need cheat mode and a mission (`TaomConsole.RunInMission`), not the MCM switch.
 
-The list opens through `BattleCheatOpener.TryOpen`. `TryOpenOnKey` checks the switch and single player before it reads any key,
-for a later hotkey.
+The list opens through `BattleCheatOpener.TryOpen`. `TryOpenOnKey` checks the switch and single player before it reads any key;
+`BattleCheatMenuView` calls it for the battle key.
 
 ## Co-op
 
@@ -117,7 +120,7 @@ Each command needs cheat mode and a running campaign (`TaomConsole.RunInCampaign
 | `taom.cheat_renown [1-10000]` | Renown for the player's clan (default 100) |
 | `taom.cheat_troops basic\|elite [1-500]` | The culture's basic or elite basic troop into the main party (default 10) |
 | `taom.cheat_heal` | Heals every wounded soldier and every hero in the main party |
-| `taom.cheat_relation <kingdom_id> [-100..100]` | Changes the player's relation with every living lord of the kingdom (default +20) |
+| `taom.cheat_relation <kingdom_id> [-100..100]` | Applies a relation change (default +20) with every living lord of the kingdom through `ChangeRelationAction.ApplyPlayerRelation`, so the game adds its Charm and perk bonus; with Personal Relations off, the engine moves each change to the lord's clan leader, who gets it once per lord (clamped at 100) |
 | `taom.cheat_teleport <settlement_id>` | Teleports to a town's, castle's or village's gate, with the refusals above |
 
 The special resource has its own command, `taom.add_special_resources` (special-resources.md). The menu's +1,000 uses the same
@@ -154,7 +157,7 @@ capped `ISpecialResourceService.GrantAmount`, for the main hero's own resource.
    12 crash path).
 5. Enter a village, then use `taom.cheat_teleport <a town id>` in the console (cheat mode on): it answers "Leave the
    settlement first" and the party does not move.
-6. Relations...: choose a kingdom; the encyclopedia shows +20 with its lords.
+6. Relations...: choose a kingdom; the encyclopedia shows at least +20 with its lords (more with Charm), with Personal Relations on.
 7. Turn the switch off and load again: the button is gone.
 8. With the switch on, press H on the free map: the cheat menu opens. Press H inside a town menu: nothing. Rebind the key
    in Options > Keybindings > Campaign Map and check the new key opens it. With the switch off, H does nothing.
@@ -174,6 +177,7 @@ capped `ISpecialResourceService.GrantAmount`, for the main hero's own resource.
 - Not tested in game (14 Nov 2026): the button, the map key, the menus, the lists and the camera after a teleport;
   the Esc item, the battle key, the battle list and every battle cheat.
 - A clash of H with the RTS Camera or Command System defaults is unknown; rebind either key if both act.
+- A teleport or relation pick runs inside the same crash guard as a menu button (`Guarded` wraps the list's choice).
 - Whether the battle pauses while the list is open has not been checked; the list is opened without the pause option.
 - Kill all enemies counts every agent it hands to `KillAgentCheat`, which does nothing in a cutscene, conversation or barter.
 
