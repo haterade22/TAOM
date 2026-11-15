@@ -789,6 +789,15 @@ DEFAULT_KITS = 'default'
 # small reprice does not churn the kits. Armour has none: a lower total is always a finding.
 WEAPON_TOLERANCE = 0.03
 
+# The reasons of rank_regressions that make a kit weaker. A 'dropped' category is information: the
+# player keeps every kit he drew, so the validator, the repair and the promoter's hint all read this.
+REGRESSION_KINDS = ('armour', 'weapon')
+
+
+def regression_reasons(reasons):
+    """The [(kind, text)] of `reasons` that are regressions, in their order."""
+    return [(kind, text) for kind, text in reasons if kind in REGRESSION_KINDS]
+
 # One weapon a kit can carry: the maintainer's category, its output (melee damage per second, a
 # launcher's damage), its kind (the weapon description, so a sword is told from an axe of the same
 # category), whether the engine bars it from the saddle (a launcher whose usage set carries
@@ -802,7 +811,7 @@ def weapon_category(item_class, description):
     Read from the item class and, for two handed weapons and polearms, the primary weapon
     description the crafting template gives. A bastard sword (primary usage OneHandedBastardSword)
     is one handed: it is swung in one hand beside a shield, whatever its two handed alternate. A
-    couchable lance is a spear for comparing outputs, and the couch is a constraint of its own
+    couchable lance is a spear here; kit_category makes it a lance in a cavalry kit
     (KitWeapon.couchable). A longbow is a bow; the saddle bar is a constraint on the repair
     (KitWeapon.foot_only). Thrown weapons, shields and ammunition have no category, so they are
     never compared; kit_weapon_outputs drops a polearm with a thrown usage for the same reason.
@@ -853,37 +862,42 @@ def kit_armour(kit, armour_stats):
     return tuple(total)
 
 
-def best_by_category(kit, weapon_info):
+def kit_category(info, mounted):
+    """The category a weapon is compared in when a kit of this assignment is judged.
+
+    In a cavalry kit a couchable spear is a lance, the maintainer's "spear that lances": a rider's
+    lance is worth its couch, so its thrust is not held against a plain spear's. On foot nobody can
+    couch (the engine's polearm_couch usage set carries requires_mount), and the same item is a spear.
+    """
+    return 'lance' if mounted and info.category == 'spear' and info.couchable else info.category
+
+
+def best_by_category(kit, weapon_info, mounted=False):
     """{category: (output, item id, slot)} of the strongest weapon the kit holds in each category."""
     best = {}
     for slot, item in kit.items():
         info = weapon_info.get(item) if slot in WEAPON_SLOTS else None
-        if info is not None and (info.category not in best or info.output > best[info.category][0]):
-            best[info.category] = (info.output, item, slot)
+        if info is None:
+            continue
+        category = kit_category(info, mounted)
+        if category not in best or info.output > best[category][0]:
+            best[category] = (info.output, item, slot)
     return best
 
 
-def _lance(kit, weapon_info):
-    """A couchable spear the kit holds, or None."""
-    return next((i for s, i in sorted(kit.items()) if s in WEAPON_SLOTS and weapon_info.get(i) is not None
-                 and weapon_info[i].category == 'spear' and weapon_info[i].couchable), None)
-
-
-def drawn_before(earlier, armour_stats, weapon_info):
+def drawn_before(earlier, armour_stats, weapon_info, mounted=False):
     """What the kits drawn before give the player: (strongest armour cell, {category: (output, item,
-    cell)} of the best weapon of each category, (lance id, cell) or None). Ties go to the later kit."""
-    armour_cell, best, lance = None, {}, None
+    cell)} of the best weapon of each category). Ties go to the later kit. `mounted` is the assignment
+    of the kit being judged, so the earlier kits are read in its categories."""
+    armour_cell, best = None, {}
     for cell, kit in earlier:
         if armour_cell is None or sum(kit_armour(kit, armour_stats)) >= sum(kit_armour(dict(earlier)[armour_cell],
                                                                                           armour_stats)):
             armour_cell = cell
-        for category, (output, item, _slot) in best_by_category(kit, weapon_info).items():
+        for category, (output, item, _slot) in best_by_category(kit, weapon_info, mounted).items():
             if category not in best or output >= best[category][0]:
                 best[category] = (output, item, cell)
-        found = _lance(kit, weapon_info)
-        if found:
-            lance = (found, cell)
-    return armour_cell, best, lance
+    return armour_cell, best
 
 
 def _rid(cell):
@@ -902,21 +916,21 @@ def rank_regressions(earlier, upper, armour_stats, weapon_info, mounted=False):
     a zone for a larger gain elsewhere.
     'weapon': in a category `upper` holds, its best is more than WEAPON_TOLERANCE weaker than the best
     of that category in any earlier kit.
-    'dropped': an earlier kit holds a category `upper` lacks, once per category; or, in a `mounted`
-    (cavalry) kit, an earlier kit holds a couchable spear and `upper` holds spears but none couchable
-    (the lance). Weapons of two categories are never compared (a spear's thrust and a sword's swing are
-    not one scale), so a dropped category is reported for the maintainer to decide per chain, and the
-    repair leaves it. The couch counts only in a cavalry kit: the engine's polearm_couch usage set
-    carries requires_mount.
+    'dropped': an earlier kit holds a category `upper` lacks, once per category. It is information,
+    not a regression: the resolver hands every kit into the party inventory and takes none back, so
+    the player still holds the earlier weapon. The validator raises no warning for it, the repair
+    leaves it, and the repair's dry run lists it. Weapons of two categories are never compared (a
+    spear's thrust and a sword's swing are not one scale). In a `mounted` (cavalry) kit the
+    categories are kit_category's, so a lance is compared with lances only.
     """
     reasons = []
-    armour_cell, best, lance = drawn_before(earlier, armour_stats, weapon_info)
+    armour_cell, best = drawn_before(earlier, armour_stats, weapon_info, mounted)
     if armour_cell is not None:
         low, high = kit_armour(dict(earlier)[armour_cell], armour_stats), kit_armour(upper, armour_stats)
         if sum(high) < sum(low):
             reasons.append(('armour', f'armour total {sum(low)} -> {sum(high)} against {_rid(armour_cell)} '
                                       f'(head, body, arm, leg {low} -> {high})'))
-    high_best = best_by_category(upper, weapon_info)
+    high_best = best_by_category(upper, weapon_info, mounted)
     for category in sorted(best):
         lo_out, lo_item, lo_cell = best[category]
         if category not in high_best:
@@ -925,8 +939,6 @@ def rank_regressions(earlier, upper, armour_stats, weapon_info, mounted=False):
             unit = 'damage' if category in LAUNCHER_CATEGORIES else 'damage per second'
             reasons.append(('weapon', f'{category} ({unit}) {lo_item} {lo_out:.1f} -> {high_best[category][1]} '
                                       f'{high_best[category][0]:.1f} against {_rid(lo_cell)}'))
-    if mounted and lance and 'spear' in high_best and _lance(upper, weapon_info) is None:
-        reasons.append(('dropped', f'drops the lance ({lance[0]}) of {_rid(lance[1])}'))
     return reasons
 
 
@@ -1053,7 +1065,8 @@ def _pick_weapon(replaced, low_best, upper, lower_item, same_culture, gear_slots
     Candidates hold the rule and are not already in another weapon slot of the kit. A launcher barred
     from the saddle (a long_bow) never goes into a kit that holds a Horse slot; a kit without one is a
     foot soldier's and may take it (the maintainer's rule, 2026-11-15: the roster's own horse makes a
-    horse archer). In a cavalry kit a couchable lance is replaced only by a couchable one. Preference:
+    horse archer). The category is kit_category's, so in a cavalry kit a lance is replaced only by a
+    lance and a plain spear only by a plain spear. Preference:
     (a) the same kind as the replaced piece from the culture's troop gear, (b) another kind of the
     category from it, (c) the earlier kit's own piece (`lower_item`), only when it is the same
     culture's. Within (a) and (b) the id closest to the replaced one first (the same weapon line,
@@ -1063,13 +1076,12 @@ def _pick_weapon(replaced, low_best, upper, lower_item, same_culture, gear_slots
     info = weapon_info[replaced]
     held = {i for s, i in upper.items() if s in WEAPON_SLOTS}
     rides = 'Horse' in upper
-    keep_couch = cavalry and info.couchable
+    category = kit_category(info, cavalry)
 
     def fits(item):
         cand = weapon_info.get(item)
-        return (cand is not None and cand.category == info.category and weapon_holds(low_best, cand.output)
-                and item not in held and not (cand.foot_only and rides)
-                and not (keep_couch and not cand.couchable))
+        return (cand is not None and kit_category(cand, cavalry) == category
+                and weapon_holds(low_best, cand.output) and item not in held and not (cand.foot_only and rides))
 
     pool = sorted((-len(os.path.commonprefix((i, replaced))), weapon_info[i].output, i)
                   for i in _weapon_items(gear_slots) if fits(i))
@@ -1117,15 +1129,15 @@ def plan_rank_repairs(kits, armour_stats, weapon_info, skip=(), gear=None):
             continue
         earlier = [(c, work[c]) for c in earlier_cells]
         upper, own = work[high], gear.get(culture, {})
-        armour_cell, best, _lance_held = drawn_before(earlier, armour_stats, weapon_info)
-        high_best = best_by_category(upper, weapon_info)
+        cavalry = high[1] == 'cavalry'
+        armour_cell, best = drawn_before(earlier, armour_stats, weapon_info, cavalry)
+        high_best = best_by_category(upper, weapon_info, cavalry)
         twice_before = _weapons_twice(upper)
         for category in sorted(set(best) & set(high_best)):
             (lo_out, lo_item, lo_cell), (hi_out, hi_item, hi_slot) = best[category], high_best[category]
             if weapon_holds(lo_out, hi_out):
                 continue
-            new = _pick_weapon(hi_item, lo_out, upper, lo_item, lo_cell[0] == culture, own, weapon_info,
-                               high[1] == 'cavalry')
+            new = _pick_weapon(hi_item, lo_out, upper, lo_item, lo_cell[0] == culture, own, weapon_info, cavalry)
             if new is not None:
                 edits.append((high, hi_slot, hi_item, new))
                 upper[hi_slot] = new
@@ -1399,13 +1411,13 @@ def repair_ranks(out_xml, culture, apply):
         return ('promote_borrowed_cultures.py, after its source' if c in promoted
                 else 'DEFAULT_ROSTER_ITEMS' if c == DEFAULT_KITS else 'not in this run' if c in skip else 'this run')
 
-    weaker = [(high, [t for k, t in reasons if k != 'dropped']) for high, _earlier, reasons in left]
+    weaker = [(high, [t for _k, t in regression_reasons(reasons)]) for high, _earlier, reasons in left]
     weaker = [row for row in weaker if row[1]]
     print(f'\nWeaker kits left after the repair ({len(weaker)}):')
     for high, texts in weaker:
         print(f'  {_rid(high)} [{owner(high[0])}]: {"; ".join(texts)}')
     dropped = [(high, t) for high, _earlier, reasons in left for k, t in reasons if k == 'dropped']
-    print(f'\nDropped categories, never repaired by a tool ({len(dropped)}):')
+    print(f'\nDropped categories, for information (the player keeps every earlier kit) ({len(dropped)}):')
     for high, text_ in dropped:
         print(f'  {_rid(high)}: {text_}')
     if not apply:
