@@ -909,9 +909,9 @@ def main() -> int:
               f"         be checked against the live install's registry.", file=sys.stderr)
         print(f"WARNING: MELEE_LADDER_INVERSION SKIPPED: weapon damage is simulated from the\n"
               f"         Armory's crafting pieces, which only the live install has.", file=sys.stderr)
-        print(f"WARNING: WORN_ARMOUR_CEILING SKIPPED (and WORN_ARMOUR_FLOOR): the armour stats of a\n"
-              f"         troop's kit come from the Armory and vanilla items, which only the live\n"
-              f"         install has.", file=sys.stderr)
+        print(f"WARNING: WORN_ARMOUR_CEILING SKIPPED (and WORN_ARMOUR_FLOOR, LORD_ARMOUR_RANGE): the\n"
+              f"         armour stats of a troop's or a lord's kit come from the Armory and vanilla\n"
+              f"         items, which only the live install has.", file=sys.stderr)
     issues.sort(key=lambda i: i.sort_key())
 
     if args.code:
