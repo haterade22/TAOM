@@ -47,6 +47,7 @@ public class PatchShieldFinalizerTests
         [MethodImpl(MethodImplOptions.NoInlining)] public static void OuterOfUnknownSwallow() => Probe.UnknownSwallow!();
         [MethodImpl(MethodImplOptions.NoInlining)] public static void ProbedThroughPatchedFinalizer() => throw new InvalidOperationException("034 patched finalizer");
         [MethodImpl(MethodImplOptions.NoInlining)] public static void SwallowProtected() { }
+        [MethodImpl(MethodImplOptions.NoInlining)] public static void ThrowsMissingMethodItself() => throw new MissingMethodException(ForeignPatches.NextMessage);
     }
 
     // Install gives a constructor the void finalizer, and Harmony maps a constructor's replacement to its
@@ -61,6 +62,8 @@ public class PatchShieldFinalizerTests
         public static string NextMessage = "";
         public static void ThrowMissingMethod() => throw new MissingMethodException(NextMessage);
         public static void Noop() { }
+        // A finalizer-only owner: passes the exception through, so the shield's finalizer still sees it.
+        public static Exception? PassThroughFinalizer(Exception __exception) => __exception;
     }
 
     // A finalizer another mod has Harmony-patched: its body then runs inside the replacement Harmony built
@@ -145,6 +148,9 @@ public class PatchShieldFinalizerTests
         _foreign.Patch(Target(nameof(Targets.SwallowPostfixWithResult)),
             postfix: new HarmonyMethod(AccessTools.Method(typeof(ForeignPatches), nameof(ForeignPatches.ThrowMissingMethod))));
 
+        _foreign.Patch(Target(nameof(Targets.ThrowsMissingMethodItself)),
+            finalizer: new HarmonyMethod(AccessTools.Method(typeof(ForeignPatches), nameof(ForeignPatches.PassThroughFinalizer))));
+        Shield(nameof(Targets.ThrowsMissingMethodItself), "ShieldFinalizerVoid");
         Shield(nameof(Targets.SwallowVoid), "ShieldFinalizerVoid");
         Shield(nameof(Targets.SwallowWithResult), "ShieldFinalizerWithResult");
         Shield(nameof(Targets.SwallowPostfixWithResult), "ShieldFinalizerWithResult");
@@ -244,6 +250,28 @@ public class PatchShieldFinalizerTests
         Targets.SwallowVoid();   // must not throw
 
         AssertSwallowedLoggedAndStripped(nameof(Targets.SwallowVoid), message, offset, swallowedBefore, unpatchedBefore);
+    }
+
+    [TestMethod]
+    public void ShieldFinalizerVoid_ForeignOwnerHasOnlyAFinalizer_LogsNoUnpatchedOwnerAndKeepsUnpatchedCount()
+    {
+        // #726 (fixed by #1146): a finalizer is never stripped, so a finalizer-only owner is neither logged as
+        // unpatched nor counted. Counting it (OwnersOf on Finalizers, or _unpatched.Add before the strip loop) fails here.
+        var message = "726-" + Guid.NewGuid().ToString("N");
+        ForeignPatches.NextMessage = message;
+        long offset = DiagLogLength();
+        long swallowedBefore = PatchShield.SwallowedMissingMethod;
+        int unpatchedBefore = PatchShield.UnpatchedCount;
+
+        Targets.ThrowsMissingMethodItself();   // must not throw
+
+        var log = DiagLogSince(offset);
+        Assert.AreEqual(1L, PatchShield.SwallowedMissingMethod - swallowedBefore, "the exception reached the shield");
+        StringAssert.Contains(log, $"swallowed MissingMethodException from a patch on {typeof(Targets).FullName}.{nameof(Targets.ThrowsMissingMethodItself)}: {message}");
+        var target = Target(nameof(Targets.ThrowsMissingMethodItself));
+        Assert.IsFalse(log.Contains($"unpatched owner '{ForeignOwner}' on {target.Module.ModuleVersionId}:{target.MetadataToken}"), "no strip line for this target");
+        Assert.AreEqual(0, PatchShield.UnpatchedCount - unpatchedBefore, "a finalizer-only owner is not counted as unpatched");
+        Assert.IsTrue(Harmony.GetPatchInfo(Target(nameof(Targets.ThrowsMissingMethodItself))).Finalizers.Any(p => p.owner == ForeignOwner), "the foreign finalizer stays");
     }
 
     [TestMethod]
