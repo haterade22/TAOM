@@ -1714,6 +1714,22 @@ branch returned `Attached` on every reconcile. A battle (state `EnlistedBattle`)
 march verdict (`AttachRequired`, or `Attached` when already parked). The pump then revokes the pass,
 and the next reconcile follows the commander in with no pass held.
 
+The tester's log (14 Nov 2026, build `eb79ee548`) showed a second way back in, and it is the one
+that happened: "shore leave granted" at 18:57:22, trade screen, the autosave from the Leave at
+18:57:28, a settlement encounter at 18:57:32, then no revoke and no FOLLOW. `Campaign.Tick` raises
+`TickEvent` only while `_dt > 0` (v1.5.7), so with time stopped by the Leave the pump cannot run its
+revoke. A click on the town or the commander from the gate re-entered on the first tick after time
+moved, before the pump's 0.25 budget filled, and the pass came back inside with the player.
+
+So the pass now ends on the player's own edge: `EnlistmentMaintenanceBehavior` routes
+`OnSettlementLeftEvent` for `MobileParty.MainParty` to `IServiceMaintenanceService.OnPlayerLeftSettlement`,
+which clears `OnTownLeave` at once. It does not finish the encounter: the edge fires inside
+`LeaveSettlementAction`, and vanilla's Leave calls `PlayerEncounter.Finish` right after it. The next
+expensive pump pass finishes the rest of the revoke (encounter check through `ShoreLeaveEnd`, then the
+re-attach) only if the player is still outside; if he has walked back in, the open encounter is the
+one that entry started and is left alone. A walk-out is now the only way a pass ends in the player's
+hands, so the `Assess` rule above is a second guard rather than the fix.
+
 ### Still open
 
 Crash bundle `d7d9f7d3` shows the same FOLLOW/EXIT pair oscillating on a 6 to 7 second period for

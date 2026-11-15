@@ -67,6 +67,12 @@ public interface IServiceMaintenanceService
     void OnPartyJoinedRunningMapEvent(string partyId);
 
     /// <summary>
+    /// The main party left a settlement. Ends a shore-leave pass at once, so a player who walks
+    /// out and straight back in does not carry the pass inside again.
+    /// </summary>
+    void OnPlayerLeftSettlement();
+
+    /// <summary>
     /// Drop the caches listed in <c>ResetSessionCaches</c>. Call on game load, on a new campaign and
     /// at game end: a commander-party handle cached from a previous campaign matches by StringId and
     /// would drive the position sync from a destroyed party. Runs on every peer, so keep it to
