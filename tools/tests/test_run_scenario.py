@@ -100,10 +100,12 @@ class ArmTextTests(unittest.TestCase):
         self.assertTrue(text.endswith("quit=1\n"))
         self.assertNotIn("\r", text)
 
-    def test_game_limit_is_inside_the_runner_kill(self):
-        known, _ = parse([])
-        _, wall = rs.arm_text_for(Path(r"E:\x"), known, SimpleNamespace(wall_limit=None))
-        self.assertLess(wall, wall + runner.OVERTIME_SECONDS)
+    def test_fractional_values_keep_every_digit(self):
+        known, _ = parse(["--speed", "12.3456789"])
+        text, wall = rs.arm_text_for(Path(r"E:\x"), known, SimpleNamespace(wall_limit=1234567.5))
+        keys = arm_dict(text)
+        self.assertEqual(float(keys["wall_limit_seconds"]), wall)
+        self.assertEqual(float(keys["speed"]), 12.3456789)
 
 
 class ArgumentTests(unittest.TestCase):
@@ -174,7 +176,43 @@ class JudgeTests(unittest.TestCase):
     def test_no_log(self):
         code, why = rs.judge(good_done(), None, None)
         self.assertEqual(code, 1)
-        self.assertIn("log", why)
+        self.assertIn("no TAOM log copy", why)
+
+    def test_crash_line_before_the_driver_started_fails(self):
+        log = "[2026-11-15 08:59:59] [ERROR] [CrashReport] init failed: X\n" + GOOD_LOG
+        code, why = rs.judge(good_done(started="2026-11-15T09:00:00"), None, log)
+        self.assertEqual(code, 1)
+        self.assertIn("CrashReport", why)
+
+    def test_done_file_must_echo_the_armed_plan(self):
+        armed = SimpleNamespace(kind="campaign-new", culture="empire_w", days=150, scenario="campaign-new")
+        code, why = rs.judge(good_done(culture="empire_w", scenario="campaign-new"), None, GOOD_LOG, armed=armed)
+        self.assertEqual(code, 1)
+        self.assertIn("days_wanted=3", why)
+        done = good_done(culture="empire_w", scenario="campaign-new", days_run="150", days_wanted="150")
+        self.assertEqual(rs.judge(done, None, GOOD_LOG, armed=armed)[0], 0)
+
+    def test_arm_file_warning_in_the_log_fails(self):
+        log = GOOD_LOG + "\n[2026-11-15 09:00:01] [WARNING] [Autorun][Scenario] arm file: speed '1e-50' is not a number above 0"
+        code, why = rs.judge(good_done(), None, log)
+        self.assertEqual(code, 1)
+        self.assertIn("arm file", why)
+
+    def test_build_must_be_this_tree(self):
+        head = "a" * 40
+        stamped = GOOD_LOG + "\n[2026-11-15 09:00:00] [INFO] [BuildStamp] TAOM=v2.0.0.0 build.20261115-090000Z+{} TAOM.Dependencies=v0.1.0.0 (pair OK)"
+        cases = (("b" * 40, 1), (head, 0), (head + ".dirty", 0))
+        for sha, want in cases:
+            with self.subTest(sha=sha):
+                self.assertEqual(rs.judge(good_done(), None, stamped.format(sha), head=head)[0], want)
+        code, why = rs.judge(good_done(), None, GOOD_LOG, head=head)
+        self.assertEqual(code, 1)
+        self.assertIn("BuildStamp", why)
+
+    def test_driver_source_keeps_the_arm_warning_prefix(self):
+        source = (Path(__file__).resolve().parents[2] / "Main/Features/Autorun/Scenario/ScenarioAutorunDriver.cs").read_text(encoding="utf-8")
+        self.assertIn('"[Autorun][Scenario] "', source)
+        self.assertIn('"arm file: "', source)
 
     def test_crash_marker(self):
         code, why = rs.judge(good_done(), None, GOOD_LOG + "\n" + CRASH_LINE)
@@ -201,13 +239,6 @@ class MainWiringTests(unittest.TestCase):
     def setUp(self):
         saved = {name: getattr(runner, name) for name in NAMES}
         self.addCleanup(lambda: [setattr(runner, name, value) for name, value in saved.items()])
-
-    def test_dialog_handler_does_not_call_itself(self):
-        runner.main = lambda rest: 0
-        rs.main([])
-        with mock.patch.object(rs, "FORDS_HANDLE_DIALOGS", return_value=None) as inner:
-            self.assertIsNone(runner.handle_dialogs(1, set(), print))
-        inner.assert_called_once()
 
     def run_main(self, argv):
         captured = {}
@@ -243,9 +274,25 @@ class MainWiringTests(unittest.TestCase):
         self.assertEqual(got["done"], "autorun_done.txt")
         self.assertEqual(got["status"], "autorun_status.txt")
         self.assertEqual(got["root"], r"E:\Temp\scenario-runs")
-        self.assertIs(got["judge"], rs.judge)
         self.assertIs(got["show_results"], rs.show_results)
-        self.assertIs(got["handle_dialogs"], rs.handle_dialogs)
+        self.assertIs(got["handle_dialogs"], runner.handle_dialogs)
+
+    def test_runner_judge_holds_the_run_to_the_armed_plan_and_this_tree(self):
+        _, got = self.run_main(["--days", "150"])
+        with mock.patch.object(rs, "tree_head_sha", return_value=None):
+            code, why = got["judge"](good_done(culture="empire_w", scenario="campaign-new"), None, GOOD_LOG)
+        self.assertEqual(code, 1)
+        self.assertIn("days_wanted=3", why)
+        self.assertIn("BuildStamp", why)
+
+    def test_help_names_this_tools_arguments(self):
+        out = io.StringIO()
+        with contextlib.redirect_stdout(out), self.assertRaises(SystemExit) as exit_info:
+            rs.parse_own(["--help"])
+        self.assertEqual(exit_info.exception.code, 0)
+        self.assertIn("--stall-seconds", out.getvalue())
+        self.assertIn("--wall-limit", out.getvalue())
+        self.assertNotIn("Fords of War match", out.getvalue())
 
     def test_armed_text_uses_the_parsed_arguments(self):
         seen = {}
@@ -265,11 +312,9 @@ class MainWiringTests(unittest.TestCase):
         self.assertIn("culture=vlandia\n", text)
         self.assertEqual(wall, 1800)
 
-    def test_stall_limit_of_the_runner_stays_after_the_game(self):
+    def test_runner_heartbeat_stall_is_not_changed(self):
         _, got = self.run_main(["--stall-seconds", "1200"])
-        self.assertGreater(got["stall"], 1200)
-        _, got = self.run_main([])
-        self.assertGreaterEqual(got["stall"], 600)
+        self.assertEqual(got["stall"], runner.STALL_SECONDS)
 
     def test_bad_argument_does_not_reach_the_runner(self):
         called = []
@@ -299,6 +344,14 @@ class ShowResultsTests(unittest.TestCase):
             self.assertIn("reason=ok", out.getvalue())
             self.assertIn("analyze_war_ledger.py", " ".join(run.call_args[0][0]))
             self.assertIn(str(log), run.call_args[0][0])
+            self.assertEqual(run.call_args[0][0][1:3], ["-X", "utf8"])
+
+            (Path(folder) / "ledger.txt").unlink()
+            failed = SimpleNamespace(returncode=1, stdout="No [WarLedger] lines found\n", stderr="")
+            with mock.patch.object(rs.subprocess, "run", return_value=failed), contextlib.redirect_stdout(io.StringIO()):
+                rs.show_results(done_text, log, None, messages.append)
+            self.assertFalse((Path(folder) / "ledger.txt").exists())
+            self.assertTrue(any("exited 1" in m for m in messages))
 
             with mock.patch.object(rs.subprocess, "run", side_effect=OSError("nope")), contextlib.redirect_stdout(io.StringIO()):
                 rs.show_results(done_text, log, None, messages.append)
