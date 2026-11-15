@@ -26,7 +26,7 @@ public class BattleShaderNoticeServiceTests
         _server = Substitute.For<IDedicatedServerProvider>();
         _logger = Substitute.For<IModLogger>();
         _texts = new BattleShaderNoticeTexts(
-            new ShaderCompileNoticeTexts("Preparing this battle: %COUNT%", "Preparing this battle: %COUNT%", "detail"),
+            new ShaderCompileNoticeTexts("Preparing this scene: %COUNT%", "Preparing this scene: %COUNT%", "detail"),
             "loading line");
         _textSource.Resolve().Returns(_texts);
     }
@@ -101,6 +101,17 @@ public class BattleShaderNoticeServiceTests
         _runner.DidNotReceiveWithAnyArgs().Start(default!);
         Assert.IsNull(service.LoadingScreenLine);
         Assert.IsFalse(service.IsShowing);
+    }
+
+    [TestMethod]
+    public void IsDedicatedServer_ReadsTheProviderOnce_SoTheHookSkipsTheNativeCountOnAServer()
+    {
+        _server.IsDedicatedServer.Returns(true);
+        var service = NewService();
+
+        Assert.IsTrue(service.IsDedicatedServer);
+        Assert.IsTrue(service.IsDedicatedServer);
+        _ = _server.Received(1).IsDedicatedServer;
     }
 
     [TestMethod]

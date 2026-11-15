@@ -30,10 +30,10 @@ internal sealed class BattleShaderNoticeRunner : IBattleShaderNoticeRunner
         // keeps its loading-screen line and goes without the window.
         if (_current is { Ended: false }) return;
         var run = new Run();
-        _current = run;
         var thread = new Thread(() => Execute(run, texts)) { IsBackground = true, Name = "TAOM battle shader notice" };
         thread.SetApartmentState(ApartmentState.STA);
         thread.Start();
+        _current = run; // only once started: a failed start must not block every later load
     }
 
     public void Stop()

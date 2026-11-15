@@ -3,8 +3,9 @@
 ## Overview
 
 When a battle load has to compile many shaders, the small window of the [Shader Compile Notice](shader-compile-notice.md)
-appears over the loading screen and counts them ("Preparing this battle: 412 shaders compiled"), and the loading
-screen's bottom bar says "Compiling shaders for this battle. This can take a minute or two; the game is not frozen."
+appears over the loading screen and counts them ("Preparing this scene: 412 shaders compiled"), and the loading
+screen's bottom bar says "Compiling shaders for this scene. This can take a minute or two; the game is not frozen."
+Every mission load is checked, a town or a tavern too, so the texts say "scene".
 Both go away when the battle is ready. A battle with a warm shader cache shows neither.
 
 ## Why This Exists
@@ -27,12 +28,13 @@ on a cold load, then one or two frames with the count falling, then a gap of 15 
 ### Design Challenge
 
 Nothing the game draws can move while the game thread waits, and the wait starts a frame or two after the load reaches
-its render-ready check. The engine reports the queued count (`Utilities.GetNumberOfShaderCompilationsInProgress`) only
-to the game thread, so only before the stop.
+its render-ready check. TAOM reads the queued count (`Utilities.GetNumberOfShaderCompilationsInProgress`, one field read in
+native) only on the game thread, because the window thread never calls the engine, so the count is known only
+before the stop.
 
 ### Solution Approach
 
-- **Detection.** A postfix on `MissionState.OnTick` (Patch153, the same frames Patch43's
+- **Detection.** A postfix on `MissionState.OnTick` (Patch155, the same frames Patch43's
   `MissionState_OnTick_RenderWait_Patch` measures) passes "in the render wait" (`FirstMissionTickAfterLoading` and the
   mission `Continuing`) and, on a waiting frame before the notice starts, the queued count. `BattleShaderNoticeGate`
   starts the notice once per load at 50 queued or more and stops it on the first frame that is not waiting: the frame
@@ -66,7 +68,7 @@ LoadingWindowViewModel.Update ──> LoadingWindowViewModel_Update_BattleShader
 
 ## Configuration
 
-None. Log lines in `taom_debug.log`: `[BattleShaderNotice] N shaders queued for this battle: notice shown` (game
+None. Log lines in `taom_debug.log`: `[BattleShaderNotice] N shaders queued for this mission: notice started` (game
 thread), `[BattleShaderNotice] window shown after S s, C compiled so far`, `[BattleShaderNotice] C shaders compiled,
 notice closed after S s` and, when the net closes it, `[BattleShaderNotice] no shader compiled for S s, closing`.
 
@@ -79,12 +81,20 @@ notice closed after S s` and, when the net closes it, `[BattleShaderNotice] no s
 | `Main/Features/BattleShaderNotice/BattleShaderNoticeRunner.cs` | The window's STA thread, one run per battle load |
 | `Main/Features/BattleShaderNotice/BattleShaderNoticeTextSource.cs` | Engine boundary for the three texts |
 | `Main/Features/BattleShaderNotice/BattleShaderNoticeTexts.cs` | The texts and the runner and text-source interfaces |
-| `Main/Features/BattleShaderNotice/Hooks/MissionState_OnTick_BattleShaderNotice_Patch.cs` | Patch153: render-wait detection |
-| `Main/Features/BattleShaderNotice/Hooks/LoadingWindowViewModel_Update_BattleShaderLine_Patch.cs` | Patch153: the loading-screen line, `[ClientOnly]` |
-| `Main/Features/BattleShaderNotice/BattleShaderNoticeModule.cs` | Feature module: services, statics, Patch153 at GameInit |
+| `Main/Features/BattleShaderNotice/Hooks/MissionState_OnTick_BattleShaderNotice_Patch.cs` | Patch155: render-wait detection |
+| `Main/Features/BattleShaderNotice/Hooks/LoadingWindowViewModel_Update_BattleShaderLine_Patch.cs` | Patch155: the loading-screen line, `[ClientOnly]` |
+| `Main/Features/BattleShaderNotice/BattleShaderNoticeModule.cs` | Feature module: services, statics, Patch155 at GameInit |
 | `Main/Features/ShaderCompileNotice/ShaderCompileNoticeMode.cs` | Pure: the Startup and Battle settings of the shared window |
 | `Client/Features/ShaderCompileNotice/ShaderCompileNoticeContext.cs` | The shared window loop, driven by the mode |
 | `Main/_Module/ModuleData/taom_module_strings.xml` | `taom_battle_shader_notice_title`, `taom_battle_shader_notice_detail`, `taom_battle_shader_loading_line` |
+
+### Limits
+
+- The loading-screen line clears only on the frame the mission ticks. No engine path was found that ends a
+  mission state during the wait without that frame (#1308 review, lens 5 F2); if one existed, the line would
+  stay until the next mission's first frame.
+- The parked Patch21 (`LoadingScreen_ShaderProgress_Patch`) writes the same `DescriptionText`. Before it is
+  re-enabled, keep the two writers apart: its shader walk loads cold missions on purpose.
 
 ## Dependencies
 
@@ -110,7 +120,7 @@ first).
 
 1. Start a field battle from the campaign. Pass: the bottom bar of the loading screen shows the line, the window
    appears within a second or two and counts up, both are gone when the battle starts, and `taom_debug.log` has the
-   `queued ... notice shown` and `notice closed after` lines. A person must look for the window and the line.
+   `queued ... notice started` and `notice closed after` lines. A person must look for the window and the line.
 2. Start a second battle in the same session. Pass: no window, no line, no `[BattleShaderNotice]` line.
 3. Repeat step 1 in exclusive full screen. The window may not show there; the line must.
 

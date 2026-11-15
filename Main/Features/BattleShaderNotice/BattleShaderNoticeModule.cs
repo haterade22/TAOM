@@ -8,12 +8,12 @@ namespace TAOM.Features.BattleShaderNotice;
 
 /// <summary>
 /// Battle Shader Notice (docs/features/battle-shader-notice.md): the startup shader notice's window and a loading-screen
-/// line during a battle load that compiles many shaders. Patch153 applies at GameInit: both targets first run when a
+/// line during a battle load that compiles many shaders. Patch155 applies at GameInit: both targets first run when a
 /// mission loads, after the game has initialized. No settings, no save data.
 /// </summary>
 internal sealed class BattleShaderNoticeModule : TaomFeatureModule
 {
-    internal const string PatchCategory = "Patch153_BattleShaderNotice";
+    internal const string PatchCategory = "Patch155_BattleShaderNotice";
 
     private static readonly PatchCategoryDecl[] Categories =
     {

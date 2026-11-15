@@ -35,10 +35,12 @@ public sealed class BattleShaderNoticeService
     /// <summary>The loading screen's line while the notice is up; null otherwise.</summary>
     public string? LoadingScreenLine { get; private set; }
 
+    /// <summary>Read once and cached. The tick hook asks it before the native shader count, so a server makes no native read.</summary>
+    public bool IsDedicatedServer => _isServer ??= _server.IsDedicatedServer;
+
     public void OnMissionStateTick(bool waitingForRender, int queuedShaders)
     {
-        _isServer ??= _server.IsDedicatedServer;
-        if (_isServer.Value) return;
+        if (IsDedicatedServer) return;
 
         switch (_gate.Observe(waitingForRender, queuedShaders))
         {
@@ -66,7 +68,7 @@ public sealed class BattleShaderNoticeService
         }
 
         LoadingScreenLine = texts.LoadingLine;
-        _logger.LogInfo($"[BattleShaderNotice] {queuedShaders} shaders queued for this battle: notice shown");
+        _logger.LogInfo($"[BattleShaderNotice] {queuedShaders} shaders queued for this mission: notice started");
         try
         {
             _runner.Start(texts.Window);

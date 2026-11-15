@@ -5,7 +5,7 @@ using TaleWorlds.MountAndBlade.GauntletUI;
 
 namespace TAOM.Features.BattleShaderNotice.Hooks;
 
-// Patch153: writes BattleShaderNoticeService.LoadingScreenLine into the loading window's DescriptionText while the
+// Patch155: writes BattleShaderNoticeService.LoadingScreenLine into the loading window's DescriptionText while the
 // battle notice is up. TAOM's TAOMLoadingWindow.xml shows DescriptionText in its bottom bar; in single player nothing
 // else writes it (v1.5.7 LoadingWindowViewModel.SetForEmpty sets "" on every enable).
 //
