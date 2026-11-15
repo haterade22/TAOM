@@ -44,3 +44,109 @@ Record each pending feature's module, source file, exact keys and English text, 
 | `taom_realms_tree_holder` | Holder | Label over the name of the hero who holds the selected title |
 | `taom_realms_tree_liege` | Liege | Heading over the title directly above the selected title |
 | `taom_realms_tree_subordinates` | Subordinate titles | Heading over the list of titles directly below the selected title |
+
+## Bandit foe lines no longer say enemy (#1281)
+
+- Status: pending project-lead translation pass. Tracked in #1294.
+- Source: PR #1281 (4548b0587).
+- Module: TAOM.
+- English source: `Main/_Module/ModuleData/taom_encounter_strings.xml`.
+- Target languages: BR, DE, FR, IT, PL, SP, TR (63 rows). CNs, CNt, JP, KO and RU already hold the new English.
+- The rows in those seven languages still hold the OLD English, so the translator never picks them up again (it picks a row only while it equals the current English). Reset each row to the new English first. No cache entry exists for these keys.
+- The lines are gender-neutral and name nobody's people (the file header's rule); keep that in translation.
+
+| Key | New English | Old English (still in the rows) |
+| --- | --- | --- |
+| `taom_enc_robbery_start_fight_rhun_raiders_foe_1` | Good. The Warlord pays well for heads, and asks no names. Surround them! | Good. The Warlord pays well for enemy heads. Surround them! |
+| `taom_enc_robbery_pay_agreement_rhun_raiders_foe_2` | Then pay as the beaten pay: every coin, and quickly. | Then pay as an enemy pays: every coin, and quickly. |
+| `taom_enc_robbery_threat_gondor_soldiers_foe_1` | You there, halt! We may have thrown off the Steward's colours, but we still know a fat purse when we see one. Hand it over, and quickly. | You there, halt! We may have thrown off the Steward's colours, but we still know an enemy when we see one. Your purse, and quickly. |
+| `taom_enc_robbery_pay_agreement_gondor_soldiers_foe_1` | You would buy your way past us? Fine, a stranger's coin spends like any other. Make it a heavy offer. | You would buy your way past us? Fine, an enemy's coin spends like any other. Make it a heavy offer. |
+| `taom_enc_robbery_start_fight_gondor_soldiers_foe_1` | Good. I have missed a fight with someone who stands their ground. At them! | Good. I have missed fighting an honest enemy. At them! |
+| `taom_enc_robbery_threat_gondor_soldiers_foe_2` | Halt. Our banners are gone, but our swords still remember their work. Empty your saddlebags, or we empty them for you. | Halt. Our banners are gone, but our swords still remember the enemy. Empty your saddlebags, or we empty them for you. |
+| `taom_enc_bandit_greet_gondor_soldiers_foe_1` | So now strangers come looking for us. We held against worse on the river, and we will hold here. | So the enemy comes looking for us now. We held against worse on the river, and we will hold here. |
+| `taom_enc_hideout_boss_gondor_soldiers_foe` | You have come far into our camp, stranger. I will meet you alone, blade to blade, and show you what a captain of the Tower was worth. | You have come far into our camp, enemy. I will meet you alone, blade to blade, and show you what a captain of the Tower was worth. |
+| `taom_enc_robbery_pay_agreement_erebor_warriors_foe_2` | Coin from an outsider is still coin. Set it on the rock where we can see it. | Coin from an enemy is still coin. Set it on the rock where we can see it. |
+
+## Dale and Khand given names that matched lord names (#1281)
+
+- Status: pending project-lead translation pass. Tracked in #1294.
+- Source: PR #1281 (af1620ecd, for #1169).
+- Module: TAOM.
+- English source: `Main/_Module/ModuleData/taom_xslt_strings.xml`.
+- Target languages: BR, CNs, CNt, DE, FR, IT, JP, KO, PL, RU, SP, TR (84 rows). Every language row still holds the old name, so non-English campaigns still give new heroes a lord's first name. Reset each row to the new English first.
+- These are personal names: transliterate, do not translate.
+
+| Key | New English | Old English (still in the rows) |
+| --- | --- | --- |
+| `aom_dale_male_name_8` | Hrafnkel | Torvald |
+| `aom_dale_female_name_1` | Hallveig | Astrid |
+| `aom_dale_female_name_5` | Gunnvor | Freydis |
+| `aom_dale_female_name_17` | Ingrun | Sigrun |
+| `aom_dale_female_name_19` | Asgerd | Svala |
+| `aom_khand_male_name_13` | Arslan | Nogai |
+| `aom_khand_female_name_17` | Toregene | Qutlugh |
+
+## Placeholder weapon names (#1253)
+
+- Status: pending. The keys are not yet registered in an English master, so no gate or translator sees them. Register them, then translate. Tracked in #1294.
+- Source: PR #1253.
+- Module: TAOM.
+- English source: `Main/_Module/ModuleData/placeholder_weapons/ph_items.xml` and `ph_crafting_pieces.xml` (written by `tools/generate_placeholder_weapons.py`; `tools/_loc_sources.py` lists neither file).
+- Target languages: BR, CNs, CNt, DE, FR, IT, JP, KO, PL, RU, SP, TR.
+
+| Key | English source |
+| --- | --- |
+| `taom_ph_isengard_1h_sword_t7_name` | [Isengard] Orthanc Sword |
+| `taom_ph_erebor_spear_a_t4_name` | [Erebor] War Spear I |
+| `taom_ph_erebor_spear_b_t4_name` | [Erebor] War Spear II |
+| `taom_ph_erebor_spear_a_t8_name` | [Erebor] Royal War Spear I |
+| `taom_ph_erebor_spear_b_t8_name` | [Erebor] Royal War Spear II |
+| `taom_ph_gondor_spear_b_t5_name` | [Gondor] Heavy Spear, Tempered |
+| `taom_ph_gondor_spear_b_gondor_t5_name` | [Gondor] Heavy Spear, Tempered - Gondor |
+| `taom_ph_gondor_spear_b_pg_t5_name` | [Gondor] Heavy Spear, Tempered - Pinnath Gelin |
+| `taom_ph_gondor_spear_b_swan_t5_name` | [Gondor] Heavy Spear, Tempered - Swan Knight |
+| `taom_ph_gondor_spear_b_t8_name` | [Gondor] Guard Spear |
+| `taom_ph_gondor_spear_b_gondor_t8_name` | [Gondor] Guard Spear - Gondor |
+| `taom_ph_gondor_spear_b_pg_t8_name` | [Gondor] Guard Spear - Pinnath Gelin |
+| `taom_ph_gondor_spear_b_swan_t8_name` | [Gondor] Guard Spear - Swan Knight |
+| `taom_ph_gondor_spear_a_t8_name` | [Gondor] Fountain Guard Spear, Tempered |
+| `taom_ph_mirkwood_sword_t8_name` | [Mirkwood] Guard Sword |
+| `taom_ph_mirkwood_sword_t10_name` | [Mirkwood] Royal Sword |
+| `taom_ph_isengard_1h_sword_t7_blade_name` | Isengard Sword Blade A (placeholder) |
+| `taom_ph_erebor_spear_a_t4_blade_name` | Erebor Spear Blade A (placeholder) |
+| `taom_ph_erebor_spear_b_t4_blade_name` | Erebor Spear Blade B (placeholder) |
+| `taom_ph_erebor_spear_a_t8_blade_name` | Erebor Spear Blade A (placeholder) |
+| `taom_ph_erebor_spear_b_t8_blade_name` | Erebor Spear Blade B (placeholder) |
+| `taom_ph_gondor_spear_b_t5_blade_name` | Gondor Spear Head C (placeholder) |
+| `taom_ph_gondor_spear_b_gondor_t5_blade_name` | Gondor Spear Head C (placeholder) |
+| `taom_ph_gondor_spear_b_pg_t5_blade_name` | Gondor Spear Head C (placeholder) |
+| `taom_ph_gondor_spear_b_swan_t5_blade_name` | Gondor Spear Head C (placeholder) |
+| `taom_ph_gondor_spear_b_t8_blade_name` | Gondor Spear Head C (placeholder) |
+| `taom_ph_gondor_spear_b_gondor_t8_blade_name` | Gondor Spear Head C (placeholder) |
+| `taom_ph_gondor_spear_b_pg_t8_blade_name` | Gondor Spear Head C (placeholder) |
+| `taom_ph_gondor_spear_b_swan_t8_blade_name` | Gondor Spear Head C (placeholder) |
+| `taom_ph_gondor_spear_a_t8_blade_name` | Gondor Spear Head D (placeholder) |
+| `taom_ph_mirkwood_sword_t8_blade_name` | [Mirkwood] Sword Blade (placeholder) |
+| `taom_ph_mirkwood_sword_t10_blade_name` | [Mirkwood] Sword Blade (placeholder) |
+
+## Momentum option hints (#1166)
+
+- Status: pending. The two hints have no `{=KEY}` yet: add one, register it, then translate. Tracked in #1294.
+- Source: PR #1166.
+- Module: TAOM.
+- English source: `Main/Features/TaomSettings.cs` (Momentum group).
+- Target languages: BR, CNs, CNt, DE, FR, IT, JP, KO, PL, RU, SP, TR.
+
+| Proposed key | English source | Context |
+| --- | --- | --- |
+| `taom_momentum_mcm_enabled_hint` | Tracks Evil vs Good war progress from battles, sieges, raids, armies and relative strength. The war ends at the victory threshold only when Enable Victory (End the War) is on; that setting is off by default, so the war is endless. Default: on. | Hint of Enable Momentum Tracking |
+| `taom_momentum_mcm_victory_hint` | When OFF (default) the War of the Ring is endless: momentum is tracked but no side ever wins. Turn ON to let a side win at the Victory Threshold (or by eliminating the other), which ends the war and makes peace. Default: off (endless). | Hint of Enable Victory (End the War) |
+
+## Custom Battle muster screen (#1118)
+
+- Status: pending. Every string is hard-coded English: wrap each as `{=taom_tcb_*}`, register it, then translate. Tracked in #1294.
+- Source: PR #1118.
+- Module: TAOM.Client.
+- English source: `Client/Features/CustomBattles/Muster/TcbVM.cs` (screen titles, buttons, popups and Status lines) and `TcbFieldVM.cs` (the Battlefield dropdown labels and choices).
+- Target languages: BR, CNs, CNt, DE, FR, IT, JP, KO, PL, RU, SP, TR.
+- Placeholders: the Status and total lines build numbers into the text; keep each number a `{VALUE}` placeholder when wrapping.

@@ -6,7 +6,7 @@ TAOM Custom Battle support replaces vanilla factions, commanders, and troops in 
 
 Siege battles here can run TAOM's staged siege on a recorded scene; see [staged-siege.md](staged-siege.md), "Custom battle sieges".
 
-Since 2026-11-11 the Custom Battle screen opens TAOM's muster screen (movie `TaomCustomBattle`) on a layer over the vanilla screen. The vanilla screen with the patches below stays underneath as the fallback: any failure to open the muster leaves the vanilla screen in place. The muster has no OLD SCREEN button: `TcbVM.ExecuteUseOldScreen` exists, but no prefab binds it (#1293). See "Muster screen".
+Since 2026-11-11 the Custom Battle screen opens TAOM's muster screen (movie `TaomCustomBattle`) on a layer over the vanilla screen. The vanilla screen with the patches below stays underneath as the fallback: any failure to open the muster leaves the vanilla screen in place. The muster has no way back to it (#1293 removed the never-bound OLD SCREEN command). See "Muster screen".
 
 ## Why This Exists
 
@@ -39,7 +39,7 @@ The vanilla screen needs no UI patches: TAOM's `CustomBattleScreen.xml` GUI pref
 
 ### Muster screen
 
-**Opening.** `CustomBattleScreen_OnInitialize_Patch` (postfix on `CustomBattleScreen.OnInitialize`) adds a `GauntletLayer` (order 200, input restrictions set, focus layer) that loads `TaomCustomBattle` with a `TcbVM`. The prefab draws TAOM's shared front-end art (`ec_*`, `cc_*`, `fs_*`, `mm_*`) and the resident fonts, so it opens only when `FactionUIPatchContext.Movies` is set: `FrontEndMovieService` matches the `TaomCustomBattle` movie with a `TcbVM` data source and holds the main menu and character creation image groups while the movie lives, and `FrontEndSpriteService` loads the `TaomCustomBattle` brush file with the chrome group. Without that service, or on any exception, the log says so and the vanilla screen stays. **BACK** pops the state. No button binds `ExecuteUseOldScreen`, so the player cannot reach the vanilla screen once the muster is open (#1293).
+**Opening.** `CustomBattleScreen_OnInitialize_Patch` (postfix on `CustomBattleScreen.OnInitialize`) adds a `GauntletLayer` (order 200, input restrictions set, focus layer) that loads `TaomCustomBattle` with a `TcbVM`. The prefab draws TAOM's shared front-end art (`ec_*`, `cc_*`, `fs_*`, `mm_*`) and the resident fonts, so it opens only when `FactionUIPatchContext.Movies` is set: `FrontEndMovieService` matches the `TaomCustomBattle` movie with a `TcbVM` data source and holds the main menu and character creation image groups while the movie lives, and `FrontEndSpriteService` loads the `TaomCustomBattle` brush file with the chrome group. Without that service, or on any exception, the log says so and the vanilla screen stays. **BACK** pops the state. Once the muster is open, the player cannot reach the vanilla screen (#1293). `MusterCommandBindingTests` fails when a muster view model has an `Execute` command that no muster prefab binds.
 
 **Armies tab.** Two cards, *Your army* and *Enemy army*; the card clicked is the army mustered below. Each card has popups for:
 
@@ -233,8 +233,8 @@ Not yet verified in game for the 2026-11-11 polish (portraits, banners); the ear
 4. Roster: search, switch type tabs, add troops and a hero; use plus and minus with Shift and Ctrl; remove a unit; toggle banner bearer, captain and horn blower. Push both armies past 1000 men: the footer warns and Start refuses.
 5. Battlefield tab: step through maps with the strip; set season and time. Start a field battle: the armies match the muster (numbers, banner as edited) and `rgl_log.txt` has `[CustomBattleMuster]` side lines. Order a mustered horn unit to charge: the horn blower sounds.
 6. Start a siege the same way: it loads with a ram and two towers.
-7. Leave the battle and reopen Custom Battle: the muster opens again. (Owed until #1293: the muster has no OLD SCREEN button, so the vanilla screen and its battle sides cannot be reached.)
-8. Owed until #1293. On the vanilla screen, pick Rohan, Dunland, Dale and Rhun in turn in the troop pickers: no Calradian troops (Vlandian, Imperial, Sturgian, Khuzait) and no training dummies or practice opponents. Khand still has Battanian infantry, ranged and cavalry. The muster cannot show this step: it already hid those troops.
+7. Leave the battle and reopen Custom Battle: the muster opens again.
+8. No game step. The vanilla screen shows only when the muster cannot open, so `CustomBattleTroopFilterLiveTests` checks its troop pickers: for Rohan, Dunland, Dale and Rhun no Calradian troops (Vlandian, Imperial, Sturgian, Khuzait) and no training dummies or practice opponents; Khand keeps its Battanian line.
 9. In the muster, open the commander popup for Rohan, Dunland, Khand, Dale, Rhun and Harwan: only TAOM lords, no `commander_N` name (Dunland: Arcor, Nylia, Crotor, Aesos; Khand: Carfyd, Belarn, Fiarad), no vanilla trader among Dunland's lords, and Khand lists one Beathag.
 10. Not yet run (#1184): set Player Type to Captain and Game Type to Battle, then Start. The battle opens, another lord of the faction leads the army, and the log has `[Check] id=taom.muster.captain-start result=pass type=Battle general=<id>`. A siege as Captain still starts. With a faction that has one lord only, Start refuses the field battle with "A captain needs another lord of the faction to lead the army". `python tools/ingame_verdict.py --issue 1184` judges the log line.
 
