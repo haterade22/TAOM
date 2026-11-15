@@ -32,6 +32,10 @@ Each test maps to one part of the contract:
     assembly with no DebuggableAttribute reads "ON (no DebuggableAttribute on the assembly)", and a
     DebuggableAttribute whose constructor or value is not the layout ECMA-335 gives that
     constructor reads unknown, never a verdict), never a refusal
+  - the four BUTR alias stubs (#969) ship with TAOM.Dependencies (and only with it), read from the
+    repo's Stubs/<ID>/_Module/SubModule.xml and written to <ID>/SubModule.xml, the only depth the
+    launcher reads; a missing stub refuses the run before anything is written; the report says
+    whether the source already holds each one, with a WARNING when it does not hold the same file
 """
 import contextlib
 import io
@@ -2517,6 +2521,147 @@ class TestLiveShaderReports(unittest.TestCase):
                 usage, why = pr.parse_shader_report(text)
                 self.assertEqual(why, "")
                 self.assertTrue(usage)
+
+
+# --------------------------------------------------------------------------- #
+# BUTR alias stubs (#969): shipped from the repo's Stubs/, flat at <ID>/      #
+# --------------------------------------------------------------------------- #
+REPO_STUBS = Path(__file__).resolve().parents[2] / "Stubs"
+
+
+def _stub_tree(tmp: Path, ids=None) -> Path:
+    root = tmp / "Stubs"
+    for sid in (pr.STUB_MODULES if ids is None else ids):
+        p = root / sid / "_Module" / "SubModule.xml"
+        p.parent.mkdir(parents=True, exist_ok=True)
+        p.write_text(f'<Module><Id value="{sid}" /></Module>')
+    return root
+
+
+def _deps_source(tmp: Path) -> Path:
+    src = tmp / "Modules"
+    _write(src, "TAOM.Dependencies/SubModule.xml", 10)
+    _write(src, "TAOM_Map/SubModule.xml", 10)
+    return src
+
+
+class TestAliasStubs(unittest.TestCase):
+    def test_release_ships_every_stub_where_the_launcher_reads_it(self):
+        # The launcher reads only Modules/<dir>/SubModule.xml; a stub left in _Module/ is invisible.
+        with tempfile.TemporaryDirectory() as td:
+            src, stubs, dest = _deps_source(Path(td)), _stub_tree(Path(td)), Path(td) / "out"
+            r = _run("--source", str(src), "--dest", str(dest), "--stubs", str(stubs),
+                     "--modules", "TAOM.Dependencies")
+            self.assertEqual(r.returncode, 0, r.stderr)
+            for sid in pr.STUB_MODULES:
+                shipped = dest / sid / "SubModule.xml"
+                self.assertTrue(shipped.is_file(), sid)
+                self.assertEqual(shipped.read_bytes(),
+                                 (stubs / sid / "_Module" / "SubModule.xml").read_bytes())
+                self.assertFalse((dest / sid / "_Module").exists(), sid)
+
+    def test_no_stubs_without_taom_dependencies(self):
+        # A stub depends on TAOM.Dependencies; shipping one without it would leave it unloadable.
+        with tempfile.TemporaryDirectory() as td:
+            src, stubs, dest = _deps_source(Path(td)), _stub_tree(Path(td)), Path(td) / "out"
+            r = _run("--source", str(src), "--dest", str(dest), "--stubs", str(stubs),
+                     "--modules", "TAOM_Map")
+            self.assertEqual(r.returncode, 0, r.stderr)
+            self.assertNotIn("alias stubs", r.stdout)
+            for sid in pr.STUB_MODULES:
+                self.assertFalse((dest / sid).exists(), sid)
+
+    def test_a_missing_stub_refuses_before_writing(self):
+        with tempfile.TemporaryDirectory() as td:
+            src = _deps_source(Path(td))
+            stubs = _stub_tree(Path(td), ids=pr.STUB_MODULES[:-1])
+            dest = Path(td) / "out"
+            for extra in ((), ("--dry-run",)):
+                r = _run("--source", str(src), "--dest", str(dest), "--stubs", str(stubs),
+                         "--modules", "TAOM.Dependencies", *extra)
+                self.assertEqual(r.returncode, 2, extra)
+                self.assertIn(pr.STUB_MODULES[-1], r.stderr)
+                self.assertFalse(dest.exists(), "must fail before writing anything")
+
+    def test_dry_run_and_manifest_list_the_stubs(self):
+        with tempfile.TemporaryDirectory() as td:
+            src, stubs = _deps_source(Path(td)), _stub_tree(Path(td))
+            man = Path(td) / "m.json"
+            r = _run("--source", str(src), "--dest", str(Path(td) / "out"), "--stubs", str(stubs),
+                     "--modules", "TAOM.Dependencies", "--dry-run", "--json", str(man))
+            self.assertEqual(r.returncode, 0, r.stderr)
+            for sid in pr.STUB_MODULES:
+                self.assertIn(f"{sid}/SubModule.xml", r.stdout)
+            self.assertEqual(json.loads(man.read_text())["stubs"], list(pr.STUB_MODULES))
+
+    def test_source_states_tell_same_differs_and_absent_apart(self):
+        # A channel folder ships as it is: the report must say which stubs it holds, and how.
+        with tempfile.TemporaryDirectory() as td:
+            src, stubs_root = _deps_source(Path(td)), _stub_tree(Path(td))
+            stubs, _ = pr.stub_sources(stubs_root)
+            harmony, butterlib, uiex = "Bannerlord.Harmony", "Bannerlord.ButterLib", "Bannerlord.UIExtenderEx"
+            (src / harmony).mkdir()
+            shutil.copyfile(stubs[harmony], src / harmony / "SubModule.xml")
+            (src / butterlib).mkdir()
+            (src / butterlib / "SubModule.xml").write_text('<Module><Id value="real ButterLib" /></Module>')
+            # A stub left one folder deep is what #969 shipped; it counts as absent.
+            (src / uiex / "_Module").mkdir(parents=True)
+            shutil.copyfile(stubs[uiex], src / uiex / "_Module" / "SubModule.xml")
+            self.assertEqual(pr.stub_source_states(src, stubs),
+                             {harmony: "same", butterlib: "differs", uiex: "absent",
+                              "Bannerlord.MBOptionScreen": "absent"})
+
+    def test_warning_only_when_the_source_lacks_a_stub(self):
+        with tempfile.TemporaryDirectory() as td:
+            src, stubs = _deps_source(Path(td)), _stub_tree(Path(td))
+            args = ("--source", str(src), "--dest", str(Path(td) / "out"), "--stubs", str(stubs),
+                    "--modules", "TAOM.Dependencies", "--dry-run")
+            r = _run(*args)
+            self.assertEqual(r.returncode, 0, r.stderr)
+            self.assertIn("(source: absent)", r.stdout)
+            self.assertIn("WARNING: the source does not hold every repo stub", r.stdout)
+            for sid in pr.STUB_MODULES:
+                (src / sid).mkdir()
+                shutil.copyfile(stubs / sid / "_Module" / "SubModule.xml", src / sid / "SubModule.xml")
+            r = _run(*args)
+            self.assertEqual(r.returncode, 0, r.stderr)
+            self.assertEqual(r.stdout.count("(source: same)"), 4)
+            self.assertNotIn("WARNING: the source does not hold every repo stub", r.stdout)
+
+    def test_the_default_stubs_root_is_the_repo_folder(self):
+        self.assertEqual(pr.STUBS_ROOT, REPO_STUBS)
+
+    def test_repo_stubs_are_the_four_butr_ids(self):
+        # A literal list, not the production tuple: a stub dropped from STUB_MODULES must fail here.
+        expected = {"Bannerlord.Harmony", "Bannerlord.ButterLib", "Bannerlord.UIExtenderEx",
+                    "Bannerlord.MBOptionScreen"}
+        self.assertEqual(set(pr.STUB_MODULES), expected)
+        self.assertEqual({p.parent.parent.name for p in REPO_STUBS.glob("*/_Module/SubModule.xml")},
+                         expected)
+
+    def test_repo_stubs_alias_their_own_id_and_load_after_taom_dependencies(self):
+        import xml.etree.ElementTree as ET
+        for sid in pr.STUB_MODULES:
+            path = REPO_STUBS / sid / "_Module" / "SubModule.xml"
+            self.assertTrue(path.is_file(), path)
+            root = ET.parse(path).getroot()
+            self.assertEqual(root.find("Id").get("value"), sid)
+            deps = [d.get("Id") for d in root.iter("DependedModule")]
+            self.assertIn("TAOM.Dependencies", deps, sid)
+
+    def test_repo_stubs_never_ask_the_engine_to_load_a_dll(self):
+        # Module.LoadSubModules looks for the SubModule DLL in the stub's own bin, which a stub never
+        # has, and shows "Cannot find" for each. A failing tag makes CheckIfSubmoduleCanBeLoadable skip
+        # the entry first; IsNoRenderModeElement="true" fails in every mode (v1.5.7 and BLSE alike).
+        # The entry itself stays, because BLSE treats a module with no SubModule as metadata-only.
+        import xml.etree.ElementTree as ET
+        for sid in pr.STUB_MODULES:
+            root = ET.parse(REPO_STUBS / sid / "_Module" / "SubModule.xml").getroot()
+            subs = root.findall("SubModules/SubModule")
+            self.assertTrue(subs, f"{sid}: keep a SubModule entry for BLSE")
+            for sub in subs:
+                tags = {(t.get("key"), t.get("value")) for t in sub.iter("Tag")}
+                self.assertIn(("IsNoRenderModeElement", "true"), tags, sid)
 
 
 if __name__ == "__main__":

@@ -91,20 +91,23 @@
 	<!-- DR3 follow-up (2026-05-22): deploy passive stub modules to the game install so that
 	     third-party mods declaring <DependedModule Id="Bannerlord.Harmony"/> etc. are no
 	     longer greyed out in the vanilla launcher's mod menu. Each stub is just a
-	     SubModule.xml that declares the standard BUTR module ID and has <SubModules />
-	     empty — no duplicate DLLs load. See docs/migration/dr3-maintenance.md "Stub
-	     modules" section. -->
+	     SubModule.xml that declares the standard BUTR module ID; its one SubModule entry
+	     carries a tag that makes the engine skip it, so no DLL loads and no "Cannot find"
+	     box shows. See docs/migration/dr3-maintenance.md "Stub modules" section. -->
 	<Target Name="DeployTAOMDependenciesStubs"
 	        AfterTargets="PostBuildCopyToModules"
 	        Condition="Exists($(GameFolder)) AND $(DisableModuleCopy) != 'true'">
 		<ItemGroup>
-			<!-- Explicit `**\SubModule.xml` (not `**\*.*`) so stray editor swap/backup
+			<!-- Exactly Stubs\<ID>\_Module\SubModule.xml (not `**\*.*`) so stray editor swap/backup
 			     files in Stubs/ never deploy. Deep-review 2026-05-25 caught the
-			     over-permissive glob. -->
-			<_TaomStubFiles Include="$(MSBuildThisFileDirectory)..\Stubs\**\SubModule.xml" />
+			     over-permissive glob. %(RecursiveDir) keeps the `_Module\` segment, so the
+			     destination drops it: the launcher reads only Modules\<ID>\SubModule.xml
+			     (v1.5.7 ModuleHelper.GetPhysicalModules) and never sees a stub one folder deeper (#969). -->
+			<_TaomStubFiles Include="$(MSBuildThisFileDirectory)..\Stubs\*\_Module\SubModule.xml" />
+			<_TaomStubDestFiles Include="@(_TaomStubFiles->'$(GameFolder)\Modules\%(RecursiveDir)%(Filename)%(Extension)'->Replace('\_Module\SubModule.xml', '\SubModule.xml')->Replace('/_Module/SubModule.xml', '/SubModule.xml'))" />
 		</ItemGroup>
 		<Copy SourceFiles="@(_TaomStubFiles)"
-		      DestinationFiles="@(_TaomStubFiles->'$(GameFolder)\Modules\%(RecursiveDir)%(Filename)%(Extension)')"
+		      DestinationFiles="@(_TaomStubDestFiles)"
 		      SkipUnchangedFiles="true" />
 		<Message Importance="high" Text="TAOM.Dependencies: deployed @(_TaomStubFiles->Count()) stub-module files to $(GameFolder)\Modules\" />
 	</Target>

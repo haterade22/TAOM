@@ -54,7 +54,13 @@ Exit codes: 0 ok · 1 nothing to do · 2 bad input / unknown entries / non-empty
             TAOM.CoopCompat bin that its build never writes (a Coop, server or third-party binary;
             dry runs included) / a shipped
             ModuleData file defining a taom_test_ id / a shader with no complete source that ships, or
-            a shader report that is missing, unreadable or does not add up (all dry runs included).
+            a shader report that is missing, unreadable or does not add up / a missing alias stub
+            under --stubs when TAOM.Dependencies is planned (all dry runs included).
+
+Whenever TAOM.Dependencies is planned, the four BUTR alias stubs ship with it: read from the repo's
+Stubs/<ID>/_Module/SubModule.xml (or --stubs) and written to <dest>/<ID>/SubModule.xml. The report
+says, per stub, whether the source already holds the same file at <ID>/SubModule.xml (same, differs
+or absent), with a WARNING when one is not the same: a channel folder ships as it is.
 """
 from __future__ import annotations
 
@@ -79,6 +85,15 @@ UNKNOWN = "unknown"
 # Alliance.Wargs was absorbed into LOTRLOME_Armory on 2026-08-28 and is no longer shipped
 # as its own module; see docs/reference/lotrlome-warg-changes.md.
 DEFAULT_MODULES = ("TAOM", "TAOM_Map", "LOTRLOME_Armory", "TAOM.Dependencies", "TAOM.CoopCompat")
+
+# The BUTR alias stubs (#969): SubModule.xml-only modules that let other mods' DependedModule on
+# these ids resolve to TAOM.Dependencies. They ship whenever TAOM.Dependencies does, read from the
+# repo's Stubs/<ID>/_Module/SubModule.xml (never from the source, which may hold the real BUTR
+# module under the same folder name) and written to <dest>/<ID>/SubModule.xml, the only depth the
+# launcher reads (v1.5.7 ModuleHelper.GetPhysicalModules).
+STUB_MODULES = ("Bannerlord.Harmony", "Bannerlord.ButterLib", "Bannerlord.UIExtenderEx",
+                "Bannerlord.MBOptionScreen")
+STUBS_ROOT = Path(__file__).resolve().parent.parent / "Stubs"
 
 # Top-level directories observed across TAOM's release set AND vanilla Native /
 # SandBoxCore (enumerated 2026-08-10). Evidence, not memory: SceneEditData and SceneObj
@@ -977,6 +992,33 @@ def plan_module(module_root: Path, *, keep_rdc: bool = False, exclude_candidates
     return plan
 
 
+def stub_sources(stubs_root: Path) -> tuple:
+    """(found, missing): found maps each STUB_MODULES id to its repo SubModule.xml."""
+    found, missing = {}, []
+    for sid in STUB_MODULES:
+        path = stubs_root / sid / "_Module" / "SubModule.xml"
+        if path.is_file():
+            found[sid] = path
+        else:
+            missing.append(sid)
+    return found, missing
+
+
+def stub_source_states(src: Path, stubs: dict) -> dict:
+    """id -> "same", "differs" or "absent": what the source holds at <src>/<ID>/SubModule.xml.
+
+    A channel folder ships what it holds, so one without the stubs, or with an old or real BUTR
+    module under a stub's folder name, would not give players the repo's stubs."""
+    states = {}
+    for sid, repo_file in stubs.items():
+        found = src / sid / "SubModule.xml"
+        if not found.is_file():
+            states[sid] = "absent"
+        else:
+            states[sid] = "same" if found.read_bytes() == repo_file.read_bytes() else "differs"
+    return states
+
+
 def execute(plan: ModulePlan, dest_root: Path) -> int:
     """Copy the planned set. Returns files copied."""
     n = 0
@@ -1134,6 +1176,8 @@ def main(argv=None) -> int:
                     help="proceed even though unrecognised entries were found (they are still not copied)")
     ap.add_argument("--dry-run", action="store_true", help="report only; writes nothing")
     ap.add_argument("--json", metavar="PATH", help="write the manifest as JSON")
+    ap.add_argument("--stubs", default=str(STUBS_ROOT), metavar="PATH",
+                    help="alias stub root, shipped with TAOM.Dependencies (default: the repo's Stubs/)")
     ap.add_argument("--game-root", metavar="DIR",
                     help="Bannerlord install folder whose Shaders/Sources holds the native shader "
                          "sources (default: the parent of --source)")
@@ -1263,6 +1307,24 @@ def main(argv=None) -> int:
         for rel in checked:
             print(f"  {rel}")
 
+    stubs = {}
+    if any(p.name == "TAOM.Dependencies" for p in plans):
+        stubs, missing = stub_sources(Path(args.stubs))
+        if missing:
+            print(f"\nERROR: alias stubs missing under {args.stubs}; refusing to package:",
+                  file=sys.stderr)
+            for sid in missing:
+                print(f"  {sid}/_Module/SubModule.xml", file=sys.stderr)
+            return 2
+        print(f"\nalias stubs ({len(stubs)}), shipped with TAOM.Dependencies from {args.stubs}:")
+        states = stub_source_states(src, stubs)
+        for sid in stubs:
+            print(f"  {sid}/SubModule.xml (source: {states[sid]})")
+        if any(s != "same" for s in states.values()):
+            print("WARNING: the source does not hold every repo stub at <ID>/SubModule.xml. This "
+                  "run writes them; a channel folder shipped as it is would lack them, so copy "
+                  "Stubs/<ID>/_Module/SubModule.xml to <ID>/SubModule.xml there.")
+
     if args.json:
         manifest = {
             "source": str(src),
@@ -1278,6 +1340,7 @@ def main(argv=None) -> int:
                 }
                 for p in plans
             ],
+            "stubs": list(stubs),
             "totals": {
                 "copy_bytes": sum(p.copy_bytes for p in plans),
                 "exclude_bytes": sum(p.exclude_bytes for p in plans),
@@ -1306,6 +1369,13 @@ def main(argv=None) -> int:
     for p in plans:
         total += execute(p, dest)
         print(f"  {p.name}: {p.copy_files} files")
+    for sid, path in stubs.items():
+        out = dest / sid / "SubModule.xml"
+        out.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copyfile(path, out)
+        total += 1
+    if stubs:
+        print(f"  alias stubs: {len(stubs)} files")
     print(f"\ndone -- {total} files, {_gb(sum(p.copy_bytes for p in plans))} GB")
     print("Next: python tools/validate_moduledata.py --game-modules "
           f"\"{dest}\"  then launch the packaged build and play a battle.")

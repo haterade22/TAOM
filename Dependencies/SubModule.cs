@@ -222,9 +222,9 @@ public class SubModule : MBSubModuleBase
         // DR3 Phase 4 C-series: install ALL the defensive shields here. Originally
         // CollectAssemblyTypesShim + RunEarlyPhase were
         // called from AliasStubSubModule.ctor, but observed 2026-05-27 — the launcher
-        // never constructs AliasStubSubModule because the alias stub module folders
-        // have no `bin/<platform>/TAOM.Dependencies.dll` (the DLL lives in TAOM.Dependencies's
-        // own bin/, not duplicated to each stub). OnSubModuleLoad fires for TAOM.Dependencies's
+        // never constructs AliasStubSubModule: no stub folder holds the DLL, and since #969
+        // each stub's SubModule carries the IsNoRenderModeElement skip tag, so the engine
+        // skips the entry instead of failing the lookup. OnSubModuleLoad fires for TAOM.Dependencies's
         // main SubModule deterministically, so all shields install from one known-working hook.
         DiagLog.Log("Dependencies", "OnSubModuleLoad: installing defensive shields");
 

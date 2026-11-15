@@ -159,6 +159,13 @@ Releases ship from `bannerlord-1.5.x` only; never port or list a 1.4.5 port as o
      (`AssetPackages/`, `EmAssetPackages/`, `GUI/`, `ModuleData/Languages*/`) exist in the install
      only, and no build step recreates them
      ([module-dependencies.md](../modding/module-dependencies.md), "Five folders").
+   - **The four BUTR alias stubs (#969) ship beside `TAOM.Dependencies`:** the channel's `Modules\` must
+     hold `Bannerlord.Harmony`, `Bannerlord.ButterLib`, `Bannerlord.UIExtenderEx` and
+     `Bannerlord.MBOptionScreen`, each with only a `SubModule.xml` at its root, the tag's
+     `Stubs/<Id>/_Module/SubModule.xml`. A deploying build puts them at `<game>/Modules/<Id>/SubModule.xml`.
+     The dry run lists each with `source: same`, `differs` or `absent` and warns unless all four are
+     `same`; on a channel folder anything else is a stub players will not get. A missing stub under
+     `Stubs/` refuses the run ([dr3-maintenance.md](../migration/dr3-maintenance.md), "Stub modules").
    - **`bin/<platform>/` of the three modules:** keep a file whose name the tag tracks under
      `_Module/bin/` (`git ls-tree -r --name-only vX.Y.Z -- Main/_Module/bin Dependencies/_Module/bin CoopCompat/_Module/bin`:
      none for TAOM from the NativeSkinFixes removal on, 2 on earlier tags; 44 for TAOM.Dependencies)
