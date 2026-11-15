@@ -499,17 +499,17 @@ CULTURES = {
             # The TAOM Dale roster is largely TAOM-invented wives + nobles; few canonical heroes here.
             # 2026-10-20 lord expansion (tools/oneoff/author_dale_lords.py): pins only for the new lords
             # whose archetype the age and sex default would not derive on its own.
-            'lord_S10_1': dict(archetype='dale_lord'),         # Halvard, owner of clan_sturgia_10
-            'lord_S10_3': dict(archetype='dale_knight'),       # Arnkel
-            'lord_S10_4': dict(archetype='dale_bowman'),       # Torgrim
-            'lord_S10_5': dict(archetype='dale_bowman'),       # Eyvind
-            'lord_S11_4': dict(archetype='dale_bowman'),       # Skuli
-            'lord_S12_1': dict(archetype='dale_lord'),         # Ottar, owner of clan_sturgia_12
-            'lord_S12_4': dict(archetype='dale_bowman'),       # Bjarni
-            'lord_S13_3': dict(archetype='dale_bowman'),       # Audun
-            'lord_S13_4': dict(archetype='dale_bowman'),       # Ingvar
-            'lord_S14_1': dict(archetype='dale_lord'),         # Thormod, owner of clan_sturgia_14
-            'lord_S14_4': dict(archetype='dale_bowman'),       # Valgard
+            'lord_S10_1': dict(archetype='dale_lord'),         # Landroi, owner of clan_sturgia_10
+            'lord_S10_3': dict(archetype='dale_knight'),       # Ragnar
+            'lord_S10_4': dict(archetype='dale_bowman'),       # Knut
+            'lord_S10_5': dict(archetype='dale_bowman'),       # Jedvard
+            'lord_S11_4': dict(archetype='dale_bowman'),       # Asger
+            'lord_S12_1': dict(archetype='dale_lord'),         # Helgi, owner of clan_sturgia_12
+            'lord_S12_4': dict(archetype='dale_bowman'),       # Brage
+            'lord_S13_3': dict(archetype='dale_bowman'),       # Torfinn
+            'lord_S13_4': dict(archetype='dale_bowman'),       # Sverker
+            'lord_S14_1': dict(archetype='dale_lord'),         # Sten, owner of clan_sturgia_14
+            'lord_S14_4': dict(archetype='dale_bowman'),       # Stenar
         },
     },
 

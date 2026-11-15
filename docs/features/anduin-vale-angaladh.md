@@ -106,18 +106,18 @@ genders. Four clans of four lords make 16.
 
 | Clan (tier) | Holds |
 |-------------|-------|
-| House of Beorn (4) | Beorn's Hall `town_AV1` (capital), Eastbank `castle_AV4` |
-| Folk of the Old Ford (3) | Old Ford `town_AV2`, High Pass Watch `castle_AV2` |
-| Wardens of the Carrock (2) | Carrock `castle_AV1` |
-| Riders of the Gladden (2) | Gladden Hold `castle_AV3` |
+| Beorning (4) | Beorn's Hall `town_AV1` (capital), Eastbank `castle_AV4` |
+| Melburgi (3) | Old Ford `town_AV2`, High Pass Watch `castle_AV2` |
+| Sairthiuda (2) | Carrock `castle_AV1` |
+| Herimundi (2) | Gladden Hold `castle_AV3` |
 
-**Angáladh**, King Ingomar, King and Queen as titles. Three clans of four lords make 12.
+**Angáladh**, King Theodemiro, King and Queen as titles. Three clans of four lords make 12.
 
 | Clan (tier) | Holds |
 |-------------|-------|
-| House of Angáladh (4) | Woodmen-town `town_AND1` (capital), Ironwood Hall `castle_AND4` |
-| Woodwards of the Forest Road (3) | Forest Gate `castle_AND3`, Thornhold `castle_AND1` |
-| Wardens of Emyn Duir (2) | Emyn Duir Watch `castle_AND2` |
+| Waldanding (4) | Woodmen-town `town_AND1` (capital), Ironwood Hall `castle_AND4` |
+| Meroaging (3) | Forest Gate `castle_AND3`, Thornhold `castle_AND1` |
+| Fadiring (2) | Emyn Duir Watch `castle_AND2` |
 
 Lords use Dale's template pair `lord_S10_1` and `lord_S10_2` and Dale's skill sets. Faces are drawn
 from `fighter_sturgia`, and each lady carries `<hair_tag name="sturgia" />`. Angáladh's lords ride
@@ -126,8 +126,8 @@ Dale's `charger` although its troops are on foot (Known gaps).
 Banners: Anduin Vale flies the Anduin Vale icons (20006 bear's head for the realm and the House of
 Beorn, 20004 bee, 20003 paw, 20002 horse trident) in honey gold (2024) on Beorning brown (palette
 2007, `0xFF654D37`). Angáladh flies icons no other clan flies (Mike, 2026-10-28): Silvan 17000 for
-the realm and the House of Angáladh, 17001 for the Woodwards of the Forest Road and the plain sun
-20001 for the Wardens of Emyn Duir, in off-white (palette 2022, `#F2F4F7`, the kingdom's `color2`, which the engine paints a clan's sigil in) on forest green (palette 2021, `0xFF4F6F5A`).
+the realm and the Waldandings, 17001 for the Meroagings and the plain sun
+20001 for the Fadirings, in off-white (palette 2022, `#F2F4F7`, the kingdom's `color2`, which the engine paints a clan's sigil in) on forest green (palette 2021, `0xFF4F6F5A`).
 Mirkwood's Nos Galengrim flies 17006, 17007 and 17008.
 
 ### Settlements
@@ -420,6 +420,11 @@ Restart Bannerlord fully, then start a new campaign. Precondition: the rows are 
 
 ## Changelog
 
+- 2026-11-15 (no issue): both realms' clans and lords take Realms in Exile names. Anduin Vale
+  keeps Grimbeorn and the Beorning house; the other three clans become the Melburgi (Old Ford), the
+  Sairthiuda (Carrock) and the Herimundi (Gladden), and the generator's name lists follow. Ids and
+  keys are unchanged; the translations of the renamed keys are stale until the next translation
+  pass.
 - 2026-10-28: created on branch `feat/anduin-vale-angaladh` (#1053), on Mike's map placement of the
   same day. The promoter gained the Dale source (`render_xslt_culture`, `block_src`, `id_overrides`,
   `lord_templates`), `realm_troops.py` counts `great_axe` as two-handed, the `dale` ranged-ladder

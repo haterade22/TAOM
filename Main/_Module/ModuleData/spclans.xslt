@@ -384,7 +384,7 @@
   <xsl:template match="Faction[@id='clan_sturgia_1']">
     <xsl:copy>
       <xsl:apply-templates select="@*[local-name() != 'name' and local-name() != 'color' and local-name() != 'color2' and local-name() != 'default_party_template']"/>
-      <xsl:attribute name="name">{=TAOM_clan_sturgia_1}House of Girion</xsl:attribute>
+      <xsl:attribute name="name">{=TAOM_clan_sturgia_1}Barding</xsl:attribute>
       <xsl:attribute name="color">FF163D52</xsl:attribute>
       <xsl:attribute name="color2">FFC0652A</xsl:attribute>
       <xsl:attribute name="default_party_template">PartyTemplate.kingdom_hero_party_dale_sturgia_1_template</xsl:attribute>
@@ -395,7 +395,7 @@
   <xsl:template match="Faction[@id='clan_sturgia_2']">
     <xsl:copy>
       <xsl:apply-templates select="@*[local-name() != 'name' and local-name() != 'color' and local-name() != 'color2' and local-name() != 'default_party_template']"/>
-      <xsl:attribute name="name">{=TAOM_clan_sturgia_2}House of Bard</xsl:attribute>
+      <xsl:attribute name="name">{=TAOM_clan_sturgia_2}Mueller</xsl:attribute>
       <xsl:attribute name="banner_key">11.312.166.1528.1528.764.764.1.0.0.27000.238.171.900.900.765.790.0.0.0</xsl:attribute>
       <xsl:attribute name="color">FF183D59</xsl:attribute>
       <xsl:attribute name="color2">FFC8752C</xsl:attribute>
@@ -407,7 +407,7 @@
   <xsl:template match="Faction[@id='clan_sturgia_3']">
     <xsl:copy>
       <xsl:apply-templates select="@*[local-name() != 'name' and local-name() != 'color' and local-name() != 'color2' and local-name() != 'default_party_template']"/>
-      <xsl:attribute name="name">{=TAOM_clan_sturgia_3}House of Brand</xsl:attribute>
+      <xsl:attribute name="name">{=TAOM_clan_sturgia_3}Oparyn</xsl:attribute>
       <xsl:attribute name="banner_key">11.312.166.1528.1528.764.764.1.0.0.27000.238.171.900.900.765.790.0.0.0</xsl:attribute>
       <xsl:attribute name="color">FF1A3D60</xsl:attribute>
       <xsl:attribute name="color2">FFCF852D</xsl:attribute>
@@ -419,7 +419,7 @@
   <xsl:template match="Faction[@id='clan_sturgia_4']">
     <xsl:copy>
       <xsl:apply-templates select="@*[local-name() != 'name' and local-name() != 'color' and local-name() != 'color2' and local-name() != 'default_party_template']"/>
-      <xsl:attribute name="name">{=TAOM_clan_sturgia_4}House of Bain</xsl:attribute>
+      <xsl:attribute name="name">{=TAOM_clan_sturgia_4}Glenbrook</xsl:attribute>
       <xsl:attribute name="banner_key">11.312.166.1528.1528.764.764.1.0.0.27000.238.171.900.900.765.790.0.0.0</xsl:attribute>
       <xsl:attribute name="color">FF1C3C67</xsl:attribute>
       <xsl:attribute name="color2">FFD29633</xsl:attribute>
@@ -431,7 +431,7 @@
   <xsl:template match="Faction[@id='clan_sturgia_5']">
     <xsl:copy>
       <xsl:apply-templates select="@*[local-name() != 'name' and local-name() != 'initial_home_settlement' and local-name() != 'color' and local-name() != 'color2' and local-name() != 'default_party_template']"/>
-      <xsl:attribute name="name">{=TAOM_clan_sturgia_5}House of Esgaroth</xsl:attribute>
+      <xsl:attribute name="name">{=TAOM_clan_sturgia_5}Frygar</xsl:attribute>
       <xsl:attribute name="initial_home_settlement">Settlement.castle_S7</xsl:attribute>
       <xsl:attribute name="banner_key">11.312.166.1528.1528.764.764.1.0.0.27000.238.171.900.900.765.790.0.0.0</xsl:attribute>
       <xsl:attribute name="color">FF1E3A6E</xsl:attribute>
@@ -444,7 +444,7 @@
   <xsl:template match="Faction[@id='clan_sturgia_6']">
     <xsl:copy>
       <xsl:apply-templates select="@*[local-name() != 'name' and local-name() != 'initial_home_settlement' and local-name() != 'color' and local-name() != 'color2' and local-name() != 'default_party_template']"/>
-      <xsl:attribute name="name">{=TAOM_clan_sturgia_6}House of the River</xsl:attribute>
+      <xsl:attribute name="name">{=TAOM_clan_sturgia_6}Telliore</xsl:attribute>
       <xsl:attribute name="initial_home_settlement">Settlement.castle_S6</xsl:attribute>
       <xsl:attribute name="banner_key">11.312.166.1528.1528.764.764.1.0.0.27000.238.171.900.900.765.790.0.0.0</xsl:attribute>
       <xsl:attribute name="color">FF203775</xsl:attribute>
@@ -457,7 +457,7 @@
   <xsl:template match="Faction[@id='clan_sturgia_7']">
     <xsl:copy>
       <xsl:apply-templates select="@*[local-name() != 'name' and local-name() != 'color' and local-name() != 'color2' and local-name() != 'default_party_template']"/>
-      <xsl:attribute name="name">{=TAOM_clan_sturgia_7}House of the Archers</xsl:attribute>
+      <xsl:attribute name="name">{=TAOM_clan_sturgia_7}Wolffort</xsl:attribute>
       <xsl:attribute name="banner_key">11.312.166.1528.1528.764.764.1.0.0.27000.238.171.900.900.765.790.0.0.0</xsl:attribute>
       <xsl:attribute name="color">FF22347C</xsl:attribute>
       <xsl:attribute name="color2">FFD7C149</xsl:attribute>
@@ -469,7 +469,7 @@
   <xsl:template match="Faction[@id='clan_sturgia_8']">
     <xsl:copy>
       <xsl:apply-templates select="@*[local-name() != 'name' and local-name() != 'color' and local-name() != 'color2' and local-name() != 'default_party_template']"/>
-      <xsl:attribute name="name">{=TAOM_clan_sturgia_8}House of Long Lake</xsl:attribute>
+      <xsl:attribute name="name">{=TAOM_clan_sturgia_8}Freyya</xsl:attribute>
       <xsl:attribute name="banner_key">11.312.166.1528.1528.764.764.1.0.0.27000.238.171.900.900.765.790.0.0.0</xsl:attribute>
       <xsl:attribute name="tier">3</xsl:attribute>
       <xsl:attribute name="color">FF243083</xsl:attribute>
@@ -482,7 +482,7 @@
   <xsl:template match="Faction[@id='clan_sturgia_9']">
     <xsl:copy>
       <xsl:apply-templates select="@*[local-name() != 'name' and local-name() != 'color' and local-name() != 'color2' and local-name() != 'default_party_template']"/>
-      <xsl:attribute name="name">{=TAOM_clan_sturgia_9}House of the Dragon-slayer</xsl:attribute>
+      <xsl:attribute name="name">{=TAOM_clan_sturgia_9}Arnstyr</xsl:attribute>
       <xsl:attribute name="banner_key">11.312.166.1528.1528.764.764.1.0.0.27000.238.171.900.900.765.790.0.0.0</xsl:attribute>
       <xsl:attribute name="tier">3</xsl:attribute>
       <xsl:attribute name="color">FF262B8A</xsl:attribute>
