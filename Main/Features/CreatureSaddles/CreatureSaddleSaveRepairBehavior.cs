@@ -1,5 +1,4 @@
 using System;
-using System.Linq;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Party;
 using TaleWorlds.CampaignSystem.Roster;
@@ -46,7 +45,7 @@ public sealed class CreatureSaddleSaveRepairBehavior : CampaignBehaviorBase
                 return;
 
             int moved = 0;
-            foreach (var hero in clan.Heroes.Concat(clan.Companions).Distinct())
+            foreach (var hero in clan.Heroes) // Clan.AddCompanion adds the companion to Heroes too (v1.5.7 Clan.cs:1252-1264)
             {
                 if (hero == null || hero.IsDead)
                     continue;

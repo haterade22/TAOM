@@ -9,7 +9,7 @@ namespace TAOM.Features.CreatureSaddles;
 /// <summary>
 /// Engine side of the creature saddle families: writes <see cref="CreatureSaddleFamilies"/> onto a Monster or a harness
 /// right after the engine read it from XML. Both <c>FamilyType</c> setters are private (v1.5.7 <c>Monster.cs:86</c>,
-/// <c>ArmorComponent.cs:87</c>), set only from the <c>family_type</c> attribute; cached once, never per call
+/// <c>ArmorComponent.cs:87</c>), set from the <c>family_type</c> attribute and by the engine's copies (a <c>base_monster</c>'s family, <c>ArmorComponent.GetCopy</c>); cached once, never per call
 /// (ReflectionSiteBindingTests pins them). A missing setter logs one error and leaves the data's family 1, which is
 /// vanilla's behaviour; Patch153 still keeps the cloth reins off these mounts.
 /// </summary>

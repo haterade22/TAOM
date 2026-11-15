@@ -48,7 +48,9 @@ public class CreatureSaddleRosterTests
             try { doc = XDocument.Load(f); } catch { continue; }
             foreach (var set in doc.Descendants().Where(e => e.Name.LocalName is "EquipmentRoster" or "EquipmentSet"))
             {
-                var slots = set.Elements("equipment").GroupBy(e => (string?)e.Attribute("slot") ?? "")
+                // The engine reads both spellings: 6,134 TAOM sets use <Equipment>, the rest <equipment>.
+                var slots = set.Elements().Where(e => string.Equals(e.Name.LocalName, "equipment", StringComparison.OrdinalIgnoreCase))
+                    .GroupBy(e => (string?)e.Attribute("slot") ?? "")
                     .ToDictionary(g => g.Key, g => ((string?)g.Last().Attribute("id") ?? "").Replace("Item.", ""));
                 if (!slots.TryGetValue("Horse", out var mount) || !mountMonster.TryGetValue(mount, out var monster)) continue;
                 var mountFamily = CreatureSaddleFamilies.MonsterFamily(monster);

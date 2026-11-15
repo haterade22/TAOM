@@ -9,7 +9,7 @@ namespace TAOM.Features.CreatureSaddles;
 /// <c>SPInventoryVM</c>). The Armory gives the warg, fell warg, dire wolf and spider family 1, the horse family, so every
 /// horse saddle fits them; a horse saddle with reins on a dire wolf crashed a player's battle spawn (2026-11-15). Each
 /// rig gets its own family here, and its own saddle the same one. The horse-rig reskins (elk, moose, ram, WildMesh) keep
-/// family 1 because horse saddles are made for their skeleton. Taken: 0 humans, 1 horse, 2 camel, 4 chariot, 10 elephant.
+/// family 1 because horse saddles are made for their skeleton. Taken: 0 humans, 1 horse, 2 camel, 3 cow, 4 goose and chariot, 5 hog, 6 sheep, 8 chicken, 10 elephant.
 /// </summary>
 public static class CreatureSaddleFamilies
 {

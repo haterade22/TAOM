@@ -11,7 +11,8 @@ elephants and the chariot keep their families.
 
 - **Vanilla behavior:** a harness fits a mount when `ArmorComponent.FamilyType == Monster.FamilyType` (v1.5.7
   `SPInventoryVM`: the equip check, and the unequip after a mount swap). Nothing else checks the pair. Vanilla families
-  are 0 human, 1 horse and mule, 2 camel; the Armory adds 4 chariot and 10 elephant.
+  are 0 human, 1 horse and mule, 2 camel, 3 cow, 4 goose, 5 hog, 6 sheep and 8 chicken; the Armory adds 4 chariot
+  and 10 elephant.
 - **The Armory:** the warg, fell warg, dire wolf and spider Monsters are family 1, like the horse, so all 111 family 1
   harnesses fit them, 45 of them with reins. Those rigs are not horse skeletons: a horse saddle does not fit their
   bodies, and its reins have no rein skeleton to hang on.
@@ -25,10 +26,10 @@ elephants and the chariot keep their families.
 
 | Monster | Rig | Items | Family (data, TAOM) | Saddles (TAOM rosters) |
 |---|---|---|---|---|
-| `warg` | `skeleton_warg` | `warg_albino`, `warg_brown`, `warg_dark` | 1, **11** | `warg_saddle` (59 rosters) |
-| `fell_warg` | `skeleton_warg` (`as_warg`) | `fell_warg` | 1, **11** | `warg_saddle` (35 rosters) |
-| `dire_wolf` | `adod_wolf_armature_unused` | `dire_wolf_grey`, `_white`, `_black`, `_brown` | 1, **12** | `dire_wolf_saddle` (24 rosters) |
-| `spider` | spider rig | 5 `spider_mount_*` | 1, **13** | none (30 rosters ride bare) |
+| `warg` | `skeleton_warg` | `warg_albino`, `warg_brown`, `warg_dark` | 1, **11** | `warg_saddle` |
+| `fell_warg` | `skeleton_warg` (`as_warg`) | `fell_warg` | 1, **11** | `warg_saddle` |
+| `dire_wolf` | `adod_wolf_armature_unused` | `dire_wolf_grey`, `_white`, `_black`, `_brown` | 1, **12** | `dire_wolf_saddle` |
+| `spider` | spider rig | 5 `spider_mount_*` | 1, **13** | none (rides bare) |
 | `taom_war_ram`, `taom_elk`, `taom_animalia_elk`/`_moose`, 5 `taom_wildmesh_*` | horse skeleton (`base_monster="horse"`) | | 1, unchanged | ram bardings, `taom_elk_saddle_a`, horse saddles |
 | `taom_war_elephant`, `taom_mumakil` | elephant | | 10, unchanged | `sk_elephant_armor_*` |
 | `chariot` | chariot | `taom_chariot_a` | 4, unchanged | `taom_chariot_armour_*` |
@@ -44,7 +45,8 @@ now; a TAOM-side change reaches every player with the TAOM update. The Armory is
 a pull request against. Two postfixes write the family right after the engine reads each Monster and item from XML
 (`Monster.Deserialize`, `ItemObject.Deserialize`), through the private `FamilyType` setters, cached once
 (`CreatureSaddleFamilyWriter`). Category `Patch154_CreatureSaddleFamilies`, applied at ProcessLoad, so it is in place
-before the first game reads its XML; it runs for each game (campaign and Custom Battle) and each module copy of an id.
+before the first game reads its XML; it runs for each game (campaign and Custom Battle). The engine merges every module's copy of an id into one
+node before it reads it, so each id is read once.
 
 If the Armory later sets these families itself, the postfix finds the value already right and writes nothing.
 `CreatureSaddleRosterTests` accepts either value in the live Armory.
@@ -63,6 +65,11 @@ skeleton anyway.
   before this change can put a horse saddle back on a warg until the next load repairs it; Patch153 keeps that from
   crashing. A family check there is a possible follow-up.
 - How a creature looks with no saddle when a soldier carried a horse saddle before: it rides bare.
+- A rider on a warg, dire wolf or spider gets no mounted gestures in a mission conversation:
+  `CampaignMissionComponent.GetAnimDataForRiderAndMountAgents` matches the mount's family against `horse` (1) and
+  `camel` (2) only. It does not throw (null and `TryGetValue` guards). Looks only.
+- In co-op the authority's `Clan.PlayerClan` is not a guest's clan, so the old-save repair does not reach a guest's
+  heroes. The inventory still refuses a harness of the wrong family.
 
 ## Configuration
 

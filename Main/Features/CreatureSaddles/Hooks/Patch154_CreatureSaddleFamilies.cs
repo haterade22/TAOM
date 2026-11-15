@@ -30,7 +30,7 @@ public static class Patch154_MonsterFamily
 }
 
 /// <summary>
-/// Patch154: after the engine reads an item from XML (each module's copy of an id is read in turn), a creature saddle
+/// Patch154: after the engine reads an item from XML (every module's copy of an id is merged into one node first), a creature saddle
 /// gets its mount's family (<see cref="CreatureSaddleFamilies"/>). Registry: "Patch154_CreatureSaddleFamilies".
 /// </summary>
 [HarmonyPatch(typeof(ItemObject), nameof(ItemObject.Deserialize), new[] { typeof(MBObjectManager), typeof(XmlNode) })]

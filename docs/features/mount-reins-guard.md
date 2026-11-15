@@ -14,7 +14,7 @@ mounts (elk, ram, WildMesh) keep vanilla's reins.
   a `reins_mesh`, calls `MBAgentVisuals.AddHorseReinsClothMesh(rein, rope)`. Nothing checks the mount. The cloth hangs
   on the Monster's `rein_skeleton`, and the creature mounts have none (#1081 RCA row 12, "Five rein attributes" in
   [dire-wolf.md](dire-wolf.md)).
-- **When it runs:** for every mounted agent's visuals (battle spawns, scene characters), never for the inventory or
+- **When it runs:** for every mounted agent's visuals (mission mount agents, through `MissionScreen` and `AddMountMeshToAgentVisual`), never for the inventory or
   portrait entity, which takes the `agentVisual == null` branch and builds no cloth.
 - **Player case (2026-11-15):** a Rivendell elf hero riding a dire wolf crashed natively at every mounted field-battle
   spawn on v2.0.38 (log ends at `[CareerPerks] mount stats for rider 'main_hero'`), and stopped crashing once the

@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Xml.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using TAOM.Features.CreatureSaddles;
 
 namespace TAOM.Tests.Features.MountReins;
 
@@ -28,7 +29,9 @@ public class MountReinsLiveDataTests
             Assert.IsTrue(monsters.TryGetValue(id, out var m), $"Monster '{id}' not found in the live Armory");
             Assert.IsNull(m.Attribute("rein_skeleton"), $"'{id}' now has a rein skeleton");
             Assert.IsNull(m.Attribute("base_monster"), $"'{id}' now inherits from another Monster");
-            Assert.AreEqual("1", (string?)m.Attribute("family_type"), $"'{id}' left harness family 1");
+            var family = (string?)m.Attribute("family_type");
+            Assert.IsTrue(family == "1" || family == CreatureSaddleFamilies.Monsters[id].ToString(),
+                $"'{id}' has family {family} in the Armory: neither the horse family nor TAOM's");
         }
     }
 

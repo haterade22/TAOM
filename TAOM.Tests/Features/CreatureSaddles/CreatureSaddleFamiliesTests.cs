@@ -66,7 +66,7 @@ public class CreatureSaddleFamiliesTests
     public void NewFamilies_AvoidEveryFamilyTheDataAlreadyUses()
     {
         // 0 humans, 1 horse, 2 camel, 4 chariot, 10 elephant (installed data, 2026-11-15).
-        var taken = new HashSet<int> { 0, 1, 2, 4, 10 };
+        var taken = new HashSet<int> { 0, 1, 2, 3, 4, 5, 6, 8, 10 };
         foreach (var f in CreatureSaddleFamilies.Monsters.Values)
             Assert.IsFalse(taken.Contains(f), $"family {f} is already used");
     }

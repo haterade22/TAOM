@@ -293,7 +293,7 @@ Copy the warg's shape (`LOTRLOME_Armory/ModuleData/Monsters/LOTR/lotr_monster_wa
 | Field | Value | Why (campaign evidence) |
 |---|---|---|
 | `num_paces` | **6** | every mountable monster is 6; the mount machinery indexes the gallop pace (5) |
-| `family_type` | **1** (horse family) | family 1 carries vanilla's complete rider-death / dismount / rider-fall surface. The spider tried 11 — no such surface exists for it. Harness isolation is done in C# (mount-lock), not via family |
+| `family_type` | **1** (horse family) | family 1 carries vanilla's complete rider-death / dismount / rider-fall surface. The spider tried 11; no such surface exists for it. Harness isolation is done in C# (mount-lock), not via family. Keep 1 in the XML: since #1306 TAOM's Patch154 sets the warg, fell warg, dire wolf and spider to 11, 12 and 13 in memory after the load ([creature-saddles.md](../features/creature-saddles.md)). On v1.5.7 no installed DLL reads `FamilyType` in a single-player mission except the inventory and the mounted conversation gestures (#1306 engine review), so the rider-death surface claim is not re-checked there; the in-game check is owed |
 | `<Flags>` | **EXACTLY** `Mountable CanRear RunsAwayWhenHit CanCharge CanWander` | **`CanAttack` is forbidden on a mountable monster** — it activates the engine's own attack-AI (`Agent_ai::set_attack_entity`), a code path NO working mount takes, and the site of the 1.4.6 charge-CTD (null `agent+0xAD8`, Event-Log-proven 2026-06-12). The BT bite/trample does NOT need it — the warg proves it. No other extras: no baseline mount declares any |
 | Rein surface | the warg's five — `rein_handle_bone` + `rein_handle_left/right_local_pos` + `rein_collision_1/2_bone` — but **vanilla declares all twelve** | "warg-minimal is fine" has never been tested against a native change in the rein path, and v1.4.8 made one. The elephant and mûmakil declare **zero** while still being `Mountable`. See "The rein-attribute invariant" below |
 | Rider adders | `rider_eye_height_adder`, `rider_body_capsule_height_adder`, `rider_body_capsule_forward_adder` | warg + vanilla horse parity (camera + rider capsule) |
@@ -520,7 +520,7 @@ invariant under Phase 2, still unverified). Since 2026-11-08 Patch47 dismounts f
 6. Typed falls WITH `_continue` siblings + typed verbs or blow-path AVs (06-11).
 7. Binding targets must exist — phantom = degenerate record = delayed AV (06-11).
 8. Rider partial at the TOP of the file or race sets inherit nothing (06-11).
-9. `family_type=1` for the vanilla rider surface (06-11).
+9. `family_type=1` in the XML for the vanilla rider surface (06-11); Patch154 changes it in memory (#1306).
 10. NO `CanAttack` on mountable monsters — engine attack-AI path, 1.4.6 CTD (06-12).
 11. `jump_start_action` typed `actt_dash`, never `actt_jump` (06-12).
 12. Jump tables TOTAL over all 9 directions — BT creatures jump sideways (06-12).
