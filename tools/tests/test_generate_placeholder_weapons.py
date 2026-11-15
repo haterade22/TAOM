@@ -125,6 +125,42 @@ class PlaceholderTierLimitTests(unittest.TestCase):
                                45 * lspec["class_tier_fraction"]["8"] * lspec["craft_default"]["polearm"])
 
 
+class PlaceholderPerAttackTests(unittest.TestCase):
+    """Each attack has its own damage_factor and its own limits (#1296), as restat_melee_blades.class_ratios
+    holds them: a thrust at its limit must not stop the swing."""
+
+    def setUp(self):
+        self._tmp = tempfile.TemporaryDirectory()
+        self.addCleanup(self._tmp.cleanup)
+        self.root = armory(Path(self._tmp.name))
+
+    def test_each_attack_gets_its_own_factor_on_multiline_and_single_attack_pieces(self):
+        xml = '<Swing damage_type="Cut"\r\n    damage_factor="4.00" />\r\n<Thrust\r\n    damage_factor="2.00" />'
+        out = gen.scale_factors(xml, 1.5, 1.0)
+        self.assertIn('damage_factor="6.00"', out)
+        self.assertIn('damage_factor="2.00"', out)
+        self.assertIn('damage_factor="3.00"', gen.scale_factors('<Thrust damage_factor="2.00" />', 9.0, 1.5))
+
+    def test_a_thrust_at_its_limit_leaves_the_swing_free_to_rise(self):
+        usage = cata.Usage("D", True, (), "set", frozenset({"swing", "thrust"}),
+                           md.WeaponStats(swing_damage=45, raw_swing_speed=22.0,
+                                          thrust_damage=30, raw_thrust_speed=12.0))
+        cat, priced = donor_weapon("TwoHandedPolearm", usage)
+        donor = priced["donor"]
+        lspec = ladder.load_spec()
+        limit = ladder.tier_limit("TwoHandedPolearm", 5, "nowhere", lspec)
+        swing_cap = ladder.max_factor(limit, donor.swing_damage, 0, donor.swing_dps, 0.0)
+        thrust_cap = ladder.max_factor(limit, 0, donor.thrust_damage, 0.0, donor.thrust_dps)
+        _p, _i, plan, _s, _d, _t = gen.build(spec_for(5), cat, priced, [], self.root)
+        k_target = plan[0][2].target / donor.best_dps
+        self.assertLess(thrust_cap, 1.05)                  # the thrust has no room
+        self.assertGreater(min(k_target, swing_cap), 2.0)  # the swing has plenty
+        xml = plan[0][5]
+        self.assertIn(f'damage_factor="{ladder.floor_factor(4.00 * min(k_target, swing_cap)):.2f}"', xml)
+        self.assertIn(f'damage_factor="{ladder.floor_factor(2.00 * min(k_target, thrust_cap)):.2f}"', xml)
+        self.assertAlmostEqual(plan[0][3], min(k_target, swing_cap))   # the DPS ratio follows the swing
+
+
 class PlaceholderFactorRoundingTests(unittest.TestCase):
     def test_a_scaled_factor_is_rounded_down_never_up(self):
         xml = '<Swing damage_factor="4.00" /><Thrust damage_factor="2.00" />'
