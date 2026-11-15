@@ -4,8 +4,8 @@ using System.Text;
 namespace TAOM.Features.Autorun.Scenario;
 
 /// <summary>What a finished run knows, for the done file and the outcome line. Days are <see cref="ScenarioRules.UnknownDay"/> when never read.</summary>
-internal sealed record ScenarioRunFacts(string Reason, int DayStart, int DayEnd, int InquiriesHidden, int NoticesHidden, int TimeResets,
-    string Prepared, double WallSeconds, string Started, string Ended);
+internal sealed record ScenarioRunFacts(string Reason, int DayStart, int DayEnd, int InquiriesHidden, int NoticesHidden,
+    int EventWindowsClosed, int TimeResets, string Prepared, double WallSeconds, string Started, string Ended);
 
 /// <summary>
 /// The text of the files the autorun leaves for the launcher: <c>autorun_done.txt</c> (one <c>key=value</c> per line, written once;
@@ -35,6 +35,7 @@ internal static class ScenarioAutorunDone
         Line(text, "days_wanted", Int(plan.Days));
         Line(text, "inquiries_hidden", Int(facts.InquiriesHidden));
         Line(text, "notices_hidden", Int(facts.NoticesHidden));
+        Line(text, "event_windows_closed", Int(facts.EventWindowsClosed));
         Line(text, "time_resets", Int(facts.TimeResets));
         Line(text, "prepared", facts.Prepared.Replace('\r', ' ').Replace('\n', ' '));
         Line(text, "wall_seconds", F1(facts.WallSeconds));

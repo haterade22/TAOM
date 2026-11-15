@@ -360,6 +360,39 @@ public class ScenarioAutorunDriverTests
         Assert.AreEqual(0, _host.NoticesHidden);
     }
 
+    // A TAOM story event window (the War Chronicle's) pauses the campaign while it shows; the first run stood 9 minutes on day 2.
+    [TestMethod]
+    public void Tick_Running_ClosesAnEventWindowLogsItAndCountsItApartFromNotices()
+    {
+        var driver = ToRunning("days=50\n");
+        _host.EventWindowOpen = true;
+        _host.NoticeOpen = true;
+
+        driver.Tick(1f);
+        driver.Tick(1f);
+
+        Assert.AreEqual(1, _host.EventWindowsClosed);
+        Assert.AreEqual(1, InfoLogs("event window closed n=1 phase=Running"));
+        _host.Days = 60;
+        driver.Tick(1f);
+        var done = Done();
+        Assert.AreEqual("1", Value(done, "event_windows_closed"));
+        Assert.AreEqual("1", Value(done, "notices_hidden"));
+    }
+
+    [TestMethod]
+    public void Tick_Running_WithNoEventWindow_ReportsNoneClosed()
+    {
+        var driver = ToRunning("days=50\n");
+
+        Run(driver, 3);
+        _host.Days = 60;
+        driver.Tick(1f);
+
+        Assert.AreEqual("0", Value(Done(), "event_windows_closed"));
+        Assert.AreEqual(0, InfoLogs("event window closed"));
+    }
+
     [TestMethod]
     public void Tick_WantedDaysPassed_FinishesOkWithTheDayNumbers()
     {
