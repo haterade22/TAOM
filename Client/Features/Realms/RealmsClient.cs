@@ -22,7 +22,7 @@ internal static class RealmsClient
     public static void OnGameStart()
     {
         ConversationNames.Patch();
-        TitleEncyclopediaPage.Patch();
+        TitleEncyclopediaPagePatch.Apply();
         EventWindows.Clear();
     }
 
