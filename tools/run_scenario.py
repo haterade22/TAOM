@@ -10,12 +10,13 @@ Own arguments (everything else goes to the Fords runner, for example --dry-run, 
   --kind campaign-new   --days N (1 to 1000, default 3)   --culture ID (default gondor)   --speed X (above 0, at most 30, default 15)
   --scenario LABEL      --stall-seconds N (default 600)
 
-This tool does not build or deploy: deploy this tree with `pwsh ./build.ps1` first. It reads HEAD once, at launch, and refuses to
-start when git cannot say.
+This tool does not build or deploy: deploy this tree with `pwsh ./build.ps1` first. It reads the checkout (HEAD and the uncommitted files
+under the build's own pathspec) once, at launch, with tools/autorun_build.py, and refuses to start when git cannot say.
 
 Exit 0 needs reason=ok, days_run at least days_wanted, the [Check] pass line in the TAOM log, no CrashReport error block, the clean
-module unload line, a done file that echoes the armed plan, no arm file warning, a [BuildStamp] of this tree's HEAD as read at
-launch, and a game that left by itself. The PASS line names that build. Then the war ledger of the run is saved as ledger.txt in
+module unload line, a done file that echoes the armed plan, no arm file warning, a [BuildStamp] that is the checkout as read at
+launch (autorun_build.stale_build: the sha is HEAD, no MISMATCH, the .dirty mark agrees with the tree, no uncommitted watched file is newer
+than the build), and a game that left by itself. The PASS line names that build. Then the war ledger of the run is saved as ledger.txt in
 the run folder.
 
 Run:  python tools/run_scenario.py --days 30 --dry-run
@@ -30,7 +31,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
-import ingame_verdict as iv  # noqa: E402
+import autorun_build  # noqa: E402
 import run_fords_autorun as runner  # noqa: E402
 
 ENV_VAR = "TAOM_AUTORUN"
@@ -52,7 +53,6 @@ LEDGER_TOOL = Path(__file__).resolve().parent / "analyze_war_ledger.py"
 LEDGER_TIMEOUT_SECONDS = 300
 # ScenarioAutorunDriver.cs logs every arm file warning with this text (Prefix + "arm file: "); the game then ran a default instead.
 ARM_WARNING = "[Autorun][Scenario] arm file: "
-NOT_CHECKED = object()
 RUNNER_OPTIONS = ("Fords runner options this tool passes on: --wall-limit SECONDS (default max(1800, 600 + days * 20)), --runs N, "
                   "--runs-root DIR, --require-idle-minutes N, --keep-on-crash MINUTES, --dry-run. The Fords match options (factions, maps, "
                   "AI profile) are parsed and ignored; --speed is this tool's campaign speed.")
@@ -130,9 +130,10 @@ def parse_count(done, key):
         return None
 
 
-def judge(done, report_json, log_text=None, armed=None, head=NOT_CHECKED):
+def judge(done, report_json, log_text=None, armed=None, checkout=None):
     """(exit code, why). Every failed condition adds one reason; the reasons are joined with '; '. armed is the parsed plan the done file
-    must echo; head is this tree's HEAD sha (None when git could not say) that the log's [BuildStamp] must name. main passes both."""
+    must echo; checkout is (HEAD sha, {path: mtime}) as main read it with autorun_build.checkout_state() before the game started, which the
+    log's [BuildStamp] must match (autorun_build.stale_build). main passes both; a judge called without a checkout fails."""
     if not done:
         return 1, "no done file"
     problems = []
@@ -163,41 +164,18 @@ def judge(done, report_json, log_text=None, armed=None, head=NOT_CHECKED):
         if warning is not None:
             problems.append("the game did not take the arm file as written: " + warning[:200])
     build = None
-    if log_text is not None and head is not NOT_CHECKED:
-        build, problem = build_check(log_text, head)
+    if checkout is None:
+        problems.append("the checkout was not read at launch, so the build cannot be judged")
+    elif log_text is not None:
+        problem = autorun_build.stale_build(log_text, *checkout)
         if problem is not None:
-            problems.append(problem)
+            problems.append("the game ran a build that is not this checkout: " + problem)
+        else:
+            build = autorun_build.build_label(log_text)
     if problems:
         return 1, "; ".join(problems)
     proved = f"build {build}, " if build else ""
     return 0, f"{proved}reason=ok, {days_run} of {days_wanted} days, pass line present, no CrashReport block, clean unload"
-
-
-def build_check(log_text, head):
-    """(build label, problem). The label is the log's [BuildStamp] sha, cut to 9 characters, with .dirty when the build had local
-    edits; None without a stamp. The problem is None when that build is head (.dirty allowed: a run under test is a working-tree
-    build). Copied from run_long_defeat.build_of: a stale deploy otherwise passes on the old build's data."""
-    stamp = next((s for s in (iv.parse_build_stamp(row) for row in log_text.splitlines() if "[BuildStamp]" in row) if s), None)
-    if stamp is None:
-        return None, "the log has no [BuildStamp] line with a git sha"
-    sha, dirty = stamp
-    label = sha[:9] + (".dirty" if dirty else "")
-    if not head:
-        return label, f"this tree's HEAD is unknown, so the build {label} cannot be matched"
-    if not sha.startswith(head):
-        return label, f"the log's build {label} is not this tree's HEAD {head[:9]}: deploy this tree and run again"
-    return label, None
-
-
-def tree_head_sha():
-    """The commit of the tree this tool lives in, or None when git cannot say."""
-    try:
-        done = subprocess.run(["git", "-C", str(Path(__file__).resolve().parent.parent), "rev-parse", "HEAD"],
-                              capture_output=True, text=True, timeout=30)
-    except (OSError, subprocess.SubprocessError):
-        return None
-    head = done.stdout.strip()
-    return head if done.returncode == 0 and re.fullmatch(r"[0-9a-f]{40}", head) else None
 
 
 def run_ledger(log_copy, say):
@@ -247,11 +225,12 @@ def main(argv=None):
     runner.STATUS_FILE = STATUS_FILE
     runner.RUNS_ROOT = RUNS_ROOT
     runner.arm_text_for = armed_text
-    head = tree_head_sha()  # read at launch: a commit made during the run is not the deployed build
-    if head is None:
-        print("cannot read this tree's HEAD with git, so no run could prove its build; nothing was started")
+    # Read once, before the game starts: a commit or an edit made during the run is not the deployed build.
+    checkout, refusal = autorun_build.read_checkout_for_launch()
+    if refusal:
+        print(refusal)
         return 1
-    runner.judge = lambda done, report_json, log_text=None: judge(done, report_json, log_text, known, head)
+    runner.judge = lambda done, report_json, log_text=None: judge(done, report_json, log_text, known, checkout)
     runner.show_results = show_results
     return runner.main(rest)
 
