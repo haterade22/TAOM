@@ -1614,3 +1614,8 @@ PR #1309 told a player with a separate BUTR copy to "delete the folder of a copy
 - **Why missed:** the advice was written for the Workshop case, where the stub wins, and the `Modules` case got the same verb.
 - **Prevent:** for each place a check can find the problem (here `InWorkshop` true and false), follow the advice to its effect on disk before writing it.
 - **Source:** [rca-pr1309-startup-alerts-2026-11-15.md](../rca-pr1309-startup-alerts-2026-11-15.md) finding 1.
+### A notice on a MissionState hook shows on every mission, so its text cannot say "battle" (PR #1308, 2026-11-15)
+PR #1308's shader notice hooks `MissionState.OnTick`, which runs for every mission that `MissionState.OpenNew` starts: SandBox alone opens about 20 kinds (town, tavern, indoor, conversation, arena, hideout). All three texts said "this battle", so a cold-cache town load would read "Preparing this battle".
+- **Why missed:** the measurements and the test case were battle loads, and the text followed the test case.
+- **Prevent:** before writing the text of a mission-level notice, list who opens a mission (`MissionState.OpenNew` callers) and word it for all of them, or filter in code. Change the English before the language rows are seeded, when the change is free.
+- **Source:** [rca-pr1308-battle-shader-notice-2026-11-15.md](../rca-pr1308-battle-shader-notice-2026-11-15.md) finding 3.

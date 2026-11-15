@@ -4039,7 +4039,7 @@
 		id="lord_AN1_1"
 		faction="Faction.clan_arthedain_1"
 		spouse="Hero.lord_AN1_3"
-		text="{=lord_AN1_1_description}Arvegil II, King of Arthedain, heir of Arvedui and of Isildur, who holds Fornost against the orcs of Gundabad and keeps an uneasy peace with his kin in Cardolan and Rhudaur." />
+		text="{=lord_AN1_1_description}Aranarth, King of Arthedain, heir of Arvedui and of Isildur, who holds Fornost against the orcs of Gundabad and keeps an uneasy peace with his kin in Cardolan and Rhudaur." />
 	<Hero
 		id="lord_AN1_2"
 		faction="Faction.clan_arthedain_1"
@@ -4122,7 +4122,7 @@
 		id="lord_CA1_1"
 		faction="Faction.clan_cardolan_1"
 		spouse="Hero.lord_CA1_3"
-		text="{=lord_CA1_1_description}Aranthir, King of Cardolan, heir of Earendur's second son, who keeps the barrow-kings' crown at Caras Gorthad." />
+		text="{=lord_CA1_1_description}Osthir, King of Cardolan, heir of Earendur's second son, who keeps the barrow-kings' crown at Caras Gorthad." />
 	<Hero
 		id="lord_CA1_2"
 		faction="Faction.clan_cardolan_1"
@@ -4189,7 +4189,7 @@
 		id="lord_RH1_1"
 		faction="Faction.clan_rhudaur_1"
 		spouse="Hero.lord_RH1_3"
-		text="{=lord_RH1_1_description}Belegorn, King of Rhudaur, heir of Earendur's third son, lord of Cameth Brin and of the hill-men of the Angle." />
+		text="{=lord_RH1_1_description}Elamarth, King of Rhudaur, heir of Earendur's third son, lord of Cameth Brin and of the hill-men of the Angle." />
 	<Hero
 		id="lord_RH1_2"
 		faction="Faction.clan_rhudaur_1"
@@ -4424,7 +4424,7 @@
 		id="lord_AND1_1"
 		faction="Faction.clan_angaladh_1"
 		spouse="Hero.lord_AND1_3"
-		text="{=lord_AND1_1_description}Ingomar, King of Angáladh, lord of Woodmen-town, who keeps the eaves of Mirkwood against the shadow of Dol Guldur." />
+		text="{=lord_AND1_1_description}Theodemiro, King of Angáladh, lord of Woodmen-town, who keeps the eaves of Mirkwood against the shadow of Dol Guldur." />
 	<Hero
 		id="lord_AND1_2"
 		faction="Faction.clan_angaladh_1"
@@ -4475,7 +4475,7 @@
 		id="lord_DO1_1"
 		faction="Faction.clan_dorwinion_1"
 		spouse="Hero.lord_DO1_3"
-		text="{=lord_DO1_1_description}Ostric, King of Dorwinion, lord of Vineholm, whose wine goes up the River Running to Dale and the Elves of Mirkwood." />
+		text="{=lord_DO1_1_description}Hawin, King of Dorwinion, lord of Vineholm, whose wine goes up the River Running to Dale and the Elves of Mirkwood." />
 	<Hero
 		id="lord_DO1_2"
 		faction="Faction.clan_dorwinion_1"
@@ -4542,7 +4542,7 @@
 		id="lord_SRH1_1"
 		faction="Faction.clan_southrhovanion_1"
 		spouse="Hero.lord_SRH1_3"
-		text="{=lord_SRH1_1_description}Vidumar, King of South Rhovanion, lord of Vidugard, who rides the plains south of Mirkwood and remembers the Wainriders." />
+		text="{=lord_SRH1_1_description}Suniefredo, King of South Rhovanion, lord of Vidugard, who rides the plains south of Mirkwood and remembers the Wainriders." />
 	<Hero
 		id="lord_SRH1_2"
 		faction="Faction.clan_southrhovanion_1"

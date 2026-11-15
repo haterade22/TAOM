@@ -23,10 +23,10 @@
                 value="5" />
             <skill
                 id="OneHanded"
-                value="72" />
+                value="73" />
             <skill
                 id="TwoHanded"
-                value="73" />
+                value="72" />
             <skill
                 id="Polearm"
                 value="82" />
@@ -372,13 +372,13 @@
                 value="10" />
             <skill
                 id="OneHanded"
-                value="137" />
+                value="142" />
             <skill
                 id="TwoHanded"
                 value="128" />
             <skill
                 id="Polearm"
-                value="142" />
+                value="137" />
             <skill
                 id="Bow"
                 value="15" />
@@ -908,13 +908,13 @@
                 value="15" />
             <skill
                 id="OneHanded"
-                value="202" />
-            <skill
-                id="TwoHanded"
                 value="173" />
             <skill
-                id="Polearm"
+                id="TwoHanded"
                 value="167" />
+            <skill
+                id="Polearm"
+                value="202" />
             <skill
                 id="Bow"
                 value="20" />
@@ -1287,10 +1287,10 @@
                 value="20" />
             <skill
                 id="OneHanded"
-                value="242" />
+                value="247" />
             <skill
                 id="TwoHanded"
-                value="247" />
+                value="242" />
             <skill
                 id="Polearm"
                 value="228" />
@@ -1521,13 +1521,13 @@
                 value="20" />
             <skill
                 id="OneHanded"
-                value="257" />
+                value="232" />
             <skill
                 id="TwoHanded"
                 value="228" />
             <skill
                 id="Polearm"
-                value="232" />
+                value="257" />
             <skill
                 id="Bow"
                 value="25" />
@@ -1684,10 +1684,10 @@
                 value="25" />
             <skill
                 id="OneHanded"
-                value="282" />
+                value="287" />
             <skill
                 id="TwoHanded"
-                value="287" />
+                value="282" />
             <skill
                 id="Polearm"
                 value="268" />
@@ -2540,9 +2540,9 @@
     </face>
     <skills>
       <skill id="Athletics" value="43" />
-      <skill id="OneHanded" value="60" />
+      <skill id="OneHanded" value="65" />
       <skill id="TwoHanded" value="60" />
-      <skill id="Polearm" value="65" />
+      <skill id="Polearm" value="60" />
       <skill id="Throwing" value="25" />
       <skill id="Riding" value="0" />
       <skill id="Bow" value="0" />
@@ -2687,9 +2687,9 @@
     </face>
     <skills>
       <skill id="Athletics" value="90" />
-      <skill id="OneHanded" value="110" />
-      <skill id="TwoHanded" value="130" />
-      <skill id="Polearm" value="125" />
+      <skill id="OneHanded" value="125" />
+      <skill id="TwoHanded" value="110" />
+      <skill id="Polearm" value="130" />
       <skill id="Throwing" value="55" />
       <skill id="Riding" value="0" />
       <skill id="Bow" value="0" />
@@ -2942,9 +2942,9 @@
     <skills>
       <skill id="Athletics" value="80" />
       <skill id="Riding" value="90" />
-      <skill id="OneHanded" value="65" />
+      <skill id="OneHanded" value="70" />
       <skill id="Polearm" value="95" />
-      <skill id="TwoHanded" value="70" />
+      <skill id="TwoHanded" value="65" />
       <skill id="Bow" value="10" />
       <skill id="Crossbow" value="5" />
       <skill id="Throwing" value="30" />
@@ -2954,8 +2954,8 @@
     </upgrade_targets>
     <Equipments>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.wm_mordor_set1_axe_a01" />
-        <equipment slot="Item1" id="Item.wm_mordor_set1_polearm_a03" />
+        <equipment slot="Item0" id="Item.wm_mordor_set1_polearm_a03" />
+        <equipment slot="Item1" id="Item.wm_mordor_set1_axe_a01" />
         <equipment slot="Head" id="Item.sk_md_orc_rdr_helmet_med_a" />
         <equipment slot="Body" id="Item.sk_md_orc_inf_chainmail_med_a" />
         <equipment slot="Cape" id="Item.sk_md_orc_pauldron_med_a" />
@@ -2993,8 +2993,8 @@
     </upgrade_targets>
     <Equipments>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.wm_mordor_set1_mace_a01" />
-        <equipment slot="Item1" id="Item.wm_mordor_set1_polearm_a01" />
+        <equipment slot="Item0" id="Item.wm_mordor_set1_polearm_a01" />
+        <equipment slot="Item1" id="Item.wm_mordor_set1_mace_a01" />
         <equipment slot="Head" id="Item.sk_md_orc_inf_helmet_med_a" />
         <equipment slot="Body" id="Item.sk_md_orc_inf_chest_med_b" />
         <equipment slot="Cape" id="Item.sk_md_orc_pauldron_med_b" />
@@ -3030,8 +3030,8 @@
     <upgrade_targets />
     <Equipments>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.sm_md_num_sword_1h_a" />
-        <equipment slot="Item1" id="Item.wm_mordor_set1_polearm_a01" />
+        <equipment slot="Item0" id="Item.wm_mordor_set1_polearm_a01" />
+        <equipment slot="Item1" id="Item.sm_md_num_sword_1h_a" />
         <equipment slot="Head" id="Item.sk_md_orc_brt_helmet_heavy_a" />
         <equipment slot="Body" id="Item.sk_md_orc_inf_chest_heavy_e" />
         <equipment slot="Cape" id="Item.sk_md_orc_pauldron_med_b" />
@@ -3057,9 +3057,9 @@
     </face>
     <skills>
       <skill id="Athletics" value="90" />
-      <skill id="OneHanded" value="102" />
-      <skill id="TwoHanded" value="103" />
-      <skill id="Polearm" value="107" />
+      <skill id="OneHanded" value="107" />
+      <skill id="TwoHanded" value="102" />
+      <skill id="Polearm" value="103" />
       <skill id="Bow" value="15" />
       <skill id="Crossbow" value="10" />
       <skill id="Throwing" value="35" />
@@ -3134,8 +3134,8 @@
     </face>
     <skills>
       <skill id="Athletics" value="125" />
-      <skill id="OneHanded" value="177" />
-      <skill id="TwoHanded" value="118" />
+      <skill id="OneHanded" value="152" />
+      <skill id="TwoHanded" value="177" />
       <skill id="Bow" value="195" />
       <skill id="Throwing" value="65" />
       <skill id="Riding" value="15" />
@@ -3292,9 +3292,9 @@
     </face>
     <skills>
       <skill id="Athletics" value="43" />
-      <skill id="OneHanded" value="60" />
+      <skill id="OneHanded" value="65" />
       <skill id="TwoHanded" value="60" />
-      <skill id="Polearm" value="65" />
+      <skill id="Polearm" value="60" />
       <skill id="Throwing" value="25" />
       <skill id="Riding" value="0" />
       <skill id="Bow" value="15" />
@@ -3686,9 +3686,9 @@
     </upgrade_targets>
     <Equipments>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.sm_md_num_sword_1h_a" />
+        <equipment slot="Item0" id="Item.wm_gundabad_spear_a03" />
         <equipment slot="Item1" id="Item.sm_md_num_cav_shield_med_a" />
-        <equipment slot="Item2" id="Item.wm_gundabad_spear_a03" />
+        <equipment slot="Item2" id="Item.sm_md_num_sword_1h_a" />
         <equipment slot="Head" id="Item.sk_md_num_cav_helmet_med_a" />
         <equipment slot="Body" id="Item.sm_md_num_cav_chest_med_a" />
         <equipment slot="Cape" id="Item.sm_md_num_cav_pauld_med_a" />
@@ -3698,9 +3698,9 @@
         <equipment slot="HorseHarness" id="Item.sm_md_num_barding_heavy_a" />
       </EquipmentRoster>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.sm_md_num_sword_1h_b" />
+        <equipment slot="Item0" id="Item.wm_gundabad_spear_a03" />
         <equipment slot="Item1" id="Item.sm_md_num_cav_shield_med_a" />
-        <equipment slot="Item2" id="Item.wm_gundabad_spear_a03" />
+        <equipment slot="Item2" id="Item.sm_md_num_sword_1h_b" />
         <equipment slot="Head" id="Item.sk_md_num_cav_helmet_med_a" />
         <equipment slot="Body" id="Item.sm_md_num_cav_chest_med_b" />
         <equipment slot="Cape" id="Item.sm_md_num_cav_pauld_med_a" />
@@ -3737,9 +3737,9 @@
     </upgrade_targets>
     <Equipments>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.sm_md_num_sword_1h_c" />
+        <equipment slot="Item0" id="Item.sm_uruk_halberd_j" />
         <equipment slot="Item1" id="Item.sm_md_num_cav_shield_med_a" />
-        <equipment slot="Item2" id="Item.sm_uruk_halberd_j" />
+        <equipment slot="Item2" id="Item.sm_md_num_sword_1h_c" />
         <equipment slot="Head" id="Item.sk_md_num_cav_helmet_med_a" />
         <equipment slot="Body" id="Item.sm_md_num_cav_chest_heavy_b" />
         <equipment slot="Cape" id="Item.sm_md_num_cav_pauld_med_a" />
@@ -3749,9 +3749,9 @@
         <equipment slot="HorseHarness" id="Item.sm_md_num_barding_heavy_b" />
       </EquipmentRoster>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.sm_md_num_sword_1h_c" />
+        <equipment slot="Item0" id="Item.sm_uruk_halberd_j" />
         <equipment slot="Item1" id="Item.sm_md_num_cav_shield_med_a" />
-        <equipment slot="Item2" id="Item.sm_uruk_halberd_j" />
+        <equipment slot="Item2" id="Item.sm_md_num_sword_1h_c" />
         <equipment slot="Head" id="Item.sk_md_num_cav_helmet_med_a" />
         <equipment slot="Body" id="Item.sm_md_num_cav_chest_heavy_b" />
         <equipment slot="Cape" id="Item.sm_md_num_cav_pauld_med_a" />
@@ -3788,9 +3788,9 @@
     </upgrade_targets>
     <Equipments>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.sm_md_num_sword_1h_c" />
+        <equipment slot="Item0" id="Item.sm_uruk_halberd_j" />
         <equipment slot="Item1" id="Item.sm_md_num_cav_shield_heavy_a" />
-        <equipment slot="Item2" id="Item.sm_uruk_halberd_j" />
+        <equipment slot="Item2" id="Item.sm_md_num_sword_1h_c" />
         <equipment slot="Head" id="Item.sk_md_num_cav_helmet_heavy_a" />
         <equipment slot="Body" id="Item.sm_md_num_cav_chest_heavy_a" />
         <equipment slot="Cape" id="Item.sm_md_num_cav_pauld_heavy_a" />
@@ -3800,9 +3800,9 @@
         <equipment slot="HorseHarness" id="Item.sm_md_num_barding_elite_a" />
       </EquipmentRoster>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.sm_md_num_sword_1h_c" />
+        <equipment slot="Item0" id="Item.sm_uruk_halberd_j" />
         <equipment slot="Item1" id="Item.sm_md_num_cav_shield_heavy_a" />
-        <equipment slot="Item2" id="Item.sm_uruk_halberd_j" />
+        <equipment slot="Item2" id="Item.sm_md_num_sword_1h_c" />
         <equipment slot="Head" id="Item.sk_md_num_cav_helmet_heavy_b" />
         <equipment slot="Body" id="Item.sm_md_num_cav_chest_heavy_a" />
         <equipment slot="Cape" id="Item.sm_md_num_cav_pauld_cape_heavy_a" />
@@ -3837,9 +3837,9 @@
     <upgrade_targets />
     <Equipments>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.sm_md_num_sword_1h_c" />
+        <equipment slot="Item0" id="Item.sm_uruk_halberd_j" />
         <equipment slot="Item1" id="Item.sm_md_num_cav_shield_heavy_a" />
-        <equipment slot="Item2" id="Item.sm_uruk_halberd_j" />
+        <equipment slot="Item2" id="Item.sm_md_num_sword_1h_c" />
         <equipment slot="Head" id="Item.sk_md_num_cav_helmet_elite_a" />
         <equipment slot="Body" id="Item.sm_md_num_cav_chest_elite_a" />
         <equipment slot="Cape" id="Item.sm_md_num_cav_pauld_elite_a" />
@@ -3849,9 +3849,9 @@
         <equipment slot="HorseHarness" id="Item.sm_md_num_barding_lord_a" />
       </EquipmentRoster>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.sm_md_num_sword_1h_c" />
+        <equipment slot="Item0" id="Item.sm_uruk_halberd_j" />
         <equipment slot="Item1" id="Item.sm_md_num_cav_shield_heavy_a" />
-        <equipment slot="Item2" id="Item.sm_uruk_halberd_j" />
+        <equipment slot="Item2" id="Item.sm_md_num_sword_1h_c" />
         <equipment slot="Head" id="Item.sk_md_num_cav_helmet_elite_b" />
         <equipment slot="Body" id="Item.sm_md_num_cav_chest_elite_b" />
         <equipment slot="Cape" id="Item.sm_md_num_cav_pauld_cape_elite_a" />
@@ -4083,7 +4083,7 @@
       <skill id="Athletics" value="135" />
       <skill id="Riding" value="35" />
       <skill id="OneHanded" value="190" />
-      <skill id="TwoHanded" value="150" />
+      <skill id="TwoHanded" value="190" />
       <skill id="Polearm" value="150" />
       <skill id="Bow" value="225" />
       <skill id="Crossbow" value="40" />
@@ -4129,8 +4129,8 @@
     <skills>
       <skill id="Athletics" value="150" />
       <skill id="Riding" value="35" />
-      <skill id="OneHanded" value="200" />
-      <skill id="TwoHanded" value="175" />
+      <skill id="OneHanded" value="190" />
+      <skill id="TwoHanded" value="200" />
       <skill id="Polearm" value="150" />
       <skill id="Bow" value="275" />
       <skill id="Crossbow" value="45" />
@@ -4176,8 +4176,8 @@
     <skills>
       <skill id="Athletics" value="162" />
       <skill id="Riding" value="35" />
-      <skill id="OneHanded" value="235" />
-      <skill id="TwoHanded" value="200" />
+      <skill id="OneHanded" value="200" />
+      <skill id="TwoHanded" value="235" />
       <skill id="Polearm" value="155" />
       <skill id="Bow" value="310" />
       <skill id="Crossbow" value="50" />
@@ -4243,8 +4243,8 @@
     <skills>
       <skill id="Athletics" value="175" />
       <skill id="Riding" value="35" />
-      <skill id="OneHanded" value="255" />
-      <skill id="TwoHanded" value="220" />
+      <skill id="OneHanded" value="220" />
+      <skill id="TwoHanded" value="255" />
       <skill id="Polearm" value="175" />
       <skill id="Bow" value="330" />
       <skill id="Crossbow" value="55" />
@@ -4323,10 +4323,10 @@
                 value="5" />
             <skill
                 id="OneHanded"
-                value="72" />
+                value="73" />
             <skill
                 id="TwoHanded"
-                value="73" />
+                value="72" />
             <skill
                 id="Polearm"
                 value="82" />

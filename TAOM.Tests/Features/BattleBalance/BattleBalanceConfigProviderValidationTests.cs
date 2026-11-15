@@ -179,6 +179,47 @@ public class BattleBalanceConfigProviderValidationTests
         _logger.Received(1).LogWarning(Arg.Is<string>(s => s.Contains("1 value(s)")));
     }
 
+    [DataTestMethod]
+    [DataRow(float.NaN)]
+    [DataRow(-0.1f)]
+    [DataRow(1.5f)]
+    [DataRow(float.PositiveInfinity)]
+    public void Validate_PowerRatioExponentOutsideZeroToOne_RevertsToTheCompiledDefault(float bad)
+    {
+        var config = new BattleBalanceConfig();
+        config.AutoResolve.PowerRatioExponent = bad;
+
+        var result = _sut.Validate(config);
+
+        Assert.AreEqual(0.5f, result.AutoResolve.PowerRatioExponent, 0.0001f);
+        _logger.Received(1).LogWarning(Arg.Is<string>(s => s.Contains("PowerRatioExponent")));
+        _logger.Received(1).LogWarning(Arg.Is<string>(s => s.Contains("1 value(s)")));
+    }
+
+    [DataTestMethod]
+    [DataRow(0f)]
+    [DataRow(0.7f)]
+    [DataRow(1f)]
+    public void Validate_PowerRatioExponentInZeroToOne_IsKept(float good)
+    {
+        var config = new BattleBalanceConfig();
+        config.AutoResolve.PowerRatioExponent = good;
+
+        var result = _sut.Validate(config);
+
+        Assert.AreEqual(good, result.AutoResolve.PowerRatioExponent, 0.0001f);
+        _logger.DidNotReceive().LogWarning(Arg.Any<string>());
+    }
+
+    [TestMethod]
+    public void Validate_NullAutoResolveSection_RevertsToTheCompiledSection()
+    {
+        var result = _sut.Validate(new BattleBalanceConfig { AutoResolve = null });
+
+        Assert.AreEqual(0.5f, result.AutoResolve.PowerRatioExponent, 0.0001f);
+        _logger.Received(1).LogWarning(Arg.Is<string>(s => s.Contains("AutoResolve is null")));
+    }
+
     // The tests above build the config in C#. These two go through the file and Newtonsoft, which merges JSON
     // keys into the compiled dictionaries and sets a section to null on a JSON null.
     [TestMethod]

@@ -113,7 +113,7 @@ public sealed class TitularRealmConfig
     /// <summary>The culture its rank name and holder style follow ("erebor": "Mansion of Khazad-dûm").</summary>
     public string? CultureId { get; }
 
-    /// <summary>The title above it ("e_durins_folk"); null or missing: none.</summary>
+    /// <summary>The title above it ("u_durins_folk"); null or missing: none.</summary>
     public string? LiegeTitleId { get; }
 
     /// <summary>The title whose counties it is formed from ("k_mistymountainorcs").</summary>

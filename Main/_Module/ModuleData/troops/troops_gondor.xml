@@ -50,9 +50,9 @@
     <skills>
       <skill id="Athletics" value="53" />
       <skill id="Riding" value="15" />
-      <skill id="OneHanded" value="70" />
+      <skill id="OneHanded" value="75" />
       <skill id="TwoHanded" value="60" />
-      <skill id="Polearm" value="75" />
+      <skill id="Polearm" value="70" />
       <skill id="Bow" value="10" />
       <skill id="Crossbow" value="5" />
       <skill id="Throwing" value="10" />
@@ -163,9 +163,9 @@
     <skills>
       <skill id="Athletics" value="100" />
       <skill id="Riding" value="20" />
-      <skill id="OneHanded" value="120" />
-      <skill id="TwoHanded" value="135" />
-      <skill id="Polearm" value="130" />
+      <skill id="OneHanded" value="135" />
+      <skill id="TwoHanded" value="130" />
+      <skill id="Polearm" value="120" />
       <skill id="Bow" value="15" />
       <skill id="Crossbow" value="10" />
       <skill id="Throwing" value="40" />
@@ -241,9 +241,9 @@
     <skills>
       <skill id="Athletics" value="105" />
       <skill id="Riding" value="25" />
-      <skill id="OneHanded" value="170" />
+      <skill id="OneHanded" value="175" />
       <skill id="TwoHanded" value="175" />
-      <skill id="Polearm" value="175" />
+      <skill id="Polearm" value="170" />
       <skill id="Bow" value="20" />
       <skill id="Crossbow" value="15" />
       <skill id="Throwing" value="60" />
@@ -289,9 +289,9 @@
     <skills>
       <skill id="Athletics" value="85" />
       <skill id="Riding" value="20" />
-      <skill id="OneHanded" value="85" />
-      <skill id="TwoHanded" value="105" />
-      <skill id="Polearm" value="100" />
+      <skill id="OneHanded" value="105" />
+      <skill id="TwoHanded" value="100" />
+      <skill id="Polearm" value="85" />
       <skill id="Bow" value="15" />
       <skill id="Crossbow" value="10" />
       <skill id="Throwing" value="20" />
@@ -335,9 +335,9 @@
     <skills>
       <skill id="Athletics" value="100" />
       <skill id="Riding" value="20" />
-      <skill id="OneHanded" value="120" />
-      <skill id="TwoHanded" value="130" />
-      <skill id="Polearm" value="135" />
+      <skill id="OneHanded" value="135" />
+      <skill id="TwoHanded" value="120" />
+      <skill id="Polearm" value="130" />
       <skill id="Bow" value="15" />
       <skill id="Crossbow" value="10" />
       <skill id="Throwing" value="40" />
@@ -475,9 +475,9 @@
     <skills>
       <skill id="Athletics" value="85" />
       <skill id="Riding" value="20" />
-      <skill id="OneHanded" value="110" />
-      <skill id="TwoHanded" value="90" />
-      <skill id="Polearm" value="80" />
+      <skill id="OneHanded" value="80" />
+      <skill id="TwoHanded" value="110" />
+      <skill id="Polearm" value="110" />
       <skill id="Bow" value="15" />
       <skill id="Crossbow" value="10" />
       <skill id="Throwing" value="30" />
@@ -535,9 +535,9 @@
     <skills>
       <skill id="Athletics" value="100" />
       <skill id="Riding" value="20" />
-      <skill id="OneHanded" value="150" />
-      <skill id="TwoHanded" value="115" />
-      <skill id="Polearm" value="100" />
+      <skill id="OneHanded" value="100" />
+      <skill id="TwoHanded" value="150" />
+      <skill id="Polearm" value="150" />
       <skill id="Bow" value="15" />
       <skill id="Crossbow" value="10" />
       <skill id="Throwing" value="40" />
@@ -595,9 +595,9 @@
     <skills>
       <skill id="Athletics" value="105" />
       <skill id="Riding" value="25" />
-      <skill id="OneHanded" value="190" />
-      <skill id="TwoHanded" value="160" />
-      <skill id="Polearm" value="150" />
+      <skill id="OneHanded" value="150" />
+      <skill id="TwoHanded" value="190" />
+      <skill id="Polearm" value="190" />
       <skill id="Bow" value="20" />
       <skill id="Crossbow" value="15" />
       <skill id="Throwing" value="60" />
@@ -655,9 +655,9 @@
     <skills>
       <skill id="Athletics" value="125" />
       <skill id="Riding" value="30" />
-      <skill id="OneHanded" value="240" />
-      <skill id="TwoHanded" value="215" />
-      <skill id="Polearm" value="200" />
+      <skill id="OneHanded" value="200" />
+      <skill id="TwoHanded" value="240" />
+      <skill id="Polearm" value="240" />
       <skill id="Bow" value="25" />
       <skill id="Crossbow" value="20" />
       <skill id="Throwing" value="70" />
@@ -715,9 +715,9 @@
     <skills>
       <skill id="Athletics" value="145" />
       <skill id="Riding" value="35" />
-      <skill id="OneHanded" value="290" />
-      <skill id="TwoHanded" value="255" />
-      <skill id="Polearm" value="240" />
+      <skill id="OneHanded" value="240" />
+      <skill id="TwoHanded" value="290" />
+      <skill id="Polearm" value="290" />
       <skill id="Bow" value="30" />
       <skill id="Crossbow" value="25" />
       <skill id="Throwing" value="80" />
@@ -777,9 +777,9 @@
     <skills>
       <skill id="Athletics" value="53" />
       <skill id="Riding" value="15" />
-      <skill id="OneHanded" value="70" />
+      <skill id="OneHanded" value="75" />
       <skill id="TwoHanded" value="60" />
-      <skill id="Polearm" value="75" />
+      <skill id="Polearm" value="70" />
       <skill id="Bow" value="10" />
       <skill id="Crossbow" value="5" />
       <skill id="Throwing" value="10" />
@@ -1409,8 +1409,8 @@
     <skills>
       <skill id="Athletics" value="53" />
       <skill id="Riding" value="15" />
-      <skill id="OneHanded" value="70" />
-      <skill id="TwoHanded" value="75" />
+      <skill id="OneHanded" value="75" />
+      <skill id="TwoHanded" value="70" />
       <skill id="Polearm" value="60" />
       <skill id="Bow" value="10" />
       <skill id="Crossbow" value="5" />
@@ -1650,8 +1650,8 @@
       <skill id="Athletics" value="100" />
       <skill id="Riding" value="20" />
       <skill id="OneHanded" value="135" />
-      <skill id="TwoHanded" value="115" />
-      <skill id="Polearm" value="135" />
+      <skill id="TwoHanded" value="135" />
+      <skill id="Polearm" value="115" />
       <skill id="Bow" value="15" />
       <skill id="Crossbow" value="10" />
       <skill id="Throwing" value="40" />
@@ -1691,8 +1691,8 @@
     <skills>
       <skill id="Athletics" value="105" />
       <skill id="Riding" value="25" />
-      <skill id="OneHanded" value="200" />
-      <skill id="TwoHanded" value="160" />
+      <skill id="OneHanded" value="160" />
+      <skill id="TwoHanded" value="200" />
       <skill id="Polearm" value="160" />
       <skill id="Bow" value="20" />
       <skill id="Crossbow" value="15" />
@@ -1735,8 +1735,8 @@
     <skills>
       <skill id="Athletics" value="125" />
       <skill id="Riding" value="30" />
-      <skill id="OneHanded" value="255" />
-      <skill id="TwoHanded" value="225" />
+      <skill id="OneHanded" value="225" />
+      <skill id="TwoHanded" value="255" />
       <skill id="Polearm" value="215" />
       <skill id="Bow" value="25" />
       <skill id="Crossbow" value="20" />
@@ -1855,8 +1855,8 @@
     <skills>
       <skill id="Athletics" value="165" />
       <skill id="Riding" value="40" />
-      <skill id="OneHanded" value="320" />
-      <skill id="TwoHanded" value="315" />
+      <skill id="OneHanded" value="315" />
+      <skill id="TwoHanded" value="320" />
       <skill id="Polearm" value="295" />
       <skill id="Bow" value="35" />
       <skill id="Crossbow" value="25" />
@@ -1918,9 +1918,9 @@
     <skills>
       <skill id="Athletics" value="53" />
       <skill id="Riding" value="15" />
-      <skill id="OneHanded" value="70" />
+      <skill id="OneHanded" value="75" />
       <skill id="TwoHanded" value="60" />
-      <skill id="Polearm" value="75" />
+      <skill id="Polearm" value="70" />
       <skill id="Bow" value="10" />
       <skill id="Crossbow" value="5" />
       <skill id="Throwing" value="10" />
@@ -2501,9 +2501,9 @@
     <skills>
       <skill id="Athletics" value="53" />
       <skill id="Riding" value="15" />
-      <skill id="OneHanded" value="70" />
+      <skill id="OneHanded" value="75" />
       <skill id="TwoHanded" value="60" />
-      <skill id="Polearm" value="75" />
+      <skill id="Polearm" value="70" />
       <skill id="Bow" value="10" />
       <skill id="Crossbow" value="5" />
       <skill id="Throwing" value="10" />
@@ -3241,8 +3241,8 @@
       <skill id="Athletics" value="105" />
       <skill id="Riding" value="25" />
       <skill id="OneHanded" value="185" />
-      <skill id="TwoHanded" value="160" />
-      <skill id="Polearm" value="175" />
+      <skill id="TwoHanded" value="175" />
+      <skill id="Polearm" value="160" />
       <skill id="Bow" value="20" />
       <skill id="Crossbow" value="15" />
       <skill id="Throwing" value="60" />
@@ -3289,8 +3289,8 @@
       <skill id="Athletics" value="125" />
       <skill id="Riding" value="30" />
       <skill id="OneHanded" value="240" />
-      <skill id="TwoHanded" value="215" />
-      <skill id="Polearm" value="240" />
+      <skill id="TwoHanded" value="240" />
+      <skill id="Polearm" value="215" />
       <skill id="Bow" value="25" />
       <skill id="Crossbow" value="20" />
       <skill id="Throwing" value="70" />
@@ -3337,8 +3337,8 @@
       <skill id="Athletics" value="145" />
       <skill id="Riding" value="35" />
       <skill id="OneHanded" value="280" />
-      <skill id="TwoHanded" value="255" />
-      <skill id="Polearm" value="280" />
+      <skill id="TwoHanded" value="280" />
+      <skill id="Polearm" value="255" />
       <skill id="Bow" value="30" />
       <skill id="Crossbow" value="25" />
       <skill id="Throwing" value="80" />
@@ -3405,8 +3405,8 @@
       <skill id="Athletics" value="165" />
       <skill id="Riding" value="40" />
       <skill id="OneHanded" value="320" />
-      <skill id="TwoHanded" value="295" />
-      <skill id="Polearm" value="315" />
+      <skill id="TwoHanded" value="315" />
+      <skill id="Polearm" value="295" />
       <skill id="Bow" value="35" />
       <skill id="Crossbow" value="25" />
       <skill id="Throwing" value="90" />
@@ -3614,9 +3614,9 @@
     </upgrade_targets>
     <Equipments>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.wm_swan_knight_swordb" />
+        <equipment slot="Item0" id="Item.taom_ph_gondor_spear_b_t5" />
         <equipment slot="Item1" id="Item.sm_gd_shield_b1" />
-        <equipment slot="Item2" id="Item.taom_ph_gondor_spear_b_t5" />
+        <equipment slot="Item2" id="Item.wm_swan_knight_swordb" />
         <equipment slot="Head" id="Item.sk_gd_lin_helmet_heavy_a" />
         <equipment slot="Body" id="Item.sk_gd_lin_chest_med_a" />
         <equipment slot="Cape" id="Item.sk_gd_lin_pauld_noble_heavy_a" />
@@ -3624,9 +3624,9 @@
         <equipment slot="Leg" id="Item.sk_gd_lin_grvs_med_a" />
       </EquipmentRoster>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.wm_swan_knight_swordb" />
+        <equipment slot="Item0" id="Item.taom_ph_gondor_spear_b_t5" />
         <equipment slot="Item1" id="Item.sm_gd_shield_b2" />
-        <equipment slot="Item2" id="Item.taom_ph_gondor_spear_b_t5" />
+        <equipment slot="Item2" id="Item.wm_swan_knight_swordb" />
         <equipment slot="Head" id="Item.sk_gd_lin_helmet_heavy_a" />
         <equipment slot="Body" id="Item.sk_gd_lin_chest_med_a" />
         <equipment slot="Cape" id="Item.sk_gd_lin_pauld_noble_heavy_a" />
@@ -3634,9 +3634,9 @@
         <equipment slot="Leg" id="Item.sk_gd_lin_grvs_med_a" />
       </EquipmentRoster>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.wm_swan_knight_swordb" />
+        <equipment slot="Item0" id="Item.taom_ph_gondor_spear_b_swan_t5" />
         <equipment slot="Item1" id="Item.sm_gd_shield_b1" />
-        <equipment slot="Item2" id="Item.taom_ph_gondor_spear_b_swan_t5" />
+        <equipment slot="Item2" id="Item.wm_swan_knight_swordb" />
         <equipment slot="Head" id="Item.sk_gd_lin_helmet_heavy_b" />
         <equipment slot="Body" id="Item.sk_gd_lin_chest_med_a" />
         <equipment slot="Cape" id="Item.sk_gd_lin_pauld_noble_heavy_a" />
@@ -3644,9 +3644,9 @@
         <equipment slot="Leg" id="Item.sk_gd_lin_grvs_med_a" />
       </EquipmentRoster>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.wm_swan_knight_swordb" />
+        <equipment slot="Item0" id="Item.taom_ph_gondor_spear_b_swan_t5" />
         <equipment slot="Item1" id="Item.sm_gd_shield_b2" />
-        <equipment slot="Item2" id="Item.taom_ph_gondor_spear_b_swan_t5" />
+        <equipment slot="Item2" id="Item.wm_swan_knight_swordb" />
         <equipment slot="Head" id="Item.sk_gd_lin_helmet_heavy_b" />
         <equipment slot="Body" id="Item.sk_gd_lin_chest_med_a" />
         <equipment slot="Cape" id="Item.sk_gd_lin_pauld_noble_heavy_a" />
@@ -3682,9 +3682,9 @@
     </upgrade_targets>
     <Equipments>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.wm_swan_knight_swordb" />
+        <equipment slot="Item0" id="Item.taom_ph_gondor_spear_b_t8" />
         <equipment slot="Item1" id="Item.sm_gd_shield_b1" />
-        <equipment slot="Item2" id="Item.taom_ph_gondor_spear_b_t8" />
+        <equipment slot="Item2" id="Item.wm_swan_knight_swordb" />
         <equipment slot="Head" id="Item.sk_gd_lin_helmet_heavy_a" />
         <equipment slot="Body" id="Item.sk_gd_lin_chest_heavy_a" />
         <equipment slot="Cape" id="Item.sk_gd_lin_pauld_noble_heavy_a" />
@@ -3692,9 +3692,9 @@
         <equipment slot="Leg" id="Item.sk_gd_lin_grvs_heavy_a" />
       </EquipmentRoster>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.wm_swan_knight_swordb" />
+        <equipment slot="Item0" id="Item.taom_ph_gondor_spear_b_t8" />
         <equipment slot="Item1" id="Item.sm_gd_shield_b2" />
-        <equipment slot="Item2" id="Item.taom_ph_gondor_spear_b_t8" />
+        <equipment slot="Item2" id="Item.wm_swan_knight_swordb" />
         <equipment slot="Head" id="Item.sk_gd_lin_helmet_heavy_a" />
         <equipment slot="Body" id="Item.sk_gd_lin_chest_heavy_a" />
         <equipment slot="Cape" id="Item.sk_gd_lin_pauld_noble_heavy_a" />
@@ -3702,9 +3702,9 @@
         <equipment slot="Leg" id="Item.sk_gd_lin_grvs_heavy_a" />
       </EquipmentRoster>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.wm_swan_knight_swordb" />
+        <equipment slot="Item0" id="Item.taom_ph_gondor_spear_b_swan_t8" />
         <equipment slot="Item1" id="Item.sm_gd_shield_b1" />
-        <equipment slot="Item2" id="Item.taom_ph_gondor_spear_b_swan_t8" />
+        <equipment slot="Item2" id="Item.wm_swan_knight_swordb" />
         <equipment slot="Head" id="Item.sk_gd_lin_helmet_heavy_b" />
         <equipment slot="Body" id="Item.sk_gd_lin_chest_heavy_a" />
         <equipment slot="Cape" id="Item.sk_gd_lin_pauld_noble_heavy_a" />
@@ -3712,9 +3712,9 @@
         <equipment slot="Leg" id="Item.sk_gd_lin_grvs_heavy_a" />
       </EquipmentRoster>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.wm_swan_knight_swordb" />
+        <equipment slot="Item0" id="Item.taom_ph_gondor_spear_b_swan_t8" />
         <equipment slot="Item1" id="Item.sm_gd_shield_b2" />
-        <equipment slot="Item2" id="Item.taom_ph_gondor_spear_b_swan_t8" />
+        <equipment slot="Item2" id="Item.wm_swan_knight_swordb" />
         <equipment slot="Head" id="Item.sk_gd_lin_helmet_heavy_b" />
         <equipment slot="Body" id="Item.sk_gd_lin_chest_heavy_a" />
         <equipment slot="Cape" id="Item.sk_gd_lin_pauld_noble_heavy_a" />
@@ -4003,9 +4003,9 @@
     <skills>
       <skill id="Athletics" value="38" />
       <skill id="Riding" value="10" />
-      <skill id="OneHanded" value="38" />
+      <skill id="OneHanded" value="33" />
       <skill id="TwoHanded" value="23" />
-      <skill id="Polearm" value="33" />
+      <skill id="Polearm" value="38" />
       <skill id="Bow" value="5" />
       <skill id="Crossbow" value="0" />
       <skill id="Throwing" value="0" />
@@ -4638,9 +4638,9 @@
     <skills>
       <skill id="Athletics" value="120" />
       <skill id="Riding" value="165" />
-      <skill id="OneHanded" value="180" />
-      <skill id="TwoHanded" value="200" />
-      <skill id="Polearm" value="135" />
+      <skill id="OneHanded" value="135" />
+      <skill id="TwoHanded" value="180" />
+      <skill id="Polearm" value="200" />
       <skill id="Bow" value="30" />
       <skill id="Crossbow" value="20" />
       <skill id="Throwing" value="40" />
@@ -4688,9 +4688,9 @@
     <skills>
       <skill id="Athletics" value="135" />
       <skill id="Riding" value="215" />
-      <skill id="OneHanded" value="230" />
-      <skill id="TwoHanded" value="255" />
-      <skill id="Polearm" value="135" />
+      <skill id="OneHanded" value="135" />
+      <skill id="TwoHanded" value="230" />
+      <skill id="Polearm" value="255" />
       <skill id="Bow" value="35" />
       <skill id="Crossbow" value="25" />
       <skill id="Throwing" value="40" />
@@ -4738,9 +4738,9 @@
     <skills>
       <skill id="Athletics" value="155" />
       <skill id="Riding" value="275" />
-      <skill id="OneHanded" value="280" />
-      <skill id="TwoHanded" value="305" />
-      <skill id="Polearm" value="135" />
+      <skill id="OneHanded" value="135" />
+      <skill id="TwoHanded" value="280" />
+      <skill id="Polearm" value="305" />
       <skill id="Bow" value="45" />
       <skill id="Crossbow" value="30" />
       <skill id="Throwing" value="50" />
@@ -4788,9 +4788,9 @@
     <skills>
       <skill id="Athletics" value="175" />
       <skill id="Riding" value="325" />
-      <skill id="OneHanded" value="320" />
-      <skill id="TwoHanded" value="345" />
-      <skill id="Polearm" value="165" />
+      <skill id="OneHanded" value="165" />
+      <skill id="TwoHanded" value="320" />
+      <skill id="Polearm" value="345" />
       <skill id="Bow" value="50" />
       <skill id="Crossbow" value="35" />
       <skill id="Throwing" value="60" />
@@ -4838,8 +4838,8 @@
     <skills>
       <skill id="Athletics" value="105" />
       <skill id="Riding" value="25" />
-      <skill id="OneHanded" value="185" />
-      <skill id="TwoHanded" value="160" />
+      <skill id="OneHanded" value="160" />
+      <skill id="TwoHanded" value="185" />
       <skill id="Polearm" value="175" />
       <skill id="Bow" value="20" />
       <skill id="Crossbow" value="15" />
@@ -4906,8 +4906,8 @@
     <skills>
       <skill id="Athletics" value="125" />
       <skill id="Riding" value="30" />
-      <skill id="OneHanded" value="240" />
-      <skill id="TwoHanded" value="215" />
+      <skill id="OneHanded" value="215" />
+      <skill id="TwoHanded" value="240" />
       <skill id="Polearm" value="240" />
       <skill id="Bow" value="25" />
       <skill id="Crossbow" value="20" />
@@ -4974,8 +4974,8 @@
     <skills>
       <skill id="Athletics" value="145" />
       <skill id="Riding" value="35" />
-      <skill id="OneHanded" value="280" />
-      <skill id="TwoHanded" value="255" />
+      <skill id="OneHanded" value="255" />
+      <skill id="TwoHanded" value="280" />
       <skill id="Polearm" value="280" />
       <skill id="Bow" value="30" />
       <skill id="Crossbow" value="25" />
@@ -5166,9 +5166,9 @@
     <skills>
       <skill id="Athletics" value="110" />
       <skill id="Riding" value="25" />
-      <skill id="OneHanded" value="150" />
-      <skill id="TwoHanded" value="90" />
-      <skill id="Polearm" value="95" />
+      <skill id="OneHanded" value="110" />
+      <skill id="TwoHanded" value="150" />
+      <skill id="Polearm" value="90" />
       <skill id="Bow" value="200" />
       <skill id="Crossbow" value="35" />
       <skill id="Throwing" value="40" />
@@ -5224,8 +5224,8 @@
     <skills>
       <skill id="Athletics" value="120" />
       <skill id="Riding" value="30" />
-      <skill id="OneHanded" value="175" />
-      <skill id="TwoHanded" value="105" />
+      <skill id="OneHanded" value="110" />
+      <skill id="TwoHanded" value="175" />
       <skill id="Polearm" value="105" />
       <skill id="Bow" value="235" />
       <skill id="Crossbow" value="40" />
@@ -5275,8 +5275,8 @@
     <skills>
       <skill id="Athletics" value="135" />
       <skill id="Riding" value="35" />
-      <skill id="OneHanded" value="205" />
-      <skill id="TwoHanded" value="125" />
+      <skill id="OneHanded" value="125" />
+      <skill id="TwoHanded" value="205" />
       <skill id="Polearm" value="125" />
       <skill id="Bow" value="290" />
       <skill id="Crossbow" value="50" />
@@ -5440,8 +5440,8 @@
     <skills>
       <skill id="Athletics" value="155" />
       <skill id="Riding" value="40" />
-      <skill id="OneHanded" value="230" />
-      <skill id="TwoHanded" value="145" />
+      <skill id="OneHanded" value="145" />
+      <skill id="TwoHanded" value="230" />
       <skill id="Polearm" value="145" />
       <skill id="Bow" value="325" />
       <skill id="Crossbow" value="55" />
@@ -5488,8 +5488,8 @@
     <skills>
       <skill id="Athletics" value="135" />
       <skill id="Riding" value="35" />
-      <skill id="OneHanded" value="205" />
-      <skill id="TwoHanded" value="125" />
+      <skill id="OneHanded" value="125" />
+      <skill id="TwoHanded" value="205" />
       <skill id="Polearm" value="125" />
       <skill id="Bow" value="290" />
       <skill id="Crossbow" value="50" />
@@ -5588,9 +5588,9 @@
     <skills>
       <skill id="Athletics" value="53" />
       <skill id="Riding" value="15" />
-      <skill id="OneHanded" value="70" />
+      <skill id="OneHanded" value="75" />
       <skill id="TwoHanded" value="60" />
-      <skill id="Polearm" value="75" />
+      <skill id="Polearm" value="70" />
       <skill id="Bow" value="10" />
       <skill id="Crossbow" value="5" />
       <skill id="Throwing" value="10" />
@@ -5931,9 +5931,9 @@
     </upgrade_targets>
     <Equipments>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.wm_gondor_sword_a03" />
+        <equipment slot="Item0" id="Item.taom_ph_gondor_spear_b_t5" />
         <equipment slot="Item1" id="Item.gond_shield_three_green" />
-        <equipment slot="Item2" id="Item.taom_ph_gondor_spear_b_t5" />
+        <equipment slot="Item2" id="Item.wm_gondor_sword_a03" />
         <equipment slot="Head" id="Item.sk_gd_anf_cav_helmet_heavy_a" />
         <equipment slot="Body" id="Item.sk_gd_anf_inf_chest_med_a" />
         <equipment slot="Cape" id="Item.sk_gd_ano_pauld_inf_med_b" />
@@ -5941,9 +5941,9 @@
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_med_a" />
       </EquipmentRoster>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.wm_gondor_sword_a03" />
+        <equipment slot="Item0" id="Item.taom_ph_gondor_spear_b_t5" />
         <equipment slot="Item1" id="Item.gond_shield_three_green" />
-        <equipment slot="Item2" id="Item.taom_ph_gondor_spear_b_t5" />
+        <equipment slot="Item2" id="Item.wm_gondor_sword_a03" />
         <equipment slot="Head" id="Item.sk_gd_anf_cav_helmet_heavy_a" />
         <equipment slot="Body" id="Item.sk_gd_anf_inf_chest_med_a" />
         <equipment slot="Cape" id="Item.sk_gd_ano_pauld_inf_med_b" />
@@ -5951,9 +5951,9 @@
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_med_a" />
       </EquipmentRoster>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.wm_gondor_sword_a03" />
+        <equipment slot="Item0" id="Item.taom_ph_gondor_spear_b_gondor_t5" />
         <equipment slot="Item1" id="Item.gond_shield_three_green" />
-        <equipment slot="Item2" id="Item.taom_ph_gondor_spear_b_gondor_t5" />
+        <equipment slot="Item2" id="Item.wm_gondor_sword_a03" />
         <equipment slot="Head" id="Item.sk_gd_anf_cav_helmet_heavy_b" />
         <equipment slot="Body" id="Item.sk_gd_anf_inf_chest_med_b" />
         <equipment slot="Cape" id="Item.sk_gd_ano_pauld_inf_med_b" />
@@ -5961,9 +5961,9 @@
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_med_a" />
       </EquipmentRoster>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.wm_gondor_sword_a03" />
+        <equipment slot="Item0" id="Item.taom_ph_gondor_spear_b_gondor_t5" />
         <equipment slot="Item1" id="Item.gond_shield_three_green" />
-        <equipment slot="Item2" id="Item.taom_ph_gondor_spear_b_gondor_t5" />
+        <equipment slot="Item2" id="Item.wm_gondor_sword_a03" />
         <equipment slot="Head" id="Item.sk_gd_anf_cav_helmet_heavy_b" />
         <equipment slot="Body" id="Item.sk_gd_anf_inf_chest_med_b" />
         <equipment slot="Cape" id="Item.sk_gd_ano_pauld_inf_med_b" />
@@ -5999,9 +5999,9 @@
     <upgrade_targets />
     <Equipments>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.wm_gondor_sword_a03" />
+        <equipment slot="Item0" id="Item.taom_ph_gondor_spear_b_t5" />
         <equipment slot="Item1" id="Item.gond_shield_three_green" />
-        <equipment slot="Item2" id="Item.taom_ph_gondor_spear_b_t5" />
+        <equipment slot="Item2" id="Item.wm_gondor_sword_a03" />
         <equipment slot="Head" id="Item.sk_gd_anf_cav_helmet_heavy_a" />
         <equipment slot="Body" id="Item.sk_gd_anf_inf_chest_heavy_a" />
         <equipment slot="Cape" id="Item.sk_gd_ano_pauld_cape_inf_elite_a" />
@@ -6009,9 +6009,9 @@
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_heavy_a" />
       </EquipmentRoster>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.wm_gondor_sword_a03" />
+        <equipment slot="Item0" id="Item.taom_ph_gondor_spear_b_t5" />
         <equipment slot="Item1" id="Item.gond_shield_three_green" />
-        <equipment slot="Item2" id="Item.taom_ph_gondor_spear_b_t5" />
+        <equipment slot="Item2" id="Item.wm_gondor_sword_a03" />
         <equipment slot="Head" id="Item.sk_gd_anf_cav_helmet_heavy_a" />
         <equipment slot="Body" id="Item.sk_gd_anf_inf_chest_heavy_a" />
         <equipment slot="Cape" id="Item.sk_gd_ano_pauld_cape_inf_elite_a" />
@@ -6019,9 +6019,9 @@
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_heavy_a" />
       </EquipmentRoster>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.wm_gondor_sword_a03" />
+        <equipment slot="Item0" id="Item.taom_ph_gondor_spear_b_gondor_t5" />
         <equipment slot="Item1" id="Item.gond_shield_three_green" />
-        <equipment slot="Item2" id="Item.taom_ph_gondor_spear_b_gondor_t5" />
+        <equipment slot="Item2" id="Item.wm_gondor_sword_a03" />
         <equipment slot="Head" id="Item.sk_gd_anf_cav_helmet_heavy_b" />
         <equipment slot="Body" id="Item.sk_gd_anf_inf_chest_heavy_b" />
         <equipment slot="Cape" id="Item.sk_gd_ano_pauld_cape_inf_elite_a" />
@@ -6029,9 +6029,9 @@
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_heavy_a" />
       </EquipmentRoster>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.wm_gondor_sword_a03" />
+        <equipment slot="Item0" id="Item.taom_ph_gondor_spear_b_gondor_t5" />
         <equipment slot="Item1" id="Item.gond_shield_three_green" />
-        <equipment slot="Item2" id="Item.taom_ph_gondor_spear_b_gondor_t5" />
+        <equipment slot="Item2" id="Item.wm_gondor_sword_a03" />
         <equipment slot="Head" id="Item.sk_gd_anf_cav_helmet_heavy_b" />
         <equipment slot="Body" id="Item.sk_gd_anf_inf_chest_heavy_b" />
         <equipment slot="Cape" id="Item.sk_gd_ano_pauld_cape_inf_elite_a" />
@@ -6683,9 +6683,9 @@
     <skills>
       <skill id="Athletics" value="53" />
       <skill id="Riding" value="15" />
-      <skill id="OneHanded" value="70" />
+      <skill id="OneHanded" value="75" />
       <skill id="TwoHanded" value="60" />
-      <skill id="Polearm" value="75" />
+      <skill id="Polearm" value="70" />
       <skill id="Bow" value="10" />
       <skill id="Crossbow" value="5" />
       <skill id="Throwing" value="10" />
@@ -7400,9 +7400,9 @@
     <skills>
       <skill id="Athletics" value="165" />
       <skill id="Riding" value="40" />
-      <skill id="OneHanded" value="320" />
+      <skill id="OneHanded" value="315" />
       <skill id="TwoHanded" value="295" />
-      <skill id="Polearm" value="315" />
+      <skill id="Polearm" value="320" />
       <skill id="Bow" value="35" />
       <skill id="Crossbow" value="25" />
       <skill id="Throwing" value="90" />
@@ -7902,9 +7902,9 @@
     <skills>
       <skill id="Athletics" value="170" />
       <skill id="Riding" value="45" />
-      <skill id="OneHanded" value="250" />
+      <skill id="OneHanded" value="240" />
       <skill id="TwoHanded" value="215" />
-      <skill id="Polearm" value="240" />
+      <skill id="Polearm" value="250" />
       <skill id="Bow" value="360" />
       <skill id="Crossbow" value="60" />
       <skill id="Throwing" value="70" />
@@ -7944,8 +7944,8 @@
       <skill id="Athletics" value="85" />
       <skill id="Riding" value="20" />
       <skill id="OneHanded" value="100" />
-      <skill id="TwoHanded" value="90" />
-      <skill id="Polearm" value="100" />
+      <skill id="TwoHanded" value="100" />
+      <skill id="Polearm" value="90" />
       <skill id="Bow" value="15" />
       <skill id="Crossbow" value="10" />
       <skill id="Throwing" value="20" />
@@ -7980,8 +7980,8 @@
       <skill id="Athletics" value="100" />
       <skill id="Riding" value="20" />
       <skill id="OneHanded" value="135" />
-      <skill id="TwoHanded" value="115" />
-      <skill id="Polearm" value="135" />
+      <skill id="TwoHanded" value="135" />
+      <skill id="Polearm" value="115" />
       <skill id="Bow" value="15" />
       <skill id="Crossbow" value="10" />
       <skill id="Throwing" value="40" />
@@ -8152,9 +8152,9 @@
     <skills>
       <skill id="Athletics" value="105" />
       <skill id="Riding" value="25" />
-      <skill id="OneHanded" value="185" />
-      <skill id="TwoHanded" value="160" />
-      <skill id="Polearm" value="175" />
+      <skill id="OneHanded" value="175" />
+      <skill id="TwoHanded" value="185" />
+      <skill id="Polearm" value="160" />
       <skill id="Bow" value="20" />
       <skill id="Crossbow" value="15" />
       <skill id="Throwing" value="100" />
@@ -8199,8 +8199,8 @@
       <skill id="Athletics" value="125" />
       <skill id="Riding" value="30" />
       <skill id="OneHanded" value="240" />
-      <skill id="TwoHanded" value="215" />
-      <skill id="Polearm" value="240" />
+      <skill id="TwoHanded" value="240" />
+      <skill id="Polearm" value="215" />
       <skill id="Bow" value="25" />
       <skill id="Crossbow" value="20" />
       <skill id="Throwing" value="140" />
@@ -8245,8 +8245,8 @@
       <skill id="Athletics" value="145" />
       <skill id="Riding" value="35" />
       <skill id="OneHanded" value="280" />
-      <skill id="TwoHanded" value="255" />
-      <skill id="Polearm" value="280" />
+      <skill id="TwoHanded" value="280" />
+      <skill id="Polearm" value="255" />
       <skill id="Bow" value="30" />
       <skill id="Crossbow" value="25" />
       <skill id="Throwing" value="180" />
@@ -8338,8 +8338,8 @@
     <skills>
       <skill id="Athletics" value="100" />
       <skill id="Riding" value="20" />
-      <skill id="OneHanded" value="135" />
-      <skill id="TwoHanded" value="115" />
+      <skill id="OneHanded" value="115" />
+      <skill id="TwoHanded" value="135" />
       <skill id="Polearm" value="135" />
       <skill id="Bow" value="15" />
       <skill id="Crossbow" value="10" />
@@ -8387,9 +8387,9 @@
     <skills>
       <skill id="Athletics" value="105" />
       <skill id="Riding" value="25" />
-      <skill id="OneHanded" value="185" />
-      <skill id="TwoHanded" value="160" />
-      <skill id="Polearm" value="175" />
+      <skill id="OneHanded" value="160" />
+      <skill id="TwoHanded" value="175" />
+      <skill id="Polearm" value="185" />
       <skill id="Bow" value="20" />
       <skill id="Crossbow" value="15" />
       <skill id="Throwing" value="60" />
@@ -8435,8 +8435,8 @@
     <skills>
       <skill id="Athletics" value="125" />
       <skill id="Riding" value="30" />
-      <skill id="OneHanded" value="240" />
-      <skill id="TwoHanded" value="215" />
+      <skill id="OneHanded" value="215" />
+      <skill id="TwoHanded" value="240" />
       <skill id="Polearm" value="240" />
       <skill id="Bow" value="25" />
       <skill id="Crossbow" value="20" />
@@ -8483,8 +8483,8 @@
     <skills>
       <skill id="Athletics" value="145" />
       <skill id="Riding" value="35" />
-      <skill id="OneHanded" value="280" />
-      <skill id="TwoHanded" value="255" />
+      <skill id="OneHanded" value="255" />
+      <skill id="TwoHanded" value="280" />
       <skill id="Polearm" value="280" />
       <skill id="Bow" value="30" />
       <skill id="Crossbow" value="25" />
@@ -8531,8 +8531,8 @@
     <skills>
       <skill id="Athletics" value="110" />
       <skill id="Riding" value="25" />
-      <skill id="OneHanded" value="150" />
-      <skill id="TwoHanded" value="115" />
+      <skill id="OneHanded" value="135" />
+      <skill id="TwoHanded" value="150" />
       <skill id="Polearm" value="135" />
       <skill id="Bow" value="170" />
       <skill id="Crossbow" value="35" />
@@ -8570,8 +8570,8 @@
     <skills>
       <skill id="Athletics" value="120" />
       <skill id="Riding" value="30" />
-      <skill id="OneHanded" value="175" />
-      <skill id="TwoHanded" value="115" />
+      <skill id="OneHanded" value="135" />
+      <skill id="TwoHanded" value="175" />
       <skill id="Polearm" value="135" />
       <skill id="Bow" value="205" />
       <skill id="Crossbow" value="40" />
@@ -8889,7 +8889,7 @@
       <skill id="Athletics" value="135" />
       <skill id="Riding" value="35" />
       <skill id="OneHanded" value="240" />
-      <skill id="TwoHanded" value="215" />
+      <skill id="TwoHanded" value="240" />
       <skill id="Polearm" value="240" />
       <skill id="Bow" value="245" />
       <skill id="Crossbow" value="50" />
@@ -8928,7 +8928,7 @@
       <skill id="Athletics" value="155" />
       <skill id="Riding" value="40" />
       <skill id="OneHanded" value="240" />
-      <skill id="TwoHanded" value="215" />
+      <skill id="TwoHanded" value="240" />
       <skill id="Polearm" value="240" />
       <skill id="Bow" value="280" />
       <skill id="Crossbow" value="55" />
@@ -9009,9 +9009,9 @@
     <skills>
       <skill id="Athletics" value="53" />
       <skill id="Riding" value="15" />
-      <skill id="OneHanded" value="70" />
+      <skill id="OneHanded" value="75" />
       <skill id="TwoHanded" value="60" />
-      <skill id="Polearm" value="75" />
+      <skill id="Polearm" value="70" />
       <skill id="Bow" value="10" />
       <skill id="Crossbow" value="5" />
       <skill id="Throwing" value="20" />
@@ -9190,9 +9190,9 @@
     <skills>
       <skill id="Athletics" value="105" />
       <skill id="Riding" value="25" />
-      <skill id="OneHanded" value="185" />
+      <skill id="OneHanded" value="175" />
       <skill id="TwoHanded" value="160" />
-      <skill id="Polearm" value="175" />
+      <skill id="Polearm" value="185" />
       <skill id="Bow" value="20" />
       <skill id="Crossbow" value="15" />
       <skill id="Throwing" value="60" />

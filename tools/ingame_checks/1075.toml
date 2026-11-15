@@ -1,0 +1,17 @@
+# In-game check for #1075 (unattended campaign runs), read by tools/ingame_verdict.py. The [Check] line comes from
+# Main/Features/Autorun/Scenario/ScenarioOutcomes.cs, written once by ScenarioAutorunDriver.Finish when an armed run ends
+# (TAOM_AUTORUN, tools/run_scenario.py). The unattended judge, tools/run_scenario.py, also wants the done file, the clean
+# unload line and no crash block; this manifest is what ingame_verdict reads across sessions.
+#
+# A session that was not armed writes no line, so the check is NOT REACHED there.
+issue = 1075
+title = "Unattended scenario runs: start a sandbox campaign, run days and save with nobody at the keyboard"
+fixed_in = "e9e576e96"   # trunk before the driver: the manifest ships with the emitter
+logs = ["taom"]
+
+[[check]]
+id = "taom.autorun.campaign-new.done"
+needs = "an armed campaign run: python tools/run_scenario.py --days 3"
+pass = ['\[Check\] id=taom\.autorun\.campaign-new\.done result=pass reason=ok days_run=\d+ days_wanted=\d+ culture=\S+']
+fail = ['\[Check\] id=taom\.autorun\.campaign-new\.done result=fail']
+absence = "not-reached"

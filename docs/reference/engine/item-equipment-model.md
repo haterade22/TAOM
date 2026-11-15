@@ -106,10 +106,16 @@ yotthani's balance simulator records traps for code that clones or edits `ItemOb
   zero-checks read raw component values (`ItemMenuVM.cs:1172`, `TooltipRefresherCollection.cs:532-551`); TAOM did not read the native side. yotthani's patch of the getters
   (`HoN/SmithingExtended/Integration/MaterialDeltaPatches.cs@c45d8374:43-62`) showed in the tooltip on v1.5.6 ("40 Cut / 29 Pierce", probe of 03.11.), and yotthani lists combat damage as open because a
   JIT-inlined getter would be bypassed at its call site. Patch these getters, not the raw fields, for a modifier effect, and measure one hit in game.
-- **Two engine facts yotthani read for hero gear (1.5.5 text, 1.5.6 said to match, partly seen in a v1.5.6 probe; not re-checked by TAOM):** heroes spawn with
-  `FixedEquipment(true)`, so battle changes never flow back (write `Hero.BattleEquipment[slot] = new EquipmentElement(item, modifier)` yourself);
-  troops re-roll every slot's modifier at each spawn from `ItemModifierGroup.GetRandomItemModifierLootScoreBased()`, and `LootDropScore` on an `ItemModifier`
-  drives those rolls (`Equipment.cs:608-609`), so zeroing it changes enemy gear too. Loot has two sources: `MapEvent.LootCasualtyCharacter` (only when the
+- **Two engine facts yotthani read for hero gear (his 1.5.5 text; TAOM checked both against the installed v1.5.7 sources on 2026-11-15):** heroes spawn with
+  fixed equipment, so battle changes never flow back (write `Hero.BattleEquipment[slot] = new EquipmentElement(item, modifier)` yourself): `Mission.SpawnAgent`
+  runs `if (agentCharacter.IsHero) agentBuildData.FixedEquipment(fixedEquipment: true);` (`TaleWorlds.MountAndBlade.Mission.cs:4284-4286`) before it calls
+  `DecideAgentSpawnEquipment`. A troop's equipment is rolled at each spawn in a campaign battle: `DecideAgentSpawnEquipment` calls
+  `Equipment.GetRandomEquipmentElements(agentBuildData.AgentCharacter, !Game.Current.GameType.IsCoreOnlyGameMode, ...)` (`Mission.cs:4108`), and
+  `GetRandomizedEquipment` sets every randomized piece's modifier from `equipmentFromSlot.Item?.ItemComponent?.ItemModifierGroup?.GetRandomItemModifierLootScoreBased()`
+  when that flag is true (`TaleWorlds.Core.Equipment.cs:609`). `GameType.IsCoreOnlyGameMode` is `false` (`TaleWorlds.Core.GameType.cs:36`) and only `CustomGame`
+  overrides it to `true` (`TaleWorlds.MountAndBlade.CustomBattle.CustomGame.cs:23`), so a campaign battle rolls and a Custom Battle does not. `LootDropScore` on an
+  `ItemModifier` drives those rolls, so zeroing it changes enemy gear too; an item's `modifier_group` therefore decides what a troop spawns with, not only what
+  it drops. Loot has two sources: `MapEvent.LootCasualtyCharacter` (only when the
   winning party leader is `Hero.MainHero`) and `BattleWreckageCampaignBehavior.ProcessCasualtyLootSource`, which keeps only the item and drops the modifier.
   Source: `docs/smithing/2026-11-03-teil2-engine-recherche.md@c45d8374`, sections 2.1 to 2.4.
 - **Run-time hook points** (yotthani's record, not re-checked): `OnGameInitializationFinished` runs after items, rosters and characters are registered and after

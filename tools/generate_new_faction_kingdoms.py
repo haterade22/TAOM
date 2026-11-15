@@ -87,24 +87,34 @@ KINGDOMS = {
         # (SKILL_TEMPLATE_MISMATCH), so a clone keeps its source's set until docs/ai-includes/lord-skills-authoring.md retunes it.
         lord_skill=("taom_gondor_knight_skills", "taom_gondor_knight_skills", "taom_gondor_young_lady_skills"),
         lords_per_clan=4,  # 5 clans x 4 = 20 lords (2 male + 2 female, married within the clan)
-        clans=[("clan_arthedain_1", 4, "town_AN2", "House of Arvedui"),
-               ("clan_arthedain_2", 3, "town_AN1", "House of Evendim"),
-               ("clan_arthedain_3", 3, "town_AN3", "Wardens of Amon Sûl"),
-               ("clan_arthedain_4", 2, "castle_AN5", "House of the Baranduin"),
-               ("clan_arthedain_5", 2, "castle_AN8", "House of Emyn Beraid")],
-        leader_name="Arvegil II",
-        male_names=["Malvegil", "Amlaith", "Celepharn", "Argeleb", "Araphor", "Halbarad", "Aranuir",
-                    "Celebrindor", "Arveleg", "Dírhael"],
-        female_names=["Gilraen", "Ivorwen", "Fíriel", "Elanwen", "Meneliel", "Silivren", "Ithilwen",
-                      "Calwen", "Maethil", "Tirwen"],
+        clans=[("clan_arthedain_1", 4, "town_AN2", "Isildurioni"),
+               ("clan_arthedain_2", 3, "town_AN1", "Tarmanos"),
+               ("clan_arthedain_3", 3, "town_AN3", "Lómëar"),
+               ("clan_arthedain_4", 2, "castle_AN5", "Orodhoth"),
+               ("clan_arthedain_5", 2, "castle_AN8", "Noirinin")],
+        leader_name="Aranarth",
+        male_names=["Aranbor", "Eluchil", "Andunar", "Laurendil", "Castarion", "Belegar", "Telemmaite",
+                    "Estelmo", "Hermacil", "Uinendil"],
+        female_names=["Celebloth", "Palurien", "Serinde", "Borwen", "Miryaiel", "Lindorie", "Lorwend",
+                      "Vardilme", "Noliel", "Finvain"],
         party_template="PartyTemplate.kingdom_hero_party_arthedain_template",
         # Arnor icon group 110 (Main/_Module/ModuleData/banner_icons.xml) in silver (palette 110) on
         # Arnor blue (palette 190); one icon per clan so no two clans fly the same banner. The realm and
         # its royal house fly the crown of Arnor (11004, Mike 2026-10-28); the White Tree went to clan 5.
         banner="11.190.190.1528.1528.764.764.1.0.0.{icon}.110.110.700.700.764.764.0.0.0",
         kingdom_icon=11004, clan_icons=[11004, 11001, 11002, 11003, 11000],
-        # The Wardens of Amon Sul fly a hand-made layered banner (72715c417) the template cannot express.
-        clan_banner_keys={"clan_arthedain_3": "11.176.176.1528.1528.764.764.1.0.0.31010.267.267.301.301.636.884.0.0.0.31010.267.267.301.301.893.884.0.1.0.31008.324.324.422.422.764.720.0.0.0.31009.332.332.95.95.686.795.0.0.0.31009.332.332.95.95.843.795.0.1.0"},
+        # The realm flies a hand-made layered banner (2026-11-15) with the crown (11004) and the White
+        # Tree (11000); realms_titles.xml gives the Arthedain title the same banner.
+        kingdom_banner_key="11.149.149.1528.1528.764.764.1.0.0.31026.110.110.387.387.764.636.0.0.0.11004.110.110.77.77.764.617.0.0.0.11000.110.110.318.318.764.839.0.0.0",
+        # The Lómëar fly a hand-made layered banner (72715c417) the template cannot express.
+        # Every house flies a hand-made layered banner (3ba27d7c8).
+        clan_banner_keys={
+            "clan_arthedain_1": "11.149.149.1528.1528.764.764.1.0.0.505.110.110.417.418.764.764.0.0.45.505.149.149.401.402.764.764.0.0.45.31026.110.110.252.252.764.681.0.0.0.11004.110.110.50.50.764.668.0.0.0.11000.110.110.207.207.764.813.0.0.0",
+            "clan_arthedain_2": "11.116.116.1528.1528.764.764.1.0.0.505.41.41.417.418.764.764.0.0.45.505.116.116.404.405.764.764.0.0.45.10017.171.171.388.388.764.764.0.0.0.503.116.116.210.210.764.764.0.0.0.31039.0.171.150.150.764.798.1.0.0",
+            "clan_arthedain_3": "11.149.149.1528.1528.764.764.1.0.0.505.110.110.417.418.764.764.0.0.45.505.329.329.407.408.764.764.0.0.45.505.110.110.304.305.764.764.0.0.45.505.149.149.295.296.764.764.0.0.45.427.110.110.42.42.764.546.0.0.0.427.110.110.42.42.982.764.0.0.270.427.110.110.42.42.764.982.0.0.180.427.110.110.42.42.546.764.0.0.90.10500.110.110.292.292.766.763.0.0.0",
+            "clan_arthedain_4": "11.149.149.1528.1528.764.764.1.0.0.24022.110.95.612.612.764.908.1.0.0.31040.182.182.274.274.754.655.0.0.0.505.110.95.656.500.748.1235.0.0.0",
+            "clan_arthedain_5": "11.330.330.1528.1528.764.764.1.0.0.510.172.172.1266.62.1016.764.0.1.270.510.172.172.1266.62.512.764.0.0.90.510.172.172.1329.65.937.764.0.1.270.510.172.172.1329.65.591.764.0.0.90.24509.172.172.106.106.977.401.0.1.0.24509.172.172.106.106.551.401.0.0.0.24509.172.172.106.106.977.735.0.1.0.24509.172.172.106.106.551.735.0.0.0.24509.172.172.106.106.977.1071.0.1.0.24509.172.172.106.106.551.1071.0.0.0.427.172.172.230.230.764.786.0.0.0.10505.172.172.172.172.763.669.0.0.0",
+        },
         clan_colors=[("FF4870B8", "FFC8CCD8"), ("FF3A6298", "FFC8CCD8"), ("FF5960A8", "FFD2D6D5"),
                      ("FF2E4A78", "FFCACCCB"), ("FF4E75BC", "FFEAEEEF")],
         # Day-one stances. value < 0 or isAtWar declares war at load (Kingdom.Deserialize,
@@ -131,15 +141,15 @@ KINGDOMS = {
         desc="The southern of the three realms into which Arnor was sundered. Its kings lie in the barrows of Tyrn Gorthad and its riders keep the plains between the Baranduin and the Greyflood, but its towns are few and its lords contend with Arthedain and Rhudaur for the crown of Arnor.",
         lord_skill=("taom_gondor_knight_skills", "taom_gondor_knight_skills", "taom_gondor_young_lady_skills"),
         lords_per_clan=4,  # 4 clans x 4 = 16 lords (2 male + 2 female, married within the clan)
-        clans=[("clan_cardolan_1", 4, "town_CA2", "House of Tyrn Gorthad"),
-               ("clan_cardolan_2", 3, "town_CA1", "House of Tharbad"),
-               ("clan_cardolan_3", 2, "town_CA3", "House of Minas Eithel"),
-               ("clan_cardolan_4", 2, "castle_CA2", "Wardens of Sarn Ford")],
-        leader_name="Aranthir",
-        male_names=["Belethor", "Caladhor", "Anardil", "Baradhel", "Calenon", "Dorthar", "Hirluin",
-                    "Vorondil", "Turgil", "Faelon"],
-        female_names=["Elendis", "Aerin", "Daeriel", "Eilinel", "Gwaeren", "Lindis", "Mirwen", "Saelind",
-                      "Nimloth", "Andreth"],
+        clans=[("clan_cardolan_1", 4, "town_CA2", "Caladir"),
+               ("clan_cardolan_2", 3, "town_CA1", "Gunnorionath"),
+               ("clan_cardolan_3", 2, "town_CA3", "Eruthimari"),
+               ("clan_cardolan_4", 2, "castle_CA2", "Emerayacil")],
+        leader_name="Osthir",
+        male_names=["Tarvegil", "Aldamir", "Mirendur", "Elorn", "Telcrist", "Maiandil", "Gwindor",
+                    "Runnor", "Araval", "Edhelvir"],
+        female_names=["Culurien", "Nuneth", "Gwaewen", "Selerwen", "Laerwen", "Failivrin", "Hiril", "Celebrindal",
+                      "Nirnadel", "Lestien"],
         party_template="PartyTemplate.kingdom_hero_party_cardolan_template",
         # Cardolan green (palette 2027) with white emblems (2004), Tharbad in gold (238) (Mike 2026-10-28,
         # #1047). The realm and its royal house fly the interlace of Tyrn Gorthad (31005).
@@ -165,12 +175,12 @@ KINGDOMS = {
         desc="The eastern of the three realms into which Arnor was sundered, a hill kingdom between the Hoarwell and the Loudwater. Its Dunedain lords hold Cameth Brin and the Angle and rule a hard people of hill-men, with trolls in the fells and orcs on every pass.",
         lord_skill=("taom_gondor_knight_skills", "taom_gondor_knight_skills", "taom_gondor_young_lady_skills"),
         lords_per_clan=4,  # 3 clans x 4 = 12 lords (2 male + 2 female, married within the clan)
-        clans=[("clan_rhudaur_1", 4, "town_RH1", "House of Cameth Brin"),
-               ("clan_rhudaur_2", 3, "castle_RH2", "House of Ettendale"),
-               ("clan_rhudaur_3", 2, "castle_RH3", "Wardens of the Coldfells")],
-        leader_name="Belegorn",
-        male_names=["Cadorn", "Corran", "Eredhir", "Gorlan", "Harnoth", "Lorgan", "Talgar", "Vardil"],
-        female_names=["Gilwen", "Branwen", "Eirlys", "Heledd", "Olwen", "Seren", "Tegwen", "Rhiain"],
+        clans=[("clan_rhudaur_1", 4, "town_RH1", "Galadhionath"),
+               ("clan_rhudaur_2", 3, "castle_RH2", "Húnen"),
+               ("clan_rhudaur_3", 2, "castle_RH3", "Endril")],
+        leader_name="Elamarth",
+        male_names=["Edhelion", "Calatar", "Baragond", "Orontor", "Aratan", "Aldor", "Axantur", "Irmondil"],
+        female_names=["Sídhwen", "Mallien", "Taurien", "Aerien", "Oarwen", "Melenis", "Elwen", "Sirioniel"],
         party_template="PartyTemplate.kingdom_hero_party_rhudaur_template",
         # Arnor icons (group 110) in silver (palette 110) on a dark hill brown (palette 99).
         banner="11.99.99.1528.1528.764.764.1.0.0.{icon}.110.110.700.700.764.764.0.0.0",
@@ -208,7 +218,7 @@ KINGDOMS = {
         kingdom_icon=24000, clan_icons=[24000, 24001, 24002, 24003],
         # The realm and its four houses fly hand-made layered banners (72715c417). Keep the icons above:
         # clan_icons is what turns the clan banner rewrite on, and the clan count check reads it.
-        kingdom_banner_key="11.292.200.1528.1528.764.764.1.0.0.31007.110.110.523.523.764.764.0.0.0",
+        kingdom_banner_key="11.146.146.1528.1528.764.764.1.0.0.31034.20.20.480.480.764.764.0.0.0.31033.228.228.428.428.764.764.0.0.0",
         clan_banner_keys={
             "clan_eredluin_1": "11.292.200.1528.1528.764.764.1.0.0.31007.110.110.523.523.764.764.0.0.0",
             "clan_eredluin_2": "11.116.116.1528.1528.764.764.0.0.0.515.173.173.33.33.757.587.0.0.0.515.173.173.33.33.656.622.0.0.0.515.173.173.33.33.858.622.0.0.0.515.173.173.33.33.587.706.0.0.0.515.173.173.33.33.926.706.0.0.0.515.173.173.33.33.556.809.0.0.0.515.173.173.33.33.957.809.0.0.0.503.114.114.350.350.754.791.0.0.0.505.193.193.758.758.754.1159.0.0.45.505.134.134.220.220.754.849.0.0.45.505.193.193.392.392.754.1095.0.0.45",
@@ -236,22 +246,30 @@ KINGDOMS = {
         desc="The Beornings and the Woodmen of the Vales hold the upper Anduin between the Misty Mountains and Mirkwood. They keep the High Pass and the Old Ford open for honest travellers and take a heavy toll of orcs and wolves. Their chieftains hold Beorn's Hall and the Carrock and want no part in the wars of kings.",
         lord_skill=("taom_dale_lord_skills", "taom_dale_lord_skills", "taom_dale_lady_skills"),
         lords_per_clan=4,  # 4 clans x 4 = 16 lords (2 male + 2 female, married within the clan)
-        clans=[("clan_anduinvale_1", 4, "town_AV1", "House of Beorn"),
-               ("clan_anduinvale_2", 3, "town_AV2", "Folk of the Old Ford"),
-               ("clan_anduinvale_3", 2, "castle_AV1", "Wardens of the Carrock"),
-               ("clan_anduinvale_4", 2, "castle_AV3", "Riders of the Gladden")],
+        clans=[("clan_anduinvale_1", 4, "town_AV1", "Beorning"),
+               ("clan_anduinvale_2", 3, "town_AV2", "Melburgi"),
+               ("clan_anduinvale_3", 2, "castle_AV1", "Sairthiuda"),
+               ("clan_anduinvale_4", 2, "castle_AV3", "Herimundi")],
         leader_name="Grimbeorn",
-        male_names=["Osbeorn", "Hathbeorn", "Eadbeorn", "Grimwulf", "Thurstan", "Wulfhere", "Brunwald",
-                    "Hunbeorn", "Ingwald", "Arnbeorn"],
-        female_names=["Beornhild", "Aldwyn", "Hildeburg", "Osgyth", "Eadwyn", "Wulfrun", "Mildgyth",
-                      "Hrothwyn", "Aelfgifu", "Thurwyn"],
+        male_names=["Olbeorn", "Egico", "Athanagildo", "Balecho", "Diaco", "Madrubal", "Matago",
+                    "Albeorn", "Jarbeorn", "Mauregato"],
+        female_names=["Ermeneberga", "Winidilda", "Argilo", "Sibilia", "Paterna", "Eldonza", "Medbeorn", "Egilona",
+                      "Langhár", "Mataga"],
         party_template="PartyTemplate.kingdom_hero_party_anduinvale_template",
         # The Anduin Vale icons (20000-20006, flown by no clan before) in honey gold (2024) on Beorning
-        # brown (palette 2007): the bear's head for the realm and the House of Beorn, the bee for the
-        # Old Ford, the paw for the Carrock, the horse trident for the riders.
+        # brown (palette 2007): the bear's head for the realm and the Beorning, the bee for the
+        # Melburgi of the Old Ford, the paw for the Sairthiuda of the Carrock, the horse trident for the
+        # Herimundi of the Gladden.
         banner="11.2007.2007.1528.1528.764.764.1.0.0.{icon}.{fg}.{fg}.700.700.764.764.0.0.0",
         kingdom_icon=20006, clan_icons=[20006, 20004, 20003, 20002],
         sigil=2024, clan_sigils=[2024, 2024, 2024, 2024],
+        # The realm and the Melburgi, Sairthiuda and Herimundi fly hand-made layered banners (0cff1443c).
+        kingdom_banner_key="11.273.273.1528.1528.764.764.1.0.0.510.20.20.638.127.532.764.0.0.90.510.20.20.638.75.592.764.0.0.90.510.116.116.638.45.602.764.0.0.90.510.20.20.638.19.562.764.0.0.90.515.20.20.32.32.562.544.0.0.0.515.20.20.32.32.562.692.0.0.0.515.20.20.32.32.562.836.0.0.0.515.20.20.32.32.562.984.0.0.0.510.20.20.638.127.996.764.0.0.90.510.20.20.638.75.936.764.0.0.90.510.116.116.638.45.926.764.0.0.90.510.20.20.638.19.966.764.0.0.90.515.20.20.32.32.966.544.0.0.0.515.20.20.32.32.966.692.0.0.0.515.20.20.32.32.966.836.0.0.0.515.20.20.32.32.966.984.0.0.0.24024.20.20.266.502.664.928.0.0.0.24024.20.20.266.502.864.928.0.0.0.20006.20.273.309.309.764.708.1.0.0",
+        clan_banner_keys={
+            "clan_anduinvale_2": "11.2.2.1528.1528.764.764.1.0.0.31037.123.158.407.407.761.764.1.0.0",
+            "clan_anduinvale_3": "11.193.193.1528.1528.764.764.1.0.0.500.252.252.862.862.508.508.0.0.0.500.96.96.827.827.508.508.0.0.0.500.252.252.862.862.1020.1020.0.0.0.500.96.96.827.827.1020.1020.0.0.0.503.252.252.33.33.812.551.0.0.0.503.96.96.17.17.812.551.0.0.0.503.252.252.33.33.716.977.0.0.0.503.96.96.17.17.716.977.0.0.0.503.252.252.33.33.798.608.0.0.0.503.96.96.17.17.798.608.0.0.0.503.252.252.33.33.730.920.0.0.0.503.96.96.17.17.730.920.0.0.0.503.252.252.33.33.774.662.0.0.0.503.96.96.17.17.774.662.0.0.0.503.252.252.33.33.754.866.0.0.0.503.96.96.17.17.754.866.0.0.0.503.252.252.33.33.740.710.0.0.0.503.96.96.17.17.740.710.0.0.0.503.252.252.33.33.788.818.0.0.0.503.96.96.17.17.788.818.0.0.0.503.252.252.33.33.697.750.0.0.0.503.96.96.17.17.697.750.0.0.0.503.252.252.33.33.831.778.0.0.0.503.96.96.17.17.831.778.0.0.0.503.252.252.33.33.647.782.0.0.0.503.96.96.17.17.647.782.0.0.0.503.252.252.33.33.881.746.0.0.0.503.96.96.17.17.881.746.0.0.0.503.252.252.33.33.593.803.0.0.0.503.96.96.17.17.593.803.0.0.0.503.252.252.33.33.935.725.0.0.0.503.96.96.17.17.935.725.0.0.0.31038.34.0.165.165.652.609.1.0.0.31037.34.142.178.178.880.907.1.0.0",
+            "clan_anduinvale_4": "11.158.158.1528.1528.764.764.1.0.0.31036.34.34.461.461.764.764.0.0.0",
+        },
         clan_colors=[("FF654D37", "FFFBC841"), ("FF5A4430", "FFF0C050"), ("FF6E563E", "FFFBC841"),
                      ("FF4E3C2A", "FFE8B840")],
         relationships={"mirkwood": (0, False), "lothlorien": (0, False), "sturgia": (0, False),
@@ -268,14 +286,14 @@ KINGDOMS = {
         desc="The Woodmen of western Mirkwood cleared their steads under the eaves of the forest and named their realm for the iron-hard trees that ring Woodmen-town. They are bowmen and woodwards, few in number, at peace with the Elves to the north and ever watchful of Dol Guldur to the south.",
         lord_skill=("taom_dale_lord_skills", "taom_dale_lord_skills", "taom_dale_lady_skills"),
         lords_per_clan=4,  # 3 clans x 4 = 12 lords (2 male + 2 female, married within the clan)
-        clans=[("clan_angaladh_1", 4, "town_AND1", "House of Angáladh"),
-               ("clan_angaladh_2", 3, "castle_AND3", "Woodwards of the Forest Road"),
-               ("clan_angaladh_3", 2, "castle_AND2", "Wardens of Emyn Duir")],
-        leader_name="Ingomar",
-        male_names=["Ansila", "Hrodiwar", "Gaisa", "Liudric", "Wandil", "Athalwin", "Thrasamund",
-                    "Vidimer"],
-        female_names=["Gudila", "Riquila", "Hildiwara", "Sunilda", "Wiliswintha", "Ansiwara", "Ranilda",
-                      "Gaila"],
+        clans=[("clan_angaladh_1", 4, "town_AND1", "Waldanding"),
+               ("clan_angaladh_2", 3, "castle_AND3", "Meroaging"),
+               ("clan_angaladh_3", 2, "castle_AND2", "Fadiring")],
+        leader_name="Theodemiro",
+        male_names=["Waldano", "Ambroz", "Arias", "Oppas", "Aoricho", "Theodefredo", "Suniefredo",
+                    "Veremondo"],
+        female_names=["Adosinda", "Riciberga", "Monniadomna", "Ingundis", "Sisenanda", "Gudilona", "Creusa",
+                      "Elvira"],
         party_template="PartyTemplate.kingdom_hero_party_angaladh_template",
         # Icons no other clan flies (Mike 2026-10-28): Silvan 17000 and 17001 and the plain sun 20001.
         # Mirkwood's Nos Galengrim flies 17006, 17007 and 17008. Off-white (palette 2022, the realm's
@@ -283,6 +301,8 @@ KINGDOMS = {
         banner="11.2021.2021.1528.1528.764.764.1.0.0.{icon}.{fg}.{fg}.700.700.764.764.0.0.0",
         kingdom_icon=17000, clan_icons=[17000, 17001, 20001],
         sigil=2022, clan_sigils=[2022, 2022, 2022],
+        # The realm flies a hand-made layered banner.
+        kingdom_banner_key="11.2.2.1528.1528.764.764.1.0.0.505.2020.2020.295.296.636.636.0.0.0.505.2020.2020.295.296.892.892.0.0.0.31032.181.181.224.224.764.605.0.0.0.31032.181.181.224.224.764.923.0.0.180.31032.181.181.224.224.605.764.0.0.90.31032.181.181.224.224.923.764.0.0.270.31031.20.116.368.368.764.749.1.0.0",
         clan_colors=[("FF4F6F5A", "FFF2F4F7"), ("FF45614F", "FFE8ECE8"), ("FF5A7A64", "FFF2F4F2")],
         relationships={"mirkwood": (0, False), "lothlorien": (0, False), "sturgia": (0, False),
                        "erebor": (0, False), "dolguldur": (0, False), "gundabad": (0, False),
@@ -299,18 +319,18 @@ KINGDOMS = {
         desc="The vintners of Dorwinion tend the warm slopes where the River Running meets the Sea of Rhûn. Their wine goes up the river to Dale, to the Elves of Mirkwood and to every hall that can pay for it, and their kings grow rich on it. They keep out of the wars of the West and buy peace from the East when they must.",
         lord_skill=("taom_dale_lord_skills", "taom_dale_lord_skills", "taom_dale_lady_skills"),
         lords_per_clan=4,  # 4 clans x 4 = 16 lords (2 male + 2 female, married within the clan)
-        clans=[("clan_dorwinion_1", 5, "town_DO2", "House of Vineholm"),
-               ("clan_dorwinion_2", 4, "town_DO1", "Wardens of the Redwater"),
-               ("clan_dorwinion_3", 4, "town_DO3", "House of Seagate"),
-               ("clan_dorwinion_4", 3, "castle_DO3", "Wardens of the Eastmarch")],
-        leader_name="Ostric",
-        male_names=["Halric", "Torvin", "Ostmar", "Gerulf", "Aldwin", "Berengar", "Raedric", "Sigmar",
-                    "Wendel", "Hartwin"],
-        female_names=["Aldith", "Berta", "Gisela", "Hilde", "Irmgard", "Liutgard", "Mathilde", "Oda",
-                      "Richenza", "Wiltrud"],
+        clans=[("clan_dorwinion_1", 5, "town_DO2", "Koldana"),
+               ("clan_dorwinion_2", 4, "town_DO1", "Vierling"),
+               ("clan_dorwinion_3", 4, "town_DO3", "Montegian"),
+               ("clan_dorwinion_4", 3, "castle_DO3", "Raudbarad")],
+        leader_name="Hawin",
+        male_names=["Bladorthin", "Vidumarh", "Godomar", "Swain", "Harward", "Ricchar", "Thalas",
+                    "Raendoric", "Hallam", "Rathar"],
+        female_names=["Sisewyn", "Freja", "Ariberga", "Vidusintha", "Thorberta", "Marhsintha", "Edith", "Asta",
+                      "Kelai", "Sulwyn"],
         party_template="PartyTemplate.kingdom_hero_party_dorwinion_template",
         # Misc icons no clan flies (30000-30015): the cluster (30011, a bunch of grapes) for the realm and
-        # the House of Vineholm, the tower (30015), the sunburst (30008), the phoenix shield (30014).
+        # the Koldana, the tower (30015), the sunburst (30008), the phoenix shield (30014).
         # Gold (2024, the realm's color2) on wine red (2015).
         banner="11.2015.2015.1528.1528.764.764.1.0.0.{icon}.{fg}.{fg}.700.700.764.764.0.0.0",
         kingdom_icon=30011, clan_icons=[30011, 30015, 30008, 30014],
@@ -329,18 +349,18 @@ KINGDOMS = {
         desc="The Northmen of South Rhovanion ride the wide plains between the southern eaves of Mirkwood and the Sea of Rhûn. They are horse-lords, kin of the Éothéod who rode north long ago, and they have not forgotten the Wainriders who once burned their halls. Their kings hold Vidugard and owe no lord in the West or the East.",
         lord_skill=("taom_rohan_knight_skills", "taom_rohan_knight_skills", "taom_rohan_lady_skills"),
         lords_per_clan=4,  # 4 clans x 4 = 16 lords (2 male + 2 female, married within the clan)
-        clans=[("clan_southrhovanion_1", 5, "town_SRH2", "House of Vidugard"),
-               ("clan_southrhovanion_2", 4, "town_SRH1", "Riders of Southwood"),
-               ("clan_southrhovanion_3", 4, "castle_SRH1", "Wainwatch Riders"),
-               ("clan_southrhovanion_4", 3, "castle_SRH3", "Wardens of the Northmark")],
-        leader_name="Vidumar",
-        male_names=["Marhwin", "Thrasaric", "Videric", "Beremud", "Gundric", "Hrodulf", "Sigiric",
-                    "Waldemar", "Theudis"],
-        female_names=["Amalaberga", "Hildegund", "Swanhilda", "Theodegotha", "Rotrudis", "Brunhildis",
-                      "Ansgard", "Gisla", "Wilgefort", "Odalinde"],
+        clans=[("clan_southrhovanion_1", 5, "town_SRH2", "Toki"),
+               ("clan_southrhovanion_2", 4, "town_SRH1", "Lucrecea"),
+               ("clan_southrhovanion_3", 4, "castle_SRH1", "Orming"),
+               ("clan_southrhovanion_4", 3, "castle_SRH3", "Guthmunding")],
+        leader_name="Suniefredo",
+        male_names=["Vidugild", "Alatheo", "Obada", "Eormenric", "Guthfrith", "Cerdic", "Hlothere",
+                    "Balthere", "Ælfstan"],
+        female_names=["Onecca", "Inger", "Aragonte", "Urraca", "Avina", "Judith", "Cyneburg",
+                      "Æthelburg", "Alethea", "Godgifu"],
         party_template="PartyTemplate.kingdom_hero_party_southrhovanion_template",
-        # Misc horse icons no clan flies: the sun between two horses (30006) for the realm and the House
-        # of Vidugard, the running horse (30001), the horn (30005), the horse's head (30004). Tan (2008,
+        # Misc horse icons no clan flies: the sun between two horses (30006) for the realm and the royal
+        # Toki, the running horse (30001), the horn (30005), the horse's head (30004). Tan (2008,
         # the realm's color2) on dark earth (2013).
         banner="11.2013.2013.1528.1528.764.764.1.0.0.{icon}.{fg}.{fg}.700.700.764.764.0.0.0",
         kingdom_icon=30006, clan_icons=[30006, 30001, 30005, 30004],

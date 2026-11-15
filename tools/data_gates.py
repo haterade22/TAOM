@@ -101,7 +101,10 @@ GATES = (
     Gate("xml-schemas-live", "whole live modules (Armory, TAOM_Map)", (),
          ("python", "tools/validate_xml_schemas.py", "--live"), ("tools/validate_xml_schemas.py",)),
     Gate("moduledata", "troops, characters, rosters, cultures, clans, party templates, lords, Armory refs, "
-         "TAOM_Map settlements", TROOP_GLOBS + MODULEDATA_GLOBS + ARMORY_GLOBS + MAP_GLOBS,
+         "TAOM_Map settlements", TROOP_GLOBS + MODULEDATA_GLOBS + ARMORY_GLOBS + MAP_GLOBS
+         # The enlistment rank rule lives in the generator and prices weapons with these tools (#1290).
+         + ("*tools/generate_enlistment_rosters.py", "*tools/melee_catalogue.py", "*tools/analyze_melee_ladder.py",
+            "*tools/ranged_ladder.py"),
          ("python", "tools/validate_moduledata.py"),
          (".claude/rules/moduledata-validation.md", ".claude/rules/troops.md", ".claude/rules/xml-data.md", CODES_DOC),
          note="read the warnings as well as the errors; settlement pins live in tools/settlement_assignments.json"),
@@ -128,6 +131,13 @@ GATES = (
          note="meshes, collision bodies, dead item ids, and the companion checks of /armory-audit"),
     Gate("polearm-shield", "Armory weapons and pieces", ARMORY_GLOBS + TROOP_GLOBS,
          ("python", "tools/audit_polearm_shield_parity.py"), ("docs/features/weapon-xml-pipeline.md",)),
+    Gate("couch-brace", "Armory weapon descriptions, the couch spec and its tool",
+         ARMORY_GLOBS + ("*tools/couch_brace_polearms.json", "*tools/register_couch_brace_polearms.py",
+                         "*tools/register_one_handed_polearms.py"),
+         ("python", "tools/register_couch_brace_polearms.py", "--check"), ("docs/features/weapon-xml-pipeline.md",),
+         note="the Dol Guldur warg riders' spears must fit TwoHandedPolearm_Couchable and _Bracing; exit 1 means a "
+              "reinstall or sync reset the Armory's weapon_descriptions.xslt: --apply --backup-tag <tag> restores it; "
+              "exit 2 is NOT RUN (no install), exit 3 a crash"),
     Gate("mesh-refs", "Armory weapons and pieces", ARMORY_GLOBS,
          ("python", "tools/validate_mesh_refs.py", "--scan-bodies"), (ARMORY_DOC,),
          note="every mesh= and body_name= resolves to a shipped asset; pending artist bo_ meshes are the expected exception"),
@@ -171,6 +181,14 @@ GATES = (
          ARMORY_GLOBS + ARMOUR_CURVE_GLOBS + ("*tools/generate_snow_orc_armor.py",),
          ("python", "tools/generate_snow_orc_armor.py", "--check"), ("docs/features/lothlorien-snow-orcs.md",),
          note="exit 1 when the live Armory differs from the render"),
+    Gate("armour-restat", "Armory armour (values and loot tables), the curve, its roster map and the two generators",
+         ARMORY_GLOBS + ARMOUR_CURVE_GLOBS + ("*tools/data/armor_roster_tiers.json",
+                                              "*tools/generate_lothlorien_armor.py",
+                                              "*tools/generate_snow_orc_armor.py"),
+         ("python", "tools/rebalance_armor.py", "--check"), ("docs/features/armor-balance.md",),
+         note="exit 1 when the live Armory differs from the curve; after an Armory reinstall run the restat with "
+              "--apply and a backup tag (the apply sequence in the doc), and in a branch merge trunk first; "
+              "exit 2 is NOT RUN (no install)"),
     Gate("generator-refs", "XML a tools/ generator wrote", ("*tools/generate_*.py",) + ARMORY_GLOBS,
          ("python", "tools/check_generator_item_refs.py"), ("tools/README.md",),
          note="and the generator's own --verify or --check; hand-read three generated entries"),

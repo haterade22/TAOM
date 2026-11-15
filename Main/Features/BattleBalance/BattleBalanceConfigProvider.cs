@@ -87,6 +87,20 @@ public class BattleBalanceConfigProvider : IBattleBalanceConfigProvider
             reverted++;
         }
 
+        if (config.AutoResolve == null)
+        {
+            _logger.LogWarning("BattleBalanceConfig: AutoResolve is null; using the compiled section");
+            config.AutoResolve = compiled.AutoResolve;
+            reverted++;
+        }
+        else if (!FiniteFloatValidator.IsFiniteInRange(config.AutoResolve.PowerRatioExponent, 0f, 1f))
+        {
+            var dflt = compiled.AutoResolve.PowerRatioExponent;
+            _logger.LogWarning($"BattleBalanceConfig: AutoResolve.PowerRatioExponent ({config.AutoResolve.PowerRatioExponent}) out of [0,1]; reverting to {dflt}");
+            config.AutoResolve.PowerRatioExponent = dflt;
+            reverted++;
+        }
+
         // A bad value reverts to its compiled row. A key with no compiled row is removed, so the lookup's own
         // fallback decides: the tier formula in GetTierPower, and 0 (the engine's own chance) for survival.
         // TierPower values: finite and > 0 (zero or negative power is nonsense).

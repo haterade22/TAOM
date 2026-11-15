@@ -1779,7 +1779,7 @@
 	<string id="taom_faction_khudorom_of_khand_weakness_0" text="{=taom_faction_khudorom_of_khand_weakness_0}Crude workshops slow construction" />
 	<string id="taom_faction_khudorom_of_khand_weakness_1" text="{=taom_faction_khudorom_of_khand_weakness_1}Weak settlements" />
 	<string id="taom_faction_khudorom_of_khand_weakness_2" text="{=taom_faction_khudorom_of_khand_weakness_2}Mercenary captains are loyal to coin, not lord" />
-	<string id="taom_faction_kingdom_of_angaladh_desc" text="{=taom_faction_kingdom_of_angaladh_desc}The Woodmen of Angáladh live under the western eaves of Mirkwood, where their fathers cleared steads among trees so hard that axes ring on them like iron. King Ingomar's archers watch the Narrows. The realm stands apart from the War of the Ring, but the shadow in the south of the forest grows every year." />
+	<string id="taom_faction_kingdom_of_angaladh_desc" text="{=taom_faction_kingdom_of_angaladh_desc}The Woodmen of Angáladh live under the western eaves of Mirkwood, where their fathers cleared steads among trees so hard that axes ring on them like iron. King Theodemiro's archers watch the Narrows. The realm stands apart from the War of the Ring, but the shadow in the south of the forest grows every year." />
 	<string id="taom_faction_kingdom_of_angaladh_trait_0" text="{=taom_faction_kingdom_of_angaladh_trait_0}Woodmen of Mirkwood" />
 	<string id="taom_faction_kingdom_of_angaladh_trait_1" text="{=taom_faction_kingdom_of_angaladh_trait_1}Archers of the Eaves" />
 	<string id="taom_faction_kingdom_of_angaladh_trait_2" text="{=taom_faction_kingdom_of_angaladh_trait_2}Friends of the Northern Wood" />
@@ -1892,7 +1892,7 @@
 	<string id="taom_faction_kingdom_of_dale_weakness_2" text="{=taom_faction_kingdom_of_dale_weakness_2}Stubborn council strains diplomacy" />
 	<string id="taom_faction_kingdom_of_dorwinion_bonus_0" text="{=taom_faction_kingdom_of_dorwinion_bonus_0}+10% party speed on plains (Vale Traders)" />
 	<string id="taom_faction_kingdom_of_dorwinion_bonus_1" text="{=taom_faction_kingdom_of_dorwinion_bonus_1}-0.5 settlement loyalty per day (Small Territory Exposure)" />
-	<string id="taom_faction_kingdom_of_dorwinion_desc" text="{=taom_faction_kingdom_of_dorwinion_desc}The vintners of Dorwinion hold the warm slopes above the Sea of Rhûn, and their red wine is prized in every hall that can pay for it. King Ostric rules from Vineholm. The realm stands apart from the War of the Ring, but the Easterlings across the inland sea look harder at its rich, lightly guarded land every year." />
+	<string id="taom_faction_kingdom_of_dorwinion_desc" text="{=taom_faction_kingdom_of_dorwinion_desc}The vintners of Dorwinion hold the warm slopes above the Sea of Rhûn, and their red wine is prized in every hall that can pay for it. King Hawin rules from Vineholm. The realm stands apart from the War of the Ring, but the Easterlings across the inland sea look harder at its rich, lightly guarded land every year." />
 	<string id="taom_faction_kingdom_of_dorwinion_name" text="{=taom_faction_kingdom_of_dorwinion_name}Kingdom of Dorwinion" />
 	<string id="taom_faction_kingdom_of_dorwinion_perk_0_desc" text="{=taom_faction_kingdom_of_dorwinion_perk_0_desc}+10% party speed on plains, along the river roads and the open shore of the inland sea." />
 	<string id="taom_faction_kingdom_of_dorwinion_perk_0_name" text="{=taom_faction_kingdom_of_dorwinion_perk_0_name}Vale Traders" />
@@ -2172,7 +2172,7 @@
 	<string id="taom_faction_kingdom_of_south_rhovanion_bonus_1" text="{=taom_faction_kingdom_of_south_rhovanion_bonus_1}+5 party morale (Riders' Spirit)" />
 	<string id="taom_faction_kingdom_of_south_rhovanion_bonus_2" text="{=taom_faction_kingdom_of_south_rhovanion_bonus_2}+0.5 settlement loyalty per day (Horse-lord Fellowship)" />
 	<string id="taom_faction_kingdom_of_south_rhovanion_bonus_3" text="{=taom_faction_kingdom_of_south_rhovanion_bonus_3}-10% party speed when over 50% infantry (Cavalry Dependent)" />
-	<string id="taom_faction_kingdom_of_south_rhovanion_desc" text="{=taom_faction_kingdom_of_south_rhovanion_desc}The Northmen of South Rhovanion ride the wide plains between the southern eaves of Mirkwood and the Sea of Rhûn, horse-breeders and kin of the Éothéod far to the north. King Vidumar holds Vidugard, and the barrows of the old kings stand on his grasslands. The realm stands apart from the War of the Ring, but the Wainriders have broken it twice before, and the riders of the plains remember it." />
+	<string id="taom_faction_kingdom_of_south_rhovanion_desc" text="{=taom_faction_kingdom_of_south_rhovanion_desc}The Northmen of South Rhovanion ride the wide plains between the southern eaves of Mirkwood and the Sea of Rhûn, horse-breeders and kin of the Éothéod far to the north. King Suniefredo holds Vidugard, and the barrows of the old kings stand on his grasslands. The realm stands apart from the War of the Ring, but the Wainriders have broken it twice before, and the riders of the plains remember it." />
 	<string id="taom_faction_kingdom_of_south_rhovanion_name" text="{=taom_faction_kingdom_of_south_rhovanion_name}Kingdom of South Rhovanion" />
 	<string id="taom_faction_kingdom_of_south_rhovanion_perk_0_desc" text="{=taom_faction_kingdom_of_south_rhovanion_perk_0_desc}+10% party speed on plains and +5 party morale: the wide grasslands are the riders' own ground." />
 	<string id="taom_faction_kingdom_of_south_rhovanion_perk_0_name" text="{=taom_faction_kingdom_of_south_rhovanion_perk_0_name}Riders of the Plains" />
@@ -2412,6 +2412,8 @@
 
 	<!-- Cheat Menu (docs/features/cheat-menu.md) -->
 	<string id="taom_cheat_bad_amount" text="{=taom_cheat_bad_amount}That amount is not allowed. The limit is {MAX}." />
+	<string id="taom_cheat_battle_done_god_off" text="{=taom_cheat_battle_done_god_off}God mode is off. You and any mount you ride take damage again." />
+	<string id="taom_cheat_battle_done_god_on" text="{=taom_cheat_battle_done_god_on}God mode is on. You and any mount you ride take no damage until you turn it off or the battle ends." />
 	<string id="taom_cheat_battle_done_heal_self" text="{=taom_cheat_battle_done_heal_self}You are back to full health, and so is your mount if you ride one." />
 	<string id="taom_cheat_battle_done_heal_side" text="{=taom_cheat_battle_done_heal_side}{NUMBER} soldiers and mounts of your side are back to full health." />
 	<string id="taom_cheat_battle_done_kill" text="{=taom_cheat_battle_done_kill}{NUMBER} enemies were killed." />
@@ -2421,6 +2423,8 @@
 	<string id="taom_cheat_battle_item" text="{=taom_cheat_battle_item}Cheats" />
 	<string id="taom_cheat_battle_none" text="{=taom_cheat_battle_none}Start a battle first. Battle cheats work only while a battle is on." />
 	<string id="taom_cheat_battle_nothing" text="{=taom_cheat_battle_nothing}Nothing changed: there is nobody in this battle this cheat can act on." />
+	<string id="taom_cheat_battle_opt_god_off" text="{=taom_cheat_battle_opt_god_off}God mode: off" />
+	<string id="taom_cheat_battle_opt_god_on" text="{=taom_cheat_battle_opt_god_on}God mode: on" />
 	<string id="taom_cheat_battle_opt_heal_self" text="{=taom_cheat_battle_opt_heal_self}Heal yourself" />
 	<string id="taom_cheat_battle_opt_heal_side" text="{=taom_cheat_battle_opt_heal_side}Heal your side" />
 	<string id="taom_cheat_battle_opt_kill" text="{=taom_cheat_battle_opt_kill}Kill all enemies" />
@@ -3390,6 +3394,10 @@
 	<string id="taom_shader_notice_title_total" text="{=taom_shader_notice_title_total}Compiling shaders: {COUNT} of about {TOTAL}" />
 	<string id="taom_shader_notice_title_count" text="{=taom_shader_notice_title_count}Compiling shaders: {COUNT}" />
 	<string id="taom_shader_notice_detail" text="{=taom_shader_notice_detail}The game is rebuilding its shaders after a change to your mod list or to the game. It is not frozen." />
+	<!-- BattleShaderNotice -->
+	<string id="taom_battle_shader_notice_title" text="{=taom_battle_shader_notice_title}Preparing this scene: {COUNT} shaders compiled" />
+	<string id="taom_battle_shader_notice_detail" text="{=taom_battle_shader_notice_detail}The game is compiling shaders for this scene. It is not frozen. This can take a minute or two." />
+	<string id="taom_battle_shader_loading_line" text="{=taom_battle_shader_loading_line}Compiling shaders for this scene. This can take a minute or two; the game is not frozen." />
 
 
 
