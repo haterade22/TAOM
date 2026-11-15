@@ -138,6 +138,56 @@ public class CheatMenuServiceTests
         _world.DidNotReceive().AddCultureTroops(false, Arg.Any<int>());
     }
 
+    private void FactionOf(params CheatTroopFacts[] troops) =>
+        _world.ReadFactionTroops().Returns((new CheatTroopSources("gondor", troops.Select(t => t.Id).ToList(), new string[0]),
+            (System.Collections.Generic.IReadOnlyDictionary<string, CheatTroopFacts>)troops.ToDictionary(t => t.Id)));
+
+    private static CheatTroopFacts Facts(string id, int tier, bool hero = false) =>
+        new(id, id, tier, "gondor", hero, false, false, true, new string[0]);
+
+    [TestMethod]
+    public void FactionTroops_AreTheSortedPickableTroops()
+    {
+        FactionOf(Facts("knight", 6), Facts("recruit", 1), Facts("captain", 0, hero: true));
+
+        CollectionAssert.AreEqual(new[] { "recruit", "knight" }, _service.FactionTroops().Select(t => t.Id).ToList());
+    }
+
+    [TestMethod]
+    public void AddFactionTroop_ATroopOfTheList_AddsItAndNamesIt()
+    {
+        FactionOf(Facts("knight", 6));
+        _world.AddTroop("knight", 10).Returns("Swan Knight");
+
+        var outcome = _service.AddFactionTroop("knight", 10);
+
+        Assert.IsTrue(outcome.Ok);
+        Assert.AreEqual("Swan Knight", outcome.Name);
+        Assert.AreEqual(10f, outcome.Number);
+    }
+
+    [TestMethod]
+    public void AddFactionTroop_AnIdOffTheList_OrAHero_IsRefusedAndAddsNothing()
+    {
+        FactionOf(Facts("knight", 6), Facts("captain", 0, hero: true));
+
+        Assert.AreEqual(CheatOutcomeKind.UnknownTarget, _service.AddFactionTroop("mordor_uruk", 10).Kind);
+        Assert.AreEqual(CheatOutcomeKind.UnknownTarget, _service.AddFactionTroop("captain", 10).Kind);
+        Assert.AreEqual(CheatOutcomeKind.UnknownTarget, _service.AddFactionTroop(null, 10).Kind);
+        Assert.AreEqual(CheatOutcomeKind.BadAmount, _service.AddFactionTroop("knight", CheatMenuService.MaxTroops + 1).Kind);
+        _world.DidNotReceive().AddTroop(Arg.Any<string>(), Arg.Any<int>());
+    }
+
+    [TestMethod]
+    public void FactionTroops_InCoop_IsEmpty_AndAddIsRefused()
+    {
+        _coop.IsSessionActive.Returns(true);
+
+        Assert.AreEqual(0, _service.FactionTroops().Count);
+        Assert.AreEqual(CheatOutcomeKind.CoopRefused, _service.AddFactionTroop("knight", 10).Kind);
+        Assert.AreEqual(0, _world.ReceivedCalls().Count());
+    }
+
     [TestMethod]
     public void AddTroops_CultureWithoutTheTroop_NothingToDo_TooMany_Bad()
     {

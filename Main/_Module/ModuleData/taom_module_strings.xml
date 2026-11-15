@@ -2457,6 +2457,7 @@
 	<string id="taom_cheat_pick_kingdom" text="{=taom_cheat_pick_kingdom}Choose a kingdom" />
 	<string id="taom_cheat_pick_ok" text="{=taom_cheat_pick_ok}Choose" />
 	<string id="taom_cheat_pick_settlement" text="{=taom_cheat_pick_settlement}Choose where to teleport" />
+	<string id="taom_cheat_pick_troop" text="{=taom_cheat_pick_troop}Choose a troop: 10 of it join your party" />
 	<string id="taom_cheat_teleport_text" text="{=taom_cheat_teleport_text}Teleport to a settlement's gate. You arrive outside and enter as usual." />
 	<string id="taom_cheat_tp_army" text="{=taom_cheat_tp_army}Leave the army first. Only an army's leader can teleport it." />
 	<string id="taom_cheat_tp_camp" text="{=taom_cheat_tp_camp}Break camp first, then teleport." />
@@ -2471,6 +2472,8 @@
 	<string id="taom_cheat_tp_siege" text="{=taom_cheat_tp_siege}End the siege first." />
 	<string id="taom_cheat_tp_towns" text="{=taom_cheat_tp_towns}Towns..." />
 	<string id="taom_cheat_tp_villages" text="{=taom_cheat_tp_villages}Villages..." />
+	<string id="taom_cheat_troop_row" text="{=taom_cheat_troop_row}Tier {TIER}: {NAME}" />
+	<string id="taom_cheat_troops_any" text="{=taom_cheat_troops_any}+10 of any troop of your faction..." />
 	<string id="taom_cheat_troops_basic" text="{=taom_cheat_troops_basic}+10 basic recruits" />
 	<string id="taom_cheat_troops_elite" text="{=taom_cheat_troops_elite}+10 elite recruits" />
 	<string id="taom_cheat_troops_text" text="{=taom_cheat_troops_text}Add recruits of your culture to your party." />

@@ -8,8 +8,11 @@ using TaleWorlds.CampaignSystem.Party;
 using TaleWorlds.CampaignSystem.Settlements;
 using TaleWorlds.Core;
 using TaleWorlds.MountAndBlade;
+using TAOM.Features.Arachnophobia;
 using TAOM.Features.CheatMenu;
+using TAOM.Features.EliteEmissary;
 using TAOM.Features.FieldCamp;
+using TAOM.Features.TroopProgression;
 
 namespace TAOM.Adapters;
 
@@ -20,8 +23,18 @@ namespace TAOM.Adapters;
 public sealed class CheatWorldAdapter : ICheatWorldAdapter
 {
     private readonly ICampService _camp;
+    private readonly IVolunteerRecruitmentService _recruitment;
+    private readonly IEliteEmissaryConfigProvider _emissary;
+    private readonly IArachnophobiaService _arachnophobia;
 
-    public CheatWorldAdapter(ICampService camp) => _camp = camp;
+    public CheatWorldAdapter(ICampService camp, IVolunteerRecruitmentService recruitment, IEliteEmissaryConfigProvider emissary,
+        IArachnophobiaService arachnophobia)
+    {
+        _camp = camp;
+        _recruitment = recruitment;
+        _emissary = emissary;
+        _arachnophobia = arachnophobia;
+    }
 
     public TeleportState ReadTeleportState()
     {
@@ -82,6 +95,67 @@ public sealed class CheatWorldAdapter : ICheatWorldAdapter
         roster.AddToCounts(troop, count);
         return troop.Name?.ToString();
     }
+
+    public (CheatTroopSources Sources, IReadOnlyDictionary<string, CheatTroopFacts> Troops)? ReadFactionTroops()
+    {
+        var clan = Hero.MainHero?.Clan;
+        var culture = clan?.Kingdom?.Culture ?? clan?.Culture;
+        if (culture == null) return null;
+
+        var own = new List<string>();
+        void Own(CharacterObject? c)
+        {
+            if (c != null) own.Add(c.StringId);
+        }
+        Own(culture.BasicTroop);
+        Own(culture.EliteBasicTroop);
+        Own(culture.MeleeMilitiaTroop);
+        Own(culture.RangedMilitiaTroop);
+        Own(culture.MeleeEliteMilitiaTroop);
+        Own(culture.RangedEliteMilitiaTroop);
+        own.AddRange(TemplateTroops(culture.VassalRewardTroopsPartyTemplate));
+        if (culture.BasicMercenaryTroops != null)
+            foreach (var merc in culture.BasicMercenaryTroops) Own(merc);
+        own.AddRange(_recruitment.GetCulturePoolTroopIds(culture.StringId));
+        if (_emissary.GetConfig().CultureOffers.TryGetValue(culture.StringId, out var offers))
+            own.AddRange(offers);
+
+        var fielded = new HashSet<string>(VolunteerRecruitmentService.AllPooledTroopIds());
+        foreach (var c in Clan.All)
+            if (c != null && !c.IsBanditFaction)
+                fielded.UnionWith(TemplateTroops(c.DefaultPartyTemplate));
+
+        var troops = new Dictionary<string, CheatTroopFacts>(System.StringComparer.Ordinal);
+        foreach (var c in CharacterObject.All)
+        {
+            if (c?.StringId == null || troops.ContainsKey(c.StringId) || _arachnophobia.IsHidden(c.StringId)) continue;
+            troops[c.StringId] = new CheatTroopFacts(
+                c.StringId,
+                c.Name?.ToString() ?? c.StringId,
+                c.IsHero ? 0 : c.Tier,
+                c.Culture?.StringId,
+                c.IsHero,
+                c.IsTemplate,
+                c.IsObsolete,
+                c.Occupation == Occupation.Soldier || c.Occupation == Occupation.Mercenary,
+                c.UpgradeTargets?.Where(u => u != null).Select(u => u.StringId).ToList() ?? new List<string>());
+        }
+        return (new CheatTroopSources(culture.StringId, own, fielded), troops);
+    }
+
+    public string? AddTroop(string troopId, int count)
+    {
+        var troop = CharacterObject.Find(troopId);
+        var roster = Campaign.Current?.MainParty?.MemberRoster;
+        if (troop == null || troop.IsHero || roster == null) return null;
+        roster.AddToCounts(troop, count);
+        return troop.Name?.ToString() ?? troop.StringId;
+    }
+
+    private static IEnumerable<string> TemplateTroops(PartyTemplateObject? template) =>
+        template?.Stacks == null
+            ? Enumerable.Empty<string>()
+            : template.Stacks.Where(s => s.Character != null).Select(s => s.Character.StringId).ToList();
 
     public int HealMainParty()
     {
