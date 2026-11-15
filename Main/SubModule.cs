@@ -679,8 +679,9 @@ public class SubModule : MBSubModuleBase
             if (stale != null)
                 Features.BattleLoadDiagnostics.StallReportNotifier.Notify(stale);
             // Any other session that ended without the clean unload line: offer the bug report (crash-report.md).
-            else
-                Features.CrashReport.BugReport.BugReportStartup.CheckPreviousSession(IoC.Resolve<IModLogger>());
+            // Once per launch; a launch that showed the stall notice uses its turn here, so no later menu offers it.
+            Features.CrashReport.BugReport.BugReportStartup.CheckPreviousSession(
+                IoC.Resolve<IModLogger>(), stallNoticeShown: stale != null);
         }
         catch { /* never block the main menu over a diagnostic */ }
 

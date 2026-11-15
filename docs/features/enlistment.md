@@ -1932,7 +1932,9 @@ player who stays paused sees it for as long as he likes.
 
 When the pump revokes a pass and the player is `EnlistedAttached`, outside every settlement and in
 no map event, it now calls `ReconcileNow("shore leave ended")` and ends that pass, so the reconciler
-parks him or follows the commander in straight away. A revoke from a state change inside the town
+parks him or follows the commander in on the first expensive pump pass after time moves (the pump
+runs from `TickEvent`, which `Campaign.Tick` does not raise while time is stopped, so a paused player
+still sees the party until he unpauses). A revoke from a state change inside the town
 (`Finish(true)` walks him out) and a revoke by a battle are left as before. This is a third
 re-attach trigger beside the two edges above; it fires only when a pass ends.
 

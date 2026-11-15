@@ -53,6 +53,13 @@ class BattleSetTests(unittest.TestCase):
         n = npc('<Equipments><EquipmentSet id="EquipmentRoster.r" /></Equipments>')
         self.assertEqual([{"Item0": "bow"}], atf.battle_sets(n, {"r": [{"Item0": "bow"}]}))
 
+    def test_a_standalone_roster_reads_its_capitalised_equipment_children(self):
+        # Standalone EquipmentRoster files write <Equipment>; the engine reads every child whatever its
+        # name (Equipment.Deserialize), so the loader must not see these sets as empty (#1256 review).
+        s = ET.fromstring('<EquipmentSet><Equipment slot="Horse" id="Item.horse" />'
+                          '<Equipment slot="Item0" id="Item.bow" /></EquipmentSet>')
+        self.assertEqual({"Horse": "horse", "Item0": "bow"}, atf._items_of(s))
+
 
 class VerdictTests(unittest.TestCase):
     def check(self, group, sets):

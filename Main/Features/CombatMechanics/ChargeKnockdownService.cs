@@ -73,11 +73,11 @@ public class ChargeKnockdownService : IChargeKnockdownService
         if (!context.HasKnockBackFlag)
             return null;
 
-        // #728: a NaN or infinite health or damage turns the comparison below into an owned
-        // verdict from garbage; defer to vanilla as for the corrupt inputs above. Branch A reads
-        // neither.
-        if (!FiniteFloatValidator.IsFinite(context.VictimMaxHealth)
-            || !FiniteFloatValidator.IsFinite(context.InflictedDamage))
+        // #728: a NaN or infinite maximum health (Agent.HealthLimit is a float) turns the comparison
+        // below into an owned verdict from garbage; defer to vanilla as for the corrupt inputs above.
+        // The inflicted damage needs no check: AttackCollisionData.InflictedDamage is an int. Branch A
+        // reads neither.
+        if (!FiniteFloatValidator.IsFinite(context.VictimMaxHealth))
             return null;
 
         // #610: neutral ratio, penetration and the floor are MCM-live, read per hit; the max stays JSON.

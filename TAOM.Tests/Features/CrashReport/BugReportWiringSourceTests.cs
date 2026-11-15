@@ -31,13 +31,13 @@ public class BugReportWiringSourceTests
     }
 
     [TestMethod]
-    public void MainMenu_ChecksThePreviousSession_OnlyWhenNoStallNoticeWasShown()
+    public void MainMenu_ChecksThePreviousSession_AndAStallNoticeUsesTheTurn()
     {
         var src = RepoPaths.ReadSource("Main/SubModule.cs", stripComments: true);
 
         StringAssert.Matches(src, new Regex(
             @"if \(stale != null\)\s*Features\.BattleLoadDiagnostics\.StallReportNotifier\.Notify\(stale\);\s*" +
-            @"else\s*Features\.CrashReport\.BugReport\.BugReportStartup\.CheckPreviousSession\("));
+            @"Features\.CrashReport\.BugReport\.BugReportStartup\.CheckPreviousSession\(\s*IoC\.Resolve<IModLogger>\(\),\s*stallNoticeShown: stale != null\)"));
     }
 
     [TestMethod]

@@ -8,6 +8,8 @@ using TaleWorlds.MountAndBlade.View.MissionViews;
 using TAOM.Core.Logging;
 using TAOM.Features.CheatMenu;
 using TAOM.Features.CheatMenu.Battle;
+using TAOM.Client.Features.FordsOfWar;
+using TAOM.Client.Features.LongDefeat;
 
 namespace TAOM.Client.Features.CheatMenu.UI;
 
@@ -77,6 +79,10 @@ public sealed class BattleCheatMenuView : MissionView
         if (mission == null || screen == null) return true;
         if (mission.IsOrderMenuOpen || screen.IsPhotoModeEnabled || screen.IsRadialMenuActive) return true;
         if (InformationManager.IsAnyInquiryActive()) return true;
+        // Fords of War (field a hero) and The Long Defeat (horn) read raw H in these views; the Esc menu item still opens
+        // the list there. A story mission carries LongDefeatMissionLogic but not the HUD view, so its key stays on.
+        if (mission.GetMissionBehavior<FordsCommandView>() != null
+            || mission.GetMissionBehavior<LongDefeatHudView>() != null) return true;
         var escape = mission.GetMissionBehavior<MissionGauntletSingleplayerEscapeMenu>();
         return escape != null && escape.IsActive;
     }

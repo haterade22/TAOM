@@ -30,13 +30,14 @@ Two widgets in TAOM.Client:
   - The canvas top is the frame top plus `FrameOffset`.
   - A positive `BottomClearance` raises the canvas to keep it that far above the viewport bottom, but never above frame top + 80 (just under the header).
 
-  `EncyclopediaPageLayoutWidget` (list pages) calls the same `Offset` helper.
+  `EncyclopediaPageLayoutWidget` (the native detail movies that have no TAOM prefab, such as the concept and ship pages) calls the same `Offset` helper with `PageTop` 130 and `PageClearance` 78.
 
 | Prefab element | FrameOffset | BottomClearance |
 |---|---|---|
 | `EncyclopediaFrame` (bar) | 0 | none |
 | `HomeCanvas`, `ListCanvas` | 0 | none |
 | Hero, unit, clan, kingdom, settlement and Realms title folios | 130 | 78 |
+| Native detail movies through `EncyclopediaPageLayoutWidget` | 130 | 78 |
 | `PageNavigation` | 956 | 22 |
 
 Each prefab's `PositionYOffset` is the 1080 result, which shows until the first late update.
@@ -62,7 +63,7 @@ None. The offsets are prefab attributes listed above.
 |------|---------|
 | `Client/Features/FactionUI/Campaign/EncyclopediaOverlayWidget.cs` | Layer order and the dimmer |
 | `Client/Features/FactionUI/Campaign/EncyclopediaFrameAnchorWidget.cs` | Frame math and canvas placement |
-| `Client/Features/FactionUI/Campaign/EncyclopediaPageLayoutWidget.cs` | List page canvas, same anchor |
+| `Client/Features/FactionUI/Campaign/EncyclopediaPageLayoutWidget.cs` | Native detail page canvas (`IsDetailMovie`), same anchor |
 | `Main/_Module/GUI/PreFabs/FactionUI/TAOMEncyclopediaBar.xml` | Overlay root, dimmer, frame, search results |
 | `Main/_Module/GUI/PreFabs/FactionUI/TAOMEncyclopediaPageNavigation.xml` | Navigation row anchor |
 | `Main/_Module/GUI/PreFabs/FactionUI/TAOMEncyclopedia{Home,ItemList,HeroPage,UnitPage,ClanPage,FactionPage,SettlementPage}.xml` | Page canvas anchors |
