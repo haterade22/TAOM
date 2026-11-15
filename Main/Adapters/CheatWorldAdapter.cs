@@ -143,6 +143,66 @@ public sealed class CheatWorldAdapter : ICheatWorldAdapter
         return (new CheatTroopSources(culture.StringId, own, fielded), troops);
     }
 
+    // v1.5.7 PartyScreenHelper: private static TroopRoster GetRosterWithAllGameTroops(), the list OpenScreenAsCheat shows (every
+    // valid encyclopedia troop, 10 of each, sorted by name). Null if a game update renames it; the screen then does not open.
+    private static readonly System.Reflection.MethodInfo? VanillaCheatRoster =
+        HarmonyLib.AccessTools.Method(typeof(Helpers.PartyScreenHelper), "GetRosterWithAllGameTroops");
+
+    public bool OpenCheatPartyScreen()
+    {
+        var game = Game.Current;
+        var main = PartyBase.MainParty;
+        if (game == null || main == null || Campaign.Current == null) return false;
+
+        // With the engine's cheat mode on, vanilla's own call does it all.
+        if (game.CheatMode)
+        {
+            Helpers.PartyScreenHelper.OpenScreenAsCheat();
+            return true;
+        }
+
+        // Otherwise the same screen as OpenScreenAsCheat (v1.5.7), field for field, minus its cheat-mode check: vanilla's
+        // list on the left, the main party on the right, dismiss mode on. Its done handler, DefaultDoneHandler, returns true.
+        if (VanillaCheatRoster?.Invoke(null, null) is not TaleWorlds.CampaignSystem.Roster.TroopRoster left) return false;
+        var logic = new PartyScreenLogic();
+        logic.Initialize(new PartyScreenLogicInitializationData
+        {
+            LeftOwnerParty = null,
+            RightOwnerParty = main,
+            LeftMemberRoster = left,
+            LeftPrisonerRoster = TaleWorlds.CampaignSystem.Roster.TroopRoster.CreateDummyTroopRoster(),
+            RightMemberRoster = main.MemberRoster,
+            RightPrisonerRoster = main.PrisonRoster,
+            LeftLeaderHero = null,
+            RightLeaderHero = main.LeaderHero,
+            LeftPartyMembersSizeLimit = 0,
+            LeftPartyPrisonersSizeLimit = 0,
+            RightPartyMembersSizeLimit = main.PartySizeLimit,
+            RightPartyPrisonersSizeLimit = main.PrisonerSizeLimit,
+            LeftPartyName = null,
+            RightPartyName = main.Name,
+            TroopTransferableDelegate = Helpers.PartyScreenHelper.TroopTransferableDelegate,
+            PartyPresentationDoneButtonDelegate = (_, _, _, _, _, _, _, _, _) => true,
+            PartyPresentationDoneButtonConditionDelegate = null,
+            PartyPresentationCancelButtonActivateDelegate = null,
+            PartyPresentationCancelButtonDelegate = null,
+            IsDismissMode = true,
+            IsTroopUpgradesDisabled = false,
+            Header = null,
+            PartyScreenClosedDelegate = null,
+            TransferHealthiesGetWoundedsFirst = false,
+            ShowProgressBar = false,
+            MemberTransferState = PartyScreenLogic.TransferState.Transferable,
+            PrisonerTransferState = PartyScreenLogic.TransferState.Transferable,
+            AccompanyingTransferState = PartyScreenLogic.TransferState.NotTransferable,
+        });
+        var state = game.GameStateManager.CreateState<PartyState>();
+        state.PartyScreenLogic = logic;
+        state.IsDonating = false;
+        game.GameStateManager.PushState(state);
+        return true;
+    }
+
     public string? AddTroop(string troopId, int count)
     {
         var troop = CharacterObject.Find(troopId);

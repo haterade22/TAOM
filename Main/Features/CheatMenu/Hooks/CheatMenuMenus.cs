@@ -78,7 +78,13 @@ internal static class CheatMenuMenus
             Shown, () => CheatMenuTexts.Show(service.AddTroops(elite: true, TroopStep)));
         Option(starter, CheatMenuIds.Troops, "taom_cheat_troops_any", "{=taom_cheat_troops_any}+10 of any troop of your faction...", 2,
             Shown, () => PickFactionTroop(service));
-        Leave(starter, CheatMenuIds.Troops, "taom_cheat_troops_back", "{=taom_cheat_opt_back}Back", 3,
+        Option(starter, CheatMenuIds.Troops, "taom_cheat_troops_screen", "{=taom_cheat_troops_screen}Every troop (party screen)...", 3,
+            Shown, () =>
+            {
+                var outcome = service.OpenCheatPartyScreen();
+                if (!outcome.Ok) CheatMenuTexts.Show(outcome);
+            });
+        Leave(starter, CheatMenuIds.Troops, "taom_cheat_troops_back", "{=taom_cheat_opt_back}Back", 4,
             () => GameMenu.SwitchToMenu(CheatMenuIds.Root));
     }
 

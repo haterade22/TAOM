@@ -2476,6 +2476,7 @@
 	<string id="taom_cheat_troops_any" text="{=taom_cheat_troops_any}+10 of any troop of your faction..." />
 	<string id="taom_cheat_troops_basic" text="{=taom_cheat_troops_basic}+10 basic recruits" />
 	<string id="taom_cheat_troops_elite" text="{=taom_cheat_troops_elite}+10 elite recruits" />
+	<string id="taom_cheat_troops_screen" text="{=taom_cheat_troops_screen}Every troop (party screen)..." />
 	<string id="taom_cheat_troops_text" text="{=taom_cheat_troops_text}Add recruits of your culture to your party." />
 	<string id="taom_cheat_unknown" text="{=taom_cheat_unknown}Nothing called &quot;{NAME}&quot; was found." />
 

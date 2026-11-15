@@ -118,6 +118,18 @@ public sealed class CheatMenuService
             : Log("troop", new CheatOutcome(CheatOutcomeKind.Done, name, count));
     }
 
+    /// <summary>
+    /// The game's own cheat party screen (every troop, 10 of each, move the ones you want). NothingToDo when it could not be
+    /// opened.
+    /// </summary>
+    public CheatOutcome OpenCheatPartyScreen()
+    {
+        if (!IsSinglePlayer) return Refused();
+        return _world.OpenCheatPartyScreen()
+            ? Log("cheat party screen", new CheatOutcome(CheatOutcomeKind.Done))
+            : new CheatOutcome(CheatOutcomeKind.NothingToDo);
+    }
+
     public CheatOutcome Heal()
     {
         if (!IsSinglePlayer) return Refused();

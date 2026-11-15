@@ -10,7 +10,7 @@ menus:
 |---|---|
 | TAOM cheat menu | Teleport to a settlement..., Gold +10,000 denars, Special resource +1,000, Influence +100, Renown +100, Troops..., Relations +20 with every lord of a kingdom..., Heal your party and your heroes, Close |
 | Teleport | Towns..., Castles..., Villages... (each opens a searchable list), Back |
-| Troops | +10 basic recruits, +10 elite recruits (the culture's `basic_troop` and `elite_basic_troop`), +10 of any troop of your faction... (a searchable list, see Troops below), Back |
+| Troops | +10 basic recruits, +10 elite recruits (the culture's `basic_troop` and `elite_basic_troop`), +10 of any troop of your faction... (a searchable list, see Troops below), Every troop (party screen)... (the game's own cheat party screen, see below), Back |
 
 Every button calls `CheatMenuService`, the same code as the console commands below, and shows its result as a message.
 
@@ -34,6 +34,18 @@ tier, each shown as "Tier N: name", sorted by tier, then name. A pick adds 10 of
   (vlandia, sturgia, empire, khuzait), and vanilla's own troops of those cultures stay loaded in the campaign; training
   dummies and town guards carry the tag too. Troops the arachnophobia option hides are left out.
 - The service checks a pick against the list again before it adds anything, so an id from elsewhere is refused.
+
+"Every troop (party screen)..." opens the game's own cheat party screen (`PartyScreenHelper.OpenScreenAsCheat`, v1.5.7).
+In vanilla it replaces the normal party screen (the P key, the party button) when the engine's cheat mode is on
+(`cheat_mode` in the engine config). It lists every valid encyclopedia troop, 10 of each, sorted by name, on the left;
+the player moves the ones he wants into his party (arrows: 1, shift 5, ctrl all), sees the selected troop's model, and
+presses Done. It is a dismiss-mode screen, as in vanilla: troops moved to the left are dismissed.
+- With the engine's cheat mode on, `CheatWorldAdapter.OpenCheatPartyScreen` calls vanilla's method. Without it (vanilla
+  then refuses with "Cheat mode is not enabled!"), it opens the same `PartyState` with the same initialization data, field
+  for field, and vanilla's own list from the private `PartyScreenHelper.GetRosterWithAllGameTroops` (read with
+  `AccessTools`; a test pins it). If a game update renames that method, the entry says there is nothing to do.
+- No faction or culture filter: vanilla's call takes no roster (project owner, 2026-11-15: "just look at the games own
+  cheat mode"). Going over the party-size limit is allowed there, as in vanilla.
 
 ## Map key
 
@@ -189,6 +201,8 @@ capped `ISpecialResourceService.GrantAmount`, for the main hero's own resource.
    In Troops, open "+10 of any troop of your faction...": the list runs from tier 1 recruits to the faction's top troops,
    with cavalry and archers; type a name in the search box, choose it, and 10 of it join the party. As a vassal of
    another culture's kingdom, the list is that kingdom's.
+   Then "Every troop (party screen)...": the party screen opens with every troop, 10 of each, on the left; click one to see
+   its model, move some to your party, press Done; they stay in the party. Cancel leaves the party as it was.
 4. Teleport: Towns..., type a town name in the search box, choose it. The menu closes and the party stands outside that
    town's gate with the camera on it. Enter the town and leave again, and the village or town menus work as usual (the case
    12 crash path).
@@ -242,3 +256,5 @@ capped `ISpecialResourceService.GrantAmount`, for the main hero's own resource.
   any mount they ride take no damage (engine Immortal state) until it is switched off or the battle ends.
 - 2026-11-15: Troops page: "+10 of any troop of your faction...", a searchable list of every regular troop of the
   faction's culture (kingdom, else clan), sorted by tier then name (`CheatTroopList`).
+- 2026-11-15: Troops page: "Every troop (party screen)...", the game's own cheat party screen (every troop, 10 of each),
+  opened without the engine's cheat mode.
