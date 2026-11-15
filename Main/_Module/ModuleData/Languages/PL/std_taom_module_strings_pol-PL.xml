@@ -8016,6 +8016,7 @@
     <string id="taom_cheat_troops_screen" text="Every troop (party screen)..." />
     <string id="taom_cheat_done_relation" text="Lords of {NAME} whose relation changed: {NUMBER}." />
     <string id="taom_cheat_done_teleport" text="You are at the gate of {NAME}." />
+    <string id="taom_rf_warden_ranks" text="Your promoted warden returns to the ranks as {TROOP}." />
   </strings>
 
 </base>
