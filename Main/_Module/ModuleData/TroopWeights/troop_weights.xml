@@ -298,4 +298,54 @@
     <TroopWeight id="dw_gundabad_pale_twinaxe" weight="2.0" />
     <TroopWeight id="dw_isengard_urukhai_twinblade" weight="2.0" />
     <TroopWeight id="dw_mordor_uruk_twinblade" weight="2.0" />
+    <!-- ===== LEVEL 31 TO 36 SWEEP, evil and dwarf trees (15 Nov 2026 audit) ===== -->
+    <!-- These cultures weighted their level 31 to 40 troops one at a time and skipped many, so a level 36 troop paid
+         2.0 above a level 31 troop of the same line at 1.0. Every one now pays 2.0, the level rule for a troop below 41
+         (TroopWeightCoverageTests.EvilAndDwarfTroopsAtLevel31To40_AreWeighted). Humans (Gondor, Rohan, Rhun, Harad, Dunland)
+         carry no weights by design and are not swept. -->
+    <!-- EREBOR, IRON HILLS AND IRONPASS -->
+    <TroopWeight id="erebor_noble_axe_guard" weight="2.0" />
+    <TroopWeight id="erebor_noble_guard" weight="2.0" />
+    <TroopWeight id="erebor_noble_shield_guard" weight="2.0" />
+    <TroopWeight id="erebor_noble_veteran_archer" weight="2.0" />
+    <TroopWeight id="erebor_noble_veteran_axe_guard" weight="2.0" />
+    <TroopWeight id="erebor_reg_mattock_warrior" weight="2.0" />
+    <TroopWeight id="erebor_reg_warrior" weight="2.0" />
+    <TroopWeight id="iron_hills_reg_axe_warrior" weight="2.0" />
+    <TroopWeight id="iron_hills_reg_warrior" weight="2.0" />
+    <TroopWeight id="ironpass_mountain_guard" weight="2.0" />
+    <TroopWeight id="ironpass_sharpshooter" weight="2.0" />
+    <TroopWeight id="ironpass_veteran_axeman" weight="2.0" />
+    <!-- DOL GULDUR -->
+    <TroopWeight id="dg_khamul_shadow_archer" weight="2.0" />
+    <TroopWeight id="dg_khamul_shadow_infantry" weight="2.0" />
+    <TroopWeight id="dg_khamul_shadow_marksman" weight="2.0" />
+    <TroopWeight id="dg_khamul_shadow_warden" weight="2.0" />
+    <TroopWeight id="dg_uruk_fell_archer" weight="2.0" />
+    <TroopWeight id="dg_uruk_fell_fang" weight="2.0" />
+    <TroopWeight id="dg_uruk_fell_infantry" weight="2.0" />
+    <!-- ISENGARD -->
+    <TroopWeight id="urukhai_berserker" weight="2.0" />
+    <TroopWeight id="urukhai_pavise" weight="2.0" />
+    <TroopWeight id="urukhai_reaver" weight="2.0" />
+    <TroopWeight id="urukhai_veterancrossbowman" weight="2.0" />
+    <TroopWeight id="urukhai_veteraninfantry" weight="2.0" />
+    <TroopWeight id="urukhai_veteranpikeman" weight="2.0" />
+    <!-- MORDOR -->
+    <TroopWeight id="mordor_uruk_shieldguard" weight="2.0" />
+    <TroopWeight id="mordor_uruk_vanguard" weight="2.0" />
+    <!-- GUNDABAD -->
+    <TroopWeight id="gundabad_berserker" weight="2.0" />
+    <TroopWeight id="gundabad_guardian_of_the_tower" weight="2.0" />
+    <TroopWeight id="gundabad_veteran_berserker" weight="2.0" />
+    <TroopWeight id="gundabad_veteran_spear_warrior" weight="2.0" />
+    <TroopWeight id="gundabad_veteran_sword_warrior" weight="2.0" />
+    <!-- GOBLINS -->
+    <TroopWeight id="goblin_berserker" weight="2.0" />
+    <TroopWeight id="goblin_bolgs_ironfang" weight="2.0" />
+    <TroopWeight id="goblin_chosen_of_tharzog" weight="2.0" />
+    <TroopWeight id="goblin_guardian_of_the_tower" weight="2.0" />
+    <TroopWeight id="goblin_veteran_berserker" weight="2.0" />
+    <TroopWeight id="goblin_veteran_spear_warrior" weight="2.0" />
+    <TroopWeight id="goblin_veteran_sword_warrior" weight="2.0" />
 </TroopWeights>

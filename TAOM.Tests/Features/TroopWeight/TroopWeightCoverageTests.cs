@@ -160,4 +160,29 @@ public class TroopWeightCoverageTests
         Assert.AreEqual(2.0f, WeightOf("gundabad_tracker"));
         Assert.AreEqual(3.0f, WeightOf("gundabad_dread_rider_of_the_tower"));
     }
+
+    /// <summary>
+    /// The evil and dwarf trees weighed their level 31 to 40 troops one at a time and skipped many, so a
+    /// level 36 Uruk sat at 2.0 above a level 31 Uruk at 1.0. Humans (Gondor, Rohan, Rhun, Harad, Dunland, ...)
+    /// carry no weights by design and are not swept; this is haterade's call and is recorded in the PR.
+    /// The disabled cave troll is named because its row is commented out on purpose.
+    /// </summary>
+    [TestMethod]
+    public void EvilAndDwarfTroopsAtLevel31To40_AreWeighted()
+    {
+        var cultures = new HashSet<string>(StringComparer.Ordinal)
+            { "erebor", "dolguldur", "isengard", "mordor", "gundabad", "goblin" };
+        var disabled = new HashSet<string>(StringComparer.Ordinal) { "cave_troll" };
+
+        var missing = _troops.Values
+            .Where(t => cultures.Contains(t.Culture) && t.Level >= 31 && t.Level < 41)
+            .Where(t => !disabled.Contains(t.Id))
+            .Where(t => WeightOf(t.Id) < 2.0f)
+            .OrderBy(t => t.Culture, StringComparer.Ordinal).ThenBy(t => t.Id, StringComparer.Ordinal)
+            .Select(t => $"L{t.Level} {t.Culture} {Show(t.Id)}")
+            .ToList();
+
+        Assert.AreEqual(0, missing.Count,
+            $"{missing.Count} level 31 to 40 troops of weighted cultures still weigh under 2.0:\n  " + string.Join("\n  ", missing));
+    }
 }
