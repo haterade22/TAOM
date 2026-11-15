@@ -5,6 +5,7 @@ Run:  python -m unittest tools.tests.test_run_scenario
 """
 import contextlib
 import io
+import json
 import os
 import sys
 import tempfile
@@ -46,6 +47,17 @@ def self_assert_exit():
     raise AssertionError("expected SystemExit")
 
 
+def json_walk(node):
+    """Every dict in a parsed JSON tree (cultures.json nests some cultures one level down)."""
+    if isinstance(node, dict):
+        yield node
+        for value in node.values():
+            yield from json_walk(value)
+    elif isinstance(node, list):
+        for value in node:
+            yield from json_walk(value)
+
+
 def arm_dict(text):
     return dict(line.split("=", 1) for line in text.splitlines())
 
@@ -68,13 +80,21 @@ class ArmTextTests(unittest.TestCase):
         self.assertEqual(keys["kind"], "campaign-new")
         self.assertEqual(keys["out"], r"E:\x\run")
         self.assertEqual(keys["scenario"], "campaign-new")
-        self.assertEqual(keys["culture"], "empire_w")
+        self.assertEqual(keys["culture"], "gondor")
         self.assertEqual(keys["days"], "3")
         self.assertEqual(keys["speed"], "15")
         self.assertEqual(keys["stall_seconds"], "600")
         self.assertEqual(keys["quit"], "1")
         self.assertEqual(wall, 1800)
         self.assertEqual(keys["wall_limit_seconds"], "1800")
+
+    def test_default_culture_is_a_creation_culture_and_matches_the_game(self):
+        root = Path(__file__).resolve().parents[2]
+        cultures = json.loads((root / "Main/_Module/ModuleData/charactercreation/cultures.json").read_text(encoding="utf-8-sig"))
+        ids = {entry["culture_id"] for entry in json_walk(cultures) if "culture_id" in entry}
+        self.assertIn(rs.DEFAULT_CULTURE, ids)
+        plan = (root / "Main/Features/Autorun/Scenario/ScenarioPlan.cs").read_text(encoding="utf-8")
+        self.assertIn(f'DefaultCulture = "{rs.DEFAULT_CULTURE}"', plan)
 
     def test_custom_values(self):
         known, _ = parse(["--days", "30", "--culture", "sturgia", "--speed", "7.5", "--scenario", "war-30", "--stall-seconds", "900"])
@@ -185,11 +205,11 @@ class JudgeTests(unittest.TestCase):
         self.assertIn("CrashReport", why)
 
     def test_done_file_must_echo_the_armed_plan(self):
-        armed = SimpleNamespace(kind="campaign-new", culture="empire_w", days=150, scenario="campaign-new")
-        code, why = rs.judge(good_done(culture="empire_w", scenario="campaign-new"), None, GOOD_LOG, armed=armed)
+        armed = SimpleNamespace(kind="campaign-new", culture="gondor", days=150, scenario="campaign-new")
+        code, why = rs.judge(good_done(culture="gondor", scenario="campaign-new"), None, GOOD_LOG, armed=armed)
         self.assertEqual(code, 1)
         self.assertIn("days_wanted=3", why)
-        done = good_done(culture="empire_w", scenario="campaign-new", days_run="150", days_wanted="150")
+        done = good_done(culture="gondor", scenario="campaign-new", days_run="150", days_wanted="150")
         self.assertEqual(rs.judge(done, None, GOOD_LOG, armed=armed)[0], 0)
 
     def test_arm_file_warning_in_the_log_fails(self):
@@ -280,7 +300,7 @@ class MainWiringTests(unittest.TestCase):
     def test_runner_judge_holds_the_run_to_the_armed_plan_and_this_tree(self):
         _, got = self.run_main(["--days", "150"])
         with mock.patch.object(rs, "tree_head_sha", return_value=None):
-            code, why = got["judge"](good_done(culture="empire_w", scenario="campaign-new"), None, GOOD_LOG)
+            code, why = got["judge"](good_done(culture="gondor", scenario="campaign-new"), None, GOOD_LOG)
         self.assertEqual(code, 1)
         self.assertIn("days_wanted=3", why)
         self.assertIn("BuildStamp", why)

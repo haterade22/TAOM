@@ -16,7 +16,7 @@ internal sealed class ScenarioPlan
 {
     internal const string EnvVar = "TAOM_AUTORUN";
     internal const string KindCampaignNew = "campaign-new";
-    internal const string DefaultCulture = "empire_w";
+    internal const string DefaultCulture = "gondor";
     internal const int DefaultDays = 3;
     internal const int MaxDays = 1000;
     internal const float DefaultSpeed = 15f;

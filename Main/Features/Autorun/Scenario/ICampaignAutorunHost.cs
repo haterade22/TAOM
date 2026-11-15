@@ -29,12 +29,15 @@ internal interface ICampaignAutorunHost
     /// <summary>Hides an open inquiry without running either of its buttons. Its title ("" when it has none), or null when none was open.</summary>
     string? HideInquiry();
 
-    /// <summary>Hides an active scene notification. True when one was active.</summary>
-    bool HideSceneNotification();
+    /// <summary>A scene notification is active. The engine marks it active one layer tick before its scene exists.</summary>
+    bool SceneNotificationActive { get; }
+
+    /// <summary>Hides the active scene notification without running its buttons. Call it only for a notification that was active on
+    /// the previous tick too: closing one whose scene does not exist yet throws (GauntletSceneNotification.CloseNotification).</summary>
+    void HideSceneNotification();
 
     /// <summary>
-    /// Starts a new sandbox campaign with the default start options, past the options screen TAOM's start options provider adds to the
-    /// menu button, and stops focus loss from pausing the game (in memory, remembering the old value). False when it could not start.
+    /// Starts a new sandbox campaign with the default start options, as the start options screen's Confirm does when nothing changed, and stops focus loss from pausing the game (in memory, remembering the old value). False when it could not start.
     /// </summary>
     bool StartNewCampaign();
 

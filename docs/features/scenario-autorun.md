@@ -62,7 +62,7 @@ UTF-8 `key=value` lines. An unknown key or a bad value is a warning and keeps th
 | `kind` | string | Must be `campaign-new`, or the plan is unarmed |
 | `out` | path | Absolute folder for the done and status files; required |
 | `scenario` | string | A free label, echoed in the log and the done file (default `-`) |
-| `culture` | string | The player's culture id (default `empire_w`, Gondor); checked at the culture stage |
+| `culture` | string | The player's culture id (default `gondor`; a kingdom id such as `empire_w` fails); checked at the culture stage |
 | `days` | int | Campaign days to run, 1 to 1000 (default 3) |
 | `speed` | float | Fast forward multiplier, above 0, at most 30 (default 15) |
 | `stall_seconds` | number | Wall seconds with no new day before the run stops as `stalled` (default 600) |
@@ -77,15 +77,22 @@ UTF-8 `key=value` lines. An unknown key or a bad value is a warning and keeps th
 
 All from the v1.5.7 decompile (`pwsh tools/taom-src.ps1 path <Type>`).
 
-- **Start:** TAOM's start options provider makes the menu button open an options screen, so the host starts the campaign itself:
-  `MBGameManager.StartNewGame(new SandBoxGameManager(...))` with `AdvancedStartOptionsManager.CreateCampaignStartOptions().GetChangedOptions()`,
-  as `SandBoxViewSubModule.StartGame` does (lines 278 to 287).
+- **Start:** the menu button opens the start options screen whenever the options list is not empty (`SandBoxViewSubModule.StartGame`,
+  lines 278 to 287), and vanilla's provider fills it. The host makes the call the screen's Confirm makes when nothing changed
+  (`GauntletCampaignStartingOptionsView.OnConfirm`): `MBGameManager.StartNewGame(new SandBoxGameManager(...))` with
+  `AdvancedStartOptionsManager.CreateCampaignStartOptions().GetChangedOptions()`.
 - **Intro video:** Patch58 already skips it; `VideoPlaybackState.OnVideoFinished()` is the fallback.
 - **Character creation:** `CharacterCreationManager.RemoveStage<T>()` is public. The host sets the culture with `SetSelectedCulture`,
   removes the six later stages and calls `NextStage()`; at the end of the stage list `NextStage` runs `ApplyFinalEffects()` and
   `FinalizeCharacterCreationState()`, so TAOM's finalize handlers still run.
-- **Main party:** `IgnoreByOtherPartiesTill(CampaignTime.Never)` and `SetMoveModeHold()`, the engine's own
-  `set_main_party_attackable 0` cheat.
+- **Main party:** `IgnoreByOtherPartiesTill(CampaignTime.Never)`, as the `set_main_party_attackable 0` cheat does: an ignored party
+  refuses interaction and no encounter forms around it. The host also holds the main party itself (`SetMoveModeHold()`).
+- **Culture:** the host sets `Hero.MainHero.Culture` before `SetSelectedCulture`, as the culture screen does, because the clan name
+  comes from the hero's culture. The hero's name is never set (the view's `NextStage`, which sets it, is bypassed).
+- **Scene notifications:** the engine marks one active a layer tick before its scene exists, and closing it then throws on the null
+  scene (`GauntletSceneNotification.CloseNotification`). So the driver hides a notification only on its second sighting in a row.
+- **Non-wait game menus:** an open game menu that is not a wait menu stops time (`Campaign` sets `_dt = 0`). The driver closes no
+  menu, so one shows as `stalled screen=MapMenu`.
 - **Time:** `CampaignTimeControlMode.UnstoppableFastForward` (the stoppable mode stops on Hold). `SpeedUpMultiplier` has no setter cap.
 - **What stops time:** `TimeControlModeLock`, and the escape menu that focus loss opens (`MapScreen` asks its map views on focus
   loss). The host sets `BannerlordConfig.StopGameOnFocusLost = false` in memory when it starts the campaign. The engine saves that
@@ -100,9 +107,18 @@ All from the v1.5.7 decompile (`pwsh tools/taom-src.ps1 path <Type>`).
 - **Day count:** `CampaignTimeModel.CampaignStartTime.ElapsedDaysUntilNow`.
 - **Exit:** `MBGameManager.EndGame()`, then `TaleWorlds.Engine.Utilities.QuitGame()`.
 
-UNVERIFIED until the first run: campaign days per wall minute at speed 15; that removing stages leaves TAOM's career and Patch78
-handlers whole; that `NextStage` is safe with the Gauntlet view open; that the native quit runs managed shutdown; which popups
-`CampStartInCamp` and `KingdomJoinOfferService` open.
+Read in the v1.5.7 source by the 2026-11-15 review:
+
+- TAOM's career handler runs from `ApplyFinalEffects` and, with no pick, assigns the first eligible career. Patch78 never fires: it
+  is a postfix on `CharacterCreationManager.StartNarrativeStage`, whose only caller is the narrative stage view, never built here.
+- `NextStage` with the culture view open is safe: `FinalizeCharacterCreationState` pushes `MapState` with `CleanAndPushState`, which
+  finalizes every screen at once, as the view's own Next button does.
+- In a default run `KingdomJoinOfferService` opens nothing (it needs a takeover), and `CampStartInCamp` is off by default. A run
+  inherits the machine's MCM settings.
+
+UNVERIFIED until the first run: campaign days per wall minute at speed 15; that the native quit runs the managed shutdown (the
+`[Shutdown] clean module unload` line settles it); that the application tick's `dt` stays above 0 while a popup pauses the game (an
+`inquiry hidden ... phase=Running` line settles it).
 
 ## Key Files
 

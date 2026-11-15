@@ -53,17 +53,12 @@ internal sealed class CampaignAutorunHost : ICampaignAutorunHost
         return title;
     }
 
-    public bool HideSceneNotification()
-    {
-        if (MBInformationManager.GetIsAnySceneNotificationActive() != true)
-            return false;
+    public bool SceneNotificationActive => MBInformationManager.GetIsAnySceneNotificationActive() == true;
 
-        MBInformationManager.HideSceneNotification();
-        return true;
-    }
+    public void HideSceneNotification() => MBInformationManager.HideSceneNotification();
 
-    // What the menu's new-game button does with the start options a player leaves unchanged (SandBoxViewSubModule.StartGame). The
-    // button itself opens the options screen first, because TAOM's start options provider makes the options non-empty.
+    // What the start options screen's Confirm does when nothing changed (GauntletCampaignStartingOptionsView.OnConfirm): the menu
+    // button opens that screen whenever the options list is not empty (SandBoxViewSubModule.StartGame), and vanilla's provider fills it.
     public bool StartNewCampaign()
     {
         // Focus loss opens the map's escape menu, which stops the campaign tick. Off from the start, so no focus loss before the map
@@ -104,6 +99,8 @@ internal sealed class CampaignAutorunHost : ICampaignAutorunHost
             return false;
         }
 
+        // As the culture screen does (CharacterCreationCultureStageVM): SetSelectedCulture names the clan from the hero's culture.
+        Hero.MainHero.Culture = culture;
         manager.CharacterCreationContent.SetSelectedCulture(culture, manager);
         manager.RemoveStage<CharacterCreationFaceGeneratorStage>();
         manager.RemoveStage<CharacterCreationNarrativeStage>();
@@ -123,7 +120,8 @@ internal sealed class CampaignAutorunHost : ICampaignAutorunHost
 
         // Process-local: the player's autosave setting in the config file is not touched.
         campaign.SandBoxManager.SandBoxSaveManager = new NoAutoSaveManager();
-        // The engine's own "not attackable" cheat: AI parties never target or join a battle against the main party.
+        // As the set_main_party_attackable 0 cheat does: an ignored party refuses interaction and no encounter forms around it. The
+        // cheat also holds the parties already chasing it; the refusal covers those, and the hold here is the main party's own.
         var main = MobileParty.MainParty;
         main.IgnoreByOtherPartiesTill(CampaignTime.Never);
         main.SetMoveModeHold();

@@ -24,6 +24,16 @@ public class ScenarioPlanTests
         return ScenarioPlan.Resolve(getEnv, _ => exists, _ => text ?? throw new InvalidOperationException("read"));
     }
 
+    // The host finds the culture in CharacterCreationContent.GetCultures(), which TAOM fills from cultures.json culture_id values
+    // (CharacterCreationContentService). A kingdom id such as empire_w is not one, and the run would end creation_failed.
+    [TestMethod]
+    public void DefaultCulture_IsACharacterCreationCultureId()
+    {
+        var json = TAOM.Tests.Infrastructure.RepoPaths.ReadSource("Main/_Module/ModuleData/charactercreation/cultures.json");
+
+        StringAssert.Contains(json, "\"culture_id\": \"" + ScenarioPlan.DefaultCulture + "\"");
+    }
+
     [TestMethod]
     public void EnvVar_IsTaomAutorun()
     {
@@ -133,7 +143,7 @@ public class ScenarioPlanTests
         Assert.AreEqual("campaign-new", plan.Kind);
         Assert.AreEqual(@"E:\x\out", plan.OutFolder);
         Assert.AreEqual("-", plan.Scenario);
-        Assert.AreEqual("empire_w", plan.Culture);
+        Assert.AreEqual("gondor", plan.Culture);
         Assert.AreEqual(3, plan.Days);
         Assert.AreEqual(15f, plan.Speed);
         Assert.AreEqual(600.0, plan.StallSeconds);
@@ -264,7 +274,7 @@ public class ScenarioPlanTests
     {
         var text = Resolve(Head + "scenario=smoke\nquit=1\n").Describe();
 
-        foreach (var part in new[] { "kind=campaign-new", "scenario=smoke", "culture=empire_w", "days=3", "speed=15", "stall_seconds=600", "wall_limit_seconds=3600", "quit=1", "out=E:\\x\\out", "arm=" + ArmPath })
+        foreach (var part in new[] { "kind=campaign-new", "scenario=smoke", "culture=gondor", "days=3", "speed=15", "stall_seconds=600", "wall_limit_seconds=3600", "quit=1", "out=E:\\x\\out", "arm=" + ArmPath })
             StringAssert.Contains(text, part);
     }
 }

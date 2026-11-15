@@ -209,7 +209,7 @@ public class ScenarioAutorunDriverTests
     {
         var driver = Driver();
         _host.OnStart = () => _host.ScreenValue = AutorunScreen.CharacterCreation;
-        _host.CreationProblem = "no such culture 'empire_w'";
+        _host.CreationProblem = "no such culture 'gondor'";
 
         Run(driver, 6);
 
@@ -326,8 +326,38 @@ public class ScenarioAutorunDriverTests
         driver.Tick(1f);
         var done = Done();
         Assert.IsTrue(int.Parse(Value(done, "inquiries_hidden")) >= 4);
-        Assert.AreEqual("4", Value(done, "notices_hidden"));
+        Assert.AreEqual("1", Value(done, "notices_hidden"));
         Assert.AreEqual("4", Value(done, "time_resets"));
+    }
+
+    // GauntletSceneNotification marks a notification active one layer tick before its scene exists, and closing it then throws on the
+    // null scene (CloseNotification), so a notice is hidden only when it was active on the previous tick too.
+    [TestMethod]
+    public void Tick_SceneNotification_IsHiddenOnItsSecondSightingOnly()
+    {
+        var driver = ToRunning("days=50\n");
+        _host.NoticeOpen = true;
+
+        driver.Tick(1f);
+        Assert.AreEqual(0, _host.NoticesHidden);
+
+        driver.Tick(1f);
+        Assert.AreEqual(1, _host.NoticesHidden);
+    }
+
+    [TestMethod]
+    public void Tick_SceneNotificationGoneBeforeTheSecondTick_IsNeverHidden()
+    {
+        var driver = ToRunning("days=50\n");
+        _host.NoticeOpen = true;
+        driver.Tick(1f);
+        _host.NoticeOpen = false;
+        driver.Tick(1f);
+        _host.NoticeOpen = true;
+
+        driver.Tick(1f);
+
+        Assert.AreEqual(0, _host.NoticesHidden);
     }
 
     [TestMethod]
@@ -618,7 +648,7 @@ public class ScenarioAutorunDriverTests
 
         Run(driver, 6);
 
-        _outcomes.Received(1).Fail("taom.autorun.campaign-new.done", "", "reason=start_refused days_run=0 days_wanted=3 culture=empire_w");
+        _outcomes.Received(1).Fail("taom.autorun.campaign-new.done", "", "reason=start_refused days_run=0 days_wanted=3 culture=gondor");
         _outcomes.DidNotReceive().Pass(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>());
     }
 

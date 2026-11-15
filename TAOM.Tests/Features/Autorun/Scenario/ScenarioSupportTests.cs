@@ -40,7 +40,7 @@ public class ScenarioSupportTests
         StringAssert.Contains(text, "reason=ok\n");
         StringAssert.Contains(text, "kind=campaign-new\n");
         StringAssert.Contains(text, "scenario=smoke\n");
-        StringAssert.Contains(text, "culture=empire_w\n");
+        StringAssert.Contains(text, "culture=gondor\n");
         StringAssert.Contains(text, "creation=skipped\n");
         StringAssert.Contains(text, "days_run=3\n");
         StringAssert.Contains(text, "prepared=autosave off, held\n");
@@ -77,7 +77,7 @@ public class ScenarioSupportTests
     [TestMethod]
     public void Detail_NamesReasonDaysAndCulture()
     {
-        Assert.AreEqual("reason=stalled days_run=3 days_wanted=3 culture=empire_w", ScenarioOutcomes.Detail(Plan(), Facts("stalled")));
+        Assert.AreEqual("reason=stalled days_run=3 days_wanted=3 culture=gondor", ScenarioOutcomes.Detail(Plan(), Facts("stalled")));
     }
 
     [TestMethod]
@@ -138,10 +138,11 @@ public class ScenarioSupportTests
 
         Assert.AreEqual(AutorunScreen.Other, host.Screen);
         Assert.IsNull(host.HideInquiry());
-        Assert.IsFalse(host.HideSceneNotification());
+        Assert.IsFalse(host.SceneNotificationActive);
+        host.HideSceneNotification();
         Assert.IsFalse(host.StartNewCampaign());
         Assert.IsFalse(host.FinishVideo());
-        Assert.IsFalse(host.TryFinishCreation("empire_w", out var problem));
+        Assert.IsFalse(host.TryFinishCreation("gondor", out var problem));
         Assert.IsNull(problem);
         Assert.AreEqual("", host.PrepareMap());
         Assert.IsFalse(host.KeepFastForward(15f));

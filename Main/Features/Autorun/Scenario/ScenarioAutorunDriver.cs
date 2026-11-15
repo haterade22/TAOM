@@ -27,6 +27,7 @@ internal sealed class ScenarioAutorunDriver
     private int _dayStart = ScenarioRules.UnknownDay, _lastDay = ScenarioRules.UnknownDay;
     private int _inquiries, _notices, _resets;
     private string _prepared = "";
+    private bool _noticeSeen;
 
     public ScenarioAutorunDriver(ScenarioPlan plan, ICampaignAutorunHost host, IModLogger logger, IOutcomeLog outcomes)
     {
@@ -171,8 +172,7 @@ internal sealed class ScenarioAutorunDriver
     private void Running()
     {
         HideInquiry();
-        if (_host.HideSceneNotification())
-            _notices++;
+        HideSceneNotification();
         if (_host.KeepFastForward(_plan.Speed))
             _resets++;
 
@@ -225,6 +225,21 @@ internal sealed class ScenarioAutorunDriver
             + ScenarioRules.DaysRun(_dayStart, _lastDay) + " days_wanted=" + _plan.Days + " quit=" + (_plan.Quit ? 1 : 0)));
         Guarded("report the outcome", () => ScenarioOutcomes.Report(_outcomes, _plan, facts));
         Guarded("end the campaign", _host.EndCampaign);
+    }
+
+    // A notice is closed only on its second sighting in a row: the engine marks it active one layer tick before its scene exists, and
+    // closing it in that tick throws (GauntletSceneNotification.CloseNotification).
+    private void HideSceneNotification()
+    {
+        var active = _host.SceneNotificationActive;
+        if (active && _noticeSeen)
+        {
+            _host.HideSceneNotification();
+            _notices++;
+            _noticeSeen = false;
+        }
+        else
+            _noticeSeen = active;
     }
 
     private void HideInquiry()

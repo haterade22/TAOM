@@ -7,7 +7,7 @@ under E:\\Temp\\scenario-runs\\<yyyyMMdd-HHmmss>\\. The game starts a new campai
 autorun_done.txt and quits.
 
 Own arguments (everything else goes to the Fords runner, for example --dry-run, --runs, --wall-limit, --require-idle-minutes):
-  --kind campaign-new   --days N (1 to 1000, default 3)   --culture ID (default empire_w)   --speed X (above 0, at most 30, default 15)
+  --kind campaign-new   --days N (1 to 1000, default 3)   --culture ID (default gondor)   --speed X (above 0, at most 30, default 15)
   --scenario LABEL      --stall-seconds N (default 600)
 
 Exit 0 needs reason=ok, days_run at least days_wanted, the [Check] pass line in the TAOM log, no CrashReport error block, the clean
@@ -38,7 +38,7 @@ CHECK_ID = "taom.autorun.campaign-new.done"
 PASS_LINE = re.compile(r"\[Check\] id=" + re.escape(CHECK_ID) + r"\s+result=pass\b")
 UNLOAD_LINE = "[Shutdown] clean module unload"
 DEFAULT_DAYS = 3
-DEFAULT_CULTURE = "empire_w"
+DEFAULT_CULTURE = "gondor"
 DEFAULT_SPEED = 15.0
 DEFAULT_STALL_SECONDS = 600
 MAX_DAYS = 1000
