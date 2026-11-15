@@ -37,7 +37,7 @@ public interface ICheatWorldAdapter
     /// <summary>
     /// Opens the game's own cheat party screen (PartyScreenHelper.OpenScreenAsCheat): every encyclopedia troop, 10 of each, on
     /// the left, the main party on the right. Vanilla opens it only with the engine's cheat mode on; without it the same screen
-    /// is opened with vanilla's own list and settings. False when it could not be opened (no campaign, or the vanilla list
+    /// is opened with vanilla's own list and settings, and prisoners moved to the left are released as vanilla does. False when it could not be opened (no campaign, or the vanilla list
     /// could not be read).
     /// </summary>
     bool OpenCheatPartyScreen();

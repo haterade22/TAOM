@@ -162,7 +162,10 @@ public sealed class CheatWorldAdapter : ICheatWorldAdapter
         }
 
         // Otherwise the same screen as OpenScreenAsCheat (v1.5.7), field for field, minus its cheat-mode check: vanilla's
-        // list on the left, the main party on the right, dismiss mode on. Its done handler, DefaultDoneHandler, returns true.
+        // list on the left, the main party on the right, dismiss mode on. Its done handler, the private
+        // PartyScreenHelper.DefaultDoneHandler, releases the prisoners moved to the left, then returns true; the handler
+        // below does the same. Without the release a lord moved left stays a prisoner with no captor for good. Vanilla's
+        // taken-prisoner branch cannot run here: the left prisoner roster starts empty.
         if (VanillaCheatRoster?.Invoke(null, null) is not TaleWorlds.CampaignSystem.Roster.TroopRoster left) return false;
         var logic = new PartyScreenLogic();
         logic.Initialize(new PartyScreenLogicInitializationData
@@ -182,7 +185,11 @@ public sealed class CheatWorldAdapter : ICheatWorldAdapter
             LeftPartyName = null,
             RightPartyName = main.Name,
             TroopTransferableDelegate = Helpers.PartyScreenHelper.TroopTransferableDelegate,
-            PartyPresentationDoneButtonDelegate = (_, _, _, _, _, _, _, _, _) => true,
+            PartyPresentationDoneButtonDelegate = (_, _, _, _, _, released, _, _, _) =>
+            {
+                if (!released.IsEmpty()) EndCaptivityAction.ApplyByReleasedByChoice(released);
+                return true;
+            },
             PartyPresentationDoneButtonConditionDelegate = null,
             PartyPresentationCancelButtonActivateDelegate = null,
             PartyPresentationCancelButtonDelegate = null,

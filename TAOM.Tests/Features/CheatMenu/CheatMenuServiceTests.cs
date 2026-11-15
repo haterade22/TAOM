@@ -207,22 +207,6 @@ public class CheatMenuServiceTests
         _world.DidNotReceive().OpenCheatPartyScreen();
     }
 
-    /// <summary>
-    /// CheatWorldAdapter opens the game's cheat party screen with vanilla's own list, read through this private v1.5.7
-    /// method. A game update that renames it would make the menu entry say "nothing to do"; this fails first.
-    /// </summary>
-    [TestMethod]
-    [TestCategory("RequiresGame")]
-    public void VanillaCheatPartyScreen_ListMethod_StillExists()
-    {
-        var method = HarmonyLib.AccessTools.Method(typeof(Helpers.PartyScreenHelper), "GetRosterWithAllGameTroops");
-
-        Assert.IsNotNull(method);
-        Assert.IsTrue(method!.IsStatic);
-        Assert.AreEqual(0, method.GetParameters().Length);
-        Assert.AreEqual(typeof(TaleWorlds.CampaignSystem.Roster.TroopRoster), method.ReturnType);
-    }
-
     [TestMethod]
     public void AddTroops_CultureWithoutTheTroop_NothingToDo_TooMany_Bad()
     {

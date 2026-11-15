@@ -39,11 +39,14 @@ tier, each shown as "Tier N: name", sorted by tier, then name. A pick adds 10 of
 In vanilla it replaces the normal party screen (the P key, the party button) when the engine's cheat mode is on
 (`cheat_mode` in the engine config). It lists every valid encyclopedia troop, 10 of each, sorted by name, on the left;
 the player moves the ones he wants into his party (arrows: 1, shift 5, ctrl all), sees the selected troop's model, and
-presses Done. It is a dismiss-mode screen, as in vanilla: troops moved to the left are dismissed.
+presses Done. It is a dismiss-mode screen, as in vanilla: troops moved to the left are dismissed, and prisoners moved to
+the left are released.
 - With the engine's cheat mode on, `CheatWorldAdapter.OpenCheatPartyScreen` calls vanilla's method. Without it (vanilla
   then refuses with "Cheat mode is not enabled!"), it opens the same `PartyState` with the same initialization data, field
   for field, and vanilla's own list from the private `PartyScreenHelper.GetRosterWithAllGameTroops` (read with
-  `AccessTools`; a test pins it). If a game update renames that method, the entry says there is nothing to do.
+  `AccessTools`; the binding gate `ReflectionSiteBindingTests` pins it). Its Done handler does what vanilla's private
+  `PartyScreenHelper.DefaultDoneHandler` does: it releases the prisoners moved to the left
+  (`EndCaptivityAction.ApplyByReleasedByChoice`). Without that, a lord moved left stays a prisoner with no captor. If a game update renames that method, the entry says there is nothing to do.
 - No faction or culture filter: vanilla's call takes no roster (project owner, 2026-11-15: "just look at the games own
   cheat mode"). Going over the party-size limit is allowed there, as in vanilla.
 
@@ -203,6 +206,8 @@ capped `ISpecialResourceService.GrantAmount`, for the main hero's own resource.
    another culture's kingdom, the list is that kingdom's.
    Then "Every troop (party screen)...": the party screen opens with every troop, 10 of each, on the left; click one to see
    its model, move some to your party, press Done; they stay in the party. Cancel leaves the party as it was.
+   With the engine's cheat mode off and a lord in your prison, open it again, move the lord to the left and press Done:
+   the release notice shows, and the lord is free afterwards (his encyclopedia page no longer says prisoner).
 4. Teleport: Towns..., type a town name in the search box, choose it. The menu closes and the party stands outside that
    town's gate with the camera on it. Enter the town and leave again, and the village or town menus work as usual (the case
    12 crash path).

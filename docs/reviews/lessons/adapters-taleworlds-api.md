@@ -2001,3 +2001,11 @@ PR #1304's doc said god mode stays on while the player walks the field after the
 **Prevent:** before acting on an engine state flag, read where the flag is set and where the object it guards is built; when they are set on different ticks, act on the second sighting and test that rule in the pure driver.
 
 **Source:** `docs/reviews/rca-scenario-autorun-2026-11-15.md`
+
+### Two engine methods share a name; cite the one the call site binds (cheat party screen, PR #1321, 2026-11-15)
+
+**Why missed:** the hand-built copy of `PartyScreenHelper.OpenScreenAsCheat` used a Done handler that only returned true, citing "DefaultDoneHandler returns true". That is `PartyScreenLogic.DefaultDoneHandler`. The method `OpenScreenAsCheat` binds is the private `PartyScreenHelper.DefaultDoneHandler`, which releases the prisoners moved to the left first. Without it a released lord became a prisoner with no captor.
+
+**Prevent:** when copying an engine setup field by field, read each delegate it binds at that exact line (the IL `ldftn` names the declaring type), never a method found by name search.
+
+**Source:** `docs/reviews/rca-pr1321-cheat-troop-list-2026-11-15.md`
