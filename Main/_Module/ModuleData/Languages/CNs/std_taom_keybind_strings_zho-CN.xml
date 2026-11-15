@@ -47,5 +47,9 @@
     <string id="taom_key_seat_slow_desc" text="在战斗中，将任务时间降低一档，最低可至正常速度的四分之一。默认按键为 Page Down。" />
     <string id="taom_key_seat_stay" text="暂停时间（TAOM）" />
     <string id="taom_key_seat_stay_desc" text="在战斗中，取消加速并暂停任务；再次按下即可继续。战斗暂停时，高座视角仍可飞行。默认按键为 Home。" />
+    <string id="taom_key_cheat_menu" text="Open Cheat Menu (TAOM)" />
+    <string id="taom_key_cheat_menu_desc" text="Opens the TAOM cheat menu on the campaign map, like the Cheats button. Works only while Enable Cheat Menu is on in Mod Options, in single player. Defaults to H." />
+    <string id="taom_key_battle_cheat_menu" text="Open Battle Cheat Menu (TAOM)" />
+    <string id="taom_key_battle_cheat_menu_desc" text="Opens the TAOM battle cheat list in a mission, like the Cheats item in the Esc menu. Works only while Enable Cheat Menu is on in Mod Options, in single player. Defaults to H." />
   </strings>
 </base>

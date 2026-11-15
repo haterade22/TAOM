@@ -47,5 +47,9 @@
     <string id="taom_key_seat_slow_desc" text="Savaşta görev zamanını bir kademe düşürür; en düşükte normal hızın dörtte birine iner. Varsayılan tuş: Page Down." />
     <string id="taom_key_seat_stay" text="Zamanı durdur (TAOM)" />
     <string id="taom_key_seat_stay_desc" text="Savaşta hızlı zamanı iptal eder ve görevi duraklatır; devam etmek için tekrar basın. Savaş duraklatılmışken Makamın görüşü yine de uçar. Varsayılan tuş: Home." />
+    <string id="taom_key_cheat_menu" text="Open Cheat Menu (TAOM)" />
+    <string id="taom_key_cheat_menu_desc" text="Opens the TAOM cheat menu on the campaign map, like the Cheats button. Works only while Enable Cheat Menu is on in Mod Options, in single player. Defaults to H." />
+    <string id="taom_key_battle_cheat_menu" text="Open Battle Cheat Menu (TAOM)" />
+    <string id="taom_key_battle_cheat_menu_desc" text="Opens the TAOM battle cheat list in a mission, like the Cheats item in the Esc menu. Works only while Enable Cheat Menu is on in Mod Options, in single player. Defaults to H." />
   </strings>
 </base>

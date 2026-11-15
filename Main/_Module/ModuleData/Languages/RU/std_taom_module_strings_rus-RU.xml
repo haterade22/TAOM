@@ -7861,6 +7861,93 @@
     <string id="taom_realms_ui_primary" text="Make primary title" />
     <string id="taom_realms_ui_primary_ask" text="Be known by the {TITLE} from now on? Your style and party name follow your primary title, and so does your realm's banner where the title has one." />
     <string id="taom_patch_self_disabled" text="TAOM: some fixes turned themselves off: {FEATURES}. They stay off for the rest of this battle or this session; the TAOM log names the cause." />
+    <string id="taom_bugreport_offer_title" text="TAOM: the last game ended unexpectedly" />
+    <string id="taom_bugreport_offer_text" text="Your last game closed without TAOM's normal shutdown. That happens after a crash, after a freeze you had to close, or when the game was stopped some other way.{newline}{newline}Make a bug report now? TAOM puts the logs from that game into one zip file that you can attach to your report." />
+    <string id="taom_bugreport_offer_yes" text="Make bug report" />
+    <string id="taom_bugreport_offer_no" text="No" />
+    <string id="taom_bugreport_done_title" text="TAOM bug report" />
+    <string id="taom_bugreport_done_text" text="Your bug report is ready:{newline}{PATH}{newline}{newline}Attach this file to your bug report and say what you were doing when the problem happened." />
+    <string id="taom_bugreport_failed_text" text="The bug report could not be written. Please attach the newest taom_debug log from this folder instead:{newline}{PATH}" />
+    <string id="taom_bugreport_close" text="Close" />
+    <string id="taom_bugreport_open_folder" text="Open folder" />
+    <string id="taom_cheat_bad_amount" text="That amount is not allowed. The limit is {MAX}." />
+    <string id="taom_cheat_battle_done_heal_self" text="You are back to full health, and so is your mount if you ride one." />
+    <string id="taom_cheat_battle_done_heal_side" text="{NUMBER} soldiers and mounts of your side are back to full health." />
+    <string id="taom_cheat_battle_done_kill" text="{NUMBER} enemies were killed." />
+    <string id="taom_cheat_battle_done_rout" text="{NUMBER} enemies are fleeing." />
+    <string id="taom_cheat_battle_done_spawn_ally" text="{NUMBER} allied troops joined the battle." />
+    <string id="taom_cheat_battle_done_spawn_enemy" text="{NUMBER} enemy troops joined the battle." />
+    <string id="taom_cheat_battle_item" text="Cheats" />
+    <string id="taom_cheat_battle_none" text="Start a battle first. Battle cheats work only while a battle is on." />
+    <string id="taom_cheat_battle_nothing" text="Nothing changed: there is nobody in this battle this cheat can act on." />
+    <string id="taom_cheat_battle_opt_heal_self" text="Heal yourself" />
+    <string id="taom_cheat_battle_opt_heal_side" text="Heal your side" />
+    <string id="taom_cheat_battle_opt_kill" text="Kill all enemies" />
+    <string id="taom_cheat_battle_opt_rout" text="Rout the enemy" />
+    <string id="taom_cheat_battle_opt_spawn_ally" text="+10 allied troops" />
+    <string id="taom_cheat_battle_opt_spawn_enemy" text="+10 enemy troops" />
+    <string id="taom_cheat_battle_text" text="Cheats change this battle. New troops are copies of soldiers already on that side." />
+    <string id="taom_cheat_battle_title" text="Battle cheats" />
+    <string id="taom_cheat_coop" text="Cheats are not available in co-op." />
+    <string id="taom_cheat_failed" text="That cheat failed. The TAOM log has the details." />
+    <string id="taom_cheat_done" text="Done: {NAME} {NUMBER}" />
+    <string id="taom_cheat_mcm_enable" text="Enable Cheat Menu" />
+    <string id="taom_cheat_mcm_enable_hint" text="Adds a Cheats button to the bottom bar of the campaign map. It opens a menu that teleports your party to a settlement and gives gold, troops, your special resource, influence, renown and relations, and heals your party. In a mission, the Esc menu has a Cheats item (or press H) that heals you or your side, routs or kills the enemy, or adds 10 allied or enemy troops. Cheats change your save, and most cannot be undone. The button appears the next time the campaign map opens, for example after loading a save. The H key on the campaign map also opens the menu (change either key under Options, Keybindings). Single-player only. Default: off." />
+    <string id="taom_cheat_mcm_group" text="Cheat Menu" />
+    <string id="taom_cheat_menu_text" text="TAOM cheat menu. Cheats change your save, and most cannot be undone." />
+    <string id="taom_cheat_nav_busy" text="The cheat menu opens from the free campaign map." />
+    <string id="taom_cheat_nav_label" text="Cheats" />
+    <string id="taom_cheat_nothing" text="Nothing changed: your hero has nothing this cheat can give to." />
+    <string id="taom_cheat_opt_back" text="Back" />
+    <string id="taom_cheat_opt_close" text="Close" />
+    <string id="taom_cheat_opt_gold" text="Gold: +10,000 denars" />
+    <string id="taom_cheat_opt_heal" text="Heal your party and your heroes" />
+    <string id="taom_cheat_opt_influence" text="Influence: +100" />
+    <string id="taom_cheat_opt_relation" text="Relations: +20 with every lord of a kingdom..." />
+    <string id="taom_cheat_opt_renown" text="Renown: +100" />
+    <string id="taom_cheat_opt_resource" text="Special resource: +1,000" />
+    <string id="taom_cheat_opt_teleport" text="Teleport to a settlement..." />
+    <string id="taom_cheat_opt_troops" text="Troops..." />
+    <string id="taom_cheat_pick_cancel" text="Cancel" />
+    <string id="taom_cheat_pick_kingdom" text="Choose a kingdom" />
+    <string id="taom_cheat_pick_ok" text="Choose" />
+    <string id="taom_cheat_pick_settlement" text="Choose where to teleport" />
+    <string id="taom_cheat_teleport_text" text="Teleport to a settlement's gate. You arrive outside and enter as usual." />
+    <string id="taom_cheat_tp_army" text="Leave the army first. Only an army's leader can teleport it." />
+    <string id="taom_cheat_tp_camp" text="Break camp first, then teleport." />
+    <string id="taom_cheat_tp_castles" text="Castles..." />
+    <string id="taom_cheat_tp_encounter" text="Finish the battle or encounter first." />
+    <string id="taom_cheat_tp_mission" text="You cannot teleport during a battle or a scene." />
+    <string id="taom_cheat_tp_nocampaign" text="Start or load a campaign first." />
+    <string id="taom_cheat_tp_parked" text="You cannot teleport while you serve in another lord's party." />
+    <string id="taom_cheat_tp_prisoner" text="You cannot teleport while you are a prisoner." />
+    <string id="taom_cheat_tp_sea" text="Go ashore first, then teleport." />
+    <string id="taom_cheat_tp_settlement" text="Leave the settlement first, then teleport." />
+    <string id="taom_cheat_tp_siege" text="End the siege first." />
+    <string id="taom_cheat_tp_towns" text="Towns..." />
+    <string id="taom_cheat_tp_villages" text="Villages..." />
+    <string id="taom_cheat_troops_basic" text="+10 basic recruits" />
+    <string id="taom_cheat_troops_elite" text="+10 elite recruits" />
+    <string id="taom_cheat_troops_text" text="Add recruits of your culture to your party." />
+    <string id="taom_cheat_unknown" text="Nothing called &quot;{NAME}&quot; was found." />
+    <string id="TAOM_LD_Up_Axemen" text="Militia to Westfold Axemen" />
+    <string id="TAOM_LD_Up_VeteranAxemen" text="Axemen to Veteran Axemen" />
+    <string id="TAOM_LD_Up_HeavyAxemen" text="Axemen to Heavy Axemen" />
+    <string id="TAOM_LD_Up_Helmingas" text="Veteran Axemen to Helmingas Axemen" />
+    <string id="TAOM_LD_Up_HelmingasHeavy" text="Heavy Axemen to Helmingas Heavy Axemen" />
+    <string id="TAOM_LD_Up_Bowmen" text="Yeomen to Eastfold Bowmen" />
+    <string id="TAOM_LD_Up_VeteranBowmen" text="Bowmen to Veteran Bowmen" />
+    <string id="TAOM_LD_Up_RoyalGuard" text="King's Knights to the King's Royal Guard" />
+    <string id="TAOM_LD_Up_Riders" text="Royal Guard to the Riders of Rohan" />
+    <string id="TAOM_LD_Hud_UpgradesTitle" text="Upgrade your soldiers" />
+    <string id="TAOM_LD_Hud_UpgradeDetail" text="{STANDING} standing, gold for {AFFORDABLE}" />
+    <string id="TAOM_LD_Hud_UpgradePrice" text="{PRICE} gold each" />
+    <string id="TAOM_LD_Notice_UnknownUpgrade" text="That upgrade is not for sale." />
+    <string id="TAOM_LD_Notice_NoneToUpgrade" text="No soldier of that troop is left to upgrade." />
+    <string id="taom_realms_tree_selected" text="Selected title" />
+    <string id="taom_realms_tree_holder" text="Holder" />
+    <string id="taom_realms_tree_liege" text="Liege" />
+    <string id="taom_realms_tree_subordinates" text="Subordinate titles" />
   </strings>
 
 </base>

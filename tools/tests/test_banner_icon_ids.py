@@ -121,7 +121,7 @@ class ShippedBannerDataTests(unittest.TestCase):
         cls.keys = {f: parse_keys(t) for f, t in cls.texts.items()}
 
     def test_registries_are_not_suspiciously_small(self):
-        self.assertGreater(len(self.icons), 500, "icon registry suspiciously small: the parse found too few icons")
+        self.assertGreater(len(self.icons), 400, "icon registry suspiciously small: the parse found too few icons")
         self.assertGreater(len(self.colours), 100, "colour registry suspiciously small: the parse found too few colours")
 
     def test_every_banner_key_occurrence_is_parsed(self):

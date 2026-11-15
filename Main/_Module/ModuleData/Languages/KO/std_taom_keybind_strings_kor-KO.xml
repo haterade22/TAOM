@@ -47,5 +47,9 @@
     <string id="taom_key_seat_slow_desc" text="전투 중 임무 시간을 한 단계 내리며, 최저 속도는 평상시의 4분의 1입니다. 기본값은 Page Down입니다." />
     <string id="taom_key_seat_stay" text="시간 멈춤 (TAOM)" />
     <string id="taom_key_seat_stay_desc" text="전투 중 빠른 시간을 취소하고 임무를 일시 정지합니다. 다시 누르면 재개됩니다. 전투가 멈춘 동안에도 지휘석의 시점은 계속 날 수 있습니다. 기본값은 Home입니다." />
+    <string id="taom_key_cheat_menu" text="Open Cheat Menu (TAOM)" />
+    <string id="taom_key_cheat_menu_desc" text="Opens the TAOM cheat menu on the campaign map, like the Cheats button. Works only while Enable Cheat Menu is on in Mod Options, in single player. Defaults to H." />
+    <string id="taom_key_battle_cheat_menu" text="Open Battle Cheat Menu (TAOM)" />
+    <string id="taom_key_battle_cheat_menu_desc" text="Opens the TAOM battle cheat list in a mission, like the Cheats item in the Esc menu. Works only while Enable Cheat Menu is on in Mod Options, in single player. Defaults to H." />
   </strings>
 </base>

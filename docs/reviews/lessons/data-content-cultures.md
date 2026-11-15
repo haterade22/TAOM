@@ -2420,3 +2420,9 @@ Every TAOM villager shipped with battle rosters that held clothes only, so a vil
 - **Why missed:** the validator checks that references resolve, and an empty weapon slot has none. The earlier lesson asks only for a battle twin of the civilian roster. The fix's own rescan used the same filter as the edit, so it could only agree.
 - **Prevent:** when a culture's `villager`, `village_woman` or a party template stack names a character, give every battle roster of that adult a weapon (a vanilla farm tool in `Item0`, `throwing_stone` in `Item1`). Pick characters by the culture field or the id family, never by `occupation`. Check an edit with a rule that does not share its filter.
 - **Source:** [rca-villager-weapons-2026-11-14.md](../rca-villager-weapons-2026-11-14.md), finding 1.
+
+### Read banner keys with the gate's parser: a rotation can be negative (#1284, 2026-11-14)
+The v2.0.40 repack deleted four icon rows as unused (17006 to 17008, 10505) while Nos Galengrim and `clan_shaghana_3` still flew them; both keys hold negative rotations such as `-134`, and a digits-only key parse skips those keys. This is the third miss of one kind: the Angáladh build's ten-field parser (above, "Check who else uses a reused id"), the repack, and a gallery script written while fixing the repack, which first called two used icons unused.
+- **Why missed:** each time a side script read the keys with its own regex, and its empty result was taken as proof of "unused".
+- **Prevent:** before deleting an `<Icon>` row or calling an icon unused, run `python -m pytest tools/tests/test_banner_icon_ids.py` (its key regex reads negative tokens) and count the id with a plain token search over every banner key; never trust a one-off regex's empty result ([banner-icon-generation.md](../../reference/banner-icon-generation.md), "Sheet names and packing").
+- **Source:** [rca-trunk-red-tests-2026-11-14.md](../rca-trunk-red-tests-2026-11-14.md), finding 7.

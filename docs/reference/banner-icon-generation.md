@@ -111,7 +111,10 @@ to `_10`. On 2026-11-14 every sheet was renamed to `taom_banners_01` to `_25`, n
 `banner_icons.xml` first names them, and `taom_banners_dwarves_alpha_02` and
 `taom_banners_elven_alpha_01` were merged into `taom_banners_11` (26 sheets became 25). The same day
 168 unused icons were deleted and sheets 16-25 moved into the freed cells (25 sheets became 15; see
-the inventory below).
+the inventory below). Four of those icons were still flown (17006 to 17008 and 10505), because their
+banner keys hold negative rotations that a digits-only key parse skips; #1284 repointed both banners.
+Before you delete an `<Icon>` row, run `python -m pytest tools/tests/test_banner_icon_ids.py`: its
+key parser reads negative tokens, and a deleted icon that any shipped key names fails it.
 
 **Adding emblems.** Draw them on a new sheet (Step 2) named the next free `taom_banners_NN`, add their
 `<Icon>` rows (Step 3) and the sprites (Step 4b). The banner editor's atlas builder picks that number

@@ -87,7 +87,17 @@ Banner keys are declared in:
 3. For vanilla kingdoms/clans being overridden, add an `<xsl:template match="Kingdom[@id='...']">` block in `spkingdoms.xslt` or `spclans.xslt` containing `<xsl:attribute name="banner_key">your_code</xsl:attribute>`.
 4. The injection service picks up the new key automatically on next session launch — no code changes required.
 
+## How to verify in game
+
+Repointed banners, #1284 (Nos Galengrim and `clan_shaghana_3` lost icons in the v2.0.40 repack):
+
+1. Build and deploy. Start a new campaign.
+2. Open the Encyclopedia page of Nos Galengrim (`clan_mirkwood_4`). Expected: a sun sigil (curled ring, rayed sun, small ring) with no missing layer.
+3. Open the Encyclopedia page of `clan_shaghana_3`. Expected: a star at the centre of its banner, in the clan's colours.
+4. Load a save from before v2.0.40. Expected: both clans show the same banners as in steps 2 and 3, because `BannerInjectionBehavior` re-applies `clans.xml` keys on load. A banner the player edited keeps its saved icons (#1285).
+
 ## Changelog
+- 2026-11-14: `clan_mirkwood_4` and `clan_shaghana_3` banner keys repointed from the icons the v2.0.40 repack removed (17006 to 17008, 10505) to 15007, 10017, 15009 and 10500 (#1284).
 - 2026-05-13 — Phase 9b: fixed `BannerExclusionService` singleton not resetting between campaigns; added `Reset()` + `OnNewGameCreatedEvent` reset before injection so canon banners re-inject in later campaigns (closes #124).
 - 2026-04-06 — Layer-limit handling moved into BannerColorPersistence: replaced the `Banner_TryGetBannerDataFromCode_Patch` postfix with an IL transpiler and deleted `BannerLayerExpander.cs`.
 - 2026-04-02 — Injection now fires once on new-game creation and save load (`OnNewGameCreatedEvent` + `OnGameLoadedEvent`) instead of on every session launch / battle return.
