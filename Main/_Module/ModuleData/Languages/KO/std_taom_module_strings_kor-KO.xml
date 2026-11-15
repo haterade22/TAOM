@@ -7996,6 +7996,12 @@
     <string id="taom_guest_trade_busy" text="The host has not answered your last request yet." />
     <string id="taom_guest_trade_no_link" text="The host cannot be reached." />
     <string id="taom_guest_trade_no_answer" text="The host did not answer your last request. Try again." />
+    <string id="taom_cheat_pick_troop" text="Choose a troop: 10 of it join your party" />
+    <string id="taom_cheat_troop_row" text="Tier {TIER}: {NAME}" />
+    <string id="taom_cheat_troops_any" text="+10 of any troop of your faction..." />
+    <string id="taom_cheat_troops_screen" text="Every troop (party screen)..." />
+    <string id="taom_cheat_done_relation" text="Lords of {NAME} whose relation changed: {NUMBER}." />
+    <string id="taom_cheat_done_teleport" text="You are at the gate of {NAME}." />
   </strings>
 
 </base>
