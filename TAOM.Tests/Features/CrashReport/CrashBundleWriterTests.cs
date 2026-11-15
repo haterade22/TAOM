@@ -3,6 +3,7 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using TAOM.Features.CrashReport.BugReport;
 using TAOM.Features.CrashReport.Domain;
 using TAOM.Features.CrashReport.Rendering;
 
@@ -112,6 +113,57 @@ public class CrashBundleWriterTests
         CollectionAssert.Contains(names, "report.txt");
         CollectionAssert.Contains(names, "manifest.txt");
         CollectionAssert.DoesNotContain(names, "diag.log", "an absent diag.log must not produce an empty entry");
+    }
+
+    // ---- player bug report (WriteReport) ----
+
+    [TestMethod]
+    public void WriteReport_WithSources_PutsEachFileInTheZipUnderItsEntryName()
+    {
+        var previous = Path.Combine(_dir, "taom_debug_2026-11-13_23-12-05.log");
+        File.WriteAllText(previous, "[INFO] [BattleLoad] seq=4 phase=MissionInitializeDone");
+        var sources = new BugReportSources(
+            new[] { new BugReportFile("taom_debug_previous.log", previous) },
+            new[] { "crash/dump.dmp not included: 300 MB" });
+
+        var zipPath = new CrashBundleWriter().WriteReport(MakeContext(null, EmptyLogs()), "report", "{}", _dir, sources);
+
+        Assert.IsNotNull(zipPath);
+        StringAssert.StartsWith(Path.GetFileName(zipPath!), "taom_report_");
+        CollectionAssert.Contains(EntryNames(zipPath!), "report.txt");
+        StringAssert.Contains(ReadEntry(zipPath!, "taom_debug_previous.log"), "MissionInitializeDone");
+    }
+
+    [TestMethod]
+    public void WriteReport_Manifest_NamesEachSourceByFileNameAndCarriesTheNotes()
+    {
+        var previous = Path.Combine(_dir, "taom_debug_2026-11-13_23-12-05.log");
+        File.WriteAllText(previous, "log");
+        var sources = new BugReportSources(
+            new[] { new BugReportFile("taom_debug_previous.log", previous) },
+            new[] { "crash/dump.dmp not included: 300 MB" });
+
+        var zipPath = new CrashBundleWriter().WriteReport(MakeContext(null, EmptyLogs()), "report", "{}", _dir, sources);
+        var manifest = ReadEntry(zipPath!, "manifest.txt");
+
+        StringAssert.Contains(manifest, "TAOM bug report");
+        StringAssert.Contains(manifest, "taom_debug_previous.log");
+        StringAssert.Contains(manifest, "taom_debug_2026-11-13_23-12-05.log");
+        StringAssert.Contains(manifest, "crash/dump.dmp not included");
+        Assert.IsFalse(manifest.Contains(_dir), "the folder can carry the Windows user name; the file name is enough");
+    }
+
+    [TestMethod]
+    public void WriteReport_SourceFileMissing_StillWritesTheReport()
+    {
+        var sources = new BugReportSources(
+            new[] { new BugReportFile("taom_debug_previous.log", Path.Combine(_dir, "gone.log")) },
+            Array.Empty<string>());
+
+        var zipPath = new CrashBundleWriter().WriteReport(MakeContext(null, EmptyLogs()), "report", "{}", _dir, sources);
+
+        Assert.IsNotNull(zipPath);
+        CollectionAssert.DoesNotContain(EntryNames(zipPath!), "taom_debug_previous.log");
     }
 
     // ---- helpers ----

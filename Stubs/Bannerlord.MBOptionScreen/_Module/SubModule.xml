@@ -36,7 +36,13 @@
             <Name value="Bannerlord.MBOptionScreen Alias Stub" />
             <DLLName value="TAOM.Dependencies.dll" />
             <SubModuleClassType value="TAOM.Dependencies.AliasStubSubModule" />
-            <Tags />
+            <Tags>
+                <!-- Fails Module.CheckIfSubmoduleCanBeLoadable in every mode (v1.5.7, and BLSE's
+                     ModuleInfoHelper agrees), so the engine skips this entry before it looks for
+                     TAOM.Dependencies.dll in this folder's bin and shows "Cannot find" (#969).
+                     The entry stays: BLSE treats a module with no SubModule as metadata-only. -->
+                <Tag key="IsNoRenderModeElement" value="true" />
+            </Tags>
         </SubModule>
     </SubModules>
 </Module>

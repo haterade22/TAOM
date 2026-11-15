@@ -1,14 +1,5 @@
-using System;
 using System.Collections.Generic;
-using TaleWorlds.CampaignSystem;
-using TaleWorlds.CampaignSystem.AgentOrigins;
-using TaleWorlds.Core;
 using TaleWorlds.Library;
-using TaleWorlds.MountAndBlade;
-using TaleWorlds.ObjectSystem;
-using TAOM.Core.Logging;
-using TAOM.Features.CreatureBandits;
-using TAOM.Features.DevConsole.Domain;
 
 namespace TAOM.Features.DevConsole.Cheats;
 
@@ -21,12 +12,11 @@ namespace TAOM.Features.DevConsole.Cheats;
 /// campaign into the right encounter.
 ///
 /// Uses the mission gate rather than the campaign gate, so it works in a custom battle — TAOM's main
-/// venue for testing creatures, mounts and equipment.
+/// venue for testing creatures, mounts and equipment. The spawning itself is
+/// <see cref="MissionTroopSpawner"/>, shared with the battle cheat menu.
 /// </summary>
 public static class MissionSpawnCheats
 {
-    private const int MaxCount = 200;
-
     private const string Usage =
         "Format is \"taom.spawn_troops [troopId] [count] [enemy|ally]\".\n"
         + "Spawns count troops into the current mission near you. Side defaults to enemy.\n"
@@ -37,113 +27,11 @@ public static class MissionSpawnCheats
         TaomConsole.RunInMission(strings, Usage, args =>
         {
             if (args.Count < 2) return "Expected a troop id and a count.\n" + Usage;
-            if (!DevConsoleArgs.TryParseCount(args[1], 1, MaxCount, out var count, out var countError))
+            if (!DevConsoleArgs.TryParseCount(args[1], 1, MissionTroopSpawner.MaxCount, out var count, out var countError))
                 return countError + "\n" + Usage;
             if (!DevConsoleArgs.TryParseSide(args.Count > 2 ? args[2] : null, out var isPlayerSide, out var sideError))
                 return sideError + "\n" + Usage;
 
-            return MissionReportFormatter.FormatSpawn(Spawn(args[0], count, isPlayerSide));
+            return MissionReportFormatter.FormatSpawn(MissionTroopSpawner.Spawn(args[0], count, isPlayerSide));
         });
-
-    private static SpawnOutcome Spawn(string troopId, int count, bool isPlayerSide)
-    {
-        var outcome = new SpawnOutcome { TroopId = troopId, Requested = count };
-
-        // BasicCharacterObject, not CharacterObject: Custom Battle registers NPCCharacter as
-        // BasicCharacterObject (v1.5.3 CustomGame.cs:135), so a CharacterObject lookup found no troop at
-        // all there. The base type is not sealed, so GetObject<T> matches by assignability and a campaign
-        // still hands back its CharacterObject (MBObjectManager.cs:586-594).
-        var character = MBObjectManager.Instance?.GetObject<BasicCharacterObject>(troopId);
-        if (character == null)
-        {
-            outcome.FailureReason = $"Unknown troop '{troopId}'. Check ModuleData/troops for the id.";
-            return outcome;
-        }
-
-        var origin = CreateOrigin(character);
-
-        // A creature bandit is an enemy at all times (#742): asked for as an ally, it spawns on the enemy side.
-        var requestedPlayerSide = isPlayerSide;
-        isPlayerSide = CreatureBanditRules.SpawnsOnPlayerSide(troopId, requestedPlayerSide);
-        if (isPlayerSide != requestedPlayerSide)
-            outcome.Note = $"{troopId} is a creature bandit and fights only as an enemy, so the player's side is ignored.";
-
-        // Pre-resolve the team and bail if it is null. SpawnTroop does
-        // `.ClothingColor1(agentTeam.Color)` with NO null check, so a null team hard-crashes the game
-        // instead of printing a sentence. This is the single biggest crash risk in the suite.
-        //
-        // Only the ENEMY path can actually return null: GetAgentTeam returns Current.PlayerEnemyTeam
-        // unguarded, and that is null in town/village missions. The ally path never returns null — it
-        // falls back to Current.PlayerTeam when PlayerAllyTeam is missing — so `ally` in a town spawns
-        // onto the player's own team rather than refusing (except a creature bandit, sent to the enemy side above). That is the engine's behaviour, not a bug
-        // to work around, but it is why the message below names the enemy case specifically.
-        var team = Mission.GetAgentTeam(origin, isPlayerSide);
-        if (team == null)
-        {
-            outcome.FailureReason =
-                "This mission has no enemy team — town and village missions only have the player's. "
-                + "Run this from a battle, a siege, or a custom battle.";
-            return outcome;
-        }
-
-        outcome.TeamLabel = team.Side.ToString();
-
-        var anchor = ResolveAnchor();
-        var logger = ResolveLogger();
-
-        for (var i = 0; i < count; i++)
-        {
-            try
-            {
-                // Ring-offset per index so N troops do not stack inside each other. Direction is
-                // passed explicitly: SpawnTroop dereferences initialDirection.Value unconditionally
-                // once initialPosition has a value.
-                var angle = i * 0.7f;
-                var radius = 2f + i * 0.35f;
-                var position = new Vec3(
-                    anchor.x + (float)Math.Cos(angle) * radius,
-                    anchor.y + (float)Math.Sin(angle) * radius,
-                    anchor.z);
-
-                Mission.Current.SpawnTroop(
-                    origin, isPlayerSide,
-                    hasFormation: true, spawnWithHorse: true, isReinforcement: false,
-                    formationTroopCount: count, formationTroopIndex: i,
-                    isAlarmed: true, wieldInitialWeapons: true,
-                    initialPosition: position, initialDirection: new Vec2(0f, 1f));
-
-                outcome.Spawned++;
-            }
-            catch (Exception ex)
-            {
-                // Keep going: one bad equipment roll should not abandon the rest of the wave.
-                try { logger?.LogError($"[DevConsole] spawn_troops '{troopId}' #{i} failed: {ex}"); } catch { }
-            }
-        }
-
-        return outcome;
-    }
-
-    /// <summary>
-    /// A campaign troop gets SimpleAgentOrigin, which hard-casts its troop to CharacterObject
-    /// (SimpleAgentOrigin.cs:136); anything else, a Custom Battle troop, gets BasicBattleAgentOrigin.
-    /// </summary>
-    internal static IAgentOriginBase CreateOrigin(BasicCharacterObject character) =>
-        character is CharacterObject campaignCharacter
-            ? new SimpleAgentOrigin(campaignCharacter)
-            : new BasicBattleAgentOrigin(character);
-
-    private static Vec3 ResolveAnchor()
-    {
-        var main = Mission.Current?.MainAgent;
-        if (main != null) return main.Position;
-
-        try { return Mission.Current.GetCameraFrame().origin; }
-        catch { return Vec3.Zero; }
-    }
-
-    private static IModLogger ResolveLogger()
-    {
-        try { return IoC.Resolve<IModLogger>(); } catch { return null; }
-    }
 }

@@ -8,13 +8,14 @@ using static TAOM.Tests.Infrastructure.HeroFaceKeys;
 namespace TAOM.Tests.Core;
 
 /// <summary>
-/// Elf hero looks gate over the repo's own ModuleData (lords.xml, named companions and the lords.xslt
+/// Elf hero looks gate over the repo's own ModuleData (lords.xml, the book named companions and the lords.xslt
 /// rebuilds, which replace a lord's face). The elf race in LOTRLOME_Armory uses the full human skin colour
 /// scale, white to near black, so the face key decides how an elf looks. Fields (value / 63): skin is bits
 /// 48-53 and hair colour bits 30-35 of the key's first 64-bit part; height is bits 19-24 of the eighth part.
 /// Elves are fair (skin 0-5, the range of the elf troop templates fighter_rivendell and fighter_mirkwood),
 /// Galadhrim are golden or fair haired (hair colour at most 22, light brown), and no elf is shorter than an
-/// average man (height at least 32). Chaegermeister (lord_R3_1) is a Patreon tribute hero kept as authored.
+/// average man (height at least 32). Chaegermeister (lord_R3_1) is a Patreon tribute hero kept as authored. The
+/// custom named companions (Thyrell and the other elves in CustomCharacters) are not read: their creators set their look.
 /// </summary>
 [TestClass]
 public class ElfAppearanceDataTests
@@ -56,17 +57,6 @@ public class ElfAppearanceDataTests
     public void GaladhrimHeroes_HairStaysGoldenOrFair() =>
         AssertNone(Elves().Where(h => h.Culture == "lothlorien" && h.Keys.Any(k => Hair(k) > MaxGaladhrimHair))
             .Select(h => $"{h.Id} ({h.File}) hair {h.Values(Hair)}/63"), "Galadhrim heroes with hair darker than " + MaxGaladhrimHair);
-
-    /// <summary>Heroes named for golden hair, outside Lorien (#1181 review: Thyrell held hair 54, near black).</summary>
-    [TestMethod]
-    public void GoldenNamedHeroes_HaveGoldenHair()
-    {
-        var golden = new[] { "named_companion_thyrell" };
-        var found = Elves().Where(h => golden.Contains(h.Id)).ToList();
-        Assert.AreEqual(golden.Length, found.Select(h => h.Id).Distinct().Count(), "A golden-named hero is missing.");
-        AssertNone(found.Where(h => h.Keys.Any(k => Hair(k) > MaxGaladhrimHair))
-            .Select(h => $"{h.Id} ({h.File}) hair {h.Values(Hair)}/63"), "Golden-named heroes with hair darker than " + MaxGaladhrimHair);
-    }
 
     [TestMethod]
     public void ElfHeroes_AreNotShorterThanAnAverageMan() =>

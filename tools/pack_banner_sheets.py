@@ -274,7 +274,7 @@ def audit(root):
     parts = sprite_parts(root)
     rep = {k: [] for k in ("missing_sheet", "empty_cell", "shared_cell", "unnamed_art", "duplicate_id",
                            "missing_sprite", "missing_package", "stale_package", "unused_sheet", "mergeable",
-                           "legacy_name")}
+                           "legacy_name", "no_alpha")}
     rep["duplicate_id"] = sorted(i for i, n in Counter(i for i, _, _ in icons).items() if n > 1)
     by_mat = defaultdict(lambda: defaultdict(list))
     for i, m, t in icons:
@@ -290,6 +290,9 @@ def audit(root):
             continue
         if not missing:
             rep["stale_package"] += package_problems(root, mat, srcs)
+        with Image.open(srcs[mat]) as img:
+            if "A" not in img.getbands():  # an RGB source compiles to DXT1: speckled icons (#1272)
+                rep["no_alpha"].append(mat)
         cells = load_cells(srcs[mat])
         rep["empty_cell"] += [(mat, t, ids) for t, ids in sorted(used.items())
                               if not 0 <= t < CELLS or not is_art(cells[t])]
@@ -359,7 +362,9 @@ def pack(root, install, write):
             data = srcs[old].read_bytes()
             (d / f"{sheet}{srcs[old].suffix.lower()}").write_bytes(data)
         for sheet, a in sheets.items():
-            Image.fromarray(a, "RGB").save(d / f"{sheet}.png")
+            # opaque alpha: the Kit's Albedo type compiles an RGB source to DXT1, and the banner
+            # material draws a DXT1 sheet as speckled dots (#1272)
+            Image.fromarray(a, "RGB").convert("RGBA").save(d / f"{sheet}.png")
     (root / XML).write_bytes(out_text.encode("utf-8"))
     print(f"wrote {len(copies) + len(sheets)} sheets to {', '.join(map(str, dirs))} and {root / XML}")
     if install is None:
@@ -387,6 +392,13 @@ def prune(root, install, backup, write):
                 if rdc.exists():
                     doomed.append((label, r, rdc))
             doomed.append((label, r, p))
+    if install and (install / SPRITE_PNGS).is_dir():
+        # a sprite PNG the repo deleted stays in the install, and the editor's sprite generation packs
+        # it back into the picker atlas (#1272): keep what the repo has or either XML names
+        ids = {i for r in (root, install) if (r / XML).exists() for i, _, _ in read_icons((r / XML).read_bytes())}
+        tracked = {p.name.casefold() for p in (root / SPRITE_PNGS).glob("*")} if (root / SPRITE_PNGS).is_dir() else set()
+        doomed += [("install", install, p) for p in sorted((install / SPRITE_PNGS).glob("*.png"))
+                   if p.name.casefold() not in tracked and p.stem not in ids]
     if held := sorted(deployed - named):
         print(f"kept: the install's banner_icons.xml still names {held}; build, then prune again")
     for _, _, p in doomed:

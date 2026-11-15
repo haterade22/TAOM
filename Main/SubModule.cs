@@ -678,6 +678,9 @@ public class SubModule : MBSubModuleBase
             var stale = stallMarker?.TryConsumeStaleMarker();
             if (stale != null)
                 Features.BattleLoadDiagnostics.StallReportNotifier.Notify(stale);
+            // Any other session that ended without the clean unload line: offer the bug report (crash-report.md).
+            else
+                Features.CrashReport.BugReport.BugReportStartup.CheckPreviousSession(IoC.Resolve<IModLogger>());
         }
         catch { /* never block the main menu over a diagnostic */ }
 

@@ -1699,6 +1699,21 @@ set until the next stop elsewhere or a session reset.
 `TownLeavePolicy.ShouldRevokeLeave` is unchanged: it already revokes exactly when the player is no
 longer inside the settlement, which is the wanted behaviour. Only the exit sweep needed teaching.
 
+### A pass the player walked out of is not followed back in
+
+Tester report, 14 Nov 2026: after shore leave, trading and the town's "Leave", the player sometimes
+stayed in the town while the commander marched off, until his next battle. Vanilla's "Leave"
+(`game_menu_settlement_leave_on_consequence`, v1.5.7) walks the player out, and
+`PlayerEncounter.Finish` stops time. The pump revokes the pass on its next expensive pass, but the
+hourly reconcile can run first. `Assess` then saw a commander still in the town and returned
+`SettlementFollowRequired`, so the follow put the player back inside with the pass still held.
+`ShouldRevokeLeave` does not revoke for a player inside, and once the commander left, the pass
+branch returned `Attached` on every reconcile. A battle (state `EnlistedBattle`) revoked it.
+
+`Assess` no longer follows on a pass while the player is outside every settlement: it returns the
+march verdict (`AttachRequired`, or `Attached` when already parked). The pump then revokes the pass,
+and the next reconcile follows the commander in with no pass held.
+
 ### Still open
 
 Crash bundle `d7d9f7d3` shows the same FOLLOW/EXIT pair oscillating on a 6 to 7 second period for
@@ -1889,6 +1904,21 @@ the player on the commander:
 
 Nothing was changed for either. Recorded so the next report can be matched against them, and so any
 decision to shorten the dwell is made against a repro rather than a hunch.
+
+### Walking out of a pass re-attaches at once
+
+Tester report, 14 Nov 2026: the player's own party sometimes showed on the map beside the lord's.
+One path that does it: vanilla's town "Leave" (`game_menu_settlement_leave_on_consequence`, v1.5.7)
+leaves the main party active and visible at the gate. The pump revoked the pass but nothing parked
+the party until the hourly reconcile, and the cheap tier's `SyncPositionCached` moved the visible
+party onto the commander every pass in between. `PlayerEncounter.Finish` also stops time, so a
+player who stays paused sees it for as long as he likes.
+
+When the pump revokes a pass and the player is `EnlistedAttached`, outside every settlement and in
+no map event, it now calls `ReconcileNow("shore leave ended")` and ends that pass, so the reconciler
+parks him or follows the commander in straight away. A revoke from a state change inside the town
+(`Finish(true)` walks him out) and a revoke by a battle are left as before. This is a third
+re-attach trigger beside the two edges above; it fires only when a pass ends.
 
 ### Known gap: the mask still disarms outside `EnlistedAttached` (#511)
 

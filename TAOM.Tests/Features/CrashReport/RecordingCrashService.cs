@@ -33,6 +33,8 @@ internal sealed class RecordingCrashService : ICrashReportService
         return null;
     }
 
+    public string? WriteBugReport(string reason) => null;
+
     internal static RecordingCrashService Install()
     {
         var service = new RecordingCrashService();

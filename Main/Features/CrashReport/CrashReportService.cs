@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using TAOM.Core.Logging;
 using TAOM.Features.CrashReport.Adapters;
+using TAOM.Features.CrashReport.BugReport;
 using TAOM.Features.CrashReport.Collectors;
 using TAOM.Features.CrashReport.Domain;
 using TAOM.Features.CrashReport.Rendering;
@@ -176,6 +177,39 @@ public sealed class CrashReportService : ICrashReportService
         }
     }
 
+    // The player's bug report (BugReportStartup): the crash report's collectors with no exception, plus the previous
+    // session's files, in Logs	aom_report_<utc>.zip. Main thread only (MCM button, main-menu inquiry). Never throws.
+    public string? WriteBugReport(string reason)
+    {
+        if (_handling) return null;
+        _handling = true;
+        try
+        {
+            _logger.LogInfo($"[CrashReport] bug report requested ({reason})");
+            _logger.TryFlush();
+            var failures = new List<CollectorFailure>();
+            var context = ComposeContext(null, "BugReport:" + reason, failures, offMainThread: false);
+            string plain = SafeRender(() => _plainRenderer.Render(context), failures, nameof(_plainRenderer)) ?? "(plain render failed)";
+            string json = SafeRender(() => _jsonRenderer.Render(context), failures, nameof(_jsonRenderer)) ?? "{}";
+            string outputDir = ResolveOutputDirectory();
+            var sources = BugReportSources.Collect(outputDir, _logger.LogFilePath, BugReportSources.DefaultEngineDirs());
+            var zipPath = _bundleWriter.WriteReport(context, plain, json, outputDir, sources);
+            _logger.LogInfo(zipPath == null
+                ? "[CrashReport] bug report could not be written"
+                : $"[CrashReport] bug report written: {Path.GetFileName(zipPath)}");
+            return zipPath;
+        }
+        catch (Exception ex)
+        {
+            try { _logger.LogError($"[CrashReport] bug report failed: {ex.GetType().Name}"); } catch { }
+            return null;
+        }
+        finally
+        {
+            _handling = false;
+        }
+    }
+
     // TEMPORARY #699 follow-up diagnostic. The re-entry guard above used to return without a
     // trace; this names each dropped capture (occurrences 1, 2, 10, 100, ...) and, on the first,
     // writes the full stack, which shows whether an outer HandleException frame sits below this one
@@ -207,13 +241,14 @@ public sealed class CrashReportService : ICrashReportService
         catch { /* diagnostic only */ }
     }
 
-    private ExceptionContext ComposeContext(Exception exception, string originatingPatchTarget, List<CollectorFailure> failures, bool offMainThread)
+    // exception is null for a player's bug report: every builder below reads a null as "no exception".
+    private ExceptionContext ComposeContext(Exception? exception, string originatingPatchTarget, List<CollectorFailure> failures, bool offMainThread)
     {
         Diag699Checkpoint("begin");
         var stack = StackFrameSnapshotBuilder.FromException(exception);
         var ex = ExceptionFrameBuilder.Build(exception);
         string signature = CrashSignatureCalculator.Compute(
-            exception,
+            exception!,
             originatingPatchTarget,
             stack);
 

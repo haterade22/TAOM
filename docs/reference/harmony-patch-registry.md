@@ -2041,6 +2041,28 @@ Applied from `SubModule.cs` in the standard `OnGameInitializationFinished` batch
 
 **Co-op.** The prefix skips a replicated mutation (prisoner XP), and the guard reads per-peer settings, so it is `GatedForCoop` in `CoopVetoClassificationTests`: while `ICoopSessionProvider.ShouldDeferToHost` holds, every stack runs vanilla. **Tests:** `DesertionConformityPatchTests` (blocked, allowed, co-op, null and throw paths; target signature and parameter names, the constant true return, both prisoner ticks still calling it, the category attaching only this prefix and the JIT). **ACTIVE**, not yet checked in game.
 
+## Patch151_CheatMenu
+
+**Target (v1.5.6 decompile; the same method Patch36 patches):** `protected virtual INavigationElement[] SandBox.View.Map.Navigation.MapNavigationHandler.OnCreateElements()`, one postfix class `Patch151_CheatMenuNavigation` in `Main/Features/CheatMenu/Hooks/`, category `Patch151_CheatMenu` (GameInit, declared by `CheatMenuModule`), `[ClientOnly]`. 2026-11-14. Feature: [cheat-menu.md](../features/cheat-menu.md).
+
+**Why.** Appends the "Cheats" navigation element after vanilla's (and after Patch36's Fiefs button) while `CheatMenuOpener.IsShown` holds: the MCM switch Enable Cheat Menu is on and `CoopSessionPolicy.IsSinglePlayerAuthority`. Otherwise the array is returned unchanged, so a player with the switch off never sees the button. The decision is the pure `AppendWhenShown` (no duplicate id, a null element from the factory leaves the bar). The element comes from `ICheatMenuNavigationElementFactory`, resolved at use: TAOM.Client's on a client, the null factory on a dedicated server.
+
+**Callers and thread.** The `MapNavigationHandler` constructor (NavalDLC's override calls the base), once per map screen; main thread. The postfix runs inside the constructor, reads no handler state and never throws out of it: a failure is logged once and leaves `__result` as vanilla built it.
+
+**Co-op.** Reads the co-op providers live through `CheatMenuService.IsSinglePlayer`; in a co-op session the bar stays vanilla. **Tests:** `CheatMenuWiringTests` (append, not shown, duplicate, null element, module and category). **ACTIVE**, not yet checked in game.
+
+## Patch152_BattleCheatMenu
+
+**Target (v1.5.6 decompile, MissionGauntletSingleplayerEscapeMenu.cs:69; not yet checked on the v1.5.7 DLL):** `protected override List<EscapeMenuItemVM> TaleWorlds.MountAndBlade.GauntletUI.Mission.Singleplayer.MissionGauntletSingleplayerEscapeMenu.GetEscapeMenuItems()`, targeted by name (it is protected), one postfix class `Patch152_BattleCheatEscapeMenu` in `Client/Features/CheatMenu/Hooks/` (TAOM.Client, ADR-013: the target is client-only), category `Patch152_BattleCheatMenu` (GameInit, declared by `CheatMenuModule`). 2026-11-14. Feature: [cheat-menu.md](../features/cheat-menu.md), "Battle".
+
+**Why.** Inserts one "Cheats" item into the single-player Esc menu just before Photo Mode (or at the end without one), where vanilla adds its gamepad "Cheat Menu" item, while `BattleCheatOpener.IsShown` holds: the MCM switch Enable Cheat Menu is on and `CoopSessionPolicy.IsSinglePlayerAuthority`. The place is the pure `BattleCheatOpener.EscapeItemIndex` (not shown or already there: no item; Photo Mode found by its shown text). A click closes the Esc menu through the public `OnEscape` (an open menu toggles shut, as "Return to the Game" does with the protected `OnEscapeMenuToggled(false)`) and calls `BattleCheatOpener.TryOpen`, which opens the battle list (`MBInformationManager.ShowMultiSelectionInquiry`); the click runs inside `CheatMenuMenus.Guarded`.
+
+**Callers and thread.** `MissionGauntletEscapeMenuBase.OnEscape` (each time the menu opens), `OnManagedOptionChanged` (Hide Battle UI changed) and the "Re-enable Battle UI" item; each hands the list to `EscapeMenuVM.RefreshItems`. Main thread. The postfix never throws out of the menu: a failure is logged once and leaves vanilla's items.
+
+**PatchShield.** `TaleWorlds.MountAndBlade.GauntletUI` is an excluded namespace (`PatchShieldPolicy.ExcludedTargetNamespacePrefixes`), so the shield adds no finalizer here.
+
+**Co-op.** Reads the co-op providers live through `BattleCheatService.IsSinglePlayer`; in a co-op session the Esc menu stays vanilla and every battle cheat refuses. **Tests:** `BattleCheatPolicyTests` (place, not shown, already there, opener), `BattleCheatWiringTests` (target, category, insert after the decision, click order), `BattleCheatPatchBindingTests` (parameter names). **ACTIVE**, not yet checked in game.
+
 <!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
 
 ## Referenced by

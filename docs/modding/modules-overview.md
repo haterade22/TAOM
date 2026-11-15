@@ -23,8 +23,8 @@ modules ship no assembly at all and still carry every TAOM-authored item and the
 
 On this install there are 19 module folders, 15 of them with a root `SubModule.xml`. <!-- measured: ls -d "<game>/Modules"/*/ | wc -l; for d in "<game>/Modules"/*/; do test -f "$d/SubModule.xml" && echo yes || echo NO; done 2026-09-05 -->
 The 4 without one are `Bannerlord.Harmony`, `Bannerlord.ButterLib`, `Bannerlord.UIExtenderEx` and
-`Bannerlord.MBOptionScreen`, the alias stubs TAOM deploys one folder too deep (see "Where the launcher
-load order really comes from" below).
+`Bannerlord.MBOptionScreen`, the alias stubs TAOM deployed one folder too deep before #969 (see "Where
+the launcher load order really comes from" below).
 
 `LoadWithFullPath` parses the manifest with a bare `XmlDocument` and no schema, and the two tables
 below list every element it reads. `<Xmls>` is read later by `XmlResource.GetXmlListAndApply`
@@ -308,17 +308,19 @@ The chain the project expects, from [coop-interop](../features/coop-interop.md) 
 `TAOM.Dependencies`, the BUTR alias stubs, `Native`, `SandBoxCore`, `Sandbox`, `StoryMode`,
 `CustomBattle`, `TAOM`, `TAOM_Map`, `LOTRLOME_Armory`, then any co-op mod.
 
-**The four alias stubs are invisible to the vanilla launcher as deployed.** `DeployTAOMDependenciesStubs`
-copies `Stubs/**/SubModule.xml` preserving the `_Module` segment (`Dependencies/TAOM.Dependencies.csproj:90-103`),
-so the deployed `Modules/Bannerlord.Harmony/` contains only `_Module/SubModule.xml`, one level below
-where `GetPhysicalModules` looks (`ModuleHelper.cs:364-376, v1.5.5`). <!-- measured: ls -R "<game>/Modules/Bannerlord.Harmony" 2026-09-05 -->
+**The four alias stubs were invisible to the vanilla launcher until #969.** `DeployTAOMDependenciesStubs`
+copied `Stubs/**/SubModule.xml` preserving the `_Module` segment, so the deployed
+`Modules/Bannerlord.Harmony/` held only `_Module/SubModule.xml`, one level below where
+`GetPhysicalModules` looks (`ModuleHelper.cs:364-376, v1.5.7`), and no release shipped them. The
+target now writes `Modules/<Id>/SubModule.xml` and the release packager ships the four beside
+TAOM.Dependencies; the measurements below are from before that change. <!-- measured: ls -R "<game>/Modules/Bannerlord.Harmony" 2026-09-05 -->
 None of the 14 `<Id>` rows in `LauncherData.xml` is a stub id; the four stub DLL names do occur there,
 4 times, but only as `<DLLName>` rows under `<DLLCheckData>`, the DLL check, not the module list. <!-- measured: grep -c "<Id>Bannerlord\.\(Harmony\|ButterLib\|UIExtenderEx\|MBOptionScreen\)<" LauncherData.xml returns 0 (the only Bannerlord.* id row is Bannerlord.Diplomacy); grep -n "Bannerlord\.\(Harmony\|ButterLib\|UIExtenderEx\|MBOptionScreen\)" returns 4 DLLName lines 2026-09-05 -->
-So `<DefaultModule value="true" />` at `Stubs/Bannerlord.Harmony/_Module/SubModule.xml:47` cannot tick
-anything, and the `<SingleplayerModule>`, `<MultiplayerModule>`, `<Official>` and `<Url>` rows beside it
+So `<DefaultModule value="true" />` at `Stubs/Bannerlord.Harmony/_Module/SubModule.xml:47` could tick
+nothing then, and the `<SingleplayerModule>`, `<MultiplayerModule>`, `<Official>` and `<Url>` rows beside it
 are read by no branch of `ModuleInfo.LoadWithFullPath` at all: they are launcher-compatibility
-vocabulary carried from BetaDeps (comment at lines 48-50 of the same file). Whether BLSE scans a level
-deeper is an open question; [Module Dependencies](module-dependencies.md) owns the stubs.
+vocabulary carried from BetaDeps (comment at lines 48-50 of the same file).
+[Module Dependencies](module-dependencies.md) owns the stubs.
 
 To change the order on your own machine: tick or drag in the launcher and press Play. Editing
 `LauncherData.xml` by hand does not override the manifests, because step 3 re-sorts whatever it reads.

@@ -28,3 +28,19 @@ Record each pending feature's module, source file, exact keys and English text, 
 | `taom_event_effect_momentum` | War of the Ring momentum | Momentum effect label |
 | `taom_event_effect_note` | Values are this event's contributions before caps, and the caps apply even to a single effect. Your own clan's fiefs and lords are never affected. | Note retained in model; currently hidden |
 | `taom_event_effect_escape_note` | The additional escape roll's chance is the shown percentage of a lord's usual escape chance. | Note retained in model; currently hidden |
+
+## Realms title tree details panel
+
+- Status: pending project-lead translation pass.
+- Source: [issue #1255](https://github.com/haterade22/TAOM/issues/1255).
+- Module: TAOM.
+- English source: `Main/_Module/ModuleData/taom_module_strings.xml`.
+- Target languages: BR, CNs, CNt, DE, FR, IT, JP, KO, PL, RU, SP, TR.
+- No placeholders. The Done button reuses the existing `taom_career_done` key.
+
+| Key | English source | Context |
+| --- | --- | --- |
+| `taom_realms_tree_selected` | Selected title | Heading of the title tree popup's details panel, over the clicked title |
+| `taom_realms_tree_holder` | Holder | Label over the name of the hero who holds the selected title |
+| `taom_realms_tree_liege` | Liege | Heading over the title directly above the selected title |
+| `taom_realms_tree_subordinates` | Subordinate titles | Heading over the list of titles directly below the selected title |

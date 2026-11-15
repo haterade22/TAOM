@@ -5127,3 +5127,14 @@ The tournament prize rule, the arena doc and several comments described the Armo
 - **Why missed:** the rule's tests supplied the provenance, so the one line that computed it in production had no test.
 - **Prevent:** when a rule takes a flag about where a value came from, expose the provenance from its owner (`IArmourGateService.GetTableClass`), pass the value rather than a bool, and test the caller with the real owner on substituted adapters.
 - **Source:** [rca-weapon-armour-rebalance-2026-11-14.md](../rca-weapon-armour-rebalance-2026-11-14.md), findings 18 and 25.
+### An image tool that drops a channel changes what the Kit compiles (banner sheets, #1272, 2026-11-14)
+`tools/pack_banner_sheets.py` read every sheet with `convert("RGB")` and wrote repacked sheets as RGB. The Kit's `Albedo (DXT1/DXT5)` type picks DXT1 for a source with no alpha channel, and the banner material draws a DXT1 sheet as speckled dots, so the v2.0.40 repack broke every sheet it wrote. Two renamed PSDs were already RGB, and the authoring doc named `DXT1, 8.000 Mb` as the expected result.
+- **Why missed:** the audit checked names, cells, sprites and source hashes, never the channels; the Kit gives no warning; nobody looked at a rendered banner after the repack.
+- **Prevent:** a tool that rewrites an engine source keeps every channel the engine reads, and its gate checks the property the compiler keys on (`no_alpha` in the audit). After a bulk asset rewrite, look at one rendered result in the game or the Kit before the commit.
+- **Source:** issue #1272.
+
+### Bring a generator's output back with the tool that mirrors its folders, never file by file (sprite regeneration, #1272, 2026-11-14)
+The Kit's sprite generation re-saved all 13 GUI `_tex.tpac` files. I copied back only the 3 banner files I expected to change, so the 3 `ui_custom_fonts_*_tex.tpac` headers stayed old in the repo, ready to go back over the install at the next build beside caches compiled for the new ones. `tools/sync_sprite_bake.ps1` mirrors exactly the generator's folders, and four docs named it, but not the banner doc I followed.
+- **Why missed:** I chose the files from what their sources should change, not from a diff of the output folders; no gate compares the repo's GauntletUI packages with the install's.
+- **Prevent:** after any Kit generation, run its sync tool (`sync_sprite_bake.ps1 -WhatIf`, then for real) and diff the output folders; a doc for a workflow that ends in a generator names that tool in its own steps.
+- **Source:** [rca-banner-sprite-regen-2026-11-14.md](../rca-banner-sprite-regen-2026-11-14.md), finding 1.

@@ -42,7 +42,12 @@ def sheet_png(path, art_cells):
         else:
             slots.append(None)
     with mock.patch.object(pbs, "SHEET_PX", PX):
-        Image.fromarray(pbs.assemble(slots), "RGB").save(path)
+        Image.fromarray(pbs.assemble(slots), "RGB").convert("RGBA").save(path)
+
+
+def drop_alpha(path):
+    """Re-save a sheet as 3-channel RGB, the source the Kit compiles to DXT1."""
+    Image.open(path).convert("RGB").save(path, format="PNG")
 
 
 def packages(root, mat, source_name=None):
@@ -133,6 +138,20 @@ class AuditFindsEachKindTests(TreeTest):
         write_module(self.root, FULL + PACKED1)
         packages(self.root, "taom_banners_01", source_name="taom_banners_01.psd")
         self.assertEqual(set(self.findings()), {"stale_package"})
+
+    def test_a_sheet_source_without_an_alpha_channel(self):
+        write_module(self.root, FULL + PACKED1)
+        drop_alpha(self.root / pbs.SOURCES / "taom_banners_02.png")
+        packages(self.root, "taom_banners_02")  # fresh hash, so only the channel finding remains
+        self.assertEqual(self.findings(), {"no_alpha": ["taom_banners_02"]})
+
+    def test_a_psd_source_without_an_alpha_channel(self):
+        write_module(self.root, FULL + PACKED1)
+        src = self.root / pbs.SOURCES / "taom_banners_02.png"
+        drop_alpha(src)
+        src.rename(src.with_suffix(".psd"))
+        packages(self.root, "taom_banners_02", "taom_banners_02.psd")
+        self.assertEqual(self.findings(), {"no_alpha": ["taom_banners_02"]})
 
     def test_two_rows_with_one_id(self):
         write_module(self.root, FULL + PACKED1 + [("200", "taom_banners_02", 12)])
@@ -331,6 +350,14 @@ class PackTests(TreeTest):
         self.assertEqual(pbs.pack(self.root, None, write=True), 1)
         self.assertEqual((self.root / pbs.XML).read_bytes(), xml)
 
+    def test_pack_writes_each_sheet_with_an_opaque_alpha_channel(self):
+        write_module(self.root, FULL + PACKED1 + [("300", "taom_banners_03", 2)])
+        self.assertEqual(pbs.pack(self.root, None, write=True), 0)
+        with Image.open(self.root / pbs.SOURCES / "taom_banners_02.png") as img:
+            self.assertEqual(img.mode, "RGBA")
+            self.assertEqual(img.getchannel("A").getextrema(), (255, 255))
+        self.assertNotIn("no_alpha", self.findings())  # the re-import and prune findings are expected
+
     def test_pack_writes_the_install_sources_too(self):
         write_module(self.root, FULL + PACKED1 + [("300", "taom_banners_03", 2)])
         (self.install / pbs.SOURCES).mkdir(parents=True)
@@ -404,6 +431,32 @@ class PruneTests(TreeTest):
         install_lines = [line for line in out if str(self.install) in line]
         names = [Path(line.split(" ", 2)[-1]).name for line in install_lines]
         self.assertLess(names.index(self.rdc.name), names.index("taom_banners_old_alpha_01_tex.tpac"))
+
+    def test_prune_deletes_install_sprite_pngs_the_repo_dropped(self):
+        orphan = self.install / pbs.SPRITE_PNGS / "999.png"
+        orphan.write_bytes(b"png")
+        pbs.prune(self.root, self.install, None, write=False)
+        self.assertTrue(orphan.exists())
+        self.assertEqual(pbs.prune(self.root, self.install, self.backup, write=True), 0)
+        self.assertFalse(orphan.exists())
+        self.assertTrue((self.backup / "install" / pbs.SPRITE_PNGS / "999.png").exists())
+        self.assertTrue((self.install / pbs.SPRITE_PNGS / "100.png").exists())  # a named icon stays
+
+    def test_prune_keeps_an_install_sprite_the_repo_still_has(self):
+        for r in (self.root, self.install):
+            (r / pbs.SPRITE_PNGS / "998.png").write_bytes(b"png")  # no icon row, but tracked in the repo
+        pbs.prune(self.root, self.install, self.backup, write=True)
+        self.assertTrue((self.install / pbs.SPRITE_PNGS / "998.png").exists())
+
+    def test_prune_keeps_an_install_sprite_the_deployed_xml_names(self):
+        (self.install / pbs.SPRITE_PNGS / "900.png").write_bytes(b"png")
+        rows = FULL + PACKED1 + [("900", "taom_banners_02", 0)]
+        (self.install / pbs.XML).write_bytes("".join(
+            ['<base><BannerIconGroup id="1">']
+            + [f'<Icon id="{i}" material_name="{m}" texture_index="{t}" />' for i, m, t in rows]
+            + ["</BannerIconGroup></base>"]).encode())
+        pbs.prune(self.root, self.install, self.backup, write=True)
+        self.assertTrue((self.install / pbs.SPRITE_PNGS / "900.png").exists())
 
     def test_prune_keeps_sheets_the_deployed_xml_still_names(self):
         rows = FULL + PACKED1 + [("900", "taom_banners_old_alpha_01", 0)]

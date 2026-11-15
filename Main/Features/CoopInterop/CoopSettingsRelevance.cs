@@ -96,6 +96,8 @@ public static class CoopSettingsRelevance
         "EnableSwingAlternativeProbe",
         // Shadowfax Screens: the [ScreenOpen] timer lines (docs/features/shadowfax-screens.md); log lines only.
         "LogScreenOpenTimes",
+        // The bug report offer after an unexpected end (docs/features/crash-report.md): a main-menu notice, never a computation.
+        "OfferBugReportAfterUnexpectedEnd",
     };
 
     /// <summary>
@@ -109,7 +111,7 @@ public static class CoopSettingsRelevance
     /// </summary>
     private static readonly HashSet<string> ActionButtons = new HashSet<string>(StringComparer.Ordinal)
     {
-        "RebuildDistanceCacheAction", "ApplyRecommendedBattleSettingsAction",
+        "RebuildDistanceCacheAction", "ApplyRecommendedBattleSettingsAction", "MakeBugReportAction",
     };
 
     /// <summary>Player-local convenience: the player acts, the co-op layer replicates the result.</summary>
@@ -133,6 +135,9 @@ public static class CoopSettingsRelevance
         // hearth or prosperity, met flags, tracker marks, relation, Roguery experience and the given rosters) is behind the
         // single-player predicate in NotableServicesService.
         "EnableNotableServices",
+        // Cheat Menu (docs/features/cheat-menu.md): the button and every cheat refuse unless CoopSessionPolicy.IsSinglePlayerAuthority,
+        // so a peer holding a different value never changes a running simulation.
+        "EnableCheatMenu",
         // Inn Rounds (#901): the switch and the two scales only shape a player's click at the tavern keeper. Every write (the player's
         // gold, the town's coffers, the party's morale, the clan's renown, Charm experience, tracker marks) is behind the
         // single-player predicate in InnRoundsService, so a peer holding a different value never changes a running simulation.

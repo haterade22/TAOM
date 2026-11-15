@@ -79,6 +79,8 @@ public sealed class LogTailCollector
                 .Select(r => Path.Combine(r, "Mount and Blade II Bannerlord", "logs"))
                 .Where(Directory.Exists)
                 .SelectMany(d => new DirectoryInfo(d).EnumerateFiles("rgl_log_*.txt"))
+                // The pattern also matches rgl_log_errors_*.txt, which holds only the error lines.
+                .Where(f => BugReport.BugReportFiles.IsMainRglLog(f.Name))
                 .OrderByDescending(f => f.LastWriteTimeUtc)
                 .FirstOrDefault()?.FullName;
         }

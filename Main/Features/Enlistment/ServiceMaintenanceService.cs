@@ -213,6 +213,21 @@ public class ServiceMaintenanceService : IServiceMaintenanceService
             }
 
             _logger?.LogInfo("[Enlistment] shore leave ended — the column has moved on");
+
+            // WALKED OUT ON FOOT: re-attach now, not at the next hourly reconcile. Vanilla's town
+            // "Leave" leaves the party active and visible on the map, and the cheap tier moves it
+            // onto the commander every pass, so until a reconcile parks it the player's own party
+            // shows beside the lord's. Only for a plainly attached player outside every settlement
+            // and battle: a state change revokes from inside the town (Finish(true) walks him out
+            // and the reconciler owns a lost commander), and a battle owns its own placement.
+            // RETURN AFTER IT: the reconcile may park or move the player, so the steps below would
+            // act on the presence read before it. The next pass reads it fresh.
+            if (record.State == EnlistmentState.EnlistedAttached
+                && !presence.IsInSettlement && !presence.IsInMapEvent)
+            {
+                _reconciler?.ReconcileNow(nowHours / 24.0, "shore leave ended");
+                return;
+            }
         }
 
         TryBreakBattleLatch(record, commander, presence);

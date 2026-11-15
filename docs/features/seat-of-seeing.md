@@ -195,6 +195,7 @@ in a pure type.
 | `Client/Features/FordsOfWar/FordsOfWarMissionViews.cs` | names `Agent.Main` in a comment | none |
 | `Client/Features/LongDefeat/LongDefeatHudView.cs` | `Mission.MainAgent == null` for the orders delay | an AI hero is not null; unchanged |
 | `Main/Adapters/AgentAdapter.cs` | `IsAIControlled` for the adapter | reports true for the handed hero, as it is |
+| `Main/Adapters/BattleCheatAdapter.cs` | heals `MainAgent`; `IsAIControlled` of enemies for Kill all enemies | an AI hero is still the main agent; only enemy agents are killed |
 | `Main/Adapters/CreatureSiegeAgentAdapter.cs` | `IsAIControlled` of an agent and of a formation | the siege role treats a handed hero as AI, which he is |
 | `Main/Adapters/FellFoesAdapter.cs` | the main agent's liveness and position | an AI hero is alive; unchanged |
 | `Main/Adapters/FordsAgentControl.cs` | `MainAgent`, `TakeControlOfAgent` | Fords only |
@@ -241,7 +242,7 @@ in a pure type.
 | `Main/Features/DevConsole/Cheats/AgentDamageCheats.cs` | `mission.MainAgent` as target and source | an AI hero is still the main agent |
 | `Main/Features/DevConsole/Cheats/AgentDiagnosticCheats.cs` | `mission.MainAgent` | the same |
 | `Main/Features/DevConsole/Cheats/LongDefeatCheats.cs` | `mission.MainAgent` position | the same |
-| `Main/Features/DevConsole/Cheats/MissionSpawnCheats.cs` | `Mission.Current.MainAgent` | the same |
+| `Main/Features/DevConsole/Cheats/MissionTroopSpawner.cs` | `Mission.Current.MainAgent` | the same |
 | `Main/Features/DevConsole/Cheats/StagedSiegeCheats.cs` | `mission.MainAgent` position | the same |
 | `Main/Features/DreadAura/Hooks/DreadAgentGate.cs` | `IsAIControlled` and a `CommonAIComponent` | a handed hero is affected by dread like any AI unit (the component exists after the flip, with morale 50) |
 | `Main/Features/Enlistment/BattleFormationPolicy.cs` | names `MainAgent` in a comment | none |

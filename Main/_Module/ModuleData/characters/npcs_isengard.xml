@@ -50,6 +50,8 @@
 		</upgrade_targets>
 		<Equipments>
 			<EquipmentRoster>
+				<equipment slot="Item0" id="Item.peasant_hatchet_1_t1" />
+				<equipment slot="Item1" id="Item.throwing_stone" />
 				<equipment slot="Body" id="Item.sk_uruk_hai_chainmail_a1" />
 				<equipment slot="Leg" id="Item.sk_uruk_hai_shoes_a1" />
 			</EquipmentRoster>
@@ -78,10 +80,14 @@
 				<equipment slot="Leg" id="Item.sk_uruk_hai_shoes_a1" />
 			</EquipmentRoster>
 			<EquipmentRoster>
+				<equipment slot="Item0" id="Item.peasant_hatchet_1_t1" />
+				<equipment slot="Item1" id="Item.throwing_stone" />
 				<equipment slot="Body" id="Item.sk_uruk_hai_chainmail_a1" />
 				<equipment slot="Leg" id="Item.sk_uruk_hai_shoes_a1" />
 			</EquipmentRoster>
 			<EquipmentRoster>
+				<equipment slot="Item0" id="Item.peasant_polearm_1_t1" />
+				<equipment slot="Item1" id="Item.throwing_stone" />
 				<equipment slot="Body" id="Item.sk_uruk_hai_chainmail_a2" />
 				<equipment slot="Leg" id="Item.sk_uruk_hai_shoes_a1" />
 			</EquipmentRoster>

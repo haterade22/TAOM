@@ -69,8 +69,9 @@ Validate well-formed XML after editing (`python -c "import xml.etree.ElementTree
 The flag draws from the **material** (`_mtl.tpac`), which references the **texture** (`_tex.tpac`). You need **both**; they are produced by **two different actions**:
 
 1. **Texture** — put the green-on-black source at `AssetSources/BannerIcons/taom_banners_NN.(psd|png)` (the next free number) and import it. **Importing the source image (PSD *or* PNG) produces ONLY the `_tex.tpac`.** (Verified 2026-06: PSD-vs-PNG makes no difference — both yield texture-only. The earlier "use PSD" theory was wrong.)
-   - **Import settings:** keep Type `Albedo (DXT1/DXT5 - RGBA)`, leave **Do Not Compress** clear and tick **Do Not Generate Mips**. Runtime Details must read `4096 x 4096, 1 Mip, DXT1, 8.000 Mb` (DXT5 and 16 Mb for a source with an alpha channel). An uncompressed sheet costs 64 Mb; all 33 sheets were that way until 2026-10-21 (2,112 Mb in total, now 336 Mb). Keep the single mip: with a full chain the banner render reads a smaller mip, and thin line-art sigils such as the Abanissa winged sun fade to a faint outline.
+   - **Import settings:** keep Type `Albedo (DXT1/DXT5 - RGBA)`, leave **Do Not Compress** clear and tick **Do Not Generate Mips**. Runtime Details must read `4096 x 4096, 1 Mip, DXT5, 16.000 Mb`. The Kit picks the format from the source: an RGB source (no alpha channel) compiles to DXT1, 8 Mb, and the banner material then draws every sigil as speckled dots while the Kit shows the material as a grey "MATERIAL" box. So save each sheet source with an opaque alpha channel (PNG colour type 6, or a 4-channel PSD); the audit reports a 3-channel source as `no_alpha`. The inspector can print `DXT5` beside `8.000 Mb` for an RGB source: trust the size. On 2026-11-14 the repack wrote every sheet as RGB and all of them broke this way (#1272). An uncompressed sheet costs 64 Mb; all 33 sheets were that way until 2026-10-21 (2,112 Mb in total, now 336 Mb). Keep the single mip: with a full chain the banner render reads a smaller mip, and thin line-art sigils such as the Abanissa winged sun fade to a faint outline.
    - **Copy the saved `_tex.tpac` into the repo** (`Main/_Module/Assets/BannerIcons/`) before anyone builds. Every build deploys the repo's copy over the live one but leaves the live `RuntimeDataCache`, so a reverted header meets a recompiled cache: the sheet's sigils render blank, and the editor crashes on its next start while it recompiles (wEditor `TaleWorlds.Native.dll+0x4F626D`, a material with a null shader).
+   - **A sheet compiled while the editor starts crashes it** (`rglIntrusive_ptr.h:151 px != nullptr`, right after `Compiled image taom_banners_NN` in the rgl log). The cache is written before the crash, so each restart gets one sheet further: restart until the editor opens, then save each re-imported texture so its `_tex.tpac` stores the new source hash. A reimport with the editor open cannot replace a cache file the editor has loaded ("Unable to write RDC"); close the editor and move that `.rdc` away instead.
    - A tpac with no `.rdc` is skipped whole (lesson: `animation-skeleton.md`). Check with `python tools/check_rdc_entries.py --under <Assets subfolder>`.
 2. **Material** — a **separate Kit step**: create a banner-icon **Material** named exactly `taom_banners_NN`, assign the banner shader, point it at the texture, save → writes `_mtl.tpac`. This is the step that was missing when icons showed in the picker but rendered **blank on the flag**. The existing sheets' shader uses flags `two_sided` + `modulate1` + `alpha_test` (from the `_mtl.tpac` binary).
 3. `material_name` in `banner_icons.xml` must match exactly. **Verify BOTH** `_mtl.tpac` **and** `_tex.tpac` exist per material — `_tex` alone = blank flag (the picker may still show it via the GauntletUI sprite).
@@ -87,6 +88,7 @@ The flag draws from the **material** (`_mtl.tpac`), which references the **textu
    - The bare `SpriteSheetGenerator.exe` CLI is awkward: its `SingleModule` mode looks for `Config.xml` in the wrong path and silently no-ops, and it never writes the `_tex.tpac`. Use the editor flow.
 3. **Texture import settings (per atlas texture).** In the editor's Texture Inspector, each `ui_taom_bannericons_NN` atlas must have **Do Not Generate Mips** ✔ and **Do Not Compress** ✔ checked (Type stays `Albedo (DXT1/DXT5 - RGBA)`) — match the existing sheets. UI needs no mipmaps, and skipping DXT compression keeps the sharp white-sigil alpha clean. New sheets imported without these look soft/artifacted. This is a manual per-texture GUI step on every new atlas (26–41 in the 2026-06 batch).
 4. **Do NOT hand-author the atlas sheets.** Pre-packed `ui_taom_bannericons_N.png` you make by hand are ignored — the generator owns those filenames and regenerates them from the source folder.
+5. **Bring the bake back with `pwsh tools/sync_sprite_bake.ps1`** (`-WhatIf` first), never by copying the files you expect to change. The generator re-saves every sprite category's `_tex.tpac`, not only the banner ones, and a header left behind in the repo goes back over the install at the next build beside a cache compiled for the new one. On 2026-11-14 a hand copy of the 3 banner files left the 3 `ui_custom_fonts_*_tex.tpac` headers stale (#1272). Prune first (`pack_banner_sheets.py --prune`) so a deleted icon's install PNG is not baked back in.
 
 ## Critical gotchas (each cost real time this session)
 
@@ -134,7 +136,10 @@ is not a PNG it gets a new number, so the old PSD stays as it was until the prun
 4. `python tools/pack_banner_sheets.py --prune` lists every sheet that neither `banner_icons.xml`
    names, in the repo (source, `.tpac`) and the install (the same, plus the texture's
    `RuntimeDataCache/<GUID>.rdc`, read from bytes 8 to 23 of its `_tex.tpac`, deleted before the
-   texture). `--prune --apply --backup-dir <dir>` deletes them, each backed up first. It refuses
+   texture). It also lists each install sprite PNG in `GUI/SpriteParts/ui_taom_bannericons` that the
+   repo does not have and no `banner_icons.xml` names: the editor's sprite generation packs every loose
+   PNG it finds, so an icon deleted in the repo comes back into the picker atlas until the install copy
+   goes. Prune before you regenerate the sprites. `--prune --apply --backup-dir <dir>` deletes them, each backed up first. It refuses
    while the audit has any other finding and while the game or the Kit runs.
 
 `python tools/pack_banner_sheets.py --audit` is the gate (`tools/tests/test_pack_banner_sheets.py`):
@@ -142,7 +147,9 @@ every icon names a sheet that exists and a cell that holds art, no two icons sha
 cell is unnamed, every icon has a `ui_taom_bannericons` sprite part in `TAOMSpriteData.xml` and its
 PNG, every material has both packages, each `_mtl.tpac` names its `_tex.tpac` and each `_tex.tpac`
 holds the hash of its current source (so a sheet changed after its Kit import is a finding), every
-sheet is named `taom_banners_NN`, no sheet file is unused, and no packing plan would save a sheet.
+sheet is named `taom_banners_NN`, every sheet source has an alpha channel (`no_alpha`), no sheet file is
+unused, and no packing plan would save a sheet. The tool writes every repacked sheet as RGBA with
+opaque alpha.
 
 ## Current inventory (2026-11-14, #1047)
 

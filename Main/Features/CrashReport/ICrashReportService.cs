@@ -20,6 +20,10 @@ public interface ICrashReportService
     // verdict, never a mark on the exception, which a read-only Exception.Data would drop).
     string? HandleException(Exception exception, string originatingPatchTarget, bool offMainThread = false);
 
+    // The player's bug report: this session's state with no exception plus the previous session's files, in one zip.
+    // Returns the zip's absolute path, or null when it could not be written. Never throws. Main thread only.
+    string? WriteBugReport(string reason);
+
     // Returns true while a HandleException invocation is on the current call stack —
     // Harmony Finalizers should consult this to break re-entry loops.
     bool IsHandling { get; }

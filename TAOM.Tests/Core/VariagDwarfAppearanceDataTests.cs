@@ -8,7 +8,7 @@ using static TAOM.Tests.Infrastructure.HeroFaceKeys;
 namespace TAOM.Tests.Core;
 
 /// <summary>
-/// Variag and dwarf hero looks gate over the repo's own ModuleData (lords.xml, named companions and the
+/// Variag and dwarf hero looks gate over the repo's own ModuleData (lords.xml, the book named companions and the
 /// lords.xslt rebuilds, which replace a lord's face). The Variags of Khand (culture battania) are swarthy,
 /// dark-haired men of the south-east; dwarves are fair to ruddy. Skin is bits 48-53 and hair colour bits 30-35
 /// of the face key's first 64-bit part (value / 63; vanilla Aserai lords average about 37 skin). A Variag hero's
