@@ -133,8 +133,9 @@ nothing.
 - **The crush-through race bonuses** are added to the skill gap, so they were scaled by 260/390
   with the window: elf and Sauron `ctbAttackBonus` 20 to 13, dwarf `ctbDefenseBonus` 15 to 10. No
   other value in `combat_mechanics_config.json` is added to or compared with the gap.
-  `skillCurveExponent` multiplies it and was not scaled, so a scaled tier gap gets up to about 0.06
-  less of the full chance between the dead zone and the top (0.457 where it was 0.515).
+  `skillCurveExponent` multiplies it and was not scaled in that round, so a scaled tier gap got up
+  to about 0.06 less of the full chance between the dead zone and the top. The follow-up of the
+  same day scaled it by 170/115 (0.008097 to 0.01197), so the curve keeps its shape.
 
 `--apply` in round 5 changed 25 records, the militia copies; a second `--apply --dry-run` printed
 `Changed: 0, Unchanged: 1337, Skipped: 17`, and the other three modes plan nothing. The shop test
@@ -250,5 +251,5 @@ FOLLOW-UP #343: the design harness that produced the damage tables (`curve_sim.p
 FOLLOW-UP #343: `spider_creature.xml` carries its own troop skills at the old level. Decide whether it follows the curve.
 FOLLOW-UP #343: stale skill tables in tools that are not run any more but would undo the restat if run: `tools/generate_gondor_troops.py`, `generate_rhun_troops.py`, `generate_dale_troops.py`, the `apply_*_troop_revamp.py` scripts and `apply_black_numenorean_troops.py`. Make `rebalance_troops.py` their source, or retire them.
 FOLLOW-UP #343: the ranged ladder's #1271 bow damage rows were fitted at the old Bow skills; the top bow's hit fell about 7% ([ranged-ladders.md](../features/ranged-ladders.md)). Decide whether to refit them.
-FOLLOW-UP #343: maintainer decides whether to scale the bash window. Hammerhand's knockdown chance is the Athletics lead clamped to 10 to 75 percent (`ShieldBashKnockdownService.cs:48`, unchanged); troop Athletics leads are now about two thirds of the old ones, so the bash chance between troops falls by about a third.
+CORRECTION (2026-11-15, same day): this RCA first said that troop Athletics leads were about two thirds of the old ones and that the bash chance between troops fell by about a third. Nobody had measured that; the session lead passed a reviewer's estimate to the builder as a fact. Measured over every pair of foot troops, the lead grew: one tier apart the median went from 15 to 30 and the mean chance from 22 to 30 percent, two tiers apart from 30 to 60 and from 33 to 53 percent; between foot troops of one tier nothing changed (14 percent). The first version of this correction quoted numbers that mixed mounted troops into the pool; a review caught it. Hammerhand's window (the Athletics lead clamped to 10 to 75 percent, `ShieldBashKnockdownService.cs:48`) stays as it is (the session's call under the maintainer's word to act on its recommendation); the in-game check is item 7 of troop-skill-balance.md.
 FOLLOW-UP #343: `python tools/rebalance_troops.py` with no arguments defaults to `--apply` and writes (`main()`, `if not args: args = ['--apply']`). That default is older than this branch and was left as it is; decide whether a bare run should preview instead.
