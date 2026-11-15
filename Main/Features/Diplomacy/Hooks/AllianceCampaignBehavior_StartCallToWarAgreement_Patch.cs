@@ -10,6 +10,9 @@ namespace TAOM.Features.Diplomacy.Hooks;
 // both the gold and the agreement out of a war that cannot start. The veto is the DeclareWarAction
 // prefix's own (ShouldPreventWarDeclaration, which defers to the host under co-op). Initialize is wired
 // in DiplomacyIoC.InitializeHooks.
+// Priority.High, as on the DeclareWarAction and MakePeaceAction prefixes: Coop's own prefix on this
+// method does the agreement on the server and returns false, so a veto that ran after it would never
+// run (#1343).
 [HarmonyPatch(typeof(AllianceCampaignBehavior), nameof(AllianceCampaignBehavior.StartCallToWarAgreement))]
 [HarmonyPatchCategory("Patch11_Diplomacy")]
 public static class AllianceCampaignBehavior_StartCallToWarAgreement_Patch
@@ -22,6 +25,7 @@ public static class AllianceCampaignBehavior_StartCallToWarAgreement_Patch
     }
 
     [HarmonyPrefix]
+    [HarmonyPriority(Priority.High)]
     public static bool Prefix(Kingdom calledKingdom, Kingdom kingdomToCallToWarAgainst)
     {
         if (_hook == null || calledKingdom == null || kingdomToCallToWarAgainst == null)
