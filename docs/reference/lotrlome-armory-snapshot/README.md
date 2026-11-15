@@ -739,7 +739,7 @@ backups on 2026-10-01: rows added only, none changed or removed. TAOM_Map's lang
 | `loc_mordor.xml` | 12 | all 12 (`aom_sk_mordor_mouth_of_sauron_helm_name`) |
 
 **Replay:** all four ids are new rows and their translations are in `tools/translation_cache/<lang>.json`, so after a
-reinstall `python tools/translate_with_claude.py --lang <L> --module Armory --sync-ids --apply` seeds and rewrites them
+reinstall `python tools/translate_with_claude.py --lang <L> --module Armory --sync-ids --apply --allow-live-write` seeds and rewrites them
 from the cache at no API cost.
 
 **2026-10-02 (deep review):** RU `loc_gondor.xml` `aom_sk_gd_vale_helmet_heavy_b_name` read "Черно" + a Devanagari

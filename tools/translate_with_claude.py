@@ -25,12 +25,14 @@ import io
 import json
 import os
 import re
+import shutil
 import sys
 import time
 import urllib.error
 import urllib.request
 import xml.etree.ElementTree as ET
 from collections import Counter
+from datetime import datetime, timezone
 
 # Force UTF-8 stdout/stderr so we can print translated Russian/Japanese/Chinese error messages
 # without crashing on Windows cp1252 console encoding.
@@ -895,6 +897,30 @@ def sync_missing_ids(source_path: Path, target_path: Path, dry_run: bool = False
     return missing
 
 
+def armory_skip_ids(source: Path, target: Path, owners: dict, lang_dir: Path) -> set:
+    """Keys --sync-ids must not seed into an Armory language file: those another Armory English source owns
+    (key_owners) and those another loc_*.xml of the same language already carries, except a row the target
+    itself holds. The Armory twin of skip_ids_for, whose siblings are the std_taom_*.xml files; a second row
+    for an id is a later-loading copy that wins and drifts. A sibling that does not parse stops the run."""
+    elsewhere = {k for k, owner in owners.items() if owner != source}
+    for other in lang_dir.glob("loc_*.xml"):
+        if other != target:
+            try:  # ET.parse, not _parse_string_xml: that reads a broken file as empty, and its keys would look absent
+                elsewhere.update(el.get("id", "") for el in ET.parse(other).iter("string") if el.get("id", ""))
+            except ET.ParseError as exc:
+                raise SystemExit(f"{other} does not parse ({exc}); fix it before a translator run")
+    return elsewhere - set(_parse_string_xml(target, strip_keys=False))
+
+
+def backup_live_file(path: Path) -> Path:
+    """Copy a live (install) file byte for byte to <name>.bak_syncids_<UTC stamp> beside it before a write.
+    The game loads only the files language_data.xml names, so the copy is never read as a language file."""
+    stamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%S%fZ")
+    backup = path.with_name(f"{path.name}.bak_syncids_{stamp}")
+    shutil.copy2(path, backup)
+    return backup
+
+
 # ── Write back ─────────────────────────────────────────────────────────────────
 
 def is_repo_file(path: Path) -> bool:
@@ -977,8 +1003,9 @@ def main(argv=None):
     p.add_argument("--dry-run", action="store_true", help="Preview without writing")
     p.add_argument("--apply", action="store_true", help="Write translations and call API")
     p.add_argument("--allow-live-write", action="store_true",
-                   help="add the grammar tags to BR and IT name rows written outside the repo (TAOM_Map, Armory); "
-                        "repo files are always tagged")
+                   help="write outside the repo: let --sync-ids seed the live LOTRLOME_Armory language files "
+                        "(each backed up first, #1056), and add the grammar tags to BR and IT name rows written "
+                        "outside the repo (TAOM_Map, Armory); repo files are always tagged")
     p.add_argument("--max-entries", type=int, default=None,
                    help="Cap API entries for testing; 0 is a cap of zero (no provider call)")
     p.add_argument("--sync-ids", action="store_true",
@@ -1050,17 +1077,33 @@ def main(argv=None):
         # the language file lacked had nowhere for write_back to substitute into, and its
         # translation was discarded after being paid for. Same failure write_back's own
         # docstring warns about, one level up.
+        #
+        # Those files are live and in no repo, so a write there cannot be undone from git (#1056: on 2026-10-28
+        # a run meant for TAOM wrote 48 of them). They are written only with --allow-live-write, each backed up
+        # beside itself first; a dry run still reports what would be seeded.
         if args.module in ("Armory", "all"):
             armory_root = armory_lang_dir()
             target_dir = armory_root / lang
-            if target_dir.exists():
-                for src_file in sorted(armory_root.glob("loc_*.xml")):
-                    added = sync_missing_ids(src_file, target_dir / src_file.name, dry_run=args.dry_run)
+            live = args.dry_run or args.allow_live_write
+            if not target_dir.exists():
+                print(f"  WARNING: Armory sync skipped, not found: {target_dir}", file=sys.stderr)
+            elif not live:
+                print(f"  Armory sync skipped: it writes the live files in {target_dir}, which no repo holds. "
+                      f"Add --allow-live-write to seed them (each file is backed up first).")
+            else:
+                armory_sources = sorted(armory_root.glob("loc_*.xml"))
+                armory_owners = key_owners(armory_sources)
+                for src_file in armory_sources:
+                    target = target_dir / src_file.name
+                    elsewhere = armory_skip_ids(src_file, target, armory_owners, target_dir)
+                    added = sync_missing_ids(src_file, target, dry_run=True, skip_ids=elsewhere)
+                    if added and not args.dry_run:
+                        backup = backup_live_file(target)
+                        print(f"  backup: {backup.name}")
+                        added = sync_missing_ids(src_file, target, skip_ids=elsewhere)
                     if added:
                         print(f"  +{len(added):>4} ids {'to seed' if args.dry_run else 'seeded'} into {lang}/{src_file.name}")
                         seeded += len(added)
-            else:
-                print(f"  WARNING: Armory sync skipped, not found: {target_dir}", file=sys.stderr)
         print(f"  Ids {chr(0x77)}ould-be-seeded: {seeded}" if args.dry_run else f"  Ids seeded: {seeded}")
         if args.seed_only:
             return 0
