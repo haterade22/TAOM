@@ -13,6 +13,13 @@ import unittest
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 import generate_cardolan_troops as gct  # noqa: E402
+import realm_troops as rt  # noqa: E402
+
+
+def setUpModule():
+    # clamp_skills classes every weapon through the install's item files (#343).
+    if not os.path.isdir(rt.GAME_MODULES):
+        raise unittest.SkipTest("game install not found: %s" % rt.GAME_MODULES)
 
 
 class TharbadBridgeGuardTests(unittest.TestCase):

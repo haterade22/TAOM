@@ -833,7 +833,8 @@ def main() -> int:
               f"         item / troop / party-template / body-property / faction / settlement / roster ref checks\n"
               f"         (BROKEN_ITEM_REF, BROKEN_TROOP_REF, BROKEN_PARTY_TEMPLATE_REF,\n"
               f"         BROKEN_BODY_PROPERTY_REF, BROKEN_FACTION_REF, BROKEN_SETTLEMENT_REF,\n"
-              f"         BROKEN_ROSTER_REF) will be\n"
+              f"         BROKEN_ROSTER_REF) and the troop weapon purpose checks (TROOP_SKILL_KIT_MISMATCH,\n"
+              f"         TROOP_ITEM_ZERO_NOT_MAIN, which read weapon classes from the install) will be\n"
               f"         SKIPPED (need the game install for a complete registry). Culture-validity, duplicate-id,\n"
               f"         civilian-type and enum checks still run. Set $BANNERLORD_GAME_DIR or\n"
               f"         pass --game-modules <path> to enable the skipped checks.\n"
@@ -912,6 +913,8 @@ def main() -> int:
         print(f"WARNING: WORN_ARMOUR_CEILING SKIPPED (and WORN_ARMOUR_FLOOR): the armour stats of a\n"
               f"         troop's kit come from the Armory and vanilla items, which only the live\n"
               f"         install has.", file=sys.stderr)
+        print(f"WARNING: {ts.ENLISTMENT_KIT_RANK_CODE} SKIPPED: the enlistment kits are judged on the\n"
+              f"         Armory's armour and weapon values, which only the live install has.", file=sys.stderr)
     issues.sort(key=lambda i: i.sort_key())
 
     if args.code:

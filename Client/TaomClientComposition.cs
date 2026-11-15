@@ -1,5 +1,6 @@
 using DryIoc;
 using TAOM.Adapters;
+using TAOM.Client.Features.Autorun;
 using TAOM.Client.Adapters;
 using TAOM.Client.Features.CustomBattles;
 using TAOM.Client.Features.EventWindow;
@@ -13,6 +14,7 @@ using TAOM.Client.Features.Realms;
 using TAOM.Client.Features.ShaderCompileNotice;
 using TAOM.Client.Features.ShaderPrecompilation;
 using TAOM.Composition;
+using TAOM.Features.Autorun.Scenario;
 using TAOM.Features.CustomBattles;
 using TAOM.Features.LinesOfDescent.UI;
 using TAOM.Features.FieldCamp;
@@ -62,6 +64,7 @@ internal sealed class TaomClientComposition : IClientComposition
         registrator.Register<IFordsAutorunHost, FordsAutorunHost>(Reuse.Singleton);
         registrator.Register<ILongDefeatGameManagerFactory, LongDefeatGameManagerFactory>(Reuse.Singleton);
         registrator.Register<ILongDefeatAutorunHost, LongDefeatAutorunHost>(Reuse.Singleton);
+        registrator.Register<ICampaignAutorunHost, CampaignAutorunHost>(Reuse.Singleton);
         registrator.Register<ICampVisualService, CampVisualService>(Reuse.Singleton);
         registrator.Register<IRefugeVisualService, RefugeVisualService>(Reuse.Singleton);
         registrator.Register<ISupplyRouteVisualService, SupplyRouteVisualService>(Reuse.Singleton);

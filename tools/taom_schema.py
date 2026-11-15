@@ -87,6 +87,7 @@ class Registries:
     factions: set = field(default_factory=set)                # defined clan <Faction> ids (empty = unavailable)
     equipment_rosters: set = field(default_factory=set)       # defined <EquipmentRoster> ids (empty = unavailable)
     settlements: set = field(default_factory=set)             # <Settlement> ids of the world the game builds (empty = unavailable)
+    item_classes: dict = field(default_factory=dict)          # weapon item id -> skill class, build_item_class_registry (empty = unavailable)
 
 
 # --------------------------------------------------------------------------- #
@@ -244,6 +245,51 @@ def _armory_catalogue(modules: Path) -> tuple:
     return cat, priced
 
 
+@functools.lru_cache(maxsize=2)
+def _kit_weapon_catalogue(modules: Path) -> tuple:
+    """(catalogue, priced melee weapons) of the Armory and SandBoxCore: the enlistment kits issue
+    vanilla weapons as well (the aserai swords, the khuzait lance), which the Armory catalogue lacks."""
+    import sys as _sys
+    _sys.path.insert(0, str(Path(__file__).resolve().parent))
+    import melee_catalogue as mc
+    import analyze_melee_ladder as mr
+    cat = mc.load(modules, item_modules={mr.ARMORY_MODULE, "SandBoxCore"})
+    priced, _failures = mc.price_all(cat)
+    return cat, priced
+
+
+def kit_weapon_info(moduledata, game_modules, launchers, mount_barred=None) -> tuple:
+    """(item id -> generate_enlistment_rosters.KitWeapon, or None when unpriced, None) for every weapon
+    of a compared category, or ({}, why not). Shared by ENLISTMENT_KIT_RANK_REGRESSION and the
+    generator's --repair-ranks, so the repair is planned on the numbers the gate judges."""
+    import sys as _sys
+    _sys.path.insert(0, str(Path(__file__).resolve().parent))
+    try:
+        import analyze_melee_ladder as mr
+        import generate_enlistment_rosters as ger
+        import melee_catalogue as mc
+    except (ImportError, AssertionError) as exc:   # the generator asserts its tables at import
+        return {}, f"the melee tools cannot be imported ({exc!r})"
+    modules = Path(game_modules or mr.MODULES)
+    if not modules.is_dir():
+        return {}, f"no install at {modules}"
+    try:
+        cat, priced = _kit_weapon_catalogue(modules)
+        ph_priced, _problems = price_placeholders(cat, Path(moduledata) / PLACEHOLDER_DIR)
+    except (mc.CatalogueError, OSError) as exc:
+        return {}, f"the weapons could not be priced ({exc})"
+    classes = build_item_class_registry(moduledata, modules)
+    if mount_barred is None:
+        mount_barred = build_mount_barred_usages(modules)
+    if mount_barred is None:
+        return {}, "the install's item usage sets could not be read, so a longbow cannot be told from a bow"
+    # price() skips a usage that is not MeleeWeapon (a pilum's TwoHandedPolearm_Thrown), so the thrown
+    # weapons are found from the descriptions the item matches.
+    thrown = {iid for iid, p in priced.items()
+              if any("MeleeWeapon" not in d.flags for d in mc.matching_descriptions(cat, p.item))}
+    return ger.kit_weapon_outputs(classes, launchers, {**priced, **ph_priced}, mount_barred, thrown), None
+
+
 # The files tools/generate_placeholder_weapons.py writes into the repo module (a test pins the names to
 # the generator's). The taom_ph_ weapons are not in the install, so the melee gate reads them from the
 # tree it validates.
@@ -366,6 +412,20 @@ def melee_pass_rows(troops, priced, spec):
 # test_githooks_pre_commit.py fails until the second matches the first. WORN_ARMOUR_FLOOR stays a WARNING.
 WORN_ARMOUR_CEILING_SEVERITY = Severity.WARNING
 
+# A WARNING while launcher troops remain whose ranged ladder cell sits under a melee skill: values
+# never cross from melee to launcher, so those need a decision on the ladder or the melee curve
+# (#343), and `rebalance_troops.py --fix-purpose` leaves them. Once that count is zero, set this to
+# Severity.ERROR and add `--code TROOP_SKILL_KIT_MISMATCH` to .claude/hooks/check-moduledata-validation.sh
+# and .githooks/pre-commit (CommitGateCoverageTests reads this constant).
+TROOP_SKILL_KIT_MISMATCH_SEVERITY = Severity.WARNING
+
+# ENLISTMENT_KIT_RANK_REGRESSION judges the shipped kits on the armour and weapon values of the
+# installed Armory, so it is TRANSITIONAL like the ceiling above: an ERROR would block every
+# contributor whose Armory predates #1271. Flip it the same way, with the ceiling.
+ENLISTMENT_KIT_RANK_CODE = "ENLISTMENT_KIT_RANK_REGRESSION"
+ENLISTMENT_KIT_RANK_SEVERITY = Severity.WARNING
+ENLISTMENT_KITS_REL = "equipmentsets/taom_enlistment_equipment.xml"
+
 
 # --------------------------------------------------------------------------- #
 # Validator                                                                 #
@@ -413,12 +473,14 @@ class Validator:
         issues += self._creature_gear_obtainable()
         issues += self._armour_slot_coverage()
         issues += self._weapon_slot_coverage()
+        issues += self._troop_purpose()
         issues += self._townsfolk_without_battle_roster()
         issues += self._troop_ids_removed()
         issues += self._upgrade_skill_regressions()
         issues += self._upgrade_armour_regressions()
         issues += self._cross_culture_armour_inversions()
         issues += self._worn_armour_limits()
+        issues += self._enlistment_kit_rank_regressions()
         issues += self._armour_mesh_tier_ladder()
         issues += self._upgrade_tier_collapse()
         issues += self._ranged_ladder_inversions()
@@ -1371,6 +1433,7 @@ class Validator:
     # reads civilian="false" AS civilian, and reads id="x_civilian_y" as civilian
     # too, silently dropping a real battle set from the comparison.
     _CIVILIAN_ATTR_RE = re.compile(r"""\bcivilian\s*=\s*["'](?:true|True)["']""")
+    _CIVILIAN_TYPE_RE = re.compile(r"""\bequipmentType\s*=\s*["']Civilian["']""")
     # Single-quoted slot='Body' is legal XML. The double-quote-only _SLOT_ATTR_RE
     # reads it as no slot at all, which turns a dressed troop into an ERROR.
     _SLOT_ANY_QUOTE_RE = re.compile(r"""\bslot=["']([^"']+)["']""")
@@ -1532,7 +1595,8 @@ class Validator:
         loose = rows(self._INLINE_ROSTER_RE.sub("", body))
         kits = []
         for r in self._INLINE_ROSTER_RE.finditer(body):
-            if self._CIVILIAN_ATTR_RE.search(r.group(1) or ""):
+            # The same test as ranged_ladder.is_civilian, which tools/rebalance_troops.py reads with.
+            if self._CIVILIAN_ATTR_RE.search(r.group(1) or "") or self._CIVILIAN_TYPE_RE.search(r.group(1) or ""):
                 continue
             kit = rows(r.group(2) or "")
             kit.update(loose)
@@ -1584,6 +1648,87 @@ class Validator:
                              f"({sum(1 for a in ammo if a)} of {len(ammo)} sets carry any). "
                              f"Slots draw independently, so a draw can pair a bow with no arrows. Put the "
                              f"ammo at one index of every set")
+        return issues
+
+    # ----------------------------------------------------------------- #
+    # TROOP_SKILL_KIT_MISMATCH / TROOP_ITEM_ZERO_NOT_MAIN                     #
+    # ----------------------------------------------------------------- #
+    # Item0 is the weapon in hand at spawn (Equipment.GetInitialWeaponIndicesToEquip takes the first
+    # weapon slot not held in the off hand). The rule is tools/troop_purpose.py (#343). Weapon
+    # classes come from the install, so the pass is skipped, never faked, without it. Troops on
+    # rebalance_troops.SKIP_TROOP_IDS (creatures, bespoke mounts) and heroes are not judged.
+    def _troop_purpose(self) -> list:
+        classes = getattr(self.reg, "item_classes", None) or {}
+        if not classes:
+            return []
+        import sys as _sys
+        _sys.path.insert(0, str(Path(__file__).resolve().parent))
+        import troop_purpose as tp
+        from rebalance_troops import SKIP_TROOP_IDS, THROWN_PRIMARY_TROOP_IDS
+        issues = []
+        for path in self._xml_files():
+            if not path.name.startswith("troops_"):
+                continue
+            text = _COMMENT_RE.sub(lambda m: "\n" * m.group(0).count("\n"), self._read(path))
+            rel = self._rel(path)
+            for m in self._NPC_BLOCK_RE.finditer(text):
+                attrs, body = m.group(1), m.group(2) or ""
+                if re.search(r"""\bis_hero\s*=\s*["']true["']""", attrs, re.I):
+                    continue
+                idm = re.search(r'\bid="([A-Za-z0-9_.\-]+)"', attrs)
+                entry_id = idm.group(1) if idm else "(unnamed)"
+                if entry_id in SKIP_TROOP_IDS:
+                    continue
+                kits = [{s: classes.get(v) for s, v in k.items() if s in self._WEAPON_SLOTS}
+                        for k in self._battle_kits(body)]
+                kit = tp.kit_of(kits)
+                if not kit.sets:
+                    continue
+                gm = self._GROUP_ATTR_RE.search(attrs)
+                launcher_troop = tp.is_launcher_troop(kit, gm.group(1) if gm else "Infantry")
+                line = _lineno(text, m.start())
+                bad = [p for p in (tp.item0_problem(k) for k in kits if k) if p]
+                if bad:
+                    issues.append(Issue(
+                        severity=Severity.ERROR, code="TROOP_ITEM_ZERO_NOT_MAIN", file=rel, line=line,
+                        entry_id=entry_id,
+                        message=(f"{len(bad)} of {kit.sets} battle sets: {bad[0]}, so the rule reads no "
+                                 f"main class from Item0 (the engine puts a shield in the off hand). "
+                                 f"Exchange the two items' slots: python tools/rebalance_troops.py "
+                                 f"--fix-purpose --apply")))
+                late = [p for p in (tp.launcher_problem(k, launcher_troop) for k in kits if k) if p]
+                if late:
+                    issues.append(Issue(
+                        severity=TROOP_SKILL_KIT_MISMATCH_SEVERITY, code="TROOP_SKILL_KIT_MISMATCH",
+                        file=rel, line=line, entry_id=entry_id,
+                        message=(f"launcher troop that does not open with its launcher: {len(late)} of "
+                                 f"{kit.sets} battle sets: {late[0]}. No tool repairs this: vanilla ships "
+                                 f"the layout, so a designer exchanges the slots by hand (#343)")))
+                skills = {sid: int(val) for sid, val in self._SKILL_ENTRY_RE.findall(body)}
+                skills.update({sid: int(val) for val, sid in self._SKILL_ENTRY_ALT_RE.findall(body)})
+                fixed_kit = tp.kit_of(tp.fix_item0(k, launcher_troop)[0] for k in kits)
+                found = tp.kit_mismatches(skills, fixed_kit)
+                if not found:
+                    continue
+                main = tp.main_class(fixed_kit, skills)
+                head = f"holds {main} in Item0, but {'; '.join(f.text for f in found)}."
+                if all(f.cross_kind for f in found) and main == tp.THROWING:
+                    listed = "in" if entry_id in THROWN_PRIMARY_TROOP_IDS else "not in"
+                    head = (f"thrower below its melee skill: {head} Throwing keeps its value on disk; "
+                            f"the troop is {listed} THROWN_PRIMARY_TROOP_IDS, so the formula gives "
+                            f"Throwing {'the Ranged Bow curve' if listed == 'in' else 'its group curve'} "
+                            f"(the number is in rebalance_troops.py --fix-purpose). Decide the value (#343)")
+                elif all(f.cross_kind for f in found):
+                    head = (f"melee skill above the launcher's ladder cell: {head} Values never cross "
+                            f"from melee to launcher, so no reorder fixes this; the launcher's value is "
+                            f"its ranged ladder cell (tools/ranged_ladders.json) and the melee value "
+                            f"comes from the curve or the upgrade clamp. Decide one of them (#343)")
+                else:
+                    head += (" Reorder the troop's own values to its kit: python "
+                             "tools/rebalance_troops.py --fix-purpose --apply")
+                issues.append(Issue(
+                    severity=TROOP_SKILL_KIT_MISMATCH_SEVERITY, code="TROOP_SKILL_KIT_MISMATCH",
+                    file=rel, line=line, entry_id=entry_id, message=head))
         return issues
 
     # ----------------------------------------------------------------- #
@@ -2290,6 +2435,122 @@ class Validator:
                     ),
                 ))
         return issues
+
+    # -- ENLISTMENT_KIT_RANK_REGRESSION -------------------------------------- #
+    # The player draws one enlistment kit per rank and keeps them all, so each kit is held against every
+    # kit the resolver issued before it (generate_enlistment_rosters.rank_chains mirrors
+    # EnlistmentRosterResolver). The
+    # rule is generate_enlistment_rosters.rank_regressions, which the generator's --repair-ranks
+    # applies too, so the gate and the repair cannot disagree (#1290). Armour comes from the install,
+    # so the pass is skipped without it, and weapons that cannot be priced are a stated warning while
+    # the armour half still runs.
+    def _kit_weapon_info(self):
+        return kit_weapon_info(self.moduledata, self.game_modules, getattr(self.reg, "launchers", None) or {},
+                               getattr(self.reg, "mount_barred_usages", None))
+
+    @staticmethod
+    def _promoted_source(culture):
+        """(source culture, True when the promoter's item map rewrites this file's clone), or (None, False)."""
+        import sys as _sys
+        _sys.path.insert(0, str(Path(__file__).resolve().parent))
+        try:
+            import promote_borrowed_cultures as pbc
+        except Exception:   # the promoter reads its layout file at import; any failure only loses the hint
+            return None, False
+        cfg = pbc.TARGETS.get(culture)
+        if not cfg:
+            return None, False
+        return pbc.block_cfg(cfg, ENLISTMENT_KITS_REL)["src"], (
+            ENLISTMENT_KITS_REL in cfg.get("item_map_files", ()) and bool(cfg.get("item_map")))
+
+    def _enlistment_kit_rank_regressions(self, weapon_info=None) -> list:
+        path = self.moduledata / ENLISTMENT_KITS_REL
+        stats = getattr(self.reg, "item_armour_stats", None) or {}
+        if not path.is_file() or not stats:
+            return []   # no kit file, or no install: skipped, and validate_moduledata.main announces the second
+        import sys as _sys
+        _sys.path.insert(0, str(Path(__file__).resolve().parent))
+        try:
+            import generate_enlistment_rosters as ger
+        except (ImportError, AssertionError) as exc:   # the generator asserts its tables at import
+            return [Issue(severity=Severity.WARNING, code=ENLISTMENT_KIT_RANK_CODE, file=self._rel(path), line=0,
+                          entry_id="(tooling)",
+                          message=(f"tools/generate_enlistment_rosters.py cannot be imported ({exc!r}), so no kit "
+                                   "was judged. Not checked is not clean."))]
+        text = path.read_bytes().decode("utf-8-sig")
+        try:
+            kits = ger.read_kits(text)
+        except ET.ParseError:
+            return []   # the schema pass reports a file that does not parse
+        issues = []
+        if weapon_info is None:
+            weapon_info, problem = self._kit_weapon_info()
+            if problem:
+                issues.append(Issue(
+                    severity=Severity.WARNING, code=ENLISTMENT_KIT_RANK_CODE, file=self._rel(path), line=0,
+                    entry_id="(weapons)",
+                    message=(f"{problem}, so no kit's weapons were compared with the kits before it; "
+                             "the armour totals were. Not checked is not clean."),
+                ))
+        unresolved = ger.unresolved_kit_items(kits, stats, weapon_info)
+        if unresolved:
+            issues.append(Issue(
+                severity=Severity.WARNING, code=ENLISTMENT_KIT_RANK_CODE, file=self._rel(path), line=0,
+                entry_id="(unresolved)",
+                message=("these kit pieces have no armour values or no weapon price, so the rank rule counts "
+                         f"them as nothing: {', '.join(unresolved)}"),
+            ))
+        promoted = ger.promoter_owned_cultures(text)
+        for high, earlier, reasons in ger.enlistment_kit_findings(kits, stats, weapon_info):
+            culture = high[0]
+            rid = "enlist_" + "_".join(high)
+            repairable = any(kind != "dropped" for kind, _text in reasons)
+            if culture in promoted:
+                repair = self._promoted_repair(ger, kits, stats, weapon_info, earlier, high)
+            elif culture == "default":
+                repair = ("the default kits are hand-authored: change DEFAULT_ROSTER_ITEMS in "
+                          "tools/generate_enlistment_rosters.py and the roster in this file together")
+            else:
+                repair = (f"python tools/generate_enlistment_rosters.py --repair-ranks --culture {culture} plans "
+                          "the change from the culture's troop gear, or says it found none; read it, then add --apply")
+            note = []
+            if repairable:
+                note.append(f"Repair: {repair}.")
+            if any(kind == "dropped" for kind, _text in reasons):
+                note.append("A dropped category is never repaired by a tool: decide whether this kit should carry it.")
+            at = text.find(f'id="{rid}"')
+            issues.append(Issue(
+                severity=ENLISTMENT_KIT_RANK_SEVERITY, code=ENLISTMENT_KIT_RANK_CODE, file=self._rel(path),
+                line=text.count("\n", 0, at) + 1 if at >= 0 else 0, entry_id=rid,
+                message=("the kit is weaker than what the player drew before it ("
+                         + ", ".join("enlist_" + "_".join(c) for c in earlier) + "): "
+                         + "; ".join(t for _kind, t in reasons) + ". " + " ".join(note)),
+            ))
+        return issues
+
+    def _promoted_repair(self, ger, kits, stats, weapon_info, earlier, high):
+        """The repair text for a promoted culture's finding: the source chain first, or the item map
+        when the source chain holds and the clone differs from it only where the map rewrote it."""
+        culture = high[0]
+        src, mapped = self._promoted_source(culture)
+        rerun = f"python tools/promote_borrowed_cultures.py --only {culture} --apply"
+        if not src:
+            return ("promote_borrowed_cultures.py clones this culture's kits from its source culture: repair "
+                    f"the source with --repair-ranks --culture <source> --apply, then run {rerun}")
+        pairs = [((src,) + c[1:] if c[0] == culture else c, c) for c in list(earlier) + [high]]
+        source_clean = (all(s in kits for s, _c in pairs)
+                        and not ger.rank_regressions([(s, kits[s]) for s, _c in pairs[:-1]], kits[pairs[-1][0]],
+                                                     stats, weapon_info, mounted=high[1] == "cavalry"))
+        if mapped and source_clean:
+            changed = [f"{slot} {kits[s][slot]} -> {kits[c][slot]}"
+                       for s, c in pairs
+                       for slot in sorted(set(kits[s]) | set(kits[c]))
+                       if kits[s].get(slot) and kits[c].get(slot) and kits[s][slot] != kits[c][slot]]
+            return (f"the source kits hold the rule, so the item_map of TARGETS['{culture}'] in "
+                    f"tools/promote_borrowed_cultures.py makes the difference ({'; '.join(changed)}): change the "
+                    f"row that maps a piece to a weaker one, then run {rerun}")
+        return (f"promote_borrowed_cultures.py clones this culture's kits from {src}: repair the source with "
+                f"python tools/generate_enlistment_rosters.py --repair-ranks --culture {src} --apply, then run {rerun}")
 
     # -- ARMOUR_MESH_TIER_LADDER --------------------------------------------- #
     # An item id carries the tier the artist modelled (_light_ ... _lord_); the ladder
@@ -3371,6 +3632,7 @@ def build_registries(moduledata, game_modules, armory_root=None, vanilla_modules
     launchers = build_launchers(item_roots)
     mount_barred = build_mount_barred_usages(game_modules)
     item_trade, hidden_pieces = build_item_trade(item_roots)
+    item_classes = build_item_class_registry(moduledata, game_modules)
 
     if game_modules is None:
         # Without the game install the item / troop / party-template registries
@@ -3394,6 +3656,8 @@ def build_registries(moduledata, game_modules, armory_root=None, vanilla_modules
         # The troll gear and its crafting pieces live in the Armory: a repo-only table would read
         # every one of them as undefined and check nothing. Unavailable, not partial.
         item_trade, hidden_pieces = {}, {}
+        # Every troop weapon is an Armory or vanilla item, so a repo-only table classes none of them.
+        item_classes = {}
         # TAOM's 30 body properties are only a quarter of the 121 defined; the
         # rest are vanilla, and TAOM characters reference them freely.
         body_properties = set()
@@ -3413,6 +3677,7 @@ def build_registries(moduledata, game_modules, armory_root=None, vanilla_modules
         # vanilla_factions has its own floor: the repo's clans alone can reach the total's, and a
         # missing spclans.xml would then pass while every ref to a vanilla clan read as broken.
         for label, value, floor in (("launchers", launchers, 30),
+                                    ("item_classes", item_classes, 500),
                                     ("armour_stats", item_armour_stats, 500),
                                     ("body_properties", body_properties, 50),
                                     ("factions", factions, 100),
@@ -3446,6 +3711,7 @@ def build_registries(moduledata, game_modules, armory_root=None, vanilla_modules
         factions=factions,
         equipment_rosters=equipment_rosters,
         settlements=settlements,
+        item_classes=item_classes,
     )
 
 

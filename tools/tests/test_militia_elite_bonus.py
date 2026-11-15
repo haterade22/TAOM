@@ -19,6 +19,7 @@ import unittest
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 import rebalance_troops as rb  # noqa: E402
+import troop_purpose as tp     # noqa: E402
 
 
 class EliteMilitiaBindingTests(unittest.TestCase):
@@ -108,10 +109,21 @@ class EliteMilitiaBonusTests(unittest.TestCase):
                         line = rl.line_of(t, spec)
                         self.assertEqual(t.skills.get(skill, 0), rl.skill_cell(line, t.tier, spec), f"{t.id} {skill}")
                 self.assertGreaterEqual(vet.get(skill, 0), basic.get(skill, 0), f"{vet_id} {skill}")
-            for skill in rb.SKILL_NAMES:
-                if skill in owned:
-                    continue
-                b, v = basic.get(skill, 0), vet.get(skill, 0)
+            # The purpose order (#343) deals each troop's melee and launcher values to its own kit,
+            # and a veteran may carry a sword its basic sibling does not: the step holds per kind.
+            pairs = []
+            for kind in (tp.MELEE, tp.LAUNCHERS):
+                classes = [c for c in kind if c not in owned]
+                pairs += zip([f"{kind[0]} kind"] * len(classes),
+                             sorted(basic.get(c, 0) for c in classes),
+                             sorted(vet.get(c, 0) for c in classes))
+            pairs += [(s, basic.get(s, 0), vet.get(s, 0)) for s in rb.SKILL_NAMES
+                      if s not in owned and s not in tp.MELEE + tp.LAUNCHERS]
+            # And no single class falls on the step up.
+            for c in tp.MELEE + tp.LAUNCHERS:
+                if c not in owned:
+                    self.assertGreaterEqual(vet.get(c, 0), basic.get(c, 0), f'{vet_id} {c}')
+            for skill, b, v in pairs:
                 if b >= rb.MILITIA_ELITE_BONUS:
                     self.assertEqual(v, b + rb.MILITIA_ELITE_BONUS, f"{vet_id} {skill}")
                 else:

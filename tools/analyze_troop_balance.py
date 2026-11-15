@@ -29,6 +29,7 @@ from collections import defaultdict
 # --- Reuse the reference formula from the existing rebalance tool (do NOT re-derive) ----
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import rebalance_troops as rb  # noqa: E402  GROUP_BASELINES / CULTURAL_MODS / calculate_skills / ...
+import troop_purpose as tp  # noqa: E402  the kit decides which skills are highest (#343)
 
 SKILL_NAMES = rb.SKILL_NAMES
 GROUPS = ['Infantry', 'Ranged', 'Cavalry', 'HorseArcher']
@@ -167,8 +168,26 @@ def parse_troop_file(filepath, item_classes=None):
         equip = npc.find('Equipments')
         has_equipment = equip is not None and len(list(equip)) > 0
         weapon_classes = rb.troop_weapon_classes(npc, item_classes) if item_classes else None
+        # The purpose rule (#343), read as the validator reads it: the battle sets whose Item0 is a
+        # shield or ammunition (TROOP_ITEM_ZERO_NOT_MAIN), and the warning reasons of
+        # TROOP_SKILL_KIT_MISMATCH on the kit with Item0 fixed, the launcher reason first.
+        sets = [s for _, s in rb.troop_battle_sets(npc, item_classes)] if item_classes else []
+        kit, _ = rb.troop_kit(npc, item_classes, fix_item0=True) if item_classes else (None, [])
+        exempt = troop_id in rb.SKIP_TROOP_IDS or kit is None
+        findings = []
+        if not exempt:
+            launcher_troop = tp.is_launcher_troop(kit, group)
+            late = [p for p in (tp.launcher_problem(s, launcher_troop) for s in sets if s) if p]
+            if late:
+                findings.append(f"launcher troop that does not open with its launcher: {len(late)} of "
+                                f"{kit.sets} battle sets: {late[0]}")
+            findings += [f.text for f in tp.kit_mismatches(actual, kit)]
 
         troops.append({
+            'kit': kit,
+            'main': None if kit is None else tp.main_class(kit, actual),
+            'item0_sets': 0 if exempt else sum(1 for s in sets if s and tp.item0_problem(s)),
+            'kit_findings': findings,
             'weapon_classes': weapon_classes,
             'file': filename,
             'file_culture': filename_culture,
@@ -199,7 +218,7 @@ def analyze(troops, weights, threshold):
 
         fc = formula_culture(t['culture'])
         ref = rb.calculate_skills(fc, t['level'], t['group'], t['id'], t['name'],
-                                  t.get('weapon_classes'))
+                                  t.get('weapon_classes'), t.get('kit'))
         if ref is not None and t.get('weapon_classes') is not None:
             # A ladder troop's Bow/Crossbow is its ranked cell (#617), as rebalance_troops writes it.
             ref = dict(ref, **rb.ladder_cells(t['id'], t['file_culture'], t['level'], t['weapon_classes']))
@@ -511,6 +530,33 @@ def render_culture_section(culture, troops, all_ids, dq):
     return '\n'.join(out)
 
 
+def render_purpose_section(all_troops):
+    """The purpose rule (#343): the Item0 class of each troop, and the troops its two findings name
+    (TROOP_ITEM_ZERO_NOT_MAIN and TROOP_SKILL_KIT_MISMATCH in validate_moduledata.py)."""
+    item0 = [t for t in all_troops if t.get('item0_sets')]
+    kit = [t for t in all_troops if t.get('kit_findings')]
+    L = ['## Purpose: the Item0 weapon decides the top skill\n',
+         '_Main class = the weapon class in Item0 over the battle sets (the weapon in hand at spawn). '
+         '`python tools/rebalance_troops.py --fix-purpose --apply` repairs a shield or ammunition in '
+         'Item0 and a skill order that does not follow the kit. No tool repairs the rest: a launcher '
+         'troop that does not open with its launcher, a melee skill above a launcher\'s ladder cell '
+         'and a thrower below its melee skill are left for a designer._\n']
+    if not item0 and not kit:
+        L.append('**Every troop holds a real weapon in Item0 and its main class is its top skill.** ✅\n')
+    if item0:
+        L.append(f'**Item0 is a shield or ammunition beside a weapon** ({len(item0)} troops):')
+        L += [f"- `{t['id']}` ({t['item0_sets']} battle sets)" for t in item0]
+        L.append('')
+    if kit:
+        L.append(f'**Skills do not follow the kit** ({len(kit)} troops):\n')
+        L.append('| Troop | L | Group | Main class | Finding |')
+        L.append('|---|---|---|---|---|')
+        L += [f"| `{t['id']}` | {t['level']} | {t['group']} | {t['main']} | {'; '.join(t['kit_findings'])} |"
+              for t in kit]
+        L.append('')
+    return '\n'.join(L)
+
+
 def render_report(by_culture, all_troops, all_ids, dq, threshold):
     cultures = sorted(by_culture.keys())
     today = datetime.date.today().isoformat()
@@ -616,6 +662,8 @@ def render_report(by_culture, all_troops, all_ids, dq, threshold):
         for p, c, pt, ct in drops:
             L.append(f'- `{p}` ({pt}) → `{c}` ({ct}), drop {pt - ct}')
         L.append('')
+
+    L.append(render_purpose_section(all_troops))
 
     # Parity matrix
     L.append('## Cross-culture parity matrix\n')
@@ -939,6 +987,21 @@ def render_html(by_culture, all_troops, all_ids, dq, threshold):
             H.append(f'<div class="callout bad"><code>{_esc(p)}</code> ({pt}) → '
                      f'<code>{_esc(c)}</code> ({ct}), drop {pt - ct}</div>')
 
+    # Purpose (#343)
+    H.append('<h2>Purpose: the Item0 weapon decides the top skill</h2>')
+    flagged = [t for t in all_troops if t.get('item0_sets') or t.get('kit_findings')]
+    if not flagged:
+        H.append('<div class="callout ok">Every troop holds a real weapon in Item0 and its main class is '
+                 'its top skill.</div>')
+    else:
+        H.append('<table><tr><th class="l">Troop</th><th>L</th><th>Group</th><th>Main class</th>'
+                 '<th>Item0 sets to fix</th><th class="l">Finding</th></tr>')
+        for t in flagged:
+            H.append(f"<tr><td class=\"l\"><code>{_esc(t['id'])}</code></td><td>{t['level']}</td>"
+                     f"<td>{_esc(t['group'])}</td><td>{_esc(t['main'])}</td><td>{t['item0_sets'] or ''}</td>"
+                     f"<td class=\"l\">{_esc('; '.join(t['kit_findings']))}</td></tr>")
+        H.append('</table>')
+
     # Parity
     H.append('<h2>Cross-culture parity matrix</h2>')
     H.append('<p class="sub">Average total skill (sum of 8 skills) per culture at each tier, '
@@ -984,7 +1047,8 @@ def build_json(all_troops):
         'mount_rider': t['mount_rider'], 'off_grid': t['off_grid'],
         'total_actual': t['total_actual'], 'total_ref': t['total_ref'], 'delta': t['delta'],
         'outlier': t['outlier'], 'weight': t['weight'], 'skill_deltas': t['skill_deltas'],
-        'actual': t['actual'],
+        'actual': t['actual'], 'main_class': t.get('main'), 'item0_sets': t.get('item0_sets', 0),
+        'kit_findings': t.get('kit_findings', []),
     } for t in all_troops]
 
 
@@ -1067,6 +1131,8 @@ def main():
               f'{len(m["upgrade_violations"])} upgrade + {len(m["level_violations"])} level inversions')
         drops = dq.get('armour_drops')
         print('Upgrade armour drops: ' + ('skipped (no game install)' if drops is None else str(len(drops))))
+        print(f"Purpose: {sum(1 for t in all_troops if t.get('item0_sets'))} troops with a non-weapon Item0, "
+              f"{sum(1 for t in all_troops if t.get('kit_findings'))} whose skills do not follow the kit")
 
 
 if __name__ == '__main__':

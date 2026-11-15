@@ -321,7 +321,7 @@ that draws on it, chooses one at the top of the ladder. The two shields have no 
 Named armour has one route so far: `<LadderPieces>`. The Arnor King's Crown (`sk_ar_art_crown_king_a`, classed
 `named` through `rebalance_armor.EXCLUDE_ID_SUBSTRINGS`, and blacklisted in the Arthedain and Gondor markets) is
 the first choice on an Arthedain hero's head rung, so it is earned, never sold or looted (Mike, 2026-10-08).
-King Arvegil II starts with it (`generate_new_faction_kingdoms.py`, `leader_head`).
+King Aranarth starts with it (`generate_new_faction_kingdoms.py`, `leader_head`).
 
 | Item | Id | Culture | Route |
 |---|---|---|---|

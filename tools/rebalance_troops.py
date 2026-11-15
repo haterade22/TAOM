@@ -13,9 +13,14 @@ Bow<->Crossbow / Polearm<->TwoHanded to match the carried weapons. Name keywords
 alone previously mis-statted crossbowmen named "Sharpshooter" and two-hander
 cavalry named "Knight" (issues #340/#341).
 
+The kit then decides the ORDER of the weapon skills (#343, tools/troop_purpose.py): the Item0
+class takes the troop's highest melee or launcher value, then the other carried classes, then the
+classes it does not carry.
+
 Usage:
     python rebalance_troops.py --dry-run    # Preview changes
     python rebalance_troops.py --apply      # Write changes to XML files
+    python rebalance_troops.py --fix-purpose [--dry-run]   # reorder on-disk skills to the kit
     python rebalance_troops.py --apply --game-modules "E:/.../Modules"
 """
 
@@ -27,11 +32,13 @@ import re
 import copy
 import codecs
 from collections import defaultdict
+from pathlib import Path
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import taom_schema as ts  # noqa: E402  build_item_class_registry
 from _gamedir import game_modules as _resolve_game_modules  # noqa: E402
 import ranged_ladder as rl  # noqa: E402  the Bow/Crossbow cell of a ladder troop (#617)
+import troop_purpose as tp  # noqa: E402  the kit decides which skills are highest (#343)
 
 TROOPS_DIR = os.path.join(os.path.dirname(__file__), '..', 'Main', '_Module', 'ModuleData', 'troops')
 MODULEDATA_DIR = os.path.join(os.path.dirname(__file__), '..', 'Main', '_Module', 'ModuleData')
@@ -315,18 +322,118 @@ def troop_weapon_classes(npc_elem, item_classes):
     return classes
 
 
-def detect_weapon_specialization(troop_id, troop_name, weapon_classes=None):
+def troop_battle_sets(npc_elem, item_classes):
+    """[(roster ordinal among ALL the troop's EquipmentRoster elements, {slot: class})] for each
+    battle roster, troop-level <equipment> rows laid over every roster. The validator's
+    _battle_kits reads the same way, so the writer and TROOP_ITEM_ZERO_NOT_MAIN agree on a kit."""
+    def cls(eq):
+        return item_classes.get((eq.get('id') or '').replace('Item.', '', 1))
+    rosters = list(npc_elem.iter('EquipmentRoster'))
+    inside = {id(eq) for r in rosters for eq in r.iter('equipment')}
+    loose = {eq.get('slot'): cls(eq) for eq in npc_elem.iter('equipment')
+             if id(eq) not in inside and eq.get('slot') in tp.WEAPON_SLOTS}
+    sets = []
+    for ordinal, roster in enumerate(rosters):
+        if rl.is_civilian(roster):
+            continue
+        slots = {eq.get('slot'): cls(eq) for eq in roster.findall('equipment')
+                 if eq.get('slot') in tp.WEAPON_SLOTS}
+        slots.update(loose)
+        sets.append((ordinal, slots))
+    return sets
+
+
+def troop_kit(npc_elem, item_classes, fix_item0=False):
+    """(troop_purpose.Kit, item0 swaps) from the troop's battle sets (troop_battle_sets).
+
+    swaps lists (roster ordinal among ALL the troop's EquipmentRoster elements, slot) for each
+    battle set whose Item0 is a shield or ammunition beside a weapon
+    (troop_purpose P2); apply_item0_swaps exchanges the two items. With fix_item0 the kit is read
+    as if the swaps were made, which is what --fix-purpose writes; otherwise it is read as on disk
+    and no swap is planned."""
+    sets = troop_battle_sets(npc_elem, item_classes)
+    kit = tp.kit_of(s for _, s in sets)
+    if not fix_item0:
+        return kit, []
+    launcher_troop = tp.is_launcher_troop(kit, npc_elem.get('default_group', 'Infantry'))
+    swaps, fixed = [], []
+    for ordinal, slots in sets:
+        slots, other = tp.fix_item0(slots, launcher_troop)
+        if other:
+            swaps.append((ordinal, other))
+        fixed.append(slots)
+    return tp.kit_of(fixed), swaps
+
+
+_EQUIPMENT_ELEM_RE = re.compile(r'<equipment\b[^>]*?/>', re.S)
+_ROSTER_ELEM_RE = re.compile(r'<EquipmentRoster\b[^>]*?(?:/>|>.*?</EquipmentRoster>)', re.S)
+
+
+def _masked(text):
+    """text with every comment blanked to spaces of the same length, so offsets still match."""
+    return _XML_COMMENT_RE.sub(lambda m: re.sub(r'[^\n]', ' ', m.group(0)), text)
+
+
+def apply_item0_swaps(filepath, swaps_by_troop):
+    """Exchange the item ids of Item0 and the named slot in the named battle rosters, byte-faithfully.
+
+    swaps_by_troop: troop id -> [(roster ordinal, slot)] from troop_kit. Only the two id values
+    change, so each item keeps its line and the set keeps every other slot."""
+    raw = Path(filepath).read_bytes()
+    bom = raw.startswith(codecs.BOM_UTF8)
+    content = raw.decode('utf-8-sig' if bom else 'utf-8')
+    original = content
+    for troop_id, swaps in swaps_by_troop.items():
+        span = _npc_block_span(content, troop_id)
+        if span is None:
+            raise RuntimeError(f"{troop_id} not found in {os.path.basename(filepath)}")
+        lo, hi = span
+        block = content[lo:hi]
+        for ordinal, other in swaps:
+            masked = _masked(block)   # re-read per swap: two ids of unequal length move every offset
+            r = list(_ROSTER_ELEM_RE.finditer(masked))[ordinal]
+            ids = {}
+            for em in _EQUIPMENT_ELEM_RE.finditer(masked, r.start(), r.end()):
+                sm = re.search(r'\bslot="([^"]*)"', em.group(0))
+                im = re.search(r'\bid="([^"]*)"', em.group(0))
+                if sm and im and sm.group(1) in ('Item0', other):
+                    ids[sm.group(1)] = (em.start() + im.start(1), em.start() + im.end(1))
+            if set(ids) != {'Item0', other}:
+                raise RuntimeError(f"{troop_id}: roster {ordinal} has no Item0 and {other} to exchange")
+            (a0, a1), (b0, b1) = sorted(ids.values())
+            first, second = block[a0:a1], block[b0:b1]
+            block = block[:a0] + second + block[a1:b0] + first + block[b1:]
+        content = content[:lo] + block + content[hi:]
+    if content == original:
+        return
+    try:
+        ET.fromstring(content.encode('utf-8'))
+    except ET.ParseError as exc:
+        raise RuntimeError(f"{os.path.basename(filepath)} would no longer parse after the Item0 "
+                           f"exchange, so nothing was written: {exc}")
+    out = content.encode('utf-8')
+    with open(filepath, 'wb') as f:
+        f.write((codecs.BOM_UTF8 if bom else b'') + out)
+
+
+def detect_weapon_specialization(troop_id, troop_name, weapon_classes=None, main=None):
     """
     Detect weapon specialization. The Bow<->Crossbow swap is decided from the
     troop's ACTUAL equipment when weapon_classes is provided (name keywords
     mis-statted crossbowmen named "Sharpshooter"/"Marksman");
     the name-keyword fallback exists only for callers without a game install.
-    Melee boosts stay name-based (flavour shifts, ±15) — the equipment-driven
-    Polearm<->TwoHanded sanity swap lives in calculate_skills.
+    The melee flavour shifts (±15) are name-based, so with the kit known a shift fires only when
+    it boosts the main class (or, with no main known, a carried class): a "Spearman" holding a
+    sword must not move 15 points onto a spear he does not hold (#343).
     Returns a dict of skill swaps to apply on top of the base formula.
     """
     name_lower = (troop_name + ' ' + troop_id).lower()
     swaps = {}
+
+    def kit_allows(cls):
+        if weapon_classes is None:
+            return True
+        return cls == main if main else cls in weapon_classes
 
     # Crossbow specialists: swap Bow and Crossbow values
     if weapon_classes is not None:
@@ -344,19 +451,20 @@ def detect_weapon_specialization(troop_id, troop_name, weapon_classes=None):
         swaps['_throwing_archer_parity'] = True
 
     # Pike/Halberd/Spear specialists: boost Polearm, reduce OneHanded
-    if any(kw in name_lower for kw in ['pike', 'halberd', 'spear', 'lance', 'glaive', 'mattock']):
+    polearm_name = any(kw in name_lower for kw in ['pike', 'halberd', 'spear', 'lance', 'glaive', 'mattock'])
+    if polearm_name and kit_allows('Polearm'):
         swaps['_boost_polearm'] = True
 
     # Sword specialists: boost OneHanded, reduce Polearm
-    if any(kw in name_lower for kw in ['sword', 'blade']):
+    if any(kw in name_lower for kw in ['sword', 'blade']) and kit_allows('OneHanded'):
         swaps['_boost_onehanded'] = True
 
     # Axe specialists: boost TwoHanded
-    if any(kw in name_lower for kw in ['axe', 'hammer', 'reaver']):
+    if any(kw in name_lower for kw in ['axe', 'hammer', 'reaver']) and kit_allows('TwoHanded'):
         swaps['_boost_twohanded'] = True
 
     # Shield specialists: boost OneHanded (shield implies 1H weapon)
-    if 'shield' in name_lower and '_boost_polearm' not in swaps:
+    if 'shield' in name_lower and not polearm_name and kit_allows('OneHanded'):
         swaps['_boost_onehanded'] = True
 
     return swaps
@@ -545,13 +653,14 @@ def ladder_cells(troop_id, filename_culture, level, battle_classes):
             if cls in battle_classes and tier in rl.tiers_for(line, cls, spec)}
 
 
-def calculate_skills(culture, level, group, troop_id, troop_name, weapon_classes=None):
+def calculate_skills(culture, level, group, troop_id, troop_name, weapon_classes=None, kit=None):
     """Calculate balanced skills for a troop.
 
     weapon_classes: set of skill classes the troop actually carries (from
-    troop_weapon_classes). When provided, drives the Bow<->Crossbow swap and
-    the Polearm<->TwoHanded sanity swap; when None, falls back to name-only
-    detection (no game install)."""
+    troop_weapon_classes). When provided, drives the Bow<->Crossbow swap and the
+    purpose order; when None, falls back to name-only detection (no game install).
+    kit: the troop's troop_purpose.Kit (troop_kit), which adds the Item0 main class to the
+    order; without it the carried classes are ranked as equals."""
     baselines = GROUP_BASELINES.get(group)
     if not baselines:
         return None
@@ -580,20 +689,19 @@ def calculate_skills(culture, level, group, troop_id, troop_name, weapon_classes
         mod_val = mods.get(skill, 0)
         skills[skill] = max(0, base_val + mod_val)
 
+    if kit is None and weapon_classes is not None:
+        kit = tp.kit_from_classes(weapon_classes)
+    main = tp.main_class(kit, skills) if kit else None
+
     # Apply weapon specialization
-    specialization = detect_weapon_specialization(troop_id, troop_name, weapon_classes)
+    specialization = detect_weapon_specialization(troop_id, troop_name, weapon_classes, main)
     if specialization:
         skills = apply_specialization(skills, specialization, level=level, culture=culture)
 
-    # Equipment sanity swap: a troop whose only heavy melee weapon is a
-    # two-hander must not have Polearm as its top melee skill (the Cavalry/
-    # Infantry baselines are polearm-biased by default, so "Knight"-named
-    # two-hander troops otherwise inherit Polearm-top stats).
-    # Total-preserving and idempotent.
-    if (weapon_classes and 'TwoHanded' in weapon_classes
-            and 'Polearm' not in weapon_classes
-            and skills['Polearm'] > skills['TwoHanded']):
-        skills['Polearm'], skills['TwoHanded'] = skills['TwoHanded'], skills['Polearm']
+    # The curve is keyed by formation group, not by kit; the purpose rule deals its values to the
+    # kit and ties alternative weapons (tools/troop_purpose.py).
+    if kit:
+        skills = tp.tie_raise(tp.purpose_skills(skills, kit), kit)
 
     return skills
 
@@ -862,7 +970,7 @@ def clamp_upgrade_monotonicity(all_changes, base_on_curve=True, restat_ids=()):
         if c.get('external'):
             pass  # read-only source; its status stays as-is and it is never written
         elif c.get('new') is None:
-            if needs_write:
+            if needs_write and not c['status'].endswith(' + CLAMPED'):   # settle_purpose clamps again
                 c['status'] += ' + CLAMPED'
         else:
             c['status'] = 'CHANGED' if needs_write else 'UNCHANGED'
@@ -872,13 +980,143 @@ def clamp_upgrade_monotonicity(all_changes, base_on_curve=True, restat_ids=()):
     return raised
 
 
-def process_file(filepath, item_classes=None):
+def settle_purpose(all_changes, base_on_curve=True, restat_ids=(), max_rounds=50):
+    """Clamp the roster, then restore the purpose order on every troop the clamp disturbed, until
+    nothing moves. Both steps only raise, so this ends. Every mode runs it: base_on_curve and
+    restat_ids pick the base as clamp_upgrade_monotonicity does, so in the clamp-only mode a troop
+    starts from its on-disk values and only a troop the clamp moved is raised.
+
+    The clamp hands a child every skill its parent has, so on a respecialising edge (a swordsman
+    upgrading to a two-hander) the child's main class can end up under a skill it inherited. The
+    main class is then raised to that value, a tie, rather than exempting the edge the way
+    RESPECIALIZATION_EXEMPT_EDGES exempts Bow and Crossbow: an exemption would let an upgrade
+    lower a stat, which the ladder rule forbids, and would have to be mirrored in two more gates.
+    A ranged ladder cell is never raised (the ladder owns it).
+
+    Records need 'new' (the base: None keeps 'old', as for a skipped troop), 'kit' and 'ladder'.
+    Returns (log, raised). log holds the purpose raises as (source, troop, skill, before, after);
+    source is the upgrade source that carries the raised value, or '' when the troop's own value
+    was the higher one. raised counts the (troop, skill) values the clamp lifted above the base,
+    which each record lists in 'clamp_lifted'; a purpose raise is not counted there."""
+    restat_ids = set(restat_ids)
+    if not base_on_curve:
+        for c in all_changes:
+            if c.get('new') is not None and not c.get('external') and c['id'] not in restat_ids:
+                c['new'] = {s: c['old'].get(s, 0) for s in SKILL_NAMES}
+    start = {c['id']: dict(c['new']) if c.get('new') is not None
+             else {s: c['old'].get(s, 0) for s in SKILL_NAMES} for c in all_changes}
+    sources = defaultdict(list)
+    for c in all_changes:
+        for t in c.get('upgrades', []):
+            sources[t].append(c['id'])
+    log = []
+    for _ in range(max_rounds):
+        clamp_upgrade_monotonicity(all_changes, base_on_curve=True)
+        finals = {c['id']: c['final'] for c in all_changes}
+        moved = False
+        for c in all_changes:
+            if c.get('new') is None or c.get('external') or c.get('kit') is None:
+                continue
+            final = c['final']
+            if final == c['new']:
+                continue   # the clamp left this troop alone
+            up = tp.purpose_raise(final, c['new'], c['kit'], pinned=set(c.get('ladder') or {}))
+            if up == final:
+                continue
+            for s in SKILL_NAMES:
+                if up[s] != final[s]:
+                    src = next((p for p in sorted(sources[c['id']]) if p in finals
+                                and up[s] in finals[p].values()), '')
+                    log.append((src, c['id'], s, final[s], up[s]))
+            c['new'] = up
+            moved = True
+        if not moved:
+            purpose = {(tid, s) for _, tid, s, _, _ in log}
+            for c in all_changes:
+                c['clamp_lifted'] = [s for s in SKILL_NAMES if c['final'][s] > start[c['id']][s]
+                                     and (c['id'], s) not in purpose]
+            return log, sum(len(c['clamp_lifted']) for c in all_changes)
+    raise RuntimeError(f"the purpose order and the upgrade clamp did not settle in {max_rounds} rounds")
+
+
+def plan_fix_purpose(all_changes):
+    """--fix-purpose: the base is what is on disk, reordered to the kit (troop_purpose P3), with
+    alternative classes raised to tie (the tie rule, logged in record['tie_raises'] as (skill,
+    value after the reorder, new)), then the roster is settled. Nothing else rises except through the clamp. A main
+    class under a skill of another kind (a launcher or Throwing under a melee skill) is not a
+    reorder, and no number is borrowed for it: it is returned for a person to decide.
+
+    Returns (raises from settle_purpose, [(record, finding, formula value)] still cross-kind)."""
+    for c in all_changes:
+        c['tie_raises'] = []
+        if c.get('external') or c['id'] in SKIP_TROOP_IDS or c.get('kit') is None:
+            c['formula'], c['new'] = c.get('new'), None
+            continue
+        c['formula'] = c.get('new')
+        pinned = set(c.get('ladder') or {})
+        ordered = tp.purpose_skills({s: c['old'].get(s, 0) for s in SKILL_NAMES}, c['kit'], pinned=pinned)
+        new = tp.tie_raise(ordered, c['kit'], pinned=pinned)
+        c['tie_raises'] = [(s, ordered[s], new[s]) for s in SKILL_NAMES if new[s] != ordered[s]]
+        c['new'] = new
+    log, _ = settle_purpose(all_changes)
+    left = []
+    for c in all_changes:
+        if c.get('new') is None:
+            continue
+        for f in tp.kit_mismatches(c['final'], c['kit']):
+            left.append((c, f, (c['formula'] or {}).get(f.cls)))
+    return log, left
+
+
+def print_purpose_report(all_changes, log, left):
+    swaps = [c for c in all_changes if c.get('item0_swaps')]
+    print(f"\nItem0 holds a shield or ammunition beside a weapon: "
+          f"{sum(len(c['item0_swaps']) for c in swaps)} battle sets on {len(swaps)} troops")
+    for c in swaps:
+        print(f"  {c['id']:<40} " + ", ".join(f"roster {o}: Item0 <-> {s}" for o, s in c['item0_swaps']))
+    disputed = [c for c in all_changes if c.get('new') is not None and tp.main_disputed(c['kit'])]
+    print(f"\nBattle sets disagree on the Item0 class ({len(disputed)} troops; the class most sets "
+          f"hold is the main class, a tie goes to the higher skill):")
+    for c in disputed:
+        print(f"  {c['id']:<40} {c['kit'].item0} -> main {tp.main_class(c['kit'], c['final'])}")
+    changed = [c for c in all_changes if c.get('new') is not None
+               and any(c['old'].get(s, 0) != c['final'][s] for s in SKILL_NAMES)]
+    print(f"\nTroops whose skills change: {len(changed)}")
+    for c in changed:
+        diff = ", ".join(f"{s} {c['old'].get(s, 0)}->{c['final'][s]}" for s in SKILL_NAMES
+                         if c['old'].get(s, 0) != c['final'][s])
+        print(f"  {c['file']:<28} {c['id']:<40} main {tp.main_class(c['kit'], c['final'])}: {diff}")
+    ties = [(c, t) for c in all_changes for t in c.get('tie_raises', [])]
+    print(f"\nRaised by the tie rule, alternative weapons of one role take the higher value "
+          f"({len(ties)} values on {len({c['id'] for c, _ in ties})} troops):")
+    for c, (s, a, b) in ties:
+        print(f"  {c['file']:<28} {c['id']:<40} {s} {a} -> {b}")
+    lifted = [c for c in all_changes if c.get('clamp_lifted')]
+    print(f"\nThe clamp raised {sum(len(c['clamp_lifted']) for c in lifted)} values on {len(lifted)} "
+          f"troops so no upgrade target sits below the troop it upgrades from")
+    print(f"\nRaised after the upgrade clamp so the purpose order holds ({len(log)} values):")
+    for src, tid, s, a, b in log:
+        print(f"  {src or '(own value)':<36} -> {tid:<36} {s} {a} -> {b}")
+    print(f"\nStill not purpose-correct ({len(left)}; values never cross kinds, a ladder cell is the "
+          f"ladder's, and a thrower's Throwing keeps its value):")
+    for c, f, value in left:
+        note = ' (ladder cell)' if f.cls in (c.get('ladder') or {}) else ''
+        if f.cls == tp.THROWING:
+            note = (' (in THROWN_PRIMARY_TROOP_IDS)' if c['id'] in THROWN_PRIMARY_TROOP_IDS
+                    else ' (not in THROWN_PRIMARY_TROOP_IDS)')
+        print(f"  {c['file']:<28} {c['id']:<40} {f.text}; formula {f.cls} {value}{note}")
+
+
+def process_file(filepath, item_classes=None, purpose=False):
     """Process a single troop XML file. Returns list of change records.
 
     item_classes: item id -> skill class map from
     taom_schema.build_item_class_registry. Required for equipment-driven
     specialization; main() always supplies it (hard-fails without the game
-    install)."""
+    install).
+    purpose: the --fix-purpose read. The kit is read as if Item0 were fixed, the planned
+    exchanges go in record['item0_swaps'], and ladder cells are read even where the formula has
+    no row, because that mode reorders on-disk values and needs no formula."""
     filename = os.path.basename(filepath)
     if filename in SKIP_FILES:
         return []
@@ -928,10 +1166,15 @@ def process_file(filepath, item_classes=None):
 
         # Calculate new skills
         weapon_classes = troop_weapon_classes(npc, item_classes) if item_classes else None
-        new_skills = calculate_skills(culture, level, group, troop_id, troop_name, weapon_classes)
-        if new_skills is not None and item_classes:
+        kit = None
+        if item_classes:
+            kit, swaps = troop_kit(npc, item_classes, fix_item0=purpose)
+            record.update(kit=kit, item0_swaps=swaps)
+        new_skills = calculate_skills(culture, level, group, troop_id, troop_name, weapon_classes, kit)
+        if item_classes and (new_skills is not None or purpose):
             cells = ladder_cells(troop_id, filename_culture, level, weapon_classes)
-            new_skills = dict(new_skills, **cells)
+            if new_skills is not None:
+                new_skills = dict(new_skills, **cells)
             record['ladder'] = cells
         if new_skills is None:
             record.update(status='SKIPPED (no baseline for level/group)', new=None)
@@ -1112,17 +1355,27 @@ def main():
     if not args:
         args = ['--apply']  # bare --dry-run keeps its old meaning: preview the rebaseline
 
-    if len(args) != 1 or args[0] not in ('--apply', '--fix-monotonicity'):
-        print("Usage: python rebalance_troops.py (--apply|--fix-monotonicity) [--dry-run] "
+    # --fix-purpose previews unless --apply is named with it: it is the narrow mode, so writing
+    # must be asked for.
+    if '--fix-purpose' in args:
+        dry_run = dry_run or '--apply' not in args
+        args = [a for a in args if a != '--apply']
+    if len(args) != 1 or args[0] not in ('--apply', '--fix-monotonicity', '--fix-purpose') or (
+            restat_ids and args[0] == '--fix-purpose'):
+        print("Usage: python rebalance_troops.py (--apply|--fix-monotonicity|--fix-purpose) [--dry-run] "
               "[--restat <id,id>] [--game-modules <path>]\n"
               "  --apply             rebaseline the whole roster onto the curve, then clamp\n"
               "  --fix-monotonicity  clamp only: repair upgrade ladders without rebaselining\n"
+              "  --fix-purpose       reorder on-disk skills to the kit and put a real weapon in Item0,\n"
+              "                      then clamp; a dry run unless --apply is added\n"
               "  --dry-run           preview either mode; write nothing\n"
               "  --restat            take the formula value for these ids even in clamp-only mode")
         sys.exit(1)
 
-    base_on_curve = args[0] != '--fix-monotonicity'
-    label = "full rebaseline + clamp" if base_on_curve else "monotonicity clamp only"
+    purpose = args[0] == '--fix-purpose'
+    base_on_curve = args[0] == '--apply'
+    label = ("purpose order + clamp" if purpose else
+             "full rebaseline + clamp" if base_on_curve else "monotonicity clamp only")
     mode = f"{'DRY RUN' if dry_run else 'APPLYING CHANGES'} ({label})"
     print(f"\n*** {mode} ***\n")
 
@@ -1158,7 +1411,7 @@ def main():
             print(f"  SKIPPING {filename}")
             continue
         print(f"  Processing {filename}...")
-        all_changes.extend(process_file(filepath, item_classes=item_classes))
+        all_changes.extend(process_file(filepath, item_classes=item_classes, purpose=purpose))
 
     external = load_external_sources()
     all_changes.extend(external)
@@ -1173,12 +1426,29 @@ def main():
             sys.exit(1)
         print(f"Restatting onto the formula: {', '.join(restat_ids)}")
 
-    raised = clamp_upgrade_monotonicity(all_changes, base_on_curve=base_on_curve,
-                                        restat_ids=restat_ids)
-    clamped = [c for c in all_changes if c.get('clamped')]
+    if purpose:
+        log, left = plan_fix_purpose(all_changes)
+        print_purpose_report(all_changes, log, left)
+        if not dry_run:
+            written = write_files(all_changes, troop_files)
+            swaps = defaultdict(dict)
+            for c in all_changes:
+                if c.get('item0_swaps'):
+                    swaps[c['file']][c['id']] = c['item0_swaps']
+            for filepath in troop_files:
+                if os.path.basename(filepath) in swaps:
+                    apply_item0_swaps(filepath, swaps[os.path.basename(filepath)])
+            print(f"\n*** Skills written to {written} files, Item0 fixed in {len(swaps)} files ***")
+        return
+
+    # Every mode writes the purpose order, or the clamp leaves a respecialising child with an
+    # inherited skill over its main class (settle_purpose).
+    log, raised = settle_purpose(all_changes, base_on_curve=base_on_curve, restat_ids=restat_ids)
+    clamped = [c for c in all_changes if c.get('clamp_lifted')]
     lifted_skips = [c for c in all_changes if c['status'].endswith('+ CLAMPED')]
-    print(f"\nMonotonicity clamp: raised {raised} skill values on {len(clamped)} troops above the "
-          f"curve so no upgrade target sits below the troop it upgrades from")
+    print(f"\nMonotonicity clamp: the clamp raised {raised} values on {len(clamped)} troops "
+          f"so no upgrade target sits below the troop it upgrades from; {len(log)} more values "
+          f"were raised after it so the purpose order holds")
     if lifted_skips:
         print(f"  ...plus {len(lifted_skips)} formula-skipped troops lifted off their own values "
               f"(a clamp only raises, so the hand-tune survives): "

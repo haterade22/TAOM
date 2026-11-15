@@ -211,6 +211,9 @@
       <Icon id="30005" material_name="taom_banners_10" texture_index="8" />
       <Icon id="31031" material_name="taom_banners_15" texture_index="11" />
       <Icon id="31032" material_name="taom_banners_15" texture_index="12" />
+      <Icon id="31036" material_name="taom_banners_16" texture_index="4" />
+      <Icon id="31037" material_name="taom_banners_16" texture_index="5" />
+      <Icon id="31038" material_name="taom_banners_16" texture_index="6" />
     </BannerIconGroup>
 
     <BannerIconGroup id="220" name="{=taom_banner_category_orcish}Orcish" is_pattern="false">

@@ -24,6 +24,7 @@ sys.path.insert(0, TOOLS)
 import importlib.util  # noqa: E402
 import generate_new_faction_kingdoms as kingdoms  # noqa: E402
 import promote_borrowed_cultures as promoter  # noqa: E402
+import realm_troops  # noqa: E402
 from _gamedir import game_dir  # noqa: E402
 
 # (generator, its check arguments) for every generator that owns a marker region in the repo's
@@ -45,6 +46,7 @@ PROMOTER_CHECKED = sorted(set(promoter.TARGETS) - PROMOTER_REFUSES)
 LIVE_OWNERS = [("promote_borrowed_cultures.py", ["--only", c, "--check"]) for c in PROMOTER_CHECKED]
 NEEDS_LXML = {c for c in PROMOTER_CHECKED if promoter.TARGETS[c].get("culture_xslt")}
 
+GAME_MODULES = str(realm_troops.GAME_MODULES)
 LIVE_SETTLEMENTS = os.path.join(game_dir(r"E:/Steam/steamapps/common/Mount & Blade II Bannerlord"),
                                 "Modules", "TAOM_Map", "ModuleData", "settlements.xml")
 
@@ -57,6 +59,9 @@ class GeneratorRegionsInSyncTests(unittest.TestCase):
             with self.subTest(script=script, args=" ".join(args)):
                 if (script, args) in LIVE_OWNERS and not live:
                     self.skipTest("live TAOM_Map install not present: %s" % LIVE_SETTLEMENTS)
+                # The realm troop generators class their weapons through the install (#343).
+                if script.endswith("_troops.py") and not os.path.isdir(GAME_MODULES):
+                    self.skipTest("game install not present: %s" % GAME_MODULES)
                 if script.startswith("promote_") and args[1] in NEEDS_LXML and importlib.util.find_spec("lxml") is None:
                     self.skipTest("lxml not installed: the Dale-cut culture blocks are rendered with it")
                 run = subprocess.run(

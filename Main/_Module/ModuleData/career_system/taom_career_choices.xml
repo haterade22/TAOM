@@ -10059,7 +10059,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="knight_of_arthedain_t2_b" display_name="{=taom_career_grp_knight_of_arthedain_t2_b}Shieldwall of Arvegil" career_id="knight_of_arthedain" tier="2">
+  <ChoiceGroup id="knight_of_arthedain_t2_b" display_name="{=taom_career_grp_knight_of_arthedain_t2_b}Shieldwall of Aranarth" career_id="knight_of_arthedain" tier="2">
     <Choice id="knight_of_arthedain_t2_b_key" type="Keystone"
             description="{=taom_koa_t2b_key}Stampede also boosts troop resistance while active."
             icon_sprite="career_choice_kob_t2b_key">
@@ -10464,7 +10464,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="warden_of_tyrn_gorthad_t3_a" display_name="{=taom_career_grp_warden_of_tyrn_gorthad_t3_a}Host of Aranthir" career_id="warden_of_tyrn_gorthad" tier="3">
+  <ChoiceGroup id="warden_of_tyrn_gorthad_t3_a" display_name="{=taom_career_grp_warden_of_tyrn_gorthad_t3_a}Host of Osthir" career_id="warden_of_tyrn_gorthad" tier="3">
     <Choice id="warden_of_tyrn_gorthad_t3_a_key" type="Keystone"
             description="{=taom_wotg_t3a_key}Career Ability grants troop resistance while active, fortifying the fleet."
             icon_sprite="career_choice_cop_t3a_key">
@@ -10622,7 +10622,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="knight_of_cardolan_t2_b" display_name="{=taom_career_grp_knight_of_cardolan_t2_b}Shieldwall of Aranthir" career_id="knight_of_cardolan" tier="2">
+  <ChoiceGroup id="knight_of_cardolan_t2_b" display_name="{=taom_career_grp_knight_of_cardolan_t2_b}Shieldwall of Osthir" career_id="knight_of_cardolan" tier="2">
     <Choice id="knight_of_cardolan_t2_b_key" type="Keystone"
             description="{=taom_koc_t2b_key}Stampede also boosts troop resistance while active."
             icon_sprite="career_choice_kob_t2b_key">
@@ -11027,7 +11027,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="captain_of_cameth_brin_t3_a" display_name="{=taom_career_grp_captain_of_cameth_brin_t3_a}Host of Belegorn" career_id="captain_of_cameth_brin" tier="3">
+  <ChoiceGroup id="captain_of_cameth_brin_t3_a" display_name="{=taom_career_grp_captain_of_cameth_brin_t3_a}Host of Elamarth" career_id="captain_of_cameth_brin" tier="3">
     <Choice id="captain_of_cameth_brin_t3_a_key" type="Keystone"
             description="{=taom_cocb_t3a_key}Career Ability grants troop resistance while active, fortifying the fleet."
             icon_sprite="career_choice_cop_t3a_key">
@@ -11185,7 +11185,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="rider_of_the_fells_t2_b" display_name="{=taom_career_grp_rider_of_the_fells_t2_b}Shieldwall of Belegorn" career_id="rider_of_the_fells" tier="2">
+  <ChoiceGroup id="rider_of_the_fells_t2_b" display_name="{=taom_career_grp_rider_of_the_fells_t2_b}Shieldwall of Elamarth" career_id="rider_of_the_fells" tier="2">
     <Choice id="rider_of_the_fells_t2_b_key" type="Keystone"
             description="{=taom_rotf_t2b_key}Stampede also boosts troop resistance while active."
             icon_sprite="career_choice_kob_t2b_key">
@@ -12009,7 +12009,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="warden_of_the_forest_gate_t2_a" display_name="{=taom_career_grp_warden_of_the_forest_gate_t2_a}Spear of Ingomar" career_id="warden_of_the_forest_gate" tier="2">
+  <ChoiceGroup id="warden_of_the_forest_gate_t2_a" display_name="{=taom_career_grp_warden_of_the_forest_gate_t2_a}Spear of Theodemiro" career_id="warden_of_the_forest_gate" tier="2">
     <Choice id="warden_of_the_forest_gate_t2_a_key" type="Keystone" description="{=taom_wfg_t2_a_key}Thornwall charge reduced, activating more frequently." icon_sprite="career_choice_dg2_t2_a_key">
       <Mutations><Mutation target_id="warden_of_the_forest_gate_ability" property="CooldownReduction" calculator="flat" value="6" operation="Add" /></Mutations>
     </Choice>
@@ -12045,7 +12045,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="warden_of_the_forest_gate_t3_a" display_name="{=taom_career_grp_warden_of_the_forest_gate_t3_a}Vanguard of King Ingomar" career_id="warden_of_the_forest_gate" tier="3">
+  <ChoiceGroup id="warden_of_the_forest_gate_t3_a" display_name="{=taom_career_grp_warden_of_the_forest_gate_t3_a}Vanguard of King Theodemiro" career_id="warden_of_the_forest_gate" tier="3">
     <Choice id="warden_of_the_forest_gate_t3_a_key" type="Keystone" description="{=taom_wfg_t3_a_key}Thornwall radius greatly expanded, devastating power." icon_sprite="career_choice_dg2_t3_a_key">
       <Mutations><Mutation target_id="warden_of_the_forest_gate_ability" property="Radius" calculator="flat" value="5" operation="Add" /></Mutations>
     </Choice>
@@ -12160,7 +12160,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="hewer_of_ironwood_hall_t3_a" display_name="{=taom_career_grp_hewer_of_ironwood_hall_t3_a}Great-axe of King Ingomar" career_id="hewer_of_ironwood_hall" tier="3">
+  <ChoiceGroup id="hewer_of_ironwood_hall_t3_a" display_name="{=taom_career_grp_hewer_of_ironwood_hall_t3_a}Great-axe of King Theodemiro" career_id="hewer_of_ironwood_hall" tier="3">
     <Choice id="hewer_of_ironwood_hall_t3_a_key" type="Keystone" description="{=taom_hiwh_t3_a_key}Heartwood Storm radius greatly expanded, devastating power." icon_sprite="career_choice_dg2_t3_a_key">
       <Mutations><Mutation target_id="hewer_of_ironwood_hall_ability" property="Radius" calculator="flat" value="5" operation="Add" /></Mutations>
     </Choice>
@@ -12293,7 +12293,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="woodward_of_the_forest_road_t3_b" display_name="{=taom_career_grp_woodward_of_the_forest_road_t3_b}The Bow of Ingomar's Line" career_id="woodward_of_the_forest_road" tier="3">
+  <ChoiceGroup id="woodward_of_the_forest_road_t3_b" display_name="{=taom_career_grp_woodward_of_the_forest_road_t3_b}The Bow of Theodemiro's Line" career_id="woodward_of_the_forest_road" tier="3">
     <Choice id="woodward_of_the_forest_road_t3_b_key" type="Keystone" description="{=taom_wfr_t3_b_key}Ironwood Volley charge greatly reduced, relentless fire." icon_sprite="career_choice_dm_t3_b_key">
       <Mutations><Mutation target_id="woodward_of_the_forest_road_ability" property="CooldownReduction" calculator="flat" value="9" operation="Add" /></Mutations>
     </Choice>
@@ -12354,7 +12354,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="spear_warden_of_vinewatch_t2_a" display_name="{=taom_career_grp_spear_warden_of_vinewatch_t2_a}Spear of King Ostric" career_id="spear_warden_of_vinewatch" tier="2">
+  <ChoiceGroup id="spear_warden_of_vinewatch_t2_a" display_name="{=taom_career_grp_spear_warden_of_vinewatch_t2_a}Spear of King Hawin" career_id="spear_warden_of_vinewatch" tier="2">
     <Choice id="spear_warden_of_vinewatch_t2_a_key" type="Keystone" description="{=taom_swov_t2_a_key}Terrace Wall charge reduced, activating more frequently." icon_sprite="career_choice_dg2_t2_a_key">
       <Mutations><Mutation target_id="spear_warden_of_vinewatch_ability" property="CooldownReduction" calculator="flat" value="6" operation="Add" /></Mutations>
     </Choice>
@@ -12390,7 +12390,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="spear_warden_of_vinewatch_t3_a" display_name="{=taom_career_grp_spear_warden_of_vinewatch_t3_a}Vanguard of King Ostric" career_id="spear_warden_of_vinewatch" tier="3">
+  <ChoiceGroup id="spear_warden_of_vinewatch_t3_a" display_name="{=taom_career_grp_spear_warden_of_vinewatch_t3_a}Vanguard of King Hawin" career_id="spear_warden_of_vinewatch" tier="3">
     <Choice id="spear_warden_of_vinewatch_t3_a_key" type="Keystone" description="{=taom_swov_t3_a_key}Terrace Wall radius greatly expanded, devastating power." icon_sprite="career_choice_dg2_t3_a_key">
       <Mutations><Mutation target_id="spear_warden_of_vinewatch_ability" property="Radius" calculator="flat" value="5" operation="Add" /></Mutations>
     </Choice>
@@ -12523,7 +12523,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="bowman_of_redwater_t3_b" display_name="{=taom_career_grp_bowman_of_redwater_t3_b}The Bow of King Ostric's Line" career_id="bowman_of_redwater" tier="3">
+  <ChoiceGroup id="bowman_of_redwater_t3_b" display_name="{=taom_career_grp_bowman_of_redwater_t3_b}The Bow of King Hawin's Line" career_id="bowman_of_redwater" tier="3">
     <Choice id="bowman_of_redwater_t3_b_key" type="Keystone" description="{=taom_bwr_t3_b_key}Seagate Volley charge greatly reduced, relentless fire." icon_sprite="career_choice_dm_t3_b_key">
       <Mutations><Mutation target_id="bowman_of_redwater_ability" property="CooldownReduction" calculator="flat" value="9" operation="Add" /></Mutations>
     </Choice>

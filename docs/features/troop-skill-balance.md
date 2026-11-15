@@ -20,10 +20,16 @@ TAOM keeps every troop's 8 combat skills (Athletics, Riding, OneHanded, TwoHande
 final_skill = BASELINE[group][level][skill] + CULTURAL_MODS[culture].get(skill, 0)
             (then weapon specialization, EQUIPMENT-DRIVEN since 2026-07-13:
              carries crossbow + no bow        -> swap Bow <-> Crossbow
-             name has pike/spear/sword/axe/…  -> ±15 flavour shifts (name-based, unchanged)
-             carries 2H + no polearm, Pol>2H  -> swap Polearm <-> TwoHanded)
+             THROWN_PRIMARY_TROOP_IDS         -> Throwing takes the Bow curve
+             name has pike/spear/sword/axe/…  -> +15 shift, only onto the main class
+                                                 (or a carried class when no main is known))
+            (then the purpose order, #343, 2026-11-15:
+             the melee values are re-dealt to the kit's melee classes, main class first,
+             and the two launcher values likewise; Throwing, Athletics, Riding stay;
+             alternative weapons of one role then tie at the higher value)
             (then the monotonicity clamp, ROSTER-WIDE since 2026-08-30:
-             child[skill] = max(child[skill], parent[skill]) over the whole upgrade DAG)
+             child[skill] = max(child[skill], parent[skill]) over the whole upgrade DAG,
+             followed by a purpose raise that restores the order the clamp broke)
 ```
 
 - **`GROUP_BASELINES`** — Infantry / Ranged / Cavalry / HorseArcher tables keyed by the 11 tier levels `{1,6,11,16,21,26,31,36,41,46,51}`. Troops at off-grid levels (e.g. L7, L13) are skipped (no reference).
@@ -38,7 +44,7 @@ Weapon detection was originally **name-keyword-only** (`crossbow`/`arbalest`/`na
 - `taom_schema.build_item_class_registry(moduledata, game_modules)` maps item id → skill class. It must read **both** vanilla `<Item Type="…">` and Armory `<CraftedItem crafting_template="…">` — the entire install has zero `Type="TwoHandedWeapon"` items; every two-hander is a crafted item.
 - `rebalance_troops.troop_weapon_classes(npc, item_classes)` collects the classes actually carried (weapon slots Item0–3).
 - The Bow↔Crossbow swap fires iff crossbow-carried-and-no-bow (unambiguous: no troop carries both). The `naffatun` keyword is gone — it had wrongly swapped two javelin throwers.
-- A total-preserving sanity post-pass swaps Polearm↔TwoHanded when a troop carries a two-hander, no polearm, and Polearm > TwoHanded. Idempotent; mixed carriers untouched; monotonicity unaffected (totals preserved).
+- **Replaced 2026-11-15 (#343):** a total-preserving post-pass used to swap Polearm and TwoHanded when a troop carried a two-hander, no polearm, and Polearm > TwoHanded. It covered one case of a general fault and is gone; the purpose order below covers every kit.
 - **Thrown-primary troops take the Bow curve on Throwing (#554, 2026-09-06).** A troop whose only
   ranged option is a javelin gets `Throwing = RANGED_BASELINES[level]['Bow']` plus the culture's
   **Bow** modifier, the same borrow the Bow↔Crossbow swap performs. It reaches into the Ranged table
@@ -57,7 +63,7 @@ Weapon detection was originally **name-keyword-only** (`crossbow`/`arbalest`/`na
 - **The writer hard-fails without the game install** (`--game-modules`, default resolved through `tools/_gamedir.py`, so `$BANNERLORD_GAME_DIR` wins over the literal) rather than silently degrading to the name heuristic. The read-only analyzer degrades to name-only with a loud warning instead.
 - Contract tests: `tools/tests/test_rebalance_equipment.py`.
 
-**Known off-formula residuals** a `--dry-run` will always report: the hand-tuned `gondor_loss_noble{,_veteran,_sergeant,_warden,_captain}` line (5 troops, intentional; do not `--apply` over them without deciding their fate, tracked in #343).
+**Known off-formula residuals:** `python tools/rebalance_troops.py --apply --dry-run` plans a change to 407 troops (327 on the commit before #343; measured 2026-11-15). The purpose order and the formula are two writers: of the 369 troops `--fix-purpose` wrote for #343, `--apply` would move 131, and 45 of those sat exactly on the formula before. Nothing was restatted to close the gap; the decision belongs to the level of the curve. The residuals include the hand-tuned `gondor_loss_noble{,_veteran,_sergeant,_warden,_captain}` line (5 troops, intentional; do not `--apply` over them). `--fix-purpose` reordered their own values on 2026-11-15 (#343): their battle sets open with a two-hander and a polearm equally often and carry no one-handed weapon, so both are main classes, both take the troop's top melee value (110 on `gondor_loss_noble`, which was its OneHanded) and OneHanded dropped to the lowest.
 
 The 34 Mordor/Morannon partial-skill-block troops are **resolved** (2026-08-30, #522). They reported CHANGED on every run and produced no byte change because the writer only rewrites values already present. `insert_missing_skill_entries` now adds the missing element, cloning the shape of the last entry in the same block so both the one-line `<skill id=… value=… />` form and the three-line form survive. This mattered beyond tidiness: `CharacterObject.GetSkillValue` returns 0 for an undeclared skill, so a partial block is a silent zero, and `mordor_uruk_skirmisher -> mordor_uruk_crossbow` read as Bow 130 to 0.
 
@@ -65,7 +71,30 @@ The 34 Mordor/Morannon partial-skill-block troops are **resolved** (2026-08-30, 
 
 **Superseded 2026-09-18 (#617).** The three ids are out of `SKIP_TROOP_IDS`. The ranged ladder put the noble line on the Erebor crossbow cells, Crossbow 120 / 160 / 195 (the same as `ironpass_*`), and Mike kept the ranking over the hand-tune: the line's edge is its crossbows, the hardest-hitting in the game at T4 to T6, and Crossbow skill adds no damage on 1.5.3 (it tightens spread, speeds the reload and sharpens the AI's aim). A full rebaseline now gives them their ladder cell and leaves them as they are on disk. [ranged-ladders.md](ranged-ladders.md).
 
-**Deferred (#343):** 108 troops carrying only 1H weapons with Polearm strictly top (+46 exact ties) need a 3-way redistribution decision, not a mechanical pair swap.
+**Resolved (#343, 2026-11-15):** the one-handed troops with Polearm on top, and every other kit the curve ranked wrongly, are now settled by the purpose rule below.
+
+### Purpose: the kit decides the order (#343, 2026-11-15)
+
+The curve is keyed by formation group, not by kit. The Infantry and Cavalry tables put Polearm at or above OneHanded at most levels, so a swordsman with a shield came out a better spearman than swordsman, and a Ranged elf with a two-handed sword had its best melee number on a one-handed sword it does not carry. The pair swap above caught one of these shapes. The purpose rule replaces it for all of them, and `tools/troop_purpose.py` is its only statement: the writer, the realm generators, the validator and the analyzer call the same functions.
+
+- **P1, the main class:** the weapon class in Item0, over the battle sets (civilian sets never count). `Equipment.GetInitialWeaponIndicesToEquip` wields the first weapon slot that is not held in the off hand, so Item0 is the weapon in hand at spawn. When sets disagree, the class most sets open with wins; a tie goes to the class the troop is more skilled in, and the tie rule below lifts the other to it. A thrown weapon counts: a javelin in Item0 is a thrower's main weapon, as in vanilla's skirmisher factions (`hidden_hand`, `beni_zilal`), and the Marshal's Word thrower trial passed with `gondor_har_javelineer` holding it.
+- **P2, Item0 is a real weapon:** never a shield or ammunition while the same set holds a weapon. The engine puts a shield in the off hand and still wields the weapon, so the fault is in the rule's input: it reads no main class from Item0. `--fix-purpose` exchanges Item0 with one other weapon slot of that set; no item is added, removed or replaced. No battle set breaks it today. A troop that carries a launcher in every battle set and is `Ranged` or `HorseArcher` should open with the launcher, but vanilla ships the other layout too, so that is a warning reason no tool repairs: a designer exchanges the slots by hand.
+- **P3, skills follow the kit:** the troop's own melee values are re-dealt to the melee classes in purpose order (main first, then the other carried classes by how many sets carry them, then the classes it does not carry), and the two launcher values the same way. The reorder keeps the troop's own total; the tie, the clamp and the purpose raise are what move it. Throwing, Athletics and Riding are never touched, and a ranged ladder cell keeps its number. A thrower's melee values are ordered the same way; its Throwing keeps its value on disk.
+- **Ties, the raise before the clamp:** in vanilla, the two troops whose battle sets hold alternative weapons for one role (`imperial_recruit`, `khuzait_nomad`, OneHanded and Polearm) hold both at one value. Two classes of one kind that share a role (Item0, or a side slot) in the same number of battle sets, and never in the same set, are alternatives: one set carries a two-handed sword where the other carries a one-handed sword (the Lorien Marchwarden line), or one set opens with a spear and the other with a two-hander (the Dale lake town line). Neither is "the" weapon, so both take the higher of the two values after the reorder. A tie for Item0 makes both main classes, so a sidearm stays below them. A 3 to 1 split is no tie, and neither is a pair carried together. The tie runs before the clamp, in the formula, the realm generators and `--fix-purpose`. The only other raises are the clamp and the purpose raise after it.
+- **After the clamp:** the clamp only raises, and an inherited value can land above the child's own main weapon. The purpose raise then lifts, never lowers: each class to the highest class after it in its kind, and the main class to tie any rival the clamp itself lifted. A gap between kinds that was on disk before the clamp is reported, never filled with a borrowed number.
+
+**The size of the change** (the troop files on commit `078b86761` against the #343 result, measured 2026-11-15): skills changed on 369 troops. On 297 of them the reorder kept the 8-skill total. On the other 72 the total moved by +1518 net: 21 by the tie rule (+712), 33 by the clamp cascade below a reordered parent (+601), and 18 by the regeneration of the Arthedain, Cardolan and Rhudaur realm files (+205; four of those went down). No troop's top weapon skill rose except through a tie. The RCA lists the troops whose Item0 class rose over a class they carry in every set ([rca](../reviews/rca-troop-skill-purpose-2026-11-15.md)).
+
+**What the formula no longer does:** the Polearm and TwoHanded swap is gone. A name shift (`spear`, `sword`, `axe`, `shield` and the rest) fires only when it boosts the main class, or a carried class when no main class is known, so a "Spearman" holding a sword no longer moves 15 points onto a spear.
+
+**Two validator codes** ([codes](../reference/moduledata-validator-codes.md)):
+
+| Code | Severity | Fires when |
+|---|---|---|
+| `TROOP_ITEM_ZERO_NOT_MAIN` | error | a battle set holds a shield or ammunition in Item0 beside a weapon, so the rule reads no main class from Item0. Commit-gated; no finding in today's data |
+| `TROOP_SKILL_KIT_MISMATCH` | warning | a melee or launcher class is above the main class, a class the troop does not carry is above a carried one of the same kind, or a launcher troop's battle set does not open with its launcher. It becomes an error when the count reaches zero (`TROOP_SKILL_KIT_MISMATCH_SEVERITY` in `tools/taom_schema.py`) |
+
+Three warning reasons are left after `--fix-purpose`, and the message names each. "launcher troop that does not open with its launcher": no tool repairs it, because vanilla ships the layout; a designer exchanges the slots by hand. "melee skill above the launcher's ladder cell": an archer whose Bow or Crossbow is a ranged ladder cell and whose melee is higher; moving a value between kinds is a decision on the level of the curve, so the writer leaves them. "thrower below its melee skill": a thrower whose Throwing is under its melee; the message says whether the troop is in `THROWN_PRIMARY_TROOP_IDS`, and `--fix-purpose` prints the formula's number, but no value is invented. No troop has the first reason today; the RCA lists the other two ([rca](../reviews/rca-troop-skill-purpose-2026-11-15.md)).
 
 `tools/analyze_troop_balance.py` **imports these tables verbatim**: it never re-derives the curve, so the "ideal" and the "writer" can never disagree. It compares each troop's actual skills to `calculate_skills(...)` and reports the delta; a ranged ladder troop's Bow or Crossbow reference is its ladder cell (`rebalance_troops.ladder_cells`), the value the writer sets (#617).
 
@@ -139,6 +168,8 @@ Verification: `validate_moduledata` PASS (zero broken refs); diff perfectly bala
 | `--apply` | the formula result | you actually want a rebaseline, and have reviewed the per-culture deltas |
 | `--fix-monotonicity` | what is on disk | you are repairing upgrade ladders and nothing else |
 | `--restat <id,id>` | forces the formula for those ids in clamp-only mode | a specific troop was misclassified and needs to come back onto the curve |
+| `--fix-purpose` | what is on disk, reordered to the kit | a troop's skills or its Item0 break the purpose rule (#343). A dry run unless `--apply` is added; it writes any Item0 exchange and the reordered and tied skills, then the clamp and the purpose raise; it prints every tie raise. A second run plans nothing. Not combinable with `--restat` |
+| (every mode) | | the clamp and the purpose raise repeat until neither moves a value (`settle_purpose`), so a `--restat` child on a respecialising edge keeps its main class on top. In the clamp-only mode a troop the clamp leaves alone is never raised |
 | `--dry-run` | (modifier) | preview EITHER mode without writing. It used to be a third mutually exclusive mode, which meant the clamp-only path could only be inspected by letting it write and then reading `git diff` |
 
 `--fix-monotonicity` exists because `--apply` on this roster sweeps up 23 deliberately off-curve troops: the `gondor_loss_noble` line (#343, documented do-not-apply-over), the hand-authored Black Numenorean `mordor_num_*` line, the dwarf ram riders, and `mistymountainorcs_bolgs_ironfang` (which sits in the goblin file and has no `detect_culture` route, so it takes goblin modifiers). None of that belongs in a monotonicity fix. The tell during the 2026-08-30 pass was a per-file diff size: `troops_lindon.xml` came out at 478 lines where the clamp accounted for 30.
@@ -251,9 +282,10 @@ every L21 Dunlending read as a downgrade, restatted to 22.
 
 | File | Purpose |
 |------|---------|
-| `tools/rebalance_troops.py` | Writes skills onto the curve. `GROUP_BASELINES` + `CULTURAL_MODS` + `SKIP_TROOP_IDS` + `detect_culture` + `militia_troop_ids` + `clamp_upgrade_monotonicity` + `insert_missing_skill_entries`. `--dry-run` / `--apply`. |
+| `tools/rebalance_troops.py` | Writes skills onto the curve. `GROUP_BASELINES` + `CULTURAL_MODS` + `SKIP_TROOP_IDS` + `detect_culture` + `militia_troop_ids` + `clamp_upgrade_monotonicity` + `insert_missing_skill_entries` + `settle_purpose` + `apply_item0_swaps`. `--dry-run` / `--apply` / `--fix-monotonicity` / `--fix-purpose`. |
+| `tools/troop_purpose.py` | The purpose rule (#343): main class, Item0 check and exchange, the reorder, the tie rule (`tie_raise`), the post-clamp raise, the findings. Pure functions on plain data; tests in `tools/tests/test_troop_purpose.py` and `tools/tests/test_fix_purpose.py`. |
 | `tools/analyze_troop_balance.py` | Read-only overview generator. Imports the curve from `rebalance_troops.py`; emits HTML/MD/JSON. `--outlier-threshold N` / `--stdout`. Never writes troop XML. |
-| `tools/taom_schema.py` | `UPGRADE_SKILL_REGRESSION` (ERROR), the `validate_moduledata.py` half of the gate. Template parity is `SKILL_TEMPLATE_MISMATCH` in `validate_moduledata.py` (#626). |
+| `tools/taom_schema.py` | `UPGRADE_SKILL_REGRESSION` (ERROR), the `validate_moduledata.py` half of the gate. `TROOP_ITEM_ZERO_NOT_MAIN` (ERROR) and `TROOP_SKILL_KIT_MISMATCH` (WARNING), fed by `Registries.item_classes`. Template parity is `SKILL_TEMPLATE_MISMATCH` in `validate_moduledata.py` (#626). |
 | `TAOM.Tests/Features/TroopProgression/TroopUpgradeSkillMonotonicityTests.cs` | 3 tests: no skill drops, all 8 skills declared, militia exemption pinned by identity (template parity is `TAOM.Tests/Core/LordInlineSkillParityTests.cs` since #626). Fails rather than going inconclusive when it cannot find ModuleData, since a data gate that cannot read its data has checked nothing. |
 | `tools/tests/test_upgrade_skill_monotonicity.py` | 25 synthetic-data tests: the gate, the clamp, entry insertion, the fail-closed militia loader, and that the upgrade index leaves templates to `SKILL_TEMPLATE_MISMATCH` (`tools/tests/test_skill_template_mismatch.py`). |
 | `tools/fix_upgrade_armour_regressions.py` | The armour clamp (#541): family step-up, parent fallback, slot append, hero-kit demotion. `tools/tests/test_fix_upgrade_armour_regressions.py` covers it on synthetic data. |
@@ -277,6 +309,17 @@ every L21 Dunlending read as a downgrade, restatted to 22.
 Save-compat: troop skills are read from XML at agent spawn, so a rebaseline applies to all troops in new *and* existing saves with nothing serialized per-troop-type — no save migration needed.
 
 ## Changelog
+
+- 2026-11-15: **Skills follow the kit (#343).** The curve is keyed by formation group, so a
+  swordsman could top out on Polearm and an archer with a two-handed sword on OneHanded. Added
+  `tools/troop_purpose.py` (the purpose rule), `--fix-purpose`, the purpose step in
+  `calculate_skills` and the realm generators, and the validator codes `TROOP_ITEM_ZERO_NOT_MAIN`
+  and `TROOP_SKILL_KIT_MISMATCH`. Removed the Polearm and TwoHanded swap. Throwing is a main
+  class (a thrower's javelin stays in Item0), and alternative weapons of one role tie at the
+  higher value. The analyzer shows each
+  troop's main class and both findings. Applied with `python tools/rebalance_troops.py
+  --fix-purpose --apply` after regenerating Arthedain, Cardolan and Rhudaur; the RCA holds the
+  counts ([rca](../reviews/rca-troop-skill-purpose-2026-11-15.md)).
 
 - 2026-09-04: **The Dol Guldur Uruk line sat a tier under the curve, and equipment joined the
   ladder rule (#541).** `f9942d84` had moved the ten `dg_uruk_*` levels up by five without a

@@ -22,6 +22,7 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 import rebalance_troops as rb  # noqa: E402
 import taom_schema as ts       # noqa: E402
+import troop_purpose as tp     # noqa: E402
 
 
 class ItemClassRegistryTests(unittest.TestCase):
@@ -156,6 +157,60 @@ class MeleeSanitySwapTests(unittest.TestCase):
                                 weapon_classes={"TwoHanded"})
         self.assertEqual(a, b)
         self.assertGreater(a["TwoHanded"], a["Polearm"])
+
+
+class PurposeFormulaTests(unittest.TestCase):
+    """calculate_skills follows the kit (#343): the Item0 class takes the troop's highest melee or
+    launcher value, and a name keyword no longer moves 15 points onto a weapon the kit contradicts."""
+
+    SWORD = tp.kit_of([{"Item0": "OneHanded", "Item1": "Shield"}])
+    SPEAR = tp.kit_of([{"Item0": "Polearm", "Item1": "Shield", "Item2": "OneHanded"}])
+
+    def test_a_troop_named_spear_with_a_sword_kit_follows_the_kit(self):
+        s = rb.calculate_skills("gondor", 31, "Infantry", "gondor_x_spearman", "Spearman",
+                                weapon_classes={"OneHanded", "Shield"}, kit=self.SWORD)
+        base = rb.INFANTRY_BASELINES[31]
+        mods = rb.CULTURAL_MODS["gondor"]
+        top = max(base[c] + mods.get(c, 0) for c in ("OneHanded", "TwoHanded", "Polearm"))
+        self.assertEqual(s["OneHanded"], top, "the sword takes the top melee value of the curve")
+        self.assertGreaterEqual(s["OneHanded"], s["Polearm"])
+        self.assertGreaterEqual(s["OneHanded"], s["TwoHanded"])
+        self.assertEqual(s["Polearm"], top, "no +15 name shift onto a spear the troop does not hold")
+
+    def test_a_named_spearman_holding_a_spear_keeps_its_shift(self):
+        s = rb.calculate_skills("gondor", 31, "Infantry", "gondor_x_spearman", "Spearman",
+                                weapon_classes={"Polearm", "Shield", "OneHanded"}, kit=self.SPEAR)
+        self.assertEqual(s["Polearm"], rb.INFANTRY_BASELINES[31]["Polearm"] + 5 + 15)
+
+    def test_a_one_handed_troop_on_the_infantry_curve_loses_its_polearm_top(self):
+        # #343's class: a sword and shield only, on a table that puts Polearm on top.
+        curve_pol = rb.INFANTRY_BASELINES[26]["Polearm"] + rb.CULTURAL_MODS["rohan"]["Polearm"]
+        self.assertGreater(curve_pol, rb.INFANTRY_BASELINES[26]["OneHanded"], "precondition")
+        s = rb.calculate_skills("rohan", 26, "Infantry", "rohan_x_guard", "Guard",
+                                weapon_classes={"OneHanded", "Shield"}, kit=self.SWORD)
+        self.assertGreater(s["OneHanded"], s["Polearm"])
+
+    def test_an_archer_with_a_two_hander_fights_with_its_second_skill(self):
+        kit = tp.kit_of([{"Item0": "Bow", "Item1": "Arrows", "Item2": "TwoHanded"}])
+        s = rb.calculate_skills("rivendell", 31, "Ranged", "x_archer", "Archer",
+                                weapon_classes={"Bow", "Arrows", "TwoHanded"}, kit=kit)
+        self.assertGreater(s["TwoHanded"], s["OneHanded"])
+        self.assertGreater(s["Bow"], s["TwoHanded"])
+
+    def test_alternative_side_weapons_tie_on_the_curve_too(self):
+        # One set carries a two handed sword where the other carries a one handed sword: both
+        # take the higher value, so --apply cannot undo what --fix-purpose writes.
+        kit = tp.kit_of([{"Item0": "Bow", "Item1": "Arrows", "Item2": "TwoHanded"},
+                         {"Item0": "Bow", "Item1": "Arrows", "Item2": "OneHanded"}])
+        s = rb.calculate_skills("lothlorien", 31, "Ranged", "x_archer", "Archer",
+                                weapon_classes={"Bow", "Arrows", "TwoHanded", "OneHanded"}, kit=kit)
+        self.assertEqual(s["TwoHanded"], s["OneHanded"])
+
+    def test_the_purpose_rule_is_a_permutation_of_the_curve(self):
+        a = rb.calculate_skills("gondor", 41, "Cavalry", "t", "Rider",
+                                weapon_classes={"TwoHanded"}, kit=tp.kit_of([{"Item0": "TwoHanded"}]))
+        b = rb.calculate_skills("gondor", 41, "Cavalry", "t", "Rider", weapon_classes=None)
+        self.assertEqual(sorted(a.values()), sorted(b.values()))
 
 
 if __name__ == "__main__":
