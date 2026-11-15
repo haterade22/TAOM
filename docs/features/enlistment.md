@@ -1278,10 +1278,14 @@ it. Each planned slot prints where it came from, and a `From:` line totals them.
 - "The culture's troop gear" is every battle set of the culture's non-hero Soldier troops in
   `troops_*.xml`, with the rows under `<Equipments>` laid over each set; a `TREE_ALIASES` culture
   (battania, abanissa) takes its source tree's gear.
-- A launcher barred from the saddle never goes into a cavalry kit, nor into an archer kit that may be
-  a horse archer's: one where the culture's riders carry a launcher of the category and the replaced
-  launcher is not only a foot troop's. In a cavalry kit a couchable spear is replaced only by a
-  couchable one. A repair never puts one weapon id in two slots.
+- The kit's own Horse slot decides the saddle (Mike, 2026-11-15): a kit whose roster holds a horse is
+  a horse archer's and needs a bow that can be shot from the saddle; a kit without one is a foot
+  archer's and may hold a longbow. So a launcher barred from the saddle (a `long_bow`) never goes into
+  a kit with a Horse slot, and may go into any other. The rule reads the kit, not the assignment, so a
+  cavalry kit without a Horse slot may take one too; no repair does so today. The kit file holds no
+  Horse slot (`grep -c 'slot="Horse"'` gives 0 on 2026-11-15), so every kit is a foot soldier's here.
+- In a cavalry kit a couchable spear is replaced only by a couchable one; that constraint is keyed on
+  the assignment. A repair never puts one weapon id in two slots.
 - A lower armour total is held against the earlier kit with the highest total, and takes pieces for
   the slots with the largest deficit first: that kit's piece when the culture's troops wear it, else
   the culture's piece that matches it most closely from above, else that kit's piece when it is the
@@ -1326,29 +1330,25 @@ promoter derives from the generator's output, so it runs second.
 archer veteran and sergeant carry the soldier's `lowland_longbow` (57 against `highland_ranger_bow`'s
 47), and the Isengard cavalry veteran, which wore a Mordor chest and helmet no Isengard troop wears,
 wears `sk_uruk_hai_plate_heavy_a1` (46 against 42) and `sk_uruk_hai_helmet_officer_a2` (34, equal).
-`--repair-ranks` then planned 64 slot changes, by the source its dry run prints: 32 weapons from the
-culture's troop gear of the same kind, 21 weapons from its troop gear of another kind of the same
-category, 9 armour pieces from its troop gear, and 2 bows from an earlier kit (`wm_isengard_bow_a02`
-from the Dol Guldur archer soldier kit into the veteran's, `wm_mirkwood_bow_a01` from the Mirkwood
-archer recruit kit into the soldier's). The promoter's Arnor `item_map` (Mike, 2026-10-07; Rhudaur
+Under the saddle rule above, `--repair-ranks` plans 66 slot changes from that file, by the source its
+dry run prints: 32 weapons from the culture's troop gear of the same kind, 21 weapons from its troop
+gear of another kind of the same category, 9 armour pieces from its troop gear, and 4 bows from an
+earlier kit (`wm_isengard_bow_a02` from the Dol Guldur archer soldier kit into the veteran's,
+`wm_mirkwood_bow_a01` from the Mirkwood archer recruit kit into the soldier's, and `woodland_longbow`
+from the Rohan archer soldier kit into the veteran's and the sergeant's, where Rohan's troop gear
+has no bow that holds). The first plan of the day inferred the saddle from what the culture's riders
+carry, refused the longbow to the two Rohan kits and planned 64; the other 64 slots are the same. The promoter's Arnor `item_map` (Mike, 2026-10-07; Rhudaur
 shares it) turned Gondor's cavalry sergeant helmet `sk_gd_pin_spear_helmet_heavy_a` (39) into
 `sk_ar_art_helmet_inf_hvy_b` (30) and left both Arnor cavalry sergeants 10 under their veterans. The
 map rewrites only the promoter's clones, and of the cloned files only the enlistment file holds that
 id (the Gondor cavalry sergeant kit), so the row now maps to `sk_ar_art_helmet_inf_elite_a` (48), a tier
 up, the strongest helmet of the same Arnor infantry line. Against 12b21d5e3 the kit file now differs in
-109 slots: 66 in generator kits, 2 in default kits and 41 in promoted kits.
+113 slots: 68 in generator kits, 2 in default kits and 43 in promoted kits.
 
 **Left after the repair**, `python tools/validate_moduledata.py --code ENLISTMENT_KIT_RANK_REGRESSION`
 printing 82 kits on 2026-11-15, 70 of the generator's and 12 promoted, with no armour reason:
 
-- Four weapon reasons on the Rohan archer chain: `enlist_vlandia_archer_veteran` (`composite_steppe_bow`,
-  52) and `enlist_vlandia_archer_sergeant` (`steppe_war_bow`, 54) against the soldier kit's
-  `woodland_longbow` (64), and their South Rhovanion clones. The veteran and sergeant kits are a
-  rider's (a steppe bow, a shield and a spear), the longbow is barred from the saddle, and the best
-  bow Rohan's troop gear carries is `ladder_rohan_bow_t7` at 46. Options: put `woodland_longbow` in
-  both kits by hand if a Rohan archer enlistee is a foot archer; give the recruit and soldier kits a
-  mountable bow, so the chain is a horse archer's from the start; or accept the change of role.
-- Two weapon reasons on the Rohan cavalry sergeant: `enlist_vlandia_cavalry_sergeant` carries the lance
+- The only weapon pair left, two reasons on the Rohan cavalry sergeant: `enlist_vlandia_cavalry_sergeant` carries the lance
   `wm_rohan_ws_spear_a03` (28.9, couchable) against the `eastern_spear_4_t4` (38.0, no couch) of the
   recruit, soldier and veteran kits, and its South Rhovanion clone does the same. The repair keeps the
   lance, and no Rohan couchable spear reaches 36.9: the best is `wm_rohan_spear_a` at 31.9. Options:

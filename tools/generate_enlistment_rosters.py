@@ -1013,8 +1013,7 @@ def culture_troop_gear(troops_dir=TROOPS_DIR):
     "The culture's troop gear" for the repair: every non-civilian EquipmentRoster of each non-hero
     Soldier NPCCharacter in troops_*.xml, with the <equipment> rows directly under <Equipments> laid
     over each set as the engine does, keyed by the troop's culture, and the TREE_ALIASES cultures
-    given their source tree's gear. The 'mounted' key holds the weapons of the Cavalry and
-    HorseArcher troops, so the repair can tell a foot archer's launcher from a rider's.
+    given their source tree's gear.
     """
     gear = {}
     for fn in sorted(os.listdir(troops_dir)):
@@ -1031,7 +1030,6 @@ def culture_troop_gear(troops_dir=TROOPS_DIR):
                     or npc.get('occupation', 'Soldier') != 'Soldier':
                 continue
             slots = gear.setdefault(raw.split('.', 1)[1], {})
-            mounted = npc.get('default_group') in ('Cavalry', 'HorseArcher')
             overrides = _slot_items(npc.findall('Equipments/equipment'))
             for roster in npc.findall('.//EquipmentRoster'):
                 if rl.is_civilian(roster):
@@ -1039,8 +1037,6 @@ def culture_troop_gear(troops_dir=TROOPS_DIR):
                 for slot, item in {**_slot_items(roster.findall('equipment')), **overrides}.items():
                     if item:
                         slots.setdefault(slot, set()).add(item)
-                        if mounted and slot in WEAPON_SLOTS:
-                            slots.setdefault('mounted', set()).add(item)
     for alias, source in TREE_ALIASES.items():
         if alias not in gear and source in gear:
             gear[alias] = gear[source]
@@ -1055,10 +1051,9 @@ def _pick_weapon(replaced, low_best, upper, lower_item, same_culture, gear_slots
     """The weapon that replaces `replaced` in its category, or None.
 
     Candidates hold the rule and are not already in another weapon slot of the kit. A launcher barred
-    from the saddle never goes into a cavalry kit, nor into an archer kit that may be a horse
-    archer's: the roster file does not say, so an archer kit counts as a foot archer's only when the
-    culture's riders carry no launcher of the category, or when only its foot troops carry the
-    replaced one. In a cavalry kit a couchable lance is replaced only by a couchable one. Preference:
+    from the saddle (a long_bow) never goes into a kit that holds a Horse slot; a kit without one is a
+    foot soldier's and may take it (the maintainer's rule, 2026-11-15: the roster's own horse makes a
+    horse archer). In a cavalry kit a couchable lance is replaced only by a couchable one. Preference:
     (a) the same kind as the replaced piece from the culture's troop gear, (b) another kind of the
     category from it, (c) the earlier kit's own piece (`lower_item`), only when it is the same
     culture's. Within (a) and (b) the id closest to the replaced one first (the same weapon line,
@@ -1067,16 +1062,13 @@ def _pick_weapon(replaced, low_best, upper, lower_item, same_culture, gear_slots
     """
     info = weapon_info[replaced]
     held = {i for s, i in upper.items() if s in WEAPON_SLOTS}
-    mounted = gear_slots.get('mounted', set())
-    riders_shoot = any(weapon_info.get(i) is not None and weapon_info[i].category == info.category for i in mounted)
-    foot_kit = not cavalry and (info.foot_only or not riders_shoot
-                                or (replaced in _weapon_items(gear_slots) and replaced not in mounted))
+    rides = 'Horse' in upper
     keep_couch = cavalry and info.couchable
 
     def fits(item):
         cand = weapon_info.get(item)
         return (cand is not None and cand.category == info.category and weapon_holds(low_best, cand.output)
-                and item not in held and not (cand.foot_only and not foot_kit)
+                and item not in held and not (cand.foot_only and rides)
                 and not (keep_couch and not cand.couchable))
 
     pool = sorted((-len(os.path.commonprefix((i, replaced))), weapon_info[i].output, i)

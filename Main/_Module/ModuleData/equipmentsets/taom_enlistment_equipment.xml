@@ -2717,7 +2717,7 @@
     </EquipmentRoster>
     <EquipmentRoster id="enlist_vlandia_archer_veteran" culture="Culture.vlandia">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.composite_steppe_bow" />
+            <Equipment slot="Item0" id="Item.woodland_longbow" />
             <Equipment slot="Item1" id="Item.piercing_arrows" />
             <Equipment slot="Item2" id="Item.wm_rohan_shield_a03_gsw" />
             <Equipment slot="Item3" id="Item.eastern_spear_4_t4" />
@@ -2765,7 +2765,7 @@
     </EquipmentRoster>
     <EquipmentRoster id="enlist_vlandia_archer_sergeant" culture="Culture.vlandia">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.steppe_war_bow" />
+            <Equipment slot="Item0" id="Item.woodland_longbow" />
             <Equipment slot="Item1" id="Item.piercing_arrows" />
             <Equipment slot="Item2" id="Item.wm_rohan_shield_a01_gsw" />
             <Equipment slot="Item3" id="Item.eastern_spear_4_t4" />
@@ -4763,7 +4763,7 @@
     </EquipmentRoster>
     <EquipmentRoster id="enlist_southrhovanion_archer_veteran" culture="Culture.southrhovanion">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.composite_steppe_bow" />
+            <Equipment slot="Item0" id="Item.woodland_longbow" />
             <Equipment slot="Item1" id="Item.piercing_arrows" />
             <Equipment slot="Item2" id="Item.wm_rohan_shield_a03_gsw" />
             <Equipment slot="Item3" id="Item.eastern_spear_4_t4" />
@@ -4811,7 +4811,7 @@
     </EquipmentRoster>
     <EquipmentRoster id="enlist_southrhovanion_archer_sergeant" culture="Culture.southrhovanion">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.steppe_war_bow" />
+            <Equipment slot="Item0" id="Item.woodland_longbow" />
             <Equipment slot="Item1" id="Item.piercing_arrows" />
             <Equipment slot="Item2" id="Item.wm_rohan_shield_a01_gsw" />
             <Equipment slot="Item3" id="Item.eastern_spear_4_t4" />

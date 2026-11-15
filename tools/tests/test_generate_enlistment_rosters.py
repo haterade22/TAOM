@@ -748,27 +748,34 @@ class RankRepairTests(unittest.TestCase):
     ARCHERS = rank_kits({'soldier': {'Item0': 'longbow'}, 'veteran': {'Item0': 'bow_b'}}, assignment='archer')
     ARCHER_VETERAN = ('x', 'archer', 'veteran')
 
-    def test_a_launcher_the_saddle_bars_never_replaces_one_a_rider_can_draw(self):
-        # bow_b is no troop's, and the culture's riders carry bows: the kit may be a horse archer's.
-        edits, left = self.plan(self.ARCHERS, gear={'x': {'mounted': {'bow_a'}}})
-        self.assertEqual([], edits)
-        self.assertEqual(1, len(left))
-        self.assertEqual([(self.ARCHER_VETERAN, 'Item0', 'bow_b', 'bow_c')],
-                         self.plan(self.ARCHERS, gear={'x': {'Item0': {'bow_c'}, 'mounted': {'bow_a'}}})[0])
+    # The maintainer's rule (2026-11-15): a kit with a Horse slot is a horse archer's, one without is a
+    # foot archer's. The culture's riders and what they carry no longer decide it.
+    HORSE_ARCHERS = rank_kits({'soldier': {'Item0': 'longbow'}, 'veteran': {'Item0': 'bow_b', 'Horse': 'horse_a'}},
+                              assignment='archer')
 
-    def test_a_launcher_the_saddle_bars_may_replace_one_only_the_cultures_foot_archers_carry(self):
-        gear = {'Item0': {'bow_b', 'longbow', 'bow_a'}, 'mounted': {'bow_a'}}
-        self.assertEqual([(self.ARCHER_VETERAN, 'Item0', 'bow_b', 'longbow')], self.plan(self.ARCHERS, gear={'x': gear})[0])
-        self.assertEqual([], self.plan(self.ARCHERS, gear={'x': {**gear, 'mounted': {'bow_b'}}})[0])
-
-    def test_a_launcher_the_saddle_bars_may_go_into_an_archer_kit_when_no_rider_of_the_culture_carries_one(self):
+    def test_a_foot_archers_kit_takes_the_earlier_kits_longbow_when_the_troop_gear_has_none_that_holds(self):
         self.assertEqual([(self.ARCHER_VETERAN, 'Item0', 'bow_b', 'longbow')],
-                         self.plan(self.ARCHERS, gear={'x': {'mounted': {'sword_a'}}})[0])
+                         self.plan(self.ARCHERS, gear={'x': {'Item0': {'bow_a'}}})[0])
 
-    def test_a_launcher_the_saddle_bars_never_goes_into_a_cavalry_kit(self):
-        kits = rank_kits({'soldier': {'Item0': 'bow_b'}, 'veteran': {'Item0': 'bow_a'}}, assignment='cavalry')
-        self.assertEqual([(('x', 'cavalry', 'veteran'), 'Item0', 'bow_a', 'bow_b')],
+    def test_a_foot_archers_kit_takes_a_longbow_from_the_troop_gear_first(self):
+        kits = rank_kits({'soldier': {'Item0': 'bow_c'}, 'veteran': {'Item0': 'bow_b'}}, assignment='archer')
+        self.assertEqual([(self.ARCHER_VETERAN, 'Item0', 'bow_b', 'longbow')],
                          self.plan(kits, gear={'x': {'Item0': {'longbow'}}})[0])
+
+    def test_a_kit_with_a_horse_slot_never_takes_a_launcher_the_saddle_bars(self):
+        edits, left = self.plan(self.HORSE_ARCHERS, gear={'x': {'Item0': {'longbow'}}})
+        self.assertEqual([], edits)
+        self.assertEqual([['weapon']], [[k for k, _t in f[2]] for f in left])
+        self.assertEqual([(self.ARCHER_VETERAN, 'Item0', 'bow_b', 'bow_c')],
+                         self.plan(self.HORSE_ARCHERS, gear={'x': {'Item0': {'longbow', 'bow_c'}}})[0])
+
+    def test_the_saddle_bar_follows_the_horse_slot_not_the_assignment(self):
+        kits = rank_kits({'soldier': {'Item0': 'bow_c'}, 'veteran': {'Item0': 'bow_b'}}, assignment='cavalry')
+        self.assertEqual([(('x', 'cavalry', 'veteran'), 'Item0', 'bow_b', 'longbow')],
+                         self.plan(kits, gear={'x': {'Item0': {'longbow'}}})[0])
+        mounted = {**kits, ('x', 'cavalry', 'veteran'): {'Item0': 'bow_b', 'Horse': 'horse_a'}}
+        self.assertEqual([(('x', 'cavalry', 'veteran'), 'Item0', 'bow_b', 'bow_c')],
+                         self.plan(mounted, gear={'x': {'Item0': {'longbow'}}})[0])
 
     def test_a_dropped_category_is_never_repaired(self):
         kits = rank_kits({'recruit': {'Item0': 'sword_b', 'Item1': 'spear_a'}, 'soldier': {'Item0': 'sword_b'}})
@@ -832,7 +839,7 @@ class CultureTroopGearTests(unittest.TestCase):
                 fh.write(xml)
             gear = ger.culture_troop_gear(tmp)
         self.assertEqual({'a', 'b'}, gear['khuzait']['Item0'])
-        self.assertEqual({'a', 'b'}, gear['khuzait']['mounted'], 'a Cavalry troop: a rider carries these')
+        self.assertNotIn('mounted', gear['khuzait'], "the kit's Horse slot decides the saddle, not the riders")
         self.assertEqual(gear['khuzait'], gear['battania'])
 
 
