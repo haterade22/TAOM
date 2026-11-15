@@ -50,7 +50,6 @@ public sealed class PromotedWardenFacts
     public bool IsPlayerClanCompanion;
     public bool HasSpouse;
     public bool HasChildren;
-    public bool IsGovernor;
     public bool IsClanLeader;
 }
 
@@ -74,7 +73,7 @@ public sealed class MintedHero
 /// while the clan has a companion slot free, because resolving one mints a real companion.</para>
 ///
 /// <para>Release never kills a companion warden. A promoted warden goes back to the ranks on
-/// dismantle, as in the source (silent KillCharacterAction.ApplyByRemove plus one of his troop),
+/// dismantle, as in the source (KillCharacterAction.ApplyByRemove plus one of his troop),
 /// but only after he left the refuge by action and only when he has no family or role that the
 /// removal would break; otherwise he stays a clan companion. UnwindPromotion uses the same
 /// removal for a founding that failed before the minted hero ever attached to a refuge.</para>
@@ -161,7 +160,8 @@ public class WardenService : IWardenService
         // Every warden leaves the refuge by action first: a raw roster copy+clear nulls a hero's
         // PartyBelongedTo (the engine's OnHeroRemoved fires on the clear). A promoted warden is
         // then removed from the MAIN party, the same state UnwindPromotion removes a minted hero
-        // from, so the refuge party is never left leaderless mid-dismantle.
+        // from: removing him while he still led the refuge would run the engine's
+        // party-leader branch of the kill, which starts a disband.
         MoveHeroToMainParty(wardenHeroId);
         if (promoted)
             ReturnToRanks(wardenHeroId, promotedFromTroopId);
@@ -170,8 +170,10 @@ public class WardenService : IWardenService
     /// <summary>
     /// Turns a promoted warden back into one soldier on dismantle (owner, 15 Nov 2026: keeping him
     /// as a companion made found, promote, dismantle a free companion every time). Removal is
-    /// KillCharacterAction.ApplyByRemove without a notification, the call UnwindPromotion already
-    /// uses: no death message, the clan companion slot is freed, his gold goes to the clan leader.
+    /// KillCharacterAction.ApplyByRemove, the call UnwindPromotion already uses: no death pop-up
+    /// (the engine's CommentOnCharacterKilledBehavior still logs "NAME was lost." to chat), the
+    /// clan companion slot is freed, his gold goes to the clan leader. A governorship needs no
+    /// tie check: AddHeroToPartyAction already removed it when he rejoined the main party.
     /// His equipment is the template kit he was minted with (a refuge warden's gear cannot be
     /// changed: the stash screen holds items only), so it is not handed out; handing it out would
     /// be a free kit every cycle.
@@ -199,14 +201,13 @@ public class WardenService : IWardenService
     }
 
     /// <summary>True when removing the promoted hero breaks nothing: still the player's companion,
-    /// no spouse, no children, governs nothing, leads no clan. Null facts (hero record gone) are
+    /// no spouse, no children, leads no clan. Null facts (hero record gone) are
     /// false. internal for TAOM.Tests (InternalsVisibleTo).</summary>
     internal static bool MayReturnToRanks(PromotedWardenFacts facts) =>
         facts != null
         && facts.IsPlayerClanCompanion
         && !facts.HasSpouse
         && !facts.HasChildren
-        && !facts.IsGovernor
         && !facts.IsClanLeader;
 
     public void UnwindPromotion(string wardenHeroId, string promotedFromTroopId)
@@ -215,7 +216,7 @@ public class WardenService : IWardenService
             return;
         // The never-attached window: the hero was minted seconds ago, sits in the main party, and
         // never led anything. Removing him here is the transactional rollback of ResolveWarden,
-        // not a violation of the no-kill release policy (which governs wardens who served).
+        // and the soldier is refunded.
         if (!RemoveMintedCompanion(wardenHeroId))
             return;
         AddOneTroopToMainParty(promotedFromTroopId);
@@ -434,8 +435,10 @@ public class WardenService : IWardenService
 
     /// <summary>Removes a minted companion from the game (the source's depromote action): the
     /// never-attached rollback and the dismantle return to the ranks. KillCharacterAction
-    /// .ApplyByRemove (showNotification false) handles the party row, the clan companion slot and
-    /// the hero record in one engine call. Callers only reach it outside a map event.</summary>
+    /// .ApplyByRemove (showNotification false) removes the party row and frees the clan companion
+    /// slot in one engine call; the hero stays in the records as dead. The dismantle guard checks
+    /// the refuge's map event, not the main party's; no caller is known to reach this while the
+    /// main party is in a battle or a siege.</summary>
     protected virtual bool RemoveMintedCompanion(string heroId)
     {
         var hero = FindHero(heroId);
@@ -444,16 +447,16 @@ public class WardenService : IWardenService
         try
         {
             KillCharacterAction.ApplyByRemove(hero);
-            // Inside a map or siege event the engine only adds a death mark and the hero lives
-            // on until the event ends; report that as not removed, so no soldier is added on
-            // top of a hero who is still there.
+            // Inside a map or siege event the engine only adds a death mark, which a later daily
+            // tick executes; report that as not removed, so no soldier is added on top of a hero
+            // who is still there.
             return !hero.IsAlive;
         }
         catch (Exception ex)
         {
             // A failed rollback leaves an extra companion, an annoyance; a throw here would eat
             // the player's founding-failure message.
-            _logger.LogWarning($"[Refuge] promotion unwind failed for '{heroId}': {ex.Message}");
+            _logger.LogWarning($"[Refuge] removing minted warden '{heroId}' failed: {ex.Message}");
             return false;
         }
     }
@@ -480,7 +483,6 @@ public class WardenService : IWardenService
             IsPlayerClanCompanion = clan != null && hero.CompanionOf == clan,
             HasSpouse = hero.Spouse != null,
             HasChildren = (hero.Children?.Count ?? 0) > 0,
-            IsGovernor = hero.GovernorOf != null,
             IsClanLeader = hero.Clan?.Leader == hero,
         };
     }

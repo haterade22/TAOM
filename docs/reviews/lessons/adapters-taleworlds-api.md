@@ -2001,3 +2001,11 @@ PR #1304's doc said god mode stays on while the player walks the field after the
 **Prevent:** before acting on an engine state flag, read where the flag is set and where the object it guards is built; when they are set on different ticks, act on the second sighting and test that rule in the pure driver.
 
 **Source:** `docs/reviews/rca-scenario-autorun-2026-11-15.md`
+
+### A notification flag stops one message, not every listener (refuge warden, PR #1323, 2026-11-15)
+
+**Why missed:** `KillCharacterAction.ApplyByRemove(hero, showNotification: false)` was documented as a silent removal. The flag only stops the death pop-up; SandBox's `CommentOnCharacterKilledBehavior.OnBeforeHeroKilled` still adds a `CharacterKilledLogEntry`, a visible chat notification that prints "<name> was lost.".
+
+**Prevent:** before calling an engine action silent, list the campaign events it fires and read each SandBox listener, not only the branch the flag guards.
+
+**Source:** `docs/reviews/rca-pr1323-refuge-warden-ranks-2026-11-15.md`

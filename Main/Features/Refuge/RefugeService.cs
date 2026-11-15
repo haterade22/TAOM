@@ -100,7 +100,8 @@ public sealed class RefugePrisoner
 /// the militia's own troop type survives its casualties; OnGameLoaded
 /// re-pins the party AI (the source only pinned at spawn; the engine saves the pin, so this is an
 /// idempotent belt for a failed or missing pin) and
-/// logs both reconcile directions; the warden is never killed (see IWardenService).</para>
+/// logs both reconcile directions; a companion warden is never removed, and a promoted warden
+/// returns to the ranks on dismantle (see IWardenService).</para>
 ///
 /// <para>Campaign statics (parties, gold, distances, militia rosters, raids, messages) sit behind
 /// protected virtual members, the CampService/SupplyOrderService pattern, so every decision path

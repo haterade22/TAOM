@@ -373,7 +373,6 @@ public class WardenServiceTests
     [DataTestMethod]
     [DataRow("spouse", DisplayName = "married")]
     [DataRow("children", DisplayName = "has children")]
-    [DataRow("governor", DisplayName = "governs a settlement")]
     [DataRow("clanLeader", DisplayName = "leads a clan")]
     [DataRow("notCompanion", DisplayName = "no longer the player's companion")]
     [DataRow("noFacts", DisplayName = "hero record missing")]
@@ -384,7 +383,6 @@ public class WardenServiceTests
         {
             case "spouse": facts.HasSpouse = true; break;
             case "children": facts.HasChildren = true; break;
-            case "governor": facts.IsGovernor = true; break;
             case "clanLeader": facts.IsClanLeader = true; break;
             case "notCompanion": facts.IsPlayerClanCompanion = false; break;
             case "noFacts": facts = null; break;

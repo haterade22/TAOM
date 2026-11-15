@@ -23,11 +23,12 @@ public sealed class WardenCandidate
 /// (culture-matched template, renamed to the troop).
 ///
 /// <para>On dismantle a warden who was already a companion rejoins the party as a companion. A
-/// PROMOTED warden goes back to the ranks: the minted hero is removed silently (the same
-/// ApplyByRemove UnwindPromotion uses) and one of his source troop rejoins the party. Keeping him
+/// PROMOTED warden goes back to the ranks: the minted hero is removed with the ApplyByRemove
+/// UnwindPromotion uses (no death pop-up; the engine still logs "NAME was lost." to chat) and
+/// one of his source troop rejoins the party. Keeping him
 /// as a companion made found, promote, dismantle a free companion every time (owner, 15 Nov
-/// 2026). A promoted warden who gained family or a role (spouse, children, governor, clan
-/// leader, or left the player's companions) stays a companion, because removing him would break
+/// 2026). A promoted warden who gained family or a role (spouse, children, clan leader,
+/// or left the player's companions) stays a companion, because removing him would break
 /// those ties. A warden who is not with the refuge party at dismantle (captured, dead) is left
 /// where fate put him and the dismantle proceeds. A refuge lost in battle never calls this.</para>
 /// </summary>

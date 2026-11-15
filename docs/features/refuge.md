@@ -39,14 +39,16 @@ clan screen + click-to-manage: Patch75 (registry entry has the co-op disposition
 - **A promoted warden goes back to the ranks on dismantle.** Keeping him as a companion made
   found, promote, dismantle a free companion every time (owner, 15 Nov 2026). Every warden
   first rejoins the party via `AddHeroToPartyAction`. A warden who was already a companion stays
-  one. A promoted warden (`WardenPromoted`, SaveableField 107) is then removed silently with
-  `KillCharacterAction.ApplyByRemove` (no notification, the call `UnwindPromotion` uses) and one
+  one. A promoted warden (`WardenPromoted`, SaveableField 107) is then removed with
+  `KillCharacterAction.ApplyByRemove` (no death pop-up, the call `UnwindPromotion` uses; the
+  engine's `CommentOnCharacterKilledBehavior` still logs "<name> was lost." to chat) and one
   `PromotedFromTroopId` (SaveableField 108) rejoins the party. Both fields have been saved since
   the feature landed, so every save carries them. When that troop no longer exists (a mod update
   removed it, or the id is empty) the hero's culture's basic troop comes back instead; when
   neither resolves he stays a companion. A promoted warden with ties stays a companion too:
-  married, with children, a governor, a clan leader, or no longer the player's companion,
-  because removing him would widow a spouse or empty a seat. His template kit is not handed out
+  married, with children, a clan leader, or no longer the player's companion, because removing
+  him would widow a spouse or empty a seat. A governorship is not a tie: rejoining the main
+  party by `AddHeroToPartyAction` already ends it. His template kit is not handed out
   (the stash screen holds items only, so a warden's gear never changes; handing it out would be a
   free kit every cycle); his gold goes to the clan leader, the engine's rule. A captured or dead
   warden is not with the refuge: he is left where fate put him, no soldier comes back, and the
@@ -247,7 +249,11 @@ disagrees.
   menu on v2.0.24 to v2.0.28, loaded with Leave available.
 - 12-language translation run for the `{=taom_rf_*}` keys, including the four added in the round-B
   fix pass (`taom_rf_warden_lost`, `taom_rf_clan_row_building`, `taom_rf_promote_entry_tier`,
-  `taom_rf_found_orders_warning`; `taom_rf_promote_entry` is superseded and unreferenced).
+  `taom_rf_found_orders_warning`; `taom_rf_promote_entry` is superseded and unreferenced), and
+  `taom_rf_warden_ranks` (#1129).
+- PR #1323 in game: found a refuge with a promoted warden, then dismantle it. Expect "<troop> was
+  lost." and "Your promoted warden returns to the ranks as <troop>." in chat, one companion fewer
+  and one more of that troop. Once more with a companion warden: he rejoins and stays a companion.
 
 ---
 
