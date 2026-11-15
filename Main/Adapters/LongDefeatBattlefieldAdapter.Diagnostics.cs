@@ -189,6 +189,10 @@ internal sealed partial class LongDefeatBattlefieldAdapter
         if (!loss)
             return new LdRemoval(LdRemovalKind.None, "", Key: key);
 
+        // Every TAOM spawn names its team (Spawn), so Coop's ally team (#1280) holds only the other players' lords: no garrison loss.
+        if (team != _mission.DefenderTeam)
+            return new LdRemoval(LdRemovalKind.None, "", Key: key);
+
         // The engine nulls MainAgent around this callback, so the body the adapter last saw is the player's too.
         var isPlayer = agent == _mission.MainAgent || ReferenceEquals(agent, _knownMain) || agent.Controller == AgentControllerType.Player;
         return new LdRemoval(isPlayer ? LdRemovalKind.Player : LdRemovalKind.Defender, id, Key: key);
@@ -205,6 +209,9 @@ internal sealed partial class LongDefeatBattlefieldAdapter
         if (!(affected is Agent hurt) || !(affector is Agent hitter) || !hurt.IsHuman || !hitter.IsHuman)
             return false;
         if (!ReferenceEquals(hurt.Mission, _mission) || !ReferenceEquals(hitter.Mission, _mission) || hurt.Team?.Side != BattleSideEnum.Defender || hitter.Team?.Side != BattleSideEnum.Attacker)
+            return false;
+        // Another player's lord (#1280, Coop's ally team) takes no poison from this run: his health is his own member's.
+        if (hurt.Team != _mission.DefenderTeam)
             return false;
         if (!_registry.TryGetKey(hitter, out attacker))
             return false;

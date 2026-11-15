@@ -17,9 +17,9 @@ internal sealed class ShaderCompileNoticeContext : ApplicationContext
 {
     private const int TickMilliseconds = 300;
     private const int MaxReadBytes = 4 << 20;
-    private static readonly TimeSpan GiveUpAfter = TimeSpan.FromMinutes(30);
 
     private readonly ShaderCompileNoticeTexts _texts;
+    private readonly ShaderCompileNoticeMode _mode;
     private readonly IModLogger _logger;
     private readonly Func<bool> _stopRequested;
     private readonly ShaderCompileProgress _progress = new();
@@ -29,20 +29,25 @@ internal sealed class ShaderCompileNoticeContext : ApplicationContext
     private readonly string _totalFile;
     private readonly int _expectedTotal;
     private long _position;
+    private int _lastCount;
+    private TimeSpan _lastCompileAt;
     private ShaderCompileNoticeWindow? _window;
     private ProcessPriorityClass? _priorityBefore;
     private bool _finished;
 
-    public ShaderCompileNoticeContext(ShaderCompileNoticeTexts texts, IModLogger logger, Func<bool> stopRequested)
+    public ShaderCompileNoticeContext(
+        ShaderCompileNoticeTexts texts, ShaderCompileNoticeMode mode, IModLogger logger, Func<bool> stopRequested)
     {
         _texts = texts;
+        _mode = mode;
         _stopRequested = stopRequested;
         _logger = logger;
         string data = Path.Combine(
             Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "Mount and Blade II Bannerlord");
         _log = Path.Combine(data, "logs", $"rgl_log_{Process.GetCurrentProcess().Id}.txt");
         _totalFile = Path.Combine(data, "Shaders", "taom_shader_compile_total.txt");
-        _expectedTotal = ShaderCompileProgress.ParseRememberedTotal(TryReadAll(_totalFile));
+        _expectedTotal = mode.UseRememberedTotal ? ShaderCompileProgress.ParseRememberedTotal(TryReadAll(_totalFile)) : 0;
+        _position = mode.StartPosition(TryLength(_log));
         _timer.Tick += (_, _) => Tick();
         _timer.Start();
     }
@@ -52,19 +57,32 @@ internal sealed class ShaderCompileNoticeContext : ApplicationContext
         if (_finished) return;
         try
         {
-            if (_stopRequested() || _clock.Elapsed > GiveUpAfter)
+            if (_stopRequested() || _clock.Elapsed > _mode.GiveUpAfter)
             {
                 Finish();
                 return;
             }
 
             ReadNewLogText();
-            if (_window == null && _progress.ShouldShow) ShowWindow();
+            if (_progress.Count != _lastCount)
+            {
+                _lastCount = _progress.Count;
+                _lastCompileAt = _clock.Elapsed;
+            }
+
+            if (_mode.ShouldCloseIdle(_window != null, _clock.Elapsed - _lastCompileAt))
+            {
+                _logger.LogInfo($"[{_mode.LogTag}] no shader compiled for {(_clock.Elapsed - _lastCompileAt).TotalSeconds:0} s, closing");
+                Finish();
+                return;
+            }
+
+            if (_window == null && _mode.ShouldShow(_progress, _clock.Elapsed)) ShowWindow();
             if (_window != null) _window.TitleText = _progress.Title(_texts, _expectedTotal);
         }
         catch (Exception e)
         {
-            _logger.LogWarning($"[ShaderNotice] closed after an error: {e.GetType().Name}: {e.Message}");
+            _logger.LogWarning($"[{_mode.LogTag}] closed after an error: {e.GetType().Name}: {e.Message}");
             Finish();
         }
     }
@@ -90,8 +108,10 @@ internal sealed class ShaderCompileNoticeContext : ApplicationContext
         _window = new ShaderCompileNoticeWindow(widest, _texts.Detail, game);
         if (game != IntPtr.Zero) _window.Show(new WindowHandleOwner(game));
         else _window.Show();
-        LowerPriority();
-        _logger.LogInfo($"[ShaderNotice] the engine is compiling its shaders: notice shown, expected about {_expectedTotal}");
+        if (_mode.LowerPriority) LowerPriority();
+        _logger.LogInfo(_mode.UseRememberedTotal
+            ? $"[{_mode.LogTag}] the engine is compiling its shaders: notice shown, expected about {_expectedTotal}"
+            : $"[{_mode.LogTag}] window shown after {_clock.Elapsed.TotalSeconds:0.0} s, {_progress.Count} compiled so far");
     }
 
     private void Finish()
@@ -100,8 +120,8 @@ internal sealed class ShaderCompileNoticeContext : ApplicationContext
         _timer.Stop();
         if (_window != null)
         {
-            _logger.LogInfo($"[ShaderNotice] {_progress.Count} shaders compiled, notice closed after {_clock.Elapsed.TotalSeconds:0} s");
-            if (_progress.ShouldRememberTotal) TryWrite(_totalFile, _progress.Count.ToString());
+            _logger.LogInfo($"[{_mode.LogTag}] {_progress.Count} shaders compiled, notice closed after {_clock.Elapsed.TotalSeconds:0} s");
+            if (_mode.UseRememberedTotal && _progress.ShouldRememberTotal) TryWrite(_totalFile, _progress.Count.ToString());
             _window.Close();
             _window.Dispose();
             _window = null;
@@ -143,6 +163,13 @@ internal sealed class ShaderCompileNoticeContext : ApplicationContext
         }
 
         base.Dispose(disposing);
+    }
+
+    private static long TryLength(string path)
+    {
+        try { return File.Exists(path) ? new FileInfo(path).Length : -1L; }
+        catch (IOException) { return -1L; }
+        catch (UnauthorizedAccessException) { return -1L; }
     }
 
     private static string? TryReadAll(string path)

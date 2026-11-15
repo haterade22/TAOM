@@ -22,9 +22,21 @@ public enum CheatOutcomeKind
     NoBattle,
 }
 
+/// <summary>A result with no Name of its own, worded by what the cheat gave (CheatMenuTexts).</summary>
+public enum CheatGiven
+{
+    Other,
+    Gold,
+    Influence,
+    Renown,
+    Heal,
+}
+
 /// <param name="Name">What was given or reached (a troop, a resource, a kingdom, a settlement), when there is one.</param>
 /// <param name="Number">The result's number: gold now, troops added, soldiers healed, lords changed, the resource's new balance.</param>
-public sealed record CheatOutcome(CheatOutcomeKind Kind, string? Name = null, float Number = 0, TeleportRefusal Refusal = TeleportRefusal.None)
+/// <param name="Given">For a result with no Name: what it gave, so the player reads more than a bare number.</param>
+public sealed record CheatOutcome(CheatOutcomeKind Kind, string? Name = null, float Number = 0, TeleportRefusal Refusal = TeleportRefusal.None,
+    CheatGiven Given = CheatGiven.Other)
 {
     public bool Ok => Kind == CheatOutcomeKind.Done;
 }
@@ -66,7 +78,7 @@ public sealed class CheatMenuService
         if (!IsSinglePlayer) return Refused();
         if (amount < 1 || amount > MaxGold) return new CheatOutcome(CheatOutcomeKind.BadAmount, Number: MaxGold);
         var now = _world.GiveGold(amount);
-        return now == null ? new CheatOutcome(CheatOutcomeKind.NothingToDo) : Log("gold", new CheatOutcome(CheatOutcomeKind.Done, Number: now.Value));
+        return now == null ? new CheatOutcome(CheatOutcomeKind.NothingToDo) : Log("gold", new CheatOutcome(CheatOutcomeKind.Done, Number: now.Value, Given: CheatGiven.Gold));
     }
 
     public CheatOutcome AddInfluence(int amount)
@@ -74,7 +86,7 @@ public sealed class CheatMenuService
         if (!IsSinglePlayer) return Refused();
         if (amount < 1 || amount > MaxInfluenceOrRenown) return new CheatOutcome(CheatOutcomeKind.BadAmount, Number: MaxInfluenceOrRenown);
         return _world.AddInfluence(amount)
-            ? Log("influence", new CheatOutcome(CheatOutcomeKind.Done, Number: amount))
+            ? Log("influence", new CheatOutcome(CheatOutcomeKind.Done, Number: amount, Given: CheatGiven.Influence))
             : new CheatOutcome(CheatOutcomeKind.NothingToDo);
     }
 
@@ -83,7 +95,7 @@ public sealed class CheatMenuService
         if (!IsSinglePlayer) return Refused();
         if (amount < 1 || amount > MaxInfluenceOrRenown) return new CheatOutcome(CheatOutcomeKind.BadAmount, Number: MaxInfluenceOrRenown);
         return _world.AddRenown(amount)
-            ? Log("renown", new CheatOutcome(CheatOutcomeKind.Done, Number: amount))
+            ? Log("renown", new CheatOutcome(CheatOutcomeKind.Done, Number: amount, Given: CheatGiven.Renown))
             : new CheatOutcome(CheatOutcomeKind.NothingToDo);
     }
 
@@ -133,7 +145,7 @@ public sealed class CheatMenuService
     public CheatOutcome Heal()
     {
         if (!IsSinglePlayer) return Refused();
-        return Log("heal", new CheatOutcome(CheatOutcomeKind.Done, Number: _world.HealMainParty()));
+        return Log("heal", new CheatOutcome(CheatOutcomeKind.Done, Number: _world.HealMainParty(), Given: CheatGiven.Heal));
     }
 
     public CheatOutcome AddRelation(string? kingdomId, int amount)

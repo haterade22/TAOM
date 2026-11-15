@@ -28,6 +28,10 @@
       <UsablePiece piece_id="taom_ph_gondor_spear_b_swan_t8_blade"/>
       <UsablePiece piece_id="taom_ph_gondor_spear_b_t5_blade"/>
       <UsablePiece piece_id="taom_ph_gondor_spear_b_t8_blade"/>
+      <UsablePiece piece_id="taom_ph_gundabad_spear_a02_t4_blade"/>
+      <UsablePiece piece_id="taom_ph_gundabad_spear_a03_t5_blade"/>
+      <UsablePiece piece_id="taom_ph_gundabad_spear_a03_t8_blade"/>
+      <UsablePiece piece_id="taom_ph_lothlorien_spear_t6_blade"/>
     </xsl:copy>
   </xsl:template>
 </xsl:stylesheet>

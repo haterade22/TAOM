@@ -59,6 +59,19 @@ internal sealed class FakeCampaignAutorunHost : ICampaignAutorunHost
         NoticeOpen = false;
     }
 
+    public bool EventWindowOpen;
+    public int EventWindowsClosed;
+
+    public bool CloseEventWindow()
+    {
+        if (!EventWindowOpen)
+            return false;
+
+        EventWindowsClosed++;
+        EventWindowOpen = false;
+        return true;
+    }
+
     public bool StartNewCampaign()
     {
         Starts++;

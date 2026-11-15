@@ -727,7 +727,7 @@ namespace TAOM.Client.Features.CustomBattles.Muster
         public void Add(int n)
         {
             if (IsHero) return;
-            _count = Math.Max(Math.Max(1, Roles), Math.Min(ArmySpec.MaxTroops, _count + n));
+            _count = Math.Max(ArmySpec.MinimumCount(_banner, _captain, _horn), Math.Min(ArmySpec.MaxTroops, _count + n));
             Notify();
         }
 
@@ -742,7 +742,7 @@ namespace TAOM.Client.Features.CustomBattles.Muster
 
         private void Fit()
         {
-            if (_count < Roles) _count = Roles;
+            _count = Math.Max(_count, ArmySpec.MinimumCount(_banner, _captain, _horn));
             Notify();
         }
 

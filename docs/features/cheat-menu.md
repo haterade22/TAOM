@@ -12,7 +12,7 @@ menus:
 | Teleport | Towns..., Castles..., Villages... (each opens a searchable list), Back |
 | Troops | +10 basic recruits, +10 elite recruits (the culture's `basic_troop` and `elite_basic_troop`), +10 of any troop of your faction... (a searchable list, see Troops below), Every troop (party screen)... (the game's own cheat party screen, see below), Back |
 
-Every button calls `CheatMenuService`, the same code as the console commands below, and shows its result as a message.
+Every button calls `CheatMenuService`, the same code as the console commands below, and shows its result as a message. Gold, influence, renown and heal results name what they gave (`CheatGiven`): gold shows the new total in denars, heal the number of soldiers healed (#1297).
 
 ## Troops
 

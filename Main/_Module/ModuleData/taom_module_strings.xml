@@ -3398,6 +3398,10 @@
 	<string id="taom_shader_notice_title_total" text="{=taom_shader_notice_title_total}Compiling shaders: {COUNT} of about {TOTAL}" />
 	<string id="taom_shader_notice_title_count" text="{=taom_shader_notice_title_count}Compiling shaders: {COUNT}" />
 	<string id="taom_shader_notice_detail" text="{=taom_shader_notice_detail}The game is rebuilding its shaders after a change to your mod list or to the game. It is not frozen." />
+	<!-- BattleShaderNotice -->
+	<string id="taom_battle_shader_notice_title" text="{=taom_battle_shader_notice_title}Preparing this scene: {COUNT} shaders compiled" />
+	<string id="taom_battle_shader_notice_detail" text="{=taom_battle_shader_notice_detail}The game is compiling shaders for this scene. It is not frozen. This can take a minute or two." />
+	<string id="taom_battle_shader_loading_line" text="{=taom_battle_shader_loading_line}Compiling shaders for this scene. This can take a minute or two; the game is not frozen." />
 
 
 
@@ -3498,6 +3502,11 @@
 	<!-- harvested by tools/harvest_literal_loc_keys.py -->
 	<!-- ShaderSourceInstall -->
 	<string id="taom_shader_source_install_failed" text="{=taom_shader_source_install_failed}TAOM could not install its bow shaders into {FOLDER}. Some bows may make their holder invisible. Run the game once as administrator; if that does not help, reinstall TAOM. The TAOM log names the cause." />
+	<!-- StartupAlerts -->
+	<string id="taom_startup_alert_war_sails" text="{=taom_startup_alert_war_sails}War Sails is loaded, but TAOM does not support it. Close the game, untick War Sails in the launcher, and start again." />
+	<string id="taom_bundled_library_copies_body" text="{=taom_bundled_library_copies_body}TAOM.Dependencies already provides Harmony, ButterLib, UIExtenderEx and MCM, so these separate copies are not needed:{NEWLINE}{NEWLINE}{LIST}{NEWLINE}{NEWLINE}Unsubscribe from a Steam Workshop copy. A copy in the Modules folder took the place of TAOM's own small module with that name: reinstall TAOM to put it back, and do not delete the folder, or mods that need the library stop loading." />
+	<string id="taom_bundled_library_copy_workshop" text="{=taom_bundled_library_copy_workshop}{NAME} {VERSION}, Steam Workshop" />
+	<string id="taom_bundled_library_copy_modules" text="{=taom_bundled_library_copy_modules}{NAME} {VERSION}, folder {FOLDER}" />
 	<!-- Bonds of Battle -->
 	<string id="taom_bonds_together" text="{=taom_bonds_together}You fought together with {LORD}." />
 	<string id="taom_bonds_against" text="{=taom_bonds_against}You fought against {LORD}." />
@@ -5011,6 +5020,17 @@
 	<string id="TAOM_LD_Hud_KeyVolleyIdle" text="{=TAOM_LD_Hud_KeyVolleyIdle}Elven Volley in a wave" />
 	<string id="TAOM_LD_Hud_KeyVolleyNotOwned" text="{=TAOM_LD_Hud_KeyVolleyNotOwned}Elven Volley not bought" />
 	<string id="TAOM_LD_Hud_KeyVolleyNotSold" text="{=TAOM_LD_Hud_KeyVolleyNotSold}Elven Volley not sold here" />
+	<string id="TAOM_LD_Coop_NoCoop" text="{=TAOM_LD_Coop_NoCoop}Co-op needs the Coop mod loaded." />
+	<string id="TAOM_LD_Coop_BadPayload" text="{=TAOM_LD_Coop_BadPayload}The host's run could not be read. Install the same TAOM as the host." />
+	<string id="TAOM_LD_Coop_BadAddress" text="{=TAOM_LD_Coop_BadAddress}Enter the host's address as address:port, for example 192.168.1.20:4200." />
+	<string id="TAOM_LD_Coop_HostLeft" text="{=TAOM_LD_Coop_HostLeft}The host left, so the run ended." />
+	<string id="TAOM_LD_Coop_RunEnded" text="{=TAOM_LD_Coop_RunEnded}The run ended at wave {WAVE}. Waves cleared: {WAVES}. Kills: {KILLS}." />
+	<string id="TAOM_LD_Coop_MenuOption" text="{=TAOM_LD_Coop_MenuOption}The Long Defeat (co-op)" />
+	<string id="TAOM_LD_Coop_MenuHint" text="{=TAOM_LD_Coop_MenuHint}Hold a fortress with other players over the Coop mod. One player hosts; the others join by address." />
+	<string id="TAOM_LD_Coop_Prompt_Desc" text="{=TAOM_LD_Coop_Prompt_Desc}Host a run for other players, or join a run another player hosts." />
+	<string id="TAOM_LD_Coop_Host" text="{=TAOM_LD_Coop_Host}Host a run" />
+	<string id="TAOM_LD_Coop_Join" text="{=TAOM_LD_Coop_Join}Join a run" />
+	<string id="TAOM_LD_Coop_JoinText" text="{=TAOM_LD_Coop_JoinText}The host's address and port, for example 192.168.1.20:4200." />
 	<!-- harvested by tools/harvest_literal_loc_keys.py -->
 	<!-- Refuge -->
 	<string id="taom_rf_reason_coop_off" text="{=taom_rf_reason_coop_off}Refuges are not available in a shared campaign." />
@@ -5164,5 +5184,28 @@
 	<string id="taom_realms_tree_holder" text="{=taom_realms_tree_holder}Holder" />
 	<string id="taom_realms_tree_liege" text="{=taom_realms_tree_liege}Liege" />
 	<string id="taom_realms_tree_subordinates" text="{=taom_realms_tree_subordinates}Subordinate titles" />
+	<!-- harvested by tools/harvest_literal_loc_keys.py -->
+	<!-- CheatMenu -->
+	<string id="taom_cheat_done_gold" text="{=taom_cheat_done_gold}Gold given. You now have {NUMBER} denars." />
+	<string id="taom_cheat_done_influence" text="{=taom_cheat_done_influence}Gained {NUMBER} influence." />
+	<string id="taom_cheat_done_renown" text="{=taom_cheat_done_renown}Gained {NUMBER} renown." />
+	<string id="taom_cheat_done_heal" text="{=taom_cheat_done_heal}Your party is healed. Soldiers healed: {NUMBER}." />
+	<!-- StoryMissions -->
+	<string id="taom_story_offer_attack" text="{=taom_story_offer_attack}Storm the walls" />
+	<string id="taom_story_offer_body_both" text="{=taom_story_offer_body_both}The hour of {TARGET} has come. Will you ride there and choose your side of its walls, or let fate decide?" />
+	<string id="taom_story_offer_body_attack" text="{=taom_story_offer_body_attack}The hour of {TARGET} has come. Will you march on its walls and lead the assault yourself, or let fate decide?" />
+	<string id="taom_story_offer_march" text="{=taom_story_offer_march}March on {TARGET}" />
+	<string id="taom_story_offer_repulsed" text="{=taom_story_offer_repulsed}Your assault on {TARGET} is thrown back, and its walls hold." />
+	<string id="taom_story_offer_stormed" text="{=taom_story_offer_stormed}The walls of {TARGET} are stormed, and the fortress falls." />
+	<string id="taom_story_offer_menu_host" text="{=taom_story_offer_menu_host}A host gathers before the walls of {TARGET}. Time stands until you choose." />
+	<!-- harvested by tools/harvest_literal_loc_keys.py -->
+	<!-- CoopInterop -->
+	<string id="taom_guest_trade_not_leader" text="{=taom_guest_trade_not_leader}The host cannot trade for you while you do not lead a free party." />
+	<string id="taom_guest_trade_not_here" text="{=taom_guest_trade_not_here}The host cannot trade for you here: your party is not in this settlement, or it is in a battle or a siege." />
+	<string id="taom_guest_trade_no_armoury" text="{=taom_guest_trade_no_armoury}The host finds no armourer at work in this town." />
+	<string id="taom_guest_trade_failed" text="{=taom_guest_trade_failed}The host could not complete this. Try again." />
+	<string id="taom_guest_trade_busy" text="{=taom_guest_trade_busy}The host has not answered your last request yet." />
+	<string id="taom_guest_trade_no_link" text="{=taom_guest_trade_no_link}The host cannot be reached." />
+	<string id="taom_guest_trade_no_answer" text="{=taom_guest_trade_no_answer}The host did not answer your last request. Try again." />
 
 </strings>

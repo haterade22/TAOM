@@ -10,7 +10,7 @@
 			<Equipment slot="Head" id="Item.sk_rh_loke_helmet_inf_lord_a" />
 			<Equipment slot="Body" id="Item.sk_rh_loke_chest_lord_a" />
 			<Equipment slot="Cape" id="Item.sk_rh_loke_cape_plate_heavy_a" />
-			<Equipment slot="Gloves" id="Item.sk_rh_loke_bracer_heavy_a" />
+			<Equipment slot="Gloves" id="Item.sk_rh_loke_bracer_heavy_c" />
 			<Equipment slot="Leg" id="Item.sk_rh_loke_grvs_plate_elite_a" />
 			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
 			<Equipment slot="Horse" id="Item.charger" />
@@ -52,7 +52,7 @@
 			<Equipment slot="Head" id="Item.sk_rh_loke_helmet_cav_lord_a" />
 			<Equipment slot="Body" id="Item.sk_rh_loke_chest_lord_b" />
 			<Equipment slot="Cape" id="Item.sk_rh_loke_cape_heavy_a" />
-			<Equipment slot="Gloves" id="Item.sk_rh_loke_bracer_heavy_b" />
+			<Equipment slot="Gloves" id="Item.sk_dg_khml_bracer_lam_heavy_a" />
 			<Equipment slot="Leg" id="Item.sk_rh_loke_grvs_plate_elite_a" />
 			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
 			<Equipment slot="Horse" id="Item.charger" />

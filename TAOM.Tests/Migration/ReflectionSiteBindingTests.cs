@@ -40,6 +40,9 @@ public class ReflectionSiteBindingTests
     // --- EquipPresets / inventory (InventoryScreenAdapter.cs) ---
     [DataRow("TaleWorlds.CampaignSystem.ViewModelCollection.Inventory.SPInventoryVM", "SPInventoryVM", "_currentCharacter", "Field", "InventoryScreenAdapter.cs:29")]
     [DataRow("TaleWorlds.CampaignSystem.ViewModelCollection.Inventory.SPInventoryVM", "SPInventoryVM", "_inventoryLogic", "Field", "InventoryScreenAdapter.cs:32")]
+    // --- Kingdom colours follow the ruler's banner edit (BannerHeroAdapter.cs, #1297) ---
+    [DataRow("TaleWorlds.CampaignSystem.Kingdom", "Kingdom", "<PrimaryBannerColor>k__BackingField", "Field", "BannerHeroAdapter.cs:40")]
+    [DataRow("TaleWorlds.CampaignSystem.Kingdom", "Kingdom", "<SecondaryBannerColor>k__BackingField", "Field", "BannerHeroAdapter.cs:41")]
     // --- A hollow parent takes its registered XML twin as origin (HeroCharacterStateAdapter.cs, #1076) ---
     [DataRow("TaleWorlds.CampaignSystem.CharacterObject", "CharacterObject", "_originCharacter", "Field", "HeroCharacterStateAdapter.cs:13")]
     // --- QuickActions panel refresh after a batch transfer (InventoryVMAdapter.cs, #917) ---
@@ -56,6 +59,9 @@ public class ReflectionSiteBindingTests
     [DataRow("TaleWorlds.CampaignSystem.ViewModelCollection.Party.PartyCharacterVM", "PartyCharacterVM", "TypeIconData", "Property", "RoleTooltipDecorator.cs:40")]
     [DataRow("TaleWorlds.MountAndBlade.ViewModelCollection.OrderOfBattle.OrderOfBattleHeroItemVM", "OrderOfBattleHeroItemVM", "_cachedTooltipProperties", "Field", "RoleTooltipDecorator.cs:41")]
     [DataRow("TaleWorlds.MountAndBlade.ViewModelCollection.OrderOfBattle.OrderOfBattleHeroItemVM", "OrderOfBattleHeroItemVM", "GetCaptainTooltip", "Method", "ManualPatchApplicator.cs:85 (manual patch)")]
+    // --- Realms encyclopedia Titles page (TitleEncyclopediaPagePatch.cs) ---
+    [DataRow("TaleWorlds.CampaignSystem.Encyclopedia.EncyclopediaPage", "EncyclopediaPage", "_identifierTypes", "Field", "TitleEncyclopediaPagePatch.cs:28")]
+    [DataRow("TaleWorlds.CampaignSystem.Encyclopedia.EncyclopediaManager", "EncyclopediaManager", "_pages", "Field", "TitleEncyclopediaPagePatch.cs:29")]
     // --- CharacterCreation narrative mount guard, Patch20 prefix (CharacterCreationCampaignBehavior_GetYouthMenuArgs_Patch.cs) ---
     [DataRow("SandBox.GauntletUI.CharacterCreation.CharacterCreationNarrativeStageView", "CharacterCreationNarrativeStageView", "SpawnNonHumanNarrativeMenuCharacter", "Method", "CharacterCreationCampaignBehavior_GetYouthMenuArgs_Patch.cs:154 (TargetMethod)")]
     [DataRow("SandBox.GauntletUI.CharacterCreation.CharacterCreationNarrativeStageView", "CharacterCreationNarrativeStageView", "_characterScene", "Field", "CharacterCreationCampaignBehavior_GetYouthMenuArgs_Patch.cs:158 (____characterScene)")]
@@ -160,6 +166,10 @@ public class ReflectionSiteBindingTests
     // --- ArmourAcquisition: the gate marks heavy, elite, lord and named pieces NotMerchandise at every game init
     // through the private setter. A missing setter turns gating off for the game (logged as an error).
     [DataRow("TaleWorlds.Core.ItemObject", "ItemObject", "set_NotMerchandise", "Method", "ArmourItemCatalogAdapter.cs:20")]
+    // --- CreatureSaddles (Patch154): the warg, dire wolf and spider rigs and their saddles get their own harness
+    // family through the private setters. A missing setter keeps the data's family 1 (logged as an error).
+    [DataRow("TaleWorlds.Core.Monster", "Monster", "set_FamilyType", "Method", "CreatureSaddleFamilyWriter.cs:19")]
+    [DataRow("TaleWorlds.Core.ArmorComponent", "ArmorComponent", "set_FamilyType", "Method", "CreatureSaddleFamilyWriter.cs:22")]
     // --- FactionUI (#704): Kysaro's front end. Each missing member silently degrades one thing: the themed
     // fonts' glyphs are not drawn, vanilla retries menu mode every frame on the main menu, the face
     // generator skips its fade-in, the backstory Random button presses nothing.

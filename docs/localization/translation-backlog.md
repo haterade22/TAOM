@@ -112,6 +112,10 @@ Record each pending feature's module, source file, exact keys and English text, 
 | `taom_ph_gondor_spear_a_t8_name` | [Gondor] Fountain Guard Spear, Tempered |
 | `taom_ph_mirkwood_sword_t8_name` | [Mirkwood] Guard Sword |
 | `taom_ph_mirkwood_sword_t10_name` | [Mirkwood] Royal Sword |
+| `taom_ph_gundabad_spear_a02_t4_name` | [Gundabad] War Spear (added by #1296) |
+| `taom_ph_gundabad_spear_a03_t5_name` | [Gundabad] Blackshield Spear (added by #1296) |
+| `taom_ph_gundabad_spear_a03_t8_name` | [Gundabad] Blackshield Spear, Tempered (added by #1296) |
+| `taom_ph_lothlorien_spear_t6_name` | [Lothlorien] Galadhrim Spear (added by #1296) |
 | `taom_ph_isengard_1h_sword_t7_blade_name` | Isengard Sword Blade A (placeholder) |
 | `taom_ph_erebor_spear_a_t4_blade_name` | Erebor Spear Blade A (placeholder) |
 | `taom_ph_erebor_spear_b_t4_blade_name` | Erebor Spear Blade B (placeholder) |
@@ -128,6 +132,10 @@ Record each pending feature's module, source file, exact keys and English text, 
 | `taom_ph_gondor_spear_a_t8_blade_name` | Gondor Spear Head D (placeholder) |
 | `taom_ph_mirkwood_sword_t8_blade_name` | [Mirkwood] Sword Blade (placeholder) |
 | `taom_ph_mirkwood_sword_t10_blade_name` | [Mirkwood] Sword Blade (placeholder) |
+| `taom_ph_gundabad_spear_a02_t4_blade_name` | Gundabad Orc Spear Blade II (placeholder) (added by #1296) |
+| `taom_ph_gundabad_spear_a03_t5_blade_name` | Gundabad Orc Spear Blade III (placeholder) (added by #1296) |
+| `taom_ph_gundabad_spear_a03_t8_blade_name` | Gundabad Orc Spear Blade III (placeholder) (added by #1296) |
+| `taom_ph_lothlorien_spear_t6_blade_name` | High Elven Spear Blade (placeholder) (added by #1296) |
 
 ## Momentum option hints (#1166)
 
@@ -150,3 +158,28 @@ Record each pending feature's module, source file, exact keys and English text, 
 - English source: `Client/Features/CustomBattles/Muster/TcbVM.cs` (screen titles, buttons, popups and Status lines) and `TcbFieldVM.cs` (the Battlefield dropdown labels and choices).
 - Target languages: BR, CNs, CNt, DE, FR, IT, JP, KO, PL, RU, SP, TR.
 - Placeholders: the Status and total lines build numbers into the text; keep each number a `{VALUE}` placeholder when wrapping.
+
+## Cheat menu results that name what they gave (#1297)
+
+- Status: pending project-lead translation pass. The English rows are registered in `taom_module_strings.xml`.
+- Source: #1297.
+- Module: TAOM.
+- English source: `Main/_Module/ModuleData/taom_module_strings.xml` (used by `Main/Features/CheatMenu/CheatMenuTexts.cs`).
+- Target languages: BR, CNs, CNt, DE, FR, IT, JP, KO, PL, RU, SP, TR.
+- Placeholder: `{NUMBER}` is a formatted number (gold total, influence, renown or soldiers healed).
+
+| Key | English source | Context |
+| --- | --- | --- |
+| `taom_cheat_done_gold` | Gold given. You now have {NUMBER} denars. | Result of the gold cheat; the number is the new total |
+| `taom_cheat_done_influence` | Gained {NUMBER} influence. | Result of the influence cheat |
+| `taom_cheat_done_renown` | Gained {NUMBER} renown. | Result of the renown cheat |
+| `taom_cheat_done_heal` | Your party is healed. Soldiers healed: {NUMBER}. | Result of the heal cheat |
+
+## Realms options for realm names and banners (a4834c46c)
+
+- Status: pending project-lead translation pass. The English rows are registered in `taom_module_strings.xml`; no language file has them yet (found by the #1297 review).
+- Source: commit a4834c46c.
+- Module: TAOM.
+- English source: `Main/_Module/ModuleData/taom_module_strings.xml` (MCM options read by the Realms settings).
+- Target languages: BR, CNs, CNt, DE, FR, IT, JP, KO, PL, RU, SP, TR.
+- Keys: `taom_realms_mcm_rename_own`, `taom_realms_mcm_rename_own_hint`, `taom_realms_mcm_rename_ai`, `taom_realms_mcm_rename_ai_hint`, `taom_realms_mcm_own_banner`, `taom_realms_mcm_own_banner_hint`, `taom_realms_mcm_ai_banners`, `taom_realms_mcm_ai_banners_hint`. Read the English in the source file; the hints are long.

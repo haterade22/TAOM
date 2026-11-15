@@ -47,7 +47,8 @@ public class CombatMechanicsConfigProviderTests
         var c = _sut.GetConfig();
 
         Assert.AreEqual(25f, c.CrushThrough.ExtraCrushThroughEnergyThreshold, 0.0001f);
-        Assert.AreEqual(30, c.CrushThrough.SkillDeadZone);
+        Assert.AreEqual(20, c.CrushThrough.SkillDeadZone);
+        Assert.AreEqual(135, c.CrushThrough.SkillTargetDelta);
         Assert.AreEqual(6f, c.ChargeKnockdown.NeutralWeightRatio, 0.0001f);
         Assert.AreEqual(4, c.Creatures.CleaveMonsterIds.Count);
         Assert.AreEqual(7, c.RaceModifiers.Count);
@@ -124,7 +125,7 @@ public class CombatMechanicsConfigProviderTests
         var c = _sut.GetConfig();
 
         Assert.AreEqual(0.3f, c.CrushThrough.MaxSkillChance, 0.0001f);
-        Assert.AreEqual(30, c.CrushThrough.SkillDeadZone);
+        Assert.AreEqual(20, c.CrushThrough.SkillDeadZone);
         Assert.AreEqual(6, c.CrushThrough.MonsterCrushMonsterIds.Count);
         Assert.AreEqual(6f, c.ChargeKnockdown.NeutralWeightRatio, 0.0001f);
         Assert.AreEqual(7, c.RaceModifiers.Count);
@@ -169,26 +170,26 @@ public class CombatMechanicsConfigProviderTests
     {
         // Equality is a violation too: deadZone == targetDelta makes the chance-curve
         // denominator 1 − e^0 = 0 (division by zero).
-        WriteConfig(@"{ ""crushThrough"": { ""skillDeadZone"": 200 } }");
+        WriteConfig(@"{ ""crushThrough"": { ""skillDeadZone"": 135 } }");
 
         var c = _sut.GetConfig();
 
-        Assert.AreEqual(30, c.CrushThrough.SkillDeadZone);
-        Assert.AreEqual(200, c.CrushThrough.SkillTargetDelta);
+        Assert.AreEqual(20, c.CrushThrough.SkillDeadZone);
+        Assert.AreEqual(135, c.CrushThrough.SkillTargetDelta);
         _logger.Received().LogWarning(Arg.Is<string>(s => s.Contains("skillDeadZone")));
     }
 
     [TestMethod]
     public void GetConfig_DefaultDeadZoneStillAboveTargetDelta_RevertsTargetDeltaToo()
     {
-        // Both individually in range, but 25 >= 20; the default dead zone (30) STILL violates
-        // against targetDelta 20, so the target delta must revert as well.
-        WriteConfig(@"{ ""crushThrough"": { ""skillDeadZone"": 25, ""skillTargetDelta"": 20 } }");
+        // Both individually in range, but 25 >= 15; the default dead zone (20) STILL violates
+        // against targetDelta 15, so the target delta must revert as well.
+        WriteConfig(@"{ ""crushThrough"": { ""skillDeadZone"": 25, ""skillTargetDelta"": 15 } }");
 
         var c = _sut.GetConfig();
 
-        Assert.AreEqual(30, c.CrushThrough.SkillDeadZone);
-        Assert.AreEqual(200, c.CrushThrough.SkillTargetDelta);
+        Assert.AreEqual(20, c.CrushThrough.SkillDeadZone);
+        Assert.AreEqual(135, c.CrushThrough.SkillTargetDelta);
         _logger.Received().LogWarning(Arg.Is<string>(s => s.Contains("skillTargetDelta")));
     }
 

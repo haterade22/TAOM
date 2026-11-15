@@ -182,6 +182,7 @@ TARGETS = {
             "sk_gd_ano_pauld_cape_fount_elite_a": "sk_ar_art_pauld_cape_noble_elite_a",
             "sk_gd_ano_pauld_noble_heavy_a": "sk_ar_art_pauld_noble_heavy_a",
             "sk_gd_ano_bracer_noble_heavy_a": "sk_ar_art_bracer_noble_heavy_a",
+            "sk_gd_ano_bracer_noble_elite_a": "sk_ar_art_bracer_noble_elite_a",
             "sk_gd_ano_bracer_noble_med_a": "sk_ar_art_bracer_noble_med_a",
             "sk_gd_ano_grvs_noble_med_a": "sk_ar_art_grvs_noble_med_a",
             "sk_gd_ano_inf_chest_heavy_a": "sk_ar_art_chest_inf_heavy_a",
@@ -217,6 +218,20 @@ TARGETS = {
             "sk_gd_pin_spear_helmet_heavy_a": "sk_ar_art_helmet_inf_elite_a",
             "sk_gd_vale_helmet_heavy_a": "sk_ar_art_helmet_warden_heavy_a",
             "sk_gd_anf_cav_helmet_heavy_a": "sk_ar_art_helmet_cav_heavy_a",
+            # Gondor's lord templates wear lord pieces since the lord kit pass (#1271), so each maps to
+            # an Arnor noble piece and the clone lords keep the Arnor look. The helmets and pauldrons
+            # map to Arnor pieces of their own; the Arnor line has only four noble chests and one
+            # lord-grade bracer, so the chests and the elite bracer share theirs with the soldier maps.
+            "sk_gd_lam_nob_helmet_lord_a": "sk_ar_art_helmet_noble_prince_b",
+            "sk_gd_lam_nob_helmet_lord_b": "sk_ar_art_helmet_noble_elite_b",
+            "sk_gd_lin_helmet_lord_a": "sk_ar_art_helmet_noble_prince_a",
+            "sk_gd_lam_inf_chest_lord_a": "sk_ar_art_chest_noble_med_b",
+            "sk_gd_lam_nob_chest_lord_a": "sk_ar_art_chest_noble_heavy_a",
+            "sk_gd_lon_chest_lord_a": "sk_ar_art_chest_noble_med_a",
+            "sk_gd_lam_cape_noble_a": "sk_ar_art_pauld_cape_noble_elite_b",
+            "sk_gd_lam_pauld_cape_noble_lord_a": "sk_ar_art_pauld_noble_elite_a",
+            "sk_gd_sere_bracer_lord_a": "sk_ar_art_bracer_noble_elite_a",
+            "sk_gd_sere_grvs_lord_a": "sk_ar_art_grvs_noble_elite_a",
         },
         # Clone only the templates that name townsfolk; the generator writes the nine soldier ones.
         "party_names": ["villager_{c}_template", "caravan_template_{c}", "elite_caravan_template_{c}"],

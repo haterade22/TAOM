@@ -54,37 +54,60 @@ bar and a player who can take a soldier after death.
 ### The story offer (slice 4)
 
 - **Source:** a War Chronicle siege with a `story` block (`war_chronicle.json`; the Hornburg names
-  `helms_deep_defend`). `IChronicleStoryPort.GetStoryOffers` lists each Active story window that the
+  `helms_deep_defend`). The block may also name an `attackMission`, the same battle from the
+  attackers' side (#1326); no shipped window has one yet, because the launcher still refuses an
+  attacking mission. `IChronicleStoryPort.GetStoryOffers` lists each Active story window that the
   player has not declined, that no attacker has besieged, and whose target the defender still holds
   (read live), while no chronicle announcement waits to show ([war-chronicle.md](war-chronicle.md)
   "The event chain", "Story offer"). The MCM switch "Offer Story Missions" (War of the Ring/War
   Chronicle) and War Ended empty the list.
 - **Gates** (`StoryOfferService.NextOffer`): single-player authority only (no co-op session, no
   dedicated server), not enlisted, not a prisoner, not in a map event (the offer opens a menu, and
-  only the battle menu may close the player's battle), the player's map faction not one of the
-  window's attackers (a loss would give the fortress to the player's own ruler), a mission the catalog
-  loads as a defence (else one warning per window), and a window not snoozed today.
-- **Offer** (`StoryOfferBehavior`): every 30 campaign ticks while time runs, on a free map
-  (`MapPopupGate.IsMapFree`), a two-button popup. "Ride to Helm's Deep" opens the menu
+  only the battle menu may close the player's battle), a `mission` the catalog loads as a defence
+  and an `attackMission` it loads as an attack (else one warning per window and id, and that side is
+  not offered), a window not snoozed today, and at least one side the player may take.
+- **Sides** (#1326, `StorySideGate.Choose`): the player never fights for a side of the opposite
+  alignment. His side is `IAlignmentService.ResolveSide` of `FactionSides.OfPlayer()` (his kingdom,
+  or his clan outside one, then that faction's culture). The defenders' side is `GetKingdomSide` of
+  the window's defender kingdom and the attackers' side that of its first attacker kingdom, so a war
+  pledge counts; there is no culture fallback, and `ShippedStoryOffersTests` requires every kingdom
+  of a story window to be listed in `execution/alignment.json`. A neutral player may take either
+  side, and a neutral side is open to everyone. At Helm's Deep (Rohan free, Isengard evil) a free player may defend, an
+  evil player may attack, and a neutral player may do either. His own kingdom comes first: when it
+  is the window's defender he may only defend, and when it is one of the attackers he may only
+  attack, so he never fights against his own realm. A window with no side for him is
+  not offered at all: "Let fate decide" is a saved decline, and a player with nothing else to click
+  would close the window for good. So until an attack mission ships, an evil player and a player of
+  Isengard or Dunland get no Helm's Deep offer.
+- **Offer** (`StoryOfferBehavior`, `StoryOfferPopup`): every 30 campaign ticks while time runs, on
+  a free map (`MapPopupGate.IsMapFree`), a two-button popup whose question follows the sides on
+  offer (`StoryOfferText`). "Ride to Helm's Deep" ("March on Helm's Deep" for a player who may only
+  attack) opens the menu
   `taom_story_offer` if the map is still free (`MapPopupGate.IsMapFreeUnderPopup`: the rest of the
   tick can open an encounter or a conversation under the popup). "Not now", or Escape, snoozes the
-  offer until the next day, as does a popup closed with no answer. The menu has "Defend the walls" (a
-  `LeaveType.Mission` option that calls `StoryMissionLauncher.Launch` with a verdict callback) and
-  "Let fate decide", which declines (saved by the chronicle as `sd`). Neither is a leave option, so
-  no menu hotkey declines by accident.
+  offer until the next day, as does a popup closed with no answer. The menu has "Defend the walls"
+  and "Storm the walls" (`LeaveType.Mission` options that call `StoryMissionLauncher.Launch` with
+  the window's `mission` or `attackMission` and a verdict callback; each shows only when the player
+  may take that side) and "Let fate decide", which declines (saved by the chronicle as `sd`). None
+  of the three is a leave option, so no menu hotkey declines by accident.
 - **Result:** the engine returns to the menu after the mission and runs its init again
   (`MapState.OnActivate`, `MenuContext.Refresh`). That init applies the verdict through
   `StoryOfferService.Apply` once, before the player can save (the behavior saves nothing), and
-  "Continue" only leaves. Won resolves the window Held (`ResolveStoryWon`: the owner check first,
-  nothing after War Ended). Lost calls `ConfirmStoryWindow` first, which runs the same owner check and
-  War Ended guard, then `IStoryCampaignAdapter.GiveSettlement`, and the chronicle's owner check
-  resolves Fell. Undecided (a fault, a stalemate, a mission left before the run starts) and a failed
+  "Continue" only leaves. The verdict is read for the side the player took. Held walls (a won
+  defence, or a lost attack) resolve the window Held (`ResolveStoryHeld`: the owner check first,
+  nothing after War Ended). Fallen walls (a lost defence, or a won attack) call `ConfirmStoryWindow`
+  first, which runs the same owner check and War Ended guard, then
+  `IStoryCampaignAdapter.GiveSettlement`, and the chronicle's owner check resolves Fell. A lost
+  attack closes the window Held on purpose: a window left open would let the player storm the walls
+  again every day. Undecided (a fault, a stalemate, a mission left before the run starts) and a failed
   transfer snooze the offer until the next day. A retreat after the run starts is Lost (slice 1's
   `StoryVerdict` for a defender), so it gives the fortress away. The menu text follows the applied
-  result (`StoryOfferService.MenuText`).
+  result and the side (`StoryOfferText.Menu`).
 - **Check lines:** `taom.story-missions.offer.shown` and `.offer.result`. `OutcomeLog` writes one line
   per key for the whole process, so each key names the campaign (`UniqueGameId`), the window and,
-  for a result, the verdict: a reload that plays the other result still writes its line.
+  for a result, the verdict (`AttackWon` and `AttackLost` for the attacking side): a reload that
+  plays the other result still writes its line. The shown line carries `choices=` (Defend, Attack or
+  Defend+Attack) and `side=` (the player's resolved side).
 - **The transfer** (`StoryCampaignAdapter`): `ChangeOwnerOfSettlementAction.ApplyByDefault` to the
   ruler of the first listed attacker with a living ruler, then the old garrison roster is emptied,
   the militia set to 0 (as vanilla's rebellion transfer does, `RebellionsCampaignBehavior`) and
@@ -192,8 +215,12 @@ All seven rows are Defend missions with one wave. Only Helm's Deep names a music
 | `Main/Features/DevConsole/Cheats/StoryMissionCheats.cs` | `taom.story_open` |
 | `Main/_Module/ModuleData/story_missions/story_missions.json` | The missions |
 | `Main/Features/StoryMissions/StoryOfferService.cs` | Slice 4: the offer's gates and the verdict's campaign result |
-| `Main/Features/StoryMissions/Hooks/StoryOfferBehavior.cs` | Slice 4: the popup, the menu `taom_story_offer` and the result click |
-| `Main/Adapters/IStoryCampaignAdapter.cs`, `StoryCampaignAdapter.cs` | Slice 4: captivity, and the transfer of a lost fortress |
+| `Main/Features/StoryMissions/Domain/StorySideGate.cs` | #1326: the sides a player may take (`StorySideGate`, `StoryChoices`, `StoryTie`) |
+| `Main/Features/StoryMissions/StoryOffer.cs` | An open window with the sides on offer and the player's resolved side |
+| `Main/Features/StoryMissions/StoryOfferText.cs` | The popup and menu lines by sides on offer, side taken and result |
+| `Main/Features/StoryMissions/Hooks/StoryOfferBehavior.cs` | Slice 4: the menu `taom_story_offer`, its two side options and the result click |
+| `Main/Features/StoryMissions/Hooks/StoryOfferPopup.cs` | The popup, and a line with {TARGET} filled in |
+| `Main/Adapters/IStoryCampaignAdapter.cs`, `StoryCampaignAdapter.cs` | Slice 4: captivity, the player's side pair, and the transfer of a fallen fortress |
 | `Main/Features/WarChronicle/Events/IChronicleStoryPort.cs` | Slice 4: the chronicle seam (`ChronicleService` implements it) |
 | `tools/ingame_checks/1105.toml` | The in-game check manifest |
 
@@ -205,6 +232,8 @@ All seven rows are Defend missions with one wave. Only Helm's Deep names a music
 - `ICoopSessionProvider`, `IDedicatedServerProvider` (CoopInterop): the co-op refusal. The co-op row
   is in [coop-interop.md](coop-interop.md).
 - `IEnlistmentStateQuery` (Enlistment): the enlistment refusal.
+- `IAlignmentService` (Execution) with `execution/alignment.json`, and the War Pledge override it
+  reads: the player's side and the side of each kingdom of a story window (#1326).
 - `IMissionMusicAdapter` (Adapters): the engine's music calls.
 
 ## Tests
@@ -216,7 +245,10 @@ All seven rows are Defend missions with one wave. Only Helm's Deep names a music
 - `StoryMissionLauncherTests`, `StoryMissionsWiringTests`, `StoryMissionWiringPinTests`: the launch refusals and the wiring.
 - `HostedRunOutcomeLogTests`: the check line rename.
 - `StoryOfferServiceTests`, `ShippedStoryOffersTests`, and in `TAOM.Tests/Features/WarChronicle/`
-  `ChronicleStoryTests`: the offer's gates, the verdict results, the shipped story ids and the fate.
+  `ChronicleStoryTests`: the offer's gates, the verdict results for both sides, the shipped story
+  ids, the alignment table row of every story window kingdom, and the fate.
+- `StorySideGateTests`, `StoryOfferTextTests`: the side rule (alignment and kingdom ties) and the
+  lines per side.
 - `StoryMusicCueTests`, and `TAOM.Tests/Infrastructure/MusicPauseGateTests.cs`: the music cue and the pause sites.
 
 ## How to verify in game
@@ -234,8 +266,11 @@ enlisted. No restart and no MCM setting are needed.
 
 Slice 4, in a campaign at the Full War:
 
-1. Run `taom.chronicle_open hornburg confirm`. The popup appears on the free map, and the line
-   `[Check] id=taom.story-missions.offer.shown result=pass` follows.
+1. As a free player, or a neutral player whose realm has not pledged (`taom.print_war_pledges`),
+   run `taom.chronicle_open hornburg confirm`. The popup appears on the free map, and the line
+   `[Check] id=taom.story-missions.offer.shown result=pass` follows, ending `choices=Defend` and
+   the player's side. The menu has no "Storm the walls". An evil player, and a player of Isengard
+   or Dunland, gets no popup and no line (#1326).
 2. Choose "Ride to Helm's Deep", then "Defend the walls". End the wave, then choose "Continue". The
    line `taom.story-missions.offer.result` reads `verdict=Won result=Held` or
    `verdict=Lost result=Fell taker=isengard`. `taom.chronicle_status` shows the same state.
@@ -263,6 +298,8 @@ player report showed the Hornburg ending with no battle (2026-11-13).
 
 ## Changelog
 
+- 2026-11-15: #1326, the offer follows the player's side of the war (defend, attack or no offer),
+  and a story block may name an `attackMission`. No attack mission ships yet.
 - 2026-11-13: Slice 4, the Hornburg's offer of the Helm's Deep defence and its campaign result.
 - 2026-11-12: this doc, from the code on trunk.
 - 2026-11-10: Slice 1 (the campaign host and `taom.story_open`), the mission's own music, and seven

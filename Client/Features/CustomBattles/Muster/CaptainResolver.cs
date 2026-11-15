@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Xml;
 using TaleWorlds.Core;
+using TaleWorlds.ModuleManager;
 using TaleWorlds.ObjectSystem;
 
 namespace TAOM.Client.Features.CustomBattles.Muster
@@ -13,7 +14,7 @@ namespace TAOM.Client.Features.CustomBattles.Muster
     /// you just get a different elite unit, with the closest weapon type - so if there is only 1 elite unit with 2 handed
     /// swords, but there is a 2handed elite unit with an axe, then that could be the captain".
     /// Upgrades come from the NPCCharacter XML of the loaded modules (read only; a Custom Battle character does not carry
-    /// them). Elite = same culture, not a hero, a higher level than the unit; closest = same weapon class, then same weapon
+    /// them: BasicCharacterObject has no upgrade targets, v1.5.7). Elite = same culture, not a hero, a higher level than the unit; closest = same weapon class, then same weapon
     /// family (two-handed, one-handed, polearm, bow, crossbow, thrown), then ranged with ranged, mounted with mounted.
     /// </summary>
     internal static class CaptainResolver
@@ -110,7 +111,13 @@ namespace TAOM.Client.Features.CustomBattles.Muster
 
         private static bool Mounted(BasicCharacterObject c) => c?.Equipment != null && !c.Equipment[EquipmentIndex.Horse].IsEmpty;
 
-        /// <summary>troop id -> its upgrade ids, from every loaded module's NPCCharacter XML (read once).</summary>
+        /// <summary>
+        /// troop id -> its upgrade ids, read once from the files each active module registers as NPCCharacters
+        /// (XmlResource.XmlInformationList), in the engine's order. Custom Battle's own load also skips registrations
+        /// not for CustomGame; this read keeps them, and they add no upgrades today (2026-11-15). A stream per file, not a
+        /// DOM load of every ModuleData XML (#1297: about 59 MB on the desktop install, 12 MB of it troop files). It
+        /// reads the files as written: no TAOM, TAOM_Map or Armory stylesheet changes upgrade_targets (2026-11-15).
+        /// </summary>
         private static Dictionary<string, List<string>> Upgrades()
         {
             if (_upgrades != null) return _upgrades;
@@ -120,44 +127,73 @@ namespace TAOM.Client.Features.CustomBattles.Muster
             int files = 0;
             try
             {
-                foreach (var name in TaleWorlds.Engine.Utilities.GetModulesNames())
+                foreach (var info in XmlResource.XmlInformationList)
                 {
-                    // the module's own folder (Modules/ or a Workshop item), as the engine resolves it
-                    var data = Path.Combine(TaleWorlds.ModuleManager.ModuleHelper.GetModuleFullPath(name), "ModuleData");
-                    if (!Directory.Exists(data)) continue;
-                    foreach (var f in Directory.EnumerateFiles(data, "*.xml", SearchOption.AllDirectories))
+                    if (info.Id != "NPCCharacters" || !ModuleHelper.IsModuleActive(info.ModuleName)) continue;
+                    foreach (var f in FilesOf(ModuleHelper.GetXmlPath(info.ModuleName, info.Name)))
                     {
-                        if (f.IndexOf("Languages", StringComparison.OrdinalIgnoreCase) >= 0) continue;
                         try
                         {
-                            var doc = new XmlDocument();
-                            doc.Load(f);
-                            var all = doc.SelectNodes("//NPCCharacter");
-                            if (all == null || all.Count == 0) continue;
+                            using (var reader = new StreamReader(f))
+                                ReadCharacters(reader, info.ModuleName, _moduleOf, _upgrades, _inTree);
                             files++;
-                            foreach (XmlNode ch in all)
-                            {
-                                var id = ch.Attributes?["id"]?.Value;
-                                if (id == null) continue;
-                                _moduleOf[id] = name;                    // the last module to define it wins, as in the game
-                                var list = ch.SelectNodes("upgrade_targets/upgrade_target")?.Cast<XmlNode>()
-                                    .Select(t => t.Attributes?["id"]?.Value?.Replace("NPCCharacter.", ""))
-                                    .Where(t => !string.IsNullOrEmpty(t)).Select(t => t!).ToList();
-                                if (list != null && list.Count > 0)
-                                {
-                                    _upgrades[id] = list;
-                                    _inTree.Add(id);
-                                    foreach (var t in list) _inTree.Add(t);
-                                }
-                            }
                         }
-                        catch { } // swallow-ok: a module XML that does not parse holds no troop tree to read
+                        catch (Exception e) { TAOM.Features.CustomBattles.Muster.CustomBattleMuster.Log($"captain upgrades: {Path.GetFileName(f)} not read: {e.Message}"); }
                     }
                 }
             }
             catch (Exception e) { TAOM.Features.CustomBattles.Muster.CustomBattleMuster.Log("captain upgrades: " + e.Message); }
             TAOM.Features.CustomBattles.Muster.CustomBattleMuster.Log($"ARMY captain resolver: {_upgrades.Count} troops with upgrades, from {files} files");
             return _upgrades;
+        }
+
+        // the engine's rule (MBObjectManager.GetMergedXmlForManaged): the registered path as a file, else a folder of them
+        private static IEnumerable<string> FilesOf(string xmlPath)
+        {
+            if (File.Exists(xmlPath)) return new[] { xmlPath };
+            var folder = xmlPath.Replace(".xml", "");
+            return Directory.Exists(folder) ? Directory.GetFiles(folder, "*.xml") : Array.Empty<string>();
+        }
+
+        /// <summary>
+        /// One NPCCharacters file: each troop's module (the last to define it wins, as in the game) and its upgrades
+        /// (every definition's targets joined, as MBObjectManager.MergeElements merges upgrade_targets).
+        /// </summary>
+        internal static void ReadCharacters(TextReader text, string module, Dictionary<string, string> moduleOf,
+            Dictionary<string, List<string>> upgrades, HashSet<string> inTree)
+        {
+            string? id = null;
+            var pending = new List<string>();
+            void Commit()
+            {
+                if (id != null && pending.Count > 0)
+                {
+                    if (upgrades.TryGetValue(id, out var earlier))
+                        pending = earlier.Concat(pending).Distinct(StringComparer.OrdinalIgnoreCase).ToList();
+                    upgrades[id] = pending;
+                    inTree.Add(id);
+                    foreach (var t in pending) inTree.Add(t);
+                }
+                pending = new List<string>();
+            }
+
+            using var r = XmlReader.Create(text, new XmlReaderSettings { IgnoreComments = true, DtdProcessing = DtdProcessing.Prohibit });
+            while (r.Read())
+            {
+                if (r.NodeType != XmlNodeType.Element) continue;
+                if (r.Name == "NPCCharacter")
+                {
+                    Commit();
+                    id = r.GetAttribute("id");
+                    if (id != null) moduleOf[id] = module;
+                }
+                else if (r.Name == "upgrade_target" && id != null)
+                {
+                    var target = r.GetAttribute("id")?.Replace("NPCCharacter.", "");
+                    if (!string.IsNullOrEmpty(target)) pending.Add(target!);
+                }
+            }
+            Commit();
         }
     }
 }

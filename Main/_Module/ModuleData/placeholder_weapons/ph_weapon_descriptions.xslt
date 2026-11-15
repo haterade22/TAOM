@@ -20,6 +20,10 @@
       <AvailablePiece id="taom_ph_gondor_spear_b_swan_t8_blade"/>
       <AvailablePiece id="taom_ph_gondor_spear_b_t5_blade"/>
       <AvailablePiece id="taom_ph_gondor_spear_b_t8_blade"/>
+      <AvailablePiece id="taom_ph_gundabad_spear_a02_t4_blade"/>
+      <AvailablePiece id="taom_ph_gundabad_spear_a03_t5_blade"/>
+      <AvailablePiece id="taom_ph_gundabad_spear_a03_t8_blade"/>
+      <AvailablePiece id="taom_ph_lothlorien_spear_t6_blade"/>
     </xsl:copy>
   </xsl:template>
   <xsl:template match="WeaponDescription[@id='OneHandedSword']/AvailablePieces">
@@ -46,6 +50,10 @@
       <AvailablePiece id="taom_ph_gondor_spear_b_swan_t8_blade"/>
       <AvailablePiece id="taom_ph_gondor_spear_b_t5_blade"/>
       <AvailablePiece id="taom_ph_gondor_spear_b_t8_blade"/>
+      <AvailablePiece id="taom_ph_gundabad_spear_a02_t4_blade"/>
+      <AvailablePiece id="taom_ph_gundabad_spear_a03_t5_blade"/>
+      <AvailablePiece id="taom_ph_gundabad_spear_a03_t8_blade"/>
+      <AvailablePiece id="taom_ph_lothlorien_spear_t6_blade"/>
     </xsl:copy>
   </xsl:template>
   <xsl:template match="WeaponDescription[@id='TwoHandedPolearm_Bracing']/AvailablePieces">
@@ -64,6 +72,10 @@
       <AvailablePiece id="taom_ph_gondor_spear_b_swan_t8_blade"/>
       <AvailablePiece id="taom_ph_gondor_spear_b_t5_blade"/>
       <AvailablePiece id="taom_ph_gondor_spear_b_t8_blade"/>
+      <AvailablePiece id="taom_ph_gundabad_spear_a02_t4_blade"/>
+      <AvailablePiece id="taom_ph_gundabad_spear_a03_t5_blade"/>
+      <AvailablePiece id="taom_ph_gundabad_spear_a03_t8_blade"/>
+      <AvailablePiece id="taom_ph_lothlorien_spear_t6_blade"/>
     </xsl:copy>
   </xsl:template>
   <xsl:template match="WeaponDescription[@id='TwoHandedPolearm_Couchable']/AvailablePieces">
@@ -82,6 +94,10 @@
       <AvailablePiece id="taom_ph_gondor_spear_b_swan_t8_blade"/>
       <AvailablePiece id="taom_ph_gondor_spear_b_t5_blade"/>
       <AvailablePiece id="taom_ph_gondor_spear_b_t8_blade"/>
+      <AvailablePiece id="taom_ph_gundabad_spear_a02_t4_blade"/>
+      <AvailablePiece id="taom_ph_gundabad_spear_a03_t5_blade"/>
+      <AvailablePiece id="taom_ph_gundabad_spear_a03_t8_blade"/>
+      <AvailablePiece id="taom_ph_lothlorien_spear_t6_blade"/>
     </xsl:copy>
   </xsl:template>
 </xsl:stylesheet>

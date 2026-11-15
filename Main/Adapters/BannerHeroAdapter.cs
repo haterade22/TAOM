@@ -1,3 +1,4 @@
+using TAOM.Features.Realms.Hooks;
 using TAOM.Core.Infrastructure;
 using TaleWorlds.CampaignSystem;
 
@@ -25,7 +26,9 @@ public class BannerHeroAdapter : IBannerHeroAdapter
         if (kingdom.RulingClan != clan) return;
         // A ruling house with a banner of its own (Realms' HouseBanners) leaves the realm's colours alone: the realm
         // follows its own banner, not the house's. (Clan.Banner of a ruling clan is the realm's; compare the house's own.)
-        if (!ReferenceEquals(clan.ClanOriginalBanner, kingdom.Banner)) return;
+        // Only while house banners are on: each XML kingdom builds its own banner object, so the comparison alone would
+        // stop the sync for every one of them (#1297).
+        if (HouseBanners.IsActive && !ReferenceEquals(clan.ClanOriginalBanner, kingdom.Banner)) return;
 
         uint bgColor = clan.Color;
         uint iconColor = clan.Color2;

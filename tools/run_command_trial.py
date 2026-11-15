@@ -13,11 +13,11 @@ controls in order, and writes one line per step:
 Exit 0 means every step in --steps has a PASS line and no FAIL line, the done file says reason=final, the log has no CrashReport block,
 no failed Seat or Marshal's Word check line, no [ERROR] line of the Seat or its trial (a Seat patch that failed to apply and the thread guard's
 line for a trial or Seat site count), no [ERROR] line of Marshal's Word (a hotkey registration that failed, a session that could not start, a patch
-class of its category that failed or was skipped, the Patch_MissionTime_MarshalsWord category that failed to apply (the two thrower patches), the thrower stand that failed, the order panel's registration failure, the spacing repair's degraded method, and the thread guard's line for one of its adapters' sites), and a clean module unload line, the game left by itself, and the log's [BuildStamp] is this checkout, read at the moment the run
-is judged: the stamp's sha is HEAD, no tier of the stamp says MISMATCH, its .dirty mark agrees with the tree (dirty with uncommitted files,
-clean without), and no uncommitted file under the build's own pathspec (WATCHED_PATHS) is newer than the stamp's build time. A deploy made before the last edit fails the run when
+class of its category that failed or was skipped, the Patch_MissionTime_MarshalsWord category that failed to apply (the two thrower patches), the thrower stand that failed, the order panel's registration failure, the spacing repair's degraded method, and the thread guard's line for one of its adapters' sites), and a clean module unload line, the game left by itself, and the log's [BuildStamp] is this checkout, read once at launch before the game starts
+(tools/autorun_build.py, shared with run_scenario.py and run_long_defeat.py): the stamp's sha is HEAD, no tier of the stamp says MISMATCH, its .dirty mark agrees with the tree (dirty with uncommitted files,
+clean without), and no uncommitted file under the build's own pathspec (autorun_build.WATCHED_PATHS) is newer than the stamp's build time. A deploy made before the last edit fails the run when
 the edited file is still uncommitted (docs/features/seat-of-seeing.md names the cases only a content hash in the stamp could close),
-and the PASS text names the build that was judged and the [Session] swallowed counts. Exit 1 is any failure, including a preflight refusal or an unreadable git; exit
+and the PASS text names the build that was judged and the [Session] swallowed counts. A commit or an edit made while the game runs is not read, so it cannot fail a good run. Exit 1 is any failure, including a preflight refusal or an unreadable git at launch (nothing is started); exit
 2 is a bad argument; a --dry-run that exits 0 only means the preflight passed. A person still looks at the hud_*.png pictures the run
 saves.
 
@@ -32,16 +32,13 @@ and its gate are in docs/reference/unattended-game-runs.md. A builder never laun
 import argparse
 import functools
 import re
-import subprocess
 import sys
-from datetime import datetime, timezone
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
+import autorun_build  # noqa: E402
 import run_fords_autorun as runner  # noqa: E402
-
-REPO = Path(__file__).resolve().parent.parent
 
 ENV_VAR = "TAOM_COMMAND_TRIAL"
 DONE_FILE = "command_trial_done.txt"
@@ -124,54 +121,7 @@ MARSHAL_ERROR = re.compile(
     r"|\[TAOM\] Marshal(?:Order|Fire|Outline)Adapter\.\w+ ran off the main mission thread)")
 SESSION_SUMMARY = re.compile(r"\[Session\] summary reason=\S+ .*?\bswallowed=(\d+) shield_swallowed=(\d+)(?:.*?\berrors=(\d+))?")
 SESSION_SITE = re.compile(r"\[Session\] swallowed feature=(\S+) site=(\S+) n=(\d+)")
-BUILD_STAMP = re.compile(r"\[BuildStamp\] TAOM=\S+ build\.(\d{8}-\d{6})Z\+([0-9a-f]{7,40})(\.dirty)?(?:\s|$)")
 UNLOAD_LINE = "[Shutdown] clean module unload"
-# The pathspec the build marks a stamp .dirty from (Directory.Build.props, target TaomStampWorkingTreeState); a test reads it out of there.
-WATCHED_PATHS = ("Main", "Client", "CoopCompat", "Dependencies", "Stubs", "Directory.Build.props", "GameReferences.targets")
-
-
-def stale_build(log_text, head, changed):
-    """Why the log's build is not this checkout, else None. changed: {path: UTC mtime} of the uncommitted files under WATCHED_PATHS, with
-    datetime.min for a path that no longer exists."""
-    match = BUILD_STAMP.search(log_text)
-    if match is None:
-        return "the log has no [BuildStamp] line with a git sha"
-    if "MISMATCH" in log_text[match.start():].split("\n", 1)[0]:
-        return "the stamp says MISMATCH: the TAOM modules in the deploy were not built together"
-    if not head.startswith(match.group(2)):
-        return f"the deploy is {match.group(2)[:9]}, this checkout is {head[:9]}"
-    if bool(match.group(3)) != bool(changed):
-        if match.group(3):
-            return "the deploy has uncommitted edits and this tree has none"
-        return f"the deploy is a clean build and this tree has uncommitted edits ({sorted(changed)[0]})"
-    built = datetime.strptime(match.group(1), "%Y%m%d-%H%M%S")
-    newer = sorted(path for path, when in changed.items() if when > built)
-    return f"{newer[0]} changed after the build" if newer else None
-
-
-def git_state(repo=REPO):
-    """(HEAD sha, {path: UTC mtime}) for the uncommitted files under WATCHED_PATHS. A path that no longer exists, a deletion or the old
-    name of a rename, has datetime.min: the tree differs from HEAD there, but no time can be newer than the build. Raises OSError when
-    git cannot answer: not knowing the checkout is not a go."""
-    def git(*args):
-        result = subprocess.run(["git", "-C", str(repo), *args], capture_output=True, text=True, encoding="utf-8", errors="replace", timeout=60)
-        if result.returncode != 0:
-            raise OSError(f"git {' '.join(args)} exited {result.returncode}: {result.stderr.strip()[:200]}")
-        return result.stdout
-
-    head = git("rev-parse", "HEAD").strip()
-    changed = {}
-    for entry in git("--no-optional-locks", "status", "--porcelain", "-z", "--no-renames", "-uall", "--", *WATCHED_PATHS).split("\0"):
-        if len(entry) < 4:
-            continue
-        name = entry[3:]
-        try:
-            modified = (Path(repo) / name).stat().st_mtime
-        except OSError:
-            changed[name] = datetime.min
-            continue
-        changed[name] = datetime.fromtimestamp(modified, timezone.utc).replace(tzinfo=None)
-    return head, changed
 
 
 def session_swallowed(log_text):
@@ -191,11 +141,11 @@ def session_swallowed(log_text):
     return text
 
 
-def judge(done, report_json, log_text=None, steps=STEPS):
+def judge(done, report_json, log_text=None, steps=STEPS, checkout=None):
     """(exit code, why). A trial run has no JSON report: its evidence is the tagged log lines. The whole log counts for the CrashReport
-    check: it opens at this launch, so a boot-time swallow is this run's too. The log must come from this checkout's build, and the
-    checkout is read here, when the run is judged after the game exits, and not when it was launched: an edit, a merge or an earlier run of a
-    batch made in between is seen."""
+    check: it opens at this launch, so a boot-time swallow is this run's too. The log must come from this checkout's build.
+    checkout is (HEAD sha, {path: mtime}) as main read it with autorun_build.checkout_state() before the game started; a commit or an edit made
+    while the game ran is not seen. None fails the run."""
     if not done:
         return 1, "no done file"
     reason = done.get("reason", "")
@@ -203,11 +153,9 @@ def judge(done, report_json, log_text=None, steps=STEPS):
         return 1, f"reason={reason or '?'}"
     if not log_text:
         return 1, "reason=final but no TAOM log was copied, and that log is the trial's evidence"
-    try:
-        head, changed = git_state()
-    except (OSError, subprocess.SubprocessError) as error:
-        return 1, f"cannot read the checkout from git ({error}); a verdict needs to know which build it judges"
-    stale = stale_build(log_text, head, changed)
+    if checkout is None:
+        return 1, "the checkout was not read at launch, so the build cannot be judged"
+    stale = autorun_build.stale_build(log_text, *checkout)
     if stale is not None:
         return 1, "the game ran a build that is not this checkout: " + stale
 
@@ -236,8 +184,7 @@ def judge(done, report_json, log_text=None, steps=STEPS):
         return 1, f"{len(errors)} [ERROR] line(s) of the Seat, Marshal's Word or the trial in the log, the first: " + errors[0][:200]
     if UNLOAD_LINE not in log_text:
         return 1, "reason=final but the TAOM log has no clean module unload line"
-    stamp = BUILD_STAMP.search(log_text)
-    build = f"{stamp.group(2)[:9]}{stamp.group(3) or ''} built {stamp.group(1)} UTC"
+    build = autorun_build.build_label(log_text)
     return 0, f"reason=final, {len(steps)} steps with a PASS line, no FAIL line, no CrashReport block, no failed Seat or Marshal's Word check, no Seat or Marshal's Word [ERROR] line, clean unload, {session_swallowed(log_text)}, build {build}"
 
 
@@ -289,11 +236,10 @@ def main(argv=None):
         parser.error(str(error))
     known.steps = ",".join(steps) if known.steps else None
 
-    # Refuse a broken git before a launch. The answer is not kept: the judge reads the checkout again when the run is judged.
-    try:
-        git_state()
-    except (OSError, subprocess.SubprocessError) as error:
-        print(f"cannot read the checkout from git ({error}); a verdict needs to know which build it judges")
+    # The checkout is read once, here, before the game starts: the judge uses this state, so a commit or an edit made during the run is not seen.
+    checkout, refusal = autorun_build.read_checkout_for_launch()
+    if refusal:
+        print(refusal)
         return 1
 
     def arm_text_for(out, args):
@@ -305,7 +251,7 @@ def main(argv=None):
     runner.STATUS_FILE = STATUS_FILE
     runner.RUNS_ROOT = RUNS_ROOT
     runner.arm_text_for = arm_text_for
-    runner.judge = functools.partial(judge, steps=steps)
+    runner.judge = functools.partial(judge, steps=steps, checkout=checkout)
     return runner.main(rest)
 
 
