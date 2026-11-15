@@ -350,6 +350,18 @@ every L21 Dunlending read as a downgrade, restatted to 22.
 
 Save-compat: troop skills are read from XML at agent spawn, so a rebaseline applies to all troops in new *and* existing saves with nothing serialized per-troop-type — no save migration needed.
 
+## How to verify in game
+
+The checks owed for the ten tier curve (#343, 2026-11-15). An existing save is enough: troop skills are read from the XML. A tool cannot do these; a person must.
+
+1. Encyclopedia, Lothlórien. The Galadhrim Blademaster (`lorien_gl_blademaster`) shows Two Handed 235 above One Handed 215. The Marchwarden Archer (`lorien_mw_archer`) shows Bow 186 on top, and One Handed and Two Handed both at 165.
+2. Encyclopedia, lance cavalry. The Black Numenorean Knight (`mordor_num_knight`) shows Polearm 220 above One Handed 195. The Riders of Rohan (`rohan_edoras_golden_hall_supreme_rider`) show Riding 240 and Polearm 220.
+3. Encyclopedia, an archer of Men. The Ithilien Ranger (`gondor_ithilien_ranger`) shows Bow 300 and One Handed 270.
+4. A campaign battle between two armies of about the same tier. Fights between same-tier troops last several blows; an elite kills a recruit in one or two. No troop group stands idle or flees at once (the AI level reads the skill).
+5. A Fords of War match. The troll copies fight as before (they keep their old values), and a militia copy fights like its campaign twin, not like a recruit.
+6. Crush-through. An elite against a recruit has a skill lead over 135, so it crushes through a block at the full configured chance; two troops of the same tier have a lead under 20 and do not.
+7. Shield bash (Hammerhand). Note how often a bash knocks a troop down. The chance reads the Athletics lead, which is smaller on this curve; the maintainer decides whether to scale the window.
+
 ## Changelog
 
 - 2026-11-15: **The Fords of War copies on the curve, promoted villagers, the shop (#343).** The
