@@ -2464,3 +2464,11 @@ The enlistment generator refuses a promotion kit weaker in armour than the rank 
 - **Why missed:** the rule lived inside the seeding step, so the file was checked against it once, against the armour values of that day. The cross-rank lesson of #525 put the check in the generator, and no gate reads the shipped file.
 - **Prevent:** when generated data must keep a property that depends on values outside it (the Armory's stats), put the property in one pure function over what the player actually holds (he keeps every kit, so a kit is held against all the kits before it, not only the last), run it as a validator pass over the shipped file, and give the generator a repair mode that applies the same function. When the data states a fact (a kit's own Horse slot says whether its archer rides), read it rather than infer it: the first repair guessed the saddle from what the culture's riders carry and refused a longbow to two foot archers' kits. Before any regeneration of a shared file, list the tool that derives from it (`TAOM-NEWCULTURE` regions) and run that tool second.
 - **Source:** [enlistment.md](../../features/enlistment.md#a-ranks-kit-is-never-weaker-than-the-kit-before-it-1290); `ENLISTMENT_KIT_RANK_REGRESSION`.
+
+### A default id in code is tested against the file the engine reads it from (#1075, 2026-11-15)
+
+**Why missed:** the scenario autorun's default culture `empire_w` came from a plan note, "empire_w (Gondor)". It is the Gondor kingdom id; character creation offers `cultures.json` `culture_id` values, where Gondor is `gondor`. The check moved to run time, and no test tied the constant to the data, so every default run would have ended `creation_failed`.
+
+**Prevent:** a constant that names game data gets a test that reads the file the engine loads it from and finds the id of that kind (`DefaultCulture_IsACharacterCreationCultureId`). Kingdom, culture and clan ids share names in TAOM; name the kind beside the id in plans and docs.
+
+**Source:** `docs/reviews/rca-scenario-autorun-2026-11-15.md`

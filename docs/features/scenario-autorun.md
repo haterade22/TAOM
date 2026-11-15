@@ -118,7 +118,8 @@ Read in the v1.5.7 source by the 2026-11-15 review:
 
 UNVERIFIED until the first run: campaign days per wall minute at speed 15; that the native quit runs the managed shutdown (the
 `[Shutdown] clean module unload` line settles it); that the application tick's `dt` stays above 0 while a popup pauses the game (an
-`inquiry hidden ... phase=Running` line settles it).
+`inquiry hidden ... phase=Running` line settles it); that a layer tick runs between two application ticks, which the second-sighting
+rule for scene notifications needs (a `notices_hidden` above 0 with no `driver_error` settles it).
 
 ## Key Files
 
