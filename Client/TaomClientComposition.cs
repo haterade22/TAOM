@@ -52,6 +52,7 @@ internal sealed class TaomClientComposition : IClientComposition
         registrator.Register<IFieldCampOverlayAdapter, FieldCampOverlayAdapter>(Reuse.Singleton);
         registrator.Register<IFiefsNavigationElementFactory, TaomFiefsNavigationElementFactory>(Reuse.Singleton);
         registrator.Register<TAOM.Features.CheatMenu.ICheatMenuNavigationElementFactory, TAOM.Client.Features.CheatMenu.TaomCheatsNavigationElementFactory>(Reuse.Singleton);
+        registrator.Register<ICheatMenuMapViewAdapter, CheatMenuMapViewAdapter>(Reuse.Singleton);
         registrator.Register<IMapConversationProviderWrapper, HallOfFireConversationWrapper>(Reuse.Singleton);
         registrator.Register<IHostReviewOrderProviderRegistrar, HostReviewOrderProviderRegistrar>(Reuse.Singleton);
         registrator.Register<IMarshalOrderProviderRegistrar, MarshalOrderProviderRegistrar>(Reuse.Singleton);

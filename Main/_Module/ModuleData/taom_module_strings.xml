@@ -2416,7 +2416,7 @@
 	<string id="taom_cheat_failed" text="{=taom_cheat_failed}That cheat failed. The TAOM log has the details." />
 	<string id="taom_cheat_done" text="{=taom_cheat_done}Done: {NAME} {NUMBER}" />
 	<string id="taom_cheat_mcm_enable" text="{=taom_cheat_mcm_enable}Enable Cheat Menu" />
-	<string id="taom_cheat_mcm_enable_hint" text="{=taom_cheat_mcm_enable_hint}Adds a Cheats button to the bottom bar of the campaign map. It opens a menu that teleports your party to a settlement and gives gold, troops, your special resource, influence, renown and relations, and heals your party. Cheats change your save, and most cannot be undone. The button appears the next time the campaign map opens, for example after loading a save. Single-player only. Default: off." />
+	<string id="taom_cheat_mcm_enable_hint" text="{=taom_cheat_mcm_enable_hint}Adds a Cheats button to the bottom bar of the campaign map. It opens a menu that teleports your party to a settlement and gives gold, troops, your special resource, influence, renown and relations, and heals your party. Cheats change your save, and most cannot be undone. The button appears the next time the campaign map opens, for example after loading a save. The H key on the campaign map also opens the menu (change it under Options, Keybindings, Campaign Map). Single-player only. Default: off." />
 	<string id="taom_cheat_mcm_group" text="{=taom_cheat_mcm_group}Cheat Menu" />
 	<string id="taom_cheat_menu_text" text="{=taom_cheat_menu_text}TAOM cheat menu. Cheats change your save, and most cannot be undone." />
 	<string id="taom_cheat_nav_busy" text="{=taom_cheat_nav_busy}The cheat menu opens from the free campaign map." />

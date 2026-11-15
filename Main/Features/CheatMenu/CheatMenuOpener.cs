@@ -53,4 +53,16 @@ public sealed class CheatMenuOpener
         _host.OpenMenu();
         return true;
     }
+
+    /// <summary>
+    /// The map key (<see cref="TaomCheatMenuHotKeyCategory"/>), asked every map frame. With the switch off or outside single
+    /// player the key is not even read; otherwise a press opens the menu through <see cref="TryOpen"/>, so the key and the
+    /// button share every gate.
+    /// </summary>
+    public bool TryOpenFromHotKey(System.Func<bool> isKeyPressed)
+    {
+        if (!_settings.EnableCheatMenu || !_service.IsSinglePlayer) return false;
+        if (!isKeyPressed()) return false;
+        return TryOpen();
+    }
 }

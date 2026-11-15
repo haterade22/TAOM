@@ -134,4 +134,58 @@ public class CheatMenuPolicyTests
         Assert.IsTrue(opener.TryOpen());
         host.Received(1).OpenMenu();
     }
+
+    // ---- map key: the same gates as the button, and no key read while the menu is off ----
+
+    [TestMethod]
+    public void HotKey_SwitchOff_KeyNotReadAndNothingOpens()
+    {
+        var (opener, settings, _, host) = Opener();
+        settings.EnableCheatMenu.Returns(false);
+        var reads = 0;
+
+        Assert.IsFalse(opener.TryOpenFromHotKey(() => { reads++; return true; }));
+        Assert.AreEqual(0, reads, "the key is read while the switch is off");
+        host.DidNotReceive().OpenMenu();
+    }
+
+    [TestMethod]
+    public void HotKey_Coop_KeyNotReadAndNothingOpens()
+    {
+        var (opener, _, coop, host) = Opener();
+        coop.IsSessionActive.Returns(true);
+        var reads = 0;
+
+        Assert.IsFalse(opener.TryOpenFromHotKey(() => { reads++; return true; }));
+        Assert.AreEqual(0, reads, "the key is read in a co-op session");
+        host.DidNotReceive().OpenMenu();
+    }
+
+    [TestMethod]
+    public void HotKey_OnSinglePlayerMapFree_PressOpensTheMenu()
+    {
+        var (opener, _, _, host) = Opener();
+
+        Assert.IsTrue(opener.TryOpenFromHotKey(() => true));
+        host.Received(1).OpenMenu();
+    }
+
+    [TestMethod]
+    public void HotKey_NotPressed_NothingOpens()
+    {
+        var (opener, _, _, host) = Opener();
+
+        Assert.IsFalse(opener.TryOpenFromHotKey(() => false));
+        host.DidNotReceive().OpenMenu();
+    }
+
+    [TestMethod]
+    public void HotKey_MapBusy_PressOpensNothing()
+    {
+        var (opener, _, _, host) = Opener();
+        host.IsMapClearForMenu.Returns(false);
+
+        Assert.IsFalse(opener.TryOpenFromHotKey(() => true));
+        host.DidNotReceive().OpenMenu();
+    }
 }

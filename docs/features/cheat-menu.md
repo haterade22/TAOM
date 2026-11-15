@@ -14,6 +14,20 @@ menus:
 
 Every button calls `CheatMenuService`, the same code as the console commands below, and shows its result as a message.
 
+## Map key
+
+**H** on the campaign map opens the same menu as the button. Rebind it under Options > Keybindings > Campaign Map, row
+"Open Cheat Menu (TAOM)" (`TaomCheatMenuHotKeyCategory`, game key id 550, after every other TAOM key id; its name rows are
+in `global_strings.xml`).
+
+- `CheatMenuMapView` (TAOM.Client) asks `CheatMenuOpener.TryOpenFromHotKey` every map frame. With the switch off or outside
+  single player it returns at once and the key is not read. Otherwise a press goes through `TryOpen`, the button's own
+  gate, so the key opens nothing while a menu, an encounter or a screen holds the map.
+- A press with Ctrl or Alt held does not count.
+- Why H: free on the campaign map (`MapHotKeyCategory` and `GenericCampaignPanelsGameKeyCategory` do not bind it, no TAOM
+  key uses it). In battle vanilla binds H only in `CheatsHotKeyCategory` (Ctrl combinations in game cheat mode), and
+  DualWield uses N. The RTS Camera and Command System defaults could not be checked, so the key is rebindable.
+
 ## Why it exists
 
 Players used the third-party mod TAOM_CheatPanel. Its teleport crashed a game (player case 12, 14 Nov 2026):
@@ -75,7 +89,9 @@ capped `ISpecialResourceService.GrantAmount`, for the main hero's own resource.
 | `Main/Features/CheatMenu/CheatMenuPolicy.cs` | Pure rules: when the menu shows, when a teleport is refused |
 | `Main/Features/CheatMenu/CheatMenuService.cs` | The cheats, with amount limits and the co-op refusal |
 | `Main/Adapters/CheatWorldAdapter.cs` | The engine calls (vanilla actions, the roster, the teleport) |
-| `Main/Features/CheatMenu/CheatMenuOpener.cs` | Switch, single player and free map; opens the root menu |
+| `Main/Features/CheatMenu/CheatMenuOpener.cs` | Switch, single player and free map; opens the root menu (button and key) |
+| `Main/Features/CheatMenu/TaomCheatMenuHotKeyCategory.cs` | The rebindable map key (default H, id 550), registered at process load |
+| `Client/Features/CheatMenu/UI/CheatMenuMapView.cs` | Reads the key every map frame (`CheatMenuKeys`); attached by `CheatMenuMapViewAdapter` from the behavior's tick |
 | `Main/Features/CheatMenu/Hooks/CheatMenuMenus.cs` | The three game menus and the pick lists |
 | `Main/Features/CheatMenu/Hooks/Patch151_CheatMenuNavigation.cs` | Adds the button to the map bar while the menu is shown |
 | `Client/Features/CheatMenu/UI/TaomCheatsNavigationElement.cs` | The button (TAOM.Client, ADR-013); icon layer `taom_cheats` in `MapBar.xml`, on the game's `SaveLoad\icon_gold` |
@@ -94,6 +110,8 @@ capped `ISpecialResourceService.GrantAmount`, for the main hero's own resource.
    settlement first" and the party does not move.
 6. Relations...: choose a kingdom; the encyclopedia shows +20 with its lords.
 7. Turn the switch off and load again: the button is gone.
+8. With the switch on, press H on the free map: the cheat menu opens. Press H inside a town menu: nothing. Rebind the key
+   in Options > Keybindings > Campaign Map and check the new key opens it. With the switch off, H does nothing.
 
 ## Limits
 
@@ -101,9 +119,11 @@ capped `ISpecialResourceService.GrantAmount`, for the main hero's own resource.
 - A teleport next to an enemy party starts an encounter on the next tick, the same as the game's own Ctrl+click cheat.
 - Special resources are per hero and resolved by kingdom, then culture. A hero whose kingdom and culture grant none gets
   "Nothing changed".
-- Not tested in game (14 Nov 2026): the button, the menus, the lists and the camera after a teleport.
+- Not tested in game (14 Nov 2026): the button, the map key, the menus, the lists and the camera after a teleport.
+- A clash of H with the RTS Camera or Command System defaults is unknown; rebind either key if both act.
 
 ## Changelog
 
 - 2026-11-14: Initial feature: MCM switch, map button, campaign cheat menu, `taom.cheat_*` console commands. The battle cheat
   menu follows separately.
+- 2026-11-14: Rebindable map key "Open Cheat Menu (TAOM)", default H, with the button's gates.

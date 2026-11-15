@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using DryIoc;
 using TAOM.Adapters;
@@ -11,7 +12,8 @@ namespace TAOM.Features.CheatMenu;
 /// Cheat Menu (docs/features/cheat-menu.md): with the MCM switch on and in single player, a "Cheats" button on the campaign
 /// map's bar opens three game menus of cheats (teleport, gold, special resource, influence, renown, troops, relations, heal),
 /// which the <c>taom.cheat_*</c> console commands share through <see cref="CheatMenuService"/>. One patch (Patch151, the
-/// button), one behavior (the menus), nothing saved. The button element lives in TAOM.Client (ADR-013).
+/// button), one behavior (the menus, and it attaches the map view that reads the map key), one rebindable key (H by default,
+/// <see cref="TaomCheatMenuHotKeyCategory"/>), nothing saved. The button element and the map view live in TAOM.Client (ADR-013).
 /// </summary>
 internal sealed class CheatMenuModule : TaomFeatureModule
 {
@@ -27,7 +29,8 @@ internal sealed class CheatMenuModule : TaomFeatureModule
         CampaignBehaviorDecl.Of(r => new CheatMenuCampaignBehavior(
             r.Resolve<CheatMenuService>(),
             r.Resolve<ICheatMenuSettingsProvider>(),
-            r.Resolve<ICheatWorldAdapter>())),
+            r.Resolve<ICheatWorldAdapter>(),
+            r.Resolve<ICheatMenuMapViewAdapter>())),
     };
 
     public override string Id => "CheatMenu";
@@ -40,6 +43,7 @@ internal sealed class CheatMenuModule : TaomFeatureModule
         registrator.Register<CheatMenuService>(Reuse.Singleton);
         registrator.Register<CheatMenuOpener>(Reuse.Singleton);
         registrator.Register<ICheatMenuNavigationElementFactory, NullCheatMenuNavigationElementFactory>(Reuse.Singleton);
+        registrator.Register<ICheatMenuMapViewAdapter, NullCheatMenuMapViewAdapter>(Reuse.Singleton);
     }
 
     public override void InitializeStatics(IResolver resolver) =>
@@ -50,4 +54,23 @@ internal sealed class CheatMenuModule : TaomFeatureModule
     public override IReadOnlyList<PatchCategoryDecl> PatchCategories => Categories;
 
     public override IReadOnlyList<CampaignBehaviorDecl> CampaignBehaviors => Behaviors;
+
+    /// <summary>
+    /// Registers the map key in OnSubModuleLoad, after Native has cleared and filled the key contexts, as the realm borders
+    /// do. A failure leaves the key unbound (the button still works); letting it escape would fault the module.
+    /// </summary>
+    public override void OnPhase(ApplyPhase phase, IResolver resolver)
+    {
+        if (phase != ApplyPhase.ProcessLoad)
+            return;
+        try
+        {
+            TaomCheatMenuHotKeyCategory.Register();
+        }
+        catch (Exception ex)
+        {
+            resolver.Resolve<IModLogger>().LogWarning(
+                $"[CheatMenu] hotkey registration failed, the cheat menu key stays unbound: {ex.GetType().Name}: {ex.Message}");
+        }
+    }
 }
