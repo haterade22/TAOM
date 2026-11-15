@@ -87,6 +87,7 @@ class Registries:
     factions: set = field(default_factory=set)                # defined clan <Faction> ids (empty = unavailable)
     equipment_rosters: set = field(default_factory=set)       # defined <EquipmentRoster> ids (empty = unavailable)
     settlements: set = field(default_factory=set)             # <Settlement> ids of the world the game builds (empty = unavailable)
+    item_classes: dict = field(default_factory=dict)          # weapon item id -> skill class, build_item_class_registry (empty = unavailable)
 
 
 # --------------------------------------------------------------------------- #
@@ -411,6 +412,13 @@ def melee_pass_rows(troops, priced, spec):
 # test_githooks_pre_commit.py fails until the second matches the first. WORN_ARMOUR_FLOOR stays a WARNING.
 WORN_ARMOUR_CEILING_SEVERITY = Severity.WARNING
 
+# A WARNING while launcher troops remain whose ranged ladder cell sits under a melee skill: values
+# never cross from melee to launcher, so those need a decision on the ladder or the melee curve
+# (#343), and `rebalance_troops.py --fix-purpose` leaves them. Once that count is zero, set this to
+# Severity.ERROR and add `--code TROOP_SKILL_KIT_MISMATCH` to .claude/hooks/check-moduledata-validation.sh
+# and .githooks/pre-commit (CommitGateCoverageTests reads this constant).
+TROOP_SKILL_KIT_MISMATCH_SEVERITY = Severity.WARNING
+
 # ENLISTMENT_KIT_RANK_REGRESSION judges the shipped kits on the armour and weapon values of the
 # installed Armory, so it is TRANSITIONAL like the ceiling above: an ERROR would block every
 # contributor whose Armory predates #1271. Flip it the same way, with the ceiling.
@@ -465,6 +473,7 @@ class Validator:
         issues += self._creature_gear_obtainable()
         issues += self._armour_slot_coverage()
         issues += self._weapon_slot_coverage()
+        issues += self._troop_purpose()
         issues += self._townsfolk_without_battle_roster()
         issues += self._troop_ids_removed()
         issues += self._upgrade_skill_regressions()
@@ -1424,6 +1433,7 @@ class Validator:
     # reads civilian="false" AS civilian, and reads id="x_civilian_y" as civilian
     # too, silently dropping a real battle set from the comparison.
     _CIVILIAN_ATTR_RE = re.compile(r"""\bcivilian\s*=\s*["'](?:true|True)["']""")
+    _CIVILIAN_TYPE_RE = re.compile(r"""\bequipmentType\s*=\s*["']Civilian["']""")
     # Single-quoted slot='Body' is legal XML. The double-quote-only _SLOT_ATTR_RE
     # reads it as no slot at all, which turns a dressed troop into an ERROR.
     _SLOT_ANY_QUOTE_RE = re.compile(r"""\bslot=["']([^"']+)["']""")
@@ -1585,7 +1595,8 @@ class Validator:
         loose = rows(self._INLINE_ROSTER_RE.sub("", body))
         kits = []
         for r in self._INLINE_ROSTER_RE.finditer(body):
-            if self._CIVILIAN_ATTR_RE.search(r.group(1) or ""):
+            # The same test as ranged_ladder.is_civilian, which tools/rebalance_troops.py reads with.
+            if self._CIVILIAN_ATTR_RE.search(r.group(1) or "") or self._CIVILIAN_TYPE_RE.search(r.group(1) or ""):
                 continue
             kit = rows(r.group(2) or "")
             kit.update(loose)
@@ -1637,6 +1648,87 @@ class Validator:
                              f"({sum(1 for a in ammo if a)} of {len(ammo)} sets carry any). "
                              f"Slots draw independently, so a draw can pair a bow with no arrows. Put the "
                              f"ammo at one index of every set")
+        return issues
+
+    # ----------------------------------------------------------------- #
+    # TROOP_SKILL_KIT_MISMATCH / TROOP_ITEM_ZERO_NOT_MAIN                     #
+    # ----------------------------------------------------------------- #
+    # Item0 is the weapon in hand at spawn (Equipment.GetInitialWeaponIndicesToEquip takes the first
+    # weapon slot not held in the off hand). The rule is tools/troop_purpose.py (#343). Weapon
+    # classes come from the install, so the pass is skipped, never faked, without it. Troops on
+    # rebalance_troops.SKIP_TROOP_IDS (creatures, bespoke mounts) and heroes are not judged.
+    def _troop_purpose(self) -> list:
+        classes = getattr(self.reg, "item_classes", None) or {}
+        if not classes:
+            return []
+        import sys as _sys
+        _sys.path.insert(0, str(Path(__file__).resolve().parent))
+        import troop_purpose as tp
+        from rebalance_troops import SKIP_TROOP_IDS, THROWN_PRIMARY_TROOP_IDS
+        issues = []
+        for path in self._xml_files():
+            if not path.name.startswith("troops_"):
+                continue
+            text = _COMMENT_RE.sub(lambda m: "\n" * m.group(0).count("\n"), self._read(path))
+            rel = self._rel(path)
+            for m in self._NPC_BLOCK_RE.finditer(text):
+                attrs, body = m.group(1), m.group(2) or ""
+                if re.search(r"""\bis_hero\s*=\s*["']true["']""", attrs, re.I):
+                    continue
+                idm = re.search(r'\bid="([A-Za-z0-9_.\-]+)"', attrs)
+                entry_id = idm.group(1) if idm else "(unnamed)"
+                if entry_id in SKIP_TROOP_IDS:
+                    continue
+                kits = [{s: classes.get(v) for s, v in k.items() if s in self._WEAPON_SLOTS}
+                        for k in self._battle_kits(body)]
+                kit = tp.kit_of(kits)
+                if not kit.sets:
+                    continue
+                gm = self._GROUP_ATTR_RE.search(attrs)
+                launcher_troop = tp.is_launcher_troop(kit, gm.group(1) if gm else "Infantry")
+                line = _lineno(text, m.start())
+                bad = [p for p in (tp.item0_problem(k) for k in kits if k) if p]
+                if bad:
+                    issues.append(Issue(
+                        severity=Severity.ERROR, code="TROOP_ITEM_ZERO_NOT_MAIN", file=rel, line=line,
+                        entry_id=entry_id,
+                        message=(f"{len(bad)} of {kit.sets} battle sets: {bad[0]}, so the rule reads no "
+                                 f"main class from Item0 (the engine puts a shield in the off hand). "
+                                 f"Exchange the two items' slots: python tools/rebalance_troops.py "
+                                 f"--fix-purpose --apply")))
+                late = [p for p in (tp.launcher_problem(k, launcher_troop) for k in kits if k) if p]
+                if late:
+                    issues.append(Issue(
+                        severity=TROOP_SKILL_KIT_MISMATCH_SEVERITY, code="TROOP_SKILL_KIT_MISMATCH",
+                        file=rel, line=line, entry_id=entry_id,
+                        message=(f"launcher troop that does not open with its launcher: {len(late)} of "
+                                 f"{kit.sets} battle sets: {late[0]}. No tool repairs this: vanilla ships "
+                                 f"the layout, so a designer exchanges the slots by hand (#343)")))
+                skills = {sid: int(val) for sid, val in self._SKILL_ENTRY_RE.findall(body)}
+                skills.update({sid: int(val) for val, sid in self._SKILL_ENTRY_ALT_RE.findall(body)})
+                fixed_kit = tp.kit_of(tp.fix_item0(k, launcher_troop)[0] for k in kits)
+                found = tp.kit_mismatches(skills, fixed_kit)
+                if not found:
+                    continue
+                main = tp.main_class(fixed_kit, skills)
+                head = f"holds {main} in Item0, but {'; '.join(f.text for f in found)}."
+                if all(f.cross_kind for f in found) and main == tp.THROWING:
+                    listed = "in" if entry_id in THROWN_PRIMARY_TROOP_IDS else "not in"
+                    head = (f"thrower below its melee skill: {head} Throwing keeps its value on disk; "
+                            f"the troop is {listed} THROWN_PRIMARY_TROOP_IDS, so the formula gives "
+                            f"Throwing {'the Ranged Bow curve' if listed == 'in' else 'its group curve'} "
+                            f"(the number is in rebalance_troops.py --fix-purpose). Decide the value (#343)")
+                elif all(f.cross_kind for f in found):
+                    head = (f"melee skill above the launcher's ladder cell: {head} Values never cross "
+                            f"from melee to launcher, so no reorder fixes this; the launcher's value is "
+                            f"its ranged ladder cell (tools/ranged_ladders.json) and the melee value "
+                            f"comes from the curve or the upgrade clamp. Decide one of them (#343)")
+                else:
+                    head += (" Reorder the troop's own values to its kit: python "
+                             "tools/rebalance_troops.py --fix-purpose --apply")
+                issues.append(Issue(
+                    severity=TROOP_SKILL_KIT_MISMATCH_SEVERITY, code="TROOP_SKILL_KIT_MISMATCH",
+                    file=rel, line=line, entry_id=entry_id, message=head))
         return issues
 
     # ----------------------------------------------------------------- #
@@ -3540,6 +3632,7 @@ def build_registries(moduledata, game_modules, armory_root=None, vanilla_modules
     launchers = build_launchers(item_roots)
     mount_barred = build_mount_barred_usages(game_modules)
     item_trade, hidden_pieces = build_item_trade(item_roots)
+    item_classes = build_item_class_registry(moduledata, game_modules)
 
     if game_modules is None:
         # Without the game install the item / troop / party-template registries
@@ -3563,6 +3656,8 @@ def build_registries(moduledata, game_modules, armory_root=None, vanilla_modules
         # The troll gear and its crafting pieces live in the Armory: a repo-only table would read
         # every one of them as undefined and check nothing. Unavailable, not partial.
         item_trade, hidden_pieces = {}, {}
+        # Every troop weapon is an Armory or vanilla item, so a repo-only table classes none of them.
+        item_classes = {}
         # TAOM's 30 body properties are only a quarter of the 121 defined; the
         # rest are vanilla, and TAOM characters reference them freely.
         body_properties = set()
@@ -3582,6 +3677,7 @@ def build_registries(moduledata, game_modules, armory_root=None, vanilla_modules
         # vanilla_factions has its own floor: the repo's clans alone can reach the total's, and a
         # missing spclans.xml would then pass while every ref to a vanilla clan read as broken.
         for label, value, floor in (("launchers", launchers, 30),
+                                    ("item_classes", item_classes, 500),
                                     ("armour_stats", item_armour_stats, 500),
                                     ("body_properties", body_properties, 50),
                                     ("factions", factions, 100),
@@ -3615,6 +3711,7 @@ def build_registries(moduledata, game_modules, armory_root=None, vanilla_modules
         factions=factions,
         equipment_rosters=equipment_rosters,
         settlements=settlements,
+        item_classes=item_classes,
     )
 
 

@@ -22,11 +22,20 @@ from pathlib import Path
 from typing import Callable
 
 import ranged_ladder as rl
+import troop_purpose as tp
 from _marker_region import replace_region  # noqa: E402
 
 ROOT = Path(__file__).resolve().parents[1]
 MD = ROOT / "Main" / "_Module" / "ModuleData"
 PARTY = MD / "taom_partyTemplates.xml"
+
+
+def _game_modules():
+    import rebalance_troops as rb  # the writer's own install path, so the two read one install
+    return rb.DEFAULT_GAME_MODULES
+
+
+GAME_MODULES = _game_modules()
 
 SKILLS = ("Athletics", "Riding", "OneHanded", "TwoHanded", "Polearm", "Bow", "Crossbow", "Throwing")
 
@@ -253,21 +262,65 @@ def militia_step(realm, by_id):
             vet.sk["Bow"] = bow_skill(realm.line, vet.level)
 
 
+@functools.lru_cache(maxsize=1)
+def item_classes():
+    """Item id -> weapon class from the install's item files (the realms' weapons are all Armory or
+    vanilla items). A generator must not guess a class, so a missing install stops the run."""
+    import taom_schema as ts
+    if not Path(GAME_MODULES).is_dir():
+        raise RuntimeError(f"the game install is needed to class the realm's weapons: {GAME_MODULES}")
+    return ts.build_item_class_registry(MD, GAME_MODULES)
+
+
+def troop_kit(t):
+    """(troop_purpose.Kit, pinned ladder classes) for a troop's two rosters. The pinned set is the
+    one tools/rebalance_troops.py pins (ladder_cells), so a generated troop is a fixed point of
+    --fix-purpose: that run plans no change to it."""
+    import rebalance_troops as rb
+    classes = item_classes()
+    unknown = sorted({w for r in t.weapons for w in r if w not in classes})
+    if unknown:
+        raise RuntimeError(f"{t.id}: no item file in the install classes {', '.join(unknown)}")
+    sets = [{f"Item{i}": classes[w] for i, w in enumerate(r)} for r in t.weapons]
+    carried = {c for s in sets for c in s.values()}
+    return tp.kit_of(sets), set(rb.ladder_cells(t.id, t.realm.culture, t.level, carried))
+
+
 def clamp_skills(realm, troops):
-    """An upgrade never lowers a skill (UPGRADE_SKILL_REGRESSION). Every edge raises its level,
-    so one pass in level order carries each source's skills into its targets."""
+    """An upgrade never lowers a skill (UPGRADE_SKILL_REGRESSION), and the kit decides which skills
+    are highest (#343, tools/troop_purpose.py). The role curve is reordered to the kit first (and
+    alternative weapons tied); then the clamp, in level order (every edge raises its level), and
+    the purpose raise repeat until neither moves a value. This is the generator's own loop, not
+    rebalance_troops.settle_purpose, and it starts from the role curve, not from disk; its output
+    is a fixed point of --fix-purpose, so a --check after that run reports no drift."""
     by_id = {t.id: t for t in troops}
     for t in troops:
+        t.realm = t.realm or realm
         t.sk = skills(realm, t.level, t.role)
-    for tid, floor in external_floors(realm, set(by_id)).items():
-        for k in SKILLS:
-            by_id[tid].sk[k] = max(by_id[tid].sk[k], floor[k])
+    floors = external_floors(realm, set(by_id))
     militia_step(realm, by_id)
-    for t in sorted(troops, key=lambda x: x.level):
-        for u in t.upgrades:
+    kits = {t.id: troop_kit(t) for t in troops}
+    for t in troops:
+        kit, pinned = kits[t.id]
+        t.sk = tp.tie_raise(tp.purpose_skills(t.sk, kit, pinned=pinned), kit, pinned=pinned)
+    for _ in range(50):
+        before = {t.id: dict(t.sk) for t in troops}
+        for tid, floor in floors.items():
             for k in SKILLS:
-                by_id[u].sk[k] = max(by_id[u].sk[k], t.sk[k])
-    return troops
+                by_id[tid].sk[k] = max(by_id[tid].sk[k], floor[k])
+        for t in sorted(troops, key=lambda x: x.level):
+            for u in t.upgrades:
+                for k in SKILLS:
+                    by_id[u].sk[k] = max(by_id[u].sk[k], t.sk[k])
+        moved = False
+        for t in troops:
+            kit, pinned = kits[t.id]
+            up = tp.purpose_raise(t.sk, before[t.id], kit, pinned=pinned)
+            moved = moved or up != t.sk
+            t.sk = up
+        if not moved and all(before[t.id] == t.sk for t in troops):
+            return troops
+    raise RuntimeError(f"{realm.culture}: the clamp and the purpose order did not settle")
 
 
 def add_mercenary(realm, troops):
@@ -373,7 +426,11 @@ def run(realm: Realm, build: Callable, party_templates: Callable, argv=None):
     mode.add_argument("--check", action="store_true")
     args = ap.parse_args(argv)
 
-    troops = add_mercenary(realm, clamp_skills(realm, build()))
+    try:
+        troops = add_mercenary(realm, clamp_skills(realm, build()))
+    except RuntimeError as exc:
+        print(f"REFUSING: {exc}")
+        return 2
     errors = self_check(party_templates, troops)
     if errors:
         print("REFUSING: the design breaks an invariant:\n  " + "\n  ".join(errors))

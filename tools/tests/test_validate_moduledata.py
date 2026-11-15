@@ -3083,6 +3083,121 @@ class ArmourSlotCoverageTests(unittest.TestCase):
         self.assertEqual(self._codes("MISSING_BODY_ARMOUR"), [])
 
 
+class TroopPurposeTests(unittest.TestCase):
+    """TROOP_SKILL_KIT_MISMATCH and TROOP_ITEM_ZERO_NOT_MAIN (#343): the Item0 weapon is the one in hand
+    at spawn, so it must be a real weapon and its class must hold the troop's top weapon skill."""
+
+    CLASSES = {"sword": "OneHanded", "spear": "Polearm", "great": "TwoHanded", "bow": "Bow",
+               "arrows": "Arrows", "jav": "Throwing", "shield": "Shield"}
+
+    def setUp(self):
+        self._tmp = tempfile.TemporaryDirectory()
+        self.md = Path(self._tmp.name) / "ModuleData"
+        self.md.mkdir(parents=True)
+        self.schemas = ts.load_schemas(SCHEMA_DIR)
+
+    def tearDown(self):
+        self._tmp.cleanup()
+
+    def _issues(self, sets, skills, tid="umbar_x", group="Infantry", attrs="", classes=None,
+                fname="troops/troops_test.xml"):
+        rosters = "".join("<EquipmentRoster>" + "".join(
+            f'<equipment slot="{k}" id="Item.{v}" />' for k, v in s.items()) + "</EquipmentRoster>"
+            for s in sets)
+        rows = "".join(f'<skill id="{k}" value="{v}" />' for k, v in skills.items())
+        _write(self.md / fname,
+               '<?xml version="1.0" encoding="utf-8"?>\n<NPCCharacters>\n'
+               f'  <NPCCharacter id="{tid}" default_group="{group}" level="21" culture="Culture.umbar"{attrs}>\n'
+               f"    <skills>{rows}</skills>\n    <Equipments>{rosters}</Equipments>\n"
+               "  </NPCCharacter>\n</NPCCharacters>\n")
+        reg = ts.Registries(items=set(), item_def_files={}, npccharacters=set(), cultures={"umbar"},
+                            party_templates=set(),
+                            item_classes=self.CLASSES if classes is None else classes)
+        return [i for i in ts.Validator(self.md, self.schemas, reg).run()
+                if i.code in ("TROOP_SKILL_KIT_MISMATCH", "TROOP_ITEM_ZERO_NOT_MAIN")]
+
+    def test_a_swordsman_with_polearm_on_top_is_reported(self):
+        found = self._issues([{"Item0": "sword", "Item1": "shield"}],
+                             {"OneHanded": 230, "TwoHanded": 210, "Polearm": 235})
+        self.assertEqual([i.code for i in found], ["TROOP_SKILL_KIT_MISMATCH"])
+        self.assertIs(found[0].severity, ts.TROOP_SKILL_KIT_MISMATCH_SEVERITY)
+        self.assertIn("OneHanded 230", found[0].message)
+        self.assertIn("--fix-purpose", found[0].message)
+
+    def test_a_purpose_correct_troop_is_clean(self):
+        self.assertEqual(self._issues([{"Item0": "great", "Item1": "sword"}],
+                                      {"OneHanded": 210, "TwoHanded": 235, "Polearm": 200}), [])
+
+    def test_an_archer_under_its_melee_skill_is_explained_not_fixed(self):
+        found = self._issues([{"Item0": "bow", "Item1": "arrows", "Item2": "sword"}],
+                             {"OneHanded": 130, "Bow": 105}, group="Ranged")
+        self.assertEqual([i.code for i in found], ["TROOP_SKILL_KIT_MISMATCH"])
+        self.assertIn("melee skill above the launcher's ladder cell", found[0].message)
+
+    def test_a_shield_in_item0_beside_a_sword_is_an_error(self):
+        found = self._issues([{"Item0": "shield", "Item1": "sword"}], {"OneHanded": 100})
+        self.assertEqual([(i.code, i.severity) for i in found],
+                         [("TROOP_ITEM_ZERO_NOT_MAIN", ts.Severity.ERROR)])
+        self.assertIn("Shield", found[0].message)
+        self.assertIn("no main class", found[0].message)
+        self.assertIn("--fix-purpose", found[0].message)
+
+    def test_an_archer_opening_with_a_sword_is_a_warning_no_tool_repairs(self):
+        sets = [{"Item0": "sword", "Item1": "bow", "Item2": "arrows"}]
+        found = self._issues(sets, {"OneHanded": 150, "Bow": 100}, group="Ranged")
+        self.assertEqual([(i.code, i.severity) for i in found],
+                         [("TROOP_SKILL_KIT_MISMATCH", ts.TROOP_SKILL_KIT_MISMATCH_SEVERITY)])
+        self.assertIn("launcher troop that does not open with its launcher", found[0].message)
+        self.assertIn("No tool repairs", found[0].message)
+        self.assertNotIn("--fix-purpose", found[0].message)
+
+    def test_a_javelin_in_item0_is_a_throwers_main_weapon(self):
+        clean = self._issues([{"Item0": "jav", "Item1": "jav", "Item2": "sword", "Item3": "shield"}],
+                             {"OneHanded": 100, "Throwing": 160})
+        self.assertEqual(clean, [])
+
+    def test_a_thrower_under_its_melee_skill_names_the_thrown_primary_list(self):
+        sets = [{"Item0": "jav", "Item1": "jav", "Item2": "sword", "Item3": "shield"}]
+        found = self._issues(sets, {"OneHanded": 250, "Polearm": 230, "Throwing": 55},
+                             tid="gondor_har_javelineer")
+        self.assertEqual([i.code for i in found], ["TROOP_SKILL_KIT_MISMATCH"])
+        self.assertIn("Throwing 55", found[0].message)
+        self.assertIn("in THROWN_PRIMARY_TROOP_IDS", found[0].message)
+        other = self._issues(sets, {"OneHanded": 230, "Throwing": 55}, tid="gondor_loss_skirmisher")
+        self.assertIn("not in THROWN_PRIMARY_TROOP_IDS", other[0].message)
+
+    def test_the_writer_and_the_validator_read_the_same_battle_sets(self):
+        # One reading: a roster typed Civilian never counts, and a troop-level row is laid over
+        # every battle roster, in tools/rebalance_troops.py troop_kit as in this pass.
+        import xml.etree.ElementTree as ET
+        import rebalance_troops as rb
+        body = ('<NPCCharacter id="umbar_x" default_group="Infantry" level="21">'
+                '<skills><skill id="OneHanded" value="10" /><skill id="Polearm" value="300" /></skills>'
+                '<Equipments><EquipmentRoster equipmentType="Civilian"><equipment slot="Item0" id="Item.spear" />'
+                '</EquipmentRoster><EquipmentRoster><equipment slot="Item0" id="Item.shield" />'
+                '<equipment slot="Item1" id="Item.spear" /></EquipmentRoster>'
+                '<equipment slot="Item0" id="Item.sword" /></Equipments></NPCCharacter>')
+        kit, _ = rb.troop_kit(ET.fromstring(body), self.CLASSES)
+        self.assertEqual((kit.sets, kit.item0), (1, {"OneHanded": 1}))
+        v = ts.Validator(self.md, self.schemas, ts.Registries(
+            items=set(), item_def_files={}, npccharacters=set(), cultures=set(), party_templates=set()))
+        self.assertEqual([{s: self.CLASSES[i] for s, i in k.items()} for k in v._battle_kits(body)],
+                         [{"Item0": "OneHanded", "Item1": "Polearm"}])
+
+    def test_a_skipped_creature_and_a_hero_are_exempt(self):
+        bad = ([{"Item0": "sword"}], {"OneHanded": 10, "Polearm": 300})
+        self.assertEqual(self._issues(*bad, tid="cave_troll"), [])
+        self.assertEqual(self._issues(*bad, attrs=' is_hero="true"'), [])
+
+    def test_a_villager_outside_troops_is_not_judged(self):
+        self.assertEqual(self._issues([{"Item0": "sword"}], {"OneHanded": 10, "Polearm": 300},
+                                      fname="characters/npcs_test.xml"), [])
+
+    def test_without_the_item_classes_nothing_is_judged(self):
+        self.assertEqual(self._issues([{"Item0": "jav", "Item1": "sword"}], {"Polearm": 300},
+                                      classes={}), [])
+
+
 class WeaponSlotCoverageTests(unittest.TestCase):
     """INCONSISTENT_WEAPON_SLOT. The weapon half of the cross-set rule in
     `.claude/rules/troops.md`: slots 0-3 draw independently from the battle sets, so a
