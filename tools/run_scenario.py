@@ -240,7 +240,8 @@ def main(argv=None):
     runner.STATUS_FILE = STATUS_FILE
     runner.RUNS_ROOT = RUNS_ROOT
     runner.arm_text_for = armed_text
-    runner.judge = lambda done, report_json, log_text=None: judge(done, report_json, log_text, known, tree_head_sha())
+    head = tree_head_sha()  # read at launch: a commit made during the run is not the deployed build
+    runner.judge = lambda done, report_json, log_text=None: judge(done, report_json, log_text, known, head)
     runner.show_results = show_results
     return runner.main(rest)
 

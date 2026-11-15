@@ -305,6 +305,16 @@ class MainWiringTests(unittest.TestCase):
         self.assertIn("days_wanted=3", why)
         self.assertIn("BuildStamp", why)
 
+    def test_runner_judge_compares_with_the_head_read_at_launch(self):
+        # A commit made while the game runs must not fail the run as a stale deploy.
+        with mock.patch.object(rs, "tree_head_sha", return_value="a" * 40):
+            _, got = self.run_main(["--days", "3"])
+        seen = {}
+        with mock.patch.object(rs, "tree_head_sha", return_value="b" * 40), \
+                mock.patch.object(rs, "judge", side_effect=lambda *a: seen.setdefault("head", a[4]) and (0, "")):
+            got["judge"](good_done(), None, GOOD_LOG)
+        self.assertEqual(seen["head"], "a" * 40)
+
     def test_help_names_this_tools_arguments(self):
         out = io.StringIO()
         with contextlib.redirect_stdout(out), self.assertRaises(SystemExit) as exit_info:
