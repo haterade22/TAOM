@@ -153,7 +153,10 @@ sub-meshes. This route is not proven in game, and the tag is not set yet.
   `materials.clear()` puts every face on one material, and `prep_dire_wolf_meshes.py` has a gate for this.
 - **Five rein attributes (known limitation):** the Monster has the warg's 5, not 12. With `dire_wolf_saddle` (no
   `reins_mesh`) the rein cloth is never built, so the absent attributes are not read. A vanilla family 1 harness with
-  reins fits in the inventory and reaches a null rein skeleton in `AddHorseReinsClothMesh`: test with `light_harness`.
+  reins fits in the inventory and, at character detail above 2, reached `AddHorseReinsClothMesh` with no rein
+  skeleton. A player's elf hero on a dire wolf crashed at every mounted battle spawn until the wolf and saddle came off
+  (2026-11-15). Patch153 now skips the cloth reins on a Monster with no rein skeleton
+  ([mount-reins-guard.md](mount-reins-guard.md)); the plain rein mesh and the harness still draw. Test with `light_harness`.
 - **LODs:** LOD1 and LOD2 are heavier than `warg_low`, because fur cards do not survive decimation. Judge the cost in
   battle.
 - **Gait tuning:** to change `$RIG_SCALE`, delete those clips, run `-Apply`, then open and save the Kit once. `-Apply`

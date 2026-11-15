@@ -16,12 +16,17 @@ Bannerlord's simulated map battles score every soldier from **`troop.level` alon
 
 ```
 Tier  = clamp(ceil((level − 5) / 5), 0, MaxCharacterTier)   // TAOM raises the cap 6 → 10
-power = tierTable[Tier] × (mounted ? 1.2 : 1.0)             // nothing else is consulted
+power = tierTable[Tier] × (mounted ? 1.2 : 1.0) × (1 + leader modifier + terrain/class/side term)
 dmg   = (0.5 + 0.5·rand) × 40 × (P_striker / P_struck)^0.7 × advantage
-ticks = min(2 × N_enemy, N_own ^ 0.6)                        // strike budget per side per round
+ticks = min(2 × N_enemy, N_own ^ 0.6)                        // field battle; a large siege assault differs
 ```
 
-Skills, weapons, armour, race and hit points never reach the simulation. That means
+Since 2026-11-15 TAOM rescales the `^0.7` to `^0.5` (`AutoResolve.PowerRatioExponent` in
+`battle_balance_config.json`, #1283; [battle-balance.md](battle-balance.md) "Auto-resolve: numbers over quality").
+
+Skills, weapons and armour never reach the simulation. Hit points do: a strike removes a regular troop when
+`RandomInt(MaxHitPoints()) < damage` (`MapEventSide.ApplySimulationDamageToSelectedTroop`, v1.5.7 line 946), so TAOM's
+race hit point bonus (trolls) counts. (Corrected 2026-11-15; this page said hit points never reach it.) That means
 [`tools/rebalance_troops.py`](../../tools/rebalance_troops.py) — the project's main balance lever —
 has only ever tuned an axis auto-resolve cannot see, and no script in the repo sets or audits the
 troop `level` ladder across factions. Measured consequence: Gondor beats Mordor 100% of the time,

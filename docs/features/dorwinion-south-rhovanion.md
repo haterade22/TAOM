@@ -126,26 +126,26 @@ C#: VolunteerRecruitmentService.Dorwinion.cs / .SouthRhovanion.cs, the culture r
 
 ### Realms
 
-**Dorwinion**, King Ostric. Four clans of four lords make 16.
+**Dorwinion**, King Hawin. Four clans of four lords make 16.
 
 | Clan (tier) | Holds |
 |-------------|-------|
-| House of Vineholm (5) | Vineholm `town_DO2` (capital, prosperity 3,200), Vinewatch `castle_DO1` |
-| Wardens of the Redwater (4) | Redwater `town_DO1` (3,100), Northgate Keep `castle_DO2` |
-| House of Seagate (4) | Seagate `town_DO3` (3,000), Sunwall `castle_DO4` |
-| Wardens of the Eastmarch (3) | Eastmarch Hold `castle_DO3` |
+| Koldana (5) | Vineholm `town_DO2` (capital, prosperity 3,200), Vinewatch `castle_DO1` |
+| Vierling (4) | Redwater `town_DO1` (3,100), Northgate Keep `castle_DO2` |
+| Montegian (4) | Seagate `town_DO3` (3,000), Sunwall `castle_DO4` |
+| Raudbarad (3) | Eastmarch Hold `castle_DO3` |
 
 "Northgate" was taken, hence Northgate Keep. 23 villages (names in `tools/add_map_villages.py`),
 hearth 350, with Dale's village types (Dale has no vineyard type).
 
-**South Rhovanion**, King Vidumar. Four clans of four lords make 16.
+**South Rhovanion**, King Suniefredo. Four clans of four lords make 16.
 
 | Clan (tier) | Holds |
 |-------------|-------|
-| House of Vidugard (5) | Vidugard `town_SRH2` (capital, 3,200), Horsemead `castle_SRH2` |
-| Riders of Southwood (4) | Southwood `town_SRH1` (3,000), Westmark `castle_SRH4` |
-| Wainwatch Riders (4) | Wainwatch `castle_SRH1` |
-| Wardens of the Northmark (3) | Northmark `castle_SRH3` |
+| Toki (5) | Vidugard `town_SRH2` (capital, 3,200), Horsemead `castle_SRH2` |
+| Lucrecea (4) | Southwood `town_SRH1` (3,000), Westmark `castle_SRH4` |
+| Orming (4) | Wainwatch `castle_SRH1` |
+| Guthmunding (3) | Northmark `castle_SRH3` |
 
 25 villages, hearth 350, with Rohan's village types, including `vlandian_horse_ranch`. Castles start
 at prosperity 800 in both realms.
@@ -158,7 +158,7 @@ generator reads her frozen row from `tools/data/new_faction_kingdom_templates.js
 carry `<hair_tag name="vlandia" />`.
 
 **Banners.** Dorwinion flies gold (palette 2024) on wine red (2015) with misc icons 30011 (the
-cluster, used by the realm and the House of Vineholm), 30015, 30008 and 30014. South Rhovanion flies
+cluster, used by the realm and the Koldana), 30015, 30008 and 30014. South Rhovanion flies
 tan (2008) on dark earth (2013) with the misc horse icons 30006 (a sun between two horses, for the
 realm), 30001, 30005 and 30004. No other clan flies either set (a plain token count). The realm
 border colours are `#722721` for Dorwinion and `#4B3F0F` for South Rhovanion, because the banner
@@ -390,6 +390,12 @@ so the live map and the deployed TAOM agree.
 
 ## Changelog
 
+- 2026-11-15 (no issue): both realms' clans and lords take Realms in Exile names. Dorwinion is led
+  by King Hawin of the Koldana, with the Vierling, Montegian and Raudbarad houses; South Rhovanion
+  by King Suniefredo of the royal Toki, with the Lucrecea, Orming and Guthmunding houses (RiE
+  Northmen houses, since RiE's own South Rhovanion is Easterling). The generator's name lists
+  follow. Ids and keys are unchanged; the translations of the renamed keys are stale until the next
+  translation pass.
 - 2026-10-29: created on this branch (#1062), on Mike's map placement of the same day. The promoter
   gained the Rohan scaffold (`_dale_successor` became `_northman_successor` over `NORTHMAN_SCAFFOLDS`),
   `realm_troops.py` gained the `horsearcher` role, and the `dale` and `rohan` ranged-ladder lines

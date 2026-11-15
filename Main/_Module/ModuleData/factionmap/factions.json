@@ -1132,7 +1132,7 @@
     "playable": false,
     "game_faction": "angaladh",
     "side": "neutral",
-    "description": "{=taom_faction_kingdom_of_angaladh_desc}The Woodmen of Angáladh live under the western eaves of Mirkwood, where their fathers cleared steads among trees so hard that axes ring on them like iron. King Ingomar's archers watch the Narrows. The realm stands apart from the War of the Ring, but the shadow in the south of the forest grows every year.",
+    "description": "{=taom_faction_kingdom_of_angaladh_desc}The Woodmen of Angáladh live under the western eaves of Mirkwood, where their fathers cleared steads among trees so hard that axes ring on them like iron. King Theodemiro's archers watch the Narrows. The realm stands apart from the War of the Ring, but the shadow in the south of the forest grows every year.",
     "traits": [
       "{=taom_faction_kingdom_of_angaladh_trait_0}Woodmen of Mirkwood",
       "{=taom_faction_kingdom_of_angaladh_trait_1}Archers of the Eaves",
@@ -1238,7 +1238,7 @@
     "playable": false,
     "game_faction": "dorwinion",
     "side": "neutral",
-    "description": "{=taom_faction_kingdom_of_dorwinion_desc}The vintners of Dorwinion hold the warm slopes above the Sea of Rhûn, and their red wine is prized in every hall that can pay for it. King Ostric rules from Vineholm. The realm stands apart from the War of the Ring, but the Easterlings across the inland sea look harder at its rich, lightly guarded land every year.",
+    "description": "{=taom_faction_kingdom_of_dorwinion_desc}The vintners of Dorwinion hold the warm slopes above the Sea of Rhûn, and their red wine is prized in every hall that can pay for it. King Hawin rules from Vineholm. The realm stands apart from the War of the Ring, but the Easterlings across the inland sea look harder at its rich, lightly guarded land every year.",
     "traits": [
       "{=taom_faction_kingdom_of_dorwinion_trait_0}Renowned Vineyards",
       "{=taom_faction_kingdom_of_dorwinion_trait_1}Trade Hub",
@@ -1297,7 +1297,7 @@
     "playable": false,
     "game_faction": "southrhovanion",
     "side": "neutral",
-    "description": "{=taom_faction_kingdom_of_south_rhovanion_desc}The Northmen of South Rhovanion ride the wide plains between the southern eaves of Mirkwood and the Sea of Rhûn, horse-breeders and kin of the Éothéod far to the north. King Vidumar holds Vidugard, and the barrows of the old kings stand on his grasslands. The realm stands apart from the War of the Ring, but the Wainriders have broken it twice before, and the riders of the plains remember it.",
+    "description": "{=taom_faction_kingdom_of_south_rhovanion_desc}The Northmen of South Rhovanion ride the wide plains between the southern eaves of Mirkwood and the Sea of Rhûn, horse-breeders and kin of the Éothéod far to the north. King Suniefredo holds Vidugard, and the barrows of the old kings stand on his grasslands. The realm stands apart from the War of the Ring, but the Wainriders have broken it twice before, and the riders of the plains remember it.",
     "traits": [
       "{=taom_faction_kingdom_of_south_rhovanion_trait_0}Northmen Horse-lords",
       "{=taom_faction_kingdom_of_south_rhovanion_trait_1}Barrows of the Old Kings",

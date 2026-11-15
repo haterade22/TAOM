@@ -531,7 +531,7 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
 
     [SettingPropertyGroup("AI Strategic Intelligence")]
     [SettingPropertyBool("Good armies hold captured forts", Order = 8, RequireRestart = false,
-        HintText = "When an AI army of a Free realm takes a town or castle by siege, it stays inside for about 22 hours (12 to 30: longer for a Calculating lord, shorter for a Valorous one) instead of the 10 the game gives. It leaves early if the fortress is besieged, its cohesion drops below 40 or it has less than a day of food, but holds are not saved: after loading a save a running hold cannot end early and runs to its end. Evil realms and (by default) Neutral ones keep rolling on. Single-player only. Needs AI Strategic Intelligence on. Default: on.")]
+        HintText = "When an AI army of a Free realm takes a town or castle by siege, it stays inside for about 22 hours (12 to 30: longer for a Calculating lord, shorter for a Valorous one) instead of the 10 the game gives. It leaves early if the fortress is besieged, its cohesion drops below 40 or it has less than a day of food, but holds are not saved: after loading a save a running hold cannot end early and runs to its end. Mordor's armies hold too; other Evil realms and (by default) Neutral ones keep rolling on. Single-player only. Needs AI Strategic Intelligence on. Default: on.")]
     public bool HoldCapturedForts { get; set; } = true;
 
     // --- Time Acceleration ---

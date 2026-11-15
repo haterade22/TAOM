@@ -802,7 +802,7 @@
 		id="clan_isengard_4"
 		initial_home_settlement="Settlement.town_isengard"
 		name="{=aom_clan_isengard_4_name}The Black Maw"
-		tier="3"
+		tier="5"
 		owner="Hero.lord_I4_1"
 		culture="Culture.isengard"
 		super_faction="Kingdom.isengard"
@@ -817,7 +817,7 @@
 		id="clan_isengard_5"
 		initial_home_settlement="Settlement.town_isengard"
 		name="{=aom_clan_isengard_5_name}The Iron Fist"
-		tier="3"
+		tier="5"
 		owner="Hero.lord_I1_7"
 		culture="Culture.isengard"
 		super_faction="Kingdom.isengard"
@@ -832,7 +832,7 @@
 		id="clan_isengard_6"
 		initial_home_settlement="Settlement.town_isengard"
 		name="{=aom_clan_isengard_6_name}The Blood Guard"
-		tier="3"
+		tier="5"
 		owner="Hero.lord_I1_6"
 		culture="Culture.isengard"
 		super_faction="Kingdom.isengard"
@@ -847,7 +847,7 @@
 		id="clan_isengard_7"
 		initial_home_settlement="Settlement.town_isengard"
 		name="{=aom_clan_isengard_7_name}The Shadow Reavers"
-		tier="3"
+		tier="5"
 		owner="Hero.lord_I2_4"
 		culture="Culture.isengard"
 		super_faction="Kingdom.isengard"
@@ -862,7 +862,7 @@
 		id="clan_isengard_8"
 		initial_home_settlement="Settlement.town_isengard"
 		name="{=aom_clan_isengard_8_name}The Skull Crushers"
-		tier="3"
+		tier="5"
 		owner="Hero.lord_I1_8"
 		culture="Culture.isengard"
 		super_faction="Kingdom.isengard"
@@ -877,7 +877,7 @@
 		id="clan_isengard_9"
 		initial_home_settlement="Settlement.town_isengard"
 		name="{=aom_clan_isengard_9_name}The War Hounds"
-		tier="3"
+		tier="5"
 		owner="Hero.lord_I2_5"
 		culture="Culture.isengard"
 		super_faction="Kingdom.isengard"
@@ -907,7 +907,7 @@
 		id="clan_isengard_11"
 		initial_home_settlement="Settlement.town_isengard"
 		name="{=aom_clan_isengard_11_name}The Stone Breakers"
-		tier="3"
+		tier="5"
 		owner="Hero.lord_I3_3"
 		culture="Culture.isengard"
 		super_faction="Kingdom.isengard"
@@ -2162,7 +2162,7 @@
   <Faction
 		id="clan_sturgia_10"
 		initial_home_settlement="Settlement.castle_S4"
-		name="{=aom_clan_sturgia_10_name}House of the Running River"
+		name="{=aom_clan_sturgia_10_name}Falkes"
 		tier="4"
 		owner="Hero.lord_S10_1"
 		culture="Culture.sturgia"
@@ -2175,7 +2175,7 @@
   <Faction
 		id="clan_sturgia_11"
 		initial_home_settlement="Settlement.castle_S1"
-		name="{=aom_clan_sturgia_11_name}House of the Carnen"
+		name="{=aom_clan_sturgia_11_name}Calmar"
 		tier="4"
 		owner="Hero.lord_S11_1"
 		culture="Culture.sturgia"
@@ -2188,7 +2188,7 @@
   <Faction
 		id="clan_sturgia_12"
 		initial_home_settlement="Settlement.castle_S3"
-		name="{=aom_clan_sturgia_12_name}House of Ravenhill"
+		name="{=aom_clan_sturgia_12_name}Macher"
 		tier="3"
 		owner="Hero.lord_S12_1"
 		culture="Culture.sturgia"
@@ -2201,7 +2201,7 @@
   <Faction
 		id="clan_sturgia_13"
 		initial_home_settlement="Settlement.town_S4"
-		name="{=aom_clan_sturgia_13_name}House of the Forest River"
+		name="{=aom_clan_sturgia_13_name}Foriking"
 		tier="3"
 		owner="Hero.lord_S13_1"
 		culture="Culture.sturgia"
@@ -2214,7 +2214,7 @@
   <Faction
 		id="clan_sturgia_14"
 		initial_home_settlement="Settlement.town_S5"
-		name="{=aom_clan_sturgia_14_name}House of the Long Marshes"
+		name="{=aom_clan_sturgia_14_name}Hill"
 		tier="3"
 		owner="Hero.lord_S14_1"
 		culture="Culture.sturgia"
@@ -2229,7 +2229,7 @@
   <Faction
 		id="clan_arthedain_1"
 		initial_home_settlement="Settlement.town_AN2"
-		name="{=aom_clan_arthedain_1_name}House of Arvedui"
+		name="{=aom_clan_arthedain_1_name}Isildurioni"
 		tier="4"
 		owner="Hero.lord_AN1_1"
 		culture="Culture.arthedain"
@@ -2238,11 +2238,11 @@
 		color="FF4870B8"
 		color2="FFC8CCD8"
 		default_party_template="PartyTemplate.kingdom_hero_party_arthedain_template"
-		banner_key="11.190.190.1528.1528.764.764.1.0.0.11004.110.110.700.700.764.764.0.0.0" />
+		banner_key="11.149.149.1528.1528.764.764.1.0.0.505.110.110.417.418.764.764.0.0.45.505.149.149.401.402.764.764.0.0.45.31026.110.110.252.252.764.681.0.0.0.11004.110.110.50.50.764.668.0.0.0.11000.110.110.207.207.764.813.0.0.0" />
   <Faction
 		id="clan_arthedain_2"
 		initial_home_settlement="Settlement.town_AN1"
-		name="{=aom_clan_arthedain_2_name}House of Evendim"
+		name="{=aom_clan_arthedain_2_name}Tarmanos"
 		tier="3"
 		owner="Hero.lord_AN2_1"
 		culture="Culture.arthedain"
@@ -2251,11 +2251,11 @@
 		color="FF3A6298"
 		color2="FFC8CCD8"
 		default_party_template="PartyTemplate.kingdom_hero_party_arthedain_template"
-		banner_key="11.190.190.1528.1528.764.764.1.0.0.11001.110.110.700.700.764.764.0.0.0" />
+		banner_key="11.116.116.1528.1528.764.764.1.0.0.505.41.41.417.418.764.764.0.0.45.505.116.116.404.405.764.764.0.0.45.10017.171.171.388.388.764.764.0.0.0.503.116.116.210.210.764.764.0.0.0.31039.0.171.150.150.764.798.1.0.0" />
   <Faction
 		id="clan_arthedain_3"
 		initial_home_settlement="Settlement.town_AN3"
-		name="{=aom_clan_arthedain_3_name}Wardens of Amon Sûl"
+		name="{=aom_clan_arthedain_3_name}Lómëar"
 		tier="3"
 		owner="Hero.lord_AN3_1"
 		culture="Culture.arthedain"
@@ -2264,11 +2264,11 @@
 		color="FF5960A8"
 		color2="FFD2D6D5"
 		default_party_template="PartyTemplate.kingdom_hero_party_arthedain_template"
-		banner_key="11.176.176.1528.1528.764.764.1.0.0.31010.267.267.301.301.636.884.0.0.0.31010.267.267.301.301.893.884.0.1.0.31008.324.324.422.422.764.720.0.0.0.31009.332.332.95.95.686.795.0.0.0.31009.332.332.95.95.843.795.0.1.0" />
+		banner_key="11.149.149.1528.1528.764.764.1.0.0.505.110.110.417.418.764.764.0.0.45.505.329.329.407.408.764.764.0.0.45.505.110.110.304.305.764.764.0.0.45.505.149.149.295.296.764.764.0.0.45.427.110.110.42.42.764.546.0.0.0.427.110.110.42.42.982.764.0.0.270.427.110.110.42.42.764.982.0.0.180.427.110.110.42.42.546.764.0.0.90.10500.110.110.292.292.766.763.0.0.0" />
   <Faction
 		id="clan_arthedain_4"
 		initial_home_settlement="Settlement.castle_AN5"
-		name="{=aom_clan_arthedain_4_name}House of the Baranduin"
+		name="{=aom_clan_arthedain_4_name}Orodhoth"
 		tier="2"
 		owner="Hero.lord_AN4_1"
 		culture="Culture.arthedain"
@@ -2277,11 +2277,11 @@
 		color="FF2E4A78"
 		color2="FFCACCCB"
 		default_party_template="PartyTemplate.kingdom_hero_party_arthedain_template"
-		banner_key="11.190.190.1528.1528.764.764.1.0.0.11003.110.110.700.700.764.764.0.0.0" />
+		banner_key="11.149.149.1528.1528.764.764.1.0.0.24022.110.95.612.612.764.908.1.0.0.31040.182.182.274.274.754.655.0.0.0.505.110.95.656.500.748.1235.0.0.0" />
   <Faction
 		id="clan_arthedain_5"
 		initial_home_settlement="Settlement.castle_AN8"
-		name="{=aom_clan_arthedain_5_name}House of Emyn Beraid"
+		name="{=aom_clan_arthedain_5_name}Noirinin"
 		tier="2"
 		owner="Hero.lord_AN5_1"
 		culture="Culture.arthedain"
@@ -2290,13 +2290,13 @@
 		color="FF4E75BC"
 		color2="FFEAEEEF"
 		default_party_template="PartyTemplate.kingdom_hero_party_arthedain_template"
-		banner_key="11.190.190.1528.1528.764.764.1.0.0.11000.110.110.700.700.764.764.0.0.0" />
+		banner_key="11.330.330.1528.1528.764.764.1.0.0.510.172.172.1266.62.1016.764.0.1.270.510.172.172.1266.62.512.764.0.0.90.510.172.172.1329.65.937.764.0.1.270.510.172.172.1329.65.591.764.0.0.90.24509.172.172.106.106.977.401.0.1.0.24509.172.172.106.106.551.401.0.0.0.24509.172.172.106.106.977.735.0.1.0.24509.172.172.106.106.551.735.0.0.0.24509.172.172.106.106.977.1071.0.1.0.24509.172.172.106.106.551.1071.0.0.0.427.172.172.230.230.764.786.0.0.0.10505.172.172.172.172.763.669.0.0.0" />
   <!-- TAOM-NEWFACTIONS:arthedain:END -->
   <!-- TAOM-NEWFACTIONS:cardolan:BEGIN -->
   <Faction
 		id="clan_cardolan_1"
 		initial_home_settlement="Settlement.town_CA2"
-		name="{=aom_clan_cardolan_1_name}House of Tyrn Gorthad"
+		name="{=aom_clan_cardolan_1_name}Caladir"
 		tier="4"
 		owner="Hero.lord_CA1_1"
 		culture="Culture.cardolan"
@@ -2309,7 +2309,7 @@
   <Faction
 		id="clan_cardolan_2"
 		initial_home_settlement="Settlement.town_CA1"
-		name="{=aom_clan_cardolan_2_name}House of Tharbad"
+		name="{=aom_clan_cardolan_2_name}Gunnorionath"
 		tier="3"
 		owner="Hero.lord_CA2_1"
 		culture="Culture.cardolan"
@@ -2322,7 +2322,7 @@
   <Faction
 		id="clan_cardolan_3"
 		initial_home_settlement="Settlement.town_CA3"
-		name="{=aom_clan_cardolan_3_name}House of Minas Eithel"
+		name="{=aom_clan_cardolan_3_name}Eruthimari"
 		tier="2"
 		owner="Hero.lord_CA3_1"
 		culture="Culture.cardolan"
@@ -2335,7 +2335,7 @@
   <Faction
 		id="clan_cardolan_4"
 		initial_home_settlement="Settlement.castle_CA2"
-		name="{=aom_clan_cardolan_4_name}Wardens of Sarn Ford"
+		name="{=aom_clan_cardolan_4_name}Emerayacil"
 		tier="2"
 		owner="Hero.lord_CA4_1"
 		culture="Culture.cardolan"
@@ -2350,7 +2350,7 @@
   <Faction
 		id="clan_rhudaur_1"
 		initial_home_settlement="Settlement.town_RH1"
-		name="{=aom_clan_rhudaur_1_name}House of Cameth Brin"
+		name="{=aom_clan_rhudaur_1_name}Galadhionath"
 		tier="4"
 		owner="Hero.lord_RH1_1"
 		culture="Culture.rhudaur"
@@ -2363,7 +2363,7 @@
   <Faction
 		id="clan_rhudaur_2"
 		initial_home_settlement="Settlement.castle_RH2"
-		name="{=aom_clan_rhudaur_2_name}House of Ettendale"
+		name="{=aom_clan_rhudaur_2_name}Húnen"
 		tier="3"
 		owner="Hero.lord_RH2_1"
 		culture="Culture.rhudaur"
@@ -2376,7 +2376,7 @@
   <Faction
 		id="clan_rhudaur_3"
 		initial_home_settlement="Settlement.castle_RH3"
-		name="{=aom_clan_rhudaur_3_name}Wardens of the Coldfells"
+		name="{=aom_clan_rhudaur_3_name}Endril"
 		tier="2"
 		owner="Hero.lord_RH3_1"
 		culture="Culture.rhudaur"
@@ -2499,7 +2499,7 @@
   <Faction
 		id="clan_anduinvale_1"
 		initial_home_settlement="Settlement.town_AV1"
-		name="{=aom_clan_anduinvale_1_name}House of Beorn"
+		name="{=aom_clan_anduinvale_1_name}Beorning"
 		tier="4"
 		owner="Hero.lord_AV1_1"
 		culture="Culture.anduinvale"
@@ -2512,7 +2512,7 @@
   <Faction
 		id="clan_anduinvale_2"
 		initial_home_settlement="Settlement.town_AV2"
-		name="{=aom_clan_anduinvale_2_name}Folk of the Old Ford"
+		name="{=aom_clan_anduinvale_2_name}Melburgi"
 		tier="3"
 		owner="Hero.lord_AV2_1"
 		culture="Culture.anduinvale"
@@ -2521,11 +2521,11 @@
 		color="FF5A4430"
 		color2="FFF0C050"
 		default_party_template="PartyTemplate.kingdom_hero_party_anduinvale_template"
-		banner_key="11.2007.2007.1528.1528.764.764.1.0.0.20004.2024.2024.700.700.764.764.0.0.0" />
+		banner_key="11.2.2.1528.1528.764.764.1.0.0.31037.123.158.407.407.761.764.1.0.0" />
   <Faction
 		id="clan_anduinvale_3"
 		initial_home_settlement="Settlement.castle_AV1"
-		name="{=aom_clan_anduinvale_3_name}Wardens of the Carrock"
+		name="{=aom_clan_anduinvale_3_name}Sairthiuda"
 		tier="2"
 		owner="Hero.lord_AV3_1"
 		culture="Culture.anduinvale"
@@ -2534,11 +2534,11 @@
 		color="FF6E563E"
 		color2="FFFBC841"
 		default_party_template="PartyTemplate.kingdom_hero_party_anduinvale_template"
-		banner_key="11.2007.2007.1528.1528.764.764.1.0.0.20003.2024.2024.700.700.764.764.0.0.0" />
+		banner_key="11.193.193.1528.1528.764.764.1.0.0.500.252.252.862.862.508.508.0.0.0.500.96.96.827.827.508.508.0.0.0.500.252.252.862.862.1020.1020.0.0.0.500.96.96.827.827.1020.1020.0.0.0.503.252.252.33.33.812.551.0.0.0.503.96.96.17.17.812.551.0.0.0.503.252.252.33.33.716.977.0.0.0.503.96.96.17.17.716.977.0.0.0.503.252.252.33.33.798.608.0.0.0.503.96.96.17.17.798.608.0.0.0.503.252.252.33.33.730.920.0.0.0.503.96.96.17.17.730.920.0.0.0.503.252.252.33.33.774.662.0.0.0.503.96.96.17.17.774.662.0.0.0.503.252.252.33.33.754.866.0.0.0.503.96.96.17.17.754.866.0.0.0.503.252.252.33.33.740.710.0.0.0.503.96.96.17.17.740.710.0.0.0.503.252.252.33.33.788.818.0.0.0.503.96.96.17.17.788.818.0.0.0.503.252.252.33.33.697.750.0.0.0.503.96.96.17.17.697.750.0.0.0.503.252.252.33.33.831.778.0.0.0.503.96.96.17.17.831.778.0.0.0.503.252.252.33.33.647.782.0.0.0.503.96.96.17.17.647.782.0.0.0.503.252.252.33.33.881.746.0.0.0.503.96.96.17.17.881.746.0.0.0.503.252.252.33.33.593.803.0.0.0.503.96.96.17.17.593.803.0.0.0.503.252.252.33.33.935.725.0.0.0.503.96.96.17.17.935.725.0.0.0.31038.34.0.165.165.652.609.1.0.0.31037.34.142.178.178.880.907.1.0.0" />
   <Faction
 		id="clan_anduinvale_4"
 		initial_home_settlement="Settlement.castle_AV3"
-		name="{=aom_clan_anduinvale_4_name}Riders of the Gladden"
+		name="{=aom_clan_anduinvale_4_name}Herimundi"
 		tier="2"
 		owner="Hero.lord_AV4_1"
 		culture="Culture.anduinvale"
@@ -2547,13 +2547,13 @@
 		color="FF4E3C2A"
 		color2="FFE8B840"
 		default_party_template="PartyTemplate.kingdom_hero_party_anduinvale_template"
-		banner_key="11.2007.2007.1528.1528.764.764.1.0.0.20002.2024.2024.700.700.764.764.0.0.0" />
+		banner_key="11.158.158.1528.1528.764.764.1.0.0.31036.34.34.461.461.764.764.0.0.0" />
   <!-- TAOM-NEWFACTIONS:anduinvale:END -->
   <!-- TAOM-NEWFACTIONS:angaladh:BEGIN -->
   <Faction
 		id="clan_angaladh_1"
 		initial_home_settlement="Settlement.town_AND1"
-		name="{=aom_clan_angaladh_1_name}House of Angáladh"
+		name="{=aom_clan_angaladh_1_name}Waldanding"
 		tier="4"
 		owner="Hero.lord_AND1_1"
 		culture="Culture.angaladh"
@@ -2566,7 +2566,7 @@
   <Faction
 		id="clan_angaladh_2"
 		initial_home_settlement="Settlement.castle_AND3"
-		name="{=aom_clan_angaladh_2_name}Woodwards of the Forest Road"
+		name="{=aom_clan_angaladh_2_name}Meroaging"
 		tier="3"
 		owner="Hero.lord_AND2_1"
 		culture="Culture.angaladh"
@@ -2579,7 +2579,7 @@
   <Faction
 		id="clan_angaladh_3"
 		initial_home_settlement="Settlement.castle_AND2"
-		name="{=aom_clan_angaladh_3_name}Wardens of Emyn Duir"
+		name="{=aom_clan_angaladh_3_name}Fadiring"
 		tier="2"
 		owner="Hero.lord_AND3_1"
 		culture="Culture.angaladh"
@@ -2594,7 +2594,7 @@
   <Faction
 		id="clan_dorwinion_1"
 		initial_home_settlement="Settlement.town_DO2"
-		name="{=aom_clan_dorwinion_1_name}House of Vineholm"
+		name="{=aom_clan_dorwinion_1_name}Koldana"
 		tier="5"
 		owner="Hero.lord_DO1_1"
 		culture="Culture.dorwinion"
@@ -2607,7 +2607,7 @@
   <Faction
 		id="clan_dorwinion_2"
 		initial_home_settlement="Settlement.town_DO1"
-		name="{=aom_clan_dorwinion_2_name}Wardens of the Redwater"
+		name="{=aom_clan_dorwinion_2_name}Vierling"
 		tier="4"
 		owner="Hero.lord_DO2_1"
 		culture="Culture.dorwinion"
@@ -2620,7 +2620,7 @@
   <Faction
 		id="clan_dorwinion_3"
 		initial_home_settlement="Settlement.town_DO3"
-		name="{=aom_clan_dorwinion_3_name}House of Seagate"
+		name="{=aom_clan_dorwinion_3_name}Montegian"
 		tier="4"
 		owner="Hero.lord_DO3_1"
 		culture="Culture.dorwinion"
@@ -2633,7 +2633,7 @@
   <Faction
 		id="clan_dorwinion_4"
 		initial_home_settlement="Settlement.castle_DO3"
-		name="{=aom_clan_dorwinion_4_name}Wardens of the Eastmarch"
+		name="{=aom_clan_dorwinion_4_name}Raudbarad"
 		tier="3"
 		owner="Hero.lord_DO4_1"
 		culture="Culture.dorwinion"
@@ -2648,7 +2648,7 @@
   <Faction
 		id="clan_southrhovanion_1"
 		initial_home_settlement="Settlement.town_SRH2"
-		name="{=aom_clan_southrhovanion_1_name}House of Vidugard"
+		name="{=aom_clan_southrhovanion_1_name}Toki"
 		tier="5"
 		owner="Hero.lord_SRH1_1"
 		culture="Culture.southrhovanion"
@@ -2661,7 +2661,7 @@
   <Faction
 		id="clan_southrhovanion_2"
 		initial_home_settlement="Settlement.town_SRH1"
-		name="{=aom_clan_southrhovanion_2_name}Riders of Southwood"
+		name="{=aom_clan_southrhovanion_2_name}Lucrecea"
 		tier="4"
 		owner="Hero.lord_SRH2_1"
 		culture="Culture.southrhovanion"
@@ -2674,7 +2674,7 @@
   <Faction
 		id="clan_southrhovanion_3"
 		initial_home_settlement="Settlement.castle_SRH1"
-		name="{=aom_clan_southrhovanion_3_name}Wainwatch Riders"
+		name="{=aom_clan_southrhovanion_3_name}Orming"
 		tier="4"
 		owner="Hero.lord_SRH3_1"
 		culture="Culture.southrhovanion"
@@ -2687,7 +2687,7 @@
   <Faction
 		id="clan_southrhovanion_4"
 		initial_home_settlement="Settlement.castle_SRH3"
-		name="{=aom_clan_southrhovanion_4_name}Wardens of the Northmark"
+		name="{=aom_clan_southrhovanion_4_name}Guthmunding"
 		tier="3"
 		owner="Hero.lord_SRH4_1"
 		culture="Culture.southrhovanion"

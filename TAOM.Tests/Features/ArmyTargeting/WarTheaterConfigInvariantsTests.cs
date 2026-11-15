@@ -104,6 +104,19 @@ public class WarTheaterConfigInvariantsTests
         Assert.AreEqual(0, deadAggression.Count, $"FactionAggressionMultipliers has unresolvable keys: {string.Join(", ", deadAggression)}");
     }
 
+    // #1283: a dead id here would silently leave that realm's armies marching off the forts they take.
+    [TestMethod]
+    public void EveryHoldTheWallsFaction_IsARealKingdom_AndMordorHolds()
+    {
+        var config = LoadShippedConfig();
+        var kingdoms = LoadKingdomIds();
+
+        var dead = config.CapturedFortHold.Factions.Where(k => !kingdoms.Contains(k)).ToList();
+
+        Assert.AreEqual(0, dead.Count, $"CapturedFortHold.Factions has ids that are no kingdom: {string.Join(", ", dead)}");
+        CollectionAssert.Contains(config.CapturedFortHold.Factions, "empire_s", "Mordor (empire_s) no longer holds its captured forts");
+    }
+
     [TestMethod]
     public void EveryKingdom_HasATheaterDecisionRecorded()
     {

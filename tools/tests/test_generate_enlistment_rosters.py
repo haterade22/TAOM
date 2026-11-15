@@ -11,6 +11,7 @@ draws each slot from any battle set), missing a Horse written directly under <Eq
 that slot in every set), letting the mount into the emitted slots, and matching a Monster by substring (the
 spider_statue row). Record: docs/reviews/rca-keyforce-art-wiring-2026-09-29.md, Codex pass C1 and fix review R1.
 """
+import collections
 import contextlib
 import io
 import os
@@ -325,6 +326,8 @@ class PipelineTests(unittest.TestCase):
                 mock.patch.object(ger, 'parse_troops', return_value=troops), \
                 mock.patch.object(ger, 'game_modules', return_value='nowhere'), \
                 mock.patch.object(ger, 'creature_mount_item_ids', return_value=set()), \
+                mock.patch.object(ger, 'build_rank_indexes', return_value=({}, {})), \
+                mock.patch.object(ger, 'culture_troop_gear', return_value={}), \
                 contextlib.redirect_stdout(buf):
             ger.main()
         return buf.getvalue()
@@ -373,6 +376,39 @@ class PipelineTests(unittest.TestCase):
         self.assertIn('id="enlist_shaghana_archer_soldier"', text)
         self.assertNotIn('enlist_default_', text)
 
+    def test_a_reseed_ends_with_the_rank_repair_dry_run_for_its_culture(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            path = os.path.join(tmp, 'rosters.xml')
+            with open(path, 'wb') as fh:
+                fh.write(OLD_FILE.encode('utf-8'))
+            out = self.reseed(path)
+        self.assertIn('Rank repairs (', out)
+        self.assertIn('python tools/generate_enlistment_rosters.py --repair-ranks --culture shaghana --apply', out)
+
+    def test_a_reseed_refuses_a_culture_the_promoter_owns(self):
+        owned = OLD_FILE.replace('\r\n    <!-- SHAGHANA -->', '\r\n  <!-- TAOM-NEWCULTURE:shaghana:BEGIN -->')
+        with tempfile.TemporaryDirectory() as tmp:
+            path = os.path.join(tmp, 'rosters.xml')
+            with open(path, 'wb') as fh:
+                fh.write(owned.encode('utf-8'))
+            with self.assertRaises(SystemExit) as cm:
+                self.reseed(path)
+            self.assertEqual(owned.encode('utf-8'), open(path, 'rb').read())
+        self.assertIn('promote_borrowed_cultures.py', str(cm.exception.code))
+
+    def test_a_full_apply_refuses_a_file_that_holds_promoter_regions(self):
+        owned = OLD_FILE.replace('\r\n    <!-- NEXT -->', '\r\n  <!-- TAOM-NEWCULTURE:next:BEGIN -->')
+        with tempfile.TemporaryDirectory() as tmp:
+            path = os.path.join(tmp, 'rosters.xml')
+            with open(path, 'wb') as fh:
+                fh.write(owned.encode('utf-8'))
+            with self.assertRaises(SystemExit) as cm:
+                self.run_main(['--apply', '--out', path])
+            self.assertEqual(owned.encode('utf-8'), open(path, 'rb').read())
+        message = str(cm.exception.code)
+        for flag in ('--reseed --culture', '--seed-missing', '--repair-ranks', 'next'):
+            self.assertIn(flag, message)
+
 
 class LauncherIdCheckTests(unittest.TestCase):
     def test_a_launcher_id_missing_from_the_universe_fails_closed(self):
@@ -394,6 +430,516 @@ class FileHeaderTests(unittest.TestCase):
         self.assertIn('builds their rosters from those trees', header)
         ET.fromstring(header + '</EquipmentRosters>')
 
+
+# The rank rule (#1290): a promotion kit must not total less armour than any kit the player drew before
+# it, nor carry a weaker weapon in a category it shares with them.
+RANK_ARMOUR = {
+    'helm_lo': {'head_armor': 12}, 'helm_hi': {'head_armor': 30},
+    'chest_lo': {'body_armor': 20, 'arm_armor': 5}, 'chest_hi': {'body_armor': 40, 'leg_armor': 5},
+    'chest_x': {'body_armor': 42, 'leg_armor': 5}, 'chest_y': {'body_armor': 60},
+    'boots_lo': {'leg_armor': 4}, 'boots_hi': {'leg_armor': 8}, 'gloves': {'arm_armor': 6},
+}
+# The generator's KitWeapon fields, so the fixtures load before the rule they test exists.
+_W = collections.namedtuple('KitWeapon', 'category output kind foot_only couchable')
+
+
+def _w(category, output, kind, foot_only=False, couchable=False):
+    return _W(category, output, kind, foot_only, couchable)
+
+
+RANK_WEAPONS = {
+    'sword_a': _w('one handed', 40.0, 'OneHandedSword'),
+    'sword_b': _w('one handed', 50.0, 'OneHandedSword'),
+    'sword_c': _w('one handed', 49.0, 'OneHandedSword'),
+    'sword_d': _w('one handed', 48.0, 'OneHandedSword'),
+    'sword_e': _w('one handed', 60.0, 'OneHandedSword'),
+    'mace_a': _w('one handed', 30.0, 'Mace'), 'mace_b': _w('one handed', 55.0, 'Mace'),
+    'spear_a': _w('spear', 30.0, 'OneHandedPolearm'), 'spear_b': _w('spear', 20.0, 'OneHandedPolearm'),
+    'bow_a': _w('bow', 50, 'Bow'), 'bow_b': _w('bow', 60, 'Bow'), 'bow_c': _w('bow', 72, 'Bow'),
+    'longbow': _w('bow', 70, 'Bow', foot_only=True), 'mystery': None,
+    'sm_x_1h_axe_a': _w('one handed', 30.0, 'OneHandedAxe'),
+    'sm_x_1h_sword_b': _w('one handed', 58.0, 'OneHandedSword'),
+    'sm_y_1h_sword_a': _w('one handed', 51.0, 'OneHandedSword'),
+    'lance_lo': _w('spear', 28.0, 'OneHandedPolearm', couchable=True),
+    'lance_hi': _w('spear', 40.0, 'OneHandedPolearm', couchable=True),
+    'spear_hi': _w('spear', 38.0, 'OneHandedPolearm'),
+}
+RECRUIT, SOLDIER, VETERAN = ('x', 'infantry', 'recruit'), ('x', 'infantry', 'soldier'), ('x', 'infantry', 'veteran')
+
+
+class _Usage:
+    def __init__(self, *features):
+        self.features = features
+
+
+class _Priced:
+    def __init__(self, description, best_dps, usages=()):
+        self.description, self.best_dps, self.usages = description, best_dps, usages
+
+
+class _Launcher:
+    def __init__(self, damage, usage='bow'):
+        self.damage, self.usage = damage, usage
+
+
+class WeaponCategoryTests(unittest.TestCase):
+    def test_categories_follow_the_maintainers_list(self):
+        cases = [('OneHanded', 'OneHandedSword', 'one handed'), ('OneHanded', 'Mace', 'one handed'),
+                 ('TwoHanded', 'TwoHandedSword', 'two handed sword'),
+                 ('TwoHanded', 'TwoHandedAxe', 'two handed axe or mace'),
+                 ('TwoHanded', 'TwoHandedMace', 'two handed axe or mace'),
+                 ('Polearm', 'OneHandedPolearm', 'spear'), ('Polearm', 'TwoHandedPolearm', 'swinging polearm'),
+                 ('Polearm', 'TwoHandedPolearm_Pike', 'pike'), ('Bow', None, 'bow'), ('Crossbow', None, 'crossbow'),
+                 ('OneHanded', 'OneHandedBastardSword', 'one handed')]
+        for cls, description, want in cases:
+            self.assertEqual(want, ger.weapon_category(cls, description), (cls, description))
+
+    def test_a_bastard_sword_is_one_handed_because_it_is_swung_beside_a_shield(self):
+        # wm_gondor_lamedon_1h_sword_a: primary usage OneHandedBastardSword, a TwoHandedSword alternate.
+        self.assertEqual('one handed', ger.weapon_category('TwoHanded', 'OneHandedBastardSword'))
+
+    def test_thrown_weapons_shields_and_ammunition_have_no_category(self):
+        for cls in ('Throwing', 'Shield', 'Arrows', 'Bolts', None):
+            self.assertIsNone(ger.weapon_category(cls, 'OneHandedPolearm'))
+
+    def test_outputs_carry_the_kind_and_mark_a_longbow_a_bow_the_saddle_bars(self):
+        classes = {'s': 'OneHanded', 'p': 'Polearm', 'b': 'Bow', 'lb': 'Bow', 'j': 'Throwing', 'sh': 'Shield',
+                   'unpriced': 'OneHanded', 'xb': 'Crossbow'}
+        priced = {'s': _Priced('OneHandedSword', 41.5), 'p': _Priced('TwoHandedPolearm', 30.0),
+                  'j': _Priced('OneHandedPolearm', 36.0)}
+        launchers = {'b': _Launcher(57), 'lb': _Launcher(64, 'long_bow')}
+        out = ger.kit_weapon_outputs(classes, launchers, priced, mount_barred={'long_bow'})
+        self.assertEqual({'s': ('one handed', 41.5, 'OneHandedSword', False, False),
+                          'p': ('swinging polearm', 30.0, 'TwoHandedPolearm', False, False),
+                          'b': ('bow', 57, 'Bow', False, False), 'lb': ('bow', 64, 'Bow', True, False),
+                          'unpriced': None, 'xb': None}, out)
+
+    def test_a_polearm_with_a_couch_usage_is_marked_couchable(self):
+        lance = _Priced('OneHandedPolearm', 28.3, (_Usage('onehanded_polearm', 'thrust'), _Usage('polearm', 'couch')))
+        spear = _Priced('OneHandedPolearm', 38.0, (_Usage('onehanded_polearm', 'thrust'), _Usage('polearm', 'thrust')))
+        out = ger.kit_weapon_outputs({'lance': 'Polearm', 'spear': 'Polearm'}, {}, {'lance': lance, 'spear': spear})
+        self.assertTrue(out['lance'].couchable)
+        self.assertFalse(out['spear'].couchable)
+
+    def test_a_polearm_with_a_thrown_usage_is_a_thrown_weapon_and_never_compared(self):
+        # imperial_throwing_spear_1_t4: a TwoHandedPolearm craft whose alternate is TwoHandedPolearm_Thrown.
+        pilum = 'imperial_throwing_spear_1_t4'
+        out = ger.kit_weapon_outputs({pilum: 'Polearm'}, {}, {pilum: _Priced('OneHandedPolearm', 36.4)},
+                                     thrown={pilum})
+        self.assertNotIn(pilum, out)
+
+
+class RankRuleTests(unittest.TestCase):
+    def regressions(self, lower, upper, mounted=False):
+        return ger.rank_regressions([(RECRUIT, lower)], upper, RANK_ARMOUR, RANK_WEAPONS, mounted=mounted)
+
+    def drawn(self, earlier, upper):
+        return ger.rank_regressions(earlier, upper, RANK_ARMOUR, RANK_WEAPONS)
+
+    def test_a_lower_armour_total_is_a_finding_that_names_both_totals(self):
+        found = self.regressions({'Body': 'chest_hi', 'Item0': 'sword_a'}, {'Body': 'chest_lo', 'Item0': 'sword_a'})
+        self.assertEqual(['armour'], [kind for kind, _text in found])
+        self.assertIn('armour total 45 -> 25', found[0][1])
+
+    def test_the_total_decides_so_a_zone_may_fall_when_another_rises_more(self):
+        self.assertEqual([], self.regressions({'Head': 'helm_lo', 'Leg': 'boots_hi'},
+                                              {'Head': 'helm_hi', 'Leg': 'boots_lo'}))
+
+    def test_an_equal_kit_is_clean(self):
+        kit = {'Body': 'chest_lo', 'Item0': 'sword_a'}
+        self.assertEqual([], self.regressions(kit, dict(kit)))
+
+    def test_a_weaker_weapon_of_a_shared_category_is_a_finding(self):
+        found = self.regressions({'Item0': 'sword_b'}, {'Item0': 'mace_a'})
+        self.assertEqual(['weapon'], [kind for kind, _text in found])
+        self.assertIn('sword_b 50.0 -> mace_a 30.0', found[0][1])
+
+    def test_a_weapon_inside_the_shared_tolerance_holds(self):
+        self.assertEqual(0.03, ger.WEAPON_TOLERANCE)
+        self.assertEqual([], self.regressions({'Item0': 'sword_b'}, {'Item0': 'sword_c'}))
+        self.assertEqual(1, len(self.regressions({'Item0': 'sword_b'}, {'Item0': 'sword_d'})))
+
+    def test_every_category_both_kits_hold_is_compared_not_only_the_main_weapon(self):
+        found = self.regressions({'Item0': 'bow_b', 'Item1': 'sword_b'}, {'Item0': 'bow_b', 'Item1': 'sword_a'})
+        self.assertEqual(['weapon'], [kind for kind, _text in found])
+        self.assertIn('one handed', found[0][1])
+
+    def test_a_category_the_upper_kit_drops_is_its_own_reason(self):
+        found = self.regressions({'Item0': 'sword_b', 'Item1': 'spear_a'}, {'Item0': 'sword_b'})
+        self.assertEqual([('dropped', 'drops the spear (spear_a) of enlist_x_infantry_recruit')], found)
+        self.assertEqual(['dropped'], [k for k, _t in self.regressions({'Item0': 'sword_b'}, {'Item0': 'spear_b'})])
+
+    def test_a_longbow_and_a_bow_are_one_category(self):
+        found = self.regressions({'Item0': 'longbow'}, {'Item0': 'bow_b'})
+        self.assertEqual(['weapon'], [kind for kind, _text in found])
+        self.assertIn('bow (damage) longbow 70.0 -> bow_b 60.0', found[0][1])
+
+    def test_every_kit_drawn_before_counts_not_only_the_last(self):
+        # The player keeps every kit he was issued, so the best piece of any of them is the floor.
+        found = self.drawn([(RECRUIT, {'Item0': 'sword_e'}), (SOLDIER, {'Item0': 'sword_b'})], {'Item0': 'sword_b'})
+        self.assertEqual(['weapon'], [kind for kind, _text in found])
+        self.assertIn('sword_e 60.0 -> sword_b 50.0 against enlist_x_infantry_recruit', found[0][1])
+
+    def test_armour_is_held_against_the_strongest_total_drawn_before(self):
+        found = self.drawn([(RECRUIT, {'Body': 'chest_hi'}), (SOLDIER, {'Body': 'chest_lo'})], {'Body': 'chest_lo'})
+        self.assertEqual(['armour'], [kind for kind, _text in found])
+        self.assertIn('armour total 45 -> 25 against enlist_x_infantry_recruit', found[0][1])
+
+    def test_a_category_dropped_since_any_earlier_kit_is_reported_once(self):
+        found = self.drawn([(RECRUIT, {'Item0': 'spear_a'}), (SOLDIER, {'Item0': 'spear_b', 'Item1': 'sword_a'})],
+                           {'Item0': 'sword_a'})
+        self.assertEqual([('dropped', 'drops the spear (spear_a) of enlist_x_infantry_recruit')], found)
+
+    def test_a_cavalry_kit_that_trades_every_lance_for_a_spear_drops_the_lance(self):
+        found = self.regressions({'Item0': 'lance_lo'}, {'Item0': 'spear_hi'}, mounted=True)
+        self.assertEqual([('dropped', 'drops the lance (lance_lo) of enlist_x_infantry_recruit')], found)
+        self.assertEqual([], self.regressions({'Item0': 'lance_lo'}, {'Item0': 'spear_hi', 'Item1': 'lance_lo'},
+                                              mounted=True))
+
+    def test_a_foot_kit_has_no_use_for_the_couch_so_no_lance_is_reported(self):
+        # The engine's polearm_couch usage set carries requires_mount.
+        self.assertEqual([], self.regressions({'Item0': 'lance_lo'}, {'Item0': 'spear_hi'}))
+
+    def test_an_unpriced_weapon_is_never_compared(self):
+        self.assertEqual([], self.regressions({'Item0': 'sword_b'}, {'Item0': 'mystery', 'Item1': 'sword_b'}))
+        self.assertEqual([], self.regressions({'Item0': 'mystery'}, {}))
+
+
+def rank_kits(chain, culture='x', assignment='infantry'):
+    return {(culture, assignment, rank): kit for rank, kit in chain.items()}
+
+
+class ResolverMirrorTests(unittest.TestCase):
+    KITS = {('x', 'infantry', 'recruit'): {}, ('x', 'infantry', 'veteran'): {}, ('x', 'cavalry', 'soldier'): {},
+            ('default', 'archer', 'recruit'): {}, ('default', 'infantry', 'soldier'): {}}
+
+    def resolve(self, culture, assignment, rank):
+        return ger.resolve_kit(culture, assignment, rank, self.KITS.__contains__)
+
+    def test_the_requested_assignment_is_probed_down_every_tier_before_infantry(self):
+        self.assertEqual(('x', 'cavalry', 'soldier'), self.resolve('x', 'cavalry', 'sergeant'))
+        self.assertEqual(('x', 'infantry', 'recruit'), self.resolve('x', 'cavalry', 'recruit'))
+        self.assertEqual(('x', 'infantry', 'veteran'), self.resolve('x', 'archer', 'sergeant'))
+
+    def test_the_default_kits_come_only_after_the_whole_culture_chain(self):
+        self.assertEqual(('default', 'archer', 'recruit'), self.resolve('y', 'archer', 'veteran'))
+        self.assertEqual(('default', 'infantry', 'soldier'), self.resolve('y', 'support', 'soldier'))
+        self.assertIsNone(self.resolve('y', 'cavalry', 'recruit'))
+
+    def test_each_kit_is_held_against_every_distinct_kit_the_resolver_issued_before_it(self):
+        kits = {k: v for k, v in self.KITS.items() if k[0] == 'x'}
+        kits[('x', 'infantry', 'sergeant')] = {}
+        chains = ger.rank_chains(kits)
+        by_kit = dict(chains)
+        self.assertEqual([('x', 'infantry', 'recruit')], by_kit[('x', 'infantry', 'veteran')])
+        self.assertEqual([('x', 'infantry', 'recruit'), ('x', 'infantry', 'veteran')], by_kit[('x', 'infantry', 'sergeant')])
+        self.assertEqual([('x', 'infantry', 'recruit')], by_kit[('x', 'cavalry', 'soldier')])
+        self.assertEqual(len(by_kit), len(chains), 'one entry per kit')
+        self.assertNotIn(('x', 'infantry', 'recruit'), by_kit)
+
+    def test_the_mirror_matches_the_csharp_resolver(self):
+        # resolve_kit cites these lines; if the resolver moves or changes order, re-read it and update both.
+        path = os.path.join(ger.REPO_ROOT, 'Main', 'Features', 'Enlistment', 'Equipment', 'EnlistmentRosterResolver.cs')
+        with open(path, encoding='utf-8-sig') as fh:
+            lines = fh.read().splitlines()
+        self.assertIn('foreach (var assignmentStep in AssignmentChain(assignment))', lines[53])
+        self.assertIn('EnlistmentRosterIds.Build(cultureId', '\n'.join(lines[53:63]))
+        self.assertIn('foreach (var assignmentStep in AssignmentChain(assignment))', lines[64])
+        self.assertIn('EnlistmentRosterIds.BuildDefault(assignmentStep', '\n'.join(lines[64:71]))
+        self.assertIn('AssignmentChain(ServiceAssignment assignment)', lines[81])
+        chain = '\n'.join(lines[81:92])
+        self.assertLess(chain.index('yield return assignment;'), chain.index('yield return ServiceAssignment.Infantry;'))
+        self.assertIn('for (var r = (int)tier; r >= (int)EnlistmentKitTier.Recruit; r--)', lines[94])
+
+
+class RankFindingsTests(unittest.TestCase):
+    def findings(self, kits):
+        return ger.enlistment_kit_findings(kits, RANK_ARMOUR, RANK_WEAPONS)
+
+    def test_each_kit_is_held_against_the_kit_issued_before_it(self):
+        kits = rank_kits({'recruit': {'Body': 'chest_hi'}, 'veteran': {'Body': 'chest_lo'}})
+        self.assertEqual([(('x', 'infantry', 'veteran'), [('x', 'infantry', 'recruit')])],
+                         [f[:2] for f in self.findings(kits)])
+
+    def test_a_cavalry_kit_is_held_against_the_infantry_kit_issued_before_it(self):
+        kits = {**rank_kits({'recruit': {'Body': 'chest_hi'}}), **rank_kits({'soldier': {'Body': 'chest_lo'}}, assignment='cavalry')}
+        self.assertEqual([(('x', 'cavalry', 'soldier'), [('x', 'infantry', 'recruit')])],
+                         [f[:2] for f in self.findings(kits)])
+
+    def test_a_culture_kit_is_held_against_the_default_kit_issued_before_it(self):
+        kits = {**rank_kits({'recruit': {'Body': 'chest_hi'}}, culture='default'), **rank_kits({'soldier': {'Body': 'chest_lo'}})}
+        self.assertEqual([(('x', 'infantry', 'soldier'), [('default', 'infantry', 'recruit')])],
+                         [f[:2] for f in self.findings(kits)])
+
+    def test_another_cultures_kit_is_never_compared(self):
+        kits = {**rank_kits({'recruit': {'Body': 'chest_hi'}}), **rank_kits({'soldier': {'Body': 'chest_lo'}}, culture='y')}
+        self.assertEqual([], self.findings(kits))
+
+    def test_kits_read_from_the_roster_file_text(self):
+        text = rosters_xml('enlist_x_infantry_recruit', 'enlist_default_archer_veteran', 'not_an_enlist_roster')
+        self.assertEqual({('x', 'infantry', 'recruit'): {'Item0': 'a'}, ('default', 'archer', 'veteran'): {'Item0': 'a'}},
+                         ger.read_kits(text))
+
+    def test_a_piece_the_rule_cannot_judge_is_named(self):
+        kits = rank_kits({'recruit': {'Body': 'nowhere', 'Item0': 'mystery', 'Item1': 'sword_a', 'Item2': 'shield'}})
+        self.assertEqual(['mystery', 'nowhere'], ger.unresolved_kit_items(kits, RANK_ARMOUR, RANK_WEAPONS))
+
+
+class RankRepairTests(unittest.TestCase):
+    def plan(self, kits, gear=None, skip=()):
+        return ger.plan_rank_repairs(kits, RANK_ARMOUR, RANK_WEAPONS, skip=skip, gear=gear)
+
+    @staticmethod
+    def applied(kits, edits):
+        out = {cell: dict(kit) for cell, kit in kits.items()}
+        for cell, slot, _old, new in edits:
+            out[cell][slot] = new
+        return out
+
+    SOLDIER = ('x', 'infantry', 'soldier')
+
+    def test_armour_carries_the_fewest_lower_rank_pieces_forward(self):
+        kits = rank_kits({'recruit': {'Head': 'helm_hi', 'Body': 'chest_hi', 'Leg': 'boots_hi'},
+                          'soldier': {'Head': 'helm_lo', 'Body': 'chest_lo', 'Leg': 'boots_hi', 'Gloves': 'gloves'}})
+        # 83 against 51: the chest is the larger deficit (20) and the helmet closes the rest (18).
+        edits, left = self.plan(kits)
+        self.assertEqual([(self.SOLDIER, 'Body', 'chest_lo', 'chest_hi'), (self.SOLDIER, 'Head', 'helm_lo', 'helm_hi')], edits)
+        self.assertEqual([], left)
+        self.assertEqual([], ger.enlistment_kit_findings(self.applied(kits, edits), RANK_ARMOUR, RANK_WEAPONS))
+
+    def test_a_slot_the_upper_rank_leaves_empty_takes_the_lower_ranks_piece(self):
+        kits = rank_kits({'recruit': {'Body': 'chest_lo', 'Gloves': 'gloves'}, 'soldier': {'Body': 'chest_lo'}})
+        self.assertEqual([(self.SOLDIER, 'Gloves', None, 'gloves')], self.plan(kits)[0])
+
+    def test_armour_prefers_the_culture_piece_that_matches_the_lower_one_most_closely(self):
+        kits = rank_kits({'recruit': {'Body': 'chest_hi'}, 'soldier': {'Body': 'chest_lo'}})
+        self.assertEqual([(self.SOLDIER, 'Body', 'chest_lo', 'chest_x')],
+                         self.plan(kits, gear={'x': {'Body': {'chest_x', 'chest_y', 'chest_lo'}}})[0])
+        self.assertEqual([(self.SOLDIER, 'Body', 'chest_lo', 'chest_hi')],
+                         self.plan(kits, gear={'x': {'Body': {'chest_hi', 'chest_x'}}})[0])
+
+    def test_a_foreign_lower_piece_is_never_carried_into_a_culture_kit(self):
+        kits = {**rank_kits({'recruit': {'Body': 'chest_hi', 'Item0': 'sword_b'}}, culture='default'),
+                **rank_kits({'soldier': {'Body': 'chest_lo', 'Item0': 'sword_a'}})}
+        edits, left = self.plan(kits, gear={'x': {}})
+        self.assertEqual([], edits)
+        self.assertEqual([['armour', 'weapon']], [[k for k, _t in f[2]] for f in left])
+
+    def test_a_weaker_weapon_takes_the_same_kind_from_the_cultures_gear_first(self):
+        kits = rank_kits({'recruit': {'Item0': 'sword_b'}, 'soldier': {'Item1': 'sword_a', 'Item0': 'spear_a'}})
+        gear = {'x': {'Item0': {'sword_c', 'sword_e', 'mace_b', 'sword_d'}}}
+        self.assertEqual([(self.SOLDIER, 'Item1', 'sword_a', 'sword_c')], self.plan(kits, gear=gear)[0])
+
+    def test_then_another_kind_of_the_category_from_the_cultures_gear(self):
+        kits = rank_kits({'recruit': {'Item0': 'sword_b'}, 'soldier': {'Item0': 'sword_a'}})
+        self.assertEqual([(self.SOLDIER, 'Item0', 'sword_a', 'mace_b')],
+                         self.plan(kits, gear={'x': {'Item2': {'mace_b', 'mace_a'}}})[0])
+
+    def test_within_a_preference_the_replaced_pieces_own_line_comes_first(self):
+        # sm_x_1h_axe_a and sm_x_1h_sword_b are one look family; the closer id keeps the kit's look.
+        kits = rank_kits({'recruit': {'Item0': 'sword_b'}, 'soldier': {'Item0': 'sm_x_1h_axe_a'}})
+        gear = {'x': {'Item0': {'sm_y_1h_sword_a', 'sm_x_1h_sword_b', 'sword_c'}}}
+        self.assertEqual([(self.SOLDIER, 'Item0', 'sm_x_1h_axe_a', 'sm_x_1h_sword_b')], self.plan(kits, gear=gear)[0])
+
+    def test_then_the_lower_kits_own_weapon(self):
+        kits = rank_kits({'recruit': {'Item0': 'sword_b'}, 'soldier': {'Item0': 'sword_a'}})
+        self.assertEqual([(self.SOLDIER, 'Item0', 'sword_a', 'sword_b')], self.plan(kits, gear={'x': {}})[0])
+
+    ARCHERS = rank_kits({'soldier': {'Item0': 'longbow'}, 'veteran': {'Item0': 'bow_b'}}, assignment='archer')
+    ARCHER_VETERAN = ('x', 'archer', 'veteran')
+
+    # The maintainer's rule (2026-11-15): a kit with a Horse slot is a horse archer's, one without is a
+    # foot archer's. The culture's riders and what they carry no longer decide it.
+    HORSE_ARCHERS = rank_kits({'soldier': {'Item0': 'longbow'}, 'veteran': {'Item0': 'bow_b', 'Horse': 'horse_a'}},
+                              assignment='archer')
+
+    def test_a_foot_archers_kit_takes_the_earlier_kits_longbow_when_the_troop_gear_has_none_that_holds(self):
+        self.assertEqual([(self.ARCHER_VETERAN, 'Item0', 'bow_b', 'longbow')],
+                         self.plan(self.ARCHERS, gear={'x': {'Item0': {'bow_a'}}})[0])
+
+    def test_a_foot_archers_kit_takes_a_longbow_from_the_troop_gear_first(self):
+        kits = rank_kits({'soldier': {'Item0': 'bow_c'}, 'veteran': {'Item0': 'bow_b'}}, assignment='archer')
+        self.assertEqual([(self.ARCHER_VETERAN, 'Item0', 'bow_b', 'longbow')],
+                         self.plan(kits, gear={'x': {'Item0': {'longbow'}}})[0])
+
+    def test_a_kit_with_a_horse_slot_never_takes_a_launcher_the_saddle_bars(self):
+        edits, left = self.plan(self.HORSE_ARCHERS, gear={'x': {'Item0': {'longbow'}}})
+        self.assertEqual([], edits)
+        self.assertEqual([['weapon']], [[k for k, _t in f[2]] for f in left])
+        self.assertEqual([(self.ARCHER_VETERAN, 'Item0', 'bow_b', 'bow_c')],
+                         self.plan(self.HORSE_ARCHERS, gear={'x': {'Item0': {'longbow', 'bow_c'}}})[0])
+
+    def test_the_saddle_bar_follows_the_horse_slot_not_the_assignment(self):
+        kits = rank_kits({'soldier': {'Item0': 'bow_c'}, 'veteran': {'Item0': 'bow_b'}}, assignment='cavalry')
+        self.assertEqual([(('x', 'cavalry', 'veteran'), 'Item0', 'bow_b', 'longbow')],
+                         self.plan(kits, gear={'x': {'Item0': {'longbow'}}})[0])
+        mounted = {**kits, ('x', 'cavalry', 'veteran'): {'Item0': 'bow_b', 'Horse': 'horse_a'}}
+        self.assertEqual([(('x', 'cavalry', 'veteran'), 'Item0', 'bow_b', 'bow_c')],
+                         self.plan(mounted, gear={'x': {'Item0': {'longbow'}}})[0])
+
+    def test_a_dropped_category_is_never_repaired(self):
+        kits = rank_kits({'recruit': {'Item0': 'sword_b', 'Item1': 'spear_a'}, 'soldier': {'Item0': 'sword_b'}})
+        edits, left = self.plan(kits, gear={'x': {'Item1': {'spear_a'}}})
+        self.assertEqual([], edits)
+        self.assertEqual([[('dropped', 'drops the spear (spear_a) of enlist_x_infantry_recruit')]], [f[2] for f in left])
+
+    def test_a_weapon_is_held_against_the_best_of_any_earlier_kit_and_may_take_that_kits_piece(self):
+        kits = rank_kits({'recruit': {'Item0': 'sword_e'}, 'soldier': {'Item0': 'sword_e', 'Item1': 'spear_a'},
+                          'veteran': {'Item0': 'sword_b', 'Item1': 'spear_a'}})
+        self.assertEqual([(VETERAN, 'Item0', 'sword_b', 'sword_e')], self.plan(kits, gear={'x': {}})[0])
+
+    def test_armour_takes_the_pieces_of_the_strongest_earlier_kit(self):
+        kits = rank_kits({'recruit': {'Body': 'chest_hi'}, 'soldier': {'Body': 'chest_lo', 'Head': 'helm_hi'},
+                          'veteran': {'Body': 'chest_lo'}})
+        # The recruit totals 45 and the soldier 55; the veteran (25) is held against the soldier's 55.
+        self.assertEqual([(VETERAN, 'Head', None, 'helm_hi')], self.plan(kits)[0])
+
+    LANCERS = rank_kits({'soldier': {'Item0': 'lance_hi'}, 'veteran': {'Item0': 'lance_lo'}}, assignment='cavalry')
+    LANCER_VETERAN = ('x', 'cavalry', 'veteran')
+
+    def test_a_couchable_lance_in_a_cavalry_kit_is_replaced_only_by_a_couchable_one(self):
+        self.assertEqual([(self.LANCER_VETERAN, 'Item0', 'lance_lo', 'lance_hi')],
+                         self.plan(self.LANCERS, gear={'x': {'Item0': {'spear_hi', 'lance_hi'}}})[0])
+        self.assertEqual([(self.LANCER_VETERAN, 'Item0', 'lance_lo', 'lance_hi')],
+                         self.plan(self.LANCERS, gear={'x': {'Item0': {'spear_hi'}}})[0], "the earlier kit's own lance")
+        kits = rank_kits({'soldier': {'Item0': 'spear_hi'}, 'veteran': {'Item0': 'lance_lo'}}, assignment='cavalry')
+        edits, left = self.plan(kits, gear={'x': {'Item0': {'spear_hi'}}})
+        self.assertEqual([], edits)
+        self.assertEqual([['weapon']], [[k for k, _t in f[2]] for f in left])
+
+    def test_a_repair_never_gives_a_kit_one_weapon_twice(self):
+        kits = rank_kits({'recruit': {'Item0': 'sword_b'}, 'soldier': {'Item0': 'sword_a', 'Item1': 'spear_a'}})
+        with mock.patch.object(ger, '_pick_weapon', return_value='spear_a'):
+            with self.assertRaises(SystemExit) as cm:
+                self.plan(kits)
+        self.assertIn('twice', str(cm.exception.code))
+
+    def test_a_repaired_rank_is_the_floor_for_the_rank_above_it(self):
+        kits = rank_kits({'recruit': {'Body': 'chest_hi'}, 'soldier': {'Body': 'chest_lo'},
+                          'veteran': {'Body': 'chest_lo', 'Gloves': 'gloves'}})
+        self.assertEqual([(self.SOLDIER, 'Body', 'chest_lo', 'chest_hi'),
+                          (('x', 'infantry', 'veteran'), 'Body', 'chest_lo', 'chest_hi')], self.plan(kits)[0])
+
+    def test_the_named_cultures_and_the_default_kits_are_skipped(self):
+        kits = rank_kits({'recruit': {'Body': 'chest_hi'}, 'soldier': {'Body': 'chest_lo'}})
+        self.assertEqual([], self.plan(kits, skip={'x'})[0])
+        self.assertEqual([], self.plan({**rank_kits({'recruit': {'Body': 'chest_hi'}, 'soldier': {'Body': 'chest_lo'}},
+                                                    culture='default')})[0])
+
+
+class CultureTroopGearTests(unittest.TestCase):
+    def test_every_battle_set_of_the_line_troops_counts_and_an_alias_takes_its_source_tree(self):
+        xml = ('<NPCCharacters>'
+               + goblin('t1', roster('<equipment slot="Item0" id="Item.a" />')
+                        + roster('<equipment slot="Item0" id="Item.b" />')
+                        + roster('<equipment slot="Item0" id="Item.civ" />', ' civilian="true"'))
+               + '</NPCCharacters>').replace('Culture.goblin', 'Culture.khuzait')
+        with tempfile.TemporaryDirectory() as tmp:
+            with open(os.path.join(tmp, 'troops_k.xml'), 'w', encoding='utf-8') as fh:
+                fh.write(xml)
+            gear = ger.culture_troop_gear(tmp)
+        self.assertEqual({'a', 'b'}, gear['khuzait']['Item0'])
+        self.assertNotIn('mounted', gear['khuzait'], "the kit's Horse slot decides the saddle, not the riders")
+        self.assertEqual(gear['khuzait'], gear['battania'])
+
+
+class RepairTextTests(unittest.TestCase):
+    TEXT = ('<EquipmentRosters>\r\n'
+            '    <EquipmentRoster id="enlist_x_infantry_soldier" culture="Culture.x">\r\n'
+            '        <EquipmentSet>\r\n'
+            '            <Equipment slot="Item0" id="Item.sword_a" />\r\n'
+            '            <Equipment slot="Body" id="Item.chest_lo" />\r\n'
+            '            <Equipment slot="Cape" id="Item.cape" />\r\n'
+            '        </EquipmentSet>\r\n'
+            '    </EquipmentRoster>\r\n'
+            '    <EquipmentRoster id="enlist_y_infantry_soldier" culture="Culture.y">\r\n'
+            '        <EquipmentSet>\r\n'
+            '            <Equipment slot="Body" id="Item.chest_lo" />\r\n'
+            '        </EquipmentSet>\r\n'
+            '    </EquipmentRoster>\r\n'
+            '</EquipmentRosters>\r\n')
+    CELL = ('x', 'infantry', 'soldier')
+
+    def test_a_swap_changes_only_the_named_rosters_slot(self):
+        out = ger.repair_text(self.TEXT, [(self.CELL, 'Body', 'chest_lo', 'chest_hi')])
+        self.assertEqual({('x', 'infantry', 'soldier'): {'Item0': 'sword_a', 'Body': 'chest_hi', 'Cape': 'cape'},
+                          ('y', 'infantry', 'soldier'): {'Body': 'chest_lo'}}, ger.read_kits(out))
+        self.assertEqual(self.TEXT.replace('Item.chest_lo" />\r\n            <Equipment slot="Cape"',
+                                           'Item.chest_hi" />\r\n            <Equipment slot="Cape"'), out)
+
+    def test_an_added_slot_goes_in_emission_order_with_the_files_line_ending(self):
+        out = ger.repair_text(self.TEXT, [(self.CELL, 'Gloves', None, 'gloves')])
+        self.assertIn('Item.chest_lo" />\r\n            <Equipment slot="Gloves" id="Item.gloves" />\r\n'
+                      '            <Equipment slot="Cape"', out)
+        ET.fromstring(out)
+
+    def test_a_stale_plan_is_refused(self):
+        with self.assertRaises(SystemExit) as cm:
+            ger.repair_text(self.TEXT, [(self.CELL, 'Body', 'not_there', 'chest_hi')])
+        self.assertIn('enlist_x_infantry_soldier', str(cm.exception.code))
+
+    def run_repair(self, argv, text):
+        with tempfile.TemporaryDirectory() as tmp:
+            path = os.path.join(tmp, 'rosters.xml')
+            with open(path, 'wb') as fh:
+                fh.write(text.encode('utf-8'))
+            out = io.StringIO()
+            with mock.patch.object(sys, 'argv', ['gen', '--repair-ranks', '--out', path] + argv), \
+                    mock.patch.object(ger, 'build_rank_indexes', return_value=(RANK_ARMOUR, RANK_WEAPONS)), \
+                    mock.patch.object(ger, 'culture_troop_gear', return_value={}), \
+                    mock.patch.object(ger, 'build_indexes', side_effect=AssertionError('indexes built')), \
+                    contextlib.redirect_stdout(out):
+                ger.main()
+            with open(path, 'rb') as fh:
+                return fh.read().decode('utf-8'), out.getvalue()
+
+    WEAK = TEXT.replace('enlist_y_infantry_soldier', 'enlist_x_infantry_recruit').replace(
+        'Culture.y', 'Culture.x').replace('Item.chest_lo" />\r\n        </EquipmentSet>\r\n    </EquipmentRoster>\r\n</',
+                                          'Item.chest_hi" />\r\n        </EquipmentSet>\r\n    </EquipmentRoster>\r\n</')
+
+    def test_the_repair_mode_is_a_dry_run_until_apply(self):
+        text, out = self.run_repair([], self.WEAK)
+        self.assertEqual(self.WEAK, text)
+        self.assertIn('enlist_x_infantry_soldier Body chest_lo -> chest_hi', out)
+        self.assertIn('DRY-RUN', out)
+
+    def test_the_repair_mode_applies_its_plan(self):
+        text, _out = self.run_repair(['--apply'], self.WEAK)
+        self.assertEqual(ger.read_kits(self.WEAK.replace('Item.chest_lo', 'Item.chest_hi')), ger.read_kits(text))
+        self.assertIn('\r\n', text)
+
+    def test_the_dry_run_lists_the_dropped_categories(self):
+        dropped = self.WEAK.replace('<Equipment slot="Body" id="Item.chest_hi" />',
+                                    '<Equipment slot="Body" id="Item.chest_hi" />\r\n'
+                                    '            <Equipment slot="Item1" id="Item.spear_a" />')
+        _text, out = self.run_repair([], dropped)
+        self.assertIn('Dropped categories, never repaired by a tool (1):', out)
+        self.assertIn('enlist_x_infantry_soldier: drops the spear (spear_a) of enlist_x_infantry_recruit', out)
+
+    def test_the_repair_mode_refuses_a_culture_the_promoter_owns(self):
+        owned = self.WEAK.replace('<EquipmentRosters>\r\n', '<EquipmentRosters>\r\n  <!-- TAOM-NEWCULTURE:x:BEGIN -->\r\n')
+        with self.assertRaises(SystemExit) as cm:
+            self.run_repair(['--culture', 'x'], owned)
+        self.assertIn('promote_borrowed_cultures.py', str(cm.exception.code))
+
+    def test_the_repair_mode_refuses_an_unknown_culture_or_the_defaults_and_names_the_known_ids(self):
+        for culture in ('nope', 'default'):
+            with self.assertRaises(SystemExit) as cm:
+                self.run_repair(['--culture', culture], self.WEAK)
+            self.assertIn(culture, str(cm.exception.code))
+            self.assertIn('Known: x', str(cm.exception.code))
+
+    def test_the_shipped_default_kits_equal_the_generators_literal(self):
+        # The repair leaves the defaults to a hand edit of both; a full apply rewrites the file from the literal.
+        with open(ger.OUT_XML, 'rb') as fh:
+            kits = ger.read_kits(fh.read().decode('utf-8-sig'))
+        for (assignment, rank), items in ger.DEFAULT_ROSTER_ITEMS.items():
+            self.assertEqual(dict(items), kits[('default', assignment, rank)], (assignment, rank))
+
+    def test_promoter_regions_name_the_cultures_the_promoter_owns(self):
+        text = ('<EquipmentRosters>\r\n  <!-- TAOM-NEWCULTURE:cardolan:BEGIN -->\r\n'
+                '  <!-- TAOM-NEWCULTURE:cardolan:END -->\r\n</EquipmentRosters>')
+        self.assertEqual({'cardolan'}, ger.promoter_owned_cultures(text))
 
 if __name__ == '__main__':
     unittest.main()
