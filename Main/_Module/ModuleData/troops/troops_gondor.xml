@@ -3602,9 +3602,9 @@
     <skills>
       <skill id="Athletics" value="105" />
       <skill id="Riding" value="25" />
-      <skill id="OneHanded" value="190" />
+      <skill id="OneHanded" value="170" />
       <skill id="TwoHanded" value="160" />
-      <skill id="Polearm" value="170" />
+      <skill id="Polearm" value="190" />
       <skill id="Bow" value="20" />
       <skill id="Crossbow" value="15" />
       <skill id="Throwing" value="60" />
@@ -3614,9 +3614,9 @@
     </upgrade_targets>
     <Equipments>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.wm_swan_knight_swordb" />
+        <equipment slot="Item0" id="Item.taom_ph_gondor_spear_b_t5" />
         <equipment slot="Item1" id="Item.sm_gd_shield_b1" />
-        <equipment slot="Item2" id="Item.taom_ph_gondor_spear_b_t5" />
+        <equipment slot="Item2" id="Item.wm_swan_knight_swordb" />
         <equipment slot="Head" id="Item.sk_gd_lin_helmet_heavy_a" />
         <equipment slot="Body" id="Item.sk_gd_lin_chest_med_a" />
         <equipment slot="Cape" id="Item.sk_gd_lin_pauld_noble_heavy_a" />
@@ -3624,9 +3624,9 @@
         <equipment slot="Leg" id="Item.sk_gd_lin_grvs_med_a" />
       </EquipmentRoster>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.wm_swan_knight_swordb" />
+        <equipment slot="Item0" id="Item.taom_ph_gondor_spear_b_t5" />
         <equipment slot="Item1" id="Item.sm_gd_shield_b2" />
-        <equipment slot="Item2" id="Item.taom_ph_gondor_spear_b_t5" />
+        <equipment slot="Item2" id="Item.wm_swan_knight_swordb" />
         <equipment slot="Head" id="Item.sk_gd_lin_helmet_heavy_a" />
         <equipment slot="Body" id="Item.sk_gd_lin_chest_med_a" />
         <equipment slot="Cape" id="Item.sk_gd_lin_pauld_noble_heavy_a" />
@@ -3634,9 +3634,9 @@
         <equipment slot="Leg" id="Item.sk_gd_lin_grvs_med_a" />
       </EquipmentRoster>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.wm_swan_knight_swordb" />
+        <equipment slot="Item0" id="Item.taom_ph_gondor_spear_b_swan_t5" />
         <equipment slot="Item1" id="Item.sm_gd_shield_b1" />
-        <equipment slot="Item2" id="Item.taom_ph_gondor_spear_b_swan_t5" />
+        <equipment slot="Item2" id="Item.wm_swan_knight_swordb" />
         <equipment slot="Head" id="Item.sk_gd_lin_helmet_heavy_b" />
         <equipment slot="Body" id="Item.sk_gd_lin_chest_med_a" />
         <equipment slot="Cape" id="Item.sk_gd_lin_pauld_noble_heavy_a" />
@@ -3644,9 +3644,9 @@
         <equipment slot="Leg" id="Item.sk_gd_lin_grvs_med_a" />
       </EquipmentRoster>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.wm_swan_knight_swordb" />
+        <equipment slot="Item0" id="Item.taom_ph_gondor_spear_b_swan_t5" />
         <equipment slot="Item1" id="Item.sm_gd_shield_b2" />
-        <equipment slot="Item2" id="Item.taom_ph_gondor_spear_b_swan_t5" />
+        <equipment slot="Item2" id="Item.wm_swan_knight_swordb" />
         <equipment slot="Head" id="Item.sk_gd_lin_helmet_heavy_b" />
         <equipment slot="Body" id="Item.sk_gd_lin_chest_med_a" />
         <equipment slot="Cape" id="Item.sk_gd_lin_pauld_noble_heavy_a" />
@@ -3670,9 +3670,9 @@
     <skills>
       <skill id="Athletics" value="125" />
       <skill id="Riding" value="30" />
-      <skill id="OneHanded" value="255" />
+      <skill id="OneHanded" value="225" />
       <skill id="TwoHanded" value="215" />
-      <skill id="Polearm" value="225" />
+      <skill id="Polearm" value="255" />
       <skill id="Bow" value="25" />
       <skill id="Crossbow" value="20" />
       <skill id="Throwing" value="70" />
@@ -3682,9 +3682,9 @@
     </upgrade_targets>
     <Equipments>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.wm_swan_knight_swordb" />
+        <equipment slot="Item0" id="Item.taom_ph_gondor_spear_b_t8" />
         <equipment slot="Item1" id="Item.sm_gd_shield_b1" />
-        <equipment slot="Item2" id="Item.taom_ph_gondor_spear_b_t8" />
+        <equipment slot="Item2" id="Item.wm_swan_knight_swordb" />
         <equipment slot="Head" id="Item.sk_gd_lin_helmet_heavy_a" />
         <equipment slot="Body" id="Item.sk_gd_lin_chest_heavy_a" />
         <equipment slot="Cape" id="Item.sk_gd_lin_pauld_noble_heavy_a" />
@@ -3692,9 +3692,9 @@
         <equipment slot="Leg" id="Item.sk_gd_lin_grvs_heavy_a" />
       </EquipmentRoster>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.wm_swan_knight_swordb" />
+        <equipment slot="Item0" id="Item.taom_ph_gondor_spear_b_t8" />
         <equipment slot="Item1" id="Item.sm_gd_shield_b2" />
-        <equipment slot="Item2" id="Item.taom_ph_gondor_spear_b_t8" />
+        <equipment slot="Item2" id="Item.wm_swan_knight_swordb" />
         <equipment slot="Head" id="Item.sk_gd_lin_helmet_heavy_a" />
         <equipment slot="Body" id="Item.sk_gd_lin_chest_heavy_a" />
         <equipment slot="Cape" id="Item.sk_gd_lin_pauld_noble_heavy_a" />
@@ -3702,9 +3702,9 @@
         <equipment slot="Leg" id="Item.sk_gd_lin_grvs_heavy_a" />
       </EquipmentRoster>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.wm_swan_knight_swordb" />
+        <equipment slot="Item0" id="Item.taom_ph_gondor_spear_b_swan_t8" />
         <equipment slot="Item1" id="Item.sm_gd_shield_b1" />
-        <equipment slot="Item2" id="Item.taom_ph_gondor_spear_b_swan_t8" />
+        <equipment slot="Item2" id="Item.wm_swan_knight_swordb" />
         <equipment slot="Head" id="Item.sk_gd_lin_helmet_heavy_b" />
         <equipment slot="Body" id="Item.sk_gd_lin_chest_heavy_a" />
         <equipment slot="Cape" id="Item.sk_gd_lin_pauld_noble_heavy_a" />
@@ -3712,9 +3712,9 @@
         <equipment slot="Leg" id="Item.sk_gd_lin_grvs_heavy_a" />
       </EquipmentRoster>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.wm_swan_knight_swordb" />
+        <equipment slot="Item0" id="Item.taom_ph_gondor_spear_b_swan_t8" />
         <equipment slot="Item1" id="Item.sm_gd_shield_b2" />
-        <equipment slot="Item2" id="Item.taom_ph_gondor_spear_b_swan_t8" />
+        <equipment slot="Item2" id="Item.wm_swan_knight_swordb" />
         <equipment slot="Head" id="Item.sk_gd_lin_helmet_heavy_b" />
         <equipment slot="Body" id="Item.sk_gd_lin_chest_heavy_a" />
         <equipment slot="Cape" id="Item.sk_gd_lin_pauld_noble_heavy_a" />
@@ -5919,9 +5919,9 @@
     <skills>
       <skill id="Athletics" value="105" />
       <skill id="Riding" value="125" />
-      <skill id="OneHanded" value="150" />
+      <skill id="OneHanded" value="125" />
       <skill id="TwoHanded" value="90" />
-      <skill id="Polearm" value="125" />
+      <skill id="Polearm" value="150" />
       <skill id="Bow" value="25" />
       <skill id="Crossbow" value="15" />
       <skill id="Throwing" value="20" />
@@ -5931,9 +5931,9 @@
     </upgrade_targets>
     <Equipments>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.wm_gondor_sword_a03" />
+        <equipment slot="Item0" id="Item.taom_ph_gondor_spear_b_t5" />
         <equipment slot="Item1" id="Item.gond_shield_three_green" />
-        <equipment slot="Item2" id="Item.taom_ph_gondor_spear_b_t5" />
+        <equipment slot="Item2" id="Item.wm_gondor_sword_a03" />
         <equipment slot="Head" id="Item.sk_gd_anf_cav_helmet_heavy_a" />
         <equipment slot="Body" id="Item.sk_gd_anf_inf_chest_med_a" />
         <equipment slot="Cape" id="Item.sk_gd_ano_pauld_inf_med_b" />
@@ -5941,9 +5941,9 @@
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_med_a" />
       </EquipmentRoster>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.wm_gondor_sword_a03" />
+        <equipment slot="Item0" id="Item.taom_ph_gondor_spear_b_t5" />
         <equipment slot="Item1" id="Item.gond_shield_three_green" />
-        <equipment slot="Item2" id="Item.taom_ph_gondor_spear_b_t5" />
+        <equipment slot="Item2" id="Item.wm_gondor_sword_a03" />
         <equipment slot="Head" id="Item.sk_gd_anf_cav_helmet_heavy_a" />
         <equipment slot="Body" id="Item.sk_gd_anf_inf_chest_med_a" />
         <equipment slot="Cape" id="Item.sk_gd_ano_pauld_inf_med_b" />
@@ -5951,9 +5951,9 @@
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_med_a" />
       </EquipmentRoster>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.wm_gondor_sword_a03" />
+        <equipment slot="Item0" id="Item.taom_ph_gondor_spear_b_gondor_t5" />
         <equipment slot="Item1" id="Item.gond_shield_three_green" />
-        <equipment slot="Item2" id="Item.taom_ph_gondor_spear_b_gondor_t5" />
+        <equipment slot="Item2" id="Item.wm_gondor_sword_a03" />
         <equipment slot="Head" id="Item.sk_gd_anf_cav_helmet_heavy_b" />
         <equipment slot="Body" id="Item.sk_gd_anf_inf_chest_med_b" />
         <equipment slot="Cape" id="Item.sk_gd_ano_pauld_inf_med_b" />
@@ -5961,9 +5961,9 @@
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_med_a" />
       </EquipmentRoster>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.wm_gondor_sword_a03" />
+        <equipment slot="Item0" id="Item.taom_ph_gondor_spear_b_gondor_t5" />
         <equipment slot="Item1" id="Item.gond_shield_three_green" />
-        <equipment slot="Item2" id="Item.taom_ph_gondor_spear_b_gondor_t5" />
+        <equipment slot="Item2" id="Item.wm_gondor_sword_a03" />
         <equipment slot="Head" id="Item.sk_gd_anf_cav_helmet_heavy_b" />
         <equipment slot="Body" id="Item.sk_gd_anf_inf_chest_med_b" />
         <equipment slot="Cape" id="Item.sk_gd_ano_pauld_inf_med_b" />
@@ -5989,9 +5989,9 @@
     <skills>
       <skill id="Athletics" value="120" />
       <skill id="Riding" value="165" />
-      <skill id="OneHanded" value="200" />
+      <skill id="OneHanded" value="180" />
       <skill id="TwoHanded" value="90" />
-      <skill id="Polearm" value="180" />
+      <skill id="Polearm" value="200" />
       <skill id="Bow" value="30" />
       <skill id="Crossbow" value="20" />
       <skill id="Throwing" value="30" />
@@ -5999,9 +5999,9 @@
     <upgrade_targets />
     <Equipments>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.wm_gondor_sword_a03" />
+        <equipment slot="Item0" id="Item.taom_ph_gondor_spear_b_t5" />
         <equipment slot="Item1" id="Item.gond_shield_three_green" />
-        <equipment slot="Item2" id="Item.taom_ph_gondor_spear_b_t5" />
+        <equipment slot="Item2" id="Item.wm_gondor_sword_a03" />
         <equipment slot="Head" id="Item.sk_gd_anf_cav_helmet_heavy_a" />
         <equipment slot="Body" id="Item.sk_gd_anf_inf_chest_heavy_a" />
         <equipment slot="Cape" id="Item.sk_gd_ano_pauld_cape_inf_elite_a" />
@@ -6009,9 +6009,9 @@
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_heavy_a" />
       </EquipmentRoster>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.wm_gondor_sword_a03" />
+        <equipment slot="Item0" id="Item.taom_ph_gondor_spear_b_t5" />
         <equipment slot="Item1" id="Item.gond_shield_three_green" />
-        <equipment slot="Item2" id="Item.taom_ph_gondor_spear_b_t5" />
+        <equipment slot="Item2" id="Item.wm_gondor_sword_a03" />
         <equipment slot="Head" id="Item.sk_gd_anf_cav_helmet_heavy_a" />
         <equipment slot="Body" id="Item.sk_gd_anf_inf_chest_heavy_a" />
         <equipment slot="Cape" id="Item.sk_gd_ano_pauld_cape_inf_elite_a" />
@@ -6019,9 +6019,9 @@
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_heavy_a" />
       </EquipmentRoster>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.wm_gondor_sword_a03" />
+        <equipment slot="Item0" id="Item.taom_ph_gondor_spear_b_gondor_t5" />
         <equipment slot="Item1" id="Item.gond_shield_three_green" />
-        <equipment slot="Item2" id="Item.taom_ph_gondor_spear_b_gondor_t5" />
+        <equipment slot="Item2" id="Item.wm_gondor_sword_a03" />
         <equipment slot="Head" id="Item.sk_gd_anf_cav_helmet_heavy_b" />
         <equipment slot="Body" id="Item.sk_gd_anf_inf_chest_heavy_b" />
         <equipment slot="Cape" id="Item.sk_gd_ano_pauld_cape_inf_elite_a" />
@@ -6029,9 +6029,9 @@
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_heavy_a" />
       </EquipmentRoster>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.wm_gondor_sword_a03" />
+        <equipment slot="Item0" id="Item.taom_ph_gondor_spear_b_gondor_t5" />
         <equipment slot="Item1" id="Item.gond_shield_three_green" />
-        <equipment slot="Item2" id="Item.taom_ph_gondor_spear_b_gondor_t5" />
+        <equipment slot="Item2" id="Item.wm_gondor_sword_a03" />
         <equipment slot="Head" id="Item.sk_gd_anf_cav_helmet_heavy_b" />
         <equipment slot="Body" id="Item.sk_gd_anf_inf_chest_heavy_b" />
         <equipment slot="Cape" id="Item.sk_gd_ano_pauld_cape_inf_elite_a" />

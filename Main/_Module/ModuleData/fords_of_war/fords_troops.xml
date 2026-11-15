@@ -3166,9 +3166,9 @@
     </skills>
     <Equipments>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.sm_md_num_sword_1h_c" />
+        <equipment slot="Item0" id="Item.sm_uruk_halberd_j" />
         <equipment slot="Item1" id="Item.sm_md_num_cav_shield_heavy_a" />
-        <equipment slot="Item2" id="Item.sm_uruk_halberd_j" />
+        <equipment slot="Item2" id="Item.sm_md_num_sword_1h_c" />
         <equipment slot="Head" id="Item.sk_md_num_cav_helmet_heavy_a" />
         <equipment slot="Body" id="Item.sm_md_num_cav_chest_heavy_a" />
         <equipment slot="Cape" id="Item.sm_md_num_cav_pauld_heavy_a" />
@@ -3178,9 +3178,9 @@
         <equipment slot="HorseHarness" id="Item.sm_md_num_barding_elite_a" />
       </EquipmentRoster>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.sm_md_num_sword_1h_c" />
+        <equipment slot="Item0" id="Item.sm_uruk_halberd_j" />
         <equipment slot="Item1" id="Item.sm_md_num_cav_shield_heavy_a" />
-        <equipment slot="Item2" id="Item.sm_uruk_halberd_j" />
+        <equipment slot="Item2" id="Item.sm_md_num_sword_1h_c" />
         <equipment slot="Head" id="Item.sk_md_num_cav_helmet_heavy_b" />
         <equipment slot="Body" id="Item.sm_md_num_cav_chest_heavy_a" />
         <equipment slot="Cape" id="Item.sm_md_num_cav_pauld_cape_heavy_a" />
@@ -14340,9 +14340,9 @@
         </skills>
         <Equipments>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.sm_dg_khml_1h_sword_b" />
+                <equipment slot="Item0" id="Item.sm_dg_khml_spear_b" />
                 <equipment slot="Item1" id="Item.wm_gundabad_shield_a03" />
-                <equipment slot="Item2" id="Item.sm_dg_khml_spear_b" />
+                <equipment slot="Item2" id="Item.sm_dg_khml_1h_sword_b" />
                 <equipment slot="Head" id="Item.sk_dg_uruk_helmet_elite_g" />
                 <equipment slot="Body" id="Item.sk_dg_uruk_chest_elite_c" />
                 <equipment slot="Cape" id="Item.sk_dg_uruk_pauldron_heavy_c" />
@@ -15051,9 +15051,9 @@
         </skills>
         <Equipments>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.sm_dg_khml_1h_sword_a" />
+                <equipment slot="Item0" id="Item.sm_dg_khml_spear_a" />
                 <equipment slot="Item1" id="Item.wm_gundabad_shield_a02" />
-                <equipment slot="Item2" id="Item.sm_dg_khml_spear_a" />
+                <equipment slot="Item2" id="Item.sm_dg_khml_1h_sword_a" />
                 <equipment slot="Head" id="Item.sk_dg_uruk_helmet_med_g" />
                 <equipment slot="Body" id="Item.sk_dg_uruk_chest_med_c" />
                 <equipment slot="Cape" id="Item.sk_dg_uruk_pauldron_med_a" />

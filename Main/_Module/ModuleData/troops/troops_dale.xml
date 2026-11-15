@@ -1035,9 +1035,9 @@
         <skills>
             <skill id="Athletics" value="90" />
             <skill id="Riding" value="85" />
-            <skill id="OneHanded" value="125" />
+            <skill id="OneHanded" value="95" />
             <skill id="TwoHanded" value="67" />
-            <skill id="Polearm" value="95" />
+            <skill id="Polearm" value="125" />
             <skill id="Bow" value="27" />
             <skill id="Crossbow" value="22" />
             <skill id="Throwing" value="20" />
@@ -1048,9 +1048,9 @@
         </upgrade_targets>
         <Equipments>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.dale_sword_b" />
+                <equipment slot="Item0" id="Item.dale_winged_spear_b" />
                 <equipment slot="Item1" id="Item.wm_dale_shield_b03" />
-                <equipment slot="Item2" id="Item.dale_winged_spear_b" />
+                <equipment slot="Item2" id="Item.dale_sword_b" />
                 <equipment slot="Horse" id="Item.sturgia_horse" />
                 <equipment slot="HorseHarness" id="Item.chain_horse_harness" />
                 <equipment slot="Head" id="Item.sk_dale_helmet_chivlary_a01" />
@@ -1060,9 +1060,9 @@
                 <equipment slot="Cape" id="Item.sk_dale_shoulder_chivlary_a01" />
             </EquipmentRoster>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.dale_sword_b" />
+                <equipment slot="Item0" id="Item.dale_winged_spear_b" />
                 <equipment slot="Item1" id="Item.wm_dale_shield_b03" />
-                <equipment slot="Item2" id="Item.dale_winged_spear_b" />
+                <equipment slot="Item2" id="Item.dale_sword_b" />
                 <equipment slot="Horse" id="Item.sturgia_horse" />
                 <equipment slot="HorseHarness" id="Item.chain_horse_harness" />
                 <equipment slot="Head" id="Item.sk_dale_helmet_chivlary_b01" />
