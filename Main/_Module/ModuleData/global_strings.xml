@@ -70,6 +70,8 @@
 	     the trailing number is the game key id, kept in step with TaomCheatMenuHotKeyCategory. -->
 	<string id="str_key_name.TaomCheatMenuHotKeyCategory_550" text="{=taom_key_cheat_menu}Open Cheat Menu (TAOM)" />
 	<string id="str_key_description.TaomCheatMenuHotKeyCategory_550" text="{=taom_key_cheat_menu_desc}Opens the TAOM cheat menu on the campaign map, like the Cheats button. Works only while Enable Cheat Menu is on in Mod Options, in single player. Defaults to H." />
+	<string id="str_key_name.TaomCheatMenuHotKeyCategory_551" text="{=taom_key_battle_cheat_menu}Open Battle Cheat Menu (TAOM)" />
+	<string id="str_key_description.TaomCheatMenuHotKeyCategory_551" text="{=taom_key_battle_cheat_menu_desc}Opens the TAOM battle cheat list in a mission, like the Cheats item in the Esc menu. Works only while Enable Cheat Menu is on in Mod Options, in single player. Defaults to H." />
 
 	<!-- Advanced Starting Options (v1.5.x main-menu screen), the MENU half (#604).
 	     Same contract as the keybinding rows above: the ASO screen runs before any campaign

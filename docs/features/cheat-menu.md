@@ -58,6 +58,47 @@ The menu itself opens only from the free map (`MapMenuGate`, as the Fiefs hub), 
 The party arrives outside the gate, and the player enters as usual, so every settlement-entered listener runs through the
 normal encounter.
 
+## Battle
+
+With the same switch on, in single player, the game's single-player Esc menu (`MissionGauntletSingleplayerEscapeMenu`, which
+the campaign's battles, sieges and scenes use) gets a **Cheats** item just before Photo Mode, where vanilla adds its gamepad
+"Cheat Menu" item. `Patch152_BattleCheatMenu` is a postfix on `MissionGauntletSingleplayerEscapeMenu.GetEscapeMenuItems` in
+TAOM.Client. A click closes the Esc menu and opens a single-choice list. **H** in a battle opens the same list: Options >
+Keybindings > Action, row "Open Battle Cheat Menu (TAOM)" (game key id 551 in the same category). `BattleCheatMenuView`, a
+`[DefaultView]` in TAOM.Client, asks `BattleCheatOpener.TryOpenOnKey` each frame, which reads no key with the switch off or
+outside single player. A press does not count with Ctrl or Alt held (vanilla's Ctrl+H cheat), nor while the Esc menu, the order
+panel, the radial menu, photo mode or another pop-up is open.
+
+| Entry | Effect |
+|---|---|
+| Heal yourself | The player's agent and its mount back to full health |
+| Heal your side | Every active soldier of the player's team and its ally team, and their mounts |
+| Rout the enemy | Vanilla `mission.flee_enemies`: every active enemy soldier panics |
+| Kill all enemies | Vanilla `mission.kill_all_enemies`: every AI-controlled soldier of every enemy team dies |
+| +10 allied troops | 10 copies of the non-hero soldiers already on the player's side |
+| +10 enemy troops | 10 copies of the non-hero soldiers already on the enemy side |
+
+Every entry calls `BattleCheatService`, the same code as the console commands below, and shows its result as a message.
+- Every action refuses in co-op first, then outside a running battle: no mission, no player team, a mission that has ended, or a
+  side that has retreated.
+- The spawns go round-robin over the distinct characters of that side's active soldiers. Heroes are never copied, so the
+  player, companions, lords and the custom dev and supporter characters stay out. A side with nobody to copy (for example
+  the enemy side in a town) changes nothing.
+- They go through `MissionTroopSpawner`, the same code as `taom.spawn_troops`: its team check, its creature-bandit rule (a
+  creature bandit always spawns as an enemy) and its ring of positions around the player.
+
+| Command | Effect |
+|---|---|
+| `taom.cheat_battle_heal [self\|side]` | Heals the player (default) or the player's side |
+| `taom.cheat_battle_rout` | Routs the enemy |
+| `taom.cheat_battle_kill` | Kills every AI-controlled enemy |
+| `taom.cheat_battle_spawn <1-200> [ally\|enemy]` | Copies of that side's non-hero soldiers (default enemy, as `taom.spawn_troops`) |
+
+The battle commands need cheat mode and a mission (`TaomConsole.RunInMission`), not the MCM switch.
+
+The list opens through `BattleCheatOpener.TryOpen`. `TryOpenOnKey` checks the switch and single player before it reads any key,
+for a later hotkey.
+
 ## Co-op
 
 Single player only. The button is added only while `CoopSessionPolicy.IsSinglePlayerAuthority`, every menu button except
@@ -96,6 +137,11 @@ capped `ISpecialResourceService.GrantAmount`, for the main hero's own resource.
 | `Main/Features/CheatMenu/Hooks/Patch151_CheatMenuNavigation.cs` | Adds the button to the map bar while the menu is shown |
 | `Client/Features/CheatMenu/UI/TaomCheatsNavigationElement.cs` | The button (TAOM.Client, ADR-013); icon layer `taom_cheats` in `MapBar.xml`, on the game's `SaveLoad\icon_gold` |
 | `Main/Features/CheatMenu/Cheats/CheatMenuCheats.cs` | The console commands |
+| `Main/Features/CheatMenu/Battle/` | The battle menu: `BattleCheatPolicy` (pure), `BattleCheatService`, `BattleCheatOpener`, `BattleCheatTexts` |
+| `Main/Adapters/BattleCheatAdapter.cs`, `BattleCheatHostAdapter.cs` | The battle cheats' engine calls; the pop-up list and the message |
+| `Main/Features/DevConsole/Cheats/MissionTroopSpawner.cs` | The spawner shared with `taom.spawn_troops` |
+| `Client/Features/CheatMenu/Hooks/Patch152_BattleCheatEscapeMenu.cs` | The Esc menu's Cheats item |
+| `Main/Features/CheatMenu/Cheats/BattleCheatCheats.cs` | The battle console commands |
 
 ## How to verify in game
 
@@ -112,6 +158,12 @@ capped `ISpecialResourceService.GrantAmount`, for the main hero's own resource.
 7. Turn the switch off and load again: the button is gone.
 8. With the switch on, press H on the free map: the cheat menu opens. Press H inside a town menu: nothing. Rebind the key
    in Options > Keybindings > Campaign Map and check the new key opens it. With the switch off, H does nothing.
+9. With the switch on, start a field battle and press Esc: Cheats shows just before Photo Mode. Click it: the Esc menu closes and
+   the battle list opens. Try each entry and check the message and the effect (health bars, fleeing enemies, the dead, new
+   troops near you, no hero among them).
+10. Turn the switch off and press Esc in a battle: no Cheats item.
+11. With the switch on, press H in a battle: the battle list opens. Press Ctrl+H with game cheat mode on: vanilla's cheat runs
+    and no list opens. Turn the switch off: H in battle does nothing.
 
 ## Limits
 
@@ -119,11 +171,17 @@ capped `ISpecialResourceService.GrantAmount`, for the main hero's own resource.
 - A teleport next to an enemy party starts an encounter on the next tick, the same as the game's own Ctrl+click cheat.
 - Special resources are per hero and resolved by kingdom, then culture. A hero whose kingdom and culture grant none gets
   "Nothing changed".
-- Not tested in game (14 Nov 2026): the button, the map key, the menus, the lists and the camera after a teleport.
+- Not tested in game (14 Nov 2026): the button, the map key, the menus, the lists and the camera after a teleport;
+  the Esc item, the battle key, the battle list and every battle cheat.
 - A clash of H with the RTS Camera or Command System defaults is unknown; rebind either key if both act.
+- Whether the battle pauses while the list is open has not been checked; the list is opened without the pause option.
+- Kill all enemies counts every agent it hands to `KillAgentCheat`, which does nothing in a cutscene, conversation or barter.
 
 ## Changelog
 
 - 2026-11-14: Initial feature: MCM switch, map button, campaign cheat menu, `taom.cheat_*` console commands. The battle cheat
   menu follows separately.
 - 2026-11-14: Rebindable map key "Open Cheat Menu (TAOM)", default H, with the button's gates.
+- 2026-11-14: Battle cheat menu: a Cheats item in the single-player Esc menu (Patch152), `taom.cheat_battle_*` console commands,
+  and `taom.spawn_troops`' spawner moved to `MissionTroopSpawner` to be shared.
+- 2026-11-15: Rebindable battle key "Open Battle Cheat Menu (TAOM)", default H, through the Esc item's gate.

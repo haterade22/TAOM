@@ -14,6 +14,9 @@ public enum CheatOutcomeKind
     UnknownTarget,
     NothingToDo,
     TeleportRefused,
+
+    /// <summary>A battle cheat outside a running battle (no mission, no player team, or the battle has ended or a side retreated).</summary>
+    NoBattle,
 }
 
 /// <param name="Name">What was given or reached (a troop, a resource, a kingdom, a settlement), when there is one.</param>

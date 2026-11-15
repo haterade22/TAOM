@@ -2412,11 +2412,28 @@
 
 	<!-- Cheat Menu (docs/features/cheat-menu.md) -->
 	<string id="taom_cheat_bad_amount" text="{=taom_cheat_bad_amount}That amount is not allowed. The limit is {MAX}." />
+	<string id="taom_cheat_battle_done_heal_self" text="{=taom_cheat_battle_done_heal_self}You are back to full health, and so is your mount if you ride one." />
+	<string id="taom_cheat_battle_done_heal_side" text="{=taom_cheat_battle_done_heal_side}{NUMBER} soldiers and mounts of your side are back to full health." />
+	<string id="taom_cheat_battle_done_kill" text="{=taom_cheat_battle_done_kill}{NUMBER} enemies were killed." />
+	<string id="taom_cheat_battle_done_rout" text="{=taom_cheat_battle_done_rout}{NUMBER} enemies are fleeing." />
+	<string id="taom_cheat_battle_done_spawn_ally" text="{=taom_cheat_battle_done_spawn_ally}{NUMBER} allied troops joined the battle." />
+	<string id="taom_cheat_battle_done_spawn_enemy" text="{=taom_cheat_battle_done_spawn_enemy}{NUMBER} enemy troops joined the battle." />
+	<string id="taom_cheat_battle_item" text="{=taom_cheat_battle_item}Cheats" />
+	<string id="taom_cheat_battle_none" text="{=taom_cheat_battle_none}Start a battle first. Battle cheats work only while a battle is on." />
+	<string id="taom_cheat_battle_nothing" text="{=taom_cheat_battle_nothing}Nothing changed: there is nobody in this battle this cheat can act on." />
+	<string id="taom_cheat_battle_opt_heal_self" text="{=taom_cheat_battle_opt_heal_self}Heal yourself" />
+	<string id="taom_cheat_battle_opt_heal_side" text="{=taom_cheat_battle_opt_heal_side}Heal your side" />
+	<string id="taom_cheat_battle_opt_kill" text="{=taom_cheat_battle_opt_kill}Kill all enemies" />
+	<string id="taom_cheat_battle_opt_rout" text="{=taom_cheat_battle_opt_rout}Rout the enemy" />
+	<string id="taom_cheat_battle_opt_spawn_ally" text="{=taom_cheat_battle_opt_spawn_ally}+10 allied troops" />
+	<string id="taom_cheat_battle_opt_spawn_enemy" text="{=taom_cheat_battle_opt_spawn_enemy}+10 enemy troops" />
+	<string id="taom_cheat_battle_text" text="{=taom_cheat_battle_text}Cheats change this battle. New troops are copies of soldiers already on that side." />
+	<string id="taom_cheat_battle_title" text="{=taom_cheat_battle_title}Battle cheats" />
 	<string id="taom_cheat_coop" text="{=taom_cheat_coop}Cheats are not available in co-op." />
 	<string id="taom_cheat_failed" text="{=taom_cheat_failed}That cheat failed. The TAOM log has the details." />
 	<string id="taom_cheat_done" text="{=taom_cheat_done}Done: {NAME} {NUMBER}" />
 	<string id="taom_cheat_mcm_enable" text="{=taom_cheat_mcm_enable}Enable Cheat Menu" />
-	<string id="taom_cheat_mcm_enable_hint" text="{=taom_cheat_mcm_enable_hint}Adds a Cheats button to the bottom bar of the campaign map. It opens a menu that teleports your party to a settlement and gives gold, troops, your special resource, influence, renown and relations, and heals your party. Cheats change your save, and most cannot be undone. The button appears the next time the campaign map opens, for example after loading a save. The H key on the campaign map also opens the menu (change it under Options, Keybindings, Campaign Map). Single-player only. Default: off." />
+	<string id="taom_cheat_mcm_enable_hint" text="{=taom_cheat_mcm_enable_hint}Adds a Cheats button to the bottom bar of the campaign map. It opens a menu that teleports your party to a settlement and gives gold, troops, your special resource, influence, renown and relations, and heals your party. In a mission, the Esc menu has a Cheats item (or press H) that heals you or your side, routs or kills the enemy, or adds 10 allied or enemy troops. Cheats change your save, and most cannot be undone. The button appears the next time the campaign map opens, for example after loading a save. The H key on the campaign map also opens the menu (change either key under Options, Keybindings). Single-player only. Default: off." />
 	<string id="taom_cheat_mcm_group" text="{=taom_cheat_mcm_group}Cheat Menu" />
 	<string id="taom_cheat_menu_text" text="{=taom_cheat_menu_text}TAOM cheat menu. Cheats change your save, and most cannot be undone." />
 	<string id="taom_cheat_nav_busy" text="{=taom_cheat_nav_busy}The cheat menu opens from the free campaign map." />

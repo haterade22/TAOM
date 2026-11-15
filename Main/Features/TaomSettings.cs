@@ -3197,6 +3197,6 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
 
     [SettingPropertyGroup("{=taom_cheat_mcm_group}Cheat Menu", GroupOrder = 90)]
     [SettingPropertyBool("{=taom_cheat_mcm_enable}Enable Cheat Menu", Order = 0, RequireRestart = false,
-        HintText = "{=taom_cheat_mcm_enable_hint}Adds a Cheats button to the bottom bar of the campaign map. It opens a menu that teleports your party to a settlement and gives gold, troops, your special resource, influence, renown and relations, and heals your party. Cheats change your save, and most cannot be undone. The button appears the next time the campaign map opens, for example after loading a save. The H key on the campaign map also opens the menu (change it under Options, Keybindings, Campaign Map). Single-player only. Default: off.")]
+        HintText = "{=taom_cheat_mcm_enable_hint}Adds a Cheats button to the bottom bar of the campaign map. It opens a menu that teleports your party to a settlement and gives gold, troops, your special resource, influence, renown and relations, and heals your party. In a mission, the Esc menu has a Cheats item (or press H) that heals you or your side, routs or kills the enemy, or adds 10 allied or enemy troops. Cheats change your save, and most cannot be undone. The button appears the next time the campaign map opens, for example after loading a save. The H key on the campaign map also opens the menu (change either key under Options, Keybindings). Single-player only. Default: off.")]
     public bool EnableCheatMenu { get; set; } = false;
 }

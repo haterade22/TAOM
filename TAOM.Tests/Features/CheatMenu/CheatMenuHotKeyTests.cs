@@ -39,7 +39,7 @@ public class CheatMenuHotKeyTests
     public void HotKeyCategory_RegistersTheKeyWhereTheOptionsScreenShowsIt()
     {
         var category = new TaomCheatMenuHotKeyCategory();
-        var key = category.RegisteredGameKeys.Where(k => k != null).Single();
+        var key = category.RegisteredGameKeys.Where(k => k != null).Single(k => k.Id == TaomCheatMenuHotKeyCategory.OpenCheatMenuKeyId);
 
         Assert.AreEqual(TaomCheatMenuHotKeyCategory.OpenCheatMenuKeyId, key.Id);
         Assert.AreEqual(550, key.Id);
@@ -48,6 +48,23 @@ public class CheatMenuHotKeyTests
         // Below TotalGameKeyCount the Options label would reuse a vanilla key's name.
         Assert.IsTrue(key.Id >= (int)GameKeyDefinition.TotalGameKeyCount, $"{key.StringId} id {key.Id}");
         Assert.AreEqual(GameKeyMainCategories.CampaignMapCategory, key.MainCategoryId);
+        Assert.AreEqual(TaomCheatMenuHotKeyCategory.CategoryId, key.GroupId);
+        Assert.IsNotNull(key.KeyboardKey, "the key ships unbound");
+        Assert.AreEqual(InputKey.H, key.KeyboardKey.InputKey);
+    }
+
+    [TestCategory("RequiresGame")]
+    [TestMethod]
+    public void HotKeyCategory_RegistersTheBattleKeyUnderAction()
+    {
+        var category = new TaomCheatMenuHotKeyCategory();
+        var keys = category.RegisteredGameKeys.Where(k => k != null).ToList();
+        var key = keys.Single(k => k.Id == TaomCheatMenuHotKeyCategory.OpenBattleCheatMenuKeyId);
+
+        Assert.AreEqual(2, keys.Count);
+        Assert.AreEqual(551, key.Id);
+        Assert.AreEqual("TaomOpenBattleCheatMenu", key.StringId);
+        Assert.AreEqual(GameKeyMainCategories.ActionCategory, key.MainCategoryId);
         Assert.AreEqual(TaomCheatMenuHotKeyCategory.CategoryId, key.GroupId);
         Assert.IsNotNull(key.KeyboardKey, "the key ships unbound");
         Assert.AreEqual(InputKey.H, key.KeyboardKey.InputKey);
@@ -63,6 +80,9 @@ public class CheatMenuHotKeyTests
         var id = TaomCheatMenuHotKeyCategory.OpenCheatMenuKeyId;
         CollectionAssert.Contains(ids, $"str_key_name.{TaomCheatMenuHotKeyCategory.CategoryId}_{id}");
         CollectionAssert.Contains(ids, $"str_key_description.{TaomCheatMenuHotKeyCategory.CategoryId}_{id}");
+        var battle = TaomCheatMenuHotKeyCategory.OpenBattleCheatMenuKeyId;
+        CollectionAssert.Contains(ids, $"str_key_name.{TaomCheatMenuHotKeyCategory.CategoryId}_{battle}");
+        CollectionAssert.Contains(ids, $"str_key_description.{TaomCheatMenuHotKeyCategory.CategoryId}_{battle}");
     }
 
     [TestMethod]
@@ -128,6 +148,24 @@ public class CheatMenuHotKeyTests
 
         StringAssert.Contains(src, "_opener.TryOpenFromHotKey(_pressed)");
         Assert.IsFalse(src.Contains(".TryOpen()"), "the view must not skip the key gate");
+    }
+
+    [TestMethod]
+    public void BattleView_IsADefaultView_ThatGoesThroughTheOpenersKeyGate()
+    {
+        var src = RepoPaths.ReadSource("Client/Features/CheatMenu/UI/BattleCheatMenuView.cs", stripComments: true);
+
+        StringAssert.Contains(src, "[DefaultView]");
+        StringAssert.Contains(src, "public sealed class BattleCheatMenuView : MissionView");
+        StringAssert.Contains(src, "_opener?.TryOpenOnKey(_pressed!)");
+        StringAssert.Contains(src, "TaomCheatMenuHotKeyCategory.OpenBattleCheatMenuKeyId");
+        Assert.IsFalse(src.Contains(".TryOpen()"), "the view must not skip the key gate");
+        // Ctrl+H stays vanilla's; no list while another menu has the cursor.
+        StringAssert.Contains(src, "InputKey.LeftControl");
+        StringAssert.Contains(src, "InputKey.LeftAlt");
+        StringAssert.Contains(src, "mission.IsOrderMenuOpen");
+        StringAssert.Contains(src, "InformationManager.IsAnyInquiryActive()");
+        StringAssert.Contains(src, "MissionGauntletSingleplayerEscapeMenu");
     }
 
     [TestMethod]
