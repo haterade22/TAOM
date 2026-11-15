@@ -2152,6 +2152,196 @@ class CrossCultureArmourInversionTests(unittest.TestCase):
             self.assertTrue(reason.strip(), f"({tid}, {item}) is exempt without a stated reason")
 
 
+class EnlistmentKitRankRegressionTests(unittest.TestCase):
+    """ENLISTMENT_KIT_RANK_REGRESSION (#1290): an enlistment kit must not total less armour than any kit
+    the resolver issued before it, nor carry a weaker weapon in a category one of them holds. A restat of
+    the Armory moves the pieces under the shipped kits, so the file is judged on the installed values."""
+
+    ROSTER = ('    <EquipmentRoster id="enlist_{c}_infantry_{rank}" culture="Culture.{c}">\n'
+              '        <EquipmentSet>\n'
+              '            <Equipment slot="Item0" id="Item.{weapon}" />\n'
+              '            <Equipment slot="Body" id="Item.{body}" />\n'
+              '        </EquipmentSet>\n'
+              '    </EquipmentRoster>\n')
+    STATS = {"chest_lo": {"body_armor": 20}, "chest_hi": {"body_armor": 40, "arm_armor": 5}}
+    # The generator's KitWeapon fields: category, output, kind, foot_only, couchable.
+    WEAPONS = {"sword_lo": ("one handed", 30.0, "OneHandedSword", False, False),
+               "sword_mid": ("one handed", 38.0, "OneHandedSword", False, False),
+               "sword_hi": ("one handed", 45.0, "OneHandedSword", False, False),
+               "spear": ("spear", 20.0, "OneHandedPolearm", False, False), "mystery": None}
+
+    def setUp(self):
+        self._tmp = tempfile.TemporaryDirectory()
+        self.addCleanup(self._tmp.cleanup)
+        self.md = Path(self._tmp.name) / "ModuleData"
+
+    def _file(self, rows, region=None):
+        body = "".join(self.ROSTER.format(c=c, rank=r, weapon=w, body=b) for c, r, w, b in rows)
+        if region:
+            body = f"  <!-- TAOM-NEWCULTURE:{region}:BEGIN -->\n{body}  <!-- TAOM-NEWCULTURE:{region}:END -->\n"
+        _write(self.md / "equipmentsets" / "taom_enlistment_equipment.xml",
+               f'<?xml version="1.0" encoding="utf-8"?>\n<EquipmentRosters>\n{body}</EquipmentRosters>\n')
+
+    def _validator(self, stats=None):
+        regs = ts.Registries(items=set(), item_def_files={}, npccharacters=set(), cultures=set(),
+                             party_templates=set(), item_armour_stats=self.STATS if stats is None else stats)
+        return ts.Validator(self.md, [], regs)
+
+    def _issues(self, stats=None, weapons=None):
+        return self._validator(stats)._enlistment_kit_rank_regressions(
+            weapon_info=self._kit_weapons(self.WEAPONS if weapons is None else weapons))
+
+    @staticmethod
+    def _kit_weapons(rows):
+        import generate_enlistment_rosters as ger
+        return {k: (ger.KitWeapon(*v) if v else None) for k, v in rows.items()}
+
+    def test_a_rank_weaker_in_armour_is_a_finding_on_the_upper_roster(self):
+        self._file([("x", "recruit", "sword_lo", "chest_hi"), ("x", "soldier", "sword_lo", "chest_lo")])
+        issues = self._issues()
+        self.assertEqual([(ts.ENLISTMENT_KIT_RANK_SEVERITY, "ENLISTMENT_KIT_RANK_REGRESSION", "enlist_x_infantry_soldier")],
+                         [(i.severity, i.code, i.entry_id) for i in issues])
+        self.assertIn("armour total 45 -> 20", issues[0].message)
+        self.assertIn("enlist_x_infantry_recruit", issues[0].message)
+        self.assertEqual(9, issues[0].line)
+        self.assertIn("--repair-ranks --culture x", issues[0].message)
+
+    def test_a_weaker_weapon_of_a_shared_category_is_a_finding(self):
+        self._file([("x", "recruit", "sword_hi", "chest_lo"), ("x", "soldier", "sword_lo", "chest_lo")])
+        self.assertIn("sword_hi 45.0 -> sword_lo 30.0", self._issues()[0].message)
+
+    def test_every_kit_drawn_before_counts_not_only_the_last(self):
+        self._file([("x", "recruit", "sword_hi", "chest_lo"), ("x", "soldier", "sword_lo", "chest_lo"),
+                    ("x", "veteran", "sword_mid", "chest_lo")])
+        issues = {i.entry_id: i.message for i in self._issues()}
+        self.assertIn("sword_hi 45.0 -> sword_mid 38.0 against enlist_x_infantry_recruit",
+                      issues["enlist_x_infantry_veteran"])
+
+    def test_a_dropped_category_is_reported_and_left_to_the_maintainer(self):
+        self._file([("x", "recruit", "sword_lo", "chest_lo"), ("x", "soldier", "spear", "chest_hi")])
+        message = self._issues()[0].message
+        self.assertIn("drops the one handed (sword_lo)", message)
+        self.assertIn("never repaired by a tool", message)
+        self.assertNotIn("--repair-ranks", message)
+
+    def test_a_chain_that_holds_is_clean(self):
+        self._file([("x", "recruit", "spear", "chest_lo"), ("x", "soldier", "spear", "chest_hi"),
+                    ("x", "veteran", "spear", "chest_hi")])
+        self.assertEqual([], self._issues())
+
+    def test_a_piece_the_rule_cannot_judge_is_one_stated_warning(self):
+        self._file([("x", "recruit", "mystery", "nowhere"), ("x", "soldier", "mystery", "nowhere")])
+        issues = self._issues()
+        self.assertEqual([("(unresolved)", ts.Severity.WARNING)], [(i.entry_id, i.severity) for i in issues])
+        self.assertIn("mystery, nowhere", issues[0].message)
+
+    def test_a_promoted_cultures_finding_sends_the_repair_to_its_source_and_the_promoter(self):
+        self._file([("arn", "recruit", "sword_lo", "chest_hi"), ("arn", "soldier", "sword_lo", "chest_lo")], region="arn")
+        with mock.patch.object(ts.Validator, "_promoted_source", return_value=("src", False)):
+            message = self._issues()[0].message
+        self.assertIn("promote_borrowed_cultures.py --only arn --apply", message)
+        self.assertIn("--repair-ranks --culture src", message)
+        self.assertNotIn("--repair-ranks --culture arn", message)
+
+    def test_a_promoted_finding_with_a_clean_source_chain_names_the_item_map(self):
+        self._file([("src", "recruit", "sword_lo", "chest_hi"), ("src", "soldier", "sword_lo", "chest_hi")])
+        text = (self.md / "equipmentsets" / "taom_enlistment_equipment.xml").read_text(encoding="utf-8")
+        arn = "".join(self.ROSTER.format(c="arn", rank=r, weapon="sword_lo", body=b)
+                      for r, b in (("recruit", "chest_hi"), ("soldier", "chest_lo")))
+        _write(self.md / "equipmentsets" / "taom_enlistment_equipment.xml", text.replace(
+            "</EquipmentRosters>", f"  <!-- TAOM-NEWCULTURE:arn:BEGIN -->\n{arn}  <!-- TAOM-NEWCULTURE:arn:END -->\n"
+                                   "</EquipmentRosters>"))
+        with mock.patch.object(ts.Validator, "_promoted_source", return_value=("src", True)):
+            issues = self._issues()
+        self.assertEqual(["enlist_arn_infantry_soldier"], [i.entry_id for i in issues])
+        self.assertIn("the source kits hold the rule", issues[0].message)
+        self.assertIn("item_map", issues[0].message)
+        self.assertIn("Body chest_hi -> chest_lo", issues[0].message)
+
+    def test_without_the_installs_armour_values_the_pass_is_skipped(self):
+        self._file([("x", "recruit", "sword_lo", "chest_hi"), ("x", "soldier", "sword_lo", "chest_lo")])
+        self.assertEqual([], self._issues(stats={}))
+
+    def test_a_tree_without_the_kit_file_checks_nothing(self):
+        self.assertEqual([], self._issues())
+
+    def test_weapons_that_could_not_be_priced_are_a_stated_warning_and_armour_is_still_judged(self):
+        self._file([("x", "recruit", "sword_lo", "chest_hi"), ("x", "soldier", "sword_lo", "chest_lo")])
+        with mock.patch.object(ts.Validator, "_kit_weapon_info", return_value=({}, "no lxml")):
+            issues = self._validator()._enlistment_kit_rank_regressions()
+        self.assertEqual(["(weapons)", "enlist_x_infantry_soldier"], [i.entry_id for i in issues])
+        self.assertIn("no lxml", issues[0].message)
+        self.assertEqual(ts.Severity.WARNING, issues[0].severity)
+
+    def test_a_generator_that_cannot_be_imported_is_a_stated_warning(self):
+        self._file([("x", "recruit", "sword_lo", "chest_hi"), ("x", "soldier", "sword_lo", "chest_lo")])
+        with mock.patch.dict(sys.modules, {"generate_enlistment_rosters": None}):
+            issues = self._validator()._enlistment_kit_rank_regressions(weapon_info={})
+        self.assertEqual([("(tooling)", ts.Severity.WARNING)], [(i.entry_id, i.severity) for i in issues])
+
+    @staticmethod
+    def _import_asserting(name):
+        """An __import__ for which `name` fails as the generator's module-level assert fails."""
+        real = __import__
+
+        def fake(module, *args, **kwargs):
+            if module == name:
+                raise AssertionError("a module-level assert")
+            return real(module, *args, **kwargs)
+        return mock.patch("builtins.__import__", side_effect=fake)
+
+    def test_a_generator_whose_import_asserts_is_the_same_stated_warning(self):
+        self._file([("x", "recruit", "sword_lo", "chest_hi"), ("x", "soldier", "sword_lo", "chest_lo")])
+        with mock.patch.dict(sys.modules), self._import_asserting("generate_enlistment_rosters"):
+            sys.modules.pop("generate_enlistment_rosters", None)
+            issues = self._validator()._enlistment_kit_rank_regressions(weapon_info={})
+        self.assertEqual([("(tooling)", ts.Severity.WARNING)], [(i.entry_id, i.severity) for i in issues])
+
+    def test_kit_weapon_info_reports_an_import_that_asserts(self):
+        with mock.patch.dict(sys.modules), self._import_asserting("generate_enlistment_rosters"):
+            sys.modules.pop("generate_enlistment_rosters", None)
+            info, problem = ts.kit_weapon_info(self.md, None, {})
+        self.assertEqual({}, info)
+        self.assertIn("cannot be imported", problem)
+
+    def test_the_pass_is_part_of_a_full_run(self):
+        self._file([("x", "recruit", "sword_lo", "chest_hi"), ("x", "soldier", "sword_lo", "chest_lo")])
+        with mock.patch.object(ts.Validator, "_kit_weapon_info", return_value=(self._kit_weapons(self.WEAPONS), None)):
+            codes = [i.code for i in self._validator().run()]
+        self.assertIn("ENLISTMENT_KIT_RANK_REGRESSION", codes)
+
+
+def _live_modules():
+    from _gamedir import DEFAULT_GAME_ROOT, game_modules
+    return Path(game_modules(DEFAULT_GAME_ROOT))
+
+
+@unittest.skipUnless((_live_modules() / "LOTRLOME_Armory" / "ModuleData").is_dir(), "needs the live Armory")
+class LiveKitWeaponInfoTests(unittest.TestCase):
+    """The rank rule's weapon facts on the installed items (#1290): the couch, a pilum, a bastard sword."""
+
+    @classmethod
+    def setUpClass(cls):
+        md = Path(__file__).resolve().parents[2] / "Main" / "_Module" / "ModuleData"
+        reg = ts.build_registries(md, _live_modules())
+        cls.info, cls.problem = ts.kit_weapon_info(md, _live_modules(), reg.launchers, reg.mount_barred_usages)
+
+    def test_the_weapons_were_priced(self):
+        self.assertIsNone(self.problem)
+
+    def test_a_pilum_with_a_thrown_usage_is_not_compared(self):
+        self.assertNotIn("imperial_throwing_spear_1_t4", self.info)
+
+    def test_a_lance_is_a_couchable_spear_and_a_long_spear_is_not(self):
+        self.assertEqual(("spear", True), (self.info["wm_rohan_ws_spear_a03"].category,
+                                           self.info["wm_rohan_ws_spear_a03"].couchable))
+        self.assertEqual(("spear", False), (self.info["eastern_spear_4_t4"].category,
+                                            self.info["eastern_spear_4_t4"].couchable))
+
+    def test_a_bastard_sword_is_one_handed(self):
+        self.assertEqual("one handed", self.info["wm_gondor_lamedon_1h_sword_a"].category)
+
+
 class WornArmourLimitsTests(unittest.TestCase):
     """WORN_ARMOUR_CEILING and WORN_ARMOUR_FLOOR (#1271, 2026-11-14): what a troop's battle sets add
     up to per region, judged against rebalance_armor's limits. A campaign spawn draws every slot from
@@ -2891,6 +3081,178 @@ class ArmourSlotCoverageTests(unittest.TestCase):
                "</EquipmentRoster></Equipments>\n"
                "  </NPCCharacter>\n</NPCCharacters>\n")
         self.assertEqual(self._codes("MISSING_BODY_ARMOUR"), [])
+
+
+class TroopPurposeTests(unittest.TestCase):
+    """TROOP_SKILL_KIT_MISMATCH and TROOP_ITEM_ZERO_NOT_MAIN (#343): the Item0 weapon is the one in hand
+    at spawn, so it must be a real weapon and its class must hold the troop's top weapon skill."""
+
+    CLASSES = {"sword": "OneHanded", "spear": "Polearm", "great": "TwoHanded", "bow": "Bow",
+               "arrows": "Arrows", "jav": "Throwing", "shield": "Shield"}
+
+    def setUp(self):
+        self._tmp = tempfile.TemporaryDirectory()
+        self.md = Path(self._tmp.name) / "ModuleData"
+        self.md.mkdir(parents=True)
+        self.schemas = ts.load_schemas(SCHEMA_DIR)
+
+    def tearDown(self):
+        self._tmp.cleanup()
+
+    def _issues(self, sets, skills, tid="umbar_x", group="Infantry", attrs="", classes=None,
+                fname="troops/troops_test.xml", couch=None):
+        rosters = "".join("<EquipmentRoster>" + "".join(
+            f'<equipment slot="{k}" id="Item.{v}" />' for k, v in s.items()) + "</EquipmentRoster>"
+            for s in sets)
+        rows = "".join(f'<skill id="{k}" value="{v}" />' for k, v in skills.items())
+        _write(self.md / fname,
+               '<?xml version="1.0" encoding="utf-8"?>\n<NPCCharacters>\n'
+               f'  <NPCCharacter id="{tid}" default_group="{group}" level="21" culture="Culture.umbar"{attrs}>\n'
+               f"    <skills>{rows}</skills>\n    <Equipments>{rosters}</Equipments>\n"
+               "  </NPCCharacter>\n</NPCCharacters>\n")
+        reg = ts.Registries(items=set(), item_def_files={}, npccharacters=set(), cultures={"umbar"},
+                            party_templates=set(),
+                            item_classes=self.CLASSES if classes is None else classes, couchable_ids=couch)
+        return [i for i in ts.Validator(self.md, self.schemas, reg).run()
+                if i.code in ("TROOP_SKILL_KIT_MISMATCH", "TROOP_ITEM_ZERO_NOT_MAIN", "TROOP_MAIN_WEAPON_NOT_ITEM0")]
+
+    def test_a_swordsman_with_polearm_on_top_is_reported(self):
+        found = self._issues([{"Item0": "sword", "Item1": "shield"}],
+                             {"OneHanded": 230, "TwoHanded": 210, "Polearm": 235})
+        self.assertEqual([i.code for i in found], ["TROOP_SKILL_KIT_MISMATCH"])
+        self.assertIs(found[0].severity, ts.TROOP_SKILL_KIT_MISMATCH_SEVERITY)
+        self.assertIn("OneHanded 230", found[0].message)
+        self.assertIn("--fix-purpose", found[0].message)
+
+    def test_a_purpose_correct_troop_is_clean(self):
+        self.assertEqual(self._issues([{"Item0": "great", "Item1": "sword"}],
+                                      {"OneHanded": 210, "TwoHanded": 235, "Polearm": 200}), [])
+
+    def test_an_archer_under_its_melee_skill_is_explained_not_fixed(self):
+        found = self._issues([{"Item0": "bow", "Item1": "arrows", "Item2": "sword"}],
+                             {"OneHanded": 130, "Bow": 105}, group="Ranged")
+        self.assertEqual([i.code for i in found], ["TROOP_SKILL_KIT_MISMATCH"])
+        self.assertIn("melee skill above the launcher's ladder cell", found[0].message)
+
+    def test_a_shield_in_item0_beside_a_sword_is_an_error(self):
+        found = self._issues([{"Item0": "shield", "Item1": "sword"}], {"OneHanded": 100})
+        self.assertEqual([(i.code, i.severity) for i in found],
+                         [("TROOP_ITEM_ZERO_NOT_MAIN", ts.Severity.ERROR)])
+        self.assertIn("Shield", found[0].message)
+        self.assertIn("no main class", found[0].message)
+        self.assertIn("--fix-purpose", found[0].message)
+
+    def test_an_archer_opening_with_a_sword_is_a_warning_no_tool_repairs(self):
+        sets = [{"Item0": "sword", "Item1": "bow", "Item2": "arrows"}]
+        found = self._issues(sets, {"OneHanded": 150, "Bow": 100}, group="Ranged")
+        self.assertEqual([(i.code, i.severity) for i in found],
+                         [("TROOP_SKILL_KIT_MISMATCH", ts.TROOP_SKILL_KIT_MISMATCH_SEVERITY)])
+        self.assertIn("launcher troop that does not open with its launcher", found[0].message)
+        self.assertIn("No tool repairs", found[0].message)
+        self.assertNotIn("--fix-purpose", found[0].message)
+
+    def test_a_javelin_in_item0_is_a_throwers_main_weapon(self):
+        clean = self._issues([{"Item0": "jav", "Item1": "jav", "Item2": "sword", "Item3": "shield"}],
+                             {"OneHanded": 100, "Throwing": 160})
+        self.assertEqual(clean, [])
+
+    def test_a_thrower_under_its_melee_skill_names_the_thrown_primary_list(self):
+        sets = [{"Item0": "jav", "Item1": "jav", "Item2": "sword", "Item3": "shield"}]
+        found = self._issues(sets, {"OneHanded": 250, "Polearm": 230, "Throwing": 55},
+                             tid="gondor_har_javelineer")
+        self.assertEqual([i.code for i in found], ["TROOP_SKILL_KIT_MISMATCH"])
+        self.assertIn("Throwing 55", found[0].message)
+        self.assertIn("in THROWN_PRIMARY_TROOP_IDS", found[0].message)
+        other = self._issues(sets, {"OneHanded": 230, "Throwing": 55}, tid="gondor_loss_skirmisher")
+        self.assertIn("not in THROWN_PRIMARY_TROOP_IDS", other[0].message)
+
+    def test_the_writer_and_the_validator_read_the_same_battle_sets(self):
+        # One reading: a roster typed Civilian never counts, and a troop-level row is laid over
+        # every battle roster, in tools/rebalance_troops.py troop_kit as in this pass.
+        import xml.etree.ElementTree as ET
+        import rebalance_troops as rb
+        body = ('<NPCCharacter id="umbar_x" default_group="Infantry" level="21">'
+                '<skills><skill id="OneHanded" value="10" /><skill id="Polearm" value="300" /></skills>'
+                '<Equipments><EquipmentRoster equipmentType="Civilian"><equipment slot="Item0" id="Item.spear" />'
+                '</EquipmentRoster><EquipmentRoster><equipment slot="Item0" id="Item.shield" />'
+                '<equipment slot="Item1" id="Item.spear" /></EquipmentRoster>'
+                '<equipment slot="Item0" id="Item.sword" /></Equipments></NPCCharacter>')
+        kit, _ = rb.troop_kit(ET.fromstring(body), self.CLASSES)
+        self.assertEqual((kit.sets, kit.item0), (1, {"OneHanded": 1}))
+        v = ts.Validator(self.md, self.schemas, ts.Registries(
+            items=set(), item_def_files={}, npccharacters=set(), cultures=set(), party_templates=set()))
+        self.assertEqual([{s: self.CLASSES[i] for s, i in k.items()} for k in v._battle_kits(body)],
+                         [{"Item0": "OneHanded", "Item1": "Polearm"}])
+
+    RIDER = {"Item0": "sword", "Item1": "shield", "Item2": "spear", "Horse": "steed"}
+    RIDER_SKILLS = {"OneHanded": 230, "Polearm": 200}
+
+    def test_a_lance_rider_that_opens_with_its_sword_is_a_warning_naming_the_mode(self):
+        found = self._issues([self.RIDER], self.RIDER_SKILLS, group="Cavalry", couch=frozenset({"spear"}))
+        self.assertEqual([(i.code, i.severity) for i in found],
+                         [("TROOP_MAIN_WEAPON_NOT_ITEM0", ts.Severity.WARNING)])
+        self.assertIn("--main-weapon-slots", found[0].message)
+        self.assertIn("rule A", found[0].message)
+
+    def test_a_rider_whose_spear_cannot_be_couched_is_not_judged(self):
+        # The state before the Armory registers the spear's pieces under the couch description.
+        self.assertEqual(self._issues([self.RIDER], self.RIDER_SKILLS, group="Cavalry", couch=frozenset()), [])
+
+    def test_a_rider_that_already_opens_with_the_spear_is_clean(self):
+        row = {"Item0": "spear", "Item1": "shield", "Item2": "sword", "Horse": "steed"}
+        self.assertEqual(self._issues([row], {"OneHanded": 200, "Polearm": 230}, group="Cavalry",
+                                      couch=frozenset({"spear"})), [])
+
+    def test_a_troop_named_for_its_polearm_is_judged_without_a_couch(self):
+        row = {"Item0": "sword", "Item1": "spear", "Item2": "shield"}
+        found = self._issues([row], self.RIDER_SKILLS, tid="umbar_spearman", couch=frozenset())
+        self.assertEqual([i.code for i in found], ["TROOP_MAIN_WEAPON_NOT_ITEM0"])
+        self.assertIn("rule B", found[0].message)
+
+    def test_the_fords_roster_is_a_second_root_that_gets_the_slot_rule_only(self):
+        skills = {"OneHanded": 100, "Polearm": 300}     # a kit mismatch if this were troops/troops_*.xml
+        found = self._issues([self.RIDER], skills, group="Cavalry", couch=frozenset({"spear"}),
+                             fname="fords_of_war/fords_troops.xml")
+        self.assertEqual([i.code for i in found], ["TROOP_MAIN_WEAPON_NOT_ITEM0"])
+        (self.md / "fords_of_war" / "fords_troops.xml").unlink()
+        other = self._issues([self.RIDER], skills, group="Cavalry", couch=frozenset({"spear"}),
+                             fname="named_companions/named_companions.xml")
+        self.assertEqual(other, [], "a file that is not listed in troop_purpose.EXTRA_TROOP_FILES is not read")
+
+    def test_the_validator_reads_the_display_name_as_the_writer_does(self):
+        row = {"Item0": "sword", "Item1": "spear", "Item2": "shield"}
+        found = self._issues([row], self.RIDER_SKILLS, tid="umbar_guard", attrs=' name="{=k}Hill Spearman"',
+                             couch=frozenset())
+        self.assertEqual([i.code for i in found], ["TROOP_MAIN_WEAPON_NOT_ITEM0"])
+
+    def test_without_a_couch_set_or_an_install_the_rule_is_not_judged(self):
+        self.assertEqual(self._issues([self.RIDER], self.RIDER_SKILLS, group="Cavalry"), [])
+
+    def test_the_writer_and_the_validator_plan_the_same_exchange(self):
+        import xml.etree.ElementTree as ET
+        import rebalance_troops as rb
+        body = ('<NPCCharacter id="umbar_x" default_group="Cavalry" level="21"><skills /><Equipments>'
+                '<EquipmentRoster><equipment slot="Item0" id="Item.sword" /><equipment slot="Item1" id="Item.shield" />'
+                '<equipment slot="Item2" id="Item.spear" /></EquipmentRoster>'
+                '<equipment slot="Horse" id="Item.steed" /></Equipments></NPCCharacter>')
+        _, swaps, detail = rb.troop_kit_plan(ET.fromstring(body), self.CLASSES, fix_item0=True,
+                                             couch_ids=frozenset({"spear"}))
+        self.assertEqual((detail["plan"].rule, swaps), ("A", [(0, "Item2")]))
+        found = self._issues([self.RIDER], self.RIDER_SKILLS, group="Cavalry", couch=frozenset({"spear"}))
+        self.assertEqual(len(found), 1)
+
+    def test_a_skipped_creature_and_a_hero_are_exempt(self):
+        bad = ([{"Item0": "sword"}], {"OneHanded": 10, "Polearm": 300})
+        self.assertEqual(self._issues(*bad, tid="cave_troll"), [])
+        self.assertEqual(self._issues(*bad, attrs=' is_hero="true"'), [])
+
+    def test_a_villager_outside_troops_is_not_judged(self):
+        self.assertEqual(self._issues([{"Item0": "sword"}], {"OneHanded": 10, "Polearm": 300},
+                                      fname="characters/npcs_test.xml"), [])
+
+    def test_without_the_item_classes_nothing_is_judged(self):
+        self.assertEqual(self._issues([{"Item0": "jav", "Item1": "sword"}], {"Polearm": 300},
+                                      classes={}), [])
 
 
 class WeaponSlotCoverageTests(unittest.TestCase):

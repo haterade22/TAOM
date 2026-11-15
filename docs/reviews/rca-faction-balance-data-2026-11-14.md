@@ -69,3 +69,22 @@ The two FOLLOW-UP gaps above were fixed under #1291 and went through the tier 2 
 | R5 | LOW | `_cache` was assigned before `Validate` ran | Deserialized into a local, cached after `Validate` |
 
 Root cause of R1 and R4: the tests were written per branch of `Validate`, not per promise the provider makes to the player. Lesson: `docs/reviews/lessons/testing-qa.md`, "A validator test that builds its config in C# never meets the deserializer". R2 is the pattern above: a doc row edited without reading what produces its value.
+
+## #1283 batch 2 review (2026-11-15)
+
+Scope: Hold the Walls by realm (`CapturedFortHold.Factions`), seven Isengard clans raised from tier 3 to tier 5, and the auto-resolve power exponent (`AutoResolve.PowerRatioExponent`, 0.5). Tier 1 (a GameModel): Data flow and Engine compatibility lenses at max effort, plus the XML lens. Codex ultra is owed: the account's usage limit blocks it until 2026-11-20. No lens found a CRITICAL or HIGH, so no second wave ran. Confirmed findings, all fixed before the commit:
+
+| # | Sev | Lens | Finding | Fix |
+|---|---|---|---|---|
+| B1 | MED | Data flow | The wiring test pinned two bare method names; swapping the striker and struck powers, dropping `AddFactor` or passing a literal exponent kept the pinned text | `AutoResolveQualityMath.Apply(ref ExplainedNumber, ...)` holds the composition, with `RequiresGame` tests that fail on a swap (mutation run); the wiring test pins the full call and the exponent read |
+| B2 | MED | Engine compat | The docs stated the strength law `N^1.6 x P^1.4` for every battle; a siege assault on a town with more than 100 defenders or a castle with more than 30 uses another tick rule (`GetSimulationTicksForBattleRound`, lines 247-251) | Docs and comments name the field branch and state the siege rule |
+| B3 | MED | Engine compat | The docs did not say the factor reaches the player's Send troops and raids | Kept, so one battle has one rule; both docs say so, and the in-game check names it |
+| B4 | LOW | Both | "Reads the powers exactly as the base does" is false after a side's leader hero dies mid-event: the engine keeps its cached modifier | Wording fixed; a reflection read was rejected (a binding for a few percent) |
+| B5 | LOW | XML, both | `faction-balance.md` said each raised clan has exactly three adults (`clan_isengard_4` has four), gave +30 party size for a clan leader (+50), and left out the starting renown and influence the tier also raises | Corrected and added |
+| B6 | LOW | Engine compat, data flow | Stale citations: provider lines in `configs-balance.md`, the override line in `external-mod-couplings.md`, test counts and the `P^e` header; older text said troop power reads tier and mount only | Corrected against the current files |
+| B7 | LOW | Data flow | `INDEX.md`, `configs-factions-and-world.md` and two `hold-the-walls.md` lines still described a Free-only hold | Updated |
+| B8 | LOW | Engine compat | The 1- and 2-argument model constructors had no caller left | Removed |
+
+Declined: a per-clan adult-lord test (XML lens). It would copy the engine's age and occupation rules into a test for a one-time data change.
+
+Root cause of B2 and B4: a derived law was written from the one engine branch that was read, and the two other branches of the same method, and the hero-death path, were not opened. B1 repeats the existing lesson "A source-text test pins wiring, never the decision": the rule existed and the first draft did not follow it. Lesson: `docs/reviews/lessons/gamemodels-services.md`, "A law derived from one branch of an engine method holds only on that branch".

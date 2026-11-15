@@ -92,13 +92,13 @@
                 value="5" />
             <skill
                 id="OneHanded"
-                value="65" />
+                value="70" />
             <skill
                 id="TwoHanded"
                 value="60" />
             <skill
                 id="Polearm"
-                value="70" />
+                value="65" />
             <skill
                 id="Bow"
                 value="10" />
@@ -614,13 +614,13 @@
                 value="5" />
             <skill
                 id="OneHanded"
-                value="65" />
+                value="70" />
             <skill
                 id="TwoHanded"
                 value="60" />
             <skill
                 id="Polearm"
-                value="70" />
+                value="65" />
             <skill
                 id="Bow"
                 value="10" />
@@ -878,13 +878,13 @@
                 value="15" />
             <skill
                 id="OneHanded"
-                value="165" />
-            <skill
-                id="TwoHanded"
                 value="175" />
             <skill
-                id="Polearm"
+                id="TwoHanded"
                 value="170" />
+            <skill
+                id="Polearm"
+                value="165" />
             <skill
                 id="Bow"
                 value="20" />
@@ -1099,10 +1099,10 @@
                 value="15" />
             <skill
                 id="OneHanded"
-                value="180" />
+                value="170" />
             <skill
                 id="TwoHanded"
-                value="170" />
+                value="180" />
             <skill
                 id="Polearm"
                 value="160" />
@@ -2353,13 +2353,13 @@
                 value="5" />
             <skill
                 id="OneHanded"
-                value="65" />
+                value="70" />
             <skill
                 id="TwoHanded"
                 value="60" />
             <skill
                 id="Polearm"
-                value="70" />
+                value="65" />
             <skill
                 id="Bow"
                 value="10" />
@@ -2584,13 +2584,13 @@
                 value="15" />
             <skill
                 id="OneHanded"
-                value="180" />
+                value="170" />
             <skill
                 id="TwoHanded"
                 value="160" />
             <skill
                 id="Polearm"
-                value="170" />
+                value="180" />
             <skill
                 id="Bow"
                 value="20" />
@@ -2814,13 +2814,13 @@
                 value="15" />
             <skill
                 id="OneHanded"
-                value="180" />
+                value="170" />
             <skill
                 id="TwoHanded"
                 value="160" />
             <skill
                 id="Polearm"
-                value="170" />
+                value="180" />
             <skill
                 id="Bow"
                 value="20" />

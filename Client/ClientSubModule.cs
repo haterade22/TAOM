@@ -6,6 +6,7 @@ using TAOM.Client.Features.LongDefeat;
 using TAOM.Client.Features.SeatOfSeeing.Trial;
 using TAOM.Composition;
 using TAOM.Core.Logging;
+using TAOM.Features.Autorun.Scenario;
 using TAOM.Features.FordsOfWar.Autorun;
 using TAOM.Features.FordsOfWar.Diagnostics;
 using TAOM.Features.LongDefeat;
@@ -30,6 +31,7 @@ public sealed class ClientSubModule : MBSubModuleBase
     private UIExtender? _uiExtender;
     private FordsAutorunDriver? _autorun;
     private LongDefeatAutorunDriver? _longDefeatAutorun;
+    private ScenarioAutorunDriver? _scenarioAutorun;
     private CommandTrialAutostart? _commandTrial;
     private bool _autorunResolved;
     private bool _autorunFaulted;
@@ -57,6 +59,14 @@ public sealed class ClientSubModule : MBSubModuleBase
         _uiExtender.Enable();
     }
 
+    // Game.Destroy runs this on every submodule (MBGameManager.OnGameEnd). On shutdown Module.FinalizeModule destroys the game and only
+    // then saves BannerlordConfig, so the scenario autorun puts the player's focus setting back here, before that save.
+    public override void OnGameEnd(Game game)
+    {
+        base.OnGameEnd(game);
+        _scenarioAutorun?.GameEnded();
+    }
+
     // Shutdown (Module.FinalizeModule is this hook's only caller): the themed encyclopedia's settlement pictures are engine
     // textures this assembly owns, so they are released here, where core's OnSubModuleUnloaded released them before ADR-013's move.
     protected override void OnSubModuleUnloaded()
@@ -74,7 +84,8 @@ public sealed class ClientSubModule : MBSubModuleBase
         MainMenuStep.Run("fords of war final report", () => IoC.Resolve<FordsRunReport>().MainMenuReturned(), () => IoC.Resolve<IModLogger>());
     }
 
-    // The Fords of War autorun (docs/features/fords-of-war.md), the Long Defeat autorun and the Seat's field trial
+    // The Fords of War autorun (docs/features/fords-of-war.md), the Long Defeat autorun, the campaign scenario autorun
+    // (docs/features/scenario-autorun.md) and the Seat's field trial
     // (docs/features/seat-of-seeing.md): unarmed, which is every player session, this is one bool and a null check per driver per tick.
     // The plan is resolved on the first tick (IoC.Configure ran in OnSubModuleLoad) and the driver only when it is armed, so an unarmed
     // session builds no autorun driver (the Long Defeat catalog itself is built on the first menu draw, by LongDefeatMenuEntry). A fault is logged once.
@@ -89,11 +100,13 @@ public sealed class ClientSubModule : MBSubModuleBase
                 _autorunResolved = true;
                 _autorun = FordsAutorunStart.Driver(IoC.Resolve<FordsAutorunPlan>(), IoC.Resolve<FordsAutorunDriver>, IoC.Resolve<IModLogger>());
                 _longDefeatAutorun = LongDefeatAutorunStart.Driver(IoC.Resolve<LongDefeatAutorunPlan>(), IoC.Resolve<LongDefeatAutorunDriver>, IoC.Resolve<IModLogger>());
+                _scenarioAutorun = ScenarioAutorunStart.Driver(IoC.Resolve<ScenarioPlan>(), IoC.Resolve<ScenarioAutorunDriver>, IoC.Resolve<IModLogger>());
                 _commandTrial = CommandTrialAutostart.Armed(IoC.Resolve<IModLogger>());
             }
 
             _autorun?.Tick(dt);
             _longDefeatAutorun?.Tick(dt);
+            _scenarioAutorun?.Tick(dt);
             _commandTrial?.Tick(dt);
         }
         catch (Exception ex)
@@ -104,7 +117,7 @@ public sealed class ClientSubModule : MBSubModuleBase
             _autorunFaulted = true;
             try
             {
-                IoC.Resolve<IModLogger>().LogError($"[Autorun] an autorun tick failed (Fords of War or Long Defeat) (further failures are not logged): {ex}");
+                IoC.Resolve<IModLogger>().LogError($"[Autorun] an autorun tick failed (Fords of War, Long Defeat or the campaign scenario) (further failures are not logged): {ex}");
             }
             catch
             {

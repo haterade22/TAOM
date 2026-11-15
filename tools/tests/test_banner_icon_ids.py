@@ -106,6 +106,12 @@ class BannerKeyHelperTests(unittest.TestCase):
     def test_realms_titles_is_a_key_file(self):
         self.assertIn(MD / "realms_titles.xml", KEY_FILES)
 
+    def test_key_files_are_every_moduledata_file_that_declares_a_key(self):
+        # A new file that declares a banner key must join KEY_FILES, or its keys pass unchecked (#1295).
+        declaring = {f for f in MD.rglob("*") if f.suffix in (".xml", ".xslt") and "Languages" not in f.parts
+                     and DECLARATION_RE.search(read(f))}
+        self.assertEqual(sorted(declaring), sorted(KEY_FILES))
+
     def test_unknown_colours_checks_layer_colour1_and_flagged_colour2(self):
         # Layer at offset 10: icon 505, colour1 7, colour2 8, flag 0 -> colour2 never read.
         key = "11.1.99.1528.1528.764.764.1.0.0.505.7.8.1.1.1.1.0.0.0"

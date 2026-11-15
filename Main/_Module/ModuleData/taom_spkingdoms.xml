@@ -1265,7 +1265,7 @@
         id="arthedain"
         owner="Hero.lord_AN1_1"
         initial_home_settlement="Settlement.town_AN2"
-        banner_key="11.190.190.1528.1528.764.764.1.0.0.11004.110.110.700.700.764.764.0.0.0"        primary_banner_color="0xFF4870B8"
+        banner_key="11.149.149.1528.1528.764.764.1.0.0.31026.110.110.387.387.764.636.0.0.0.11004.110.110.77.77.764.617.0.0.0.11000.110.110.318.318.764.839.0.0.0"        primary_banner_color="0xFF4870B8"
         secondary_banner_color="0xFFC8CCD8"
         color="0xFF4870B8"
         color2="0xFFC8CCD8"      

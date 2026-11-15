@@ -161,9 +161,11 @@ From his own test harnesses, unverified in TAOM.
 
 ## Scope today and what is planned
 
-Today the in-game driver plays only a Fords of War match, so `/game-run` serves Fords checks and any change a Fords match exercises
-(mission start, agents, formations, destructibles). A general scenario driver, one that arms other in-game checks the same way, is planned
-separately and is not built; until it exists, a check outside Fords still needs a person to play it.
+The Fords driver plays a Fords of War match, so `/game-run` serves Fords checks and any change a Fords match exercises
+(mission start, agents, formations, destructibles). The scenario autorun (#1075 slice 1, [doc](../features/scenario-autorun.md)) has its
+own wrapper, `tools/run_scenario.py`, under this same permission and gate: it arms `TAOM_AUTORUN`, starts a new campaign, runs the wanted
+days on fast forward and quits. Only `kind=campaign-new` exists; a check that needs a save, a battle or a menu outside it still needs a
+person to play it.
 The Long Defeat (#1079) has its own wrapper, `tools/run_long_defeat.py`, under this same permission and gate. It reuses this runner's
 preflight, idle gate, launch, dialog handling and crash scan, arms the game with `TAOM_LONGDEFEAT_AUTORUN`, and presses Cancel on the
 Helm's Deep terrain shader dialog. `/game-run` names it for changes under `LongDefeat`. Exit 0 needs the `[Check]` lines of the plan, so

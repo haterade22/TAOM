@@ -113,5 +113,6 @@ internal static class FeatureModules
         new Features.HeroAuras.HeroAurasModule(),
         new Features.HallSeats.HallSeatsModule(),
         new Features.CheatMenu.CheatMenuModule(),
+        new Features.Autorun.AutorunModule(),
     };
 }

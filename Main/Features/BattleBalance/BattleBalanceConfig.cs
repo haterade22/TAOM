@@ -6,6 +6,17 @@ public class BattleBalanceConfig
 {
     public TroopPowerSection TroopPower { get; set; } = new();
     public CasualtyRatiosSection CasualtyRatios { get; set; } = new();
+    public AutoResolveSection AutoResolve { get; set; } = new();
+
+    /// <summary>Auto-resolve tuning (#1283). See <see cref="AutoResolveQualityMath"/>.</summary>
+    public class AutoResolveSection
+    {
+        /// <summary>
+        /// The exponent of the striker-to-struck power ratio in a simulated strike, in [0, 1]. Vanilla is 0.7, which makes a
+        /// side's strength N^1.6 x P^1.4; 0.5 makes it N^1.6 x P^1.0, so numbers outweigh quality. 0 ignores quality.
+        /// </summary>
+        public float PowerRatioExponent { get; set; } = 0.5f;
+    }
 
     public class TroopPowerSection
     {
