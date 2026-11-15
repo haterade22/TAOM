@@ -16,12 +16,12 @@ namespace TAOM.Features.Realms.Hooks;
 /// (<c>ClanOriginalBanner</c>): the house's parties on the map (party nameplate, the banner a lord hangs at a town or
 /// siege camp, the party markers on a settlement's nameplate), the encyclopedia (clan page and faction cards) and the
 /// banner editor. Settlements, the clan screen and battles read the getter outside a scope and show the realm's.
-/// The getter scopes save nothing, but the separate kingdom banner objects that <see cref="Decouple"/> and the
+/// The getter scopes save nothing, but the separate kingdom banner objects that <see cref="KingdomBanners.Decouple"/> and the
 /// <c>InitializeKingdom</c> prefix create are saved with the kingdom (<c>Kingdom.Banner</c> is a saveable property).
 /// Without the patch the game falls back to the shared banner.
 /// <para>
 /// <c>KingdomManager.CreateKingdom</c> gives a new kingdom its founder's banner object itself, so editing one would
-/// edit both; <c>Kingdom.InitializeKingdom</c> gets a copy instead, and <see cref="Decouple"/> splits the kingdoms of
+/// edit both; <c>Kingdom.InitializeKingdom</c> gets a copy instead, and <see cref="KingdomBanners.Decouple"/> splits the kingdoms of
 /// older saves on load.
 /// </para>
 /// Off while Realms is (a save it could not read).
@@ -110,33 +110,6 @@ internal static class HouseBanners
         {
             _shown--;
         }
-    }
-
-    /// <summary>
-    /// Gives each kingdom a banner object of its own where it still shares its ruling clan's (a kingdom founded before
-    /// this version), so editing the house banner no longer edits the realm's. Looks the same; safe to run on every peer.
-    /// </summary>
-    public static void Decouple()
-    {
-        if (!IsActive)
-            return;
-        foreach (var kingdom in Kingdom.All)
-        {
-            var banner = kingdom?.Banner;
-            if (banner != null && ReferenceEquals(banner, kingdom!.RulingClan?.ClanOriginalBanner))
-                kingdom.Banner = new Banner(banner);
-        }
-    }
-
-    /// <summary>Marks the visuals of everything that shows the clan's banner for a redraw.</summary>
-    public static void Redraw(Clan? clan)
-    {
-        if (clan == null)
-            return;
-        foreach (var party in clan.WarPartyComponents)
-            party?.MobileParty?.Party?.SetVisualAsDirty();
-        foreach (var settlement in clan.Settlements)
-            settlement?.Party?.SetVisualAsDirty();
     }
 
     private static void ShowWithin(Harmony harmony, MethodBase? method, string what)
