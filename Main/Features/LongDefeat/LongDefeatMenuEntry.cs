@@ -40,7 +40,7 @@ internal sealed class LongDefeatMenuEntry
         if (_menu.HasOption(OptionId))
             return;
 
-        _menu.AddOption(OptionId, Label, Hint, OrderIndex, IsHidden, _prompt.Begin);
+        _menu.AddOption(OptionId, Label, Hint, OrderIndex, IsHidden, () => _prompt.Begin());
     }
 
     private bool IsHidden()

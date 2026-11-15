@@ -170,7 +170,7 @@ section B). The order was wrong here until 2026-11-12. A BUTR-style launcher can
 above `TAOM_Map`, because `TAOM_Map/SubModule.xml` asks for that; check the list by hand. Players
 in Host and Client mode set this order in the launcher on every PC.
 
-`TAOM.CoopCompat` depends on TAOM and Coop, so the launcher sorts it after both. Its code starts at the first campaign start, after every module's `OnSubModuleLoad`, so on a dedicated server (where Coop has no submodule) its place against `DedicatedServer.Windows` does not matter.
+`TAOM.CoopCompat` depends on TAOM and Coop, so the launcher sorts it after both. Its code starts at the first campaign start (the Long Defeat session link at the main menu, #1280), after every module's `OnSubModuleLoad`, so on a dedicated server (where Coop has no submodule) its place against `DedicatedServer.Windows` does not matter.
 
 **Why it is first, and not "after the vanilla modules like every other mod":** `TAOM.Dependencies`
 bundles the whole BUTR stack (0Harmony, ButterLib, UIExtenderEx, MCM) and installs the

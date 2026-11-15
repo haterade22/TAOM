@@ -5016,6 +5016,17 @@
 	<string id="TAOM_LD_Hud_KeyVolleyIdle" text="{=TAOM_LD_Hud_KeyVolleyIdle}Elven Volley in a wave" />
 	<string id="TAOM_LD_Hud_KeyVolleyNotOwned" text="{=TAOM_LD_Hud_KeyVolleyNotOwned}Elven Volley not bought" />
 	<string id="TAOM_LD_Hud_KeyVolleyNotSold" text="{=TAOM_LD_Hud_KeyVolleyNotSold}Elven Volley not sold here" />
+	<string id="TAOM_LD_Coop_NoCoop" text="{=TAOM_LD_Coop_NoCoop}Co-op needs the Coop mod loaded." />
+	<string id="TAOM_LD_Coop_BadPayload" text="{=TAOM_LD_Coop_BadPayload}The host's run could not be read. Install the same TAOM as the host." />
+	<string id="TAOM_LD_Coop_BadAddress" text="{=TAOM_LD_Coop_BadAddress}Enter the host's address as address:port, for example 192.168.1.20:4200." />
+	<string id="TAOM_LD_Coop_HostLeft" text="{=TAOM_LD_Coop_HostLeft}The host left, so the run ended." />
+	<string id="TAOM_LD_Coop_RunEnded" text="{=TAOM_LD_Coop_RunEnded}The run ended at wave {WAVE}. Waves cleared: {WAVES}. Kills: {KILLS}." />
+	<string id="TAOM_LD_Coop_MenuOption" text="{=TAOM_LD_Coop_MenuOption}The Long Defeat (co-op)" />
+	<string id="TAOM_LD_Coop_MenuHint" text="{=TAOM_LD_Coop_MenuHint}Hold a fortress with other players over the Coop mod. One player hosts; the others join by address." />
+	<string id="TAOM_LD_Coop_Prompt_Desc" text="{=TAOM_LD_Coop_Prompt_Desc}Host a run for other players, or join a run another player hosts." />
+	<string id="TAOM_LD_Coop_Host" text="{=TAOM_LD_Coop_Host}Host a run" />
+	<string id="TAOM_LD_Coop_Join" text="{=TAOM_LD_Coop_Join}Join a run" />
+	<string id="TAOM_LD_Coop_JoinText" text="{=TAOM_LD_Coop_JoinText}The host's address and port, for example 192.168.1.20:4200." />
 	<!-- harvested by tools/harvest_literal_loc_keys.py -->
 	<!-- Refuge -->
 	<string id="taom_rf_reason_coop_off" text="{=taom_rf_reason_coop_off}Refuges are not available in a shared campaign." />

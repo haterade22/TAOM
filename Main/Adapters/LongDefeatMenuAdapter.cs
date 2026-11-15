@@ -51,6 +51,21 @@ internal sealed class LongDefeatMenuAdapter : ILongDefeatMenuAdapter
             new TextObject(NoticeTitle).ToString(), new TextObject(message).ToString(), true, false,
             new TextObject(OkText).ToString(), string.Empty, null, null));
 
+    public void Notify(string message, IReadOnlyDictionary<string, string> values)
+    {
+        var text = new TextObject(message);
+        foreach (var pair in values)
+            text.SetTextVariable(pair.Key, pair.Value);
+        InformationManager.ShowInquiry(new InquiryData(
+            new TextObject(NoticeTitle).ToString(), text.ToString(), true, false,
+            new TextObject(OkText).ToString(), string.Empty, null, null));
+    }
+
+    public void AskText(string title, string text, Action<string> onDone) =>
+        InformationManager.ShowTextInquiry(new TextInquiryData(
+            new TextObject(title).ToString(), new TextObject(text).ToString(), true, true,
+            new TextObject(OkText).ToString(), new TextObject(CancelText).ToString(), onDone, () => { }));
+
     public void EndGame() => MBGameManager.EndGame();
 
     private static string Resolve(LongDefeatChoice choice)

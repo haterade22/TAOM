@@ -33,6 +33,11 @@ public class WireContractNamesTests
         Layout(typeof(CoopCompatMomentumSnapshot)));
 
     [TestMethod]
+    public void LdRunEnded_Layout() => Assert.AreEqual(
+        "TAOM.CoopCompat.Messages.CoopCompatLdRunEnded: 1=ProtocolVersion, 2=SessionId, 3=Epoch, 4=Reason, 5=Wave, 6=WavesCleared, 7=Kills",
+        Layout(typeof(CoopCompatLdRunEnded)));
+
+    [TestMethod]
     public void TradeRequest_Layout() => Assert.AreEqual(
         "TAOM.CoopCompat.Messages.CoopCompatTradeRequest: 1=ProtocolVersion, 2=RequestId, 3=Action, 4=SettlementId, 5=Subject, 6=Modifier, 7=Target, 8=Quantity",
         Layout(typeof(CoopCompatTradeRequest)));
@@ -53,6 +58,7 @@ public class WireContractNamesTests
         {
             "TAOM.CoopCompat.Messages.CoopCompatHello",
             "TAOM.CoopCompat.Messages.CoopCompatHelloReply",
+            "TAOM.CoopCompat.Messages.CoopCompatLdRunEnded",
             "TAOM.CoopCompat.Messages.CoopCompatMomentumSnapshot",
             "TAOM.CoopCompat.Messages.CoopCompatTradeReply",
             "TAOM.CoopCompat.Messages.CoopCompatTradeRequest",
@@ -64,7 +70,7 @@ public class WireContractNamesTests
     {
         // The constructor's initializers are what turn an empty repeated field back into an empty array.
         foreach (var t in new[] { typeof(CoopCompatHello), typeof(CoopCompatHelloReply), typeof(CoopCompatMomentumSnapshot),
-                     typeof(CoopCompatTradeRequest), typeof(CoopCompatTradeReply) })
+                     typeof(CoopCompatLdRunEnded), typeof(CoopCompatTradeRequest), typeof(CoopCompatTradeReply) })
         {
             var attr = (ProtoContractAttribute)t.GetCustomAttributes(typeof(ProtoContractAttribute), false).Single();
             Assert.IsFalse(attr.SkipConstructor, t.Name);
@@ -73,6 +79,7 @@ public class WireContractNamesTests
         Assert.IsTrue(typeof(ICommand).IsAssignableFrom(typeof(CoopCompatHello)));
         Assert.IsTrue(typeof(IEvent).IsAssignableFrom(typeof(CoopCompatHelloReply)));
         Assert.IsTrue(typeof(IEvent).IsAssignableFrom(typeof(CoopCompatMomentumSnapshot)));
+        Assert.IsTrue(typeof(IEvent).IsAssignableFrom(typeof(CoopCompatLdRunEnded)));
         Assert.IsTrue(typeof(ICommand).IsAssignableFrom(typeof(CoopCompatTradeRequest)));
         Assert.IsTrue(typeof(IEvent).IsAssignableFrom(typeof(CoopCompatTradeReply)));
     }
