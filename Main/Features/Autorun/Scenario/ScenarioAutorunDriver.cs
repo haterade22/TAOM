@@ -25,7 +25,7 @@ internal sealed class ScenarioAutorunDriver
     private Phase _phase;
     private double _wall, _phaseStart, _startWall, _held, _dayChanged, _lastStatus, _dt;
     private int _dayStart = ScenarioRules.UnknownDay, _lastDay = ScenarioRules.UnknownDay;
-    private int _inquiries, _notices, _resets;
+    private int _inquiries, _notices, _eventWindows, _resets;
     private string _prepared = "";
     private bool _noticeSeen;
 
@@ -173,6 +173,8 @@ internal sealed class ScenarioAutorunDriver
     {
         HideInquiry();
         HideSceneNotification();
+        if (_host.CloseEventWindow() && ScenarioRules.TitleLogged(++_eventWindows))
+            _logger.LogInfo(Prefix + "event window closed n=" + _eventWindows + " phase=" + _phase);
         if (_host.KeepFastForward(_plan.Speed))
             _resets++;
 
@@ -217,7 +219,8 @@ internal sealed class ScenarioAutorunDriver
             return;
 
         Enter(Phase.Exiting);
-        var facts = new ScenarioRunFacts(reason, _dayStart, _lastDay, _inquiries, _notices, _resets, _prepared, _wall, _startedAt, DateTime.Now.ToString("o"));
+        var facts = new ScenarioRunFacts(reason, _dayStart, _lastDay, _inquiries, _notices, _eventWindows, _resets, _prepared, _wall, _startedAt,
+            DateTime.Now.ToString("o"));
         Guarded("restore the focus setting", _host.RestoreFocusSetting);
         // The text is built inside the guard, so a throw while building it still lets the outcome and the campaign end run.
         Guarded("write " + ScenarioAutorunDone.DoneFile, () => _host.WriteFile(ScenarioAutorunDone.DoneFile, ScenarioAutorunDone.Text(_plan, facts)));

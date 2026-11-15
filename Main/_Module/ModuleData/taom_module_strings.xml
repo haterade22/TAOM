@@ -5175,6 +5175,14 @@
 	<string id="taom_cheat_done_influence" text="{=taom_cheat_done_influence}Gained {NUMBER} influence." />
 	<string id="taom_cheat_done_renown" text="{=taom_cheat_done_renown}Gained {NUMBER} renown." />
 	<string id="taom_cheat_done_heal" text="{=taom_cheat_done_heal}Your party is healed. Soldiers healed: {NUMBER}." />
+	<!-- StoryMissions -->
+	<string id="taom_story_offer_attack" text="{=taom_story_offer_attack}Storm the walls" />
+	<string id="taom_story_offer_body_both" text="{=taom_story_offer_body_both}The hour of {TARGET} has come. Will you ride there and choose your side of its walls, or let fate decide?" />
+	<string id="taom_story_offer_body_attack" text="{=taom_story_offer_body_attack}The hour of {TARGET} has come. Will you march on its walls and lead the assault yourself, or let fate decide?" />
+	<string id="taom_story_offer_march" text="{=taom_story_offer_march}March on {TARGET}" />
+	<string id="taom_story_offer_repulsed" text="{=taom_story_offer_repulsed}Your assault on {TARGET} is thrown back, and its walls hold." />
+	<string id="taom_story_offer_stormed" text="{=taom_story_offer_stormed}The walls of {TARGET} are stormed, and the fortress falls." />
+	<string id="taom_story_offer_menu_host" text="{=taom_story_offer_menu_host}A host gathers before the walls of {TARGET}. Time stands until you choose." />
 	<!-- harvested by tools/harvest_literal_loc_keys.py -->
 	<!-- CoopInterop -->
 	<string id="taom_guest_trade_not_leader" text="{=taom_guest_trade_not_leader}The host cannot trade for you while you do not lead a free party." />

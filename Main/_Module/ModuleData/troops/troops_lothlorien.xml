@@ -13,14 +13,14 @@
       <face_key_template value="BodyProperty.fighter_lothlorien" />
     </face>
     <skills>
-      <skill id="Athletics" value="130" />
+      <skill id="Athletics" value="120" />
       <skill id="Riding" value="40" />
-      <skill id="OneHanded" value="140" />
-      <skill id="TwoHanded" value="135" />
-      <skill id="Polearm" value="175" />
-      <skill id="Bow" value="50" />
-      <skill id="Crossbow" value="45" />
-      <skill id="Throwing" value="85" />
+      <skill id="OneHanded" value="105" />
+      <skill id="TwoHanded" value="50" />
+      <skill id="Polearm" value="115" />
+      <skill id="Bow" value="40" />
+      <skill id="Crossbow" value="40" />
+      <skill id="Throwing" value="40" />
     </skills>
     <Equipments>
       <EquipmentRoster>
@@ -44,14 +44,14 @@
       <face_key_template value="BodyProperty.fighter_lothlorien" />
     </face>
     <skills>
-      <skill id="Athletics" value="130" />
+      <skill id="Athletics" value="120" />
       <skill id="Riding" value="40" />
-      <skill id="OneHanded" value="130" />
-      <skill id="TwoHanded" value="90" />
-      <skill id="Polearm" value="100" />
-      <skill id="Bow" value="105" />
-      <skill id="Crossbow" value="65" />
-      <skill id="Throwing" value="75" />
+      <skill id="OneHanded" value="45" />
+      <skill id="TwoHanded" value="45" />
+      <skill id="Polearm" value="45" />
+      <skill id="Bow" value="50" />
+      <skill id="Crossbow" value="40" />
+      <skill id="Throwing" value="40" />
     </skills>
     <Equipments>
       <EquipmentRoster>
@@ -77,14 +77,14 @@
       <face_key_template value="BodyProperty.fighter_lothlorien" />
     </face>
     <skills>
-      <skill id="Athletics" value="145" />
-      <skill id="Riding" value="55" />
-      <skill id="OneHanded" value="155" />
-      <skill id="TwoHanded" value="150" />
-      <skill id="Polearm" value="190" />
-      <skill id="Bow" value="65" />
-      <skill id="Crossbow" value="60" />
-      <skill id="Throwing" value="100" />
+      <skill id="Athletics" value="130" />
+      <skill id="Riding" value="50" />
+      <skill id="OneHanded" value="115" />
+      <skill id="TwoHanded" value="60" />
+      <skill id="Polearm" value="125" />
+      <skill id="Bow" value="50" />
+      <skill id="Crossbow" value="50" />
+      <skill id="Throwing" value="50" />
     </skills>
     <Equipments>
       <EquipmentRoster>
@@ -109,14 +109,14 @@
       <face_key_template value="BodyProperty.fighter_lothlorien" />
     </face>
     <skills>
-      <skill id="Athletics" value="145" />
-      <skill id="Riding" value="55" />
-      <skill id="OneHanded" value="145" />
-      <skill id="TwoHanded" value="105" />
-      <skill id="Polearm" value="115" />
-      <skill id="Bow" value="135" />
-      <skill id="Crossbow" value="80" />
-      <skill id="Throwing" value="90" />
+      <skill id="Athletics" value="130" />
+      <skill id="Riding" value="50" />
+      <skill id="OneHanded" value="75" />
+      <skill id="TwoHanded" value="60" />
+      <skill id="Polearm" value="60" />
+      <skill id="Bow" value="85" />
+      <skill id="Crossbow" value="50" />
+      <skill id="Throwing" value="50" />
     </skills>
     <Equipments>
       <EquipmentRoster>
@@ -143,14 +143,14 @@
       <face_key_template value="BodyProperty.fighter_lothlorien" />
     </face>
     <skills>
-      <skill id="Athletics" value="130" />
+      <skill id="Athletics" value="120" />
       <skill id="Riding" value="40" />
-      <skill id="OneHanded" value="130" />
-      <skill id="TwoHanded" value="100" />
-      <skill id="Polearm" value="90" />
-      <skill id="Bow" value="180" />
-      <skill id="Crossbow" value="65" />
-      <skill id="Throwing" value="75" />
+      <skill id="OneHanded" value="105" />
+      <skill id="TwoHanded" value="50" />
+      <skill id="Polearm" value="50" />
+      <skill id="Bow" value="120" />
+      <skill id="Crossbow" value="40" />
+      <skill id="Throwing" value="40" />
     </skills>
     <upgrade_targets>
       <upgrade_target id="NPCCharacter.lorien_spearman" />
@@ -189,14 +189,14 @@
       <face_key_template value="BodyProperty.fighter_lothlorien" />
     </face>
     <skills>
-      <skill id="Athletics" value="135" />
-      <skill id="Riding" value="45" />
-      <skill id="OneHanded" value="190" />
-      <skill id="TwoHanded" value="180" />
-      <skill id="Polearm" value="215" />
-      <skill id="Bow" value="180" />
-      <skill id="Crossbow" value="65" />
-      <skill id="Throwing" value="105" />
+      <skill id="Athletics" value="155" />
+      <skill id="Riding" value="50" />
+      <skill id="OneHanded" value="135" />
+      <skill id="TwoHanded" value="65" />
+      <skill id="Polearm" value="150" />
+      <skill id="Bow" value="120" />
+      <skill id="Crossbow" value="50" />
+      <skill id="Throwing" value="50" />
     </skills>
     <upgrade_targets>
       <upgrade_target id="NPCCharacter.lorien_infantry" />
@@ -235,14 +235,14 @@
       <face_key_template value="BodyProperty.fighter_lothlorien" />
     </face>
     <skills>
-      <skill id="Athletics" value="155" />
-      <skill id="Riding" value="50" />
-      <skill id="OneHanded" value="260" />
-      <skill id="TwoHanded" value="235" />
-      <skill id="Polearm" value="265" />
-      <skill id="Bow" value="180" />
-      <skill id="Crossbow" value="65" />
-      <skill id="Throwing" value="115" />
+      <skill id="Athletics" value="185" />
+      <skill id="Riding" value="60" />
+      <skill id="OneHanded" value="160" />
+      <skill id="TwoHanded" value="80" />
+      <skill id="Polearm" value="180" />
+      <skill id="Bow" value="120" />
+      <skill id="Crossbow" value="60" />
+      <skill id="Throwing" value="60" />
     </skills>
     <upgrade_targets>
       <upgrade_target id="NPCCharacter.lorien_warden" />
@@ -282,14 +282,14 @@
       <face_key_template value="BodyProperty.fighter_lothlorien" />
     </face>
     <skills>
-      <skill id="Athletics" value="175" />
-      <skill id="Riding" value="55" />
-      <skill id="OneHanded" value="300" />
-      <skill id="TwoHanded" value="275" />
-      <skill id="Polearm" value="305" />
-      <skill id="Bow" value="180" />
-      <skill id="Crossbow" value="65" />
-      <skill id="Throwing" value="125" />
+      <skill id="Athletics" value="215" />
+      <skill id="Riding" value="75" />
+      <skill id="OneHanded" value="190" />
+      <skill id="TwoHanded" value="90" />
+      <skill id="Polearm" value="210" />
+      <skill id="Bow" value="120" />
+      <skill id="Crossbow" value="75" />
+      <skill id="Throwing" value="75" />
     </skills>
     <Equipments>
       <EquipmentRoster>
@@ -326,14 +326,14 @@
       <face_key_template value="BodyProperty.fighter_lothlorien" />
     </face>
     <skills>
-      <skill id="Athletics" value="165" />
-      <skill id="Riding" value="235" />
-      <skill id="OneHanded" value="250" />
-      <skill id="TwoHanded" value="180" />
-      <skill id="Polearm" value="280" />
-      <skill id="Bow" value="180" />
-      <skill id="Crossbow" value="65" />
-      <skill id="Throwing" value="105" />
+      <skill id="Athletics" value="155" />
+      <skill id="Riding" value="170" />
+      <skill id="OneHanded" value="160" />
+      <skill id="TwoHanded" value="80" />
+      <skill id="Polearm" value="180" />
+      <skill id="Bow" value="120" />
+      <skill id="Crossbow" value="60" />
+      <skill id="Throwing" value="60" />
     </skills>
     <upgrade_targets>
       <upgrade_target id="NPCCharacter.lorien_lancer" />
@@ -377,14 +377,14 @@
       <face_key_template value="BodyProperty.fighter_lothlorien" />
     </face>
     <skills>
-      <skill id="Athletics" value="185" />
-      <skill id="Riding" value="295" />
-      <skill id="OneHanded" value="285" />
-      <skill id="TwoHanded" value="180" />
-      <skill id="Polearm" value="345" />
-      <skill id="Bow" value="180" />
-      <skill id="Crossbow" value="65" />
-      <skill id="Throwing" value="105" />
+      <skill id="Athletics" value="155" />
+      <skill id="Riding" value="200" />
+      <skill id="OneHanded" value="190" />
+      <skill id="TwoHanded" value="90" />
+      <skill id="Polearm" value="210" />
+      <skill id="Bow" value="120" />
+      <skill id="Crossbow" value="75" />
+      <skill id="Throwing" value="75" />
     </skills>
     <Equipments>
       <EquipmentRoster>
@@ -425,14 +425,14 @@
       <face_key_template value="BodyProperty.fighter_lothlorien" />
     </face>
     <skills>
-      <skill id="Athletics" value="140" />
-      <skill id="Riding" value="45" />
-      <skill id="OneHanded" value="170" />
-      <skill id="TwoHanded" value="120" />
-      <skill id="Polearm" value="110" />
-      <skill id="Bow" value="220" />
-      <skill id="Crossbow" value="70" />
-      <skill id="Throwing" value="85" />
+      <skill id="Athletics" value="155" />
+      <skill id="Riding" value="50" />
+      <skill id="OneHanded" value="135" />
+      <skill id="TwoHanded" value="65" />
+      <skill id="Polearm" value="65" />
+      <skill id="Bow" value="155" />
+      <skill id="Crossbow" value="50" />
+      <skill id="Throwing" value="50" />
     </skills>
     <upgrade_targets>
       <upgrade_target id="NPCCharacter.lorien_archer" />
@@ -472,14 +472,14 @@
       <face_key_template value="BodyProperty.fighter_lothlorien" />
     </face>
     <skills>
-      <skill id="Athletics" value="150" />
-      <skill id="Riding" value="50" />
-      <skill id="OneHanded" value="195" />
-      <skill id="TwoHanded" value="130" />
-      <skill id="Polearm" value="125" />
-      <skill id="Bow" value="255" />
-      <skill id="Crossbow" value="75" />
-      <skill id="Throwing" value="95" />
+      <skill id="Athletics" value="185" />
+      <skill id="Riding" value="60" />
+      <skill id="OneHanded" value="165" />
+      <skill id="TwoHanded" value="80" />
+      <skill id="Polearm" value="80" />
+      <skill id="Bow" value="186" />
+      <skill id="Crossbow" value="60" />
+      <skill id="Throwing" value="60" />
     </skills>
     <upgrade_targets>
       <upgrade_target id="NPCCharacter.lorien_longbowman" />
@@ -521,14 +521,14 @@
       <face_key_template value="BodyProperty.fighter_lothlorien" />
     </face>
     <skills>
-      <skill id="Athletics" value="165" />
-      <skill id="Riding" value="55" />
-      <skill id="OneHanded" value="225" />
-      <skill id="TwoHanded" value="150" />
-      <skill id="Polearm" value="145" />
-      <skill id="Bow" value="320" />
-      <skill id="Crossbow" value="85" />
-      <skill id="Throwing" value="105" />
+      <skill id="Athletics" value="215" />
+      <skill id="Riding" value="75" />
+      <skill id="OneHanded" value="195" />
+      <skill id="TwoHanded" value="90" />
+      <skill id="Polearm" value="90" />
+      <skill id="Bow" value="217" />
+      <skill id="Crossbow" value="75" />
+      <skill id="Throwing" value="75" />
     </skills>
     <Equipments>
       <EquipmentRoster>
@@ -568,14 +568,14 @@
       <face_key_template value="BodyProperty.fighter_lothlorien" />
     </face>
     <skills>
-      <skill id="Athletics" value="140" />
-      <skill id="Riding" value="45" />
-      <skill id="OneHanded" value="170" />
-      <skill id="TwoHanded" value="170" />
-      <skill id="Polearm" value="110" />
-      <skill id="Bow" value="220" />
-      <skill id="Crossbow" value="70" />
-      <skill id="Throwing" value="85" />
+      <skill id="Athletics" value="155" />
+      <skill id="Riding" value="50" />
+      <skill id="OneHanded" value="135" />
+      <skill id="TwoHanded" value="135" />
+      <skill id="Polearm" value="65" />
+      <skill id="Bow" value="155" />
+      <skill id="Crossbow" value="50" />
+      <skill id="Throwing" value="50" />
     </skills>
     <upgrade_targets>
       <upgrade_target id="NPCCharacter.lorien_mw_archer" />
@@ -616,14 +616,14 @@
       <face_key_template value="BodyProperty.fighter_lothlorien" />
     </face>
     <skills>
-      <skill id="Athletics" value="150" />
-      <skill id="Riding" value="50" />
-      <skill id="OneHanded" value="195" />
-      <skill id="TwoHanded" value="195" />
-      <skill id="Polearm" value="125" />
-      <skill id="Bow" value="255" />
-      <skill id="Crossbow" value="75" />
-      <skill id="Throwing" value="95" />
+      <skill id="Athletics" value="185" />
+      <skill id="Riding" value="60" />
+      <skill id="OneHanded" value="165" />
+      <skill id="TwoHanded" value="165" />
+      <skill id="Polearm" value="80" />
+      <skill id="Bow" value="186" />
+      <skill id="Crossbow" value="60" />
+      <skill id="Throwing" value="60" />
     </skills>
     <upgrade_targets>
       <upgrade_target id="NPCCharacter.lorien_mw_ranger" />
@@ -666,14 +666,14 @@
       <face_key_template value="BodyProperty.fighter_lothlorien" />
     </face>
     <skills>
-      <skill id="Athletics" value="165" />
-      <skill id="Riding" value="55" />
-      <skill id="OneHanded" value="225" />
-      <skill id="TwoHanded" value="225" />
-      <skill id="Polearm" value="145" />
-      <skill id="Bow" value="320" />
-      <skill id="Crossbow" value="85" />
-      <skill id="Throwing" value="105" />
+      <skill id="Athletics" value="215" />
+      <skill id="Riding" value="75" />
+      <skill id="OneHanded" value="195" />
+      <skill id="TwoHanded" value="195" />
+      <skill id="Polearm" value="90" />
+      <skill id="Bow" value="217" />
+      <skill id="Crossbow" value="75" />
+      <skill id="Throwing" value="75" />
     </skills>
     <upgrade_targets>
       <upgrade_target id="NPCCharacter.lorien_mw_high_ranger" />
@@ -715,14 +715,14 @@
       <face_key_template value="BodyProperty.fighter_lothlorien" />
     </face>
     <skills>
-      <skill id="Athletics" value="185" />
-      <skill id="Riding" value="60" />
-      <skill id="OneHanded" value="250" />
-      <skill id="TwoHanded" value="250" />
-      <skill id="Polearm" value="165" />
-      <skill id="Bow" value="355" />
-      <skill id="Crossbow" value="90" />
-      <skill id="Throwing" value="115" />
+      <skill id="Athletics" value="245" />
+      <skill id="Riding" value="85" />
+      <skill id="OneHanded" value="220" />
+      <skill id="TwoHanded" value="220" />
+      <skill id="Polearm" value="105" />
+      <skill id="Bow" value="248" />
+      <skill id="Crossbow" value="85" />
+      <skill id="Throwing" value="85" />
     </skills>
     <Equipments>
       <EquipmentRoster>
@@ -761,14 +761,14 @@
       <face_key_template value="BodyProperty.fighter_lothlorien" />
     </face>
     <skills>
-      <skill id="Athletics" value="195" />
-      <skill id="Riding" value="335" />
-      <skill id="OneHanded" value="245" />
-      <skill id="TwoHanded" value="245" />
-      <skill id="Polearm" value="140" />
-      <skill id="Bow" value="320" />
+      <skill id="Athletics" value="185" />
+      <skill id="Riding" value="200" />
+      <skill id="OneHanded" value="195" />
+      <skill id="TwoHanded" value="195" />
+      <skill id="Polearm" value="90" />
+      <skill id="Bow" value="217" />
       <skill id="Crossbow" value="75" />
-      <skill id="Throwing" value="110" />
+      <skill id="Throwing" value="75" />
     </skills>
     <upgrade_targets>
       <upgrade_target id="NPCCharacter.lorien_mw_dawnrider" />
@@ -814,14 +814,14 @@
       <face_key_template value="BodyProperty.fighter_lothlorien" />
     </face>
     <skills>
-      <skill id="Athletics" value="210" />
-      <skill id="Riding" value="375" />
-      <skill id="OneHanded" value="280" />
-      <skill id="TwoHanded" value="280" />
-      <skill id="Polearm" value="165" />
-      <skill id="Bow" value="355" />
-      <skill id="Crossbow" value="75" />
-      <skill id="Throwing" value="120" />
+      <skill id="Athletics" value="185" />
+      <skill id="Riding" value="230" />
+      <skill id="OneHanded" value="220" />
+      <skill id="TwoHanded" value="220" />
+      <skill id="Polearm" value="105" />
+      <skill id="Bow" value="248" />
+      <skill id="Crossbow" value="85" />
+      <skill id="Throwing" value="85" />
     </skills>
     <Equipments>
       <EquipmentRoster>
@@ -864,14 +864,14 @@
       <face_key_template value="BodyProperty.fighter_lothlorien" />
     </face>
     <skills>
-      <skill id="Athletics" value="155" />
-      <skill id="Riding" value="50" />
-      <skill id="OneHanded" value="265" />
-      <skill id="TwoHanded" value="235" />
-      <skill id="Polearm" value="260" />
-      <skill id="Bow" value="220" />
-      <skill id="Crossbow" value="70" />
-      <skill id="Throwing" value="115" />
+      <skill id="Athletics" value="185" />
+      <skill id="Riding" value="60" />
+      <skill id="OneHanded" value="180" />
+      <skill id="TwoHanded" value="135" />
+      <skill id="Polearm" value="80" />
+      <skill id="Bow" value="155" />
+      <skill id="Crossbow" value="60" />
+      <skill id="Throwing" value="165" />
     </skills>
     <upgrade_targets>
       <upgrade_target id="NPCCharacter.lorien_mw_ambusher" />
@@ -911,14 +911,14 @@
       <face_key_template value="BodyProperty.fighter_lothlorien" />
     </face>
     <skills>
-      <skill id="Athletics" value="175" />
-      <skill id="Riding" value="55" />
-      <skill id="OneHanded" value="305" />
-      <skill id="TwoHanded" value="275" />
-      <skill id="Polearm" value="300" />
-      <skill id="Bow" value="220" />
-      <skill id="Crossbow" value="70" />
-      <skill id="Throwing" value="125" />
+      <skill id="Athletics" value="215" />
+      <skill id="Riding" value="75" />
+      <skill id="OneHanded" value="210" />
+      <skill id="TwoHanded" value="135" />
+      <skill id="Polearm" value="90" />
+      <skill id="Bow" value="155" />
+      <skill id="Crossbow" value="75" />
+      <skill id="Throwing" value="195" />
     </skills>
     <upgrade_targets>
       <upgrade_target id="NPCCharacter.lorien_mw_waystalker" />
@@ -960,14 +960,14 @@
       <face_key_template value="BodyProperty.fighter_lothlorien" />
     </face>
     <skills>
-      <skill id="Athletics" value="195" />
-      <skill id="Riding" value="60" />
-      <skill id="OneHanded" value="340" />
-      <skill id="TwoHanded" value="315" />
-      <skill id="Polearm" value="340" />
-      <skill id="Bow" value="220" />
-      <skill id="Crossbow" value="70" />
-      <skill id="Throwing" value="135" />
+      <skill id="Athletics" value="245" />
+      <skill id="Riding" value="85" />
+      <skill id="OneHanded" value="240" />
+      <skill id="TwoHanded" value="135" />
+      <skill id="Polearm" value="105" />
+      <skill id="Bow" value="155" />
+      <skill id="Crossbow" value="85" />
+      <skill id="Throwing" value="220" />
     </skills>
     <Equipments>
       <EquipmentRoster>
@@ -1007,14 +1007,14 @@
       <face_key_template value="BodyProperty.fighter_lothlorien" />
     </face>
     <skills>
-      <skill id="Athletics" value="155" />
-      <skill id="Riding" value="50" />
-      <skill id="OneHanded" value="260" />
-      <skill id="TwoHanded" value="235" />
-      <skill id="Polearm" value="265" />
+      <skill id="Athletics" value="185" />
+      <skill id="Riding" value="60" />
+      <skill id="OneHanded" value="160" />
+      <skill id="TwoHanded" value="80" />
+      <skill id="Polearm" value="180" />
       <skill id="Bow" value="60" />
-      <skill id="Crossbow" value="55" />
-      <skill id="Throwing" value="115" />
+      <skill id="Crossbow" value="60" />
+      <skill id="Throwing" value="60" />
     </skills>
     <upgrade_targets>
       <upgrade_target id="NPCCharacter.lorien_gl_bladeguard" />
@@ -1056,14 +1056,14 @@
       <face_key_template value="BodyProperty.fighter_lothlorien" />
     </face>
     <skills>
-      <skill id="Athletics" value="175" />
-      <skill id="Riding" value="55" />
-      <skill id="OneHanded" value="290" />
-      <skill id="TwoHanded" value="315" />
-      <skill id="Polearm" value="275" />
-      <skill id="Bow" value="65" />
-      <skill id="Crossbow" value="60" />
-      <skill id="Throwing" value="125" />
+      <skill id="Athletics" value="215" />
+      <skill id="Riding" value="75" />
+      <skill id="OneHanded" value="190" />
+      <skill id="TwoHanded" value="205" />
+      <skill id="Polearm" value="180" />
+      <skill id="Bow" value="75" />
+      <skill id="Crossbow" value="75" />
+      <skill id="Throwing" value="75" />
     </skills>
     <upgrade_targets>
       <upgrade_target id="NPCCharacter.lorien_gl_blademaster" />
@@ -1101,14 +1101,14 @@
       <face_key_template value="BodyProperty.fighter_lothlorien" />
     </face>
     <skills>
-      <skill id="Athletics" value="195" />
-      <skill id="Riding" value="60" />
-      <skill id="OneHanded" value="325" />
-      <skill id="TwoHanded" value="355" />
-      <skill id="Polearm" value="315" />
-      <skill id="Bow" value="70" />
-      <skill id="Crossbow" value="60" />
-      <skill id="Throwing" value="135" />
+      <skill id="Athletics" value="245" />
+      <skill id="Riding" value="85" />
+      <skill id="OneHanded" value="215" />
+      <skill id="TwoHanded" value="235" />
+      <skill id="Polearm" value="180" />
+      <skill id="Bow" value="85" />
+      <skill id="Crossbow" value="85" />
+      <skill id="Throwing" value="85" />
     </skills>
     <upgrade_targets>
       <upgrade_target id="NPCCharacter.lorien_gl_highblade" />
@@ -1146,14 +1146,14 @@
       <face_key_template value="BodyProperty.fighter_lothlorien" />
     </face>
     <skills>
-      <skill id="Athletics" value="210" />
-      <skill id="Riding" value="65" />
-      <skill id="OneHanded" value="345" />
-      <skill id="TwoHanded" value="375" />
-      <skill id="Polearm" value="335" />
-      <skill id="Bow" value="75" />
-      <skill id="Crossbow" value="65" />
-      <skill id="Throwing" value="135" />
+      <skill id="Athletics" value="275" />
+      <skill id="Riding" value="95" />
+      <skill id="OneHanded" value="240" />
+      <skill id="TwoHanded" value="265" />
+      <skill id="Polearm" value="180" />
+      <skill id="Bow" value="95" />
+      <skill id="Crossbow" value="95" />
+      <skill id="Throwing" value="95" />
     </skills>
     <Equipments>
       <EquipmentRoster>
@@ -1188,14 +1188,14 @@
       <face_key_template value="BodyProperty.fighter_lothlorien" />
     </face>
     <skills>
-      <skill id="Athletics" value="175" />
-      <skill id="Riding" value="55" />
-      <skill id="OneHanded" value="300" />
-      <skill id="TwoHanded" value="275" />
-      <skill id="Polearm" value="305" />
-      <skill id="Bow" value="65" />
-      <skill id="Crossbow" value="60" />
-      <skill id="Throwing" value="125" />
+      <skill id="Athletics" value="215" />
+      <skill id="Riding" value="75" />
+      <skill id="OneHanded" value="190" />
+      <skill id="TwoHanded" value="90" />
+      <skill id="Polearm" value="210" />
+      <skill id="Bow" value="75" />
+      <skill id="Crossbow" value="75" />
+      <skill id="Throwing" value="75" />
     </skills>
     <upgrade_targets>
       <upgrade_target id="NPCCharacter.lorien_gl_sentinel" />
@@ -1235,14 +1235,14 @@
       <face_key_template value="BodyProperty.fighter_lothlorien" />
     </face>
     <skills>
-      <skill id="Athletics" value="195" />
-      <skill id="Riding" value="60" />
-      <skill id="OneHanded" value="340" />
-      <skill id="TwoHanded" value="315" />
-      <skill id="Polearm" value="340" />
-      <skill id="Bow" value="70" />
-      <skill id="Crossbow" value="60" />
-      <skill id="Throwing" value="135" />
+      <skill id="Athletics" value="245" />
+      <skill id="Riding" value="85" />
+      <skill id="OneHanded" value="215" />
+      <skill id="TwoHanded" value="105" />
+      <skill id="Polearm" value="240" />
+      <skill id="Bow" value="85" />
+      <skill id="Crossbow" value="85" />
+      <skill id="Throwing" value="85" />
     </skills>
     <upgrade_targets>
       <upgrade_target id="NPCCharacter.lorien_gl_mallorn_defender" />
@@ -1282,14 +1282,14 @@
       <face_key_template value="BodyProperty.fighter_lothlorien" />
     </face>
     <skills>
-      <skill id="Athletics" value="210" />
-      <skill id="Riding" value="65" />
-      <skill id="OneHanded" value="360" />
-      <skill id="TwoHanded" value="335" />
-      <skill id="Polearm" value="360" />
-      <skill id="Bow" value="75" />
-      <skill id="Crossbow" value="65" />
-      <skill id="Throwing" value="135" />
+      <skill id="Athletics" value="275" />
+      <skill id="Riding" value="95" />
+      <skill id="OneHanded" value="240" />
+      <skill id="TwoHanded" value="115" />
+      <skill id="Polearm" value="270" />
+      <skill id="Bow" value="95" />
+      <skill id="Crossbow" value="95" />
+      <skill id="Throwing" value="95" />
     </skills>
     <Equipments>
       <EquipmentRoster>
@@ -1326,14 +1326,14 @@
       <face_key_template value="BodyProperty.fighter_lothlorien" />
     </face>
     <skills>
-      <skill id="Athletics" value="165" />
-      <skill id="Riding" value="55" />
-      <skill id="OneHanded" value="260" />
-      <skill id="TwoHanded" value="265" />
-      <skill id="Polearm" value="265" />
-      <skill id="Bow" value="320" />
-      <skill id="Crossbow" value="85" />
-      <skill id="Throwing" value="115" />
+      <skill id="Athletics" value="215" />
+      <skill id="Riding" value="75" />
+      <skill id="OneHanded" value="160" />
+      <skill id="TwoHanded" value="195" />
+      <skill id="Polearm" value="180" />
+      <skill id="Bow" value="217" />
+      <skill id="Crossbow" value="75" />
+      <skill id="Throwing" value="75" />
     </skills>
     <upgrade_targets>
       <upgrade_target id="NPCCharacter.lorien_gl_marksman" />
@@ -1375,14 +1375,14 @@
       <face_key_template value="BodyProperty.fighter_lothlorien" />
     </face>
     <skills>
-      <skill id="Athletics" value="185" />
-      <skill id="Riding" value="60" />
-      <skill id="OneHanded" value="260" />
-      <skill id="TwoHanded" value="265" />
-      <skill id="Polearm" value="265" />
-      <skill id="Bow" value="355" />
-      <skill id="Crossbow" value="90" />
-      <skill id="Throwing" value="115" />
+      <skill id="Athletics" value="245" />
+      <skill id="Riding" value="85" />
+      <skill id="OneHanded" value="160" />
+      <skill id="TwoHanded" value="220" />
+      <skill id="Polearm" value="180" />
+      <skill id="Bow" value="248" />
+      <skill id="Crossbow" value="85" />
+      <skill id="Throwing" value="85" />
     </skills>
     <upgrade_targets>
       <upgrade_target id="NPCCharacter.lorien_gl_bowmaster" />
@@ -1424,14 +1424,14 @@
       <face_key_template value="BodyProperty.fighter_lothlorien" />
     </face>
     <skills>
-      <skill id="Athletics" value="200" />
-      <skill id="Riding" value="65" />
-      <skill id="OneHanded" value="265" />
-      <skill id="TwoHanded" value="270" />
-      <skill id="Polearm" value="265" />
-      <skill id="Bow" value="375" />
+      <skill id="Athletics" value="275" />
+      <skill id="Riding" value="95" />
+      <skill id="OneHanded" value="160" />
+      <skill id="TwoHanded" value="250" />
+      <skill id="Polearm" value="180" />
+      <skill id="Bow" value="279" />
       <skill id="Crossbow" value="95" />
-      <skill id="Throwing" value="115" />
+      <skill id="Throwing" value="95" />
     </skills>
     <Equipments>
       <EquipmentRoster>
@@ -1470,14 +1470,14 @@
       <face_key_template value="BodyProperty.fighter_lothlorien" />
     </face>
     <skills>
-      <skill id="Athletics" value="140" />
-      <skill id="Riding" value="45" />
-      <skill id="OneHanded" value="170" />
-      <skill id="TwoHanded" value="170" />
-      <skill id="Polearm" value="110" />
-      <skill id="Bow" value="220" />
-      <skill id="Crossbow" value="70" />
-      <skill id="Throwing" value="85" />
+      <skill id="Athletics" value="155" />
+      <skill id="Riding" value="50" />
+      <skill id="OneHanded" value="135" />
+      <skill id="TwoHanded" value="135" />
+      <skill id="Polearm" value="65" />
+      <skill id="Bow" value="155" />
+      <skill id="Crossbow" value="50" />
+      <skill id="Throwing" value="50" />
     </skills>
     <Equipments>
       <EquipmentRoster>

@@ -163,14 +163,14 @@ The raw enum spellings `Weapon0` to `Weapon3` and `ExtraWeaponSlot` work too, be
       <face_key_template value="BodyProperty.fighter_gondor" />
     </face>
     <skills>
-      <skill id="Athletics" value="185" />
-      <skill id="Riding" value="45" />
+      <skill id="Athletics" value="270" />
+      <skill id="Riding" value="105" />
       <skill id="OneHanded" value="270" />
-      <skill id="TwoHanded" value="175" />
-      <skill id="Polearm" value="175" />
-      <skill id="Bow" value="380" />
-      <skill id="Crossbow" value="65" />
-      <skill id="Throwing" value="70" />
+      <skill id="TwoHanded" value="130" />
+      <skill id="Polearm" value="130" />
+      <skill id="Bow" value="300" />
+      <skill id="Crossbow" value="105" />
+      <skill id="Throwing" value="105" />
     </skills>
     <upgrade_targets />
     <Equipments>
@@ -270,7 +270,7 @@ The raw enum spellings `Weapon0` to `Weapon3` and `ExtraWeaponSlot` work too, be
 The three things a reader changes first:
 
 1. **`level="51"`.** This is the whole ladder position. 51 is T10 under TAOM's raised cap, which sets the wage (30 gold a day before multipliers), the recruitment price and the simulated battle power. Change this and you have changed the troop's tier, not just a number on a screen.
-2. **The eight `<skill>` rows.** They are not free-hand numbers. Every one of them is `GROUP_BASELINES['Ranged'][51]` plus `CULTURAL_MODS['gondor']` out of [`tools/rebalance_troops.py`](../../tools/rebalance_troops.py), and the file matches the formula exactly, row for row. <!-- measured: python import of tools/rebalance_troops.py compared against the on-disk skills block 2026-09-05 -->
+2. **The eight `<skill>` rows.** They are not free-hand numbers. They are the role table of [`tools/rebalance_troops.py`](../../tools/rebalance_troops.py) (`calculate_skills`, [troop-skill-balance.md](../features/troop-skill-balance.md)) for this troop's kit: tier 10, so N is 260, on Gondor's row. Bow 300 is the Ithilien ladder cell (rank 3: 260 + 10 x (7 - 3)); the carried sword is 0.9 of that, rounded down to 270; Athletics is 260 x 1.03 = 267.8, rounded to 270; the uncarried TwoHanded and Polearm are 0.5 x 260 = 130; Riding on foot, Crossbow and Throwing are 0.4 x 260 = 104, rounded to 105. The file matches the writer exactly, row for row. <!-- measured: rebalance_troops.calculate_skills for gondor_ithilien_ranger compared against the on-disk skills block 2026-11-15 -->
 3. **The eight `<EquipmentRoster>` blocks.** Read them as a column, not as eight outfits. Slot `Item0` holds a bow in all eight, `Item1` and `Item2` hold the same arrow in all eight, `Item3` holds the same sword in all eight, and Head, Body, Cape, Gloves and Leg are filled in all eight. That is a requirement, not a coincidence, and the "Gotchas" section says why.
 
 ## Recipes: Add / Modify / Delete
@@ -287,9 +287,9 @@ run it with `--apply`, and `--check` must then report "unchanged". One `Troop(..
 steps 2 to 5 below (the XML block, the skills from its role, the edge, both rosters), and step 6 only for
 the templates the generator's `party_templates()` lists. The workflow that worked follows the numbered list.
 
-1. **Pick the level, not the tier.** Stay on the `6 + 5n` grid (6, 11, 16, 21, 26, 31, 36, 41, 46, 51) so the troop lands cleanly in a tier and so `rebalance_troops.py` has a baseline row for it. An off-grid level is skipped by the formula entirely.
+1. **Pick the level, not the tier.** Stay on the `6 + 5n` grid (6, 11, 16, 21, 26, 31, 36, 41, 46, 51) so the troop lands cleanly in a tier. The skill formula keys on the engine tier, so an off-grid level takes its tier's row.
 2. **Write the entry** in `Main/_Module/ModuleData/troops/troops_<culture>.xml`. Copy the nearest existing rung of the same `default_group` and edit it. Keep the id convention `{culture_prefix}_{origin}_{role}` from [`.claude/rules/troops.md`](../../.claude/rules/troops.md) lines 55 to 62. Set `culture="Culture.<id>"`, `occupation="Soldier"`, a `race=` only for non-human lines (leave it off for humans), and one `<face_key_template value="BodyProperty.<id>"/>`.
-3. **Give it the eight-skill block.** Every TAOM troop carries the same eight rows: Athletics, Riding, OneHanded, TwoHanded, Polearm, Bow, Crossbow and Throwing. Take the numbers from `GROUP_BASELINES[<group>][<level>]` plus `CULTURAL_MODS[<culture>]` in `tools/rebalance_troops.py` rather than inventing them. **Match the curve to the weapon in Item0.** The engine maps a weapon class to a skill (`WeaponComponentData.GetRelevantSkillFromWeaponClass`): every polearm (spear, pike, poleaxe) to Polearm, a two-handed sword, axe or mace to TwoHanded, a one-handed blade, mace or shield to OneHanded. The AI's block and parry scale with the skill of the weapon in hand (`AgentStatCalculateModel.GetMeleeSkill`), and at spawn that is Item0 (`Equipment.GetInitialWeaponIndicesToEquip`). A troop that opens with a poleaxe or a pike therefore needs Polearm as its best melee skill: in a generator, role `spear`, not `twohand`. (The Evendim Warden shipped on `twohand` for one review round and fought its poleaxe at 220 against a 225 sword skill it could not use.)
+3. **Give it the eight-skill block.** Every TAOM troop carries the same eight rows: Athletics, Riding, OneHanded, TwoHanded, Polearm, Bow, Crossbow and Throwing. Do not invent the numbers: `python tools/rebalance_troops.py --apply` (with `--dry-run` first) writes the role table for the troop's kit, tier and culture ([troop-skill-balance.md](../features/troop-skill-balance.md)), and `tools/tests/test_troop_skill_curve.py` fails on any value it would not write. **Match the curve to the weapon in Item0.** The engine maps a weapon class to a skill (`WeaponComponentData.GetRelevantSkillFromWeaponClass`): every polearm (spear, pike, poleaxe) to Polearm, a two-handed sword, axe or mace to TwoHanded, a one-handed blade, mace or shield to OneHanded. The AI's block and parry scale with the skill of the weapon in hand (`AgentStatCalculateModel.GetMeleeSkill`), and at spawn that is Item0 (`Equipment.GetInitialWeaponIndicesToEquip`). A troop that opens with a poleaxe or a pike therefore needs Polearm as its best melee skill: in a generator, role `spear`, not `twohand`. (The Evendim Warden shipped on `twohand` for one review round and fought its poleaxe at 220 against a 225 sword skill it could not use.)
 4. **Attach the parent edge, and list who reads it first.** Add `<upgrade_target id="NPCCharacter.<new_id>"/>` to the rung below it. A rung with no incoming edge and no pool entry is fielded by AI lords and unobtainable by the player. An edge also puts the troop in play whatever the party templates say, because these read `CharacterObject.UpgradeTargets`: the engine's AI upgrader (`PartyUpgraderCampaignBehavior` lines 80 to 92 and 171 to 174, weighted by `DefaultPartyTroopUpgradeModel.GetUpgradeChanceForTroopUpgrade`), notables' volunteer growth below `MaxVolunteerTier` (6; `RecruitmentCampaignBehavior` line 250 and TAOM's copy `CastleNotableMaintainer` lines 168 to 172, which picks a target at random), garrison culture conversion (`GarrisonCultureSwapAdapter` line 323), field commission (`TroopUpgradeGraph`), the special-resource party screen patches and the faction screen's viewport (`FactionRoster.EliteInfantry` ranks by tier, then level, then the lowest id, so a new level 36 foot troop that sorts first takes the viewport: pin the faction in `FactionUI/faction_characters.json`). The Codex review of the Arnor change also named the vanilla tournament and arena fallbacks and Custom Battle's army composition; those were not re-read. **A second target on one troop splits the AI's lords.** With no preferred upgrade formation, the leader's hash gives one target weight 9999 and the other 1, so about half of those lords send every upgrade to the same target (with a preferred formation, targets that hold it weigh the same). Give a mid-tree troop one target; put a branch only at the top of a line, where both targets are end points of equal standing.
 5. **Write the rosters slot for slot.** If one battle set fills a slot, every battle set fills that slot with something of the same kind. Do not add a ninth roster that drops the arrows or the cape.
 6. **Add it to the party templates** in [`Main/_Module/ModuleData/taom_partyTemplates.xml`](../../Main/_Module/ModuleData/taom_partyTemplates.xml), to every template of that culture it belongs in, or lord armies will never field it as a spawn. Leaving it out does not keep it out of AI armies: an incoming edge (step 4) lets the AI upgrader reach it.
@@ -418,7 +418,7 @@ Every count below was produced on 2026-09-05 by the command beside it, run from 
 | 18,973 `<equipment>` rows naming 2,557 distinct item ids; 11 of the 12 slots are used and `Item4` is used 0 times | the same scan, over every `<equipment>` element |
 | 105 `<TroopWeight>` rows; 77 `<Troop>` rows in `troop_resource_costs.xml`; 383 `<MBPartyTemplate>` holding 3,295 `<PartyTemplateStack>` rows | ElementTree child counts on the three files |
 | `validate_all_troop_refs.py` sweeps every `troops_*.xml` in the folder (25 files) | `sed -n '76,100p' tools/validate_all_troop_refs.py` |
-| The worked example's eight skill values equal `GROUP_BASELINES['Ranged'][51]` plus `CULTURAL_MODS['gondor']`, row for row | a python import of `tools/rebalance_troops.py` compared against the on-disk block |
+| The worked example's eight skill values equal `rebalance_troops.calculate_skills` for its kit and ladder cell, row for row | a python import of `tools/rebalance_troops.py` compared against the on-disk block, 2026-11-15 |
 
 Three numbers are quoted from source files rather than counted. The wage table (T0 1, T1 2, T2 3, T3 5, T4 8, T5 12, T6 15, T7 18, T8 20, T9 25, T10 30, above that 57) and the recruit-cost brackets come from `Main/Features/TroopProgression/TroopCostService.cs` lines 9 to 60; `MaxCharacterTier => 10` from `Main/Features/TroopProgression/Models/TaomCharacterStatsModel.cs` line 23; and the 96 `INCONSISTENT_ARMOUR_SLOT` warnings across 10 cultures from [`docs/features/moduledata-validation.md`](../features/moduledata-validation.md) lines 320 to 326.
 

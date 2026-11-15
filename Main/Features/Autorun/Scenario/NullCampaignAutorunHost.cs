@@ -20,6 +20,8 @@ internal sealed class NullCampaignAutorunHost : ICampaignAutorunHost
     {
     }
 
+    public bool CloseEventWindow() => false;
+
     public bool StartNewCampaign() => false;
 
     public bool FinishVideo() => false;

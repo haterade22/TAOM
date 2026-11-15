@@ -1220,7 +1220,11 @@ shield) and a cell with no usable weapon is suppressed instead of emitted.
 ### A rank's kit is never weaker than the kit before it (#1290)
 
 **What the player holds.** The resolver hands every kit into the party inventory and takes none
-back, so at each rank the player holds every kit of his chain. `resolve_kit` in
+back, so while he serves the player holds every kit he drew. Three limits: he draws a kit by hand at
+the quartermaster and nothing equips it; the ledger keeps only the highest tier drawn, so a tier he
+skipped is never issued; and the ledger does not record the assignment, so a soldier reassigned at
+his rank gets no kit of the new assignment at that tier (`rank_chains` does not model that case).
+The only removal is the reclaim at an honourable discharge. `resolve_kit` in
 `tools/generate_enlistment_rosters.py` mirrors `EnlistmentRosterResolver.Resolve`: the requested
 culture, then the default kits; inside each, the requested assignment, then infantry; inside each,
 the requested tier down to recruit. `rank_chains` lists, for each kit, every distinct kit issued at the
@@ -1238,21 +1242,29 @@ reasons:
   category in any earlier kit (`WEAPON_TOLERANCE`, shared by the gate and the repair). Melee output is
   damage per second from `melee_catalogue`, as the melee ladder reads a troop; a launcher's is its
   damage.
-- **dropped:** an earlier kit holds a category the kit lacks, reported once per category against the
-  kit that holds the best of it. Weapons of two categories are never compared (a spear's thrust and a
-  sword's swing are not one scale), so the gate reports it and no tool repairs it. In a cavalry kit
-  the lance counts the same way: an earlier kit holds a couchable spear, and the kit holds spears but
-  none couchable. The couch counts only in a cavalry kit, because the engine's `polearm_couch` usage
-  set carries `requires_mount`. Judging every kit as mounted would change nothing in the shipped file
-  today (2026-11-15): the plan is the same, and the lance reason still falls on the same two cavalry
-  kits.
+- **dropped:** an earlier kit holds a category the kit lacks, listed once per category against the
+  kit that holds the best of it. It is information, not a regression: the player still holds the
+  earlier kit's weapon ("What the player holds" above). The validator raises no warning for it, no
+  tool repairs it, and the dry run of `--repair-ranks` lists it. Weapons of two categories are never
+  compared (a spear's thrust and a sword's swing are not one scale).
+
+**The lance in a cavalry kit.** When a cavalry kit is judged, a couchable spear is a lance, a
+category of its own (`kit_category`; the maintainer's list names "a spear that lances" beside "spear
+and shield"). A rider's lance is worth its couch, so its thrust is held against earlier lances and
+not against a plain spear's. On foot nobody can couch (the engine's `polearm_couch` usage set carries
+`requires_mount`), so in every other kit the same item is a spear. The category assumes that a cavalry
+enlistee brings his own horse: no kit holds a Horse slot and the service promises none
+(`EnlistmentAssignmentDialogBehavior`), so on foot the lance is only a weaker spear, and the player
+still holds the earlier kit's spear. Until 2026-11-15 the lance was a
+spear in every kit, with the couch as a side rule, and a dropped category was a warning; both changed
+on the session's call under the maintainer's word to act on its recommendation.
 
 The categories are the maintainer's
 ([melee-damage-model.md](./melee-damage-model.md#a-troop-keeps-its-weapon-category)): one handed, two
-handed sword, two handed axe or mace, spear, swinging polearm, pike, bow and crossbow. A bastard sword
+handed sword, two handed axe or mace, spear, lance (cavalry kits only, above), swinging polearm, pike,
+bow and crossbow. A bastard sword
 (primary usage `OneHandedBastardSword`, such as `wm_gondor_lamedon_1h_sword_a` in the Umbar infantry and
-support soldier kits) is one handed, whatever its two handed alternate. A couchable lance is a spear,
-and its couch is the constraint above. A longbow is a bow; its `long_bow` usage set carries
+support soldier kits) is one handed, whatever its two handed alternate. A longbow is a bow; its `long_bow` usage set carries
 `requires_no_mount`, which binds the repair, not the category. A polearm with a thrown usage (a pilum
 such as `imperial_throwing_spear_1_t4`, `TwoHandedPolearm_Thrown`) is a thrown weapon, and thrown
 weapons, shields and ammunition are not compared.
@@ -1284,8 +1296,8 @@ it. Each planned slot prints where it came from, and a `From:` line totals them.
   a kit with a Horse slot, and may go into any other. The rule reads the kit, not the assignment, so a
   cavalry kit without a Horse slot may take one too; no repair does so today. The kit file holds no
   Horse slot (`grep -c 'slot="Horse"'` gives 0 on 2026-11-15), so every kit is a foot soldier's here.
-- In a cavalry kit a couchable spear is replaced only by a couchable one; that constraint is keyed on
-  the assignment. A repair never puts one weapon id in two slots.
+- In a cavalry kit a lance is replaced only by a lance and a plain spear only by a plain spear (the
+  category above, keyed on the assignment). A repair never puts one weapon id in two slots.
 - A lower armour total is held against the earlier kit with the highest total, and takes pieces for
   the slots with the largest deficit first: that kit's piece when the culture's troops wear it, else
   the culture's piece that matches it most closely from above, else that kit's piece when it is the
@@ -1345,22 +1357,24 @@ id (the Gondor cavalry sergeant kit), so the row now maps to `sk_ar_art_helmet_i
 up, the strongest helmet of the same Arnor infantry line. Against 12b21d5e3 the kit file now differs in
 113 slots: 68 in generator kits, 2 in default kits and 43 in promoted kits.
 
-**Left after the repair**, `python tools/validate_moduledata.py --code ENLISTMENT_KIT_RANK_REGRESSION`
-printing 82 kits on 2026-11-15, 70 of the generator's and 12 promoted, with no armour reason:
+**Left after the repair.** Under the rule of the day, `python tools/validate_moduledata.py --code
+ENLISTMENT_KIT_RANK_REGRESSION` printed 82 kits on 2026-11-15 with no armour reason: two weapon reasons
+and 87 dropped reasons. Both kinds were settled the same day by the two rule changes above, and the
+command now prints `PASS: no validation issues found`:
 
-- The only weapon pair left, two reasons on the Rohan cavalry sergeant: `enlist_vlandia_cavalry_sergeant` carries the lance
-  `wm_rohan_ws_spear_a03` (28.9, couchable) against the `eastern_spear_4_t4` (38.0, no couch) of the
-  recruit, soldier and veteran kits, and its South Rhovanion clone does the same. The repair keeps the
-  lance, and no Rohan couchable spear reaches 36.9: the best is `wm_rohan_spear_a` at 31.9. Options:
-  put `eastern_spear_4_t4` in the sergeant kit beside the lance, in the slot of the javelin
-  `eastern_javelin_3_t4` or the shield; give the sergeant a couchable spear from outside Rohan's troop
-  gear (the vanilla `vlandia_lance_2_t4` at 37.8 holds); restat a Rohan lance in the Armory; or
-  accept a lance that trades thrust for the couch.
-- 87 dropped reasons, which the dry run of `--repair-ranks` lists under "Dropped categories": 85
-  dropped categories in 80 kits and 2 lances, the Rhun and Khand cavalry veterans
-  (`enlist_khuzait_cavalry_veteran`, `enlist_battania_cavalry_veteran`), which carry
-  `eastern_spear_4_t4` after the soldier kit's `khuzait_lance_1_t3`. Each is a decision per chain: carry
-  the category up, or accept the change. Every one of the 82 kits carries at least one.
+- The weapon pair was the Rohan cavalry sergeant and its South Rhovanion clone:
+  `enlist_vlandia_cavalry_sergeant` carries the lance `wm_rohan_ws_spear_a03` (28.9, couchable) after
+  the `eastern_spear_4_t4` (38.0, no couch) of the recruit, soldier and veteran kits. A stronger Rohan
+  lance in the Armory was the first idea and does not work: 11 troops carry that lance, the lowest at
+  level 11, and a weapon is priced at the tier of its lowest wearer (section 4 of
+  `python tools/analyze_melee_ladder.py --stdout`), so a lance strong enough for a sergeant would
+  break the limit of its tier 2 wearers. The lance is the sergeant's new
+  weapon and the player still holds the spear, so in a cavalry kit the lance is its own category.
+- The dropped categories are information. The dry run of `--repair-ranks` lists 94 on 2026-11-15
+  ("Dropped categories, for information"), eight of them a lance: for example the Rhun and Khand
+  cavalry veterans (`enlist_khuzait_cavalry_veteran`, `enlist_battania_cavalry_veteran`) carry
+  `eastern_spear_4_t4` after the soldier kit's `khuzait_lance_1_t3`. To carry a category up a chain,
+  edit the kit by hand; nothing requires it.
 - The Arnor cape row: `sk_gd_ano_cape_a` (23) maps to `sk_ar_art_cape_a` (2) in the Arthedain and
   Rhudaur infantry and support recruit kits. It raises no finding, because a recruit kit has no kit
   before it, and no Arnor cape is stronger (`sk_ar_art_cape_b` is also 2). Options: map it to an Arnor

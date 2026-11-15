@@ -1783,9 +1783,9 @@ class Validator:
                 if all(f.cross_kind for f in found) and main == tp.THROWING:
                     listed = "in" if entry_id in THROWN_PRIMARY_TROOP_IDS else "not in"
                     head = (f"thrower below its melee skill: {head} Throwing keeps its value on disk; "
-                            f"the troop is {listed} THROWN_PRIMARY_TROOP_IDS, so the formula gives "
-                            f"Throwing {'the Ranged Bow curve' if listed == 'in' else 'its group curve'} "
-                            f"(the number is in rebalance_troops.py --fix-purpose). Decide the value (#343)")
+                            f"the troop is {listed} THROWN_PRIMARY_TROOP_IDS. A javelin in Item0 is the "
+                            f"main weapon, so the role table gives Throwing the main number, at the top "
+                            f"of its weapons (rebalance_troops.py --apply). Decide the value (#343)")
                 elif all(f.cross_kind for f in found):
                     head = (f"melee skill above the launcher's ladder cell: {head} Values never cross "
                             f"from melee to launcher, so no reorder fixes this; the launcher's value is "
@@ -1900,7 +1900,7 @@ class Validator:
     # A skill the target never declares reads as 0 in the engine (CharacterObject.GetSkillValue),
     # so an omitted <skill> element is a drop, not a "leave it alone". 34 troops shipped that way.
     #
-    # The one exemption is militia to militia. Militia are pinned to the level-21 baseline whatever
+    # The one exemption is militia to militia. Militia take the tier 4 row of the role table whatever
     # their real level so village defence stays costly, which makes a militia promotion flat by
     # design. The exemption is keyed off what a culture BINDS, never off the word "militia" in a
     # name -- name matching is what produced the bug.
@@ -2577,9 +2577,13 @@ class Validator:
             ))
         promoted = ger.promoter_owned_cultures(text)
         for high, earlier, reasons in ger.enlistment_kit_findings(kits, stats, weapon_info):
+            # A dropped category is no regression: the player keeps every earlier kit. The repair
+            # tool's dry run lists them; only a lower armour total or a weaker weapon is a finding.
+            reasons = ger.regression_reasons(reasons)
+            if not reasons:
+                continue
             culture = high[0]
             rid = "enlist_" + "_".join(high)
-            repairable = any(kind != "dropped" for kind, _text in reasons)
             if culture in promoted:
                 repair = self._promoted_repair(ger, kits, stats, weapon_info, earlier, high)
             elif culture == "default":
@@ -2588,18 +2592,13 @@ class Validator:
             else:
                 repair = (f"python tools/generate_enlistment_rosters.py --repair-ranks --culture {culture} plans "
                           "the change from the culture's troop gear, or says it found none; read it, then add --apply")
-            note = []
-            if repairable:
-                note.append(f"Repair: {repair}.")
-            if any(kind == "dropped" for kind, _text in reasons):
-                note.append("A dropped category is never repaired by a tool: decide whether this kit should carry it.")
             at = text.find(f'id="{rid}"')
             issues.append(Issue(
                 severity=ENLISTMENT_KIT_RANK_SEVERITY, code=ENLISTMENT_KIT_RANK_CODE, file=self._rel(path),
                 line=text.count("\n", 0, at) + 1 if at >= 0 else 0, entry_id=rid,
                 message=("the kit is weaker than what the player drew before it ("
                          + ", ".join("enlist_" + "_".join(c) for c in earlier) + "): "
-                         + "; ".join(t for _kind, t in reasons) + ". " + " ".join(note)),
+                         + "; ".join(t for _kind, t in reasons) + f". Repair: {repair}."),
             ))
         return issues
 
@@ -2614,8 +2613,9 @@ class Validator:
                     f"the source with --repair-ranks --culture <source> --apply, then run {rerun}")
         pairs = [((src,) + c[1:] if c[0] == culture else c, c) for c in list(earlier) + [high]]
         source_clean = (all(s in kits for s, _c in pairs)
-                        and not ger.rank_regressions([(s, kits[s]) for s, _c in pairs[:-1]], kits[pairs[-1][0]],
-                                                     stats, weapon_info, mounted=high[1] == "cavalry"))
+                        and not ger.regression_reasons(ger.rank_regressions(
+                            [(s, kits[s]) for s, _c in pairs[:-1]], kits[pairs[-1][0]],
+                            stats, weapon_info, mounted=high[1] == "cavalry")))
         if mapped and source_clean:
             changed = [f"{slot} {kits[s][slot]} -> {kits[c][slot]}"
                        for s, c in pairs
@@ -3236,6 +3236,35 @@ def build_item_class_registry(moduledata, game_modules) -> dict:
                 if skill:
                     classes[mid.group(1)] = skill
     return classes
+
+
+_ATTR_DIFFICULTY_RE = re.compile(r'\bdifficulty="(\d+)"')
+
+
+def build_mount_difficulty_registry(moduledata, game_modules) -> dict:
+    """Map horse item id -> its XML difficulty, over the item roots build_item_class_registry reads.
+    The engine mounts an agent only when Riding >= that difficulty (Agent.CheckSkillForMounting,
+    ItemObject.Difficulty), so the troop writer floors a rider's Riding at it."""
+    moduledata = Path(moduledata)
+    game_modules = Path(game_modules) if game_modules else None
+    item_roots = []
+    if game_modules:
+        for name in ("SandBoxCore", "SandBox", "Native", "StoryMode", "CustomBattle",
+                     "LOTRLOME_Armory", "ADOD_Beasts", "NavalDLC"):
+            item_roots.append(game_modules / name / "ModuleData")
+    item_roots.append(moduledata)
+    mounts = {}
+    for root in item_roots:
+        if not root.exists():
+            continue
+        for xml in root.rglob("*.xml"):
+            for m in _ITEM_OPEN_RE.finditer(_read_stripped(xml)):
+                tag = m.group(0)
+                mid, mtype = _ATTR_ID_RE.search(tag), _ATTR_TYPE_RE.search(tag)
+                if mid and mtype and mtype.group(1) == "Horse":
+                    diff = _ATTR_DIFFICULTY_RE.search(tag)
+                    mounts[mid.group(1)] = int(diff.group(1)) if diff else 0
+    return mounts
 
 
 # --------------------------------------------------------------------------- #

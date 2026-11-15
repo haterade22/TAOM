@@ -10,7 +10,8 @@ the run ends as a stall. The in-game LongDefeatAutorunDriver starts the run from
 agent, leaves it when the run ends or a limit trips, writes long_defeat_done.txt and quits.
 
 Exit 0 needs, in order: the done reason (final, or lost_* under --lose), the JSON report (final true and wavesCleared of at least N, not
-under --lose), no "spawn level WRONG" line, no [Check] fail line of this feature, a [BuildStamp] that starts with this tree's HEAD, a
+under --lose), no "spawn level WRONG" line, no [Check] fail line of this feature, a [BuildStamp] that is the checkout read once at launch before the game starts
+(tools/autorun_build.py stale_build: the sha is HEAD, no MISMATCH, the .dirty mark agrees with the tree, no uncommitted watched file is newer than the build; git that cannot answer at launch starts nothing), a
 pass line for every id in REQUIRED_CHECKS (a shorter list under --lose), both READ_BACK lines, as many wave pass lines as waves cleared
 (not under --lose), no CrashReport block, and a game that left by itself. The best run goes under the run folder, never to the player's
 own file.
@@ -44,14 +45,13 @@ import math
 import os
 import re
 import struct
-import subprocess
 import sys
 import xml.etree.ElementTree as ET
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
-import ingame_verdict as iv  # noqa: E402
+import autorun_build  # noqa: E402
 import run_fords_autorun as runner  # noqa: E402
 
 ENV_VAR = "TAOM_LONGDEFEAT_AUTORUN"
@@ -146,10 +146,10 @@ SHADER_DIALOG = re.compile(r"Shaders/Sources/pbr_terrain(_gbuffer)?\.rs$")
 SHADER_ERROR = "X4008"
 FORDS_HANDLE_DIALOGS = runner.handle_dialogs
 
-# Set by main() before the runner starts: the wave target the judge holds the report to, and the commit of this tree, which the log's
-# [BuildStamp] must carry (a stale deploy otherwise passes on the old build's lines).
+# Set by main() before the runner starts: the wave target the judge holds the report to, and the checkout read once at launch,
+# (HEAD sha, {path: mtime}), which the log's [BuildStamp] must match (a stale deploy otherwise passes on the old build's lines).
 target_waves = None
-tree_head = None
+checkout = None
 # The --speed the run was armed with, or None: the report's maxSpeed must equal it, or the arm key never took effect.
 expected_speed = None
 # The report fields the arm file fixed ({"seed": N, "startWave": N, "startRerolls": N, "startGold": N, "breakEngines": N}): each must come back equal, or the arm key never took effect.
@@ -1624,9 +1624,12 @@ def judge(done, report_json, log_text=None):
     failed = FAIL_LINE.search(log_text)
     if failed:
         return 1, "the log holds a failed check: " + failed.group(0)[:400]
-    build, problem = build_of(log_text)
+    if checkout is None:
+        return 1, f"reason={reason} but the checkout was not read at launch, so the build cannot be judged"
+    problem = autorun_build.stale_build(log_text, *checkout)
     if problem:
-        return 1, f"reason={reason} but {problem}"
+        return 1, f"reason={reason} but the game ran a build that is not this checkout: {problem}"
+    build = autorun_build.build_label(log_text)
     over = max([reported_missing] + [int(n) for n in OWNER_MISSING.findall(log_text)])
     if over > 0:
         return 1, f"owner_missing={over} (the report's poison.ownerMissing and the log's tokens, worst of them): a poison tick found its owner gone, so a kill could reach the engine with a stale hitter"
@@ -1706,32 +1709,6 @@ def judge(done, report_json, log_text=None):
 def waived_note(waived):
     """"; no sally point recorded, so sally and sally-return skipped" for the checks the no-sally-point skip stood in for, and "" when none was waived."""
     return f"; no sally point recorded, so {' and '.join(waived)} skipped" if waived else ""
-
-
-def build_of(log_text):
-    """(build label, problem). The log's [BuildStamp] must name this tree's HEAD; .dirty is allowed and shown, because a build from the
-    working tree is what a run under test is."""
-    stamp = next((s for s in (iv.parse_build_stamp(row) for row in log_text.splitlines() if "[BuildStamp]" in row) if s), None)
-    if stamp is None:
-        return None, "the log has no [BuildStamp] line with a git sha"
-    sha, dirty = stamp
-    label = sha[:9] + (".dirty" if dirty else "")
-    if not tree_head:
-        return label, "this tree's HEAD is unknown, so the build cannot be matched"
-    if not sha.startswith(tree_head):
-        return label, f"the log's build {label} is not this tree's HEAD {tree_head[:9]}: deploy this tree and run again"
-    return label, None
-
-
-def tree_head_sha():
-    """The commit of the tree this wrapper lives in, or None when git cannot say."""
-    try:
-        done = subprocess.run(["git", "-C", str(Path(__file__).resolve().parent.parent), "rev-parse", "HEAD"],
-                              capture_output=True, text=True, timeout=30)
-    except (OSError, subprocess.SubprocessError):
-        return None
-    head = done.stdout.strip()
-    return head if done.returncode == 0 and re.fullmatch(r"[0-9a-f]{40}", head) else None
 
 
 def handle_dialogs(pid, seen, say):
@@ -1870,7 +1847,7 @@ def show_results(done_text, log_copy, report_json, say):
 
 
 def main(argv=None):
-    global target_waves, tree_head, expected_speed, expected_report, posts_variant
+    global target_waves, checkout, expected_speed, expected_report, posts_variant
     parser = build_parser()
     known, rest = parser.parse_known_args(argv)
     apply_deep(known)
@@ -1886,9 +1863,9 @@ def main(argv=None):
     expected_speed = known.speed
     expected_report = armed_report_fields(known)
     run_counter = itertools.count()
-    tree_head = tree_head_sha()
-    if tree_head is None:
-        print("cannot read this tree's HEAD with git, so a run could not be matched to its build")
+    checkout, refusal = autorun_build.read_checkout_for_launch()
+    if refusal:
+        print(refusal)
         return 1
 
     def arm_text_for(out, args):

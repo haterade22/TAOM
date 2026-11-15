@@ -4,9 +4,10 @@
 tools/generate_arthedain_troops.py, generate_cardolan_troops.py, generate_rhudaur_troops.py and
 generate_eredluin_troops.py each hold one realm's DESIGN (its troops, party templates, militia and
 tavern mercenary) and bind the functions here to a Realm. Everything that is the same for all of
-them lives here: the skill curves, the Troop record and its XML, the upgrade skill clamp, the
-TAOM-wide militia rule, the tavern mercenary copy, the self-check, and the byte-faithful write of
-troops_<culture>.xml plus the realm's marker region in taom_partyTemplates.xml.
+them lives here: the skills (the role table of tools/rebalance_troops.py, read off each troop's kit
+and horse), the Troop record and its XML, the upgrade skill clamp, the tavern mercenary copy, the
+self-check, and the byte-faithful write of troops_<culture>.xml plus the realm's marker region in
+taom_partyTemplates.xml.
 
 Moved out of generate_arthedain_troops.py on 2026-10-23 when Cardolan and Rhudaur were added; the
 Arthedain output is byte-identical (its --check proves it). Ered Luin (2026-10-27) added the
@@ -22,6 +23,7 @@ from pathlib import Path
 from typing import Callable
 
 import ranged_ladder as rl
+import rebalance_troops as rb
 import troop_purpose as tp
 from _marker_region import replace_region  # noqa: E402
 
@@ -30,29 +32,13 @@ MD = ROOT / "Main" / "_Module" / "ModuleData"
 PARTY = MD / "taom_partyTemplates.xml"
 
 
-def _game_modules():
-    import rebalance_troops as rb  # the writer's own install path, so the two read one install
-    return rb.DEFAULT_GAME_MODULES
-
-
-GAME_MODULES = _game_modules()
+GAME_MODULES = rb.DEFAULT_GAME_MODULES   # the writer's own install path, so the two read one install
 
 SKILLS = ("Athletics", "Riding", "OneHanded", "TwoHanded", "Polearm", "Bow", "Crossbow", "Throwing")
 
-# Skill curves by level, calibrated a step under Gondor's per-level medians (troops_gondor.xml,
-# 2026-10-07) and a step over Dale's: good soldiers, few of them.
-ATH = {6: 38, 11: 52, 16: 80, 21: 95, 26: 105, 31: 120, 36: 140}
-PRIMARY = {6: 40, 11: 70, 16: 100, 21: 130, 26: 175, 31: 225, 36: 270}
-SECONDARY = {6: 30, 11: 55, 16: 80, 21: 105, 26: 140, 31: 180, 36: 220}
-LOW = {6: 10, 11: 15, 16: 20, 21: 25, 26: 30, 31: 35, 36: 40}
-RIDING = {16: 90, 21: 120, 26: 160, 31: 205, 36: 250}  # 16 and 36: Cardolan's riders and capstone
-
-# The culture's four militia slots follow the TAOM-wide militia rule (tools/rebalance_troops.py,
-# tools/tests/test_militia_elite_bonus.py): every militia slot takes the level-21 baseline whatever
-# its level, and the elite slot is the basic one plus MILITIA_ELITE_BONUS on every skill. The one
-# exception is a laddered archer's Bow, which is its own ladder cell (#617).
-MILITIA_BASELINE_LEVEL = 21
-MILITIA_ELITE_BONUS = 15  # rebalance_troops.MILITIA_ELITE_BONUS
+# The culture's four militia slots follow the TAOM-wide militia rule (rebalance_troops.calculate_skills,
+# tools/tests/test_militia_elite_bonus.py), read from the culture bindings as the writer reads them.
+MILITIA_ELITE_BONUS = rb.MILITIA_ELITE_BONUS
 
 CIVILIAN_SET = "battania_troop_civilian_template_t2"  # what every Gondor troop uses
 BODY = "fighter_gondor"
@@ -79,46 +65,6 @@ class Realm:
     @property
     def line(self) -> str:
         return self.ladder_line or self.culture
-
-
-@functools.lru_cache(maxsize=None)
-def bow_skill(line, level):
-    """The ladder cell for this level's engine tier: what rebalance_ranged_ladders.py writes too.
-    One cell per line and tier, whichever launcher class the troop carries."""
-    return rl.skill_cell(line, rl.engine_tier(level), rl.load_spec())
-
-
-def skills(realm, level, role):
-    """One skill block per role. Roles: spear, sword, twohand, ranged, crossbow, cavalry,
-    horsearcher (a mounted bowman: the ranged Bow cell and the cavalry Riding)."""
-    s = dict.fromkeys(SKILLS, 0)
-    s["Athletics"] = ATH[level]
-    s["Throwing"] = LOW[level]
-    s["Crossbow"] = LOW[level]
-    if role == "spear":
-        s.update(Polearm=PRIMARY[level], OneHanded=SECONDARY[level], TwoHanded=LOW[level] * 2,
-                 Bow=LOW[level])
-    elif role == "sword":
-        s.update(OneHanded=PRIMARY[level], Polearm=SECONDARY[level], TwoHanded=SECONDARY[level] // 2,
-                 Bow=LOW[level])
-    elif role == "twohand":
-        s.update(TwoHanded=PRIMARY[level], Polearm=SECONDARY[level], OneHanded=SECONDARY[level],
-                 Bow=LOW[level])
-    elif role == "ranged":
-        s.update(Bow=bow_skill(realm.line, level), OneHanded=SECONDARY[level], Polearm=LOW[level] * 2,
-                 TwoHanded=LOW[level] * 2)
-    elif role == "crossbow":
-        s.update(Crossbow=bow_skill(realm.line, level), OneHanded=SECONDARY[level], Polearm=LOW[level] * 2,
-                 TwoHanded=LOW[level] * 2, Bow=LOW[level])
-    elif role == "cavalry":
-        s.update(Riding=RIDING[level], Polearm=PRIMARY[level], OneHanded=SECONDARY[level],
-                 TwoHanded=LOW[level] * 2, Bow=LOW[level], Athletics=ATH[level] - 10)
-    elif role == "horsearcher":
-        s.update(Bow=bow_skill(realm.line, level), Riding=RIDING[level], OneHanded=SECONDARY[level],
-                 Polearm=LOW[level] * 2, TwoHanded=LOW[level] * 2, Athletics=ATH[level] - 10)
-    else:
-        raise ValueError(role)
-    return s
 
 
 def armour(realm, head, body, leg, gloves, cape):
@@ -178,18 +124,18 @@ class Troop:
     name: str
     level: int
     group: str
-    role: str
+    role: str               # the designer's label (spear, sword, ranged...); the kit decides the skills
     weapons: tuple          # (roster_a weapons, roster_b weapons): each a list of Item0.. ids
     gear: tuple             # (roster_a armour dict, roster_b armour dict)
     upgrades: list = field(default_factory=list)
     basic: bool = False
     horse: tuple = None     # (horse, harness), the same in both rosters
-    sk: dict = None         # set by clamp_skills(); the curve value before that
+    sk: dict = None         # set by clamp_skills()
     occupation: str = "Soldier"
     realm: Realm = None     # set by the realm's build(); the realm that writes this troop
 
     def xml(self, nl):
-        sk = self.sk or skills(self.realm, self.level, self.role)
+        sk = self.sk
         lines = [
             "  <NPCCharacter",
             f'      id="{self.id}"',
@@ -252,16 +198,6 @@ def external_floors(realm, troop_ids):
     return floors
 
 
-def militia_step(realm, by_id):
-    for basic_id, vet_id in realm.militia.items():
-        basic, vet = by_id[basic_id], by_id[vet_id]
-        basic.sk = skills(realm, MILITIA_BASELINE_LEVEL, basic.role)
-        vet.sk = {k: v + MILITIA_ELITE_BONUS for k, v in basic.sk.items()}
-        if basic.role == "ranged":
-            basic.sk["Bow"] = bow_skill(realm.line, basic.level)
-            vet.sk["Bow"] = bow_skill(realm.line, vet.level)
-
-
 @functools.lru_cache(maxsize=1)
 def item_classes():
     """Item id -> weapon class from the install's item files (the realms' weapons are all Armory or
@@ -272,37 +208,51 @@ def item_classes():
     return ts.build_item_class_registry(MD, GAME_MODULES)
 
 
+@functools.lru_cache(maxsize=1)
+def mount_difficulties():
+    """Horse item id -> difficulty, from the same item files (a rider's Riding floor)."""
+    import taom_schema as ts
+    item_classes()   # the same install check
+    return ts.build_mount_difficulty_registry(MD, GAME_MODULES)
+
+
 def troop_kit(t):
-    """(troop_purpose.Kit, pinned ladder classes) for a troop's two rosters. The pinned set is the
-    one tools/rebalance_troops.py pins (ladder_cells), so a generated troop is a fixed point of
+    """(troop_purpose.Kit, {Bow|Crossbow: ladder cell}) for a troop's two rosters. The cells are
+    the ones tools/rebalance_troops.py pins (ladder_cells), so a generated troop is a fixed point of
     --fix-purpose: that run plans no change to it."""
-    import rebalance_troops as rb
     classes = item_classes()
     unknown = sorted({w for r in t.weapons for w in r if w not in classes})
     if unknown:
         raise RuntimeError(f"{t.id}: no item file in the install classes {', '.join(unknown)}")
     sets = [{f"Item{i}": classes[w] for i, w in enumerate(r)} for r in t.weapons]
     carried = {c for s in sets for c in s.values()}
-    return tp.kit_of(sets), set(rb.ladder_cells(t.id, t.realm.culture, t.level, carried))
+    return tp.kit_of(sets), rb.ladder_cells(t.id, t.realm.culture, t.level, carried)
+
+
+def role_skills(t):
+    """The role table for a generated troop, as rebalance_troops.py --apply computes it from the
+    file: its kit, its ladder cells, and its horse."""
+    kit, cells = troop_kit(t)
+    mounted = bool(t.horse) or t.group in ("Cavalry", "HorseArcher")
+    difficulty = mount_difficulties().get(t.horse[0], 0) if t.horse else 0
+    return rb.calculate_skills(rb.detect_culture(t.id, t.realm.culture), t.level, t.id, kit,
+                               ladder=cells, mounted=mounted, mount_difficulty=difficulty)
 
 
 def clamp_skills(realm, troops):
     """An upgrade never lowers a skill (UPGRADE_SKILL_REGRESSION), and the kit decides which skills
-    are highest (#343, tools/troop_purpose.py). The role curve is reordered to the kit first (and
-    alternative weapons tied); then the clamp, in level order (every edge raises its level), and
-    the purpose raise repeat until neither moves a value. This is the generator's own loop, not
-    rebalance_troops.settle_purpose, and it starts from the role curve, not from disk; its output
-    is a fixed point of --fix-purpose, so a --check after that run reports no drift."""
+    are highest (#343, tools/troop_purpose.py). The role table is reordered to the kit first (and
+    alternative weapons tied, both inside rebalance_troops.calculate_skills); then the clamp, in
+    level order (every edge raises its level), and the purpose raise repeat until neither moves a
+    value. This is the generator's own loop, not rebalance_troops.settle_purpose, and it starts
+    from the role table, not from disk; its output is a fixed point of --fix-purpose, so a --check
+    after that run reports no drift."""
     by_id = {t.id: t for t in troops}
     for t in troops:
         t.realm = t.realm or realm
-        t.sk = skills(realm, t.level, t.role)
+        t.sk = role_skills(t)
     floors = external_floors(realm, set(by_id))
-    militia_step(realm, by_id)
     kits = {t.id: troop_kit(t) for t in troops}
-    for t in troops:
-        kit, pinned = kits[t.id]
-        t.sk = tp.tie_raise(tp.purpose_skills(t.sk, kit, pinned=pinned), kit, pinned=pinned)
     for _ in range(50):
         before = {t.id: dict(t.sk) for t in troops}
         for tid, floor in floors.items():

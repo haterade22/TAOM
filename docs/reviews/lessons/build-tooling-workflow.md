@@ -5138,3 +5138,9 @@ The Kit's sprite generation re-saved all 13 GUI `_tex.tpac` files. I copied back
 - **Why missed:** I chose the files from what their sources should change, not from a diff of the output folders; no gate compares the repo's GauntletUI packages with the install's.
 - **Prevent:** after any Kit generation, run its sync tool (`sync_sprite_bake.ps1 -WhatIf`, then for real) and diff the output folders; a doc for a workflow that ends in a generator names that tool in its own steps.
 - **Source:** [rca-banner-sprite-regen-2026-11-14.md](../rca-banner-sprite-regen-2026-11-14.md), finding 1.
+
+### A launcher that reads HEAD once at launch also names that build in its PASS (#1075, 2026-11-15)
+`run_scenario.py` compared the build stamp with HEAD at judge time, so a commit during the run failed a good run. After the fix to read HEAD at launch, its PASS still named no build, so a later reader could quote it for another commit. An unknown HEAD failed only after the whole game had run.
+- **Why missed:** the wrapper copied the sibling's stamp check but not its timing (`run_long_defeat.py` reads HEAD once in `main`) or its report text. This repeats "An unattended wrapper binds its PASS to the build under test".
+- **Prevent:** when you copy a check from a sibling launcher, copy where it reads its reference, what it prints on PASS and when it refuses. Test each one: a commit during the run, a PASS text with the sha, a refusal before launch.
+- **Source:** [rca-scenario-event-window-2026-11-15.md](../rca-scenario-event-window-2026-11-15.md), findings 3, 4 and 6.
