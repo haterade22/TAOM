@@ -163,8 +163,8 @@ def pick_next(source: Piece, pieces: Iterable[Piece]) -> Optional[str]:
     # on one is skipped (Codex F1 in the Ered Luin review: its first troop tree had classed two Iron
     # Hills and Erebor capes heavy). A trade, more on one value and less on another, stays the artist's
     # design. The elite-to-lord forge path is exempt because it buys the lord look, even where the lord
-    # piece has less armour than its elite source (some lose more than 20 points; an open decision in
-    # docs/features/ered-luin.md "Known gaps"). With either side's values unknown, the class and id
+    # piece has less armour than its elite source (24 links lose 1 to 3 points after the 2026-11-14
+    # restat; an open decision in docs/features/ered-luin.md "Known gaps"). With either side's values unknown, the class and id
     # rule alone decides, as before.
     pool = [p for p in pieces if p.item_id != source.item_id and p.slot == source.slot and p.cls in targets
             and (p.cls == 'lord' or not _dominated(p.armour, source.armour))]

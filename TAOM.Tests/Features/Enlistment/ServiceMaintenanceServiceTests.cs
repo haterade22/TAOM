@@ -1026,4 +1026,90 @@ public class ServiceMaintenanceServiceTests
 
         _reconciler.DidNotReceive().ReconcileNow(Arg.Any<double>(), Arg.Any<string>());
     }
+
+    // ---- The player's own walk-out ends the pass at once (tester log, 14 Nov 2026) ----------------
+    // Vanilla's Leave stops time, TickEvent is silent at dt 0, and a click from the gate re-entered
+    // the town before the pump's revoke ran, carrying the pass back inside.
+
+    [TestMethod]
+    public void OnPlayerLeftSettlement_OnAPass_EndsItAtOnce()
+    {
+        MakeEnlisted();
+        _store.Record.OnTownLeave = true;
+
+        _pump.OnPlayerLeftSettlement();
+
+        Assert.IsFalse(_store.Record.OnTownLeave);
+        _encounter.DidNotReceive().Finish(Arg.Any<bool>());   // vanilla's Leave finishes it itself
+    }
+
+    [TestMethod]
+    public void OnPlayerLeftSettlement_ThenReEnteredBeforeThePump_ThePassStaysEnded()
+    {
+        MakeEnlisted();
+        _store.Record.OnTownLeave = true;
+        _pump.OnPlayerLeftSettlement();
+
+        Presence(parked: false, encounter: true, settlementId: "town_ES1");   // clicked back in
+        Encounter();                                                          // the new entry's encounter
+        PumpExpensive();
+
+        Assert.IsFalse(_store.Record.OnTownLeave);
+        _encounter.DidNotReceive().Finish(Arg.Any<bool>());
+        _reconciler.DidNotReceive().ReconcileNow(Arg.Any<double>(), Arg.Any<string>());
+    }
+
+    [TestMethod]
+    public void OnPlayerLeftSettlement_StillOutsideAtThePump_FinishesTheRevoke()
+    {
+        MakeEnlisted();
+        _store.Record.OnTownLeave = true;
+        _pump.OnPlayerLeftSettlement();
+
+        Presence(parked: false, settlementId: null);
+        Encounter();   // a settlement-shaped encounter still open
+        PumpExpensive(nowHours: 48.0);
+
+        _encounter.Received(1).Finish(false);
+        _reconciler.Received(1).ReconcileNow(2.0, Arg.Any<string>());
+    }
+
+    [TestMethod]
+    public void OnPlayerLeftSettlement_NoPass_ChangesNothing()
+    {
+        MakeEnlisted();
+        _pump.OnPlayerLeftSettlement();
+
+        Presence(parked: false, settlementId: null);
+        Encounter();
+        PumpExpensive();
+
+        _encounter.DidNotReceive().Finish(Arg.Any<bool>());
+        _reconciler.DidNotReceive().ReconcileNow(Arg.Any<double>(), Arg.Any<string>());
+    }
+
+    [TestMethod]
+    public void OnPlayerLeftSettlement_NotEnlisted_ChangesNothing()
+    {
+        _store.Record.OnTownLeave = true;
+
+        _pump.OnPlayerLeftSettlement();
+
+        Assert.IsTrue(_store.Record.OnTownLeave);
+    }
+
+    [TestMethod]
+    public void ResetSessionCaches_DropsAWalkOutWaitingForThePump()
+    {
+        MakeEnlisted();
+        _store.Record.OnTownLeave = true;
+        _pump.OnPlayerLeftSettlement();
+        _pump.ResetSessionCaches();
+
+        Presence(parked: false, settlementId: null);
+        Encounter();
+        PumpExpensive();
+
+        _encounter.DidNotReceive().Finish(Arg.Any<bool>());
+    }
 }

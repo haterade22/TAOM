@@ -10,39 +10,39 @@
   <Item id="boromir_cloak" class="named" />
   <Item id="boromir_jerkin" class="named" />
   <Item id="cts_cts_rohan_royal_guard_helmet_tail" class="heavy" next="cts_rohan_helmet_captain" />
-  <Item id="cts_roha_cape1" class="medium" next="cts_rohan_royal_guard_shoulder_armor" />
+  <Item id="cts_roha_cape1" class="medium" next="roh_nbl_shldr_s" />
   <Item id="cts_rohan_armguard1" class="light" next="cts_rohan_armguard2" />
   <Item id="cts_rohan_armguard2" class="medium" next="cts_rohan_armguard3" />
   <Item id="cts_rohan_armguard3" class="heavy" next="cts_rohan_royal_guard_gloves" />
   <Item id="cts_rohan_armguard4" class="light" next="cts_rohan_armguard2" />
   <Item id="cts_rohan_armor1" class="heavy" next="cts_rohan_armor_captain" />
-  <Item id="cts_rohan_armor11" class="medium" next="cts_rohan_armor111" />
+  <Item id="cts_rohan_armor11" class="heavy" next="cts_rohan_armor_captain" />
   <Item id="cts_rohan_armor111" class="heavy" next="cts_rohan_armor_captain" />
   <Item id="cts_rohan_armor1111" class="heavy" next="cts_rohan_armor_captain" />
   <Item id="cts_rohan_armor2" class="heavy" next="cts_rohan_armor_captain" />
   <Item id="cts_rohan_armor22" class="heavy" next="cts_rohan_armor_captain" />
   <Item id="cts_rohan_armor222" class="heavy" next="cts_rohan_armor_captain" />
   <Item id="cts_rohan_armor2222" class="heavy" next="cts_rohan_armor_captain" />
-  <Item id="cts_rohan_armor3" class="medium" next="cts_rohan_armor3333" />
-  <Item id="cts_rohan_armor333" class="medium" next="cts_rohan_armor3333" />
+  <Item id="cts_rohan_armor3" class="medium" next="cts_rohan_armor333" />
+  <Item id="cts_rohan_armor333" class="heavy" next="cts_rohan_armor_captain" />
   <Item id="cts_rohan_armor3333" class="heavy" next="cts_rohan_armor_captain" />
-  <Item id="cts_rohan_armor4" class="medium" next="cts_rohan_armor1" />
-  <Item id="cts_rohan_armor44" class="light" next="cts_rohan_armor444" />
-  <Item id="cts_rohan_armor444" class="medium" next="cts_rohan_armor1" />
-  <Item id="cts_rohan_armor4444" class="medium" next="cts_rohan_armor1" />
+  <Item id="cts_rohan_armor4" class="medium" next="cts_rohan_armor44" />
+  <Item id="cts_rohan_armor44" class="heavy" next="cts_rohan_armor_captain" />
+  <Item id="cts_rohan_armor444" class="medium" next="cts_rohan_armor44" />
+  <Item id="cts_rohan_armor4444" class="medium" next="cts_rohan_armor44" />
   <Item id="cts_rohan_armor_captain" class="elite" />
   <Item id="cts_rohan_armor_captain1" class="elite" />
   <Item id="cts_rohan_boots1" class="medium" next="cts_rohan_captain_boots" />
   <Item id="cts_rohan_boots3" class="light" next="cts_rohan_boots1" />
   <Item id="cts_rohan_boots4" class="light" next="cts_rohan_boots1" />
-  <Item id="cts_rohan_cape2" class="medium" next="cts_rohan_royal_guard_shoulder_armor" />
+  <Item id="cts_rohan_cape2" class="medium" next="roh_nbl_shldr_s" />
   <Item id="cts_rohan_cape3" class="light" next="cts_rohan_cape2" />
-  <Item id="cts_rohan_cape4" class="medium" next="cts_rohan_royal_guard_shoulder_armor" />
+  <Item id="cts_rohan_cape4" class="medium" next="roh_nbl_shldr_s" />
   <Item id="cts_rohan_captain_boots" class="heavy" next="cts_rohan_captain_boots1" />
   <Item id="cts_rohan_captain_boots1" class="elite" />
   <Item id="cts_rohan_captain_bracer" class="medium" next="cts_rohan_armguard3" />
   <Item id="cts_rohan_captain_bracers1" class="medium" next="cts_rohan_armguard3" />
-  <Item id="cts_rohan_captain_shoulder" class="medium" next="cts_rohan_royal_guard_shoulder_armor" />
+  <Item id="cts_rohan_captain_shoulder" class="elite" />
   <Item id="cts_rohan_helmet1" class="light" next="cts_rohan_helmet1c" />
   <Item id="cts_rohan_helmet1a" class="light" next="cts_rohan_helmet1c" />
   <Item id="cts_rohan_helmet1b" class="light" next="cts_rohan_helmet1c" />
@@ -62,7 +62,7 @@
   <Item id="cts_rohan_royal_guard_boots" class="heavy" next="cts_rohan_captain_boots1" />
   <Item id="cts_rohan_royal_guard_gloves" class="elite" next="jor_lord_brcr_fgc3" />
   <Item id="cts_rohan_royal_guard_shoulder_armor" class="elite" />
-  <Item id="cts_rohan_shoulder_captain1" class="medium" next="cts_rohan_royal_guard_shoulder_armor" />
+  <Item id="cts_rohan_shoulder_captain1" class="elite" />
   <Item id="dunland_caerdh_boots_heavy_a" class="elite" />
   <Item id="dunland_caerdh_boots_heavy_b" class="elite" />
   <Item id="dunland_caerdh_boots_heavy_c" class="heavy" next="dunland_caerdh_boots_heavy_a" />
@@ -84,7 +84,7 @@
   <Item id="dunland_caerdh_bracer_medium_c" class="heavy" next="dunland_caerdh_bracer_heavy_c" />
   <Item id="dunland_caerdh_bracer_medium_d" class="heavy" next="dunland_caerdh_bracer_heavy_a" />
   <Item id="dunland_caerdh_cape_long_a" class="heavy" next="dunland_caerdh_pauldron_elite_a" />
-  <Item id="dunland_caerdh_cape_long_b" class="light" next="dunland_wulf_cape_long_a" />
+  <Item id="dunland_caerdh_cape_long_b" class="medium" next="dunland_caerdh_cape_long_a" />
   <Item id="dunland_caerdh_chainmail_elite_a" class="elite" next="dunland_caerdh_chainmail_lord_a" />
   <Item id="dunland_caerdh_chainmail_elite_b" class="elite" next="dunland_caerdh_chainmail_lord_b" />
   <Item id="dunland_caerdh_chainmail_elite_c" class="elite" next="dunland_caerdh_chainmail_lord_c" />
@@ -132,7 +132,7 @@
   <Item id="dunland_caerdh_pauldron_heavy_fur_b" class="heavy" next="dunland_caerdh_pauldron_elite_a" />
   <Item id="dunland_caerdh_pauldron_heavy_fur_c" class="elite" />
   <Item id="dunland_caerdh_pauldron_heavy_fur_d" class="elite" />
-  <Item id="dunland_caerdh_pauldron_light_a" class="light" next="dunland_wulf_cape_long_a" />
+  <Item id="dunland_caerdh_pauldron_light_a" class="light" next="dunland_caerdh_cape_long_b" />
   <Item id="dunland_caerdh_pauldron_light_b" class="heavy" next="dunland_caerdh_pauldron_elite_a" />
   <Item id="dunland_caerdh_pauldron_light_cape_a" class="heavy" next="dunland_caerdh_pauldron_elite_cape_a" />
   <Item id="dunland_wulf_boots_heavy_a" class="heavy" next="dunland_wulf_boots_heavy_c" />
@@ -190,13 +190,13 @@
   <Item id="dunland_wulf_helmet_medium_a" class="light" next="dunland_caerdh_helmet_heavy_e" />
   <Item id="dunland_wulf_helmet_medium_b" class="light" next="dunland_caerdh_helmet_heavy_e" />
   <Item id="dunland_wulf_pauldron_cape_a" class="elite" />
-  <Item id="dunland_wulf_pauldron_cape_b" class="light" next="dunland_wulf_cape_long_a" />
+  <Item id="dunland_wulf_pauldron_cape_b" class="elite" />
   <Item id="dunland_wulf_pauldron_cape_c" class="heavy" next="dunland_wulf_pauldron_cape_a" />
   <Item id="dunland_wulf_pauldron_cape_d" class="elite" />
-  <Item id="dunland_wulf_pauldron_cape_short_a" class="light" next="dunland_wulf_cape_long_a" />
-  <Item id="dunland_wulf_pauldron_cape_short_b" class="light" next="dunland_wulf_cape_long_a" />
-  <Item id="dunland_wulf_pauldron_cape_short_c" class="heavy" next="dunland_wulf_pauldron_cape_a" />
-  <Item id="dunland_wulf_pauldron_cape_short_d" class="heavy" next="dunland_wulf_pauldron_cape_a" />
+  <Item id="dunland_wulf_pauldron_cape_short_a" class="elite" />
+  <Item id="dunland_wulf_pauldron_cape_short_b" class="elite" />
+  <Item id="dunland_wulf_pauldron_cape_short_c" class="heavy" next="dunland_wulf_pauldron_cape_short_a" />
+  <Item id="dunland_wulf_pauldron_cape_short_d" class="heavy" next="dunland_wulf_pauldron_cape_short_a" />
   <Item id="dunland_wulf_scalemail_elite_a" class="elite" next="dunland_wulf_scalemail_lord_a" />
   <Item id="dunland_wulf_scalemail_elite_b" class="elite" next="dunland_wulf_scalemail_lord_b" />
   <Item id="dunland_wulf_scalemail_elite_c" class="elite" next="dunland_wulf_scalemail_lord_c" />
@@ -245,24 +245,24 @@
   <Item id="glorfindel_gauntlets" class="named" />
   <Item id="glorfindel_helmet" class="named" />
   <Item id="glorfindel_pauldrons" class="named" />
-  <Item id="gondor_king_crown" class="light" next="sk_gd_har_inf_helmet_med_a" />
-  <Item id="gondor_noble_coat_a" class="light" next="ithilien_jerkin_long" />
-  <Item id="gondor_noble_coat_b" class="light" next="ithilien_jerkin_long" />
-  <Item id="gondor_noble_jerkin_a" class="light" next="ithilien_jerkin_long" />
-  <Item id="gondor_noble_jerkin_b" class="light" next="ithilien_jerkin_long" />
+  <Item id="gondor_king_crown" class="medium" next="sk_gd_anf_cav_helmet_heavy_a" />
+  <Item id="gondor_noble_coat_a" class="medium" next="ithilien_jerkin_long" />
+  <Item id="gondor_noble_coat_b" class="medium" next="ithilien_jerkin_long" />
+  <Item id="gondor_noble_jerkin_a" class="light" next="gondor_noble_coat_a" />
+  <Item id="gondor_noble_jerkin_b" class="light" next="gondor_noble_coat_a" />
   <Item id="ithilien_boots" class="medium" next="ithilien_boots_heavy" />
-  <Item id="ithilien_boots_heavy" class="heavy" next="sk_gd_ano_grvs_noble_elite_a" />
-  <Item id="ithilien_bracers" class="light" next="sk_gd_ano_bracer_inf_med_a" />
-  <Item id="ithilien_cloak" class="medium" next="sk_gd_ano_cape_b" />
-  <Item id="ithilien_cloak_var" class="medium" next="sk_gd_ano_cape_b" />
-  <Item id="ithilien_hood" class="light" next="sk_gd_har_inf_helmet_med_a" />
-  <Item id="ithilien_hood_masked" class="light" next="sk_gd_har_inf_helmet_med_a" />
-  <Item id="ithilien_hood_masked_var" class="light" next="sk_gd_har_inf_helmet_med_a" />
-  <Item id="ithilien_hood_var" class="light" next="sk_gd_har_inf_helmet_med_a" />
-  <Item id="ithilien_jerkin_long" class="medium" next="sk_gd_anf_inf_chest_heavy_a" />
-  <Item id="ithilien_jerkin_long_var" class="light" next="ithilien_jerkin_long" />
-  <Item id="ithilien_jerkin_short" class="light" next="ithilien_jerkin_long" />
-  <Item id="ithilien_jerkin_short_var" class="light" next="ithilien_jerkin_long" />
+  <Item id="ithilien_boots_heavy" class="heavy" />
+  <Item id="ithilien_bracers" class="heavy" next="sk_gd_ano_bracer_noble_elite_a" />
+  <Item id="ithilien_cloak" class="elite" next="sk_gd_lam_pauld_cape_noble_lord_a" />
+  <Item id="ithilien_cloak_var" class="elite" next="sk_gd_lam_pauld_cape_noble_lord_a" />
+  <Item id="ithilien_hood" class="medium" next="sk_gd_anf_cav_helmet_heavy_a" />
+  <Item id="ithilien_hood_masked" class="medium" next="sk_gd_anf_cav_helmet_heavy_a" />
+  <Item id="ithilien_hood_masked_var" class="medium" next="sk_gd_anf_cav_helmet_heavy_a" />
+  <Item id="ithilien_hood_var" class="medium" next="sk_gd_anf_cav_helmet_heavy_a" />
+  <Item id="ithilien_jerkin_long" class="heavy" next="sk_gd_ano_chainmail_full_b" />
+  <Item id="ithilien_jerkin_long_var" class="heavy" next="sk_gd_ano_chainmail_full_b" />
+  <Item id="ithilien_jerkin_short" class="medium" next="ithilien_jerkin_long" />
+  <Item id="ithilien_jerkin_short_var" class="medium" next="ithilien_jerkin_long" />
   <Item id="jor_lord_brcr_fgc3" class="lord" />
   <Item id="khamul_body" class="named" />
   <Item id="khamul_boots" class="named" />
@@ -275,11 +275,11 @@
   <Item id="lotr_troll_armor" class="named" />
   <Item id="lotr_troll_bracers" class="named" />
   <Item id="lotr_troll_helmet" class="named" />
-  <Item id="m_northern_armor_a1" class="light" next="m_northern_armor_b1" />
-  <Item id="m_northern_armor_a3" class="light" next="m_northern_armor_b1" />
-  <Item id="m_northern_armor_b1" class="medium" />
-  <Item id="m_northern_armor_b3" class="medium" />
-  <Item id="m_northern_cape_a" class="light" next="sk_northern_pauldron_medium_a" />
+  <Item id="m_northern_armor_a1" class="medium" next="m_northern_armor_b1" />
+  <Item id="m_northern_armor_a3" class="medium" next="m_northern_armor_b1" />
+  <Item id="m_northern_armor_b1" class="heavy" />
+  <Item id="m_northern_armor_b3" class="heavy" />
+  <Item id="m_northern_cape_a" class="medium" />
   <Item id="mirkwood_body" class="light" next="mkwd_inf3_chest_bronze" />
   <Item id="mirkwood_boots" class="light" next="mkwd_inf3_greaves_bronze" />
   <Item id="mirkwood_gloves" class="elite" />
@@ -293,7 +293,7 @@
   <Item id="mkwd_inf1_t3_helmet_silver_hc" class="elite" />
   <Item id="mkwd_inf1_t4_helmet_gold_hc" class="elite" />
   <Item id="mkwd_inf1_t4_helmet_silver_hc" class="elite" />
-  <Item id="mkwd_inf2_t1_helmet_silver_hc" class="light" next="mkwd_inf2_t2_helmet_silver_hc" />
+  <Item id="mkwd_inf2_t1_helmet_silver_hc" class="medium" next="mirkwood_helmet" />
   <Item id="mkwd_inf2_t2_helmet_silver_hc" class="medium" next="mirkwood_helmet" />
   <Item id="mkwd_inf2_t3_helmet_silver_hc" class="elite" />
   <Item id="mkwd_inf2_t4_helmet_silver_hc" class="elite" />
@@ -306,8 +306,8 @@
   <Item id="mkwd_inf3_pauldrons" class="elite" />
   <Item id="mkwd_inf3_pauldrons_bronze" class="medium" next="mkwd_inf3_pauldrons_silver" />
   <Item id="mkwd_inf3_pauldrons_silver" class="elite" />
-  <Item id="mkwd_inf3_t1_helmet_gold_hc" class="light" next="mkwd_inf1_t2_helmet_gold_hc" />
-  <Item id="mkwd_inf3_t2_helmet_gold_hc" class="light" next="mkwd_inf1_t2_helmet_gold_hc" />
+  <Item id="mkwd_inf3_t1_helmet_gold_hc" class="medium" next="mirkwood_helmet" />
+  <Item id="mkwd_inf3_t2_helmet_gold_hc" class="medium" next="mirkwood_helmet" />
   <Item id="mkwd_inf3_t3_helmet_gold_hc" class="elite" />
   <Item id="mkwd_inf3_t4_helmet_gold_hc" class="elite" />
   <Item id="mkwd_inf3_vambraces" class="light" next="mkwd_inf3_vambraces_bronze" />
@@ -325,14 +325,14 @@
   <Item id="nazgul_v1_gloves" class="named" />
   <Item id="nazgul_v1_helmet" class="named" />
   <Item id="nazgul_v1_pauldrons" class="named" />
-  <Item id="rivendell_body_gold_a" class="heavy" next="rivendell_torso_heavy_tier1" />
-  <Item id="rivendell_body_gold_b" class="medium" next="rivendell_body_gold_a" />
-  <Item id="rivendell_body_gold_c" class="medium" next="rivendell_body_gold_a" />
-  <Item id="rivendell_body_gold_d" class="heavy" next="rivendell_torso_heavy_tier1" />
-  <Item id="rivendell_body_silver_a" class="medium" next="rivendell_body_gold_a" />
-  <Item id="rivendell_body_silver_b" class="medium" next="rivendell_body_gold_a" />
-  <Item id="rivendell_body_silver_c" class="medium" next="rivendell_body_gold_a" />
-  <Item id="rivendell_body_silver_d" class="medium" next="rivendell_body_gold_a" />
+  <Item id="rivendell_body_gold_a" class="heavy" next="rivendell_body_gold_b" />
+  <Item id="rivendell_body_gold_b" class="elite" next="rivendell_torso_lord1" />
+  <Item id="rivendell_body_gold_c" class="elite" next="rivendell_torso_lord1" />
+  <Item id="rivendell_body_gold_d" class="heavy" next="rivendell_body_gold_b" />
+  <Item id="rivendell_body_silver_a" class="elite" next="rivendell_torso_lord1" />
+  <Item id="rivendell_body_silver_b" class="elite" next="rivendell_torso_lord1" />
+  <Item id="rivendell_body_silver_c" class="elite" next="rivendell_torso_lord1" />
+  <Item id="rivendell_body_silver_d" class="elite" next="rivendell_torso_lord1" />
   <Item id="rivendell_boots" class="light" next="rivendell_boots_greaves1" />
   <Item id="rivendell_boots_greaves1" class="medium" next="rivendell_boots_greaves1_silvergold" />
   <Item id="rivendell_boots_greaves1_silver" class="elite" />
@@ -349,14 +349,14 @@
   <Item id="rivendell_boots_leather1" class="light" next="rivendell_boots_greaves1" />
   <Item id="rivendell_boots_leather2" class="light" next="rivendell_boots_greaves1" />
   <Item id="rivendell_cape_a" class="elite" />
-  <Item id="rivendell_cape_b" class="light" next="rivendell_pauldron_tier1_cape" />
-  <Item id="rivendell_gloves_gold" class="heavy" next="rivendell_vambraces_1_silver" />
-  <Item id="rivendell_gloves_silver" class="heavy" next="rivendell_vambraces_1_silver" />
-  <Item id="rivendell_helmet_archer_tier1" class="light" next="rivendell_helmet_archer_tier1_silver" />
-  <Item id="rivendell_helmet_archer_tier1_silver" class="medium" next="rivendell_helmet_archer_tier2_silver" />
+  <Item id="rivendell_cape_b" class="heavy" next="rivendell_cape_a" />
+  <Item id="rivendell_gloves_gold" class="heavy" next="rivendell_gloves_silver" />
+  <Item id="rivendell_gloves_silver" class="elite" />
+  <Item id="rivendell_helmet_archer_tier1" class="light" next="rivendell_helmet_archer_tier2" />
+  <Item id="rivendell_helmet_archer_tier1_silver" class="heavy" next="rivendell_helmet_archer_tier1_silvergold" />
   <Item id="rivendell_helmet_archer_tier1_silvergold" class="elite" next="rivendell_helmet_lord_circlet" />
-  <Item id="rivendell_helmet_archer_tier2" class="medium" next="rivendell_helmet_archer_tier2_silver" />
-  <Item id="rivendell_helmet_archer_tier2_silver" class="heavy" next="rivendell_helmet_archer_tier2_silvergold" />
+  <Item id="rivendell_helmet_archer_tier2" class="medium" next="rivendell_helmet_archer_tier1_silver" />
+  <Item id="rivendell_helmet_archer_tier2_silver" class="elite" next="rivendell_helmet_lord_circlet" />
   <Item id="rivendell_helmet_archer_tier2_silvergold" class="elite" next="rivendell_helmet_lord_circlet" />
   <Item id="rivendell_helmet_archer_tier3" class="elite" next="rivendell_helmet_lord_circlet" />
   <Item id="rivendell_helmet_archer_tier3_silver" class="elite" next="rivendell_helmet_lord_circlet" />
@@ -364,7 +364,7 @@
   <Item id="rivendell_helmet_cavalry_tier1" class="elite" next="rivendell_helmet_lord_circlet" />
   <Item id="rivendell_helmet_cavalry_tier1_silver" class="elite" next="rivendell_helmet_lord_circlet" />
   <Item id="rivendell_helmet_cavalry_tier1_silvergold" class="elite" next="rivendell_helmet_lord_circlet" />
-  <Item id="rivendell_helmet_cavalry_tier2" class="heavy" next="rivendell_helmet_cavalry_tier2_silver" />
+  <Item id="rivendell_helmet_cavalry_tier2" class="elite" next="rivendell_helmet_lord_circlet" />
   <Item id="rivendell_helmet_cavalry_tier2_silver" class="elite" next="rivendell_helmet_lord_circlet" />
   <Item id="rivendell_helmet_cavalry_tier2_silvergold" class="elite" next="rivendell_helmet_lord_circlet" />
   <Item id="rivendell_helmet_cavalry_tier3" class="elite" next="rivendell_helmet_lord_circlet" />
@@ -392,15 +392,15 @@
   <Item id="rivendell_helmet_lord_circletmask_silver" class="lord" />
   <Item id="rivendell_helmet_lord_circletmask_silvergold" class="lord" />
   <Item id="rivendell_helmet_mask_hood" class="heavy" next="rivendell_helmet_archer_tier1_silvergold" />
-  <Item id="rivendell_helmet_silver" class="medium" next="rivendell_helmet_archer_tier2_silver" />
+  <Item id="rivendell_helmet_silver" class="heavy" next="rivendell_helmet_archer_tier1_silvergold" />
   <Item id="rivendell_pauldron_cape" class="elite" />
   <Item id="rivendell_pauldron_elite_robe" class="elite" />
   <Item id="rivendell_pauldron_elite_robe_silver" class="elite" />
   <Item id="rivendell_pauldron_elite_robe_silvergold" class="elite" />
   <Item id="rivendell_pauldron_leather_cape" class="elite" />
   <Item id="rivendell_pauldron_leather_robe" class="elite" />
-  <Item id="rivendell_pauldron_tier1_cape" class="medium" next="rivendell_pauldron_tier1_cape_silvergold" />
-  <Item id="rivendell_pauldron_tier1_cape_silver" class="medium" next="rivendell_pauldron_tier1_cape_silvergold" />
+  <Item id="rivendell_pauldron_tier1_cape" class="medium" next="rivendell_cape_b" />
+  <Item id="rivendell_pauldron_tier1_cape_silver" class="medium" next="rivendell_cape_b" />
   <Item id="rivendell_pauldron_tier1_cape_silvergold" class="elite" />
   <Item id="rivendell_pauldron_tier1_robe" class="elite" />
   <Item id="rivendell_pauldron_tier1_robe_silver" class="elite" />
@@ -485,18 +485,18 @@
   <Item id="roh_nbl_arm_b" class="heavy" next="roh_nbl_arm_r" />
   <Item id="roh_nbl_arm_g" class="heavy" next="roh_nbl_arm_r" />
   <Item id="roh_nbl_arm_r" class="elite" />
-  <Item id="roh_nbl_arm_y" class="medium" next="roh_nbl_arm_1" />
+  <Item id="roh_nbl_arm_y" class="heavy" next="roh_nbl_arm_r" />
   <Item id="roh_nbl_bts" class="heavy" next="cts_rohan_captain_boots1" />
   <Item id="roh_nbl_glv" class="heavy" next="cts_rohan_royal_guard_gloves" />
   <Item id="roh_nbl_gorg_tst_6" class="elite" />
   <Item id="roh_nbl_hlm_cf" class="heavy" next="cts_rohan_helmet_captain" />
-  <Item id="roh_nbl_shldr_c" class="light" next="cts_roha_cape1" />
+  <Item id="roh_nbl_shldr_c" class="elite" />
   <Item id="roh_nbl_shldr_cgs_2" class="elite" />
-  <Item id="roh_nbl_shldr_cs" class="light" next="cts_roha_cape1" />
-  <Item id="roh_nbl_shldr_g_2" class="light" next="cts_roha_cape1" />
-  <Item id="roh_nbl_shldr_gs" class="light" next="cts_roha_cape1" />
-  <Item id="roh_nbl_shldr_gs_2" class="light" next="cts_roha_cape1" />
-  <Item id="roh_nbl_shldr_s" class="light" next="cts_roha_cape1" />
+  <Item id="roh_nbl_shldr_cs" class="elite" />
+  <Item id="roh_nbl_shldr_g_2" class="elite" />
+  <Item id="roh_nbl_shldr_gs" class="elite" />
+  <Item id="roh_nbl_shldr_gs_2" class="elite" />
+  <Item id="roh_nbl_shldr_s" class="heavy" next="roh_nbl_shldr_c" />
   <Item id="roh_sol_bts" class="light" next="cts_rohan_boots1" />
   <Item id="rohan_militia_armour_a" class="light" next="rohan_militia_armour_f" />
   <Item id="rohan_militia_armour_b" class="light" next="rohan_militia_armour_f" />
@@ -553,11 +553,11 @@
   <Item id="sk_ar_art_helmet_guard_heavy_b" class="heavy" next="sk_ar_art_helmet_guard_elite_b" />
   <Item id="sk_ar_art_helmet_inf_elite_a" class="elite" next="sk_ar_art_helmet_noble_lord_b" />
   <Item id="sk_ar_art_helmet_inf_elite_b" class="elite" next="sk_ar_art_helmet_noble_lord_b" />
-  <Item id="sk_ar_art_helmet_inf_hvy_a" class="medium" next="sk_ar_art_helmet_cav_heavy_a" />
-  <Item id="sk_ar_art_helmet_inf_hvy_b" class="medium" next="sk_ar_art_helmet_cav_heavy_a" />
+  <Item id="sk_ar_art_helmet_inf_hvy_a" class="heavy" next="sk_ar_art_helmet_inf_elite_a" />
+  <Item id="sk_ar_art_helmet_inf_hvy_b" class="heavy" next="sk_ar_art_helmet_inf_elite_a" />
   <Item id="sk_ar_art_helmet_inf_light_a" class="light" next="sk_ar_art_helmet_inf_med_a" />
-  <Item id="sk_ar_art_helmet_inf_med_a" class="medium" next="sk_ar_art_helmet_cav_heavy_a" />
-  <Item id="sk_ar_art_helmet_inf_med_b" class="medium" next="sk_ar_art_helmet_cav_heavy_a" />
+  <Item id="sk_ar_art_helmet_inf_med_a" class="medium" next="sk_ar_art_helmet_inf_hvy_a" />
+  <Item id="sk_ar_art_helmet_inf_med_b" class="medium" next="sk_ar_art_helmet_inf_hvy_a" />
   <Item id="sk_ar_art_helmet_noble_elite_a" class="elite" next="sk_ar_art_helmet_noble_lord_b" />
   <Item id="sk_ar_art_helmet_noble_elite_b" class="elite" next="sk_ar_art_helmet_noble_lord_b" />
   <Item id="sk_ar_art_helmet_noble_heavy_a" class="heavy" next="sk_ar_art_helmet_noble_elite_a" />
@@ -566,8 +566,8 @@
   <Item id="sk_ar_art_helmet_noble_lord_b" class="lord" />
   <Item id="sk_ar_art_helmet_noble_med_a" class="medium" next="sk_ar_art_helmet_noble_heavy_a" />
   <Item id="sk_ar_art_helmet_noble_med_b" class="medium" next="sk_ar_art_helmet_noble_heavy_b" />
-  <Item id="sk_ar_art_helmet_noble_prince_a" class="heavy" next="sk_ar_art_helmet_noble_elite_a" />
-  <Item id="sk_ar_art_helmet_noble_prince_b" class="heavy" next="sk_ar_art_helmet_noble_elite_a" />
+  <Item id="sk_ar_art_helmet_noble_prince_a" class="elite" next="sk_ar_art_helmet_noble_lord_b" />
+  <Item id="sk_ar_art_helmet_noble_prince_b" class="elite" next="sk_ar_art_helmet_noble_lord_b" />
   <Item id="sk_ar_art_helmet_warden_elite_a" class="elite" next="sk_ar_art_helmet_noble_lord_b" />
   <Item id="sk_ar_art_helmet_warden_elite_b" class="elite" next="sk_ar_art_helmet_noble_lord_b" />
   <Item id="sk_ar_art_helmet_warden_heavy_a" class="heavy" next="sk_ar_art_helmet_warden_elite_a" />
@@ -763,14 +763,14 @@
   <Item id="sk_dg_khml_bracer_plate_med_a" class="elite" />
   <Item id="sk_dg_khml_bracer_scale_heavy_a" class="heavy" next="sk_dg_khml_bracer_heavy_a" />
   <Item id="sk_dg_khml_bracer_scale_med_a" class="medium" next="sk_dg_khml_bracer_scale_heavy_a" />
-  <Item id="sk_dg_khml_cape_a" class="light" next="sk_dg_khml_pauldron_hplate_light_a" />
-  <Item id="sk_dg_khml_cape_b" class="light" next="sk_dg_khml_pauldron_hplate_light_a" />
+  <Item id="sk_dg_khml_cape_a" class="medium" next="sk_dg_khml_cape_heavy_a" />
+  <Item id="sk_dg_khml_cape_b" class="medium" next="sk_dg_khml_cape_heavy_a" />
   <Item id="sk_dg_khml_cape_heavy_a" class="heavy" next="sk_dg_khml_cape_hplate_heavy_a" />
-  <Item id="sk_dg_khml_cape_heavy_b" class="heavy" next="sk_dg_khml_cape_hplate_heavy_a" />
+  <Item id="sk_dg_khml_cape_heavy_b" class="heavy" />
   <Item id="sk_dg_khml_cape_hplate_heavy_a" class="elite" />
-  <Item id="sk_dg_khml_cape_plate_heavy_a" class="heavy" next="sk_dg_khml_cape_hplate_heavy_a" />
+  <Item id="sk_dg_khml_cape_plate_heavy_a" class="heavy" />
   <Item id="sk_dg_khml_cape_scale_heavy_a" class="elite" />
-  <Item id="sk_dg_khml_chainmail_a" class="medium" next="sk_dg_khml_chest_heavy_b" />
+  <Item id="sk_dg_khml_chainmail_a" class="heavy" next="sk_dg_khml_chest_elite_a" />
   <Item id="sk_dg_khml_chest_elite_a" class="elite" next="sk_dg_khml_chest_lord_a" />
   <Item id="sk_dg_khml_chest_elite_b" class="elite" next="sk_dg_khml_chest_lord_b" />
   <Item id="sk_dg_khml_chest_heavy_a" class="elite" next="sk_dg_khml_chest_lord_a" />
@@ -1509,8 +1509,8 @@
   <Item id="sk_gd_ano_bracer_noble_elite_a" class="elite" next="sk_gd_sere_bracer_lord_a" />
   <Item id="sk_gd_ano_bracer_noble_heavy_a" class="heavy" next="sk_gd_ano_bracer_noble_elite_a" />
   <Item id="sk_gd_ano_bracer_noble_med_a" class="heavy" next="sk_gd_ano_bracer_noble_elite_a" />
-  <Item id="sk_gd_ano_cape_a" class="light" next="sk_gd_ano_pauld_noble_med_c" />
-  <Item id="sk_gd_ano_cape_b" class="heavy" next="sk_gd_ano_cape_noble_a" />
+  <Item id="sk_gd_ano_cape_a" class="elite" next="sk_gd_lam_pauld_cape_noble_lord_a" />
+  <Item id="sk_gd_ano_cape_b" class="elite" next="sk_gd_lam_pauld_cape_noble_lord_a" />
   <Item id="sk_gd_ano_cape_noble_a" class="elite" next="sk_gd_lam_pauld_cape_noble_lord_a" />
   <Item id="sk_gd_ano_cape_noble_b" class="elite" next="sk_gd_lam_pauld_cape_noble_lord_a" />
   <Item id="sk_gd_ano_cav_helmet_heavy_a" class="heavy" next="sk_gd_ano_noble_helmet_heavy_a" />
@@ -1554,7 +1554,7 @@
   <Item id="sk_gd_ano_pauld_noble_med_b" class="heavy" next="sk_gd_ano_pauld_noble_elite_b" />
   <Item id="sk_gd_ano_pauld_noble_med_c" class="medium" next="sk_gd_ano_pauld_noble_heavy_a" />
   <Item id="sk_gd_bel_boots_a" class="light" next="sk_gd_ano_grvs_inf_med_a" />
-  <Item id="sk_gd_bel_cape_a" class="medium" next="sk_gd_ano_cape_b" />
+  <Item id="sk_gd_bel_cape_a" class="elite" next="sk_gd_lam_pauld_cape_noble_lord_a" />
   <Item id="sk_gd_bel_inf_chainmail_a" class="light" next="sk_gd_bel_inf_chest_med_a" />
   <Item id="sk_gd_bel_inf_chainmail_b" class="light" next="sk_gd_bel_inf_chest_med_a" />
   <Item id="sk_gd_bel_inf_chest_heavy_a" class="heavy" next="sk_gd_ano_chainmail_full_b" />
@@ -1622,7 +1622,7 @@
   <Item id="sk_gd_ith_chest_noble_med_b" class="elite" next="sk_gd_lam_inf_chest_lord_a" />
   <Item id="sk_gd_ith_noble_helmet_heavy_a" class="elite" next="sk_gd_lam_nob_helmet_lord_a" />
   <Item id="sk_gd_ith_noble_helmet_heavy_b" class="elite" next="sk_gd_lam_nob_helmet_lord_a" />
-  <Item id="sk_gd_lam_cape_a" class="light" next="sk_gd_ano_pauld_noble_med_c" />
+  <Item id="sk_gd_lam_cape_a" class="elite" next="sk_gd_lam_pauld_cape_noble_lord_a" />
   <Item id="sk_gd_lam_cape_noble_a" class="elite" next="sk_gd_lam_pauld_cape_noble_lord_a" />
   <Item id="sk_gd_lam_inf_chainmail_a" class="light" next="sk_gd_lam_inf_chest_med_a" />
   <Item id="sk_gd_lam_inf_chest_heavy_a" class="heavy" next="sk_gd_lam_nob_chainmail_a" />
@@ -1735,7 +1735,7 @@
   <Item id="sk_gd_mns_citadel_chest_heavy_a" class="elite" next="sk_gd_lam_inf_chest_lord_a" />
   <Item id="sk_gd_mns_citadel_chest_med_a" class="elite" next="sk_gd_lam_inf_chest_lord_a" />
   <Item id="sk_gd_mns_fount_chest_elite_a" class="elite" next="sk_gd_lam_inf_chest_lord_a" />
-  <Item id="sk_gd_mns_fount_chest_heavy_a" class="heavy" next="sk_gd_mns_fount_chest_elite_a" />
+  <Item id="sk_gd_mns_fount_chest_heavy_a" class="heavy" next="sk_gd_cair_inf_chest_elite_a" />
   <Item id="sk_gd_mns_fount_helmet_heavy_a" class="elite" next="sk_gd_lam_nob_helmet_lord_a" />
   <Item id="sk_gd_mns_fount_helmet_heavy_b" class="elite" next="sk_gd_lam_nob_helmet_lord_a" />
   <Item id="sk_gd_mns_noble_helmet_heavy_a" class="elite" next="sk_gd_lam_nob_helmet_lord_a" />
@@ -2006,7 +2006,7 @@
   <Item id="sk_ll_ml_helmet_med_c" class="medium" next="sk_ll_ml_helmet_heavy_b" />
   <Item id="sk_ll_ml_pauld_cape_heavy_a" class="elite" />
   <Item id="sk_ll_ml_pauld_heavy_a" class="elite" />
-  <Item id="sk_ll_ml_pauld_med_a" class="medium" next="sk_ll_ml_pauld_heavy_a" />
+  <Item id="sk_ll_ml_pauld_med_a" class="medium" next="sk_ll_rg_pauld_light_a" />
   <Item id="sk_ll_mw_bracer_heavy_a" class="elite" />
   <Item id="sk_ll_mw_bracer_med_a" class="heavy" next="sk_ll_mw_bracer_heavy_a" />
   <Item id="sk_ll_mw_chest_heavy_a" class="elite" />
@@ -2144,8 +2144,8 @@
   <Item id="sk_md_num_cav_helmet_lord_a" class="lord" />
   <Item id="sk_md_num_cav_helmet_lord_b" class="lord" />
   <Item id="sk_md_num_cav_helmet_med_a" class="elite" next="sk_md_num_cav_helmet_lord_a" />
-  <Item id="sk_md_num_hood_a" class="light" next="sk_md_num_hood_light_a" />
-  <Item id="sk_md_num_hood_b" class="light" next="sk_md_num_hood_light_a" />
+  <Item id="sk_md_num_hood_a" class="medium" next="sk_md_num_hood_light_a" />
+  <Item id="sk_md_num_hood_b" class="medium" next="sk_md_num_hood_light_a" />
   <Item id="sk_md_num_hood_elite_a" class="elite" next="sk_md_num_hood_lord_a" />
   <Item id="sk_md_num_hood_elite_b" class="elite" next="sk_md_num_hood_lord_b" />
   <Item id="sk_md_num_hood_elite_c" class="elite" next="sk_md_num_hood_lord_a" />
@@ -2235,11 +2235,11 @@
   <Item id="sk_mordor_mouth_of_sauron_helm" class="named" />
   <Item id="sk_northern_armor_light_a" class="light" next="sk_northern_armor_medium_a" />
   <Item id="sk_northern_armor_light_b" class="light" next="sk_northern_armor_medium_b" />
-  <Item id="sk_northern_armor_medium_a" class="medium" />
-  <Item id="sk_northern_armor_medium_b" class="medium" />
-  <Item id="sk_northern_boots_a" class="medium" />
-  <Item id="sk_northern_boots_medium_a" class="medium" />
-  <Item id="sk_northern_bracers_gloves_a" class="light" next="sk_northern_bracers_medium_a" />
+  <Item id="sk_northern_armor_medium_a" class="medium" next="m_northern_armor_b1" />
+  <Item id="sk_northern_armor_medium_b" class="medium" next="m_northern_armor_b1" />
+  <Item id="sk_northern_boots_a" class="heavy" />
+  <Item id="sk_northern_boots_medium_a" class="medium" next="sk_northern_boots_a" />
+  <Item id="sk_northern_bracers_gloves_a" class="medium" />
   <Item id="sk_northern_bracers_light_a" class="light" next="sk_northern_bracers_medium_a" />
   <Item id="sk_northern_bracers_medium_a" class="medium" />
   <Item id="sk_northern_bracers_medium_b" class="medium" />
@@ -2276,8 +2276,8 @@
   <Item id="sk_rh_drag_bracer_plate_med_a" class="medium" next="sk_rh_drag_bracer_hplate_light_a" />
   <Item id="sk_rh_drag_bracer_scale_heavy_a" class="elite" />
   <Item id="sk_rh_drag_bracer_scale_med_a" class="elite" />
-  <Item id="sk_rh_drag_cape_a" class="light" next="sk_rh_drag_pauldron_lam_light_a" />
-  <Item id="sk_rh_drag_cape_b" class="light" next="sk_rh_drag_pauldron_lam_light_a" />
+  <Item id="sk_rh_drag_cape_a" class="medium" next="sk_rh_drag_pauldron_heavy_b" />
+  <Item id="sk_rh_drag_cape_b" class="medium" next="sk_rh_drag_pauldron_heavy_b" />
   <Item id="sk_rh_drag_cape_heavy_a" class="elite" />
   <Item id="sk_rh_drag_cape_heavy_b" class="elite" />
   <Item id="sk_rh_drag_cape_hplate_heavy_a" class="elite" />
@@ -2471,8 +2471,8 @@
   <Item id="sk_rh_loke_bracer_plate_med_a" class="medium" next="sk_rh_loke_bracer_heavy_a" />
   <Item id="sk_rh_loke_bracer_scale_heavy_a" class="elite" />
   <Item id="sk_rh_loke_bracer_scale_med_a" class="heavy" next="sk_rh_loke_bracer_scale_heavy_a" />
-  <Item id="sk_rh_loke_cape_a" class="light" next="sk_rh_loke_pauldron_hplate_light_a" />
-  <Item id="sk_rh_loke_cape_b" class="light" next="sk_rh_loke_pauldron_hplate_light_a" />
+  <Item id="sk_rh_loke_cape_a" class="medium" next="sk_rh_loke_cape_hplate_heavy_a" />
+  <Item id="sk_rh_loke_cape_b" class="medium" next="sk_rh_loke_cape_hplate_heavy_a" />
   <Item id="sk_rh_loke_cape_heavy_a" class="elite" />
   <Item id="sk_rh_loke_cape_heavy_b" class="elite" />
   <Item id="sk_rh_loke_cape_hplate_heavy_a" class="heavy" next="sk_rh_loke_cape_heavy_a" />
@@ -2502,7 +2502,7 @@
   <Item id="sk_rh_loke_grvs_light_b" class="medium" next="sk_rh_loke_grvs_heavy_b" />
   <Item id="sk_rh_loke_grvs_plate_elite_a" class="elite" />
   <Item id="sk_rh_loke_grvs_plate_heavy_a" class="elite" />
-  <Item id="sk_rh_loke_grvs_plate_light_a" class="light" next="sk_rh_loke_grvs_plate_med_a" />
+  <Item id="sk_rh_loke_grvs_plate_light_a" class="light" next="sk_rh_loke_grvs_heavy_a" />
   <Item id="sk_rh_loke_grvs_plate_med_a" class="medium" next="sk_rh_loke_grvs_heavy_a" />
   <Item id="sk_rh_loke_grvs_scale_heavy_a" class="elite" />
   <Item id="sk_rh_loke_grvs_scale_light_a" class="light" next="sk_rh_loke_grvs_hplate_light_a" />
@@ -2749,7 +2749,7 @@
   <Item id="sk_uruk_hai_helmet_bers_a2" class="elite" />
   <Item id="sk_uruk_hai_helmet_bers_a3" class="heavy" next="sk_uruk_hai_helmet_bers_a2" />
   <Item id="sk_uruk_hai_helmet_bers_a4" class="heavy" next="sk_uruk_hai_helmet_bers_a2" />
-  <Item id="sk_uruk_hai_helmet_bers_ar1" class="elite" />
+  <Item id="sk_uruk_hai_helmet_bers_ar1" class="heavy" next="sk_uruk_hai_helmet_bers_a2" />
   <Item id="sk_uruk_hai_helmet_captain_a1" class="elite" />
   <Item id="sk_uruk_hai_helmet_captain_a2" class="elite" />
   <Item id="sk_uruk_hai_helmet_captain_a3" class="elite" />
@@ -2814,9 +2814,9 @@
   <Item id="sk_uruk_hai_pauldron_heavy_a3" class="elite" />
   <Item id="sk_uruk_hai_pauldron_heavy_b1" class="elite" />
   <Item id="sk_uruk_hai_pauldron_heavy_b2" class="elite" />
-  <Item id="sk_uruk_hai_pauldron_heavy_b3" class="heavy" next="sk_uruk_hai_pauldron_heavy_a3" />
-  <Item id="sk_uruk_hai_pauldron_heavy_br2" class="heavy" next="sk_uruk_hai_pauldron_heavy_a3" />
-  <Item id="sk_uruk_hai_pauldron_heavy_br3" class="heavy" next="sk_uruk_hai_pauldron_heavy_a3" />
+  <Item id="sk_uruk_hai_pauldron_heavy_b3" class="heavy" />
+  <Item id="sk_uruk_hai_pauldron_heavy_br2" class="heavy" />
+  <Item id="sk_uruk_hai_pauldron_heavy_br3" class="heavy" />
   <Item id="sk_uruk_hai_pauldron_light_a1" class="light" next="sk_uruk_hai_pauldron_light_a3" />
   <Item id="sk_uruk_hai_pauldron_light_a2" class="light" next="sk_uruk_hai_pauldron_light_a3" />
   <Item id="sk_uruk_hai_pauldron_light_a3" class="medium" next="sk_uruk_hai_pauldron_med_a3" />
@@ -2856,14 +2856,14 @@
   <Item id="sk_uruk_mordor_bracer_medium_b" class="light" next="sk_uruk_mordor_bracer_heavy_a" />
   <Item id="sk_uruk_mordor_bracer_medium_c" class="light" next="sk_uruk_mordor_bracer_heavy_a" />
   <Item id="sk_uruk_mordor_bracer_medium_d" class="light" next="sk_uruk_mordor_bracer_heavy_a" />
-  <Item id="sk_uruk_mordor_chainmail_captain_a1" class="heavy" next="sk_uruk_mordor_chainmail_elite_a1" />
-  <Item id="sk_uruk_mordor_chainmail_captain_a2" class="light" next="sk_uruk_mordor_chainmail_captain_a1" />
-  <Item id="sk_uruk_mordor_chainmail_captain_b1" class="heavy" next="sk_uruk_mordor_chainmail_elite_a1" />
-  <Item id="sk_uruk_mordor_chainmail_captain_b2" class="light" next="sk_uruk_mordor_chainmail_captain_b1" />
-  <Item id="sk_uruk_mordor_chainmail_captain_c1" class="heavy" next="sk_uruk_mordor_chainmail_elite_a1" />
-  <Item id="sk_uruk_mordor_chainmail_captain_c2" class="light" next="sk_uruk_mordor_chainmail_captain_c1" />
-  <Item id="sk_uruk_mordor_chainmail_captain_d1" class="light" next="sk_uruk_mordor_chainmail_captain_a1" />
-  <Item id="sk_uruk_mordor_chainmail_captain_d2" class="light" next="sk_uruk_mordor_chainmail_captain_a1" />
+  <Item id="sk_uruk_mordor_chainmail_captain_a1" class="elite" />
+  <Item id="sk_uruk_mordor_chainmail_captain_a2" class="light" next="sk_uruk_mordor_chainmail_heavy_a1" />
+  <Item id="sk_uruk_mordor_chainmail_captain_b1" class="elite" />
+  <Item id="sk_uruk_mordor_chainmail_captain_b2" class="light" next="sk_uruk_mordor_chainmail_heavy_a1" />
+  <Item id="sk_uruk_mordor_chainmail_captain_c1" class="elite" />
+  <Item id="sk_uruk_mordor_chainmail_captain_c2" class="light" next="sk_uruk_mordor_chainmail_heavy_a1" />
+  <Item id="sk_uruk_mordor_chainmail_captain_d1" class="light" next="sk_uruk_mordor_chainmail_heavy_a1" />
+  <Item id="sk_uruk_mordor_chainmail_captain_d2" class="light" next="sk_uruk_mordor_chainmail_heavy_a1" />
   <Item id="sk_uruk_mordor_chainmail_elite_a1" class="elite" />
   <Item id="sk_uruk_mordor_chainmail_elite_a2" class="elite" />
   <Item id="sk_uruk_mordor_chainmail_elite_b1" class="elite" />
@@ -2975,32 +2975,32 @@
   <Item id="sm_md_num_inf_pauld_elite_b" class="elite" />
   <Item id="sm_md_num_inf_pauld_heavy_a" class="elite" />
   <Item id="sm_md_num_inf_pauld_med_a" class="heavy" next="sm_md_num_inf_pauld_elite_a" />
-  <Item id="thenn_armor1" class="light" next="thenn_armor_med1" />
-  <Item id="thenn_armor2" class="light" next="thenn_armor_med1" />
-  <Item id="thenn_armor3" class="light" next="thenn_armor_med1" />
-  <Item id="thenn_armor4" class="light" next="thenn_armor_med1" />
-  <Item id="thenn_armor5" class="light" next="thenn_armor_med1" />
-  <Item id="thenn_armor6" class="light" next="thenn_armor_med1" />
-  <Item id="thenn_armor7" class="light" next="thenn_armor_med1" />
-  <Item id="thenn_armor8" class="light" next="thenn_armor_med1" />
+  <Item id="thenn_armor1" class="medium" next="thenn_armor_heavy1" />
+  <Item id="thenn_armor2" class="medium" next="thenn_armor_heavy1" />
+  <Item id="thenn_armor3" class="medium" next="thenn_armor_heavy1" />
+  <Item id="thenn_armor4" class="medium" next="thenn_armor_heavy1" />
+  <Item id="thenn_armor5" class="medium" next="thenn_armor_heavy1" />
+  <Item id="thenn_armor6" class="medium" next="thenn_armor_heavy1" />
+  <Item id="thenn_armor7" class="medium" next="thenn_armor_heavy1" />
+  <Item id="thenn_armor8" class="medium" next="thenn_armor_heavy1" />
   <Item id="thenn_armor_heavy1" class="heavy" />
   <Item id="thenn_armor_heavy2" class="heavy" />
   <Item id="thenn_armor_med1" class="medium" next="thenn_armor_heavy1" />
   <Item id="thenn_armor_med2" class="medium" next="thenn_armor_heavy2" />
   <Item id="thenn_armor_med3" class="medium" next="thenn_armor_heavy1" />
-  <Item id="thenn_boots" class="heavy" next="thenn_boots_fur" />
+  <Item id="thenn_boots" class="elite" />
   <Item id="thenn_boots_fur" class="elite" />
-  <Item id="thenn_cloak" class="light" />
+  <Item id="thenn_cloak" class="medium" next="thenn_necklace" />
   <Item id="thenn_glv" class="elite" />
   <Item id="thenn_glv2" class="elite" />
-  <Item id="thenn_helm1" class="medium" next="thenn_helm4" />
-  <Item id="thenn_helm2" class="medium" next="thenn_helm4" />
-  <Item id="thenn_helm3" class="medium" next="thenn_helm4" />
-  <Item id="thenn_helm4" class="heavy" next="thenn_helm7" />
-  <Item id="thenn_helm5" class="heavy" next="thenn_helm7" />
-  <Item id="thenn_helm6" class="heavy" next="thenn_helm7" />
-  <Item id="thenn_helm7" class="elite" />
-  <Item id="thenn_necklace" class="light" />
+  <Item id="thenn_helm1" class="medium" next="thenn_helm3" />
+  <Item id="thenn_helm2" class="medium" next="thenn_helm3" />
+  <Item id="thenn_helm3" class="heavy" />
+  <Item id="thenn_helm4" class="heavy" />
+  <Item id="thenn_helm5" class="heavy" />
+  <Item id="thenn_helm6" class="heavy" />
+  <Item id="thenn_helm7" class="heavy" />
+  <Item id="thenn_necklace" class="elite" />
   <Item id="theoden_boots" class="named" />
   <Item id="theoden_glove" class="named" />
   <Item id="theoden_helmet" class="named" />
@@ -3023,7 +3023,7 @@
   <Item id="whiterun_armor" class="elite" />
   <Item id="whiterun_boots" class="elite" />
   <Item id="whiterun_bracers" class="elite" next="jor_lord_brcr_fgc3" />
-  <Item id="whiterun_cloak" class="light" next="cts_roha_cape1" />
+  <Item id="whiterun_cloak" class="elite" />
   <Item id="whiterun_helm" class="elite" />
   <Item id="witch_king" class="named" />
   <Item id="witch_king_boots" class="named" />

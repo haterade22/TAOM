@@ -24,6 +24,13 @@ was keyword first before, which is how the Fountain Guard's `_heavy_` helmet, wo
 The writer's --tier-source roster-first applies the same precedence, so the map's tier, target
 and status columns describe what the restat does.
 
+A hero (is_hero="true": the lords, the Harad lords, the named companions, the vanilla lords that
+lords.xslt retags and hands battle templates, and the wanderer templates the game turns into heroes) never anchors a tier, but the map records `heroWorn: true`
+on every item a hero's battle sets wear, so the restat can tell hero-only kit from merchandise
+(rebalance_armor._roster_first_plan). Lords hold their kit as <EquipmentSet id=...> references into
+equipmentsets/*.xml, resolved here, and a direct <equipment> child of <Equipments> replaces its slot in
+every set of that hero, as BasicCharacterObject.Deserialize applies it.
+
 This script NEVER writes armor XML. It writes the derived map (tools/data/armor_roster_tiers.json)
 and a human report (tools/reports/armor-balance/ROSTER-TIERS.md). It computes the level-band
 target as a REFERENCE — it does not decide whether an under-progressed line (e.g. Dale's flat
@@ -49,7 +56,18 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import rebalance_armor as ra  # noqa: E402
 
 REPO_ROOT = os.path.normpath(os.path.join(os.path.dirname(__file__), '..'))
-TROOPS_DIR = os.path.join(REPO_ROOT, 'Main', '_Module', 'ModuleData', 'troops')
+MODULEDATA_DIR = os.path.join(REPO_ROOT, 'Main', '_Module', 'ModuleData')
+TROOPS_DIR = os.path.join(MODULEDATA_DIR, 'troops')
+# Where the heroes' battle kit lives: lords and the Harad lords in characters/, the named companions beside
+# them, the wanderer templates, and the EquipmentSet templates every lord points at by id. The vanilla lords
+# are not in characters/: lords.xslt retags them and is the only stylesheet that assigns them equipment sets
+# (lord_template_rosters.xslt only strips flags).
+CHARACTERS_DIR = os.path.join(MODULEDATA_DIR, 'characters')
+NAMED_COMPANIONS_DIR = os.path.join(MODULEDATA_DIR, 'named_companions')
+WANDERERS_XML = os.path.join(MODULEDATA_DIR, 'taom_wanderers.xml')
+EQUIPMENTSETS_DIR = os.path.join(MODULEDATA_DIR, 'equipmentsets')
+LORDS_XSLT = os.path.join(MODULEDATA_DIR, 'lords.xslt')
+XSL_NS = '{http://www.w3.org/1999/XSL/Transform}'
 DATA_DIR = os.path.join(REPO_ROOT, 'tools', 'data')
 REPORT_DIR = os.path.join(REPO_ROOT, 'tools', 'reports', 'armor-balance')
 MAP_JSON = os.path.join(DATA_DIR, 'armor_roster_tiers.json')
@@ -145,6 +163,123 @@ def parse_rosters():
     return wearers
 
 
+def _equipment_slots(elem, tag_lower=True):
+    """{slot: item id} an equipment container lists, any slot. The tag is `equipment` or `Equipment`
+    alike, or exactly `equipment` with tag_lower=False (what Deserialize reads under <Equipments>)."""
+    out = {}
+    for eq in elem:
+        if (eq.tag.lower() if tag_lower else eq.tag) == 'equipment':
+            raw = eq.get('id', '')
+            item_id = raw.split('.', 1)[1] if raw.startswith('Item.') else raw
+            if item_id:
+                out[eq.get('slot', '')] = item_id
+    return out
+
+
+def load_battle_templates():
+    """{roster id: [{slot: item id}, ...]} over equipmentsets/*.xml, one dict per battle set: the
+    <EquipmentSet id=...> reference a lord uses points at an <EquipmentRoster id=...> there, and the
+    hero gets all of that roster's sets. Civilian rosters and sets are skipped."""
+    out = {}
+    if not os.path.isdir(EQUIPMENTSETS_DIR):
+        return out
+    for fn in sorted(os.listdir(EQUIPMENTSETS_DIR)):
+        if not fn.endswith('.xml'):
+            continue
+        try:
+            root = ET.parse(os.path.join(EQUIPMENTSETS_DIR, fn)).getroot()
+        except ET.ParseError:
+            continue
+        for roster in root.iter('EquipmentRoster'):
+            rid = roster.get('id')
+            if not rid or _is_civilian_roster(roster):
+                continue
+            sets = out.setdefault(rid, [])
+            for st in roster.findall('EquipmentSet'):
+                slots = {} if _is_civilian_roster(st) else _equipment_slots(st)
+                if slots:
+                    sets.append(slots)
+    return out
+
+
+def _hero_elements():
+    """(hero id, element holding its <Equipments>) over every place a hero's kit is defined: an
+    NPCCharacter with is_hero="true" in characters/ or named_companions/, each wanderer template of
+    taom_wanderers.xml, and each lords.xslt template that writes an <Equipments> block (the retagged
+    vanilla lords, id from its xsl:attribute name="id").
+
+    A wanderer template says is_hero="false", but CompanionsCampaignBehavior turns every template with
+    occupation Wanderer into a hero (HeroCreator.CreateSpecialHero), and Hero takes its battle equipment
+    from the template's roster."""
+    for directory in (CHARACTERS_DIR, NAMED_COMPANIONS_DIR):
+        if not os.path.isdir(directory):
+            continue
+        for fn in sorted(os.listdir(directory)):
+            if not fn.endswith('.xml'):
+                continue
+            try:
+                root = ET.parse(os.path.join(directory, fn)).getroot()
+            except ET.ParseError:
+                continue
+            for npc in root.iter('NPCCharacter'):
+                if npc.get('is_hero') == 'true':
+                    yield npc.get('id', ''), npc
+    if os.path.isfile(WANDERERS_XML):
+        try:
+            root = ET.parse(WANDERERS_XML).getroot()
+        except ET.ParseError:
+            root = None
+        for npc in (root.iter('NPCCharacter') if root is not None else ()):
+            if npc.get('is_template') == 'true' and npc.get('occupation') == 'Wanderer':
+                yield npc.get('id', ''), npc
+    if os.path.isfile(LORDS_XSLT):
+        try:
+            root = ET.parse(LORDS_XSLT).getroot()
+        except ET.ParseError:
+            return
+        for template in root.iter(XSL_NS + 'template'):
+            if template.find('.//Equipments') is None:
+                continue
+            ids = [a.text for a in template.iter(XSL_NS + 'attribute') if a.get('name') == 'id' and a.text]
+            yield (ids[0] if ids else template.get('match', '')), template
+
+
+def _hero_battle_items(container, templates):
+    """The item ids one hero wears in battle. Every battle set it holds (inline, or a template roster by
+    id) is one set; the direct <equipment> children of <Equipments> then replace their slot in each of
+    them (AddOverriddenEquipments), so a replaced template item is not worn by this hero."""
+    sets = []
+    for roster in list(container.iter('EquipmentRoster')) + list(container.iter('EquipmentSet')):
+        if _is_civilian_roster(roster):
+            continue
+        own = _equipment_slots(roster)
+        if own:
+            sets.append(own)
+        if roster.tag == 'EquipmentSet' and roster.get('id'):
+            sets.extend(templates.get(roster.get('id'), ()))
+    overrides = {}
+    for equipments in container.iter('Equipments'):
+        overrides.update(_equipment_slots(equipments, tag_lower=False))
+    if not sets:
+        return set(overrides.values())
+    return {item for s in sets for item in {**s, **overrides}.values()}
+
+
+def parse_hero_wearers():
+    """Return {item_id: [hero id]} for the armour a hero's BATTLE sets wear (every slot is read; the
+    caller only looks up armour items). A hero is an NPCCharacter with is_hero="true" in characters/
+    or named_companions/, or a lord lords.xslt hands a template (_hero_elements). Its kit is an inline
+    <EquipmentRoster>/<EquipmentSet> or an <EquipmentSet id=...> reference to a template in
+    equipmentsets/, with direct <equipment> overrides applied; civilian sets are skipped. Ladder-
+    exempt heroes are read like the rest: this map never anchors a tier."""
+    templates = load_battle_templates()
+    wearers = defaultdict(list)
+    for hero, container in _hero_elements():
+        for item_id in sorted(_hero_battle_items(container, templates)):
+            wearers[item_id].append(hero)
+    return wearers
+
+
 def build_armory_index():
     """Return item_id -> {folder, slot, primary, armour, weight, name, type}."""
     index = {}
@@ -193,6 +328,7 @@ def build_armory_index():
 
 def derive():
     wearers = parse_rosters()
+    hero_wearers = parse_hero_wearers()
     index, armory_dir = build_armory_index()
 
     records = {}
@@ -239,6 +375,7 @@ def derive():
             'maxLevel': max(levels) if levels else None,
             'levelSpan': span,
             'wearerCount': len(ws),
+            'heroWorn': item_id in hero_wearers,         # a hero's kit; never moves the anchor or the tier
             'tier': tier,
             'tierSource': source,
             'target': target,

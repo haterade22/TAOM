@@ -79,8 +79,24 @@ public class EnlistmentMaintenanceBehavior : CampaignBehaviorBase
         _maintenance.OnPartyJoinedRunningMapEvent(party?.MobileParty?.StringId);
     }
 
-    private void OnSettlementLeft(MobileParty party, Settlement settlement) =>
+    private void OnSettlementLeft(MobileParty party, Settlement settlement)
+    {
+        if (party != null && party == MobileParty.MainParty)
+            OnMainPartyLeftSettlement();
         OnPartyLeftSettlement(party?.LeaderHero?.StringId);
+    }
+
+    /// <summary>
+    /// The player's own walk-out ends a shore-leave pass at once; see
+    /// <see cref="IServiceMaintenanceService.OnPlayerLeftSettlement"/>. internal for TAOM.Tests.
+    /// </summary>
+    internal void OnMainPartyLeftSettlement()
+    {
+        if (!_coopSession.IsAuthority)
+            return;
+
+        _maintenance.OnPlayerLeftSettlement();
+    }
 
     /// <summary>
     /// The commander walking out is the end of the column's stop, however the player leaves the

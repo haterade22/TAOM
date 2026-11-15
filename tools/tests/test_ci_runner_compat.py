@@ -15,8 +15,6 @@ PYTEST_BASELINE = {
     "test_analyze_melee_ladder.py",
     "test_audit_map_scene_memory.py",
     "test_melee_damage.py",
-    "test_melee_ladder.py",
-    "test_restat_melee_blades.py",
 }
 PYTEST_IMPORT = re.compile(r"^\s*(import pytest\b|from pytest\b)", re.M)
 

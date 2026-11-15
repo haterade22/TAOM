@@ -11,6 +11,8 @@ paths:
   - "tools/generate_ranged_ladder_items.py"
   - "tools/ranged_ladders.json"
   - "tools/audit_polearm_shield_parity.py"
+  - "tools/armour_cover_flags.json"
+  - "tools/apply_armour_cover_flags.py"
 ---
 
 # Trap sheet: troop and culture data
@@ -29,3 +31,5 @@ history and the gate. A new trap for this area is a new row here, never a row in
 | NPCCharacter `<face>` | Missing: toddler; copied key: twin lords; a lady on a template: her own hair tag. Gates in the doc | [body properties](../../../docs/modding/body-properties.md) |
 | Player start kits | Defaults are `starter_<donor>` twins, careers take troop gear; override the roster, never a set | [start kits](../../../docs/features/starting-equipment-tuning.md) |
 | Troop bows | Generated `ladder_*` items in the unversioned Armory: `generate_ranged_ladder_items.py --verify` | [ladders](../../../docs/features/ranged-ladders.md) |
+| Armour cover attributes | A reinstall, sync or art drop resets hair, beard, `covers_*` and mane values in the unversioned Armory: change them only through `armour_cover_flags.json` and `apply_armour_cover_flags.py --check`, never by hand alone | [ledger](../../../docs/reference/lotrlome-beard-cover-changes.md) |
+| Troop weapon category | A balance pass changes a weapon's numbers or swaps it within its category, never across categories or between a shield kit and a two handed one; `fix_melee_ladder.py --apply` stays unrun until it holds that | [rule](../../../docs/features/melee-damage-model.md#a-troop-keeps-its-weapon-category) |

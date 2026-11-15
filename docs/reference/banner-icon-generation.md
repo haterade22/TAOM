@@ -148,7 +148,9 @@ is not a PNG it gets a new number, so the old PSD stays as it was until the prun
 `python tools/pack_banner_sheets.py --audit` is the gate (`tools/tests/test_pack_banner_sheets.py`):
 every icon names a sheet that exists and a cell that holds art, no two icons share a cell, no art
 cell is unnamed, every icon has a `ui_taom_bannericons` sprite part in `TAOMSpriteData.xml` and its
-PNG, every material has both packages, each `_mtl.tpac` names its `_tex.tpac` and each `_tex.tpac`
+PNG, every such sprite part or PNG is named by an icon row (`orphan_sprite`, #1274; `KNOWN_ORPHAN_SPRITES`
+holds back 22004 until the Kit regeneration removes it, and an entry that is no orphan any more is a
+`stale_known_orphan` finding), every material has both packages, each `_mtl.tpac` names its `_tex.tpac` and each `_tex.tpac`
 holds the hash of its current source (so a sheet changed after its Kit import is a finding), every
 sheet is named `taom_banners_NN`, every sheet source has an alpha channel (`no_alpha`), no sheet file is
 unused, and no packing plan would save a sheet. The tool writes every repacked sheet as RGBA with

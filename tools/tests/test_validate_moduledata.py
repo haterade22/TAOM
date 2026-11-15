@@ -2075,38 +2075,46 @@ class CrossCultureArmourInversionTests(unittest.TestCase):
         """Kingdoms differ in armour power by design (#583): a low-cap kingdom's raw totals sit
         under a high-cap kingdom's, and that is not a finding. Every ITEM is scaled to the reference
         cap of the line it belongs to (its folder, or the prefix-routed sub-line), never the wearer's
-        culture: an Umbar noble in Black Numenorean plate wears 57-cap kit."""
+        culture: an Umbar noble in Black Numenorean plate wears that line's cap."""
         import rebalance_armor as ra
         self.assertEqual(ts.item_cap_for("sm_md_num_grvs_elite_a", "mordor"), ra.KINGDOM_CAPS["mordor_numenorean"])
         self.assertEqual(ts.item_cap_for("sk_uruk_mordor_helmet_a", "mordor"), ra.KINGDOM_CAPS["mordor_uruk"])
         self.assertEqual(ts.item_cap_for("sk_md_orc_x", "mordor"), ra.KINGDOM_CAPS["mordor_orc"])
         self.assertEqual(ts.item_cap_for("sk_dg_khml_x", "rhun"), ra.KINGDOM_CAPS["dol_guldur"])
-        self.assertEqual(ts.item_cap_for("anything", "gondor"), 57)
+        self.assertEqual(ts.item_cap_for("anything", "gondor"), ra.KINGDOM_CAPS["gondor"])
         self.assertIsNone(ts.item_cap_for("anything", None))       # vanilla or repo item
         self.assertIsNone(ts.item_cap_for("anything", "troll"))    # a folder without a cap
         self.assertAlmostEqual(ts.scale_to_reference_cap(38, 38), ts.REFERENCE_CAP)
         self.assertEqual(ts.scale_to_reference_cap(40, None), 40)
         old = dict(ra.KINGDOM_CAPS)
         try:
+            ref = ts.REFERENCE_CAP
             ra.KINGDOM_CAPS["lowcap"] = 38
-            ra.KINGDOM_CAPS["men"] = 57
+            ra.KINGDOM_CAPS["men"] = ref
             self.armour["hi2"] = 200
-            # a's tier-4 troop wears `lo` (40) from a 38-cap folder: 40 * 57 / 38 = 60 against a
-            # 200 field whose kit is 57-cap: still flagged.
+            # a's tier-4 troop wears `lo` (40) from a 38-cap folder: 40 * ref / 38 against a
+            # 200 field whose kit is reference-cap: still flagged.
             self._field()
             self.assertEqual(len(self._run(folders={"lo": "lowcap", "hi": "men"})), 1)
-            # Item level, not culture level: the weak troop's 200 is 57-cap kit (stays 200) while
-            # the field's identical 200 is 38-cap kit (scales to 300): flagged, 100 short.
+            # Item level, not culture level: the weak troop's 200 is reference-cap kit (stays 200)
+            # while the field's identical 200 is 38-cap kit (scales to 200 * ref / 38): flagged.
             self._field(weak_t4="hi2")
             hits = self._run(folders={"hi": "lowcap", "hi2": "men"})
             self.assertEqual(len(hits), 1)
-            self.assertIn("100 under", hits[0].message)
+            self.assertIn(f"{200 * ref / 38 - 200:.0f} under", hits[0].message)
             # Same kit on the same cap: clear.
             self.assertEqual(self._run(folders={"hi": "men", "hi2": "men"}), [])
         finally:
             ra.KINGDOM_CAPS.clear()
             ra.KINGDOM_CAPS.update(old)
             self.armour.pop("hi2", None)
+
+    def test_the_reference_cap_is_gondors_cap_in_the_curve(self):
+        """REFERENCE_CAP is a literal so the validator stays stdlib-only at import; this is the pin
+        that stops it drifting when the maintainer moves Gondor's cap (it read 57 for weeks after
+        KINGDOM_CAPS['gondor'] became 46, 2026-11-14)."""
+        import rebalance_armor as ra
+        self.assertEqual(ts.REFERENCE_CAP, ra.KINGDOM_CAPS["gondor"])
 
     def test_exempt_ids_still_exist_in_the_shipped_troops(self):
         troops = Path(__file__).resolve().parents[2] / "Main" / "_Module" / "ModuleData" / "troops"
@@ -2142,6 +2150,387 @@ class CrossCultureArmourInversionTests(unittest.TestCase):
         for (tid, item), reason in ts.Validator._ARMOUR_LADDER_EXEMPT_ITEMS.items():
             self.assertIn(item, worn.get(tid, set()), f"exempt pair ({tid}, {item}) is not worn")
             self.assertTrue(reason.strip(), f"({tid}, {item}) is exempt without a stated reason")
+
+
+class WornArmourLimitsTests(unittest.TestCase):
+    """WORN_ARMOUR_CEILING and WORN_ARMOUR_FLOOR (#1271, 2026-11-14): what a troop's battle sets add
+    up to per region, judged against rebalance_armor's limits. A campaign spawn draws every slot from
+    its own set (Equipment.GetRandomEquipmentElements re-rolls the set index per slot whenever the
+    seed is not -1, and a troop spawn never passes -1), so the reach is per slot, not per set."""
+
+    STATS = {
+        "helm40": {"head_armor": 40}, "helm10": {"head_armor": 10},
+        "chest40": {"body_armor": 40}, "chest10": {"body_armor": 10}, "bigchest": {"body_armor": 60},
+        "cape10": {"body_armor": 10, "arm_armor": 5}, "cape20": {"body_armor": 20, "arm_armor": 5},
+        "bigcape": {"body_armor": 30},
+    }
+
+    def setUp(self):
+        self._tmp = tempfile.TemporaryDirectory()
+        self.md = Path(self._tmp.name) / "ModuleData"
+        (self.md / "troops").mkdir(parents=True)
+        self.schemas = ts.load_schemas(SCHEMA_DIR)
+
+    def tearDown(self):
+        self._tmp.cleanup()
+
+    @staticmethod
+    def _roster(**slots):
+        rows = "".join(f'<equipment slot="{s}" id="Item.{i}" />' for s, i in slots.items())
+        return f"<EquipmentRoster>{rows}</EquipmentRoster>"
+
+    def _write(self, troops, fname="troops/troops_x.xml"):
+        """troops: [(id, level, [roster xml, ...])]"""
+        body = "".join(
+            f'<NPCCharacter id="{tid}" level="{level}" default_group="Infantry">'
+            f'<Equipments>{"".join(rosters)}</Equipments></NPCCharacter>'
+            for tid, level, rosters in troops)
+        _write(self.md / fname, f'<?xml version="1.0" encoding="utf-8"?>\n<NPCCharacters>{body}</NPCCharacters>')
+
+    def _run(self, troops, stats="default", fname="troops/troops_x.xml"):
+        self._write(troops, fname)
+        regs = ts.Registries(items=set(), item_def_files={}, npccharacters=set(), cultures=set(),
+                             party_templates=set(),
+                             item_armour_stats=self.STATS if stats == "default" else stats)
+        return [i for i in ts.Validator(self.md, self.schemas, regs).run()
+                if i.code in ("WORN_ARMOUR_CEILING", "WORN_ARMOUR_FLOOR")]
+
+    def test_a_helmetless_elite_is_a_floor_warning(self):
+        issues = self._run([("elite_a", 31, [self._roster(Body="chest40")])])
+        self.assertEqual([(i.code, i.severity, i.entry_id) for i in issues],
+                         [("WORN_ARMOUR_FLOOR", ts.Severity.WARNING, "elite_a")])
+        self.assertIn("head 0", issues[0].message)
+        self.assertIn("30", issues[0].message)
+        self.assertIn("elite", issues[0].message)
+
+    def test_a_troop_that_meets_its_floor_is_clean(self):
+        self.assertEqual(self._run([("elite_a", 31, [self._roster(Head="helm40", Body="chest40")])]), [])
+
+    def test_the_floor_follows_the_band_of_the_level(self):
+        rosters = [self._roster(Head="helm10", Body="chest10")]
+        self.assertEqual(self._run([("light_a", 1, rosters), ("medium_a", 16, rosters)]), [])
+        heavy = self._run([("heavy_a", 21, rosters)])
+        self.assertEqual([i.code for i in heavy], ["WORN_ARMOUR_FLOOR"])
+        self.assertIn("head 10", heavy[0].message)
+        self.assertIn("body 10", heavy[0].message)
+
+    def test_a_light_troop_has_no_floor(self):
+        self.assertEqual(self._run([("light_a", 1, [self._roster(Body="chest10")])]), [])
+
+    def test_a_set_that_adds_past_the_ceiling_is_flagged(self):
+        """A WARNING until every contributor has the rewritten Armory: the validator reads the Armory
+        installed on each machine, so an ERROR would block the commits of anyone still on the old one.
+        The flip step is in armor-balance.md, "The apply sequence"."""
+        # chest 60 + cape 30 = body 90, over vanilla's best troop (67) plus 10.
+        issues = self._run([("big", 31, [self._roster(Head="helm40", Body="bigchest", Cape="bigcape")])])
+        self.assertEqual([(i.code, i.severity, i.entry_id) for i in issues],
+                         [("WORN_ARMOUR_CEILING", ts.Severity.WARNING, "big")])
+        self.assertIn("body 90", issues[0].message)
+        self.assertIn("77", issues[0].message)
+        self.assertIn("before item modifiers", issues[0].message)
+
+    def test_the_limits_are_read_from_rebalance_armor_never_copied(self):
+        import rebalance_armor as ra
+        rosters = [self._roster(Head="helm40", Body="chest40")]
+        self.assertEqual(self._run([("elite_a", 31, rosters)]), [])
+        with mock.patch.dict(ra.WORN_ARMOUR_CEILING, {"body": 30}):
+            self.assertEqual([i.code for i in self._run([("elite_a", 31, rosters)])], ["WORN_ARMOUR_CEILING"])
+        with mock.patch.dict(ra.WORN_ARMOUR_FLOOR["elite"], {"body": 50}):
+            self.assertEqual([i.code for i in self._run([("elite_a", 31, rosters)])], ["WORN_ARMOUR_FLOOR"])
+
+    def test_every_slot_is_drawn_from_its_own_set_so_the_floor_is_judged_per_slot(self):
+        # Body+cape add to 50 in set one and 30 in set two, so every set clears 30. A spawn can
+        # take the thin chest (10) of set two and the thin cape (10) of set one: body 20.
+        sets = [self._roster(Head="helm40", Body="chest40", Cape="cape10"),
+                self._roster(Head="helm40", Body="chest10", Cape="cape20")]
+        issues = self._run([("elite_a", 31, sets)])
+        self.assertEqual([i.code for i in issues], ["WORN_ARMOUR_FLOOR"])
+        self.assertIn("body 20", issues[0].message)
+
+    def test_every_slot_is_drawn_from_its_own_set_so_the_ceiling_is_judged_per_slot(self):
+        # One set holds the heavy chest, the other the heavy cape: no set reaches 77, a spawn can.
+        sets = [self._roster(Head="helm40", Body="bigchest"), self._roster(Head="helm40", Cape="bigcape")]
+        issues = self._run([("big", 31, sets)])
+        self.assertIn("WORN_ARMOUR_CEILING", [i.code for i in issues])
+
+    def test_civilian_sets_are_not_battle_sets(self):
+        civilian = '<EquipmentRoster civilian="true"><equipment slot="Body" id="Item.bigchest" /></EquipmentRoster>'
+        issues = self._run([("elite_a", 31, [self._roster(Head="helm40", Body="chest40"), civilian])])
+        self.assertEqual(issues, [])
+
+    def test_a_ladder_exempt_troop_is_left_out(self):
+        exempt = "gondor_ithilien_ranger"
+        self.assertIn(exempt, ts.Validator._ARMOUR_LADDER_EXEMPT)
+        naked = [self._roster(Gloves="cape10")]
+        self.assertEqual(self._run([(exempt, 51, naked)]), [])
+        self.assertEqual([i.code for i in self._run([("ordinary_elite", 51, naked)])], ["WORN_ARMOUR_FLOOR"])
+
+    def test_a_troll_is_left_out(self):
+        self.assertEqual(self._run([("snow_troll_x", 51, [self._roster(Gloves="cape10")])]), [])
+
+    def test_the_creature_markers_are_the_balance_analyzers(self):
+        import analyze_troop_balance as atb
+        self.assertEqual(ts.Validator._WORN_ARMOUR_CREATURE_MARKERS, atb.CREATURE_MARKERS)
+
+    def test_a_bodyless_troop_keeps_its_head_floor_and_loses_its_body_floor(self):
+        bodyless = "urukhai_champion"
+        self.assertIn(bodyless, ts.Validator._BODYLESS_BY_DESIGN)
+        self.assertEqual(self._run([(bodyless, 41, [self._roster(Head="helm40")])]), [])
+        issues = self._run([(bodyless, 41, [self._roster(Gloves="cape10")])])
+        self.assertEqual([i.code for i in issues], ["WORN_ARMOUR_FLOOR"])
+        self.assertIn("head 0", issues[0].message)
+        self.assertNotIn("body 0", issues[0].message)
+
+    def test_only_the_ladder_troop_files_are_judged(self):
+        naked = [self._roster(Gloves="cape10")]
+        self.assertEqual(self._run([("villager_x", 31, naked)], fname="characters/npcs_x.xml"), [])
+
+    def test_a_troop_with_no_battle_set_is_left_out(self):
+        self.assertEqual(self._run([("empty_a", 31, [])]), [])
+
+    def test_without_an_armour_stats_registry_the_pass_is_skipped(self):
+        # The caller (validate_moduledata.main) announces the skip; here nothing is faked.
+        self.assertEqual(self._run([("elite_a", 31, [self._roster(Body="chest40")])], stats={}), [])
+
+    def test_a_missing_curve_module_is_a_stated_warning_not_a_silent_pass(self):
+        with mock.patch.object(ts, "_curve", return_value=None):
+            issues = self._run([("elite_a", 31, [self._roster(Body="chest40")])])
+        self.assertEqual(len(issues), 1)
+        self.assertEqual(issues[0].severity, ts.Severity.WARNING)
+        self.assertEqual(issues[0].entry_id, "(tooling)")
+        self.assertIn("checked nothing", issues[0].message)
+
+    def test_the_ceiling_and_its_tooling_failure_share_one_severity_constant(self):
+        """The tooling issue stands in for the ceiling check, so it must never be softer than the
+        ceiling: once the ceiling is an error, a broken import left as a warning would let the
+        commit hook pass with the check not run."""
+        self.assertIs(ts.WORN_ARMOUR_CEILING_SEVERITY, ts.Severity.WARNING)
+        big = [("big", 31, [self._roster(Head="helm40", Body="bigchest", Cape="bigcape")])]
+        with mock.patch.object(ts, "WORN_ARMOUR_CEILING_SEVERITY", ts.Severity.ERROR):
+            ceiling = self._run(big)
+            with mock.patch.object(ts, "_curve", return_value=None):
+                tooling = self._run(big)
+        self.assertEqual([(i.code, i.severity) for i in ceiling],
+                         [("WORN_ARMOUR_CEILING", ts.Severity.ERROR)])
+        self.assertEqual([(i.entry_id, i.severity) for i in tooling], [("(tooling)", ts.Severity.ERROR)])
+
+    def test_the_floor_stays_a_warning_when_the_ceiling_becomes_an_error(self):
+        thin = [("elite_a", 31, [self._roster(Body="chest40")])]
+        with mock.patch.object(ts, "WORN_ARMOUR_CEILING_SEVERITY", ts.Severity.ERROR):
+            issues = self._run(thin)
+        self.assertEqual([(i.code, i.severity) for i in issues], [("WORN_ARMOUR_FLOOR", ts.Severity.WARNING)])
+
+    def test_missing_install_announces_the_worn_armour_skip(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            (Path(tmp) / "ModuleData").mkdir()
+            _code, _out, err = _run_main("--moduledata", str(Path(tmp) / "ModuleData"),
+                                         "--game-modules", str(Path(tmp) / "nope"))
+        self.assertIn("WORN_ARMOUR_CEILING SKIPPED", err)
+
+    def test_build_item_armour_stats_keeps_the_four_regions_and_the_total_still_sums_them(self):
+        item_xml = (
+            '<Items><Item id="chest_x" Type="BodyArmor"><ItemComponent>'
+            '<Armor body_armor="30" arm_armor="8" leg_armor="2" /></ItemComponent></Item>'
+            '<Item id="helm_x" Type="HeadArmor"><ItemComponent><Armor head_armor="12" /></ItemComponent></Item>'
+            '<Item id="sword_x" Type="OneHandedWeapon"><ItemComponent /></Item></Items>')
+        with tempfile.TemporaryDirectory() as tmp:
+            _write(Path(tmp) / "ModuleData" / "items" / "x.xml", item_xml)
+            roots = [Path(tmp) / "ModuleData"]
+            self.assertEqual(ts.build_item_armour_stats(roots), {
+                "chest_x": {"body_armor": 30, "arm_armor": 8, "leg_armor": 2},
+                "helm_x": {"head_armor": 12}})
+            self.assertEqual(ts._armour_totals(ts.build_item_armour_stats(roots)), {"chest_x": 40, "helm_x": 12})
+
+
+class MeleePassRowsTests(unittest.TestCase):
+    """The validator's melee pass prices a troop the way tools/restat_melee_blades.py does: the
+    craft key (a troop id prefix can pick the row) and the dominant attack of a polearm
+    (melee_ladder.craft_key, melee_ladder.dominant_flags). Rows built from t.culture and the raw
+    swing/thrust flags judge a Black Numenorean at orc smithing and a spear against a halberd's swing."""
+
+    SPEC = {"craft_troop_prefix": {"mordor_num_": "mordor_numenorean"},
+            "craft_column": {"OneHandedPolearm": "polearm", "OneHandedSword": "sword"}}
+
+    @staticmethod
+    def _weapon(template, swing, thrust, swing_dps, thrust_dps, blade="blade_a"):
+        from types import SimpleNamespace as NS
+        return NS(item=NS(template=template), blade_piece=blade, best_dps=max(swing_dps, thrust_dps),
+                  swing_damage=swing, thrust_damage=thrust, swing_dps=swing_dps, thrust_dps=thrust_dps)
+
+    @staticmethod
+    def _troop(tid, culture, tier, items):
+        from types import SimpleNamespace as NS
+        return NS(id=tid, culture=culture, tier=tier, items=set(items))
+
+    def _rows(self, troops, priced):
+        return ts.melee_pass_rows(troops, priced, self.SPEC)
+
+    def test_a_troop_id_prefix_picks_the_craft_row_in_both_row_kinds(self):
+        priced = {"sw": self._weapon("OneHandedSword", 80, 40, 60, 30)}
+        kits, carried = self._rows([self._troop("mordor_num_swordsman", "mordor", 5, ["sw"]),
+                                    self._troop("mordor_orc_grunt", "mordor", 5, ["sw"])], priced)
+        self.assertEqual([k[1] for k in kits], ["mordor_numenorean", "mordor"])
+        self.assertEqual([c[-2:] for c in carried], [(5, "mordor_numenorean"), (5, "mordor")])
+
+    def test_a_thrust_dominant_polearm_is_priced_on_its_thrust_alone(self):
+        priced = {"spear": self._weapon("OneHandedPolearm", 50, 70, 30, 60),
+                  "halberd": self._weapon("OneHandedPolearm", 90, 40, 80, 20),
+                  "sword": self._weapon("OneHandedSword", 80, 40, 60, 30)}
+        kits, _ = self._rows([self._troop("t_spear", "gondor", 5, ["spear"]),
+                              self._troop("t_halberd", "gondor", 5, ["halberd"]),
+                              self._troop("t_sword", "gondor", 5, ["sword"])], priced)
+        flags = {k[0]: k[-2:] for k in kits}
+        self.assertEqual(flags, {"t_spear": (False, True), "t_halberd": (True, True), "t_sword": (True, True)})
+
+    def test_a_troop_with_no_priced_weapon_has_no_kit_row_and_no_carried_row(self):
+        kits, carried = self._rows([self._troop("t_bare", "gondor", 5, ["unknown"])],
+                                   {"sw": self._weapon("OneHandedSword", 80, 40, 60, 30)})
+        self.assertEqual((kits, carried), ([], []))
+
+    def test_the_carried_tier_changes_the_verdict_on_a_blow_under_the_class_limit(self):
+        import melee_ladder as ml
+        spec = ml.load_spec()
+        tier = 2
+        limit = ml.tier_limit("OneHandedSword", tier, "gondor", spec)
+        self.assertLess(limit["swing"] + 5, ml.class_limit("OneHandedSword", spec)["swing"])
+        row = ("t_sword", "sw", "OneHandedSword", "blade_a", limit["swing"] + 5, 0, 1.0, 0.0)
+        self.assertEqual(ml.blow_findings([row], spec), [])
+        found = ml.blow_findings([row + (tier, "gondor")], spec)
+        self.assertEqual([f.item for f in found], ["sw"])
+        self.assertTrue(found[0].tiered)
+
+
+class PlaceholderMeleePassTests(unittest.TestCase):
+    """MELEE_BLOW_CEILING and MELEE_LADDER_INVERSION price the taom_ph_ placeholders (#1271, 2026-11-14).
+    The Armory catalogue cannot build them from the install: their pieces register through the
+    tree's own placeholder_weapons files, so the pass adds them to a copy of the catalogue the way
+    tools/generate_placeholder_weapons.py price_new does and judges each against its real carriers.
+    The Armory is a hand-built catalogue here, so the tests need neither the install nor its data."""
+
+    PIECES = ('<CraftingPieces><CraftingPiece id="base_blade" piece_type="Blade" length="80" weight="1.0">'
+              '<BladeData><Thrust damage_type="Pierce" damage_factor="2.0"/>'
+              '<Swing damage_type="Cut" damage_factor="4.0"/></BladeData></CraftingPiece>'
+              '<CraftingPiece id="base_handle" piece_type="Handle" length="20" weight="0.3"/></CraftingPieces>')
+    PH_BLADE = ('<CraftingPieces><CraftingPiece id="taom_ph_x_t5_blade" piece_type="Blade" length="80" weight="1.0">'
+                '<BladeData><Thrust damage_type="Pierce" damage_factor="{thrust}"/>'
+                '<Swing damage_type="Cut" damage_factor="{swing}"/></BladeData></CraftingPiece></CraftingPieces>')
+    PH_ITEMS = ('<Items><CraftedItem id="taom_ph_x_t5" name="{{=n}}X" crafting_template="OneHandedSword" '
+                'culture="Culture.gondor"><Pieces><Piece id="{blade}" Type="Blade" scale_factor="100" />'
+                '<Piece id="base_handle" Type="Handle" scale_factor="100" /></Pieces></CraftedItem></Items>')
+    PH_DESCS = ('<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">'
+                '<xsl:template match="WeaponDescription[@id=\'Desc\']/AvailablePieces"><xsl:copy>'
+                '<xsl:apply-templates select="@*|node()"/><AvailablePiece id="taom_ph_x_t5_blade"/>'
+                '</xsl:copy></xsl:template></xsl:stylesheet>')
+    TROOP = ('<NPCCharacters><NPCCharacter id="x_knight" level="26" culture="Culture.gondor">'
+             '<Equipments><EquipmentRoster><equipment slot="Item0" id="Item.{item}" /></EquipmentRoster>'
+             '</Equipments></NPCCharacter></NPCCharacters>')
+
+    def setUp(self):
+        import analyze_melee_ladder as mr
+        import melee_catalogue as mc
+        import melee_damage as md
+        import xml.etree.ElementTree as ET
+        if mr.LET is None:
+            self.skipTest("needs lxml")
+        self.mc, self.mr = mc, mr
+        self._tmp = tempfile.TemporaryDirectory()
+        self.addCleanup(self._tmp.cleanup)
+        self.root = Path(self._tmp.name)
+        self.md = self.root / "ModuleData"
+        self.cat = mc.Catalogue()
+        self.cat.templates["OneHandedSword"] = mc.Template(
+            "OneHandedSword", "OneHandedWeapon", [("Blade", 0), ("Handle", 1)], ["Desc"])
+        self.cat.descriptions["Desc"] = mc.Description(
+            "Desc", "OneHandedSword", frozenset({"MeleeWeapon"}), frozenset({"base_blade", "base_handle"}), ("s",))
+        self.cat.usage_sets["s"] = (None, frozenset({"swing", "thrust"}))
+        for node in ET.fromstring(self.PIECES).iter("CraftingPiece"):
+            piece = md.parse_piece(node)
+            self.cat.pieces[piece.id] = piece
+        donor = mc.Item("donor", "Donor", "gondor", "OneHandedSword",
+                        (("base_blade", "Blade", 100), ("base_handle", "Handle", 100)), "armory")
+        self.cat.items["donor"] = donor
+        self.priced = {"donor": mc.price(self.cat, donor)}
+
+    def _tree(self, swing="4.0", thrust="2.0", carries="taom_ph_x_t5", files=True, blade="taom_ph_x_t5_blade"):
+        _write(self.md / "troops" / "troops_x.xml", self.TROOP.format(item=carries))
+        if files:
+            ph = self.md / "placeholder_weapons"
+            _write(ph / "ph_crafting_pieces.xml", self.PH_BLADE.format(swing=swing, thrust=thrust))
+            _write(ph / "ph_items.xml", self.PH_ITEMS.format(blade=blade))
+            _write(ph / "ph_weapon_descriptions.xslt", self.PH_DESCS)
+
+    def _issues(self):
+        regs = ts.Registries(items=set(), item_def_files={}, npccharacters=set(), cultures=set(),
+                             party_templates=set())
+        with mock.patch.object(self.mc, "load", return_value=self.cat), \
+             mock.patch.object(self.mc, "price_all", return_value=(self.priced, [])):
+            return ts.Validator(self.md, [], regs, game_modules=self.root)._melee_ladder_inversions()
+
+    def _blow(self, issues):
+        return [i for i in issues if i.code == "MELEE_BLOW_CEILING"]
+
+    def test_a_placeholder_over_its_tier_limit_is_a_blow_finding_that_names_it(self):
+        self._tree(swing="12.0")
+        found = self._blow(self._issues())
+        self.assertEqual([i.entry_id for i in found], ["taom_ph_x_t5"])
+        self.assertIn("x_knight", found[0].message)
+
+    def test_the_same_placeholder_inside_its_limits_is_not_a_blow_finding(self):
+        self._tree(swing="3.0", thrust="1.5")
+        self.assertEqual(self._blow(self._issues()), [])
+
+    def test_a_placeholder_nobody_carries_is_not_judged(self):
+        self._tree(swing="12.0", carries="donor")
+        self.assertEqual(self._blow(self._issues()), [])
+
+    def test_a_tree_without_placeholder_files_judges_the_armory_alone(self):
+        self._tree(swing="12.0", files=False)
+        issues = self._issues()
+        self.assertEqual(self._blow(issues), [])
+        self.assertNotIn("could not be priced", " ".join(i.message for i in issues))
+
+    def test_a_placeholder_breach_says_to_restat_the_donor_and_regenerate(self):
+        """Restatting the placeholder's own blade would be overwritten by the next generator run."""
+        self._tree(swing="12.0")
+        message = self._blow(self._issues())[0].message
+        self.assertIn("restat its donor", message)
+        self.assertIn("generate_placeholder_weapons.py", message)
+        self.assertNotIn("lowers the blade to the limit", message)
+
+    def test_a_placeholder_that_cannot_be_priced_is_a_stated_warning_not_a_silent_pass(self):
+        self._tree(swing="12.0", blade="taom_ph_missing_blade")
+        issues = [i for i in self._issues() if i.entry_id == "taom_ph_x_t5"]
+        self.assertEqual([(i.code, i.severity) for i in issues],
+                         [("MELEE_LADDER_INVERSION", ts.Severity.WARNING)])
+        self.assertIn("could not be priced", issues[0].message)
+        self.assertIn("taom_ph_missing_blade", issues[0].message)
+
+    def test_a_placeholder_files_description_sheet_is_what_registers_its_blade(self):
+        self._tree(swing="12.0")
+        (self.md / "placeholder_weapons" / "ph_weapon_descriptions.xslt").unlink()
+        issues = [i for i in self._issues() if i.entry_id == "taom_ph_x_t5"]
+        self.assertEqual([i.code for i in issues], ["MELEE_LADDER_INVERSION"])
+        self.assertIn("no WeaponDescription", issues[0].message)
+
+    def test_pricing_the_placeholders_leaves_the_shared_catalogue_as_it_was(self):
+        self._tree(swing="12.0")
+        before = (set(self.cat.items), set(self.cat.pieces), self.cat.descriptions["Desc"].available)
+        priced, problems = ts.price_placeholders(self.cat, self.md / "placeholder_weapons")
+        self.assertEqual((sorted(priced), problems), (["taom_ph_x_t5"], []))
+        self.assertEqual(before, (set(self.cat.items), set(self.cat.pieces), self.cat.descriptions["Desc"].available))
+
+    def test_a_malformed_placeholder_file_is_a_problem_not_a_crash(self):
+        self._tree()
+        _write(self.md / "placeholder_weapons" / "ph_items.xml", "<Items><CraftedItem")
+        priced, problems = ts.price_placeholders(self.cat, self.md / "placeholder_weapons")
+        self.assertEqual(priced, {})
+        self.assertEqual([p[0] for p in problems], ["ph_items.xml"])
+
+    def test_the_file_names_are_the_ones_the_generator_writes(self):
+        import generate_placeholder_weapons as gen
+        self.assertEqual(ts.PLACEHOLDER_DIR, gen.OUT_DIR.name)
+        self.assertEqual((ts.PLACEHOLDER_PIECES, ts.PLACEHOLDER_ITEMS, ts.PLACEHOLDER_DESCRIPTIONS),
+                         (gen.PIECES_FILE.name, gen.ITEMS_FILE.name, gen.DESC_XSLT.name))
 
 
 class ArmourMeshTierLadderTests(unittest.TestCase):
@@ -3943,20 +4332,56 @@ class CommitGateCoverageTests(unittest.TestCase):
         self.assertGreaterEqual(len(passes), 3, "the pass scan found nothing")
         self.assertEqual(unreached, [], f"main() never calls: {unreached}")
 
+    @staticmethod
+    def _error_codes_in(src):
+        """ERROR codes from the shapes the module uses: an inline Issue(...), the ref-sweep
+        table whose rows are `(..., Severity.ERROR, "CODE", ...)`, a `*_CODE` constant, and a
+        `*_SEVERITY = Severity.ERROR` constant passed as `severity=`. Scanning only the inline
+        form is how the first version of this test read 7 live codes as non-existent."""
+        return (set(re.findall(r'severity=(?:ts\.)?Severity\.ERROR,\s*code="([A-Z_]+)"', src))
+                | set(re.findall(r'Severity\.ERROR,\s*"([A-Z_]+)"', src))
+                | CommitGateCoverageTests._named_codes(src, "ERROR")
+                | CommitGateCoverageTests._severity_constant_codes(src, "ERROR"))
+
+    @staticmethod
+    def _severity_constant_codes(src, severity):
+        """Codes emitted as `severity=NAME_SEVERITY, code=...` where the module sets
+        `NAME_SEVERITY = Severity.<severity>`; the code is a literal or a `*_CODE` constant."""
+        names = re.findall(r'^([A-Z_]+_SEVERITY)\s*=\s*(?:ts\.)?Severity\.' + severity + r'\b', src, flags=re.M)
+        consts = dict(re.findall(r'^([A-Z_]+_CODE)\s*=\s*"([A-Z_]+)"', src, flags=re.M))
+        out = set()
+        for name in names:
+            for literal, const in re.findall(r'severity=' + name + r',\s*code=(?:"([A-Z_]+)"|([A-Z_]+_CODE)\b)', src):
+                out.add(literal or consts.get(const, ""))
+        out.discard("")
+        return out
+
     def _error_codes(self):
-        """ERROR codes from BOTH shapes the module uses: an inline Issue(...) and
-        the ref-sweep table, whose rows are `(..., Severity.ERROR, "CODE", ...)`.
-        Scanning only the inline form is how the first version of this test read
-        7 live codes as non-existent."""
         # Both files emit codes: taom_schema.py owns the ref sweep, and
         # validate_moduledata.py adds the passes that call sibling tools
         # (generators, collision bodies). Scanning one of them is how a code
         # could be emitted and never enforced (#599 added the first ERROR to the
         # second file).
         src = self.SCHEMA.read_text(encoding="utf-8") + self.VALIDATOR.read_text(encoding="utf-8")
-        return (set(re.findall(r'severity=(?:ts\.)?Severity\.ERROR,\s*code="([A-Z_]+)"', src))
-                | set(re.findall(r'Severity\.ERROR,\s*"([A-Z_]+)"', src))
-                | self._named_codes(src, "ERROR"))
+        return self._error_codes_in(src)
+
+    def test_a_severity_constant_flipped_to_error_makes_its_code_an_enforced_code(self):
+        """WORN_ARMOUR_CEILING_SEVERITY is the one switch that turns the ceiling into an error;
+        the scan has to see that flip or the hook list is never checked against it."""
+        src = self.SCHEMA.read_text(encoding="utf-8")
+        switch = re.compile(r"^(WORN_ARMOUR_CEILING_SEVERITY\s*=\s*)Severity\.\w+", re.M)
+        self.assertRegex(src, switch)
+        self.assertNotIn("WORN_ARMOUR_CEILING", self._error_codes_in(switch.sub(r"\1Severity.WARNING", src)))
+        self.assertIn("WORN_ARMOUR_CEILING", self._error_codes_in(switch.sub(r"\1Severity.ERROR", src)))
+
+    def test_a_severity_constant_resolves_for_a_literal_code_and_a_code_constant_alike(self):
+        src = ('SLOW_SEVERITY = Severity.ERROR\n'
+               'LAX_SEVERITY = Severity.WARNING\n'
+               'FAST_CODE = "FAST_ONE"\n'
+               'a = Issue(severity=SLOW_SEVERITY, code="SLOW_ONE")\n'
+               'b = Issue(severity=SLOW_SEVERITY, code=FAST_CODE)\n'
+               'c = Issue(severity=LAX_SEVERITY, code="LAX_ONE")\n')
+        self.assertEqual(self._error_codes_in(src), {"SLOW_ONE", "FAST_ONE"})
 
     def _hook_codes(self):
         return set(re.findall(r"--code\s+([A-Z_]+)", self.HOOK.read_text(encoding="utf-8")))

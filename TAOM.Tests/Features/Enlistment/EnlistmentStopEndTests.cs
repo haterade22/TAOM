@@ -26,14 +26,15 @@ public class EnlistmentStopEndTests
     private sealed class ReachedTheStopEnd : System.Exception { }
 
     private static EnlistmentMaintenanceBehavior NewBehavior(
-        IEnlistmentWaitMenuPresenter presenter, bool isAuthority = true)
+        IEnlistmentWaitMenuPresenter presenter, bool isAuthority = true,
+        IServiceMaintenanceService? maintenance = null)
     {
         var store = Substitute.For<IEnlistmentStore>();
         store.Record.Returns(new EnlistmentRecord { CommanderHeroId = Commander });
         var coop = Substitute.For<ICoopSessionProvider>();
         coop.IsAuthority.Returns(isAuthority);
         return new EnlistmentMaintenanceBehavior(
-            Substitute.For<IServiceMaintenanceService>(),
+            maintenance ?? Substitute.For<IServiceMaintenanceService>(),
             Substitute.For<IEnlistmentReconciler>(),
             store,
             coop,
@@ -80,6 +81,41 @@ public class EnlistmentStopEndTests
         sut.OnPartyLeftSettlement(Commander);
 
         presenter.DidNotReceive().OnStopEnded();
+    }
+
+    // The player's own walk-out ends a shore-leave pass on the edge (tester log, 14 Nov 2026): the
+    // pump's revoke cannot run while time is stopped, and a click from the gate re-enters first.
+
+    [TestCategory("RequiresGame")]
+    [TestMethod]
+    public void ThePlayerLeavingASettlement_EndsThePassOnTheEdge()
+    {
+        var maintenance = Substitute.For<IServiceMaintenanceService>();
+        var sut = NewBehavior(Substitute.For<IEnlistmentWaitMenuPresenter>(), maintenance: maintenance);
+
+        sut.OnMainPartyLeftSettlement();
+
+        maintenance.Received(1).OnPlayerLeftSettlement();
+    }
+
+    [TestCategory("RequiresGame")]
+    [TestMethod]
+    public void OnACoopClient_ThePlayerLeaving_DoesNotTouchThePass()
+    {
+        var maintenance = Substitute.For<IServiceMaintenanceService>();
+        var sut = NewBehavior(Substitute.For<IEnlistmentWaitMenuPresenter>(), isAuthority: false, maintenance: maintenance);
+
+        sut.OnMainPartyLeftSettlement();
+
+        maintenance.DidNotReceive().OnPlayerLeftSettlement();
+    }
+
+    [TestMethod]
+    public void TheMainPartyEdge_IsWiredToTheSettlementLeftHandler()
+    {
+        var path = RepoPath("Main", "Features", "Enlistment", "Hooks", "EnlistmentMaintenanceBehavior.cs");
+        AssertHasCodeLine(path, "if (party != null && party == MobileParty.MainParty)");
+        AssertHasCodeLine(path, "OnMainPartyLeftSettlement();");
     }
 
     [TestMethod]

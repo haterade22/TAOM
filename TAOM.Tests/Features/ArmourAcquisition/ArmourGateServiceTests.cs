@@ -212,6 +212,53 @@ public class ArmourGateServiceTests
     }
 
     [TestMethod]
+    public void GetTableClass_TabledPiece_IsTheTableClass()
+    {
+        Given(new[] { Armour("table_light") }, ("table_light", ArmourClass.Light, null));
+        _service.ApplyGating(isCampaign: true);
+
+        Assert.AreEqual(ArmourClass.Light, _service.GetTableClass("table_light"));
+    }
+
+    [TestMethod]
+    public void GetTableClass_PieceClassedOnlyByEngineTier_IsNull()
+    {
+        Given(new[] { Armour("table_elite", culture: "battania"), Armour("battania_noble_armor", tier: 5, culture: "battania") },
+            ("table_elite", ArmourClass.Elite, null));
+        _service.ApplyGating(isCampaign: true);
+
+        Assert.IsNotNull(_service.GetClass("battania_noble_armor"));
+        Assert.IsNull(_service.GetTableClass("battania_noble_armor"));
+    }
+
+    [TestMethod]
+    public void GetTableClass_TableRowNamingNoLoadedItem_IsNull()
+    {
+        Given(new[] { Armour("other") }, ("not_loaded", ArmourClass.Light, null));
+        _service.ApplyGating(isCampaign: true);
+
+        Assert.IsNull(_service.GetTableClass("not_loaded"));
+    }
+
+    [TestMethod]
+    public void GetTableClass_NamedWeaponListedInTheTable_IsNamed()
+    {
+        Given(new[] { Armour("anduril") }, ("anduril", ArmourClass.Light, null));
+        _service.ApplyGating(isCampaign: true);
+
+        Assert.AreEqual(ArmourClass.Named, _service.GetTableClass("anduril"));
+    }
+
+    [TestMethod]
+    public void GetTableClass_NamedWeaponNotInTheTable_IsNamed()
+    {
+        Given(new[] { Armour("anduril") });
+        _service.ApplyGating(isCampaign: true);
+
+        Assert.AreEqual(ArmourClass.Named, _service.GetTableClass("anduril"));
+    }
+
+    [TestMethod]
     public void GetPieces_WithASlot_ListsOnlyThePiecesWornThere()
     {
         // The lord's gear ladder (#693) awards one slot per rung.

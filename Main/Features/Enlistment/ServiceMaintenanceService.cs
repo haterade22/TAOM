@@ -68,6 +68,9 @@ public class ServiceMaintenanceService : IServiceMaintenanceService
     private int _pendingRaidJoinToken;
     private bool _inMenuFrame;
 
+    // Set when the player's own walk-out ended a pass; the next expensive pass finishes the revoke.
+    private bool _passEndedByWalkOut;
+
     public ServiceMaintenanceService(
         IEnlistmentStore store,
         IEnlistmentStateMachine machine,
@@ -121,6 +124,29 @@ public class ServiceMaintenanceService : IServiceMaintenanceService
         }
     }
 
+    public void OnPlayerLeftSettlement()
+    {
+        // THE PASS ENDS ON THE PLAYER'S OWN EDGE, not on the next expensive pump pass. Vanilla's
+        // town "Leave" stops time, and Campaign.Tick raises TickEvent only while dt > 0, so the
+        // pump's revoke cannot run until time moves. A click on the town or the commander from the
+        // gate re-enters on the first tick after that, before the pump's 0.25 budget fills: the
+        // player is back inside with the pass held, ShouldRevokeLeave never fires for a player
+        // inside, and when the commander marches the pass branch in Assess keeps him in that town
+        // until a battle (tester log, 14 Nov 2026: "shore leave granted" 18:57:22, autosave from
+        // the Leave 18:57:28, settlement encounter 18:57:32, no revoke and no FOLLOW).
+        //
+        // Only the flag is cleared here. The edge fires inside LeaveSettlementAction, and vanilla's
+        // Leave calls PlayerEncounter.Finish itself right after it; finishing here as well would
+        // run Finish twice. The encounter check waits for the next expensive pass.
+        var record = _store.Record;
+        if (!record.IsEnlisted || !record.OnTownLeave)
+            return;
+
+        record.OnTownLeave = false;
+        _passEndedByWalkOut = true;
+        _logger?.LogInfo("[Enlistment] shore leave ended — the player left the settlement");
+    }
+
     public void RequestBattleJoin(string commanderHeroId)
     {
         // One extra Find<Hero> on a join request only, never per frame.
@@ -166,7 +192,14 @@ public class ServiceMaintenanceService : IServiceMaintenanceService
         // Shore leave dies with the settlement stop (field report 1). Done here, on the presence
         // this pump already read, rather than through a second service doing its own lookup — one
         // owner for the revoke means it cannot be half-applied.
-        if (TownLeavePolicy.ShouldRevokeLeave(record.State, presence.IsInSettlement, record.OnTownLeave))
+        //
+        // A walk-out already cleared the flag on its own edge (OnPlayerLeftSettlement); this pass
+        // does the rest of the revoke on the presence it has read. Only while the player is still
+        // out: if he has walked back in, the open encounter is the one that entry started.
+        var walkedOut = _passEndedByWalkOut;
+        _passEndedByWalkOut = false;
+        if (TownLeavePolicy.ShouldRevokeLeave(record.State, presence.IsInSettlement, record.OnTownLeave)
+            || (walkedOut && !presence.IsInSettlement))
         {
             record.OnTownLeave = false;
 
@@ -290,6 +323,7 @@ public class ServiceMaintenanceService : IServiceMaintenanceService
         _renewal?.ResetForNewSession();
 
         _cachedCommanderPartyId = null;
+        _passEndedByWalkOut = false;
         _lastJoinRequestedForMapEventToken = 0;
         _menuFailures = 0;
         _budget = 0f;

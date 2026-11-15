@@ -1729,7 +1729,7 @@
               <equipment slot="Item0" id="Item.wm_mordor_set1_mace_a02" />
               <equipment slot="Item1" id="Item.wm_gundabad_javelin_a02" />
               <equipment slot="Item2" id="Item.wm_gundabad_javelin_a02" />
-              <equipment slot="Head" id="Item.sk_md_orc_brt_helmet_heavy_a" />
+              <equipment slot="Head" id="Item.sk_md_orc_arc_helmet_heavy_a" />
               <equipment slot="Body" id="Item.sk_md_orc_inf_chest_med_b" />
               <equipment slot="Cape" id="Item.sk_md_orc_pauldron_med_a" />
               <equipment slot="Gloves" id="Item.sk_md_orc_bracer_med_b" />
@@ -1744,7 +1744,7 @@
                     id="Item.wm_gundabad_javelin_a02" />
                 <equipment
                     slot="Head"
-                    id="Item.sk_md_orc_vgd_helmet_heavy_a" />
+                    id="Item.sk_md_orc_arc_helmet_heavy_a" />
                 <equipment
                     slot="Body"
                     id="Item.sk_md_orc_inf_chest_med_b" />
@@ -1767,7 +1767,7 @@
                     id="Item.wm_gundabad_javelin_a02" />
                 <equipment
                     slot="Head"
-                    id="Item.sk_md_orc_inf_helmet_heavy_a" />
+                    id="Item.sk_md_orc_arc_helmet_heavy_a" />
                 <equipment
                     slot="Body"
                     id="Item.sk_md_orc_inf_chest_med_b" />
@@ -1790,7 +1790,7 @@
                     id="Item.wm_gundabad_javelin_a02" />
                 <equipment
                     slot="Head"
-                    id="Item.sk_md_orc_vgd_helmet_heavy_a" />
+                    id="Item.sk_md_orc_arc_helmet_heavy_a" />
                 <equipment
                     slot="Body"
                     id="Item.sk_md_orc_inf_chest_med_b" />
@@ -1813,7 +1813,7 @@
                     id="Item.wm_gundabad_javelin_a02" />
                 <equipment
                     slot="Head"
-                    id="Item.sk_md_orc_brt_helmet_heavy_a" />
+                    id="Item.sk_md_orc_arc_helmet_heavy_a" />
                 <equipment
                     slot="Body"
                     id="Item.sk_md_orc_inf_chest_med_b" />
@@ -1836,7 +1836,7 @@
                     id="Item.wm_gundabad_javelin_a02" />
                 <equipment
                     slot="Head"
-                    id="Item.sk_md_orc_brt_helmet_heavy_a" />
+                    id="Item.sk_md_orc_arc_helmet_heavy_a" />
                 <equipment
                     slot="Body"
                     id="Item.sk_md_orc_inf_chest_med_b" />
@@ -2272,7 +2272,7 @@
         <Equipments>
             <EquipmentRoster>
               <equipment slot="Item0" id="Item.isengard_pike_b" />
-              <equipment slot="Head" id="Item.sk_md_orc_vgd_helmet_heavy_a" />
+              <equipment slot="Head" id="Item.sk_md_orc_arc_helmet_heavy_a" />
               <equipment slot="Body" id="Item.sk_md_orc_inf_chest_heavy_e" />
               <equipment slot="Cape" id="Item.sk_md_orc_pauldron_med_b" />
               <equipment slot="Gloves" id="Item.sk_md_orc_bracer_med_a" />

@@ -166,9 +166,9 @@
     <string id="taom_enc_robbery_threat_rhun_raiders_foe_1" text="A stranger on the Warlord's steppe, and alone. Your silver first, and then we will see what else you are worth." />
     <string id="taom_enc_robbery_pay_agreement_rhun_raiders_foe_1" text="You bargain like a captive already. Everything in your purse, and the finest thing in your pack besides." />
     <string id="taom_enc_robbery_conclusion_rhun_raiders_foe_1" text="Crawl back the way you came and tell them the East is stirring." />
-    <string id="taom_enc_robbery_start_fight_rhun_raiders_foe_1" text="Good. The Warlord pays well for enemy heads. Surround them!" />
+    <string id="taom_enc_robbery_start_fight_rhun_raiders_foe_1" text="Good. The Warlord pays well for heads, and asks no names. Surround them!" />
     <string id="taom_enc_robbery_threat_rhun_raiders_foe_2" text="You wandered too far from your friends. Leave your silver here, and perhaps the vultures go hungry today." />
-    <string id="taom_enc_robbery_pay_agreement_rhun_raiders_foe_2" text="Then pay as an enemy pays: every coin, and quickly." />
+    <string id="taom_enc_robbery_pay_agreement_rhun_raiders_foe_2" text="Then pay as the beaten pay: every coin, and quickly." />
     <string id="taom_enc_robbery_conclusion_rhun_raiders_foe_2" text="Take your empty purse and go. When next we meet, there will be no bargaining." />
     <string id="taom_enc_robbery_start_fight_rhun_raiders_foe_2" text="Then the drums speak for us. For Rhûn and the Warlord!" />
     <string id="taom_enc_bandit_greet_rhun_raiders_kin_1" text="Hold! We are horse herders with lean ponies and empty bellies, like any who live by the road. Let us pass." />
@@ -295,11 +295,11 @@
     <string id="taom_enc_robbery_pay_agreement_gondor_soldiers_side_2" text="Fair of you. The Steward's treasury never was. Name your sum and we will hear it." />
     <string id="taom_enc_robbery_conclusion_gondor_soldiers_side_2" text="That is more than the Tower ever sent us. Go in peace, and may your own lords pay their soldiers better than ours did." />
     <string id="taom_enc_robbery_start_fight_gondor_soldiers_side_2" text="Then we take it. We are long past caring which side anyone stands on. Steel out!" />
-    <string id="taom_enc_robbery_threat_gondor_soldiers_foe_1" text="You there, halt! We may have thrown off the Steward's colours, but we still know an enemy when we see one. Your purse, and quickly." />
-    <string id="taom_enc_robbery_pay_agreement_gondor_soldiers_foe_1" text="You would buy your way past us? Fine, an enemy's coin spends like any other. Make it a heavy offer." />
+    <string id="taom_enc_robbery_threat_gondor_soldiers_foe_1" text="You there, halt! We may have thrown off the Steward's colours, but we still know a fat purse when we see one. Hand it over, and quickly." />
+    <string id="taom_enc_robbery_pay_agreement_gondor_soldiers_foe_1" text="You would buy your way past us? Fine, a stranger's coin spends like any other. Make it a heavy offer." />
     <string id="taom_enc_robbery_conclusion_gondor_soldiers_foe_1" text="Take your road and do not look back. If we meet again, we may not be so hungry." />
-    <string id="taom_enc_robbery_start_fight_gondor_soldiers_foe_1" text="Good. I have missed fighting an honest enemy. At them!" />
-    <string id="taom_enc_robbery_threat_gondor_soldiers_foe_2" text="Halt. Our banners are gone, but our swords still remember the enemy. Empty your saddlebags, or we empty them for you." />
+    <string id="taom_enc_robbery_start_fight_gondor_soldiers_foe_1" text="Good. I have missed a fight with someone who stands their ground. At them!" />
+    <string id="taom_enc_robbery_threat_gondor_soldiers_foe_2" text="Halt. Our banners are gone, but our swords still remember their work. Empty your saddlebags, or we empty them for you." />
     <string id="taom_enc_robbery_pay_agreement_gondor_soldiers_foe_2" text="So you will pay rather than bleed. Clever. Let us see how much your hide is worth to you." />
     <string id="taom_enc_robbery_conclusion_gondor_soldiers_foe_2" text="Done. Ride on before some of us decide the coin was not enough." />
     <string id="taom_enc_robbery_start_fight_gondor_soldiers_foe_2" text="Then we finish this as we did in the old days in Ithilien. No quarter for those who cross us!" />
@@ -307,11 +307,11 @@
     <string id="taom_enc_bandit_greet_gondor_soldiers_kin_2" text="Put up your swords. We are tired, hungry and few, and none of us wants to die on a muddy road for nothing." />
     <string id="taom_enc_bandit_greet_gondor_soldiers_side_1" text="Steady! We once fought beside allies such as you against the Dark Lord. Is this how the Free Peoples repay us?" />
     <string id="taom_enc_bandit_greet_gondor_soldiers_side_2" text="Turn back. We still know how to hold a shield wall, and you will break on it before you break us." />
-    <string id="taom_enc_bandit_greet_gondor_soldiers_foe_1" text="So the enemy comes looking for us now. We held against worse on the river, and we will hold here." />
+    <string id="taom_enc_bandit_greet_gondor_soldiers_foe_1" text="So now strangers come looking for us. We held against worse on the river, and we will hold here." />
     <string id="taom_enc_bandit_greet_gondor_soldiers_foe_2" text="Come on, then. Gondor taught us to fight before it forgot us, and we remember every lesson." />
     <string id="taom_enc_hideout_boss_gondor_soldiers_kin" text="Enough of this slaughter between soldiers. Face me alone, sword to sword, and let my company live or die by how it ends." />
     <string id="taom_enc_hideout_boss_gondor_soldiers_side" text="I was a captain once, with a banner and a good name. Meet me alone and let the outcome settle this, as was done in the old wars." />
-    <string id="taom_enc_hideout_boss_gondor_soldiers_foe" text="You have come far into our camp, enemy. I will meet you alone, blade to blade, and show you what a captain of the Tower was worth." />
+    <string id="taom_enc_hideout_boss_gondor_soldiers_foe" text="You have come far into our camp, stranger. I will meet you alone, blade to blade, and show you what a captain of the Tower was worth." />
     <string id="taom_enc_robbery_threat_erebor_warriors_kin_1" text="Well met, cousin of the deep places. Even kin pay toll on this road, though we take less from you than from the rest. Open your purse." />
     <string id="taom_enc_robbery_pay_agreement_erebor_warriors_kin_1" text="Good. No need for axes between those who know the dark under the mountains. Weigh out a fair share." />
     <string id="taom_enc_robbery_conclusion_erebor_warriors_kin_1" text="The debt is settled and no beard is bloodied. Go, and do not speak of the Blacklocks in your own halls." />
@@ -333,7 +333,7 @@
     <string id="taom_enc_robbery_conclusion_erebor_warriors_foe_1" text="Taken and written in the book. Go, and tell your lords the hills of the east answer to no one." />
     <string id="taom_enc_robbery_start_fight_erebor_warriors_foe_1" text="Good. Our axes have gone too long without work. Break them!" />
     <string id="taom_enc_robbery_threat_erebor_warriors_foe_2" text="Stand fast, stranger. The Blacklocks keep long memories for those who serve the great powers. Your gold, or your blood on the stones." />
-    <string id="taom_enc_robbery_pay_agreement_erebor_warriors_foe_2" text="Coin from an enemy is still coin. Set it on the rock where we can see it." />
+    <string id="taom_enc_robbery_pay_agreement_erebor_warriors_foe_2" text="Coin from an outsider is still coin. Set it on the rock where we can see it." />
     <string id="taom_enc_robbery_conclusion_erebor_warriors_foe_2" text="That pays for this road and nothing more. Cross our hills again and the price will be dearer." />
     <string id="taom_enc_robbery_start_fight_erebor_warriors_foe_2" text="Close ranks. We stopped counting enemies the day our halls were taken, and we will not start again with you." />
     <string id="taom_enc_bandit_greet_erebor_warriors_kin_1" text="Stay your hand! We are of the same stone and the same blood, whatever our banners say." />

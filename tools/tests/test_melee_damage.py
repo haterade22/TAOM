@@ -606,6 +606,25 @@ def test_strip_loc_removes_the_localisation_key():
     assert cata.strip_loc("") == ""
 
 
+ITEM_XML = (
+    '<CraftedItem id="x" name="{=k}Name" culture="Culture.gondor" crafting_template="OneHandedSword">'
+    '<Pieces><Piece id="b" Type="Blade" scale_factor="90" /><Piece id="h" Type="Handle" />'
+    '<Piece id="s" Type="Bogus" /><Piece Type="Guard" /></Pieces></CraftedItem>'
+)
+ITEM_PIECES = (("b", "Blade", 90), ("h", "Handle", 100))
+
+
+def test_item_from_node_reads_the_same_item_from_either_xml_library():
+    expected = cata.Item("x", "Name", "gondor", "OneHandedSword", ITEM_PIECES, "src")
+    assert cata.item_from_node(ET.fromstring(ITEM_XML), "src") == expected
+    if cata.LET is not None:
+        assert cata.item_from_node(cata.LET.fromstring(ITEM_XML), "src") == expected
+
+
+def test_item_from_node_skips_a_node_with_no_id():
+    assert cata.item_from_node(ET.fromstring('<CraftedItem name="n" />'), "src") is None
+
+
 def test_thrown_templates_are_refused_rather_than_mispriced():
     cat = _cat()
     item = cata.Item("j", "n", "c", "Javelin", (), "src")

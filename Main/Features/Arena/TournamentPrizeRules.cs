@@ -22,10 +22,19 @@ public enum PrizeBand
 public static class TournamentPrizeRules
 {
     /// <summary>
-    /// The regular band's junk floor. Engine Tier is Round(Tierf) - 1, so this drops Tier1 and the lower half
-    /// of Tier2 (Tierf 1.5 to 2).
+    /// The regular band's junk floor for an item the class table does not list (a weapon, a shield, harness,
+    /// or armour added since the table was generated). Engine Tier is Round(Tierf) - 1, so this drops Tier1 and
+    /// the lower half of Tier2 (Tierf 1.5 to 2). A table piece is judged by its class and by
+    /// <see cref="RegularMinTableArmourValue"/> instead.
     /// </summary>
     internal const float RegularMinTierf = 2f;
+
+    /// <summary>
+    /// The regular band's floor on <c>ItemObject.Value</c> for a piece the class table lists. The engine sorts
+    /// the pool by value and a small tournament draws from a quarter of it by hero count
+    /// (<c>FightTournamentGame.GetTournamentPrize</c>), so cheap armour would otherwise fill the prizes.
+    /// </summary>
+    internal const int RegularMinTableArmourValue = 750;
 
     /// <summary>The table's class when it has one, else the class the engine tier implies.</summary>
     public static ArmourClass PrizeClass(ArmourClass? tableClass, int engineTierIndex) =>
@@ -38,16 +47,23 @@ public static class TournamentPrizeRules
     public static bool XmlMerchandise(bool? recorded, bool liveNotMerchandise) =>
         recorded ?? !liveNotMerchandise;
 
+    /// <param name="tableClass">The class table's class for the item, null when it lists none (then the engine
+    /// tier implies the class and the Tierf floor applies, a NaN Tierf failing it).</param>
+    /// <param name="engineTierIndex"><c>(int)ItemObject.Tier</c>, Tier1 = 0 in v1.5.3.</param>
     /// <param name="xmlMerchandise">From <see cref="XmlMerchandise"/>: a gated heavy piece is still a prize,
     /// an XML non-merchandise item never is.</param>
-    public static bool Fits(PrizeBand band, ArmourClass cls, float tierf, bool xmlMerchandise)
+    /// <param name="itemValue"><c>ItemObject.Value</c>, judged only for a table piece in the regular band.</param>
+    public static bool Fits(PrizeBand band, ArmourClass? tableClass, int engineTierIndex, float tierf,
+        bool xmlMerchandise, int itemValue)
     {
         if (!xmlMerchandise)
             return false;
-        return band == PrizeBand.Elite
-            ? cls == ArmourClass.Heavy
-            : (cls == ArmourClass.Light || cls == ArmourClass.Medium || cls == ArmourClass.Civilian)
-              && tierf >= RegularMinTierf;
+        var cls = PrizeClass(tableClass, engineTierIndex);
+        if (band == PrizeBand.Elite)
+            return cls == ArmourClass.Heavy;
+        if (cls != ArmourClass.Light && cls != ArmourClass.Medium && cls != ArmourClass.Civilian)
+            return false;
+        return tableClass.HasValue ? itemValue >= RegularMinTableArmourValue : tierf >= RegularMinTierf;
     }
 
     /// <summary>

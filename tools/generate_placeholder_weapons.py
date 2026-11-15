@@ -16,7 +16,11 @@ WHAT IT WRITES (all in the repo; the unversioned Armory is only read)
   Main/_Module/ModuleData/placeholder_weapons/ph_crafting_pieces.xml
       one cloned blade piece per weapon: the donor blade with a new id and every damage_factor
       multiplied by (ladder target DPS / donor DPS). DPS is linear in damage_factor
-      (restat_melee_blades.py, Crafting.cs:374, :380), so the clone lands on the target.
+      (restat_melee_blades.py, Crafting.cs:374, :380), so the clone lands on the target. The
+      multiplier stops at the tier limit (melee_ladders.json `class_limits` scaled to the
+      placeholder's tier and culture by `melee_ladder.tier_limit`: one blow and DPS per crafting
+      template), so a capped clone sits under its tier target. Run the tool AFTER
+      restat_melee_blades.py: k is relative to the donor, and the restat moves the donor.
   Main/_Module/ModuleData/placeholder_weapons/ph_items.xml
       one CraftedItem per weapon: the donor item with the new id, the new name key, the cloned blade
       and is_merchandise="false" (no shop flood; a NotMerchandise item never drops as loot).
@@ -98,10 +102,48 @@ def find_item_file(armory: Path, item_id: str) -> Path:
 
 def scale_factors(piece_xml: str, k: float) -> str:
     def repl(m):
-        return f'{m.group(1)}{round(float(m.group(2)) * k, 2):.2f}{m.group(3)}'
+        return f'{m.group(1)}{ladder.floor_factor(float(m.group(2)) * k):.2f}{m.group(3)}'
     out, n = re.subn(r'(damage_factor=")([0-9.]+)(")', repl, piece_xml)
     if n == 0:
         raise PlaceholderError("blade piece has no damage_factor")
+    return out
+
+
+def carriers_of(w, troops):
+    """The troops that hold or will hold this placeholder: a listed culture, a tier inside `tiers`,
+    and the donor (or the placeholder itself after an earlier --apply) in the battle kit."""
+    return [t for t in troops
+            if t.culture in w["cultures"] and w["tiers"][0] <= t.tier <= w["tiers"][1]
+            and (w["id"] in t.items or w["donor"] in t.items)]
+
+
+def spec_craft(w, lspec):
+    """The craft row of the spec's first culture, routed through `ladder.craft_key` like every caller."""
+    return ladder.craft_key(w["id"], w["cultures"][0], lspec)
+
+
+def carrier_rows(w, users, lspec):
+    """{(tier, craft key): [troop ids]} the weapon must stay inside: every real carrier, plus the
+    spec's own tier and first culture (an empty list when no troop sits there). The weapon goes to
+    every troop in `tiers` of every listed culture, so the spec's tier alone would let a lower
+    tier carry a blow it may not."""
+    rows = {}
+    for t in sorted(users, key=lambda t: (t.tier, t.id)):
+        rows.setdefault((t.tier, ladder.craft_key(t.id, t.culture, lspec)), []).append(t.id)
+    rows.setdefault((w["tier"], spec_craft(w, lspec)), [])
+    return rows
+
+
+def row_breaches(priced_weapon, rows, lspec):
+    """[((tier, craft key), troop ids, breaches)] for each row whose tier limit the weapon is over."""
+    out = []
+    for (tier, craft), ids in sorted(rows.items()):
+        over = ladder.limit_breaches(
+            ladder.tier_limit(priced_weapon.item.template, tier, craft, lspec),
+            priced_weapon.swing_damage, priced_weapon.thrust_damage,
+            priced_weapon.swing_dps, priced_weapon.thrust_dps)
+        if over:
+            out.append(((tier, craft), ids, over))
     return out
 
 
@@ -121,13 +163,32 @@ def build(spec, cat, priced, troops, armory):
         donor = priced.get(w["donor"])
         if donor is None:
             raise PlaceholderError(f"donor {w['donor']} is not a priced Armory melee weapon")
-        culture = w["cultures"][0]
-        band = ladder.band(w["tier"], culture, lspec)
+        culture = spec_craft(w, lspec)
+        # The donor's class decides the band (melee_ladder.target), so each class spreads over the
+        # ten tiers; its attacks decide which of the class limits it tops out at. A donor that
+        # thrusts harder than it swings is a spear (dominant_flags), whatever its template says.
+        template = cat.items[w["donor"]].template
+        band = ladder.band(w["tier"], culture, lspec, template,
+                           *ladder.dominant_flags(template, donor.swing_damage, donor.thrust_damage,
+                                                  donor.swing_dps, donor.thrust_dps, lspec))
         # blend < 1 (owner choice) lands part way: donor DPS + blend x (ladder target - donor DPS).
         blend = float(w.get("blend", 1.0))
         if not 0.0 < blend <= 1.0:
             raise PlaceholderError(f"{wid}: blend must be in (0, 1]")
         k = (donor.best_dps + blend * (band.target - donor.best_dps)) / donor.best_dps
+        # The tier limit (melee_ladders.json `class_limits` scaled to the placeholder's tier and
+        # culture) binds before the tier target: a top tier target would let a one handed sword
+        # swing past any tier's blow, and a tier 4 placeholder may not carry a tier 10 blow either.
+        # Run this tool after restat_melee_blades.py: k is relative to the donor's DPS, so a
+        # restat that moves the donor moves k.
+        # The cap is the tightest tier limit over every row of carrier_rows, not the spec's tier.
+        users = carriers_of(w, troops)
+        k_max = min(ladder.max_factor(ladder.tier_limit(template, tier, craft, lspec),
+                                      donor.swing_damage, donor.thrust_damage,
+                                      donor.swing_dps, donor.thrust_dps)
+                    for tier, craft in carrier_rows(w, users, lspec))
+        capped = k > k_max
+        k = min(k, k_max)
         blade_id = donor.blade_piece
         new_blade = f"{wid}_blade"
         piece_xml = element_text(armory / "ModuleData" / "LOTRLOME_crafting_pieces.xml", "CraftingPiece", blade_id)
@@ -153,17 +214,11 @@ def build(spec, cat, priced, troops, armory):
         tmpl_add.setdefault(cat.items[w["donor"]].template, []).append(new_blade)
         pieces.append(f"    <!-- {wid}: donor blade {blade_id}, damage_factor x{k:.3f} -->\n    {piece_xml}")
         items.append(f"    <!-- PLACEHOLDER {wid}: look of {w['donor']}, tier {w['tier']} ladder target -->\n    {item_xml}")
-        users = []
-        for t in troops:
-            if t.culture not in w["cultures"] or not w["tiers"][0] <= t.tier <= w["tiers"][1]:
-                continue
-            if wid in t.items:  # already swapped by an earlier --apply
-                users.append(t)
-            elif w["donor"] in t.items:
-                users.append(t)
+        for t in users:
+            if w["id"] not in t.items:  # not yet swapped by an earlier --apply
                 for slot in sorted(t.slots_of.get(w["donor"], ())):
                     swaps.append({"file": t.path, "troop": t.id, "slot": slot, "old": w["donor"], "new": wid})
-        plan.append((w, donor, band, k, new_blade, piece_xml, users))
+        plan.append((w, donor, band, k, new_blade, piece_xml, users, capped))
     return pieces, items, plan, swaps, desc_add, tmpl_add
 
 
@@ -194,7 +249,7 @@ def render(tag, root, body):
 def price_new(cat, plan):
     """Price each placeholder with the engine port: the cloned blade parsed from the generated XML."""
     out = {}
-    for w, donor, band, k, new_blade, piece_xml, _ in plan:
+    for w, donor, band, k, new_blade, piece_xml, _, _ in plan:
         piece = md.parse_piece(ET.fromstring(piece_xml))
         if piece is None:
             raise PlaceholderError(f"{new_blade} did not parse as a piece")
@@ -249,6 +304,7 @@ def main(argv=None) -> int:
     troops = report.load_troops(report.TROOPS)
     pieces, items, plan, swaps, desc_add, tmpl_add = build(spec, cat, priced, troops, armory)
     new_prices = price_new(cat, plan)
+    lspec = ladder.load_spec()
 
     pieces_text = render(spec["tag"], "CraftingPieces", pieces)
     items_text = render(spec["tag"], "Items", items)
@@ -261,13 +317,25 @@ def main(argv=None) -> int:
     ET.fromstring(sub_new.encode("utf-8"))
 
     print(f"placeholder weapons: {len(plan)}; troop slots to swap: {len(swaps)}")
-    for w, donor, band, k, new_blade, _, users in plan:
+    for w, donor, band, k, new_blade, _, users, capped in plan:
         p = new_prices[w["id"]]
         print(f"  {w['id']}: donor {w['donor']} {donor.best_dps:.0f} DPS -> {p.best_dps:.0f} DPS "
               f"(T{w['tier']} band {band.low:.0f}-{band.high:.0f}, target {band.target:.0f}; x{k:.2f}); "
               f"swing {p.swing_damage}, thrust {p.thrust_damage}; {len(users)} troops: "
               + ", ".join(f"{t.id} T{t.tier}" for t in sorted(users, key=lambda t: (t.tier, t.id))))
-        if float(w.get("blend", 1.0)) == 1.0:
+        over = row_breaches(p, carrier_rows(w, users, lspec), lspec)
+        if over:
+            raise PlaceholderError(
+                f"{w['id']} is over its tier limit: "
+                + "; ".join(f"tier {tier} {craft} ({', '.join(ids) or 'the spec row'}): "
+                            + ", ".join(f"{s} {v:.0f} > {m}" for s, v, m in b)
+                            for (tier, craft), ids, b in over))
+        if capped:
+            if not donor.best_dps < p.best_dps <= band.high:
+                raise PlaceholderError(f"{w['id']} prices at {p.best_dps:.1f}: its tier limit leaves "
+                                       "no room above its donor; remove it from the spec")
+            print(f"    (tier limit of {p.item.template}: held under the tier target)")
+        elif float(w.get("blend", 1.0)) == 1.0:
             if not band.low <= p.best_dps <= band.high:
                 raise PlaceholderError(f"{w['id']} prices at {p.best_dps:.1f}, outside its band")
         elif not donor.best_dps < p.best_dps <= band.high:
