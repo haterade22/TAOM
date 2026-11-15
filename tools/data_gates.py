@@ -101,7 +101,10 @@ GATES = (
     Gate("xml-schemas-live", "whole live modules (Armory, TAOM_Map)", (),
          ("python", "tools/validate_xml_schemas.py", "--live"), ("tools/validate_xml_schemas.py",)),
     Gate("moduledata", "troops, characters, rosters, cultures, clans, party templates, lords, Armory refs, "
-         "TAOM_Map settlements", TROOP_GLOBS + MODULEDATA_GLOBS + ARMORY_GLOBS + MAP_GLOBS,
+         "TAOM_Map settlements", TROOP_GLOBS + MODULEDATA_GLOBS + ARMORY_GLOBS + MAP_GLOBS
+         # The enlistment rank rule lives in the generator and prices weapons with these tools (#1290).
+         + ("*tools/generate_enlistment_rosters.py", "*tools/melee_catalogue.py", "*tools/analyze_melee_ladder.py",
+            "*tools/ranged_ladder.py"),
          ("python", "tools/validate_moduledata.py"),
          (".claude/rules/moduledata-validation.md", ".claude/rules/troops.md", ".claude/rules/xml-data.md", CODES_DOC),
          note="read the warnings as well as the errors; settlement pins live in tools/settlement_assignments.json"),

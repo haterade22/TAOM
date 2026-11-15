@@ -552,8 +552,7 @@ close the game, the launcher and the dedicated server.
     - LIVE ARMORY: `python tools/generate_starter_kit.py`, `--apply`, `--verify` (no `--asset-repo`, so
       the mirror is not written).
     - REPO: `python tools/wire_starter_kit_rosters.py`, and `--apply` only on drift.
-    - REPO: `python tools/generate_enlistment_rosters.py --out Main/_Module/ModuleData/equipmentsets/taom_enlistment_equipment.xml`,
-      read it, then the same command with `--apply`.
+    - REPO: `python tools/generate_enlistment_rosters.py --repair-ranks`, read the plan, then `--apply`; then `python tools/promote_borrowed_cultures.py --only <c> --check` for each promoted culture and `--apply` where only the enlistment file drifts, until `ENLISTMENT_KIT_RANK_REGRESSION` lists nothing new ([enlistment.md](./enlistment.md#a-ranks-kit-is-never-weaker-than-the-kit-before-it-1290); a full generator `--apply` refuses the file, because it would drop the promoter's regions).
 12. **REPO.** `python tools/generate_placeholder_weapons.py`, `--apply`, `--verify`. It runs after
     step 9: its scale factor is relative to the donor blade, and the restat moves the donor. It
     writes `placeholder_weapons/*`, `SubModule.xml` once and the troop rosters, and reads the Armory.
