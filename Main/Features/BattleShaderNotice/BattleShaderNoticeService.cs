@@ -35,6 +35,13 @@ public sealed class BattleShaderNoticeService
     /// <summary>The loading screen's line while the notice is up; null otherwise.</summary>
     public string? LoadingScreenLine { get; private set; }
 
+    /// <summary>
+    /// The line to write on this frame: <see cref="LoadingScreenLine"/> only while the caller reports the engine's
+    /// render wait (the current mission state's first-tick flag with its mission <c>Continuing</c>). Once a mission state
+    /// is finalized nothing writes the line again; a line already on the window stays until its next enable clears it.
+    /// </summary>
+    public string? LineDuringRenderWait(bool missionWaiting) => missionWaiting ? LoadingScreenLine : null;
+
     /// <summary>Read once and cached. The tick hook asks it before the native shader count, so a server makes no native read.</summary>
     public bool IsDedicatedServer => _isServer ??= _server.IsDedicatedServer;
 
