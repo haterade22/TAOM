@@ -18,6 +18,7 @@ with one dated backup per file.
 import contextlib
 import io
 import os
+import re
 import shutil
 import sys
 import tempfile
@@ -251,10 +252,11 @@ class CurveTests(unittest.TestCase):
 
     def test_extremity_loot_tables_are_scoped(self):
         for slot in ("arm", "leg", "shoulder"):
-            # 2026-11-14: at the new bands a +5 cloth roll let a light cape pass a heavy one (15 shoulder
-            # cases) and a medium cape pass an elite one (5 cases), so light and medium take the +3 table.
+            # Light and medium take the +3 table: a +5 cloth roll let a light cape pass a heavy one and a
+            # medium cape pass an elite one. Heavy and up take leather, whose down-rolls (-2, -3) fit a
+            # 7 to 28 point stat where chain's (-6, -8) did not.
             self.assertEqual([ra.modifier_group_for(slot, t) for t in ra.TIERS],
-                             ["cloth_unarmoured"] * 3 + ["chain"] * 3, slot)
+                             ["cloth_unarmoured"] * 3 + ["leather"] * 3, slot)
         self.assertEqual(ra.modifier_group_for("body", "elite"), "plate")
         self.assertEqual(ra.modifier_group_for("head", "medium"), "chain")
 
@@ -514,6 +516,61 @@ class WriterTests(unittest.TestCase):
         head = {c["id"]: c for c in self._run("gondor", "head_armors.xml", "head")}
         self.assertEqual(head["sk_gd_x_helm_heroonly"]["new_values"], {"head_armor": 51})   # 46 * 1.04 * 1.07
 
+    def _clamped(self, slot, folder_file, *items, hero_worn=True):
+        """Write `items` into a fresh file as kit nobody but a hero wears (or nobody at all) and return
+        the clamp plan keyed by id."""
+        for iid in [m for it in items for m in re.findall(r'id="([^"]+)"', it)]:
+            self.roster.setdefault(iid, {"anchorLevel": None, "tier": None, "tierSource": "unworn",
+                                         "heroWorn": hero_worn})
+        path = self.armory / "gondor" / folder_file
+        path.write_bytes(_file(*items, crlf=True))
+        return {c["id"]: c for c in self._run("gondor", folder_file, slot)}
+
+    def test_a_hero_only_heavy_extremity_leaves_plate_and_chain_for_the_lord_loot_table(self):
+        """The group decides the roll of a lord's drop, so the clamp moves the piece to its band's table."""
+        for kind, group in (("plate", "plate"), ("chain", "chain")):
+            by_id = self._clamped("arm", "arm_armors_clamp.xml",
+                                  _item("boromir_bracer_" + kind, "HandArmor", arm_armor=60, modifier_group=group))
+            c = by_id["boromir_bracer_" + kind]
+            self.assertEqual((c["tier"], c["status"], c["new_modifier"]), ("lord", "CHANGED", "leather"), kind)
+            self.assertEqual(c["new_material"], c["old_material"])
+
+    def test_a_clamped_extremity_already_under_its_cap_still_moves_to_the_band_table(self):
+        by_id = self._clamped("leg", "leg_armors_clamp.xml",
+                              _item("boromir_greave_low", "LegArmor", leg_armor=2, modifier_group="chain"))
+        c = by_id["boromir_greave_low"]
+        self.assertEqual((c["old_values"], c["new_values"]), ({"leg_armor": 2}, {"leg_armor": 2}))
+        self.assertEqual((c["status"], c["new_modifier"]), ("CHANGED", "leather"))
+
+    def test_a_clamped_unworn_extremity_takes_the_elite_table(self):
+        by_id = self._clamped("leg", "leg_armors_clamp.xml",
+                              _item("sk_gd_x_greave_unworn_a", "LegArmor", leg_armor=60, modifier_group="chain"),
+                              hero_worn=False)
+        c = by_id["sk_gd_x_greave_unworn_a"]
+        self.assertEqual((c["tier"], c["new_modifier"]), ("elite", "leather"))
+
+    def test_the_clamp_never_raises_a_loot_table_and_leaves_head_and_body_alone(self):
+        for group in ("cloth", "cloth_unarmoured", "leather"):
+            by_id = self._clamped("arm", "arm_armors_clamp.xml",
+                                  _item("boromir_bracer_x", "HandArmor", arm_armor=60, modifier_group=group))
+            self.assertEqual(by_id["boromir_bracer_x"]["new_modifier"], group, group)
+        by_id = self._clamped("body", "body_armors_clamp.xml",
+                              _item("boromir_jerkin", "BodyArmor", body_armor=60, arm_armor=30,
+                                    modifier_group="chain"))
+        self.assertEqual(by_id["boromir_jerkin"]["new_modifier"], "chain")
+        by_id = self._clamped("head", "head_armors_clamp.xml",
+                              _item("sk_gd_x_helm_heroonly", "HeadArmor", head_armor=70, modifier_group="chain"))
+        self.assertEqual(by_id["sk_gd_x_helm_heroonly"]["new_modifier"], "chain")
+
+    def test_the_clamp_writes_the_loot_table_to_the_file(self):
+        self._clamped("arm", "arm_armors_clamp.xml",
+                      _item("boromir_bracer_w", "HandArmor", arm_armor=60, modifier_group="plate"))
+        path = self.armory / "gondor" / "arm_armors_clamp.xml"
+        self._run("gondor", "arm_armors_clamp.xml", "arm", dry_run=False)
+        out = path.read_bytes().decode("utf-8")
+        self.assertIn('modifier_group="leather"', out)
+        self.assertNotIn('modifier_group="plate"', out)
+
     def test_a_clamp_is_skipped_by_no_lower_armor_and_weights_only(self):
         for kw in ({"no_lower_armor": True}, {"weights_only": True}):
             by_id = {c["id"]: c for c in self._run("gondor", "body_armors.xml", "body", **kw)}
@@ -702,6 +759,74 @@ class WriterTests(unittest.TestCase):
         self.assertIn(f"Changes written to {len(backups)} files", out)    # a backup exists per written file
         code, out = self._main("--apply", "--backup-tag", "t", *args)
         self.assertIn("Changes written to 0 files", out)
+
+    def test_check_exits_1_on_a_plan_and_0_on_an_empty_one_and_writes_nothing(self):
+        """--check is the dry run of the apply sequence with its flags fixed, so a bare --check is enough."""
+        before = {p: p.read_bytes() for p in self.armory.rglob("*") if p.is_file()}
+        code, out = self._main("--check", "--armory-path", str(self.armory))
+        self.assertEqual(code, 1)
+        self.assertRegex(out, r"\d+ item\(s\) differ from the curve")
+        self.assertIn("gondor/body_armors.xml", out.replace("\\", "/"))
+        self.assertIn("sk_gd_x_chest_heavy_a", out)
+        self.assertEqual({p: p.read_bytes() for p in self.armory.rglob("*") if p.is_file()}, before)
+        self._main("--apply", "--backup-tag", "t", "--all", "--tier-source", "roster-first", "--keep-weights",
+                   "--keep-material-type", "--armory-path", str(self.armory))
+        code, out = self._main("--check", "--armory-path", str(self.armory))
+        self.assertEqual(code, 0)
+        self.assertIn("0 item(s) differ from the curve", out)
+
+    def test_check_lists_the_first_twenty_differences_with_the_live_and_the_curve_value(self):
+        items = []
+        for n in range(25):
+            iid = f"sk_gd_x_grvs_heavy_{n:02d}"
+            self.roster[iid] = {"anchorLevel": 46, "tier": "heavy", "tierSource": "id-keyword"}
+            items.append(_item(iid, "LegArmor", leg_armor=20, modifier_group="chain"))
+        (self.armory / "gondor" / "leg_armors.xml").write_bytes(_file(*items, crlf=True))
+        for name in ("arm_armors.xml", "body_armors.xml", "head_armors.xml"):
+            (self.armory / "gondor" / name).unlink()
+        (self.armory / "mordor" / "shoulder_armors.xml").unlink()
+        code, out = self._main("--check", "--armory-path", str(self.armory))
+        self.assertEqual(code, 1)
+        self.assertIn("25 item(s) differ from the curve", out)
+        lines = [l for l in out.splitlines() if "sk_gd_x_grvs_heavy_" in l]
+        self.assertEqual(len(lines), 20)
+        self.assertIn("leg_armor: live 20 -> curve 21", lines[0])    # Gondor's elite greaves
+        self.assertEqual(out.strip().splitlines()[-1], "25 item(s) differ from the curve.")
+        self.assertTrue(any("modifier_group" in l and "chain" in l and "leather" in l for l in lines))
+
+    def test_check_exits_2_when_the_armory_is_not_installed(self):
+        code, out = self._main("--check", "--armory-path", str(self.armory / "missing"))
+        self.assertEqual(code, 2)
+        self.assertIn("not installed", out)
+
+    def test_check_refuses_flags_that_would_change_what_it_checks(self):
+        for flag in (("--weights-only",), ("--no-lower-armor",), ("--materials-only",), ("--keep-materials",),
+                     ("--backup-tag", "t")):
+            code, _ = self._main("--check", *flag, "--armory-path", str(self.armory))
+            self.assertEqual(code, 2, flag)
+
+    def test_a_check_that_read_nothing_is_not_a_pass(self):
+        """Exit 0 would make the gate print PASS for a run that compared no file with the curve."""
+        import data_gates as dg
+        empty = Path(self._tmp.name) / "empty_items"
+        (empty / "gondor").mkdir(parents=True)               # a culture folder with no armour file
+        bare = Path(self._tmp.name) / "no_cultures"
+        bare.mkdir()
+        cases = {
+            "no culture folder": ["--armory-path", str(bare)],
+            "no armour file": ["--armory-path", str(empty)],
+            "unknown culture": ["--cultures", "gondor,nowhere", "--armory-path", str(self.armory)],
+            "unknown slot": ["--slots", "bogus", "--armory-path", str(self.armory)],
+        }
+        for label, argv in cases.items():
+            code, out = self._main("--check", *argv)
+            self.assertEqual(code, 2, label)
+            self.assertIn("ERROR: SKIPPED", out, label)
+            self.assertIn("nothing was checked", out, label)
+            self.assertEqual(dg.verdict(code, out)[0], "NOT RUN", label)
+        code, out = self._main("--check", "--cultures", "gondor", "--slots", "body",
+                               "--armory-path", str(self.armory))
+        self.assertEqual(code, 1)                             # a real scope still compares files
 
     def test_apply_is_byte_faithful_and_backs_up_once(self):
         body = self.armory / "gondor" / "body_armors.xml"
