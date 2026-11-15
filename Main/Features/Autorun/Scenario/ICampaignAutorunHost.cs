@@ -34,7 +34,7 @@ internal interface ICampaignAutorunHost
 
     /// <summary>
     /// Starts a new sandbox campaign with the default start options, past the options screen TAOM's start options provider adds to the
-    /// menu button. False when it could not start.
+    /// menu button, and stops focus loss from pausing the game (in memory, remembering the old value). False when it could not start.
     /// </summary>
     bool StartNewCampaign();
 
@@ -49,8 +49,8 @@ internal interface ICampaignAutorunHost
     bool TryFinishCreation(string cultureId, out string? problem);
 
     /// <summary>
-    /// Once, on the map: turns autosave off for this process, stops focus loss from pausing the map (remembering the old value), makes
-    /// every other party ignore the main party and holds it in place. Returns what it did, for the log.
+    /// Once, on the map: turns autosave off for this campaign, makes every other party ignore the main party and holds it in place.
+    /// Returns what it did, for the log.
     /// </summary>
     string PrepareMap();
 
@@ -63,7 +63,7 @@ internal interface ICampaignAutorunHost
     /// <summary>Whole and part days since the campaign started; NaN when no campaign runs.</summary>
     double ElapsedDays { get; }
 
-    /// <summary>Puts back the focus-loss setting <see cref="PrepareMap"/> changed. Does nothing when it changed nothing.</summary>
+    /// <summary>Puts back the focus-loss setting <see cref="StartNewCampaign"/> changed. Does nothing when it changed nothing.</summary>
     void RestoreFocusSetting();
 
     /// <summary>Ends the running campaign and shows the main menu; does nothing when no campaign runs.</summary>

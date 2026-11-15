@@ -47,6 +47,17 @@ internal sealed class ScenarioAutorunDriver
 
     internal string PhaseName => _phase.ToString();
 
+    /// <summary>
+    /// The client's OnGameEnd. Every game end, the shutdown's included, comes here before the engine saves BannerlordConfig (Module.cs
+    /// FinalizeModule: Game.OnFinalize, then BannerlordConfig.Save), so the focus setting the host changed never reaches the player's
+    /// config file, whoever ended the game.
+    /// </summary>
+    internal void GameEnded()
+    {
+        if (_phase != Phase.Off)
+            Guarded("restore the focus setting", _host.RestoreFocusSetting);
+    }
+
     /// <summary>One engine application tick. <paramref name="dt"/> is wall seconds. An unarmed or finished driver, or a dt that is not a positive number, returns at once.</summary>
     internal void Tick(float dt)
     {
@@ -185,8 +196,13 @@ internal sealed class ScenarioAutorunDriver
 
     private void Exiting()
     {
-        if (_host.Screen == AutorunScreen.MainMenu || !ScenarioRules.Waiting(_wall - _phaseStart, ScenarioRules.ExitWaitSeconds))
+        if (_host.Screen == AutorunScreen.MainMenu)
             Guarded("quit", QuitIfWanted, Phase.Done);
+        else if (!ScenarioRules.Waiting(_wall - _phaseStart, ScenarioRules.ExitWaitSeconds))
+        {
+            _logger.LogWarning(Prefix + "exit_stalled: the main menu did not come back in " + ScenarioRules.ExitWaitSeconds + " s");
+            Guarded("quit", QuitIfWanted, Phase.Done);
+        }
     }
 
     private void QuitIfWanted()
@@ -203,9 +219,10 @@ internal sealed class ScenarioAutorunDriver
         Enter(Phase.Exiting);
         var facts = new ScenarioRunFacts(reason, _dayStart, _lastDay, _inquiries, _notices, _resets, _prepared, _wall, _startedAt, DateTime.Now.ToString("o"));
         Guarded("restore the focus setting", _host.RestoreFocusSetting);
-        Write(ScenarioAutorunDone.DoneFile, ScenarioAutorunDone.Text(_plan, facts));
-        _logger.LogInfo(Prefix + "done reason=" + reason + " scenario=" + _plan.Scenario + " days_run=" + ScenarioRules.DaysRun(_dayStart, _lastDay)
-            + " days_wanted=" + _plan.Days + " quit=" + (_plan.Quit ? 1 : 0));
+        // The text is built inside the guard, so a throw while building it still lets the outcome and the campaign end run.
+        Guarded("write " + ScenarioAutorunDone.DoneFile, () => _host.WriteFile(ScenarioAutorunDone.DoneFile, ScenarioAutorunDone.Text(_plan, facts)));
+        Guarded("log the result", () => _logger.LogInfo(Prefix + "done reason=" + reason + " scenario=" + _plan.Scenario + " days_run="
+            + ScenarioRules.DaysRun(_dayStart, _lastDay) + " days_wanted=" + _plan.Days + " quit=" + (_plan.Quit ? 1 : 0)));
         Guarded("report the outcome", () => ScenarioOutcomes.Report(_outcomes, _plan, facts));
         Guarded("end the campaign", _host.EndCampaign);
     }

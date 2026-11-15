@@ -10,13 +10,15 @@ public class ScenarioPlanTests
     private const string ArmPath = @"E:\Temp\scenario-runs\arm.txt";
     private const string Head = "kind=campaign-new\nout=E:\\x\\out\n";
 
-    private static ScenarioPlan Resolve(string? text, string? env = ArmPath, bool exists = true, string? fords = null, string? longDefeat = null)
+    private static ScenarioPlan Resolve(string? text, string? env = ArmPath, bool exists = true, string? fords = null, string? longDefeat = null,
+        string? commandTrial = null)
     {
         Func<string, string?> getEnv = name => name switch
         {
             ScenarioPlan.EnvVar => env,
             "TAOM_FORDS_AUTORUN" => fords,
             "TAOM_LONGDEFEAT_AUTORUN" => longDefeat,
+            "TAOM_COMMAND_TRIAL" => commandTrial,
             _ => null,
         };
         return ScenarioPlan.Resolve(getEnv, _ => exists, _ => text ?? throw new InvalidOperationException("read"));
@@ -64,6 +66,16 @@ public class ScenarioPlanTests
         Assert.IsFalse(plan.Armed);
         StringAssert.Contains(plan.Problem, "two autorun variables are set");
         StringAssert.Contains(plan.Problem, "TAOM_LONGDEFEAT_AUTORUN");
+    }
+
+    // The Seat's field trial (CommandTrialAutostart) also starts a game from the main menu, on the same settle.
+    [TestMethod]
+    public void Resolve_CommandTrialVariableAlsoSet_IsUnarmedWithAProblem()
+    {
+        var plan = Resolve(Head, commandTrial: @"E:\t.txt");
+
+        Assert.IsFalse(plan.Armed);
+        StringAssert.Contains(plan.Problem, "TAOM_COMMAND_TRIAL");
     }
 
     [TestMethod]

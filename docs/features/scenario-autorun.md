@@ -26,7 +26,9 @@ time for popups, focus loss and some menus. The driver must also never arm in a 
 ### Solution Approach
 
 - `ScenarioPlan` reads the arm file named by the environment variable `TAOM_AUTORUN`. No file fallback: a stray file never arms a
-  session. A second autorun variable (`TAOM_FORDS_AUTORUN`, `TAOM_LONGDEFEAT_AUTORUN`) leaves the plan unarmed.
+  session. A second autorun variable (`TAOM_FORDS_AUTORUN`, `TAOM_LONGDEFEAT_AUTORUN`, `TAOM_COMMAND_TRIAL`) leaves the plan unarmed.
+- After the done file, the driver waits up to 60 s for the main menu and then quits; a wait that runs out logs `exit_stalled`. The
+  launcher kills the game 120 s after it sees the done file, so the game quits first.
 - `ScenarioAutorunDriver` is a pure state machine ticked with wall seconds from the client's application tick. Phases: `WaitMenu`,
   `Creation`, `WaitMap`, `Running`, `Exiting`, `Done`. The decisions are in `ScenarioRules`; every wall and day gate fails on NaN.
 - `ICampaignAutorunHost` holds every engine call. Core registers `NullCampaignAutorunHost`; TAOM.Client replaces it with
@@ -85,11 +87,16 @@ All from the v1.5.7 decompile (`pwsh tools/taom-src.ps1 path <Type>`).
 - **Main party:** `IgnoreByOtherPartiesTill(CampaignTime.Never)` and `SetMoveModeHold()`, the engine's own
   `set_main_party_attackable 0` cheat.
 - **Time:** `CampaignTimeControlMode.UnstoppableFastForward` (the stoppable mode stops on Hold). `SpeedUpMultiplier` has no setter cap.
-- **What stops time:** `TimeControlModeLock`, and the escape menu that focus loss opens. The host sets
-  `BannerlordConfig.StopGameOnFocusLost = false` in memory and puts it back at the end. It never writes MCM or the config file.
+- **What stops time:** `TimeControlModeLock`, and the escape menu that focus loss opens (`MapScreen` asks its map views on focus
+  loss). The host sets `BannerlordConfig.StopGameOnFocusLost = false` in memory when it starts the campaign. The engine saves that
+  config on shutdown: `Module.FinalizeModule` calls `Game.Current.OnFinalize()` (which ends in `Game.Destroy` and every submodule's
+  `OnGameEnd`) and then `BannerlordConfig.Save()` (Module.cs lines 1348 to 1362). So `ClientSubModule.OnGameEnd` puts the player's
+  value back at every game end, before that save, whoever ended the game. A crash or a kill does not save. MCM is never written.
 - **Autosave:** the host replaces `SandBoxManager.SandBoxSaveManager` with an `ISaveManager` that disables autosave.
 - **Popups:** `InformationManager.HideInquiry()` and `MBInformationManager.HideSceneNotification()`. No API gives an open inquiry's title,
-  so the host listens to `OnShowInquiry` and `OnShowTextInquiry` and logs the first 20 titles.
+  so the host listens to `OnShowInquiry` and `OnShowTextInquiry` and logs, for the first 20 hides, the newest title shown. With two
+  inquiries queued, that title can be the queued one's, and a multi-selection inquiry logs an empty or old title. The titles are for
+  the log only.
 - **Day count:** `CampaignTimeModel.CampaignStartTime.ElapsedDaysUntilNow`.
 - **Exit:** `MBGameManager.EndGame()`, then `TaleWorlds.Engine.Utilities.QuitGame()`.
 
@@ -127,7 +134,9 @@ so it needs Mike's word.
 1. Run `python tools/run_scenario.py --days 3`. The TAOM log shows
    `[Check] id=taom.autorun.campaign-new.done result=pass reason=ok`, and the run folder under `E:\Temp\scenario-runs\` holds
    `autorun_done.txt` with `reason=ok`.
-2. Read `days_run` and the wall seconds in the done file to measure the days per minute, then set a wall limit for the long run.
+2. Measure the days per minute from the log: the `[Autorun][Scenario] phase WaitMap -> Running wall=` line and the `phase Running ->
+   Exiting wall=` line give the running seconds, and `days_run` in the done file gives the days. (`wall_seconds` in the done file also
+   counts boot, the menu, creation and the map load.) Then set a wall limit for the long run.
 3. Run `python tools/run_scenario.py --days 150`. The run folder holds `ledger.txt` from `analyze_war_ledger.py`.
 
 ## Changelog

@@ -24,10 +24,8 @@ internal sealed class ScenarioPlan
     internal const double DefaultStallSeconds = 600.0;
     internal const double DefaultWallLimitSeconds = 3600.0;
 
-    private static readonly string[] OtherEnvVars = { "TAOM_FORDS_AUTORUN", "TAOM_LONGDEFEAT_AUTORUN" };
-
-    /// <summary>The launcher set the arm variable for this process, so nobody is at the keyboard.</summary>
-    internal static bool ArmedInThisProcess => !string.IsNullOrWhiteSpace(Environment.GetEnvironmentVariable(EnvVar));
+    // Each of these also drives the game from the main menu (CommandTrialAutostart is the Seat's field trial), so two would both start one.
+    private static readonly string[] OtherEnvVars = { "TAOM_FORDS_AUTORUN", "TAOM_LONGDEFEAT_AUTORUN", "TAOM_COMMAND_TRIAL" };
 
     public bool Armed { get; internal init; }
 

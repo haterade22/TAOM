@@ -66,6 +66,10 @@ internal sealed class CampaignAutorunHost : ICampaignAutorunHost
     // button itself opens the options screen first, because TAOM's start options provider makes the options non-empty.
     public bool StartNewCampaign()
     {
+        // Focus loss opens the map's escape menu, which stops the campaign tick. Off from the start, so no focus loss before the map
+        // settles can stop the run. In memory only: the driver restores it at every game end, before the engine saves the config.
+        _focusSettingBefore ??= BannerlordConfig.StopGameOnFocusLost;
+        BannerlordConfig.StopGameOnFocusLost = false;
         var options = AdvancedStartOptionsManager.CreateCampaignStartOptions();
         MBGameManager.StartNewGame(new SandBoxGameManager(() => new Campaign(CampaignGameMode.Campaign, options.GetChangedOptions())));
         return true;
@@ -119,14 +123,11 @@ internal sealed class CampaignAutorunHost : ICampaignAutorunHost
 
         // Process-local: the player's autosave setting in the config file is not touched.
         campaign.SandBoxManager.SandBoxSaveManager = new NoAutoSaveManager();
-        // Focus loss opens the map's escape menu, which stops the campaign tick. Put back in RestoreFocusSetting.
-        _focusSettingBefore = BannerlordConfig.StopGameOnFocusLost;
-        BannerlordConfig.StopGameOnFocusLost = false;
         // The engine's own "not attackable" cheat: AI parties never target or join a battle against the main party.
         var main = MobileParty.MainParty;
         main.IgnoreByOtherPartiesTill(CampaignTime.Never);
         main.SetMoveModeHold();
-        return "autosave=off focus_pause=off main_party=ignored,hold";
+        return "autosave=off main_party=ignored,hold";
     }
 
     public bool KeepFastForward(float speedUpMultiplier)
