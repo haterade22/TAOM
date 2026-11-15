@@ -2414,3 +2414,21 @@ The first starter cap limited the blade `damage_factor` to the weakest sibling's
 - **Why missed:** the proxy agreed with the real quantity on the reported case (the Isengard sword), and the tests checked the proxy.
 - **Prevent:** when a rule says "must not out-damage" or "must not cost more", compute that quantity with the model the repo already has (`melee_catalogue` for melee DPS) and test the quantity. Define the comparison set by what the player can reach (merchandise, not a tournament or practice weapon), and write one decoy per exclusion.
 - **Source:** [rca-starter-cap-upgrade-paths-2026-11-13.md](../rca-starter-cap-upgrade-paths-2026-11-13.md), findings 5, 8 to 10.
+
+### Limit one blow as well as sustained damage (melee ladder, #1271, 2026-11-14)
+The melee ladder was one DPS curve for every weapon class, and nothing limited one blow. A slow weapon meets a DPS target with a large blow, so a placeholder one handed sword reached its tier 10 target of 119 DPS with a 140 swing, which kills a 100 health troop outright.
+- **Why missed:** DPS ranks weapons of one class against each other well, and every check was a DPS band.
+- **Prevent:** a weapon spec holds a limit on the displayed blow as well as on DPS, per class, and the cap that raises a weapon stops at the smaller of the two (`melee_ladder.max_factor`). A gate reports the blow (`MELEE_BLOW_CEILING`) beside the band.
+- **Source:** [rca-weapon-armour-rebalance-2026-11-14.md](../rca-weapon-armour-rebalance-2026-11-14.md), finding 1.
+
+### Judge armour on what a troop wears in total (armour curve, #1271, 2026-11-14)
+Each armour item was priced against its own slot cap, and a pauldron at 0.6 of the chest put the best troop's body sum at 112 against vanilla's 67. A hit meets the sum of every piece on that body part, so weapons were raised to get through it.
+- **Why missed:** the curve and its tests judged one item at a time; no check added the pieces a troop wears.
+- **Prevent:** state an armour target as the worn sum per body part, pin the best troop's sum in a test, and gate every troop's worn sum (`WORN_ARMOUR_CEILING`, `WORN_ARMOUR_FLOOR`), with each slot drawn from any battle set as a seeded spawn draws it.
+- **Source:** [rca-weapon-armour-rebalance-2026-11-14.md](../rca-weapon-armour-rebalance-2026-11-14.md), finding 2.
+
+### Fit weapons and armour together, with every multiplier the engine applies (#1271, 2026-11-14)
+Weapons rose to beat inflated armour, so a fix to either alone would have broken the other. The first fits of one against the other used the displayed blow and left out the wielder's weapon skill, and the first DPS cap read a whole-number damage as exact, so six capped weapons ended over their limit after the engine rounded.
+- **Why missed:** each fit used the numbers the tools already priced, and those agreed with the engine on the cases checked.
+- **Prevent:** change weapons and armour in one plan and judge the pair (a blow against a worn sum). Before a fit, list every multiplier and rounding the engine applies between the number the tool prices and the damage that lands (skill, head, speed, whole-point rounding), and either model each or state the one left out beside the limit.
+- **Source:** [rca-weapon-armour-rebalance-2026-11-14.md](../rca-weapon-armour-rebalance-2026-11-14.md), findings 3 and 21.

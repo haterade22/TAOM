@@ -24,6 +24,14 @@ public interface IArmourGateService
     /// <summary>The class of a governed item (character armour or a named weapon), or null.</summary>
     ArmourClass? GetClass(string itemId);
 
+    /// <summary>
+    /// The class-table row's class for a loaded item, or null when the table lists none. Unlike
+    /// <see cref="GetClass"/> it is never the engine-tier fallback, so a caller can tell a listed piece from
+    /// an unlisted one. A named item reports Named whether the table lists it or not: the named list decides
+    /// before the table does, and a caller that read null would judge a hero's weapon as ordinary kit.
+    /// </summary>
+    ArmourClass? GetTableClass(string itemId);
+
     /// <summary>The piece the armoury upgrades <paramref name="itemId"/> into, or null.</summary>
     string? GetNext(string itemId);
 

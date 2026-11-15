@@ -14,7 +14,7 @@ Four kits, one id family each (sk_ll_<kit>_<slot>_<tier>_<variant>):
   name carries her name, so rebalance_armor.is_excluded keeps them off the curve.
 
 Values come from rebalance_armor.calculate_stats on the kingdom-cap curve (KINGDOM_CAPS
-'lothlorien' = 60) at the band of the id token, the same numbers a restat writes for a piece whose
+'lothlorien') at the band of the id token, the same numbers a restat writes for a piece whose
 lowest wearer sits in that band. clo_* meshes in the pack are cloth overlays and get no item.
 
 Usage:

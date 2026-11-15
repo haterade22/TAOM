@@ -21,13 +21,14 @@ A troop's armour is the four engine regions (head, body, arm, leg), each summed 
 armour slots (Head, Body, Cape, Gloves, Leg) exactly as Equipment.GetHeadArmorSum /
 GetHumanBodyArmorSum / GetArmArmorSum / GetLegArmorSum do (v1.4.8 Equipment.cs:271-325): a chest
 contributes arm armour, a cape contributes body armour. Each region is averaged over the troop's
-BATTLE equipment sets, an unfilled slot counting 0 because the engine draws each slot from an
-independently chosen set (.claude/rules/troops.md); civilian sets are excluded. The total is the
-sum of the four regions, which equals fix_upgrade_armour_regressions.total on the same slots.
-Troops are placed by engine tier, clamp(ceil((level - 5) / 5), 0, 10), the tier the party screen
-shows (taom_schema.Validator._troop_tier). The per-slot draw is the campaign spawn path's
-behaviour: Equipment.GetRandomEquipmentElements redraws the set per slot whenever the seed is not
--1, and CharacterHelper.GetPartyMemberFaceSeed never yields -1 (.claude/rules/troops.md).
+BATTLE equipment sets, an unfilled slot counting 0; civilian sets are excluded. The mean is the same
+whether the slots are drawn together or apart. The total is the sum of the four regions, which equals
+fix_upgrade_armour_regressions.total on the same slots. Troops are placed by engine tier,
+clamp(ceil((level - 5) / 5), 0, 10), the tier the party screen shows
+(taom_schema.Validator._troop_tier). The extremes are not the mean: a campaign spawn draws every
+slot from its own set (Equipment.GetRandomEquipmentElements redraws the set per slot whenever the seed
+is not -1, and CharacterHelper.GetPartyMemberFaceSeed never yields -1, .claude/rules/troops.md), so
+the worn floor and ceiling section judges the per-slot reach.
 
 Creature troops, the two bespoke mount riders, troops with no level= and troops with no battle set
 are excluded from every statistic; militia and standalone troops (no upgrade edge in or out) are
@@ -46,7 +47,10 @@ WHAT IT REPORTS
      culture pair plus the worst pairs;
   3. the validator's CROSS_CULTURE_ARMOUR_INVERSION verdict, computed by its own function and
      constants (taom_schema.cross_culture_armour_inversions), so tool and gate cannot disagree;
-  4. per culture: the Armory ceiling per slot (best troop-eligible item in the folders the culture
+  4. the worn floor and ceiling (rebalance_armor.WORN_ARMOUR_FLOOR / WORN_ARMOUR_CEILING): the
+     ladder troops whose battle sets add up to more than a region's ceiling, or to less head or body
+     than their band's floor, per set and per slot;
+  5. per culture: the Armory ceiling per slot (best troop-eligible item in the folders the culture
      actually wears vs the best it wears) and the unworn elite/lord-row items, i.e. the re-slot
      reserve, each judged on the curve of the FOLDER it was authored in (Umbar wears Harad's
      folder, whose items were statted on Harad's -3, not Umbar's -1); the item curve's prediction
@@ -477,7 +481,7 @@ def curve_view(records):
     """{culture: {tier: n, predicted median, actual median, deltas, mean filled share}}.
     The prediction is a generic benchmark: the culture's DEFAULT line at the troop's band
     (a Black Numenorean in troops_mordor is held against the orc cap), every slot filled,
-    secondaries at the legacy proportion. It is not a per-item target."""
+    secondaries by the capped rule (none below the heavy band). It is not a per-item target."""
     groups = defaultdict(list)
     for r in _matrix_records(records):
         groups[(r['culture'], r['tier'])].append(r)
@@ -507,6 +511,21 @@ def gate_cells(records):
     return dict(out)
 
 
+def worn_floor_ceiling(records, troops, items):
+    """One row per ladder troop (no creature, exempt or unlevelled troop) whose battle sets break a
+    worn limit when every slot comes from its own set (rebalance_armor.worn_armour_extremes_per_slot):
+    {'troop', 'culture', 'level', 'tier', 'band', 'worst', 'best', 'ceiling', 'floor'}, the last two as
+    rebalance_armor.worn_armour_breaches lists them. A bare-chested troop is not held to the body floor."""
+    rows = []
+    for r in _ladder_records(records):
+        worst, best = ra.worn_armour_extremes_per_slot(troops[r['id']], items)
+        breaches = ra.worn_armour_breaches(r['level'], worst, best, bodyless='bodyless' in r['tags'])
+        if breaches['ceiling'] or breaches['floor']:
+            rows.append({'troop': r['id'], 'culture': r['culture'], 'level': r['level'], 'tier': r['tier'],
+                         'band': ra.level_to_band(r['level']), 'worst': worst, 'best': best, **breaches})
+    return rows
+
+
 def gate_preview(records):
     v = ts.Validator
     return ts.cross_culture_armour_inversions(
@@ -533,6 +552,7 @@ def build_context(troops, items, militia, threshold, min_gap, only_culture, game
         'matrices': matrices(records),
         'pairs': pairs, 'aggregated': aggregate_inversions(pairs),
         'gate': gate_preview(records),
+        'worn': worn_floor_ceiling(records, troops, items),
         'ceilings': {c: ceilings(c, records, troops, items, worn_by) for c in detail_cultures},
         'curve': curve_view(records),
         'off_line': off_line_kit(records, troops, items),
@@ -593,6 +613,10 @@ def render_report(ctx):
                f'{len(ctx["pairs"])} troop pairs over {len(agg)} culture pairs.')
     out.append(f'- Validator gate `CROSS_CULTURE_ARMOUR_INVERSION` would warn on {len(ctx["gate"])} culture-tier cell(s): '
                + (', '.join(f'{h["culture"]}/tier{h["tier"]}' for h in ctx['gate']) or 'none') + '.')
+    out.append(f'- Worn limits (`WORN_ARMOUR_CEILING` a warning until the Armory apply, then an error; '
+               f'`WORN_ARMOUR_FLOOR` a warning): '
+               f'{sum(1 for w in ctx["worn"] if w["ceiling"])} troop(s) over a ceiling and '
+               f'{sum(1 for w in ctx["worn"] if w["floor"])} under a floor.')
     if ctx['pairs']:
         out.append('- Worst pairs:')
         for p in ctx['pairs'][:5]:
@@ -604,7 +628,7 @@ def render_report(ctx):
                'slots (Head, Body, Cape, Gloves, Leg) exactly as `Equipment.GetHeadArmorSum` / `GetHumanBodyArmorSum` / '
                '`GetArmArmorSum` / `GetLegArmorSum` do, so a chest contributes arm armour and a cape contributes body '
                'armour. Each region is the mean over the troop\'s battle equipment sets, an unfilled slot counting 0 '
-               'because the engine draws each slot from an independently chosen set; civilian sets are excluded. Total '
+               '(the mean is the same whether slots are drawn together or apart); civilian sets are excluded. Total '
                '= head + body + arm + leg. Engine tier is `clamp(ceil((level - 5) / 5), 0, 10)`, the tier the party '
                'screen shows. The item curve (`tools/rebalance_armor.py`) has ONE row, "elite", for levels 31 to 51, '
                'so tiers 6 to 10 share a target; the curve view below shows what that does per kingdom. The '
@@ -666,6 +690,8 @@ def render_report(ctx):
         out.append('No cell is flagged.')
     out.append('')
 
+    out.append(render_worn(ctx))
+
     out.append('## Per-culture detail\n')
     for c in ctx['detail_cultures']:
         out.append(render_culture(c, ctx))
@@ -691,6 +717,37 @@ def render_report(ctx):
     out.append(render_off_line(ctx['off_line'], ctx['only_culture']))
     out.append('_Nothing was applied. Fixing an inversion is a roster, item or curve decision taken with this report '
                'in hand; see docs/features/armor-balance.md "Kingdom armour ladder"._\n')
+    return '\n'.join(out)
+
+
+def render_worn(ctx):
+    """The "Worn floor and ceiling" section, built from rebalance_armor's own functions and constants."""
+    ceil, floor = ra.WORN_ARMOUR_CEILING, ra.WORN_ARMOUR_FLOOR
+    out = ['## Worn floor and ceiling\n',
+           'Per troop, the head, body, arm and leg its battle sets add up to when every armour slot comes from '
+           'its own set, as a campaign spawn draws it (`rebalance_armor.worn_armour_extremes_per_slot`). '
+           'Ceiling, a warning until the Armory apply '
+           'and an error in the validator after it (`WORN_ARMOUR_CEILING`, vanilla\'s best troop plus 10): '
+           + ', '.join(f'{r} {v}' for r, v in ceil.items())
+           + '. Floor, a warning (`WORN_ARMOUR_FLOOR`, head / body): '
+           + ', '.join(f'{b} {f["head"]}/{f["body"]}' for b, f in floor.items())
+           + '; light troops have none, and a bare-chested troop is not held to the body floor. '
+           'Creatures, exempt troops and troops with no level are not judged.\n']
+    rows = sorted(ctx['worn'], key=lambda w: (w['culture'], -w['tier'], w['troop']))
+    if not rows:
+        out.append('No troop breaks a limit.\n')
+        return '\n'.join(out)
+
+    def cell(w):
+        return (', '.join(f'{r} {v}>{lim}' for r, v, lim in w['ceiling']) or '·',
+                ', '.join(f'{r} {v}<{lim}' for r, v, lim in w['floor']) or '·')
+
+    out += ['| Culture | Troop | T | Band | Ceiling | Floor |',
+            '|---|---|---|---|---|---|']
+    for w in rows:
+        c_cell, f_cell = cell(w)
+        out.append(f'| {w["culture"]} | `{w["troop"]}` | {w["tier"]} | {w["band"]} | {c_cell} | {f_cell} |')
+    out.append('')
     return '\n'.join(out)
 
 
@@ -742,7 +799,7 @@ def render_culture(culture, ctx):
     cv = ctx['curve'].get(culture, {})
     if cv:
         out.append('**Curve view** (a generic benchmark, not a per-item target: the culture\'s default line at the '
-                   'troop\'s band with every slot filled and secondaries at the legacy proportion, vs actual medians; '
+                   'troop\'s band with every slot filled and secondaries by the capped rule (none below heavy), vs actual medians; '
                    'a troop in another line\'s kit is held against the default line)\n')
         out.append('| Tier | n | Predicted total | Actual median | Delta | d head | d body | d arm | d leg | Filled slots |')
         out.append('|---|---|---|---|---|---|---|---|---|---|')
@@ -787,6 +844,8 @@ def build_json(ctx):
             'worst': [pair(p) for p in ctx['pairs'][:WORST_PAIRS_JSON]],
         },
         'gatePreview': ctx['gate'],
+        'wornLimits': {'ceiling': dict(ra.WORN_ARMOUR_CEILING), 'floor': {b: dict(f) for b, f in ra.WORN_ARMOUR_FLOOR.items()},
+                       'troops': ctx['worn']},
         'ceilings': {c: {'folders': {k or 'vanilla/repo': v for k, v in ce['folders'].items()},
                          'slots': ce['slots'], 'unworn': ce['unworn_elite']}
                      for c, ce in ctx['ceilings'].items()},

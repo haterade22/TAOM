@@ -269,6 +269,264 @@ vanilla's own demonstrated maximum (its hardest-sustaining melee weapon measures
 is what "no weapon too OP" means numerically. Hero blades are exempt from the ceiling but not
 from the band: a line troop holding a hero weapon is still a ladder fault.
 
+Since 2026-11-14 this curve, the kingdom offsets and the 25% band price only a weapon judged without its
+crafting template, or whose template has no class limit. Every other weapon takes the per-class target, the
+craft table and the 15% band of the next sections.
+
+### Class limits: one blow and sustained damage per class (2026-11-14)
+
+The curve is one DPS curve for every class, and nothing limited one blow. A placeholder one handed sword
+met its tier-10 target of 119 DPS with a 140 swing, and shield spears reached 123 per thrust. Most troops
+have 100 health, so a one handed weapon must not kill one in a single blow (Mike, 2026-11-14).
+
+`class_limits` in `tools/melee_ladders.json` holds four numbers per crafting template: `swing` and `thrust`
+(the displayed damage of one blow) and `swing_dps` and `thrust_dps`. A weapon must be inside all four. Hero
+blades are held to a hero limit (below). The numbers are the vanilla maximum per class, rounded; the spec comment records the
+exceptions. Vanilla, measured 2026-11-14 with `melee_catalogue` over SandBoxCore and SandBox (261 weapons,
+no failures), as min / median / 90th percentile / max:
+
+| Template | n | Swing blow | Thrust blow | Swing DPS | Thrust DPS |
+|---|---|---|---|---|---|
+| Dagger | 7 | 10/17/41/41 | 28/51/63/63 | 12/19/46/46 | 25/46/56/56 |
+| Mace | 30 | 18/55/67/71 | 12/15/26/26 | 18/48/56/58 | 10/13/22/22 |
+| OneHandedAxe | 26 | 33/64/78/83 | none | 34/62/68/70 | none |
+| OneHandedSword | 85 | 17/71/84/103 | 12/38/49/54 | 18/60/70/83 | 11/33/41/47 |
+| Pike | 5 | none | 26/41/42/42 | none | 22/34/35/35 |
+| TwoHandedAxe | 17 | 66/116/136/139 | none | 57/92/98/103 | none |
+| TwoHandedMace | 5 | 38/73/85/85 | none | 30/52/59/59 | none |
+| TwoHandedPolearm | 62 | 59/121/182/184 | 16/40/47/49 | 44/97/127/138 | 14/34/40/43 |
+| TwoHandedSword | 24 | 20/102/133/140 | 13/48/57/57 | 22/99/118/132 | 12/42/49/50 |
+
+The low ends are practice and tournament weapons.
+
+A class limit is a limit on the DISPLAYED blow, the number on the weapon's tooltip. The damage a troop takes
+also carries the wielder's weapon skill multiplier, the head multiplier on a head hit and the speed of the
+swing, so the in-game check assumes a body hit on an armoured troop.
+
+`melee_ladder.max_factor` returns the largest `damage_factor` multiplier that keeps a weapon inside its
+limits, and `limit_breaches` lists the stats above them. The engine rounds damage to a whole number, so DPS
+moves in steps of one damage point: the DPS cap is the largest whole damage inside the DPS limit, with the
+same half point of margin the blow cap keeps, and a weapon at the cap cannot round up past its limit. `generate_placeholder_weapons.py` and
+`restat_melee_blades.py` stop a raise at that multiplier: the unworn pass and `--limits-only` at the class
+limit, a worn blade and a placeholder at the tier limit (below). A class with a low limit no longer climbs
+with the tier: a one handed sword stops near 83 DPS, where the shared curve passes tier 6.
+
+The restat holds each factor by its own limits: `swing_damage_factor` by the swing numbers and
+`thrust_damage_factor` by the thrust numbers. One ratio for both took swing damage off a sword whose thrust
+was at its limit (`wm_rivendell_sword_a02_black_blade` dropped from 96 to 49 DPS in that dry run, and to 80
+with separate ratios). The placeholder generator still uses one ratio for both factors.
+
+### Per-class tier targets and craft columns (2026-11-14)
+
+The limits alone break the ten tier spread: the shared curve passes the one handed sword limit near tier 6, so
+tiers 6 to 10 would carry the same sword. TAOM has ten troop tiers where vanilla has six, and every class must
+spread over all of them. `melee_ladder.target` therefore takes the weapon's crafting template and attacks:
+
+`target(class, tier, culture) = class_top x class_tier_fraction[tier] x craft[culture][column]`
+
+- `class_top` is the larger of the class's `swing_dps` and `thrust_dps` the weapon can use, null ignored. A
+  weapon "swings" when `Priced.swing_damage > 0` and "thrusts" when `Priced.thrust_damage > 0`, except that a
+  polearm which can do both takes its top from the swing only when its swing DPS is at least its thrust DPS
+  (`melee_ladder.dominant_flags`, below). A thrust-only spear of template TwoHandedPolearm tops at 45, a
+  swinging polearm at 138.
+- `class_tier_fraction[tier]` is the share of the class top a tier may reach (`melee_ladder.tier_share`):
+  0.58, 0.62, 0.66, 0.72, 0.77, 0.81, 0.88, 0.91, 0.94, 0.97 and 1.0 for tiers 0 to 10. It replaced the shared
+  curve's `curve[tier] / curve[10]` (0.22 at tier 0, 0.61 at tier 5) on 2026-11-14, because that shape
+  starved the low tiers of every class. A spec without the key falls back to the curve share.
+- `craft` ranks each culture's smithing in three columns (`sword`: Dagger, OneHandedSword, TwoHandedSword;
+  `axe`: OneHandedAxe, TwoHandedAxe, Mace, TwoHandedMace; `polearm`: TwoHandedPolearm, Pike). The best culture
+  in a column is 1.00 and sits on the class top at tier 10. `craft_column` in the spec maps template to column.
+
+| Culture ids | Sword | Axe | Polearm |
+|---|---|---|---|
+| rivendell, lindon | 1.00 | 0.90 | 0.97 |
+| lothlorien | 0.97 | 0.85 | 0.95 |
+| erebor, eredluin | 0.95 | 1.00 | 0.92 |
+| gondor, arthedain, cardolan, rhudaur | 0.93 | 0.88 | 0.93 |
+| mirkwood | 0.92 | 0.85 | 0.95 |
+| sturgia (Dale) | 0.88 | 0.88 | 0.88 |
+| vlandia (Rohan) | 0.88 | 0.85 | 1.00 |
+| khuzait (Rhun), rhun, aserai (Harad), battania (Khand) | 0.88 | 0.85 | 0.90 |
+| isengard | 0.87 | 0.87 | 0.90 |
+| mordor, gundabad, goblin, dolguldur, feral_orcs | 0.82 | 0.85 | 0.82 |
+| mordor_numenorean (troop ids starting `mordor_num_`) | 0.90 | 0.88 | 0.90 |
+| umbar, shaghana | 0.88 | 0.85 | 0.90 |
+| empire (Dunland) | 0.82 | 0.85 | 0.85 |
+| any other id (`craft_default`) | 0.85 | 0.85 | 0.85 |
+
+`craft` replaces `kingdom_offset`, and `class_band` (0.15) replaces `band` (0.25), wherever the template has a
+class limit. A caller that passes no template, or a template without a class limit, gets the shared curve and
+the old band. The `ceiling` of 140 stays for that legacy path. Callers that pass the template and the attack
+flags: `taom_schema` (the `MELEE_LADDER_INVERSION` kit rows), `fix_melee_ladder.py` (each swap candidate is
+judged by its own class band), `restat_melee_blades.py` and `generate_placeholder_weapons.py`. Every one of
+them takes the craft row from `melee_ladder.craft_key(troop id, culture, spec)` and the flags from
+`melee_ladder.dominant_flags`, so the four cannot price one weapon differently.
+`analyze_melee_ladder.py` computes no band or target; its `HERO_BLADE_IDS` is the spec's `hero_blades` list
+(it kept its own copy of 18 blades while the spec listed 26).
+
+**Craft by troop id.** The Black Numenoreans (`mordor_num_*`, 13 troops, `troops_mordor.xml`) are filed under
+the `mordor` culture, but their smithing is not orc smithing. `craft_troop_prefix` in the spec maps the id
+prefix `mordor_num_` to the `mordor_numenorean` row. The engine still reads the culture id; only the ladder
+reads the prefix. The prefix table is checked by `validate_spec`: each value must be a `craft` row.
+
+**Dominant attack.** A polearm that both swings and thrusts took its class top from the 138 swing DPS even when
+it is a spear in the hand. `dominant_flags(template, swing_damage, thrust_damage, swing_dps, thrust_dps,
+spec)` returns `(swings, thrusts)` for `target`, `band` and `class_top`: for a template in the `polearm` craft
+column with both attacks it drops the swing when the thrust DPS is higher. Swords and axes are untouched, and
+so is a polearm with one attack. A tie stays swing-dominant.
+
+### Tier limits (2026-11-14, #1271)
+
+The class limits are the tier 10 numbers. A tier 3 troop must not carry what only a tier 10 troop may swing, so
+`melee_ladder.tier_limit(template, tier, culture, spec)` scales all four limit fields (null stays null) by
+`class_tier_fraction[tier] x craft[culture][column]`, the factor the DPS target uses. For a swinging weapon the
+DPS limit and the DPS target are then one number, and a restat lands on it, or up to about one damage
+point under it where the whole-point DPS cap binds. For a one handed sword at tier 5
+with a craft of 0.93 the swing limit is 95 x 0.81 x 0.93 = 71.6 and the swing DPS limit 62.5. At tier 10 with
+craft 1.00 it is the class limit.
+
+- `restat_melee_blades.class_ratios(p, spec, tier, culture)` holds a weapon to the tier limit of one carrier's
+  tier and craft key. The restat applies it to every non-exempt carrier of every weapon on the blade and takes
+  the tightest, and prices the blade from the weakest carrier's own tier and craft row, not from whichever troop
+  loaded first. Without the tier it uses the class limit, which is what the unworn pass and `--limits-only`
+  want. A hero blade keeps its hero limit at every tier.
+- `generate_placeholder_weapons.py` caps k by the tightest tier limit over the placeholder's real carriers
+  (every troop of a listed culture inside `tiers` that holds the donor), and by the spec's own tier and first
+  culture, which `carrier_rows` groups as `(tier, craft key)` rows. Capping at the spec's tier and first
+  culture alone left 11 of 16 placeholders 1 to 5 percent over their lowest carrier's limit. The post-price
+  check reads the same rows and names every carrier of a breached row. Each written `damage_factor` is rounded
+  down, as in the restat. Run it after the restat: k is relative to the donor, so a restat that moves the donor
+  moves k, although the placeholder's own DPS stays on its target.
+- `fix_melee_ladder.py` accepts a swap candidate only inside the carrier's tier limit, with the carrier's craft
+  key. The band is a DPS window, and a slow heavy weapon sits in it while showing a blow the tier may not carry.
+- The restat moves the two attacks of a weapon by one multiplier: the ratio of the primary attack, the one
+  with the higher DPS, after that attack's own limits. A held primary does not send the other attack up to
+  chase a target the primary cannot reach, and a move under 2 percent or under one displayed damage point is
+  not planned, so a second run on the output plans nothing. Before the one-point rule, the rounding of small
+  blows kept a second run busy with 2.01 percent moves.
+- A written factor is rounded down to its two decimals, never to nearest (`melee_ladder.floor_factor`), in the
+  restat and in the placeholder generator: the tier limit's DPS is the tier target, so a factor rounded up
+  lands above the limit that set it. The tolerance judges the factor as written, after the rounding down,
+  because a small raise shrinks when rounded down and would otherwise find work on a second run.
+- A blade that only ladder-exempt troops carry is left alone in every pass: the tier pass, the mixed blade
+  pass, the unworn pass, the hero pass and `--limits-only` share one rule (`lower_to_limit`). An unworn plan
+  lists every weapon on its blade and counts every wearer, since the edit moves them all.
+- `blow_findings` takes an optional trailing `(carrier tier, craft key)` on each carried row. With it an
+  ordinary weapon is judged by the tier limit and the finding says "tier limit"; a hero blade is judged by its
+  hero limit either way; without it the class limit applies as before. A weapon carried at several tiers is
+  reported once, with the breach of the carrier it overshoots most.
+- `validate_spec` rejects a `class_tier_fraction` that lacks a tier from 0 to 10, is not strictly increasing,
+  has a value outside (0, 1] or does not end at 1.0, and a `craft_troop_prefix` that names a missing row.
+
+### Hero limits (2026-11-14)
+
+A hero blade is exempt from the tier target and the ceiling, never from a limit. Its limit is the class limit
+with each DPS raised by the maker group's bonus and each blow limit raised in the same proportion, rounded: a
+one handed sword at +10 goes from 83 to 93 DPS and from 95 to 106 swing. `hero_blades` stays the list of exempt
+pieces; `hero_makers` maps a piece to a group and `hero_bonus` a group to DPS. A hero blade with no maker takes
+`other`.
+
+| Group | Bonus | Blades |
+|---|---|---|
+| `high_elven_dwarven` | +10 | Glamdring, Galadriel, the three Aranruth, Tuor's axes, and the Celegorm, Finarin, Voronwe, Ingwe and Turin swords |
+| `numenorean_sindar_maia` | +8 | Anduril, Strider, Boromir, Faramir, Legolas, Thranduil, Sauron's mace, the Witch King, the Nazgul, and the two Khamul greatswords and the Khamul two handed mace |
+| `rohan_dale` | +6 | Theoden, Eomer, Eowyn |
+| `other` | +5 | none today |
+
+The eight blades added on 2026-11-14 (Celegorm, Finarin, Voronwe, Ingwe, Turin, `sm_dg_khml_sword_2h_b`,
+`sm_dg_khml_sword_2h_c`, `sm_dg_khml_2h_mace_b`) are carried by no troop and share their blade piece with no
+other weapon. The grouping is the author's reading of the lore and waits for the maintainer.
+
+`MELEE_BLOW_CEILING` judges a carried hero blade against its hero limit. `restat_melee_blades.py` lowers a hero
+blade above its hero limit, each factor by its own limits, and leaves one below it alone, or one that only
+ladder-exempt troops carry.
+
+### `--limits-only`
+
+`python tools/restat_melee_blades.py --limits-only` lowers only the blades above a class or hero limit. It
+raises nothing and ignores the tier target and the ceiling, so older ladder drift does not ride along with a
+limit fix. It is a dry run unless `--apply` is given, and cannot be combined with `--culture`.
+
+### `--culture` names two different things
+
+`restat_melee_blades.py --culture` filters the tier pass by craft key (`ladder.craft_key`): a troop's culture,
+except that the Black Numenoreans are `mordor_numenorean`, not `mordor`. `fix_melee_ladder.py --culture` filters
+by the engine culture id of the troop (`empire` is Dunland, `battania` Khand). The help texts say which. The
+restat takes no engine culture id, which would need a second mapping for the same filter; the unworn, mixed
+blade and hero passes ignore the filter in both modes.
+
+### Dry runs before the tier limit (superseded)
+
+The first 2026-11-14 dry runs judged every weapon against the class limit only: 190 blades in the full
+restat and, after a simulated restat, 523 of 965 troops inside their band. The tier limit below replaced them,
+and so did the figures: read the next section for the plan as it stands.
+
+### Dry runs with the tier limit (2026-11-14, #1271; live Armory read, nothing written)
+
+`python tools/restat_melee_blades.py` and `--limits-only` print the plan counts; the rest is a one-off in-memory
+simulation that scales each attack of a plan's weapons by the plan's factor ratio. Counts below are from the
+final run on 2026-11-14, after the deep review fixes.
+
+- Full restat: 203 blades (55 raise a factor, 148 only lower) reaching 264 weapons and 1448 troop slots,
+  because an unworn plan now lists every weapon on its blade. `--limits-only`: 69 blades reaching 98 weapons
+  and 331 troop slots, none raised. Nine of the 203 are couchable blades that need a cut but not a raise (see below).
+- Seven blades back both one handed and two handed weapons. The restat prices none of them by tier. It lowers
+  three of them, only as far as a class or hero limit needs: `sm_dwarf_erebor_axe_blade_2h_a2` and `_b2`
+  (two handed axes at 159 and 242 swing) and Tuor's axe. The run lists all seven with every weapon, its class
+  and the damage it shows.
+- No non-hero one handed weapon displays a blow of 100 or more after the restat (four do today).
+- Troops whose best weapon sits inside its class band (965 troops with a melee weapon, trolls excluded): 382
+  today (339 under, 244 over); 599 after the restat (366 under, none over). The remaining troops are under
+  because a shared blade is priced for its weakest wearer. The whole-point DPS cap costs 18 of them in this
+  scale-only simulation (617 were inside with a cap that read the displayed damage as exact, but six
+  weapons then ended above their limit); re-priced through the engine port, which rounds the damage
+  again, the cost is 9 (604 against 613).
+- Median best DPS per tier, tiers 0 to 10: today 25, 34, 43, 50, 54, 60, 71, 78, 86, 94, 96; after the
+  restat 39, 43, 44, 48, 52, 55, 60, 69, 80, 70, 70.
+- Weapons a troop carries above the tier limit of that troop, repriced in memory after the restat: 160 today,
+  8 after. All eight are weapons on the Erebor shared one handed and two handed blades, which the restat does
+  not price by tier. Rounding the written factors down and the whole-point DPS cap closed the other eleven.
+- A second simulated run on the output of the first plans nothing.
+- `fix_melee_ladder.py` against today's Armory: 189 swaps across 175 troops, none above its carrier's tier
+  limit. Before the tier limit check it planned 582 swaps and 430 of them landed above the carrier's limit.
+  803 weapon slots stay unresolved, 456 of them because every in-band candidate is over the carrier's tier
+  limit.
+- `generate_placeholder_weapons.py`: priced against the Armory as the restat leaves it, all 16 placeholders sit
+  inside the tier limit of every troop that will carry them. Against today's unrestated Armory the dry run
+  stops at `taom_ph_gondor_spear_b_t5`, whose donor already sits at the cap, so the tool has to run after the
+  restat is applied.
+- `python tools/validate_moduledata.py` reports 546 `MELEE_LADDER_INVERSION` and 171 `MELEE_BLOW_CEILING`
+  warnings against the unrestated Armory (2026-11-14); 11 of the 171 name a `taom_ph_` placeholder, which the
+  gate prices too. The gate builds its rows with the same `craft_key` and `dominant_flags` calls as the
+  restat.
+
+### Not done, and known problems
+
+- **The Armory blades have NOT been restated.** Every number above is a dry run or an in-memory simulation.
+  `fix_melee_ladder.py`, `generate_career_kits.py`, `wire_starter_kit_rosters.py`,
+  `generate_starter_kit.py` and `generate_placeholder_weapons.py --apply` were not run after it. The order
+  of the apply is in [armor-balance.md](./armor-balance.md#the-apply-sequence-2026-11-14-1271).
+- A blade is priced for its lowest wearer and held to that wearer's tier limit, so a blade worn across more
+  than two tiers leaves its upper wearers light. 62 of the 204 worn non-hero blades span more than two tiers
+  (`wm_mirkwood_spear_a01_blade` T2 to T10, `wm_gondor_sword_a03_blade` T3 to T10). The cure is a cloned blade
+  for the upper wearers, as `generate_placeholder_weapons.py` makes for its placeholders; nothing clones one
+  for the restat yet.
+- A couchable blade is never raised, since a couch charge multiplies the hit the model cannot see. Before
+  2026-11-14 a plan that raised one attack and cut the other was dropped whole, which left `he_spear` at a
+  thrust of 74 against a limit of 60. The raise is now cut from such a plan and the cut kept.
+- A blade that backs both one handed and two handed weapons is not priced by tier, because its weakest wearer
+  is the one handed troop and its target took the two handed twins down with it (an Erebor two handed axe
+  swing of 126 fell to 75). The restat leaves such a blade alone unless a weapon on it is above its CLASS
+  limit, and then lowers it only that far. The Erebor one handed axes use two handed blade pieces
+  (`sm_dwarf_erebor_axe_blade_2h_a`, `_a2`, `_b`, `_b2`, `_c`), so those one handed axes stay above their
+  carriers' tier limits (they show swing 62 to 137 today) until the blades are cloned. Seven blade pieces carry both a one
+  handed and a two handed weapon, and every run of the restat lists them. Nothing clones them yet.
+- Tuor's axe and its one handed variant share a blade piece, so the lowering for the two handed axe also
+  lowers the one handed one.
+- `wm_gondor_boromir_sword` (hero blade `wm_boromir_sword_blade`) is carried by ordinary Gondor t7 and t8
+  troops and judged at its hero limit (thrust 64 against an ordinary t7 limit of about 46.5). The decided fix
+  is a roster swap to a non-hero blade, not done yet.
+
 ### Pass 1, the roster: applied 2026-09-20
 
 `tools/fix_melee_ladder.py` swaps the weapon a troop carries. It writes only
@@ -506,6 +764,49 @@ The second constraint is the **name-versus-id** question. The numeral lines are 
 display names (`[Mordor] Uruk Sword III`) while the ids run on letters (`sm_uruk_sword_c`).
 Section 3 lists the lines where the two orders already disagree, which have to be resolved
 before anything automated keys on either.
+
+## Key Files
+
+| File | Purpose |
+|------|---------|
+| `tools/melee_damage.py` | The engine's crafting physics: piece geometry to damage and speed |
+| `tools/melee_catalogue.py` | Loads the installed modules as the engine merges them and prices every usage mode |
+| `tools/melee_ladders.json` | The ladder spec: class limits, tier shares, craft table, hero blades and bonuses, exempt troops |
+| `tools/melee_ladder.py` | Targets, bands, tier and hero limits, `max_factor`, `floor_factor`, the findings the gate and the report share |
+| `tools/restat_melee_blades.py` | Pass 2: restats blade `damage_factor`s in the Armory (`--limits-only`, `--culture`, `--apply`) |
+| `tools/fix_melee_ladder.py` | Pass 1: roster swaps inside each carrier's tier limit |
+| `tools/generate_placeholder_weapons.py` | The `taom_ph_` placeholder weapons, capped by every carrier's tier limit |
+| `tools/analyze_melee_ladder.py` | The read-only report |
+| `tools/taom_schema.py` | The `MELEE_LADDER_INVERSION` and `MELEE_BLOW_CEILING` gates |
+| `tools/tests/test_melee_damage.py`, `test_melee_ladder.py`, `test_restat_melee_blades.py`, `test_generate_placeholder_weapons.py`, `test_analyze_melee_ladder.py` | The tests |
+
+## How to verify in game
+
+Not verified in game for #1271. The checks read the displayed blow, so each assumes a body hit on an
+armoured troop (see "Class limits"). After the apply and a full restart:
+
+1. In a Custom Battle, check the tooltip swing of one handed swords against their tier limit: at most 95
+   for a tier 10 Rivendell troop, at most 64 for a Gondor tier 3 troop. No ordinary one handed weapon
+   shows 100 or more.
+2. Field same-tier heavy or elite infantry of two kingdoms: a one handed body hit must not kill in one blow,
+   and a same-tier sword swing on the body does at least about 10 damage (R2).
+3. Field elite (tier 6 or more) swordsmen against tier 1 to 3 recruits: a one-blow kill there is wanted.
+4. Check that a thrust-dominant spear (a Gondor spear) and an Erebor two handed axe still feel strong. The
+   two handed axes share blade pieces with one handed ones and are no longer priced by tier; the one handed
+   twins stay heavier than their tier allows until the blades are cloned.
+
+## Changelog
+
+- 2026-11-14: class limits on one blow and on DPS, per-class tier targets over ten tiers with a craft table,
+  tier limits, hero limits by maker group, `--limits-only`, and a DPS cap in whole damage points (#1271).
+  Built and dry run; the Armory is not yet restated.
+
+## GitHub Issue
+
+- **Issue:** #1271: Weapons and armour sit far above the vanilla range: a one handed sword at 140, elite
+  armour at 112
+- **Status:** Open
+- The melee ladder umbrella is #631.
 
 ## Related
 

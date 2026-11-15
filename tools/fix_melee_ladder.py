@@ -21,7 +21,7 @@ The rosters are git-tracked, so git is the backup.
 
 Usage:
     python tools/fix_melee_ladder.py                    # report the plan
-    python tools/fix_melee_ladder.py --culture gondor   # one culture
+    python tools/fix_melee_ladder.py --culture gondor   # one engine culture id (a troop's culture attribute)
     python tools/fix_melee_ladder.py --apply
 """
 
@@ -32,6 +32,7 @@ import collections
 import sys
 from dataclasses import dataclass
 from pathlib import Path
+from typing import Callable
 
 REPO = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(REPO / "tools"))
@@ -144,7 +145,8 @@ def build_pool(
 
 def pick_substitute(
     current: mc.Priced,
-    window: ladder.Band,
+    band_of: Callable[[mc.Priced], ladder.Band],
+    fits_limit: Callable[[mc.Priced], bool],
     culture_pool: dict[str, list[mc.Priced]],
     cat: mc.Catalogue,
     needs_shield_safe: bool,
@@ -160,11 +162,14 @@ def pick_substitute(
       2. Same crafting template. A troop's skills, animations and holster all follow the class,
          so swapping a sword for a mace is a different troop, not a rebalance.
       3. Shield-safe when the troop carries a shield. Non-negotiable, see NO_SHIELD_FLAG.
-      4. Inside the tier band, and not a hero blade unless nothing else is in band.
-      5. Not already in the troop's kit (`taken`).
-      6. Same named line as the weapon it replaces, so `[Gondor] Sword II` becomes
+      4. Inside the tier band of the CANDIDATE's own class (`band_of`), and not a hero blade
+         unless nothing else is in band. A halberd and a spear share a template but not a curve.
+      5. Inside the carrier's tier limit (`fits_limit`). A band is a DPS window, and a slow heavy
+         weapon sits in it while showing a blow the troop's tier may not carry.
+      6. Not already in the troop's kit (`taken`).
+      7. Same named line as the weapon it replaces, so `[Gondor] Sword II` becomes
          `[Gondor] Sword IV` rather than a different Gondorian family.
-      7. Then closest to the band's target.
+      8. Then closest to the band's target.
 
     `taken` holds every id the troop keeps (non-weapons included, which never match a
     candidate) plus each replacement already chosen for it. A candidate in it is skipped, so
@@ -177,12 +182,21 @@ def pick_substitute(
     if not candidates:
         return None, f"this culture fields no other {current.item.template}"
 
-    usable = [c for c in candidates if window.low <= c.best_dps <= window.high]
+    usable = [c for c in candidates if band_of(c).verdict(c.best_dps) == "ok"]
     if not usable:
+        window = band_of(current)
         return None, (
             f"this culture owns no {current.item.template} in "
             f"{window.low:.0f}-{window.high:.0f} DPS"
         )
+
+    within = [c for c in usable if fits_limit(c)]
+    if not within:
+        return None, (
+            f"every in-band {current.item.template} this culture owns is over the tier limit "
+            "of this troop's tier and craft"
+        )
+    usable = within
 
     if needs_shield_safe:
         safe = [c for c in usable if not shield_forbidden(cat, c.item)]
@@ -211,7 +225,7 @@ def pick_substitute(
         return (
             0 if line_of(c.item.name) == same_line else 1,
             0 if family(c.item.id) == same_family else 1,
-            abs(c.best_dps - window.target),
+            abs(c.best_dps - band_of(c).target),
         )
 
     best = min(usable, key=rank)
@@ -242,12 +256,28 @@ def plan(
             continue
         if cultures and troop.culture not in cultures:
             continue
-        window = ladder.band(troop.tier, troop.culture, spec)
         carries_shield = troop_carries_shield(troop, shields)
+
+        # A weapon is judged by its own class's band (melee_ladder.target), so the band follows
+        # the weapon and not the troop alone. The craft row comes from craft_key (a Black
+        # Numenorean is not an orc) and a thrust-dominant polearm is read as a spear
+        # (dominant_flags); the restat and the validator route through the same two functions.
+        craft = ladder.craft_key(troop.id, troop.culture, spec)
+
+        def band_of(p: mc.Priced) -> ladder.Band:
+            return ladder.band(troop.tier, craft, spec, p.item.template,
+                               *ladder.dominant_flags(p.item.template, p.swing_damage,
+                                                      p.thrust_damage, p.swing_dps,
+                                                      p.thrust_dps, spec))
+
+        def fits_limit(p: mc.Priced) -> bool:
+            limit = ladder.tier_limit(p.item.template, troop.tier, craft, spec)
+            return not ladder.limit_breaches(limit, p.swing_damage, p.thrust_damage,
+                                             p.swing_dps, p.thrust_dps)
 
         def out_of_band(iid: str) -> bool:
             p = priced.get(iid)
-            return p is not None and p.best_dps > 0 and window.verdict(p.best_dps) != "ok"
+            return p is not None and p.best_dps > 0 and band_of(p).verdict(p.best_dps) != "ok"
 
         # What the troop keeps, plus each replacement as it is chosen: never hand out a copy.
         taken = {iid for iid in troop.items if not out_of_band(iid)}
@@ -257,7 +287,7 @@ def plan(
                 continue
             p = priced[iid]
             replacement, why = pick_substitute(
-                p, window, pool.get(troop.culture, {}), cat, carries_shield, spec,
+                p, band_of, fits_limit, pool.get(troop.culture, {}), cat, carries_shield, spec,
                 frozenset(taken),
             )
             if replacement is None:
@@ -282,7 +312,7 @@ def plan(
                         new=replacement.item.id,
                         old_dps=p.best_dps,
                         new_dps=replacement.best_dps,
-                        target=window.target,
+                        target=band_of(replacement).target,
                         reason=why,
                     )
                 )
@@ -292,7 +322,9 @@ def plan(
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     ap.add_argument("--apply", action="store_true", help="write the rosters (default: report)")
-    ap.add_argument("--culture", action="append", help="limit to these cultures (repeatable)")
+    ap.add_argument("--culture", action="append",
+                    help="limit to these engine culture ids (repeatable): a troop's culture "
+                         "attribute. restat_melee_blades.py takes craft rows instead")
     ap.add_argument("--top", type=int, default=30, help="rows to print (default 30)")
     args = ap.parse_args(argv)
 
@@ -318,6 +350,8 @@ def main(argv=None) -> int:
         print(f"  {len(failures)} weapon(s) could not be priced and were skipped")
     print(f"  {len(swaps)} swaps planned across {len({s.troop for s in swaps})} troops")
     print(f"  {len(unresolved)} weapon slots could not be resolved")
+    refused = sum(1 for _t, _i, why in unresolved if "over the tier limit" in why)
+    print(f"  {refused} of them because every in-band candidate is over the carrier's tier limit")
 
     regressions = [s for s in swaps if s.improvement <= 0]
     if regressions:

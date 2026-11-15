@@ -76,6 +76,14 @@ MODULEDATA_GLOBS = ("*/_module/moduledata/*.xml", "*/_module/moduledata/*.xslt",
 ARMORY_GLOBS = ("*/lotrlome_armory/moduledata/*","*/lotrlome_items/*.xml", "*/crafting_pieces*.xml",
                 "*/weapon_descriptions*.xml")
 MAP_GLOBS = ("*/taom_map/moduledata/*",)
+# Everything the placeholder generator prices from: its own spec and output, the melee tools and ladder
+# spec, the donors (live Armory) and the troops that carry the weapons.
+PLACEHOLDER_GLOBS = ("*/placeholder_weapons/*", "*tools/placeholder_weapons.json", "*tools/melee_ladders.json",
+                     "*tools/generate_placeholder_weapons.py", "*tools/melee_ladder.py", "*tools/melee_damage.py",
+                     "*tools/melee_catalogue.py", "*tools/analyze_melee_ladder.py", "*tools/restat_melee_blades.py",
+                     "*tools/fix_melee_ladder.py", "*/troops/troops_*.xml") + ARMORY_GLOBS
+# Both armour generators write stats through rebalance_armor.calculate_stats.
+ARMOUR_CURVE_GLOBS = ("*tools/rebalance_armor.py",)
 CREATURE_GLOBS = ("*/action_sets.xml", "*/action_types.xml", "*/monster_usage_sets.xml", "*/monsters/*.xml",
                   "*/lotr_monster_*.xml")
 FBX_GLOBS = ("*/assetsources/*.fbx",)
@@ -142,10 +150,16 @@ GATES = (
          ("python", "tools/audit_leg_cover_flags.py"), ("docs/modding/items-armor.md",),
          note="covers_legs is true on every greave and boot, false only on a bare-shin mesh (the Uruk-hai shoes); "
               "scans the Armory, TAOM_Map and the repo, never vanilla"),
-    Gate("lorien-armor", "Lorien armour items and their generator", ARMORY_GLOBS + ("*tools/generate_lothlorien_armor.py",),
+    Gate("placeholder-weapons", "placeholder weapons, their spec, the melee tools, donors and carriers", PLACEHOLDER_GLOBS,
+         ("python", "tools/generate_placeholder_weapons.py", "--verify"), ("docs/features/placeholder-weapons.md",),
+         note="exit 1 when a generated file differs from the render or a placeholder is over its carriers' tier "
+              "limit; run it after restat_melee_blades.py --apply, because each damage factor is relative to its donor"),
+    Gate("lorien-armor", "Lorien armour items and their generator",
+         ARMORY_GLOBS + ARMOUR_CURVE_GLOBS + ("*tools/generate_lothlorien_armor.py",),
          ("python", "tools/generate_lothlorien_armor.py", "--check"), ("docs/features/lothlorien-snow-orcs.md",),
          note="exit 1 when the live Armory differs from the render; --apply copies each changed file to a .bak-gen backup"),
-    Gate("snow-orc-armor", "Snow Orc armour items and their generator", ARMORY_GLOBS + ("*tools/generate_snow_orc_armor.py",),
+    Gate("snow-orc-armor", "Snow Orc armour items and their generator",
+         ARMORY_GLOBS + ARMOUR_CURVE_GLOBS + ("*tools/generate_snow_orc_armor.py",),
          ("python", "tools/generate_snow_orc_armor.py", "--check"), ("docs/features/lothlorien-snow-orcs.md",),
          note="exit 1 when the live Armory differs from the render"),
     Gate("generator-refs", "XML a tools/ generator wrote", ("*tools/generate_*.py",) + ARMORY_GLOBS,

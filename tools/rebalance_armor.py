@@ -8,7 +8,7 @@ then stats are computed from: Final Stat = Baseline[tier][slot] + Cultural Mod
 
 Usage:
     python rebalance_armor.py --dry-run       # Preview changes
-    python rebalance_armor.py --apply         # Write changes to XML files
+    python rebalance_armor.py --apply --backup-tag <tag>   # Write changes to XML files (a tag is required)
     python rebalance_armor.py --export-csv    # Export tier classification to CSV
 """
 
@@ -137,16 +137,18 @@ VARIANT_CAP = 1
 # independently by the engine. Capes need this because the native ladder's deltas are calibrated
 # for chest-scale bases (30-60), not cape-scale (2-25): +12 on a 42-armor cuirass is +29%, but
 # +12 on a 12-armor pauldron is +100%.
-# Since the kingdom-cap curve (#583, 2026-09-13) bracers and greaves sit at 0.6 and 0.5 of the
-# chest cap, as compressed as capes, so all three extremity slots share one table: medium rolls
-# cloth (+5), not leather (+7), because at a 35 cap the elite piece leads the medium one by only
-# 7.6 (arm) or 6.3 (leg) points and a +7 roll plus the variant step would pass it. Heavy keeps
-# chain for its modifier names (Loose / Rusty read fine on plate); it is never the low side of a
-# judged pair, since the lord band equals the elite band on the cap curve.
+# Since the kingdom-cap curve (#583, 2026-09-13) bracers and greaves sit at 0.5 and 0.45 of the
+# chest cap, as compressed as capes, so all three extremity slots share one table. 2026-11-14: light
+# and medium roll cloth_unarmoured (+3), not cloth (+5). At the bands of that date (light 0.16,
+# medium 0.35, heavy 0.68, elite 1.0 of the cap) a +5 roll let a light cape pass a heavy one (15
+# shoulder cases) and a medium cape pass an elite one (5 cases); at +3 no judged pair crosses
+# (analyze_armor_balance.check_kingdom_curve_invariant). Heavy keeps chain for its modifier names
+# (Loose / Rusty read fine on plate); it is never the low side of a judged pair, which are
+# (heavy over light) and (elite over medium).
 _EXTREMITY_MODIFIER_GROUPS = {
     'civilian': 'cloth_unarmoured',  # +3
-    'light':    'cloth',             # +5
-    'medium':   'cloth',             # +5
+    'light':    'cloth_unarmoured',  # +3
+    'medium':   'cloth_unarmoured',  # +3
     'heavy':    'chain',             # +9 -- naming-safe on Plate (Loose / Rusty)
     'elite':    'chain',             # +9
     'lord':     'chain',             # +9
@@ -227,24 +229,42 @@ CULTURAL_MODS = {
 # CULTURAL_MODS.protection model for every kingdom listed here (the tables above stay as the
 # fallback for the civilian tier, weights, and cultures without a cap, such as the troll). The
 # maintainer's table, verbatim; named hero armour (HERO_NAMES) is excluded from the curve.
-# The lord band equals the elite band: nothing but named kit sits above a kingdom's cap.
+# 2026-11-14: the lord band sits 7 percent above the elite band, and nothing but lord kit, hero kit
+# and the unworn merchandise clamp (see process_file) reaches past a kingdom's cap.
+# 2026-11-14, back to the vanilla range: the best troop's body sum (chest plus shoulder) is 67, the
+# body armour of vanilla's best armoured troop. Measured vanilla item maxima are helmet 55, chest 57,
+# gloves 28, boots 26, shoulder 16. With the old table a 95 point sword cut did 3 damage to an
+# elite. The order is the old order compressed so the weakest kingdom is at 0.67 to 0.70 of the
+# best, and Dale moved up because its smiths worked beside Erebor's.
 KINGDOM_CAPS = {
-    'erebor': 70, 'iron_hills': 70,
-    'rivendell': 68, 'lindon': 68,
-    'mirkwood': 63,
-    'lothlorien': 60,           # the Lorien kit, tools/generate_lothlorien_armor.py
-    'gondor': 57, 'rhun': 57, 'mordor_numenorean': 57, 'arnor': 57,
-    'gundabad': 49,
-    'dol_guldur': 46, 'khand': 46,   # Khand owns no armour item today
-    'isengard': 45,
-    'dale': 44, 'harad': 44, 'umbar': 44, 'mercenary': 44,
-    'mordor_uruk': 43,
-    'rohan': 40, 'dunland': 40,
-    'mordor_orc': 38, 'mistymountainorcs': 38, 'goblin': 38,   # one shared orc kit
+    'erebor': 52, 'iron_hills': 52,
+    'rivendell': 51, 'lindon': 51,
+    'mirkwood': 48,
+    'lothlorien': 47,           # the Lorien kit, tools/generate_lothlorien_armor.py
+    'gondor': 46, 'rhun': 46, 'mordor_numenorean': 46, 'arnor': 46,
+    'dale': 43,
+    'gundabad': 42,
+    'dol_guldur': 41, 'khand': 41,   # Khand owns no armour item today
+    'isengard': 40,
+    'harad': 40, 'umbar': 40, 'mercenary': 40,
+    'mordor_uruk': 39,
+    'rohan': 37, 'dunland': 37,
+    'mordor_orc': 36, 'mistymountainorcs': 36, 'goblin': 36,   # one shared orc kit
     'thenn': 35,
 }
-SLOT_CAP_RATIO = {'body': 1.0, 'head': 0.9, 'arm': 0.6, 'shoulder': 0.6, 'leg': 0.5}
-BAND_RATIO = {'light': 0.40, 'medium': 0.64, 'heavy': 0.84, 'elite': 1.0, 'lord': 1.0}
+# 2026-11-14 (issue #1271): the bands fell from 0.40 / 0.64 / 0.84 to 0.16 / 0.35 / 0.68 so an elite
+# can one-shot a recruit again (the old bands left elites nearly unable to). The head sits at 1.04
+# of the chest, its light and heavy bands differ (SLOT_BAND_RATIO), and the lord band is 1.07 so a
+# lord is at most 5 points over the elite set of the same kingdom per region.
+SLOT_CAP_RATIO = {'body': 1.0, 'head': 1.04, 'arm': 0.5, 'shoulder': 0.28, 'leg': 0.45}
+BAND_RATIO = {'light': 0.16, 'medium': 0.35, 'heavy': 0.68, 'elite': 1.0, 'lord': 1.07}
+SLOT_BAND_RATIO = {'head': {'light': 0.24, 'heavy': 0.82}}   # a slot band that differs from BAND_RATIO
+
+# A secondary stat (a chest's leg and arm armour, a cape's arm armour) exists from the heavy band
+# only, and is the item's own share of its primary, capped per (slot, stat). Below heavy the
+# secondary is 0, which also keeps it modifier-immune (the engine guards on `num > 0`).
+SECONDARY_FROM_BAND = 'heavy'
+SECONDARY_SHARE_CAP = {('body', 'arm_armor'): 0.30, ('body', 'leg_armor'): 0.40, ('shoulder', 'arm_armor'): 1.0}
 
 # Sub-lines that share an Armory folder, routed by id prefix; anything else takes the folder.
 # The mordor folder holds three kits at three caps and two misfiled strangers; the rhun folder
@@ -260,12 +280,22 @@ LINE_PREFIXES = (
 # gundabad_snow: the Snow Orc kit (tools/generate_snow_orc_armor.py), priced on Gundabad's cap.
 FOLDER_DEFAULT_LINE = {'mordor': 'mordor_orc', 'gundabad_snow': 'gundabad'}
 
+# 2026-11-14 (issue #1271): the named kit of Mordor's lords (Sauron, the Nazgul, the Witch-king, Khamul, the
+# Mouth of Sauron) sits in the mordor/ folder, whose default line is the orc cap (36). That clamped the Dark
+# Lord's own torso to 39 body armour, under a Gondor elite troop (59). Their kit is priced on the numenorean
+# line instead (cap 46, the same as Gondor), by id. Only the mordor/ folder: the Dol Guldur troop line
+# `sk_dg_khml_*` in rhun/ carries a captain's name but no lord wears it, and LINE_PREFIXES already routes it.
+MORDOR_LORD_KIT_MARKERS = ('sauron', 'nazgul', 'witch_king', 'witchking', 'khamul')
+MORDOR_LORD_KIT_LINE = 'mordor_numenorean'
+
 
 def kingdom_key(item_id, culture):
     """The KINGDOM_CAPS key for an item, or None when the culture has no cap (legacy curve)."""
     for prefix, key in LINE_PREFIXES:
         if (item_id or '').startswith(prefix):
             return key
+    if culture == 'mordor' and any(m in (item_id or '').lower() for m in MORDOR_LORD_KIT_MARKERS):
+        return MORDOR_LORD_KIT_LINE
     key = FOLDER_DEFAULT_LINE.get(culture, culture)
     return key if key in KINGDOM_CAPS else None
 
@@ -281,9 +311,72 @@ def level_to_band(level):
     return 'elite'  # L31-51
 
 
+# Worn armour limits (2026-11-14, #1271), judged on what a troop's battle sets add up to per region.
+# The ceiling is vanilla's best troop plus 10 (head 54, body 67, arm 59, leg 49 before the 10): no set
+# may reach past it. The floor is the least head and body a medium, heavy or elite troop's set may
+# carry; below it a one-handed hit that the model clears for plain gear can kill (a helmetless elite
+# archer in a light chest). Light troops have no floor. The ceiling is an error, the floor a warning.
+WORN_ARMOUR_CEILING = {'head': 64, 'body': 77, 'arm': 69, 'leg': 59}
+WORN_ARMOUR_FLOOR = {'medium': {'head': 8, 'body': 8}, 'heavy': {'head': 20, 'body': 20},
+                     'elite': {'head': 30, 'body': 30}}
+_WORN_REGION_STATS = {'head': 'head_armor', 'body': 'body_armor', 'arm': 'arm_armor', 'leg': 'leg_armor'}
+
+
+def _worn_contributions(troop, items):
+    """[{slot: {region: value}}] per battle set: what each armour slot's item adds to the four regions.
+    An unfilled or unknown slot adds 0. `troop` is {'sets': [{Slot: item_id}]} and `items` is
+    {item_id: {'stats': {'head_armor': n, ...}}}, the shape fix_upgrade_armour_regressions.load_troops
+    and load_item_armour produce."""
+    return [{slot: {region: (items.get(st[slot], {}).get('stats', {}).get(stat, 0) if st.get(slot) else 0)
+                    for region, stat in _WORN_REGION_STATS.items()}
+             for slot in MESH_LADDER_SLOTS}
+            for st in troop.get('sets') or ()]
+
+
+def worn_armour_extremes_per_slot(troop, items):
+    """(worst, best) when each armour slot comes from its own battle set: per slot the smallest and the
+    largest value over the sets, then added over the slots. Equipment.GetRandomEquipmentElements re-rolls
+    the set index at the top of every slot iteration whenever its seed is not -1, and a troop spawn passes
+    CharacterHelper.GetPartyMemberFaceSeed (abs(...) % 2000, never -1), so every campaign battle draws the
+    slots apart (v1.5.7 TaleWorlds.Core.Equipment.cs:549-590; seed -1, settlement guards only, draws slots
+    4 and up from one set)."""
+    sets = _worn_contributions(troop, items)
+    if not sets:
+        zero = {region: 0 for region in _WORN_REGION_STATS}
+        return dict(zero), dict(zero)
+    worst = {region: sum(min(st[slot][region] for st in sets) for slot in MESH_LADDER_SLOTS)
+             for region in _WORN_REGION_STATS}
+    best = {region: sum(max(st[slot][region] for st in sets) for slot in MESH_LADDER_SLOTS)
+            for region in _WORN_REGION_STATS}
+    return worst, best
+
+
+def worn_armour_breaches(level, worst, best, bodyless=False):
+    """{'ceiling': [(region, best, limit)], 'floor': [(region, worst, floor)]} for a troop of this level
+    given the (worst, best) of worn_armour_extremes_per_slot. The floor follows
+    level_to_band, so a light troop has none; a troop bare-chested by design is not held to the body
+    floor."""
+    floors = WORN_ARMOUR_FLOOR.get(level_to_band(level), {})
+    return {
+        'ceiling': [(r, best[r], limit) for r, limit in WORN_ARMOUR_CEILING.items() if best[r] > limit],
+        'floor': [(r, worst[r], floor) for r, floor in floors.items()
+                  if worst[r] < floor and not (bodyless and r == 'body')],
+    }
+
+
 def cap_value(cap, slot_type, tier):
-    """round-half-up of cap x slot ratio x band ratio."""
-    return int(math.floor(cap * SLOT_CAP_RATIO[slot_type] * BAND_RATIO[tier] + 0.5))
+    """round-half-up of cap x slot ratio x band ratio (the slot's own band ratio when it has one)."""
+    ratio = SLOT_BAND_RATIO.get(slot_type, {}).get(tier, BAND_RATIO[tier])
+    return int(math.floor(cap * SLOT_CAP_RATIO[slot_type] * ratio + 0.5))
+
+
+def kingdom_secondary(slot_type, stat, tier, primary, ratio):
+    """A secondary stat on the kingdom-cap curve: 0 below SECONDARY_FROM_BAND or for an item that has
+    none (ratio 0); from the heavy band up, the primary times the smaller of the item's own share and
+    SECONDARY_SHARE_CAP for that (slot, stat), round-half-up. A stat the table has no share for is 0."""
+    if TIERS.index(tier) < TIERS.index(SECONDARY_FROM_BAND) or ratio <= 0:
+        return 0
+    return int(math.floor(primary * min(ratio, SECONDARY_SHARE_CAP.get((slot_type, stat), 0.0)) + 0.5))
 
 
 # =============================================================================
@@ -364,7 +457,7 @@ def substitute_mesh_tiers(level, noble=False):
     light band beats a heavy one left there. A noble is judged at its raised band and its
     one-tier-up allowance."""
     band = level_to_band(noble_anchor_level(level) if noble else level)
-    # The lord band prices as the elite band (BAND_RATIO), so lord kit is not above it.
+    # A troop never anchors above the elite band (level_to_band), so an elite-band troop may wear lord kit.
     ceiling = MESH_TIER_ORDER.index('lord' if band == 'elite' else band)
     allowed = allowed_mesh_tiers(level, noble)
     below = [t for t in reversed(MESH_TIER_ORDER) if t in allowed and MESH_TIER_ORDER.index(t) <= ceiling]
@@ -453,7 +546,14 @@ HERO_NAMES = {
 # (mordor_numenorean, 57), so the exclusion is lifted (#583).
 # 'sk_ar_art_crown_king': the Arnor King's Crown, Arthedain's lord's-ladder head reward, never sold or looted
 # (Mike, 2026-10-08); generate_armour_classes.py classes an excluded piece `named`.
-EXCLUDE_ID_SUBSTRINGS = ('lotr_troll', 'cave_troll', 'glorfindel', 'gf_', 'dain_crown', 'sk_ar_art_crown_king')
+# Creature kit: a troll wears its own plate (95 by design), so no restat reaches it, worn or not.
+MONSTER_ID_SUBSTRINGS = ('lotr_troll', 'cave_troll')
+EXCLUDE_ID_SUBSTRINGS = MONSTER_ID_SUBSTRINGS + ('glorfindel', 'gf_', 'dain_crown', 'sk_ar_art_crown_king')
+
+
+def is_monster_kit(item_id):
+    """True for troll kit, which stays off the troop curve even when a troop wears it."""
+    return any(s in (item_id or '').lower() for s in MONSTER_ID_SUBSTRINGS)
 
 
 # Generated troop kit whose display names carry a hero's name: the Dol Guldur "Khamul ..." line
@@ -730,8 +830,9 @@ def calculate_stats(tier, slot_type, culture, variant_num=0, item_id=None):
 
     On the kingdom-cap curve (every culture in KINGDOM_CAPS, combat tiers) the slot's PRIMARY stat
     is cap x slot ratio x band ratio; the row's secondary (a chest's leg_armor, a cape's arm_armor)
-    keeps the legacy row's secondary-to-primary proportion for that tier. The writer then scales
-    an ITEM's own secondaries with its primary instead, so each folder keeps its convention (a
+    is 0 below the heavy band and, from it, the legacy row's secondary-to-primary proportion for
+    that tier capped at SECONDARY_SHARE_CAP (kingdom_secondary). The writer prices an ITEM's own
+    secondaries from its own share of the primary instead, so each folder keeps its convention (a
     Gondor chest carries arm_armor, a Rhun chest leg_armor). item_id routes the sub-lines that
     share a folder. The civilian tier, weights and cultures without a cap stay on the
     SLOT_BASELINES model below.
@@ -749,7 +850,7 @@ def calculate_stats(tier, slot_type, culture, variant_num=0, item_id=None):
             if stat == 'weight' or stat == stat_name:
                 continue
             base_primary = baseline[stat_name]
-            result[stat] = (int(math.floor(primary * base_val / base_primary + 0.5))
+            result[stat] = (kingdom_secondary(slot_type, stat, tier, primary, base_val / base_primary)
                             if base_val > 0 and base_primary > 0 else 0)
         result['weight'] = round(baseline['weight'] * mods['weight_mult'], 1)
         result['material_type'] = MATERIAL_MAP[tier]['material_type']
@@ -819,7 +920,8 @@ def _inside_comment(text, pos):
 
 def apply_changes_via_regex(filepath, item_changes, backup_tag=None):
     """
-    Apply stat/weight/material changes to XML file using regex.
+    Apply stat/weight/material changes to XML file using regex. Returns True when the file was
+    rewritten and False when the edits left its bytes as they were.
     Preserves all formatting, comments, whitespace, the BOM and the line endings (a binary
     round-trip: the Armory mixes LF and CRLF files, and a text-mode write rewrote whole files).
     With backup_tag, a `<file>.bak-<tag>` copy of the original is taken once, before the first
@@ -893,7 +995,7 @@ def apply_changes_via_regex(filepath, item_changes, backup_tag=None):
 
     out = content.encode('utf-8')
     if out == raw:
-        return
+        return False
     # Parse before writing: a substitution that broke the document must never reach the tree.
     ET.fromstring(out[3:] if out.startswith(b'\xef\xbb\xbf') else out)
     if backup_tag:
@@ -903,6 +1005,7 @@ def apply_changes_via_regex(filepath, item_changes, backup_tag=None):
                 f.write(raw)
     with open(filepath, 'wb') as f:
         f.write(out)
+    return True
 
 
 # =============================================================================
@@ -919,29 +1022,60 @@ def parse_current_values(armor_elem, slot_type):
     return values
 
 
-def _roster_first_tier(roster_map, item_id):
-    """The band for --tier-source roster-first: the lowest troop wearer's level decides; the id
-    keyword decides only for kit no troop wears; civilian keyword kit and kit with neither is
-    skipped (None). roster_map values may be the tier string (legacy map) or the full record."""
+def _roster_first_plan(roster_map, item_id, item_name, culture):
+    """(band, how) for --tier-source roster-first; how is 'full' (restat on the troop curve), 'clamp'
+    (lower only) or 'skip'. roster_map values are the full derive_armor_tiers record, or the tier string
+    of the legacy map.
+      * Troll kit and kit with no record or a civilian keyword is skipped.
+      * Any kit a troop wears goes on the troop curve at its lowest wearer's band, whatever its name:
+        a hero-named piece a troop wears (Golden Flower, Erkenbrand) is troop kit.
+      * Hero-only kit (excluded by name, or worn only by a hero) with a kingdom cap is lowered to the
+        lord band and never raised. It is never restated: a lord's kit keeps the value it has.
+      * Keyword-less merchandise nobody wears with a kingdom cap is lowered to the elite band, the
+        most merchandise may carry.
+      * Everything else takes the band of its id keyword, a lord keyword counting as elite."""
     rec = roster_map.get(item_id)
-    if rec is None:
-        return None
+    skip = ('medium', 'skip')
+    if rec is None or is_monster_kit(item_id):
+        return skip
     if isinstance(rec, str):
-        return 'elite' if rec == 'lord' else rec
+        return skip if is_excluded(item_id, item_name) else ('elite' if rec == 'lord' else rec, 'full')
     kw_tier = rec.get('tier') if rec.get('tierSource') == 'id-keyword' else None
     if kw_tier == 'civilian':
-        return None
-    anchor = rec.get('anchorLevel')
-    if anchor is not None:
-        return level_to_band(int(anchor))
-    return kw_tier
+        return skip
+    if rec.get('anchorLevel') is not None:
+        return (level_to_band(int(rec['anchorLevel'])), 'full')
+    keyed = kingdom_key(item_id, culture) is not None
+    if is_excluded(item_id, item_name) or rec.get('heroWorn'):
+        return ('lord', 'clamp') if keyed else skip
+    if kw_tier is None:
+        return ('elite', 'clamp') if keyed else skip
+    return ('elite' if kw_tier == 'lord' else kw_tier, 'full')
+
+
+def clamp_armour(slot_type, key, current_values, tier, headroom=0):
+    """An item's armour lowered to the kingdom-cap band `tier`, never raised: the primary is the smaller
+    of its value and cap_value + headroom; each other stat the item declares is the smaller of its value
+    and kingdom_secondary at the new primary (the item's own share, capped). Weight, material and loot
+    table are not part of it."""
+    primary_stat = GOVERNED_STATS[slot_type][0]
+    old_p = current_values.get(primary_stat, 0)
+    if old_p <= 0:
+        return dict(current_values)
+    new_p = min(old_p, cap_value(KINGDOM_CAPS[key], slot_type, tier) + headroom)
+    out = {primary_stat: new_p}
+    for stat, cur in current_values.items():
+        if stat != primary_stat:
+            out[stat] = min(cur, kingdom_secondary(slot_type, stat, tier, new_p, cur / old_p))
+    return out
 
 
 def process_file(filepath, slot_type, dry_run=True, weights_only=False,
                  tier_source='keyword', roster_map=None, no_lower_armor=False,
                  materials_only=False, keep_materials=False, keep_weights=False,
-                 keep_material_type=False, backup_tag=None):
-    """Process a single armor XML file. Returns list of change records.
+                 keep_material_type=False, backup_tag=None, written=None):
+    """Process a single armor XML file. Returns list of change records. A `written` list receives the
+    file's path when an apply really rewrote it (the caller counts files from that, not from the plan).
 
     tier_source='roster' picks each item's tier from the derive_armor_tiers.py map (authoritative —
     the level of the troop that wears the item) instead of the brittle name-keyword detector; unworn
@@ -949,7 +1083,8 @@ def process_file(filepath, slot_type, dry_run=True, weights_only=False,
     tier_source='roster-first' (the kingdom-cap curve, #583) takes the band of the item's LOWEST
     troop wearer even when the id carries a tier keyword (the Fountain Guard helmet is `_heavy_`
     and worn only at level 46), falls back to the keyword for unworn kit, and skips civilian kit,
-    hero kit and kit with neither; it needs the full-record map (load_roster_records).
+    troll kit and kit with neither, and lowers (never raises) hero-only kit and keyword-less unworn
+    kit (_roster_first_plan); it needs the full-record map (load_roster_records).
 
     keep_weights=True leaves weight alone in a full re-stat; keep_material_type=True leaves
     material_type (hit sounds and FX) alone while modifier_group (the loot table) still follows the
@@ -1030,11 +1165,13 @@ def process_file(filepath, slot_type, dry_run=True, weights_only=False,
             else:
                 tier, mode = detect_tier(item_id, item_name, current_values, slot_type), 'material'
         elif tier_source == 'roster-first':
-            band = None if is_excluded(item_id, item_name) else _roster_first_tier(roster_map, item_id)
-            if band is None:
-                tier, mode = 'medium', 'skip'   # hero/boss, civilian, or nothing to anchor on
+            tier, how = _roster_first_plan(roster_map, item_id, item_name, culture)
+            if how == 'full':
+                mode = 'weight' if weights_only else 'full'
+            elif how == 'clamp' and not (weights_only or no_lower_armor):
+                mode = 'clamp'   # a clamp only lowers, so --no-lower-armor and a weights pass leave it be
             else:
-                tier, mode = band, ('weight' if weights_only else 'full')
+                tier, mode = 'medium', 'skip'   # troll kit, civilian, or nothing to anchor on
         elif tier_source == 'roster':
             roster_tier = roster_map.get(item_id)
             if isinstance(roster_tier, dict):
@@ -1061,6 +1198,11 @@ def process_file(filepath, slot_type, dry_run=True, weights_only=False,
         if mode == 'skip':
             new_values, new_weight = {}, current_weight
             new_material, new_modifier, has_change = current_material, current_modifier, False
+        elif mode == 'clamp':
+            new_values = clamp_armour(slot_type, kingdom_key(item_id, culture), current_values, tier,
+                                      VARIANT_CAP if tier == 'elite' else 0)
+            new_weight, new_material, new_modifier = current_weight, current_material, current_modifier
+            has_change = any(new_values.get(s) != current_values.get(s) for s in current_values)
         else:
             new_stats = calculate_stats(tier, slot_type, culture, variant_num, item_id=item_id)
             new_weight = current_weight if keep_weights else new_stats['weight']
@@ -1080,15 +1222,18 @@ def process_file(filepath, slot_type, dry_run=True, weights_only=False,
                         # no_lower_armor: never reduce a stat (raise under-tiered items, keep the rest).
                         new_values[s] = max(tgt, current_values[s]) if no_lower_armor else tgt
                 # Kingdom-cap curve: the row carries the primary only; every other stat the item
-                # declares keeps its ratio to the primary (a 0 stays 0), so a Gondor chest keeps
-                # its arm_armor convention and a cape its arm_armor.
+                # declares is priced from the item's own share of its primary (a 0 stays 0), so a
+                # Gondor chest keeps its arm_armor convention and a cape its arm_armor. Since
+                # 2026-11-14 the share is capped (SECONDARY_SHARE_CAP) and a secondary exists from
+                # the heavy band only, so a light or medium chest loses its arm and leg armour.
                 primary_stat = GOVERNED_STATS[slot_type][0]
                 if kingdom_key(item_id, culture) is not None and primary_stat in new_values:
                     old_p, new_p = current_values.get(primary_stat, 0), new_values[primary_stat]
                     for s, cur in current_values.items():
                         if s == primary_stat:
                             continue
-                        scaled = int(math.floor(cur * new_p / old_p + 0.5)) if old_p > 0 and cur > 0 else cur
+                        scaled = cur if cur <= 0 else kingdom_secondary(
+                            slot_type, s, tier, new_p, cur / old_p if old_p > 0 else 0)
                         new_values[s] = max(scaled, cur) if no_lower_armor else scaled
                 # material/modifier is a CURVE-CORRECTNESS attribute, not an armor value, so
                 # no_lower_armor must NOT freeze it — that is how ~1000 items kept an unearned
@@ -1133,16 +1278,21 @@ def process_file(filepath, slot_type, dry_run=True, weights_only=False,
                 # Strictly materials: writing 'weight' here would round-trip weight="5" to "5.0".
                 item_changes[item_id] = {'material_type': new_material,
                                          'modifier_group': new_modifier}
+            elif mode == 'clamp':
+                item_changes[item_id] = dict(new_values)   # stats only, for the same reason
             else:
                 write_changes = dict(new_values)
-                write_changes['weight'] = new_weight
+                if not keep_weights:
+                    # Never touch the attribute under --keep-weights: re-formatting weight="3" as "3.0" is a diff.
+                    write_changes['weight'] = new_weight
                 write_changes['material_type'] = new_material
                 write_changes['modifier_group'] = new_modifier
                 item_changes[item_id] = write_changes
 
     # Apply via regex
     if not dry_run and item_changes:
-        apply_changes_via_regex(filepath, item_changes, backup_tag=backup_tag)
+        if apply_changes_via_regex(filepath, item_changes, backup_tag=backup_tag) and written is not None:
+            written.append(filepath)
 
     return changes
 
@@ -1324,7 +1474,7 @@ def main():
     parser.add_argument('--keep-material-type', action='store_true',
                         help='Leave material_type (hit sounds/FX) alone; modifier_group still follows the ladder.')
     parser.add_argument('--backup-tag', default='',
-                        help='Take a one-time <file>.bak-<tag> copy of every file written (recommended for --apply).')
+                        help='Take a one-time <file>.bak-<tag> copy of every file written (required with --apply).')
     parser.add_argument('--no-lower-armor', action='store_true',
                         help='Never reduce an armor stat (raise under-tiered items, keep the rest). '
                              'Use for "do not nerf" cultures (e.g. dunland).')
@@ -1338,6 +1488,10 @@ def main():
 
     if args.materials_only and args.weights_only:
         print("ERROR: --materials-only and --weights-only are mutually exclusive.")
+        sys.exit(2)
+    if args.apply and not args.backup_tag:
+        print("ERROR: --apply needs --backup-tag <tag> (for example --backup-tag 20261114): the live Armory "
+              "is unversioned, so the one-time <file>.bak-<tag> copy is the only way back.")
         sys.exit(2)
 
     dry_run = not args.apply
@@ -1390,6 +1544,7 @@ def main():
 
     all_changes = []
     files_processed = 0
+    files_written = []
     generator_owned = 0
 
     for culture_dir in culture_dirs:
@@ -1410,7 +1565,7 @@ def main():
                                     keep_materials=args.keep_materials,
                                     keep_weights=args.keep_weights,
                                     keep_material_type=args.keep_material_type,
-                                    backup_tag=args.backup_tag or None)
+                                    backup_tag=args.backup_tag or None, written=files_written)
             all_changes.extend(changes)
             files_processed += 1
             generator_owned += count_generator_owned(filepath)
@@ -1425,7 +1580,7 @@ def main():
         export_csv(all_changes, csv_path)
 
     if args.apply:
-        print(f"\n*** Changes written to {files_processed} files ***")
+        print(f"\n*** Changes written to {len(files_written)} files ({files_processed} analyzed) ***")
     else:
         print(f"\n*** {files_processed} files analyzed (no changes written) ***")
 

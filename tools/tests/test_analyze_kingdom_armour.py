@@ -343,9 +343,10 @@ class KingdomArmourTests(unittest.TestCase):
     def test_a_sub_line_item_in_a_shared_folder_is_judged_on_its_own_cap(self):
         """A Dol Guldur helmet in the rhun folder at its own elite value (41) read as Rhun heavy
         (43 is nearer than 51) and vanished from the reserve; 62 such items (Codex, 2026-09-13).
-        Here: alpha is capped 57, its `sub_` line 46, and the unworn sub_helm sits at 46 x .9 = 41."""
+        Here: alpha is capped 57, its `sub_` line 46, and the unworn sub_helm sits at 46 x 1.04 = 48
+        (alpha's own heavy helmet is 49, so the folder's cap alone reads it as heavy)."""
         self._cap_alpha_and_beta(sub=46)
-        self.items["sub_helm"] = {"value": 41, "stats": {"head_armor": 41, "body_armor": 0, "arm_armor": 0,
+        self.items["sub_helm"] = {"value": 48, "stats": {"head_armor": 48, "body_armor": 0, "arm_armor": 0,
                                                           "leg_armor": 0}, "folder": "alpha",
                                   "type": "HeadArmor", "name": "Sub Helm", "file": "x"}
         c = ka.ceilings("alpha", self._records(), self.troops, self.items, ka.worn_by_index(self.troops))
@@ -354,7 +355,8 @@ class KingdomArmourTests(unittest.TestCase):
     def test_off_line_kit_lists_imports_and_uncurved_items_above_the_ceiling(self):
         """Observations for the roster pass, not findings: a troop wearing another line's kit
         (Umbar nobles in Black Numenorean plate) and a vanilla item above the culture's elite slot
-        value (a 47 helmet on a 40 kingdom), which no restat can touch (Codex, 2026-09-13)."""
+        value (a 47 helmet on a 44 kingdom, whose elite helmet is 46), which no restat can touch
+        (Codex, 2026-09-13)."""
         self._cap_alpha_and_beta()
         self.items["v_helm"] = {"value": 47, "stats": {"head_armor": 47, "body_armor": 0, "arm_armor": 0,
                                                        "leg_armor": 0}, "folder": None,
@@ -369,7 +371,7 @@ class KingdomArmourTests(unittest.TestCase):
         row = [r for r in obs["imports"] if r["troop"] == "beta_t6" and r["item"] == "a_chest_heavy"][0]
         self.assertEqual((row["culture_cap"], row["line"], row["line_cap"], row["slot"]), (44, "alpha", 57, "Body"))
         self.assertEqual([(r["troop"], r["item"], r["primary"], r["ceiling"]) for r in obs["uncurved"]],
-                         [("beta_t5", "v_helm", 47, 40)])
+                         [("beta_t5", "v_helm", 47, 46)])
         self.assertNotIn("v_boot", {r["item"] for r in obs["uncurved"]})  # villagers are not a culture
         self.assertNotIn("alpha_troll", {r["troop"] for r in obs["imports"] + obs["uncurved"]})  # creature
 
@@ -413,6 +415,41 @@ class KingdomArmourTests(unittest.TestCase):
             (ts.Validator._CROSS_CULTURE_ARMOUR_MIN_CULTURES, ts.Validator._CROSS_CULTURE_ARMOUR_TIER_GAP,
              ts.Validator._CROSS_CULTURE_ARMOUR_MARGIN) = old
 
+    # -- worn floor and ceiling (2026-11-14) -------------------------------------------- #
+
+    def test_worn_limits_are_judged_with_every_slot_from_its_own_set_on_the_ladder_troops_only(self):
+        rows = ka.worn_floor_ceiling(self._records(), self.troops, self.items)
+        # alpha_t9 (level 46, elite floor 30): one set has no helmet, so its worst head is 0 even though the
+        # mean over its two sets is 16. The troll, the exempt capstone and the unlevelled troop are not judged.
+        self.assertEqual([r["troop"] for r in rows], ["alpha_t9"])
+        row = rows[0]
+        self.assertEqual((row["band"], row["floor"], row["ceiling"]), ("elite", [("head", 0, 30)], []))
+        self.assertEqual(row["worst"], {"head": 0, "body": 55, "arm": 31, "leg": 50})
+        self.assertEqual(row["best"], {"head": 32, "body": 55, "arm": 31, "leg": 50})
+
+    def test_a_seeded_spawn_can_break_a_floor_that_every_set_meets(self):
+        """Two sets that each carry 40 body armour (a chest in one, a cape in the other) leave a spawn
+        that draws the Body slot from the second and the Cape slot from the first with none."""
+        self.items["x_body"] = {"value": 40, "stats": {"body_armor": 40}, "folder": "beta"}
+        self.items["x_cape"] = {"value": 40, "stats": {"body_armor": 40}, "folder": "beta"}
+        mixed = {"Head": "a_helm_elite", "Gloves": "a_glove", "Leg": "a_boot"}
+        self.troops["beta_t9"]["sets"] = [dict(mixed, Body="x_body"), dict(mixed, Cape="x_cape")]
+        rows = {r["troop"]: r for r in ka.worn_floor_ceiling(self._records(), self.troops, self.items)}
+        self.assertEqual(rows["beta_t9"]["floor"], [("body", 0, 30)])
+
+    def test_the_bare_chested_troop_is_not_held_to_the_body_floor_and_a_breached_ceiling_is_listed(self):
+        old = dict(ra.WORN_ARMOUR_CEILING)
+        try:
+            ra.WORN_ARMOUR_CEILING.update({"head": 40, "body": 60})
+            rows = {r["troop"]: r for r in ka.worn_floor_ceiling(self._records(), self.troops, self.items)}
+        finally:
+            ra.WORN_ARMOUR_CEILING.clear()
+            ra.WORN_ARMOUR_CEILING.update(old)
+        # beta_t5 wears head 45 over a head ceiling of 40; the bare-chested troop has no body to be judged on
+        self.assertEqual(rows["beta_t5"]["ceiling"], [("head", 45, 40)])
+        self.assertEqual(rows[self.bodyless_id]["ceiling"], [("head", 45, 40)])
+        self.assertEqual(rows[self.bodyless_id]["floor"], [])
+
     # -- CLI ------------------------------------------------------------------------------ #
 
     def _hashes(self):
@@ -436,6 +473,19 @@ class KingdomArmourTests(unittest.TestCase):
         self.assertIn("| Culture |", md)
         self.assertIn("### alpha", md)
         self.assertIn("### beta", md)
+        self.assertIn("## Worn floor and ceiling", md)
+        # WORN_ARMOUR_CEILING ships as a warning until the Armory apply (taom_schema.py, 2026-11-14); the
+        # report must not call it an error
+        worn_text = md.split("## Worn floor and ceiling")[1].split("## Per-culture detail")[0]
+        self.assertIn("a warning until the Armory apply", worn_text)
+        self.assertIn("a warning until the Armory apply", md.split("## Executive summary")[1].split("##")[0])
+        self.assertNotIn("Ceiling, an error in the validator", md)
+        self.assertNotIn("`WORN_ARMOUR_CEILING` error", md)
+        self.assertIn("`alpha_t9`", md.split("## Worn floor and ceiling")[1].split("## Per-culture detail")[0])
+        self.assertEqual([r["troop"] for r in data["wornLimits"]["troops"]], ["alpha_t9"])
+        self.assertNotIn("troopsPerSlot", data["wornLimits"])
+        self.assertIn("| Culture | Troop | T | Band | Ceiling | Floor |", md)
+        self.assertEqual(data["wornLimits"]["ceiling"], ra.WORN_ARMOUR_CEILING)
 
     def test_main_culture_filter_and_missing_install(self):
         out = Path(self._tmp.name) / "reports"

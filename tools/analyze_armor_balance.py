@@ -221,9 +221,8 @@ def check_curve_invariant(variant_cap=None):
     return violations
 
 
-# The two band pairs the kingdom-cap curve is judged on. Civilian kit is off the curve, and the
-# lord band equals the elite band, so (lord, heavy) is an adjacent gap by construction, which is
-# the loot excitement the invariant allows.
+# The two band pairs the kingdom-cap curve is judged on. Civilian kit is off the curve, and (lord,
+# heavy) is an adjacent gap by construction, which is the loot excitement the invariant allows.
 KINGDOM_INVARIANT_PAIRS = (('heavy', 'light'), ('elite', 'medium'))
 
 
@@ -231,11 +230,12 @@ def check_kingdom_curve_invariant(variant_cap=None):
     """The two-tier invariant on the kingdom-cap curve's PRIMARY stat: for every cap, slot and
     pair (n, n-2), the primary at tier n (variant 0) must exceed tier n-2 at the variant cap plus
     the legendary roll of n-2's loot table. Pure function of the curve constants, so it proves the
-    primary only. Secondaries keep each item's own legacy ratio to its primary; a small ratio
-    shrinks the tier gap without shrinking the flat modifier bonus, so a legendary medium piece can
-    still pass an elite one on a secondary (live Isengard pauldrons: medium arm 5 + 5 against elite
-    7). Those are judged per live item by _check_tier_inversions, which reads every governed stat
-    with the item's own modifier group (Codex, 2026-09-13)."""
+    primary only, and cap_value carries the head's own light and heavy bands (SLOT_BAND_RATIO).
+    Since 2026-11-14 the secondaries are 0 below the heavy band and capped by SECONDARY_SHARE_CAP
+    from it, so the light side of each judged pair carries no secondary and has no legendary
+    headroom (a 0 stat is modifier-immune). Per-item secondaries are still judged by
+    _check_tier_inversions, which reads every governed stat with the item's own modifier group
+    (Codex, 2026-09-13)."""
     cap_v = ra.VARIANT_CAP if variant_cap is None else variant_cap
     violations = []
     for kingdom, cap in sorted(ra.KINGDOM_CAPS.items()):

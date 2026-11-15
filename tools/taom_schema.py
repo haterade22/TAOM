@@ -78,6 +78,7 @@ class Registries:
     settlement_economy: list = field(default_factory=list)    # live per-settlement (id, culture, kind, value, bound) records
     suspect_registries: list = field(default_factory=list)    # human-readable "this registry looks too small" warnings
     item_armour: dict = field(default_factory=dict)           # armour item id -> head+body+arm+leg (empty = unavailable)
+    item_armour_stats: dict = field(default_factory=dict)     # armour item id -> {head_armor|body_armor|arm_armor|leg_armor: n} (empty = unavailable)
     item_folder: dict = field(default_factory=dict)           # armour item id -> LOTRLOME_items folder (None = vanilla/repo)
     launchers: dict = field(default_factory=dict)             # bow/crossbow id -> ranged_ladder.Launcher (empty = unavailable)
     mount_barred_usages: set = None                           # item_usage ids flagged requires_no_mount (None = unavailable)
@@ -229,16 +230,140 @@ def _is_dwarf_mount(mount_id: str) -> bool:
 
 
 @functools.lru_cache(maxsize=2)
-def _priced_armory(modules: Path) -> dict:
-    """The Armory's priced melee weapons, once per install path per process (~0.35 s each).
-    A raised error is never cached, so a broken Armory is reported on every call."""
+def _armory_catalogue(modules: Path) -> tuple:
+    """(catalogue, priced melee weapons) of the Armory, once per install path per process (~0.35 s
+    each). The catalogue is shared between calls: a caller that adds to it works on a copy
+    (price_placeholders does). A raised error is never cached, so a broken Armory is reported on
+    every call."""
     import sys as _sys
     _sys.path.insert(0, str(Path(__file__).resolve().parent))
     import melee_catalogue as mc
     import analyze_melee_ladder as mr
     cat = mc.load(modules, item_modules={mr.ARMORY_MODULE})
     priced, _failures = mc.price_all(cat)
-    return priced
+    return cat, priced
+
+
+# The files tools/generate_placeholder_weapons.py writes into the repo module (a test pins the names to
+# the generator's). The taom_ph_ weapons are not in the install, so the melee gate reads them from the
+# tree it validates.
+PLACEHOLDER_DIR = "placeholder_weapons"
+PLACEHOLDER_PIECES = "ph_crafting_pieces.xml"
+PLACEHOLDER_ITEMS = "ph_items.xml"
+PLACEHOLDER_DESCRIPTIONS = "ph_weapon_descriptions.xslt"
+# A placeholder blade is generated from its donor's, so a restat of the blade piece is overwritten by the
+# next generator run: the donor is restatted first, then the placeholders are regenerated from it.
+_PLACEHOLDER_REPAIR = ("Repair: a taom_ph_ weapon is generated, so restat its donor "
+                       "(python tools/restat_melee_blades.py) and then run "
+                       "python tools/generate_placeholder_weapons.py --apply, then --verify")
+_XSL_TEMPLATE = "{http://www.w3.org/1999/XSL/Transform}template"
+_PH_DESCRIPTION_MATCH_RE = re.compile(r"WeaponDescription\[@id='([^']+)'\]/AvailablePieces")
+
+
+def _placeholder_items(path: Path) -> dict:
+    """{item id: melee_catalogue.Item} of a placeholder items file, read the way
+    melee_catalogue.load_items reads the Armory's."""
+    import melee_catalogue as mc
+    items = (mc.item_from_node(node, "ph") for node in ET.parse(str(path)).getroot().iter("CraftedItem"))
+    return {item.id: item for item in items if item is not None}
+
+
+def _placeholder_description_pieces(path: Path) -> dict:
+    """{WeaponDescription id: blade ids} that the description sheet adds to AvailablePieces.
+    A missing sheet adds nothing, and the blades then fail to price with that reason."""
+    out = {}
+    if not path.is_file():
+        return out
+    for template in ET.parse(str(path)).getroot().iter(_XSL_TEMPLATE):
+        match = _PH_DESCRIPTION_MATCH_RE.fullmatch(template.get("match") or "")
+        if match:
+            out.setdefault(match.group(1), set()).update(
+                p.get("id") for p in template.iter("AvailablePiece") if p.get("id"))
+    return out
+
+
+def price_placeholders(cat, ph_dir: Path) -> tuple:
+    """(priced, problems): each placeholder of the tree priced against a COPY of the Armory
+    catalogue, the way tools/generate_placeholder_weapons.py price_new prices it, but from the
+    files it wrote: the cloned blades, the items and the sheet that makes each blade available to its
+    weapon description. `problems` is [(file, entry id, reason)], one per file that would not read
+    and per item that would not price, so a placeholder the gate could not judge is said, not
+    skipped. A tree with no placeholder items file gives ({}, [])."""
+    import dataclasses
+    import melee_catalogue as mc
+    import melee_damage as md
+    items_file = ph_dir / PLACEHOLDER_ITEMS
+    if not items_file.is_file():
+        return {}, []
+    problems = []
+
+    def read(name, reader):
+        try:
+            return reader(ph_dir / name)
+        except (ET.ParseError, OSError) as exc:
+            problems.append((name, name, f"{name} would not read ({exc})"))
+            return {}
+
+    pieces = read(PLACEHOLDER_PIECES, md.parse_crafting_pieces)
+    items = read(PLACEHOLDER_ITEMS, _placeholder_items)
+    available = read(PLACEHOLDER_DESCRIPTIONS, _placeholder_description_pieces)
+    if problems:
+        return {}, problems
+    copy = dataclasses.replace(cat, pieces={**cat.pieces, **pieces}, descriptions=dict(cat.descriptions),
+                               items={**cat.items, **items})
+    for did, blades in available.items():
+        if did in copy.descriptions:
+            copy.descriptions[did] = dataclasses.replace(
+                copy.descriptions[did], available=copy.descriptions[did].available | frozenset(blades))
+    priced = {}
+    for iid, item in sorted(items.items()):
+        try:
+            priced[iid] = mc.price(copy, item)
+        except (mc.CatalogueError, md.MeleeDamageError) as exc:
+            problems.append((PLACEHOLDER_ITEMS, iid, str(exc)))
+    return priced, problems
+
+
+def melee_pass_rows(troops, priced, spec):
+    """(kits, carried) for the melee ladder gate, rows built the way tools/restat_melee_blades.py
+    prices a troop. The craft key stands where the culture was, because a troop id prefix can pick
+    the row (the Black Numenoreans are filed under mordor but forge at their own craft), and the
+    attack flags are the dominant ones, because a spear whose thrust out-damages its swing takes its
+    class top from the thrust. Rows from t.culture and the raw damage flags judge a troop against a
+    different weapon than the restat arms it with. `carried` ends with (carrier tier, craft key) so
+    blow_findings holds an ordinary weapon to the tier limit of its carrier."""
+    import sys as _sys
+    _sys.path.insert(0, str(Path(__file__).resolve().parent))
+    import melee_ladder as ml
+    kits, carried = [], []
+    for t in troops:
+        craft = ml.craft_key(t.id, t.culture, spec)
+        best = [(priced[i].best_dps, i) for i in t.items if i in priced]
+        if best:
+            dps, iid = max(best)
+            p = priced[iid]
+            kits.append((t.id, craft, t.tier, iid, dps, p.blade_piece, p.item.template,
+                         *ml.dominant_flags(p.item.template, p.swing_damage, p.thrust_damage,
+                                            p.swing_dps, p.thrust_dps, spec)))
+        for i in sorted(t.items):
+            if i in priced:
+                p = priced[i]
+                carried.append((t.id, i, p.item.template, p.blade_piece, p.swing_damage,
+                                p.thrust_damage, p.swing_dps, p.thrust_dps, t.tier, craft))
+    return kits, carried
+
+
+# The severity of WORN_ARMOUR_CEILING, and of the "(tooling)" issue that stands in for the whole worn
+# armour pass when the curve module cannot be imported. They share one constant on purpose: that
+# import failure means the ceiling was not checked, so it must never be softer than the ceiling. A
+# WARNING here while the ceiling is an ERROR would let a broken import pass the commit hook.
+# TRANSITIONAL: a WARNING until the live Armory apply, because the unversioned Armory still holds the
+# pre-#1271 values. The flip step in docs/features/armor-balance.md ("The apply sequence") says what
+# changes with this line: set it to Severity.ERROR and add `--code WORN_ARMOUR_CEILING` to BOTH
+# .claude/hooks/check-moduledata-validation.sh and .githooks/pre-commit. CommitGateCoverageTests
+# (_error_codes) reads this constant, so it fails until the first names the code; CodeList in
+# test_githooks_pre_commit.py fails until the second matches the first. WORN_ARMOUR_FLOOR stays a WARNING.
+WORN_ARMOUR_CEILING_SEVERITY = Severity.WARNING
 
 
 # --------------------------------------------------------------------------- #
@@ -292,6 +417,7 @@ class Validator:
         issues += self._upgrade_skill_regressions()
         issues += self._upgrade_armour_regressions()
         issues += self._cross_culture_armour_inversions()
+        issues += self._worn_armour_limits()
         issues += self._armour_mesh_tier_ladder()
         issues += self._upgrade_tier_collapse()
         issues += self._ranged_ladder_inversions()
@@ -345,7 +471,12 @@ class Validator:
             # and then the Armory is not priced at all.
             troops_dir = self.moduledata / "troops"
             troops = mr.load_troops(troops_dir) if troops_dir.is_dir() else []
-            priced = _priced_armory(modules) if troops else {}
+            cat, priced = _armory_catalogue(modules) if troops else (None, {})
+            # The taom_ph_ placeholders are not in the install: price them from this tree's own files
+            # (2026-11-14, #1271), so the troops that carry them are judged like any other weapon.
+            ph_priced, ph_problems = (price_placeholders(cat, self.moduledata / PLACEHOLDER_DIR)
+                                      if troops else ({}, []))
+            priced = {**priced, **ph_priced}
         except (mc.CatalogueError, mr.AnalysisError, OSError) as exc:
             return [Issue(
                 severity=Severity.WARNING, code=code, file=spec_rel, line=0, entry_id="(install)",
@@ -359,6 +490,14 @@ class Validator:
             )]
 
         issues = []
+        for file, entry, reason in ph_problems:
+            issues.append(Issue(
+                severity=Severity.WARNING, code=code,
+                file=self._rel(self.moduledata / PLACEHOLDER_DIR / file), line=0, entry_id=entry,
+                message=(f"placeholder {entry} could not be priced ({reason}), so no troop that carries "
+                         "it was judged. Regenerate it: python tools/generate_placeholder_weapons.py "
+                         "--apply, then --verify"),
+            ))
         for stale in ml.stale_exemptions({t.id for t in troops}, spec):
             issues.append(Issue(
                 severity=Severity.WARNING, code=code, file=spec_rel, line=0, entry_id=stale,
@@ -367,23 +506,29 @@ class Validator:
             ))
 
         by_id = {t.id: t for t in troops}
-        kits = []
-        for t in troops:
-            best = [(priced[i].best_dps, i) for i in t.items if i in priced]
-            if not best:
-                continue
-            dps, iid = max(best)
-            kits.append((t.id, t.culture, t.tier, iid, dps, priced[iid].blade_piece))
+        kits, carried = melee_pass_rows(troops, priced, spec)
         for f in ml.findings(kits, spec, min_gap=1.0):
             troop = by_id.get(f.troop)
             issues.append(Issue(
                 severity=Severity.WARNING, code=code,
                 file=self._rel(Path(troop.path)) if troop and troop.path else "troops",
                 line=0, entry_id=f.troop,
-                message=(f.describe() + ". Repair: python tools/fix_melee_ladder.py (dry-run, then "
+                message=(f.describe() + (". " + _PLACEHOLDER_REPAIR if f.item in ph_priced else
+                         ". Repair: python tools/fix_melee_ladder.py (dry-run, then "
                          "--apply); where the culture owns no weapon in band the fix is a restat of "
                          "the blade piece, not a roster swap. Deliberate exceptions go in "
-                         f"{spec_rel} exempt_troops with a reason (#631)"),
+                         f"{spec_rel} exempt_troops with a reason (#631)")),
+            ))
+        # One blow and sustained damage per class and tier (class_limits scaled by tier_limit). A hero
+        # blade is judged against its hero limit, the class limit plus its maker group's bonus.
+        for b in ml.blow_findings(carried, spec):
+            issues.append(Issue(
+                severity=Severity.WARNING, code="MELEE_BLOW_CEILING", file=spec_rel, line=0,
+                entry_id=b.item,
+                message=(b.describe() + (". " + _PLACEHOLDER_REPAIR if b.item in ph_priced else
+                         ". Repair: python tools/restat_melee_blades.py (dry-run, then "
+                         "--apply) lowers the blade to the limit; a hero weapon goes in "
+                         f"{spec_rel} hero_blades")),
             ))
         return issues
 
@@ -2057,6 +2202,94 @@ class Validator:
             ))
         return issues
 
+    # -- WORN_ARMOUR_CEILING / WORN_ARMOUR_FLOOR ----------------------------- #
+    # What a troop's battle sets add up to per region (head, body, arm, leg), held against
+    # rebalance_armor.WORN_ARMOUR_CEILING (vanilla's best troop plus 10: no spawn may reach past it)
+    # and WORN_ARMOUR_FLOOR (the least head and body a medium, heavy or elite troop may wear; below it
+    # a one-handed hit the model clears for plain gear can kill). The limits and the arithmetic live
+    # in the curve module so the analyzer, the writer and this gate cannot disagree (#1271).
+    #
+    # The reach is per SLOT. Equipment.GetRandomEquipmentElements re-rolls the set index inside its
+    # slot loop whenever the seed is not -1, and a troop spawn passes CharacterHelper's face seed
+    # (abs(...) % 2000, never -1), so a campaign battle draws Head, Body, Cape, Gloves and Leg from
+    # five independent sets (v1.5.7 TaleWorlds.Core.Equipment.cs:549-590), so a per-set reading
+    # misses what real spawns reach.
+    #
+    # Item stats come from the install, so the pass is skipped without them and the caller says so;
+    # a missing curve module is its own stated warning, because a gate that checks nothing must not
+    # read as a clean run. Exempt, bodyless and creature troops follow the cross-culture gate; the
+    # bodyless keep the head floor and lose only the body one.
+    #
+    # TRANSITIONAL: the ceiling is meant to be an ERROR, but the live Armory is unversioned and
+    # still holds the pre-#1271 item values, so an ERROR would fail the commit hook on every
+    # ModuleData commit until the Armory apply (docs/features/armor-balance.md, "The apply
+    # sequence"). It ships as a WARNING. The severity is WORN_ARMOUR_CEILING_SEVERITY, shared with
+    # the "(tooling)" issue below; after the apply, in the SAME change, follow the steps in the
+    # comment on that constant, then update the codes-doc row.
+    #
+    # The creature skip is the id half of analyze_kingdom_armour.classify: the analyzer also matches
+    # the display name and BESPOKE_RIDERS, and a test pins that every troop it skips that way is
+    # in _ARMOUR_LADDER_EXEMPT, so the gate reaches the same troops.
+    _WORN_ARMOUR_CREATURE_MARKERS = ("troll", "creature")
+
+    def _worn_armour_limits(self) -> list:
+        stats = getattr(self.reg, "item_armour_stats", None) or {}
+        if not stats:
+            return []   # no install: skipped, and validate_moduledata.main announces it
+        ra = _curve()
+        if ra is None or not hasattr(ra, "worn_armour_breaches"):
+            return [Issue(
+                severity=WORN_ARMOUR_CEILING_SEVERITY, code="WORN_ARMOUR_CEILING", file="tools/rebalance_armor.py",
+                line=0, entry_id="(tooling)",
+                message=("the armour curve module (tools/rebalance_armor.py) cannot be imported, so this "
+                         "pass checked nothing against WORN_ARMOUR_CEILING or WORN_ARMOUR_FLOOR. "
+                         "Not checked is not clean."),
+            )]
+        items = {iid: {"stats": s} for iid, s in stats.items()}
+        troops, _ = self._upgrade_troop_index()
+        issues = []
+        for tid in sorted(troops):
+            rec = troops[tid]
+            fname = re.split(r"[\\/]", rec["file"])[-1]
+            if not fname.startswith("troops_") or not fname.endswith(".xml"):
+                continue
+            if rec["level"] is None or not rec["sets"]:
+                continue
+            if tid in self._ARMOUR_LADDER_EXEMPT or any(m in tid.lower() for m in self._WORN_ARMOUR_CREATURE_MARKERS):
+                continue
+            worst, best = ra.worn_armour_extremes_per_slot(rec, items)
+            hit = ra.worn_armour_breaches(rec["level"], worst, best, bodyless=tid in self._BODYLESS_BY_DESIGN)
+            band = ra.level_to_band(rec["level"])
+            if hit["ceiling"]:
+                issues.append(Issue(
+                    severity=WORN_ARMOUR_CEILING_SEVERITY, code="WORN_ARMOUR_CEILING",
+                    file=rec["file"], line=rec["line"], entry_id=tid,
+                    message=(
+                        "a spawn can wear more armour than any troop may, before item modifiers: "
+                        + ", ".join(f"{r} {v} (ceiling {limit})" for r, v, limit in hit["ceiling"])
+                        + ". The ceiling is vanilla's best troop plus 10, summed over the five armour "
+                          "slots with each slot drawn from any battle set. Swap the piece that adds "
+                          "most for one lower in its line, or reprice the item: python "
+                          "tools/analyze_kingdom_armour.py lists every troop under \"Worn floor and "
+                          "ceiling\""
+                    ),
+                ))
+            if hit["floor"]:
+                issues.append(Issue(
+                    severity=Severity.WARNING, code="WORN_ARMOUR_FLOOR",
+                    file=rec["file"], line=rec["line"], entry_id=tid,
+                    message=(
+                        f"a spawn can wear less than a level {rec['level']} {band} troop should: "
+                        + ", ".join(f"{r} {v} (floor {f})" for r, v, f in hit["floor"])
+                        + ". Under the floor a one-handed hit that the model clears for plain gear "
+                          "can kill. The worst case takes each slot from the battle set that fills "
+                          "it least. Fill the slot in every battle set from the troop's kingdom kit "
+                          "at its band; python tools/analyze_kingdom_armour.py lists every troop "
+                          "under \"Worn floor and ceiling\""
+                    ),
+                ))
+        return issues
+
     # -- ARMOUR_MESH_TIER_LADDER --------------------------------------------- #
     # An item id carries the tier the artist modelled (_light_ ... _lord_); the ladder
     # (rebalance_armor.MESH_TIER_LADDER, the maintainer's table 2026-09-16) says which of
@@ -2790,15 +3023,17 @@ _ARMOUR_ATTRS = ("head_armor", "body_armor", "arm_armor", "leg_armor")
 
 
 # Since the kingdom-cap armour curve (#583) each kingdom's armour power is a chest cap set by the
-# maintainer (rebalance_armor.KINGDOM_CAPS: Erebor 70 ... goblins 38), so raw totals differ across
-# kingdoms BY DESIGN and the cross-culture check must not read that as a defect. Every ITEM's value
-# is scaled to one reference cap (Gondor's 57, the men's baseline) before a troop is totalled and
-# the medians compared: the question becomes "is this troop dressed below the power of the kit it
+# maintainer (rebalance_armor.KINGDOM_CAPS: Erebor and Iron Hills 52 down to Thenn 35), so raw totals
+# differ across kingdoms BY DESIGN and the cross-culture check must not read that as a defect. Every
+# ITEM's value is scaled to one reference cap (Gondor's, the men's baseline) before a troop is totalled
+# and the medians compared: the question becomes "is this troop dressed below the power of the kit it
 # wears, relative to the others", the roster question the caps leave open. Item level, not culture
-# level, because items belong to a line (an Umbar noble in Black Numenorean plate wears 57-cap
-# kit; scaling him by Umbar's 44 read as 29% more armour than he has, deep review 2026-09-13).
-# Without the curve module the check runs unscaled.
-REFERENCE_CAP = 57
+# level, because items belong to a line (an Umbar noble in Black Numenorean plate wears that line's
+# cap, not Umbar's; scaling him by Umbar's read as 29% more armour than he has, deep review
+# 2026-09-13). Without the curve module the check runs unscaled.
+# The value is Gondor's cap, rebalance_armor.KINGDOM_CAPS['gondor'], as a literal so this module stays
+# stdlib-only at import; a test pins the two (2026-11-14: it read 57 after the caps fell to 46).
+REFERENCE_CAP = 46
 
 
 def _curve():
@@ -2888,13 +3123,20 @@ def build_item_folders(item_roots) -> dict:
     return folders
 
 
-def build_item_armour(item_roots) -> dict:
-    """armour item id -> head + body + arm + leg, over every <Item> carrying an <Armor> element.
+def _armour_totals(stats) -> dict:
+    """armour item id -> head + body + arm + leg, from build_item_armour_stats.
 
     All four stats are summed because a chest contributes arm armour and a pauldron contributes
     body armour; the engine adds them all, so a ladder judged on the primary stat alone would
     miss exactly the cape inversions that hid the longest.
     """
+    return {iid: sum(s.values()) for iid, s in stats.items()}
+
+
+def build_item_armour_stats(item_roots) -> dict:
+    """armour item id -> {head_armor|body_armor|arm_armor|leg_armor: n}, the stats the item
+    names, over every <Item> carrying an <Armor> element. The worn armour gate needs the regions
+    apart (a head ceiling and a body ceiling differ); _armour_totals sums them."""
     armour = {}
     for root in item_roots:
         root = Path(root)
@@ -2912,12 +3154,12 @@ def build_item_armour(item_roots) -> dict:
                 am = _ARMOR_ELEM_RE.search(body)
                 if not idm or not am:
                     continue
-                total = 0
+                stats = {}
                 for attr in _ARMOUR_ATTRS:
                     vm = re.search(r'\b%s="(-?\d+)"' % attr, am.group(1))
                     if vm:
-                        total += int(vm.group(1))
-                armour[idm.group(1)] = total
+                        stats[attr] = int(vm.group(1))
+                armour[idm.group(1)] = stats
     return armour
 
 
@@ -3122,7 +3364,8 @@ def build_registries(moduledata, game_modules, armory_root=None, vanilla_modules
     armory_dups = {iid: fs for iid, fs in armory_dups.items() if len(set(fs)) > 1}
 
     harness_family_types, mount_family_types = build_harness_registries(item_roots)
-    item_armour = build_item_armour(item_roots)
+    item_armour_stats = build_item_armour_stats(item_roots)
+    item_armour = _armour_totals(item_armour_stats)
     item_folder = build_item_folders(item_roots)
     launchers = build_launchers(item_roots)
     mount_barred = build_mount_barred_usages(game_modules)
@@ -3143,6 +3386,7 @@ def build_registries(moduledata, game_modules, armory_root=None, vanilla_modules
         # Armour values are mostly Armory and vanilla; a TAOM-only table would judge every
         # edge on a handful of repo items and read the rest as bare. Unavailable, not partial.
         item_armour = {}
+        item_armour_stats = {}
         item_folder = {}
         launchers = {}
         mount_barred = None
@@ -3168,6 +3412,7 @@ def build_registries(moduledata, game_modules, armory_root=None, vanilla_modules
         # vanilla_factions has its own floor: the repo's clans alone can reach the total's, and a
         # missing spclans.xml would then pass while every ref to a vanilla clan read as broken.
         for label, value, floor in (("launchers", launchers, 30),
+                                    ("armour_stats", item_armour_stats, 500),
                                     ("body_properties", body_properties, 50),
                                     ("factions", factions, 100),
                                     ("vanilla_factions", vanilla_factions, 50),
@@ -3191,6 +3436,7 @@ def build_registries(moduledata, game_modules, armory_root=None, vanilla_modules
         settlement_economy=settlement_economy,
         suspect_registries=suspect,
         item_armour=item_armour,
+        item_armour_stats=item_armour_stats,
         item_folder=item_folder,
         launchers=launchers,
         mount_barred_usages=mount_barred,
