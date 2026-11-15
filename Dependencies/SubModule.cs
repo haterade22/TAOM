@@ -334,6 +334,24 @@ public class SubModule : MBSubModuleBase
         PatchShield.WriteRepeatCheckpoint();
     }
 
+    /// <summary>
+    /// Arms the missing-TAOM notice (<see cref="MissingTaomNotice"/>): with War Sails ticked the launcher drops TAOM
+    /// but still starts this module. The engine calls this hook with no try, on every tick while no state is active,
+    /// so it only sets a flag. Not on the dedicated server, which has no menu.
+    /// </summary>
+    protected override void OnBeforeInitialModuleScreenSetAsRoot()
+    {
+        base.OnBeforeInitialModuleScreenSetAsRoot();
+        if (!GameNetwork.IsDedicatedServer) MissingTaomNotice.Arm();
+    }
+
+    /// <summary>Shows the armed notice one tick later, once Native's inquiry manager exists. Never throws.</summary>
+    protected override void OnApplicationTick(float dt)
+    {
+        base.OnApplicationTick(dt);
+        MissingTaomNotice.Tick();
+    }
+
     private static void ApplyHarmonyGuards()
     {
         var harmony = new Harmony(GuardHarmonyId);

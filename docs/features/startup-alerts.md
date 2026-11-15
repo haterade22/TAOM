@@ -23,6 +23,22 @@ one inquiry that lists every problem it found:
   says why things then break. The check reads the loaded list, not the install, because every DLC owner
   has the module installed.
 
+### TAOM dropped by the launcher
+
+- **Vanilla behavior:** with War Sails ticked, the v1.5.7 launcher honours TAOM's `IncompatibleModules`
+  entry by dropping TAOM itself, but still starts TAOM.Dependencies, TAOM_Map and the Armory (project
+  owner's start 2026-11-15 20:31, rgl_log line 61: no TAOM in the loaded list, no TAOM log).
+- **Without this notice:** TAOM's own War Sails alert never runs, and the player gets the plain War Sails
+  menu with no word on why.
+- **Fix:** TAOM.Dependencies loads either way, so it says it: `MissingTaomCheck` (pure) and
+  `MissingTaomNotice` show one inquiry when TAOM_Map or TAOM.Dependencies is loaded and TAOM is not,
+  naming War Sails when `NavalDLC` is loaded, otherwise saying TAOM is not ticked or failed to load.
+  TAOM.Dependencies constructs before Native, whose `GauntletUISubModule` creates the inquiry manager in
+  its own `OnBeforeInitialModuleScreenSetAsRoot`; so Dependencies' hook only arms the notice and the next
+  `OnApplicationTick` shows it, once per process, never on a dedicated server. The text is inline English
+  (TAOM's language files load only with TAOM); the rows sit in `taom_module_strings.xml` for the language
+  pass. It logs to `Modules\TAOM.Dependencies\diag.log` (`MissingTaomNotice: reason=...`).
+
 ### Separate library copies
 
 - **Vanilla behavior:** the v1.5.7 launcher lists every `Modules\<dir>\SubModule.xml` and then every
@@ -86,6 +102,8 @@ ILoadedModuleIds         IModuleFolderReader
 | `Main/Adapters/ILoadedModuleIds.cs`, `LoadedModuleIds.cs` | Loaded module ids |
 | `Main/Adapters/IModuleFolderReader.cs`, `ModuleFolderReader.cs` | Folder listing and SubModule.xml reads |
 | `Main/_Module/ModuleData/taom_module_strings.xml` | `taom_startup_alert_war_sails`, `taom_bundled_library_copies_body`, `taom_bundled_library_copy_workshop`, `taom_bundled_library_copy_modules` |
+| `Dependencies/Foundation/MissingTaomCheck.cs` | Who gets the missing-TAOM notice (pure) |
+| `Dependencies/MissingTaomNotice.cs`, `Dependencies/SubModule.cs` | The notice: armed at the menu hook, shown on the next tick; rows `taom_missing_taom_war_sails`, `taom_missing_taom_not_loaded` |
 
 ## Tests
 
@@ -96,6 +114,9 @@ ILoadedModuleIds         IModuleFolderReader
   the one `Main/_Module/SubModule.xml` declares incompatible.
 - `TAOM.Tests/Features/StartupAlerts/StartupAlertsWiringTests.cs`: the module is listed once, declares
   nothing else, and reads nothing outside MainMenu or on a dedicated server.
+- `TAOM.Tests/Infrastructure/Dependencies/MissingTaomCheckTests.cs`: who gets the missing-TAOM notice
+  (the owner's War Sails start, TAOM loaded, not ticked, ids in other case or only containing TAOM), the
+  ids against both SubModule.xml files, and the inline English against the base rows.
 
 ## How to verify in game
 
@@ -107,10 +128,14 @@ ILoadedModuleIds         IModuleFolderReader
    launcher list). Pass: the inquiry has the War Sails paragraph; the log has
    `[StartupAlerts] NavalDLC is loaded with TAOM`.
 3. **Clean setup.** No copies, no War Sails. Pass: no inquiry; the log line says 0 copies.
+4. **TAOM dropped for War Sails.** Precondition: tick War Sails in the launcher with TAOM installed (the
+   launcher unticks TAOM). Start the game. Pass: at the main menu one TAOM inquiry says TAOM did not load
+   because of War Sails; `Modules\TAOM.Dependencies\diag.log` has `MissingTaomNotice: reason=WarSails`.
 
 ## Changelog
 
 - 2026-11-15: added (War Sails and separate library copies).
+- 2026-11-15: TAOM.Dependencies says when the launcher dropped TAOM (War Sails ticked, or TAOM not loaded).
 
 ## GitHub Issue
 
