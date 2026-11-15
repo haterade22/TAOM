@@ -159,14 +159,15 @@ Record each pending feature's module, source file, exact keys and English text, 
 - Target languages: BR, CNs, CNt, DE, FR, IT, JP, KO, PL, RU, SP, TR.
 - Placeholders: the Status and total lines build numbers into the text; keep each number a `{VALUE}` placeholder when wrapping.
 
-## Cheat menu results that name what they gave (#1297)
+## Cheat menu results that name what they gave (#1297, #1317)
 
 - Status: pending project-lead translation pass. The English rows are registered in `taom_module_strings.xml`.
-- Source: #1297.
+- Source: #1297 (gold, influence, renown, heal); #1317 (relation, teleport).
 - Module: TAOM.
 - English source: `Main/_Module/ModuleData/taom_module_strings.xml` (used by `Main/Features/CheatMenu/CheatMenuTexts.cs`).
 - Target languages: BR, CNs, CNt, DE, FR, IT, JP, KO, PL, RU, SP, TR.
-- Placeholder: `{NUMBER}` is a formatted number (gold total, influence, renown or soldiers healed).
+- Placeholders: `{NUMBER}` is a formatted number (gold total, influence, renown, soldiers healed or lords changed).
+  `{NAME}` is a kingdom's or a settlement's display name.
 
 | Key | English source | Context |
 | --- | --- | --- |
@@ -174,6 +175,8 @@ Record each pending feature's module, source file, exact keys and English text, 
 | `taom_cheat_done_influence` | Gained {NUMBER} influence. | Result of the influence cheat |
 | `taom_cheat_done_renown` | Gained {NUMBER} renown. | Result of the renown cheat |
 | `taom_cheat_done_heal` | Your party is healed. Soldiers healed: {NUMBER}. | Result of the heal cheat |
+| `taom_cheat_done_relation` | Lords of {NAME} whose relation changed: {NUMBER}. | Result of the relation cheat; NAME is the kingdom |
+| `taom_cheat_done_teleport` | You are at the gate of {NAME}. | Result of the teleport cheat; NAME is the town, castle or village |
 
 ## Realms options for realm names and banners (a4834c46c)
 

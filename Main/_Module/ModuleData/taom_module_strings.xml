@@ -2970,7 +2970,11 @@
 	<string id="taom_fcamp_ambush_ok" text="{=taom_fcamp_ambush_ok}Your ambush is set against {ENEMY} - strike now?" />
 	<string id="taom_fcamp_ambush_terrain" text="{=taom_fcamp_ambush_terrain}Needs concealing terrain - forest, hills, swamp, canyon, dunes, a bridge or a ford." />
 	<string id="taom_fcamp_ambush_title" text="{=taom_fcamp_ambush_title}Ambush" />
+	<string id="taom_fcamp_block_disorganized" text="{=taom_fcamp_block_disorganized}the party is still disorganized; wait a few hours." />
+	<string id="taom_fcamp_block_encounter" text="{=taom_fcamp_block_encounter}the party is in an encounter." />
+	<string id="taom_fcamp_block_menu" text="{=taom_fcamp_block_menu}a menu or window is open; close it first." />
 	<string id="taom_fcamp_broken" text="{=taom_fcamp_broken}Camp broken." />
+	<string id="taom_fcamp_btn_blocked" text="{=taom_fcamp_btn_blocked}Cannot camp now: {REASON}" />
 	<string id="taom_fcamp_btn_make" text="{=taom_fcamp_btn_make}Make Camp" />
 	<string id="taom_fcamp_btn_options" text="{=taom_fcamp_btn_options}Camp Options" />
 	<string id="taom_fcamp_building" text="{=taom_fcamp_building}The camp is still being set up." />
@@ -5207,5 +5211,9 @@
 	<string id="taom_guest_trade_busy" text="{=taom_guest_trade_busy}The host has not answered your last request yet." />
 	<string id="taom_guest_trade_no_link" text="{=taom_guest_trade_no_link}The host cannot be reached." />
 	<string id="taom_guest_trade_no_answer" text="{=taom_guest_trade_no_answer}The host did not answer your last request. Try again." />
+	<!-- harvested by tools/harvest_literal_loc_keys.py -->
+	<!-- CheatMenu -->
+	<string id="taom_cheat_done_relation" text="{=taom_cheat_done_relation}Lords of {NAME} whose relation changed: {NUMBER}." />
+	<string id="taom_cheat_done_teleport" text="{=taom_cheat_done_teleport}You are at the gate of {NAME}." />
 
 </strings>

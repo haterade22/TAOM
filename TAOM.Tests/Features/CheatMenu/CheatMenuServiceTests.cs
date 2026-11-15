@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
@@ -97,6 +98,16 @@ public class CheatMenuServiceTests
         Assert.IsTrue(CheatMenuTexts.Describe(_service.AddInfluence(100)).Value.StartsWith("{=taom_cheat_done_influence}"));
         Assert.IsTrue(CheatMenuTexts.Describe(_service.AddRenown(100)).Value.StartsWith("{=taom_cheat_done_renown}"));
         Assert.IsTrue(CheatMenuTexts.Describe(_service.Heal()).Value.StartsWith("{=taom_cheat_done_heal}"));
+    }
+
+    [TestMethod]
+    public void RelationAndTeleportResults_HaveTheirOwnWords()
+    {
+        _world.AddRelationWithKingdom("gondor", 20).Returns(12);
+        _world.SettlementName("town_minas_tirith").Returns("Minas Tirith");
+
+        Assert.IsTrue(CheatMenuTexts.Describe(_service.AddRelation("gondor", 20)).Value.StartsWith("{=taom_cheat_done_relation}"));
+        Assert.IsTrue(CheatMenuTexts.Describe(_service.Teleport("town_minas_tirith")).Value.StartsWith("{=taom_cheat_done_teleport}"));
     }
 
     [TestMethod]
@@ -253,6 +264,17 @@ public class CheatMenuServiceTests
 
         Assert.IsTrue(outcome.Ok);
         Assert.AreEqual(12f, outcome.Number);
+    }
+
+    [TestMethod]
+    public void AddRelation_NamesTheKingdomByItsDisplayName_OrItsIdWhenItHasNone()
+    {
+        // spkingdoms.xslt keeps vanilla ids (Gondor is empire_w), so the id is no name a player knows (#1317).
+        _world.Kingdoms().Returns(new List<(string Id, string Name)> { ("empire_w", "Gondor") });
+        _world.AddRelationWithKingdom(Arg.Any<string>(), 20).Returns(12);
+
+        Assert.AreEqual("Gondor", _service.AddRelation("empire_w", 20).Name);
+        Assert.AreEqual("eliminated_one", _service.AddRelation("eliminated_one", 20).Name);
     }
 
     [TestMethod]

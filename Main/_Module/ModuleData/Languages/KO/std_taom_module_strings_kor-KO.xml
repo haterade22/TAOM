@@ -7967,10 +7967,10 @@
     <string id="taom_cheat_done_influence" text="Gained {NUMBER} influence." />
     <string id="taom_cheat_done_renown" text="Gained {NUMBER} renown." />
     <string id="taom_cheat_done_heal" text="Your party is healed. Soldiers healed: {NUMBER}." />
-    <string id="taom_cheat_pick_troop" text="Choose a troop: 10 of it join your party" />
-    <string id="taom_cheat_troop_row" text="Tier {TIER}: {NAME}" />
-    <string id="taom_cheat_troops_any" text="+10 of any troop of your faction..." />
-    <string id="taom_cheat_troops_screen" text="Every troop (party screen)..." />
+    <string id="taom_fcamp_block_disorganized" text="the party is still disorganized; wait a few hours." />
+    <string id="taom_fcamp_block_encounter" text="the party is in an encounter." />
+    <string id="taom_fcamp_block_menu" text="a menu or window is open; close it first." />
+    <string id="taom_fcamp_btn_blocked" text="Cannot camp now: {REASON}" />
     <string id="TAOM_LD_Coop_NoCoop" text="Co-op needs the Coop mod loaded." />
     <string id="TAOM_LD_Coop_BadPayload" text="The host's run could not be read. Install the same TAOM as the host." />
     <string id="TAOM_LD_Coop_BadAddress" text="Enter the host's address as address:port, for example 192.168.1.20:4200." />
