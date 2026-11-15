@@ -3492,7 +3492,7 @@
 	<string id="taom_shader_source_install_failed" text="{=taom_shader_source_install_failed}TAOM could not install its bow shaders into {FOLDER}. Some bows may make their holder invisible. Run the game once as administrator; if that does not help, reinstall TAOM. The TAOM log names the cause." />
 	<!-- StartupAlerts -->
 	<string id="taom_startup_alert_war_sails" text="{=taom_startup_alert_war_sails}War Sails is loaded, but TAOM does not support it. Close the game, untick War Sails in the launcher, and start again." />
-	<string id="taom_bundled_library_copies_body" text="{=taom_bundled_library_copies_body}TAOM.Dependencies already provides Harmony, ButterLib, UIExtenderEx and MCM, so these separate copies are not needed:{NEWLINE}{NEWLINE}{LIST}{NEWLINE}{NEWLINE}Please remove them: unsubscribe from them on the Steam Workshop, or delete the folder of a copy in the Modules folder." />
+	<string id="taom_bundled_library_copies_body" text="{=taom_bundled_library_copies_body}TAOM.Dependencies already provides Harmony, ButterLib, UIExtenderEx and MCM, so these separate copies are not needed:{NEWLINE}{NEWLINE}{LIST}{NEWLINE}{NEWLINE}Unsubscribe from a Steam Workshop copy. A copy in the Modules folder took the place of TAOM's own small module with that name: reinstall TAOM to put it back, and do not delete the folder, or mods that need the library stop loading." />
 	<string id="taom_bundled_library_copy_workshop" text="{=taom_bundled_library_copy_workshop}{NAME} {VERSION}, Steam Workshop" />
 	<string id="taom_bundled_library_copy_modules" text="{=taom_bundled_library_copy_modules}{NAME} {VERSION}, folder {FOLDER}" />
 	<!-- Bonds of Battle -->

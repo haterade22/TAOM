@@ -34,9 +34,12 @@ one inquiry that lists every problem it found:
   ([dr3-maintenance.md](../migration/dr3-maintenance.md) "Stub modules"). The project owner decided
   (2026-11-15) that every player uses the stubs.
 - **Without this alert:** a player subscribed to the Workshop BUTR modules sees each id twice in the
-  launcher and can't untick one copy without the other. In game the stub wins:
+  launcher and can't untick one copy without the other. Over a Workshop copy the stub wins in game:
   `ModuleHelper.InitializeModules` takes the first module per Id and reads the `Modules` folder before
-  the Workshop, and BLSE's `ModuleInfoHelper` keeps the first module per Id from the same order.
+  the Workshop. How BLSE orders two modules with one Id is not verified. A real copy in `Modules\<ID>`
+  takes the stub's own folder and replaces its `SubModule.xml`, so no stub exists for that Id: the alert
+  asks the player to reinstall TAOM, never to delete that folder, which would unload every mod that
+  depends on the library.
 
 ## Architecture
 

@@ -37,7 +37,7 @@ public static class StartupAlertsEntry
     public static string LibraryCopiesParagraph(IReadOnlyList<BundledLibraryCopy> copies)
     {
         var text = new TextObject(
-            "{=taom_bundled_library_copies_body}TAOM.Dependencies already provides Harmony, ButterLib, UIExtenderEx and MCM, so these separate copies are not needed:{NEWLINE}{NEWLINE}{LIST}{NEWLINE}{NEWLINE}Please remove them: unsubscribe from them on the Steam Workshop, or delete the folder of a copy in the Modules folder.");
+            "{=taom_bundled_library_copies_body}TAOM.Dependencies already provides Harmony, ButterLib, UIExtenderEx and MCM, so these separate copies are not needed:{NEWLINE}{NEWLINE}{LIST}{NEWLINE}{NEWLINE}Unsubscribe from a Steam Workshop copy. A copy in the Modules folder took the place of TAOM's own small module with that name: reinstall TAOM to put it back, and do not delete the folder, or mods that need the library stop loading.");
         text.SetTextVariable("NEWLINE", "\n");
         text.SetTextVariable("LIST", string.Join("\n", copies.Select(Line)));
         return text.ToString();

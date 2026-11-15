@@ -1608,3 +1608,9 @@ The self-disable notice called `InformationManager.DisplayMessage`, then wrote `
 - **Why missed:** the call returned normally in every case, and the tests faked the notice's own interfaces, so the chat view model was outside every test.
 - **Prevent:** before a line claims that the player saw something, read the engine consumer past the call and gate on its filter (for chat: the two options and the active `GameState`). Write the log line at once and the display later, in two steps, so a held or dropped display never costs the log. A display that the options forbid writes `result=skip` with the reason, never `pass`.
 - **Source:** [rca-patch-self-disable-2026-11-13.md](../rca-patch-self-disable-2026-11-13.md) rows 1, 2 and 6, `/deep-review` Agents 5 and 2.
+
+### Advice in an alert must hold for every place the code finds the problem (PR #1309, 2026-11-15)
+PR #1309 told a player with a separate BUTR copy to "delete the folder of a copy in the Modules folder". BUTR's zips unpack to `Modules\<ID>`, the folder TAOM.Dependencies deploys its alias stub to, so that copy has replaced the stub, and deleting it removes the only module with that id.
+- **Why missed:** the advice was written for the Workshop case, where the stub wins, and the `Modules` case got the same verb.
+- **Prevent:** for each place a check can find the problem (here `InWorkshop` true and false), follow the advice to its effect on disk before writing it.
+- **Source:** [rca-pr1309-startup-alerts-2026-11-15.md](../rca-pr1309-startup-alerts-2026-11-15.md) finding 1.
