@@ -304,5 +304,149 @@ class Item0Tests(unittest.TestCase):
         self.assertFalse(tp.is_launcher_troop(tp.kit_of([ARCHER_1H, SWORD_SHIELD]), "Ranged"))
 
 
+LANCE_SET = {"Item0": "OneHanded", "Item1": "Shield", "Item2": "Polearm"}
+COUCH_AT_2 = frozenset({"Item2"})
+
+
+def plan(sets, couchable=None, group="Cavalry", mounted=True, named=False):
+    return tp.main_weapon_slots(sets, couchable if couchable is not None else [COUCH_AT_2] * len(sets),
+                                group, mounted, named)
+
+
+class NamesAPolearmTests(unittest.TestCase):
+    def test_a_word_that_starts_with_the_stem_matches(self):
+        for text in ("Linhir Spearman", "Serelond Pikeman", "Falathrim Lancer", "Easterling Halberdier",
+                     "Goblin Pike-Reaver", "Pinnath Gelin Spearwarden", "gondor_ca_pikewarden"):
+            self.assertTrue(tp.names_a_polearm(text), text)
+
+    def test_a_veteran_prefix_in_an_id_matches(self):
+        self.assertTrue(tp.names_a_polearm("urukhai_veteranpikeman"))
+        self.assertTrue(tp.names_a_polearm("urukhai_veteranspearman"))
+
+    def test_a_stem_inside_another_word_does_not_match(self):
+        for text in ("Spiked Club Brute", "Balance Warden", "Vigilance Guard", "Ambulance"):
+            self.assertFalse(tp.names_a_polearm(text), text)
+
+    def test_any_of_the_texts_may_carry_the_word(self):
+        self.assertTrue(tp.names_a_polearm("Dalian Guardsman", "dale_spearman"))
+        self.assertFalse(tp.names_a_polearm("Dalian Guardsman", "dale_guardsman"))
+
+
+class MainWeaponSlotTests(unittest.TestCase):
+    def test_a_mounted_lancer_with_a_sword_in_item0_trades_the_sword_for_the_lance(self):
+        got = plan([LANCE_SET, LANCE_SET])
+        self.assertEqual((got.rule, got.swaps, got.left), ("A", ((0, "Item2"), (1, "Item2")), ""))
+        after = tp.apply_slot_swaps([LANCE_SET, LANCE_SET], got.swaps)
+        self.assertEqual(after[0], {"Item0": "Polearm", "Item1": "Shield", "Item2": "OneHanded"})
+        self.assertEqual(tp.main_class(tp.kit_of(after)), "Polearm")
+
+    def test_only_the_two_items_trade_slots(self):
+        row = {"Item0": "TwoHanded", "Item1": "Shield", "Item2": "Throwing", "Item3": "Polearm"}
+        after = tp.apply_slot_swaps([row], plan([row], [frozenset({"Item3"})]).swaps)[0]
+        self.assertEqual(after, {"Item0": "Polearm", "Item1": "Shield", "Item2": "Throwing", "Item3": "TwoHanded"})
+
+    def test_the_lance_that_can_couch_is_the_one_exchanged(self):
+        row = {"Item0": "OneHanded", "Item1": "Polearm", "Item2": "Polearm"}
+        self.assertEqual(plan([row], [frozenset({"Item2"})]).swaps, ((0, "Item2"),))
+
+    def test_a_rider_whose_spear_cannot_be_couched_is_left_and_reported(self):
+        got = plan([LANCE_SET], [frozenset()])
+        self.assertEqual((got.rule, got.swaps), ("", ()))
+        self.assertIn("cannot be couched", got.left)
+
+    def test_a_rider_with_a_lance_in_some_sets_only_is_left_and_reported(self):
+        got = plan([LANCE_SET, {"Item0": "OneHanded", "Item1": "Shield"}], [COUCH_AT_2, frozenset()])
+        self.assertEqual((got.rule, got.swaps), ("", ()))
+        self.assertIn("not in every battle set", got.left)
+
+    def test_a_horse_archer_is_left_and_reported(self):
+        got = plan([LANCE_SET], group="HorseArcher")
+        self.assertEqual((got.rule, got.swaps), ("", ()))
+        self.assertIn("HorseArcher", got.left)
+
+    def test_a_cavalry_troop_with_no_horse_in_a_set_is_not_a_lancer(self):
+        got = plan([LANCE_SET], mounted=False)
+        self.assertEqual((got.rule, got.swaps, got.left), ("", (), ""))
+
+    def test_a_set_that_already_opens_with_the_lance_is_not_swapped(self):
+        lance_first = {"Item0": "Polearm", "Item1": "Shield", "Item2": "OneHanded"}
+        got = plan([lance_first, LANCE_SET], [frozenset({"Item0"}), COUCH_AT_2])
+        self.assertEqual((got.rule, got.swaps), ("A", ((1, "Item2"),)))
+
+    def test_a_troop_named_spearman_with_a_sword_in_item0_trades_for_its_spear(self):
+        row = {"Item0": "OneHanded", "Item1": "Polearm", "Item2": "Shield"}
+        got = plan([row], [frozenset()], group="Infantry", mounted=False, named=True)
+        self.assertEqual((got.rule, got.swaps), ("B", ((0, "Item1"),)))
+
+    def test_a_named_troop_with_the_polearm_in_some_sets_only_is_left_and_reported(self):
+        got = plan([{"Item0": "OneHanded", "Item1": "Polearm"}, {"Item0": "OneHanded", "Item1": "Shield"}],
+                   group="Infantry", mounted=False, named=True)
+        self.assertEqual((got.rule, got.swaps), ("", ()))
+        self.assertIn("not in every battle set", got.left)
+
+    def test_a_swordsman_with_a_spare_spear_is_no_case(self):
+        row = {"Item0": "OneHanded", "Item1": "Shield", "Item2": "Polearm"}
+        self.assertEqual(plan([row], group="Infantry", mounted=False), tp.SlotPlan())
+
+    def test_a_launcher_or_thrown_weapon_in_item0_leaves_the_troop_and_reports_it(self):
+        for first in ("Bow", "Throwing"):
+            row = {"Item0": first, "Item1": "Polearm"}
+            got = plan([row, {"Item0": "OneHanded", "Item1": "Polearm"}], [frozenset({"Item1"})] * 2)
+            self.assertEqual((got.rule, got.swaps), ("", ()))
+            self.assertIn(f"Item0 holds {first}", got.left)
+
+    def test_a_second_pass_plans_nothing(self):
+        once = tp.apply_slot_swaps([LANCE_SET], plan([LANCE_SET]).swaps)
+        again = tp.main_weapon_slots(once, [frozenset({"Item0"})], "Cavalry", True, False)
+        self.assertEqual(again, tp.SlotPlan())
+
+    def test_the_exchange_leaves_the_purpose_order_stable(self):
+        after = tp.apply_slot_swaps([LANCE_SET], plan([LANCE_SET]).swaps)
+        kit = tp.kit_of(after)
+        ordered = tp.purpose_skills(skills(oh=200, pol=150, th=100), kit)
+        self.assertEqual((ordered["Polearm"], ordered["OneHanded"]), (200, 150))
+        self.assertEqual(tp.purpose_skills(ordered, kit), ordered)
+        self.assertEqual(tp.kit_mismatches(ordered, kit), [])
+
+
+class TroopMainWeaponTests(unittest.TestCase):
+    """troop_main_weapon: the glue the writer and the validator share, from item ids to a SlotPlan."""
+    CLASSES = {"sword": "OneHanded", "lance": "Polearm", "shield": "Shield", "bow": "Bow", "arrows": "Arrows"}
+    RIDER = {"Item0": "sword", "Item1": "shield", "Item2": "lance", "Horse": "steed"}
+
+    def run_plan(self, rows, couch=("lance",), group="Cavalry", names=("Rider", "rider_x")):
+        return tp.troop_main_weapon(rows, self.CLASSES, set(couch), group, names)
+
+    def test_a_mounted_lance_rider_gets_the_exchange_and_its_rows_after_it(self):
+        plan, p2, rows = self.run_plan([self.RIDER, self.RIDER])
+        self.assertEqual((plan.rule, plan.swaps, p2), ("A", ((0, "Item2"), (1, "Item2")), [None, None]))
+        self.assertEqual(rows[0], dict(self.RIDER))     # the rows are the ones after the Item0 fix only
+
+    def test_couchability_is_the_callers_set_and_not_the_class(self):
+        plan, _, _ = self.run_plan([self.RIDER], couch=())
+        self.assertEqual((plan.rule, plan.swaps), ("", ()))
+        self.assertIn("cannot be couched", plan.left)
+
+    def test_without_a_couch_set_nothing_is_planned(self):
+        plan, _, _ = tp.troop_main_weapon([self.RIDER], self.CLASSES, None, "Cavalry", ("Rider",))
+        self.assertEqual(plan, tp.SlotPlan())
+
+    def test_a_missing_horse_in_one_set_is_not_mounted(self):
+        plan, _, _ = self.run_plan([self.RIDER, {"Item0": "sword", "Item2": "lance"}])
+        self.assertEqual(plan, tp.SlotPlan())
+
+    def test_the_shield_fix_comes_first_and_the_lance_is_found_after_it(self):
+        row = {"Item0": "shield", "Item1": "lance", "Item2": "sword", "Horse": "steed"}
+        plan, p2, rows = self.run_plan([row])
+        self.assertEqual(p2, ["Item1"])
+        self.assertEqual(rows[0]["Item0"], "lance")
+        self.assertEqual(plan, tp.SlotPlan())            # Item0 now holds the lance already
+
+    def test_the_name_or_the_id_may_name_the_polearm(self):
+        row = {"Item0": "sword", "Item1": "lance", "Item2": "shield"}
+        plan, _, _ = self.run_plan([row], couch=(), group="Infantry", names=("Guard", "dale_spearman"))
+        self.assertEqual((plan.rule, plan.swaps), ("B", ((0, "Item1"),)))
+
+
 if __name__ == "__main__":
     unittest.main()

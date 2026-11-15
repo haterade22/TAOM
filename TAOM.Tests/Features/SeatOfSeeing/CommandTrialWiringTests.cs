@@ -127,7 +127,8 @@ public class CommandTrialWiringTests
             .OrderBy(n => n)
             .ToList();
 
-        CollectionAssert.AreEqual(new[] { "CommandTrialOptions.cs" }, reads, string.Join(",", reads));
+        // ScenarioPlan names the variable only to stay unarmed when the trial is armed (#1075).
+        CollectionAssert.AreEqual(new[] { "CommandTrialOptions.cs", "ScenarioPlan.cs" }, reads, string.Join(",", reads));
         var trial = string.Join("\n", TrialFiles().Select(File.ReadAllText));
         Assert.AreEqual(1, Regex.Matches(trial, @"GetEnvironmentVariable\(").Count, "read once, by the options");
         Assert.IsFalse(View().Contains("GetEnvironmentVariable"), "the view asks the run, not the environment");

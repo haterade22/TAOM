@@ -163,6 +163,10 @@ public class ReflectionSiteBindingTests
     // --- ArmourAcquisition: the gate marks heavy, elite, lord and named pieces NotMerchandise at every game init
     // through the private setter. A missing setter turns gating off for the game (logged as an error).
     [DataRow("TaleWorlds.Core.ItemObject", "ItemObject", "set_NotMerchandise", "Method", "ArmourItemCatalogAdapter.cs:20")]
+    // --- CreatureSaddles (Patch154): the warg, dire wolf and spider rigs and their saddles get their own harness
+    // family through the private setters. A missing setter keeps the data's family 1 (logged as an error).
+    [DataRow("TaleWorlds.Core.Monster", "Monster", "set_FamilyType", "Method", "CreatureSaddleFamilyWriter.cs:19")]
+    [DataRow("TaleWorlds.Core.ArmorComponent", "ArmorComponent", "set_FamilyType", "Method", "CreatureSaddleFamilyWriter.cs:22")]
     // --- FactionUI (#704): Kysaro's front end. Each missing member silently degrades one thing: the themed
     // fonts' glyphs are not drawn, vanilla retries menu mode every frame on the main menu, the face
     // generator skips its fade-in, the backstory Random button presses nothing.

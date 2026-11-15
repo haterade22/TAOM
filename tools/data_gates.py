@@ -131,6 +131,13 @@ GATES = (
          note="meshes, collision bodies, dead item ids, and the companion checks of /armory-audit"),
     Gate("polearm-shield", "Armory weapons and pieces", ARMORY_GLOBS + TROOP_GLOBS,
          ("python", "tools/audit_polearm_shield_parity.py"), ("docs/features/weapon-xml-pipeline.md",)),
+    Gate("couch-brace", "Armory weapon descriptions, the couch spec and its tool",
+         ARMORY_GLOBS + ("*tools/couch_brace_polearms.json", "*tools/register_couch_brace_polearms.py",
+                         "*tools/register_one_handed_polearms.py"),
+         ("python", "tools/register_couch_brace_polearms.py", "--check"), ("docs/features/weapon-xml-pipeline.md",),
+         note="the Dol Guldur warg riders' spears must fit TwoHandedPolearm_Couchable and _Bracing; exit 1 means a "
+              "reinstall or sync reset the Armory's weapon_descriptions.xslt: --apply --backup-tag <tag> restores it; "
+              "exit 2 is NOT RUN (no install), exit 3 a crash"),
     Gate("mesh-refs", "Armory weapons and pieces", ARMORY_GLOBS,
          ("python", "tools/validate_mesh_refs.py", "--scan-bodies"), (ARMORY_DOC,),
          note="every mesh= and body_name= resolves to a shipped asset; pending artist bo_ meshes are the expected exception"),

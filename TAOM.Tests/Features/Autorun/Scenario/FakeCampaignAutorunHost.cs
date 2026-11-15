@@ -51,13 +51,12 @@ internal sealed class FakeCampaignAutorunHost : ICampaignAutorunHost
         return InquiryTitle;
     }
 
-    public bool HideSceneNotification()
-    {
-        if (!NoticeOpen)
-            return false;
+    public bool SceneNotificationActive => NoticeOpen;
 
+    public void HideSceneNotification()
+    {
         NoticesHidden++;
-        return true;
+        NoticeOpen = false;
     }
 
     public bool StartNewCampaign()

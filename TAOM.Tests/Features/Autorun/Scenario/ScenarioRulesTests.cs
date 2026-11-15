@@ -70,6 +70,7 @@ public class ScenarioRulesTests
     [DataRow(double.PositiveInfinity)]
     [DataRow(double.NegativeInfinity)]
     [DataRow(-0.5)]
+    [DataRow(-2.5)]
     [DataRow(1e12)]
     public void WholeDay_NotARealDay_IsUnknown(double elapsed)
     {

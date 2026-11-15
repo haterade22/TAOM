@@ -7970,6 +7970,9 @@
     <string id="taom_realms_mcm_own_banner_hint" text="The banner of a realm you rule. Title banner (default): the banner of your primary title when it has one, such as the Kingdom of Gondor's, else the realm's own. Realm's own banner: the realm keeps the banner it has; a realm you founded keeps the banner you made. Your house banner: the realm flies your clan's own banner on its towns, in battle and on the clan screen, even a realm you inherit, and follows when you edit it. Your parties on the map fly your house banner either way. Only the title banner choice lets a coronation give your clan and realm the crowned house's banner. Changes show within a day." />
     <string id="taom_realms_mcm_ai_banners" text="AI Realms Fly Title Banners" />
     <string id="taom_realms_mcm_ai_banners_hint" text="When on, a realm ruled by an AI lord flies the banner of its ruler's primary title when it has one. When off, every such realm keeps its own banner; one already changed takes it back within a day. Default: on." />
+    <string id="taom_battle_shader_notice_title" text="Preparing this scene: {COUNT} shaders compiled" />
+    <string id="taom_battle_shader_notice_detail" text="The game is compiling shaders for this scene. It is not frozen. This can take a minute or two." />
+    <string id="taom_battle_shader_loading_line" text="Compiling shaders for this scene. This can take a minute or two; the game is not frozen." />
   </strings>
 
 </base>

@@ -690,6 +690,14 @@ def price(cat: Catalogue, item: Item) -> Priced:
     )
 
 
+def couchable_ids(priced: dict[str, Priced]) -> set[str]:
+    """Ids of the priced weapons with a couch usage. This is the one statement of "can be couched":
+    the writer (rebalance_troops --main-weapon-slots) and the validator (TROOP_MAIN_WEAPON_NOT_ITEM0)
+    both read it through taom_schema.couchable_item_ids. A description gives an item the usage when
+    every piece the item uses is in its AvailablePieces, so the usage list is the fit."""
+    return {iid for iid, p in priced.items() if any("couch" in u.features for u in p.usages)}
+
+
 def price_all(cat: Catalogue) -> tuple[dict[str, Priced], list[tuple[str, str]]]:
     """Price every melee item. Returns (priced, failures) where failures are (id, reason).
 

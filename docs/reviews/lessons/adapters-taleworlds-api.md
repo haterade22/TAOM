@@ -1985,3 +1985,19 @@ PR #1304's doc said god mode stays on while the player walks the field after the
 - **Why missed:** the doc sentence described what the design wanted, and nobody followed the `Ending` flag to its engine producer.
 - **Prevent:** before a doc says when a battle "ends" for a feature, name the flag the code reads and quote the engine line that sets it. Read the end of a battle from `MissionEnded`, not `RetreatSide`.
 - **Source:** [rca-pr1304-god-mode-2026-11-15.md](../rca-pr1304-god-mode-2026-11-15.md) finding 2 and 3 (lens 2).
+
+### An in-memory BannerlordConfig change reaches the player's file at shutdown (#1075, 2026-11-15)
+
+**Why missed:** the scenario host set `BannerlordConfig.StopGameOnFocusLost = false` and restored it only when its run finished. `Module.FinalizeModule` destroys the game and then calls `BannerlordConfig.Save()` (Module.cs 1348 to 1362), so a person who closed the game mid-run kept the setting. The Fords and Long Defeat views say why they refuse the escape menu instead (`FordsCommandView.cs:43-47`); the new host did not read that.
+
+**Prevent:** before writing an engine setting in memory, find every `Save()` of its store and the order of shutdown. Restore it from `OnGameEnd`, which every game end reaches before that save, or refuse the behaviour per view as the siblings do.
+
+**Source:** `docs/reviews/rca-scenario-autorun-2026-11-15.md`
+
+### An engine "is active" flag can lead the object it reports (scene notifications, #1075, 2026-11-15)
+
+**Why missed:** `MBInformationManager.GetIsAnySceneNotificationActive()` is true from the tick `GauntletSceneNotification` sets `_isActive`, one layer tick before `_scene` exists. Closing the notification in that tick throws on the null scene. The driver read "active" as "ready to close".
+
+**Prevent:** before acting on an engine state flag, read where the flag is set and where the object it guards is built; when they are set on different ticks, act on the second sighting and test that rule in the pure driver.
+
+**Source:** `docs/reviews/rca-scenario-autorun-2026-11-15.md`

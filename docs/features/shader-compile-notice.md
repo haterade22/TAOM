@@ -84,7 +84,8 @@ None. Log lines: `[ShaderNotice] the engine is compiling its shaders: notice sho
 | `Main/Features/ShaderCompileNotice/ShaderCompileNoticeTexts.cs` | The resolved texts and their placeholders |
 | `Main/Features/ShaderCompileNotice/ShaderCompileNotice.cs` | The start and stop flags and the STA thread. Stays in TAOM.dll under this name on purpose (ADR-013 B4c): VanillaTuning may look it up by full type name |
 | `Main/Features/ShaderCompileNotice/IShaderCompileNoticeWindowHost.cs`, `NullShaderCompileNoticeWindowHost.cs` | The window-host seam; the null host shows nothing and returns at once |
-| `Client/Features/ShaderCompileNotice/ShaderCompileNoticeContext.cs` | The message loop: the log reading, the timer, the priority (was the nested `NoticeContext`) |
+| `Main/Features/ShaderCompileNotice/ShaderCompileNoticeMode.cs` | Pure: `Startup` (this notice, behaviour unchanged) and `Battle` ([battle-shader-notice.md](battle-shader-notice.md)): where reading starts, when the window shows and closes, priority, remembered total, cap |
+| `Client/Features/ShaderCompileNotice/ShaderCompileNoticeContext.cs` | The message loop: the log reading, the timer, the priority (was the nested `NoticeContext`), driven by the mode |
 | `Client/Features/ShaderCompileNotice/ShaderCompileNoticeWindow.cs` | The window and its owner handle (WinForms) |
 | `Client/Features/ShaderCompileNotice/ShaderCompileNoticeWindowHost.cs` | Runs the context with `Application.Run`; replaces the null host |
 | `Main/Features/ShaderCompileNotice/ShaderCompileNoticeEntry.cs` | Engine boundary: texts, module list, start and stop |

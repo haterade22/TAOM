@@ -209,7 +209,7 @@ public class ScenarioAutorunDriverTests
     {
         var driver = Driver();
         _host.OnStart = () => _host.ScreenValue = AutorunScreen.CharacterCreation;
-        _host.CreationProblem = "no such culture 'empire_w'";
+        _host.CreationProblem = "no such culture 'gondor'";
 
         Run(driver, 6);
 
@@ -326,8 +326,38 @@ public class ScenarioAutorunDriverTests
         driver.Tick(1f);
         var done = Done();
         Assert.IsTrue(int.Parse(Value(done, "inquiries_hidden")) >= 4);
-        Assert.AreEqual("4", Value(done, "notices_hidden"));
+        Assert.AreEqual("1", Value(done, "notices_hidden"));
         Assert.AreEqual("4", Value(done, "time_resets"));
+    }
+
+    // GauntletSceneNotification marks a notification active one layer tick before its scene exists, and closing it then throws on the
+    // null scene (CloseNotification), so a notice is hidden only when it was active on the previous tick too.
+    [TestMethod]
+    public void Tick_SceneNotification_IsHiddenOnItsSecondSightingOnly()
+    {
+        var driver = ToRunning("days=50\n");
+        _host.NoticeOpen = true;
+
+        driver.Tick(1f);
+        Assert.AreEqual(0, _host.NoticesHidden);
+
+        driver.Tick(1f);
+        Assert.AreEqual(1, _host.NoticesHidden);
+    }
+
+    [TestMethod]
+    public void Tick_SceneNotificationGoneBeforeTheSecondTick_IsNeverHidden()
+    {
+        var driver = ToRunning("days=50\n");
+        _host.NoticeOpen = true;
+        driver.Tick(1f);
+        _host.NoticeOpen = false;
+        driver.Tick(1f);
+        _host.NoticeOpen = true;
+
+        driver.Tick(1f);
+
+        Assert.AreEqual(0, _host.NoticesHidden);
     }
 
     [TestMethod]
@@ -443,19 +473,130 @@ public class ScenarioAutorunDriverTests
         Assert.AreEqual("Done", driver.PhaseName);
     }
 
+    // The launcher kills the game 120 s after it sees the done file (run_fords_autorun.py EXIT_GRACE_SECONDS), so the game quits first.
     [TestMethod]
-    public void Finish_MenuNeverReturns_QuitsAfterOneHundredTwentySeconds()
+    public void Finish_MenuNeverReturns_QuitsAfterSixtySecondsAndLogsTheStall()
     {
         var driver = ToRunning("days=1\nquit=1\n");
         _host.Days = 11.0;
         driver.Tick(1f);
         _host.ScreenValue = AutorunScreen.Other;
 
-        Run(driver, 118);
+        Run(driver, 58);
         Assert.AreEqual(0, _host.Quits);
 
         Run(driver, 5);
         Assert.AreEqual(1, _host.Quits);
+        _logger.Received().LogWarning(Arg.Is<string>(s => s.Contains("exit_stalled")));
+    }
+
+    [TestMethod]
+    public void Tick_HostThrowsWhileExiting_QuitsAndIsDone()
+    {
+        var driver = ToRunning("days=1\nquit=1\n");
+        _host.Days = 11.0;
+        driver.Tick(1f);
+        _host.ScreenThrows = true;
+
+        driver.Tick(1f);
+
+        Assert.AreEqual(1, _host.Quits);
+        Assert.IsTrue(driver.IsDone);
+    }
+
+    [TestMethod]
+    public void Tick_WallLimit_CountsFromTheCampaignStart()
+    {
+        // The start is at wall 4 and Running begins at wall 11; the limit trips once wall - 4 exceeds 60.
+        var driver = ToRunning("wall_limit_seconds=60\nstall_seconds=1000\ndays=50\n");
+
+        Run(driver, 50);
+        Assert.IsFalse(_host.Files.ContainsKey(ScenarioAutorunDone.DoneFile));
+
+        Run(driver, 4);
+        Assert.AreEqual("wall_limit", Value(Done(), "reason"));
+    }
+
+    [TestMethod]
+    public void Tick_DaysDoneStalledAndOverTheWallLimitOnOneTick_FinishesOk()
+    {
+        var driver = Driver("days=1\nstall_seconds=0.5\nwall_limit_seconds=1\n");
+        _host.OnStart = () => _host.ScreenValue = AutorunScreen.CharacterCreation;
+        Run(driver, 5);
+        _host.ScreenValue = AutorunScreen.Map;
+        _host.Days = 10.4;
+        Run(driver, 5);
+        Assert.AreEqual("Running", driver.PhaseName);
+        _host.Days = 11.0;
+
+        driver.Tick(1f);
+
+        Assert.AreEqual("ok", Value(Done(), "reason"));
+    }
+
+    [TestMethod]
+    public void Tick_ElapsedDaysTurnsNaNWhileRunning_KeepsTheLastKnownDay()
+    {
+        var driver = ToRunning("stall_seconds=20\ndays=5\n");
+        _host.Days = 11.2;
+        driver.Tick(1f);
+        _host.Days = double.NaN;
+
+        Run(driver, 25);
+
+        Assert.AreEqual("11", Value(Done(), "day_end"));
+        Assert.AreEqual("1", Value(Done(), "days_run"));
+    }
+
+    [TestMethod]
+    public void Tick_InquiryWhileWaitingForTheMap_IsHidden()
+    {
+        var driver = Driver();
+        _host.OnStart = () => _host.ScreenValue = AutorunScreen.CharacterCreation;
+        Run(driver, 5);
+        Assert.AreEqual("WaitMap", driver.PhaseName);
+        _host.ScreenValue = AutorunScreen.Other;
+        _host.InquiryTitle = "Join a kingdom?";
+
+        driver.Tick(1f);
+
+        Assert.AreEqual(1, _host.InquiriesHidden);
+    }
+
+    [TestMethod]
+    public void Finish_DoneTextThrows_StillReportsAndEndsTheCampaign()
+    {
+        // A host that breaks its contract (PrepareMap returns null) makes the done text throw while it is built.
+        _host.Prepared = null!;
+        var driver = ToRunning("days=1\n");
+        _host.Days = 11.0;
+
+        driver.Tick(1f);
+
+        _outcomes.Received(1).Pass(ScenarioOutcomes.DoneId, "", Arg.Any<string>());
+        Assert.AreEqual(1, _host.Ends);
+        _logger.Received().LogWarning(Arg.Is<string>(s => s.Contains("could not write " + ScenarioAutorunDone.DoneFile)));
+    }
+
+    [TestMethod]
+    public void GameEnded_ArmedDriver_RestoresTheFocusSetting()
+    {
+        var driver = ToRunning();
+
+        driver.GameEnded();
+
+        Assert.AreEqual(1, _host.Restores);
+    }
+
+    [TestMethod]
+    public void GameEnded_RestoreThrows_IsLoggedAndDoesNotEscape()
+    {
+        var driver = ToRunning();
+        _host.RestoreThrows = true;
+
+        driver.GameEnded();
+
+        _logger.Received().LogWarning(Arg.Is<string>(s => s.Contains("restore the focus setting")));
     }
 
     [TestMethod]
@@ -507,7 +648,7 @@ public class ScenarioAutorunDriverTests
 
         Run(driver, 6);
 
-        _outcomes.Received(1).Fail("taom.autorun.campaign-new.done", "", "reason=start_refused days_run=0 days_wanted=3 culture=empire_w");
+        _outcomes.Received(1).Fail("taom.autorun.campaign-new.done", "", "reason=start_refused days_run=0 days_wanted=3 culture=gondor");
         _outcomes.DidNotReceive().Pass(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>());
     }
 

@@ -3394,6 +3394,10 @@
 	<string id="taom_shader_notice_title_total" text="{=taom_shader_notice_title_total}Compiling shaders: {COUNT} of about {TOTAL}" />
 	<string id="taom_shader_notice_title_count" text="{=taom_shader_notice_title_count}Compiling shaders: {COUNT}" />
 	<string id="taom_shader_notice_detail" text="{=taom_shader_notice_detail}The game is rebuilding its shaders after a change to your mod list or to the game. It is not frozen." />
+	<!-- BattleShaderNotice -->
+	<string id="taom_battle_shader_notice_title" text="{=taom_battle_shader_notice_title}Preparing this scene: {COUNT} shaders compiled" />
+	<string id="taom_battle_shader_notice_detail" text="{=taom_battle_shader_notice_detail}The game is compiling shaders for this scene. It is not frozen. This can take a minute or two." />
+	<string id="taom_battle_shader_loading_line" text="{=taom_battle_shader_loading_line}Compiling shaders for this scene. This can take a minute or two; the game is not frozen." />
 
 
 
