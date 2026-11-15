@@ -76,7 +76,19 @@ public class ChronicleStoryTests
         Assert.AreEqual("hornburg", offer.EventId);
         Assert.AreEqual("helms_deep_defend", offer.MissionId);
         Assert.AreEqual("town_V2", offer.TargetSettlementId);
+        Assert.AreEqual("vlandia", offer.Defender);
+        Assert.IsNull(offer.AttackMissionId, "a story block with no attackMission offers no attack");
         CollectionAssert.AreEqual(new[] { "isengard", "empire" }, offer.Attackers.ToArray());
+    }
+
+    [TestMethod]
+    public void GetStoryOffers_AStoryWithAnAttackMission_CarriesItToTheOffer()
+    {
+        var definition = StorySiege();
+        definition.Story!.AttackMissionId = "helms_deep_attack";
+        OpenWindow(definition);
+
+        Assert.AreEqual("helms_deep_attack", _sut.GetStoryOffers().Single().AttackMissionId);
     }
 
     [TestMethod]
@@ -169,12 +181,12 @@ public class ChronicleStoryTests
     }
 
     [TestMethod]
-    public void ResolveStoryWon_AnAttackerTookTheTargetWithNoEvent_ResolvesFellInstead()
+    public void ResolveStoryHeld_AnAttackerTookTheTargetWithNoEvent_ResolvesFellInstead()
     {
         OpenWindow(StorySiege());
         _f.World.Owners["town_V2"] = "isengard";
 
-        Assert.IsFalse(_sut.ResolveStoryWon("hornburg"));
+        Assert.IsFalse(_sut.ResolveStoryHeld("hornburg", "the player won the story mission"));
         Assert.AreEqual(ChronicleEventState.Fell, _f.StateOf("hornburg"));
     }
 
@@ -188,12 +200,12 @@ public class ChronicleStoryTests
     }
 
     [TestMethod]
-    public void ResolveStoryWon_TheWarHasEnded_ChangesNothingAndSkipsTheWindow()
+    public void ResolveStoryHeld_TheWarHasEnded_ChangesNothingAndSkipsTheWindow()
     {
         OpenWindow(StorySiege());
         _f.Phase = WarPhase.WarEnded;
 
-        Assert.IsFalse(_sut.ResolveStoryWon("hornburg"));
+        Assert.IsFalse(_sut.ResolveStoryHeld("hornburg", "the player won the story mission"));
         Assert.AreEqual(ChronicleEventState.Skipped, _f.StateOf("hornburg"));
     }
 
@@ -236,11 +248,11 @@ public class ChronicleStoryTests
     }
 
     [TestMethod]
-    public void ResolveStoryWon_AnActiveWindow_ResolvesHeldAtOnceAndPaysHeld()
+    public void ResolveStoryHeld_AnActiveWindow_ResolvesHeldAtOnceAndPaysHeld()
     {
         OpenWindow(StorySiege());
 
-        Assert.IsTrue(_sut.ResolveStoryWon("hornburg"));
+        Assert.IsTrue(_sut.ResolveStoryHeld("hornburg", "the player won the story mission"));
 
         Assert.AreEqual(ChronicleEventState.Held, _f.StateOf("hornburg"));
         Assert.IsTrue(_f.Volunteers("vlandia") > 1f, "the Held outcome pays the defender");
@@ -248,22 +260,22 @@ public class ChronicleStoryTests
     }
 
     [TestMethod]
-    public void ResolveStoryWon_AResolvedWindow_ChangesNothing()
+    public void ResolveStoryHeld_AResolvedWindow_ChangesNothing()
     {
         OpenWindow(StorySiege());
         _f.World.Owners["town_V2"] = "isengard";
         _sut.OnTargetOwnerChanged("town_V2");
 
-        Assert.IsFalse(_sut.ResolveStoryWon("hornburg"));
+        Assert.IsFalse(_sut.ResolveStoryHeld("hornburg", "the player won the story mission"));
         Assert.AreEqual(ChronicleEventState.Fell, _f.StateOf("hornburg"));
     }
 
     [TestMethod]
-    public void ResolveStoryWon_AWindowWithNoStory_ChangesNothing()
+    public void ResolveStoryHeld_AWindowWithNoStory_ChangesNothing()
     {
         OpenWindow(SiegeDef());
 
-        Assert.IsFalse(_sut.ResolveStoryWon("hornburg"));
+        Assert.IsFalse(_sut.ResolveStoryHeld("hornburg", "the player won the story mission"));
         Assert.AreEqual(ChronicleEventState.Active, _f.StateOf("hornburg"));
     }
 
