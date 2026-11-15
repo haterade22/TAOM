@@ -2786,13 +2786,13 @@
                 value="115" />
             <skill
                 id="OneHanded"
-                value="163" />
+                value="130" />
             <skill
                 id="TwoHanded"
                 value="85" />
             <skill
                 id="Polearm"
-                value="130" />
+                value="163" />
             <skill
                 id="Bow"
                 value="20" />
@@ -2808,9 +2808,9 @@
         </upgrade_targets>
         <Equipments>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.sm_dg_khml_1h_sword_a" />
+                <equipment slot="Item0" id="Item.sm_dg_khml_spear_a" />
                 <equipment slot="Item1" id="Item.wm_gundabad_shield_a02" />
-                <equipment slot="Item2" id="Item.sm_dg_khml_spear_a" />
+                <equipment slot="Item2" id="Item.sm_dg_khml_1h_sword_a" />
                 <equipment slot="Head" id="Item.sk_dg_uruk_helmet_med_g" />
                 <equipment slot="Body" id="Item.sk_dg_uruk_chest_med_c" />
                 <equipment slot="Cape" id="Item.sk_dg_uruk_pauldron_med_a" />
@@ -2844,13 +2844,13 @@
                 value="155" />
             <skill
                 id="OneHanded"
-                value="213" />
+                value="185" />
             <skill
                 id="TwoHanded"
                 value="105" />
             <skill
                 id="Polearm"
-                value="185" />
+                value="213" />
             <skill
                 id="Bow"
                 value="25" />
@@ -2866,9 +2866,9 @@
         </upgrade_targets>
         <Equipments>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.sm_dg_khml_1h_sword_a" />
+                <equipment slot="Item0" id="Item.sm_dg_khml_spear_a" />
                 <equipment slot="Item1" id="Item.wm_gundabad_shield_a02" />
-                <equipment slot="Item2" id="Item.sm_dg_khml_spear_a" />
+                <equipment slot="Item2" id="Item.sm_dg_khml_1h_sword_a" />
                 <equipment slot="Head" id="Item.sk_dg_uruk_helmet_med_h" />
                 <equipment slot="Body" id="Item.sk_dg_uruk_chest_med_d" />
                 <equipment slot="Cape" id="Item.sk_dg_uruk_pauldron_med_a" />
@@ -2902,13 +2902,13 @@
                 value="205" />
             <skill
                 id="OneHanded"
-                value="268" />
+                value="235" />
             <skill
                 id="TwoHanded"
                 value="125" />
             <skill
                 id="Polearm"
-                value="235" />
+                value="268" />
             <skill
                 id="Bow"
                 value="30" />
@@ -2924,9 +2924,9 @@
         </upgrade_targets>
         <Equipments>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.sm_dg_khml_1h_sword_a" />
+                <equipment slot="Item0" id="Item.sm_dg_khml_spear_b" />
                 <equipment slot="Item1" id="Item.wm_gundabad_shield_a03" />
-                <equipment slot="Item2" id="Item.sm_dg_khml_spear_b" />
+                <equipment slot="Item2" id="Item.sm_dg_khml_1h_sword_a" />
                 <equipment slot="Head" id="Item.sk_dg_uruk_helmet_heavy_g" />
                 <equipment slot="Body" id="Item.sk_dg_uruk_chest_heavy_c" />
                 <equipment slot="Cape" id="Item.sk_dg_uruk_pauldron_heavy_b" />
@@ -2960,13 +2960,13 @@
                 value="265" />
             <skill
                 id="OneHanded"
-                value="318" />
+                value="285" />
             <skill
                 id="TwoHanded"
                 value="155" />
             <skill
                 id="Polearm"
-                value="285" />
+                value="318" />
             <skill
                 id="Bow"
                 value="40" />
@@ -2980,9 +2980,9 @@
         <upgrade_targets />
         <Equipments>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.sm_dg_khml_1h_sword_b" />
+                <equipment slot="Item0" id="Item.sm_dg_khml_spear_b" />
                 <equipment slot="Item1" id="Item.wm_gundabad_shield_a03" />
-                <equipment slot="Item2" id="Item.sm_dg_khml_spear_b" />
+                <equipment slot="Item2" id="Item.sm_dg_khml_1h_sword_b" />
                 <equipment slot="Head" id="Item.sk_dg_uruk_helmet_elite_g" />
                 <equipment slot="Body" id="Item.sk_dg_uruk_chest_elite_c" />
                 <equipment slot="Cape" id="Item.sk_dg_uruk_pauldron_heavy_c" />

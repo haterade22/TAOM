@@ -23,7 +23,7 @@ public class ShaderCompileNoticeSourceTests
         var host = new NullShaderCompileNoticeWindowHost();
         var done = new ManualResetEventSlim();
 
-        var thread = new Thread(() => { host.Run(texts, Substitute.For<IModLogger>(), () => false); done.Set(); });
+        var thread = new Thread(() => { host.Run(texts, ShaderCompileNoticeMode.Startup, Substitute.For<IModLogger>(), () => false); done.Set(); });
         thread.Start();
 
         Assert.IsTrue(done.Wait(TimeSpan.FromSeconds(5)), "the null host must not wait for a stop request");
@@ -39,7 +39,7 @@ public class ShaderCompileNoticeSourceTests
         Assert.IsFalse(src.Contains("ApplicationContext"));
         StringAssert.Contains(src, "ApartmentState.STA");
         StringAssert.Contains(src, "Interlocked.Exchange(ref _started, 1)");
-        StringAssert.Contains(src, "host.Run(texts, logger, () => _stopRequested)");
+        StringAssert.Contains(src, "host.Run(texts, ShaderCompileNoticeMode.Startup, logger, () => _stopRequested)");
     }
 
     [TestMethod]

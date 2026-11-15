@@ -7,11 +7,12 @@ under E:\\Temp\\scenario-runs\\<yyyyMMdd-HHmmss>\\. The game starts a new campai
 autorun_done.txt and quits.
 
 Own arguments (everything else goes to the Fords runner, for example --dry-run, --runs, --wall-limit, --require-idle-minutes):
-  --kind campaign-new   --days N (1 to 1000, default 3)   --culture ID (default empire_w)   --speed X (above 0, at most 30, default 15)
+  --kind campaign-new   --days N (1 to 1000, default 3)   --culture ID (default gondor)   --speed X (above 0, at most 30, default 15)
   --scenario LABEL      --stall-seconds N (default 600)
 
 Exit 0 needs reason=ok, days_run at least days_wanted, the [Check] pass line in the TAOM log, no CrashReport error block, the clean
-module unload line, and a game that left by itself. Then the war ledger of the run is saved as ledger.txt in the run folder.
+module unload line, a done file that echoes the armed plan, no arm file warning, a [BuildStamp] of this tree's HEAD, and a game
+that left by itself. Then the war ledger of the run is saved as ledger.txt in the run folder.
 
 Run:  python tools/run_scenario.py --days 30 --dry-run
 Tests: python -m unittest tools.tests.test_run_scenario
@@ -25,6 +26,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
+import ingame_verdict as iv  # noqa: E402
 import run_fords_autorun as runner  # noqa: E402
 
 ENV_VAR = "TAOM_AUTORUN"
@@ -36,7 +38,7 @@ CHECK_ID = "taom.autorun.campaign-new.done"
 PASS_LINE = re.compile(r"\[Check\] id=" + re.escape(CHECK_ID) + r"\s+result=pass\b")
 UNLOAD_LINE = "[Shutdown] clean module unload"
 DEFAULT_DAYS = 3
-DEFAULT_CULTURE = "empire_w"
+DEFAULT_CULTURE = "gondor"
 DEFAULT_SPEED = 15.0
 DEFAULT_STALL_SECONDS = 600
 MAX_DAYS = 1000
@@ -44,10 +46,12 @@ MAX_SPEED = 30.0
 LEDGER_FILE = "ledger.txt"
 LEDGER_TOOL = Path(__file__).resolve().parent / "analyze_war_ledger.py"
 LEDGER_TIMEOUT_SECONDS = 300
-# The Fords runner reads its own stall limit (10 minutes) from this name; keep it after the game's limit so the game reports first.
-STALL_MARGIN_SECONDS = 120
-
-FORDS_HANDLE_DIALOGS = runner.handle_dialogs
+# ScenarioAutorunDriver.cs logs every arm file warning with this text (Prefix + "arm file: "); the game then ran a default instead.
+ARM_WARNING = "[Autorun][Scenario] arm file: "
+NOT_CHECKED = object()
+RUNNER_OPTIONS = ("Fords runner options this tool passes on: --wall-limit SECONDS (default max(1800, 600 + days * 20)), --runs N, "
+                  "--runs-root DIR, --require-idle-minutes N, --keep-on-crash MINUTES, --dry-run. The Fords match options (factions, maps, "
+                  "AI profile) are parsed and ignored; --speed is this tool's campaign speed.")
 
 
 def days_arg(text):
@@ -81,7 +85,7 @@ def stall_arg(text):
 
 
 def build_own_parser():
-    parser = argparse.ArgumentParser(add_help=False, description="Run one unattended new-campaign scenario in the real game.")
+    parser = argparse.ArgumentParser(description="Run one unattended new-campaign scenario in the real game.", epilog=RUNNER_OPTIONS)
     parser.add_argument("--kind", choices=KINDS, default=KINDS[0], help="the scenario kind (only campaign-new)")
     parser.add_argument("--days", type=days_arg, default=DEFAULT_DAYS, help=f"campaign days to run, 1 to {MAX_DAYS} (default {DEFAULT_DAYS})")
     parser.add_argument("--culture", default=DEFAULT_CULTURE, help=f"the player's culture id (default {DEFAULT_CULTURE})")
@@ -102,7 +106,7 @@ def default_wall_limit(days):
 
 
 def number_text(value):
-    return str(int(value)) if float(value).is_integer() else f"{value:g}"
+    return str(int(value)) if float(value).is_integer() else repr(float(value))
 
 
 def arm_text_for(out, known, args):
@@ -122,11 +126,16 @@ def parse_count(done, key):
         return None
 
 
-def judge(done, report_json, log_text=None):
-    """(exit code, why). Every failed condition adds one reason; the reasons are joined with '; '."""
+def judge(done, report_json, log_text=None, armed=None, head=NOT_CHECKED):
+    """(exit code, why). Every failed condition adds one reason; the reasons are joined with '; '. armed is the parsed plan the done file
+    must echo; head is this tree's HEAD sha (None when git could not say) that the log's [BuildStamp] must name. main passes both."""
     if not done:
         return 1, "no done file"
     problems = []
+    if armed is not None:
+        for key, want in (("kind", armed.kind), ("scenario", armed.scenario), ("culture", armed.culture), ("days_wanted", str(armed.days))):
+            if done.get(key) != want:
+                problems.append(f"{key}={done.get(key, '?')} in the done file, but the arm file asked for {want}")
     reason = done.get("reason", "")
     if reason != "ok":
         problems.append(f"reason={reason or '?'} (wanted ok)")
@@ -140,37 +149,68 @@ def judge(done, report_json, log_text=None):
     else:
         if not PASS_LINE.search(log_text):
             problems.append(f"the TAOM log has no [Check] id={CHECK_ID} result=pass line")
-        block = runner.crash_report_line(log_text, done.get("started"))
+        # The whole log is this session's (the runner takes the newest log created after launch), and TAOM's load comes before the driver.
+        block = runner.crash_report_line(log_text, None)
         if block is not None:
-            problems.append("the TAOM log holds a CrashReport block during the run: " + block[:200])
+            problems.append("the TAOM log holds a CrashReport block: " + block[:200])
         if UNLOAD_LINE not in log_text:
             problems.append("the log has no clean module unload line")
+        warning = next((line for line in log_text.splitlines() if ARM_WARNING in line), None)
+        if warning is not None:
+            problems.append("the game did not take the arm file as written: " + warning[:200])
+        if head is not NOT_CHECKED:
+            problem = build_problem(log_text, head)
+            if problem is not None:
+                problems.append(problem)
     if problems:
         return 1, "; ".join(problems)
     return 0, f"reason=ok, {days_run} of {days_wanted} days, pass line present, no CrashReport block, clean unload"
 
 
-def handle_dialogs(pid, seen, say):
-    """No dialog of this feature needs an answer: the Fords runner logs a new dialog once and reports a crash dialog."""
-    return FORDS_HANDLE_DIALOGS(pid, seen, say)
+def build_problem(log_text, head):
+    """None when the log's [BuildStamp] names this tree's HEAD (.dirty allowed: a run under test is a working-tree build), else why not.
+    Copied from run_long_defeat.build_of: a stale deploy otherwise passes on the old build's data."""
+    stamp = next((s for s in (iv.parse_build_stamp(row) for row in log_text.splitlines() if "[BuildStamp]" in row) if s), None)
+    if stamp is None:
+        return "the log has no [BuildStamp] line with a git sha"
+    sha, dirty = stamp
+    label = sha[:9] + (".dirty" if dirty else "")
+    if not head:
+        return f"this tree's HEAD is unknown, so the build {label} cannot be matched"
+    if not sha.startswith(head):
+        return f"the log's build {label} is not this tree's HEAD {head[:9]}: deploy this tree and run again"
+    return None
+
+
+def tree_head_sha():
+    """The commit of the tree this tool lives in, or None when git cannot say."""
+    try:
+        done = subprocess.run(["git", "-C", str(Path(__file__).resolve().parent.parent), "rev-parse", "HEAD"],
+                              capture_output=True, text=True, timeout=30)
+    except (OSError, subprocess.SubprocessError):
+        return None
+    head = done.stdout.strip()
+    return head if done.returncode == 0 and re.fullmatch(r"[0-9a-f]{40}", head) else None
 
 
 def run_ledger(log_copy, say):
-    """Runs analyze_war_ledger.py on the copied log, saves ledger.txt beside it and prints it. A failure is reported, never fatal."""
+    """Runs analyze_war_ledger.py on the copied log and prints it; on exit 0 saves ledger.txt beside the log. A failure is reported,
+    never fatal, and leaves no ledger.txt."""
     try:
-        done = subprocess.run([sys.executable, str(LEDGER_TOOL), str(log_copy)], capture_output=True, text=True,
+        done = subprocess.run([sys.executable, "-X", "utf8", str(LEDGER_TOOL), str(log_copy)], capture_output=True, text=True,
                               encoding="utf-8", errors="replace", timeout=LEDGER_TIMEOUT_SECONDS)
     except (OSError, subprocess.SubprocessError) as error:
         say(f"war ledger not produced: {error}")
         return
     text = done.stdout + (("\n" + done.stderr) if done.stderr else "")
+    print(f"---- war ledger (exit {done.returncode}) ----\n" + text.strip())
+    if done.returncode != 0:
+        say(f"war ledger tool exited {done.returncode}; no {LEDGER_FILE}: " + text.strip()[:200])
+        return
     try:
         (Path(log_copy).parent / LEDGER_FILE).write_text(text, encoding="utf-8")
     except OSError as error:
         say(f"war ledger not saved: {error}")
-    print(f"---- war ledger (exit {done.returncode}) ----\n" + text.strip())
-    if done.returncode != 0:
-        say(f"war ledger tool exited {done.returncode}")
 
 
 def show_results(done_text, log_copy, report_json, say):
@@ -199,10 +239,8 @@ def main(argv=None):
     runner.DONE_FILE = DONE_FILE
     runner.STATUS_FILE = STATUS_FILE
     runner.RUNS_ROOT = RUNS_ROOT
-    runner.STALL_SECONDS = max(runner.STALL_SECONDS, known.stall_seconds + STALL_MARGIN_SECONDS)
     runner.arm_text_for = armed_text
-    runner.judge = judge
-    runner.handle_dialogs = handle_dialogs
+    runner.judge = lambda done, report_json, log_text=None: judge(done, report_json, log_text, known, tree_head_sha())
     runner.show_results = show_results
     return runner.main(rest)
 

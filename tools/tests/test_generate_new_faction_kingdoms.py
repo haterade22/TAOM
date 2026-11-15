@@ -134,8 +134,10 @@ class BannerTests(unittest.TestCase):
         self.assertEqual("11.1.1.1528.1528.764.764.1.0.0.10.2.2.700.700.764.764.0.0.0", gen.clan_banner(k, 0))
 
     def test_a_realm_without_the_slot_keeps_its_one_emblem_colour(self):
-        k = gen.KINGDOMS["arthedain"]
-        self.assertEqual(gen.kingdom_banner(k), "11.190.190.1528.1528.764.764.1.0.0.11004.110.110.700.700.764.764.0.0.0")
+        # Rhudaur, not Arthedain: Arthedain flies a hand-made layered banner since c0fee2f30.
+        k = gen.KINGDOMS["rhudaur"]
+        self.assertNotIn("kingdom_banner_key", k)
+        self.assertEqual(gen.kingdom_banner(k), "11.99.99.1528.1528.764.764.1.0.0.11002.110.110.700.700.764.764.0.0.0")
 
 class KingdomNameTests(unittest.TestCase):
     """A kingdom's name is the bare realm name, as Erebor, Imladris and Lindon are; "Kingdom of X" belongs to the

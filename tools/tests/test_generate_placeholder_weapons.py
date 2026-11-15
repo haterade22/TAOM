@@ -247,5 +247,34 @@ class PlaceholderCarrierLimitTests(unittest.TestCase):
         self.assertEqual(gen.row_breaches(donor, gen.carrier_rows(w, troops[2:], self.lspec), self.lspec), [])
 
 
+class PlaceholderCarrierLoadingTests(unittest.TestCase):
+    """#1295: a donor given by a troop-level <equipment> directly under <Equipments> is in the troop's
+    kit (the engine lays it over every set), so the troop is a carrier."""
+
+    def carriers(self, body):
+        with tempfile.TemporaryDirectory() as tmp:
+            (Path(tmp) / "troops_x.xml").write_text(
+                '<NPCCharacters><NPCCharacter id="t" level="21" culture="Culture.nowhere">'
+                f"<Equipments>{body}</Equipments></NPCCharacter></NPCCharacters>", encoding="utf-8")
+            troops = report.load_troops(Path(tmp))
+        w = {"id": "placeholder", "donor": "donor", "cultures": ["nowhere"], "tiers": [4, 8]}
+        return [t.id for t in gen.carriers_of(w, troops)]
+
+    def test_a_donor_in_a_roster_child_is_a_carrier(self):
+        self.assertEqual(["t"], self.carriers(
+            '<EquipmentRoster><equipment slot="Item0" id="Item.donor" /></EquipmentRoster>'))
+
+    def test_a_donor_in_a_troop_level_equipment_is_a_carrier(self):
+        self.assertEqual(["t"], self.carriers(
+            '<EquipmentRoster><equipment slot="Item1" id="Item.shield" /></EquipmentRoster>'
+            '<equipment slot="Item0" id="Item.donor" />'))
+
+    def test_an_uppercase_troop_level_equipment_is_not_read(self):
+        # The engine reads only a lowercase troop-level override, so an uppercase one gives nothing.
+        self.assertEqual([], self.carriers(
+            '<EquipmentRoster><equipment slot="Item1" id="Item.shield" /></EquipmentRoster>'
+            '<Equipment slot="Item0" id="Item.donor" />'))
+
+
 if __name__ == "__main__":
     unittest.main()

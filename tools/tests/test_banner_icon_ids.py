@@ -47,6 +47,25 @@ KEY_RE = re.compile(rf'banner_key="({NUM})"|name="(?:faction_)?banner_key"\s*>\s
 DECLARATION_RE = re.compile(r'banner_key\s*=\s*"|name\s*=\s*"(?:faction_)?banner_key"|\b(?:former_)?banner\s*=\s*"')
 
 
+# A culture's <possible_clan_banner_icon_ids> list: the engine draws rebel and companion clan banners
+# from it during play (CultureObject.PossibleClanBannerIconsIDs), so a removed icon there makes new
+# clans with a blank emblem (#1285).
+CULTURE_LIST_RE = re.compile(r"<possible_clan_banner_icon_ids>(.*?)</possible_clan_banner_icon_ids>", re.S)
+CULTURE_ICON_RE = re.compile(r'<icon\s+id="(\d+)"')
+
+
+def culture_icon_ids(text):
+    """[(icon id, line)] for every icon in a culture's possible clan banner list (comments already stripped)."""
+    return [(m.group(1), text.count("\n", 0, block.start(1) + m.start()) + 1)
+            for block in CULTURE_LIST_RE.finditer(text) for m in CULTURE_ICON_RE.finditer(block.group(1))]
+
+
+def culture_icon_files():
+    """Every ModuleData XML or XSLT that declares a culture's possible clan banner icon list."""
+    return sorted(p for p in MD.rglob("*") if p.suffix in (".xml", ".xslt") and p.is_file()
+                  and "<possible_clan_banner_icon_ids>" in read(p))
+
+
 def read(path):
     # Blank a comment but keep its newlines, so a reported line number is the file's own.
     text = path.read_bytes().decode("utf-8-sig", errors="replace")
@@ -106,6 +125,12 @@ class BannerKeyHelperTests(unittest.TestCase):
     def test_realms_titles_is_a_key_file(self):
         self.assertIn(MD / "realms_titles.xml", KEY_FILES)
 
+    def test_key_files_are_every_moduledata_file_that_declares_a_key(self):
+        # A new file that declares a banner key must join KEY_FILES, or its keys pass unchecked (#1295).
+        declaring = {f for f in MD.rglob("*") if f.suffix in (".xml", ".xslt") and "Languages" not in f.parts
+                     and DECLARATION_RE.search(read(f))}
+        self.assertEqual(sorted(declaring), sorted(KEY_FILES))
+
     def test_unknown_colours_checks_layer_colour1_and_flagged_colour2(self):
         # Layer at offset 10: icon 505, colour1 7, colour2 8, flag 0 -> colour2 never read.
         key = "11.1.99.1528.1528.764.764.1.0.0.505.7.8.1.1.1.1.0.0.0"
@@ -158,6 +183,22 @@ class ShippedBannerDataTests(unittest.TestCase):
                for f, keys in self.keys.items() for key, line in keys
                if (missing := unknown_colours(key, self.colours))]
         self.assertEqual(bad, [], "banner keys naming colours no banner_icons.xml defines:\n" + "\n".join(bad))
+
+    def test_every_culture_clan_banner_icon_exists(self):
+        files = culture_icon_files()
+        self.assertTrue(files, "no culture declares possible_clan_banner_icon_ids: the scan reads nothing")
+        found = {f: culture_icon_ids(read(f)) for f in files}
+        self.assertGreater(sum(len(v) for v in found.values()), 100, "too few culture icon ids parsed")
+        bad = [f"{f.relative_to(REPO)}:{line} unknown icon {icon}"
+               for f, ids in found.items() for icon, line in ids if icon not in self.icons]
+        self.assertEqual(bad, [], "culture clan banner icons no banner_icons.xml defines:\n" + "\n".join(bad))
+
+
+class CultureIconParseTests(unittest.TestCase):
+    def test_reads_only_icons_inside_the_list_with_their_lines(self):
+        text = ('<Culture>\n  <icon id="7" />\n  <possible_clan_banner_icon_ids>\n'
+                '    <icon id="100" />\n    <icon id="10002" />\n  </possible_clan_banner_icon_ids>\n</Culture>')
+        self.assertEqual([("100", 4), ("10002", 5)], culture_icon_ids(text))
 
 
 if __name__ == "__main__":

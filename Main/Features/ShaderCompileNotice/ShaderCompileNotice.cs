@@ -40,7 +40,7 @@ public static class ShaderCompileNotice
     {
         try
         {
-            host.Run(texts, logger, () => _stopRequested);
+            host.Run(texts, ShaderCompileNoticeMode.Startup, logger, () => _stopRequested);
         }
         catch (Exception e)
         {

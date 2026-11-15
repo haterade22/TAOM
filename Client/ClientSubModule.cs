@@ -59,6 +59,14 @@ public sealed class ClientSubModule : MBSubModuleBase
         _uiExtender.Enable();
     }
 
+    // Game.Destroy runs this on every submodule (MBGameManager.OnGameEnd). On shutdown Module.FinalizeModule destroys the game and only
+    // then saves BannerlordConfig, so the scenario autorun puts the player's focus setting back here, before that save.
+    public override void OnGameEnd(Game game)
+    {
+        base.OnGameEnd(game);
+        _scenarioAutorun?.GameEnded();
+    }
+
     // Shutdown (Module.FinalizeModule is this hook's only caller): the themed encyclopedia's settlement pictures are engine
     // textures this assembly owns, so they are released here, where core's OnSubModuleUnloaded released them before ADR-013's move.
     protected override void OnSubModuleUnloaded()

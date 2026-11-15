@@ -3100,7 +3100,7 @@ class TroopPurposeTests(unittest.TestCase):
         self._tmp.cleanup()
 
     def _issues(self, sets, skills, tid="umbar_x", group="Infantry", attrs="", classes=None,
-                fname="troops/troops_test.xml"):
+                fname="troops/troops_test.xml", couch=None):
         rosters = "".join("<EquipmentRoster>" + "".join(
             f'<equipment slot="{k}" id="Item.{v}" />' for k, v in s.items()) + "</EquipmentRoster>"
             for s in sets)
@@ -3112,9 +3112,9 @@ class TroopPurposeTests(unittest.TestCase):
                "  </NPCCharacter>\n</NPCCharacters>\n")
         reg = ts.Registries(items=set(), item_def_files={}, npccharacters=set(), cultures={"umbar"},
                             party_templates=set(),
-                            item_classes=self.CLASSES if classes is None else classes)
+                            item_classes=self.CLASSES if classes is None else classes, couchable_ids=couch)
         return [i for i in ts.Validator(self.md, self.schemas, reg).run()
-                if i.code in ("TROOP_SKILL_KIT_MISMATCH", "TROOP_ITEM_ZERO_NOT_MAIN")]
+                if i.code in ("TROOP_SKILL_KIT_MISMATCH", "TROOP_ITEM_ZERO_NOT_MAIN", "TROOP_MAIN_WEAPON_NOT_ITEM0")]
 
     def test_a_swordsman_with_polearm_on_top_is_reported(self):
         found = self._issues([{"Item0": "sword", "Item1": "shield"}],
@@ -3183,6 +3183,63 @@ class TroopPurposeTests(unittest.TestCase):
             items=set(), item_def_files={}, npccharacters=set(), cultures=set(), party_templates=set()))
         self.assertEqual([{s: self.CLASSES[i] for s, i in k.items()} for k in v._battle_kits(body)],
                          [{"Item0": "OneHanded", "Item1": "Polearm"}])
+
+    RIDER = {"Item0": "sword", "Item1": "shield", "Item2": "spear", "Horse": "steed"}
+    RIDER_SKILLS = {"OneHanded": 230, "Polearm": 200}
+
+    def test_a_lance_rider_that_opens_with_its_sword_is_a_warning_naming_the_mode(self):
+        found = self._issues([self.RIDER], self.RIDER_SKILLS, group="Cavalry", couch=frozenset({"spear"}))
+        self.assertEqual([(i.code, i.severity) for i in found],
+                         [("TROOP_MAIN_WEAPON_NOT_ITEM0", ts.Severity.WARNING)])
+        self.assertIn("--main-weapon-slots", found[0].message)
+        self.assertIn("rule A", found[0].message)
+
+    def test_a_rider_whose_spear_cannot_be_couched_is_not_judged(self):
+        # The state before the Armory registers the spear's pieces under the couch description.
+        self.assertEqual(self._issues([self.RIDER], self.RIDER_SKILLS, group="Cavalry", couch=frozenset()), [])
+
+    def test_a_rider_that_already_opens_with_the_spear_is_clean(self):
+        row = {"Item0": "spear", "Item1": "shield", "Item2": "sword", "Horse": "steed"}
+        self.assertEqual(self._issues([row], {"OneHanded": 200, "Polearm": 230}, group="Cavalry",
+                                      couch=frozenset({"spear"})), [])
+
+    def test_a_troop_named_for_its_polearm_is_judged_without_a_couch(self):
+        row = {"Item0": "sword", "Item1": "spear", "Item2": "shield"}
+        found = self._issues([row], self.RIDER_SKILLS, tid="umbar_spearman", couch=frozenset())
+        self.assertEqual([i.code for i in found], ["TROOP_MAIN_WEAPON_NOT_ITEM0"])
+        self.assertIn("rule B", found[0].message)
+
+    def test_the_fords_roster_is_a_second_root_that_gets_the_slot_rule_only(self):
+        skills = {"OneHanded": 100, "Polearm": 300}     # a kit mismatch if this were troops/troops_*.xml
+        found = self._issues([self.RIDER], skills, group="Cavalry", couch=frozenset({"spear"}),
+                             fname="fords_of_war/fords_troops.xml")
+        self.assertEqual([i.code for i in found], ["TROOP_MAIN_WEAPON_NOT_ITEM0"])
+        (self.md / "fords_of_war" / "fords_troops.xml").unlink()
+        other = self._issues([self.RIDER], skills, group="Cavalry", couch=frozenset({"spear"}),
+                             fname="named_companions/named_companions.xml")
+        self.assertEqual(other, [], "a file that is not listed in troop_purpose.EXTRA_TROOP_FILES is not read")
+
+    def test_the_validator_reads_the_display_name_as_the_writer_does(self):
+        row = {"Item0": "sword", "Item1": "spear", "Item2": "shield"}
+        found = self._issues([row], self.RIDER_SKILLS, tid="umbar_guard", attrs=' name="{=k}Hill Spearman"',
+                             couch=frozenset())
+        self.assertEqual([i.code for i in found], ["TROOP_MAIN_WEAPON_NOT_ITEM0"])
+
+    def test_without_a_couch_set_or_an_install_the_rule_is_not_judged(self):
+        self.assertEqual(self._issues([self.RIDER], self.RIDER_SKILLS, group="Cavalry"), [])
+
+    def test_the_writer_and_the_validator_plan_the_same_exchange(self):
+        import xml.etree.ElementTree as ET
+        import rebalance_troops as rb
+        body = ('<NPCCharacter id="umbar_x" default_group="Cavalry" level="21"><skills /><Equipments>'
+                '<EquipmentRoster><equipment slot="Item0" id="Item.sword" /><equipment slot="Item1" id="Item.shield" />'
+                '<equipment slot="Item2" id="Item.spear" /></EquipmentRoster>'
+                '<equipment slot="Horse" id="Item.steed" /></Equipments></NPCCharacter>')
+        _, swaps, detail = rb.troop_kit_plan(ET.fromstring(body), self.CLASSES, fix_item0=True,
+                                             couch_ids=frozenset({"spear"}))
+        self.assertEqual((detail["plan"].rule, swaps), ("A", [(0, "Item2")]))
+        found = self._issues([self.RIDER], self.RIDER_SKILLS, group="Cavalry", couch=frozenset({"spear"}))
+        self.assertEqual(len(found), 1)
 
     def test_a_skipped_creature_and_a_hero_are_exempt(self):
         bad = ([{"Item0": "sword"}], {"OneHanded": 10, "Polearm": 300})

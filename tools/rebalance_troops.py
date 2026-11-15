@@ -322,47 +322,85 @@ def troop_weapon_classes(npc_elem, item_classes):
     return classes
 
 
-def troop_battle_sets(npc_elem, item_classes):
-    """[(roster ordinal among ALL the troop's EquipmentRoster elements, {slot: class})] for each
-    battle roster, troop-level <equipment> rows laid over every roster. The validator's
-    _battle_kits reads the same way, so the writer and TROOP_ITEM_ZERO_NOT_MAIN agree on a kit."""
-    def cls(eq):
-        return item_classes.get((eq.get('id') or '').replace('Item.', '', 1))
+def troop_battle_rows(npc_elem):
+    """([(roster ordinal among ALL the troop's EquipmentRoster elements, {slot: item id})] for each
+    battle roster, the slots that a troop-level <equipment> row fills). Troop-level rows lie over
+    every roster, an empty id clearing the slot, as _battle_kits in the validator reads them."""
+    def item(eq):
+        return (eq.get('id') or '').replace('Item.', '', 1)
     rosters = list(npc_elem.iter('EquipmentRoster'))
     inside = {id(eq) for r in rosters for eq in r.iter('equipment')}
-    loose = {eq.get('slot'): cls(eq) for eq in npc_elem.iter('equipment')
-             if id(eq) not in inside and eq.get('slot') in tp.WEAPON_SLOTS}
-    sets = []
+    loose = {eq.get('slot'): item(eq) for eq in npc_elem.iter('equipment') if id(eq) not in inside}
+    rows = []
     for ordinal, roster in enumerate(rosters):
         if rl.is_civilian(roster):
             continue
-        slots = {eq.get('slot'): cls(eq) for eq in roster.findall('equipment')
-                 if eq.get('slot') in tp.WEAPON_SLOTS}
-        slots.update(loose)
-        sets.append((ordinal, slots))
-    return sets
+        row = {eq.get('slot'): item(eq) for eq in roster.findall('equipment')}
+        row.update(loose)
+        rows.append((ordinal, row))
+    return rows, set(loose)
 
 
-def troop_kit(npc_elem, item_classes, fix_item0=False):
-    """(troop_purpose.Kit, item0 swaps) from the troop's battle sets (troop_battle_sets).
+def troop_battle_sets(npc_elem, item_classes):
+    """[(roster ordinal among ALL the troop's EquipmentRoster elements, {slot: class})] for each
+    battle roster, troop-level <equipment> rows laid over every roster (troop_battle_rows)."""
+    return [(ordinal, {s: item_classes.get(i) for s, i in row.items() if s in tp.WEAPON_SLOTS})
+            for ordinal, row in troop_battle_rows(npc_elem)[0]]
+
+
+def troop_kit(npc_elem, item_classes, fix_item0=False, couch_ids=None):
+    """(troop_purpose.Kit, item0 swaps); see troop_kit_plan."""
+    kit, swaps, _ = troop_kit_plan(npc_elem, item_classes, fix_item0, couch_ids)
+    return kit, swaps
+
+
+def troop_kit_plan(npc_elem, item_classes, fix_item0=False, couch_ids=None):
+    """(troop_purpose.Kit, swaps, detail) from the troop's battle sets (troop_battle_rows).
 
     swaps lists (roster ordinal among ALL the troop's EquipmentRoster elements, slot) for each
     battle set whose Item0 is a shield or ammunition beside a weapon
     (troop_purpose P2); apply_item0_swaps exchanges the two items. With fix_item0 the kit is read
     as if the swaps were made, which is what --fix-purpose writes; otherwise it is read as on disk
-    and no swap is planned."""
-    sets = troop_battle_sets(npc_elem, item_classes)
-    kit = tp.kit_of(s for _, s in sets)
+    and no swap is planned.
+
+    With couch_ids (the item ids whose weapon has a couch usage) the main weapon rule runs too
+    (troop_purpose P4, --main-weapon-slots) on the sets as P2 leaves them: its exchanges follow the P2
+    ones in swaps, and detail holds the plan with each battle roster's item ids before and after.
+    detail is None without couch_ids."""
+    rows, loose = troop_battle_rows(npc_elem)
+
+    def classes_of(row):
+        return {s: item_classes.get(i) for s, i in row.items() if s in tp.WEAPON_SLOTS}
+
     if not fix_item0:
-        return kit, []
-    launcher_troop = tp.is_launcher_troop(kit, npc_elem.get('default_group', 'Infantry'))
-    swaps, fixed = [], []
-    for ordinal, slots in sets:
-        slots, other = tp.fix_item0(slots, launcher_troop)
-        if other:
-            swaps.append((ordinal, other))
-        fixed.append(slots)
-    return tp.kit_of(fixed), swaps
+        return tp.kit_of(classes_of(row) for _, row in rows), [], None
+    plan, p2, ids = tp.troop_main_weapon(
+        [row for _, row in rows], item_classes, couch_ids, npc_elem.get('default_group', 'Infantry'),
+        (get_display_name(npc_elem.get('name', '')), npc_elem.get('id', '')))
+    swaps = [(ordinal, other) for (ordinal, _), other in zip(rows, p2) if other]
+    if couch_ids is None:
+        return tp.kit_of(classes_of(row) for row in ids), swaps, None
+    # apply_item0_swaps edits ids inside a roster; a weapon row shared by every roster has none to edit.
+    if plan.swaps and any(s in loose for s in ('Item0',) + tuple(slot for _, slot in plan.swaps)):
+        plan = tp.SlotPlan(left="the exchange would move a troop-level row, which no roster holds")
+    after = [dict(row) for row in ids]
+    for index, slot in plan.swaps:
+        after[index]['Item0'], after[index][slot] = after[index][slot], after[index]['Item0']
+    order = tp.WEAPON_SLOTS
+    detail = {
+        'plan': plan,
+        'before': [(o, {s: row[s] for s in order if row.get(s)}) for (o, _), row in zip(rows, ids)],
+        'after': [(o, {s: row[s] for s in order if row.get(s)}) for (o, _), row in zip(rows, after)],
+    }
+    return (tp.kit_of(classes_of(row) for row in after),
+            swaps + [(rows[i][0], slot) for i, slot in plan.swaps], detail)
+
+
+def load_couchable_ids(game_modules):
+    """The item ids that can be couched: taom_schema.couchable_item_ids, the source the validator
+    reads too. It prices the Armory, vanilla (SandBoxCore and SandBox) and this repo's placeholders; it
+    does not read the other installed modules, whose multiplayer lances no troop carries."""
+    return ts.couchable_item_ids(Path(game_modules), Path(MODULEDATA_DIR) / ts.PLACEHOLDER_DIR)
 
 
 _EQUIPMENT_ELEM_RE = re.compile(r'<equipment\b[^>]*?/>', re.S)
@@ -1049,7 +1087,8 @@ def plan_fix_purpose(all_changes):
     Returns (raises from settle_purpose, [(record, finding, formula value)] still cross-kind)."""
     for c in all_changes:
         c['tie_raises'] = []
-        if c.get('external') or c['id'] in SKIP_TROOP_IDS or c.get('kit') is None:
+        if c.get('external') or c['id'] in SKIP_TROOP_IDS or c.get('kit') is None or (
+                c.get('slots_only') and not (c.get('main_weapon') and c['main_weapon']['plan'].swaps)):
             c['formula'], c['new'] = c.get('new'), None
             continue
         c['formula'] = c.get('new')
@@ -1068,12 +1107,47 @@ def plan_fix_purpose(all_changes):
     return log, left
 
 
+def _shield_swaps(c):
+    """The P2 exchanges of a record: item0_swaps without the main weapon ones that follow them."""
+    swaps = c.get('item0_swaps', [])
+    main = len(c['main_weapon']['plan'].swaps) if c.get('main_weapon') else 0
+    return swaps[:len(swaps) - main]
+
+
+def _slot_order(row):
+    return ' '.join(f"{slot[-1]}:{item}" for slot, item in row.items())
+
+
+def print_main_weapon_report(all_changes):
+    """--main-weapon-slots: every troop the rule changes (each battle roster's slot order before and
+    after, and the skills), then every troop in scope that stays and why. Call it after the plan."""
+    tracked = [c for c in all_changes if c.get('main_weapon')]
+    planned = [c for c in tracked if c['main_weapon']['plan'].swaps]
+    sets = sum(len(c['main_weapon']['plan'].swaps) for c in planned)
+    print(f"\nMain weapon in Item0 (A: lance cavalry, B: named polearm troop): "
+          f"{sets} battle sets on {len(planned)} troops")
+    for c in planned:
+        d = c['main_weapon']
+        print(f"  {c['file']:<28} {c['id']:<36} rule {d['plan'].rule}  L{c['level']} {c['culture']}  {c['name']}")
+        for (ordinal, before), (_, after) in zip(d['before'], d['after']):
+            if before != after:
+                print(f"      roster {ordinal}: {_slot_order(before)}  ->  {_slot_order(after)}")
+        if c.get('final'):
+            diff = ', '.join(f"{s} {c['old'].get(s, 0)}->{c['final'][s]}" for s in SKILL_NAMES
+                             if c['old'].get(s, 0) != c['final'][s])
+            print(f"      skills: {diff or 'unchanged'}")
+    stays = [c for c in tracked if c['main_weapon']['plan'].left]
+    print(f"\nIn scope of the rule and left as they are ({len(stays)} troops):")
+    for c in stays:
+        print(f"  {c['file']:<28} {c['id']:<36} {c['group']:<12} L{c['level']}  {c['main_weapon']['plan'].left}")
+
+
 def print_purpose_report(all_changes, log, left):
-    swaps = [c for c in all_changes if c.get('item0_swaps')]
+    swaps = [c for c in all_changes if _shield_swaps(c)]
     print(f"\nItem0 holds a shield or ammunition beside a weapon: "
-          f"{sum(len(c['item0_swaps']) for c in swaps)} battle sets on {len(swaps)} troops")
+          f"{sum(len(_shield_swaps(c)) for c in swaps)} battle sets on {len(swaps)} troops")
     for c in swaps:
-        print(f"  {c['id']:<40} " + ", ".join(f"roster {o}: Item0 <-> {s}" for o, s in c['item0_swaps']))
+        print(f"  {c['id']:<40} " + ", ".join(f"roster {o}: Item0 <-> {s}" for o, s in _shield_swaps(c)))
     disputed = [c for c in all_changes if c.get('new') is not None and tp.main_disputed(c['kit'])]
     print(f"\nBattle sets disagree on the Item0 class ({len(disputed)} troops; the class most sets "
           f"hold is the main class, a tie goes to the higher skill):")
@@ -1107,7 +1181,7 @@ def print_purpose_report(all_changes, log, left):
         print(f"  {c['file']:<28} {c['id']:<40} {f.text}; formula {f.cls} {value}{note}")
 
 
-def process_file(filepath, item_classes=None, purpose=False):
+def process_file(filepath, item_classes=None, purpose=False, couch_ids=None, slots_only=False):
     """Process a single troop XML file. Returns list of change records.
 
     item_classes: item id -> skill class map from
@@ -1116,7 +1190,10 @@ def process_file(filepath, item_classes=None, purpose=False):
     install).
     purpose: the --fix-purpose read. The kit is read as if Item0 were fixed, the planned
     exchanges go in record['item0_swaps'], and ladder cells are read even where the formula has
-    no row, because that mode reorders on-disk values and needs no formula."""
+    no row, because that mode reorders on-disk values and needs no formula.
+    couch_ids: with purpose, also plan the main weapon exchanges (--main-weapon-slots).
+    slots_only: a second-root file (troop_purpose.EXTRA_TROOP_FILES): only a troop whose slots the
+    rule changes has its skills reordered, because the file's other troops were never reordered."""
     filename = os.path.basename(filepath)
     if filename in SKIP_FILES:
         return []
@@ -1168,8 +1245,8 @@ def process_file(filepath, item_classes=None, purpose=False):
         weapon_classes = troop_weapon_classes(npc, item_classes) if item_classes else None
         kit = None
         if item_classes:
-            kit, swaps = troop_kit(npc, item_classes, fix_item0=purpose)
-            record.update(kit=kit, item0_swaps=swaps)
+            kit, swaps, detail = troop_kit_plan(npc, item_classes, fix_item0=purpose, couch_ids=couch_ids)
+            record.update(kit=kit, item0_swaps=swaps, main_weapon=detail, slots_only=slots_only)
         new_skills = calculate_skills(culture, level, group, troop_id, troop_name, weapon_classes, kit)
         if item_classes and (new_skills is not None or purpose):
             cells = ladder_cells(troop_id, filename_culture, level, weapon_classes)
@@ -1355,26 +1432,33 @@ def main():
     if not args:
         args = ['--apply']  # bare --dry-run keeps its old meaning: preview the rebaseline
 
-    # --fix-purpose previews unless --apply is named with it: it is the narrow mode, so writing
-    # must be asked for.
-    if '--fix-purpose' in args:
+    # --fix-purpose and --main-weapon-slots preview unless --apply is named with them: they are the
+    # narrow modes, so writing must be asked for.
+    if '--fix-purpose' in args or '--main-weapon-slots' in args:
         dry_run = dry_run or '--apply' not in args
         args = [a for a in args if a != '--apply']
-    if len(args) != 1 or args[0] not in ('--apply', '--fix-monotonicity', '--fix-purpose') or (
-            restat_ids and args[0] == '--fix-purpose'):
-        print("Usage: python rebalance_troops.py (--apply|--fix-monotonicity|--fix-purpose) [--dry-run] "
+    purpose_modes = ('--fix-purpose', '--main-weapon-slots')
+    if len(args) != 1 or args[0] not in ('--apply', '--fix-monotonicity') + purpose_modes or (
+            restat_ids and args[0] in purpose_modes):
+        print("Usage: python rebalance_troops.py (--apply|--fix-monotonicity|--fix-purpose|--main-weapon-slots) "
+              "[--dry-run] "
               "[--restat <id,id>] [--game-modules <path>]\n"
               "  --apply             rebaseline the whole roster onto the curve, then clamp\n"
               "  --fix-monotonicity  clamp only: repair upgrade ladders without rebaselining\n"
               "  --fix-purpose       reorder on-disk skills to the kit and put a real weapon in Item0,\n"
               "                      then clamp; a dry run unless --apply is added\n"
-              "  --dry-run           preview either mode; write nothing\n"
+              "  --main-weapon-slots everything --fix-purpose does, and a lance rider or a troop named for\n"
+              "                      its polearm opens with that polearm (Item0 trades with it); a dry run\n"
+              "                      unless --apply is added\n"
+              "  --dry-run           preview a mode; write nothing\n"
               "  --restat            take the formula value for these ids even in clamp-only mode")
         sys.exit(1)
 
-    purpose = args[0] == '--fix-purpose'
+    purpose = args[0] in purpose_modes
+    slots_mode = args[0] == '--main-weapon-slots'
     base_on_curve = args[0] == '--apply'
-    label = ("purpose order + clamp" if purpose else
+    label = ("main weapon slots + purpose order + clamp" if slots_mode else
+             "purpose order + clamp" if purpose else
              "full rebaseline + clamp" if base_on_curve else "monotonicity clamp only")
     mode = f"{'DRY RUN' if dry_run else 'APPLYING CHANGES'} ({label})"
     print(f"\n*** {mode} ***\n")
@@ -1390,6 +1474,9 @@ def main():
         sys.exit(1)
     item_classes = ts.build_item_class_registry(MODULEDATA_DIR, game_modules)
     print(f"Item-class registry: {len(item_classes):,} weapon-classed items")
+    couch_ids = load_couchable_ids(game_modules) if slots_mode else None
+    if slots_mode:
+        print(f"Couchable items (a weapon description with the couch feature): {len(couch_ids):,}")
 
     troop_files = sorted(glob.glob(os.path.join(TROOPS_DIR, 'troops_*.xml')))
     print(f"Found {len(troop_files)} troop files")
@@ -1411,7 +1498,17 @@ def main():
             print(f"  SKIPPING {filename}")
             continue
         print(f"  Processing {filename}...")
-        all_changes.extend(process_file(filepath, item_classes=item_classes, purpose=purpose))
+        all_changes.extend(process_file(filepath, item_classes=item_classes, purpose=purpose,
+                                        couch_ids=couch_ids))
+    # The second root: troop definitions outside troops/ that fight (troop_purpose.EXTRA_TROOP_FILES).
+    # Only the slot rule reads them, and only the troops it changes get their skills reordered.
+    if slots_mode:
+        for rel in tp.EXTRA_TROOP_FILES:
+            filepath = os.path.join(MODULEDATA_DIR, *rel.split('/'))
+            print(f"  Processing {rel} (second root, slot rule only)...")
+            all_changes.extend(process_file(filepath, item_classes=item_classes, purpose=True,
+                                            couch_ids=couch_ids, slots_only=True))
+            troop_files = troop_files + [filepath]
 
     external = load_external_sources()
     all_changes.extend(external)
@@ -1428,6 +1525,8 @@ def main():
 
     if purpose:
         log, left = plan_fix_purpose(all_changes)
+        if slots_mode:
+            print_main_weapon_report(all_changes)
         print_purpose_report(all_changes, log, left)
         if not dry_run:
             written = write_files(all_changes, troop_files)

@@ -1608,3 +1608,9 @@ The self-disable notice called `InformationManager.DisplayMessage`, then wrote `
 - **Why missed:** the call returned normally in every case, and the tests faked the notice's own interfaces, so the chat view model was outside every test.
 - **Prevent:** before a line claims that the player saw something, read the engine consumer past the call and gate on its filter (for chat: the two options and the active `GameState`). Write the log line at once and the display later, in two steps, so a held or dropped display never costs the log. A display that the options forbid writes `result=skip` with the reason, never `pass`.
 - **Source:** [rca-patch-self-disable-2026-11-13.md](../rca-patch-self-disable-2026-11-13.md) rows 1, 2 and 6, `/deep-review` Agents 5 and 2.
+
+### A notice on a MissionState hook shows on every mission, so its text cannot say "battle" (PR #1308, 2026-11-15)
+PR #1308's shader notice hooks `MissionState.OnTick`, which runs for every mission that `MissionState.OpenNew` starts: SandBox alone opens about 20 kinds (town, tavern, indoor, conversation, arena, hideout). All three texts said "this battle", so a cold-cache town load would read "Preparing this battle".
+- **Why missed:** the measurements and the test case were battle loads, and the text followed the test case.
+- **Prevent:** before writing the text of a mission-level notice, list who opens a mission (`MissionState.OpenNew` callers) and word it for all of them, or filter in code. Change the English before the language rows are seeded, when the change is free.
+- **Source:** [rca-pr1308-battle-shader-notice-2026-11-15.md](../rca-pr1308-battle-shader-notice-2026-11-15.md) finding 3.
