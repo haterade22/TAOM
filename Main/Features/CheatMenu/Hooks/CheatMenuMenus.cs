@@ -97,7 +97,7 @@ internal static class CheatMenuMenus
             CheatMenuTexts.Show(new CheatOutcome(CheatOutcomeKind.NothingToDo));
             return;
         }
-        Pick("{=taom_cheat_pick_troop}Choose a troop: 10 of it join your party",
+        Pick("taom_cheat_troops_any", "{=taom_cheat_pick_troop}Choose a troop: 10 of it join your party",
             troops.Select(t => (t.Id, TroopLabel(t))).ToList(),
             id => CheatMenuTexts.Show(service.AddFactionTroop(id, TroopStep)));
     }

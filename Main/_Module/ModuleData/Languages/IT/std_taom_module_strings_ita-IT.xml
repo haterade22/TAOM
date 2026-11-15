@@ -8179,6 +8179,35 @@
     <string id="taom_cheat_done_influence" text="Gained {NUMBER} influence." />
     <string id="taom_cheat_done_renown" text="Gained {NUMBER} renown." />
     <string id="taom_cheat_done_heal" text="Your party is healed. Soldiers healed: {NUMBER}." />
+    <string id="taom_cheat_pick_troop" text="Choose a troop: 10 of it join your party" />
+    <string id="taom_cheat_troop_row" text="Tier {TIER}: {NAME}" />
+    <string id="taom_cheat_troops_any" text="+10 of any troop of your faction..." />
+    <string id="taom_cheat_troops_screen" text="Every troop (party screen)..." />
+    <string id="TAOM_LD_Coop_NoCoop" text="Co-op needs the Coop mod loaded." />
+    <string id="TAOM_LD_Coop_BadPayload" text="The host's run could not be read. Install the same TAOM as the host." />
+    <string id="TAOM_LD_Coop_BadAddress" text="Enter the host's address as address:port, for example 192.168.1.20:4200." />
+    <string id="TAOM_LD_Coop_HostLeft" text="The host left, so the run ended." />
+    <string id="TAOM_LD_Coop_RunEnded" text="The run ended at wave {WAVE}. Waves cleared: {WAVES}. Kills: {KILLS}." />
+    <string id="TAOM_LD_Coop_MenuOption" text="The Long Defeat (co-op)" />
+    <string id="TAOM_LD_Coop_MenuHint" text="Hold a fortress with other players over the Coop mod. One player hosts; the others join by address." />
+    <string id="TAOM_LD_Coop_Prompt_Desc" text="Host a run for other players, or join a run another player hosts." />
+    <string id="TAOM_LD_Coop_Host" text="Host a run" />
+    <string id="TAOM_LD_Coop_Join" text="Join a run" />
+    <string id="TAOM_LD_Coop_JoinText" text="The host's address and port, for example 192.168.1.20:4200." />
+    <string id="taom_story_offer_attack" text="Storm the walls" />
+    <string id="taom_story_offer_body_both" text="The hour of {TARGET} has come. Will you ride there and choose your side of its walls, or let fate decide?" />
+    <string id="taom_story_offer_body_attack" text="The hour of {TARGET} has come. Will you march on its walls and lead the assault yourself, or let fate decide?" />
+    <string id="taom_story_offer_march" text="March on {TARGET}" />
+    <string id="taom_story_offer_repulsed" text="Your assault on {TARGET} is thrown back, and its walls hold." />
+    <string id="taom_story_offer_stormed" text="The walls of {TARGET} are stormed, and the fortress falls." />
+    <string id="taom_story_offer_menu_host" text="A host gathers before the walls of {TARGET}. Time stands until you choose." />
+    <string id="taom_guest_trade_not_leader" text="The host cannot trade for you while you do not lead a free party." />
+    <string id="taom_guest_trade_not_here" text="The host cannot trade for you here: your party is not in this settlement, or it is in a battle or a siege." />
+    <string id="taom_guest_trade_no_armoury" text="The host finds no armourer at work in this town." />
+    <string id="taom_guest_trade_failed" text="The host could not complete this. Try again." />
+    <string id="taom_guest_trade_busy" text="The host has not answered your last request yet." />
+    <string id="taom_guest_trade_no_link" text="The host cannot be reached." />
+    <string id="taom_guest_trade_no_answer" text="The host did not answer your last request. Try again." />
   </strings>
 
 </base>
