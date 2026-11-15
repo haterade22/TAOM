@@ -20,7 +20,7 @@
       <skill id="Polearm" value="20" />
       <skill id="Bow" value="10" />
       <skill id="Crossbow" value="10" />
-      <skill id="Throwing" value="20" />
+      <skill id="Throwing" value="15" />
     </skills>
     <upgrade_targets>
       <upgrade_target id="NPCCharacter.rhudaur_hill_spearman" />
@@ -64,7 +64,7 @@
       <skill id="Polearm" value="40" />
       <skill id="Bow" value="15" />
       <skill id="Crossbow" value="15" />
-      <skill id="Throwing" value="20" />
+      <skill id="Throwing" value="15" />
     </skills>
     <upgrade_targets>
       <upgrade_target id="NPCCharacter.rhudaur_axeman" />

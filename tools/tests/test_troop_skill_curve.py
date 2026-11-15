@@ -310,6 +310,25 @@ class ShippedRosterTests(unittest.TestCase):
                if not c.get("external") for s in rb.SKILL_NAMES if c["old"].get(s, 0) != c["final"][s]]
         self.assertEqual(off, [], f"{len(off)} values off the plan")
         self.assertGreater(len(recs), 1000)
+        # The Fords of War copies are on the curve too (the second root), so they are in the plan.
+        fords = [c for c in recs if c["file"] == "fords_troops.xml" and c.get("new") is not None]
+        self.assertGreater(len(fords), 200)
+
+    def test_a_promoted_villager_equals_its_source_villager(self):
+        # promote_borrowed_cultures.py copies the source culture's npcs file, so its --check holds
+        # only while the copy's villager has the source villager's skills.
+        def villager(culture):
+            path = Path(rb.CHARACTERS_DIR) / f"npcs_{culture}.xml"
+            if not path.exists():
+                return None
+            for npc in ET.parse(str(path)).getroot().iter("NPCCharacter"):
+                if npc.get("id") == f"villager_{culture}" and npc.find("skills") is not None:
+                    return {s.get("id"): s.get("value") for s in npc.iter("skill")}
+            return None
+        pairs = [(t, s) for t, s in sorted(rb.promoted_npcs_sources().items())
+                 if villager(t) is not None and villager(s) is not None]
+        self.assertIn(("rhudaur", "gondor"), pairs)
+        self.assertEqual([(t, s) for t, s in pairs if villager(t) != villager(s)], [])
 
     def test_the_villagers_are_written_on_the_tier_1_row(self):
         recs = {c["id"]: c for c in self._settled()}
@@ -369,6 +388,7 @@ class _FixtureRun(unittest.TestCase):
         out = io.StringIO()
         with mock.patch.object(rb, "TROOPS_DIR", str(self.tmp / "troops")), \
                 mock.patch.object(rb, "CHARACTERS_DIR", str(self.tmp / "characters")), \
+                mock.patch.object(rb, "EXTRA_ROOT_DIR", str(self.tmp)), \
                 mock.patch("taom_schema.build_item_class_registry", lambda *a: dict(self.CLASSES)), \
                 mock.patch("taom_schema.build_mount_difficulty_registry", lambda *a: {}), \
                 mock.patch.object(sys, "argv", ["rebalance_troops.py", *argv, "--game-modules", str(self.tmp)]), \
@@ -439,6 +459,91 @@ class VillagerWriteTests(_FixtureRun):
         vill = {s.get("id"): int(s.get("value")) for s in root.find("NPCCharacter").iter("skill")}
         self.assertEqual(vill["Polearm"], 20)
         self.assertEqual(vill["Throwing"], 15)
+
+
+class PromotedVillagerTests(_FixtureRun):
+    """A villager in an npcs file that promote_borrowed_cultures.py copies takes its copy source's
+    row, so the copy stays equal to the source villager and the promoter's --check holds."""
+
+    def test_rhudaur_is_a_copy_of_gondor(self):
+        self.assertEqual(rb.promoted_npcs_sources()["rhudaur"], "gondor")
+
+    def test_the_rhudaur_villager_takes_gondors_row(self):
+        self.write("troops/troops_rhudaur.xml", _npc("rhudaur_levy", 6, [20] * 8, ["fixture_sword"]))
+        self.write("characters/npcs_rhudaur.xml",
+                   _npc("villager_rhudaur", 1, [30, 0, 30, 20, 30, 0, 0, 20], ["fixture_fork", "fixture_stone"],
+                        upgrades=["rhudaur_levy"]))
+        code, out = self.run_main("--apply")
+        self.assertEqual(code, 0, out)
+        root = ET.fromstring((self.tmp / "characters" / "npcs_rhudaur.xml").read_text(encoding="utf-8"))
+        vill = {s.get("id"): int(s.get("value")) for s in root.iter("skill")}
+        # The stone: 0.9 x 20 x 0.95 = 17.1 on Gondor's row (15); Rhudaur's own +5 would give 20.
+        self.assertEqual(vill["Throwing"], 15)
+
+
+FORDS = "fords_of_war/fords_troops.xml"
+
+
+class SecondRootTests(_FixtureRun):
+    """--apply puts the Fords of War copies (troop_purpose.EXTRA_TROOP_FILES) on the curve: each by
+    its own level and kit, on the row of the campaign troop it copies, skill values only. No edge
+    that touches the second root moves a campaign troop."""
+
+    def setUp(self):
+        super().setUp()
+        gondor = ' culture="Culture.gondor"'
+        self.write("troops/troops_gondor.xml",
+                   _npc("gondor_recruit", 6, [20] * 8, ["fixture_sword"], upgrades=["gondor_soldier"], extra=gondor)
+                   + _npc("gondor_soldier", 11, [40] * 8, ["fixture_sword"], extra=gondor))
+        (self.tmp / "fords_of_war").mkdir()
+        self.write(FORDS,
+                   _npc("fow_gondor_soldier", 16, [99] * 8, ["fixture_fork"], extra=gondor)
+                   + _npc("fow_gondor_pikeman", 11, [99] * 8, ["fixture_fork"], extra=gondor)
+                   + _npc("fow_gondor_bare", 11, [], ["fixture_fork"], extra=gondor)
+                   + _npc("fow_gondor_captain", 51, [300] * 8, ["fixture_sword"], upgrades=["gondor_soldier"],
+                          extra=gondor),
+                   crlf=True)
+
+    def _skills(self, rel, troop_id):
+        root = ET.fromstring((self.tmp / rel).read_text(encoding="utf-8"))
+        npc = next(n for n in root.iter("NPCCharacter") if n.get("id") == troop_id)
+        return {s.get("id"): int(s.get("value")) for s in npc.iter("skill")}
+
+    def test_a_copy_takes_its_own_level_and_kit_on_its_source_troops_row(self):
+        code, out = self.run_main("--apply")
+        self.assertEqual(code, 0, out)
+        polearm = tp.kit_of([{"Item0": "Polearm"}])
+        self.assertEqual(self._skills(FORDS, "fow_gondor_soldier"),
+                         rb.calculate_skills("gondor", 16, "fow_gondor_soldier", polearm))
+
+    def test_a_copy_of_no_campaign_troop_takes_the_row_its_culture_attribute_names(self):
+        self.run_main("--apply")
+        polearm = tp.kit_of([{"Item0": "Polearm"}])
+        self.assertEqual(self._skills(FORDS, "fow_gondor_pikeman"),
+                         rb.calculate_skills("gondor", 11, "fow_gondor_pikeman", polearm))
+
+    def test_only_skill_values_change_and_a_copy_without_skills_is_left(self):
+        before = (self.tmp / FORDS).read_bytes()
+        self.run_main("--apply")
+        after = (self.tmp / FORDS).read_bytes()
+        a, b = before.decode("utf-8").split("\r\n"), after.decode("utf-8").split("\r\n")
+        self.assertEqual(len(a), len(b))
+        changed = [i for i, (x, y) in enumerate(zip(a, b)) if x != y]
+        self.assertTrue(changed)
+        self.assertTrue(all("<skill " in a[i] for i in changed), changed)
+
+    def test_a_second_root_edge_never_raises_a_campaign_troop(self):
+        # fow_gondor_captain (tier 10) upgrades into gondor_soldier (tier 2) in this fixture.
+        self.run_main("--apply")
+        sword = tp.kit_of([{"Item0": "OneHanded"}])
+        self.assertEqual(self._skills("troops/troops_gondor.xml", "gondor_soldier"),
+                         rb.calculate_skills("gondor", 11, "gondor_soldier", sword))
+
+    def test_a_second_run_plans_nothing(self):
+        self.run_main("--apply")
+        code, out = self.run_main("--apply", "--dry-run")
+        self.assertEqual(code, 0, out)
+        self.assertIn("Changed: 0,", out)
 
 
 if __name__ == "__main__":

@@ -20,18 +20,21 @@ tier 4 row and the elite slots +10 (was 15). The ranged ladder's skill spec anch
 curve (Mirkwood T10 Bow 410 to 320). `python tools/rebalance_troops.py --apply` restated the roster.
 
 Measured on the troop files, trunk against the result (`report_stats.py` in the session scratchpad,
-read-only): 1120 troops in the files, 1116 changed, 3755 values rose and 4768 fell. The median main
+read-only): 1120 troops in the files, 1116 changed, 3755 values rose and 4769 fell. The median main
 weapon skill by tier, before and after:
 
 | Tier | T0 | T1 | T2 | T3 | T4 | T5 | T6 | T7 | T8 | T9 | T10 |
 |---|---|---|---|---|---|---|---|---|---|---|---|
-| Before | 25 | 40 | 70 | 100 | 135 | 185 | 240 | 286 | 345 | 375 | 390 |
+| Before | 25 | 40 | 70 | 100 | 135 | 180 | 240 | 285 | 345 | 372.5 | 390 |
 | After | 20 | 20 | 40 | 73 | 104 | 135 | 160 | 190 | 225 | 255 | 310 |
 
 T10 sits over 260 because 12 of the 13 tier 10 troops are Lindon, Rivendell or Mirkwood, whose
-rows are above the curve (Mirkwood's main weapon median 350 to 240). Harad went up (median 90 to 104, +15.6%); every other
-culture went down, from -12.0% (southrhovanion, 100 to 88) to -38.5% (feral_orcs, 65 to 40), with
-Gondor at -27.0% (185 to 135) and Mirkwood at -31.4%. `python tools/validate_moduledata.py`: 0 errors before and after;
+rows are above the curve (Mirkwood's main weapon median 350 to 240). Harad went up (median 90 to 104, +15.6%) and Mordor's
+median stayed at 70; every other culture went down, from -12.0% (southrhovanion, 100 to 88) to
+-38.5% (feral_orcs, 65 to 40), with Gondor at -27.0% (185 to 135) and Mirkwood at -31.4%. The main
+class of each troop is read from its kit as it is now, after trunk's main weapon slot pass, so a
+troop that pass moved onto its lance is measured on Polearm before and after (the "before" row and
+Mordor's median moved by that, measured 2026-11-15 after the merge). `python tools/validate_moduledata.py`: 0 errors before and after;
 `TROOP_SKILL_KIT_MISMATCH` 97 to 1, `UPGRADE_SKILL_REGRESSION` 0 to 0, `TROOP_ITEM_ZERO_NOT_MAIN` 0
 to 0. No equipment line and no Armory value changed.
 
@@ -47,7 +50,8 @@ The first review asked for these changes, all in this change:
   compares the plain orcs with the mannish mean.
 - **The Black Numenoreans.** `mordor_num_*` takes a mannish row of its own, `mordor_numenorean`
   (Athletics and Riding +3, the melee classes +5). `mordor_num_knight` (T8, horse difficulty 90) went
-  from Athletics 180, Riding 310, OneHanded 350, Polearm 320 to 135, 215, 220, 195.
+  from Athletics 180, Riding 310, OneHanded 350, Polearm 320 to 135, 215, 195, 220 (with the lance in
+  Item0 since the merge of the slot pass, so Polearm is its main weapon).
 - **The villagers.** The 20 `villager_*` characters with a `<skills>` block take the tier 1 row and
   `--apply` writes only their skill values into `characters/npcs_*.xml` (147 lines). The clamp
   then lifts 17 recruit values from them, not 50: a farm tool or a stone the recruit does not carry.
@@ -66,6 +70,37 @@ The first review asked for these changes, all in this change:
 
 `--apply` in the review round changed 193 troop and villager records; a second `--apply --dry-run`
 plans nothing.
+
+### Round 4 (2026-11-15): the merge, promoted villagers, the Fords copies, the shop
+
+- **The merge.** Trunk brought the main weapon slot pass (PR #1314: `--main-weapon-slots`,
+  `troop_purpose.EXTRA_TROOP_FILES`, `TROOP_MAIN_WEAPON_NOT_ITEM0`) and realm data (PR #1315). In
+  the four troop files with conflicts (`troops_dale.xml`, `troops_dolguldur.xml`,
+  `troops_gondor.xml`, `troops_mordor.xml`) every line was taken from trunk, then the restat
+  rewrote the skill values: each file's equipment lines are byte-identical to trunk's side. The
+  writer keeps both: trunk's slot mode and couchable source, and the curve. PR #1315 brought no
+  troop and no culture id the table does not route: `--apply` reported no culture without a row.
+- **Promoted villagers (Option A).** `promote_borrowed_cultures.py` copies an npcs file from its
+  source culture, so it owns the villager's skills too. A villager in such a file now takes the
+  source's row (`rebalance_troops.promoted_npcs_sources`). `villager_rhudaur`'s stone went from 20
+  (Rhudaur's Throwing +5) to Gondor's 15, the promoter's `--check` for Rhudaur passes, and the clamp
+  lift it gave `rhudaur_levy` and `rhudaur_hill_spearman` (Throwing 20) fell to 15.
+- **The Fords of War copies.** `--apply` reads `fords_of_war/fords_troops.xml` as a second root: a
+  copy `fow_<id>` takes campaign troop `<id>`'s culture row and ranged ladder line, its own level
+  and kit the rest; the two copies whose id names no campaign troop take the troop file their
+  culture attribute points to. 214 copies, 1656 skill values on 1656 lines, no other line. No
+  upgrade edge between the roots is a clamp edge, in either direction.
+- **The Long Defeat shop.** `tools/tests/test_long_defeat_shop_skills.py` reads
+  `long_defeat/shop.json` (read only) and checks that no shop upgrade lowers the main weapon skill
+  (the source's top carried weapon skill against the target's value in its main class). Before the
+  Fords restat one edge failed: `fow_rohan_edoras_golden_hall_eorlingas_rider` (T6, Polearm 325) to
+  `rohan_edoras_golden_hall_kings_own_rider` (T7, Polearm 190). After it all 9 edges rise.
+
+`--apply` in round 4 changed 551 records: the 214 Fords copies, the Rhudaur villager and its two
+recruits, and 334 of the 336 troops in the four merged files, which held trunk's old values when it
+ran; a second `--apply --dry-run` printed `Changed: 0, Unchanged: 1342,
+Skipped: 12`, and `--fix-monotonicity --dry-run`, `--fix-purpose` and `--main-weapon-slots` each plan
+nothing.
 
 ## Engine facts (v1.5.7)
 
@@ -134,14 +169,14 @@ the code disagreed, these readings were taken:
 - **Counts.** The design's preview restated 1103 troops and skipped 17; `--apply` changed 1108 and
   skipped 12 (the skip list; no troop is skipped for tier 0 any more). The preview did not model the
   militia or `settle_purpose`.
-- **The clamp after the restat.** The clamp raises 315 values on 263 troops (OneHanded 126,
-  Athletics 77, Polearm 43, Throwing 32, Bow 18, TwoHanded 16, Riding 3), 298 of them from a troop
+- **The clamp after the restat.** The clamp raises 314 values on 262 troops (OneHanded 126,
+  Athletics 77, Polearm 43, Throwing 31, Bow 18, TwoHanded 16, Riding 3), 297 of them from a troop
   parent and 17 from a `villager_*` parent; the purpose step raises 2 more after it. The design
   counted 141 edges with a drop before the clamp. (Before the villagers went on the curve: 368 on
   268, 50 from villagers.)
-- **Uncarried values over their role value.** After the clamp, 230 values on 203 troops sit over
+- **Uncarried values over their role value.** After the clamp, 229 values on 202 troops sit over
   the role table's value for a weapon the troop does not carry (OneHanded 121, Polearm 43,
-  Throwing 32, Bow 18, TwoHanded 16); the review measured 261 on 208 before the villagers went on
+  Throwing 31, Bow 18, TwoHanded 16); the review measured 261 on 208 before the villagers went on
   the curve. They are the clamp's lifts from a parent that did carry it. One troop's order still
   does not fit its kit, `dg_uruk_skirmisher` (follow-up below).
 - **Bow and Crossbow percents.** They change a written value only on a carried launcher with no
@@ -165,15 +200,15 @@ the code disagreed, these readings were taken:
   is computed from the formula, not seen in a battle.
 - `generate_enlistment_rosters.py --repair-ranks` plans 0 rank repairs; its "weaker kits left" and
   "dropped categories" counts were not compared with trunk's.
-- `fords_troops.xml` (Fords of War, Long Defeat) and `spider_creature.xml` are outside
-  `troops_*.xml` and were not restated (the review round said not to restat the Fords file).
+- `spider_creature.xml` is outside `troops_*.xml` and the second root, and was not restated.
+- The Long Defeat shop test covers only the upgrades in `shop.json`; the wave rosters
+  (`waves.json`) field `fow_` copies without an upgrade and are not compared with anything.
 
 ## Follow-ups
 
 FOLLOW-UP #343: `dg_uruk_skirmisher` holds Bow 92 (its ladder cell) under OneHanded 105, raised by the clamp from its parent `dg_uruk_veteran_warrior`. It is the last `TROOP_SKILL_KIT_MISMATCH` (reason "melee skill above the launcher's ladder cell"; the other reasons count 0), so the code stays a warning. Decide the edge (an exempt respecialising edge, or a lower parent value), then flip `TROOP_SKILL_KIT_MISMATCH_SEVERITY` to error.
 FOLLOW-UP #343: an in-game check at the new level: a tier 10 Mirkwood archer against a tier 8 Gondor line, a Rohan rider on its horse, and a militia defence of a castle.
 FOLLOW-UP #343: the design harness that produced the damage tables (`curve_sim.py`, `render.py`) is only in a session scratchpad. Bring it into `tools/` with a test, or accept that the tables cannot be reproduced from the repo.
-FOLLOW-UP #343: Fords of War copies. `fords_of_war/fords_troops.xml` holds `fow_*` copies of campaign troops at the old skill level, and the Long Defeat shop upgrades `fow_*` copies into campaign troops, so a restated campaign troop can sit under the copy that upgrades into it. Restat the copies on the curve and add `fords_troops.xml` to the upgrade graph the clamp reads; nothing in `rebalance_troops.py` may assume `troops/` is the only troop root.
 FOLLOW-UP #343: `spider_creature.xml` carries its own troop skills at the old level. Decide whether it follows the curve.
 FOLLOW-UP #343: stale skill tables in tools that are not run any more but would undo the restat if run: `tools/generate_gondor_troops.py`, `generate_rhun_troops.py`, `generate_dale_troops.py`, the `apply_*_troop_revamp.py` scripts and `apply_black_numenorean_troops.py`. Make `rebalance_troops.py` their source, or retire them.
 FOLLOW-UP #343: the ranged ladder's #1271 bow damage rows were fitted at the old Bow skills; the top bow's hit fell about 7% ([ranged-ladders.md](../features/ranged-ladders.md)). Decide whether to refit them.

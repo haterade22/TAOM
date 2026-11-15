@@ -362,10 +362,10 @@ one-shot, and a bow's t3 hit can kill a helmet of 8.
 
 ### Current Values
 
-These are the spec's cells. **The live Armory has not been regenerated** with the 2026-11-14 damage
-rows (#1271): its `ranged_ladder.xml` items still carry the old damage, and
-`python tools/generate_ranged_ladder_items.py --verify` reports 142 drifted items until
-`--apply` runs at the Armory apply.
+These are the spec's cells. The live Armory carries them: on 2026-11-15
+`python tools/generate_ranged_ladder_items.py --verify` printed "OK: all 147 ladder items present
+with their speed, damage and accuracy in 1 tree(s)", so the 2026-11-14 damage rows (#1271) are in
+its `ranged_ladder.xml` items.
 
 | Line | Ranks (overall, damage, accuracy) | Class | Cells: tier speed / damage / accuracy / skill |
 |---|---|---|---|
