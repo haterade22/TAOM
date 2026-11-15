@@ -33,6 +33,11 @@ public class WireContractNamesTests
         Layout(typeof(CoopCompatMomentumSnapshot)));
 
     [TestMethod]
+    public void LdRunEnded_Layout() => Assert.AreEqual(
+        "TAOM.CoopCompat.Messages.CoopCompatLdRunEnded: 1=ProtocolVersion, 2=SessionId, 3=Epoch, 4=Reason, 5=Wave, 6=WavesCleared, 7=Kills",
+        Layout(typeof(CoopCompatLdRunEnded)));
+
+    [TestMethod]
     public void EveryContractInTheNamespace_IsPinned()
     {
         var names = typeof(CoopCompatHello).Assembly.GetTypes()
@@ -43,6 +48,7 @@ public class WireContractNamesTests
         {
             "TAOM.CoopCompat.Messages.CoopCompatHello",
             "TAOM.CoopCompat.Messages.CoopCompatHelloReply",
+            "TAOM.CoopCompat.Messages.CoopCompatLdRunEnded",
             "TAOM.CoopCompat.Messages.CoopCompatMomentumSnapshot",
         }, names);
     }
@@ -51,7 +57,7 @@ public class WireContractNamesTests
     public void Contracts_RunTheConstructorAndUseTheRightInterface()
     {
         // The constructor's initializers are what turn an empty repeated field back into an empty array.
-        foreach (var t in new[] { typeof(CoopCompatHello), typeof(CoopCompatHelloReply), typeof(CoopCompatMomentumSnapshot) })
+        foreach (var t in new[] { typeof(CoopCompatHello), typeof(CoopCompatHelloReply), typeof(CoopCompatMomentumSnapshot), typeof(CoopCompatLdRunEnded) })
         {
             var attr = (ProtoContractAttribute)t.GetCustomAttributes(typeof(ProtoContractAttribute), false).Single();
             Assert.IsFalse(attr.SkipConstructor, t.Name);
@@ -60,5 +66,6 @@ public class WireContractNamesTests
         Assert.IsTrue(typeof(ICommand).IsAssignableFrom(typeof(CoopCompatHello)));
         Assert.IsTrue(typeof(IEvent).IsAssignableFrom(typeof(CoopCompatHelloReply)));
         Assert.IsTrue(typeof(IEvent).IsAssignableFrom(typeof(CoopCompatMomentumSnapshot)));
+        Assert.IsTrue(typeof(IEvent).IsAssignableFrom(typeof(CoopCompatLdRunEnded)));
     }
 }

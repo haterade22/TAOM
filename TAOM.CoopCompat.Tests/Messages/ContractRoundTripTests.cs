@@ -56,6 +56,20 @@ public class ContractRoundTripTests
     }
 
     [TestMethod]
+    public void LdRunEnded_RoundTrips()
+    {
+        var back = (CoopCompatLdRunEnded)RoundTrip(ContractSamples.LdRunEnded());
+
+        Assert.AreEqual(1, back.ProtocolVersion);
+        Assert.AreEqual("session-1", back.SessionId);
+        Assert.AreEqual(3, back.Epoch);
+        Assert.AreEqual(2, back.Reason);
+        Assert.AreEqual(7, back.Wave);
+        Assert.AreEqual(6, back.WavesCleared);
+        Assert.AreEqual(412, back.Kills);
+    }
+
+    [TestMethod]
     public void EmptyArrays_RoundTripAsEmpty_NeverNull()
     {
         // protobuf-net writes nothing for an empty repeated field, so only the constructor's
@@ -99,7 +113,7 @@ public class ContractRoundTripTests
             ids.Add(id, type);
         }
 
-        Assert.AreEqual(3, ids.Count);
+        Assert.AreEqual(4, ids.Count);
     }
 
     [TestMethod]

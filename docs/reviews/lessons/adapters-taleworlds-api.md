@@ -1979,3 +1979,10 @@ yotthani's record says `WeaponComponentData.SetDamageFactors` derives the swing 
 - **Why missed:** a formula that appears in a method body reads as its effect, and the decompiled line was real; the dead local only shows when each term is followed to a store.
 - **Prevent:** before a doc or a design states what feeds a stat, follow each term in the method to the store that uses it and quote that line, as the Research-first rule says. Re-read it on each engine bump when a design depends on it.
 - **Source:** yotthani, `yotthani/bannerlord` `docs/balance-sim/app-0.4-checks.md`@c45d8374 lines 62-66; TAOM's IL reading in [item-equipment-model.md](../../reference/engine/item-equipment-model.md).
+
+### A spawn that takes the engine's default team breaks when another module adds an ally team (#1280, 2026-11-15)
+The Long Defeat spawned every defender with `GetAgentBuildDataToSpawnTroop(new BasicBattleAgentOrigin(troop), side, ...)` and set no team. In a BannerlordCoop session, Coop's `CoopPlayerAllyTeamPatch` adds a `DefenderAllyTeam` while its spawn gate is on, and `Mission.GetAgentTeam` returns `PlayerAllyTeam` for any origin that is not under the player's command or in the player's army (v1.5.7 `Mission.cs:5229-5233`; `BasicBattleAgentOrigin.cs:17`, `:19` answer false). So the whole garrison spawned on the ally team, and the host's run counted no defenders.
+- **Why missed:** the helper was right while each side had one team; the design read Coop's session API, not the mission patches its gate turns on.
+- **Prevent:** a spawn that must land on one team sets it on the build data (`.Team(team)`, its colours, and `team.GetFormation(...)`), and the design for a shared mission lists the other module's patches on that mission.
+- **Gate:** `LongDefeatCoopAllyTeamPinTests` pins the explicit team in `Spawn`; the two-client run is the proof.
+- **Source:** [rca-ld-coop-session-2026-11-15.md](../rca-ld-coop-session-2026-11-15.md), F1.

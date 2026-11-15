@@ -72,6 +72,14 @@ port his work (2026-10-21); his two rules hold here: never decide on `ModInforma
   `DedicatedServer.Windows` does not matter. It then adds `MomentumRelayCampaignBehavior` to each
   campaign. If a Coop assembly is missing or changed, it logs one line and is off for that process;
   the campaign goes on.
+- The Long Defeat co-op session (#1280) starts earlier, from `OnBeforeInitialModuleScreenSetAsRoot`
+  (once, behind a latch), because a session starts from the main menu with no campaign.
+  `CoopSessionTransport` wraps Coop's `SessionLauncher` and moves its events to the game thread;
+  `LongDefeatSessionLink` passes on only sessions for TAOM's mod id and run-ended messages of this
+  protocol to TAOM's `ILongDefeatCoopPort`. Against a Coop with no session API (no
+  `Missions.Sessions.dll` in `CoopBinDir`, before BannerlordCoop #4694), the project builds
+  `CoopSessionTransport.NoSessionApi.cs` instead: its `Start` throws, the module logs "sessions off",
+  and the co-op option stays hidden.
 
 ### Component Diagram
 
@@ -96,13 +104,16 @@ settings of its own.
 
 | File | Purpose |
 |------|---------|
-| `CoopCompat/CoopCompatSubModule.cs` | Entry point: at the first campaign start, starts the transport, builds the services and adds the campaign behavior |
+| `CoopCompat/CoopCompatSubModule.cs` | Entry point: at the first campaign start, starts the transport, builds the services and adds the campaign behavior; at the main menu, starts the Long Defeat session link |
 | `CoopCompat/_Module/SubModule.xml` | Module manifest: depends on TAOM and Coop, untagged so it loads on a client and on a dedicated server |
 | `CoopCompat/TAOM.CoopCompat.csproj` | The scanned DLL; deploys both DLLs to the Client and Server bins; skips the build when no Coop is found at `CoopBinDir` |
 | `CoopCompat/Coop/TAOM.CoopCompat.Coop.csproj` | The DLL that holds every Coop-backed type; not named in `SubModule.xml` |
 | `CoopCompat/Coop/Transport/CoopTransport.cs` | The Coop binding |
 | `CoopCompat/Coop/Transport/ICoopTransport.cs` | The seam the services and tests use |
-| `CoopCompat/Coop/Messages/*.cs` | The three wire messages and `CoopCompatProtocol.ProtocolVersion` |
+| `CoopCompat/Coop/Messages/*.cs` | The four wire messages (hello, reply, momentum snapshot, Long Defeat run ended) and `CoopCompatProtocol.ProtocolVersion` |
+| `CoopCompat/Coop/Sessions/CoopSessionTransport.cs` | The binding to Coop's session API (#1280); `CoopSessionTransport.NoSessionApi.cs` is its stub for an older Coop |
+| `CoopCompat/Coop/Sessions/ICoopSessionTransport.cs` | The session seam the link and tests use |
+| `CoopCompat/Sessions/LongDefeatSessionLink.cs` | Joins TAOM's Long Defeat co-op port to the session transport |
 | `CoopCompat/Handshake/SettingsHandshakeService.cs` | Build and settings handshake |
 | `CoopCompat/Handshake/BuildIdentity.cs` | Protocol, TAOM build text and MVIDs of this peer |
 | `CoopCompat/Handshake/InformationManagerSettingsNotice.cs` | The two player notices |

@@ -5121,3 +5121,9 @@ The Kit's sprite generation re-saved all 13 GUI `_tex.tpac` files. I copied back
 - **Why missed:** I chose the files from what their sources should change, not from a diff of the output folders; no gate compares the repo's GauntletUI packages with the install's.
 - **Prevent:** after any Kit generation, run its sync tool (`sync_sprite_bake.ps1 -WhatIf`, then for real) and diff the output folders; a doc for a workflow that ends in a generator names that tool in its own steps.
 - **Source:** [rca-banner-sprite-regen-2026-11-14.md](../rca-banner-sprite-regen-2026-11-14.md), finding 1.
+
+### Build with the defaults too when a change compiles against a newer dependency build (#1280, 2026-11-15)
+`TAOM.CoopCompat.Coop` gained code against Coop's session API, which only a session Coop build has. Every build and test in the slice passed `-p:CoopBinDir` for that build, so nobody saw that the default build (the installed Coop, as `build.ps1` and a contributor use it) failed with CS0234.
+- **Why missed:** the override that made the work possible was on every command, including the verify runs.
+- **Prevent:** before review, build once with no override. When the code needs a newer API, the project picks a stub by a marker file (`Exists()`), and both builds run in `/verify`.
+- **Source:** [rca-ld-coop-session-2026-11-15.md](../rca-ld-coop-session-2026-11-15.md), F2.

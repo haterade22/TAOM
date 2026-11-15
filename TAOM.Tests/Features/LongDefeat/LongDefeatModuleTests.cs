@@ -97,8 +97,9 @@ public class LongDefeatModuleTests
         module.OnPhase(ApplyPhase.MainMenu, container);
         module.OnPhase(ApplyPhase.MainMenu, container);
 
-        Assert.AreEqual(1, menu.AddCalls);
+        Assert.AreEqual(2, menu.AddCalls, "the solo and the co-op option, once each");
         Assert.IsTrue(menu.HasOption("TaomLongDefeat"));
+        Assert.IsTrue(menu.HasOption("TaomLongDefeatCoop"));
     }
 
     [TestMethod]

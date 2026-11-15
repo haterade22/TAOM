@@ -33,5 +33,16 @@ internal static class ContractSamples
         Values = new[] { "1", "2" },
     };
 
-    public static IMessage[] All() => new IMessage[] { Hello(), Reply(), Snapshot() };
+    public static CoopCompatLdRunEnded LdRunEnded() => new CoopCompatLdRunEnded
+    {
+        ProtocolVersion = 1,
+        SessionId = "session-1",
+        Epoch = 3,
+        Reason = 2,
+        Wave = 7,
+        WavesCleared = 6,
+        Kills = 412,
+    };
+
+    public static IMessage[] All() => new IMessage[] { Hello(), Reply(), Snapshot(), LdRunEnded() };
 }

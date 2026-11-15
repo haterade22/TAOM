@@ -31,6 +31,12 @@ internal interface ILongDefeatMenuAdapter
     /// <summary>Shows a notice the player closes.</summary>
     void Notify(string message);
 
+    /// <summary>Shows a notice the player closes, with each value set as a text variable of the message.</summary>
+    void Notify(string message, IReadOnlyDictionary<string, string> values);
+
+    /// <summary>Asks for a line of text with an OK and a Cancel button; <paramref name="onDone"/> runs only on OK.</summary>
+    void AskText(string title, string text, Action<string> onDone);
+
     /// <summary>Ends the running game and shows the main menu: <c>MBGameManager.EndGame</c>, what the escape menu's "Exit to Main Menu" calls.</summary>
     void EndGame();
 }
