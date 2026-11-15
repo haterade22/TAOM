@@ -465,7 +465,8 @@ and so did the figures: read the next section for the plan as it stands.
 
 `python tools/restat_melee_blades.py` and `--limits-only` print the plan counts; the rest is a one-off in-memory
 simulation that scales each attack of a plan's weapons by the plan's factor ratio. Counts below are from the
-final run on 2026-11-14, after the deep review fixes.
+final run on 2026-11-14, after the deep review fixes. "Today" in this section means the Armory before the
+restat of the same day; the restat has since been applied (see "Not done, and known problems").
 
 - Full restat: 203 blades (55 raise a factor, 148 only lower) reaching 264 weapons and 1448 troop slots,
   because an unworn plan now lists every weapon on its blade. `--limits-only`: 69 blades reaching 98 weapons
@@ -492,20 +493,23 @@ final run on 2026-11-14, after the deep review fixes.
   803 weapon slots stay unresolved, 456 of them because every in-band candidate is over the carrier's tier
   limit.
 - `generate_placeholder_weapons.py`: priced against the Armory as the restat leaves it, all 16 placeholders sit
-  inside the tier limit of every troop that will carry them. Against today's unrestated Armory the dry run
-  stops at `taom_ph_gondor_spear_b_t5`, whose donor already sits at the cap, so the tool has to run after the
-  restat is applied.
-- `python tools/validate_moduledata.py` reports 546 `MELEE_LADDER_INVERSION` and 171 `MELEE_BLOW_CEILING`
-  warnings against the unrestated Armory (2026-11-14); 11 of the 171 name a `taom_ph_` placeholder, which the
-  gate prices too. The gate builds its rows with the same `craft_key` and `dominant_flags` calls as the
-  restat.
+  inside the tier limit of every troop that will carry them. Against the Armory before the restat the dry run
+  stopped at `taom_ph_gondor_spear_b_t5`, whose donor already sat at the cap, so the tool runs after the
+  restat; it did, on 2026-11-14.
+- `python tools/validate_moduledata.py` reported 546 `MELEE_LADDER_INVERSION` and 171 `MELEE_BLOW_CEILING`
+  warnings against the Armory before the restat (2026-11-14); 11 of the 171 named a `taom_ph_` placeholder,
+  which the gate prices too. The gate builds its rows with the same `craft_key` and `dominant_flags` calls as
+  the restat. After the restat and the rest of the apply the same run reports 318 `MELEE_LADDER_INVERSION`
+  and 8 `MELEE_BLOW_CEILING` (the blades the Erebor one handed and two handed axes share).
 
 ### Not done, and known problems
 
-- **The Armory blades have NOT been restated.** Every number above is a dry run or an in-memory simulation.
-  `fix_melee_ladder.py`, `generate_career_kits.py`, `wire_starter_kit_rosters.py`,
-  `generate_starter_kit.py` and `generate_placeholder_weapons.py --apply` were not run after it. The order
-  of the apply is in [armor-balance.md](./armor-balance.md#the-apply-sequence-2026-11-14-1271).
+- **The Armory blades were restated on 2026-11-14; the troop swaps were not made.** The restat wrote 203 blade
+  pieces and a second run plans 0. The counts above are the dry runs and simulations made before it.
+  `generate_career_kits.py`, `generate_starter_kit.py` and `generate_placeholder_weapons.py` ran after it.
+  `fix_melee_ladder.py` did not: it breaks the weapon category rule ("A troop keeps its weapon category", below), so the 318
+  `MELEE_LADDER_INVERSION` warnings it was meant to remove stay. The order of the apply and its results are in
+  [armor-balance.md](./armor-balance.md#the-apply-sequence-2026-11-14-1271).
 - A blade is priced for its lowest wearer and held to that wearer's tier limit, so a blade worn across more
   than two tiers leaves its upper wearers light. 62 of the 204 worn non-hero blades span more than two tiers
   (`wm_mirkwood_spear_a01_blade` T2 to T10, `wm_gondor_sword_a03_blade` T3 to T10). The cure is a cloned blade
@@ -764,6 +768,23 @@ The second constraint is the **name-versus-id** question. The numeral lines are 
 display names (`[Mordor] Uruk Sword III`) while the ids run on letters (`sm_uruk_sword_c`).
 Section 3 lists the lines where the two orders already disagree, which have to be resolved
 before anything automated keys on either.
+
+## A troop keeps its weapon category
+
+The maintainer's rule (2026-11-14): "Extremely important, every troop was made for a specific category,
+sword and shield, two handed sword or axe, spear and shield, spear that lances, polearms, pikes, bows."
+
+A balance pass changes a weapon's numbers, or swaps it for a weapon of the same category. The categories
+are: one handed weapon with shield, two handed sword, two handed axe or mace, spear with shield,
+couchable lance, swinging polearm, pike, bow and crossbow. A swap never crosses categories and never
+moves a troop between a shield kit and a two handed one. The rule binds every tool that fits a troop to a
+number, not only the melee ladder.
+
+`fix_melee_ladder.py` does not hold this rule yet. On 2026-11-14 its plan of 176 swaps across 162 troops
+(against the restated Armory) replaced poleaxes with short spears, for example `rhudaur_lord_of_the_angle`
+from `numenorean_poleaxe_heavy` at 92 DPS to `dunland_caerdh_short_spear_e` at 33, so it was not applied.
+Do not run it with `--apply` until it picks only same-category candidates and never lowers an
+under-armed troop's damage.
 
 ## Key Files
 

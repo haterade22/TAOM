@@ -61,7 +61,8 @@ from `tools/` prints any cell, and the other bands are in the subsection of 2026
 
 Bands: light 0.16, medium 0.35, heavy 0.68, elite 1.0, lord 1.07 of the elite value, rounded half up
 (the head has its own light and heavy bands, 0.24 and 0.82: `SLOT_BAND_RATIO`); only lord kit and
-named hero kit (`HERO_NAMES`, `EXCLUDE_ID_SUBSTRINGS`) sit above a kingdom's elite band, and the
+named hero kit (`HERO_NAMES`, `EXCLUDE_ID_SUBSTRINGS`) sit above a kingdom's elite band, apart from the
+Lothlorien Mallorn kit (see the generator band fix below), and the
 writer lowers the hero kit to the lord band (2026-11-14, below). The band an item sits in is the band of its LOWEST battle-set troop
 wearer (`level_to_band`: light to 13, medium 14 to 18, heavy 19 to 30, elite 31 up), decided by
 `--tier-source roster-first`; an id keyword decides only for kit no troop wears, and kit with
@@ -212,8 +213,9 @@ The goals the numbers serve (maintainer, 2026-11-14), all checked in tests or by
 - R3b: the lord band is at most 5 points over the elite band per region, on every kingdom (pinned).
 - R3c: no worn set sums above vanilla's best troop plus 10, region by region (head 64, body 77,
   arm 69, leg 59): `rebalance_armor.WORN_ARMOUR_CEILING`. The maintainer decided it is an error; it
-  ships as a warning until the Armory apply, because the unapplied Armory breaks it on 367 troops and
-  an error would block every ModuleData commit. A medium, heavy or elite troop
+  ships as a warning until every contributor has the rewritten Armory. The validator reads the Armory
+  installed on each machine, so an error would block the commits of a contributor who still has the old
+  one (which broke it on 367 troops before the apply of 2026-11-14). A medium, heavy or elite troop
   whose set carries less than the band floor (head and body 8, 20, 30 for medium, heavy, elite;
   light has none) is a warning, `WORN_ARMOUR_FLOOR`: a helmetless elite in a light chest is the case
   it names. The validator's gates of the same names are in
@@ -280,11 +282,12 @@ are now clamped as hero kit instead of restated. Under `--tier-source roster-fir
   (it would hold the light and medium pieces at their old values) or `--keep-materials` (it freezes
   the loot tables) for this apply.
 
-Status: nothing here is applied to the live Armory. The 2026-11-14 dry run
+Status: applied to the live Armory on 2026-11-14 (see "Applied on 2026-11-14" under the apply
+sequence). The dry run before it
 (`python tools/rebalance_armor.py --dry-run --all --tier-source roster-first --keep-weights
 --keep-material-type`, which prints the totals) judged 2,945 items and planned 2,739 changes, with 97
 generator-owned items left to `generate_lothlorien_armor.py` and `generate_snow_orc_armor.py`
-(`--check` exits 1 on both until they are applied). 217 of the planned changes raise a stat (66
+(`--check` exited 1 on both until they were applied). 217 of the planned changes raise a stat (66
 heavy, 151 elite): 213 helmets, because the head ratio rose to 1.04 and a helmet's band value can
 pass its old one, and the four Golden Flower bodies `gf_body_1` to `gf_body_4`. 103 of the 217 are
 unworn merchandise priced by their id keyword, and none is a clamp. A copy of the live
@@ -292,10 +295,11 @@ unworn merchandise priced by their id keyword, and none is a clamp. A copy of th
 second apply wrote 0, no `weight` attribute text changed, no clamp raised a stat and no hero-only item
 rose. The live Armory is unversioned: back it up before an apply, and land the in-repo gates with it.
 
-Counts against the unapplied Armory on 2026-11-14 (`python tools/validate_moduledata.py`):
+Counts against the Armory before the apply, 2026-11-14 (`python tools/validate_moduledata.py`):
 `WORN_ARMOUR_CEILING` 367 troops, `WORN_ARMOUR_FLOOR` 42, `CROSS_CULTURE_ARMOUR_INVERSION` 7,
-`UPGRADE_ARMOUR_REGRESSION` 4. The dry run of the apply leaves 0 ceiling breaches
-and 203 floor troops, because the light and medium bands fall. On the copy, the
+`UPGRADE_ARMOUR_REGRESSION` 4. The dry run of the apply predicted 0 ceiling breaches
+and 203 floor troops, because the light and medium bands fall; the write measured 196 floor troops
+before the generator band fix (see "Applied on 2026-11-14"). On the copy, the
 validator's `_worn_armour_limits` read 12 ceiling and 188 floor troops after the armour apply alone
 and 0 and 203 once the two generators ran, and `fix_upgrade_armour_regressions.py` reported 14 edges
 that lower armour against 4 now (0 left after its planned fixes).
@@ -323,8 +327,9 @@ Item price follows armour through `DefaultItemValueModel` (`TaleWorlds.Core.Defa
 `(1.2 head + body + leg + arm) x type x 0.1 - 0.4`, and the value is
 `base x 2.75^Tierf x (1 + 0.2 x (appearance - 1)) + 100 x max(0, appearance - 1)`, with Tierf clamped
 to -1..7.5 and a base of 120 for a chest, bracer or greaves and 100 for the other armour. The two
-appearance terms are 0 at appearance 1, the case the prices below assume, so the lower bands get
-cheap. A Gondor chest before and after the plan: light `sk_gd_ano_chainmail_half_a` (23 to 7) 820 to
+appearance terms are 0 at appearance 1, but the prices below use each item's own appearance (at
+appearance 1 the four "after" prices would be 162, 403, 4,579 and 34,629). Either way the lower bands
+get cheap. A Gondor chest before and after the plan: light `sk_gd_ano_chainmail_half_a` (23 to 7) 820 to
 162, medium `sk_gd_ano_chainmail_full_a` (36 and arm 11, to 16 and 0) 13,214 to 765, heavy
 `sk_gd_los_inf_chest_heavy_a` (48 and 16, to 31 and 9) 83,341 to 7,626, elite
 `sk_gd_ano_chainmail_full_b` (57 and 17, to 46 and 14) 200,019 to 48,681. The formula is applied to the
@@ -384,7 +389,9 @@ plan by hand, not measured in game. Pricing is not re-balanced here, and these r
 
 ### The apply sequence (2026-11-14, #1271)
 
-Nothing below has run. **LIVE ARMORY** marks a command that writes the unversioned install
+This sequence ran on 2026-11-14, with three exceptions and the results listed under "Applied on
+2026-11-14" after step 18; it stays as the procedure to repeat after an engine or art change.
+**LIVE ARMORY** marks a command that writes the unversioned install
 (`E:/Steam/steamapps/common/Mount & Blade II Bannerlord/Modules/LOTRLOME_Armory`); **REPO** marks one
 that writes only this checkout. Every command runs from the repo root, and every writer is run as a
 dry run, report or `--check` first. The `lotraom-assets` mirror (`E:/repos/lotraom-assets/v1.5`, not
@@ -431,8 +438,7 @@ close the game, the launcher and the dedicated server.
       the swapped troop ids.
    2. Carry each swap into the generator's table. An in-memory run of steps 4 to 6 changed
       `cardolan_levy`'s two body alternatives from `sk_gd_anf_inf_chainmail_a` and `_b` to
-      `gondor_noble_jerkin_b`, and `LIGHT_FOOT` at `tools/generate_cardolan_troops.py:83` still names
-      the old pair.
+      `gondor_noble_jerkin_b`, which `LIGHT_FOOT` in `tools/generate_cardolan_troops.py` now names.
    3. Regenerate: `python tools/generate_<realm>_troops.py --apply`, then `--check` again. Lorien:
       `python tools/generate_lothlorien_troops.py --apply`, which carries the placed skills over; it has
       no `--check`, and `test_generated_files.py` in the next step checks it.
@@ -500,8 +506,11 @@ close the game, the launcher and the dedicated server.
     `Main/_Module/ModuleData/equipmentsets/taom_career_starting_equipment.xml`,
     `taom_char_creation_equipment.xml`, `taom_player_start_vanilla_override.xml` and
     `taom_enlistment_equipment.xml`, `docs/reference/ranged-troops.html`, and
-    `tools/translation_cache/*` if step 14 changed it. In the same commit, make `WORN_ARMOUR_CEILING`
-    an error: set the constant `WORN_ARMOUR_CEILING_SEVERITY` in `tools/taom_schema.py` to
+    `tools/translation_cache/*` if step 14 changed it. **The severity flip waits** (decided at the
+    apply of 2026-11-14): the validator reads the Armory installed on each machine, so an ERROR would
+    block every commit of a contributor who still has the old Armory. Flip it in its own commit once
+    the rewritten Armory has reached every contributor and the mirror. To make `WORN_ARMOUR_CEILING`
+    an error then: set the constant `WORN_ARMOUR_CEILING_SEVERITY` in `tools/taom_schema.py` to
     `Severity.ERROR` (the ceiling and its `(tooling)` issue both read it), flip the pin in
     `test_the_ceiling_and_its_tooling_failure_share_one_severity_constant`
     (`tools/tests/test_validate_moduledata.py`) to match, and add `--code WORN_ARMOUR_CEILING` to
@@ -515,6 +524,72 @@ close the game, the launcher and the dedicated server.
     armour values come from the item XML on each machine, so a mixed set disagrees about every hit.
     Keep the E: backup of step 1 until the in-game checks pass.
 18. **The in-game checks** below are owed (label `triage-needs-ingame`).
+
+#### Applied on 2026-11-14
+
+Steps 1 to 15 ran against the live Armory on 2026-11-14, except the items under "Not run". Steps 16
+and 17 (the second commit and its release note) are not done by an apply: the commit and the release
+steps follow. The generator band fix is applied too (last paragraph).
+
+- Step 4, the armour restat: 2,739 items written in 83 files, plus 2 more files in the repair loop;
+  the dry run after it plans 0.
+- Step 5, the Lothlorien and Snow Orc generators, applied, then re-run with the generator band fix
+  (last paragraph).
+- Step 6, `fix_upgrade_armour_regressions.py --apply`: 154 equipment lines changed across 18 troops in 7
+  troop files when it ran. After the Umbar file was restored (see "Not run"), the net diff
+  (`git diff --numstat` on `Main/_Module/ModuleData/troops`) is 146 changed equipment lines across 17
+  troops in 6 files; 0 upgrade edges left that lower armour.
+- Step 8, `armour_classes.xml` regenerated.
+- Step 9, `restat_melee_blades.py --apply`: 203 blade pieces; a second run plans 0.
+- Steps 11, 12 and 14: the career kits, the starter kit, the placeholder weapons and 147 ranged ladder
+  items.
+- The validator after the write (`python tools/validate_moduledata.py`): 0 errors, `WORN_ARMOUR_CEILING`
+  0, `UPGRADE_ARMOUR_REGRESSION` 0, `ARMOUR_CLASS_TABLE_DRIFT` 0, `MELEE_BLOW_CEILING` 8 (the blades that
+  the one handed and two handed Erebor axes share), `WORN_ARMOUR_FLOOR` 196 (183 after the generator band
+  fix) and `MELEE_LADDER_INVERSION` 318.
+
+Not run, and why:
+
+- `fix_melee_ladder.py` (step 9). Its plan replaced poleaxes with short spears, which moves a troop to
+  another weapon category; see "A troop keeps its weapon category" in
+  [melee-damage-model.md](./melee-damage-model.md). The 318 ladder inversions stay until the tool
+  holds the category.
+- `generate_starter_armor.py` (step 11). It overwrites the hand fixes in `harad/starter_armors.xml`,
+  and Gondor's starter file needs a hand edit first. The starter armour literals are still the old
+  ones.
+- `generate_enlistment_rosters.py --apply` (step 11). A full run rewrites the `enlist_<culture>_*`
+  rosters that `promote_borrowed_cultures.py` owns for the eight promoted cultures, and their sync
+  checks then fail, so the run was reverted. The enlistment kits keep their old items: 14 ranks now
+  give a weaker kit than the rank below. They need a reseed per culture (`--culture` with
+  `--reseed`), then the promoted cultures regenerated.
+- Also not applied: the repair of the Umbar edge `umbar_elite_root000` to `umbar_elite_root0000`.
+  The parent wears uncurved vanilla Aserai armour, and the repair would hand the same pieces to the
+  child, above the Umbar curve. One `UPGRADE_ARMOUR_REGRESSION` warning stays for it.
+- The `WORN_ARMOUR_CEILING` error flip (step 16). The validator reads the Armory installed on each
+  machine, so an error would block the commits of a contributor who still has the old Armory.
+
+Backup. `E:/Backups/LOTRLOME_Armory-ModuleData-pre-rebalance-20261114` holds the whole `ModuleData` of
+the Armory from before the write (step 1 planned a full module copy; this one is the data only). The
+tools also left 102 `*.bak-*` files beside the live XML files (counted with `find` in the live Armory
+`ModuleData` on 2026-11-15). The engine does not load them, and they
+must be swept before a mirror sync or a release package: `pwsh tools/sweep_module_backups.ps1` is the
+dry run, and `pwsh tools/sweep_module_backups.ps1 -Apply` moves them into a dated quarantine with a
+SHA256 manifest.
+
+Generator band fix, applied to the live Armory. The first generator run priced
+each of the 97 generator-owned pieces by the tier word in its id, so 47 of the 79 worn pieces sat below
+their wearers' band: `sk_ll_rg_helmet_med_b` was priced medium (17) while its lowest wearer is level
+31 (elite, 49). Both generators now price a worn piece at the band of its lowest wearer, as a restat
+does, and an unworn piece by its id word; the Mallorn kit stays one band above either, and the
+appearance stays with the id word. Both generators' `--check` pass on the live Armory and
+`armour_classes.xml` is regenerated (one row, `sk_ll_ml_pauld_med_a`, changed its `next`). The apply
+changed 55 items (50 Lothlorien, 5 Snow Orc), no unworn piece changed, `WORN_ARMOUR_FLOOR` went from
+196 to 183 and `WORN_ARMOUR_CEILING` stays 0. No troop passes a ceiling.
+
+The Mallorn exception to the lord band: a worn Mallorn piece stays one band above its wearers' band,
+by design. Three level 46 Lothlorien troops, `lorien_gl_highblade`, `lorien_gl_mallorn_defender` and
+`lorien_gl_bowmaster`, wear lord-band values (chest 50 against the Lothlorien cap of 47). Each sums to
+52 head, 64 body, 37 arm and 43 leg, inside every worn limit.
 
 ### The two-tier invariant (modifier-aware curve, 2026-07-31)
 
@@ -1014,9 +1089,9 @@ The kingdom-cap curve (#583) has `tools/tests/test_kingdom_caps.py`: the cap tab
 
 ## How to verify in game
 
-Not verified in game: the 2026-11-14 bands, secondaries, hero clamps and loot tables (#1271) are NOT in
-the live Armory yet. After the apply sequence above and a full restart (item XML loads at launch), each
-step pairs a check a tool can make with what only a person can see.
+Not verified in game: the 2026-11-14 bands, secondaries, hero clamps and loot tables (#1271) are in the
+live Armory since the apply of 2026-11-14, but nobody has played them. After a full restart (item XML
+loads at launch), each step pairs a check a tool can make with what only a person can see.
 
 1. Gondor elite (tier 6 or more) armour. Tool: after the apply, `python tools/analyze_kingdom_armour.py --stdout`
    reads the live Armory and its "Worn floor and ceiling" section lists no troop over a ceiling (head

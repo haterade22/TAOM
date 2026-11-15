@@ -9,13 +9,19 @@ Four kits, one id family each (sk_ll_<kit>_<slot>_<tier>_<variant>):
 - gl  Galadhrim: the noble line (T6-T9). Helmet variant a = open (infantry), b = hood (archers),
       c = hood and mask (blades).
 - ml  Mallorn: the Galadhrim kit one step up (KEYforce: "ML medium is roughly GL heavy"), so an
-      ML piece is priced one band above its id token. ML `_elite_` chests and helmets are for lords.
+      ML piece is priced one band above the band it would otherwise get. ML `_elite_` chests and
+      helmets are for lords.
 - gl_galad: Galadriel's own pieces (chest, pauldron, bracer, crown), worn by her only. The display
   name carries her name, so rebalance_armor.is_excluded keeps them off the curve.
 
 Values come from rebalance_armor.calculate_stats on the kingdom-cap curve (KINGDOM_CAPS
-'lothlorien') at the band of the id token, the same numbers a restat writes for a piece whose
-lowest wearer sits in that band. clo_* meshes in the pack are cloth overlays and get no item.
+'lothlorien'). A piece a troop wears is priced at the band of its lowest wearer, from
+tools/data/armor_roster_tiers.json (rebalance_armor.worn_band), the same number a restat writes;
+a piece nobody wears is priced at the band its id token names. Mallorn goes one band above that
+(lord stays lord). The appearance follows the id token (one step up for Mallorn), not the price,
+because a restat leaves the appearance alone and the token names the art tier. Run
+derive_armor_tiers.py before this generator when troops changed. clo_* meshes in the pack are
+cloth overlays and get no item.
 
 Usage:
     python tools/generate_lothlorien_armor.py              # dry run: prints the item table
@@ -38,8 +44,8 @@ CULTURE_ATTR = "Culture.lothlorien"
 TAG = "[Lothlórien]"
 
 KIT_NAMES = {"rg": "Lórien", "mw": "Marchwarden", "gl": "Galadhrim", "ml": "Mallorn"}
-# A Mallorn piece prices one band above its token (see the docstring); lord prices as elite.
-ML_BAND_UP = {"medium": "heavy", "heavy": "elite", "elite": "lord"}
+# A Mallorn piece prices one band above the band it would otherwise get (see the docstring).
+ML_BAND_UP = {"light": "medium", "medium": "heavy", "heavy": "elite", "elite": "lord", "lord": "lord"}
 
 # (item id, slot, display stem). Slot keys follow rebalance_armor.SLOT_TYPES.
 PIECES = [
@@ -148,11 +154,31 @@ def kit_of(item_id):
     return item_id.split("_")[2]
 
 
-def priced_band(item_id):
+_ROSTER = None
+
+
+def roster_records():
+    """The derive_armor_tiers records, loaded once; a missing file stops the run rather than pricing by id word."""
+    global _ROSTER
+    if _ROSTER is None:
+        _ROSTER, _ = ra.load_roster_records()
+        if _ROSTER is None:
+            raise SystemExit("tools/data/armor_roster_tiers.json is missing; run tools/derive_armor_tiers.py first")
+    return _ROSTER
+
+
+def appearance_band(item_id):
+    """The band the id token names, one step up for Mallorn: the art tier, which the appearance follows."""
     token = ra.mesh_tier_of(item_id)
-    if kit_of(item_id) == "ml":
-        return ML_BAND_UP[token]
-    return token
+    return ML_BAND_UP[token] if kit_of(item_id) == "ml" else token
+
+
+def priced_band(item_id, records=None):
+    """The band the stats use: the lowest wearer's band, else the id token's; Mallorn one band above."""
+    worn = ra.worn_band((roster_records() if records is None else records).get(item_id))
+    if worn is None:
+        return appearance_band(item_id)
+    return ML_BAND_UP[worn] if kit_of(item_id) == "ml" else worn
 
 
 def stats_for(item_id, slot, band):
@@ -211,14 +237,14 @@ def item_xml(item_id, slot, name, st, appearance, merchandise=True):
     )
 
 
-def build():
+def build(records=None):
     by_file = {slot: [] for slot in FILES}
     rows = []
     for item_id, slot, stem in PIECES:
-        band = priced_band(item_id)
+        band = priced_band(item_id, records)
         st = stats_for(item_id, slot, band)
         name = f"{KIT_NAMES[kit_of(item_id)]} {stem}"
-        by_file[slot].append(item_xml(item_id, slot, name, st, APPEARANCE[band], merchandise=not lord_only(item_id)))
+        by_file[slot].append(item_xml(item_id, slot, name, st, APPEARANCE[appearance_band(item_id)], merchandise=not lord_only(item_id)))
         rows.append((item_id, slot, band, {k: v for k, v in st.items() if k.endswith("_armor")}, st["weight"]))
     for item_id, slot, name in GALADRIEL:
         st = stats_for(item_id, slot, "lord")

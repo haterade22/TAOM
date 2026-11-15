@@ -2700,7 +2700,7 @@
                     id="Item.sk_dwarf_erebor_pauldron_plate_cape_heavy_f" />
                 <equipment
                     slot="Body"
-                    id="Item.sk_dwarf_erebor_chest_plate_heavy_b" />
+                    id="Item.sk_dwarf_erebor_chest_plate_elite_a" />
                 <equipment
                     slot="Gloves"
                     id="Item.sk_dwarf_erebor_bracers_elite_d" />
@@ -2729,7 +2729,7 @@
                     id="Item.sk_dwarf_erebor_pauldron_plate_cape_elite_a" />
                 <equipment
                     slot="Body"
-                    id="Item.sk_dwarf_erebor_chest_plate_heavy_b" />
+                    id="Item.sk_dwarf_erebor_chest_plate_elite_a" />
                 <equipment
                     slot="Gloves"
                     id="Item.sk_dwarf_erebor_bracers_elite_e" />
@@ -2758,7 +2758,7 @@
                     id="Item.sk_dwarf_erebor_pauldron_plate_cape_elite_b" />
                 <equipment
                     slot="Body"
-                    id="Item.sk_dwarf_erebor_chest_plate_heavy_b" />
+                    id="Item.sk_dwarf_erebor_chest_plate_elite_a" />
                 <equipment
                     slot="Gloves"
                     id="Item.sk_dwarf_erebor_bracers_elite_f" />

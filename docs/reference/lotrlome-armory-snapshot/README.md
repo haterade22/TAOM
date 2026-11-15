@@ -475,7 +475,7 @@ TAOM installed the ModuleData half:
 
 | File | How |
 |---|---|
-| `ModuleData/LOTRLOME_crafting_pieces.xml`, `LOTRLOME_items/harad/body_armors.xml`, `crafting_templates.xslt` | his files verbatim (live equalled his parent revision) |
+| `ModuleData/LOTRLOME_crafting_pieces.xml`, `LOTRLOME_items/harad/body_armors.xml`, `crafting_templates.xslt` | his files verbatim (live equalled his parent revision); since 2026-11-14 the first two carry the #1271 rewrite (see the APPLIED EDIT for it below) |
 | `ModuleData/LOTRLOME_items/harad/weapons.xml`, `weapon_descriptions.xslt` | three-way merge from his parent `85b201c17`: his additions plus the three #805 edits above (longbows off the shelves, the `TAOM-HARAD-COUCH` block). Live is CRLF and his blobs LF, so merge on LF and write CRLF, or the whole file reads as one conflict |
 | `Languages/loc_harad.xml` | English rows for his 6 weapon and 14 barding and saddle names, under a `TAOM: English rows for KEYforce's lotraom-assets 03320a65` comment |
 | `Languages/loc_LOTRLOME_crafting_pieces.xml` | English rows for his 12 javelin and mace pieces, under the same comment |
@@ -493,6 +493,22 @@ TAOM installed the ModuleData half:
   `starter_kit.xml` names.
 - **Replay after a drop:** as for #805 above (the English rows by `register_armory_names.py --apply --prefix <his ids>`), then move the starter-kit markers in `OneHandedPolearm_JavelinAlternative`
   again if his file still wraps the whole template; the first test names the six pieces until it is done.
+
+### ⚠️ APPLIED EDIT: the #1271 weapon and armour rebalance (2026-11-14)
+
+The #1271 tools rewrote armour stats, modifier groups and blade factors in the live Armory on 2026-11-14: the
+armour restat wrote 2,739 items in 83 files (plus 2 more in the repair loop), `LOTRLOME_crafting_pieces.xml`
+took new `damage_factor` values on 203 blade pieces, and the Lothlorien and Snow Orc generators, the ranged
+ladder tools and the starter kit tools wrote their own items. `LOTRLOME_crafting_pieces.xml` and the Harad
+`body_armors.xml`, listed above as KEYforce's verbatim files, are no longer verbatim.
+
+- **Replay after a drop:** the tools re-apply the numbers, in the order of "The apply sequence" in
+  [armor-balance.md](../../features/armor-balance.md) (`rebalance_armor.py` on the roster tiers, then
+  `restat_melee_blades.py`, then the generators). Dry run each first; a new KEYforce file reverts its
+  values until they run.
+- **Backups:** `E:/Backups/LOTRLOME_Armory-ModuleData-pre-rebalance-20261114` holds the whole `ModuleData` from
+  before the write, and 92 `*.bak-*` files sit beside the live XML files. The engine does not load them; sweep
+  them (`pwsh tools/sweep_module_backups.ps1`, then `-Apply`) before a mirror sync or a release package.
 
 ### ⚠️ APPLIED EDIT: shield-compatible polearms registered under `OneHandedPolearm` (2026-08-10, extended 2026-08-20)
 

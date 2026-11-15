@@ -379,7 +379,8 @@ def _check_tier_inversions(items, slot_type):
         comparison against it meaningless.
 
         Roster 'lord' collapses to 'elite' because that is what rebalance_armor actually writes
-        (troops cap at elite; the lord row is hero-only). Comparing against a 'lord' label that
+        (troops cap at elite; the lord row is hero-only, except the Lothlorien generator's Mallorn
+        kit, by design one band above its wearers). Comparing against a 'lord' label that
         carries elite STATS would report a one-tier gap as a two-tier violation.
         """
         tier = it.get('roster_tier') or it['tier']

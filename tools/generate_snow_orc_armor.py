@@ -9,8 +9,12 @@ The pack holds chests and cape pauldrons only (lotraom-assets tools/gundabad_arm
 - arc_chest_*       archers and wolf riders (light/medium/heavy); arc_tunic_* = the T1 recruit
 - inf_pauld_cape_*  cape pauldrons for infantry and wolf riders (light/medium/heavy)
 
-Values come from rebalance_armor.calculate_stats on the kingdom-cap curve (KINGDOM_CAPS 'gundabad')
-at the band of the id token. The tunic has no tier token and prices as light. The kit has its own
+Values come from rebalance_armor.calculate_stats on the kingdom-cap curve (KINGDOM_CAPS 'gundabad').
+A piece a troop wears is priced at the band of its lowest wearer, from tools/data/armor_roster_tiers.json
+(rebalance_armor.worn_band), the same number a restat writes; a piece nobody wears is priced at the band
+its id token names. The tunic has no tier token and prices as light when unworn. The appearance follows
+the id token, not the price, because a restat leaves the appearance alone and the token names the art
+tier. Run derive_armor_tiers.py before this generator when troops changed. The kit has its own
 folder with the standard slot files (the curve, derive_armor_tiers and generate_armour_classes read
 only those), and rebalance_armor.FOLDER_DEFAULT_LINE prices that folder on Gundabad's cap. The
 English names sit in loc_gundabad.xml.
@@ -66,12 +70,32 @@ SUBTYPE = {"body": "body_armor", "shoulder": None}
 APPEARANCE = {"light": 2, "medium": 3, "heavy": 4}
 
 
-def band_of(item_id):
+_ROSTER = None
+
+
+def roster_records():
+    """The derive_armor_tiers records, loaded once; a missing file stops the run rather than pricing by id word."""
+    global _ROSTER
+    if _ROSTER is None:
+        _ROSTER, _ = ra.load_roster_records()
+        if _ROSTER is None:
+            raise SystemExit("tools/data/armor_roster_tiers.json is missing; run tools/derive_armor_tiers.py first")
+    return _ROSTER
+
+
+def appearance_band(item_id):
+    """The band the id token names: the art tier, which the appearance follows."""
     return ra.mesh_tier_of(item_id) or "light"
 
 
-def stats_for(item_id, slot):
-    return ra.calculate_stats(band_of(item_id), slot, CULTURE_KEY, item_id=item_id)
+def band_of(item_id, records=None):
+    """The band the stats use: the lowest wearer's band, else the id token's."""
+    worn = ra.worn_band((roster_records() if records is None else records).get(item_id))
+    return worn or appearance_band(item_id)
+
+
+def stats_for(item_id, slot, records=None):
+    return ra.calculate_stats(band_of(item_id, records), slot, CULTURE_KEY, item_id=item_id)
 
 
 def armor_attrs(slot, st):
@@ -92,7 +116,7 @@ def item_xml(item_id, slot, name, st):
     return (
         f'    <Item id="{item_id}" name="{{=aom_{item_id}_name}}{TAG} {name}"{sub} mesh="{item_id}" '
         f'culture="{CULTURE_ATTR}" is_merchandise="true" '
-        f'weight="{st["weight"]}"{diff} appearance="{APPEARANCE[band_of(item_id)]}" Type="{ITEM_TYPE[slot]}">\n'
+        f'weight="{st["weight"]}"{diff} appearance="{APPEARANCE[appearance_band(item_id)]}" Type="{ITEM_TYPE[slot]}">\n'
         f"        <ItemComponent>\n"
         f"            <Armor {armor_attrs(slot, st)} />\n"
         f"        </ItemComponent>\n"
@@ -101,12 +125,12 @@ def item_xml(item_id, slot, name, st):
     )
 
 
-def build():
+def build(records=None):
     items, rows = {slot: [] for slot in FILES}, []
     for item_id, slot, name in PIECES:
-        st = stats_for(item_id, slot)
+        st = stats_for(item_id, slot, records)
         items[slot].append(item_xml(item_id, slot, name, st))
-        rows.append((item_id, slot, band_of(item_id), {k: v for k, v in st.items() if k.endswith("_armor")}, st["weight"]))
+        rows.append((item_id, slot, band_of(item_id, records), {k: v for k, v in st.items() if k.endswith("_armor")}, st["weight"]))
     return items, rows
 
 

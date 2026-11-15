@@ -588,14 +588,15 @@ containing `troll` or `creature` are left out. Item stats come from the install
 `validate_moduledata.py` says so on stderr. A `rebalance_armor` module that cannot be imported gives one
 `(tooling)` issue saying nothing was checked.
 
-**Severity.** The maintainer decided the ceiling is an error. The live Armory is unversioned and holds the
-pre-#1271 item values until the apply, and on 2026-11-14 367 troops reached past the ceiling (the dry run of
-the apply leaves none), so an error today would fail the commit hook on every ModuleData commit. The floor
-is a warning: 42 troops on 2026-11-14, 203 in the dry run of the apply, because the apply lowers the light
-and medium bands. Both the ceiling issue and the `(tooling)` issue read one constant,
+**Severity.** The maintainer decided the ceiling is an error. The live Armory is unversioned and the validator
+reads the copy installed on each machine. Before the apply of 2026-11-14 it held the pre-#1271 item values and
+367 troops reached past the ceiling; the rewritten Armory leaves none, but a contributor who still has the
+old one would fail the commit hook on every ModuleData commit under an error. The floor is a warning: 42
+troops on 2026-11-14 before the apply, 203 in its dry run and 196 measured after the write (before the
+generator band fix), because the apply lowers the light and medium bands. Both the ceiling issue and the `(tooling)` issue read one constant,
 `taom_schema.WORN_ARMOUR_CEILING_SEVERITY`, and they must stay equal: the `(tooling)` issue means the
 ceiling was not checked, so a warning left beside an error ceiling would let a broken import pass the
-commit hook. After the apply, in one change: set the constant to `Severity.ERROR`, add
+commit hook. Once every contributor has the rewritten Armory, in one change: set the constant to `Severity.ERROR`, add
 `--code WORN_ARMOUR_CEILING` to both hook lists, `.claude/hooks/check-moduledata-validation.sh` and
 `.githooks/pre-commit` (`CommitGateCoverageTests` fails until the first names the code, and `CodeList`
 in `tools/tests/test_githooks_pre_commit.py` fails until the second matches it), and update the row in

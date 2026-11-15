@@ -2218,9 +2218,9 @@ class WornArmourLimitsTests(unittest.TestCase):
         self.assertEqual(self._run([("light_a", 1, [self._roster(Body="chest10")])]), [])
 
     def test_a_set_that_adds_past_the_ceiling_is_flagged(self):
-        """A WARNING until the Armory apply: the unapplied Armory still holds the old item values, so
-        an ERROR would block every ModuleData commit. The flip step is in armor-balance.md, "The
-        apply sequence"."""
+        """A WARNING until every contributor has the rewritten Armory: the validator reads the Armory
+        installed on each machine, so an ERROR would block the commits of anyone still on the old one.
+        The flip step is in armor-balance.md, "The apply sequence"."""
         # chest 60 + cape 30 = body 90, over vanilla's best troop (67) plus 10.
         issues = self._run([("big", 31, [self._roster(Head="helm40", Body="bigchest", Cape="bigcape")])])
         self.assertEqual([(i.code, i.severity, i.entry_id) for i in issues],

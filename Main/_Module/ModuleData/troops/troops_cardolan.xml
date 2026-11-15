@@ -29,13 +29,13 @@
       <EquipmentRoster>
         <equipment slot="Item0" id="Item.wm_gondor_light_spear_cardolan" />
         <equipment slot="Item1" id="Item.sm_gd_shield_a1" />
-        <equipment slot="Body" id="Item.sk_gd_anf_inf_chainmail_a" />
+        <equipment slot="Body" id="Item.gondor_noble_jerkin_b" />
         <equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
       </EquipmentRoster>
       <EquipmentRoster>
         <equipment slot="Item0" id="Item.wm_gondor_light_spear_cardolan" />
         <equipment slot="Item1" id="Item.sm_gd_shield_a3" />
-        <equipment slot="Body" id="Item.sk_gd_anf_inf_chainmail_b" />
+        <equipment slot="Body" id="Item.gondor_noble_jerkin_b" />
         <equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
       </EquipmentRoster>
       <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />

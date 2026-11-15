@@ -613,7 +613,7 @@ def render_report(ctx):
                f'{len(ctx["pairs"])} troop pairs over {len(agg)} culture pairs.')
     out.append(f'- Validator gate `CROSS_CULTURE_ARMOUR_INVERSION` would warn on {len(ctx["gate"])} culture-tier cell(s): '
                + (', '.join(f'{h["culture"]}/tier{h["tier"]}' for h in ctx['gate']) or 'none') + '.')
-    out.append(f'- Worn limits (`WORN_ARMOUR_CEILING` a warning until the Armory apply, then an error; '
+    out.append(f'- Worn limits (`WORN_ARMOUR_CEILING` a warning until every contributor has the rewritten Armory, then an error; '
                f'`WORN_ARMOUR_FLOOR` a warning): '
                f'{sum(1 for w in ctx["worn"] if w["ceiling"])} troop(s) over a ceiling and '
                f'{sum(1 for w in ctx["worn"] if w["floor"])} under a floor.')
@@ -726,7 +726,7 @@ def render_worn(ctx):
     out = ['## Worn floor and ceiling\n',
            'Per troop, the head, body, arm and leg its battle sets add up to when every armour slot comes from '
            'its own set, as a campaign spawn draws it (`rebalance_armor.worn_armour_extremes_per_slot`). '
-           'Ceiling, a warning until the Armory apply '
+           'Ceiling, a warning until every contributor has the rewritten Armory '
            'and an error in the validator after it (`WORN_ARMOUR_CEILING`, vanilla\'s best troop plus 10): '
            + ', '.join(f'{r} {v}' for r, v in ceil.items())
            + '. Floor, a warning (`WORN_ARMOUR_FLOOR`, head / body): '

@@ -104,14 +104,14 @@ carrier's row stays under the limit of the lowest tier and weakest craft that wi
 
 136 troop slots. The tool's dry run prints the full list.
 
-**Status, 2026-11-14 (#1271):** the Armory blades have NOT been restated yet. The committed
-`ph_crafting_pieces.xml` was generated against today's donors before k was capped over every real
-carrier, so the generator runs again with `--apply` after `restat_melee_blades.py --apply` at the Armory
-apply, and the table above is what it should then print. Until then the dry run and `--verify` both exit 1
-at `taom_ph_gondor_spear_b_t5` (the tightest tier limit over its carriers, who start at tier 4, leaves no
-room above the unrestated donor), so
-the `placeholder-weapons` row of `python tools/data_gates.py` fails, and the validator reports 11
-`MELEE_BLOW_CEILING` findings on `taom_ph_` weapons (2026-11-14).
+**Status, 2026-11-14 (#1271):** the Armory blades were restated the same day
+(`restat_melee_blades.py --apply`), and the generator then ran with `--apply`, so the table above is what
+its dry run prints and `--verify` exits 0. Before the restat the committed `ph_crafting_pieces.xml` had
+been generated against the old donors, before k was capped over every real carrier; the dry run and
+`--verify` both exited 1 at `taom_ph_gondor_spear_b_t5` (the tightest tier limit over its carriers, who
+start at tier 4, left no room above the unrestated donor), the `placeholder-weapons` row of
+`python tools/data_gates.py` failed, and the validator reported 11 `MELEE_BLOW_CEILING` findings on
+`taom_ph_` weapons.
 
 ## Key Files
 

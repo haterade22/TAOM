@@ -474,11 +474,12 @@ class KingdomArmourTests(unittest.TestCase):
         self.assertIn("### alpha", md)
         self.assertIn("### beta", md)
         self.assertIn("## Worn floor and ceiling", md)
-        # WORN_ARMOUR_CEILING ships as a warning until the Armory apply (taom_schema.py, 2026-11-14); the
-        # report must not call it an error
+        # WORN_ARMOUR_CEILING ships as a warning until every contributor has the rewritten Armory
+        # (taom_schema.py, 2026-11-14); the report must not call it an error
         worn_text = md.split("## Worn floor and ceiling")[1].split("## Per-culture detail")[0]
-        self.assertIn("a warning until the Armory apply", worn_text)
-        self.assertIn("a warning until the Armory apply", md.split("## Executive summary")[1].split("##")[0])
+        self.assertIn("a warning until every contributor has the rewritten Armory", worn_text)
+        self.assertIn("a warning until every contributor has the rewritten Armory",
+                      md.split("## Executive summary")[1].split("##")[0])
         self.assertNotIn("Ceiling, an error in the validator", md)
         self.assertNotIn("`WORN_ARMOUR_CEILING` error", md)
         self.assertIn("`alpha_t9`", md.split("## Worn floor and ceiling")[1].split("## Per-culture detail")[0])

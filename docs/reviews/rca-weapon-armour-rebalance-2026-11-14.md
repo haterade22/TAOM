@@ -111,3 +111,41 @@ Deferred:
 None. The rules go to the lessons files: the one-blow limit, worn totals and engine multipliers to
 `lessons/data-content-cultures.md`; the severity constant, data not yet applied and call site
 provenance to `lessons/build-tooling-workflow.md`.
+
+## Found in the review of the written Armory (2026-11-14)
+
+Three reviews read the files the apply wrote. Each finding below carries its state.
+
+- **The generator band defect (fixed and applied).** `generate_lothlorien_armor.py` and
+  `generate_snow_orc_armor.py` priced each of their 97 pieces by the tier word in its id, while every other
+  Armory piece is priced at the band of its lowest wearer. The generators run after the restat, so they
+  undid it for 47 of the 79 worn pieces: `sk_ll_rg_helmet_med_b` stayed at 17 for a level 31 wearer
+  (elite, 49). Both generators now price a worn piece at its lowest wearer's band, an unworn piece by its
+  id word, and Mallorn one band above either; the appearance stays with the id word. Both generators were applied to
+  the live Armory (`--check` passes for both, `armour_classes.xml` regenerated): 55 items changed (50
+  Lorien, 5 Snow Orc), no unworn piece changed, 13 troops left `WORN_ARMOUR_FLOOR` (196 to 183), no
+  troop reaches a ceiling. Three level 46 Lothlorien troops wear the Mallorn kit one band above their
+  own, by design (`armor-balance.md`, generator band fix).
+- **The Umbar repair (reverted by the session lead).** It gave `umbar_elite_root0000` vanilla Aserai armour
+  above the Umbar curve. The parent `umbar_elite_root000` and 38 other troops wear uncurved vanilla armour.
+  With the Umbar file restored, the repair's net diff is 146 changed equipment lines across 17 troops in 6
+  files (`git diff --numstat` on `Main/_Module/ModuleData/troops`).
+- **Enlistment kits are not regenerated.** A full `generate_enlistment_rosters.py --apply` rewrites the `enlist_<culture>_*` rosters that `promote_borrowed_cultures.py` also owns for the eight promoted cultures, and their sync checks then fail; the run was reverted. With the new armour values 14 enlistment ranks give a weaker kit than the rank below (an Erebor recruit 81, the soldier 67).
+- FOLLOW-UP no issue: the enlistment kits need a reseed per culture (`--culture` with `--reseed`) with the promoted cultures regenerated after it; it waits for a maintainer decision on which tool owns those rosters.
+
+Deferred:
+
+- FOLLOW-UP no issue: `fix_melee_ladder.py` has no weapon category rule; its plan of 176 swaps replaced poleaxes with short spears, so it was not applied and the 318 `MELEE_LADDER_INVERSION` warnings stay (`melee-damage-model.md`, "A troop keeps its weapon category").
+- FOLLOW-UP no issue: lords and companions wear light troop chests; median lord body armour fell from 68 to 47 and 263 lords sit under 30, which needs a decision on lord kit.
+- FOLLOW-UP no issue: the regular tournament armour pool fell from 756 to 222 pieces; whether that is enough variety needs a decision on the pool or on `RegularMinTableArmourValue`.
+- FOLLOW-UP no issue: `wm_mordor_set1_polearm_a01_blade` has a thrust factor of 0.00 from before the write (8 troops carry it); it needs a hand-set factor.
+- FOLLOW-UP no issue: `analyze_armor_balance.py` mixes tier sources, so 6 of its 10 errors are false; it needs one source throughout.
+- FOLLOW-UP no issue: no gate fails when a reset brings old armour or blade values back; `rebalance_armor.py` and `restat_melee_blades.py` need a check mode registered in `data_gates.py`.
+- FOLLOW-UP no issue: the starter armour literals are still the old ones, because `generate_starter_armor.py` overwrites the hand fixes in `harad/starter_armors.xml` and Gondor's file needs a hand edit.
+- FOLLOW-UP no issue: the 39 troops on uncurved vanilla armour (the Umbar finding above) are a content decision for the maintainer.
+- FOLLOW-UP no issue: the mirror and release steps are the maintainer's: commit the 118 files to the `lotraom-assets` mirror, bump the Armory version, sweep the 102 backups, re-stage the dedicated server.
+- FOLLOW-UP no issue: the armour class table links a piece to an "upgrade" with equal armour (`sk_ll_ml_pauld_med_a` to `sk_ll_rg_pauld_light_a`, both body 9 and arm 8), because `generate_armour_classes.pick_next` accepts a candidate that is not better on any value.
+- FOLLOW-UP no issue: the material type of the generator pieces follows the price band while the rest of the Armory kept its material; it changes hit sounds only.
+
+The rule behind the fixer finding goes to `lessons/data-content-cultures.md` ("A tool that fits a troop
+to a number must hold the troop's weapon category fixed").

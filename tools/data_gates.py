@@ -150,6 +150,15 @@ GATES = (
          ("python", "tools/audit_leg_cover_flags.py"), ("docs/modding/items-armor.md",),
          note="covers_legs is true on every greave and boot, false only on a bare-shin mesh (the Uruk-hai shoes); "
               "scans the Armory, TAOM_Map and the repo, never vanilla"),
+    Gate("armour-cover-flags", "Armory armour (cover and visibility attributes), their spec and its tool",
+         ARMORY_GLOBS + ("*tools/armour_cover_flags.json", "*tools/apply_armour_cover_flags.py",
+                         "*tools/generate_*armor*.py"),
+         ("python", "tools/apply_armour_cover_flags.py", "--check"), ("docs/reference/lotrlome-beard-cover-changes.md",),
+         note="holds hair, beard, mane, covers_head, covers_body, covers_hands and covers_legs for every armour item "
+              "(crowns, beards under helmets, gloves, boots); exit 1 means a reinstall, sync or art drop reset a value "
+              "or a rule changed: --apply --backup-tag <tag> restores, --snapshot --expect N after a change you meant "
+              "(never before --apply on a reset); a bad spec or two rules that disagree are also exit 1; "
+              "exit 2 is NOT RUN (no install)"),
     Gate("placeholder-weapons", "placeholder weapons, their spec, the melee tools, donors and carriers", PLACEHOLDER_GLOBS,
          ("python", "tools/generate_placeholder_weapons.py", "--verify"), ("docs/features/placeholder-weapons.md",),
          note="exit 1 when a generated file differs from the render or a placeholder is over its carriers' tier "

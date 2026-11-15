@@ -357,8 +357,9 @@ def melee_pass_rows(troops, priced, spec):
 # armour pass when the curve module cannot be imported. They share one constant on purpose: that
 # import failure means the ceiling was not checked, so it must never be softer than the ceiling. A
 # WARNING here while the ceiling is an ERROR would let a broken import pass the commit hook.
-# TRANSITIONAL: a WARNING until the live Armory apply, because the unversioned Armory still holds the
-# pre-#1271 values. The flip step in docs/features/armor-balance.md ("The apply sequence") says what
+# TRANSITIONAL: a WARNING until every contributor has the rewritten Armory. The validator reads the
+# Armory installed on the machine, so an ERROR blocks the commits of anyone still on the pre-#1271
+# Armory. The flip step in docs/features/armor-balance.md ("The apply sequence") says what
 # changes with this line: set it to Severity.ERROR and add `--code WORN_ARMOUR_CEILING` to BOTH
 # .claude/hooks/check-moduledata-validation.sh and .githooks/pre-commit. CommitGateCoverageTests
 # (_error_codes) reads this constant, so it fails until the first names the code; CodeList in
@@ -2220,11 +2221,11 @@ class Validator:
     # read as a clean run. Exempt, bodyless and creature troops follow the cross-culture gate; the
     # bodyless keep the head floor and lose only the body one.
     #
-    # TRANSITIONAL: the ceiling is meant to be an ERROR, but the live Armory is unversioned and
-    # still holds the pre-#1271 item values, so an ERROR would fail the commit hook on every
-    # ModuleData commit until the Armory apply (docs/features/armor-balance.md, "The apply
-    # sequence"). It ships as a WARNING. The severity is WORN_ARMOUR_CEILING_SEVERITY, shared with
-    # the "(tooling)" issue below; after the apply, in the SAME change, follow the steps in the
+    # TRANSITIONAL: the ceiling is meant to be an ERROR, but the live Armory is unversioned, so
+    # an ERROR would fail the commit hook of every contributor whose install still holds the
+    # pre-#1271 item values (docs/features/armor-balance.md, "The apply sequence"). It ships as a
+    # WARNING until the rewritten Armory has reached them all. The severity is WORN_ARMOUR_CEILING_SEVERITY, shared with
+    # the "(tooling)" issue below; when it flips, in the SAME change, follow the steps in the
     # comment on that constant, then update the codes-doc row.
     #
     # The creature skip is the id half of analyze_kingdom_armour.classify: the analyzer also matches

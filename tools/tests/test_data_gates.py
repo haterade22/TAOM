@@ -201,6 +201,20 @@ class SelectionTests(unittest.TestCase):
         self.assertIn(("python", "tools/generate_lothlorien_armor.py", "--check"), commands)
         self.assertIn(("python", "tools/generate_snow_orc_armor.py", "--check"), commands)
 
+    def test_the_armour_cover_flags_gate_reads_the_spec_the_tool_and_any_live_armour_file(self):
+        """A reinstall resets the cover attributes of every armour slot, so the spec, its tool, a generator and
+        a named live Armory file all select the check, and exit 2 (no install) is NOT RUN."""
+        gate = next(g for g in dg.GATES if g.id == "armour-cover-flags")
+        self.assertEqual(gate.cmd, ("python", "tools/apply_armour_cover_flags.py", "--check"))
+        live_head = LIVE_ARMORY.replace("weapons.xml", "head_armors.xml")
+        live_legs = LIVE_ARMORY.replace("weapons.xml", "leg_armors.xml")
+        for path in ("tools/armour_cover_flags.json", "tools/apply_armour_cover_flags.py",
+                     "tools/generate_dale_armor.py", live_head, live_legs):
+            self.assertIn("armour-cover-flags", _ids(dg.select(dg.GATES, [path])), path)
+        self.assertNotIn("armour-cover-flags", _ids(dg.select(dg.GATES, [TROOPS])))
+        self.assertEqual(dg.verdict(2, "ERROR: SKIPPED, LOTRLOME_Armory is not installed")[0], "NOT RUN")
+        self.assertEqual(dg.verdict(1, "DRIFT ...")[0], "FAIL")
+
     def test_a_prefab_selects_the_sprite_test(self):
         selected = dg.select(dg.GATES, ["Main/_Module/GUI/PreFabs/X.xml"])
         self.assertTrue(any("PrefabSpriteTests" in " ".join(g.cmd) for g in selected))

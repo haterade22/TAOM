@@ -230,7 +230,8 @@ CULTURAL_MODS = {
 # fallback for the civilian tier, weights, and cultures without a cap, such as the troll). The
 # maintainer's table, verbatim; named hero armour (HERO_NAMES) is excluded from the curve.
 # 2026-11-14: the lord band sits 7 percent above the elite band, and nothing but lord kit, hero kit
-# and the unworn merchandise clamp (see process_file) reaches past a kingdom's cap.
+# and the unworn merchandise clamp (see process_file) reaches past a kingdom's cap. The one other
+# exception is the Lothlorien generator's Mallorn kit, by design one band above its wearers.
 # 2026-11-14, back to the vanilla range: the best troop's body sum (chest plus shoulder) is 67, the
 # body armour of vanilla's best armoured troop. Measured vanilla item maxima are helmet 55, chest 57,
 # gloves 28, boots 26, shoulder 16. With the old table a 95 point sword cut did 3 damage to an
@@ -309,6 +310,12 @@ def level_to_band(level):
     if level <= 30:
         return 'heavy'
     return 'elite'  # L31-51
+
+
+def worn_band(record):
+    """The band of the lowest wearer in a derive_armor_tiers record, or None when nobody wears the item."""
+    level = record.get('anchorLevel') if isinstance(record, dict) else None
+    return None if level is None else level_to_band(int(level))
 
 
 # Worn armour limits (2026-11-14, #1271), judged on what a troop's battle sets add up to per region.
@@ -564,11 +571,10 @@ HERO_NAME_FALSE_POSITIVE_PREFIXES = ('sk_dg_khml_',)
 
 
 # Items whose numbers belong to their own generator, never to a restat (Mike, 2026-11-06). tools/generate_lothlorien_armor.py
-# prices a Mallorn piece one band above its id token (KEYforce's values), and tools/generate_snow_orc_armor.py prices each
-# Snow Orc item at the band its id names. A roster-first restat would re-band items of both kits by their lowest wearer and
-# undo that, and the next generator run would undo the restat. To see how many, run
-# `python tools/rebalance_armor.py --dry-run --cultures lothlorien,gundabad_snow --tier-source roster-first` with this
-# prefix list emptied. `sk_ll_` is the 77 Lorien items and `sk_gb_orc_` the 20 Snow Orc items: no other id starts with either.
+# and tools/generate_snow_orc_armor.py price a worn piece at the band of its lowest wearer (worn_band, as a restat does) and
+# a piece nobody wears at the band its id names; the Mallorn kit sits one band above either (KEYforce's values). The
+# generator owns the numbers so the Mallorn step and the unworn rule survive a restat. `sk_ll_` is the 77 Lorien items and
+# `sk_gb_orc_` the 20 Snow Orc items: no other id starts with either.
 GENERATOR_OWNED_ID_PREFIXES = ('sk_ll_', 'sk_gb_orc_')
 
 
@@ -1043,8 +1049,8 @@ def _roster_first_plan(roster_map, item_id, item_name, culture):
     kw_tier = rec.get('tier') if rec.get('tierSource') == 'id-keyword' else None
     if kw_tier == 'civilian':
         return skip
-    if rec.get('anchorLevel') is not None:
-        return (level_to_band(int(rec['anchorLevel'])), 'full')
+    if worn_band(rec) is not None:
+        return (worn_band(rec), 'full')
     keyed = kingdom_key(item_id, culture) is not None
     if is_excluded(item_id, item_name) or rec.get('heroWorn'):
         return ('lord', 'clamp') if keyed else skip

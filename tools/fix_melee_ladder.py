@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
-"""Pass 1 of the melee ladder fix (#631): narrow each weapon to its troop's tier band.
+"""DO NOT run with --apply: it does not keep a troop in its weapon category (docs/features/melee-damage-model.md).
+
+Pass 1 of the melee ladder fix (#631): narrow each weapon to its troop's tier band.
 
 The melee ladder was flat. Measured 2026-09-20, the median best sustained damage per engine
 tier ran 66, 64, 66, 67, 69, 69, 81, 82, 82, 69 for tiers 1 to 10, a climb of 1.04x against

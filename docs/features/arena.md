@@ -207,7 +207,7 @@ supplies both lists through [TournamentPrizeRules](../../Main/Features/Arena/Tou
   from a quarter of it chosen by the number of heroes, so with no or one hero the draw would mostly
   award pieces worth 100 to 400 denars (a light pauldron with 2 body armour is worth about 96). The old
   Tierf 2 floor meant about 756 to 907 denars.
-  The Armory rewrite for the rebalance is a later step; until then the rule already applies to today's
+  The Armory rewrite for the rebalance was applied on 2026-11-14, so the rule now reads the rewritten
   values.
 - **Merchandise** is the XML value from before the armour gate flips heavy and above to
   `NotMerchandise`: the gate's record keeps it (`GetRecord(id).IsMerchandise`). That is how a gated

@@ -930,7 +930,7 @@
                     id="Item.wm_gundabad_sword_a03" />
                 <equipment
                     slot="Head"
-                    id="Item.sk_gb_uruk_helmet_med_b" />
+                    id="Item.sk_gb_uruk_helmet_heavy_a" />
                 <equipment
                     slot="Body"
                     id="Item.sk_gb_uruk_chest_heavy_a" />
@@ -962,7 +962,7 @@
                     id="Item.wm_gundabad_sword_a03" />
                 <equipment
                     slot="Head"
-                    id="Item.sk_gb_uruk_helmet_med_b" />
+                    id="Item.sk_gb_uruk_helmet_heavy_a" />
                 <equipment
                     slot="Body"
                     id="Item.sk_gb_uruk_chest_heavy_a" />
@@ -994,10 +994,10 @@
                     id="Item.wm_gundabad_sword_a03" />
                 <equipment
                     slot="Head"
-                    id="Item.sk_gb_uruk_helmet_med_b" />
+                    id="Item.sk_gb_uruk_helmet_heavy_a" />
                 <equipment
                     slot="Body"
-                    id="Item.sk_gb_uruk_chest_heavy_e" />
+                    id="Item.sk_gb_uruk_chest_elite_a" />
                 <equipment
                     slot="Cape"
                     id="Item.sk_gb_uruk_pauldron_med_b" />
@@ -1026,10 +1026,10 @@
                     id="Item.wm_gundabad_sword_a03" />
                 <equipment
                     slot="Head"
-                    id="Item.sk_gb_uruk_helmet_med_b" />
+                    id="Item.sk_gb_uruk_helmet_heavy_a" />
                 <equipment
                     slot="Body"
-                    id="Item.sk_gb_uruk_chest_heavy_f" />
+                    id="Item.sk_gb_uruk_chest_elite_a" />
                 <equipment
                     slot="Cape"
                     id="Item.sk_gb_uruk_pauldron_med_b" />
