@@ -112,6 +112,7 @@ public class TaomMarshalHotKeyCategoryTests
             TaomTimeControlHotKeyCategory.TurboKeyId, TaomCareerHotKeyCategory.AbilityActivationKeyId,
             TaomRealmBordersHotKeyCategory.ToggleBordersKeyId, TaomRealmBordersHotKeyCategory.CycleMapModeKeyId,
             TaomSeatHotKeyCategory.TakeTheSeatKeyId, TaomCheatMenuHotKeyCategory.OpenCheatMenuKeyId,
+            TaomCheatMenuHotKeyCategory.OpenBattleCheatMenuKeyId,
         };
 
         foreach (var key in RegisteredKeys)

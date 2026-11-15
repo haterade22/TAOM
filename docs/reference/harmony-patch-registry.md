@@ -2051,6 +2051,18 @@ Applied from `SubModule.cs` in the standard `OnGameInitializationFinished` batch
 
 **Co-op.** Reads the co-op providers live through `CheatMenuService.IsSinglePlayer`; in a co-op session the bar stays vanilla. **Tests:** `CheatMenuWiringTests` (append, not shown, duplicate, null element, module and category). **ACTIVE**, not yet checked in game.
 
+## Patch152_BattleCheatMenu
+
+**Target (v1.5.6 decompile, MissionGauntletSingleplayerEscapeMenu.cs:69; not yet checked on the v1.5.7 DLL):** `protected override List<EscapeMenuItemVM> TaleWorlds.MountAndBlade.GauntletUI.Mission.Singleplayer.MissionGauntletSingleplayerEscapeMenu.GetEscapeMenuItems()`, targeted by name (it is protected), one postfix class `Patch152_BattleCheatEscapeMenu` in `Client/Features/CheatMenu/Hooks/` (TAOM.Client, ADR-013: the target is client-only), category `Patch152_BattleCheatMenu` (GameInit, declared by `CheatMenuModule`). 2026-11-14. Feature: [cheat-menu.md](../features/cheat-menu.md), "Battle".
+
+**Why.** Inserts one "Cheats" item into the single-player Esc menu just before Photo Mode (or at the end without one), where vanilla adds its gamepad "Cheat Menu" item, while `BattleCheatOpener.IsShown` holds: the MCM switch Enable Cheat Menu is on and `CoopSessionPolicy.IsSinglePlayerAuthority`. The place is the pure `BattleCheatOpener.EscapeItemIndex` (not shown or already there: no item; Photo Mode found by its shown text). A click closes the Esc menu through the public `OnEscape` (an open menu toggles shut, as "Return to the Game" does with the protected `OnEscapeMenuToggled(false)`) and calls `BattleCheatOpener.TryOpen`, which opens the battle list (`MBInformationManager.ShowMultiSelectionInquiry`); the click runs inside `CheatMenuMenus.Guarded`.
+
+**Callers and thread.** `MissionGauntletEscapeMenuBase.OnEscape` (each time the menu opens), `OnManagedOptionChanged` (Hide Battle UI changed) and the "Re-enable Battle UI" item; each hands the list to `EscapeMenuVM.RefreshItems`. Main thread. The postfix never throws out of the menu: a failure is logged once and leaves vanilla's items.
+
+**PatchShield.** `TaleWorlds.MountAndBlade.GauntletUI` is an excluded namespace (`PatchShieldPolicy.ExcludedTargetNamespacePrefixes`), so the shield adds no finalizer here.
+
+**Co-op.** Reads the co-op providers live through `BattleCheatService.IsSinglePlayer`; in a co-op session the Esc menu stays vanilla and every battle cheat refuses. **Tests:** `BattleCheatPolicyTests` (place, not shown, already there, opener), `BattleCheatWiringTests` (target, category, insert after the decision, click order), `BattleCheatPatchBindingTests` (parameter names). **ACTIVE**, not yet checked in game.
+
 <!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
 
 ## Referenced by

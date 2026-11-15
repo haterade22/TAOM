@@ -108,7 +108,7 @@ public class TaomSeatHotKeyCategoryTests
             TaomTimeControlHotKeyCategory.FastForwardKeyId, TaomTimeControlHotKeyCategory.ExtraFastForwardKeyId,
             TaomTimeControlHotKeyCategory.TurboKeyId, TaomCareerHotKeyCategory.AbilityActivationKeyId,
             TaomRealmBordersHotKeyCategory.ToggleBordersKeyId, TaomRealmBordersHotKeyCategory.CycleMapModeKeyId,
-            TaomCheatMenuHotKeyCategory.OpenCheatMenuKeyId,
+            TaomCheatMenuHotKeyCategory.OpenCheatMenuKeyId, TaomCheatMenuHotKeyCategory.OpenBattleCheatMenuKeyId,
         };
 
         foreach (var id in new[] { TaomSeatHotKeyCategory.TakeTheSeatKeyId, TaomSeatHotKeyCategory.KeepToKeyId, TaomSeatHotKeyCategory.TakeThisSoldierKeyId,

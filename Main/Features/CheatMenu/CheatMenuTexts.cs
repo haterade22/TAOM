@@ -18,6 +18,7 @@ public static class CheatMenuTexts
             .SetTextVariable("NAME", o.Name ?? string.Empty),
         CheatOutcomeKind.NothingToDo => new TextObject("{=taom_cheat_nothing}Nothing changed: your hero has nothing this cheat can give to."),
         CheatOutcomeKind.TeleportRefused => Refusal(o.Refusal),
+        CheatOutcomeKind.NoBattle => new TextObject("{=taom_cheat_battle_none}Start a battle first. Battle cheats work only while a battle is on."),
         _ => new TextObject("{=taom_cheat_done}Done: {NAME} {NUMBER}")
             .SetTextVariable("NAME", o.Name ?? string.Empty)
             .SetTextVariable("NUMBER", o.Number.ToString("#,0.##")),

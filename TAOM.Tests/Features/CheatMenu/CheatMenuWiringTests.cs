@@ -71,8 +71,9 @@ public class CheatMenuWiringTests
     {
         var module = FeatureModules.All.OfType<CheatMenuModule>().Single();
 
-        Assert.AreEqual(CheatMenuModule.PatchCategory, module.PatchCategories.Single().Category);
-        Assert.AreEqual(ApplyPhase.GameInit, module.PatchCategories.Single().Phase);
+        CollectionAssert.AreEqual(new[] { "Patch151_CheatMenu", "Patch152_BattleCheatMenu" },
+            module.PatchCategories.Select(d => d.Category).ToArray());
+        Assert.IsTrue(module.PatchCategories.All(d => d.Phase == ApplyPhase.GameInit));
         Assert.AreEqual(typeof(CheatMenuCampaignBehavior), module.CampaignBehaviors.Single().BehaviorType);
     }
 

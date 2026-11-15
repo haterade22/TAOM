@@ -26,7 +26,7 @@ public class MissionSpawnOriginTests
         if (!_gameLoaded)
             Assert.Inconclusive("Game assemblies not loaded: " + string.Join("; ", GameAssemblies.Diagnostics));
 
-        var origin = MissionSpawnCheats.CreateOrigin(new BasicCharacterObject());
+        var origin = MissionTroopSpawner.CreateOrigin(new BasicCharacterObject());
 
         Assert.IsInstanceOfType(origin, typeof(BasicBattleAgentOrigin));
     }
@@ -37,7 +37,7 @@ public class MissionSpawnOriginTests
         if (!_gameLoaded)
             Assert.Inconclusive("Game assemblies not loaded: " + string.Join("; ", GameAssemblies.Diagnostics));
 
-        var origin = MissionSpawnCheats.CreateOrigin(new TaleWorlds.CampaignSystem.CharacterObject());
+        var origin = MissionTroopSpawner.CreateOrigin(new TaleWorlds.CampaignSystem.CharacterObject());
 
         Assert.IsInstanceOfType(origin, typeof(TaleWorlds.CampaignSystem.AgentOrigins.SimpleAgentOrigin),
             "a campaign troop keeps the campaign origin, which its party and XP code expect");

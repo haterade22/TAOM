@@ -490,7 +490,7 @@ public class CreatureBanditsWiringTests
     [TestMethod]
     public void SpawnTroopsCommand_AsksTheCreatureSideRuleBeforeChoosingATeam()
     {
-        var src = RepoPaths.ReadSource("Main/Features/DevConsole/Cheats/MissionSpawnCheats.cs", stripComments: true);
+        var src = RepoPaths.ReadSource("Main/Features/DevConsole/Cheats/MissionTroopSpawner.cs", stripComments: true);
         var rule = src.IndexOf("isPlayerSide = CreatureBanditRules.SpawnsOnPlayerSide(troopId, requestedPlayerSide)", StringComparison.Ordinal);
         var team = src.IndexOf("Mission.GetAgentTeam(origin, isPlayerSide)", StringComparison.Ordinal);
         Assert.IsTrue(rule >= 0, "spawn_troops must take its side from CreatureBanditRules.SpawnsOnPlayerSide");

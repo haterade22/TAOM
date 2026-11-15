@@ -4,6 +4,7 @@ using DryIoc;
 using TAOM.Adapters;
 using TAOM.Composition;
 using TAOM.Core.Logging;
+using TAOM.Features.CheatMenu.Battle;
 using TAOM.Features.CheatMenu.Hooks;
 
 namespace TAOM.Features.CheatMenu;
@@ -14,14 +15,18 @@ namespace TAOM.Features.CheatMenu;
 /// which the <c>taom.cheat_*</c> console commands share through <see cref="CheatMenuService"/>. One patch (Patch151, the
 /// button), one behavior (the menus, and it attaches the map view that reads the map key), one rebindable key (H by default,
 /// <see cref="TaomCheatMenuHotKeyCategory"/>), nothing saved. The button element and the map view live in TAOM.Client (ADR-013).
+/// In a mission, Patch152 (TAOM.Client, the Esc menu's "Cheats" item) opens the battle list, which the
+/// <c>taom.cheat_battle_*</c> commands share through <see cref="BattleCheatService"/>.
 /// </summary>
 internal sealed class CheatMenuModule : TaomFeatureModule
 {
     internal const string PatchCategory = "Patch151_CheatMenu";
+    internal const string BattlePatchCategory = "Patch152_BattleCheatMenu";
 
     private static readonly PatchCategoryDecl[] Categories =
     {
         new(PatchCategory, ApplyPhase.GameInit),
+        new(BattlePatchCategory, ApplyPhase.GameInit),
     };
 
     private static readonly CampaignBehaviorDecl[] Behaviors =
@@ -44,6 +49,10 @@ internal sealed class CheatMenuModule : TaomFeatureModule
         registrator.Register<CheatMenuOpener>(Reuse.Singleton);
         registrator.Register<ICheatMenuNavigationElementFactory, NullCheatMenuNavigationElementFactory>(Reuse.Singleton);
         registrator.Register<ICheatMenuMapViewAdapter, NullCheatMenuMapViewAdapter>(Reuse.Singleton);
+        registrator.Register<IBattleCheatAdapter, BattleCheatAdapter>(Reuse.Singleton);
+        registrator.Register<IBattleCheatHostAdapter, BattleCheatHostAdapter>(Reuse.Singleton);
+        registrator.Register<BattleCheatService>(Reuse.Singleton);
+        registrator.Register<BattleCheatOpener>(Reuse.Singleton);
     }
 
     public override void InitializeStatics(IResolver resolver) =>
