@@ -252,7 +252,7 @@ economy of the bands and needs the maintainer's call first.
 ### `Main/_Module/ModuleData/diplomacy/diplomacy.json`
 Defines all kingdom pair relationships. Each entry has `kingdomA`, `kingdomB`, and `tier` (`Permanent`, `Natural`, `Neutral`, or `Hostile`). Keys are matched order-insensitively.
 
-Current data: 38 Permanent, 29 Natural, 7 Neutral and 79 Hostile pairs <!-- measured: python collections.Counter(r['tier'] for r in diplomacy.json relationships) 2026-10-27 -->. Every Hostile pair goes to war at Full War, so a free realm needs a Hostile row with each evil realm; `DiplomacyShippedConfigTests` holds Arthedain and Ered Luin to that. Ered Luin has Arthedain's 9 Hostile rows and is Natural with `erebor` and `lindon`.
+Current data: 38 Permanent, 29 Natural, 7 Neutral and 78 Hostile pairs <!-- measured: python collections.Counter(r['tier'] for r in diplomacy.json relationships) 2026-11-14 -->. Every Hostile pair goes to war at Full War, so a free realm needs a Hostile row with each evil realm it must fight; `DiplomacyShippedConfigTests` holds Arthedain and Ered Luin to that. Dunland (`empire`) is narrower on purpose: it is Hostile to Rohan, Rivendell, Arthedain and Ered Luin, and not to Gondor (#1283; `ShippedConfig_Dunland_IsNotHostileToGondor` pins it). Ered Luin has Arthedain's 9 Hostile rows and is Natural with `erebor` and `lindon`.
 
 ### `Main/_Module/ModuleData/diplomacy/war_of_the_ring.json`
 Controls the scripted war escalation:
@@ -362,6 +362,7 @@ Phase 1 (Isengard and Dunland attack Rohan) triggers on day 30; Phase 2 (the ful
 
 ## Changelog
 
+- 2026-11-14: The Hostile row between Dunland (`empire`) and Gondor (`empire_w`) is removed from `diplomacy.json`, so Full War no longer declares that war or blocks its peace (#1283). The pair has no row and reads Neutral, which leaves two routes to that war open in Full War. Either realm can declare it by its own choice. A realm allied with one of them and at war with the other can also call it in (`AllianceCampaignBehavior.OnWarDeclared`): Rivendell and Arthedain are Hostile to Dunland and Natural with Gondor, and a call-to-war agreement lasts 42 days. Nothing in TAOM blocks an alliance vote between the two; the engine's alliance score decides.
 - 2026-11-10: `GetRelationshipTier` returns `Hostile` for a realm that pledged to a side against a realm of the other side; a static `Permanent` row wins, and a pair with no pledged realm reads `diplomacy.json` alone (War Pledge, #1113, [war-pledge.md](war-pledge.md)).
 - 2026-10-29: Recorded yotthani's Free/Shadow side-boundary report (three gaps, each confirmed in the code, the peace hazard by pair class, the v1.5.6 mercenary seam) and the decision to change no code until 2.0.36 evidence exists.
 - 2026-10-19: Three personal-relations overrides on `TaomDiplomacyModel` (the player's relation stays on the lord named, a larger disband cost for an army's leader, and an heir keeps his own relation), single player only, behind their own MCM group (#862).

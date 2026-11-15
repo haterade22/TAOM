@@ -49,6 +49,47 @@ public class ShippedBattleBalanceConfigTests
     }
 
     /// <summary>
+    /// Mirkwood is an elf realm like Rivendell and Lindon; it had no row at all until 2026-11-14 (#1283).
+    /// </summary>
+    [TestMethod]
+    public void ShippedConfig_Mirkwood_MatchesRivendellSurvivalBonus()
+    {
+        var bonuses = LoadShippedFileOnly().CasualtyRatios.CulturalSurvivalBonuses;
+
+        Assert.IsTrue(bonuses.TryGetValue("mirkwood", out var mirkwood), "battle_balance_config.json has no mirkwood row");
+        Assert.AreEqual(bonuses["rivendell"], mirkwood, 0.001f);
+    }
+
+    /// <summary>
+    /// Mordor carries no survival penalty (#1283). The -0.2 it shipped with multiplied the death chance of a
+    /// wounded regular by 1.2. In a party with no Medicine skill that chance is 1 / (1 + level x 0.02), so a
+    /// troop of level 10 or below then never survived a cut or pierce blow.
+    /// </summary>
+    [TestMethod]
+    public void ShippedConfig_Mordor_HasNoSurvivalPenalty()
+    {
+        var bonuses = LoadShippedFileOnly().CasualtyRatios.CulturalSurvivalBonuses;
+
+        Assert.IsFalse(bonuses.TryGetValue("mordor", out var mordor) && mordor < 0f,
+            $"battle_balance_config.json gives mordor a survival penalty again ({mordor})");
+    }
+
+    /// <summary>
+    /// The table is keyed on culture StringIds, and a key no culture carries is silent: the lookup finds
+    /// no row and returns 0, so that realm's parties keep the engine's roll.
+    /// </summary>
+    [TestMethod]
+    public void ShippedConfig_EverySurvivalBonusKey_IsAMainCultureId()
+    {
+        var cultures = CultureDataFixture.MainCultureIds();
+
+        var unknown = LoadShippedFileOnly().CasualtyRatios.CulturalSurvivalBonuses.Keys
+            .Where(key => !cultures.Contains(key)).OrderBy(key => key).ToList();
+
+        Assert.AreEqual(0, unknown.Count, $"survival bonus keys that are no playable culture: {string.Join(", ", unknown)}");
+    }
+
+    /// <summary>
     /// The compiled table is what a missing or unreadable file falls back to, so it carries every
     /// culture row the shipped file does (the #749 fix mirrored Lindon by hand; nothing checked it).
     /// </summary>

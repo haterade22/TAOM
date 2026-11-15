@@ -10,7 +10,7 @@ Three GameModel overrides that tune large-scale battle math: troop power values 
   - `DefaultMilitaryPowerModel.GetDefaultTroopPower` uses the formula `(2 + tier) * (10 + tier) * 0.02` and never sees a tier above 6.
   - `DefaultCombatSimulationModel.GetBluntDamageChance` returns a fixed blunt chance: 30% in a player map event, 10% otherwise.
   - `DefaultPartyHealingModel.GetSurvivalChance` produces uniform survival chances across cultures.
-- **TAOM requirement:** Tier 7-10 troops exist (Cultural Feats system, lots of elite LOTR units like Dúnedain Rangers, Royal Guard); their power values must be authored, not extrapolated. LOTR cultures should also have distinct casualty profiles — Mordor armies shrug off losses (or rather, players shrug off losing them), elite Eldar formations should rarely take real casualties — and the player should be able to dial wound-vs-kill ratios for their own battles separately from AI-vs-AI sim.
+- **TAOM requirement:** Tier 7-10 troops exist (Cultural Feats system, lots of elite LOTR units like Dúnedain Rangers, Royal Guard); their power values must be authored, not extrapolated. LOTR cultures should also have distinct casualty profiles: the orcs of Gundabad and Dol Guldur die more easily, and elite Eldar formations should rarely take real casualties. The player should be able to dial wound-vs-kill ratios for their own battles separately from AI-vs-AI sim.
 - **Without this feature:** T7+ troops fall back to a polynomial extrapolation that produces unintuitive AutoCalc results; cultural identity in losses is invisible; the player can't tune lethality without editing source.
 
 ## Architecture
@@ -76,9 +76,9 @@ TaomMilitaryPowerModel       TaomCombatSimulationModel       TaomPartyHealingMod
     "EnableCulturalSurvivalBonuses": true,
     "CulturalSurvivalBonuses": {
       "gondor": 0.3, "vlandia": 0.2, "lothlorien": 0.5,
-      "erebor": 0.3, "eredluin": 0.3, "rivendell": 0.4, "lindon": 0.4, "arthedain": 0.3,
+      "erebor": 0.3, "eredluin": 0.3, "rivendell": 0.4, "lindon": 0.4, "mirkwood": 0.4, "arthedain": 0.3,
       "cardolan": 0.3, "rhudaur": 0.2, "anduinvale": 0.1, "angaladh": 0.1, "dorwinion": 0.1, "southrhovanion": 0.2,
-      "mordor": -0.2, "gundabad": -0.1, "dolguldur": -0.1
+      "gundabad": -0.1, "dolguldur": -0.1
     }
   }
 }
@@ -147,7 +147,7 @@ The models themselves test the static helpers (`CalculateTierPower`, `CalculateB
 1. Edit [Main/_Module/ModuleData/configs/battle_balance_config.json](../../Main/_Module/ModuleData/configs/battle_balance_config.json).
 2. Under `CasualtyRatios.CulturalSurvivalBonuses`, add `"<cultureId>": <bonus>` where `cultureId` matches the `<Culture id="...">` value in the relevant XML and `<bonus>` is a float in `[-1.0, +1.0]` (positive = better survival, negative = worse).
 3. Restart Bannerlord (the provider caches for the whole process).
-4. **Verify in-game:** Trigger or sim a battle for a party of that culture. Cultural cultures (`gondor`, `mordor`, etc.) should see materially different survival rates compared to a culture without an entry.
+4. **Verify in-game:** Trigger or sim a battle for a party of that culture. Cultural cultures (`gondor`, `gundabad`, etc.) should see materially different survival rates compared to a culture without an entry.
 
 ## How to Tune T7-T10 Power Live
 
@@ -155,6 +155,7 @@ Use the MCM panel: **TAOM → Troop Power → Tier7Power / Tier8Power / Tier9Pow
 
 ## Changelog
 
+- 2026-11-14: Mordor's -0.2 survival row is removed from the JSON and the compiled default (#1283). The row multiplied the death chance of a wounded regular by 1.2. With no Medicine skill in the party the engine's chance is 1 / (1 + level x 0.02), so a troop of level 10 or below never survived a cut or pierce blow, and a level 26 troop survived 21% of the time, against 34% with no row and 54% for Gondor. Mirkwood gets Rivendell's 0.4; it had no row.
 - 2026-10-06: Lindon gets Rivendell's 0.4 survival bonus in the JSON and the compiled default (#749). It had none since Lindon became its own culture in `cc1713eb3` (2026-08-11); before that it ran on `rivendell`.
 - 2026-09-24: plan 003 (PERF-04): `BattleBalanceSettingsProvider` stops resolving `TaomSettings.Instance` on every read; it caches the reference lazily on the first non-null read and reads through it, so MCM edits still apply live.
 - 2026-05-13 — Phase 9b: `BattleBalanceConfigProvider` now validates per-key (TierPower T0-T10 finite + > 0, CulturalSurvivalBonuses finite + [-1, +1]); invalid values revert to compiled default with a warning (partial closes #140).

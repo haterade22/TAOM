@@ -37,6 +37,17 @@ public class DiplomacyShippedConfigTests
         new(rows.Where(r => r.Tier == AllianceTier.Hostile && (r.KingdomA == kingdom || r.KingdomB == kingdom))
                 .Select(r => r.KingdomA == kingdom ? r.KingdomB : r.KingdomA));
 
+    // Dunland ("empire") fights Rohan for Isengard. A Hostile row with Gondor ("empire_w") made Full War
+    // declare that war and block its peace in every campaign.
+    [TestMethod]
+    public void ShippedConfig_Dunland_IsNotHostileToGondor()
+    {
+        var dunlandFoes = HostileTo(ShippedRelationships(), "empire");
+
+        Assert.IsTrue(dunlandFoes.Contains("vlandia"), "Dunland lost its Hostile row with Rohan");
+        Assert.IsFalse(dunlandFoes.Contains("empire_w"), "Dunland is Hostile to Gondor again");
+    }
+
     // Arthedain and Ered Luin, the free realms added after the core seven, carry the same Hostile rows.
     [DataTestMethod]
     [DataRow("arthedain")]

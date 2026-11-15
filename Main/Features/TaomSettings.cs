@@ -472,7 +472,7 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
 
     [SettingPropertyGroup("Battle Balance/Casualty Ratios")]
     [SettingPropertyBool("Enable Cultural Survival Bonuses", Order = 3, RequireRestart = false,
-        HintText = "Applies per-culture survival modifiers from battle_balance_config.json. Gondor +30%, Lothlorien +50%, Mordor -20%.")]
+        HintText = "Applies the per-culture survival modifiers from battle_balance_config.json. A positive value means more of that culture's wounded survive.")]
     public bool EnableCulturalSurvivalBonuses { get; set; } = true;
 
     // --- Siege Defense ---
