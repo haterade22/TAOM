@@ -11,8 +11,9 @@ namespace TAOM.Dependencies;
 /// Engine boundary for <see cref="MissingTaomCheck"/>: one inquiry at the first main menu when this module loaded
 /// without TAOM. TAOM.Dependencies constructs before Native (ModulesToLoadAfterThis), and Native's GauntletUISubModule
 /// creates the inquiry manager in its own OnBeforeInitialModuleScreenSetAsRoot, after ours; InformationManager queues
-/// nothing sent before that. So the hook only arms the notice and the first application tick after it shows it. An
-/// inquiry, not a chat line: the initial screen clears the chat log after the splash video. The text is inline English:
+/// nothing sent before that. So the hook only arms the notice, and the submodule tick loop that follows all modules' hooks in the same
+/// Module.OnApplicationTick shows it. An
+/// inquiry, not a chat line: the initial screen clears the chat log after the splash video. The text is plain English:
 /// TAOM's language files load only with TAOM, which is exactly the module missing here. Never throws.
 /// </summary>
 internal static class MissingTaomNotice
@@ -49,7 +50,8 @@ internal static class MissingTaomNotice
         }
     }
 
+    // Plain English: the notice shows only when TAOM did not load, and TAOM's language files load only with TAOM.
     internal static string Text(MissingTaomReason reason) => reason == MissingTaomReason.WarSails
-        ? new TextObject("{=taom_missing_taom_war_sails}TAOM did not load because War Sails is ticked in the launcher, and TAOM does not work with War Sails. Close the game, untick War Sails in the launcher, check that TAOM is ticked, and start again.").ToString()
-        : new TextObject("{=taom_missing_taom_not_loaded}TAOM did not load, so this game is running without it. Close the game, tick TAOM in the launcher, and start again. If TAOM is already ticked, it failed to load: please report it and include your game's log files.").ToString();
+        ? "TAOM did not load because War Sails is ticked in the launcher, and TAOM does not work with War Sails. Close the game, untick War Sails in the launcher, check that TAOM is ticked, and start again."
+        : "TAOM did not load, so this game is running without it. Close the game, tick TAOM in the launcher, and start again. If TAOM is already ticked, the launcher left it out: please report it and include your game's log files.";
 }

@@ -31,13 +31,16 @@ one inquiry that lists every problem it found:
 - **Without this notice:** TAOM's own War Sails alert never runs, and the player gets the plain War Sails
   menu with no word on why.
 - **Fix:** TAOM.Dependencies loads either way, so it says it: `MissingTaomCheck` (pure) and
-  `MissingTaomNotice` show one inquiry when TAOM_Map or TAOM.Dependencies is loaded and TAOM is not,
-  naming War Sails when `NavalDLC` is loaded, otherwise saying TAOM is not ticked or failed to load.
+  `MissingTaomNotice` show one inquiry when TAOM_Map is loaded and TAOM is not, naming War
+  Sails when `NavalDLC` is loaded, otherwise saying TAOM is not ticked or the launcher left it out.
+  TAOM.Dependencies alone does not count: its alias stubs are `DefaultModule` and serve the BUTR ids to
+  other playsets, so it loads without TAOM on purpose. A TAOM whose DLL fails after the launcher listed it
+  is not detected here.
   TAOM.Dependencies constructs before Native, whose `GauntletUISubModule` creates the inquiry manager in
-  its own `OnBeforeInitialModuleScreenSetAsRoot`; so Dependencies' hook only arms the notice and the next
-  `OnApplicationTick` shows it, once per process, never on a dedicated server. The text is inline English
-  (TAOM's language files load only with TAOM); the rows sit in `taom_module_strings.xml` for the language
-  pass. It logs to `Modules\TAOM.Dependencies\diag.log` (`MissingTaomNotice: reason=...`).
+  its own `OnBeforeInitialModuleScreenSetAsRoot`; so Dependencies' hook only arms the notice, and its
+  `OnApplicationTick` in the same frame (after every module's hook) shows it, once per process, never on a
+  dedicated server. The text is plain English with no language rows: TAOM's language files load only with
+  TAOM. It logs to `Modules\TAOM.Dependencies\diag.log` (`MissingTaomNotice: reason=...`).
 
 ### Separate library copies
 

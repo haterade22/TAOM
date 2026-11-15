@@ -35,7 +35,9 @@ public static class MissingTaomCheck
     {
         var loaded = new HashSet<string>(loadedModuleIds ?? Enumerable.Empty<string>(), StringComparer.OrdinalIgnoreCase);
         if (loaded.Contains(TaomModuleId)) return MissingTaomReason.None;
-        if (!loaded.Contains(MapModuleId) && !loaded.Contains(DependenciesModuleId)) return MissingTaomReason.None;
+        // TAOM_Map only: TAOM.Dependencies also loads in playsets without TAOM, because its alias stubs are
+        // DefaultModule and serve the BUTR ids to other mods (Stubs/*/_Module/SubModule.xml).
+        if (!loaded.Contains(MapModuleId)) return MissingTaomReason.None;
         return loaded.Contains(WarSailsModuleId) ? MissingTaomReason.WarSails : MissingTaomReason.NotLoaded;
     }
 }

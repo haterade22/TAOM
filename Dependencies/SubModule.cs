@@ -345,7 +345,7 @@ public class SubModule : MBSubModuleBase
         if (!GameNetwork.IsDedicatedServer) MissingTaomNotice.Arm();
     }
 
-    /// <summary>Shows the armed notice one tick later, once Native's inquiry manager exists. Never throws.</summary>
+    /// <summary>Shows the armed notice in the same frame, after every module's hook ran (Native's inquiry manager exists then). Never throws.</summary>
     protected override void OnApplicationTick(float dt)
     {
         base.OnApplicationTick(dt);

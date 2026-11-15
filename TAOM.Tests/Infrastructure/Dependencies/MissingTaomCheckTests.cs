@@ -58,9 +58,10 @@ public class MissingTaomCheckTests
     }
 
     [TestMethod]
-    public void Evaluate_OnlyDependencies_StillCounts()
+    public void Evaluate_DependenciesWithoutTheMap_ReturnsNone_ItServesOtherPlaysetsThroughTheStubs()
     {
-        Assert.AreEqual(MissingTaomReason.WarSails, MissingTaomCheck.Evaluate(With("TAOM.Dependencies", "NavalDLC")));
+        Assert.AreEqual(MissingTaomReason.None, MissingTaomCheck.Evaluate(With("TAOM.Dependencies", "NavalDLC")));
+        Assert.AreEqual(MissingTaomReason.None, MissingTaomCheck.Evaluate(With("TAOM.Dependencies", "Bannerlord.Harmony")));
     }
 
     [TestMethod]
@@ -106,19 +107,14 @@ public class MissingTaomCheckTests
     }
 
     [TestMethod]
-    public void NoticeTexts_InlineEnglish_MatchTheBaseStringRows()
+    public void NoticeTexts_HaveNoLanguageRows_TheyShowOnlyWhenTaomsStringsDidNotLoad()
     {
         var source = File.ReadAllText(RepoPaths.RepoPath("Dependencies", "MissingTaomNotice.cs"));
         var rows = XDocument.Load(RepoPaths.RepoPath("Main", "_Module", "ModuleData", "taom_module_strings.xml"))
             .Root!.Elements("string").ToDictionary(e => (string)e.Attribute("id")!, e => (string)e.Attribute("text")!);
 
-        foreach (var key in new[] { "taom_missing_taom_war_sails", "taom_missing_taom_not_loaded" })
-        {
-            var inline = Regex.Match(source, "\"(\\{=" + key + "\\}[^\"]*)\"");
-            Assert.IsTrue(inline.Success, key + " not found in MissingTaomNotice.cs");
-            Assert.IsTrue(rows.ContainsKey(key), key + " has no row in taom_module_strings.xml");
-            Assert.AreEqual(rows[key], inline.Groups[1].Value, key + ": inline English and base row differ");
-        }
+        Assert.IsFalse(source.Contains("{=taom_missing_taom"), "the notice texts carry a TAOM key nobody can translate");
+        Assert.IsFalse(rows.Keys.Any(k => k.StartsWith("taom_missing_taom")), "a dead row for the missing-TAOM notice");
     }
 
     private static string ModuleId(params string[] path) =>

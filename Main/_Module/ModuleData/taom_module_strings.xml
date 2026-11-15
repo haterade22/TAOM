@@ -3503,8 +3503,6 @@
 	<string id="taom_bundled_library_copies_body" text="{=taom_bundled_library_copies_body}TAOM.Dependencies already provides Harmony, ButterLib, UIExtenderEx and MCM, so these separate copies are not needed:{NEWLINE}{NEWLINE}{LIST}{NEWLINE}{NEWLINE}Unsubscribe from a Steam Workshop copy. A copy in the Modules folder took the place of TAOM's own small module with that name: reinstall TAOM to put it back, and do not delete the folder, or mods that need the library stop loading." />
 	<string id="taom_bundled_library_copy_workshop" text="{=taom_bundled_library_copy_workshop}{NAME} {VERSION}, Steam Workshop" />
 	<string id="taom_bundled_library_copy_modules" text="{=taom_bundled_library_copy_modules}{NAME} {VERSION}, folder {FOLDER}" />
-	<string id="taom_missing_taom_war_sails" text="{=taom_missing_taom_war_sails}TAOM did not load because War Sails is ticked in the launcher, and TAOM does not work with War Sails. Close the game, untick War Sails in the launcher, check that TAOM is ticked, and start again." />
-	<string id="taom_missing_taom_not_loaded" text="{=taom_missing_taom_not_loaded}TAOM did not load, so this game is running without it. Close the game, tick TAOM in the launcher, and start again. If TAOM is already ticked, it failed to load: please report it and include your game's log files." />
 	<!-- Bonds of Battle -->
 	<string id="taom_bonds_together" text="{=taom_bonds_together}You fought together with {LORD}." />
 	<string id="taom_bonds_against" text="{=taom_bonds_against}You fought against {LORD}." />

@@ -1619,3 +1619,9 @@ PR #1308's shader notice hooks `MissionState.OnTick`, which runs for every missi
 - **Why missed:** the measurements and the test case were battle loads, and the text followed the test case.
 - **Prevent:** before writing the text of a mission-level notice, list who opens a mission (`MissionState.OpenNew` callers) and word it for all of them, or filter in code. Change the English before the language rows are seeded, when the change is free.
 - **Source:** [rca-pr1308-battle-shader-notice-2026-11-15.md](../rca-pr1308-battle-shader-notice-2026-11-15.md) finding 3.
+
+### TAOM.Dependencies loads without TAOM on purpose, so it never proves the player wanted TAOM (PR #1309, 2026-11-15)
+A notice for "TAOM did not load" first fired when TAOM.Dependencies loaded without TAOM. The alias stubs (`Stubs/*/_Module/SubModule.xml`) are `DefaultModule` and depend on TAOM.Dependencies, so any playset with a mod that needs Harmony loads it, and those players would have seen the notice at every launch. The notice also had language rows that could never show, because TAOM's language files load only with TAOM.
+- **Why missed:** the trigger came from one observed launch, which had TAOM_Map too.
+- **Prevent:** key a "TAOM is missing" check on TAOM_Map, the module only TAOM players load. Text shown only when TAOM did not load is plain English with no `{=KEY}` row.
+- **Source:** [rca-pr1309-startup-alerts-2026-11-15.md](../rca-pr1309-startup-alerts-2026-11-15.md) findings 6 and 7.
