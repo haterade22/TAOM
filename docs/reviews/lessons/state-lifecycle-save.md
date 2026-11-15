@@ -1379,3 +1379,12 @@ A comment on TAOM's formation preset definer said the base id "matches the origi
 - **Why missed:** the sentence names two true facts, the base id and the class id, and each later reader checked those two. Saved data of two builds or two mods meets only when the behaviour's `StringId` (the type name by default), the SyncData key, the type id (base id plus class id), each field or property id and each member's type all match. Nobody opened the reader of the data.
 - **Prevent:** before writing "imports", "compatible" or "migrates" about saved data, read both ends: the writer's key and saved members, and the reader's. State which parts match, one by one, and what was not compared. A matching number is not an import. The rule line for tests is in `.claude/rules/tests.md`.
 - **Source:** [rca-external-mod-contract-tests-2026-11-13.md](../rca-external-mod-contract-tests-2026-11-13.md) findings 1 and 7; [external-mod-couplings.md](../../reference/external-mod-couplings.md) "What each value protects".
+
+### A startup guard in TAOM.Dependencies skips the Modding Kit like its siblings (#1340, 2026-11-16)
+The game version guard in `GameVersionNotice.Run` checked the dedicated server and test mode, then turned TAOM's code off on a version mismatch. TAOM.Dependencies also loads in the Modding Kit (`Win64_Shipping_wEditor`), whose engine can lag the client's, so the guard would have disabled TAOM inside the Kit. `IncompatibleModDetector.RunEarlyPhase` already skips the Kit through `IsEditorBin`.
+
+**Why missed:** the code followed the engine's own box rules and a test that runs with the game installed; the neighbouring startup code in the same assembly was not compared.
+
+**Prevent:** a new startup guard or marker in `Dependencies/` reads `IncompatibleModDetector.RunEarlyPhase` first and takes the same early return on `IsEditorBin`, with a log line. A test that reads a method body from a referenced engine assembly carries `RequiresGameIL` and `BindingVerification`.
+
+**Source:** [rca-game-version-warning-2026-11-16.md](../rca-game-version-warning-2026-11-16.md) findings 1 and 2.
