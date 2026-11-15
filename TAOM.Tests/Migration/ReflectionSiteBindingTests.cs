@@ -40,6 +40,9 @@ public class ReflectionSiteBindingTests
     // --- EquipPresets / inventory (InventoryScreenAdapter.cs) ---
     [DataRow("TaleWorlds.CampaignSystem.ViewModelCollection.Inventory.SPInventoryVM", "SPInventoryVM", "_currentCharacter", "Field", "InventoryScreenAdapter.cs:29")]
     [DataRow("TaleWorlds.CampaignSystem.ViewModelCollection.Inventory.SPInventoryVM", "SPInventoryVM", "_inventoryLogic", "Field", "InventoryScreenAdapter.cs:32")]
+    // --- Kingdom colours follow the ruler's banner edit (BannerHeroAdapter.cs, #1297) ---
+    [DataRow("TaleWorlds.CampaignSystem.Kingdom", "Kingdom", "<PrimaryBannerColor>k__BackingField", "Field", "BannerHeroAdapter.cs:40")]
+    [DataRow("TaleWorlds.CampaignSystem.Kingdom", "Kingdom", "<SecondaryBannerColor>k__BackingField", "Field", "BannerHeroAdapter.cs:41")]
     // --- A hollow parent takes its registered XML twin as origin (HeroCharacterStateAdapter.cs, #1076) ---
     [DataRow("TaleWorlds.CampaignSystem.CharacterObject", "CharacterObject", "_originCharacter", "Field", "HeroCharacterStateAdapter.cs:13")]
     // --- QuickActions panel refresh after a batch transfer (InventoryVMAdapter.cs, #917) ---

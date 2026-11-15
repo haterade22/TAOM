@@ -7963,6 +7963,10 @@
     <string id="taom_battle_shader_notice_title" text="Preparing this scene: {COUNT} shaders compiled" />
     <string id="taom_battle_shader_notice_detail" text="The game is compiling shaders for this scene. It is not frozen. This can take a minute or two." />
     <string id="taom_battle_shader_loading_line" text="Compiling shaders for this scene. This can take a minute or two; the game is not frozen." />
+    <string id="taom_startup_alert_war_sails" text="War Sails is loaded, but TAOM does not support it. Close the game, untick War Sails in the launcher, and start again." />
+    <string id="taom_bundled_library_copies_body" text="TAOM.Dependencies already provides Harmony, ButterLib, UIExtenderEx and MCM, so these separate copies are not needed:{NEWLINE}{NEWLINE}{LIST}{NEWLINE}{NEWLINE}Unsubscribe from a Steam Workshop copy. A copy in the Modules folder took the place of TAOM's own small module with that name: reinstall TAOM to put it back, and do not delete the folder, or mods that need the library stop loading." />
+    <string id="taom_bundled_library_copy_workshop" text="{NAME} {VERSION}, Steam Workshop" />
+    <string id="taom_bundled_library_copy_modules" text="{NAME} {VERSION}, folder {FOLDER}" />
   </strings>
 
 </base>

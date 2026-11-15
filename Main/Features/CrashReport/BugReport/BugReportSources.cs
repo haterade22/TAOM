@@ -32,7 +32,7 @@ public sealed class BugReportSources
     }.Select(r => Path.Combine(r, "Mount and Blade II Bannerlord"));
 
     public static BugReportSources Collect(string logsDir, string? currentLogPath, IEnumerable<string> engineDirs,
-        long maxCrashFileBytes = BugReportFiles.MaxCrashFileBytes)
+        long maxCrashFileBytes = BugReportFiles.MaxCrashFileBytes, long maxCrashFolderBytes = BugReportFiles.MaxCrashFolderBytes)
     {
         var files = new List<BugReportFile>();
         var notes = new List<string>();
@@ -63,14 +63,21 @@ public sealed class BugReportSources
         else
         {
             notes.Add($"engine crash folder: {crash.Name}");
-            foreach (var f in FilesIn(crash.FullName))
+            long taken = 0;
+            foreach (var f in FilesIn(crash.FullName).OrderBy(f => f.Length))
             {
                 var entry = "crash/" + f.Name;
-                if (f.Length <= maxCrashFileBytes)
-                    files.Add(new BugReportFile(entry, f.FullName));
-                else
+                if (f.Length > maxCrashFileBytes)
                     notes.Add($"{entry} not included: {f.Length / (1024 * 1024)} MB is over the " +
                               $"{maxCrashFileBytes / (1024 * 1024)} MB limit; it stays in the game's crashes folder");
+                else if (taken + f.Length > maxCrashFolderBytes)
+                    notes.Add($"{entry} not included: the crash files are over their " +
+                              $"{maxCrashFolderBytes / (1024 * 1024)} MB total; it stays in the game's crashes folder");
+                else
+                {
+                    taken += f.Length;
+                    files.Add(new BugReportFile(entry, f.FullName));
+                }
             }
         }
 
