@@ -76,6 +76,7 @@ panel, the radial menu, photo mode or another pop-up is open.
 |---|---|
 | Heal yourself | The player's agent and its mount back to full health |
 | Heal your side | Every active soldier of the player's team and its ally team, and their mounts |
+| God mode: off / on | Switches god mode: the player and the horse they ride take no damage until it is switched off or the battle ends |
 | Rout the enemy | Vanilla `mission.flee_enemies`: every active enemy soldier panics |
 | Kill all enemies | Vanilla `mission.kill_all_enemies`: every AI-controlled soldier of every enemy team dies |
 | +10 allied troops | 10 copies of the non-hero soldiers already on the player's side |
@@ -89,10 +90,20 @@ Every entry calls `BattleCheatService`, the same code as the console commands be
   the enemy side in a town) changes nothing.
 - They go through `MissionTroopSpawner`, the same code as `taom.spawn_troops`: its team check, its creature-bandit rule (a
   creature bandit always spawns as an enemy) and its ring of positions around the player.
+- God mode sets the engine's own `Agent.MortalityState.Immortal` on the main agent and the mount it rides. In v1.5.7
+  `Agent.HandleBlow` zeroes every blow's damage on an Immortal agent, the engine's and TAOM's own creature blows (spider,
+  trample) alike, while the blow still lands: knockdowns, knockbacks and falls play as usual, they only take no health.
+  `Invulnerable` was not used: the engine reads it only in its melee, missile, charge and fall callbacks, so a blow registered
+  directly would still hurt. `BattleCheatMenuView` calls `BattleCheatService.TickGodMode` every frame, which protects a new
+  horse after a remount, sets a horse the player left back to Mortal, and once the battle ends or a side retreats turns god
+  mode off and sets both back. It touches only agents it made Immortal itself (`BattleCheatPolicy.PlanGodMode`): an agent the
+  game made Invulnerable or Immortal is never taken over, and an agent whose state something else changed is let go untouched.
+  It never carries over to the next mission (`BattleCheatState.MissionKey`). Nothing is saved.
 
 | Command | Effect |
 |---|---|
 | `taom.cheat_battle_heal [self\|side]` | Heals the player (default) or the player's side |
+| `taom.cheat_battle_god [on\|off]` | Switches god mode (no argument), or turns it on or off |
 | `taom.cheat_battle_rout` | Routs the enemy |
 | `taom.cheat_battle_kill` | Kills every AI-controlled enemy |
 | `taom.cheat_battle_spawn <1-200> [ally\|enemy]` | Copies of that side's non-hero soldiers (default enemy, as `taom.spawn_troops`) |
@@ -167,6 +178,10 @@ capped `ISpecialResourceService.GrantAmount`, for the main hero's own resource.
 10. Turn the switch off and press Esc in a battle: no Cheats item.
 11. With the switch on, press H in a battle: the battle list opens. Press Ctrl+H with game cheat mode on: vanilla's cheat runs
     and no list opens. Turn the switch off: H in battle does nothing.
+12. Mounted in a field battle, pick "God mode: off". Open the list again: it reads "God mode: on". Let enemies hit you and your
+    horse, ride off a drop and get hit by a spider or a trampling beast: no health is lost, and you are still knocked down
+    and staggered. Dismount, take another horse: the new horse takes no damage, the old one does. Pick "God mode: on": both
+    take damage again. Turn it on, win the battle, start another: the list reads "God mode: off".
 
 ## Limits
 
@@ -175,7 +190,11 @@ capped `ISpecialResourceService.GrantAmount`, for the main hero's own resource.
 - Special resources are per hero and resolved by kingdom, then culture. A hero whose kingdom and culture grant none gets
   "Nothing changed".
 - Not tested in game (14 Nov 2026): the button, the map key, the menus, the lists and the camera after a teleport;
-  the Esc item, the battle key, the battle list and every battle cheat.
+  the Esc item, the battle key, the battle list and every battle cheat. God mode (15 Nov 2026) is not tested in game either.
+- God mode is kept by `BattleCheatMenuView`'s tick. A mission without the game's default views would get god mode only at the
+  moment it is switched, with no remount follow-up and no switch-off at the battle's end; the next mission still starts with
+  it off.
+- God mode stays on after the last enemy falls, while the player walks the field, until the mission ends or a side retreats.
 - A clash of H with the RTS Camera or Command System defaults is unknown; rebind either key if both act.
 - A teleport or relation pick runs inside the same crash guard as a menu button (`Guarded` wraps the list's choice).
 - Whether the battle pauses while the list is open has not been checked; the list is opened without the pause option.
@@ -189,3 +208,5 @@ capped `ISpecialResourceService.GrantAmount`, for the main hero's own resource.
 - 2026-11-14: Battle cheat menu: a Cheats item in the single-player Esc menu (Patch152), `taom.cheat_battle_*` console commands,
   and `taom.spawn_troops`' spawner moved to `MissionTroopSpawner` to be shared.
 - 2026-11-15: Rebindable battle key "Open Battle Cheat Menu (TAOM)", default H, through the Esc item's gate.
+- 2026-11-15: God mode in the battle list ("God mode: off / on") and `taom.cheat_battle_god [on|off]`: the player and the
+  horse they ride take no damage (engine Immortal state) until it is switched off or the battle ends.

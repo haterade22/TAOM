@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using TAOM.Adapters;
 using TAOM.Core.Logging;
 using TAOM.Features.CoopInterop;
@@ -22,6 +24,8 @@ public sealed class BattleCheatService
     private readonly ICoopSessionProvider _coop;
     private readonly IDedicatedServerProvider _dedicated;
     private readonly IModLogger _logger;
+    private readonly List<GodModeAgent> _godModeHeld = new();
+    private int _godModeMission;
 
     public BattleCheatService(IBattleCheatAdapter battle, ICoopSessionProvider coop, IDedicatedServerProvider dedicated, IModLogger logger)
     {
@@ -34,11 +38,18 @@ public sealed class BattleCheatService
     /// <summary>Read live on every call (ICoopSessionProvider's contract).</summary>
     public bool IsSinglePlayer => CoopSessionPolicy.IsSinglePlayerAuthority(_coop, _dedicated);
 
+    /// <summary>
+    /// God mode is on: the main agent and the mount it rides take no damage. It never carries over to another mission
+    /// (<see cref="BattleCheatState.MissionKey"/>), and <see cref="TickGodMode"/> turns it off once the battle ends or a side retreats.
+    /// </summary>
+    public bool GodModeOn { get; private set; }
+
     /// <summary>The menu's entry for <paramref name="action"/>; the spawn entries add <see cref="MenuSpawnCount"/>.</summary>
     public CheatOutcome Run(BattleCheatAction action) => action switch
     {
         BattleCheatAction.HealSelf => HealSelf(),
         BattleCheatAction.HealSide => HealSide(),
+        BattleCheatAction.GodMode => ToggleGodMode(),
         BattleCheatAction.Rout => RoutEnemies(),
         BattleCheatAction.Kill => KillEnemies(),
         BattleCheatAction.SpawnAllies => SpawnTroops(playerSide: true, MenuSpawnCount),
@@ -80,6 +91,69 @@ public sealed class BattleCheatService
         }
 
         return spawned == 0 ? Nothing() : Log(playerSide ? "spawn allies" : "spawn enemies", spawned);
+    }
+
+    /// <summary>The menu's god mode entry: turns it on when off, off when on.</summary>
+    public CheatOutcome ToggleGodMode() => ChangeGodMode(null);
+
+    /// <summary>
+    /// Turns god mode on or off, behind the same gate as every battle cheat, and applies it at once. Number = 1 when it is now on,
+    /// 0 when off. While on, <see cref="TickGodMode"/> keeps it on the main agent and whatever mount it rides.
+    /// </summary>
+    public CheatOutcome SetGodMode(bool on) => ChangeGodMode(on);
+
+    /// <summary>
+    /// Once per mission frame. Does nothing while god mode is off and holds no agent. While on it protects the main agent and
+    /// the mount it rides now (a new horse after a remount too) and releases a horse the player left; once the battle ends or a
+    /// side retreats it turns itself off and releases everything it holds.
+    /// </summary>
+    public void TickGodMode()
+    {
+        if (!GodModeOn && _godModeHeld.Count == 0) return;
+        var state = _battle.ReadState();
+        if (ForgetOtherMission(state)) return;
+        if (GodModeOn && (!IsSinglePlayer || !BattleCheatPolicy.IsBattleOn(state)))
+        {
+            GodModeOn = false;
+            _logger.LogInfo("[CheatMenu] battle god mode: off, the battle is over");
+        }
+        ApplyGodMode();
+    }
+
+    // null = switch it. The co-op check comes before any adapter call, as for every battle cheat.
+    private CheatOutcome ChangeGodMode(bool? on)
+    {
+        if (!IsSinglePlayer) return Refused();
+        var state = _battle.ReadState();
+        ForgetOtherMission(state);
+        if (!BattleCheatPolicy.IsBattleOn(state)) return NoBattle();
+        GodModeOn = on ?? !GodModeOn;
+        ApplyGodMode();
+        _logger.LogInfo($"[CheatMenu] battle god mode: {(GodModeOn ? "on" : "off")}");
+        return new CheatOutcome(CheatOutcomeKind.Done, Number: GodModeOn ? 1 : 0);
+    }
+
+    // State left from an earlier mission is dropped with no engine call: its agents are gone, and an index may name another
+    // agent in this mission. Returns true when it dropped something.
+    private bool ForgetOtherMission(BattleCheatState state)
+    {
+        if (state.MissionKey == _godModeMission) return false;
+        _godModeMission = state.MissionKey;
+        var had = GodModeOn || _godModeHeld.Count > 0;
+        GodModeOn = false;
+        _godModeHeld.Clear();
+        return had;
+    }
+
+    private void ApplyGodMode()
+    {
+        var held = _godModeHeld.Count == 0 ? Array.Empty<GodModeAgent>() : _battle.ReadAgents(_godModeHeld.ToArray());
+        var targets = GodModeOn ? _battle.GodModeTargets() : Array.Empty<GodModeAgent>();
+        var plan = BattleCheatPolicy.PlanGodMode(GodModeOn, targets, held);
+        foreach (var agent in plan.Release) _battle.SetImmortal(agent.Index, false);
+        foreach (var agent in plan.Protect) _battle.SetImmortal(agent.Index, true);
+        _godModeHeld.Clear();
+        _godModeHeld.AddRange(plan.Held);
     }
 
     private CheatOutcome Act(string what, System.Func<int> act)

@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
@@ -76,6 +77,8 @@ public class BattleCheatServiceTests
         _battle.DidNotReceive().RoutEnemies();
         _battle.DidNotReceive().KillEnemies();
         _battle.DidNotReceiveWithAnyArgs().SpawnTroops(default!, default, default, default);
+        _battle.DidNotReceiveWithAnyArgs().SetImmortal(default, default);
+        Assert.IsFalse(_service.GodModeOn);
     }
 
     // ---- heal, rout, kill ----
@@ -238,5 +241,187 @@ public class BattleCheatServiceTests
         _battle.Received(1).SpawnTroops("a", BattleCheatService.MenuSpawnCount, true, 0);
         _service.Run(BattleCheatAction.SpawnEnemies);
         _battle.Received(1).SpawnTroops("a", BattleCheatService.MenuSpawnCount, false, 0);
+        _service.Run(BattleCheatAction.GodMode);
+        Assert.IsTrue(_service.GodModeOn);
+    }
+
+    // ---- god mode ----
+
+    private static readonly GodModeAgent[] RiderAndHorse =
+    {
+        new(1, AgentMortality.Mortal), new(2, AgentMortality.Mortal),
+    };
+
+    private static readonly GodModeAgent[] RiderAndHorseHeld =
+    {
+        new(1, AgentMortality.Immortal), new(2, AgentMortality.Immortal),
+    };
+
+    private void HeldReadsAs(AgentMortality mortality) =>
+        _battle.ReadAgents(Arg.Any<IReadOnlyList<GodModeAgent>>())
+            .Returns(c => c.ArgAt<IReadOnlyList<GodModeAgent>>(0).Select(a => a with { Mortality = mortality }).ToList());
+
+    [TestMethod]
+    public void GodMode_InACoopSession_RefusedAndTouchesNothing()
+    {
+        _coop.IsSessionActive.Returns(true);
+
+        Assert.AreEqual(CheatOutcomeKind.CoopRefused, _service.ToggleGodMode().Kind);
+        Assert.AreEqual(CheatOutcomeKind.CoopRefused, _service.SetGodMode(true).Kind);
+        _service.TickGodMode();
+        Assert.IsFalse(_service.GodModeOn);
+        Assert.AreEqual(0, _battle.ReceivedCalls().Count());
+    }
+
+    [TestMethod]
+    public void GodMode_TurnedOn_MakesTheRiderAndHorseImmortal()
+    {
+        _battle.GodModeTargets().Returns(RiderAndHorse);
+
+        var outcome = _service.ToggleGodMode();
+
+        Assert.AreEqual(CheatOutcomeKind.Done, outcome.Kind);
+        Assert.AreEqual(1f, outcome.Number, "1 = now on");
+        Assert.IsTrue(_service.GodModeOn);
+        _battle.Received(1).SetImmortal(1, true);
+        _battle.Received(1).SetImmortal(2, true);
+        _battle.DidNotReceive().SetImmortal(Arg.Any<int>(), false);
+    }
+
+    [TestMethod]
+    public void GodMode_TurnedOff_SetsBothBackToMortal()
+    {
+        _battle.GodModeTargets().Returns(RiderAndHorse);
+        _service.ToggleGodMode();
+        HeldReadsAs(AgentMortality.Immortal);
+        _battle.ClearReceivedCalls();
+
+        var outcome = _service.ToggleGodMode();
+
+        Assert.AreEqual(CheatOutcomeKind.Done, outcome.Kind);
+        Assert.AreEqual(0f, outcome.Number, "0 = now off");
+        Assert.IsFalse(_service.GodModeOn);
+        _battle.Received(1).SetImmortal(1, false);
+        _battle.Received(1).SetImmortal(2, false);
+        _battle.DidNotReceive().SetImmortal(Arg.Any<int>(), true);
+    }
+
+    [TestMethod]
+    public void GodMode_SetOnTwice_StaysOnAndReleasesNothing()
+    {
+        _battle.GodModeTargets().Returns(RiderAndHorse);
+        _service.SetGodMode(true);
+        _battle.GodModeTargets().Returns(RiderAndHorseHeld);
+        HeldReadsAs(AgentMortality.Immortal);
+        _battle.ClearReceivedCalls();
+
+        var second = _service.SetGodMode(true);
+
+        Assert.IsTrue(_service.GodModeOn);
+        Assert.AreEqual(1f, second.Number);
+        _battle.DidNotReceiveWithAnyArgs().SetImmortal(default, default);
+    }
+
+    [TestMethod]
+    public void GodMode_OutsideARunningBattle_NoBattleAndStaysOff()
+    {
+        _battle.ReadState().Returns(BattleCheatPolicyTests.On() with { Ending = true });
+
+        Assert.AreEqual(CheatOutcomeKind.NoBattle, _service.SetGodMode(true).Kind);
+        Assert.IsFalse(_service.GodModeOn);
+        _battle.DidNotReceiveWithAnyArgs().SetImmortal(default, default);
+    }
+
+    [TestMethod]
+    public void TickGodMode_Off_ReadsNothing()
+    {
+        _service.TickGodMode();
+
+        Assert.AreEqual(0, _battle.ReceivedCalls().Count(), "an idle god mode costs nothing per frame");
+    }
+
+    [TestMethod]
+    public void TickGodMode_NewHorse_ProtectsItAndReleasesTheOldOne()
+    {
+        _battle.GodModeTargets().Returns(RiderAndHorse);
+        _service.SetGodMode(true);
+        HeldReadsAs(AgentMortality.Immortal);
+        _battle.GodModeTargets().Returns(new[] { new GodModeAgent(1, AgentMortality.Immortal), new GodModeAgent(5, AgentMortality.Mortal) });
+        _battle.ClearReceivedCalls();
+
+        _service.TickGodMode();
+
+        _battle.Received(1).SetImmortal(5, true);
+        _battle.Received(1).SetImmortal(2, false);
+        _battle.DidNotReceive().SetImmortal(1, Arg.Any<bool>());
+    }
+
+    [TestMethod]
+    public void TickGodMode_HeldHorseGoneOrItsSlotReused_LetGoWithoutATouch()
+    {
+        _battle.GodModeTargets().Returns(RiderAndHorse);
+        _service.SetGodMode(true);
+        // The adapter leaves out a held agent that is gone or whose index now holds another agent.
+        _battle.ReadAgents(Arg.Any<IReadOnlyList<GodModeAgent>>()).Returns(new[] { new GodModeAgent(1, AgentMortality.Immortal) });
+        _battle.GodModeTargets().Returns(new[] { new GodModeAgent(1, AgentMortality.Immortal) });
+        _service.TickGodMode();
+        _battle.ClearReceivedCalls();
+
+        _service.SetGodMode(false);
+
+        _battle.Received(1).SetImmortal(1, false);
+        _battle.DidNotReceive().SetImmortal(2, Arg.Any<bool>());
+    }
+
+    [TestMethod]
+    public void TickGodMode_BattleEnded_TurnsOffAndReleases()
+    {
+        _battle.GodModeTargets().Returns(RiderAndHorse);
+        _service.SetGodMode(true);
+        HeldReadsAs(AgentMortality.Immortal);
+        _battle.ReadState().Returns(BattleCheatPolicyTests.On() with { Ending = true });
+        _battle.ClearReceivedCalls();
+
+        _service.TickGodMode();
+
+        Assert.IsFalse(_service.GodModeOn);
+        _battle.Received(1).SetImmortal(1, false);
+        _battle.Received(1).SetImmortal(2, false);
+        _battle.ClearReceivedCalls();
+        _service.TickGodMode();
+        Assert.AreEqual(0, _battle.ReceivedCalls().Count(), "nothing held after the release");
+    }
+
+    [TestMethod]
+    public void TickGodMode_NextMission_StartsOffAndTouchesNoAgentOfIt()
+    {
+        _battle.ReadState().Returns(BattleCheatPolicyTests.On() with { MissionKey = 11 });
+        _battle.GodModeTargets().Returns(RiderAndHorse);
+        _service.SetGodMode(true);
+        _battle.ReadState().Returns(BattleCheatPolicyTests.On() with { MissionKey = 22 });
+        HeldReadsAs(AgentMortality.Immortal);
+        _battle.ClearReceivedCalls();
+
+        _service.TickGodMode();
+
+        Assert.IsFalse(_service.GodModeOn);
+        _battle.DidNotReceiveWithAnyArgs().SetImmortal(default, default);
+        _battle.DidNotReceiveWithAnyArgs().ReadAgents(default!);
+    }
+
+    [TestMethod]
+    public void ToggleGodMode_InTheNextMission_TurnsItOn()
+    {
+        _battle.ReadState().Returns(BattleCheatPolicyTests.On() with { MissionKey = 11 });
+        _battle.GodModeTargets().Returns(RiderAndHorse);
+        _service.SetGodMode(true);
+        _battle.ReadState().Returns(BattleCheatPolicyTests.On() with { MissionKey = 22 });
+        _battle.ClearReceivedCalls();
+
+        var outcome = _service.ToggleGodMode();
+
+        Assert.AreEqual(1f, outcome.Number, "a stale 'on' from the last battle must not make the first toggle turn it off");
+        _battle.DidNotReceiveWithAnyArgs().ReadAgents(default!);
+        _battle.Received(1).SetImmortal(1, true);
     }
 }
