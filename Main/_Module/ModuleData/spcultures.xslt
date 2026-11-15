@@ -1278,7 +1278,7 @@
 				<name name="{{=aom_dale_male_name_5}}Ingvald" />
 				<name name="{{=aom_dale_male_name_6}}Kjartan" />
 				<name name="{{=aom_dale_male_name_7}}Sigvard" />
-				<name name="{{=aom_dale_male_name_8}}Torvald" />
+				<name name="{{=aom_dale_male_name_8}}Hrafnkel" />
 				<name name="{{=aom_dale_male_name_9}}Ulfrik" />
 				<name name="{{=aom_dale_male_name_10}}Vigmar" />
 				<name name="{{=aom_dale_male_name_11}}Asmund" />
@@ -1323,11 +1323,11 @@
 				<name name="{{=aom_dale_male_name_50}}Hakon" />
 			</male_names>
 			<female_names>
-				<name name="{{=aom_dale_female_name_1}}Astrid" />
+				<name name="{{=aom_dale_female_name_1}}Hallveig" />
 				<name name="{{=aom_dale_female_name_2}}Bergljot" />
 				<name name="{{=aom_dale_female_name_3}}Dagny" />
 				<name name="{{=aom_dale_female_name_4}}Eldrid" />
-				<name name="{{=aom_dale_female_name_5}}Freydis" />
+				<name name="{{=aom_dale_female_name_5}}Gunnvor" />
 				<name name="{{=aom_dale_female_name_6}}Gudny" />
 				<name name="{{=aom_dale_female_name_7}}Halla" />
 				<name name="{{=aom_dale_female_name_8}}Hildegunn" />
@@ -1339,9 +1339,9 @@
 				<name name="{{=aom_dale_female_name_14}}Oddny" />
 				<name name="{{=aom_dale_female_name_15}}Hrefna" />
 				<name name="{{=aom_dale_female_name_16}}Ranveig" />
-				<name name="{{=aom_dale_female_name_17}}Sigrun" />
+				<name name="{{=aom_dale_female_name_17}}Ingrun" />
 				<name name="{{=aom_dale_female_name_18}}Sigyn" />
-				<name name="{{=aom_dale_female_name_19}}Svala" />
+				<name name="{{=aom_dale_female_name_19}}Asgerd" />
 				<name name="{{=aom_dale_female_name_20}}Thurid" />
 				<name name="{{=aom_dale_female_name_21}}Thorhild" />
 				<name name="{{=aom_dale_female_name_22}}Ulfhild" />
@@ -1567,7 +1567,7 @@
 				<name name="{{=aom_khand_male_name_10}}Kaidar" />
 				<name name="{{=aom_khand_male_name_11}}Kutlu" />
 				<name name="{{=aom_khand_male_name_12}}Mazar" />
-				<name name="{{=aom_khand_male_name_13}}Nogai" />
+				<name name="{{=aom_khand_male_name_13}}Arslan" />
 				<name name="{{=aom_khand_male_name_14}}Ozgan" />
 				<name name="{{=aom_khand_male_name_15}}Qorchi" />
 				<name name="{{=aom_khand_male_name_16}}Rasul" />
@@ -1623,7 +1623,7 @@
 				<name name="{{=aom_khand_female_name_14}}Nergis" />
 				<name name="{{=aom_khand_female_name_15}}Oyuna" />
 				<name name="{{=aom_khand_female_name_16}}Parisa" />
-				<name name="{{=aom_khand_female_name_17}}Qutlugh" />
+				<name name="{{=aom_khand_female_name_17}}Toregene" />
 				<name name="{{=aom_khand_female_name_18}}Roxana" />
 				<name name="{{=aom_khand_female_name_19}}Saghira" />
 				<name name="{{=aom_khand_female_name_20}}Tamar" />
