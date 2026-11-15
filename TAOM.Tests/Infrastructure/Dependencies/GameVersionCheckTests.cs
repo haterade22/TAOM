@@ -1,0 +1,259 @@
+using System;
+using System.IO;
+using System.Linq;
+using System.Xml.Linq;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using TAOM.Dependencies.Foundation;
+
+namespace TAOM.Tests.Infrastructure.Dependencies;
+
+/// <summary>
+/// TAOM.Dependencies warns, before the engine's "Error while loading TAOM" box, when the game is not the Bannerlord
+/// version TAOM's SubModule.xml pins for Native. These pin the compare, the pin reader, the text and where it runs.
+/// </summary>
+[TestClass]
+public class GameVersionCheckTests
+{
+    private const string Pin = "v1.5.7.*";
+
+    [TestMethod]
+    public void Evaluate_SameVersion_Matches()
+    {
+        Assert.AreEqual(GameVersionMatch.Match, GameVersionCheck.Evaluate(Pin, 1, 5, 7));
+    }
+
+    [TestMethod]
+    public void Evaluate_OtherRevision_IsMismatch()
+    {
+        Assert.AreEqual(GameVersionMatch.Mismatch, GameVersionCheck.Evaluate(Pin, 1, 5, 6));
+        Assert.AreEqual(GameVersionMatch.Mismatch, GameVersionCheck.Evaluate(Pin, 1, 5, 8));
+    }
+
+    [TestMethod]
+    public void Evaluate_OtherMinor_IsMismatch()
+    {
+        Assert.AreEqual(GameVersionMatch.Mismatch, GameVersionCheck.Evaluate(Pin, 1, 4, 7));
+        Assert.AreEqual(GameVersionMatch.Mismatch, GameVersionCheck.Evaluate(Pin, 1, 6, 7));
+    }
+
+    [TestMethod]
+    public void Evaluate_OtherMajor_IsMismatch()
+    {
+        Assert.AreEqual(GameVersionMatch.Mismatch, GameVersionCheck.Evaluate(Pin, 2, 5, 7));
+    }
+
+    [TestMethod]
+    public void Evaluate_WildcardRevision_MatchesEveryRevision()
+    {
+        Assert.AreEqual(GameVersionMatch.Match, GameVersionCheck.Evaluate("v1.5.*", 1, 5, 0));
+        Assert.AreEqual(GameVersionMatch.Match, GameVersionCheck.Evaluate("v1.5.*", 1, 5, 9));
+        Assert.AreEqual(GameVersionMatch.Mismatch, GameVersionCheck.Evaluate("v1.5.*", 1, 4, 9));
+    }
+
+    [TestMethod]
+    public void Evaluate_PinWithoutWildcardOrLetter_ComparesItsNumbers()
+    {
+        Assert.AreEqual(GameVersionMatch.Match, GameVersionCheck.Evaluate("v1.5.7", 1, 5, 7));
+        Assert.AreEqual(GameVersionMatch.Match, GameVersionCheck.Evaluate("1.5.7.*", 1, 5, 7));
+        Assert.AreEqual(GameVersionMatch.Mismatch, GameVersionCheck.Evaluate("1.5.7", 1, 5, 6));
+    }
+
+    [TestMethod]
+    public void Evaluate_GameVersionNotDetected_IsUnknown_NoWarning()
+    {
+        // VersionProbe leaves Major at 0 when the engine read failed.
+        Assert.AreEqual(GameVersionMatch.Unknown, GameVersionCheck.Evaluate(Pin, 0, 0, 0));
+    }
+
+    [TestMethod]
+    public void Evaluate_PinMissingOrUnreadable_IsUnknown_NoWarning()
+    {
+        foreach (var bad in new[] { null, "", "  ", "v1", "1", "vX.5.7", "v1.*.7", "v1.5.7.1.2", "v1.-5.7", "*" })
+            Assert.AreEqual(GameVersionMatch.Unknown, GameVersionCheck.Evaluate(bad, 1, 5, 6), bad ?? "null");
+    }
+
+    [TestMethod]
+    public void ReadSubModule_ShippedTaomFile_PinsNative157()
+    {
+        var path = RepoPaths.RepoPath("Main", "_Module", "SubModule.xml");
+        var (pin, version) = GameVersionCheck.ReadSubModule(File.ReadAllText(path));
+
+        Assert.AreEqual(Pin, pin);
+        Assert.AreEqual((string)XDocument.Load(path).Root!.Element("Version")!.Attribute("value")!, version);
+    }
+
+    [TestMethod]
+    public void ReadSubModule_FindsNativeAmongOtherMetadata_CaseInsensitiveId()
+    {
+        const string xml = "<Module><Version value='v2.0.40'/><DependedModuleMetadatas>"
+            + "<DependedModuleMetadata id='TAOM.Dependencies' version='v2.0.40'/>"
+            + "<DependedModuleMetadata id='native' version='v1.4.8.*'/>"
+            + "</DependedModuleMetadatas></Module>";
+        Assert.AreEqual(("v1.4.8.*", "v2.0.40"), GameVersionCheck.ReadSubModule(xml));
+    }
+
+    [TestMethod]
+    public void ReadSubModule_NoNativePin_GivesNullPin()
+    {
+        Assert.AreEqual((null, "v2.0.40"), GameVersionCheck.ReadSubModule(
+            "<Module><Version value='v2.0.40'/><DependedModuleMetadatas>"
+            + "<DependedModuleMetadata id='Native' order='LoadBeforeThis'/></DependedModuleMetadatas></Module>"));
+    }
+
+    [TestMethod]
+    public void ReadSubModule_EmptyOrBrokenFile_GivesNothing_AndDoesNotThrow()
+    {
+        Assert.AreEqual(((string?)null, (string?)null), GameVersionCheck.ReadSubModule(null));
+        Assert.AreEqual(((string?)null, (string?)null), GameVersionCheck.ReadSubModule(""));
+        Assert.AreEqual(((string?)null, (string?)null), GameVersionCheck.ReadSubModule("<Module><Version"));
+    }
+
+    [TestMethod]
+    public void DisplayPin_DropsWildcards_AndAddsTheLetter()
+    {
+        Assert.AreEqual("v1.5.7", GameVersionCheck.DisplayPin("v1.5.7.*"));
+        Assert.AreEqual("v1.5", GameVersionCheck.DisplayPin("v1.5.*"));
+        Assert.AreEqual("v1.5.7", GameVersionCheck.DisplayPin("1.5.7"));
+    }
+
+    [TestMethod]
+    public void Text_BoxBeforeTheGamesError_NamesBothVersions_TheGamesBox_AndBothFixes()
+    {
+        var text = GameVersionCheck.Text(Pin, "v2.0.40", 1, 5, 6, taomSkipped: false);
+
+        StringAssert.Contains(text, "This TAOM (v2.0.40) is made for Bannerlord v1.5.7, but your game is v1.5.6.");
+        StringAssert.Contains(text, "missing or conflicting dependency");
+        Assert.IsFalse(text.Contains("turned off"));
+        AssertFixesAndStyle(text);
+    }
+
+    [TestMethod]
+    public void Text_MenuPopupAfterTaomWasTurnedOff_SaysCloseTheGame_NotTheGamesBox()
+    {
+        var text = GameVersionCheck.Text(Pin, "v2.0.40", 1, 5, 6, taomSkipped: true);
+
+        StringAssert.Contains(text, "This TAOM (v2.0.40) is made for Bannerlord v1.5.7, but your game is v1.5.6.");
+        StringAssert.Contains(text, "TAOM is turned off for this session");
+        StringAssert.Contains(text, "Close the game.");
+        Assert.IsFalse(text.Contains("conflicting dependency"), "no engine box follows in this case");
+        AssertFixesAndStyle(text);
+    }
+
+    [TestMethod]
+    public void Text_WithoutTaomVersion_StillReads()
+    {
+        StringAssert.StartsWith(GameVersionCheck.Text(Pin, null, 1, 4, 8, taomSkipped: true), "This TAOM is made for Bannerlord v1.5.7, but your game is v1.4.8.");
+    }
+
+    private static void AssertFixesAndStyle(string text)
+    {
+        StringAssert.Contains(text, "Properties, then Betas, and pick v1.5.7");
+        StringAssert.Contains(text, "TAOM launcher");
+        Assert.IsFalse(text.Contains("{="), "no language key: TAOM's strings are not read when this shows");
+        Assert.IsFalse(text.Contains("\u2014") || text.Contains("\u2013"), "no em or en dash");
+    }
+
+    [TestMethod]
+    public void SubModuleConstructor_RunsTheNotice()
+    {
+        // The engine constructs every submodule before any OnSubModuleLoad, and a TAOM that does not fit the
+        // game aborts between the two, so the notice must run from the constructor.
+        var body = Body(RepoPaths.ReadSource("Dependencies/SubModule.cs", stripComments: true), "public SubModule()");
+        StringAssert.Contains(body, "GameVersionNotice.ShowOnceIfMismatched()");
+    }
+
+    [TestMethod]
+    public void Notice_ChecksServerAndTestMode_First_AndCatchesEverything()
+    {
+        var source = RepoPaths.ReadSource("Dependencies/GameVersionNotice.cs", stripComments: true);
+        var run = Body(source, "private static void Run()");
+        int guard = run.IndexOf("GameNetwork.IsDedicatedServer || TaleWorlds.Engine.MBDebug.TestModeEnabled", StringComparison.Ordinal);
+        int mismatch = run.IndexOf("if (match != GameVersionMatch.Mismatch) return;", StringComparison.Ordinal);
+        int skip = run.IndexOf("TrySkipTaomCode(", StringComparison.Ordinal);
+        int box = run.IndexOf("ShowMessageBox(", StringComparison.Ordinal);
+        Assert.IsTrue(guard >= 0 && mismatch > guard && skip > mismatch && box > skip,
+            "server/test guard, then only on a mismatch: turn TAOM's code off, else the box");
+        StringAssert.Contains(run, "taomSkipped: true");
+        StringAssert.Contains(run, "taomSkipped: false");
+
+        var entry = Body(source, "internal static void ShowOnceIfMismatched()");
+        StringAssert.Contains(entry, "try { Run(); }");
+        StringAssert.Contains(entry, "catch (Exception");
+        StringAssert.Contains(source, "[MethodImpl(MethodImplOptions.NoInlining)]\n    private static void Run()");
+    }
+
+    [TestMethod]
+    public void Guard_PatchesTheEnginesPerSubmoduleCheck_AndSkipsOnlyTaomsSubmodules()
+    {
+        var source = RepoPaths.ReadSource("Dependencies/GameVersionNotice.cs", stripComments: true);
+        var install = Body(source, "private static bool TrySkipTaomCode(");
+        StringAssert.Contains(install, "IsTaom(m.Id) || m.DependedModules.Any(d => IsTaom(d.ModuleId))");
+        StringAssert.Contains(install, "nameof(Module.CheckIfSubmoduleCanBeLoadable)");
+
+        var prefix = Body(source, "private static bool SkipTaomSubModule(");
+        StringAssert.Contains(prefix, "!_skipped.Contains(subModuleInfo)) return true;");
+        StringAssert.Contains(prefix, "__result = false;");
+    }
+
+    [TestMethod]
+    public void Guard_Target_BindsOnTheReferencedEngine_WithThePrefixShape()
+    {
+        var target = typeof(TaleWorlds.MountAndBlade.Module).GetMethod("CheckIfSubmoduleCanBeLoadable",
+            System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public);
+        Assert.IsNotNull(target, "Module.CheckIfSubmoduleCanBeLoadable is gone: the version guard falls back to the box");
+        Assert.AreEqual(typeof(bool), target!.ReturnType);
+        var p = target.GetParameters();
+        Assert.AreEqual(1, p.Length);
+        Assert.AreEqual(typeof(TaleWorlds.ModuleManager.SubModuleInfo), p[0].ParameterType);
+        Assert.AreEqual("subModuleInfo", p[0].Name, "the prefix binds the argument by this name");
+        // A method with a try region is never inlined into LoadSubModules, so the detour is reached.
+        Assert.IsTrue(target.GetMethodBody()!.ExceptionHandlingClauses.Count > 0, "foreach over the tag list keeps a try/finally");
+    }
+
+    [TestMethod]
+    public void MenuNotice_ShowsTheVersionText_BeforeTheMissingTaomCheck()
+    {
+        // TAOM stays in the loaded list when its code is turned off, so MissingTaomCheck alone would say nothing.
+        var tick = Body(RepoPaths.ReadSource("Dependencies/MissingTaomNotice.cs", stripComments: true), "internal static void Tick()");
+        int version = tick.IndexOf("GameVersionNotice.MenuText", StringComparison.Ordinal);
+        int missing = tick.IndexOf("MissingTaomCheck.Evaluate(", StringComparison.Ordinal);
+        Assert.IsTrue(version >= 0 && missing > version);
+    }
+
+    [TestMethod]
+    [TestCategory("LiveInstall")]
+    public void InstalledGame_MatchesTheShippedPin()
+    {
+        string? env = Environment.GetEnvironmentVariable("BANNERLORD_GAME_DIR");
+        var game = string.IsNullOrWhiteSpace(env) ? @"C:\STEAM\steamapps\common\Mount & Blade II Bannerlord" : env!;
+        var versionFile = Path.Combine(game, "bin", "Win64_Shipping_Client", "Version.xml");
+        if (!Directory.Exists(game))
+            Assert.Inconclusive("Bannerlord install not found.");
+        Assert.IsTrue(File.Exists(versionFile), "the game install has no Version.xml: " + versionFile);
+
+        // ApplicationVersion.FromParametersFile reads the first child's Value: <Version><Singleplayer Value="v1.5.7"/>.
+        var value = (string)XDocument.Load(versionFile).Root!.Elements().First().Attribute("Value")!;
+        var parts = value.Substring(1).Split('.');
+        var (pin, _) = GameVersionCheck.ReadSubModule(File.ReadAllText(RepoPaths.RepoPath("Main", "_Module", "SubModule.xml")));
+
+        Assert.AreEqual(GameVersionMatch.Match,
+            GameVersionCheck.Evaluate(pin, int.Parse(parts[0]), int.Parse(parts[1]), int.Parse(parts[2])),
+            $"installed game {value} vs TAOM pin {pin}");
+    }
+
+    private static string Body(string code, string signature)
+    {
+        var start = code.IndexOf(signature, StringComparison.Ordinal);
+        Assert.IsTrue(start >= 0, "source no longer declares " + signature);
+        var open = code.IndexOf('{', start);
+        var depth = 0;
+        for (var i = open; i < code.Length; i++)
+        {
+            if (code[i] == '{') depth++;
+            else if (code[i] == '}' && --depth == 0)
+                return code.Substring(open, i - open + 1);
+        }
+        Assert.Fail("Unbalanced braces after " + signature);
+        return string.Empty;
+    }
+}

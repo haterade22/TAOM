@@ -32,6 +32,15 @@ public class SubModule : MBSubModuleBase
             ConfigureGauntletPrefabs();
     }
 
+    /// <summary>
+    /// The engine constructs every submodule before it runs any OnSubModuleLoad, and a TAOM that does not
+    /// fit this game version aborts the game in between. So the version warning runs here (GameVersionNotice).
+    /// </summary>
+    public SubModule()
+    {
+        GameVersionNotice.ShowOnceIfMismatched();
+    }
+
     /// <summary>Client only. Holds every TaleWorlds.Engine.GauntletUI reference of the static constructor.</summary>
     [MethodImpl(MethodImplOptions.NoInlining)]
     private static void ConfigureGauntletPrefabs()

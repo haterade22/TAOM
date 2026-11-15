@@ -35,20 +35,32 @@ internal static class MissingTaomNotice
         _done = true;
         try
         {
+            // Wrong game version: GameVersionNotice turned TAOM's code off, so TAOM is listed but not running.
+            var versionText = GameVersionNotice.MenuText;
+            if (versionText != null)
+            {
+                DiagLog.Log("Dependencies", "MissingTaomNotice: showing the wrong-game-version notice");
+                Show(versionText);
+                return;
+            }
+
             var loaded = ModuleHelper.GetModules().Select(m => m.Id).ToList();
             var reason = MissingTaomCheck.Evaluate(loaded);
             DiagLog.Log("Dependencies", $"MissingTaomNotice: reason={reason}, loaded={string.Join(",", loaded)}");
             if (reason == MissingTaomReason.None) return;
 
-            InformationManager.ShowInquiry(new InquiryData(
-                "TAOM", Text(reason), true, false,
-                new TextObject("{=oHaWR73d}Ok").ToString(), string.Empty, null, null));
+            Show(Text(reason));
         }
         catch (Exception ex)
         {
             DiagLog.LogCaught("Dependencies", "MissingTaomNotice", ex);
         }
     }
+
+    private static void Show(string text) =>
+        InformationManager.ShowInquiry(new InquiryData(
+            "TAOM", text, true, false,
+            new TextObject("{=oHaWR73d}Ok").ToString(), string.Empty, null, null));
 
     // Plain English: the notice shows only when TAOM did not load, and TAOM's language files load only with TAOM.
     internal static string Text(MissingTaomReason reason) => reason == MissingTaomReason.WarSails
