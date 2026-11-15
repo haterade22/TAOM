@@ -10,6 +10,7 @@ Usage:
     python rebalance_armor.py --dry-run       # Preview changes
     python rebalance_armor.py --apply --backup-tag <tag>   # Write changes to XML files (a tag is required)
     python rebalance_armor.py --export-csv    # Export tier classification to CSV
+    python rebalance_armor.py --check         # Exit 1 when the live Armory differs from the curve
 """
 
 import argparse
@@ -137,21 +138,24 @@ VARIANT_CAP = 1
 # independently by the engine. Capes need this because the native ladder's deltas are calibrated
 # for chest-scale bases (30-60), not cape-scale (2-25): +12 on a 42-armor cuirass is +29%, but
 # +12 on a 12-armor pauldron is +100%.
-# Since the kingdom-cap curve (#583, 2026-09-13) bracers and greaves sit at 0.5 and 0.45 of the
-# chest cap, as compressed as capes, so all three extremity slots share one table. 2026-11-14: light
-# and medium roll cloth_unarmoured (+3), not cloth (+5). At the bands of that date (light 0.16,
-# medium 0.35, heavy 0.68, elite 1.0 of the cap) a +5 roll let a light cape pass a heavy one (15
-# shoulder cases) and a medium cape pass an elite one (5 cases); at +3 no judged pair crosses
-# (analyze_armor_balance.check_kingdom_curve_invariant). Heavy keeps chain for its modifier names
-# (Loose / Rusty read fine on plate); it is never the low side of a judged pair, which are
-# (heavy over light) and (elite over medium).
+# Bracers and greaves sit at 0.5 and 0.45 of the chest cap, as compressed as capes, so all three
+# extremity slots share one table. Light and medium roll cloth_unarmoured (+3), not cloth (+5): at
+# +5 a light cape passes a heavy one and a medium cape passes an elite one
+# (analyze_armor_balance.check_kingdom_curve_invariant). Heavy, elite and lord roll leather, whose
+# down-rolls (Worn -2, Battered -3) fit curve primaries of 7 to 28; chain's Loose (-6) and Rusty (-8)
+# took a heavy pauldron of 9 to 1. Chain and leather carry the same five loot weights, so only the
+# magnitudes change. The group also sets what a troop spawns with in a campaign battle, not only
+# loot. Heavy and up are never the low side of a pair the kingdom gate judges (heavy over light,
+# elite over medium), but check_curve_invariant also judges (lord, heavy) and reads their top roll
+# (+7), and _check_tier_inversions in analyze_armor_balance.py reads each item's own live group. The
+# lowest curve primary is 4 after a Battered roll; a secondary of 4 or less still goes down to 1.
 _EXTREMITY_MODIFIER_GROUPS = {
     'civilian': 'cloth_unarmoured',  # +3
     'light':    'cloth_unarmoured',  # +3
     'medium':   'cloth_unarmoured',  # +3
-    'heavy':    'chain',             # +9 -- naming-safe on Plate (Loose / Rusty)
-    'elite':    'chain',             # +9
-    'lord':     'chain',             # +9
+    'heavy':    'leather',           # +7, down-rolls -2 and -3
+    'elite':    'leather',           # +7
+    'lord':     'leather',           # +7
 }
 SLOT_MODIFIER_GROUPS = {
     'shoulder': _EXTREMITY_MODIFIER_GROUPS,
@@ -1059,11 +1063,20 @@ def _roster_first_plan(roster_map, item_id, item_name, culture):
     return ('elite' if kw_tier == 'lord' else kw_tier, 'full')
 
 
+def _clamped_modifier_group(slot_type, tier, current_group):
+    """The loot table of a clamped piece: an arm, leg or shoulder piece still on chain or plate moves to
+    the table of its band, so a defeated lord's bracer no longer drops with a -6 or -8 roll. A piece on a
+    lighter table stays there, and head and body pieces keep theirs: a clamp only lowers."""
+    if slot_type in SLOT_MODIFIER_GROUPS and current_group in ('chain', 'plate'):
+        return modifier_group_for(slot_type, tier)
+    return current_group
+
+
 def clamp_armour(slot_type, key, current_values, tier, headroom=0):
     """An item's armour lowered to the kingdom-cap band `tier`, never raised: the primary is the smaller
     of its value and cap_value + headroom; each other stat the item declares is the smaller of its value
-    and kingdom_secondary at the new primary (the item's own share, capped). Weight, material and loot
-    table are not part of it."""
+    and kingdom_secondary at the new primary (the item's own share, capped). Weight and material are not
+    part of it; the loot table is _clamped_modifier_group's."""
     primary_stat = GOVERNED_STATS[slot_type][0]
     old_p = current_values.get(primary_stat, 0)
     if old_p <= 0:
@@ -1090,7 +1103,8 @@ def process_file(filepath, slot_type, dry_run=True, weights_only=False,
     troop wearer even when the id carries a tier keyword (the Fountain Guard helmet is `_heavy_`
     and worn only at level 46), falls back to the keyword for unworn kit, and skips civilian kit,
     troll kit and kit with neither, and lowers (never raises) hero-only kit and keyword-less unworn
-    kit (_roster_first_plan); it needs the full-record map (load_roster_records).
+    kit (_roster_first_plan), moving their chain or plate arm, leg and shoulder pieces to the band's loot
+    table; it needs the full-record map (load_roster_records).
 
     keep_weights=True leaves weight alone in a full re-stat; keep_material_type=True leaves
     material_type (hit sounds and FX) alone while modifier_group (the loot table) still follows the
@@ -1207,8 +1221,10 @@ def process_file(filepath, slot_type, dry_run=True, weights_only=False,
         elif mode == 'clamp':
             new_values = clamp_armour(slot_type, kingdom_key(item_id, culture), current_values, tier,
                                       VARIANT_CAP if tier == 'elite' else 0)
-            new_weight, new_material, new_modifier = current_weight, current_material, current_modifier
-            has_change = any(new_values.get(s) != current_values.get(s) for s in current_values)
+            new_weight, new_material = current_weight, current_material
+            new_modifier = _clamped_modifier_group(slot_type, tier, current_modifier)
+            has_change = (new_modifier != current_modifier or
+                          any(new_values.get(s) != current_values.get(s) for s in current_values))
         else:
             new_stats = calculate_stats(tier, slot_type, culture, variant_num, item_id=item_id)
             new_weight = current_weight if keep_weights else new_stats['weight']
@@ -1285,7 +1301,9 @@ def process_file(filepath, slot_type, dry_run=True, weights_only=False,
                 item_changes[item_id] = {'material_type': new_material,
                                          'modifier_group': new_modifier}
             elif mode == 'clamp':
-                item_changes[item_id] = dict(new_values)   # stats only, for the same reason
+                item_changes[item_id] = dict(new_values)   # no weight or material, for the same reason
+                if new_modifier != current_modifier:
+                    item_changes[item_id]['modifier_group'] = new_modifier
             else:
                 write_changes = dict(new_values)
                 if not keep_weights:
@@ -1306,6 +1324,41 @@ def process_file(filepath, slot_type, dry_run=True, weights_only=False,
 # =============================================================================
 # Reporting
 # =============================================================================
+
+CHECK_LIST_LIMIT = 20
+
+
+def curve_differences(all_changes):
+    """One (file, id, attribute, live value, curve value) row per attribute a plan would change."""
+    rows = []
+    for c in all_changes:
+        if c['status'] != 'CHANGED':
+            continue
+        for stat in sorted(c['new_values']):
+            if c['new_values'][stat] != c['old_values'].get(stat):
+                rows.append((c['file'], c['id'], stat, c['old_values'].get(stat), c['new_values'][stat]))
+        for attr, old, new in (('weight', c['old_weight'], c['new_weight']),
+                               ('material_type', c['old_material'], c['new_material']),
+                               ('modifier_group', c['old_modifier'], c['new_modifier'])):
+            if old != new:
+                rows.append((c['file'], c['id'], attr, old, new))
+    return rows
+
+
+def print_check(all_changes):
+    """The --check report: how many items differ from the curve, then the first rows. True when none do."""
+    differing = sum(1 for c in all_changes if c['status'] == 'CHANGED')
+    summary = f"{differing} item(s) differ from the curve."
+    print("\n" + summary)
+    rows = curve_differences(all_changes)
+    for file, item_id, attr, live, curve in rows[:CHECK_LIST_LIMIT]:
+        print(f"  {file} {item_id} {attr}: live {live} -> curve {curve}")
+    if len(rows) > CHECK_LIST_LIMIT:
+        print(f"  ... {len(rows) - CHECK_LIST_LIMIT} more difference(s)")
+    if rows:
+        print(summary)   # last line too: a gate prints only the end of the output
+    return differing == 0
+
 
 def print_report(all_changes):
     """Print a formatted report of all changes."""
@@ -1460,6 +1513,10 @@ def main():
     grp.add_argument('--dry-run', action='store_true', help='Preview changes (no writes)')
     grp.add_argument('--apply', action='store_true', help='Write changes to the live armory XML')
     grp.add_argument('--export-csv', action='store_true', help='Export tier classification to CSV')
+    grp.add_argument('--check', action='store_true',
+                     help='Compare the Armory with the curve using the apply flags (--all --tier-source '
+                          'roster-first --keep-weights --keep-material-type): exit 1 when the plan is not empty, '
+                          '2 when the Armory is not installed')
     parser.add_argument('--armory-path', default=ARMORY_DIR,
                         help='Override the armory base dir (default: live LOTRLOME_Armory)')
     parser.add_argument('--cultures', default='',
@@ -1495,6 +1552,14 @@ def main():
     if args.materials_only and args.weights_only:
         print("ERROR: --materials-only and --weights-only are mutually exclusive.")
         sys.exit(2)
+    if args.check:
+        if (args.materials_only or args.weights_only or args.no_lower_armor or args.keep_materials
+                or args.backup_tag):
+            print("ERROR: --check takes the apply sequence's flags as fixed; only --armory-path, --cultures and "
+                  "--slots may go with it.")
+            sys.exit(2)
+        args.all, args.tier_source = True, 'roster-first'
+        args.keep_weights = args.keep_material_type = True
     if args.apply and not args.backup_tag:
         print("ERROR: --apply needs --backup-tag <tag> (for example --backup-tag 20261114): the live Armory "
               "is unversioned, so the one-time <file>.bak-<tag> copy is the only way back.")
@@ -1526,12 +1591,17 @@ def main():
         print(f"\n*** APPLYING CHANGES (scoped: {', '.join(sorted(requested))}) ***\n")
     elif args.export_csv:
         print("\n*** EXPORT CSV MODE ***\n")
+    elif args.check:
+        print("\n*** CHECK ***\n")
     else:
         print("\n*** DRY RUN ***\n")
 
     # Resolve armory path
     armory_dir = os.path.normpath(args.armory_path)
     if not os.path.isdir(armory_dir):
+        if args.check:
+            print(f"ERROR: SKIPPED, LOTRLOME_Armory is not installed at {armory_dir}; nothing was checked")
+            sys.exit(2)
         print(f"ERROR: Armory directory not found: {armory_dir}")
         sys.exit(1)
 
@@ -1542,6 +1612,12 @@ def main():
         d for d in os.listdir(armory_dir)
         if os.path.isdir(os.path.join(armory_dir, d)) and (not requested or d in requested)
     ])
+    if args.check:
+        # A check that compared nothing is not a pass: a typo in --cultures or --slots must not exit 0.
+        unknown = sorted(requested - set(culture_dirs)) + sorted(requested_slots - set(SLOT_TYPES.values()))
+        if unknown:
+            print(f"ERROR: SKIPPED, no such culture folder or slot: {', '.join(unknown)}; nothing was checked")
+            sys.exit(2)
     if requested:
         missing = requested - set(culture_dirs)
         if missing:
@@ -1563,7 +1639,8 @@ def main():
             if not os.path.exists(filepath):
                 continue
 
-            print(f"  Processing {culture_dir}/{armor_file}...")
+            if not args.check:
+                print(f"  Processing {culture_dir}/{armor_file}...")
             changes = process_file(filepath, slot_type, dry_run=dry_run, weights_only=args.weights_only,
                                     tier_source=args.tier_source, roster_map=roster_map,
                                     no_lower_armor=args.no_lower_armor,
@@ -1575,6 +1652,12 @@ def main():
             all_changes.extend(changes)
             files_processed += 1
             generator_owned += count_generator_owned(filepath)
+
+    if args.check:
+        if not files_processed:
+            print(f"ERROR: SKIPPED, no armour file was read under {armory_dir}; nothing was checked")
+            sys.exit(2)
+        sys.exit(0 if print_check(all_changes) else 1)
 
     print_report(all_changes)
     if generator_owned:
