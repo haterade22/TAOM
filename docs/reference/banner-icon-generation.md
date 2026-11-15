@@ -112,7 +112,7 @@ to `_10`. On 2026-11-14 every sheet was renamed to `taom_banners_01` to `_25`, n
 `taom_banners_elven_alpha_01` were merged into `taom_banners_11` (26 sheets became 25). The same day
 163 icons were deleted (389 became 235 with the 9 new ids 31022 to 31030) and sheets 16-25 moved into the freed cells (25 sheets became 15; see
 the inventory below). Four of those icons were still flown (17006 to 17008 and 10505), because their
-banner keys hold negative rotations that a digits-only key parse skips; #1284 repointed both banners.
+banner keys hold negative rotations that a digits-only key parse skips; #1284 repointed both banners, and on 2026-11-15 the four icons came back with their ids on `taom_banners_16` and both keys fly them again.
 Before you delete an `<Icon>` row, run `python -m pytest tools/tests/test_banner_icon_ids.py`: its
 key parser reads negative tokens, and a deleted icon that any shipped key names fails it.
 
@@ -158,11 +158,11 @@ opaque alpha.
 
 ## Current inventory (2026-11-15, after #1047 and #1265)
 
-15 sheets, 235 icons on 2026-11-15 (`grep -c '<Icon ' Main/_Module/ModuleData/banner_icons.xml`). On
+16 sheets, 244 icons on 2026-11-15 (`grep -c '<Icon ' Main/_Module/ModuleData/banner_icons.xml`). On
 2026-11-14 Tom deleted 163 icons meant to be ones no shipped banner key or career screen used (rows,
 thumbnails and `banner-ai/credits.json` entries; four were still flown, see above). Their cells became the
 placeholder checkerboard, and sheets 16-25 moved into the free cells of 01-15 (06, 07 and 09 did
-not change); the free cells are the end of `taom_banners_15`. `banner_icons.xml` is the
+not change); the free cells are the end of `taom_banners_16`. `banner_icons.xml` is the
 authority; the dry run of `pack_banner_sheets.py` lists the free cells. Group names are the
 `<BannerIconGroup>` names.
 
@@ -182,7 +182,8 @@ authority; the dry run of `pack_banner_sheets.py` lists the free cells. Group na
 | `taom_banners_12` | 16 | Forces of Evil 18000-18003, 22000-22002; Northmen 21007; Dwarven 24501, 24505-24507, 24510, 31007; Miscellaneous 24508-24509 |
 | `taom_banners_13` | 16 | Forces of Evil 19001-19015; Orcish 22003 |
 | `taom_banners_14` | 16 | Dwarven 24000-24014; Miscellaneous 31015 |
-| `taom_banners_15` | 11 | Northmen 21000-21005; Dwarven 31023, 31027-31030 |
+| `taom_banners_15` | 16 | Elven 31035; Northmen 21000-21005, 31031-31032; Dwarven 31023, 31027-31030, 31033-31034 |
+| `taom_banners_16` | 4 | Dúnedain 10505; Elven 17006-17008 |
 
 ## Related
 
