@@ -84,6 +84,21 @@ public class CheatMenuServiceTests
         Assert.AreEqual(12_345f, outcome.Number);
     }
 
+    // #1297: these four results have no Name, so the shared "Done: {NAME} {NUMBER}" line read "Done:  25,000".
+    [TestMethod]
+    public void UnnamedResults_EachHaveTheirOwnWords()
+    {
+        _world.GiveGold(Arg.Any<int>()).Returns(12_345);
+        _world.AddInfluence(Arg.Any<int>()).Returns(true);
+        _world.AddRenown(Arg.Any<int>()).Returns(true);
+        _world.HealMainParty().Returns(7);
+
+        Assert.IsTrue(CheatMenuTexts.Describe(_service.GiveGold(100)).Value.StartsWith("{=taom_cheat_done_gold}"));
+        Assert.IsTrue(CheatMenuTexts.Describe(_service.AddInfluence(100)).Value.StartsWith("{=taom_cheat_done_influence}"));
+        Assert.IsTrue(CheatMenuTexts.Describe(_service.AddRenown(100)).Value.StartsWith("{=taom_cheat_done_renown}"));
+        Assert.IsTrue(CheatMenuTexts.Describe(_service.Heal()).Value.StartsWith("{=taom_cheat_done_heal}"));
+    }
+
     [TestMethod]
     public void GiveGold_ZeroNegativeOrOverTheLimit_IsBadAndGivesNothing()
     {
