@@ -33,6 +33,7 @@ using TAOM.Features.MissionPerf.Hooks;
 using TAOM.Features.MixedFormations.Hooks;
 using TAOM.Features.MountDespawn.Hooks;
 using TAOM.Features.Mumakil;
+using TAOM.Features.OrcBattleVoice.Hooks;
 using TAOM.Features.RaceAbilities.Hooks;
 using TAOM.Features.ShaderPrecompilation;
 using TAOM.Features.SiegeDismount.Hooks;
@@ -114,6 +115,7 @@ public static class CoopMissionRoles
         [nameof(HeroKillCounterMissionLogic)] = CoopMissionRole.Local,
         [nameof(AnimVarietyMissionBehavior)] = CoopMissionRole.Local,
         [nameof(GaitVarietyMissionBehavior)] = CoopMissionRole.Local,
+        [nameof(OrcBattleVoiceMissionBehavior)] = CoopMissionRole.Local,
         [nameof(BattleCorpseMissionBehavior)] = CoopMissionRole.Local,
         [nameof(CreatureBanditDiagnosticsBehavior)] = CoopMissionRole.Local,
         [nameof(AnimMemoryProbeMissionBehavior)] = CoopMissionRole.Local,

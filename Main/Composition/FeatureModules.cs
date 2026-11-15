@@ -117,5 +117,6 @@ internal static class FeatureModules
         new Features.Autorun.AutorunModule(),
         new Features.BattleShaderNotice.BattleShaderNoticeModule(),
         new Features.CoopInterop.GuestTrade.GuestTradeModule(),
+        new Features.OrcBattleVoice.OrcBattleVoiceModule(),
     };
 }
