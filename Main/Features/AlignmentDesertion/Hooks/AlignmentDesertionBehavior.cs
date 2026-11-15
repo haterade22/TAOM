@@ -54,7 +54,7 @@ public class AlignmentDesertionBehavior : CampaignBehaviorBase
         // villagers, militia, bandits, and garrison parties are excluded — garrisons desert via
         // OnDailyTickSettlement under their own MCM gate. (Without this gate a player/AI caravan's
         // guards would desert — the "lords' field parties" promise the MCM hint makes. Codex #1.)
-        if (!party.IsLordParty && !party.IsMainParty)
+        if ((!party.IsLordParty && !party.IsMainParty) || (_service.KeepsMainPartyTroops && party.IsMainParty))
             return;
 
         var clan = party.LeaderHero?.Clan;

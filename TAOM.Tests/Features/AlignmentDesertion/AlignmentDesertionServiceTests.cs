@@ -16,6 +16,7 @@ public class AlignmentDesertionServiceTests
     private IAlignmentService _alignment;
     private IAlignmentDesertionSettingsProvider _settings;
     private AlignmentDesertionService _service;
+    private TAOM.Features.CheatMenu.CheatPartyRules _cheatParty = null!;
 
     [TestInitialize]
     public void Setup()
@@ -40,7 +41,8 @@ public class AlignmentDesertionServiceTests
         _alignment.GetCultureSide("gondor").Returns(FactionSide.Free);
         _alignment.GetCultureSide("umbar").Returns(FactionSide.Neutral);
 
-        _service = new AlignmentDesertionService(_alignment, _settings);
+        _cheatParty = new TAOM.Features.CheatMenu.CheatPartyRules();
+        _service = new AlignmentDesertionService(_alignment, _settings, _cheatParty);
     }
 
     private static List<DesertionTroopInfo> Troops(params DesertionTroopInfo[] t) => new(t);
@@ -471,5 +473,16 @@ public class AlignmentDesertionServiceTests
         Assert.AreEqual(1, result.Count);
         Assert.AreEqual(5, result[0].DesertCount);
         Assert.IsTrue(_service.WouldDesert(FreeKingdom, false, false, "mordor"));
+    }
+
+    // The cheat menu's "Unlimited party" switch reaches the behavior and the recruit guard through this one property.
+    [TestMethod]
+    public void KeepsMainPartyTroops_FollowsTheCheatSwitch()
+    {
+        Assert.IsFalse(_service.KeepsMainPartyTroops);
+        _cheatParty.UnlimitedParty = true;
+        Assert.IsTrue(_service.KeepsMainPartyTroops);
+        _cheatParty.UnlimitedParty = false;
+        Assert.IsFalse(_service.KeepsMainPartyTroops);
     }
 }

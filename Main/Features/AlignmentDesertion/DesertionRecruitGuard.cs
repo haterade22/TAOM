@@ -66,6 +66,9 @@ public sealed class DesertionRecruitGuard : IDesertionRecruitGuard
             // Desertion only runs on lord field parties and the main party (AlignmentDesertionBehavior).
             if (mobile == null || (!mobile.IsLordParty && !mobile.IsMainParty))
                 return false;
+            // Cheat menu "Unlimited party": the main party keeps every troop, so none would desert it.
+            if (_service.KeepsMainPartyTroops && mobile.IsMainParty)
+                return false;
             return TryOwner(mobile.LeaderHero?.Clan, isGarrison: false, out var kingdomId, out var isPlayerOwned)
                    && _service.WouldDesert(kingdomId, isPlayerOwned, isGarrison: false, troop.Culture?.StringId!);
         }
@@ -82,6 +85,9 @@ public sealed class DesertionRecruitGuard : IDesertionRecruitGuard
             return vanillaIndex;
         try
         {
+            // Cheat menu "Unlimited party": the player recruiting into his own party keeps every troop, so no slot is capped.
+            if (_service.KeepsMainPartyTroops && buyerIsPlayer && buyerHero != null && buyerHero == Hero.MainHero)
+                return vanillaIndex;
             if (!TryOwner(buyerHero?.Clan, isGarrison: false, out var kingdomId, out var isPlayerOwned))
                 return vanillaIndex;
             var first = FirstDeserterSlot(sellerHero, kingdomId, isPlayerOwned, isGarrison: false);

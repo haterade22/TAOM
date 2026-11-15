@@ -61,15 +61,28 @@ public sealed class CheatMenuService
     private readonly ICoopSessionProvider _coop;
     private readonly IDedicatedServerProvider _dedicated;
     private readonly IModLogger _logger;
+    private readonly ICheatPartyRules _partyRules;
 
     public CheatMenuService(ICheatWorldAdapter world, ISpecialResourceService resources, ICoopSessionProvider coop,
-        IDedicatedServerProvider dedicated, IModLogger logger)
+        IDedicatedServerProvider dedicated, IModLogger logger, ICheatPartyRules partyRules)
     {
         _world = world;
         _resources = resources;
         _coop = coop;
         _dedicated = dedicated;
         _logger = logger;
+        _partyRules = partyRules;
+    }
+
+    /// <summary>The "Unlimited party" switch (<see cref="ICheatPartyRules"/>): no size limit and no desertion of enemy troops for the player's party.</summary>
+    public bool UnlimitedParty => _partyRules.UnlimitedParty;
+
+    /// <summary>Turns the "Unlimited party" switch on or off. Turning it off removes no troop: the game's own rules apply again.</summary>
+    public CheatOutcome SetUnlimitedParty(bool on)
+    {
+        if (!IsSinglePlayer) return Refused();
+        _partyRules.UnlimitedParty = on;
+        return Log("unlimited party", new CheatOutcome(CheatOutcomeKind.Done, on ? "on" : "off", on ? 1 : 0));
     }
 
     /// <summary>Read live on every call (ICoopSessionProvider's contract).</summary>

@@ -26,6 +26,7 @@ public class TaomPartySizeModel : DefaultPartySizeLimitModel
     private readonly IEyeOfSauronHook _eyeOfSauron;
     private readonly ICastlePatrolSizeHook _castlePatrolSize;
     private readonly IPatrolRosterHook _patrolRoster;
+    private readonly CheatMenu.ICheatPartyRules _cheatParty;
     // Built once: a lambda over the method parameter would allocate a closure and a Func on every call, every party.
     private readonly System.Func<object?, float> _weightedCountOf;
 
@@ -46,6 +47,7 @@ public class TaomPartySizeModel : DefaultPartySizeLimitModel
         // Resolved once here, not as a constructor parameter: that would need an edit to SubModule.cs, where this model is built.
         _castlePatrolSize = IoC.Resolve<ICastlePatrolSizeHook>();
         _patrolRoster = IoC.Resolve<IPatrolRosterHook>();
+        _cheatParty = IoC.Resolve<CheatMenu.ICheatPartyRules>();
         _weightedCountOf = p => _troopWeight.CalculateWeightedMemberCount((PartyBase)p!);
     }
 
@@ -104,6 +106,10 @@ public class TaomPartySizeModel : DefaultPartySizeLimitModel
         // the enforcement path (PartyBase.PartySizeLimit, includeDescriptions: false) still deflates. The
         // branch lives in the service, not here — gamemodels.md rule 4 keeps this override branch-free.
         _troopWeight.ApplyPartySizeWeightPenalty(party, ref result, includeDescriptions);
+        // Cheat menu "Unlimited party" (CheatPartyRules): a +10,000 flat bonus for the main party only, while the switch is on.
+        // Last on purpose: after the TroopWeight penalty, so nothing applied later can take it back; the TroopWeight shed
+        // never trims the main party (PartyUpgraderUpgradeReadyTroopsHook), so its "true base" snapshot needs no bonus.
+        AiPartySizeService.AddResultFrameBonus(ref result, _cheatParty.SizeBonusFor(party == PartyBase.MainParty));
         // TEMPORARY (2026-07-17) — one-shot load-order probe for the "max troop goes over after loading"
         // report; self-guards to the first main-party computation. Strip with the diagnostic class.
         PartySizeLoadOrderDiagnostic.RecordFirstMainPartyLimit(party, result.ResultNumber, _careerPassives, _logger);

@@ -8,11 +8,32 @@ menus:
 
 | Page | Buttons |
 |---|---|
-| TAOM cheat menu | Teleport to a settlement..., Gold +10,000 denars, Special resource +1,000, Influence +100, Renown +100, Troops..., Relations +20 with every lord of a kingdom..., Heal your party and your heroes, Close |
+| TAOM cheat menu | Teleport to a settlement..., Gold +10,000 denars, Special resource +1,000, Influence +100, Renown +100, Troops..., Relations +20 with every lord of a kingdom..., Heal your party and your heroes, Unlimited party: off/on, Close |
 | Teleport | Towns..., Castles..., Villages... (each opens a searchable list), Back |
 | Troops | +10 basic recruits, +10 elite recruits (the culture's `basic_troop` and `elite_basic_troop`), +10 of any troop of your faction... (a searchable list, see Troops below), Every troop (party screen)... (the game's own cheat party screen, see below), Back |
 
 Every button calls `CheatMenuService`, the same code as the console commands below, and shows its result as a message. Gold, influence, renown, heal, relation and teleport results name what they did (`CheatGiven`): gold shows the new total in denars, heal the number of soldiers healed (#1297), relation the kingdom's display name and the number of lords changed, and teleport the settlement (#1317).
+
+## Unlimited party
+
+"Unlimited party: off/on" on the main page flips one switch (`CheatPartyRules`, saved with the campaign under
+`_taom_cheat_unlimitedParty` by `CheatMenuCampaignBehavior`, off in a new campaign). While on, for the player's own party
+only (not companions' parties, garrisons or AI parties):
+- **No size limit.** `TaomPartySizeModel.GetPartyMemberSizeLimit` adds a flat +10,000 as its last step, after the TroopWeight
+  penalty, through `AiPartySizeService.AddResultFrameBonus`. So the party screen, recruiting, prisoner recruiting and the
+  cheat troop screens never refuse for size, vanilla's over-limit desertion (a quarter of the men over the limit each day,
+  `DefaultPartyDesertionModel`) and over-limit speed penalty find nothing over, and the party-size morale effect stays at its
+  normal value. The TroopWeight shed never trims the main party, so its snapshot needs no bonus.
+- **No desertion of enemy troops.** `AlignmentDesertionBehavior` skips the main party's daily alignment desertion (troops of
+  an opposed alignment or enemy culture), and `DesertionRecruitGuard` stops blocking such troops for it: prisoner recruiting
+  and its conformity tick (Patch150), and the player's volunteer slots (`CapHeroIndex`). Both read the switch before they test
+  for the main party, so with it off nothing changes for anyone.
+- Not changed: vanilla's low-morale desertion, which hits every troop alike whatever its culture; TAOM's morale model has no
+  penalty for enemy troops.
+
+Turning it off removes no troop. The usual rules come back the next day: men over the size limit start to desert (a quarter
+of the excess per day), the party is slower while over the limit, and alignment desertion takes the opposed troops again.
+The menu hint says both effects and what happens when it is turned off.
 
 ## Troops
 
@@ -208,6 +229,10 @@ capped `ISpecialResourceService.GrantAmount`, for the main hero's own resource.
    its model, move some to your party, press Done; they stay in the party. Cancel leaves the party as it was.
    With the engine's cheat mode off and a lord in your prison, open it again, move the lord to the left and press Done:
    the release notice shows, and the lord is free afterwards (his encyclopedia page no longer says prisoner).
+   "Unlimited party: off" turns to "on" with a message. Take more troops than the size limit allows: the party screen and
+   town recruiting accept them, and the next days none desert, Mordor troops in a Gondor party included. Save, load: still
+   "on". Turn it off: the troops stay; the next day a quarter of the men over the limit desert, and opposed troops desert
+   again.
 4. Teleport: Towns..., type a town name in the search box, choose it. The menu closes and the party stands outside that
    town's gate with the camera on it. Enter the town and leave again, and the village or town menus work as usual (the case
    12 crash path).
@@ -261,5 +286,7 @@ capped `ISpecialResourceService.GrantAmount`, for the main hero's own resource.
   any mount they ride take no damage (engine Immortal state) until it is switched off or the battle ends.
 - 2026-11-15: Troops page: "+10 of any troop of your faction...", a searchable list of every regular troop of the
   faction's culture (kingdom, else clan), sorted by tier then name (`CheatTroopList`).
+- 2026-11-15: "Unlimited party: off/on": no size limit and no alignment desertion for the player's own party, saved with
+  the campaign (`CheatPartyRules`).
 - 2026-11-15: Troops page: "Every troop (party screen)...", the game's own cheat party screen (every troop, 10 of each),
   opened without the engine's cheat mode.

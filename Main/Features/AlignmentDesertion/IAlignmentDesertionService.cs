@@ -14,6 +14,13 @@ public interface IAlignmentDesertionService
     bool IsEnabled { get; }
 
     /// <summary>
+    /// True while the cheat menu's "Unlimited party" switch is on (CheatMenu.ICheatPartyRules): the player's own party keeps every
+    /// troop, so AlignmentDesertionBehavior skips it and DesertionRecruitGuard blocks nothing for it. Read before any
+    /// main-party test, so with the switch off no party pays for that test.
+    /// </summary>
+    bool KeepsMainPartyTroops { get; }
+
+    /// <summary>
     /// False when no roster of this owner and location can lose a troop today (feature off, owner or
     /// location toggle off, a Neutral or kingdomless owner, a zero rate), so the behavior can skip the
     /// roster snapshot. True exactly when <see cref="CalculateDesertion"/> would look at the troops.
