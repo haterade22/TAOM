@@ -5,8 +5,8 @@
 wields the first item that is not held in the off hand (a shield goes to the off hand), so the
 Item0 weapon is the one a troop starts the battle with. The rules follow, and this module is their only statement: the writer
 (tools/rebalance_troops.py), the realm generators (tools/realm_troops.py), the validator
-(TROOP_SKILL_KIT_MISMATCH and TROOP_ITEM_ZERO_NOT_MAIN in tools/taom_schema.py) and the analyzer all
-call it, so they cannot disagree.
+(TROOP_SKILL_KIT_MISMATCH, TROOP_ITEM_ZERO_NOT_MAIN and TROOP_MAIN_WEAPON_NOT_ITEM0 in
+tools/taom_schema.py) and the analyzer (P1 to P3 only) all call it, so they cannot disagree.
 
   P1  The main class is the weapon class of Item0 over the battle sets (the most sets win). A
       thrown weapon counts: a javelin in Item0 is a thrower's main weapon, as in vanilla's
@@ -25,9 +25,14 @@ call it, so they cannot disagree.
   Raise After the upgrade clamp, purpose_raise lifts a class the clamp left under a later one.
       These two are the only raises the rule makes; the clamp makes the rest.
 
+  P4  A lance rider and a troop whose name says spear, pike, lance or halberd open with that polearm
+      (main_weapon_slots): the polearm and the Item0 weapon trade slots, then P3 puts Polearm on top.
+      Every other troop keeps the weapon it opens with; a swordsman with a spare spear stays one.
+
 Inputs are plain data (a battle set is {slot: weapon class}), so every caller classifies items
 its own way (ElementTree or the validator's regexes) and passes the classes in.
 """
+import re
 from collections import Counter
 from dataclasses import dataclass, field
 
@@ -281,3 +286,116 @@ def fix_item0(slots, launcher_troop: bool):
     out = dict(slots)
     out["Item0"], out[other] = slots[other], slots["Item0"]
     return out, other
+
+
+# Troop definitions outside troops/ that fight and are tuned by hand: the Fords of War roster (its
+# troops are copies of campaign troops, and Long Defeat fields them too). The slot rule reads these
+# as a second root, relative to ModuleData. Files that are not troops in battle (lords, notables,
+# wanderers, companions, obsolete vanilla overrides) are not listed.
+EXTRA_TROOP_FILES = ("fords_of_war/fords_troops.xml",)
+
+POLEARM_WORDS = ("spear", "pike", "lance", "halberd")
+_WORD_RE = re.compile(r"[a-z]+")
+_ONE_OR_TWO_HANDED = ("OneHanded", "TwoHanded")
+
+
+def names_a_polearm(*texts) -> bool:
+    """A word of any text starts with spear, pike, lance or halberd (spearman, lancer, Pike-Reaver,
+    veteranpikeman). A stem inside a longer word (spiked, balance) does not count."""
+    for text in texts:
+        for word in _WORD_RE.findall((text or "").lower()):
+            if word.removeprefix("veteran").startswith(POLEARM_WORDS):
+                return True
+    return False
+
+
+@dataclass(frozen=True)
+class SlotPlan:
+    """rule is "A" (lance cavalry), "B" (named polearm troop) or "" (nothing planned). swaps are
+    (battle set index, slot): that set's Item0 item and the item in that slot trade places. left
+    says why a troop in scope for the rule is untouched, or is empty."""
+    rule: str = ""
+    swaps: tuple = ()
+    left: str = ""
+
+
+def apply_slot_swaps(sets, swaps) -> list:
+    """The sets with each planned exchange made. Only the two slots change."""
+    out = [dict(s) for s in sets]
+    for index, slot in swaps:
+        out[index]["Item0"], out[index][slot] = out[index][slot], out[index]["Item0"]
+    return out
+
+
+def main_weapon_slots(sets, couchable, group, mounted, named) -> SlotPlan:
+    """P4. sets: one {slot: class} per battle set. couchable: per set, the slots whose item has a
+    couch usage. mounted: a Horse in every battle set. named: the troop's name or id says spear,
+    pike, lance or halberd.
+
+    Rule A: Cavalry, mounted, a couchable polearm in every set. Rule B: named, a polearm in every
+    set. Either moves the polearm into Item0 in each set whose Item0 holds a one or two handed
+    weapon. A rider is judged on a polearm that can be couched, because only that one is carried as
+    a lance. A troop in scope whose sets disagree, whose lance cannot be couched, whose Item0
+    holds a launcher or thrown weapon, or that is a HorseArcher, is left and says why."""
+    rows = [{s: c for s, c in st.items() if s in WEAPON_SLOTS and c} for st in sets]
+    rider = group == "Cavalry" and mounted
+    if not rows or not (rider or named or group == "HorseArcher"):
+        return SlotPlan()
+    if not any("Polearm" in r.values() for r in rows):
+        return SlotPlan()
+    firsts = [r.get("Item0") for r in rows]
+    if all(f == "Polearm" for f in firsts):
+        return SlotPlan()
+    if group == "HorseArcher":
+        return SlotPlan(left="HorseArcher: the rule covers lance cavalry and named polearm troops")
+    odd = [f for f in firsts if f not in MELEE]
+    if odd:
+        return SlotPlan(left=f"Item0 holds {odd[0] or 'nothing'} in a battle set, so which weapon "
+                             f"opens the kit is a designer's call")
+
+    def carried(i, couch):
+        return [s for s in WEAPON_SLOTS
+                if rows[i].get(s) == "Polearm" and (not couch or s in couchable[i])]
+
+    def swaps_for(couch):
+        if not all(carried(i, couch) for i in range(len(rows))):
+            return None
+        return tuple((i, carried(i, couch)[0]) for i, f in enumerate(firsts) if f in _ONE_OR_TWO_HANDED)
+
+    for rule, wanted, couch in (("A", rider, True), ("B", named, False)):
+        found = swaps_for(couch) if wanted else None
+        if found:
+            return SlotPlan(rule, found)
+    if not all(carried(i, False) for i in range(len(rows))):
+        have = sum(1 for i in range(len(rows)) if carried(i, False))
+        return SlotPlan(left=f"the polearm is not in every battle set ({have} of {len(rows)})")
+    return SlotPlan(left="the polearm cannot be couched in every battle set, so it is no lance")
+
+
+def troop_main_weapon(rows, classes, couch_ids, group, names):
+    """P4 for one troop from its battle sets as item ids: (SlotPlan, P2 exchanges, rows after P2).
+
+    rows: one {slot: item id} per battle set, a Horse row included. classes: item id -> weapon
+    class. couch_ids: the item ids that can be couched, or None to plan nothing. names: the troop's
+    name and id. The writer and the validator both call this, so they cannot disagree on a kit.
+
+    The P2 exchange (a shield or ammunition out of Item0) is made first, on the ids, because the
+    plan reads the sets as the writer leaves them. p2 lists, per set, the slot that traded with
+    Item0 or None."""
+    sets = [{s: classes.get(i) for s, i in row.items() if s in WEAPON_SLOTS and i} for row in rows]
+    launcher_troop = is_launcher_troop(kit_of(sets), group)
+    p2, fixed, fixed_sets = [], [], []
+    for row, slots in zip(rows, sets):
+        slots, other = fix_item0(slots, launcher_troop)
+        row = dict(row)
+        if other:
+            row["Item0"], row[other] = row[other], row["Item0"]
+        p2.append(other)
+        fixed.append(row)
+        fixed_sets.append(slots)
+    if couch_ids is None:
+        return SlotPlan(), p2, fixed
+    couchable = [frozenset(s for s in WEAPON_SLOTS if row.get(s) in couch_ids) for row in fixed]
+    mounted = bool(fixed) and all(row.get("Horse") for row in fixed)
+    plan = main_weapon_slots(fixed_sets, couchable, group, mounted, names_a_polearm(*names))
+    return plan, p2, fixed

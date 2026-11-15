@@ -2942,8 +2942,8 @@
     <skills>
       <skill id="Athletics" value="80" />
       <skill id="Riding" value="90" />
-      <skill id="OneHanded" value="95" />
-      <skill id="Polearm" value="70" />
+      <skill id="OneHanded" value="70" />
+      <skill id="Polearm" value="95" />
       <skill id="TwoHanded" value="65" />
       <skill id="Bow" value="10" />
       <skill id="Crossbow" value="5" />
@@ -2954,8 +2954,8 @@
     </upgrade_targets>
     <Equipments>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.wm_mordor_set1_axe_a01" />
-        <equipment slot="Item1" id="Item.wm_mordor_set1_polearm_a03" />
+        <equipment slot="Item0" id="Item.wm_mordor_set1_polearm_a03" />
+        <equipment slot="Item1" id="Item.wm_mordor_set1_axe_a01" />
         <equipment slot="Head" id="Item.sk_md_orc_rdr_helmet_med_a" />
         <equipment slot="Body" id="Item.sk_md_orc_inf_chainmail_med_a" />
         <equipment slot="Cape" id="Item.sk_md_orc_pauldron_med_a" />
@@ -2981,8 +2981,8 @@
     <skills>
       <skill id="Athletics" value="95" />
       <skill id="Riding" value="115" />
-      <skill id="OneHanded" value="140" />
-      <skill id="Polearm" value="115" />
+      <skill id="OneHanded" value="115" />
+      <skill id="Polearm" value="140" />
       <skill id="TwoHanded" value="70" />
       <skill id="Bow" value="20" />
       <skill id="Crossbow" value="10" />
@@ -2993,8 +2993,8 @@
     </upgrade_targets>
     <Equipments>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.wm_mordor_set1_mace_a01" />
-        <equipment slot="Item1" id="Item.wm_mordor_set1_polearm_a01" />
+        <equipment slot="Item0" id="Item.wm_mordor_set1_polearm_a01" />
+        <equipment slot="Item1" id="Item.wm_mordor_set1_mace_a01" />
         <equipment slot="Head" id="Item.sk_md_orc_inf_helmet_med_a" />
         <equipment slot="Body" id="Item.sk_md_orc_inf_chest_med_b" />
         <equipment slot="Cape" id="Item.sk_md_orc_pauldron_med_b" />
@@ -3020,8 +3020,8 @@
     <skills>
       <skill id="Athletics" value="110" />
       <skill id="Riding" value="155" />
-      <skill id="OneHanded" value="190" />
-      <skill id="Polearm" value="170" />
+      <skill id="OneHanded" value="170" />
+      <skill id="Polearm" value="190" />
       <skill id="TwoHanded" value="85" />
       <skill id="Bow" value="25" />
       <skill id="Crossbow" value="15" />
@@ -3030,8 +3030,8 @@
     <upgrade_targets />
     <Equipments>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.sm_md_num_sword_1h_a" />
-        <equipment slot="Item1" id="Item.wm_mordor_set1_polearm_a01" />
+        <equipment slot="Item0" id="Item.wm_mordor_set1_polearm_a01" />
+        <equipment slot="Item1" id="Item.sm_md_num_sword_1h_a" />
         <equipment slot="Head" id="Item.sk_md_orc_brt_helmet_heavy_a" />
         <equipment slot="Body" id="Item.sk_md_orc_inf_chest_heavy_e" />
         <equipment slot="Cape" id="Item.sk_md_orc_pauldron_med_b" />
@@ -3674,9 +3674,9 @@
     <skills>
       <skill id="Athletics" value="140" />
       <skill id="Riding" value="200" />
-      <skill id="OneHanded" value="235" />
+      <skill id="OneHanded" value="225" />
       <skill id="TwoHanded" value="145" />
-      <skill id="Polearm" value="225" />
+      <skill id="Polearm" value="235" />
       <skill id="Bow" value="30" />
       <skill id="Crossbow" value="20" />
       <skill id="Throwing" value="65" />
@@ -3686,9 +3686,9 @@
     </upgrade_targets>
     <Equipments>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.sm_md_num_sword_1h_a" />
+        <equipment slot="Item0" id="Item.wm_gundabad_spear_a03" />
         <equipment slot="Item1" id="Item.sm_md_num_cav_shield_med_a" />
-        <equipment slot="Item2" id="Item.wm_gundabad_spear_a03" />
+        <equipment slot="Item2" id="Item.sm_md_num_sword_1h_a" />
         <equipment slot="Head" id="Item.sk_md_num_cav_helmet_med_a" />
         <equipment slot="Body" id="Item.sm_md_num_cav_chest_med_a" />
         <equipment slot="Cape" id="Item.sm_md_num_cav_pauld_med_a" />
@@ -3698,9 +3698,9 @@
         <equipment slot="HorseHarness" id="Item.sm_md_num_barding_heavy_a" />
       </EquipmentRoster>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.sm_md_num_sword_1h_b" />
+        <equipment slot="Item0" id="Item.wm_gundabad_spear_a03" />
         <equipment slot="Item1" id="Item.sm_md_num_cav_shield_med_a" />
-        <equipment slot="Item2" id="Item.wm_gundabad_spear_a03" />
+        <equipment slot="Item2" id="Item.sm_md_num_sword_1h_b" />
         <equipment slot="Head" id="Item.sk_md_num_cav_helmet_med_a" />
         <equipment slot="Body" id="Item.sm_md_num_cav_chest_med_b" />
         <equipment slot="Cape" id="Item.sm_md_num_cav_pauld_med_a" />
@@ -3725,9 +3725,9 @@
     <skills>
       <skill id="Athletics" value="160" />
       <skill id="Riding" value="255" />
-      <skill id="OneHanded" value="295" />
+      <skill id="OneHanded" value="270" />
       <skill id="TwoHanded" value="165" />
-      <skill id="Polearm" value="270" />
+      <skill id="Polearm" value="295" />
       <skill id="Bow" value="35" />
       <skill id="Crossbow" value="25" />
       <skill id="Throwing" value="70" />
@@ -3737,9 +3737,9 @@
     </upgrade_targets>
     <Equipments>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.sm_md_num_sword_1h_c" />
+        <equipment slot="Item0" id="Item.sm_uruk_halberd_j" />
         <equipment slot="Item1" id="Item.sm_md_num_cav_shield_med_a" />
-        <equipment slot="Item2" id="Item.sm_uruk_halberd_j" />
+        <equipment slot="Item2" id="Item.sm_md_num_sword_1h_c" />
         <equipment slot="Head" id="Item.sk_md_num_cav_helmet_med_a" />
         <equipment slot="Body" id="Item.sm_md_num_cav_chest_heavy_b" />
         <equipment slot="Cape" id="Item.sm_md_num_cav_pauld_med_a" />
@@ -3749,9 +3749,9 @@
         <equipment slot="HorseHarness" id="Item.sm_md_num_barding_heavy_b" />
       </EquipmentRoster>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.sm_md_num_sword_1h_c" />
+        <equipment slot="Item0" id="Item.sm_uruk_halberd_j" />
         <equipment slot="Item1" id="Item.sm_md_num_cav_shield_med_a" />
-        <equipment slot="Item2" id="Item.sm_uruk_halberd_j" />
+        <equipment slot="Item2" id="Item.sm_md_num_sword_1h_c" />
         <equipment slot="Head" id="Item.sk_md_num_cav_helmet_med_a" />
         <equipment slot="Body" id="Item.sm_md_num_cav_chest_heavy_b" />
         <equipment slot="Cape" id="Item.sm_md_num_cav_pauld_med_a" />
@@ -3776,9 +3776,9 @@
     <skills>
       <skill id="Athletics" value="180" />
       <skill id="Riding" value="310" />
-      <skill id="OneHanded" value="350" />
+      <skill id="OneHanded" value="320" />
       <skill id="TwoHanded" value="185" />
-      <skill id="Polearm" value="320" />
+      <skill id="Polearm" value="350" />
       <skill id="Bow" value="40" />
       <skill id="Crossbow" value="30" />
       <skill id="Throwing" value="75" />
@@ -3788,9 +3788,9 @@
     </upgrade_targets>
     <Equipments>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.sm_md_num_sword_1h_c" />
+        <equipment slot="Item0" id="Item.sm_uruk_halberd_j" />
         <equipment slot="Item1" id="Item.sm_md_num_cav_shield_heavy_a" />
-        <equipment slot="Item2" id="Item.sm_uruk_halberd_j" />
+        <equipment slot="Item2" id="Item.sm_md_num_sword_1h_c" />
         <equipment slot="Head" id="Item.sk_md_num_cav_helmet_heavy_a" />
         <equipment slot="Body" id="Item.sm_md_num_cav_chest_heavy_a" />
         <equipment slot="Cape" id="Item.sm_md_num_cav_pauld_heavy_a" />
@@ -3800,9 +3800,9 @@
         <equipment slot="HorseHarness" id="Item.sm_md_num_barding_elite_a" />
       </EquipmentRoster>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.sm_md_num_sword_1h_c" />
+        <equipment slot="Item0" id="Item.sm_uruk_halberd_j" />
         <equipment slot="Item1" id="Item.sm_md_num_cav_shield_heavy_a" />
-        <equipment slot="Item2" id="Item.sm_uruk_halberd_j" />
+        <equipment slot="Item2" id="Item.sm_md_num_sword_1h_c" />
         <equipment slot="Head" id="Item.sk_md_num_cav_helmet_heavy_b" />
         <equipment slot="Body" id="Item.sm_md_num_cav_chest_heavy_a" />
         <equipment slot="Cape" id="Item.sm_md_num_cav_pauld_cape_heavy_a" />
@@ -3827,9 +3827,9 @@
     <skills>
       <skill id="Athletics" value="195" />
       <skill id="Riding" value="350" />
-      <skill id="OneHanded" value="380" />
+      <skill id="OneHanded" value="350" />
       <skill id="TwoHanded" value="200" />
-      <skill id="Polearm" value="350" />
+      <skill id="Polearm" value="380" />
       <skill id="Bow" value="45" />
       <skill id="Crossbow" value="35" />
       <skill id="Throwing" value="80" />
@@ -3837,9 +3837,9 @@
     <upgrade_targets />
     <Equipments>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.sm_md_num_sword_1h_c" />
+        <equipment slot="Item0" id="Item.sm_uruk_halberd_j" />
         <equipment slot="Item1" id="Item.sm_md_num_cav_shield_heavy_a" />
-        <equipment slot="Item2" id="Item.sm_uruk_halberd_j" />
+        <equipment slot="Item2" id="Item.sm_md_num_sword_1h_c" />
         <equipment slot="Head" id="Item.sk_md_num_cav_helmet_elite_a" />
         <equipment slot="Body" id="Item.sm_md_num_cav_chest_elite_a" />
         <equipment slot="Cape" id="Item.sm_md_num_cav_pauld_elite_a" />
@@ -3849,9 +3849,9 @@
         <equipment slot="HorseHarness" id="Item.sm_md_num_barding_lord_a" />
       </EquipmentRoster>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.sm_md_num_sword_1h_c" />
+        <equipment slot="Item0" id="Item.sm_uruk_halberd_j" />
         <equipment slot="Item1" id="Item.sm_md_num_cav_shield_heavy_a" />
-        <equipment slot="Item2" id="Item.sm_uruk_halberd_j" />
+        <equipment slot="Item2" id="Item.sm_md_num_sword_1h_c" />
         <equipment slot="Head" id="Item.sk_md_num_cav_helmet_elite_b" />
         <equipment slot="Body" id="Item.sm_md_num_cav_chest_elite_b" />
         <equipment slot="Cape" id="Item.sm_md_num_cav_pauld_cape_elite_a" />
