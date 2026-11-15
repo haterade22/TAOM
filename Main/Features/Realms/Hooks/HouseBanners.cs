@@ -83,8 +83,8 @@ internal static class HouseBanners
             ShowWithin(harmony, factionCard == null ? null : AccessTools.Constructor(factionCard, new[] { typeof(IFaction) }),
                 "encyclopedia faction card");
             var editor = AccessTools.TypeByName("SandBox.GauntletUI.BannerEditor.GauntletBannerEditorScreen");
-            ShowWithin(harmony, editor == null ? null : AccessTools.FirstConstructor(editor, c => c.GetParameters().Length == 1),
-                "banner editor");
+            ShowWithin(harmony, editor == null ? null
+                : AccessTools.Constructor(editor, new[] { typeof(TaleWorlds.CampaignSystem.GameState.BannerEditorState) }), "banner editor");
         }
         catch (Exception ex)
         {
