@@ -129,6 +129,23 @@ public class BattleShaderNoticeServiceTests
     }
 
     [TestMethod]
+    public void LineDuringRenderWait_GivesTheLineOnlyWhileTheEngineStillWaits()
+    {
+        // The writer passes the engine's render wait; the service gives the stored line only with it.
+        var service = NewService();
+        service.OnMissionStateTick(true, 1192);
+
+        Assert.AreEqual("loading line", service.LineDuringRenderWait(missionWaiting: true));
+        Assert.IsNull(service.LineDuringRenderWait(missionWaiting: false));
+    }
+
+    [TestMethod]
+    public void LineDuringRenderWait_NoNotice_GivesNothingEvenWhileWaiting()
+    {
+        Assert.IsNull(NewService().LineDuringRenderWait(missionWaiting: true));
+    }
+
+    [TestMethod]
     public void OnMissionStateTick_RunnerThrowsOnStart_KeepsTheLoadingLineAndLogs()
     {
         _runner.When(r => r.Start(Arg.Any<ShaderCompileNoticeTexts>())).Do(_ => throw new OutOfMemoryException());
