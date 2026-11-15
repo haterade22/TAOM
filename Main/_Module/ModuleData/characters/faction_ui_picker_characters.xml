@@ -156,7 +156,7 @@
     </Equipments>
   </NPCCharacter>
 
-  <!-- Brand: borrowed body from lord_2_7_1 (Mimir), a Dale (Culture.sturgia) male lord with a real
+  <!-- Brand: borrowed body from lord_2_7_1 (Bryn), a Dale (Culture.sturgia) male lord with a real
        face key (lord_S8_u/lord_S9_l/lord_S9_c/lord_S9_u all carry only a "PLACEHOLDER FACE KEY"
        comment). Gear references the EXISTING dale_bat_template_medium_c / dale_civ_template_default_c
        rosters (Main/_Module/ModuleData/equipmentsets/taom_equipment_sets_dale.xml, not edited here):
@@ -188,7 +188,7 @@
     <!-- #704 lens7-xml #3: full 18-skill sheet (see Gandalf's comment above for why). Source: the
          standard adult Dale lord sheet (SkillSet.taom_dale_lord_skills, e.g. lord_2_4_1); this
          legend's own OneHanded, Riding, Leadership and Steward were higher and are kept.
-         lord_2_1 (Bard II) is vanilla's lord re-themed by lords.xslt, with no TAOM-authored sheet;
+         lord_2_1 (Brand) is vanilla's lord re-themed by lords.xslt, with no TAOM-authored sheet;
          this is the nearest TAOM adult Dale lord sheet. -->
     <skills>
       <skill id="OneHanded" value="240" />
@@ -216,7 +216,7 @@
     </Equipments>
   </NPCCharacter>
 
-  <!-- Bard: borrowed body from lord_2_15_4 (Bovan), another real-faced Dale male lord. Gear
+  <!-- Bard: borrowed body from lord_2_15_4 (Arnfast), another real-faced Dale male lord. Gear
        references the EXISTING dale_bat_template_medium_a / dale_civ_template_default_a rosters
        (same file as Brand, not edited here): longbow + bodkin arrows, bow-armed per spec. -->
   <NPCCharacter id="taom_fui_bard"

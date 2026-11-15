@@ -5,7 +5,7 @@
 The Kingdom of Arthedain is a playable what-if realm: the North-kingdom of Arnor in which Arvedui's
 line survived. It has its own culture (`arthedain`), a Dúnedain troop tree built on the Arnor armour
 in the Armory, ten fortifications and twenty-four villages in the north-west of the TAOM_Map main
-map, five clans under King Arvegil II at Fornost Erain, and full character-creation support. It is
+map, five clans under King Aranarth at Fornost Erain, and full character-creation support. It is
 weak by design: few lords, small parties, poor towns, and at war with Gundabad (Angmar) from day 44, when the War of the Ring reaches Full War.
 
 ## Why This Exists
@@ -91,11 +91,11 @@ kingdom touches")
 
 | Clan | Tier | Holds |
 |------|------|-------|
-| House of Arvedui (King Arvegil II) | 4 | Fornost Erain `town_AN2` (capital), Barad Forn `castle_AN9` |
-| House of Evendim | 3 | Annúminas `town_AN1`, Emyn Uial `castle_AN10` |
-| Wardens of Amon Sûl | 3 | Bree `town_AN3`, Amon Sûl `castle_AN4` |
-| House of the Baranduin | 2 | Hoarwell Watch `castle_AN5`, Brandywine Bridge `castle_AN6` |
-| House of Emyn Beraid | 2 | Emyn Beraid `castle_AN8`, Forochel `castle_AN11` |
+| Isildurioni (King Aranarth) | 4 | Fornost Erain `town_AN2` (capital), Barad Forn `castle_AN9` |
+| Tarmanos | 3 | Annúminas `town_AN1`, Emyn Uial `castle_AN10` |
+| Lómëar | 3 | Bree `town_AN3`, Amon Sûl `castle_AN4` |
+| Orodhoth | 2 | Hoarwell Watch `castle_AN5`, Brandywine Bridge `castle_AN6` |
+| Noirinin | 2 | Emyn Beraid `castle_AN8`, Forochel `castle_AN11` |
 
 Four lords per clan (two married couples), each with a distinct face taken from a shipped Gondor
 lord, and each clan flying its own Arnor icon (11000 to 11004) in silver on Arnor blue. The realm and
@@ -267,6 +267,11 @@ both map tools append and `add_map_fortifications.py --check` refuses any other 
 
 ## Changelog
 
+- 2026-11-15 (no issue): the five clans and their 20 lords take Realms in Exile names: Arthedain's
+  last royal house and the houses holding its lands in RiE, placed by geography (Isildurioni at
+  Fornost, Tarmanos at Annúminas, Lómëar at Bree, Orodhoth on the Baranduin, Noirinin in the
+  north). The king is now Aranarth. Ids and keys are unchanged; the translations of the renamed
+  keys are stale until the next translation pass.
 - 2026-11-06 (no issue, waived by Mike): the Knight of Annuminas, Evendim Warden and Dunedain Steel
   Bowman from player feedback; a sixth `arthedain` bow (`ladder_arthedain_bow_t7`) in the live
   Armory; a `kingdom_of_arthedain` line in `faction_characters.json` so the faction screen keeps the

@@ -296,8 +296,8 @@ AUTHORED = {
     # to the east, the Misty Mountains' goblins to the west, Dol Guldur and Lothlórien to the south.
     "anduinvale": {
         "parents": [
-            ("House of Beorn",
-             "Your family belonged to the House of Beorn, kin and companions to Grimbeorn, carrying great axes in the hall of Beorn and riding the sturdy ponies of the Vales wherever the chieftain's word sent them."),
+            ("The Beornings",
+             "Your family belonged to the Beornings, kin and companions to Grimbeorn, carrying great axes in the hall of Beorn and riding the sturdy ponies of the Vales wherever the chieftain's word sent them."),
             ("Traders of the Old Ford",
              "Your family kept a trading house at the Old Ford, where the road from the High Pass meets the river. Honey, hides and timber went across to the Woodmen and the Elves of Mirkwood, and every cart paid its due."),
             ("Free Farmers of the Vales",
@@ -339,7 +339,7 @@ AUTHORED = {
         ],
         "adulthood": [
             ("You held the Carrock ford beside Grimbeorn.",
-             "When a goblin host came down from the High Pass to cut the Vales in two, you stood in the ford with the axe-men of the House of Beorn until the Vale Riders came round their flank. Your name was spoken in the hall that night."),
+             "When a goblin host came down from the High Pass to cut the Vales in two, you stood in the ford with the axe-men of the Beornings until the Vale Riders came round their flank. Your name was spoken in the hall that night."),
             ("You opened a free market at the Old Ford.",
              "You brought Beornings, Woodmen and the Elves of Mirkwood to one table and settled the tolls at the Old Ford, so that honey and timber crossed the river without a quarrel. Grimbeorn's steward does not forget who filled the storehouses."),
             ("You rebuilt the farms of Eastbank after a goblin raid.",
@@ -352,27 +352,27 @@ AUTHORED = {
              "For months stolen goods from the Misty Mountains had turned up in the back rooms along the river. You traced the trade, found the men behind it and handed them to the wardens, keeping a little of the silver for your trouble."),
         ],
     },
-    # Angaladh: the Woodmen of western Mirkwood under King Ingomar of the House of Angaladh, in
+    # Angaladh: the Woodmen of western Mirkwood under King Theodemiro of the Waldandings, in
     # Woodmen-town; Ironwood Hall, the Forest Gate, Thornhold and the watch on the Emyn Duir; the
     # Forest Road, spiders and wolves under the trees, Dol Guldur to the south, the Anduin and the
     # Beornings to the west. A realm of foot soldiers: no riders.
     "angaladh": {
         "parents": [
-            ("House of Angáladh",
-             "Your family belonged to the House of Angáladh, kin to King Ingomar, bearing great axes in his hall at Woodmen-town and leading the forest levies along the Forest Road."),
+            ("Waldanding",
+             "Your family belonged to the Waldandings, kin to King Theodemiro, bearing great axes in his hall at Woodmen-town and leading the forest levies along the Forest Road."),
             ("Traders of Woodmen-town",
              "Your family kept a trading house in Woodmen-town, where timber, furs and honey came in from the clearings and went out along the Forest Road, and where every load paid its toll."),
             ("Clearing Farmers",
              "Your family worked a clearing hacked out of the forest, felling trees in winter and sowing in spring, with a spear by the door because spiders and wolves came out of the trees more often than the rain."),
             ("Woodwrights of Ironwood Hall",
              "Your family were woodwrights and axe-smiths at Ironwood Hall, felling the dark heartwood the hall is named for and hafting the broad axes of the Woodmen."),
-            ("Woodwards of the Forest Road",
+            ("Meroaging",
              "Your family were woodwards of the Forest Road, walking its length with bow and hatchet to keep the way open and the spiders back. Few thanked them, but the road stayed passable."),
             ("Outcasts of Thornhold",
              "Your family lived on the thorny edges of the Thornhold marches, taking what the forest and the road gave, and learned that a stranger's purse was often looser than his tongue."),
         ],
         "youth": [
-            ("Ran dispatches for King Ingomar.",
+            ("Ran dispatches for King Theodemiro.",
              "You carried the king's word between Woodmen-town and the outlying holds, running the forest trails from hold to hold."),
             ("Manned the palisade of the Forest Gate.",
              "You served on the wall of the Forest Gate, shooting from the platforms at wolves and goblins on the road below and learning how few bowmen can hold a narrow way."),
@@ -386,7 +386,7 @@ AUTHORED = {
              "You went up and down the Forest Road with a pack of knives, thread and honey-cakes, and learned how to pass a hungry stranger, a toll-warden and a doubtful bargain."),
         ],
         "education": [
-            ("Trained in the hall of King Ingomar.",
+            ("Trained in the hall of King Theodemiro.",
              "You grew up among the king's household in Woodmen-town, swinging the great axe against stumps and learning to move through the trees in full gear. Every bruise was a lesson, and the old forest songs taught you what the Woodmen owe each other."),
             ("Counted timber in the yards of Woodmen-town.",
              "You spent your youth tallying logs and planks in the timber yards of Woodmen-town, learning to bargain with Beornings and caravan-masters and to tell sound wood from rot."),
@@ -400,7 +400,7 @@ AUTHORED = {
              "You grew up among the lean-tos outside the Forest Gate, running errands for travellers and selling what the road dropped. The road taught you quick hands, a quicker tongue and when to vanish."),
         ],
         "adulthood": [
-            ("You held the Forest Gate beside King Ingomar.",
+            ("You held the Forest Gate beside King Theodemiro.",
              "When a host of orcs came up from Dol Guldur to force the Forest Gate, you stood in the passage with the king's spearmen until the woodwards came round through the trees. Your name was spoken in the hall that night."),
             ("You opened a timber market with the Beornings.",
              "You crossed the Anduin and put the case for Angáladh's timber to the Beornings with such plainness that a regular market was set up within the month. The king's steward learned your name."),
@@ -414,13 +414,13 @@ AUTHORED = {
              "For months looted goods had been turning up in the back rooms of Woodmen-town. You traced the trade, found the men behind it and handed them to the king's wardens, keeping a little of the silver for your trouble."),
         ],
     },
-    # Dorwinion: the vintners and river-traders under King Ostric in Vineholm; the Redwater, the
+    # Dorwinion: the vintners and river-traders under King Hawin in Vineholm; the Redwater, the
     # River Running and the Sea of Rhun, Seagate and Sunwall, Vinewatch and Eastmarch Hold; raiders
     # out of the eastern steppe. No Dale person or place.
     "dorwinion": {
         "parents": [
-            ("Household of King Ostric",
-             "Your family served in the hall of King Ostric at Vineholm, riding in his household and carrying his word along the river roads wherever the vintage and the realm required it."),
+            ("Household of King Hawin",
+             "Your family served in the hall of King Hawin at Vineholm, riding in his household and carrying his word along the river roads wherever the vintage and the realm required it."),
             ("Wine-merchants of Redwater",
              "Your family kept a wine-house at Redwater, shipping casks down the river and across the Sea of Rhûn, and every cask paid its toll before it left the quay."),
             ("Vineyard Farmers",
@@ -447,7 +447,7 @@ AUTHORED = {
              "You went up and down the Redwater and across the Sea of Rhûn with the wine barges, minding casks and learning how to pass a toll, a watchman and a doubtful buyer."),
         ],
         "education": [
-            ("Trained in the hall of King Ostric.",
+            ("Trained in the hall of King Hawin.",
              "You grew up among the king's household at Vineholm, learning to ride in full gear and to swing heavy weapons under the old guardsmen. Every bruise was a lesson, and the songs of the hall taught you what you owe your lord."),
             ("Clerked in the wine-houses of Redwater.",
              "You learned to keep tallies and charm buyers in the cellars of Redwater, where every cask is sampled and every price argued, and to tell a fair bargain from a quick tongue."),
@@ -475,13 +475,13 @@ AUTHORED = {
              "For months wine had been leaving the king's warehouses without paying a toll. You traced the cargo, found the harbour official behind it and handed him to the wardens, keeping a little of the silver for your trouble."),
         ],
     },
-    # South Rhovanion: the Northmen horse-lords of the plains south of Mirkwood under King Vidumar
+    # South Rhovanion: the Northmen horse-lords of the plains south of Mirkwood under King Suniefredo
     # in Vidugard; Horsemead, Southwood, Westmark, Wainwatch and the Northmark; the Wainriders of
     # the east, the southern eaves of Mirkwood, Dol Guldur. No Rohan person or place.
     "southrhovanion": {
         "parents": [
-            ("Retainers of King Vidumar",
-             "Your family served in the hall of King Vidumar at Vidugard, riding in his household and carrying his spear wherever the plains required it."),
+            ("Retainers of King Suniefredo",
+             "Your family served in the hall of King Suniefredo at Vidugard, riding in his household and carrying his spear wherever the plains required it."),
             ("Horse-traders of Southwood",
              "Your family were horse-traders in Southwood, bringing herds to the fairs and selling mounts to every lord from the forest to the eastern sea."),
             ("Freeholders of the Northmark",
@@ -508,7 +508,7 @@ AUTHORED = {
              "Rather than take up arms, you travelled with the herd-wagons and the camp-followers, learning to live by wit, trade and a quick hand."),
         ],
         "education": [
-            ("Rode in training with the household of King Vidumar.",
+            ("Rode in training with the household of King Suniefredo.",
              "You spent your youth learning the art of mounted war among the king's household at Vidugard, where the old riders taught you to keep your seat, your spear and your temper through a long day in the saddle."),
             ("Traded horses at the fairs of Southwood.",
              "You carried prices and tallies between the horse-fairs of Southwood and the lesser holds of the plain, learning to judge a mount at a glance and a buyer in a breath."),
@@ -529,7 +529,7 @@ AUTHORED = {
             ("You broke a Wainrider raid that struck the Northmark in early autumn.",
              "The raiders had timed their strike for the harvest, when the farmsteads lay open. You gathered the levy, met them on foot at the stream-crossing and held them there until the riders came."),
             ("You forged a sword the king chose for his household guard.",
-             "The commission came from the king's stables: a blade that could be carried at the saddle and drawn without a pause. When Vidumar chose your pattern for his own riders, your name was made."),
+             "The commission came from the king's stables: a blade that could be carried at the saddle and drawn without a pause. When Suniefredo chose your pattern for his own riders, your name was made."),
             ("You tracked the scouts mapping the approaches to Westmark.",
              "You noticed the signs of careful watching: grass pressed back upright, stones turned, a fire dug over. You followed the trail south and brought the report back in time for the riders to act."),
             ("You exposed a spy working inside Vidugard.",

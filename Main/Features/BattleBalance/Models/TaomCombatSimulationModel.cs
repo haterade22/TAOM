@@ -11,16 +11,14 @@ public class TaomCombatSimulationModel : DefaultCombatSimulationModel
 {
     private readonly IBattleBalanceSettingsProvider _settings;
     private readonly IRefugeDefenseService _refugeDefense;
+    private readonly IBattleBalanceConfigProvider _configProvider;
 
-    public TaomCombatSimulationModel(IBattleBalanceSettingsProvider settings)
-        : this(settings, null)
-    {
-    }
-
-    public TaomCombatSimulationModel(IBattleBalanceSettingsProvider settings, IRefugeDefenseService refugeDefense)
+    public TaomCombatSimulationModel(IBattleBalanceSettingsProvider settings, IRefugeDefenseService refugeDefense,
+        IBattleBalanceConfigProvider configProvider)
     {
         _settings = settings;
         _refugeDefense = refugeDefense;
+        _configProvider = configProvider;
     }
 
     // Refuge (#507): defenders of a ready refuge take reduced auto-resolve damage. The source
@@ -37,6 +35,11 @@ public class TaomCombatSimulationModel : DefaultCombatSimulationModel
         var result = base.SimulateHit(strikerTroop, struckTroop, strikerParty, struckParty,
             strikerAdvantage, battle, battleEnvironment, strikerSideMorale, struckSideMorale);
 
+        // #1283: numbers over quality. The base raised the power ratio to 0.7; rescale it to the configured exponent, on the
+        // final number, before the refuge reduction (both scale the final number, so the order does not matter). This runs
+        // for every simulated strike, the player's Send troops and raids included.
+        AutoResolveQualityMath.Apply(ref result, TroopPower(strikerTroop, strikerParty), TroopPower(struckTroop, struckParty), PowerRatioExponent);
+
         var reduction = _refugeDefense?.DefenderDamageReduction(struckParty?.MobileParty?.StringId) ?? 0f;
         // Shared composition contract (RefugeDamageReduction): (1 - r) on the FINAL number, same
         // as the real-time path. A bare AddFactor(-r) here composed against the BASE and drifted
@@ -45,6 +48,16 @@ public class TaomCombatSimulationModel : DefaultCombatSimulationModel
 
         return result;
     }
+
+    private float PowerRatioExponent => _configProvider?.GetConfig()?.AutoResolve?.PowerRatioExponent ?? AutoResolveQualityMath.VanillaPowerRatioExponent;
+
+    // The power the base read for this troop (DefaultCombatSimulationModel.SimulateHit, line 19). The base passes the
+    // internal MapEventSide.LeaderSimulationModifier, which the engine caches from the leader party's hero's PowerModifier
+    // at event start, after a load and when the leader party leaves. This live read matches it, except after the side's
+    // leader hero dies or is replaced during the event: the engine keeps the old cached value (a few percent).
+    private static float TroopPower(CharacterObject troop, PartyBase party) =>
+        Campaign.Current.Models.MilitaryPowerModel.GetTroopPower(troop, party.Side, party.MapEvent.SimulationContext,
+            party.MapEventSide.LeaderParty?.LeaderHero?.PowerModifier ?? 0f);
 
     public override float GetBluntDamageChance(CharacterObject strikerTroop,
         CharacterObject strikedTroop, PartyBase strikerParty, PartyBase strikedParty,

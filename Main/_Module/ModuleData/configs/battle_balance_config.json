@@ -35,5 +35,8 @@
       "gundabad": -0.1,
       "dolguldur": -0.1
     }
+  },
+  "AutoResolve": {
+    "PowerRatioExponent": 0.5
   }
 }

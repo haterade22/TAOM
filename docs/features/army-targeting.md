@@ -129,7 +129,7 @@ All sections optional, missing entries default to vanilla behaviour. **Every val
   "ForeignTheaterWeight": 0.35,
   "FactionPriorityTargets": { "<kingdom_id>": ["<settlement_id>", ...] },
   "FactionAggressionMultipliers": { "<kingdom_id>": 2.0 },
-  "CapturedFortHold": { "Sides": ["Free"], "MinCohesionToHold": 45, "ReleaseCohesion": 40, "ReleaseFoodDays": 1,
+  "CapturedFortHold": { "Sides": ["Free"], "Factions": ["empire_s"], "MinCohesionToHold": 45, "ReleaseCohesion": 40, "ReleaseFoodDays": 1,
                         "BaseHours": 22, "PerTraitPointHours": 5, "MinHours": 12, "MaxHours": 30 }
 }
 ```
@@ -159,8 +159,8 @@ The registry is not saved: the chronicle pushes its Active windows again at sess
 
 The scoring above decides where an army goes next. It cannot make one stay: a captured settlement leaves the enemy pool, and pushing the other targets down risks `Army.CheckInactivity` disbanding the army. So the capture itself is handled apart, by [hold-the-walls.md](hold-the-walls.md) (#871), which does not touch the target score:
 
-- After a siege win the engine pauses each capturing army leader's AI for 10 hours (`KingdomManager.SiegeCompleted`, `KingdomManager.cs:241-274`). An AI army of a Free realm (config `CapturedFortHold.Sides`) that stands inside the fortress, with cohesion of at least 45 and the fortress not under siege, has that same pause lengthened to 12 to 30 hours from the capture, by the leader's Valor and Calculating (22 + 5 x (Calculating - Valor), clamped; the code never goes above 32). The hold counts toward the engine's 48 hour inactivity disband of an army whose leader waits on Hold, and releasing it does not reset that counter, so the 30 hour ceiling leaves the army about 14 or more hours to march out.
-- It ends early on a siege, cohesion below 40 or less than a day of food, restoring what is left of the engine's 10 hours. Evil and (by default) Neutral armies keep rolling on. Nothing is minted.
+- After a siege win the engine pauses each capturing army leader's AI for 10 hours (`KingdomManager.SiegeCompleted`, `KingdomManager.cs:241-274`). An AI army of a Free realm (config `CapturedFortHold.Sides`), or of a realm in `CapturedFortHold.Factions` (shipped: Mordor), that stands inside the fortress, with cohesion of at least 45 and the fortress not under siege, has that same pause lengthened to 12 to 30 hours from the capture, by the leader's Valor and Calculating (22 + 5 x (Calculating - Valor), clamped; the code never goes above 32). The hold counts toward the engine's 48 hour inactivity disband of an army whose leader waits on Hold, and releasing it does not reset that counter, so the 30 hour ceiling leaves the army about 14 or more hours to march out.
+- It ends early on a siege, cohesion below 40 or less than a day of food, restoring what is left of the engine's 10 hours. Mordor's armies hold too (config `CapturedFortHold.Factions`, #1283); other Evil and (by default) Neutral armies keep rolling on. Nothing is minted.
 - MCM "Good armies hold captured forts" in this group (default on), effective only while Enable AI Strategic Intelligence is on. The `CapturedFortHold` section of `army_targeting.json` carries the numbers and is validated on load like the rest of the file.
 - Single-player only.
 

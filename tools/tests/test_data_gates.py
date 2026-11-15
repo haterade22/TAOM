@@ -173,6 +173,11 @@ class SelectionTests(unittest.TestCase):
     def test_the_troop_id_baseline_selects_moduledata(self):
         self.assertIn("moduledata", _ids(dg.select(dg.GATES, ["tools/shipped_troop_ids.txt"])))
 
+    def test_the_tools_the_enlistment_rank_rule_reads_select_moduledata(self):
+        for path in ("tools/generate_enlistment_rosters.py", "tools/melee_catalogue.py",
+                     "tools/analyze_melee_ladder.py", "tools/ranged_ladder.py"):
+            self.assertIn("moduledata", _ids(dg.select(dg.GATES, [path])), path)
+
     def test_the_lord_skill_sets_and_their_generator_select_generator_regions(self):
         for path in ("Main/_Module/ModuleData/taom_lord_skill_sets.xml", "tools/apply_culture_skills_traits.py"):
             self.assertIn("generator-regions", _ids(dg.select(dg.GATES, [path])), path)
@@ -200,6 +205,23 @@ class SelectionTests(unittest.TestCase):
         commands = [g.cmd for g in selected]
         self.assertIn(("python", "tools/generate_lothlorien_armor.py", "--check"), commands)
         self.assertIn(("python", "tools/generate_snow_orc_armor.py", "--check"), commands)
+
+    def test_the_armour_restat_check_reads_the_curve_the_roster_map_and_any_live_armour_file(self):
+        """A reinstall or a restat from a stale checkout reverts every value and loot table to the old curve,
+        and no other gate compares the live Armory with it."""
+        gate = next(g for g in dg.GATES if g.id == "armour-restat")
+        self.assertEqual(gate.cmd, ("python", "tools/rebalance_armor.py", "--check"))
+        live_arm = LIVE_ARMORY.replace("weapons.xml", "arm_armors.xml")
+        for path in ("tools/rebalance_armor.py", "tools/data/armor_roster_tiers.json",
+                     "tools/generate_lothlorien_armor.py", "tools/generate_snow_orc_armor.py", live_arm):
+            self.assertIn("armour-restat", _ids(dg.select(dg.GATES, [path])), path)
+        self.assertNotIn("armour-restat", _ids(dg.select(dg.GATES, [TROOPS])))
+        self.assertIn("--apply", gate.note)
+        self.assertIn("backup tag", gate.note)
+        self.assertIn("merge trunk", gate.note)
+        self.assertEqual(dg.verdict(2, "ERROR: SKIPPED, LOTRLOME_Armory is not installed")[0], "NOT RUN")
+        self.assertEqual(dg.verdict(2, "ERROR: SKIPPED, no armour file was read; nothing was checked")[0], "NOT RUN")
+        self.assertEqual(dg.verdict(1, "12 item(s) differ from the curve")[0], "FAIL")
 
     def test_the_armour_cover_flags_gate_reads_the_spec_the_tool_and_any_live_armour_file(self):
         """A reinstall resets the cover attributes of every armour slot, so the spec, its tool, a generator and

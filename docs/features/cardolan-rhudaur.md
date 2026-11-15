@@ -81,13 +81,13 @@ C#: VolunteerRecruitmentService.Cardolan.cs / .Rhudaur.cs, the culture rows of t
 
 | Realm | Clan (tier) | Holds |
 |-------|-------------|-------|
-| Cardolan, King Aranthir | House of Tyrn Gorthad (4) | Caras Gorthad `town_CA2` (capital), Tyrn Gorthad `castle_CA1` |
-| | House of Tharbad (3) | Tharbad `town_CA1` |
-| | House of Minas Eithel (2) | Minas Eithel `town_CA3` |
-| | Wardens of Sarn Ford (2) | Sarn Ford `castle_CA2` |
-| Rhudaur, King Belegorn | House of Cameth Brin (4) | Cameth Brin `town_RH1` (capital), Egladil `castle_RH1` |
-| | House of Ettendale (3) | Ettendale Hold `castle_RH2` |
-| | Wardens of the Coldfells (2) | Coldfells `castle_RH3` |
+| Cardolan, King Osthir | Caladir (4) | Caras Gorthad `town_CA2` (capital), Tyrn Gorthad `castle_CA1` |
+| | Gunnorionath (3) | Tharbad `town_CA1` |
+| | Eruthimari (2) | Minas Eithel `town_CA3` |
+| | Emerayacil (2) | Sarn Ford `castle_CA2` |
+| Rhudaur, King Elamarth | Galadhionath (4) | Cameth Brin `town_RH1` (capital), Egladil `castle_RH1` |
+| | Húnen (3) | Ettendale Hold `castle_RH2` |
+| | Endril (2) | Coldfells `castle_RH3` |
 
 Four lords per clan (two married couples), 16 for Cardolan and 12 for Rhudaur. Each lord draws his
 own face from the `fighter_gondor` template at campaign start (Lord Face Variety rule A), where a
@@ -97,8 +97,8 @@ keys' hair indices, where a woman's index 0 is bald. So each lady carries her ow
 `<hair_tag name="empire" />` (10 of the 22 adult female hairs, none bald), written by the
 generator's `female_hair_tag` and pinned by `FemaleLordHairDataTests`. Banners: Rhudaur flies the Arnor icons
 (group 110) in silver on palette 99. Cardolan (#1047) flies green (palette 2027, `0xFF28745C`, also its realm
-colour) with white emblems; the realm and the House of Tyrn Gorthad fly 31005 (an interlace ring around a
-lozenge, with seven stars), the House of Tharbad flies its icon in gold (238). The generator's `sigil` and
+colour) with white emblems; the realm and the royal Caladir fly 31005 (an interlace ring around a
+lozenge, with seven stars), the Gunnorionath of Tharbad fly its icon in gold (238). The generator's `sigil` and
 `clan_sigils` fill the `{fg}` slot of the realm's banner template. The clans' `color`/`color2`, which
 Patch23 uses to dress troops and map parties, are shades of the same green with white, and the culture
 and faction-map colours match (`0xFF28745C`).
@@ -280,6 +280,11 @@ generator and `--only <culture>`. Both `generate_new_faction_kingdoms.py` and
   shield) from player feedback, a second upgrade of the Veteran Barrow Guard beside the Warden. Its
   name waits for its translation (#763). Review record:
   `docs/reviews/rca-arnor-elite-troops-2026-11-06.md`.
+- 2026-11-15 (no issue): both realms' clans and lords take Realms in Exile names, each realm's last
+  RiE royal house plus the houses holding its lands, placed by geography. Cardolan: Caladir (King
+  Osthir), Gunnorionath at Tharbad, Eruthimari at Minas Eithel, Emerayacil at Sarn Ford. Rhudaur:
+  Galadhionath (King Elamarth), Húnen in Ettendale, Endril in the Coldfells. Ids and keys are
+  unchanged; the translations of the renamed keys are stale until the next translation pass.
 
 ## How to verify in game (the 2026-11-06 addition)
 

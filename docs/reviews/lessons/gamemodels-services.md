@@ -1415,3 +1415,11 @@ The gold-only emissary's first party cap was `PartySizeLimit - NumberOfAllMember
 - **Why missed:** the callers came from the plan, which listed the barterables only. Nobody grepped the base model for its own calls of the method it overrides.
 - **Prevent:** before overriding a model method, grep the base model and the engine for every call of that method, the base class's own virtual self-calls included, and decide for each reader whether the override must answer it. Exempt the inputs a second reader asks about (here, the realm the clan already serves) and test that exemption.
 - **Source:** [rca-kingdom-allegiance-2026-11-10.md](../rca-kingdom-allegiance-2026-11-10.md), row 1.
+
+### A law derived from one branch of an engine method holds only on that branch (#1283, 2026-11-15)
+
+The auto-resolve change stated that a side's strength goes as `N^1.6 x P^(2e)`, from the strike count `N^0.6` at `GetSimulationTicksForBattleRound` lines 258-261. The same method has a siege-assault branch (lines 247-251) where the attackers' strike count does not grow with their number, and a small-garrison branch that is linear. The docs, comments and test header carried the field law for every battle.
+
+- **Why missed:** the derivation started from the line that the vanilla formula pointed at, and the rest of the method was not read. A simulation of the field loop agreed with the law, so nothing contradicted it.
+- **Prevent:** before you write a law, a table or a ratio derived from engine code, read every branch of each method the derivation uses, and name the branch the law holds on beside it. A simulation proves only the branches it models: say which.
+- **Source:** [rca-faction-balance-data-2026-11-14.md](../rca-faction-balance-data-2026-11-14.md), "#1283 batch 2 review", rows B2 and B4.

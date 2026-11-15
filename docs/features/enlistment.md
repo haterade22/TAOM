@@ -1217,6 +1217,155 @@ otherwise descend to. The first cut of #525 shipped 15 such rosters, all Support
 the reported bug inside its own fix. Support now takes any melee sidearm (one weapon, still no
 shield) and a cell with no usable weapon is suppressed instead of emitted.
 
+### A rank's kit is never weaker than the kit before it (#1290)
+
+**What the player holds.** The resolver hands every kit into the party inventory and takes none
+back, so at each rank the player holds every kit of his chain. `resolve_kit` in
+`tools/generate_enlistment_rosters.py` mirrors `EnlistmentRosterResolver.Resolve`: the requested
+culture, then the default kits; inside each, the requested assignment, then infantry; inside each,
+the requested tier down to recruit. `rank_chains` lists, for each kit, every distinct kit issued at the
+tiers below it for one culture and requested assignment, so a cavalry enlistee of a culture with no
+cavalry recruit kit holds the infantry recruit kit at the cavalry soldier kit. `ResolverMirrorTests`
+pins the C# lines the mirror cites.
+
+**The rule.** `rank_regressions` holds a kit against everything drawn before it and gives three
+reasons:
+
+- **armour:** the total over head, body, arm and leg, read from the installed Armory, is under the
+  highest total of any earlier kit. Armour has no tolerance, so a kit may trade a zone for a larger
+  gain elsewhere but may not lose in total.
+- **weapon:** in a category the kit holds, its best weapon is more than 3% weaker than the best of that
+  category in any earlier kit (`WEAPON_TOLERANCE`, shared by the gate and the repair). Melee output is
+  damage per second from `melee_catalogue`, as the melee ladder reads a troop; a launcher's is its
+  damage.
+- **dropped:** an earlier kit holds a category the kit lacks, reported once per category against the
+  kit that holds the best of it. Weapons of two categories are never compared (a spear's thrust and a
+  sword's swing are not one scale), so the gate reports it and no tool repairs it. In a cavalry kit
+  the lance counts the same way: an earlier kit holds a couchable spear, and the kit holds spears but
+  none couchable. The couch counts only in a cavalry kit, because the engine's `polearm_couch` usage
+  set carries `requires_mount`. Judging every kit as mounted would change nothing in the shipped file
+  today (2026-11-15): the plan is the same, and the lance reason still falls on the same two cavalry
+  kits.
+
+The categories are the maintainer's
+([melee-damage-model.md](./melee-damage-model.md#a-troop-keeps-its-weapon-category)): one handed, two
+handed sword, two handed axe or mace, spear, swinging polearm, pike, bow and crossbow. A bastard sword
+(primary usage `OneHandedBastardSword`, such as `wm_gondor_lamedon_1h_sword_a` in the Umbar infantry and
+support soldier kits) is one handed, whatever its two handed alternate. A couchable lance is a spear,
+and its couch is the constraint above. A longbow is a bow; its `long_bow` usage set carries
+`requires_no_mount`, which binds the repair, not the category. A polearm with a thrown usage (a pilum
+such as `imperial_throwing_spear_1_t4`, `TwoHandedPolearm_Thrown`) is a thrown weapon, and thrown
+weapons, shields and ammunition are not compared.
+
+**The check.** `ENLISTMENT_KIT_RANK_REGRESSION` in `python tools/validate_moduledata.py`, a warning
+while the Armory is unversioned, as `WORN_ARMOUR_CEILING` is. Its message names the earlier kits, and
+each reason names the kit it is held against. Its `(unresolved)` row names a kit piece with no armour
+values or no weapon price, `(weapons)` says the weapons could not be priced, and `(tooling)` says the
+generator could not be imported or failed an assert at import. A promoted culture's finding names its
+source culture; when the source chain holds the rule, it names the promoter's `item_map` and the slots
+it rewrote.
+
+**The repair.** `python tools/generate_enlistment_rosters.py --repair-ranks` plans from the same
+function, walking the kits from recruit up so a repaired kit is part of the floor for the kits above
+it. Each planned slot prints where it came from, and a `From:` line totals them.
+
+- A weaker weapon is replaced in the slot of the kit's best of that category, against the best of that
+  category drawn before. The candidate comes from (a) the culture's troop gear, the same kind as the
+  replaced piece (sword, axe or mace by the weapon description); (b) the culture's troop gear, another
+  kind of the category; (c) the piece of the earlier kit that holds the best, only when that kit is
+  the same culture's. Within (a) and (b) the id closest to the replaced one comes first (the same weapon
+  line keeps the kit's look), then the weakest that holds.
+- "The culture's troop gear" is every battle set of the culture's non-hero Soldier troops in
+  `troops_*.xml`, with the rows under `<Equipments>` laid over each set; a `TREE_ALIASES` culture
+  (battania, abanissa) takes its source tree's gear.
+- The kit's own Horse slot decides the saddle (Mike, 2026-11-15): a kit whose roster holds a horse is
+  a horse archer's and needs a bow that can be shot from the saddle; a kit without one is a foot
+  archer's and may hold a longbow. So a launcher barred from the saddle (a `long_bow`) never goes into
+  a kit with a Horse slot, and may go into any other. The rule reads the kit, not the assignment, so a
+  cavalry kit without a Horse slot may take one too; no repair does so today. The kit file holds no
+  Horse slot (`grep -c 'slot="Horse"'` gives 0 on 2026-11-15), so every kit is a foot soldier's here.
+- In a cavalry kit a couchable spear is replaced only by a couchable one; that constraint is keyed on
+  the assignment. A repair never puts one weapon id in two slots.
+- A lower armour total is held against the earlier kit with the highest total, and takes pieces for
+  the slots with the largest deficit first: that kit's piece when the culture's troops wear it, else
+  the culture's piece that matches it most closely from above, else that kit's piece when it is the
+  same culture's.
+- It never edits a promoter region or a default kit, and never a dropped category.
+
+**Guards.** A full `--apply` refuses a file that holds promoter regions and names `--reseed --culture`,
+`--seed-missing` and `--repair-ranks`. A reseed refuses a promoted culture, and ends by printing the
+rank repair plan for its culture with the `--apply` command to run: printed, not applied, so the
+candidates are read before they are written. `--repair-ranks --culture` with an unknown id or
+`default` exits and names the known ids.
+
+**Why the kits went stale.** The donor floor in `pick_donor` (`is_progression`) held the armour half
+only for the values of the day a kit was seeded, and only against the rank below. The restat of
+2026-11-14 (#1271) priced every Armory piece at the band of its lowest wearer and moved the pieces
+under the shipped kits; the Erebor infantry soldier fell to 67 armour against the recruit's 81.
+Nothing had checked the weapon half. On the ModuleData of 12b21d5e3,
+`python tools/validate_moduledata.py --moduledata <that tree> --code ENLISTMENT_KIT_RANK_REGRESSION`
+printed 152 kits under this rule on 2026-11-15. Counted from its messages, they carry 195 reasons: 16
+armour reasons in 16 kits, 91 weapon reasons in 89 kits, 85 dropped-category reasons in 80 kits and 3
+lance reasons in 3 kits.
+
+**Who owns which roster.** `promote_borrowed_cultures.py` owns the rosters of the eight promoted
+cultures (arthedain, cardolan, rhudaur, eredluin, anduinvale, angaladh, dorwinion, southrhovanion):
+it clones its source culture's `enlist_*` rosters into a `TAOM-NEWCULTURE:<culture>` region
+(`SHARED_FILES` and `extract_rosters`), and `test_generator_regions_in_sync` checks every region.
+The generator owns every other culture's rosters and the hand-authored `DEFAULT_ROSTER_ITEMS`. The
+promoter derives from the generator's output, so it runs second.
+
+**After any armour or weapon rebalance**, in this order:
+
+1. `python tools/validate_moduledata.py --code ENLISTMENT_KIT_RANK_REGRESSION` lists the weaker kits.
+2. `python tools/generate_enlistment_rosters.py --repair-ranks`, read the plan, then the same with
+   `--apply`. A second dry run plans nothing.
+3. For each promoted culture, `python tools/promote_borrowed_cultures.py --only <culture> --check`,
+   then `--apply` where it reports a change to the enlistment file and nothing else.
+4. A default kit is a hand edit of `DEFAULT_ROSTER_ITEMS` and the file together; a test pins the two
+   equal.
+5. Run step 1 again and `python -m unittest tools.tests.test_generator_regions_in_sync`.
+
+**The repair of 2026-11-15** started from the kit file of 12b21d5e3 and four hand edits: the default
+archer veteran and sergeant carry the soldier's `lowland_longbow` (57 against `highland_ranger_bow`'s
+47), and the Isengard cavalry veteran, which wore a Mordor chest and helmet no Isengard troop wears,
+wears `sk_uruk_hai_plate_heavy_a1` (46 against 42) and `sk_uruk_hai_helmet_officer_a2` (34, equal).
+Under the saddle rule above, `--repair-ranks` plans 66 slot changes from that file, by the source its
+dry run prints: 32 weapons from the culture's troop gear of the same kind, 21 weapons from its troop
+gear of another kind of the same category, 9 armour pieces from its troop gear, and 4 bows from an
+earlier kit (`wm_isengard_bow_a02` from the Dol Guldur archer soldier kit into the veteran's,
+`wm_mirkwood_bow_a01` from the Mirkwood archer recruit kit into the soldier's, and `woodland_longbow`
+from the Rohan archer soldier kit into the veteran's and the sergeant's, where Rohan's troop gear
+has no bow that holds). The first plan of the day inferred the saddle from what the culture's riders
+carry, refused the longbow to the two Rohan kits and planned 64; the other 64 slots are the same. The promoter's Arnor `item_map` (Mike, 2026-10-07; Rhudaur
+shares it) turned Gondor's cavalry sergeant helmet `sk_gd_pin_spear_helmet_heavy_a` (39) into
+`sk_ar_art_helmet_inf_hvy_b` (30) and left both Arnor cavalry sergeants 10 under their veterans. The
+map rewrites only the promoter's clones, and of the cloned files only the enlistment file holds that
+id (the Gondor cavalry sergeant kit), so the row now maps to `sk_ar_art_helmet_inf_elite_a` (48), a tier
+up, the strongest helmet of the same Arnor infantry line. Against 12b21d5e3 the kit file now differs in
+113 slots: 68 in generator kits, 2 in default kits and 43 in promoted kits.
+
+**Left after the repair**, `python tools/validate_moduledata.py --code ENLISTMENT_KIT_RANK_REGRESSION`
+printing 82 kits on 2026-11-15, 70 of the generator's and 12 promoted, with no armour reason:
+
+- The only weapon pair left, two reasons on the Rohan cavalry sergeant: `enlist_vlandia_cavalry_sergeant` carries the lance
+  `wm_rohan_ws_spear_a03` (28.9, couchable) against the `eastern_spear_4_t4` (38.0, no couch) of the
+  recruit, soldier and veteran kits, and its South Rhovanion clone does the same. The repair keeps the
+  lance, and no Rohan couchable spear reaches 36.9: the best is `wm_rohan_spear_a` at 31.9. Options:
+  put `eastern_spear_4_t4` in the sergeant kit beside the lance, in the slot of the javelin
+  `eastern_javelin_3_t4` or the shield; give the sergeant a couchable spear from outside Rohan's troop
+  gear (the vanilla `vlandia_lance_2_t4` at 37.8 holds); restat a Rohan lance in the Armory; or
+  accept a lance that trades thrust for the couch.
+- 87 dropped reasons, which the dry run of `--repair-ranks` lists under "Dropped categories": 85
+  dropped categories in 80 kits and 2 lances, the Rhun and Khand cavalry veterans
+  (`enlist_khuzait_cavalry_veteran`, `enlist_battania_cavalry_veteran`), which carry
+  `eastern_spear_4_t4` after the soldier kit's `khuzait_lance_1_t3`. Each is a decision per chain: carry
+  the category up, or accept the change. Every one of the 82 kits carries at least one.
+- The Arnor cape row: `sk_gd_ano_cape_a` (23) maps to `sk_ar_art_cape_a` (2) in the Arthedain and
+  Rhudaur infantry and support recruit kits. It raises no finding, because a recruit kit has no kit
+  before it, and no Arnor cape is stronger (`sk_ar_art_cape_b` is also 2). Options: map it to an Arnor
+  pauldron (another look), accept the lighter recruit cape, or restat the Arnor capes in the Armory.
+
 **No mounts, at any assignment including cavalry.** The cavalry donor pools mount `taom_chariot_a`
 (the generator's `drop_creature_riders` keeps the spider, war elephant and Mumakil riders out of
 every pool, judging each troop by every battle set the engine builds for it, `<Equipments>`-level
