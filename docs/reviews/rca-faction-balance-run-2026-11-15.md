@@ -24,7 +24,7 @@ at `high`). Codex was skipped on the maintainer's word (usage limit). No lens fo
 Lens 7 also corrected a figure in the builder's brief: Harad's clans have three to seven adult heroes, not four to seven. The doc and the
 test say "at least three", which holds (`clan_aserai_8` has exactly three).
 
-FOLLOW-UP #1343: on a co-op host, Coop's `StartCallToWarAgreement` prefix (default priority) is likely added before TAOM's and returns false, so TAOM's veto prefix on that method never runs and the gold moves before TAOM refuses the war (lens 2, [Likely], not seen in a live session). The fix it names, `[HarmonyPriority(Priority.High)]` as the other TAOM diplomacy prefixes use, changes co-op behaviour and needs a co-op test, so it is its own change.
+FOLLOW-UP #1343: on a co-op host, Coop's `StartCallToWarAgreement` prefix (default priority) is likely added before TAOM's and returns false, so TAOM's veto prefix on that method never runs and the gold moves before TAOM refuses the war (lens 2, [Likely], not seen in a live session). The fix it names, `[HarmonyPriority(Priority.High)]` as the other TAOM diplomacy prefixes use, changes co-op behaviour and needs a co-op test, so it is its own change. Fixed on trunk in e722addfc (PR #1347).
 
 ## Root-cause pattern
 
