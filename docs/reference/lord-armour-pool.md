@@ -4,16 +4,26 @@ Written on 2026-11-15 by `python tools/fix_lord_kits.py --pool-md <path> --value
 
 ## aserai
 
-Folders: harad. Families: 4. Pieces per slot: Head 3, Body 0, Cape 3, Gloves 0, Leg 0.
+Folders: harad. Families: 4. Pieces per slot: Head 5, Body 5, Cape 4, Gloves 0, Leg 2.
 
 | Slot | Family | Piece | Armour | Lowest troop | Templates |
 |---|---|---|---|---|---|
-| Head | hr_st | `sk_hr_st_helmet_heavy_c` | 38/0/0/0 | none | harad_bat_template_medium_a |
-| Head | hr_st | `sk_hr_st_helmet_heavy_d` | 34/0/0/0 | none | harad_bat_template_medium_c |
-| Head | sg_st | `sk_sg_st_helmet_heavy_d` | 34/0/0/0 | none | harad_bat_template_medium_e |
-| Cape | hr_st_cav | `sk_hr_st_pauld_cav_elite_a` | 0/12/10/0 | none | harad_bat_template_medium_a, harad_bat_template_medium_c, harad_bat_template_medium_e |
-| Cape | hr_st_cav | `sk_hr_st_pauld_cav_elite_b` | 0/11/9/0 | none | harad_bat_template_medium_b |
-| Cape | hr_st_inf | `sk_hr_st_pauld_inf_heavy_c` | 0/8/7/0 | none | harad_bat_template_medium_d |
+| Head | hr_st | `taom_lord_sk_hr_st_helmet_heavy_a` | 44/0/0/0 | none | harad_bat_template_medium_b |
+| Head | hr_st | `taom_lord_sk_hr_st_helmet_heavy_b` | 44/0/0/0 | none | harad_bat_template_medium_d |
+| Head | hr_st | `taom_lord_sk_hr_st_helmet_heavy_c` | 44/0/0/0 | none | harad_bat_template_medium_a |
+| Head | hr_st | `taom_lord_sk_hr_st_helmet_heavy_d` | 44/0/0/0 | none | harad_bat_template_medium_c |
+| Head | sg_st | `taom_lord_sk_sg_st_helmet_heavy_d` | 44/0/0/0 | none | harad_bat_template_medium_e |
+| Body | hr_st_cav | `taom_lord_sk_hr_st_chest_cav_heavy_b` | 0/43/13/17 | none | harad_bat_template_medium_e |
+| Body | hr_st_inf | `taom_lord_sk_hr_st_chest_inf_chest_heavy_b` | 0/43/13/17 | none | harad_bat_template_medium_d |
+| Body | hr_st_inf | `taom_lord_sk_hr_st_chest_inf_chest_light_a` | 0/43/13/17 | none | harad_bat_template_medium_a |
+| Body | hr_st_inf | `taom_lord_sk_hr_st_chest_inf_chest_med_a` | 0/43/13/17 | none | harad_bat_template_medium_b |
+| Body | hr_st_inf | `taom_lord_sk_hr_st_chest_inf_chest_med_b` | 0/43/13/17 | none | harad_bat_template_medium_c |
+| Cape | hr_st_cav | `sk_hr_st_pauld_cav_elite_a` | 0/12/10/0 | none | harad_bat_template_medium_e |
+| Cape | hr_st_inf | `sk_hr_st_pauld_inf_elite_a` | 0/12/10/0 | none | harad_bat_template_medium_a |
+| Cape | hr_st_inf | `sk_hr_st_pauld_inf_elite_b` | 0/11/9/0 | none | harad_bat_template_medium_d |
+| Cape | hr_st_inf | `taom_lord_sk_hr_st_pauld_inf_med_a` | 0/12/11/0 | none | harad_bat_template_medium_b, harad_bat_template_medium_c |
+| Leg | hr_st | `taom_lord_sk_hr_st_grvs_light_a` | 0/0/0/19 | none | harad_bat_template_medium_a, harad_bat_template_medium_e |
+| Leg | hr_st | `taom_lord_sk_hr_st_grvs_med_a` | 0/0/0/19 | none | harad_bat_template_medium_b, harad_bat_template_medium_c, harad_bat_template_medium_d |
 
 ## bluecraig
 
@@ -347,7 +357,7 @@ Folders: lothlorien. Families: 3. Pieces per slot: Head 4, Body 3, Cape 3, Glove
 
 ## mirkwood
 
-Folders: mirkwood. Families: 7. Pieces per slot: Head 5, Body 1, Cape 1, Gloves 3, Leg 1.
+Folders: mirkwood. Families: 7. Pieces per slot: Head 5, Body 4, Cape 3, Gloves 3, Leg 4.
 
 | Slot | Family | Piece | Armour | Lowest troop | Templates |
 |---|---|---|---|---|---|
@@ -356,12 +366,20 @@ Folders: mirkwood. Families: 7. Pieces per slot: Head 5, Body 1, Cape 1, Gloves 
 | Head | mkwd_inf1_t4 | `mkwd_inf1_t4_helmet_gold_hc` | 50/0/0/0 | mirkwood_glaivesman L46 | mirkwood_bat_template_medium_c |
 | Head | mkwd_inf3_t3 | `mkwd_inf3_t3_helmet_gold_hc` | 50/0/0/0 | mirkwood_guards L41 | mirkwood_bat_template_medium_a |
 | Head | mkwd_inf3_t4 | `mkwd_inf3_t4_helmet_gold_hc` | 50/0/0/0 | mirkwood_swordsman L46 | mirkwood_bat_template_medium_b |
-| Body | mkwd_inf3 | `mkwd_inf3_chest_silver` | 0/48/8/19 | mirkwood_rochenlas L41 | mirkwood_bat_template_medium_a, mirkwood_bat_template_medium_b, mirkwood_bat_template_medium_c, mirkwood_bat_template_medium_d, mirkwood_bat_template_medium_e |
-| Cape | mkwd_inf3 | `mkwd_inf3_pauldrons_silver` | 0/13/11/0 | mirkwood_rochenlas L41 | mirkwood_bat_template_medium_a, mirkwood_bat_template_medium_b, mirkwood_bat_template_medium_c, mirkwood_bat_template_medium_d, mirkwood_bat_template_medium_e |
+| Body | dikmoorw | `taom_lord_mirkwood_body` | 0/51/9/20 | none | mirkwood_bat_template_medium_c, mirkwood_bat_template_medium_d |
+| Body | mkwd_inf3 | `mkwd_inf3_chest_silver` | 0/48/8/19 | mirkwood_rochenlas L41 | mirkwood_bat_template_medium_e |
+| Body | mkwd_inf3 | `taom_lord_mkwd_inf3_chest` | 0/51/9/20 | none | mirkwood_bat_template_medium_a |
+| Body | mkwd_inf3 | `taom_lord_mkwd_inf3_chest_bronze` | 0/51/9/20 | none | mirkwood_bat_template_medium_b |
+| Cape | dikmoorw | `mirkwood_shoulder` | 0/13/11/0 | mirkwood_wardens L41 | mirkwood_bat_template_medium_c, mirkwood_bat_template_medium_d |
+| Cape | mkwd_inf3 | `mkwd_inf3_pauldrons_silver` | 0/13/11/0 | mirkwood_rochenlas L41 | mirkwood_bat_template_medium_e |
+| Cape | mkwd_inf3 | `taom_lord_mkwd_inf3_pauldrons_bronze` | 0/14/12/0 | none | mirkwood_bat_template_medium_b |
 | Gloves | dikmoorw | `mirkwood_gloves` | 0/0/24/0 | mirkwood_wardens L41 | mirkwood_bat_template_medium_b, mirkwood_bat_template_medium_d |
 | Gloves | mkwd_inf3 | `mkwd_inf3_vambraces_bronze` | 0/0/24/0 | mirkwood_guards L41 | mirkwood_bat_template_medium_a |
 | Gloves | mkwd_inf3 | `mkwd_inf3_vambraces_silver` | 0/0/24/0 | mirkwood_rochenlas L41 | mirkwood_bat_template_medium_c, mirkwood_bat_template_medium_e |
-| Leg | mkwd_inf3 | `mkwd_inf3_greaves_silver` | 0/0/0/22 | mirkwood_rochenlas L41 | mirkwood_bat_template_medium_a, mirkwood_bat_template_medium_b, mirkwood_bat_template_medium_c, mirkwood_bat_template_medium_d, mirkwood_bat_template_medium_e |
+| Leg | dikmoorw | `taom_lord_mirkwood_boots` | 0/0/0/23 | none | mirkwood_bat_template_medium_c, mirkwood_bat_template_medium_d |
+| Leg | mkwd_inf3 | `mkwd_inf3_greaves_silver` | 0/0/0/22 | mirkwood_rochenlas L41 | mirkwood_bat_template_medium_e |
+| Leg | mkwd_inf3 | `taom_lord_mkwd_inf3_greaves` | 0/0/0/23 | none | mirkwood_bat_template_medium_a |
+| Leg | mkwd_inf3 | `taom_lord_mkwd_inf3_greaves_bronze` | 0/0/0/23 | none | mirkwood_bat_template_medium_b |
 
 ## mistymountainorcs
 

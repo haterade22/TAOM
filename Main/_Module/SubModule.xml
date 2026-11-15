@@ -1460,6 +1460,16 @@
         <GameType value="EditorGame"/>
       </IncludedGameTypes>
     </XmlNode>
+    <!-- Lord armour variants (tools/generate_lord_armour_variants.py): ids start with taom_lord_ -->
+    <XmlNode>
+      <XmlName id="Items" path="lord_armour/lord_armour_variants"/>
+      <IncludedGameTypes>
+        <GameType value="Campaign"/>
+        <GameType value="CampaignStoryMode"/>
+        <GameType value="CustomGame"/>
+        <GameType value="EditorGame"/>
+      </IncludedGameTypes>
+    </XmlNode>
     <!-- Stylesheet-only rows (no .xml): they must apply after LOTRLOME_Armory's, which replace these lists -->
     <XmlNode>
       <XmlName id="WeaponDescriptions" path="placeholder_weapons/ph_weapon_descriptions"/>
