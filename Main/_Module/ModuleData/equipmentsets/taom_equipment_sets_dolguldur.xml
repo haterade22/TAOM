@@ -11,7 +11,7 @@
 			<Equipment slot="Body" id="Item.sk_dg_uruk_chest_elite_a" />
 			<Equipment slot="Cape" id="Item.sk_dg_uruk_pauldron_elite_cape_a" />
 			<Equipment slot="Gloves" id="Item.sk_dg_uruk_bracer_elite_a" />
-			<Equipment slot="Leg" id="Item.sk_dg_uruk_boots_elite_a" />
+			<Equipment slot="Leg" id="Item.sk_dg_uruk_boots_lord_a" />
 			<Equipment slot="HorseHarness" id="Item.warg_saddle" />
 			<Equipment slot="Horse" id="Item.warg_brown" />
 		</EquipmentSet>
@@ -25,7 +25,7 @@
 			<Equipment slot="Body" id="Item.sk_dg_uruk_chest_elite_b" />
 			<Equipment slot="Cape" id="Item.sk_dg_uruk_pauldron_elite_cape_b" />
 			<Equipment slot="Gloves" id="Item.sk_dg_uruk_bracer_elite_b" />
-			<Equipment slot="Leg" id="Item.sk_dg_uruk_boots_elite_b" />
+			<Equipment slot="Leg" id="Item.sk_dg_uruk_boots_lord_b" />
 			<Equipment slot="HorseHarness" id="Item.warg_saddle" />
 			<Equipment slot="Horse" id="Item.warg_brown" />
 		</EquipmentSet>
@@ -39,7 +39,7 @@
 			<Equipment slot="Body" id="Item.sk_dg_uruk_chest_elite_c" />
 			<Equipment slot="Cape" id="Item.sk_dg_uruk_pauldron_elite_cape_c" />
 			<Equipment slot="Gloves" id="Item.sk_dg_uruk_bracer_elite_c" />
-			<Equipment slot="Leg" id="Item.sk_dg_uruk_boots_elite_c" />
+			<Equipment slot="Leg" id="Item.sk_dg_uruk_boots_lord_c" />
 			<Equipment slot="HorseHarness" id="Item.warg_saddle" />
 			<Equipment slot="Horse" id="Item.warg_brown" />
 		</EquipmentSet>
@@ -67,7 +67,7 @@
 			<Equipment slot="Body" id="Item.sk_dg_uruk_chest_elite_e" />
 			<Equipment slot="Cape" id="Item.sk_dg_uruk_pauldron_elite_cape_e" />
 			<Equipment slot="Gloves" id="Item.sk_dg_uruk_bracer_elite_e" />
-			<Equipment slot="Leg" id="Item.sk_dg_uruk_boots_elite_e" />
+			<Equipment slot="Leg" id="Item.sk_dg_uruk_boots_lord_d" />
 			<Equipment slot="HorseHarness" id="Item.warg_saddle" />
 			<Equipment slot="Horse" id="Item.warg_brown" />
 		</EquipmentSet>
@@ -178,7 +178,7 @@
 			<Equipment slot="Body" id="Item.sk_dg_uruk_chest_elite_a" />
 			<Equipment slot="Cape" id="Item.sk_dg_uruk_pauldron_elite_cape_a" />
 			<Equipment slot="Gloves" id="Item.sk_dg_uruk_bracer_elite_g" />
-			<Equipment slot="Leg" id="Item.sk_dg_uruk_boots_elite_a" />
+			<Equipment slot="Leg" id="Item.sk_dg_uruk_boots_lord_e" />
 			<Equipment slot="HorseHarness" id="Item.warg_saddle" />
 			<Equipment slot="Horse" id="Item.warg_brown" />
 		</EquipmentSet>
@@ -205,7 +205,7 @@
 			<Equipment slot="Body" id="Item.sk_dg_uruk_chest_elite_b" />
 			<Equipment slot="Cape" id="Item.sk_dg_uruk_pauldron_elite_cape_b" />
 			<Equipment slot="Gloves" id="Item.sk_dg_uruk_bracer_elite_h" />
-			<Equipment slot="Leg" id="Item.sk_dg_uruk_boots_elite_b" />
+			<Equipment slot="Leg" id="Item.sk_dg_uruk_boots_lord_f" />
 			<Equipment slot="HorseHarness" id="Item.warg_saddle" />
 			<Equipment slot="Horse" id="Item.warg_brown" />
 		</EquipmentSet>

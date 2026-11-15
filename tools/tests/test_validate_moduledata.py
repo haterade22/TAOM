@@ -2532,6 +2532,159 @@ class WornArmourLimitsTests(unittest.TestCase):
             self.assertEqual(ts._armour_totals(ts.build_item_armour_stats(roots)), {"chest_x": 40, "helm_x": 12})
 
 
+class LordArmourRangeTests(unittest.TestCase):
+    """LORD_ARMOUR_RANGE (#1271 lord kit pass): a hero wears one whole battle set
+    (Hero.SetInitialValuesFromCharacter), so a lord's figure on each part (head, body, arm, leg) is
+    his worst whole set, held to the culture's best elite-band troop on that part; his best whole
+    set over that troop plus fix_lord_kits.CEILING_MARGIN is the ceiling. Both are warnings, one per
+    generic lord template (every lord on it wears the same sets), one per lord for a named roster."""
+
+    STATS = {"chest_light": {"body_armor": 6},
+             "chest_elite": {"body_armor": 46, "arm_armor": 10, "leg_armor": 12},
+             "pauld_elite": {"body_armor": 13}, "helm": {"head_armor": 40},
+             "chest_lordly": {"body_armor": 70, "arm_armor": 20, "leg_armor": 30},
+             "pauld_small": {"body_armor": 9}}
+    ELITE = ('<Equipment slot="Head" id="Item.helm" /><Equipment slot="Body" id="Item.chest_elite" />'
+             '<Equipment slot="Cape" id="Item.pauld_elite" />')
+
+    def setUp(self):
+        self._tmp = tempfile.TemporaryDirectory()
+        self.md = Path(self._tmp.name) / "ModuleData"
+        self.schemas = ts.load_schemas(SCHEMA_DIR)
+        _write(self.md / "troops" / "troops_x.xml",
+               '<?xml version="1.0" encoding="utf-8"?>\n<NPCCharacters>'
+               '<NPCCharacter id="x_guard" level="31" culture="Culture.x" default_group="Infantry"><Equipments>'
+               '<EquipmentRoster><equipment slot="Head" id="Item.helm" /><equipment slot="Body" id="Item.chest_elite" />'
+               '<equipment slot="Cape" id="Item.pauld_elite" /></EquipmentRoster></Equipments></NPCCharacter>'
+               '<NPCCharacter id="x_recruit" level="6" culture="Culture.x" default_group="Infantry"><Equipments>'
+               '<EquipmentRoster><equipment slot="Body" id="Item.chest_light" /></EquipmentRoster></Equipments>'
+               '</NPCCharacter></NPCCharacters>')
+        _write(self.md / "equipmentsets" / "taom_equipment_sets_x.xml",
+               '<?xml version="1.0" encoding="utf-8"?>\n<EquipmentRosters>'
+               '<EquipmentRoster id="x_bat_template_medium_a" culture="Culture.x"><EquipmentSet>'
+               '<Equipment slot="Body" id="Item.chest_light" /></EquipmentSet></EquipmentRoster>'
+               '<EquipmentRoster id="x_bat_template_medium_b" culture="Culture.x"><EquipmentSet>'
+               f'{self.ELITE}</EquipmentSet></EquipmentRoster>'
+               '<EquipmentRoster id="x_bat_template_medium_c" culture="Culture.x">'
+               f'<EquipmentSet>{self.ELITE}</EquipmentSet><EquipmentSet>'
+               '<Equipment slot="Head" id="Item.helm" /><Equipment slot="Body" id="Item.chest_lordly" />'
+               '<Equipment slot="Cape" id="Item.pauld_elite" /></EquipmentSet></EquipmentRoster>'
+               '<EquipmentRoster id="x_bat_template_medium_d" culture="Culture.x"><EquipmentSet>'
+               '<Equipment slot="Head" id="Item.helm" /><Equipment slot="Body" id="Item.chest_elite" />'
+               '<Equipment slot="Cape" id="Item.pauld_small" /></EquipmentSet></EquipmentRoster>'
+               '</EquipmentRosters>')
+
+    def tearDown(self):
+        self._tmp.cleanup()
+
+    def _run(self, lords, stats="default", fallback=None):
+        """lords: [(id, culture, battle template id)]; fallback: the body of
+        taom_lord_template_equipment.xml, when the test needs one."""
+        body = "".join(
+            f'<NPCCharacter id="{lid}" is_hero="true" occupation="Lord" culture="Culture.{c}">'
+            f'<Equipments><EquipmentSet id="{t}" /></Equipments></NPCCharacter>' for lid, c, t in lords)
+        _write(self.md / "characters" / "lords.xml",
+               f'<?xml version="1.0" encoding="utf-8"?>\n<NPCCharacters>{body}</NPCCharacters>')
+        if fallback is not None:
+            _write(self.md / "equipmentsets" / "taom_lord_template_equipment.xml",
+                   f'<?xml version="1.0" encoding="utf-8"?>\n<EquipmentRosters>{fallback}</EquipmentRosters>')
+        regs = ts.Registries(items=set(), item_def_files={}, npccharacters=set(), cultures=set(),
+                             party_templates=set(),
+                             item_armour_stats=self.STATS if stats == "default" else stats)
+        return [i for i in ts.Validator(self.md, self.schemas, regs).run() if i.code == "LORD_ARMOUR_RANGE"]
+
+    def test_a_template_under_the_best_troop_is_one_warning_naming_each_part(self):
+        issues = self._run([("lord_x_1", "x", "x_bat_template_medium_a")])
+        self.assertEqual([(i.severity, i.entry_id) for i in issues],
+                         [(ts.Severity.WARNING, "x_bat_template_medium_a")])
+        msg = issues[0].message
+        self.assertTrue(issues[0].file.endswith("equipmentsets/taom_equipment_sets_x.xml"), issues[0].file)
+        self.assertIn("1 lord (lord_x_1)", msg)
+        self.assertTrue(msg.startswith("floor:"), msg)
+        for part in ("head 0 < 40", "body 6 < 59", "arm 0 < 10", "leg 0 < 12"):
+            self.assertIn(part, msg)
+        self.assertIn("x_guard", msg)
+        self.assertIn("fix_lord_kits.py", msg)
+
+    def test_a_lord_at_the_best_troop_is_clean(self):
+        self.assertEqual(self._run([("lord_x_2", "x", "x_bat_template_medium_b")]), [])
+
+    def test_a_template_whose_best_whole_set_passes_the_ceiling_is_a_ceiling_warning(self):
+        issues = self._run([("lord_x_3", "x", "x_bat_template_medium_c")])
+        self.assertEqual([(i.severity, i.entry_id) for i in issues],
+                         [(ts.Severity.WARNING, "x_bat_template_medium_c")])
+        msg = issues[0].message
+        self.assertTrue(msg.startswith("ceiling:"), msg)
+        for part in ("body 83 > 64", "arm 20 > 15", "leg 30 > 17"):
+            self.assertIn(part, msg)
+        self.assertNotIn("head 40", msg)
+
+    def test_a_fallback_roster_is_judged_like_a_lord(self):
+        fallback = ('<EquipmentRoster id="taom_x_lord_battle_male" culture="Culture.x"><EquipmentSet>'
+                    '<Equipment slot="Body" id="Item.chest_light" /></EquipmentSet></EquipmentRoster>')
+        issues = self._run([("lord_x_2", "x", "x_bat_template_medium_b")], fallback=fallback)
+        self.assertEqual([i.entry_id for i in issues], ["taom_x_lord_battle_male"])
+        self.assertTrue(issues[0].file.endswith("taom_lord_template_equipment.xml"))
+
+    def test_a_part_within_ten_percent_of_the_reference_is_not_a_floor_warning(self):
+        # Body 46 + 9 = 55 against 59: 4 under, inside the 5.9 tolerance.
+        self.assertEqual(self._run([("lord_x_4", "x", "x_bat_template_medium_d")]), [])
+
+    def test_a_culture_with_no_elite_troop_is_judged_against_its_templates_culture(self):
+        issues = self._run([("lord_k_1", "khand", "x_bat_template_medium_a")])
+        self.assertEqual([i.entry_id for i in issues], ["x_bat_template_medium_a"])
+        self.assertIn("judged as x", issues[0].message)
+        self.assertIn("khand", issues[0].message)
+
+    def test_every_lord_on_one_template_is_one_row_that_counts_them(self):
+        issues = self._run([("lord_x_1", "x", "x_bat_template_medium_a"), ("lord_x_5", "x", "x_bat_template_medium_a"),
+                            ("lord_k_1", "khand", "x_bat_template_medium_a")])
+        self.assertEqual(sorted(i.entry_id for i in issues), ["x_bat_template_medium_a"] * 2)
+        msgs = sorted(i.message for i in issues)
+        self.assertTrue(any("2 lords (lord_x_1, lord_x_5)" in m for m in msgs), msgs)
+        self.assertTrue(any("1 lord (lord_k_1)" in m for m in msgs), msgs)
+
+    def test_a_lord_with_a_roster_of_his_own_keeps_a_row_of_his_own(self):
+        _write(self.md / "characters" / "lords.xml",
+               '<?xml version="1.0" encoding="utf-8"?>\n<NPCCharacters>'
+               '<NPCCharacter id="lord_x_named" is_hero="true" occupation="Lord" culture="Culture.x"><Equipments>'
+               '<EquipmentRoster><equipment slot="Body" id="Item.chest_light" /></EquipmentRoster>'
+               '</Equipments></NPCCharacter></NPCCharacters>')
+        regs = ts.Registries(items=set(), item_def_files={}, npccharacters=set(), cultures=set(),
+                             party_templates=set(), item_armour_stats=self.STATS)
+        issues = [i for i in ts.Validator(self.md, self.schemas, regs).run() if i.code == "LORD_ARMOUR_RANGE"]
+        self.assertEqual([i.entry_id for i in issues], ["lord_x_named"])
+        self.assertTrue(issues[0].file.endswith("characters/lords.xml"))
+
+    def test_without_an_armour_stats_registry_the_pass_is_skipped(self):
+        self.assertEqual(self._run([("lord_x_1", "x", "x_bat_template_medium_a")], stats={}), [])
+
+    def test_no_lords_read_is_a_stated_warning_not_a_clean_pass(self):
+        issues = self._run([])
+        self.assertEqual([(i.severity, i.entry_id) for i in issues], [(ts.Severity.WARNING, "(tooling)")])
+        self.assertIn("read no lords", issues[0].message)
+
+    def test_a_lord_file_that_does_not_parse_is_a_stated_warning(self):
+        _write(self.md / "characters" / "broken.xml", '<?xml version="1.0"?>\n<NPCCharacters><oops></NPCCharacters>')
+        issues = self._run([("lord_x_2", "x", "x_bat_template_medium_b")])
+        self.assertEqual([(i.severity, i.entry_id) for i in issues], [(ts.Severity.WARNING, "(tooling)")])
+        self.assertTrue(issues[0].file.endswith("characters/broken.xml"), issues[0].file)
+        self.assertIn("could not be parsed", issues[0].message)
+
+    def test_a_missing_lord_kit_module_is_a_stated_warning_not_a_silent_pass(self):
+        with mock.patch.object(ts, "_lord_kits", return_value=None):
+            issues = self._run([("lord_x_1", "x", "x_bat_template_medium_a")])
+        self.assertEqual([(i.severity, i.entry_id) for i in issues], [(ts.Severity.WARNING, "(tooling)")])
+        self.assertIn("checked nothing", issues[0].message)
+
+    def test_missing_install_announces_the_lord_armour_skip(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            (Path(tmp) / "ModuleData").mkdir()
+            _code, _out, err = _run_main("--moduledata", str(Path(tmp) / "ModuleData"),
+                                         "--game-modules", str(Path(tmp) / "nope"))
+        self.assertIn("LORD_ARMOUR_RANGE", err)
+
+
 class MeleePassRowsTests(unittest.TestCase):
     """The validator's melee pass prices a troop the way tools/restat_melee_blades.py does: the
     craft key (a troop id prefix can pick the row) and the dominant attack of a polearm

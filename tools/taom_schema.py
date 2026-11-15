@@ -507,6 +507,7 @@ class Validator:
         issues += self._worn_armour_limits()
         issues += self._enlistment_kit_rank_regressions()
         issues += self._armour_mesh_tier_ladder()
+        issues += self._lord_armour_range()
         issues += self._upgrade_tier_collapse()
         issues += self._ranged_ladder_inversions()
         issues += self._melee_ladder_inversions()
@@ -1984,11 +1985,16 @@ class Validator:
                         if sm and im and sm.group(1) in self._ARMOUR_SLOTS:
                             slots[sm.group(1)] = im.group(1)
                     sets.append(slots)
+                # Culture and race pick the troops a lord of the same culture is held to (LORD_ARMOUR_RANGE).
+                culm = self._CULTURE_ATTR_RE.search(attrs)
+                racem = self._RACE_ATTR_RE.search(attrs)
                 troops[idm.group(1)] = {
                     "file": rel, "line": line, "skills": skills, "upgrades": upgrades,
                     "templated": bool(tmpl),
                     "level": int(lvlm.group(1)) if lvlm else None,
                     "sets": sets,
+                    "culture": culm.group(1) if culm else None,
+                    "race": racem.group(1) if racem else None,
                 }
 
         # A gate that silently checks nothing is worse than no gate. Both upgrade checks read two
@@ -2015,6 +2021,8 @@ class Validator:
         return self._upgrade_index_cache
 
     _LEVEL_ATTR_RE = re.compile(r"""(?<![A-Za-z_])level=["'](\d+)["']""")
+    _CULTURE_ATTR_RE = re.compile(r"""(?<![A-Za-z_])culture=["']Culture\.([^"']+)["']""")
+    _RACE_ATTR_RE = re.compile(r"""(?<![A-Za-z_])race=["']([^"']+)["']""")
 
     # -- pass 4h: upgrade edges the engine prices at zero ------------------- #
     # Vanilla DefaultPartyTroopUpgradeModel.GetXpCostForUpgrade sums a per-tier table over
@@ -2663,6 +2671,88 @@ class Validator:
                 ),
             ))
         return issues
+
+    # -- LORD_ARMOUR_RANGE -------------------------------------------------- #
+    # A hero wears one whole battle set (Hero.SetInitialValuesFromCharacter), so a lord's figure on
+    # each part is his worst whole set, held to the culture's best elite-band troop on that part (of
+    # the lord's race when the culture has one; a culture with none, Khand or the Abanissa, takes the
+    # culture of its templates). Only a part more than TOLERANCE (and SHORT_MIN_POINTS) under warns.
+    # His best whole set over that troop plus CEILING_MARGIN is the ceiling. Every lord a generic
+    # template alone dresses wears the same sets, so the template is one row naming them; a lord with
+    # a roster of his own and the fallback and ruler rosters are a row each. The rule, the reference
+    # and the fixer are tools/fix_lord_kits.py (#1271); the values are the install's.
+    def _lord_armour_range(self) -> list:
+        stats = getattr(self.reg, "item_armour_stats", None) or {}
+        if not stats:
+            return []   # no install: skipped, and validate_moduledata.main announces it
+        lk = _lord_kits()
+
+        def tooling(file, message):
+            return Issue(severity=Severity.WARNING, code="LORD_ARMOUR_RANGE", file=file, line=0,
+                         entry_id="(tooling)", message=message)
+
+        if lk is None:
+            return [tooling("tools/fix_lord_kits.py",
+                            "tools/fix_lord_kits.py cannot be imported, so this pass checked nothing "
+                            "against LORD_ARMOUR_RANGE. Not checked is not clean.")]
+        items = {iid: {"stats": s} for iid, s in stats.items()}
+        troops, _ = self._upgrade_troop_index()
+        exempt = set(self._ARMOUR_LADDER_EXEMPT) | set(self._BODYLESS_BY_DESIGN)
+        reference = lk.reference_troops(troops, exempt)
+        sets_dir = self.moduledata / "equipmentsets"
+        templates = lk.dat.load_battle_templates(str(sets_dir))
+        failures = []
+        lords = lk.load_lords(self.moduledata, failures)
+        issues = [tooling(self._rel(Path(path)),
+                          f"this file could not be parsed ({err}), so its lords were not judged "
+                          f"against LORD_ARMOUR_RANGE") for path, err in failures]
+        if not lords:
+            issues.append(tooling("characters/", "the pass read no lords from characters/*.xml or "
+                                                 "lords.xslt, so LORD_ARMOUR_RANGE checked nothing"))
+            return issues
+        fallback = lk.fallback_lords(lk.load_fallback_rosters(sets_dir / "taom_lord_template_equipment.xml"), lords)
+        generic = lk.load_generic_templates(sorted(sets_dir.glob("taom_equipment_sets_*.xml")))
+        cultures = {rid: t["culture"] for rid, t in generic.items()}
+        groups = {}
+        for row in lk.judge_lords(lords + fallback, templates, reference, items, cultures):
+            if not (row["short"] or row["over"]):
+                continue
+            if row["generic"]:
+                groups.setdefault((row["generic"], row["culture"], row["judged_as"], row["race"]), []).append(row)
+                continue
+            judged = "" if row["judged_as"] == row["culture"] else f" (judged as {row['judged_as']}, the culture of his templates)"
+            where = dict(file=self._rel(Path(row["file"])), line=row["line"], entry_id=row["lord"])
+            issues += self._lord_range_issues(lk, row, where, f"a {row['culture']} lord{judged}",
+                                              "a named lord's own roster is a hand decision")
+        for (tmpl, culture, judged_as, _race), rows in sorted(groups.items(), key=lambda kv: str(kv[0])):
+            ids = sorted(r["lord"] for r in rows)
+            shown = ", ".join(ids[:6]) + (", ..." if len(ids) > 6 else "")
+            judged = "" if judged_as == culture else f" (judged as {judged_as}, the culture of their templates)"
+            path = generic[tmpl[0]]["file"] if tmpl[0] in generic else rows[0]["file"]
+            where = dict(file=self._rel(Path(path)), line=0, entry_id=", ".join(tmpl))
+            who = (f"the generic template {', '.join(tmpl)}, worn by {len(ids)} "
+                   f"lord{'s' if len(ids) > 1 else ''} ({shown}) of {culture}{judged},")
+            issues += self._lord_range_issues(lk, rows[0], where, who,
+                                              "the template is planned by python tools/fix_lord_kits.py "
+                                              "(lord pool first, then elite troop pieces)")
+        return issues
+
+    @staticmethod
+    def _lord_range_issues(lk, row, where, who, fix) -> list:
+        out = []
+        if row["short"]:
+            parts = ", ".join(f"{p} {w} < {r} ({t})" for p, (w, r, t) in row["short"].items())
+            out.append(Issue(severity=Severity.WARNING, code="LORD_ARMOUR_RANGE", **where, message=(
+                f"floor: {who} whose worst whole battle set is more than "
+                f"{round(lk.TOLERANCE * 100)} percent and {lk.SHORT_MIN_POINTS} points under the culture's "
+                f"best elite-band troop on {parts}. A hero wears one set entire; {fix}")))
+        if row["over"]:
+            parts = ", ".join(f"{p} {b} > {lim}" for p, (b, lim) in row["over"].items())
+            out.append(Issue(severity=Severity.WARNING, code="LORD_ARMOUR_RANGE", **where, message=(
+                f"ceiling: {who} whose best whole battle set passes the culture's best elite-band troop "
+                f"plus {lk.CEILING_MARGIN} on {parts}. Check the piece against python "
+                f"tools/fix_lord_kits.py's pool table before a restat")))
+        return out
 
     def _mounted_dwarves(self) -> list:
         mounted_rosters = self._mounted_rosters()
@@ -3369,6 +3459,14 @@ def _curve():
     try:
         import rebalance_armor as _ra  # stdlib-only sibling; guarded so the validator never needs it
         return _ra
+    except Exception:
+        return None
+
+
+def _lord_kits():
+    try:
+        import fix_lord_kits as _lk  # the lord kit rule; guarded like _curve so a broken import is stated
+        return _lk
     except Exception:
         return None
 

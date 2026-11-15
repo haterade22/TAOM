@@ -607,6 +607,18 @@ def is_excluded(item_id, display_name):
     return any(h and h in nl for h in HERO_NAMES)
 
 
+# The id tokens that name a lord line (lord, noble and its Rohan and Lamedon short forms, king,
+# captain), whole tokens only; a digit may follow (`rivendell_torso_lord3`). fix_lord_kits builds
+# each culture's lord armour pool from these, and the restat prices such a piece at the lord band
+# once only heroes wear it.
+LORD_KIT_TOKEN_RE = re.compile(r'(?:^|_)(?:lord|noble|nbl|nob|king|captain)(?=\d|_|$)')
+
+
+def is_lord_kit(item_id):
+    """True when an armour id carries a lord-line token (LORD_KIT_TOKEN_RE)."""
+    return bool(LORD_KIT_TOKEN_RE.search((item_id or '').lower()))
+
+
 def load_roster_tier_map():
     """Load {item_id: tier} from the derive_armor_tiers.py map (tools/data/armor_roster_tiers.json).
 
@@ -1039,7 +1051,9 @@ def _roster_first_plan(roster_map, item_id, item_name, culture):
       * Troll kit and kit with no record or a civilian keyword is skipped.
       * Any kit a troop wears goes on the troop curve at its lowest wearer's band, whatever its name:
         a hero-named piece a troop wears (Golden Flower, Erkenbrand) is troop kit.
-      * Hero-only kit (excluded by name, or worn only by a hero) with a kingdom cap is lowered to the
+      * Lord-line kit (is_lord_kit) worn only by heroes, a lord among them (lordWorn), and not hero-named
+        is restated at the lord band; a piece only companions or wanderers wear stays on the clamp.
+      * Other hero-only kit (excluded by name, or worn only by a hero) with a kingdom cap is lowered to the
         lord band and never raised. It is never restated: a lord's kit keeps the value it has.
       * Keyword-less merchandise nobody wears with a kingdom cap is lowered to the elite band, the
         most merchandise may carry.
@@ -1056,6 +1070,11 @@ def _roster_first_plan(roster_map, item_id, item_name, culture):
     if worn_band(rec) is not None:
         return (worn_band(rec), 'full')
     keyed = kingdom_key(item_id, culture) is not None
+    # A lord-line piece only heroes wear, a lord among them, is a lord template's armour: restated at the
+    # lord band, so a lettered variant a lord takes up is not left at the value of its old low wearer
+    # (lord kit, 2026-11-15). A companion's or wanderer's piece and hero-named kit keep the clamp below.
+    if rec.get('lordWorn') and is_lord_kit(item_id) and not is_excluded(item_id, item_name):
+        return ('lord', 'full') if keyed else skip
     if is_excluded(item_id, item_name) or rec.get('heroWorn'):
         return ('lord', 'clamp') if keyed else skip
     if kw_tier is None:

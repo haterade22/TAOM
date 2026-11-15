@@ -8,7 +8,7 @@
 		<EquipmentSet>
 			<Equipment slot="Item0" id="Item.wm_rivendell_sword_a02" />
 			<Equipment slot="Item1" id="Item.wm_rivendell_shield_a02" />
-			<Equipment slot="Head" id="Item.sk_ll_gl_helmet_heavy_a" />
+			<Equipment slot="Head" id="Item.sk_ll_mw_helmet_lord_a" />
 			<Equipment slot="Body" id="Item.sk_ll_gl_chest_heavy_a" />
 			<Equipment slot="Cape" id="Item.sk_ll_gl_pauld_heavy_a" />
 			<Equipment slot="Gloves" id="Item.sk_ll_gl_bracer_heavy_a" />
