@@ -50,10 +50,10 @@ one inquiry that lists every problem it found:
   engine shows "Error while loading TAOM: ... submodule could not be loaded due to a missing or
   conflicting dependency" and aborts the game. Players do not read that as a version problem. The
   vanilla launcher ignores `DependedModuleMetadatas`, so TAOM's `Native` version pin warns nobody.
-- **Fix:** TAOM.Dependencies loads first, so its `SubModule` constructor is the last TAOM code that runs
-  before that box. `GameVersionNotice` reads the `Native` pin (`version="v1.5.7.*"`) from the loaded
+- **Fix:** TAOM.Dependencies loads first, so its `SubModule` constructor runs before any other TAOM submodule
+  loads and before the engine's box. `GameVersionNotice` reads the `Native` pin (`version="v1.5.7.*"`) from the loaded
   TAOM's own `SubModule.xml` (the pin travels with the build it describes) and compares it with
-  `VersionProbe` (the game's `Parameters/Version.xml`) through `GameVersionCheck` (pure). On a difference
+  `VersionProbe` (the version text compiled into `TaleWorlds.Library`, read through `VirtualFolders` by `ApplicationVersion.FromParametersFile`) through `GameVersionCheck` (pure). On a difference
   it turns TAOM's code off for the session: a prefix on `Module.CheckIfSubmoduleCanBeLoadable`, which the
   same loop asks for every submodule before it loads the DLL, answers false for the submodules of TAOM
   and of every module that depends on TAOM. The engine's box then never comes, the game reaches the main
@@ -69,7 +69,11 @@ one inquiry that lists every problem it found:
   version the build targets. Same guard as the engine's own box (not on a dedicated server, not with
   `MBDebug.TestModeEnabled`); once per process; nothing happens when TAOM is not in the loaded list, the
   version can't be read, or the pin is missing. If TAOM.Dependencies itself fails to load on that game
-  version, nothing runs. Logs `GameVersionNotice: game v..., TAOM ... pins Native ...: Match|Mismatch|Unknown`
+  version, nothing runs. The same holds if an engine member `Run` reads differs on the player's game
+  version: nothing runs and the engine's own box shows as before. Not in the Modding Kit (its engine can
+  lag the client's; logs `skipped: Modding Kit`). The TAOM launcher and BLSE use their own version rules
+  (launcher: same major.minor series; BUTR: minimum), so on a same-minor game revision TAOM can turn off
+  while the launcher calls the game compatible. Logs `GameVersionNotice: game v..., TAOM ... pins Native ...: Match|Mismatch|Unknown`
   and `TAOM's code is off for this session: N submodule(s) of ...` to `diag.log`.
 
 ### Separate library copies
@@ -187,7 +191,7 @@ ILoadedModuleIds         IModuleFolderReader
 
 - 2026-11-15: added (War Sails and separate library copies).
 - 2026-11-15: TAOM.Dependencies says when the launcher dropped TAOM (War Sails ticked, or TAOM not loaded).
-- 2026-11-15: TAOM.Dependencies warns when the game is not the Bannerlord version TAOM was built for.
+- 2026-11-15: TAOM.Dependencies turns TAOM's code off and tells the player when the game is not the Bannerlord version TAOM was built for.
 
 ## GitHub Issue
 
