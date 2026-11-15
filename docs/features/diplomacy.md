@@ -67,7 +67,7 @@ WarOfTheRingBehavior --> IWarOfTheRingService.CheckPhaseTransition (both events)
 Harmony Patch11_Diplomacy
   AllianceCampaignBehavior.EndAlliance [Prefix] -> IOnAllianceAction.ShouldPreventAllianceEnd  (+ [diag] log)
   DeclareWarAction.ApplyInternal       [Prefix] -> IOnAllianceAction.ShouldPreventWarDeclaration -> IWarOfTheRingService.GetWarVeto (Permanent first, then WarEnded, then the same-side rule, then the phase rule; a player-caused war skips the phase rule)
-  AllianceCampaignBehavior.StartCallToWarAgreement [Prefix] -> IOnAllianceAction.ShouldPreventWarDeclaration (same veto, before any gold moves)
+  AllianceCampaignBehavior.StartCallToWarAgreement [Prefix, Priority.High] -> IOnAllianceAction.ShouldPreventWarDeclaration (same veto, before any gold moves; High so it runs before Coop's prefix, #1343)
   AllianceCampaignBehavior.OnCallToWarAgreementProposedByPlayerKingdom [Prefix] -> same veto, so a one-clan player kingdom gets no map notice for a refused war
   ProposeCallToWarAgreementDecision.IsAllowed / AcceptCallToWarAgreementDecision.IsAllowed [Prefix] -> same veto, result false, so vanilla cancels the ballot before the player sees it
   MakePeaceAction.ApplyInternal        [Prefix] -> IOnPeaceAction.ShouldPreventPeace
