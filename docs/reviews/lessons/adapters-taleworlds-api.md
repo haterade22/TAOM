@@ -2001,3 +2001,11 @@ PR #1304's doc said god mode stays on while the player walks the field after the
 **Prevent:** before acting on an engine state flag, read where the flag is set and where the object it guards is built; when they are set on different ticks, act on the second sighting and test that rule in the pure driver.
 
 **Source:** `docs/reviews/rca-scenario-autorun-2026-11-15.md`
+
+### A Coop id is an object key, not a StringId; an engine member is what its source says, not its name (#1329, 2026-11-15)
+
+**Why missed:** guest trade passed Coop's `Player.HeroId` to `CampaignObjectManager.Find<Hero>`. Coop builds that id with `ObjectManager.TryGetId`, which returns the key it registered, `"Hero_" + StringId` (`HeroInterface.RegisterPrimary`), and `Find` compares `StringId` only, so the host refused every real guest. The same change read `MobileParty.SiegeEvent` as any siege; it is `BesiegerCamp?.SiegeEvent`, the besieger's side only. Both were read from their names, and the transport test faked the lookup with the string `"hero_1"`.
+
+**Prevent:** resolve a Coop id through Coop (`IPlayerManager.TryGetSenderHero`, `IObjectManager.TryGetObject`) and hand TAOM the object's `StringId`. Before using an engine member, read the line that sets it. A seam that carries an external id gets one test with that system's real id shape.
+
+**Source:** `docs/reviews/rca-coop-guest-trade-2026-11-15.md` (Class 1)

@@ -5175,5 +5175,14 @@
 	<string id="taom_cheat_done_influence" text="{=taom_cheat_done_influence}Gained {NUMBER} influence." />
 	<string id="taom_cheat_done_renown" text="{=taom_cheat_done_renown}Gained {NUMBER} renown." />
 	<string id="taom_cheat_done_heal" text="{=taom_cheat_done_heal}Your party is healed. Soldiers healed: {NUMBER}." />
+	<!-- harvested by tools/harvest_literal_loc_keys.py -->
+	<!-- CoopInterop -->
+	<string id="taom_guest_trade_not_leader" text="{=taom_guest_trade_not_leader}The host cannot trade for you while you do not lead a free party." />
+	<string id="taom_guest_trade_not_here" text="{=taom_guest_trade_not_here}The host cannot trade for you here: your party is not in this settlement, or it is in a battle or a siege." />
+	<string id="taom_guest_trade_no_armoury" text="{=taom_guest_trade_no_armoury}The host finds no armourer at work in this town." />
+	<string id="taom_guest_trade_failed" text="{=taom_guest_trade_failed}The host could not complete this. Try again." />
+	<string id="taom_guest_trade_busy" text="{=taom_guest_trade_busy}The host has not answered your last request yet." />
+	<string id="taom_guest_trade_no_link" text="{=taom_guest_trade_no_link}The host cannot be reached." />
+	<string id="taom_guest_trade_no_answer" text="{=taom_guest_trade_no_answer}The host did not answer your last request. Try again." />
 
 </strings>

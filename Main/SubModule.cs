@@ -1503,7 +1503,7 @@ public class SubModule : MBSubModuleBase
             IoC.Resolve<Features.EliteEmissary.IEliteEmissarySettingsProvider>(),
             IoC.Resolve<Features.EliteEmissary.IEliteEmissaryConfigProvider>(),
             IoC.Resolve<ISettlementOwnerAdapter>(),
-            IoC.Resolve<Features.CoopInterop.ICoopSessionProvider>(),
+            IoC.Resolve<Features.CoopInterop.GuestTrade.GuestTradeClient>(),
             IoC.Resolve<IModLogger>()));
 
         // CultureConversion — conquered cross-culture fiefs gradually adopt the new owner's culture

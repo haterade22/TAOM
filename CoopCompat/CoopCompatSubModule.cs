@@ -5,10 +5,12 @@ using TaleWorlds.CampaignSystem;
 using TaleWorlds.Core;
 using TaleWorlds.MountAndBlade;
 using TAOM.Core.Logging;
+using TAOM.CoopCompat.GuestTrade;
 using TAOM.CoopCompat.Handshake;
 using TAOM.CoopCompat.Momentum;
 using TAOM.CoopCompat.Transport;
 using TAOM.Features.CoopInterop;
+using TAOM.Features.CoopInterop.GuestTrade;
 using TAOM.Features.WarOfTheRingMomentum;
 
 namespace TAOM.CoopCompat;
@@ -16,7 +18,7 @@ namespace TAOM.CoopCompat;
 /// <summary>
 /// Entry point of the TAOM.CoopCompat module. The engine scans every type of this DLL before any
 /// OnSubModuleLoad runs, when no Coop assembly is loaded yet, so every type that needs Coop to load
-/// lives in TAOM.CoopCompat.Coop.dll (TypeScanGateTests). The transport and both services live in
+/// lives in TAOM.CoopCompat.Coop.dll (TypeScanGateTests). The transport and the services live in
 /// fields because Coop holds its subscriptions weakly.
 /// </summary>
 public sealed class CoopCompatSubModule : MBSubModuleBase
@@ -24,6 +26,7 @@ public sealed class CoopCompatSubModule : MBSubModuleBase
     private ICoopTransport? _transport;
     private SettingsHandshakeService? _handshake;
     private MomentumRelayService? _momentum;
+    private GuestTradeRelayService? _guestTrade;
     private bool _startTried;
 
     protected override void OnSubModuleLoad() => Log("[CoopCompat] module loaded");
@@ -56,6 +59,7 @@ public sealed class CoopCompatSubModule : MBSubModuleBase
             _transport = null;
             _handshake = null;
             _momentum = null;
+            _guestTrade = null;
             Log("[CoopCompat] off, Coop is not usable: " + ex.GetType().Name + ": " + ex.Message);
         }
     }
@@ -77,6 +81,7 @@ public sealed class CoopCompatSubModule : MBSubModuleBase
             BuildIdentity.FromLoadedAssemblies(), new InformationManagerSettingsNotice(), logger, outcomes);
         _momentum = new MomentumRelayService(transport, IoC.Resolve<IMomentumStateStore>(), logger, outcomes,
             () => Stopwatch.GetTimestamp() / (double)Stopwatch.Frequency, () => CampaignTime.Now.ToHours);
+        _guestTrade = new GuestTradeRelayService(transport, IoC.Resolve<GuestTradeClient>(), IoC.Resolve<GuestTradeHost>(), logger);
     }
 
     private static void Log(string message)
