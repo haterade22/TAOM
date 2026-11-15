@@ -13,14 +13,14 @@
       <face_key_template value="BodyProperty.fighter_gondor" />
     </face>
     <skills>
-      <skill id="Athletics" value="38" />
-      <skill id="Riding" value="0" />
-      <skill id="OneHanded" value="40" />
-      <skill id="TwoHanded" value="20" />
-      <skill id="Polearm" value="30" />
+      <skill id="Athletics" value="20" />
+      <skill id="Riding" value="10" />
+      <skill id="OneHanded" value="20" />
+      <skill id="TwoHanded" value="10" />
+      <skill id="Polearm" value="20" />
       <skill id="Bow" value="10" />
       <skill id="Crossbow" value="10" />
-      <skill id="Throwing" value="20" />
+      <skill id="Throwing" value="15" />
     </skills>
     <upgrade_targets>
       <upgrade_target id="NPCCharacter.rhudaur_hill_spearman" />
@@ -57,14 +57,14 @@
       <face_key_template value="BodyProperty.fighter_gondor" />
     </face>
     <skills>
-      <skill id="Athletics" value="52" />
-      <skill id="Riding" value="0" />
-      <skill id="OneHanded" value="55" />
-      <skill id="TwoHanded" value="30" />
-      <skill id="Polearm" value="70" />
+      <skill id="Athletics" value="40" />
+      <skill id="Riding" value="15" />
+      <skill id="OneHanded" value="35" />
+      <skill id="TwoHanded" value="20" />
+      <skill id="Polearm" value="40" />
       <skill id="Bow" value="15" />
       <skill id="Crossbow" value="15" />
-      <skill id="Throwing" value="20" />
+      <skill id="Throwing" value="15" />
     </skills>
     <upgrade_targets>
       <upgrade_target id="NPCCharacter.rhudaur_axeman" />
@@ -106,14 +106,14 @@
       <face_key_template value="BodyProperty.fighter_gondor" />
     </face>
     <skills>
-      <skill id="Athletics" value="80" />
-      <skill id="Riding" value="0" />
-      <skill id="OneHanded" value="100" />
-      <skill id="TwoHanded" value="40" />
-      <skill id="Polearm" value="80" />
-      <skill id="Bow" value="20" />
-      <skill id="Crossbow" value="20" />
-      <skill id="Throwing" value="20" />
+      <skill id="Athletics" value="75" />
+      <skill id="Riding" value="30" />
+      <skill id="OneHanded" value="70" />
+      <skill id="TwoHanded" value="35" />
+      <skill id="Polearm" value="40" />
+      <skill id="Bow" value="30" />
+      <skill id="Crossbow" value="30" />
+      <skill id="Throwing" value="30" />
     </skills>
     <upgrade_targets>
       <upgrade_target id="NPCCharacter.rhudaur_veteran_axeman" />
@@ -152,14 +152,14 @@
       <face_key_template value="BodyProperty.fighter_gondor" />
     </face>
     <skills>
-      <skill id="Athletics" value="95" />
-      <skill id="Riding" value="0" />
-      <skill id="OneHanded" value="130" />
-      <skill id="TwoHanded" value="52" />
-      <skill id="Polearm" value="105" />
-      <skill id="Bow" value="25" />
-      <skill id="Crossbow" value="25" />
-      <skill id="Throwing" value="25" />
+      <skill id="Athletics" value="105" />
+      <skill id="Riding" value="40" />
+      <skill id="OneHanded" value="100" />
+      <skill id="TwoHanded" value="50" />
+      <skill id="Polearm" value="50" />
+      <skill id="Bow" value="40" />
+      <skill id="Crossbow" value="40" />
+      <skill id="Throwing" value="40" />
     </skills>
     <upgrade_targets>
       <upgrade_target id="NPCCharacter.rhudaur_fell_warden" />
@@ -198,14 +198,14 @@
       <face_key_template value="BodyProperty.fighter_gondor" />
     </face>
     <skills>
-      <skill id="Athletics" value="105" />
-      <skill id="Riding" value="0" />
-      <skill id="OneHanded" value="140" />
-      <skill id="TwoHanded" value="175" />
-      <skill id="Polearm" value="140" />
-      <skill id="Bow" value="30" />
-      <skill id="Crossbow" value="30" />
-      <skill id="Throwing" value="30" />
+      <skill id="Athletics" value="135" />
+      <skill id="Riding" value="50" />
+      <skill id="OneHanded" value="100" />
+      <skill id="TwoHanded" value="135" />
+      <skill id="Polearm" value="65" />
+      <skill id="Bow" value="50" />
+      <skill id="Crossbow" value="50" />
+      <skill id="Throwing" value="50" />
     </skills>
     <upgrade_targets></upgrade_targets>
     <Equipments>
@@ -240,14 +240,14 @@
       <face_key_template value="BodyProperty.fighter_gondor" />
     </face>
     <skills>
-      <skill id="Athletics" value="85" />
-      <skill id="Riding" value="120" />
-      <skill id="OneHanded" value="55" />
-      <skill id="TwoHanded" value="105" />
-      <skill id="Polearm" value="130" />
-      <skill id="Bow" value="25" />
-      <skill id="Crossbow" value="25" />
-      <skill id="Throwing" value="25" />
+      <skill id="Athletics" value="55" />
+      <skill id="Riding" value="100" />
+      <skill id="OneHanded" value="50" />
+      <skill id="TwoHanded" value="95" />
+      <skill id="Polearm" value="100" />
+      <skill id="Bow" value="40" />
+      <skill id="Crossbow" value="40" />
+      <skill id="Throwing" value="40" />
     </skills>
     <upgrade_targets></upgrade_targets>
     <Equipments>
@@ -291,11 +291,11 @@
       <face_key_template value="BodyProperty.fighter_gondor" />
     </face>
     <skills>
-      <skill id="Athletics" value="52" />
-      <skill id="Riding" value="0" />
-      <skill id="OneHanded" value="55" />
-      <skill id="TwoHanded" value="70" />
-      <skill id="Polearm" value="27" />
+      <skill id="Athletics" value="40" />
+      <skill id="Riding" value="15" />
+      <skill id="OneHanded" value="20" />
+      <skill id="TwoHanded" value="40" />
+      <skill id="Polearm" value="20" />
       <skill id="Bow" value="15" />
       <skill id="Crossbow" value="15" />
       <skill id="Throwing" value="15" />
@@ -338,14 +338,14 @@
       <face_key_template value="BodyProperty.fighter_gondor" />
     </face>
     <skills>
-      <skill id="Athletics" value="80" />
-      <skill id="Riding" value="0" />
-      <skill id="OneHanded" value="55" />
-      <skill id="TwoHanded" value="80" />
-      <skill id="Polearm" value="40" />
-      <skill id="Bow" value="115" />
-      <skill id="Crossbow" value="20" />
-      <skill id="Throwing" value="20" />
+      <skill id="Athletics" value="75" />
+      <skill id="Riding" value="30" />
+      <skill id="OneHanded" value="35" />
+      <skill id="TwoHanded" value="70" />
+      <skill id="Polearm" value="35" />
+      <skill id="Bow" value="79" />
+      <skill id="Crossbow" value="30" />
+      <skill id="Throwing" value="30" />
     </skills>
     <upgrade_targets>
       <upgrade_target id="NPCCharacter.rhudaur_ranger" />
@@ -388,14 +388,14 @@
       <face_key_template value="BodyProperty.fighter_gondor" />
     </face>
     <skills>
-      <skill id="Athletics" value="95" />
-      <skill id="Riding" value="0" />
-      <skill id="OneHanded" value="55" />
-      <skill id="TwoHanded" value="105" />
+      <skill id="Athletics" value="105" />
+      <skill id="Riding" value="40" />
+      <skill id="OneHanded" value="50" />
+      <skill id="TwoHanded" value="100" />
       <skill id="Polearm" value="50" />
-      <skill id="Bow" value="160" />
-      <skill id="Crossbow" value="25" />
-      <skill id="Throwing" value="25" />
+      <skill id="Bow" value="112" />
+      <skill id="Crossbow" value="40" />
+      <skill id="Throwing" value="40" />
     </skills>
     <upgrade_targets>
       <upgrade_target id="NPCCharacter.rhudaur_veteran_ranger" />
@@ -438,14 +438,14 @@
       <face_key_template value="BodyProperty.fighter_gondor" />
     </face>
     <skills>
-      <skill id="Athletics" value="105" />
-      <skill id="Riding" value="0" />
-      <skill id="OneHanded" value="60" />
-      <skill id="TwoHanded" value="140" />
-      <skill id="Polearm" value="60" />
-      <skill id="Bow" value="200" />
-      <skill id="Crossbow" value="30" />
-      <skill id="Throwing" value="30" />
+      <skill id="Athletics" value="135" />
+      <skill id="Riding" value="50" />
+      <skill id="OneHanded" value="65" />
+      <skill id="TwoHanded" value="130" />
+      <skill id="Polearm" value="65" />
+      <skill id="Bow" value="145" />
+      <skill id="Crossbow" value="50" />
+      <skill id="Throwing" value="50" />
     </skills>
     <upgrade_targets>
       <upgrade_target id="NPCCharacter.rhudaur_ranger_captain" />
@@ -488,14 +488,14 @@
       <face_key_template value="BodyProperty.fighter_gondor" />
     </face>
     <skills>
-      <skill id="Athletics" value="120" />
-      <skill id="Riding" value="0" />
-      <skill id="OneHanded" value="70" />
-      <skill id="TwoHanded" value="180" />
-      <skill id="Polearm" value="70" />
-      <skill id="Bow" value="235" />
-      <skill id="Crossbow" value="35" />
-      <skill id="Throwing" value="35" />
+      <skill id="Athletics" value="165" />
+      <skill id="Riding" value="60" />
+      <skill id="OneHanded" value="80" />
+      <skill id="TwoHanded" value="155" />
+      <skill id="Polearm" value="80" />
+      <skill id="Bow" value="174" />
+      <skill id="Crossbow" value="60" />
+      <skill id="Throwing" value="60" />
     </skills>
     <upgrade_targets></upgrade_targets>
     <Equipments>
@@ -536,14 +536,14 @@
       <face_key_template value="BodyProperty.fighter_gondor" />
     </face>
     <skills>
-      <skill id="Athletics" value="80" />
-      <skill id="Riding" value="0" />
-      <skill id="OneHanded" value="80" />
-      <skill id="TwoHanded" value="80" />
-      <skill id="Polearm" value="100" />
-      <skill id="Bow" value="20" />
-      <skill id="Crossbow" value="20" />
-      <skill id="Throwing" value="20" />
+      <skill id="Athletics" value="75" />
+      <skill id="Riding" value="30" />
+      <skill id="OneHanded" value="35" />
+      <skill id="TwoHanded" value="40" />
+      <skill id="Polearm" value="70" />
+      <skill id="Bow" value="30" />
+      <skill id="Crossbow" value="30" />
+      <skill id="Throwing" value="30" />
     </skills>
     <upgrade_targets>
       <upgrade_target id="NPCCharacter.rhudaur_guard" />
@@ -580,14 +580,14 @@
       <face_key_template value="BodyProperty.fighter_gondor" />
     </face>
     <skills>
-      <skill id="Athletics" value="95" />
-      <skill id="Riding" value="0" />
-      <skill id="OneHanded" value="105" />
-      <skill id="TwoHanded" value="130" />
-      <skill id="Polearm" value="105" />
-      <skill id="Bow" value="25" />
-      <skill id="Crossbow" value="25" />
-      <skill id="Throwing" value="25" />
+      <skill id="Athletics" value="105" />
+      <skill id="Riding" value="40" />
+      <skill id="OneHanded" value="50" />
+      <skill id="TwoHanded" value="105" />
+      <skill id="Polearm" value="90" />
+      <skill id="Bow" value="40" />
+      <skill id="Crossbow" value="40" />
+      <skill id="Throwing" value="40" />
     </skills>
     <upgrade_targets>
       <upgrade_target id="NPCCharacter.rhudaur_veteran_guard" />
@@ -626,14 +626,14 @@
       <face_key_template value="BodyProperty.fighter_gondor" />
     </face>
     <skills>
-      <skill id="Athletics" value="105" />
-      <skill id="Riding" value="0" />
-      <skill id="OneHanded" value="140" />
-      <skill id="TwoHanded" value="175" />
-      <skill id="Polearm" value="140" />
-      <skill id="Bow" value="30" />
-      <skill id="Crossbow" value="30" />
-      <skill id="Throwing" value="30" />
+      <skill id="Athletics" value="135" />
+      <skill id="Riding" value="50" />
+      <skill id="OneHanded" value="65" />
+      <skill id="TwoHanded" value="135" />
+      <skill id="Polearm" value="115" />
+      <skill id="Bow" value="50" />
+      <skill id="Crossbow" value="50" />
+      <skill id="Throwing" value="50" />
     </skills>
     <upgrade_targets>
       <upgrade_target id="NPCCharacter.rhudaur_guard_captain" />
@@ -672,14 +672,14 @@
       <face_key_template value="BodyProperty.fighter_gondor" />
     </face>
     <skills>
-      <skill id="Athletics" value="120" />
-      <skill id="Riding" value="0" />
-      <skill id="OneHanded" value="180" />
-      <skill id="TwoHanded" value="225" />
-      <skill id="Polearm" value="140" />
-      <skill id="Bow" value="35" />
-      <skill id="Crossbow" value="35" />
-      <skill id="Throwing" value="35" />
+      <skill id="Athletics" value="165" />
+      <skill id="Riding" value="60" />
+      <skill id="OneHanded" value="80" />
+      <skill id="TwoHanded" value="165" />
+      <skill id="Polearm" value="115" />
+      <skill id="Bow" value="60" />
+      <skill id="Crossbow" value="60" />
+      <skill id="Throwing" value="60" />
     </skills>
     <upgrade_targets>
       <upgrade_target id="NPCCharacter.rhudaur_lord_of_the_angle" />
@@ -718,14 +718,14 @@
       <face_key_template value="BodyProperty.fighter_gondor" />
     </face>
     <skills>
-      <skill id="Athletics" value="140" />
-      <skill id="Riding" value="0" />
-      <skill id="OneHanded" value="220" />
-      <skill id="TwoHanded" value="270" />
-      <skill id="Polearm" value="220" />
-      <skill id="Bow" value="40" />
-      <skill id="Crossbow" value="40" />
-      <skill id="Throwing" value="40" />
+      <skill id="Athletics" value="190" />
+      <skill id="Riding" value="75" />
+      <skill id="OneHanded" value="90" />
+      <skill id="TwoHanded" value="190" />
+      <skill id="Polearm" value="165" />
+      <skill id="Bow" value="75" />
+      <skill id="Crossbow" value="75" />
+      <skill id="Throwing" value="75" />
     </skills>
     <upgrade_targets></upgrade_targets>
     <Equipments>
@@ -762,14 +762,14 @@
       <face_key_template value="BodyProperty.fighter_gondor" />
     </face>
     <skills>
-      <skill id="Athletics" value="95" />
-      <skill id="Riding" value="0" />
-      <skill id="OneHanded" value="105" />
+      <skill id="Athletics" value="105" />
+      <skill id="Riding" value="40" />
+      <skill id="OneHanded" value="90" />
       <skill id="TwoHanded" value="50" />
-      <skill id="Polearm" value="130" />
-      <skill id="Bow" value="25" />
-      <skill id="Crossbow" value="25" />
-      <skill id="Throwing" value="25" />
+      <skill id="Polearm" value="100" />
+      <skill id="Bow" value="40" />
+      <skill id="Crossbow" value="40" />
+      <skill id="Throwing" value="40" />
     </skills>
     <upgrade_targets>
       <upgrade_target id="NPCCharacter.rhudaur_militia_veteran_spearman" />
@@ -808,14 +808,14 @@
       <face_key_template value="BodyProperty.fighter_gondor" />
     </face>
     <skills>
-      <skill id="Athletics" value="95" />
-      <skill id="Riding" value="0" />
-      <skill id="OneHanded" value="105" />
-      <skill id="TwoHanded" value="50" />
-      <skill id="Polearm" value="50" />
-      <skill id="Bow" value="85" />
-      <skill id="Crossbow" value="25" />
-      <skill id="Throwing" value="25" />
+      <skill id="Athletics" value="105" />
+      <skill id="Riding" value="40" />
+      <skill id="OneHanded" value="40" />
+      <skill id="TwoHanded" value="40" />
+      <skill id="Polearm" value="40" />
+      <skill id="Bow" value="46" />
+      <skill id="Crossbow" value="40" />
+      <skill id="Throwing" value="40" />
     </skills>
     <upgrade_targets>
       <upgrade_target id="NPCCharacter.rhudaur_militia_veteran_archer" />
@@ -856,14 +856,14 @@
       <face_key_template value="BodyProperty.fighter_gondor" />
     </face>
     <skills>
-      <skill id="Athletics" value="110" />
-      <skill id="Riding" value="15" />
-      <skill id="OneHanded" value="120" />
-      <skill id="TwoHanded" value="65" />
-      <skill id="Polearm" value="145" />
-      <skill id="Bow" value="40" />
-      <skill id="Crossbow" value="40" />
-      <skill id="Throwing" value="40" />
+      <skill id="Athletics" value="115" />
+      <skill id="Riding" value="50" />
+      <skill id="OneHanded" value="100" />
+      <skill id="TwoHanded" value="60" />
+      <skill id="Polearm" value="110" />
+      <skill id="Bow" value="50" />
+      <skill id="Crossbow" value="50" />
+      <skill id="Throwing" value="50" />
     </skills>
     <upgrade_targets></upgrade_targets>
     <Equipments>
@@ -902,14 +902,14 @@
       <face_key_template value="BodyProperty.fighter_gondor" />
     </face>
     <skills>
-      <skill id="Athletics" value="110" />
-      <skill id="Riding" value="15" />
-      <skill id="OneHanded" value="120" />
-      <skill id="TwoHanded" value="65" />
-      <skill id="Polearm" value="65" />
-      <skill id="Bow" value="115" />
-      <skill id="Crossbow" value="40" />
-      <skill id="Throwing" value="40" />
+      <skill id="Athletics" value="115" />
+      <skill id="Riding" value="50" />
+      <skill id="OneHanded" value="70" />
+      <skill id="TwoHanded" value="60" />
+      <skill id="Polearm" value="60" />
+      <skill id="Bow" value="79" />
+      <skill id="Crossbow" value="50" />
+      <skill id="Throwing" value="50" />
     </skills>
     <upgrade_targets></upgrade_targets>
     <Equipments>
@@ -950,11 +950,11 @@
       <face_key_template value="BodyProperty.fighter_gondor" />
     </face>
     <skills>
-      <skill id="Athletics" value="52" />
-      <skill id="Riding" value="0" />
-      <skill id="OneHanded" value="55" />
-      <skill id="TwoHanded" value="70" />
-      <skill id="Polearm" value="27" />
+      <skill id="Athletics" value="40" />
+      <skill id="Riding" value="15" />
+      <skill id="OneHanded" value="20" />
+      <skill id="TwoHanded" value="40" />
+      <skill id="Polearm" value="20" />
       <skill id="Bow" value="15" />
       <skill id="Crossbow" value="15" />
       <skill id="Throwing" value="15" />

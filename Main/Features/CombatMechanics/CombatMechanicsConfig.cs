@@ -19,15 +19,17 @@ public class CombatMechanicsConfig
     // Keyed by race NAME (precedent: raceage/race_age_config.json). Keys are validated against
     // IRaceManager.IsValidRaceName lazily (RaceCombatModifiersResolver) because the race registry
     // is engine state unavailable at provider construction.
+    // The Ctb bonuses are added to the weapon-skill gap (CrushThroughService), so they were scaled
+    // by 260/390 with the skill window (#343): dwarf 15 to 10, elf and Sauron 20 to 13.
     public Dictionary<string, RaceCombatModifiers> RaceModifiers { get; set; } = new Dictionary<string, RaceCombatModifiers>
     {
-        ["dwarf"] = new RaceCombatModifiers { CtbDefenseBonus = 15f, KnockdownResistanceMultiplier = 2.5f, StaggerThresholdMultiplier = 1.5f },
-        ["elf"] = new RaceCombatModifiers { CtbAttackBonus = 20f, RemoveNonOverheadPenalty = true },
+        ["dwarf"] = new RaceCombatModifiers { CtbDefenseBonus = 10f, KnockdownResistanceMultiplier = 2.5f, StaggerThresholdMultiplier = 1.5f },
+        ["elf"] = new RaceCombatModifiers { CtbAttackBonus = 13f, RemoveNonOverheadPenalty = true },
         // Sauron (lord_1_17) was race "elf" until #321 split him into his own race; the CTB/overhead
         // baseline mirrors elf so the split dropped nothing. On top: charge-knockdown resistance above
         // the dwarf ceiling (2.5) and the strongest swing-energy bias (orc 0.15) — the 1.40-scale
         // Dark Lord keeps elf Monster weight 80, so the resistance row is what stops horse-bowling.
-        ["sauron"] = new RaceCombatModifiers { CtbAttackBonus = 20f, RemoveNonOverheadPenalty = true, KnockdownResistanceMultiplier = 3.0f, SwingEnergyBonusFactor = 0.20f },
+        ["sauron"] = new RaceCombatModifiers { CtbAttackBonus = 13f, RemoveNonOverheadPenalty = true, KnockdownResistanceMultiplier = 3.0f, SwingEnergyBonusFactor = 0.20f },
         ["orc"] = new RaceCombatModifiers { SwingEnergyBonusFactor = 0.15f },
         // #610: uruk-hai lost their 1.25 knockdown row (vanilla parity with the other orc-kind).
         ["uruk_hai"] = new RaceCombatModifiers { SwingEnergyBonusFactor = 0.10f },
@@ -45,8 +47,12 @@ public class CrushThroughConfig
 
     // Extra-CTB path only; the engine's base 58f overhead path is untouched (falls through to base).
     public float ExtraCrushThroughEnergyThreshold { get; set; } = 25f;
-    public int SkillDeadZone { get; set; } = 30;
-    public int SkillTargetDelta { get; set; } = 200;
+    // Weapon-skill gap, in troop skill points: scaled by 260/390 when the troop curve's top fell
+    // to vanilla's 260 (#343), so a tier gap leaves the dead zone and reaches the full chance at
+    // the same place. SkillCurveExponent was not scaled, so in between the same tier gap gets up
+    // to about 0.06 less of the full chance (0.457 where it was 0.515, 0.607 where it was 0.666).
+    public int SkillDeadZone { get; set; } = 20;
+    public int SkillTargetDelta { get; set; } = 135;
     public float MaxSkillChance { get; set; } = 0.5f;
     public float SkillCurveExponent { get; set; } = 0.008097f;
     public float EnergyRampMarginFactor { get; set; } = 0.27f;

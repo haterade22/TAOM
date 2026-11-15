@@ -288,10 +288,11 @@ def fix_item0(slots, launcher_troop: bool):
     return out, other
 
 
-# Troop definitions outside troops/ that fight and are tuned by hand: the Fords of War roster (its
-# troops are copies of campaign troops, and Long Defeat fields them too). The slot rule reads these
-# as a second root, relative to ModuleData. Files that are not troops in battle (lords, notables,
-# wanderers, companions, obsolete vanilla overrides) are not listed.
+# Troop definitions outside troops/ that fight: the Fords of War roster (its troops are copies of
+# campaign troops, and Long Defeat fields them too). tools/rebalance_troops.py reads these as a
+# second root, relative to ModuleData: --apply puts them on the skill curve, each copy by its
+# campaign source's rules, and the slot rule reads them. Files that are not troops in battle (lords,
+# notables, wanderers, companions, obsolete vanilla overrides) are not listed.
 EXTRA_TROOP_FILES = ("fords_of_war/fords_troops.xml",)
 
 POLEARM_WORDS = ("spear", "pike", "lance", "halberd")
