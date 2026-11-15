@@ -20,7 +20,7 @@ mounts (elk, ram, WildMesh) keep vanilla's reins.
   spawn on v2.0.38 (log ends at `[CareerPerks] mount stats for rider 'main_hero'`), and stopped crashing once the
   player took off the wolf and the harness. The player named the pair: `dire_wolf_brown` with the vanilla
   `light_harness` (`reins_mesh`, family 1). The elf is incidental: the elf Monster uses `as_human_warrior` and the human
-  skeleton. No crash dump exists, so the cloth reins are the leading cause, matched by the gear, not a proven one.
+  skeleton. The battle lab reproduced the crash with that pair and none with the guard (see "How to verify in game").
 - **The class:** 4 Monsters without a rein skeleton in family 1 (`warg`, `fell_warg`, `dire_wolf`, `spider`, 13 items)
   and 45 installed harnesses with reins, all family 1. No troop or hero in the data pairs them; only a player's own
   choice in the inventory (for the hero or a companion) does. The elephants are family 10 and no harness with reins
@@ -78,7 +78,13 @@ None.
 
 ## How to verify in game
 
-Nothing below has run yet. Character detail must be above 2 (Options, Graphics).
+**Battle lab, 2026-11-15** (hidden, TAOM 9e57fb94c, character detail 4, 1 vs 1 on `battle_terrain_a`): without the
+guard, a goblin on `dire_wolf_brown` with `light_harness` crashed the game at spawn (access violation 0xC0000005), after
+three clean control fights (elf on its own horse, elf on the wolf with `dire_wolf_saddle`, goblin on the wolf bare).
+With Patch153 and Patch154 all five fights ran, both `light_harness` fights included, and the log had the
+`[MountReins]` line below. The lab spawns AI troops with an equipment override, so it does not exercise the inventory.
+
+The steps below are still owed in a campaign. Character detail must be above 2 (Options, Graphics).
 
 1. A campaign field battle: the player on `dire_wolf_brown` with `light_harness` (an old save; Patch154 keeps the
    inventory from making the pair now). The battle starts, the log has one `[MountReins] mount 'dire_wolf_brown'

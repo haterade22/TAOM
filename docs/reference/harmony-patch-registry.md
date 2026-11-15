@@ -2073,7 +2073,7 @@ Applied from `SubModule.cs` in the standard `OnGameInitializationFinished` batch
 
 **PatchShield.** `TaleWorlds.MountAndBlade.View` is not an excluded namespace, so the shield's finalizer attaches to `AddMountMesh` from a process's first game start; it swallows only a missing-API throw and then strips unprotected owners' patches on the method, this transpiler (`com.taom.mod`) included, after which vanilla runs.
 
-**Co-op.** A transpiler with no bool prefix that changes looks only, so `CoopVetoClassificationTests` needs no entry. **Tests:** `MountReinsTranspilerTests` (rule, synthetic swap, labels, 0 and 2 sites), `MountReinsBindingTests` (installed target, swap on real IL, hook calls, JIT), `MountReinsWiringTests`, `MountReinsLiveDataTests` (premise in the installed data). **ACTIVE**, not yet checked in game.
+**Co-op.** A transpiler with no bool prefix that changes looks only, so `CoopVetoClassificationTests` needs no entry. **Tests:** `MountReinsTranspilerTests` (rule, synthetic swap, labels, 0 and 2 sites), `MountReinsBindingTests` (installed target, swap on real IL, hook calls, JIT), `MountReinsWiringTests`, `MountReinsLiveDataTests` (premise in the installed data). **ACTIVE**. Battle lab 2026-11-15: a goblin on `dire_wolf_brown` with `light_harness` crashed at spawn without it and fought with it (mount-reins-guard.md); not checked in a campaign.
 
 ## Patch154_CreatureSaddleFamilies
 
@@ -2085,7 +2085,7 @@ Applied from `SubModule.cs` in the standard `OnGameInitializationFinished` batch
 
 **PatchShield.** `TaleWorlds.Core` is not excluded; the shield's finalizer can attach from the first game start. These are postfixes with no throw of their own.
 
-**Co-op.** Same data on every peer (the same modules load the same table). The old-save repair, `CreatureSaddleSaveRepairBehavior`, is host-only (coop-interop.md). **Tests:** `CreatureSaddleFamiliesTests` (table by literal, families avoid 0/1/2/4/10, unequip rule, the writer on real engine objects, both postfixes attached, module wiring), `CreatureSaddleRosterTests` (every TAOM roster pairs a creature mount with a harness of its family; the live Armory still has family 1). **ACTIVE**, not yet checked in game.
+**Co-op.** Same data on every peer (the same modules load the same table). The old-save repair, `CreatureSaddleSaveRepairBehavior`, is host-only (coop-interop.md). **Tests:** `CreatureSaddleFamiliesTests` (table by literal, families avoid 0/1/2/4/10, unequip rule, the writer on real engine objects, both postfixes attached, module wiring), `CreatureSaddleRosterTests` (every TAOM roster pairs a creature mount with a harness of its family; the live Armory still has family 1). **ACTIVE**. Battle lab 2026-11-15: the four Monster lines and two saddle lines were logged at load; the inventory and the old-save repair are not checked in game.
 
 ## Realms manual patches (no category)
 
