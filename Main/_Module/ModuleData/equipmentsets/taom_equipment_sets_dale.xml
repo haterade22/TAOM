@@ -54,10 +54,10 @@
 			<Equipment slot="Item0" id="Item.sturgia_noble_sword_4_t5" />
 			<Equipment slot="Item1" id="Item.wm_dale_shield_a04" />
 			<Equipment slot="Head" id="Item.sk_dale_helmet_chivlary_b04" />
-			<Equipment slot="Body" id="Item.sk_dale_chest_chivalry_b04" />
+			<Equipment slot="Body" id="Item.sk_dale_chest_chivalry_a04" />
 			<Equipment slot="Cape" id="Item.sk_dale_shoulder_chivlary_b04" />
-			<Equipment slot="Gloves" id="Item.sk_dale_gauntlet_chivlary_b04" />
-			<Equipment slot="Leg" id="Item.sk_dale_boots_chivlary_b04" />
+			<Equipment slot="Gloves" id="Item.sk_dale_gauntlet_archer_a04" />
+			<Equipment slot="Leg" id="Item.sk_dale_boots_archer_a04" />
 			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
 			<Equipment slot="Horse" id="Item.charger" />
 		</EquipmentSet>
@@ -184,10 +184,10 @@
 			<Equipment slot="Item0" id="Item.sturgia_noble_sword_1_t5" />
 			<Equipment slot="Item1" id="Item.wm_dale_shield_b02" />
 			<Equipment slot="Head" id="Item.sk_dale_lake_town_helmet_mariner_a04" />
-			<Equipment slot="Body" id="Item.sk_dale_lake_town_chest_mariner_a04" />
+			<Equipment slot="Body" id="Item.sk_dale_lake_town_chest_mariner_b04" />
 			<Equipment slot="Cape" id="Item.sk_dale_shoulder_archer_a04" />
 			<Equipment slot="Gloves" id="Item.sk_dale_lake_town_bracers_mariner_a04" />
-			<Equipment slot="Leg" id="Item.sk_dale_lake_town_boots_mariner_a04" />
+			<Equipment slot="Leg" id="Item.sk_dale_boots_archer_b04" />
 			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
 			<Equipment slot="Horse" id="Item.charger" />
 		</EquipmentSet>

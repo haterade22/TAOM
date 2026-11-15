@@ -2101,13 +2101,15 @@ Applied from `SubModule.cs` in the standard `OnGameInitializationFinished` batch
 
 ## Realms manual patches (no category)
 
-**Targets (v1.5.7):** three classes in `Main/Features/Realms/Hooks/`, each applied by hand with its own Harmony id, outside any patch category, so `PatchShield` and the category list do not see them. Feature: [realms.md](../features/realms.md).
+**Targets (v1.5.7):** three classes in `Main/Features/Realms/Hooks/` and `TitleEncyclopediaPagePatch` in `Client/Features/Realms/Encyclopedia/`, each applied by hand with its own Harmony id, outside any patch category, so `PatchShield` and the category list do not see them. Feature: [realms.md](../features/realms.md).
 
 - `PartyNames` (`TAOM.Realms.PartyNames`): postfix on `LordPartyComponent.GetPartyName`, the party name styles. Applied at `ApplyPhase.GameInit` by `RealmsModule.OnPhase`.
 - `HouseBanners` (`TAOM.Realms.HouseBanners`, #1219): a prefix on the `Clan.Banner` getter returns `ClanOriginalBanner` inside a scope; a prefix on `Kingdom.InitializeKingdom` gives a new kingdom a copy of its founder's banner. The scopes are prefix and finalizer pairs on `WarPartyComponent.GetDefaultComponentBanner`, `CaravanPartyComponent.GetDefaultComponentBanner`, `MobilePartyVisual.RefreshPartyIcon` and `AddTentEntityForParty`, the `SettlementNameplatePartyMarkerItemVM(MobileParty)` constructor, `EncyclopediaClanPageVM.Refresh`, the `EncyclopediaFactionVM(IFaction)` constructor and the one-argument `GauntletBannerEditorScreen` constructor. Applied at `ApplyPhase.GameInit` by `RealmsModule.OnPhase`; a target not found is skipped with a log line.
 - `LiegeArmyDiscount` (`TAOM.Realms.LiegeArmyDiscount`): postfix on `CalculatePartyInfluenceCost(MobileParty, MobileParty)` of the campaign's own `ArmyManagementCalculationModel` type, patched once per type at `OnSessionLaunched` (`RealmsCampaign`).
+- `TitleEncyclopediaPagePatch` (`TAOM.Realms.TitlePage`): a prefix on the `EncyclopediaPage` constructor gives the Titles page its target type (`RealmsTitle`), and a postfix on `EncyclopediaManager.CreateEncyclopediaPages` adds the page. Applied once per process, at the first game start, by `RealmsClient.OnGameStart` (TAOM.Client), before the encyclopedia builds its pages; without both patches the encyclopedia has no Titles page. (#1298 moved it out of `TitleEncyclopediaPage`.)
+- `ConversationNames` (`TAOM.Realms.ConversationNames`, `Client/Features/Realms/Hooks/`): a postfix on `MissionConversationVM.Refresh` shows the hero's name style in conversations. Applied once per process from the same `RealmsClient.OnGameStart`, one line before `TitleEncyclopediaPagePatch`.
 
-**Crash triage.** A stack with `HouseBanners.BannerPrefix`, `Enter` or `Leave` is this section. Each `Patch()` catches its own exception and logs `[TAOM.Realms] ... are off`.
+**Crash triage.** A stack with `HouseBanners.BannerPrefix`, `Enter` or `Leave`, `TitleEncyclopediaPagePatch.PagePrefix` or `CreatePagesPostfix`, or `ConversationNames.Postfix` is this section. Each `Patch()` or `Apply()` catches its own exception and logs `[TAOM.Realms] ... are off` (the Titles page: `[TAOM.Realms] the encyclopedia Titles page is off`, or `adding the encyclopedia Titles page threw` from the postfix).
 
 <!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
 

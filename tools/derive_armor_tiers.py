@@ -27,7 +27,8 @@ and status columns describe what the restat does.
 A hero (is_hero="true": the lords, the Harad lords, the named companions, the vanilla lords that
 lords.xslt retags and hands battle templates, and the wanderer templates the game turns into heroes) never anchors a tier, but the map records `heroWorn: true`
 on every item a hero's battle sets wear, so the restat can tell hero-only kit from merchandise
-(rebalance_armor._roster_first_plan). Lords hold their kit as <EquipmentSet id=...> references into
+(rebalance_armor._roster_first_plan), and `lordWorn: true` when a lord (not only a named companion or
+a wanderer) is among them, so a companion's piece is never priced at the lord band. Lords hold their kit as <EquipmentSet id=...> references into
 equipmentsets/*.xml, resolved here, and a direct <equipment> child of <Equipments> replaces its slot in
 every set of that hero, as BasicCharacterObject.Deserialize applies it.
 
@@ -176,18 +177,20 @@ def _equipment_slots(elem, tag_lower=True):
     return out
 
 
-def load_battle_templates():
+def load_battle_templates(directory=None):
     """{roster id: [{slot: item id}, ...]} over equipmentsets/*.xml, one dict per battle set: the
     <EquipmentSet id=...> reference a lord uses points at an <EquipmentRoster id=...> there, and the
-    hero gets all of that roster's sets. Civilian rosters and sets are skipped."""
+    hero gets all of that roster's sets. Civilian rosters and sets are skipped. `directory` defaults
+    to this checkout's equipmentsets/ (the validator passes the ModuleData it was given)."""
+    directory = directory or EQUIPMENTSETS_DIR
     out = {}
-    if not os.path.isdir(EQUIPMENTSETS_DIR):
+    if not os.path.isdir(directory):
         return out
-    for fn in sorted(os.listdir(EQUIPMENTSETS_DIR)):
+    for fn in sorted(os.listdir(directory)):
         if not fn.endswith('.xml'):
             continue
         try:
-            root = ET.parse(os.path.join(EQUIPMENTSETS_DIR, fn)).getroot()
+            root = ET.parse(os.path.join(directory, fn)).getroot()
         except ET.ParseError:
             continue
         for roster in root.iter('EquipmentRoster'):
@@ -202,7 +205,7 @@ def load_battle_templates():
     return out
 
 
-def _hero_elements():
+def _hero_elements(lords_only=False):
     """(hero id, element holding its <Equipments>) over every place a hero's kit is defined: an
     NPCCharacter with is_hero="true" in characters/ or named_companions/, each wanderer template of
     taom_wanderers.xml, and each lords.xslt template that writes an <Equipments> block (the retagged
@@ -210,8 +213,12 @@ def _hero_elements():
 
     A wanderer template says is_hero="false", but CompanionsCampaignBehavior turns every template with
     occupation Wanderer into a hero (HeroCreator.CreateSpecialHero), and Hero takes its battle equipment
-    from the template's roster."""
-    for directory in (CHARACTERS_DIR, NAMED_COMPANIONS_DIR):
+    from the template's roster.
+
+    With `lords_only`, only the lords: an occupation Lord hero of characters/ and the lords.xslt
+    templates (none says another occupation). Named companions and wanderers are left out, because
+    companions stay light (2026-11-15) and their kit must not be priced at the lord band."""
+    for directory in ((CHARACTERS_DIR,) if lords_only else (CHARACTERS_DIR, NAMED_COMPANIONS_DIR)):
         if not os.path.isdir(directory):
             continue
         for fn in sorted(os.listdir(directory)):
@@ -222,9 +229,9 @@ def _hero_elements():
             except ET.ParseError:
                 continue
             for npc in root.iter('NPCCharacter'):
-                if npc.get('is_hero') == 'true':
+                if npc.get('is_hero') == 'true' and (not lords_only or npc.get('occupation') == 'Lord'):
                     yield npc.get('id', ''), npc
-    if os.path.isfile(WANDERERS_XML):
+    if os.path.isfile(WANDERERS_XML) and not lords_only:
         try:
             root = ET.parse(WANDERERS_XML).getroot()
         except ET.ParseError:
@@ -241,6 +248,9 @@ def _hero_elements():
             if template.find('.//Equipments') is None:
                 continue
             ids = [a.text for a in template.iter(XSL_NS + 'attribute') if a.get('name') == 'id' and a.text]
+            occupation = [a.text for a in template.iter(XSL_NS + 'attribute') if a.get('name') == 'occupation']
+            if lords_only and occupation and (occupation[0] or '').strip() != 'Lord':
+                continue
             yield (ids[0] if ids else template.get('match', '')), template
 
 
@@ -272,9 +282,19 @@ def parse_hero_wearers():
     <EquipmentRoster>/<EquipmentSet> or an <EquipmentSet id=...> reference to a template in
     equipmentsets/, with direct <equipment> overrides applied; civilian sets are skipped. Ladder-
     exempt heroes are read like the rest: this map never anchors a tier."""
+    return _wearers(_hero_elements())
+
+
+def parse_lord_wearers():
+    """Return {item_id: [lord id]}: parse_hero_wearers over the lords only (_hero_elements with
+    lords_only), so a piece only a companion or wanderer wears is not lord kit."""
+    return _wearers(_hero_elements(lords_only=True))
+
+
+def _wearers(heroes):
     templates = load_battle_templates()
     wearers = defaultdict(list)
-    for hero, container in _hero_elements():
+    for hero, container in heroes:
         for item_id in sorted(_hero_battle_items(container, templates)):
             wearers[item_id].append(hero)
     return wearers
@@ -329,6 +349,7 @@ def build_armory_index():
 def derive():
     wearers = parse_rosters()
     hero_wearers = parse_hero_wearers()
+    lord_wearers = parse_lord_wearers()
     index, armory_dir = build_armory_index()
 
     records = {}
@@ -376,6 +397,7 @@ def derive():
             'levelSpan': span,
             'wearerCount': len(ws),
             'heroWorn': item_id in hero_wearers,         # a hero's kit; never moves the anchor or the tier
+            'lordWorn': item_id in lord_wearers,         # a lord's kit (not only a companion's or wanderer's)
             'tier': tier,
             'tierSource': source,
             'target': target,
