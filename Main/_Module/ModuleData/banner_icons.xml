@@ -146,6 +146,7 @@
       <Icon id="31016" material_name="taom_banners_11" texture_index="9" />
       <Icon id="31017" material_name="taom_banners_11" texture_index="10" />
       <Icon id="31018" material_name="taom_banners_11" texture_index="11" />
+      <Icon id="31035" material_name="taom_banners_15" texture_index="15" />
     </BannerIconGroup>
 
     <BannerIconGroup id="180" name="{=taom_banner_category_evil}Forces of Evil" is_pattern="false">
@@ -208,6 +209,8 @@
       <Icon id="30004" material_name="taom_banners_10" texture_index="7" />
       <Icon id="30003" material_name="taom_banners_10" texture_index="6" />
       <Icon id="30005" material_name="taom_banners_10" texture_index="8" />
+      <Icon id="31031" material_name="taom_banners_15" texture_index="11" />
+      <Icon id="31032" material_name="taom_banners_15" texture_index="12" />
     </BannerIconGroup>
 
     <BannerIconGroup id="220" name="{=taom_banner_category_orcish}Orcish" is_pattern="false">
@@ -266,6 +269,8 @@
       <Icon id="24506" material_name="taom_banners_12" texture_index="6" />
       <Icon id="24505" material_name="taom_banners_12" texture_index="5" />
       <Icon id="24501" material_name="taom_banners_12" texture_index="1" />
+      <Icon id="31033" material_name="taom_banners_15" texture_index="13" />
+      <Icon id="31034" material_name="taom_banners_15" texture_index="14" />
     </BannerIconGroup>
 
     <BannerIconGroup id="260" name="{=taom_banner_category_dunlending}Dunlending" is_pattern="false">
