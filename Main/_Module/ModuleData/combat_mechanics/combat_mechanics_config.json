@@ -69,9 +69,9 @@
     "playerVictimChanceFactor": 0.5
   },
   "raceModifiers": {
-    "dwarf": { "ctbDefenseBonus": 15, "knockdownResistanceMultiplier": 2.5, "staggerThresholdMultiplier": 1.5 },
-    "elf": { "ctbAttackBonus": 20, "removeNonOverheadPenalty": true },
-    "sauron": { "ctbAttackBonus": 20, "removeNonOverheadPenalty": true, "knockdownResistanceMultiplier": 3.0, "swingEnergyBonusFactor": 0.20 },
+    "dwarf": { "ctbDefenseBonus": 10, "knockdownResistanceMultiplier": 2.5, "staggerThresholdMultiplier": 1.5 },
+    "elf": { "ctbAttackBonus": 13, "removeNonOverheadPenalty": true },
+    "sauron": { "ctbAttackBonus": 13, "removeNonOverheadPenalty": true, "knockdownResistanceMultiplier": 3.0, "swingEnergyBonusFactor": 0.20 },
     "orc": { "swingEnergyBonusFactor": 0.15 },
     "uruk_hai": { "swingEnergyBonusFactor": 0.10 },
     "cave_troll": { "knockdownResistanceMultiplier": 4.0, "baseHitPoints": 200 },

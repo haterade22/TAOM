@@ -546,5 +546,86 @@ class SecondRootTests(_FixtureRun):
         self.assertIn("Changed: 0,", out)
 
 
+class SecondRootRuleTests(_FixtureRun):
+    """A copy follows its campaign source's rule: the exclusion list, the militia row and the
+    thrown-primary list are keyed by the source id, which is the copy's id without COPY_PREFIX."""
+
+    CLASSES = dict(_FixtureRun.CLASSES, fixture_shield="Shield")
+
+    def setUp(self):
+        super().setUp()
+        gondor = ' culture="Culture.gondor"'
+        self.write("troops/troops_gondor.xml",
+                   _npc("gondor_recruit", 6, [20] * 8, ["fixture_sword"], extra=gondor)
+                   + _npc("gondor_guard", 11, [40] * 8, ["fixture_shield", "fixture_sword"], extra=gondor))
+        (self.tmp / "fords_of_war").mkdir()
+        self.write(FORDS,
+                   _npc("fow_cave_troll", 26, [77] * 8, ["fixture_sword"], extra=gondor)
+                   + _npc("fow_gondor_militia_spearman", 11, [99] * 8, ["fixture_fork"], extra=gondor)
+                   + _npc("fow_gondor_militia_veteran_spearman", 16, [99] * 8, ["fixture_fork"], extra=gondor)
+                   + _npc("fow_gondor_har_skirmisher", 16, [99] * 8, ["fixture_sword", "fixture_stone"], extra=gondor)
+                   + _npc("fow_gondor_shieldman", 11, [40] * 8, ["fixture_shield", "fixture_sword"], extra=gondor),
+                   crlf=True)
+
+    def _skills(self, troop_id):
+        root = ET.fromstring((self.tmp / FORDS).read_text(encoding="utf-8"))
+        npc = next(n for n in root.iter("NPCCharacter") if n.get("id") == troop_id)
+        return {s.get("id"): int(s.get("value")) for s in npc.iter("skill")}
+
+    def test_a_copy_of_an_excluded_troop_keeps_its_values(self):
+        code, out = self.run_main("--apply")
+        self.assertEqual(code, 0, out)
+        self.assertEqual(set(self._skills("fow_cave_troll").values()), {77})
+
+    def test_a_militia_copy_takes_its_twins_militia_row(self):
+        self.run_main("--apply")
+        fork = tp.kit_of([{"Item0": "Polearm"}])
+        twin = rb.calculate_skills("gondor", 11, "gondor_militia_spearman", fork)
+        self.assertNotEqual(twin, rb.calculate_skills("gondor", 11, "fow_gondor_militia_spearman", fork))
+        self.assertEqual(self._skills("fow_gondor_militia_spearman"), twin)
+
+    def test_an_elite_militia_copy_adds_the_elite_bonus(self):
+        self.run_main("--apply")
+        fork = tp.kit_of([{"Item0": "Polearm"}])
+        self.assertEqual(self._skills("fow_gondor_militia_veteran_spearman"),
+                         rb.calculate_skills("gondor", 16, "gondor_militia_veteran_spearman", fork))
+
+    def test_a_thrown_primary_copy_takes_the_main_number_on_throwing(self):
+        self.run_main("--apply")
+        kit = tp.kit_of([{"Item0": "OneHanded", "Item1": "Throwing"}])
+        twin = rb.calculate_skills("gondor", 16, "gondor_har_skirmisher", kit)
+        self.assertNotEqual(twin, rb.calculate_skills("gondor", 16, "fow_gondor_har_skirmisher", kit))
+        self.assertEqual(self._skills("fow_gondor_har_skirmisher"), twin)
+
+    def test_fix_purpose_changes_no_equipment_line_in_the_second_root(self):
+        # Trunk's --fix-purpose never read the second root; only --main-weapon-slots moves a copy's
+        # Item0. A campaign troop still gets its shield out of Item0, as on trunk.
+        self.run_main("--apply")
+        fords = (self.tmp / FORDS).read_bytes()
+        code, out = self.run_main("--fix-purpose", "--apply")
+        self.assertEqual(code, 0, out)
+        self.assertEqual((self.tmp / FORDS).read_bytes(), fords)
+        guard = (self.tmp / "troops" / "troops_gondor.xml").read_text(encoding="utf-8").split('id="gondor_guard"')[1]
+        self.assertIn('slot="Item0" id="Item.fixture_sword"', guard)
+
+
+class ExtraRootPathTests(_FixtureRun):
+    def test_a_listed_second_root_file_that_is_missing_warns(self):
+        import io
+        from contextlib import redirect_stdout
+        from unittest import mock
+        out = io.StringIO()
+        with mock.patch.object(rb, "EXTRA_ROOT_DIR", str(self.tmp)), redirect_stdout(out):
+            self.assertEqual(rb.extra_troop_paths(), [])
+        self.assertIn("WARNING", out.getvalue())
+        self.assertIn(FORDS, out.getvalue())
+
+    def test_the_processing_line_names_only_files_that_exist(self):
+        self.write("troops/troops_gondor.xml", _npc("gondor_recruit", 6, [20] * 8, ["fixture_sword"]))
+        code, out = self.run_main("--apply", "--dry-run")
+        self.assertEqual(code, 0, out)
+        self.assertNotIn(f"Processing {FORDS}", out)
+
+
 if __name__ == "__main__":
     unittest.main()

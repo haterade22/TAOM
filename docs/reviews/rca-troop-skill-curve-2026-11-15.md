@@ -102,6 +102,44 @@ ran; a second `--apply --dry-run` printed `Changed: 0, Unchanged: 1342,
 Skipped: 12`, and `--fix-monotonicity --dry-run`, `--fix-purpose` and `--main-weapon-slots` each plan
 nothing.
 
+### Round 5 (2026-11-15): the convergence review
+
+- **Copies of excluded troops.** The skip check compared the copy's own id with `SKIP_TROOP_IDS`,
+  and a copy's id carries the `fow_` prefix, so round 4 put five excluded copies on the humanoid
+  curve (`fow_cave_troll`, `fow_hill_troll`, `fow_goblin_spider_rider`, `fow_harad_elephant_rider`,
+  `fow_harad_mumakil_rider`). A second-root troop whose id without the prefix
+  (`rebalance_troops.bare_id`) is in the list is now skipped, and the five `<skills>` blocks were put
+  back to trunk's values by hand (38 lines; `--apply` does not revert a skipped troop).
+- **A copy follows its campaign source's rule** (the maintainer's decision). `calculate_skills`
+  gets the source id for a copy, so the militia row, the elite +10 and `THROWN_PRIMARY_TROOP_IDS`
+  apply as to the twin. The 25 militia copies (10 elite) were on the level curve:
+  `fow_gondor_militia_spearman` had Polearm 150 on trunk, round 4 gave 40, and it now has its
+  twin's 105. `--apply` changed those 25 records, and every one equals its campaign twin.
+- **The other id lists keyed by troop id.** The militia bindings and `THROWN_PRIMARY_TROOP_IDS`
+  in `calculate_skills` now read the source id. Three uses still read the copy's own id and change
+  nothing on today's data: the clamp's militia-to-militia exemption and
+  `RESPECIALIZATION_EXEMPT_EDGES` (no edge between two militia copies and no copy of an exempt
+  edge in the Fords file), and the `(in THROWN_PRIMARY_TROOP_IDS)` note of the purpose report (no
+  thrown-primary copy).
+- **`--fix-purpose` and the second root.** Round 4 read the second root in `--fix-purpose` with
+  the Item0 plan on, so a copy with a shield in Item0 would have been rewritten; trunk's
+  `--fix-purpose` never read that file. It now reads it with no Item0 plan, so it changes no
+  equipment line there; in `troops/` it still moves a shield or ammunition out of Item0, as on
+  trunk. Only `--main-weapon-slots` plans a copy's Item0.
+- **A copy with no `<skills>` block** keeps its slot plan in `--main-weapon-slots`; only its skill
+  write is skipped. No copy lacks the block today.
+- **A listed second-root file that is missing** is named with a warning, and the `Processing`
+  line names only files that exist.
+- **The crush-through race bonuses** are added to the skill gap, so they were scaled by 260/390
+  with the window: elf and Sauron `ctbAttackBonus` 20 to 13, dwarf `ctbDefenseBonus` 15 to 10. No
+  other value in `combat_mechanics_config.json` is added to or compared with the gap.
+  `skillCurveExponent` multiplies it and was not scaled, so a scaled tier gap gets up to about 0.06
+  less of the full chance between the dead zone and the top (0.457 where it was 0.515).
+
+`--apply` in round 5 changed 25 records, the militia copies; a second `--apply --dry-run` printed
+`Changed: 0, Unchanged: 1337, Skipped: 17`, and the other three modes plan nothing. The shop test
+passes.
+
 ## Engine facts (v1.5.7)
 
 The reviewer confirmed these on the installed v1.5.7 build; each was re-read this round in the
@@ -212,3 +250,5 @@ FOLLOW-UP #343: the design harness that produced the damage tables (`curve_sim.p
 FOLLOW-UP #343: `spider_creature.xml` carries its own troop skills at the old level. Decide whether it follows the curve.
 FOLLOW-UP #343: stale skill tables in tools that are not run any more but would undo the restat if run: `tools/generate_gondor_troops.py`, `generate_rhun_troops.py`, `generate_dale_troops.py`, the `apply_*_troop_revamp.py` scripts and `apply_black_numenorean_troops.py`. Make `rebalance_troops.py` their source, or retire them.
 FOLLOW-UP #343: the ranged ladder's #1271 bow damage rows were fitted at the old Bow skills; the top bow's hit fell about 7% ([ranged-ladders.md](../features/ranged-ladders.md)). Decide whether to refit them.
+FOLLOW-UP #343: maintainer decides whether to scale the bash window. Hammerhand's knockdown chance is the Athletics lead clamped to 10 to 75 percent (`ShieldBashKnockdownService.cs:48`, unchanged); troop Athletics leads are now about two thirds of the old ones, so the bash chance between troops falls by about a third.
+FOLLOW-UP #343: `python tools/rebalance_troops.py` with no arguments defaults to `--apply` and writes (`main()`, `if not args: args = ['--apply']`). That default is older than this branch and was left as it is; decide whether a bare run should preview instead.

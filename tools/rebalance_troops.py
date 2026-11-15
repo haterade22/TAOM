@@ -915,7 +915,7 @@ def plan_fix_purpose(all_changes):
     Returns (raises from settle_purpose, [(record, finding, formula value)] still cross-kind)."""
     for c in all_changes:
         c['tie_raises'] = []
-        if c.get('external') or c['id'] in SKIP_TROOP_IDS or c.get('kit') is None or (
+        if c.get('external') or c.get('no_skills') or c['id'] in SKIP_TROOP_IDS or c.get('kit') is None or (
                 c.get('slots_only') and not (c.get('main_weapon') and c['main_weapon']['plan'].swaps)):
             c['formula'], c['new'] = c.get('new'), None
             continue
@@ -1017,9 +1017,23 @@ COPY_PREFIX = 'fow_'
 
 
 def extra_troop_paths():
-    """The second-root files that exist (troop_purpose.EXTRA_TROOP_FILES under EXTRA_ROOT_DIR)."""
-    paths = [os.path.join(EXTRA_ROOT_DIR, *rel.split('/')) for rel in tp.EXTRA_TROOP_FILES]
-    return [path for path in paths if os.path.isfile(path)]
+    """The second-root files that exist (troop_purpose.EXTRA_TROOP_FILES under EXTRA_ROOT_DIR). A
+    listed file that is missing is named, so a moved roster is not silently left off the curve."""
+    paths = []
+    for rel in tp.EXTRA_TROOP_FILES:
+        path = os.path.join(EXTRA_ROOT_DIR, *rel.split('/'))
+        if os.path.isfile(path):
+            paths.append(path)
+        else:
+            print(f"  WARNING: second troop root {rel} is listed in troop_purpose.EXTRA_TROOP_FILES "
+                  f"but not found under {EXTRA_ROOT_DIR}; it is not read")
+    return paths
+
+
+def bare_id(troop_id):
+    """A copy's campaign source id: its id without COPY_PREFIX. The id lists this tool keys by troop
+    id (SKIP_TROOP_IDS, the militia bindings, THROWN_PRIMARY_TROOP_IDS) name campaign troops."""
+    return troop_id[len(COPY_PREFIX):] if troop_id.startswith(COPY_PREFIX) else troop_id
 
 
 def file_culture(filename):
@@ -1039,15 +1053,16 @@ def copy_sources(records):
 
 
 def copy_source(troop_id, culture_attr, sources):
-    """(culture row, ladder id, ladder file token) for a second-root troop, or None outside one.
+    """(culture row, source id, ladder file token) for a second-root troop, or None outside one.
 
-    A copy fights as the campaign troop it copies, so it takes that troop's routed culture and its
-    ranged ladder line; its own level and kit set the rest. A copy whose id names no campaign troop
+    A copy fights as the campaign troop it copies, so it takes that troop's routed culture, and the
+    source id keys its ranged ladder line and the rest of its rules; its own level and kit set the
+    rest. A copy whose id names no campaign troop
     takes the troop file its culture attribute points to (copy_sources), because the second root's
     file name says no culture."""
     if sources is None:
         return None
-    bare = troop_id[len(COPY_PREFIX):] if troop_id.startswith(COPY_PREFIX) else troop_id
+    bare = bare_id(troop_id)
     source = sources['ids'].get(bare)
     if source is not None:
         return source['culture'], source['id'], file_culture(source['file'])
@@ -1072,9 +1087,10 @@ def process_file(filepath, item_classes=None, purpose=False, mounts=None, couch_
     slots_only: a second-root file in a purpose mode: only a troop whose slots the rule changes
     has its skills reordered (plan_fix_purpose).
     sources: troop id -> campaign record, for a second-root file (troop_purpose.EXTRA_TROOP_FILES).
-    A copy named fow_<id> takes that campaign troop's culture row and ranged ladder line, because
-    the file's name says no culture and the copy fights as the troop it copies; its own level and
-    its own kit set the rest (copy_source)."""
+    A copy named fow_<id> follows that campaign troop's rules: its culture row and ranged ladder
+    line, because the file's name says no culture and the copy fights as the troop it copies, and
+    its exclusion, militia row, elite bonus and thrown-primary status; its own level and its own
+    kit set the rest (copy_source)."""
     filename = os.path.basename(filepath)
     if filename in SKIP_FILES:
         return []
@@ -1118,34 +1134,41 @@ def process_file(filepath, item_classes=None, purpose=False, mounts=None, couch_
             'culture_attr': npc.get('culture', ''),
         }
 
-        if troop_id in SKIP_TROOP_IDS:
+        # A copy follows its campaign source's rule, so a copy of an excluded troop is excluded too.
+        if (bare_id(troop_id) if sources is not None else troop_id) in SKIP_TROOP_IDS:
             record.update(status='SKIPPED (excluded: creature/hand-tuned)', new=None)
             changes.append(record)
             continue
         if sources is not None:
             record['path'] = filepath
-            if skills_elem is None:
-                # The writer changes values; adding a <skills> block to a copy is not a value.
-                record.update(status='SKIPPED (second root, no <skills> block)', new=None)
-                changes.append(record)
-                continue
+        # The writer changes values; adding a <skills> block to a copy is not a value. Its slots
+        # still follow the slot rule, so the kit and the plan are read first.
+        no_skills = sources is not None and skills_elem is None
 
         # Calculate new skills
         new_skills = None
         if item_classes:
             weapon_classes = troop_weapon_classes(npc, item_classes)
             kit, swaps, detail = troop_kit_plan(npc, item_classes, fix_item0=purpose, couch_ids=couch_ids)
-            record.update(main_weapon=detail, slots_only=slots_only)
-            ladder_id, ladder_file = troop_id, filename_culture
+            record.update(main_weapon=detail, slots_only=slots_only, kit=kit, item0_swaps=swaps)
+        if no_skills:
+            record.update(status='SKIPPED (second root, no <skills> block)', new=None, no_skills=True)
+            changes.append(record)
+            continue
+        if item_classes:
+            # rule_id: the id the troop's rules are keyed by. A copy takes its campaign source's
+            # militia row, elite bonus and thrown-primary status as well as its culture row and
+            # ladder line (copy_source); its own level and kit set the rest.
+            rule_id, ladder_file = troop_id, filename_culture
             source = copy_source(troop_id, npc.get('culture', ''), sources)
             if source is not None:
-                culture, ladder_id, ladder_file = source
+                culture, rule_id, ladder_file = source
                 record['culture'] = culture
-            cells = ladder_cells(ladder_id, ladder_file, level, weapon_classes)
+            cells = ladder_cells(rule_id, ladder_file, level, weapon_classes)
             mounted, difficulty = troop_mount(npc, mounts)
-            record.update(kit=kit, item0_swaps=swaps, ladder=cells)
+            record['ladder'] = cells
             try:
-                new_skills = calculate_skills(culture, level, troop_id, kit, ladder=cells,
+                new_skills = calculate_skills(culture, level, rule_id, kit, ladder=cells,
                                               mounted=mounted, mount_difficulty=difficulty)
             except MissingCultureRow:
                 # Only --apply and --restat need the formula; main() stops those on this record.
@@ -1185,7 +1208,7 @@ def promoted_npcs_sources():
     """npcs file culture -> the culture tools/promote_borrowed_cultures.py copies it from, for each
     promoter target whose copied files include its npcs file (no 'standalone' list copies them all)."""
     import promote_borrowed_cultures as pr
-    npcs = 'characters/npcs_{c}.xml'
+    npcs = next(rel for rel, _ in pr.STANDALONE_FILES if rel.startswith('characters/npcs_'))
     return {target: cfg['src'] for target, cfg in pr.TARGETS.items()
             if 'standalone' not in cfg or npcs in cfg['standalone']}
 
@@ -1253,12 +1276,14 @@ def load_external_sources(item_classes=None, mounts=None, cultures=None):
     return records
 
 
-def load_roster(troop_files, item_classes, mounts, purpose=False, couch_ids=None):
+def load_roster(troop_files, item_classes, mounts, purpose=False, couch_ids=None, extra_paths=None):
     """Every troop record, the second root and every upgrade source outside troops/, as main()
     plans them.
 
-    The second root (extra_troop_paths, the Fords of War copies) is on the curve; in a purpose
-    mode only the slot rule reads it (process_file slots_only). An upgrade edge between the two
+    The second root (extra_paths, default extra_troop_paths(): the Fords of War copies) is on the
+    curve; in a purpose mode only the slot rule reads it (process_file slots_only), and only
+    --main-weapon-slots (couch_ids given) plans an Item0 exchange there: trunk's --fix-purpose never
+    read the second root, so it changes no equipment line in it. An upgrade edge between the two
     roots is not a clamp edge, in either direction: a copy is tuned to its own level, and a
     campaign troop is never raised for a Fords of War or Long Defeat edge.
     tools/tests/test_long_defeat_shop_skills.py reads the shop's edges instead."""
@@ -1268,9 +1293,9 @@ def load_roster(troop_files, item_classes, mounts, purpose=False, couch_ids=None
             records += process_file(filepath, item_classes=item_classes, purpose=purpose, mounts=mounts,
                                     couch_ids=couch_ids)
     sources = copy_sources(records)
-    for filepath in extra_troop_paths():
-        extra = process_file(filepath, item_classes=item_classes, purpose=purpose, mounts=mounts,
-                             couch_ids=couch_ids, slots_only=purpose, sources=sources)
+    for filepath in (extra_troop_paths() if extra_paths is None else extra_paths):
+        extra = process_file(filepath, item_classes=item_classes, purpose=purpose and couch_ids is not None,
+                             mounts=mounts, couch_ids=couch_ids, slots_only=purpose, sources=sources)
         second = {c['id'] for c in extra}
         for c in extra:
             c['upgrades'] = [u for u in c['upgrades'] if u in second]
@@ -1286,14 +1311,15 @@ def write_files(all_changes, troop_files):
 
     Final means after the monotonicity clamp, so this deliberately includes troops the formula
     skipped: a clamp only raises, so writing one cannot revert a hand-tune. External sources are
-    never written; they only feed the clamp. A villager is written into its npcs file (its record
+    never written; they only feed the clamp. Nor is a second-root copy with no <skills> block (the
+    writer adds no block). A villager is written into its npcs file (its record
     carries the path), and only its skill values change there.
     """
     by_file = defaultdict(dict)
     paths = {os.path.basename(f): f for f in troop_files}
     for c in all_changes:
         final = c.get('final')
-        if not final or c.get('external'):
+        if not final or c.get('external') or c.get('no_skills'):
             continue
         current = c['old']
         if any(current.get(s, 0) != final[s] for s in SKILL_NAMES) or any(s not in current for s in SKILL_NAMES):
@@ -1459,10 +1485,13 @@ def main():
         print(f"  {'SKIPPING' if filename in SKIP_FILES else 'Processing'} {filename}...")
     # The second root (troop_purpose.EXTRA_TROOP_FILES, the Fords of War copies): on the curve in
     # --apply and the clamp mode, the slot rule only in the purpose modes (process_file slots_only).
-    for rel in tp.EXTRA_TROOP_FILES:
+    extra_paths = extra_troop_paths()
+    for path in extra_paths:
+        rel = os.path.relpath(path, EXTRA_ROOT_DIR).replace(os.sep, '/')
         print(f"  Processing {rel} (second root{', slot rule only' if purpose else ''})...")
-    all_changes = load_roster(troop_files, item_classes, mounts, purpose=purpose, couch_ids=couch_ids)
-    troop_files = troop_files + extra_troop_paths()
+    all_changes = load_roster(troop_files, item_classes, mounts, purpose=purpose, couch_ids=couch_ids,
+                              extra_paths=extra_paths)
+    troop_files = troop_files + extra_paths
     external = [c for c in all_changes if c.get('external') or c.get('villager')]
     villagers = [c for c in external if c.get('villager')]
     print(f"Upgrade sources outside troops/: {len(external)}; {len(villagers)} villagers on the curve "
