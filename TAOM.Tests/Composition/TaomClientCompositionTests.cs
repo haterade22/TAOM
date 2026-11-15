@@ -59,6 +59,7 @@ public class TaomClientCompositionTests
         container.RegisterInstance(new HallOfFireService(Substitute.For<IHallOfFireConfigProvider>()));
         container.Register<IMomentumUIService, NullMomentumUIService>(Reuse.Singleton);
         container.Register<IRealmBordersMapViewAdapter, NullRealmBordersMapViewAdapter>(Reuse.Singleton);
+        container.Register<ICheatMenuMapViewAdapter, NullCheatMenuMapViewAdapter>(Reuse.Singleton);
         container.Register<IFieldCampOverlayAdapter, NullFieldCampOverlayAdapter>(Reuse.Singleton);
         container.Register<IFiefsNavigationElementFactory, NullFiefsNavigationElementFactory>(Reuse.Singleton);
         container.Register<IMapConversationProviderWrapper, NullMapConversationProviderWrapper>(Reuse.Singleton);
@@ -87,6 +88,7 @@ public class TaomClientCompositionTests
         Assert.IsInstanceOfType(container.Resolve<ICustomBattleFactionSelectionFactory>(), typeof(TaomFactionSelectionFactory));
         Assert.IsInstanceOfType(container.Resolve<IMomentumUIService>(), typeof(MomentumUIService));
         Assert.IsInstanceOfType(container.Resolve<IRealmBordersMapViewAdapter>(), typeof(RealmBordersMapViewAdapter));
+        Assert.IsInstanceOfType(container.Resolve<ICheatMenuMapViewAdapter>(), typeof(CheatMenuMapViewAdapter));
         Assert.IsInstanceOfType(container.Resolve<IFieldCampOverlayAdapter>(), typeof(FieldCampOverlayAdapter));
         Assert.IsInstanceOfType(container.Resolve<IFiefsNavigationElementFactory>(), typeof(TaomFiefsNavigationElementFactory));
         Assert.IsInstanceOfType(container.Resolve<IMapConversationProviderWrapper>(), typeof(HallOfFireConversationWrapper));

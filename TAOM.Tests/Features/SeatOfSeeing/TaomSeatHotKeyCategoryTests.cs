@@ -5,6 +5,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TaleWorlds.InputSystem;
 using TaleWorlds.MountAndBlade;
 using TAOM.Features.CareerSystem.Abilities;
+using TAOM.Features.CheatMenu;
 using TAOM.Features.RealmBorders.UI;
 using TAOM.Features.SeatOfSeeing;
 using TAOM.Features.TimeAcceleration;
@@ -107,6 +108,7 @@ public class TaomSeatHotKeyCategoryTests
             TaomTimeControlHotKeyCategory.FastForwardKeyId, TaomTimeControlHotKeyCategory.ExtraFastForwardKeyId,
             TaomTimeControlHotKeyCategory.TurboKeyId, TaomCareerHotKeyCategory.AbilityActivationKeyId,
             TaomRealmBordersHotKeyCategory.ToggleBordersKeyId, TaomRealmBordersHotKeyCategory.CycleMapModeKeyId,
+            TaomCheatMenuHotKeyCategory.OpenCheatMenuKeyId,
         };
 
         foreach (var id in new[] { TaomSeatHotKeyCategory.TakeTheSeatKeyId, TaomSeatHotKeyCategory.KeepToKeyId, TaomSeatHotKeyCategory.TakeThisSoldierKeyId,

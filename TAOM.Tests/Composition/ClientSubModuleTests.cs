@@ -187,6 +187,8 @@ public class ClientSubModuleTests
             typeof(TAOM.Adapters.IRealmBordersMapViewAdapter),
             typeof(TAOM.Adapters.IFieldCampOverlayAdapter),
             typeof(TAOM.Features.FiefManagement.IFiefsNavigationElementFactory),
+            typeof(TAOM.Features.CheatMenu.ICheatMenuNavigationElementFactory),
+            typeof(TAOM.Adapters.ICheatMenuMapViewAdapter),
             typeof(TAOM.Features.HallOfFire.IMapConversationProviderWrapper),
             typeof(TAOM.Features.HostReview.IHostReviewOrderProviderRegistrar),
             typeof(TAOM.Features.MarshalsWord.IMarshalOrderProviderRegistrar),
