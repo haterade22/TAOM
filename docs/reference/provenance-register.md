@@ -67,6 +67,7 @@ is ever treated as a token, which is what keeps the bare word "Alliance" from ma
 | BannerlordCoop | `BannerlordCoop` `Bannerlord-Coop-Team` `Bannerlord.Coop` | BannerlordCoop Source Available License since 2026-06-17 (no copying, distribution or use in another project without the maintainers' written permission; earlier MIT releases keep MIT) | interop-only | `Main/Features/CoopInterop/Missions/CoopMissionAuthority.cs` (binds Coop's agent registry and `CoopMissionController` by reflection; no Coop code copied); `CoopCompat/` (`TAOM.CoopCompat` compiles against Coop's `Common`, `GameInterface` and `Coop.Core` and implements its message interfaces; no Coop code copied, no Coop binary ships) | uncleared |
 | BannerlordCoop.DedicatedServer | `Bannerlord-Coop-Team/BannerlordCoop.DedicatedServer` `Bannerlord Coop LLC` | proprietary (Bannerlord Coop LLC) | interop-only | `docs/research/taom-headless-server.md` (staging and boot research read from the server repo's scripts and its staged output); `TAOM.Tests/Infrastructure/ServerLoadGateTests.cs` (reads a staged server root read-only, from `TAOM_DS_STAGE`); nothing from the repo ships and no file of it is copied | uncleared |
 | TAOM-Coop (Sternab) | `Sternab/TAOM-Coop` `TAOM.CoopCompat` | author-granted, terms informal (via the maintainer, 2026-10-21; private repo, no `LICENSE`) | behavioural-port | `Main/Features/CoopInterop/CoopPlayerControlQuery.cs`; the T6 guard in `Main/Features/TroopWeight/Hooks/PartyUpgraderUpgradeReadyTroopsHook.cs`; `CoopCompat/` (the separate module, its settings handshake and its momentum relay); `docs/research/coop-compat-gap-ledger.md` (comparison only) | cleared |
+| TAOM.CoopEmissaryArmory (minimalcash63) | `TAOM.CoopEmissaryArmory` `minimalcash63` | author-granted, terms informal (via the maintainer, 2026-11-15; no `LICENSE`) | behavioural-port | `Main/Features/CoopInterop/GuestTrade/**` `CoopCompat/GuestTrade/**` `Main/Adapters/GuestTradeHeroAdapter.cs` `Main/Adapters/IGuestTradeHeroAdapter.cs` | cleared |
 | Yotthani Harad war paint | `HaradTattoos` `tattoo_harad` | UNKNOWN | redistributed | `Main/_Module/AssetSources/tattoos/**` `Main/_Module/Assets/tattoos/**`; the entries in `Main/_Module/ModuleData/skins.xml` | uncleared |
 | Yotthani HoN mods (external developer drop) | `Features_fixed` `HoN` `yotthani/bannerlord` | MIT, (c) 2026 yotthani (the maintainer's statement of 2026-10-09; no root `LICENSE` in `yotthani/bannerlord` yet, asked for) | verbatim-port | `Main/Features/SiegeDismount/**` `Main/Features/MixedFormations/**` `Main/Features/SmartCavalryAI/**` `Main/Features/FiefManagement/**` `Main/Features/QuickActions/**` `Main/Features/EquipPresets/**` `Main/Features/CompanionTactics/**` | cleared |
 | TAOM_Promoted | `TAOM_Promoted` `RF_Promoted` | UNKNOWN | behavioural-port | `Main/Features/FieldCommission/**` | uncleared |
@@ -592,9 +593,21 @@ reading; structure, naming and decomposition are TAOM's (the provider is a refle
 interface, the guard is one early return), hence `behavioural-port`. Further ports add their paths
 to Covers. `TAOM.CoopCompat` (#967 C3) is such a port: a separate module next to TAOM, a
 settings fingerprint check at join and a War of the Ring momentum relay follow his module's
-approach. The code is TAOM's own, written for Bannerlord v1.5.7 and the Coop 1.5.x API. The repo
+approach. Guest trade (#1329) takes the request checks of his emissary relay: the hero comes from
+the sender's current connection, and every field is bounded before a hero is read. The code is TAOM's own, written for Bannerlord v1.5.7 and the Coop 1.5.x API. The repo
 also vendors the private `Bannerlord-Coop-Team/BannerlordCoop.DedicatedServer` source under
 `wrapper/`: that part is not Sternab's to grant and never enters this public repo.
+
+### TAOM.CoopEmissaryArmory (minimalcash63)
+
+minimalcash63 wrote `TAOM.CoopEmissaryArmory`, a Harmony add-on that let a co-op guest buy from the
+Elite Emissary and use the armoury through the host. The maintainer received it as a binary zip with
+the author's permission to port the code, credited to minimalcash63 (2026-11-15). TAOM read the
+decompiled add-on and reproduced its design in TAOM's own code for #1329: the host builds TAOM's
+emissary and armoury services with the guest hero's adapters, one request waits per guest, a reply
+cache answers a repeated request, and the host's balance is copied back to the guest's screen. The
+code is TAOM's: no Harmony patch on TAOM's presenters, localized text, a protocol version, and Sternab's
+request checks, hence `behavioural-port`. The add-on's test console command was not ported.
 
 ### Yotthani HoN mods, the external developer drop `Downloads/Features_fixed/`
 

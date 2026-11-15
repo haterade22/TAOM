@@ -2824,6 +2824,14 @@ The battle balance provider's new tests built `BattleBalanceConfig` objects in C
 **Prevent:** a push that skips the full suite adds `FullyQualifiedName~Composition` to its filter whenever it touches `TaomClientComposition`, `FeatureModules` or a feature module, and says in the commit body which suite ran.
 
 **Source:** `docs/reviews/rca-scenario-autorun-2026-11-15.md`
+
+### A relay test against a collaborator that refuses everything pins no field (#1329, 2026-11-15)
+
+**Why missed:** the guest trade relay test used a host that answered every request "not a free leader", so only the refusal crossed the wire. Dropping `Status`, `Balance` or the new armoury level from the reply, or swapping `Subject` and `Target` in the request, left every test green.
+
+**Prevent:** a relay or adapter between two formats gets one test per direction that asserts every field, through a collaborator that returns a full result.
+
+**Source:** `docs/reviews/rca-coop-guest-trade-2026-11-15.md` (Class 4)
 ### A plan that names a call is checked against the gates on that call's type (#1326, 2026-11-15)
 
 **Why missed:** the approved plan for the story side gate told `StoryOfferService` to call `ResolveSide(kingdom id, mission row culture)`. `SidePairScanTests` (#957) allows the two-argument call only to listed types, because a kingdom zipped with another entity's culture sides a Neutral realm wrongly. The design pass checked the entry-point and service-signature gates only, and the filtered run while building named the feature's own tests, so the first full run was the first to see it.

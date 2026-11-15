@@ -1,7 +1,9 @@
 namespace TAOM.Adapters;
 
 /// <summary>Boundary over the main hero and party (ADR-007 — keeps <c>Hero</c>, <c>MobileParty</c> and
-/// <c>CharacterObject</c> out of services): the hero id, the party's daily wage and purchased troops.</summary>
+/// <c>CharacterObject</c> out of services): the hero id, the party's daily wage and purchased troops. "Main" is the
+/// hero this adapter acts for: the main hero, or a co-op guest's hero for <c>PlayerPartyAdapter.ForHero</c>
+/// (#1329).</summary>
 public interface IPlayerPartyAdapter
 {
     /// <summary>The main hero's StringId, or null when there is no main hero.</summary>
