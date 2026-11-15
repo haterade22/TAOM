@@ -24,6 +24,20 @@ public class ShippedBattleBalanceConfigTests
         return config;
     }
 
+    // #1283: troop numbers outweigh troop quality in auto-resolve. Read from the raw JSON, because a missing key would
+    // load the compiled value and hide that the file lost it.
+    [TestMethod]
+    public void ShippedConfig_AutoResolvePowerRatioExponent_IsHalfAndMatchesTheCompiledDefault()
+    {
+        var path = Path.Combine(CultureDataFixture.ModuleDataPath(), "configs", "battle_balance_config.json");
+        var raw = Newtonsoft.Json.Linq.JObject.Parse(File.ReadAllText(path));
+
+        var shipped = (float?)raw["AutoResolve"]?["PowerRatioExponent"];
+
+        Assert.AreEqual(0.5f, shipped ?? float.NaN, 1e-6f, "the shipped file must carry the exponent");
+        Assert.AreEqual(0.5f, new BattleBalanceConfig().AutoResolve.PowerRatioExponent, 1e-6f);
+    }
+
     /// <summary>
     /// Lindon's troop tree is a clone of Rivendell's, so its parties survive like Rivendell's.
     /// </summary>
