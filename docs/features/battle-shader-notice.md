@@ -32,7 +32,7 @@ to the game thread, so only before the stop.
 
 ### Solution Approach
 
-- **Detection.** A postfix on `MissionState.OnTick` (Patch153, the same frames Patch43's
+- **Detection.** A postfix on `MissionState.OnTick` (Patch155, the same frames Patch43's
   `MissionState_OnTick_RenderWait_Patch` measures) passes "in the render wait" (`FirstMissionTickAfterLoading` and the
   mission `Continuing`) and, on a waiting frame before the notice starts, the queued count. `BattleShaderNoticeGate`
   starts the notice once per load at 50 queued or more and stops it on the first frame that is not waiting: the frame
@@ -79,9 +79,9 @@ notice closed after S s` and, when the net closes it, `[BattleShaderNotice] no s
 | `Main/Features/BattleShaderNotice/BattleShaderNoticeRunner.cs` | The window's STA thread, one run per battle load |
 | `Main/Features/BattleShaderNotice/BattleShaderNoticeTextSource.cs` | Engine boundary for the three texts |
 | `Main/Features/BattleShaderNotice/BattleShaderNoticeTexts.cs` | The texts and the runner and text-source interfaces |
-| `Main/Features/BattleShaderNotice/Hooks/MissionState_OnTick_BattleShaderNotice_Patch.cs` | Patch153: render-wait detection |
-| `Main/Features/BattleShaderNotice/Hooks/LoadingWindowViewModel_Update_BattleShaderLine_Patch.cs` | Patch153: the loading-screen line, `[ClientOnly]` |
-| `Main/Features/BattleShaderNotice/BattleShaderNoticeModule.cs` | Feature module: services, statics, Patch153 at GameInit |
+| `Main/Features/BattleShaderNotice/Hooks/MissionState_OnTick_BattleShaderNotice_Patch.cs` | Patch155: render-wait detection |
+| `Main/Features/BattleShaderNotice/Hooks/LoadingWindowViewModel_Update_BattleShaderLine_Patch.cs` | Patch155: the loading-screen line, `[ClientOnly]` |
+| `Main/Features/BattleShaderNotice/BattleShaderNoticeModule.cs` | Feature module: services, statics, Patch155 at GameInit |
 | `Main/Features/ShaderCompileNotice/ShaderCompileNoticeMode.cs` | Pure: the Startup and Battle settings of the shared window |
 | `Client/Features/ShaderCompileNotice/ShaderCompileNoticeContext.cs` | The shared window loop, driven by the mode |
 | `Main/_Module/ModuleData/taom_module_strings.xml` | `taom_battle_shader_notice_title`, `taom_battle_shader_notice_detail`, `taom_battle_shader_loading_line` |

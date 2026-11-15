@@ -5,7 +5,7 @@ using TaleWorlds.MountAndBlade;
 
 namespace TAOM.Features.BattleShaderNotice.Hooks;
 
-// Patch153: tells BattleShaderNoticeService, once per frame, whether the mission is in its render wait.
+// Patch155: tells BattleShaderNoticeService, once per frame, whether the mission is in its render wait.
 //
 // v1.5.7 MissionState.OnTick reaches TickMission only through `Handler == null || Handler.RenderIsReady()`, and
 // RenderIsReady is MissionScreen.MissionStartedRendering() -> SceneView.ReadyToRender(), false while the scene's shaders
