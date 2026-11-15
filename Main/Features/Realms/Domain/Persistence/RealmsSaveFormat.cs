@@ -36,7 +36,7 @@ public sealed class SaveReadResult
 /// <summary>
 /// The campaign save payload: one tab-separated record per line, under a versioned header.
 /// T = title, H = holder, C = claim, L = laws, D = default laws, P = pending succession, R = chronicle entry (v2),
-/// O = office and its holder (v2, \0 when vacant).
+/// O = office and its holder (v2, \0 when vacant), M = a hero's chosen primary title (hero, title).
 /// Unknown record types are skipped with a warning so later versions can add records.
 /// </summary>
 public static class RealmsSaveFormat

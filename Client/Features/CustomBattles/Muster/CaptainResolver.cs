@@ -28,11 +28,13 @@ namespace TAOM.Client.Features.CustomBattles.Muster
         /// <summary>
         /// A troop worth offering in the new Custom Battle screen (user 2026-11-07, TAOM units): defined by a non-vanilla
         /// module (TAOM reuses vanilla culture ids, so vanilla Imperial / Vlandian troops otherwise show under Dunland /
-        /// Rohan), part of a troop tree or an elite (level 21+), and not a training dummy.
+        /// Rohan), part of a troop tree or an elite (level 21+), a soldier (not a caravan guard, mercenary, bandit or
+        /// villager), not obsolete (TAOM redefines vanilla and Fords of War ids as obsolete, and the troop list hides
+        /// them), and not a training dummy.
         /// </summary>
         public static bool IsOffered(BasicCharacterObject c)
         {
-            if (c == null) return false;
+            if (c == null || !c.IsSoldier || c.IsObsolete) return false;
             Upgrades();
             var id = c.StringId;
             if (id.IndexOf("dummy", StringComparison.OrdinalIgnoreCase) >= 0 || id.IndexOf("practice", StringComparison.OrdinalIgnoreCase) >= 0
@@ -48,7 +50,7 @@ namespace TAOM.Client.Features.CustomBattles.Muster
             var all = MBObjectManager.Instance.GetObjectTypeList<BasicCharacterObject>();
             if (Upgrades().TryGetValue(unit.StringId, out var ids))
             {
-                var ups = ids.Select(id => MBObjectManager.Instance.GetObject<BasicCharacterObject>(id)).Where(c => c != null).ToList();
+                var ups = ids.Select(id => MBObjectManager.Instance.GetObject<BasicCharacterObject>(id)).Where(c => c != null && !c.IsObsolete).ToList();
                 if (ups.Count > 0)
                 {
                     var best = ups.OrderBy(c => Distance(unit, c)).ThenByDescending(c => c.Level).First();

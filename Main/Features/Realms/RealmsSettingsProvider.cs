@@ -45,10 +45,22 @@ public sealed class RealmsSettingsProvider : IRealmsSettingsProvider
     public bool LiegeArmyDiscount => Settings?.RealmsLiegeArmyDiscount ?? true;
     public bool FamilyGrants => Settings?.RealmsFamilyGrants ?? true;
     public bool TitleStyles => Settings?.RealmsTitleStyles ?? true;
+    public bool RenameOwnRealm => Settings?.RealmsRenameOwnRealm ?? true;
+    public bool RenameAiRealms => Settings?.RealmsRenameAiRealms ?? true;
+    public RealmBanner OwnRealmBanner => BannerChoice(Settings?.RealmsOwnRealmBanner?.SelectedIndex);
+    public bool AiRealmBanners => Settings?.RealmsAiRealmBanners ?? true;
 
     internal static int Cost(int? value) => SettingClamp.Clamp(value, DefaultPercent, MinCostPercent, MaxCostPercent);
 
     internal static int Payment(int? value) => SettingClamp.Clamp(value, DefaultPercent, MinPaymentPercent, MaxPaymentPercent);
 
     internal static int Tribute(int? value) => SettingClamp.Clamp(value, DefaultTributePercent, MinTributePercent, MaxTributePercent);
+
+    /// <summary>The dropdown index to a banner; the title banner for no dropdown or an unknown index.</summary>
+    internal static RealmBanner BannerChoice(int? selectedIndex) => selectedIndex switch
+    {
+        1 => RealmBanner.Own,
+        2 => RealmBanner.House,
+        _ => RealmBanner.Title,
+    };
 }

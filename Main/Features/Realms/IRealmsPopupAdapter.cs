@@ -18,7 +18,7 @@ public sealed class CoronationPopup
     public string Heading { get; }
     public string Text { get; }
 
-    /// <summary>The illustration's sprite name, or null to show the new house's banner instead.</summary>
+    /// <summary>The illustration's PNG file name in GUI/EventArt, or null to show the new house's banner instead.</summary>
     public string? Image { get; }
 
     public string Button { get; }

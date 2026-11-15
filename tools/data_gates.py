@@ -101,7 +101,10 @@ GATES = (
     Gate("xml-schemas-live", "whole live modules (Armory, TAOM_Map)", (),
          ("python", "tools/validate_xml_schemas.py", "--live"), ("tools/validate_xml_schemas.py",)),
     Gate("moduledata", "troops, characters, rosters, cultures, clans, party templates, lords, Armory refs, "
-         "TAOM_Map settlements", TROOP_GLOBS + MODULEDATA_GLOBS + ARMORY_GLOBS + MAP_GLOBS,
+         "TAOM_Map settlements", TROOP_GLOBS + MODULEDATA_GLOBS + ARMORY_GLOBS + MAP_GLOBS
+         # The enlistment rank rule lives in the generator and prices weapons with these tools (#1290).
+         + ("*tools/generate_enlistment_rosters.py", "*tools/melee_catalogue.py", "*tools/analyze_melee_ladder.py",
+            "*tools/ranged_ladder.py"),
          ("python", "tools/validate_moduledata.py"),
          (".claude/rules/moduledata-validation.md", ".claude/rules/troops.md", ".claude/rules/xml-data.md", CODES_DOC),
          note="read the warnings as well as the errors; settlement pins live in tools/settlement_assignments.json"),
@@ -178,6 +181,14 @@ GATES = (
          ARMORY_GLOBS + ARMOUR_CURVE_GLOBS + ("*tools/generate_snow_orc_armor.py",),
          ("python", "tools/generate_snow_orc_armor.py", "--check"), ("docs/features/lothlorien-snow-orcs.md",),
          note="exit 1 when the live Armory differs from the render"),
+    Gate("armour-restat", "Armory armour (values and loot tables), the curve, its roster map and the two generators",
+         ARMORY_GLOBS + ARMOUR_CURVE_GLOBS + ("*tools/data/armor_roster_tiers.json",
+                                              "*tools/generate_lothlorien_armor.py",
+                                              "*tools/generate_snow_orc_armor.py"),
+         ("python", "tools/rebalance_armor.py", "--check"), ("docs/features/armor-balance.md",),
+         note="exit 1 when the live Armory differs from the curve; after an Armory reinstall run the restat with "
+              "--apply and a backup tag (the apply sequence in the doc), and in a branch merge trunk first; "
+              "exit 2 is NOT RUN (no install)"),
     Gate("generator-refs", "XML a tools/ generator wrote", ("*tools/generate_*.py",) + ARMORY_GLOBS,
          ("python", "tools/check_generator_item_refs.py"), ("tools/README.md",),
          note="and the generator's own --verify or --check; hand-read three generated entries"),

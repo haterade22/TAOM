@@ -106,6 +106,22 @@ public class HoldTheWallsStartTests
         CollectionAssert.AreEqual(new[] { "hold:orc:22" }, _rig.Adapter.Writes, "the Free army no longer holds");
     }
 
+    // #1283: Mordor's armies take forts and then march off, so its realm holds although the Evil side does not.
+    [TestMethod]
+    public void AnEvilArmy_HoldsWhenTheConfigListsItsRealm_AndOtherEvilRealmsDoNot()
+    {
+        _rig.Hold.Factions = new List<string> { "mordor" };
+        _rig.SideOfRealm["isengard"] = FactionSide.Evil;
+        _rig.Capture("town_A", HoldTheWallsRig.Army("orc", "mordor"));
+        _rig.Capture("town_B", HoldTheWallsRig.Army("uruk", "isengard"));
+        _rig.Capture("town_C", HoldTheWallsRig.Army("man"));
+
+        _rig.Tick(0.0);
+
+        CollectionAssert.AreEquivalent(new[] { "hold:orc:22", "hold:man:22" }, _rig.Adapter.Writes,
+            "the listed realm and the listed side hold; an unlisted realm of an unlisted side does not");
+    }
+
     [TestMethod]
     public void TheSide_IsResolvedFromTheRealmsIdAndItsOwnCulture()
     {

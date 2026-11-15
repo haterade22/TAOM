@@ -122,7 +122,7 @@ public class BattleCheatPolicyTests
         Assert.IsFalse(opener.TryOpen());
         Assert.IsFalse(opener.TryOpenOnKey(() => { keyRead = true; return true; }));
         Assert.IsFalse(keyRead, "no key is read while the switch is off");
-        host.DidNotReceiveWithAnyArgs().ShowList(default!, default!);
+        host.DidNotReceiveWithAnyArgs().ShowList(default!, default, default!);
     }
 
     [TestMethod]
@@ -136,7 +136,7 @@ public class BattleCheatPolicyTests
         Assert.IsFalse(opener.TryOpen());
         Assert.IsFalse(opener.TryOpenOnKey(() => { keyRead = true; return true; }));
         Assert.IsFalse(keyRead);
-        host.DidNotReceiveWithAnyArgs().ShowList(default!, default!);
+        host.DidNotReceiveWithAnyArgs().ShowList(default!, default, default!);
     }
 
     [TestMethod]
@@ -148,9 +148,9 @@ public class BattleCheatPolicyTests
         Assert.IsTrue(opener.TryOpen());
         host.Received(1).ShowList(Arg.Is<IReadOnlyList<BattleCheatAction>>(a => a.SequenceEqual(new[]
         {
-            BattleCheatAction.HealSelf, BattleCheatAction.HealSide, BattleCheatAction.Rout, BattleCheatAction.Kill,
-            BattleCheatAction.SpawnAllies, BattleCheatAction.SpawnEnemies,
-        })), Arg.Any<Action<BattleCheatAction>>());
+            BattleCheatAction.HealSelf, BattleCheatAction.HealSide, BattleCheatAction.GodMode, BattleCheatAction.Rout,
+            BattleCheatAction.Kill, BattleCheatAction.SpawnAllies, BattleCheatAction.SpawnEnemies,
+        })), false, Arg.Any<Action<BattleCheatAction>>());
     }
 
     [TestMethod]
@@ -159,7 +159,7 @@ public class BattleCheatPolicyTests
         var (opener, _, _, host, _) = Opener();
 
         Assert.IsFalse(opener.TryOpenOnKey(() => false));
-        host.DidNotReceiveWithAnyArgs().ShowList(default!, default!);
+        host.DidNotReceiveWithAnyArgs().ShowList(default!, default, default!);
     }
 
     [TestMethod]
@@ -168,7 +168,7 @@ public class BattleCheatPolicyTests
         var (opener, _, _, host, _) = Opener();
 
         Assert.IsTrue(opener.TryOpenOnKey(() => true));
-        host.ReceivedWithAnyArgs(1).ShowList(default!, default!);
+        host.ReceivedWithAnyArgs(1).ShowList(default!, default, default!);
     }
 
     [TestMethod]
@@ -176,8 +176,8 @@ public class BattleCheatPolicyTests
     {
         var (opener, _, _, host, battle) = Opener();
         Action<BattleCheatAction>? onPicked = null;
-        host.When(h => h.ShowList(Arg.Any<IReadOnlyList<BattleCheatAction>>(), Arg.Any<Action<BattleCheatAction>>()))
-            .Do(call => onPicked = call.ArgAt<Action<BattleCheatAction>>(1));
+        host.When(h => h.ShowList(Arg.Any<IReadOnlyList<BattleCheatAction>>(), Arg.Any<bool>(), Arg.Any<Action<BattleCheatAction>>()))
+            .Do(call => onPicked = call.ArgAt<Action<BattleCheatAction>>(2));
         battle.HealMainAgent().Returns(1);
 
         opener.TryOpen();
@@ -185,5 +185,119 @@ public class BattleCheatPolicyTests
 
         battle.Received(1).HealMainAgent();
         host.Received(1).ShowOutcome(BattleCheatAction.HealSelf, Arg.Is<CheatOutcome>(o => o.Kind == CheatOutcomeKind.Done && o.Number == 1));
+    }
+
+    [TestMethod]
+    public void Opener_GodModeOn_TheListShowsItOn()
+    {
+        var (opener, _, _, host, battle) = Opener();
+        battle.GodModeTargets().Returns(new[] { new GodModeAgent(7, AgentMortality.Mortal) });
+        opener.Pick(BattleCheatAction.GodMode);
+
+        opener.TryOpen();
+
+        host.Received(1).ShowList(Arg.Any<IReadOnlyList<BattleCheatAction>>(), true, Arg.Any<Action<BattleCheatAction>>());
+    }
+
+    // ---- god mode plan ----
+
+    private static int[] Ids(IEnumerable<GodModeAgent> agents) => agents.Select(a => a.Index).ToArray();
+
+    private static GodModeAgent Mortal(int i) => new(i, AgentMortality.Mortal);
+
+    private static GodModeAgent Immortal(int i) => new(i, AgentMortality.Immortal);
+
+    private static GodModeAgent Invulnerable(int i) => new(i, AgentMortality.Invulnerable);
+
+    [TestMethod]
+    public void PlanGodMode_OnRiderAndHorse_ProtectsAndHoldsBoth()
+    {
+        var plan = BattleCheatPolicy.PlanGodMode(true, new[] { Mortal(1), Mortal(2) }, Array.Empty<GodModeAgent>());
+
+        CollectionAssert.AreEqual(new[] { 1, 2 }, Ids(plan.Protect));
+        Assert.AreEqual(0, plan.Release.Count);
+        CollectionAssert.AreEqual(new[] { 1, 2 }, Ids(plan.Held));
+    }
+
+    [TestMethod]
+    public void PlanGodMode_OnAlreadyHeld_NothingToDoAndStillHeld()
+    {
+        var plan = BattleCheatPolicy.PlanGodMode(true, new[] { Immortal(1), Immortal(2) }, new[] { Immortal(1), Immortal(2) });
+
+        Assert.AreEqual(0, plan.Protect.Count);
+        Assert.AreEqual(0, plan.Release.Count);
+        CollectionAssert.AreEqual(new[] { 1, 2 }, Ids(plan.Held));
+    }
+
+    [TestMethod]
+    public void PlanGodMode_Off_ReleasesEveryHeldAgent()
+    {
+        var plan = BattleCheatPolicy.PlanGodMode(false, new[] { Immortal(1), Immortal(2) }, new[] { Immortal(1), Immortal(2) });
+
+        Assert.AreEqual(0, plan.Protect.Count);
+        CollectionAssert.AreEqual(new[] { 1, 2 }, Ids(plan.Release));
+        Assert.AreEqual(0, plan.Held.Count);
+    }
+
+    [TestMethod]
+    public void PlanGodMode_NewHorse_ProtectsTheNewOneAndReleasesTheOldOne()
+    {
+        var plan = BattleCheatPolicy.PlanGodMode(true, new[] { Immortal(1), Mortal(3) }, new[] { Immortal(1), Immortal(2) });
+
+        CollectionAssert.AreEqual(new[] { 3 }, Ids(plan.Protect));
+        CollectionAssert.AreEqual(new[] { 2 }, Ids(plan.Release));
+        CollectionAssert.AreEquivalent(new[] { 1, 3 }, Ids(plan.Held));
+    }
+
+    [TestMethod]
+    public void PlanGodMode_Dismounted_ReleasesTheHorseKeepsTheRider()
+    {
+        var plan = BattleCheatPolicy.PlanGodMode(true, new[] { Immortal(1) }, new[] { Immortal(1), Immortal(2) });
+
+        CollectionAssert.AreEqual(new[] { 2 }, Ids(plan.Release));
+        CollectionAssert.AreEqual(new[] { 1 }, Ids(plan.Held));
+    }
+
+    [DataTestMethod]
+    [DataRow(AgentMortality.Invulnerable, DisplayName = "game made it invulnerable")]
+    [DataRow(AgentMortality.Immortal, DisplayName = "game made it immortal")]
+    public void PlanGodMode_TheGamesOwnFlag_IsNeverTakenOverNorUndone(AgentMortality games)
+    {
+        var on = BattleCheatPolicy.PlanGodMode(true, new[] { new GodModeAgent(1, games) }, Array.Empty<GodModeAgent>());
+        Assert.AreEqual(0, on.Protect.Count);
+        Assert.AreEqual(0, on.Held.Count, "an agent god mode did not change is not held, so turning off never touches it");
+
+        var off = BattleCheatPolicy.PlanGodMode(false, new[] { new GodModeAgent(1, games) }, Array.Empty<GodModeAgent>());
+        Assert.AreEqual(0, off.Release.Count);
+    }
+
+    [DataTestMethod]
+    [DataRow(AgentMortality.Mortal, DisplayName = "set back to mortal")]
+    [DataRow(AgentMortality.Invulnerable, DisplayName = "made invulnerable")]
+    public void PlanGodMode_HeldAgentSomethingElseChanged_DroppedAndNotTouched(AgentMortality now)
+    {
+        var plan = BattleCheatPolicy.PlanGodMode(false, Array.Empty<GodModeAgent>(), new[] { new GodModeAgent(2, now) });
+
+        Assert.AreEqual(0, plan.Release.Count);
+        Assert.AreEqual(0, plan.Held.Count);
+    }
+
+    [TestMethod]
+    public void PlanGodMode_HeldInvulnerableTarget_NotTakenBack()
+    {
+        // The game made the held rider Invulnerable meanwhile: god mode neither releases nor re-protects it.
+        var plan = BattleCheatPolicy.PlanGodMode(true, new[] { Invulnerable(1) }, new[] { Invulnerable(1) });
+
+        Assert.AreEqual(0, plan.Protect.Count);
+        Assert.AreEqual(0, plan.Release.Count);
+        Assert.AreEqual(0, plan.Held.Count);
+    }
+
+    [TestMethod]
+    public void PlanGodMode_OnWithNoMainAgent_NothingToDo()
+    {
+        var plan = BattleCheatPolicy.PlanGodMode(true, Array.Empty<GodModeAgent>(), Array.Empty<GodModeAgent>());
+
+        Assert.AreEqual(0, plan.Protect.Count + plan.Release.Count + plan.Held.Count);
     }
 }

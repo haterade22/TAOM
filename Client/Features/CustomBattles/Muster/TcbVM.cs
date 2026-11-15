@@ -24,15 +24,13 @@ namespace TAOM.Client.Features.CustomBattles.Muster
     /// </summary>
     public class TcbVM : ViewModel
     {
-        private readonly Action _close;
         private string _status = "";
         private bool _fieldTab;
         private TcbSideVM _active = null!;   // set in the constructor through Activate
 
         /// <param name="kingdomBanners">Culture id to its kingdom's banner code (IBannerConfigProvider), each army's first banner.</param>
-        public TcbVM(Action close, IReadOnlyDictionary<string, string>? kingdomBanners = null)
+        public TcbVM(IReadOnlyDictionary<string, string>? kingdomBanners = null)
         {
-            _close = close;
             var factions = CustomBattleData.Factions.Where(f => f != null).ToList();
             Player = new TcbSideVM("Your army", true, factions, 0, OnChanged, Activate, kingdomBanners);
             Enemy = new TcbSideVM("Enemy army", false, factions, factions.Count > 1 ? 1 : 0, OnChanged, Activate, kingdomBanners);
@@ -52,7 +50,6 @@ namespace TAOM.Client.Features.CustomBattles.Muster
         [DataSourceProperty] public string StartText => "START BATTLE";
         [DataSourceProperty] public string BackText => "BACK";
         [DataSourceProperty] public string RandomText => "RANDOMISE";
-        [DataSourceProperty] public string OldScreenText => "OLD SCREEN";
         [DataSourceProperty] public bool IsArmiesTab => !_fieldTab;
         [DataSourceProperty] public bool IsFieldTab => _fieldTab;
         private int Sum => (Player?.Total ?? 0) + (Enemy?.Total ?? 0);
@@ -91,7 +88,6 @@ namespace TAOM.Client.Features.CustomBattles.Muster
         public void ExecuteArmiesTab() { _fieldTab = false; OnPropertyChanged(nameof(IsArmiesTab)); OnPropertyChanged(nameof(IsFieldTab)); }
         public void ExecuteFieldTab() { _fieldTab = true; OnPropertyChanged(nameof(IsArmiesTab)); OnPropertyChanged(nameof(IsFieldTab)); }
         public void ExecuteBack() => Game.Current?.GameStateManager?.PopState(0);
-        public void ExecuteUseOldScreen() => _close?.Invoke();
         public void ExecuteRandomise() => Active?.Randomise(ArmySpec.MaxTroops - (Sum - (Active?.Total ?? 0)));
 
         public void ExecuteStart()
@@ -481,7 +477,6 @@ namespace TAOM.Client.Features.CustomBattles.Muster
 
         public void ExecuteEditColor1() { _paletteFor = 1; _iconsOpen = false; TcbSwatchVM.MarkCurrent(Palette, _color1); NotifyPopups(); }
         public void ExecuteEditColor2() { _paletteFor = 2; _iconsOpen = false; TcbSwatchVM.MarkCurrent(Palette, _color2); NotifyPopups(); }
-        public void ExecuteClosePalette() { _paletteFor = 0; NotifyPopups(); }
 
         public void ExecuteOpenIcons()
         {
@@ -490,8 +485,6 @@ namespace TAOM.Client.Features.CustomBattles.Muster
             if (Icons.Count == 0 && IconGroups.Count > 0) IconGroups[0].ExecuteSelect();
             NotifyPopups();
         }
-
-        public void ExecuteCloseIcons() { _iconsOpen = false; NotifyPopups(); }
 
         private void FillIcons(BannerIconGroup g)
         {

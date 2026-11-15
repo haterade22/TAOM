@@ -35,43 +35,6 @@ public sealed class TitleTreeNode
 }
 
 /// <summary>
-/// How the popup lays out one title's vassals to keep the tree narrow: vassals with vassals of their own are drawn as
-/// branches side by side, and the rest (leaves) are packed into columns of compact rows placed after the branches.
-/// </summary>
-public static class TitleTreeLayout
-{
-    public const int RowsPerStack = 5;
-
-    /// <summary>
-    /// Splits <paramref name="children"/> into branches and stacks, each in the given order. Leaves fill as few stacks as
-    /// <paramref name="rowsPerStack"/> allows, evened out so 6 leaves make two stacks of 3 rather than 5 and 1.
-    /// </summary>
-    public static (IReadOnlyList<TitleTreeNode> Branches, IReadOnlyList<IReadOnlyList<TitleTreeNode>> Stacks) Split(
-        IReadOnlyList<TitleTreeNode> children, int rowsPerStack = RowsPerStack)
-    {
-        if (rowsPerStack < 1)
-            throw new ArgumentOutOfRangeException(nameof(rowsPerStack));
-        var branches = children.Where(c => c.Children.Count > 0).ToList();
-        var leaves = children.Where(c => c.Children.Count == 0).ToList();
-        var stacks = new List<IReadOnlyList<TitleTreeNode>>();
-        if (leaves.Count == 0)
-            return (branches, stacks);
-
-        var count = (leaves.Count + rowsPerStack - 1) / rowsPerStack;
-        var size = leaves.Count / count;
-        var larger = leaves.Count % count;
-        var at = 0;
-        for (var i = 0; i < count; i++)
-        {
-            var take = size + (i < larger ? 1 : 0);
-            stacks.Add(leaves.GetRange(at, take));
-            at += take;
-        }
-        return (branches, stacks);
-    }
-}
-
-/// <summary>
 /// The whole de jure tree around one title: from its highest liege down to every castle and town. Village lordships are
 /// folded into a count on their castle or town, except under the one holding the focus (the focus itself or one of its
 /// lordships), so the focus is always drawn. Vassals are ordered highest rank first, then by base name.

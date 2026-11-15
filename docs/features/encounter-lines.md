@@ -111,7 +111,7 @@ No gate. The patches skip nothing and write only local conversation text variabl
 
 ## How to verify in game
 
-In-game check owed; none of these has been run. No `taom.*` command drives these beats, so every result is one only a person can see, read from the conversation text, plus the log check in step 9.
+In-game check owed; none of these has been run. No `taom.*` command drives these beats, so every result is one only a person can see, read from the conversation text, plus the log check in step 10.
 
 **Preconditions:** a TAOM campaign, MCM "World/Encounter Lines" on, no restart needed.
 
@@ -122,14 +122,16 @@ In-game check owed; none of these has been run. No `taom.*` command drives these
 5. Meet several caravans and villager parties for the first time, then rob one. Check: about half greet in their people's voice, and the surrender line is TAOM's. This proves the `UpdateCurrentSentenceText` postfix runs. If the surrender and hideout boss lines stay vanilla while the greetings are TAOM's, the seam postfix did not run: check the log for the Patch149 apply and any `[EncounterLines]` warning; if the patch applied, move the seam to the `CurrentSentenceText` getter or to `ProcessSentence`.
 6. Get robbed by Feral Orcs or looters several times (about 80% TAOM) and by a Bandit Voices clan (about 50%). Attack a bandit party for the greeting, and assault a hideout for the boss's challenge.
 7. Take a lord's yield after a field battle and release him. Check: TAOM lines in the field, vanilla inside a settlement.
-8. Switch the setting off. Check: every line is vanilla.
-9. Log check, with the switch on after the first conversation: `rgl_log` has no `ERROR: Text with id` line and no `[EncounterLines]` warning, shows `EncounterGroupsConfigProvider: Loaded encounter_groups.json (...)`, and has no other `EncounterGroupsConfigProvider:` warning. Grep for both prefixes; the config loader does not use the `[EncounterLines]` one, and with the switch off it reads nothing.
+8. As a Neutral (Khand or Umbar) player at peace, get robbed by a Gondor soldiers band and a Rhûn raiders band, and assault a Gondor soldiers hideout. Check: no line calls you an enemy (#1281).
+9. Switch the setting off. Check: every line is vanilla.
+10. Log check, with the switch on after the first conversation: `rgl_log` has no `ERROR: Text with id` line and no `[EncounterLines]` warning, shows `EncounterGroupsConfigProvider: Loaded encounter_groups.json (...)`, and has no other `EncounterGroupsConfigProvider:` warning. Grep for both prefixes; the config loader does not use the `[EncounterLines]` one, and with the switch off it reads nothing.
 
 ## Changelog
 
 - 2026-11-13: first version (Patch149).
 - 2026-11-13: follow-up to the merged review: kin greetings and farewells step aside at war; the orc ally greeting, three foe greetings and six bandit lines no longer claim a side or an act the listener may not have; the hideout rows for looters are removed (looters never hold a hideout); the text seam's postfix is run in tests; the voice, animation, settlement and displacement notes above.
 - 2026-11-13: review fixes: the hideout boss speaks for the clan of his own party (the hideout's map faction only when that reads nothing); notables are no longer described as lords; the bucket greeting's `_1` and `_2` split evenly.
+- 2026-11-15 (#1281): nine bandit foe lines of the Gondor soldiers and Rhûn raiders no longer call the listener an enemy, because bandits take the foe bucket at peace too and a Neutral player hears them. CNs, CNt, JP, KO and RU hold the new English; BR, DE, FR, IT, PL, SP and TR still hold the old English for these nine keys, and the translator never picks up a row that holds an old English text.
 
 ## GitHub Issue
 

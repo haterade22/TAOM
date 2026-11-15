@@ -531,7 +531,7 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
 
     [SettingPropertyGroup("AI Strategic Intelligence")]
     [SettingPropertyBool("Good armies hold captured forts", Order = 8, RequireRestart = false,
-        HintText = "When an AI army of a Free realm takes a town or castle by siege, it stays inside for about 22 hours (12 to 30: longer for a Calculating lord, shorter for a Valorous one) instead of the 10 the game gives. It leaves early if the fortress is besieged, its cohesion drops below 40 or it has less than a day of food, but holds are not saved: after loading a save a running hold cannot end early and runs to its end. Evil realms and (by default) Neutral ones keep rolling on. Single-player only. Needs AI Strategic Intelligence on. Default: on.")]
+        HintText = "When an AI army of a Free realm takes a town or castle by siege, it stays inside for about 22 hours (12 to 30: longer for a Calculating lord, shorter for a Valorous one) instead of the 10 the game gives. It leaves early if the fortress is besieged, its cohesion drops below 40 or it has less than a day of food, but holds are not saved: after loading a save a running hold cannot end early and runs to its end. Mordor's armies hold too; other Evil realms and (by default) Neutral ones keep rolling on. Single-player only. Needs AI Strategic Intelligence on. Default: on.")]
     public bool HoldCapturedForts { get; set; } = true;
 
     // --- Time Acceleration ---
@@ -2936,6 +2936,27 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
     [SettingPropertyBool("{=taom_realms_mcm_title_styles}Lords Styled by Their Titles", Order = 12, RequireRestart = false,
         HintText = "{=taom_realms_mcm_title_styles_hint}When on, lord parties and the name above a conversation carry the lord's style and title, such as Steward Denethor of Gondor. When off, they show the plain name; the encyclopedia still lists every title. Party names change within an in-game hour. Default: on.")]
     public bool RealmsTitleStyles { get; set; } = true;
+
+    [SettingPropertyGroup("World/Realms")]
+    [SettingPropertyBool("{=taom_realms_mcm_rename_own}Your Realm Takes Your Title's Name", Order = 13, RequireRestart = false,
+        HintText = "{=taom_realms_mcm_rename_own_hint}When on, a realm you rule is named after the higher title you hold, as Erebor becomes Durin's Folk, and takes its own name back when you lose that title. When off, your realm keeps its own name; one already renamed takes it back within a day. Default: on.")]
+    public bool RealmsRenameOwnRealm { get; set; } = true;
+
+    [SettingPropertyGroup("World/Realms")]
+    [SettingPropertyBool("{=taom_realms_mcm_rename_ai}AI Realms Take Their Titles' Names", Order = 14, RequireRestart = false,
+        HintText = "{=taom_realms_mcm_rename_ai_hint}When on, a realm ruled by an AI lord is named after the higher title its ruler holds. When off, every such realm keeps its own name; one already renamed takes it back within a day. Default: on.")]
+    public bool RealmsRenameAiRealms { get; set; } = true;
+
+    [SettingPropertyGroup("World/Realms")]
+    [SettingPropertyDropdown("{=taom_realms_mcm_own_banner}Your Realm's Banner", Order = 15, RequireRestart = false,
+        HintText = "{=taom_realms_mcm_own_banner_hint}The banner of a realm you rule. Title banner (default): the banner of your primary title when it has one, such as the Kingdom of Gondor's, else the realm's own. Realm's own banner: the realm keeps the banner it has; a realm you founded keeps the banner you made. Your house banner: the realm flies your clan's own banner on its towns, in battle and on the clan screen, even a realm you inherit, and follows when you edit it. Your parties on the map fly your house banner either way. Only the title banner choice lets a coronation give your clan and realm the crowned house's banner. Changes show within a day.")]
+    public Dropdown<string> RealmsOwnRealmBanner { get; set; } = new Dropdown<string>(
+        new[] { "Title banner", "Realm's own banner", "Your house banner" }, 0);
+
+    [SettingPropertyGroup("World/Realms")]
+    [SettingPropertyBool("{=taom_realms_mcm_ai_banners}AI Realms Fly Title Banners", Order = 16, RequireRestart = false,
+        HintText = "{=taom_realms_mcm_ai_banners_hint}When on, a realm ruled by an AI lord flies the banner of its ruler's primary title when it has one. When off, every such realm keeps its own banner; one already changed takes it back within a day. Default: on.")]
+    public bool RealmsAiRealmBanners { get; set; } = true;
 
     // --- Provender-master (docs/features/provender.md, #908) ---
     //

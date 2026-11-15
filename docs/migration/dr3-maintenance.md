@@ -204,7 +204,7 @@ Process:
 
 To preserve compatibility with third-party Bannerlord mods that declare `<DependedModule Id="Bannerlord.Harmony"/>` (or `.ButterLib` / `.UIExtenderEx` / `.MBOptionScreen`) in their `SubModule.xml`, TAOM.Dependencies ships **four passive stub modules** at the standard BUTR IDs.
 
-Each stub is a single ~20-line `SubModule.xml` deployed to `Modules/<ID>/SubModule.xml`, for the four standard BUTR IDs: `Bannerlord.Harmony`, `Bannerlord.UIExtenderEx`, `Bannerlord.ButterLib`, `Bannerlord.MBOptionScreen`. Their `<Version>` values are NOT listed here — read `Stubs/<ID>/_Module/SubModule.xml`, and see the v99 rule below for how each is derived.
+Each stub is a single `SubModule.xml` (mostly comments; `wc -l Stubs/*/_Module/SubModule.xml` prints the sizes) deployed to `Modules/<ID>/SubModule.xml`, for the four standard BUTR IDs: `Bannerlord.Harmony`, `Bannerlord.UIExtenderEx`, `Bannerlord.ButterLib`, `Bannerlord.MBOptionScreen`. Their `<Version>` values are NOT listed here: read `Stubs/<ID>/_Module/SubModule.xml`, and see the v99 rule below for how each is derived.
 
 Source files live in `Stubs/<ID>/_Module/SubModule.xml`. Two paths put them in a Modules folder, and both drop the `_Module/` segment, because the launcher reads only `Modules/<dir>/SubModule.xml` (v1.5.7 `ModuleHelper.GetPhysicalModules`, one level deep) and never sees a stub inside `_Module/` (#969):
 
@@ -314,7 +314,7 @@ In a co-op session the `[PatchShield] shield pass` line is absent by design — 
 
 ### External Bannerlord.Harmony module conflict (HIGH)
 
-**Symptom:** User has the external standalone `Bannerlord.Harmony` module (e.g., from Steam Workshop) installed in `Modules/Bannerlord.Harmony/` AND TAOM.Dependencies's stub module is also deployed to the same path.
+**Symptom:** User has the external standalone `Bannerlord.Harmony` module installed (from the Steam Workshop, in the Workshop content folder, or copied by hand into `Modules/Bannerlord.Harmony/`) AND TAOM.Dependencies's stub module is deployed to `Modules/Bannerlord.Harmony/`.
 
 **Risk:** Two modules claim one id. The stub at `Modules/<ID>/SubModule.xml` does not overwrite a Workshop module's manifest, which lives in the Workshop content folder. `ModuleHelper.InitializeModules` (v1.5.7) lists the `Modules/` folders (`GetPhysicalModules`) before the Workshop ones (`GetPlatformModules`) and takes the first module per id, so the game loads the stub, and with it TAOM's bundled library versions; the Workshop copy is ignored. A real BUTR module copied into `Modules/<ID>/` by hand is overwritten by a dev deploy. How the vanilla launcher and BLSE's launcher list two modules with one id is not verified.
 
