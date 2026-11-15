@@ -1795,7 +1795,7 @@
 
   <Career id="axe_warden_of_beorns_hall" rank1_name="{=taom_career_rank1_axe_warden_of_beorns_hall}Vale Axeman" rank2_name="{=taom_career_rank2_axe_warden_of_beorns_hall}Axe-warden of Beorn's Hall" rank3_name="{=taom_career_rank3_axe_warden_of_beorns_hall}Champion of the Carrock"
           display_name="{=taom_career_axe_warden_of_beorns_hall}Axe-warden of Beorn's Hall"
-          description="{=taom_career_axe_warden_of_beorns_hall_desc}A broad-shouldered axeman of the House of Beorn who holds the fords and passes of the Vales against goblin and wolf alike."
+          description="{=taom_career_axe_warden_of_beorns_hall_desc}A broad-shouldered axeman of the Beornings who holds the fords and passes of the Vales against goblin and wolf alike."
           portrait_sprite="career_dale_guardsman_portrait"
           ability_template_id="axe_warden_of_beorns_hall_ability"
           ability_sprite="dale_guardsman_ability"

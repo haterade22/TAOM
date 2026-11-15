@@ -2052,7 +2052,7 @@
         "string_id": "taom_youth_angaladh_1",
         "culture_id": "angaladh",
         "title_type": "guard",
-        "text": "Ran dispatches for King Ingomar.",
+        "text": "Ran dispatches for King Theodemiro.",
         "description": "You carried the king's word between Woodmen-town and the outlying holds, running the forest trails from hold to hold.",
         "skills": ["Riding", "Polearm"],
         "attribute": "Endurance",

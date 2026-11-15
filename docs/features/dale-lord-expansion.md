@@ -23,7 +23,7 @@ Pure data, written once by `tools/oneoff/author_dale_lords.py` (a finished one-o
 - **Bowmen:** they carry the `a` or `b` equipment roster, the only Dale battle rosters with a bow.
 - **Faces:** each new lord's face is a vanilla Vlandian or Imperial lord face that `lords.xslt` replaces, so no campaign character wears it. Whether they read as Bardings needs an in-game look.
 - **Banner:** all five clans fly the Dale banner key that clans 2 to 9 use.
-- **Custom Battle:** `custom_battle_commanders.json` curates three Dale commanders: `lord_S10_1` Halvard, `lord_S11_1` Ketil and `lord_S13_1` Starkad.
+- **Custom Battle:** `custom_battle_commanders.json` curates three Dale commanders: `lord_S10_1` Landroi, `lord_S11_1` Sigtrygg and `lord_S13_1` Arne.
 - **Marker blocks:** the Dale block sits in front of the Arthedain generator's block in `clans.xml`, `lords.xml` and `heroes.xml`. Since #947 `generate_new_faction_kingdoms.py` replaces its block where it stands, so the order no longer matters to a re-run.
 - **Castles:** after the deploy, `python tools/Assign-SettlementOwners.py --apply` seats Dale by the tool's own distribution (`castle_S1` clan 11, `castle_S2` clan 5, `castle_S3` clan 12, `castle_S4` clan 10, `castle_S5` clan 6, `castle_S6` clan 8, `castle_S7` clan 9; towns unchanged). 12 of the 14 clans hold one fief. The tool is again the record of Dale's owners.
 
@@ -33,11 +33,11 @@ Pure data, written once by `tools/oneoff/author_dale_lords.py` (a finished one-o
 
 | Clan | Name | Tier | Initial home |
 |------|------|------|--------------|
-| `clan_sturgia_10` | House of the Running River | 4 | `castle_S4` |
-| `clan_sturgia_11` | House of the Carnen | 4 | `castle_S1` |
-| `clan_sturgia_12` | House of Ravenhill | 3 | `castle_S3` |
-| `clan_sturgia_13` | House of the Forest River | 3 | `town_S4` |
-| `clan_sturgia_14` | House of the Long Marshes | 3 | `town_S5` |
+| `clan_sturgia_10` | Falkes | 4 | `castle_S4` |
+| `clan_sturgia_11` | Calmar | 4 | `castle_S1` |
+| `clan_sturgia_12` | Macher | 3 | `castle_S3` |
+| `clan_sturgia_13` | Foriking | 3 | `town_S4` |
+| `clan_sturgia_14` | Hill | 3 | `town_S5` |
 
 The home column is a starting value only: the engine re-picks every clan's home settlement weekly. The initial homes match what `tools/Assign-SettlementOwners.py` seats for Dale.
 
@@ -102,12 +102,13 @@ The XML is the source of truth and the generator is retired. A future change edi
 - Faces need an in-game look (see Architecture).
 - The 27 new heroes have no biography text; the 55 vanilla-derived Dale heroes get one from `heroes.xslt`.
 - The new clans reuse the party templates of clans 1, 4, 2, 3 and 6 and the shared Dale banner. A heraldry pass owes both.
-- The new names are translated in all 12 languages (2026-11-12, #763).
+- The names were translated in all 12 languages (2026-11-12, #763); the 2026-11-15 rename leaves those translations stale until the next translation pass.
 - New campaign only.
 - In-game check owed.
 
 ## Changelog
 
+- 2026-11-15 (no issue): all 14 clans and their lords take Realms in Exile names, the royal house included. The king is now Brand of the Barding house; Girion of the Wolffort house is named for the last lord of old Dale. Ids and keys are unchanged; the translations of the renamed keys are stale until the next translation pass.
 - 2026-10-20: five clans and 27 lords added, `clan_sturgia_8` and `_9` raised to tier 3, Dale's castle distribution moved into `Assign-SettlementOwners.py`.
 
 ## GitHub Issue

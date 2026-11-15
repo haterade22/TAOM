@@ -2090,8 +2090,8 @@
     {
         "string_id": "taom_parent_anduinvale_1",
         "culture_id": "anduinvale",
-        "text": "House of Beorn",
-        "description": "Your family belonged to the House of Beorn, kin and companions to Grimbeorn, carrying great axes in the hall of Beorn and riding the sturdy ponies of the Vales wherever the chieftain's word sent them.",
+        "text": "The Beornings",
+        "description": "Your family belonged to the Beornings, kin and companions to Grimbeorn, carrying great axes in the hall of Beorn and riding the sturdy ponies of the Vales wherever the chieftain's word sent them.",
         "skills": ["TwoHanded", "Riding"],
         "attribute": "Vigor",
         "focus_to_add": 1,
@@ -2162,8 +2162,8 @@
     {
         "string_id": "taom_parent_angaladh_1",
         "culture_id": "angaladh",
-        "text": "House of Angáladh",
-        "description": "Your family belonged to the House of Angáladh, kin to King Ingomar, bearing great axes in his hall at Woodmen-town and leading the forest levies along the Forest Road.",
+        "text": "Waldanding",
+        "description": "Your family belonged to the Waldandings, kin to King Theodemiro, bearing great axes in his hall at Woodmen-town and leading the forest levies along the Forest Road.",
         "skills": ["TwoHanded", "Riding"],
         "attribute": "Vigor",
         "focus_to_add": 1,
@@ -2210,7 +2210,7 @@
     {
         "string_id": "taom_parent_angaladh_5",
         "culture_id": "angaladh",
-        "text": "Woodwards of the Forest Road",
+        "text": "Meroaging",
         "description": "Your family were woodwards of the Forest Road, walking its length with bow and hatchet to keep the way open and the spiders back. Few thanked them, but the road stayed passable.",
         "skills": ["Scouting", "Bow"],
         "attribute": "Control",
@@ -2234,8 +2234,8 @@
     {
         "string_id": "taom_parent_dorwinion_1",
         "culture_id": "dorwinion",
-        "text": "Household of King Ostric",
-        "description": "Your family served in the hall of King Ostric at Vineholm, riding in his household and carrying his word along the river roads wherever the vintage and the realm required it.",
+        "text": "Household of King Hawin",
+        "description": "Your family served in the hall of King Hawin at Vineholm, riding in his household and carrying his word along the river roads wherever the vintage and the realm required it.",
         "skills": ["TwoHanded", "Riding"],
         "attribute": "Vigor",
         "focus_to_add": 1,
@@ -2306,8 +2306,8 @@
     {
         "string_id": "taom_parent_southrhovanion_1",
         "culture_id": "southrhovanion",
-        "text": "Retainers of King Vidumar",
-        "description": "Your family served in the hall of King Vidumar at Vidugard, riding in his household and carrying his spear wherever the plains required it.",
+        "text": "Retainers of King Suniefredo",
+        "description": "Your family served in the hall of King Suniefredo at Vidugard, riding in his household and carrying his spear wherever the plains required it.",
         "skills": ["TwoHanded", "Riding"],
         "attribute": "Vigor",
         "focus_to_add": 1,
