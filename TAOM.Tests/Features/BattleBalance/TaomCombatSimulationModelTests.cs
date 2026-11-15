@@ -74,4 +74,22 @@ public class TaomCombatSimulationModelTests
         // Assert
         Assert.AreEqual(expected, result, 0.001f);
     }
+
+    // Wiring only (#1283): the registration hands the model the config provider, and SimulateHit passes the striker's
+    // power first, the struck troop's second, each read from its own party, and the configured exponent. The decision is
+    // pinned in AutoResolveQualityMathTests and AutoResolveQualityApplyTests.
+    [TestMethod]
+    public void Wiring_SubModulePassesTheConfig_AndSimulateHitAppliesTheQualityFactor()
+    {
+        var subModule = TAOM.Tests.Infrastructure.RepoPaths.ReadSource("Main/SubModule.cs", stripComments: true);
+        var model = TAOM.Tests.Infrastructure.RepoPaths.ReadSource(
+            "Main/Features/BattleBalance/Models/TaomCombatSimulationModel.cs", stripComments: true);
+
+        StringAssert.Contains(subModule,
+            "new TaomCombatSimulationModel(battleBalanceSettings, IoC.Resolve<Features.Refuge.IRefugeDefenseService>(), battleBalanceConfig)");
+        StringAssert.Contains(model,
+            "AutoResolveQualityMath.Apply(ref result, TroopPower(strikerTroop, strikerParty), TroopPower(struckTroop, struckParty), PowerRatioExponent);");
+        StringAssert.Contains(model,
+            "PowerRatioExponent => _configProvider?.GetConfig()?.AutoResolve?.PowerRatioExponent ?? AutoResolveQualityMath.VanillaPowerRatioExponent;");
+    }
 }

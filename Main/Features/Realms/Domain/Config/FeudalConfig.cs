@@ -201,7 +201,7 @@ public sealed class CoronationEvent
     public string? Heading { get; }
     public string? Text { get; }
 
-    /// <summary>A sprite name for the illustration.</summary>
+    /// <summary>A PNG file name in GUI/EventArt for the illustration.</summary>
     public string? Image { get; }
 
     public string? Button { get; }

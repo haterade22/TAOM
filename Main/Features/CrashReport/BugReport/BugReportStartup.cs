@@ -13,10 +13,20 @@ public static class BugReportStartup
     // The main-menu hook runs on every return to the main menu; offer once per launch.
     private static bool _checked;
 
-    public static void CheckPreviousSession(IModLogger logger)
+    // The launch's one turn. A battle-load stall notice uses it: its marker is gone after the first menu, so a
+    // later return to the menu would otherwise offer a report about the session the player was already told of.
+    internal static bool TakeTurn(bool stallNoticeShown)
     {
-        if (_checked) return;
+        if (_checked) return false;
         _checked = true;
+        return !stallNoticeShown;
+    }
+
+    internal static void ResetTurnForTests() => _checked = false;
+
+    public static void CheckPreviousSession(IModLogger logger, bool stallNoticeShown)
+    {
+        if (!TakeTurn(stallNoticeShown)) return;
         try
         {
             var current = logger.LogFilePath;

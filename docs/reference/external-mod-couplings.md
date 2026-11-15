@@ -37,7 +37,7 @@ the other mod and breaks nothing in TAOM's build; `ExternalModContractTests` (`T
 | `Spider.SpiderAttackService.CalculateSpiderBiteDamage` | same fit test | `:52`, 253-255 | `Main/Features/Spider/SpiderAttackService.cs`:26 |
 | `AdvancedCombat.CustomAttacksUtils.TakeDamage`, the 8-parameter overload | patch found by exact parameter types; the prefix binds by NAME: `victim`, `damage`, `knockDown`, `damageType` | `:276-285`, 330-331 | `Main/Features/AdvancedCombat/CustomAttacksUtils.cs`:152-153 |
 | `Adapters.AgentAdapter.GetUnderlyingAgent()` | reflection: an instance method returning `Agent`, to unwrap the warg and spider `IAgentAdapter` target | `:420-432` | `Main/Adapters/AgentAdapter.cs`:58 |
-| `TaomCombatSimulationModel.SimulateHit` (9 parameters) | the auto-resolve postfix walks `Campaign.Current.Models.CombatSimulationModel.GetType()` upward and patches the most-derived declared override; arguments by position (`__0`, `__1`) | `AutoResolvePatch.cs`:40-44, 52-59, 98-112 | `Main/Features/BattleBalance/Models/TaomCombatSimulationModel.cs`:30 |
+| `TaomCombatSimulationModel.SimulateHit` (9 parameters) | the auto-resolve postfix walks `Campaign.Current.Models.CombatSimulationModel.GetType()` upward and patches the most-derived declared override; arguments by position (`__0`, `__1`) | `AutoResolvePatch.cs`:40-44, 52-59, 98-112 | `Main/Features/BattleBalance/Models/TaomCombatSimulationModel.cs`:28 |
 
 The last row is why `TaomCombatSimulationModel` must stay the most-derived `SimulateHit` override on the runtime model type:
 a subclass or a later model registered above it moves the patch target, and Armory's factor on map battles goes with it

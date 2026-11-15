@@ -130,11 +130,11 @@ internal static class CheatMenuMenus
             maxSelectableOptionCount: 1,
             affirmativeText: new TextObject("{=taom_cheat_pick_ok}Choose").ToString(),
             negativeText: new TextObject("{=taom_cheat_pick_cancel}Cancel").ToString(),
-            affirmativeAction: chosen =>
+            affirmativeAction: chosen => Guarded(title, () =>
             {
                 if (chosen != null && chosen.Count > 0 && chosen[0].Identifier is string id)
                     onPicked(id);
-            },
+            }),
             negativeAction: _ => { },
             isSeachAvailable: true));
     }

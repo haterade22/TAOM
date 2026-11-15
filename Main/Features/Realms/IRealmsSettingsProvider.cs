@@ -44,4 +44,16 @@ public interface IRealmsSettingsProvider
 
     /// <summary>Lord party and conversation names carry the lord's style and title.</summary>
     bool TitleStyles { get; }
+
+    /// <summary>A realm a player rules is named after the higher title its ruler holds.</summary>
+    bool RenameOwnRealm { get; }
+
+    /// <summary>A realm an AI lord rules is named after the higher title its ruler holds.</summary>
+    bool RenameAiRealms { get; }
+
+    /// <summary>The banner a realm a player rules flies.</summary>
+    RealmBanner OwnRealmBanner { get; }
+
+    /// <summary>A realm an AI lord rules flies the banner of its ruler's primary title.</summary>
+    bool AiRealmBanners { get; }
 }

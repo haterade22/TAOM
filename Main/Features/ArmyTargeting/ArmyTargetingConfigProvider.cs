@@ -204,6 +204,7 @@ public class ArmyTargetingConfigProvider : IArmyTargetingConfigProvider
     {
         var defaults = new CapturedFortHoldConfig();
         hold.Sides = ValidateSides(hold.Sides, defaults.Sides, ref rejected);
+        hold.Factions = ValidateFactions(hold.Factions, ref rejected);
 
         hold.MinCohesionToHold = ValidateHoldField("MinCohesionToHold", hold.MinCohesionToHold, 0f, 100f, defaults.MinCohesionToHold, ref rejected);
         hold.ReleaseCohesion = ValidateHoldField("ReleaseCohesion", hold.ReleaseCohesion, 0f, 100f, defaults.ReleaseCohesion, ref rejected);
@@ -271,6 +272,31 @@ public class ArmyTargetingConfigProvider : IArmyTargetingConfigProvider
             _logger.LogWarning($"ArmyTargetingConfigProvider: CapturedFortHold Sides has no valid side, reverting to {string.Join(", ", fallback)}");
             rejected = true;
             return new List<string>(fallback);
+        }
+        return kept;
+    }
+
+    /// <summary>
+    /// Kingdom ids are matched by exact StringId, so a blank entry is dropped with a warning, the rest are trimmed and kept once
+    /// each. No kingdom list exists at load; the shipped ids are checked by <c>WarTheaterConfigInvariantsTests</c>.
+    /// </summary>
+    private List<string> ValidateFactions(List<string>? factions, ref bool rejected)
+    {
+        var kept = new List<string>();
+        if (factions == null)
+            return kept;
+
+        foreach (var raw in factions)
+        {
+            var id = raw?.Trim();
+            if (string.IsNullOrEmpty(id))
+            {
+                _logger.LogWarning("ArmyTargetingConfigProvider: CapturedFortHold Factions lists a blank id, skipping it");
+                rejected = true;
+                continue;
+            }
+            if (!kept.Contains(id!))
+                kept.Add(id!);
         }
         return kept;
     }

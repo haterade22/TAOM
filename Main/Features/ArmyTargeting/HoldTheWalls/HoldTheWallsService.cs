@@ -235,7 +235,7 @@ public sealed class HoldTheWallsService : IHoldTheWallsService
             // An army that fled in just before the first pass is paused 5 h by EnterSettlementAction and may be held; accepted.
             if (!army.AiPaused)
                 continue;
-            if (!config.HoldsSide(_alignment.ResolveSide(army.Side)))
+            if (!config.HoldsArmy(army.Side.FactionId, _alignment.ResolveSide(army.Side)))
                 continue;
             if (!HoldTheWallsMath.MayStart(army.Cohesion, army.LowestFoodDays, army.FortUnderSiege, config))
                 continue;
