@@ -62,8 +62,9 @@ public class ShippedBattleBalanceConfigTests
 
     /// <summary>
     /// Mordor carries no survival penalty (#1283). The -0.2 it shipped with multiplied the death chance of a
-    /// wounded regular by 1.2. In a party with no Medicine skill that chance is 1 / (1 + level x 0.02), so a
-    /// troop of level 10 or below then never survived a cut or pierce blow.
+    /// wounded regular by 1.2. With no Medicine bonus on either side (no surgeon skill in the party, no
+    /// Doctor's Oath in the enemy's) that chance is 1 / (1 + level x 0.02), so a troop of level 10 or below
+    /// then never survived a cut or pierce blow.
     /// </summary>
     [TestMethod]
     public void ShippedConfig_Mordor_HasNoSurvivalPenalty()

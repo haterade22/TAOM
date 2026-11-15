@@ -155,7 +155,7 @@ Use the MCM panel: **TAOM → Troop Power → Tier7Power / Tier8Power / Tier9Pow
 
 ## Changelog
 
-- 2026-11-14: Mordor's -0.2 survival row is removed from the JSON and the compiled default (#1283). The row multiplied the death chance of a wounded regular by 1.2. With no Medicine skill in the party the engine's chance is 1 / (1 + level x 0.02), so a troop of level 10 or below never survived a cut or pierce blow, and a level 26 troop survived 21% of the time, against 34% with no row and 54% for Gondor. Mirkwood gets Rivendell's 0.4; it had no row.
+- 2026-11-14: Mordor's -0.2 survival row is removed from the JSON and the compiled default (#1283). The row multiplied the death chance of a wounded regular by 1.2. With no Medicine bonus on either side (no surgeon skill in the party, no Doctor's Oath in the enemy's) the engine's chance is 1 / (1 + level x 0.02), so a troop of level 10 or below never survived a cut or pierce blow, and a level 26 troop survived 21% of the time, against 34% with no row and 54% for Gondor. Mirkwood gets Rivendell's 0.4; it had no row.
 - 2026-10-06: Lindon gets Rivendell's 0.4 survival bonus in the JSON and the compiled default (#749). It had none since Lindon became its own culture in `cc1713eb3` (2026-08-11); before that it ran on `rivendell`.
 - 2026-09-24: plan 003 (PERF-04): `BattleBalanceSettingsProvider` stops resolving `TaomSettings.Instance` on every read; it caches the reference lazily on the first non-null read and reads through it, so MCM edits still apply live.
 - 2026-05-13 — Phase 9b: `BattleBalanceConfigProvider` now validates per-key (TierPower T0-T10 finite + > 0, CulturalSurvivalBonuses finite + [-1, +1]); invalid values revert to compiled default with a warning (partial closes #140).

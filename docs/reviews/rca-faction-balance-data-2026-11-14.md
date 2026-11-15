@@ -2,7 +2,7 @@
 
 ## Top-line
 
-`/deep-review` of the #1283 data change ran at tier 2: the data-flow lens at high effort. It confirmed one MEDIUM and five LOW findings, and each was re-read in the source before it was fixed. None changes the shipped data, and all six were fixed before the commit. Findings 2 to 5 repeat lessons recorded within the last week. Two errors in the builder's own plan were caught before the lens ran, both by reading a feature doc late. A Codex pass runs after the commit, against the commit; a confirmed Codex finding gets its own row here.
+`/deep-review` of the #1283 data change ran at tier 2: the data-flow lens at high effort. It confirmed one MEDIUM and five LOW findings, and each was re-read in the source before it was fixed. None changes the shipped data, and all six were fixed before the commit. Findings 2 to 5 repeat lessons recorded within the last week. Two errors in the builder's own plan were caught before the lens ran, both by reading a feature doc late. A Codex pass ran after the commit, against the commit, and added three LOW rows (7 to 9).
 
 The change: the Hostile row between Dunland (`empire`) and Gondor (`empire_w`) is removed from `diplomacy.json`, the `mordor` survival row (-0.2) is removed, and `mirkwood` gets 0.4, in `battle_balance_config.json` and in the compiled defaults.
 
@@ -16,6 +16,17 @@ The change: the Hostile row between Dunland (`empire`) and Gondor (`empire_w`) i
 | 4 | LOW | A test comment, the changelog line in `docs/features/battle-balance.md` and the issue said that no low-level Mordor troop ever survived a wound. That holds only for a cut or pierce blow in a party with no Medicine skill. `DefaultPartyHealingModel.GetSurvivalChance` returns 1 for a blunt blow that cannot kill, and `AddSurgeonSurvivalBonus` adds the surgeon's or the leader's Medicine effect to the denominator, a quarter of it outside a player battle. | Effect claimed from part of a method | The builder read the method, took the surgeon helper as zero without opening it, and passed over the blunt early return. | All three texts now state the condition. Repeat of `lessons/campaign-mechanics.md`, "A limit read from an engine formula covers every branch of that method". |
 | 5 | LOW | Leftover labels: a `DataRow("mordor", 0f)` under a test named for defined cultures, a "Mordor: -20%" comment on a math row, and the "Mordor armies shrug off losses" intent line in `battle-balance.md`. The test that pins Mordor's missing penalty also failed on an explicit zero row. | Stale labels | Same as 2. | Row removed, comment and intent line reworded, the assertion now fails only on a negative value. |
 | 6 | LOW | Two changelog lines and a test comment were dated 2026-11-15. | Wrong date source | The date came from the UTC timestamps of the work claims. The machine's local date was 2026-11-14. | Dates corrected. One-off. |
+
+Codex pass (`high`, on commit 5832fc5c6): no P1 or P2. Three P3 findings in the change, each re-read in the source, and two gaps that predate it:
+
+| # | Sev | Finding | Category | Why missed | Preventive action |
+|---|---|---|---|---|---|
+| 7 | LOW | The survival texts named one condition, no Medicine skill in the party. `GetSurvivalChance` also adds the enemy party's Doctor's Oath bonus to the denominator (lines 72 to 74). | Effect claimed from part of a method | The fix for finding 4 covered the two branches the lens named and did not re-read the method for a third. | Changelog line and test comment now name both sides. The commit body of 5832fc5c6 keeps the narrower wording. Second repeat of the lesson named in finding 4. |
+| 8 | LOW | The commit body of 5832fc5c6 says an ally can call Gondor in "for 42 days at a time". Only the agreement and its peace block end after 42 days; `EndCallToWarAgreement` makes no peace, so the war goes on as an ordinary war. | Wording that implies an effect | The builder read `EndCallToWarAgreement` and shortened the sentence past what it does. | The follow-up commit body states it correctly. The docs and the issue already said "the agreement lasts 42 days". |
+| 9 | LOW | `docs/modding/configs-factions-and-world.md` still gave 153 rows and 79 Hostile. | Stale prose copy of data | The search for the old count used the words "Hostile pairs" and missed a table row that lists the totals. | Corrected to 152 and 78. Same repeat as finding 2. |
+
+- FOLLOW-UP (no issue: predates this change, for the maintainer's batch): `BattleBalanceConfigProvider.ValidateConfig` reverts an out-of-range survival value to 0, not to its compiled default, and prints no summary warning (`config-providers.md` items 5 and 6).
+- FOLLOW-UP (no issue: predates this change, for the maintainer's batch): no test asserts that both kingdom ids of every `diplomacy.json` row resolve (`xml-data.md`, "Config ID Cross-Reference"). Codex cross-checked the shipped rows and found no bad id.
 
 Caught by the builder before the lens ran, recorded for the pattern:
 
@@ -33,7 +44,7 @@ Finding 1 is a different class: a change that removes state. `csharp-architectur
 - **Builder self-check before the lens:** checked the code readers of both tables and the culture id of the new key. It did not check the prose copies, and it checked the allies of the pair only through the Permanent row.
 - **Agent 5, data flow:** found all six.
 - **Lenses 1, 2, 3, 4, 6 and 7:** skipped by tier. The change holds no XML and no script.
-- **Codex:** pending, see the top-line.
+- **Codex:** found 7 to 9 and the two older gaps; it confirmed the lens's traces of the diplomacy readers, the old-save case and the survival table.
 
 ## Lessons
 
