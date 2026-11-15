@@ -49,12 +49,12 @@ public class CrushThroughConfig
     public float ExtraCrushThroughEnergyThreshold { get; set; } = 25f;
     // Weapon-skill gap, in troop skill points: scaled by 260/390 when the troop curve's top fell
     // to vanilla's 260 (#343), so a tier gap leaves the dead zone and reaches the full chance at
-    // the same place. SkillCurveExponent was not scaled, so in between the same tier gap gets up
-    // to about 0.06 less of the full chance (0.457 where it was 0.515, 0.607 where it was 0.666).
+    // the same place. The window shrank from 170 points to 115, and SkillCurveExponent grew by
+    // 170/115 with it, so the curve has the same shape over the new window.
     public int SkillDeadZone { get; set; } = 20;
     public int SkillTargetDelta { get; set; } = 135;
     public float MaxSkillChance { get; set; } = 0.5f;
-    public float SkillCurveExponent { get; set; } = 0.008097f;
+    public float SkillCurveExponent { get; set; } = 0.01197f;
     public float EnergyRampMarginFactor { get; set; } = 0.27f;
     public float NonOverheadPenaltyFactor { get; set; } = 0.5f;
 

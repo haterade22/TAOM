@@ -2488,3 +2488,15 @@ TAOM's troop skills reached a main weapon median of 390 at tier 10, where vanill
 **Prevent:** a constant that names game data gets a test that reads the file the engine loads it from and finds the id of that kind (`DefaultCulture_IsACharacterCreationCultureId`). Kingdom, culture and clan ids share names in TAOM; name the kind beside the id in plans and docs.
 
 **Source:** `docs/reviews/rca-scenario-autorun-2026-11-15.md`
+
+### A number in a brief is a claim until somebody measures it (shield bash, #343, 2026-11-15)
+A reviewer estimated that troop Athletics leads were "about two thirds" of the old ones on the new skill curve. The session lead passed that to the builder as a fact, the builder wrote it into the feature doc and the RCA with the note "not measured", and the lead repeated it to the maintainer as a decision to take. Measured over every pair of foot troops, the lead had grown (one tier apart the median went from 15 to 30), because Athletics now follows the tier curve. The lead's first measure then mixed mounted troops into a table labelled "foot troops", and a review caught that too.
+- **Why missed:** the estimate came from the weapon skill ratio 260/390, and Athletics did not move with the weapon skills. The brief gave the figure without its source, so nobody downstream could tell it from a measurement.
+- **Prevent:** a brief states where each number comes from (a command, a file and line, or "estimate, measure it first"). A builder's "not measured" in a report stops the claim there: measure it before it reaches a doc or the maintainer. A table's label is part of the measure: read the filter in the script before writing the label.
+- **Source:** [rca-troop-skill-curve-2026-11-15.md](../rca-troop-skill-curve-2026-11-15.md), the CORRECTION line.
+
+### A warning nothing can clear is a question about the rule (enlistment kits, #1290, 2026-11-15)
+After the rank repair the validator still printed 82 enlistment kits, nearly all for a "dropped category": an earlier kit held a weapon category the kit lacks. No tool may repair that, so the count could only stay. The resolver hands every kit into the party inventory and takes none back, so the player still holds the earlier weapon: the finding described no loss. The last two weapon findings compared a rider's lance with a plain spear's thrust, two categories in the maintainer's own list.
+- **Why missed:** the rule was written from "a later kit must not be weaker" without asking what the player holds at that moment, although the same doc said it two paragraphs up.
+- **Prevent:** before a new finding ships as a warning, state what the player or the game loses when it fires. If the answer is nothing, it is a line in the tool's report, not a warning.
+- **Source:** [enlistment.md](../../features/enlistment.md#a-ranks-kit-is-never-weaker-than-the-kit-before-it-1290), "The lance in a cavalry kit" and "Left after the repair".

@@ -91,6 +91,26 @@ public class ShippedCombatMechanicsConfigTests
     }
 
     [TestMethod]
+    public void ShippedConfig_SkillCurveExponent_KeepsTheCurveShapeOverTheScaledWindow()
+    {
+        // #343: the window between the dead zone and the target delta shrank from 170 skill points
+        // to 115, so the exponent grows by 170/115. Halfway through the window the chance is then
+        // the same share of its full value as with the old tuning (30, 200, 0.008097).
+        var shipped = _sut.GetConfig().CrushThrough;
+        var compiled = new CombatMechanicsConfig().CrushThrough;
+
+        double before = ShareAtHalfWindow(200 - 30, 0.008097);
+        double now = ShareAtHalfWindow(shipped.SkillTargetDelta - shipped.SkillDeadZone, shipped.SkillCurveExponent);
+
+        Assert.AreEqual(before, now, 0.001);
+        Assert.AreEqual(compiled.SkillCurveExponent, shipped.SkillCurveExponent, 0.000001f);
+    }
+
+    // CrushThroughService.EvaluateSkillCurve: (1 - e^(-(delta - deadZone) * exponent)) / (1 - e^(-window * exponent)).
+    private static double ShareAtHalfWindow(double window, double exponent) =>
+        (1.0 - Math.Exp(-(window / 2.0) * exponent)) / (1.0 - Math.Exp(-window * exponent));
+
+    [TestMethod]
     public void ShippedConfig_RaceCrushBonuses_AreScaledWithTheSkillWindow()
     {
         // #343: the race bonuses are added to the weapon-skill gap, so they were scaled by 260/390
