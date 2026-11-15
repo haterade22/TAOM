@@ -4,7 +4,10 @@ using Common;
 using Common.Messaging;
 using Coop.Core.Client.Messages;
 using GameInterface;
+using GameInterface.Services.Players;
 using LiteNetLib;
+using NSubstitute;
+using TaleWorlds.CampaignSystem;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TAOM.CoopCompat.Messages;
 using TAOM.CoopCompat.Transport;
@@ -199,5 +202,104 @@ public class CoopTransportTests
 
         ModInformation.IsServer = true;
         Assert.IsFalse(_transport.Broadcast(new CoopCompatMomentumSnapshot()));
+    }
+
+    [TestMethod]
+    public void TradeRequest_OnServer_RaisesWithTheConnectionsHero_OnTheGameThread()
+    {
+        var peerSeen = default(NetPeer);
+        var transport = new CoopTransport(a => { _marshalled++; a(); }, p => { peerSeen = p; return "hero_1"; });
+        transport.Start();
+        BeginSession(server: true);
+        string? heroId = null;
+        CoopCompatTradeRequest? got = null;
+        transport.TradeRequestReceived += (_, h, r) => { heroId = h; got = r; };
+        var sender = FakePeer();
+
+        MessageBroker.Instance.Publish(sender, new CoopCompatTradeRequest { RequestId = "r1" });
+
+        Assert.AreEqual("hero_1", heroId);
+        Assert.AreEqual("r1", got!.RequestId);
+        Assert.AreSame(sender, peerSeen);
+        Assert.IsTrue(_marshalled >= 1);
+    }
+
+    [TestMethod]
+    public void TradeRequest_FromAConnectionThatStandsForNoHero_IsRaisedWithNoHero_SoTheHostAnswersIt()
+    {
+        var transport = new CoopTransport(a => a(), _ => null);
+        transport.Start();
+        BeginSession(server: true);
+        var heroes = new System.Collections.Generic.List<string>();
+        transport.TradeRequestReceived += (_, h, _) => heroes.Add(h);
+
+        MessageBroker.Instance.Publish(FakePeer(), new CoopCompatTradeRequest());
+        MessageBroker.Instance.Publish("not a peer", new CoopCompatTradeRequest());
+
+        CollectionAssert.AreEqual(new[] { "" }, heroes, "a peer gets a refusal; a sender that is no peer cannot be answered");
+    }
+
+    [TestMethod]
+    public void HeroOfCurrentController_IsTheHerosStringId_NotCoopsObjectKey()
+    {
+        // Coop keys a player's hero as "Hero_" + StringId (Player.HeroId); CampaignObjectManager.Find matches StringId only.
+        var peer = FakePeer();
+        var hero = (Hero)System.Runtime.Serialization.FormatterServices.GetUninitializedObject(typeof(Hero));
+        hero.StringId = "Player1";
+        var players = Substitute.For<IPlayerManager>();
+        players.TryGetCurrentController(Arg.Any<NetPeer>(), out Arg.Any<string>()).Returns(x => { x[1] = "controller"; return true; });
+        players.TryGetSenderHero(Arg.Any<object>(), out Arg.Any<Hero>()).Returns(x => { x[1] = hero; return true; });
+
+        Assert.AreEqual("Player1", CoopTransport.HeroOfCurrentController(players, peer));
+    }
+
+    [TestMethod]
+    public void HeroOfCurrentController_IsNull_ForAConnectionNoLongerCurrent_OrWithNoHero()
+    {
+        var peer = FakePeer();
+        var hero = (Hero)System.Runtime.Serialization.FormatterServices.GetUninitializedObject(typeof(Hero));
+        hero.StringId = "Player1";
+        var players = Substitute.For<IPlayerManager>();
+        players.TryGetSenderHero(Arg.Any<object>(), out Arg.Any<Hero>()).Returns(x => { x[1] = hero; return true; });
+        players.TryGetCurrentController(Arg.Any<NetPeer>(), out Arg.Any<string>()).Returns(false);
+
+        Assert.IsNull(CoopTransport.HeroOfCurrentController(players, peer), "a reconnect leaves the old peer standing for nobody");
+
+        players.TryGetCurrentController(Arg.Any<NetPeer>(), out Arg.Any<string>()).Returns(x => { x[1] = "controller"; return true; });
+        players.TryGetSenderHero(Arg.Any<object>(), out Arg.Any<Hero>()).Returns(false);
+
+        Assert.IsNull(CoopTransport.HeroOfCurrentController(players, peer));
+    }
+
+    [TestMethod]
+    public void TradeRequest_OnAClient_IsIgnored_AndTradeReply_OnlyOnAClient()
+    {
+        var transport = new CoopTransport(a => a(), _ => "hero_1");
+        transport.Start();
+        var requests = 0;
+        var replies = 0;
+        transport.TradeRequestReceived += (_, _, _) => requests++;
+        transport.TradeReplyReceived += _ => replies++;
+
+        BeginSession(server: false);
+        MessageBroker.Instance.Publish(FakePeer(), new CoopCompatTradeRequest());
+        MessageBroker.Instance.Publish(FakePeer(), new CoopCompatTradeReply());
+        Assert.AreEqual(0, requests);
+        Assert.AreEqual(1, replies);
+
+        ModInformation.IsServer = true;
+        MessageBroker.Instance.Publish(FakePeer(), new CoopCompatTradeReply());
+        Assert.AreEqual(1, replies);
+    }
+
+    [TestMethod]
+    public void TradeSends_WithTheWrongRole_ReturnFalse()
+    {
+        var peer = new CoopPeer(FakePeer());
+        BeginSession(server: true);
+        Assert.IsFalse(_transport.SendToServer(new CoopCompatTradeRequest()));
+
+        ModInformation.IsServer = false;
+        Assert.IsFalse(_transport.SendToPeer(peer, new CoopCompatTradeReply()));
     }
 }

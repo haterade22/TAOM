@@ -13,22 +13,41 @@ namespace TAOM.Adapters;
 
 /// <summary>
 /// Boundary implementation of <see cref="IArmouryPlayerAdapter"/>: the main hero and the main party's item
-/// roster. Every removal goes stack by stack with the stack's own EquipmentElement, so a modifier never
+/// roster, or a guest's hero and its party's roster for an instance from <see cref="ForHero"/>. Every removal goes stack by stack with the stack's own EquipmentElement, so a modifier never
 /// strands a stack at a negative amount (the TownRosterAdapter.RemoveItem lesson, crash report 2026-06-17).
 /// </summary>
 public class ArmouryPlayerAdapter : IArmouryPlayerAdapter
 {
-    public string HeroId => Hero.MainHero?.StringId ?? string.Empty;
+    private readonly Hero? _guest;
 
-    public string? KingdomId => Hero.MainHero?.Clan?.Kingdom?.StringId;
+    public ArmouryPlayerAdapter()
+    {
+    }
 
-    public string? CultureId => Hero.MainHero?.Culture?.StringId;
+    private ArmouryPlayerAdapter(Hero guest)
+    {
+        _guest = guest;
+    }
 
-    public SideIds Side => FactionSides.OfPlayer();
+    /// <summary>
+    /// The same adapter for another hero, for a co-op guest's trade on the host (#1329): that hero's purse, the item
+    /// roster of the party the hero is in, and relation changes between that hero and the other one.
+    /// </summary>
+    public static ArmouryPlayerAdapter ForHero(Hero hero) => new(hero);
 
-    public int Gold => Hero.MainHero?.Gold ?? 0;
+    private Hero? Self => _guest ?? Hero.MainHero;
 
-    private static ItemRoster? Roster => MobileParty.MainParty?.ItemRoster;
+    public string HeroId => Self?.StringId ?? string.Empty;
+
+    public string? KingdomId => Self?.Clan?.Kingdom?.StringId;
+
+    public string? CultureId => Self?.Culture?.StringId;
+
+    public SideIds Side => _guest == null ? FactionSides.OfPlayer() : FactionSides.OfHero(_guest);
+
+    public int Gold => Self?.Gold ?? 0;
+
+    private ItemRoster? Roster => _guest == null ? MobileParty.MainParty?.ItemRoster : _guest.PartyBelongedTo?.ItemRoster;
 
     public IReadOnlyList<InventoryPiece> ReadInventory()
     {
@@ -47,7 +66,7 @@ public class ArmouryPlayerAdapter : IArmouryPlayerAdapter
         return pieces;
     }
 
-    private static int CountItem(string itemId)
+    private int CountItem(string itemId)
     {
         var roster = Roster;
         if (roster == null || string.IsNullOrEmpty(itemId))
@@ -115,7 +134,7 @@ public class ArmouryPlayerAdapter : IArmouryPlayerAdapter
 
     public bool ChargeGold(int amount)
     {
-        var hero = Hero.MainHero;
+        var hero = Self;
         if (hero == null || amount < 0 || hero.Gold < amount)
             return false;
         if (amount > 0)
@@ -131,7 +150,7 @@ public class ArmouryPlayerAdapter : IArmouryPlayerAdapter
         var hero = string.IsNullOrEmpty(heroId) || manager == null ? null : manager.Find<Hero>(heroId);
         if (hero == null)
             return false;
-        ChangeRelationAction.ApplyPlayerRelation(hero, delta);
+        ChangeRelationAction.ApplyRelationChangeBetweenHeroes(Self, hero, delta, showQuickNotification: _guest == null);
         return true;
     }
 }

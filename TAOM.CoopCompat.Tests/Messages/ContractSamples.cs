@@ -33,5 +33,45 @@ internal static class ContractSamples
         Values = new[] { "1", "2" },
     };
 
-    public static IMessage[] All() => new IMessage[] { Hello(), Reply(), Snapshot() };
+    public static CoopCompatLdRunEnded LdRunEnded() => new CoopCompatLdRunEnded
+    {
+        ProtocolVersion = 1,
+        SessionId = "session-1",
+        Epoch = 3,
+        Reason = 2,
+        Wave = 7,
+        WavesCleared = 6,
+        Kills = 412,
+    };
+
+    public static CoopCompatTradeRequest TradeRequest() => new CoopCompatTradeRequest
+    {
+        ProtocolVersion = 1,
+        RequestId = "abc",
+        Action = 4,
+        SettlementId = "town_A1",
+        Subject = "mail",
+        Modifier = "fine",
+        Target = "plate",
+        Quantity = 3,
+    };
+
+    public static CoopCompatTradeReply TradeReply() => new CoopCompatTradeReply
+    {
+        ProtocolVersion = 1,
+        RequestId = "abc",
+        Action = 2,
+        Refusal = 0,
+        Status = 6,
+        Quantity = 5,
+        TotalCost = 50,
+        ResourceName = "Horses",
+        ResourceId = "horses",
+        HasBalance = true,
+        Balance = 12.5f,
+        HasArmouryLevel = true,
+        ArmouryLevel = 2,
+    };
+
+    public static IMessage[] All() => new IMessage[] { Hello(), Reply(), Snapshot(), LdRunEnded(), TradeRequest(), TradeReply() };
 }

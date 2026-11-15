@@ -116,5 +116,6 @@ internal static class FeatureModules
         new Features.CheatMenu.CheatMenuModule(),
         new Features.Autorun.AutorunModule(),
         new Features.BattleShaderNotice.BattleShaderNoticeModule(),
+        new Features.CoopInterop.GuestTrade.GuestTradeModule(),
     };
 }

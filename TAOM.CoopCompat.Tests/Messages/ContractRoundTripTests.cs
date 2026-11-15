@@ -56,6 +56,54 @@ public class ContractRoundTripTests
     }
 
     [TestMethod]
+    public void LdRunEnded_RoundTrips()
+    {
+        var back = (CoopCompatLdRunEnded)RoundTrip(ContractSamples.LdRunEnded());
+
+        Assert.AreEqual(1, back.ProtocolVersion);
+        Assert.AreEqual("session-1", back.SessionId);
+        Assert.AreEqual(3, back.Epoch);
+        Assert.AreEqual(2, back.Reason);
+        Assert.AreEqual(7, back.Wave);
+        Assert.AreEqual(6, back.WavesCleared);
+        Assert.AreEqual(412, back.Kills);
+    }
+
+    [TestMethod]
+    public void TradeRequest_RoundTrips()
+    {
+        var back = (CoopCompatTradeRequest)RoundTrip(ContractSamples.TradeRequest());
+
+        Assert.AreEqual(1, back.ProtocolVersion);
+        Assert.AreEqual("abc", back.RequestId);
+        Assert.AreEqual(4, back.Action);
+        Assert.AreEqual("town_A1", back.SettlementId);
+        Assert.AreEqual("mail", back.Subject);
+        Assert.AreEqual("fine", back.Modifier);
+        Assert.AreEqual("plate", back.Target);
+        Assert.AreEqual(3, back.Quantity);
+    }
+
+    [TestMethod]
+    public void TradeReply_RoundTrips()
+    {
+        var back = (CoopCompatTradeReply)RoundTrip(ContractSamples.TradeReply());
+
+        Assert.AreEqual(1, back.ProtocolVersion);
+        Assert.AreEqual("abc", back.RequestId);
+        Assert.AreEqual(2, back.Action);
+        Assert.AreEqual(6, back.Status);
+        Assert.AreEqual(5, back.Quantity);
+        Assert.AreEqual(50, back.TotalCost);
+        Assert.AreEqual("Horses", back.ResourceName);
+        Assert.AreEqual("horses", back.ResourceId);
+        Assert.IsTrue(back.HasBalance);
+        Assert.AreEqual(12.5f, back.Balance);
+        Assert.IsTrue(back.HasArmouryLevel);
+        Assert.AreEqual(2, back.ArmouryLevel);
+    }
+
+    [TestMethod]
     public void EmptyArrays_RoundTripAsEmpty_NeverNull()
     {
         // protobuf-net writes nothing for an empty repeated field, so only the constructor's
@@ -99,7 +147,7 @@ public class ContractRoundTripTests
             ids.Add(id, type);
         }
 
-        Assert.AreEqual(3, ids.Count);
+        Assert.AreEqual(6, ids.Count);
     }
 
     [TestMethod]

@@ -5,6 +5,7 @@ using TAOM.Adapters;
 using TAOM.Core.Logging;
 using TAOM.Features.CoopInterop;
 using TAOM.Features.Enlistment;
+using TAOM.Features.Execution;
 using TAOM.Features.StoryMissions;
 using TAOM.Features.StoryMissions.Config;
 using TAOM.Features.StoryMissions.Domain;
@@ -15,7 +16,7 @@ namespace TAOM.Tests.Features.StoryMissions;
 /// <summary>
 /// The story offer (#1105 slice 4, docs/features/story-missions.md "The story offer"): which chronicle window the player is offered, when no
 /// offer may show, and what a mission's verdict does to the campaign. A win holds the window, a loss gives the target to an attacker, and no
-/// verdict leaves the window open and offers it again on the next day.
+/// verdict leaves the window open and offers it again on the next day. The sides on offer follow the player's side of the war (#1326).
 /// </summary>
 [TestClass]
 public class StoryOfferServiceTests
@@ -27,6 +28,41 @@ public class StoryOfferServiceTests
         + "\"defenderCulture\":\"vlandia\",\"attackerCulture\":\"isengard\",\"garrison\":[{\"troop\":\"g1\",\"class\":\"Infantry\",\"count\":10}],"
         + "\"roster\":{\"waves\":[{\"count\":110,\"mix\":[{\"troop\":\"a1\",\"class\":\"Infantry\",\"weight\":1}]}]}}";
 
+    // The alignment table's rule, on a table of four: the faction id first, its culture when the id is not listed. A window's
+    // kingdoms are sided by GetKingdomSide alone; a two-argument ResolveSide in the service would zip a kingdom with a mission
+    // row's culture (SidePairScanTests, #957), so it throws here.
+    private sealed class TableAlignment : IAlignmentService
+    {
+        private static readonly Dictionary<string, FactionSide> Sides = new()
+        {
+            ["vlandia"] = FactionSide.Free, ["isengard"] = FactionSide.Evil, ["empire"] = FactionSide.Evil, ["mordor"] = FactionSide.Evil,
+        };
+
+        public FactionSide GetKingdomSide(string kingdomId) => Sides.TryGetValue(kingdomId ?? string.Empty, out var side) ? side : FactionSide.Neutral;
+
+        public FactionSide GetCultureSide(string cultureId) => GetKingdomSide(cultureId);
+
+        public FactionSide ResolveSide(string kingdomId, string cultureId)
+        {
+            // Reached only through the SideIds extension, for the player's own pair.
+            if (kingdomId != PlayerFactionId)
+                throw new System.InvalidOperationException($"ResolveSide('{kingdomId}', '{cultureId}') is not the player's pair");
+            var side = GetKingdomSide(kingdomId);
+            return side != FactionSide.Neutral ? side : GetCultureSide(cultureId);
+        }
+
+        public string PlayerFactionId { get; set; } = string.Empty;
+
+        public bool AreEnemyAlignments(string kingdomIdA, string kingdomIdB) => throw new System.NotSupportedException();
+
+        public bool AreSameAlignment(string kingdomIdA, string kingdomIdB) => throw new System.NotSupportedException();
+
+        public bool AreEnemyAlignments(FactionSide sideA, FactionSide sideB) => throw new System.NotSupportedException();
+
+        public bool AreSameAlignment(FactionSide sideA, FactionSide sideB) => throw new System.NotSupportedException();
+    }
+
+    private readonly TableAlignment _alignment = new();
     private IChronicleStoryPort _chronicle = null!;
     private ICoopSessionProvider _coop = null!;
     private IDedicatedServerProvider _dedicated = null!;
@@ -37,8 +73,15 @@ public class StoryOfferServiceTests
     private List<ChronicleStoryOffer> _offers = null!;
     private StoryOfferService _sut = null!;
 
-    private static ChronicleStoryOffer Offer(string mission = "helms_deep_defend", string id = "hornburg", string? target = "town_V2") =>
-        new(id, mission, "{=taom_wc_hornburg_title}The Battle of the Hornburg", target, new[] { "isengard", "empire" });
+    private static ChronicleStoryOffer Offer(string mission = "helms_deep_defend", string id = "hornburg", string? target = "town_V2", string? attack = null,
+        string defender = "vlandia", string[]? attackers = null) =>
+        new(id, mission, "{=taom_wc_hornburg_title}The Battle of the Hornburg", target, attackers ?? new[] { "isengard", "empire" }, defender, attack);
+
+    private void PlayerIs(string factionId, string cultureId)
+    {
+        _campaign.PlayerSide.Returns(new SideIds(factionId, cultureId));
+        _alignment.PlayerFactionId = factionId;
+    }
 
     [TestInitialize]
     public void Setup()
@@ -53,9 +96,12 @@ public class StoryOfferServiceTests
         _enlistment = Substitute.For<IEnlistmentStateQuery>();
         _campaign = Substitute.For<IStoryCampaignAdapter>();
         _campaign.CampaignId.Returns("game1");
+        // A neutral clan outside every kingdom: it may take any side that has a mission.
+        PlayerIs("clan_player", "battania");
         _logger = Substitute.For<IModLogger>();
         _outcomes = Substitute.For<IOutcomeLog>();
-        _sut = new StoryOfferService(_chronicle, StoryMissionCatalog.FromText(Catalog, _logger), _coop, _dedicated, _enlistment, _campaign, _logger, _outcomes);
+        _sut = new StoryOfferService(_chronicle, StoryMissionCatalog.FromText(Catalog, _logger), _coop, _dedicated, _enlistment, _campaign,
+            _alignment, _logger, _outcomes);
     }
 
     [TestMethod]
@@ -105,32 +151,145 @@ public class StoryOfferServiceTests
     }
 
     [TestMethod]
-    public void NextOffer_ThePlayersKingdomIsAnAttacker_ReturnsNull()
+    public void NextOffer_APlayerOfTheEvilHost_NoAttackMission_ReturnsNull()
     {
-        // A loss would give the fortress to the player's own ruler, or to the player.
-        _campaign.PlayerKingdomId.Returns("empire");
+        // A lost defence would give the fortress to the player's own ruler, or to the player.
+        PlayerIs("empire", "empire");
 
         Assert.IsNull(_sut.NextOffer());
     }
 
     [TestMethod]
-    public void NextOffer_ThePlayersKingdomIsNotAnAttacker_ReturnsTheOffer()
+    public void NextOffer_APlayerOfTheEvilHost_WithAnAttackMission_MayOnlyAttack()
     {
-        _campaign.PlayerKingdomId.Returns("vlandia");
+        _offers[0] = Offer(attack: "isengard_attack");
+        PlayerIs("isengard", "isengard");
 
-        Assert.AreEqual("hornburg", _sut.NextOffer()?.EventId);
+        var offer = _sut.NextOffer();
+
+        Assert.IsNotNull(offer);
+        Assert.IsFalse(offer!.Choices.Defend);
+        Assert.IsTrue(offer.Choices.Attack);
     }
 
     [TestMethod]
-    public void MenuText_FollowsTheAppliedResult()
+    public void NextOffer_ANeutralRealmAmongTheAttackers_ItsPlayerMayOnlyAttack()
     {
-        StringAssert.StartsWith(StoryOfferService.MenuText(false, null), "{=taom_story_offer_none}");
-        StringAssert.StartsWith(StoryOfferService.MenuText(true, null), "{=taom_story_offer_menu}");
-        StringAssert.StartsWith(StoryOfferService.MenuText(true, StoryResult.Held), "{=taom_story_offer_won}");
-        StringAssert.StartsWith(StoryOfferService.MenuText(true, StoryResult.Fell), "{=taom_story_offer_lost}");
-        StringAssert.StartsWith(StoryOfferService.MenuText(true, StoryResult.Failed), "{=taom_story_offer_undecided}", "a failed transfer gave nothing away");
-        StringAssert.StartsWith(StoryOfferService.MenuText(true, StoryResult.Undecided), "{=taom_story_offer_undecided}");
-        StringAssert.StartsWith(StoryOfferService.MenuText(true, StoryResult.Unchanged), "{=taom_story_offer_none}");
+        // Alignment leaves a neutral player both sides: only his tie to an attacking realm removes the defence.
+        _offers[0] = Offer(attack: "isengard_attack", attackers: new[] { "isengard", "umbar" });
+        PlayerIs("umbar", "umbar");
+
+        var offer = _sut.NextOffer();
+
+        Assert.IsFalse(offer!.Choices.Defend, "he never fights against his own realm");
+        Assert.IsTrue(offer.Choices.Attack);
+        Assert.AreEqual(FactionSide.Neutral, offer.PlayerSide);
+    }
+
+    [TestMethod]
+    public void NextOffer_ANeutralRealmDefends_ItsPlayerMayOnlyDefend()
+    {
+        // Alignment leaves a neutral player both sides: only his tie to the defending realm removes the attack.
+        _offers[0] = Offer(attack: "isengard_attack", defender: "umbar");
+        PlayerIs("umbar", "umbar");
+
+        var offer = _sut.NextOffer();
+
+        Assert.IsTrue(offer!.Choices.Defend);
+        Assert.IsFalse(offer.Choices.Attack, "he never fights against his own realm");
+    }
+
+    [TestMethod]
+    public void NextOffer_APlayerOfTheFreeDefender_MayOnlyDefend()
+    {
+        _offers[0] = Offer(attack: "isengard_attack");
+        PlayerIs("vlandia", "vlandia");
+
+        var offer = _sut.NextOffer();
+
+        Assert.IsTrue(offer!.Choices.Defend);
+        Assert.IsFalse(offer.Choices.Attack);
+        Assert.AreEqual(FactionSide.Free, offer.PlayerSide);
+    }
+
+    [TestMethod]
+    public void NextOffer_AFreePlayerOfAnotherRealm_MayOnlyDefend()
+    {
+        _offers[0] = Offer(attack: "isengard_attack");
+        PlayerIs("clan_player", "vlandia");
+
+        var offer = _sut.NextOffer();
+
+        Assert.IsTrue(offer!.Choices.Defend);
+        Assert.IsFalse(offer.Choices.Attack, "a free player never storms a free fortress");
+    }
+
+    [TestMethod]
+    public void NextOffer_AnEvilPlayer_NoAttackMission_ReturnsNull()
+    {
+        // Not a lone "Let fate decide": that is a saved decline, and it would close the window for him before an attack exists.
+        PlayerIs("empire_s", "mordor");
+
+        Assert.IsNull(_sut.NextOffer());
+    }
+
+    [TestMethod]
+    public void NextOffer_AnEvilPlayer_WithAnAttackMission_MayOnlyAttack()
+    {
+        _offers[0] = Offer(attack: "isengard_attack");
+        PlayerIs("empire_s", "mordor");
+
+        var offer = _sut.NextOffer();
+
+        Assert.IsFalse(offer!.Choices.Defend, "an evil player is not asked to hold Rohan's walls");
+        Assert.IsTrue(offer.Choices.Attack);
+        Assert.AreEqual(FactionSide.Evil, offer.PlayerSide);
+    }
+
+    [TestMethod]
+    public void NextOffer_ANeutralPlayer_WithAnAttackMission_MayTakeEitherSide()
+    {
+        _offers[0] = Offer(attack: "isengard_attack");
+
+        var offer = _sut.NextOffer();
+
+        Assert.IsTrue(offer!.Choices.Defend);
+        Assert.IsTrue(offer.Choices.Attack);
+        Assert.AreEqual(FactionSide.Neutral, offer.PlayerSide);
+    }
+
+    [TestMethod]
+    public void NextOffer_ANeutralPlayer_NoAttackMission_MayOnlyDefend()
+    {
+        var offer = _sut.NextOffer();
+
+        Assert.IsTrue(offer!.Choices.Defend);
+        Assert.IsFalse(offer.Choices.Attack);
+    }
+
+    [TestMethod]
+    public void NextOffer_AnAttackIdThatIsNotAnAttack_DropsTheAttackAndWarnsOnce()
+    {
+        _offers[0] = Offer(attack: "helms_deep_defend");
+
+        var offer = _sut.NextOffer();
+        _sut.NextOffer();
+
+        Assert.IsTrue(offer!.Choices.Defend);
+        Assert.IsFalse(offer.Choices.Attack);
+        _logger.Received(1).LogWarning(Arg.Is<string>(s => s.Contains("helms_deep_defend") && s.Contains("attack")));
+    }
+
+    [TestMethod]
+    public void NextOffer_OnlyTheAttackMissionLoads_StillOffersTheAttack()
+    {
+        _offers[0] = Offer("nope", attack: "isengard_attack");
+        PlayerIs("empire_s", "mordor");
+
+        var offer = _sut.NextOffer();
+
+        Assert.IsFalse(offer!.Choices.Defend);
+        Assert.IsTrue(offer.Choices.Attack);
     }
 
     [TestMethod]
@@ -186,9 +345,9 @@ public class StoryOfferServiceTests
     [TestMethod]
     public void Apply_Won_ResolvesTheWindowHeldAndPasses()
     {
-        _chronicle.ResolveStoryWon("hornburg").Returns(true);
+        _chronicle.ResolveStoryHeld("hornburg", Arg.Any<string>()).Returns(true);
 
-        Assert.AreEqual(StoryResult.Held, _sut.Apply(Offer(), StoryOutcome.Won));
+        Assert.AreEqual(StoryResult.Held, _sut.Apply(Offer(), StorySide.Defending, StoryOutcome.Won));
 
         _campaign.DidNotReceiveWithAnyArgs().GiveSettlement(default!, default!, out _);
         _outcomes.Received(1).Pass(StoryOfferService.ResultId, "game1/hornburg/Won", Arg.Is<string>(d => d.Contains("verdict=Won") && d.Contains("result=Held")));
@@ -197,9 +356,9 @@ public class StoryOfferServiceTests
     [TestMethod]
     public void Apply_WonOnAWindowAlreadyResolved_ChangesNothing()
     {
-        _chronicle.ResolveStoryWon("hornburg").Returns(false);
+        _chronicle.ResolveStoryHeld("hornburg", Arg.Any<string>()).Returns(false);
 
-        Assert.AreEqual(StoryResult.Unchanged, _sut.Apply(Offer(), StoryOutcome.Won));
+        Assert.AreEqual(StoryResult.Unchanged, _sut.Apply(Offer(), StorySide.Defending, StoryOutcome.Won));
     }
 
     [TestMethod]
@@ -211,11 +370,11 @@ public class StoryOfferServiceTests
             return true;
         });
 
-        Assert.AreEqual(StoryResult.Fell, _sut.Apply(Offer(), StoryOutcome.Lost));
+        Assert.AreEqual(StoryResult.Fell, _sut.Apply(Offer(), StorySide.Defending, StoryOutcome.Lost));
 
         _chronicle.Received(1).ConfirmStoryWindow("hornburg");
         _campaign.Received(1).GiveSettlement("town_V2", Arg.Is<IReadOnlyList<string>>(a => a[0] == "isengard" && a[1] == "empire"), out Arg.Any<string>());
-        _chronicle.DidNotReceiveWithAnyArgs().ResolveStoryWon(default);
+        _chronicle.DidNotReceiveWithAnyArgs().ResolveStoryHeld(default, default!);
         _outcomes.Received(1).Pass(StoryOfferService.ResultId, "game1/hornburg/Lost", Arg.Is<string>(d => d.Contains("verdict=Lost") && d.Contains("taker=isengard")));
     }
 
@@ -224,7 +383,7 @@ public class StoryOfferServiceTests
     {
         _offers[0] = Offer("isengard_attack");
 
-        Assert.IsNull(_sut.NextOffer(), "the player can take only the defending side");
+        Assert.IsNull(_sut.NextOffer(), "the window's defence must be a Defend row: an attack is offered only through attackMission");
     }
 
     [TestMethod]
@@ -239,24 +398,24 @@ public class StoryOfferServiceTests
     [TestMethod]
     public void NoteShown_KeysTheLineByCampaignAndWindow()
     {
-        _sut.NoteShown(Offer());
+        _sut.NoteShown(_sut.NextOffer()!);
 
-        _outcomes.Received(1).Pass(StoryOfferService.ShownId, "game1/hornburg", Arg.Any<string>());
+        _outcomes.Received(1).Pass(StoryOfferService.ShownId, "game1/hornburg", "mission=helms_deep_defend target=town_V2 choices=Defend side=Neutral");
     }
 
     [TestMethod]
     public void Apply_AWinAndALossInOneProcess_WriteTwoResultKeys()
     {
         // OutcomeLog latches one line per key for the whole process: a reload that plays the other result must still write its line.
-        _chronicle.ResolveStoryWon("hornburg").Returns(true);
+        _chronicle.ResolveStoryHeld("hornburg", Arg.Any<string>()).Returns(true);
         _campaign.GiveSettlement("town_V2", Arg.Any<IReadOnlyList<string>>(), out Arg.Any<string>()).Returns(c =>
         {
             c[2] = "isengard";
             return true;
         });
 
-        _sut.Apply(Offer(), StoryOutcome.Won);
-        _sut.Apply(Offer(), StoryOutcome.Lost);
+        _sut.Apply(Offer(), StorySide.Defending, StoryOutcome.Won);
+        _sut.Apply(Offer(), StorySide.Defending, StoryOutcome.Lost);
 
         _outcomes.Received(1).Pass(StoryOfferService.ResultId, "game1/hornburg/Won", Arg.Any<string>());
         _outcomes.Received(1).Pass(StoryOfferService.ResultId, "game1/hornburg/Lost", Arg.Any<string>());
@@ -265,7 +424,7 @@ public class StoryOfferServiceTests
     [TestMethod]
     public void Apply_LostWithNoTarget_FailsAndGivesNothingAway()
     {
-        Assert.AreEqual(StoryResult.Failed, _sut.Apply(Offer(target: null), StoryOutcome.Lost));
+        Assert.AreEqual(StoryResult.Failed, _sut.Apply(Offer(target: null), StorySide.Defending, StoryOutcome.Lost));
 
         _campaign.DidNotReceiveWithAnyArgs().GiveSettlement(default!, default!, out _);
     }
@@ -276,7 +435,7 @@ public class StoryOfferServiceTests
         // The chronicle reconciles the live owner first (a clan that defects with its fiefs raises no owner-change event).
         _chronicle.ConfirmStoryWindow("hornburg").Returns(false);
 
-        Assert.AreEqual(StoryResult.Unchanged, _sut.Apply(Offer(), StoryOutcome.Lost));
+        Assert.AreEqual(StoryResult.Unchanged, _sut.Apply(Offer(), StorySide.Defending, StoryOutcome.Lost));
 
         _campaign.DidNotReceiveWithAnyArgs().GiveSettlement(default!, default!, out _);
         _outcomes.DidNotReceiveWithAnyArgs().Pass(default!, default!, default!);
@@ -292,18 +451,57 @@ public class StoryOfferServiceTests
             return false;
         });
 
-        Assert.AreEqual(StoryResult.Failed, _sut.Apply(Offer(), StoryOutcome.Lost));
+        Assert.AreEqual(StoryResult.Failed, _sut.Apply(Offer(), StorySide.Defending, StoryOutcome.Lost));
 
         Assert.IsNull(_sut.NextOffer(), "snoozed for today");
         _outcomes.Received(1).Fail(StoryOfferService.ResultId, "game1/hornburg/Lost", Arg.Any<string>());
     }
 
     [TestMethod]
+    public void Apply_AttackWon_GivesTheTargetToTheAttackers()
+    {
+        _campaign.GiveSettlement("town_V2", Arg.Any<IReadOnlyList<string>>(), out Arg.Any<string>()).Returns(c =>
+        {
+            c[2] = "isengard";
+            return true;
+        });
+
+        Assert.AreEqual(StoryResult.Fell, _sut.Apply(Offer(), StorySide.Attacking, StoryOutcome.Won));
+
+        _chronicle.Received(1).ConfirmStoryWindow("hornburg");
+        _chronicle.DidNotReceiveWithAnyArgs().ResolveStoryHeld(default, default!);
+        _outcomes.Received(1).Pass(StoryOfferService.ResultId, "game1/hornburg/AttackWon", "side=Attacking verdict=Won result=Fell taker=isengard");
+    }
+
+    [TestMethod]
+    public void Apply_AttackLost_ResolvesTheWindowHeld()
+    {
+        // The canon ending. A window left open would let the player storm the walls again every day.
+        _chronicle.ResolveStoryHeld("hornburg", Arg.Any<string>()).Returns(true);
+
+        Assert.AreEqual(StoryResult.Held, _sut.Apply(Offer(), StorySide.Attacking, StoryOutcome.Lost));
+
+        _chronicle.Received(1).ResolveStoryHeld("hornburg", Arg.Is<string>(why => why.Contains("thrown back")));
+        _campaign.DidNotReceiveWithAnyArgs().GiveSettlement(default!, default!, out _);
+        _outcomes.Received(1).Pass(StoryOfferService.ResultId, "game1/hornburg/AttackLost", "side=Attacking verdict=Lost result=Held");
+    }
+
+    [TestMethod]
+    public void Apply_AttackUndecided_LeavesTheWindowOpenAndSnoozes()
+    {
+        Assert.AreEqual(StoryResult.Undecided, _sut.Apply(Offer(), StorySide.Attacking, StoryOutcome.Undecided));
+
+        _chronicle.DidNotReceiveWithAnyArgs().ResolveStoryHeld(default, default!);
+        _campaign.DidNotReceiveWithAnyArgs().GiveSettlement(default!, default!, out _);
+        Assert.IsNull(_sut.NextOffer(), "snoozed for today");
+    }
+
+    [TestMethod]
     public void Apply_Undecided_LeavesTheWindowOpenAndOffersAgainTomorrow()
     {
-        Assert.AreEqual(StoryResult.Undecided, _sut.Apply(Offer(), StoryOutcome.Undecided));
+        Assert.AreEqual(StoryResult.Undecided, _sut.Apply(Offer(), StorySide.Defending, StoryOutcome.Undecided));
 
-        _chronicle.DidNotReceiveWithAnyArgs().ResolveStoryWon(default);
+        _chronicle.DidNotReceiveWithAnyArgs().ResolveStoryHeld(default, default!);
         _campaign.DidNotReceiveWithAnyArgs().GiveSettlement(default!, default!, out _);
         Assert.IsNull(_sut.NextOffer());
         _sut.NewDay();
