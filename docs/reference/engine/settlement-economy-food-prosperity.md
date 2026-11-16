@@ -128,11 +128,13 @@ which **excludes garrisons, militia, caravans, villagers, bandits**. Consequence
 
 - **Garrison troops eat from the town pool, not the mobile-party path.** They consume from
   `FoodStocks` via the food model above rather than through `FoodConsumptionBehavior`.
-- **But they DO die from starvation, through a different route.** (Corrected 2026-09-06 against
+- **But starvation wounds them, through a different route.** (Corrected 2026-09-06 against
   installed v1.4.8; this section previously claimed they never do, which sent at least one
   investigation down the wrong path.) `DefaultPartyHealingModel.GetDailyHealingForRegulars:132-141`
   applies a negative "healing" of `TotalRegulars * 0.1` to a garrison whose settlement is starving,
-  so **10% of garrison regulars die per day**. Two gates must both hold:
+  so **10% of garrison regulars are wounded per day**: `PartyHealCampaignBehavior.ReduceHpMemberRegulars` (v1.5.7,
+  line 364) calls `AddToCountsAtIndex(index, 0, n)`, which adds wounded and removes nobody, and no regular heals
+  while the gates hold (corrected 2026-11-16, #1283). Two gates must both hold:
 
   | Gate | Source | Meaning |
   |---|---|---|
@@ -141,18 +143,20 @@ which **excludes garrisons, militia, caravans, villagers, bandits**. Consequence
 
   Substituting the food formula into the second gate, the `Prosperity/40` terms cancel and it reduces
   to **`production < garrison / 20`**: the bleed starts once a fief's food production falls below its
-  garrison's own consumption. So a deficit driven purely by civilians never kills troops, however
+  garrison's own consumption. So a deficit driven purely by civilians never wounds troops, however
   deep it gets; a deficit where the garrison alone outweighs production does. The threshold garrison
   size is therefore `production * 20`, which is why a village-poor high-prosperity town cannot hold
   troops. Field parties are hit far harder, losing 25%/day (:144-145).
 
-  **TAOM leaves the starvation kill vanilla.** `TaomPartyHealingModel` (BattleBalance) is in the
+  **TAOM leaves the starvation wounding vanilla, except for a garrison of a realm in
+  `SiegeDefence.UpkeepFreeGarrisons`, whose negative regulars healing `TaomPartyHealingModel` cancels to 0 before the
+  camp rest line (#1283).** `TaomPartyHealingModel` (BattleBalance) is in the
   GameModel registry against `DefaultPartyHealingModel`. It also overrides the
   regulars path (`GetDailyHealingForRegulars`) with two additive lines: camp rest (#860, main party
   only, and `CampRestHealing.Grant` returns nothing while the party `isStarving`) and, since #769 E11,
   the career `WoundRecovery` factor, applied only to a positive healing value on the non-prisoner
   call (`CareerPassiveService.cs:266`). A starving garrison's negative value passes through
-  untouched, so the 10%/day above is still pure vanilla behaviour (it was verified before the
+  untouched (outside those free realms), so the 10%/day above is still pure vanilla behaviour (it was verified before the
   override existed, 2026-09-06).
 - **The cultural food-consumption feats do not touch garrisons.** `TaomFoodConsumptionModel` extends
   `DefaultMobilePartyFoodConsumptionModel`; its Goblin +20% / Dol Guldur +10% etc. apply only to

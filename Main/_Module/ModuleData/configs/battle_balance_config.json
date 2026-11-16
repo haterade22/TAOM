@@ -43,6 +43,12 @@
   "SiegeDefence": {
     "DefenderAdvantageBonuses": {
       "bluecraig": 0.1
+    },
+    "UpkeepFreeGarrisons": {
+      "bluecraig": true
+    },
+    "DailyGarrisonGrowth": {
+      "bluecraig": 2
     }
   }
 }

@@ -30,8 +30,8 @@ towns above 3,000 and two at 5,100, so the map moved prosperity well past vanill
 while production stayed vanilla. The 2026-08-14 economy floor pass, which lifts eight cultures to
 town prosperity 4,800 for income reasons, makes the food side strictly worse.
 
-**This is why fiefs cannot support lords.** A starving settlement kills **10% of its garrison
-regulars per day** (`DefaultPartyHealingModel.GetDailyHealingForRegulars`), gated on
+**This is why fiefs cannot support lords.** A starving settlement wounds **10% of its garrison
+regulars per day** (they are added as wounded, and none heal while it starves) (`DefaultPartyHealingModel.GetDailyHealingForRegulars`), gated on
 `SettlementHelper.IsGarrisonStarving`, which reduces to `production < garrison / 20`. Before this
 fix, 17 of 72 towns could not hold 800 men and Orthanc capped at 540; after it, the lowest threshold
 on the map is 1,860 men.

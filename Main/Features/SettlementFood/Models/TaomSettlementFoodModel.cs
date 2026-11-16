@@ -1,6 +1,8 @@
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.GameComponents;
 using TaleWorlds.CampaignSystem.Settlements;
+using TaleWorlds.Core;
+using TAOM.Features.BattleBalance;
 using TAOM.Features.SettlementFood;
 
 namespace TAOM.Features.SettlementFood.Models;
@@ -19,15 +21,20 @@ namespace TAOM.Features.SettlementFood.Models;
 ///
 /// Thin per ADR-002 / gamemodels.md: the constant properties are single expressions; the calculation
 /// override does boundary conversion (<see cref="TownFoodSnapshot.FromTown"/>) then delegates the math
-/// to <see cref="ISettlementFoodService"/>. Master toggle off ⇒ vanilla constants + zero delta.
+/// to <see cref="ISettlementFoodService"/>. Master toggle off ⇒ vanilla constants + zero delta. The #1283 garrison
+/// food refund for a realm in SiegeDefence.UpkeepFreeGarrisons is a realm rule, not food tuning, so it applies with the
+/// toggle off too.
 /// </summary>
 public class TaomSettlementFoodModel : DefaultSettlementFoodModel
 {
     private readonly ISettlementFoodService _service;
     private readonly SettlementFoodConfig _config;
+    private readonly IBattleBalanceConfigProvider _battleBalanceConfig;
 
-    public TaomSettlementFoodModel(ISettlementFoodService service, ISettlementFoodConfigProvider configProvider)
+    public TaomSettlementFoodModel(ISettlementFoodService service, ISettlementFoodConfigProvider configProvider,
+        IBattleBalanceConfigProvider battleBalanceConfig)
     {
+        _battleBalanceConfig = battleBalanceConfig;
         _service = service;
         _config = configProvider.GetConfig();
     }
@@ -48,6 +55,12 @@ public class TaomSettlementFoodModel : DefaultSettlementFoodModel
     public override ExplainedNumber CalculateTownFoodStocksChange(Town town, bool includeMarketStocks = true, bool includeDescriptions = false)
     {
         var result = base.CalculateTownFoodStocksChange(town, includeMarketStocks, includeDescriptions);
+        // #1283: a free realm's garrison eats nothing; give back the base's garrison term.
+        var refund = GarrisonUpkeep.GarrisonFoodRefund(
+            GarrisonUpkeep.IsUpkeepFree(_battleBalanceConfig?.GetConfig()?.SiegeDefence, town.MapFaction?.Culture?.StringId),
+            town.GarrisonParty?.Party.NumberOfAllMembers ?? 0, NumberOfMenOnGarrisonToEatOneFood);
+        if (refund > 0f)
+            result.Add(refund, GameTexts.FindText("str_garrison"));
         _service.ApplyFoodAdjustment(TownFoodSnapshot.FromTown(town), _config, Enabled, ref result, includeDescriptions);
         return result;
     }
