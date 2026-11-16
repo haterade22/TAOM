@@ -1,6 +1,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TAOM.Client.Features.LongDefeat;
 using TAOM.Features.LongDefeat.Diagnostics;
+using TAOM.Features.LongDefeat.Domain;
 using TAOM.Tests.Infrastructure;
 
 namespace TAOM.Tests.Features.LongDefeat.Client;
@@ -31,6 +32,51 @@ public class LongDefeatHudViewTests
         var noPanel = LongDefeatClientChecks.Hud("Preparation", true, false);
         Assert.AreEqual(CheckResult.Fail, noPanel.Result);
         StringAssert.Contains(noPanel.Detail, "panel_loaded=False");
+    }
+
+    [TestMethod]
+    public void TheUpgradeNoticeCheck_PassesWithText_AndNamesKindStepAndCounts()
+    {
+        var step = new UpgradeStep("fow_militia>fow_axe", "{=TAOM_LD_Up_Axemen}Militia to Westfold Axemen", "fow_militia", "fow_axe", 15);
+        var notice = new UpgradeNotice(1, UpgradeNoticeKind.Bought, step, 6, 24);
+
+        var pass = LongDefeatClientChecks.Notice(notice, "x");
+        Assert.AreEqual(CheckResult.Pass, pass.Result);
+        Assert.AreEqual("kind=bought from=fow_militia to=fow_axe count=6 left=24 text=set", pass.Detail);
+
+        var fail = LongDefeatClientChecks.Notice(notice, "");
+        Assert.AreEqual(CheckResult.Fail, fail.Result);
+        StringAssert.Contains(fail.Detail, "text=empty");
+    }
+
+    [TestMethod]
+    public void TheUpgradeNoticeCheck_IsRecordedOncePerSerial()
+    {
+        var vm = LongDefeatHudUpgradeTests.Panel(out _, out var run, gold: 100);
+        var log = new RecordingOutcomeLog();
+        vm.Upgrades[0].ExecuteUpgrade();
+
+        var recorded = LongDefeatClientChecks.RecordNotice(log, vm, "m1", 0);
+        var again = LongDefeatClientChecks.RecordNotice(log, vm, "m1", recorded);
+
+        Assert.AreEqual(1, recorded);
+        Assert.AreEqual(1, again);
+        Assert.AreEqual(1, log.Of(LongDefeatClientChecks.UpgradeNoticeId).Count, string.Join(", ", log.Lines));
+
+        var order = run.Tick(new RunSnapshot(1f, 0, 0, 30, 0, 0, 1000)).Upgrades[0];
+        run.CompleteUpgrade(order, 0, 30);
+        vm.Refresh();
+        vm.Upgrades[0].ExecuteUpgrade();
+        var second = LongDefeatClientChecks.RecordNotice(log, vm, "m1", again);
+
+        Assert.AreEqual(3, second, "the refund was serial 2, the second buy is serial 3");
+        Assert.AreEqual(2, log.Of(LongDefeatClientChecks.UpgradeNoticeId).Count, string.Join(", ", log.Lines));
+    }
+
+    [TestMethod]
+    public void TheView_CallsTheNoticeCheck()
+    {
+        StringAssert.Contains(View(), "LongDefeatClientChecks.RecordNotice(");
     }
 
     [TestMethod]

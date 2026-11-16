@@ -3322,6 +3322,157 @@ class UpgradeManifestTests(unittest.TestCase):
         self.assertIn('"' + self.PINNED + '"', self.TEST_FILE.read_text(encoding="utf-8"))
 
 
+class UpgradeFeedbackManifestTests(unittest.TestCase):
+    """tools/ingame_checks/1388.toml and 1401.toml judge real log lines (the fixtures hold the lines of runs 20261116-024002 and 20261116-055255) and the notice line the client's C# writes, through ingame_verdict's own loader and judge."""
+
+    FIXTURES = REPO / "tools" / "tests" / "fixtures"
+    CAVALRY_RUN = FIXTURES / "long_defeat_run_cavalry_before_1388.txt"
+    FOOT_RUN = FIXTURES / "long_defeat_run_foot_before_1388.txt"
+    HUD_TESTS = REPO / "TAOM.Tests" / "Features" / "LongDefeat" / "Client" / "LongDefeatHudViewTests.cs"
+    STAMP = "[2026-11-16 02:40:54] [INFO] "
+    LAUNCH = STAMP + "[LongDefeat] launching taom_rohan_castle_helms_deep_forceatmo for fortress helms (autorun)"
+    CAVALRY = STAMP + "[Check] id=taom.long-defeat.class result=pass class=cavalry mounted=true kit=Item0=wm_rohan_ws_spear_a03,Item1=wm_rohan_shield_a02_ggw,Item2=wm_rohan_ws_sword_a01,Item3=,Head=cts_rohan_helmet3 has_mount=true wrong=none skipped=none"
+    FOOT = STAMP + "[Check] id=taom.long-defeat.class result=pass class=sword_and_board mounted=false kit=Item0=wm_rohan_ws_sword_a02,Item1=wm_rohan_shield_a03_gsg,Item2=,Item3=,Horse=,HorseHarness= has_mount=false wrong=none skipped=none"
+    BATCH_1 = STAMP + "[LongDefeat][Muster] batch 1/7 Infantry fow_rohan_westfold_militiaman count=20 on_point=2 overlap=0 far=0 off_mesh=0"
+    BATCH_7 = STAMP + "[LongDefeat][Muster] batch 7/7 Infantry fow_rohan_westfold_militiaman count=10 on_point=0 overlap=0 far=0 off_mesh=0"
+    ARCHER_BATCH = STAMP + "[LongDefeat][Muster] batch archers Ranged fow_rohan_eastfold_skirmisher count=65 on_point=2 overlap=0 far=0 off_mesh=0"
+    BOUGHT = STAMP + "[LongDefeat][Shop] bought upgrade=fow_rohan_westfold_militiaman>fow_rohan_westfold_axeman n=20"
+    UPGRADE_PASS = STAMP + "[Check] id=taom.long-defeat.upgrade result=pass w=1 from=fow_rohan_westfold_militiaman to=fow_rohan_westfold_axeman ordered=20 found=20 replaced=20 read=20"
+    SKIRMISHER_44 = STAMP + "[Check] id=taom.long-defeat.upgrade result=pass w=1 from=fow_rohan_eastfold_skirmisher to=fow_rohan_eastfold_bowman ordered=65 found=44 replaced=44 read=44"
+    SKIRMISHER_65 = STAMP + "[Check] id=taom.long-defeat.upgrade result=pass w=1 from=fow_rohan_eastfold_skirmisher to=fow_rohan_eastfold_bowman ordered=65 found=65 replaced=65 read=65"
+    SKIRMISHER_REPLACED_44 = STAMP + "[Check] id=taom.long-defeat.upgrade result=fail w=1 from=fow_rohan_eastfold_skirmisher to=fow_rohan_eastfold_bowman ordered=65 found=65 replaced=44 read=44"
+    SKIRMISHER_READ_64 = STAMP + "[Check] id=taom.long-defeat.upgrade result=fail w=1 from=fow_rohan_eastfold_skirmisher to=fow_rohan_eastfold_bowman ordered=65 found=65 replaced=65 read=64"
+    SKIRMISHER_30 = STAMP + "[Check] id=taom.long-defeat.upgrade result=pass w=2 from=fow_rohan_eastfold_skirmisher to=fow_rohan_eastfold_bowman ordered=30 found=65 replaced=30 read=30"
+    SKIRMISHER_43 = STAMP + "[Check] id=taom.long-defeat.upgrade result=pass w=1 from=fow_rohan_eastfold_skirmisher to=fow_rohan_eastfold_bowman ordered=65 found=43 replaced=43 read=43"
+    SKIRMISHER_LATER = STAMP + "[Check] id=taom.long-defeat.upgrade result=pass w=3 from=fow_rohan_eastfold_skirmisher to=fow_rohan_eastfold_bowman ordered=58 found=58 replaced=58 read=58"
+    AXEMAN_NONE_FOUND = STAMP + "[Check] id=taom.long-defeat.upgrade result=skip w=1 from=fow_rohan_westfold_axeman to=rohan_westfold_veteran_axeman ordered=20 found=0 replaced=0 read=0 reason=none-found"
+    WAVE_1 = STAMP + "[LongDefeat][Wave] 1 starts: first batch 83 foot and 27 ranged"
+    NONE_FOUND = STAMP + "[Check] id=taom.long-defeat.upgrade result=skip w=1 from=fow_rohan_eastfold_skirmisher to=fow_rohan_eastfold_bowman ordered=21 found=0 replaced=0 read=0 reason=none-found"
+    NOTICE_DETAIL = "kind=bought from=fow_militia to=fow_axe count=6 left=24 text=set"
+    CHECKS_FILE = REPO / "Client" / "Features" / "LongDefeat" / "LongDefeatClientChecks.cs"
+    NOTICE_ROW = "taom.long-defeat.upgrade-notice"
+    ARCHERS_ROW = "taom.long-defeat.upgrade-finds-all-archers"
+
+    def setUp(self):
+        self.m1388 = iv.load_manifest(REPO / "tools" / "ingame_checks" / "1388.toml", 1388)
+        self.m1401 = iv.load_manifest(REPO / "tools" / "ingame_checks" / "1401.toml", 1401)
+
+    def log(self, *lines):
+        return iv.LogFile("taom", "taom_debug_test.log", list(enumerate(lines, 1)))
+
+    def verdict(self, manifest, check_id, *lines):
+        row = next(c for c in manifest.checks if c.id == check_id)
+        return iv.judge_check(row, [self.log(*lines)], []).verdict
+
+    def notice(self, result, detail):
+        return self.STAMP + f"[Check] id=taom.long-defeat.upgrade-notice result={result} {detail}"
+
+    def test_the_notice_line_the_csharp_writes_passes_the_notice_row(self):
+        source = self.CHECKS_FILE.read_text(encoding="utf-8")
+        for piece in ('"kind="', '" from="', '" to="', '" count="', '" left="', '" text="', '"set"', '"empty"', 'UpgradeNoticeId = "taom.long-defeat.upgrade-notice"'):
+            self.assertIn(piece, source)
+        self.assertIn('"' + self.NOTICE_DETAIL + '"', self.HUD_TESTS.read_text(encoding="utf-8"))
+        self.assertEqual(self.verdict(self.m1388, self.NOTICE_ROW, self.LAUNCH, self.BOUGHT, self.notice("pass", self.NOTICE_DETAIL)), iv.PASS)
+
+    def test_a_refund_notice_alone_does_not_pass_the_bought_notice_row(self):
+        refund = self.notice("pass", "kind=refunded from=a to=b count=2 left=0 text=set")
+        self.assertNotEqual(self.verdict(self.m1388, self.NOTICE_ROW, self.LAUNCH, self.BOUGHT, refund), iv.PASS)
+
+    def test_a_buy_with_no_notice_or_an_empty_one_fails(self):
+        self.assertEqual(self.verdict(self.m1388, self.NOTICE_ROW, self.LAUNCH, self.BOUGHT), iv.FAIL)
+        empty = self.notice("fail", self.NOTICE_DETAIL.replace("text=set", "text=empty"))
+        self.assertEqual(self.verdict(self.m1388, self.NOTICE_ROW, self.LAUNCH, self.BOUGHT, empty), iv.FAIL)
+
+    def test_a_buy_whose_only_said_notice_is_a_refund_fails_the_notice_row(self):
+        refund = self.notice("pass", "kind=refunded from=fow_militia to=fow_axe count=6 left=0 text=set")
+        self.assertEqual(self.verdict(self.m1388, self.NOTICE_ROW, self.LAUNCH, self.BOUGHT, refund), iv.FAIL)
+
+    def test_a_buy_before_the_last_muster_batch_fails_upgrade_after_muster(self):
+        row = "taom.long-defeat.upgrade-after-muster"
+        self.assertEqual(self.verdict(self.m1388, row, self.LAUNCH, self.ARCHER_BATCH, self.BATCH_1, self.BOUGHT, self.UPGRADE_PASS, self.BATCH_7), iv.FAIL)
+
+    def test_a_buy_after_the_last_muster_batch_passes_upgrade_after_muster(self):
+        row = "taom.long-defeat.upgrade-after-muster"
+        self.assertEqual(self.verdict(self.m1388, row, self.LAUNCH, self.ARCHER_BATCH, self.BATCH_1, self.BATCH_7, self.BOUGHT), iv.PASS)
+
+    def test_a_run_with_no_buy_passes_upgrade_after_muster_but_not_the_bought_row(self):
+        lines = (self.LAUNCH, self.BATCH_1, self.BATCH_7)
+        self.assertEqual(self.verdict(self.m1388, "taom.long-defeat.upgrade-after-muster", *lines), iv.PASS)
+        self.assertEqual(self.verdict(self.m1388, "taom.long-defeat.upgrade-bought-after-muster", *lines), iv.NOT_REACHED)
+
+    def test_the_bought_row_passes_only_on_a_buy_after_the_last_batch(self):
+        row = "taom.long-defeat.upgrade-bought-after-muster"
+        self.assertEqual(self.verdict(self.m1388, row, self.LAUNCH, self.BATCH_1, self.BOUGHT, self.BATCH_7), iv.NOT_REACHED)
+        self.assertEqual(self.verdict(self.m1388, row, self.LAUNCH, self.BATCH_1, self.BATCH_7, self.BOUGHT), iv.PASS)
+
+    def test_the_bought_row_ends_at_the_first_wave(self):
+        row = "taom.long-defeat.upgrade-bought-after-muster"
+        self.assertEqual(self.verdict(self.m1388, row, self.LAUNCH, self.BATCH_1, self.BATCH_7, self.WAVE_1, self.BOUGHT), iv.NOT_REACHED)
+        self.assertEqual(self.verdict(self.m1388, row, self.LAUNCH, self.BATCH_1, self.BATCH_7, self.BOUGHT, self.WAVE_1), iv.PASS)
+
+    def test_the_refund_has_a_human_claim_and_no_row_that_stays_unreached(self):
+        self.assertEqual([c.id for c in self.m1388.checks], [self.NOTICE_ROW, "taom.long-defeat.upgrade-after-muster", "taom.long-defeat.upgrade-bought-after-muster"])
+        claims = list(self.m1388.human)
+        self.assertTrue(any("could not be upgraded" in c and "gold paid back" in c for c in claims))
+        self.assertTrue(any("Upgrades N of M for G gold" in c and "M standing, gold for 0" in c for c in claims))
+
+    def test_a_working_run_passes_every_1388_row(self):
+        lines = (self.LAUNCH, self.BATCH_1, self.BATCH_7, self.BOUGHT, self.UPGRADE_PASS, self.notice("pass", self.NOTICE_DETAIL))
+        for c in self.m1388.checks:
+            self.assertEqual(self.verdict(self.m1388, c.id, *lines), iv.PASS, c.id)
+
+    def test_the_manifests_name_the_checks_the_csharp_writes(self):
+        self.assertEqual(iv.named_check_ids(self.m1388), {"taom.long-defeat.upgrade-notice"})
+        self.assertEqual(iv.named_check_ids(self.m1401), {"taom.long-defeat.class", "taom.long-defeat.upgrade"})
+
+    def test_a_cavalry_run_that_finds_44_of_65_skirmishers_fails_1401(self):
+        self.assertEqual(self.verdict(self.m1401, self.ARCHERS_ROW, self.LAUNCH, self.CAVALRY, self.SKIRMISHER_44), iv.FAIL)
+
+    def test_a_cavalry_run_that_finds_all_65_passes_1401(self):
+        self.assertEqual(self.verdict(self.m1401, self.ARCHERS_ROW, self.LAUNCH, self.CAVALRY, self.SKIRMISHER_65), iv.PASS)
+
+    def test_a_none_found_skip_fails_1401(self):
+        self.assertEqual(self.verdict(self.m1401, self.ARCHERS_ROW, self.LAUNCH, self.CAVALRY, self.SKIRMISHER_65, self.NONE_FOUND), iv.FAIL)
+
+    def test_a_foot_class_run_and_a_cavalry_run_without_the_skirmisher_read_not_reached_for_1401(self):
+        self.assertEqual(self.verdict(self.m1401, self.ARCHERS_ROW, self.LAUNCH, self.FOOT, self.SKIRMISHER_44), iv.NOT_REACHED)
+        self.assertEqual(self.verdict(self.m1401, self.ARCHERS_ROW, self.LAUNCH, self.CAVALRY, self.UPGRADE_PASS), iv.NOT_REACHED)
+
+    def test_a_found_65_order_that_replaced_fewer_fails_1401(self):
+        self.assertEqual(self.verdict(self.m1401, self.ARCHERS_ROW, self.LAUNCH, self.CAVALRY, self.SKIRMISHER_REPLACED_44), iv.FAIL)
+
+    def test_the_read_64_line_and_a_smaller_order_that_found_65_pass_1401(self):
+        self.assertEqual(self.verdict(self.m1401, self.ARCHERS_ROW, self.LAUNCH, self.CAVALRY, self.SKIRMISHER_READ_64), iv.PASS)
+        self.assertEqual(self.verdict(self.m1401, self.ARCHERS_ROW, self.LAUNCH, self.CAVALRY, self.SKIRMISHER_30), iv.PASS)
+
+    def test_a_wave_1_order_of_65_that_finds_another_number_fails_1401(self):
+        self.assertEqual(self.verdict(self.m1401, self.ARCHERS_ROW, self.LAUNCH, self.CAVALRY, self.SKIRMISHER_43), iv.FAIL)
+
+    def test_another_troops_none_found_skip_does_not_fail_1401(self):
+        self.assertEqual(self.verdict(self.m1401, self.ARCHERS_ROW, self.LAUNCH, self.CAVALRY, self.AXEMAN_NONE_FOUND, self.SKIRMISHER_65), iv.PASS)
+
+    def test_a_later_wave_order_that_found_its_own_count_does_not_pass_1401(self):
+        self.assertEqual(self.verdict(self.m1401, self.ARCHERS_ROW, self.LAUNCH, self.CAVALRY, self.SKIRMISHER_LATER), iv.NOT_REACHED)
+
+    def judge_real(self, manifest, check_id, fixture):
+        lines = fixture.read_text(encoding="utf-8").splitlines()
+        row = next(c for c in manifest.checks if c.id == check_id)
+        return iv.judge_check(row, [iv.LogFile("taom", fixture, list(enumerate(lines, 1)))], []).verdict
+
+    def test_the_real_cavalry_run_before_the_fix_fails_1401_and_upgrade_after_muster(self):
+        self.assertEqual(self.judge_real(self.m1401, self.ARCHERS_ROW, self.CAVALRY_RUN), iv.FAIL)
+        self.assertEqual(self.judge_real(self.m1388, "taom.long-defeat.upgrade-after-muster", self.CAVALRY_RUN), iv.FAIL)
+
+    def test_the_real_foot_run_before_the_fix_reads_not_reached_for_1401_and_fails_upgrade_after_muster(self):
+        self.assertEqual(self.judge_real(self.m1401, self.ARCHERS_ROW, self.FOOT_RUN), iv.NOT_REACHED)
+        self.assertEqual(self.judge_real(self.m1388, "taom.long-defeat.upgrade-after-muster", self.FOOT_RUN), iv.FAIL)
+
+    def test_the_real_runs_bought_nothing_between_the_last_batch_and_the_first_wave(self):
+        for fixture in (self.CAVALRY_RUN, self.FOOT_RUN):
+            with self.subTest(run=fixture.name):
+                self.assertEqual(self.judge_real(self.m1388, "taom.long-defeat.upgrade-bought-after-muster", fixture), iv.NOT_REACHED)
+
+
 class HeroJudgeTests(unittest.TestCase):
     """A run that bought a hero owes the game's own pass line for him (#1337): the line carries what the engine made of the body."""
 

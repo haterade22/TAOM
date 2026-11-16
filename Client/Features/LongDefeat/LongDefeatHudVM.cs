@@ -396,6 +396,11 @@ public sealed class LongDefeatHudVM : LongDefeatViewModel
         Refresh();
     }
 
+    /// <summary>The last upgrade notice the panel said, and its text, for the view's check (#1388).</summary>
+    internal UpgradeNotice? SaidUpgrade { get; private set; }
+
+    internal string SaidUpgradeLine { get; private set; } = string.Empty;
+
     internal void Refresh()
     {
         var view = _session.GetView();
@@ -405,7 +410,10 @@ public sealed class LongDefeatHudVM : LongDefeatViewModel
 
         ApplySpeed();
         if (view != null)
+        {
             ApplyStrip(view);
+            ApplyUpgradeNotice(view);
+        }
         if (view == null || !view.ShopOpen || result != null)
             _shopWanted = false;
 
@@ -651,6 +659,19 @@ public sealed class LongDefeatHudVM : LongDefeatViewModel
     {
         Notify(LongDefeatHudText.Refusal(_session.TryBuy(offerId)));
         Refresh();
+    }
+
+    /// <summary>Says each upgrade buy or refund once (#1388), by its serial, and keeps it for the view's check.</summary>
+    private void ApplyUpgradeNotice(RunView view)
+    {
+        var notice = view.UpgradeNotice;
+        if (notice == null || notice.Serial == SaidUpgrade?.Serial)
+            return;
+
+        var line = LongDefeatHudText.UpgradeNoticeLine(notice);
+        Notify(line);
+        SaidUpgrade = notice;
+        SaidUpgradeLine = line;
     }
 
     private void Notify(string line)

@@ -5043,9 +5043,12 @@
 	<string id="TAOM_LD_Hud_NoOffers" text="{=TAOM_LD_Hud_NoOffers}No reinforcements are for sale here." />
 	<string id="TAOM_LD_Hud_UpgradesTitle" text="{=TAOM_LD_Hud_UpgradesTitle}Upgrade your soldiers" />
 	<string id="TAOM_LD_Hud_UpgradeDetail" text="{=TAOM_LD_Hud_UpgradeDetail}{STANDING} standing, gold for {AFFORDABLE}" />
+	<string id="TAOM_LD_Hud_UpgradeDeal" text="{=TAOM_LD_Hud_UpgradeDeal}Upgrades {AFFORDABLE} of {STANDING} for {TOTAL} gold" />
 	<string id="TAOM_LD_Hud_UpgradePrice" text="{=TAOM_LD_Hud_UpgradePrice}{PRICE} gold each" />
 	<string id="TAOM_LD_Notice_UnknownUpgrade" text="{=TAOM_LD_Notice_UnknownUpgrade}That upgrade is not for sale." />
 	<string id="TAOM_LD_Notice_NoneToUpgrade" text="{=TAOM_LD_Notice_NoneToUpgrade}No soldier of that troop is left to upgrade." />
+	<string id="TAOM_LD_Notice_UpgradeBought" text="{=TAOM_LD_Notice_UpgradeBought}{STEP}: {COUNT} upgraded, {LEFT} left." />
+	<string id="TAOM_LD_Notice_UpgradeRefund" text="{=TAOM_LD_Notice_UpgradeRefund}{STEP}: {COUNT} could not be upgraded, {GOLD} gold paid back." />
 	<string id="TAOM_LD_Hud_HeroesTitle" text="{=TAOM_LD_Hud_HeroesTitle}Heroes" />
 	<string id="TAOM_LD_Hud_HeroPending" text="{=TAOM_LD_Hud_HeroPending}On his way" />
 	<string id="TAOM_LD_Hud_HeroStanding" text="{=TAOM_LD_Hud_HeroStanding}On the field" />

@@ -27,6 +27,7 @@ Most of the gap lives in engine rules that a data file cannot see: party slots f
 | Harad's eight tier-3 and tier-4 clans raised to tier 5: 19 party slots to 27 | `spclans.xslt` | this page, "Harad party slots" |
 | Auto-resolve power ratio exponent 0.7 to 0.5: numbers outweigh quality | `AutoResolve.PowerRatioExponent` in `configs/battle_balance_config.json` | [battle-balance.md](battle-balance.md) "Auto-resolve: numbers over quality" |
 | Blue Craig's defenders get +10% advantage in an auto-resolved siege of its own fortification, and survival 0.3 | `SiegeDefence.DefenderAdvantageBonuses` and `CulturalSurvivalBonuses` in `configs/battle_balance_config.json` | [battle-balance.md](battle-balance.md) "Siege defence by culture" |
+| Blue Craig's garrisons cost no wages or food, take no starvation wounds, and grow by 2 free troops a day | `SiegeDefence.UpkeepFreeGarrisons` and `DailyGarrisonGrowth`, new `TaomSettlementGarrisonModel` | [battle-balance.md](battle-balance.md) "Garrison upkeep by realm" |
 
 ### Isengard party slots
 
@@ -47,6 +48,8 @@ See the linked feature docs for each file. The two new fields:
 | `CapturedFortHold.Factions` | `army_targeting.json` | `["empire_s"]` | Realms whose armies hold a captured fort whatever their side |
 | `AutoResolve.PowerRatioExponent` | `battle_balance_config.json` | 0.5 | Exponent of the power ratio in a simulated strike (vanilla 0.7) |
 | `SiegeDefence.DefenderAdvantageBonuses` | `battle_balance_config.json` | `bluecraig` 0.1 | Factor on the defenders' advantage in an auto-resolved siege of a fortification that culture owns |
+| `SiegeDefence.UpkeepFreeGarrisons` | `battle_balance_config.json` | `bluecraig` true | The realm's garrisons cost no wages, eat no food and take no starvation wounds |
+| `SiegeDefence.DailyGarrisonGrowth` | `battle_balance_config.json` | `bluecraig` 2 | Free basic troops each fortification of the realm gains a day |
 
 ## Key Files
 
@@ -205,7 +208,7 @@ fell. Gondor ended 14,362 strength ahead of Mordor, the widest gap of the last t
 
 ## Still owed
 
-- Blue Craig fell in the sixth run too, with its siege defence bonus: capital day 54, destroyed day 140. The maintainer decides whether it needs more (a larger bonus, stronger garrisons) or may fall (#1283).
+- Blue Craig fell in the sixth run too, with its siege defence bonus: capital day 54, destroyed day 140. The maintainer's target (2026-11-16) is that it may fall, but not before about day 300. Its garrisons now need no gold or food and grow by 2 troops a day; 300-day runs tune `DailyGarrisonGrowth` until the realm lasts that long (#1283).
 - The Gondor to Mordor gap widened to 14,362 in the sixth run (8,027 in the fifth). Watch it in the next run before any change (#1283).
 - Gondor's survival row (0.3, shared with Arthedain) and its tier 7+ party template stacks: not changed, because the second run
   closed the gap. Revisit only if a later run shows the gap again.
@@ -215,6 +218,7 @@ fell. Gondor ended 14,362 strength ahead of Mordor, the widest gap of the last t
 
 ## Changelog
 
+- 2026-11-16: Blue Craig's garrisons cost no wages or food, take no starvation wounds, and grow by 2 free troops a day (#1283).
 - 2026-11-16: Sixth 150-day run recorded; Blue Craig, with its siege defence bonus, lasts to day 140 but loses its capital on day 54 (#1283).
 - 2026-11-16: Blue Craig gets a siege defence bonus of 0.1 and the survival bonus 0.3 (#1283).
 - 2026-11-16: Fifth 150-day run recorded; Blue Craig still falls with four wars (#1283).

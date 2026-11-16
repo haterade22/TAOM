@@ -1222,7 +1222,7 @@ public class SubModule : MBSubModuleBase
         campaignStarter.AddModel(new TaomPartySizeModel(culturalFeats, careerPassives, IoC.Resolve<ITroopWeightService>(), aiPartySize, IoC.Resolve<IModLogger>(), eyeOfSauron));
         campaignStarter.AddModel(new TaomFoodConsumptionModel(culturalFeats, aiPartySize, careerPassives));
         campaignStarter.AddModel(new TaomSettlementLoyaltyModel(culturalFeats, IoC.Resolve<IRevoltTuningConfigProvider>()));
-        campaignStarter.AddModel(new TaomSettlementFoodModel(IoC.Resolve<ISettlementFoodService>(), IoC.Resolve<ISettlementFoodConfigProvider>()));
+        campaignStarter.AddModel(new TaomSettlementFoodModel(IoC.Resolve<ISettlementFoodService>(), IoC.Resolve<ISettlementFoodConfigProvider>(), IoC.Resolve<IBattleBalanceConfigProvider>()));
         campaignStarter.AddModel(new TaomSettlementEconomyModel(IoC.Resolve<ISettlementEconomyService>(), IoC.Resolve<ISettlementEconomyConfigProvider>()));
         campaignStarter.AddModel(new TaomBanditDensityModel(IoC.Resolve<IBanditScalingService>(), IoC.Resolve<IHideoutBossFightService>()));
         campaignStarter.AddModel(new TaomPartyMoraleModel(culturalFeats, careerPassives));
@@ -1243,6 +1243,7 @@ public class SubModule : MBSubModuleBase
         campaignStarter.AddModel(new TaomMilitaryPowerModel(battleBalanceSettings, battleBalanceConfig));
         campaignStarter.AddModel(new TaomCombatSimulationModel(battleBalanceSettings, IoC.Resolve<Features.Refuge.IRefugeDefenseService>(), battleBalanceConfig));
         campaignStarter.AddModel(new TaomPartyHealingModel(battleBalanceSettings, battleBalanceConfig, IoC.Resolve<ICareerPassiveService>(), IoC.Resolve<Features.FieldCamp.Activities.CampRestHealing>()));
+        campaignStarter.AddModel(new TaomSettlementGarrisonModel(battleBalanceConfig));
 
         campaignStarter.AddModel(new TaomInformationRestrictionModel(IoC.Resolve<IEncyclopediaSettingsProvider>()));
 

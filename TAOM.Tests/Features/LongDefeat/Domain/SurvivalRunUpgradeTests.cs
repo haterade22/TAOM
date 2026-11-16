@@ -18,13 +18,14 @@ public class SurvivalRunUpgradeTests
     private static readonly UpgradeStep AxeToTwoHand = new("fow_a>two_a", "two_a", "fow_a", "two_a", 25);
     private static readonly UpgradeStep BowToVeteran = new("fow_b>vet_b", "vet_b", "fow_b", "vet_b", 25);
 
-    private static RunPlan Plan(int gold = 1000, RunRules? rules = null) =>
+    /// <summary>A garrison of 30 that musters in one batch unless <paramref name="musterBatch"/> says otherwise: an upgrade is sold only after the last batch (#1388).</summary>
+    private static RunPlan Plan(int gold = 1000, RunRules? rules = null, int musterBatch = 30) =>
         new(
             "helms",
             new[] { new GarrisonRow("fow_m", FormationSlot.Infantry, 30) },
             new WavePlan(new[] { new WaveSpec(20, new[] { new WaveTroop("orc", FormationSlot.Infantry, 3) }) }, new WaveScaling(10, 300)),
             new ShopPlan(gold, new[] { new ShopOffer("bowmen", "Bowmen", "fow_b", FormationSlot.Ranged, 8, 200) }) { Upgrades = new[] { MilitiaToAxe, AxeToVeteran, AxeToTwoHand, BowToVeteran } },
-            rules ?? RunRules.Default with { PreparationSeconds = 50f, IntermissionSeconds = 10f },
+            (rules ?? RunRules.Default with { PreparationSeconds = 50f, IntermissionSeconds = 10f }) with { MusterBatch = musterBatch },
             new RunOptions { Seed = 1UL })
         {
             Bounties = new Dictionary<string, int> { ["orc"] = 4 },
@@ -130,7 +131,7 @@ public class SurvivalRunUpgradeTests
         run.TryUpgrade(MilitiaToAxe.Id);
         var order = run.Tick(Snap()).Upgrades[0];
 
-        run.CompleteUpgrade(order, 30);
+        run.CompleteUpgrade(order, 30, 30);
 
         var purchase = run.FortSummary().Purchases.Single(p => p.Kind == PurchaseKind.Upgrade);
         Assert.AreEqual(MilitiaToAxe.Id, purchase.Id);
@@ -150,7 +151,7 @@ public class SurvivalRunUpgradeTests
         run.TryUpgrade(MilitiaToAxe.Id);
         var order = run.Tick(Snap()).Upgrades[0];
 
-        run.CompleteUpgrade(order, 28);
+        run.CompleteUpgrade(order, 28, 28);
 
         Assert.AreEqual(1000 - 28 * 15, run.Gold);
         Assert.AreEqual(28 * 15, run.Purse.SpentOn(PurseSink.Upgrades));
@@ -166,7 +167,7 @@ public class SurvivalRunUpgradeTests
         run.TryUpgrade(MilitiaToAxe.Id);
         var order = run.Tick(Snap()).Upgrades[0];
 
-        run.CompleteUpgrade(order, 0);
+        run.CompleteUpgrade(order, 0, 0);
 
         Assert.AreEqual(1000, run.Gold);
         Assert.AreEqual(0, run.FortSummary().Purchases.Count);
@@ -179,10 +180,110 @@ public class SurvivalRunUpgradeTests
         run.TryUpgrade(MilitiaToAxe.Id);
         var order = run.Tick(Snap()).Upgrades[0];
 
-        run.CompleteUpgrade(order, 99);
+        run.CompleteUpgrade(order, 99, 99);
 
         Assert.AreEqual(30, run.FortSummary().Purchases.Single().Count);
         Assert.AreEqual(1000 - 30 * 15, run.Gold);
+    }
+
+    [TestMethod]
+    public void TryUpgrade_WhileTheGarrisonMusters_IsNotOpen_AndListsNoRow()
+    {
+        var run = Begun(Plan(musterBatch: 20), ("fow_m", 20));
+
+        Assert.AreEqual(UpgradeResult.NotOpen, run.TryUpgrade(MilitiaToAxe.Id));
+
+        Assert.AreEqual(1000, run.Gold);
+        Assert.AreEqual(0, run.GetView().Upgrades.Count);
+    }
+
+    [TestMethod]
+    public void TheLastMusterBatch_OpensTheUpgrades_ForTheWholeGarrison()
+    {
+        var run = Begun(Plan(musterBatch: 20), ("fow_m", 20));
+        for (var i = 0; i < 4; i++)
+            run.Tick(Snap());
+        run.ObserveStanding(new Dictionary<string, int> { ["fow_m"] = 30 });
+
+        Assert.AreEqual(UpgradeResult.Ok, run.TryUpgrade(MilitiaToAxe.Id));
+
+        Assert.AreEqual(30, run.Tick(Snap()).Upgrades[0].Count);
+    }
+
+    [TestMethod]
+    public void CompleteUpgrade_BooksWhatTheFieldFound_SoSoldiersItCouldNotReachAreNotSoldAgain()
+    {
+        var run = Begun(Plan(1000), ("fow_m", 30));
+        run.TryUpgrade(MilitiaToAxe.Id);
+        var order = run.Tick(Snap()).Upgrades[0];
+
+        run.CompleteUpgrade(order, 20, 20);
+
+        var rows = run.GetView().Upgrades;
+        Assert.IsFalse(rows.Any(r => r.Step == MilitiaToAxe), "the 10 the field never found are not offered again");
+        Assert.AreEqual(1000 - 20 * 15, run.Gold);
+        Assert.AreEqual(20, rows.Single(r => r.Step == AxeToVeteran).Standing);
+    }
+
+    [TestMethod]
+    public void CompleteUpgrade_WhenTheFieldFoundMoreThanTheOrderTook_LeavesTheRestStandingAsTheOldTroop()
+    {
+        var run = Begun(Plan(100), ("fow_m", 30));
+        run.TryUpgrade(MilitiaToAxe.Id);
+        var order = run.Tick(Snap()).Upgrades[0];
+        Assert.AreEqual(6, order.Count, "the gold pays for 6 of the 30");
+
+        run.CompleteUpgrade(order, 6, 30);
+
+        var rows = run.GetView().Upgrades;
+        Assert.AreEqual(24, rows.Single(r => r.Step == MilitiaToAxe).Standing, "the 24 the order did not take still stand as militia");
+        Assert.AreEqual(6, rows.Single(r => r.Step == AxeToVeteran).Standing);
+    }
+
+    [TestMethod]
+    public void TryUpgrade_ABuy_LeavesABoughtNotice_WithItsCountAndTheSoldiersLeft()
+    {
+        var run = Begun(Plan(100), ("fow_m", 30));
+
+        run.TryUpgrade(MilitiaToAxe.Id);
+
+        Assert.AreEqual(new UpgradeNotice(1, UpgradeNoticeKind.Bought, MilitiaToAxe, 6, 24), run.GetView().UpgradeNotice);
+    }
+
+    [TestMethod]
+    public void TryUpgrade_ARefusal_LeavesNoNotice()
+    {
+        var run = Begun(Plan(14), ("fow_m", 30));
+
+        Assert.AreEqual(UpgradeResult.NoGold, run.TryUpgrade(MilitiaToAxe.Id));
+
+        Assert.IsNull(run.GetView().UpgradeNotice);
+    }
+
+    [TestMethod]
+    public void CompleteUpgrade_ARefund_LeavesARefundedNotice()
+    {
+        var run = Begun(Plan(1000), ("fow_m", 30));
+        run.TryUpgrade(MilitiaToAxe.Id);
+        var order = run.Tick(Snap()).Upgrades[0];
+
+        run.CompleteUpgrade(order, 28, 28);
+
+        Assert.AreEqual(new UpgradeNotice(2, UpgradeNoticeKind.Refunded, MilitiaToAxe, 2, 0), run.GetView().UpgradeNotice);
+    }
+
+    [TestMethod]
+    public void CompleteUpgrade_EveryoneReplaced_KeepsTheBoughtNotice()
+    {
+        var run = Begun(Plan(1000), ("fow_m", 30));
+        run.TryUpgrade(MilitiaToAxe.Id);
+        var order = run.Tick(Snap()).Upgrades[0];
+
+        run.CompleteUpgrade(order, 30, 30);
+
+        var notice = run.GetView().UpgradeNotice!;
+        Assert.AreEqual(1, notice.Serial);
+        Assert.AreEqual(UpgradeNoticeKind.Bought, notice.Kind);
     }
 
     [TestMethod]
@@ -254,7 +355,7 @@ public class SurvivalRunUpgradeTests
         Assert.AreEqual(1, order.BeforeWave);
         Assert.AreEqual(RunPhase.Preparation, run.Phase, "the timer ran out, but the wave waits for the order");
         Assert.IsNull(fx.StartWave);
-        run.CompleteUpgrade(order, 30);
+        run.CompleteUpgrade(order, 30, 30);
         Assert.AreEqual(1, run.FortSummary().Purchases.Single(p => p.Kind == PurchaseKind.Upgrade).BeforeWave);
         run.Tick(Snap());
         Assert.AreEqual(RunPhase.Wave, run.Phase);
@@ -272,7 +373,7 @@ public class SurvivalRunUpgradeTests
         Assert.AreEqual(1, fx.Upgrades.Single().BeforeWave);
         Assert.IsNull(fx.StartWave, "the wave's first batch waits a tick for the order");
         Assert.AreEqual(0, fx.AttackerBatches.Count);
-        run.CompleteUpgrade(fx.Upgrades[0], 30);
+        run.CompleteUpgrade(fx.Upgrades[0], 30, 30);
         Assert.AreEqual(1, run.FortSummary().Purchases.Single(p => p.Kind == PurchaseKind.Upgrade).BeforeWave);
         Assert.IsNotNull(run.Tick(Snap()).StartWave);
     }

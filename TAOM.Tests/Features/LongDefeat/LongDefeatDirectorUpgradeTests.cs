@@ -27,7 +27,7 @@ public class LongDefeatDirectorUpgradeTests
         public LongDefeatDirector Director { get; set; } = null!;
     }
 
-    private static Rig NewRig(bool autoplay = false, int gold = 3000)
+    private static Rig NewRig(bool autoplay = false, int gold = 3000, int musterBatch = 30)
     {
         var rig = new Rig();
         var plan = new RunPlan(
@@ -35,7 +35,7 @@ public class LongDefeatDirectorUpgradeTests
             new[] { new GarrisonRow("fow_militia", FormationSlot.Infantry, 30) },
             new WavePlan(new[] { new WaveSpec(60, new[] { new WaveTroop("orc", FormationSlot.Infantry, 75) }) }, new WaveScaling(10, 300)),
             new ShopPlan(gold, new[] { new ShopOffer("militia", "Militia", "fow_militia", FormationSlot.Infantry, 12, 180) }) { Upgrades = new[] { MilitiaToAxe } },
-            RunRules.Default with { PreparationSeconds = 50f, IntermissionSeconds = 60f, GarrisonCap = 30 },
+            RunRules.Default with { PreparationSeconds = 50f, IntermissionSeconds = 60f, GarrisonCap = 30, MusterBatch = musterBatch },
             new RunOptions { Autoplay = autoplay })
         {
             Bounties = new Dictionary<string, int> { ["orc"] = 4 },
@@ -88,6 +88,23 @@ public class LongDefeatDirectorUpgradeTests
     }
 
     [TestMethod]
+    public void TheBot_BuysNoUpgrade_UntilTheGarrisonHasMustered()
+    {
+        var rig = NewRig(autoplay: true, musterBatch: 20);
+        rig.Field.StandingByTroop["fow_militia"] = 30;
+        Assert.IsTrue(rig.Director.Start());
+
+        for (var i = 0; i < 10; i++)
+            rig.Director.Tick(0.1f);
+        Assert.AreEqual(0, rig.Field.Replaces.Count);
+
+        for (var i = 0; i < 10; i++)
+            rig.Director.Tick(0.5f);
+        Assert.AreEqual(1, rig.Field.Replaces.Count);
+        Assert.AreEqual(30, rig.Field.Replaces[0].Count);
+    }
+
+    [TestMethod]
     public void AShortReplace_PaysTheRestBack_AndStillPasses_WhenEverySoldierFoundWasReplaced()
     {
         var rig = NewRig();
@@ -134,6 +151,22 @@ public class LongDefeatDirectorUpgradeTests
         Assert.IsTrue(rig.Outcomes.Has("fail", LongDefeatUpgradeChecks.Id), "found 30 and replaced 29: one new soldier was not active. " + string.Join("\n", rig.Outcomes.Lines));
         Assert.AreEqual(3000 - 29 * 15, rig.Session.GetView()!.Gold);
         Assert.IsTrue(rig.Log.Lines.Any(l => l.Contains("[Upgrade]") && l.Contains("replaced 29") && l.Contains("paid 435")), string.Join("\n", rig.Log.Lines));
+    }
+
+    [TestMethod]
+    public void TheBooking_LeavesWhatTheFieldFoundMinusWhatItReplaced_ToSell()
+    {
+        var rig = NewRig();
+        rig.Field.StandingByTroop["fow_militia"] = 30;
+        Assert.IsTrue(rig.Director.Start());
+        rig.Director.Tick(0.1f);
+        rig.Session.TryUpgrade(MilitiaToAxe.Id);
+        rig.Field.ReplaceAnswer = new LdUpgradeReport(28, 25, 25, null);
+
+        rig.Director.Tick(0.1f);
+
+        var row = rig.Session.GetView()!.Upgrades.Single(r => r.Step.Id == MilitiaToAxe.Id);
+        Assert.AreEqual(3, row.Standing, "found 28 less replaced 25; the run's last read (30) or Replaced passed as found (25 - 25 = 0, no row) would give another row");
     }
 
     [TestMethod]
