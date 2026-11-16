@@ -6,25 +6,42 @@
 
 The Chinese team ships its work as a module of its own (TAOM_CN, #1385). Its text is the reference
 for Chinese (docs/localization/TRANSLATOR_GUIDE.md, "Chinese: the team's text is the reference"), so
-this tool takes it into the repo: every row of ours whose id the team translated gets the team's
-text, in the language file and in tools/translation_cache/<lang>.json, so a rebuild keeps it and the
-AI translator never drafts it again (the translator picks up only rows that still equal English).
+this tool takes it into the repo: a row of ours whose id the team translated gets the team's text, in
+the language file and in tools/translation_cache/<lang>.json, so a rebuild keeps it and the AI
+translator never drafts it again (the translator picks up only rows that still equal English).
 
-Where the team's text comes from, first source wins per id:
-  1. ModuleData/Languages/<lang>/*.xml rows (their language files);
-  2. {=KEY}text values in their RuntimeTranslations*.xml (ModuleData/ for CNs, ModuleData/CNt/ for CNt);
-  3. {=KEY}text values in their Overrides/ (CNs) or Overrides.CNt/ (CNt) file copies.
+The team's text comes from its ModuleData/Languages/<lang>/*.xml rows. Their runtime and override
+copies are not read: in the v2.0.38 drop, every id of ours they hold is also in the language files.
 
-A row is taken only when its id is already a row of ours, its placeholders, conditionals and tags
-match our English (translate_with_claude.placeholders_match), and it is not the English text itself.
+A row of ours with a translation override takes the override: tools/translation_overrides/<lang>.json
+wins in every tool, so a hand correction survives each import, and a different team text is reported.
+Any other row takes the team's text only when all of these hold:
+  - the id is not in KEEP_OURS (decisions recorded below) and has no --skip-prefix;
+  - the text is not empty, is not our English, and holds no tab or line break (written raw into an
+    attribute, either reads back as a space);
+  - no {...} expression in it holds a character outside ASCII and whitespace, such as a Chinese name
+    or a full-width question mark: the engine's tokenizer reads none, and then shows the whole string
+    empty (Tokenizer.FindTokenMatchesAndText);
+  - its placeholders, conditionals and tags match our English (translate_with_claude.placeholders_match);
+  - for TAOM, our English for the id is what it was at the drop's base version: the TAOM version its
+    SubModule.xml depends on, or --base. Otherwise the team translated words we have since changed, and
+    the row is reported as stale. An id newer than the base is taken and listed. TAOM_Map and the
+    Armory are not versioned here, so their rows are taken without this check and counted;
+  - in a file of names a player picks between (troop names, Armory items), it does not give two ids
+    with different English one text. An Armory name whose English ends in a tier (I, IV, II-T1) first
+    gets that tier appended when the team's text lacks it, the way the team writes it elsewhere.
 The tool never adds a row, so it cannot seed a vanilla-key row VanillaKeyOverrideTests forbids.
 
---module TAOM (the default) writes the repo's files. TAOM_Map and Armory write the live install,
-each file backed up first (translate_with_claude.backup_live_file). A dry run (the default) writes
-nothing; --report always writes the JSON report to the path given.
+--module TAOM (the default) writes the repo's files. TAOM_Map and Armory write the live install, each
+file backed up first (translate_with_claude.backup_live_file). A dry run (the default) writes only the
+JSON report, which --report always writes, also when a run stops.
 
-The drop is untrusted data: it is read as XML and JSON only, from a zip or a folder, and nothing in it
-is run. ElementTree resolves no external entity, and the expat it uses limits entity expansion.
+Exit codes: 0 done. 2 done, but the drop has problems (a file that does not parse, two texts for one
+id, no rows for a language): read the report's "problems". 1 stopped (a bad --from or --base, a file of
+ours that does not parse, a row that does not land).
+
+The drop is untrusted data: it is read as XML only, from a zip or a folder, and nothing in it is run or
+extracted. ElementTree resolves no external entity, and the expat it uses limits entity expansion.
 """
 
 from __future__ import annotations
@@ -32,11 +49,14 @@ from __future__ import annotations
 import argparse
 import json
 import re
+import subprocess
 import sys
 import xml.etree.ElementTree as ET
 import zipfile
+from collections import defaultdict
 from dataclasses import dataclass, field
 from pathlib import Path
+from typing import Callable
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
@@ -45,7 +65,6 @@ from translate_with_claude import (  # noqa: E402
     LANGUAGES,
     REPO_ROOT,
     TAOM_LANG_DIR,
-    _parse_string_xml,
     armory_lang_dir,
     backup_live_file,
     game_modules_root,
@@ -59,13 +78,29 @@ from translate_with_claude import (  # noqa: E402
 
 KEYED = re.compile(r"^\{=([^}]+)\}(.*)$", re.DOTALL)
 TAG = re.compile(r'<tag\s+language="([^"]*)"\s*/>')
+MODULE_ROOT = re.compile(r"^(?:([^/]+)/)?ModuleData/", re.IGNORECASE)
+XML_UNSAFE = re.compile(r"[\x00-\x1f\ud800-\udfff￾￿]")
+# A character no token of the engine's tokenizer reads inside a {...} expression (Tokenizer's token table).
+UNREADABLE = re.compile(r"[^\x00-\x7f\s]")
+TIER = re.compile(r"\s((?:[IVXL]+|\d+)(?:-T\d+)?)$")
 MODULES = ("TAOM", "TAOM_Map", "Armory")
+TEAM_LANGS = ("CNs", "CNt")
+ENGLISH_DIR = "Main/_Module/ModuleData"
+# Our sources whose rows are names a player picks between, so two of them may never share a text.
+DISTINCT_NAME_SOURCES = {"taom_troop_name_strings.xml"}
 
-# Where each language's runtime and override copies sit in the team's module.
-TEAM_LAYOUT = {
-    "CNs": {"runtime": "ModuleData", "overrides": "Overrides"},
-    "CNt": {"runtime": "ModuleData/CNt", "overrides": "Overrides.CNt"},
-}
+# Ids whose team text names another entity than our English does: a Chinese player would meet another
+# lord, clan or name than an English one. Our row stays, and the report lists the id with the reason for
+# the team (#1385). Each pattern must match the whole id.
+KEEP_OURS = (
+    (r"aom_mordor_(?:male|female)_name_\d+", "the team's Mordor name pools are another list (Gûlsha is 格拉斯卡)"),
+    (r"aom_rohan_clan_name_\d+", "the team's Rohan clans are other houses (Harolding is 埃奥尔一族, the Eorlings)"),
+    (r"aom_shaghana_clan_\d+", "the team's Shaghana clans are other names (Alâranin is 阿兹拉克氏族, the Azrak clan)"),
+    (r"aom_abanissa_clan_\d+", "the team's Âbanissa houses are other names (House of Phaxsharân is 乌洛家族)"),
+    (r"aom_clan_dolguldur_1_name", "Hîondrûs is 黑暗獠牙 (Dark Fang) in the team's text"),
+    (r"aom_clan_gundabad_1_name", "Ashmog is 贡达巴德之子 (Sons of Gundabad) in the team's text"),
+    (r"aom_lord_1_8_name", "Húrioneth is 文德丽娅 in the team's text"),
+)
 
 
 # ── Reading the drop ───────────────────────────────────────────────────────────
@@ -78,9 +113,14 @@ class Drop:
         self._files: dict[str, object] = {}
         if source.is_file() and zipfile.is_zipfile(source):
             self._zip = zipfile.ZipFile(source)
-            names = [n for n in self._zip.namelist() if not n.endswith("/")]
-            root = _common_root(names)
-            self._files = {n[len(root):]: n for n in names}
+            names = [n for n in self._zip.namelist() if not n.endswith("/") and not n.startswith("__MACOSX/")]
+            roots = {m.group(1) or "" for n in names if (m := MODULE_ROOT.match(n))}
+            if len(roots) != 1:
+                self._zip.close()
+                raise SystemExit(f"--from {source}: want one module folder holding ModuleData/, found "
+                                 f"{sorted(roots) or 'none'}")
+            prefix = (roots.pop() + "/").lstrip("/")
+            self._files = {n[len(prefix):]: n for n in names if n.startswith(prefix)}
         elif source.is_dir():
             if not (source / "ModuleData").is_dir():
                 inner = [d for d in source.iterdir() if (d / "ModuleData").is_dir()]
@@ -92,12 +132,13 @@ class Drop:
             raise SystemExit(f"--from {source}: not a zip file or a folder")
 
     def names(self, folder: str, suffix: str) -> list[str]:
-        prefix = folder.rstrip("/") + "/"
-        return sorted(n for n in self._files if n.startswith(prefix) and n.lower().endswith(suffix))
+        """The files under folder (any depth) whose names end in suffix, both matched without case."""
+        prefix = folder.rstrip("/").lower() + "/"
+        return sorted(n for n in self._files if n.lower().startswith(prefix) and n.lower().endswith(suffix))
 
-    def names_directly_in(self, folder: str, suffix: str) -> list[str]:
-        prefix = folder.rstrip("/") + "/"
-        return [n for n in self.names(folder, suffix) if "/" not in n[len(prefix):]]
+    def find(self, name: str) -> str | None:
+        """The drop's own spelling of a root-relative path, matched without case."""
+        return next((n for n in self._files if n.lower() == name.lower()), None)
 
     def read(self, name: str) -> bytes:
         ref = self._files[name]
@@ -105,18 +146,18 @@ class Drop:
             return self._zip.read(ref)
         return Path(ref).read_bytes()
 
+    def close(self) -> None:
+        if self._zip is not None:
+            self._zip.close()
 
-def _common_root(names: list[str]) -> str:
-    """The single top folder every name shares ("TAOM_CN/"), or "" when the drop has none."""
-    tops = {n.split("/", 1)[0] for n in names if "/" in n}
-    if len(tops) == 1 and all("/" in n for n in names):
-        top = tops.pop()
-        if not any(n.startswith("ModuleData/") for n in names):
-            return top + "/"
-    return ""
+    def __enter__(self) -> Drop:
+        return self
+
+    def __exit__(self, *exc) -> None:
+        self.close()
 
 
-def _xml(drop: Drop, name: str, problems: list[str]):
+def _drop_xml(drop: Drop, name: str, problems: list[str]):
     try:
         return ET.fromstring(drop.read(name))
     except ET.ParseError as exc:
@@ -124,81 +165,83 @@ def _xml(drop: Drop, name: str, problems: list[str]):
         return None
 
 
-def _keyed_values(value) -> list[tuple[str, str]]:
-    """Every {=KEY}text string inside a JSON value."""
-    found = []
-    if isinstance(value, str):
-        m = KEYED.match(value)
-        if m:
-            found.append((m.group(1), m.group(2)))
-    elif isinstance(value, dict):
-        for v in value.values():
-            found.extend(_keyed_values(v))
-    elif isinstance(value, list):
-        for v in value:
-            found.extend(_keyed_values(v))
-    return found
-
-
-def _keyed_attributes(root) -> list[tuple[str, str]]:
-    found = []
-    for el in root.iter():
-        for value in el.attrib.values():
-            m = KEYED.match(value)
-            if m:
-                found.append((m.group(1), m.group(2)))
-    return found
-
-
 def team_rows(drop: Drop, lang: str, problems: list[str]) -> dict[str, tuple[str, str]]:
-    """id -> (text, origin), first source wins (see the module docstring)."""
+    """id -> (text, file) from the team's ModuleData/Languages/<lang>/*.xml.
+
+    An id the drop gives two different texts is a problem, and neither text is taken: the engine shows
+    whichever file it loads last, so the drop itself does not say which one the team means."""
     rows: dict[str, tuple[str, str]] = {}
-
-    def take(sid: str, text: str, origin: str):
-        if sid and sid != "!" and sid not in rows:
-            rows[sid] = (text, origin)
-
+    clashing: set[str] = set()
     for name in drop.names(f"ModuleData/Languages/{lang}", ".xml"):
-        if name.endswith("/language_data.xml"):
+        if name.lower().endswith("/language_data.xml"):
             continue
-        root = _xml(drop, name, problems)
+        root = _drop_xml(drop, name, problems)
         if root is None:
             continue
         for el in root.iter("string"):
-            take(el.get("id", ""), el.get("text", ""), name)
-
-    layout = TEAM_LAYOUT.get(lang)
-    if layout is None:
-        return rows
-    for name in drop.names_directly_in(layout["runtime"], ".xml"):
-        if not Path(name).name.startswith("RuntimeTranslations"):
-            continue
-        root = _xml(drop, name, problems)
-        if root is None:
-            continue
-        for el in root.iter("string"):
-            m = KEYED.match(el.get("text", ""))
-            if m:
-                take(m.group(1), m.group(2), name)
-    for name in drop.names(layout["overrides"], ""):
-        lower = name.lower()
-        if lower.endswith(".xml"):
-            root = _xml(drop, name, problems)
-            pairs = _keyed_attributes(root) if root is not None else []
-        elif lower.endswith(".json"):
-            try:
-                pairs = _keyed_values(json.loads(drop.read(name).decode("utf-8-sig")))
-            except (ValueError, UnicodeDecodeError) as exc:
-                problems.append(f"{name}: not JSON ({exc})")
-                pairs = []
-        else:
-            continue
-        for sid, text in pairs:
-            take(sid, text, name)
+            sid, text = el.get("id", ""), el.get("text", "")
+            if not sid:
+                continue
+            if sid in rows and rows[sid][0] != text:
+                clashing.add(sid)
+            rows.setdefault(sid, (text, name))
+    for sid in sorted(clashing):
+        problems.append(f"{lang} {sid}: the drop holds two different texts for this id; neither is imported")
+        del rows[sid]
     return rows
 
 
+def base_version(drop: Drop) -> str | None:
+    """The TAOM version the drop's SubModule.xml depends on (its DependedModuleMetadata), or None."""
+    name = drop.find("SubModule.xml")
+    if name is None:
+        return None
+    try:
+        root = ET.fromstring(drop.read(name))
+    except ET.ParseError:
+        return None
+    for el in root.iter("DependedModuleMetadata"):
+        if el.get("id") == "TAOM" and el.get("version"):
+            return el.get("version")
+    return None
+
+
 # ── Our side ───────────────────────────────────────────────────────────────────
+
+def _rows(data: bytes, where: str, strip_keys: bool) -> dict[str, str]:
+    """The <string id text> rows; with strip_keys, text="{=KEY}value" is the row KEY. Stops on a file that
+    does not parse, which would otherwise read as empty and file every team row under the wrong list."""
+    try:
+        root = ET.fromstring(data)
+    except ET.ParseError as exc:
+        raise SystemExit(f"{where} does not parse ({exc}); fix it before an import") from None
+    rows = {}
+    for el in root.iter("string"):
+        sid, text = el.get("id", ""), el.get("text", "")
+        if strip_keys and (m := KEYED.match(text)):
+            sid, text = m.group(1), m.group(2)
+        if sid:
+            rows[sid] = text
+    return rows
+
+
+def _file_rows(path: Path, strip_keys: bool) -> dict[str, str]:
+    return _rows(path.read_bytes(), str(path), strip_keys)
+
+
+def ref_exists(ref: str) -> bool:
+    return subprocess.run(["git", "-C", str(REPO_ROOT), "rev-parse", "--verify", "--quiet", f"{ref}^{{commit}}"],
+                          capture_output=True).returncode == 0
+
+
+def english_at(ref: str) -> Callable[[str], dict[str, str]]:
+    """A reader of one English source of ours as it was at git ref: {} when the file did not exist then."""
+    def read(src_name: str) -> dict[str, str]:
+        shown = subprocess.run(["git", "-C", str(REPO_ROOT), "show", f"{ref}:{ENGLISH_DIR}/{src_name}"],
+                               capture_output=True)
+        return _rows(shown.stdout, f"{ref}:{src_name}", strip_keys=True) if shown.returncode == 0 else {}
+    return read
+
 
 @dataclass
 class Target:
@@ -206,18 +249,23 @@ class Target:
     english: dict[str, str]
     current: dict[str, str]
     live: bool
+    english_then: dict[str, str] | None = None  # our English at the drop's base version; None: no history
+    distinct_names: bool = False                 # names a player picks between: no two may share a text
+    tiers: bool = False                          # Armory item names: append the English tier the team left out
 
 
-def taom_targets(lang: str, lang_root: Path = TAOM_LANG_DIR, source_root: Path | None = None) -> list[Target]:
+def taom_targets(lang: str, lang_root: Path = TAOM_LANG_DIR, source_root: Path | None = None,
+                 base: Callable[[str], dict[str, str]] | None = None) -> list[Target]:
     locale, _ = LANGUAGES[lang]
-    source_root = source_root or REPO_ROOT / "Main" / "_Module" / "ModuleData"
+    source_root = source_root or REPO_ROOT / ENGLISH_DIR
     targets = []
     for src_name, template in TAOM_SOURCES:
         target = lang_root / lang / template.format(locale=locale)
         src = source_root / src_name
         if target.exists() and src.exists():
-            targets.append(Target(target, _parse_string_xml(src, strip_keys=True),
-                                  _parse_string_xml(target, strip_keys=False), live=False))
+            targets.append(Target(target, _file_rows(src, strip_keys=True), _file_rows(target, strip_keys=False),
+                                  live=False, english_then=base(src_name) if base else None,
+                                  distinct_names=src_name in DISTINCT_NAME_SOURCES))
     return targets
 
 
@@ -237,12 +285,12 @@ def live_targets(lang: str, module: str) -> list[Target]:
         source = game_modules_root() / "TAOM_Map" / "ModuleData" / "settlements.xml"
         if not (target.exists() and source.exists()):
             raise SystemExit(f"TAOM_Map: not found: {target if not target.exists() else source}")
-        return [Target(target, settlement_english(source), _parse_string_xml(target, strip_keys=False), live=True)]
+        return [Target(target, settlement_english(source), _file_rows(target, strip_keys=False), live=True)]
     root = armory_lang_dir()
     if not (root / lang).is_dir():
         raise SystemExit(f"Armory: not found: {root / lang}")
-    return [Target(root / lang / src.name, _parse_string_xml(src, strip_keys=False),
-                   _parse_string_xml(root / lang / src.name, strip_keys=False), live=True)
+    return [Target(root / lang / src.name, _file_rows(src, strip_keys=False),
+                   _file_rows(root / lang / src.name, strip_keys=False), live=True, distinct_names=True, tiers=True)
             for src in sorted(root.glob("loc_*.xml")) if (root / lang / src.name).exists()]
 
 
@@ -254,12 +302,112 @@ class Plan:
     cache: dict[str, str] = field(default_factory=dict)
     imported: int = 0
     already_equal: int = 0
+    unchecked: int = 0
+    stale: list[dict] = field(default_factory=list)
+    collisions: list[dict] = field(default_factory=list)
+    kept_ours: list[dict] = field(default_factory=list)
+    override_conflicts: list[dict] = field(default_factory=list)
     rejected: list[dict] = field(default_factory=list)
+    new_since_base: list[str] = field(default_factory=list)
+    tier_added: list[str] = field(default_factory=list)
     english_in_drop: list[str] = field(default_factory=list)
     skipped_prefix: list[str] = field(default_factory=list)
-    override_conflicts: list[dict] = field(default_factory=list)
+    orphans: list[str] = field(default_factory=list)
     theirs_only: list[str] = field(default_factory=list)
     ours_untranslated_they_lack: list[str] = field(default_factory=list)
+    ours_drafted_they_lack: list[str] = field(default_factory=list)
+
+
+def keep_ours_reason(sid: str) -> str | None:
+    return next((reason for pattern, reason in KEEP_OURS if re.fullmatch(pattern, sid)), None)
+
+
+def with_tier(english: str, text: str) -> str:
+    """text with the tier that ends english (II, IV, 3, II-T1) appended as " II", unless text holds it."""
+    m = TIER.search(english)
+    if not m or re.search(r"(?<![A-Za-z0-9])" + re.escape(m.group(1)) + r"(?![A-Za-z0-9])", text):
+        return text
+    return f"{text} {m.group(1)}"
+
+
+def unreadable_expressions(text: str) -> list[str]:
+    """Each {...} expression in text that holds an UNREADABLE character. The expression ends where its
+    braces balance, as Tokenizer.FindExpressionEnd cuts it."""
+    found, start = [], text.find("{")
+    while start != -1:
+        depth, end = 1, start + 1
+        while end < len(text) and depth:
+            depth += {"{": 1, "}": -1}.get(text[end], 0)
+            end += 1
+        if UNREADABLE.search(text, start, end):
+            found.append(text[start:end])
+        start = text.find("{", end)
+    return found
+
+
+def _accepted_text(sid: str, current: str, team: dict[str, tuple[str, str]], target: Target,
+                   overrides: dict[str, str], skip_prefixes: tuple[str, ...], plan: Plan) -> str | None:
+    """The text this row of ours takes from the team, or None with the reason filed in the plan."""
+    english = target.english.get(sid)
+    if sid not in team:
+        if english is not None:
+            (plan.ours_untranslated_they_lack if current == english else plan.ours_drafted_they_lack).append(sid)
+        return None
+    if english is None:
+        plan.orphans.append(sid)  # a row with no English source: check_orphan_loc_rows.py owns it
+        return None
+    if skip_prefixes and sid.startswith(skip_prefixes):
+        plan.skipped_prefix.append(sid)
+        return None
+    text, origin = team[sid]
+    if sid in overrides:
+        if overrides[sid] != text:
+            plan.override_conflicts.append({"id": sid, "override": overrides[sid], "theirs": text})
+        return overrides[sid]
+    reason = keep_ours_reason(sid)
+    if reason:
+        plan.kept_ours.append({"id": sid, "reason": reason})
+        return None
+    if not text.strip() or text == english:
+        plan.english_in_drop.append(sid)
+        return None
+    unsafe = set(XML_UNSAFE.findall(text)) - set(english)
+    unreadable = unreadable_expressions(text)
+    if unsafe:
+        ok, why = False, f"characters an attribute cannot carry: {sorted(hex(ord(c)) for c in unsafe)}"
+    elif unreadable:
+        ok, why = False, f"the game shows the whole string empty for these {{...}} expressions: {unreadable}"
+    else:
+        ok, why = placeholders_match(english, text)
+    if not ok:
+        plan.rejected.append({"id": sid, "file": target.path.name, "origin": origin, "reason": why,
+                              "english": english, "theirs": text})
+        return None
+    if target.english_then is not None:
+        then = target.english_then.get(sid)
+        if then is None:
+            plan.new_since_base.append(sid)
+        elif then != english:
+            plan.stale.append({"id": sid, "file": target.path.name, "english_then": then,
+                               "english_now": english, "theirs": text})
+            return None
+    return with_tier(english, text) if target.tiers else text
+
+
+def _drop_collisions(target: Target, accepted: dict[str, str], plan: Plan) -> None:
+    """Keeps our text wherever the team's text would give ids with different English one name."""
+    while True:
+        holders: dict[str, list[str]] = defaultdict(list)
+        for sid, current in target.current.items():
+            if sid in target.english:
+                holders[accepted.get(sid, current)].append(sid)
+        clashing = [sid for ids in holders.values() if len({target.english[s] for s in ids}) > 1
+                    for sid in ids if sid in accepted and accepted[sid] != target.current[sid]]
+        if not clashing:
+            return
+        for sid in clashing:
+            plan.collisions.append({"id": sid, "file": target.path.name, "english": target.english[sid],
+                                    "theirs": accepted.pop(sid)})
 
 
 def make_plan(team: dict[str, tuple[str, str]], targets: list[Target], overrides: dict[str, str],
@@ -267,62 +415,57 @@ def make_plan(team: dict[str, tuple[str, str]], targets: list[Target], overrides
     plan = Plan()
     ours: set[str] = set()
     for target in targets:
+        accepted: dict[str, str] = {}
         for sid, current in target.current.items():
             ours.add(sid)
-            english = target.english.get(sid)
-            if sid not in team:
-                if english is not None and current == english:
-                    plan.ours_untranslated_they_lack.append(sid)
-                continue
-            if skip_prefixes and sid.startswith(skip_prefixes):
-                plan.skipped_prefix.append(sid)
-                continue
-            text, origin = team[sid]
-            if english is None:
-                # A row with no English source is an orphan; leave it to check_orphan_loc_rows.py.
-                continue
-            if not text.strip() or text == english:
-                plan.english_in_drop.append(sid)
-                continue
-            ok, reason = placeholders_match(english, text)
-            if not ok:
-                plan.rejected.append({"id": sid, "file": target.path.name, "origin": origin,
-                                      "reason": reason, "english": english, "theirs": text})
-                continue
-            if sid in overrides and overrides[sid] != text:
-                plan.override_conflicts.append({"id": sid, "override": overrides[sid], "theirs": text})
+            text = _accepted_text(sid, current, team, target, overrides, skip_prefixes, plan)
+            if text is not None:
+                accepted[sid] = text
+        if target.distinct_names:
+            _drop_collisions(target, accepted, plan)
+        for sid, text in accepted.items():
             plan.cache[sid] = text
-            if current == text:
+            if target.current[sid] == text:
                 plan.already_equal += 1
                 continue
             plan.writes.setdefault(target.path, {})[sid] = text
             plan.imported += 1
+            if target.english_then is None:
+                plan.unchecked += 1
+            if target.tiers and sid not in overrides and text != team[sid][0]:
+                plan.tier_added.append(sid)
     plan.theirs_only = sorted(set(team) - ours)
-    for name in ("rejected", "english_in_drop", "skipped_prefix", "ours_untranslated_they_lack"):
-        value = getattr(plan, name)
-        value.sort(key=(lambda r: r["id"]) if name == "rejected" else None)
+    for name in ("new_since_base", "tier_added", "english_in_drop", "skipped_prefix", "orphans",
+                 "ours_untranslated_they_lack", "ours_drafted_they_lack"):
+        getattr(plan, name).sort()
+    for name in ("stale", "collisions", "kept_ours", "override_conflicts", "rejected"):
+        getattr(plan, name).sort(key=lambda r: r["id"])
     return plan
 
 
-def apply_plan(plan: Plan, lang: str, targets: list[Target], cache_dir: Path | None = None) -> list[str]:
-    """Writes the language files (live ones backed up first) and the cache; returns the backups made."""
-    live = {t.path for t in targets if t.live}
-    backups = []
-    for path, rows in sorted(plan.writes.items()):
-        if path in live:
-            backups.append(str(backup_live_file(path)))
-        content = path.read_text(encoding="utf-8")
-        tag = TAG.search(content)
-        written, unplaced = write_back(path, rows, tag.group(1) if tag else LANGUAGES[lang][1])
-        if unplaced:
-            raise SystemExit(f"{path}: {len(unplaced)} rows did not land, e.g. {unplaced[:3]}")
-        ET.parse(path)  # refuse to leave a file that no longer parses unnoticed
+def apply_plan(plan: Plan, lang: str, targets: list[Target], cache_dir: Path | None = None,
+               backups: list[str] | None = None) -> list[str]:
+    """Saves the cache, then writes the language files, each live one backed up first.
+
+    The cache goes first: its rows passed every check, and a rebuild writes them into any file a failed
+    write below leaves behind. Each backup path is added to backups as it is made, so a caller can still
+    report them after a failure."""
+    backups = [] if backups is None else backups
     cache = load_cache(lang, cache_dir) if cache_dir else load_cache(lang)
     cache.update(plan.cache)
     if cache_dir:
         save_cache(lang, cache, cache_dir)
     else:
         save_cache(lang, cache)
+    live = {t.path for t in targets if t.live}
+    for path, rows in sorted(plan.writes.items()):
+        if path in live:
+            backups.append(str(backup_live_file(path)))
+        tag = TAG.search(path.read_text(encoding="utf-8"))
+        _, unplaced = write_back(path, rows, tag.group(1) if tag else LANGUAGES[lang][1])
+        if unplaced:
+            raise SystemExit(f"{path}: {len(unplaced)} rows did not land, e.g. {unplaced[:3]}")
+        ET.parse(path)  # every text passed XML_UNSAFE; this guards write_back itself
     return backups
 
 
@@ -331,53 +474,90 @@ def summary(lang: str, plan: Plan) -> dict:
         "lang": lang,
         "imported": plan.imported,
         "already_equal": plan.already_equal,
+        "unchecked": plan.unchecked,
         "files_written": len(plan.writes),
-        "rejected_placeholders": plan.rejected,
+        "writes": {str(path): sorted(rows) for path, rows in sorted(plan.writes.items())},
+        "stale": plan.stale,
+        "new_since_base": plan.new_since_base,
+        "kept_ours": plan.kept_ours,
+        "collisions": plan.collisions,
+        "tier_added": plan.tier_added,
+        "override_conflicts": plan.override_conflicts,
+        "rejected": plan.rejected,
         "english_in_drop": plan.english_in_drop,
         "skipped_prefix": plan.skipped_prefix,
-        "override_conflicts": plan.override_conflicts,
+        "orphans": plan.orphans,
         "theirs_only": plan.theirs_only,
         "ours_untranslated_they_lack": plan.ours_untranslated_they_lack,
+        "ours_drafted_they_lack": plan.ours_drafted_they_lack,
     }
+
+
+def _line(lang: str, team_count: int, plan: Plan) -> str:
+    return (f"[{lang}] team rows {team_count}; imported {plan.imported} into {len(plan.writes)} files "
+            f"({plan.unchecked} with no base to check); already equal {plan.already_equal}; "
+            f"stale {len(plan.stale)}; kept ours {len(plan.kept_ours)}; collisions {len(plan.collisions)}; "
+            f"tier added {len(plan.tier_added)}; override conflicts {len(plan.override_conflicts)}; "
+            f"rejected {len(plan.rejected)}; English in drop {len(plan.english_in_drop)}; "
+            f"skipped by prefix {len(plan.skipped_prefix)}; orphans {len(plan.orphans)}; "
+            f"theirs only {len(plan.theirs_only)}; ours they lack {len(plan.ours_untranslated_they_lack)} "
+            f"untranslated and {len(plan.ours_drafted_they_lack)} drafted")
 
 
 def main(argv=None) -> int:
     p = argparse.ArgumentParser(description=__doc__.split("\n\n", 1)[0])
-    p.add_argument("--lang", action="append", required=True, choices=sorted(TEAM_LAYOUT))
+    p.add_argument("--lang", action="append", required=True, choices=TEAM_LANGS)
     p.add_argument("--from", dest="source", required=True, type=Path, help="the team's module: a .zip or a folder")
     p.add_argument("--module", action="append", choices=MODULES,
                    help="our module(s) to write; default TAOM (TAOM_Map and Armory are live installs)")
+    p.add_argument("--base", help="the git ref of TAOM the team translated (default: the TAOM version the "
+                                  "drop's SubModule.xml depends on)")
     p.add_argument("--skip-prefix", action="append", default=[],
                    help="ids to leave alone, e.g. realms_ while another session owns them")
     p.add_argument("--report", required=True, type=Path, help="where to write the JSON report")
     p.add_argument("--apply", action="store_true", help="write the files (default: a dry run)")
     args = p.parse_args(argv)
 
-    drop = Drop(args.source)
-    modules = args.module or ["TAOM"]
-    report = {"source": str(args.source), "modules": modules, "applied": args.apply, "problems": [], "languages": []}
-    for lang in args.lang:
-        team = team_rows(drop, lang, report["problems"])
-        targets = []
-        for module in modules:
-            targets.extend(taom_targets(lang) if module == "TAOM" else live_targets(lang, module))
-        plan = make_plan(team, targets, load_overrides(lang), tuple(args.skip_prefix))
-        entry = summary(lang, plan)
-        entry["team_rows"] = len(team)
-        if args.apply:
-            entry["backups"] = apply_plan(plan, lang, targets)
-        report["languages"].append(entry)
-        print(f"[{lang}] team rows {len(team)}; imported {plan.imported} into {len(plan.writes)} files; "
-              f"already equal {plan.already_equal}; rejected (placeholders) {len(plan.rejected)}; "
-              f"English in drop {len(plan.english_in_drop)}; skipped by prefix {len(plan.skipped_prefix)}; "
-              f"override conflicts {len(plan.override_conflicts)}; theirs only {len(plan.theirs_only)}; "
-              f"ours untranslated and they lack {len(plan.ours_untranslated_they_lack)}")
+    langs = list(dict.fromkeys(args.lang))
+    modules = list(dict.fromkeys(args.module or ["TAOM"]))
+    problems: list[str] = []
+    with Drop(args.source) as drop:
+        base = args.base or base_version(drop)
+        teams = {lang: team_rows(drop, lang, problems) for lang in langs}
+    if "TAOM" in modules:
+        if not base:
+            raise SystemExit(f"--from {args.source}: its SubModule.xml names no TAOM version; pass --base <tag>")
+        if not ref_exists(base):
+            raise SystemExit(f"--base {base}: not a commit or tag in this repo (git fetch --tags?)")
+    report = {"source": str(args.source), "modules": modules, "base": base, "applied": args.apply,
+              "problems": problems, "languages": []}
+    try:
+        for lang in langs:
+            team = teams[lang]
+            if not team:
+                problems.append(f"{lang}: the drop holds no rows under ModuleData/Languages/{lang}")
+            targets = []
+            for module in modules:
+                targets.extend(taom_targets(lang, base=english_at(base)) if module == "TAOM"
+                               else live_targets(lang, module))
+            plan = make_plan(team, targets, load_overrides(lang), tuple(args.skip_prefix))
+            entry = summary(lang, plan)
+            entry["team_rows"] = len(team)
+            report["languages"].append(entry)
+            if args.apply:
+                entry["backups"] = []
+                apply_plan(plan, lang, targets, backups=entry["backups"])
+            print(_line(lang, len(team), plan))
+    except BaseException as exc:
+        report["error"] = f"{type(exc).__name__}: {exc}"
+        raise
+    finally:
+        args.report.parent.mkdir(parents=True, exist_ok=True)
+        args.report.write_text(json.dumps(report, ensure_ascii=False, indent=2), encoding="utf-8")
     for problem in report["problems"]:
         print(f"  PROBLEM: {problem}", file=sys.stderr)
-    args.report.parent.mkdir(parents=True, exist_ok=True)
-    args.report.write_text(json.dumps(report, ensure_ascii=False, indent=2), encoding="utf-8")
     print(f"report: {args.report}" + ("" if args.apply else "  (dry run: nothing else written)"))
-    return 0
+    return 2 if report["problems"] else 0
 
 
 if __name__ == "__main__":

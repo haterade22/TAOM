@@ -6,332 +6,332 @@
     <tag language="Simplified Chinese" />
   </tags>
   <strings>
-    <string id="taom_lotr_issue_grain_title" text="{ISSUE_SETTLEMENT}需要粮种" />
-    <string id="taom_lotr_issue_grain_desc" text="{ISSUE_SETTLEMENT}的居民失去了粮种。如果不能及时播种，他们就要挨饿了。" />
-    <string id="taom_lotr_issue_grain_brief" text="旅人，黑暗笼罩下的日子可不好过。鼠患和严冬毁掉了我们的粮种。没有粮食播种，我们就撑不过这一年。" />
-    <string id="taom_lotr_issue_grain_accept" text="难道没有办法了吗？" />
-    <string id="taom_lotr_issue_grain_expl" text="如果你能带来{COUNT}份粮食，我们就能赶在换季前播种。我们自己实在买不起这么多。" />
-    <string id="taom_lotr_issue_grain_soln" text="我会为你们找来粮食。" />
-    <string id="taom_lotr_issue_grain_task" text="收集谷物（{COUNT}）" />
-    <string id="taom_lotr_issue_supplies_title" text="急需粮草的大军" />
-    <string id="taom_lotr_issue_supplies_desc" text="一位领主正在集结军队准备出征，需要粮食供养集结的士兵。" />
-    <string id="taom_lotr_issue_supplies_brief" text="我的士兵正在集结，但光有剑可填不饱肚子。没有粮食，这支大军还没上战场就会散了。" />
-    <string id="taom_lotr_issue_supplies_accept" text="你需要多少粮食？" />
-    <string id="taom_lotr_issue_supplies_expl" text="给我带来{COUNT}份粮食，我的部下就能吃饱了出征。办成这件事，整个王国都会记住你的功劳。" />
-    <string id="taom_lotr_issue_supplies_soln" text="我会给你的军队送来粮食。" />
-    <string id="taom_lotr_issue_supplies_task" text="为军队运送谷物（{COUNT}）" />
+    <string id="taom_lotr_issue_grain_title" text="{ISSUE_SETTLEMENT}需要种子粮" />
+    <string id="taom_lotr_issue_grain_desc" text="{ISSUE_SETTLEMENT}的人民失去了种子粮,除非播种田地,否则将挨饿。" />
+    <string id="taom_lotr_issue_grain_brief" text="黑暗对我们很残酷,旅行者。老鼠和严冬夺走了我们的种子谷物。没有粮食播种,我们撑不过这一年。" />
+    <string id="taom_lotr_issue_grain_accept" text="难道没有办法吗?" />
+    <string id="taom_lotr_issue_grain_expl" text="如果你能给我们带来{COUNT}份粮食,我们就能在季节转换之前播种田地。我们自己没有足够的钱购买那么多。" />
+    <string id="taom_lotr_issue_grain_soln" text="我会为你找到那些粮食。" />
+    <string id="taom_lotr_issue_grain_task" text="收集粮食 ({COUNT})" />
+    <string id="taom_lotr_issue_supplies_title" text="需要补给的军队" />
+    <string id="taom_lotr_issue_supplies_desc" text="一位正在集结军队准备开战的领主需要粮食来养活集结的部队,才能出征。" />
+    <string id="taom_lotr_issue_supplies_brief" text="我的士兵们正在集结,但剑不能填饱肚子。没有粮食喂养他们,这支军队还没上战场就会四散而去。" />
+    <string id="taom_lotr_issue_supplies_accept" text="你需要多少粮食?" />
+    <string id="taom_lotr_issue_supplies_expl" text="给我带来{COUNT}份粮食,我的部下就能吃饱了肚子出征。做成此事,整个王国都会铭记你的功绩。" />
+    <string id="taom_lotr_issue_supplies_soln" text="我会为你的军队带来粮食。" />
+    <string id="taom_lotr_issue_supplies_task" text="为军队带来粮食 ({COUNT})" />
     <string id="taom_lotr_issue_draught_title" text="{ISSUE_SETTLEMENT}需要役畜" />
-    <string id="taom_lotr_issue_draught_desc" text="{ISSUE_SETTLEMENT}村失去了耕牛，已经无法耕种田地。" />
-    <string id="taom_lotr_issue_draught_brief" text="我们的耕牛没了，有些被劫掠者抢走，有些活活饿死。没有牲畜拉犁，硬土翻不开，田地也没法播种。" />
-    <string id="taom_lotr_issue_draught_accept" text="怎样才能帮到你们？" />
-    <string id="taom_lotr_issue_draught_expl" text="如果你能给我们赶来{COUNT}头牛，我们就能在换季前重新翻耕土地。" />
-    <string id="taom_lotr_issue_draught_soln" text="我会给你们带来牛。" />
-    <string id="taom_lotr_issue_draught_task" text="交付牛（{COUNT}）" />
-    <string id="taom_lotr_issue_crafting_title" text="{ISSUE_SETTLEMENT}需要铁料" />
-    <string id="taom_lotr_issue_crafting_desc" text="{ISSUE_SETTLEMENT}的铁匠耗尽了铁料，没法修理工具和刀剑。" />
-    <string id="taom_lotr_issue_crafting_brief" text="旅人，锻炉的火已经熄了。没有铁料，铁匠既不能给马钉蹄铁，也不能修补犁铧，整个村子都受到了影响。" />
-    <string id="taom_lotr_issue_crafting_accept" text="哪里能弄到铁？" />
-    <string id="taom_lotr_issue_crafting_expl" text="给我们带来{COUNT}块铁锭，锻炉旁就能重新响起锤声。我们自己实在买不起这么多铁料。" />
-    <string id="taom_lotr_issue_crafting_soln" text="我会为你们找来铁料。" />
-    <string id="taom_lotr_issue_crafting_task" text="交付铁锭（{COUNT}）" />
+    <string id="taom_lotr_issue_draught_desc" text="{ISSUE_SETTLEMENT}村失去了耕牛,无法耕种田地。" />
+    <string id="taom_lotr_issue_draught_brief" text="我们的牛被夺走了——有些被劫掠者抢走,有些死于饥荒。没有牲畜拉犁,土地坚硬,田地无法播种。" />
+    <string id="taom_lotr_issue_draught_accept" text="什么能帮上忙?" />
+    <string id="taom_lotr_issue_draught_expl" text="如果你能给我们赶来{COUNT}头牛,我们就能在季节更替之前重新翻耕土地。" />
+    <string id="taom_lotr_issue_draught_soln" text="我会给你带来牛。" />
+    <string id="taom_lotr_issue_draught_task" text="运送牛 ({COUNT})" />
+    <string id="taom_lotr_issue_crafting_title" text="{ISSUE_SETTLEMENT}需要铁" />
+    <string id="taom_lotr_issue_crafting_desc" text="{ISSUE_SETTLEMENT}的铁匠已经没有铁了,无法修理工具和刀剑。" />
+    <string id="taom_lotr_issue_crafting_brief" text="熔炉已经冷却了,旅行者。没有铁,铁匠无法给马钉掌,也无法修补犁铧,村子深受其苦。" />
+    <string id="taom_lotr_issue_crafting_accept" text="你从哪里能得到铁?" />
+    <string id="taom_lotr_issue_crafting_expl" text="给我们带来{COUNT}条铁锭,熔炉就会再次响起锤击声。我们自己没有足够的钱来购买这么多。" />
+    <string id="taom_lotr_issue_crafting_soln" text="我会为你找到铁。" />
+    <string id="taom_lotr_issue_crafting_task" text="运送铁 ({COUNT})" />
     <string id="taom_lotr_issue_tools_title" text="{ISSUE_SETTLEMENT}需要工具" />
-    <string id="taom_lotr_issue_tools_desc" text="{ISSUE_SETTLEMENT}的居民缺少耕种和制作货物所需的工具。" />
-    <string id="taom_lotr_issue_tools_brief" text="我们的镰刀已经锈穿了，锤子也坏了。再勤快的人，没有趁手的工具也干不快。" />
-    <string id="taom_lotr_issue_tools_accept" text="你需要什么？" />
-    <string id="taom_lotr_issue_tools_expl" text="如果你能带来{COUNT}套工具，村子就能恢复正常，再次兴旺起来。" />
-    <string id="taom_lotr_issue_tools_soln" text="我会给你们带来工具。" />
-    <string id="taom_lotr_issue_tools_task" text="交付工具（{COUNT}）" />
+    <string id="taom_lotr_issue_tools_desc" text="{ISSUE_SETTLEMENT}的人们缺少耕作土地和制作货物的工具。" />
+    <string id="taom_lotr_issue_tools_brief" text="我们的镰刀已经锈透了,锤子也断了。没有好工具,诚实的劳作也变得缓慢。" />
+    <string id="taom_lotr_issue_tools_accept" text="你需要什么?" />
+    <string id="taom_lotr_issue_tools_expl" text="如果你能给我们带来{COUNT}套工具,村子就能重新振作,再次繁荣起来。" />
+    <string id="taom_lotr_issue_tools_soln" text="我会给你带来工具。" />
+    <string id="taom_lotr_issue_tools_task" text="运送工具 ({COUNT})" />
     <string id="taom_lotr_issue_horses_title" text="缺少战马的领主" />
-    <string id="taom_lotr_issue_horses_desc" text="一位领主的坐骑因战斗和日常损耗而减少，需要为骑兵补充马匹。" />
-    <string id="taom_lotr_issue_horses_brief" text="旅人，战争可不会怜惜马匹。我的马在艰难的长途行军中接连累垮，骑手没了坐骑，也不过是个行动迟缓的矛兵。" />
-    <string id="taom_lotr_issue_horses_accept" text="你需要多少匹马？" />
-    <string id="taom_lotr_issue_horses_expl" text="给我带来{COUNT}匹健壮的马，我的骑手就能重新出征。你会得到丰厚的报酬。" />
-    <string id="taom_lotr_issue_horses_soln" text="我会给你带来马匹。" />
-    <string id="taom_lotr_issue_horses_task" text="交付马匹（{COUNT}）" />
-    <string id="taom_lotr_issue_recruits_title" text="帮派需要新血" />
-    <string id="taom_lotr_issue_recruits_desc" text="一个帮派头目想强迫俘虏为他效力。" />
-    <string id="taom_lotr_issue_recruits_brief" text="帮派人多才有力量，可我这里缺人。不管是什么人，只要是俘虏就给我带来，我自有用处。" />
-    <string id="taom_lotr_issue_recruits_accept" text="你要什么样的俘虏？" />
-    <string id="taom_lotr_issue_recruits_expl" text="给我带来{COUNT}名俘虏，我会安排他们干活。你拿钱，我也不问他们的来路。" />
+    <string id="taom_lotr_issue_horses_desc" text="一位领主在战争和损耗中失去了坐骑,需要为他的骑兵补充新马。" />
+    <string id="taom_lotr_issue_horses_brief" text="战争对马匹残酷无情,旅行者。我的马在艰苦的行军中累垮了,而没有坐骑的骑兵只不过是缓慢的枪兵。" />
+    <string id="taom_lotr_issue_horses_accept" text="你需要多少匹马?" />
+    <string id="taom_lotr_issue_horses_expl" text="给我带来{COUNT}匹健壮的马,我的骑兵就能重新骑行。你会得到丰厚的报酬。" />
+    <string id="taom_lotr_issue_horses_soln" text="我会给你带来马。" />
+    <string id="taom_lotr_issue_horses_task" text="运送马匹 ({COUNT})" />
+    <string id="taom_lotr_issue_recruits_title" text="帮派的新鲜血液" />
+    <string id="taom_lotr_issue_recruits_desc" text="一名帮派头目想把俘虏强征入伙。" />
+    <string id="taom_lotr_issue_recruits_brief" text="帮派的强弱全看人数，而我的人手太单薄了。给我带俘虏来，管他是谁，我都能派上用场。" />
+    <string id="taom_lotr_issue_recruits_accept" text="什么样的俘虏?" />
+    <string id="taom_lotr_issue_recruits_expl" text="给我带来 {COUNT} 名俘虏，我会让他们干活。你也有钱可拿，不问来路。" />
     <string id="taom_lotr_issue_recruits_soln" text="我会给你带来俘虏。" />
     <string id="taom_lotr_issue_recruits_task" text="交付俘虏（{COUNT}）" />
-    <string id="taom_lotr_issue_laborers_title" text="矿场缺人手" />
-    <string id="taom_lotr_issue_laborers_desc" text="一位地主需要强壮的人手干重活，愿意接收你抓到的任何俘虏。" />
-    <string id="taom_lotr_issue_laborers_brief" text="矿坑里缺工人，可自由民都不肯下去。给我带些戴着镣铐的俘虏，他们得靠挥镐干活换口饭吃。" />
-    <string id="taom_lotr_issue_laborers_accept" text="你要俘虏？" />
-    <string id="taom_lotr_issue_laborers_expl" text="给我带来{COUNT}名俘虏补充劳工队，我会付你抓人的辛苦钱。" />
+    <string id="taom_lotr_issue_laborers_title" text="矿场的劳力" />
+    <string id="taom_lotr_issue_laborers_desc" text="一名地主需要壮劳力来做苦工，你抓到的任何俘虏他都要。" />
+    <string id="taom_lotr_issue_laborers_brief" text="矿坑需要工人，可自由人不肯下去。把戴着镣铐的俘虏带来，他们就用镐头挣自己的口粮。" />
+    <string id="taom_lotr_issue_laborers_accept" text="你要囚犯?" />
+    <string id="taom_lotr_issue_laborers_expl" text="给我带来 {COUNT} 名俘虏充作劳役队，我会为你抓人的辛劳付酬。" />
     <string id="taom_lotr_issue_laborers_soln" text="我会给你带来俘虏。" />
     <string id="taom_lotr_issue_laborers_task" text="交付俘虏（{COUNT}）" />
     <string id="taom_lotr_issue_banditbase_title" text="{ISSUE_SETTLEMENT}附近的巢穴" />
-    <string id="taom_lotr_issue_banditbase_desc" text="一伙劫掠者盘踞在{ISSUE_SETTLEMENT}附近，袭击道路上的行人。" />
-    <string id="taom_lotr_issue_banditbase_brief" text="旅人，山里有一处贼窝。他们抢走我们的货物，还抓走我们的人。守卫人手太少，没法把他们一网打尽。" />
-    <string id="taom_lotr_issue_banditbase_accept" text="这处巢穴在哪里？" />
-    <string id="taom_lotr_issue_banditbase_expl" text="除掉那些在道路上作恶的劫掠者，我们会给你报酬。这里的日子也能安稳些。" />
-    <string id="taom_lotr_issue_banditbase_soln" text="我会把他们一网打尽。" />
+    <string id="taom_lotr_issue_banditbase_desc" text="一伙掠夺者在{ISSUE_SETTLEMENT}附近的道路上作恶。" />
+    <string id="taom_lotr_issue_banditbase_brief" text="旅行者,山中有他们的污秽巢穴。他们抢走我们的货物和族人,而守卫太少,无法剿灭他们。" />
+    <string id="taom_lotr_issue_banditbase_accept" text="这巢穴在哪?" />
+    <string id="taom_lotr_issue_banditbase_expl" text="铲除那些在我们道路上作祟的掠夺者,我们会奖赏你。这片土地会因此安宁许多。" />
+    <string id="taom_lotr_issue_banditbase_soln" text="我会把他们扫荡干净。" />
     <string id="taom_lotr_issue_outlaws_title" text="商路上的亡命徒" />
-    <string id="taom_lotr_issue_outlaws_desc" text="劫掠团伙正在阻断一位商人的生意，需要有人将他们击溃。" />
-    <string id="taom_lotr_issue_outlaws_brief" text="路上的劫掠者让我的商队寸步难行。多打垮几支劫掠队，生意才有机会恢复。" />
-    <string id="taom_lotr_issue_outlaws_accept" text="要对付多少伙人？" />
-    <string id="taom_lotr_issue_outlaws_expl" text="击败那些在路上作恶的团伙，打几场漂亮的胜仗，其余的人自然就散了。我会给你丰厚的报酬。" />
-    <string id="taom_lotr_issue_outlaws_soln" text="我会清除商路上的匪患。" />
+    <string id="taom_lotr_issue_outlaws_desc" text="劫掠团伙正在扼杀一位商人的贸易,必须将其击溃。" />
+    <string id="taom_lotr_issue_outlaws_brief" text="我的商队无法通行,因为道路上有劫匪。击溃足够多的团伙,贸易才能恢复。" />
+    <string id="taom_lotr_issue_outlaws_accept" text="有多少团伙?" />
+    <string id="taom_lotr_issue_outlaws_expl" text="击败那些祸害道路的团伙——几场漂亮的胜仗就能驱散其余的——我会慷慨地付你报酬。" />
+    <string id="taom_lotr_issue_outlaws_soln" text="我会清理道路。" />
     <string id="taom_lotr_issue_poachers_title" text="一伙偷猎者" />
     <string id="taom_lotr_issue_poachers_desc" text="一大群偷猎者正在毁掉一位商人的狩猎生意。" />
-    <string id="taom_lotr_issue_poachers_brief" text="偷猎者越来越多，也越来越猖狂。他们把林子里的猎物捕杀一空，还赶走正经猎人。必须有人收拾他们。" />
-    <string id="taom_lotr_issue_poachers_accept" text="他们在哪里活动？" />
-    <string id="taom_lotr_issue_poachers_expl" text="打败那群偷猎者，林子就又是我们的了。你会得到报酬。" />
-    <string id="taom_lotr_issue_poachers_soln" text="我会对付他们。" />
-    <string id="taom_lotr_issue_captured_title" text="被俘的手下" />
-    <string id="taom_lotr_issue_captured_desc" text="一个帮派头目的手下被赏金猎人抓走了，他想把他们救出来。" />
-    <string id="taom_lotr_issue_captured_brief" text="赏金猎人抓走了我的几个手下，还打算把他们卖掉。打垮看押他们的那群混蛋，我会私下给你报酬，绝不声张。" />
-    <string id="taom_lotr_issue_captured_accept" text="谁看押着他们？" />
-    <string id="taom_lotr_issue_captured_expl" text="找到抓走我手下的那伙人，把他们打垮。办成了就有钱拿，我不会多问。" />
+    <string id="taom_lotr_issue_poachers_brief" text="偷猎者变得胆大且人多——他们把树林洗劫一空,赶走诚实的猎人。必须有人制裁他们。" />
+    <string id="taom_lotr_issue_poachers_accept" text="他们在哪片区域活动?" />
+    <string id="taom_lotr_issue_poachers_expl" text="击败那群偷猎者,树林就又是我们的了。这事有报酬。" />
+    <string id="taom_lotr_issue_poachers_soln" text="我会解决他们。" />
+    <string id="taom_lotr_issue_captured_title" text="我被囚的手下" />
+    <string id="taom_lotr_issue_captured_desc" text="一位帮派头目的人被赏金猎人抓走了,他想把他们救出来。" />
+    <string id="taom_lotr_issue_captured_brief" text="赏金猎人抓走了我的几个小伙子,打算卖掉他们。打垮那些看押他们的杂碎,就有钱拿——不声张的钱。" />
+    <string id="taom_lotr_issue_captured_accept" text="谁看押着他们?" />
+    <string id="taom_lotr_issue_captured_expl" text="找到抓走我手下的那伙人,把他们打垮。做到这点,你会拿到报酬,不问缘由。" />
     <string id="taom_lotr_issue_captured_soln" text="我会救出你的人。" />
-    <string id="taom_lotr_issue_deserters_title" text="逃兵劫掠{ISSUE_SETTLEMENT}" />
-    <string id="taom_lotr_issue_deserters_desc" text="一伙逃兵正在勒索{ISSUE_SETTLEMENT}的居民，还杀害了拒绝交钱的人。" />
-    <string id="taom_lotr_issue_deserters_brief" text="一群拿着剑的溃兵来抢我们的粮食和钱财，已经闹出了人命。光靠我们自己对付不了他们。" />
-    <string id="taom_lotr_issue_deserters_accept" text="我会帮忙。他们在哪里？" />
-    <string id="taom_lotr_issue_deserters_expl" text="先埋伏起来，等那些逃兵来了就打垮他们。替我们除掉这群人，我们会感谢你，也会给你报酬。" />
-    <string id="taom_lotr_issue_deserters_soln" text="我会让他们再也没法劫掠。" />
-    <string id="taom_lotr_issue_commons_title" text="公用牧地之争" />
-    <string id="taom_lotr_issue_commons_desc" text="一伙武装人员正用武力抢占村庄的公用牧地。" />
-    <string id="taom_lotr_issue_commons_brief" text="一群凶徒占了我们的牧地，谁靠近就赶走谁。他们一天不走，我们的牲畜就得挨一天饿。" />
-    <string id="taom_lotr_issue_commons_accept" text="他们是什么人？" />
-    <string id="taom_lotr_issue_commons_expl" text="用武力把他们赶出公用牧地，牧场就又是我们的了。我们会尽力凑出报酬。" />
+    <string id="taom_lotr_issue_deserters_title" text="逃兵祸害{ISSUE_SETTLEMENT}" />
+    <string id="taom_lotr_issue_deserters_desc" text="一伙逃兵勒索{ISSUE_SETTLEMENT},并杀害了拒绝的人。" />
+    <string id="taom_lotr_issue_deserters_brief" text="持剑的败兵来抢我们的粮食和钱财,还流了血。我们无法独自对抗他们。" />
+    <string id="taom_lotr_issue_deserters_accept" text="我会帮忙。他们在哪?" />
+    <string id="taom_lotr_issue_deserters_expl" text="埋伏起来,等他们来时击溃那些逃兵。替我们除掉他们,你会得到我们的感谢和报酬。" />
+    <string id="taom_lotr_issue_deserters_soln" text="我会终结他们的劫掠。" />
+    <string id="taom_lotr_issue_commons_title" text="公地的麻烦" />
+    <string id="taom_lotr_issue_commons_desc" text="武装的竞争者正用武力夺取村庄的放牧公地。" />
+    <string id="taom_lotr_issue_commons_brief" text="凶狠的人占据了我们的牧场,驱赶任何靠近的人。我们的牲畜在挨饿,而他们却占着那里。" />
+    <string id="taom_lotr_issue_commons_accept" text="他们是什么人?" />
+    <string id="taom_lotr_issue_commons_expl" text="用武力将那些竞争者赶出我们的公地,牧场就又是我们的了。我们会尽力支付报酬。" />
     <string id="taom_lotr_issue_commons_soln" text="我会把他们赶走。" />
-    <string id="taom_lotr_issue_rivalgang_title" text="敌对帮派抢地盘" />
-    <string id="taom_lotr_issue_rivalgang_desc" text="一个敌对帮派正在抢占帮派头目的地盘，需要有人将他们击败。" />
-    <string id="taom_lotr_issue_rivalgang_brief" text="另一伙人以为能抢走我的地盘。去巷子里打垮他们，街上就又能安静下来了，你也能拿到钱。" />
-    <string id="taom_lotr_issue_rivalgang_accept" text="他们在哪里聚集？" />
-    <string id="taom_lotr_issue_rivalgang_expl" text="打败敌对帮派，让其他人看看和我作对的下场。办成了，就有大笔金币等着你。" />
+    <string id="taom_lotr_issue_rivalgang_title" text="敌对势力入侵" />
+    <string id="taom_lotr_issue_rivalgang_desc" text="一个敌对帮派正在侵入犯罪头目的地盘,必须将其铲除。" />
+    <string id="taom_lotr_issue_rivalgang_brief" text="另一伙人以为可以夺走属于我的东西。在小巷里打垮他们,街道就会再次安静——而你也能拿到报酬。" />
+    <string id="taom_lotr_issue_rivalgang_accept" text="他们在哪里聚集?" />
+    <string id="taom_lotr_issue_rivalgang_expl" text="击败敌对帮派,杀鸡儆猴。做到这点,就有大笔金币等着你。" />
     <string id="taom_lotr_issue_rivalgang_soln" text="包在我身上。" />
-    <string id="taom_lotr_issue_spy_title" text="敌方密探" />
-    <string id="taom_lotr_issue_spy_desc" text="一位领主怀疑敌方密探正图谋对付他，希望有人追踪并消灭密探的队伍。" />
-    <string id="taom_lotr_issue_spy_brief" text="暗处藏着一条毒蛇，是敌人派来的密探，身边还带着一群亡命徒。趁他们还没动手，找到他们，除掉他们。" />
-    <string id="taom_lotr_issue_spy_accept" text="我怎么认出他们？" />
-    <string id="taom_lotr_issue_spy_expl" text="追上并消灭密探的队伍。替我除掉这个威胁，你会得到丰厚的奖赏。" />
-    <string id="taom_lotr_issue_spy_soln" text="我会追上他们，把他们除掉。" />
-    <string id="taom_lotr_issue_revolt_title" text="叛乱的贵族" />
-    <string id="taom_lotr_issue_revolt_desc" text="一个小贵族煽动农民起义，需要有人将其镇压。" />
-    <string id="taom_lotr_issue_revolt_brief" text="一个小领主煽动农民反抗贵族，还召集了一批武装人员。趁叛乱还没蔓延，把他的势力打垮。" />
-    <string id="taom_lotr_issue_revolt_accept" text="他在哪里集结？" />
-    <string id="taom_lotr_issue_revolt_expl" text="打败这个叛徒和他那群乌合之众，秩序就能恢复。你会因为这次效劳得到奖赏。" />
+    <string id="taom_lotr_issue_spy_title" text="敌方间谍" />
+    <string id="taom_lotr_issue_spy_desc" text="一位领主怀疑有敌方特工在对付他,想要将间谍的队伍猎杀。" />
+    <string id="taom_lotr_issue_spy_brief" text="草丛中藏着毒蛇——我敌人的特工,带着一群亡命之徒四处活动。在他们动手之前找到他们,消灭他们。" />
+    <string id="taom_lotr_issue_spy_accept" text="我如何辨认他们?" />
+    <string id="taom_lotr_issue_spy_expl" text="追踪间谍的队伍并将其歼灭。为我除掉这个威胁,你会得到丰厚的奖赏。" />
+    <string id="taom_lotr_issue_spy_soln" text="我会将他们猎杀。" />
+    <string id="taom_lotr_issue_revolt_title" text="叛逆的贵族" />
+    <string id="taom_lotr_issue_revolt_desc" text="一个小贵族煽动农民起义,必须将其镇压。" />
+    <string id="taom_lotr_issue_revolt_brief" text="一个小领主煽动农民对抗他们的主人,并聚集武装人员。在叛乱蔓延之前粉碎他的力量。" />
+    <string id="taom_lotr_issue_revolt_accept" text="他在哪里集结?" />
+    <string id="taom_lotr_issue_revolt_expl" text="击败这个叛徒和他的乌合之众,秩序就会恢复。你会因你的效劳得到奖赏。" />
     <string id="taom_lotr_issue_revolt_soln" text="我会镇压这场叛乱。" />
-    <string id="taom_lotr_issue_company_title" text="惹是生非的佣兵团" />
-    <string id="taom_lotr_issue_company_desc" text="一群雇佣兵受雇骚扰一位领主，需要有人将他们赶走。" />
-    <string id="taom_lotr_issue_company_brief" text="我的敌人派了一支佣兵团到我的领地上。他们拿着别人的钱，到处烧杀抢掠。替我打垮他们。" />
-    <string id="taom_lotr_issue_company_accept" text="他们在哪里劫掠？" />
-    <string id="taom_lotr_issue_company_expl" text="打败这支佣兵团，我的领地就能重新安宁下来。我会给你丰厚的报酬。" />
+    <string id="taom_lotr_issue_company_title" text="麻烦的佣兵团" />
+    <string id="taom_lotr_issue_company_desc" text="一群被雇来骚扰领主的雇佣兵必须被驱逐。" />
+    <string id="taom_lotr_issue_company_brief" text="我的敌人派了一支佣兵团到我的领地上。他们在别人的金币驱使下焚烧和劫掠。替我打垮他们。" />
+    <string id="taom_lotr_issue_company_accept" text="他们在哪里劫掠?" />
+    <string id="taom_lotr_issue_company_expl" text="击败这支佣兵团,我的领地就能重归和平。我会给你丰厚的报酬。" />
     <string id="taom_lotr_issue_company_soln" text="我会打垮他们。" />
-    <string id="taom_lotr_issue_prodigal_title" text="欠债的亲人" />
-    <string id="taom_lotr_issue_prodigal_desc" text="一位领主的年轻亲戚和帮派混在一起，欠了债，如今被他们扣押。" />
-    <string id="taom_lotr_issue_prodigal_brief" text="我有个不成器的年轻亲戚，跟一群盗贼混在一起，如今那伙人因为他欠债把他扣住了。打垮他们，把人救出来。" />
-    <string id="taom_lotr_issue_prodigal_accept" text="他被关在哪里？" />
-    <string id="taom_lotr_issue_prodigal_expl" text="打败扣押我亲人的帮派，把他救出来。我愿意拿出那笔债务几倍的钱来酬谢你。" />
-    <string id="taom_lotr_issue_prodigal_soln" text="我会救出你的亲人。" />
-    <string id="taom_lotr_issue_rival_title" text="可恨的对手" />
-    <string id="taom_lotr_issue_rival_desc" text="一位领主想让人在战斗中活捉他的敌对领主。" />
-    <string id="taom_lotr_issue_rival_brief" text="有个领主，我很想看他被活捉，再狠狠受一番羞辱。只要你能在战斗中俘虏一名敌方领主，就算帮了我一个大忙。" />
-    <string id="taom_lotr_issue_rival_accept" text="你要活捉他？" />
-    <string id="taom_lotr_issue_rival_expl" text="在战斗中俘虏一名敌方领主，任务就算完成。你会得到丰厚的奖赏。" />
-    <string id="taom_lotr_issue_rival_soln" text="我会给你带来一名被俘的领主。" />
-    <string id="taom_lotr_issue_caravanambush_title" text="商路伏击" />
-    <string id="taom_lotr_issue_caravanambush_desc" text="劫掠者为一位商人的商队设下了埋伏，需要先击败他们。" />
-    <string id="taom_lotr_issue_caravanambush_brief" text="我得到消息，前面的路上有强盗正埋伏着，等我的商队经过。将计就计，趁他们还没把我抢个精光，打垮他们。" />
-    <string id="taom_lotr_issue_caravanambush_accept" text="他们埋伏在哪里？" />
-    <string id="taom_lotr_issue_caravanambush_expl" text="找到那些埋伏的劫掠者，把他们消灭。道路畅通了，我的货物和你的报酬才能送过来。" />
-    <string id="taom_lotr_issue_caravanambush_soln" text="我会粉碎他们的伏击。" />
-    <string id="taom_lotr_issue_escortcaravan_title" text="肃清商路" />
-    <string id="taom_lotr_issue_escortcaravan_desc" text="只有击败商路上的劫掠团伙，一位商人的商队才能通行。" />
-    <string id="taom_lotr_issue_escortcaravan_brief" text="路上到处都是劫掠者，我的货车根本不敢动身。多打垮几支劫掠队，正经商人才能重新做生意。" />
-    <string id="taom_lotr_issue_escortcaravan_accept" text="有多少人挡道？" />
-    <string id="taom_lotr_issue_escortcaravan_expl" text="打败那些威胁商路的团伙，我的商队就能重新上路。只要能安全通行，我会给你丰厚的报酬。" />
-    <string id="taom_lotr_issue_escortcaravan_soln" text="我会扫清路上的障碍。" />
-    <string id="taom_lotr_issue_herd_title" text="为{ISSUE_SETTLEMENT}运送牲畜" />
-    <string id="taom_lotr_issue_herd_desc" text="{ISSUE_SETTLEMENT}的居民需要有人运来牲畜，让畜群重新繁衍。" />
-    <string id="taom_lotr_issue_herd_brief" text="旅人，狼和更可怕的东西几乎害光了我们的牲畜。没有种畜繁育，村子以后就别想过上粮食充足的冬天了。" />
-    <string id="taom_lotr_issue_herd_accept" text="你想让我带什么来？" />
-    <string id="taom_lotr_issue_herd_expl" text="给我们赶来{COUNT}只羊，畜群才有机会重新繁衍。我们会尽村子所能凑出报酬。" />
-    <string id="taom_lotr_issue_herd_soln" text="我会给你们带来牲畜。" />
-    <string id="taom_lotr_issue_herd_task" text="交付牲畜（{COUNT}）" />
-    <string id="taom_lotr_issue_snare_title" text="给贪婪者的陷阱" />
-    <string id="taom_lotr_issue_snare_desc" text="一个帮派头目想将一伙贪婪的对手诱入陷阱，再消灭他们。" />
-    <string id="taom_lotr_issue_snare_brief" text="有一伙贪得无厌的家伙，连自己亲娘都敢抢。把他们引过来干掉，我们再悄悄分掉他们带的东西。" />
-    <string id="taom_lotr_issue_snare_accept" text="这些对手是什么人？" />
-    <string id="taom_lotr_issue_snare_expl" text="等那群贪婪的家伙落入圈套，就把他们解决掉。办得干净利落，你就能拿到一大笔钱。" />
+    <string id="taom_lotr_issue_prodigal_title" text="负债的亲族" />
+    <string id="taom_lotr_issue_prodigal_desc" text="一位领主的年轻亲族与帮派混在一起,现在被帮派以债务为由扣押。" />
+    <string id="taom_lotr_issue_prodigal_brief" text="我的一个愚蠢的年轻表亲落入盗贼之手,现在他们以他的债务为由扣押他。打垮那个帮派,解救他出来。" />
+    <string id="taom_lotr_issue_prodigal_accept" text="他被关在哪里?" />
+    <string id="taom_lotr_issue_prodigal_expl" text="击败扣押我亲族的帮派,把他带出来。我会数倍偿还他的债务作为你的酬劳。" />
+    <string id="taom_lotr_issue_prodigal_soln" text="我会解救你的亲族。" />
+    <string id="taom_lotr_issue_rival_title" text="憎恨的对手" />
+    <string id="taom_lotr_issue_rival_desc" text="一位领主想要在战斗中活捉一位敌对领主。" />
+    <string id="taom_lotr_issue_rival_brief" text="有一位领主我想看到他蒙羞——被活捉并被贬低。在战斗中俘虏一名敌方领主,我会将此视为莫大的功劳。" />
+    <string id="taom_lotr_issue_rival_accept" text="你要活捉他?" />
+    <string id="taom_lotr_issue_rival_expl" text="在战斗中俘虏一名敌方领主,任务便算完成。你将获得丰厚的奖赏。" />
+    <string id="taom_lotr_issue_rival_soln" text="我会为你带来一个俘虏领主。" />
+    <string id="taom_lotr_issue_caravanambush_title" text="路上的伏击" />
+    <string id="taom_lotr_issue_caravanambush_desc" text="劫匪为商人的商队设下伏击,必须先将他们击溃。" />
+    <string id="taom_lotr_issue_caravanambush_brief" text="我得到消息,前方道路上有强盗埋伏着我的商队。触发他们的陷阱并击溃他们,否则他们会榨干我的血汗。" />
+    <string id="taom_lotr_issue_caravanambush_accept" text="他们埋伏在哪里?" />
+    <string id="taom_lotr_issue_caravanambush_expl" text="找到埋伏等待的劫匪并消灭他们。清理道路,我的货物——还有你的报酬——就能通过了。" />
+    <string id="taom_lotr_issue_caravanambush_soln" text="我会打破他们的伏击。" />
+    <string id="taom_lotr_issue_escortcaravan_title" text="清理商道" />
+    <string id="taom_lotr_issue_escortcaravan_desc" text="商人的商队无法通过,除非击溃道路上的劫掠队伍。" />
+    <string id="taom_lotr_issue_escortcaravan_brief" text="只要劫匪还在道路上游荡,我的货车就不敢前行。击溃足够多的劫匪队伍,诚实的贸易之路才能重新开放。" />
+    <string id="taom_lotr_issue_escortcaravan_accept" text="有多少人挡道?" />
+    <string id="taom_lotr_issue_escortcaravan_expl" text="击败那些威胁商道的队伍,我的商队就能再次前行。我会为安全通行付给你丰厚的报酬。" />
+    <string id="taom_lotr_issue_escortcaravan_soln" text="我会清理道路。" />
+    <string id="taom_lotr_issue_herd_title" text="为{ISSUE_SETTLEMENT}运送畜群" />
+    <string id="taom_lotr_issue_herd_desc" text="{ISSUE_SETTLEMENT}的民众需要有人赶牲畜来重建他们的畜群。" />
+    <string id="taom_lotr_issue_herd_brief" text="狼群和更可怕的东西已经把我们的畜群吃到几乎没有了,旅行者。没有牲畜繁育,村子撑不过下一个寒冬。" />
+    <string id="taom_lotr_issue_herd_accept" text="你要我带什么来?" />
+    <string id="taom_lotr_issue_herd_expl" text="给我们赶来{COUNT}头羊,我们的畜群才能重新繁衍。我们会支付村子能拿出的报酬。" />
+    <string id="taom_lotr_issue_herd_soln" text="我会给你们带来畜群。" />
+    <string id="taom_lotr_issue_herd_task" text="运送牲畜({COUNT})" />
+    <string id="taom_lotr_issue_snare_title" text="贪婪者的陷阱" />
+    <string id="taom_lotr_issue_snare_desc" text="一个帮派头目想引诱一伙贪婪的对手进入陷阱并消灭他们。" />
+    <string id="taom_lotr_issue_snare_brief" text="有一伙贪心的家伙,能抢自己亲娘的钱。把他们引诱进来干掉,我们悄悄分了他们身上的东西。" />
+    <string id="taom_lotr_issue_snare_accept" text="这些对手是谁?" />
+    <string id="taom_lotr_issue_snare_expl" text="触发陷阱干掉那伙贪婪的人。干得干净利落,你会得到一大笔钱。" />
     <string id="taom_lotr_issue_snare_soln" text="我会办好的。" />
     <string id="taom_lotr_issue_cantsell_title" text="无人问津的货物" />
-    <string id="taom_lotr_issue_cantsell_desc" text="一位工匠的货物积压卖不出去，需要运到有销路的市场。" />
-    <string id="taom_lotr_issue_cantsell_brief" text="旅人，我的货架快被压垮了，可这里没人肯买。只要把这些货送到需要它们的城镇，我就不用守着手艺挨饿了。" />
-    <string id="taom_lotr_issue_cantsell_accept" text="你做的是什么货物？" />
-    <string id="taom_lotr_issue_cantsell_expl" text="给我带来{COUNT}批陶器，好送到销路更好的市场去。我会分给你一部分卖货的收入。" />
-    <string id="taom_lotr_issue_cantsell_soln" text="我会帮你的货物打开销路。" />
-    <string id="taom_lotr_issue_cantsell_task" text="收集陶器用于交易（{COUNT}）" />
+    <string id="taom_lotr_issue_cantsell_desc" text="工匠的货物积压未售,需要运到有需求的市场。" />
+    <string id="taom_lotr_issue_cantsell_brief" text="我的货架上堆满了这里没人买的货物,旅行者。如果我的手艺能送到需要它的城镇,我就不会在自己的工作台前挨饿了。" />
+    <string id="taom_lotr_issue_cantsell_accept" text="你做什么?" />
+    <string id="taom_lotr_issue_cantsell_expl" text="给我带来{COUNT}批陶器送到更好的市场,我会付给你一份交易所得。" />
+    <string id="taom_lotr_issue_cantsell_soln" text="我会让你的货物流通起来。" />
+    <string id="taom_lotr_issue_cantsell_task" text="收集陶器进行交易({COUNT})" />
     <string id="taom_lotr_issue_overpriced_title" text="昂贵的材料" />
-    <string id="taom_lotr_issue_overpriced_desc" text="一位工匠买不起制作货物所需的原料，需要有人便宜些卖给他。" />
-    <string id="taom_lotr_issue_overpriced_brief" text="好皮革的价格涨得太离谱了，再弄不到，我的生意就要做不下去了。按公道的价钱给我带一些来，我会记住你的帮助。" />
-    <string id="taom_lotr_issue_overpriced_accept" text="你需要什么？" />
-    <string id="taom_lotr_issue_overpriced_expl" text="给我带来{COUNT}批皮革，我的作坊就能重新开工。我会给你公道的报酬。" />
-    <string id="taom_lotr_issue_overpriced_soln" text="我会为你找来皮革。" />
-    <string id="taom_lotr_issue_overpriced_task" text="交付皮革（{COUNT}）" />
-    <string id="taom_lotr_issue_offload_title" text="转移赃物" />
-    <string id="taom_lotr_issue_offload_desc" text="一个帮派头目需要转移一批赃物，正在找能悄悄运走它们的人。" />
-    <string id="taom_lotr_issue_offload_brief" text="我有一批货，可不能让不该看见的人看见。替我运走它们，就有一笔干净的钱等着你。不问来路，也不留姓名。" />
-    <string id="taom_lotr_issue_offload_accept" text="我要运什么？" />
-    <string id="taom_lotr_issue_offload_expl" text="给我弄来{COUNT}批这种货物，再悄悄转移。办好了，下一单生意也交给你。" />
-    <string id="taom_lotr_issue_offload_soln" text="我会运走你的货物。" />
-    <string id="taom_lotr_issue_offload_task" text="取得货物（{COUNT}）" />
+    <string id="taom_lotr_issue_overpriced_desc" text="工匠买不起他们手艺所需的原材料,需要有人以低价带来。" />
+    <string id="taom_lotr_issue_overpriced_brief" text="好皮革的价格涨得太离谱了,我的手艺因为缺它而停滞。以合理的价格给我带些来,我会记得你的恩情。" />
+    <string id="taom_lotr_issue_overpriced_accept" text="你需要什么?" />
+    <string id="taom_lotr_issue_overpriced_expl" text="给我带来{COUNT}批皮革,我的作坊就能重新运转。我会公平支付你的辛劳。" />
+    <string id="taom_lotr_issue_overpriced_soln" text="我会为你找到皮革。" />
+    <string id="taom_lotr_issue_overpriced_task" text="交付皮革 ({COUNT})" />
+    <string id="taom_lotr_issue_offload_title" text="赃物转移" />
+    <string id="taom_lotr_issue_offload_desc" text="一个帮派头目有赃物需要转移,需要一个谨慎的人来运送。" />
+    <string id="taom_lotr_issue_offload_brief" text="我有一批货物不能被不该看见的人发现。帮我运送它们,就有干净的钱币等着你——不问问题,不问名字。" />
+    <string id="taom_lotr_issue_offload_accept" text="我要运送什么?" />
+    <string id="taom_lotr_issue_offload_expl" text="给我弄来{COUNT}批这些货物并悄悄转移。做好了,下一单也是你的。" />
+    <string id="taom_lotr_issue_offload_soln" text="我会转移你的货物。" />
+    <string id="taom_lotr_issue_offload_task" text="获取货物 ({COUNT})" />
     <string id="taom_lotr_issue_revenue_title" text="实物什一税" />
-    <string id="taom_lotr_issue_revenue_desc" text="偏远的农场拖欠了一位地主的什一税，需要以粮食缴纳。" />
-    <string id="taom_lotr_issue_revenue_brief" text="农场欠我什一税，要用粮食交，不是钱币。当然，得他们肯交才行。把欠的收上来交给我，你也能分到一份。" />
-    <string id="taom_lotr_issue_revenue_accept" text="欠了多少？" />
-    <string id="taom_lotr_issue_revenue_expl" text="按照什一税应收的数额，收来{COUNT}份粮食。我会给你一份公道的报酬。" />
+    <string id="taom_lotr_issue_revenue_desc" text="一位地主应收的粮食什一税,但边远农场尚未缴纳。" />
+    <string id="taom_lotr_issue_revenue_brief" text="农场欠我什一税,他们用粮食支付,不是钱币——如果他们肯付的话。把欠的收上来交给我,你会得到一份。" />
+    <string id="taom_lotr_issue_revenue_accept" text="欠了多少?" />
+    <string id="taom_lotr_issue_revenue_expl" text="按什一税的要求收来{COUNT}份粮食,我会付给你一份公道的收税报酬。" />
     <string id="taom_lotr_issue_revenue_soln" text="我会为你收齐什一税。" />
-    <string id="taom_lotr_issue_revenue_task" text="收取粮食什一税（{COUNT}）" />
-    <string id="taom_lotr_issue_arttrade_title" text="一桩贸易生意" />
-    <string id="taom_lotr_issue_arttrade_desc" text="一个想做生意的人需要一批货物来赚取利润，证明这门生意行得通。" />
-    <string id="taom_lotr_issue_arttrade_brief" text="旅人，我想靠做生意发财，可还缺第一批货。你把货物带来，我把它们卖成钱，让咱们两个都能赚上一笔。" />
-    <string id="taom_lotr_issue_arttrade_accept" text="你需要什么货物？" />
-    <string id="taom_lotr_issue_arttrade_expl" text="给我带来{COUNT}批油，让生意做起来。货物卖掉后，你也能分到利润。" />
+    <string id="taom_lotr_issue_revenue_task" text="收取粮食什一税 ({COUNT})" />
+    <string id="taom_lotr_issue_arttrade_title" text="贸易风险投资" />
+    <string id="taom_lotr_issue_arttrade_desc" text="一位志在经商的人需要进货来赚取利润,证明这笔生意可行。" />
+    <string id="taom_lotr_issue_arttrade_brief" text="旅行者,我打算靠贸易发财,但我需要货物来起步。给我带来存货,我会把它变成金子,我们都有份。" />
+    <string id="taom_lotr_issue_arttrade_accept" text="你需要什么存货?" />
+    <string id="taom_lotr_issue_arttrade_expl" text="给我带来{COUNT}批油料让生意运转起来,等卖出去时你会分到利润。" />
     <string id="taom_lotr_issue_arttrade_soln" text="我会给你的生意备好货。" />
-    <string id="taom_lotr_issue_arttrade_task" text="交付贸易货物（{COUNT}）" />
+    <string id="taom_lotr_issue_arttrade_task" text="交付贸易存货 ({COUNT})" />
     <string id="taom_lotr_issue_smugglers_title" text="铲除走私团伙" />
-    <string id="taom_lotr_issue_smugglers_desc" text="一个走私团伙正靠低价货冲击正经商人的生意，一位商人希望有人铲除他们。" />
-    <string id="taom_lotr_issue_smugglers_brief" text="一伙走私贩把没交过税的货物大量倒进市场，正经商人都快被逼破产了。断掉他们的运货路线，生意自然就能恢复正常。" />
-    <string id="taom_lotr_issue_smugglers_accept" text="他们从哪里运货？" />
-    <string id="taom_lotr_issue_smugglers_expl" text="打败走私贩，打散他们的团伙。把他们赶出商路，我会给你报酬。" />
+    <string id="taom_lotr_issue_smugglers_desc" text="一个走私团伙在破坏正当贸易,一位商人想铲除他们。" />
+    <string id="taom_lotr_issue_smugglers_brief" text="一群走私贩让市场上充斥着未交税的货物,诚实商人因此破产。打断他们的生意,贸易就会恢复正常。" />
+    <string id="taom_lotr_issue_smugglers_accept" text="他们在哪里运货?" />
+    <string id="taom_lotr_issue_smugglers_expl" text="击败走私贩,打散他们的团伙。把道路上的他们清除干净,我会付你报酬。" />
     <string id="taom_lotr_issue_smugglers_soln" text="我会打散他们的团伙。" />
     <string id="taom_lotr_issue_gangweapons_title" text="夺取武器" />
-    <string id="taom_lotr_issue_gangweapons_desc" text="一个帮派头目想用武力夺取对手藏匿的武器。" />
-    <string id="taom_lotr_issue_gangweapons_brief" text="对头藏着一批好武器，我的手下却只能拿生锈的刀打架。打败他们，武器就是我们的了，你也能分到一份。" />
-    <string id="taom_lotr_issue_gangweapons_accept" text="这批武器藏在哪里？" />
-    <string id="taom_lotr_issue_gangweapons_expl" text="打败看守武器的那伙人，武器就归我了。办成这件事，我会给你一大笔钱。" />
-    <string id="taom_lotr_issue_gangweapons_soln" text="我会夺下他们藏的武器。" />
+    <string id="taom_lotr_issue_gangweapons_desc" text="一个帮派头目想用武力夺取对手的武器储备。" />
+    <string id="taom_lotr_issue_gangweapons_brief" text="对手帮派坐拥一批好武器,而我的人只能用生锈的刀打架。击败他们,武器就是我们的——你也能分一份。" />
+    <string id="taom_lotr_issue_gangweapons_accept" text="这批武器在哪里?" />
+    <string id="taom_lotr_issue_gangweapons_expl" text="击败持有武器的那帮人,武器就归我了。做成了,你手里就有好钱拿。" />
+    <string id="taom_lotr_issue_gangweapons_soln" text="我会夺取他们的武器。" />
     <string id="taom_lotr_issue_garrison_title" text="坚守城墙" />
-    <string id="taom_lotr_issue_garrison_desc" text="一位领主的驻军处境艰难，需要有人击退不断骚扰他们的敌军。" />
-    <string id="taom_lotr_issue_garrison_brief" text="我的驻军兵力不足，敌人却步步紧逼。打垮那些骚扰城防的队伍，让我的士兵喘口气。" />
-    <string id="taom_lotr_issue_garrison_accept" text="是谁在进逼？" />
-    <string id="taom_lotr_issue_garrison_expl" text="击败骚扰驻军的敌人，城墙就能守住。王国会奖赏你。" />
-    <string id="taom_lotr_issue_garrison_soln" text="我会替你的驻军解围。" />
+    <string id="taom_lotr_issue_garrison_desc" text="一位领主的守军处境艰难,需要驱逐骚扰他们的敌人。" />
+    <string id="taom_lotr_issue_garrison_brief" text="我的守军兵力紧张,敌人步步紧逼。击溃骚扰我城墙的那些队伍,就能让我的士兵喘口气。" />
+    <string id="taom_lotr_issue_garrison_accept" text="是谁在进攻你?" />
+    <string id="taom_lotr_issue_garrison_expl" text="击败骚扰我守军的敌人,城墙就能守住。国度会奖赏你的。" />
+    <string id="taom_lotr_issue_garrison_soln" text="我会解除你的驻军之困。" />
     <string id="taom_lotr_issue_conquest_title" text="削弱敌军实力" />
-    <string id="taom_lotr_issue_conquest_desc" text="一位领主准备出兵征服敌土，需要先击溃敌人的野战部队。" />
-    <string id="taom_lotr_issue_conquest_brief" text="我打算拿走本该属于我的东西，可敌军挡在前面。打垮他们的野战部队，目标就更容易到手了。" />
-    <string id="taom_lotr_issue_conquest_accept" text="你想让我做什么？" />
-    <string id="taom_lotr_issue_conquest_expl" text="击败敌军，削弱他们对领地的控制。办成了，你就能分到这次征战的战利品。" />
-    <string id="taom_lotr_issue_conquest_soln" text="我会削弱他的兵力。" />
+    <string id="taom_lotr_issue_conquest_desc" text="一位领主计划征服敌土,但需要先在野战中击溃敌军的野战部队。" />
+    <string id="taom_lotr_issue_conquest_brief" text="我打算夺回本该属于我的东西,但敌人的力量挡在路上。击溃他在野外的部队,胜利果实就会更容易到手。" />
+    <string id="taom_lotr_issue_conquest_accept" text="你要我做什么?" />
+    <string id="taom_lotr_issue_conquest_expl" text="击败敌军部队,削弱他的控制。做到这一点,你就能分享征服的战利品。" />
+    <string id="taom_lotr_issue_conquest_soln" text="我会击溃他的力量。" />
     <string id="taom_lotr_issue_raid_title" text="将战火烧向敌境" />
-    <string id="taom_lotr_issue_raid_desc" text="一位领主希望有人袭扰敌人的领地，并消灭敌军的劫掠队。" />
-    <string id="taom_lotr_issue_raid_brief" text="是时候让敌人在自己的土地上尝尝战争的滋味了。追上他的劫掠队，把他们消灭，让恐惧笼罩他的领地。" />
-    <string id="taom_lotr_issue_raid_accept" text="我该在哪里进攻？" />
-    <string id="taom_lotr_issue_raid_expl" text="击败在他边境一带活动的敌军。让他的领地流血，你就能得到丰厚的报酬。" />
-    <string id="taom_lotr_issue_raid_soln" text="我会把战火带到他们那里。" />
-    <string id="taom_lotr_issue_scout_title" text="查明敌情" />
-    <string id="taom_lotr_issue_scout_desc" text="一位领主需要有人击溃敌军巡逻队，让他的斥候能够查明边境的情况。" />
-    <string id="taom_lotr_issue_scout_brief" text="敌人的巡逻队在边境来回活动，让我没法掌握他的动向。打垮他们，让我的斥候看清局势，我才知道该往哪里进攻。" />
-    <string id="taom_lotr_issue_scout_accept" text="他的巡逻队在哪里活动？" />
-    <string id="taom_lotr_issue_scout_expl" text="击败封锁边境的敌军巡逻队，让我的斥候能够通过。办成这件事，你会得到报酬。" />
-    <string id="taom_lotr_issue_scout_soln" text="我会清除边境的敌军。" />
+    <string id="taom_lotr_issue_raid_desc" text="一位领主希望袭扰敌人的领地,并消灭他们的劫掠队。" />
+    <string id="taom_lotr_issue_raid_brief" text="是时候让敌人在自己的土地上感受战争了。追杀他的劫掠队,将他们斩尽杀绝,让他的领地充满恐惧。" />
+    <string id="taom_lotr_issue_raid_accept" text="我该在哪里发动进攻?" />
+    <string id="taom_lotr_issue_raid_expl" text="击败在边境游荡的敌军队伍。让他的土地流血,你会得到丰厚的回报。" />
+    <string id="taom_lotr_issue_raid_soln" text="我会将战火带给他们。" />
+    <string id="taom_lotr_issue_scout_title" text="监视敌军" />
+    <string id="taom_lotr_issue_scout_desc" text="一位领主需要击溃敌人的巡逻队,以便他的斥候能清楚地侦察边境地带。" />
+    <string id="taom_lotr_issue_scout_brief" text="只要敌人的巡逻队还在边境游荡,我就看不清他们的动向。击溃他们,让我视野清晰,我就能知道该在哪里发动进攻。" />
+    <string id="taom_lotr_issue_scout_accept" text="他的巡逻队在哪里游荡?" />
+    <string id="taom_lotr_issue_scout_expl" text="击败在边境掩护的敌军巡逻队,好让我的斥候通过。做到这一点,你会得到报酬。" />
+    <string id="taom_lotr_issue_scout_soln" text="我会清理边境。" />
     <string id="taom_lotr_issue_knight_title" text="勇士的信物" />
-    <string id="taom_lotr_issue_knight_desc" text="一位女贵族希望有人佩戴她的信物，在比武场上获胜。" />
-    <string id="taom_lotr_issue_knight_brief" text="我希望有位勇士佩戴我的信物参加竞技大赛，以我的名义赢得荣耀。只要你在比武场上获胜，我就会一直记得这份恩情。" />
-    <string id="taom_lotr_issue_knight_accept" text="你想让我替你出战比武场？" />
-    <string id="taom_lotr_issue_knight_expl" text="佩戴我的信物赢得竞技大赛，荣耀就属于我们两人。你会因为这场胜利得到奖赏。" />
+    <string id="taom_lotr_issue_knight_desc" text="一位贵族女子希望看到她的信物在比武场上赢得胜利。" />
+    <string id="taom_lotr_issue_knight_brief" text="我希望有一位勇士在比武大会上佩戴我的信物,以我之名赢得荣耀。在比武场上获胜,你将赢得我永久的感激。" />
+    <string id="taom_lotr_issue_knight_accept" text="你要我在比武场上参战?" />
+    <string id="taom_lotr_issue_knight_expl" text="佩戴我的信物赢得比武大会,荣耀属于我们两人。你会因这场胜利得到奖赏。" />
     <string id="taom_lotr_issue_knight_soln" text="我会为你赢得胜利。" />
-    <string id="taom_lotr_issue_tutor_title" text="继承人的教育" />
-    <string id="taom_lotr_issue_tutor_desc" text="一位领主需要精美布料和其他物品，为继承人的求学生活备齐体面的衣装与用具。" />
-    <string id="taom_lotr_issue_tutor_brief" text="我的继承人得接受符合家族身份的教育，体面的衣服和学习用具一样都不能少。把需要的东西带来，那孩子就什么也不缺了。" />
-    <string id="taom_lotr_issue_tutor_accept" text="我需要带什么来？" />
-    <string id="taom_lotr_issue_tutor_expl" text="给我带来{COUNT}匹天鹅绒，让我的继承人穿得像个领主该有的样子。我会给你丰厚的报酬。" />
-    <string id="taom_lotr_issue_tutor_soln" text="我会为你的继承人备齐所需物品。" />
-    <string id="taom_lotr_issue_tutor_task" text="交付精美布料（{COUNT}）" />
-    <string id="taom_lotr_issue_training_title" text="让扈从经受战火" />
-    <string id="taom_lotr_issue_training_desc" text="一位地主想让缺乏经验的扈从在实战中接受磨炼。" />
-    <string id="taom_lotr_issue_training_brief" text="我的扈从太娇弱，也没打过仗，这样的人第一次上战场就会送命。带他们去对付真正的敌人，把他们练成能打硬仗的士兵。" />
-    <string id="taom_lotr_issue_training_accept" text="你想让他们见识真正的战斗？" />
-    <string id="taom_lotr_issue_training_expl" text="打赢几场硬仗，教会我的扈从怎么作战。把他们练得坚强些，你就能拿到这份教学的报酬。" />
-    <string id="taom_lotr_issue_training_soln" text="我会把他们训练成士兵。" />
-    <string id="taom_lotr_issue_inn_title" text="受骗后的怒火" />
-    <string id="taom_lotr_issue_inn_desc" text="一位当地的显要人物被骗子骗走了财产，希望有人狠狠教训他们。" />
-    <string id="taom_lotr_issue_inn_brief" text="一帮骗子和老千用做过手脚的骰子和假文书骗走了我的财产。替我收拾他们，我或许还能在镇上抬起头来做人。" />
-    <string id="taom_lotr_issue_inn_accept" text="谁骗了你？" />
-    <string id="taom_lotr_issue_inn_expl" text="找到那些骗子，给他们一个忘不了的教训。我会尽我所能报答你。" />
-    <string id="taom_lotr_issue_inn_soln" text="我会替你算这笔账。" />
-    <string id="taom_lotr_issue_feud_title" text="多年的仇怨" />
-    <string id="taom_lotr_issue_feud_desc" text="一场积怨已演变成流血冲突，一位领主希望有人击溃敌对势力的武装人员。" />
-    <string id="taom_lotr_issue_feud_brief" text="我的家族和另一个家族结怨多年，仇恨很深，如今已经动了刀剑。打败他们的武装人员，这场恩怨或许就能了结。" />
-    <string id="taom_lotr_issue_feud_accept" text="你和谁有仇？" />
-    <string id="taom_lotr_issue_feud_expl" text="击败对方的人马，用武力了结这场仇怨。办成了，我的家族就欠你一份人情。" />
-    <string id="taom_lotr_issue_feud_soln" text="我会了结这场仇怨。" />
-    <string id="taom_lotr_issue_daughter_title" text="被绑走的女儿" />
-    <string id="taom_lotr_issue_daughter_desc" text="一位当地显要人物的女儿被帮派绑走，家人希望有人将她救回。" />
-    <string id="taom_lotr_issue_daughter_brief" text="我的女儿！旅人，他们抓走了我的女儿，还要我付一笔根本拿不出的赎金。打垮那群混蛋，把她带回家吧。" />
-    <string id="taom_lotr_issue_daughter_accept" text="她被关在哪里？" />
-    <string id="taom_lotr_issue_daughter_expl" text="找到抓走我女儿的那伙人，把他们打垮。只要把她平安带回家，我愿意拿出所有能拿得出的东西来报答你。" />
+    <string id="taom_lotr_issue_tutor_title" text="为继承人的教育" />
+    <string id="taom_lotr_issue_tutor_desc" text="一位领主希望有人带来精美的布料和物品,为他继承人的教育提供体面的装备。" />
+    <string id="taom_lotr_issue_tutor_brief" text="我的继承人必须接受符合我们家族身份的教育,要有精美的服饰和学习所需的物品。把我需要的东西带来,这孩子就不会缺少什么了。" />
+    <string id="taom_lotr_issue_tutor_accept" text="我需要带什么来?" />
+    <string id="taom_lotr_issue_tutor_expl" text="给我带来{COUNT}匹天鹅绒,让我的继承人穿得像个真正的领主,你会得到丰厚的报酬。" />
+    <string id="taom_lotr_issue_tutor_soln" text="我会为你的继承人提供所需。" />
+    <string id="taom_lotr_issue_tutor_task" text="运送精美布料({COUNT})" />
+    <string id="taom_lotr_issue_training_title" text="让扈从见血" />
+    <string id="taom_lotr_issue_training_desc" text="一位地主希望让他那些未经战阵的扈从在战场上与真正的敌人作战,得到锤炼。" />
+    <string id="taom_lotr_issue_training_brief" text="我的扈从们软弱且缺乏磨练,软弱的人在第一战就会送命。带他们与真正的敌人作战,把他们锻造成坚强的战士。" />
+    <string id="taom_lotr_issue_training_accept" text="你想让他们见血?" />
+    <string id="taom_lotr_issue_training_expl" text="打几场硬仗,教我的扈从们学会战争的技艺。让他们变得坚韧,你会得到教学的报酬。" />
+    <string id="taom_lotr_issue_training_soln" text="我会把他们训练成战士。" />
+    <string id="taom_lotr_issue_inn_title" text="被骗且愤怒" />
+    <string id="taom_lotr_issue_inn_desc" text="一位名士的财产被骗子骗走,他希望给那些骗子一个惨痛的教训。" />
+    <string id="taom_lotr_issue_inn_brief" text="一帮骗子和老千用灌铅骰子和伪造文书骗走了我的财产。替我教训他们,我或许还能在这镇上抬起头来。" />
+    <string id="taom_lotr_issue_inn_accept" text="谁骗了你?" />
+    <string id="taom_lotr_issue_inn_expl" text="找到那些骗子并教训他们。给他们一个终生难忘的教训,我会尽我所能报答你。" />
+    <string id="taom_lotr_issue_inn_soln" text="我会为你讨回公道。" />
+    <string id="taom_lotr_issue_feud_title" text="宿怨" />
+    <string id="taom_lotr_issue_feud_desc" text="一场积怨已演变成流血冲突,一位领主希望击溃敌对派系的武装人员。" />
+    <string id="taom_lotr_issue_feud_brief" text="我的家族与另一家族之间有宿怨,既深且久,如今已经兵戎相见。击溃他们的武装人员,这场宿怨或许终能了结。" />
+    <string id="taom_lotr_issue_feud_accept" text="你和谁结怨?" />
+    <string id="taom_lotr_issue_feud_expl" text="击败敌对派系的人马,用武力结束这场宿怨。做到这点,我的家族将欠你一份人情。" />
+    <string id="taom_lotr_issue_feud_soln" text="我会结束这场宿怨。" />
+    <string id="taom_lotr_issue_daughter_title" text="女儿被掳" />
+    <string id="taom_lotr_issue_daughter_desc" text="一位显贵的女儿被一伙人掳走,她的家人想要救她回来。" />
+    <string id="taom_lotr_issue_daughter_brief" text="我的女儿——他们抓走了我的女儿,旅者,还要求我付一笔无力承担的赎金。打垮那些囚禁她的恶徒,把她带回家。" />
+    <string id="taom_lotr_issue_daughter_accept" text="她被关在哪里?" />
+    <string id="taom_lotr_issue_daughter_expl" text="找到掳走我女儿的那伙人并击溃他们。把她平安带回家,我会倾尽所有回报你。" />
     <string id="taom_lotr_issue_daughter_soln" text="我会把她带回家。" />
     <string id="taom_lotr_issue_betting_title" text="稳赢的赌注" />
-    <string id="taom_lotr_issue_betting_desc" text="一个帮派头目在竞技大赛上下了重注，需要一名斗士帮他赢下赌注。" />
-    <string id="taom_lotr_issue_betting_brief" text="我在下一场竞技大赛上押了一大笔钱，而我不喜欢输。替我赢下来，赢来的钱有你一大份。" />
-    <string id="taom_lotr_issue_betting_accept" text="你想让我赢下竞技大赛？" />
-    <string id="taom_lotr_issue_betting_expl" text="赢下一场竞技大赛，让我的赌注赚到钱。拿下冠军，我会从赢来的钱里好好酬谢你。" />
+    <string id="taom_lotr_issue_betting_desc" text="一个帮派头目在比武大会上下了重注,需要一名斗士让他的赌注兑现。" />
+    <string id="taom_lotr_issue_betting_brief" text="我在下一场比武大会上押了一大笔钱,而我不喜欢输。替我赢下来,赢来的钱分你一大份。" />
+    <string id="taom_lotr_issue_betting_accept" text="你要我赢下比武大会?" />
+    <string id="taom_lotr_issue_betting_expl" text="赢得一场比武大会,让我的赌注兑现。拿下奖金,我会从赢来的钱里好好回报你。" />
     <string id="taom_lotr_issue_betting_soln" text="我会帮你赢下赌注。" />
-    <string id="taom_lotr_issue_special_title" text="锻炉需要铁料" />
-    <string id="taom_lotr_issue_special_desc" text="一个帮派头目需要上好的铁料，来锻造一批特制刀剑。" />
-    <string id="taom_lotr_issue_special_brief" text="我要打一批刀剑，得是真正的好刀剑，不是我手下拿的那些破烂。这就得用好铁。把铁料弄来，我会让铁匠开工。" />
-    <string id="taom_lotr_issue_special_accept" text="需要多少铁？" />
-    <string id="taom_lotr_issue_special_expl" text="给我弄来{COUNT}块上好的铁锭用于锻造，你就有钱拿。至于刀剑，那是我的事。" />
+    <string id="taom_lotr_issue_special_title" text="锻炉的铁料" />
+    <string id="taom_lotr_issue_special_desc" text="一个帮派头目想要上好的铁料来锻造一批特制刀剑。" />
+    <string id="taom_lotr_issue_special_brief" text="我要打造刀剑——真正的好刀剑,不是我手下拿的那些破烂货——这需要好铁。给我弄来金属,我会让铁匠开工。" />
+    <string id="taom_lotr_issue_special_accept" text="需要多少铁?" />
+    <string id="taom_lotr_issue_special_expl" text="给我弄来{COUNT}块上好的铁锭用于锻造,有钱拿——至于刀剑嘛,那是我的事。" />
     <string id="taom_lotr_issue_special_soln" text="我会给你弄来铁料。" />
-    <string id="taom_lotr_issue_special_task" text="交付铁锭（{COUNT}）" />
-    <string id="taom_lotr_issue_fallback_title" text="请求援助" />
-    <string id="taom_lotr_issue_fallback_desc" text="一位当地居民需要有人送来货物。" />
-    <string id="taom_lotr_issue_fallback_brief" text="旅人，我们需要帮助。" />
-    <string id="taom_lotr_issue_fallback_accept" text="我能帮什么忙？" />
-    <string id="taom_lotr_issue_fallback_expl" text="把我们需要的{ITEM}带来，数量是{COUNT}，我们就有救了。" />
+    <string id="taom_lotr_issue_special_task" text="交付铁锭({COUNT})" />
+    <string id="taom_lotr_issue_fallback_title" text="求助请求" />
+    <string id="taom_lotr_issue_fallback_desc" text="一位本地人需要货物运送。" />
+    <string id="taom_lotr_issue_fallback_brief" text="我们有求于你,旅者。" />
+    <string id="taom_lotr_issue_fallback_accept" text="我能帮什么忙?" />
+    <string id="taom_lotr_issue_fallback_expl" text="给我们带来{COUNT}个{ITEM},我们就得救了。" />
     <string id="taom_lotr_issue_fallback_soln" text="我会带来你们需要的东西。" />
-    <string id="taom_lotr_issue_common_accepted" text="将{ITEM}（{COUNT}）送到{QUEST_SETTLEMENT}。" />
-    <string id="taom_lotr_issue_common_ready" text="你已备齐任务所需的物品，返回{QUEST_SETTLEMENT}交付即可。" />
-    <string id="taom_lotr_issue_common_cancel" text="约定已取消。" />
+    <string id="taom_lotr_issue_common_accepted" text="将{COUNT}个{ITEM}送到{QUEST_SETTLEMENT}。" />
+    <string id="taom_lotr_issue_common_ready" text="你已有足够的物品完成任务。返回{QUEST_SETTLEMENT}交付物品。" />
+    <string id="taom_lotr_issue_common_cancel" text="协议已取消。" />
     <string id="taom_lotr_issue_common_timeout" text="你未能及时交付货物。" />
-    <string id="taom_lotr_issue_common_offer_accept" text="谢谢你。我不会忘记这份恩情。" />
-    <string id="taom_lotr_issue_common_have_you" text="你带来我们需要的东西了吗？" />
-    <string id="taom_lotr_issue_common_thanks" text="祝福你，旅人。你救了我们。" />
-    <string id="taom_lotr_issue_common_await" text="我们等你回来。" />
-    <string id="taom_lotr_issue_common_turnin" text="带来了，都在这里。" />
-    <string id="taom_lotr_issue_common_working" text="还没有，我正在办。" />
+    <string id="taom_lotr_issue_common_offer_accept" text="多谢。我不会忘记这份恩情。" />
+    <string id="taom_lotr_issue_common_have_you" text="你带来我们需要的东西了吗?" />
+    <string id="taom_lotr_issue_common_thanks" text="愿神祝福你,旅者。你拯救了我们。" />
+    <string id="taom_lotr_issue_common_await" text="我们等待你的归来。" />
+    <string id="taom_lotr_issue_common_turnin" text="是的。在这里。" />
+    <string id="taom_lotr_issue_common_working" text="还没有——我正在处理。" />
     <string id="taom_lotr_issue_common_not_enough" text="你带的还不够。" />
     <string id="taom_lotr_issue_common_task" text="收集物品" />
-    <string id="taom_lotr_issue_pers_expl" text="给我带来{COUNT}名俘虏，我会给你丰厚的报酬。" />
+    <string id="taom_lotr_issue_pers_expl" text="给我带来{COUNT}个俘虏,我会付给你丰厚的报酬。" />
     <string id="taom_lotr_issue_pers_soln" text="我会给你带来俘虏。" />
-    <string id="taom_lotr_issue_pers_accepted" text="将{COUNT}名俘虏送到{QUEST_SETTLEMENT}。" />
-    <string id="taom_lotr_issue_pers_ready" text="你的俘虏数量已经足够，返回{QUEST_SETTLEMENT}交付即可。" />
+    <string id="taom_lotr_issue_pers_accepted" text="将 {COUNT} 名俘虏送到 {QUEST_SETTLEMENT}。" />
+    <string id="taom_lotr_issue_pers_ready" text="你已经有足够的俘虏了。返回{QUEST_SETTLEMENT}交付他们。" />
     <string id="taom_lotr_issue_pers_timeout" text="你未能及时交付俘虏。" />
-    <string id="taom_lotr_issue_pers_have" text="你带来俘虏了吗？" />
-    <string id="taom_lotr_issue_pers_thanks" text="这些人正合适。多谢了。" />
-    <string id="taom_lotr_issue_pers_turnin" text="带来了，人都在这里。" />
-    <string id="taom_lotr_issue_pers_not_enough" text="你的俘虏数量还不够。" />
+    <string id="taom_lotr_issue_pers_have" text="你带来俘虏了吗?" />
+    <string id="taom_lotr_issue_pers_thanks" text="很好。感谢你。" />
+    <string id="taom_lotr_issue_pers_turnin" text="是的。他们在这里。" />
+    <string id="taom_lotr_issue_pers_not_enough" text="你的俘虏还不够。" />
     <string id="taom_lotr_issue_pers_task" text="抓捕俘虏" />
-    <string id="taom_lotr_issue_combat_expl" text="解决我们的敌人，你就能得到奖赏。" />
-    <string id="taom_lotr_issue_combat_soln" text="我会对付他们。" />
-    <string id="taom_lotr_issue_combat_task_capture" text="俘虏敌方领主（{COUNT}）" />
-    <string id="taom_lotr_issue_combat_task_tourney" text="赢得竞技大赛（{COUNT}）" />
-    <string id="taom_lotr_issue_combat_task_defeat" text="击败劫掠者（{COUNT}）" />
-    <string id="taom_lotr_issue_combat_timeout" text="你未能及时消除威胁。" />
-    <string id="taom_lotr_issue_combat_fallback_desc" text="有个敌人需要处理。" />
-    <string id="taom_lotr_issue_combat_fallback_brief" text="我们正遭到敌人的围攻，旅人。" />
+    <string id="taom_lotr_issue_combat_expl" text="解决我们的敌人,你将得到奖赏。" />
+    <string id="taom_lotr_issue_combat_soln" text="我会解决他们。" />
+    <string id="taom_lotr_issue_combat_task_capture" text="俘获敌方领主({COUNT})" />
+    <string id="taom_lotr_issue_combat_task_tourney" text="赢得比武大会({COUNT})" />
+    <string id="taom_lotr_issue_combat_task_defeat" text="击败劫掠者({COUNT})" />
+    <string id="taom_lotr_issue_combat_timeout" text="你未能及时解决威胁。" />
+    <string id="taom_lotr_issue_combat_fallback_desc" text="必须对付一个敌人。" />
+    <string id="taom_lotr_issue_combat_fallback_brief" text="旅人啊，我们正被敌人围困。" />
     <string id="taom_lotr_issue_combat_fallback_accept" text="需要我做什么？" />
-    <string id="taom_lotr_issue_pers_fallback_desc" text="有人需要运送俘虏。" />
-    <string id="taom_lotr_issue_pers_fallback_brief" text="我需要一些能干重活的人，旅人。" />
-    <string id="taom_lotr_issue_armourer_title" text="铸甲师的委托" />
-    <string id="taom_lotr_issue_armourer_desc" text="{ISSUE_SETTLEMENT}的铸甲大师有一副重甲只打造了一半，缺少钢料，没法完成。" />
-    <string id="taom_lotr_issue_armourer_brief" text="战争把好钢都拿走了，根本送不到我的炉子里。我在铁砧上有一副能挡箭的甲，可手头已经没料把它做完了。" />
+    <string id="taom_lotr_issue_pers_fallback_desc" text="有人需要把俘虏押送过去。" />
+    <string id="taom_lotr_issue_pers_fallback_brief" text="旅人啊，我需要强壮的帮手。" />
+    <string id="taom_lotr_issue_armourer_title" text="甲匠的委托" />
+    <string id="taom_lotr_issue_armourer_desc" text="{ISSUE_SETTLEMENT}的甲匠大师有一副锻到一半的重甲，却没有钢料将其完成。" />
+    <string id="taom_lotr_issue_armourer_brief" text="战争夺走了每一根好钢，它们根本到不了我的炉边。我的铁砧上有一副能挡住箭矢的甲胄，却没有东西把它打完。" />
     <string id="taom_lotr_issue_armourer_accept" text="你需要什么？" />
-    <string id="taom_lotr_issue_armourer_expl" text="给我送来{COUNT}份{ITEM}，甲做好就是你的。拿钢料换铠甲，这买卖很公平。" />
-    <string id="taom_lotr_issue_armourer_soln" text="我会把钢料送来。" />
-    <string id="taom_lotr_issue_armourer_task" text="向铸甲师交付{ITEM}（{COUNT}）" />
-    <string id="taom_lotr_issue_seam_title" text="深层矿脉" />
-    <string id="taom_lotr_issue_seam_desc" text="{ISSUE_SETTLEMENT}的矿工发现了一条稀有金属矿脉，这种金属可以打造领主铠甲。矿井需要木料支撑，否则就会坍塌。" />
-    <string id="taom_lotr_issue_seam_brief" text="我的矿工运气好，找到了一条矿脉，那里的金属是铸甲大师们不惜重金收购的。但矿井太旧了，没有好木料撑住，矿工和矿脉都会被埋在下面。" />
+    <string id="taom_lotr_issue_armourer_expl" text="给我带{COUNT}批{ITEM}，甲胄完工后便归你。以钢换钢：公平的交易。" />
+    <string id="taom_lotr_issue_armourer_soln" text="我会把钢料带给你。" />
+    <string id="taom_lotr_issue_armourer_task" text="把{ITEM}带给甲匠（{COUNT}）" />
+    <string id="taom_lotr_issue_seam_title" text="深处的矿脉" />
+    <string id="taom_lotr_issue_seam_desc" text="{ISSUE_SETTLEMENT}的矿工挖到了一条稀有金属矿脉——那是锻造领主铠甲之物，但矿井在塌陷前亟需木材支撑。" />
+    <string id="taom_lotr_issue_seam_brief" text="我的矿工们是走运才发现的：一条伟大甲匠不惜重金求购的金属矿脉。可矿井年久失修，若没有好木料支撑，它会把矿工和矿脉一同埋葬。" />
     <string id="taom_lotr_issue_seam_accept" text="你需要什么？" />
-    <string id="taom_lotr_issue_seam_expl" text="给我送来{COUNT}份{ITEM}加固矿井，第一批开采出来的矿石就归你。它们对你来说比对我更有用。" />
-    <string id="taom_lotr_issue_seam_soln" text="我会把木料送来。" />
-    <string id="taom_lotr_issue_seam_task" text="向村长交付{ITEM}（{COUNT}）" />
+    <string id="taom_lotr_issue_seam_expl" text="给我带{COUNT}批{ITEM}来支撑矿井，挖出的头一批矿料便归你。那对你比对我更有价值。" />
+    <string id="taom_lotr_issue_seam_soln" text="我会把木料带给你。" />
+    <string id="taom_lotr_issue_seam_task" text="将{ITEM}带给村长（{COUNT}）" />
   </strings>
 </base>

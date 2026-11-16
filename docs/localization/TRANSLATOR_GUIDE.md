@@ -292,6 +292,43 @@ Run the AI pipeline (Option A), then open each file and refine the AI translatio
 
 ---
 
+## Chinese: the team's text is the reference
+
+The Chinese team (RuiNova, BLCC) translates TAOM for its players and ships the work as a module of its
+own, `TAOM_CN` (#1385). For Simplified (`CNs`) and Traditional (`CNt`) Chinese, their text replaces the
+AI draft. We import each drop they send, and the AI translator then drafts only the rows that still
+hold English.
+
+```bash
+# Dry run: writes only the report. Read it before --apply.
+python -I tools/import_team_translations.py --lang CNs --lang CNt --from <TAOM_CN.zip> --report <out.json>
+# Then the repo files, and the live TAOM_Map and Armory files (each backed up first):
+python -I tools/import_team_translations.py --lang CNs --lang CNt --from <TAOM_CN.zip> --report <out.json> --module TAOM --module TAOM_Map --module Armory --apply
+```
+
+What decides a row (the tool's docstring has the full list):
+
+- **An override wins.** `tools/translation_overrides/cns.json` and `cnt.json` beat the team's text in
+  the importer, as in every other tool. Put a hand correction to a Chinese row there, or the next
+  import replaces it.
+- **A stale row keeps ours.** The team translates the TAOM release its module depends on. When our
+  English for an id changed after that release, their text translates words we no longer show, so the
+  importer keeps our row and lists it under `stale`.
+- **A name stays the same entity.** `KEEP_OURS` in the tool lists ids where the team's text names
+  another lord, clan or name list than our English. To rename, change the English first; the team then
+  translates the new name.
+- **Names stay distinct.** In troop names and Armory items, no two ids with different English may
+  share one Chinese name. An Armory name gets its English tier (`IV`) appended when the team's text
+  drops it.
+
+After an import, send the team the report's `stale`, `kept_ours`, `collisions`, `rejected`,
+`ours_untranslated_they_lack` and `ours_drafted_they_lack` lists. From them we need only their
+`ModuleData/Languages/CNs` and `CNt` folders, with the TAOM version they translated in `SubModule.xml`.
+TAOM_Map and the Armory are live installs, so a reinstall reverts their imported rows: run the import
+again for those modules afterwards.
+
+---
+
 ## Changing English Text That Is Already Translated
 
 Adding a new key works. **Changing the English of a key that already has translations does not.** No

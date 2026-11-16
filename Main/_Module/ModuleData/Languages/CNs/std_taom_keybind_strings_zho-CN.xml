@@ -7,46 +7,46 @@
   </tags>
   <strings>
     <string id="taom_key_fast_forward" text="快进（TAOM）" />
-    <string id="taom_key_fast_forward_desc" text="使用 TAOM 的快进速度倍率。默认与本体的暂停切换共用一个按键，这是有意设置的。" />
-    <string id="taom_key_extra_fast_forward" text="高速快进（TAOM）" />
-    <string id="taom_key_extra_fast_forward_desc" text="使用 TAOM 更高的快进速度倍率。默认按键为 E，与向右旋转镜头共用按键；修改其中一个按键，就能避免同时触发。" />
-    <string id="taom_key_turbo" text="极速快进，按住 Ctrl（TAOM）" />
-    <string id="taom_key_turbo_desc" text="同时按住 Ctrl 和此键，使用 TAOM 最高的速度倍率。松开其中任意一个按键，就会恢复之前的速度。" />
-    <string id="taom_key_career_ability" text="职业技能（TAOM）" />
-    <string id="taom_key_career_ability_desc" text="战斗中，能量条充满后可用此键发动职业技能。默认按键为 V。" />
-    <string id="taom_aso_desc_invasion" text="统治中洲大部分地区的势力。" />
-    <string id="taom_aso_item_desc_invasion" text="{InvasionScenarioFactionId}控制着中洲绝大部分地区。" />
-    <string id="taom_aso_item_desc_randomized" text="在合理范围内，按你选择的程度随机调整中洲的开局状态。" />
-    <string id="taom_key_realm_borders" text="显示国境（TAOM）" />
-    <string id="taom_key_realm_borders_desc" text="显示或隐藏战役地图上的国境和国家名称。默认按键为 M。" />
-    <string id="taom_key_realm_borders_mode" text="国境地图模式（TAOM）" />
-    <string id="taom_key_realm_borders_mode_desc" text="切换国境的显示方式：按国家划分、按自由人民与暗影阵营划分，或按你的盟友与敌人划分。默认按键为 G。" />
-    <string id="taom_key_seat_take" text="切换指挥视角（TAOM）" />
-    <string id="taom_key_seat_take_desc" text="让视角脱离角色，自由飞越战场；切回时会平滑返回角色。使用指挥视角时，角色会原地待命；若启用了自动战斗设置，则会继续作战。默认按键为 Q。" />
-    <string id="taom_key_marshal_queue" text="追加命令（TAOM）" />
-    <string id="taom_key_marshal_queue_desc" text="打开命令面板后，按住此键下达命令，编队会在执行完当前命令后再执行新命令。默认按键为左 Shift。" />
-    <string id="taom_key_marshal_widths" text="保持阵型宽度（TAOM）" />
-    <string id="taom_key_marshal_widths_desc" text="打开命令面板后，按住此键为多个编队拖出阵线，它们会整体转向，不改变各自的宽度。默认按键为左 Alt。" />
-    <string id="taom_key_seat_keep" text="跟随士兵或编队（TAOM）" />
-    <string id="taom_key_seat_keep_desc" text="使用指挥视角时，跟随屏幕中央的士兵；显示光标时则跟随光标指向的士兵，也可以跟随命令面板中选中的编队，并围绕目标观察。再次按下此键，或自由移动镜头，即可取消跟随。默认按键为 Insert。" />
+    <string id="taom_key_fast_forward_desc" text="应用 TAOM 的快进速度倍率。默认与原版暂停切换键共用同一按键，这是有意为之。" />
+    <string id="taom_key_extra_fast_forward" text="超级快进（TAOM）" />
+    <string id="taom_key_extra_fast_forward_desc" text="应用更高的 TAOM 快进倍率。默认为 E 键，该键同时也是向右旋转镜头；若不想两者同时触发，请重新绑定其中之一。" />
+    <string id="taom_key_turbo" text="极速时间，按住 Ctrl（TAOM）" />
+    <string id="taom_key_turbo_desc" text="按住 Ctrl 并同时按下此键，即可获得 TAOM 的最高速度倍率。松开任一按键即恢复之前的速度。" />
+    <string id="taom_key_career_ability" text="职业能力（TAOM）" />
+    <string id="taom_key_career_ability_desc" text="当能量条充满时，在战斗中激活你的职业技能。默认按键为 V。" />
+    <string id="taom_aso_desc_invasion" text="统治中洲大部分地区的阵营。" />
+    <string id="taom_aso_item_desc_invasion" text="{InvasionScenarioFactionId}统治着中洲的绝大部分地区。" />
+    <string id="taom_aso_item_desc_randomized" text="在合理范围内，按你选择的程度随机化中洲的初始局势。" />
+    <string id="taom_key_realm_borders" text="显示国界（TAOM）" />
+    <string id="taom_key_realm_borders_desc" text="在战役地图上显示或隐藏国界与国度名称。默认按键为 M。" />
+    <string id="taom_key_realm_borders_mode" text="国界地图模式（TAOM）" />
+    <string id="taom_key_realm_borders_mode_desc" text="在各国度、自由民族对抗黑暗势力以及你的盟友与敌人之间切换国界显示。默认按键为 G。" />
+    <string id="taom_key_seat_take" text="登上高座（TAOM）" />
+    <string id="taom_key_seat_take_desc" text="将视角从你的英雄身上抬起，使你能飞越战场，并以一段短暂的滑行将视角带回。你在上方时英雄会原地待命，若开启相应设置则会继续作战。默认按键为 Q。" />
+    <string id="taom_key_marshal_queue" text="依次下达命令（TAOM）" />
+    <string id="taom_key_marshal_queue_desc" text="在打开指令面板下达命令时按住，该部队将在执行完当前命令后再执行此命令。默认按键为左 Shift。" />
+    <string id="taom_key_marshal_widths" text="保持阵宽（TAOM）" />
+    <string id="taom_key_marshal_widths_desc" text="在打开指令面板为多支部队拖拽阵线时按住，它们将作为一个整体转向而不被拉伸。默认按键为左 Alt。" />
+    <string id="taom_key_seat_keep" text="跟随此士兵或部队（TAOM）" />
+    <string id="taom_key_seat_keep_desc" text="在高座中，将视角锁定在屏幕中央的士兵、光标所指的士兵（若有显示），或你在指令面板中选中的部队上，并围绕其环绕。再次按下或飞行即可解除。默认按键为 Insert。" />
     <string id="taom_key_seat_hide" text="隐藏界面（TAOM）" />
-    <string id="taom_key_seat_hide_desc" text="使用指挥视角时，隐藏整个界面，方便观察战场。再按一次恢复界面；打开命令面板时也会自动恢复。默认按键为 End。" />
-    <string id="taom_key_marshal_mark" text="指定目标，保持移动（TAOM）" />
-    <string id="taom_key_marshal_mark_desc" text="打开命令面板后，按住此键对敌方编队下达冲锋命令，只会将其标记为目标，己方编队仍执行原来的移动命令。标记用于引导弓兵等远程士兵选择目标；近战士兵仍自行选择交战对象。默认按键为左 Ctrl。" />
-    <string id="taom_key_marshal_fire" text="切换弓兵射击模式（TAOM）" />
-    <string id="taom_key_marshal_fire_desc" text="选中编队后按下此键，可在三种模式间切换：自由射击；拉弓等待命令，最多等待 14 秒；拉弓准备，等大多数弓兵就绪后自动下令齐射。默认按键为逗号键。" />
-    <string id="taom_key_marshal_word" text="下令齐射（TAOM）" />
-    <string id="taom_key_marshal_word_desc" text="选中编队后按下此键，让已经拉弓待命的弓兵同时放箭。默认按键为 M。" />
-    <string id="taom_key_seat_take_soldier" text="接管士兵（TAOM）" />
-    <string id="taom_key_seat_take_soldier_desc" text="使用指挥视角时，如果你的角色已在本场战斗中倒下，就可以接管屏幕中央的士兵，或当前跟随编队中距离最近的士兵，继续亲自作战。默认按键为 Delete。" />
+    <string id="taom_key_seat_hide_desc" text="在高座中隐藏整个界面，以获得清爽视野。再次按下可恢复界面；打开指令面板时界面也会恢复。默认按键为 End。" />
+    <string id="taom_key_marshal_mark" text="标记而不移动（TAOM）" />
+    <string id="taom_key_marshal_mark_desc" text="在打开指令面板命令部队冲锋敌方部队时按住，你的部队会将其标记为目标，同时保持原有的移动命令。标记可引导弓箭手及其他远程士兵；近战士兵则自行选择对手。默认按键为左 Ctrl。" />
+    <string id="taom_key_marshal_fire" text="切换弓箭手射击方式（TAOM）" />
+    <string id="taom_key_marshal_fire_desc" text="选中部队后按下，可在以下方式间切换：自由射击；张弓待命直至你下令（最多 14 秒）；以及张弓待命直至大多数人准备就绪，届时自动为你下达放箭之令。默认按键为逗号。" />
+    <string id="taom_key_marshal_word" text="下令放箭（TAOM）" />
+    <string id="taom_key_marshal_word_desc" text="选中部队后按下，该部队中张弓待命的弓箭手将齐射。默认按键为 M。" />
+    <string id="taom_key_seat_take_soldier" text="接管此士兵（TAOM）" />
+    <string id="taom_key_seat_take_soldier_desc" text="在高座中，当你的英雄在战斗中倒下后，接管屏幕中央的士兵，或你所跟随部队中最近的一名士兵，由其代为传达你的命令。默认按键为 Delete。" />
     <string id="taom_key_marshal_hold" text="坚守阵线（TAOM）" />
-    <string id="taom_key_marshal_hold_desc" text="选中编队后按下此键，处于盾墙、圆阵或方阵中的持盾步兵会停止攻击并守住位置，受伤后会短暂反击。下达冲锋、撤退命令，或再次按下此键，便会恢复正常战斗。默认按键为句号键。" />
+    <string id="taom_key_marshal_hold_desc" text="选中部队后按下：其持盾步兵在盾墙、圆阵或方阵中停止进攻并坚守原位，受伤时会反击数秒。下达冲锋、撤退命令或再次按下可让他们恢复作战。默认按键为句号。" />
     <string id="taom_key_seat_quicken" text="加快时间（TAOM）" />
-    <string id="taom_key_seat_quicken_desc" text="战斗中将时间速度提高一档，档位依次为 0.25、0.5、1、2、4 和 10 倍速。10 倍速仅在使用指挥视角，或已无可接管角色时可用。指挥视角和角色视角下均可使用，仅限单人模式。默认按键为 Page Up。" />
+    <string id="taom_key_seat_quicken_desc" text="在战斗中，将任务时间提升一档：0.25、0.5、1、2、4 与 10。第 10 档需要处于高座状态，或已无人可供你操控作战。该功能在高座视角或英雄视角下均可使用，仅限单人模式。默认按键为 Page Up。" />
     <string id="taom_key_seat_slow" text="减慢时间（TAOM）" />
-    <string id="taom_key_seat_slow_desc" text="战斗中将时间速度降低一档，最低为正常速度的四分之一。默认按键为 Page Down。" />
-    <string id="taom_key_seat_stay" text="暂停战斗（TAOM）" />
-    <string id="taom_key_seat_stay_desc" text="战斗中取消加速并暂停，再按一次即可继续。暂停时仍可自由移动指挥视角。默认按键为 Home。" />
+    <string id="taom_key_seat_slow_desc" text="在战斗中，将任务时间降低一档，最低可至正常速度的四分之一。默认按键为 Page Down。" />
+    <string id="taom_key_seat_stay" text="暂停时间（TAOM）" />
+    <string id="taom_key_seat_stay_desc" text="在战斗中，取消加速并暂停任务；再次按下即可继续。战斗暂停时，高座视角仍可飞行。默认按键为 Home。" />
     <string id="taom_key_cheat_menu" text="Open Cheat Menu (TAOM)" />
     <string id="taom_key_cheat_menu_desc" text="Opens the TAOM cheat menu on the campaign map, like the Cheats button. Works only while Enable Cheat Menu is on in Mod Options, in single player. Defaults to H." />
     <string id="taom_key_battle_cheat_menu" text="Open Battle Cheat Menu (TAOM)" />

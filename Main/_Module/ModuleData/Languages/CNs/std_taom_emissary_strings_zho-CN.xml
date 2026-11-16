@@ -6,30 +6,30 @@
     <tag language="Simplified Chinese" />
   </tags>
   <strings>
-    <string id="taom_emissary_menu" text="与阵营使者交谈" />
-    <string id="taom_emissary_no_trade" text="此处无法招募该阵营的精锐兵种。" />
-    <string id="taom_emissary_greet" text="你想要我们最精锐的战士？选出你要的人，只要出得起价，他们就归你指挥。" />
-    <string id="taom_emissary_buy" text="我想招募精锐兵种。" />
+    <string id="taom_emissary_menu" text="与派系使者交谈" />
+    <string id="taom_emissary_no_trade" text="这里没有该派系的精英交易。" />
+    <string id="taom_emissary_greet" text="你想要我族能提供的最精锐战士?说出他们的名字,只要价钱合适,他们就是你的了。" />
+    <string id="taom_emissary_buy" text="我想购买精英单位。" />
     <string id="taom_emissary_leave" text="今天不用了。" />
-    <string id="taom_emissary_list_title" text="精锐兵种" />
-    <string id="taom_emissary_list_desc" text="余额：{AMOUNT} {RESOURCE}" />
-    <string id="taom_emissary_offer_line" text="{NAME}：{COST} {RESOURCE}" />
-    <string id="taom_emissary_offer_afford" text="你最多可以招募{MAX}名。" />
+    <string id="taom_emissary_list_title" text="精英单位" />
+    <string id="taom_emissary_list_desc" text="余额:{AMOUNT} {RESOURCE}" />
+    <string id="taom_emissary_offer_line" text="{NAME} — {COST} {RESOURCE}" />
+    <string id="taom_emissary_offer_afford" text="你最多可以购买{MAX}个。" />
     <string id="taom_emissary_offer_cant" text="{RESOURCE}不足。" />
     <string id="taom_emissary_select" text="选择" />
     <string id="taom_emissary_back" text="返回" />
-    <string id="taom_emissary_qty_title" text="要招募多少名{TROOP}？" />
-    <string id="taom_emissary_qty_desc" text="每名需要{COST} {RESOURCE}，你现有{BALANCE}。" />
-    <string id="taom_emissary_qty_line" text="{QTY}（单价{COST}，合计{TOTAL} {RESOURCE}）" />
+    <string id="taom_emissary_qty_title" text="需要多少{TROOP}?" />
+    <string id="taom_emissary_qty_desc" text="每个需要{COST} {RESOURCE}。你拥有{BALANCE}。" />
+    <string id="taom_emissary_qty_line" text="{QTY} (×{COST} = {TOTAL} {RESOURCE})" />
     <string id="taom_emissary_confirm" text="招募" />
-    <string id="taom_emissary_bought" text="花费{COST} {RESOURCE}招募了{QTY}名{TROOP}。" />
-    <string id="taom_emissary_cant_afford" text="{RESOURCE}不足，需要{COST}。" />
-    <string id="taom_emissary_no_resource" text="这个聚落没有使者提供招募服务。" />
-    <string id="taom_emissary_no_offers" text="使者目前没有可供招募的精锐兵种。" />
-    <string id="taom_emissary_failed" text="使者未能完成这笔交易。" />
-    <string id="taom_emissary_coop_guest" text="使者只与本场合作战役的主机玩家交易。" />
+    <string id="taom_emissary_bought" text="花费{COST} {RESOURCE}招募了{QTY}个{TROOP}。" />
+    <string id="taom_emissary_cant_afford" text="{RESOURCE}不足——需要{COST}。" />
+    <string id="taom_emissary_no_resource" text="此定居点没有使者交易。" />
+    <string id="taom_emissary_no_offers" text="使者目前没有精英单位可供交易。" />
+    <string id="taom_emissary_failed" text="使者无法完成交易。" />
+    <string id="taom_emissary_coop_guest" text="使者只与本场战役的主机方交涉。" />
     <string id="taom_emissary_denars" text="第纳尔" />
-    <string id="taom_emissary_party_full" text="你的部队容不下这些士兵。" />
-    <string id="taom_emissary_offer_room" text="你的部队还能容纳{MAX}人。" />
+    <string id="taom_emissary_party_full" text="你的队伍已无空位容纳这些士兵。" />
+    <string id="taom_emissary_offer_room" text="你的队伍还能容纳 {MAX} 人。" />
   </strings>
 </base>

@@ -6,96 +6,96 @@
     <tag language="Simplified Chinese" />
   </tags>
   <strings>
-    <string id="aom_clan_bluecraig_1_name" text="蓝岩战帮" />
-    <string id="aom_clan_bluecraig_2_name" text="峭岩后裔" />
-    <string id="aom_clan_bluecraig_3_name" text="路恩潜伏者" />
+    <string id="aom_clan_bluecraig_1_name" text="蓝岩战团" />
+    <string id="aom_clan_bluecraig_2_name" text="崖生之辈" />
+    <string id="aom_clan_bluecraig_3_name" text="卢恩潜伏者" />
     <string id="aom_clan_bluecraig_4_name" text="埃瑞德路因劫掠者" />
-    <string id="aom_clan_bluecraig_5_name" text="黑石部族" />
+    <string id="aom_clan_bluecraig_5_name" text="暗石部族" />
     <string id="aom_clan_dolguldur_10_name" text="德鲁兹古尔" />
     <string id="aom_clan_dolguldur_11_name" text="弗鲁克莫格" />
     <string id="aom_clan_dolguldur_12_name" text="赫拉库尔兹" />
     <string id="aom_clan_dolguldur_13_name" text="斯罗兹布兹" />
-    <string id="aom_clan_dolguldur_14_name" text="拉兹戈尔" />
+    <string id="aom_clan_dolguldur_14_name" text="拉兹戈" />
     <string id="aom_clan_dolguldur_15_name" text="乌兹古尔" />
-    <string id="aom_clan_dolguldur_1_name" text="黑暗獠牙" />
-    <string id="aom_clan_dolguldur_2_name" text="古尔兹拉克" />
+    <string id="aom_clan_dolguldur_1_name" text="希昂德鲁斯" />
+    <string id="aom_clan_dolguldur_2_name" text="古兹拉克" />
     <string id="aom_clan_dolguldur_3_name" text="毛格杜尔" />
-    <string id="aom_clan_dolguldur_4_name" text="杜尔赞" />
+    <string id="aom_clan_dolguldur_4_name" text="杜赞" />
     <string id="aom_clan_dolguldur_5_name" text="克拉兹戈斯" />
     <string id="aom_clan_dolguldur_6_name" text="祖尔巴克" />
-    <string id="aom_clan_dolguldur_7_name" text="嘎什鲁兹" />
-    <string id="aom_clan_dolguldur_8_name" text="莫尔巴克" />
+    <string id="aom_clan_dolguldur_7_name" text="加什鲁兹" />
+    <string id="aom_clan_dolguldur_8_name" text="莫巴克" />
     <string id="aom_clan_dolguldur_9_name" text="斯库尔加斯" />
     <string id="aom_clan_empire_south_10_name" text="阿尔基" />
-    <string id="aom_clan_empire_south_11_name" text="伊孔" />
-    <string id="aom_clan_empire_south_12_name" text="阿克赫斯" />
+    <string id="aom_clan_empire_south_11_name" text="伊洪" />
+    <string id="aom_clan_empire_south_12_name" text="阿凯斯" />
     <string id="aom_clan_empire_south_13_name" text="扎鲁尼克" />
     <string id="aom_clan_empire_south_14_name" text="乌格拉库尔" />
     <string id="aom_clan_empire_south_15_name" text="布鲁加什" />
-    <string id="aom_clan_empire_west_10_name" text="希阿尔苏利昂纳斯家族" />
-    <string id="aom_clan_empire_west_11_name" text="卡拉迪昂纳斯家族" />
-    <string id="aom_clan_empire_west_12_name" text="加尔维瑞昂纳斯家族" />
-    <string id="aom_clan_empire_west_13_name" text="希瑞利昂纳斯家族" />
-    <string id="aom_clan_empire_west_14_name" text="巴拉尼昂纳斯家族" />
-    <string id="aom_clan_erebor_1_name" text="都林的家族" />
-    <string id="aom_clan_erebor_2_name" text="罗尼的家族" />
-    <string id="aom_clan_erebor_3_name" text="拉尔的家族" />
-    <string id="aom_clan_erebor_4_name" text="格罗尔的家族" />
-    <string id="aom_clan_erebor_5_name" text="戈利的家族" />
-    <string id="aom_clan_erebor_6_name" text="罗里的家族" />
-    <string id="aom_clan_erebor_7_name" text="诺林的家族" />
+    <string id="aom_clan_empire_west_10_name" text="希亚苏利昂那斯家族" />
+    <string id="aom_clan_empire_west_11_name" text="卡拉迪昂那斯家族" />
+    <string id="aom_clan_empire_west_12_name" text="加尔维里昂那斯家族" />
+    <string id="aom_clan_empire_west_13_name" text="希瑞里昂那斯家族" />
+    <string id="aom_clan_empire_west_14_name" text="巴兰尼昂那斯家族" />
+    <string id="aom_clan_erebor_1_name" text="都林之家" />
+    <string id="aom_clan_erebor_2_name" text="罗尼之家" />
+    <string id="aom_clan_erebor_3_name" text="拉尔之家" />
+    <string id="aom_clan_erebor_4_name" text="格罗尔之家" />
+    <string id="aom_clan_erebor_5_name" text="戈利之家" />
+    <string id="aom_clan_erebor_6_name" text="罗瑞之家" />
+    <string id="aom_clan_erebor_7_name" text="诺林之家" />
     <string id="aom_clan_goblin_1_name" text="斯克里萨克" />
-    <string id="aom_clan_goblin_2_name" text="亚古尔" />
+    <string id="aom_clan_goblin_2_name" text="雅古尔" />
     <string id="aom_clan_goblin_3_name" text="戈基尔" />
-    <string id="aom_clan_goblin_4_name" text="斯那嘎战群" />
+    <string id="aom_clan_goblin_4_name" text="斯纳加群" />
     <string id="aom_clan_goblin_5_name" text="穆格拉特" />
     <string id="aom_clan_gundabad_10_name" text="斯罗克莫" />
-    <string id="aom_clan_gundabad_1_name" text="贡达巴德之子" />
-    <string id="aom_clan_gundabad_2_name" text="刚德鲁克" />
-    <string id="aom_clan_gundabad_3_name" text="扎巴格" />
-    <string id="aom_clan_gundabad_4_name" text="莫祖格" />
+    <string id="aom_clan_gundabad_1_name" text="阿什莫格" />
+    <string id="aom_clan_gundabad_2_name" text="贡德鲁克" />
+    <string id="aom_clan_gundabad_3_name" text="扎尔巴格" />
+    <string id="aom_clan_gundabad_4_name" text="莫尔祖格" />
     <string id="aom_clan_gundabad_5_name" text="克鲁加什" />
     <string id="aom_clan_gundabad_6_name" text="格里舒克" />
-    <string id="aom_clan_gundabad_7_name" text="路格都什" />
-    <string id="aom_clan_gundabad_8_name" text="毛克林" />
-    <string id="aom_clan_gundabad_9_name" text="斯卡尔扎格" />
+    <string id="aom_clan_gundabad_7_name" text="卢格杜什" />
+    <string id="aom_clan_gundabad_8_name" text="毛克瑞姆" />
+    <string id="aom_clan_gundabad_9_name" text="斯卡扎格" />
     <string id="aom_clan_isengard_10_name" text="灰烬卫队" />
-    <string id="aom_clan_isengard_11_name" text="破岩者" />
+    <string id="aom_clan_isengard_11_name" text="碎石者" />
     <string id="aom_clan_isengard_1_name" text="白手" />
     <string id="aom_clan_isengard_2_name" text="红色梯队" />
     <string id="aom_clan_isengard_3_name" text="黑色梯队" />
     <string id="aom_clan_isengard_4_name" text="黑颚" />
     <string id="aom_clan_isengard_5_name" text="铁拳" />
     <string id="aom_clan_isengard_6_name" text="血卫队" />
-    <string id="aom_clan_isengard_7_name" text="暗影劫掠者" />
+    <string id="aom_clan_isengard_7_name" text="暗影掠夺者" />
     <string id="aom_clan_isengard_8_name" text="碎颅者" />
     <string id="aom_clan_isengard_9_name" text="战犬" />
-    <string id="aom_clan_khuzait_10_name" text="伊尔诺里亚" />
+    <string id="aom_clan_khuzait_10_name" text="伊尔诺瑞亚" />
     <string id="aom_clan_khuzait_11_name" text="沙卡利安" />
     <string id="aom_clan_khuzait_12_name" text="胡兹" />
     <string id="aom_clan_khuzait_13_name" text="阿德基格" />
-    <string id="aom_clan_khuzait_14_name" text="西尔泽隆" />
+    <string id="aom_clan_khuzait_14_name" text="锡尔泽隆" />
     <string id="aom_clan_khuzait_15_name" text="卡尔基安" />
     <string id="aom_clan_khuzait_16_name" text="佐里安" />
     <string id="aom_clan_khuzait_17_name" text="米斯伦泰" />
     <string id="aom_clan_khuzait_18_name" text="瓦泽维安" />
-    <string id="aom_clan_khuzait_19_name" text="博佐加尼思" />
-    <string id="aom_clan_lindon_1_name" text="法拉斯民" />
-    <string id="aom_clan_lindon_2_name" text="米斯泷德精灵" />
-    <string id="aom_clan_lothlorien_1_name" text="菲纳芬" />
-    <string id="aom_clan_lothlorien_2_name" text="耐斯守卫" />
-    <string id="aom_clan_lothlorien_3_name" text="瑁加拉德家族" />
-    <string id="aom_clan_mirkwood_1_name" text="拉斯嘉兰" />
-    <string id="aom_clan_mirkwood_2_name" text="欧洛斐尔家族" />
-    <string id="aom_clan_mirkwood_3_name" text="陶里翁家族" />
-    <string id="aom_clan_mirkwood_4_name" text="加拉格林家族" />
+    <string id="aom_clan_khuzait_19_name" text="博佐尔加尼斯" />
+    <string id="aom_clan_lindon_1_name" text="诺斯·诺威" />
+    <string id="aom_clan_lindon_2_name" text="诺斯·阿塔诺" />
+    <string id="aom_clan_lothlorien_1_name" text="费纳芬家族" />
+    <string id="aom_clan_lothlorien_2_name" text="奈斯守卫" />
+    <string id="aom_clan_lothlorien_3_name" text="玛尔加拉德家族" />
+    <string id="aom_clan_mirkwood_1_name" text="拉斯加伦家族" />
+    <string id="aom_clan_mirkwood_2_name" text="奥洛费尔家族" />
+    <string id="aom_clan_mirkwood_3_name" text="陶瑞安家族" />
+    <string id="aom_clan_mirkwood_4_name" text="加伦格林家族" />
     <string id="aom_clan_mirkwood_5_name" text="阿伦威家族" />
-    <string id="aom_clan_mirkwood_6_name" text="伊明尼家族" />
-    <string id="aom_clan_mistymountainorcs_10_name" text="路格布尔兹" />
+    <string id="aom_clan_mirkwood_6_name" text="伊米涅家族" />
+    <string id="aom_clan_mistymountainorcs_10_name" text="卢格布兹" />
     <string id="aom_clan_mistymountainorcs_11_name" text="赫拉克杜尔" />
     <string id="aom_clan_mistymountainorcs_12_name" text="乌兹格纳什" />
-    <string id="aom_clan_mistymountainorcs_13_name" text="弗拉克莫" />
-    <string id="aom_clan_mistymountainorcs_14_name" text="嘎什林" />
+    <string id="aom_clan_mistymountainorcs_13_name" text="弗拉克茅" />
+    <string id="aom_clan_mistymountainorcs_14_name" text="加什林" />
     <string id="aom_clan_mistymountainorcs_15_name" text="莫尔祖克" />
     <string id="aom_clan_mistymountainorcs_1_name" text="布尔兹加什" />
     <string id="aom_clan_mistymountainorcs_2_name" text="克林帕什" />
@@ -104,67 +104,67 @@
     <string id="aom_clan_mistymountainorcs_5_name" text="瓦格林" />
     <string id="aom_clan_mistymountainorcs_6_name" text="格罗布尔兹" />
     <string id="aom_clan_mistymountainorcs_7_name" text="斯卡尔纳克" />
-    <string id="aom_clan_mistymountainorcs_8_name" text="毛嘎什" />
-    <string id="aom_clan_mistymountainorcs_9_name" text="斯罗格莫" />
-    <string id="aom_clan_rivendell_1_name" text="半精灵" />
-    <string id="aom_clan_rivendell_2_name" text="格罗芬德尔家族" />
-    <string id="aom_clan_rivendell_3_name" text="埃兰-诺尔玛瑞" />
-    <string id="aom_clan_umbar_1_name" text="卡西米里奥尼家族" />
-    <string id="aom_clan_vlandia_12_name" text="艾尔夫威金家族" />
+    <string id="aom_clan_mistymountainorcs_8_name" text="莫加什" />
+    <string id="aom_clan_mistymountainorcs_9_name" text="斯罗格茅" />
+    <string id="aom_clan_rivendell_1_name" text="诺斯·佩瑞德尔" />
+    <string id="aom_clan_rivendell_2_name" text="诺斯·格洛芬德尔" />
+    <string id="aom_clan_rivendell_3_name" text="埃伦-诺尔玛瑞" />
+    <string id="aom_clan_umbar_1_name" text="卡希米瑞欧尼家族" />
+    <string id="aom_clan_vlandia_12_name" text="埃尔夫维京家族" />
     <string id="aom_clan_vlandia_13_name" text="凯尔蒙丁家族" />
     <string id="aom_clan_vlandia_14_name" text="维德蒙丁家族" />
     <string id="aom_clan_vlandia_15_name" text="奥德加林家族" />
-    <string id="aom_clan_vlandia_16_name" text="洪塞尔明家族" />
+    <string id="aom_clan_vlandia_16_name" text="亨塞尔明家族" />
     <string id="aom_clan_vlandia_17_name" text="布雷格丹宁家族" />
-    <string id="aom_clan_vlandia_18_name" text="德阿弗林加斯家族" />
-    <string id="aom_clan_vlandia_19_name" text="马尔哈德一族" />
-    <string id="aom_clan_vlandia_20_name" text="莫尔卡加斯家族" />
-    <string id="aom_clan_vlandia_21_name" text="哈烈斯一族" />
-    <string id="aom_clan_vlandia_22_name" text="朗要塞的家族" />
-    <string id="aom_clan_umbar_2_name" text="贾尔贾克斯家族" />
+    <string id="aom_clan_vlandia_18_name" text="德亚弗林加斯家族" />
+    <string id="aom_clan_vlandia_19_name" text="马哈德家族" />
+    <string id="aom_clan_vlandia_20_name" text="莫尔卡尔加斯家族" />
+    <string id="aom_clan_vlandia_21_name" text="哈莱斯林家族" />
+    <string id="aom_clan_vlandia_22_name" text="伦加林家族" />
+    <string id="aom_clan_umbar_2_name" text="雅尔雅克斯家族" />
     <string id="aom_clan_umbar_3_name" text="赫什拉家族" />
     <string id="aom_clan_umbar_4_name" text="贝尔因祖尔家族" />
     <string id="aom_clan_umbar_5_name" text="哈尔拉克斯家族" />
     <string id="aom_clan_umbar_6_name" text="卡图格家族" />
     <string id="aom_clan_arthedain_1_name" text="阿维杜伊家族" />
-    <string id="aom_clan_arthedain_2_name" text="暮暗湖家族" />
-    <string id="aom_clan_arthedain_3_name" text="阿蒙苏尔守望者" />
-    <string id="aom_clan_arthedain_4_name" text="巴兰都因河家族" />
-    <string id="aom_clan_arthedain_5_name" text="埃敏贝莱德家族" />
+    <string id="aom_clan_arthedain_2_name" text="黄昏湖家族" />
+    <string id="aom_clan_arthedain_3_name" text="阿蒙苏尔守护者" />
+    <string id="aom_clan_arthedain_4_name" text="巴兰都因家族" />
+    <string id="aom_clan_arthedain_5_name" text="埃明贝莱德家族" />
     <string id="aom_clan_sturgia_10_name" text="奔流河家族" />
-    <string id="aom_clan_sturgia_11_name" text="卡尔能河家族" />
-    <string id="aom_clan_sturgia_12_name" text="渡鸦岭家族" />
-    <string id="aom_clan_sturgia_13_name" text="密林河家族" />
+    <string id="aom_clan_sturgia_11_name" text="卡尔宁河家族" />
+    <string id="aom_clan_sturgia_12_name" text="鸦岭家族" />
+    <string id="aom_clan_sturgia_13_name" text="森林河家族" />
     <string id="aom_clan_sturgia_14_name" text="长沼泽家族" />
-    <string id="aom_clan_cardolan_1_name" text="提殒戈沙德家族" />
-    <string id="aom_clan_cardolan_2_name" text="沙巴德家族" />
-    <string id="aom_clan_cardolan_3_name" text="米那斯艾塞尔家族" />
-    <string id="aom_clan_cardolan_4_name" text="萨恩渡口守望者" />
-    <string id="aom_clan_rhudaur_1_name" text="卡梅斯布林家族" />
-    <string id="aom_clan_rhudaur_2_name" text="埃滕山谷家族" />
-    <string id="aom_clan_rhudaur_3_name" text="冷原守望者" />
-    <string id="aom_clan_lindon_3_name" text="加尔多家族" />
-    <string id="aom_clan_lindon_4_name" text="布砾松巴尔家族" />
-    <string id="aom_clan_lindon_5_name" text="埃瑞德路因守望者" />
-    <string id="aom_clan_lindon_6_name" text="埃格拉瑞斯特家族" />
-    <string id="aom_clan_eredluin_1_name" text="波林家族" />
-    <string id="aom_clan_eredluin_2_name" text="宽背族" />
-    <string id="aom_clan_eredluin_3_name" text="火须族" />
-    <string id="aom_clan_eredluin_4_name" text="多米德山守望者" />
+    <string id="aom_clan_cardolan_1_name" text="提恩·戈萨德家族" />
+    <string id="aom_clan_cardolan_2_name" text="塔巴德家族" />
+    <string id="aom_clan_cardolan_3_name" text="米那斯·埃塞尔家族" />
+    <string id="aom_clan_cardolan_4_name" text="萨恩渡口守卫" />
+    <string id="aom_clan_rhudaur_1_name" text="卡梅斯·布林家族" />
+    <string id="aom_clan_rhudaur_2_name" text="埃滕谷家族" />
+    <string id="aom_clan_rhudaur_3_name" text="冷荒原守卫" />
+    <string id="aom_clan_lindon_3_name" text="诺斯·萨文·阿·米那斯洛斯" />
+    <string id="aom_clan_lindon_4_name" text="诺斯·埃尔达洛姆瑞尔" />
+    <string id="aom_clan_lindon_5_name" text="诺斯·宁温迪尔" />
+    <string id="aom_clan_lindon_6_name" text="诺斯·英格罗" />
+    <string id="aom_clan_eredluin_1_name" text="德林古尔家族" />
+    <string id="aom_clan_eredluin_2_name" text="德瓦林家族" />
+    <string id="aom_clan_eredluin_3_name" text="乌瑞家族" />
+    <string id="aom_clan_eredluin_4_name" text="埃尔德兰家族" />
     <string id="aom_clan_anduinvale_1_name" text="贝奥恩家族" />
-    <string id="aom_clan_anduinvale_2_name" text="老渡口人" />
-    <string id="aom_clan_anduinvale_3_name" text="卡尔岩守望者" />
-    <string id="aom_clan_anduinvale_4_name" text="金鸢尾河骑兵" />
+    <string id="aom_clan_anduinvale_2_name" text="老渡口之民" />
+    <string id="aom_clan_anduinvale_3_name" text="卡洛克守卫" />
+    <string id="aom_clan_anduinvale_4_name" text="格拉顿骑手" />
     <string id="aom_clan_angaladh_1_name" text="安加拉兹家族" />
-    <string id="aom_clan_angaladh_2_name" text="密林路护林人" />
-    <string id="aom_clan_angaladh_3_name" text="埃敏杜伊尔守望者" />
-    <string id="aom_clan_dorwinion_1_name" text="葡萄洲家族" />
-    <string id="aom_clan_dorwinion_2_name" text="红水河守望者" />
+    <string id="aom_clan_angaladh_2_name" text="林道护林人" />
+    <string id="aom_clan_angaladh_3_name" text="埃敏杜尔守卫" />
+    <string id="aom_clan_dorwinion_1_name" text="葡园堡家族" />
+    <string id="aom_clan_dorwinion_2_name" text="赤水河守卫" />
     <string id="aom_clan_dorwinion_3_name" text="海门家族" />
-    <string id="aom_clan_dorwinion_4_name" text="东境守望者" />
+    <string id="aom_clan_dorwinion_4_name" text="东马克守卫" />
     <string id="aom_clan_southrhovanion_1_name" text="维杜加德家族" />
-    <string id="aom_clan_southrhovanion_2_name" text="南林骑兵" />
-    <string id="aom_clan_southrhovanion_3_name" text="战车哨骑" />
-    <string id="aom_clan_southrhovanion_4_name" text="北境守望者" />
+    <string id="aom_clan_southrhovanion_2_name" text="南林骑手" />
+    <string id="aom_clan_southrhovanion_3_name" text="车民哨骑" />
+    <string id="aom_clan_southrhovanion_4_name" text="北境守卫" />
   </strings>
 </base>
