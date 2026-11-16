@@ -2500,3 +2500,9 @@ After the rank repair the validator still printed 82 enlistment kits, nearly all
 - **Why missed:** the rule was written from "a later kit must not be weaker" without asking what the player holds at that moment, although the same doc said it two paragraphs up.
 - **Prevent:** before a new finding ships as a warning, state what the player or the game loses when it fires. If the answer is nothing, it is a line in the tool's report, not a warning.
 - **Source:** [enlistment.md](../../features/enlistment.md#a-ranks-kit-is-never-weaker-than-the-kit-before-it-1290), "The lance in a cavalry kit" and "Left after the repair".
+
+### A scope list typed by hand misses the cultures you did not think of (troop weight sweep, PR #1339, 2026-11-15)
+The level 31 to 36 sweep and its test named six cultures as "the evil and dwarf trees". Ered Luin (a dwarf culture added on 2026-10-27) and the two goblin cultures Blue Craig and Misty Mountain Orcs were not on the list, so six troops stayed at 1.0 while their twins paid 2.0, and the test passed.
+- **Why missed:** the list came from memory of the large factions. A test that checks only the cultures it names cannot report one it does not name.
+- **Prevent:** when a rule covers a kind of culture, build the list from the culture table in `docs/modding/id-cheatsheet.md` and name each excluded culture with its reason, so a new culture shows up as a decision.
+- **Source:** [rca-pr1339-troop-weight-gaps-2026-11-15.md](../rca-pr1339-troop-weight-gaps-2026-11-15.md), row 1.

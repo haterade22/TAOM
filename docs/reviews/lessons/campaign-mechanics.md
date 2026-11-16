@@ -1266,6 +1266,13 @@ Removing the Hostile row between Gondor and Dunland stops Full War from declarin
 - **Prevent:** when a diplomacy row changes tier, write the table of every realm that can be allied with either side (Permanent and Natural rows) against every realm at war with the other side. Read `DefaultAllianceModel.GetScoreOfCallingToWar` for the pairs that remain: it refuses a caller that is stronger than its target.
 - **Source:** [rca-faction-balance-data-2026-11-14.md](../rca-faction-balance-data-2026-11-14.md), finding 1, data-flow lens.
 
+### The party is inside a settlement before its gate menu asks for access (Hostile Peace, PR #1332, 2026-11-15)
+
+**Why missed:** a settlement access override exempted "the settlement the party is in right now" to avoid stranding the player. `PlayerEncounter.Init` calls `EnterSettlement()`, which sets `MobileParty.CurrentSettlement`, before `GameMenu.ActivateGameMenu` opens the gate menu that asks `CanMainHeroEnterSettlement`. The exemption was true at every gate, so the block never acted; the unit tests passed `false` for the gate case and pinned the wrong order.
+
+**Prevent:** before keying a rule on `CurrentSettlement` or `PlayerEncounter` state, read the engine order from the encounter's start to the menu that asks; prove a gate rule with the step that opens the gate, not with a hand-set flag.
+
+**Source:** `docs/reviews/rca-pr1332-hostile-peace-2026-11-15.md`
 ### A list of what stops campaign time includes TAOM's own pause calls (#1075, 2026-11-15)
 The scenario driver handled every engine pause the slice review listed (inquiries, scene notifications, menus, the time lock, focus loss). The first unattended run still stood 9 minutes on day 2: a War Chronicle story window called `GameStateManager.RegisterActiveStateDisableRequest` (`RealmsPopupLayer.cs:57-61`), and the status read `screen=Map time_locked=0` the whole time.
 - **Why missed:** the review read the engine's pause sources and no lens grepped TAOM's own code for the same call.

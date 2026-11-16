@@ -1213,6 +1213,15 @@ must be swept before a mirror sync or a release package: `pwsh tools/sweep_modul
 dry run, and `pwsh tools/sweep_module_backups.ps1 -Apply` moves them into a dated quarantine with a
 SHA256 manifest.
 
+Swept and mirrored on 2026-11-15 (maintainer's word). The sweep moved 164 sidecars, all from the
+Armory's `ModuleData`, into `E:\Bannerlord_Backups\module_bak_sweep_2026-11-15`. The `lotraom-assets`
+mirror then took the live data in commit `2088acbc2` (pushed): 181 `ModuleData` files and
+`SubModule.xml` under `v1.5/LOTRLOME_Armory`, each newer in the install than its last mirror commit.
+119 of them carry the rebalance, and 62 were older live edits the mirror did not hold (`action_sets.xml`,
+`skins.xml`, five language files in each of the 12 languages). `SubModule.xml` went from v2.0.36 to
+v2.0.40 there. Not mirrored: the eight scene shader caches and the shader compile log that differ,
+`RuntimeDataCache`, and nothing was deleted from the mirror.
+
 Generator band fix, applied to the live Armory. The first generator run priced
 each of the 97 generator-owned pieces by the tier word in its id, so 47 of the 79 worn pieces sat below
 their wearers' band: `sk_ll_rg_helmet_med_b` was priced medium (17) while its lowest wearer is level
@@ -1687,8 +1696,10 @@ live Armory: `LOTRLOME_items/gondor/*.bak-noble-restat-2026-09-25` (KEYforce's s
 `ARMOUR_MESH_TIER_LADDER` 1,330 against 1,348 at `HEAD`, `CROSS_CULTURE_ARMOUR_INVERSION` 7
 (unchanged), `UPGRADE_ARMOUR_REGRESSION` 4 against 6, none of them Gondor.
 
-The restat lives only in the unversioned Armory, and the mirror still holds KEYforce's stats by
-Mike's rule, so a re-sync reverts it silently. Re-run the restat after any Gondor sync:
+Until 2026-11-15 the restat lived only in the unversioned Armory, and the mirror held KEYforce's
+stats by Mike's rule. Since mirror commit `2088acbc2` of that day the mirror holds the live values, the
+Gondor ones included, so a sync from the mirror's head no longer reverts them; a sync from an older
+copy, or a new artist drop, still can. Re-run the restat after any Gondor sync:
 `python tools/derive_armor_tiers.py`, then
 `python tools/rebalance_armor.py --dry-run --tier-source roster-first --keep-weights
 --keep-material-type --cultures gondor`; a clean tree reports `Changed: 0`.

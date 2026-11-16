@@ -373,4 +373,33 @@ public class DiplomacyServiceTests
         Assert.IsFalse(result);
     }
 
+    // #1283: Dunland went to war with Gondor in every run because an evil ally called it in. A refusal row has a
+    // direction: the called realm refuses a call against the target, not the other way round.
+    private DiplomacyService ServiceWithRefusal(string called, string target)
+    {
+        var provider = Substitute.For<IDiplomacyConfigProvider>();
+        provider.LoadConfig().Returns(new DiplomacyConfig
+        {
+            CallToWarRefusals = new List<CallToWarRefusal> { new() { Called = called, Target = target } }
+        });
+        return new DiplomacyService(provider, _allianceAdapter, _alignmentService, _logger);
+    }
+
+    [TestMethod]
+    public void RefusesCallToWar_ListedPair_ReturnsTrue()
+    {
+        Assert.IsTrue(ServiceWithRefusal("empire", "empire_w").RefusesCallToWar("empire", "empire_w"));
+    }
+
+    [TestMethod]
+    public void RefusesCallToWar_ReverseDirection_ReturnsFalse()
+    {
+        Assert.IsFalse(ServiceWithRefusal("empire", "empire_w").RefusesCallToWar("empire_w", "empire"));
+    }
+
+    [TestMethod]
+    public void RefusesCallToWar_UnlistedPair_ReturnsFalse()
+    {
+        Assert.IsFalse(_sut.RefusesCallToWar("empire", "empire_w"));
+    }
 }

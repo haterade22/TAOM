@@ -39,6 +39,8 @@
     <TroopWeight id="imladris_swordguard" weight="2.0" />
     <TroopWeight id="imladris_archer" weight="2.0" />
     <TroopWeight id="imladris_bowman" weight="2.0" />
+    <!-- Level 26 infantry beside the bowman (15 Nov 2026 audit): the Bowman paid 2.0 and the Infantry, same parent and level, 1.0 -->
+    <TroopWeight id="imladris_infantry" weight="2.0" />
     <TroopWeight id="rivendell_noble" weight="2.0" />
 
     <!-- ===== LOTHLORIEN / GALADHRIM, MARCHWARDENS AND REGULARS (Lorien Elves) ===== -->
@@ -99,6 +101,7 @@
     <TroopWeight id="lindon_imladris_swordguard" weight="2.0" />
     <TroopWeight id="lindon_imladris_archer" weight="2.0" />
     <TroopWeight id="lindon_imladris_bowman" weight="2.0" />
+    <TroopWeight id="lindon_imladris_infantry" weight="2.0" />
     <TroopWeight id="lindon_noble" weight="2.0" />
 
     <!-- ===== MIRKWOOD — Wood Elves ===== -->
@@ -210,6 +213,9 @@
     <TroopWeight id="gundabad_dire_wolf_rider" weight="2.0" />
     <TroopWeight id="gundabad_wolf_lord" weight="2.0" />
     <TroopWeight id="gundabad_bolgs_ironfang" weight="2.0" />
+    <!-- Pale Uruk Fang Rider upgrades from the weight-2 Warg Tamer; Azog's Defiler is level 41 (15 Nov 2026 audit) -->
+    <TroopWeight id="gundabad_tracker" weight="2.0" />
+    <TroopWeight id="gundabad_dread_rider_of_the_tower" weight="3.0" />
 
     <!-- ===== GONDOR ===== -->
     <!-- Pinnath Gelin cavalry (#224 polish pass) — T6 elite cavalry -->
@@ -263,4 +269,92 @@
     <TroopWeight id="mordor_num_temple_knight" weight="3.0" />
     <TroopWeight id="mordor_num_temple_guard" weight="3.0" />
     <TroopWeight id="mordor_num_shadowbow" weight="3.0" />
+
+    <!-- ===== HIRED COPIES (15 Nov 2026 audit) ===== -->
+    <!-- A Hired troop is the same body in the same kit as its original and weighs the same
+         (TroopWeightCoverageTests.EveryHiredCopy_WeighsTheSameAsItsOriginal). lorien_mw_sentry_merc and
+         orthanc_chosen_merc stay unlisted: their originals are level 26 and weigh 1.0. -->
+    <TroopWeight id="imladris_bowman_merc" weight="2.0" />
+    <TroopWeight id="lindon_imladris_bowman_merc" weight="2.0" />
+    <TroopWeight id="rivendell_noble_merc" weight="2.0" />
+    <TroopWeight id="lindon_noble_merc" weight="2.0" />
+    <TroopWeight id="mirkwood_recruit_merc" weight="2.0" />
+    <TroopWeight id="erebor_oathsworn_merc" weight="2.0" />
+
+    <!-- ===== DUAL WIELD (module DualWield, its TAOM troop set) ===== -->
+    <!-- Its troops are defined in that module, not in troops_*.xml, and its XSLT hangs them under TAOM troops as
+         upgrade targets. They follow the level rule and never sit below their parent: level 31 pays 2.0, level 46
+         pays 3.0 (Blade-Maiden, Warden and Huntress upgrade from level-41 troops that pay 3.0). A row for an id
+         of a module that is not loaded is never looked up, so it costs nothing.
+         Left at 1.0 on purpose: the level 21 to 26 twin-blades (below tier 6), the human twin-blades of Gondor, Rohan,
+         Rhun, Harad and Dunland (those cultures carry no troop weights beyond gondor_pg_vet_cavalry and
+         the two Harad mount packages, a design call), and the Armored Troll with Twin
+         Maces (monster, its parent cave_troll is disabled above). -->
+    <TroopWeight id="dw_imladris_bladedancer" weight="2.0" />
+    <TroopWeight id="dw_lindon_bladedancer" weight="2.0" />
+    <TroopWeight id="dw_imladris_blademaiden" weight="3.0" />
+    <TroopWeight id="dw_mirkwood_twinblade_warden" weight="3.0" />
+    <TroopWeight id="dw_mirkwood_twinblade_huntress" weight="3.0" />
+    <TroopWeight id="dw_goblintown_twinblade" weight="2.0" />
+    <TroopWeight id="dw_gundabad_pale_twinaxe" weight="2.0" />
+    <TroopWeight id="dw_isengard_urukhai_twinblade" weight="2.0" />
+    <TroopWeight id="dw_mordor_uruk_twinblade" weight="2.0" />
+    <!-- ===== LEVEL 31 TO 36 SWEEP, evil and dwarf trees (15 Nov 2026 audit) ===== -->
+    <!-- These cultures weighted their level 31 to 40 troops one at a time and skipped many, so a level 36 troop paid
+         2.0 above a level 31 troop of the same line at 1.0. Every one now pays 2.0, the level rule for a troop below 41
+         (TroopWeightCoverageTests.EvilAndDwarfTroopsAtLevel31To40_AreWeighted). Humans (Gondor, Rohan, Rhun, Harad, Dunland)
+         carry no troop weights beyond gondor_pg_vet_cavalry and the two Harad mount packages, by design, and are not swept. -->
+    <!-- EREBOR, IRON HILLS AND IRONPASS -->
+    <TroopWeight id="erebor_noble_axe_guard" weight="2.0" />
+    <TroopWeight id="erebor_noble_guard" weight="2.0" />
+    <TroopWeight id="erebor_noble_shield_guard" weight="2.0" />
+    <TroopWeight id="erebor_noble_veteran_archer" weight="2.0" />
+    <TroopWeight id="erebor_noble_veteran_axe_guard" weight="2.0" />
+    <TroopWeight id="erebor_reg_mattock_warrior" weight="2.0" />
+    <TroopWeight id="erebor_reg_warrior" weight="2.0" />
+    <TroopWeight id="iron_hills_reg_axe_warrior" weight="2.0" />
+    <TroopWeight id="iron_hills_reg_warrior" weight="2.0" />
+    <TroopWeight id="ironpass_mountain_guard" weight="2.0" />
+    <TroopWeight id="ironpass_sharpshooter" weight="2.0" />
+    <TroopWeight id="ironpass_veteran_axeman" weight="2.0" />
+    <!-- DOL GULDUR -->
+    <TroopWeight id="dg_khamul_shadow_archer" weight="2.0" />
+    <TroopWeight id="dg_khamul_shadow_infantry" weight="2.0" />
+    <TroopWeight id="dg_khamul_shadow_marksman" weight="2.0" />
+    <TroopWeight id="dg_khamul_shadow_warden" weight="2.0" />
+    <TroopWeight id="dg_uruk_fell_archer" weight="2.0" />
+    <TroopWeight id="dg_uruk_fell_fang" weight="2.0" />
+    <TroopWeight id="dg_uruk_fell_infantry" weight="2.0" />
+    <!-- ISENGARD -->
+    <TroopWeight id="urukhai_berserker" weight="2.0" />
+    <TroopWeight id="urukhai_pavise" weight="2.0" />
+    <TroopWeight id="urukhai_reaver" weight="2.0" />
+    <TroopWeight id="urukhai_veterancrossbowman" weight="2.0" />
+    <TroopWeight id="urukhai_veteraninfantry" weight="2.0" />
+    <TroopWeight id="urukhai_veteranpikeman" weight="2.0" />
+    <!-- MORDOR -->
+    <TroopWeight id="mordor_uruk_shieldguard" weight="2.0" />
+    <TroopWeight id="mordor_uruk_vanguard" weight="2.0" />
+    <!-- GUNDABAD -->
+    <TroopWeight id="gundabad_berserker" weight="2.0" />
+    <TroopWeight id="gundabad_guardian_of_the_tower" weight="2.0" />
+    <TroopWeight id="gundabad_veteran_berserker" weight="2.0" />
+    <TroopWeight id="gundabad_veteran_spear_warrior" weight="2.0" />
+    <TroopWeight id="gundabad_veteran_sword_warrior" weight="2.0" />
+    <!-- GOBLINS -->
+    <TroopWeight id="goblin_berserker" weight="2.0" />
+    <TroopWeight id="goblin_bolgs_ironfang" weight="2.0" />
+    <TroopWeight id="goblin_chosen_of_tharzog" weight="2.0" />
+    <TroopWeight id="goblin_guardian_of_the_tower" weight="2.0" />
+    <TroopWeight id="goblin_veteran_berserker" weight="2.0" />
+    <TroopWeight id="goblin_veteran_spear_warrior" weight="2.0" />
+    <TroopWeight id="goblin_veteran_sword_warrior" weight="2.0" />
+    <!-- ERED LUIN -->
+    <TroopWeight id="eredluin_firebeard_master" weight="2.0" />
+    <TroopWeight id="eredluin_halls_warden" weight="2.0" />
+    <TroopWeight id="eredluin_ironbound_warden" weight="2.0" />
+    <TroopWeight id="eredluin_kings_guard" weight="2.0" />
+    <!-- BLUE CRAIG GOBLINS AND MISTY MOUNTAIN ORCS: the twins of goblin_bolgs_ironfang -->
+    <TroopWeight id="bluecraig_bolgs_ironfang" weight="2.0" />
+    <TroopWeight id="mistymountainorcs_bolgs_ironfang" weight="2.0" />
 </TroopWeights>

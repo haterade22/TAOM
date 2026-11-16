@@ -1,0 +1,35 @@
+# In-game checks for #1346 item 1, read by tools/ingame_verdict.py: TAOM fief elections reach co-op clients.
+# Written by CoopCompat/Decisions/DecisionTypeRegistration.cs (every peer, once per process) and by
+# Main/Features/FiefGranting/FiefClaimantDecisionCodec.cs (the host when it sends an election, a client when it
+# reads one). On a dedicated server, run the reader with --ds-engine <stage>\engine.
+# NOT REACHED is the normal result without TAOM.CoopCompat in every peer's module list, or without a co-op session.
+issue = 1346
+title = "Co-op: TAOM fief elections reach every client, and Patch70 runs before Coop's AddDecision prefix"
+fixed_in = "2dbcf1a35"   # trunk on origin before the patch: the manifest ships with the emitters
+logs = ["taom-ds", "taom"]
+
+[[check]]
+id = "taom.coopcompat.fief-election.registered"
+needs = "start the game with TAOM.CoopCompat and Coop loaded: a client or a listen host reaches the main menu, a dedicated server loads its campaign"
+reached = ['\[Check\] id=taom\.coopcompat\.fief-election\.registered result=(pass|fail) ']
+pass = ['\[Check\] id=taom\.coopcompat\.fief-election\.registered result=pass type=TaomSettlementClaimantDecision$']
+fail = ['\[Check\] id=taom\.coopcompat\.fief-election\.registered result=fail ']
+absence = "not-reached"
+
+[[check]]
+id = "taom.coopcompat.fief-election.sent"
+needs = "a co-op session: the host's kingdom takes a castle or town, and a fief election opens for it"
+reached = ['\[Check\] id=taom\.coopcompat\.fief-election\.sent result=pass ']
+pass = ['\[Check\] id=taom\.coopcompat\.fief-election\.sent result=pass settlement=\S+$']
+absence = "not-reached"
+
+[[check]]
+id = "taom.coopcompat.fief-election.read"
+needs = "the same election, read from the log of a client whose clan is in that kingdom"
+reached = ['\[Check\] id=taom\.coopcompat\.fief-election\.read result=(pass|fail) ']
+pass = ['\[Check\] id=taom\.coopcompat\.fief-election\.read result=pass settlement=\S+$']
+fail = ['\[Check\] id=taom\.coopcompat\.fief-election\.read result=fail ']
+absence = "not-reached"
+
+[[human]]
+claim = "the client sees the same candidates as the host, can vote, and the fief goes to the clan the votes chose"

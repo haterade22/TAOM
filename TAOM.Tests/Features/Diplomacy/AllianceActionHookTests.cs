@@ -218,4 +218,41 @@ public class AllianceActionHookTests
 
         Assert.AreEqual(5000f, _sut.GetDeclareWarScorePenalty("gondor", true, "rohan", true));
     }
+
+    // #1283: a call to war is refused for the war veto's reasons or for a configured refusal.
+    [TestMethod]
+    public void ShouldPreventCallToWar_RefusedPair_ReturnsTrueAndLogs()
+    {
+        _wotr.GetWarVeto("empire", "empire_w", false).Returns(WarVeto.None);
+        _diplomacyService.RefusesCallToWar("empire", "empire_w").Returns(true);
+
+        Assert.IsTrue(_sut.ShouldPreventCallToWar("empire", "empire_w"));
+        _logger.Received(1).LogInfo("[Diplomacy] Call to war refused: empire will not join a war against empire_w");
+    }
+
+    [TestMethod]
+    public void ShouldPreventCallToWar_WarVetoed_ReturnsTrue()
+    {
+        _wotr.GetWarVeto("rohan", "gondor", false).Returns(WarVeto.Permanent);
+
+        Assert.IsTrue(_sut.ShouldPreventCallToWar("rohan", "gondor"));
+    }
+
+    [TestMethod]
+    public void ShouldPreventCallToWar_AllowedAndNotRefused_ReturnsFalse()
+    {
+        _wotr.GetWarVeto("empire", "vlandia", false).Returns(WarVeto.None);
+
+        Assert.IsFalse(_sut.ShouldPreventCallToWar("empire", "vlandia"));
+    }
+
+    [TestMethod]
+    public void ShouldPreventCallToWar_CoopDefersToHost_ReturnsFalseWithoutConsultingTheList()
+    {
+        _coop.ShouldDeferToHost.Returns(true);
+        _diplomacyService.RefusesCallToWar("empire", "empire_w").Returns(true);
+
+        Assert.IsFalse(_sut.ShouldPreventCallToWar("empire", "empire_w"));
+        _diplomacyService.DidNotReceive().RefusesCallToWar(Arg.Any<string>(), Arg.Any<string>());
+    }
 }
