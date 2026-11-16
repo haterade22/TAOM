@@ -22,6 +22,8 @@ The first hand-attached exception: `CrashReport/Hooks/Native2ManagedTargets.cs` 
 
 The other hand-attached patches: `Realms/Hooks/HouseBanners.cs` looks up six of its targets by name (`TypeByName` and a method or constructor). The suite above cannot see them, so they are Category B `[DataRow]`s below (#1320).
 
+In `TAOM.Dependencies`, `Dependencies/GameVersionNotice.cs` patches `Module.CheckIfSubmoduleCanBeLoadable` by hand (Harmony id `TAOM.Dependencies.GameVersionGuard`) when the game version differs from TAOM's pin. `GameVersionCheckTests.Guard_Target_BindsOnTheReferencedEngine_WithThePrefixShape` (`BindingVerification`) checks the target.
+
 > First run of that gate (2026-05-28) caught a real defect: `HeroViewModel_FillFrom_Patch` was name-only on an overloaded method (`HeroViewModel` inherits two more `FillFrom` overloads from `CharacterViewModel`), so Harmony's `AccessTools.Method` threw `AmbiguousMatchException` at patch time — the postfix never applied in v1.4.5. Fixed by pinning the argument types.
 
 A third-party site gated the same way: `Adapters/ButterLibDistanceMatrixAdapter.cs` (#740) finds ButterLib's internal `Bannerlord.ButterLib.Implementation.DistanceMatrix.DistanceMatrixSubSystem` by full name and reads its static `Instance`, then calls `IsEnabled` and `Disable()` on it. The type lives in a version-specific ButterLib DLL that ReflectionSiteBindingTests does not load, so `TAOM.Tests/Features/ButterLibDistanceMatrix/ButterLibDistanceMatrixBindingTests.cs` (`BindingVerification`) checks it against the newest implementation DLL tracked in `Dependencies/_Module/bin/`.
