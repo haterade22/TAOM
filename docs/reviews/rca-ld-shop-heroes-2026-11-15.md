@@ -26,6 +26,10 @@ Not applied:
 
 FOLLOW-UP: a post that moves with the fight belongs to the abilities phase of #1325; the heroes hold one lane until then.
 
+## Proof
+
+Run 20261115-210056, on the committed build a5f607f41, is the first run after the second fix. `python tools/ingame_verdict.py --issue 1337` reads PASS for `hero`, `hero-fall` and `hunters`. At the three wave clears the standing heroes were in formation 7 with nobody else in it and near the lane (`near` equal to `standing`: 3, 2, 1). Legolas had 24 kills at the second clear and Gimli 20 at the third; in the run before, the two melee heroes had none. Aragorn fell twice and Legolas once, and Aragorn was bought again between waves, so the fall and the buy-back are now seen in game. The lord's fall handed the group back once, and the hold retook it with nobody moved. The run reached no stalemate charge and no membership repair; findings 4 and 6 rest on their pins. The wrapper's exit is still FAIL on the muster line of #1142, as in every run.
+
 ## Root-cause pattern
 
 Findings 1, 2, 4 and 5 are one failure four times: a design step that named an engine call and its expected effect without reading the body that produces the effect, in an area where a sibling file had already recorded the trap. `Posts.cs` held finding 1's answer, `Split.cs` held half of finding 4's, and `Split.Order` sets the three orders finding 5 left out. The plan read those files for their spawn recipe and not for their comments.
