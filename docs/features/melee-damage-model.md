@@ -11,7 +11,9 @@ Three pieces:
 
 - **`tools/melee_damage.py`** is the physics, ported from the v1.5.3 decompile.
 - **`tools/melee_catalogue.py`** is the wiring: it reads the installed modules the way the
-  engine merges them, works out which usage modes each item has, and prices them.
+  engine merges them, works out which usage modes each item has, and prices them. Since #1372 it
+  applies the stylesheets each module's `SubModule.xml` `<XmlName>` rows name and leaves out the
+  modules TAOM lists as incompatible (NavalDLC), by the shield gate's rule.
 - **`tools/analyze_melee_ladder.py`** is a read-only report over the result. It has no
   `--apply` and no write path into any ModuleData.
 
@@ -799,7 +801,7 @@ under-armed troop's damage.
 | `tools/generate_placeholder_weapons.py` | The `taom_ph_` placeholder weapons, capped by every carrier's tier limit |
 | `tools/analyze_melee_ladder.py` | The read-only report |
 | `tools/taom_schema.py` | The `MELEE_LADDER_INVERSION` and `MELEE_BLOW_CEILING` gates |
-| `tools/tests/test_melee_damage.py`, `test_melee_ladder.py`, `test_restat_melee_blades.py`, `test_generate_placeholder_weapons.py`, `test_analyze_melee_ladder.py` | The tests |
+| `tools/tests/test_melee_damage.py`, `test_melee_ladder.py`, `test_restat_melee_blades.py`, `test_generate_placeholder_weapons.py`, `test_analyze_melee_ladder.py`, `test_melee_catalogue_loading.py` | The tests |
 
 ## How to verify in game
 
@@ -821,6 +823,12 @@ armoured troop (see "Class limits"). After the apply and a full restart:
 - 2026-11-14: class limits on one blow and on DPS, per-class tier targets over ten tiers with a craft table,
   tier limits, hero limits by maker group, `--limits-only`, and a DPS cap in whole damage points (#1271).
   Built and dry run; the Armory is not yet restated.
+- v2.0.40 (16 Nov 2026, #1372): the catalogue finds stylesheets through `SubModule.xml` rows and leaves out
+  NavalDLC. NavalDLC's 149 crafting pieces and its items left the catalogue. TAOM's own placeholder sheets
+  stay out of the chain, because the callers that price placeholders add them from the tree they check. The
+  ladder, the generators and the validator gave the same output on TAOM's weapons; the troop roster page now
+  reads items without NavalDLC's stubs, so its Umbar `northern_round_shield` shows 300 hp (page regenerated
+  under #1384).
 
 ## GitHub Issue
 
@@ -828,6 +836,7 @@ armoured troop (see "Class limits"). After the apply and a full restart:
   armour at 112
 - **Status:** Open
 - The melee ladder umbrella is #631.
+- #1372: the catalogue loads modules and stylesheets by the shield gate's rule.
 
 ## Related
 
