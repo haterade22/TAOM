@@ -68,8 +68,8 @@ internal sealed partial class LongDefeatBattlefieldAdapter
 
     // On foot, so a fade leaves no riderless horse and the new soldier (who spawns with no horse) is no downgrade; never the player or the lord's body; never a hero; never a man working an
     // engine (the fade would release it: Agent.OnRemove stops his use, Agent.cs:5184-5187, and it would stand uncrewed until the AI sends another); never a man running away (Agent.OnFleeing
-    // nulls his formation and keeps his state, Agent.cs:5162-5170, so he is still active), the same rule as the split's; never a tower post archer, whom the posts hold by agent, also when he
-    // has strayed from the posts formation.
+    // nulls his formation and keeps his state, Agent.cs:5162-5170, so he is still active), the same rule as the split's; never a tower post archer, whom the posts hold by agent (the registry),
+    // wherever he stands.
     private IEnumerable<Agent> Upgradable()
     {
         var team = _mission.DefenderTeam;
@@ -77,7 +77,7 @@ internal sealed partial class LongDefeatBattlefieldAdapter
             return Enumerable.Empty<Agent>();
 
         return team.ActiveAgents.Where(a => a.IsHuman && a.IsActive() && !a.IsRunningAway && a.Formation != null && a.Character != null && !a.Character.IsHero && !IsHeldHero(a) && !a.HasMount
-            && !a.IsUsingGameObject && a != _mission.MainAgent && !ReferenceEquals(a, _lordWatch.Lord) && a.Controller != AgentControllerType.Player && a.Formation.FormationIndex != PostsClass
+            && !a.IsUsingGameObject && a != _mission.MainAgent && !ReferenceEquals(a, _lordWatch.Lord) && a.Controller != AgentControllerType.Player
             && !_postedByAgent.ContainsKey(a));
     }
 }

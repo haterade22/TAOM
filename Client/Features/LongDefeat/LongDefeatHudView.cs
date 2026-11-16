@@ -35,6 +35,8 @@ public sealed class LongDefeatHudView : MissionView
     private readonly LongDefeatHudClock _clock = new();
     private LongDefeatMissionSpeed? _speed;
     private bool _ordersChecked;
+    private IOutcomeLog? _outcomes;
+    private int _noticeChecked;
     private bool _failed;
 
     /// <summary>A lost focus opens the Escape menu, which pauses the mission until someone closes it. An armed run says no, as the Fords panel does.</summary>
@@ -69,6 +71,7 @@ public sealed class LongDefeatHudView : MissionView
                 _vm.Refresh();
 
             _panel.Sync(MissionScreen, _vm);
+            _noticeChecked = LongDefeatClientChecks.RecordNotice(_outcomes ??= IoC.Resolve<IOutcomeLog>(), _vm, _key, _noticeChecked);
             CheckOrders();
         }
         catch (Exception ex)

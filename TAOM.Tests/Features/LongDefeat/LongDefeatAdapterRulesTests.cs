@@ -111,6 +111,7 @@ public class LongDefeatAdapterRulesTests
         StringAssert.Contains(body, "!a.IsRunningAway", "Agent.OnFleeing nulls the formation and keeps the state, so a runner is still active");
         StringAssert.Contains(body, "a.Formation != null");
         StringAssert.Contains(body, "!_postedByAgent.ContainsKey(a)", "the posts hold their archers by agent, and a strayed one leaves the posts formation");
+        Assert.IsFalse(body.Contains("FormationIndex"), "#1401: a stranger the tactic put into the posts formation (index 4) is an upgradable soldier; only the registry keeps a post archer out");
         StringAssert.Contains(Body("Main/Adapters/LongDefeatBattlefieldAdapter.Upgrades.cs", "public IReadOnlyDictionary<string, int> StandingDefendersByTroop()"), "in Upgradable()",
             "the shop counts the soldiers the replace may take");
         StringAssert.Contains(Body("Main/Adapters/LongDefeatBattlefieldAdapter.Upgrades.cs", "public LdUpgradeReport ReplaceDefenders("), "= Upgradable().Where(",

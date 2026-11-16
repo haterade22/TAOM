@@ -60,8 +60,11 @@ internal sealed record RunView(
     /// <summary>The Elven Volley and the towers' volleys: what the HUD shows in a wave and the bot reads to fire.</summary>
     public VolleyView Volleys { get; init; } = VolleyView.None;
 
-    /// <summary>The upgrade steps the shop can sell now (#1161), in shop.json order: one row per step whose troop has a soldier standing and not yet sold. Empty in a wave.</summary>
+    /// <summary>The upgrade steps the shop can sell now (#1161), in shop.json order: one row per step whose troop has a soldier standing and not yet sold. Empty in a wave, and empty while the garrison musters (#1388).</summary>
     public IReadOnlyList<UpgradeRow> Upgrades { get; init; } = Array.Empty<UpgradeRow>();
+
+    /// <summary>The last upgrade buy or refund (#1388), or null before the first.</summary>
+    public UpgradeNotice? UpgradeNotice { get; init; }
 
     /// <summary>Every hero of the shop (#1325) in shop.json order, in a wave too: the price to pay now and whether he is for sale, bought or standing.</summary>
     public IReadOnlyList<HeroRow> Heroes { get; init; } = Array.Empty<HeroRow>();
@@ -69,6 +72,12 @@ internal sealed record RunView(
 
 /// <summary>One upgrade row: the step, the soldiers of its troop that stand and are not yet sold, and how many of them the gold pays for now.</summary>
 internal sealed record UpgradeRow(UpgradeStep Step, int Standing, int Affordable);
+
+/// <summary>What the last upgrade click did, for the HUD to say once: <c>Bought</c> carries the count the order took and the soldiers of the troop left to sell; <c>Refunded</c> carries the count the field could not replace.</summary>
+internal enum UpgradeNoticeKind { Bought, Refunded }
+
+/// <summary>One upgrade notice. <c>Serial</c> counts up with every notice, so a reader that kept the last serial says each one once.</summary>
+internal sealed record UpgradeNotice(int Serial, UpgradeNoticeKind Kind, UpgradeStep Step, int Count, int Left);
 
 /// <summary>
 /// One fortification row as the HUD and the bot read it. <c>Level</c> and <c>MaxLevel</c> count levels (for field care, buys used this intermission and the most one allows); <c>Price</c> is what the next
