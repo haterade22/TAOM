@@ -59,6 +59,24 @@ public class TaomCombatSimulationModel : DefaultCombatSimulationModel
         Campaign.Current.Models.MilitaryPowerModel.GetTroopPower(troop, party.Side, party.MapEvent.SimulationContext,
             party.MapEventSide.LeaderParty?.LeaderHero?.PowerModifier ?? 0f);
 
+    // #1283: the defenders of a besieged fortification hit harder when its realm's culture has a siege defence bonus. The
+    // realm, as for the survival row (CultureFeatAdapter.ResolvePartyCulture), so a player vassal's castle counts too.
+    // The base gives the attackers AddFactor(-0.1) in every siege (DefaultCombatSimulationModel.GetBattleAdvantage); the
+    // bonus is a factor on the defenders' side. MapEvent.SimulateBattleRound reads both once per round.
+    public override void GetBattleAdvantage(MapEvent mapEvent, out ExplainedNumber defenderAdvantage,
+        out ExplainedNumber attackerAdvantage)
+    {
+        base.GetBattleAdvantage(mapEvent, out defenderAdvantage, out attackerAdvantage);
+
+        var bonus = SiegeDefenceBonus(mapEvent.EventType == MapEvent.BattleTypes.Siege,
+            mapEvent.MapEventSettlement?.MapFaction?.Culture?.StringId, _configProvider?.GetConfig()?.SiegeDefence);
+        if (bonus > 0f)
+            defenderAdvantage.AddFactor(bonus);
+    }
+
+    internal static float SiegeDefenceBonus(bool isSiege, string ownerCultureId, BattleBalanceConfig.SiegeDefenceSection section)
+        => isSiege && section != null ? section.GetDefenderAdvantageBonus(ownerCultureId) : 0f;
+
     public override float GetBluntDamageChance(CharacterObject strikerTroop,
         CharacterObject strikedTroop, PartyBase strikerParty, PartyBase strikedParty,
         MapEvent battle)

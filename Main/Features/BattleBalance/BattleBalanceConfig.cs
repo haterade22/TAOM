@@ -7,6 +7,24 @@ public class BattleBalanceConfig
     public TroopPowerSection TroopPower { get; set; } = new();
     public CasualtyRatiosSection CasualtyRatios { get; set; } = new();
     public AutoResolveSection AutoResolve { get; set; } = new();
+    public SiegeDefenceSection SiegeDefence { get; set; } = new();
+
+    /// <summary>Auto-resolve siege defence by culture (#1283).</summary>
+    public class SiegeDefenceSection
+    {
+        /// <summary>
+        /// Culture id to a factor, in [0, 1], added to the defenders' battle advantage in an auto-resolved siege of a
+        /// fortification whose realm has that culture. The engine gives the attackers -0.1 in every siege; 0.1 gives
+        /// the defenders +10%. Blue Craig stands alone in the far west against its neighbours.
+        /// </summary>
+        public Dictionary<string, float> DefenderAdvantageBonuses { get; set; } = new()
+        {
+            ["bluecraig"] = 0.1f
+        };
+
+        public float GetDefenderAdvantageBonus(string cultureId) =>
+            cultureId != null && DefenderAdvantageBonuses.TryGetValue(cultureId, out var v) ? v : 0f;
+    }
 
     /// <summary>Auto-resolve tuning (#1283). See <see cref="AutoResolveQualityMath"/>.</summary>
     public class AutoResolveSection
@@ -42,7 +60,7 @@ public class BattleBalanceConfig
             ["erebor"] = 0.3f,    ["rivendell"] = 0.4f,  ["lindon"] = 0.4f,
             ["mirkwood"] = 0.4f,
             ["arthedain"] = 0.3f, ["cardolan"] = 0.3f,  ["rhudaur"] = 0.2f,
-            ["eredluin"] = 0.3f,
+            ["eredluin"] = 0.3f, ["bluecraig"] = 0.3f,
             ["anduinvale"] = 0.1f, ["angaladh"] = 0.1f,
             ["dorwinion"] = 0.1f, ["southrhovanion"] = 0.2f,
             ["gundabad"] = -0.1f,  ["dolguldur"] = -0.1f
