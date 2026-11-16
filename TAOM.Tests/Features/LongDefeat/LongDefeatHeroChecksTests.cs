@@ -13,8 +13,8 @@ namespace TAOM.Tests.Features.LongDefeat;
 [TestClass]
 public class LongDefeatHeroChecksTests
 {
-    private static LdHeroFacts Hero(string id, int kills = 0, int formation = HeroGroup.FormationIndex, float health = 1f, float distance = 3f, float height = 0.5f) =>
-        new(id, kills, formation, health, distance, height);
+    private static LdHeroFacts Hero(string id, int kills = 0, int formation = HeroGroup.FormationIndex, float health = 1f, float distance = 3f, float height = 0.5f, string weapon = "none") =>
+        new(id, kills, formation, health, distance, height, Weapon: weapon);
 
     private static LdHeroesRead Read(IReadOnlyList<LdHeroFacts> heroes, bool held = true, string order = "Move", bool own = true, int? units = null, float settled = 600f) =>
         new(heroes, held, order, own, units ?? heroes.Count, settled);
@@ -34,13 +34,27 @@ public class LongDefeatHeroChecksTests
     [TestMethod]
     public void AllInTheGroup_HeldAloneAndNearTheWall_Passes_WithTheExactDetail()
     {
-        var facts = new[] { Hero("aragorn", 5, health: 0.5f), Hero("gimli", 2, health: 1f), Hero("legolas", 0, health: 0.256f) };
+        var facts = new[]
+        {
+            Hero("aragorn", 5, health: 0.5f, weapon: "TwoHandedSword"),
+            Hero("gimli", 2, health: 1f, weapon: "TwoHandedAxe"),
+            Hero("legolas", 0, health: 0.256f, weapon: "Bow"),
+        };
 
         var verdict = Hunters(3, Read(facts), new LdHuntersTotals(1, 4, 2));
 
         Assert.AreEqual(CheckResult.Pass, verdict.Result);
         Assert.AreEqual("w=3 standing=3 in_group=3 units=3 held=1 order=Move own=1 settled=600 near=3 kills=7 by=aragorn:5,gimli:2,legolas:0 health=aragorn:0.50,gimli:1.00,legolas:0.26"
-            + " retaken=1 moved_out=4 moved_back=2", verdict.Detail);
+            + " weapons=aragorn:TwoHandedSword,gimli:TwoHandedAxe,legolas:Bow retaken=1 moved_out=4 moved_back=2", verdict.Detail);
+    }
+
+    [TestMethod]
+    public void TheWeaponClass_IsPrinted_AndAPassingReadStillPasses()
+    {
+        var verdict = Hunters(2, Read(new[] { Hero("aragorn", 1), Hero("gimli", 0, weapon: "OneHandedSword") }));
+
+        Assert.AreEqual(CheckResult.Pass, verdict.Result);
+        StringAssert.Contains(verdict.Detail, " health=aragorn:1.00,gimli:1.00 weapons=aragorn:none,gimli:OneHandedSword retaken=0");
     }
 
     [TestMethod]

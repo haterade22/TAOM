@@ -2903,3 +2903,11 @@ The battle balance provider's new tests built `BattleBalanceConfig` objects in C
 **Prevent:** a source-reading test of a bool or mode flag also asserts the consuming expression (here `quitOnOk ? QuitGame`). For an expression-bodied member, slice the source up to the next member instead of calling `Body()`.
 
 **Source:** [rca-game-version-warning-2026-11-16.md](../rca-game-version-warning-2026-11-16.md) finding F9.
+
+### A root cause explains the case that works as well as the case that fails (#1370, 2026-11-16)
+
+**Why missed:** in the story mission the engine's castle tactic moved the garrison's foot into the heroes' formation about once a second before the first wave. One instrumented run in that mission showed the mechanism exactly. The cause of the difference from the Long Defeat was then read from the plan code (the Long Defeat has an opening split, the story plan has none) and a fix was built on it. Seven Long Defeat logs on disk showed the same muster with no split yet and no such move, so the split could not be the difference. The review found it; the investigation had not opened one of those logs.
+
+**Prevent:** before a cause is named for "A fails and B does not", state what B must show if the cause is right, and read it in a log or a run of B. Instrument both modes with the same lines, not only the failing one. A fix whose reason is a difference between two modes is not built until that difference is seen in evidence from both.
+
+**Source:** [rca-hero-weapons-2026-11-16.md](../rca-hero-weapons-2026-11-16.md) finding 1.

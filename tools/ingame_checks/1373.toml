@@ -1,0 +1,103 @@
+# In-game checks for #1373 (Hero companions: Gimli carries an Erebor two-handed axe, and the hunters line names each hero's weapon), read by tools/ingame_verdict.py.
+# The maintainer's word (2026-11-16): Aragorn fights with the two-handed sword Strider of the Armory, Legolas with the best bow and arrows of Mirkwood, Gimli with a two-handed axe of Erebor.
+# Two lines carry the proof. The hero spawn line (taom.long-defeat.hero, key <mission>h<N>) names the item in Gimli's hand: wielded=sm_dwarf_erebor_axe_2h_c. The hunters line
+# (taom.long-defeat.hunters, key <mission>hw<wave>) ends its hero lists with weapons=<id>:<weapon class>,... : the class of the weapon each standing hero holds in its CURRENT usage (the
+# engine changes a weapon's usage index on its own, so the spawn proves nothing about the mode later), "none" when nothing is wielded. strider_sword has two usages: a one-handed bastard
+# sword mode whose usage set needs a shield, and the two-handed mode; Aragorn carries no shield and must read TwoHandedSword. The field is information on the line: it does not change the
+# hunters verdict, and the weapon rows below judge the field whether the hunters line passed or failed. A hunters line from before #1373 has no weapons= field and reads NOT REACHED here.
+# A hero who has fallen is not in the list, so each hero has his own row: a run in which Legolas fell reads NOT REACHED for his row only. A fail line at any one wave clear fails a row that has a fail pattern.
+# The Gimli axe rows judge the axe only: they pass on a spawn line of taom_hero_gimli whose wielded= is sm_dwarf_erebor_axe_2h_c, also when its strangers or held check failed (that is #1337's matter; a line with a wrong is_hero, campaign or mounted value is not reached),
+# and fail only on a spawn line of taom_hero_gimli whose wielded= names another item. A refused spawn has no wielded= and is not reached.
+# Gimli's weapon rows have no fail pattern: his axe has one usage, so another class means another item in his hand, and such a run reads NOT REACHED for the row.
+# The row ids below are labels of this manifest: no C# writes them, as with the rows of 894, 981, 1096 and 1099. The lines they read carry the ids taom.long-defeat.hero and .hunters (hosted ids in a story run).
+# The Long Defeat rows are scoped to a Long Defeat run: a segment opens at the "[LongDefeat] launching <scene> for fortress <id>" line and closes at the next Long Defeat or story mission
+# launch. The story rows (the hosted ids, renamed by HostedRunOutcomeLog) are scoped to the launch of helms_deep_defend as tools/ingame_checks/1366.toml scopes them, where the three free
+# heroes read is_hero=0 campaign=1. Read the verdict from a game process that fought no other battle after the run.
+# The unattended proofs: python tools/run_long_defeat.py --waves 3 --garrison-scale 1.3 --start-gold 5000 (the bot buys the heroes), and python tools/run_scenario.py --kind story-mission --mission helms_deep_defend.
+issue = 1373
+title = "Hero companions: Gimli carries an Erebor two-handed axe, and the hunters line names each hero's weapon mode"
+# fixed_in names the trunk commit this manifest was written on; only a build that holds it counts. The docs commit of the feature sets it to the feature commit (the main session does that).
+fixed_in = "a4cedd4c2"
+logs = ["taom"]
+
+[[check]]
+id = "taom.long-defeat.hero-gimli-axe"
+scope = '\[LongDefeat\] launching \S+ for fortress '
+scope_end = '\[(LongDefeat|StoryMissions)\] launching '
+needs = "a Long Defeat run in which the bot or the player buys Gimli: python tools/run_long_defeat.py --waves 3 --garrison-scale 1.3 --start-gold 5000"
+reached = ['\[Check\] id=taom\.long-defeat\.hero result=(?:pass|fail) hero=\S+ troop=taom_hero_gimli ']
+pass = ['\[Check\] id=taom\.long-defeat\.hero result=(?:pass|fail) hero=\S+ troop=taom_hero_gimli is_hero=1 (?:campaign=0 )?mounted=0 .* wielded=sm_dwarf_erebor_axe_2h_c$']
+fail = ['\[Check\] id=taom\.long-defeat\.hero result=(?:pass|fail) hero=\S+ troop=taom_hero_gimli .* wielded=(?!sm_dwarf_erebor_axe_2h_c$)\S+']
+absence = "not-reached"
+
+[[check]]
+id = "taom.long-defeat.weapon-aragorn"
+scope = '\[LongDefeat\] launching \S+ for fortress '
+scope_end = '\[(LongDefeat|StoryMissions)\] launching '
+needs = "a Long Defeat run in which Aragorn stands at a wave clear: python tools/run_long_defeat.py --waves 3 --garrison-scale 1.3 --start-gold 5000"
+reached = ['\[Check\] id=taom\.long-defeat\.hunters result=(?:pass|fail) .* weapons=(?:\S*,)?aragorn:']
+pass = ['\[Check\] id=taom\.long-defeat\.hunters result=(?:pass|fail) .* weapons=(?:\S*,)?aragorn:TwoHandedSword(?:,|\s)']
+fail = ['\[Check\] id=taom\.long-defeat\.hunters result=(?:pass|fail) .* weapons=(?:\S*,)?aragorn:OneHandedSword(?:,|\s)']
+absence = "not-reached"
+
+[[check]]
+id = "taom.long-defeat.weapon-gimli"
+scope = '\[LongDefeat\] launching \S+ for fortress '
+scope_end = '\[(LongDefeat|StoryMissions)\] launching '
+needs = "the same run, with Gimli standing at a wave clear"
+reached = ['\[Check\] id=taom\.long-defeat\.hunters result=(?:pass|fail) .* weapons=(?:\S*,)?gimli:']
+pass = ['\[Check\] id=taom\.long-defeat\.hunters result=(?:pass|fail) .* weapons=(?:\S*,)?gimli:TwoHandedAxe(?:,|\s)']
+absence = "not-reached"
+
+[[check]]
+id = "taom.long-defeat.weapon-legolas"
+scope = '\[LongDefeat\] launching \S+ for fortress '
+scope_end = '\[(LongDefeat|StoryMissions)\] launching '
+needs = "the same run, with Legolas standing at a wave clear and holding his bow: with empty quivers he holds his sword and the row is not reached"
+reached = ['\[Check\] id=taom\.long-defeat\.hunters result=(?:pass|fail) .* weapons=(?:\S*,)?legolas:']
+pass = ['\[Check\] id=taom\.long-defeat\.hunters result=(?:pass|fail) .* weapons=(?:\S*,)?legolas:Bow(?:,|\s)']
+absence = "not-reached"
+
+[[check]]
+id = "taom.story-missions.hosted.hero-gimli-axe"
+scope = '\[StoryMissions\] launching \S+ for \x27helms_deep_defend\x27 '
+scope_end = '\[(LongDefeat|StoryMissions)\] launching '
+needs = "in a loaded campaign: taom.story_open helms_deep_defend auto, choose Open the mission; one hero line per free hero on the first tick (unattended: python tools/run_scenario.py --kind story-mission --mission helms_deep_defend)"
+reached = ['\[Check\] id=taom\.story-missions\.hosted\.hero result=(?:pass|fail) hero=\S+ troop=taom_hero_gimli ']
+pass = ['\[Check\] id=taom\.story-missions\.hosted\.hero result=(?:pass|fail) hero=\S+ troop=taom_hero_gimli is_hero=0 campaign=1 mounted=0 .* wielded=sm_dwarf_erebor_axe_2h_c$']
+fail = ['\[Check\] id=taom\.story-missions\.hosted\.hero result=(?:pass|fail) hero=\S+ troop=taom_hero_gimli .* wielded=(?!sm_dwarf_erebor_axe_2h_c$)\S+']
+absence = "not-reached"
+
+[[check]]
+id = "taom.story-missions.hosted.weapon-aragorn"
+scope = '\[StoryMissions\] launching \S+ for \x27helms_deep_defend\x27 '
+scope_end = '\[(LongDefeat|StoryMissions)\] launching '
+needs = "the same run, with a wave cleared while Aragorn stands"
+reached = ['\[Check\] id=taom\.story-missions\.hosted\.hunters result=(?:pass|fail) .* weapons=(?:\S*,)?aragorn:']
+pass = ['\[Check\] id=taom\.story-missions\.hosted\.hunters result=(?:pass|fail) .* weapons=(?:\S*,)?aragorn:TwoHandedSword(?:,|\s)']
+fail = ['\[Check\] id=taom\.story-missions\.hosted\.hunters result=(?:pass|fail) .* weapons=(?:\S*,)?aragorn:OneHandedSword(?:,|\s)']
+absence = "not-reached"
+
+[[check]]
+id = "taom.story-missions.hosted.weapon-gimli"
+scope = '\[StoryMissions\] launching \S+ for \x27helms_deep_defend\x27 '
+scope_end = '\[(LongDefeat|StoryMissions)\] launching '
+needs = "the same run, with a wave cleared while Gimli stands"
+reached = ['\[Check\] id=taom\.story-missions\.hosted\.hunters result=(?:pass|fail) .* weapons=(?:\S*,)?gimli:']
+pass = ['\[Check\] id=taom\.story-missions\.hosted\.hunters result=(?:pass|fail) .* weapons=(?:\S*,)?gimli:TwoHandedAxe(?:,|\s)']
+absence = "not-reached"
+
+[[check]]
+id = "taom.story-missions.hosted.weapon-legolas"
+scope = '\[StoryMissions\] launching \S+ for \x27helms_deep_defend\x27 '
+scope_end = '\[(LongDefeat|StoryMissions)\] launching '
+needs = "the same run, with a wave cleared while Legolas stands and holds his bow: with empty quivers he holds his sword and the row is not reached"
+reached = ['\[Check\] id=taom\.story-missions\.hosted\.hunters result=(?:pass|fail) .* weapons=(?:\S*,)?legolas:']
+pass = ['\[Check\] id=taom\.story-missions\.hosted\.hunters result=(?:pass|fail) .* weapons=(?:\S*,)?legolas:Bow(?:,|\s)']
+absence = "not-reached"
+
+[[human]]
+claim = "Aragorn swings the Strider sword with both hands (the two-handed animations) for the whole wave, not only at the spawn: the weapons= field reads TwoHandedSword at every clear"
+
+[[human]]
+claim = "Gimli's Erebor two-handed axe looks and feels as a two-handed axe, and his swing hits as hard as the weapon's numbers say (the melee ladder may lower the blade to its class limit, see docs/features/long-defeat.md)"

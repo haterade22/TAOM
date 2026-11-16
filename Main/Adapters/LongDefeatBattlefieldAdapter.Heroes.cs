@@ -302,7 +302,8 @@ internal sealed partial class LongDefeatBattlefieldAdapter
             var position = agent.Position;
             var distance = place == null ? float.NaN : position.AsVec2.Distance(at.AsVec2);
             var height = place == null ? float.NaN : Math.Abs(position.z - at.z);
-            facts.Add(new LdHeroFacts(pair.Id, agent.KillCount, agent.Formation?.Index ?? -1, limit > 0f ? agent.Health / limit : 0f, distance, height, agent.IsPlayerControlled));
+            facts.Add(new LdHeroFacts(pair.Id, agent.KillCount, agent.Formation?.Index ?? -1, limit > 0f ? agent.Health / limit : 0f, distance, height, agent.IsPlayerControlled,
+                agent.WieldedWeapon.CurrentUsageItem?.WeaponClass.ToString() ?? "none"));
         }
 
         var formation = _mission.DefenderTeam?.GetFormation(HeroClass);

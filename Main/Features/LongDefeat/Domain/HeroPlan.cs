@@ -43,9 +43,10 @@ internal sealed record LdHeroReport(bool Spawned, string? Problem, bool IsHero =
 /// One standing hero as the field reads him now (#1337): his kills so far (the engine's <c>KillCount</c>, which also counts knock-outs),
 /// his formation index (-1 for none), his health as a share of his health limit, and his ground distance and height difference to the
 /// heroes' place (both NaN when the field has no place for them). <c>PlayerControlled</c>: the player drives this hero's body (a take-over after the
-/// player fell, possible in a campaign only, #1366).
+/// player fell, possible in a campaign only, #1366). <c>Weapon</c>: the weapon class of the wielded weapon's current usage as text ("none" when
+/// nothing is wielded), so a check line can show which mode a two-mode weapon is in (#1373).
 /// </summary>
-internal sealed record LdHeroFacts(string Id, int Kills, int FormationIndex, float HealthShare, float Distance, float Height, bool PlayerControlled = false);
+internal sealed record LdHeroFacts(string Id, int Kills, int FormationIndex, float HealthShare, float Distance, float Height, bool PlayerControlled = false, string Weapon = "none");
 
 /// <summary>
 /// What the field reads of the heroes at a wave clear (#1337): the standing heroes (empty when none stands), and the heroes' formation

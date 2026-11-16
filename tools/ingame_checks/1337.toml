@@ -8,7 +8,7 @@
 # hero-fall, key <mission><hero>-f<N>, is written when a held hero leaves the field, with cause=killed or cause=fled; the shop sells him again.
 # hunters, key <mission>hw<wave>, is written at each wave clear of a mission that spawned a hero: standing=, in_group= (in formation 7), units= (the soldiers the formation holds),
 # held= (1 when it is off AI control), order= (its movement order), own= (1 while that order is still the field's own Move to the wall lane), settled= (the whole seconds since the field gave it, 0 under
-# another order), near= (the standing heroes within 20 m of that place on the ground and 4 m in height), kills= (the engine's KillCount, which counts knock-outs too), health= per hero, and the mission's running totals of the director's holds: retaken=, moved_out=,
+# another order), near= (the standing heroes within 20 m of that place on the ground and 4 m in height), kills= (the engine's KillCount, which counts knock-outs too), health= per hero, weapons= per hero (#1373, information only; absent in logs before #1373), and the mission's running totals of the director's holds: retaken=, moved_out=,
 # moved_back=. It passes only when every hero is in formation 7, units equals in_group, held=1, and, once the field's own order has stood 60 seconds (own=1, settled 60 or more), near
 # equals standing. A player's own order (own=0) and heroes still on their way (settled below 60) are never judged on near; kills and the totals are never judged; with no
 # hero standing it is skipped.
@@ -40,7 +40,7 @@ absence = "not-reached"
 id = "taom.long-defeat.hunters"
 needs = "a Long Defeat run in which a bought hero stands at a wave clear: python tools/run_long_defeat.py --waves 3 --garrison-scale 1.3 --start-gold 5000; one line per cleared wave, w= is the wave"
 reached = ['\[Check\] id=taom\.long-defeat\.hunters result=']
-pass = ['\[Check\] id=taom\.long-defeat\.hunters result=pass w=[0-9]+ standing=([0-9]+) in_group=\1 units=\1 held=1 order=\S+ (?:own=0 settled=[0-9]+ near=[0-9]+|own=1 settled=[0-5]?[0-9] near=[0-9]+|own=1 settled=(?:[6-9][0-9]|[0-9]{3,}) near=\1) kills=[0-9]+ by=\S+ health=\S+ retaken=[0-9]+ moved_out=[0-9]+ moved_back=[0-9]+$']
+pass = ['\[Check\] id=taom\.long-defeat\.hunters result=pass w=[0-9]+ standing=([0-9]+) in_group=\1 units=\1 held=1 order=\S+ (?:own=0 settled=[0-9]+ near=[0-9]+|own=1 settled=[0-5]?[0-9] near=[0-9]+|own=1 settled=(?:[6-9][0-9]|[0-9]{3,}) near=\1) kills=[0-9]+ by=\S+ health=\S+ (?:weapons=\S+ )?retaken=[0-9]+ moved_out=[0-9]+ moved_back=[0-9]+$']
 fail = ['\[Check\] id=taom\.long-defeat\.hunters result=fail']
 absence = "not-reached"
 
