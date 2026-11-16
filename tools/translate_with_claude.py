@@ -58,6 +58,7 @@ from pathlib import Path
 import name_tags
 from _gamedir import DEFAULT_GAME_ROOT, ensure_exists, game_modules
 from _loc_sources import OVERRIDE_SOURCE, TAOM_SOURCES, VANILLA_ID_SHAPE  # noqa: F401
+import _team_reference
 
 
 # ── Configuration ──────────────────────────────────────────────────────────────
@@ -583,7 +584,8 @@ def _extract_translations(data) -> dict[str, str]:
     return result
 
 
-def build_request(target_language: str, batch: list[Entry], provider: dict = None) -> dict:
+def build_request(target_language: str, batch: list[Entry], provider: dict = None,
+                  reference: "_team_reference.Reference | None" = None) -> dict:
     """The request body for one batch. Sequential and batched paths BOTH build from here —
     if they diverge, the two paths silently produce different translations.
 
@@ -591,13 +593,18 @@ def build_request(target_language: str, batch: list[Entry], provider: dict = Non
     prompt carries the rules that keep placeholders intact, so it must reach the model on
     both shapes — as the top-level `system` field on Anthropic, as the first message on the
     /chat/completions shape.
+
+    A language team's reference (#1421) adds the team's terms and style examples for this
+    batch to the user message; with none, or nothing in it that applies, the request is unchanged.
     """
     provider = provider or resolve_provider(DEFAULT_PROVIDER)
     user_payload = [{"id": e.string_id, "text": e.english_text} for e in batch]
+    guide = reference.guide(target_language, [e.english_text for e in batch]) if reference else ""
     user_msg = (
         f"Translate these {len(batch)} entries to {target_language}. "
         f"Respond with the JSON object only.\n\n"
-        f"INPUT:\n{json.dumps(user_payload, ensure_ascii=False, indent=2)}"
+        + (f"{guide}\n\n" if guide else "")
+        + f"INPUT:\n{json.dumps(user_payload, ensure_ascii=False, indent=2)}"
     )
     system = SYSTEM_PROMPT.format(target_language=target_language)
 
@@ -639,14 +646,14 @@ def _parse_response_text(text: str) -> dict[str, str]:
 
 
 def call_claude(client, target_language: str, batch: list[Entry],
-                provider: dict = None) -> dict[str, str]:
+                provider: dict = None, reference=None) -> dict[str, str]:
     """Translate a batch via the Claude API. Returns {id: translated_text}.
 
     `provider` is threaded through so --model reaches the request. Omitting it here made
     build_request fall back to the packaged default, so `--model X` printed X in the run
     header, priced the estimate as X, and sent the hardcoded MODEL.
     """
-    req = build_request(target_language, batch, provider)
+    req = build_request(target_language, batch, provider, reference)
     # The installed SDK predates the typed output_config parameter — send it via extra_body.
     output_config = req.pop("output_config")
 
@@ -692,15 +699,15 @@ def _post_json(url: str, headers: dict, payload: dict, timeout: int = 180) -> di
         return json.loads(response.read().decode("utf-8"))
 
 
-def call_openai_compatible(provider: dict, target_language: str,
-                           batch: list[Entry]) -> tuple[dict[str, str], tuple[int, int]]:
+def call_openai_compatible(provider: dict, target_language: str, batch: list[Entry],
+                           reference=None) -> tuple[dict[str, str], tuple[int, int]]:
     """Translate a batch through a /chat/completions endpoint. Returns ({id: text}, usage).
 
     Mirrors call_claude's failure handling deliberately: a batch whose JSON will not parse
     after MAX_RETRIES comes back empty so the caller marks its entries failed, rather than
     taking the whole run down over one bad response.
     """
-    req = build_request(target_language, batch, provider)
+    req = build_request(target_language, batch, provider, reference)
     url = provider["base_url"].rstrip("/") + "/chat/completions"
     headers = {
         "Content-Type": "application/json",
@@ -742,24 +749,24 @@ def call_openai_compatible(provider: dict, target_language: str,
     return {}, (0, 0)
 
 
-def call_model(provider: dict, client, target_language: str,
-               batch: list[Entry]) -> tuple[dict[str, str], tuple[int, int]]:
+def call_model(provider: dict, client, target_language: str, batch: list[Entry],
+               reference=None) -> tuple[dict[str, str], tuple[int, int]]:
     """One batch through whichever provider is selected."""
     if provider["api"] == "anthropic":
-        return call_claude(client, target_language, batch, provider)
-    return call_openai_compatible(provider, target_language, batch)
+        return call_claude(client, target_language, batch, provider, reference)
+    return call_openai_compatible(provider, target_language, batch, reference)
 
 
 def call_claude_batched(
         client, target_language: str, chunks: list[list[Entry]], poll_seconds: int = 30,
-        provider: dict = None) -> tuple[dict[int, dict[str, str]], tuple[int, int]]:
+        provider: dict = None, reference=None) -> tuple[dict[int, dict[str, str]], tuple[int, int]]:
     """Translate many chunks through the Batches API (50% of standard price).
 
     Returns ({chunk_index: {id: translated}}, (input_tokens, output_tokens)). A chunk that
     errored, expired, or was canceled comes back absent — the caller marks its entries failed.
     """
     requests = [{"custom_id": f"chunk-{i}",
-                 "params": build_request(target_language, chunk, provider)}
+                 "params": build_request(target_language, chunk, provider, reference)}
                 for i, chunk in enumerate(chunks)]
     batch = client.messages.batches.create(requests=requests)
     print(f"    Batch submitted: {batch.id} ({len(requests)} requests)", flush=True)
@@ -1050,12 +1057,17 @@ def main(argv=None):
     locale, lang_name = LANGUAGES[lang]
     overrides = load_overrides(lang)
     cache = load_cache(lang)
+    reference = _team_reference.load(lang)  # the language team's terms and style (#1421); empty for most
     # Beside the cache, before any paid call: a missing or broken table stops the run here, not after the spend.
     tag_table = name_tags.load_table() if lang in name_tags.TAGGED_LANGUAGES else None
 
     print(f"\n[TAOM Translator] Target: {lang_name} ({lang} / {locale})")
     print(f"  Overrides loaded: {len(overrides)}")
     print(f"  Cache loaded: {len(cache)}")
+    if reference:
+        print(f"  Team reference: {len(reference.pairs)} pairs ({_team_reference.path_for(lang).name})")
+    elif lang in _team_reference.TEAM_LANGUAGES:
+        print("  Team reference: none; run tools/build_translation_reference.py first", file=sys.stderr)
     print(f"  Module filter: {args.module}")
     print(f"  Mode: {'DRY RUN' if args.dry_run else 'APPLY'}")
 
@@ -1180,7 +1192,7 @@ def main(argv=None):
             print(f"\n  Calling Claude Batches API ({provider['model']}) — "
                   f"{len(chunks)} requests of up to {size} entries (50% price)...")
             per_chunk, (in_tok, out_tok) = call_claude_batched(
-                client, lang_name, chunks, provider=provider)
+                client, lang_name, chunks, provider=provider, reference=reference)
             result.api_input_tokens += in_tok
             result.api_output_tokens += out_tok
             for idx, chunk in enumerate(chunks):
@@ -1193,7 +1205,7 @@ def main(argv=None):
             for idx, batch in enumerate(chunks):
                 try:
                     translated_map, (in_tok, out_tok) = call_model(
-                        provider, client, lang_name, batch)
+                        provider, client, lang_name, batch, reference)
                 except Exception as exc:
                     print(f"    Batch {idx + 1} FAILED: {exc}")
                     for e in batch:

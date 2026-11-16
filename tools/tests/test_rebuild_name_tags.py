@@ -371,7 +371,7 @@ class TranslatorMainTests(unittest.TestCase):
     def _run(self, td, lang_file, entries, cache, overrides, *extra, table=TABLE, repo_root=None, fake=None):
         calls = []
 
-        def fake_model(provider, client, lang_name, batch):
+        def fake_model(provider, client, lang_name, batch, reference=None):
             calls.append([e.string_id for e in batch])
             return ({e.string_id: (fake or {}).get(e.string_id, "Fresco " + e.english_text) for e in batch}, (0, 0))
 
