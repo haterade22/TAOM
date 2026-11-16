@@ -15,8 +15,8 @@
 # The rgl greps are not a row, because a scoped manifest reads one log kind: they are the [[human]] claim about the run's rgl log at the end of this file.
 issue = 1409
 title = "Story missions: the Helm's Deep attack, the player storms the walls as the attacker (Phase 7)"
-# fixed_in is the trunk commit before the driver: the feature commit replaces it when it exists. Only a build that holds it counts.
-fixed_in = "1d1fd4501"
+# fixed_in is the feature commit: only a build that holds it counts.
+fixed_in = "c7fc79ef7"
 logs = ["taom"]
 
 # Written once, in Finish. Any reason but ok writes result=fail with the same detail, and that can happen before any launching line, so this row has no scope.
