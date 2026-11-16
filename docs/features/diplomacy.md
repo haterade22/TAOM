@@ -67,9 +67,9 @@ WarOfTheRingBehavior --> IWarOfTheRingService.CheckPhaseTransition (both events)
 Harmony Patch11_Diplomacy
   AllianceCampaignBehavior.EndAlliance [Prefix] -> IOnAllianceAction.ShouldPreventAllianceEnd  (+ [diag] log)
   DeclareWarAction.ApplyInternal       [Prefix] -> IOnAllianceAction.ShouldPreventWarDeclaration -> IWarOfTheRingService.GetWarVeto (Permanent first, then WarEnded, then the same-side rule, then the phase rule; a player-caused war skips the phase rule)
-  AllianceCampaignBehavior.StartCallToWarAgreement [Prefix, Priority.High] -> IOnAllianceAction.ShouldPreventWarDeclaration (same veto, before any gold moves; High so it runs before Coop's prefix, #1343)
-  AllianceCampaignBehavior.OnCallToWarAgreementProposedByPlayerKingdom [Prefix] -> same veto, so a one-clan player kingdom gets no map notice for a refused war
-  ProposeCallToWarAgreementDecision.IsAllowed / AcceptCallToWarAgreementDecision.IsAllowed [Prefix] -> same veto, result false, so vanilla cancels the ballot before the player sees it
+  AllianceCampaignBehavior.StartCallToWarAgreement [Prefix, Priority.High] -> IOnAllianceAction.ShouldPreventCallToWar (the war veto or a callToWarRefusals row, before any gold moves; High so it runs before Coop's prefix, #1343)
+  AllianceCampaignBehavior.OnCallToWarAgreementProposedByPlayerKingdom [Prefix] -> ShouldPreventCallToWar, so a one-clan player kingdom gets no map notice for a refused call
+  ProposeCallToWarAgreementDecision.IsAllowed / AcceptCallToWarAgreementDecision.IsAllowed [Prefix] -> ShouldPreventCallToWar, result false, so vanilla cancels the ballot before the player sees it
   MakePeaceAction.ApplyInternal        [Prefix] -> IOnPeaceAction.ShouldPreventPeace
   AllianceCampaignBehavior.StartAlliance [Postfix] -> [diag] log (TEMPORARY, player-involved)
 
@@ -258,6 +258,8 @@ Defines all kingdom pair relationships. Each entry has `kingdomA`, `kingdomB`, a
 
 Current data: 38 Permanent, 29 Natural, 7 Neutral and 78 Hostile pairs <!-- measured: python collections.Counter(r['tier'] for r in diplomacy.json relationships) 2026-11-14 -->. Every Hostile pair goes to war at Full War, so a free realm needs a Hostile row with each evil realm it must fight; `DiplomacyShippedConfigTests` holds Arthedain and Ered Luin to that. Dunland (`empire`) is narrower on purpose: it is Hostile to Rohan, Rivendell, Arthedain and Ered Luin, and not to Gondor (#1283; `ShippedConfig_Dunland_IsNotHostileToGondor` pins it). Ered Luin has Arthedain's 9 Hostile rows and is Natural with `erebor` and `lindon`.
 
+`callToWarRefusals` lists calls to war a kingdom always refuses: `{ "called": "empire", "target": "empire_w" }` keeps Dunland out of any war against Gondor that an ally calls it into (#1283). A row has a direction, so Gondor can still be called against Dunland. `AllianceActionHook.ShouldPreventCallToWar` adds the list to the war veto at all four call-to-war gates (the calling kingdom's ballot, the called kingdom's ballot, the player kingdom's offer and `StartCallToWarAgreement`), writes `[Diplomacy] Call to war refused: <called> will not join a war against <target>`, and defers to the host under co-op. Dunland can still declare that war by its own choice: the list covers calls to war only. The row binds a player who rules Dunland too, as the war vetoes do. A refused call is cancelled before any vote, so Dunland loses no relation and no influence, where a vanilla refusal costs -50 relation. Known gap: the lord-dialogue "sponsor a call to war" option still lists Gondor to a player allied with Dunland, and choosing it does nothing (#1350).
+
 ### `Main/_Module/ModuleData/diplomacy/war_of_the_ring.json`
 Controls the scripted war escalation:
 ```json
@@ -296,10 +298,10 @@ Phase 1 (Isengard and Dunland attack Rohan) triggers on day 30; Phase 2 (the ful
 | `Main/Features/Diplomacy/Hooks/AllianceCampaignBehavior_EndAlliance_Patch.cs` | Harmony Prefix — calls `IOnAllianceAction.ShouldPreventAllianceEnd` (+ temporary `[diag]` log of player-involved end attempts) |
 | `Main/Features/Diplomacy/Hooks/AllianceCampaignBehavior_StartAlliance_Patch.cs` | Harmony Postfix — **TEMPORARY diagnostic** (`Patch11_Diplomacy`): logs `[Diplomacy][diag] Player alliance FORMED` on any path (kingdom-screen button + dialog). Strip after in-game durability sign-off. |
 | `Main/Features/Diplomacy/Hooks/DeclareWarAction_ApplyInternal_Patch.cs` | Harmony Prefix: calls `IOnAllianceAction.ShouldPreventWarDeclaration` (→ `GetWarVeto`: Permanent pairs always, then `WarEnded`, then same-alignment pairs, then the War of the Ring phase rule) |
-| `Main/Features/Diplomacy/Hooks/AllianceCampaignBehavior_StartCallToWarAgreement_Patch.cs` | Harmony Prefix: the same veto, so a call-to-war agreement for a refused war moves no gold |
-| `Main/Features/Diplomacy/Hooks/AllianceCampaignBehavior_OnCallToWarAgreementProposedByPlayerKingdom_Patch.cs` | Harmony Prefix: the same veto for a player kingdom's call-to-war notice, which vanilla posts without reading `IsAllowed` |
-| `Main/Features/Diplomacy/Hooks/ProposeCallToWarAgreementDecision_IsAllowed_Patch.cs` | Harmony Prefix: the propose decision is not allowed when the war is vetoed |
-| `Main/Features/Diplomacy/Hooks/AcceptCallToWarAgreementDecision_IsAllowed_Patch.cs` | Harmony Prefix: the accept decision is not allowed when the war is vetoed |
+| `Main/Features/Diplomacy/Hooks/AllianceCampaignBehavior_StartCallToWarAgreement_Patch.cs` | Harmony Prefix: `ShouldPreventCallToWar` (the war veto or a refusal row), so a refused call-to-war agreement moves no gold |
+| `Main/Features/Diplomacy/Hooks/AllianceCampaignBehavior_OnCallToWarAgreementProposedByPlayerKingdom_Patch.cs` | Harmony Prefix: `ShouldPreventCallToWar` for a player kingdom's call-to-war notice, which vanilla posts without reading `IsAllowed` |
+| `Main/Features/Diplomacy/Hooks/ProposeCallToWarAgreementDecision_IsAllowed_Patch.cs` | Harmony Prefix: the propose decision is not allowed when `ShouldPreventCallToWar` refuses the call |
+| `Main/Features/Diplomacy/Hooks/AcceptCallToWarAgreementDecision_IsAllowed_Patch.cs` | Harmony Prefix: the accept decision is not allowed when `ShouldPreventCallToWar` refuses the call |
 | `Main/Features/Diplomacy/Hooks/MakePeaceAction_ApplyInternal_Patch.cs` | Harmony Prefix — calls `IOnPeaceAction.ShouldPreventPeace` |
 | `Main/Features/Diplomacy/IKingdomVoteDeadlockService.cs` | Service interface: is this ballot stale, and has the player been told |
 | `Main/Features/Diplomacy/KingdomVoteDeadlockService.cs` | Implementation: staleness verdict + one announce per ballot, bounded dedupe |
@@ -333,14 +335,14 @@ Phase 1 (Isengard and Dunland attack Rohan) triggers on day 30; Phase 2 (the ful
 ## Tests
 | File | Coverage |
 |------|---------|
-| `TAOM.Tests/Features/Diplomacy/DiplomacyServiceTests.cs` | Tier lookup, score modifiers, alliance allowed/blocked, initial alliance establishment, enforcement, player-freedom score/permission overloads, `CanPlayerProposeAlliance` (same/empty/at-war/already-allied/Hostile-tier), `FormPlayerAlliance`, `IsWarAllowed` (Permanent/same-alignment/neutral) |
+| `TAOM.Tests/Features/Diplomacy/DiplomacyServiceTests.cs` | Tier lookup, score modifiers, alliance allowed/blocked, initial alliance establishment, enforcement, player-freedom score/permission overloads, `CanPlayerProposeAlliance` (same/empty/at-war/already-allied/Hostile-tier), `FormPlayerAlliance`, `IsWarAllowed` (Permanent/same-alignment/neutral), `RefusesCallToWar` (listed pair, reverse direction, unlisted) |
 | `TAOM.Tests/Features/Diplomacy/WarOfTheRingServiceTests.cs` | Phase transitions, peace blocking, MCM override, test-mode day overrides, hostile-tier auto-war, the session reset (#764), the stored-stance guard and `ReconcileDeclaredWars` (#772) |
 | `TAOM.Tests/Features/Diplomacy/WarOfTheRingBehaviorSessionResetTests.cs` | The constructor reset (#764), the host session launch reconciling before the phase check (#772), the co-op client gate |
 | `TAOM.Tests/Features/Diplomacy/WarOfTheRingWiringTests.cs` | SubModule builds `WarOfTheRingBehavior` inline, once (#764) |
 | `TAOM.Tests/Features/Diplomacy/WarOfTheRingPhaseDayTests.cs` | `GetEffectivePhaseDay` (#765) |
 | `TAOM.Tests/Features/Diplomacy/DiplomacyConfigProviderTests.cs` | JSON parsing, missing file handling |
-| `TAOM.Tests/Features/Diplomacy/DiplomacyShippedConfigTests.cs` | The shipped `diplomacy.json`: both ids of every row are real kingdom ids (read by `CultureDataFixture.KingdomIds()`, #1291), Dunland is not Hostile to Gondor (#1283), Arthedain and Ered Luin carry the core free realms' Hostile rows |
-| `TAOM.Tests/Features/Diplomacy/AllianceActionHookTests.cs` | `ShouldPreventAllianceEnd` for permanent vs non-permanent tiers; `ShouldPreventWarDeclaration` follows whatever `GetWarVeto` returns (any veto blocks, the player-caused flag is passed through, co-op defers to the host without asking the service); `GetWarRefusalText` returns the veto's text, null for none, null under co-op, and logs nothing |
+| `TAOM.Tests/Features/Diplomacy/DiplomacyShippedConfigTests.cs` | The shipped `diplomacy.json`: both ids of every row are real kingdom ids (read by `CultureDataFixture.KingdomIds()`, #1291), Dunland is not Hostile to Gondor and refuses a call to war against it, and every refusal id is a real kingdom (#1283), Arthedain and Ered Luin carry the core free realms' Hostile rows |
+| `TAOM.Tests/Features/Diplomacy/AllianceActionHookTests.cs` | `ShouldPreventAllianceEnd` for permanent vs non-permanent tiers; `ShouldPreventWarDeclaration` follows whatever `GetWarVeto` returns (any veto blocks, the player-caused flag is passed through, co-op defers to the host without asking the service); `GetWarRefusalText` returns the veto's text, null for none, null under co-op, and logs nothing; `ShouldPreventCallToWar` refuses for a veto or a refusal row, logs the refusal, and defers to the host under co-op |
 | `TAOM.Tests/Features/Diplomacy/WarOfTheRingWarVetoTests.cs` | `GetWarVeto` in every phase (side before phase, player-caused wars), the score penalties, `IsEnabled`, and `EndWarsForbiddenByPhase` |
 | `TAOM.Tests/Features/Diplomacy/WarOfTheRingBehaviorPhaseWarsTests.cs` | The sweep runs on the daily tick after the phase check, authority only, not on session launch (`RequiresGame`) |
 | `TAOM.Tests/Features/Diplomacy/WarVetoReasonsTests.cs` | Every veto has its own keyed inline text; `Permanent` keeps `taom_war_blocked` |
@@ -367,6 +369,7 @@ Phase 1 (Isengard and Dunland attack Rohan) triggers on day 30; Phase 2 (the ful
 
 ## Changelog
 
+- 2026-11-15: Dunland refuses every call to war against Gondor (`callToWarRefusals` in `diplomacy.json`, #1283). The second 150-day run showed the war begin on day 2 when the Misty Mountain Orcs called Dunland in; the maintainer decided Dunland refuses such calls.
 - 2026-11-15: `ShippedConfig_EveryKingdomId_IsARealKingdom` fails when a `diplomacy.json` row names an id that is no kingdom (#1291). The table is keyed on the two id strings, so a lore name such as `rohan` for `vlandia` loads without a warning and its pair silently reads Neutral. The kingdom list comes from `taom_spkingdoms.xml` and `spkingdoms.xslt`, the same reader the army targeting tests use.
 - 2026-11-14: The Hostile row between Dunland (`empire`) and Gondor (`empire_w`) is removed from `diplomacy.json`, so Full War no longer declares that war or blocks its peace (#1283). The pair has no row and reads Neutral, which leaves two routes to that war open in Full War. Either realm can declare it by its own choice. A realm allied with one of them and at war with the other can also call it in (`AllianceCampaignBehavior.OnWarDeclared`): Rivendell and Arthedain are Hostile to Dunland and Natural with Gondor, and a call-to-war agreement lasts 42 days. Nothing in TAOM blocks an alliance vote between the two; the engine's alliance score decides.
 - 2026-11-10: `GetRelationshipTier` returns `Hostile` for a realm that pledged to a side against a realm of the other side; a static `Permanent` row wins, and a pair with no pledged realm reads `diplomacy.json` alone (War Pledge, #1113, [war-pledge.md](war-pledge.md)).
