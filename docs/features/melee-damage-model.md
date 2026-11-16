@@ -507,8 +507,9 @@ restat of the same day; the restat has since been applied (see "Not done, and kn
 - **The Armory blades were restated on 2026-11-14; the troop swaps were not made.** The restat wrote 203 blade
   pieces and a second run plans 0. The counts above are the dry runs and simulations made before it.
   `generate_career_kits.py`, `generate_starter_kit.py` and `generate_placeholder_weapons.py` ran after it.
-  `fix_melee_ladder.py` did not: it breaks the weapon category rule ("A troop keeps its weapon category", below), so the 318
-  `MELEE_LADDER_INVERSION` warnings it was meant to remove stay. The order of the apply and its results are in
+  `fix_melee_ladder.py` did not: it broke the weapon category rule ("A troop keeps its weapon category", below), so the 318
+  `MELEE_LADDER_INVERSION` warnings it was meant to remove stay. The tool holds the rule since 2026-11-16; its
+  roster pass is still not applied. The order of the apply and its results are in
   [armor-balance.md](./armor-balance.md#the-apply-sequence-2026-11-14-1271).
 - A blade is priced for its lowest wearer and held to that wearer's tier limit, so a blade worn across more
   than two tiers leaves its upper wearers light. 62 of the 204 worn non-hero blades span more than two tiers
@@ -780,11 +781,17 @@ couchable lance, swinging polearm, pike, bow and crossbow. A swap never crosses 
 moves a troop between a shield kit and a two handed one. The rule binds every tool that fits a troop to a
 number, not only the melee ladder.
 
-`fix_melee_ladder.py` does not hold this rule yet. On 2026-11-14 its plan of 176 swaps across 162 troops
-(against the restated Armory) replaced poleaxes with short spears, for example `rhudaur_lord_of_the_angle`
-from `numenorean_poleaxe_heavy` at 92 DPS to `dunland_caerdh_short_spear_e` at 33, so it was not applied.
-Do not run it with `--apply` until it picks only same-category candidates and never lowers an
-under-armed troop's damage.
+`fix_melee_ladder.py` holds this rule since 2026-11-16. On 2026-11-14 its plan of 176 swaps across 162
+troops (against the restated Armory) replaced poleaxes with short spears, for example
+`rhudaur_lord_of_the_angle` from `numenorean_poleaxe_heavy` at 92 DPS to `dunland_caerdh_short_spear_e`
+at 33, so it was not applied. All polearms share the template `TwoHandedPolearm`, and each weapon sat
+inside its own class band. Now `weapon_category` keys a candidate on the template and, for a polearm, on
+its main attack (swing or thrust, by the higher DPS), on its couch usage and on whether its primary usage
+refuses a shield; a candidate of another category is never picked. Same category means the same band, so
+an under-armed weapon is only ever swapped for a stronger one. The dry run of 2026-11-16 plans 125 swaps
+across 118 troops, none across a category, none lower for an under-armed weapon
+(`RosterFixerWeaponCategoryTests` pins both). The roster pass is a balance change of its own and is not
+applied.
 
 ## Key Files
 
