@@ -3,9 +3,10 @@ using TaleWorlds.CampaignSystem.Election;
 
 namespace TAOM.Features.Diplomacy.Hooks;
 
-// A call-to-war ballot for a war the rule refuses can never end in war: the DeclareWarAction prefix
-// and the StartCallToWarAgreement prefix both stop it. Vanilla cancels a decision whose IsAllowed is
+// A call-to-war ballot for a war the rule refuses can never end in war: the StartCallToWarAgreement
+// prefix stops it, and for a war the phase forbids the DeclareWarAction prefix stops it too. Vanilla cancels a decision whose IsAllowed is
 // false (KingdomElection.StartElection and the hourly sweep), so the player never sees the offer.
+// The rule is ShouldPreventCallToWar: the war veto, or a callToWarRefusals row (#1283).
 // The hook defers to the host under co-op. Initialize is wired in DiplomacyIoC.InitializeHooks.
 [HarmonyPatch(typeof(ProposeCallToWarAgreementDecision), nameof(ProposeCallToWarAgreementDecision.IsAllowed))]
 [HarmonyPatchCategory("Patch11_Diplomacy")]
@@ -29,7 +30,7 @@ public static class ProposeCallToWarAgreementDecision_IsAllowed_Patch
         var target = __instance.KingdomToCallToWarAgainst;
         if (called == null || target == null) return true;
 
-        if (!_hook.ShouldPreventWarDeclaration(called.StringId, target.StringId)) return true;
+        if (!_hook.ShouldPreventCallToWar(called.StringId, target.StringId)) return true;
 
         __result = false;
         return false;

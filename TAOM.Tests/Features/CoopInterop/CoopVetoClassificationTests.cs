@@ -69,15 +69,15 @@ public class CoopVetoClassificationTests
         ["AllianceCampaignBehavior_EndAlliance_Patch"] = new(CoopVeto.GatedForCoop,
             "Skips an alliance end. Static-config condition, same peer-mismatch exposure as war."),
         ["AllianceCampaignBehavior_StartCallToWarAgreement_Patch"] = new(CoopVeto.GatedForCoop,
-            "Skips a call-to-war agreement whose war the phase forbids. Delegates to ShouldPreventWarDeclaration, " +
+            "Skips a call-to-war agreement whose war the phase forbids or a refusal row names. Delegates to ShouldPreventCallToWar, " +
             "which defers to the host under co-op; the condition reads WarOfTheRingService.CurrentPhase, the " +
             "same unreplicated SyncData as the peace veto."),
         ["AllianceCampaignBehavior_OnCallToWarAgreementProposedByPlayerKingdom_Patch"] = new(CoopVeto.GatedForCoop,
             "Skips the player kingdom's call-to-war offer (a map notice for a one-clan kingdom) for a war the " +
-            "rule refuses. Delegates to ShouldPreventWarDeclaration, which defers to the host under co-op; " +
+            "rule refuses. Delegates to ShouldPreventCallToWar, which defers to the host under co-op; " +
             "the same unreplicated WarOfTheRingService.CurrentPhase."),
         ["ProposeCallToWarAgreementDecision_IsAllowed_Patch"] = new(CoopVeto.GatedForCoop,
-            "Cancels a call-to-war ballot for a war the rule refuses. Delegates to ShouldPreventWarDeclaration, " +
+            "Cancels a call-to-war ballot for a war the rule refuses. Delegates to ShouldPreventCallToWar, " +
             "which defers to the host under co-op; the same unreplicated WarOfTheRingService.CurrentPhase."),
         ["AcceptCallToWarAgreementDecision_IsAllowed_Patch"] = new(CoopVeto.GatedForCoop,
             "The called kingdom's side of the same ballot; same hook, same host deferral."),
