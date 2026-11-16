@@ -226,6 +226,18 @@ public class GameVersionCheckTests
     }
 
     [TestMethod]
+    public void MenuNotice_OkClosesTheGame_OnlyForTheWrongVersionPopup()
+    {
+        Assert.IsTrue(global::TAOM.Dependencies.MissingTaomNotice.QuitsOnOk("TAOM is turned off"));
+        Assert.IsFalse(global::TAOM.Dependencies.MissingTaomNotice.QuitsOnOk(null));
+
+        // Tick passes the version text through the decision and the missing-TAOM text with none.
+        var tick = Body(RepoPaths.ReadSource("Dependencies/MissingTaomNotice.cs", stripComments: true), "internal static void Tick()");
+        StringAssert.Contains(tick, "Show(versionText, QuitsOnOk(versionText))");
+        StringAssert.Contains(tick, "Show(Text(reason), QuitsOnOk(null))");
+    }
+
+    [TestMethod]
     [TestCategory("LiveInstall")]
     public void InstalledGame_MatchesTheShippedPin()
     {

@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using TaleWorlds.Library;
 using TaleWorlds.Localization;
 using TaleWorlds.ModuleManager;
@@ -40,7 +41,7 @@ internal static class MissingTaomNotice
             if (versionText != null)
             {
                 DiagLog.Log("Dependencies", "MissingTaomNotice: showing the wrong-game-version notice");
-                Show(versionText);
+                Show(versionText, QuitsOnOk(versionText));
                 return;
             }
 
@@ -49,7 +50,7 @@ internal static class MissingTaomNotice
             DiagLog.Log("Dependencies", $"MissingTaomNotice: reason={reason}, loaded={string.Join(",", loaded)}");
             if (reason == MissingTaomReason.None) return;
 
-            Show(Text(reason));
+            Show(Text(reason), QuitsOnOk(null));
         }
         catch (Exception ex)
         {
@@ -57,10 +58,26 @@ internal static class MissingTaomNotice
         }
     }
 
-    private static void Show(string text) =>
+    /// <summary>
+    /// Only the wrong-game-version popup closes the game on Ok (owner, 16 Nov 2026): its text tells the player to
+    /// close the game and TAOM's code is off, so there is nothing to play. The missing-TAOM popup keeps a plain Ok.
+    /// </summary>
+    internal static bool QuitsOnOk(string? versionText) => versionText != null;
+
+    private static void Show(string text, bool quitOnOk) =>
         InformationManager.ShowInquiry(new InquiryData(
             "TAOM", text, true, false,
-            new TextObject("{=oHaWR73d}Ok").ToString(), string.Empty, null, null));
+            new TextObject("{=oHaWR73d}Ok").ToString(), string.Empty,
+            quitOnOk ? QuitGame : (Action?)null, null));
+
+    // NoInlining: the engine call sits here so a member missing on another game version fails this method, not Show.
+    // Utilities.QuitGame is the call the engine's own Exit button and TAOM's autorun hosts use.
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    private static void QuitGame()
+    {
+        try { TaleWorlds.Engine.Utilities.QuitGame(); }
+        catch (Exception ex) { DiagLog.LogCaught("Dependencies", "MissingTaomNotice.QuitGame", ex); }
+    }
 
     // Plain English: the notice shows only when TAOM did not load, and TAOM's language files load only with TAOM.
     internal static string Text(MissingTaomReason reason) => reason == MissingTaomReason.WarSails
