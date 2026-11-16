@@ -1,6 +1,7 @@
 using System.Linq;
 using System.Reflection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using TAOM.Features.ServerSettings;
 using TAOM.Features;
 using TAOM.Features.BanditVoices;
 using TAOM.Features.CoopInterop;
@@ -41,9 +42,9 @@ public class BanditVoicesSettingsProviderTests
         var group = Attribute(property, "SettingPropertyGroupAttribute");
         var flag = Attribute(property, "SettingPropertyBoolAttribute");
 
-        Assert.AreEqual("World/Bandit Voices", Read(group, "GroupName"));
+        Assert.AreEqual("World/Bandit Voices", McmText.Plain(Read(group, "GroupName") as string));
         Assert.AreEqual(78, Read(group, "GroupOrder"));
-        Assert.AreEqual("Enable Bandit Clan Greetings", Read(flag, "DisplayName"));
+        Assert.AreEqual("Enable Bandit Clan Greetings", McmText.Plain(Read(flag, "DisplayName") as string));
         Assert.AreEqual(false, Read(flag, "RequireRestart"));
     }
 

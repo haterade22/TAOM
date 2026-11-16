@@ -114,7 +114,7 @@ public class HardQuestionsWiringTests
     {
         var src = RepoPaths.ReadSource("Main/Features/TaomSettings.cs", stripComments: true);
 
-        Assert.IsTrue(src.Contains("[SettingPropertyGroup(\"World/Hard Questions\", GroupOrder = 57)]"));
+        Assert.IsTrue(src.Contains("[SettingPropertyGroup(\"{=taom_mcm_group_world}World/{=taom_mcm_group_hard_questions}Hard Questions\", GroupOrder = 57)]"));
         Assert.IsTrue(src.Contains("public bool EnableHardQuestions { get; set; } = true;"));
         Assert.AreEqual(1, src.Split(new[] { "GroupOrder = 57" }, System.StringSplitOptions.None).Length - 1,
             "GroupOrder 57 is used by another group");

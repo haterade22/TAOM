@@ -126,16 +126,35 @@ def split_keys():
     return found
 
 
+# An MCM settings group path: MCM splits it on '/' before it translates each part, so each part has its own key
+# (#1385 Phase 4), and LITERAL reads the first key with the rest of the path as its default.
+MCM_GROUP_PREFIX = "taom_mcm_group_"
+# A nested part's key needs a TAOM prefix too: a vanilla key in taom_module_strings.xml would override the vanilla text.
+KEYED_PART = re.compile(r"^\{=((?:" + "|".join(map(re.escape, LOC_KEY_PREFIXES)) + r")[A-Za-z0-9_]+)\}(.*)$", re.S)
+
+
+def group_parts(key, default):
+    """[(key, default)] for each part of an MCM group path; any other literal is one part."""
+    if not key.startswith(MCM_GROUP_PREFIX):
+        return [(key, default)]
+    first, *rest = default.split("/")
+    parts = [(key, first)]
+    for part in rest:
+        m = KEYED_PART.match(part)
+        if m:   # an unkeyed part has no row to write; McmSettingsTextIsKeyedTests reports it
+            parts.append((m.group(1), m.group(2)))
+    return parts
+
+
 def declared_keys():
     """key -> (default_text, repo_relative_path, line_no), first declaration wins."""
     found = OrderedDict()
     for rel, text in code_files():
         for m in LITERAL.finditer(text):
-            key = m.group(2)
-            if key in found:
-                continue
-            default = unescape(m.group(3), m.group(1) == "$")
-            found[key] = (default, rel, text.count("\n", 0, m.start()) + 1)
+            line = text.count("\n", 0, m.start()) + 1
+            for key, default in group_parts(m.group(2), unescape(m.group(3), m.group(1) == "$")):
+                if key not in found:
+                    found[key] = (default, rel, line)
     return found
 
 

@@ -2,6 +2,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using TAOM.Features.ServerSettings;
 using TAOM.Features;
 using TAOM.Features.ReevesLedger;
 
@@ -51,9 +52,9 @@ public class ReevesLedgerSettingsProviderTests
         var second = typeof(TaomSettings).GetProperty(nameof(TaomSettings.EnableReserveSteps))!;
 
         var group = Attribute(first, "SettingPropertyGroupAttribute");
-        Assert.AreEqual("Fief Management/Reeve's Ledger", Read(group, "GroupName"));
+        Assert.AreEqual("Fief Management/Reeve's Ledger", McmText.Plain(Read(group, "GroupName") as string));
         Assert.AreEqual(2, Read(group, "GroupOrder"), "Postern Gate is 0 and From the Ashes is 1; the first property carries the order");
-        Assert.AreEqual("Fief Management/Reeve's Ledger", Read(Attribute(second, "SettingPropertyGroupAttribute"), "GroupName"));
+        Assert.AreEqual("Fief Management/Reeve's Ledger", McmText.Plain(Read(Attribute(second, "SettingPropertyGroupAttribute"), "GroupName") as string));
         Assert.AreEqual(0, Read(Attribute(first, "SettingPropertyBoolAttribute"), "Order"));
         Assert.AreEqual(1, Read(Attribute(second, "SettingPropertyBoolAttribute"), "Order"));
     }
@@ -64,8 +65,8 @@ public class ReevesLedgerSettingsProviderTests
         // A group's order comes from the property that carries it, so the largest value on the group's properties is its order.
         var orders = typeof(TaomSettings).GetProperties()
             .SelectMany(p => p.GetCustomAttributes(inherit: false))
-            .Where(a => a.GetType().Name == "SettingPropertyGroupAttribute" && ((string)Read(a, "GroupName")).StartsWith("Fief Management/"))
-            .GroupBy(a => (string)Read(a, "GroupName"), a => (int)Read(a, "GroupOrder"))
+            .Where(a => a.GetType().Name == "SettingPropertyGroupAttribute" && McmText.Plain(McmText.Plain(Read(a, "GroupName") as string)).StartsWith("Fief Management/"))
+            .GroupBy(a => McmText.Plain(McmText.Plain(Read(a, "GroupName") as string)), a => (int)Read(a, "GroupOrder"))
             .Select(g => g.Key + "=" + g.Max())
             .ToList();
 

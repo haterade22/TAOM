@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Reflection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using TAOM.Features.ServerSettings;
 using TAOM.Features;
 using TAOM.Features.StagedSiege;
 
@@ -78,7 +79,7 @@ public class StagedSiegeSettingsProviderTests
         var property = typeof(TaomSettings).GetProperty(nameof(TaomSettings.EnableStagedSiege))!;
 
         var group = Attribute(property, "SettingPropertyGroupAttribute");
-        Assert.AreEqual("Battle Tactics/Staged Siege", Read(group, "GroupName"));
+        Assert.AreEqual("Battle Tactics/Staged Siege", McmText.Plain(Read(group, "GroupName") as string));
         Assert.AreEqual(GroupOrder, (int)Read(group, "GroupOrder"),
             "MCM creates a group from its first property and ignores a GroupOrder on any later one");
 
@@ -109,7 +110,7 @@ public class StagedSiegeSettingsProviderTests
             .Where(p => p.Name != nameof(TaomSettings.EnableStagedSiege))
             .Select(p => p.GetCustomAttributes(inherit: false).FirstOrDefault(a => a.GetType().Name == "SettingPropertyGroupAttribute"))
             .Where(a => a != null)
-            .Select(a => (Name: (string)Read(a!, "GroupName"), Order: (int)Read(a!, "GroupOrder")))
+            .Select(a => (Name: McmText.Plain(Read(a!, "GroupName") as string), Order: (int)Read(a!, "GroupOrder")))
             .Where(g => g.Order == GroupOrder)
             .ToList();
 

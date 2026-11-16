@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Reflection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using TAOM.Features.ServerSettings;
 using TAOM.Features;
 using TAOM.Features.ManyHammers;
 

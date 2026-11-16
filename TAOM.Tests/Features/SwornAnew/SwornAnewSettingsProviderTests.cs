@@ -1,6 +1,7 @@
 using System.Linq;
 using System.Reflection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using TAOM.Features.ServerSettings;
 using TAOM.Features;
 using TAOM.Features.SwornAnew;
 
@@ -56,10 +57,10 @@ public class SwornAnewSettingsProviderTests
         var property = typeof(TaomSettings).GetProperty(nameof(TaomSettings.SwornAnewEnabled))!;
 
         var group = Attribute(property, "SettingPropertyGroupAttribute");
-        Assert.AreEqual("World/Sworn Anew", Read(group, "GroupName"));
+        Assert.AreEqual("World/Sworn Anew", McmText.Plain(Read(group, "GroupName") as string));
         Assert.AreEqual(71, Read(group, "GroupOrder"));
         var value = Attribute(property, "SettingPropertyBoolAttribute");
-        Assert.AreEqual("Enable Sworn Anew", Read(value, "DisplayName"));
+        Assert.AreEqual("Enable Sworn Anew", McmText.Plain(Read(value, "DisplayName") as string));
         Assert.AreEqual(false, Read(value, "RequireRestart"), "read at each conversation question");
         StringAssert.Contains((string)Read(value, "HintText"), "captured");
     }

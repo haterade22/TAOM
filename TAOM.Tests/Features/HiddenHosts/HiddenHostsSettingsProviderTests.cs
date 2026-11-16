@@ -31,7 +31,7 @@ public class HiddenHostsSettingsProviderTests
         var attributes = property.GetCustomAttributesData();
 
         var text = string.Join("|", attributes.Select(a => a.ToString()));
-        StringAssert.Contains(text, "Map UI/Hidden Hosts");
+        StringAssert.Contains(text, "Map UI/{=taom_mcm_group_hidden_hosts}Hidden Hosts");
         StringAssert.Contains(text, "RequireRestart = False");
     }
 }

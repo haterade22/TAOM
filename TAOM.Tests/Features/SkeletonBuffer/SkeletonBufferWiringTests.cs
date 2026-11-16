@@ -13,6 +13,7 @@ using TAOM.Composition;
 using TAOM.Core.Logging;
 using TAOM.Features.CoopInterop;
 using TAOM.Features.CrashReport;
+using TAOM.Features.ServerSettings;
 using TAOM.Features.SkeletonBuffer;
 using TAOM.Features.SkeletonBuffer.Hooks;
 using TAOM.Tests.Infrastructure;
@@ -124,14 +125,14 @@ public class SkeletonBufferWiringTests
         Assert.IsTrue((bool)watch!.GetValue(settings)!);
         var guardAttribute = guard.GetCustomAttribute<SettingPropertyBoolAttribute>()!;
         var watchAttribute = watch.GetCustomAttribute<SettingPropertyBoolAttribute>()!;
-        Assert.AreEqual("Skeleton Buffer Guard", guardAttribute.DisplayName);
-        Assert.AreEqual("Skeleton Buffer Watch", watchAttribute.DisplayName);
+        Assert.AreEqual("Skeleton Buffer Guard", McmText.Plain(guardAttribute.DisplayName));
+        Assert.AreEqual("Skeleton Buffer Watch", McmText.Plain(watchAttribute.DisplayName));
         Assert.IsTrue(guardAttribute.RequireRestart, "the guard installs once, at the first main menu");
         Assert.IsFalse(watchAttribute.RequireRestart);
         Assert.IsFalse(string.IsNullOrWhiteSpace(guardAttribute.HintText));
         Assert.IsFalse(string.IsNullOrWhiteSpace(watchAttribute.HintText));
-        Assert.AreEqual("Master", guard.GetCustomAttribute<SettingPropertyGroupAttribute>()!.GroupName);
-        Assert.AreEqual("Master", watch.GetCustomAttribute<SettingPropertyGroupAttribute>()!.GroupName);
+        Assert.AreEqual("Master", McmText.Plain(guard.GetCustomAttribute<SettingPropertyGroupAttribute>()!.GroupName));
+        Assert.AreEqual("Master", McmText.Plain(watch.GetCustomAttribute<SettingPropertyGroupAttribute>()!.GroupName));
     }
 
     [TestMethod]

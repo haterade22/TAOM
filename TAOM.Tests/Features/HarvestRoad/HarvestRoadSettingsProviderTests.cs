@@ -1,6 +1,7 @@
 using System.Linq;
 using System.Reflection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using TAOM.Features.ServerSettings;
 using TAOM.Features;
 using TAOM.Features.HarvestRoad;
 
@@ -40,7 +41,7 @@ public class HarvestRoadSettingsProviderTests
         var group = Attribute(property, "SettingPropertyGroupAttribute");
         var bool_ = Attribute(property, "SettingPropertyBoolAttribute");
 
-        Assert.AreEqual("Map UI/Settlement Nameplates", Read(group, "GroupName"));
+        Assert.AreEqual("Map UI/Settlement Nameplates", McmText.Plain(Read(group, "GroupName") as string));
         Assert.AreEqual(7, Read(bool_, "Order"));
         Assert.AreEqual(false, Read(bool_, "RequireRestart"));
         StringAssert.StartsWith((string)Read(bool_, "DisplayName"), "{=taom_hroad_mcm_enable}");

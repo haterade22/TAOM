@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using TAOM.Features.ServerSettings;
 using TAOM.Features;
 using TAOM.Features.TokensOfEsteem;
 using TAOM.Tests.Infrastructure;
@@ -121,7 +122,7 @@ public class GiftSettingsProviderTests
     {
         var source = RepoPaths.ReadSource("Main/Features/TaomSettings.cs", stripComments: true);
 
-        Assert.IsTrue(source.Contains("[SettingPropertyGroup(\"Tokens of Esteem\", GroupOrder = 62)]"));
+        Assert.IsTrue(source.Contains("[SettingPropertyGroup(\"{=taom_mcm_group_tokens_of_esteem}Tokens of Esteem\", GroupOrder = 62)]"));
         Assert.AreEqual(1, source.Split(new[] { "GroupOrder = 62" }, StringSplitOptions.None).Length - 1,
             "GroupOrder 62 is used by another group");
 
@@ -129,7 +130,7 @@ public class GiftSettingsProviderTests
         Assert.AreEqual(7, grouped.Length, "enable, cooldown, cap, alignment refusal and three purses; scaling is not a setting");
         foreach (var property in grouped)
         {
-            Assert.AreEqual("Tokens of Esteem", Read(Attribute(property, "SettingPropertyGroupAttribute"), "GroupName"), property.Name);
+            Assert.AreEqual("Tokens of Esteem", McmText.Plain(Read(Attribute(property, "SettingPropertyGroupAttribute"), "GroupName") as string), property.Name);
             Assert.AreEqual(false, Read(ValueAttribute(property), "RequireRestart"), property.Name + ": nothing is applied once at start-up");
         }
     }
@@ -210,7 +211,7 @@ public class GiftSettingsProviderTests
         foreach (var property in GiftProperties())
         {
             var attribute = ValueAttribute(property);
-            var text = (string)Read(attribute, "DisplayName") + " " + (string)Read(attribute, "HintText");
+            var text = McmText.Plain(Read(attribute, "DisplayName") as string) + " " + (string)Read(attribute, "HintText");
             Assert.IsFalse(Regex.IsMatch(text, @"\b(he|she|his|her|him|hers|himself|herself)\b", RegexOptions.IgnoreCase),
                 property.Name + " names a gender: " + text);
             Assert.IsFalse(text.Contains("Gifts Matter Less"), property.Name + " still names the removed scaling setting");

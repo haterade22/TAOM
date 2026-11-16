@@ -5,6 +5,7 @@ using System.Reflection;
 using System.Text.RegularExpressions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TAOM.Features.Relations;
+using TAOM.Features.ServerSettings;
 using TAOM.Features;
 using TAOM.Features.GoodDeeds;
 using TAOM.Tests.Infrastructure;
@@ -219,7 +220,7 @@ public class GoodDeedsSettingsProviderTests
     {
         var source = RepoPaths.ReadSource("Main/Features/TaomSettings.cs", stripComments: true);
 
-        Assert.IsTrue(source.Contains("[SettingPropertyGroup(\"Good Deeds\", GroupOrder = 65)]"));
+        Assert.IsTrue(source.Contains("[SettingPropertyGroup(\"{=taom_mcm_group_good_deeds}Good Deeds\", GroupOrder = 65)]"));
         Assert.AreEqual(1, source.Split(new[] { "GroupOrder = 65" }, StringSplitOptions.None).Length - 1,
             "GroupOrder 65 is used by another group");
 
@@ -227,7 +228,7 @@ public class GoodDeedsSettingsProviderTests
         Assert.AreEqual(18, grouped.Length, "four switches, five amounts and nine multipliers");
         foreach (var property in grouped)
         {
-            Assert.AreEqual("Good Deeds", Read(Attribute(property, "SettingPropertyGroupAttribute"), "GroupName"), property.Name);
+            Assert.AreEqual("Good Deeds", McmText.Plain(Read(Attribute(property, "SettingPropertyGroupAttribute"), "GroupName") as string), property.Name);
             Assert.AreEqual(false, Read(ValueAttribute(property), "RequireRestart"), property.Name + ": every value is read when the deed happens");
         }
     }
@@ -322,7 +323,7 @@ public class GoodDeedsSettingsProviderTests
         foreach (var property in GoodDeedsProperties())
         {
             var attribute = ValueAttribute(property);
-            var text = (string)Read(attribute, "DisplayName") + " " + (string)Read(attribute, "HintText");
+            var text = McmText.Plain(Read(attribute, "DisplayName") as string) + " " + (string)Read(attribute, "HintText");
             Assert.IsFalse(Regex.IsMatch(text, @"\b(he|she|his|her|him|hers|himself|herself|man|woman|men|women|kinsmen)\b", RegexOptions.IgnoreCase),
                 property.Name + " names a gender: " + text);
         }
@@ -334,8 +335,8 @@ public class GoodDeedsSettingsProviderTests
         var spouse = ValueAttribute(typeof(TaomSettings).GetProperty(nameof(TaomSettings.GoodDeedsReleaseSpouseAmount))!);
         var leader = ValueAttribute(typeof(TaomSettings).GetProperty(nameof(TaomSettings.GoodDeedsReleaseLeaderAmount))!);
 
-        StringAssert.Contains((string)Read(spouse, "DisplayName"), "The Lord's Spouse");
-        StringAssert.Contains((string)Read(leader, "DisplayName"), "The Lord's Clan Leader");
+        StringAssert.Contains(McmText.Plain(Read(spouse, "DisplayName") as string), "The Lord's Spouse");
+        StringAssert.Contains(McmText.Plain(Read(leader, "DisplayName") as string), "The Lord's Clan Leader");
         StringAssert.Contains((string)Read(leader, "HintText"), "share one relation");
     }
 

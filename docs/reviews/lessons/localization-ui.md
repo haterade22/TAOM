@@ -1665,3 +1665,9 @@ Phase 3 of #1385 keyed sentence templates and the words set into them as text va
 - **Why missed:** each check read one string. Nothing compared a template with the parts it holds, and the gate that compares rows with C# also read only the first literal.
 - **Prevent:** when a word gets a translated row, check that every sentence it is set into has one too; take a team's format string with its slots renamed to our variables. Write each `{=KEY}` default as one literal (the harvester refuses a split one).
 - **Source:** [rca-cn-phase3-2026-11-16.md](../rca-cn-phase3-2026-11-16.md) rows 2 and 15.
+
+### A gate that flags a translator's text is a hypothesis about the gate too (#1385, 2026-11-16)
+Phase 4 imported the Chinese team's text for 1,130 MCM keys. `LanguageTextIntegrityTests` flagged 7 hints, and the builder dropped them. Six of the flagged words were code names the English row also holds (`taom.tactic_status`, `event:/ui/transfer`, `taom_debug.log`): the gate's identifier pattern did not know dotted commands, sound paths or `.log` files. The same phase wrote a rule about MCM group names into the guide and checked the data once by script, with no test, so the next language pass could break it unseen.
+- **Why missed:** a red gate read as bad data, and a one-off script read as a gate.
+- **Prevent:** when a gate flags a row, read the English row before dropping the translation; if the English carries the same token, fix the gate with a data test. A rule written into a guide gets a test in the same commit (`McmSettingsTextIsKeyedTests.NoChildGroupText_ContainsItsParentsText_InAnyLanguage`).
+- **Source:** [rca-cn-phase4-2026-11-16.md](../rca-cn-phase4-2026-11-16.md) rows 2 and 3.
