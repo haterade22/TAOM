@@ -60,6 +60,14 @@ public class AllianceActionHook : IOnAllianceAction
         return veto == WarVeto.None ? null : WarVetoReasons.Text(veto);
     }
 
+    public string GetCallToWarRefusalText(string calledKingdomId, string targetKingdomId)
+    {
+        var warRefusal = GetWarRefusalText(calledKingdomId, targetKingdomId);
+        if (warRefusal != null || _coop.ShouldDeferToHost) return warRefusal;
+
+        return _diplomacyService.RefusesCallToWar(calledKingdomId, targetKingdomId) ? WarVetoReasons.CallToWarRefused : null;
+    }
+
     public float GetDeclareWarScorePenalty(
         string factionAId, bool factionAIsKingdom, string factionBId, bool factionBIsKingdom)
     {

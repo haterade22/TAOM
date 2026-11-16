@@ -388,6 +388,13 @@ public class CoopVetoClassificationTests
             "battle during service. Local dialogue only."),
         ["LordConversationsAllyThanksConditionPatch"] = new(CoopVeto.ReviewedSafe,
             "Second ally-thanks variant. Local dialogue only."),
+        ["LordConversations_SponsorCallToWarClickable_Patch"] = new(CoopVeto.ReviewedSafe,
+            "Greys out the lord dialogue's sponsor-a-call-to-war option for a call the rule refuses (#1350). Local dialogue " +
+            "option, no campaign mutation; GetCallToWarRefusalText also returns null under a co-op host, so the option stays live."),
+        ["LordConversations_SponsorCallToWarConsequence_Patch"] = new(CoopVeto.ReviewedSafe,
+            "Replaces the sponsor option's consequence with the same two vanilla calls for the clicked kingdom (#1350). The " +
+            "condition reads only the local conversation, and the mutation still goes through StartCallToWarAgreement, where " +
+            "Coop's prefix and TAOM's host-deferring veto run as before."),
         ["PreloadHelper_WaitForMeshesToBeLoaded_Patch"] = new(CoopVeto.ReviewedSafe,
             "Patch90 (#601). Never returns false: vanilla's wait always runs. Before it does, the " +
             "prefix removes collision-body names that no loaded tpac ships from this peer's own " +
