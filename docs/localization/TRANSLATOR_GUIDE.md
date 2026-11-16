@@ -35,6 +35,7 @@ Located at `Main/_Module/ModuleData/Languages/<LANG>/`:
 | `std_taom_character_name_strings_{locale}.xml` | Notable, townsfolk, wanderer, named-companion and creature names, generated from `characters/*.xml` (not lords, clans, heroes), `taom_wanderers.xml` and `named_companions.xml` (added 2026-10-01) | 1,622 |
 | `std_taom_bandit_voice_strings_{locale}.xml` | Bandit Voices (#900): the eight talking bandit clans' robbery lines and greetings; 45 of the 80 rows carry conversation animation tags (added 2026-10-26) | 80 |
 | `std_taom_battle_scene_strings_{locale}.xml` | Custom Battle scene names, generated from `custom_battle_scenes.xml` (added 2026-10-01) | 27 |
+| `std_taom_realms_title_strings_{locale}.xml` | Realms rank templates, title and house names, generated from `realms_titles.xml` (#1374, 2026-11-16) | 186 |
 
 ### TAOM_Map module (1 file, 1,388 strings on 2026-10-28)
 

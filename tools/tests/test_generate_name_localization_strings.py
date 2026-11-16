@@ -232,6 +232,18 @@ class DataTextCategoriesTests(unittest.TestCase):
         self.assertNotIn("taom_vanilla_troop_obsolete_overrides.xml", names)
 
 
+class RealmsTitleCategoryTests(unittest.TestCase):
+    """#1374: realms_titles.xml carries rank, title and house names inline; TitleNames builds a
+    TextObject from each, so an unregistered key shows English in all twelve languages."""
+
+    def test_EveryRealmsTitleKey_IsRegisteredInAnEnglishSource(self):
+        keys = {k for k, _ in gen.extract_from_file(gen.MODULE_DATA / "realms_titles.xml")}
+        registered = gen.registered_ids()
+        built = {k for entries in gen.build_all(registered).values() for k, _ in entries}
+        self.assertGreater(len(keys), 100)
+        self.assertEqual(sorted(keys - registered - built), [])
+
+
 class BuildXmlTests(unittest.TestCase):
     def test_BuildXml_Entries_ProducesBareStringsRoot(self):
         """The English source files at ModuleData root use a bare <strings> root, NOT the

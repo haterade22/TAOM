@@ -458,6 +458,7 @@ public class LocalizationKeyConsistencyTests
             Path.Combine(ModuleDataPath, "taom_wanderers.xml"),
             Path.Combine(ModuleDataPath, "named_companions", "named_companions.xml"),
             Path.Combine(ModuleDataPath, "custom_battle_scenes.xml"),
+            Path.Combine(ModuleDataPath, "realms_titles.xml"),
         };
         foreach (var path in fixedSources)
         {
