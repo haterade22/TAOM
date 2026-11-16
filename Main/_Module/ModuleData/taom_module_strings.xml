@@ -5234,5 +5234,13 @@
 	<!-- CheatMenu -->
 	<string id="taom_cheat_done_relation" text="{=taom_cheat_done_relation}Lords of {NAME} whose relation changed: {NUMBER}." />
 	<string id="taom_cheat_done_teleport" text="{=taom_cheat_done_teleport}You are at the gate of {NAME}." />
+	<!-- harvested by tools/harvest_literal_loc_keys.py -->
+	<!-- HeroAbilities -->
+	<string id="taom_hero_ability_aragorn_for_frodo" text="{=taom_hero_ability_aragorn_for_frodo}For Frodo!" />
+	<string id="taom_hero_ability_aragorn_isildurs_heir" text="{=taom_hero_ability_aragorn_isildurs_heir}Heir of Isildur" />
+	<string id="taom_hero_ability_gimli_baruk_khazad" text="{=taom_hero_ability_gimli_baruk_khazad}Baruk Khazâd!" />
+	<string id="taom_hero_ability_gimli_still_standing" text="{=taom_hero_ability_gimli_still_standing}Still Standing" />
+	<string id="taom_hero_ability_cast_ally" text="{=taom_hero_ability_cast_ally}{HERO}: {ABILITY}" />
+	<string id="taom_hero_ability_cast_enemy" text="{=taom_hero_ability_cast_enemy}Enemy {HERO}: {ABILITY}" />
 
 </strings>

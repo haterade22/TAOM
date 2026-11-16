@@ -33,16 +33,18 @@ public sealed class SignatureStrikeRunner
     private readonly IModLogger _logger;
     private readonly ICareerAgentStatService _careerStats;
     private readonly StrikeSoundPlayer _sound;
+    private readonly SignatureInstantKill _instantKill;
 
     // Reused across rings. Every Mission.GetNearby* overload Clear()s the list it is handed.
     private readonly MBList<Agent> _nearbyBuffer = new MBList<Agent>();
 
-    public SignatureStrikeRunner(ISignatureStrikeService service, IDreadRegistry dreadRegistry, IModLogger logger, ICareerAgentStatService careerStats)
+    public SignatureStrikeRunner(ISignatureStrikeService service, IDreadRegistry dreadRegistry, IModLogger logger, ICareerAgentStatService careerStats, SignatureInstantKill instantKill)
     {
         _service = service;
         _dreadRegistry = dreadRegistry;
         _logger = logger;
         _careerStats = careerStats;
+        _instantKill = instantKill;
         _sound = new StrikeSoundPlayer(logger);
     }
 
@@ -76,8 +78,8 @@ public sealed class SignatureStrikeRunner
         // The strike happened, so its voice plays even when the ring finds nobody.
         var sound = _sound.Play(mission, attacker, effect.Sound);
 
-        // Nothing to apply (a profile with no damage share and no fear): no query, no log line.
-        if (!(effect.DamageFraction > 0f) && !(effect.FearMorale > 0f))
+        // Nothing to apply (a profile with no damage share, no fear and no kill chance): no query, no log line.
+        if (!(effect.DamageFraction > 0f) && !(effect.FearMorale > 0f) && !(effect.KillChance > 0f))
             return;
 
         // The centre is an engine float handed straight to a native query; gate it here, before
@@ -121,17 +123,11 @@ public sealed class SignatureStrikeRunner
 
             // Fear before damage: the blow may kill the victim, and morale on a corpse is harmless
             // while a blow on a fading agent is the crash class TakeDamage guards against.
-            if (effect.FearMorale > 0f && moraleModel != null && DreadAgentGate.CanAffect(victim))
+            var taken = MoraleShock.Apply(victim, effect.FearMorale, falloff, moraleModel, _careerStats, _dreadRegistry);
+            if (taken > 0f)
             {
-                var scaled = CareerTroopHooks.ScaleFearDrain(_careerStats, victim, moraleModel.CalculateMoraleChangeToCharacter(victim, effect.FearMorale));
-                var drain = _service.ComputeFearDrain(
-                    scaled, falloff, _dreadRegistry.ResolveResist(victim.Character?.Race), victim.GetMorale());
-                if (drain > 0f)
-                {
-                    victim.ChangeMorale(-drain);
-                    feared++;
-                    moraleTaken += drain;
-                }
+                feared++;
+                moraleTaken += taken;
             }
 
             // The struck foe already took the real blow and the model's knockdown or knock-back
@@ -153,6 +149,10 @@ public sealed class SignatureStrikeRunner
                 extraFlags: effect.KnockBack ? BlowFlags.KnockBack : BlowFlags.None);
             hit++;
         }
+
+        // The struck foe is the only candidate. TryKill re-gates it for the frame that has passed.
+        if (effect.KillChance > 0f)
+            _instantKill.TryKill(attacker, request.PrimaryVictim, effect.KillChance, effect.Magnitude, effect.SignatureId);
 
         _logger.LogInfo(
             $"[SignatureStrikes] {effect.Kind} ('{effect.SignatureId}') by {request.AttackerName}: basis {effect.DamageBasis}, ring={hit} hit, {feared} feared (morale -{moraleTaken:0.#}), {skipped} skipped, sound={sound}");

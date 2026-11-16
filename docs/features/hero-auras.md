@@ -99,7 +99,7 @@ factor of 0 or less as 1). Both settings are simulation-relevant for co-op ([coo
 
 | Aura | Heroes | Reaches | Effects |
 |---|---|---|---|
-| `aragorn_heir_of_isildur` | Aragorn (`named_companion_aragorn`) | men | morale floor 30, damage reduction 10 %, block 10 % |
+| `aragorn_heir_of_isildur` | Aragorn (`named_companion_aragorn`, and the Long Defeat's `taom_hero_aragorn`) | men | morale floor 30, damage reduction 10 %, block 10 % |
 | `dain_ironfoot` | Dáin II Ironfoot (`lord_E1_1`) | dwarves | knockdown resistance 40 %, knock-back resistance 30 %, block 15 % |
 | `theoden_king_of_the_mark` | Théoden (`lord_4_1`) | men | morale floor 25, melee damage 8 %, mount speed 8 %, dismount resistance 30 % |
 | `eomer_marshal_of_the_mark` | Éomer (`lord_4_3_1`) | men | melee damage 10 %, dismount resistance 40 %, mount speed 5 % |
@@ -108,7 +108,11 @@ factor of 0 or less as 1). Both settings are simulation-relevant for co-op ([coo
 | `witch_king` | the Witch-king (`lord_1_15`) | orcs, goblins, uruks | morale floor 40, attack eagerness 15 % |
 
 The numbers are first drafts for tuning. Théoden is the vanilla ruler `lord_4_1`, renamed in `lords.xslt`. Aragorn
-is a campaign hero only: he is not a Custom Battle commander, so his aura appears in a campaign battle only.
+the companion is a campaign hero only: he is not a Custom Battle commander. The Long Defeat's mission hero
+`taom_hero_aragorn` (#1359) carries the same aura: the Long Defeat is a Custom Battle, whose characters are
+`BasicCharacterObject`s, so `HeroAxisId` reads his character id. In a campaign `HeroAxisId` reads the
+`HeroObject` id, which a mission character with no `<Hero>` entry does not have, so in the Helm's Deep story
+mission the aura misses him without a warning; that is owed in Phase 6 of #1325 ([hero-abilities.md](hero-abilities.md)).
 
 **Known limitations:**
 

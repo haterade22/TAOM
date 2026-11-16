@@ -2863,3 +2863,11 @@ The battle balance provider's new tests built `BattleBalanceConfig` objects in C
 **Prevent:** when a run shows a defect, write the check from what the run showed the player (here: heroes far from any fight), and prove it by asking whether the last bad run would fail it. Report the outcome numbers that cannot be judged (kills) on the same line, and read them in every proof run.
 
 **Source:** [rca-ld-shop-heroes-2026-11-15.md](../rca-ld-shop-heroes-2026-11-15.md) finding 3.
+
+### A check's "had the chance" condition is the judged code's own rule, counted independently (#1359, 2026-11-15)
+
+**Why missed:** the `fired` line fails a hero who stood in contact and cast nothing. "Contact" was pinned as one enemy within 10 m on the ground; the abilities need three enemies within 10 m or 8 m in 3D. A hero on the wall walk above a crowd at the wall's foot would have failed the line while every rule worked.
+
+**Prevent:** when a check fails on "it could have acted and did not", take the "could have" from the same numbers the code acts on (here the kit's easiest trigger: its count and range, in the same distance measure), and count it by a second path so a broken sensor still fails. Then ask what correct play looks like at the edge of the rule, and make sure that play does not fail.
+
+**Source:** [rca-hero-abilities-2026-11-15.md](../rca-hero-abilities-2026-11-15.md) finding 1.

@@ -177,7 +177,7 @@ public class SignatureStrikeServiceTests
     [TestMethod]
     public void Evaluate_SignatureIndexOutOfRange_ReturnsNull()
     {
-        Assert.IsNull(_sut.Evaluate(Overhead() with { SignatureIndex = 2 }));
+        Assert.IsNull(_sut.Evaluate(Overhead() with { SignatureIndex = 4 }));
         Assert.IsNull(_sut.Evaluate(Overhead() with { SignatureIndex = -1 }));
     }
 
@@ -634,60 +634,123 @@ public class SignatureStrikeServiceTests
         Assert.AreEqual(0, _sut.ComputeRingDamage(int.MaxValue, 1f, 1f, victimBlocking: false));
     }
 
-    // ---- ComputeFearDrain -------------------------------------------------------------------
+    // ---- Instant kill (#1359) ---------------------------------------------------------------
+
+    private const int Aragorn = 2;
+    private const int Gimli = 3;
 
     [TestMethod]
-    public void ComputeFearDrain_FullFalloffNoResist_IsTheScaledFear()
+    public void Evaluate_CleanHitWithKillChance_CarriesChance()
     {
-        Assert.AreEqual(10f, _sut.ComputeFearDrain(10f, 1f, 1f, 50f), 0.001f);
+        Assert.AreEqual(0.15f, _sut.Evaluate(Overhead() with { SignatureIndex = Aragorn })!.Value.KillChance, 0.0001f);
+        Assert.AreEqual(0.35f, _sut.Evaluate(Overhead() with { SignatureIndex = Gimli })!.Value.KillChance, 0.0001f);
     }
 
     [TestMethod]
-    public void ComputeFearDrain_AppliesFalloffAndRaceResist()
+    public void Evaluate_ProfileWithoutKillChance_CarriesZero()
     {
-        Assert.AreEqual(2f, _sut.ComputeFearDrain(10f, 0.5f, 0.4f, 50f), 0.001f);
+        Assert.AreEqual(0f, _sut.Evaluate(Overhead())!.Value.KillChance, 0.0001f);
     }
 
     [TestMethod]
-    public void ComputeFearDrain_ClampsToTheVictimsRemainingMorale()
+    public void Evaluate_ShieldBlocked_KillChanceZero()
     {
-        Assert.AreEqual(4f, _sut.ComputeFearDrain(10f, 1f, 1f, 4f), 0.001f);
+        var effect = _sut.Evaluate(Overhead() with
+        {
+            SignatureIndex = Gimli,
+            Collision = StrikeCollision.Blocked,
+            AttackBlockedWithShield = true,
+        });
+
+        Assert.AreEqual(0f, effect!.Value.KillChance, 0.0001f);
     }
 
     [TestMethod]
-    public void ComputeFearDrain_MoraleSentinel_ReturnsZero()
+    public void Evaluate_HitWorld_KillChanceZero()
     {
-        // GetMorale() returns -1f for an agent with no CommonAIComponent.
-        Assert.AreEqual(0f, _sut.ComputeFearDrain(10f, 1f, 1f, -1f), 0.001f);
+        _config.Signatures[Gimli].Strikes["Overhead"].WorldHitBaseDamage = 40;
+
+        var effect = _sut.Evaluate(Overhead() with { SignatureIndex = Gimli, Collision = StrikeCollision.HitWorld });
+
+        Assert.AreEqual(0f, effect!.Value.KillChance, 0.0001f);
     }
 
     [TestMethod]
-    public void ComputeFearDrain_ZeroMorale_ReturnsZero()
+    public void Evaluate_VictimNotHuman_KillChanceZero()
     {
-        Assert.AreEqual(0f, _sut.ComputeFearDrain(10f, 1f, 1f, 0f), 0.001f);
+        var effect = _sut.Evaluate(Overhead() with { SignatureIndex = Gimli, VictimIsHuman = false });
+
+        Assert.AreEqual(0f, effect!.Value.KillChance, 0.0001f);
+    }
+
+    private bool Kill(
+        float chance = 0.5f, float roll = 0.1f, bool human = true, bool hero = false, bool player = false,
+        bool general = false, bool bearer = false, bool immune = false, bool shrugging = false, float health = 50f)
+        => _sut.DecideInstantKill(chance, roll, human, hero, player, general, bearer, immune, shrugging, health);
+
+    [TestMethod]
+    public void DecideInstantKill_RollBelowChance_True() => Assert.IsTrue(Kill());
+
+    [TestMethod]
+    public void DecideInstantKill_RollAtChance_False() => Assert.IsFalse(Kill(chance: 0.5f, roll: 0.5f));
+
+    [TestMethod]
+    public void DecideInstantKill_NotHuman_False() => Assert.IsFalse(Kill(human: false));
+
+    [TestMethod]
+    public void DecideInstantKill_Hero_False() => Assert.IsFalse(Kill(hero: true));
+
+    [TestMethod]
+    public void DecideInstantKill_Player_False() => Assert.IsFalse(Kill(player: true));
+
+    [TestMethod]
+    public void DecideInstantKill_General_False() => Assert.IsFalse(Kill(general: true));
+
+    [TestMethod]
+    public void DecideInstantKill_SignatureBearer_False() => Assert.IsFalse(Kill(bearer: true));
+
+    [TestMethod]
+    public void DecideInstantKill_ImmuneRace_False() => Assert.IsFalse(Kill(immune: true));
+
+    [TestMethod]
+    public void DecideInstantKill_ShruggingOff_False() => Assert.IsFalse(Kill(shrugging: true));
+
+    [TestMethod]
+    public void DecideInstantKill_NaNChance_False() => Assert.IsFalse(Kill(chance: float.NaN));
+
+    [TestMethod]
+    public void DecideInstantKill_NaNRoll_False() => Assert.IsFalse(Kill(roll: float.NaN));
+
+    [TestMethod]
+    public void DecideInstantKill_ZeroChance_False() => Assert.IsFalse(Kill(chance: 0f, roll: -1f));
+
+    [TestMethod]
+    public void DecideInstantKill_ZeroHealth_False() => Assert.IsFalse(Kill(health: 0f));
+
+    [TestMethod]
+    public void DecideInstantKill_NaNHealth_False() => Assert.IsFalse(Kill(health: float.NaN));
+
+    [TestMethod]
+    public void InstantKillDamage_ExceedsHealth()
+    {
+        Assert.AreEqual(51, _sut.InstantKillDamage(50f));
+        Assert.AreEqual(52, _sut.InstantKillDamage(50.2f));
     }
 
     [TestMethod]
-    public void ComputeFearDrain_NaNScaledFear_ReturnsZero()
+    public void InstantKillDamage_Huge_Zero()
     {
-        Assert.AreEqual(0f, _sut.ComputeFearDrain(float.NaN, 1f, 1f, 50f), 0.001f);
+        Assert.AreEqual(0, _sut.InstantKillDamage(3e9f));
+        Assert.AreEqual(0, _sut.InstantKillDamage(float.PositiveInfinity));
     }
 
     [TestMethod]
-    public void ComputeFearDrain_NaNFalloff_ReturnsZero()
-    {
-        Assert.AreEqual(0f, _sut.ComputeFearDrain(10f, float.NaN, 1f, 50f), 0.001f);
-    }
+    public void InstantKillDamage_NaN_Zero() => Assert.AreEqual(0, _sut.InstantKillDamage(float.NaN));
 
     [TestMethod]
-    public void ComputeFearDrain_NaNResist_ReturnsZero()
+    public void InstantKillDamage_NotPositive_Zero()
     {
-        Assert.AreEqual(0f, _sut.ComputeFearDrain(10f, 1f, float.NaN, 50f), 0.001f);
-    }
-
-    [TestMethod]
-    public void ComputeFearDrain_NaNMorale_ReturnsZero()
-    {
-        Assert.AreEqual(0f, _sut.ComputeFearDrain(10f, 1f, 1f, float.NaN), 0.001f);
+        Assert.AreEqual(0, _sut.InstantKillDamage(0f));
+        Assert.AreEqual(0, _sut.InstantKillDamage(-4f));
     }
 }
