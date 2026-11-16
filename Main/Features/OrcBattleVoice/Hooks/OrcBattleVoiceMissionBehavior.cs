@@ -8,17 +8,17 @@ using TaleWorlds.MountAndBlade;
 namespace TAOM.Features.OrcBattleVoice.Hooks;
 
 /// <summary>
-/// Thin boundary for the orc battle voice: it hands each freshly built agent and the mission end to
+/// Thin boundary for the orc battle voice: it hands each freshly built or re-equipped agent and the mission end to
 /// <see cref="OrcBattleVoiceService"/> and never throws. After the first exception it stops for the mission
 /// with one warning; the battle itself goes on.
 /// </summary>
-public sealed class OrcBattleVoiceMissionBehavior : MissionLogic
+public sealed class OrcBattleVoiceMissionBehavior : MissionLogic, IMissionListener
 {
     private readonly OrcBattleVoiceService _service;
     private readonly IModLogger _logger;
     private readonly Action<string> _warn;
     private bool _failed;
-    private BannerBearerLogic? _bannerLogic;
+    private bool _listening;
 
     public OrcBattleVoiceMissionBehavior(OrcBattleVoiceService service, IModLogger logger)
     {
@@ -28,9 +28,9 @@ public sealed class OrcBattleVoiceMissionBehavior : MissionLogic
     }
 
     // v1.5.7 Mission.SpawnAgent runs `missionBehavior3.OnAgentBuild(agent, ...)` over every behavior after
-    // BuildAgent(agent, agentBuildData) (Mission.cs:4388-4399). BuildAgent has by then run
+    // BuildAgent(agent, agentBuildData) (Mission.cs:4389-4392). BuildAgent has by then run
     // EquipItemsFromSpawnEquipment, whose AddSkinMeshes builds the skin from the race and body properties
-    // (Agent.cs:4594, 5453-5458), and InitializeAgentRecord (Mission.cs:4049-4050), so the voice set here
+    // (Agent.cs:4594, 5453-5458), and InitializeAgentRecord (Mission.cs:4054), so the voice set here
     // comes after the engine's own pick. Vanilla sets a mount's voice at the same stage, from the
     // OnEquipItemsFromSpawnEquipment listener (Agent.cs:4599 -> MissionScreen -> MountVisualCreator).
     public override void OnAgentBuild(Agent agent, Banner banner)
@@ -47,18 +47,25 @@ public sealed class OrcBattleVoiceMissionBehavior : MissionLogic
         }
     }
 
-    // v1.5.7 BannerBearerLogic.UpdateAgent calls Agent.UpdateSpawnEquipmentAndRefreshVisuals (BannerBearerLogic.cs:
-    // 733-755), which rebuilds the skin through AddSkinMeshes with no new OnAgentBuild, so a native re-pick of the
-    // skin voice would undo the orc voice. The event is raised after that refresh (:756). AfterStart, not
-    // OnBehaviorInitialize, which never fires for a behavior added from OnMissionBehaviorInitialize (#606).
+    // Every in-place skin rebuild ends in Agent.EquipItemsFromSpawnEquipment, whose AddSkinMeshes re-picks the skin
+    // voice natively (Agent.cs:4594) and then calls Mission.OnEquipItemsFromSpawnEquipment (Agent.cs:4599), which
+    // reaches every IMissionListener (Mission.cs:3267-3272). That covers the banner bearer update, the hideout
+    // stealth equipment, the inventory screen for main-party heroes, the body generator and the Coop inventory
+    // and barber handlers, none of which raise OnAgentBuild again, so the native re-pick undoes the orc voice.
+    // The listener fires before InitializeAgentRecord on a spawn, which is why OnAgentBuild stays too.
+    // AfterStart, not OnBehaviorInitialize, which never fires for a behavior added from
+    // OnMissionBehaviorInitialize (#606).
     public override void AfterStart()
     {
         base.AfterStart();
         if (_failed) return;
         try
         {
-            _bannerLogic = Mission?.GetMissionBehavior<BannerBearerLogic>();
-            if (_bannerLogic != null) _bannerLogic.OnBannerBearerAgentUpdated += OnBannerBearerAgentUpdated;
+            if (Mission != null && !_listening)
+            {
+                Mission.AddListener(this);
+                _listening = true;
+            }
         }
         catch (Exception ex)
         {
@@ -66,7 +73,32 @@ public sealed class OrcBattleVoiceMissionBehavior : MissionLogic
         }
     }
 
-    private void OnBannerBearerAgentUpdated(Agent agent, bool willBecomeBannerBearer) => OnAgentBuild(agent, null);
+    public void OnEquipItemsFromSpawnEquipment(Agent agent, Agent.CreationType creationType)
+    {
+        if (_failed || agent == null) return;
+        try
+        {
+            if (MissionThreadGuard.NoteCall("OrcBattleVoiceMissionBehavior.OnEquipItemsFromSpawnEquipment", _warn)) return;
+            _service.OnAgentBuild(new OrcBattleVoiceAgent(agent));
+        }
+        catch (Exception ex)
+        {
+            Fail("OnEquipItemsFromSpawnEquipment", ex);
+        }
+    }
+
+    public void OnEquipItemsFromSpawnEquipmentBegin(Agent agent, Agent.CreationType creationType) { }
+
+    // MissionLogic.OnEndMission is protected and does the stop; the listener's public one has nothing to add.
+    void IMissionListener.OnEndMission() { }
+
+    public void OnMissionModeChange(MissionMode oldMissionMode, bool atStart) { }
+
+    public void OnConversationCharacterChanged() { }
+
+    public void OnResetMission() { }
+
+    public void OnDeploymentPlanMade(Team team, bool isFirstPlan) { }
 
     protected override void OnEndMission() => Stop();
 
@@ -79,10 +111,10 @@ public sealed class OrcBattleVoiceMissionBehavior : MissionLogic
     private void Stop()
     {
         _service.End();
-        if (_bannerLogic == null) return;
-        try { _bannerLogic.OnBannerBearerAgentUpdated -= OnBannerBearerAgentUpdated; }
-        catch { /* swallow-ok: the mission is ending, an unsubscribe failure has no effect */ }
-        _bannerLogic = null;
+        if (!_listening) return;
+        _listening = false;
+        try { Mission?.RemoveListener(this); }
+        catch { /* swallow-ok: the mission is ending, a failed removal has no effect */ }
     }
 
     private void Fail(string site, Exception ex)

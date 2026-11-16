@@ -66,15 +66,25 @@ public class OrcBattleVoiceWiringTests
     }
 
     [TestMethod]
-    public void Behavior_ReappliesAfterABannerBearerRebuildAndLetsGoAtTheEnd()
+    public void Behavior_ReappliesThroughTheMissionListenerAndLetsGoAtTheEnd()
     {
         var body = RepoPaths.ReadSource("Main/Features/OrcBattleVoice/Hooks/OrcBattleVoiceMissionBehavior.cs", stripComments: true);
 
+        StringAssert.Contains(body, ": MissionLogic, IMissionListener");
         StringAssert.Contains(body, "override void AfterStart()");
-        StringAssert.Contains(body, "GetMissionBehavior<BannerBearerLogic>()");
-        StringAssert.Contains(body, "OnBannerBearerAgentUpdated +=");
-        StringAssert.Contains(body, "OnBannerBearerAgentUpdated -=");
-        Assert.IsTrue(body.Contains("_bannerLogic != null"), "the logic may be absent in a mission");
+        StringAssert.Contains(body, "Mission.AddListener(this)");
+        StringAssert.Contains(body, "Mission?.RemoveListener(this)");
+        StringAssert.Contains(body, "public void OnEquipItemsFromSpawnEquipment(Agent agent, Agent.CreationType creationType)");
+        StringAssert.Contains(body, "void IMissionListener.OnEndMission()");
+        Assert.IsFalse(body.Contains("BannerBearerLogic"), "the listener covers every in-place rebuild, the banner event is not needed");
+    }
+
+    [TestMethod]
+    public void Adapter_TreatsOnlyValidVisualsAsPresent()
+    {
+        var body = RepoPaths.ReadSource("Main/Adapters/OrcBattleVoiceAgent.cs", stripComments: true);
+
+        StringAssert.Contains(body, "_agent.AgentVisuals?.IsValid() == true");
     }
 
     [TestMethod]

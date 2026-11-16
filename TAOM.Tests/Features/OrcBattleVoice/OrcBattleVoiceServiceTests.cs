@@ -259,7 +259,7 @@ public class OrcBattleVoiceServiceTests
         Assert.AreEqual("male_05", orc.Current, "the probed agent goes back to the voice it was built with");
         Assert.AreEqual(12, orc.Sets.Last().Index);
         Assert.AreEqual(0, second.Sets.Count, "no second probe in the same mission");
-        rig.Outcomes.Received(1).Fail(OrcBattleVoiceService.CheckId, "", Arg.Any<string>());
+        rig.Outcomes.Received(1).Fail(OrcBattleVoiceService.CheckId, "uruk-voice-missing", Arg.Any<string>());
         rig.Outcomes.DidNotReceive().Pass(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>());
     }
 
@@ -277,7 +277,7 @@ public class OrcBattleVoiceServiceTests
         // so the name map is worthless and probing stops there.
         CollectionAssert.AreEqual(new[] { 10, 11 }, orc.Sets.Select(s => s.Index).ToArray());
         Assert.AreEqual(0, second.Sets.Count);
-        rig.Outcomes.Received(1).Fail(OrcBattleVoiceService.CheckId, "", Arg.Any<string>());
+        rig.Outcomes.Received(1).Fail(OrcBattleVoiceService.CheckId, "readback-not-following", Arg.Any<string>());
     }
 
     [TestMethod]
@@ -289,7 +289,7 @@ public class OrcBattleVoiceServiceTests
         rig.Service.OnAgentBuild(orc);
 
         Assert.AreEqual(0, orc.Sets.Count);
-        rig.Outcomes.Received(1).Fail(OrcBattleVoiceService.CheckId, "", Arg.Any<string>());
+        rig.Outcomes.Received(1).Fail(OrcBattleVoiceService.CheckId, "no-human-voices", Arg.Any<string>());
     }
 
     [TestMethod]
@@ -313,7 +313,25 @@ public class OrcBattleVoiceServiceTests
 
         rig.Service.OnAgentBuild(stubborn);
 
-        rig.Outcomes.Received(1).Fail(OrcBattleVoiceService.CheckId, "", Arg.Is<string>(d => d.Contains("reported=male_05")));
+        rig.Outcomes.Received(1).Fail(OrcBattleVoiceService.CheckId, "set-not-taken", Arg.Is<string>(d => d.Contains("reported=male_05")));
+    }
+
+    [TestMethod]
+    public void OnAgentBuild_DifferentFailReasons_EachReachTheOutcomeLogWithTheirOwnKey()
+    {
+        // IOutcomeLog writes one line per (id, result, key) per process, so a shared key would hide the second reason.
+        var missing = new Rig(new[] { 10, 11, 12 });
+        var taken = new Rig();
+        var shared = missing.Outcomes;
+        var second = new OrcBattleVoiceService(taken.Catalog, taken.Races, shared, taken.Log);
+
+        missing.Service.OnAgentBuild(new FakeAgent());
+        second.OnAgentBuild(new FakeAgent());
+        second.OnAgentBuild(new FakeAgent { ReadbackFollowsSet = false });
+
+        shared.Received(1).Fail(OrcBattleVoiceService.CheckId, "uruk-voice-missing", Arg.Any<string>());
+        shared.Received(1).Fail(OrcBattleVoiceService.CheckId, "set-not-taken", Arg.Any<string>());
+        shared.DidNotReceive().Fail(OrcBattleVoiceService.CheckId, "", Arg.Any<string>());
     }
 
     [TestMethod]

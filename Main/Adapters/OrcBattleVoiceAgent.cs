@@ -15,7 +15,8 @@ public sealed class OrcBattleVoiceAgent : IOrcBattleVoiceAgent
 
     public bool IsPlayerControlled => _agent.IsMainAgent || _agent.IsPlayerControlled;
 
-    public bool HasVisuals => _agent.AgentVisuals != null;
+    // The native voice getter names a definition only while the visuals are valid (MBAgentVisuals.IsValid, v1.5.7).
+    public bool HasVisuals => _agent.AgentVisuals?.IsValid() == true;
 
     // v1.5.7 Agent.cs:1527-1530: `return BodyPropertiesValue.Age;`
     public float Age => _agent.Age;

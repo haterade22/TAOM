@@ -7,10 +7,10 @@ using TAOM.Core.Logging;
 namespace TAOM.Features.OrcBattleVoice;
 
 /// <summary>
-/// Gives soldiers of the plain <c>orc</c> race the Uruk battle voice (<c>uruk_01</c>: grunts, pain, death and
+/// Gives male adult AI agents of the plain <c>orc</c> race the Uruk battle voice (<c>uruk_01</c>: grunts, pain, death and
 /// yells) instead of the vanilla human male voices their Armory skin lists (<c>male_02</c> to <c>male_08</c>).
 /// TAOM-only route C of docs/features/kingdom-voices.md: the voice is set on the agent's visuals at spawn and
-/// again after a banner bearer's skin rebuild, and the Armory's skins.xml is not touched. It covers every male
+/// again after every in-place skin rebuild, and the Armory's skins.xml is not touched. It covers every male
 /// adult orc agent in any mission (soldiers, townsfolk, notables, heroes), not only soldiers.
 /// <para>
 /// The engine hands out voice definitions only as opaque native indices
@@ -69,13 +69,13 @@ public sealed class OrcBattleVoiceService
     }
 
     /// <summary>
-    /// The voice pitch for a soldier, in [0, 1], from its body properties seed, the way vanilla makes a mount's.
+    /// The voice pitch for an orc, in [0, 1], from its body properties seed, the way vanilla makes a mount's.
     /// Computed in long so <see cref="int.MinValue"/> cannot overflow the absolute value.
     /// </summary>
     public static float PitchFor(int seed) => (float)Math.Min(1.0, Math.Abs((long)seed) * SeedToPitch);
 
     /// <summary>
-    /// Handles one freshly built agent, or one whose skin vanilla rebuilt in place (a banner bearer). Repeating it
+    /// Handles one freshly built agent, or one whose skin vanilla rebuilt in place (the engine's OnEquipItemsFromSpawnEquipment listener call). Repeating it
     /// on one agent is safe. An engine exception propagates to the mission behavior.
     /// </summary>
     public void OnAgentBuild(IOrcBattleVoiceAgent agent)
@@ -130,7 +130,7 @@ public sealed class OrcBattleVoiceService
         string reason = indices.Length == 0 ? "no-human-voices" : readbackFollows ? "uruk-voice-missing" : "readback-not-following";
         string detail = string.Format(System.Globalization.CultureInfo.InvariantCulture, "reason={0} probed={1} named={2} voice={3}",
             reason, indices.Length, _indexByName.Count, UrukVoice);
-        _outcomes.Fail(CheckId, "", detail);
+        _outcomes.Fail(CheckId, reason, detail);
         _logger.LogWarning($"{Tag} orc voice not set for this mission: {detail}");
         return false;
     }
@@ -148,7 +148,7 @@ public sealed class OrcBattleVoiceService
 
         if (_mismatchReported) return;
         _mismatchReported = true;
-        _outcomes.Fail(CheckId, "", string.Format(System.Globalization.CultureInfo.InvariantCulture,
+        _outcomes.Fail(CheckId, "set-not-taken", string.Format(System.Globalization.CultureInfo.InvariantCulture,
             "reason=set-not-taken index={0} reported={1}", _urukIndex, reported));
     }
 }
