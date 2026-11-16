@@ -5106,10 +5106,10 @@
                 value="65" />
             <skill
                 id="TwoHanded"
-                value="130" />
+                value="145" />
             <skill
                 id="Polearm"
-                value="140" />
+                value="125" />
             <skill
                 id="Bow"
                 value="50" />
@@ -5128,13 +5128,10 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.taom_ph_erebor_spear_a_t4" />
-                <equipment
-                    slot="Item1"
                     id="Item.sm_dwarf_iron_axe_a" />
                 <equipment
-                    slot="Item2"
-                    id="Item.sm_dwarf_erebor_shield_tower_a" />
+                    slot="Item1"
+                    id="Item.taom_ph_erebor_spear_a_t4" />
                 <equipment
                     slot="Head"
                     id="Item.sk_dwarf_iron_helmet_med_c2" />
@@ -5154,13 +5151,10 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.taom_ph_erebor_spear_a_t4" />
+                    id="Item.sm_dwarf_erebor_axe_2h_b" />
                 <equipment
                     slot="Item1"
-                    id="Item.sm_dwarf_erebor_shield_tower_b" />
-                <equipment
-                    slot="Item2"
-                    id="Item.sm_dwarf_erebor_axe_2h_b" />
+                    id="Item.taom_ph_erebor_spear_a_t4" />
                 <equipment
                     slot="Head"
                     id="Item.sk_dwarf_iron_helmet_heavy_c2" />
@@ -5180,13 +5174,10 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.taom_ph_erebor_spear_a_t4" />
+                    id="Item.sm_dwarf_erebor_axe_2h_a" />
                 <equipment
                     slot="Item1"
-                    id="Item.sm_dwarf_erebor_shield_tower_d" />
-                <equipment
-                    slot="Item2"
-                    id="Item.sm_dwarf_erebor_axe_2h_a" />
+                    id="Item.taom_ph_erebor_spear_a_t4" />
                 <equipment
                     slot="Head"
                     id="Item.sk_dwarf_iron_helmet_heavy_c1" />
@@ -5206,13 +5197,10 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.taom_ph_erebor_spear_a_t4" />
+                    id="Item.sm_dwarf_erebor_axe_2h_b" />
                 <equipment
                     slot="Item1"
-                    id="Item.sm_dwarf_erebor_shield_tower_b" />
-                <equipment
-                    slot="Item2"
-                    id="Item.sm_dwarf_erebor_axe_2h_b" />
+                    id="Item.taom_ph_erebor_spear_a_t4" />
                 <equipment
                     slot="Head"
                     id="Item.sk_dwarf_iron_helmet_heavy_a1" />
@@ -5265,10 +5253,10 @@
                 value="80" />
             <skill
                 id="TwoHanded"
-                value="155" />
+                value="175" />
             <skill
                 id="Polearm"
-                value="170" />
+                value="150" />
             <skill
                 id="Bow"
                 value="60" />
@@ -5287,13 +5275,10 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.taom_ph_erebor_spear_a_t8" />
-                <equipment
-                    slot="Item1"
                     id="Item.sm_dwarf_iron_axe_b" />
                 <equipment
-                    slot="Item2"
-                    id="Item.sm_dwarf_erebor_shield_tower_b" />
+                    slot="Item1"
+                    id="Item.taom_ph_erebor_spear_a_t8" />
                 <equipment
                     slot="Head"
                     id="Item.sk_dwarf_iron_helmet_heavy_c1" />
@@ -5313,13 +5298,10 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.taom_ph_erebor_spear_b_t8" />
+                    id="Item.sm_dwarf_erebor_axe_2h_c" />
                 <equipment
                     slot="Item1"
-                    id="Item.sm_dwarf_erebor_shield_tower_c" />
-                <equipment
-                    slot="Item2"
-                    id="Item.sm_dwarf_erebor_axe_2h_c" />
+                    id="Item.taom_ph_erebor_spear_b_t8" />
                 <equipment
                     slot="Head"
                     id="Item.sk_dwarf_iron_helmet_heavy_c2" />
@@ -5339,13 +5321,10 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.taom_ph_erebor_spear_a_t8" />
+                    id="Item.sm_dwarf_erebor_axe_2h_b" />
                 <equipment
                     slot="Item1"
-                    id="Item.sm_dwarf_erebor_shield_tower_c" />
-                <equipment
-                    slot="Item2"
-                    id="Item.sm_dwarf_erebor_axe_2h_b" />
+                    id="Item.taom_ph_erebor_spear_a_t8" />
                 <equipment
                     slot="Head"
                     id="Item.sk_dwarf_iron_helmet_heavy_d1" />
@@ -5365,13 +5344,10 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.taom_ph_erebor_spear_b_t8" />
+                    id="Item.sm_dwarf_erebor_axe_2h_d" />
                 <equipment
                     slot="Item1"
-                    id="Item.sm_dwarf_erebor_shield_tower_c" />
-                <equipment
-                    slot="Item2"
-                    id="Item.sm_dwarf_erebor_axe_2h_d" />
+                    id="Item.taom_ph_erebor_spear_b_t8" />
                 <equipment
                     slot="Head"
                     id="Item.sk_dwarf_iron_helmet_med_c1" />
@@ -5424,10 +5400,10 @@
                 value="90" />
             <skill
                 id="TwoHanded"
-                value="185" />
+                value="205" />
             <skill
                 id="Polearm"
-                value="195" />
+                value="175" />
             <skill
                 id="Bow"
                 value="75" />
@@ -5442,13 +5418,10 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.taom_ph_erebor_spear_a_t8" />
-                <equipment
-                    slot="Item1"
                     id="Item.sm_dwarf_iron_axe_c" />
                 <equipment
-                    slot="Item2"
-                    id="Item.sm_dwarf_erebor_shield_tower_e" />
+                    slot="Item1"
+                    id="Item.taom_ph_erebor_spear_a_t8" />
                 <equipment
                     slot="Head"
                     id="Item.sk_dwarf_iron_helmet_elite_c1" />
@@ -5468,13 +5441,10 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.taom_ph_erebor_spear_b_t8" />
+                    id="Item.sm_dwarf_erebor_axe_2h_d" />
                 <equipment
                     slot="Item1"
-                    id="Item.sm_dwarf_erebor_shield_tower_c" />
-                <equipment
-                    slot="Item2"
-                    id="Item.sm_dwarf_erebor_axe_2h_d" />
+                    id="Item.taom_ph_erebor_spear_b_t8" />
                 <equipment
                     slot="Head"
                     id="Item.sk_dwarf_iron_helmet_elite_c2" />
@@ -5494,13 +5464,10 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.taom_ph_erebor_spear_a_t8" />
+                    id="Item.sm_dwarf_erebor_axe_2h_c" />
                 <equipment
                     slot="Item1"
-                    id="Item.sm_dwarf_erebor_shield_tower_d" />
-                <equipment
-                    slot="Item2"
-                    id="Item.sm_dwarf_erebor_axe_2h_c" />
+                    id="Item.taom_ph_erebor_spear_a_t8" />
                 <equipment
                     slot="Head"
                     id="Item.sk_dwarf_iron_helmet_elite_a1" />
@@ -5520,13 +5487,10 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.taom_ph_erebor_spear_b_t8" />
+                    id="Item.sm_dwarf_erebor_axe_2h_d" />
                 <equipment
                     slot="Item1"
-                    id="Item.sm_dwarf_erebor_shield_tower_b" />
-                <equipment
-                    slot="Item2"
-                    id="Item.sm_dwarf_erebor_axe_2h_d" />
+                    id="Item.taom_ph_erebor_spear_b_t8" />
                 <equipment
                     slot="Head"
                     id="Item.sk_dwarf_iron_helmet_elite_a2" />
