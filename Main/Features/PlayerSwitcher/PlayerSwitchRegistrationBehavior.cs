@@ -4,6 +4,7 @@ using TaleWorlds.CampaignSystem.CharacterCreationContent;
 using TAOM.Adapters;
 using TAOM.Core.Logging;
 using TAOM.Features.CareerSystem;
+using TAOM.Core.Diagnostics;
 
 namespace TAOM.Features.PlayerSwitcher;
 
@@ -31,6 +32,9 @@ public class PlayerSwitchRegistrationBehavior : CampaignBehaviorBase
     /// which RacePersistenceService would then faithfully persist.
     /// </summary>
     public const int HandlerPriority = 1100;
+
+    /// <summary>The #1185 notice id for a lord pick that cannot be applied this session (#1223).</summary>
+    internal const string SelfDisableId = "PlayerSwitcher";
 
     private readonly IHeroSwitchService _switchService;
     private readonly ISwitchPlanner _planner;
@@ -98,7 +102,12 @@ public class PlayerSwitchRegistrationBehavior : CampaignBehaviorBase
         }
         catch (Exception ex)
         {
+            var wasOn = _policy.Current.Enabled;
             _policy.DisableForSession($"handler registration at priority {HandlerPriority} failed: {ex.Message}");
+            // The player is not told otherwise: a blocked handover is announced by the handler, and the picker panel's
+            // probe failure has its own inquiry (#1223). A player who turned the feature off loses nothing.
+            if (wasOn)
+                SelfDisables.Report(SelfDisableId, $"character creation handler registration failed: {ex.Message}");
             _logger.LogError($"Player Switcher: could not register its character creation handler: {ex}");
         }
     }

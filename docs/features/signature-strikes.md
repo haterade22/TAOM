@@ -385,7 +385,7 @@ registration lines); `hit by ... -> no effect` on every swing means the gates in
   stays. The ring's blow direction is the victim's local -X axis (`CustomAttacksUtils`), so a
   scream's stagger may push sideways rather than away from the wraith; a radial push is a follow-up.
 - **Open question: does the engine ignore `BlowFlags.KnockDown` on a hand-built blow?** TAOM sets it in
-  `Main/Features/AdvancedCombat/CustomAttacksUtils.cs:320` (`flags |= victimHasMount ? BlowFlags.CanDismount :
+  `Main/Features/AdvancedCombat/CustomAttacksUtils.cs:335` (`flags |= victimHasMount ? BlowFlags.CanDismount :
   BlowFlags.KnockDown`, in `ComposeBlowFlags`) [Certain for the line, read this turn]. Kysaro claims the engine ignores
   `KnockDown` on hand-built blows, so he plays `act_strike_fall_{back|front|left|right}_heavy_back_rise` directly, and
   that the engine does honour `CanDismount` (a rider is off in about 0.2 s). He calls it verified in his harness (his

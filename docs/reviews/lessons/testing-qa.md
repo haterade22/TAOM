@@ -2903,3 +2903,8 @@ The battle balance provider's new tests built `BattleBalanceConfig` objects in C
 **Prevent:** a source-reading test of a bool or mode flag also asserts the consuming expression (here `quitOnOk ? QuitGame`). For an expression-bodied member, slice the source up to the next member instead of calling `Body()`.
 
 **Source:** [rca-game-version-warning-2026-11-16.md](../rca-game-version-warning-2026-11-16.md) finding F9.
+
+### A test that calls a static member runs the class's static constructor (#1223, 2026-11-16)
+The #1223 tests called a pure helper on `CustomAttacksUtils`. Any static call runs its explicit static constructor, which binds the engine and prints through `Debug`, so the tests needed `RequiresGame`. The same change moved lines in that file, and three `file:line` pins in a comment, a test message and a feature doc went stale; only the reflection pin has a gate.
+- **Prevent:** before you tag a test of a pure helper as engine-free, check whether its class has a static constructor. After you insert lines in a file, `grep -rn '<File>.cs:'` for its pins.
+- **Source:** the #1223 tier 1 review, Data flow T9 and T10.

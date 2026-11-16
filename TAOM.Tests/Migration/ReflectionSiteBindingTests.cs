@@ -84,7 +84,7 @@ public class ReflectionSiteBindingTests
     [DataRow("TaleWorlds.MountAndBlade.Agent", "Agent", "SetMountAgent", "Method", "Agent_Die_SpiderDismount_Patch.cs:35 (Patch47)")]
     [DataRow("TaleWorlds.CampaignSystem.ViewModelCollection.ClanManagement.Categories.ClanPartiesVM", "ClanPartiesVM", "OnPartySelection", "Method", "RefugeClanScreenPatch.cs:45")]
     // --- AdvancedCombat custom attacks (CustomAttacksUtils.cs) ---
-    [DataRow("TaleWorlds.MountAndBlade.Mission", "Mission", "RegisterBlow", "Method", "CustomAttacksUtils.cs:61")]
+    [DataRow("TaleWorlds.MountAndBlade.Mission", "Mission", "RegisterBlow", "Method", "CustomAttacksUtils.cs:62")]
     // --- MissionPerf tick profiler: the private wait it times at its call site (MissionTickProfilerInstaller.cs) ---
     [DataRow("TaleWorlds.MountAndBlade.Mission", "Mission", "WaitTickCompletion", "Method", "MissionTickProfilerInstaller.cs:31,54")]
     // --- MissionPerf attribution: the protected internal script tick it binds and swaps (MissionAttributionInstaller.cs) ---
