@@ -1,3 +1,5 @@
+using System;
+using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TAOM.Features.AlignmentDesertion;
 
@@ -87,5 +89,33 @@ public class DesertionRecruitCapTests
         Assert.AreEqual(1, DesertionRecruitCap.EstimateSlotEnd(slotsConsidered: 4, slotCount: 6, firstDeserterSlot: 1));
         Assert.AreEqual(0, DesertionRecruitCap.EstimateSlotEnd(slotsConsidered: 4, slotCount: 6, firstDeserterSlot: 0));
         Assert.AreEqual(3, DesertionRecruitCap.EstimateSlotEnd(slotsConsidered: 4, slotCount: 3, firstDeserterSlot: int.MaxValue));
+    }
+
+    // #1189 item 3: a slot the cap locks shows vanilla's relation tooltip with "You need 0"; the hint names the real cause.
+    [TestMethod]
+    public void LockReason_NamesTheDeserterAndTheSlotsAroundIt()
+    {
+        Assert.AreEqual(SlotLockReason.None, DesertionRecruitCap.LockReason(index: 0, firstDeserterSlot: 2, slotDeserts: false));
+        Assert.AreEqual(SlotLockReason.BeforeDeserter, DesertionRecruitCap.LockReason(index: 1, firstDeserterSlot: 2, slotDeserts: false));
+        Assert.AreEqual(SlotLockReason.WouldDesert, DesertionRecruitCap.LockReason(index: 2, firstDeserterSlot: 2, slotDeserts: true));
+        Assert.AreEqual(SlotLockReason.BehindDeserter, DesertionRecruitCap.LockReason(index: 4, firstDeserterSlot: 2, slotDeserts: false));
+        // A deserter behind another deserter is named for itself: it stays locked when the earlier one is gone.
+        Assert.AreEqual(SlotLockReason.WouldDesert, DesertionRecruitCap.LockReason(index: 4, firstDeserterSlot: 2, slotDeserts: true));
+        Assert.AreEqual(SlotLockReason.None, DesertionRecruitCap.LockReason(index: 0, firstDeserterSlot: DesertionRecruitCap.NoDeserter, slotDeserts: false));
+    }
+
+    // The VM's own search (index < max) never reaches the slot just before the first deserter under the player's cap
+    // (max is first - 1), so it showed "You need 0" there; RequiredRelation uses the recruit test (index <= max).
+    [TestMethod]
+    public void RequiredRelation_FindsTheSlotBeforeTheDeserter_AndNullWhenNoRelationOpensIt()
+    {
+        const int first = 4;
+        Func<int, int> capped = relation =>
+            DesertionRecruitCap.CapVolunteerIndex(relation >= 10 ? 5 : relation >= 0 ? 2 : 1, first, buyerIsPlayer: true);
+
+        Assert.AreEqual(10, DesertionRecruitCap.RequiredRelation(first - 1, capped));
+        Assert.AreEqual(0, DesertionRecruitCap.RequiredRelation(2, capped));
+        Assert.IsNull(DesertionRecruitCap.RequiredRelation(first, capped));
+        Assert.IsFalse(Enumerable.Range(-100, 200).Any(r => first - 1 < capped(r)), "the VM's search never finds it");
     }
 }
