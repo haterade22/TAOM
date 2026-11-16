@@ -166,11 +166,12 @@ public class LocalizationKeyConsistencyTests
     // ── 2. An inline default equals the registered English ────────────────────────────────────
 
     /// <summary>
-    /// A plain C# literal that is a whole <c>{=taom_*}Default</c>: not interpolated, not verbatim,
-    /// not continued by <c>+</c>, not on a comment line. Group 1 is the key, group 2 the raw default.
+    /// A plain C# literal that is a whole <c>{=taom_*}Default</c> (or <c>TAOM_*</c>, <c>realms_*</c>, #1130):
+    /// not interpolated, not verbatim, not continued by <c>+</c>, not on a comment line. Group 1 is the
+    /// key, group 2 the raw default.
     /// </summary>
     private static readonly Regex CSharpDefault = new Regex(
-        "(?<![$@\\w])\"\\{=(taom_[A-Za-z0-9_.]+)\\}((?:[^\"\\\\\\r\\n]|\\\\.)*)\"(?!\\s*\\+)",
+        "(?<![$@\\w])\"\\{=((?:taom|TAOM|realms)_[A-Za-z0-9_.]+)\\}((?:[^\"\\\\\\r\\n]|\\\\.)*)\"(?!\\s*\\+)",
         RegexOptions.Compiled);
 
     internal static string UnescapeCSharp(string s)
@@ -272,6 +273,14 @@ public class LocalizationKeyConsistencyTests
     }
 
     [TestMethod]
+    public void CSharpDefault_RealmsAndUpperCaseTaomKeys_AreMatched()
+    {
+        Assert.AreEqual("realms_ui_yes", CSharpDefault.Match("Text(\"{=realms_ui_yes}Yes\")").Groups[1].Value);
+        Assert.AreEqual("TAOM_CrashReport_Title",
+            CSharpDefault.Match("new TextObject(\"{=TAOM_CrashReport_Title}TAOM caught a crash\")").Groups[1].Value);
+    }
+
+    [TestMethod]
     public void CSharpDefault_InterpolatedOrConcatenatedLiteral_IsSkipped()
     {
         Assert.IsFalse(CSharpDefault.IsMatch("$\"{=taom_x}Count {n}\""));
@@ -315,7 +324,8 @@ public class LocalizationKeyConsistencyTests
 
         Assert.IsTrue(checkedSites > 500, $"Only {checkedSites} C# sites checked; the literal pattern broke.");
         Assert.AreEqual(0, problems.Count,
-            $"{problems.Count} C# default(s) differ from the registered English. English players read the code, " +
+            $"{problems.Count} C# default(s) differ from the registered English. English players read the code for a taom_ " +
+            "key and the registered row for a TAOM_ or realms_ key (LocalizationOverrideLoader); " +
             "the other twelve languages translate the registration. Align them, or give the site its own key:\n  " +
             string.Join("\n  ", problems.Take(40)));
     }

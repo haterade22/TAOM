@@ -8105,6 +8105,212 @@
     <string id="taom_hostile_peace_mcm_alliances_hint" text="When off (default), a kingdom you rule cannot ally with a realm on the other side of the war: a Free kingdom does not ally with the Shadow, and the reverse. Realms of the Neutral side can ally with anyone. A kingdom you founded takes the side of its culture. Alliances you already have are kept. When on, your kingdom may ally with any realm, as before. AI realms keep their own rules either way. Applies at once, no restart." />
     <string id="taom_hostile_peace_no_alliance" text="Your realms stand on opposite sides of the war and cannot be allied." />
     <string id="taom_hostile_peace_no_trade" text="Your realms are enemies in all but war. They will not trade." />
+    <string id="TAOM_LD_Hero_Aragorn_Text" text="The heir of Isildur, sword in hand. If he falls, he can be called again." />
+    <string id="TAOM_LD_Hero_Legolas_Text" text="The prince of Mirkwood and his bow. If he falls, he can be called again." />
+    <string id="TAOM_LD_Hero_Gimli_Text" text="The son of Glóin and his axe. If he falls, he can be called again." />
+    <string id="TAOM_LD_Hud_HeroesTitle" text="Heroes" />
+    <string id="TAOM_LD_Hud_HeroPending" text="On his way" />
+    <string id="TAOM_LD_Hud_HeroStanding" text="On the field" />
+    <string id="TAOM_LD_Notice_UnknownHero" text="That hero is not for sale." />
+    <string id="TAOM_LD_Notice_HeroAlive" text="That hero is already with you." />
+    <string id="taom_hero_ability_aragorn_for_frodo" text="For Frodo!" />
+    <string id="taom_hero_ability_aragorn_isildurs_heir" text="Heir of Isildur" />
+    <string id="taom_hero_ability_gimli_baruk_khazad" text="Baruk Khazâd!" />
+    <string id="taom_hero_ability_gimli_still_standing" text="Still Standing" />
+    <string id="taom_hero_ability_legolas_rapid_fire" text="Rapid Fire" />
+    <string id="taom_hero_ability_legolas_many_arrows" text="Many Arrows" />
+    <string id="taom_hero_ability_legolas_archers_eye" text="Archer's Eye" />
+    <string id="taom_hero_ability_cast_ally" text="{HERO}: {ABILITY}" />
+    <string id="taom_hero_ability_cast_enemy" text="Enemy {HERO}: {ABILITY}" />
+    <string id="realms_ui_cost" text="{AMOUNT} {RESOURCE}" />
+    <string id="realms_ui_no_resource" text="Your people have no resource to buy claims with." />
+    <string id="realms_ui_low_resource" text="You have {AMOUNT} {RESOURCE}." />
+    <string id="realms_ui_buy_claim" text="Buy a claim" />
+    <string id="realms_ui_buy_claim_ask" text="Buy a claim on the {TITLE} for {COST}?" />
+    <string id="realms_ui_influence_cost" text="{AMOUNT} influence" />
+    <string id="realms_ui_low_influence" text="Your clan has {AMOUNT} influence." />
+    <string id="realms_ui_usurp" text="Usurp" />
+    <string id="realms_ui_usurp_ask" text="Press your claim and take the {TITLE} for {COST}?" />
+    <string id="realms_ui_yes" text="Yes" />
+    <string id="realms_ui_no" text="No" />
+    <string id="realms_ui_claim_failed" text="That is no longer possible." />
+    <string id="realms_ui_refuse_clan" text="Your own clan holds it." />
+    <string id="realms_ui_refuse_realm" text="It lies in your own realm." />
+    <string id="realms_ui_refuse_far" text="It does not border your fiefs." />
+    <string id="realms_ui_refuse_owned" text="Your clan must hold its fief first." />
+    <string id="realms_ui_refuse_vassals" text="You, your clan and your vassals must hold more than half of its lands." />
+    <string id="realms_ui_refuse_foothold" text="You, your clan or your vassals must first hold one of its lands." />
+    <string id="realms_ui_refuse_outside" text="Its holder does not serve your realm." />
+    <string id="realms_ui_refuse_serving" text="The claimant must serve its realm." />
+    <string id="realms_ui_refuse_restore_only" text="Only the heir of its old kings can take up this throne." />
+    <string id="realms_ui_refuse_not_vacant" text="It is not vacant." />
+    <string id="realms_ui_refuse_culture" text="Only its own people can take up this title." />
+    <string id="realms_ui_refuse" text="Not possible." />
+    <string id="realms_enc_title" text="Title" />
+    <string id="realms_enc_realm_title" text="Realm title" />
+    <string id="realms_enc_titles" text="Titles" />
+    <string id="realms_ency_titles" text="Titles" />
+    <string id="realms_ency_titles_desc" text="Every title of the realms, from the village lordships to the high crowns: who holds each by right and who claims it." />
+    <string id="realms_ency_f_high" text="Realms and high titles" />
+    <string id="realms_ency_f_duchy" text="Duchies" />
+    <string id="realms_ency_f_county" text="Counties (towns)" />
+    <string id="realms_ency_f_barony" text="Baronies (castles)" />
+    <string id="realms_ency_f_lordship" text="Lordships (villages)" />
+    <string id="realms_ency_f_held" text="Held by your clan" />
+    <string id="realms_ency_f_claimed" text="Claimed by your clan" />
+    <string id="realms_ency_f_realm" text="In your realm" />
+    <string id="realms_ency_f_vacant" text="Vacant" />
+    <string id="realms_ency_f_has_claims" text="Claimed" />
+    <string id="realms_ency_g_rank" text="Rank" />
+    <string id="realms_ency_g_yours" text="Yours" />
+    <string id="realms_ency_g_status" text="Status" />
+    <string id="realms_ency_s_rank" text="Rank" />
+    <string id="realms_ency_s_claims" text="Claims" />
+    <string id="realms_ui_holder" text="Held by right" />
+    <string id="realms_page_vacant" text="Vacant" />
+    <string id="realms_page_no_vassals" text="No titles below it." />
+    <string id="realms_page_no_seat" text="No fief of its own." />
+    <string id="realms_page_actions" text="Your actions" />
+    <string id="realms_page_no_actions" text="Nothing you can do with this title now." />
+    <string id="realms_ui_chronicle" text="Chronicle" />
+    <string id="realms_page_no_chronicle" text="No holders recorded yet." />
+    <string id="realms_page_tree" text="Title tree" />
+    <string id="realms_page_fief" text="Fief" />
+    <string id="realms_page_seat" text="Seat" />
+    <string id="realms_ui_liege" text="Liege title" />
+    <string id="realms_page_realm" text="Realm" />
+    <string id="realms_page_kingdom" text="Kingdom" />
+    <string id="realms_ui_owner" text="Fief owned by" />
+    <string id="realms_ui_ruler" text="Realm ruled by" />
+    <string id="realms_ui_without_title" text="(without the title)" />
+    <string id="realms_ui_laws" text="Laws" />
+    <string id="realms_ui_claims" text="Claims" />
+    <string id="realms_ui_none_cap" text="None" />
+    <string id="realms_enc_claimant" text="1 claimant" />
+    <string id="realms_enc_claimants" text="{COUNT} claimants" />
+    <string id="realms_page_lands" text="Lands it lies over, its vassals once formed" />
+    <string id="realms_ui_vassals" text="Vassal titles" />
+    <string id="realms_page_rank_realm" text="{RANK}, {REALM}" />
+    <string id="realms_page_owned_by" text="Owned by {OWNER}" />
+    <string id="realms_ui_none" text="none" />
+    <string id="realms_enc_more" text="and {COUNT} more" />
+    <string id="realms_enc_style" text="Style" />
+    <string id="realms_enc_offices" text="Offices" />
+    <string id="realms_enc_holds" text="Holds" />
+    <string id="realms_enc_pay" text="Pay {COST}" />
+    <string id="realms_enc_cost_refused" text="{COST}: {REASON}" />
+    <string id="realms_claim_conquest_short" text="conquest" />
+    <string id="realms_claim_fabricated_short" text="fabricated" />
+    <string id="realms_claim_ancestral_short" text="ancestral" />
+    <string id="realms_ui_grant_village" text="A village passes to another clan only with its town or castle." />
+    <string id="realms_ui_grant_none" text="No one can receive it." />
+    <string id="realms_ui_grant" text="Grant" />
+    <string id="realms_ui_grant_pick" text="Who receives the {TITLE}?" />
+    <string id="realms_ui_free" text="no influence" />
+    <string id="realms_ui_revoke" text="Revoke" />
+    <string id="realms_ui_revoke_ask" text="Take the {TITLE} back from its holder for {COST}? They will not forget it." />
+    <string id="realms_ui_restore" text="Restore" />
+    <string id="realms_ui_restore_for" text="Restore for {HERO}" />
+    <string id="realms_ui_restore_ask" text="Spend {COST} so that {HERO} takes up the {TITLE} by right of blood?" />
+    <string id="realms_ui_form" text="Form" />
+    <string id="realms_ui_form_ask" text="Form the {TITLE} for {COST}?" />
+    <string id="realms_ui_appoint" text="Appoint the {OFFICE}" />
+    <string id="realms_ui_appoint_none" text="No lord of your realm can take it up." />
+    <string id="realms_ui_appoint_pick" text="Who will be the {TITLE}?" />
+    <string id="realms_ui_dismiss" text="Dismiss {HERO} as {OFFICE}" />
+    <string id="realms_ui_dismiss_header" text="Dismiss" />
+    <string id="realms_ui_grant_fief" text="With its fief: the town or castle passes to their clan." />
+    <string id="realms_ui_grant_vassals" text="With the titles below it that you hold." />
+    <string id="realms_ui_grant_title" text="The title alone: its lands stay with their lords." />
+    <string id="realms_ui_grant_ask_fief" text="Give the {TITLE} and its fief to {HERO}?" />
+    <string id="realms_ui_grant_ask" text="Grant the {TITLE} to {HERO}?" />
+    <string id="realms_ui_coronation_ask_player" text="Your clan will become the {CLAN} and rule {KINGDOM} from {SEAT}." />
+    <string id="realms_ui_coronation_ask_player_no_seat" text="Your clan will become the {CLAN} and rule {KINGDOM}." />
+    <string id="realms_ui_coronation_ask" text="{HERO} will leave your clan, found the {CLAN} and rule {KINGDOM} from {SEAT}." />
+    <string id="realms_ui_coronation_ask_no_seat" text="{HERO} will leave your clan, found the {CLAN} and rule {KINGDOM}." />
+    <string id="realms_ui_coronation_player" text="You will no longer rule {KINGDOM}." />
+    <string id="realms_ui_choose" text="Choose" />
+    <string id="realms_ui_back" text="Back" />
+    <string id="realms_claim_conquest" text="Conquest claim" />
+    <string id="realms_claim_fabricated" text="Fabricated claim" />
+    <string id="realms_claim_ancestral" text="Ancestral claim" />
+    <string id="realms_claims_on" text="Claims on {TITLE}" />
+    <string id="realms_tree_lands" text="Lies under the realm above once it is formed." />
+    <string id="realms_tree_lordship" text="+1 lordship" />
+    <string id="realms_tree_lordships" text="+{COUNT} lordships" />
+    <string id="realms_ui_you" text="(you)" />
+    <string id="realms_ui_waiting" text="Waiting for" />
+    <string id="realms_ui_wait_ruler" text="the realm to choose a ruler" />
+    <string id="realms_ui_wait_clan" text="the clan to choose a leader" />
+    <string id="realms_why_inherited" text="inherited" />
+    <string id="realms_why_clan" text="new clan leader" />
+    <string id="realms_why_ruler" text="new ruler" />
+    <string id="realms_why_transfer" text="handed over" />
+    <string id="realms_why_possession" text="took up" />
+    <string id="realms_why_vacated" text="fell vacant" />
+    <string id="realms_why_conquest" text="conquered" />
+    <string id="realms_why_grant" text="granted" />
+    <string id="realms_why_usurped" text="usurped" />
+    <string id="realms_why_claim" text="by claim" />
+    <string id="realms_why_start" text="first holder" />
+    <string id="realms_why_formed" text="formed" />
+    <string id="realms_why_restored" text="restored" />
+    <string id="realms_why_revoked" text="revoked" />
+    <string id="realms_why_appointed" text="appointed" />
+    <string id="realms_why_dismissed" text="left office" />
+    <string id="realms_why_other" text="changed" />
+    <string id="realms_law_primo" text="eldest child inherits" />
+    <string id="realms_law_ultimo" text="youngest child inherits" />
+    <string id="realms_law_seniority" text="eldest of the clan inherits" />
+    <string id="realms_law_clan" text="passes to the clan leader" />
+    <string id="realms_law_elective" text="passes to the chosen ruler" />
+    <string id="realms_law_agnatic" text="men only" />
+    <string id="realms_law_agnatic_cognatic" text="men first" />
+    <string id="realms_law_absolute" text="men and women equally" />
+    <string id="realms_ui_rank_lordship" text="Lordship (village)" />
+    <string id="realms_ui_rank_barony" text="Barony (castle)" />
+    <string id="realms_ui_rank_county" text="County (town)" />
+    <string id="realms_ui_rank_duchy" text="Duchy" />
+    <string id="realms_ui_rank_kingdom" text="Kingdom" />
+    <string id="realms_ui_rank_union" text="Union of realms" />
+    <string id="realms_ui_rank_empire" text="High title" />
+    <string id="realms_news_coronation" text="{HERO} is crowned in {SEAT}. The {CLAN} rules {KINGDOM}." />
+    <string id="realms_coronation_text_default" text="{HERO} is crowned in {SEAT}, and the {CLAN} rules {REALM}." />
+    <string id="realms_coronation_line_house_player" text="Your clan becomes the {CLAN}, the ruling house of {REALM}." />
+    <string id="realms_coronation_line_house" text="{HERO} founds the {CLAN}, the ruling house of {REALM}." />
+    <string id="realms_coronation_line_titles_lordships_player" text="You hold by right: {TITLES} and {COUNT} lordships." />
+    <string id="realms_coronation_line_titles_player" text="You hold by right: {TITLES}." />
+    <string id="realms_coronation_line_titles_lordships" text="He holds by right: {TITLES} and {COUNT} lordships." />
+    <string id="realms_coronation_line_titles" text="He holds by right: {TITLES}." />
+    <string id="realms_coronation_line_office" text="{NAME} remains {OFFICE} under the King." />
+    <string id="realms_coronation_line_relation" text="{HERO} likes you more (+{AMOUNT})." />
+    <string id="realms_coronation_line_paid" text="Your clan paid {AMOUNT} influence." />
+    <string id="realms_finance_tribute_in" text="Tribute from Vassals" />
+    <string id="realms_finance_tribute_out" text="Tribute to Liege" />
+    <string id="realms_msg_office_vacant" text="{OLD} is no longer {OFFICE}." />
+    <string id="realms_msg_office_follows" text="{HERO} takes up the office of {OFFICE}." />
+    <string id="realms_msg_office_appointed" text="{HERO} is appointed {OFFICE}." />
+    <string id="realms_msg_claim_bought" text="{HERO} has bought a claim on the {TITLE}." />
+    <string id="realms_msg_claim_blood" text="{HERO} inherits a claim on the {TITLE}." />
+    <string id="realms_msg_claim" text="{HERO} now has a claim on the {TITLE}." />
+    <string id="realms_msg_usurp" text="{HERO} has usurped the {TITLE}." />
+    <string id="realms_msg_revoke" text="{HERO} has taken the {TITLE} back from {OLD}." />
+    <string id="realms_msg_form" text="{HERO} has formed the {TITLE}." />
+    <string id="realms_msg_restore" text="{HERO} has restored the {TITLE} by right of blood." />
+    <string id="realms_msg_by_claim" text="{HERO} takes up the {TITLE} by claim." />
+    <string id="realms_msg_vacant" text="The {TITLE} has fallen vacant." />
+    <string id="realms_msg_inherit" text="{HERO} inherits the {TITLE}." />
+    <string id="realms_msg_grant" text="{HERO} is granted the {TITLE}." />
+    <string id="realms_msg_transfer" text="The {TITLE} passes to {HERO}." />
+    <string id="realms_msg_holder" text="{HERO} now holds the {TITLE}." />
+    <string id="realms_vacant" text="(vacant)" />
+    <string id="realms_known_as_epithet" text="{HOLDER} of {TITLE}, {EPITHET}" />
+    <string id="realms_known_as" text="{HOLDER} of {TITLE}" />
+    <string id="realms_known_as_style_epithet" text="{HOLDER}, {EPITHET}" />
+    <string id="realms_known_as_style" text="{HOLDER}" />
+    <string id="TAOM_CrashReport_Title" text="TAOM caught a crash" />
+    <string id="TAOM_CrashReport_Continue" text="Continue (risky)" />
+    <string id="TAOM_CrashReport_OpenBundle" text="Open bundle folder" />
   </strings>
 
 </base>

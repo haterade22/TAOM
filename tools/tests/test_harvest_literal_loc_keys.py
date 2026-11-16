@@ -46,6 +46,29 @@ def _block(prefix):
             f'  <string id="taom_{prefix}_b" text="{{=taom_{prefix}_b}}Beta" />']
 
 
+class KeyPrefixTests(unittest.TestCase):
+    """#1130: the Realms features write realms_ keys and the crash notifier TAOM_ keys; the
+    harvest skipped both."""
+
+    def test_literal_RealmsKey_MatchesWithItsDefault(self):
+        m = h.LITERAL.search('new TextObject("{=realms_war_title}War of the Realms")')
+        self.assertIsNotNone(m)
+        self.assertEqual(("realms_war_title", "War of the Realms"), (m.group(2), m.group(3)))
+
+    def test_literal_InterpolatedRealmsKey_Matches(self):
+        m = h.LITERAL.search('$"{{=realms_gold}}{{GOLD}} gold"')
+        self.assertIsNotNone(m)
+        self.assertEqual("realms_gold", m.group(2))
+
+    def test_literal_UpperCaseTaomKey_Matches(self):
+        m = h.LITERAL.search('new TextObject("{=TAOM_CrashReport_Title}TAOM caught a crash")')
+        self.assertIsNotNone(m)
+        self.assertEqual("TAOM_CrashReport_Title", m.group(2))
+
+    def test_literal_OtherPrefix_DoesNotMatch(self):
+        self.assertIsNone(h.LITERAL.search('"{=str_vanilla_id}Text"'))
+
+
 class ControlCharacterRefusalTests(unittest.TestCase):
     """#702: a C# default with \\n, \\r or \\t would land raw in the XML attribute, which XML reads back
     as a space, so the registered English would differ from the inline default."""

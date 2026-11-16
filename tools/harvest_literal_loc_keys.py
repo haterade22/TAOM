@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-Register the {=taom_*} localization keys that C# declares as plain literals but no
-ModuleData strings XML carries a row for.
+Register the {=taom_*}, {=TAOM_*} and {=realms_*} localization keys that C# declares
+as plain literals but no ModuleData strings XML carries a row for.
 
 An unregistered key is invisible in English -- MBTextManager.GetLocalizedText
 short-circuits on English and returns the inline default -- and untranslatable in the
@@ -38,7 +38,7 @@ from _loc_sources import CODE_ROOTS  # noqa: E402
 # the default text that follows the key inside the same literal. The trailing quote is
 # what bounds the default; (?:\\.|[^"\\])* steps over any C# escape, so an embedded \"
 # does not end the match early.
-LITERAL = re.compile(r'(\$?)"\{\{?=(taom_[A-Za-z0-9_]+)\}\}?((?:\\.|[^"\\])*)"')
+LITERAL = re.compile(r'(\$?)"\{\{?=((?:taom|TAOM|realms)_[A-Za-z0-9_]+)\}\}?((?:\\.|[^"\\])*)"')
 
 # A registered row re-embeds its own key as a {=KEY} prefix on some attribute value.
 EMBEDDED_PREFIX = re.compile(r"^\{=([A-Za-z0-9_]+)\}")
@@ -192,7 +192,7 @@ def main():
     registered = registered_keys()
     missing = [(k, v[0], v[1], v[2]) for k, v in declared.items() if k not in registered]
 
-    print(f"[harvest] literal {{=taom_*}} keys declared in {', '.join(CODE_ROOTS)} *.cs: {len(declared)}")
+    print(f"[harvest] literal {{=taom_*}}, {{=TAOM_*}} and {{=realms_*}} keys declared in {', '.join(CODE_ROOTS)} *.cs: {len(declared)}")
     print(f"[harvest] already registered in ModuleData:                 "
           f"{len(declared) - len(missing)}")
     print(f"[harvest] unregistered:                                     {len(missing)}")
