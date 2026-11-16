@@ -32,13 +32,14 @@ REPO_ROOT = Path(__file__).resolve().parent.parent
 MODULE_DATA = REPO_ROOT / "Main" / "_Module" / "ModuleData"
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from _loc_sources import CODE_ROOTS  # noqa: E402
+from _loc_sources import CODE_ROOTS, LOC_KEY_PREFIXES  # noqa: E402
 
 # Mirrors UnregisteredLocalizationKeyBaselineTests.KeyLiteral, plus a capture group for
 # the default text that follows the key inside the same literal. The trailing quote is
 # what bounds the default; (?:\\.|[^"\\])* steps over any C# escape, so an embedded \"
 # does not end the match early.
-LITERAL = re.compile(r'(\$?)"\{\{?=((?:taom|TAOM|realms)_[A-Za-z0-9_]+)\}\}?((?:\\.|[^"\\])*)"')
+LITERAL = re.compile(r'(\$?)"\{\{?=((?:' + "|".join(map(re.escape, LOC_KEY_PREFIXES))
+                     + r')[A-Za-z0-9_]+)\}\}?((?:\\.|[^"\\])*)"')
 
 # A registered row re-embeds its own key as a {=KEY} prefix on some attribute value.
 EMBEDDED_PREFIX = re.compile(r"^\{=([A-Za-z0-9_]+)\}")

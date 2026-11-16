@@ -1,4 +1,5 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using TaleWorlds.Localization;
 using TAOM.Features.Realms;
 
 namespace TAOM.Tests.Features.Realms;
@@ -56,6 +57,39 @@ public class KingdomNamesRestoreTests
 
     // A name with a variable, such as a rebel kingdom named after its clan, is kept as the text the player reads; the
     // bare template would come back without its variable. A plain name keeps its {=key}, so it follows a language change.
+    // #1391: the world snapshot reads kingdom names through this overload, so a kingdom title keeps the {=key} of the
+    // kingdom's name.
+    [TestMethod]
+    public void OwnText_ATextObjectWithAKey_KeepsTheKey()
+    {
+        Assert.AreEqual("{=taom_town_westoft}Westoft",
+            KingdomNames.OwnText(new TextObject("{=taom_town_westoft}Westoft"), "westoft"));
+        Assert.AreEqual("westoft", KingdomNames.OwnText(null, "westoft"));
+    }
+
+    [TestMethod]
+    public void OwnText_ATextObjectWithAVariable_KeepsItsResolvedText()
+    {
+        var name = new TextObject("{=generickingdomname}{KINGDOM_NAME}");
+        name.SetTextVariable("KINGDOM_NAME", "Iron Hills Pact");
+
+        Assert.AreEqual("Iron Hills Pact", KingdomNames.OwnText(name, "pact"));
+    }
+
+    // #1391: the engine sets IS_SETTLEMENT, IS_CASTLE, IS_TOWN and IS_HIDEOUT on every settlement name
+    // (Settlement.Deserialize, SetSettlementProperties), so the kingdom rule would resolve it. No settlement name's
+    // text uses them, so a settlement title keeps the raw {=key} text.
+    [TestMethod]
+    public void SettlementNameText_AFlaggedSettlementName_KeepsTheKey()
+    {
+        var name = new TextObject("{=taom_town_westoft}Westoft");
+        name.SetTextVariable("IS_SETTLEMENT", 1);
+        name.SetTextVariable("IS_TOWN", 1);
+
+        Assert.AreEqual("{=taom_town_westoft}Westoft", WorldSnapshotReader.SettlementNameText(name, "westoft"));
+        Assert.AreEqual("westoft", WorldSnapshotReader.SettlementNameText(null, "westoft"));
+    }
+
     [TestMethod]
     public void OwnText_ANameWithVariables_KeepsItsResolvedText() =>
         Assert.AreEqual("Dunland Rebels",

@@ -15,7 +15,12 @@ Each test maps to a way the gate could be wrong and pass anyway:
   - registration_must_cover_every_piece   -> Crafting.cs's all-pieces-must-match rule
   - stylesheet_named_by_a_submodule_row_applies -> #1354: a row's subfolder path is read
   - stylesheet_without_a_submodule_row_is_ignored -> only what the engine loads counts
-  - incompatible_module_is_ignored        -> #1354: NavalDLC never loads beside TAOM
+  - incompatible_module_is_ignored        -> #1354: NavalDLC never loads beside TAOM, keyed by <Id>
+  - xsl_sibling_wins_over_xslt            -> #1375: the engine reads <path>.xsl first
+  - row_for_another_game_type_is_ignored  -> #1375: <IncludedGameTypes> without Campaign
+  - module_outside_the_playset_does_not_count -> #1375: AWOIAF_Armoury never loads beside TAOM
+  - load_before_metadata_module_counts    -> the Armory is only optional LoadBeforeThis metadata
+  - row_xml_merge_is_bad_input            -> an XSD merge the gate does not model exits 2
   - first_description_wins                -> template order decides the primary usage
   - ranged_is_not_a_finding               -> a bow + shield is normal, not a defect
   - twohanded_fails_like_polearm          -> #1312: two-handed weapons joined the ratchet
@@ -275,13 +280,132 @@ class GateContractTests(unittest.TestCase):
         write(self.rosters / "troops.xml", roster_xml("test_spear", "test_shield"))
         own = self.rosters.parent
         write(own / "SubModule.xml",
-              '<Module><Id value="TestOwn"/><Xmls><XmlNode><XmlName id="WeaponDescriptions" '
+              '<Module><Id value="TestOwn"/><DependedModules><DependedModule Id="TestArmory"/>'
+              '</DependedModules><Xmls><XmlNode><XmlName id="WeaponDescriptions" '
               'path="ph/ph_descriptions"/></XmlNode></Xmls></Module>\n')
         write(own / "ModuleData" / "ph" / "ph_descriptions.xslt", xslt_registering("spear_blade", "spear_handle"))
         write(self.modules / "TestOwn" / "SubModule.xml", '<Module><Id value="TestOwn"/></Module>\n')
         code, out = self.run_gate()
         self.assertEqual(code, 0, out)
         self.assertIn("PASS", out)
+
+    def test_xsl_sibling_wins_over_xslt(self):
+        """#1375: the engine tries `<path>.xsl` first and reads `.xslt` only when it is absent
+        (MBObjectManager.HandleXsltList)."""
+        write(self.rosters / "troops.xml", roster_xml("test_spear", "test_shield"))
+        write(self.overlay.with_suffix(".xsl"), xslt_registering("spear_blade", "spear_handle"))
+        # If the .xslt were applied too, its undefined piece would dangle and fail the run.
+        write(self.overlay, xslt_registering("spear_blade", "spear_handle", "ghost_piece"))
+        code, out = self.run_gate()
+        self.assertEqual(code, 0, out)
+        self.assertIn("PASS", out)
+
+    def test_row_for_another_game_type_is_ignored(self):
+        """#1375: a row whose <IncludedGameTypes> does not name Campaign never loads in a campaign."""
+        write(self.rosters / "troops.xml", roster_xml("test_spear", "test_shield"))
+        write(self.modules / "TestArmory" / "SubModule.xml",
+              '<Module><Xmls><XmlNode><XmlName id="WeaponDescriptions" path="weapon_descriptions"/>'
+              '<IncludedGameTypes><GameType value="MultiplayerGame"/></IncludedGameTypes>'
+              '</XmlNode></Xmls></Module>\n')
+        write(self.overlay, xslt_registering("spear_blade", "spear_handle"))
+        code, out = self.run_gate()
+        self.assertEqual(code, 1, out)
+        self.assertIn("test_spear", out)
+
+    def test_row_naming_campaign_applies(self):
+        write(self.rosters / "troops.xml", roster_xml("test_spear", "test_shield"))
+        write(self.modules / "TestArmory" / "SubModule.xml",
+              '<Module><Xmls><XmlNode><XmlName id="WeaponDescriptions" path="weapon_descriptions"/>'
+              '<IncludedGameTypes><GameType value="MultiplayerGame"/><GameType value="Campaign"/>'
+              '</IncludedGameTypes></XmlNode></Xmls></Module>\n')
+        write(self.overlay, xslt_registering("spear_blade", "spear_handle"))
+        code, out = self.run_gate()
+        self.assertEqual(code, 0, out)
+
+    def own_submodule(self, *, depends=(), load_before=(), load_after=()):
+        """The checked module's SubModule.xml: with one, only its playset counts (#1375)."""
+        deps = "".join(f'<DependedModule Id="{m}"/>' for m in depends)
+        meta = "".join(f'<DependedModuleMetadata id="{m}" order="LoadBeforeThis" optional="true"/>'
+                       for m in load_before)
+        meta += "".join(f'<DependedModuleMetadata id="{m}" order="LoadAfterThis" optional="true"/>'
+                        for m in load_after)
+        write(self.rosters.parent / "SubModule.xml",
+              f'<Module><Id value="TestOwn"/><DependedModules>{deps}</DependedModules>'
+              f'<DependedModuleMetadatas>{meta}</DependedModuleMetadatas></Module>\n')
+
+    def register_in_testmod(self, depends=()):
+        module = self.modules / "TestMod"
+        deps = "".join(f'<DependedModule Id="{m}"/>' for m in depends)
+        write(module / "SubModule.xml",
+              f'<Module><Id value="TestMod"/><DependedModules>{deps}</DependedModules><Xmls>'
+              '<XmlNode><XmlName id="WeaponDescriptions" path="weapon_descriptions"/></XmlNode>'
+              '</Xmls></Module>\n')
+        write(module / "ModuleData" / "weapon_descriptions.xslt", xslt_registering("spear_blade", "spear_handle"))
+
+    def test_module_outside_the_playset_does_not_count(self):
+        """#1375: AWOIAF_Armoury is installed but never loads beside TAOM, so its sheets must not count."""
+        write(self.rosters / "troops.xml", roster_xml("test_spear", "test_shield"))
+        self.own_submodule(depends=("Native", "TestArmory"))
+        self.register_in_testmod()
+        code, out = self.run_gate()
+        self.assertEqual(code, 1, out)
+        self.assertIn("test_spear", out)
+
+    def test_load_before_metadata_module_counts(self):
+        """TAOM names LOTRLOME_Armory only as optional LoadBeforeThis metadata, and it loads."""
+        write(self.rosters / "troops.xml", roster_xml("test_spear", "test_shield"))
+        self.own_submodule(depends=("Native", "TestArmory"), load_before=("TestMod",))
+        self.register_in_testmod()
+        code, out = self.run_gate()
+        self.assertEqual(code, 0, out)
+
+    def test_load_after_metadata_module_does_not_count(self):
+        """TAOM names Coop as LoadAfterThis: a module that only loads after it is not its playset."""
+        write(self.rosters / "troops.xml", roster_xml("test_spear", "test_shield"))
+        self.own_submodule(depends=("Native", "TestArmory"), load_after=("TestMod",))
+        self.register_in_testmod()
+        code, out = self.run_gate()
+        self.assertEqual(code, 1, out)
+        self.assertIn("test_spear", out)
+
+    def test_first_of_two_modules_with_one_id_wins(self):
+        """The engine keeps the first module it finds for an Id (ModuleHelper), so a stray copy
+        folder that sorts later must not replace the real one."""
+        write(self.rosters / "troops.xml", roster_xml("test_spear", "test_shield"))
+        write(self.overlay, xslt_registering("spear_blade", "spear_handle"))
+        write(self.modules / "TestArmory" / "SubModule.xml",
+              submodule_xml(("WeaponDescriptions", "weapon_descriptions"))
+              .replace("<Module>", '<Module><Id value="TestArmory"/>'))
+        write(self.modules / "TestArmory - Copy" / "SubModule.xml", '<Module><Id value="TestArmory"/></Module>\n')
+        code, out = self.run_gate()
+        self.assertEqual(code, 0, out)
+
+    def test_dependency_of_a_dependency_counts(self):
+        write(self.rosters / "troops.xml", roster_xml("test_spear", "test_shield"))
+        self.own_submodule(depends=("Native", "TestArmory"))
+        write(self.modules / "TestArmory" / "SubModule.xml",
+              '<Module><Id value="TestArmory"/><DependedModules><DependedModule Id="TestMod"/>'
+              '</DependedModules></Module>\n')
+        self.register_in_testmod()
+        code, out = self.run_gate()
+        self.assertEqual(code, 0, out)
+
+    def test_row_xml_merge_is_bad_input(self):
+        """#1375: a row naming an .xml file (or a folder) merges by the engine's XSD rules, which
+        the gate does not model, so a non-Native one stops the run (exit 2) and names the row."""
+        write(self.rosters / "troops.xml", roster_xml("test_spear"))
+        write(self.modules / "TestArmory" / "ModuleData" / "weapon_descriptions.xml", DESCRIPTIONS)
+        code, out = self.run_gate()
+        self.assertEqual(code, 2, out)
+        self.assertIn("TestArmory", out)
+        self.assertIn("weapon_descriptions", out)
+
+    def test_row_folder_merge_is_bad_input(self):
+        write(self.rosters / "troops.xml", roster_xml("test_spear"))
+        (self.modules / "TestArmory" / "ModuleData" / "weapon_descriptions").mkdir(parents=True)
+        code, out = self.run_gate()
+        self.assertEqual(code, 2, out)
+        self.assertIn("TestArmory", out)
 
     def test_roster_weapon_that_resolves_no_usage_fails(self):
         """#1354's root: a weapon whose pieces no description lists resolved to no usage, and the
@@ -323,12 +447,12 @@ class GateContractTests(unittest.TestCase):
 
     def test_incompatible_module_is_ignored(self):
         """#1354: TAOM's <IncompatibleModules> (NavalDLC) never load beside it, so a registration
-        or a piece id there must not count. The list comes from the SubModule.xml beside --rosters."""
+        or a piece id there must not count. With no SubModule.xml beside --rosters the list is
+        TAOM's. The engine keys a module by its <Id>, not its folder name (#1375)."""
         write(self.rosters / "troops.xml", roster_xml("test_spear", "test_shield"))
-        write(self.rosters.parent / "SubModule.xml",
-              '<Module><IncompatibleModules><Module Id="TestMod"/></IncompatibleModules></Module>\n')
-        module = self.modules / "TestMod"
-        write(module / "SubModule.xml", submodule_xml(("WeaponDescriptions", "weapon_descriptions")))
+        module = self.modules / "NavalFolder"
+        write(module / "SubModule.xml", submodule_xml(("WeaponDescriptions", "weapon_descriptions"))
+              .replace("<Module>", '<Module><Id value="NavalDLC"/>'))
         write(module / "ModuleData" / "weapon_descriptions.xslt",
               xslt_registering("spear_blade", "spear_handle", "ghost_piece"))
         # Its pieces and items must not count either: a piece defined there would hide a dangling

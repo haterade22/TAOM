@@ -1,3 +1,4 @@
+using TAOM.Features.CoopInterop;
 using TAOM.Features.MarriageAlignment;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.GameComponents;
@@ -36,11 +37,21 @@ public sealed class TaomMarriageModel : DefaultMarriageModel
 {
     private readonly INazgulRegistry _registry;
     private readonly IMarriageAlignmentService _marriageAlignment;
+    private readonly IPlayerControlQuery _players;
 
+    // The query is resolved here, not as a constructor parameter: that would need an edit to SubModule.cs, where this
+    // model is built.
     public TaomMarriageModel(INazgulRegistry registry, IMarriageAlignmentService marriageAlignment)
+        : this(registry, marriageAlignment, IoC.Resolve<IPlayerControlQuery>())
+    {
+    }
+
+    internal TaomMarriageModel(INazgulRegistry registry, IMarriageAlignmentService marriageAlignment,
+        IPlayerControlQuery players)
     {
         _registry = registry;
         _marriageAlignment = marriageAlignment;
+        _players = players;
     }
 
     public override bool IsSuitableForMarriage(Hero maidenOrSuitor)
@@ -55,16 +66,20 @@ public sealed class TaomMarriageModel : DefaultMarriageModel
 
     // Boundary conversion (ADR-007): the sealed Hero stops here and only culture StringIds cross
     // into the service. "Involves the player clan" covers the player's siblings and children too,
-    // not just Hero.MainHero, because the courtship dialogue proposes matches for the whole clan.
+    // not just Hero.MainHero, because the courtship dialogue proposes matches for the whole clan. A co-op guest's
+    // marriage is checked on the server, where Clan.PlayerClan is the server's own clan except inside Coop's
+    // BarterPlayerContext: ask the player query (#1371).
     private bool IsCrossAlignment(Hero firstHero, Hero secondHero)
     {
         if (firstHero == null || secondHero == null) return false;
 
-        var involvesPlayerClan = firstHero.Clan == Clan.PlayerClan || secondHero.Clan == Clan.PlayerClan;
-
         return _marriageAlignment.IsMarriageBlocked(
             firstHero.Culture?.StringId,
             secondHero.Culture?.StringId,
-            involvesPlayerClan);
+            InvolvesPlayerClan(firstHero.Clan, secondHero.Clan, _players));
     }
+
+    // Unknown is not a player's clan, as in TaomPregnancyModel: an unreadable registry keeps the AI rule.
+    internal static bool InvolvesPlayerClan(Clan? first, Clan? second, IPlayerControlQuery players)
+        => players.OfClan(first) == PlayerControl.Player || players.OfClan(second) == PlayerControl.Player;
 }

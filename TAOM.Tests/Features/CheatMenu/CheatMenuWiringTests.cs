@@ -113,6 +113,31 @@ public class CheatMenuWiringTests
         Assert.IsFalse(Regex.IsMatch(src, @"affirmativeAction: chosen =>\s*\{"), "a pick list choice outside the guard");
     }
 
+    // MBTextManager.SetTextVariable is global: any other text with a {STATE} tag would read the switch's word. The option's own
+    // TextObject is args.Text (GameMenuOption.GetConditionsHold builds MenuCallbackArgs with its Text, v1.5.7).
+    [TestMethod]
+    public void UnlimitedPartyLabel_SetsItsStateOnItsOwnText()
+    {
+        var src = RepoPaths.ReadSource("Main/Features/CheatMenu/Hooks/CheatMenuMenus.cs", stripComments: true);
+
+        StringAssert.Contains(src, "args.Text.SetTextVariable(\"STATE\"");
+        Assert.IsFalse(src.Contains("MBTextManager.SetTextVariable(\"STATE\""), "the global text variable leaks into other texts");
+    }
+
+    // Low-morale desertion still applies to the main party with the switch on; only the culture-based desertion is skipped.
+    [TestMethod]
+    public void UnlimitedPartyTexts_SayEnemyTroopsKeepOnlyTheCultureRule()
+    {
+        var src = RepoPaths.ReadSource("Main/Features/CheatMenu/Hooks/CheatMenuMenus.cs", stripComments: true);
+
+        foreach (var key in new[] { "taom_cheat_unlimited_party_hint", "taom_cheat_unlimited_party_on" })
+        {
+            var literal = Regex.Match(src, @"""\{=" + key + @"\}(?<text>[^""]*)""");
+            Assert.IsTrue(literal.Success, key + " is gone");
+            StringAssert.Contains(literal.Groups["text"].Value, "do not desert because of their culture", key);
+        }
+    }
+
     [TestMethod]
     public void Guarded_AThrowingCheat_DoesNotEscapeTheMenuClick() =>
         CheatMenuMenus.Guarded("test", () => throw new System.InvalidOperationException("boom"));

@@ -81,7 +81,9 @@ MAP_GLOBS = ("*/taom_map/moduledata/*",)
 PLACEHOLDER_GLOBS = ("*/placeholder_weapons/*", "*tools/placeholder_weapons.json", "*tools/melee_ladders.json",
                      "*tools/generate_placeholder_weapons.py", "*tools/melee_ladder.py", "*tools/melee_damage.py",
                      "*tools/melee_catalogue.py", "*tools/analyze_melee_ladder.py", "*tools/restat_melee_blades.py",
-                     "*tools/fix_melee_ladder.py", "*/troops/troops_*.xml") + ARMORY_GLOBS
+                     "*tools/fix_melee_ladder.py", "*/troops/troops_*.xml",
+                     # The catalogue's module set and loading rules (#1375).
+                     "*/_module/submodule.xml", "*tools/audit_polearm_shield_parity.py") + ARMORY_GLOBS
 # Both armour generators write stats through rebalance_armor.calculate_stats.
 ARMOUR_CURVE_GLOBS = ("*tools/rebalance_armor.py",)
 # The lord armour variants (#1333): their output and spec, the generator and every tool it imports, the
@@ -95,6 +97,12 @@ CREATURE_GLOBS = ("*/action_sets.xml", "*/action_types.xml", "*/monster_usage_se
                   "*/lotr_monster_*.xml")
 FBX_GLOBS = ("*/assetsources/*.fbx",)
 LANG_GLOBS = ("*/languages/*.xml", "*/taom_module_strings.xml", "*/taom_xslt_strings.xml")
+# Every source and output of generate_name_localization_strings.py CATEGORIES not already in TROOP_GLOBS,
+# and the tool itself (#1374; test_data_gates pins it against CATEGORIES).
+NAME_LOC_GLOBS = ("*/realms_titles.xml", "*/custom_battle_scenes.xml", "*/career_system/*.xml",
+                  "*/taom_spkingdoms.xml", "*/taom_wanderers.xml", "*/named_companions/named_companions.xml",
+                  "*/_module/moduledata/taom_*_strings.xml", "*tools/generate_name_localization_strings.py",
+                  "*tools/_loc_sources.py")
 # Globs tested against the file name alone: `*banner*` on a full path matches the install folder
 # "Mount & Blade II Bannerlord", so every named live file would select banner-sheets.
 NAME_GLOBS = ("*banner*",)
@@ -111,7 +119,7 @@ GATES = (
          "TAOM_Map settlements", TROOP_GLOBS + MODULEDATA_GLOBS + ARMORY_GLOBS + MAP_GLOBS
          # The enlistment rank rule lives in the generator and prices weapons with these tools (#1290).
          + ("*tools/generate_enlistment_rosters.py", "*tools/melee_catalogue.py", "*tools/analyze_melee_ladder.py",
-            "*tools/ranged_ladder.py"),
+            "*tools/ranged_ladder.py", "*tools/audit_polearm_shield_parity.py"),
          ("python", "tools/validate_moduledata.py"),
          (".claude/rules/moduledata-validation.md", ".claude/rules/troops.md", ".claude/rules/xml-data.md", CODES_DOC),
          note="read the warnings as well as the errors; settlement pins live in tools/settlement_assignments.json"),
@@ -122,7 +130,7 @@ GATES = (
     Gate("career-kits", "troops, characters, rosters", TROOP_GLOBS,
          ("python", "tools/generate_career_kits.py", "--verify"), ("docs/features/career-system.md",),
          note="after any troop add or delete, re-run every generator check, not only the validator"),
-    Gate("name-loc", "troops, characters, language files", TROOP_GLOBS + LANG_GLOBS,
+    Gate("name-loc", "troops, characters, language files, name generator sources", TROOP_GLOBS + LANG_GLOBS + NAME_LOC_GLOBS,
          ("python", "tools/generate_name_localization_strings.py", "--check"), ("docs/localization/TRANSLATOR_GUIDE.md",)),
     Gate("wanderers", "wanderers, wanderer strings", ("*/taom_wanderers.xml", "*/taom_wanderer_strings.xml"),
          _dotnet("WandererBackstoryCoverageTests"), (MODULEDATA_DOC,), dotnet=True),
@@ -269,7 +277,7 @@ GATES = (
          ("*/_module/moduledata/*strings*.xml", "*tools/check_orphan_loc_rows.py", "*tools/_loc_sources.py",
           "*tools/loc_composed_families.json", "*tools/loc_orphan_allowlist.json"),
          ("python", "tools/check_orphan_loc_rows.py"), ("docs/localization/TRANSLATOR_GUIDE.md",),
-         note="a row is also orphaned when the C# literal that read it is removed: run it by hand after such a removal"),
+         note="a row is also orphaned when the C# literal, XSLT or JSON that read it is removed: run it by hand after such a removal"),
     Gate("loc-coverage", "language files, {=KEY} text", LANG_GLOBS + ARMORY_GLOBS,
          ("python", "tools/check_external_loc_coverage.py"), ("docs/reference/localization-map.md",),
          note="after any name or language edit; --apply raises the untranslated count, so run its --update-baseline in the same change"),

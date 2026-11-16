@@ -146,7 +146,9 @@ start at tier 4, left no room above the unrestated donor), the `placeholder-weap
   additions are wiped and the placeholders get no weapon usage. TAOM's SubModule.xml declares
   `<DependedModuleMetadata id="LOTRLOME_Armory" order="LoadBeforeThis" optional="true" />`: BUTR/BLSE
   launchers sort by it, the vanilla launcher ignores it.
-- The installed Armory (donors are read from it) and lxml (the shared `melee_catalogue`).
+- The installed Armory (donors are read from it) and lxml (the shared `melee_catalogue`). The catalogue
+  leaves TAOM's own placeholder sheets out (#1372): a caller that prices placeholders adds the registrations
+  from its own tree, as `taom_schema.price_placeholders` and `price_new` do.
 
 ## Tests
 
@@ -203,6 +205,10 @@ The validator then reports any troop still pointing at the removed id.
   run again.
 - v2.0.40 (16 Nov 2026, #1354): the shield gate reads these sheets; before, every placeholder resolved to no
   usage there and was never checked.
+- v2.0.40 (16 Nov 2026, #1375): the shield gate and the catalogue read only TAOM's playset, and a row's
+  `.xsl` sibling wins over its `.xslt`, as in the engine. The 20 placeholders resolve as before.
+- v2.0.40 (16 Nov 2026, #1384): `docs/reference/troop-rosters.html` prices these weapons from this folder;
+  before, their 305 slots on the page read "not found".
 
 ## GitHub Issue
 

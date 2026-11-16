@@ -1915,7 +1915,6 @@
   "TAOM_LD_Offer_Yeomen": "東伏爾德自耕兵",
   "TAOM_LD_Prompt_Cancel": "取消",
   "TAOM_LD_Prompt_ChoiceBest": "{NAME},最佳紀錄:已清波次 {WAVES},擊殺 {KILLS}",
-  "TAOM_LD_Prompt_ChoiceClass": "{NAME}:{TEXT}",
   "TAOM_LD_Prompt_Choose": "選擇",
   "TAOM_LD_Prompt_ClassDesc": "你的職業決定你帶入戰鬥的武器。騎兵還會更換你的盔甲並讓你騎上馬;其他職業則保留你原有的盔甲。",
   "TAOM_LD_Prompt_ClassTitle": "選擇你的職業",

@@ -11,7 +11,11 @@ Three pieces:
 
 - **`tools/melee_damage.py`** is the physics, ported from the v1.5.3 decompile.
 - **`tools/melee_catalogue.py`** is the wiring: it reads the installed modules the way the
-  engine merges them, works out which usage modes each item has, and prices them.
+  engine merges them, works out which usage modes each item has, and prices them. Since #1372 it
+  applies the stylesheets each module's `SubModule.xml` `<XmlName>` rows name and leaves out the
+  modules TAOM lists as incompatible (NavalDLC), by the shield gate's rule. Since #1375 it reads only
+  the modules TAOM loads with (its dependencies and LoadBeforeThis metadata), so AWOIAF_Armoury,
+  Multiplayer and StoryMode do not count.
 - **`tools/analyze_melee_ladder.py`** is a read-only report over the result. It has no
   `--apply` and no write path into any ModuleData.
 
@@ -504,11 +508,12 @@ restat of the same day; the restat has since been applied (see "Not done, and kn
 
 ### Not done, and known problems
 
-- **The Armory blades were restated on 2026-11-14; the troop swaps were not made.** The restat wrote 203 blade
+- **The Armory blades were restated on 2026-11-14; the troop swaps followed on 2026-11-16.** The restat wrote 203 blade
   pieces and a second run plans 0. The counts above are the dry runs and simulations made before it.
   `generate_career_kits.py`, `generate_starter_kit.py` and `generate_placeholder_weapons.py` ran after it.
-  `fix_melee_ladder.py` did not: it breaks the weapon category rule ("A troop keeps its weapon category", below), so the 318
-  `MELEE_LADDER_INVERSION` warnings it was meant to remove stay. The order of the apply and its results are in
+  `fix_melee_ladder.py` did not then: it broke the weapon category rule ("A troop keeps its weapon category",
+  below). It holds the rule since 2026-11-16 and its roster pass was applied that day; the counts are in that
+  section. The order of the apply and its results are in
   [armor-balance.md](./armor-balance.md#the-apply-sequence-2026-11-14-1271).
 - A blade is priced for its lowest wearer and held to that wearer's tier limit, so a blade worn across more
   than two tiers leaves its upper wearers light. 62 of the 204 worn non-hero blades span more than two tiers
@@ -641,10 +646,11 @@ either way; this is the fixed point, not a stopping place chosen early.
 
 ### Three guards, each of which was wrong once
 
-1. **Couchable weapons, asymmetrically.** `ComputeBlowMagnitudeMelee` feeds the attacker's
-   closing speed into `CalculateStrikeMagnitudeForThrust` as `extraLinearSpeed`, where it is
-   added to the thrust speed and the sum is **squared**. A couched lance therefore already
-   lands several times the standing-thrust magnitude this model computes, so RAISING one is
+1. **Couchable weapons, asymmetrically.** A couch is a passive usage. On v1.5.7
+   `ComputeBlowMagnitudeMelee` sends it to `CalculateBaseBlowMagnitudeForPassiveUsage`
+   (`MissionCombatMechanicsHelper.cs:661-671`), which computes a thrust with zero thrust speed
+   and 0.83 times the closing speed (`CombatStatCalculator.cs:53-56`). The blow therefore comes
+   from the charge, not from the thrust this model computes, so RAISING a couchable weapon is
    refused. The first version refused to move them at all, which protected
    `wm_gundabad_spear_a02` at 164 DPS in the hands of tier-3 militia, the single worst weapon
    the audit found. Lowering is safe and is now allowed.
@@ -780,11 +786,39 @@ couchable lance, swinging polearm, pike, bow and crossbow. A swap never crosses 
 moves a troop between a shield kit and a two handed one. The rule binds every tool that fits a troop to a
 number, not only the melee ladder.
 
-`fix_melee_ladder.py` does not hold this rule yet. On 2026-11-14 its plan of 176 swaps across 162 troops
-(against the restated Armory) replaced poleaxes with short spears, for example `rhudaur_lord_of_the_angle`
-from `numenorean_poleaxe_heavy` at 92 DPS to `dunland_caerdh_short_spear_e` at 33, so it was not applied.
-Do not run it with `--apply` until it picks only same-category candidates and never lowers an
-under-armed troop's damage.
+`fix_melee_ladder.py` holds this rule since 2026-11-16. On 2026-11-14 its plan of 176 swaps across 162
+troops (against the restated Armory) replaced poleaxes with short spears, for example
+`rhudaur_lord_of_the_angle` from `numenorean_poleaxe_heavy` at 92 DPS to `dunland_caerdh_short_spear_e`
+at 33, so it was not applied. All polearms share the template `TwoHandedPolearm`, and each weapon sat
+inside its own class band. Now `weapon_category` keys a candidate on the template and, for a polearm, on
+its main attack (swing or thrust, by the higher DPS), on its couch usage and on whether its primary usage
+refuses a shield; a candidate of another category is never picked. Same category means the same band, so
+an under-armed weapon is only ever swapped for a stronger one (`RosterFixerWeaponCategoryTests`).
+
+The roster pass under this rule was applied on 2026-11-16 with two more rules, each found by the review of
+its first apply:
+
+- **No swap in a generated troop file.** A troop file that a generator writes whole (the eight realm files,
+  `troops_lothlorien.xml`, `troops_gundabad_snow.xml`; `GENERATED_TROOP_FILES`) is reported, not swapped: the
+  generator's next `--apply` would undo the swap. Change such a weapon in the generator. The first apply wrote
+  into seven realm files and `test_generator_regions_in_sync` failed on all seven
+  (`RosterFixerGeneratedFileTests`).
+- **No swap above the upgrade.** Troops are planned from the highest level down, and a candidate may not beat
+  the best weapon that any of the troop's upgrade targets carries on the same template and main attack, after
+  their own swaps. The first apply gave `dale_footman` a 78 DPS poleaxe while its upgrade `dale_spearman` kept
+  a 60 DPS winged spear (`RosterFixerUpgradeCeilingTests`).
+
+Result (`python tools/fix_melee_ladder.py --apply` on 2026-11-16): 82 swaps on 75 troops in 13 troop files,
+35 distinct old and new weapon pairs, all for under-armed weapons; none across a category, none weaker, no
+new upgrade inversion. 538 weapon slots stay unresolved: 160 in generated files, 11 held by an upgrade's
+weapon, the rest with no in-band candidate of the category or over the carrier's tier limit. The same day the
+16 Lothlorien slots the fixer could swap were changed in `generate_lothlorien_troops.py` (each troop's own
+sword or spear line, the fixer's pick); 144 slots in generated files remain.
+`mordor_uruk_shieldguard` is exempt (`tools/melee_ladders.json`): the only candidate was an Uruk halberd,
+and its main weapon is an open decision (rca-black-uruk-weapons-2026-11-07 F1). `generate_career_kits.py
+--apply` then changed 8 career kit ids and `wire_starter_kit_rosters.py --apply` 6 player start rosters.
+`python tools/validate_moduledata.py` reported 304 `MELEE_LADDER_INVERSION` warnings before the pass and
+270 after (2026-11-16).
 
 ## Key Files
 
@@ -799,7 +833,7 @@ under-armed troop's damage.
 | `tools/generate_placeholder_weapons.py` | The `taom_ph_` placeholder weapons, capped by every carrier's tier limit |
 | `tools/analyze_melee_ladder.py` | The read-only report |
 | `tools/taom_schema.py` | The `MELEE_LADDER_INVERSION` and `MELEE_BLOW_CEILING` gates |
-| `tools/tests/test_melee_damage.py`, `test_melee_ladder.py`, `test_restat_melee_blades.py`, `test_generate_placeholder_weapons.py`, `test_analyze_melee_ladder.py` | The tests |
+| `tools/tests/test_melee_damage.py`, `test_melee_ladder.py`, `test_restat_melee_blades.py`, `test_generate_placeholder_weapons.py`, `test_analyze_melee_ladder.py`, `test_melee_catalogue_loading.py`, `test_analyze_melee_ladder_order.py` | The tests |
 
 ## How to verify in game
 
@@ -821,6 +855,21 @@ armoured troop (see "Class limits"). After the apply and a full restart:
 - 2026-11-14: class limits on one blow and on DPS, per-class tier targets over ten tiers with a craft table,
   tier limits, hero limits by maker group, `--limits-only`, and a DPS cap in whole damage points (#1271).
   Built and dry run; the Armory is not yet restated.
+- v2.0.40 (16 Nov 2026, #1372): the catalogue finds stylesheets through `SubModule.xml` rows and leaves out
+  NavalDLC. NavalDLC's 149 crafting pieces and its items left the catalogue. TAOM's own placeholder sheets
+  stay out of the chain, because the callers that price placeholders add them from the tree they check. The
+  ladder, the generators and the validator gave the same output on TAOM's weapons; the troop roster page now
+  reads items without NavalDLC's stubs, so its Umbar `northern_round_shield` shows 300 hp (page regenerated
+  under #1384).
+- v2.0.40 (16 Nov 2026, #1379): `analyze_melee_ladder.py` gave a different report from run to run when two
+  weapons tied (the erebor `TwoHandedAxe` row named `sm_dwarf_iron_axe_c` or `_d` by hash order). A tie
+  now goes to the first item id in sorted order, in the report and in the validator's melee gate, so a
+  `MELEE_LADDER` warning names the same weapon as `LADDER.md`; `test_analyze_melee_ladder_order.py` runs six
+  hash seeds.
+- v2.0.40 (16 Nov 2026, #1375): the catalogue and the shield gate read only TAOM's playset and follow the
+  engine's row rules (`.xsl` before `.xslt`, rows for other game types skipped, modules keyed by `<Id>`).
+  AWOIAF_Armoury's 280 crafting pieces left the ladder (2292 to 2012 loaded). The ladder, the generators,
+  the validator and the troop roster page gave the same output on TAOM's weapons.
 
 ## GitHub Issue
 
@@ -828,6 +877,9 @@ armoured troop (see "Class limits"). After the apply and a full restart:
   armour at 112
 - **Status:** Open
 - The melee ladder umbrella is #631.
+- #1372: the catalogue loads modules and stylesheets by the shield gate's rule.
+- #1379: the report gives the same output on every run.
+- #1375: the catalogue reads only the modules TAOM loads with.
 
 ## Related
 

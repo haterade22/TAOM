@@ -89,6 +89,17 @@ class SelectionTests(unittest.TestCase):
             self.assertIn("loc-orphans", _ids(dg.select(dg.GATES, [path])), path)
         self.assertNotIn("loc-orphans", _ids(dg.select(dg.GATES, [TROOPS])))
 
+    def test_every_name_generator_source_and_output_selects_the_name_loc_gate(self):
+        # #1374: realms_titles.xml became a generator source, and editing it did not run the --check.
+        import generate_name_localization_strings as gen
+        repo = Path(gen.REPO_ROOT)
+        paths = ["tools/generate_name_localization_strings.py", "tools/_loc_sources.py"]
+        for spec in gen.CATEGORIES.values():
+            for p in list(spec["sources"]()) + [spec["output"]]:
+                paths.append(Path(p).resolve().relative_to(repo.resolve()).as_posix())
+        for path in paths:
+            self.assertIn("name-loc", _ids(dg.select(dg.GATES, [path])), path)
+
     def test_a_live_armory_file_selects_the_armory_gates(self):
         ids = _ids(dg.select(dg.GATES, [LIVE_ARMORY]))
         self.assertIn("armory-refs", ids)

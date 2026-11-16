@@ -286,6 +286,7 @@
   ],
   "exempt_troops": {
     "cave_troll": "A troll is a monster, not a soldier. Its weapons are scenery-scale and deliberately slow, and the creature's threat comes from its own attacks and its mass rather than from its kit sustaining tier-10 DPS.",
-    "hill_troll": "The same monster rule as the cave troll: the hill troll carries its own war hammer (wm_hill_troll_2h_hammer_a; head weight 0.875, set 2026-09-26 so the engine prices it at the cave mace's 86 Blunt and swing speed 28) on its own 3.6 m skeleton."
+    "hill_troll": "The same monster rule as the cave troll: the hill troll carries its own war hammer (wm_hill_troll_2h_hammer_a; head weight 0.875, set 2026-09-26 so the engine prices it at the cave mace's 86 Blunt and swing speed 28) on its own 3.6 m skeleton.",
+    "mordor_uruk_shieldguard": "A spear and shield troop whose name says so. The roster pass of 2026-11-16 found no other in-band shield-safe spear in Mordor's pool and picked an Uruk halberd that thrusts; rca-black-uruk-weapons-2026-11-07 F1 left a halberd as its main weapon as an open option, not a decision. Keep its Gundabad spear until that is decided."
   }
 }

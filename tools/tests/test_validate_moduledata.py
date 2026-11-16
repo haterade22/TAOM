@@ -2751,6 +2751,13 @@ class MeleePassRowsTests(unittest.TestCase):
                                    {"sw": self._weapon("OneHandedSword", 80, 40, 60, 30)})
         self.assertEqual((kits, carried), ([], []))
 
+    def test_a_tie_on_the_best_weapon_names_the_first_id_as_the_ladder_report_does(self):
+        """#1379: the gate and LADDER.md name the same weapon when two are equally strong."""
+        priced = {"sw_a": self._weapon("OneHandedSword", 80, 40, 60, 30),
+                  "sw_b": self._weapon("OneHandedSword", 80, 40, 60, 30)}
+        kits, _ = self._rows([self._troop("t_sword", "gondor", 5, ["sw_b", "sw_a"])], priced)
+        self.assertEqual([k[3] for k in kits], ["sw_a"])
+
     def test_the_carried_tier_changes_the_verdict_on_a_blow_under_the_class_limit(self):
         import melee_ladder as ml
         spec = ml.load_spec()

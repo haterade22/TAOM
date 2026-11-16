@@ -1,11 +1,16 @@
 using System.Collections.Generic;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Settlements;
+using TaleWorlds.Localization;
 using TAOM.Features.Realms.Domain.World;
 
 namespace TAOM.Features.Realms;
 
-/// <summary>Copies the kingdoms and fiefs of the running campaign into a <see cref="WorldSnapshot"/>.</summary>
+/// <summary>
+/// Copies the kingdoms and fiefs of the running campaign into a <see cref="WorldSnapshot"/>. A name keeps its {=key}
+/// (<see cref="KingdomNames.OwnText(TextObject?, string)"/>, <see cref="SettlementNameText"/>), so the titles made
+/// from it follow a language change (#1391).
+/// </summary>
 internal static class WorldSnapshotReader
 {
     public static WorldSnapshot Read()
@@ -15,7 +20,7 @@ internal static class WorldSnapshotReader
         {
             if (kingdom == null || kingdom.IsEliminated)
                 continue;
-            kingdoms.Add(new KingdomInfo(kingdom.StringId, kingdom.Name?.ToString() ?? kingdom.StringId,
+            kingdoms.Add(new KingdomInfo(kingdom.StringId, KingdomNames.OwnText(kingdom.Name, kingdom.StringId),
                 kingdom.Culture?.StringId, kingdom.Leader?.StringId));
         }
 
@@ -29,6 +34,13 @@ internal static class WorldSnapshotReader
 
         return new WorldSnapshot(kingdoms, fiefs);
     }
+
+    /// <summary>
+    /// A settlement name's raw text. The engine sets IS_SETTLEMENT, IS_CASTLE, IS_TOWN and IS_HIDEOUT on every settlement
+    /// name (<c>Settlement.Deserialize</c>, <c>SetSettlementProperties</c>), and no name's text uses them, so they are
+    /// no reason to keep the resolved text the way a kingdom name with variables is kept.
+    /// </summary>
+    internal static string SettlementNameText(TextObject? name, string fallback) => name?.Value ?? fallback;
 
     private static FiefInfo? ToFief(Settlement settlement)
     {
@@ -55,7 +67,7 @@ internal static class WorldSnapshotReader
         var position = settlement.GetPosition2D;
         return new FiefInfo(
             settlement.StringId,
-            settlement.Name?.ToString() ?? settlement.StringId,
+            SettlementNameText(settlement.Name, settlement.StringId),
             kind,
             landlord.OwnerClan?.Kingdom?.StringId,
             landlord.Owner?.StringId,

@@ -411,7 +411,8 @@ def melee_pass_rows(troops, priced, spec):
         craft = ml.craft_key(t.id, t.culture, spec)
         best = [(priced[i].best_dps, i) for i in t.items if i in priced]
         if best:
-            dps, iid = max(best)
+            # A tie names the smallest id, as analyze_melee_ladder.py does (#1379).
+            dps, iid = min(best, key=lambda b: (-b[0], b[1]))
             p = priced[iid]
             kits.append((t.id, craft, t.tier, iid, dps, p.blade_piece, p.item.template,
                          *ml.dominant_flags(p.item.template, p.swing_damage, p.thrust_damage,
@@ -561,8 +562,9 @@ class Validator:
             troops_dir = self.moduledata / "troops"
             troops = mr.load_troops(troops_dir) if troops_dir.is_dir() else []
             cat, priced = _armory_catalogue(modules) if troops else (None, {})
-            # The taom_ph_ placeholders are not in the install: price them from this tree's own files
-            # (2026-11-14, #1271), so the troops that carry them are judged like any other weapon.
+            # The catalogue leaves TAOM's placeholder sheets out (#1372): price the taom_ph_ placeholders
+            # from this tree's own files (#1271), so the troops that carry them are judged like any other
+            # weapon and a registration the tree lost is not hidden by a deployed copy.
             ph_priced, ph_problems = (price_placeholders(cat, self.moduledata / PLACEHOLDER_DIR)
                                       if troops else ({}, []))
             priced = {**priced, **ph_priced}

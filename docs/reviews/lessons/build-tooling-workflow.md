@@ -5150,6 +5150,11 @@ The Kit's sprite generation re-saved all 13 GUI `_tex.tpac` files. I copied back
 - **Prevent:** when you copy a check from a sibling launcher, copy where it reads its reference, what it prints on PASS and when it refuses. Test each one: a commit during the run, a PASS text with the sha, a refusal before launch.
 - **Source:** [rca-scenario-event-window-2026-11-15.md](../rca-scenario-event-window-2026-11-15.md), findings 3, 4 and 6.
 
+### Pin the package facts a build guard is scheduled around (Dependencies deploy guard, 2026-11-16)
+`FailOnMissingBundledDlls` runs `BeforeTargets="PostBuildCopyToModules"` and mirrors `CopyBinariesWindows`' condition rather than `DisableModuleCopy`. Both choices depend on the pinned Bannerlord.BuildResources `Basic.targets` (declaration order, and a clean that ignores `DisableModuleCopy`), and the wiring tests read only our csproj, so a package bump could silently stop the guard running first.
+- **Why missed:** the package facts were verified once by hand, and the tests checked our side of the contract only.
+- **Prevent:** when a target is ordered or conditioned around a dependency's targets, add a test that reads the pinned version's file from the NuGet cache and asserts those facts (Inconclusive when the cache lacks it).
+- **Source:** [rca-dependencies-deploy-dlls-2026-11-16.md](../rca-dependencies-deploy-dlls-2026-11-16.md), finding 2.
 ### An advisory tier that waits for an issue to close is never promoted (shield and two-hander gate, #1312, 2026-11-15)
 `audit_polearm_shield_parity.py` reported two-handed weapons beside a shield as WARN, with the comment "once #450 is closed, move TwoHandedWeapon into this set". #450 closed and nobody moved it, so the count grew from 33 to 98 to 114 rosters, and the 2026-11-05 RCA saw it and filed nothing.
 - **Why missed:** the promotion was a note in a comment, owned by no commit; closing the issue did not touch the tool.
@@ -5161,3 +5166,21 @@ The Kit's sprite generation re-saved all 13 GUI `_tex.tpac` files. I copied back
 - **Why missed:** the file-name rule matched every stylesheet that existed when the gate was written; nothing failed when a new one used a subfolder.
 - **Prevent:** derive the file list from the manifest the engine reads (`SubModule.xml` rows, `<IncompatibleModules>`), and test both edges: a row's subfolder file counts, a file no row names does not. Make an input the gate cannot judge fail the run: a roster weapon that resolves to no usage now fails instead of passing in silence.
 - **Source:** issue #1354.
+
+### A fix to a helper must reach its copies (melee catalogue, #1372, 2026-11-16)
+#1354 fixed `merged()` in `audit_polearm_shield_parity.py`, but `melee_catalogue.py` held a copy whose docstring said "Copied in shape from `tools/audit_polearm_shield_parity.py:merged`". The copy kept the file-name rule and read NavalDLC, and `generate_troop_roster_page.py` had a third loop of its own, so NavalDLC's stub of `northern_round_shield` replaced SandBoxCore's on the roster page. Reusing the gate's rule also showed that the catalogue must leave TAOM's own placeholder sheets out: `taom_schema.price_placeholders` adds the tree's registrations, and a deployed copy would hide one the tree lost.
+- **Why missed:** the fix searched for the defect in the file the issue named, not for other code with the same shape.
+- **Prevent:** when fixing a helper, grep for its copies (the function name, "Copied in shape from", the same loop) and fix or file each in the same change. Before reusing a loader, read what each caller adds on top of it.
+- **Source:** issue #1372.
+
+### A loop over a set decides ties by hash order (melee ladder report, #1379, 2026-11-16)
+`analyze_melee_ladder.py` looped over `Troop.items`, a frozenset, and kept the first of two equal weapons, so one row of the report named a different axe from run to run on the same data. Python salts string hashes per process, so a test inside one process never sees the change.
+- **Why missed:** each run looked stable; only two runs side by side, or two `PYTHONHASHSEED` values, show it.
+- **Prevent:** when output depends on the order of a set (a tie-break, the first match, a dict filled from it), loop over `sorted(...)`. Prove a generator or report deterministic by running it under two or more `PYTHONHASHSEED` values in subprocesses.
+- **Source:** issue #1379.
+
+### A gate that mirrors engine loading needs the engine's module set too (shield gate and catalogue, #1375, 2026-11-16)
+After #1354 the gate and the catalogue found stylesheets through `SubModule.xml` rows, but they still read every installed module, so AWOIAF_Armoury's 280 crafting pieces and its items counted in a TAOM campaign where it never loads. They also read `.xslt` where the engine reads `.xsl` first, applied rows meant for multiplayer, and keyed modules by folder name (SandBox's Id is `Sandbox`).
+- **Why missed:** each fix copied one rule of `MBObjectManager.GetMergedXmlForManaged` at a time; no test listed the whole function's branches.
+- **Prevent:** when a tool mirrors an engine loader, list every branch of the engine function (module active, game type, file suffix, file or folder) in the docstring or a test map, and make each one either a test or bad input (exit 2) that names what the tool does not model.
+- **Source:** issue #1375.

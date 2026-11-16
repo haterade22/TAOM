@@ -7619,7 +7619,6 @@
     <string id="TAOM_LD_Class_SwordBoard_Text" text="Miecz i tarcza. Stań w szeregu i przyjmij ciosy." />
     <string id="TAOM_LD_Class_TwoHanded" text="Piechota Dwuręczna" />
     <string id="TAOM_LD_Class_TwoHanded_Text" text="Dwuręczny topór. Bez tarczy, za to ciężki cios." />
-    <string id="TAOM_LD_Prompt_ChoiceClass" text="{NAME}: {TEXT}" />
     <string id="TAOM_LD_Prompt_ClassDesc" text="Twoja klasa określa broń, z którą ruszasz do walki. Kawaleria ustala także twój pancerz i sadza cię na koniu; pozostałe klasy pozostawiają pancerz bez zmian." />
     <string id="TAOM_LD_Prompt_ClassTitle" text="Wybierz swoją klasę" />
     <string id="TAOM_LD_Boon_BloodiedButUnbowed" text="Zakrwawiony, lecz nieugięty" />
@@ -7849,9 +7848,6 @@
     <string id="taom_char_title" text="Character" />
     <string id="taom_char_perk_or" text="or" />
     <string id="taom_char_attribute_points" text="Attribute Points" />
-    <string id="taom_char_next_perk_tier" text="Skill {LEVEL}: next perk tier {TIER}, {COUNT} skill levels away" />
-    <string id="taom_char_next_perk_tier_one" text="Skill {LEVEL}: next perk tier {TIER}, 1 skill level away" />
-    <string id="taom_char_all_perk_tiers" text="Skill {LEVEL}: every perk tier reached" />
     <string id="taom_char_perk_tier_locked" text="Locked" />
     <string id="taom_char_no_traits" text="No notable traits" />
     <string id="taom_story_offer_body" text="The hour of {TARGET} has come. Will you ride to its walls and fight the battle yourself, or let fate decide?" />
@@ -8233,6 +8229,14 @@
     <string id="TAOM_CrashReport_Title" text="TAOM caught a crash" />
     <string id="TAOM_CrashReport_Continue" text="Continue (risky)" />
     <string id="TAOM_CrashReport_OpenBundle" text="Open bundle folder" />
+    <string id="taom_call_to_war_refused" text="{CALLED_KINGDOM} will not go to war against {KINGDOM_TO_CALL_TO_WAR_AGAINST}." />
+    <string id="taom_cheat_opt_unlimited_party" text="Unlimited party: {STATE}" />
+    <string id="taom_cheat_state_off" text="off" />
+    <string id="taom_cheat_state_on" text="on" />
+    <string id="taom_cheat_unlimited_party_hint" text="While on, your party has no troop limit, and troops of enemy or opposite-alignment cultures in it do not desert because of their culture. Turning it off keeps every troop, but the usual rules apply again: men over the troop limit start to desert, morale drops and the party is slower." />
+    <string id="taom_cheat_unlimited_party_bonus" text="Unlimited party (cheat)" />
+    <string id="taom_cheat_unlimited_party_off" text="Unlimited party is off: the size limit and desertion apply again." />
+    <string id="taom_cheat_unlimited_party_on" text="Unlimited party is on: no size limit, and enemy troops in your party do not desert because of their culture." />
     <string id="taom_realm_borders_mcm_name_size" text="Realm Name Size" />
     <string id="taom_realm_borders_mcm_name_size_hint" text="Makes the kingdom names on the map larger or smaller. Default: 100%." />
   </strings>

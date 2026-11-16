@@ -214,6 +214,24 @@ public class DiplomacyWarPrefixBindingTests
             .GetParameters().Length, "IAllianceCampaignBehavior.StartCallToWarAgreement changed arity: the prefix's call would not JIT.");
     }
 
+    // #1381: the sponsor list's on-condition gets a postfix that gives each row its own price; a rename would bring back
+    // the last row's price on every row.
+    [TestMethod]
+    [TestCategory("BindingVerification")]
+    public void SponsorCallToWarListCondition_BindingResolves_PrivateParameterlessBool()
+    {
+        RequireGame();
+
+        var method = SingleMethod(Resolve(Ns + "CampaignBehaviors.LordConversationsCampaignBehavior"),
+            "conversation_player_wants_to_sponsor_call_to_war_list_on_condition");
+
+        Assert.IsFalse(method.IsStatic, "The sponsor list condition became static.");
+        Assert.AreEqual(typeof(bool), method.ReturnType, "The sponsor list condition no longer returns bool.");
+        Assert.AreEqual(0, method.GetParameters().Length, "The sponsor list condition gained parameters.");
+        Assert.IsNotNull(typeof(LordConversations_SponsorCallToWarPrice_Patch).GetMethod("Postfix", BindingFlags.Public | BindingFlags.Static),
+            "LordConversations_SponsorCallToWarPrice_Patch.Postfix is gone.");
+    }
+
     // BannerlordCoop prefixes all three at the default priority (400), and equal priorities run in the
     // order they were added, which Coop usually wins. On StartCallToWarAgreement, Coop's server branch
     // does the agreement itself and returns false; Harmony 2.4.2 then skips every later bool prefix
