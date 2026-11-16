@@ -23,18 +23,19 @@ Any other row takes the team's text only when all of these hold:
     or a full-width question mark: the engine's tokenizer reads none, and then shows the whole string
     empty (Tokenizer.FindTokenMatchesAndText);
   - its placeholders, conditionals and tags match our English (translate_with_claude.placeholders_match);
-  - for TAOM, our English for the id is what it was at the drop's base version: the TAOM version its
-    SubModule.xml depends on, or --base. Otherwise the team translated words we have since changed, and
-    the row is reported as stale. An id newer than the base is taken and listed. TAOM_Map and the
+  - for TAOM, our English for the id had one text at the drop's base version (the TAOM version its
+    SubModule.xml depends on, or --base), in every commit since, and now. Otherwise the team may have
+    translated words we have since changed, and the row is reported as stale. An id added after the base
+    is taken, and listed, only when its English never changed after it was added. TAOM_Map and the
     Armory are not versioned here, so their rows are taken without this check and counted;
-  - in a file of names a player picks between (troop names, Armory items), it does not give two ids
+  - in a file of names a player must tell apart (troop and lord names, Armory items), it does not give two ids
     with different English one text. An Armory name whose English ends in a tier (I, IV, II-T1) first
     gets that tier appended when the team's text lacks it, the way the team writes it elsewhere.
 The tool never adds a row, so it cannot seed a vanilla-key row VanillaKeyOverrideTests forbids.
 
 --module TAOM (the default) writes the repo's files. TAOM_Map and Armory write the live install, each
 file backed up first (translate_with_claude.backup_live_file). A dry run (the default) writes only the
-JSON report, which --report always writes, also when a run stops.
+JSON report. The report is also written when a run stops after the drop and the base are read.
 
 Exit codes: 0 done. 2 done, but the drop has problems (a file that does not parse, two texts for one
 id, no rows for a language): read the report's "problems". 1 stopped (a bad --from or --base, a file of
@@ -47,6 +48,7 @@ extracted. ElementTree resolves no external entity, and the expat it uses limits
 from __future__ import annotations
 
 import argparse
+import functools
 import json
 import re
 import subprocess
@@ -62,6 +64,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 from _loc_sources import TAOM_SOURCES  # noqa: E402
 from translate_with_claude import (  # noqa: E402
+    CACHE_DIR,
     LANGUAGES,
     REPO_ROOT,
     TAOM_LANG_DIR,
@@ -87,7 +90,7 @@ MODULES = ("TAOM", "TAOM_Map", "Armory")
 TEAM_LANGS = ("CNs", "CNt")
 ENGLISH_DIR = "Main/_Module/ModuleData"
 # Our sources whose rows are names a player picks between, so two of them may never share a text.
-DISTINCT_NAME_SOURCES = {"taom_troop_name_strings.xml"}
+DISTINCT_NAME_SOURCES = {"taom_troop_name_strings.xml", "taom_lord_name_strings.xml"}
 
 # Ids whose team text names another entity than our English does: a Chinese player would meet another
 # lord, clan or name than an English one. Our row stays, and the report lists the id with the reason for
@@ -236,10 +239,31 @@ def ref_exists(ref: str) -> bool:
 
 def english_at(ref: str) -> Callable[[str], dict[str, str]]:
     """A reader of one English source of ours as it was at git ref: {} when the file did not exist then."""
+    @functools.cache
     def read(src_name: str) -> dict[str, str]:
         shown = subprocess.run(["git", "-C", str(REPO_ROOT), "show", f"{ref}:{ENGLISH_DIR}/{src_name}"],
                                capture_output=True)
         return _rows(shown.stdout, f"{ref}:{src_name}", strip_keys=True) if shown.returncode == 0 else {}
+    return read
+
+
+def english_after(ref: str) -> Callable[[str], dict[str, list[str]]]:
+    """A reader of each text every row of one English source had in the commits after git ref that changed
+    the file, in log order, oldest first. A row added after the team's base can change again before now."""
+    @functools.cache
+    def read(src_name: str) -> dict[str, list[str]]:
+        path = f"{ENGLISH_DIR}/{src_name}"
+        commits = subprocess.run(["git", "-C", str(REPO_ROOT), "log", "--reverse", "--format=%H", f"{ref}..HEAD",
+                                  "--", path], capture_output=True, text=True, check=True).stdout.split()
+        texts: dict[str, list[str]] = defaultdict(list)
+        for commit in commits:
+            shown = subprocess.run(["git", "-C", str(REPO_ROOT), "show", f"{commit}:{path}"], capture_output=True)
+            if shown.returncode:  # this commit deleted the file
+                continue
+            for sid, text in _rows(shown.stdout, f"{commit}:{src_name}", strip_keys=True).items():
+                if not texts[sid] or texts[sid][-1] != text:
+                    texts[sid].append(text)
+        return dict(texts)
     return read
 
 
@@ -250,12 +274,14 @@ class Target:
     current: dict[str, str]
     live: bool
     english_then: dict[str, str] | None = None  # our English at the drop's base version; None: no history
+    english_later: dict[str, list[str]] = field(default_factory=dict)  # its texts in the commits since
     distinct_names: bool = False                 # names a player picks between: no two may share a text
     tiers: bool = False                          # Armory item names: append the English tier the team left out
 
 
 def taom_targets(lang: str, lang_root: Path = TAOM_LANG_DIR, source_root: Path | None = None,
-                 base: Callable[[str], dict[str, str]] | None = None) -> list[Target]:
+                 base: Callable[[str], dict[str, str]] | None = None,
+                 later: Callable[[str], dict[str, list[str]]] | None = None) -> list[Target]:
     locale, _ = LANGUAGES[lang]
     source_root = source_root or REPO_ROOT / ENGLISH_DIR
     targets = []
@@ -265,6 +291,7 @@ def taom_targets(lang: str, lang_root: Path = TAOM_LANG_DIR, source_root: Path |
         if target.exists() and src.exists():
             targets.append(Target(target, _file_rows(src, strip_keys=True), _file_rows(target, strip_keys=False),
                                   live=False, english_then=base(src_name) if base else None,
+                                  english_later=later(src_name) if later else {},
                                   distinct_names=src_name in DISTINCT_NAME_SOURCES))
     return targets
 
@@ -371,7 +398,7 @@ def _accepted_text(sid: str, current: str, team: dict[str, tuple[str, str]], tar
     if not text.strip() or text == english:
         plan.english_in_drop.append(sid)
         return None
-    unsafe = set(XML_UNSAFE.findall(text)) - set(english)
+    unsafe = set(XML_UNSAFE.findall(text))
     unreadable = unreadable_expressions(text)
     if unsafe:
         ok, why = False, f"characters an attribute cannot carry: {sorted(hex(ord(c)) for c in unsafe)}"
@@ -385,12 +412,13 @@ def _accepted_text(sid: str, current: str, team: dict[str, tuple[str, str]], tar
         return None
     if target.english_then is not None:
         then = target.english_then.get(sid)
-        if then is None:
-            plan.new_since_base.append(sid)
-        elif then != english:
-            plan.stale.append({"id": sid, "file": target.path.name, "english_then": then,
+        texts = ([] if then is None else [then]) + target.english_later.get(sid, []) + [english]
+        if len(set(texts)) > 1:
+            plan.stale.append({"id": sid, "file": target.path.name, "english_then": texts[0],
                                "english_now": english, "theirs": text})
             return None
+        if then is None:
+            plan.new_since_base.append(sid)
     return with_tier(english, text) if target.tiers else text
 
 
@@ -443,7 +471,7 @@ def make_plan(team: dict[str, tuple[str, str]], targets: list[Target], overrides
     return plan
 
 
-def apply_plan(plan: Plan, lang: str, targets: list[Target], cache_dir: Path | None = None,
+def apply_plan(plan: Plan, lang: str, targets: list[Target], cache_dir: Path = CACHE_DIR,
                backups: list[str] | None = None) -> list[str]:
     """Saves the cache, then writes the language files, each live one backed up first.
 
@@ -451,21 +479,23 @@ def apply_plan(plan: Plan, lang: str, targets: list[Target], cache_dir: Path | N
     write below leaves behind. Each backup path is added to backups as it is made, so a caller can still
     report them after a failure."""
     backups = [] if backups is None else backups
-    cache = load_cache(lang, cache_dir) if cache_dir else load_cache(lang)
+    cache = load_cache(lang, cache_dir)
     cache.update(plan.cache)
-    if cache_dir:
-        save_cache(lang, cache, cache_dir)
-    else:
-        save_cache(lang, cache)
+    save_cache(lang, cache, cache_dir)
     live = {t.path for t in targets if t.live}
     for path, rows in sorted(plan.writes.items()):
         if path in live:
             backups.append(str(backup_live_file(path)))
-        tag = TAG.search(path.read_text(encoding="utf-8"))
+        before = path.read_bytes()
+        tag = TAG.search(before.decode("utf-8-sig"))
         _, unplaced = write_back(path, rows, tag.group(1) if tag else LANGUAGES[lang][1])
+        try:  # write_back writes in place, so a document that no longer parses is put back (data-scripts.md)
+            ET.parse(path)
+        except ET.ParseError as exc:
+            path.write_bytes(before)
+            raise SystemExit(f"{path}: the written file does not parse ({exc}); it is put back") from None
         if unplaced:
             raise SystemExit(f"{path}: {len(unplaced)} rows did not land, e.g. {unplaced[:3]}")
-        ET.parse(path)  # every text passed XML_UNSAFE; this guards write_back itself
     return backups
 
 
@@ -531,6 +561,7 @@ def main(argv=None) -> int:
             raise SystemExit(f"--base {base}: not a commit or tag in this repo (git fetch --tags?)")
     report = {"source": str(args.source), "modules": modules, "base": base, "applied": args.apply,
               "problems": problems, "languages": []}
+    then, later = english_at(base), english_after(base)  # read only for TAOM, once per source file (cached)
     try:
         for lang in langs:
             team = teams[lang]
@@ -538,7 +569,7 @@ def main(argv=None) -> int:
                 problems.append(f"{lang}: the drop holds no rows under ModuleData/Languages/{lang}")
             targets = []
             for module in modules:
-                targets.extend(taom_targets(lang, base=english_at(base)) if module == "TAOM"
+                targets.extend(taom_targets(lang, base=then, later=later) if module == "TAOM"
                                else live_targets(lang, module))
             plan = make_plan(team, targets, load_overrides(lang), tuple(args.skip_prefix))
             entry = summary(lang, plan)

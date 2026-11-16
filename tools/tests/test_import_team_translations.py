@@ -8,6 +8,7 @@ our files: English source and language file. Each test breaks one rule the impor
 """
 import json
 import os
+import subprocess
 import sys
 import tempfile
 import unittest
@@ -155,6 +156,12 @@ class ImportTests(unittest.TestCase):
         self.assertEqual({}, plan.writes)
         self.assertNotIn("taom_plain", plan.cache)
 
+    def test_a_line_break_is_rejected_even_when_our_english_has_one(self):
+        # write_back escapes only & " < >: a raw line break in an attribute reads back as a space.
+        target = self.live_target({"x": "A\nB"}, {"x": "旧"}, tiers=False)
+        plan = imp.make_plan({"x": ("甲\n乙", "t")}, [target], {}, ())
+        self.assertEqual(["x"], [r["id"] for r in plan.rejected])
+
     def test_a_brace_token_with_a_non_ascii_character_is_rejected(self):
         # The engine's tokenizer reads no such character and shows the whole string empty (Tokenizer.FindTokenMatchesAndText).
         plan = self.plan(drop_rows={"taom_hello": "你好{NAME}{玩家}"})
@@ -230,6 +237,46 @@ class ImportTests(unittest.TestCase):
         self.assertEqual("后加的", plan.writes[self.ours]["taom_new"])
         self.assertEqual(["taom_new"], plan.new_since_base)
 
+    def test_an_id_new_since_the_base_whose_english_changed_after_is_stale(self):
+        # The team saw the id's first words; our English has changed since then.
+        targets = imp.taom_targets("CNs", lang_root=self.root / "Languages", source_root=self.root / "src",
+                                   base=lambda src: ENGLISH_AT_BASE, later=lambda src: {"taom_new": ["Added first"]})
+        plan = self.plan(targets=targets)
+        self.assertNotIn("taom_new", plan.writes[self.ours])
+        self.assertNotIn("taom_new", plan.new_since_base)
+        self.assertIn({"id": "taom_new", "file": self.ours.name, "english_then": "Added first",
+                       "english_now": "Added later", "theirs": "后加的"}, plan.stale)
+
+    def test_a_row_whose_english_changed_and_changed_back_is_stale(self):
+        targets = imp.taom_targets("CNs", lang_root=self.root / "Languages", source_root=self.root / "src",
+                                   base=lambda src: ENGLISH_AT_BASE, later=lambda src: {"taom_plain": ["Other", "Plain"]})
+        plan = self.plan(targets=targets)
+        self.assertNotIn("taom_plain", plan.writes[self.ours])
+        self.assertIn("taom_plain", [r["id"] for r in plan.stale])
+
+    def test_english_after_a_ref_lists_each_text_of_the_later_commits(self):
+        repo = self.root / "repo"
+        source = repo / imp.ENGLISH_DIR / "taom_module_strings.xml"
+        source.parent.mkdir(parents=True)
+
+        def commit(rows):
+            source.write_text("<strings>" + "".join(f'<string id="{k}" text="{{={k}}}{v}" />' for k, v in rows.items())
+                              + "</strings>", encoding="utf-8")
+            subprocess.run(["git", "-C", str(repo), "add", "-A"], check=True, capture_output=True)
+            subprocess.run(["git", "-C", str(repo), "-c", "user.name=t", "-c", "user.email=t@example.invalid",
+                            "commit", "-q", "-m", "x"], check=True, capture_output=True)
+            return subprocess.run(["git", "-C", str(repo), "rev-parse", "HEAD"], check=True, capture_output=True,
+                                  text=True).stdout.strip()
+
+        subprocess.run(["git", "init", "-q", str(repo)], check=True, capture_output=True)
+        base = commit({"taom_a": "A"})
+        commit({"taom_a": "A", "taom_b": "B1"})
+        commit({"taom_a": "A2", "taom_b": "B2"})
+        with mock.patch.object(imp, "REPO_ROOT", repo):
+            read = imp.english_after(base)
+            self.assertEqual({"taom_a": ["A", "A2"], "taom_b": ["B1", "B2"]}, read("taom_module_strings.xml"))
+            self.assertEqual({}, read("no_such_source_strings.xml"))
+
     def test_a_target_with_no_history_is_taken_and_counted_unchecked(self):
         plan = self.plan(targets=self.targets(base=None))
         self.assertEqual("旧措辞", plan.writes[self.ours]["taom_stale"])
@@ -277,6 +324,29 @@ class ImportTests(unittest.TestCase):
         self.assertEqual({"archer": "安法拉斯弓手"}, plan.writes[target.path])
         self.assertEqual(["foot"], [c["id"] for c in plan.collisions])
         self.assertNotIn("foot", plan.cache)
+
+    def test_lord_names_are_names_a_player_must_tell_apart(self):
+        # The first re-import gave Amandir (aom_lord_EW_1_name) the Chinese name of Vorondir.
+        src_name, template = next((s, t) for s, t in imp.TAOM_SOURCES if s == "taom_lord_name_strings.xml")
+        (self.root / "src" / src_name).write_text(ENGLISH, encoding="utf-8")
+        (self.root / "Languages" / "CNs" / template.format(locale=imp.LANGUAGES["CNs"][0])).write_bytes(
+            OURS.encode("utf-8"))
+        lords = [t for t in self.targets() if t.path.name.startswith("std_taom_lord_name_strings")]
+        self.assertEqual([True], [t.distinct_names for t in lords])
+
+    def test_a_collision_that_appears_only_after_a_row_goes_back_is_kept_ours_too(self):
+        english = {"a": "Amandir", "b": "Vorondir", "c": "Celebrin"}
+        target = self.live_target(english, {"a": "阿", "b": "沃", "c": "凯"}, tiers=False)
+        # a and b clash on 新; a then returns to 阿, which the team gave c.
+        team = {"a": ("新", "t"), "b": ("新", "t"), "c": ("阿", "t")}
+        plan = imp.make_plan(team, [target], {}, ())
+        self.assertEqual(["a", "b", "c"], sorted(c["id"] for c in plan.collisions))
+        self.assertNotIn(target.path, plan.writes)
+
+    def test_a_tier_with_a_track_or_a_digit_is_appended_once(self):
+        self.assertEqual("[黑森林]步兵盔 II-T1", imp.with_tier("Infantry Helmet II-T1", "[黑森林]步兵盔"))
+        self.assertEqual("矛 3", imp.with_tier("Spear 3", "矛"))
+        self.assertEqual("步兵盔 II-T1", imp.with_tier("Infantry Helmet II-T1", "步兵盔 II-T1"))
 
     def test_plain_text_may_share_a_translation(self):
         plan = self.plan(drop_rows={"taom_plain": "相同", "taom_same": "相同"})
@@ -382,13 +452,44 @@ class ImportTests(unittest.TestCase):
         report = self.root / "report.json"
         saved = {} if saved is None else saved
         targets = self.targets()
-        with mock.patch.object(imp, "taom_targets", lambda lang, base=None: targets), \
+        with mock.patch.object(imp, "taom_targets", lambda lang, base=None, later=None: targets), \
                 mock.patch.object(imp, "load_overrides", lambda lang: {}), \
                 mock.patch.object(imp, "load_cache", lambda lang, *a: {}), \
                 mock.patch.object(imp, "save_cache", lambda lang, cache, *a: saved.update(cache)):
             code = imp.main(["--lang", "CNs", "--from", str(drop), "--base", "HEAD", "--report", str(report),
                              "--skip-prefix", "realms_", *extra])
         return code, json.loads(report.read_text(encoding="utf-8")), saved
+
+    def test_main_reads_the_base_from_the_drop_and_passes_both_readers(self):
+        drop, report, seen = make_drop(self.root), self.root / "report.json", {}
+        targets = self.targets()
+
+        def fake_targets(lang, base=None, later=None):
+            seen["base"], seen["later"] = base, later
+            return targets
+        with mock.patch.object(imp, "english_at", lambda ref: ("at", ref)), \
+                mock.patch.object(imp, "english_after", lambda ref: ("after", ref)), \
+                mock.patch.object(imp, "ref_exists", lambda ref: True), \
+                mock.patch.object(imp, "taom_targets", fake_targets), \
+                mock.patch.object(imp, "load_overrides", lambda lang: {}):
+            self.assertEqual(0, imp.main(["--lang", "CNs", "--from", str(drop), "--report", str(report)]))
+        self.assertEqual({"base": ("at", "v2.0.38"), "later": ("after", "v2.0.38")}, seen)
+
+    def test_main_stops_when_the_drop_names_no_taom_version_and_no_base_is_given(self):
+        drop = make_drop(self.root, extra={"TAOM_CN/SubModule.xml": "<Module />"})
+        with self.assertRaises(SystemExit):
+            imp.main(["--lang", "CNs", "--from", str(drop), "--report", str(self.root / "report.json")])
+
+    def test_a_written_file_that_does_not_parse_is_put_back(self):
+        before = self.ours.read_bytes()
+        plan = self.plan()
+
+        def broken_write(path, rows, tag):
+            path.write_text("<strings><string", encoding="utf-8")
+            return len(rows), []
+        with mock.patch.object(imp, "write_back", broken_write), self.assertRaises(SystemExit):
+            imp.apply_plan(plan, "CNs", self.targets(), cache_dir=self.cache)
+        self.assertEqual(before, self.ours.read_bytes())
 
     def test_main_without_apply_writes_only_the_report(self):
         before = self.ours.read_bytes()
@@ -411,7 +512,7 @@ class ImportTests(unittest.TestCase):
             z.writestr("TAOM_CN/SubModule.xml", SUBMODULE)
             z.writestr("TAOM_CN/ModuleData/Languages/CNt/a.xml", team_language_file({"taom_plain": "新"}))
         targets = self.targets()
-        with mock.patch.object(imp, "taom_targets", lambda lang, base=None: targets), \
+        with mock.patch.object(imp, "taom_targets", lambda lang, base=None, later=None: targets), \
                 mock.patch.object(imp, "load_overrides", lambda lang: {}):
             code = imp.main(["--lang", "CNs", "--from", str(empty), "--base", "HEAD",
                              "--report", str(self.root / "r2.json")])

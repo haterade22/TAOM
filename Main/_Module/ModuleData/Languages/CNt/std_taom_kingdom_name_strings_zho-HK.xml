@@ -6,105 +6,105 @@
     <tag language="Traditional Chinese" />
   </tags>
   <strings>
-    <string id="taom_bluecraig_desc" text="遠西藍色山脈（埃瑞德隆恩）中藍崖的半獸人巢穴，緊鄰林頓的灰港。這是一支獨特而數不盡的半獸人大軍——與迷霧山脈半獸人城的同族有所區別——他們遍佈西部的峭壁，不斷騷擾西岸的精靈。" />
-    <string id="taom_bluecraig_name" text="藍崖半獸人" />
-    <string id="taom_bluecraig_ruler_title" text="大半獸人" />
-    <string id="taom_bluecraig_short_name" text="藍崖" />
-    <string id="taom_bluecraig_title" text="藍崖半獸人王國" />
-    <string id="taom_dolguldur_desc" text="多爾哥多，陰影與絕望的堡壘，如同死靈法師黑暗意志的險惡燈塔。棲息於其深處的半獸人與污穢生物令所有人心生恐懼。" />
-    <string id="taom_dolguldur_name" text="多爾哥多" />
+    <string id="taom_bluecraig_desc" text="藍巖的半獸人巢穴位於遙遠西方的藍色山脈，也就是埃瑞德路因，緊鄰林頓的灰港。它們是一支獨立而數量龐大的半獸人族羣，與迷霧山脈半獸人鎮的同類不同，常在西方峭壁間蜂擁而出，騷擾西岸的精靈。" />
+    <string id="taom_bluecraig_name" text="藍巖半獸人" />
+    <string id="taom_bluecraig_ruler_title" text="半獸人王" />
+    <string id="taom_bluecraig_short_name" text="藍巖" />
+    <string id="taom_bluecraig_title" text="藍巖半獸人王國" />
+    <string id="taom_dolguldur_desc" text="多古爾都是陰影與絕望的要塞，也是死靈法師黑暗意志的危險燈塔。盤踞在深處的奧克和邪惡生物，讓所有人的心中都生出恐懼。" />
+    <string id="taom_dolguldur_name" text="多古爾都" />
     <string id="taom_dolguldur_ruler_title" text="恐懼之主" />
-    <string id="taom_dolguldur_short_name" text="多爾哥多" />
-    <string id="taom_dolguldur_title" text="多爾哥多死靈法師之國" />
-    <string id="taom_erebor_desc" text="孤山，埃瑞博，是北方最偉大的矮人王國。此地黃金與祕銀豐饒，乃杜林一族的家園。埃瑞博的矮人是聞名的工匠與勇猛的戰士，他們的廳堂中迴盪著祖先的歌聲。" />
-    <string id="taom_erebor_name" text="埃瑞博" />
+    <string id="taom_dolguldur_short_name" text="多古爾都" />
+    <string id="taom_dolguldur_title" text="多古爾都死靈法師領" />
+    <string id="taom_erebor_desc" text="孤山，又稱埃瑞博山，是北方最偉大的矮人王國。這裏盛產黃金和祕銀，也是都林一脈的家園。孤山的矮人以精湛工藝和勇猛善戰聞名，他們的廳堂中迴盪着祖先的歌聲。" />
+    <string id="taom_erebor_name" text="孤山" />
     <string id="taom_erebor_ruler_title" text="國王" />
     <string id="taom_erebor_short_name" text="孤山" />
-    <string id="taom_erebor_title" text="孤山王國" />
-    <string id="taom_goblin_desc" text="高隘口的半獸人成群蜂擁於迷霧山脈地底的隧道之中，他們是大半獸人曾率領以攻擊矮人與旅人的那支大軍的後裔。他們數不勝數、兇殘暴虐，自半獸人城傾巢而出，襲掠山間道路。" />
+    <string id="taom_erebor_title" text="山下王國" />
+    <string id="taom_goblin_desc" text="高隘口的半獸人在迷霧山脈下方的隧道中蜂擁而動，他們是半獸人王昔日率領、同時襲擊矮人與旅人的那支大軍的餘孽。他們數量衆多，兇狠惡毒，從半獸人鎮湧出，劫掠山路。" />
     <string id="taom_goblin_name" text="半獸人" />
-    <string id="taom_goblin_ruler_title" text="大半獸人" />
+    <string id="taom_goblin_ruler_title" text="半獸人王" />
     <string id="taom_goblin_short_name" text="半獸人" />
-    <string id="taom_goblin_title" text="高隘口半獸人領域" />
-    <string id="taom_gundabad_desc" text="甘達巴德——半獸人古老而陰森的堡壘，是野蠻與宰制的據點。甘達巴德的半獸人為戰爭與混亂而生，在染血的旗幟下集結。" />
-    <string id="taom_gundabad_name" text="甘達巴德" />
-    <string id="taom_gundabad_ruler_title" text="統帥" />
-    <string id="taom_gundabad_short_name" text="甘達巴德" />
-    <string id="taom_gundabad_title" text="甘達巴德" />
-    <string id="taom_isengard_desc" text="艾辛格——白袍巫師薩魯曼的堡壘，是權勢與野心的據點。強獸人在白掌旗幟下行軍，其紀律與兇殘無人能及。" />
-    <string id="taom_isengard_name" text="艾辛格" />
-    <string id="taom_isengard_ruler_title" text="統帥" />
-    <string id="taom_isengard_short_name" text="艾辛格" />
-    <string id="taom_isengard_title" text="艾辛格霸權" />
-    <string id="taom_lindon_desc" text="林頓，藍色山脈以西的翠綠之地，是高等精靈在中土海岸上最後的王國。白船自密斯隆德的灰港啟航西去，而造船者奇爾丹則守望著艾爾達逐漸消逝的光輝。" />
+    <string id="taom_goblin_title" text="高隘口半獸人王國" />
+    <string id="taom_gundabad_desc" text="貢達巴德是奧克古老而令人畏懼的堡壘，也是野蠻與統治的據點。貢達巴德的奧克爲戰爭和混亂而生，在染血的旗幟下集結。" />
+    <string id="taom_gundabad_name" text="貢達巴德" />
+    <string id="taom_gundabad_ruler_title" text="督軍" />
+    <string id="taom_gundabad_short_name" text="貢達巴德" />
+    <string id="taom_gundabad_title" text="貢達巴德" />
+    <string id="taom_isengard_desc" text="艾森加德是白袍巫師薩茹曼的要塞，也是一處權力與野心的堡壘。烏魯克在白手旗幟下向外進軍，他們的紀律與兇暴無人能比。" />
+    <string id="taom_isengard_name" text="艾森加德" />
+    <string id="taom_isengard_ruler_title" text="督軍" />
+    <string id="taom_isengard_short_name" text="艾森加德" />
+    <string id="taom_isengard_title" text="艾森加德霸主領" />
+    <string id="taom_lindon_desc" text="林頓是藍色山脈以西的綠色土地，也是中洲海岸上最後的高等精靈王國。白船從米斯瀧德的灰港駛向西方，而造船者奇爾丹守望着埃爾達逐漸遠去的光輝。" />
     <string id="taom_lindon_name" text="林頓" />
-    <string id="taom_lindon_ruler_title" text="港灣之主" />
+    <string id="taom_lindon_ruler_title" text="港口之主" />
     <string id="taom_lindon_short_name" text="林頓" />
     <string id="taom_lindon_title" text="林頓至高王國" />
-    <string id="taom_lothlorien_desc" text="黃金森林座落於銀脈河與宏偉的安都因河之間。在凱蘭崔爾與凱勒鵬的意志守護之下，它是精靈優雅與抗爭的堡壘——一片不為時光所觸的土地，樹葉永不凋落。" />
-    <string id="taom_lothlorien_name" text="羅斯洛立安" />
+    <string id="taom_lothlorien_desc" text="金色森林坐落在銀脈河與浩蕩的安都因河之間。它受加拉德瑞爾與凱勒博恩的意志守護，是精靈優雅與抗爭的堡壘，一片彷彿不受時間觸及、葉子也不會凋落的土地。" />
+    <string id="taom_lothlorien_name" text="洛絲羅瑞恩" />
     <string id="taom_lothlorien_ruler_title" text="夫人" />
-    <string id="taom_lothlorien_short_name" text="羅斯洛立安" />
-    <string id="taom_lothlorien_title" text="羅斯洛立安王國" />
-    <string id="taom_mirkwood_desc" text="幽暗密林的林地王國多年來歷經重重磨難。在瑟蘭督伊的領導下，木精靈變得離群索居，對外人心存戒備。然而在瑟蘭督伊心中，仍殘存著一簇燃自第一紀元遠古之日的火焰。" />
-    <string id="taom_mirkwood_name" text="拉斯加蘭" />
-    <string id="taom_mirkwood_ruler_title" text="阿蘭（王）" />
-    <string id="taom_mirkwood_short_name" text="幽暗密林" />
-    <string id="taom_mirkwood_title" text="幽暗密林王國" />
-    <string id="taom_mistymountainorcs_desc" text="迷霧山脈的半獸人大軍佔據著自格拉姆山至摩瑞亞門前的高處與深坑。他們在嚴寒的峰巒間為戰爭而生，響應黑影的召喚，渴望奪回山脈為己有。" />
-    <string id="taom_mistymountainorcs_name" text="迷霧山脈半獸人" />
-    <string id="taom_mistymountainorcs_ruler_title" text="統帥" />
-    <string id="taom_mistymountainorcs_short_name" text="迷霧半獸人" />
-    <string id="taom_mistymountainorcs_title" text="迷霧山脈半獸人大軍" />
-    <string id="taom_rivendell_desc" text="瑞文戴爾深藏於迷霧山脈的裂谷之中，是大海以東最後的溫馨之家。它由半精靈愛隆所建，是抵禦聚集黑暗的庇護之所，一處療癒、智識與靜默力量之地。" />
-    <string id="taom_rivendell_name" text="伊姆拉崔" />
-    <string id="taom_rivendell_ruler_title" text="大人" />
-    <string id="taom_rivendell_short_name" text="伊姆拉崔" />
-    <string id="taom_rivendell_title" text="伊姆拉崔的庇護所" />
-    <string id="taom_umbar_desc" text="昂巴,海盜們的黑暗港灣,是一個充滿海上霸權與陰險野心的國度。海盜們劫掠中土世界的海岸,以他們迅捷的戰船散播恐懼。" />
-    <string id="taom_umbar_name" text="昂巴" />
+    <string id="taom_lothlorien_short_name" text="洛絲羅瑞恩" />
+    <string id="taom_lothlorien_title" text="洛絲羅瑞恩王國" />
+    <string id="taom_mirkwood_desc" text="黑森林的林地王國多年來歷經苦難。在瑟蘭杜伊統治下，森林精靈變得避世，也對陌生人保持戒備。但在瑟蘭杜伊心中，仍有一團從第一紀元遠古歲月點燃的火焰。" />
+    <string id="taom_mirkwood_name" text="埃林拉斯嘉蘭" />
+    <string id="taom_mirkwood_ruler_title" text="阿蘭" />
+    <string id="taom_mirkwood_short_name" text="黑森林" />
+    <string id="taom_mirkwood_title" text="黑森林王國" />
+    <string id="taom_mistymountainorcs_desc" text="迷霧山脈的奧克大軍佔據着從格拉姆山到墨瑞亞大門之間的高地和深窟。他們在寒冷山峯中爲戰爭而生，回應陰影的召喚，渴望奪回羣山據爲己有。" />
+    <string id="taom_mistymountainorcs_name" text="迷霧山脈奧克" />
+    <string id="taom_mistymountainorcs_ruler_title" text="督軍" />
+    <string id="taom_mistymountainorcs_short_name" text="迷霧奧克" />
+    <string id="taom_mistymountainorcs_title" text="迷霧山脈奧克大軍" />
+    <string id="taom_rivendell_desc" text="幽谷藏在迷霧山脈深處的裂谷中，是大海以東最後家園。它由半精靈埃爾隆德建立，是抵禦不斷聚集的黑暗的避難所，也是一處療愈、學識與安靜力量並存的地方。" />
+    <string id="taom_rivendell_name" text="幽谷" />
+    <string id="taom_rivendell_ruler_title" text="領主" />
+    <string id="taom_rivendell_short_name" text="幽谷" />
+    <string id="taom_rivendell_title" text="幽谷庇護所" />
+    <string id="taom_umbar_desc" text="烏姆巴爾是海盜的黑暗港口，一個浸透海上力量與危險野心的國度。烏姆巴爾的海盜劫掠中洲的海岸，以迅捷船隻散播恐懼。" />
+    <string id="taom_umbar_name" text="烏姆巴爾" />
     <string id="taom_umbar_ruler_title" text="海盜王" />
-    <string id="taom_umbar_short_name" text="昂巴" />
-    <string id="taom_umbar_title" text="昂巴海港" />
-    <string id="taom_arthedain_desc" text="亞爾諾分裂而成的三個王國中，唯有雅爾辛不曾傾覆。阿維杜伊的血脈仍據守北崗上的福諾斯特，然其領主寥寥，城鎮貧弱，安格馬的陰影始終籠罩著北方的丘陵。" />
-    <string id="taom_arthedain_name" text="雅爾辛" />
+    <string id="taom_umbar_short_name" text="烏姆巴爾" />
+    <string id="taom_umbar_title" text="烏姆巴爾港" />
+    <string id="taom_arthedain_desc" text="阿爾諾分裂出的三個王國中，阿塞丹堅持到了最後，至今仍未陷落。阿維杜伊的後人依然統治着北崗上的佛諾斯特，只是領主所剩無幾，城鎮貧困，安格瑪的陰影始終籠罩着北方丘陵。" />
+    <string id="taom_arthedain_name" text="阿塞丹" />
     <string id="taom_arthedain_ruler_title" text="國王" />
-    <string id="taom_arthedain_short_name" text="雅爾辛" />
-    <string id="taom_arthedain_title" text="雅爾辛北方王國" />
-    <string id="taom_cardolan_desc" text="亞爾諾分裂後的三個王國中最南的一個。其歷代君王長眠於提恩·戈薩德的古塚之中，其騎兵守衛著巴蘭都因河與灰泛河之間的平原，但城鎮稀少，領主們則與雅西頓和魯道爾爭奪亞爾諾的王冠。" />
-    <string id="taom_cardolan_name" text="卡多蘭" />
+    <string id="taom_arthedain_short_name" text="阿塞丹" />
+    <string id="taom_arthedain_title" text="北方王國阿塞丹" />
+    <string id="taom_cardolan_desc" text="阿爾諾分裂出的三個王國中，卡多藍位於南方。歷代國王長眠於提殞戈沙德的古冢，騎兵守衛着巴蘭都因河與灰水河之間的平原。這裏城鎮稀少，領主們仍與阿塞丹、魯道爾爭奪阿爾諾的王冠。" />
+    <string id="taom_cardolan_name" text="卡多藍" />
     <string id="taom_cardolan_ruler_title" text="國王" />
-    <string id="taom_cardolan_short_name" text="卡多蘭" />
-    <string id="taom_cardolan_title" text="卡多蘭王國" />
-    <string id="taom_rhudaur_desc" text="亞爾諾分裂後的三個王國中最東的一個，位於灰泉河與喧水河之間的丘陵王國。其杜內丹領主據有卡美斯·布林與三角洲地，統治著一群剛強的丘陵人，荒原上有食人妖，每道隘口都有半獸人。" />
+    <string id="taom_cardolan_short_name" text="卡多藍" />
+    <string id="taom_cardolan_title" text="卡多藍王國" />
+    <string id="taom_rhudaur_desc" text="阿爾諾分裂出的三個王國中，魯道爾位於東方，是蒼泉河與響水河之間的山地王國。杜內丹領主掌握着卡梅斯布林和河角地，統治着堅韌的山民；高地有食人妖出沒，每處山口都有奧克盤踞。" />
     <string id="taom_rhudaur_name" text="魯道爾" />
     <string id="taom_rhudaur_ruler_title" text="國王" />
     <string id="taom_rhudaur_short_name" text="魯道爾" />
     <string id="taom_rhudaur_title" text="魯道爾王國" />
-    <string id="taom_eredluin_desc" text="藍色山脈的矮人王國。都靈一族流亡時曾在此建立索林之廳，而在這個紀元，寬膀族與火鬚族重新據有貝磊勾斯特與諾格羅德。此地領主不多，廳堂也比東方同族的來得貧瘠，但其鐵匠乃是西方最古老的，而他們的戰斧使藍崖的半獸人不敢靠近通往林頓的道路。" />
-    <string id="taom_eredluin_name" text="埃瑞德隆恩" />
+    <string id="taom_eredluin_desc" text="藍色山脈的矮人王國。都林一族流亡時在這裏建起梭林大廳，如今寬梁族和火須族也重新掌握了貝烈戈斯特與諾格羅德。這裏領主不多，大廳不如東方同族的富有，但鐵匠傳承在西方最爲悠久，他們的戰斧讓藍巖的半獸人無法侵擾通往林頓的道路。" />
+    <string id="taom_eredluin_name" text="埃瑞德路因" />
     <string id="taom_eredluin_ruler_title" text="國王" />
-    <string id="taom_eredluin_short_name" text="埃瑞德隆恩" />
-    <string id="taom_eredluin_title" text="埃瑞德隆恩王國" />
-    <string id="taom_anduinvale_desc" text="貝奧恩族人與谷地林人掌握著迷霧山脈與幽暗密林之間的安都因河上游。他們使高隘口與古渡口對正直的旅人保持暢通，並大量殲滅半獸人與惡狼。他們的酋長據守貝奧恩廳與卡羅克岩，不願捲入列王的戰爭。" />
+    <string id="taom_eredluin_short_name" text="埃瑞德路因" />
+    <string id="taom_eredluin_title" text="埃瑞德路因王國" />
+    <string id="taom_anduinvale_desc" text="貝奧恩一族和安都因河谷的林中居民守着迷霧山脈與黑森林之間的安都因河上游。他們保障高隘口和老渡口暢通，讓正派的旅人安全通行，也讓奧克與狼付出慘重代價。他們的酋長掌握着貝奧恩大廳和卡爾巖，不願捲入諸王的戰爭。" />
     <string id="taom_anduinvale_name" text="安都因河谷" />
     <string id="taom_anduinvale_ruler_title" text="酋長" />
     <string id="taom_anduinvale_short_name" text="安都因河谷" />
     <string id="taom_anduinvale_title" text="安都因河谷" />
-    <string id="taom_angaladh_desc" text="幽暗密林西側的林人在林緣開墾田莊，並以環繞林人鎮的鐵硬樹木為他們的國度命名。他們是弓手與林守，人數稀少，與北方的精靈和睦相處，並時刻警戒南方的多爾古多。" />
+    <string id="taom_angaladh_desc" text="黑森林西部的林中居民在森林邊緣開墾農莊，以環繞林中居民鎮、堅硬如鐵的樹木爲自己的國家命名。他們是弓手和護林人，人數不多，與北方精靈和平相處，時刻警惕南方的多古爾都。" />
     <string id="taom_angaladh_name" text="安加拉茲" />
     <string id="taom_angaladh_ruler_title" text="國王" />
     <string id="taom_angaladh_short_name" text="安加拉茲" />
-    <string id="taom_angaladh_title" text="安加拉德王國" />
-    <string id="taom_dorwinion_desc" text="多溫尼安的釀酒人照料著奔流河匯入魯恩內海之處的溫暖坡地。他們的酒順河而上運往河谷邦、幽暗密林的精靈，以及任何付得起價錢的廳堂，而他們的君王也因此富足。他們避開西方的戰事，必要時則向東方買取和平。" />
+    <string id="taom_angaladh_title" text="安加拉茲王國" />
+    <string id="taom_dorwinion_desc" text="在奔流河匯入魯恩內海的地方，多溫尼安酒商經營着溫暖山坡上的葡萄園。他們的葡萄酒沿河運往河谷邦、黑森林的精靈領地，以及一切買得起酒的廳堂，國王也因此積累了財富。他們置身西方的戰爭之外，必要時便花錢向東方勢力買取和平。" />
     <string id="taom_dorwinion_name" text="多溫尼安" />
     <string id="taom_dorwinion_ruler_title" text="國王" />
     <string id="taom_dorwinion_short_name" text="多溫尼安" />
     <string id="taom_dorwinion_title" text="多溫尼安王國" />
-    <string id="taom_southrhovanion_desc" text="南羅馬尼安的北方人馳騁於幽暗密林南緣與魯恩內海之間的廣闊平原。他們是馭馬之民，是昔日北遷的伊歐希歐德人的親族，也不曾忘記那些曾焚燒他們廳堂的戰車民。他們的君王據守維都加德，不臣服於西方或東方的任何領主。" />
-    <string id="taom_southrhovanion_name" text="南羅馬尼安" />
+    <string id="taom_southrhovanion_desc" text="南羅瓦尼安的北方人在黑森林南部邊緣與魯恩內海之間的遼闊平原上馳騁。他們是馭馬者，與很久以前向北遷徙的伊奧希奧德同源，至今沒有忘記戰車民焚燒廳堂的往事。他們的國王統治維杜加德，不向西方或東方的任何領主效忠。" />
+    <string id="taom_southrhovanion_name" text="南羅瓦尼安" />
     <string id="taom_southrhovanion_ruler_title" text="國王" />
-    <string id="taom_southrhovanion_short_name" text="南羅馬尼安" />
-    <string id="taom_southrhovanion_title" text="南羅馬尼安王國" />
+    <string id="taom_southrhovanion_short_name" text="南羅瓦尼安" />
+    <string id="taom_southrhovanion_title" text="南羅瓦尼安王國" />
   </strings>
 </base>

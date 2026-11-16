@@ -312,19 +312,25 @@ What decides a row (the tool's docstring has the full list):
 - **An override wins.** `tools/translation_overrides/cns.json` and `cnt.json` beat the team's text in
   the importer, as in every other tool. Put a hand correction to a Chinese row there, or the next
   import replaces it.
-- **A stale row keeps ours.** The team translates the TAOM release its module depends on. When our
-  English for an id changed after that release, their text translates words we no longer show, so the
-  importer keeps our row and lists it under `stale`.
+- **A stale row keeps ours.** The importer takes the TAOM version that the drop's `SubModule.xml`
+  depends on (or `--base`) as the English the team translated. When our English for an id changed in
+  any commit after it, their text can translate words we no longer show, so the importer keeps our row
+  and lists it under `stale`. The v2.0.38 drop also held the Realms titles, which came after the
+  v2.0.38 tag, so the team worked from a later trunk build, and some `stale` rows may already match our
+  English. Our kept row can be stale as well: an English edit that reset no language row leaves both
+  texts on the old words. Reset such a row by the checklist in "Changing English Text That Is Already
+  Translated".
 - **A name stays the same entity.** `KEEP_OURS` in the tool lists ids where the team's text names
   another lord, clan or name list than our English. To rename, change the English first; the team then
   translates the new name.
-- **Names stay distinct.** In troop names and Armory items, no two ids with different English may
+- **Names stay distinct.** In troop and lord names and Armory items, no two ids with different English may
   share one Chinese name. An Armory name gets its English tier (`IV`) appended when the team's text
   drops it.
 
 After an import, send the team the report's `stale`, `kept_ours`, `collisions`, `rejected`,
 `ours_untranslated_they_lack` and `ours_drafted_they_lack` lists. From them we need only their
-`ModuleData/Languages/CNs` and `CNt` folders, with the TAOM version they translated in `SubModule.xml`.
+`ModuleData/Languages/CNs` and `CNt` folders, and the TAOM build they translated: the release tag, or
+the commit of a trunk build. Pass it to the importer as `--base`.
 TAOM_Map and the Armory are live installs, so a reinstall reverts their imported rows: run the import
 again for those modules afterwards.
 
