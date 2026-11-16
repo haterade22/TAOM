@@ -36,6 +36,13 @@ public sealed class HeroAuraService
 
     public float LingerSeconds => _config.GetConfig().LingerSeconds;
 
+    /// <summary>
+    /// The id an aura source is found by: a campaign hero's id, else the character's own id. The character id serves a Custom Game
+    /// character (no Hero there) and a campaign character with no Hero behind it, as the story mission's free heroes are (#1366).
+    /// Dread keeps its own rule (DreadSourceTracker.HeroAxisId), which gives no id to a campaign character with no Hero.
+    /// </summary>
+    public static string? SourceId(string? campaignHeroId, string? characterId) => campaignHeroId ?? characterId;
+
     public HeroAura? AuraFor(string? heroId)
     {
         if (string.IsNullOrEmpty(heroId))

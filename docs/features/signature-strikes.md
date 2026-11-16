@@ -221,7 +221,7 @@ player's body, not his team's general, not a signature bearer, and of a race out
 `nazghul`, `cave_troll`, `hill_troll`, `saruman`, `sauron`). There is no health cap, because the Long Defeat scales
 troop health per wave. The blow is `CustomAttacksUtils.TakeDamage` for the health left plus one, owned by the
 hero. Each roll moves the counter `taom.signature-strikes.instant-kill-rolls`; a roll that wins writes the
-`taom.signature-strikes.instant-kill` check line. Their timed abilities are [hero-abilities.md](hero-abilities.md).
+`taom.signature-strikes.instant-kill` check line. Their timed abilities are [hero-abilities.md](hero-abilities.md). Legolas's arrows ask the same executor from the hero abilities' ranged logic (#1361), with `signature=taom_hero_legolas_arrow` in the line: [hero-abilities.md](hero-abilities.md), "The ranged kit".
 
 Cooldowns: Sauron's Slam 20 s and Sweep 12 s, the Nine's Scream 15 s (one timer for all three
 directions). Long on purpose: Mike's standing instruction is that Sauron must not be overpowered.

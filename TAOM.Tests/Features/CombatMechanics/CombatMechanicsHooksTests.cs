@@ -1,3 +1,5 @@
+using System;
+using System.Runtime.Serialization;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
 using TAOM.Features.CareerSystem.Abilities;
@@ -43,7 +45,17 @@ public class CombatMechanicsHooksTests
         _career = Substitute.For<ICareerAgentStatService>();
         _settings = Substitute.For<ICombatMechanicsSettingsProvider>();
         _sut = new CombatMechanicsHooks(_crush, _charge, _creature, _shield, _bash, _career, _settings);
+        _savedPierce = CombatMechanicsHooks.ShooterPiercesShields;
+        CombatMechanicsHooks.ShooterPiercesShields = null;
     }
+
+    private Func<Agent, bool>? _savedPierce;
+
+    [TestCleanup]
+    public void Cleanup() => CombatMechanicsHooks.ShooterPiercesShields = _savedPierce;
+
+    // No native side: only the grant delegate sees it, by reference.
+    private static Agent BareAgent() => (Agent)FormatterServices.GetUninitializedObject(typeof(Agent));
 
     [TestMethod]
     public void CrushThrough_NoAgents_AsksWithTheSwingAndNeutralFighters()
@@ -225,9 +237,98 @@ public class CombatMechanicsHooksTests
         _shield.ApplyPenetrationFlags(null!, null!, (ulong)WeaponFlags.MeleeWeapon)
             .Returns((ulong)(WeaponFlags.MeleeWeapon | WeaponFlags.CanPenetrateShield));
 
-        var flags = _sut.PenetrationFlags(default, WeaponFlags.MeleeWeapon);
+        var flags = _sut.PenetrationFlags(null, default, WeaponFlags.MeleeWeapon);
 
         Assert.AreEqual(WeaponFlags.MeleeWeapon | WeaponFlags.CanPenetrateShield, flags);
+    }
+
+    // The hero grant (#1361, decision R7) rides after the service and outside its MCM switch. A shooter the delegate
+    // does not name keeps exactly the service's flags.
+    [TestMethod]
+    public void PenetrationFlags_NullShooter_KeepsServiceFlags()
+    {
+        CombatMechanicsHooks.ShooterPiercesShields = _ => true;
+        _shield.ApplyPenetrationFlags(null!, null!, (ulong)WeaponFlags.MeleeWeapon).Returns((ulong)WeaponFlags.MeleeWeapon);
+
+        Assert.AreEqual(WeaponFlags.MeleeWeapon, _sut.PenetrationFlags(null, default, WeaponFlags.MeleeWeapon));
+    }
+
+    [TestMethod]
+    public void PenetrationFlags_NoDelegate_KeepsServiceFlags()
+    {
+        CombatMechanicsHooks.ShooterPiercesShields = null;
+        _shield.ApplyPenetrationFlags(null!, null!, (ulong)WeaponFlags.MeleeWeapon).Returns((ulong)WeaponFlags.MeleeWeapon);
+
+        Assert.AreEqual(WeaponFlags.MeleeWeapon, _sut.PenetrationFlags(BareAgent(), default, WeaponFlags.MeleeWeapon));
+    }
+
+    [TestMethod]
+    public void PenetrationFlags_DelegateDeclines_KeepsServiceFlags()
+    {
+        CombatMechanicsHooks.ShooterPiercesShields = _ => false;
+        _shield.ApplyPenetrationFlags(null!, null!, (ulong)WeaponFlags.MeleeWeapon).Returns((ulong)WeaponFlags.MeleeWeapon);
+
+        Assert.AreEqual(WeaponFlags.MeleeWeapon, _sut.PenetrationFlags(BareAgent(), default, WeaponFlags.MeleeWeapon));
+    }
+
+    [TestMethod]
+    public void PenetrationFlags_GrantedShooter_AddsCanPenetrateShieldOnly_AfterTheService()
+    {
+        var hero = BareAgent();
+        CombatMechanicsHooks.ShooterPiercesShields = a => ReferenceEquals(a, hero);
+        _shield.ApplyPenetrationFlags(null!, null!, (ulong)WeaponFlags.MeleeWeapon).Returns((ulong)WeaponFlags.MeleeWeapon);
+
+        var flags = _sut.PenetrationFlags(hero, default, WeaponFlags.MeleeWeapon);
+
+        Assert.AreEqual(WeaponFlags.MeleeWeapon | WeaponFlags.CanPenetrateShield, flags);
+        Assert.AreEqual((WeaponFlags)0, flags & WeaponFlags.MultiplePenetration, "one shield, never a second body");
+    }
+
+    [DataTestMethod]
+    [DataRow(false, false)]
+    [DataRow(true, false)]
+    [DataRow(false, true)]
+    public void ShieldPierceFloor_NotBlockedOrNotMissile_ReturnsInput(bool isMissile, bool blocked)
+    {
+        CombatMechanicsHooks.ShooterPiercesShields = _ => true;
+        var info = new AttackInformation { AttackerAgent = BareAgent() };
+        var collision = CollisionDataFixture.With(isMissile: isMissile, attackBlockedWithShield: blocked);
+
+        Assert.AreEqual(12f, _sut.ShieldPierceFloor(in info, in collision, 12f));
+    }
+
+    [TestMethod]
+    public void ShieldPierceFloor_NoAttacker_ReturnsInput()
+    {
+        CombatMechanicsHooks.ShooterPiercesShields = _ => true;
+        var info = new AttackInformation();
+        var collision = CollisionDataFixture.With(isMissile: true, attackBlockedWithShield: true);
+
+        Assert.AreEqual(12f, _sut.ShieldPierceFloor(in info, in collision, 12f));
+    }
+
+    [TestMethod]
+    public void ShieldPierceFloor_NoDelegateOrDeclined_ReturnsInput()
+    {
+        var info = new AttackInformation { AttackerAgent = BareAgent() };
+        var collision = CollisionDataFixture.With(isMissile: true, attackBlockedWithShield: true);
+
+        CombatMechanicsHooks.ShooterPiercesShields = null;
+        Assert.AreEqual(12f, _sut.ShieldPierceFloor(in info, in collision, 12f));
+
+        CombatMechanicsHooks.ShooterPiercesShields = _ => false;
+        Assert.AreEqual(12f, _sut.ShieldPierceFloor(in info, in collision, 12f));
+    }
+
+    // A granted shooter whose victim holds no shield in the offhand (AttackInformation.cs:187-194 leaves it Invalid).
+    [TestMethod]
+    public void ShieldPierceFloor_GrantedButNoVictimShield_ReturnsInput()
+    {
+        CombatMechanicsHooks.ShooterPiercesShields = _ => true;
+        var info = new AttackInformation { AttackerAgent = BareAgent(), VictimShield = MissionWeapon.Invalid };
+        var collision = CollisionDataFixture.With(isMissile: true, attackBlockedWithShield: true);
+
+        Assert.AreEqual(12f, _sut.ShieldPierceFloor(in info, in collision, 12f));
     }
 
     [TestMethod]

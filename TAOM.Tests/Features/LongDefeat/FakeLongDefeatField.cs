@@ -282,7 +282,14 @@ internal sealed partial class FakeLongDefeatField : ILongDefeatBattlefieldAdapte
 
     public IReadOnlyList<LdPoint> AttackersNearest(LdPoint? keep) => Sample ?? Array.Empty<LdPoint>();
 
-    public void AdoptMain(bool aiDriven) => Calls.Add($"Adopt:{aiDriven}");
+    /// <summary>What <see cref="AdoptMain"/> answers: whether the new main body is a held hero (a take-over in a campaign, #1366).</summary>
+    public bool MainIsHeldHero { get; set; }
+
+    public bool AdoptMain(bool aiDriven)
+    {
+        Calls.Add($"Adopt:{aiDriven}");
+        return MainIsHeldHero;
+    }
 
     public LdBootFacts BootFacts() => Facts;
 
@@ -304,6 +311,8 @@ internal sealed partial class FakeLongDefeatField : ILongDefeatBattlefieldAdapte
             return new LdRemoval(LdRemovalKind.Attacker, text.TrimEnd('!').Substring(2), AttackerRole.Commander, text.EndsWith("!", StringComparison.Ordinal), loss, key);
         if (text.StartsWith("H:", StringComparison.Ordinal))
             return new LdRemoval(LdRemovalKind.Hero, text.Substring(2), Loss: loss, Key: key);
+        if (text.StartsWith("HP:", StringComparison.Ordinal))
+            return new LdRemoval(LdRemovalKind.Hero, text.Substring(3), Loss: loss, Key: key, PlayerBody: true);
         if (!loss)
             return new LdRemoval(LdRemovalKind.None, "", Key: key);
         if (text == "P")

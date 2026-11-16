@@ -52,9 +52,6 @@ internal sealed class HeroAbilityHost
         internal int Shocked { get; set; }
     }
 
-    // The nearby-agent query's proximity grid limit (HeroAbilityCaster.MaxRadius).
-    private const float MaxQueryRadius = 15f;
-
     private readonly HeroAbilityRuntime _runtime;
     private readonly HeroAbilityCaster _caster;
     private readonly List<HeroRecord> _heroes = new List<HeroRecord>();
@@ -112,6 +109,8 @@ internal sealed class HeroAbilityHost
                 // Granted on the first owned pass rather than in OnAgentBuild, so the refresh runs on a built agent.
                 record.PassiveGiven = true;
                 _runtime.Ledger.Grant(hero, "passive:" + record.Kit.CharacterId, record.Kit.Passive, float.PositiveInfinity);
+                if (record.Kit.Ranged != null)
+                    _runtime.Ranged.Add(hero, record.Kit.Ranged);
                 HeroAbilityCaster.Refresh(hero);
             }
 
@@ -168,9 +167,12 @@ internal sealed class HeroAbilityHost
     }
 
     // No pass runs after a stand-down, so nothing would end the buffs already given: end them all now. A passive's end
-    // is infinity, which an infinite clock reaches.
+    // is infinity, which an infinite clock reaches. The roster goes first, so that expiry's refresh drops the zero aim
+    // error and the shield pierce too.
     internal void StandDown()
     {
+        _runtime.Ranged.Clear();
+        _runtime.Bursts.Clear();
         try
         {
             Expire(float.PositiveInfinity);
@@ -192,6 +194,8 @@ internal sealed class HeroAbilityHost
     internal void Clear()
     {
         _runtime.Ledger.Clear();
+        _runtime.Ranged.Clear();
+        _runtime.Bursts.Clear();
         _heroes.Clear();
         _scratch.Clear();
         _changed.Clear();
@@ -207,6 +211,8 @@ internal sealed class HeroAbilityHost
             _runtime.RaceAbilities.Visuals.Outline(record.Agent, null);
         }
         _runtime.Ledger.Remove(record.Agent);
+        _runtime.Ranged.Remove(record.Agent);
+        _runtime.Bursts.Remove(record.Agent);
     }
 
     // Painted again on every pass while an ability runs: an equipment rebuild replaces the meshes the outline was on,
@@ -231,14 +237,16 @@ internal sealed class HeroAbilityHost
 
     // Contact is the kit's easiest enemy trigger held by a count of its own, not the sensor's: the query is flat (a Vec2),
     // the trigger is 3D (RaceAbilitySensor reads enemy.Position.Distance), so a wall-walk hero over attackers at the wall
-    // foot is in contact for the sensor only when they are close in 3D.
+    // foot is in contact for the sensor only when they are close in 3D. The query takes the trigger's full range, as the
+    // sensor's does (RaceAbilitySensor.cs:46): a range clamped to 15 m would count no contact for a 40 m trigger (#1361).
+    // Past 15 m the native query walks every agent (traps/mission.md "Native branches"); it runs once a second per hero.
     private bool InContact(Mission mission, Agent hero, HeroRecord record)
     {
         var team = hero.Team;
         if (team == null || !record.HasContactRule)
             return false;
         _scratch.Clear();
-        mission.GetNearbyEnemyAgents(hero.Position.AsVec2, Math.Min(record.ContactRange, MaxQueryRadius), team, _scratch);
+        mission.GetNearbyEnemyAgents(hero.Position.AsVec2, record.ContactRange, team, _scratch);
         var count = 0;
         foreach (var enemy in _scratch)
             if (enemy != null && enemy.IsActive() && enemy.IsHuman && enemy.Position.Distance(hero.Position) <= record.ContactRange)

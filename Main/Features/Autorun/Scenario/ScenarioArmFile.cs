@@ -13,11 +13,11 @@ internal static class ScenarioArmFile
     {
         var warnings = new List<string>();
         string? kind = null, outFolder = null;
-        var scenario = "-";
+        string scenario = "-", mission = "-";
         var culture = ScenarioPlan.DefaultCulture;
         var days = ScenarioPlan.DefaultDays;
         var speed = ScenarioPlan.DefaultSpeed;
-        double stall = ScenarioPlan.DefaultStallSeconds, wallLimit = ScenarioPlan.DefaultWallLimitSeconds;
+        double stall = ScenarioPlan.DefaultStallSeconds, wallLimit = ScenarioPlan.DefaultWallLimitSeconds, missionLimit = ScenarioPlan.DefaultMissionLimitSeconds;
         var quit = false;
 
         foreach (var raw in text.TrimStart('﻿').Split('\n'))
@@ -40,6 +40,8 @@ internal static class ScenarioArmFile
                 case "kind": kind = value; break;
                 case "out": outFolder = value; break;
                 case "scenario": scenario = value.Length == 0 ? "-" : value; break;
+                case "mission": mission = value.Length == 0 ? "-" : value; break;
+                case "mission_limit_seconds": missionLimit = Seconds(key, value, missionLimit, warnings); break;
                 case "culture": culture = value.Length == 0 ? culture : value; break;
                 case "days": days = Days(key, value, days, warnings); break;
                 case "speed": speed = Speed(key, value, speed, warnings); break;
@@ -50,16 +52,21 @@ internal static class ScenarioArmFile
             }
         }
 
-        if (kind != ScenarioPlan.KindCampaignNew)
-            return ScenarioPlan.Unarmed("the arm file " + path + " needs kind=" + ScenarioPlan.KindCampaignNew + " (got '" + (kind ?? "") + "')");
+        if (kind != ScenarioPlan.KindCampaignNew && kind != ScenarioPlan.KindStoryMission)
+            return ScenarioPlan.Unarmed("the arm file " + path + " needs kind=" + ScenarioPlan.KindCampaignNew + " or kind=" + ScenarioPlan.KindStoryMission + " (got '" + (kind ?? "") + "')");
 
         if (string.IsNullOrEmpty(outFolder) || !IsAbsolute(outFolder!))
             return ScenarioPlan.Unarmed("the arm file " + path + " needs an absolute out=<folder> for the done file");
+
+        var story = kind == ScenarioPlan.KindStoryMission;
+        if (story && mission == "-")
+            return ScenarioPlan.Unarmed("the arm file " + path + " needs mission=<story mission id> for kind=" + ScenarioPlan.KindStoryMission);
 
         return new ScenarioPlan
         {
             Armed = true, Warnings = warnings, ArmPath = path, Kind = kind, OutFolder = outFolder!, Scenario = scenario, Culture = culture,
             Days = days, Speed = speed, StallSeconds = stall, WallLimitSeconds = wallLimit, Quit = quit,
+            MissionId = story ? mission : "-", MissionLimitSeconds = missionLimit,
         };
     }
 

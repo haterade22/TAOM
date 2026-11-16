@@ -3,6 +3,7 @@ using TAOM.Features.CombatMechanics.Hooks;
 using TAOM.Features.CreatureBandits.Hooks;
 using TAOM.Features.CreatureSiegeRole.Hooks;
 using TAOM.Features.CultureDoctrine.Hooks;
+using TAOM.Features.HeroAbilities.Hooks;
 using TAOM.Features.LongDefeat.Hooks;
 using TAOM.Features.RaceAbilities.Hooks;
 using TaleWorlds.Core;
@@ -56,6 +57,9 @@ public class TaomCustomBattleAgentStatCalculateModel : CustomBattleAgentStatCalc
         RaceAbilityHooks.ApplyStats(agent, agentDrivenProperties);
         // Long Defeat: the wave's stat affixes, applied on top of the abilities' result; inert outside its armed mission.
         LongDefeatStatHooks.UpdateStats(agent, agentDrivenProperties);
+        // Hero Abilities (#1361): a ranged hero's zero aim error, last so no later multiply or write undoes it; inert for
+        // any agent the gated host has not listed.
+        HeroRangedHooks.ApplyStats(agent, agentDrivenProperties);
     }
 
     // Race Abilities: a live ability's knockdown, knock-back and dismount resistance, as in the campaign slot.

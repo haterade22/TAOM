@@ -7,6 +7,10 @@ public interface IObjectManagerAdapter
 {
     BasicCharacterObject GetBasicCharacter(string id);
     BasicCultureObject GetBasicCulture(string id);
+
+    /// <summary>True when the object manager holds an item with this id.</summary>
+    bool ItemExists(string id);
+
     IReadOnlyList<CultureInfo> GetAllCultureInfos();
     IReadOnlyList<CharacterInfo> GetAllCharacterInfos();
 }

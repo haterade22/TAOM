@@ -1,4 +1,5 @@
 using System;
+using TAOM.Features.StoryMissions.Domain;
 
 namespace TAOM.Features.Autorun.Scenario;
 
@@ -14,6 +15,8 @@ internal static class ScenarioRules
     internal const double MapWaitSeconds = 600.0;
     /// <summary>Under the launcher's 120 s exit grace (run_fords_autorun.py EXIT_GRACE_SECONDS), so the game quits before it is killed.</summary>
     internal const double ExitWaitSeconds = 60.0;
+    /// <summary>One wait for every story step: the menu free, the option chosen, the mission open, the map back.</summary>
+    internal const double StoryStepWaitSeconds = 120.0;
     internal const double StatusSeconds = 5.0;
     internal const int TitleLogCap = 20;
     internal const int UnknownDay = -1;
@@ -30,6 +33,14 @@ internal static class ScenarioRules
     internal static bool WithinWallLimit(double sinceStartSeconds, double limitSeconds) => sinceStartSeconds <= limitSeconds;
 
     internal static bool StatusDue(double wall, double lastStatus) => wall - lastStatus >= StatusSeconds;
+
+    /// <summary>The done reason a story mission verdict forces, or null when it was decided (Won or Lost).</summary>
+    internal static string? MissionReason(StoryOutcome? verdict) => verdict switch
+    {
+        StoryOutcome.Won or StoryOutcome.Lost => null,
+        StoryOutcome.Undecided => "mission_undecided",
+        _ => "mission_no_verdict",
+    };
 
     internal static bool OnMap(AutorunScreen screen) => screen == AutorunScreen.Map || screen == AutorunScreen.MapMenu;
 

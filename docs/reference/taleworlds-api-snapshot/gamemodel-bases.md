@@ -139,6 +139,7 @@ Models: 72. Regenerate after any patch, GameModel or engine change: `pwsh tools/
 - `Single ApplyDamageAmplifications(ref AttackInformation attackInformation, ref AttackCollisionData collisionData, Single baseDamage)`
 - `Single ApplyDamageReductions(ref AttackInformation attackInformation, ref AttackCollisionData collisionData, Single baseDamage)`
 - `Single ApplyDamageScaling(ref AttackInformation attackInformation, ref AttackCollisionData collisionData, Single baseDamage)`
+- `Single ApplyGeneralDamageModifiers(ref AttackInformation attackInformation, ref AttackCollisionData collisionData, Single baseDamage)`
 - `Single CalculateRemainingMomentum(Single originalMomentum, ref Blow b, ref AttackCollisionData collisionData, Agent attacker, Agent victim, ref MissionWeapon attackerWeapon, Boolean isCrushThrough)`
 - `Single CalculateShieldDamage(ref AttackInformation attackInformation, Single baseDamage)`
 - `Single CalculateStaggerThresholdDamage(Agent defenderAgent, ref Blow blow)`
@@ -184,6 +185,7 @@ Models: 72. Regenerate after any patch, GameModel or engine change: `pwsh tools/
 - `Single ApplyDamageAmplifications(ref AttackInformation attackInformation, ref AttackCollisionData collisionData, Single baseDamage)`
 - `Single ApplyDamageReductions(ref AttackInformation attackInformation, ref AttackCollisionData collisionData, Single baseDamage)`
 - `Single ApplyDamageScaling(ref AttackInformation attackInformation, ref AttackCollisionData collisionData, Single baseDamage)`
+- `Single ApplyGeneralDamageModifiers(ref AttackInformation attackInformation, ref AttackCollisionData collisionData, Single baseDamage)`
 - `Single CalculateRemainingMomentum(Single originalMomentum, ref Blow b, ref AttackCollisionData collisionData, Agent attacker, Agent victim, ref MissionWeapon attackerWeapon, Boolean isCrushThrough)`
 - `Single CalculateShieldDamage(ref AttackInformation attackInformation, Single baseDamage)`
 - `Single CalculateStaggerThresholdDamage(Agent defenderAgent, ref Blow blow)`

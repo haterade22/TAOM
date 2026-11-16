@@ -133,8 +133,9 @@ internal interface ILongDefeatBattlefieldAdapter
     /// <summary>
     /// Makes the player's body the team's general and the owner of its orders, then hands every formation to AI, so an order
     /// still takes one back. With <paramref name="aiDriven"/> the agent itself is also driven by AI (the unattended run).
+    /// Returns true when that body is a held hero (in a campaign the fallen player can take over a free hero, #1366), whose health is his own.
     /// </summary>
-    void AdoptMain(bool aiDriven);
+    bool AdoptMain(bool aiDriven);
 
     /// <summary>The facts the boot and general checks judge, read now.</summary>
     LdBootFacts BootFacts();

@@ -11,9 +11,9 @@ namespace TAOM.Tests.Features.LongDefeat.Domain;
 [TestClass]
 public class VolleyOwnerRuleTests
 {
-    private static LdOwnerCandidate Archer(float nearest) => new(true, true, false, true, nearest);
+    private static LdOwnerCandidate Archer(float nearest) => new(true, true, false, true, nearest, false);
 
-    private static LdOwnerCandidate Foot(float nearest) => new(true, true, false, false, nearest);
+    private static LdOwnerCandidate Foot(float nearest) => new(true, true, false, false, nearest, false);
 
     [TestMethod]
     public void NoCandidate_IsNobody()
@@ -24,7 +24,7 @@ public class VolleyOwnerRuleTests
     [TestMethod]
     public void TheMainAgent_IsNeverTheOwner_EvenWhenHeIsTheOnlyArcher()
     {
-        var main = new LdOwnerCandidate(true, true, true, true, 90f);
+        var main = new LdOwnerCandidate(true, true, true, true, 90f, false);
 
         Assert.AreEqual(-1, VolleyOwnerRule.Choose(new[] { main }));
         Assert.AreEqual(1, VolleyOwnerRule.Choose(new[] { main, Foot(5f) }), "a foot soldier is taken before the main agent");
@@ -33,15 +33,25 @@ public class VolleyOwnerRuleTests
     [TestMethod]
     public void APlayerControlledBody_IsRefused_BecauseItsFriendlyHitWouldNotBeCancelled()
     {
-        var player = new LdOwnerCandidate(true, false, false, true, 80f);
+        var player = new LdOwnerCandidate(true, false, false, true, 80f, false);
 
         Assert.AreEqual(-1, VolleyOwnerRule.Choose(new[] { player }));
+    }
+
+    // A volley arrow owned by a held hero would get his ranged kit: the shield pierce, the damage floor and the kill roll (#1361).
+    [TestMethod]
+    public void AHeldHero_IsNeverTheOwner_EvenAsTheOnlyAndFarthestArcher()
+    {
+        var hero = new LdOwnerCandidate(true, true, false, true, 200f, true);
+
+        Assert.AreEqual(-1, VolleyOwnerRule.Choose(new[] { hero }));
+        Assert.AreEqual(1, VolleyOwnerRule.Choose(new[] { hero, Foot(5f) }), "a near foot soldier is taken before a held hero");
     }
 
     [TestMethod]
     public void AnInactiveOrRecycledSlot_IsRefused()
     {
-        var gone = new LdOwnerCandidate(false, true, false, true, 80f);
+        var gone = new LdOwnerCandidate(false, true, false, true, 80f, false);
 
         Assert.AreEqual(-1, VolleyOwnerRule.Choose(new[] { gone }));
         Assert.AreEqual(1, VolleyOwnerRule.Choose(new[] { gone, Archer(10f) }));

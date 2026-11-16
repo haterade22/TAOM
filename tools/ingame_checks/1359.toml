@@ -1,10 +1,12 @@
 # In-game checks for #1359 (Hero abilities: timed abilities and killing blows for Aragorn and Gimli), read by
 # tools/ingame_verdict.py. The [Check] lines come from Main/Features/HeroAbilities/Hooks/ (HeroAbilitiesMissionLogic,
 # HeroAbilityHost, HeroAbilityCaster; verdicts in HeroAbilityChecks) and Main/Features/SignatureStrikes/Hooks/SignatureInstantKill.cs.
-# gate, key ha<N> for the Nth mission, is written on the first tick of a mission that holds the Long Defeat logic (the
-# story mission holds it too, so its gate opens; but no hero with a kit stands there until the mission heroes load in a
-# campaign, a later phase of #1325): it passes when the mission is a combat mission (combat=1), hero_abilities.json is on
-# (config=1) and holds a kit.
+# Every check is scoped to a Long Defeat run: a segment opens at LongDefeatMissionLauncher's "[LongDefeat] launching <scene> for
+# fortress <id>" line and closes at the next Long Defeat or story mission launch. The Helm's Deep story mission holds the Long
+# Defeat logic and, since #1366, the three heroes, so it writes these same lines; that run is read by tools/ingame_checks/1366.toml
+# and not here. A campaign battle fought after a Long Defeat run in the same game process writes no launch line and is still read.
+# gate, key ha<N> for the Nth mission, is written on the first tick of a mission that holds the Long Defeat logic: it passes when
+# the mission is a combat mission (combat=1), hero_abilities.json is on (config=1) and holds a kit.
 # fired, key ha<N>-<characterId>-<k> for the kth body of that hero, is written at the mission end for each hero body:
 # fired= counts his casts, contact_s= the one-second passes in which the AI drove him and the kit's easiest enemy
 # trigger held by the host's own count (the fewest enemies in range, in 3D, of any of his abilities; Aragorn 3 within
@@ -30,7 +32,9 @@ logs = ["taom"]
 
 [[check]]
 id = "taom.hero-abilities.gate"
-needs = "a Long Defeat run: python tools/run_long_defeat.py --waves 3 --garrison-scale 1.3 --start-gold 5000. The gate also opens in the Helm's Deep story mission, but no hero with a kit stands there until the mission heroes load in a campaign (a later phase of #1325)"
+scope = '\[LongDefeat\] launching \S+ for fortress '
+scope_end = '\[(LongDefeat|StoryMissions)\] launching '
+needs = "a Long Defeat run: python tools/run_long_defeat.py --waves 3 --garrison-scale 1.3 --start-gold 5000. A Helm's Deep story mission run does not count here (1366.toml reads it)"
 reached = ['\[Check\] id=taom\.hero-abilities\.gate result=(pass|fail)']
 pass = ['\[Check\] id=taom\.hero-abilities\.gate result=pass long_defeat=1 combat=1 config=1 kits=[1-9][0-9]*$']
 fail = ['\[Check\] id=taom\.hero-abilities\.gate result=fail', '\[HeroAbilities\] disabled for this mission after ']
@@ -38,18 +42,22 @@ absence = "not-reached"
 
 [[check]]
 id = "taom.hero-abilities.fired"
+scope = '\[LongDefeat\] launching \S+ for fortress '
+scope_end = '\[(LongDefeat|StoryMissions)\] launching '
 needs = "a Long Defeat run in which the bot or the player buys Aragorn and Gimli and they meet the waves at the wall"
-reached = ['\[Check\] id=taom\.hero-abilities\.fired result=(pass|fail)']
+reached = ['\[Check\] id=taom\.hero-abilities\.fired result=(pass|fail) hero=taom_hero_(aragorn|gimli) ']
 pass = [
     '\[Check\] id=taom\.hero-abilities\.fired result=pass hero=taom_hero_aragorn fired=[1-9][0-9]* contact_s=[0-9]+ allies=[0-9]+ shocked=[0-9]+ owned=1$',
     '\[Check\] id=taom\.hero-abilities\.fired result=pass hero=taom_hero_gimli fired=[1-9][0-9]* contact_s=[0-9]+ allies=[0-9]+ shocked=[0-9]+ owned=1$',
 ]
-fail = ['\[Check\] id=taom\.hero-abilities\.fired result=fail', '\[HeroAbilities\] disabled for this mission after ']
+fail = ['\[Check\] id=taom\.hero-abilities\.fired result=fail hero=taom_hero_(aragorn|gimli) ', '\[HeroAbilities\] disabled for this mission after ']
 absence = "not-reached"
 
 [[check]]
 id = "taom.hero-abilities.stats-refreshed"
-needs = "a mission in which a hero casts an ability that raises swing speed (For Frodo!, Baruk Khazad, Still Standing)"
+scope = '\[LongDefeat\] launching \S+ for fortress '
+scope_end = '\[(LongDefeat|StoryMissions)\] launching '
+needs = "a Long Defeat run in which a hero casts an ability that raises swing speed (For Frodo!, Baruk Khazad, Still Standing)"
 reached = ['\[Check\] id=taom\.hero-abilities\.stats-refreshed result=(pass|fail)']
 pass = ['\[Check\] id=taom\.hero-abilities\.stats-refreshed result=pass ability=\S+ troop=\S+ ratio=[0-9.]+ want=[0-9.]+$']
 fail = ['\[Check\] id=taom\.hero-abilities\.stats-refreshed result=fail']
@@ -57,14 +65,18 @@ absence = "not-reached"
 
 [[check]]
 id = "taom.signature-strikes.instant-kill"
-needs = "an overhead strike by Aragorn or Gimli on an unshielded human soldier whose kill roll wins"
-reached = ['\[Check\] id=taom\.signature-strikes\.instant-kill result=(pass|fail)']
+scope = '\[LongDefeat\] launching \S+ for fortress '
+scope_end = '\[(LongDefeat|StoryMissions)\] launching '
+needs = "a Long Defeat run with an overhead strike by Aragorn or Gimli on an unshielded human soldier whose kill roll wins"
+reached = ['\[Check\] id=taom\.signature-strikes\.instant-kill result=(pass|fail) signature=(aragorn|gimli) ']
 pass = ['\[Check\] id=taom\.signature-strikes\.instant-kill result=pass signature=(aragorn|gimli) victim=\S+ chance=[0-9.]+ roll=[0-9.]+ health=[0-9]+ damage=[0-9]+ died=1$']
-fail = ['\[Check\] id=taom\.signature-strikes\.instant-kill result=fail']
+fail = ['\[Check\] id=taom\.signature-strikes\.instant-kill result=fail signature=(aragorn|gimli) ']
 absence = "not-reached"
 
 [[check]]
 id = "taom.hero-auras.reached"
+scope = '\[LongDefeat\] launching \S+ for fortress '
+scope_end = '\[(LongDefeat|StoryMissions)\] launching '
 needs = "a Long Defeat run with Aragorn bought: his aura (aragorn_heir_of_isildur) reaches at least one soldier, named in the mission-end line"
 reached = ['\[HeroAuras\] Mission end: ']
 pass = ['\[HeroAuras\] Mission end: (.*; )?aragorn_heir_of_isildur: [1-9][0-9]* soldier\(s\)']

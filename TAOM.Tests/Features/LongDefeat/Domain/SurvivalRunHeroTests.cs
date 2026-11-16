@@ -27,6 +27,22 @@ public class SurvivalRunHeroTests
             Bounties = new Dictionary<string, int> { ["orc"] = 4 },
         };
 
+    private static readonly HeroSpawn FreeAragorn = new("aragorn", "taom_hero_aragorn", 3f);
+    private static readonly HeroSpawn FreeLegolas = new("legolas", "taom_hero_legolas", 3f);
+
+    // A story mission's plan: the shop is empty (no heroes, no gold) and the heroes stand free (#1366).
+    private static RunPlan FreePlan(params HeroSpawn[] free) =>
+        new(
+            "helms",
+            new[] { new GarrisonRow("fow_m", FormationSlot.Infantry, 30) },
+            new WavePlan(new[] { new WaveSpec(20, new[] { new WaveTroop("orc", FormationSlot.Infantry, 3) }) }, new WaveScaling(10, 300)),
+            new ShopPlan(0, System.Array.Empty<ShopOffer>()),
+            RunRules.Default with { PreparationSeconds = 50f, IntermissionSeconds = 10f },
+            new RunOptions { Seed = 1UL })
+        {
+            FreeHeroes = free,
+        };
+
     private static RunSnapshot Snap(int defenders = 40) => new(1f, 0, 0, defenders, 0, 0, 1000);
 
     private static SurvivalRun Begun(RunPlan plan)
@@ -291,5 +307,64 @@ public class SurvivalRunHeroTests
         CollectionAssert.IsSubsetOf(new[] { "taom_hero_aragorn", "taom_hero_gimli" }, RunPlanTroops.AllTroopIds(Plan()).ToArray());
         // Boons draw for the troops of the defender groups; a hero is nobody's group.
         Assert.IsFalse(RunPlanTroops.DefenderTroopIds(Plan()).Contains("taom_hero_aragorn"));
+    }
+
+    [TestMethod]
+    public void Begin_WithFreeHeroes_TheFirstTickCarriesOneSpawnEach_AndSpendsNoGold()
+    {
+        var run = Begun(FreePlan(FreeAragorn, FreeLegolas));
+
+        var fx = run.Tick(Snap());
+
+        CollectionAssert.AreEqual(new[] { FreeAragorn, FreeLegolas }, fx.SpawnHeroes.ToArray());
+        Assert.AreEqual(0, run.Gold);
+        Assert.AreEqual(0, run.Purse.SpentOn(PurseSink.Heroes));
+        Assert.AreEqual(0, run.FortSummary().Purchases.Count, "a free hero is no purchase");
+        Assert.AreEqual(0, run.Tick(Snap()).SpawnHeroes.Count, "a spawn goes out once");
+    }
+
+    [TestMethod]
+    public void Begin_ADuplicateFreeHeroId_IsSpawnedOnce()
+    {
+        var run = Begun(FreePlan(FreeAragorn, FreeAragorn with { HealthFactor = 5f }));
+
+        var fx = run.Tick(Snap());
+
+        Assert.AreEqual(FreeAragorn, fx.SpawnHeroes.Single());
+    }
+
+    [TestMethod]
+    public void AFreeHeroTheFieldRefuses_IsNotPaidBack_AndIsNotPendingAgain()
+    {
+        // PendingDefenders also counts the garrison's muster still to come; a run with no hero gives that part.
+        var bare = Begun(FreePlan());
+        bare.Tick(Snap());
+        var musterOnly = bare.PendingDefenders;
+        var run = Begun(FreePlan(FreeAragorn));
+        run.Tick(Snap());
+        Assert.AreEqual(1, run.PendingDefenders - musterOnly, "he holds his room while he is pending");
+
+        run.HeroSpawned("aragorn", false);
+
+        Assert.AreEqual(0, run.Gold, "no purchase, so no refund");
+        Assert.AreEqual(0, run.Purse.SpentOn(PurseSink.Heroes));
+        Assert.AreEqual(0, run.PendingDefenders - musterOnly);
+        Assert.AreEqual(0, run.Tick(Snap()).SpawnHeroes.Count, "a refused free hero is not queued again");
+    }
+
+    [TestMethod]
+    public void AFreeHerosFall_DoesNotSellHimAgain()
+    {
+        var run = Begun(FreePlan(FreeAragorn));
+        run.Tick(Snap());
+        run.HeroSpawned("aragorn", true);
+        var lost = run.Stats.LostThisWave;
+
+        run.HeroDown("aragorn", loss: true);
+
+        Assert.AreEqual(lost + 1, run.Stats.LostThisWave);
+        Assert.AreEqual(HeroResult.UnknownHero, run.TryBuyHero("aragorn"), "the shop lists no hero, so nothing brings him back");
+        Assert.AreEqual(0, run.Tick(Snap()).SpawnHeroes.Count);
+        Assert.AreEqual(0, run.GetView().Heroes.Count);
     }
 }

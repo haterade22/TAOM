@@ -136,7 +136,8 @@ internal sealed partial class LongDefeatBattlefieldAdapter
         return new LdVolleyFire(null, added, before, _mission.AllAgents.Count, owner.Character?.StringId ?? string.Empty, multiplier, indices);
     }
 
-    // D22: a live, AI-controlled human defender who is not the main agent, archers first and the one farthest from the nearest attacker. A tower's volley is owned by a post archer of that tower, chosen by the same
+    // D22: a live, AI-controlled human defender who is not the main agent and not a held hero (IsHeldHero, the hero list of Heroes.cs by reference: a volley he owned would carry his ranged kit, #1361), archers
+    // first and the one farthest from the nearest attacker. A tower's volley is owned by a post archer of that tower, chosen by the same
     // rule among that tower's posted archers only (the lists of Posts.cs, held by reference; PruneDead drops a dead or recycled handle before any native read), and a tower with none standing has no owner, so its shot is withheld and the run stops that
     // tower's clock for the wave. A standing defender is one the slot still holds (IsLive) who is not running away.
     private Agent? ChooseVolleyOwner(string towerId)
@@ -148,8 +149,9 @@ internal sealed partial class LongDefeatBattlefieldAdapter
         var candidates = defenders.Select(a =>
         {
             var live = IsLive(a) && !a.IsRunningAway;
-            var eligible = live && a.IsAIControlled && !a.IsMainAgent;
-            return new LdOwnerCandidate(live, a.IsAIControlled, a.IsMainAgent, a.IsRangedCached, eligible ? NearestAttacker(a.Position, attackers) : 0f);
+            var held = IsHeldHero(a);
+            var eligible = live && a.IsAIControlled && !a.IsMainAgent && !held;
+            return new LdOwnerCandidate(live, a.IsAIControlled, a.IsMainAgent, a.IsRangedCached, eligible ? NearestAttacker(a.Position, attackers) : 0f, held);
         }).ToList();
         var chosen = VolleyOwnerRule.Choose(candidates);
         return chosen < 0 ? null : defenders[chosen];

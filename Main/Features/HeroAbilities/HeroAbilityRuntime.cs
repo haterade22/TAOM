@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using TAOM.Core.Logging;
 using TAOM.Features.CareerSystem.Abilities;
 using TAOM.Features.DreadAura;
@@ -41,4 +42,11 @@ public sealed class HeroAbilityRuntime
     public IOutcomeLog Outcomes { get; }
 
     public HeroBuffLedger<Agent> Ledger { get; } = new HeroBuffLedger<Agent>();
+
+    // The owned heroes whose ranged kit is armed (#1361); the stat and damage models read it through HeroRangedHooks.
+    public HeroRangedRoster<Agent> Ranged { get; } = new();
+
+    // The running extra-arrow windows, set by the cast and read by the ranged mission logic. Main thread only; the host
+    // removes a dropped hero and clears it at mission end.
+    public Dictionary<Agent, HeroBurst> Bursts { get; } = new();
 }

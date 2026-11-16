@@ -39,7 +39,7 @@ bar and a player who can take a soldier after death.
   list and no map event, as Host Review opens its mission. Each launch gets its own
   `LongDefeatSession`. It never assigns `Game.PlayerTroop`, which in a campaign is the player's hero.
   The launcher refuses the attacking side, a missing culture and a missing troop, and logs why.
-- **Run plan** (`StoryPlanBuilder`): the row's garrison, waves and rules only. There is no shop, gold,
+- **Run plan** (`StoryPlanBuilder`): the row's garrison, waves, rules and free heroes. There is no shop, gold,
   fortification, affix, boon or class, and the run stops after the authored waves.
 - **Verdict** (`StoryVerdict`, `StoryEndWatch`): the run's side-neutral end reason becomes a win or a
   loss for the player's side. A stalemate, a fault or no result decides nothing. About five seconds
@@ -138,6 +138,53 @@ bar and a player who can take a soldier after death.
   - remove the governor and the patrol party, and recalculate clan homes and the garrison wage limit
     (`ChangeGovernorAction`, `PatrolPartiesCampaignBehavior`, `ClanVariablesCampaignBehavior`).
 
+### The free heroes (#1366, Phase 6 of #1325)
+
+Aragorn, Legolas and Gimli stand with the garrison in `helms_deep_defend`. They cost nothing and are
+not for sale; each is a row of the mission's `heroes` list.
+
+- **Data:** `heroes` rows are `id`, `troop` and an optional `healthFactor` (1 to 10, 1 when absent): the
+  shop's hero row without a price. `StoryHeroesReader` reads the list through `HeroesReader.ReadRow`,
+  the row reader the Long Defeat shop uses, so `hero=aragorn` means the same in both modes. A missing
+  key is no hero and no warning; a value that is not an array gives no hero and one warning; a bad or
+  repeated row is skipped with a warning; past three valid rows (`StoryHeroesReader.MaxHeroes`) the
+  rest are dropped with one warning. `helms_deep_defend` ships all three with `healthFactor` 3.0, the
+  factor of `shop.json`; `ShippedStoryMissionsTests` requires the two to agree.
+- **Plan:** `StoryPlanBuilder` sets `RunPlan.FreeHeroes` from the definition. `SurvivalRun.Begin`
+  queues each free hero as pending (`QueueFreeHeroes`), so he holds one place under the garrison cap
+  and the defenders-dead check waits for him. The first director tick spawns them, after the lord has
+  been adopted, at the plan's home place (the mission's `muster` foot point), in the Long Defeat's
+  formation 7 (order key 8) with the wall order and the hold. A free hero who falls or flees is not
+  for sale: `TryBuyHero` answers `UnknownHero`, because the story shop is empty. A spawn the field
+  refuses pays nothing back.
+- **Launch check:** `RunPlanTroops.AllTroopIds` includes the free heroes' troops, so the launcher's
+  missing-troop refusal names a hero troop that did not load.
+- **The characters and the item in a campaign:** `SubModule.xml` loads
+  `characters/taom_mission_heroes` and `hero_abilities/hero_abilities_items` for Campaign,
+  CampaignStoryMode and CustomGame. The characters have no `<Hero>` entry, `occupation="Wanderer"` and
+  no `is_template`, so the companion pool and the encyclopedia do not list them; they are obsolete, so
+  no picker does. The arrow item is not merchandise and cannot be picked up, so workshops, loot and
+  prizes skip it. `level="36"` gives them battle tier 7 with no Hero
+  (`BasicCharacterObject.GetBattleTier`).
+- **No `IsHero` in a campaign:** `CharacterObject.IsHero` is true only with a `Hero` behind it, so the
+  three read `IsHero == false`. The adapter therefore passes `FirstBattleEquipment` as the spawn kit,
+  because the engine fixes a hero's equipment only for `IsHero` and otherwise rolls item modifiers in a
+  campaign. For the same reason the adapter puts each hero's own body and age on the build data, so the
+  story mission's face cache cannot give him a garrison soldier's face. A fallen player can take over a
+  hero there; the hero keeps his own health, counts as near his place in the `hunters` line, and his
+  later death is booked as his fall and as the player's death. The detail for abilities, take-over,
+  faces and the aura is in [hero-abilities.md](hero-abilities.md) and [hero-auras.md](hero-auras.md).
+- **Check lines:** the hero spawn line reads `taom.story-missions.hosted.hero` with
+  `is_hero=0 campaign=1`; the `hunters` line is `taom.story-missions.hosted.hunters`. The ability,
+  ranged and aura lines keep their own ids, because only the Long Defeat's lines are renamed.
+  `taom.story-missions.roster` is written once per process when a campaign session starts (a new game
+  or a loaded save, through `StoryRosterBehavior` and `StoryRosterService`): the troop ids of every
+  mission's plan and the extra arrow item of every hero kit that resolve to nothing. It is a log line
+  at session start, so a new game and a loaded save in the same process write one line, not two.
+- **Not done:** no hero strip on the HUD, no message when a hero falls, no per-hero position (the three
+  stand where the heroes' home place puts them, at the nearest wall lane), no `<Hero>` entry, and no
+  unattended driver beyond the one defence mission of #1368 ([scenario autorun](scenario-autorun.md)).
+
 The feature declares no Harmony patch and no GameModel. Its one saved value, a declined offer, is a
 field of the War Chronicle's payload.
 
@@ -177,6 +224,7 @@ mean the same thing by the same key.
 | `rules` | object | Long Defeat rule numbers, for example `preparationSeconds` |
 | `garrison` | array | The player's troops: `troop`, `class`, `count` |
 | `muster`, `keep` | object | Optional recorded points of the scene |
+| `heroes` | array | Optional free heroes, at most three: `id`, `troop`, optional `healthFactor` (#1366) |
 | `roster.waves` | array | Each wave: `count` and a weighted `mix` of troops |
 
 ### Current Values
@@ -187,7 +235,7 @@ All seven rows are Defend missions with one wave. Only Helm's Deep names a music
 
 | Id | Scene | Defender, attacker | Note |
 |----|-------|--------------------|------|
-| `helms_deep_defend` | `taom_rohan_castle_helms_deep_forceatmo` | `vlandia`, `isengard` | Has muster points |
+| `helms_deep_defend` | `taom_rohan_castle_helms_deep_forceatmo` | `vlandia`, `isengard` | Has muster points; free heroes Aragorn, Legolas and Gimli (#1366) |
 | `minas_tirith_defend` | `taom_gondor_town_minas_tirith_forceatmo` | `gondor`, `mordor` | |
 | `osgiliath_defend` | `taom_gondor_town_osgiliath_e_forceatmo` | `gondor`, `mordor` | |
 | `pelargir_defend` | `taom_gondor_town_dolamroth_forceatmo` | `gondor`, `umbar` | Stand-in: the Pelargir scene took over 17 minutes to load |
@@ -204,6 +252,8 @@ All seven rows are Defend missions with one wave. Only Helm's Deep names a music
 | `Main/Features/StoryMissions/StoryMissionsModule.cs` | Feature module: the catalog, the launcher and the dev menu behavior |
 | `Main/Features/StoryMissions/Config/StoryMissionCatalog.cs` | Validating loader for the JSON |
 | `Main/Features/StoryMissions/Domain/` | `StoryMissionDefinition`, `StoryPlanBuilder`, `StoryVerdict` |
+| `Main/Features/StoryMissions/Config/StoryHeroesReader.cs` | #1366: the `heroes` list, through `HeroesReader.ReadRow` |
+| `Main/Features/StoryMissions/StoryRosterCheck.cs`, `StoryRosterService.cs`, `Hooks/StoryRosterBehavior.cs` | #1366: the `taom.story-missions.roster` line at session start |
 | `Main/Features/StoryMissions/Hooks/StoryDevMenuBehavior.cs` | The dev menu and its refusals |
 | `Main/Features/StoryMissions/Hooks/StoryMissionLauncher.cs` | Opens the mission |
 | `Main/Features/StoryMissions/Hooks/StoryMissionLogic.cs` | The mission logic that feeds `StoryEndWatch` |
@@ -223,6 +273,7 @@ All seven rows are Defend missions with one wave. Only Helm's Deep names a music
 | `Main/Adapters/IStoryCampaignAdapter.cs`, `StoryCampaignAdapter.cs` | Slice 4: captivity, the player's side pair, and the transfer of a fallen fortress |
 | `Main/Features/WarChronicle/Events/IChronicleStoryPort.cs` | Slice 4: the chronicle seam (`ChronicleService` implements it) |
 | `tools/ingame_checks/1105.toml` | The in-game check manifest |
+| `tools/ingame_checks/1366.toml` | The manifest of the free heroes |
 
 ## Dependencies
 
@@ -240,7 +291,9 @@ All seven rows are Defend missions with one wave. Only Helm's Deep names a music
 
 `TAOM.Tests/Features/StoryMissions/`:
 
-- `StoryMissionCatalogTests`, `ShippedStoryMissionsTests`: the loader's validation and the shipped rows.
+- `StoryMissionCatalogTests`, `ShippedStoryMissionsTests`: the loader's validation and the shipped rows, including the three free heroes.
+- `StoryHeroesReaderTests`: the `heroes` list (no key, not an array, the cap of three).
+- `StoryRosterCheckTests`: the roster line's rule, detail and service.
 - `StoryPlanBuilderTests`, `StoryVerdictTests`, `StoryEndWatchTests`: the run plan, the verdict and the end check line.
 - `StoryMissionLauncherTests`, `StoryMissionsWiringTests`, `StoryMissionWiringPinTests`: the launch refusals and the wiring.
 - `HostedRunOutcomeLogTests`: the check line rename.
@@ -280,6 +333,73 @@ Slice 4, in a campaign at the Full War:
 `python tools/ingame_verdict.py` reads these rows from `tools/ingame_checks/1105.toml`. The proof is
 owed, and Slice 2 waits on it.
 
+The free heroes (#1366). A driver for the story mission exists since #1368 (step 0 below), but it has not run yet, so a person
+still runs this by hand until it has, in a loaded campaign on a build that holds the feature (a `.dirty` build is not counted).
+
+0. The unattended route: `python tools/run_scenario.py --kind story-mission --mission helms_deep_defend` starts a new campaign,
+   opens the mission through the dev menu's click path (`Open the mission`), waits for the end and chooses `Back to the map`, then
+   quits. It reaches the mission rows of `1366.toml` for the one defence mission, and `python tools/ingame_verdict.py --issue 1368` reads
+   its own three rows. It does not reach: step 5 (a person's judgement), the War Chronicle's offer path, a save and reload, a forced
+   loss, or any other mission id. The driver is unit tested only; its first run is owed.
+
+
+1. Start a new campaign or load a save, single player, on the map with no menu open. The line
+   `[Check] id=taom.story-missions.roster result=pass` appears at session start, with `missing=-` and
+   `items_missing=-`. This step needs no person: `python tools/run_scenario.py --days 2` on a build
+   that holds this change starts a new campaign unattended and writes the line.
+2. Run `taom.story_open helms_deep_defend auto`, then choose "Open the mission".
+3. Play or let the bot play one wave to its clear, then let the mission end.
+4. Run `python tools/ingame_verdict.py --issue 1366`. It reads the roster line, three
+   `taom.story-missions.hosted.hero` passes (one per hero, `is_hero=0 campaign=1`), the `hunters`
+   line, each hero's `fired` line, Legolas's `precision` and `multishot` (`item=1`), and the aura line.
+   A hero who casts nothing in a short run reads NOT REACHED, not a fail: read the log before calling
+   it a defect. Each mission row reads from the story launch line to the next `[LongDefeat]` or
+   `[StoryMissions] launching` line (the manifest's `scope` and `scope_end`). A campaign battle fought
+   after the story mission writes no launch line and is still read, and the aura row can then match the
+   companion Aragorn: read the verdict from a game process that fought no other battle after the story
+   mission. Every row of `1359.toml` and `1361.toml` reads only a Long Defeat run, so this run does
+   not count for them.
+5. The rows a person judges are in the manifest: key 8 selects the three and they hold the nearest wall
+   lane; after the player falls he can take control of a hero, who keeps his health and casts nothing
+   while controlled; the War Chronicle's offer opens the same mission; a new save and an old save each load,
+   play a day, save under a new name and reload clean; no `taom_hero_*` shows in the encyclopedia, the
+   party screen or the companion pool; the campaign is unchanged after the return; the three look as
+   they do in the Long Defeat, and at the lowest Character Detail setting each has his own face; a save
+   made on this build loads on a trunk build.
+
+What one run has proven: the unattended run `E:/Temp/scenario-runs/20261116-035100`
+(`python tools/run_scenario.py --days 2`, on trunk 317413337 plus only the two `SubModule.xml` nodes)
+started a new campaign with the hero characters and the extra arrow loaded and ran 2 of 2 days with a
+clean unload. The engine log of that run shows both files opened. It did not prove a save, a load,
+the roster line (not built then) or the story mission.
+
+What two more runs have proven, both on the committed build 8ee4ef2fe. The unattended run
+`E:/Temp/scenario-runs/20261116-055126` (`python tools/run_scenario.py --days 2`) started a new campaign
+and wrote `[Check] id=taom.story-missions.roster result=pass missions=7 troops=34 missing=- items=1
+items_missing=-`: every troop of the seven story missions, the three heroes among them, and the extra
+arrow resolve at session start. `python tools/ingame_verdict.py --issue 1366` reads PASS for the roster row
+and NOT REACHED for the mission rows. The unattended Long Defeat run `E:/Temp/long-defeat-runs/20261116-055255`
+(3 waves) is the check that the changed hero spawn and the level did not break the custom game: the three
+hero lines read `is_hero=1 campaign=0 ... health_factor=3.00` with their own weapons, and
+`python tools/ingame_verdict.py` reads PASS for #1337 and for all seven rows of #1361.
+
+The story mission itself is proven by the unattended run `E:/Temp/scenario-runs/20261116-075342` (the driver of #1368,
+build 4baa2f53a): `python tools/ingame_verdict.py --issue 1366` reads PASS for all seven rows. The three hero lines read
+`is_hero=0 campaign=1 mounted=0 formation=7 held=1 strangers=0 order=Move health_factor=3.00` with `strider_sword`,
+`wm_mirkwood_bow_a01` and `sm_dwarf_dain_axe_a`. The hunters line passed at the wave clear with all three standing and in place.
+Each cast (`fired=1`, `8` and `2`), Legolas's aim read zero, Many Arrows fired ten extra arrows with the campaign-loaded item
+(`item=1`), and Aragorn's aura reached 102 soldiers, which in a campaign only the new source rule can do. The mission was won
+(108 kills, 9 defenders lost).
+
+One number of that run is not healthy: the hunters line ends `retaken=1 moved_out=1517`. From the second after the heroes
+spawned, the repair moved about 20 soldiers out of the heroes' formation every second (the log's first five repairs read 21, 20,
+20, 20 and 40), and it never does so in a Long Defeat (`moved_out=0` in every run there). Something puts garrison soldiers into
+formation 7 again and again in the story mission. The checks pass because the repair wins each time; what it does to those
+soldiers is not known. It has its own issue.
+
+Not proven: that an XML character no party holds survives a save and reload, and every row a person must look at (the order
+key, the take-over, the faces, the War Chronicle offer path).
+
 ## How to add a story mission
 
 1. Add a row to `story_missions.json` with a Defend side, two culture ids, a garrison and at least
@@ -298,6 +418,11 @@ player report showed the Hornburg ending with no battle (2026-11-13).
 
 ## Changelog
 
+- 2026-11-16: #1366, Aragorn, Legolas and Gimli stand free with the garrison in the Helm's Deep
+  defence of a campaign; the roster check at session start. After review: the heroes keep their own
+  faces and, when taken over, their own health; the verdict tool's `scope_end` keeps a later Long
+  Defeat run out of the #1366 rows and the story mission out of the #1359 and #1361 rows. Not yet
+  opened in a game.
 - 2026-11-15: #1326, the offer follows the player's side of the war (defend, attack or no offer),
   and a story block may name an `attackMission`. No attack mission ships yet.
 - 2026-11-13: Slice 4, the Hornburg's offer of the Helm's Deep defence and its campaign result.
@@ -311,4 +436,5 @@ player report showed the Hornburg ending with no battle (2026-11-13).
 ## GitHub Issue
 
 - **Issue:** #1105
+- **Issue:** #1366, Phase 6 of #1325: the free heroes (built, in-game proof owed)
 - **Status:** Open (Slices 1 and 4 built; in-game proof owed for both)

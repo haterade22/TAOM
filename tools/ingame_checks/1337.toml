@@ -1,6 +1,6 @@
 # In-game checks for #1337 (The Long Defeat: buy Aragorn, Legolas and Gimli at the shop), read by tools/ingame_verdict.py. The [Check] lines come from
 # Main/Features/LongDefeat/LongDefeatDirector.Heroes.cs and Diagnostics/LongDefeatHeroChecks.cs.
-# hero, key <mission>h<N> for the mission's Nth hero spawn, is written on the tick after the buy. It passes when the body the engine made is a hero to it (is_hero=1), has no mount
+# hero, key <mission>h<N> for the mission's Nth hero spawn, is written on the tick after the buy. It passes when the body the engine made is a hero to it (is_hero=1 campaign=0; a line from before #1366 has no campaign=), has no mount
 # (mounted=0), stands in the heroes' formation (formation=7) and has its health limit scaled by the shop's factor (health_factor= equals wanted_factor=). The formation
 # must also be off AI control after the spawn (held=1), so the siege tactic cannot move him out, and hold no soldier who is not a held hero (strangers=0). order= names the
 # formation's movement order: Move when the spawn gave the standing order at a wall lane, or whatever order the player gave group 8. wielded= names the item in his hand (the bow,
@@ -24,7 +24,7 @@ logs = ["taom"]
 id = "taom.long-defeat.hero"
 needs = "a Long Defeat intermission in which the bot or the player buys a hero: python tools/run_long_defeat.py --waves 3 --garrison-scale 1.3 --start-gold 5000"
 reached = ['\[Check\] id=taom\.long-defeat\.hero result=']
-pass = ['\[Check\] id=taom\.long-defeat\.hero result=pass hero=\S+ troop=taom_hero_\S+ is_hero=1 mounted=0 formation=7 held=1 strangers=0 order=\S+ health_factor=[0-9.]+ wanted_factor=[0-9.]+ wielded=\S+$']
+pass = ['\[Check\] id=taom\.long-defeat\.hero result=pass hero=\S+ troop=taom_hero_\S+ is_hero=1 (?:campaign=0 )?mounted=0 formation=7 held=1 strangers=0 order=\S+ health_factor=[0-9.]+ wanted_factor=[0-9.]+ wielded=\S+$']
 fail = ['\[Check\] id=taom\.long-defeat\.hero result=fail']
 absence = "not-reached"
 

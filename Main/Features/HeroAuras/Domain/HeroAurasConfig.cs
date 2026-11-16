@@ -25,7 +25,7 @@ public sealed class HeroAuraDefinition
 {
     public string Id { get; set; } = "";
 
-    // Hero StringIds; in a battle without a campaign, the character id (DreadSourceTracker.HeroAxisId).
+    // Hero StringIds; for a character with no Hero (a Custom Game, or a campaign's mission heroes, #1366), the character id (HeroAuraService.SourceId).
     public List<string> HeroIds { get; set; } = new List<string>();
 
     // Null: the config's radius.

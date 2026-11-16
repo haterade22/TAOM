@@ -1446,3 +1446,10 @@ window. This repeats the Eye of Sauron entry of 2026-10-14 in `adapters-taleworl
   the setter, a load, and any automatic turn-off. Test that the invalidator is called, and not called when the change is
   refused.
 - **Source:** [rca-cheat-unlimited-party-2026-11-16.md](../rca-cheat-unlimited-party-2026-11-16.md), rows 1 and 2.
+### A grant keyed by the shooter needs the list of everything that shoots in his name (#1361, 2026-11-16)
+
+**Why missed:** Legolas's shield pierce, his damage floor and his arrow's kill roll all ask one question: is the attacker a hero on the ranged roster. The Long Defeat's Elven Volley adds its arrows with `AddCustomMissile(owner, ...)`, and its owner rule took any live AI human defender, archers first and the one farthest from the attackers. That is Legolas late in a wave. The plan had read the volley only as a reader of his extra arrows.
+
+**Prevent:** when a model or a callback grants something by `attackerAgent`, grep every `AddCustomMissile` and every blow built with an owner in the missions the grant is gated to, and decide for each whether its shooter can be the granted agent. Close it at the producer (the owner rule) and make the closed fact a required argument, so a new caller cannot leave it out.
+
+**Source:** [rca-hero-ranged-kit-2026-11-16.md](../rca-hero-ranged-kit-2026-11-16.md) finding 1 and 6.

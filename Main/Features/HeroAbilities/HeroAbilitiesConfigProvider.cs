@@ -31,6 +31,9 @@ public sealed class HeroAbilitiesConfigProvider : IHeroAbilitiesConfigProvider
     private const float MaxDamageReduction = 90f;
     private const float MaxResistance = 1000f;
     private const float MaxOtherPercent = 300f;
+    private const float MaxExtraArrowSpread = 20f;
+    private const float MaxExtraArrowRange = 150f;
+    private const int MaxExtraArrows = 3;
 
     private static readonly Regex AbilityId = new Regex("^[a-z0-9_]{1,63}$", RegexOptions.CultureInvariant);
 
@@ -116,16 +119,57 @@ public sealed class HeroAbilitiesConfigProvider : IHeroAbilitiesConfigProvider
         };
         result.Glow = ValidateGlow(kit.Glow, characterId!, out var color);
         result.GlowColor = color;
+        result.Ranged = ValidateRanged(kit.Ranged, characterId!);
         foreach (var ability in kit.Abilities ?? new List<HeroAbilityConfig>())
         {
-            var checkedAbility = ValidateAbility(ability, abilityIds);
+            var checkedAbility = ValidateAbility(ability, abilityIds, result.Ranged);
             if (checkedAbility != null)
                 result.Abilities.Add(checkedAbility);
         }
         return result;
     }
 
-    private HeroAbilityConfig? ValidateAbility(HeroAbilityConfig? ability, HashSet<string> abilityIds)
+    private HeroRangedConfig? ValidateRanged(HeroRangedConfig? ranged, string characterId)
+    {
+        if (ranged == null)
+            return null;
+        var label = $"hero '{characterId}' ranged";
+        var item = (ranged.ExtraArrowItem ?? "").Trim();
+        if (item.Length > 0 && !AbilityId.IsMatch(item))
+        {
+            Reject($"{label}: extraArrowItem '{item}' must be 1 to 63 of a-z, 0-9 and _, set to empty");
+            item = "";
+        }
+        return new HeroRangedConfig
+        {
+            ZeroAimError = ranged.ZeroAimError,
+            PierceShields = ranged.PierceShields,
+            HeadshotKillChance = InRange(ranged.HeadshotKillChance, 1f, $"{label}: headshotKillChance"),
+            BodyKillChance = InRange(ranged.BodyKillChance, 1f, $"{label}: bodyKillChance"),
+            ExtraArrowItem = item,
+            ExtraArrowSpreadMeters = InRange(ranged.ExtraArrowSpreadMeters, MaxExtraArrowSpread, $"{label}: extraArrowSpreadMeters"),
+            ExtraArrowRangeMeters = InRange(ranged.ExtraArrowRangeMeters, MaxExtraArrowRange, $"{label}: extraArrowRangeMeters"),
+        };
+    }
+
+    private int ValidateExtraArrows(HeroAbilityConfig ability, string id, HeroRangedConfig? ranged)
+    {
+        if (ability.ExtraArrows == 0)
+            return 0;
+        if (ability.ExtraArrows < 0 || ability.ExtraArrows > MaxExtraArrows)
+        {
+            Reject($"ability '{id}': extraArrows {ability.ExtraArrows} is outside 0 to {MaxExtraArrows}, set to 0");
+            return 0;
+        }
+        if (ranged == null || ranged.ExtraArrowItem.Length == 0 || !(ranged.ExtraArrowSpreadMeters > 0f) || !(ranged.ExtraArrowRangeMeters > 0f))
+        {
+            Reject($"ability '{id}': extraArrows needs a ranged block with an extraArrowItem, spread and range above 0, set to 0");
+            return 0;
+        }
+        return ability.ExtraArrows;
+    }
+
+    private HeroAbilityConfig? ValidateAbility(HeroAbilityConfig? ability, HashSet<string> abilityIds, HeroRangedConfig? ranged)
     {
         var id = ability?.Id ?? "";
         if (ability == null || !AbilityId.IsMatch(id))
@@ -171,6 +215,8 @@ public sealed class HeroAbilitiesConfigProvider : IHeroAbilitiesConfigProvider
             EnemyShockRadius = InRange(ability.EnemyShockRadius, MaxRadius, $"ability '{id}': enemyShockRadius"),
             EnemyShockMorale = InRange(ability.EnemyShockMorale, MaxMorale, $"ability '{id}': enemyShockMorale"),
             WarCry = ValidateWarCry(ability.WarCry, id),
+            ExtraArrows = ValidateExtraArrows(ability, id, ranged),
+            AlliesRangedOnly = ability.AlliesRangedOnly,
         };
     }
 

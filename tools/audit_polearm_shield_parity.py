@@ -24,9 +24,14 @@ WHAT IT CHECKS
 2. Every `<AvailablePiece>` id in the merged weapon descriptions resolves to a real
    `<CraftingPiece>`, unless KNOWN_DANGLING holds it. A typo'd id in an XSLT fails silently in game -- the same class of hazard
    `validate_mesh_refs.py` and `audit_item_refs.py` exist to catch elsewhere.
+3. Every crafted weapon a roster carries resolves to a primary usage. A weapon that resolves to
+   none was never judged by check 1, which is how 20 placeholder weapons went unchecked (#1354).
 
 Item and description data come from the INSTALLED modules (that is where LOTRLOME_Armory lives
-and it is not in this repo); rosters come from this repo, because a commit is what changes them.
+and it is not in this repo), except the module whose rosters are checked: that one is read from
+the checked tree, so an edit counts before it is deployed. Stylesheets are the ones each module's
+SubModule.xml `<XmlName>` rows name, and the modules that module's `<IncompatibleModules>` lists
+(NavalDLC for TAOM) are left out, as the engine never loads them beside it.
 
 EXIT CODES
 ----------
@@ -180,24 +185,89 @@ KNOWN_DANGLING: dict[str, str] = {
 }
 
 
+class GateInputError(Exception):
+    """Input the gate cannot judge (a SubModule.xml it cannot parse): exit 2, never a finding."""
+
+
 def _parse(path: Path):
     return ET.parse(str(path), ET.XMLParser(recover=True, huge_tree=True))
 
 
-def merged(modules: Path, name: str):
-    """Native's XML with every module's same-named XSLT chained onto it, as the engine does.
+def _submodule(path: Path):
+    """The root of a SubModule.xml, parsed strictly: the module list and stylesheets come from it,
+    so a file the engine would reject must stop the run rather than drop the module in silence."""
+    try:
+        root = ET.parse(str(path)).getroot()
+    except (ET.XMLSyntaxError, OSError) as exc:
+        raise GateInputError(f"cannot parse {path}: {exc}") from exc
+    if root is None:
+        raise GateInputError(f"cannot parse {path}: no root element")
+    return root
+
+
+def incompatible(submodule: Path) -> frozenset[str]:
+    """The module ids a SubModule.xml lists under <IncompatibleModules>.
+
+    TAOM lists NavalDLC there: the two never load together, so NavalDLC's weapon stylesheets and
+    pieces must not count (#1354).
+    """
+    block = _submodule(submodule).find("IncompatibleModules")
+    if block is None:
+        return frozenset()
+    return frozenset(m.get("Id") for m in block.findall("Module") if m.get("Id"))
+
+
+def module_dirs(modules: Path, own: Path | None, skip: frozenset[str]) -> list[Path]:
+    """The module folders to read, sorted by module id (load-equivalent, see merged()).
+
+    Every installed module except the skipped ids. `own` is the checked module's folder (the one
+    holding the SubModule.xml beside --rosters): it takes the place of its installed copy, so an
+    undeployed edit counts and a stale deployed file does not (#1354).
+    """
+    by_id = {p.name: p for p in modules.iterdir() if p.is_dir()}
+    if own is not None:
+        id_node = _submodule(own / "SubModule.xml").find("Id")
+        own_id = id_node.get("value") if id_node is not None else None
+        by_id[own_id or own.name] = own
+    return [by_id[k] for k in sorted(by_id) if k not in skip]
+
+
+def stylesheets(module: Path, xml_id: str) -> list[Path]:
+    """The stylesheets the engine applies from this module for one XmlName id, in row order.
+
+    The engine finds a module's files through its SubModule.xml rows
+    (`<XmlName id="WeaponDescriptions" path="placeholder_weapons/ph_weapon_descriptions"/>`), and a
+    path may sit in a subfolder. Reading `<name>.xslt` at the top level instead missed TAOM's
+    placeholder registrations, so every `taom_ph_*` weapon resolved to no usage (#1354).
+    """
+    sub = module / "SubModule.xml"
+    if not sub.is_file():
+        return []
+    sheets = []
+    for row in _submodule(sub).iter("XmlName"):
+        path = row.get("path")
+        if row.get("id") == xml_id and path:
+            sheet = module / "ModuleData" / f"{path}.xslt"
+            if sheet.is_file():
+                sheets.append(sheet)
+    return sheets
+
+
+def merged(dirs: list[Path], name: str, xml_id: str):
+    """Native's `<name>.xml` with every module's `xml_id` stylesheets chained onto it, as the engine does.
 
     `MBObjectManager.CreateMergedXmlFile` applies each contributing module's transform in load
     order. TAOM's contributors here are all additive (each override template ends by applying
-    templates to the node it replaced), so a sorted order gives the same document as load order.
+    templates to the node it replaced), so a sorted order gives the same document as load order,
+    and it keeps LOTRLOME_Armory, which replaces the lists, before TAOM, which appends to them.
     """
-    base = modules / "Native" / "ModuleData" / f"{name}.xml"
-    if not base.is_file():
+    native = next((d for d in dirs if d.name == "Native"), None)
+    base = native / "ModuleData" / f"{name}.xml" if native is not None else None
+    if base is None or not base.is_file():
         return None
     doc = _parse(base)
-    for module in sorted(p for p in modules.iterdir() if p.is_dir()):
-        sheet = module / "ModuleData" / f"{name}.xslt"
-        if sheet.is_file():
+    for module in dirs:
+        for sheet in stylesheets(module, xml_id):
             doc = ET.XSLT(_parse(sheet))(doc)
     return doc
 
@@ -230,10 +300,10 @@ def usage_flags(modules: Path) -> dict[str, set[str]]:
     return resolved
 
 
-def crafting_pieces(modules: Path) -> dict[str, set[str]]:
+def crafting_pieces(dirs: list[Path]) -> dict[str, set[str]]:
     """piece id -> the usage-feature tokens that piece excludes."""
     out: dict[str, set[str]] = {}
-    for module in sorted(p for p in modules.iterdir() if p.is_dir()):
+    for module in dirs:
         data = module / "ModuleData"
         if not data.is_dir():
             continue
@@ -244,9 +314,9 @@ def crafting_pieces(modules: Path) -> dict[str, set[str]]:
     return out
 
 
-def descriptions(modules: Path):
+def descriptions(dirs: list[Path]):
     """description id -> (available piece ids, its item_usage_features tokens)."""
-    doc = merged(modules, "weapon_descriptions")
+    doc = merged(dirs, "weapon_descriptions", "WeaponDescriptions")
     out: dict[str, tuple[set[str], list[str]]] = {}
     if doc is None:
         return out
@@ -260,12 +330,12 @@ def descriptions(modules: Path):
     return out
 
 
-def templates(modules: Path) -> dict[str, tuple[str, list[str]]]:
+def templates(dirs: list[Path]) -> dict[str, tuple[str, list[str]]]:
     """crafting template id -> (item_type, its WeaponDescription ids in order).
 
     The order is what decides the primary usage, so it must be preserved verbatim.
     """
-    doc = merged(modules, "crafting_templates")
+    doc = merged(dirs, "crafting_templates", "CraftingTemplates")
     out: dict[str, tuple[str, list[str]]] = {}
     if doc is None:
         return out
@@ -278,7 +348,7 @@ def templates(modules: Path) -> dict[str, tuple[str, list[str]]]:
     return out
 
 
-def items(modules: Path):
+def items(dirs: list[Path]):
     """(crafted, plain, shields).
 
     crafted: id -> (template, pieces).  plain: id -> (Type, item_usage).
@@ -286,7 +356,7 @@ def items(modules: Path):
     crafted: dict[str, tuple[str, list[str]]] = {}
     plain: dict[str, tuple[str, str]] = {}
     shields: set[str] = set()
-    for module in sorted(p for p in modules.iterdir() if p.is_dir()):
+    for module in dirs:
         data = module / "ModuleData"
         if not data.is_dir():
             continue
@@ -394,10 +464,21 @@ def main() -> int:
         print(f"ERROR: roster folder not found: {roster_root}", file=sys.stderr)
         return 2
 
-    descs = descriptions(modules)
-    templs = templates(modules)
-    pieces_meta = crafting_pieces(modules)
-    crafted, plain, shields = items(modules)
+    # The checked module's own SubModule.xml names the modules that never load beside it (#1354).
+    # A --rosters folder with none beside it (a fixture, a copy) takes TAOM's list instead.
+    own_sub = roster_root.parent / "SubModule.xml"
+    own = roster_root.parent if own_sub.is_file() else None
+    skip_from = own_sub if own is not None else DEFAULT_ROSTERS.parent / "SubModule.xml"
+    try:
+        skip = incompatible(skip_from) if skip_from.is_file() else frozenset()
+        dirs = module_dirs(modules, own, skip)
+        descs = descriptions(dirs)
+        templs = templates(dirs)
+        pieces_meta = crafting_pieces(dirs)
+        crafted, plain, shields = items(dirs)
+    except GateInputError as exc:
+        print(f"ERROR: {exc}", file=sys.stderr)
+        return 2
     flags = usage_flags(modules)
     if not descs or not templs:
         print(f"ERROR: no weapon_descriptions/crafting_templates under {modules}", file=sys.stderr)
@@ -420,8 +501,20 @@ def main() -> int:
         if item_type in MELEE_TYPES and BLOCKING_FLAG in flags.get(usage, set()):
             blocking[item_id] = (item_type, "<plain item_usage>", usage)
 
+    # Check 3. A roster weapon that resolves to no usage cannot be judged by check 1, and passing it
+    # in silence is how all 20 placeholder weapons went unchecked (#1354).
+    unresolved: dict[str, str] = {}
     failing, known = [], []
     for troop, path, index, ids in rosters(roster_root):
+        for item_id in ids:
+            if item_id not in crafted or item_id in unresolved:
+                continue
+            template, item_pieces = crafted[item_id]
+            if template not in templs:
+                unresolved[item_id] = f"crafting template {template!r} is not defined"
+            elif templs[template][0] in MELEE_TYPES and primary_usage(
+                    item_pieces, template, descs, templs, pieces_meta)[1] is None:
+                unresolved[item_id] = f"no WeaponDescription of {template} lists all its pieces"
         if not any(i in shields for i in ids):
             continue
         for item_id in ids:
@@ -445,7 +538,11 @@ def main() -> int:
         failing.extend(excess)
 
     print(f"Modules:  {modules}")
+    if own is not None:
+        print(f"Own:      {own} (read in place of its installed copy)")
     print(f"Rosters:  {roster_root}")
+    if skip:
+        print(f"Skipped:  {', '.join(sorted(skip))} (incompatible, from {skip_from})")
     print(
         f"Loaded {len(descs)} weapon descriptions, {len(templs)} crafting templates, "
         f"{len(crafted)} crafted items, {len(shields)} shields."
@@ -475,6 +572,15 @@ def main() -> int:
         print(f"\nFAIL: {len(stale_dangling)} KNOWN_DANGLING id(s) no longer dangle; delete them:")
         for piece in stale_dangling:
             print(f"  {piece}  [{KNOWN_DANGLING[piece]}]")
+
+    if unresolved:
+        status = 1
+        print(f"\nFAIL: {len(unresolved)} roster weapon(s) resolve no usage, so the shield check "
+              "cannot judge them:")
+        for item_id in sorted(unresolved):
+            print(f"  {item_id}: {unresolved[item_id]}")
+        print("Register the pieces in a WeaponDescription the template lists, through a stylesheet "
+              "a SubModule.xml <XmlName> row names, or fix the item's crafting_template.")
 
     def _display_path(path):
         """Repo-relative when possible, absolute otherwise.

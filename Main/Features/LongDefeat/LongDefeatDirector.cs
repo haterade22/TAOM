@@ -204,15 +204,23 @@ internal sealed partial class LongDefeatDirector
                     _run.DefenderDown();
                     break;
                 case LdRemovalKind.Player:
-                    _run.PlayerDown();
-                    _deathPending = true;
-                    NoteEngineTookSplit("the lord fell");
+                    LordFell();
                     break;
                 case LdRemovalKind.Hero:
                     HeroLeft(removal.TroopId, removal.Loss);
+                    if (removal.PlayerBody && removal.Loss)
+                        LordFell();
                     break;
             }
         });
+    }
+
+    /// <summary>The lord's body fell. Main thread only, called from the deferred removal.</summary>
+    private void LordFell()
+    {
+        _run.PlayerDown();
+        _deathPending = true;
+        NoteEngineTookSplit("the lord fell");
     }
 
     /// <summary>An agent started running away. Main thread only, as the engine raises it.</summary>
@@ -254,9 +262,9 @@ internal sealed partial class LongDefeatDirector
             return;
 
         _adoptedBody = _mainBody;
-        _field.AdoptMain(_plan.Options.Autoplay);
+        var heldHero = _field.AdoptMain(_plan.Options.Autoplay);
         NoteEngineTookSplit("a new body");
-        DressNewBody();
+        DressNewBody(heldHero);
         _logger.LogInfo($"{Tag}[General] {_field.DescribeFormations()}");
         LongDefeatChecks.Record(_outcomes, LongDefeatChecks.GeneralId, _mission, LongDefeatChecks.General(_field.BootFacts()));
         if (!_deathPending)

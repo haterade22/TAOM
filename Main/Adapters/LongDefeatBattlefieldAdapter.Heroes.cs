@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using TAOM.Features.LongDefeat.Domain;
+using TaleWorlds.CampaignSystem;
 using TaleWorlds.Core;
 using TaleWorlds.Engine;
 using TaleWorlds.Library;
@@ -11,8 +12,9 @@ using TaleWorlds.ObjectSystem;
 namespace TAOM.Adapters;
 
 /// <summary>
-/// The shop's heroes (#1325, #1337): one spawn into the heroes' own formation, a standing Move order at a wall lane for that formation, a
-/// repair that keeps its membership to the held heroes, and the bodies held by reference so a removal is reported by the shop's hero id.
+/// The shop's heroes and a story mission's free heroes (#1325, #1337, #1366): one spawn into the heroes' own formation, a standing Move order at
+/// a wall lane for that formation, a repair that keeps its membership to the held heroes, and the bodies held by reference so a removal is
+/// reported by the hero id.
 /// The held bodies are a copy-on-write array: the writers (the spawn, <see cref="TakeHero"/> on any thread, <see cref="ClearHeroes"/>)
 /// replace it under <see cref="_heroGate"/>, and the main-thread readers and <see cref="IsHeldHero"/> read it without the lock, so a
 /// per-tick read allocates nothing.
@@ -38,7 +40,10 @@ internal sealed partial class LongDefeatBattlefieldAdapter
 
     // The formation is positioned at the place before its first spawn, as the mounted lord's is (SpawnMounted): the spawn then finds it
     // positioned and never asks the deployment plan for a plan nobody added troops to. A hero's character has no horse and a battle set
-    // of his own (ShippedMissionHeroesTests), so no kit override is passed: for a hero the engine copies that first battle set itself.
+    // of his own (ShippedMissionHeroesTests), and that first battle set goes in as the kit. In a Custom Game is_hero makes IsHero true and the
+    // engine fixes the equipment to a clone of that set (Mission.cs:4284-4287, :4108), so the kit changes nothing there. In a campaign
+    // (#1366) the character has no Hero, IsHero is false (CharacterObject.cs:300), and with no kit the engine would roll the set through
+    // Equipment.GetRandomEquipmentElements with random item modifiers on (Mission.cs:4108, Equipment.cs:604-614). A kit is cloned before that.
     // The engine wields the first weapon slot at the spawn (Mission.SpawnTroopWithAgentBuildData runs agent.WieldInitialWeapons, which takes the first
     // slot), and Legolas's bow is in the first slot, so this adapter draws no weapon.
     // An empty formation 7 is a split target of the siege tactic (TacticComponent.cs:229-235), so strangers leave it before the spawn.
@@ -59,7 +64,7 @@ internal sealed partial class LongDefeatBattlefieldAdapter
         formation.BeginSpawn(1, false);
         try
         {
-            agent = Spawn(troop, team, true, HeroClass, true, 1, 0, false, place: place);
+            agent = Spawn(troop, team, true, HeroClass, true, 1, 0, false, kit: troop.FirstBattleEquipment, place: place, ownBody: true);
         }
         finally
         {
@@ -79,7 +84,7 @@ internal sealed partial class LongDefeatBattlefieldAdapter
 
         return new LdHeroReport(true, null, agent.Character?.IsHero ?? false, agent.HasMount, agent.Formation?.Index ?? -1,
             before > 0f ? agent.HealthLimit / before : 0f, agent.WieldedWeapon.Item?.StringId ?? "", !formation.IsAIControlled,
-            Strangers(formation, held), formation.GetReadonlyMovementOrderReference().OrderEnum.ToString());
+            Strangers(formation, held), formation.GetReadonlyMovementOrderReference().OrderEnum.ToString(), agent.Character is CharacterObject);
     }
 
     // Main thread, every tick while a hero stands. Only reads when the group is whole and off AI control.
@@ -297,7 +302,7 @@ internal sealed partial class LongDefeatBattlefieldAdapter
             var position = agent.Position;
             var distance = place == null ? float.NaN : position.AsVec2.Distance(at.AsVec2);
             var height = place == null ? float.NaN : Math.Abs(position.z - at.z);
-            facts.Add(new LdHeroFacts(pair.Id, agent.KillCount, agent.Formation?.Index ?? -1, limit > 0f ? agent.Health / limit : 0f, distance, height));
+            facts.Add(new LdHeroFacts(pair.Id, agent.KillCount, agent.Formation?.Index ?? -1, limit > 0f ? agent.Health / limit : 0f, distance, height, agent.IsPlayerControlled));
         }
 
         var formation = _mission.DefenderTeam?.GetFormation(HeroClass);

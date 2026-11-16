@@ -375,6 +375,33 @@ public class StoryMissionCatalogTests
     }
 
     [TestMethod]
+    public void Load_AHeroesList_IsReadIntoTheDefinition()
+    {
+        var (catalog, logger) = Load(File(Row(("heroes", "[{\"id\":\"aragorn\",\"troop\":\"t_a\",\"healthFactor\":3.0}]"))));
+
+        Assert.AreEqual(new HeroSpawn("aragorn", "t_a", 3f), catalog.Missions.Single().Heroes.Single());
+        logger.DidNotReceiveWithAnyArgs().LogWarning(default!);
+    }
+
+    [TestMethod]
+    public void Load_NoHeroesList_GivesNoHero()
+    {
+        var (catalog, _) = Load(File(Row()));
+
+        Assert.AreEqual(0, catalog.Missions.Single().Heroes.Count);
+    }
+
+    [TestMethod]
+    public void Load_ABadHeroesList_DoesNotSkipTheMission()
+    {
+        var (catalog, logger) = Load(File(Row(("heroes", "\"aragorn\""))));
+
+        Assert.AreEqual(1, catalog.Missions.Count);
+        Assert.AreEqual(0, catalog.Missions[0].Heroes.Count);
+        AssertWarned(logger, "m1.heroes");
+    }
+
+    [TestMethod]
     public void Load_AMusicPath_IsRead()
     {
         var (catalog, logger) = Load(File(Row(("music", "\"StoryMusic/isengard_vs_rohan.ogg\""))));

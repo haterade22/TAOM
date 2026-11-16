@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using TAOM.Features.LongDefeat;
 using TAOM.Features.LongDefeat.Domain;
@@ -28,4 +29,8 @@ internal sealed record StoryMissionDefinition(
     RunRules Rules,
     KeepPoint? Keep,
     MusterPoints? Muster,
-    string? Music = null);
+    string? Music = null)
+{
+    /// <summary>The heroes who stand free with the garrison from the first tick (#1366), at most three; none when the file lists none.</summary>
+    public IReadOnlyList<HeroSpawn> Heroes { get; init; } = Array.Empty<HeroSpawn>();
+}

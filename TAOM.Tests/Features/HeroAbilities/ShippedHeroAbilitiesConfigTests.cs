@@ -68,11 +68,67 @@ public class ShippedHeroAbilitiesConfigTests
     }
 
     [TestMethod]
-    public void ShippedConfig_Kits_AreAragornAndGimliOnly()
+    public void ShippedConfig_Kits_AreAragornGimliAndLegolas()
     {
-        // Legolas's ranged kit is Phase 5.
-        CollectionAssert.AreEquivalent(new[] { "taom_hero_aragorn", "taom_hero_gimli" },
+        CollectionAssert.AreEquivalent(new[] { "taom_hero_aragorn", "taom_hero_gimli", "taom_hero_legolas" },
             _sut.GetConfig().Heroes.Select(k => k.CharacterId).ToArray());
+    }
+
+    // #1361: the kit as the plan pins it. Aragorn and Gimli carry no ranged block.
+    [TestMethod]
+    public void ShippedConfig_LegolasRow_HasTheRangedKit()
+    {
+        var heroes = _sut.GetConfig().Heroes;
+        var legolas = heroes.Single(k => k.CharacterId == "taom_hero_legolas");
+        var ranged = legolas.Ranged;
+
+        Assert.IsNotNull(ranged);
+        Assert.IsTrue(ranged!.ZeroAimError);
+        Assert.IsTrue(ranged.PierceShields);
+        Assert.AreEqual(1f, ranged.HeadshotKillChance);
+        Assert.AreEqual(0.10f, ranged.BodyKillChance, 1e-6f);
+        Assert.AreEqual("taom_legolas_arrow", ranged.ExtraArrowItem);
+        Assert.AreEqual(10f, ranged.ExtraArrowSpreadMeters);
+        Assert.AreEqual(120f, ranged.ExtraArrowRangeMeters);
+        CollectionAssert.AreEqual(new[] { "legolas_rapid_fire", "legolas_many_arrows", "legolas_archers_eye" },
+            legolas.Abilities.Select(a => a.Id).ToArray());
+        Assert.AreEqual(2, legolas.Abilities.Single(a => a.Id == "legolas_many_arrows").ExtraArrows);
+        Assert.IsTrue(legolas.Abilities.Single(a => a.Id == "legolas_archers_eye").AlliesRangedOnly);
+        Assert.IsTrue(legolas.Abilities.All(a => a.EnemyShockMorale == 0f && a.EnemyShockRadius == 0f), "no Legolas effect on enemy morale (LongDefeatMorale.HoldsAttacker)");
+        Assert.IsTrue(heroes.Where(k => k.CharacterId != "taom_hero_legolas").All(k => k.Ranged == null));
+    }
+
+    [TestMethod]
+    public void ShippedConfig_ExtraArrowItem_IsInItemsXml()
+    {
+        var xml = File.ReadAllText(Path.Combine(ModuleDataPath, "hero_abilities", "hero_abilities_items.xml"));
+        var ids = Regex.Matches(xml, "<Item\\b[^>]*?\\bid=\"([^\"]+)\"").Cast<Match>().Select(m => m.Groups[1].Value).ToList();
+
+        foreach (var kit in _sut.GetConfig().Heroes.Where(k => k.Ranged != null && k.Ranged.ExtraArrowItem.Length > 0))
+            CollectionAssert.Contains(ids, kit.Ranged!.ExtraArrowItem, kit.CharacterId);
+    }
+
+    // The items file loads for a Custom Game (the Long Defeat) and for a campaign (the Helm's Deep story mission, #1366).
+    [TestMethod]
+    public void ShippedConfig_ItemsXml_LoadsForCampaignAndCustomGame()
+    {
+        var subModule = File.ReadAllText(RepoPaths.RepoPath("Main", "_Module", "SubModule.xml"));
+        var node = Regex.Match(subModule,
+            "<XmlNode>\\s*<XmlName id=\"Items\" path=\"hero_abilities/hero_abilities_items\"\\s*/>\\s*<IncludedGameTypes>\\s*<GameType value=\"Campaign\"\\s*/>\\s*<GameType value=\"CampaignStoryMode\"\\s*/>\\s*<GameType value=\"CustomGame\"\\s*/>\\s*</IncludedGameTypes>\\s*</XmlNode>");
+
+        Assert.IsTrue(node.Success, "SubModule.xml needs the hero_abilities_items node for Campaign, CampaignStoryMode and CustomGame");
+    }
+
+    [TestMethod]
+    public void ShippedConfig_ExtraArrowItem_IsNotMerchandise_AndCannotBePickedUp()
+    {
+        // In a campaign is_merchandise="false" (ItemObject.NotMerchandise) keeps the arrow out of workshops, loot and prizes,
+        // and CannotBePickedUp keeps a stuck arrow off the field.
+        var item = System.Xml.Linq.XDocument.Load(Path.Combine(ModuleDataPath, "hero_abilities", "hero_abilities_items.xml")).Root!
+            .Elements("Item").Single(i => (string?)i.Attribute("id") == "taom_legolas_arrow");
+
+        Assert.AreEqual("false", (string?)item.Attribute("is_merchandise"));
+        Assert.AreEqual("true", (string?)item.Element("Flags")?.Attribute("CannotBePickedUp"));
     }
 
     [TestMethod]

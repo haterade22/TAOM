@@ -4,6 +4,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
 using TAOM.Core.Logging;
 using TAOM.Features.Autorun.Scenario;
+using TAOM.Features.StoryMissions.Domain;
 
 namespace TAOM.Tests.Features.Autorun.Scenario;
 
@@ -24,9 +25,11 @@ public class ScenarioAutorunDriverTests
         _outcomes = Substitute.For<IOutcomeLog>();
     }
 
-    private ScenarioAutorunDriver Driver(string extra = "")
+    private const string StoryHead = "kind=story-mission\nout=E:\\x\\out\nmission=helms_deep_defend\n";
+
+    private ScenarioAutorunDriver Driver(string extra = "", string head = Head)
     {
-        var plan = ScenarioPlan.Resolve(n => n == ScenarioPlan.EnvVar ? @"E:\arm.txt" : null, _ => true, _ => Head + extra);
+        var plan = ScenarioPlan.Resolve(n => n == ScenarioPlan.EnvVar ? @"E:\arm.txt" : null, _ => true, _ => head + extra);
         Assert.IsTrue(plan.Armed, plan.Problem);
         return new ScenarioAutorunDriver(plan, _host, _logger, _outcomes);
     }
@@ -734,6 +737,415 @@ public class ScenarioAutorunDriverTests
     public void Tick_HostThrows_FinishesDriverErrorInsteadOfEscapingToTheEngine()
     {
         var driver = Driver();
+        _host.ScreenThrows = true;
+
+        driver.Tick(1f);
+        _host.ScreenThrows = false;
+
+        Assert.AreEqual("driver_error", Value(Done(), "reason"));
+        Assert.AreEqual(1, _host.Ends);
+    }
+
+    // ---- the story-mission kind (#1368) ----
+
+    /// <summary>Menu, start, creation, then a settled map: the story driver has just entered MissionMenu.</summary>
+    private ScenarioAutorunDriver ToMissionMenu(string extra = "")
+    {
+        var driver = Driver(extra, StoryHead);
+        _host.OnStart = () => _host.ScreenValue = AutorunScreen.CharacterCreation;
+        Run(driver, 5);
+        _host.ScreenValue = AutorunScreen.Map;
+        _host.Days = 10.4;
+        Run(driver, 5);
+        Assert.AreEqual("MissionMenu", driver.PhaseName);
+        return driver;
+    }
+
+    /// <summary>The story menu was opened and shows: the driver has just entered MissionOpen.</summary>
+    private ScenarioAutorunDriver ToMissionOpen(string extra = "")
+    {
+        var driver = ToMissionMenu(extra);
+        Run(driver, 5);
+        Assert.AreEqual("MissionOpen", driver.PhaseName);
+        _host.ScreenValue = AutorunScreen.MapMenu;
+        _host.StoryMenuShownValue = true;
+        return driver;
+    }
+
+    /// <summary>The Open option was chosen: the driver has just entered InMission and the screen is not the mission yet.</summary>
+    private ScenarioAutorunDriver ToInMission(string extra = "")
+    {
+        var driver = ToMissionOpen(extra);
+        Run(driver, 5);
+        Assert.AreEqual("InMission", driver.PhaseName);
+        return driver;
+    }
+
+    /// <summary>The mission was seen for three ticks and then ended with a Won verdict, back on the story menu: the driver has just entered MissionReturn.</summary>
+    private ScenarioAutorunDriver ToMissionReturn(string extra = "")
+    {
+        var driver = ToInMission(extra);
+        _host.ScreenValue = AutorunScreen.Mission;
+        Run(driver, 3);
+        _host.Verdict = StoryOutcome.Won;
+        _host.ScreenValue = AutorunScreen.MapMenu;
+        driver.Tick(1f);
+        Assert.AreEqual("MissionReturn", driver.PhaseName);
+        return driver;
+    }
+
+    [TestMethod]
+    public void Tick_StoryKind_SettledMap_OpensTheStoryMenuOnceWithThePlansMission()
+    {
+        var driver = ToMissionMenu();
+        Run(driver, 4);
+        Assert.AreEqual(0, _host.StoryMenuCalls);
+
+        driver.Tick(1f);
+        Run(driver, 3);
+
+        Assert.AreEqual(1, _host.StoryMenuCalls);
+        Assert.AreEqual("helms_deep_defend", _host.LastMissionId);
+        Assert.AreEqual("MissionOpen", driver.PhaseName);
+        Assert.AreEqual(1, InfoLogs("story menu: The story menu is open for 'helms_deep_defend'"));
+        Assert.AreEqual(1, InfoLogs("phase WaitMap -> MissionMenu"));
+    }
+
+    [TestMethod]
+    public void Tick_StoryKind_NeverEntersRunningAndNeverFastForwards()
+    {
+        _host.FastForwardChanged = true;
+        var driver = ToMissionReturn();
+        _host.ScreenValue = AutorunScreen.Map;
+
+        Run(driver, 6);
+
+        Assert.AreEqual(0, InfoLogs("-> Running"));
+        Assert.AreEqual(0f, _host.LastSpeed);
+        Assert.AreEqual("ok", Value(Done(), "reason"));
+    }
+
+    [TestMethod]
+    public void Tick_StoryMenuRefused_FinishesMissionRefusedAndLogsTheMessageAndTheOpenMenu()
+    {
+        _host.StoryMenuOpens = false;
+        _host.StoryMenuMessage = "A map event is running.";
+        _host.OpenMenuIdValue = "camp_start";
+        var driver = ToMissionMenu();
+
+        Run(driver, 6);
+
+        Assert.AreEqual("mission_refused", Value(Done(), "reason"));
+        Assert.AreEqual(1, _host.StoryMenuCalls);
+        Assert.AreEqual(1, _host.Ends);
+        _logger.Received().LogWarning(Arg.Is<string>(s => s.Contains("A map event is running.") && s.Contains("camp_start")));
+    }
+
+    [TestMethod]
+    public void Tick_StoryMenuRefusedWithNoOpenMenu_NamesNone()
+    {
+        _host.StoryMenuOpens = false;
+        _host.OpenMenuIdValue = null;
+        var driver = ToMissionMenu();
+
+        Run(driver, 6);
+
+        _logger.Received().LogWarning(Arg.Is<string>(s => s.Contains("open_menu=none")));
+    }
+
+    [TestMethod]
+    public void Tick_MenuNeverFreeFor120Seconds_FinishesMissionRefusedAndNamesTheOpenMenu()
+    {
+        _host.OpenMenuIdValue = "camp_start";
+        var driver = ToMissionMenu();
+        _host.ScreenValue = AutorunScreen.MapMenu;
+
+        Run(driver, 118);
+        Assert.IsFalse(_host.Files.ContainsKey(ScenarioAutorunDone.DoneFile));
+
+        Run(driver, 3);
+        Assert.AreEqual("mission_refused", Value(Done(), "reason"));
+        Assert.AreEqual(0, _host.StoryMenuCalls);
+        _logger.Received().LogWarning(Arg.Is<string>(s => s.Contains("never showed") && s.Contains("camp_start")));
+    }
+
+    [TestMethod]
+    public void Tick_StoryMenuShownFiveSeconds_ChoosesOpenOnce()
+    {
+        var driver = ToMissionOpen();
+        Run(driver, 4);
+        Assert.AreEqual(0, _host.OpenChoices);
+
+        driver.Tick(1f);
+        _host.ScreenValue = AutorunScreen.Mission;
+        Run(driver, 10);
+
+        Assert.AreEqual(1, _host.OpenChoices);
+        Assert.AreEqual("InMission", driver.PhaseName);
+    }
+
+    [TestMethod]
+    public void Tick_StoryMenuLeftBeforeSettling_RestartsTheSettle()
+    {
+        var driver = ToMissionOpen();
+        Run(driver, 4);
+        _host.StoryMenuShownValue = false;
+        driver.Tick(1f);
+        _host.StoryMenuShownValue = true;
+
+        Run(driver, 4);
+        Assert.AreEqual(0, _host.OpenChoices);
+
+        driver.Tick(1f);
+        Assert.AreEqual(1, _host.OpenChoices);
+    }
+
+    [TestMethod]
+    public void Tick_EventWindowWaiting_HoldsTheOpenChoiceUntilItIsGone()
+    {
+        var driver = ToMissionOpen();
+        _host.EventWindowOpen = true;
+        _host.EventWindowWaiting = true;
+
+        Run(driver, 12);
+
+        Assert.AreEqual(1, _host.EventWindowsClosed);
+        Assert.AreEqual(0, _host.OpenChoices);
+
+        _host.EventWindowWaiting = false;
+        driver.Tick(1f);
+
+        Assert.AreEqual(1, _host.OpenChoices);
+    }
+
+    [TestMethod]
+    public void Tick_OpenChoiceRefused_FinishesMissionRefused()
+    {
+        _host.OpenChoiceResult = false;
+        var driver = ToMissionOpen();
+
+        Run(driver, 6);
+
+        Assert.AreEqual("mission_refused", Value(Done(), "reason"));
+        Assert.AreEqual(1, _host.OpenChoices);
+    }
+
+    [TestMethod]
+    public void Tick_StoryMenuNeverShowsFor120Seconds_FinishesMissionRefused()
+    {
+        var driver = ToMissionOpen();
+        _host.StoryMenuShownValue = false;
+        _host.OpenMenuIdValue = "town";
+
+        Run(driver, 125);
+
+        Assert.AreEqual("mission_refused", Value(Done(), "reason"));
+        Assert.AreEqual(0, _host.OpenChoices);
+        _logger.Received().LogWarning(Arg.Is<string>(s => s.Contains("town")));
+    }
+
+    [TestMethod]
+    public void Tick_NoMissionWithin120Seconds_FinishesMissionNotOpened()
+    {
+        var driver = ToInMission();
+        _host.ScreenValue = AutorunScreen.MapMenu;
+
+        Run(driver, 118);
+        Assert.IsFalse(_host.Files.ContainsKey(ScenarioAutorunDone.DoneFile));
+
+        Run(driver, 3);
+        Assert.AreEqual("mission_not_opened", Value(Done(), "reason"));
+        Assert.AreEqual("0.0", Value(Done(), "mission_seconds"));
+    }
+
+    [TestMethod]
+    public void Tick_InTheMission_HidesInquiriesAndClosesEventWindowsAndNeverFastForwards()
+    {
+        _host.FastForwardChanged = true;
+        var driver = ToInMission("mission_limit_seconds=500\n");
+        _host.ScreenValue = AutorunScreen.Mission;
+        _host.InquiryTitle = "Take over?";
+        _host.EventWindowOpen = true;
+
+        Run(driver, 5);
+
+        Assert.IsTrue(_host.InquiriesHidden >= 5);
+        Assert.AreEqual(1, _host.EventWindowsClosed);
+        Assert.AreEqual(1, InfoLogs("event window closed n=1 phase=InMission"));
+        Assert.AreEqual(0f, _host.LastSpeed);
+        Assert.AreEqual("InMission", driver.PhaseName);
+    }
+
+    [TestMethod]
+    public void Tick_MissionOverTheLimit_FinishesMissionLimitAndEndsTheCampaign()
+    {
+        var driver = ToInMission("mission_limit_seconds=30\n");
+        _host.ScreenValue = AutorunScreen.Mission;
+
+        Run(driver, 31);
+        Assert.IsFalse(_host.Files.ContainsKey(ScenarioAutorunDone.DoneFile));
+
+        Run(driver, 3);
+        Assert.AreEqual("mission_limit", Value(Done(), "reason"));
+        Assert.AreEqual(1, _host.Ends);
+        Assert.AreEqual("-", Value(Done(), "verdict"));
+        _logger.Received().LogWarning(Arg.Is<string>(s => s.Contains("mission_limit")));
+    }
+
+    [TestMethod]
+    public void Tick_MissionEndsUndecided_FinishesMissionUndecided()
+    {
+        var driver = ToInMission();
+        _host.ScreenValue = AutorunScreen.Mission;
+        Run(driver, 3);
+        _host.Verdict = StoryOutcome.Undecided;
+        _host.ScreenValue = AutorunScreen.MapMenu;
+
+        driver.Tick(1f);
+
+        Assert.AreEqual("mission_undecided", Value(Done(), "reason"));
+        Assert.AreEqual("Undecided", Value(Done(), "verdict"));
+        Assert.AreEqual("3.0", Value(Done(), "mission_seconds"));
+    }
+
+    [TestMethod]
+    public void Tick_MissionEndsWithNoVerdict_FinishesMissionNoVerdict()
+    {
+        var driver = ToInMission();
+        _host.ScreenValue = AutorunScreen.Mission;
+        Run(driver, 3);
+        _host.Verdict = null;
+        _host.ScreenValue = AutorunScreen.Map;
+
+        driver.Tick(1f);
+
+        Assert.AreEqual("mission_no_verdict", Value(Done(), "reason"));
+        Assert.AreEqual("-", Value(Done(), "verdict"));
+    }
+
+    [TestMethod]
+    public void Tick_MissionEnds_LogsTheVerdictAndTheSeconds()
+    {
+        ToMissionReturn();
+
+        Assert.AreEqual(1, InfoLogs("mission ended verdict=Won seconds=3.0"));
+    }
+
+    [TestMethod]
+    public void Tick_BackAtTheStoryMenu_ChoosesBackOnceAfterItSettled()
+    {
+        var driver = ToMissionReturn();
+        Run(driver, 4);
+        Assert.AreEqual(0, _host.BackChoices);
+
+        driver.Tick(1f);
+        _host.ScreenValue = AutorunScreen.Map;
+        Run(driver, 3);
+
+        Assert.AreEqual(1, _host.BackChoices);
+        Assert.AreEqual(1, InfoLogs("Back to the map"));
+        Assert.IsFalse(_host.Files.ContainsKey(ScenarioAutorunDone.DoneFile));
+    }
+
+    [TestMethod]
+    public void Tick_BackChoiceRefused_FinishesReturnFailed()
+    {
+        _host.BackChoiceResult = false;
+        var driver = ToMissionReturn();
+
+        Run(driver, 6);
+
+        Assert.AreEqual("return_failed", Value(Done(), "reason"));
+        Assert.AreEqual(1, _host.BackChoices);
+    }
+
+    [TestMethod]
+    public void Tick_ReturnNeverSettles_FinishesReturnFailed()
+    {
+        var driver = ToMissionReturn();
+        _host.ScreenValue = AutorunScreen.Other;
+
+        Run(driver, 118);
+        Assert.IsFalse(_host.Files.ContainsKey(ScenarioAutorunDone.DoneFile));
+
+        Run(driver, 3);
+        Assert.AreEqual("return_failed", Value(Done(), "reason"));
+    }
+
+    [TestMethod]
+    public void Tick_ReturnWithNoMenuOpen_FinishesOkWithoutClickingBackAndSaysSo()
+    {
+        var driver = ToInMission();
+        _host.ScreenValue = AutorunScreen.Mission;
+        Run(driver, 3);
+        _host.Verdict = StoryOutcome.Lost;
+        _host.ScreenValue = AutorunScreen.Map;
+        driver.Tick(1f);
+        Assert.AreEqual("MissionReturn", driver.PhaseName);
+
+        Run(driver, 5);
+
+        Assert.AreEqual("ok", Value(Done(), "reason"));
+        Assert.AreEqual("Lost", Value(Done(), "verdict"));
+        Assert.AreEqual(0, _host.BackChoices);
+        Assert.AreEqual(1, InfoLogs("no menu open"));
+    }
+
+    [TestMethod]
+    public void Tick_MapSettledAfterTheBackClick_FinishesOkWithTheStoryDoneIdAndKeys()
+    {
+        var driver = ToMissionReturn("culture=rohan\n");
+        Run(driver, 5);
+        _host.ScreenValue = AutorunScreen.Map;
+        Run(driver, 5);
+
+        var done = Done();
+        Assert.AreEqual("ok", Value(done, "reason"));
+        Assert.AreEqual("story-mission", Value(done, "kind"));
+        Assert.AreEqual("helms_deep_defend", Value(done, "mission"));
+        Assert.AreEqual("Won", Value(done, "verdict"));
+        Assert.AreEqual("3.0", Value(done, "mission_seconds"));
+        Assert.IsFalse(done.Contains("days_run="));
+        _outcomes.Received(1).Pass(ScenarioOutcomes.StoryDoneId, "",
+            Arg.Is<string>(s => s.StartsWith("reason=ok mission=helms_deep_defend verdict=Won mission_seconds=3.0") && s.EndsWith(" culture=rohan")));
+        _outcomes.DidNotReceive().Fail(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>());
+        Assert.AreEqual(1, InfoLogs("[Autorun][Scenario] done reason=ok"));
+    }
+
+    [TestMethod]
+    public void Tick_StoryKind_QuitsWhenTheMenuIsBack()
+    {
+        var driver = ToMissionReturn("quit=1\n");
+        _host.ScreenValue = AutorunScreen.Map;
+        Run(driver, 6);
+        _host.ScreenValue = AutorunScreen.MainMenu;
+
+        Run(driver, 3);
+
+        Assert.AreEqual(1, _host.Quits);
+        Assert.IsTrue(driver.IsDone);
+    }
+
+    [TestMethod]
+    public void Tick_CampaignNewKind_NeverCallsAStoryMember()
+    {
+        var driver = ToRunning("days=1\nquit=0\n");
+        _host.EventWindowOpen = true;
+        driver.Tick(1f);
+        _host.Days = 11.0;
+        _host.ScreenValue = AutorunScreen.MainMenu;
+        Run(driver, 10);
+
+        Assert.AreEqual("ok", Value(Done(), "reason"));
+        Assert.AreEqual(0, _host.StoryMenuCalls);
+        Assert.AreEqual(0, _host.OpenChoices);
+        Assert.AreEqual(0, _host.BackChoices);
+    }
+
+    [TestMethod]
+    public void Tick_ThrowInAStoryPhase_FinishesDriverError()
+    {
+        var driver = ToMissionOpen();
         _host.ScreenThrows = true;
 
         driver.Tick(1f);

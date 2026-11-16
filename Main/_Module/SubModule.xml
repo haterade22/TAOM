@@ -29,6 +29,8 @@
          this block). Bump this alongside Dependencies/_Module/SubModule.xml's <Version> whenever
          the Dependencies assembly changes — a stale pairing is the #371 failure mode. -->
     <DependedModuleMetadata id="TAOM.Dependencies" order="LoadBeforeThis" version="v2.0.40" />
+    <!-- TAOM.Dependencies also reads this Native version at startup (GameVersionNotice); when the game is another
+         version it turns TAOM's code off for the session and tells the player, so keep it on the game version this build targets. -->
     <DependedModuleMetadata id="Native" order="LoadBeforeThis" version="v1.5.7.*" />
     <DependedModuleMetadata id="SandBoxCore" order="LoadBeforeThis" />
     <DependedModuleMetadata id="Sandbox" order="LoadBeforeThis" />
@@ -1142,11 +1144,14 @@
         <GameType value="CampaignStoryMode"/>
       </IncludedGameTypes>
     </XmlNode>
-    <!-- Custom Game only: the mission heroes (taom_hero_aragorn, taom_hero_legolas, taom_hero_gimli), the Long Defeat's own copies of
-         the named companions (#1335). All obsolete, so no picker lists them. The campaign load waits for the story mission phase of #1325. -->
+    <!-- The mission heroes (taom_hero_aragorn, taom_hero_legolas, taom_hero_gimli): the Long Defeat's own copies of the named companions (#1335), and
+         the free heroes of the Helm's Deep story mission in a campaign (#1366). All obsolete, so no picker lists them. No <Hero> entry, so in a campaign
+         no Hero stands behind one and IsHero reads false (CharacterObject.IsHero). -->
     <XmlNode>
       <XmlName id="NPCCharacters" path="characters/taom_mission_heroes"/>
       <IncludedGameTypes>
+        <GameType value="Campaign"/>
+        <GameType value="CampaignStoryMode"/>
         <GameType value="CustomGame"/>
       </IncludedGameTypes>
     </XmlNode>
@@ -1446,6 +1451,16 @@
     <XmlNode>
       <XmlName id="Items" path="long_defeat/long_defeat_items"/>
       <IncludedGameTypes>
+        <GameType value="CustomGame"/>
+      </IncludedGameTypes>
+    </XmlNode>
+    <!-- Beside long_defeat_items: the extra arrow of the ranged hero kit (taom_legolas_arrow, #1361), which no troop carries and no shop sells. Also loaded in a
+         campaign for the Helm's Deep story mission (#1366): is_merchandise="false" keeps it out of workshops, loot and prizes, and CannotBePickedUp off the field. -->
+    <XmlNode>
+      <XmlName id="Items" path="hero_abilities/hero_abilities_items"/>
+      <IncludedGameTypes>
+        <GameType value="Campaign"/>
+        <GameType value="CampaignStoryMode"/>
         <GameType value="CustomGame"/>
       </IncludedGameTypes>
     </XmlNode>

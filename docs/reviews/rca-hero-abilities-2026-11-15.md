@@ -20,7 +20,7 @@ Not applied:
 
 FOLLOW-UP (#1325): what Gimli's fear does in a mode that holds its attackers. Three options are on the issue: a stagger on the war cry, a hold the heroes' shock can break, or the drain as it is.
 
-FOLLOW-UP (#1325): Aragorn's aura finds him by character id in a custom game and would miss him in a campaign-hosted story mission, where the id comes from a `Hero` he does not have. The phase that puts the heroes in the story mission must handle it.
+FOLLOW-UP (#1325): Aragorn's aura finds him by character id in a custom game and would miss him in a campaign-hosted story mission, where the id comes from a `Hero` he does not have. The phase that puts the heroes in the story mission must handle it. Status: #1366 did it (`HeroAuraService.SourceId`, 2026-11-16); the story mission with the heroes has not been opened in a game.
 
 ## Proof
 
