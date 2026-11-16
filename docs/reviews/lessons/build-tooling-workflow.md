@@ -5184,3 +5184,9 @@ After #1354 the gate and the catalogue found stylesheets through `SubModule.xml`
 - **Why missed:** each fix copied one rule of `MBObjectManager.GetMergedXmlForManaged` at a time; no test listed the whole function's branches.
 - **Prevent:** when a tool mirrors an engine loader, list every branch of the engine function (module active, game type, file suffix, file or folder) in the docstring or a test map, and make each one either a test or bad input (exit 2) that names what the tool does not model.
 - **Source:** issue #1375.
+
+### A tool that models one game mode must name every mode the mod plays (shield gate, #1398, 2026-11-16)
+The first #1398 change kept only rows for Campaign. On the live install that dropped TAOM's own Fords of War `fords_items.xml` (a CustomGame row) from the gate, and it made 429 pieces that Native's campaign `weapon_descriptions.xml` lists, but only its multiplayer file defines, read as dangling. The side-by-side run against trunk showed both before any commit.
+- **Why missed:** the issue text named only the multiplayer files to drop; nobody listed the game types TAOM itself uses.
+- **Prevent:** before filtering data by game type, list the files the filter drops on the live install (one line of Python over `other_game_files`) and read each name. Name the mod's game types in one constant (`GAME_TYPES`).
+- **Source:** issue #1398.
