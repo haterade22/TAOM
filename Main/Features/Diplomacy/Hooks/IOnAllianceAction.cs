@@ -10,6 +10,9 @@ public interface IOnAllianceAction
     // The refusal text for a war between two kingdoms, or null when it is allowed or the co-op host
     // governs. Logs nothing: the engine asks it for every AI proposal.
     string GetWarRefusalText(string kingdomAId, string kingdomBId);
+    // The refusal text for a call to war, by ShouldPreventCallToWar's rules, or null when the call is allowed or
+    // the co-op host governs. Logs nothing: the lord dialogue asks it each time it draws the sponsor option.
+    string GetCallToWarRefusalText(string calledKingdomId, string targetKingdomId);
     // How far to push the AI score for declaring this war down: 0 under a co-op host or when either
     // side is not a kingdom, else the War of the Ring service's penalty.
     float GetDeclareWarScorePenalty(

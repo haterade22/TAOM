@@ -2060,3 +2060,11 @@ PR #1304's doc said god mode stays on while the player walks the field after the
 **Prevent:** when a character moves between a custom game and a campaign, grep `IsHero` in the engine's mission, view and agent-build code, not only in TAOM, and for each branch write what both modes do. Known branches: fixed equipment and random item modifiers (Mission.cs:4284-4287, :4108), body and face (above), take-over (:6395), battle tier and power (BasicCharacterObject.cs:257-285, CharacterObject.cs:609-622). Give the spawn what the engine would give a hero (kit, body, age) rather than rely on the flag. Then follow every path the other mode's rule had closed to its end in TAOM code.
 
 **Source:** [rca-story-free-heroes-2026-11-16.md](../rca-story-free-heroes-2026-11-16.md) finding 3, 4 and 5.
+
+### A repeat-line consequence that reads `CurrentProcessedRepeatObject` acts on the first row of the page (#1350, 2026-11-16)
+
+**Why missed:** the #1350 plan patched only the sponsor option's clickable condition, where `CurrentProcessedRepeatObject` is the row being built. Vanilla's consequence (LordConversationsCampaignBehavior.cs:551) reads the same getter at click time. By then `ConversationManager.GetSentenceOptions` has reset `_currentRepeatIndex` to 0 for each line matched after the repeat line (ConversationManager.cs:527-528), and `ProcessSentence` stores the click only in `_lastSelectedDialogObject` (:286). So the call to war went against the first kingdom on the page. The Data flow and Engine lenses each found it.
+
+**Prevent:** in a repeat line, a condition or clickable condition reads `CurrentProcessedRepeatObject`; a consequence reads `SelectedRepeatObject` (vanilla's marriage and caravan consequences do; TAOM's `GiftConversationAdapter` does). When you patch one half of a vanilla repeat line, read the other half's getter too.
+
+**Source:** /deep-review of #1350, Data flow lens item 3 and Engine compatibility lens finding 1.
