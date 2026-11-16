@@ -811,7 +811,9 @@ its first apply:
 Result (`python tools/fix_melee_ladder.py --apply` on 2026-11-16): 82 swaps on 75 troops in 13 troop files,
 35 distinct old and new weapon pairs, all for under-armed weapons; none across a category, none weaker, no
 new upgrade inversion. 538 weapon slots stay unresolved: 160 in generated files, 11 held by an upgrade's
-weapon, the rest with no in-band candidate of the category or over the carrier's tier limit.
+weapon, the rest with no in-band candidate of the category or over the carrier's tier limit. The same day the
+16 Lothlorien slots the fixer could swap were changed in `generate_lothlorien_troops.py` (each troop's own
+sword or spear line, the fixer's pick); 144 slots in generated files remain.
 `mordor_uruk_shieldguard` is exempt (`tools/melee_ladders.json`): the only candidate was an Uruk halberd,
 and its main weapon is an open decision (rca-black-uruk-weapons-2026-11-07 F1). `generate_career_kits.py
 --apply` then changed 8 career kit ids and `wire_starter_kit_rosters.py --apply` 6 player start rosters.
