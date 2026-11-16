@@ -135,9 +135,31 @@ The gap stayed below the first run's 15,231 but grew from day 1, where the secon
 Blue Craig lost its capital on day 75 and was destroyed on day 99. In the second run Blue Craig lived with 1 town. Each run is one
 campaign, so these runs cannot say whether Dunland's peace with Gondor freed Gondor to fight Blue Craig.
 
+## The fourth 150-day run
+
+Run `E:\Temp\scenario-runs\20261116-100801` (trunk `9dc562c62`, built 2026-11-16 16:01 UTC, with the refusal and the #1350 and #1381
+dialogue fixes) passed 150 of 150 days with a clean unload. Dunland again refused three calls to war against Gondor, and the log has no
+war declaration between the two realms.
+
+| Day 150 | Second run | Third run | Fourth run |
+|---|---|---|---|
+| Gondor towns/castles, strength | 9/9, 21,631 | 11/15, 23,883 | 10/15, 24,060 |
+| Mordor towns/castles, strength | 7/11, 15,523 | 6/10, 13,734 | 7/10, 15,468 |
+| Gondor to Mordor gap (day 1 gap) | 6,108 (8,674) | 10,149 (6,466) | 8,592 (8,646) |
+| Harad towns/castles | 6/16 | 5/10 | 5/9 |
+| Dunland towns/castles | 3/6 | 4/6 | 4/6 |
+| Blue Craig capital lost, destroyed | no, no | day 75, day 99 | day 53, day 122 |
+
+The free share stayed within 0.4 to 0.6 on all 150 days (maximum deviation 0.042, no lead change), and the gap held level with day 1.
+The capital target failed again, earlier: Blue Craig lost its capital on day 53 and was destroyed on day 122. In the second, third and
+fourth runs, ten free realms declared war on Blue Craig on day 2 (Gondor, Dale, Rohan, Erebor, Lorien, Rivendell, Mirkwood, and Lindon
+called in by Rivendell; Blue Craig declared on Arthedain and Ered Luin), so its enemies did not change between runs. Blue Craig fell in
+both runs with Dunland's refusal and lived in the one run without it. Three campaigns cannot prove the cause, but the pattern fits
+Gondor having no Dunland front.
+
 ## Still owed
 
-- Blue Craig fell on day 75 of the third run: watch its capital in the next run before any change (#1283).
+- Blue Craig fell in both runs with Dunland's refusal (capital day 75 and day 53): the maintainer decides whether Blue Craig needs help, which would change gameplay (#1283).
 - Gondor's survival row (0.3, shared with Arthedain) and its tier 7+ party template stacks: not changed, because the second run
   closed the gap. Revisit only if a later run shows the gap again.
 - A Codex review of 5101f151b and of these changes: the account's usage limit blocks Codex until 2026-11-20.
@@ -146,6 +168,7 @@ campaign, so these runs cannot say whether Dunland's peace with Gondor freed Gon
 
 ## Changelog
 
+- 2026-11-16: Fourth 150-day run recorded; Blue Craig fell again (#1283).
 - 2026-11-15: First 150-day run recorded; Harad's clans raised to tier 5; allowed war declarations logged (#1283).
 - 2026-11-15: Page created. Mordor holds captured forts, Isengard's seven tier-3 clans raised to tier 5, auto-resolve exponent 0.5 (#1283).
 - 2026-11-14: Dunland-Gondor Hostile row removed, Mordor survival row removed, Mirkwood survival row added (#1283, 5832fc5c6).
