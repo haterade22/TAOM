@@ -164,6 +164,9 @@ start at tier 4, left no room above the unrestated donor), the `placeholder-weap
   placeholders from this tree's `placeholder_weapons/` files (`taom_schema.price_placeholders`) and judge
   each against the troops that carry it. A placeholder that will not price is a `MELEE_LADDER_INVERSION`
   warning naming it.
+- Since 2026-11-16 (#1354) `tools/audit_polearm_shield_parity.py` applies these sheets through their
+  `SubModule.xml` rows, so a placeholder beside a shield is judged on its real primary usage. On that date all 20
+  resolved: 17 to `onehanded_polearm_block_long_rshield_thrust` and 3 to `onehanded_block_shield_swing_thrust`.
 
 ## How to verify in game
 
@@ -198,6 +201,8 @@ The validator then reports any troop still pointing at the removed id.
 - v2.0.40 (15 Nov 2026, #1296): a damage factor per attack; four placeholders for the Gundabad spear line
   (a02 at T4, a03 at T5 and T8) and the Lothlorien riders (`he_spear` at T6); the value table matches the dry
   run again.
+- v2.0.40 (16 Nov 2026, #1354): the shield gate reads these sheets; before, every placeholder resolved to no
+  usage there and was never checked.
 
 ## GitHub Issue
 
