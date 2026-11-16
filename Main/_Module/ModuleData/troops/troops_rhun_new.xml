@@ -1965,7 +1965,7 @@
         <upgrade_targets />
         <Equipments>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.wm_harad_spear_b01" />
+                <equipment slot="Item0" id="Item.sm_dg_khml_spear_b" />
                 <equipment slot="Item1" id="Item.aserai_sword_3_t3" />
                 <equipment slot="Item2" id="Item.sm_rh_loke_shield_med_a" />
                 <equipment slot="Head" id="Item.sk_rh_loke_helmet_east_heavy_c" />
@@ -3650,7 +3650,7 @@
         </upgrade_targets>
         <Equipments>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.wm_harad_spear_b01" />
+                <equipment slot="Item0" id="Item.sm_dg_khml_spear_b" />
                 <equipment slot="Item2" id="Item.sm_rh_loke_1h_sword_b" />
                 <equipment slot="Head" id="Item.sk_rh_loke_helmet_arch_heavy_a" />
                 <equipment slot="Body" id="Item.sk_rh_loke_chest_heavy_a" />
@@ -3724,7 +3724,7 @@
         <upgrade_targets />
         <Equipments>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.wm_harad_spear_b01" />
+                <equipment slot="Item0" id="Item.sm_dg_khml_spear_b" />
                 <equipment slot="Item2" id="Item.sm_rh_loke_1h_mace_b" />
                 <equipment slot="Item3" id="Item.eastern_javelin_1_t2" />
                 <equipment slot="Head" id="Item.sk_rh_loke_helmet_arch_elite_a" />

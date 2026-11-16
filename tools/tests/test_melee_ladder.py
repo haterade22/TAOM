@@ -18,7 +18,9 @@ import json
 import shutil
 import sys
 import tempfile
+import types
 import unittest
+from unittest import mock
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
@@ -943,9 +945,6 @@ class RosterFixerTierLimitTests(TmpCase):
         assert [sw for sw in swaps if sw.troop == "orc"] == []
 
 
-if __name__ == "__main__":
-    unittest.main()
-
 
 def couch_spear(item_id, dps):
     """A thrust-only polearm with a couch usage, as `couchable_ids` reads one."""
@@ -1011,3 +1010,182 @@ class RosterFixerWeaponCategoryTests(TmpCase):
         swaps, unresolved = fixer.plan(priced, cata.Catalogue(), [foot, owner], s, shields=set())
         assert [sw for sw in swaps if sw.troop == "foot"] == []
         assert [(tr.id, i) for tr, i, _why in unresolved] == [("foot", "wm_x_spear_weak")]
+
+
+class RosterFixerGeneratedFileTests(TmpCase):
+    """A swap written into a generator's troop file is undone by the generator's next --apply.
+
+    The defect this pins: the first roster pass of 2026-11-16 wrote swaps into seven realm files
+    (troops_arthedain.xml and others), and test_generator_regions_in_sync failed on all seven.
+    """
+
+    def test_a_troop_in_a_generated_file_is_reported_not_swapped(self):
+        s = class_spec()
+        priced = {p.item.id: p for p in (
+            thrust_weapon("wm_x_spear_weak", "TwoHandedPolearm", 20.0),
+            thrust_weapon("wm_x_spear_good", "TwoHandedPolearm", 40.0),
+        )}
+        generated = report.Troop("realm_spearman", "realm_spearman", 51, "rivendell", "troops_arthedain.xml",
+                                 frozenset(["wm_x_spear_weak"]), path="troops_arthedain.xml",
+                                 slots_of={"wm_x_spear_weak": frozenset({"Item0"})})
+        owner = troop("owner", 51, "rivendell", ["wm_x_spear_good"])
+        swaps, unresolved = fixer.plan(priced, cata.Catalogue(), [generated, owner], s, shields=set())
+        assert [sw for sw in swaps if sw.troop == "realm_spearman"] == []
+        assert any(tr.id == "realm_spearman" and "generate_arthedain_troops.py" in why
+                   for tr, _i, why in unresolved)
+
+    def test_every_regeneratable_realm_and_the_lorien_and_snow_orc_files_are_generated(self):
+        import generate_new_faction_kingdoms as kingdoms
+        for realm in kingdoms.REGENERATABLE:
+            assert fixer.GENERATED_TROOP_FILES[f"troops_{realm}.xml"] == f"generate_{realm}_troops.py"
+        assert fixer.GENERATED_TROOP_FILES["troops_lothlorien.xml"] == "generate_lothlorien_troops.py"
+        assert fixer.GENERATED_TROOP_FILES["troops_gundabad_snow.xml"] == "generate_snow_orc_troops.py"
+
+    def test_every_troop_generator_is_either_generated_or_a_known_scaffolder(self):
+        """A new generate_*_troops.py must be classed, or the fixer writes into its output unseen."""
+        tools = Path(fixer.__file__).resolve().parent
+        named = set(fixer.GENERATED_TROOP_FILES.values()) | set(fixer.SCAFFOLDERS)
+        found = {p.name for p in tools.glob("generate_*_troops.py")}
+        assert found, "no troop generator found: the glob is wrong"
+        assert found - named == set(), sorted(found - named)
+        assert named - found == set(), sorted(named - found)
+        assert set(fixer.GENERATED_TROOP_FILES.values()).isdisjoint(fixer.SCAFFOLDERS)
+
+
+class RosterFixerUpgradeCeilingTests(TmpCase):
+    """A swap never hands a troop a stronger weapon than its upgrade carries in the same category.
+
+    The defect this pins: the roster pass of 2026-11-16 gave `dale_footman` `dale_poleaxe_a` at 78.2
+    DPS while its upgrade `dale_spearman` kept 60.2, and `goblin_grunt` an axe at 38.6 over the 36.6
+    of `goblin_fighter`. An upgrade that loses damage is a tree the player is punished for climbing.
+    """
+
+    def setUp(self):
+        super().setUp()
+        self.s = class_spec()
+        # Tier 5 rivendell sword band 57.1 to 77.3 (target 67.2); tier 6 band 62.1 to 84.0.
+        self.weak = weapon("wm_x_sword_weak", dps=10.0)
+        self.good = weapon("wm_x_sword_good", dps=66.0)
+        self.ok = weapon("wm_x_sword_ok", dps=60.0)
+        # The veteran's own sword: in the tier 6 band, but its 80 blow is over the tier 5 limit of
+        # 77, so the recruit cannot take it and the ceiling of 63 is what decides.
+        self.vet = heavy_blow("wm_x_sword_vet", 80, 63.0)
+
+    def plan(self, troops, priced, upgrades):
+        return fixer.plan({p.item.id: p for p in priced}, cata.Catalogue(), troops, self.s,
+                          shields=set(), upgrade_targets=upgrades)
+
+    def test_a_candidate_above_the_upgrades_weapon_is_refused(self):
+        recruit = troop("recruit", 26, "rivendell", ["wm_x_sword_weak"])
+        veteran = troop("veteran", 31, "rivendell", ["wm_x_sword_vet"])
+        owner = troop("owner", 26, "rivendell", ["wm_x_sword_good", "wm_x_sword_ok"],
+                      slots={"wm_x_sword_good": frozenset({"Item0"}), "wm_x_sword_ok": frozenset({"Item1"})})
+        swaps, _u = self.plan([recruit, veteran, owner], (self.weak, self.good, self.ok, self.vet),
+                              {"recruit": ("veteran",)})
+        assert [(sw.old, sw.new) for sw in swaps if sw.troop == "recruit"] == [
+            ("wm_x_sword_weak", "wm_x_sword_ok")]
+
+    def test_with_no_candidate_under_the_ceiling_the_slot_is_unresolved_for_that_reason(self):
+        recruit = troop("recruit", 26, "rivendell", ["wm_x_sword_weak"])
+        veteran = troop("veteran", 31, "rivendell", ["wm_x_sword_vet"])
+        owner = troop("owner", 26, "rivendell", ["wm_x_sword_good"])
+        swaps, unresolved = self.plan([recruit, veteran, owner], (self.weak, self.good, self.vet),
+                                      {"recruit": ("veteran",)})
+        assert [sw for sw in swaps if sw.troop == "recruit"] == []
+        assert any(tr.id == "recruit" and "upgrade" in why for tr, _i, why in unresolved), unresolved
+
+    def test_the_ceiling_is_the_upgrades_weapon_after_its_own_swap(self):
+        """The veteran is listed after the recruit and is itself under-armed: it is planned first."""
+        strong = weapon("wm_x_sword_strong", dps=72.0)   # in the tier 6 band, over the tier 5 band
+        recruit = troop("recruit", 26, "rivendell", ["wm_x_sword_weak"])
+        veteran = troop("veteran", 31, "rivendell", ["wm_x_sword_weak"])
+        owner = troop("owner", 31, "rivendell", ["wm_x_sword_good", "wm_x_sword_strong"],
+                      slots={"wm_x_sword_good": frozenset({"Item0"}), "wm_x_sword_strong": frozenset({"Item1"})})
+        swaps, _u = self.plan([recruit, veteran, owner], (self.weak, self.good, strong),
+                              {"recruit": ("veteran",)})
+        assert [(sw.troop, sw.new) for sw in swaps if sw.troop in ("recruit", "veteran")] == [
+            ("veteran", "wm_x_sword_strong"), ("recruit", "wm_x_sword_good")]
+
+    def test_an_upgrade_of_another_category_sets_no_ceiling(self):
+        axe = weapon("wm_x_axe", "OneHandedAxe", dps=40.0)
+        recruit = troop("recruit", 26, "rivendell", ["wm_x_sword_weak"])
+        veteran = troop("veteran", 31, "rivendell", ["wm_x_axe"])
+        owner = troop("owner", 26, "rivendell", ["wm_x_sword_good"])
+        swaps, _u = self.plan([recruit, veteran, owner], (self.weak, self.good, axe),
+                              {"recruit": ("veteran",)})
+        assert [(sw.old, sw.new) for sw in swaps if sw.troop == "recruit"] == [
+            ("wm_x_sword_weak", "wm_x_sword_good")]
+
+    def test_the_ceiling_compares_template_and_main_attack_not_couch_or_shield(self):
+        """dale_footman (a two handed only halberd) upgrades to dale_spearman (a shield-safe winged
+        spear): both swing on the same band, so the spear is the halberd's ceiling."""
+        recruit = troop("recruit", 26, "rivendell", ["wm_x_sword_weak"])
+        veteran = troop("veteran", 31, "rivendell", ["wm_x_sword_vet"])
+        owner = troop("owner", 26, "rivendell", ["wm_x_sword_good"])
+        cat = cata.Catalogue()
+        real = fixer.weapon_category
+
+        def category(c, p, couchable, spec):   # the recruit's line is "two handed only"
+            key = real(c, p, couchable, spec)
+            return key[:3] + (p.item.id != "wm_x_sword_vet",)
+
+        with mock.patch.object(fixer, "weapon_category", category):
+            swaps, _u = fixer.plan({p.item.id: p for p in (self.weak, self.good, self.vet)}, cat,
+                                   [recruit, veteran, owner], self.s, shields=set(),
+                                   upgrade_targets={"recruit": ("veteran",)})
+        assert [sw for sw in swaps if sw.troop == "recruit"] == []
+
+    def test_load_upgrade_targets_reads_the_troop_xml(self):
+        (self.tmp_path / "troops_x.xml").write_text(
+            '<NPCCharacters><NPCCharacter id="a" level="6"><upgrade_targets>'
+            '<upgrade_target id="NPCCharacter.b" /><upgrade_target id="NPCCharacter.c" />'
+            '</upgrade_targets></NPCCharacter><NPCCharacter id="b" level="11" /></NPCCharacters>',
+            encoding="utf-8")
+        assert fixer.load_upgrade_targets(self.tmp_path) == {"a": ("b", "c")}
+
+
+class RosterFixerCategoryDetailTests(TmpCase):
+    """Edges of `weapon_category` that the plan tests do not reach."""
+
+    @staticmethod
+    def stub(template, swing_dps, thrust_dps, item_id="x"):
+        item = cata.Item(item_id, item_id, "", template, (("blade", "Blade", 100),), "src")
+        return types.SimpleNamespace(item=item, swing_damage=swing_dps, thrust_damage=thrust_dps,
+                                     swing_dps=swing_dps, thrust_dps=thrust_dps)
+
+    def test_a_polearm_whose_swing_equals_its_thrust_is_a_swinging_polearm(self):
+        p = self.stub("TwoHandedPolearm", 40.0, 40.0)
+        assert fixer.weapon_category(cata.Catalogue(), p, frozenset(), class_spec())[1] == "swing"
+
+    def test_the_attack_follows_the_craft_column_not_the_template_name(self):
+        """Only a template the spec files under the polearm column has a main attack."""
+        s = class_spec(craft_column={**CRAFT_COLUMN, "Pike": "polearm"})
+        assert fixer.weapon_category(cata.Catalogue(), self.stub("Pike", 0.0, 30.0), frozenset(), s)[1] == "thrust"
+        assert fixer.weapon_category(cata.Catalogue(), self.stub("OneHandedSword", 50.0, 40.0),
+                                     frozenset(), s)[1] is None
+
+    def test_a_two_handed_only_polearm_and_a_shield_safe_one_are_two_categories(self):
+        cat = cata.Catalogue(
+            templates={"TwoHandedPolearm": cata.Template("TwoHandedPolearm", "Polearm", [("Handle", 0)], ["DN", "DS"])},
+            descriptions={
+                "DN": cata.Description("DN", "TwoHandedPolearm", frozenset({"MeleeWeapon"}),
+                                       frozenset({"nb"}), ("polearm", "swing")),
+                "DS": cata.Description("DS", "TwoHandedPolearm", frozenset({"MeleeWeapon"}),
+                                       frozenset({"sb"}), ("polearm", "thrust")),
+            },
+            usage_flags={"polearm_swing": frozenset({"requires_no_shield"}), "polearm_thrust": frozenset()},
+        )
+
+        def priced(item_id, blade):
+            item = cata.Item(item_id, item_id, "", "TwoHandedPolearm", ((blade, "Blade", 100),), "src")
+            return types.SimpleNamespace(item=item, swing_damage=0.0, thrust_damage=30.0,
+                                         swing_dps=0.0, thrust_dps=30.0)
+
+        no_shield, safe = priced("pole_n", "nb"), priced("pole_s", "sb")
+        assert fixer.shield_forbidden(cat, no_shield.item) and not fixer.shield_forbidden(cat, safe.item)
+        assert (fixer.weapon_category(cat, no_shield, frozenset(), class_spec())
+                != fixer.weapon_category(cat, safe, frozenset(), class_spec()))
+
+
+if __name__ == "__main__":
+    unittest.main()
