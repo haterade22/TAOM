@@ -9,7 +9,7 @@
 # The row ids are labels the judge reads from the log; the [Check] ids the patterns name (upgrade, upgrade-notice) are string literals in C#.
 issue = 1388
 title = "The Long Defeat: an upgrade says what it did, the row states the deal, and no upgrade is sold while the garrison musters"
-fixed_in = "ad4a8854b"
+fixed_in = "cc2e2f8fc"   # the fix commit: a build without it is not judged
 logs = ["taom"]
 
 [[check]]

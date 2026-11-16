@@ -9,7 +9,7 @@
 # The gold matters: the bot buys the upgrade rows in shop order, and since #1388 all 130 foot stand when it starts, so it reaches the skirmisher row only after the three foot steps (15, 25 and 40 gold each).
 issue = 1401
 title = "The Long Defeat: an upgrade reaches the archers a cavalry run leaves in the posts formation"
-fixed_in = "ad4a8854b"
+fixed_in = "cc2e2f8fc"   # the fix commit: a build without it is not judged
 logs = ["taom"]
 
 [[check]]
