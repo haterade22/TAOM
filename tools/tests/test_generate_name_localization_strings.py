@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
-"""Tests for tools/generate_name_localization_strings.py. Most run on synthetic XML; DataTextCategoriesTests and
-ShippedTreeTests read the repo's ModuleData (no game install needed).
+"""Tests for tools/generate_name_localization_strings.py. Most run on synthetic XML; DataTextCategoriesTests,
+ShippedTreeTests and InlineDataKeyTests read the repo's ModuleData (no game install needed).
 
 Every test pins a way the generator could ship wrong content and still look right in a dry run:
 a key already registered elsewhere getting a second, duplicate row; two troops sharing a key
@@ -232,16 +232,42 @@ class DataTextCategoriesTests(unittest.TestCase):
         self.assertNotIn("taom_vanilla_troop_obsolete_overrides.xml", names)
 
 
-class RealmsTitleCategoryTests(unittest.TestCase):
-    """#1374: realms_titles.xml carries rank, title and house names inline; TitleNames builds a
-    TextObject from each, so an unregistered key shows English in all twelve languages."""
+class InlineDataKeyTests(unittest.TestCase):
+    """#1390: a data XML file can carry {=KEY}default text that no English source registers. The
+    C# gates count any inline key as registered, so only this scan sees it (#1374 shipped 186 so)."""
 
-    def test_EveryRealmsTitleKey_IsRegisteredInAnEnglishSource(self):
-        keys = {k for k, _ in gen.extract_from_file(gen.MODULE_DATA / "realms_titles.xml")}
-        registered = gen.registered_ids()
-        built = {k for entries in gen.build_all(registered).values() for k, _ in entries}
-        self.assertGreater(len(keys), 100)
-        self.assertEqual(sorted(keys - registered - built), [])
+    def test_UnregisteredInlineKeys_ListsANewKeyAndSkipsKnownAndVanillaShaped(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / "feature").mkdir()
+            (root / "Languages" / "DE").mkdir(parents=True)
+            write(root / "taom_module_strings.xml",
+                  '<strings><string id="taom_known" text="{=taom_rowonly}Row" /></strings>')
+            write(root / "feature" / "data.xml",
+                  '<X><Y name="{=taom_new}New" /><Y name="{=taom_known}Known" /><Y name="{=abcd1234}Vanilla" />'
+                  '<!-- write {=KEY}text --><Z>{=taom_leaf}Leaf</Z></X>')
+            write(root / "feature" / "t.xslt",
+                  '<xsl:attribute name="name">{=taom_xa}A</xsl:attribute><Y name="{{=taom_avt}}B" />')
+            write(root / "Languages" / "DE" / "std.xml", '<X><Y text="{=taom_lang}L" /></X>')
+            found = gen.unregistered_inline_keys(root, {"taom_known"}, ["taom_module_strings.xml"])
+        self.assertEqual(found, {"feature/data.xml": ["taom_leaf", "taom_new"],
+                                 "feature/t.xslt": ["taom_avt", "taom_xa"]})
+
+    def test_ShippedTree_EveryInlineKeyIsRegisteredOrInTheBacklog(self):
+        # Fix: add the file to a generator category (generate_name_localization_strings.py CATEGORIES)
+        # and re-run --apply, or, for text owed to a later pass, list the file in
+        # tools/loc_inline_backlog.json with a reason.
+        backlog = gen.load_inline_backlog()
+        found = gen.unregistered_inline_keys()
+        # A floor, so a wrong root or a broken pattern cannot pass on an empty scan.
+        scanned = sum(len(keys) for keys in gen.inline_keys_by_file().values())
+        self.assertGreater(scanned, 10000)
+        self.assertEqual(sorted(set(found) - set(backlog)), [], found)
+        # Counts, so a listed file cannot gain keys unnoticed: lower the count as the backlog shrinks.
+        counts = {rel: len(keys) for rel, keys in found.items() if rel in backlog}
+        self.assertEqual(counts, {rel: backlog[rel]["keys"] for rel in counts})
+        self.assertEqual(sorted(set(backlog) - set(found)), [],
+                         "backlog files whose keys are all registered now: drop them from loc_inline_backlog.json")
 
 
 class BuildXmlTests(unittest.TestCase):
