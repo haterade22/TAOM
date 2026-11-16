@@ -21,7 +21,7 @@
     <!-- vlandia -->
     <EquipmentRoster id="player_char_creation_vlandia_retainer_m" culture="Culture.vlandia" _replaceWhileMerging="true">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.wm_rohan_spear_b" />
+            <Equipment slot="Item0" id="Item.wm_rohan_ws_spear_a01" />
             <Equipment slot="Item1" id="Item.wm_rohan_shield_a01_gsg" />
             <Equipment slot="Item2" id="Item.wm_rohan_ws_sword_a01" />
             <Equipment slot="Body" id="Item.rohan_militia_armour_c" />
@@ -37,7 +37,7 @@
     </EquipmentRoster>
     <EquipmentRoster id="player_char_creation_vlandia_retainer_f" culture="Culture.vlandia" _replaceWhileMerging="true">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.wm_rohan_spear_b" />
+            <Equipment slot="Item0" id="Item.wm_rohan_ws_spear_a01" />
             <Equipment slot="Item1" id="Item.wm_rohan_shield_a01_gsg" />
             <Equipment slot="Item2" id="Item.wm_rohan_ws_sword_a01" />
             <Equipment slot="Body" id="Item.rohan_militia_armour_c" />
@@ -55,7 +55,7 @@
         <EquipmentSet>
             <Equipment slot="Item0" id="Item.wm_rohan_ws_sword_a01" />
             <Equipment slot="Item1" id="Item.wm_rohan_shield_a01_gsg" />
-            <Equipment slot="Item2" id="Item.wm_rohan_spear_b" />
+            <Equipment slot="Item2" id="Item.wm_rohan_ws_spear_a01" />
             <Equipment slot="Body" id="Item.rohan_militia_armour_c" />
             <Equipment slot="Leg" id="Item.cts_rohan_boots3" />
         </EquipmentSet>
@@ -69,7 +69,7 @@
         <EquipmentSet>
             <Equipment slot="Item0" id="Item.wm_rohan_ws_sword_a01" />
             <Equipment slot="Item1" id="Item.wm_rohan_shield_a01_gsg" />
-            <Equipment slot="Item2" id="Item.wm_rohan_spear_b" />
+            <Equipment slot="Item2" id="Item.wm_rohan_ws_spear_a01" />
             <Equipment slot="Body" id="Item.rohan_militia_armour_c" />
             <Equipment slot="Leg" id="Item.cts_rohan_boots3" />
         </EquipmentSet>
@@ -139,7 +139,7 @@
         <EquipmentSet>
             <Equipment slot="Item0" id="Item.wm_rohan_ws_sword_a01" />
             <Equipment slot="Item1" id="Item.wm_rohan_shield_a01_gsg" />
-            <Equipment slot="Item2" id="Item.wm_rohan_spear_b" />
+            <Equipment slot="Item2" id="Item.wm_rohan_ws_spear_a01" />
             <Equipment slot="Body" id="Item.rohan_militia_armour_c" />
             <Equipment slot="Leg" id="Item.cts_rohan_boots3" />
         </EquipmentSet>
@@ -153,7 +153,7 @@
         <EquipmentSet>
             <Equipment slot="Item0" id="Item.wm_rohan_ws_sword_a01" />
             <Equipment slot="Item1" id="Item.wm_rohan_shield_a01_gsg" />
-            <Equipment slot="Item2" id="Item.wm_rohan_spear_b" />
+            <Equipment slot="Item2" id="Item.wm_rohan_ws_spear_a01" />
             <Equipment slot="Body" id="Item.rohan_militia_armour_c" />
             <Equipment slot="Leg" id="Item.cts_rohan_boots3" />
         </EquipmentSet>

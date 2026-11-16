@@ -2,8 +2,10 @@
 
 	<!-- Realm names over the campaign map (#698). Dark ink with a parchment outline, so a name reads
 	     over grass, snow and sea alike. aniron has 267 glyphs (Latin, Latin-1, Cyrillic); names it
-	     cannot draw use the Plain brush in the game's own font (RealmNameLettering decides). The colour
-	     is on each Style: the brush loader reads no FontColor on the Brush element itself. -->
+	     cannot draw use the Plain brush in the game's own font (RealmNameLettering decides). Each label binds
+	     Brush.FontSize to RealmNamesVM's size, so these sizes are only the fallback (#1380);
+	     RealmNamesPrefabTests keeps them equal to its base sizes. The colour is on each Style: the brush
+	     loader reads no FontColor on the Brush element itself. -->
 	<Brush Name="TaomRealmBorders.Name" Font="aniron" FontSize="34"
 	       TextHorizontalAlignment="Center" TextVerticalAlignment="Center">
 		<Layers>
@@ -13,7 +15,7 @@
 		</Styles>
 	</Brush>
 
-	<Brush Name="TaomRealmBorders.Name.Plain" FontSize="30"
+	<Brush Name="TaomRealmBorders.Name.Plain" FontSize="42"
 	       TextHorizontalAlignment="Center" TextVerticalAlignment="Center">
 		<Layers>
 		</Layers>

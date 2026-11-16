@@ -632,7 +632,7 @@
                     id="Item.bodkin_arrows_c" />
                 <equipment
                     slot="Item3"
-                    id="Item.sm_dg_khml_2h_mace_a" />
+                    id="Item.wm_dol_goldur_2h_mace_a03" />
                 <equipment
                     slot="Head"
                     id="Item.sk_dg_uruk_helmet_med_a" />
@@ -661,7 +661,7 @@
                     id="Item.bodkin_arrows_c" />
                 <equipment
                     slot="Item3"
-                    id="Item.sm_dg_khml_2h_mace_a" />
+                    id="Item.wm_dol_goldur_2h_mace_a03" />
                 <equipment
                     slot="Head"
                     id="Item.sk_dg_uruk_helmet_med_b" />
@@ -1463,7 +1463,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.sm_dg_khml_2h_mace_a" />
+                    id="Item.wm_dol_goldur_2h_mace_a03" />
                 <equipment
                     slot="Head"
                     id="Item.sk_dg_uruk_helmet_med_g" />
@@ -1483,7 +1483,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.sm_dg_khml_2h_mace_a" />
+                    id="Item.wm_dol_goldur_2h_mace_a03" />
                 <equipment
                     slot="Head"
                     id="Item.sk_dg_uruk_helmet_med_h" />
@@ -1503,7 +1503,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.sm_dg_khml_2h_mace_a" />
+                    id="Item.wm_dol_goldur_2h_mace_a03" />
                 <equipment
                     slot="Head"
                     id="Item.sk_dg_uruk_helmet_med_a" />
@@ -1523,7 +1523,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.sm_dg_khml_2h_mace_a" />
+                    id="Item.wm_dol_goldur_2h_mace_a03" />
                 <equipment
                     slot="Head"
                     id="Item.sk_dg_uruk_helmet_med_b" />
@@ -1601,7 +1601,7 @@
                     id="Item.bodkin_arrows_c" />
                 <equipment
                     slot="Item3"
-                    id="Item.sm_dg_khml_2h_mace_a" />
+                    id="Item.wm_dol_goldur_2h_mace_a03" />
                 <equipment
                     slot="Head"
                     id="Item.sk_dg_uruk_helmet_med_f" />
@@ -1630,7 +1630,7 @@
                     id="Item.bodkin_arrows_c" />
                 <equipment
                     slot="Item3"
-                    id="Item.sm_dg_khml_2h_mace_a" />
+                    id="Item.wm_dol_goldur_2h_mace_a03" />
                 <equipment
                     slot="Head"
                     id="Item.sk_dg_uruk_helmet_med_g" />
@@ -4362,7 +4362,7 @@
                     id="Item.bodkin_arrows_c" />
                 <equipment
                     slot="Item3"
-                    id="Item.sm_dg_khml_2h_mace_a" />
+                    id="Item.wm_dol_goldur_2h_mace_a03" />
                 <equipment
                     slot="Head"
                     id="Item.sk_dg_uruk_helmet_med_f" />
@@ -4391,7 +4391,7 @@
                     id="Item.bodkin_arrows_c" />
                 <equipment
                     slot="Item3"
-                    id="Item.sm_dg_khml_2h_mace_a" />
+                    id="Item.wm_dol_goldur_2h_mace_a03" />
                 <equipment
                     slot="Head"
                     id="Item.sk_dg_uruk_helmet_med_g" />

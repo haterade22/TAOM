@@ -67,6 +67,35 @@ public class RealmBordersProviderTests
     }
 
     [TestMethod]
+    [DataRow(float.NaN)]
+    [DataRow(float.PositiveInfinity)]
+    [DataRow(0.1f)]
+    [DataRow(9f)]
+    public void CheckedNameScale_UnusableValue_FallsBackToFullSizeAndWarnsOnce(float raw)
+    {
+        var logger = Substitute.For<IModLogger>();
+        var provider = new RealmBordersSettingsProvider(logger);
+
+        Assert.AreEqual(RealmBordersSettingsProvider.DefaultNameScale, provider.CheckedNameScale(raw));
+        Assert.AreEqual(RealmBordersSettingsProvider.DefaultNameScale, provider.CheckedNameScale(raw));
+
+        logger.Received(1).LogWarning(Arg.Is<string>(m => m.Contains("Realm Name Size")));
+    }
+
+    [TestMethod]
+    public void CheckedNameScale_InRangeOrUnset_IsKeptQuietly()
+    {
+        var logger = Substitute.For<IModLogger>();
+        var provider = new RealmBordersSettingsProvider(logger);
+
+        Assert.AreEqual(2.5f, provider.CheckedNameScale(2.5f));
+        Assert.AreEqual(0.5f, provider.CheckedNameScale(0.5f));
+        Assert.AreEqual(RealmBordersSettingsProvider.DefaultNameScale, provider.CheckedNameScale(null));
+
+        logger.DidNotReceive().LogWarning(Arg.Any<string>());
+    }
+
+    [TestMethod]
     public void CheckedWidthScale_BadAgainAfterAGoodValue_WarnsAgain()
     {
         var logger = Substitute.For<IModLogger>();

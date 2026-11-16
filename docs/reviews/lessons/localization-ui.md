@@ -1631,3 +1631,14 @@ The first #1390 gate scanned `*.xml` attributes only. The stylesheets carry abou
 - **Why missed:** the scan reused the generator's `ATTR_KEY_PATTERN`, which was written for the category sources, and the backlog was designed for shrinking, not growth.
 - **Prevent:** before a gate trusts a regex, list every file type and text position the data uses (`grep -c '{=' --include` per extension). Give an allowlist a count, and give a scan a floor.
 - **Source:** the #1390 tier 2 review, Tooling findings 1 and 2, Data flow trace 5.
+
+### A settlement name always has variables set, so "has Attributes" does not mean "uses a variable" (#1391, 2026-11-16)
+The first #1391 fix read settlement names through `KingdomNames.OwnText`, which keeps the resolved text when `TextObject.Attributes` is not empty. `Settlement.Deserialize` and `PartyBase.SetCustomName` set IS_SETTLEMENT, IS_CASTLE, IS_TOWN and IS_HIDEOUT on every settlement name, so the fix changed nothing for county, barony and lordship titles. Its unit test passed because it built a bare `TextObject`.
+- **Why missed:** a rule proven for kingdom names was reused for another engine type, and the test built the input by hand instead of the way the engine builds it.
+- **Prevent:** before a rule reads `Attributes` or `Value` of an engine `TextObject`, read where the engine creates and changes that object; give the test the engine-shaped object (here, with the four flags set).
+- **Source:** the #1391 tier 1 review, Data flow trace 1 and Engine compatibility finding 1.
+### A brush value that a binding overwrites is a mirror: pin it to its source in a test (#1380, 2026-11-16)
+The realm-name brushes declare `FontSize` 34 and 42, and each label binds `Brush.FontSize` to `RealmNamesVM`'s size, which overwrites the brush value on the label's own brush clone. A later edit to a brush alone would change nothing on screen, and only a comment said the brush matched the constants.
+- **Why missed:** the constants were the source of truth, and the brush was edited by hand to match.
+- **Prevent:** when a prefab binds a brush property, pin the brush's own value to its source in a test (`RealmNamesPrefabTests.Brushes_DeclareTheViewModelsBaseSizes`). The general rule is the lord inline-skills entry in `data-content-cultures.md`: gate the mirror, not the comment.
+- **Source:** [rca-realm-name-size-2026-11-16.md](../rca-realm-name-size-2026-11-16.md) finding 1.

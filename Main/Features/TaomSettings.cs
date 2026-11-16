@@ -2190,34 +2190,39 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
     public bool RealmBordersNames { get; set; } = true;
 
     [SettingPropertyGroup("Realm Borders")]
-    [SettingPropertyBool("Border-Crossing Notices", Order = 8, RequireRestart = false,
+    [SettingPropertyFloatingInteger("{=taom_realm_borders_mcm_name_size}Realm Name Size", 0.5f, 2.5f, "0%", Order = 8, RequireRestart = false,
+        HintText = "{=taom_realm_borders_mcm_name_size_hint}Makes the kingdom names on the map larger or smaller. Default: 100%.")]
+    public float RealmBordersNameScale { get; set; } = TAOM.Features.RealmBorders.RealmBordersSettingsProvider.DefaultNameScale;
+
+    [SettingPropertyGroup("Realm Borders")]
+    [SettingPropertyBool("Border-Crossing Notices", Order = 9, RequireRestart = false,
         HintText = "Tells you when your party rides into another kingdom's lands.")]
     public bool RealmBordersCrossingNotices { get; set; } = true;
 
     [SettingPropertyGroup("Realm Borders")]
-    [SettingPropertyBool("Colour Realm Lands", Order = 9, RequireRestart = false,
+    [SettingPropertyBool("Colour Realm Lands", Order = 10, RequireRestart = false,
         HintText = "Tints each kingdom's land in its colour between the borders, like a map in an atlas.")]
     public bool RealmBordersFillLands { get; set; } = true;
 
     [SettingPropertyGroup("Realm Borders")]
-    [SettingPropertyFloatingInteger("Realm Colour Strength", 0.05f, 0.8f, "0.00", Order = 10, RequireRestart = false,
+    [SettingPropertyFloatingInteger("Realm Colour Strength", 0.05f, 0.8f, "0.00", Order = 11, RequireRestart = false,
         HintText = "How strongly the land is tinted: 0.05 is a faint wash, 0.8 nearly paints over the map. Default: 0.5.")]
     public float RealmBordersFillStrength { get; set; } = TAOM.Features.RealmBorders.RealmBordersSettingsProvider.DefaultFillStrength;
 
     [SettingPropertyGroup("Realm Borders")]
-    [SettingPropertyBool("Parchment Map at Full Zoom-Out", Order = 11, RequireRestart = false,
+    [SettingPropertyBool("Parchment Map at Full Zoom-Out", Order = 12, RequireRestart = false,
         HintText = "As you zoom all the way out, a parchment map of Middle-earth fades in over the campaign map, with the borders, realm colours and names drawn on it. It shows only while the borders do.")]
     public bool RealmBordersParchmentMap { get; set; } = true;
 
     // Dropdowns persist by index: never reorder either list (RealmBordersProviderTests pins both).
     [SettingPropertyGroup("Realm Borders")]
-    [SettingPropertyDropdown("Border Blend Mode", Order = 12, RequireRestart = false,
+    [SettingPropertyDropdown("Border Blend Mode", Order = 13, RequireRestart = false,
         HintText = "Advanced: how the borders mix with the map beneath. 'Material default' keeps the engine material's own. If the borders glow and their dark ink line is missing, try Modulate (Factor turns blending off).")]
     public Dropdown<string> RealmBordersBlendMode { get; set; } = new Dropdown<string>(
         TAOM.Features.RealmBorders.RealmBordersSettingsProvider.BlendModeChoices, 0);
 
     [SettingPropertyGroup("Realm Borders")]
-    [SettingPropertyDropdown("Border Material", Order = 13, RequireRestart = false,
+    [SettingPropertyDropdown("Border Material", Order = 14, RequireRestart = false,
         HintText = "Advanced: the engine material the borders are drawn from. 'Automatic' tries vertex_color_blend_after_postfx_mat first, which blends normally so the dark ink line shows, then the others in list order. Every choice draws over the parchment map.")]
     public Dropdown<string> RealmBordersMaterial { get; set; } = new Dropdown<string>(
         TAOM.Features.RealmBorders.RealmBordersSettingsProvider.MaterialChoices, 0);

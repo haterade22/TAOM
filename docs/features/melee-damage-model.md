@@ -508,12 +508,12 @@ restat of the same day; the restat has since been applied (see "Not done, and kn
 
 ### Not done, and known problems
 
-- **The Armory blades were restated on 2026-11-14; the troop swaps were not made.** The restat wrote 203 blade
+- **The Armory blades were restated on 2026-11-14; the troop swaps followed on 2026-11-16.** The restat wrote 203 blade
   pieces and a second run plans 0. The counts above are the dry runs and simulations made before it.
   `generate_career_kits.py`, `generate_starter_kit.py` and `generate_placeholder_weapons.py` ran after it.
-  `fix_melee_ladder.py` did not: it broke the weapon category rule ("A troop keeps its weapon category", below), so the 318
-  `MELEE_LADDER_INVERSION` warnings it was meant to remove stay. The tool holds the rule since 2026-11-16; its
-  roster pass is still not applied. The order of the apply and its results are in
+  `fix_melee_ladder.py` did not then: it broke the weapon category rule ("A troop keeps its weapon category",
+  below). It holds the rule since 2026-11-16 and its roster pass was applied that day; the counts are in that
+  section. The order of the apply and its results are in
   [armor-balance.md](./armor-balance.md#the-apply-sequence-2026-11-14-1271).
 - A blade is priced for its lowest wearer and held to that wearer's tier limit, so a blade worn across more
   than two tiers leaves its upper wearers light. 62 of the 204 worn non-hero blades span more than two tiers
@@ -646,10 +646,11 @@ either way; this is the fixed point, not a stopping place chosen early.
 
 ### Three guards, each of which was wrong once
 
-1. **Couchable weapons, asymmetrically.** `ComputeBlowMagnitudeMelee` feeds the attacker's
-   closing speed into `CalculateStrikeMagnitudeForThrust` as `extraLinearSpeed`, where it is
-   added to the thrust speed and the sum is **squared**. A couched lance therefore already
-   lands several times the standing-thrust magnitude this model computes, so RAISING one is
+1. **Couchable weapons, asymmetrically.** A couch is a passive usage. On v1.5.7
+   `ComputeBlowMagnitudeMelee` sends it to `CalculateBaseBlowMagnitudeForPassiveUsage`
+   (`MissionCombatMechanicsHelper.cs:661-671`), which computes a thrust with zero thrust speed
+   and 0.83 times the closing speed (`CombatStatCalculator.cs:53-56`). The blow therefore comes
+   from the charge, not from the thrust this model computes, so RAISING a couchable weapon is
    refused. The first version refused to move them at all, which protected
    `wm_gundabad_spear_a02` at 164 DPS in the hands of tier-3 militia, the single worst weapon
    the audit found. Lowering is safe and is now allowed.
@@ -792,10 +793,30 @@ at 33, so it was not applied. All polearms share the template `TwoHandedPolearm`
 inside its own class band. Now `weapon_category` keys a candidate on the template and, for a polearm, on
 its main attack (swing or thrust, by the higher DPS), on its couch usage and on whether its primary usage
 refuses a shield; a candidate of another category is never picked. Same category means the same band, so
-an under-armed weapon is only ever swapped for a stronger one. The dry run of 2026-11-16 plans 125 swaps
-across 118 troops, none across a category, none lower for an under-armed weapon
-(`RosterFixerWeaponCategoryTests` pins both). The roster pass is a balance change of its own and is not
-applied.
+an under-armed weapon is only ever swapped for a stronger one (`RosterFixerWeaponCategoryTests`).
+
+The roster pass under this rule was applied on 2026-11-16 with two more rules, each found by the review of
+its first apply:
+
+- **No swap in a generated troop file.** A troop file that a generator writes whole (the eight realm files,
+  `troops_lothlorien.xml`, `troops_gundabad_snow.xml`; `GENERATED_TROOP_FILES`) is reported, not swapped: the
+  generator's next `--apply` would undo the swap. Change such a weapon in the generator. The first apply wrote
+  into seven realm files and `test_generator_regions_in_sync` failed on all seven
+  (`RosterFixerGeneratedFileTests`).
+- **No swap above the upgrade.** Troops are planned from the highest level down, and a candidate may not beat
+  the best weapon that any of the troop's upgrade targets carries on the same template and main attack, after
+  their own swaps. The first apply gave `dale_footman` a 78 DPS poleaxe while its upgrade `dale_spearman` kept
+  a 60 DPS winged spear (`RosterFixerUpgradeCeilingTests`).
+
+Result (`python tools/fix_melee_ladder.py --apply` on 2026-11-16): 82 swaps on 75 troops in 13 troop files,
+35 distinct old and new weapon pairs, all for under-armed weapons; none across a category, none weaker, no
+new upgrade inversion. 538 weapon slots stay unresolved: 160 in generated files, 11 held by an upgrade's
+weapon, the rest with no in-band candidate of the category or over the carrier's tier limit.
+`mordor_uruk_shieldguard` is exempt (`tools/melee_ladders.json`): the only candidate was an Uruk halberd,
+and its main weapon is an open decision (rca-black-uruk-weapons-2026-11-07 F1). `generate_career_kits.py
+--apply` then changed 8 career kit ids and `wire_starter_kit_rosters.py --apply` 6 player start rosters.
+`python tools/validate_moduledata.py` reported 304 `MELEE_LADDER_INVERSION` warnings before the pass and
+270 after (2026-11-16).
 
 ## Key Files
 

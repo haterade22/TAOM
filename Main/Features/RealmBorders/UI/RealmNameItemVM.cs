@@ -12,6 +12,7 @@ public sealed class RealmNameItemVM : ViewModel
     private string _name = string.Empty;
     private float _offsetX, _offsetY, _alpha;
     private bool _useTolkienFont = true, _isShown;
+    private int _fontSize = RealmNamesVM.AnironFontSize;
 
     [DataSourceProperty]
     public string Name
@@ -62,6 +63,20 @@ public sealed class RealmNameItemVM : ViewModel
                 return;
             _alpha = value;
             OnPropertyChangedWithValue(value, nameof(Alpha));
+        }
+    }
+
+    /// <summary>The text size, bound to Brush.FontSize on both text widgets; set by <see cref="RealmNamesVM"/>.</summary>
+    [DataSourceProperty]
+    public int FontSize
+    {
+        get => _fontSize;
+        set
+        {
+            if (_fontSize == value)
+                return;
+            _fontSize = value;
+            OnPropertyChangedWithValue(value, nameof(FontSize));
         }
     }
 
