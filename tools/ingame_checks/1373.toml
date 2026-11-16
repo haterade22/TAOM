@@ -16,8 +16,8 @@
 # The unattended proofs: python tools/run_long_defeat.py --waves 3 --garrison-scale 1.3 --start-gold 5000 (the bot buys the heroes), and python tools/run_scenario.py --kind story-mission --mission helms_deep_defend.
 issue = 1373
 title = "Hero companions: Gimli carries an Erebor two-handed axe, and the hunters line names each hero's weapon mode"
-# fixed_in names the trunk commit this manifest was written on; only a build that holds it counts. The docs commit of the feature sets it to the feature commit (the main session does that).
-fixed_in = "a4cedd4c2"
+# fixed_in is the feature commit: only a build that holds it counts.
+fixed_in = "b56995820"
 logs = ["taom"]
 
 [[check]]
@@ -100,4 +100,4 @@ absence = "not-reached"
 claim = "Aragorn swings the Strider sword with both hands (the two-handed animations) for the whole wave, not only at the spawn: the weapons= field reads TwoHandedSword at every clear"
 
 [[human]]
-claim = "Gimli's Erebor two-handed axe looks and feels as a two-handed axe, and his swing hits as hard as the weapon's numbers say (the melee ladder may lower the blade to its class limit, see docs/features/long-defeat.md)"
+claim = "Gimli's Erebor two-handed axe looks and feels as a two-handed axe, and his swing hits as hard as the weapon's numbers say (swing 140; the melee ladder's repair leaves this shared blade as it is, see docs/features/long-defeat.md)"
