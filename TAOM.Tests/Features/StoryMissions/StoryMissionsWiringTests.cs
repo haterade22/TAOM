@@ -10,6 +10,7 @@ using TAOM.Core.Logging;
 using TAOM.Features.CoopInterop;
 using TAOM.Features.DevConsole.Cheats;
 using TAOM.Features.Enlistment;
+using TAOM.Features.HeroAbilities;
 using TAOM.Features.StoryMissions;
 using TAOM.Features.StoryMissions.Config;
 using TAOM.Features.StoryMissions.Hooks;
@@ -42,6 +43,8 @@ public class StoryMissionsWiringTests
         container.RegisterInstance(Substitute.For<IDedicatedServerProvider>());
         container.RegisterInstance(Substitute.For<IEnlistmentStateQuery>());
         container.RegisterInstance(Substitute.For<IEncounterAdapter>());
+        container.RegisterInstance(Substitute.For<IObjectManagerAdapter>());
+        container.RegisterInstance(Substitute.For<IHeroAbilitiesConfigProvider>());
         new StoryMissionsModule().RegisterServices(container);
         return container;
     }
@@ -74,13 +77,14 @@ public class StoryMissionsWiringTests
     }
 
     [TestMethod]
-    public void Module_DeclaresTheDevMenuAndTheStoryOffer_NoMissionBehaviorModelPatchOrSaveData()
+    public void Module_DeclaresTheDevMenuTheStoryOfferAndTheRosterCheck_NoMissionBehaviorModelPatchOrSaveData()
     {
         var module = new StoryMissionsModule();
 
-        Assert.AreEqual(2, module.CampaignBehaviors.Count);
+        Assert.AreEqual(3, module.CampaignBehaviors.Count);
         Assert.AreEqual(typeof(StoryDevMenuBehavior), module.CampaignBehaviors[0].BehaviorType);
         Assert.AreEqual(typeof(StoryOfferBehavior), module.CampaignBehaviors[1].BehaviorType);
+        Assert.AreEqual(typeof(StoryRosterBehavior), module.CampaignBehaviors[2].BehaviorType);
         Assert.AreEqual(0, module.MissionBehaviors.Count, "the mission behaviors are built by the launcher, as Host Review's are");
         Assert.AreEqual(0, module.GameModels.Count);
         Assert.AreEqual(0, module.PatchCategories.Count);
@@ -95,6 +99,7 @@ public class StoryMissionsWiringTests
 
         Assert.AreSame(container.Resolve<StoryMissionCatalog>(), container.Resolve<StoryMissionCatalog>());
         Assert.AreSame(container.Resolve<StoryMissionLauncher>(), container.Resolve<StoryMissionLauncher>());
+        Assert.AreSame(container.Resolve<StoryRosterService>(), container.Resolve<StoryRosterService>());
     }
 
     [TestMethod]

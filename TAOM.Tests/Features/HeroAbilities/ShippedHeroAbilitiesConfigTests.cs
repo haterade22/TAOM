@@ -108,15 +108,27 @@ public class ShippedHeroAbilitiesConfigTests
             CollectionAssert.Contains(ids, kit.Ranged!.ExtraArrowItem, kit.CharacterId);
     }
 
-    // The items file loads for a Custom Battle only, as long_defeat_items does: a campaign never sees the extra arrow.
+    // The items file loads for a Custom Game (the Long Defeat) and for a campaign (the Helm's Deep story mission, #1366).
     [TestMethod]
-    public void ShippedConfig_ItemsXml_LoadsForCustomGame()
+    public void ShippedConfig_ItemsXml_LoadsForCampaignAndCustomGame()
     {
         var subModule = File.ReadAllText(RepoPaths.RepoPath("Main", "_Module", "SubModule.xml"));
         var node = Regex.Match(subModule,
-            "<XmlNode>\\s*<XmlName id=\"Items\" path=\"hero_abilities/hero_abilities_items\"\\s*/>\\s*<IncludedGameTypes>\\s*<GameType value=\"CustomGame\"\\s*/>\\s*</IncludedGameTypes>\\s*</XmlNode>");
+            "<XmlNode>\\s*<XmlName id=\"Items\" path=\"hero_abilities/hero_abilities_items\"\\s*/>\\s*<IncludedGameTypes>\\s*<GameType value=\"Campaign\"\\s*/>\\s*<GameType value=\"CampaignStoryMode\"\\s*/>\\s*<GameType value=\"CustomGame\"\\s*/>\\s*</IncludedGameTypes>\\s*</XmlNode>");
 
-        Assert.IsTrue(node.Success, "SubModule.xml needs the hero_abilities_items node, Custom Game only");
+        Assert.IsTrue(node.Success, "SubModule.xml needs the hero_abilities_items node for Campaign, CampaignStoryMode and CustomGame");
+    }
+
+    [TestMethod]
+    public void ShippedConfig_ExtraArrowItem_IsNotMerchandise_AndCannotBePickedUp()
+    {
+        // In a campaign is_merchandise="false" (ItemObject.NotMerchandise) keeps the arrow out of workshops, loot and prizes,
+        // and CannotBePickedUp keeps a stuck arrow off the field.
+        var item = System.Xml.Linq.XDocument.Load(Path.Combine(ModuleDataPath, "hero_abilities", "hero_abilities_items.xml")).Root!
+            .Elements("Item").Single(i => (string?)i.Attribute("id") == "taom_legolas_arrow");
+
+        Assert.AreEqual("false", (string?)item.Attribute("is_merchandise"));
+        Assert.AreEqual("true", (string?)item.Element("Flags")?.Attribute("CannotBePickedUp"));
     }
 
     [TestMethod]

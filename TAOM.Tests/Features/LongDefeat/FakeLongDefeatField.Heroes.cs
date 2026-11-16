@@ -5,7 +5,7 @@ namespace TAOM.Tests.Features.LongDefeat;
 
 /// <summary>
 /// The heroes' half of the field fake (#1325): a spawn is recorded and answers a body as the engine makes one, unless a test set its
-/// answer. A removal named "H:&lt;id&gt;" is the held hero's (FakeLongDefeatField.Classify).
+/// answer. A removal named "H:&lt;id&gt;" is the held hero's, "HP:&lt;id&gt;" the held hero's whose body the player had taken over (FakeLongDefeatField.Classify).
 /// </summary>
 internal sealed partial class FakeLongDefeatField
 {

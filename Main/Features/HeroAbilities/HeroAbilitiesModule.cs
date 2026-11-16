@@ -11,7 +11,7 @@ namespace TAOM.Features.HeroAbilities;
 
 /// <summary>
 /// Hero Abilities (#1359, docs/features/hero-abilities.md): the mission heroes listed in hero_abilities.json cast timed
-/// abilities that buff their allies and shake their enemies, in the Long Defeat missions only (the story mission's gate opens, but no kit hero stands there yet).
+/// abilities that buff their allies and shake their enemies, in the Long Defeat missions and in the Helm's Deep story mission, where the three stand free (#1366).
 /// The buffs are the race abilities' channels and reach the engine through the same models, via
 /// <see cref="RaceAbilityHooks.BuffEffects"/> (wired here). No save data: a buff lives inside one battle.
 /// </summary>

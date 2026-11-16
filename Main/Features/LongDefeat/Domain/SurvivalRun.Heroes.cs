@@ -6,13 +6,13 @@ namespace TAOM.Features.LongDefeat.Domain;
 
 /// <summary>
 /// The heroes of the shop (#1325): bought between waves, one of each alive, on the field from the next tick, each one more defender
-/// under the garrison cap. A hero who has fallen is for sale again at once.
+/// under the garrison cap. A hero who has fallen is for sale again at once. The plan's free heroes (#1366) stand from the first tick with no purchase, and a fallen one is not for sale.
 /// </summary>
 internal sealed partial class SurvivalRun
 {
     // A hero with no entry is for sale.
     private readonly Dictionary<string, HeroState> _heroes = new(StringComparer.Ordinal);
-    private readonly List<HeroOffer> _heroOrders = new();
+    private readonly List<HeroSpawn> _heroOrders = new();
 
     /// <summary>Spends the price at once; the hero spawns on the next tick, and the field answers through <see cref="HeroSpawned"/>.</summary>
     public HeroResult TryBuyHero(string heroId)
@@ -38,7 +38,7 @@ internal sealed partial class SurvivalRun
 
         _purchases.Add(new FortPurchase(_wave + 1, PurchaseKind.Hero, offer.Id, 0, offer.Price, price, 0f));
         _heroes[offer.Id] = HeroState.Pending;
-        _heroOrders.Add(offer);
+        _heroOrders.Add(new HeroSpawn(offer.Id, offer.TroopId, offer.HealthFactor));
         _pendingEvents.Add(new RunEvent(RunEventKind.Bought, _wave, "hero=" + offer.Id));
         return HeroResult.Ok;
     }
@@ -95,9 +95,20 @@ internal sealed partial class SurvivalRun
 
     private void EmitHeroes(RunEffects fx)
     {
-        foreach (var offer in _heroOrders)
-            fx.SpawnHeroes.Add(new HeroSpawn(offer.Id, offer.TroopId, offer.HealthFactor));
+        fx.SpawnHeroes.AddRange(_heroOrders);
         _heroOrders.Clear();
+    }
+
+    private void QueueFreeHeroes()
+    {
+        foreach (var hero in _plan.FreeHeroes)
+        {
+            if (_heroes.ContainsKey(hero.Id))
+                continue;
+
+            _heroes[hero.Id] = HeroState.Pending;
+            _heroOrders.Add(hero);
+        }
     }
 
     private IReadOnlyList<HeroRow> HeroRowsNow() => _plan.Shop.Heroes

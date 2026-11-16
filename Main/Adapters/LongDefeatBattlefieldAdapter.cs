@@ -332,8 +332,14 @@ internal sealed partial class LongDefeatBattlefieldAdapter : ILongDefeatBattlefi
     // still built, only the engine's visual picks a random coat: "if (string.IsNullOrEmpty(mountCreationKeyStr)) mountCreationKeyStr = MountCreationKey.GetRandomMountKeyString(mountItem, MBRandom.RandomInt());"
     // (MountVisualCreator.cs:41-46), so risk 8 is closed and a new horse after a remount is a new coat.
     // A place goes in as a position with its direction: the engine reads the direction of a given position at once (Mission.cs:4498), and a given position skips the formation layout (Mission.cs:4227).
+    // ownBody (a mission hero, #1366): a body the engine does not treat as a hero (a campaign CharacterObject with no Hero, CharacterObject.cs:300) gets no body on the build
+    // data, so the engine asks OnComputeTroopBodyProperties (Mission.cs:4331-4338), and the story mission's MissionFaceCacheView can swap in a cached soldier's face
+    // (MissionFaceCacheView.cs:184-189). The body goes on the build data as the engine gives a hero, "return characterObject.GetBodyProperties(equipment, seed);"
+    // (MissionFaceCacheView.cs:173-176, the same call as Mission.cs:4339), from the kit (HairCoverType reads the head and body slots, which the engine's edits of its
+    // clone leave alone, Equipment.cs:83-99, Mission.cs:4109-4164) and the build data's seed. Its age goes on too, rounded, since an overridden body with no age takes the
+    // XML age (Mission.cs:4192-4198). An IsHero body (the Custom Game) is left as it was: the engine reads it through the same GetBodyProperties call (Mission.cs:4339).
     private Agent Spawn(BasicCharacterObject troop, Team team, bool playerSide, FormationClass cls, bool reinforcement, int count, int index, bool forceReinforcement,
-        bool intoOwnFormation = false, Equipment? kit = null, LdPlace? place = null, bool mounted = false)
+        bool intoOwnFormation = false, Equipment? kit = null, LdPlace? place = null, bool mounted = false, bool ownBody = false)
     {
         Vec3? initialPosition = place == null ? null : new Vec3(place.X, place.Y, place.Z);
         Vec2? initialDirection = place == null ? null : FacingOf(place);
@@ -345,6 +351,11 @@ internal sealed partial class LongDefeatBattlefieldAdapter : ILongDefeatBattlefi
             data.Team(team).ClothingColor1(team.Color).ClothingColor2(team.Color2).Formation(team.GetFormation(data.AgentFormation?.FormationIndex ?? cls));
         if (kit != null)
             data.Equipment(kit).NoHorses(!mounted);
+        if (ownBody && !troop.IsHero)
+        {
+            var body = troop.GetBodyProperties(kit, data.AgentEquipmentSeed);
+            data.BodyProperties(body).Age((int)Math.Round(body.Age));
+        }
 
         // GetAgentBuildDataToSpawnTroop skips the reinforcement flag for the player troop (Mission.cs:4477-4480), and without it a respawned lord appears at the foot frame.
         if (forceReinforcement)
@@ -503,12 +514,12 @@ internal sealed partial class LongDefeatBattlefieldAdapter : ILongDefeatBattlefi
 
     private IEnumerable<Agent> StandingDefenders() => _mission.DefenderTeam.ActiveAgents.Where(a => a.IsHuman && a.IsActive());
 
-    public void AdoptMain(bool aiDriven)
+    public bool AdoptMain(bool aiDriven)
     {
         var main = _mission.MainAgent;
         var team = _mission.DefenderTeam;
         if (main == null || team == null)
-            return;
+            return false;
 
         team.GeneralAgent = main;
         team.PlayerOrderController.Owner = main;
@@ -519,6 +530,7 @@ internal sealed partial class LongDefeatBattlefieldAdapter : ILongDefeatBattlefi
         team.DelegateCommandToAI();
         if (aiDriven)
             main.Controller = AgentControllerType.AI;
+        return IsHeldHero(main);
     }
 
     private static string At(Vec3 v) => $"({Num(v.x)}, {Num(v.y)}, {Num(v.z)})";

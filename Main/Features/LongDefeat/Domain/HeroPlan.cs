@@ -33,17 +33,19 @@ internal static class HeroGroup
 /// What the field did with one hero spawn. Refused: <c>Problem</c> says why. Spawned: what the engine made of him, read back from the
 /// body: whether it treats him as a hero, whether he has a mount, his formation, his health limit as a multiple of the limit he
 /// spawned with, the item in his hand, whether his formation is off AI control after the spawn (<c>Held</c>), how many soldiers in
-/// it are not held heroes (<c>Strangers</c>, 0 is right) and the name of its movement order (<c>Order</c>).
+/// it are not held heroes (<c>Strangers</c>, 0 is right) and the name of its movement order (<c>Order</c>). <c>CampaignCharacter</c>: the body is a
+/// campaign <c>CharacterObject</c>, whose <c>IsHero</c> is true only with a Hero behind it; the mission heroes have none (#1366), so there <c>IsHero</c> is false.
 /// </summary>
 internal sealed record LdHeroReport(bool Spawned, string? Problem, bool IsHero = false, bool Mounted = false, int FormationIndex = -1, float HealthFactor = 0f, string Wielded = "",
-    bool Held = false, int Strangers = 0, string Order = "");
+    bool Held = false, int Strangers = 0, string Order = "", bool CampaignCharacter = false);
 
 /// <summary>
 /// One standing hero as the field reads him now (#1337): his kills so far (the engine's <c>KillCount</c>, which also counts knock-outs),
 /// his formation index (-1 for none), his health as a share of his health limit, and his ground distance and height difference to the
-/// heroes' place (both NaN when the field has no place for them).
+/// heroes' place (both NaN when the field has no place for them). <c>PlayerControlled</c>: the player drives this hero's body (a take-over after the
+/// player fell, possible in a campaign only, #1366).
 /// </summary>
-internal sealed record LdHeroFacts(string Id, int Kills, int FormationIndex, float HealthShare, float Distance, float Height);
+internal sealed record LdHeroFacts(string Id, int Kills, int FormationIndex, float HealthShare, float Distance, float Height, bool PlayerControlled = false);
 
 /// <summary>
 /// What the field reads of the heroes at a wave clear (#1337): the standing heroes (empty when none stands), and the heroes' formation

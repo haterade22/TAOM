@@ -15,7 +15,9 @@ Manifests: tools/ingame_checks/<issue>.toml, read with tomllib. Top level: issue
 fixed_in (a commit), logs (the kinds below; taom or taom-ds must be one), allow_dirty (default
 false). Each [[check]] has an id (^[a-z0-9]+(\\.[a-z0-9-]+)+$), needs (what the tester does), an
 optional scope regex that cuts each log into segments at its matches (lines before the first match
-are dropped), the regex lists reached, pass (required) and fail, min (each pass pattern must match
+are dropped), an optional scope_end regex (only with a scope): a line that matches it and not the
+scope ends the current segment, and the lines after it are dropped until the next scope match, the
+regex lists reached, pass (required) and fail, min (each pass pattern must match
 at least that many lines, default 1) and absence ("fail", the default, or "not-reached"). [[human]]
 items carry a claim; they are printed as still owed by a person and never counted. A pattern is
 searched in one log line at a time; one that matches an empty line is refused, since it matches
@@ -124,7 +126,7 @@ EVIDENCE = 3
 
 PASS, FAIL, NOT_REACHED = "PASS", "FAIL", "NOT REACHED"
 MANIFEST_KEYS = {"issue", "title", "fixed_in", "logs", "allow_dirty", "check", "human"}
-CHECK_KEYS = {"id", "needs", "scope", "reached", "pass", "fail", "min", "absence"}
+CHECK_KEYS = {"id", "needs", "scope", "scope_end", "reached", "pass", "fail", "min", "absence"}
 USER_PROFILE_PATH = re.compile(r"[A-Za-z]:(\\\\|\\|/)Users\1[^\\/\s'\"]+", re.I)
 
 
@@ -160,6 +162,9 @@ class Check:
         if not isinstance(self.needs, str):
             raise VerdictError(f"{where}: needs must be a string", 2)
         self.scope = _compile(raw["scope"], where) if "scope" in raw else None
+        self.scope_end = _compile(raw["scope_end"], f"{where} scope_end") if "scope_end" in raw else None
+        if self.scope_end and not self.scope:
+            raise VerdictError(f"{where}: scope_end needs a scope, since it ends the segments a scope opens", 2)
         self.reached = _patterns(raw, "reached", where)
         self.passes = _patterns(raw, "pass", where)
         self.fails = _patterns(raw, "fail", where)
@@ -258,7 +263,7 @@ def named_check_ids(manifest):
     """The [Check] ids a manifest's patterns name, unescaped."""
     ids = set()
     for c in manifest.checks:
-        for p in c.reached + c.passes + c.fails + ([c.scope] if c.scope else []):
+        for p in c.reached + c.passes + c.fails + [s for s in (c.scope, c.scope_end) if s]:
             ids.update(m.replace("\\.", ".") for m in NAMED_CHECK.findall(p.pattern))
     return ids
 
@@ -580,6 +585,8 @@ def judge_check(check, logs, missing):
                 if check.scope.search(t):
                     current = []
                     segments.append(current)
+                elif check.scope_end and check.scope_end.search(t):
+                    current = None
                 if current is not None:
                     current.append((log, n, t))
         if not segments:

@@ -83,6 +83,9 @@ internal sealed record RunPlan(
     /// <summary>The places this build can deliver (D46). Nothing in Slice 1, so every row of shop.json stays hidden; a test sets what it needs.</summary>
     public LocationOffer Locations { get; init; } = LocationOffer.Offered;
 
+    /// <summary>The heroes that stand with the garrison from the first tick, paid for by nobody (#1366): a story mission names them, the shop sells none. Empty: the shop's heroes only.</summary>
+    public IReadOnlyList<HeroSpawn> FreeHeroes { get; init; } = System.Array.Empty<HeroSpawn>();
+
     /// <summary>The ids of gear sets with an item the spawn would refuse, found once at launch (<see cref="LongDefeatGearItems"/>). Nothing reads it yet; a later slice hides those sets for the run.</summary>
     public IReadOnlyList<string> HiddenGearSets { get; init; } = System.Array.Empty<string>();
 }

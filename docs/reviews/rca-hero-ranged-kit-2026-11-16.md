@@ -23,7 +23,7 @@ Not applied:
 
 FOLLOW-UP (#1325): the arrow kill's blow is placed at the midpoint of shooter and victim (`CustomAttacksUtils.TakeDamage`), so its hit sound plays between them. A change there touches every custom attack.
 
-FOLLOW-UP (#1325): `taom_legolas_arrow` loads in Custom Game only. The phase that puts the heroes in a campaign story mission must load the item there too.
+FOLLOW-UP (#1325): `taom_legolas_arrow` loads in Custom Game only. The phase that puts the heroes in a campaign story mission must load the item there too. Status: #1366 did it (the item loads for Campaign, CampaignStoryMode and CustomGame, 2026-11-16); no campaign has been run with it yet.
 
 FOLLOW-UP (no issue: a pre-existing validator gap, not from this work): `validate_mesh_refs.py` does not check `holster_body_name`.
 
@@ -33,7 +33,7 @@ Run 20261116-024002 (4 waves) on the committed build d33642297. `python tools/in
 
 The run settles the question the engine source left open: the body hit does follow a shield pass-through, 14 times in 17. With the removal event in place, that count cannot come from a reused index (finding 2). The `calls=17` against 50 body hits is finding 5 at work: 28 of his hits found the soldier already dead by the arrow itself.
 
-The run does not show a gain in kills (10, 26 and 14 in the waves he finished, against 39 in three waves before the kit), and it shows why: he shot 61 arrows in four waves. The three heroes hold one post at the top of a wall lane, and there he fights with his sword much of the time. Helm's Deep sells no Elven Volley, so finding 1 could not have occurred in this run; its proof is the rule's test and the adapter pin.
+The run does not show a gain in kills, and it shows why: he shot 61 arrows in four waves. The hunters line counts a body's kills for its whole life: he had 10 at the end of wave 1 and 26 at the end of wave 2, fell in wave 3, and the body bought after that made 14 in wave 4; the run before the kit read 21, 34 and 39 at the end of waves 1, 2 and 3. (Corrected 2026-11-16: the first text of this paragraph read the counts as kills per wave.) The three heroes hold one post at the top of a wall lane, and there he fights with his sword much of the time. Helm's Deep sells no Elven Volley, so finding 1 could not have occurred in this run; its proof is the rule's test and the adapter pin.
 
 FOLLOW-UP (#1325): where Legolas stands. His kit needs a post from which he shoots; the shared post of the three heroes puts him in the melee. The decision that the three form one group is the maintainer's.
 

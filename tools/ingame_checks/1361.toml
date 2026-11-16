@@ -28,6 +28,10 @@
 # fired is the #1359 line for his abilities (Rapid Fire, Many Arrows, Archer's Eye); contact_s= counts the seconds with 3 enemies within 40 m.
 # A throw in the ranged logic writes its stand-down line, and a throw in the hero abilities its own; both fail fired and the five
 # ranged checks (the instant-kill line is the shared executor's).
+# Every check is scoped to a Long Defeat run: a segment opens at LongDefeatMissionLauncher's "[LongDefeat] launching <scene> for fortress
+# <id>" line and closes at the next Long Defeat or story mission launch. The Helm's Deep story mission holds the same logic and, since #1366,
+# the three heroes, so it writes these same lines; that run is read by tools/ingame_checks/1366.toml and not here. A campaign battle fought
+# after a Long Defeat run in the same game process writes no launch line and is still read.
 # The unattended proof: python tools/run_long_defeat.py --waves 4 --garrison-scale 1.3 --start-gold 5000, so the bot buys the heroes.
 # A run of skips only is not a pass.
 issue = 1361
@@ -38,6 +42,8 @@ logs = ["taom"]
 
 [[check]]
 id = "taom.hero-abilities.fired"
+scope = '\[LongDefeat\] launching \S+ for fortress '
+scope_end = '\[(LongDefeat|StoryMissions)\] launching '
 needs = "a Long Defeat run in which the bot or the player buys Legolas and the waves come within 40 m of him"
 reached = ['\[Check\] id=taom\.hero-abilities\.fired result=(pass|fail) hero=taom_hero_legolas ']
 pass = ['\[Check\] id=taom\.hero-abilities\.fired result=pass hero=taom_hero_legolas fired=[1-9][0-9]* contact_s=[0-9]+ allies=[0-9]+ shocked=[0-9]+ owned=1$']
@@ -46,6 +52,8 @@ absence = "not-reached"
 
 [[check]]
 id = "taom.hero-abilities.precision"
+scope = '\[LongDefeat\] launching \S+ for fortress '
+scope_end = '\[(LongDefeat|StoryMissions)\] launching '
 needs = "a Long Defeat run with Legolas bought, holding his bow at least once"
 reached = ['\[Check\] id=taom\.hero-abilities\.precision result=(pass|fail)']
 pass = ['\[Check\] id=taom\.hero-abilities\.precision result=pass hero=\S+ ranged=1 nonzero=0 shooter_error=0\.0000 inaccuracy=0\.0000$']
@@ -54,6 +62,8 @@ absence = "not-reached"
 
 [[check]]
 id = "taom.hero-abilities.hits"
+scope = '\[LongDefeat\] launching \S+ for fortress '
+scope_end = '\[(LongDefeat|StoryMissions)\] launching '
 needs = "a Long Defeat run in which Legolas shoots at least 20 arrows"
 reached = ['\[Check\] id=taom\.hero-abilities\.hits result=(pass|fail)']
 pass = ['\[Check\] id=taom\.hero-abilities\.hits result=pass hero=\S+ shots=[0-9]+ contact=[0-9]+ share=[0-9.]+ shield=[0-9]+$']
@@ -62,6 +72,8 @@ absence = "not-reached"
 
 [[check]]
 id = "taom.hero-abilities.pierce"
+scope = '\[LongDefeat\] launching \S+ for fortress '
+scope_end = '\[(LongDefeat|StoryMissions)\] launching '
 needs = "a Long Defeat run in which enemy shields block Legolas's arrows (5 or more to judge a miss)"
 reached = ['\[Check\] id=taom\.hero-abilities\.pierce result=(pass|fail)']
 pass = ['\[Check\] id=taom\.hero-abilities\.pierce result=pass hero=\S+ shield_hits=[0-9]+ passed=[1-9][0-9]* broken=[0-9]+$']
@@ -70,6 +82,8 @@ absence = "not-reached"
 
 [[check]]
 id = "taom.hero-abilities.multishot"
+scope = '\[LongDefeat\] launching \S+ for fortress '
+scope_end = '\[(LongDefeat|StoryMissions)\] launching '
 needs = "a Long Defeat run in which Legolas casts Many Arrows (5 enemies within 40 m) and shoots during it"
 reached = ['\[Check\] id=taom\.hero-abilities\.multishot result=(pass|fail)']
 pass = ['\[Check\] id=taom\.hero-abilities\.multishot result=pass hero=\S+ item=1 windows=[1-9][0-9]* window_shots=[0-9]+ fired=[0-9]+ no_target=[0-9]+ out_of_range=[0-9]+ hits=[1-9][0-9]*$']
@@ -78,6 +92,8 @@ absence = "not-reached"
 
 [[check]]
 id = "taom.hero-abilities.arrow-kill"
+scope = '\[LongDefeat\] launching \S+ for fortress '
+scope_end = '\[(LongDefeat|StoryMissions)\] launching '
 needs = "a Long Defeat run in which Legolas's arrows land on enough human soldiers for a kill roll to win (50 rolls to judge a miss)"
 reached = ['\[Check\] id=taom\.hero-abilities\.arrow-kill result=(pass|fail)']
 pass = ['\[Check\] id=taom\.hero-abilities\.arrow-kill result=pass hero=\S+ body_hits=[0-9]+ head=[0-9]+ exempt=[0-9]+ dead_shooter=[0-9]+ calls=[0-9]+ kills=[1-9][0-9]*$']
@@ -86,7 +102,9 @@ absence = "not-reached"
 
 [[check]]
 id = "taom.signature-strikes.instant-kill"
-needs = "an arrow of Legolas's on an unshielded human soldier whose kill roll wins"
+scope = '\[LongDefeat\] launching \S+ for fortress '
+scope_end = '\[(LongDefeat|StoryMissions)\] launching '
+needs = "a Long Defeat run with an arrow of Legolas's on an unshielded human soldier whose kill roll wins"
 reached = ['\[Check\] id=taom\.signature-strikes\.instant-kill result=(pass|fail) signature=taom_hero_legolas_arrow ']
 pass = ['\[Check\] id=taom\.signature-strikes\.instant-kill result=pass signature=taom_hero_legolas_arrow victim=\S+ chance=[0-9.]+ roll=[0-9.]+ health=[0-9]+ damage=[0-9]+ died=1$']
 fail = ['\[Check\] id=taom\.signature-strikes\.instant-kill result=fail signature=taom_hero_legolas_arrow ']

@@ -76,7 +76,7 @@ internal sealed partial class LongDefeatBattlefieldAdapter
         if (team == null)
             return Enumerable.Empty<Agent>();
 
-        return team.ActiveAgents.Where(a => a.IsHuman && a.IsActive() && !a.IsRunningAway && a.Formation != null && a.Character != null && !a.Character.IsHero && !a.HasMount
+        return team.ActiveAgents.Where(a => a.IsHuman && a.IsActive() && !a.IsRunningAway && a.Formation != null && a.Character != null && !a.Character.IsHero && !IsHeldHero(a) && !a.HasMount
             && !a.IsUsingGameObject && a != _mission.MainAgent && !ReferenceEquals(a, _lordWatch.Lord) && a.Controller != AgentControllerType.Player && a.Formation.FormationIndex != PostsClass
             && !_postedByAgent.ContainsKey(a));
     }

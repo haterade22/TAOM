@@ -122,6 +122,18 @@ public class LongDefeatHeroChecksTests
     }
 
     [TestMethod]
+    public void AHeroThePlayerControls_CountsAsNear_WhereverHeStands()
+    {
+        // #1366: in a campaign a fallen player can take over a free hero (IsHero is false there). He stays in the heroes' formation, and he is where the player wants him.
+        var driven = new LdHeroFacts("aragorn", 0, HeroGroup.FormationIndex, 1f, 80f, 9f, PlayerControlled: true);
+
+        var verdict = Hunters(2, Read(new[] { driven, Hero("gimli") }));
+
+        Assert.AreEqual(CheckResult.Pass, verdict.Result, verdict.Detail);
+        StringAssert.Contains(verdict.Detail, " own=1 settled=600 near=2 ");
+    }
+
+    [TestMethod]
     public void AtTheSettleTime_DistanceIsJudged()
     {
         var verdict = Hunters(2, Read(new[] { Hero("aragorn", distance: 80f) }, settled: HeroGroup.SettleSeconds));
@@ -217,13 +229,28 @@ public class LongDefeatHeroChecksTests
         var verdict = LongDefeatHeroChecks.Spawned(Aragorn, GoodSpawn());
 
         Assert.AreEqual(CheckResult.Pass, verdict.Result);
-        Assert.AreEqual("hero=aragorn troop=taom_hero_aragorn is_hero=1 mounted=0 formation=7 held=1 strangers=0 order=Move health_factor=3.00 wanted_factor=3.00 wielded=strider_sword", verdict.Detail);
+        Assert.AreEqual("hero=aragorn troop=taom_hero_aragorn is_hero=1 campaign=0 mounted=0 formation=7 held=1 strangers=0 order=Move health_factor=3.00 wanted_factor=3.00 wielded=strider_sword", verdict.Detail);
     }
 
     [TestMethod]
     public void ASpawn_TheEngineDoesNotTreatAsAHero_Fails()
     {
         Assert.AreEqual(CheckResult.Fail, LongDefeatHeroChecks.Spawned(Aragorn, GoodSpawn() with { IsHero = false }).Result);
+    }
+
+    [TestMethod]
+    public void ACampaignCharacterWithNoHero_Passes_WithCampaign1()
+    {
+        var verdict = LongDefeatHeroChecks.Spawned(Aragorn, GoodSpawn() with { IsHero = false, CampaignCharacter = true });
+
+        Assert.AreEqual(CheckResult.Pass, verdict.Result);
+        StringAssert.Contains(verdict.Detail, "is_hero=0 campaign=1 mounted=0");
+    }
+
+    [TestMethod]
+    public void ACampaignHero_Fails()
+    {
+        Assert.AreEqual(CheckResult.Fail, LongDefeatHeroChecks.Spawned(Aragorn, GoodSpawn() with { CampaignCharacter = true }).Result);
     }
 
     [TestMethod]
