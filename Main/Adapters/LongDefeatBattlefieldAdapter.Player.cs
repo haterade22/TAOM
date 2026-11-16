@@ -26,7 +26,8 @@ internal sealed partial class LongDefeatBattlefieldAdapter
     public bool SpawnPlayer(bool respawn, LdLoadout? loadout, LdPlace? place = null)
     {
         var player = Game.Current?.PlayerTroop;
-        var team = _mission.DefenderTeam;
+        var team = PlayerSideTeam;
+        var attacks = PlayerAttacks;
         if (player == null || team == null)
             return false;
 
@@ -39,10 +40,14 @@ internal sealed partial class LongDefeatBattlefieldAdapter
             return true;
         }
 
-        if (respawn)
+        // A lord who attacks (#1409) never joins the open batch, which is the defenders' foot. He spawns alone into the attackers' foot, placed first from the
+        // attacker reinforcement plan Boot fills, in the order PlaceFormation uses: an unplaced formation would take the plan with no troops (Mission.cs:4215-4219 asks for isReinforcement false).
+        if (respawn || attacks)
         {
             var formation = team.GetFormation(FormationClass.Infantry);
             formation.BeginSpawn(1, false);
+            if (attacks && !formation.HasBeenPositioned)
+                _mission.SetFormationPositioningFromDeploymentPlan(formation, true);
             var respawned = Spawn(player, team, true, FormationClass.Infantry, true, 1, 0, true, kit: kit);
             formation.EndSpawn();
             _lordWatch.SetLord(respawned);

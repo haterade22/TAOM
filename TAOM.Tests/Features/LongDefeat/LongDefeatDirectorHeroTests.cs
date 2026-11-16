@@ -410,6 +410,24 @@ public class LongDefeatDirectorHeroTests
     }
 
     [TestMethod]
+    public void WhenThePlayerAttacks_TheHeroesAreNeverHeld_AndNoHuntersLineIsWritten()
+    {
+        var rig = NewRig(heroes: System.Array.Empty<HeroOffer>(), free: new[] { new HeroSpawn("aragorn", "taom_hero_aragorn", 3f), new HeroSpawn("gimli", "taom_hero_gimli", 3f), new HeroSpawn("legolas", "taom_hero_legolas", 3f) });
+        rig.Field.PlayerAttacks = true;
+        Assert.IsTrue(rig.Director.Start());
+        rig.Director.Tick(0.1f);
+        rig.Director.Tick(0.1f);
+
+        Assert.AreEqual(3, rig.Field.Calls.Count(c => c == "SpawnHero"));
+        ClearOneWave(rig);
+
+        Assert.IsTrue(rig.Outcomes.Lines.Any(l => l.Contains(LongDefeatChecks.WaveId)), "the wave cleared");
+        Assert.AreEqual(0, HoldCalls(rig));
+        Assert.AreEqual(0, rig.Outcomes.Lines.Count(l => l.Contains(LongDefeatHeroChecks.HuntersId)));
+        Assert.IsFalse(rig.Field.Calls.Contains("ReadHeroes"));
+    }
+
+    [TestMethod]
     public void AfterOnlyARefusedSpawn_TheHeroesGroupIsNeverHeld_AndNoHuntersLineIsWritten()
     {
         var rig = NewRig();

@@ -16,7 +16,8 @@ internal sealed partial class LongDefeatBattlefieldAdapter
         int attackers = 0, fleeing = 0, atKeep = 0, attackersHigh = 0;
         foreach (var agent in _mission.AttackerTeam.ActiveAgents)
         {
-            if (!agent.IsHuman || !agent.IsActive())
+            // The player's body in a story attack (#1409) is no wave soldier: counted, the wave would never clear while he stands.
+            if (!agent.IsHuman || !agent.IsActive() || ReferenceEquals(agent, _mission.MainAgent))
                 continue;
             if (agent.IsRunningAway)
                 fleeing++;
@@ -64,7 +65,7 @@ internal sealed partial class LongDefeatBattlefieldAdapter
 
     public IReadOnlyList<LdPoint> AttackersNearest(LdPoint? keep) =>
         _mission.AttackerTeam.ActiveAgents
-            .Where(a => a.IsHuman && a.IsActive() && !a.IsRunningAway)
+            .Where(a => a.IsHuman && a.IsActive() && !a.IsRunningAway && !ReferenceEquals(a, _mission.MainAgent))
             .OrderBy(a => keep is { } k ? DistanceSquared(a.Position, k) : 0f)
             .Take(SampleSize)
             .Select(a => Point(a.Position))
@@ -86,14 +87,20 @@ internal sealed partial class LongDefeatBattlefieldAdapter
         if (main == null)
             return "main=none";
 
-        var owner = _mission.DefenderTeam?.PlayerOrderController?.Owner;
-        return $"main={main.Name} owner={owner?.Name?.ToString() ?? "null"} controller={main.Controller} z={Num(main.Position.z)} at={At(main.Position)}";
+        // A lord who attacks (#1409) also gets the attackers' foot frame, the place his spawn is meant to be near. inside= is the test MissionBoundaryCrossingHandler makes for the
+        // main agent (MissionBoundaryCrossingHandler.cs:210): a body outside it starts the retreat countdown, and the run ends Abandoned.
+        var owner = PlayerSideTeam?.PlayerOrderController?.Owner;
+        var frameText = PlayerAttacks && FrameOf(_mission.AttackerTeam, FormationClass.Infantry, true) is { } frame ? $" frame={At(frame)}" : "";
+        var inside = _mission.IsPositionInsideBoundaries(main.Position.AsVec2) ? "true" : "false";
+        return $"main={main.Name} owner={owner?.Name?.ToString() ?? "null"} controller={main.Controller} z={Num(main.Position.z)} at={At(main.Position)}{frameText} inside={inside}";
     }
 
+    // ai_formations= reads the player's own team, as it always has; defender_ai= reads the defenders, whose AI state is the #1370 signal in an attack too.
     public string DescribeFormations()
     {
-        var all = _mission.DefenderTeam?.FormationsIncludingEmpty.ToList() ?? new List<Formation>();
-        return $"ai_formations={all.Count(f => f.IsAIControlled)} of {all.Count}";
+        var all = PlayerSideTeam?.FormationsIncludingEmpty.ToList() ?? new List<Formation>();
+        var defenders = _mission.DefenderTeam?.FormationsIncludingEmpty.ToList() ?? new List<Formation>();
+        return $"ai_formations={all.Count(f => f.IsAIControlled)} of {all.Count} defender_ai={defenders.Count(f => f.IsAIControlled)} of {defenders.Count}";
     }
 
     private static bool AtKeep(Agent agent, LdPoint? keep, float radius, float heightBand)
@@ -128,16 +135,18 @@ internal sealed partial class LongDefeatBattlefieldAdapter
     public LdBootFacts BootFacts()
     {
         var main = _mission.MainAgent;
-        var defenders = _mission.DefenderTeam;
-        var siegeAi = defenders?.TeamAI is TeamAISiegeDefender && _mission.AttackerTeam?.TeamAI is TeamAISiegeAttacker;
+        var team = PlayerSideTeam;
+        var siegeAi = _mission.DefenderTeam?.TeamAI is TeamAISiegeDefender && _mission.AttackerTeam?.TeamAI is TeamAISiegeAttacker;
         return new LdBootFacts(
             _mission.IsDeploymentFinished,
             siegeAi,
             main != null,
             _mission.IsFriendlyMission,
-            main != null && ReferenceEquals(defenders?.GeneralAgent, main),
-            defenders?.IsPlayerGeneral == true,
-            main != null && ReferenceEquals(defenders?.PlayerOrderController?.Owner, main));
+            main != null && ReferenceEquals(team?.GeneralAgent, main),
+            team?.IsPlayerGeneral == true,
+            main != null && ReferenceEquals(team?.PlayerOrderController?.Owner, main),
+            MainOnPlayerTeam: main != null && ReferenceEquals(main.Team, team),
+            PlayerAttacks: PlayerAttacks);
     }
 
     public string DescribeEngines()
@@ -187,6 +196,10 @@ internal sealed partial class LongDefeatBattlefieldAdapter
         if (team == null)
             return new LdRemoval(LdRemovalKind.None, "", Key: key);
 
+        // The player's body on his own team, before the side: in a story attack (#1409) it stands on the attacker team, and its loss is his fall, never a wave kill.
+        if (team == PlayerSideTeam && IsPlayerBody(agent))
+            return loss ? new LdRemoval(LdRemovalKind.Player, id, Key: key) : new LdRemoval(LdRemovalKind.None, "", Key: key);
+
         if (team.Side == BattleSideEnum.Attacker)
         {
             if (loss)
@@ -202,7 +215,7 @@ internal sealed partial class LongDefeatBattlefieldAdapter
         if (team != _mission.DefenderTeam)
             return new LdRemoval(LdRemovalKind.None, "", Key: key);
 
-        return new LdRemoval(IsPlayerBody(agent) ? LdRemovalKind.Player : LdRemovalKind.Defender, id, Key: key);
+        return new LdRemoval(LdRemovalKind.Defender, id, Key: key);
     }
 
     // The engine nulls MainAgent around this callback, so the body the adapter last saw is the player's too.

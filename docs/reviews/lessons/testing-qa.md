@@ -2911,3 +2911,10 @@ The battle balance provider's new tests built `BattleBalanceConfig` objects in C
 **Prevent:** before a cause is named for "A fails and B does not", state what B must show if the cause is right, and read it in a log or a run of B. Instrument both modes with the same lines, not only the failing one. A fix whose reason is a difference between two modes is not built until that difference is seen in evidence from both.
 
 **Source:** [rca-hero-weapons-2026-11-16.md](../rca-hero-weapons-2026-11-16.md) finding 1.
+### A wrong world can write a pass line: a manifest fails it by its other fields (#1409, 2026-11-16)
+
+**Why missed:** four rows of a new manifest took the line itself as `reached` and only `result=fail` as `fail`. The failure the change could cause (the player on the wrong team) writes a pass line with `side=defender` or `side=Defending`, so the rows read NOT REACHED and the run passed.
+
+**Prevent:** for each row, name the wrong world the row is there to catch and write the line that world prints. If it is a pass line with another field, add that line to `fail`, and test it through `ingame_verdict.judge_check`, not only against the pass pattern.
+
+**Source:** [rca-hero-attack-slices-2026-11-16.md](../rca-hero-attack-slices-2026-11-16.md) finding 1.

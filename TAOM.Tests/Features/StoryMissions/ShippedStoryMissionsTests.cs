@@ -22,11 +22,12 @@ namespace TAOM.Tests.Features.StoryMissions;
 public class ShippedStoryMissionsTests
 {
     private const string MissionId = "helms_deep_defend";
+    private const string AttackId = "helms_deep_attack";
 
     // Every row the file ships, in file order. Each row other than Helm's Deep is a stand-in until its scene gets a recorded muster and its own track.
     private static readonly string[] ShippedIds =
     {
-        MissionId, "minas_tirith_defend", "osgiliath_defend", "pelargir_defend", "dale_defend", "lorien_defend", "north_defend",
+        MissionId, AttackId, "minas_tirith_defend", "osgiliath_defend", "pelargir_defend", "dale_defend", "lorien_defend", "north_defend",
     };
 
     private static string ModuleData => RepoPaths.RepoPath("Main", "_Module", "ModuleData");
@@ -81,22 +82,42 @@ public class ShippedStoryMissionsTests
     private static IReadOnlyList<StoryMissionDefinition> All() => Load().Catalog.Missions;
 
     [TestMethod]
-    public void TheShippedFile_LoadsEveryRowWithNoWarning_AsSiegeDefences()
+    public void TheShippedFile_LoadsEveryRowWithNoWarning_WithItsSide()
     {
         var (catalog, logger) = Load();
 
         CollectionAssert.AreEqual(ShippedIds, catalog.Missions.Select(m => m.Id).ToArray());
         foreach (var m in catalog.Missions)
-            Assert.AreEqual(StorySide.Defending, m.Side, m.Id + ": the host plays a siege defence only");
+            Assert.AreEqual(m.Id == AttackId ? StorySide.Attacking : StorySide.Defending, m.Side, m.Id + ": only the Helm's Deep attack row is an attack");
         logger.DidNotReceiveWithAnyArgs().LogWarning(default!);
     }
 
     [TestMethod]
-    public void TheShippedFile_GivesEveryRowItsOwnScene()
+    public void TheShippedFile_GivesEveryRowItsOwnScenePerSide()
     {
-        var scenes = All().Select(m => m.Scene).ToList();
+        var keys = All().Select(m => m.Scene.ToLowerInvariant() + "|" + m.Side).ToList();
 
-        Assert.AreEqual(scenes.Count, scenes.Distinct(StringComparer.OrdinalIgnoreCase).Count());
+        Assert.AreEqual(keys.Count, keys.Distinct().Count());
+    }
+
+    [TestMethod]
+    public void HelmsDeepAttack_MirrorsTheDefence()
+    {
+        var defence = Helms();
+        Assert.IsTrue(Load().Catalog.TryGet(AttackId, out var attack), AttackId + " is not in story_missions.json");
+
+        Assert.AreEqual(StorySide.Attacking, attack.Side);
+        Assert.AreEqual(defence.Scene, attack.Scene);
+        Assert.AreEqual(defence.DefenderCulture, attack.DefenderCulture);
+        Assert.AreEqual(defence.AttackerCulture, attack.AttackerCulture);
+        Assert.AreEqual(defence.Music, attack.Music);
+        CollectionAssert.AreEqual(defence.Garrison.Select(g => (g.TroopId, g.Slot, g.Count)).ToArray(), attack.Garrison.Select(g => (g.TroopId, g.Slot, g.Count)).ToArray());
+        CollectionAssert.AreEqual(defence.Heroes.Select(h => (h.Id, h.TroopId, h.HealthFactor)).ToArray(), attack.Heroes.Select(h => (h.Id, h.TroopId, h.HealthFactor)).ToArray());
+        Assert.AreEqual(defence.Muster?.Foot, attack.Muster?.Foot);
+        Assert.AreEqual(defence.Muster?.Archers, attack.Muster?.Archers);
+        Assert.AreEqual(1, attack.Waves.Authored.Count);
+        Assert.IsTrue(attack.Waves.Authored[0].Count >= 250, "the player leads a host of 250");
+        Assert.AreEqual(26, attack.Rules.KeepMinAttackers, "the reader's own floor for a wave of 250: authored, so it logs no warning");
     }
 
     [TestMethod]
@@ -241,7 +262,7 @@ public class ShippedStoryMissionsTests
     public void OnlyHelmsDeep_NamesATrack()
     {
         // Each other row is a stand-in: with no track, the campaign's music plays and nothing is silenced.
-        CollectionAssert.AreEqual(new[] { MissionId }, All().Where(m => m.Music != null).Select(m => m.Id).ToArray());
+        CollectionAssert.AreEqual(new[] { MissionId, AttackId }, All().Where(m => m.Music != null).Select(m => m.Id).ToArray());
     }
 
     [TestMethod]

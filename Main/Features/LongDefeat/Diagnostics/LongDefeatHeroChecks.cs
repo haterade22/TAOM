@@ -39,7 +39,13 @@ internal static class LongDefeatHeroChecks
             + $" health_factor={report.HealthFactor.ToString("0.00", CultureInfo.InvariantCulture)} wanted_factor={hero.HealthFactor.ToString("0.00", CultureInfo.InvariantCulture)}"
             + $" wielded={(report.Wielded.Length > 0 ? Words(report.Wielded) : "none")}";
         var scaled = Math.Abs(report.HealthFactor - hero.HealthFactor) <= 0.01f;
-        return LongDefeatChecks.Verdict(report.IsHero != report.CampaignCharacter && !report.Mounted && report.FormationIndex == HeroGroup.FormationIndex && report.Held && report.Strangers == 0 && scaled, detail);
+        var placed = report.Enemy
+            ? report.FormationIndex >= 0 && report.FormationIndex != HeroGroup.FormationIndex && !report.Held
+            : report.FormationIndex == HeroGroup.FormationIndex && report.Held && report.Strangers == 0;
+        if (report.Enemy)
+            detail += " side=enemy";
+
+        return LongDefeatChecks.Verdict(report.IsHero != report.CampaignCharacter && !report.Mounted && placed && scaled, detail);
     }
 
     internal const string HuntersId = "taom.long-defeat.hunters";

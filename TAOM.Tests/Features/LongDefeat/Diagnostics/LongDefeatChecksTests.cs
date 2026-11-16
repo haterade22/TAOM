@@ -52,6 +52,34 @@ public class LongDefeatChecksTests
     }
 
     [TestMethod]
+    public void General_AMainOffThePlayersTeam_Fails()
+    {
+        Is(CheckResult.Fail, LongDefeatChecks.General(Good() with { MainOnPlayerTeam = false }));
+    }
+
+    [TestMethod]
+    public void General_DetailKeepsTheOldThreeFields_ThenMainOnTeamAndSide()
+    {
+        var defence = LongDefeatChecks.General(Good());
+        var attack = LongDefeatChecks.General(Good() with { PlayerAttacks = true });
+
+        StringAssert.StartsWith(defence.Detail, "general_is_main=true player_general=true order_owner_is_main=true");
+        StringAssert.EndsWith(defence.Detail, "main_on_team=true side=defender");
+        StringAssert.EndsWith(attack.Detail, "main_on_team=true side=attacker");
+        Is(CheckResult.Pass, attack);
+    }
+
+    [TestMethod]
+    public void LordFell_IsAPassWithDeathsAndSide()
+    {
+        Assert.AreEqual("taom.long-defeat.lord-fell", LongDefeatChecks.LordFellId);
+        var attack = LongDefeatChecks.LordFell(2, true);
+        Is(CheckResult.Pass, attack);
+        Assert.AreEqual("deaths=2 side=attacker", attack.Detail);
+        Assert.AreEqual("deaths=1 side=defender", LongDefeatChecks.LordFell(1, false).Detail);
+    }
+
+    [TestMethod]
     public void General_NeedsMainAsGeneralAndOrderOwner()
     {
         Is(CheckResult.Pass, LongDefeatChecks.General(Good()));

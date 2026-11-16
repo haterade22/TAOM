@@ -46,7 +46,8 @@ internal sealed partial class LongDefeatDirector
 
         var standing = fx.DefenderBatches.Count > 0 ? _field.StandingDefenderPoints() : Array.Empty<LdPoint>();
 
-        // A lord on foot joins the foot formation's open batch, which closes after him; a mounted one joins the cavalry formation, so the batch closes on its own.
+        // A defending lord on foot joins the foot formation's open batch, which closes after him; a mounted one joins the cavalry formation, so the batch closes on its own.
+        // When the player attacks, the lord spawns alone into the attackers' foot, so the slot reserved here is never filled; that is harmless (the formation is laid out for one more while it spawns).
         var joinsBatch = fx.SpawnPlayer && !LordRides;
         var closes = joinsBatch ? new List<FormationSlot>() : null;
         foreach (var batch in fx.DefenderBatches)
@@ -137,7 +138,8 @@ internal sealed partial class LongDefeatDirector
     /// <summary>
     /// One engine batch. Its first soldier opens it (placing the formation when the run says so), its last closes it. A defender
     /// batch is not closed here when the player spawns in the same call: the foot formation reserved a slot for the lord, so it
-    /// closes after him.
+    /// closes after him. When the player attacks, the slot is reserved but unused; the formation is laid out for one more soldier
+    /// while it spawns, which is harmless.
     /// </summary>
     private void SpawnBatch(SoldierBatch b, bool attackers, bool playerFollows, IReadOnlyList<LdPoint> standing, List<FormationSlot>? closes)
     {

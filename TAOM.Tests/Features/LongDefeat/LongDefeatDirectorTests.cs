@@ -938,6 +938,40 @@ public class LongDefeatDirectorTests
     }
 
     [TestMethod]
+    public void Start_LogsThePlayerStartLine()
+    {
+        var rig = NewRig();
+        rig.Field.PlayerAttacks = true;
+        Assert.IsTrue(rig.Director.Start());
+
+        Assert.IsTrue(rig.Log.Lines.Any(l => l.Contains("[LongDefeat][Player] start main=fake")), string.Join("\n", rig.Log.Lines));
+        Assert.IsTrue(rig.Outcomes.Lines.Any(l => l.Contains(LongDefeatChecks.BootId)));
+    }
+
+    [TestMethod]
+    public void LordFell_WritesTheLordFellLine_WithDeathsAndSide_ForAnAttack()
+    {
+        var rig = NewRig();
+        rig.Field.PlayerAttacks = true;
+        rig.StartAndSpawnWave();
+        rig.Director.OnAgentRemoved("P", true);
+
+        var line = rig.Outcomes.Lines.Single(l => l.Contains(LongDefeatChecks.LordFellId));
+        StringAssert.StartsWith(line, "pass " + LongDefeatChecks.LordFellId);
+        StringAssert.EndsWith(line, "deaths=1 side=attacker");
+    }
+
+    [TestMethod]
+    public void LordFell_InADefence_SaysSideDefender()
+    {
+        var rig = NewRig();
+        rig.StartAndSpawnWave();
+        rig.Director.OnAgentRemoved("P", true);
+
+        StringAssert.EndsWith(rig.Outcomes.Lines.Single(l => l.Contains(LongDefeatChecks.LordFellId)), "deaths=1 side=defender");
+    }
+
+    [TestMethod]
     public void PlayerDeath_RespawnsAtTheIntermission_AndTheCheckSeesTheAdoption()
     {
         var rig = NewRig();

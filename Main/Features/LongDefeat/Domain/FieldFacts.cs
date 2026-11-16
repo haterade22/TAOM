@@ -14,7 +14,9 @@ internal sealed record LdBootFacts(
     bool IsFriendlyMission,
     bool GeneralIsMain,
     bool IsPlayerGeneral,
-    bool OrderOwnerIsMain);
+    bool OrderOwnerIsMain,
+    bool MainOnPlayerTeam = true,
+    bool PlayerAttacks = false);
 
 /// <summary>
 /// Where one spawned batch landed. <c>Far</c> counts soldiers well off the height their frame authored, <c>OffMesh</c> soldiers

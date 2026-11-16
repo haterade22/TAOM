@@ -25,6 +25,30 @@
       }
     },
     {
+      "id": "helms_deep_attack",
+      "name": "{=!}Helm's Deep: storm the walls",
+      "scene": "taom_rohan_castle_helms_deep_forceatmo",
+      "side": "Attack",
+      "defenderCulture": "vlandia",
+      "attackerCulture": "isengard",
+      "music": "StoryMusic/isengard_vs_rohan.ogg",
+      "rules": { "preparationSeconds": 20, "keepMinAttackers": 26 },
+      "garrison": [
+        { "troop": "rohan_westfold_militiaman", "class": "Infantry", "count": 100 },
+        { "troop": "rohan_eastfold_skirmisher", "class": "Ranged", "count": 50 }
+      ],
+      "muster": {"foot": {"x": 186.91, "y": 141.235, "z": 3.749, "fx": 0.75, "fy": 0.662}, "archers": {"x": 197.678, "y": 151.557, "z": 1.728, "fx": 0.739, "fy": 0.673}},
+      "heroes": [{"id": "aragorn", "troop": "taom_hero_aragorn", "healthFactor": 3.0}, {"id": "legolas", "troop": "taom_hero_legolas", "healthFactor": 3.0}, {"id": "gimli", "troop": "taom_hero_gimli", "healthFactor": 3.0}],
+      "roster": {
+        "waves": [
+          { "count": 250, "mix": [
+            { "troop": "urukhai_fighter", "class": "Infantry", "weight": 50 },
+            { "troop": "isengard_militia_spearman", "class": "Infantry", "weight": 25 },
+            { "troop": "urukhai_skirmisher", "class": "Ranged", "weight": 25 } ] }
+        ]
+      }
+    },
+    {
       "id": "minas_tirith_defend",
       "name": "{=!}Minas Tirith: hold the White City",
       "scene": "taom_gondor_town_minas_tirith_forceatmo",

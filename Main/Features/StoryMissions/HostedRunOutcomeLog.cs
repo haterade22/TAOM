@@ -16,6 +16,12 @@ internal sealed class HostedRunOutcomeLog : IOutcomeLog
     /// <summary>The hero spawn check (<c>taom.long-defeat.hero</c> renamed); tools/ingame_checks/1366.toml reads it.</summary>
     internal const string HeroId = "taom.story-missions.hosted.hero";
 
+    /// <summary>The general check (<c>taom.long-defeat.general</c> renamed); tools/ingame_checks/1409.toml reads it.</summary>
+    internal const string GeneralId = "taom.story-missions.hosted.general";
+
+    /// <summary>The player-fell line (<c>taom.long-defeat.lord-fell</c> renamed); tools/ingame_checks/1409.toml reads it.</summary>
+    internal const string LordFellId = "taom.story-missions.hosted.lord-fell";
+
     /// <summary>The hero fall line (<c>taom.long-defeat.hero-fall</c> renamed).</summary>
     internal const string HeroFallId = "taom.story-missions.hosted.hero-fall";
 

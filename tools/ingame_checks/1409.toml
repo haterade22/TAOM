@@ -1,0 +1,195 @@
+# In-game checks for #1409 (Phase 7 of #1325: the Helm's Deep attack, the player storms the walls as the attacker in the story mission helms_deep_attack), read by
+# tools/ingame_verdict.py. The unattended run is: python tools/run_scenario.py --kind story-mission --mission helms_deep_attack, then python tools/ingame_verdict.py --issue 1409
+# on its log. Only the dev menu and that driver can open the row: the War Chronicle offers no attack yet. The story mission hosts the Long Defeat run, whose check lines
+# HostedRunOutcomeLog writes as taom.story-missions.hosted.<name>; the ability and signature lines are not renamed.
+#
+# Every row but the done row carries a scope that opens a segment at each launch of helms_deep_attack (StoryMissionLauncher's "[StoryMissions] launching <scene> for '<id>' (...)")
+# and a scope_end that closes it at the next launch of any story mission or Long Defeat run, as in tools/ingame_checks/1368.toml. The done row has no scope, because the driver
+# writes one done line per process and a failure before the launch writes no launching line. Read this manifest from one session (the default --sessions 1).
+#
+# The player fights on the attacker team: the main agent is a wave soldier of no kind (the director counts, fells and books him apart), and the three heroes stand in the
+# garrison's class formations under the defenders' AI (never held in formation 7, so no defender formation is off AI and the siege tactic's consolidation has no off-AI formation to pour into: #1370). A boundary retreat of the
+# main agent ends the run Abandoned, which reads as a loss, so the ended row fails on it. The start line (LongDefeatDirector.Start) writes where he stands and inside=, the
+# test MissionBoundaryCrossingHandler makes for the main agent; the retreat line of LongDefeatMissionLogic.OnRetreatMission says where he was when it fired.
+#
+# The rgl greps are not a row, because a scoped manifest reads one log kind: they are the [[human]] claim about the run's rgl log at the end of this file.
+issue = 1409
+title = "Story missions: the Helm's Deep attack, the player storms the walls as the attacker (Phase 7)"
+# fixed_in is the trunk commit before the driver: the feature commit replaces it when it exists. Only a build that holds it counts.
+fixed_in = "1d1fd4501"
+logs = ["taom"]
+
+# Written once, in Finish. Any reason but ok writes result=fail with the same detail, and that can happen before any launching line, so this row has no scope.
+# A done line of another mission is not read.
+[[check]]
+id = "taom.autorun.story-mission.done"
+needs = "an armed unattended run: python tools/run_scenario.py --kind story-mission --mission helms_deep_attack, on a build that holds the driver"
+reached = ['\[Check\] id=taom\.autorun\.story-mission\.done result=\S+ reason=\S+ mission=helms_deep_attack ']
+pass = ['\[Check\] id=taom\.autorun\.story-mission\.done result=pass reason=ok mission=helms_deep_attack verdict=(Won|Lost) mission_seconds=\d+\.\d culture=\S+$']
+fail = ['\[Check\] id=taom\.autorun\.story-mission\.done result=fail reason=\S+ mission=helms_deep_attack ']
+absence = "not-reached"
+
+[[check]]
+id = "taom.story-missions.hosted.boot"
+scope = '\[StoryMissions\] launching \S+ for \x27helms_deep_attack\x27 '
+scope_end = '\[(LongDefeat|StoryMissions)\] launching '
+needs = "the same run: the hosted Long Defeat run booted in the campaign (deployment finished, siege team AI, a main agent, IsFriendlyMission false)"
+reached = ['\[Check\] id=taom\.story-missions\.hosted\.boot result=']
+pass = ['\[Check\] id=taom\.story-missions\.hosted\.boot result=pass deployment_finished=true siege_ai=true main=true friendly=false']
+fail = ['\[Check\] id=taom\.story-missions\.hosted\.boot result=fail']
+absence = "not-reached"
+
+# LongDefeatChecks.General: the main agent leads the team he fights on, so in an attack the attacker team. side= reads defender when MissionCombatantsLogic made the defenders the player's team; main_on_team stays true then.
+[[check]]
+id = "taom.story-missions.hosted.general"
+scope = '\[StoryMissions\] launching \S+ for \x27helms_deep_attack\x27 '
+scope_end = '\[(LongDefeat|StoryMissions)\] launching '
+needs = "the same run: the player's body is the general of the attacker team and stands on it"
+reached = ['\[Check\] id=taom\.story-missions\.hosted\.general result=']
+pass = ['\[Check\] id=taom\.story-missions\.hosted\.general result=pass general_is_main=true player_general=true order_owner_is_main=true main_on_team=true side=attacker$']
+fail = ['\[Check\] id=taom\.story-missions\.hosted\.general result=fail', '\[Check\] id=taom\.story-missions\.hosted\.general result=pass .* side=defender$']
+absence = "not-reached"
+
+# LongDefeatDirector.Start writes this once after the boot. at= is the main agent's place, frame= the attackers' foot reinforcement frame his spawn is meant to be near, and inside=
+# the boundary test. A start outside the boundary would end the run Abandoned about ten seconds later.
+[[check]]
+id = "taom.story-missions.player-start"
+scope = '\[StoryMissions\] launching \S+ for \x27helms_deep_attack\x27 '
+scope_end = '\[(LongDefeat|StoryMissions)\] launching '
+needs = "the same run: the player's body starts inside the mission boundary, with the attackers' foot reinforcement frame logged (the pattern checks that frame= is present and inside=true; it does not compare at= with frame=)"
+reached = ['\[LongDefeat\]\[Player\] start ']
+pass = ['\[LongDefeat\]\[Player\] start main=.* at=\(.*\) frame=\(.*\) inside=true$']
+fail = ['\[LongDefeat\]\[Player\] start main=none', '\[LongDefeat\]\[Player\] start main=.* inside=false$', '\[LongDefeat\]\[Player\] start (?!.*frame=)']
+absence = "not-reached"
+
+# One line per hero, written on the first tick. The heroes are the enemy here: each stands in the class formation of his default group (Aragorn and Gimli the foot, Legolas the
+# archers) under AI control, never held, and the line ends side=enemy. A hero held in formation 7 would reproduce the #1370 churn.
+[[check]]
+id = "taom.story-missions.hosted.hero"
+scope = '\[StoryMissions\] launching \S+ for \x27helms_deep_attack\x27 '
+scope_end = '\[(LongDefeat|StoryMissions)\] launching '
+needs = "the same run: one line per enemy hero on the first tick"
+reached = ['\[Check\] id=taom\.story-missions\.hosted\.hero result=']
+pass = [
+    '\[Check\] id=taom\.story-missions\.hosted\.hero result=pass hero=\S+ troop=taom_hero_aragorn is_hero=0 campaign=1 mounted=0 formation=0 held=0 strangers=[0-9]+ order=\S+ health_factor=3\.00 wanted_factor=3\.00 wielded=strider_sword side=enemy$',
+    '\[Check\] id=taom\.story-missions\.hosted\.hero result=pass hero=\S+ troop=taom_hero_legolas is_hero=0 campaign=1 mounted=0 formation=1 held=0 strangers=[0-9]+ order=\S+ health_factor=3\.00 wanted_factor=3\.00 wielded=wm_mirkwood_bow_a01 side=enemy$',
+    '\[Check\] id=taom\.story-missions\.hosted\.hero result=pass hero=\S+ troop=taom_hero_gimli is_hero=0 campaign=1 mounted=0 formation=0 held=0 strangers=[0-9]+ order=\S+ health_factor=3\.00 wanted_factor=3\.00 wielded=sm_dwarf_erebor_axe_2h_c side=enemy$',
+]
+fail = ['\[Check\] id=taom\.story-missions\.hosted\.hero result=fail', '\[Check\] id=taom\.story-missions\.hosted\.hero result=pass (?!.*side=enemy$)']
+absence = "not-reached"
+
+# The ended line, with the strict pattern of tools/ingame_checks/1105.toml for the attacking side (tools/run_scenario.py story_ended_pass holds the same text). A boundary retreat is
+# reason=Abandoned, read as a loss; here it is a fail, because the unattended player must not leave the boundary.
+[[check]]
+id = "taom.story-missions.ended"
+scope = '\[StoryMissions\] launching \S+ for \x27helms_deep_attack\x27 '
+scope_end = '\[(LongDefeat|StoryMissions)\] launching '
+needs = "the same run: the wave ended by a win or a loss that the mission reached by itself (a reason=Abandoned end reads FAIL here)"
+reached = ['\[Check\] id=taom\.story-missions\.ended result=']
+pass = ['\[Check\] id=taom\.story-missions\.ended result=pass verdict=(Won|Lost) side=Attacking reason=(TargetReached|DefendersDead|KeepLost) waves=\d+$']
+fail = ['\[Check\] id=taom\.story-missions\.ended result=fail', '\[Check\] id=taom\.story-missions\.ended result=pass verdict=Lost side=Attacking reason=Abandoned ',
+        '\[Check\] id=taom\.story-missions\.ended result=\S+ verdict=\S+ side=Defending ',
+        '\[Check\] id=taom\.story-missions\.ended result=pass verdict=Lost side=Attacking reason=(KeepLost|DefendersDead) ',
+        '\[Check\] id=taom\.story-missions\.ended result=pass verdict=Won side=Attacking reason=TargetReached ']
+absence = "not-reached"
+
+# A balance result for the maintainer, not a fault. The keep rule is KeepHoldRule.cs:19 (attackers at the keep at or above keepMinAttackers, 26 on this row, and twice the defenders
+# there) for the hold time of RunRules.cs:27-30; the other win is every defender down. NOT REACHED here means the attack was not won at the shipped numbers.
+[[check]]
+id = "taom.story-missions.attack-won"
+scope = '\[StoryMissions\] launching \S+ for \x27helms_deep_attack\x27 '
+scope_end = '\[(LongDefeat|StoryMissions)\] launching '
+needs = "the same run: the attackers take the keep or leave no defender standing"
+reached = ['\[Check\] id=taom\.story-missions\.ended result=']
+pass = ['\[Check\] id=taom\.story-missions\.ended result=pass verdict=Won side=Attacking reason=(KeepLost|DefendersDead) waves=\d+$']
+fail = ['\[Check\] id=taom\.story-missions\.ended result=fail']
+absence = "not-reached"
+
+# The engines the attackers bring (LongDefeatBattlefieldAdapter.DescribeEngines, one line every 5 s): a tower arrived, the ram arrived and a gate was destroyed (all three patterns must match). The machines have no behaviour
+# while their formation is off AI, so this reads whether the player's delegated team still drives them. Each pattern may match a different line of the run.
+[[check]]
+id = "taom.story-missions.attack-engines"
+scope = '\[StoryMissions\] launching \S+ for \x27helms_deep_attack\x27 '
+scope_end = '\[(LongDefeat|StoryMissions)\] launching '
+needs = "the same run: a siege tower arrives, the ram arrives, and a gate is destroyed"
+reached = ['\[LongDefeat\]\[Engines\] ladders']
+pass = [
+    'towers arrived/destroyed/forced \[([^\],]*,)*True/',
+    'rams arrived/destroyed/done/forced \[True/',
+    'gates \[[^\]]*destroyed True',
+]
+absence = "not-reached"
+
+# The ability line of each enemy hero (owned=1: the ability host owns it here, as in a solo run). Gimli's cast must shock someone.
+[[check]]
+id = "taom.hero-abilities.fired"
+scope = '\[StoryMissions\] launching \S+ for \x27helms_deep_attack\x27 '
+scope_end = '\[(LongDefeat|StoryMissions)\] launching '
+needs = "the same run: Aragorn, Legolas and Gimli each cast at least once against the attackers"
+reached = ['\[Check\] id=taom\.hero-abilities\.fired result=(pass|fail) hero=taom_hero_(aragorn|legolas|gimli) ']
+pass = [
+    '\[Check\] id=taom\.hero-abilities\.fired result=pass hero=taom_hero_aragorn fired=[1-9][0-9]* contact_s=[0-9]+ allies=[0-9]+ shocked=[0-9]+ owned=1$',
+    '\[Check\] id=taom\.hero-abilities\.fired result=pass hero=taom_hero_legolas fired=[1-9][0-9]* contact_s=[0-9]+ allies=[0-9]+ shocked=[0-9]+ owned=1$',
+    '\[Check\] id=taom\.hero-abilities\.fired result=pass hero=taom_hero_gimli fired=[1-9][0-9]* contact_s=[0-9]+ allies=[0-9]+ shocked=[1-9][0-9]* owned=1$',
+]
+fail = ['\[Check\] id=taom\.hero-abilities\.fired result=fail hero=taom_hero_(aragorn|legolas|gimli) ', '\[HeroAbilities\] disabled for this mission after ', '\[HeroAbilities\] ranged kit disabled for this mission after ']
+absence = "not-reached"
+
+# The pattern of tools/ingame_checks/1359.toml, copied: it reads an Aragorn or Gimli overhead strike on an unshielded soldier. A Legolas arrow writes the same check id with signature=taom_hero_legolas_arrow,
+# which tools/ingame_checks/1361.toml reads and this row does not.
+[[check]]
+id = "taom.signature-strikes.instant-kill"
+scope = '\[StoryMissions\] launching \S+ for \x27helms_deep_attack\x27 '
+scope_end = '\[(LongDefeat|StoryMissions)\] launching '
+needs = "the same run: an overhead strike by Aragorn or Gimli on an unshielded human soldier whose kill roll wins"
+reached = ['\[Check\] id=taom\.signature-strikes\.instant-kill result=(pass|fail) signature=(aragorn|gimli) ']
+pass = ['\[Check\] id=taom\.signature-strikes\.instant-kill result=pass signature=(aragorn|gimli) victim=\S+ chance=[0-9.]+ roll=[0-9.]+ health=[0-9]+ damage=[0-9]+ died=1$']
+fail = ['\[Check\] id=taom\.signature-strikes\.instant-kill result=fail signature=(aragorn|gimli) ']
+absence = "not-reached"
+
+# LongDefeatDirector.LordFell: written each time the player's body falls, deaths= his total. side=attacker is the attack's accounting: his fall is no wave kill. A run in which he never falls
+# is NOT REACHED here.
+[[check]]
+id = "taom.story-missions.hosted.lord-fell"
+scope = '\[StoryMissions\] launching \S+ for \x27helms_deep_attack\x27 '
+scope_end = '\[(LongDefeat|StoryMissions)\] launching '
+needs = "the same run: the player's body falls at least once"
+reached = ['\[Check\] id=taom\.story-missions\.hosted\.lord-fell result=']
+pass = ['\[Check\] id=taom\.story-missions\.hosted\.lord-fell result=pass deaths=[1-9][0-9]* side=attacker$']
+fail = ['\[Check\] id=taom\.story-missions\.hosted\.lord-fell result=fail', '\[Check\] id=taom\.story-missions\.hosted\.lord-fell result=pass .* side=defender$']
+absence = "not-reached"
+
+# One line per enemy hero that dies or leaves the field (LongDefeatHeroChecks.Fell).
+[[check]]
+id = "taom.story-missions.hosted.hero-fall"
+scope = '\[StoryMissions\] launching \S+ for \x27helms_deep_attack\x27 '
+scope_end = '\[(LongDefeat|StoryMissions)\] launching '
+needs = "the same run: an enemy hero is killed or flees"
+reached = ['\[Check\] id=taom\.story-missions\.hosted\.hero-fall result=']
+pass = ['\[Check\] id=taom\.story-missions\.hosted\.hero-fall result=pass hero=\S+ cause=(killed|fled)$']
+fail = ['\[Check\] id=taom\.story-missions\.hosted\.hero-fall result=fail']
+absence = "not-reached"
+
+[[human]]
+claim = "the order bar shows the attacker formations, an order takes a formation off AI, and the key presses work"
+
+[[human]]
+claim = "after his death the player takes over one of his own soldiers, the run goes on, and his death is not counted as a kill (a takeover after his death makes the wave check write a false hosted.wave result=fail, because Read and Fell skip the taken-over soldier; no manifest reads that line)"
+
+[[human]]
+claim = "the boss cast lines are red and read 'Enemy Aragorn' (and 'Enemy Legolas', 'Enemy Gimli')"
+
+[[human]]
+claim = "owed only after the attackMission key lands (#1409 step 6; until then the Hornburg window offers no attack): a won attack: Helm's Deep belongs to Isengard with an empty garrison, and taom.chronicle_status shows hornburg Fell"
+
+[[human]]
+claim = "owed only after the attackMission key lands (#1409 step 6): a lost attack or a retreat: hornburg Held, the Held effects apply, and the free side gains its momentum"
+
+[[human]]
+claim = "owed only after the attackMission key lands (#1409 step 6): one campaign per alignment at the Hornburg window shows the right options"
+
+[[human]]
+claim = "a save and a reload after the result menu loads clean"
+
+[[human]]
+claim = 'the rgl log of the same session: grep -cE "\] Defender \S+ transfers .* units to HeavyCavalry" is 0 on this scene (a small Ranged or Infantry transfer there is vanilla split into an empty formation: read a nonzero count by its source and size); the total of "\] Defender .* transfers" lines is reported against 27 in the defence and 8 in the Long Defeat; grep -c "out of walkable area" is 0 (UNVERIFIED: not known whether that native message reaches the rgl log, so a zero proves little)'

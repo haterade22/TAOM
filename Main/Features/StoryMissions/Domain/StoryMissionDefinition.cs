@@ -13,7 +13,7 @@ internal enum StorySide
 }
 
 /// <summary>
-/// One valid row of <c>story_missions.json</c>: the scene, the two cultures, the player's garrison and the waves that attack it, with the
+/// One valid row of <c>story_missions.json</c>: the scene, the two cultures, the garrison (the defenders; the player's in a Defend row) and the waves that attack it, with the
 /// rule numbers and the recorded keep and muster points of that scene. <paramref name="Name"/> is raw <c>{=KEY}English</c> text.
 /// <paramref name="Music"/> is the mission's own track, a path under the module's <c>ModuleSounds</c> folder; null keeps the campaign's music.
 /// </summary>
