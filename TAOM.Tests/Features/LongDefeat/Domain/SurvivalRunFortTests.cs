@@ -46,7 +46,10 @@ public class SurvivalRunFortTests
             "helms",
             new[] { new GarrisonRow("fow_militia", FormationSlot.Infantry, 30) },
             new WavePlan(new[] { new WaveSpec(20, new[] { new WaveTroop("orc", FormationSlot.Infantry, 3), new WaveTroop("skirm", FormationSlot.Ranged, 1) }) }, new WaveScaling(10, 300)),
-            new ShopPlan(gold, new[] { new ShopOffer("militia", "Militia", "fow_militia", FormationSlot.Infantry, 12, 180) }, fort ?? Everything),
+            new ShopPlan(gold, new[] { new ShopOffer("militia", "Militia", "fow_militia", FormationSlot.Infantry, 12, 180) }, fort ?? Everything)
+            {
+                Heroes = new[] { new HeroOffer("aragorn", "Aragorn", "", "taom_hero_aragorn", 300, 3f) },
+            },
             rules ?? RunRules.Default with { PreparationSeconds = 50f, IntermissionSeconds = 10f },
             new RunOptions { Seed = 1UL, StopAfterWaves = stopAfter, StartGold = startGold })
         {
@@ -469,6 +472,21 @@ public class SurvivalRunFortTests
         Assert.AreEqual((200, 160), (bought[0].BasePrice, bought[0].Price));
         Assert.AreEqual((200, 160), (bought[1].BasePrice, bought[1].Price), "a broken gate pays all of the factored repair price");
         Assert.AreEqual((350, 280), (bought[2].BasePrice, bought[2].Price));
+    }
+
+    [TestMethod]
+    public void AHeroPrice_TakesTheBoonsPriceFactor_OnTheRowAndAtTheBuy()
+    {
+        var boons = new BoonPlan(new[] { Boon("haggler", ("pricePercent", -20f)) }, 1);
+        var run = Begun(Plan(boons: boons));
+        TakeBoon(run, "haggler");
+
+        Assert.AreEqual(240, run.GetView().Heroes.Single().Price, "the row shows what the buy will take");
+        Assert.AreEqual(HeroResult.Ok, run.TryBuyHero("aragorn"));
+
+        var bought = run.FortSummary().Purchases.Last();
+        Assert.AreEqual((PurchaseKind.Hero, 300, 240), (bought.Kind, bought.BasePrice, bought.Price));
+        Assert.AreEqual(240, run.Purse.SpentOn(PurseSink.Heroes));
     }
 
     [TestMethod]

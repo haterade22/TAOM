@@ -290,6 +290,12 @@ internal static class LongDefeatHudText
 
     internal static string Leave() => new TextObject("{=TAOM_LD_Hud_Leave}Return to the main menu").ToString();
 
+    private static string NoticeShopClosed() => new TextObject("{=TAOM_LD_Notice_ShopClosed}The shop is closed during a wave.").ToString();
+
+    private static string NoticeNoGold() => new TextObject("{=TAOM_LD_Notice_NoGold}Not enough gold.").ToString();
+
+    private static string NoticeGarrisonFull() => new TextObject("{=TAOM_LD_Notice_GarrisonFull}The garrison is full.").ToString();
+
     /// <summary>The refusal line for a purchase the run turned down; empty for Ok.</summary>
     internal static string Refusal(BuyResult result)
     {
@@ -298,13 +304,13 @@ internal static class LongDefeatHudText
             case BuyResult.Ok:
                 return string.Empty;
             case BuyResult.NotOpen:
-                return new TextObject("{=TAOM_LD_Notice_ShopClosed}The shop is closed during a wave.").ToString();
+                return NoticeShopClosed();
             case BuyResult.UnknownOffer:
                 return new TextObject("{=TAOM_LD_Notice_UnknownOffer}That pack is not for sale.").ToString();
             case BuyResult.NoGold:
-                return new TextObject("{=TAOM_LD_Notice_NoGold}Not enough gold.").ToString();
+                return NoticeNoGold();
             case BuyResult.GarrisonFull:
-                return new TextObject("{=TAOM_LD_Notice_GarrisonFull}The garrison is full.").ToString();
+                return NoticeGarrisonFull();
             default:
                 return new TextObject("{=TAOM_LD_Notice_RunOver}The run is over.").ToString();
         }
@@ -326,13 +332,51 @@ internal static class LongDefeatHudText
             case UpgradeResult.Ok:
                 return string.Empty;
             case UpgradeResult.NotOpen:
-                return new TextObject("{=TAOM_LD_Notice_ShopClosed}The shop is closed during a wave.").ToString();
+                return NoticeShopClosed();
             case UpgradeResult.UnknownStep:
                 return new TextObject("{=TAOM_LD_Notice_UnknownUpgrade}That upgrade is not for sale.").ToString();
             case UpgradeResult.NoneStanding:
                 return new TextObject("{=TAOM_LD_Notice_NoneToUpgrade}No soldier of that troop is left to upgrade.").ToString();
             case UpgradeResult.NoGold:
-                return new TextObject("{=TAOM_LD_Notice_NoGold}Not enough gold.").ToString();
+                return NoticeNoGold();
+            default:
+                return new TextObject("{=TAOM_LD_Notice_RunOver}The run is over.").ToString();
+        }
+    }
+
+    internal static string HeroesTitle() => new TextObject("{=TAOM_LD_Hud_HeroesTitle}Heroes").ToString();
+
+    /// <summary>A hero row's one state line: his price while he is for sale, where he is once bought.</summary>
+    internal static string HeroStateLine(HeroState state, int price)
+    {
+        switch (state)
+        {
+            case HeroState.Pending:
+                return new TextObject("{=TAOM_LD_Hud_HeroPending}On his way").ToString();
+            case HeroState.Standing:
+                return new TextObject("{=TAOM_LD_Hud_HeroStanding}On the field").ToString();
+            default:
+                return Price(price);
+        }
+    }
+
+    /// <summary>The refusal line for a hero the run turned down; empty for Ok.</summary>
+    internal static string Refusal(HeroResult result)
+    {
+        switch (result)
+        {
+            case HeroResult.Ok:
+                return string.Empty;
+            case HeroResult.NotOpen:
+                return NoticeShopClosed();
+            case HeroResult.UnknownHero:
+                return new TextObject("{=TAOM_LD_Notice_UnknownHero}That hero is not for sale.").ToString();
+            case HeroResult.Alive:
+                return new TextObject("{=TAOM_LD_Notice_HeroAlive}That hero is already with you.").ToString();
+            case HeroResult.NoGold:
+                return NoticeNoGold();
+            case HeroResult.GarrisonFull:
+                return NoticeGarrisonFull();
             default:
                 return new TextObject("{=TAOM_LD_Notice_RunOver}The run is over.").ToString();
         }
@@ -397,11 +441,11 @@ internal static class LongDefeatHudText
             case FortResult.Ok:
                 return string.Empty;
             case FortResult.NotOpen:
-                return new TextObject("{=TAOM_LD_Notice_ShopClosed}The shop is closed during a wave.").ToString();
+                return NoticeShopClosed();
             case FortResult.NoGold:
-                return new TextObject("{=TAOM_LD_Notice_NoGold}Not enough gold.").ToString();
+                return NoticeNoGold();
             case FortResult.GarrisonFull:
-                return new TextObject("{=TAOM_LD_Notice_GarrisonFull}The garrison is full.").ToString();
+                return NoticeGarrisonFull();
             case FortResult.Used:
                 return new TextObject("{=TAOM_LD_Notice_CareUsed}Field care is already used between these waves.").ToString();
             case FortResult.MaxLevel:

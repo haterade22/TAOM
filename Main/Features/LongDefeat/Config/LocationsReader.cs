@@ -7,8 +7,8 @@ using TAOM.Features.LongDefeat.Domain;
 namespace TAOM.Features.LongDefeat;
 
 /// <summary>
-/// The <c>armoury</c>, <c>yard</c> and <c>marshal</c> blocks of one shop in shop.json (phase4-plan.md section 5). A bad value costs one warning naming the file and the key and drops the smallest thing that holds it:
-/// a class id, a set, an engine row, or when the block cannot work without it, the block. A block that is absent is no warning at all, and the shop then has no such place. A block of the wrong type is dropped whole.
+/// The <c>armoury</c> and <c>yard</c> blocks of one shop in shop.json (phase4-plan.md section 5). A bad value costs one warning naming the file and the key and drops the smallest thing that holds it:
+/// a class id, a set, an engine row, or when the block cannot work without it, the block. A block that is absent is no warning at all, and the shop then has no such place. A block of the wrong type is dropped whole. Any other key, a retired <c>marshal</c> block included (the shop's heroes list replaced it, #1337), is ignored without a warning.
 /// A gear set's item ids are not checked here (the object manager decides that at launch, <see cref="LongDefeatGearItems"/>), and neither is a donor. <c>tools/run_long_defeat.py</c> mirrors every rule here
 /// (<c>read_locations</c>), and both suites read the cases in <c>tools/tests/long_defeat_location_cases.json</c>. A skipped set or row does not claim its id or kind.
 /// </summary>
@@ -23,16 +23,16 @@ internal static class LocationsReader
     private static readonly string[] EngineKinds = { "mangonel", "trebuchet" };
 
     /// <summary>
-    /// The shop's places, or null when the shop has none of the three keys. <paramref name="classIds"/> gives the ids classes.json holds, and is called at most once, and only when a set lists a class, so a shop
+    /// The shop's places, or null when the shop has neither key. <paramref name="classIds"/> gives the ids classes.json holds, and is called at most once, and only when a set lists a class, so a shop
     /// without such a set never makes the catalog load classes.json early; null means the ids are not known and a listed class is taken as it is.
     /// </summary>
     public static LocationsPlan? Read(JObject shop, string label, LongDefeatConfigScope s, Func<IReadOnlyCollection<string>>? classIds)
     {
-        if (!shop.ContainsKey("armoury") && !shop.ContainsKey("yard") && !shop.ContainsKey("marshal"))
+        if (!shop.ContainsKey("armoury") && !shop.ContainsKey("yard"))
             return null;
 
         var known = classIds == null ? null : new Lazy<IReadOnlyCollection<string>>(classIds);
-        return new LocationsPlan(ReadArmoury(shop, label, s, known), ReadYard(shop, label, s), ReadMarshal(shop, label, s));
+        return new LocationsPlan(ReadArmoury(shop, label, s, known), ReadYard(shop, label, s));
     }
 
     private static JObject? Block(JObject shop, string key, string label, string what, LongDefeatConfigScope s)
@@ -269,28 +269,5 @@ internal static class LocationsReader
         }
 
         return new EngineOffer(kind, price);
-    }
-
-    private static MarshalPlan? ReadMarshal(JObject shop, string label, LongDefeatConfigScope s)
-    {
-        var block = Block(shop, "marshal", label, "Marshal", s);
-        if (block == null)
-            return null;
-
-        var path = label + ".marshal";
-        var troop = LongDefeatConfigScope.Text(block["troop"]);
-        if (troop == null)
-        {
-            s.Warn($"'{path}.troop' is missing or blank; the Marshal is dropped");
-            return null;
-        }
-
-        if (!LongDefeatConfigScope.TryInt(block["price"], 1, MaxPrice, out var price, out var why))
-        {
-            s.Warn($"'{path}.price' {why}; the Marshal is dropped");
-            return null;
-        }
-
-        return new MarshalPlan(troop, price, LongDefeatConfigScope.Text(block["name"]) ?? troop, LongDefeatConfigScope.Text(block["text"]) ?? "");
     }
 }

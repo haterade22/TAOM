@@ -4918,6 +4918,9 @@
 	<string id="TAOM_LD_Up_VeteranBowmen" text="{=TAOM_LD_Up_VeteranBowmen}Bowmen to Veteran Bowmen" />
 	<string id="TAOM_LD_Up_RoyalGuard" text="{=TAOM_LD_Up_RoyalGuard}King's Knights to the King's Royal Guard" />
 	<string id="TAOM_LD_Up_Riders" text="{=TAOM_LD_Up_Riders}Royal Guard to the Riders of Rohan" />
+	<string id="TAOM_LD_Hero_Aragorn_Text" text="{=TAOM_LD_Hero_Aragorn_Text}The heir of Isildur, sword in hand. If he falls, he can be called again." />
+	<string id="TAOM_LD_Hero_Legolas_Text" text="{=TAOM_LD_Hero_Legolas_Text}The prince of Mirkwood and his bow. If he falls, he can be called again." />
+	<string id="TAOM_LD_Hero_Gimli_Text" text="{=TAOM_LD_Hero_Gimli_Text}The son of Glóin and his axe. If he falls, he can be called again." />
 	<string id="TAOM_LD_Prompt_Cancel" text="{=TAOM_LD_Prompt_Cancel}Cancel" />
 	<string id="TAOM_LD_Prompt_ChoiceBest" text="{=TAOM_LD_Prompt_ChoiceBest}{NAME}, best run: waves cleared {WAVES}, kills {KILLS}" />
 	<string id="TAOM_LD_Prompt_ChoiceClass" text="{=TAOM_LD_Prompt_ChoiceClass}{NAME}: {TEXT}" />
@@ -5004,6 +5007,11 @@
 	<string id="TAOM_LD_Hud_UpgradePrice" text="{=TAOM_LD_Hud_UpgradePrice}{PRICE} gold each" />
 	<string id="TAOM_LD_Notice_UnknownUpgrade" text="{=TAOM_LD_Notice_UnknownUpgrade}That upgrade is not for sale." />
 	<string id="TAOM_LD_Notice_NoneToUpgrade" text="{=TAOM_LD_Notice_NoneToUpgrade}No soldier of that troop is left to upgrade." />
+	<string id="TAOM_LD_Hud_HeroesTitle" text="{=TAOM_LD_Hud_HeroesTitle}Heroes" />
+	<string id="TAOM_LD_Hud_HeroPending" text="{=TAOM_LD_Hud_HeroPending}On his way" />
+	<string id="TAOM_LD_Hud_HeroStanding" text="{=TAOM_LD_Hud_HeroStanding}On the field" />
+	<string id="TAOM_LD_Notice_UnknownHero" text="{=TAOM_LD_Notice_UnknownHero}That hero is not for sale." />
+	<string id="TAOM_LD_Notice_HeroAlive" text="{=TAOM_LD_Notice_HeroAlive}That hero is already with you." />
 	<string id="TAOM_LD_Hud_PickSubtitle" text="{=TAOM_LD_Hud_PickSubtitle}Select one blessing" />
 	<string id="TAOM_LD_Hud_KeyHorn" text="{=TAOM_LD_Hud_KeyHorn}Sound the horn" />
 	<string id="TAOM_LD_Hud_KeySpeed" text="{=TAOM_LD_Hud_KeySpeed}Speed {SPEED}x" />

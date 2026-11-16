@@ -76,7 +76,7 @@ internal sealed partial class SurvivalRun
     public Purse Purse => _purse;
     public RunStats Stats => _stats;
 
-    public int PendingDefenders => _musterFoot.Count - _musterEmitted + _packs.Sum(p => p.PackSize) + _pendingPosts;
+    public int PendingDefenders => _musterFoot.Count - _musterEmitted + _packs.Sum(p => p.PackSize) + _pendingPosts + PendingHeroes;
 
     private int QueueLeft => _queue.Count - _queueHead;
 
@@ -137,6 +137,7 @@ internal sealed partial class SurvivalRun
 
         EmitMuster(s.Dt, fx);
         EmitPacks(fx);
+        EmitHeroes(fx);
         EmitUpgrades(fx);
 
         if (BetweenWaves)
@@ -254,6 +255,7 @@ internal sealed partial class SurvivalRun
             Boons = _ownedCards,
             GarrisonCap = _r.GarrisonCap,
             Upgrades = UpgradeRowsNow(),
+            Heroes = HeroRowsNow(),
         };
     }
 

@@ -71,9 +71,6 @@ internal sealed record RunPlan(
     /// <summary>The shop's engineer's yard (its reach and engine kinds), or null: no yard row.</summary>
     public YardPlan? Yard => Shop.Locations?.Yard;
 
-    /// <summary>The shop's Marshal (his troop and price), or null: no Marshal row.</summary>
-    public MarshalPlan? Marshal => Shop.Locations?.Marshal;
-
     /// <summary>The recorded armoury place, or null. Nothing reads it yet; a later slice hides the armoury when it is null.</summary>
     public MusterFrame? ArmouryPoint { get; init; }
 

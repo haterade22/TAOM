@@ -2001,3 +2001,19 @@ PR #1304's doc said god mode stays on while the player walks the field after the
 **Prevent:** before acting on an engine state flag, read where the flag is set and where the object it guards is built; when they are set on different ticks, act on the second sighting and test that rule in the pure driver.
 
 **Source:** `docs/reviews/rca-scenario-autorun-2026-11-15.md`
+
+### `Formation.SetControlledByAI` does nothing when the state is unchanged, and an off-AI formation still gains units (#1337, 2026-11-15)
+
+**Why missed:** the heroes' formation was to be kept apart from the siege tactic with `SetControlledByAI(true, enforceNotSplittableByAI: true)`. The method returns on its first lines when the formation is already AI controlled (Formation.cs:810-813), and every formation is after `AdoptMain`, so the flag was never set and the tactic merged the heroes into the foot formation. The fix then took the formation off AI control, which stops transfers out of it (Formation.cs:2155-2158) and not transfers into it: consolidation ranks such a formation first as a target (TacticComponent.cs:191). `LongDefeatBattlefieldAdapter.Posts.cs` and `.Split.cs` already said both in their comments.
+
+**Prevent:** before a design holds a formation by an engine switch, read the switch's first lines for an early return, and read both ends of `TransferUnitsAux` and its callers. Read the sibling adapters' comments for the same engine type, not only their code. A held formation gets a repair (strangers out, members back) and a line that reads its unit count.
+
+**Source:** [rca-ld-shop-heroes-2026-11-15.md](../rca-ld-shop-heroes-2026-11-15.md) findings 1 and 4.
+
+### An order lives only while it is applicable: a Charge with no enemy becomes Stop (#1337, 2026-11-15)
+
+**Why missed:** the heroes' group was given the order bar's charge at the spawn. `Formation.Tick` replaces any order that is not applicable with its substitute (Formation.cs:2466-2470); a Charge is applicable only while an enemy team has an active agent (MovementOrder.cs:804-815) and its substitute is Stop (:1107-1112). The shop sells between waves, so the order died within a frame. A formation off AI control also keeps the arrangement and form the AI's last behaviour gave it; `Formation.ResetAux` restores the defaults only at a mission reset.
+
+**Prevent:** for an order code gives to a formation, read `MovementOrder.IsApplicable` and `GetSubstituteOrder` for the moment it is given, and `TickOccasionally` for what the order does near gates and machines. Set the arrangement, firing and form orders with it, as `Split.Order` does. A Move is always applicable.
+
+**Source:** [rca-ld-shop-heroes-2026-11-15.md](../rca-ld-shop-heroes-2026-11-15.md) findings 2 and 5.

@@ -63,6 +63,9 @@ internal sealed partial class LongDefeatDirector
         if (fx.FinishInitialSpawn)
             _field.FinishInitialSpawn();
 
+        if (fx.SpawnHeroes.Count > 0)
+            SpawnHeroes(fx.SpawnHeroes);
+
         if (fx.StartWave is { } start)
         {
             _logger.LogInfo($"{Tag}[Wave] {start.Wave} starts: first batch {start.Foot} foot and {start.Ranged} ranged{ScaleText(start)}");
@@ -266,6 +269,7 @@ internal sealed partial class LongDefeatDirector
         CloseVolleyWatch("wave");
         JudgeEngineUse(false);
         BreakEnginesAt(_run.WavesCleared);
+        JudgeHunters(e.Wave);
         _volleyByBot = false;
         FlushScale();
         FlushTerror();

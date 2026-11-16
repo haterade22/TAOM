@@ -16,8 +16,9 @@ namespace TAOM.Adapters;
 /// archer position with Scatter, fire at will and a wide form for the archers (BehaviorShootFromCastleWalls). Scatter joins every defender archer point within 40 m of the order position on each
 /// ground axis, at any height (the <c>strategic_archer_point</c> prefab sets <c>_distanceToCheck</c> 40 and <c>_ignoreHeight</c>), with or without AI control (ArrangementOrder.TickOccasionally). A
 /// formation off AI control keeps its units: ConsolidateFormations skips it, and a tactic's transfer out of it is refused (Formation.TransferUnitsAux, not splittable by AI while the player is general).
-/// It can still gain units, since consolidation ranks it first as a target. The director hands the groups back at the first contact, and the tactic then defends the lanes from where they stand. The
-/// engine also hands them back at the stalemate charge, at a new body for the lord and at the lord's fall (Team.DelegateCommandToAI); the director splits again after the last two. Main thread.
+/// It can still gain units, since consolidation ranks it first as a target. The director hands the groups back at the first contact, and the tactic then defends the lanes from where they stand. They
+/// are also handed back by Team.DelegateCommandToAI at the stalemate charge (TAOM's OrderCharge), at a new body for the lord (TAOM's AdoptMain) and at the lord's fall (the engine's own, in
+/// Mission.OnAgentRemoved, Mission.cs:3039-3041); the director splits again after the last two. Main thread.
 /// </summary>
 internal sealed partial class LongDefeatBattlefieldAdapter
 {
@@ -76,7 +77,7 @@ internal sealed partial class LongDefeatBattlefieldAdapter
         var posts = team.GetFormation(PostsClass);
         foreach (var agent in team.ActiveAgents)
         {
-            if (!agent.IsHuman || !agent.IsActive() || agent.IsRunningAway || agent == main || agent.HasMount || agent.Formation == posts || _postedByAgent.ContainsKey(agent))
+            if (!agent.IsHuman || !agent.IsActive() || agent.IsRunningAway || agent == main || agent.HasMount || agent.Formation == posts || _postedByAgent.ContainsKey(agent) || IsHeldHero(agent))
                 continue;
             (agent.IsRangedCached ? archers : foot).Add(agent);
         }
@@ -182,12 +183,7 @@ internal sealed partial class LongDefeatBattlefieldAdapter
     // the span between them as the width, so one line covers every lane of that wall (at Helm's Deep, both Deeping Wall lanes). A middle with no navmesh falls back to the segment nearest it.
     private SplitPlace? WallPlace(FormationAI.BehaviorSide? gateSide)
     {
-        var segments = _mission.ActiveMissionObjects.FindAllWithType<WallSegment>()
-            .Where(w => w.DefenseSide != FormationAI.BehaviorSide.BehaviorSideNotSet && w.DefenseSide != gateSide)
-            .Select(w => KeyPlace(w.MiddlePosition, w.MiddleFrame, w.DefenseSide))
-            .Where(p => p != null)
-            .Select(p => p!.Value)
-            .ToList();
+        var segments = WallLanes(gateSide);
         if (segments.Count == 0)
             return null;
         if (segments.Count == 1)
@@ -205,6 +201,15 @@ internal sealed partial class LongDefeatBattlefieldAdapter
         var nearest = segments.OrderBy(s => s.Position.AsVec2.DistanceSquared(middle.AsVec2)).First();
         return new SplitPlace(nearest.Position, nearest.Direction, nearest.Width, nearest.Side);
     }
+
+    // Each wall lane's own place: where vanilla's lane defenders stand ready (BehaviorDefendCastleKeyPosition orders the segment's MiddlePosition).
+    private List<SplitPlace> WallLanes(FormationAI.BehaviorSide? gateSide) =>
+        _mission.ActiveMissionObjects.FindAllWithType<WallSegment>()
+            .Where(w => w.DefenseSide != FormationAI.BehaviorSide.BehaviorSideNotSet && w.DefenseSide != gateSide)
+            .Select(w => KeyPlace(w.MiddlePosition, w.MiddleFrame, w.DefenseSide))
+            .Where(p => p != null)
+            .Select(p => p!.Value)
+            .ToList();
 
     private SplitPlace? KeyPlace(TacticalPosition? tactical, WorldFrame frame, FormationAI.BehaviorSide side)
     {

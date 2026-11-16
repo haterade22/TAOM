@@ -172,6 +172,13 @@ internal sealed partial class LongDefeatBattlefieldAdapter
             return new LdRemoval(LdRemovalKind.None, "", Key: plannedKey);
         }
 
+        // A hero of the shop is matched by the body the field holds, before the team is read: his removal carries his shop id, loss or rout.
+        if (TakeHero(agent, out var heroId))
+        {
+            _registry.TakeRemoval(agent, out _, out _, out var heroKey);
+            return new LdRemoval(LdRemovalKind.Hero, heroId, Loss: loss, Key: heroKey);
+        }
+
         var id = agent.Character?.StringId ?? "";
         _registry.TakeRemoval(agent, out var role, out var felled, out var key);
         var team = agent.Team;

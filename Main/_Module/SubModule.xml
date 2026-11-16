@@ -1142,6 +1142,14 @@
         <GameType value="CampaignStoryMode"/>
       </IncludedGameTypes>
     </XmlNode>
+    <!-- Custom Game only: the mission heroes (taom_hero_aragorn, taom_hero_legolas, taom_hero_gimli), the Long Defeat's own copies of
+         the named companions (#1335). All obsolete, so no picker lists them. The campaign load waits for the story mission phase of #1325. -->
+    <XmlNode>
+      <XmlName id="NPCCharacters" path="characters/taom_mission_heroes"/>
+      <IncludedGameTypes>
+        <GameType value="CustomGame"/>
+      </IncludedGameTypes>
+    </XmlNode>
     <!-- Custom Battle only, after every NPCCharacters node but fords_troops (all obsolete): hide non-army characters
          (non-harad_ Aserai/Shaghana, vanilla Calradian lines, dummies, vanilla commanders); list in its header. -->
     <XmlNode>
