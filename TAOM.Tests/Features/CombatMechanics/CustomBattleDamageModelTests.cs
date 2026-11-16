@@ -322,7 +322,7 @@ public class CustomBattleDamageModelTests
         var creature = Substitute.For<ICreatureCombatService>();
         var hooks = new CombatMechanicsHooks(Substitute.For<ICrushThroughService>(), Substitute.For<IChargeKnockdownService>(),
             creature, Substitute.For<IShieldPenetrationService>(), Substitute.For<IShieldBashKnockdownService>(), Substitute.For<ICareerAgentStatService>(), settings,
-            Substitute.For<ICleavingBlowService>());
+            Substitute.For<ICleavingBlowService>(), Substitute.For<TAOM.Features.BlowDiagnostics.IBlowDiagnosticService>());
         return (Activator.CreateInstance(Twin, hooks, null, null)!, settings, creature);
     }
 

@@ -39,6 +39,16 @@ public sealed class BlowDiagnosticService : IBlowDiagnosticService
         catch { /* the diagnostic must never propagate */ }
     }
 
+    public void LogCleaveFatalSkill(int attackerSkill, int victimSkill)
+    {
+        if (!IsEnabled) return;
+        try
+        {
+            _logger.LogInfo($"{Tag} cleave-fatal attackerSkill={attackerSkill} victimSkill={victimSkill}");
+        }
+        catch { /* the diagnostic must never propagate */ }
+    }
+
     private void Emit(string kind, BlowDiagRecord r)
     {
         if (!IsEnabled || r == null) return;

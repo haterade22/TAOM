@@ -108,6 +108,26 @@ public class CleavingBlowServiceTests
     }
 
     [TestMethod]
+    public void AKill_NeverEarnsTheSkillBonus_BecauseTheDeadMansWeaponReadsZero()
+    {
+        // The victim's weapon may already be dropped on a fatal hit, so his skill reads 0 and the gap would be the attacker's whole
+        // skill: the kill bonus covers kills, and the skill term is 0 on a fatal hit.
+        var lead = _sut.CalculateMomentum(Context(isFatal: true, attackerSkill: 235, victimSkill: 0), 1f);
+        var level = _sut.CalculateMomentum(Context(isFatal: true, attackerSkill: 100, victimSkill: 100), 1f);
+
+        Assert.AreEqual(0.6f, lead!.Value, 0.0001f);
+        Assert.AreEqual(level!.Value, lead.Value, 0.0001f);
+    }
+
+    [TestMethod]
+    public void ASkillLeadOnANonFatalHit_StillAddsTheSkillBonus()
+    {
+        var result = _sut.CalculateMomentum(Context(isFatal: false, attackerSkill: 235, victimSkill: 0), 1f);
+
+        Assert.AreEqual(0.55f, result!.Value, 0.0001f);
+    }
+
+    [TestMethod]
     public void ASwordCarriesWhereVanillaNeverDid()
     {
         var result = _sut.CalculateMomentum(Context(weaponClass: "TwoHandedSword", absorbed: 0f), 1f);
@@ -269,16 +289,20 @@ public class CleavingBlowServiceTests
     }
 
     [TestMethod]
-    public void MaxTwo_CarriesOnceThenStops()
+    public void MaxFour_CarriesThreeTimesThenStops()
     {
-        _settings.CleavingBlowsMaxTargets.Returns(2);
+        _settings.CleavingBlowsMaxTargets.Returns(4);
         var key = new object();
 
         var first = Hit(key, 1f);
         var second = Hit(key, first!.Value);
+        var third = Hit(key, second!.Value);
+        var fourth = Hit(key, third!.Value);
 
         Assert.AreEqual(0.75f, first.Value);
-        Assert.AreEqual(0f, second!.Value);
+        Assert.AreEqual(0.5625f, second.Value);
+        Assert.AreEqual(0.421875f, third.Value);
+        Assert.AreEqual(0f, fourth!.Value);
     }
 
     [TestMethod]
@@ -337,12 +361,14 @@ public class CleavingBlowServiceTests
         var third = Hit(key, second!.Value);
         Assert.AreEqual(0f, third!.Value);
 
-        _settings.CleavingBlowsMaxTargets.Returns(2);
+        _settings.CleavingBlowsMaxTargets.Returns(4);
         var swing2First = Hit(key, 1f);
         var swing2Second = Hit(key, swing2First!.Value);
+        var swing2Third = Hit(key, swing2Second!.Value);
 
         Assert.AreEqual(0.75f, swing2First.Value);
-        Assert.AreEqual(0f, swing2Second!.Value);
+        Assert.AreEqual(0.5625f, swing2Second.Value);
+        Assert.AreEqual(0.421875f, swing2Third!.Value);
     }
 
     // ---- never below vanilla ----

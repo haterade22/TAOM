@@ -1520,7 +1520,7 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
     public bool EnableCleavingBlowsForAi { get; set; } = false;
 
     [SettingPropertyGroup("Combat Mechanics")]
-    [SettingPropertyInteger("{=taom_cleave_mcm_max_targets}Cleaving Blows Max Targets", 2, 5, "0", Order = 20, RequireRestart = false,
+    [SettingPropertyInteger("{=taom_cleave_mcm_max_targets}Cleaving Blows Max Targets", 3, 5, "0", Order = 20, RequireRestart = false,
         HintText = "{=taom_cleave_mcm_max_targets_hint}The most enemies one swing can strike, the first one included. Default 3. A swing often stops sooner: each enemy takes some of its force, and armour takes more.")]
     public int CleavingBlowsMaxTargets { get; set; } = 3;
 

@@ -317,8 +317,9 @@ GitHub issue number: the maintainer waived a new issue for this work.
 **What the engine does.** The momentum a hit leaves is what the next hit of the swing is scaled by (`ComputeBlowMagnitudeMelee`
 multiplies the base magnitude by the momentum remaining). `Mission.MeleeHitCallback` asks `CalculateRemainingMomentum` twice: first
 with `isCrushThrough: true` and a default `Blow` when the hit crushed through, then with the real blow after `RegisterBlow`. Right
-after the second ask it calls `DecideWeaponCollisionReaction`. Vanilla carries momentum only for a two-handed axe or mace
-(`CanHitMultipleTargets`): `orig x (1 - absorbed / inflicted) x 0.5`, 0 below 0.25, and 0.3 after a crush-through.
+after the second ask it calls `DecideWeaponCollisionReaction`. Outside a crush-through (0.3) and a couched or braced hit (0.5),
+vanilla carries momentum only for a two-handed axe or mace (`CanHitMultipleTargets`) on a non-thrust hit with the weapon's own
+bone: `orig x (1 - absorbed / inflicted) x 0.5`, 0 below 0.25.
 
 **Who counts.** The attacker must be human and on foot (`includeMountedAttackers` ships false), and either
 
@@ -345,7 +346,7 @@ requirement, so a NaN fails it.
 armourShare = absorbed / (absorbed + inflicted)
 carry       = classFactor * (1 - armourShare)
             + (isFatal ? killCarryBonus : 0)
-            + skillCarryBonus * SkillGapCurve(attackerSkill - victimSkill)
+            + skillCarryBonus * SkillGapCurve(attackerSkill - victimSkill)   // 0 on a fatal hit
 carry       = min(carry, maxCarryFactor)
 next        = originalMomentum * carry
 if !(next >= minRemainingMomentum) next = 0
@@ -355,14 +356,16 @@ if hit >= maxTargetsPerSwing       next = 0
 A returned 0 is an answer, not a decline: the rule owns the hit and the swing ends. The skill term reuses the crush-through skill
 window (`crushThrough.skillDeadZone`, `skillTargetDelta`, `skillCurveExponent`) through `SkillGapCurve`, extracted from
 `CrushThroughService` with no change of result. The attacker's skill is his value for his weapon's `RelevantSkill`; the victim's is
-his value for his wielded item (offhand, else primary; 0 for a horse or no character). No race term. For a player's two-handed axe
+his value for his wielded item (offhand, else primary; 0 for a horse or no character). On a fatal hit the skill term is 0: the
+victim's weapon may already be dropped (`Die` then `OnWeaponDrop` empties the slot, `Agent.cs:3458-3462`, `:5529-5532`), so his skill
+could read 0 and give every kill the full term; the kill bonus covers kills. No race term. For a player's two-handed axe
 or mace the result is never below vanilla on a carried hit (`a/(a+i) <= a/i`, 0.6 > 0.5, the bonuses are not negative, the floor is
 vanilla's), and vanilla's best case is 3 targets (1, 0.5, 0.25), so the default cap of 3 never cuts a hit vanilla would land;
 `CleavingBlowServiceTests` pins both.
 
 **Reaction.** When the rule qualifies and `momentumRemaining > 0`, `CleavingBlowReaction` forces `SlicedThrough`, so an axe no
-longer sticks in a man it carried through. When the rule returned 0 (floor or cap) the vanilla reaction stands, so the axe sticks
-in the last man. Shield blocks are excluded and stay Bounced.
+longer sticks in a man it carried through. When the rule returned 0 (floor or cap) the vanilla reaction stands: an axe sticks in a man
+it does not kill when the hit does under half his health, and slices through otherwise. Shield blocks are excluded and stay Bounced.
 
 **The AI switch.** JSON `cleavingBlows.aiEnabled` false (the compiled default is also false, so a malformed edit cannot switch it
 on); MCM `EnableCleavingBlowsForAi`, default false. `CleavingBlowsAiEnabled` folds the master and `CleavingBlowsEnabled`, so AI
@@ -407,11 +410,11 @@ human cleaves on the peer that owns him. The three new MCM properties join the s
 | `skillCarryBonus` | 0.10 | finite in [0, 1] |
 | `maxCarryFactor` | 0.75 | finite in (0, 0.95] |
 | `minRemainingMomentum` | 0.25 | finite in [0, 1], and below `maxCarryFactor` (else both revert) |
-| `maxTargetsPerSwing` | 3 | int in [2, 5], the slider's range |
+| `maxTargetsPerSwing` | 3 | int in [3, 5], the slider's range (3 is vanilla's best case for an axe: 1, 0.5, 0.25) |
 | `includeMountedAttackers` | false | |
 
 MCM, group "Combat Mechanics": `EnableCleavingBlows` (default on), `EnableCleavingBlowsForAi` (default off), and
-`CleavingBlowsMaxTargets` (2 to 5, default 3). Their names and hints are `{=KEY}` text, six keys (`taom_cleave_mcm_enable`,
+`CleavingBlowsMaxTargets` (3 to 5, default 3; a floor of 2 would reach fewer men than vanilla's axe, which lands 3 hits). Their names and hints are `{=KEY}` text, six keys (`taom_cleave_mcm_enable`,
 `taom_cleave_mcm_enable_hint`, `taom_cleave_mcm_ai`, `taom_cleave_mcm_ai_hint`, `taom_cleave_mcm_max_targets`,
 `taom_cleave_mcm_max_targets_hint`) registered in `taom_module_strings.xml`. The twelve language files do not have them yet, so
 `LanguageFileCoverageTests.EveryLanguage_DeclaresARowForEveryEnglishKey` is red for exactly these six keys until the languages
@@ -438,16 +441,21 @@ tier 1 to 2 infantry, walking into a packed group):
 1. Side swings into 2 or 3 packed men: up to 3 "Delivered" lines per swing, each smaller than the one before; the axe passes through
    a man it does not kill instead of sticking.
 2. The same with a two-handed sword: it now also hits a second man (vanilla never does).
-3. A thrust with a two-handed polearm, and a swing from horseback: one man only.
+3. A thrust with a two-handed polearm, and a swing from horseback: one man only (the horseback line of the MCM hint holds only while
+   `includeMountedAttackers` is false).
 4. A swing a shield blocks: it stops at the shield.
-5. Max Targets 2: never more than 2 lines per swing over 20 swings.
-6. Cap proof: Max Targets 2 against 3 or more unarmoured men in a tight row. If 3 lines ever appear, native changed the momentum
-   between hits and the counter restarted: report it (the floor still bounds the swing).
+5. Max Targets 3: never more than 3 lines per swing over 20 swings.
+6. Cap proof: Max Targets 3 against 4 or more weak men in a tight row, each killed by one blow (the kill bonus keeps the momentum
+   above the floor). If 4 lines ever appear, native changed the momentum between hits and the counter restarted: report it (the
+   floor still bounds the swing).
 7. Cleaving Blows off: the sword stops at the first man; the axe sticks in a man it does not kill (vanilla).
 8. AI switch on, the player standing back: AI two-handed troops visibly cut through a packed line; AI spearmen and one-handers do
    not. Optional: the MCM page "TAOM - Blow Diagnostics" on; `[BlowDiag]` lines show bursts of blows with falling `mag=` from one
    swing.
 9. Trolls (Creature Cleave on) behave as before.
+10. Kill skill premise: MCM page "TAOM - Blow Diagnostics" on, kill a few men with the axe and read the `[BlowDiag] cleave-fatal
+    attackerSkill=... victimSkill=...` lines in the newest log. A `victimSkill=0` on a man who carried a weapon confirms that a
+    dead man's weapon reads empty (the reason the skill term is 0 on a kill); a normal value means the term could be restored.
 
 A campaign field battle with the same weapon, checks 1 and 7, covers the campaign model.
 

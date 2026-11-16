@@ -279,10 +279,11 @@ public class CombatMechanicsSettingsProviderTests
     }
 
     [DataTestMethod]
-    [DataRow(1, 2)]
+    [DataRow(1, 3)]
+    [DataRow(2, 3)]
     [DataRow(9, 5)]
     [DataRow(4, 4)]
-    public void CleavingBlowsMaxTargets_ClampsTheSliderToTwoToFive(int mcmValue, int expected)
+    public void CleavingBlowsMaxTargets_ClampsTheSliderToThreeToFive(int mcmValue, int expected)
     {
         var mcm = new TaomSettings { CleavingBlowsMaxTargets = mcmValue };
         var sut = WarmProviderOn(mcm);

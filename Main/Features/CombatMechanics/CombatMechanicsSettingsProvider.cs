@@ -53,7 +53,7 @@ public sealed class CombatMechanicsSettingsProvider : ICombatMechanicsSettingsPr
     public bool CleavingBlowsAiEnabled => CleavingBlowsEnabled && (Settings?.EnableCleavingBlowsForAi ?? _defaults.CleavingBlows.AiEnabled);
 
     public int CleavingBlowsMaxTargets
-        => SettingClamp.Clamp(Settings?.CleavingBlowsMaxTargets, _defaults.CleavingBlows.MaxTargetsPerSwing, 2, 5);
+        => SettingClamp.Clamp(Settings?.CleavingBlowsMaxTargets, _defaults.CleavingBlows.MaxTargetsPerSwing, 3, 5);
 
     // No JSON sibling — the race table itself is the JSON side; this is a pure MCM kill switch.
     public bool RaceCombatModifiersEnabled => MasterEnabled && (Settings?.EnableRaceCombatModifiers ?? true);

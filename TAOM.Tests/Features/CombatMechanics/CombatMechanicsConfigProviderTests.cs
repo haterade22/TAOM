@@ -844,6 +844,7 @@ public class CombatMechanicsConfigProviderTests
     }
 
     [DataTestMethod]
+    [DataRow(2)]
     [DataRow(1)]
     [DataRow(6)]
     [DataRow(0)]

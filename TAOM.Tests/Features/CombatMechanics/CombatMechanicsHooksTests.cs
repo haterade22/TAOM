@@ -33,6 +33,7 @@ public class CombatMechanicsHooksTests
     private ICareerAgentStatService _career = null!;
     private ICombatMechanicsSettingsProvider _settings = null!;
     private ICleavingBlowService _cleave = null!;
+    private TAOM.Features.BlowDiagnostics.IBlowDiagnosticService _diag = null!;
     private CombatMechanicsHooks _sut = null!;
 
     [TestInitialize]
@@ -46,7 +47,8 @@ public class CombatMechanicsHooksTests
         _career = Substitute.For<ICareerAgentStatService>();
         _settings = Substitute.For<ICombatMechanicsSettingsProvider>();
         _cleave = Substitute.For<ICleavingBlowService>();
-        _sut = new CombatMechanicsHooks(_crush, _charge, _creature, _shield, _bash, _career, _settings, _cleave);
+        _diag = Substitute.For<TAOM.Features.BlowDiagnostics.IBlowDiagnosticService>();
+        _sut = new CombatMechanicsHooks(_crush, _charge, _creature, _shield, _bash, _career, _settings, _cleave, _diag);
         _savedPierce = CombatMechanicsHooks.ShooterPiercesShields;
         CombatMechanicsHooks.ShooterPiercesShields = null;
     }
@@ -409,5 +411,20 @@ public class CombatMechanicsHooksTests
             _sut.CleavingBlowReaction(in blow, in collision, BareAgent(), BareAgent(), in weapon, 0f, MeleeCollisionReaction.Stuck));
 
         _cleave.DidNotReceiveWithAnyArgs().ShouldSliceThrough(default, default);
+    }
+
+    // The cheap gates run before the context is built: a declined kind never reaches the bone lookup or the skill reads.
+    [DataTestMethod]
+    [DataRow(CleaveAttackerKind.None, true, true, false)]
+    [DataRow(CleaveAttackerKind.Player, true, false, true)]
+    [DataRow(CleaveAttackerKind.Player, false, true, false)]
+    [DataRow(CleaveAttackerKind.Ai, true, false, false)]
+    [DataRow(CleaveAttackerKind.Ai, false, true, true)]
+    public void CleaveKindMayApply_FollowsTheFoldedSettings(CleaveAttackerKind kind, bool enabled, bool aiEnabled, bool expected)
+    {
+        _settings.CleavingBlowsEnabled.Returns(enabled);
+        _settings.CleavingBlowsAiEnabled.Returns(aiEnabled);
+
+        Assert.AreEqual(expected, _sut.CleaveKindMayApply(kind));
     }
 }

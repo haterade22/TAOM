@@ -13,7 +13,7 @@ namespace TAOM.Features.CombatMechanics;
 // momentum is the original times that carry, 0 below the floor or once the swing has struck maxTargets enemies.
 public sealed class CleavingBlowService : ICleavingBlowService
 {
-    // One per attacker object. The engine hands back the momentum we returned, so a hit whose incoming momentum equals the
+    // Assumed, not verified (combat-mechanics.md UNVERIFIED 1): one per attacker object. The engine hands back the momentum we returned, so a hit whose incoming momentum equals the
     // last value we carried is the next hit of the same swing; a fresh swing starts at 1.0, which a carried value never is.
     private sealed class Chain
     {
@@ -75,11 +75,16 @@ public sealed class CleavingBlowService : ICleavingBlowService
         float carry = classFactor * (1f - armourShare);
         if (context.IsFatal)
             carry += _killCarryBonus;
-        carry += _skillCarryBonus * SkillGapCurve.Normalized(
-            (float)context.AttackerWeaponSkill - context.VictimWeaponSkill,
-            _skillDeadZone,
-            _skillCurveExponent,
-            _skillCurveDenominator);
+        // On a kill the victim's weapon may already be dropped, so his skill would read 0 and hand every kill the full skill term:
+        // the kill bonus covers kills.
+        else
+        {
+            carry += _skillCarryBonus * SkillGapCurve.Normalized(
+                (float)context.AttackerWeaponSkill - context.VictimWeaponSkill,
+                _skillDeadZone,
+                _skillCurveExponent,
+                _skillCurveDenominator);
+        }
         if (carry > _maxCarryFactor)
             carry = _maxCarryFactor;
 

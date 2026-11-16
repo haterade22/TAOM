@@ -348,7 +348,7 @@ public class CombatMechanicsConfigProvider : ICombatMechanicsConfigProvider
             // Below 1 so the momentum always falls from hit to hit.
             MaxCarryFactor = CheckFiniteAboveExclusiveMin(parsed.MaxCarryFactor, 0f, 0.95f, defaults.MaxCarryFactor, "cleavingBlows.maxCarryFactor", ref rejected),
             MinRemainingMomentum = CheckFiniteInRange(parsed.MinRemainingMomentum, 0f, 1f, defaults.MinRemainingMomentum, "cleavingBlows.minRemainingMomentum", ref rejected),
-            MaxTargetsPerSwing = CheckIntInRange(parsed.MaxTargetsPerSwing, 2, 5, defaults.MaxTargetsPerSwing, "cleavingBlows.maxTargetsPerSwing", ref rejected),
+            MaxTargetsPerSwing = CheckIntInRange(parsed.MaxTargetsPerSwing, 3, 5, defaults.MaxTargetsPerSwing, "cleavingBlows.maxTargetsPerSwing", ref rejected),
         };
 
         // A floor at or above the ceiling means no hit could ever carry on.

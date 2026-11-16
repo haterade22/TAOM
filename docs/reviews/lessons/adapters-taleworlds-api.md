@@ -2075,3 +2075,11 @@ PR #1304's doc said god mode stays on while the player walks the field after the
 **Prevent:** in a repeat line, a condition or clickable condition reads `CurrentProcessedRepeatObject`; a consequence reads `SelectedRepeatObject` (vanilla's marriage and caravan consequences do; TAOM's `GiftConversationAdapter` does). When you patch one half of a vanilla repeat line, read the other half's getter too.
 
 **Source:** /deep-review of #1350, Data flow lens item 3 and Engine compatibility lens finding 1.
+
+### Reading the victim's state after RegisterBlow on a fatal hit reads a dead agent (Cleaving Blows, 2026-11-16)
+
+**Why missed:** the momentum and reaction seams run after `RegisterBlow`, so on a kill the victim has already died: `Die` drops his weapons (`OnWeaponDrop` sets the slot to Invalid, `Agent.cs:3458-3462`, `:5529-5532`) and his wielded-item skill reads 0. The skill term then gave every kill the full bonus.
+
+**Prevent:** in a seam that runs after the blow, treat any read of the victim's equipment or skills as untrustworthy when `Health <= 0`: skip the term on a fatal hit, or read it before `RegisterBlow`. Back the premise with a `[BlowDiag]` line until it is seen in game.
+
+**Source:** [rca-cleaving-blows-2026-11-16.md](../rca-cleaving-blows-2026-11-16.md) finding A.

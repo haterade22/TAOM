@@ -34,6 +34,7 @@ public sealed class CombatMechanicsHooks
     private readonly ICareerAgentStatService _careerAgentStatService;
     private readonly ICombatMechanicsSettingsProvider _settingsProvider;
     private readonly ICleavingBlowService _cleavingBlowService;
+    private readonly TAOM.Features.BlowDiagnostics.IBlowDiagnosticService _blowDiagnostics;
 
     public CombatMechanicsHooks(
         ICrushThroughService crushThroughService,
@@ -43,7 +44,8 @@ public sealed class CombatMechanicsHooks
         IShieldBashKnockdownService shieldBashKnockdownService,
         ICareerAgentStatService careerAgentStatService,
         ICombatMechanicsSettingsProvider settingsProvider,
-        ICleavingBlowService cleavingBlowService)
+        ICleavingBlowService cleavingBlowService,
+        TAOM.Features.BlowDiagnostics.IBlowDiagnosticService blowDiagnostics)
     {
         _crushThroughService = crushThroughService;
         _chargeKnockdownService = chargeKnockdownService;
@@ -53,6 +55,7 @@ public sealed class CombatMechanicsHooks
         _careerAgentStatService = careerAgentStatService;
         _settingsProvider = settingsProvider;
         _cleavingBlowService = cleavingBlowService;
+        _blowDiagnostics = blowDiagnostics;
     }
 
     // The crush context (two skill lookups and a roll) is built only when the model asks, after the race abilities.
@@ -68,13 +71,22 @@ public sealed class CombatMechanicsHooks
             : colReaction;
 
     // Cleaving Blows. The crush call carries a default Blow and keeps vanilla's 0.3. A non-collider, an alternative attack and a
-    // hit without damage never qualify, so they decline before the context's skill reads.
+    // hit without damage never qualify, and neither does an attacker whose kind is off (no controller match, the feature off, or
+    // an AI swing with the AI switch off): all decline from field and setting reads, before the context's bone lookup, passive
+    // attack read and skill reads.
     public float? CleavingBlowMomentum(float originalMomentum, in Blow b, in AttackCollisionData collisionData, Agent attacker, Agent victim, in MissionWeapon attackerWeapon, bool isCrushThrough)
     {
         if (isCrushThrough || attacker == null || !collisionData.IsColliderAgent || collisionData.IsAlternativeAttack || b.InflictedDamage <= 0)
             return null;
 
-        var context = BuildCleavingBlowContext(in b, in collisionData, attacker, victim, in attackerWeapon);
+        var kind = CleaveKindOf(attacker);
+        if (!CleaveKindMayApply(kind))
+            return null;
+
+        var context = BuildCleavingBlowContext(kind, in b, in collisionData, attacker, victim, in attackerWeapon);
+        // Owed in game: does a kill read the victim's skill as 0 (his weapon already dropped)? The service ignores the skill term on a kill.
+        if (context.IsFatal && _blowDiagnostics.IsEnabled)
+            _blowDiagnostics.LogCleaveFatalSkill(context.AttackerWeaponSkill, context.VictimWeaponSkill);
         return _cleavingBlowService.CalculateMomentum(in context, originalMomentum);
     }
 
@@ -83,9 +95,22 @@ public sealed class CombatMechanicsHooks
         if (attacker == null || !(momentumRemaining > 0f) || !collisionData.IsColliderAgent || collisionData.IsAlternativeAttack || registeredBlow.InflictedDamage <= 0)
             return colReaction;
 
-        var context = BuildCleavingBlowContext(in registeredBlow, in collisionData, attacker, defender, in attackerWeapon);
+        var kind = CleaveKindOf(attacker);
+        if (!CleaveKindMayApply(kind))
+            return colReaction;
+
+        var context = BuildCleavingBlowContext(kind, in registeredBlow, in collisionData, attacker, defender, in attackerWeapon);
         return _cleavingBlowService.ShouldSliceThrough(in context, momentumRemaining) ? MeleeCollisionReaction.SlicedThrough : colReaction;
     }
+
+    private static CleaveAttackerKind CleaveKindOf(Agent attacker)
+        => attacker.IsPlayerControlled ? CleaveAttackerKind.Player
+            : attacker.IsAIControlled ? CleaveAttackerKind.Ai : CleaveAttackerKind.None;
+
+    // The two folded settings, read before any context is built. The service checks them again, so this is only the cheap decline.
+    internal bool CleaveKindMayApply(CleaveAttackerKind kind)
+        => kind == CleaveAttackerKind.Player ? _settingsProvider.CleavingBlowsEnabled
+            : kind == CleaveAttackerKind.Ai && _settingsProvider.CleavingBlowsAiEnabled;
 
     public bool IsUnstoppable(Agent victimAgent, in AttackCollisionData collisionData)
         => _creatureCombatService.IsUnstoppable(victimAgent?.Monster?.StringId, collisionData.InflictedDamage);
@@ -197,13 +222,12 @@ public sealed class CombatMechanicsHooks
             randomRoll: MBRandom.RandomFloat);
     }
 
-    private static CleavingBlowContext BuildCleavingBlowContext(in Blow b, in AttackCollisionData collisionData, Agent attacker, Agent victim, in MissionWeapon attackerWeapon)
+    private static CleavingBlowContext BuildCleavingBlowContext(CleaveAttackerKind kind, in Blow b, in AttackCollisionData collisionData, Agent attacker, Agent victim, in MissionWeapon attackerWeapon)
     {
         var usage = attackerWeapon.IsEmpty ? null : attackerWeapon.CurrentUsageItem;
         return new CleavingBlowContext(
             attackerIdentity: attacker,
-            attackerKind: attacker.IsPlayerControlled ? CleaveAttackerKind.Player
-                : attacker.IsAIControlled ? CleaveAttackerKind.Ai : CleaveAttackerKind.None,
+            attackerKind: kind,
             attackerIsHuman: attacker.IsHuman,
             attackerIsMounted: attacker.HasMount,
             isSwing: b.StrikeType == StrikeType.Swing,

@@ -22,7 +22,7 @@ public interface ICombatMechanicsSettingsProvider
     /// <summary>Cleaving Blows for AI soldiers; needs <see cref="CleavingBlowsEnabled"/>, so it folds the master too.</summary>
     bool CleavingBlowsAiEnabled { get; }
 
-    /// <summary>The most enemies one swing can strike, the first included; the MCM slider's 2 to 5 over the JSON value.</summary>
+    /// <summary>The most enemies one swing can strike, the first included; the MCM slider's 3 to 5 over the JSON value (3 is vanilla's best case for an axe, so the floor never reaches fewer men than vanilla).</summary>
     int CleavingBlowsMaxTargets { get; }
     bool RaceCombatModifiersEnabled { get; }
 

@@ -8,8 +8,10 @@ using TAOM.Tests.Migration;
 namespace TAOM.Tests.Features.CombatMechanics;
 
 /// <summary>
-/// Cleaving Blows wiring pins. The chain counter keeps one entry per attacker object and takes a lock because the engine's own
-/// single-thread declaration of the melee hit callback is not something this mod has ever observed at run time. Both damage models
+/// Cleaving Blows wiring pins. The chain counter keeps one entry per attacker object and takes a lock because native promises
+/// nothing about the thread, whatever the engine declares: one TAOM run (20261101-112404, FordsTowerHitPatch.cs:24-25) traced
+/// 76 melee blows through OnRegisterBlow, all on the main thread, and yotthani's v1.5.3 decompile has the main thread call the
+/// callback serially after the sweep (scripted-melee-strikes.md:92). Both damage models
 /// ask creature cleave, then Cleaving Blows, then the engine, and the service stays free of agent indexes and random rolls.
 /// </summary>
 [TestClass]
