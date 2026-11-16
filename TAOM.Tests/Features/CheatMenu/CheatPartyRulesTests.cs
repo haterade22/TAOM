@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -49,15 +50,25 @@ public class CheatPartyRulesTests
 
     // ---- the switch ----
 
-    private static (CheatMenuService Service, CheatPartyRules Rules, ICoopSessionProvider Coop) Service()
+    private const string MainHeroId = "main_hero";
+
+    private static (CheatMenuService Service, CheatPartyRules Rules, ICoopSessionProvider Coop) Service() =>
+        ServiceWithCache(Substitute.For<IPartySizeCacheInvalidator>());
+
+    private static (CheatMenuService Service, CheatPartyRules Rules, ICoopSessionProvider Coop) ServiceWithCache(
+        IPartySizeCacheInvalidator cache)
     {
         var coop = Substitute.For<ICoopSessionProvider>();
         coop.IsAuthority.Returns(true);
+        var world = Substitute.For<ICheatWorldAdapter>();
+        world.MainHeroIds().Returns((MainHeroId, "kingdom", "culture"));
         var rules = new CheatPartyRules();
-        var service = new CheatMenuService(Substitute.For<ICheatWorldAdapter>(), Substitute.For<ISpecialResourceService>(), coop,
-            Substitute.For<IDedicatedServerProvider>(), Substitute.For<IModLogger>(), rules);
+        var service = new CheatMenuService(world, Substitute.For<ISpecialResourceService>(), coop,
+            Substitute.For<IDedicatedServerProvider>(), Substitute.For<IModLogger>(), rules, cache);
         return (service, rules, coop);
     }
+
+    private static bool OnlyTheMainHero(ICollection<string> ids) => ids.Count == 1 && ids.Contains(MainHeroId);
 
     [TestMethod]
     public void SetUnlimitedParty_TurnsItOnAndOff()
@@ -80,6 +91,88 @@ public class CheatPartyRulesTests
 
         Assert.AreEqual(CheatOutcomeKind.CoopRefused, service.SetUnlimitedParty(true).Kind);
         Assert.IsFalse(rules.UnlimitedParty);
+    }
+
+    // PartyBase.PartySizeLimit is cached until the roster's VersionNo changes: a flip that does not bump it leaves the old limit
+    // in force (the party screen's "transfer all" cap, the Over Limit question) until some roster change.
+    [DataTestMethod]
+    [DataRow(true)]
+    [DataRow(false)]
+    public void SetUnlimitedParty_RefreshesTheMainPartysCachedSizeLimit(bool on)
+    {
+        var cache = Substitute.For<IPartySizeCacheInvalidator>();
+        var (service, rules, _) = ServiceWithCache(cache);
+        rules.UnlimitedParty = !on;
+
+        Assert.IsTrue(service.SetUnlimitedParty(on).Ok);
+
+        cache.Received(1).InvalidateLedBy(Arg.Is<ICollection<string>>(ids => OnlyTheMainHero(ids)));
+    }
+
+    [TestMethod]
+    public void SetUnlimitedParty_InCoop_RefreshesNothing()
+    {
+        var cache = Substitute.For<IPartySizeCacheInvalidator>();
+        var (service, _, coop) = ServiceWithCache(cache);
+        coop.IsSessionActive.Returns(true);
+
+        service.SetUnlimitedParty(true);
+
+        cache.DidNotReceiveWithAnyArgs().InvalidateLedBy(default!);
+        cache.DidNotReceiveWithAnyArgs().InvalidateAll();
+    }
+
+    [TestMethod]
+    public void SessionLaunch_SwitchLoadedOn_InSinglePlayer_StaysOnAndRefreshesTheCache()
+    {
+        var cache = Substitute.For<IPartySizeCacheInvalidator>();
+        var (service, rules, _) = ServiceWithCache(cache);
+        rules.UnlimitedParty = true;
+
+        service.ReconcileAtSessionLaunch();
+
+        Assert.IsTrue(rules.UnlimitedParty);
+        cache.Received(1).InvalidateLedBy(Arg.Is<ICollection<string>>(ids => OnlyTheMainHero(ids)));
+    }
+
+    // Only the setter checks co-op: a single-player save with the switch on, loaded into a session, would keep acting.
+    [TestMethod]
+    public void SessionLaunch_SwitchLoadedOn_InCoop_TurnsItOffAndRefreshesTheCache()
+    {
+        var cache = Substitute.For<IPartySizeCacheInvalidator>();
+        var (service, rules, coop) = ServiceWithCache(cache);
+        coop.IsSessionActive.Returns(true);
+        rules.UnlimitedParty = true;
+
+        service.ReconcileAtSessionLaunch();
+
+        Assert.IsFalse(rules.UnlimitedParty);
+        cache.Received(1).InvalidateLedBy(Arg.Is<ICollection<string>>(ids => OnlyTheMainHero(ids)));
+    }
+
+    [DataTestMethod]
+    [DataRow(false)]
+    [DataRow(true)]
+    public void SessionLaunch_SwitchOff_DoesNothing(bool coopSession)
+    {
+        var cache = Substitute.For<IPartySizeCacheInvalidator>();
+        var (service, rules, coop) = ServiceWithCache(cache);
+        coop.IsSessionActive.Returns(coopSession);
+
+        service.ReconcileAtSessionLaunch();
+
+        Assert.IsFalse(rules.UnlimitedParty);
+        cache.DidNotReceiveWithAnyArgs().InvalidateLedBy(default!);
+    }
+
+    [TestMethod]
+    public void Behavior_ReconcilesTheSwitchAtSessionLaunch_AfterTheSaveIsRead()
+    {
+        var src = RepoPaths.ReadSource("Main/Features/CheatMenu/Hooks/CheatMenuCampaignBehavior.cs", stripComments: true);
+        var launch = System.Text.RegularExpressions.Regex.Match(src, @"void OnSessionLaunched\(CampaignGameStarter starter\)\s*\{(?<body>[^}]*)\}");
+
+        Assert.IsTrue(launch.Success, "OnSessionLaunched has a block body");
+        StringAssert.Contains(launch.Groups["body"].Value, "_service.ReconcileAtSessionLaunch();");
     }
 
     [TestMethod]
@@ -153,12 +246,27 @@ public class CheatPartyRulesTests
     {
         var src = File.ReadAllText(RepoPaths.RepoPath("Main", "Features", "CulturalFeats", "Models", "TaomPartySizeModel.cs"));
         int penalty = src.LastIndexOf("_troopWeight.ApplyPartySizeWeightPenalty(", System.StringComparison.Ordinal);
-        int bonus = src.IndexOf("_cheatParty.SizeBonusFor(party == PartyBase.MainParty)", System.StringComparison.Ordinal);
+        // The switch first, then MobileParty.IsMainParty: PartyBase.MainParty dereferences Campaign.Current.MainParty, which
+        // vanilla nulls for a moment in OnPlayerCharacterChanged, and with the switch off nothing past the flag is read.
+        int bonus = src.IndexOf("_cheatParty.SizeBonusFor(_cheatParty.UnlimitedParty && party.MobileParty?.IsMainParty == true)",
+            System.StringComparison.Ordinal);
         int end = src.IndexOf("return result;", bonus < 0 ? 0 : bonus, System.StringComparison.Ordinal);
 
         Assert.IsTrue(penalty >= 0 && bonus >= 0, "the model applies the TroopWeight penalty and the cheat bonus");
         Assert.IsTrue(bonus > penalty, "the bonus comes after the TroopWeight penalty, so nothing later shrinks it");
         Assert.IsTrue(end > bonus, "the bonus is part of GetPartyMemberSizeLimit's result");
         Assert.AreEqual(1, System.Text.RegularExpressions.Regex.Matches(src, @"IoC\.Resolve<CheatMenu\.ICheatPartyRules>\(\)").Count);
+    }
+
+    [TestMethod]
+    public void PartySizeModel_NamesTheUnlimitedBonusInTheTooltip()
+    {
+        var src = RepoPaths.ReadSource("Main/Features/CulturalFeats/Models/TaomPartySizeModel.cs", stripComments: true);
+
+        Assert.IsFalse(src.Contains("party == PartyBase.MainParty"), "PartyBase.MainParty can be null mid player change");
+        StringAssert.Matches(src, new System.Text.RegularExpressions.Regex(
+            @"UnlimitedPartyBonusText\s*=\s*new(\s+TextObject)?\(""\{=taom_cheat_unlimited_party_bonus\}Unlimited party \(cheat\)""\)"));
+        StringAssert.Matches(src, new System.Text.RegularExpressions.Regex(
+            @"SizeBonusFor\([^;]*\),\s*UnlimitedPartyBonusText\);"));
     }
 }

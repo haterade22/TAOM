@@ -27,6 +27,9 @@ public class TaomPartySizeModel : DefaultPartySizeLimitModel
     private readonly ICastlePatrolSizeHook _castlePatrolSize;
     private readonly IPatrolRosterHook _patrolRoster;
     private readonly CheatMenu.ICheatPartyRules _cheatParty;
+    // The tooltip line of the cheat menu's "Unlimited party" bonus.
+    private static readonly TaleWorlds.Localization.TextObject UnlimitedPartyBonusText =
+        new("{=taom_cheat_unlimited_party_bonus}Unlimited party (cheat)");
     // Built once: a lambda over the method parameter would allocate a closure and a Func on every call, every party.
     private readonly System.Func<object?, float> _weightedCountOf;
 
@@ -109,7 +112,10 @@ public class TaomPartySizeModel : DefaultPartySizeLimitModel
         // Cheat menu "Unlimited party" (CheatPartyRules): a +10,000 flat bonus for the main party only, while the switch is on.
         // Last on purpose: after the TroopWeight penalty, so nothing applied later can take it back; the TroopWeight shed
         // never trims the main party (PartyUpgraderUpgradeReadyTroopsHook), so its "true base" snapshot needs no bonus.
-        AiPartySizeService.AddResultFrameBonus(ref result, _cheatParty.SizeBonusFor(party == PartyBase.MainParty));
+        // The switch is read first, then MobileParty.IsMainParty: PartyBase.MainParty dereferences Campaign.Current.MainParty,
+        // which vanilla nulls for a moment in OnPlayerCharacterChanged.
+        AiPartySizeService.AddResultFrameBonus(ref result,
+            _cheatParty.SizeBonusFor(_cheatParty.UnlimitedParty && party.MobileParty?.IsMainParty == true), UnlimitedPartyBonusText);
         // TEMPORARY (2026-07-17) — one-shot load-order probe for the "max troop goes over after loading"
         // report; self-guards to the first main-party computation. Strip with the diagnostic class.
         PartySizeLoadOrderDiagnostic.RecordFirstMainPartyLimit(party, result.ResultNumber, _careerPassives, _logger);

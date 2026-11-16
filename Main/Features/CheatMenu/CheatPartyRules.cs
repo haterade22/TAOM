@@ -19,7 +19,7 @@ public interface ICheatPartyRules
 public sealed class CheatPartyRules : ICheatPartyRules
 {
     /// <summary>
-    /// "No limit" as a number: far above any party (the engine's agent cap is about 2,000 in battle) and inside
+    /// "No limit" as a number: far above any party a campaign builds, and inside
     /// AiPartySizeService.AddResultFrameBonus's 100,000 ceiling.
     /// </summary>
     public const float UnlimitedSizeBonus = 10_000f;

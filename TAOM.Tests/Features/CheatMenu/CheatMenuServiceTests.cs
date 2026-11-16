@@ -37,7 +37,8 @@ public class CheatMenuServiceTests
         _coop.IsAuthority.Returns(true);
         _dedicated = Substitute.For<IDedicatedServerProvider>();
         _partyRules = new CheatPartyRules();
-        _service = new CheatMenuService(_world, _resources, _coop, _dedicated, Substitute.For<IModLogger>(), _partyRules);
+        _service = new CheatMenuService(_world, _resources, _coop, _dedicated, Substitute.For<IModLogger>(), _partyRules,
+            Substitute.For<IPartySizeCacheInvalidator>());
         _world.ReadTeleportState().Returns(Free());
     }
 

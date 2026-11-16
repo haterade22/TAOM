@@ -150,9 +150,9 @@ internal static class CheatMenuMenus
             args =>
             {
                 args.optionLeaveType = GameMenuOption.LeaveType.Continue;
-                MBTextManager.SetTextVariable("STATE", new TextObject(service.UnlimitedParty
+                args.Text.SetTextVariable("STATE", new TextObject(service.UnlimitedParty
                     ? "{=taom_cheat_state_on}on" : "{=taom_cheat_state_off}off"));
-                args.Tooltip = new TextObject("{=taom_cheat_unlimited_party_hint}While on, your party has no size limit, and troops of enemy or opposite-alignment cultures in it do not desert. Turning it off keeps every troop, but the usual rules apply again: men over the size limit start to desert and the party is slower.");
+                args.Tooltip = new TextObject("{=taom_cheat_unlimited_party_hint}While on, your party has no size limit, and troops of enemy or opposite-alignment cultures in it do not desert because of their culture. Turning it off keeps every troop, but the usual rules apply again: men over the size limit start to desert and the party is slower.");
                 return shown();
             },
             _ => Guarded("taom_cheat_opt_unlimited_party", () =>
@@ -164,7 +164,7 @@ internal static class CheatMenuMenus
                     return;
                 }
                 TaleWorlds.Library.InformationManager.DisplayMessage(new TaleWorlds.Library.InformationMessage(new TextObject(service.UnlimitedParty
-                    ? "{=taom_cheat_unlimited_party_on}Unlimited party is on: no size limit, and enemy troops in your party do not desert."
+                    ? "{=taom_cheat_unlimited_party_on}Unlimited party is on: no size limit, and enemy troops in your party do not desert because of their culture."
                     : "{=taom_cheat_unlimited_party_off}Unlimited party is off: the size limit and desertion apply again.").ToString()));
                 GameMenu.SwitchToMenu(CheatMenuIds.Root);
             }),

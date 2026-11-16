@@ -44,7 +44,12 @@ public sealed class CheatMenuCampaignBehavior : CampaignBehaviorBase
         _partyRules.UnlimitedParty = unlimited;
     }
 
-    private void OnSessionLaunched(CampaignGameStarter starter) => CheatMenuMenus.Register(starter, _service, _settings, _world);
+    // Main thread, after SyncData on a load: a switch saved on is turned off outside single player and refreshes the size cache.
+    private void OnSessionLaunched(CampaignGameStarter starter)
+    {
+        CheatMenuMenus.Register(starter, _service, _settings, _world);
+        _service.ReconcileAtSessionLaunch();
+    }
 
     internal void OnTick(float dt) => _mapView.EnsureAttached();
 }
