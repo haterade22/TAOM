@@ -1,4 +1,5 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using TAOM.Features.BattleBalance;
 using TAOM.Features.BattleBalance.Models;
 
 namespace TAOM.Tests.Features.BattleBalance;
@@ -91,5 +92,35 @@ public class TaomCombatSimulationModelTests
             "AutoResolveQualityMath.Apply(ref result, TroopPower(strikerTroop, strikerParty), TroopPower(struckTroop, struckParty), PowerRatioExponent);");
         StringAssert.Contains(model,
             "PowerRatioExponent => _configProvider?.GetConfig()?.AutoResolve?.PowerRatioExponent ?? AutoResolveQualityMath.VanillaPowerRatioExponent;");
+    }
+
+    [DataTestMethod]
+    [DataRow(true, "bluecraig", 0.1f)]
+    [DataRow(false, "bluecraig", 0f)]
+    [DataRow(true, "gondor", 0f)]
+    [DataRow(true, null, 0f)]
+    public void SiegeDefenceBonus_AppliesOnlyToASiegeOfAFortificationTheCultureOwns(bool isSiege, string ownerCulture, float expected)
+    {
+        var section = new BattleBalanceConfig.SiegeDefenceSection();
+
+        Assert.AreEqual(expected, TaomCombatSimulationModel.SiegeDefenceBonus(isSiege, ownerCulture, section), 0.0001f);
+    }
+
+    [TestMethod]
+    public void SiegeDefenceBonus_NoSection_IsZero()
+    {
+        Assert.AreEqual(0f, TaomCombatSimulationModel.SiegeDefenceBonus(true, "bluecraig", null), 0.0001f);
+    }
+
+    [TestMethod]
+    public void Wiring_GetBattleAdvantage_AddsTheSiegeDefenceBonusToTheDefenders()
+    {
+        var model = TAOM.Tests.Infrastructure.RepoPaths.ReadSource(
+            "Main/Features/BattleBalance/Models/TaomCombatSimulationModel.cs", stripComments: true);
+
+        StringAssert.Contains(model, "base.GetBattleAdvantage(mapEvent, out defenderAdvantage, out attackerAdvantage);");
+        StringAssert.Contains(model, "SiegeDefenceBonus(mapEvent.EventType == MapEvent.BattleTypes.Siege,");
+        StringAssert.Contains(model, "mapEvent.MapEventSettlement?.MapFaction?.Culture?.StringId");
+        StringAssert.Contains(model, "defenderAdvantage.AddFactor(bonus);");
     }
 }

@@ -26,6 +26,7 @@ Most of the gap lives in engine rules that a data file cannot see: party slots f
 | Isengard's seven tier-3 clans raised to tier 5: 24 party slots to 31 | `characters/clans.xml` | this page |
 | Harad's eight tier-3 and tier-4 clans raised to tier 5: 19 party slots to 27 | `spclans.xslt` | this page, "Harad party slots" |
 | Auto-resolve power ratio exponent 0.7 to 0.5: numbers outweigh quality | `AutoResolve.PowerRatioExponent` in `configs/battle_balance_config.json` | [battle-balance.md](battle-balance.md) "Auto-resolve: numbers over quality" |
+| Blue Craig's defenders get +10% advantage in an auto-resolved siege of its own fortification, and survival 0.3 | `SiegeDefence.DefenderAdvantageBonuses` and `CulturalSurvivalBonuses` in `configs/battle_balance_config.json` | [battle-balance.md](battle-balance.md) "Siege defence by culture" |
 
 ### Isengard party slots
 
@@ -45,6 +46,7 @@ See the linked feature docs for each file. The two new fields:
 |---|---|---|---|
 | `CapturedFortHold.Factions` | `army_targeting.json` | `["empire_s"]` | Realms whose armies hold a captured fort whatever their side |
 | `AutoResolve.PowerRatioExponent` | `battle_balance_config.json` | 0.5 | Exponent of the power ratio in a simulated strike (vanilla 0.7) |
+| `SiegeDefence.DefenderAdvantageBonuses` | `battle_balance_config.json` | `bluecraig` 0.1 | Factor on the defenders' advantage in an auto-resolved siege of a fortification that culture owns |
 
 ## Key Files
 
@@ -181,7 +183,7 @@ so it cannot carry the war to anyone. Arthedain also lost its capital, on day 78
 
 ## Still owed
 
-- Blue Craig fell in the fifth run too (capital day 73), with only its four neighbours at war with it. Fewer wars did not save it; the maintainer decides whether it needs a stronger defence or may fall (#1283).
+- Blue Craig fell in the fifth run too (capital day 73), with only its four neighbours at war with it. On the maintainer's word (2026-11-16) its defenders now get +10% advantage in an auto-resolved siege of its own fortification and the survival bonus 0.3: a sixth run should show whether its capital holds past day 120 (#1283).
 - Arthedain lost its capital on day 78 of the fifth run, and Rohan ended with 3 towns and 1 castle: watch both in the next run (#1283).
 - Gondor's survival row (0.3, shared with Arthedain) and its tier 7+ party template stacks: not changed, because the second run
   closed the gap. Revisit only if a later run shows the gap again.
@@ -191,6 +193,7 @@ so it cannot carry the war to anyone. Arthedain also lost its capital, on day 78
 
 ## Changelog
 
+- 2026-11-16: Blue Craig gets a siege defence bonus of 0.1 and the survival bonus 0.3 (#1283).
 - 2026-11-16: Fifth 150-day run recorded; Blue Craig still falls with four wars (#1283).
 - 2026-11-16: Blue Craig keeps Hostile rows only with its Eriador neighbours (#1283).
 - 2026-11-16: Fourth 150-day run recorded; Blue Craig fell again (#1283).
