@@ -22,6 +22,10 @@ FOLLOW-UP (#1325): what Gimli's fear does in a mode that holds its attackers. Th
 
 FOLLOW-UP (#1325): Aragorn's aura finds him by character id in a custom game and would miss him in a campaign-hosted story mission, where the id comes from a `Hero` he does not have. The phase that puts the heroes in the story mission must handle it.
 
+## Proof
+
+Run 20261115-232309 (4 waves) on the committed build 5ee569711. `python tools/ingame_verdict.py --issue 1359` reads PASS for the gate, `fired` (Aragorn 11 casts, Gimli 8), `stats-refreshed` (`ratio=1.100 want=1.100`), `instant-kill` (Gimli, an Uruk-hai warrior, roll 0.108 under 0.35) and the aura line (283 soldiers). No stand-down line. The contact counts were 287 and 206 seconds, so the new contact rule and the casts agree in a real fight. Both melee heroes stood through four waves; in the run before the abilities Aragorn fell twice in three.
+
 ## Root-cause pattern
 
 Findings 1, 4 and 5 are the lesson of the shop heroes' review again, one layer up: a check, a copied check and an effect were each defined from the feature's own code and not from what the player would see in the mode. The shrug-off clause (2) and the story claims (3) are the same habit in small: text and guards kept after the fact under them had changed.

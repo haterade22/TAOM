@@ -24,8 +24,8 @@
 # buys the heroes. A run of skips only is not a pass. A 3-wave run may land no killing blow: that check then reads NOT REACHED.
 issue = 1359
 title = "Hero abilities: timed abilities and killing blows for Aragorn and Gimli"
-# fixed_in is the branch base, which holds none of these lines, so a build before the feature reads NOT REACHED.
-fixed_in = "2ef2d647d"
+# fixed_in is the feature commit: trunk already wrote the hero-aura line before it, so only a build that holds this commit counts.
+fixed_in = "5ee569711"
 logs = ["taom"]
 
 [[check]]

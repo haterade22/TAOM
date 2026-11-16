@@ -191,10 +191,19 @@ time. Every number is a first guess for tuning. Legolas has no row yet (Phase 5)
   (`reason=no-soldier`), never failed.
 - `HeroAurasConfigProvider` sets no upper bound on an aura's damage reduction; the hero abilities cap theirs at 90.
 
+**Proof run.** The unattended run 20261115-232309 (4 waves, commit 5ee569711) reads PASS for all five checks in
+`python tools/ingame_verdict.py --issue 1359`. Aragorn cast 11 times and Gimli 8 (`fired=11 contact_s=287 allies=365`
+and `fired=8 contact_s=206 allies=249`). The stats sample read `ratio=1.100 want=1.100` on "For Frodo!". Gimli's
+overhead killed an Uruk-hai warrior outright (`chance=0.35 roll=0.108 health=77 damage=78 died=1`; one other roll was
+lost or filtered). Aragorn's aura reached 283 soldiers. Both heroes stood through all four waves, with 16 and 15 kills
+at the last clear; in the run before the abilities, Aragorn fell twice in three waves. A screenshot of the run shows
+the line "Aragorn: For Frodo!". Not seen by any run: the war cry, the sparks and the outline, the low-health ability
+of Gimli, and an ability of a hero on the enemy side.
+
 ## Changelog
 
 - 2026-11-15: first version (#1359): Aragorn's and Gimli's timed abilities, their killing blows and Aragorn's aura in
-  the Long Defeat.
+  the Long Defeat. Proved by the unattended run 20261115-232309.
 
 ## GitHub Issue
 
