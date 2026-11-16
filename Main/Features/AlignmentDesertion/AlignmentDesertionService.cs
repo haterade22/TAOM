@@ -14,14 +14,19 @@ public class AlignmentDesertionService : IAlignmentDesertionService
 {
     private readonly IAlignmentService _alignment;
     private readonly IAlignmentDesertionSettingsProvider _settings;
+    private readonly CheatMenu.ICheatPartyRules _cheatParty;
 
-    public AlignmentDesertionService(IAlignmentService alignment, IAlignmentDesertionSettingsProvider settings)
+    public AlignmentDesertionService(IAlignmentService alignment, IAlignmentDesertionSettingsProvider settings,
+        CheatMenu.ICheatPartyRules cheatParty)
     {
         _alignment = alignment;
         _settings = settings;
+        _cheatParty = cheatParty;
     }
 
     public bool IsEnabled => _settings.IsEnabled;
+
+    public bool KeepsMainPartyTroops => _cheatParty.UnlimitedParty;
 
     public bool ShouldEvaluate(string ownerKingdomId, bool isPlayerOwned, bool isGarrison)
         => TryGetPurge(ownerKingdomId, isPlayerOwned, isGarrison, out _, out _);
