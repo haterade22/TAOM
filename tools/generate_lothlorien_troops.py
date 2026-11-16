@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 """Generate Main/_Module/ModuleData/troops/troops_lothlorien.xml, Lothlorien's own troop trees.
 
-The T6-T7 riders carry taom_ph_lothlorien_spear_t6, a placeholder of he_spear that
-tools/generate_placeholder_weapons.py owns (#1296). When it is retired, put the real spear back here.
+The T6-T7 riders carry he_spear. Its placeholder taom_ph_lothlorien_spear_t6 (#1296) was retired on
+2026-11-16 (#631): the riders carry a shield, so they hold the spear in its one handed thrust, and that
+mode already sits at the tier 6 limit.
 
 Until this file Lothlorien fielded Rivendell's tree whole. The trees and the armour roles are
 KEYforce's (2026-11-04); tier T<n> is level 6 + (n-1)*5, so T4 is level 21 and T9 level 46.
@@ -157,12 +158,12 @@ TROOPS = [
       {"Head": [rg("helmet_med_a")], "Cape": [rg("pauld_med_a")], "Body": [rg("chest_heavy_a")],
        "Gloves": [rg("bracer_med_a")], "Leg": [rg("grvs_med_a")]}),
     T("lorien_rider", "Lórien Rider", 6, "Cavalry",
-      shield_line("taom_ph_lothlorien_spear_t6", "wm_elven_shield_b", ("mirkwood_sword_a01", "wm_rivendell_sword_a01_black")),
+      shield_line("he_spear", "wm_elven_shield_b", ("mirkwood_sword_a01", "wm_rivendell_sword_a01_black")),
       {"Head": [rg("helmet_med_b")], "Cape": [rg("pauld_med_a")], "Body": [rg("chest_med_a")],
        "Gloves": [rg("bracer_med_a")], "Leg": [rg("grvs_med_a")]},
       ups=("lorien_lancer",), horse=LIGHT_HORSE),
     T("lorien_lancer", "Lórien Lancer", 7, "Cavalry",
-      shield_line("taom_ph_lothlorien_spear_t6", "wm_rivendell_shield_a02_silver", ("wm_rivendell_sword_a01_black", "wm_rivendell_sword_a02_black")),
+      shield_line("he_spear", "wm_rivendell_shield_a02_silver", ("wm_rivendell_sword_a01_black", "wm_rivendell_sword_a02_black")),
       {"Head": [rg("helmet_med_b")], "Cape": [rg("pauld_med_a")], "Body": [rg("chest_heavy_a")],
        "Gloves": [rg("bracer_med_a")], "Leg": [rg("grvs_med_a")]},
       horse=GOOD_HORSE),

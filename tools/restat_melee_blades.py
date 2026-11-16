@@ -175,7 +175,7 @@ def class_ratios(p: mc.Priced, spec: dict, tier: int | None = None,
     class's blow, so a recruit's sword cannot carry an elite's. Without them the class limit
     holds, which is what `--limits-only` and the unworn pass want.
     """
-    limit = ladder.limit_for(p.blade_piece, p.item.template, spec, tier, culture)
+    limit = ladder.limit_for(p.blade_piece, p.class_template, spec, tier, culture)
     return (ladder.max_factor(limit, p.swing_damage, 0, p.swing_dps, 0.0),
             ladder.max_factor(limit, 0, p.thrust_damage, 0.0, p.thrust_dps))
 
@@ -351,36 +351,52 @@ class Cap:
     by: str = ""
 
 
-def carrier_contexts(placements: dict, spec: dict) -> dict[str, list[tuple[int, str, str]]]:
-    """weapon -> its non-exempt carriers as (tier, craft key, a troop id), one per tier and craft row."""
-    out: dict[str, list[tuple[int, str, str]]] = {}
+def carrier_contexts(placements: dict, spec: dict,
+                     shields: frozenset[str] = frozenset()) -> dict[str, list[tuple[int, str, str, bool]]]:
+    """weapon -> its non-exempt carriers as (tier, craft key, a troop id, carries a shield), one per
+    tier, craft row and shield use. A carrier with a shield wields the weapon in the modes a shield
+    allows (`held`), as tools/fix_melee_ladder.py and the validator judge it."""
+    out: dict[str, list[tuple[int, str, str, bool]]] = {}
     for iid, placement in placements.items():
-        seen: dict[tuple[int, str], str] = {}
+        seen: dict[tuple[int, str, bool], str] = {}
         for t in sorted(placement.wearers, key=lambda w: w.id):
             if not ladder.is_exempt_troop(t.id, spec):
-                seen.setdefault((t.tier, ladder.craft_key(t.id, t.culture, spec)), t.id)
-        out[iid] = [(tier, craft, who) for (tier, craft), who in sorted(seen.items())]
+                shielded = any(i in shields for i in t.items)
+                seen.setdefault((t.tier, ladder.craft_key(t.id, t.culture, spec), shielded), t.id)
+        out[iid] = [(tier, craft, who, sh) for (tier, craft, sh), who in sorted(seen.items())]
     return out
 
 
+def as_wielded(p: mc.Priced, shielded: bool) -> mc.Priced:
+    """The weapon as a carrier wields it: behind a shield, only the modes a shield allows."""
+    return p.with_shield() if shielded else p
+
+
 def carrier_caps(items: list[str], priced: dict[str, mc.Priced], spec: dict,
-                 contexts: dict[str, list[tuple[int, str, str]]],
-                 fallback: tuple[int, str, str]) -> tuple[Cap, Cap]:
+                 contexts: dict[str, list[tuple[int, str, str, bool]]],
+                 fallback: tuple[int, str, str, bool]) -> tuple[Cap, Cap]:
     """(swing, thrust): the tightest tier limit over EVERY non-exempt carrier of EVERY weapon on the blade.
 
     A weapon nobody non-exempt carries is held to the limit of `fallback`, the blade's weakest
-    carrier, so an unworn sibling is no stronger than the weakest wearer may carry.
+    carrier, so an unworn sibling is no stronger than the weakest wearer may carry, in the modes that
+    wearer holds. A carrier with a shield is held in the modes it wields (`as_wielded`); the weapon's
+    other modes still reach a player or a troop without a shield, so they stay inside their class
+    limit. When the weakest wearer has a shield, an unworn sibling's other modes are therefore held to
+    their class limit only, not to a tier limit.
     """
     swing, thrust = Cap(), Cap()
     for iid in sorted(items):
         p = priced[iid]
-        for tier, craft, who in contexts.get(iid) or [fallback]:
-            ratio_s, ratio_t = class_ratios(p, spec, tier, craft)
-            where = f"{iid} ({p.item.template}) at tier {tier} for {who}"
-            if ratio_s < swing.ratio:
-                swing = Cap(ratio_s, where)
-            if ratio_t < thrust.ratio:
-                thrust = Cap(ratio_t, where)
+        for tier, craft, who, shielded in contexts.get(iid) or [fallback]:
+            v = as_wielded(p, shielded)
+            checks = [(class_ratios(v, spec, tier, craft), f"{iid} ({v.class_template}) at tier {tier} for {who}")]
+            if v is not p:
+                checks.append((class_ratios(p, spec), f"{iid} ({p.class_template}) at its class limit"))
+            for (ratio_s, ratio_t), where in checks:
+                if ratio_s < swing.ratio:
+                    swing = Cap(ratio_s, where)
+                if ratio_t < thrust.ratio:
+                    thrust = Cap(ratio_t, where)
     return swing, thrust
 
 
@@ -390,10 +406,12 @@ def build_plans(
     troops: list[report.Troop],
     spec: dict,
     cultures: set[str] | None = None,
+    shields: frozenset[str] = frozenset(),
 ) -> tuple[list[BladePlan], list[str]]:
-    """(plans, notes). One plan per blade piece that needs to move."""
+    """(plans, notes). One plan per blade piece that needs to move. `shields` are the shield ids:
+    a carrier with one is priced on the modes a shield allows."""
     placements = report.place(priced, troops)
-    contexts = carrier_contexts(placements, spec)
+    contexts = carrier_contexts(placements, spec, frozenset(shields))
 
     # A weapon reachable only by ladder-exempt troops is off the ladder by decision (`only_exempt`):
     # the cave troll's club is scenery-scale and deliberately slow, and restatting it to a
@@ -443,22 +461,23 @@ def build_plans(
         # and craft row (M2): the first troop loaded no longer decides either.
         worst = None
         for iid in owned:
-            p = priced[iid]
-            flags = ladder.dominant_flags(p.item.template, p.swing_damage, p.thrust_damage,
-                                          p.swing_dps, p.thrust_dps, spec)
-            for tier, craft, who in contexts[iid]:
+            for tier, craft, who, shielded in contexts[iid]:
                 if cultures and craft not in cultures:
                     continue
-                tgt = ladder.target(tier, craft, spec, p.item.template, *flags)
+                v = as_wielded(priced[iid], shielded)
+                flags = ladder.dominant_flags(v.class_template, v.swing_damage, v.thrust_damage,
+                                              v.swing_dps, v.thrust_dps, spec)
+                tgt = ladder.target(tier, craft, spec, v.class_template, *flags)
                 if worst is None or tgt < worst[0]:
-                    worst = (tgt, tier, craft, who)
+                    worst = (tgt, tier, craft, who, shielded)
         if worst is None:
             continue
-        target_dps, anchor, culture, anchor_troop = worst
+        target_dps, anchor, culture, anchor_troop, anchor_shield = worst
 
         siblings = all_on_blade[blade]
-        worn_best = max(owned, key=lambda i: priced[i].best_dps)
-        worn_dps = priced[worn_best].best_dps
+        # The strongest worn weapon, as the anchor wields it, lands on the anchor's target.
+        worn_best = max(owned, key=lambda i: as_wielded(priced[i], anchor_shield).best_dps)
+        worn_dps = as_wielded(priced[worn_best], anchor_shield).best_dps
         current = max(priced[i].best_dps for i in siblings)
         if worn_dps <= 0 or current <= 0:
             notes.append(f"{blade}: every weapon on it has no usable attack, skipped")
@@ -476,13 +495,14 @@ def build_plans(
         # Nor past the tier limit of ANY carrier of ANY weapon on the blade: the class limit scaled
         # to the carrier's tier and craft row, so a one handed blade is never raised to an elite's
         # blow for a recruit.
-        cap_s, cap_t = carrier_caps(siblings, priced, spec, contexts, (anchor, culture, anchor_troop))
+        cap_s, cap_t = carrier_caps(siblings, priced, spec, contexts,
+                                    (anchor, culture, anchor_troop, anchor_shield))
         # The weapon's primary attack sets the common multiplier. When a raise is held by the
         # primary's own limit, the other attack follows the primary's realized ratio and is never
         # raised on its own to chase a target the primary cannot reach: that raised the free thrust
         # again on every run. A primary that must come down does not drag the other attack
         # below the ratio the target asks of it.
-        best = priced[worn_best]
+        best = as_wielded(priced[worn_best], anchor_shield)
         primary = cap_s if best.swing_dps >= best.thrust_dps else cap_t
         common = max(1.0, min(ratio, primary.ratio)) if ratio > 1.0 else ratio
         ratio_s = min(common, cap_s.ratio)
@@ -676,7 +696,8 @@ def main(argv=None) -> int:
     if args.limits_only:
         plans, notes = build_limit_plans(priced, cat, troops, spec)
     else:
-        plans, notes = build_plans(priced, cat, troops, spec, cultures)
+        plans, notes = build_plans(priced, cat, troops, spec, cultures,
+                                   frozenset(mc.load_shield_ids(MODULES)))
 
     print(f"melee blade restat (#631 pass 2{', limits only' if args.limits_only else ''}): "
           f"{len(priced)} weapons, {len(troops)} troops")
