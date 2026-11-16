@@ -28,15 +28,17 @@ otherwise write an empty file over a registered one.
 from __future__ import annotations
 
 import argparse
+import json
 import re
 import sys
 import xml.etree.ElementTree as ET
 from pathlib import Path
 
-from _loc_sources import TAOM_SOURCES
+from _loc_sources import TAOM_SOURCES, VANILLA_ID_SHAPE
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 MODULE_DATA = REPO_ROOT / "Main" / "_Module" / "ModuleData"
+INLINE_BACKLOG = Path(__file__).resolve().parent / "loc_inline_backlog.json"
 
 # Any attribute of the shape attr="{=KEY}default text", the same shape
 # translate_with_claude.py's _diff_against_settlement_source uses for TAOM_Map's settlements.xml.
@@ -44,6 +46,10 @@ MODULE_DATA = REPO_ROOT / "Main" / "_Module" / "ModuleData"
 ATTR_KEY_PATTERN = re.compile(r'\w+="\{=([^}]+)\}([^"]*)"')
 SENTINEL_KEYS = {"!", "*"}
 ID_PATTERN = re.compile(r'<string\s+id="([^"]+)"')
+# #1390: a key anywhere in data text: an attribute, element text, or an XSLT template's doubled
+# braces ({{=KEY}}). Comments are removed first: several files show {=KEY} there as an example.
+ANY_KEY_PATTERN = re.compile(r"\{\{?=([^}]+)\}")
+COMMENT_PATTERN = re.compile(r"<!--.*?-->", re.S)
 
 CATEGORIES: dict[str, dict] = {
     "troop": {
@@ -169,6 +175,57 @@ def extract_from_file(path: Path) -> list[tuple[str, str]]:
         if key not in seen and key not in SENTINEL_KEYS:
             seen[key] = default
     return list(seen.items())
+
+
+def unregistered_inline_keys(root: Path = MODULE_DATA, registered: set[str] | None = None,
+                             table_sources: list[str] | None = None) -> dict[str, list[str]]:
+    """#1390: data .xml and .xslt files (outside Languages/ and the loc source table) whose inline
+    {=KEY} text no English source row registers, as {relative path: sorted keys}. Vanilla-shaped keys
+    are skipped: vanilla's own language files translate them."""
+    table = [src for src, _ in TAOM_SOURCES] if table_sources is None else table_sources
+    if registered is None:
+        registered = translation_keys([root / src for src in table])
+    found: dict[str, list[str]] = {}
+    for rel, keys in inline_keys_by_file(root, table).items():
+        left = sorted(k for k in keys if k not in registered and not VANILLA_ID_SHAPE.fullmatch(k))
+        if left:
+            found[rel] = left
+    return found
+
+
+def inline_keys_by_file(root: Path = MODULE_DATA, table_sources: list[str] | None = None) -> dict[str, set[str]]:
+    """Every inline key in each .xml and .xslt data file outside Languages/ and the loc source
+    table, keyed by relative path."""
+    table = [src for src, _ in TAOM_SOURCES] if table_sources is None else table_sources
+    skip = {(root / src).resolve() for src in table}
+    found: dict[str, set[str]] = {}
+    for path in sorted(p for p in root.rglob("*") if p.suffix.lower() in (".xml", ".xslt")):
+        rel = path.relative_to(root)
+        if rel.parts[0] == "Languages" or path.resolve() in skip:
+            continue
+        text = COMMENT_PATTERN.sub("", path.read_text(encoding="utf-8"))
+        keys = set(ANY_KEY_PATTERN.findall(text)) - SENTINEL_KEYS
+        if keys:
+            found[rel.as_posix()] = keys
+    return found
+
+
+def translation_keys(sources: list[Path]) -> set[str]:
+    """The key each <string> row is translated under, the rule LanguageFileCoverageTests uses: the
+    {=KEY} at the start of its text, else its id."""
+    keys: set[str] = set()
+    for path in sources:
+        if not path.exists():
+            continue
+        for row in ET.parse(path).getroot().iter("string"):
+            match = re.match(r"\{=([^}]+)\}", row.get("text", ""))
+            keys.add(match.group(1) if match else row.get("id", ""))
+    return keys
+
+
+def load_inline_backlog(path: Path = INLINE_BACKLOG) -> dict[str, dict]:
+    """The data files allowed to hold unregistered inline keys: {path: {"keys": count, "reason": text}}."""
+    return json.loads(path.read_text(encoding="utf-8"))["files"]
 
 
 def category_sources(cat: str) -> list[Path]:
