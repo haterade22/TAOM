@@ -5447,5 +5447,9 @@
 	<!-- TaomSettings.cs -->
 	<string id="taom_realm_borders_mcm_name_size" text="{=taom_realm_borders_mcm_name_size}Realm Name Size" />
 	<string id="taom_realm_borders_mcm_name_size_hint" text="{=taom_realm_borders_mcm_name_size_hint}Makes the kingdom names on the map larger or smaller. Default: 100%." />
+	<!-- harvested by tools/harvest_literal_loc_keys.py -->
+	<!-- AlignmentDesertion -->
+	<string id="taom_recruit_slot_would_desert" text="{=taom_recruit_slot_would_desert}This volunteer would desert your party: their people will not serve your side." />
+	<string id="taom_recruit_slot_behind_deserter" text="{=taom_recruit_slot_behind_deserter}An earlier volunteer here would desert your party, and volunteers are recruited in order." />
 
 </strings>

@@ -179,10 +179,16 @@ AI trip estimate counts the same slots.
   `CharacterObject.OneToOneConversationCharacter` to the roster (`BuyMercenaries`, line 812). The troop comes
   from the town culture's `BasicMercenaryTroops` (line 362). None of these asks a model whether the troop may be recruited (only `PartyWageModel`, for the price), so no
   model override can refuse them.
-- A volunteer slot locked by the cap shows vanilla's relation tooltip with a required relation of 0, and stays
-  locked until the notable's volunteers change (culture conversion).
+- A volunteer slot locked by the cap stays locked until the notable's volunteers change (culture conversion).
+  Its hint names the cause (Patch157): the volunteer would desert, or an earlier volunteer would (an empty slot
+  too). The slot just before the first deserter opens with relation, and its hint shows that relation. Vanilla's
+  hint asked for a relation of 0 on all of these: the VM's relation search tests `index < max`
+  (`RecruitVolunteerTroopVM` line 290), and the cap holds `max` below the first deserter.
 - The player index is inclusive and the AI bound exclusive (see Volunteer index convention); the cap follows
-  each reader exactly.
+  each recruit reader exactly. The hint's relation search is the one reader it does not follow, so Patch157
+  replaces that hint.
+- A notable whose volunteers TAOM's alignment block refuses (`TaomVolunteerModel` returns -1) still shows
+  vanilla's "You need 0" on every slot; that is outside this feature.
 
 ## Battle rosters
 
