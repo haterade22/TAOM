@@ -1915,7 +1915,6 @@
   "TAOM_LD_Offer_Yeomen": "東谷人の郷士",
   "TAOM_LD_Prompt_Cancel": "キャンセル",
   "TAOM_LD_Prompt_ChoiceBest": "{NAME}、最高記録:突破した波 {WAVES}、撃破数 {KILLS}",
-  "TAOM_LD_Prompt_ChoiceClass": "{NAME}: {TEXT}",
   "TAOM_LD_Prompt_Choose": "選択",
   "TAOM_LD_Prompt_ClassDesc": "クラスは戦いに携える武器を決める。騎兵は装備も定められ馬に乗る。他のクラスでは鎧はそのままだ。",
   "TAOM_LD_Prompt_ClassTitle": "クラスを選べ",

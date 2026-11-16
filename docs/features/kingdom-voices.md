@@ -7,8 +7,9 @@ orders an agent emits in battle. TAOM ships three custom voice definitions (`dwa
 `uruk_hai_01`) bound to seven of the fourteen custom races, plus 437 audio files under
 `Main/_Module/ModuleSounds/`.
 
-This doc is a **system reference written from research, not from an implementation**. No TAOM C#
-touches the voice API today; everything below is data wiring that already ships. It exists because
+This doc is a **system reference written from research, not from an implementation**. Apart from
+[orc-battle-voice.md](orc-battle-voice.md), which sets the plain orc race's voice from C# (route C),
+everything below is data wiring that already ships. It exists because
 reconstructing how voice binding works took two research passes against the decompile and the
 installed modules, and nothing in the repo captured it.
 
@@ -126,7 +127,7 @@ attribute gotcha recorded under Gotchas below.
 |--------|--------|
 | ~~**Long clips on frequently-fired slots**~~ | FIXED 2026-09-06 for `dwarf_01`. `D1_Grunts1/2.wav` (7.93 / 8.77 s) sat on `Grunt`, `Pain` and `Focus`, and the warcries (up to 11.81 s) on `Yell`. Those files are sound-set compilations holding several complete spoken lines, so players heard a full line every 2 to 4 seconds. `Yell` now points at the short `Battlecries` bank and the warcries moved to `Charge`, which fires once per order on one agent. Gated by `tools/audit_voice_clip_lengths.py`. `uruk_hai_01` has the same defect and is still open, baselined in `tools/voice-clip-baseline.txt` |
 | **Unbound adult female skins** | `uruk_hai` and `berserker` have a custom voice on the adult male skin and vanilla `female_*` on the adult female one. Narrow, since female troops are rare, but it is a real hole. Corrected 2026-08-25 from an earlier and wrong "diluted skins" reading |
-| **Seven unbound races** | `elf`, `orc`, `nazghul`, `cave_troll`, `hill_troll`, `saruman`, `sauron` have no custom voice |
+| **Seven unbound races** | `elf`, `orc`, `nazghul`, `cave_troll`, `hill_troll`, `saruman`, `sauron` have no custom voice in `skins.xml`. Male adult `orc` AI agents in any mission get `uruk_01` from C# at spawn ([orc-battle-voice.md](orc-battle-voice.md), route C); female orcs and the player's own orc keep the skin's vanilla voices |
 | **Orphaned Théoden set** | 83 clips under `ModuleSounds/LOTR/Rohan/Voice/Theoden` are registered in `module_sounds.xml` and reachable by nothing: no Rohan voice definition exists, and Rohan is the vanilla human race anyway |
 | ~~**Dangling mbproj entry**~~ | FIXED 2026-08-28. `project.mbproj` line 9 declares `ModuleData/VoiceDefinitions/LOTR/lotr_warg_voice_def.xml`; the file now exists, carrying `warg_01` absorbed from the retired `Alliance.Wargs` module. See [lotrlome-warg-changes.md](../reference/lotrlome-warg-changes.md) |
 | ~~**`uruk_01` defined twice**~~ | RESOLVED 2026-08-28 by retiring `Alliance.Wargs`. Its duplicate `uruk_01` was deliberately not carried over in the absorption; TAOM's is now the only definition |
@@ -142,14 +143,17 @@ clips plays, so it should follow asset replacement rather than precede it.
 |-------|-----------|-----------|--------|
 | **A. `skins.xml` `<voice_types>`** | any race with its own `<race>` entry | add the definition name to the skin's voice pool | **Proven, in use, 7 races bound.** Per-race only. Edits an unversioned external module |
 | **B. monster sound class** | orcs, trolls, ents, wargs | distinct `sound_and_collision_info_class` on the `<monster>`, matched on the `<voice_definition>` | Untried here. All three TAOM definitions declare `human`. This is how vanilla does `horse` / `camel` / `bovine`, and how `warg_01` works |
-| **C. `MBAgentVisuals.SetVoiceDefinitionIndex`** | anything | force a voice definition on agent spawn from C# | **Only route that can key on culture.** Needs a MissionBehavior |
+| **C. `MBAgentVisuals.SetVoiceDefinitionIndex`** | anything | force a voice definition on agent spawn from C# | **Only route that can key on culture.** Needs a MissionBehavior. In use for male `orc` soldiers ([orc-battle-voice.md](orc-battle-voice.md)), not yet confirmed by ear |
 
 **Route A is the default.** It already works and needs no code. Every one of the seven unbound races
 has its own `<race>` entry, so a voice added there lands on that race alone.
 
 **Route C is the only answer for the Mannish kingdoms**, since they share the vanilla human race.
-Its API pair is public but has **zero callers anywhere in the shipping client**, so it is a modder
-API with no worked examples. Budget a spike.
+Its API pair is public. Its one vanilla caller is `MountVisualCreator.SetVoiceDefinition` in
+TaleWorlds.MountAndBlade.View (v1.5.7), which gives every mount its voice this way; an earlier search of
+TaleWorlds.MountAndBlade alone reported zero callers (corrected 2026-11-16). The engine gives only
+opaque indices, with no name lookup: [orc-battle-voice.md](orc-battle-voice.md) finds a definition's index
+by setting each candidate on one agent and reading `Agent.GetAgentVoiceDefinition()` back.
 
 ```csharp
 int n = SkinVoiceManager.GetVoiceDefinitionCountWithMonsterSoundAndCollisionInfoClassName("human");
