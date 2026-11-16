@@ -14,6 +14,7 @@ Map:
                                                 tree, so a stale deployed sheet must not count
   - own_submodule_unreadable_or_missing      -> a CatalogueError, never a silent empty skip list
   - module_outside_the_playset_is_left_out   -> #1375: only the modules TAOM loads with count
+  - data_files_for_another_game_type_are_left_out -> #1398: multiplayer-only rows do not load
 """
 from __future__ import annotations
 
@@ -154,6 +155,29 @@ class CatalogueLoadingTests(unittest.TestCase):
               '</CraftingPieces>\n')
         self.assertNotIn("other_blade", self.available())
         self.assertNotIn("other_blade", mc.load_pieces(self.modules))
+
+    def test_data_files_for_another_game_type_are_left_out(self):
+        """#1398: a module's multiplayer-only rows (Native's mp_crafting_pieces, mpitems) name files
+        a campaign never loads, so their pieces, items and shields do not count."""
+        mod = self.modules / "TestMod"
+        write(mod / "SubModule.xml",
+              '<Module><Id value="TestMod"/><Xmls>'
+              '<XmlNode><XmlName id="CraftingPieces" path="mp_crafting_pieces"/>'
+              '<IncludedGameTypes><GameType value="MultiplayerGame"/></IncludedGameTypes></XmlNode>'
+              '<XmlNode><XmlName id="Items" path="mpitems"/>'
+              '<IncludedGameTypes><GameType value="MultiplayerGame"/></IncludedGameTypes></XmlNode>'
+              '</Xmls></Module>\n')
+        write(mod / "ModuleData" / "mp_crafting_pieces.xml",
+              '<CraftingPieces><CraftingPiece id="mp_blade" piece_type="Blade" length="80" weight="1"/>'
+              '</CraftingPieces>\n')
+        write(mod / "ModuleData" / "mpitems.xml",
+              '<Items><Item id="mp_shield" Type="Shield"/>'
+              '<CraftedItem id="mp_spear" crafting_template="Spear">'
+              '<Pieces><Piece id="native_blade" Type="Blade"/></Pieces></CraftedItem></Items>\n')
+        self.assertNotIn("mp_blade", mc.load_pieces(self.modules))
+        self.assertNotIn("mp_blade", mc.load_excluded_features(self.modules))
+        self.assertNotIn("mp_spear", mc.load_items(self.modules))
+        self.assertNotIn("mp_shield", mc.load_shield_ids(self.modules))
 
     def test_missing_native_base_is_a_catalogue_error(self):
         (self.modules / "Native" / "ModuleData" / "weapon_descriptions.xml").unlink()

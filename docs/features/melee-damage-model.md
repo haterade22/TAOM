@@ -15,7 +15,8 @@ Three pieces:
   applies the stylesheets each module's `SubModule.xml` `<XmlName>` rows name and leaves out the
   modules TAOM lists as incompatible (NavalDLC), by the shield gate's rule. Since #1375 it reads only
   the modules TAOM loads with (its dependencies and LoadBeforeThis metadata), so AWOIAF_Armoury,
-  Multiplayer and StoryMode do not count.
+  Multiplayer and StoryMode do not count. Since #1398 it skips data files that only multiplayer or
+  editor rows name (Native's `mp_crafting_pieces.xml`, `mpitems.xml`).
 - **`tools/analyze_melee_ladder.py`** is a read-only report over the result. It has no
   `--apply` and no write path into any ModuleData.
 
@@ -870,6 +871,10 @@ armoured troop (see "Class limits"). After the apply and a full restart:
   engine's row rules (`.xsl` before `.xslt`, rows for other game types skipped, modules keyed by `<Id>`).
   AWOIAF_Armoury's 280 crafting pieces left the ladder (2292 to 2012 loaded). The ladder, the generators,
   the validator and the troop roster page gave the same output on TAOM's weapons.
+- v2.0.40 (16 Nov 2026, #1398): the catalogue skips data files that only multiplayer or editor rows name,
+  reads one `<XmlName>` per row and compares module ids without case, as the engine does. Native's 435
+  multiplayer pieces left the ladder (2012 to 1577 loaded). The ladder, the generators, the validator and the
+  troop roster page gave the same output on TAOM's weapons.
 
 ## GitHub Issue
 
@@ -880,6 +885,7 @@ armoured troop (see "Class limits"). After the apply and a full restart:
 - #1372: the catalogue loads modules and stylesheets by the shield gate's rule.
 - #1379: the report gives the same output on every run.
 - #1375: the catalogue reads only the modules TAOM loads with.
+- #1398: the catalogue skips multiplayer-only data files.
 
 ## Related
 

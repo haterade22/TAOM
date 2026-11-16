@@ -282,6 +282,13 @@ def _gate():
     return gate
 
 
+def campaign_files(module: Path, paths) -> list[Path]:
+    """`paths`, sorted, less the files only rows for other game types name (Native's mpitems.xml,
+    mp_crafting_pieces.xml): a campaign never loads them (#1398)."""
+    other = _gate().other_game_files(module)
+    return [p for p in sorted(paths) if p not in other]
+
+
 def module_dirs(modules: Path, without_taom: bool = False) -> list[Path]:
     """The installed module folders to read, in sorted order: the modules TAOM's SubModule.xml
     loads with (its dependencies and LoadBeforeThis metadata, followed through each module, #1375),
@@ -384,8 +391,8 @@ def load_pieces(modules: Path) -> dict[str, md.Piece]:
         data = module / "ModuleData"
         if not data.is_dir():
             continue
-        for path in sorted(
-            list(data.glob("*crafting_pieces*.xml")) + list(data.glob("*/*crafting_pieces*.xml"))
+        for path in campaign_files(
+            module, list(data.glob("*crafting_pieces*.xml")) + list(data.glob("*/*crafting_pieces*.xml"))
         ):
             for pid, piece in md.parse_crafting_pieces(path).items():
                 out.setdefault(pid, piece)
@@ -434,7 +441,7 @@ def load_items(modules: Path, only: set[str] | None = None) -> dict[str, Item]:
         data = module / "ModuleData"
         if not data.is_dir():
             continue
-        for path in sorted(data.rglob("*.xml")):
+        for path in campaign_files(module, data.rglob("*.xml")):
             try:
                 root = _parse(path).getroot()
             except (LET.XMLSyntaxError, OSError):
@@ -561,7 +568,7 @@ def load_shield_ids(modules: Path) -> set[str]:
         data = module / "ModuleData"
         if not data.is_dir():
             continue
-        for path in sorted(data.rglob("*.xml")):
+        for path in campaign_files(module, data.rglob("*.xml")):
             try:
                 root = _parse(path).getroot()
             except (LET.XMLSyntaxError, OSError):
@@ -581,8 +588,8 @@ def load_excluded_features(modules: Path) -> dict[str, frozenset[str]]:
         data = module / "ModuleData"
         if not data.is_dir():
             continue
-        for path in sorted(
-            list(data.glob("*crafting_pieces*.xml")) + list(data.glob("*/*crafting_pieces*.xml"))
+        for path in campaign_files(
+            module, list(data.glob("*crafting_pieces*.xml")) + list(data.glob("*/*crafting_pieces*.xml"))
         ):
             try:
                 root = _parse(path).getroot()
