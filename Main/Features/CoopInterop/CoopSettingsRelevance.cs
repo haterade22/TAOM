@@ -219,7 +219,7 @@ public static class CoopSettingsRelevance
         "RealmBordersWidthScale", "RealmBordersFadeStartDistance", "RealmBordersFullOpacityDistance",
         "RealmBordersDrawThroughTerrain", "RealmBordersNames", "RealmBordersCrossingNotices",
         "RealmBordersFillLands", "RealmBordersFillStrength", "RealmBordersBlendMode", "RealmBordersMaterial",
-        "RealmBordersParchmentMap",
+        "RealmBordersParchmentMap", "RealmBordersNameScale",
         // Menus & Loading Screens (#704): the main menu, its video and music, loading pictures and
         // skill icons, all drawn or played on this client only.
         "FrontEndCustomMainMenu", "FrontEndHideGameVersion", "FrontEndMenuVideo", "FrontEndMuteMenuMusic",

@@ -42,6 +42,23 @@ public class RealmNamesPrefabTests
     }
 
     [TestMethod]
+    public void TextWidgets_BindTheirFontSize_SoTheSizeSettingReachesBothFonts()
+    {
+        foreach (var text in Prefab().Descendants("TextWidget"))
+            Assert.AreEqual("@FontSize", (string?)text.Attribute("Brush.FontSize"));
+    }
+
+    [TestMethod]
+    public void Brushes_DeclareTheViewModelsBaseSizes()
+    {
+        var sizes = XDocument.Load(Path.Combine(Gui, "Brushes", "TaomRealmBorders.xml")).Descendants("Brush")
+            .ToDictionary(b => (string)b.Attribute("Name")!, b => (int)b.Attribute("FontSize")!);
+
+        Assert.AreEqual(RealmNamesVM.AnironFontSize, sizes["TaomRealmBorders.Name"]);
+        Assert.AreEqual(RealmNamesVM.PlainFontSize, sizes["TaomRealmBorders.Name.Plain"]);
+    }
+
+    [TestMethod]
     public void EveryBinding_IsADataSourceProperty()
     {
         var root = Prefab();

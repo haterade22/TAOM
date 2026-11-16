@@ -8215,6 +8215,8 @@
     <string id="TAOM_CrashReport_Title" text="TAOM caught a crash" />
     <string id="TAOM_CrashReport_Continue" text="Continue (risky)" />
     <string id="TAOM_CrashReport_OpenBundle" text="Open bundle folder" />
+    <string id="taom_realm_borders_mcm_name_size" text="Realm Name Size" />
+    <string id="taom_realm_borders_mcm_name_size_hint" text="Makes the kingdom names on the map larger or smaller. Default: 100%." />
   </strings>
 
 </base>

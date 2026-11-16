@@ -1625,3 +1625,9 @@ A notice for "TAOM did not load" first fired when TAOM.Dependencies loaded witho
 - **Why missed:** the trigger came from one observed launch, which had TAOM_Map too.
 - **Prevent:** key a "TAOM is missing" check on TAOM_Map, the module only TAOM players load. Text shown only when TAOM did not load is plain English with no `{=KEY}` row.
 - **Source:** [rca-pr1309-startup-alerts-2026-11-15.md](../rca-pr1309-startup-alerts-2026-11-15.md) findings 6 and 7.
+
+### A brush value that a binding overwrites is a mirror: pin it to its source in a test (#1380, 2026-11-16)
+The realm-name brushes declare `FontSize` 34 and 42, and each label binds `Brush.FontSize` to `RealmNamesVM`'s size, which overwrites the brush value on the label's own brush clone. A later edit to a brush alone would change nothing on screen, and only a comment said the brush matched the constants.
+- **Why missed:** the constants were the source of truth, and the brush was edited by hand to match.
+- **Prevent:** when a prefab binds a brush property, pin the brush's own value to its source in a test (`RealmNamesPrefabTests.Brushes_DeclareTheViewModelsBaseSizes`). The general rule is the lord inline-skills entry in `data-content-cultures.md`: gate the mirror, not the comment.
+- **Source:** [rca-realm-name-size-2026-11-16.md](../rca-realm-name-size-2026-11-16.md) finding 1.

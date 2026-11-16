@@ -8215,6 +8215,8 @@
     <string id="TAOM_CrashReport_Title" text="TAOM caught a crash" />
     <string id="TAOM_CrashReport_Continue" text="Continue (risky)" />
     <string id="TAOM_CrashReport_OpenBundle" text="Open bundle folder" />
+    <string id="taom_realm_borders_mcm_name_size" text="國家名稱大小" />
+    <string id="taom_realm_borders_mcm_name_size_hint" text="放大或縮小地圖上的國家名稱。默認：100%。" />
   </strings>
 
 </base>
