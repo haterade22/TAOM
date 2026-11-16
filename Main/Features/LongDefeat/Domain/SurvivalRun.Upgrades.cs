@@ -7,12 +7,15 @@ namespace TAOM.Features.LongDefeat.Domain;
 /// <summary>
 /// Upgrading the soldiers the player has (#1161). The director reads the standing defenders by troop between waves (<see cref="ObserveStanding"/>); a wave forgets that read, because soldiers die in
 /// it. A buy takes every standing soldier of the step's troop that is not yet sold and that the gold pays for, spends at once, and goes out on the next tick as an <see cref="UpgradeOrder"/>; the
-/// director books what the field replaced with <see cref="CompleteUpgrade"/>, which pays back the rest. Upgrade prices take no boon price factor.
+/// director books what the field replaced with <see cref="CompleteUpgrade"/>, which pays back the rest. Nothing is sold while the garrison musters (#1388), and each buy or refund leaves an <see cref="UpgradeNotice"/>
+/// on the view. Upgrade prices take no boon price factor.
 /// </summary>
 internal sealed partial class SurvivalRun
 {
     private readonly Dictionary<string, int> _standingByTroop = new(StringComparer.OrdinalIgnoreCase);
     private readonly List<UpgradeOrder> _upgrades = new();
+    private UpgradeNotice? _upgradeNotice;
+    private int _upgradeNoticeSerial;
 
     /// <summary>The standing defenders by troop id, read from the field between waves. A count below 0 is read as 0.</summary>
     public void ObserveStanding(IReadOnlyDictionary<string, int> byTroop)
@@ -26,7 +29,7 @@ internal sealed partial class SurvivalRun
     {
         if (Result != null)
             return UpgradeResult.RunOver;
-        if (!BetweenWaves)
+        if (!BetweenWaves || Mustering)
             return UpgradeResult.NotOpen;
 
         var step = _plan.Shop.Upgrades.FirstOrDefault(s => s.Id == stepId);
@@ -43,23 +46,27 @@ internal sealed partial class SurvivalRun
 
         _upgrades.Add(new UpgradeOrder(step, count, _wave + 1));
         _pendingEvents.Add(new RunEvent(RunEventKind.Bought, _wave, $"upgrade={step.Id} n={count}"));
+        _upgradeNotice = new UpgradeNotice(++_upgradeNoticeSerial, UpgradeNoticeKind.Bought, step, count, free - count);
         return UpgradeResult.Ok;
     }
 
     /// <summary>
     /// Books an order the field carried out: one purchase of the soldiers it replaced (none when it replaced nobody), the gold of the rest paid back, and the read moved from the old troop to the
-    /// new one so the view stays right until the next read. A count outside 0 to the order's count is clamped; returns the count booked.
+    /// new one so the view stays right until the next read. The old troop's count is what the field <paramref name="found"/> less what it replaced, so soldiers it could not reach are not sold again. A count
+    /// outside 0 to the order's count is clamped; returns the count booked. A refund leaves a <see cref="UpgradeNoticeKind.Refunded"/> notice.
     /// </summary>
-    public int CompleteUpgrade(UpgradeOrder order, int replaced)
+    public int CompleteUpgrade(UpgradeOrder order, int replaced, int found)
     {
         var done = Math.Max(0, Math.Min(order.Count, replaced));
         var price = order.Step.Price;
         if (done > 0)
             _purchases.Add(new FortPurchase(order.BeforeWave, PurchaseKind.Upgrade, order.Step.Id, 0, price, price * done, 0f) { Count = done });
         _purse.Refund((order.Count - done) * price, PurseSink.Upgrades);
+        if (done < order.Count)
+            _upgradeNotice = new UpgradeNotice(++_upgradeNoticeSerial, UpgradeNoticeKind.Refunded, order.Step, order.Count - done, 0);
 
         var from = order.Step.FromTroop;
-        _standingByTroop[from] = Math.Max(0, (_standingByTroop.TryGetValue(from, out var left) ? left : 0) - done);
+        _standingByTroop[from] = Math.Max(0, found - done);
         _standingByTroop[order.Step.ToTroop] = (_standingByTroop.TryGetValue(order.Step.ToTroop, out var had) ? had : 0) + done;
         return done;
     }
@@ -77,7 +84,7 @@ internal sealed partial class SurvivalRun
 
     private IReadOnlyList<UpgradeRow> UpgradeRowsNow()
     {
-        if (!BetweenWaves || Result != null || _plan.Shop.Upgrades.Count == 0)
+        if (!BetweenWaves || Mustering || Result != null || _plan.Shop.Upgrades.Count == 0)
             return Array.Empty<UpgradeRow>();
 
         var rows = new List<UpgradeRow>();

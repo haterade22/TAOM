@@ -33,7 +33,7 @@ internal readonly record struct BotAction(BotActionKind Kind, string? OfferId = 
 /// any other run buys them from what its packs left. A row the view shows unavailable (not offered, not carried, at its top, used, or posts that bust the cap) is never asked for, so a build that offers
 /// nothing decides exactly as one with no fortifications. In a wave it arms the Elven Volley whenever the view shows it ready (<see cref="BotActionKind.Volley"/>).
 /// Gold that no pack and no fortification wants buys an upgrade (#1161): the first row in shop.json order that the gold reaches (<see cref="BotActionKind.Upgrade"/>, the step id in
-/// <c>OfferId</c>), so an unattended run proves the step before its horn.
+/// <c>OfferId</c>). The rows open when the last muster batch stands; a horn before that leaves the first upgrade to the next intermission.
 /// </summary>
 internal static class ShopBot
 {

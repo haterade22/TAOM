@@ -15,12 +15,15 @@ public class LongDefeatHudUpgradeTests
     private static readonly UpgradeStep Axemen = new("fow_militia>fow_axeman", "{=TAOM_LD_Up_Axemen}Militia to Westfold Axemen", "fow_militia", "fow_axeman", 15);
 
     /// <summary>The open shop in the preparation, with <paramref name="standing"/> militia read from the field.</summary>
-    private static LongDefeatHudVM Panel(out LongDefeatSession session, int gold = 600, int standing = 30)
+    internal static LongDefeatHudVM Panel(out LongDefeatSession session, int gold = 600, int standing = 30, int musterBatch = 30) =>
+        Panel(out session, out _, gold, standing, musterBatch);
+
+    internal static LongDefeatHudVM Panel(out LongDefeatSession session, out SurvivalRun run, int gold = 600, int standing = 30, int musterBatch = 30)
     {
         var waves = new WavePlan(new[] { new WaveSpec(110, new[] { new WaveTroop("orc", FormationSlot.Infantry, 1) }) }, new WaveScaling(10, 300));
         var shop = new ShopPlan(gold, new[] { new ShopOffer("militia", "{=TAOM_LD_Offer_Militia}Westfold Militia", "fow_militia", FormationSlot.Infantry, 12, 180) }) { Upgrades = new[] { Axemen } };
-        var plan = new RunPlan("helms", new[] { new GarrisonRow("fow_militia", FormationSlot.Infantry, 30) }, waves, shop, RunRules.Default, RunOptions.Default);
-        var run = new SurvivalRun(plan);
+        var plan = new RunPlan("helms", new[] { new GarrisonRow("fow_militia", FormationSlot.Infantry, 30) }, waves, shop, RunRules.Default with { MusterBatch = musterBatch }, RunOptions.Default);
+        run = new SurvivalRun(plan);
         run.Begin();
         run.ObserveStanding(new Dictionary<string, int> { ["fow_militia"] = standing });
         session = new LongDefeatSession();
@@ -28,6 +31,15 @@ public class LongDefeatHudUpgradeTests
         var vm = new LongDefeatHudVM(session, () => { });
         vm.ToggleShop();
         return vm;
+    }
+
+    [TestMethod]
+    public void WhileTheGarrisonMusters_TheShopListsNoUpgrade()
+    {
+        var vm = Panel(out _, musterBatch: 20);
+
+        Assert.IsFalse(vm.HasUpgrades);
+        Assert.AreEqual(0, vm.Upgrades.Count);
     }
 
     [TestMethod]
@@ -40,7 +52,7 @@ public class LongDefeatHudUpgradeTests
         Assert.AreEqual("Upgrade your soldiers", vm.UpgradesTitle);
         Assert.AreEqual(1, vm.Upgrades.Count);
         Assert.AreEqual("Militia to Westfold Axemen", vm.Upgrades[0].Name);
-        Assert.AreEqual("30 standing, gold for 30", vm.Upgrades[0].DetailText);
+        Assert.AreEqual("Upgrades 30 of 30 for 450 gold", vm.Upgrades[0].DetailText);
         Assert.AreEqual("15 gold each", vm.Upgrades[0].PriceText);
         Assert.IsTrue(vm.Upgrades[0].CanAfford);
     }
@@ -48,7 +60,7 @@ public class LongDefeatHudUpgradeTests
     [TestMethod]
     public void TheGold_CapsWhatARowSells_AndARowTheGoldMissesIsGrey()
     {
-        Assert.AreEqual("30 standing, gold for 6", Panel(out _, gold: 100).Upgrades[0].DetailText);
+        Assert.AreEqual("Upgrades 6 of 30 for 90 gold", Panel(out _, gold: 100).Upgrades[0].DetailText);
 
         var poor = Panel(out _, gold: 10);
         Assert.AreEqual("30 standing, gold for 0", poor.Upgrades[0].DetailText);
@@ -56,7 +68,7 @@ public class LongDefeatHudUpgradeTests
     }
 
     [TestMethod]
-    public void ABuy_SpendsForEverySoldierTheGoldPaysFor_AndTheRowGoesWhenNoneIsLeftToSell()
+    public void ABuy_SpendsForEverySoldierTheGoldPaysFor_SaysSo_AndTheRowGoesWhenNoneIsLeftToSell()
     {
         var vm = Panel(out var session);
 
@@ -65,7 +77,54 @@ public class LongDefeatHudUpgradeTests
         Assert.AreEqual(150, session.GetView()!.Gold, "30 militia at 15 each");
         Assert.AreEqual(0, vm.Upgrades.Count, "every militia is sold to the order that goes out on the next tick");
         Assert.IsFalse(vm.HasUpgrades);
-        Assert.AreEqual(string.Empty, vm.NoticeText, "a buy that went through says nothing");
+        Assert.AreEqual("Militia to Westfold Axemen: 30 upgraded, 0 left.", vm.NoticeText);
+    }
+
+    [TestMethod]
+    public void ABuyTheGoldCaps_SaysHowManyItTookAndHowManyAreLeft()
+    {
+        var vm = Panel(out _, gold: 100);
+
+        vm.Upgrades[0].ExecuteUpgrade();
+
+        Assert.AreEqual("Militia to Westfold Axemen: 6 upgraded, 24 left.", vm.NoticeText);
+    }
+
+    [TestMethod]
+    public void ARefund_IsSaidOnTheNextRefresh()
+    {
+        var vm = Panel(out var session, out var run);
+        vm.Upgrades[0].ExecuteUpgrade();
+        var order = run.Tick(new RunSnapshot(1f, 0, 0, 30, 0, 0, 1000)).Upgrades[0];
+        run.CompleteUpgrade(order, 28, 28);
+
+        vm.Refresh();
+
+        Assert.AreEqual("Militia to Westfold Axemen: 2 could not be upgraded, 30 gold paid back.", vm.NoticeText);
+        Assert.IsNotNull(session.GetView());
+    }
+
+    [TestMethod]
+    public void ANotice_IsSaidOnce()
+    {
+        var vm = Panel(out _);
+        vm.Upgrades[0].ExecuteUpgrade();
+        vm.Tick(5f);
+
+        vm.Refresh();
+
+        Assert.AreEqual(string.Empty, vm.NoticeText);
+    }
+
+    [TestMethod]
+    public void ABuy_IsRememberedForTheViewsCheck()
+    {
+        var vm = Panel(out _);
+
+        vm.Upgrades[0].ExecuteUpgrade();
+
+        Assert.AreEqual(1, vm.SaidUpgrade!.Serial);
+        Assert.AreEqual(vm.NoticeText, vm.SaidUpgradeLine);
     }
 
     [TestMethod]

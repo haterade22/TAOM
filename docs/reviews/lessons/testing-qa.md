@@ -2903,3 +2903,19 @@ The battle balance provider's new tests built `BattleBalanceConfig` objects in C
 **Prevent:** a source-reading test of a bool or mode flag also asserts the consuming expression (here `quitOnOk ? QuitGame`). For an expression-bodied member, slice the source up to the next member instead of calling `Body()`.
 
 **Source:** [rca-game-version-warning-2026-11-16.md](../rca-game-version-warning-2026-11-16.md) finding F9.
+
+### A proof row reads the value the fix changes, and a test feeds it the failure the fix could cause (#1401, 2026-11-16)
+
+**Why missed:** the upgrade filter of the Long Defeat skipped 21 of 65 archers, and the old log line read `ordered=65 found=44`. The proof row for the fix passed on `found=65` and failed on `found=44`. The fix makes those 21 archers go through the replacement for the first time, so its own failure would read `found=65 replaced=44`, and that line passed. The row was written from the old symptom, and its test fed it one good line and the old bad line.
+
+**Prevent:** before a pass pattern is written, name the line a broken fix would write, and feed that line to the judge in a test: it must read FAIL. A fail pattern compares with the expected value (`found=(?!65 )`), never with the number one bad run happened to show. A row that no proof run can reach is a human claim, not a row: one test must pass every row of the manifest on the lines of a good run.
+
+**Source:** [rca-long-defeat-upgrade-feedback-2026-11-16.md](../rca-long-defeat-upgrade-feedback-2026-11-16.md) findings 1 to 3.
+
+### A feature a bot proves is also walked as a player would meet it (#1388, 2026-11-16)
+
+**Why missed:** the shop upgrade of the Long Defeat replaced soldiers correctly, and its proof was a bot run with 5000 gold. The maintainer played it with 600 gold and saw nothing happen: a buy showed no message, the row did not say that one click takes every soldier the gold pays for, a click in the first seconds took only the first muster batch, and the class he could choose left a third of the archers out of reach. The bot reads no screen, buys every row in one second, and its check compared the replaced count with what it had ordered, not with the size of the line.
+
+**Prevent:** for a feature with a button, the proof has two parts. The bot run proves the mechanism. A written walk proves the feature: the default gold and not the bot's, each choice a player has at the start (class, fortress), a click at the earliest moment the button is live, and what the screen says after a success. Each "says nothing" or "takes part of" in that walk is a finding before the maintainer plays.
+
+**Source:** [rca-long-defeat-upgrade-feedback-2026-11-16.md](../rca-long-defeat-upgrade-feedback-2026-11-16.md) the first table.

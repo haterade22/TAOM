@@ -1,0 +1,54 @@
+# In-game checks for #1388 (The Long Defeat: an upgrade says what it did, the row states the deal, and no upgrade is sold while the garrison musters), read by tools/ingame_verdict.py.
+# upgrade-notice is written by Client/Features/LongDefeat/LongDefeatHudView.cs once per notice the HUD said (key <view>n<serial>); the notice rides the run's view, so a bot's buy can make one.
+# The run keeps one notice slot and the HUD reads it on its 0.25 s refresh, so a bot that buys several rows in a second is heard once, and a Bought notice overwritten by a Refunded one before the refresh is never said.
+# The row therefore proves at least one Bought notice in a run, not one per buy; a run whose only said notice is a refund reads FAIL.
+# Scope deviation: the row text (b) and the refund (an order that replaced fewer soldiers than it bought, which a normal run no longer makes) are proven by unit tests and [[human]] claims, not by a log, so no row is unreached by design and the issue can read PASS. The bot never opens the panel, so the row text writes no line.
+# The booking of what the field found (d) writes no line of its own; the upgrade check line (see 1161.toml) shows the order's found= and replaced= counts.
+# upgrade-after-muster fails when a buy is logged before the last muster batch, but passes on a run that bought nothing; upgrade-bought-after-muster is the row that needs a buy, so a run with no upgrade does not pass the item.
+# Proof run: python tools/run_long_defeat.py --waves 3 --garrison-scale 1.3 --start-gold 5000
+# The row ids are labels the judge reads from the log; the [Check] ids the patterns name (upgrade, upgrade-notice) are string literals in C#.
+issue = 1388
+title = "The Long Defeat: an upgrade says what it did, the row states the deal, and no upgrade is sold while the garrison musters"
+fixed_in = "ad4a8854b"
+logs = ["taom"]
+
+[[check]]
+id = "taom.long-defeat.upgrade-notice"
+scope = '\[LongDefeat\] launching \S+ for fortress '
+scope_end = '\[(LongDefeat|StoryMissions)\] launching '
+needs = "a Long Defeat run in which the bot or the player buys an upgrade row: python tools/run_long_defeat.py --waves 3 --garrison-scale 1.3 --start-gold 5000"
+reached = ['\[LongDefeat\]\[Shop\] bought upgrade=']
+pass = ['\[Check\] id=taom\.long-defeat\.upgrade-notice result=pass kind=bought from=\S+ to=\S+ count=[1-9][0-9]* left=[0-9]+ text=set$']
+fail = ['\[Check\] id=taom\.long-defeat\.upgrade-notice result=fail ']
+absence = "fail"
+
+[[check]]
+id = "taom.long-defeat.upgrade-after-muster"
+scope = '\[LongDefeat\] launching \S+ for fortress '
+scope_end = '\[LongDefeat\]\[Muster\] batch ([0-9]+)/\1 '
+needs = "the same run: the garrison musters in more than one batch and the bot has gold for an upgrade from the first tick"
+reached = ['\[LongDefeat\]\[Muster\] batch 1/[0-9]+ ']
+pass = ['\[LongDefeat\]\[Muster\] batch 1/[0-9]+ ']
+fail = ['\[LongDefeat\]\[Shop\] bought upgrade=']
+absence = "not-reached"
+
+[[check]]
+id = "taom.long-defeat.upgrade-bought-after-muster"
+scope = '\[LongDefeat\]\[Muster\] batch ([0-9]+)/\1 '
+scope_end = '\[(LongDefeat|StoryMissions)\] launching |\[LongDefeat\]\[Wave\] 1 starts'
+needs = "the same run: a buy of an upgrade row between the last muster batch and the first wave, so a run that bought nothing there does not pass (a buy in a later calm does not count)"
+reached = ['\[LongDefeat\]\[Shop\] bought upgrade=']
+pass = ['\[LongDefeat\]\[Shop\] bought upgrade=']
+absence = "not-reached"
+
+[[human]]
+claim = "in the shop, a row under Upgrade your soldiers that the gold pays for reads 'Upgrades N of M for G gold' (N is what the gold pays for, M the soldiers of that troop that stand, G is N times the price each); a row the gold pays nothing for is disabled and reads 'M standing, gold for 0'"
+
+[[human]]
+claim = "after clicking a row, the notice line says '<step>: N upgraded, M left.' and the gold drops by N times the price each"
+
+[[human]]
+claim = "when an order replaces fewer soldiers than it bought (a soldier falls between the click and the next tick), the notice line says '<step>: N could not be upgraded, G gold paid back.' and the gold returns to the purse"
+
+[[human]]
+claim = "in the first seconds of the preparation the shop shows no upgrade group; it appears once the last muster batch stands (about 16 s at the default garrison scale)"

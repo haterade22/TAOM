@@ -1,0 +1,27 @@
+# In-game checks for #1401 (The Long Defeat: an upgrade reaches the archers a cavalry run leaves in the posts formation), read by tools/ingame_verdict.py.
+# The [Check] id=taom.long-defeat.upgrade line comes from LongDefeatUpgradeChecks (see 1161.toml). In a cavalry run the engine's split puts 21 of the 65 skirmishers into formation index 4 (run 20261116-024002: found=44 of ordered=65),
+# and Upgradable() used to skip that index. With the clause gone, the order finds and replaces all 65.
+# The row passes on a skirmisher line with found=65 and replaced equal to ordered (the result= word is not read, so the #1402 read=64 line passes). It fails on a wave-1 order of all 65 that finds another number,
+# on a found=65 line whose replaced differs from ordered, and on a none-found skip of the skirmisher troop. A none-found skip of another troop is not this issue's.
+# The row is bound to the proof run's garrison scale: 65 is the 50 archers of the Helm's Deep garrison at scale 1.3. A different scale or fortress needs another number.
+# The class line scopes the row to a cavalry run; a foot-class run reads NOT REACHED.
+# Proof run: python tools/run_long_defeat.py --waves 3 --garrison-scale 1.3 --start-gold 30000 --class cavalry
+# The gold matters: the bot buys the upgrade rows in shop order, and since #1388 all 130 foot stand when it starts, so it reaches the skirmisher row only after the three foot steps (15, 25 and 40 gold each).
+issue = 1401
+title = "The Long Defeat: an upgrade reaches the archers a cavalry run leaves in the posts formation"
+fixed_in = "ad4a8854b"
+logs = ["taom"]
+
+[[check]]
+id = "taom.long-defeat.upgrade-finds-all-archers"
+scope = '\[Check\] id=taom\.long-defeat\.class result=\S+ class=cavalry '
+scope_end = '\[(LongDefeat|StoryMissions)\] launching '
+needs = "python tools/run_long_defeat.py --waves 3 --garrison-scale 1.3 --start-gold 30000 --class cavalry (65 is 50 archers at scale 1.3, so the row is bound to that scale; the gold lets the bot reach the skirmisher row)"
+reached = ['\[Check\] id=taom\.long-defeat\.upgrade result=\S+ w=[0-9]+ from=fow_rohan_eastfold_skirmisher ']
+pass = ['\[Check\] id=taom\.long-defeat\.upgrade result=\S+ w=[0-9]+ from=fow_rohan_eastfold_skirmisher to=\S+ ordered=([0-9]+) found=65 replaced=\1 ']
+fail = [
+  '\[Check\] id=taom\.long-defeat\.upgrade result=skip w=[0-9]+ from=fow_rohan_eastfold_skirmisher .*reason=none-found',
+  '\[Check\] id=taom\.long-defeat\.upgrade result=\S+ w=1 from=fow_rohan_eastfold_skirmisher to=\S+ ordered=65 found=(?!65 )[0-9]+ ',
+  '\[Check\] id=taom\.long-defeat\.upgrade result=\S+ w=[0-9]+ from=fow_rohan_eastfold_skirmisher to=\S+ ordered=([0-9]+) found=65 replaced=(?!\1 )[0-9]+ ',
+]
+absence = "not-reached"

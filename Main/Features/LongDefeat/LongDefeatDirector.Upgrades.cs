@@ -8,7 +8,7 @@ namespace TAOM.Features.LongDefeat;
 /// <summary>
 /// Upgrading the soldiers the player has (#1161). Between waves the director reads the standing defenders by troop on the first tick of a calm, then every <see cref="StandingReadSeconds"/> and on
 /// any tick that spawned soldiers, and hands the counts to the run (an order moves its own counts), so the shop sells only soldiers who stand. Each order is carried out on the tick after its buy, before field care, and
-/// writes one <c>upgrade</c> line.
+/// writes one <c>upgrade</c> line. The order books what the field found: the run keeps the found count less the soldiers replaced as the troop's standing soldiers, until the next read.
 /// </summary>
 internal sealed partial class LongDefeatDirector
 {
@@ -40,7 +40,7 @@ internal sealed partial class LongDefeatDirector
         foreach (var order in orders)
         {
             var report = _field.ReplaceDefenders(order.Step.FromTroop, order.Step.ToTroop, order.Count, order.HealthFactor);
-            var paid = order.Step.Price * _run.CompleteUpgrade(order, report.Replaced);
+            var paid = order.Step.Price * _run.CompleteUpgrade(order, report.Replaced, report.Found);
             // A fade that empties a held split group hands it to the AI (Formation.RemoveUnit, Formation.cs:2376-2379), and the replacement joining it does not take it back.
             if (report.Replaced > 0)
                 NoteEngineTookSplit("an upgrade");
