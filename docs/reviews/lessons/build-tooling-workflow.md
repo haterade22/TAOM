@@ -5190,3 +5190,9 @@ The first #1398 change kept only rows for Campaign. On the live install that dro
 - **Why missed:** the issue text named only the multiplayer files to drop; nobody listed the game types TAOM itself uses.
 - **Prevent:** before filtering data by game type, list the files the filter drops on the live install (one line of Python over `other_game_files`) and read each name. Name the mod's game types in one constant (`GAME_TYPES`).
 - **Source:** issue #1398.
+
+### A ladder rule reaches every tool that prices against the ladder (shield view, #631, 2026-11-16)
+The shield view (a troop with a shield is judged on the modes a shield allows) went into the validator, the fixer and the blade restat, but not into `generate_placeholder_weapons.py`. The generator banded and capped placeholders for shield carriers on the two handed mode, and the validator then flagged one of them over its tier limit.
+- **Why missed:** the consumers were found by grepping the calls that judge troops (`findings`, `judge`, `band`). The generator caps with `tier_limit` and `max_factor` row by row and never calls them.
+- **Prevent:** before changing how the ladder judges a weapon, grep every caller of `melee_ladder.` (`tier_limit`, `max_factor`, `class_limit`, `band`, `target`, `judge`, `findings`) and of `melee_catalogue.price_all`, and list each tool as changed or as left on purpose.
+- **Source:** [RCA](../rca-melee-tier-tolerance-2026-11-16.md) F1.

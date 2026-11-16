@@ -6,11 +6,11 @@
       "reason": "Lord armour variant names (#1333), owed in docs/localization/translation-backlog.md."
     },
     "placeholder_weapons/ph_crafting_pieces.xml": {
-      "keys": 20,
+      "keys": 19,
       "reason": "Placeholder weapon names (#1253), owed in docs/localization/translation-backlog.md."
     },
     "placeholder_weapons/ph_items.xml": {
-      "keys": 20,
+      "keys": 19,
       "reason": "Placeholder weapon names (#1253), owed in docs/localization/translation-backlog.md."
     }
   }

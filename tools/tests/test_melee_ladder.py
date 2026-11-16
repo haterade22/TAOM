@@ -20,6 +20,7 @@ import sys
 import tempfile
 import types
 import unittest
+from dataclasses import replace
 from unittest import mock
 from pathlib import Path
 
@@ -446,8 +447,10 @@ CLASS_LIMITS = {
     "OneHandedSword": SWORD_LIMIT,
     "OneHandedAxe": {"swing": 85, "thrust": None, "swing_dps": 70, "thrust_dps": None},
     "TwoHandedPolearm": {"swing": 185, "thrust": 60, "swing_dps": 138, "thrust_dps": 45},
+    "OneHandedPolearm": {"swing": None, "thrust": 45, "swing_dps": None, "thrust_dps": 37},
 }
-CRAFT_COLUMN = {"OneHandedSword": "sword", "OneHandedAxe": "axe", "TwoHandedPolearm": "polearm"}
+CRAFT_COLUMN = {"OneHandedSword": "sword", "OneHandedAxe": "axe", "TwoHandedPolearm": "polearm",
+                "OneHandedPolearm": "polearm"}
 # The shipped weapon_tier_fraction (2026-11-14): the share of a class top that tier t may reach.
 TIER_FRACTION = {str(t): v for t, v in enumerate(
     [0.58, 0.62, 0.66, 0.72, 0.77, 0.81, 0.88, 0.91, 0.94, 0.97, 1.0])}
@@ -1185,6 +1188,176 @@ class RosterFixerCategoryDetailTests(TmpCase):
         assert fixer.shield_forbidden(cat, no_shield.item) and not fixer.shield_forbidden(cat, safe.item)
         assert (fixer.weapon_category(cat, no_shield, frozenset(), class_spec())
                 != fixer.weapon_category(cat, safe, frozenset(), class_spec()))
+
+
+class UnderToleranceTests(TmpCase):
+    """A weapon a little under its carrier's band is accepted: troop skill carries the step.
+
+    The maintainer (2026-11-16): "just because Tier 5 and 6 share one weapon doesn't mean tier 6
+    isn't better because they swing faster and are more armored". Weapon skill adds 4 to 6% DPS per
+    tier for swords and axes and about 3% for polearms (blow damage and attack speed), so a weapon
+    inside the band of a tier up to `under_tolerance_tiers` below its carrier is not a finding.
+    """
+
+    def test_a_weapon_in_the_band_of_two_tiers_below_is_not_under(self):
+        s = class_spec(under_tolerance_tiers=2)
+        low7 = ladder.band(7, "rivendell", s, "OneHandedSword").low
+        dps = ladder.band(3, "rivendell", s, "OneHandedSword").target   # under tier 7, inside tier 5
+        assert dps < low7
+        assert ladder.judge(7, "rivendell", s, dps, "OneHandedSword") == "ok"
+
+    def test_a_weapon_three_tiers_below_is_still_under(self):
+        s = class_spec(under_tolerance_tiers=2)
+        dps = ladder.band(4, "rivendell", s, "OneHandedSword").low - 0.5
+        assert ladder.judge(7, "rivendell", s, dps, "OneHandedSword") == "under"
+
+    def test_without_the_setting_the_band_alone_decides(self):
+        s = class_spec()
+        dps = ladder.band(3, "rivendell", s, "OneHandedSword").target
+        assert ladder.judge(7, "rivendell", s, dps, "OneHandedSword") == "under"
+
+    def test_over_is_never_excused(self):
+        s = class_spec(under_tolerance_tiers=2)
+        dps = ladder.band(7, "rivendell", s, "OneHandedSword").high + 1
+        assert ladder.judge(7, "rivendell", s, dps, "OneHandedSword") == "over"
+
+    def test_findings_and_the_fixer_read_the_tolerance(self):
+        s = class_spec(under_tolerance_tiers=2)
+        dps = ladder.band(3, "rivendell", s, "OneHandedSword").target
+        rows = [("t", "rivendell", 7, "wm_x_sword", dps, "blade", "OneHandedSword", True, False)]
+        assert ladder.findings(rows, s) == []
+        t = troop("t", 36, "rivendell", ["wm_x_sword"])          # level 36: tier 7
+        assert t.tier == 7
+        priced = {"wm_x_sword": weapon("wm_x_sword", dps=dps)}
+        swaps, unresolved = fixer.plan(priced, cata.Catalogue(), [t], s, shields=set())
+        assert swaps == [] and unresolved == []
+
+    def test_an_under_finding_names_the_tolerance_floor(self):
+        """The band in the message is the carrier's own; the warning names the lowest DPS judge
+        accepts, so a reader knows how far the weapon must rise."""
+        s = class_spec(under_tolerance_tiers=2)
+        floor = min(ladder.band(t, "rivendell", s, "OneHandedSword").low for t in (5, 6, 7))
+        assert ladder.tolerance_floor(7, "rivendell", s, "OneHandedSword") == floor
+        rows = [("t", "rivendell", 7, "wm_x_sword", floor - 1, "blade", "OneHandedSword", True, False)]
+        [f] = ladder.findings(rows, s)
+        assert f.kind == "under" and f.floor == floor
+        assert f"accepted from {floor:.0f}" in f.describe()
+
+    def test_the_spec_rejects_a_bad_tolerance(self):
+        for bad in (-1, 4, 1.5, "2"):
+            assert any("under_tolerance_tiers" in p for p in ladder.validate_spec(class_spec(under_tolerance_tiers=bad)))
+        assert not any("under_tolerance_tiers" in p for p in ladder.validate_spec(class_spec(under_tolerance_tiers=2)))
+
+
+def shield_spear(item_id, swing_dps, thrust_damage, blade="blade"):
+    """A spear as the Armory builds one: a one handed thrust mode a shield allows (primary) and a
+    two handed swing and thrust mode that refuses a shield (`requires_no_shield`)."""
+    one = cata.Usage("OneHandedPolearm", True, (), "onehanded_polearm_block_long_rshield_thrust",
+                     frozenset({"thrust"}),
+                     md.WeaponStats(thrust_damage=thrust_damage, raw_thrust_speed=20.8),
+                     class_template="OneHandedPolearm")
+    two = cata.Usage("TwoHandedPolearm", False, (), "polearm_block_long_shield_swing_thrust",
+                     frozenset({"swing", "thrust"}),
+                     md.WeaponStats(swing_damage=swing_dps * 1.1, raw_swing_speed=20.8,
+                                    thrust_damage=thrust_damage, raw_thrust_speed=20.8),
+                     shield_ok=False)
+    return cata.Priced(
+        item=cata.Item(item_id, item_id, "", "TwoHandedPolearm", ((blade, "Blade", 100),), "src"),
+        usages=(one, two), blade_piece=blade, tier=3,
+    )
+
+
+class ShieldUsageTests(TmpCase):
+    """A troop with a shield wields a spear in the modes a shield allows (2026-11-16).
+
+    The Armory's spears have a one handed thrust mode (`requires_shield`) and a two handed swing
+    mode (`requires_no_shield`). A troop with a shield never swings the spear, so judging it by
+    the two handed swing against the halberd band calls it under-armed when only its thrust counts.
+    """
+
+    def test_with_shield_keeps_only_the_modes_a_shield_allows(self):
+        p = shield_spear("sp", swing_dps=60.0, thrust_damage=40)
+        assert p.swing_dps > 0
+        held = p.with_shield()
+        assert held.swing_dps == 0 and held.swing_damage == 0
+        assert held.thrust_dps == p.thrust_dps > 0
+        assert [u.description for u in held.usages] == ["OneHandedPolearm"]
+
+    def test_a_bastard_sword_behind_a_shield_is_judged_as_a_one_handed_sword(self):
+        """Its shield mode's weapon class is OneHandedSword, so the band is the one handed sword's."""
+        one = cata.Usage("OneHandedBastardSword", True, (), "onehanded_block_shield_swing_thrust",
+                         frozenset({"swing", "thrust"}),
+                         md.WeaponStats(swing_damage=40, raw_swing_speed=20.8), class_template="OneHandedSword")
+        two = cata.Usage("TwoHandedSword", False, (), "twohanded_block_swing_thrust",
+                         frozenset({"swing", "thrust"}),
+                         md.WeaponStats(swing_damage=90, raw_swing_speed=20.8), shield_ok=False,
+                         class_template="TwoHandedSword")
+        p = cata.Priced(item=cata.Item("bs", "bs", "", "TwoHandedSword", (("b", "Blade", 100),), "src"),
+                        usages=(one, two), blade_piece="b", tier=3)
+        assert p.class_template == "TwoHandedSword"
+        assert p.with_shield().class_template == "OneHandedSword"
+        assert shield_spear("sp", 60.0, 40).with_shield().class_template == "OneHandedPolearm"
+
+    def test_a_weapon_that_always_refuses_a_shield_is_judged_whole(self):
+        """No mode survives: the troop must put the shield away to use it, so judge every mode."""
+        p = shield_spear("sp", swing_dps=60.0, thrust_damage=40)
+        only_two = cata.Priced(item=p.item, usages=(p.usages[1],), blade_piece=p.blade_piece, tier=3)
+        assert only_two.with_shield() is only_two
+
+    def test_a_weapon_whose_primary_mode_refuses_a_shield_is_judged_whole(self):
+        """dale_war_spear_a and the Mordor polearms: a two handed primary that refuses a shield and a
+        couch mode that allows one. The wielder draws the primary, so judge every mode."""
+        p = shield_spear("sp", swing_dps=60.0, thrust_damage=40)
+        couch = replace(p.usages[0], description="TwoHandedPolearm_Couchable", class_template="TwoHandedPolearm")
+        no_shield_first = cata.Priced(item=p.item, usages=(p.usages[1], couch), blade_piece=p.blade_piece, tier=3)
+        assert no_shield_first.with_shield() is no_shield_first
+
+    def test_a_weapon_with_no_shield_rule_is_unchanged(self):
+        p = weapon("sw", dps=50.0)
+        assert p.with_shield() is p
+
+    def test_the_fixer_judges_a_shield_troops_spear_by_its_thrust(self):
+        s = class_spec()
+        t_shield = troop("t_shield", 26, "rivendell", ["sp", "sh"])
+        t_bare = troop("t_bare", 26, "rivendell", ["sp"])
+        swing_target = ladder.band(t_bare.tier, "rivendell", s, "TwoHandedPolearm", True, False).target
+        priced = {"sp": shield_spear("sp", swing_dps=swing_target, thrust_damage=1)}
+        _sw, unresolved = fixer.plan(priced, cata.Catalogue(), [t_bare], s, shields={"sh"})
+        assert unresolved == []
+        _sw, unresolved = fixer.plan(priced, cata.Catalogue(), [t_shield], s, shields={"sh"})
+        assert [(t.id, iid) for t, iid, _why in unresolved] == [("t_shield", "sp")]
+
+    def test_a_shield_spear_in_the_one_handed_band_is_not_under(self):
+        """Its thrust is judged on the one handed polearm class, not the 45 DPS two handed thrust."""
+        s = class_spec()
+        t_shield = troop("t_shield", 26, "rivendell", ["sp", "sh"])
+        one = ladder.band(t_shield.tier, "rivendell", s, "OneHandedPolearm", False, True)
+        two = ladder.band(t_shield.tier, "rivendell", s, "TwoHandedPolearm", False, True)
+        p = shield_spear("sp", swing_dps=1.0, thrust_damage=40)
+        thrust = p.with_shield().thrust_dps
+        scaled = shield_spear("sp", swing_dps=1.0, thrust_damage=round(40 * one.target / thrust))
+        assert one.verdict(scaled.with_shield().thrust_dps) == "ok"
+        assert two.verdict(scaled.with_shield().thrust_dps) == "under"
+        _sw, unresolved = fixer.plan({"sp": scaled}, cata.Catalogue(), [t_shield], s, shields={"sh"})
+        assert unresolved == []
+
+    @unittest.skipUnless(fixer.MODULES.is_dir(), "needs the Bannerlord install")
+    def test_a_shipped_shield_spear_cannot_swing_behind_its_shield(self):
+        cat = cata.load(fixer.MODULES, item_modules={report.ARMORY_MODULE})
+        p = cata.price(cat, cat.items["he_spear"])
+        assert p.swing_dps > 0
+        held = p.with_shield()
+        assert held.swing_dps == 0 and held.thrust_dps > 0
+        assert held.class_template == "OneHandedPolearm"
+
+    @unittest.skipUnless(fixer.MODULES.is_dir(), "needs the Bannerlord install")
+    def test_every_held_class_has_a_class_limit(self):
+        """A shield view judged on a class the spec does not limit would fall off the class bands."""
+        cat = cata.load(fixer.MODULES, item_modules={report.ARMORY_MODULE})
+        priced, _ = cata.price_all(cat)
+        limits = ladder.load_spec()["class_limits"]
+        held = {p.with_shield().class_template for p in priced.values()}
+        assert held - set(limits) == set()
 
 
 if __name__ == "__main__":

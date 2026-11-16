@@ -98,6 +98,12 @@
     "thrust and 43 DPS; pike 42 and 35. Vanilla has five two handed maces (85 and 59), too few to",
     "copy, so that class sits between the one handed mace and the two handed axe. Thrust on the",
     "polearm classes is 60 rather than 49 because a couched lance is outside this model.",
+    "OneHandedPolearm is not a crafting template but the class of a spear's one handed mode: the",
+    "mode a troop with a shield thrusts in (its two handed mode is requires_no_shield), so a",
+    "shield troop's spear is judged on it (melee_catalogue.Priced.with_shield, 2026-11-16).",
+    "Vanilla's 55 such modes thrust 42 at most (median 32) and 35.4 DPS at most (median 25.8):",
+    "rounded up to 45 and 37. Judged on the 45 DPS two handed thrust instead, every shield spear",
+    "in vanilla's range read as under-armed.",
     "A hero blade is held to its hero limit (the class limit plus its maker group's bonus, see",
     "`hero_bonus`) and is exempt from `ceiling`."
   ],
@@ -105,6 +111,7 @@
     "Dagger":           {"swing": 45,   "thrust": 65,   "swing_dps": 46,   "thrust_dps": 56},
     "Mace":             {"swing": 75,   "thrust": 30,   "swing_dps": 60,   "thrust_dps": 25},
     "OneHandedAxe":     {"swing": 85,   "thrust": null, "swing_dps": 70,   "thrust_dps": null},
+    "OneHandedPolearm": {"swing": null, "thrust": 45,   "swing_dps": null, "thrust_dps": 37},
     "OneHandedSword":   {"swing": 95,   "thrust": 55,   "swing_dps": 83,   "thrust_dps": 47},
     "Pike":             {"swing": null, "thrust": 60,   "swing_dps": null, "thrust_dps": 45},
     "TwoHandedAxe":     {"swing": 140,  "thrust": null, "swing_dps": 105,  "thrust_dps": null},
@@ -150,6 +157,16 @@
     "small for the low classes (a one handed sword gains about 6 DPS per tier at the top)."
   ],
   "class_band": 0.15,
+  "_under_tolerance_comment": [
+    "A weapon under its carrier's band is accepted while it sits inside the band of a tier up to",
+    "`under_tolerance_tiers` below (melee_ladder.judge). The maintainer, 2026-11-16: a tier 6 troop is",
+    "better than a tier 5 one with the same weapon, because it swings faster and is better armoured.",
+    "Weapon skill adds blow damage (+0.15% per point one handed, 0.16% two handed, 0.07% polearm) and",
+    "attack speed (+0.07%, 0.06%, 0.06%): about 4 to 6% DPS per tier for swords and axes, 3% for",
+    "polearms, against weapon targets that rise 3 to 9% per tier. Over a band is never excused, and",
+    "restat_melee_blades.py still prices blades onto the exact target."
+  ],
+  "under_tolerance_tiers": 2,
   "class_tier_fraction": {
     "0": 0.58,
     "1": 0.62,
@@ -167,7 +184,7 @@
   "craft_column": {
     "Dagger": "sword", "OneHandedSword": "sword", "TwoHandedSword": "sword",
     "OneHandedAxe": "axe", "TwoHandedAxe": "axe", "Mace": "axe", "TwoHandedMace": "axe",
-    "TwoHandedPolearm": "polearm", "Pike": "polearm"
+    "TwoHandedPolearm": "polearm", "Pike": "polearm", "OneHandedPolearm": "polearm"
   },
   "craft_default": {"sword": 0.85, "axe": 0.85, "polearm": 0.85},
   "craft": {

@@ -193,6 +193,10 @@ def _validate_craft(spec: dict) -> list[str]:
         width = spec["class_band"]
         if not isinstance(width, (int, float)) or not 0 < width < 1:
             problems.append(f"`class_band` must be a fraction between 0 and 1, got {width!r}")
+    if "under_tolerance_tiers" in spec:
+        tol = spec["under_tolerance_tiers"]
+        if isinstance(tol, bool) or not isinstance(tol, int) or not 0 <= tol <= 3:
+            problems.append(f"`under_tolerance_tiers` must be a whole number from 0 to 3, got {tol!r}")
     return problems
 
 
@@ -479,6 +483,30 @@ def band(tier: int, culture: str, spec: dict, template: str | None = None,
     return Band(tier, culture, value, value * (1 - width), value * (1 + width))
 
 
+def judge(tier: int, culture: str, spec: dict, dps: float, template: str | None = None,
+          swings: bool = True, thrusts: bool = True) -> str:
+    """"ok", "under" or "over" for a weapon of `dps` in a troop of `tier`.
+
+    A weapon under its carrier's band is still "ok" when it sits inside the band of a tier up to
+    `under_tolerance_tiers` below: weapon skill adds damage and attack speed every tier, so a troop
+    one or two tiers up already fights harder with the same weapon (melee-damage-model.md, "Tier
+    tolerance"). Over is never excused.
+    """
+    verdict = band(tier, culture, spec, template, swings, thrusts).verdict(dps)
+    if verdict != "under":
+        return verdict
+    return "ok" if dps >= tolerance_floor(tier, culture, spec, template, swings, thrusts) else "under"
+
+
+def tolerance_floor(tier: int, culture: str, spec: dict, template: str | None = None,
+                    swings: bool = True, thrusts: bool = True) -> float:
+    """The lowest DPS `judge` accepts for a troop of `tier`: the lowest band floor from the
+    carrier's tier down `under_tolerance_tiers` tiers."""
+    lowest = max(0, int(tier) - spec.get("under_tolerance_tiers", 0))
+    return min(band(t, culture, spec, template, swings, thrusts).low
+               for t in range(lowest, int(tier) + 1))
+
+
 def is_exempt_troop(troop_id: str, spec: dict) -> bool:
     return troop_id in spec.get("exempt_troops", {})
 
@@ -509,6 +537,8 @@ class Finding:
     target: float
     low: float
     high: float
+    # The lowest DPS judge accepts (tolerance_floor); set on an "under" finding only.
+    floor: float | None = None
 
     @property
     def gap(self) -> float:
@@ -526,10 +556,12 @@ class Finding:
                 f"{self.high:.0f}; reachable by {self.troop}"
             )
         direction = "under-armed" if self.kind == "under" else "over-armed"
+        floor = (f"; accepted from {self.floor:.0f} (the tier tolerance)"
+                 if self.floor is not None and self.floor < self.low else "")
         return (
             f"{self.troop} (tier {self.tier}, {self.culture}) is {direction}: its best melee "
             f"weapon {self.item} sustains {self.dps:.0f} DPS against a band of "
-            f"{self.low:.0f} to {self.high:.0f}"
+            f"{self.low:.0f} to {self.high:.0f}{floor}"
         )
 
 
@@ -552,11 +584,13 @@ def findings(troop_kits, spec: dict, min_gap: float = 0.0) -> list[Finding]:
             continue
         template, swings, thrusts = kind or (None, True, True)
         window = band(tier, culture, spec, template, swings, thrusts)
-        verdict = window.verdict(dps)
+        verdict = judge(tier, culture, spec, dps, template, swings, thrusts)
         if verdict != "ok":
             finding = Finding(
                 verdict, troop_id, culture, tier, item, dps,
                 window.target, window.low, window.high,
+                tolerance_floor(tier, culture, spec, template, swings, thrusts)
+                if verdict == "under" else None,
             )
             if finding.gap >= min_gap:
                 out.append(finding)

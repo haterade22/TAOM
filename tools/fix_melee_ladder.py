@@ -53,7 +53,7 @@ WEAPON_SLOTS = ("Item0", "Item1", "Item2", "Item3")
 # A usage set carrying this flag cannot be paired with a shield. Handing such a polearm to a
 # shield-carrying troop is the trap CLAUDE.md records as having shipped three times: the troop
 # holds the weapon until combat starts and then never draws it. No error, no log.
-NO_SHIELD_FLAG = "requires_no_shield"
+NO_SHIELD_FLAG = mc.NO_SHIELD_FLAG
 
 
 # Troop files a generator writes whole. A swap written into one is undone by the generator's next
@@ -356,12 +356,17 @@ def plan(
     def band_key(p: mc.Priced) -> tuple:
         return category_of(p)[:2]
 
+    def held(p: mc.Priced, items) -> mc.Priced:
+        """The weapon as a troop with these items wields it: behind a shield, only the modes a
+        shield allows (`Priced.with_shield`), so a shield spearman's spear is judged by its thrust."""
+        return p.with_shield() if any(i in shields for i in items) else p
+
     def best_carried(tid: str, key: tuple) -> float | None:
         items = carried.get(tid)
         if items is None:
             items = by_id[tid].items if tid in by_id else ()
-        dps = [priced[i].best_dps for i in items
-               if i in priced and priced[i].best_dps > 0 and band_key(priced[i]) == key]
+        views = [held(priced[i], items) for i in items if i in priced]
+        dps = [v.best_dps for v in views if v.best_dps > 0 and band_key(v) == key]
         return max(dps) if dps else None
 
     def ceiling_for(troop: report.Troop, p: mc.Priced) -> float | None:
@@ -385,19 +390,23 @@ def plan(
         craft = ladder.craft_key(troop.id, troop.culture, spec)
 
         def band_of(p: mc.Priced) -> ladder.Band:
-            return ladder.band(troop.tier, craft, spec, p.item.template,
-                               *ladder.dominant_flags(p.item.template, p.swing_damage,
+            return ladder.band(troop.tier, craft, spec, p.class_template,
+                               *ladder.dominant_flags(p.class_template, p.swing_damage,
                                                       p.thrust_damage, p.swing_dps,
                                                       p.thrust_dps, spec))
 
         def fits_limit(p: mc.Priced) -> bool:
-            limit = ladder.tier_limit(p.item.template, troop.tier, craft, spec)
+            limit = ladder.tier_limit(p.class_template, troop.tier, craft, spec)
             return not ladder.limit_breaches(limit, p.swing_damage, p.thrust_damage,
                                              p.swing_dps, p.thrust_dps)
 
         def out_of_band(iid: str) -> bool:
             p = priced.get(iid)
-            return p is not None and p.best_dps > 0 and band_of(p).verdict(p.best_dps) != "ok"
+            p = held(p, troop.items) if p is not None else None
+            return p is not None and p.best_dps > 0 and ladder.judge(
+                troop.tier, craft, spec, p.best_dps, p.class_template,
+                *ladder.dominant_flags(p.class_template, p.swing_damage, p.thrust_damage,
+                                       p.swing_dps, p.thrust_dps, spec)) != "ok"
 
         # What the troop keeps, plus each replacement as it is chosen: never hand out a copy.
         taken = {iid for iid in troop.items if not out_of_band(iid)}
@@ -407,12 +416,15 @@ def plan(
         for iid in sorted(troop.items):
             if not out_of_band(iid):
                 continue
-            p = priced[iid]
+            p = held(priced[iid], troop.items)
             if generator:
                 unresolved.append((troop, iid, f"{GENERATED_REASON}{generator}: change the weapon there"))
                 continue
+            culture_pool = pool.get(troop.culture, {})
+            if carries_shield:
+                culture_pool = {k: [c.with_shield() for c in v] for k, v in culture_pool.items()}
             replacement, why = pick_substitute(
-                p, band_of, fits_limit, pool.get(troop.culture, {}), cat, carries_shield, spec,
+                p, band_of, fits_limit, culture_pool, cat, carries_shield, spec,
                 frozenset(taken), couchable, ceiling_for(troop, p),
             )
             if replacement is None:
