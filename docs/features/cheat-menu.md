@@ -20,19 +20,32 @@ Every button calls `CheatMenuService`, the same code as the console commands bel
 `_taom_cheat_unlimitedParty` by `CheatMenuCampaignBehavior`, off in a new campaign). While on, for the player's own party
 only (not companions' parties, garrisons or AI parties):
 - **No size limit.** `TaomPartySizeModel.GetPartyMemberSizeLimit` adds a flat +10,000 as its last step, after the TroopWeight
-  penalty, through `AiPartySizeService.AddResultFrameBonus`. So the party screen, recruiting, prisoner recruiting and the
-  cheat troop screens never refuse for size, vanilla's over-limit desertion (a quarter of the men over the limit each day,
-  `DefaultPartyDesertionModel`) and over-limit speed penalty find nothing over, and the party-size morale effect stays at its
-  normal value. The TroopWeight shed never trims the main party, so its snapshot needs no bonus.
+  penalty, through `AiPartySizeService.AddResultFrameBonus`, with its own tooltip line "Unlimited party (cheat)". So the
+  party screen, recruiting, prisoner recruiting and the cheat troop screens never warn or cap for size, vanilla's
+  over-limit desertion (a quarter of the men over the limit each day, `DefaultPartyDesertionModel`) and over-limit speed
+  penalty find nothing over, and the party-size morale effect stays at its normal value. The TroopWeight shed never trims
+  the main party, so its snapshot needs no bonus. The check reads the switch first, then `MobileParty.IsMainParty`, never
+  `PartyBase.MainParty` (vanilla nulls the main party for a moment in `OnPlayerCharacterChanged`).
 - **No desertion of enemy troops.** `AlignmentDesertionBehavior` skips the main party's daily alignment desertion (troops of
   an opposed alignment or enemy culture), and `DesertionRecruitGuard` stops blocking such troops for it: prisoner recruiting
   and its conformity tick (Patch150), and the player's volunteer slots (`CapHeroIndex`). Both read the switch before they test
   for the main party, so with it off nothing changes for anyone.
-- Not changed: vanilla's low-morale desertion, which hits every troop alike whatever its culture; TAOM's morale model has no
-  penalty for enemy troops.
+- **At once.** `PartyBase.PartySizeLimit` is cached until the roster's `VersionNo` changes, so each flip calls
+  `IPartySizeCacheInvalidator.InvalidateLedBy` with the main hero (which also refreshes the army leader party's speed
+  cache). At session launch, after a load, a switch saved on does the same (`CheatMenuService.ReconcileAtSessionLaunch`).
+- Not changed: vanilla's low-morale desertion, which hits every troop alike whatever its culture (TAOM's morale model has no
+  penalty for enemy troops); special-resource upkeep desertion (at a balance of 0, a tenth of each upkeep troop type each
+  day, [special-resources.md](special-resources.md)); and Recruitment Alignment's source block (a settlement of an
+  enemy-aligned kingdom still offers no volunteers, [alignment-recruitment.md](alignment-recruitment.md)).
+- The switch stays in force with the MCM **Enable Cheat Menu** off: that switch only hides the menu. Turn Unlimited party
+  off before turning the menu off.
+- Army side effect: the engine reads a party's size limit at army level too, so an army that holds the player's party
+  reads that party as huge: its speed and the AI's army decisions see the bonus. Not checked in game.
+- Co-op: refused, and a single-player save loaded into a shared session has the switch turned off at session launch.
 
-Turning it off removes no troop. The usual rules come back the next day: men over the size limit start to desert (a quarter
-of the excess per day), the party is slower while over the limit, and alignment desertion takes the opposed troops again.
+Turning it off removes no troop. The size limit applies again at once (the party screen and the speed penalty); the
+desertion rules come back with the next daily tick: men over the size limit start to desert (a quarter of the excess per
+day), and alignment desertion takes the opposed troops again.
 The menu hint says both effects and what happens when it is turned off.
 
 ## Troops
@@ -288,5 +301,7 @@ capped `ISpecialResourceService.GrantAmount`, for the main hero's own resource.
   faction's culture (kingdom, else clan), sorted by tier then name (`CheatTroopList`).
 - 2026-11-15: "Unlimited party: off/on": no size limit and no alignment desertion for the player's own party, saved with
   the campaign (`CheatPartyRules`).
+- 2026-11-16: Unlimited party takes effect at once (party-size cache refreshed on each flip and after a load), is turned
+  off when a save is loaded into a co-op session, and shows a tooltip line for its bonus.
 - 2026-11-15: Troops page: "Every troop (party screen)...", the game's own cheat party screen (every troop, 10 of each),
   opened without the engine's cheat mode.
