@@ -29,9 +29,13 @@ WHAT IT CHECKS
 
 Item and description data come from the INSTALLED modules (that is where LOTRLOME_Armory lives
 and it is not in this repo), except the module whose rosters are checked: that one is read from
-the checked tree, so an edit counts before it is deployed. Stylesheets are the ones each module's
-SubModule.xml `<XmlName>` rows name, and the modules that module's `<IncompatibleModules>` lists
-(NavalDLC for TAOM) are left out, as the engine never loads them beside it.
+the checked tree, so an edit counts before it is deployed. Only the modules that load with it
+count: itself, Native, and what its SubModule.xml depends on or loads after (LoadBeforeThis
+metadata), followed through each of those modules (#1375). The modules its `<IncompatibleModules>`
+lists (NavalDLC for TAOM) are left out too. Stylesheets are the ones each module's SubModule.xml
+`<XmlName>` rows name for a campaign, `<path>.xsl` before `<path>.xslt`, as the engine reads them.
+A row that merges an `.xml` file or a folder for these ids is bad input (exit 2): the gate does not
+model the engine's XSD merge.
 
 EXIT CODES
 ----------
@@ -43,6 +47,10 @@ USAGE
 -----
     python tools/audit_polearm_shield_parity.py
     python tools/audit_polearm_shield_parity.py --game-modules "<game>/Modules" --rosters <dir>
+
+A --rosters folder with no SubModule.xml beside it reads every installed module (less TAOM's
+incompatible list), not TAOM's playset. On a desktop with AWOIAF_Armoury installed that run exits 2:
+its rows merge .xml files. Copy TAOM's SubModule.xml beside the folder to check TAOM's playset.
 """
 from __future__ import annotations
 
@@ -68,6 +76,8 @@ BLOCKING_FLAG = "requires_no_shield"
 # The defect is a MELEE weapon the AI can never draw, so ranged types are out of scope, not
 # suppressed case by case.
 MELEE_TYPES = frozenset({"Polearm", "OneHandedWeapon", "TwoHandedWeapon"})
+# The game type a campaign merges its XML for: GameType.GameTypeStringId is the class name.
+CAMPAIGN = "Campaign"
 
 # Every melee type fails the same way: a new pair fails the build. Two-handed weapons joined in
 # #1312, after each flagged roster was fixed or held below.
@@ -217,19 +227,73 @@ def incompatible(submodule: Path) -> frozenset[str]:
     return frozenset(m.get("Id") for m in block.findall("Module") if m.get("Id"))
 
 
-def module_dirs(modules: Path, own: Path | None, skip: frozenset[str]) -> list[Path]:
+def _module_id(root, folder: Path) -> str:
+    """A module's <Id value>, which the engine keys it by (SandBox's folder holds Id "Sandbox")."""
+    node = root.find("Id") if root is not None else None
+    return (node.get("value") if node is not None else None) or folder.name
+
+
+def _depends(root) -> list[str]:
+    """The ids a SubModule.xml loads after: its <DependedModule> rows and its LoadBeforeThis
+    metadata (TAOM names LOTRLOME_Armory only there, as optional)."""
+    ids = [m.get("Id") for m in root.iterfind("DependedModules/DependedModule")]
+    ids += [m.get("id") for m in root.iterfind("DependedModuleMetadatas/DependedModuleMetadata")
+            if m.get("order") == "LoadBeforeThis"]
+    return [i for i in ids if i]
+
+
+def playset(by_id: dict[str, Path], root_sub: Path) -> set[str]:
+    """The ids of the installed modules that load with the module `root_sub` describes: itself,
+    Native, and what it depends on or loads after, followed through each module's own SubModule.xml.
+
+    An installed module outside it (AWOIAF_Armoury, Multiplayer, StoryMode) is not in a TAOM
+    campaign, so its stylesheets, pieces and items must not count (#1375). A player can enable
+    another module beside TAOM; the gate checks the set TAOM declares. Modules that load after it
+    (TAOM_Map, TAOM.CoopCompat, Coop) are left out too; on 2026-11-16 none had weapon data.
+    """
+    root = _submodule(root_sub)
+    out = {_module_id(root, root_sub.parent), "Native"}
+    queue = _depends(root)
+    while queue:
+        mid = queue.pop()
+        if mid in out or mid not in by_id:
+            continue
+        out.add(mid)
+        sub = by_id[mid] / "SubModule.xml"
+        if sub.is_file():
+            queue += _depends(_submodule(sub))
+    return out
+
+
+def module_dirs(modules: Path, own: Path | None, skip: frozenset[str],
+                root: Path | None = None) -> list[Path]:
     """The module folders to read, sorted by module id (load-equivalent, see merged()).
 
-    Every installed module except the skipped ids. `own` is the checked module's folder (the one
-    holding the SubModule.xml beside --rosters): it takes the place of its installed copy, so an
-    undeployed edit counts and a stale deployed file does not (#1354).
+    With `root`, a SubModule.xml, only the modules of its playset; without it, every installed
+    module. Either way less the skipped ids. A module is keyed by its <Id value>, falling back to
+    its folder name. `own` is the checked module's folder (the one holding the SubModule.xml
+    beside --rosters): it takes the place of its installed copy, so an undeployed edit counts and
+    a stale deployed file does not (#1354).
     """
-    by_id = {p.name: p for p in modules.iterdir() if p.is_dir()}
+    by_id: dict[str, Path] = {}
+    for folder in sorted(p for p in modules.iterdir() if p.is_dir()):
+        sub = folder / "SubModule.xml"
+        # The engine keeps the first module it finds for an Id (ModuleHelper.GetModules).
+        by_id.setdefault(_module_id(_submodule(sub) if sub.is_file() else None, folder), folder)
     if own is not None:
-        id_node = _submodule(own / "SubModule.xml").find("Id")
-        own_id = id_node.get("value") if id_node is not None else None
-        by_id[own_id or own.name] = own
-    return [by_id[k] for k in sorted(by_id) if k not in skip]
+        by_id[_module_id(_submodule(own / "SubModule.xml"), own)] = own
+    keep = playset(by_id, root) if root is not None else set(by_id)
+    return [by_id[k] for k in sorted(by_id) if k in keep and k not in skip]
+
+
+def _in_campaign(row) -> bool:
+    """False for a row whose <IncludedGameTypes> lists game types without Campaign: the engine
+    skips it in a campaign (MBObjectManager.GetMergedXmlForManaged; a campaign's game type id is
+    its class name, GameType.GameTypeStringId)."""
+    node = row.getparent()
+    types = node.find("IncludedGameTypes") if node is not None else None
+    values = [g.get("value") for g in types.findall("GameType")] if types is not None else []
+    return not values or CAMPAIGN in values
 
 
 def stylesheets(module: Path, xml_id: str) -> list[Path]:
@@ -239,17 +303,30 @@ def stylesheets(module: Path, xml_id: str) -> list[Path]:
     (`<XmlName id="WeaponDescriptions" path="placeholder_weapons/ph_weapon_descriptions"/>`), and a
     path may sit in a subfolder. Reading `<name>.xslt` at the top level instead missed TAOM's
     placeholder registrations, so every `taom_ph_*` weapon resolved to no usage (#1354).
+
+    Per row, as MBObjectManager.HandleXsltList does: `<path>.xsl` if it exists, else `<path>.xslt`.
+    A row that names an `.xml` file or a folder merges that data by the engine's XSD rules
+    (MergeTwoXmls), which the gate does not model: that is bad input (#1375). Call this for every
+    module but the base (Native), whose row's `.xml` is the document the others transform.
     """
     sub = module / "SubModule.xml"
     if not sub.is_file():
         return []
+    data = module / "ModuleData"
     sheets = []
     for row in _submodule(sub).iter("XmlName"):
         path = row.get("path")
-        if row.get("id") == xml_id and path:
-            sheet = module / "ModuleData" / f"{path}.xslt"
+        if row.get("id") != xml_id or not path or not _in_campaign(row):
+            continue
+        if (data / f"{path}.xml").is_file() or (data / path).is_dir():
+            raise GateInputError(
+                f"{sub}: the {xml_id} row path=\"{path}\" merges an .xml file or folder, which this "
+                "gate does not model; only stylesheets are supported for this id")
+        for suffix in (".xsl", ".xslt"):
+            sheet = data / f"{path}{suffix}"
             if sheet.is_file():
                 sheets.append(sheet)
+                break
     return sheets
 
 
@@ -267,6 +344,9 @@ def merged(dirs: list[Path], name: str, xml_id: str):
         return None
     doc = _parse(base)
     for module in dirs:
+        # The engine never applies the first entry's stylesheet: Native's row is the base.
+        if module is native:
+            continue
         for sheet in stylesheets(module, xml_id):
             doc = ET.XSLT(_parse(sheet))(doc)
     return doc
@@ -464,14 +544,15 @@ def main() -> int:
         print(f"ERROR: roster folder not found: {roster_root}", file=sys.stderr)
         return 2
 
-    # The checked module's own SubModule.xml names the modules that never load beside it (#1354).
-    # A --rosters folder with none beside it (a fixture, a copy) takes TAOM's list instead.
+    # The checked module's own SubModule.xml names the modules that load with it (#1375) and the
+    # ones that never do (#1354). A --rosters folder with none beside it (a fixture, a copy) reads
+    # every installed module less TAOM's incompatible list.
     own_sub = roster_root.parent / "SubModule.xml"
     own = roster_root.parent if own_sub.is_file() else None
     skip_from = own_sub if own is not None else DEFAULT_ROSTERS.parent / "SubModule.xml"
     try:
         skip = incompatible(skip_from) if skip_from.is_file() else frozenset()
-        dirs = module_dirs(modules, own, skip)
+        dirs = module_dirs(modules, own, skip, own_sub if own is not None else None)
         descs = descriptions(dirs)
         templs = templates(dirs)
         pieces_meta = crafting_pieces(dirs)
@@ -541,6 +622,8 @@ def main() -> int:
     if own is not None:
         print(f"Own:      {own} (read in place of its installed copy)")
     print(f"Rosters:  {roster_root}")
+    print(f"Playset:  {', '.join(_module_id(_submodule(d / 'SubModule.xml'), d) for d in dirs if (d / 'SubModule.xml').is_file())}"
+          + (f" (from {own_sub})" if own is not None else " (every installed module)"))
     if skip:
         print(f"Skipped:  {', '.join(sorted(skip))} (incompatible, from {skip_from})")
     print(
