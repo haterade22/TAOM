@@ -85,9 +85,17 @@ internal static class LongDefeatChecks
 
     internal static CheckVerdict General(LdBootFacts f)
     {
-        var ok = f.GeneralIsMain && f.IsPlayerGeneral && f.OrderOwnerIsMain;
-        return Verdict(ok, $"general_is_main={Flag(f.GeneralIsMain)} player_general={Flag(f.IsPlayerGeneral)} order_owner_is_main={Flag(f.OrderOwnerIsMain)}");
+        var ok = f.GeneralIsMain && f.IsPlayerGeneral && f.OrderOwnerIsMain && f.MainOnPlayerTeam;
+        return Verdict(ok, $"general_is_main={Flag(f.GeneralIsMain)} player_general={Flag(f.IsPlayerGeneral)} order_owner_is_main={Flag(f.OrderOwnerIsMain)}"
+            + $" main_on_team={Flag(f.MainOnPlayerTeam)} side={Side(f.PlayerAttacks)}");
     }
+
+    internal const string LordFellId = "taom.long-defeat.lord-fell";
+
+    /// <summary>The player's body fell: a line for every side, so an attack's accounting of his death is read, not assumed.</summary>
+    internal static CheckVerdict LordFell(int deaths, bool attacks) => new(CheckResult.Pass, $"deaths={Num(deaths)} side={Side(attacks)}");
+
+    private static string Side(bool attacks) => attacks ? "attacker" : "defender";
 
     /// <summary>A shipped muster point the scene no longer serves: the run still plays, on the scene's frame, but it must not read as a pass.</summary>
     internal static CheckVerdict MusterPlaceLost(FormationSlot slot) => Verdict(false, $"source=scene class={slot} recorded place has no navmesh");

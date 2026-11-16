@@ -23,11 +23,13 @@ public sealed class LongDefeatMissionLogic : MissionLogic, IBattlePowerCalculati
 
     private readonly LongDefeatRunHost _host;
     private readonly Func<float> _missionTime;
+    private readonly IModLogger _logger;
 
     internal LongDefeatMissionLogic(RunPlan plan, LongDefeatSession session, IModLogger logger, IOutcomeLog outcomes, Action leave,
         string missionKey, LongDefeatRunRecords? records = null, LongDefeatRunCoop? coop = null)
     {
         _missionTime = () => Mission.CurrentTime;
+        _logger = logger;
 
         // One registry for the mission: the field adapter records each attacker's role, the effects adapter finds the commander by it.
         var registry = new LongDefeatAgentRegistry();
@@ -116,9 +118,12 @@ public sealed class LongDefeatMissionLogic : MissionLogic, IBattlePowerCalculati
 
     // Crossing the boundary reaches RetreatMission (MissionBoundaryCrossingHandler.cs:133-150). The Long Defeat's launcher binds the exit to EndGame, not EndMission: with the manager
     // ending, the engine shows the main menu instead of the Custom Battle screen under it. A story mission binds its own EndMission. The end report is written by the exit that follows.
+    // The line (#1409) gives the main agent's place and the boundary test the handler made there (MissionBoundaryCrossingHandler.cs:210), so a retreat reads as a place.
     public override void OnRetreatMission()
     {
         base.OnRetreatMission();
+        var main = Mission?.MainAgent;
+        _logger.LogInfo(main == null ? "[LongDefeat][Player] retreat main=none" : FormattableString.Invariant($"[LongDefeat][Player] retreat at=({main.Position.x:F1}, {main.Position.y:F1}, {main.Position.z:F1}) inside={(Mission.IsPositionInsideBoundaries(main.Position.AsVec2) ? "true" : "false")}"));
         _host.Leave();
     }
 

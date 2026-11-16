@@ -238,6 +238,28 @@ public class LongDefeatHeroChecksTests
     private static LdHeroReport GoodSpawn() => new(true, null, true, false, HeroGroup.FormationIndex, 3f, "strider_sword", Held: true, Strangers: 0, Order: "Move");
 
     [TestMethod]
+    public void Spawned_AnEnemyHeroUnderAiInAClassFormation_PassesAndEndsSideEnemy()
+    {
+        var verdict = LongDefeatHeroChecks.Spawned(Aragorn, GoodSpawn() with { Enemy = true, FormationIndex = 0, Held = false, Strangers = 99 });
+
+        Assert.AreEqual(CheckResult.Pass, verdict.Result, verdict.Detail);
+        StringAssert.EndsWith(verdict.Detail, " side=enemy");
+    }
+
+    [TestMethod]
+    public void Spawned_AnEnemyHeroInFormation7OrHeld_Fails()
+    {
+        Assert.AreEqual(CheckResult.Fail, LongDefeatHeroChecks.Spawned(Aragorn, GoodSpawn() with { Enemy = true, Held = false }).Result, "formation 7");
+        Assert.AreEqual(CheckResult.Fail, LongDefeatHeroChecks.Spawned(Aragorn, GoodSpawn() with { Enemy = true, FormationIndex = 0, Held = true }).Result, "held");
+    }
+
+    [TestMethod]
+    public void Spawned_ADefenceHero_DetailHasNoSide()
+    {
+        Assert.IsFalse(LongDefeatHeroChecks.Spawned(Aragorn, GoodSpawn()).Detail.Contains("side="));
+    }
+
+    [TestMethod]
     public void AGoodSpawn_Passes_WithTheExactDetail()
     {
         var verdict = LongDefeatHeroChecks.Spawned(Aragorn, GoodSpawn());

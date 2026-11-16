@@ -23,6 +23,9 @@ internal sealed partial class LongDefeatDirector
     private const float StateLogSeconds = 5f;
 
     private readonly RunPlan _plan;
+
+    // The engine's answer, read once in Start after the boot (#1409): the player fights on the attacker team.
+    private bool _playerAttacks;
     private readonly SurvivalRun _run;
     private readonly ILongDefeatBattlefieldAdapter _field;
     private readonly ILongDefeatEffectsAdapter? _effects;
@@ -126,7 +129,10 @@ internal sealed partial class LongDefeatDirector
         var read = _field.Read(_keepAt, _keepRadius, _plan.Rules.KeepHeightBand, true);
         _mainBody = read.MainBody;
         AdoptIfNew();
-        LongDefeatChecks.Record(_outcomes, LongDefeatChecks.BootId, _mission, LongDefeatChecks.Boot(_field.BootFacts()));
+        var facts = _field.BootFacts();
+        _playerAttacks = facts.PlayerAttacks;
+        _logger.LogInfo($"{Tag}[Player] start {_field.DescribePlayer()}");
+        LongDefeatChecks.Record(_outcomes, LongDefeatChecks.BootId, _mission, LongDefeatChecks.Boot(facts));
         LogArcherPositions();
         _logger.LogInfo($"{Tag}[Boot] run started: fortress {_plan.FortressId}, keep {KeepText()} ({(recorded != null ? "recorded" : "scene")}), autoplay {_plan.Options.Autoplay}");
         return true;
@@ -220,6 +226,7 @@ internal sealed partial class LongDefeatDirector
     private void LordFell()
     {
         _run.PlayerDown();
+        LongDefeatChecks.Record(_outcomes, LongDefeatChecks.LordFellId, _mission + "-f" + _run.Stats.PlayerDeaths, LongDefeatChecks.LordFell(_run.Stats.PlayerDeaths, _playerAttacks));
         _deathPending = true;
         NoteEngineTookSplit("the lord fell");
     }

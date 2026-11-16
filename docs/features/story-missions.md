@@ -38,7 +38,8 @@ bar and a player who can take a soldier after death.
 - **Launch** (`StoryMissionLauncher`): `MissionState.OpenNew` with the Long Defeat's siege behavior
   list and no map event, as Host Review opens its mission. Each launch gets its own
   `LongDefeatSession`. It never assigns `Game.PlayerTroop`, which in a campaign is the player's hero.
-  The launcher refuses the attacking side, a missing culture and a missing troop, and logs why.
+  The launcher refuses a missing culture and a missing troop, and logs why. A row with side `Attack`
+  makes the attacker combatant the player's team (#1409).
 - **Run plan** (`StoryPlanBuilder`): the row's garrison, waves, rules and free heroes. There is no shop, gold,
   fortification, affix, boon or class, and the run stops after the authored waves.
 - **Verdict** (`StoryVerdict`, `StoryEndWatch`): the run's side-neutral end reason becomes a win or a
@@ -55,8 +56,8 @@ bar and a player who can take a soldier after death.
 
 - **Source:** a War Chronicle siege with a `story` block (`war_chronicle.json`; the Hornburg names
   `helms_deep_defend`). The block may also name an `attackMission`, the same battle from the
-  attackers' side (#1326); no shipped window has one yet, because the launcher still refuses an
-  attacking mission. `IChronicleStoryPort.GetStoryOffers` lists each Active story window that the
+  attackers' side (#1326); no shipped window has one yet, because the maintainer has not decided the
+  key (#1409 step 6). `IChronicleStoryPort.GetStoryOffers` lists each Active story window that the
   player has not declined, that no attacker has besieged, and whose target the defender still holds
   (read live), while no chronicle announcement waits to show ([war-chronicle.md](war-chronicle.md)
   "The event chain", "Story offer"). The MCM switch "Offer Story Missions" (War of the Ring/War
@@ -218,18 +219,18 @@ mean the same thing by the same key.
 | `id` | string | The id that `taom.story_open` takes |
 | `name` | string | `{=KEY}English` display name |
 | `scene` | string | The scene the mission opens |
-| `side` | string | `Defend` (the launcher refuses the attacking side) |
+| `side` | string | `Defend` or `Attack`: the side the player fights on |
 | `defenderCulture`, `attackerCulture` | string | Culture ids of the two sides |
 | `music` | string | Optional: an `.ogg` path under the module's `ModuleSounds` folder |
 | `rules` | object | Long Defeat rule numbers, for example `preparationSeconds` |
-| `garrison` | array | The player's troops: `troop`, `class`, `count` |
+| `garrison` | array | The defenders' troops (the player's in a Defend row): `troop`, `class`, `count` |
 | `muster`, `keep` | object | Optional recorded points of the scene |
 | `heroes` | array | Optional free heroes, at most three: `id`, `troop`, optional `healthFactor` (#1366) |
 | `roster.waves` | array | Each wave: `count` and a weighted `mix` of troops |
 
 ### Current Values
 
-All seven rows are Defend missions with one wave. Only Helm's Deep names a music track
+Seven rows are Defend missions and `helms_deep_attack` is an Attack mission; every row has one wave. Only Helm's Deep names a music track
 (`StoryMusic/isengard_vs_rohan.ogg`). Four rows use stand-in scenes after one-wave probes on
 2026-11-10.
 
@@ -439,6 +440,14 @@ key, the take-over, the faces, the War Chronicle offer path).
 Slices 2, 3 and 5 of #1105 are not built: field SAVE and KILL missions, the Breaking end to end, and
 the ATTACK side. Only the Hornburg offers a mission. Slice 4 was built before slices 2 and 3, because a
 player report showed the Hornburg ending with no battle (2026-11-13).
+
+## Known limits
+
+- In an Attack row (#1409) the player's body stands on the attacker team, and some Long Defeat code still treats it as a wave soldier or
+  the defender team as the player's. The hooks and effect sampling keyed by side (`LongDefeatStatHooks`, `LongDefeatCombatHooks`,
+  `LongDefeatEffectsAdapter`, morale, the gate watch) do not skip the main agent. The sally helpers do the same: `RemountPlayer` takes
+  `DefenderTeam`, and `NearestAttackerTo` includes the main agent. No story plan reaches this code today, because a story plan has no
+  affix, scaling, boon, shop or mounted class. It becomes live if a story attack gets one of them; fix it then.
 
 ## Changelog
 

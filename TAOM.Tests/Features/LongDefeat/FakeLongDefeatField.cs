@@ -21,6 +21,13 @@ internal sealed partial class FakeLongDefeatField : ILongDefeatBattlefieldAdapte
     public int HiddenGates { get; set; } = 1;
     public LdPoint? Keep { get; set; } = new LdPoint(138.4f, 159.5f, 32.5f);
     public LdBootFacts Facts { get; set; } = new(true, true, true, false, true, true, true);
+
+    /// <summary>What the boot facts report as "the player attacks" (an attack row); true makes the director run as the attacker's side.</summary>
+    public bool PlayerAttacks
+    {
+        get => Facts.PlayerAttacks;
+        set => Facts = Facts with { PlayerAttacks = value };
+    }
     public int AttackersStanding { get; set; }
     public int AttackersFleeing { get; set; }
 

@@ -489,8 +489,19 @@ NOT_ARMED_LOG = ("[2026-11-16 09:00:00] [WARNING] [Autorun][Scenario] not armed:
                  + UNLOAD_LINE)
 
 
+ATTACK_LAUNCH = STORY_LAUNCH.replace("helms_deep_defend", "helms_deep_attack")
+ATTACK_PASS = STORY_PASS.replace("helms_deep_defend", "helms_deep_attack").replace("verdict=Won", "verdict=Lost")
+ATTACK_ENDED = STORY_ENDED.replace("verdict=Won side=Defending reason=TargetReached", "verdict=Won side=Attacking reason=KeepLost")
+
+
+def attack_log():
+    return "\n".join([ATTACK_LAUNCH, STORY_BOOT, ATTACK_ENDED, ATTACK_PASS.replace("verdict=Lost", "verdict=Won"), UNLOAD_LINE,
+                      STAMP_LINE.format(HEAD)])
+
+
 def story_armed(**overrides):
-    values = {"kind": "story-mission", "scenario": "story-mission", "culture": "gondor", "days": None, "mission": "helms_deep_defend"}
+    values = {"kind": "story-mission", "scenario": "story-mission", "culture": "gondor", "days": None, "mission": "helms_deep_defend",
+              "side": "Defending"}
     values.update(overrides)
     return SimpleNamespace(**values)
 
@@ -520,6 +531,15 @@ class StoryArmTextTests(unittest.TestCase):
                          ("story-mission", "story-mission", "helms_deep_defend", "1200", "gondor", "1"))
         self.assertEqual(wall, 3000)
         self.assertEqual(keys["wall_limit_seconds"], "3000")
+
+    def test_an_unknown_mission_is_refused_at_parse(self):
+        message = parse_fails(["--kind", "story-mission", "--mission", "nowhere"])
+        self.assertIn("nowhere", message)
+        self.assertIn("helms_deep_attack", message)
+
+    def test_an_attack_mission_parses(self):
+        known, _ = parse(["--kind", "story-mission", "--mission", "Helms_Deep_Attack"])
+        self.assertEqual(known.mission, "helms_deep_attack")
 
     def test_story_kind_needs_a_mission(self):
         self.assertIn("--mission", parse_fails(["--kind", "story-mission"]))
@@ -609,6 +629,59 @@ class StoryJudgeTests(unittest.TestCase):
         code, why = story_judge(good_story_done(), log)
         self.assertEqual(code, 1)
         self.assertIn("story-missions.ended", why)
+
+    def test_story_side_reads_the_checkout_row(self):
+        self.assertEqual(rs.story_side("helms_deep_attack"), "Attacking")
+        self.assertEqual(rs.story_side("helms_deep_defend"), "Defending")
+        self.assertEqual(rs.story_side("Helms_Deep_Attack"), "Attacking")
+        self.assertIsNone(rs.story_side("nowhere"))
+
+    def test_an_attack_run_passes_with_side_attacking(self):
+        log = attack_log()
+        self.assertEqual(rs.story_log_problems(log, "helms_deep_attack", "Attacking"), [])
+        code, why = story_judge(good_story_done(mission="helms_deep_attack"), log,
+                                armed=story_armed(mission="helms_deep_attack", side="Attacking"))
+        self.assertEqual(code, 0, why)
+
+    def test_the_judge_uses_the_side_read_at_launch_not_the_file(self):
+        known, _ = parse(["--kind", "story-mission", "--mission", "helms_deep_attack"])
+        self.assertEqual(known.side, "Attacking")
+        with tempfile.TemporaryDirectory() as folder, mock.patch.object(rs, "STORY_MISSIONS_FILE", Path(folder) / "missing.json"):
+            code, why = story_judge(good_story_done(mission="helms_deep_attack"), attack_log(), armed=known)
+        self.assertEqual(code, 0, why)
+
+    def test_a_json_with_a_bom_is_read(self):
+        with tempfile.TemporaryDirectory() as folder:
+            bom = Path(folder) / "story_missions.json"
+            bom.write_bytes(b"\xef\xbb\xbf" + rs.STORY_MISSIONS_FILE.read_bytes())
+            with mock.patch.object(rs, "STORY_MISSIONS_FILE", bom):
+                self.assertEqual(rs.story_side("helms_deep_defend"), "Defending")
+
+    def test_an_unreadable_json_is_named_at_parse(self):
+        with tempfile.TemporaryDirectory() as folder, mock.patch.object(rs, "STORY_MISSIONS_FILE", Path(folder) / "missing.json"):
+            message = parse_fails(STORY_ARGS)
+        self.assertIn("could not be read or holds no row with side Defend or Attack", message)
+
+    def test_a_defence_that_logs_side_attacking_is_rejected(self):
+        log = STORY_LOG.replace("side=Defending", "side=Attacking")
+        problems = rs.story_log_problems(log, "helms_deep_defend", "Defending")
+        self.assertEqual(len(problems), 1)
+        self.assertIn("taom.story-missions.ended", problems[0])
+
+    def test_an_attack_that_logs_side_defending_is_rejected(self):
+        problems = rs.story_log_problems(attack_log().replace("side=Attacking", "side=Defending"), "helms_deep_attack", "Attacking")
+        self.assertEqual(len(problems), 1)
+        self.assertIn("taom.story-missions.ended", problems[0])
+
+    def test_an_abandoned_attack_is_not_a_pass(self):
+        log = attack_log().replace("verdict=Won side=Attacking reason=KeepLost", "verdict=Lost side=Attacking reason=Abandoned")
+        self.assertEqual(len(rs.story_log_problems(log, "helms_deep_attack", "Attacking")), 1)
+
+    def test_an_unknown_mission_fails_the_judge(self):
+        code, why = story_judge(good_story_done(mission="nowhere"), STORY_LOG.replace("helms_deep_defend", "nowhere"),
+                                armed=story_armed(mission="nowhere", side=None))
+        self.assertEqual(code, 1)
+        self.assertIn("nowhere", why)
 
     def test_story_needs_exactly_one_launch_line_with_autoplay_true(self):
         for log in (without(STORY_LOG, "launching"), STORY_LOG.replace("autoplay True", "autoplay False")):
@@ -762,6 +835,203 @@ class StoryWiringTests(unittest.TestCase):
         self.assertNotIn("--mission-limit", out.getvalue())
 
 
+def check_line(check_id, detail, result="pass"):
+    return f"[2026-11-16 11:00:00] [INFO] [Check] id={check_id} result={result} {detail}"
+
+
+def hits(patterns, line):
+    return any(re.search(pattern, line) for pattern in patterns)
+
+
+class AttackManifestTests(unittest.TestCase):
+    """tools/ingame_checks/1409.toml: every pass and fail pattern is tried against a line built from the C# that writes it."""
+
+    SCOPE = r"\[StoryMissions\] launching \S+ for \x27helms_deep_attack\x27 "
+
+    @classmethod
+    def setUpClass(cls):
+        import tomllib
+        cls.manifest = tomllib.loads((ROOT / "tools/ingame_checks/1409.toml").read_text(encoding="utf-8"))
+
+    def rows(self, check_id):
+        return [c for c in self.manifest["check"] if c["id"] == check_id]
+
+    def row(self, check_id):
+        found = self.rows(check_id)
+        self.assertEqual(len(found), 1, check_id)
+        return found[0]
+
+    def test_header(self):
+        self.assertEqual((self.manifest["issue"], self.manifest["logs"]), (1409, ["taom"]))
+        self.assertRegex(self.manifest["fixed_in"], r"^[0-9a-f]{7,40}$")
+
+    def test_every_row_but_the_done_row_is_scoped_to_the_attack_launch(self):
+        for check in self.manifest["check"]:
+            if check["id"] == "taom.autorun.story-mission.done":
+                self.assertNotIn("scope", check)
+                self.assertNotIn("scope_end", check)
+                continue
+            self.assertEqual(check["scope"], self.SCOPE, check["id"])
+            self.assertEqual(check["scope_end"], r"\[(LongDefeat|StoryMissions)\] launching ", check["id"])
+
+    def test_the_ended_pass_is_the_attacking_pattern(self):
+        ended = self.rows("taom.story-missions.ended")
+        self.assertEqual([rs.story_ended_pass("Attacking")], ended[0]["pass"])
+        self.assertEqual(ended[0].get("absence", "fail"), "not-reached")
+        line = check_line("taom.story-missions.ended", "verdict=Won side=Attacking reason=KeepLost waves=1")
+        self.assertTrue(hits(ended[0]["pass"], line))
+        self.assertFalse(hits(ended[0]["fail"], line))
+        self.assertFalse(hits(ended[0]["pass"], line.replace("side=Attacking", "side=Defending")))
+        abandoned = line.replace("verdict=Won side=Attacking reason=KeepLost", "verdict=Lost side=Attacking reason=Abandoned")
+        self.assertFalse(hits(ended[0]["pass"], abandoned))
+        self.assertTrue(hits(ended[0]["fail"], abandoned))
+        self.assertTrue(hits(ended[0]["fail"], line.replace("result=pass", "result=fail")))
+
+    def test_the_balance_row_reads_a_won_attack_and_is_not_reached_otherwise(self):
+        balance = self.row("taom.story-missions.attack-won")
+        self.assertEqual(balance["absence"], "not-reached")
+        won = check_line("taom.story-missions.ended", "verdict=Won side=Attacking reason=KeepLost waves=1")
+        lost = check_line("taom.story-missions.ended", "verdict=Lost side=Attacking reason=Abandoned waves=0")
+        self.assertTrue(hits(balance["pass"], won))
+        self.assertFalse(hits(balance["pass"], lost))
+        self.assertFalse(hits(balance["pass"], won.replace("verdict=Won", "verdict=Lost")))
+
+    def test_the_done_row_names_the_attack_mission(self):
+        done = self.row("taom.autorun.story-mission.done")
+        line = check_line("taom.autorun.story-mission.done", "reason=ok mission=helms_deep_attack verdict=Lost mission_seconds=611.2 culture=gondor")
+        self.assertTrue(hits(done["pass"], line))
+        self.assertFalse(hits(done["pass"], line.replace("mission=helms_deep_attack", "mission=helms_deep_defend")))
+        refused = line.replace("result=pass reason=ok", "result=fail reason=mission_limit")
+        self.assertTrue(hits(done["fail"], refused))
+        self.assertFalse(hits(done["fail"], refused.replace("helms_deep_attack", "helms_deep_defend")))
+
+    def test_general_needs_the_main_on_the_attacker_team(self):
+        general = self.row("taom.story-missions.hosted.general")
+        line = check_line("taom.story-missions.hosted.general",
+                          "general_is_main=true player_general=true order_owner_is_main=true main_on_team=true side=attacker")
+        self.assertTrue(hits(general["pass"], line))
+        for bad in (line.replace("side=attacker", "side=defender"), line.replace("main_on_team=true", "main_on_team=false")):
+            self.assertFalse(hits(general["pass"], bad))
+        self.assertTrue(hits(general["fail"], line.replace("result=pass", "result=fail").replace("main_on_team=true", "main_on_team=false")))
+
+    def test_each_enemy_hero_stands_in_a_class_formation_under_ai(self):
+        hero = self.row("taom.story-missions.hosted.hero")
+        self.assertEqual(len(hero["pass"]), 3)
+        tail = "is_hero=0 campaign=1 mounted=0 formation={f} held=0 strangers=57 order=Charge health_factor=3.00 wanted_factor=3.00 wielded={w} side=enemy"
+        lines = {
+            "aragorn": check_line("taom.story-missions.hosted.hero", "hero=aragorn troop=taom_hero_aragorn " + tail.format(f=0, w="strider_sword")),
+            "legolas": check_line("taom.story-missions.hosted.hero", "hero=legolas troop=taom_hero_legolas " + tail.format(f=1, w="wm_mirkwood_bow_a01")),
+            "gimli": check_line("taom.story-missions.hosted.hero", "hero=gimli troop=taom_hero_gimli " + tail.format(f=0, w="sm_dwarf_erebor_axe_2h_c")),
+        }
+        for name, line in lines.items():
+            self.assertEqual(sum(1 for p in hero["pass"] if re.search(p, line)), 1, name)
+            self.assertFalse(hits(hero["fail"], line))
+            self.assertFalse(hits(hero["pass"], line.replace(" side=enemy", "")), name)
+            self.assertFalse(hits(hero["pass"], line.replace("formation=0", "formation=7").replace("formation=1", "formation=7")), name)
+            self.assertFalse(hits(hero["pass"], line.replace("held=0", "held=1")), name)
+        self.assertTrue(hits(hero["fail"], lines["gimli"].replace("result=pass", "result=fail")))
+
+    def test_the_fired_row_reads_owned_here(self):
+        fired = self.row("taom.hero-abilities.fired")
+        self.assertEqual(len(fired["pass"]), 3)
+        gimli = check_line("taom.hero-abilities.fired", "hero=taom_hero_gimli fired=1 contact_s=27 allies=58 shocked=10 owned=1")
+        self.assertTrue(hits(fired["pass"], gimli))
+        self.assertFalse(hits(fired["pass"], gimli.replace("owned=1", "owned=0")))
+        self.assertFalse(hits(fired["pass"], gimli.replace("shocked=10", "shocked=0")))
+        self.assertTrue(hits(fired["fail"], gimli.replace("result=pass", "result=fail")))
+
+    def test_the_instant_kill_pattern_is_the_1359_pattern(self):
+        import tomllib
+        old = tomllib.loads((ROOT / "tools/ingame_checks/1359.toml").read_text(encoding="utf-8"))
+        old_row = next(c for c in old["check"] if c["id"] == "taom.signature-strikes.instant-kill")
+        for key in ("reached", "pass", "fail"):
+            self.assertEqual(self.row("taom.signature-strikes.instant-kill")[key], old_row[key])
+
+    def test_the_lord_fell_row_reads_the_attacker_side(self):
+        row = self.row("taom.story-missions.hosted.lord-fell")
+        line = check_line("taom.story-missions.hosted.lord-fell", "deaths=2 side=attacker")
+        self.assertTrue(hits(row["pass"], line))
+        self.assertFalse(hits(row["pass"], line.replace("side=attacker", "side=defender")))
+        self.assertEqual(row["absence"], "not-reached")
+
+    def test_the_hero_fall_row_is_a_pass_line(self):
+        row = self.row("taom.story-missions.hosted.hero-fall")
+        self.assertTrue(hits(row["pass"], check_line("taom.story-missions.hosted.hero-fall", "hero=gimli cause=killed")))
+        self.assertTrue(hits(row["pass"], check_line("taom.story-missions.hosted.hero-fall", "hero=legolas cause=fled")))
+
+    def test_the_player_start_line_judges_the_place_by_inside(self):
+        row = self.row("taom.story-missions.player-start")
+        good = ("[2026-11-16 11:00:01] [INFO] [LongDefeat][Player] start main=Eren owner=Eren controller=AI z=9.9 at=(227.7, 146.2, 9.9) "
+                "frame=(231.0, 150.0, 9.9) inside=true")
+        self.assertTrue(hits(row["pass"], good))
+        self.assertFalse(hits(row["fail"], good))
+        bad = good.replace("inside=true", "inside=false")
+        self.assertTrue(hits(row["fail"], bad))
+        self.assertFalse(hits(row["pass"], bad))
+        wave = good.replace("start", "wave 1")
+        self.assertFalse(hits(row["pass"], wave))
+        self.assertFalse(hits(row["fail"], wave.replace("inside=true", "inside=false")))
+
+    def test_the_engines_row_reads_arrival_and_a_destroyed_gate(self):
+        row = self.row("taom.story-missions.attack-engines")
+        done = ("[2026-11-16 11:00:09] [INFO] [LongDefeat][Engines] ladders [] towers arrived/destroyed/forced [False/False/True,True/False/True] "
+                "rams arrived/destroyed/done/forced [True/False/False/True] gates [0.0 Destroyed destroyed True disabled False] lanes [Left open False breach False]")
+        self.assertTrue(hits(row["reached"], done))
+        for pattern in row["pass"]:
+            self.assertTrue(re.search(pattern, done), pattern)
+        still = done.replace("[False/False/True,True/False/True]", "[False/False/True,False/False/True]")
+        self.assertFalse(all(re.search(p, still) for p in row["pass"]))
+
+    def test_the_manifest_lists_the_owed_human_rows(self):
+        self.assertGreaterEqual(len(self.manifest.get("human", [])), 4)
+        self.assertTrue(any("HeavyCavalry" in h["claim"] and "out of walkable area" in h["claim"] for h in self.manifest["human"]))
+
+    def judged(self, check_id, *seen):
+        """The verdict ingame_verdict gives a scoped session that holds the attack launch line and this one line."""
+        import ingame_verdict as iv
+        manifest = iv.load_manifest(ROOT / "tools/ingame_checks/1409.toml", 1409)
+        check = next(c for c in manifest.checks if c.id == check_id)
+        launch = ("[2026-11-16 11:00:00] [INFO] [StoryMissions] launching taom_rohan_castle_helms_deep_forceatmo for 'helms_deep_attack' "
+                  "(story1, autoplay True)")
+
+        class Log:
+            kind = "taom"
+            name = "taom_debug_test.log"
+            lines = list(enumerate([launch, *seen], 1))
+
+        return iv.judge_check(check, [Log()], []).verdict
+
+    def test_a_wrong_side_or_a_missing_frame_is_a_fail_not_a_not_reached(self):
+        import ingame_verdict as iv
+        general = check_line("taom.story-missions.hosted.general",
+                             "general_is_main=true player_general=true order_owner_is_main=true main_on_team=true side=attacker")
+        self.assertEqual(self.judged("taom.story-missions.hosted.general", general), iv.PASS)
+        self.assertEqual(self.judged("taom.story-missions.hosted.general", general.replace("side=attacker", "side=defender")), iv.FAIL)
+        tail = "is_hero=0 campaign=1 mounted=0 formation={f} held=0 strangers=57 order=Charge health_factor=3.00 wanted_factor=3.00 wielded={w} side=enemy"
+        heroes = [check_line("taom.story-missions.hosted.hero", f"hero={n} troop=taom_hero_{n} " + tail.format(f=f, w=w))
+                  for n, f, w in (("aragorn", 0, "strider_sword"), ("legolas", 1, "wm_mirkwood_bow_a01"), ("gimli", 0, "sm_dwarf_erebor_axe_2h_c"))]
+        self.assertEqual(self.judged("taom.story-missions.hosted.hero", *heroes), iv.PASS)
+        defence_hero = heroes[0].replace("formation=0", "formation=7").replace("held=0", "held=1").replace(" side=enemy", "")
+        self.assertEqual(self.judged("taom.story-missions.hosted.hero", defence_hero, *heroes[1:]), iv.FAIL)
+        start = ("[2026-11-16 11:00:01] [INFO] [LongDefeat][Player] start main=Eren owner=Eren controller=AI z=9.9 at=(227.7, 146.2, 9.9) "
+                 "frame=(231.0, 150.0, 9.9) inside=true")
+        self.assertEqual(self.judged("taom.story-missions.player-start", start), iv.PASS)
+        self.assertEqual(self.judged("taom.story-missions.player-start", start.replace("frame=(231.0, 150.0, 9.9) ", "")), iv.FAIL)
+
+    def test_an_ended_line_of_the_wrong_side_or_reason_is_a_fail(self):
+        import ingame_verdict as iv
+        for detail, want in (("verdict=Won side=Attacking reason=KeepLost waves=1", iv.PASS),
+                             ("verdict=Lost side=Attacking reason=TargetReached waves=1", iv.PASS),
+                             ("verdict=Won side=Defending reason=TargetReached waves=1", iv.FAIL),
+                             ("verdict=Lost side=Defending reason=KeepLost waves=1", iv.FAIL),
+                             ("verdict=Lost side=Attacking reason=KeepLost waves=1", iv.FAIL),
+                             ("verdict=Lost side=Attacking reason=DefendersDead waves=1", iv.FAIL),
+                             ("verdict=Won side=Attacking reason=TargetReached waves=1", iv.FAIL),
+                             ("verdict=Lost side=Attacking reason=Abandoned waves=0", iv.FAIL)):
+            with self.subTest(detail=detail):
+                self.assertEqual(self.judged("taom.story-missions.ended", check_line("taom.story-missions.ended", detail)), want)
+
+
 class StoryManifestTests(unittest.TestCase):
     def manifest(self, issue):
         import tomllib
@@ -773,7 +1043,7 @@ class StoryManifestTests(unittest.TestCase):
     def test_story_patterns_match_the_1105_manifest(self):
         old = self.manifest(1105)
         self.assertEqual([rs.STORY_BOOT_PASS], self.check(old, "taom.story-missions.hosted.boot")["pass"])
-        self.assertEqual([rs.STORY_ENDED_PASS], self.check(old, "taom.story-missions.ended")["pass"])
+        self.assertEqual([rs.story_ended_pass("Defending")], self.check(old, "taom.story-missions.ended")["pass"])
 
     def test_the_1368_manifest_holds_the_three_rows_scoped_to_the_armed_mission(self):
         new = self.manifest(1368)

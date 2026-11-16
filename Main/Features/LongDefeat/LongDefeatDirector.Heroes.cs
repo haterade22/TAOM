@@ -103,7 +103,7 @@ internal sealed partial class LongDefeatDirector
     // nothing; a refused spawn does not count.
     private void JudgeHunters(int wave)
     {
-        if (_heroesLanded == 0)
+        if (_heroesLanded == 0 || _playerAttacks)
             return;
 
         TickHunters();
@@ -114,7 +114,7 @@ internal sealed partial class LongDefeatDirector
     // (ILongDefeatBattlefieldAdapter.HoldHunters names the hand-backs). Every regain is logged; a membership repair only the first few times.
     private void TickHunters()
     {
-        if (_heroesStanding.Count == 0)
+        if (_heroesStanding.Count == 0 || _playerAttacks)
             return;
 
         var hold = _field.HoldHunters();

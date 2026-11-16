@@ -79,6 +79,16 @@ public class HostedRunOutcomeLogTests
     }
 
     [TestMethod]
+    public void TheGeneralAndLordFellIds_AreTheRenamedLongDefeatIds()
+    {
+        Sut().Pass(LongDefeatChecks.GeneralId, "story1", "d");
+        Sut().Pass(LongDefeatChecks.LordFellId, "story1", "d");
+
+        _inner.Received(1).Pass(HostedRunOutcomeLog.GeneralId, "story1", "d");
+        _inner.Received(1).Pass(HostedRunOutcomeLog.LordFellId, "story1", "d");
+    }
+
+    [TestMethod]
     public void EveryRewrittenId_StillMatchesTheOutcomeLogsIdPattern()
     {
         foreach (var id in new[] { "taom.long-defeat.boot", "taom.long-defeat.best-run", "taom.long-defeat.early-start", LongDefeatHeroChecks.SpawnId, LongDefeatHeroChecks.FallId, LongDefeatHeroChecks.HuntersId })

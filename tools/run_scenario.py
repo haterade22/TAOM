@@ -13,7 +13,8 @@ Own arguments (everything else goes to the Fords runner, for example --dry-run, 
   --kind campaign-new|story-mission   --days N (campaign-new only: 1 to 1000, default 3)   --culture ID (default gondor)
   --speed X (campaign-new only: above 0, at most 30, default 15)   --scenario LABEL (default the kind)
   --stall-seconds N (campaign-new only, default 600)
-  --mission ID (story-mission only, required: the story mission id, for example helms_deep_defend)
+  --mission ID (story-mission only, required: a story mission id of Main/_Module/ModuleData/story_missions/story_missions.json, for
+  example helms_deep_defend or helms_deep_attack; an unknown id is refused)
 
 This tool does not build or deploy: deploy this tree with `pwsh ./build.ps1` first. It reads the checkout (HEAD and the uncommitted files
 under the build's own pathspec) once, at launch, with tools/autorun_build.py, and refuses to start when git cannot say.
@@ -26,16 +27,20 @@ the run folder.
 
 Exit 0 for story-mission needs reason=ok, a Won or Lost verdict echoed by the done file for the armed mission, the story done [Check] pass
 line, the hosted.boot and ended pass lines of the story mission (a reason=Abandoned end is not one), exactly one [StoryMissions] launching
-line (the armed id, autoplay True) and no other launching line, and the same log, crash, unload, arm warning and build conditions. A build
+line (the armed id, autoplay True) and no other launching line, and the same log, crash, unload, arm warning and build conditions. The ended
+line must name the row's own side (side=Defending for a defence row, side=Attacking for an attack row, read from the checkout's
+story_missions.json). A build
 that does not know the kind stays unarmed and writes no done file, so the runner ends it as a 10 minute stall and never calls the judge; the
 printers then quote the log's first "not armed:" line. The default wall limit is the campaign-new one plus the mission limit (1200 s, the
 arm file's mission_limit_seconds). The driver reads no wall limit for this kind: --wall-limit only moves the runner's give-up time.
 
 Run:  python tools/run_scenario.py --days 30 --dry-run
       python tools/run_scenario.py --kind story-mission --mission helms_deep_defend --dry-run
+      python tools/run_scenario.py --kind story-mission --mission helms_deep_attack --dry-run
 Tests: python -m unittest tools.tests.test_run_scenario
 """
 import argparse
+import json
 import math
 import re
 import subprocess
@@ -62,8 +67,33 @@ PASS_LINE = re.compile(r"\[Check\] id=" + re.escape(CHECK_ID) + r"\s+result=pass
 # The same patterns as tools/ingame_checks/1105.toml (a test holds them equal): the boot line, and the end line that names only the three
 # ways a run ends by itself, so a reason=Abandoned retreat is not a pass. Matched line by line.
 STORY_BOOT_PASS = r"\[Check\] id=taom\.story-missions\.hosted\.boot result=pass deployment_finished=true siege_ai=true main=true friendly=false"
-STORY_ENDED_PASS = (r"\[Check\] id=taom\.story-missions\.ended result=pass verdict=(Won|Lost) side=Defending "
-                    r"reason=(TargetReached|DefendersDead|KeepLost) waves=\d+$")
+ROOT = Path(__file__).resolve().parent.parent
+STORY_MISSIONS_FILE = ROOT / "Main" / "_Module" / "ModuleData" / "story_missions" / "story_missions.json"
+STORY_SIDES = {"Defend": "Defending", "Attack": "Attacking"}
+
+
+def story_ended_pass(side):
+    """The ended line's pass pattern for a row's side (Defending or Attacking), as tools/ingame_checks/1105.toml (Defending) and 1409.toml
+    (Attacking) hold it."""
+    return (r"\[Check\] id=taom\.story-missions\.ended result=pass verdict=(Won|Lost) side=" + side
+            + r" reason=(TargetReached|DefendersDead|KeepLost) waves=\d+$")
+
+
+def story_rows():
+    """{lowercase mission id: "Defending" or "Attacking"} read from this checkout's story_missions.json. An unreadable file is an empty table."""
+    try:
+        data = json.loads(STORY_MISSIONS_FILE.read_text(encoding="utf-8-sig"))
+    except (OSError, ValueError):
+        return {}
+    rows = data.get("missions", []) if isinstance(data, dict) else []
+    return {str(row.get("id", "")).lower(): STORY_SIDES[row["side"]] for row in rows if isinstance(row, dict) and row.get("side") in STORY_SIDES}
+
+
+def story_side(mission):
+    """"Defending" or "Attacking" for a story mission id of the checkout, None for an id it does not hold."""
+    return story_rows().get(str(mission).strip().lower())
+
+
 # Both launchers log "[X] launching ..." once per run; a story run holds exactly one such line.
 ANY_LAUNCH = re.compile(r"\[(LongDefeat|StoryMissions)\] launching ")
 # ScenarioAutorunStart logs this when the arm file is refused; a build that lacks the story kind refuses it.
@@ -147,6 +177,12 @@ def parse_own(argv):
                 parser.error(f"{flag} is only for --kind campaign-new; a story-mission run reads neither")
         # The game takes the id in any case and logs the catalog's lowercase id, which the judge and tools/ingame_checks/1368.toml match.
         known.mission = known.mission.strip().lower()
+        # The side is read once, here, at launch: the judge uses this value, so an edit of the JSON while the game runs cannot fail a good run.
+        rows = story_rows()
+        known.side = rows.get(known.mission)
+        if known.side is None:
+            parser.error(f"--mission '{known.mission}' is not a story mission of this checkout"
+                         + (f" (known: {', '.join(sorted(rows))})" if rows else f" ({STORY_MISSIONS_FILE} could not be read or holds no row with side Defend or Attack)"))
     else:
         if known.mission is not None:
             parser.error("--mission is only for --kind story-mission")
@@ -197,9 +233,10 @@ def parse_count(done, key):
         return None
 
 
-def story_log_problems(log_text, mission):
+def story_log_problems(log_text, mission, side):
     """The story kind's log conditions, one reason each. The driver's done line alone could pass a mission the player's own agent walked out
-    of (reason=Abandoned reads as a loss), so the story's end line and its boot line are required too, and a run holds one launch only."""
+    of (reason=Abandoned reads as a loss), so the story's end line and its boot line are required too, and a run holds one launch only.
+    side is the row's side, Defending or Attacking: an end line of the other side is no pass."""
     lines = log_text.splitlines()
     problems = []
     done_pass = (r"\[Check\] id=" + re.escape(STORY_CHECK_ID) + r" result=pass reason=ok mission=" + re.escape(mission)
@@ -208,8 +245,9 @@ def story_log_problems(log_text, mission):
         problems.append(f"the TAOM log has no [Check] id={STORY_CHECK_ID} result=pass line for mission {mission} with a Won or Lost verdict")
     if not any(re.search(STORY_BOOT_PASS, line) for line in lines):
         problems.append("the TAOM log has no taom.story-missions.hosted.boot pass line")
-    if not any(re.search(STORY_ENDED_PASS, line) for line in lines):
-        problems.append("the TAOM log has no taom.story-missions.ended pass line (a reason=Abandoned end is not one)")
+    ended = story_ended_pass(side)
+    if not any(re.search(ended, line) for line in lines):
+        problems.append(f"the TAOM log has no taom.story-missions.ended pass line with side={side} (a reason=Abandoned end is not one)")
     launch = r"\[StoryMissions\] launching \S+ for '" + re.escape(mission) + r"' \(story\d+, autoplay True\)"
     wanted = [line for line in lines if re.search(launch, line)]
     others = [line for line in lines if ANY_LAUNCH.search(line)]
@@ -251,7 +289,14 @@ def judge(done, report_json, log_text=None, armed=None, checkout=None):
         problems.append("no TAOM log copy, so the result=pass line and the crash scan could not be checked")
     else:
         if story:
-            problems.extend(story_log_problems(log_text, mission))
+            # The side parse_own read at launch; a judge called without it (older callers) reads the checkout.
+            side = getattr(armed, "side", None) if armed is not None else None
+            if side is None:
+                side = story_side(mission)
+            if side is None:
+                problems.append(f"'{mission}' is not a story mission of this checkout, so its side is unknown")
+            else:
+                problems.extend(story_log_problems(log_text, mission, side))
         elif not PASS_LINE.search(log_text):
             problems.append(f"the TAOM log has no [Check] id={CHECK_ID} result=pass line")
         # The whole log is this session's (the runner takes the newest log created after launch), and TAOM's load comes before the driver.

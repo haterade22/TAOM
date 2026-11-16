@@ -35,9 +35,10 @@ internal static class HeroGroup
 /// spawned with, the item in his hand, whether his formation is off AI control after the spawn (<c>Held</c>), how many soldiers in
 /// it are not held heroes (<c>Strangers</c>, 0 is right) and the name of its movement order (<c>Order</c>). <c>CampaignCharacter</c>: the body is a
 /// campaign <c>CharacterObject</c>, whose <c>IsHero</c> is true only with a Hero behind it; the mission heroes have none (#1366), so there <c>IsHero</c> is false.
+/// <c>Enemy</c>: the hero fights for the other side than the player (a story attack, #1409): he stands in his class formation under AI, never held in the heroes' group.
 /// </summary>
 internal sealed record LdHeroReport(bool Spawned, string? Problem, bool IsHero = false, bool Mounted = false, int FormationIndex = -1, float HealthFactor = 0f, string Wielded = "",
-    bool Held = false, int Strangers = 0, string Order = "", bool CampaignCharacter = false);
+    bool Held = false, int Strangers = 0, string Order = "", bool CampaignCharacter = false, bool Enemy = false);
 
 /// <summary>
 /// One standing hero as the field reads him now (#1337): his kills so far (the engine's <c>KillCount</c>, which also counts knock-outs),
