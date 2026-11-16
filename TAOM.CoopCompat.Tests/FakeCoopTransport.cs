@@ -17,11 +17,15 @@ internal sealed class FakeCoopTransport : ICoopTransport
     public List<(CoopPeer Peer, CoopCompatHelloReply Reply)> RepliesSent { get; } = new();
     public List<(CoopPeer Peer, CoopCompatMomentumSnapshot Snapshot)> SnapshotsToPeer { get; } = new();
     public List<CoopCompatMomentumSnapshot> Broadcasts { get; } = new();
+    public List<CoopCompatTradeRequest> TradeRequestsSent { get; } = new();
+    public List<(CoopPeer Peer, CoopCompatTradeReply Reply)> TradeRepliesSent { get; } = new();
 
     public event Action? ClientReady;
     public event Action<CoopPeer, CoopCompatHello>? HelloReceived;
     public event Action<CoopCompatHelloReply>? HelloReplyReceived;
     public event Action<CoopCompatMomentumSnapshot>? SnapshotReceived;
+    public event Action<CoopPeer, string, CoopCompatTradeRequest>? TradeRequestReceived;
+    public event Action<CoopCompatTradeReply>? TradeReplyReceived;
 
     public void Start()
     {
@@ -48,6 +52,20 @@ internal sealed class FakeCoopTransport : ICoopTransport
         return true;
     }
 
+    public bool SendToServer(CoopCompatTradeRequest message)
+    {
+        if (!SendsSucceed) return false;
+        TradeRequestsSent.Add(message);
+        return true;
+    }
+
+    public bool SendToPeer(CoopPeer peer, CoopCompatTradeReply message)
+    {
+        if (!SendsSucceed) return false;
+        TradeRepliesSent.Add((peer, message));
+        return true;
+    }
+
     public bool Broadcast(CoopCompatMomentumSnapshot message)
     {
         if (!SendsSucceed) return false;
@@ -59,6 +77,8 @@ internal sealed class FakeCoopTransport : ICoopTransport
     public void RaiseHello(CoopPeer peer, CoopCompatHello hello) => HelloReceived?.Invoke(peer, hello);
     public void RaiseReply(CoopCompatHelloReply reply) => HelloReplyReceived?.Invoke(reply);
     public void RaiseSnapshot(CoopCompatMomentumSnapshot snapshot) => SnapshotReceived?.Invoke(snapshot);
+    public void RaiseTradeRequest(CoopPeer peer, string heroId, CoopCompatTradeRequest request) => TradeRequestReceived?.Invoke(peer, heroId, request);
+    public void RaiseTradeReply(CoopCompatTradeReply reply) => TradeReplyReceived?.Invoke(reply);
 
     public static CoopPeer Peer(string label = "7") => new CoopPeer(new object(), label);
 }

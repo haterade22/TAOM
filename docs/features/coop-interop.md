@@ -170,7 +170,7 @@ section B). The order was wrong here until 2026-11-12. A BUTR-style launcher can
 above `TAOM_Map`, because `TAOM_Map/SubModule.xml` asks for that; check the list by hand. Players
 in Host and Client mode set this order in the launcher on every PC.
 
-`TAOM.CoopCompat` depends on TAOM and Coop, so the launcher sorts it after both. Its code starts at the first campaign start, after every module's `OnSubModuleLoad`, so on a dedicated server (where Coop has no submodule) its place against `DedicatedServer.Windows` does not matter.
+`TAOM.CoopCompat` depends on TAOM and Coop, so the launcher sorts it after both. Its code starts at the first campaign start (the Long Defeat session link at the main menu, #1280), after every module's `OnSubModuleLoad`, so on a dedicated server (where Coop has no submodule) its place against `DedicatedServer.Windows` does not matter.
 
 **Why it is first, and not "after the vanilla modules like every other mod":** `TAOM.Dependencies`
 bundles the whole BUTR stack (0Harmony, ButterLib, UIExtenderEx, MCM) and installs the
@@ -405,16 +405,16 @@ behaviour's whole `RegisterEvents` and follow each handler to the service.
 | `TournamentRewardsBehavior` | the skill award, in `TournamentSkillAwardService.Award` (`IsDedicatedServer`, `ShouldDeferToHost`, #1086) | The award adds skill XP to this peer's hero, which the host owns, so a guest gets none. The Join flow (`TournamentJoinService.BeginJoin`) stands down for a guest too: no prize swap, which writes the town's shared tournament, and no skill pick. Noting the hero count for the renown model stays ungated: it is transient and read on the same peer. Pinned by `TournamentSkillAwardServiceTests` and `TournamentJoinServiceTests`. |
 | `CareerSwitchDialogueBehavior` | the paid switch and the retrain, in `GauntletCareerScreen` (`ShouldDeferToHost`, #1086) | Both charge hero gold, which the host owns. A guest gets `{=taom_career_coop_gold_off}` and nothing changes. A free switch changes only this peer's career book, like every other career choice, until the career relay (#967). The dialog line itself only opens the screen. No unit test: the screen is a thin UI entry point. |
 | `ArmourAcquisitionCampaignBehavior` | `OnDailyTick`, `OnDailyTickSettlement` (`ShouldDeferToHost`) | The market sweep removes armour from town markets and the visiting armourer roll writes saved state. `OnSessionLaunched` resets state when no save record loaded this session (`_loadedThisSession` false): a new campaign, or a save made before the feature. |
-| `ArmouryMenuBehavior` | the armoury purchase, in `ArmouryPresenter` (`ShouldDeferToHost`) | Player action: the presenter refuses a guest before anything is bought. The menu option itself only opens it. |
+| `ArmouryMenuBehavior` | the armoury purchase, in `ArmouryPresenter` (`GuestTradeClient`, over `ShouldDeferToHost`) | Player action: with `TAOM.CoopCompat` a guest's upgrade runs on the host (#1329, [coop-compat.md](coop-compat.md)); without it the presenter refuses a guest before anything is bought. The menu option itself only opens it. |
 | `LordHarnessEventBehavior` | `OnPlayerBattleEnd` (`ShouldDeferToHost`, `IsDedicatedServer`) | The item grant and the relation change in the inquiry callbacks. |
-| `LordsLadderBehavior` | `OnPlayerBattleEnd`, `OnHourlyTick` (`!ShouldDeferToHost && !IsDedicatedServer`) | The item grant and the quest progress. `OnQuestCompleted` stays ungated: it writes this peer's TAOM save data keyed to the quest owner, and its only consumer, the armoury, refuses a guest. |
+| `LordsLadderBehavior` | `OnPlayerBattleEnd`, `OnHourlyTick` (`!ShouldDeferToHost && !IsDedicatedServer`) | The item grant and the quest progress. `OnQuestCompleted` stays ungated: it writes this peer's TAOM save data keyed to the quest owner, and its only consumer, the armoury, shows a guest no ladder rows (it refuses a guest without `TAOM.CoopCompat`). |
 | `HostReviewCampaignBehavior` | the camp menu option, in `HostReviewService` (`IsSessionActive`) | Player action: the review mission does not start in a co-op session. |
 | `StoryDevMenuBehavior` | the dev menu behind `taom.story_open`, in `StoryDevMenuBehavior.Open` (`CoopSessionPolicy.IsSinglePlayerAuthority`) | Dev console entry (#1105, slice 1): refused in a co-op session. The mission it opens writes nothing to the campaign, so a single-player run changes no shared state. |
 | `StoryOfferBehavior` | the story offer, in `StoryOfferService.NextOffer` (`CoopSessionPolicy.IsSinglePlayerAuthority`) | War Chronicle story offer (#1105, slice 4): no offer in a co-op session or on a dedicated server, so no peer opens the mission or applies its result; the Hornburg window then ends by the map or its fate on the host. |
 | `TaomBuildingSeedingBehavior` | `OnGameLoaded` (`IsAuthority`, checked in `TaomBuildingSeedingService`) | Adds town buildings, a shared write. |
 | `LordCourtesiesDialogBehavior` | the dialog lines, in `LordCourtesiesService` (`!ShouldDeferToHost && !IsDedicatedServer`) | Player action: the relation charge, the clan reveal and the troop gift. |
 | `DiplomacyBehavior` | `OnSessionLaunched` (`ShouldDeferToHost`), `OnNewGameCreatedPartialFollowUp` (`IsCoopClient`) | Enforces the permanent alliances, and sets up the initial alliances in a new campaign. A first-time joiner builds a local campaign for character creation, and Coop's `StartAlliance` prefix on a client asks the server instead of forming the alliance, so a Coop client skips both; the host's save carries them. The new-game step reads `IsCoopClient`: with a co-op mod TAOM cannot probe, `ShouldDeferToHost` is true in solo too, and a new campaign there has no host save to carry the alliances. |
-| `EliteEmissaryBehavior` | the purchase, in `EliteEmissaryInquiryPresenter.ExecutePurchase` (`ShouldDeferToHost`) | See "Client-reachable entry points" below. The behavior's own handlers only register the menus and dialog. |
+| `EliteEmissaryBehavior` | the purchase, in `EliteEmissaryInquiryPresenter.ExecutePurchase` (`GuestTradeClient`, over `ShouldDeferToHost`) | With `TAOM.CoopCompat` a guest's purchase runs on the host (#1329); without it, see "Client-reachable entry points" below. The behavior's own handlers only register the menus and dialog. |
 | `FiefGrantingCampaignBehavior` | `MapEventEnded`, `OnSettlementOwnerChanged` (`IsAuthority`) | The saved siege participation record. Session launch and load only reset the in-memory service. |
 | `PlayerClanLeadershipRepairBehavior` | `OnSessionLaunched`, in `PlayerClanLeadershipService` (`IsAuthority`) | Promotes a clan leader. |
 | `FieldCommissionBehavior` | `MapEventStarted`, `MapEventEnded`, `OnTick`, `OnGameLoaded` (`IsAuthority`) | Merit, offers and pruning ([field-commission.md](field-commission.md)). Session launch and a new game only clear in-memory state. |
@@ -762,7 +762,7 @@ desyncs; the client just quietly gets nothing.
 | Area | What a client could do | What it never got | Status |
 |---|---|---|---|
 | Messengers | Pay `MessengerGoldCost` and enqueue a `PendingMessenger` | Hourly processing is authority-only, so it never advanced or arrived — gold simply lost | **Fixed 2026-08-01** — the send refuses on a non-authority peer and logs `[Messengers][coop] send refused on non-authority peer — delivery is host-side` |
-| Elite emissary | Pay special resources for an elite troop | The troop landed in a client-side roster the next resync overwrote — pay real, get phantom | **Fixed 2026-08-03** — `ExecutePurchase` refuses before charging when `ShouldDeferToHost` |
+| Elite emissary | Pay special resources for an elite troop | The troop landed in a client-side roster the next resync overwrote: pay real, get phantom | **Fixed 2026-08-03**: `ExecutePurchase` refuses before charging when `ShouldDeferToHost`. **Since 2026-11-15 (#1329)**, with `TAOM.CoopCompat` the guest's purchase runs on the host instead |
 | Siege defence | Be prompted, accept, and be tracked | Reward tick is authority-only | Partly addressed by `_locallyClaimed`; the prompt/accept path still needs an owner check |
 | Career quests | Be offered and accept | The engine rewards (an item, renown, influence) on completion: the host owns the hero | Offer **fixed 2026-08-01** (the dedup scan filters by owner); engine rewards **switched off for guests 2026-11-06 (#1091)**, career-data rewards still apply |
 | Field camp | Press the camp button and establish a camp through the local camp service | A camp the host knows about: the camp book is this peer's own TAOM `SyncData` | **Switched off for guests 2026-10-21 (#966)**: the button hides and `ExecuteOpenCampMenu` refuses |
@@ -773,10 +773,10 @@ desyncs; the client just quietly gets nothing.
 | Career switch and retrain | Pay gold to switch or retrain | Gold the host owns | **Switched off for guests and the human host 2026-11-06 (#1086)**: the paid change is refused with a message; a free switch still goes through |
 | Tournament prize and skill | Pick a prize and a skill at Join, then win | The town's prize, and skill XP the host owns | **Switched off for guests and the human host 2026-11-06 (#1086)**: Join runs vanilla's way, with no TAOM skill XP |
 
-**Both fixes decline rather than forward, and that is the ceiling here.** Granting either
-authoritatively would need TAOM to send a message across the co-op layer, which it cannot do without
-a compile-time dependency on one specific co-op mod. Declining is the honest behaviour, not a
-placeholder for a forwarding path that is coming.
+**Inside TAOM.dll both fixes decline rather than forward.** Granting either authoritatively needs a
+message across the co-op layer, and TAOM.dll names no Coop type. The separate `TAOM.CoopCompat` module
+can send one: since #1329 it forwards the emissary purchase and the armoury upgrade to the host
+([coop-compat.md](coop-compat.md)). Without that module the decline stays.
 
 The emissary decline shows the player `{=taom_emissary_coop_guest}` *"The emissary only deals with
 the host of this campaign."* **That string is not yet localized** — it appears only at
@@ -797,12 +797,12 @@ to characterise. The existing try/catch around acceptance is containment, not co
 
 ## What is NOT done
 
-- **No MCM settings parity: reported, not yet exchanged.** TAOM ships **556** settings across
+- **No MCM settings parity: reported, not yet exchanged.** TAOM ships **560** settings across
   four MCM classes (the 284 here counted `[SettingPropertyGroup]` lines alongside the properties;
-  the split is 522 in `TaomSettings`, 21 in `BattleLoadDiagnosticsSettings`, 12 in
+  the split is 526 in `TaomSettings`, 21 in `BattleLoadDiagnosticsSettings`, 12 in
   `CrashReportSettings` and 1 in `BlowDiagnosticsSettings`).
-  **359 are simulation-relevant**, traced to the feature that consumes each one and kept when that feature
-  ships a GameModel, CampaignBehavior, MissionBehavior or Harmony patch; all 359 are in
+  **363 are simulation-relevant**, traced to the feature that consumes each one and kept when that feature
+  ships a GameModel, CampaignBehavior, MissionBehavior or Harmony patch; all 363 are in
   `TaomSettings`. The 197 excluded (67 counted 2026-09-22, less the three Stall Watchdog settings removed 2026-11-12 with the load watchdog, less the Native Skin Fixes toggle removed with the feature 2026-10-05, the 38 Realm Borders settings added from 2026-09-30 to 2026-10-08, the Crash Report AfterStart dev trigger added 2026-10-01, the Battle Corpses advice toggle and button added 2026-10-01, and the thirteen Menus & Loading Screens settings added 2026-10-01, #704, and the three tick profiler settings added 2026-10-02, and the hitch probe toggle added 2026-10-02, and the Animation Clip Memory probe toggle added 2026-10-02, and the map profiler toggle added 2026-10-03, and the Load-Time Stamps toggle added 2026-10-03, and the Race Abilities war cry, message and debug-log toggles added 2026-10-04, and the Race Abilities glow toggle added 2026-10-04, and the Crash Report mission-start survival toggle added 2026-10-08, and the Crash Report skeleton buffer guard and watch toggles added 2026-10-08, and the Map Performance nameplate cull and map view release settings added 2026-10-08, and the War Chronicle announcements toggle added 2026-10-08, and the three Animation Variety settings and the swing alternative probe toggle added 2026-10-17, and the Hidden Hosts toggle added 2026-10-18, and the Fell Foes debug log toggle added 2026-10-19, the two Telchar's Mark settings added 2026-10-19, #875, the two Reeve's Ledger switches added 2026-10-19, #857, and the Lost Footing census toggle added 2026-10-20, #894, the Watch-Silver and Tidings of the Lists switches added 2026-10-21, #859, less the two Quick Actions "include equipped" toggles removed 2026-10-23, #925, and the Cardolan and Rhudaur realm colours added 2026-10-23, #978, and the Loremaster's Line switch added 2026-10-23, #877, and the Hearth Roll tint toggle added 2026-10-23, #906, and the six camp work, rest healing and start-in-camp settings added 2026-10-24, #860, and the Notable Services switch added 2026-10-24, #899, and the Harvest Road notices toggle added 2026-10-26, #912, and the Make Tools switch added 2026-10-26, #910, and the two Many Hammers switches added 2026-10-26, #911, and the Bandit Voices greetings toggle added 2026-10-26, #900, less the two Auto-Resolve Diagnostics toggles removed with the feature 2026-10-26, and the Inn Rounds switch and its two scales added 2026-10-26, #901, and the Prisoner Banners toggle added 2026-10-27, #902, and the Ered Luin realm colour added 2026-10-27, and the Warden's Tally switch added 2026-10-27, #903, and the Anduin Vale and Angáladh realm colours added 2026-10-28, and the Dorwinion and South Rhovanion realm colours added 2026-10-29, and the two Seat of Seeing settings added 2026-11-03, and the two Seat of Seeing pointer settings added 2026-11-04, and the three Marshal's Word settings added 2026-11-04 and the Outlines switch added with its stage M4, and the Hollow Square and Spacing Repair switches added with its stage M5 (the repair is read once at patch time and stays off whenever co-op is present, so no value of it reaches a co-op simulation), and the Throwers Throw First switch added 2026-11-05 (read only by a live session, which is off online), and the two Seat of Seeing settings for the hero's hand-off and the take of a soldier added 2026-11-04, and the Seat of Seeing rise setting added with its stage S7, and the Realms title styles toggle added 2026-11-11 (it renames parties and the conversation header only), and the Battle HUD Colours dropdown added 2026-11-12 (it recolours three rings of each player's own battle HUD), and the Hall Seats switch added 2026-11-13 (it decides which lords get an agent in the player's own lord's hall mission and writes no campaign state), and the Encounter Lines switch added 2026-11-13 (Patch149, conversation text only), the Offer Story Missions switch added 2026-11-13 (#1105; no story offer opens in a co-op session, so no value of it reaches a co-op simulation), the Crash Report bug report button and its next-start offer toggle added 2026-11-14 (a zip of logs and a main-menu notice), the Enable Cheat Menu switch added 2026-11-14 (every cheat refuses outside single player), and the five Screen Performance settings in `BattleLoadDiagnosticsSettings` added 2026-10-19, #851 to #854) are instrumentation, player-local convenience,
   presentation, two action buttons, and the three time-acceleration knobs whose UI co-op already
   suppresses; the list with its reasons is
@@ -815,7 +815,7 @@ to characterise. The existing try/catch around acceptance is containment, not co
   excluded name may stop matching a real property, and no two settings classes may share a
   property name.
 
-  `SettingsFingerprint` hashes those 359: one code per MCM group plus a global, culture-invariant
+  `SettingsFingerprint` hashes those 363: one code per MCM group plus a global, culture-invariant
   so a comma decimal separator cannot fake a mismatch — and `SettingsFingerprintLog` writes them
   to each peer's log under the co-op gate. Floats and doubles hash as their IEEE bit patterns
   (-0 folded to 0), not as runtime-formatted text, so a .NET 6 server and a net472 client agree on
@@ -824,7 +824,7 @@ to characterise. The existing try/catch around acceptance is containment, not co
   every diagnostics property is excluded so this moves no hash today (a test asserts exactly
   that), and it means a simulation-affecting setting added to a diagnostics page later is covered
   the day it lands. That makes the "compare settings manually" workaround a comparison of a few
-  short strings instead of 359 values read off two screens.
+  short strings instead of 363 values read off two screens.
 
   **All four classes are `AttributeGlobalSettings<T>`, and the reasoning above depends on it.**
   MCM has three scopes, and only one of them travels with a save. Verified against MCM 5.12.1:
@@ -843,12 +843,12 @@ to characterise. The existing try/catch around acceptance is containment, not co
   PerSave class would be equal by construction and need not be hashed; a PerCampaign one would
   need hashing more urgently than a global, not less.
 
-  **A matching fingerprint means the MCM settings agree, and nothing wider.** It covers the 359
+  **A matching fingerprint means the MCM settings agree, and nothing wider.** It covers the 363
   values on the four settings pages. It does not cover the `ModuleData` JSON/XML that several
   features fall back to when a setting is unset (on a client only; a server never reads them for an
   MCM-backed field), the `TAOM.Dependencies` flag files
   (`patchshield-disabled.flag`, `saveshield-swallow-disabled.flag`, `coop-force-active.flag`),
-  or any difference outside TAOM. None of those three flags gates a setting in the 359 (each
+  or any difference outside TAOM. None of those three flags gates a setting in the 363 (each
   governs a Dependencies-side shield with no MCM property), but the general point holds: read the
   log line as "our settings pages match", not as "our installs are equivalent".
 
@@ -1015,7 +1015,9 @@ Owed by the 2026-08-03 work specifically, none of it run:
 8. A two-client join where the joiner keeps their character-creation race, culture startup gold,
    career and special-resource seed. The line to look for is
    `[Possession] Controlled hero changed 'X' -> 'Y'`.
-9. An emissary purchase attempted on a guest: it must decline, and no resources may be deducted.
+9. An emissary purchase attempted on a guest without `TAOM.CoopCompat`: it must decline, and no
+   resources may be deducted. With `TAOM.CoopCompat`, see [coop-compat.md](coop-compat.md), "How to
+   verify in game" step 4.
 10. A dedicated server with no session live logs the one-shot `[SpecRes] Dedicated server —` line and
     credits nobody. Once a session is live the registered players earn on the server, with the hero id
     on the `Co-op <source>: credited hero` lines ([special-resources.md](special-resources.md#per-player-earning-under-co-op-967-c1)).

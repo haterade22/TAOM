@@ -1980,6 +1980,12 @@ yotthani's record says `WeaponComponentData.SetDamageFactors` derives the swing 
 - **Prevent:** before a doc or a design states what feeds a stat, follow each term in the method to the store that uses it and quote that line, as the Research-first rule says. Re-read it on each engine bump when a design depends on it.
 - **Source:** yotthani, `yotthani/bannerlord` `docs/balance-sim/app-0.4-checks.md`@c45d8374 lines 62-66; TAOM's IL reading in [item-equipment-model.md](../../reference/engine/item-equipment-model.md).
 
+### A spawn that takes the engine's default team breaks when another module adds an ally team (#1280, 2026-11-15)
+The Long Defeat spawned every defender with `GetAgentBuildDataToSpawnTroop(new BasicBattleAgentOrigin(troop), side, ...)` and set no team. In a BannerlordCoop session, Coop's `CoopPlayerAllyTeamPatch` adds a `DefenderAllyTeam` while its spawn gate is on, and `Mission.GetAgentTeam` returns `PlayerAllyTeam` for any origin that is not under the player's command or in the player's army (v1.5.7 `Mission.cs:5229-5233`; `BasicBattleAgentOrigin.cs:17`, `:19` answer false). So the whole garrison spawned on the ally team, and the host's run counted no defenders.
+- **Why missed:** the helper was right while each side had one team; the design read Coop's session API, not the mission patches its gate turns on.
+- **Prevent:** a spawn that must land on one team sets it on the build data (`.Team(team)`, its colours, and `team.GetFormation(...)`), and the design for a shared mission lists the other module's patches on that mission.
+- **Gate:** `LongDefeatCoopAllyTeamPinTests` pins the explicit team in `Spawn`; the two-client run is the proof.
+- **Source:** [rca-ld-coop-session-2026-11-15.md](../rca-ld-coop-session-2026-11-15.md), F1.
 ### "The battle ends" in a field battle is `Mission.MissionEnded`, set before the after-victory walk; `RetreatSide` is never written (PR #1304, v1.5.7)
 PR #1304's doc said god mode stays on while the player walks the field after the last enemy falls. Field battles and sieges add `BattleEndLogic`, whose `MissionEnded` returns true once a side is depleted or retreating (`BattleEndLogic.cs:198-222`, `:294`); `Mission.CheckMissionEnd` then sets `MissionEnded` and shows the results while the state stays `Continuing` (`Mission.cs:4844-4868`). So any check on `MissionEnded` is already true during the walk. `Mission.RetreatSide` is `{ get; private set; } = BattleSideEnum.None` with no writer in any installed assembly (`Mission.cs:1266`), so a test on it is always false.
 - **Why missed:** the doc sentence described what the design wanted, and nobody followed the `Ending` flag to its engine producer.
@@ -2001,3 +2007,25 @@ PR #1304's doc said god mode stays on while the player walks the field after the
 **Prevent:** before acting on an engine state flag, read where the flag is set and where the object it guards is built; when they are set on different ticks, act on the second sighting and test that rule in the pure driver.
 
 **Source:** `docs/reviews/rca-scenario-autorun-2026-11-15.md`
+
+### A notification flag stops one message, not every listener (refuge warden, PR #1323, 2026-11-15)
+
+**Why missed:** `KillCharacterAction.ApplyByRemove(hero, showNotification: false)` was documented as a silent removal. The flag only stops the death pop-up; SandBox's `CommentOnCharacterKilledBehavior.OnBeforeHeroKilled` still adds a `CharacterKilledLogEntry`, a visible chat notification that prints "<name> was lost.".
+
+**Prevent:** before calling an engine action silent, list the campaign events it fires and read each SandBox listener, not only the branch the flag guards.
+
+**Source:** `docs/reviews/rca-pr1323-refuge-warden-ranks-2026-11-15.md`
+### Two engine methods share a name; cite the one the call site binds (cheat party screen, PR #1321, 2026-11-15)
+
+**Why missed:** the hand-built copy of `PartyScreenHelper.OpenScreenAsCheat` used a Done handler that only returned true, citing "DefaultDoneHandler returns true". That is `PartyScreenLogic.DefaultDoneHandler`. The method `OpenScreenAsCheat` binds is the private `PartyScreenHelper.DefaultDoneHandler`, which releases the prisoners moved to the left first. Without it a released lord became a prisoner with no captor.
+
+**Prevent:** when copying an engine setup field by field, read each delegate it binds at that exact line (the IL `ldftn` names the declaring type), never a method found by name search.
+
+**Source:** `docs/reviews/rca-pr1321-cheat-troop-list-2026-11-15.md`
+### A Coop id is an object key, not a StringId; an engine member is what its source says, not its name (#1329, 2026-11-15)
+
+**Why missed:** guest trade passed Coop's `Player.HeroId` to `CampaignObjectManager.Find<Hero>`. Coop builds that id with `ObjectManager.TryGetId`, which returns the key it registered, `"Hero_" + StringId` (`HeroInterface.RegisterPrimary`), and `Find` compares `StringId` only, so the host refused every real guest. The same change read `MobileParty.SiegeEvent` as any siege; it is `BesiegerCamp?.SiegeEvent`, the besieger's side only. Both were read from their names, and the transport test faked the lookup with the string `"hero_1"`.
+
+**Prevent:** resolve a Coop id through Coop (`IPlayerManager.TryGetSenderHero`, `IObjectManager.TryGetObject`) and hand TAOM the object's `StringId`. Before using an engine member, read the line that sets it. A seam that carries an external id gets one test with that system's real id shape.
+
+**Source:** `docs/reviews/rca-coop-guest-trade-2026-11-15.md` (Class 1)

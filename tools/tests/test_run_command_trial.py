@@ -18,6 +18,7 @@ from unittest import mock
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
+import autorun_build  # noqa: E402
 import run_command_trial as trial  # noqa: E402
 import run_fords_autorun as runner  # noqa: E402
 
@@ -76,9 +77,8 @@ def full_log(skip=(), extra=(), stamp=CLEAN_STAMP_LINE, unload=True):
 
 
 def judge(done, report_json, log_text=None, *, head=HEAD, changed=None, **kwargs):
-    """trial.judge over a git that answers this checkout's HEAD and a clean tree (no changed file), unless a test says otherwise."""
-    with mock.patch.object(trial, "git_state", return_value=(head, changed or {})):
-        return trial.judge(done, report_json, log_text, **kwargs)
+    """trial.judge over a launch checkout of this HEAD and a clean tree (no changed file), unless a test says otherwise."""
+    return trial.judge(done, report_json, log_text, checkout=(head, changed or {}), **kwargs)
 
 
 RUNNER_NAMES = ("ENV_VAR", "DONE_FILE", "STATUS_FILE", "RUNS_ROOT", "judge", "arm_text_for")
@@ -524,195 +524,6 @@ class SessionSwallowedTests(unittest.TestCase):
         self.assertIn("[Session] swallowed feature=", source)
 
 
-class StaleBuildTests(unittest.TestCase):
-    """stale_build, each clause in both directions, with the stamp line of the first real run as the passing sample."""
-
-    def test_a_log_with_no_stamp_line_is_stale(self):
-        self.assertIn("BuildStamp", trial.stale_build("[2026-11-04 10:00:00] [INFO] nothing here", HEAD, {}))
-        self.assertIn("BuildStamp", trial.stale_build("[2026-11-04 10:00:00] [INFO] [BuildStamp] sample", HEAD, {}), "a stamp with no git sha")
-
-    def test_the_real_stamp_line_is_the_one_the_pattern_reads(self):
-        match = trial.BUILD_STAMP.search(STAMP_LINE)
-        self.assertIsNotNone(match)
-        self.assertEqual(match.group(1), "20261104-091104")
-        self.assertEqual(match.group(2), HEAD)
-        self.assertEqual(match.group(3), ".dirty")
-
-    def test_another_sha_is_stale_and_names_both(self):
-        stamp = STAMP_LINE.replace(HEAD, "0000000deadbeef")
-        reason = trial.stale_build(stamp, HEAD, {})
-        self.assertIn("0000000de", reason)
-        self.assertIn("1735f2add", reason)
-
-    def test_the_same_sha_is_not_stale_and_a_short_sha_matches_by_prefix(self):
-        self.assertIsNone(trial.stale_build(CLEAN_STAMP_LINE, HEAD, {}))
-        short = CLEAN_STAMP_LINE.replace(HEAD, "1735f2a")
-        self.assertIsNone(trial.stale_build(short, HEAD, {}))
-
-    def test_a_changed_file_newer_than_the_build_is_stale_and_named(self):
-        changed = {"Main/a.cs": datetime(2026, 11, 4, 9, 11, 5), "Client/b.cs": datetime(2026, 11, 4, 9, 0, 0)}
-        reason = trial.stale_build(STAMP_LINE, HEAD, changed)
-        self.assertIn("Main/a.cs", reason)
-        self.assertNotIn("Client/b.cs", reason)
-
-    def test_a_changed_file_older_than_the_build_is_not_stale(self):
-        self.assertIsNone(trial.stale_build(STAMP_LINE, HEAD, {"Main/a.cs": datetime(2026, 11, 4, 9, 11, 3)}))
-
-    def test_a_file_at_exactly_the_stamps_time_is_not_stale(self):
-        self.assertIsNone(trial.stale_build(STAMP_LINE, HEAD, {"Main/a.cs": BUILT}))
-
-    MISMATCH_TAIL = (" TAOM.Dependencies=v0.1.0.0 build.20261104-091104Z+" + HEAD + " MISMATCH \u2014 built 2d 03h 10m apart. These modules were not built "
-                     "together; update BOTH from the same release or expect the preview patches to fail (issue #371).")
-    REBUILT_TAIL = (" (pair rebuilt 0d 00h 12m apart \u2014 one module was rebuilt after the other, which is normal mid-session and is usually a docs or "
-                    "config commit. Rebuild both if the preview patches misbehave. Issue #371.)")
-
-    def stamp(self, tail):
-        return CLEAN_STAMP_LINE.split(" TAOM.Dependencies=")[0] + tail
-
-    def test_a_stamp_marked_mismatch_is_stale(self):
-        """The tail is on the tier that was built apart: the TAOM= tier the pattern reads can look right while the pair does not."""
-        reason = trial.stale_build(self.stamp(self.MISMATCH_TAIL), HEAD, {})
-        self.assertIn("MISMATCH", reason)
-
-    def test_a_stamp_with_the_pair_rebuilt_tail_is_not_stale(self):
-        self.assertIsNone(trial.stale_build(self.stamp(" TAOM.Dependencies=v0.1.0.0 build.20261104-091104Z+" + HEAD + self.REBUILT_TAIL), HEAD, {}))
-
-    def test_a_stamp_line_with_no_sha_before_the_real_one_does_not_hide_the_mismatch(self):
-        """The line that is judged is the one the sha was read from, and the word sits at the tail of that one."""
-        no_sha = "[2026-11-04 03:11:00] [INFO] [BuildStamp] TAOM=v2.0.0.0 build.20261104-091104Z (no git sha)"
-
-        reason = trial.stale_build(no_sha + "\n" + self.stamp(self.MISMATCH_TAIL), HEAD, {})
-
-        self.assertIsNotNone(reason)
-        self.assertIn("MISMATCH", reason)
-
-    def test_the_word_mismatch_on_another_line_is_not_the_stamps(self):
-        other = "[2026-11-04 10:00:00] [WARNING] [Player] MISMATCH: no snapshot at all."
-        self.assertIsNone(trial.stale_build(other + "\n" + CLEAN_STAMP_LINE, HEAD, {}))
-        self.assertIsNone(trial.stale_build(CLEAN_STAMP_LINE + "\n" + other, HEAD, {}))
-
-    def test_a_nogit_stamp_is_refused(self):
-        nogit = CLEAN_STAMP_LINE.replace(HEAD, HEAD + ".nogit", 1)
-
-        reason = trial.stale_build(nogit, HEAD, {})
-
-        self.assertIsNotNone(reason)
-        self.assertIn("[BuildStamp]", reason)
-
-    def test_a_clean_match_with_no_changed_file_is_not_stale(self):
-        self.assertIsNone(trial.stale_build(CLEAN_STAMP_LINE, HEAD, {}))
-
-    def test_a_dirty_build_of_a_tree_that_has_no_change_is_stale(self):
-        """A dirty build, then a restore; or a sibling worktree at the same HEAD with edits of its own."""
-        reason = trial.stale_build(STAMP_LINE, HEAD, {})
-        self.assertIn("uncommitted edits", reason)
-        self.assertIn("this tree has none", reason)
-
-    def test_a_clean_build_of_a_tree_with_a_change_older_than_the_build_is_stale(self):
-        """A file restored with its old time still differs from HEAD, and a clean build cannot have compiled it."""
-        reason = trial.stale_build(CLEAN_STAMP_LINE, HEAD, OLDER_CHANGE)
-        self.assertIn("clean build", reason)
-        self.assertIn("Main/a.cs", reason)
-
-    def test_a_clean_build_of_a_tree_whose_only_change_is_a_deletion_is_stale(self):
-        self.assertIn("clean build", trial.stale_build(CLEAN_STAMP_LINE, HEAD, {"Main/gone.cs": datetime.min}))
-
-    def test_a_dirty_build_with_an_older_change_is_the_real_run_and_is_not_stale(self):
-        self.assertIsNone(trial.stale_build(STAMP_LINE, HEAD, OLDER_CHANGE))
-
-
-class GitStateTests(unittest.TestCase):
-
-    def test_the_state_of_this_checkout_is_a_head_and_a_dict(self):
-        head, changed = trial.git_state()
-        self.assertRegex(head, r"^[0-9a-f]{40}$")
-        self.assertIsInstance(changed, dict)
-
-    def test_the_command_asks_for_no_renames_and_takes_no_optional_lock_over_the_builds_own_paths(self):
-        calls = []
-
-        def fake_run(command, **kwargs):
-            calls.append(command)
-            return SimpleNamespace(returncode=0, stdout=HEAD + "\n" if "rev-parse" in command else "", stderr="")
-
-        with mock.patch.object(trial.subprocess, "run", side_effect=fake_run):
-            trial.git_state(REPO)
-
-        status = next(command for command in calls if "status" in command)
-        self.assertIn("--no-optional-locks", status)
-        self.assertIn("--no-renames", status)
-        self.assertEqual(tuple(status[status.index("--") + 1:]), trial.WATCHED_PATHS)
-
-    def test_a_real_repository_reports_an_edit_a_staged_rename_an_untracked_file_and_a_deletion(self):
-        """Real git in a temp repo. The hooks path, the identity and the config files are given or cleared on the command line, so
-        nothing of the machine reaches the repo. A deleted path, and the old path of a rename, are changes with no time."""
-        with tempfile.TemporaryDirectory() as tmp:
-            repo = Path(tmp)
-            options = ["-c", "core.hooksPath=", "-c", "user.name=Trial", "-c", "user.email=trial@example.invalid", "-c", "commit.gpgsign=false",
-                       "-c", "core.autocrlf=false"]
-            environment = {**os.environ, "GIT_CONFIG_GLOBAL": os.devnull, "GIT_CONFIG_NOSYSTEM": "1"}
-
-            def git(*args):
-                result = subprocess.run(["git", "-C", tmp, *options, *args], capture_output=True, text=True, encoding="utf-8", timeout=60, env=environment)
-                self.assertEqual(result.returncode, 0, result.stderr)
-                return result.stdout
-
-            for name in ("Main/edit.cs", "Main/old.cs", "Client/gone.cs", "Dependencies/quiet.cs"):
-                (repo / name).parent.mkdir(parents=True, exist_ok=True)
-                (repo / name).write_text(f"// {name}, long enough for git to see a rename\n" * 12, encoding="utf-8")
-            git("init", "-q")
-            git("add", "-A")
-            git("commit", "-q", "-m", "base")
-
-            (repo / "Main/edit.cs").write_text("// edited\n", encoding="utf-8")
-            git("mv", "Main/old.cs", "Main/new.cs")
-            # A new folder, so only -uall lists the file: a plain status shows the folder and not what is in it.
-            (repo / "Client/New").mkdir()
-            (repo / "Client/New/fresh.cs").write_text("// untracked\n", encoding="utf-8")
-            (repo / "Client/gone.cs").unlink()
-            for name in ("Main/edit.cs", "Main/new.cs", "Client/New/fresh.cs"):
-                os.utime(repo / name, (1762247465, 1762247465))
-            self.assertIn("R  Main/old.cs -> Main/new.cs", git("status", "--porcelain", "-uall"), "the fixture must hold a staged rename")
-
-            head, changed = trial.git_state(repo)
-
-        self.assertRegex(head, r"^[0-9a-f]{40}$")
-        self.assertEqual(sorted(changed), ["Client/New/fresh.cs", "Client/gone.cs", "Main/edit.cs", "Main/new.cs", "Main/old.cs"])
-        for name in ("Main/edit.cs", "Main/new.cs", "Client/New/fresh.cs"):
-            self.assertEqual(changed[name], datetime(2025, 11, 4, 9, 11, 5), name)
-        for name in ("Client/gone.cs", "Main/old.cs"):
-            self.assertEqual(changed[name], datetime.min, name)
-
-    def test_the_watched_paths_are_the_ones_the_build_stamps_its_dirty_mark_from(self):
-        props = (REPO / "Directory.Build.props").read_text(encoding="utf-8")
-        match = re.search(r"git --no-optional-locks status [^\"]*? -- ([^\"]*?) 2&gt;nul", props)
-        self.assertIsNotNone(match, "the stamp target's git status command was not found in Directory.Build.props")
-        self.assertEqual(tuple(match.group(1).split()), trial.WATCHED_PATHS)
-
-    def test_a_git_that_fails_raises_instead_of_answering_empty(self):
-        with mock.patch.object(trial.subprocess, "run", return_value=SimpleNamespace(returncode=128, stdout="", stderr="fatal: not a git repository")):
-            with self.assertRaises(OSError):
-                trial.git_state(REPO)
-
-    def test_main_refuses_when_git_fails_and_never_reaches_the_runner(self):
-        reached = []
-        with restoring_runner(main=lambda rest: reached.append(rest) or 0), \
-                mock.patch.object(trial, "git_state", side_effect=OSError("git exited 128")), \
-                contextlib.redirect_stdout(io.StringIO()) as out:
-            self.assertEqual(trial.main(["--dry-run"]), 1)
-        self.assertEqual(reached, [])
-        self.assertIn("git", out.getvalue())
-
-    def test_main_refuses_when_git_times_out_and_never_reaches_the_runner(self):
-        reached = []
-        with restoring_runner(main=lambda rest: reached.append(rest) or 0), \
-                mock.patch.object(trial, "git_state", side_effect=subprocess.TimeoutExpired("git", 60)), \
-                contextlib.redirect_stdout(io.StringIO()) as out:
-            self.assertEqual(trial.main(["--dry-run"]), 1)
-        self.assertEqual(reached, [])
-        self.assertIn("git", out.getvalue())
-
-
 class SourceTieTests(unittest.TestCase):
     """The judge and the arm text name strings the C# side owns. A rewording there would otherwise pass every test here."""
 
@@ -887,7 +698,7 @@ class PatchTests(unittest.TestCase):
                         judge=runner.judge, arm=runner.arm_text_for, rest=rest)
             return 7
 
-        with restoring_runner(main=fake_main), mock.patch.object(trial, "git_state", return_value=(HEAD, {})):
+        with restoring_runner(main=fake_main), mock.patch.object(autorun_build, "checkout_state", return_value=(HEAD, {})):
             self.assertEqual(trial.main(["--dry-run"]), 7)
         self.assertEqual(seen["env"], trial.ENV_VAR)
         self.assertEqual(seen["done"], trial.DONE_FILE)
@@ -908,13 +719,13 @@ class PatchTests(unittest.TestCase):
             seen["judge"] = runner.judge
             return 0
 
-        # The judge reads the checkout itself when it judges, so the patch has to cover the judging too.
+        # main reads the checkout once at launch and binds it into the judge.
         rows = [STAMP_LINE, pass_line("enter"), pass_line("fly"), UNLOAD_LINE]
-        with restoring_runner(main=fake_main), mock.patch.object(trial, "git_state", return_value=(HEAD, {"Main/a.cs": datetime(2026, 11, 4, 9, 30)})):
+        with restoring_runner(main=fake_main), mock.patch.object(autorun_build, "checkout_state", return_value=(HEAD, {"Main/a.cs": datetime(2026, 11, 4, 9, 30)})):
             trial.main(["--steps", "enter,fly"])
             self.assertEqual(seen["judge"](FINAL, None, "\n".join(rows))[0], 1, "Main/a.cs is newer than the build")
         clean_rows = [CLEAN_STAMP_LINE, pass_line("enter"), pass_line("fly"), UNLOAD_LINE]
-        with restoring_runner(main=fake_main), mock.patch.object(trial, "git_state", return_value=(HEAD, {})):
+        with restoring_runner(main=fake_main), mock.patch.object(autorun_build, "checkout_state", return_value=(HEAD, {})):
             trial.main(["--steps", "enter,fly"])
             self.assertEqual(seen["judge"](FINAL, None, "\n".join(clean_rows))[0], 0)
             self.assertEqual(seen["judge"](FINAL, None, "\n".join([CLEAN_STAMP_LINE, pass_line("enter"), UNLOAD_LINE]))[0], 1)
@@ -926,7 +737,7 @@ class PatchTests(unittest.TestCase):
             seen["arm"] = runner.arm_text_for
             return 0
 
-        with restoring_runner(main=fake_main), mock.patch.object(trial, "git_state", return_value=(HEAD, {})):
+        with restoring_runner(main=fake_main), mock.patch.object(autorun_build, "checkout_state", return_value=(HEAD, {})):
             trial.main(["--live-limit", "90", "--steps", "enter,fly", "--scene", "battle_terrain_b"])
         text, limit = seen["arm"]("E:/out", SimpleNamespace(wall_limit=1234.0))
         self.assertIn("live_limit_seconds=90\n", text)
@@ -935,51 +746,66 @@ class PatchTests(unittest.TestCase):
         self.assertEqual(limit, 1234.0)
 
 
-class CheckoutAtJudgingTests(unittest.TestCase):
-    """C2: the run is judged after the game exits, so the checkout is read then and not when it was launched."""
+class LaunchCheckoutTests(unittest.TestCase):
+    """The checkout is read once, in main, before the game starts (autorun_build.read_checkout_for_launch), and the judge uses that state."""
 
-    def judged(self, states, log=None, **kwargs):
-        """Judge once through the partial main binds, with git_state answering from states in turn; returns the verdict and the call count."""
+    def launched(self, states):
+        """Run main with autorun_build.checkout_state answering from states in turn; returns the judge main handed the runner and the mock."""
         seen = {}
-        with restoring_runner(main=lambda rest: seen.update(judge=runner.judge) or 0), mock.patch.object(trial, "git_state", return_value=(HEAD, {})):
+        with restoring_runner(main=lambda rest: seen.update(judge=runner.judge) or 0), \
+                mock.patch.object(autorun_build, "checkout_state", side_effect=states) as git:
             trial.main(["--dry-run"])
-        with mock.patch.object(trial, "git_state", side_effect=states) as git:
-            return seen["judge"](FINAL, None, log if log is not None else full_log(), **kwargs), git.call_count
+        return seen["judge"], git
 
-    def test_a_head_that_moves_after_the_launch_fails_the_run(self):
+    def test_a_head_that_moves_after_the_launch_does_not_fail_a_good_run(self):
         moved = "0000000deadbeefdeadbeefdeadbeefdeadbeef0"
-        (code, why), _ = self.judged([(moved, {})])
+        judge_it, git = self.launched([(HEAD, {}), (moved, {})])
+        code, why = judge_it(FINAL, None, full_log())
+        self.assertEqual(code, 0, why)
+        self.assertEqual(git.call_count, 1, "the judge must not read git again")
+
+    def test_an_edit_made_after_the_launch_does_not_fail_a_good_run(self):
+        judge_it, git = self.launched([(HEAD, {}), (HEAD, {"Main/a.cs": datetime(2026, 11, 4, 9, 30)})])
+        self.assertEqual(judge_it(FINAL, None, full_log())[0], 0)
+        self.assertEqual(git.call_count, 1)
+
+    def test_the_head_read_at_launch_is_the_one_judged(self):
+        judge_it, _ = self.launched([("0000000deadbeefdeadbeefdeadbeefdeadbeef0", {})])
+        code, why = judge_it(FINAL, None, full_log())
         self.assertEqual(code, 1)
-        self.assertIn("not this checkout", why)
         self.assertIn("0000000de", why)
 
-    def test_an_edit_made_after_the_launch_fails_the_run(self):
-        (code, why), _ = self.judged([(HEAD, {"Main/a.cs": datetime(2026, 11, 4, 9, 30)})], log=full_log(stamp=STAMP_LINE))
+    def test_a_dirty_stamp_with_a_clean_tree_at_launch_fails(self):
+        judge_it, _ = self.launched([(HEAD, {})])
+        code, why = judge_it(FINAL, None, full_log(stamp=STAMP_LINE))
+        self.assertEqual(code, 1)
+        self.assertIn("this tree has none", why)
+
+    def test_a_clean_stamp_with_an_uncommitted_watched_file_at_launch_fails(self):
+        judge_it, _ = self.launched([(HEAD, OLDER_CHANGE)])
+        code, why = judge_it(FINAL, None, full_log())
         self.assertEqual(code, 1)
         self.assertIn("Main/a.cs", why)
 
-    def test_the_checkout_is_read_once_for_each_judged_run(self):
-        (code, why), calls = self.judged([(HEAD, {}), (HEAD, {})])
-        self.assertEqual(code, 0, why)
-        self.assertEqual(calls, 1)
+    def test_a_git_that_fails_at_launch_returns_1_and_starts_nothing(self):
+        for error in (OSError("git exited 128"), subprocess.TimeoutExpired("git", 60)):
+            reached = []
+            with self.subTest(error=type(error).__name__), restoring_runner(main=lambda rest: reached.append(rest) or 0), \
+                    mock.patch.object(autorun_build, "checkout_state", side_effect=error), contextlib.redirect_stdout(io.StringIO()) as out:
+                self.assertEqual(trial.main(["--dry-run"]), 1)
+            self.assertEqual(reached, [])
+            self.assertIn("cannot read the checkout from git", out.getvalue())
 
-    def test_a_git_that_fails_at_the_moment_of_judging_is_exit_1_with_the_reason(self):
-        (code, why), _ = self.judged(OSError("git status exited 128: not a repository"))
+    def test_a_judge_with_no_checkout_fails(self):
+        code, why = trial.judge(FINAL, None, full_log())
         self.assertEqual(code, 1)
-        self.assertIn("cannot read the checkout from git", why)
-        self.assertIn("exited 128", why)
+        self.assertIn("not read at launch", why)
 
-    def test_a_git_that_times_out_at_the_moment_of_judging_is_exit_1_with_the_reason(self):
-        (code, why), _ = self.judged(subprocess.TimeoutExpired("git", 60))
-        self.assertEqual(code, 1)
-        self.assertIn("cannot read the checkout from git", why)
+    def test_main_binds_the_steps_and_the_launch_checkout(self):
+        judge_it, _ = self.launched([(HEAD, {})])
+        self.assertEqual(sorted(judge_it.keywords), ["checkout", "steps"])
+        self.assertEqual(judge_it.keywords["checkout"], (HEAD, {}))
 
-    def test_main_binds_nothing_from_the_early_git_call(self):
-        """The early call only refuses a broken git before a launch: the partial holds the steps and not a head."""
-        seen = {}
-        with restoring_runner(main=lambda rest: seen.update(judge=runner.judge) or 0), mock.patch.object(trial, "git_state", return_value=(HEAD, {})):
-            trial.main(["--dry-run"])
-        self.assertEqual(sorted(seen["judge"].keywords), ["steps"])
 
 
 class RunOnceTests(unittest.TestCase):
@@ -1035,7 +861,7 @@ class RunOnceTests(unittest.TestCase):
         )
         runs = self.root / "runs"
         with restoring_runner(**patches), mock.patch.object(runner.subprocess, "Popen", game), mock.patch.object(runner.time, "sleep"), \
-                mock.patch.object(trial, "git_state", return_value=(HEAD, {})), contextlib.redirect_stdout(io.StringIO()):
+                mock.patch.object(autorun_build, "checkout_state", return_value=(HEAD, {})), contextlib.redirect_stdout(io.StringIO()):
             code = trial.main(["--require-idle-minutes", "0", "--runs-root", str(runs), *argv])
         folders = sorted(runs.iterdir())
         self.assertEqual(len(folders), 1)
@@ -1116,7 +942,7 @@ class ArgumentTests(unittest.TestCase):
 
     def test_a_thrower_step_beside_another_step_is_refused_and_one_alone_is_accepted(self):
         for text in ("advance_throwers,advance_throwers_vanilla", "hold_line_proof,advance_throwers", "ADVANCE_THROWERS_VANILLA, enter"):
-            with self.subTest(steps=text), restoring_runner(main=lambda rest: 0), mock.patch.object(trial, "git_state", return_value=(HEAD, {})):
+            with self.subTest(steps=text), restoring_runner(main=lambda rest: 0), mock.patch.object(autorun_build, "checkout_state", return_value=(HEAD, {})):
                 with self.assertRaises(SystemExit) as stop:
                     trial.main(["--steps", text, "--dry-run"])
                 self.assertEqual(stop.exception.code, 2)

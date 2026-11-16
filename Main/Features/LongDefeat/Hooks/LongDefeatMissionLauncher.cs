@@ -5,6 +5,7 @@ using System.Threading;
 using TAOM.Adapters;
 using TAOM.Core.Diagnostics;
 using TAOM.Core.Logging;
+using TAOM.Features.LongDefeat.Coop;
 using TAOM.Features.LongDefeat.Domain;
 using TaleWorlds.Core;
 using TaleWorlds.Localization;
@@ -30,10 +31,11 @@ internal sealed class LongDefeatMissionLauncher
     private readonly IOutcomeLog _outcomes;
     private readonly ILongDefeatMenuAdapter _menu;
     private readonly LongDefeatRunRecords _records;
+    private readonly LongDefeatCoopRuns _coop;
     private int _missions;
 
     public LongDefeatMissionLauncher(LongDefeatConfigCatalog catalog, LongDefeatSession session, IModLogger logger, IOutcomeLog outcomes,
-        ILongDefeatMenuAdapter menu, LongDefeatRunRecords records)
+        ILongDefeatMenuAdapter menu, LongDefeatRunRecords records, LongDefeatCoopRuns coop)
     {
         _catalog = catalog;
         _session = session;
@@ -41,6 +43,7 @@ internal sealed class LongDefeatMissionLauncher
         _outcomes = outcomes;
         _menu = menu;
         _records = records;
+        _coop = coop;
     }
 
     /// <summary>True once the mission is open. An unknown fortress id, a missing culture or troop, or an engine failure logs an error and returns false.</summary>
@@ -85,10 +88,11 @@ internal sealed class LongDefeatMissionLauncher
             var attacker = Combatant("{=!}The Long Defeat, Attackers", attackerCulture, BattleSideEnum.Attacker);
             _logger.LogInfo($"[LongDefeat] launching {fortress.Scene} for fortress {fortress.Id} ({setup.Trigger})");
             var records = setup.RecordsFolder == null ? _records : LongDefeatRunRecords.ForFolder(setup.RecordsFolder, _logger.LogFilePath);
-            var mission = MissionState.OpenNew(LongDefeatMission.MissionName, Record(fortress.Scene), _ => CreateBehaviors(plan, defender, attacker, records));
+            var co = LongDefeatCoopMission.For(setup.SessionId, _coop);
+            var mission = MissionState.OpenNew(LongDefeatMission.MissionName, Record(fortress.Scene), _ => LongDefeatCoopMission.Compose(co.Session, CreateBehaviors(plan, defender, attacker, records, co.Run)));
 
-            // Both are needed: a dead player may take a soldier, and IsFriendlyMission true makes Tab end the mission and leaves the order bar empty.
-            mission.SetPlayerCanTakeControlOfAnotherAgentWhenDead();
+            // A dead solo player may take a soldier (a co-op host gets it when its director starts), and IsFriendlyMission true makes Tab end the mission and leaves the order bar empty.
+            if (co.Run == null) mission.SetPlayerCanTakeControlOfAnotherAgentWhenDead();
             mission.IsFriendlyMission = false;
             return true;
         }
@@ -101,7 +105,7 @@ internal sealed class LongDefeatMissionLauncher
     }
 
     internal IReadOnlyList<MissionBehavior> CreateBehaviors(RunPlan plan, CustomBattleCombatant defender, CustomBattleCombatant attacker,
-        LongDefeatRunRecords records) =>
+        LongDefeatRunRecords records, LongDefeatRunCoop? coop = null) =>
         new MissionBehavior[]
         {
             new BattleSpawnLogic("battle_set"),
@@ -118,7 +122,7 @@ internal sealed class LongDefeatMissionLauncher
             new EquipmentControllerLeaveLogic(),
             new MissionSiegeEnginesLogic(Weapons(DefaultSiegeEngineTypes.Catapult, 4, DefaultSiegeEngineTypes.Trebuchet, 2),
                 Weapons(DefaultSiegeEngineTypes.Ram, 1, DefaultSiegeEngineTypes.SiegeTower, 2)),
-            new LongDefeatMissionLogic(plan, _session, _logger, _outcomes, _menu.EndGame, "ld" + Interlocked.Increment(ref _missions), records),
+            new LongDefeatMissionLogic(plan, _session, _logger, _outcomes, _menu.EndGame, "ld" + Interlocked.Increment(ref _missions), records, coop),
         };
 
     private static List<MissionSiegeWeapon> Weapons(SiegeEngineType first, int firstCount, SiegeEngineType second, int secondCount) =>

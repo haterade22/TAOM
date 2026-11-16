@@ -341,6 +341,16 @@
 	<!-- DLL localization token overrides (diplomacy/policy messages) -->
 	<!-- These reuse the same localization tokens as vanilla C# code to override at load time -->
 	<string id="taom_alliance_formed" text="{=0cdXddA9}{KINGDOM1_LINK} has formed an alliance with {KINGDOM2_LINK}." />
+	<string id="taom_hostile_peace_mcm_access" text="{=taom_hostile_peace_mcm_access}Enemy Realms Close Their Gates" />
+	<string id="taom_hostile_peace_mcm_access_hint" text="{=taom_hostile_peace_mcm_access_hint}When enabled (default), the towns and castles of a sworn enemy realm treat you as they would in war, even while your realms are at peace: you enter a town only in disguise, a castle not at all, and you cannot trade, recruit or rest in its villages. Your own fiefs are not affected. When off, the base game&apos;s rules apply. Applies at once, no restart." />
+	<string id="taom_hostile_peace_mcm_agreements" text="{=taom_hostile_peace_mcm_agreements}No Trade Agreements With Enemy Realms" />
+	<string id="taom_hostile_peace_mcm_agreements_hint" text="{=taom_hostile_peace_mcm_agreements_hint}When enabled (default), a Free realm and a realm of the Shadow never sign a trade agreement, neither by the AI nor by your own kingdom&apos;s vote. An agreement signed before this was switched on runs to its end. When off, the base game&apos;s rules apply. Applies at once, no restart." />
+	<string id="taom_hostile_peace_mcm_caravans" text="{=taom_hostile_peace_mcm_caravans}No Caravan Trade With Enemy Realms" />
+	<string id="taom_hostile_peace_mcm_caravans_hint" text="{=taom_hostile_peace_mcm_caravans_hint}When enabled (default), caravans of a Free realm do not trade in the towns of a realm of the Shadow, and the reverse, while the two are at peace before the War of the Ring. Realms that are not sworn enemies trade as before. When off, the base game&apos;s rules apply. Applies at once, no restart." />
+	<string id="taom_hostile_peace_mcm_alliances" text="{=taom_hostile_peace_mcm_alliances}Allow Player Alliances With Anyone" />
+	<string id="taom_hostile_peace_mcm_alliances_hint" text="{=taom_hostile_peace_mcm_alliances_hint}When off (default), a kingdom you rule cannot ally with a realm on the other side of the war: a Free kingdom does not ally with the Shadow, and the reverse. Realms of the Neutral side can ally with anyone. A kingdom you founded takes the side of its culture. Alliances you already have are kept. When on, your kingdom may ally with any realm, as before. AI realms keep their own rules either way. Applies at once, no restart." />
+	<string id="taom_hostile_peace_no_alliance" text="{=taom_hostile_peace_no_alliance}Your realms stand on opposite sides of the war and cannot be allied." />
+	<string id="taom_hostile_peace_no_trade" text="{=taom_hostile_peace_no_trade}Your realms are enemies in all but war. They will not trade." />
 	<string id="taom_no_longer_enemies" text="{=1rbg3Hz2}{FACTION_1} and {FACTION_2} are no longer enemies." />
 
 	<!-- Erebor -->
@@ -2457,6 +2467,7 @@
 	<string id="taom_cheat_pick_kingdom" text="{=taom_cheat_pick_kingdom}Choose a kingdom" />
 	<string id="taom_cheat_pick_ok" text="{=taom_cheat_pick_ok}Choose" />
 	<string id="taom_cheat_pick_settlement" text="{=taom_cheat_pick_settlement}Choose where to teleport" />
+	<string id="taom_cheat_pick_troop" text="{=taom_cheat_pick_troop}Choose a troop: 10 of it join your party" />
 	<string id="taom_cheat_teleport_text" text="{=taom_cheat_teleport_text}Teleport to a settlement's gate. You arrive outside and enter as usual." />
 	<string id="taom_cheat_tp_army" text="{=taom_cheat_tp_army}Leave the army first. Only an army's leader can teleport it." />
 	<string id="taom_cheat_tp_camp" text="{=taom_cheat_tp_camp}Break camp first, then teleport." />
@@ -2471,8 +2482,11 @@
 	<string id="taom_cheat_tp_siege" text="{=taom_cheat_tp_siege}End the siege first." />
 	<string id="taom_cheat_tp_towns" text="{=taom_cheat_tp_towns}Towns..." />
 	<string id="taom_cheat_tp_villages" text="{=taom_cheat_tp_villages}Villages..." />
+	<string id="taom_cheat_troop_row" text="{=taom_cheat_troop_row}Tier {TIER}: {NAME}" />
+	<string id="taom_cheat_troops_any" text="{=taom_cheat_troops_any}+10 of any troop of your faction..." />
 	<string id="taom_cheat_troops_basic" text="{=taom_cheat_troops_basic}+10 basic recruits" />
 	<string id="taom_cheat_troops_elite" text="{=taom_cheat_troops_elite}+10 elite recruits" />
+	<string id="taom_cheat_troops_screen" text="{=taom_cheat_troops_screen}Every troop (party screen)..." />
 	<string id="taom_cheat_troops_text" text="{=taom_cheat_troops_text}Add recruits of your culture to your party." />
 	<string id="taom_cheat_unknown" text="{=taom_cheat_unknown}Nothing called &quot;{NAME}&quot; was found." />
 
@@ -2956,6 +2970,7 @@
 	<string id="taom_rf_upgrade_tooltip" text="{=taom_rf_upgrade_tooltip}Cost: {GOLD} denars. Your company stays while it is rebuilt into a stronghold." />
 	<string id="taom_rf_upgrading" text="{=taom_rf_upgrading}Rebuilding the refuge into a stronghold - your company must stay until it is done." />
 	<string id="taom_rf_warden_desc" text="{=taom_rf_warden_desc}Choose who commands the refuge - a companion, or promote one of your soldiers into an officer. They leave your party to lead it." />
+	<string id="taom_rf_warden_ranks" text="{=taom_rf_warden_ranks}Your promoted warden returns to the ranks as {TROOP}." />
 	<string id="taom_rf_warden_title" text="{=taom_rf_warden_title}Assign a Warden" />
 	<string id="taom_rf_fallen" text="{=taom_rf_fallen}Your refuge has fallen. What remains of its garrison is lost; your warden's fate rides with the survivors." />
 	<string id="taom_rf_food_note" text="{=taom_rf_food_note}The garrison eats from the stored goods; keep the stash provisioned or it will starve." />
@@ -2966,7 +2981,11 @@
 	<string id="taom_fcamp_ambush_ok" text="{=taom_fcamp_ambush_ok}Your ambush is set against {ENEMY} - strike now?" />
 	<string id="taom_fcamp_ambush_terrain" text="{=taom_fcamp_ambush_terrain}Needs concealing terrain - forest, hills, swamp, canyon, dunes, a bridge or a ford." />
 	<string id="taom_fcamp_ambush_title" text="{=taom_fcamp_ambush_title}Ambush" />
+	<string id="taom_fcamp_block_disorganized" text="{=taom_fcamp_block_disorganized}the party is still disorganized; wait a few hours." />
+	<string id="taom_fcamp_block_encounter" text="{=taom_fcamp_block_encounter}the party is in an encounter." />
+	<string id="taom_fcamp_block_menu" text="{=taom_fcamp_block_menu}a menu or window is open; close it first." />
 	<string id="taom_fcamp_broken" text="{=taom_fcamp_broken}Camp broken." />
+	<string id="taom_fcamp_btn_blocked" text="{=taom_fcamp_btn_blocked}Cannot camp now: {REASON}" />
 	<string id="taom_fcamp_btn_make" text="{=taom_fcamp_btn_make}Make Camp" />
 	<string id="taom_fcamp_btn_options" text="{=taom_fcamp_btn_options}Camp Options" />
 	<string id="taom_fcamp_building" text="{=taom_fcamp_building}The camp is still being set up." />
@@ -5016,6 +5035,17 @@
 	<string id="TAOM_LD_Hud_KeyVolleyIdle" text="{=TAOM_LD_Hud_KeyVolleyIdle}Elven Volley in a wave" />
 	<string id="TAOM_LD_Hud_KeyVolleyNotOwned" text="{=TAOM_LD_Hud_KeyVolleyNotOwned}Elven Volley not bought" />
 	<string id="TAOM_LD_Hud_KeyVolleyNotSold" text="{=TAOM_LD_Hud_KeyVolleyNotSold}Elven Volley not sold here" />
+	<string id="TAOM_LD_Coop_NoCoop" text="{=TAOM_LD_Coop_NoCoop}Co-op needs the Coop mod loaded." />
+	<string id="TAOM_LD_Coop_BadPayload" text="{=TAOM_LD_Coop_BadPayload}The host's run could not be read. Install the same TAOM as the host." />
+	<string id="TAOM_LD_Coop_BadAddress" text="{=TAOM_LD_Coop_BadAddress}Enter the host's address as address:port, for example 192.168.1.20:4200." />
+	<string id="TAOM_LD_Coop_HostLeft" text="{=TAOM_LD_Coop_HostLeft}The host left, so the run ended." />
+	<string id="TAOM_LD_Coop_RunEnded" text="{=TAOM_LD_Coop_RunEnded}The run ended at wave {WAVE}. Waves cleared: {WAVES}. Kills: {KILLS}." />
+	<string id="TAOM_LD_Coop_MenuOption" text="{=TAOM_LD_Coop_MenuOption}The Long Defeat (co-op)" />
+	<string id="TAOM_LD_Coop_MenuHint" text="{=TAOM_LD_Coop_MenuHint}Hold a fortress with other players over the Coop mod. One player hosts; the others join by address." />
+	<string id="TAOM_LD_Coop_Prompt_Desc" text="{=TAOM_LD_Coop_Prompt_Desc}Host a run for other players, or join a run another player hosts." />
+	<string id="TAOM_LD_Coop_Host" text="{=TAOM_LD_Coop_Host}Host a run" />
+	<string id="TAOM_LD_Coop_Join" text="{=TAOM_LD_Coop_Join}Join a run" />
+	<string id="TAOM_LD_Coop_JoinText" text="{=TAOM_LD_Coop_JoinText}The host's address and port, for example 192.168.1.20:4200." />
 	<!-- harvested by tools/harvest_literal_loc_keys.py -->
 	<!-- Refuge -->
 	<string id="taom_rf_reason_coop_off" text="{=taom_rf_reason_coop_off}Refuges are not available in a shared campaign." />
@@ -5175,5 +5205,26 @@
 	<string id="taom_cheat_done_influence" text="{=taom_cheat_done_influence}Gained {NUMBER} influence." />
 	<string id="taom_cheat_done_renown" text="{=taom_cheat_done_renown}Gained {NUMBER} renown." />
 	<string id="taom_cheat_done_heal" text="{=taom_cheat_done_heal}Your party is healed. Soldiers healed: {NUMBER}." />
+	<!-- StoryMissions -->
+	<string id="taom_story_offer_attack" text="{=taom_story_offer_attack}Storm the walls" />
+	<string id="taom_story_offer_body_both" text="{=taom_story_offer_body_both}The hour of {TARGET} has come. Will you ride there and choose your side of its walls, or let fate decide?" />
+	<string id="taom_story_offer_body_attack" text="{=taom_story_offer_body_attack}The hour of {TARGET} has come. Will you march on its walls and lead the assault yourself, or let fate decide?" />
+	<string id="taom_story_offer_march" text="{=taom_story_offer_march}March on {TARGET}" />
+	<string id="taom_story_offer_repulsed" text="{=taom_story_offer_repulsed}Your assault on {TARGET} is thrown back, and its walls hold." />
+	<string id="taom_story_offer_stormed" text="{=taom_story_offer_stormed}The walls of {TARGET} are stormed, and the fortress falls." />
+	<string id="taom_story_offer_menu_host" text="{=taom_story_offer_menu_host}A host gathers before the walls of {TARGET}. Time stands until you choose." />
+	<!-- harvested by tools/harvest_literal_loc_keys.py -->
+	<!-- CoopInterop -->
+	<string id="taom_guest_trade_not_leader" text="{=taom_guest_trade_not_leader}The host cannot trade for you while you do not lead a free party." />
+	<string id="taom_guest_trade_not_here" text="{=taom_guest_trade_not_here}The host cannot trade for you here: your party is not in this settlement, or it is in a battle or a siege." />
+	<string id="taom_guest_trade_no_armoury" text="{=taom_guest_trade_no_armoury}The host finds no armourer at work in this town." />
+	<string id="taom_guest_trade_failed" text="{=taom_guest_trade_failed}The host could not complete this. Try again." />
+	<string id="taom_guest_trade_busy" text="{=taom_guest_trade_busy}The host has not answered your last request yet." />
+	<string id="taom_guest_trade_no_link" text="{=taom_guest_trade_no_link}The host cannot be reached." />
+	<string id="taom_guest_trade_no_answer" text="{=taom_guest_trade_no_answer}The host did not answer your last request. Try again." />
+	<!-- harvested by tools/harvest_literal_loc_keys.py -->
+	<!-- CheatMenu -->
+	<string id="taom_cheat_done_relation" text="{=taom_cheat_done_relation}Lords of {NAME} whose relation changed: {NUMBER}." />
+	<string id="taom_cheat_done_teleport" text="{=taom_cheat_done_teleport}You are at the gate of {NAME}." />
 
 </strings>

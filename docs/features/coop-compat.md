@@ -5,7 +5,9 @@
 `TAOM.CoopCompat` is a separate module in the TAOM download that connects TAOM to BannerlordCoop.
 When a client joins a co-op campaign, it compares the client's TAOM build and simulation settings
 with the server's and tells the player about a difference. It also sends the server's War of the Ring
-momentum to every client, so a client's War of the Ring screen shows the server's war.
+momentum to every client, so a client's War of the Ring screen shows the server's war. And it lets a
+guest buy from the Elite Emissary and use a town armoury: the guest's screen asks the host, and the
+host runs TAOM's own purchase or upgrade for the guest's hero (#1329).
 
 The module does nothing without Coop. A player who does not play co-op does not need it.
 
@@ -24,6 +26,12 @@ compat module next to TAOM, a settings fingerprint relay and a momentum relay. T
 TAOM-owned rewrite for Bannerlord v1.5.7 and the current Coop 1.5.x API. Sternab gave permission to
 port his work (2026-10-21); his two rules hold here: never decide on `ModInformation.IsServer` at
 `OnSubModuleLoad`, and never subscribe a static method to Coop's `MessageBroker`.
+
+Guest trade is a port of minimalcash63's `TAOM.CoopEmissaryArmory` (2026-11-15, with permission): the
+host builds TAOM's own emissary and armoury services with the guest hero's adapters, keeps one request
+in flight per guest, and copies the host's balance back to the guest's screen. From
+Sternab's emissary relay in `TAOM-Coop` it takes the request checks: the hero comes from the sender's
+current connection, never from the message, and every field is bounded before any hero is read.
 
 ## Architecture
 
@@ -67,11 +75,36 @@ port his work (2026-10-21); his two rules hold here: never decide on `ModInforma
   change it broadcasts again, at most once a minute of real time, plus once every 24 in-game hours.
   A client applies a snapshot with `ApplyWarState`, which replaces the war state and keeps the local
   player events. A client ignores an older sequence number and a snapshot with a different protocol.
-- `CoopCompatSubModule` starts the transport and builds both services at the first campaign start
+- `GuestTrade/GuestTradeRelayService` (#1329) attaches itself to TAOM's `GuestTradeClient`. A guest's
+  emissary or armoury screen sends a `CoopCompatTradeRequest`. The transport names the hero that the
+  sender's current connection controls: `IPlayerManager.TryGetCurrentController` for connected peers
+  only, then `TryGetSenderHero` for the hero's `StringId`. (`Player.HeroId` is Coop's object key,
+  `"Hero_" + StringId`, which `CampaignObjectManager.Find` cannot resolve.) A connection that controls
+  no hero gets a refusal, not silence. TAOM's `GuestTradeHost` checks the request (the hero leads a
+  free party, is in that settlement, and is in no battle and no besieged settlement; the emissary is
+  on, the settlement is a key one and not at war with the hero; the town has an armoury), runs
+  `EliteEmissaryService.Purchase` or `ArmouryUpgradeService.Execute` with the guest hero's
+  `IPlayerPartyAdapter` and `IArmouryPlayerAdapter`, and answers with a `CoopCompatTradeReply` that
+  carries the result, the hero's balance and, for the armoury, the host's armoury level (a visiting
+  armourer's bonus is host state only). The host's change to the roster, gold and inventory reaches
+  the guest through Coop's own sync. Every request has a new id, so the host keeps no reply cache. When
+  the host does not answer within 15 seconds, the guest's next click says so and sends nothing; the
+  click after that sends again. A host on another protocol version, or an older `TAOM.CoopCompat` with
+  no trade handler, never answers, so the guest sees that notice; the join handshake already reports
+  either one as a build mismatch.
+- `CoopCompatSubModule` starts the transport and builds the three services at the first campaign start
   (`OnGameStart`), when every module's `OnSubModuleLoad` has run, so the module order against Coop and
   `DedicatedServer.Windows` does not matter. It then adds `MomentumRelayCampaignBehavior` to each
   campaign. If a Coop assembly is missing or changed, it logs one line and is off for that process;
   the campaign goes on.
+- The Long Defeat co-op session (#1280) starts earlier, from `OnBeforeInitialModuleScreenSetAsRoot`
+  (once, behind a latch), because a session starts from the main menu with no campaign.
+  `CoopSessionTransport` wraps Coop's `SessionLauncher` and moves its events to the game thread;
+  `LongDefeatSessionLink` passes on only sessions for TAOM's mod id and run-ended messages of this
+  protocol to TAOM's `ILongDefeatCoopPort`. Against a Coop with no session API (no
+  `Missions.Sessions.dll` in `CoopBinDir`, before BannerlordCoop #4694), the project builds
+  `CoopSessionTransport.NoSessionApi.cs` instead: its `Start` throws, the module logs "sessions off",
+  and the co-op option stays hidden.
 
 ### Component Diagram
 
@@ -81,10 +114,10 @@ Coop MessageBroker / INetwork
     CoopTransport (TAOM.CoopCompat.Coop.dll)
           |  ICoopTransport
      /          \
-SettingsHandshakeService     MomentumRelayService
-  |  SettingsFingerprint        |  IMomentumStateStore (TAOM.dll)
-  |  BuildIdentity              |
-  ISettingsNotice               MomentumRelayCampaignBehavior (tick)
+SettingsHandshakeService     MomentumRelayService            GuestTradeRelayService
+  |  SettingsFingerprint        |  IMomentumStateStore (TAOM.dll)  |  GuestTradeClient (guest, TAOM.dll)
+  |  BuildIdentity              |                                  |  GuestTradeHost (host, TAOM.dll)
+  ISettingsNotice               MomentumRelayCampaignBehavior      |    IGuestTradeShops, IGuestTradeHeroAdapter
 ```
 
 ## Configuration
@@ -96,24 +129,33 @@ settings of its own.
 
 | File | Purpose |
 |------|---------|
-| `CoopCompat/CoopCompatSubModule.cs` | Entry point: at the first campaign start, starts the transport, builds the services and adds the campaign behavior |
+| `CoopCompat/CoopCompatSubModule.cs` | Entry point: at the first campaign start, starts the transport, builds the services and adds the campaign behavior; at the main menu, starts the Long Defeat session link |
 | `CoopCompat/_Module/SubModule.xml` | Module manifest: depends on TAOM and Coop, untagged so it loads on a client and on a dedicated server |
 | `CoopCompat/TAOM.CoopCompat.csproj` | The scanned DLL; deploys both DLLs to the Client and Server bins; skips the build when no Coop is found at `CoopBinDir` |
 | `CoopCompat/Coop/TAOM.CoopCompat.Coop.csproj` | The DLL that holds every Coop-backed type; not named in `SubModule.xml` |
 | `CoopCompat/Coop/Transport/CoopTransport.cs` | The Coop binding |
 | `CoopCompat/Coop/Transport/ICoopTransport.cs` | The seam the services and tests use |
-| `CoopCompat/Coop/Messages/*.cs` | The three wire messages and `CoopCompatProtocol.ProtocolVersion` |
+| `CoopCompat/Coop/Messages/*.cs` | The six wire messages (hello, reply, momentum snapshot, Long Defeat run ended, trade request and reply) and `CoopCompatProtocol.ProtocolVersion` |
+| `CoopCompat/Coop/Sessions/CoopSessionTransport.cs` | The binding to Coop's session API (#1280); `CoopSessionTransport.NoSessionApi.cs` is its stub for an older Coop |
+| `CoopCompat/Coop/Sessions/ICoopSessionTransport.cs` | The session seam the link and tests use |
+| `CoopCompat/Sessions/LongDefeatSessionLink.cs` | Joins TAOM's Long Defeat co-op port to the session transport |
 | `CoopCompat/Handshake/SettingsHandshakeService.cs` | Build and settings handshake |
 | `CoopCompat/Handshake/BuildIdentity.cs` | Protocol, TAOM build text and MVIDs of this peer |
 | `CoopCompat/Handshake/InformationManagerSettingsNotice.cs` | The two player notices |
 | `CoopCompat/Momentum/MomentumRelayService.cs` | War of the Ring momentum relay |
+| `CoopCompat/GuestTrade/GuestTradeRelayService.cs` | Guest trade relay (#1329) |
+| `Main/Features/CoopInterop/GuestTrade/GuestTradeClient.cs` | The guest side: one request in flight, the reply callback, the balance copy |
+| `Main/Features/CoopInterop/GuestTrade/GuestTradeHost.cs` | The host side: request checks, the emissary and armoury runs |
+| `Main/Features/CoopInterop/GuestTrade/GuestTradeShops.cs` | Builds TAOM's emissary and armoury services for one guest hero |
+| `Main/Adapters/GuestTradeHeroAdapter.cs` | Reads a guest's hero on the host; `ArmouryPlayerAdapter.ForHero`, `PlayerPartyAdapter.ForHero` |
 | `Main/Features/WarOfTheRingMomentum/IMomentumStateStore.cs` | `CaptureWarState` and `ApplyWarState` |
 | `Main/Features/CoopInterop/TaomSettingsPages.cs` | The four settings pages the fingerprint reads |
 
 ## Dependencies
 
 - `TAOM.dll`: `IModLogger`, `IOutcomeLog`, `IMomentumStateStore`, `SettingsFingerprint`,
-  `TaomSettingsPages`, resolved from TAOM's container.
+  `TaomSettingsPages`, `GuestTradeClient`, `GuestTradeHost`, resolved from TAOM's container.
+- BannerlordCoop's `IPlayerManager`: the hero behind a connection, for guest trade.
 - BannerlordCoop (`Common`, `Coop.Core`, `GameInterface` and Autofac from the Coop module):
   `MessageBroker`, `INetwork`, `ContainerProvider`, `ModInformation`, `GameThread`. Coop's DLLs are
   references only and never ship in the TAOM download.
@@ -124,8 +166,21 @@ settings of its own.
   wire contract round trip (empty arrays come back empty, not null) and names, the transport binding to
   Coop, the manifest, the type scan gate (`TypeScanGateTests`), the reference gate over both DLLs, the
   service signature and entry point line count gates.
+- `CoopModelPatchBaseCallGateTests` (#1151): Coop fixes vanilla rules with Harmony patches on
+  `Default*Model` methods, and a TAOM override that never calls `base` hides them (#1141). The gate
+  reads the Coop patches that the referenced Coop build declares by attribute (a target on the patch
+  method, on the class, or from `TargetMethod` and `TargetMethods`), and fails on a TAOM override of
+  a patched `Default*Model` method with no base call, unless its `Reviewed` entry says where TAOM
+  carries Coop's rule. One known target per way of declaring one is a canary. An override that calls
+  `base` on some paths passes. Patches registered at run time (`harmony.Patch`, AutoSync) are outside
+  its reach, and a base call does not prove that TAOM's own rule around it treats co-op players right.
 - `TAOM.Tests/Features/WarOfTheRingMomentum/MomentumStateStoreTests.cs`: `CaptureWarState` and
   `ApplyWarState`.
+- `TAOM.Tests/Features/CoopInterop/GuestTrade/`: the client (busy, the late reply, the balance copy
+  and its NaN gate) and the host (every refusal, the emissary buy, the armoury upgrade and its offer
+  match, request bounds) and the module wiring. `TAOM.CoopCompat.Tests/GuestTrade/` and the transport
+  tests cover the relay's field mapping both ways, the protocol check, the connection check and the hero
+  lookup. The presenters' guest branches have no unit test (thin Gauntlet code); step 4 below covers them.
 - `MomentumRelaySizeTests` measures the size of a full snapshot. Whether Coop's transport carries a
   snapshot of that size in one message is not verified in a session yet.
 
@@ -146,6 +201,14 @@ settings of its own.
    `[Check] id=taom.coopcompat.momentum.client result=pass`. After a settlement
    changes hands on the server, the client's War of the Ring screen shows the new value within about
    a minute (a person must look at the screen).
+4. Guest trade (#1329), from a client whose hero leads its party: enter a key settlement whose owner
+   is not at war with you and buy elite troops from the emissary. The troops join your party, the
+   charge shows in your balance, and the server's taom log shows `[GuestTrade] EmissaryBuy for
+   <hero> ... None, status 0`. In a town, open the armoury and improve a carried piece: the new piece
+   is in your inventory and the gold is gone. Save on the server, load, and check both again. Then
+   leave the town and open the emissary from a saved inquiry, or trade while the town is besieged:
+   the host refuses with "not in this settlement, or it is in a battle or a siege", and nothing is
+   charged.
 
 ## Distribution
 
@@ -169,10 +232,12 @@ module. A change on either side gets copied to the other. Coodsz merges and rele
 ## Changelog
 
 - 2026-11-11: first version (#967 C3): build and settings handshake, War of the Ring momentum relay.
+- 2026-11-15: guest trade (#1329): a guest buys from the Elite Emissary and uses the armoury through
+  the host. Ported from minimalcash63's `TAOM.CoopEmissaryArmory`, with Sternab's request checks.
 
 ## GitHub Issue
 
-- **Issue:** #967: co-op server authority and sync (sub-batch C3)
+- **Issue:** #967: co-op server authority and sync (sub-batch C3); #1329: guest trade
 - **Status:** Open
 
 ---

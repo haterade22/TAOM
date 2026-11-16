@@ -150,11 +150,12 @@ Inverting the two thresholds reverts **both** to defaults, not just the offender
 
 | Field | Type | Shipped | Legal range | Read at (file:line) |
 |---|---|---|---|---|
-| `crushThrough.extraCrushThroughEnergyThreshold` | float | 25.0 | `[1, 1000]` | `CombatMechanicsConfigProvider.cs:103` |
-| `crushThrough.skillTargetDelta` | int | 135 | `[1, 1000]` | `CombatMechanicsConfigProvider.cs:104` |
-| `crushThrough.skillDeadZone` | int | 20 | `[0, 1000]`, must be below `skillTargetDelta` | `CombatMechanicsConfigProvider.cs:105, 119` |
-| `crushThrough.maxSkillChance` | float | 0.5 | `[0, 1]` | `CombatMechanicsConfigProvider.cs:106` |
-| `crushThrough.nonOverheadPenaltyFactor` | float | 0.5 | `[0, 1]` | `CombatMechanicsConfigProvider.cs:109` |
+| `crushThrough.extraCrushThroughEnergyThreshold` | float | 25.0 | `[1, 1000]` | `CombatMechanicsConfigProvider.cs:105` |
+| `crushThrough.skillTargetDelta` | int | 135 | `[1, 1000]` | `CombatMechanicsConfigProvider.cs:106` |
+| `crushThrough.skillDeadZone` | int | 20 | `[0, 1000]`, must be below `skillTargetDelta` | `CombatMechanicsConfigProvider.cs:107, 122` |
+| `crushThrough.maxSkillChance` | float | 0.5 | `[0, 1]` | `CombatMechanicsConfigProvider.cs:108` |
+| `crushThrough.skillCurveExponent` | float | 0.01197 | above 0, at most 0.1 | `CombatMechanicsConfigProvider.cs:109` |
+| `crushThrough.nonOverheadPenaltyFactor` | float | 0.5 | `[0, 1]` | `CombatMechanicsConfigProvider.cs:111` |
 | `chargeKnockdown.neutralWeightRatio` | float | 6.0 | `[0.1, 1000]` | `CombatMechanicsConfigProvider.cs:147` |
 | `chargeKnockdown.autoKnockdownWeightRatio` | float | 8.0 | `[0.1, 1000]`, must be at least `neutralWeightRatio` | `CombatMechanicsConfigProvider.cs:148, 161` |
 | `chargeKnockdown.autoKnockdownMinSpeedFactor` | float | 0.4 | `[0, 1]` | `CombatMechanicsConfigProvider.cs:149` |

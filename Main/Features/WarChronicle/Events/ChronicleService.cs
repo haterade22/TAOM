@@ -610,7 +610,8 @@ public sealed class ChronicleService : IChronicleStoryPort
             if (definition.Story != null && record is { State: ChronicleEventState.Active, StoryDeclined: false, Assaulted: false }
                 && !AttackerBesieges(definition)
                 && string.Equals(_world.GetOwnerKingdomId(definition.TargetSettlementId!), definition.Defender, StringComparison.Ordinal))
-                offers.Add(new ChronicleStoryOffer(definition.Id, definition.Story.MissionId, definition.Title, definition.TargetSettlementId, definition.Attackers));
+                offers.Add(new ChronicleStoryOffer(definition.Id, definition.Story.MissionId, definition.Title, definition.TargetSettlementId, definition.Attackers,
+                    definition.Defender ?? string.Empty, definition.Story.AttackMissionId));
         }
 
         return offers;
@@ -629,11 +630,12 @@ public sealed class ChronicleService : IChronicleStoryPort
     }
 
     /// <summary>
-    /// The player won the window's story mission: Held at once, with its effects. False when no Active story window has this id, or the
-    /// chronicle step was skipped (switched off, War Ended, a bad clock). A lost mission needs no call: the transfer to the attacker
-    /// resolves the window Fell through <see cref="OnTargetOwnerChanged"/>.
+    /// The walls held in the window's story mission (a won defence, or an attack the player lost): Held at once, with its effects.
+    /// <paramref name="why"/> is the log's reason. False when no Active story window has this id, or the chronicle step was skipped
+    /// (switched off, War Ended, a bad clock). A fallen fortress needs no call: the transfer to the attacker resolves the window Fell
+    /// through <see cref="OnTargetOwnerChanged"/>.
     /// </summary>
-    public bool ResolveStoryWon(string? eventId)
+    public bool ResolveStoryHeld(string? eventId, string why)
     {
         var resolved = false;
         Guarded("story result", now =>
@@ -642,7 +644,7 @@ public sealed class ChronicleService : IChronicleStoryPort
             if (record == null || CheckOwner(definition!, record, now))
                 return;
 
-            Resolve(definition!, record, ChronicleEventState.Held, now, true, "the player won the story mission");
+            Resolve(definition!, record, ChronicleEventState.Held, now, true, why);
             resolved = true;
         });
         return resolved;

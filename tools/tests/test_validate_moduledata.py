@@ -2217,12 +2217,17 @@ class EnlistmentKitRankRegressionTests(unittest.TestCase):
         self.assertIn("sword_hi 45.0 -> sword_mid 38.0 against enlist_x_infantry_recruit",
                       issues["enlist_x_infantry_veteran"])
 
-    def test_a_dropped_category_is_reported_and_left_to_the_maintainer(self):
+    def test_a_kit_that_only_drops_a_category_is_no_finding(self):
+        # The resolver hands every kit into the party inventory and takes none back, so the player still
+        # holds the sword of the recruit kit. The repair tool's dry run lists the dropped categories.
         self._file([("x", "recruit", "sword_lo", "chest_lo"), ("x", "soldier", "spear", "chest_hi")])
+        self.assertEqual([], self._issues())
+
+    def test_a_finding_names_its_real_reasons_and_not_the_dropped_category(self):
+        self._file([("x", "recruit", "sword_lo", "chest_hi"), ("x", "soldier", "spear", "chest_lo")])
         message = self._issues()[0].message
-        self.assertIn("drops the one handed (sword_lo)", message)
-        self.assertIn("never repaired by a tool", message)
-        self.assertNotIn("--repair-ranks", message)
+        self.assertIn("armour total 45 -> 20", message)
+        self.assertNotIn("drops the", message)
 
     def test_a_chain_that_holds_is_clean(self):
         self._file([("x", "recruit", "spear", "chest_lo"), ("x", "soldier", "spear", "chest_hi"),
@@ -2256,6 +2261,22 @@ class EnlistmentKitRankRegressionTests(unittest.TestCase):
         self.assertEqual(["enlist_arn_infantry_soldier"], [i.entry_id for i in issues])
         self.assertIn("the source kits hold the rule", issues[0].message)
         self.assertIn("item_map", issues[0].message)
+        self.assertIn("Body chest_hi -> chest_lo", issues[0].message)
+
+    def test_a_source_chain_that_only_drops_a_category_holds_the_rule_so_the_item_map_is_named(self):
+        # The source soldier kit drops the recruit's sword: information, not a finding. The clone also
+        # loses armour, and the message must send the reader to the item_map, not to a source repair.
+        self._file([("src", "recruit", "sword_lo", "chest_hi"), ("src", "soldier", "spear", "chest_hi")])
+        text = (self.md / "equipmentsets" / "taom_enlistment_equipment.xml").read_text(encoding="utf-8")
+        arn = "".join(self.ROSTER.format(c="arn", rank=r, weapon=w, body=b)
+                      for r, w, b in (("recruit", "sword_lo", "chest_hi"), ("soldier", "spear", "chest_lo")))
+        _write(self.md / "equipmentsets" / "taom_enlistment_equipment.xml", text.replace(
+            "</EquipmentRosters>", f"  <!-- TAOM-NEWCULTURE:arn:BEGIN -->\n{arn}  <!-- TAOM-NEWCULTURE:arn:END -->\n"
+                                   "</EquipmentRosters>"))
+        with mock.patch.object(ts.Validator, "_promoted_source", return_value=("src", True)):
+            issues = self._issues()
+        self.assertEqual(["enlist_arn_infantry_soldier"], [i.entry_id for i in issues])
+        self.assertIn("the source kits hold the rule", issues[0].message)
         self.assertIn("Body chest_hi -> chest_lo", issues[0].message)
 
     def test_without_the_installs_armour_values_the_pass_is_skipped(self):
