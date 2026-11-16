@@ -1388,3 +1388,9 @@ The game version guard in `GameVersionNotice.Run` checked the dedicated server a
 **Prevent:** a new startup guard or marker in `Dependencies/` reads `IncompatibleModDetector.RunEarlyPhase` first and takes the same early return on `IsEditorBin`, with a log line. A test that reads a method body from a referenced engine assembly carries `RequiresGameIL` and `BindingVerification`.
 
 **Source:** [rca-game-version-warning-2026-11-16.md](../rca-game-version-warning-2026-11-16.md) findings 1 and 2.
+
+### A skip path that leaves data without code needs a way out (wrong game version warning, PR #1340, 2026-11-16)
+The version guard turned TAOM's code off but the engine had already registered TAOM's XML, and the game's save check compares only module ids and versions. A TAOM save would load with no warning and no TAOM code. The popup said "close the game", and its Ok button only closed the popup.
+- **Why missed:** the text described the right action, so the state looked handled; nobody asked what the save check sees in that state.
+- **Prevent:** when a guard leaves a half-loaded session, make its only action the safe one (quit), and name the checks that would otherwise pass in that state.
+- **Source:** [rca-pr1340-game-version-warning-2026-11-16.md](../rca-pr1340-game-version-warning-2026-11-16.md), row 1.

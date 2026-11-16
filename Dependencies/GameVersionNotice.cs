@@ -25,11 +25,12 @@ namespace TAOM.Dependencies;
 /// Module.CheckIfSubmoduleCanBeLoadable, which the same loop asks for every submodule before it loads
 /// its DLL, answers false for the submodules of TAOM and of every module that depends on TAOM. The game
 /// then reaches the main menu and <see cref="MissingTaomNotice"/> shows the TAOM popup there. TAOM's XML
-/// is still registered (the loop applies every module's XML list first), so the popup tells the player
-/// to close the game rather than play. If the prefix can't be installed, a native message box (the call
+/// is still registered (the loop applies every module's XML list first), so the popup's only button
+/// closes the game: a save made without TAOM's code would be damaged. If the prefix can't be installed, a native message box (the call
 /// the engine uses for its own box) says the same before the engine's box.
 ///
-/// Same guard as the engine's own box: not on a dedicated server, not in test mode; also not in the Modding Kit. Runs once per
+/// Not on a dedicated server, and not in the Modding Kit. The engine's own box also checks MBDebug.TestModeEnabled, but
+/// /runTest sets that flag only after the submodules load (Module.cs:315), so it is always false here. Runs once per
 /// process. Never throws: a throw here would make the engine fail TAOM.Dependencies itself.
 /// </summary>
 internal static class GameVersionNotice
@@ -59,9 +60,9 @@ internal static class GameVersionNotice
     [MethodImpl(MethodImplOptions.NoInlining)]
     private static void Run()
     {
-        if (GameNetwork.IsDedicatedServer || TaleWorlds.Engine.MBDebug.TestModeEnabled)
+        if (GameNetwork.IsDedicatedServer)
         {
-            DiagLog.Log(Tag, "skipped: dedicated server or test mode");
+            DiagLog.Log(Tag, "skipped: dedicated server");
             return;
         }
 

@@ -40,7 +40,7 @@ internal static class MissingTaomNotice
             if (versionText != null)
             {
                 DiagLog.Log("Dependencies", "MissingTaomNotice: showing the wrong-game-version notice");
-                Show(versionText);
+                Show(versionText, quitOnOk: true);
                 return;
             }
 
@@ -57,10 +57,15 @@ internal static class MissingTaomNotice
         }
     }
 
-    private static void Show(string text) =>
+    private static void Show(string text, bool quitOnOk = false) =>
         InformationManager.ShowInquiry(new InquiryData(
             "TAOM", text, true, false,
-            new TextObject("{=oHaWR73d}Ok").ToString(), string.Empty, null, null));
+            quitOnOk ? "Quit" : new TextObject("{=oHaWR73d}Ok").ToString(), string.Empty,
+            quitOnOk ? QuitGame : null, null));
+
+    // Wrong game version: TAOM's XML is loaded without its code, so a save made now would be damaged. MCM's
+    // restart prompt quits the same way, from an inquiry button at the main menu.
+    private static void QuitGame() => TaleWorlds.Engine.Utilities.QuitGame();
 
     // Plain English: the notice shows only when TAOM did not load, and TAOM's language files load only with TAOM.
     internal static string Text(MissingTaomReason reason) => reason == MissingTaomReason.WarSails

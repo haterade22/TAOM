@@ -57,17 +57,21 @@ one inquiry that lists every problem it found:
   it turns TAOM's code off for the session: a prefix on `Module.CheckIfSubmoduleCanBeLoadable`, which the
   same loop asks for every submodule before it loads the DLL, answers false for the submodules of TAOM
   and of every module that depends on TAOM. The engine's box then never comes, the game reaches the main
-  menu, and `MissingTaomNotice` shows the usual TAOM popup there (title "TAOM", Ok) with both versions,
-  "TAOM is turned off for this session ... Close the game", and the two fixes: switch the game version in
-  Steam (Betas), or install the matching TAOM from the TAOM launcher. Plain English, no language rows.
+  menu, and `MissingTaomNotice` shows the TAOM popup there (title "TAOM", one button: Quit) with both
+  versions, "TAOM is turned off for this session ... Press Quit to close the game", and the two fixes:
+  switch the game version in Steam (Betas), or, if one is out, install the TAOM made for that game version
+  from the TAOM launcher. Quit calls `TaleWorlds.Engine.Utilities.QuitGame()`, as MCM's restart prompt does.
+  Plain English, no language rows.
 - **Fallback:** if the prefix can't be installed, a native message box (`TaleWorlds.Library.Debug.ShowMessageBox`,
   the call the engine uses for its own box) says the same before the engine's box, which then follows.
 - **Limits:** TAOM's XML is still registered (the loop applies every module's XML list before it loads
-  any DLL), so the menu is reached with TAOM's data and none of its code; the popup asks the player to
-  close the game rather than play. A version difference does not always break TAOM (a hotfix can keep the
+  any DLL), so the menu is reached with TAOM's data and none of its code. The game's save check sees TAOM
+  in the module list at its own version, so a TAOM save would load with no warning and no TAOM code; the
+  popup's only button therefore quits the game. A version difference does not always break TAOM (a hotfix can keep the
   API), but on any version other than the pin TAOM is now turned off; the pin must follow the game
-  version the build targets. Same guard as the engine's own box (not on a dedicated server, not with
-  `MBDebug.TestModeEnabled`); once per process; nothing happens when TAOM is not in the loaded list, the
+  version the build targets. Not on a dedicated server (the engine's box also checks
+  `MBDebug.TestModeEnabled`, which `/runTest` sets only after the submodules load, so it is not read);
+  once per process; nothing happens when TAOM is not in the loaded list, the
   version can't be read, or the pin is missing. If TAOM.Dependencies itself fails to load on that game
   version, nothing runs. The same holds if an engine member `Run` reads differs on the player's game
   version: nothing runs and the engine's own box shows as before. Not in the Modding Kit (its engine can
@@ -185,7 +189,7 @@ ILoadedModuleIds         IModuleFolderReader
    `version="v1.5.7.*"` on the Native line to `v1.5.6.*`; nothing else changes, so TAOM still loads).
    Start the game. Pass: no "Error while loading TAOM" box; at the main menu one TAOM popup names both
    versions and says TAOM is turned off; `diag.log` has `GameVersionNotice: ... Mismatch` and `TAOM's code
-   is off for this session`. Undo the edit afterwards. On a matching game: no popup, `diag.log` has `... Match`.
+   is off for this session`. Press Quit: the game closes. Undo the edit afterwards. On a matching game: no popup, `diag.log` has `... Match`.
 
 ## Changelog
 

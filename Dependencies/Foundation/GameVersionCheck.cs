@@ -133,7 +133,7 @@ public static class GameVersionCheck
         var wanted = DisplayPin(pin);
         var taom = string.IsNullOrEmpty(taomVersion) ? "This TAOM" : $"This TAOM ({taomVersion})";
         var what = taomSkipped
-            ? "TAOM is turned off for this session, so the game would not work properly. Close the game.\n\n"
+            ? "TAOM is turned off for this session, so the game would not work properly. Press Quit to close the game.\n\n"
             : "TAOM will most likely not load. If the game shows an error box after this one " +
               "(\"could not be loaded due to a missing or conflicting dependency\"), this is the reason.\n\n";
         return
@@ -141,7 +141,7 @@ public static class GameVersionCheck
             what +
             "To fix it, do one of these:\n" +
             $"- In Steam, right-click Mount & Blade II: Bannerlord, choose Properties, then Betas, and pick {wanted}. Let Steam update the game, then start again.\n" +
-            "- Or use the TAOM launcher to install the TAOM made for your game version.";
+            "- Or, if a TAOM made for your game version is out, install it with the TAOM launcher.";
     }
 
     private static string? Blank(string? s) => string.IsNullOrWhiteSpace(s) ? null : s!.Trim();

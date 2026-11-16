@@ -135,7 +135,7 @@ public class GameVersionCheckTests
 
         StringAssert.Contains(text, "This TAOM (v2.0.40) is made for Bannerlord v1.5.7, but your game is v1.5.6.");
         StringAssert.Contains(text, "TAOM is turned off for this session");
-        StringAssert.Contains(text, "Close the game.");
+        StringAssert.Contains(text, "Press Quit to close the game.");
         Assert.IsFalse(text.Contains("conflicting dependency"), "no engine box follows in this case");
         AssertFixesAndStyle(text);
     }
@@ -150,6 +150,8 @@ public class GameVersionCheckTests
     {
         StringAssert.Contains(text, "Properties, then Betas, and pick v1.5.7");
         StringAssert.Contains(text, "TAOM launcher");
+        // The launcher may not have a TAOM for the player's game version yet; the text must not promise one.
+        StringAssert.Contains(text, "if a TAOM made for your game version is out");
         Assert.IsFalse(text.Contains("{="), "no language key: TAOM's strings are not read when this shows");
         Assert.IsFalse(text.Contains("\u2014") || text.Contains("\u2013"), "no em or en dash");
     }
@@ -164,11 +166,13 @@ public class GameVersionCheckTests
     }
 
     [TestMethod]
-    public void Notice_ChecksServerAndTestMode_First_AndCatchesEverything()
+    public void Notice_ChecksServer_First_AndCatchesEverything()
     {
         var source = RepoPaths.ReadSource("Dependencies/GameVersionNotice.cs", stripComments: true);
         var run = Body(source, "private static void Run()");
-        int guard = run.IndexOf("GameNetwork.IsDedicatedServer || TaleWorlds.Engine.MBDebug.TestModeEnabled", StringComparison.Ordinal);
+        // MBDebug.TestModeEnabled is not read: /runTest sets it only after the submodules load (Module.cs:315), so here it is always false.
+        Assert.IsFalse(run.Contains("TestModeEnabled"), "TestModeEnabled is always false while submodules are constructed");
+        int guard = run.IndexOf("if (GameNetwork.IsDedicatedServer)", StringComparison.Ordinal);
         int mismatch = run.IndexOf("if (match != GameVersionMatch.Mismatch) return;", StringComparison.Ordinal);
         int skip = run.IndexOf("TrySkipTaomCode(", StringComparison.Ordinal);
         int box = run.IndexOf("ShowMessageBox(", StringComparison.Ordinal);
@@ -226,6 +230,18 @@ public class GameVersionCheckTests
     }
 
     [TestMethod]
+    public void WrongVersionPopup_QuitsTheGame_AndTheOtherNoticesDoNot()
+    {
+        // On the skip path TAOM's XML is loaded and its code is not: a save made in that session would be
+        // damaged, so the popup's only button closes the game. The War Sails and missing-TAOM notices stay Ok.
+        var source = RepoPaths.ReadSource("Dependencies/MissingTaomNotice.cs", stripComments: true);
+        var tick = Body(source, "internal static void Tick()");
+        StringAssert.Contains(tick, "Show(versionText, quitOnOk: true);");
+        StringAssert.Contains(tick, "Show(Text(reason));");
+        StringAssert.Contains(source, "TaleWorlds.Engine.Utilities.QuitGame()");
+    }
+
+    [TestMethod]
     [TestCategory("LiveInstall")]
     public void InstalledGame_MatchesTheShippedPin()
     {
@@ -236,7 +252,9 @@ public class GameVersionCheckTests
             Assert.Inconclusive("Bannerlord install not found.");
         Assert.IsTrue(File.Exists(versionFile), "the game install has no Version.xml: " + versionFile);
 
-        // ApplicationVersion.FromParametersFile reads the first child's Value: <Version><Singleplayer Value="v1.5.7"/>.
+        // The game reads its version from text compiled into TaleWorlds.Library (VirtualFolders), not from this file.
+        // bin\Win64_Shipping_Client\Version.xml carries the same version and is what this test can read:
+        // the first child's Value, <Version><Singleplayer Value="v1.5.7"/>.
         var value = (string)XDocument.Load(versionFile).Root!.Elements().First().Attribute("Value")!;
         var parts = value.Substring(1).Split('.');
         var (pin, _) = GameVersionCheck.ReadSubModule(File.ReadAllText(RepoPaths.RepoPath("Main", "_Module", "SubModule.xml")));
