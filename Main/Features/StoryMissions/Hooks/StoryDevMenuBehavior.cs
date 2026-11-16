@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.GameMenus;
@@ -8,6 +9,7 @@ using TAOM.Adapters;
 using TAOM.Features.CoopInterop;
 using TAOM.Features.Enlistment;
 using TAOM.Features.StoryMissions.Config;
+using TAOM.Features.StoryMissions.Domain;
 
 namespace TAOM.Features.StoryMissions.Hooks;
 
@@ -16,10 +18,15 @@ namespace TAOM.Features.StoryMissions.Hooks;
 /// (a <c>LeaveType.Mission</c> option, as Host Review's) opens the mission from the menu click, never from a console call or a campaign tick. When the
 /// mission ends the engine returns to this menu and "Back to the map" leaves it. The pending request lives on this behavior, which the module builds
 /// new for every campaign, so a second campaign starts clean. Holds no saved data and writes nothing to the campaign.
+/// The scenario autorun (#1368) makes the same click from the client's application tick: it calls <see cref="Open"/> with a verdict callback, then
+/// <c>MenuContext.InvokeConsequence</c> after <c>GameMenu.GetMenuOptionConditionsHold</c>, never from the console and never inside the campaign tick.
+/// It skips the console command's cheat-mode gate, which is safe because only the arm file starts it. The console passes no callback.
 /// </summary>
 public sealed class StoryDevMenuBehavior : CampaignBehaviorBase
 {
     internal const string MenuId = "taom_story_dev";
+    internal const string OpenOptionId = "taom_story_dev_open";
+    internal const string BackOptionId = "taom_story_dev_back";
     private const string BodyVariable = "TAOM_STORY_DEV";
 
     private readonly StoryMissionCatalog _catalog;
@@ -31,6 +38,7 @@ public sealed class StoryDevMenuBehavior : CampaignBehaviorBase
     private readonly IEncounterAdapter _encounter;
     private string? _pendingId;
     private bool _pendingAuto;
+    private Action<StoryOutcome>? _pendingVerdict;
 
     internal StoryDevMenuBehavior(StoryMissionCatalog catalog, StoryMissionLauncher launcher, IGameMenuAdapter menus, ICoopSessionProvider coop,
         IDedicatedServerProvider dedicated, IEnlistmentStateQuery enlistment, IEncounterAdapter encounter)
@@ -51,7 +59,8 @@ public sealed class StoryDevMenuBehavior : CampaignBehaviorBase
     }
 
     /// <summary>Stores the request and opens the menu. Returns the line the console prints.</summary>
-    internal string Open(string missionId, bool auto)
+    /// <param name="onVerdict">Optional: handed to the launcher with the request, so it hears the mission's verdict. A refusal stores nothing.</param>
+    internal string Open(string missionId, bool auto, Action<StoryOutcome>? onVerdict = null)
     {
         // Read live on every use (ICoopSessionProvider's contract): no mission runs on a co-op authority.
         if (!CoopSessionPolicy.IsSinglePlayerAuthority(_coop, _dedicated))
@@ -72,18 +81,20 @@ public sealed class StoryDevMenuBehavior : CampaignBehaviorBase
 
         _pendingId = mission.Id;
         _pendingAuto = auto;
+        _pendingVerdict = onVerdict;
         if (_menus.EnsureMenuOpen(MenuId))
             return $"The story menu is open for '{mission.Id}'. Choose \"Open the mission\".";
 
         _pendingId = null;
+        _pendingVerdict = null;
         return "The story menu could not open. The taom log says why.";
     }
 
     private void AddMenu(CampaignGameStarter starter)
     {
         starter.AddGameMenu(MenuId, "{=!}{" + BodyVariable + "}", new OnInitDelegate(OnInit), GameMenu.MenuOverlayType.None);
-        starter.AddGameMenuOption(MenuId, "taom_story_dev_open", "{=!}Open the mission", OpenCondition, OpenConsequence, isLeave: false, index: 0);
-        starter.AddGameMenuOption(MenuId, "taom_story_dev_back", "{=!}Back to the map", BackCondition, args => _menus.ExitToLast(), isLeave: true, index: 1);
+        starter.AddGameMenuOption(MenuId, OpenOptionId, "{=!}Open the mission", OpenCondition, OpenConsequence, isLeave: false, index: 0);
+        starter.AddGameMenuOption(MenuId, BackOptionId, "{=!}Back to the map", BackCondition, args => _menus.ExitToLast(), isLeave: true, index: 1);
     }
 
     private void OnInit(MenuCallbackArgs args)
@@ -109,8 +120,10 @@ public sealed class StoryDevMenuBehavior : CampaignBehaviorBase
     private void OpenConsequence(MenuCallbackArgs args)
     {
         var id = _pendingId;
+        var verdict = _pendingVerdict;
         _pendingId = null;
-        if (id != null && !_launcher.Launch(id, _pendingAuto))
+        _pendingVerdict = null;
+        if (id != null && !_launcher.Launch(id, _pendingAuto, verdict))
             InformationManager.DisplayMessage(new InformationMessage($"Story mission '{id}' could not open. The taom log says why.", Colors.Red));
     }
 }

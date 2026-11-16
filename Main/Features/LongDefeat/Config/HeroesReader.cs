@@ -30,15 +30,29 @@ internal static class HeroesReader
 
         for (var i = 0; i < rows.Count; i++)
         {
-            var hero = ReadHero(rows[i], $"{label}.heroes[{i}]", heroes, s);
-            if (hero != null)
-                heroes.Add(hero);
+            var where = $"{label}.heroes[{i}]";
+            var row = ReadRow(rows[i], where, heroes.Select(h => (h.Id, h.TroopId)), s);
+            if (row == null)
+                continue;
+
+            if (!LongDefeatConfigScope.TryInt(rows[i]["price"], 1, 100_000, out var price, out var why))
+            {
+                s.Warn($"'{where}.price' {why}; hero '{row.Id}' skipped");
+                continue;
+            }
+
+            heroes.Add(new HeroOffer(row.Id, LongDefeatConfigScope.Text(rows[i]["name"]) ?? row.Id, LongDefeatConfigScope.Text(rows[i]["text"]) ?? string.Empty,
+                row.TroopId, price, row.HealthFactor));
         }
 
         return heroes;
     }
 
-    private static HeroOffer? ReadHero(JToken row, string where, IReadOnlyList<HeroOffer> kept, LongDefeatConfigScope s)
+    /// <summary>
+    /// A hero row's shared part: <c>id</c>, <c>troop</c> and the optional <c>healthFactor</c>. The shop reads its own <c>price</c>, <c>name</c> and <c>text</c>;
+    /// a story mission's free heroes have none. <paramref name="kept"/> holds the ids and troops already taken, so a repeat is skipped with one warning.
+    /// </summary>
+    internal static ReadHeroRow? ReadRow(JToken row, string where, IEnumerable<(string Id, string TroopId)> kept, LongDefeatConfigScope s)
     {
         if (!(row is JObject o))
         {
@@ -60,15 +74,9 @@ internal static class HeroesReader
             return null;
         }
 
-        if (!LongDefeatConfigScope.TryInt(o["price"], 1, 100_000, out var price, out var why))
-        {
-            s.Warn($"'{where}.price' {why}; hero '{id}' skipped");
-            return null;
-        }
-
         var healthFactor = 1f;
         var factor = o["healthFactor"];
-        if (factor != null && factor.Type != JTokenType.Null && !LongDefeatConfigScope.TryFloat(factor, 1f, 10f, out healthFactor, out why))
+        if (factor != null && factor.Type != JTokenType.Null && !LongDefeatConfigScope.TryFloat(factor, 1f, 10f, out healthFactor, out var why))
         {
             s.Warn($"'{where}.healthFactor' {why}; hero '{id}' skipped");
             return null;
@@ -80,8 +88,10 @@ internal static class HeroesReader
             return null;
         }
 
-        return new HeroOffer(id, LongDefeatConfigScope.Text(o["name"]) ?? id, LongDefeatConfigScope.Text(o["text"]) ?? string.Empty, troop, price, healthFactor);
+        return new ReadHeroRow(id, troop, healthFactor);
     }
+
+    internal sealed record ReadHeroRow(string Id, string TroopId, float HealthFactor);
 
     private static bool Same(string a, string b) => string.Equals(a, b, StringComparison.OrdinalIgnoreCase);
 }

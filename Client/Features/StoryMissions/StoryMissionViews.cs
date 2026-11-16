@@ -23,7 +23,8 @@ namespace TAOM.Client.Features.StoryMissions;
 ///   mission needs them.
 /// - The Long Defeat HUD: it reads that mode's session, and it offers a shop and a button that leaves to the main menu. Its two refusals are not
 ///   needed here. Photo Mode stays allowed, because this list has the Photo Mode view, which holds the only exit from Photo Mode. The focus-loss
-///   Escape refusal is for the Long Defeat's environment-variable autorun, which a story mission does not use.
+///   Escape refusal is not needed either: the scenario autorun (#1368) turns focus loss off in memory (CampaignAutorunHost.StartNewCampaign), and
+///   the escape menu opens on focus loss only while BannerlordConfig.StopGameOnFocusLost is true (MissionGauntletSingleplayerEscapeMenu).
 /// A list with the singleplayer escape menu must also have the Photo Mode view or a view that refuses Photo Mode (PhotoModeEscapeMenuGateTests).
 /// </summary>
 [ViewCreatorModule]

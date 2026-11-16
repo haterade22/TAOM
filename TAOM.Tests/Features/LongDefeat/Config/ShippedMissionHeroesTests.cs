@@ -38,16 +38,55 @@ public class ShippedMissionHeroesTests
     }
 
     [TestMethod]
-    public void EveryHero_IsAHeroToTheEngine_AndStaysOutOfTheCustomBattlePickers()
+    public void EveryHero_IsMarkedHero_AndStaysOutOfTheCustomBattlePickers()
     {
         foreach (var hero in Heroes())
         {
             var id = (string?)hero.Attribute("id");
-            // is_hero: the engine refuses a take-over (Mission.CanTakeControlOfAgent) and the shop's upgrade filter skips him.
+            // is_hero reaches the engine's hero checks only in a Custom Game, where CharacterObject has no campaign Hero. In a campaign
+            // IsHero is false (CharacterObject.IsHero => _heroObject != null), so no take-over refusal and no shop upgrade skip there.
             Assert.AreEqual("true", (string?)hero.Attribute("is_hero"), id);
             // The Custom Battle pickers list soldiers and heroes that are not obsolete, and Custom Battle loads CustomGame data too.
             Assert.AreEqual("true", (string?)hero.Attribute("is_obsolete"), id);
         }
+    }
+
+    [TestMethod]
+    public void NoHero_HasACampaignHeroEntry()
+    {
+        // A <Hero> entry would make a campaign Hero stand behind the character: a lord the world could move, kill and list.
+        var root = RepoPaths.RepoPath("Main", "_Module", "ModuleData");
+        var files = Directory.EnumerateFiles(root, "*.xml", SearchOption.AllDirectories)
+            .Where(f => !f.Replace('\\', '/').Contains("/Languages/"));
+
+        foreach (var file in files)
+            Assert.IsFalse(System.Text.RegularExpressions.Regex.IsMatch(File.ReadAllText(file), "<Hero\\b[^>]*\\bid=\"(?:Hero\\.)?taom_hero_"), file);
+    }
+
+    [TestMethod]
+    public void EveryHero_IsNotATemplate_AndAWanderer_SoNoCompanionPoolOrEncyclopediaListsHim()
+    {
+        // The wanderer pool takes IsTemplate && Occupation == Wanderer (CompanionsCampaignBehavior), and the encyclopedia lists only
+        // soldier-like occupations. Wanderer without a template stays out of both, as npcs_harad_lords does.
+        foreach (var hero in Heroes())
+        {
+            var id = (string?)hero.Attribute("id");
+            Assert.AreNotEqual("true", (string?)hero.Attribute("is_template"), id);
+            Assert.AreEqual("Wanderer", (string?)hero.Attribute("occupation"), id);
+        }
+    }
+
+    [TestMethod]
+    public void EveryHero_IsLevel36_SoACampaignReadsBattleTierSeven()
+    {
+        // With no Hero entry a campaign reads the XML level: BasicCharacterObject.GetBattleTier returns 7 for a hero but
+        // Min(Max(Ceiling((Level - 5) / 5), 0), 7) otherwise, so a missing level is tier 0 and the elf and dwarf race abilities
+        // would run at their minimum. Level 36 gives ceil(31 / 5) = 7, the tier a Custom Game already gives the heroes.
+        // The level does more, and that is accepted: in a Custom Game GetPower rises from 0.50 to 5.49 (BasicCharacterObject.cs:257-261) and SkillFactor
+        // from 1/32 to 1 (:74), which the AI's formation power sums and the agent's position error read (Agent.cs:1440, :5119-5120); in a campaign GetPower
+        // and GetBattlePower follow the tier (CharacterObject.cs:609-616).
+        foreach (var hero in Heroes())
+            Assert.AreEqual("36", (string?)hero.Attribute("level"), (string?)hero.Attribute("id"));
     }
 
     [TestMethod]
@@ -112,16 +151,16 @@ public class ShippedMissionHeroesTests
     }
 
     [TestMethod]
-    public void TheFile_LoadsForCustomGameOnly_BeforeTheCustomBattleFilter()
+    public void TheFile_LoadsForCampaignStoryModeAndCustomGame_BeforeTheCustomBattleFilter()
     {
-        // CustomGame is the Long Defeat's game type. The campaign registration waits for the phase that puts the heroes in a story
-        // mission, with its own load check: an is_hero character with no Hero entry is unproven in a campaign.
+        // CustomGame is the Long Defeat's game type; Campaign and CampaignStoryMode load the same characters for the free heroes of the
+        // Helm's Deep story mission (#1366).
         var nodes = XDocument.Load(RepoPaths.RepoPath("Main", "_Module", "SubModule.xml")).Descendants("XmlNode")
             .Where(n => (string?)n.Element("XmlName")?.Attribute("id") == "NPCCharacters").ToList();
         var paths = nodes.Select(n => (string?)n.Element("XmlName")!.Attribute("path")).ToList();
         var node = nodes.Single(n => (string?)n.Element("XmlName")!.Attribute("path") == "characters/taom_mission_heroes");
 
-        CollectionAssert.AreEqual(new[] { "CustomGame" },
+        CollectionAssert.AreEqual(new[] { "Campaign", "CampaignStoryMode", "CustomGame" },
             node.Element("IncludedGameTypes")!.Elements("GameType").Select(g => (string?)g.Attribute("value")).ToArray());
         Assert.IsTrue(paths.IndexOf("characters/taom_mission_heroes") < paths.IndexOf("custom_battle/custom_battle_harad_troop_filter"),
             "the filter node comes after every NPCCharacters node it may hide");

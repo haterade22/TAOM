@@ -2879,3 +2879,27 @@ The battle balance provider's new tests built `BattleBalanceConfig` objects in C
 **Prevent:** before a change writes an existing check id from a new place, grep `tools/ingame_checks/` for the id and narrow each reached, pass and fail pattern to the field that names the writer (`hero=`, `signature=`); add a test that feeds each manifest the other writer's lines. For a copied test, diff it against its source and account for every assertion that is gone. Prove a test of a validator by running the validator on input that must fail.
 
 **Source:** [rca-hero-ranged-kit-2026-11-16.md](../rca-hero-ranged-kit-2026-11-16.md) finding 3, 4 and 5.
+
+### A proof cut from a log has an end as well as a start (#1366, 2026-11-16)
+
+**Why missed:** the manifest of #1366 opened its segment at the story mission's launch line, to keep out what came before. The ability and aura lines keep their ids in the story mission, a game process writes one log, and a segment ran to the end of the file, so a Long Defeat run played afterwards could pass or fail the issue. The header said such lines are never read. The manifests of #1359 and #1361 had no scope at all, and the story mission had just become a second place that writes their lines.
+
+**Prevent:** for every scoped check ask what a tester does next in the same session, and end the segment there (`scope_end` in `tools/ingame_verdict.py`). When a mission starts to write an existing check line, give every manifest that reads the line a scope, and prove the bound with a made-up mixed session run through the real manifest. Where no line marks the end (a campaign battle writes none), say so in the manifest header and in the steps a person follows. Record a spike's run in the repo when it runs, with what it did not prove.
+
+**Source:** [rca-story-free-heroes-2026-11-16.md](../rca-story-free-heroes-2026-11-16.md) finding 1, 2 and 6.
+
+### A run's failure is tested through the path a failed run takes (#1368, 2026-11-16)
+
+**Why missed:** the unattended story run got a done row in its manifest and a "this build did not arm the run" message in its judge. The done row carried the scope of the mission rows, so a run that failed before the mission launched matched no segment and read NOT REACHED. The message sat in the judge, which the runner calls only when a done file exists, and an unarmed build writes none. Each had a unit test, and each test called the piece directly with the input the piece expects.
+
+**Prevent:** for every failure a runner can report, write the test from the outside: the log and files a real failed run leaves (no done file, no launch line, a fail line before the scope), through the runner's own call order, then through `tools/ingame_verdict.py` with the real manifest. Before a row gets a scope, list the lines it must read and check that each one comes after the scope's start. Put a diagnosis where every stop reason passes (the printer), not inside the success path's judge.
+
+**Source:** [rca-story-mission-driver-2026-11-16.md](../rca-story-mission-driver-2026-11-16.md) finding 1 and 2.
+### A source test of a flag pins the line that consumes it, not only the call sites (#1340, 2026-11-16)
+`MenuNotice_OkClosesTheGame_OnlyForTheWrongVersionPopup` asserted the two `Show(..., flag)` calls in `Tick` and the helper that computed the flag, but nothing read `Show`, so a `Show` that ignored the flag still passed. The repo's `Body()` helper matches braces from the first `{`, so on an expression-bodied member it returns the first `{=KEY}` in a string instead of the body.
+
+**Why missed:** the test was written to the decision (which popup quits) rather than to the effect (the quit action reaches `InquiryData`).
+
+**Prevent:** a source-reading test of a bool or mode flag also asserts the consuming expression (here `quitOnOk ? QuitGame`). For an expression-bodied member, slice the source up to the next member instead of calling `Body()`.
+
+**Source:** [rca-game-version-warning-2026-11-16.md](../rca-game-version-warning-2026-11-16.md) finding F9.

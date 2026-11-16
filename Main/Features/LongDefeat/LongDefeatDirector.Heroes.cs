@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using TAOM.Features.LongDefeat.Diagnostics;
 using TAOM.Features.LongDefeat.Domain;
 
@@ -42,9 +43,16 @@ internal sealed partial class LongDefeatDirector
                 _logger.LogInfo($"{Tag}[Hero] {hero.Id} ({hero.TroopId}) joins the defenders: formation {report.FormationIndex}, health x{report.HealthFactor:0.00}, holds {report.Wielded}");
             }
             else
-                _logger.LogError($"{Tag}[Hero] {hero.Id} ({hero.TroopId}) could not be spawned ({report.Problem}); his price is paid back");
+                _logger.LogError($"{Tag}[Hero] {hero.Id} ({hero.TroopId}) could not be spawned ({report.Problem}); {HeroRefusedTail(InShop(hero.Id))}");
         }
     }
+
+    private bool InShop(string heroId) => _plan.Shop.Heroes.Any(offer => offer.Id == heroId);
+
+    internal static string HeroRefusedTail(bool sold) => sold ? "a price he cost is paid back" : "he was free, so nothing is paid back";
+
+    internal static string HeroLeftText(string heroId, bool loss, bool sold) =>
+        $"{heroId} {(loss ? "fell" : "fled")}; {(sold ? "a hero of the shop is for sale again" : "a free hero does not come back")}";
 
     // What the standing heroes did in the wave just cleared (#1337). A mission in which the field took no hero writes no line and reads
     // nothing; a refused spawn does not count.
@@ -81,6 +89,6 @@ internal sealed partial class LongDefeatDirector
         _heroesStanding.Remove(heroId);
         _run.HeroDown(heroId, loss);
         LongDefeatChecks.Record(_outcomes, LongDefeatHeroChecks.FallId, _mission + heroId + "-f" + ++_heroFalls, LongDefeatHeroChecks.Fell(heroId, loss));
-        _logger.LogInfo($"{Tag}[Hero] {heroId} {(loss ? "fell" : "fled")}; the shop sells him again");
+        _logger.LogInfo($"{Tag}[Hero] {HeroLeftText(heroId, loss, InShop(heroId))}");
     }
 }

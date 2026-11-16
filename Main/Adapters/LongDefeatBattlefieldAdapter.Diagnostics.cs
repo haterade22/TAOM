@@ -172,11 +172,13 @@ internal sealed partial class LongDefeatBattlefieldAdapter
             return new LdRemoval(LdRemovalKind.None, "", Key: plannedKey);
         }
 
-        // A hero of the shop is matched by the body the field holds, before the team is read: his removal carries his shop id, loss or rout.
+        // A hero of the shop is matched by the body the field holds, before the team is read: his removal carries his shop id, loss or rout. In a campaign the fallen
+        // player can take over a free hero (#1366); the engine hands every formation to the AI when the main agent is removed (Mission.cs:3017, :3039-3041), so the
+        // removal also says the body was the player's.
         if (TakeHero(agent, out var heroId))
         {
             _registry.TakeRemoval(agent, out _, out _, out var heroKey);
-            return new LdRemoval(LdRemovalKind.Hero, heroId, Loss: loss, Key: heroKey);
+            return new LdRemoval(LdRemovalKind.Hero, heroId, Loss: loss, Key: heroKey, PlayerBody: IsPlayerBody(agent));
         }
 
         var id = agent.Character?.StringId ?? "";
@@ -200,10 +202,11 @@ internal sealed partial class LongDefeatBattlefieldAdapter
         if (team != _mission.DefenderTeam)
             return new LdRemoval(LdRemovalKind.None, "", Key: key);
 
-        // The engine nulls MainAgent around this callback, so the body the adapter last saw is the player's too.
-        var isPlayer = agent == _mission.MainAgent || ReferenceEquals(agent, _knownMain) || agent.Controller == AgentControllerType.Player;
-        return new LdRemoval(isPlayer ? LdRemovalKind.Player : LdRemovalKind.Defender, id, Key: key);
+        return new LdRemoval(IsPlayerBody(agent) ? LdRemovalKind.Player : LdRemovalKind.Defender, id, Key: key);
     }
+
+    // The engine nulls MainAgent around this callback, so the body the adapter last saw is the player's too.
+    private bool IsPlayerBody(Agent agent) => agent == _mission.MainAgent || ReferenceEquals(agent, _knownMain) || agent.Controller == AgentControllerType.Player;
 
     public bool IsAttacker(object? agent) =>
         agent is Agent a && ReferenceEquals(a.Mission, _mission) && a.Team != null && a.Team.Side == BattleSideEnum.Attacker;

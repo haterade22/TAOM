@@ -8,7 +8,7 @@ namespace TAOM.Features.LongDefeat.Diagnostics;
 
 /// <summary>
 /// The verdicts of the shop's heroes (#1325). <see cref="SpawnId"/>, key <c>&lt;mission&gt;h&lt;N&gt;</c> for the mission's Nth hero spawn, passes
-/// when the body the engine made is a hero to it, has no mount, stands in the heroes' formation, has its health limit scaled by the
+/// when the body the engine made is a hero to it (or, in a campaign, a character with no Hero behind it: <c>campaign=1</c>, <c>is_hero=0</c>), has no mount, stands in the heroes' formation, has its health limit scaled by the
 /// shop's factor, that formation is off AI control after the spawn (<c>held=1</c>) and it holds no soldier who is not a held hero
 /// (<c>strangers=0</c>); <c>order=</c> names the formation's movement order and is reported, never judged. A spawn the field refused fails with
 /// <c>problem=</c>. <see cref="FallId"/>, key <c>&lt;mission&gt;&lt;hero&gt;-f&lt;N&gt;</c>, is written when a held hero leaves the field, with
@@ -19,7 +19,8 @@ namespace TAOM.Features.LongDefeat.Diagnostics;
 /// hero did (kills, health) and the director's running totals of the holds (<c>retaken=</c>, <c>moved_out=</c>, <c>moved_back=</c>). It passes
 /// when every standing hero is in the heroes' formation, the formation holds no one else, it is off AI control, and, once it has held the
 /// field's own order for <see cref="HeroGroup.SettleSeconds"/>, every standing hero is near the place on the ground and in height. A
-/// player's own order is never judged, and neither are heroes on their way after a new order. <c>kills</c> is the engine's KillCount,
+/// player's own order is never judged, and neither are heroes on their way after a new order. A hero the player controls (a take-over in a
+/// campaign, #1366) counts as near: he stands where the player wants him. <c>kills</c> is the engine's KillCount,
 /// which also counts knock-outs; it and the totals are reported, never judged. With no hero standing it is skipped.
 /// </summary>
 internal static class LongDefeatHeroChecks
@@ -33,12 +34,12 @@ internal static class LongDefeatHeroChecks
         if (!report.Spawned)
             return LongDefeatChecks.Verdict(false, detail + " problem=" + Words(report.Problem ?? "unknown"));
 
-        detail += $" is_hero={(report.IsHero ? 1 : 0)} mounted={(report.Mounted ? 1 : 0)} formation={report.FormationIndex} held={(report.Held ? 1 : 0)}"
+        detail += $" is_hero={(report.IsHero ? 1 : 0)} campaign={(report.CampaignCharacter ? 1 : 0)} mounted={(report.Mounted ? 1 : 0)} formation={report.FormationIndex} held={(report.Held ? 1 : 0)}"
             + $" strangers={report.Strangers} order={(report.Order.Length > 0 ? Words(report.Order) : "none")}"
             + $" health_factor={report.HealthFactor.ToString("0.00", CultureInfo.InvariantCulture)} wanted_factor={hero.HealthFactor.ToString("0.00", CultureInfo.InvariantCulture)}"
             + $" wielded={(report.Wielded.Length > 0 ? Words(report.Wielded) : "none")}";
         var scaled = Math.Abs(report.HealthFactor - hero.HealthFactor) <= 0.01f;
-        return LongDefeatChecks.Verdict(report.IsHero && !report.Mounted && report.FormationIndex == HeroGroup.FormationIndex && report.Held && report.Strangers == 0 && scaled, detail);
+        return LongDefeatChecks.Verdict(report.IsHero != report.CampaignCharacter && !report.Mounted && report.FormationIndex == HeroGroup.FormationIndex && report.Held && report.Strangers == 0 && scaled, detail);
     }
 
     internal const string HuntersId = "taom.long-defeat.hunters";
@@ -50,7 +51,7 @@ internal static class LongDefeatHeroChecks
             return new CheckVerdict(CheckResult.Skip, $"w={wave} reason=none-standing");
 
         var inGroup = facts.Count(f => f.FormationIndex == HeroGroup.FormationIndex);
-        var near = facts.Count(f => f.Distance <= HeroGroup.NearMetres && f.Height <= HeroGroup.NearHeightMetres);
+        var near = facts.Count(f => f.PlayerControlled || (f.Distance <= HeroGroup.NearMetres && f.Height <= HeroGroup.NearHeightMetres));
         var settled = read.SettledSeconds >= 0f ? (int)Math.Min(read.SettledSeconds, 99999f) : 0;
         var detail = $"w={wave} standing={facts.Count} in_group={inGroup} units={read.GroupUnits} held={(read.GroupHeld ? 1 : 0)} order={Words(read.GroupOrder)}"
             + $" own={(read.OwnOrder ? 1 : 0)} settled={settled} near={near} kills={facts.Sum(f => f.Kills)}"

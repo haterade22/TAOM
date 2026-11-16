@@ -110,4 +110,25 @@ public class StoryPlanBuilderTests
 
         CollectionAssert.AreEquivalent(new[] { "g1", "g2", "a1", "a2" }, RunPlanTroops.AllTroopIds(plan).ToArray());
     }
+
+    [TestMethod]
+    public void Build_CarriesTheDefinitionsHeroesAsFreeHeroes()
+    {
+        var heroes = new[] { new HeroSpawn("aragorn", "h_a", 3f), new HeroSpawn("gimli", "h_g", 3f) };
+
+        var plan = StoryPlanBuilder.Build(StoryTestData.Definition(heroes: heroes), RunOptions.Default);
+
+        Assert.AreSame(heroes, plan.FreeHeroes);
+        Assert.AreEqual(0, plan.Shop.Heroes.Count);
+    }
+
+    [TestMethod]
+    public void Build_TheTroopsToLoad_IncludeTheFreeHeroes()
+    {
+        var heroes = new[] { new HeroSpawn("aragorn", "h_a", 3f) };
+
+        var plan = StoryPlanBuilder.Build(StoryTestData.Definition(heroes: heroes), RunOptions.Default);
+
+        CollectionAssert.AreEquivalent(new[] { "g1", "g2", "a1", "a2", "h_a" }, RunPlanTroops.AllTroopIds(plan).ToArray());
+    }
 }

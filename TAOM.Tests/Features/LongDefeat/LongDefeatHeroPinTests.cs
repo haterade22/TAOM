@@ -114,6 +114,71 @@ public class LongDefeatHeroPinTests
         Assert.IsTrue(Regex.IsMatch(spawn, @"formation\.BeginSpawn\(1, false\);\s*try\s*\{[^}]*\}\s*finally\s*\{\s*formation\.EndSpawn\(\);\s*\}"), "the spawn is closed even when it throws");
     }
 
+    // In a campaign the mission heroes are CharacterObjects with no Hero, so IsHero is false (CharacterObject.cs:300) and the engine does not fix the equipment
+    // (Mission.cs:4284-4287). With no override it then rolls the battle set through GetRandomEquipmentElements with random item modifiers on (Mission.cs:4108,
+    // "!Game.Current.GameType.IsCoreOnlyGameMode", which is false only for CustomGame). The override is cloned before that roll, so the first battle set goes in as the kit.
+    [TestMethod]
+    public void SpawnHero_PassesTheFirstBattleSetAsTheKit_SoNoRandomModifierRolls()
+    {
+        var spawn = Body(Source(), "public LdHeroReport SpawnHero(");
+
+        StringAssert.Contains(spawn, "kit: troop.FirstBattleEquipment");
+        Assert.IsFalse(spawn.Contains("mounted: true"), "a hero spawns on foot: NoHorses(!mounted) clears the kit's horse slots (Mission.cs:4109-4113)");
+    }
+
+    // #1366: a campaign body with no Hero reads IsHero false, so with no body on the build data the engine asks OnComputeTroopBodyProperties (Mission.cs:4331-4338), and the
+    // story mission's MissionFaceCacheView can give it a cached soldier's face (MissionFaceCacheView.cs:184-189). The engine gives an IsHero body
+    // characterObject.GetBodyProperties(equipment, seed) (MissionFaceCacheView.cs:173-176, Mission.cs:4339), so the hero spawn puts that body on the build data, and its age with it:
+    // an overridden body with no age takes the XML age (Mission.cs:4192-4198). An IsHero body (the Custom Game) is left to the engine as before.
+    [TestMethod]
+    public void SpawnHero_GivesACampaignHeroBodyItsOwnFace_AndAge_AndLeavesAnIsHeroBodyToTheEngine()
+    {
+        var spawn = Body(Source(), "public LdHeroReport SpawnHero(");
+        StringAssert.Contains(spawn, "ownBody: true");
+
+        var helper = Body(RepoPaths.ReadSource(Field, stripComments: true), "private Agent Spawn(");
+        StringAssert.Contains(helper, "if (ownBody && !troop.IsHero)");
+        StringAssert.Contains(helper, "troop.GetBodyProperties(kit, data.AgentEquipmentSeed)");
+        StringAssert.Contains(helper, "data.BodyProperties(body).Age(");
+        Assert.IsTrue(At(helper, "data.Equipment(kit)") < At(helper, "data.BodyProperties(body)"), "the body is read from the kit the build data carries");
+        Assert.IsTrue(At(helper, "data.BodyProperties(body)") < At(helper, "SpawnTroopWithAgentBuildData("));
+    }
+
+    // #1366: a taken-over hero keeps his own health, and he counts as near the place in the hunters line.
+    [TestMethod]
+    public void AdoptMain_ReportsAHeldHero_AndReadHeroes_CarriesWhetherThePlayerControlsEach()
+    {
+        var adopt = Body(RepoPaths.ReadSource(Field, stripComments: true), "public bool AdoptMain(");
+        StringAssert.Contains(adopt, "return IsHeldHero(main);");
+        var read = Body(Source(), "public LdHeroesRead ReadHeroes(");
+        StringAssert.Contains(read, "agent.IsPlayerControlled");
+    }
+
+    // #1366: a campaign mission hero reads IsHero false (CharacterObject.cs:300), and TickStanding counts the standing defenders between every wave, so the held-hero test keeps him out in both modes.
+    [TestMethod]
+    public void Upgradable_ExcludesAHeldHero_SoACampaignBodyWithNoIsHeroIsNoUpgradableSoldier()
+    {
+        var upgradable = Body(RepoPaths.ReadSource("Main/Adapters/LongDefeatBattlefieldAdapter.Upgrades.cs", stripComments: true), "private IEnumerable<Agent> Upgradable(");
+
+        StringAssert.Contains(upgradable, "!a.Character.IsHero && !IsHeldHero(a)");
+    }
+
+    [TestMethod]
+    public void Classify_SaysAHeroRemovalWasThePlayersBody_InsideTheTakeHeroBranch()
+    {
+        var classify = Body(RepoPaths.ReadSource("Main/Adapters/LongDefeatBattlefieldAdapter.Diagnostics.cs", stripComments: true), "public LdRemoval Classify(");
+
+        Assert.IsTrue(Regex.IsMatch(classify, @"if \(TakeHero\(agent, out var heroId\)\)\s*\{[^}]*PlayerBody: IsPlayerBody\(agent\)"), "the hero's removal carries PlayerBody (#1366)");
+    }
+
+    [TestMethod]
+    public void SpawnHero_ReportsWhetherTheBodyIsACampaignCharacter()
+    {
+        var spawn = Body(Source(), "public LdHeroReport SpawnHero(");
+
+        StringAssert.Contains(spawn, "agent.Character is CharacterObject", "the spawn check passes a campaign body whose IsHero is false (#1366)");
+    }
+
     [TestMethod]
     public void SpawnHero_PostsTheGroup_OnlyWhileTheFormationIsAiControlled()
     {

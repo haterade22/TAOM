@@ -37,6 +37,18 @@ public class RunPlanTroopsTests
     }
 
     [TestMethod]
+    public void AllTroopIds_IncludesTheFreeHeroTroops()
+    {
+        var plan = Plan() with { FreeHeroes = new[] { new HeroSpawn("aragorn", "taom_hero_aragorn", 3f), new HeroSpawn("twin", "g_foot", 1f) } };
+
+        var ids = RunPlanTroops.AllTroopIds(plan);
+
+        CollectionAssert.Contains(ids.ToList(), "taom_hero_aragorn");
+        Assert.AreEqual(1, ids.Count(i => i == "g_foot"), "each id once");
+        Assert.IsFalse(RunPlanTroops.DefenderTroopIds(plan).Contains("taom_hero_aragorn"), "a hero is nobody's defender group");
+    }
+
+    [TestMethod]
     public void DefenderTroopIds_AreTheGarrisonAndTheShopOnly_OnceEach()
     {
         var ids = RunPlanTroops.DefenderTroopIds(Plan());

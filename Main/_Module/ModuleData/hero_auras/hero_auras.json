@@ -1,5 +1,5 @@
 {
-  "_comment": "Hero Auras (#1127, docs/features/hero-auras.md). Each aura names its heroes by hero StringId (in a battle without a campaign, the character id). Allied soldiers within the radius (any team on the hero's side, the player included, never the hero himself), and of the listed races when races is set, get the effects while he lives and for lingerSeconds after. The effect keys are the race abilities' (race_abilities.json); an aura only strengthens, so negative bonuses and positive aimErrorPercent are rejected. Where an aura and a soldier's own race ability give the same channel, the stronger counts; values never add. Radius at most 15 m.",
+  "_comment": "Hero Auras (#1127, docs/features/hero-auras.md). Each aura names its heroes by hero StringId (for a character with no Hero behind it, the character id: a Custom Game, and the mission heroes in a campaign, #1366). So never name a campaign troop that is not a hero. Allied soldiers within the radius (any team on the hero's side, the player included, never the hero himself), and of the listed races when races is set, get the effects while he lives and for lingerSeconds after. The effect keys are the race abilities' (race_abilities.json); an aura only strengthens, so negative bonuses and positive aimErrorPercent are rejected. Where an aura and a soldier's own race ability give the same channel, the stronger counts; values never add. Radius at most 15 m.",
   "enabled": true,
   "pulseSeconds": 1.0,
   "lingerSeconds": 3.0,
@@ -7,7 +7,7 @@
   "auras": [
     {
       "id": "aragorn_heir_of_isildur",
-      "_comment": "Aragorn steadies the men around him. taom_hero_aragorn is the Long Defeat's Aragorn (#1359), found by his character id in a battle without a campaign.",
+      "_comment": "Aragorn steadies the men around him. taom_hero_aragorn is the Long Defeat's Aragorn (#1359) and the Helm's Deep story mission's (#1366), found by his character id in both, since no Hero stands behind him.",
       "heroIds": ["named_companion_aragorn", "taom_hero_aragorn"],
       "races": ["human"],
       "effects": { "moraleFloor": 30, "damageReductionPercent": 10, "blockAbilityPercent": 10 }

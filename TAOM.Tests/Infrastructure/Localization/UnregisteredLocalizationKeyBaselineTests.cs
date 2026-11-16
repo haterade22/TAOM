@@ -22,7 +22,8 @@ namespace TAOM.Tests.Infrastructure.Localization;
 /// checked-in baseline, so a newly-added unregistered key fails the build while the backlog is
 /// worked down. Fixing one requires deleting its baseline line, which is how the list shrinks.
 ///
-/// Deliberately scoped to `taom_`-prefixed keys. A bare <c>{=SomeVanillaId}</c> is usually a
+/// Deliberately scoped to TAOM's key prefixes: `taom_`, the crash notifier's `TAOM_` and the Realms
+/// features' `realms_` (#1130). A bare <c>{=SomeVanillaId}</c> is usually a
 /// reference to a row the base game already owns, and flagging those would bury the real signal —
 /// the same "a check that reports mostly noise gets ignored" failure that let this accumulate.
 /// </summary>
@@ -53,7 +54,7 @@ public class UnregisteredLocalizationKeyBaselineTests
     /// <c>harvest_duty_strings.py</c> (duty text comes from <c>enlistment_duties.json</c>).
     /// </summary>
     private static readonly Regex KeyLiteral =
-        new Regex(@"\{\{?=(taom_[A-Za-z0-9_]+)\}", RegexOptions.Compiled);
+        new Regex(@"\{\{?=((?:taom|TAOM|realms)_[A-Za-z0-9_]+)\}", RegexOptions.Compiled);
 
     /// <summary>Matches a registered default's own embedded prefix: <c>text="{=taom_foo}Foo"</c>.</summary>
     private static readonly Regex EmbeddedPrefix =
@@ -125,7 +126,7 @@ public class UnregisteredLocalizationKeyBaselineTests
         }
 
         Assert.IsTrue(declared.Count > 100,
-            $"Only {declared.Count} taom_ key literals found in Main/, Client/ and CoopCompat/ — the scan is broken.");
+            $"Only {declared.Count} TAOM key literals found in Main/, Client/ and CoopCompat/ — the scan is broken.");
         return declared;
     }
 

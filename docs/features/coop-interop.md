@@ -469,6 +469,8 @@ entry can never pay out. The authority half is pinned by two tests in `CoopAutho
 
 `HiddenHostsBehavior` (the Hidden Hosts hint popup) is deliberately ungated: it writes two saved hint flags and shows a popup, this peer's own presentation.
 
+`StoryRosterBehavior` (the story roster check, #1366) is deliberately ungated: at session start it reads the story missions' troop ids and the hero kits' extra arrow items through the object manager and writes one `[Check]` line, so it changes no shared state.
+
 `EmptyMeetingMenuBehavior` (the Leave menu Patch143 opens) is deliberately ungated: it only registers a menu at session launch, and that menu must exist on any peer whose meeting the guard can stop (#1099).
 
 `HiddenHostsPlainSightBehavior` (the remembered sightings) is deliberately ungated: it stamps this peer's memory rows, per-player presentation like the `HiddenHostsMemoryBehavior` rows below.

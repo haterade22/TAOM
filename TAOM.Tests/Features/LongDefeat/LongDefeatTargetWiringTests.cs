@@ -61,9 +61,9 @@ public class LongDefeatTargetWiringTests
         var source = RepoPaths.ReadSource("Main/Features/LongDefeat/LongDefeatDirector.cs", stripComments: true);
         var adopt = BodyOf(source, "private void AdoptIfNew()");
         var body = RepoPaths.ReadSource("Main/Features/LongDefeat/LongDefeatDirector.TargetBoons.cs", stripComments: true);
-        var dress = BodyOf(body, "private void DressNewBody()");
+        var dress = BodyOf(body, "private void DressNewBody(bool heldHero)");
 
-        Assert.IsTrue(adopt.IndexOf("_field.AdoptMain(", StringComparison.Ordinal) < adopt.IndexOf("DressNewBody()", StringComparison.Ordinal));
+        Assert.IsTrue(adopt.IndexOf("_field.AdoptMain(", StringComparison.Ordinal) < adopt.IndexOf("DressNewBody(heldHero)", StringComparison.Ordinal));
         StringAssert.Contains(dress, "_effects.RefreshStats(BoonTarget.Player)");
         StringAssert.Contains(dress, "_effects.SetPlayerHealth(_run.HealthFactor(BoonTarget.Player))");
     }

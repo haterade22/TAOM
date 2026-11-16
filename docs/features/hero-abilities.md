@@ -2,17 +2,19 @@
 
 ## Overview
 
-The Long Defeat's mission heroes Aragorn (`taom_hero_aragorn`) and Gimli (`taom_hero_gimli`) cast timed abilities
+The mission heroes Aragorn (`taom_hero_aragorn`) and Gimli (`taom_hero_gimli`) cast timed abilities
 (#1359, Phase 4 of #1325). A cast strengthens the hero and the soldiers of his own team around him, raises their
 morale, and shakes the enemies near him. Their overhead strikes can also kill a soldier outright: that part is a
-Signature Strikes row ([signature-strikes.md](signature-strikes.md), "Killing blows"). The abilities work only in the
-Long Defeat missions. The gate also opens in the Helm's Deep story mission, but no hero with a kit stands there until
-a later phase of #1325 loads the mission heroes in a campaign (`characters/taom_mission_heroes.xml` loads for Custom
-Game only, `Main/_Module/SubModule.xml`). A hired campaign companion keeps his normal strength.
+Signature Strikes row ([signature-strikes.md](signature-strikes.md), "Killing blows"). The kits load in the Long
+Defeat missions and, since #1366 (Phase 6), in a campaign: `characters/taom_mission_heroes.xml` and
+`hero_abilities/hero_abilities_items.xml` load for Campaign, CampaignStoryMode and CustomGame
+(`Main/_Module/SubModule.xml`), and the three stand free in the Helm's Deep story mission
+([story-missions.md](story-missions.md), "The free heroes"). A hired
+campaign companion keeps his normal strength.
 
 Legolas (`taom_hero_legolas`) has a ranged kit (#1361, Phase 5): his arrows have no aim error, pass a shield that
 blocks them, and can kill a soldier outright; three timed abilities make him shoot faster, add two arrows to each shot,
-or speed up the archers around him. His kit works where the gate opens, the Long Defeat today.
+or speed up the archers around him. His kit works where the gate opens: the Long Defeat and the Helm's Deep story mission.
 
 ## Why This Exists
 
@@ -192,8 +194,8 @@ arrow `taom_legolas_arrow` within 10 m of his target and 120 m of him; outline `
 | `Main/Features/HeroAbilities/Hooks/HeroMultiShotRunner.cs`, `HeroArrowKills.cs` | The extra arrows; the arrow's kill roll through `SignatureInstantKill` |
 | `Main/Features/CombatMechanics/ShieldPierceMath.cs` | The damage floor above the engine's shield pass-through threshold |
 | `Main/_Module/ModuleData/hero_abilities/hero_abilities.json` | Configuration |
-| `Main/_Module/ModuleData/hero_abilities/hero_abilities_items.xml` | `taom_legolas_arrow`, the extra arrow (Custom Game only) |
-| `tools/ingame_checks/1359.toml`, `1361.toml` | The in-game check manifests |
+| `Main/_Module/ModuleData/hero_abilities/hero_abilities_items.xml` | `taom_legolas_arrow`, the extra arrow (loads for Campaign, CampaignStoryMode and CustomGame) |
+| `tools/ingame_checks/1359.toml`, `1361.toml`, `1366.toml` | The in-game check manifests (1366: the three heroes in the story mission of a campaign) |
 
 ## Dependencies
 
@@ -281,15 +283,45 @@ arrow `taom_legolas_arrow` within 10 m of his target and 120 m of him; outline `
 
 ## Traps
 
-- **The story mission has no kit hero yet.** `characters/taom_mission_heroes.xml` loads for Custom Game only
-  (`Main/_Module/SubModule.xml`), so no `taom_hero_*` body exists in the campaign-hosted story mission until a later
-  phase of #1325 loads the characters in a campaign. The gate opens there, but nothing casts.
-- **Phase 6: Aragorn's aura in the story mission.** `HeroAuraPulse` finds a hero through
-  `DreadSourceTracker.HeroAxisId`. In a campaign it reads `CharacterObject.HeroObject?.StringId`, which is null for a
-  mission character with no `<Hero>` entry, so in the Helm's Deep story mission the aura misses `taom_hero_aragorn`
-  without a warning. The Long Defeat is a Custom Battle (`CustomGame.OnRegisterTypes` registers
-  `BasicCharacterObject`, line 99 of `TaleWorlds.MountAndBlade.CustomBattle.CustomGame.cs` in the v1.5.7 source), where
-  it reads the character id.
+- **`IsHero` is false for the three in a campaign (#1366).** `CharacterObject.IsHero` is `_heroObject != null`
+  (`CharacterObject.cs:300`) and the `taom_hero_*` characters have no `<Hero>` entry, so in the story mission the
+  engine does not treat them as heroes, as it does in a Custom Game (`is_hero` there makes a `BasicCharacterObject` a
+  hero). What follows:
+  - **Take-over is possible.** `Mission.CanTakeControlOfAgent` refuses only `Character.IsHero`, so a dead player can
+    take one of the three. `HeroAbilityService.ShouldDecide` refuses a player-controlled body, so a taken-over hero
+    casts nothing. He keeps his own health: `AdoptMain` reports a held hero, and the director then skips the player's
+    health write (`DressNewBody`). The hunters line counts a hero the player controls as near the place
+    (`LdHeroFacts.PlayerControlled`). His later death is booked as his fall and as the player's death (the field's
+    removal carries `PlayerBody`), so the death count, the player-death check and the split's retake after the engine's
+    hand-back (`Mission.cs:3017`, `:3039-3041`) all happen. The take-over itself is a row for a person.
+  - **Faces.** With `IsHero` false and no body on the build data, the engine asks `OnComputeTroopBodyProperties`
+    (`Mission.cs:4331-4338`), and the story mission's `MissionFaceCacheView` can give the body a cached soldier's face
+    (`MissionFaceCacheView.cs:184-189`). `SpawnHero` therefore puts the hero's own body on the build data, the call the
+    view makes for a hero (`GetBodyProperties(equipment, seed)`, `MissionFaceCacheView.cs:173-176`), with its age,
+    since an overridden body with no age takes the XML age (`Mission.cs:4192-4198`). A Custom Game body is `IsHero` and
+    is left to the engine as before. The face at the lowest Character Detail setting is a row for a person.
+  - **Equipment.** The engine fixes a body's equipment only for `IsHero` (`Mission.cs:4284-4287`) and otherwise rolls
+    item modifiers in a campaign (`Mission.cs:4108`, `Equipment.cs:604-614`). `SpawnHero` therefore passes the
+    character's `FirstBattleEquipment` as the spawn kit, so the three carry their authored sets.
+  - **Tier.** `GetBattleTier` returns 7 for a hero and otherwise from the level (`BasicCharacterObject.cs:278-285`),
+    so `level="36"` on the three gives tier 7 (ceil(31/5)). The level does more. In a Custom Game `GetPower` rises from
+    0.50 to 5.49 (`BasicCharacterObject.cs:257-261`) and `SkillFactor` from 1/32 to 1 (`:74`); the AI's formation power
+    sums the cached power (`Agent.cs:1440`, `Formation.cs:1602`) and the position error reads `SkillFactor`
+    (`Agent.cs:5119-5120`). In a campaign `GetPower` and `GetBattlePower` follow the tier (`CharacterObject.cs:609-616`).
+    Their race abilities (the elf and dwarf tree)
+    take the tier factor, not the hero factor, because `RaceAbilityActivator` passes `agent.IsHero`: tier 7 reaches
+    the cap of 1.2 in `race_abilities.json`, against the hero factor 1.25 a Custom Game hero gets. The same level sets
+    their morale resistance in a campaign: `CharacterObject.GetMoraleResistance` reads the tier (`0.5 * 7 + 1`, 4.5,
+    `CharacterObject.cs:619-622`) where level 1 would give 1.0.
+  - **The aura.** `HeroAuraPulse` finds a source through `HeroAuraService.SourceId` (the hero's id when a `Hero`
+    stands behind the body, else the character's own id), not `DreadSourceTracker.HeroAxisId`, which returns null for
+    a campaign character with no `Hero` and which Dread depends on. See [hero-auras.md](hero-auras.md).
+  - **Unreached code.** The shop's upgrade filter and the boon health rescale skip `IsHero` bodies, but the story
+    mission has no shop upgrade or boon, so neither is reached.
+- **Proven in a game:** the unattended run 20261116-075342 (the driver of #1368) opened the story mission with the three
+  heroes, and `tools/ingame_checks/1366.toml` reads PASS for all seven rows ([story-missions.md](story-missions.md)). The
+  manifest's rows end at the next mission launch (`scope_end`), and the `1359.toml` and `1361.toml` rows read only a
+  Long Defeat run.
 - A buffed soldier counts as moved by an ability (`RaceAbilityHooks.HasLiveEffects`) while his buff lasts, so the
   Long Defeat's boon read-back passes him over for 12 to 15 s. With no plain soldier left its check is skipped
   (`reason=no-soldier`), never failed.
@@ -297,10 +329,10 @@ arrow `taom_legolas_arrow` within 10 m of his target and 120 m of him; outline `
 - **The 15 m clamp.** `HeroAbilityHost.InContact` once clamped its query to 15 m. With Legolas's 40 m trigger it would
   count no contact, and his fired check could never fail. The query now takes the trigger's range. Past 15 m the
   native query walks every agent (traps/mission.md, "Native branches"); it runs once a second per hero.
-- **The extra arrow is Custom Game only.** `hero_abilities_items.xml` loads beside `long_defeat_items`. A kit that
-  names an item the game did not load fires no extra arrow; the multishot line then shows `item=0` and fails.
-  `taom_legolas_arrow` loads in Custom Game only, so the phase that puts the heroes in a campaign story mission must
-  load the item there too.
+- **The extra arrow in a campaign.** `hero_abilities_items.xml` loads for Campaign, CampaignStoryMode and CustomGame
+  since #1366. A kit that names an item the game did not load fires no extra arrow; the multishot line then shows
+  `item=0` and fails, and `taom.story-missions.roster` lists the item as `items_missing`. In a campaign the item has
+  `is_merchandise="false"` (workshops, loot and prizes skip it) and `CannotBePickedUp`, and a test pins both.
 - **Co-op.** `AddCustomMissile` writes `missionObjectToIgnore.Id` on a server or a recorder (`Mission.cs:4972-4975`),
   and an extra arrow has none, so no extra is added there (logged once). The ranged logic is `AgentOwner` and the
   roster holds only heroes this peer owns. Co-op is not proven in a game.
@@ -330,12 +362,21 @@ victim=fow_urukhai_skirmisher chance=1.00 roll=0.173 health=20 damage=21 died=1`
 What the run settles: the engine does carry an arrow on to the body after it passes a shield (14 of 17 shield hits
 were followed by a hit of the same arrow on the same soldier), and the extra arrows fly and land (10 fired, none
 without a target, none refused by the aim solver). `hits=` counts hit events, and an extra arrow that passes a shield
-makes two, so it can be above `fired=`. What it does not show: a gain in kills. He made 10 and 26 kills in waves 1 and
-2 and 14 in wave 4, against 39 in three waves in the run before the kit. He shot only 61 arrows in four waves: the
-three heroes hold one post at the top of a wall lane, and there he fights much of the time with his sword (14 kills
-in wave 4 from 6 shots). Where he should stand is the maintainer's decision (#1325). Not seen by any run: the faster
-draw of Rapid Fire, Archer's Eye on the archers near him, the look of the extra arrows, and a shield he broke
-(`broken=0`).
+makes two, so it can be above `fired=`. What it does not show: a gain in kills. The `kills=` of the hunters line is
+the body's kill count for its whole life: he had 10 kills at the end of wave 1 and 26 at the end of wave 2, then fell
+in wave 3, and the body bought after that made 14 in wave 4. The run before the kit read 21, 34 and 39 at the end of
+waves 1, 2 and 3. He shot only 61 arrows in four waves: the three heroes hold one post at the top of a wall lane, and
+there he fights much of the time with his sword (14 kills in wave 4 from 6 shots). Where he should stand is the
+maintainer's decision (#1325). Not seen by any run: the faster draw of Rapid Fire, Archer's Eye on the archers near
+him, the look of the extra arrows, and a shield he broke (`broken=0`).
+
+**After the level change (#1366).** The unattended run 20261116-055255 (3 waves, commit 8ee4ef2fe) has the heroes at
+level 36. Legolas had 25 kills at the end of wave 1 and 41 at the end of wave 2, shot 91 arrows before he fell in
+wave 3 (`shots=91 contact=62 share=0.68`, `shield_hits=31 passed=17`, `windows=5 fired=25 hits=21`,
+`calls=24 kills=5`), and `python tools/ingame_verdict.py --issue 1361` reads PASS for all seven rows. Level 36
+shrinks the offset the engine gives an AI agent from his place in the formation, from up to about 1 m to under 0.1 m
+(`Agent.cs:5117-5125`, `BasicCharacterObject.cs:74`). Whether that, the AI power change or chance moved the numbers is
+not known: these are single runs with no control.
 
 ## Changelog
 
@@ -343,9 +384,12 @@ draw of Rapid Fire, Archer's Eye on the archers near him, the look of the extra 
   the Long Defeat. Proved by the unattended run 20261115-232309.
 - 2026-11-16: Legolas's ranged kit (#1361): zero aim error, shield pierce, the arrow kill, extra arrows, and three
   abilities. Proved by the unattended run 20261116-024002.
+- 2026-11-16: #1366 (Phase 6): the kits load in a campaign and the three stand free in the Helm's Deep story mission;
+  the aura finds them by `HeroAuraService.SourceId`. Not yet opened in a game.
 
 ## GitHub Issue
 
 - **Issue:** #1359: Hero abilities: timed abilities and killing blows for Aragorn and Gimli
 - **Issue:** #1361: Hero abilities: Legolas's ranged kit
+- **Issue:** #1366: Phase 6 of #1325, the three heroes in the Helm's Deep story mission (in-game proof owed)
 - **Status:** Open

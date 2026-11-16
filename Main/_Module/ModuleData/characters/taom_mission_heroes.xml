@@ -1,14 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- The mission heroes (#1335, Phase 2 of #1325): the Long Defeat's own Aragorn, Legolas and Gimli. SubModule.xml loads this file for
-     CustomGame only. They are copies of the named companions (named_companions/named_companions.xml: the same face, skills and name
-     key, so the existing translations apply), kept apart so that no campaign Hero ever stands behind a mission agent and a balance
-     edit here never reaches a campaign. is_hero: the engine refuses a take-over and the shop's upgrade filter skips them. is_obsolete
-     keeps them out of the Custom Battle pickers. No horse: a mounted share of a tenth or more switches a formation to mounted spacing, and one rider is a third of the heroes' group. The
+<!-- The mission heroes (#1335, Phase 2 of #1325): the Long Defeat's own Aragorn, Legolas and Gimli, and the free heroes of the Helm's Deep
+     story mission in a campaign (#1366). SubModule.xml loads this file for Campaign, CampaignStoryMode and CustomGame. They are copies of the
+     named companions (named_companions/named_companions.xml: the same face, skills and name key, so the existing translations apply), kept
+     apart so that no campaign Hero ever stands behind a mission agent and a balance edit here never reaches the named companions (the
+     campaign Heroes). It does reach the second user of these characters, the Helm's Deep story mission of a campaign. There is no <Hero>
+     entry: in a campaign IsHero reads false, in a Custom Game is_hero makes the engine refuse a take-over and the shop's upgrade filter skip
+     them. level="36" gives battle tier 7 with no Hero (BasicCharacterObject.GetBattleTier), the tier a Custom Game gives a hero. The level
+     does more. In a Custom Game GetPower rises from 0.50 to 5.49 (BasicCharacterObject.GetPower: 0.2 + (Level + 10)^2 * 0.0025) and
+     SkillFactor from 1/32 to 1 (Min(Level, 32) / 32); the AI's formation power sums the cached power, and the agent's position error
+     reads SkillFactor. In a campaign GetPower and GetBattlePower follow the tier (CharacterObject.GetPower, GetBattlePower).
+     occupation="Wanderer" without is_template keeps them out of the companion pool and the encyclopedia. is_obsolete keeps them out of
+     the Custom Battle pickers. No horse: a mounted share of a tenth or more switches a formation to mounted spacing, and one rider is a third of the heroes' group. The
      engine wields the first weapon slot at the spawn (Mission.SpawnTroopWithAgentBuildData), so Legolas's bow is in the first slot. A name change needs a new
      {=key}, because a copied key shows the companion's translation. -->
 <NPCCharacters>
 
-    <NPCCharacter id="taom_hero_aragorn" name="{=nc_aragorn_name}Aragorn" age="27" voice="earnest" culture="Culture.gondor" race="human" default_group="Infantry" is_hero="true" is_obsolete="true" occupation="Wanderer" face_mesh_cache="true">
+    <NPCCharacter id="taom_hero_aragorn" name="{=nc_aragorn_name}Aragorn" age="27" voice="earnest" culture="Culture.gondor" race="human" default_group="Infantry" level="36" is_hero="true" is_obsolete="true" occupation="Wanderer" face_mesh_cache="true">
         <face>
             <BodyProperties version="4" age="37.56" weight="0.6878" build="0.678" key="0005000D800013420F800A1A098007985FFD8660BE886A0167895C1885BB9A60009B06030909B70500000000000000000000000000000000000000003F3C2002" />
         </face>
@@ -43,7 +50,7 @@
         </Equipments>
     </NPCCharacter>
 
-    <NPCCharacter id="taom_hero_legolas" name="{=nc_legolas_name}Legolas" age="30" voice="earnest" culture="Culture.mirkwood" race="elf" default_group="Ranged" is_hero="true" is_obsolete="true" occupation="Wanderer" face_mesh_cache="true">
+    <NPCCharacter id="taom_hero_legolas" name="{=nc_legolas_name}Legolas" age="30" voice="earnest" culture="Culture.mirkwood" race="elf" default_group="Ranged" level="36" is_hero="true" is_obsolete="true" occupation="Wanderer" face_mesh_cache="true">
         <face>
             <BodyProperties version="4" age="25.97" weight="0.4301" build="0.4" key="00001C00000000031980F72F6853461660648330588B86016756B50C88A64A7500B516030B01EA0000000000000000000000000000000000000000003B6C4002" />
         </face>
@@ -81,7 +88,7 @@
         </Equipments>
     </NPCCharacter>
 
-    <NPCCharacter id="taom_hero_gimli" name="{=nc_gimli_name}Gimli" age="30" voice="earnest" culture="Culture.erebor" race="dwarf" default_group="Infantry" is_hero="true" is_obsolete="true" occupation="Wanderer" face_mesh_cache="true">
+    <NPCCharacter id="taom_hero_gimli" name="{=nc_gimli_name}Gimli" age="30" voice="earnest" culture="Culture.erebor" race="dwarf" default_group="Infantry" level="36" is_hero="true" is_obsolete="true" occupation="Wanderer" face_mesh_cache="true">
         <face>
             <BodyProperties version="4" age="32.01" weight="0.7454" build="0.8379" key="0000D404C000314508807EB03F1F0F70108788878FF88067888878888D3017F0008DB60308FFF0AE000000000000000000000000000000000000000043040142" />
         </face>

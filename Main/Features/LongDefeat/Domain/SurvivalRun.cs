@@ -106,6 +106,7 @@ internal sealed partial class SurvivalRun
         var opening = ranged.Concat(TakeMusterBatch(0)).ToList();
         _musterNext = 1;
         fx.DefenderBatches.AddRange(Batches(opening, new int[2], CountBySlot(opening), false, _defenderPlaced, DefenderHealth));
+        QueueFreeHeroes();
         fx.SpawnPlayer = true;
         fx.FinishInitialSpawn = true;
         return fx;

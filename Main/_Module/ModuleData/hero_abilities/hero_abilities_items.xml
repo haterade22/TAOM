@@ -4,7 +4,8 @@
        own thrust: this item has the thrust of his bow and his arrow together, wm_mirkwood_bow_a01 (86) plus wm_mirkwood_arrow_a03 (4), and the arrow's meshes and missile speed. The
        flight speed is his shot's own, passed to AddCustomMissile. tools/tests/test_hero_abilities_items.py reads both Armory items, so a retuned bow or arrow fails it.
        No troop carries it and it is not for sale. CannotBePickedUp keeps a stuck extra arrow from becoming a pickup (SpawnedItemEntity.cs:163-164), as the Long Defeat volley arrows do.
-       The name is vanilla's {=gFtu0j4T}Arrows, so the item adds no string. Custom Game only (SubModule.xml), beside long_defeat_items, so a campaign never loads it. -->
+       The name is vanilla's {=gFtu0j4T}Arrows, so the item adds no string. Loaded for Campaign, CampaignStoryMode and CustomGame (SubModule.xml), beside long_defeat_items: the Helm's Deep story mission (#1366) uses it in a campaign, where
+       is_merchandise="false" keeps it out of workshops, loot and prizes. -->
   <Item
     id="taom_legolas_arrow"
     name="{=gFtu0j4T}Arrows"
