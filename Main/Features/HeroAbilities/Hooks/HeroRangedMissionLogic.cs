@@ -17,7 +17,8 @@ namespace TAOM.Features.HeroAbilities.Hooks;
 /// (HeroAbilityRuntime.Ranged), and every callback ignores a shooter the roster does not list. The missile callbacks
 /// may run off the main thread (#634), so they only enqueue; the tick drains. A missile's removal goes into the same
 /// queue, so the tallies forget its index after its own hits and before the next missile's on that index. The work is
-/// <see cref="HeroMultiShotRunner"/>'s and <see cref="HeroArrowKills"/>'s, the verdicts <see cref="HeroRangedChecks"/>'.
+/// <see cref="HeroMultiShotRunner"/>'s, <see cref="HeroArrowKills"/>'s and <see cref="HeroKeepDistance"/>'s (#1415), the verdicts
+/// <see cref="HeroRangedChecks"/>'.
 /// MUST be <c>: MissionLogic</c> (rca-looter-battle-nre-2026-05-24.md). Boundary code, game-tested (ADR-008).
 /// </summary>
 public sealed class HeroRangedMissionLogic : MissionLogic
@@ -28,6 +29,7 @@ public sealed class HeroRangedMissionLogic : MissionLogic
     private readonly HeroMissileQueue _queue = new HeroMissileQueue();
     private readonly HeroMultiShotRunner _runner;
     private readonly HeroArrowKills _kills;
+    private readonly HeroKeepDistance _keep = new HeroKeepDistance();
     // Character.StringId names the kit hero, as the host keys him.
     private readonly HeroRangedTallies<Agent> _tallies = new HeroRangedTallies<Agent>(hero => hero.Character?.StringId ?? "unknown");
     private readonly string _key;
@@ -96,6 +98,7 @@ public sealed class HeroRangedMissionLogic : MissionLogic
             var now = Mission.CurrentTime;
             while (_queue.TryDequeue(out var e))
                 Handle(in e, now);
+            _keep.Tick(Mission, _runtime.Ranged, _tallies, now);
             if (now >= _nextSample)
             {
                 _nextSample = now + HeroAbilityService.PassSeconds;
@@ -118,6 +121,7 @@ public sealed class HeroRangedMissionLogic : MissionLogic
         _tallies.Clear();
         _queue.Clear();
         _runner.Clear();
+        _keep.Clear();
         base.OnRemoveBehavior();
     }
 
@@ -152,6 +156,7 @@ public sealed class HeroRangedMissionLogic : MissionLogic
         foreach (var hero in _runtime.Ranged.Keys)
         {
             var t = _tallies.Of(hero, _runtime.Ranged.KitOf(hero));
+            HeroKeepDistance.NoteWeapon(hero, t);
             if (_runtime.Bursts.TryGetValue(hero, out var burst) && burst.Until > now)
                 t.NoteWindow(burst.Until);
             if (t.PrecisionWritten || !AgentSlotIdentity.IsCurrentOccupant(hero) || !hero.IsActive())
