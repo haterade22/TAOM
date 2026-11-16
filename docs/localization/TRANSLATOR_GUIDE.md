@@ -351,6 +351,20 @@ translated text from the child's, so a child group's text must not contain its p
 parent's text must not be empty (MCM then hides the whole TAOM page). Gate:
 `McmSettingsTextIsKeyedTests.NoChildGroupText_ContainsItsParentsText_InAnyLanguage`.
 
+The AI translator follows the team too (#1421). `tools/translation_reference/cns.json` and `cnt.json`
+hold an English and Chinese pair for every row of ours, in all three modules, that carries the team's
+text. For each batch of CNs or CNt rows, `translate_with_claude.py` adds two things to the request: the
+team's terms whose English occurs in the batch (names and game terms of at most four words), and up to
+six of the team's sentences that share the most words with one entry, as style examples. The prompt
+tells the model that the team's text wins over its own choices and over the published-Tolkien rule.
+Rebuild the reference after each import:
+
+```bash
+python -I tools/build_translation_reference.py --lang CNs --lang CNt --from <TAOM_CN.zip> --module TAOM --module TAOM_Map --module Armory --apply
+```
+
+A language with no reference file gets the same request as before.
+
 ---
 
 ## Changing English Text That Is Already Translated
