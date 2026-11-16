@@ -7605,7 +7605,6 @@
     <string id="TAOM_LD_Class_SwordBoard_Text" text="검 한 자루와 방패 하나. 대열에 서서 타격을 받아내시오." />
     <string id="TAOM_LD_Class_TwoHanded" text="양손 보병" />
     <string id="TAOM_LD_Class_TwoHanded_Text" text="양손 도끼. 방패는 없지만, 묵직한 일격." />
-    <string id="TAOM_LD_Prompt_ChoiceClass" text="{NAME}: {TEXT}" />
     <string id="TAOM_LD_Prompt_ClassDesc" text="직업에 따라 전투에 들고 갈 무기가 정해집니다. 기병은 갑옷도 정해지고 말을 타게 되며, 다른 직업은 갑옷을 그대로 둡니다." />
     <string id="TAOM_LD_Prompt_ClassTitle" text="직업을 선택하십시오" />
     <string id="TAOM_LD_Boon_BloodiedButUnbowed" text="피투성이지만 굴하지 않는" />
@@ -7835,9 +7834,6 @@
     <string id="taom_char_title" text="Character" />
     <string id="taom_char_perk_or" text="or" />
     <string id="taom_char_attribute_points" text="Attribute Points" />
-    <string id="taom_char_next_perk_tier" text="Skill {LEVEL}: next perk tier {TIER}, {COUNT} skill levels away" />
-    <string id="taom_char_next_perk_tier_one" text="Skill {LEVEL}: next perk tier {TIER}, 1 skill level away" />
-    <string id="taom_char_all_perk_tiers" text="Skill {LEVEL}: every perk tier reached" />
     <string id="taom_char_perk_tier_locked" text="Locked" />
     <string id="taom_char_no_traits" text="No notable traits" />
     <string id="taom_story_offer_body" text="The hour of {TARGET} has come. Will you ride to its walls and fight the battle yourself, or let fate decide?" />

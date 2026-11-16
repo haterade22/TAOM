@@ -1969,7 +1969,6 @@
   "TAOM_LD_Offer_Yeomen": "Fanti liberi dell'Eastfold",
   "TAOM_LD_Prompt_Cancel": "Annulla",
   "TAOM_LD_Prompt_ChoiceBest": "{NAME}, miglior partita: ondate superate {WAVES}, uccisioni {KILLS}",
-  "TAOM_LD_Prompt_ChoiceClass": "{NAME}: {TEXT}",
   "TAOM_LD_Prompt_Choose": "Scegli",
   "TAOM_LD_Prompt_ClassDesc": "La tua classe determina le armi che porti in battaglia. La cavalleria stabilisce anche la tua armatura e ti mette in sella; le altre classi lasciano la tua armatura così com'è.",
   "TAOM_LD_Prompt_ClassTitle": "Scegli la tua classe",

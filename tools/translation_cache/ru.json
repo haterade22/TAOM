@@ -1915,7 +1915,6 @@
   "TAOM_LD_Offer_Yeomen": "Йомены Истфолда",
   "TAOM_LD_Prompt_Cancel": "Отмена",
   "TAOM_LD_Prompt_ChoiceBest": "{NAME}, лучший поход: волн отбито {WAVES}, убийств {KILLS}",
-  "TAOM_LD_Prompt_ChoiceClass": "{NAME}: {TEXT}",
   "TAOM_LD_Prompt_Choose": "Выбрать",
   "TAOM_LD_Prompt_ClassDesc": "Класс определяет оружие, с которым вы идёте в бой. Кавалерия также задаёт ваши доспехи и сажает вас на коня; прочие классы оставляют доспехи как есть.",
   "TAOM_LD_Prompt_ClassTitle": "Выберите свой класс",
