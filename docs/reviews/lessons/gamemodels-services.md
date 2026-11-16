@@ -1431,3 +1431,18 @@ The auto-resolve change stated that a side's strength goes as `N^1.6 x P^(2e)`, 
 **Prevent:** for an effect that works through a model's decision (panic, retreat, a stat), read every TAOM override of that decision for the missions the effect is gated to, not only the code that writes the input. If a mode forbids the outcome, say so in the design and choose another effect there.
 
 **Source:** [rca-hero-abilities-2026-11-15.md](../rca-hero-abilities-2026-11-15.md) finding 5.
+
+### A setting that feeds a cached engine value invalidates that cache when it changes (cheat menu, 2026-11-16)
+
+The cheat menu's "Unlimited party" switch adds +10,000 in `TaomPartySizeModel`, but `PartyBase.PartySizeLimit` caches
+the model's answer until `MemberRoster.VersionNo` changes. Flipping the switch left the old limit in force until some
+roster change: on, the party screen still capped and warned; off, the bonus stayed. A save loaded with it on had the same
+window. This repeats the Eye of Sauron entry of 2026-10-14 in `adapters-taleworlds-api.md`.
+
+- **Why missed:** the bonus was written and tested in the model; nobody asked which engine getter caches the model's
+  answer, and the earlier lesson sits in another category file.
+- **Prevent:** when a toggle, slider or saved flag feeds a GameModel whose result the engine caches, change the value and
+  invalidate in the same method (`IPartySizeCacheInvalidator` for the party size limit), on every path that changes it:
+  the setter, a load, and any automatic turn-off. Test that the invalidator is called, and not called when the change is
+  refused.
+- **Source:** [rca-cheat-unlimited-party-2026-11-16.md](../rca-cheat-unlimited-party-2026-11-16.md), rows 1 and 2.
