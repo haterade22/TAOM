@@ -43,7 +43,7 @@ pass it.)
 |---|---|
 | If any battle set puts a bow in a slot, **every** battle set must put a bow in that same slot, and the arrows must sit at one fixed slot index present in every set | Gate: `INCONSISTENT_WEAPON_SLOT` (#529) |
 | At least one slot index must hold a weapon in **every** battle set | Gate: `INCONSISTENT_WEAPON_SLOT`. Promote the sidearm into a deleted bow's slot |
-| A shield in one set and a `requires_no_shield` weapon in another is the same defect as pairing them in one set | The AI will not draw the weapon. `audit_polearm_shield_parity.py` is per-set and cannot see the cross-set form (#531) |
+| A shield in one set and a `requires_no_shield` weapon in another is the same defect as pairing them in one set | The AI will not draw the weapon. `audit_polearm_shield_parity.py` is per-set and cannot see the cross-set form (#531). One exception: a shield troop's spare two-handed weapon is a backup for when the shield breaks (Mike, #1312); a new pair still fails the gate until it is held in `KNOWN_FAILURES` |
 | `Horse` and `HorseHarness` (slots 10 and 11) also draw independently | Pair them consistently across sets |
 | Heroes are exempt | `CharacterObject` returns the single `HeroObject.BattleEquipment` when `IsHero`, and `Mission.BuildAgent` forces `FixedEquipment(true)`. Wanderer/companion templates pick a whole set once at creation (`Hero.SetInitialValuesFromCharacter` does `list.GetRandomElement().Clone()`). For those, in-set completeness is the whole requirement |
 | Civilian sets mix too, but only among themselves | Battle and civilian pools never cross. A single civilian set always resolves whole |

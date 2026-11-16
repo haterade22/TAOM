@@ -26,7 +26,7 @@ history and the gate. A new trap for this area is a new row here, never a row in
 
 | Trap | Rule | Doc |
 |---|---|---|
-| Shield plus polearm | A shield troop never draws a polearm absent from `OneHandedPolearm`: `audit_polearm_shield_parity.py` | [pipeline](../../../docs/features/weapon-xml-pipeline.md) |
+| Shield plus polearm or two-hander | A shield troop never draws a polearm absent from `OneHandedPolearm`, or a two-handed weapon; a new pair fails `audit_polearm_shield_parity.py` (#1312) | [pipeline](../../../docs/features/weapon-xml-pipeline.md) |
 | Landless cultures | A culture owning no settlement CTDs the daily clan tick: `Patch65`, `LANDLESS_CULTURE` | [spawn guard](../../../docs/features/lord-spawn-guard.md) |
 | NPCCharacter `<face>` | Missing: toddler; copied key: twin lords; a lady on a template: her own hair tag. Gates in the doc | [body properties](../../../docs/modding/body-properties.md) |
 | Player start kits | Defaults are `starter_<donor>` twins, careers take troop gear; override the roster, never a set | [start kits](../../../docs/features/starting-equipment-tuning.md) |

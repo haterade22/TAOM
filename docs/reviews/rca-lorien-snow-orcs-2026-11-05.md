@@ -61,6 +61,8 @@ FOLLOW-UP: the `RuntimeDataCache` check is not part of the Armory audit. Seven p
 
 FOLLOW-UP: move the two-handed weapon class into the failing set of `audit_polearm_shield_parity.py` and let #526 ratchet the 122 existing rosters. no issue filed (public action, waits for the maintainer's word).
 
+Resolved by #1312 (2026-11-15): every melee type now fails the gate, and the existing pairs are fixed or held in `KNOWN_FAILURES` with their reason.
+
 FOLLOW-UP: `generate_lothlorien_troops.py`, `generate_snow_orc_troops.py` and `generate_enlistment_rosters.py` have no `--check`, and the Lorien troop generator is not in `tools/tests/test_generator_regions_in_sync.py`. no issue filed (public action, waits for the maintainer's word).
 
 RESOLVED (2026-11-06, Mike): the generator keeps KEYforce's values. `rebalance_armor.py` skips `sk_ll_` items through `is_generator_owned`, pinned by `test_a_generator_owned_item_is_left_to_its_generator`.

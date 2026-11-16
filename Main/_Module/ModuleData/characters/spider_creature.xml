@@ -84,6 +84,7 @@
       <skill id="Athletics" value="100" />
       <skill id="Riding" value="130" />
       <skill id="OneHanded" value="140" />
+      <skill id="TwoHanded" value="130" />
       <skill id="Polearm" value="110" />
     </skills>
     <upgrade_targets>
@@ -100,8 +101,8 @@
         <equipment slot="Horse" id="Item.spider_mount_brown" />
       </EquipmentRoster>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.wm_dol_goldur_axe_a02" />
-        <equipment slot="Item1" id="Item.wm_gundabad_shield_a02" />
+        <equipment slot="Item0" id="Item.wm_dol_goldur_1h_sword_a02" />
+        <equipment slot="Item1" id="Item.wm_dol_goldur_axe_a02" />
         <equipment slot="Head" id="Item.sk_dg_uruk_helmet_med_h" />
         <equipment slot="Body" id="Item.sk_dg_uruk_chest_med_d" />
         <equipment slot="Gloves" id="Item.sk_dg_uruk_bracer_med_c" />
@@ -135,6 +136,7 @@
       <skill id="Athletics" value="120" />
       <skill id="Riding" value="160" />
       <skill id="OneHanded" value="180" />
+      <skill id="TwoHanded" value="170" />
       <skill id="Polearm" value="140" />
     </skills>
     <Equipments>
@@ -149,8 +151,8 @@
         <equipment slot="Horse" id="Item.spider_mount_pale" />
       </EquipmentRoster>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.wm_dol_goldur_axe_a01" />
-        <equipment slot="Item1" id="Item.wm_gundabad_shield_a03" />
+        <equipment slot="Item0" id="Item.wm_dol_goldur_1h_sword_a01" />
+        <equipment slot="Item1" id="Item.wm_dol_goldur_axe_a01" />
         <equipment slot="Head" id="Item.sk_dg_uruk_helmet_heavy_g" />
         <equipment slot="Body" id="Item.sk_dg_uruk_chest_heavy_c" />
         <equipment slot="Cape" id="Item.sk_dg_uruk_pauldron_heavy_b" />
