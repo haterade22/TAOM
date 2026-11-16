@@ -1653,3 +1653,9 @@ The first #1408 hint said "This realm will not let its people serve your side." 
 - **Why missed:** the sentence was written for the default Symmetric mode, and the service's other branch was not read.
 - **Prevent:** before writing a reason line, read every branch of the decision it explains, including each setting mode, and check the sentence against each one.
 - **Source:** the #1408 tier 1 review, Data flow trace 16.
+
+### A name localized on each machine reaches the other machine in the sender's language (#1385, 2026-11-16)
+Phase 2 of #1385 made special resource names resolve through `{=taom_res_name_<id>}`. The emissary's co-op reply carries the host's `ResourceDisplayName` to the guest, so a guest in another language saw the host's name in the result toast, while the offer list beside it used the guest's own. The same change imported 19 rows of the team's Chinese that were vanilla's own row for that key, which changed nothing and would hide a TaleWorlds fix.
+- **Why missed:** each check stayed on one side. The names were traced to their readers on one machine, and the team's text was compared with our English, never with vanilla's Chinese.
+- **Prevent:** when a value becomes localized, grep every co-op message field it reaches; send an id and resolve on the receiver. Before a row overrides a vanilla key in a language, compare it with vanilla's row in that language (`VanillaKeyOverrideTests.KeptRows_NoneRepeatsVanillasOwnRow`).
+- **Source:** [rca-cn-phase2-2026-11-16.md](../rca-cn-phase2-2026-11-16.md) rows 1 and 2.

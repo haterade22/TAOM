@@ -240,7 +240,7 @@ public class LocalizationKeyConsistencyTests
 
     /// <summary>
     /// The English an untranslated language row keeps, by id: the default of a <c>{=key}Default</c> row, and the whole
-    /// text of a plain GameText row (<c>taom_wotr_strings.xml</c> holds only plain rows, which code looks up by id).
+    /// text of a plain GameText row (none is left since #1385: GameTextRowsAreKeyedTests).
     /// The first source that has an id wins, as in <see cref="RegisteredEnglish"/>.
     /// </summary>
     internal static Dictionary<string, string> EnglishPlaceholders()

@@ -32,7 +32,7 @@
             <EncyclopediaSearchBarBrushWidget Id="SearchButton" SuggestedWidth="266.4" SuggestedHeight="36" PositionXOffset="1354" PositionYOffset="24" Sprite="ec_search_box" SearchResultPanel="..\SearchResults" SearchInputWidget="SearchInputWidget" MinCharAmountToShowResults="@MinCharAmountToShowResults" ShowResults="@IsSearchResultsShown" Command.SearchBarClick="ExecuteOnSearchActivated" DoNotAcceptEvents="true">
               <Children>
                 <Widget SuggestedWidth="19.8" SuggestedHeight="19.8" PositionXOffset="9" VerticalAlignment="Center" Sprite="ec_search_icon" DoNotAcceptEvents="true" />
-                <EditableTextWidget Id="SearchInputWidget" SuggestedWidth="221.4" SuggestedHeight="32.4" PositionXOffset="36" PositionYOffset="0.9" DefaultSearchText="Search..." Text="@SearchText" Brush="TAOM.Encyclopedia.SearchText" GamepadNavigationIndex="0" />
+                <FrontEndEditableTextWidget Id="SearchInputWidget" SuggestedWidth="221.4" SuggestedHeight="32.4" PositionXOffset="36" PositionYOffset="0.9" LocalizedDefaultSearchText="{=taom_ency_search}Search..." Text="@SearchText" Brush="TAOM.Encyclopedia.SearchText" GamepadNavigationIndex="0" />
               </Children>
             </EncyclopediaSearchBarBrushWidget>
             <ScrollbarWidget Id="SearchResultListScrollbar" SuggestedWidth="10.8" SuggestedHeight="48.6" PositionXOffset="1564.2" PositionYOffset="66.6" AlignmentAxis="Vertical" MinValue="0" MaxValue="100" Handle="SearchResultListScrollbarHandle" IsVisible="false" IsEnabled="false">

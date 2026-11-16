@@ -145,10 +145,10 @@
                                     Brush="FactionMap.Difficulty"
                                     DoNotAcceptEvents="true"
                                     IsVisible="@HasDifficulty" />
-                        <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
+                        <FrontEndTextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
                                     HorizontalAlignment="Center" VerticalAlignment="Bottom"
                                     MarginBottom="8"
-                                    Text="This realm is not playable"
+                                    LocalizedText="{=taom_fui_realm_not_playable}This realm is not playable"
                                     Brush="FactionMap.Warning"
                                     DoNotAcceptEvents="true"
                                     IsVisible="@SelectedFactionNotPlayable" />
@@ -229,9 +229,9 @@
                                          Brush="FactionMap.SectionBar"
                                          IsVisible="@HasSelection">
                               <Children>
-                                <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"
+                                <FrontEndTextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"
                                             HorizontalAlignment="Center" VerticalAlignment="Center"
-                                            Text="Perks" Brush="FactionMap.SectionTitle" />
+                                            LocalizedText="{=taom_fui_perks}Perks" Brush="FactionMap.SectionTitle" />
                               </Children>
                             </BrushWidget>
 
@@ -257,9 +257,9 @@
                                          Brush="FactionMap.SectionBar"
                                          IsVisible="@HasSpecialUnit">
                               <Children>
-                                <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"
+                                <FrontEndTextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"
                                             HorizontalAlignment="Center" VerticalAlignment="Center"
-                                            Text="Special Units" Brush="FactionMap.SectionTitle" />
+                                            LocalizedText="{=taom_fui_special_units}Special Units" Brush="FactionMap.SectionTitle" />
                               </Children>
                             </BrushWidget>
 
@@ -285,9 +285,9 @@
                                          Brush="FactionMap.SectionBar"
                                          IsVisible="@HasSelection">
                               <Children>
-                                <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"
+                                <FrontEndTextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"
                                             HorizontalAlignment="Center" VerticalAlignment="Center"
-                                            Text="Bonuses" Brush="FactionMap.SectionTitle" />
+                                            LocalizedText="{=taom_fui_bonuses}Bonuses" Brush="FactionMap.SectionTitle" />
                               </Children>
                             </BrushWidget>
 
@@ -314,9 +314,9 @@
                                          Brush="FactionMap.SectionBar"
                                          IsVisible="@HasStrengths">
                               <Children>
-                                <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"
+                                <FrontEndTextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"
                                             HorizontalAlignment="Center" VerticalAlignment="Center"
-                                            Text="Strengths" Brush="FactionMap.SectionTitle" />
+                                            LocalizedText="{=taom_fui_strengths}Strengths" Brush="FactionMap.SectionTitle" />
                               </Children>
                             </BrushWidget>
 
@@ -335,9 +335,9 @@
                                          Brush="FactionMap.SectionBar"
                                          IsVisible="@HasWeaknesses">
                               <Children>
-                                <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"
+                                <FrontEndTextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"
                                             HorizontalAlignment="Center" VerticalAlignment="Center"
-                                            Text="Weaknesses" Brush="FactionMap.SectionTitle" />
+                                            LocalizedText="{=taom_fui_weaknesses}Weaknesses" Brush="FactionMap.SectionTitle" />
                               </Children>
                             </BrushWidget>
 
@@ -404,9 +404,9 @@
                               Command.Click="ExecuteConfirm"
                               IsEnabled="@CanConfirm" UpdateChildrenStates="true">
                   <Children>
-                    <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"
+                    <FrontEndTextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"
                                 HorizontalAlignment="Center" VerticalAlignment="Center"
-                                Text="Start" Brush="Popup.Button.Text" />
+                                LocalizedText="{=taom_fui_start}Start" Brush="Popup.Button.Text" />
                   </Children>
                 </ButtonWidget>
               </Children>

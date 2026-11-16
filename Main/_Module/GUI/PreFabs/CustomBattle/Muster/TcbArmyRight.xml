@@ -97,8 +97,8 @@
                                               IsSelected="@IsOptionsOpen" Command.Click="ExecuteToggleOptions" DoNotPassEventsToChildren="true" IsVisible="@IsTroop">
                                   <Children><ImageWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="16" SuggestedHeight="16" HorizontalAlignment="Center" VerticalAlignment="Center" Sprite="ec_list_expand" /></Children>
                                 </ButtonWidget>
-                                <TextWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="70" SuggestedHeight="28" MarginLeft="348" MarginTop="33"
-                                            Brush="Tcb.Button" Brush.FontSize="13" Brush.FontColor="#F0D898FF" Text="HERO" IsVisible="@IsHero" />
+                                <FrontEndTextWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="70" SuggestedHeight="28" MarginLeft="348" MarginTop="33"
+                                            Brush="Tcb.Button" Brush.FontSize="13" Brush.FontColor="#F0D898FF" LocalizedText="{=taom_tcb_hero}HERO" IsVisible="@IsHero" />
                               </Children>
                             </Widget>
                             <!-- the options -->
