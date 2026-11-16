@@ -13,7 +13,9 @@ Three pieces:
 - **`tools/melee_catalogue.py`** is the wiring: it reads the installed modules the way the
   engine merges them, works out which usage modes each item has, and prices them. Since #1372 it
   applies the stylesheets each module's `SubModule.xml` `<XmlName>` rows name and leaves out the
-  modules TAOM lists as incompatible (NavalDLC), by the shield gate's rule.
+  modules TAOM lists as incompatible (NavalDLC), by the shield gate's rule. Since #1375 it reads only
+  the modules TAOM loads with (its dependencies and LoadBeforeThis metadata), so AWOIAF_Armoury,
+  Multiplayer and StoryMode do not count.
 - **`tools/analyze_melee_ladder.py`** is a read-only report over the result. It has no
   `--apply` and no write path into any ModuleData.
 
@@ -862,6 +864,10 @@ armoured troop (see "Class limits"). After the apply and a full restart:
   now goes to the first item id in sorted order, in the report and in the validator's melee gate, so a
   `MELEE_LADDER` warning names the same weapon as `LADDER.md`; `test_analyze_melee_ladder_order.py` runs six
   hash seeds.
+- v2.0.40 (16 Nov 2026, #1375): the catalogue and the shield gate read only TAOM's playset and follow the
+  engine's row rules (`.xsl` before `.xslt`, rows for other game types skipped, modules keyed by `<Id>`).
+  AWOIAF_Armoury's 280 crafting pieces left the ladder (2292 to 2012 loaded). The ladder, the generators,
+  the validator and the troop roster page gave the same output on TAOM's weapons.
 
 ## GitHub Issue
 
@@ -871,6 +877,7 @@ armoured troop (see "Class limits"). After the apply and a full restart:
 - The melee ladder umbrella is #631.
 - #1372: the catalogue loads modules and stylesheets by the shield gate's rule.
 - #1379: the report gives the same output on every run.
+- #1375: the catalogue reads only the modules TAOM loads with.
 
 ## Related
 
