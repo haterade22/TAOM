@@ -83,14 +83,17 @@ public class TaomCombatMechanicsModel : TaomAgentApplyDamageModel
            ?? _combat.CrushThrough(attackerAgent, defenderAgent, totalAttackEnergy, attackDirection, strikeType, defendItem, isPassiveUsageHit)
            ?? base.DecideCrushedThrough(attackerAgent, defenderAgent, totalAttackEnergy, attackDirection, strikeType, defendItem, isPassiveUsageHit));
 
+    // A listed creature's cleave first, then Cleaving Blows for a human's two-handed swing, then the engine's own carry.
     public override float CalculateRemainingMomentum(float originalMomentum, in Blow b, in AttackCollisionData collisionData, Agent attacker, Agent victim, in MissionWeapon attackerWeapon, bool isCrushThrough)
         => _combat.CleaveMomentum(attacker, originalMomentum, in collisionData)
+           ?? _combat.CleavingBlowMomentum(originalMomentum, in b, in collisionData, attacker, victim, in attackerWeapon, isCrushThrough)
            ?? base.CalculateRemainingMomentum(originalMomentum, in b, in collisionData, attacker, victim, in attackerWeapon, isCrushThrough);
 
     public override void DecideWeaponCollisionReaction(in Blow registeredBlow, in AttackCollisionData collisionData, Agent attacker, Agent defender, in MissionWeapon attackerWeapon, bool isFatalHit, bool isShruggedOff, float momentumRemaining, out MeleeCollisionReaction colReaction)
     {
         base.DecideWeaponCollisionReaction(in registeredBlow, in collisionData, attacker, defender, in attackerWeapon, isFatalHit, isShruggedOff, momentumRemaining, out colReaction);
         colReaction = _combat.CollisionReaction(attacker, momentumRemaining, in collisionData, colReaction);
+        colReaction = _combat.CleavingBlowReaction(in registeredBlow, in collisionData, attacker, defender, in attackerWeapon, momentumRemaining, colReaction);
     }
 
     // Base = vanilla stagger threshold (which re-enters our CalculateStaggerThresholdDamage via the

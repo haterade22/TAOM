@@ -11,7 +11,7 @@ using TAOM.Features.RaceAbilities.Hooks;
 namespace TAOM.Features.CombatMechanics.Hooks;
 
 /// <summary>
-/// What the damage models (<c>TaomCombatMechanicsModel</c> in the campaign, <c>TaomCustomBattleDamageModel</c> in Custom Battle) ask of the five combat services, one call per seam so
+/// What the damage models (<c>TaomCombatMechanicsModel</c> in the campaign, <c>TaomCustomBattleDamageModel</c> in Custom Battle) ask of the six combat services, one call per seam so
 /// each override there stays base plus a delegate (gamemodels.md rule 4; ADR-002's 150 lines, #737). Each method turns the
 /// engine's arguments into the primitives or context its service takes and returns the service's answer; the model keeps
 /// the order the features run in. Three gates live here rather than in a service: <see cref="ChargeKnockdown"/> and
@@ -33,6 +33,7 @@ public sealed class CombatMechanicsHooks
     private readonly IShieldBashKnockdownService _shieldBashKnockdownService;
     private readonly ICareerAgentStatService _careerAgentStatService;
     private readonly ICombatMechanicsSettingsProvider _settingsProvider;
+    private readonly ICleavingBlowService _cleavingBlowService;
 
     public CombatMechanicsHooks(
         ICrushThroughService crushThroughService,
@@ -41,7 +42,8 @@ public sealed class CombatMechanicsHooks
         IShieldPenetrationService shieldPenetrationService,
         IShieldBashKnockdownService shieldBashKnockdownService,
         ICareerAgentStatService careerAgentStatService,
-        ICombatMechanicsSettingsProvider settingsProvider)
+        ICombatMechanicsSettingsProvider settingsProvider,
+        ICleavingBlowService cleavingBlowService)
     {
         _crushThroughService = crushThroughService;
         _chargeKnockdownService = chargeKnockdownService;
@@ -50,6 +52,7 @@ public sealed class CombatMechanicsHooks
         _shieldBashKnockdownService = shieldBashKnockdownService;
         _careerAgentStatService = careerAgentStatService;
         _settingsProvider = settingsProvider;
+        _cleavingBlowService = cleavingBlowService;
     }
 
     // The crush context (two skill lookups and a roll) is built only when the model asks, after the race abilities.
@@ -63,6 +66,26 @@ public sealed class CombatMechanicsHooks
         => _creatureCombatService.ShouldForceSliceThrough(attacker?.Monster?.StringId, momentumRemaining, collisionData.IsColliderAgent, collisionData.InflictedDamage)
             ? MeleeCollisionReaction.SlicedThrough
             : colReaction;
+
+    // Cleaving Blows. The crush call carries a default Blow and keeps vanilla's 0.3. A non-collider, an alternative attack and a
+    // hit without damage never qualify, so they decline before the context's skill reads.
+    public float? CleavingBlowMomentum(float originalMomentum, in Blow b, in AttackCollisionData collisionData, Agent attacker, Agent victim, in MissionWeapon attackerWeapon, bool isCrushThrough)
+    {
+        if (isCrushThrough || attacker == null || !collisionData.IsColliderAgent || collisionData.IsAlternativeAttack || b.InflictedDamage <= 0)
+            return null;
+
+        var context = BuildCleavingBlowContext(in b, in collisionData, attacker, victim, in attackerWeapon);
+        return _cleavingBlowService.CalculateMomentum(in context, originalMomentum);
+    }
+
+    public MeleeCollisionReaction CleavingBlowReaction(in Blow registeredBlow, in AttackCollisionData collisionData, Agent attacker, Agent defender, in MissionWeapon attackerWeapon, float momentumRemaining, MeleeCollisionReaction colReaction)
+    {
+        if (attacker == null || !(momentumRemaining > 0f) || !collisionData.IsColliderAgent || collisionData.IsAlternativeAttack || registeredBlow.InflictedDamage <= 0)
+            return colReaction;
+
+        var context = BuildCleavingBlowContext(in registeredBlow, in collisionData, attacker, defender, in attackerWeapon);
+        return _cleavingBlowService.ShouldSliceThrough(in context, momentumRemaining) ? MeleeCollisionReaction.SlicedThrough : colReaction;
+    }
 
     public bool IsUnstoppable(Agent victimAgent, in AttackCollisionData collisionData)
         => _creatureCombatService.IsUnstoppable(victimAgent?.Monster?.StringId, collisionData.InflictedDamage);
@@ -172,6 +195,31 @@ public sealed class CombatMechanicsHooks
             attackerMonsterId: attackerAgent?.Monster?.StringId,
             isAiControlled: attackerAgent != null && attackerAgent.IsAIControlled,
             randomRoll: MBRandom.RandomFloat);
+    }
+
+    private static CleavingBlowContext BuildCleavingBlowContext(in Blow b, in AttackCollisionData collisionData, Agent attacker, Agent victim, in MissionWeapon attackerWeapon)
+    {
+        var usage = attackerWeapon.IsEmpty ? null : attackerWeapon.CurrentUsageItem;
+        return new CleavingBlowContext(
+            attackerIdentity: attacker,
+            attackerKind: attacker.IsPlayerControlled ? CleaveAttackerKind.Player
+                : attacker.IsAIControlled ? CleaveAttackerKind.Ai : CleaveAttackerKind.None,
+            attackerIsHuman: attacker.IsHuman,
+            attackerIsMounted: attacker.HasMount,
+            isSwing: b.StrikeType == StrikeType.Swing,
+            isAlternativeAttack: collisionData.IsAlternativeAttack,
+            isPassiveAttack: attacker.IsDoingPassiveAttack,
+            isHorseCharge: collisionData.IsHorseCharge,
+            isColliderAgent: collisionData.IsColliderAgent,
+            blockedByShield: collisionData.AttackBlockedWithShield || collisionData.CollidedWithShieldOnBack,
+            hitWithAnotherBone: MissionCombatMechanicsHelper.HitWithAnotherBone(in collisionData, attacker, in attackerWeapon),
+            victimShruggedOff: (b.BlowFlag & BlowFlags.ShrugOff) != 0,
+            isFatal: victim != null && victim.Health <= 0f,
+            inflictedDamage: b.InflictedDamage,
+            absorbedByArmor: b.AbsorbedByArmor,
+            weaponClassName: GetWeaponClassName(usage),
+            attackerWeaponSkill: GetSkillValue(attacker, usage),
+            victimWeaponSkill: GetSkillValue(victim, GetWieldedUsageItem(victim)));
     }
 
     private static ChargeKnockdownContext BuildChargeKnockdownContext(Agent attackerAgent, Agent victimAgent, in AttackCollisionData collisionData, in Blow blow)

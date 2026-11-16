@@ -1509,6 +1509,21 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
         HintText = "A shield bash or a kick can floor a man. The chance grows with the attacker's Athletics lead over the victim; the victim's race and any race ability that toughens him cut it, a kick is weaker than a bash, and you resist more than a soldier does. Fighters who shrug off blows never fall: trolls while Creature Stagger Immunity is on, a soldier with a live race ability that shrugs off blows, and a hero with a career shrug-off passive. The numbers live in combat_mechanics_config.json.")]
     public bool EnableShieldBashKnockdown { get; set; } = true;
 
+    [SettingPropertyGroup("Combat Mechanics")]
+    [SettingPropertyBool("{=taom_cleave_mcm_enable}Cleaving Blows", Order = 18, RequireRestart = false,
+        HintText = "{=taom_cleave_mcm_enable_hint}Your swings with a two-handed axe, mace, sword or polearm can cut through one enemy and strike the next. Each enemy after the first takes less damage. Armour slows the blade, a kill or a clear skill lead over the victim carries it further, and a shield block, a thrust or a swing from horseback never cuts through. Only the character you control, unless the AI option below is on. Trolls and other big creatures keep their own cleave. The numbers live in combat_mechanics_config.json. Default: on.")]
+    public bool EnableCleavingBlows { get; set; } = true;
+
+    [SettingPropertyGroup("Combat Mechanics")]
+    [SettingPropertyBool("{=taom_cleave_mcm_ai}Cleaving Blows for AI Two-Handers", Order = 19, RequireRestart = false,
+        HintText = "{=taom_cleave_mcm_ai_hint}AI soldiers who swing a two-handed axe, mace or sword cut through enemies by the same rules. Every two-handed troop in both armies then hits a packed line harder. Needs Cleaving Blows on. Default: off.")]
+    public bool EnableCleavingBlowsForAi { get; set; } = false;
+
+    [SettingPropertyGroup("Combat Mechanics")]
+    [SettingPropertyInteger("{=taom_cleave_mcm_max_targets}Cleaving Blows Max Targets", 2, 5, "0", Order = 20, RequireRestart = false,
+        HintText = "{=taom_cleave_mcm_max_targets_hint}The most enemies one swing can strike, the first one included. Default 3. A swing often stops sooner: each enemy takes some of its force, and armour takes more.")]
+    public int CleavingBlowsMaxTargets { get; set; } = 3;
+
     // --- Aura of Dread ---
 
     [SettingPropertyGroup("Aura of Dread", GroupOrder = 34)]

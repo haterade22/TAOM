@@ -15,6 +15,15 @@ public interface ICombatMechanicsSettingsProvider
     /// <summary>Hammerhand (#895), the shield bash and kick knockdown; folds the master.</summary>
     bool ShieldBashKnockdownEnabled { get; }
     bool ShieldPenetrationEnabled { get; }
+
+    /// <summary>Cleaving Blows; folds the master.</summary>
+    bool CleavingBlowsEnabled { get; }
+
+    /// <summary>Cleaving Blows for AI soldiers; needs <see cref="CleavingBlowsEnabled"/>, so it folds the master too.</summary>
+    bool CleavingBlowsAiEnabled { get; }
+
+    /// <summary>The most enemies one swing can strike, the first included; the MCM slider's 2 to 5 over the JSON value.</summary>
+    int CleavingBlowsMaxTargets { get; }
     bool RaceCombatModifiersEnabled { get; }
 
     /// <summary>Per-culture charge damage (#610); folds the master.</summary>

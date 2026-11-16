@@ -650,4 +650,210 @@ public class CombatMechanicsConfigProviderTests
         Assert.AreEqual(75f, c.MaxChancePercent, 0.0001f);
         _logger.DidNotReceive().LogWarning(Arg.Is<string>(s => s.Contains("shieldBash")));
     }
+
+    // ---- Cleaving Blows ----
+
+    [TestMethod]
+    public void GetConfig_MissingFile_CleavingBlowsDefaults()
+    {
+        var c = _sut.GetConfig().CleavingBlows;
+
+        Assert.IsTrue(c.Enabled);
+        Assert.IsFalse(c.AiEnabled);
+        Assert.AreEqual(4, c.WeaponClassCarry.Count);
+        Assert.AreEqual(0.6f, c.WeaponClassCarry["TwoHandedAxe"], 0.0001f);
+        Assert.AreEqual(0.4f, c.WeaponClassCarry["TwoHandedPolearm"], 0.0001f);
+        CollectionAssert.AreEqual(new[] { "TwoHandedAxe", "TwoHandedMace", "TwoHandedSword" }, c.AiWeaponClasses);
+        Assert.AreEqual(3, c.MaxTargetsPerSwing);
+        Assert.IsFalse(c.IncludeMountedAttackers);
+    }
+
+    [TestMethod]
+    public void GetConfig_CleavingBlowsSectionAbsent_UsesDefaultsWithoutAWarning()
+    {
+        WriteConfig(@"{ }");
+
+        var c = _sut.GetConfig().CleavingBlows;
+
+        Assert.AreEqual(4, c.WeaponClassCarry.Count);
+        _logger.DidNotReceive().LogWarning(Arg.Is<string>(s => s.Contains("cleavingBlows")));
+    }
+
+    [TestMethod]
+    public void GetConfig_CleavingBlowsSectionNull_RevertsToDefaultsAndWarns()
+    {
+        WriteConfig(@"{ ""cleavingBlows"": null }");
+
+        var c = _sut.GetConfig().CleavingBlows;
+
+        Assert.IsFalse(c.AiEnabled);
+        Assert.AreEqual(4, c.WeaponClassCarry.Count);
+        _logger.Received().LogWarning(Arg.Is<string>(s => s.Contains("cleavingBlows section is null")));
+    }
+
+    [TestMethod]
+    public void GetConfig_CleavingBlowsValidBlock_RoundTrips()
+    {
+        WriteConfig(@"{ ""cleavingBlows"": { ""enabled"": false, ""aiEnabled"": true, ""weaponClassCarry"": { ""TwoHandedAxe"": 0.7, ""TwoHandedSword"": 1 }, ""aiWeaponClasses"": [""TwoHandedSword""], ""killCarryBonus"": 0.2, ""skillCarryBonus"": 0, ""maxCarryFactor"": 0.9, ""minRemainingMomentum"": 0.1, ""maxTargetsPerSwing"": 5, ""includeMountedAttackers"": true } }");
+
+        var c = _sut.GetConfig().CleavingBlows;
+
+        Assert.IsFalse(c.Enabled);
+        Assert.IsTrue(c.AiEnabled);
+        Assert.AreEqual(2, c.WeaponClassCarry.Count);
+        Assert.AreEqual(0.7f, c.WeaponClassCarry["TwoHandedAxe"], 0.0001f);
+        Assert.AreEqual(1f, c.WeaponClassCarry["TwoHandedSword"], 0.0001f);
+        CollectionAssert.AreEqual(new[] { "TwoHandedSword" }, c.AiWeaponClasses);
+        Assert.AreEqual(0.2f, c.KillCarryBonus, 0.0001f);
+        Assert.AreEqual(0f, c.SkillCarryBonus, 0.0001f);
+        Assert.AreEqual(0.9f, c.MaxCarryFactor, 0.0001f);
+        Assert.AreEqual(0.1f, c.MinRemainingMomentum, 0.0001f);
+        Assert.AreEqual(5, c.MaxTargetsPerSwing);
+        Assert.IsTrue(c.IncludeMountedAttackers);
+        _logger.DidNotReceive().LogWarning(Arg.Is<string>(s => s.Contains("cleavingBlows")));
+    }
+
+    [TestMethod]
+    public void GetConfig_CleavingBlowsOneEntryCarryMap_ReplacesTheFourDefaults()
+    {
+        WriteConfig(@"{ ""cleavingBlows"": { ""weaponClassCarry"": { ""TwoHandedAxe"": 0.5 }, ""aiWeaponClasses"": [""TwoHandedAxe""] } }");
+
+        var c = _sut.GetConfig().CleavingBlows;
+
+        Assert.AreEqual(1, c.WeaponClassCarry.Count);
+        Assert.AreEqual(0.5f, c.WeaponClassCarry["TwoHandedAxe"], 0.0001f);
+    }
+
+    [TestMethod]
+    public void GetConfig_CleavingBlowsNullCarryMap_RevertsToDefaultsAndWarns()
+    {
+        WriteConfig(@"{ ""cleavingBlows"": { ""weaponClassCarry"": null } }");
+
+        var c = _sut.GetConfig().CleavingBlows;
+
+        Assert.AreEqual(4, c.WeaponClassCarry.Count);
+        _logger.Received().LogWarning(Arg.Is<string>(s => s.Contains("weaponClassCarry is null")));
+    }
+
+    [DataTestMethod]
+    [DataRow("\"Typo\": 0.5")]
+    [DataRow("\"5\": 0.5")]
+    [DataRow("\"twohandedaxe\": 0.5")]
+    [DataRow("\"TwoHandedSword\": 0")]
+    [DataRow("\"TwoHandedSword\": 1.5")]
+    [DataRow("\"TwoHandedSword\": NaN")]
+    [DataRow("\"TwoHandedSword\": Infinity")]
+    public void GetConfig_CleavingBlowsBadCarryRow_IsDroppedAndWarns(string badRow)
+    {
+        WriteConfig(@"{ ""cleavingBlows"": { ""weaponClassCarry"": { ""TwoHandedAxe"": 0.6, " + badRow + @" }, ""aiWeaponClasses"": [""TwoHandedAxe""] } }");
+
+        var c = _sut.GetConfig().CleavingBlows;
+
+        Assert.AreEqual(1, c.WeaponClassCarry.Count);
+        Assert.IsTrue(c.WeaponClassCarry.ContainsKey("TwoHandedAxe"));
+        _logger.Received().LogWarning(Arg.Is<string>(s => s.Contains("weaponClassCarry[")));
+        _logger.Received().LogWarning(Arg.Is<string>(s => s.Contains("contained invalid values")));
+    }
+
+    [TestMethod]
+    public void GetConfig_CleavingBlowsNullAiList_RevertsToDefaultsAndWarns()
+    {
+        WriteConfig(@"{ ""cleavingBlows"": { ""aiWeaponClasses"": null } }");
+
+        var c = _sut.GetConfig().CleavingBlows;
+
+        CollectionAssert.AreEqual(new[] { "TwoHandedAxe", "TwoHandedMace", "TwoHandedSword" }, c.AiWeaponClasses);
+        _logger.Received().LogWarning(Arg.Is<string>(s => s.Contains("aiWeaponClasses is null")));
+    }
+
+    [TestMethod]
+    public void GetConfig_CleavingBlowsUnknownAiClass_IsDroppedAndWarns()
+    {
+        WriteConfig(@"{ ""cleavingBlows"": { ""aiWeaponClasses"": [""TwoHandedAxe"", ""Nonsense"", ""7""] } }");
+
+        var c = _sut.GetConfig().CleavingBlows;
+
+        CollectionAssert.AreEqual(new[] { "TwoHandedAxe" }, c.AiWeaponClasses);
+        _logger.Received().LogWarning(Arg.Is<string>(s => s.Contains("aiWeaponClasses entry 'Nonsense'")));
+    }
+
+    [TestMethod]
+    public void GetConfig_CleavingBlowsAiClassWithoutACarryFactor_IsDroppedAndWarns()
+    {
+        WriteConfig(@"{ ""cleavingBlows"": { ""weaponClassCarry"": { ""TwoHandedAxe"": 0.6 }, ""aiWeaponClasses"": [""TwoHandedAxe"", ""TwoHandedSword""] } }");
+
+        var c = _sut.GetConfig().CleavingBlows;
+
+        CollectionAssert.AreEqual(new[] { "TwoHandedAxe" }, c.AiWeaponClasses);
+        _logger.Received().LogWarning(Arg.Is<string>(s => s.Contains("aiWeaponClasses entry 'TwoHandedSword'")));
+    }
+
+    private static float CleaveField(CleavingBlowsConfig c, string key) => key switch
+    {
+        "killCarryBonus" => c.KillCarryBonus,
+        "skillCarryBonus" => c.SkillCarryBonus,
+        "maxCarryFactor" => c.MaxCarryFactor,
+        _ => c.MinRemainingMomentum,
+    };
+
+    [DataTestMethod]
+    [DataRow("killCarryBonus", "NaN", 0.15f)]
+    [DataRow("killCarryBonus", "-0.1", 0.15f)]
+    [DataRow("killCarryBonus", "1.1", 0.15f)]
+    [DataRow("skillCarryBonus", "NaN", 0.1f)]
+    [DataRow("skillCarryBonus", "-0.1", 0.1f)]
+    [DataRow("skillCarryBonus", "1.1", 0.1f)]
+    [DataRow("maxCarryFactor", "0", 0.75f)]
+    [DataRow("maxCarryFactor", "0.96", 0.75f)]
+    [DataRow("maxCarryFactor", "NaN", 0.75f)]
+    [DataRow("minRemainingMomentum", "NaN", 0.25f)]
+    [DataRow("minRemainingMomentum", "-0.1", 0.25f)]
+    [DataRow("minRemainingMomentum", "1.1", 0.25f)]
+    public void GetConfig_CleavingBlowsBadFloat_RevertsThatValueAndWarns(string key, string value, float expectedDefault)
+    {
+        WriteConfig(@"{ ""cleavingBlows"": { """ + key + @""": " + value + @" } }");
+
+        var c = _sut.GetConfig().CleavingBlows;
+
+        Assert.AreEqual(expectedDefault, CleaveField(c, key), 0.0001f);
+        _logger.Received().LogWarning(Arg.Is<string>(s => s.Contains("cleavingBlows." + key)));
+        _logger.Received().LogWarning(Arg.Is<string>(s => s.Contains("contained invalid values")));
+    }
+
+    [TestMethod]
+    public void GetConfig_CleavingBlowsFloorAtOrAboveCeiling_RevertsBothAndWarns()
+    {
+        WriteConfig(@"{ ""cleavingBlows"": { ""minRemainingMomentum"": 0.6, ""maxCarryFactor"": 0.5 } }");
+
+        var c = _sut.GetConfig().CleavingBlows;
+
+        Assert.AreEqual(0.25f, c.MinRemainingMomentum, 0.0001f);
+        Assert.AreEqual(0.75f, c.MaxCarryFactor, 0.0001f);
+        _logger.Received().LogWarning(Arg.Is<string>(s => s.Contains("must be below maxCarryFactor")));
+    }
+
+    [TestMethod]
+    public void GetConfig_CleavingBlowsFloorEqualToCeiling_RevertsBoth()
+    {
+        WriteConfig(@"{ ""cleavingBlows"": { ""minRemainingMomentum"": 0.5, ""maxCarryFactor"": 0.5 } }");
+
+        var c = _sut.GetConfig().CleavingBlows;
+
+        Assert.AreEqual(0.25f, c.MinRemainingMomentum, 0.0001f);
+        Assert.AreEqual(0.75f, c.MaxCarryFactor, 0.0001f);
+    }
+
+    [DataTestMethod]
+    [DataRow(1)]
+    [DataRow(6)]
+    [DataRow(0)]
+    public void GetConfig_CleavingBlowsMaxTargetsOutsideTheSlider_RevertsToDefaultAndWarns(int value)
+    {
+        WriteConfig(@"{ ""cleavingBlows"": { ""maxTargetsPerSwing"": " + value + @" } }");
+
+        var c = _sut.GetConfig().CleavingBlows;
+
+        Assert.AreEqual(3, c.MaxTargetsPerSwing);
+        _logger.Received().LogWarning(Arg.Is<string>(s => s.Contains("cleavingBlows.maxTargetsPerSwing")));
+    }
 }

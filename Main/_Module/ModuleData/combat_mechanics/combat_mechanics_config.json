@@ -68,6 +68,19 @@
     "kickChanceFactor": 0.5,
     "playerVictimChanceFactor": 0.5
   },
+  "_comment_cleavingBlows": "Cleaving Blows: a two-handed swing can cut through several enemies. Carry = class factor x (1 - armour share) + kill bonus + skill bonus x the crush-through skill curve, capped at maxCarryFactor; the swing stops below minRemainingMomentum or after maxTargetsPerSwing enemies. Player-controlled agents only unless aiEnabled; AI also needs its weapon class in aiWeaponClasses. Restart to reload.",
+  "cleavingBlows": {
+    "enabled": true,
+    "aiEnabled": false,
+    "weaponClassCarry": { "TwoHandedAxe": 0.6, "TwoHandedMace": 0.6, "TwoHandedSword": 0.5, "TwoHandedPolearm": 0.4 },
+    "aiWeaponClasses": ["TwoHandedAxe", "TwoHandedMace", "TwoHandedSword"],
+    "killCarryBonus": 0.15,
+    "skillCarryBonus": 0.1,
+    "maxCarryFactor": 0.75,
+    "minRemainingMomentum": 0.25,
+    "maxTargetsPerSwing": 3,
+    "includeMountedAttackers": false
+  },
   "raceModifiers": {
     "dwarf": { "ctbDefenseBonus": 10, "knockdownResistanceMultiplier": 2.5, "staggerThresholdMultiplier": 1.5 },
     "elf": { "ctbAttackBonus": 13, "removeNonOverheadPenalty": true },

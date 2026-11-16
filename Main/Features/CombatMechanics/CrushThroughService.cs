@@ -74,9 +74,7 @@ public class CrushThroughService : ICrushThroughService
             _orcShieldCrushRaces.Add(raceName);
         }
 
-        float curveSpan = _config.SkillTargetDelta - _config.SkillDeadZone;
-        float denominatorArg = curveSpan * _config.SkillCurveExponent;
-        _curveDenominator = 1.0 - Math.Exp(-denominatorArg);
+        _curveDenominator = SkillGapCurve.Denominator(_config.SkillDeadZone, _config.SkillTargetDelta, _config.SkillCurveExponent);
         if (_curveDenominator <= 0.0)
             logger.LogWarning("CrushThroughService: skill curve denominator is non-positive (skillTargetDelta must exceed skillDeadZone with a positive skillCurveExponent) — skill-based crush-through is disabled");
     }
@@ -132,11 +130,8 @@ public class CrushThroughService : ICrushThroughService
         if (_curveDenominator <= 0.0)
             return null;
 
-        float numeratorArg = (delta - _config.SkillDeadZone) * _config.SkillCurveExponent;
-        double normalized = (1.0 - Math.Exp(-numeratorArg)) / _curveDenominator;
-
         // Max chance comes from the SETTINGS provider (MCM slider over JSON), not the config.
-        float chance = _settings.CrushThroughMaxChance * Clamp01((float)normalized);
+        float chance = _settings.CrushThroughMaxChance * SkillGapCurve.Normalized(delta, _config.SkillDeadZone, _config.SkillCurveExponent, _curveDenominator);
         chance *= Clamp01((effectiveEnergy - threshold) / (threshold * _config.EnergyRampMarginFactor));
 
         if (!context.IsOverhead && !orcQualified && !attackerMods.RemoveNonOverheadPenalty)

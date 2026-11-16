@@ -32,6 +32,7 @@ public class CombatMechanicsHooksTests
     private IShieldBashKnockdownService _bash = null!;
     private ICareerAgentStatService _career = null!;
     private ICombatMechanicsSettingsProvider _settings = null!;
+    private ICleavingBlowService _cleave = null!;
     private CombatMechanicsHooks _sut = null!;
 
     [TestInitialize]
@@ -44,7 +45,8 @@ public class CombatMechanicsHooksTests
         _bash = Substitute.For<IShieldBashKnockdownService>();
         _career = Substitute.For<ICareerAgentStatService>();
         _settings = Substitute.For<ICombatMechanicsSettingsProvider>();
-        _sut = new CombatMechanicsHooks(_crush, _charge, _creature, _shield, _bash, _career, _settings);
+        _cleave = Substitute.For<ICleavingBlowService>();
+        _sut = new CombatMechanicsHooks(_crush, _charge, _creature, _shield, _bash, _career, _settings, _cleave);
         _savedPierce = CombatMechanicsHooks.ShooterPiercesShields;
         CombatMechanicsHooks.ShooterPiercesShields = null;
     }
@@ -355,5 +357,57 @@ public class CombatMechanicsHooksTests
         _settings.ChargeHorsePenetration.Returns(0.55f);
 
         Assert.IsNull(_sut.HorseChargePenetration());
+    }
+
+    // ---- Cleaving Blows ----
+
+    [TestMethod]
+    public void CleavingBlowMomentum_CrushThroughCall_NeverAsks()
+    {
+        var weapon = default(MissionWeapon);
+        var blow = default(Blow);
+        var collision = CollisionDataFixture.With(isColliderAgent: true);
+
+        Assert.IsNull(_sut.CleavingBlowMomentum(1f, in blow, in collision, BareAgent(), BareAgent(), in weapon, isCrushThrough: true));
+
+        _cleave.DidNotReceiveWithAnyArgs().CalculateMomentum(default, default);
+    }
+
+    [TestMethod]
+    public void CleavingBlowMomentum_NoAttacker_NeverAsks()
+    {
+        var weapon = default(MissionWeapon);
+        var blow = default(Blow);
+        var collision = CollisionDataFixture.With(isColliderAgent: true);
+
+        Assert.IsNull(_sut.CleavingBlowMomentum(1f, in blow, in collision, null!, BareAgent(), in weapon, isCrushThrough: false));
+
+        _cleave.DidNotReceiveWithAnyArgs().CalculateMomentum(default, default);
+    }
+
+    [TestMethod]
+    public void CleavingBlowReaction_NoAttacker_KeepsTheVanillaReaction()
+    {
+        var weapon = default(MissionWeapon);
+        var blow = default(Blow);
+        var collision = CollisionDataFixture.With(isColliderAgent: true);
+
+        Assert.AreEqual(MeleeCollisionReaction.Stuck,
+            _sut.CleavingBlowReaction(in blow, in collision, null!, BareAgent(), in weapon, 0.4f, MeleeCollisionReaction.Stuck));
+
+        _cleave.DidNotReceiveWithAnyArgs().ShouldSliceThrough(default, default);
+    }
+
+    [TestMethod]
+    public void CleavingBlowReaction_NoMomentumLeft_KeepsTheVanillaReaction()
+    {
+        var weapon = default(MissionWeapon);
+        var blow = default(Blow);
+        var collision = CollisionDataFixture.With(isColliderAgent: true);
+
+        Assert.AreEqual(MeleeCollisionReaction.Stuck,
+            _sut.CleavingBlowReaction(in blow, in collision, BareAgent(), BareAgent(), in weapon, 0f, MeleeCollisionReaction.Stuck));
+
+        _cleave.DidNotReceiveWithAnyArgs().ShouldSliceThrough(default, default);
     }
 }
