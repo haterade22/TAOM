@@ -25,4 +25,5 @@
   <LanguageFile xml_path="CNt/std_taom_career_data_strings_zho-HK.xml" />
   <LanguageFile xml_path="CNt/std_taom_character_name_strings_zho-HK.xml" />
   <LanguageFile xml_path="CNt/std_taom_battle_scene_strings_zho-HK.xml" />
+  <LanguageFile xml_path="CNt/std_taom_realms_title_strings_zho-HK.xml" />
 </LanguageData>

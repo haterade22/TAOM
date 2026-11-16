@@ -41,6 +41,7 @@ TAOM_SOURCES = [
     ("taom_career_data_strings.xml",                 "std_taom_career_data_strings_{locale}.xml"),
     ("taom_character_name_strings.xml",              "std_taom_character_name_strings_{locale}.xml"),
     ("taom_battle_scene_strings.xml",                "std_taom_battle_scene_strings_{locale}.xml"),
+    ("taom_realms_title_strings.xml",                "std_taom_realms_title_strings_{locale}.xml"),
 ]
 
 # Where LocalizationOverrideLoader reads its English-only overrides, and the shape of a vanilla key.
