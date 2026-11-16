@@ -561,8 +561,9 @@ class Validator:
             troops_dir = self.moduledata / "troops"
             troops = mr.load_troops(troops_dir) if troops_dir.is_dir() else []
             cat, priced = _armory_catalogue(modules) if troops else (None, {})
-            # The taom_ph_ placeholders are not in the install: price them from this tree's own files
-            # (2026-11-14, #1271), so the troops that carry them are judged like any other weapon.
+            # The catalogue leaves TAOM's placeholder sheets out (#1372): price the taom_ph_ placeholders
+            # from this tree's own files (#1271), so the troops that carry them are judged like any other
+            # weapon and a registration the tree lost is not hidden by a deployed copy.
             ph_priced, ph_problems = (price_placeholders(cat, self.moduledata / PLACEHOLDER_DIR)
                                       if troops else ({}, []))
             priced = {**priced, **ph_priced}
