@@ -1,0 +1,12 @@
+schema_version = "1.0.0"
+id = "taom_retopology"
+version = "1.0.0"
+name = "TAOM Retopology"
+tagline = "Independent UV-guided garment retopology"
+maintainer = "TAOM"
+type = "add-on"
+tags = ["Mesh"]
+blender_version_min = "4.5.0"
+license = [
+  "SPDX:MIT",
+]
