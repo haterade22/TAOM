@@ -2855,3 +2855,11 @@ The battle balance provider's new tests built `BattleBalanceConfig` objects in C
 **Prevent:** for each rule of a combined decision, write one case in which the other rules allow everything (here a neutral realm on each side), and prove it by forcing the rule off once: the new case must be the one that fails.
 
 **Source:** [rca-story-side-gate-2026-11-15.md](../rca-story-side-gate-2026-11-15.md) finding 6.
+
+### A line that proves a fix reads the player's symptom, not the fix's mechanism (#1337, 2026-11-15)
+
+**Why missed:** after the heroes were found merged into another formation, the per-wave `hunters` line was written to prove the group holds: all in formation 7, nobody else in it, off AI control. The next run passed that line in every wave while two of the three heroes made no kill, because the new order had turned to Stop. The line proved the mechanism of the fix and was read as proof of the feature.
+
+**Prevent:** when a run shows a defect, write the check from what the run showed the player (here: heroes far from any fight), and prove it by asking whether the last bad run would fail it. Report the outcome numbers that cannot be judged (kills) on the same line, and read them in every proof run.
+
+**Source:** [rca-ld-shop-heroes-2026-11-15.md](../rca-ld-shop-heroes-2026-11-15.md) finding 3.

@@ -20,6 +20,7 @@ internal enum PurseSink
     FieldCare,
     Volley,
     Upgrades,
+    Heroes,
 }
 
 /// <summary>The player's gold. The balance is always start plus earned minus spent, which the report checks.</summary>

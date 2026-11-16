@@ -85,6 +85,7 @@ internal static class LongDefeatRunReport
                     ["fieldCare"] = purse.SpentOn(PurseSink.FieldCare),
                     ["volley"] = purse.SpentOn(PurseSink.Volley),
                     ["upgrades"] = purse.SpentOn(PurseSink.Upgrades),
+                    ["heroes"] = purse.SpentOn(PurseSink.Heroes),
                 },
             },
             ["purchases"] = new JArray((fort ?? RunFort.None).Purchases.Select(Purchase)),
@@ -118,9 +119,9 @@ internal static class LongDefeatRunReport
 
     private static JObject Volley(VolleyWaveRecord v) => new() { ["uses"] = v.Uses, ["arrows"] = v.Arrows, ["hits"] = v.Hits, ["kills"] = v.Kills, ["withheld"] = v.Withheld };
 
-    private static readonly string[] PurchaseKinds = { "pack", "gateLevel", "gateRepair", "towerLevel", "fieldCare", "volleyLevel", "upgrade" };
+    private static readonly string[] PurchaseKinds = { "pack", "gateLevel", "gateRepair", "towerLevel", "fieldCare", "volleyLevel", "upgrade", "hero" };
 
-    /// <summary>One purchase: the wave it precedes, its kind, the offer (a pack's only), the level a level kind reached, shop.json's price and the price paid (an upgrade's for one soldier, and its <c>count</c>), and the share (a repair's missing share summed over its gates, care's heal share) to three decimals; a repair also lists each gate's own share in <c>shares</c>.</summary>
+    /// <summary>One purchase: the wave it precedes, its kind, the offer (a pack's), the step (an upgrade's) or the hero's id (a hero's), the level a level kind reached, shop.json's price and the price paid (an upgrade's for one soldier, and its <c>count</c>), and the share (a repair's missing share summed over its gates, care's heal share) to three decimals; a repair also lists each gate's own share in <c>shares</c>.</summary>
     private static JObject Purchase(FortPurchase p)
     {
         var row = new JObject

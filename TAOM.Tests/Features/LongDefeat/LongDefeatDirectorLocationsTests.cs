@@ -10,7 +10,7 @@ namespace TAOM.Tests.Features.LongDefeat;
 
 /// <summary>
 /// Phase 4 Slice 1 builds the places' config and plan with no run code and offers nothing (D46, <see cref="LocationOffer.Offered"/>), so a run of a build that offers nothing must play exactly as it did:
-/// the same calls to the field and the same gold at every step, whether or not shop.json carries an armoury, a yard and a Marshal, and fortresses.json records their places. Nothing reads the new plan
+/// the same calls to the field and the same gold at every step, whether or not shop.json carries an armoury and a yard, and fortresses.json records their places. Nothing reads the new plan
 /// fields yet, so this passes before the slice's last line is written; it is the pin the later slices must keep passing until each raises its kind in <see cref="LocationOffer"/>.
 /// </summary>
 [TestClass]
@@ -23,8 +23,6 @@ public class LongDefeatDirectorLocationsTests
     });
 
     private static readonly YardPlan Yard = new(6f, new[] { new EngineOffer("mangonel", 450), new EngineOffer("trebuchet", 700) });
-
-    private static readonly MarshalPlan Marshal = new("lord_4_7", 500, "Theodred", "A hero.");
 
     private sealed class Rig
     {
@@ -46,7 +44,7 @@ public class LongDefeatDirectorLocationsTests
             {
                 new ShopOffer("militia", "Militia", "fow_militia", FormationSlot.Infantry, 12, 180),
                 new ShopOffer("yeomen", "Yeomen", "fow_yeomen", FormationSlot.Ranged, 10, 200),
-            }, null, locations ? new LocationsPlan(Armoury, Yard, Marshal) : null),
+            }, null, locations ? new LocationsPlan(Armoury, Yard) : null),
             RunRules.Default with { PreparationSeconds = 90f, IntermissionSeconds = 90f },
             new RunOptions { Autoplay = true, StartGold = startGold })
         {
@@ -97,7 +95,7 @@ public class LongDefeatDirectorLocationsTests
     public void Clean() => MissionThreadGuard.ResetForTests();
 
     [TestMethod]
-    public void AnUnattendedRun_WithAnArmouryAYardAMarshalAndTheirPlaces_PlaysExactlyAsOneWithNone()
+    public void AnUnattendedRun_WithAnArmouryAYardAndTheirPlaces_PlaysExactlyAsOneWithNone()
     {
         var plain = Play(NewRig(false, null));
         var placed = Play(NewRig(true, null));

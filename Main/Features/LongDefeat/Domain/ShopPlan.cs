@@ -12,12 +12,15 @@ internal sealed record ShopOffer(string Id, string Name, string TroopId, Formati
 internal sealed record UpgradeStep(string Id, string Name, string FromTroop, string ToTroop, int Price);
 
 /// <summary>
-/// A shop: the gold a run starts with, the packs it sells and, when shop.json carries them, its fortifications (null: none) and its Phase 4 places, the armoury, the engineer's yard
-/// and the Marshal (null: none of the three keys). <see cref="Upgrades"/> are the steps of its troop lines (#1161), empty when shop.json lists none.
+/// A shop: the gold a run starts with, the packs it sells and, when shop.json carries them, its fortifications (null: none) and its Phase 4 places, the armoury and the engineer's yard
+/// (null: neither key). <see cref="Upgrades"/> are the steps of its troop lines (#1161), empty when shop.json lists none.
 /// </summary>
 internal sealed record ShopPlan(int StartingGold, IReadOnlyList<ShopOffer> Offers, FortPlan? Fort = null, LocationsPlan? Locations = null)
 {
     public IReadOnlyList<UpgradeStep> Upgrades { get; init; } = System.Array.Empty<UpgradeStep>();
+
+    /// <summary>The named heroes the shop sells (#1325), in shop.json order; empty when it lists none.</summary>
+    public IReadOnlyList<HeroOffer> Heroes { get; init; } = System.Array.Empty<HeroOffer>();
 }
 
 internal enum BuyResult
