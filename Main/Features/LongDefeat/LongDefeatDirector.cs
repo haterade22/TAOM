@@ -166,6 +166,7 @@ internal sealed partial class LongDefeatDirector
         if (_run.Result != null)
             return;
 
+        TickWaitingHeroes(dt);
         TickStanding(dt, fx);
         TickSplit(dt, fx.DefenderBatches.Count > 0);
         TickVolleyWatch(dt);
