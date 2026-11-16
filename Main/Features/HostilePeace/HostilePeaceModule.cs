@@ -8,10 +8,10 @@ namespace TAOM.Features.HostilePeace;
 
 /// <summary>
 /// Hostile Peace (docs/features/hostile-peace.md): Free and Dark Power realms (the Hostile tier of <c>diplomacy.json</c>) stay at
-/// peace until the War of the Ring, but do not act as friends. Three blocks, one switch each in MCM and
+/// peace until the War of the Ring, but do not act as friends. Four blocks, one switch each in MCM and
 /// <c>hostile_peace.json</c>: A, no caravan trade in each other's towns (Patch156, postfix on <c>CaravansCampaignBehavior.CanTradeWith</c>);
 /// B, no trade agreement (<c>TaomTradeAgreementModel</c>); C, the player meets their settlements as at war
-/// (<c>TaomSettlementAccessModel</c>). The two models are game models that <c>SubModule.RegisterDiplomacyAndConflict</c> adds by
+/// (<c>TaomSettlementAccessModel</c>); D, the player's kingdom does not ally across the Free/Evil line (<c>PlayerAllianceGate</c>). The two models are game models that <c>SubModule.RegisterDiplomacyAndConflict</c> adds by
 /// hand. Nothing is saved. Overlap check, 2026-11-15: TAOM overrides neither <c>TradeAgreementModel</c> nor
 /// <c>SettlementAccessModel</c>; CaravanTrade's postfix on <c>CanTradeWith</c> only lifts war blocks. <c>IDiplomacyService</c>
 /// (<c>DiplomacyIoC</c>), <c>IPathService</c> and <c>IModLogger</c> are registered elsewhere.

@@ -1,6 +1,6 @@
 namespace TAOM.Features.HostilePeace;
 
-/// <summary>The three switches, read live at each question: the MCM group "World/Hostile Peace" when MCM is up, else the JSON.</summary>
+/// <summary>The four switches, read live at each question: the MCM group "World/Hostile Peace" when MCM is up, else the JSON.</summary>
 public interface IHostilePeaceSettingsProvider
 {
     bool BlockCaravanTrade { get; }

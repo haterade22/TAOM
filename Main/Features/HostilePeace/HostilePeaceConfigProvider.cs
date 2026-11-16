@@ -12,7 +12,7 @@ public interface IHostilePeaceConfigProvider
     HostilePeaceConfig Config { get; }
 }
 
-/// <summary>Loads <c>ModuleData/diplomacy/hostile_peace.json</c> on first use. Three booleans need no range checks; a null
+/// <summary>Loads <c>ModuleData/diplomacy/hostile_peace.json</c> on first use. Four booleans need no range checks; a null
 /// document or a parse error falls back to <see cref="HostilePeaceConfig"/>'s defaults and says so in the log.</summary>
 public sealed class HostilePeaceConfigProvider : IHostilePeaceConfigProvider
 {

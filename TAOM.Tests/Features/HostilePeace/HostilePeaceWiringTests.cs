@@ -144,6 +144,8 @@ public class HostilePeaceWiringTests
         Assert.AreEqual(typeof(TaomTradeAgreementModel), typeof(TaomTradeAgreementModel).GetMethod("CanMakeTradeAgreement")!.DeclaringType);
         Assert.AreEqual(typeof(TaomSettlementAccessModel), typeof(TaomSettlementAccessModel).GetMethod("CanMainHeroEnterSettlement")!.DeclaringType);
         Assert.AreEqual(typeof(TaomSettlementAccessModel), typeof(TaomSettlementAccessModel).GetMethod("CanMainHeroDoSettlementAction")!.DeclaringType);
+        Assert.AreEqual(typeof(TaomSettlementAccessModel), typeof(TaomSettlementAccessModel).GetMethod("CanMainHeroEnterLordsHall")!.DeclaringType,
+            "a castle's 'Request entry' asks the lords hall answer, so it must be overridden too");
     }
 
     // ---- Block C: the base game's war answers ----
@@ -166,6 +168,18 @@ public class HostilePeaceWiringTests
         Assert.AreEqual(SettlementAccessModel.AccessLevel.NoAccess, access.AccessLevel);
         Assert.AreEqual(SettlementAccessModel.AccessMethod.ByRequest, access.AccessMethod);
         Assert.AreEqual(SettlementAccessModel.AccessLimitationReason.HostileFaction, access.AccessLimitationReason);
+    }
+
+    [TestMethod]
+    public void KeepAsAtWar_IsTheBaseGamesWarAnswerForTheKeep_SoRequestEntryIsNotGranted()
+    {
+        // DefaultSettlementAccessModel.CanMainHeroEnterKeepInternal, war branch: limited access by disguise, reason Disguised.
+        // The castle menu grants entry only for FullAccess or a Bribe solution, so this answer lands on "entry denied".
+        var access = HostilePeaceAccess.KeepAsAtWar();
+
+        Assert.AreEqual(SettlementAccessModel.AccessLevel.LimitedAccess, access.AccessLevel);
+        Assert.AreEqual(SettlementAccessModel.LimitedAccessSolution.Disguise, access.LimitedAccessSolution);
+        Assert.AreEqual(SettlementAccessModel.AccessLimitationReason.Disguised, access.AccessLimitationReason);
     }
 
     [DataTestMethod]

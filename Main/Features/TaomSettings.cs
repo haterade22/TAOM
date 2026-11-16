@@ -2883,7 +2883,7 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
 
     [SettingPropertyGroup("World/Hostile Peace", GroupOrder = 101)]
     [SettingPropertyBool("{=taom_hostile_peace_mcm_access}Enemy Realms Close Their Gates", Order = 2, RequireRestart = false,
-        HintText = "{=taom_hostile_peace_mcm_access_hint}When enabled (default), the towns and castles of a sworn enemy realm treat you as they would in war, even while your realms are at peace: you enter a town only in disguise, a castle not at all, and you cannot trade, recruit or rest in its villages. Your own fiefs and a town you are already in are not affected. When off, the base game's rules apply. Applies at once, no restart.")]
+        HintText = "{=taom_hostile_peace_mcm_access_hint}When enabled (default), the towns and castles of a sworn enemy realm treat you as they would in war, even while your realms are at peace: you enter a town only in disguise, a castle not at all, and you cannot trade, recruit or rest in its villages. Your own fiefs are not affected. When off, the base game's rules apply. Applies at once, no restart.")]
     public bool HostilePeaceLimitTownAccess { get; set; } = TAOM.Features.HostilePeace.HostilePeaceSettingsProvider.DefaultLimitTownAccess;
 
     [SettingPropertyGroup("World/Hostile Peace", GroupOrder = 101)]

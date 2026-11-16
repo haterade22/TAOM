@@ -3,14 +3,14 @@
 ## Overview
 
 Free and Dark Power realms stay at peace until the War of the Ring, but they do not act as friends. Two realms whose
-`diplomacy.json` tier is `Hostile` (every Free realm against every Dark Power, 45 pairs, plus a pledged realm through War
-Pledge) get three blocks while they are at peace:
+`diplomacy.json` tier is `Hostile` (every Free realm against every Dark Power, plus the extra Hostile rows in
+`diplomacy.json` and a pledged realm through War Pledge) get blocks A to C while they are at peace, and block D at all times:
 
 | Block | What stops | Where |
 |---|---|---|
 | A, caravans | Their caravans do not trade in each other's towns | `Patch156_CaravanTrade_HostilePeace`, a postfix on `CaravansCampaignBehavior.CanTradeWith` |
 | B, trade agreements | They never sign a trade agreement | `TaomTradeAgreementModel.CanMakeTradeAgreement` |
-| C, the player's access | The player meets their towns and castles as at war: a town only in disguise, a castle not at all, and no trade, recruits or rest in their villages | `TaomSettlementAccessModel` |
+| C, the player's access | The player meets their towns and castles as at war: a town only in disguise, a castle not at all (the gate and "Request entry to the castle" both), and no trade, recruits or rest in their villages | `TaomSettlementAccessModel`, `ProvenderWorldAdapter.RefusesPlayer` for the Provender-master |
 | D, the player's alliances | A kingdom the player rules does not ally across the Free/Evil line (any phase, peace or war) | `PlayerAllianceGate`, asked by `TaomAllianceModel`, `TaomKingdomDecisionPermissionModel` and `PlayerAllianceProposalBehavior` |
 
 No war is declared and no phase is read. Each block has one switch in MCM ("World/Hostile Peace") and in
@@ -53,9 +53,12 @@ one-sidedly.
   game's texts). The menus read only those values: the sneak-in option is `LimitedAccessSolution.Disguise` and the closed-gate
   text is `AccessLimitationReason.HostileFaction` (`EncounterGameMenuBehavior`). A sneak caught at peace raises the crime rating
   and ends in captivity, the base game's own path for a peaceful town where the player has a crime rating.
-- **Never strands the player.** Block C leaves alone a settlement the player's clan owns and the settlement the player's party
-  is in right now; village actions are the exception, refused from inside as at war. The keep and the dungeon keep the base
-  rules (reached only from inside a town, where a disguised player is already treated as at war).
+- **The player's own fiefs are left alone.** Block C never limits a settlement the player's clan owns. It does not exempt the
+  settlement the player is in: on v1.5.7 the engine sets `CurrentSettlement` before the gate menu asks the model, so such an
+  exemption would always be true. No town or castle menu asks `CanMainHeroEnterSettlement` from inside. A town's keep and the
+  dungeon keep the base rules (a town keep is reached only after a sneak in, where the base model answers as at war). A
+  castle's keep does not: "Request entry to the castle" asks `CanMainHeroEnterLordsHall` from outside, so a Hostile castle
+  gets the war answer there.
 - **Old trade agreements run out.** An agreement signed before the switch was on runs to its end date; a proposed one is
   cancelled by the decision's own check.
 
@@ -83,8 +86,8 @@ into `true`; Patch156 only turns a peacetime `true` into `false`. The order of t
 
 | File | Purpose |
 |---|---|
-| `Main/Features/HostilePeace/HostilePeaceService.cs` | The pair rule and the three block questions |
-| `Main/Features/HostilePeace/HostilePeaceSettingsProvider.cs` | The three switches, MCM over JSON |
+| `Main/Features/HostilePeace/HostilePeaceService.cs` | The pair rule and the four block questions |
+| `Main/Features/HostilePeace/HostilePeaceSettingsProvider.cs` | The four switches, MCM over JSON |
 | `Main/Features/HostilePeace/HostilePeaceConfigProvider.cs`, `HostilePeaceConfig.cs` | `hostile_peace.json` |
 | `Main/Features/HostilePeace/Hooks/Patch156_CaravanTrade_HostilePeace.cs` | Block A |
 | `Main/Features/HostilePeace/Models/TaomTradeAgreementModel.cs` | Block B |
@@ -95,9 +98,10 @@ into `true`; Patch156 only turns a peacetime `true` into `false`. The order of t
 ## Testing
 
 - `TAOM.Tests/Features/HostilePeace/HostilePeaceServiceTests.cs`: each block for a Hostile pair at peace, the same pair at war,
-  a non-Hostile pair, a switch off, blank and identical ids, the player's own settlement and the one the player is in.
-- `TAOM.Tests/Features/HostilePeace/HostilePeaceAccessTests.cs`: the access answers equal the base game's war answers.
-- `TAOM.Tests/Features/HostilePeace/HostilePeaceSettingsTests.cs`: MCM over JSON, the JSON defaults and the shipped file.
+  a non-Hostile pair, a switch off, blank and identical ids, and the player's own settlement.
+- `TAOM.Tests/Features/HostilePeace/HostilePeaceWiringTests.cs`: the module and its patch binding, the models' overrides, the
+  access answers against the base game's war answers (town, castle, keep, village), MCM over JSON, the JSON defaults and the
+  shipped file.
 
 ## How to verify in game
 
@@ -110,10 +114,19 @@ Not done yet. Start a campaign as Thranduil (Woodland Realm) and stay before day
 4. Found a kingdom of Gondor culture: the "I propose an alliance" line is missing with Dol Guldur's ruler and present with
    Lothlorien's; the Diplomacy screen refuses the Dol Guldur alliance with "Your realms stand on opposite sides of the war and
    cannot be allied.". Turn "Allow Player Alliances With Anyone" on: both are offered.
-5. Turn each A to C switch off in MCM ("World/Hostile Peace"): its block lifts at once.
+5. At a Dol Guldur castle as a clan tier 3 player: Approach the gates, then "Request entry to the castle" is refused (entry
+   denied), not granted.
+6. Ride into a Dol Guldur village with a Provender-master hired: he does not buy there (the base game refuses Trade in that
+   village), and he still buys in a Lothlorien village.
+7. Turn each A to C switch off in MCM ("World/Hostile Peace"): its block lifts at once.
 
 ## Known limits
 
+- Each failed sneak into a Hostile town adds crime rating, and at the crime threshold the engine declares war on a kingdom the
+  player leads (`ChangeCrimeRatingAction`). Failed sneaks can therefore start a war before the War of the Ring. This is a known
+  consequence of the base game's war path, awaiting the owner's decision; no code changes it.
+- A caravan already in or heading into a Hostile town when block A turns on trades there once: `OnSettlementEntered` sells and
+  the hourly tick buys without asking `CanTradeWith`.
 - Block C covers the player only. AI lords already keep out of the other side's recruits and tournaments (Alignment
   Recruitment, Tournament Alignment Filter).
 - A trade agreement signed in an old save before this feature runs to its end date.

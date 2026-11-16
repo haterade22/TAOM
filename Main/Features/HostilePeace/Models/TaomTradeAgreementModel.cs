@@ -7,8 +7,9 @@ namespace TAOM.Features.HostilePeace.Models;
 
 /// <summary>
 /// Block B: no trade agreement between two Hostile realms. Every vanilla path asks <c>CanMakeTradeAgreement</c> (v1.5.7, read on
-/// the installed DLL 2026-11-15): the AI's proposal (<c>KingdomDecisionProposalBehavior.cs:473</c>), the decision's
-/// <c>IsAllowed</c> (<c>TradeAgreementDecision.cs:259</c>) and its cancel check (<c>:159</c>), which drops one already proposed.
+/// the installed DLL 2026-11-15): the AI's proposal (<c>KingdomDecisionProposalBehavior.ConsiderTradeAgreement</c>), the decision's
+/// <c>TradeAgreementDecision.CanMakeDecision</c> and its cancel check (<c>ShouldBeCancelledInternal</c>), which drops one already
+/// proposed.
 /// An agreement signed before this rule (an old save) runs to its end date. Off under co-op on a peer that defers to the host,
 /// like <c>TaomDiplomacyModel</c>: the host's diplomacy governs.
 /// </summary>

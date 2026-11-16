@@ -6,7 +6,7 @@ using TAOM.Features.Execution;
 namespace TAOM.Features.HostilePeace;
 
 /// <summary>
-/// The one rule behind the three peacetime blocks (docs/features/hostile-peace.md): two realms whose
+/// The one rule behind the four blocks (docs/features/hostile-peace.md): two realms whose
 /// <c>diplomacy.json</c> tier is <see cref="AllianceTier.Hostile"/> (every Free realm against every Dark Power, plus a
 /// pledged realm through <c>DiplomacyService</c>) are enemies in all but war. While they are at peace their caravans do not
 /// trade in each other's towns, they sign no trade agreement, and the player meets their towns as at war. No war is declared
@@ -66,10 +66,9 @@ public sealed class HostilePeaceService
         !atWar && _settings.LimitTownAccess && IsHostilePair(playerFactionId, settlementFactionId);
 
     /// <summary>True when the player meets this settlement as at war: a Hostile pair at peace, unless the player's clan owns
-    /// it or the player is inside it right now (so the rule never strands the player in a town).</summary>
-    public bool LimitsPlayerAccess(string? playerFactionId, string? settlementFactionId, bool atWar, bool playerOwnsSettlement,
-        bool playerIsInside) =>
-        !playerOwnsSettlement && !playerIsInside && LimitsTownAccess(playerFactionId, settlementFactionId, atWar);
+    /// it.</summary>
+    public bool LimitsPlayerAccess(string? playerFactionId, string? settlementFactionId, bool atWar, bool playerOwnsSettlement) =>
+        !playerOwnsSettlement && LimitsTownAccess(playerFactionId, settlementFactionId, atWar);
 
     /// <summary>Two different, named realms of the Hostile tier. A clan without a kingdom, or a realm missing from
     /// <c>diplomacy.json</c>, reads Neutral there and is never blocked.</summary>

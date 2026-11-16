@@ -2101,9 +2101,9 @@ Applied from `SubModule.cs` in the standard `OnGameInitializationFinished` batch
 
 ## Patch156_HostilePeace
 
-**Target (v1.5.7, `CaravansCampaignBehavior.cs:2234` read on the installed `TaleWorlds.CampaignSystem.dll` 2026-11-15):** `private bool TaleWorlds.CampaignSystem.CampaignBehaviors.CaravansCampaignBehavior.CanTradeWith(IFaction caravanFaction, IFaction targetFaction)`. Postfix `Patch156_CaravanTrade_HostilePeace`, bound by name (the method is private).
+**Target (v1.5.7, read on the installed `TaleWorlds.CampaignSystem.dll` 2026-11-15):** `private bool TaleWorlds.CampaignSystem.CampaignBehaviors.CaravansCampaignBehavior.CanTradeWith(IFaction caravanFaction, IFaction targetFaction)`. Postfix `Patch156_CaravanTrade_HostilePeace`, bound by name (the method is private).
 
-**Why.** Vanilla refuses a caravan only a town at war. The caravan chooses its destinations through this method (lines 928 and 664; the second is also the mid-route drop), so a `false` keeps a caravan out of a Hostile realm's towns while the two are at peace ([hostile-peace.md](../features/hostile-peace.md), block A).
+**Why.** Vanilla refuses a caravan only a town at war. The caravan chooses its destinations through this method (`FindNextDestinationForCaravan`, and the destination check in `HourlyTickParty`, which is also the mid-route drop), so a `false` keeps a caravan out of a Hostile realm's towns while the two are at peace ([hostile-peace.md](../features/hostile-peace.md), block A). A caravan already in or heading into a Hostile town when the block turns on trades there once: `OnSettlementEntered` sells and the hourly tick buys without asking `CanTradeWith`.
 
 **What it changes.** It only turns a `true` into `false`, and only when `HostilePeaceService.BlocksCaravanTrade` says so: the switch is on, the two factions are not at war, and their `diplomacy.json` tier is Hostile. A fault keeps vanilla's answer and is logged once.
 

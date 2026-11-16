@@ -1,6 +1,5 @@
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.GameComponents;
-using TaleWorlds.CampaignSystem.Party;
 using TaleWorlds.CampaignSystem.Settlements;
 using TaleWorlds.Localization;
 
@@ -12,10 +11,11 @@ namespace TAOM.Features.HostilePeace.Models;
 /// the player's own fiefs keep the base rules. What it leaves alone:
 /// <list type="bullet">
 /// <item>A settlement the player's clan owns, and any of the player's own realm (never a Hostile pair).</item>
-/// <item>The settlement the player's party is in right now: switching the rule on, or a check the menus repeat while inside, never
-/// strands the player in a town. Village actions are the exception, as at war they are refused from inside.</item>
-/// <item>The keep and the dungeon (<c>CanMainHeroEnterLordsHall</c>, <c>CanMainHeroEnterDungeon</c>): reached only from inside a
-/// town, where the base model already treats a disguised player as at war.</item>
+/// <item>A town's keep and the dungeon (<c>CanMainHeroEnterDungeon</c>, and <c>CanMainHeroEnterLordsHall</c> for a town): a town
+/// keep is reached only after a sneak in, where the base model already answers as at war.</item>
+/// <item>A castle's keep is the exception: "Request entry to the castle" (castle_guard menu) asks
+/// <c>CanMainHeroEnterLordsHall</c> from outside, and the base model grants a clan tier 3 player full access at peace, so a Hostile
+/// castle gets the war answer there (<see cref="HostilePeaceAccess.KeepAsAtWar"/>).</item>
 /// <item>Request a meeting, ransom brokers, quests: unchanged base-game rules once the player is inside or meets a lord outside.</item>
 /// </list>
 /// Main hero only; the AI never asks this model. No co-op gate: it decides only the local player's own menus.
@@ -34,8 +34,15 @@ public sealed class TaomSettlementAccessModel : DefaultSettlementAccessModel
         base.CanMainHeroEnterSettlement(settlement, out accessDetails);
         if (settlement == null || !(settlement.IsTown || settlement.IsCastle))
             return;
-        if (Limits(settlement, entering: true))
+        if (Limits(settlement))
             accessDetails = HostilePeaceAccess.AsAtWar(settlement.IsTown);
+    }
+
+    public override void CanMainHeroEnterLordsHall(Settlement settlement, out AccessDetails accessDetails)
+    {
+        base.CanMainHeroEnterLordsHall(settlement, out accessDetails);
+        if (settlement != null && settlement.IsCastle && Limits(settlement))
+            accessDetails = HostilePeaceAccess.KeepAsAtWar();
     }
 
     public override bool CanMainHeroDoSettlementAction(Settlement settlement, SettlementAction settlementAction,
@@ -46,7 +53,7 @@ public sealed class TaomSettlementAccessModel : DefaultSettlementAccessModel
             return allowed;
 
         var refusal = HostilePeaceAccess.VillageRefusal(settlementAction);
-        if (refusal == null || !Limits(settlement, entering: false))
+        if (refusal == null || !Limits(settlement))
             return allowed;
 
         disableOption = true;
@@ -54,7 +61,7 @@ public sealed class TaomSettlementAccessModel : DefaultSettlementAccessModel
         return false;
     }
 
-    private bool Limits(Settlement settlement, bool entering)
+    private bool Limits(Settlement settlement)
     {
         var playerFaction = Hero.MainHero?.MapFaction;
         var settlementFaction = settlement.MapFaction;
@@ -65,7 +72,6 @@ public sealed class TaomSettlementAccessModel : DefaultSettlementAccessModel
             playerFaction.StringId,
             settlementFaction.StringId,
             FactionManager.IsAtWarAgainstFaction(playerFaction, settlementFaction),
-            playerOwnsSettlement: settlement.OwnerClan == Clan.PlayerClan,
-            playerIsInside: entering && MobileParty.MainParty?.CurrentSettlement == settlement);
+            playerOwnsSettlement: settlement.OwnerClan == Clan.PlayerClan);
     }
 }

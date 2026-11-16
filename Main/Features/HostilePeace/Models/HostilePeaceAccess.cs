@@ -30,6 +30,18 @@ internal static class HostilePeaceAccess
                 AccessLimitationReason = SettlementAccessModel.AccessLimitationReason.HostileFaction,
             };
 
+    /// <summary>
+    /// The keep's answer at war (<c>CanMainHeroEnterKeepInternal</c>, war branch): limited access by disguise, reason Disguised.
+    /// A castle's "Request entry to the castle" grants entry only for full access or a bribe, so this lands on "entry denied".
+    /// </summary>
+    internal static SettlementAccessModel.AccessDetails KeepAsAtWar() =>
+        new SettlementAccessModel.AccessDetails
+        {
+            AccessLevel = SettlementAccessModel.AccessLevel.LimitedAccess,
+            LimitedAccessSolution = SettlementAccessModel.LimitedAccessSolution.Disguise,
+            AccessLimitationReason = SettlementAccessModel.AccessLimitationReason.Disguised,
+        };
+
     /// <summary>The base game's refusal for this village action at war, or null for an action war does not refuse.</summary>
     internal static TextObject? VillageRefusal(SettlementAccessModel.SettlementAction action)
     {

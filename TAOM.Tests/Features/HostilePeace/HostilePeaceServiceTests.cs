@@ -200,25 +200,19 @@ public class HostilePeaceServiceTests
     [TestMethod]
     public void LimitsPlayerAccess_HostilePairAtPeace_Limits()
     {
-        Assert.IsTrue(_service.LimitsPlayerAccess(Mirkwood, DolGuldur, atWar: false, playerOwnsSettlement: false, playerIsInside: false));
+        Assert.IsTrue(_service.LimitsPlayerAccess(Mirkwood, DolGuldur, atWar: false, playerOwnsSettlement: false));
     }
 
     [TestMethod]
     public void LimitsPlayerAccess_AtWar_LeavesItToVanilla()
     {
-        Assert.IsFalse(_service.LimitsPlayerAccess(Mirkwood, DolGuldur, atWar: true, playerOwnsSettlement: false, playerIsInside: false));
+        Assert.IsFalse(_service.LimitsPlayerAccess(Mirkwood, DolGuldur, atWar: true, playerOwnsSettlement: false));
     }
 
     [TestMethod]
     public void LimitsPlayerAccess_PlayersOwnSettlement_NeverLimits()
     {
-        Assert.IsFalse(_service.LimitsPlayerAccess(Mirkwood, DolGuldur, atWar: false, playerOwnsSettlement: true, playerIsInside: false));
-    }
-
-    [TestMethod]
-    public void LimitsPlayerAccess_PlayerAlreadyInside_NeverStrandsThePlayer()
-    {
-        Assert.IsFalse(_service.LimitsPlayerAccess(Mirkwood, DolGuldur, atWar: false, playerOwnsSettlement: false, playerIsInside: true));
+        Assert.IsFalse(_service.LimitsPlayerAccess(Mirkwood, DolGuldur, atWar: false, playerOwnsSettlement: true));
     }
 
     [DataTestMethod]
@@ -226,7 +220,7 @@ public class HostilePeaceServiceTests
     [DataRow(Dorwinion)]
     public void LimitsPlayerAccess_NotHostile_Allows(string settlementRealm)
     {
-        Assert.IsFalse(_service.LimitsPlayerAccess(Mirkwood, settlementRealm, atWar: false, playerOwnsSettlement: false, playerIsInside: false));
+        Assert.IsFalse(_service.LimitsPlayerAccess(Mirkwood, settlementRealm, atWar: false, playerOwnsSettlement: false));
     }
 
     [TestMethod]
@@ -234,7 +228,7 @@ public class HostilePeaceServiceTests
     {
         _settings.LimitTownAccess.Returns(false);
 
-        Assert.IsFalse(_service.LimitsPlayerAccess(Mirkwood, DolGuldur, atWar: false, playerOwnsSettlement: false, playerIsInside: false));
+        Assert.IsFalse(_service.LimitsPlayerAccess(Mirkwood, DolGuldur, atWar: false, playerOwnsSettlement: false));
     }
 
     // ---- The switches are independent ----

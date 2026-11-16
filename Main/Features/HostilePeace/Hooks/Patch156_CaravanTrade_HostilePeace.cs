@@ -7,10 +7,12 @@ using TAOM.Core.Logging;
 namespace TAOM.Features.HostilePeace.Hooks;
 
 /// <summary>
-/// Patch156, block A: postfix on the private <c>CaravansCampaignBehavior.CanTradeWith(IFaction, IFaction)</c> (v1.5.7,
-/// <c>CaravansCampaignBehavior.cs:2234</c>, read on the installed DLL 2026-11-15). Vanilla refuses only a faction at war; the
-/// caravan picks its destinations through this method (lines 928 and 664, the second also the mid-route drop), so a
-/// <c>false</c> here keeps a caravan out of a Hostile realm's towns while the two are at peace.
+/// Patch156, block A: postfix on the private <c>CaravansCampaignBehavior.CanTradeWith(IFaction, IFaction)</c> (v1.5.7, read on
+/// the installed DLL 2026-11-15). Vanilla refuses only a faction at war; the caravan picks its destinations through this method
+/// (<c>FindNextDestinationForCaravan</c>, and the destination check in <c>HourlyTickParty</c>, which also drops a route
+/// mid-way), so a <c>false</c> here keeps a caravan out of a Hostile realm's towns while the two are at peace. A caravan already
+/// in or heading into a Hostile town when the block turns on trades there once: <c>OnSettlementEntered</c> sells and the hourly
+/// tick buys without asking <c>CanTradeWith</c>.
 ///
 /// <para>Coexists with CaravanTrade's own postfix on the same method (<c>Patch59_CaravanTrade</c>): that one only turns a
 /// war-caused <c>false</c> into <c>true</c>, this one only turns a peacetime <c>true</c> into <c>false</c>, so the order of
