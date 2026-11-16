@@ -113,7 +113,7 @@ public class TroopWeightCoverageTests
     }
 
     /// <summary>
-    /// The Dual Wield elves come from the separate DualWield_TAOM module, so no troops_*.xml here knows them;
+    /// The Dual Wield elves come from the separate DualWield module, so no troops_*.xml here knows them;
     /// their rows sit in this file because the weight service reads only this one. Level 31 pays 2.0 and
     /// level 41 and above 3.0, and a row never sits below the troop it upgrades from. Literal list on purpose.
     /// Rows for ids of a module that is not loaded are never looked up, so they cost nothing.
@@ -171,7 +171,7 @@ public class TroopWeightCoverageTests
     public void EvilAndDwarfTroopsAtLevel31To40_AreWeighted()
     {
         var cultures = new HashSet<string>(StringComparer.Ordinal)
-            { "erebor", "dolguldur", "isengard", "mordor", "gundabad", "goblin" };
+            { "erebor", "eredluin", "dolguldur", "isengard", "mordor", "gundabad", "goblin", "bluecraig", "mistymountainorcs" };
         var disabled = new HashSet<string>(StringComparer.Ordinal) { "cave_troll" };
 
         var missing = _troops.Values

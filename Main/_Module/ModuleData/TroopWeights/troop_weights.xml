@@ -281,13 +281,14 @@
     <TroopWeight id="mirkwood_recruit_merc" weight="2.0" />
     <TroopWeight id="erebor_oathsworn_merc" weight="2.0" />
 
-    <!-- ===== DUAL WIELD (module DualWield_TAOM) ===== -->
+    <!-- ===== DUAL WIELD (module DualWield, its TAOM troop set) ===== -->
     <!-- Its troops are defined in that module, not in troops_*.xml, and its XSLT hangs them under TAOM troops as
          upgrade targets. They follow the level rule and never sit below their parent: level 31 pays 2.0, level 46
          pays 3.0 (Blade-Maiden, Warden and Huntress upgrade from level-41 troops that pay 3.0). A row for an id
          of a module that is not loaded is never looked up, so it costs nothing.
          Left at 1.0 on purpose: the level 21 to 26 twin-blades (below tier 6), the human twin-blades of Gondor, Rohan,
-         Rhun, Harad and Dunland (those cultures carry no weights, a design call), and the Armored Troll with Twin
+         Rhun, Harad and Dunland (those cultures carry no troop weights beyond gondor_pg_vet_cavalry and
+         the two Harad mount packages, a design call), and the Armored Troll with Twin
          Maces (monster, its parent cave_troll is disabled above). -->
     <TroopWeight id="dw_imladris_bladedancer" weight="2.0" />
     <TroopWeight id="dw_lindon_bladedancer" weight="2.0" />
@@ -302,7 +303,7 @@
     <!-- These cultures weighted their level 31 to 40 troops one at a time and skipped many, so a level 36 troop paid
          2.0 above a level 31 troop of the same line at 1.0. Every one now pays 2.0, the level rule for a troop below 41
          (TroopWeightCoverageTests.EvilAndDwarfTroopsAtLevel31To40_AreWeighted). Humans (Gondor, Rohan, Rhun, Harad, Dunland)
-         carry no weights by design and are not swept. -->
+         carry no troop weights beyond gondor_pg_vet_cavalry and the two Harad mount packages, by design, and are not swept. -->
     <!-- EREBOR, IRON HILLS AND IRONPASS -->
     <TroopWeight id="erebor_noble_axe_guard" weight="2.0" />
     <TroopWeight id="erebor_noble_guard" weight="2.0" />
@@ -348,4 +349,12 @@
     <TroopWeight id="goblin_veteran_berserker" weight="2.0" />
     <TroopWeight id="goblin_veteran_spear_warrior" weight="2.0" />
     <TroopWeight id="goblin_veteran_sword_warrior" weight="2.0" />
+    <!-- ERED LUIN -->
+    <TroopWeight id="eredluin_firebeard_master" weight="2.0" />
+    <TroopWeight id="eredluin_halls_warden" weight="2.0" />
+    <TroopWeight id="eredluin_ironbound_warden" weight="2.0" />
+    <TroopWeight id="eredluin_kings_guard" weight="2.0" />
+    <!-- BLUE CRAIG GOBLINS AND MISTY MOUNTAIN ORCS: the twins of goblin_bolgs_ironfang -->
+    <TroopWeight id="bluecraig_bolgs_ironfang" weight="2.0" />
+    <TroopWeight id="mistymountainorcs_bolgs_ironfang" weight="2.0" />
 </TroopWeights>

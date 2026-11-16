@@ -40,7 +40,7 @@ public class TroopWeightLevelBandTests
     };
 
     /// <summary>
-    /// Troops of the separate DualWield_TAOM module. No troops_*.xml here defines them, so they resolve to no
+    /// Troops of the separate DualWield module. No troops_*.xml here defines them, so they resolve to no
     /// level; their rows sit in this file because the weight service reads only this one, and a row for a
     /// module that is not loaded is never looked up. Pinned by TroopWeightCoverageTests.
     /// </summary>
@@ -169,7 +169,7 @@ public class TroopWeightLevelBandTests
             .ToList();
 
         Assert.AreEqual(0, unresolved.Count,
-            "weighted ids that are neither a troops_*.xml troop, a named mount package nor a named DualWield_TAOM troop (a dead row, or a renamed troop):\n  "
+            "weighted ids that are neither a troops_*.xml troop, a named mount package nor a named DualWield troop (a dead row, or a renamed troop):\n  "
             + string.Join("\n  ", unresolved));
     }
 }

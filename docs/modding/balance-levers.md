@@ -377,7 +377,7 @@ Code: Code changes required in `Main/Features/TroopProgression/TroopCostService.
 - **An explicit `value=` on an item silences the whole price model.** `ItemObject.cs:477-484`. A hand-set `value="6000"` on a starter weapon is invisible to any armour or tier pass.
 - **A `modifier_group` the engine does not know resolves to null with no warning**, and the item then never rolls any modifier. Two shipped examples exist: `modifier_group="mail"` and `modifier_group="false"`. The legal set is the 20 group ids listed above.
 - **Party template prose in the docs is stale by a factor of 13.** Sum the file.
-- **Troop weight doc counts are stale.** 218 live rows (2026-11-15), not 80, not 87, not 105 and not 133.
+- **Troop weight doc counts are stale.** 224 live rows (2026-11-15), not 80, not 87, not 105 and not 133.
 
 ### Questions this chapter cannot answer
 
@@ -401,7 +401,7 @@ Code: Code changes required in `Main/Features/TroopProgression/TroopCostService.
 | 14.3 percent, the gap between `CharacterObject.GetPower` and the real auto-resolve number at tier 4 | `python -c "print(round(100*(1-((2+4)*(8+4)*0.02)/((2+4)*(10+4)*0.02)),1))"` | 2026-09-05 |
 | `battle_balance_config.json` rows T0 to T6 equal the vanilla formula | `python -c "import json;d=json.load(open('Main/_Module/ModuleData/configs/battle_balance_config.json'))['TroopPower']['TierPower'];print([(k,v,round((2+int(k[1:]))*(10+int(k[1:]))*0.02,2)) for k,v in d.items()])"` | 2026-09-05 |
 | 510 party templates; goblin 320, mordor 267, isengard 260, erebor 225, gondor 200, rivendell 150 | `python -c "import xml.etree.ElementTree as ET;r=ET.parse('Main/_Module/ModuleData/taom_partyTemplates.xml').getroot();t=r.findall('.//MBPartyTemplate');print(len(t))"` plus the per-template max sums | 2026-11-03 |
-| 218 live `<TroopWeight>` rows: 131 at 2.0, 79 at 3.0, 6 at 4.0, 1 at 12.0, 1 at 20.0 | `python -c "import xml.etree.ElementTree as ET,collections;r=ET.parse('Main/_Module/ModuleData/TroopWeights/troop_weights.xml').getroot();w=[x.get('weight') for x in r.findall('.//TroopWeight')];print(len(w),sorted(collections.Counter(w).items()))"` | 2026-11-15 |
+| 224 live `<TroopWeight>` rows: 137 at 2.0, 79 at 3.0, 6 at 4.0, 1 at 12.0, 1 at 20.0 | `python -c "import xml.etree.ElementTree as ET,collections;r=ET.parse('Main/_Module/ModuleData/TroopWeights/troop_weights.xml').getroot();w=[x.get('weight') for x in r.findall('.//TroopWeight')];print(len(w),sorted(collections.Counter(w).items()))"` | 2026-11-15 |
 | 20 item modifier groups | `grep -oE 'id="[^"]+"' Native/ModuleData/item_modifiers_groups.xml \| wc -l` | 2026-09-05 |
 | 3 validator schemas | `ls tools/schemas/ \| wc -l` | 2026-09-05 |
 | 9 keys in `settlement_food_config.json` | `grep -o '"[a-zA-Z]*"' Main/_Module/ModuleData/settlement_food/settlement_food_config.json \| sort -u \| wc -l` | 2026-09-06 |
