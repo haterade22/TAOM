@@ -100,8 +100,12 @@ public class BundledDllDeployGuardTests
             .Where(r => (string?)r.Attribute("Include") == "Bannerlord.BuildResources")
             .Select(r => (string?)r.Attribute("Version")).SingleOrDefault();
         Assert.IsNotNull(version, "Dependencies/TAOM.Dependencies.csproj pins no Bannerlord.BuildResources.");
-        var profile = Environment.GetEnvironmentVariable("USERPROFILE") ?? "";
-        var targetsPath = Path.Combine(profile, ".nuget", "packages", "bannerlord.buildresources", version!, "build", "Basic.targets");
+        // The build imports from $(NuGetPackageRoot): NUGET_PACKAGES when it is set (E:\nuget\packages on the desktop),
+        // else the profile cache. Reading only the profile cache would let a deleted old copy turn this test Inconclusive.
+        var packages = Environment.GetEnvironmentVariable("NUGET_PACKAGES");
+        if (string.IsNullOrWhiteSpace(packages))
+            packages = Path.Combine(Environment.GetEnvironmentVariable("USERPROFILE") ?? "", ".nuget", "packages");
+        var targetsPath = Path.Combine(packages!, "bannerlord.buildresources", version!, "build", "Basic.targets");
         if (!File.Exists(targetsPath))
         {
             Assert.Inconclusive($"Bannerlord.BuildResources {version} is not in the NuGet cache ({targetsPath}).");
@@ -112,6 +116,7 @@ public class BundledDllDeployGuardTests
             .Where(e => e.Name.LocalName == "Target").ToList();
         var names = targets.Select(t => (string?)t.Attribute("Name")).ToList();
         var clean = targets.Single(t => (string?)t.Attribute("Name") == "CopyBinariesWindows");
+        var host = targets.Single(t => (string?)t.Attribute("Name") == "PostBuildCopyToModules");
 
         // Assert: (a) PostBuildCopyToModules is declared first, so BeforeTargets on it precedes the clean;
         // (b) the clean does not look at DisableModuleCopy, so the guard's condition must not either.
@@ -119,6 +124,9 @@ public class BundledDllDeployGuardTests
         Assert.IsTrue(hostIndex >= 0, "Basic.targets declares no PostBuildCopyToModules.");
         Assert.IsTrue(hostIndex < names.IndexOf("CopyBinariesWindows"),
             "PostBuildCopyToModules is no longer declared before CopyBinariesWindows.");
+        // Declaration order decides only between targets on the same AfterTargets hook: both must still hang on PostBuildEvent.
+        Assert.AreEqual("PostBuildEvent", (string?)host.Attribute("AfterTargets"), "PostBuildCopyToModules moved off PostBuildEvent.");
+        Assert.AreEqual("PostBuildEvent", (string?)clean.Attribute("AfterTargets"), "CopyBinariesWindows moved off PostBuildEvent.");
         var condition = (string?)clean.Attribute("Condition") ?? "";
         Assert.IsFalse(condition.Contains("DisableModuleCopy"),
             $"CopyBinariesWindows now checks DisableModuleCopy: {condition}");
