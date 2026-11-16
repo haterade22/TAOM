@@ -1915,7 +1915,6 @@
   "TAOM_LD_Offer_Yeomen": "Eastfold Yeomenleri",
   "TAOM_LD_Prompt_Cancel": "İptal",
   "TAOM_LD_Prompt_ChoiceBest": "{NAME}, en iyi deneme: temizlenen dalga {WAVES}, öldürme {KILLS}",
-  "TAOM_LD_Prompt_ChoiceClass": "{NAME}: {TEXT}",
   "TAOM_LD_Prompt_Choose": "Seç",
   "TAOM_LD_Prompt_ClassDesc": "Sınıfın, savaşa taşıdığın silahları belirler. Süvari ayrıca zırhını belirler ve seni ata bindirir; diğer sınıflar zırhını olduğu gibi bırakır.",
   "TAOM_LD_Prompt_ClassTitle": "Sınıfını seç",

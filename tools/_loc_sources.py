@@ -51,3 +51,9 @@ VANILLA_ID_SHAPE = re.compile(r"[0-9A-Za-z]{8}")
 # from them and check_orphan_loc_rows.py counts them as readers: one list, so the two cannot drift
 # (561d1b308 added CoopCompat to the first only, and the gate then failed on its two rows).
 CODE_ROOTS = ("Main", "Client", "CoopCompat")
+
+# The key prefixes of TAOM's own rows: harvest_literal_loc_keys.py registers literals with them and
+# check_orphan_loc_rows.py checks their rows for readers. One list, for the same reason (#1130, #1377:
+# the gate kept taom_ alone after the harvest widened). UnregisteredLocalizationKeyBaselineTests and
+# LocalizationKeyConsistencyTests carry the same three in their C# regexes.
+LOC_KEY_PREFIXES = ("taom_", "TAOM_", "realms_")

@@ -7605,7 +7605,6 @@
     <string id="TAOM_LD_Class_SwordBoard_Text" text="剣と盾。隊列に立ち、打撃を受け止めよ。" />
     <string id="TAOM_LD_Class_TwoHanded" text="両手武器歩兵" />
     <string id="TAOM_LD_Class_TwoHanded_Text" text="両手斧。盾はなく、重い一撃を放つ。" />
-    <string id="TAOM_LD_Prompt_ChoiceClass" text="{NAME}: {TEXT}" />
     <string id="TAOM_LD_Prompt_ClassDesc" text="クラスは戦いに携える武器を決める。騎兵は装備も定められ馬に乗る。他のクラスでは鎧はそのままだ。" />
     <string id="TAOM_LD_Prompt_ClassTitle" text="クラスを選べ" />
     <string id="TAOM_LD_Boon_BloodiedButUnbowed" text="血に塗れども屈せず" />
@@ -7835,9 +7834,6 @@
     <string id="taom_char_title" text="Character" />
     <string id="taom_char_perk_or" text="or" />
     <string id="taom_char_attribute_points" text="Attribute Points" />
-    <string id="taom_char_next_perk_tier" text="Skill {LEVEL}: next perk tier {TIER}, {COUNT} skill levels away" />
-    <string id="taom_char_next_perk_tier_one" text="Skill {LEVEL}: next perk tier {TIER}, 1 skill level away" />
-    <string id="taom_char_all_perk_tiers" text="Skill {LEVEL}: every perk tier reached" />
     <string id="taom_char_perk_tier_locked" text="Locked" />
     <string id="taom_char_no_traits" text="No notable traits" />
     <string id="taom_story_offer_body" text="The hour of {TARGET} has come. Will you ride to its walls and fight the battle yourself, or let fate decide?" />

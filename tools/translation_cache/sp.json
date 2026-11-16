@@ -1915,7 +1915,6 @@
   "TAOM_LD_Offer_Yeomen": "Yeomen del Folde Este",
   "TAOM_LD_Prompt_Cancel": "Cancelar",
   "TAOM_LD_Prompt_ChoiceBest": "{NAME}, mejor partida: oleadas superadas {WAVES}, bajas {KILLS}",
-  "TAOM_LD_Prompt_ChoiceClass": "{NAME}: {TEXT}",
   "TAOM_LD_Prompt_Choose": "Elegir",
   "TAOM_LD_Prompt_ClassDesc": "Tu clase determina las armas que llevas al combate. La caballería también define tu armadura y te pone a caballo; las demás clases dejan tu armadura tal como está.",
   "TAOM_LD_Prompt_ClassTitle": "Elige tu clase",

@@ -1919,7 +1919,6 @@
   "TAOM_LD_Offer_Yeomen": "Wolni kmiecie ze Wschodniej Bruzdy",
   "TAOM_LD_Prompt_Cancel": "Anuluj",
   "TAOM_LD_Prompt_ChoiceBest": "{NAME}, najlepszy przebieg: odparte fale {WAVES}, zabici {KILLS}",
-  "TAOM_LD_Prompt_ChoiceClass": "{NAME}: {TEXT}",
   "TAOM_LD_Prompt_Choose": "Wybierz",
   "TAOM_LD_Prompt_ClassDesc": "Twoja klasa określa broń, z którą ruszasz do walki. Kawaleria ustala także twój pancerz i sadza cię na koniu; pozostałe klasy pozostawiają pancerz bez zmian.",
   "TAOM_LD_Prompt_ClassTitle": "Wybierz swoją klasę",

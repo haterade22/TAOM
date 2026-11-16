@@ -7601,7 +7601,6 @@
     <string id="TAOM_LD_Class_SwordBoard_Text" text="Una espada y un escudo. Mantén la línea y aguanta los golpes." />
     <string id="TAOM_LD_Class_TwoHanded" text="Infantería a dos manos" />
     <string id="TAOM_LD_Class_TwoHanded_Text" text="Un hacha a dos manos. Sin escudo, y un golpe pesado." />
-    <string id="TAOM_LD_Prompt_ChoiceClass" text="{NAME}: {TEXT}" />
     <string id="TAOM_LD_Prompt_ClassDesc" text="Tu clase determina las armas que llevas al combate. La caballería también define tu armadura y te pone a caballo; las demás clases dejan tu armadura tal como está." />
     <string id="TAOM_LD_Prompt_ClassTitle" text="Elige tu clase" />
     <string id="TAOM_LD_Boon_BloodiedButUnbowed" text="Ensangrentado pero invicto" />
@@ -7831,9 +7830,6 @@
     <string id="taom_char_title" text="Character" />
     <string id="taom_char_perk_or" text="or" />
     <string id="taom_char_attribute_points" text="Attribute Points" />
-    <string id="taom_char_next_perk_tier" text="Skill {LEVEL}: next perk tier {TIER}, {COUNT} skill levels away" />
-    <string id="taom_char_next_perk_tier_one" text="Skill {LEVEL}: next perk tier {TIER}, 1 skill level away" />
-    <string id="taom_char_all_perk_tiers" text="Skill {LEVEL}: every perk tier reached" />
     <string id="taom_char_perk_tier_locked" text="Locked" />
     <string id="taom_char_no_traits" text="No notable traits" />
     <string id="taom_story_offer_body" text="The hour of {TARGET} has come. Will you ride to its walls and fight the battle yourself, or let fate decide?" />
