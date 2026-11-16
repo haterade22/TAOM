@@ -366,10 +366,19 @@ started a new campaign with the hero characters and the extra arrow loaded and r
 clean unload. The engine log of that run shows both files opened. It did not prove a save, a load,
 the roster line (not built then) or the story mission.
 
+What two more runs have proven, both on the committed build 8ee4ef2fe. The unattended run
+`E:/Temp/scenario-runs/20261116-055126` (`python tools/run_scenario.py --days 2`) started a new campaign
+and wrote `[Check] id=taom.story-missions.roster result=pass missions=7 troops=34 missing=- items=1
+items_missing=-`: every troop of the seven story missions, the three heroes among them, and the extra
+arrow resolve at session start. `python tools/ingame_verdict.py --issue 1366` reads PASS for the roster row
+and NOT REACHED for the mission rows. The unattended Long Defeat run `E:/Temp/long-defeat-runs/20261116-055255`
+(3 waves) is the check that the changed hero spawn and the level did not break the custom game: the three
+hero lines read `is_hero=1 campaign=0 ... health_factor=3.00` with their own weapons, and
+`python tools/ingame_verdict.py` reads PASS for #1337 and for all seven rows of #1361.
+
 What no run has proven: the story mission with the three heroes has not been opened in a game, and no
 driver opens it without a person. The unit tests and the manifest's patterns are the only evidence
-for the mission rows. Not proven either: that an XML character no party holds survives a save and reload, and that the
-shipped catalog's real `troops=` count matches (the roster tests use a one-mission catalog).
+for the mission rows. Not proven either: that an XML character no party holds survives a save and reload.
 
 ## How to add a story mission
 

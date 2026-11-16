@@ -17,9 +17,8 @@
 # taom.story_open helms_deep_defend auto, clicks Open the mission, and then python tools/ingame_verdict.py --issue 1366.
 issue = 1366
 title = "Story missions: Aragorn, Legolas and Gimli stand free with the garrison in the Helm's Deep story mission"
-# fixed_in is the trunk commit this work was built on, so a trunk build is bound too. The roster, hero and hunters rows cannot pass on it (a new id, campaign=1, no
-# hero landed), so the issue cannot. The follow-up docs commit sets the feature commit.
-fixed_in = "317413337"
+# fixed_in is the feature commit: only a build that holds it counts.
+fixed_in = "8ee4ef2fe"
 logs = ["taom"]
 
 [[check]]

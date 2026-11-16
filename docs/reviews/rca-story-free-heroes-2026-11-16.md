@@ -24,6 +24,14 @@ FOLLOW-UP (#1325): a driver that opens the story mission without a person. None 
 
 FOLLOW-UP (#1325): no message tells the player that a hero fell, in either mode. The first design named one.
 
+## Proof
+
+On the committed build 8ee4ef2fe. The unattended campaign run 20261116-055126 wrote `taom.story-missions.roster result=pass missions=7 troops=34 missing=- items=1 items_missing=-`, and `python tools/ingame_verdict.py --issue 1366` reads PASS for that row and NOT REACHED for the mission rows. The unattended Long Defeat run 20261116-055255 (3 waves) reads PASS for #1337 (the three hero lines with `is_hero=1 campaign=0`, a hero fall, the hunters lines) and for all seven rows of #1361, through the new scopes. Its two failed checks are the muster line of #1142 and one `upgrade` read-back that was one short (the intermittent miss noted on #1161).
+
+Not proven: the story mission itself. No run has opened it with the heroes, so findings 3, 4 and 5 rest on unit tests, source pins and the engine lines quoted in their fixes. A person's run is owed, with the rows of `tools/ingame_checks/1366.toml`.
+
+One thing the Long Defeat run shows that no check asked for: Legolas had 25 kills at the end of wave 1 and 41 at the end of wave 2, and shot 91 arrows before he fell in wave 3. In the run before this change his first body had 10 and 26 kills at those points and shot 55 arrows before he fell in wave 3. (The hunters line counts a body's kills for its whole life.) `level="36"` is the one change to him between the two (finding 7). Whether the level or chance moved the numbers is not known: one run each, with no control.
+
 ## Root-cause pattern
 
 Findings 3, 4 and 5 have one cause. The three characters are heroes to the engine in a custom game and plain characters in a campaign, and every rule the engine keys on `IsHero` flips between the two: the take-over, the fixed equipment, the face cache, the battle tier. The plan found the ones in the mission code. The ones it missed sat behind a rule the other mode had closed (the take-over) or in a layer it did not read (the views). Findings 1 and 2 are the second pattern of this work: a proof line is written from one more place, and the manifests that read it are not asked again.

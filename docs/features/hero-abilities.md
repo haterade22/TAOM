@@ -362,12 +362,21 @@ victim=fow_urukhai_skirmisher chance=1.00 roll=0.173 health=20 damage=21 died=1`
 What the run settles: the engine does carry an arrow on to the body after it passes a shield (14 of 17 shield hits
 were followed by a hit of the same arrow on the same soldier), and the extra arrows fly and land (10 fired, none
 without a target, none refused by the aim solver). `hits=` counts hit events, and an extra arrow that passes a shield
-makes two, so it can be above `fired=`. What it does not show: a gain in kills. He made 10 and 26 kills in waves 1 and
-2 and 14 in wave 4, against 39 in three waves in the run before the kit. He shot only 61 arrows in four waves: the
-three heroes hold one post at the top of a wall lane, and there he fights much of the time with his sword (14 kills
-in wave 4 from 6 shots). Where he should stand is the maintainer's decision (#1325). Not seen by any run: the faster
-draw of Rapid Fire, Archer's Eye on the archers near him, the look of the extra arrows, and a shield he broke
-(`broken=0`).
+makes two, so it can be above `fired=`. What it does not show: a gain in kills. The `kills=` of the hunters line is
+the body's kill count for its whole life: he had 10 kills at the end of wave 1 and 26 at the end of wave 2, then fell
+in wave 3, and the body bought after that made 14 in wave 4. The run before the kit read 21, 34 and 39 at the end of
+waves 1, 2 and 3. He shot only 61 arrows in four waves: the three heroes hold one post at the top of a wall lane, and
+there he fights much of the time with his sword (14 kills in wave 4 from 6 shots). Where he should stand is the
+maintainer's decision (#1325). Not seen by any run: the faster draw of Rapid Fire, Archer's Eye on the archers near
+him, the look of the extra arrows, and a shield he broke (`broken=0`).
+
+**After the level change (#1366).** The unattended run 20261116-055255 (3 waves, commit 8ee4ef2fe) has the heroes at
+level 36. Legolas had 25 kills at the end of wave 1 and 41 at the end of wave 2, shot 91 arrows before he fell in
+wave 3 (`shots=91 contact=62 share=0.68`, `shield_hits=31 passed=17`, `windows=5 fired=25 hits=21`,
+`calls=24 kills=5`), and `python tools/ingame_verdict.py --issue 1361` reads PASS for all seven rows. Level 36
+shrinks the offset the engine gives an AI agent from his place in the formation, from up to about 1 m to under 0.1 m
+(`Agent.cs:5117-5125`, `BasicCharacterObject.cs:74`). Whether that, the AI power change or chance moved the numbers is
+not known: these are single runs with no control.
 
 ## Changelog
 
