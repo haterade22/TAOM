@@ -135,7 +135,7 @@ public class GameVersionCheckTests
 
         StringAssert.Contains(text, "This TAOM (v2.0.40) is made for Bannerlord v1.5.7, but your game is v1.5.6.");
         StringAssert.Contains(text, "TAOM is turned off for this session");
-        StringAssert.Contains(text, "Press Quit to close the game.");
+        StringAssert.Contains(text, "Press Exit Game to close the game.");
         Assert.IsFalse(text.Contains("conflicting dependency"), "no engine box follows in this case");
         AssertFixesAndStyle(text);
     }
@@ -230,15 +230,23 @@ public class GameVersionCheckTests
     }
 
     [TestMethod]
-    public void WrongVersionPopup_QuitsTheGame_AndTheOtherNoticesDoNot()
+    public void MenuNotice_OkClosesTheGame_OnlyForTheWrongVersionPopup()
     {
-        // On the skip path TAOM's XML is loaded and its code is not: a save made in that session would be
-        // damaged, so the popup's only button closes the game. The War Sails and missing-TAOM notices stay Ok.
         var source = RepoPaths.ReadSource("Dependencies/MissingTaomNotice.cs", stripComments: true);
+
+        // Tick: the version popup quits, the missing-TAOM popup does not.
         var tick = Body(source, "internal static void Tick()");
-        StringAssert.Contains(tick, "Show(versionText, quitOnOk: true);");
-        StringAssert.Contains(tick, "Show(Text(reason));");
-        StringAssert.Contains(source, "TaleWorlds.Engine.Utilities.QuitGame()");
+        StringAssert.Contains(tick, "Show(versionText, quitOnOk: true)");
+        StringAssert.Contains(tick, "Show(Text(reason), quitOnOk: false)");
+
+        // Show: the flag really wires the quit and the Exit Game label (a Show that ignored it would pass the above).
+        // Show is expression-bodied, so Body() (brace matching) can't cut it: take the text up to the next method.
+        var showStart = source.IndexOf("private static void Show(", StringComparison.Ordinal);
+        var showEnd = source.IndexOf("private static void QuitGame()", StringComparison.Ordinal);
+        Assert.IsTrue(showStart >= 0 && showEnd > showStart, "Show must sit before QuitGame in MissingTaomNotice");
+        var show = source.Substring(showStart, showEnd - showStart);
+        StringAssert.Contains(show, "quitOnOk ? QuitGame : (Action?)null");
+        StringAssert.Contains(show, "quitOnOk ? new TextObject(\"{=YbpzLHzk}Exit Game\")");
     }
 
     [TestMethod]

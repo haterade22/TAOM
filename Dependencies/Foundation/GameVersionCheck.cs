@@ -133,7 +133,7 @@ public static class GameVersionCheck
         var wanted = DisplayPin(pin);
         var taom = string.IsNullOrEmpty(taomVersion) ? "This TAOM" : $"This TAOM ({taomVersion})";
         var what = taomSkipped
-            ? "TAOM is turned off for this session, so the game would not work properly. Press Quit to close the game.\n\n"
+            ? "TAOM is turned off for this session, so the game would not work properly. Press Exit Game to close the game.\n\n"
             : "TAOM will most likely not load. If the game shows an error box after this one " +
               "(\"could not be loaded due to a missing or conflicting dependency\"), this is the reason.\n\n";
         return
