@@ -5161,3 +5161,9 @@ The Kit's sprite generation re-saved all 13 GUI `_tex.tpac` files. I copied back
 - **Why missed:** the file-name rule matched every stylesheet that existed when the gate was written; nothing failed when a new one used a subfolder.
 - **Prevent:** derive the file list from the manifest the engine reads (`SubModule.xml` rows, `<IncompatibleModules>`), and test both edges: a row's subfolder file counts, a file no row names does not. Make an input the gate cannot judge fail the run: a roster weapon that resolves to no usage now fails instead of passing in silence.
 - **Source:** issue #1354.
+
+### A fix to a helper must reach its copies (melee catalogue, #1372, 2026-11-16)
+#1354 fixed `merged()` in `audit_polearm_shield_parity.py`, but `melee_catalogue.py` held a copy whose docstring said "Copied in shape from `tools/audit_polearm_shield_parity.py:merged`". The copy kept the file-name rule and read NavalDLC, and `generate_troop_roster_page.py` had a third loop of its own, so NavalDLC's stub of `northern_round_shield` replaced SandBoxCore's on the roster page. Reusing the gate's rule also showed that the catalogue must leave TAOM's own placeholder sheets out: `taom_schema.price_placeholders` adds the tree's registrations, and a deployed copy would hide one the tree lost.
+- **Why missed:** the fix searched for the defect in the file the issue named, not for other code with the same shape.
+- **Prevent:** when fixing a helper, grep for its copies (the function name, "Copied in shape from", the same loop) and fix or file each in the same change. Before reusing a loader, read what each caller adds on top of it.
+- **Source:** issue #1372.
