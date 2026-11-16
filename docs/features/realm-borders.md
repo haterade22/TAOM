@@ -233,7 +233,12 @@ Each realm's name is lettered at the deepest point (chamfer distance) of its lar
 when that piece has at least 400 cells. The name is written in spaced capitals in TAOM's aniron font
 when aniron has every glyph (Latin and Cyrillic; `RealmNameLetteringTests` holds the table to
 `aniron.fnt`), and as written in the language's own font otherwise, so a Chinese, Japanese or Korean
-name never shows empty boxes. The names appear once the borders are 35% opaque and fade in with them
+name never shows empty boxes. At 100% aniron is size 34 and the plain font size 42: a name of two to
+five CJK characters at aniron's size spans far less of the map than one in spaced capitals, and Chinese
+players found it too small (#1380). The plain size also applies to a Polish or Turkish name that needs
+the plain font (it was 30 before #1380). MCM's Realm Name Size multiplies both; each label binds
+`Brush.FontSize` to the size `RealmNamesVM` computes, so a change applies on the next frame. The names
+appear once the borders are 35% opaque and fade in with them
 (through `Brush.GlobalAlphaFactor`, which is how Gauntlet fades text), are centred on the screen's
 usable area, and never take a click: every widget ignores events and the layer sets no input
 restrictions. The name is the kingdom's own `Name`. A realm renamed in play (Erebor as Durin's Folk
@@ -288,6 +293,7 @@ Recorded so they can be re-weighed; each is the build's choice, not an oversight
 | Full Opacity Distance | 110 | fully drawn from this distance out |
 | Draw Borders Through Hills | on | off lets ridges hide the lines |
 | Realm Names | on | the names layer |
+| Realm Name Size | 100% | the names' font size, 50% to 250% (#1380) |
 | Border-Crossing Notices | on | the hourly crossing message |
 | Colour Realm Lands | on | the land tint between the borders |
 | Realm Colour Strength | 0.5 | the tint's strength, 0.05 to 0.8 |
@@ -301,7 +307,8 @@ Recorded so they can be re-weighed; each is the build's choice, not an oversight
 0.5 to 3 becomes 1, and a fade pair with either value not a number, outside 0 to 5000, or a start not
 below the full distance reverts both to 45 and 110. Each reversion logs one warning naming the
 setting, repeated only when the value changes; a tint strength outside 0.05 to 0.8 becomes 0.5, and a
-realm colour that is not `#RRGGBB` keeps the palette's. Every setting applies on the next map frame. The
+realm colour that is not `#RRGGBB` keeps the palette's. A name size that is not a number or outside 50%
+to 250% becomes 100%. Every setting applies on the next map frame. The
 two dropdowns persist by index, so their lists are pinned by tests and never reordered; a console
 command stands until its dropdown is changed. The
 defaults live once, in the provider, and `TaomSettings` reads them from there; changing a shipped
@@ -387,7 +394,7 @@ its best colour again in every campaign.
 
 ## Tests
 
-260 test methods in `TAOM.Tests/Features/RealmBorders/`:
+262 test methods in `TAOM.Tests/Features/RealmBorders/` (counted 2026-11-16 with `grep -c "\[TestMethod\]"`):
 
 - `ProvincePartitionerTests` (16), `BoundaryTracerTests` (7), `RealmBorderSelectorTests` (7): the flood,
   walls, rivers, diagonal ridges, pockets, water, NaN seeds and positions, chain tracing (saddles and
@@ -411,10 +418,10 @@ its best colour again in every campaign.
   scene waits, one that fails or throws (partway included) leaves nothing drawn and is not retried every frame, and the next map screen or a rebuild
   tries again; the fade band refuses NaN, infinity and an inverted pair; the tiles cover the square with
   the picture north up.
-- `RealmBordersProviderTests` (27): the settings' fallbacks and colour fields, the dropdown lists pinned in order, every
+- `RealmBordersProviderTests` (28): the settings' fallbacks and colour fields, the dropdown lists pinned in order, every
   border material in the late pass, the second winding only for a material that culls back faces, the
   parchment map's flags and render orders, and its switch on with no settings. `RealmNameLetteringTests`
-  (7), `RealmNamesVMTests` (4), `RealmNamesPrefabTests` (4), `ProvinceBitmapTests` (3).
+  (7), `RealmNamesVMTests` (10), `RealmNamesPrefabTests` (6), `ProvinceBitmapTests` (3).
 - `RealmBordersWiringTests` (12): the module listed once, no hand registration, the behavior's gates and
   events, the key category and its Options names, the map view driving the parchment map every
   frame and on close, and the renderer's call sites for the winding, the late pass and the render orders.
@@ -488,6 +495,9 @@ boxes below are still owed.
       translated language.
 - [ ] Realm names at a far zoom fade in with the borders; a Chinese game shows them in the plain font;
       a click under a name still reaches the map.
+- [ ] In a Chinese game the names read about as large as an English game's; Realm Name Size at 50% and
+      250% re-sizes them without a restart; an English game at 100% looks as before; in a Polish game a
+      name with a letter aniron lacks (ł, ż) is not much larger than its aniron neighbours (#1380).
 - [ ] Riding over a border shows the crossing notice once.
 - [ ] Save and load: the borders redraw and no second `sampling terrain` line appears for the same map;
       a second campaign in the same process starts its reserve colours afresh.
@@ -508,6 +518,9 @@ boxes below are still owed.
   one winding on a two-sided material, which had blended every tile twice in the look session's
   builds, with the tint's default moved from 0.3 to 0.5 to keep the judged look; new colours for Rohan, Harad, Gundabad, Rivendell
   and Mirkwood.
+
+- 2026-11-16: Realm Name Size in MCM, and the plain font for Chinese, Japanese and Korean names from size
+  30 to 42 (#1380).
 
 ## GitHub Issue
 
