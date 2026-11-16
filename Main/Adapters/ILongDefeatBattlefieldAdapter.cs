@@ -206,6 +206,15 @@ internal interface ILongDefeatBattlefieldAdapter
     LdHeroReport SpawnHero(HeroSpawn hero, LdPlace place);
 
     /// <summary>
+    /// True when any siege lane holds a stored formation of the defenders (#1370, SiegeLane.GetLastAssignedFormation). While no lane holds
+    /// one, the castle tactic merges its foot formations into one that is off AI control (TacticDefendCastle.cs:621-624, TacticComponent.cs:191-208),
+    /// which is the heroes' formation 7 once a hero stands; once one does, it skips formations off AI control (:590). So the director holds
+    /// the heroes until this is true, or for at most 5 s. Any lane, not all: only the active lanes keep a formation (:921-924). False with
+    /// no lanes. Main thread only.
+    /// </summary>
+    bool DefenderLanesAssigned();
+
+    /// <summary>
     /// Reads every held hero whose body is still live and not routing (#1337): kills, formation index, health share, and ground distance
     /// and height difference to the heroes' place (NaN before the place is resolved or when there is none), ordered by hero id, and the
     /// heroes' formation itself: off AI control or not, the name of its movement order, whether that order is still the field's own Move

@@ -14,6 +14,13 @@ internal sealed partial class LongDefeatDirector
 {
     private const int HuntersRepairsLogged = 5;
 
+    // #1370: how long a hero waits for the castle tactic's first lane pick before he spawns anyway. The pick came 0.1 s after the run
+    // started in run 20261116-125931; a scene where no lane is active and no lane has a gate never makes one.
+    private const float HeroLaneWaitSeconds = 5f;
+
+    private readonly List<HeroSpawn> _heroesWaiting = new();
+    private float _heroWaitSeconds;
+
     private int _heroSpawns;
     private int _heroFalls;
     private int _heroesLanded;
@@ -28,6 +35,44 @@ internal sealed partial class LongDefeatDirector
     /// With no place the engine would lay the body out from a deployment plan nobody built for its formation, so the caller refuses.
     /// </summary>
     private LdPlace? PlanHome => _plan.Muster?.Foot is { } foot ? LdPlace.From(foot) : _keepAt is { } keep ? LdPlace.At(keep) : null;
+
+    // The heroes the run asks for wait until a lane holds a defender formation (#1370, ILongDefeatBattlefieldAdapter.DefenderLanesAssigned):
+    // before that pick the castle tactic merges its foot formations into the heroes' formation 7, which is off AI control, and the
+    // director's repairs then move soldiers out again all run. A shop hero is bought one frame after the pick at the earliest, so he
+    // spawns at once. A later lane pick can still take formation 7 (TacticDefendCastle.cs:701-735); the hunters line's moved_out counts it.
+    private void QueueHeroes(IReadOnlyList<HeroSpawn> heroes)
+    {
+        _heroesWaiting.AddRange(heroes);
+        SpawnWaitingHeroes();
+    }
+
+    private void TickWaitingHeroes(float dt)
+    {
+        if (_heroesWaiting.Count == 0)
+            return;
+
+        _heroWaitSeconds += dt;
+        SpawnWaitingHeroes();
+    }
+
+    private void SpawnWaitingHeroes()
+    {
+        if (_heroesWaiting.Count == 0)
+            return;
+
+        if (!_field.DefenderLanesAssigned())
+        {
+            if (_heroWaitSeconds < HeroLaneWaitSeconds)
+                return;
+
+            _logger.LogWarning($"{Tag}[Hero] no wall lane holds a defender formation after {HeroLaneWaitSeconds:0} s; the heroes spawn now");
+        }
+
+        var heroes = _heroesWaiting.ToArray();
+        _heroesWaiting.Clear();
+        _heroWaitSeconds = 0f;
+        SpawnHeroes(heroes);
+    }
 
     private void SpawnHeroes(IReadOnlyList<HeroSpawn> heroes)
     {

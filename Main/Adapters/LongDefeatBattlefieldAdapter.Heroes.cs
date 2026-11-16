@@ -87,6 +87,23 @@ internal sealed partial class LongDefeatBattlefieldAdapter
             Strangers(formation, held), formation.GetReadonlyMovementOrderReference().OrderEnum.ToString(), agent.Character is CharacterObject);
     }
 
+    // SiegeLanes is the static list TeamAISiegeComponent builds for the mission; each lane stores one formation per team index.
+    public bool DefenderLanesAssigned()
+    {
+        var defenders = _mission.DefenderTeam;
+        var lanes = TeamAISiegeComponent.SiegeLanes;
+        if (defenders == null || lanes == null)
+            return false;
+
+        foreach (var lane in lanes)
+        {
+            if (lane.GetLastAssignedFormation(defenders.TeamIndex) != null)
+                return true;
+        }
+
+        return false;
+    }
+
     // Main thread, every tick while a hero stands. Only reads when the group is whole and off AI control.
     public LdHuntersHold HoldHunters()
     {
