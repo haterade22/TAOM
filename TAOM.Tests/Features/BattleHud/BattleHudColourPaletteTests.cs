@@ -6,6 +6,7 @@ using MCM.Abstractions.Attributes;
 using MCM.Abstractions.Attributes.v2;
 using MCM.Common;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using TAOM.Features.ServerSettings;
 using TAOM.Features;
 using TAOM.Features.BattleHud.UI;
 using TAOM.Features.BattleHud.Widgets;
@@ -131,7 +132,7 @@ public class BattleHudColourPaletteTests
         var group = property.GetCustomAttribute<SettingPropertyGroupAttribute>();
         var dropdown = property.GetCustomAttribute<SettingPropertyDropdownAttribute>();
 
-        Assert.AreEqual("Accessibility", group?.GroupName);
+        Assert.AreEqual("Accessibility", McmText.Plain(group?.GroupName));
         Assert.IsNotNull(dropdown);
         Assert.IsFalse(dropdown!.RequireRestart);
     }

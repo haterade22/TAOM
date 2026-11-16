@@ -112,7 +112,7 @@ public class UncapturableHeroesWiringTests
 
         StringAssert.Contains(src, "EnableUncapturableHeroes",
             "The settings provider reads this property; without it the feature has no in-game toggle.");
-        StringAssert.Contains(src, "World/Uncapturable Heroes");
+        StringAssert.Contains(src, "World/{=taom_mcm_group_uncapturable_heroes}Uncapturable Heroes");
     }
 
     // ---- Shipped data -------------------------------------------------------

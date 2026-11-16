@@ -3,6 +3,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using TAOM.Features.ServerSettings;
 using TAOM.Features;
 using TAOM.Features.BondOfHire;
 using TAOM.Tests.Infrastructure;
@@ -80,11 +81,11 @@ public class BondOfHireSettingsProviderTests
     {
         var source = RepoPaths.ReadSource("Main/Features/TaomSettings.cs", stripComments: true);
 
-        Assert.IsTrue(source.Contains("[SettingPropertyGroup(\"World/Bond of Hire\", GroupOrder = 72)]"));
+        Assert.IsTrue(source.Contains("[SettingPropertyGroup(\"{=taom_mcm_group_world}World/{=taom_mcm_group_bond_of_hire}Bond of Hire\", GroupOrder = 72)]"));
         Assert.AreEqual(1, source.Split(new[] { "GroupOrder = 72" }, StringSplitOptions.None).Length - 1, "GroupOrder 72 is used by another group");
 
         var property = GroupProperties().Single();
-        Assert.AreEqual("World/Bond of Hire", Read(Attribute(property, "SettingPropertyGroupAttribute"), "GroupName"));
+        Assert.AreEqual("World/Bond of Hire", McmText.Plain(Read(Attribute(property, "SettingPropertyGroupAttribute"), "GroupName") as string));
         Assert.AreEqual(false, Read(ValueAttribute(property), "RequireRestart"), "the minimum is read when a clan signs on");
         Assert.AreEqual(typeof(int), property.PropertyType);
     }
@@ -136,7 +137,7 @@ public class BondOfHireSettingsProviderTests
     public void TheLabelAndHint_AreGenderNeutral_AndCarryNoDash()
     {
         var attribute = ValueAttribute(GroupProperties().Single());
-        var text = (string)Read(attribute, "DisplayName") + " " + (string)Read(attribute, "HintText");
+        var text = McmText.Plain(Read(attribute, "DisplayName") as string) + " " + (string)Read(attribute, "HintText");
 
         Assert.IsFalse(Regex.IsMatch(text, @"\b(he|she|his|her|him|hers|himself|herself|man|woman|men|women|kinsmen)\b", RegexOptions.IgnoreCase), text);
         Assert.IsFalse(text.Contains('\u2014') || text.Contains('\u2013'), "a dash in: " + text);

@@ -134,7 +134,12 @@ Run with: `dotnet test TAOM.Tests --filter "FullyQualifiedName~LanguageDataXml"`
 | `EveryDataDefault_OfARegisteredKey_MatchesTheRegisteredEnglish` | The same for every data XML and XSLT `{=key}Default` |
 | `EveryNameKey_InTheNameGeneratorsSources_HasOneEnglishDefault` | Two characters never share a name key with different English |
 | `NoTranslatedString_ContainsAReplacementCharacterOrControlCode` | No U+FFFD or C0 control in a row |
-| `NoTranslatedString_MixesWritingSystems`, `NoCachedTranslation_MixesWritingSystems` | No word from another language's script in a row or in `tools/translation_cache/` |
+| `NoTranslatedString_MixesWritingSystems`, `NoCachedTranslation_MixesWritingSystems` | No word from another language's script in a row or in `tools/translation_cache/`; a file name, console command or sound path the English row also holds is not a word |
+
+`McmSettingsTextIsKeyedTests.cs` (#1385 Phase 4): every MCM setting name, hint, button text and group part carries a
+`{=key}` with a registered English row; `ServerSettingsSet.Classes` lists every MCM settings class in TAOM.dll; one
+English group part has one key; and in no language does a subgroup's text contain its parent group's text (MCM
+would cut it) or a parent's text stay empty (MCM would hide the page).
 
 Run all of them with: `dotnet test TAOM.Tests --filter "FullyQualifiedName~Infrastructure.Localization"`
 
@@ -197,6 +202,7 @@ The engine loads the active language's listed files when that language is set an
 
 ## Changelog
 
+- 2026-11-16: the Chinese team's text (#1385). `tools/import_team_translations.py` imports their `TAOM_CN` drop as the CNs and CNt rows, and the text their module patched at runtime is keyed at the source: the War of the Ring strings, siege defense and special resource texts, prefab labels, C# literals and every MCM setting text (`taom_mcm_*`; `McmText.Plain` keeps the co-op fingerprint and the server settings file in English). Detail: [TRANSLATOR_GUIDE.md](../localization/TRANSLATOR_GUIDE.md) "Chinese: the team's text is the reference".
 - 2026-09-25: stale sweep. Stale translations re-translated across the three modules, the translator no longer seeds or translates a key another source owns, and two test classes gate the failure classes the sweep found (`LocalizationKeyConsistencyTests`, `LanguageTextIntegrityTests`; table under Tests). Detail: CHANGELOG `fix(loc)` of 2026-09-25 and [TRANSLATOR_GUIDE.md](../localization/TRANSLATOR_GUIDE.md).
 - 2026-09-17: Case B pipeline extension (#572 and the lord/clan/kingdom analogues). `tools/generate_name_localization_strings.py` extracts every `{=KEY}default` name/identity key from `troops/*.xml`, `characters/lords.xml`, `characters/clans.xml`, and `taom_spkingdoms.xml` that had no registered row anywhere in the pipeline, and writes four generated English master files wired into `SubModule.xml`, all 12 `language_data.xml` manifests, the translator's source list, and `LanguageDataXmlTests` (13 to 17 `LanguageFile` entries per language). 1,999 new keys (troop 836, lord 988, clan 115, kingdom 60) translated across all 12 languages. Hero biographies and female notable names are related but separate gaps, left open; see "What strings are NOT translatable through this system" above.
 - 2026-05-23 — Added the AI first-draft translation pipeline (`tools/translate_with_claude.py` + `tools/rebuild_translation_files.py`) with a 4-tier fallback chain (overrides → cache → LLM → English) and first-draft coverage across all 11 AI-translated languages.

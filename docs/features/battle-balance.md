@@ -83,7 +83,9 @@ TaomMilitaryPowerModel       TaomCombatSimulationModel       TaomPartyHealingMod
   },
   "AutoResolve": { "PowerRatioExponent": 0.5 },
   "SiegeDefence": {
-    "DefenderAdvantageBonuses": { "bluecraig": 0.1 }
+    "DefenderAdvantageBonuses": { "bluecraig": 0.1 },
+    "UpkeepFreeGarrisons": { "bluecraig": true },
+    "DailyGarrisonGrowth": { "bluecraig": 2 }
   }
 }
 ```
@@ -94,6 +96,8 @@ TaomMilitaryPowerModel       TaomCombatSimulationModel       TaomPartyHealingMod
 | `CasualtyRatios.EnableCulturalSurvivalBonuses` | bool | Master kill switch on cultural bonus application |
 | `CasualtyRatios.CulturalSurvivalBonuses` | `<cultureId>` | float | bonus > 0 reduces death chance; bonus < 0 increases it. Formula: `newDeathChance = vanillaDeathChance * (1 - bonus)` |
 | `SiegeDefence.DefenderAdvantageBonuses` | `<cultureId>` | float | Factor added to the defenders' battle advantage in an auto-resolved siege assault of a fortification that culture owns; see "Siege defence by culture" |
+| `SiegeDefence.UpkeepFreeGarrisons` | `<cultureId>` | bool | `true`: that realm's garrisons cost no wages, eat no food and take no starvation wounds; see "Garrison upkeep by realm" |
+| `SiegeDefence.DailyGarrisonGrowth` | `<cultureId>` | float | Free basic troops each of that realm's fortifications gains a day; see "Garrison upkeep by realm" |
 
 ### MCM (TaomSettings)
 
@@ -173,6 +177,50 @@ In an auto-resolved siege assault the engine gives the attackers `AddFactor(-0.1
 
 The shipped row is `bluecraig` 0.1 (#1283): Blue Craig stands alone in the far west, on a land-navigation island it shares only with its Eriador neighbours, and it lost its capital in three 150-day runs. With a defender with no Tactics bonus, its strikes do about 10% more damage. Blue Craig also gets the survival bonus of Arthedain and Ered Luin (0.3). The bonus keys on the fortification's realm, not on the town's culture, so a Blue Craig town that another realm takes loses it, and a town Blue Craig takes gains it. Live battles are unchanged: they do not read the battle advantage. `GetSettlementAdvantage` was considered and not used: it changes the defenders' strike count only above 100 town or 30 castle defenders, and it also delays the AI's assault decision (`BesiegerCamp`), which can starve a garrison.
 
+## Garrison upkeep by realm
+
+An AI garrison's size follows its wages. Each day `ClanVariablesCampaignBehavior.UpdateClanSettlementsPaymentLimit`
+(lines 458-475) sets every AI fief's garrison wage limit from the realm's ideal garrison strength, the clan's economy, the
+town's prosperity and its food potential. `GarrisonRecruitmentCampaignBehavior` grows a garrison only within its wage budget
+(`PaymentLimit - TotalWage - 5`, divided by the troop's wage): both the base growth and the auto-recruitment (1 a day, more
+with buildings, and only while the town's food change is above 0). The garrison also eats 1 food a day per 20 men from the
+town (`DefaultSettlementFoodModel`, line 48). In a starving town a tenth of its regulars are wounded each day
+(`DefaultPartyHealingModel`, lines 132 to 139, applied by `PartyHealCampaignBehavior.ReduceHpMemberRegulars`, which adds
+wounded and kills none), and none heal while the stocks are empty.
+
+A realm whose culture has `true` in `SiegeDefence.UpkeepFreeGarrisons` drops those costs (#1283). Each model keys on the
+fortification's realm (`Settlement.MapFaction`, which is the owner clan's realm), so a player vassal of that realm, a player
+kingdom of that culture and a rebel town of that culture qualify too:
+
+- `TaomPartyWageModel.GetTotalWage` (through `Hooks/FreeGarrisonUpkeepLine.Wage`): its garrison's wage is 0, so the owner clan pays no garrison wages. The wage budget no
+  longer shrinks as the garrison grows: it stays at the fief's wage limit minus 5, which still caps one day's growth.
+- `TaomSettlementFoodModel.CalculateTownFoodStocksChange`: the town gets back the base's unscaled garrison term, members
+  divided by `NumberOfMenOnGarrisonToEatOneFood`, on the "Garrison" tooltip line. The base scales its charge: a governor with
+  Generosity +1 or +2 raises it by 10%, so that garrison still eats a tenth; FoodConsumption buildings and, in a siege, a
+  Gourmet governor lower it, so there the town gains the difference. The refund is a realm rule, so it applies with the food
+  tuning toggle off too.
+- `TaomPartyHealingModel.GetDailyHealingForRegulars`: a negative value, which only the starving branch gives, becomes 0, so
+  the garrison takes no starvation wounds. The starving morale penalty (-30) can still apply when the town's food change
+  sits on the starving line; it stays above the desertion threshold.
+
+Three gold costs remain. The owner clan still pays the recruit price of each auto-recruited troop
+(`OwnerClan.AutoRecruitmentExpenses`, through `GetTroopRecruitmentCost`). The clan leader pays the upgrade price of each
+garrison troop that upgrades (`PartyUpgraderCampaignBehavior`), and with a wage of 0 its wage gate no longer limits those
+upgrades, so free garrisons climb tiers faster. And lords' parties that take troops from the garrison pay those troops'
+wages.
+
+`SiegeDefence.DailyGarrisonGrowth` gives each fortification of that realm free troops a day through the new
+`TaomSettlementGarrisonModel.CalculateBaseGarrisonChange` (vanilla's base adds +2 for rebels and the issue effects). The
+engine adds that many of the realm's basic troop (`GetBasicTroopForTown` returns `town.MapFaction.BasicTroop`; for Blue
+Craig `goblin_snaga`), whatever the town's own culture, only while the fortification is in no battle or siege, and the
+growth never takes the garrison past its size limit. The growth is free only with an `UpkeepFreeGarrisons` row; without
+one it is wage-capped and its troops cost wages. Lords of the owner clan who enter the fortification also take troops when
+it holds more than its share of their combined regulars (`GarrisonTroopsCampaignBehavior.CollectPartyGarrisonTransferData`),
+never leaving fewer than 125 in a town or 75 in a castle, so part of the growth goes to the field armies.
+
+The shipped rows give Blue Craig both, with 2 troops a day: it fell in every 150-day run, and the maintainer chose a realm of
+swarm and kings that needs no gold or food for its garrisons, tuned until it lasts about 300 days.
+
 ## How to Add a Cultural Survival Bonus for a New Culture
 
 1. Edit [Main/_Module/ModuleData/configs/battle_balance_config.json](../../Main/_Module/ModuleData/configs/battle_balance_config.json).
@@ -186,6 +234,7 @@ Use the MCM panel: **TAOM → Troop Power → Tier7Power / Tier8Power / Tier9Pow
 
 ## Changelog
 
+- 2026-11-16: Garrison upkeep by realm (#1283): `SiegeDefence.UpkeepFreeGarrisons` makes a realm's garrisons cost no wages, eat no food and take no starvation wounds, and `SiegeDefence.DailyGarrisonGrowth` gives its fortifications free troops each day through the new `TaomSettlementGarrisonModel`. Blue Craig gets both, with 2 troops a day.
 - 2026-11-16: Siege defence by culture (#1283): `SiegeDefence.DefenderAdvantageBonuses` adds a factor to the defenders' battle advantage in an auto-resolved siege of a fortification that culture owns. Blue Craig gets 0.1, and the survival bonus 0.3 of Arthedain and Ered Luin.
 - 2026-11-15: Auto-resolve raises the power ratio to 0.5, not vanilla's 0.7 (`AutoResolve.PowerRatioExponent`, #1283), so troop numbers count for more than troop quality; see "Auto-resolve: numbers over quality".
 - 2026-11-15: `BattleBalanceConfigProvider` reverts a bad survival value to that culture's compiled row, not to 0, so a typo in a penalty row (Gundabad -0.1) no longer deletes the penalty (#1291). A bad row with no compiled row is removed, so the lookup's own fallback decides: 0 for survival, the tier formula for power (before, a bad `T11` became 1.0, not the formula's 5.46). A `null` section or table now reverts to the compiled one; before, a `"CasualtyRatios": null` reached `SurvivalChanceLine.Apply`, which reads the section with no null check (`SurvivalChanceLine.cs:30`). Any reversion ends with one summary warning that counts the values.

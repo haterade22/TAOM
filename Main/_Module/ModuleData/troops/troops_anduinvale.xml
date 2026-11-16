@@ -785,7 +785,7 @@
     <upgrade_targets></upgrade_targets>
     <Equipments>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.dale_poleaxe_a" />
+        <equipment slot="Item0" id="Item.taom_ph_dale_poleaxe_a_t7" />
         <equipment slot="Item1" id="Item.dale_war_axe_c" />
         <equipment slot="Head" id="Item.sk_dale_lake_town_helmet_mariner_a04" />
         <equipment slot="Body" id="Item.sk_dale_lake_town_chest_mariner_a04" />
@@ -794,7 +794,7 @@
         <equipment slot="Leg" id="Item.sk_dale_lake_town_boots_mariner_a04" />
       </EquipmentRoster>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.dale_poleaxe_a" />
+        <equipment slot="Item0" id="Item.taom_ph_dale_poleaxe_a_t7" />
         <equipment slot="Item1" id="Item.dale_war_axe_c" />
         <equipment slot="Head" id="Item.sk_dale_lake_town_helmet_mariner_b04" />
         <equipment slot="Body" id="Item.sk_dale_lake_town_chest_mariner_b04" />

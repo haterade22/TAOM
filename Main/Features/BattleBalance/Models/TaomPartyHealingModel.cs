@@ -39,7 +39,9 @@ public class TaomPartyHealingModel : DefaultPartyHealingModel
     // true. Keyed on the party's LeaderHero like the other E11 party types: owner-first would heal the player's garrisons too.
     public override ExplainedNumber GetDailyHealingForRegulars(PartyBase party, bool isPrisoners, bool includeDescriptions = false)
     {
-        var result = TAOM.Features.FieldCamp.Activities.Hooks.CampRestModelLine.Apply(_campRest, party, isPrisoners, false, base.GetDailyHealingForRegulars(party, isPrisoners, includeDescriptions));
+        // #1283: a free realm's garrison takes no starvation wounds (FreeGarrisonUpkeepLine.Healing).
+        var baseHealing = FreeGarrisonUpkeepLine.Healing(_configProvider, party, base.GetDailyHealingForRegulars(party, isPrisoners, includeDescriptions));
+        var result = TAOM.Features.FieldCamp.Activities.Hooks.CampRestModelLine.Apply(_campRest, party, isPrisoners, false, baseHealing);
         _careerPassives.ApplyWoundRecovery(party?.LeaderHero?.StringId, isPrisoners, ref result);
         return result;
     }

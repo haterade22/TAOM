@@ -7,6 +7,7 @@ using System;
 using TaleWorlds.Core;
 using TaleWorlds.Library;
 using TaleWorlds.MountAndBlade;
+using TaleWorlds.Localization;
 
 namespace TAOM.Features.Warg.BehaviorTreeElements;
 
@@ -35,8 +36,9 @@ public class PrepareOnFirstCall : BTTask, IBTBannerlordBase, IBTWargBlackboard, 
 
             if (Agent.GetValue().IsPlayerControlled)
             {
-                MBInformationManager.AddQuickInformation(new("Your warg entered into a rage, you lost control!"));
-                InformationManager.DisplayMessage(new InformationMessage("Your warg entered into a rage, you lost control!"));
+                var text = new TextObject("{=taom_warg_rage_start}Your warg entered into a rage, you lost control!");
+                MBInformationManager.AddQuickInformation(text);
+                InformationManager.DisplayMessage(new InformationMessage(text.ToString()));
                 WargMissionBehavior.SwitchMainAgentController(true);
                 var controller = Mission.Current.GetMissionBehavior<IAutonomousMovementController>();
                 if (controller != null) controller.TargetAgent = AgentHitBy.GetValue();

@@ -224,6 +224,19 @@ class TestTroopIndex(unittest.TestCase):
         # the engine applies an <Equipments>/<equipment> override to every set of the troop
         self.assertEqual(self.index["pony"], (6, 1))
 
+    def test_a_placeholder_counts_as_its_donor(self):
+        # A tier clone (tools/placeholder_weapons.json) is its donor restated: the kit takes the donor, never
+        # the clone, so a career does not start with a troop's restated weapon.
+        root = ET.fromstring(TROOPS.replace('id="Item.good_sword"', 'id="Item.taom_ph_x"'))
+        index = ck.index_troop_gear([root], donor_of={"taom_ph_x": "low_sword"})["gondor"]
+        self.assertEqual(index["low_sword"], (6, 3))
+        self.assertNotIn("taom_ph_x", index)
+
+    def test_the_donors_come_from_the_placeholder_spec(self):
+        import generate_placeholder_weapons as gpw
+        donors = ck.placeholder_donors()
+        self.assertEqual(donors, {w["id"]: w["donor"] for w in gpw.load_spec()["weapons"]})
+
 
 class TestScan(unittest.TestCase):
     def test_an_unparsable_item_file_is_reported_not_silently_skipped(self):

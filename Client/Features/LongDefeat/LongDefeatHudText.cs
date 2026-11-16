@@ -318,9 +318,29 @@ internal static class LongDefeatHudText
 
     internal static string UpgradesTitle() => new TextObject("{=TAOM_LD_Hud_UpgradesTitle}Upgrade your soldiers").ToString();
 
-    /// <summary>An upgrade row's line: the soldiers of the step's troop that stand and are not yet sold, and how many of them the gold pays for. A buy takes all of those.</summary>
+    /// <summary>An upgrade row's line when the gold pays for no soldier (the row is disabled then): the soldiers of the step's troop that stand and are not yet sold.</summary>
     internal static string UpgradeDetail(int standing, int affordable) => new TextObject("{=TAOM_LD_Hud_UpgradeDetail}{STANDING} standing, gold for {AFFORDABLE}")
         .SetTextVariable("STANDING", Math.Max(0, standing)).SetTextVariable("AFFORDABLE", Math.Max(0, affordable)).ToString();
+
+    /// <summary>An upgrade row's deal (#1388): how many of the soldiers of the step's troop that stand and are not yet sold the gold pays for, and what a click costs in all. A buy takes all of those.</summary>
+    internal static string UpgradeDeal(int standing, int affordable, int price)
+    {
+        var count = Math.Max(0, affordable);
+        return new TextObject("{=TAOM_LD_Hud_UpgradeDeal}Upgrades {AFFORDABLE} of {STANDING} for {TOTAL} gold")
+            .SetTextVariable("AFFORDABLE", count).SetTextVariable("STANDING", Math.Max(0, standing)).SetTextVariable("TOTAL", count * Math.Max(0, price)).ToString();
+    }
+
+    /// <summary>The line for an upgrade buy or refund (#1388): the step label, the count and either the soldiers left to sell or the gold paid back.</summary>
+    internal static string UpgradeNoticeLine(UpgradeNotice notice)
+    {
+        var step = OfferName(notice.Step.Name);
+        if (notice.Kind == UpgradeNoticeKind.Refunded)
+            return new TextObject("{=TAOM_LD_Notice_UpgradeRefund}{STEP}: {COUNT} could not be upgraded, {GOLD} gold paid back.")
+                .SetTextVariable("STEP", step).SetTextVariable("COUNT", notice.Count).SetTextVariable("GOLD", notice.Count * notice.Step.Price).ToString();
+
+        return new TextObject("{=TAOM_LD_Notice_UpgradeBought}{STEP}: {COUNT} upgraded, {LEFT} left.")
+            .SetTextVariable("STEP", step).SetTextVariable("COUNT", notice.Count).SetTextVariable("LEFT", notice.Left).ToString();
+    }
 
     internal static string UpgradePrice(int price) => new TextObject("{=TAOM_LD_Hud_UpgradePrice}{PRICE} gold each").SetTextVariable("PRICE", price).ToString();
 

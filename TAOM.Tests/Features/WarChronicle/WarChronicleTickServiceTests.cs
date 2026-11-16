@@ -177,7 +177,7 @@ public class WarChronicleTickServiceTests
 
         _sut.RunDaily();
 
-        Assert.AreEqual(6, _logged.Count(l => l.StartsWith("[WarLedger] v=1 t=") && !l.Contains("t=event")));
+        Assert.AreEqual(8, _logged.Count(l => l.StartsWith("[WarLedger] v=1 t=") && !l.Contains("t=event")), "two kingdom, three side, the share and two garrison lines");
         _logger.Received().LogWarning(Arg.Is<string>(m => m.Contains("Rally skipped")));
     }
 
@@ -301,7 +301,7 @@ public class WarChronicleTickServiceTests
 
         _sut.RunDaily();
 
-        Assert.AreEqual(6, _logged.Count(l => l.StartsWith("[WarLedger] v=1 ")));
+        Assert.AreEqual(8, _logged.Count(l => l.StartsWith("[WarLedger] v=1 ")), "two kingdom, three side, the share and two garrison lines");
     }
 
     [TestMethod]
@@ -317,11 +317,11 @@ public class WarChronicleTickServiceTests
     }
 
     [TestMethod]
-    public void RunDaily_WritesTheLedger_TwoKingdomsThreeSidesAndAShare()
+    public void RunDaily_WritesTheLedger_TwoKingdomsThreeSidesAShareAndTwoGarrisons()
     {
         _sut.RunDaily();
 
-        Assert.AreEqual(6, _logged.Count(l => l.StartsWith("[WarLedger] v=1 ")));
+        Assert.AreEqual(8, _logged.Count(l => l.StartsWith("[WarLedger] v=1 ")), "two kingdom, three side, the share and two garrison lines");
     }
 
     [TestMethod]

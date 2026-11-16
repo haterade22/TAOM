@@ -161,8 +161,32 @@ public class StarterKitCoverageTests
         Assert.AreEqual(0, problems.Count, string.Join("\n  ", problems));
     }
 
+    [TestMethod]
+    public void PlaceholderDonors_NoDonorIsItselfAPlaceholder()
+    {
+        // generate_career_kits.py counts a placeholder as its donor, so a troop that carries a tier
+        // clone vouches for the donor, never for the clone. The coverage test above reads the same map.
+        var donors = PlaceholderDonors();
+        Assert.IsTrue(donors.Count > 0, "no placeholder read from tools/placeholder_weapons.json");
+        foreach (var pair in donors)
+        {
+            StringAssert.StartsWith(pair.Key, "taom_ph_");
+            Assert.IsFalse(pair.Value.StartsWith("taom_ph_", StringComparison.Ordinal),
+                $"{pair.Key}: its donor {pair.Value} is itself a placeholder");
+        }
+    }
+
+    private static Dictionary<string, string> PlaceholderDonors()
+    {
+        var spec = Path.GetFullPath(Path.Combine(ModuleDataPath, "..", "..", "..", "tools", "placeholder_weapons.json"));
+        Assert.IsTrue(File.Exists(spec), $"placeholder spec not found at {spec}");
+        return ((JArray)JObject.Parse(File.ReadAllText(spec))["weapons"]!)
+            .ToDictionary(w => (string)w["id"]!, w => (string)w["donor"]!, StringComparer.Ordinal);
+    }
+
     private static Dictionary<string, HashSet<string>> TroopBattleItemsByCulture()
     {
+        var donorOf = PlaceholderDonors();
         // Mirrors what the engine reads as troop gear (BasicCharacterObject.cs:365-418): inline
         // battle rosters, plus <Equipments>/<equipment> overrides, which apply to every set.
         var troopsDir = Path.Combine(ModuleDataPath, "troops");
@@ -181,7 +205,10 @@ public class StarterKitCoverageTests
                 .Where(r => !string.Equals((string?)r.Attribute("civilian"), "true", StringComparison.OrdinalIgnoreCase))
                 .SelectMany(r => r.Elements("equipment")));
             foreach (var eq in entries)
-                items.Add(CultureDataFixture.StripPrefix((string?)eq.Attribute("id") ?? ""));
+            {
+                var id = CultureDataFixture.StripPrefix((string?)eq.Attribute("id") ?? "");
+                items.Add(donorOf.TryGetValue(id, out var donor) ? donor : id);
+            }
         }
         return byCulture;
     }

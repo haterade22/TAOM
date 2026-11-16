@@ -69,6 +69,21 @@ public class HeroRangedTalliesTests
         Assert.IsFalse(none.ZeroAimError || none.PierceShields);
     }
 
+    // #1415: keep-distance is on only when the kit has both a keep distance and a step.
+    [TestMethod]
+    public void Of_KeepDistance_NeedsBothValues()
+    {
+        var tallies = New();
+
+        var both = tallies.Of(new Body(), new HeroRangedConfig { KeepDistanceMeters = 5f, StepBackMeters = 8f });
+        var noStep = tallies.Of(new Body(), new HeroRangedConfig { KeepDistanceMeters = 5f });
+        var none = tallies.Of(new Body(), null);
+
+        Assert.IsTrue(both.KeepDistance);
+        Assert.IsFalse(noStep.KeepDistance);
+        Assert.IsFalse(none.KeepDistance);
+    }
+
     [TestMethod]
     public void MissileRemoved_ReachesEveryTally()
     {

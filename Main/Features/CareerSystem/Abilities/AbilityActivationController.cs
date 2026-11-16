@@ -63,6 +63,7 @@ public class AbilityActivationController : IAbilityActivationController
         {
             _abilityReadyNotified = true;
             result.JustBecameReady = true;
+            result.KeyName = _input.ActivationKeyName;
         }
 
         if (_input.IsActivationKeyPressed())

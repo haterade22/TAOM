@@ -2,6 +2,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using TAOM.Features.ServerSettings;
 using TAOM.Features;
 using TAOM.Features.FromTheAshes;
 
@@ -31,10 +32,10 @@ public class FromTheAshesSettingsProviderTests
         var property = typeof(TaomSettings).GetProperty(nameof(TaomSettings.EnableFromTheAshes))!;
 
         var group = Attribute(property, "SettingPropertyGroupAttribute");
-        Assert.AreEqual("Fief Management/From the Ashes", Read(group, "GroupName"));
+        Assert.AreEqual("Fief Management/From the Ashes", McmText.Plain(Read(group, "GroupName") as string));
         Assert.AreEqual(1, Read(group, "GroupOrder"), "the group's first property carries GroupOrder");
         var value = Attribute(property, "SettingPropertyBoolAttribute");
-        Assert.AreEqual("From the Ashes", Read(value, "DisplayName"));
+        Assert.AreEqual("From the Ashes", McmText.Plain(Read(value, "DisplayName") as string));
         Assert.AreEqual(false, Read(value, "RequireRestart"), "the switch is read at each menu open");
         Assert.IsTrue(new TaomSettings().EnableFromTheAshes);
     }

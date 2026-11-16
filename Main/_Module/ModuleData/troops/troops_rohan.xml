@@ -941,7 +941,7 @@
                     id="Item.wm_rohan_shield_a01_rgw" />
                 <equipment
                     slot="Item2"
-                    id="Item.wm_rohan_ws_axe_1h_a01" />
+                    id="Item.taom_ph_wm_rohan_ws_axe_1h_a01_t5" />
                 <equipment
                     slot="Item3"
                     id="Item.northern_javelin_3_t4" />
@@ -1018,13 +1018,13 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.wm_rohan_ws_spear_a02" />
+                    id="Item.taom_ph_wm_rohan_ws_spear_a02_t6" />
                 <equipment
                     slot="Item1"
                     id="Item.wm_rohan_shield_a02_rgw" />
                 <equipment
                     slot="Item2"
-                    id="Item.wm_rohan_ws_axe_1h_a01" />
+                    id="Item.taom_ph_wm_rohan_ws_axe_1h_a01_t5" />
                 <equipment
                     slot="Item3"
                     id="Item.northern_javelin_3_t4" />
@@ -1098,13 +1098,13 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.wm_rohan_ws_spear_a02" />
+                    id="Item.taom_ph_wm_rohan_ws_spear_a02_t6" />
                 <equipment
                     slot="Item1"
                     id="Item.wm_rohan_shield_a03_rgw" />
                 <equipment
                     slot="Item2"
-                    id="Item.wm_rohan_ws_axe_1h_a01" />
+                    id="Item.taom_ph_wm_rohan_ws_axe_1h_a01_t5" />
                 <equipment
                     slot="Item3"
                     id="Item.northern_javelin_3_t4" />
@@ -1507,7 +1507,7 @@
                     id="Item.wm_rohan_shield_a02_ggw" />
                 <equipment
                     slot="Item2"
-                    id="Item.wm_rohan_ws_sword_a01" />
+                    id="Item.taom_ph_wm_rohan_ws_sword_a01_t5" />
                 <equipment
                     slot="Head"
                     id="Item.cts_rohan_helmet3" />
@@ -1587,7 +1587,7 @@
                     id="Item.wm_rohan_shield_a03_ggw" />
                 <equipment
                     slot="Item2"
-                    id="Item.wm_rohan_ws_sword_a03" />
+                    id="Item.taom_ph_wm_rohan_ws_sword_a03_t6" />
                 <equipment
                     slot="Head"
                     id="Item.cts_cts_rohan_royal_guard_helmet_tail" />
@@ -1658,13 +1658,13 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.wm_rohan_ws_spear_a02" />
+                    id="Item.taom_ph_wm_rohan_ws_spear_a02_t6" />
                 <equipment
                     slot="Item1"
                     id="Item.wm_rohan_shield_a03_ggw" />
                 <equipment
                     slot="Item2"
-                    id="Item.wm_rohan_ws_sword_a03" />
+                    id="Item.taom_ph_wm_rohan_ws_sword_a03_t6" />
                 <equipment
                     slot="Head"
                     id="Item.roh_nbl_hlm_cf" />
@@ -2808,7 +2808,7 @@
                     id="Item.wm_rohan_shield_a03_ysw" />
                 <equipment
                     slot="Item2"
-                    id="Item.wm_rohan_ws_sword_a01" />
+                    id="Item.taom_ph_wm_rohan_ws_sword_a01_t5" />
                 <equipment
                     slot="Head"
                     id="Item.cts_rohan_helmet4a" />
@@ -3640,7 +3640,7 @@
                     id="Item.wm_rohan_shield_a03_gsg" />
                 <equipment
                     slot="Item2"
-                    id="Item.wm_rohan_ws_sword_a01" />
+                    id="Item.taom_ph_wm_rohan_ws_sword_a01_t5" />
                 <equipment
                     slot="Head"
                     id="Item.cts_cts_rohan_royal_guard_helmet_tail" />
@@ -3666,13 +3666,13 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.wm_rohan_ws_spear_a01" />
+                    id="Item.taom_ph_wm_rohan_ws_spear_a01_t5" />
                 <equipment
                     slot="Item1"
                     id="Item.wm_rohan_shield_a03_gsg" />
                 <equipment
                     slot="Item2"
-                    id="Item.wm_rohan_ws_sword_a01" />
+                    id="Item.taom_ph_wm_rohan_ws_sword_a01_t5" />
                 <equipment
                     slot="Head"
                     id="Item.cts_rohan_helmet3" />
@@ -3704,7 +3704,7 @@
                     id="Item.wm_rohan_shield_a03_gsg" />
                 <equipment
                     slot="Item2"
-                    id="Item.wm_rohan_ws_sword_a01" />
+                    id="Item.taom_ph_wm_rohan_ws_sword_a01_t5" />
                 <equipment
                     slot="Head"
                     id="Item.roh_nbl_hlm_cf" />
@@ -3730,13 +3730,13 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.wm_rohan_ws_spear_a01" />
+                    id="Item.taom_ph_wm_rohan_ws_spear_a01_t5" />
                 <equipment
                     slot="Item1"
                     id="Item.wm_rohan_shield_a03_gsg" />
                 <equipment
                     slot="Item2"
-                    id="Item.wm_rohan_ws_sword_a01" />
+                    id="Item.taom_ph_wm_rohan_ws_sword_a01_t5" />
                 <equipment
                     slot="Head"
                     id="Item.cts_cts_rohan_royal_guard_helmet_tail" />
@@ -3840,13 +3840,13 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.wm_rohan_ws_spear_a03" />
+                    id="Item.taom_ph_wm_rohan_ws_spear_a03_t6" />
                 <equipment
                     slot="Item1"
                     id="Item.wm_rohan_shield_a03_gsg" />
                 <equipment
                     slot="Item2"
-                    id="Item.wm_rohan_ws_sword_a02" />
+                    id="Item.taom_ph_wm_rohan_ws_sword_a02_t6" />
                 <equipment
                     slot="Item3"
                     id="Item.eastern_javelin_3_t4" />
@@ -3875,13 +3875,13 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.wm_rohan_ws_spear_a01" />
+                    id="Item.taom_ph_wm_rohan_ws_spear_a01_t5" />
                 <equipment
                     slot="Item1"
                     id="Item.wm_rohan_shield_a03_gsg" />
                 <equipment
                     slot="Item2"
-                    id="Item.wm_rohan_ws_sword_a03" />
+                    id="Item.taom_ph_wm_rohan_ws_sword_a03_t6" />
                 <equipment
                     slot="Item3"
                     id="Item.eastern_javelin_3_t4" />
@@ -3910,13 +3910,13 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.wm_rohan_ws_spear_a03" />
+                    id="Item.taom_ph_wm_rohan_ws_spear_a03_t6" />
                 <equipment
                     slot="Item1"
                     id="Item.wm_rohan_shield_a03_gsg" />
                 <equipment
                     slot="Item2"
-                    id="Item.wm_rohan_ws_sword_a02" />
+                    id="Item.taom_ph_wm_rohan_ws_sword_a02_t6" />
                 <equipment
                     slot="Item3"
                     id="Item.eastern_javelin_3_t4" />
@@ -3945,13 +3945,13 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.wm_rohan_ws_spear_a01" />
+                    id="Item.taom_ph_wm_rohan_ws_spear_a01_t5" />
                 <equipment
                     slot="Item1"
                     id="Item.wm_rohan_shield_a03_gsg" />
                 <equipment
                     slot="Item2"
-                    id="Item.wm_rohan_ws_sword_a03" />
+                    id="Item.taom_ph_wm_rohan_ws_sword_a03_t6" />
                 <equipment
                     slot="Item3"
                     id="Item.eastern_javelin_3_t4" />
@@ -4061,13 +4061,13 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.wm_rohan_spear_a" />
+                    id="Item.taom_ph_wm_rohan_spear_a_t7" />
                 <equipment
                     slot="Item1"
                     id="Item.wm_rohan_shield_a03_gbg" />
                 <equipment
                     slot="Item2"
-                    id="Item.wm_rohan_ws_sword_a02" />
+                    id="Item.taom_ph_wm_rohan_ws_sword_a02_t6" />
                 <equipment
                     slot="Item3"
                     id="Item.eastern_javelin_3_t4" />
@@ -4096,13 +4096,13 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.wm_rohan_ws_spear_a01" />
+                    id="Item.taom_ph_wm_rohan_ws_spear_a01_t5" />
                 <equipment
                     slot="Item1"
                     id="Item.wm_rohan_shield_a03_gbg" />
                 <equipment
                     slot="Item2"
-                    id="Item.wm_rohan_ws_sword_a03" />
+                    id="Item.taom_ph_wm_rohan_ws_sword_a03_t6" />
                 <equipment
                     slot="Item3"
                     id="Item.eastern_javelin_3_t4" />
@@ -4131,13 +4131,13 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.wm_rohan_ws_spear_a03" />
+                    id="Item.taom_ph_wm_rohan_ws_spear_a03_t6" />
                 <equipment
                     slot="Item1"
                     id="Item.wm_rohan_shield_a03_gbg" />
                 <equipment
                     slot="Item2"
-                    id="Item.wm_rohan_ws_sword_a02" />
+                    id="Item.taom_ph_wm_rohan_ws_sword_a02_t6" />
                 <equipment
                     slot="Item3"
                     id="Item.eastern_javelin_3_t4" />
@@ -4166,13 +4166,13 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.wm_rohan_ws_spear_a01" />
+                    id="Item.taom_ph_wm_rohan_ws_spear_a01_t5" />
                 <equipment
                     slot="Item1"
                     id="Item.wm_rohan_shield_a03_gbg" />
                 <equipment
                     slot="Item2"
-                    id="Item.wm_rohan_ws_sword_a03" />
+                    id="Item.taom_ph_wm_rohan_ws_sword_a03_t6" />
                 <equipment
                     slot="Item3"
                     id="Item.eastern_javelin_3_t4" />
@@ -4279,13 +4279,13 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.wm_rohan_ws_spear_a02" />
+                    id="Item.taom_ph_wm_rohan_ws_spear_a02_t6" />
                 <equipment
                     slot="Item1"
                     id="Item.wm_rohan_shield_a03_gbg" />
                 <equipment
                     slot="Item2"
-                    id="Item.wm_rohan_ws_sword_a02" />
+                    id="Item.taom_ph_wm_rohan_ws_sword_a02_t6" />
                 <equipment
                     slot="Item3"
                     id="Item.eastern_javelin_3_t4" />
@@ -4314,13 +4314,13 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.wm_rohan_ws_spear_a02" />
+                    id="Item.taom_ph_wm_rohan_ws_spear_a02_t6" />
                 <equipment
                     slot="Item1"
                     id="Item.wm_rohan_shield_a03_gbg" />
                 <equipment
                     slot="Item2"
-                    id="Item.wm_rohan_ws_sword_a03" />
+                    id="Item.taom_ph_wm_rohan_ws_sword_a03_t6" />
                 <equipment
                     slot="Item3"
                     id="Item.eastern_javelin_3_t4" />
@@ -4349,13 +4349,13 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.wm_rohan_ws_spear_a02" />
+                    id="Item.taom_ph_wm_rohan_ws_spear_a02_t6" />
                 <equipment
                     slot="Item1"
                     id="Item.wm_rohan_shield_a03_gbg" />
                 <equipment
                     slot="Item2"
-                    id="Item.wm_rohan_ws_sword_a02" />
+                    id="Item.taom_ph_wm_rohan_ws_sword_a02_t6" />
                 <equipment
                     slot="Item3"
                     id="Item.eastern_javelin_3_t4" />
@@ -4384,13 +4384,13 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.wm_rohan_spear_a" />
+                    id="Item.taom_ph_wm_rohan_spear_a_t7" />
                 <equipment
                     slot="Item1"
                     id="Item.wm_rohan_shield_a03_gbg" />
                 <equipment
                     slot="Item2"
-                    id="Item.wm_rohan_ws_sword_a03" />
+                    id="Item.taom_ph_wm_rohan_ws_sword_a03_t6" />
                 <equipment
                     slot="Item3"
                     id="Item.eastern_javelin_3_t4" />
@@ -4982,7 +4982,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.wm_rohan_ws_sword_a02" />
+                    id="Item.taom_ph_wm_rohan_ws_sword_a02_t6" />
                 <equipment
                     slot="Item1"
                     id="Item.wm_rohan_shield_a01_gbg" />
@@ -5005,7 +5005,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.wm_rohan_ws_sword_a03" />
+                    id="Item.taom_ph_wm_rohan_ws_sword_a03_t6" />
                 <equipment
                     slot="Item1"
                     id="Item.wm_rohan_shield_a02_gbg" />
@@ -5028,7 +5028,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.wm_rohan_ws_sword_a02" />
+                    id="Item.taom_ph_wm_rohan_ws_sword_a02_t6" />
                 <equipment
                     slot="Item1"
                     id="Item.wm_rohan_shield_a01_gbg" />
@@ -5051,7 +5051,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.wm_rohan_ws_sword_a03" />
+                    id="Item.taom_ph_wm_rohan_ws_sword_a03_t6" />
                 <equipment
                     slot="Item1"
                     id="Item.wm_rohan_shield_a02_gbg" />
@@ -5503,7 +5503,7 @@
                     id="Item.wm_rohan_shield_b01_gbw" />
                 <equipment
                     slot="Item2"
-                    id="Item.wm_rohan_ws_sword_a01" />
+                    id="Item.taom_ph_wm_rohan_ws_sword_a01_t5" />
                 <equipment
                     slot="Head"
                     id="Item.cts_rohan_helmet3a" />
@@ -5523,13 +5523,13 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.wm_rohan_ws_spear_a01" />
+                    id="Item.taom_ph_wm_rohan_ws_spear_a01_t5" />
                 <equipment
                     slot="Item1"
                     id="Item.wm_rohan_shield_b01_gbw" />
                 <equipment
                     slot="Item2"
-                    id="Item.wm_rohan_ws_sword_a01" />
+                    id="Item.taom_ph_wm_rohan_ws_sword_a01_t5" />
                 <equipment
                     slot="Head"
                     id="Item.cts_rohan_helmet3" />
@@ -5555,7 +5555,7 @@
                     id="Item.wm_rohan_shield_b01_gbw" />
                 <equipment
                     slot="Item2"
-                    id="Item.wm_rohan_ws_sword_a01" />
+                    id="Item.taom_ph_wm_rohan_ws_sword_a01_t5" />
                 <equipment
                     slot="Head"
                     id="Item.cts_cts_rohan_royal_guard_helmet_tail" />
@@ -5575,13 +5575,13 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.wm_rohan_ws_spear_a01" />
+                    id="Item.taom_ph_wm_rohan_ws_spear_a01_t5" />
                 <equipment
                     slot="Item1"
                     id="Item.wm_rohan_shield_b01_gbw" />
                 <equipment
                     slot="Item2"
-                    id="Item.wm_rohan_ws_sword_a01" />
+                    id="Item.taom_ph_wm_rohan_ws_sword_a01_t5" />
                 <equipment
                     slot="Head"
                     id="Item.cts_rohan_helmet3a" />
@@ -5670,13 +5670,13 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.wm_rohan_ws_spear_a03" />
+                    id="Item.taom_ph_wm_rohan_ws_spear_a03_t6" />
                 <equipment
                     slot="Item1"
                     id="Item.wm_rohan_shield_b01_gbw" />
                 <equipment
                     slot="Item2"
-                    id="Item.wm_rohan_ws_sword_a02" />
+                    id="Item.taom_ph_wm_rohan_ws_sword_a02_t6" />
                 <equipment
                     slot="Head"
                     id="Item.whiterun_helm" />
@@ -5696,13 +5696,13 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.wm_rohan_ws_spear_a01" />
+                    id="Item.taom_ph_wm_rohan_ws_spear_a01_t5" />
                 <equipment
                     slot="Item1"
                     id="Item.wm_rohan_shield_b01_gbw" />
                 <equipment
                     slot="Item2"
-                    id="Item.wm_rohan_ws_sword_a03" />
+                    id="Item.taom_ph_wm_rohan_ws_sword_a03_t6" />
                 <equipment
                     slot="Head"
                     id="Item.cts_cts_rohan_royal_guard_helmet_tail" />
@@ -5722,13 +5722,13 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.wm_rohan_ws_spear_a03" />
+                    id="Item.taom_ph_wm_rohan_ws_spear_a03_t6" />
                 <equipment
                     slot="Item1"
                     id="Item.wm_rohan_shield_b01_gbw" />
                 <equipment
                     slot="Item2"
-                    id="Item.wm_rohan_ws_sword_a02" />
+                    id="Item.taom_ph_wm_rohan_ws_sword_a02_t6" />
                 <equipment
                     slot="Head"
                     id="Item.roh_nbl_hlm_cf" />
@@ -5748,13 +5748,13 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.wm_rohan_ws_spear_a01" />
+                    id="Item.taom_ph_wm_rohan_ws_spear_a01_t5" />
                 <equipment
                     slot="Item1"
                     id="Item.wm_rohan_shield_b01_gbw" />
                 <equipment
                     slot="Item2"
-                    id="Item.wm_rohan_ws_sword_a03" />
+                    id="Item.taom_ph_wm_rohan_ws_sword_a03_t6" />
                 <equipment
                     slot="Head"
                     id="Item.cts_cts_rohan_royal_guard_helmet_tail" />

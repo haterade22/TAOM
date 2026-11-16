@@ -90,6 +90,8 @@ public class ShippedHeroAbilitiesConfigTests
         Assert.AreEqual("taom_legolas_arrow", ranged.ExtraArrowItem);
         Assert.AreEqual(10f, ranged.ExtraArrowSpreadMeters);
         Assert.AreEqual(120f, ranged.ExtraArrowRangeMeters);
+        Assert.AreEqual(5f, ranged.KeepDistanceMeters, "#1415: an enemy within 5 m is a melee threat");
+        Assert.AreEqual(8f, ranged.StepBackMeters);
         CollectionAssert.AreEqual(new[] { "legolas_rapid_fire", "legolas_many_arrows", "legolas_archers_eye" },
             legolas.Abilities.Select(a => a.Id).ToArray());
         Assert.AreEqual(2, legolas.Abilities.Single(a => a.Id == "legolas_many_arrows").ExtraArrows);

@@ -2083,3 +2083,10 @@ PR #1304's doc said god mode stays on while the player walks the field after the
 **Prevent:** before a comment states how long engine state lasts, grep the method for every writer of that state (here `SetLastAssignedFormation`), not only the reader that confirms the plan. Read a probe log to its end, not to the first moment that matches.
 
 **Source:** [rca-1370-lane-hold-2026-11-16.md](../rca-1370-lane-hold-2026-11-16.md) finding 1.
+### A scripted move is proven by where the body went, and its gate is the engine's own (#1415, 2026-11-16)
+
+**Why missed:** the keep-distance step counted a step when `HumanAIComponent.SetScriptedPositionAndDirectionTimed` returned, and the check passed on that count. Whether the agent walks there is native: the formation's Move order is a Hold state that caps his speed as he leaves his slot (`HumanAIComponent.cs:622-633, :673-687`). The guard beside it was a hand list (player, mount, fleeing) that missed four conditions of `Agent.CanBeAssignedForScriptedMovement` (`Agent.cs:3242-3249`).
+
+**Prevent:** store the start and the target at the call, and at the end of the hold count the move only when the body covered part of the step along its line. Gate a scripted move with `CanBeAssignedForScriptedMovement()` after a `HumanAIComponent` null check. Build a test point as the engine builds the target: copy his `GetWorldPosition()` and `SetVec2`, not a new `WorldPosition`.
+
+**Source:** [rca-legolas-keep-distance-2026-11-16.md](../rca-legolas-keep-distance-2026-11-16.md) findings 1 to 3.

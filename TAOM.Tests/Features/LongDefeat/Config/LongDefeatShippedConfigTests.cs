@@ -668,6 +668,22 @@ public class LongDefeatShippedConfigTests
             StringAssert.DoesNotMatch(offer.Single(c => c.Id == "cavalry").Text, new System.Text.RegularExpressions.Regex("all run|stays under you"));
     }
 
+    // The Cavalry sally point: Mike recorded it in game on 2026-11-16 (taom.ld_record sally) on the slope outside the Deeping Wall,
+    // facing down toward the wall, so the mounted lord rides out from there at each wave's start.
+    [TestMethod]
+    public void ShippedHelmsDeep_HasTheRecordedSallyPointOnTheSlope()
+    {
+        var (catalog, _) = Load();
+        var helms = catalog.Fortresses.Single(f => f.Id == "helms");
+
+        Assert.IsNotNull(helms.Sally, "the sally block was recorded and must load");
+        Assert.AreEqual(329.65f, helms.Sally!.X, 0.01f);
+        Assert.AreEqual(187.305f, helms.Sally.Y, 0.01f);
+        Assert.AreEqual(8.326f, helms.Sally.Z, 0.01f);
+        Assert.AreEqual(-0.672f, helms.Sally.Fx, 0.01f);
+        Assert.AreEqual(0.741f, helms.Sally.Fy, 0.01f);
+    }
+
     [TestMethod]
     public void ShippedBoons_ClassAndTroopRows_NameARealClass_AndAimOnlyAtTheirOwnGroup()
     {

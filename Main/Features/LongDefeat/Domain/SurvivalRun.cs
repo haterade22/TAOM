@@ -85,6 +85,9 @@ internal sealed partial class SurvivalRun
     /// <summary>How many foot batches the garrison musters in, the first included; 0 before <see cref="Begin"/>.</summary>
     public int MusterBatchCount => _musterBatches.Count;
 
+    /// <summary>True while a foot batch of the garrison is still to spawn: the shop sells no upgrade then, because a buy would take only the soldiers that already stand (#1388).</summary>
+    private bool Mustering => _musterNext < _musterBatches.Count;
+
     /// <summary>Once: the archers, the first foot batch, the player and the end of the initial spawn.</summary>
     public RunEffects Begin()
     {
@@ -256,6 +259,7 @@ internal sealed partial class SurvivalRun
             Boons = _ownedCards,
             GarrisonCap = _r.GarrisonCap,
             Upgrades = UpgradeRowsNow(),
+            UpgradeNotice = _upgradeNotice,
             Heroes = HeroRowsNow(),
         };
     }

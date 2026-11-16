@@ -5,6 +5,7 @@ using TaleWorlds.Core;
 using TaleWorlds.Library;
 using TAOM.Core.Logging;
 using TAOM.Features.CompanionTactics.FormationPresets.Models;
+using TaleWorlds.Localization;
 
 namespace TAOM.Features.CompanionTactics.FormationPresets.Hooks;
 
@@ -74,7 +75,7 @@ public sealed class FormationPresetCampaignBehavior : CampaignBehaviorBase
             try
             {
                 InformationManager.DisplayMessage(new InformationMessage(
-                    "[TAOM] Formation presets could not be loaded — reset to empty (see log for details).",
+                    new TextObject("{=taom_fp_load_failed}[TAOM] Formation presets could not be loaded — reset to empty (see log for details).").ToString(),
                     Color.FromUint(0xFFFFAA00)));
             }
             catch { /* InformationManager may not be available in some load paths */ }

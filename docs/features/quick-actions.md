@@ -102,18 +102,18 @@ ExecuteRemoveZeroCounts
 
 ## Tests
 
-- `TAOM.Tests/Features/QuickActions/QuickActionsServiceTests.cs`: 34 tests covering skip-guard exhaustion (every filter exclusion, locked, non-transferable), threshold matrix (custom override + presets + boundary), modifier-preservation (filter uses `ModifierPriceMultiplier`, not `ItemValue`), audio invocation, refresh-on-success, no-inventory-active fallback, Unequip All routing through the inventory adapter (#917), menu options enumeration. The confirmation dialog is not covered: it calls `InformationManager` directly.
+- `TAOM.Tests/Features/QuickActions/QuickActionsServiceTests.cs`: 33 tests covering skip-guard exhaustion (every filter exclusion, locked, non-transferable), threshold matrix (custom override + presets + boundary), modifier-preservation (filter uses `ModifierPriceMultiplier`, not `ItemValue`), audio invocation, refresh-on-success, no-inventory-active fallback, Unequip All routing through the inventory adapter (#917). The confirmation dialog is not covered: it calls `InformationManager` directly.
 - `TAOM.Tests/Features/QuickActions/InventoryPanelRefreshBindingTests.cs`: 1 binding test (game assemblies) that the two private `SPInventoryVM` refresh methods bind; their `ReflectionSiteBindingTests` rows pin the names.
 - `TAOM.Tests/Adapters/InventoryPanelRefreshTests.cs`: 2 tests (game assemblies) that `RefreshDisplay` and EquipPresets' `RefreshActiveVM` remove rows left at count 0 (#924, #926).
 - `TAOM.Tests/Features/QuickActions/InventorySearchCampaignBehaviorTests.cs` — 7 tests covering: default-true on construct, `OnTick` MCM reconciliation in both directions, `OnNewGameCreated` seed (true + false), `OnGameLoaded` reconcile when MCM disagrees.
 - `TAOM.Tests/Features/QuickActions/DamagedQualityPresetTests.cs` — 9 tests covering: preset → threshold (4 presets), dropdown index → preset (4 valid + out-of-range fallback to Moderate).
 
-Total: 51 QuickActions tests, plus the 2 shared panel refresh tests.
+Total: 50 QuickActions tests (counted 2026-11-16), plus the 2 shared panel refresh tests.
 
 ## How To: Add a New Quick Action
 
 1. Add a new value to `QuickActionType` enum.
-2. Add the option in `QuickActionsService.GetMenuOptions()` and `OpenMenu()`'s inquiry-element list.
+2. Add the option in `OpenMenu()`'s inquiry-element list.
 3. Add a routing case in `QuickActionsService.DispatchSelected()`.
 4. Implement the service method (returns `QuickActionResult`). Iterate `_inventory.GetRightPaneItems()`, apply filters via `IInventoryItemAdapter` properties (do NOT cast `UnderlyingVm` back to `SPItemVM` — keeps ADR-007 intact).
 5. Write skip-guard tests for every filter exclusion (one positive, one negative per setting flag). See `csharp-architecture.md` "Skip-Guard Exhaustion" rule.

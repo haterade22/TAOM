@@ -21,7 +21,7 @@ public sealed class PresetsOverlayVM : ViewModel
     private readonly IEquipPresetsSettingsProvider _settings;
     private readonly IModLogger _logger;
 
-    private string _buttonText = "Presets";
+    private string _buttonText = new TextObject("{=taom_ep_button}Presets").ToString();
 
     public PresetsOverlayVM(
         IEquipmentPresetService service,
@@ -263,7 +263,7 @@ public sealed class PresetsOverlayVM : ViewModel
         new TextObject("{=taom_ep_psummary}Battle: {B}  Civilian: {C}  Mount: {M}")
             .SetTextVariable("B", p.Items.Count)
             .SetTextVariable("C", p.IncludesCivilianEquipment ? p.CivilianItems.Count : 0)
-            .SetTextVariable("M", p.IncludesMount ? "yes" : "no")
+            .SetTextVariable("M", new TextObject(p.IncludesMount ? "{=taom_ep_mount_yes}yes" : "{=taom_ep_mount_no}no"))
             .ToString();
 
     private static void DisplayInfo(string msg) =>

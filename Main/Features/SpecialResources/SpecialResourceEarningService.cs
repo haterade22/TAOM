@@ -261,7 +261,7 @@ public sealed class SpecialResourceEarningService
             // desert, and the map-bar flag (SpecialResourceMapBarMixin) keys on the same three terms.
             if (balance + breakdown.Net <= 0f)
             {
-                outcome.Warning = $"{resource.DisplayName} running out: {balance:F0} left, losing {-breakdown.Net:F0}/day";
+                outcome.Warning = SpecialResourceMessages.RunningOut(resource.DisplayName, balance, breakdown.Net);
             }
         }
 

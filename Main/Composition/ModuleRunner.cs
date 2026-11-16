@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using DryIoc;
 using TAOM.Core.Logging;
+using TaleWorlds.Localization;
 
 namespace TAOM.Composition;
 
@@ -14,7 +15,8 @@ namespace TAOM.Composition;
 /// throw propagates, because a campaign that runs without it can lose that data on the next save. That holds for a save owner
 /// that faulted in an earlier, fail-open step too: a fail-closed step throws for it instead of
 /// skipping it. A parked module never fails closed, since its behavior never runs. Parked modules
-/// get only their service registration. Engine-free and unit-tested; the engine-facing loops are in
+/// get only their service registration. Free of engine state (it only builds the fault summary's
+/// TextObject) and unit-tested; the engine-facing loops are in
 /// <see cref="FeatureModuleHooks"/>.
 /// </summary>
 internal sealed class ModuleRunner
@@ -94,12 +96,12 @@ internal sealed class ModuleRunner
     /// One player-facing line naming every module that faulted since the last call, or null when none
     /// did. Clears the list, so each report point shows only new faults.
     /// </summary>
-    internal string? TakeFaultSummary()
+    internal TextObject? TakeFaultSummary()
     {
         if (_unreported.Count == 0) return null;
 
-        var summary = "TAOM: feature modules failed and are off this session: "
-            + string.Join(", ", _unreported) + ". The TAOM log names the cause.";
+        var summary = new TextObject("{=taom_module_fault_summary}TAOM: feature modules failed and are off this session: {MODULES}. The TAOM log names the cause.")
+            .SetTextVariable("MODULES", string.Join(", ", _unreported));
         _unreported.Clear();
         return summary;
     }

@@ -1333,7 +1333,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.isengard_berserker_sword_2h" />
+                    id="Item.taom_ph_isengard_berserker_sword_2h_t5" />
                 <equipment
                     slot="Head"
                     id="Item.sk_uruk_hai_helmet_officer_a2" />
@@ -1600,7 +1600,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.isengard_berserker_sword_2h" />
+                    id="Item.taom_ph_isengard_berserker_sword_2h_t5" />
                 <equipment
                     slot="Head"
                     id="Item.sk_uruk_hai_helmet_bers_a2" />
@@ -1795,7 +1795,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.isengard_spear_b" />
+                    id="Item.taom_ph_isengard_spear_b_t6" />
                 <equipment
                     slot="Item1"
                     id="Item.wm_isengard_shield_c02" />
@@ -1927,7 +1927,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.isengard_berserker_sword_2h" />
+                    id="Item.taom_ph_isengard_berserker_sword_2h_t5" />
                 <equipment
                     slot="Head"
                     id="Item.sk_uruk_hai_helmet_nazg_a2" />

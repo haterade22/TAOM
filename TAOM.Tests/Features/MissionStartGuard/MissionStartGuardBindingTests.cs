@@ -7,6 +7,7 @@ using MCM.Abstractions.Attributes;
 using MCM.Abstractions.Attributes.v2;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
+using TAOM.Features.ServerSettings;
 using TaleWorlds.MountAndBlade;
 using TAOM.Composition;
 using TAOM.Core.Logging;
@@ -386,10 +387,10 @@ public class MissionStartGuardBindingTests
         Assert.AreEqual(typeof(bool), property.PropertyType);
         var bool_ = property.GetCustomAttribute<SettingPropertyBoolAttribute>();
         Assert.IsNotNull(bool_);
-        Assert.AreEqual("Survive Mission Start Failures", bool_.DisplayName);
+        Assert.AreEqual("Survive Mission Start Failures", McmText.Plain(bool_.DisplayName));
         Assert.IsFalse(bool_.RequireRestart, "read when an exception arrives");
         Assert.IsFalse(string.IsNullOrWhiteSpace(bool_.HintText));
-        Assert.AreEqual("Master", property.GetCustomAttribute<SettingPropertyGroupAttribute>()!.GroupName);
+        Assert.AreEqual("Master", McmText.Plain(property.GetCustomAttribute<SettingPropertyGroupAttribute>()!.GroupName));
     }
 
     [TestMethod]

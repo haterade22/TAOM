@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection;
 using System.Security.Cryptography;
 using System.Text;
+using TAOM.Features.ServerSettings;
 
 namespace TAOM.Features.CoopInterop;
 
@@ -155,7 +156,8 @@ public static class SettingsFingerprint
         {
             var t = attr.GetType();
             if (t.Name.IndexOf("SettingPropertyGroup", StringComparison.Ordinal) < 0) continue;
-            var value = (t.GetProperty("GroupName") ?? t.GetProperty("Name"))?.GetValue(attr, null) as string;
+            // The keys MCM translates each part with (#1385) stay out of the hash and the report.
+            var value = McmText.Plain((t.GetProperty("GroupName") ?? t.GetProperty("Name"))?.GetValue(attr, null) as string);
             if (string.IsNullOrEmpty(value)) continue;
             // "Battle Tactics/Smart Cavalry" -> "Battle Tactics": a subgroup is a UI nicety,
             // and reporting the root is what a player can act on.

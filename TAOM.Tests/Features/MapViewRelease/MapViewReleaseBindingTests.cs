@@ -7,6 +7,7 @@ using HarmonyLib;
 using MCM.Abstractions.Attributes;
 using MCM.Abstractions.Attributes.v2;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using TAOM.Features.ServerSettings;
 using TaleWorlds.Engine;
 using TaleWorlds.Engine.Screens;
 using TaleWorlds.ScreenSystem;
@@ -270,10 +271,10 @@ public class MapViewReleaseBindingTests
         Assert.AreEqual(typeof(bool), property.PropertyType);
         var attribute = property.GetCustomAttribute<SettingPropertyBoolAttribute>();
         Assert.IsNotNull(attribute);
-        Assert.AreEqual("Release Map View Memory", attribute.DisplayName);
+        Assert.AreEqual("Release Map View Memory", McmText.Plain(attribute.DisplayName));
         Assert.IsFalse(attribute.RequireRestart);
         Assert.IsFalse(string.IsNullOrWhiteSpace(attribute.HintText));
-        Assert.AreEqual("Map Performance", property.GetCustomAttribute<SettingPropertyGroupAttribute>()!.GroupName);
+        Assert.AreEqual("Map Performance", McmText.Plain(property.GetCustomAttribute<SettingPropertyGroupAttribute>()!.GroupName));
         Assert.AreEqual(true, new BattleLoadDiagnosticsSettings().ReleaseMapViewMemory);
     }
 
@@ -287,13 +288,13 @@ public class MapViewReleaseBindingTests
         Assert.AreEqual(typeof(int), property.PropertyType);
         var attribute = property.GetCustomAttribute<SettingPropertyIntegerAttribute>();
         Assert.IsNotNull(attribute);
-        Assert.AreEqual("Map View Release Interval", attribute.DisplayName);
+        Assert.AreEqual("Map View Release Interval", McmText.Plain(attribute.DisplayName));
         Assert.AreEqual(1, (int)attribute.MinValue);
         Assert.AreEqual(1000, (int)attribute.MaxValue);
         Assert.AreEqual(MapViewReleaseCounter.MinInterval, (int)attribute.MinValue);
         Assert.AreEqual(MapViewReleaseCounter.MaxInterval, (int)attribute.MaxValue);
         Assert.IsFalse(attribute.RequireRestart);
-        Assert.AreEqual("Map Performance", property.GetCustomAttribute<SettingPropertyGroupAttribute>()!.GroupName);
+        Assert.AreEqual("Map Performance", McmText.Plain(property.GetCustomAttribute<SettingPropertyGroupAttribute>()!.GroupName));
         Assert.AreEqual(MapViewReleaseCounter.DefaultInterval, new BattleLoadDiagnosticsSettings().MapViewReleaseInterval);
     }
 }

@@ -1,6 +1,7 @@
 using System.Linq;
 using System.Reflection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using TAOM.Features.ServerSettings;
 using TAOM.Features;
 using TAOM.Features.CoopInterop;
 using TAOM.Features.EncounterLines;
@@ -41,9 +42,9 @@ public class EncounterLinesSettingsProviderTests
         var group = Attribute(property, "SettingPropertyGroupAttribute");
         var flag = Attribute(property, "SettingPropertyBoolAttribute");
 
-        Assert.AreEqual("World/Encounter Lines", Read(group, "GroupName"));
+        Assert.AreEqual("World/Encounter Lines", McmText.Plain(Read(group, "GroupName") as string));
         Assert.AreEqual(89, Read(group, "GroupOrder"));
-        Assert.AreEqual("Enable Encounter Lines", Read(flag, "DisplayName"));
+        Assert.AreEqual("Enable Encounter Lines", McmText.Plain(Read(flag, "DisplayName") as string));
         Assert.AreEqual(false, Read(flag, "RequireRestart"));
     }
 

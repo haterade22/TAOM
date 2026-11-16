@@ -1,0 +1,51 @@
+[2026-11-16 02:40:54] [INFO] [LongDefeat] launching taom_rohan_castle_helms_deep_forceatmo for fortress helms (autorun)
+[2026-11-16 02:41:01] [INFO] [LongDefeat][Muster] batch archers Ranged fow_rohan_eastfold_skirmisher count=65 on_point=2 overlap=0 far=0 off_mesh=0
+[2026-11-16 02:41:01] [INFO] [LongDefeat][Muster] batch 1/7 Infantry fow_rohan_westfold_militiaman count=20 on_point=2 overlap=0 far=0 off_mesh=0
+[2026-11-16 02:41:01] [INFO] [Check] id=taom.long-defeat.class result=pass class=cavalry mounted=true kit=Item0=wm_rohan_ws_spear_a03,Item1=wm_rohan_shield_a02_ggw,Item2=wm_rohan_ws_sword_a01,Item3=,Head=cts_rohan_helmet3,Body=cts_rohan_armor2222,Cape=cts_rohan_cape2,Gloves=cts_rohan_armguard3,Leg=cts_rohan_boots1,Horse=t3_empire_horse,HorseHarness=rohan_horse_armor_one has_mount=true wrong=none skipped=none
+[2026-11-16 02:41:01] [INFO] [LongDefeat][Shop] bought upgrade=fow_rohan_westfold_militiaman>fow_rohan_westfold_axeman n=20
+[2026-11-16 02:41:01] [INFO] [Check] id=taom.long-defeat.upgrade result=pass w=1 from=fow_rohan_westfold_militiaman to=fow_rohan_westfold_axeman ordered=20 found=20 replaced=20 read=20
+[2026-11-16 02:41:01] [INFO] [LongDefeat][Shop] bought upgrade=fow_rohan_westfold_axeman>rohan_westfold_veteran_axeman n=20
+[2026-11-16 02:41:01] [INFO] [Check] id=taom.long-defeat.upgrade result=pass w=1 from=fow_rohan_westfold_axeman to=rohan_westfold_veteran_axeman ordered=20 found=20 replaced=20 read=20
+[2026-11-16 02:41:01] [INFO] [LongDefeat][Shop] bought upgrade=rohan_westfold_veteran_axeman>rohan_westfold_helmingas_axeman n=20
+[2026-11-16 02:41:01] [INFO] [Check] id=taom.long-defeat.upgrade result=pass w=1 from=rohan_westfold_veteran_axeman to=rohan_westfold_helmingas_axeman ordered=20 found=20 replaced=20 read=20
+[2026-11-16 02:41:01] [INFO] [LongDefeat][Shop] bought upgrade=fow_rohan_eastfold_skirmisher>fow_rohan_eastfold_bowman n=65
+[2026-11-16 02:41:01] [INFO] [Check] id=taom.long-defeat.upgrade result=pass w=1 from=fow_rohan_eastfold_skirmisher to=fow_rohan_eastfold_bowman ordered=65 found=44 replaced=44 read=44
+[2026-11-16 02:41:01] [INFO] [LongDefeat][Shop] bought upgrade=fow_rohan_eastfold_skirmisher>fow_rohan_eastfold_bowman n=21
+[2026-11-16 02:41:01] [INFO] [Check] id=taom.long-defeat.upgrade result=skip w=1 from=fow_rohan_eastfold_skirmisher to=fow_rohan_eastfold_bowman ordered=21 found=0 replaced=0 read=0 reason=none-found
+[2026-11-16 02:41:01] [INFO] [LongDefeat][Shop] bought upgrade=fow_rohan_eastfold_skirmisher>fow_rohan_eastfold_bowman n=21
+[2026-11-16 02:41:01] [INFO] [Check] id=taom.long-defeat.upgrade result=skip w=1 from=fow_rohan_eastfold_skirmisher to=fow_rohan_eastfold_bowman ordered=21 found=0 replaced=0 read=0 reason=none-found
+[2026-11-16 02:41:01] [INFO] [LongDefeat][Shop] bought upgrade=fow_rohan_eastfold_skirmisher>fow_rohan_eastfold_bowman n=21
+[2026-11-16 02:41:01] [INFO] [Check] id=taom.long-defeat.upgrade result=skip w=1 from=fow_rohan_eastfold_skirmisher to=fow_rohan_eastfold_bowman ordered=21 found=0 replaced=0 read=0 reason=none-found
+[2026-11-16 02:41:01] [INFO] [LongDefeat][Shop] bought upgrade=fow_rohan_eastfold_skirmisher>fow_rohan_eastfold_bowman n=21
+[2026-11-16 02:41:01] [INFO] [Check] id=taom.long-defeat.upgrade result=skip w=1 from=fow_rohan_eastfold_skirmisher to=fow_rohan_eastfold_bowman ordered=21 found=0 replaced=0 read=0 reason=none-found
+[2026-11-16 02:41:01] [INFO] [LongDefeat][Shop] bought upgrade=fow_rohan_eastfold_skirmisher>fow_rohan_eastfold_bowman n=21
+[2026-11-16 02:41:01] [INFO] [Check] id=taom.long-defeat.upgrade result=skip w=1 from=fow_rohan_eastfold_skirmisher to=fow_rohan_eastfold_bowman ordered=21 found=0 replaced=0 read=0 reason=none-found
+[2026-11-16 02:41:01] [INFO] [LongDefeat][Shop] bought upgrade=fow_rohan_eastfold_skirmisher>fow_rohan_eastfold_bowman n=21
+[2026-11-16 02:41:01] [INFO] [Check] id=taom.long-defeat.upgrade result=skip w=1 from=fow_rohan_eastfold_skirmisher to=fow_rohan_eastfold_bowman ordered=21 found=0 replaced=0 read=0 reason=none-found
+[2026-11-16 02:41:01] [INFO] [LongDefeat][Shop] bought upgrade=fow_rohan_eastfold_skirmisher>fow_rohan_eastfold_bowman n=21
+[2026-11-16 02:41:01] [INFO] [Check] id=taom.long-defeat.upgrade result=skip w=1 from=fow_rohan_eastfold_skirmisher to=fow_rohan_eastfold_bowman ordered=21 found=0 replaced=0 read=0 reason=none-found
+[2026-11-16 02:41:01] [INFO] [LongDefeat][Shop] bought upgrade=fow_rohan_eastfold_skirmisher>fow_rohan_eastfold_bowman n=21
+[2026-11-16 02:41:01] [INFO] [Check] id=taom.long-defeat.upgrade result=skip w=1 from=fow_rohan_eastfold_skirmisher to=fow_rohan_eastfold_bowman ordered=21 found=0 replaced=0 read=0 reason=none-found
+[2026-11-16 02:41:02] [INFO] [LongDefeat][Shop] bought upgrade=fow_rohan_eastfold_bowman>rohan_eastfold_veteran_bowman n=44
+[2026-11-16 02:41:02] [INFO] [Check] id=taom.long-defeat.upgrade result=pass w=1 from=fow_rohan_eastfold_bowman to=rohan_eastfold_veteran_bowman ordered=44 found=44 replaced=44 read=44
+[2026-11-16 02:41:05] [INFO] [LongDefeat][Muster] batch 2/7 Infantry fow_rohan_westfold_militiaman count=20 on_point=0 overlap=0 far=0 off_mesh=0
+[2026-11-16 02:41:05] [INFO] [LongDefeat][Shop] bought upgrade=fow_rohan_westfold_militiaman>fow_rohan_westfold_axeman n=20
+[2026-11-16 02:41:05] [INFO] [Check] id=taom.long-defeat.upgrade result=pass w=1 from=fow_rohan_westfold_militiaman to=fow_rohan_westfold_axeman ordered=20 found=20 replaced=20 read=20
+[2026-11-16 02:41:05] [INFO] [LongDefeat][Shop] bought upgrade=fow_rohan_westfold_axeman>rohan_westfold_veteran_axeman n=20
+[2026-11-16 02:41:05] [INFO] [Check] id=taom.long-defeat.upgrade result=pass w=1 from=fow_rohan_westfold_axeman to=rohan_westfold_veteran_axeman ordered=20 found=20 replaced=20 read=20
+[2026-11-16 02:41:05] [INFO] [LongDefeat][Shop] bought upgrade=rohan_westfold_veteran_axeman>rohan_westfold_helmingas_axeman n=1
+[2026-11-16 02:41:05] [INFO] [Check] id=taom.long-defeat.upgrade result=pass w=1 from=rohan_westfold_veteran_axeman to=rohan_westfold_helmingas_axeman ordered=1 found=20 replaced=1 read=1
+[2026-11-16 02:41:09] [INFO] [LongDefeat][Muster] batch 3/7 Infantry fow_rohan_westfold_militiaman count=20 on_point=0 overlap=0 far=0 off_mesh=0
+[2026-11-16 02:41:13] [INFO] [LongDefeat][Muster] batch 4/7 Infantry fow_rohan_westfold_militiaman count=20 on_point=0 overlap=0 far=0 off_mesh=0
+[2026-11-16 02:41:17] [INFO] [LongDefeat][Muster] batch 5/7 Infantry fow_rohan_westfold_militiaman count=20 on_point=0 overlap=0 far=0 off_mesh=1
+[2026-11-16 02:41:21] [INFO] [LongDefeat][Muster] batch 6/7 Infantry fow_rohan_westfold_militiaman count=20 on_point=0 overlap=0 far=0 off_mesh=0
+[2026-11-16 02:41:25] [INFO] [LongDefeat][Muster] batch 7/7 Infantry fow_rohan_westfold_militiaman count=10 on_point=0 overlap=0 far=0 off_mesh=0
+[2026-11-16 02:41:31] [INFO] [LongDefeat][Wave] 1 starts: first batch 83 foot and 27 ranged
+[2026-11-16 02:46:00] [INFO] [LongDefeat][Shop] bought upgrade=fow_rohan_westfold_militiaman>fow_rohan_westfold_axeman n=44
+[2026-11-16 02:46:00] [INFO] [Check] id=taom.long-defeat.upgrade result=pass w=2 from=fow_rohan_westfold_militiaman to=fow_rohan_westfold_axeman ordered=44 found=90 replaced=44 read=44
+[2026-11-16 02:51:39] [INFO] [LongDefeat][Shop] bought upgrade=fow_rohan_westfold_militiaman>fow_rohan_westfold_axeman n=40
+[2026-11-16 02:51:39] [INFO] [Check] id=taom.long-defeat.upgrade result=pass w=3 from=fow_rohan_westfold_militiaman to=fow_rohan_westfold_axeman ordered=40 found=45 replaced=40 read=40
+[2026-11-16 02:56:59] [INFO] [LongDefeat][Shop] bought upgrade=fow_rohan_westfold_militiaman>fow_rohan_westfold_axeman n=4
+[2026-11-16 02:56:59] [INFO] [Check] id=taom.long-defeat.upgrade result=pass w=4 from=fow_rohan_westfold_militiaman to=fow_rohan_westfold_axeman ordered=4 found=4 replaced=4 read=4
+[2026-11-16 02:56:59] [INFO] [LongDefeat][Shop] bought upgrade=fow_rohan_westfold_axeman>rohan_westfold_veteran_axeman n=7
+[2026-11-16 02:56:59] [INFO] [Check] id=taom.long-defeat.upgrade result=pass w=4 from=fow_rohan_westfold_axeman to=rohan_westfold_veteran_axeman ordered=7 found=85 replaced=7 read=7

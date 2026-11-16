@@ -882,6 +882,14 @@ and its main weapon is an open decision (rca-black-uruk-weapons-2026-11-07 F1). 
 `python tools/validate_moduledata.py` reported 304 `MELEE_LADDER_INVERSION` warnings before the pass and
 270 after (2026-11-16).
 
+Most of the residue is slots whose culture owns no weapon of the category in band. The owner's answer
+(2026-11-16): a tier clone of the weapon the troop carries, restated to its tier and named as the next Roman
+numerals of that weapon's line ([placeholder-weapons.md](placeholder-weapons.md), "Tier clones"). Only a
+clone that reaches the band is made: 58 clones take 172 slots, generated troop files included (their
+generators apply the same swap). The clone keeps the donor's weapon category, since only its blade differs.
+`python tools/validate_moduledata.py` then reports 40 `MELEE_LADDER_INVERSION` warnings, against 125 on trunk
+c25b221aa; `MELEE_BLOW_CEILING` stays at 9 (2026-11-16).
+
 ## Key Files
 
 | File | Purpose |

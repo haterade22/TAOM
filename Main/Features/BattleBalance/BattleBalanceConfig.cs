@@ -9,7 +9,7 @@ public class BattleBalanceConfig
     public AutoResolveSection AutoResolve { get; set; } = new();
     public SiegeDefenceSection SiegeDefence { get; set; } = new();
 
-    /// <summary>Auto-resolve siege defence by culture (#1283).</summary>
+    /// <summary>Siege defence and garrison upkeep by realm culture (#1283). See <see cref="GarrisonUpkeep"/>.</summary>
     public class SiegeDefenceSection
     {
         /// <summary>
@@ -24,6 +24,31 @@ public class BattleBalanceConfig
 
         public float GetDefenderAdvantageBonus(string cultureId) =>
             cultureId != null && DefenderAdvantageBonuses.TryGetValue(cultureId, out var v) ? v : 0f;
+
+        /// <summary>
+        /// Realm culture id to true when that realm's garrisons cost no wages, eat no food and take no starvation wounds. A
+        /// dictionary, not a list: the JSON merges into the compiled table, so <c>false</c> turns a compiled row off.
+        /// </summary>
+        public Dictionary<string, bool> UpkeepFreeGarrisons { get; set; } = new()
+        {
+            ["bluecraig"] = true
+        };
+
+        /// <summary>
+        /// Realm culture id to free basic troops each of its fortifications gains a day, in [0, 20], whole troops (the
+        /// engine drops the fraction). Not during a siege, and never past the garrison size limit. Free only with an
+        /// UpkeepFreeGarrisons row: without one the growth is wage-capped and its troops cost wages.
+        /// </summary>
+        public Dictionary<string, float> DailyGarrisonGrowth { get; set; } = new()
+        {
+            ["bluecraig"] = 2f
+        };
+
+        public bool IsUpkeepFree(string cultureId) =>
+            cultureId != null && UpkeepFreeGarrisons != null && UpkeepFreeGarrisons.TryGetValue(cultureId, out var free) && free;
+
+        public float GetDailyGarrisonGrowth(string cultureId) =>
+            cultureId != null && DailyGarrisonGrowth != null && DailyGarrisonGrowth.TryGetValue(cultureId, out var v) ? v : 0f;
     }
 
     /// <summary>Auto-resolve tuning (#1283). See <see cref="AutoResolveQualityMath"/>.</summary>

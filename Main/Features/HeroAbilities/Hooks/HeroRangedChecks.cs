@@ -5,7 +5,7 @@ using TAOM.Features.LongDefeat.Diagnostics;
 namespace TAOM.Features.HeroAbilities.Hooks;
 
 /// <summary>
-/// The #1361 [Check] ids that tools/ingame_checks/1361.toml reads, and the verdict each gives. Pure: the ranged mission
+/// The [Check] ids that tools/ingame_checks/1361.toml and 1415.toml read, and the verdict each gives. Pure: the ranged mission
 /// logic counts, these judge. A float gate is written as the requirement, so a NaN fails it.
 /// </summary>
 internal static class HeroRangedChecks
@@ -15,6 +15,7 @@ internal static class HeroRangedChecks
     internal const string PierceId = "taom.hero-abilities.pierce";
     internal const string MultiShotId = "taom.hero-abilities.multishot";
     internal const string ArrowKillId = "taom.hero-abilities.arrow-kill";
+    internal const string KeepDistanceId = "taom.hero-abilities.keep-distance";
 
     // The fewest shots that judge the hit share, and the share that passes.
     private const int ShotsToJudge = 20;
@@ -24,6 +25,7 @@ internal static class HeroRangedChecks
     private const int WindowShotsToJudge = 3;
     private const int FiredToJudgeHits = 10;
     private const int CallsToJudge = 50;
+    private const int LooksToJudge = 10;
 
     // A kit switch that is off judges nothing: its check is a skip (reason=off).
     internal static CheckVerdict Precision(string heroId, bool zeroAimError, int nonZero, float shooterError, float inaccuracy)
@@ -78,6 +80,20 @@ internal static class HeroRangedChecks
             : new CheckVerdict(CheckResult.Skip, "reason=few-calls " + detail);
     }
 
+    // #1415: a step is the engine call, moved is his body covering half the step by the end of the hold. One move passes;
+    // with no move, ten steps or ten cornered looks fail.
+    internal static CheckVerdict KeepDistance(string heroId, bool on, int steps, int moved, int cornered, int meleeSeconds)
+    {
+        var detail = $"hero={heroId} steps={Num(steps)} moved={Num(moved)} cornered={Num(cornered)} melee_seconds={Num(meleeSeconds)}";
+        if (!on)
+            return new CheckVerdict(CheckResult.Skip, "reason=off " + detail);
+        if (moved >= 1)
+            return new CheckVerdict(CheckResult.Pass, detail);
+        if (steps >= LooksToJudge || cornered >= LooksToJudge)
+            return new CheckVerdict(CheckResult.Fail, detail);
+        return new CheckVerdict(CheckResult.Skip, (steps == 0 && cornered == 0 ? "reason=no-threat " : "reason=few-threats ") + detail);
+    }
+
     /// <summary>The mission-end lines of one hero body. Precision was written at its sample, or is a never-ranged skip now.</summary>
     internal static void WriteEnd(IOutcomeLog outcomes, string missionKey, HeroRangedTally t)
     {
@@ -89,6 +105,7 @@ internal static class HeroRangedChecks
         LongDefeatChecks.Record(outcomes, MultiShotId, key,
             MultiShot(t.HeroId, t.ItemResolved, t.Windows, t.WindowShots, t.Fired, t.NoTarget, t.OutOfRange, t.ExtraHits));
         LongDefeatChecks.Record(outcomes, ArrowKillId, key, ArrowKill(t.HeroId, t.BodyHits, t.Head, t.Exempt, t.DeadShooter, t.Calls, t.Kills));
+        LongDefeatChecks.Record(outcomes, KeepDistanceId, key, KeepDistance(t.HeroId, t.KeepDistance, t.Steps, t.Moved, t.Cornered, t.MeleeSeconds));
     }
 
     internal static string KeyOf(string missionKey, HeroRangedTally t) => $"{missionKey}-{t.HeroId}-{Num(t.Serial)}";
