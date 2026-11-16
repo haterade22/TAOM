@@ -2506,3 +2506,9 @@ The level 31 to 36 sweep and its test named six cultures as "the evil and dwarf 
 - **Why missed:** the list came from memory of the large factions. A test that checks only the cultures it names cannot report one it does not name.
 - **Prevent:** when a rule covers a kind of culture, build the list from the culture table in `docs/modding/id-cheatsheet.md` and name each excluded culture with its reason, so a new culture shows up as a decision.
 - **Source:** [rca-pr1339-troop-weight-gaps-2026-11-15.md](../rca-pr1339-troop-weight-gaps-2026-11-15.md), row 1.
+
+### A roster tool that writes troop files must know which files a generator owns, and the upgrade tree (melee roster pass, 2026-11-16)
+The first apply of `fix_melee_ladder.py --apply` wrote swaps into seven realm troop files that `generate_new_faction_kingdoms.py` writes whole, so `test_generator_regions_in_sync` failed on all seven. The review of the second apply found three upgrade inversions: a swap gave `dale_footman` a 78 DPS poleaxe while its upgrade `dale_spearman` kept a 60 DPS winged spear, and `goblin_grunt` an axe above `goblin_fighter`'s.
+- **Why missed:** the fixer judged each troop alone against its own tier band. It had no table of generated troop files and never read `<upgrade_target>`.
+- **Prevent:** a tool that changes troop equipment refuses a file a generator owns (`GENERATED_TROOP_FILES`, with a test that globs `tools/generate_*_troops.py`), plans troops from the highest level down, and holds each pick under what the troop's upgrade targets carry on the same band. Check every apply with a diff script that compares each troop with its upgrades before and after.
+- **Source:** [melee-damage-model.md](../../features/melee-damage-model.md#a-troop-keeps-its-weapon-category), the two rules under "The roster pass under this rule".
