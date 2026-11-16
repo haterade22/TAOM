@@ -83,7 +83,7 @@ from the thrust top by `dominant_flags`), and the multiplier stops at the tier l
 placeholder whose every carrier has a shield is banded on the modes a shield allows (for a spear, the one handed
 thrust and its `OneHandedPolearm` class), and each carrier row is held to the tier limit of the mode it wields,
 as the validator judges them (melee-damage-model.md, "A troop with a shield"). Values from the generator's dry
-run on 16 Nov 2026; DPS marked * is in the shield modes, swing and thrust are the whole weapon's:
+run on 16 Nov 2026, after the blade restat of that day was written to the Armory; DPS marked * is in the shield modes, swing and thrust are the whole weapon's:
 
 | Placeholder | Donor DPS | DPS | Swing | Thrust | k |
 |---|---|---|---|---|---|
@@ -101,13 +101,13 @@ run on 16 Nov 2026; DPS marked * is in the shield modes, swing and thrust are th
 | Mirkwood sword T8 | 48 | 66 | 78 | 45 | 1.37 |
 | Mirkwood sword T10 | 48 | 70 | 83 | 48 | 1.47 |
 | Gundabad War Spear (a02), T4 | 52 | 86 | 110 | 28 | 1.68 |
-| Gundabad Blackshield Spear (a03), T5 | 68 | 92 | 107 | 32 | 1.34 |
-| Gundabad Blackshield Spear (a03), T8 | 25* | 27* | 90 | 35 | 1.07 |
+| Gundabad Blackshield Spear (a03), T5 | 67 | 91 | 106 | 32 | 1.37 |
+| Gundabad Blackshield Spear (a03), T8 | 24* | 27* | 91 | 35 | 1.11 |
 
-All 19 beat their donor in the view they are banded on (k between 1.07 and 1.68). The swords, the Gondor spears
+All 19 beat their donor in the view they are banded on (k between 1.11 and 1.68). The swords, the Gondor spears
 and the Gundabad T8 spear stop at the tier limit of the mode their carriers wield, below their DPS target; the
 four Erebor spears are blended (0.5) on purpose. The Gundabad T8 spear is weaker than the T5 one in its two
-handed swing (90 against 107) and stronger in the one handed thrust its shield carriers use (27 against 24): the
+handed swing (91 against 106) and stronger in the one handed thrust its shield carriers use (27 against 24): the
 T5 spear has carriers without a shield, so it is banded on the whole weapon. A placeholder capped over every
 carrier's row stays under the limit of the lowest tier and weakest craft that will carry it.
 

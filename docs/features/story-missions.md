@@ -274,6 +274,7 @@ All seven rows are Defend missions with one wave. Only Helm's Deep names a music
 | `Main/Features/WarChronicle/Events/IChronicleStoryPort.cs` | Slice 4: the chronicle seam (`ChronicleService` implements it) |
 | `tools/ingame_checks/1105.toml` | The in-game check manifest |
 | `tools/ingame_checks/1366.toml` | The manifest of the free heroes |
+| `tools/ingame_checks/1370.toml` | The manifest of the free heroes' formation churn (#1370, open): `moved_out=0` on the hunters line |
 
 ## Dependencies
 
@@ -386,16 +387,29 @@ hero lines read `is_hero=1 campaign=0 ... health_factor=3.00` with their own wea
 The story mission itself is proven by the unattended run `E:/Temp/scenario-runs/20261116-075342` (the driver of #1368,
 build 4baa2f53a): `python tools/ingame_verdict.py --issue 1366` reads PASS for all seven rows. The three hero lines read
 `is_hero=0 campaign=1 mounted=0 formation=7 held=1 strangers=0 order=Move health_factor=3.00` with `strider_sword`,
-`wm_mirkwood_bow_a01` and `sm_dwarf_dain_axe_a`. The hunters line passed at the wave clear with all three standing and in place.
+`wm_mirkwood_bow_a01` and `sm_dwarf_dain_axe_a` (the kit of that run; since #1373 Gimli carries `sm_dwarf_erebor_axe_2h_c`, and `1366.toml` accepts both). The hunters line passed at the wave clear with all three standing and in place.
 Each cast (`fired=1`, `8` and `2`), Legolas's aim read zero, Many Arrows fired ten extra arrows with the campaign-loaded item
 (`item=1`), and Aragorn's aura reached 102 soldiers, which in a campaign only the new source rule can do. The mission was won
 (108 kills, 9 defenders lost).
 
-One number of that run is not healthy: the hunters line ends `retaken=1 moved_out=1517`. From the second after the heroes
-spawned, the repair moved about 20 soldiers out of the heroes' formation every second (the log's first five repairs read 21, 20,
-20, 20 and 40), and it never does so in a Long Defeat (`moved_out=0` in every run there). Something puts garrison soldiers into
-formation 7 again and again in the story mission. The checks pass because the repair wins each time; what it does to those
-soldiers is not known. It has its own issue.
+One number of that run is not healthy: the hunters line ends `retaken=1 moved_out=1517`. A second run with one temporary
+log line (`E:/Temp/scenario-runs/20261116-081024`, `moved_out=1481`) shows that about once a second during the preparation
+before the first wave (24 repairs in 21 seconds) the whole Infantry formation is moved into the heroes' formation and out
+again by the repair (20, then 40, 60, 80, 100 soldiers), and that the last repair comes in the second the wave starts, with none after it. It never shows in a
+Long Defeat (`moved_out=0` in every run there). The checks passed because the repair won each time. This is #1370, and it is
+open: no fix is in the tree.
+
+What is measured: the mover is the engine's castle tactic. Before the attackers exist no lane is active, so it defends only the
+lanes that have a gate, which is one lane (`TacticDefendCastle.cs:1005-1016`). It then has two melee formations for one lane:
+the garrison's Infantry formation, under AI control, and the heroes' formation, off AI control by the design of #1337.
+`ConsolidateFormations` ranks a formation that is not AI controlled first as the target (`TacticComponent.cs:191`) and
+transfers every AI-controlled formation into it (`:208`). When the wave starts, more lanes are active than there are melee
+formations, and the consolidation stops.
+
+What is not known: why the Long Defeat never shows it. It has the same heroes, the same tactic and a muster of the same kind.
+Its opening split starts only after its muster (24 seconds after the heroes spawned in run 20261116-055255, with no repair in
+that window), so the split is not the reason. `tools/ingame_checks/1370.toml` holds the one check that is red on the defect:
+`moved_out=0` on the hunters line.
 
 Not proven: that an XML character no party holds survives a save and reload, and every row a person must look at (the order
 key, the take-over, the faces, the War Chronicle offer path).
@@ -418,6 +432,9 @@ player report showed the Hornburg ending with no battle (2026-11-13).
 
 ## Changelog
 
+- 2026-11-16: #1373, Gimli's kit is now the Erebor two-handed axe `sm_dwarf_erebor_axe_2h_c`; the hunters line gains `weapons=`, and `tools/ingame_checks/1373.toml` reads both. Unplayed.
+- 2026-11-16: #1370, the churn of the garrison's foot through the heroes' formation before the first wave is measured and
+  checked by `tools/ingame_checks/1370.toml` (red on the bug). No fix yet; the issue is open.
 - 2026-11-16: #1366, Aragorn, Legolas and Gimli stand free with the garrison in the Helm's Deep
   defence of a campaign; the roster check at session start. After review: the heroes keep their own
   faces and, when taken over, their own health; the verdict tool's `scope_end` keeps a later Long

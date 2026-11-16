@@ -146,7 +146,7 @@ public class ShippedMissionHeroesTests
     {
         var kit = Kit("taom_hero_gimli");
 
-        Assert.AreEqual("Item.sm_dwarf_dain_axe_a", kit["Item0"]);
+        Assert.AreEqual("Item.sm_dwarf_erebor_axe_2h_c", kit["Item0"], "the Erebor two-handed axe with the highest swing damage (#1373), not Dain's axe");
         Assert.AreEqual(1, kit.Keys.Count(slot => slot.StartsWith("Item")), "no shield: the axe needs both hands");
     }
 
