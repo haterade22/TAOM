@@ -82,7 +82,7 @@ public sealed class OrcBattleVoiceService
     {
         if (_ended || _unavailable || agent == null) return;
         if (!agent.IsHuman || agent.IsFemale || agent.IsPlayerControlled || !agent.HasVisuals) return;
-        if (agent.Age < AdultAge) return;
+        if (!(agent.Age >= AdultAge)) return; // a NaN age is not an adult
         if (!string.Equals(_races.GetRaceNameFromId(agent.Race), OrcRace, StringComparison.Ordinal)) return;
 
         var built = agent.VoiceDefinitionName;

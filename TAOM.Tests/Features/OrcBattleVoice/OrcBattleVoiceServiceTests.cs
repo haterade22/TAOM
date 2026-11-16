@@ -167,6 +167,20 @@ public class OrcBattleVoiceServiceTests
         rig.Catalog.DidNotReceive().GetDefinitionIndices(Arg.Any<string>());
     }
 
+    [DataTestMethod]
+    [DataRow(17.9f, false)]
+    [DataRow(18f, true)]
+    [DataRow(float.NaN, false)]
+    public void OnAgentBuild_AdultAgeBoundary(float age, bool expectSet)
+    {
+        var rig = new Rig();
+        var orc = new FakeAgent { Age = age };
+
+        rig.Service.OnAgentBuild(orc);
+
+        Assert.AreEqual(expectSet, orc.Sets.Count > 0, $"age {age}: only an agent of {OrcBattleVoiceService.AdultAge} or older gets uruk_01");
+    }
+
     [TestMethod]
     public void OnAgentBuild_SecondApplyOnTheSameOrc_IsANoOp()
     {
