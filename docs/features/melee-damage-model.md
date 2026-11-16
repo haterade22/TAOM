@@ -644,10 +644,11 @@ either way; this is the fixed point, not a stopping place chosen early.
 
 ### Three guards, each of which was wrong once
 
-1. **Couchable weapons, asymmetrically.** `ComputeBlowMagnitudeMelee` feeds the attacker's
-   closing speed into `CalculateStrikeMagnitudeForThrust` as `extraLinearSpeed`, where it is
-   added to the thrust speed and the sum is **squared**. A couched lance therefore already
-   lands several times the standing-thrust magnitude this model computes, so RAISING one is
+1. **Couchable weapons, asymmetrically.** A couch is a passive usage. On v1.5.7
+   `ComputeBlowMagnitudeMelee` sends it to `CalculateBaseBlowMagnitudeForPassiveUsage`
+   (`MissionCombatMechanicsHelper.cs:661-671`), which computes a thrust with zero thrust speed
+   and 0.83 times the closing speed (`CombatStatCalculator.cs:53-56`). The blow therefore comes
+   from the charge, not from the thrust this model computes, so RAISING a couchable weapon is
    refused. The first version refused to move them at all, which protected
    `wm_gundabad_spear_a02` at 164 DPS in the hands of tier-3 militia, the single worst weapon
    the audit found. Lowering is safe and is now allowed.
