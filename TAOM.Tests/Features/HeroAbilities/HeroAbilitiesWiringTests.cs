@@ -144,7 +144,6 @@ public class HeroAbilitiesWiringTests
         var contact = Body(Read("Hooks/HeroAbilityHost.cs"), "private bool InContact(");
 
         StringAssert.Contains(contact, "!record.HasContactRule");
-        StringAssert.Contains(contact, "Math.Min(record.ContactRange, MaxQueryRadius)");
         StringAssert.Contains(contact, "enemy.IsActive() && enemy.IsHuman && enemy.Position.Distance(hero.Position) <= record.ContactRange");
         StringAssert.Contains(contact, "return count >= record.ContactCount;");
         StringAssert.Contains(Read("Hooks/HeroAbilityHost.cs"), "_runtime.Service.TryContactRule(kit,");
@@ -186,5 +185,281 @@ public class HeroAbilitiesWiringTests
         StringAssert.Contains(Body(visuals, "public void Outline("), "Paint(agent,");
         foreach (var file in new[] { "Hooks/HeroAbilityHost.cs", "Hooks/HeroAbilityCaster.cs" })
             Assert.IsFalse(Read(file).Contains("SetContourColor("), file + " must paint through RaceAbilityVisuals.Outline");
+    }
+
+    // #1361: the zero-aim pass is the last statement of each stat model's UpdateAgentStats, so no later multiply (the
+    // Long Defeat affixes scale AiShooterError) or overwrite can undo it. Both families: a rule pinned in one only is
+    // the two-family trap.
+    private static void AssertRangedPassIsLast(string path)
+    {
+        var update = Body(RepoPaths.ReadSource(path, stripComments: true), "public override void UpdateAgentStats(");
+        const string call = "HeroRangedHooks.ApplyStats(agent, agentDrivenProperties);";
+        var at = At(update, call);
+
+        Assert.AreEqual("}", update.Substring(at + call.Length).Trim(), path + ": the ranged pass must be the last statement");
+        Assert.AreEqual(at, update.LastIndexOf("HeroRangedHooks.", StringComparison.Ordinal), "one call");
+    }
+
+    [TestMethod]
+    public void CustomBattleStatModel_RangedPassIsLast()
+    {
+        const string path = "Main/Features/CultureDoctrine/Models/TaomCustomBattleAgentStatCalculateModel.cs";
+        AssertRangedPassIsLast(path);
+        var update = Body(RepoPaths.ReadSource(path, stripComments: true), "public override void UpdateAgentStats(");
+        Assert.IsTrue(At(update, "LongDefeatStatHooks.UpdateStats(agent, agentDrivenProperties);") < At(update, "HeroRangedHooks.ApplyStats("));
+    }
+
+    [TestMethod]
+    public void CampaignStatModel_RangedPassIsLast()
+    {
+        AssertRangedPassIsLast("Main/Features/CareerSystem/Models/TaomAgentStatCalculateModel.cs");
+    }
+
+    // The entry the models call looks the agent up before it reads any engine getter, and hands the mount test to the
+    // tested ApplyFor.
+    [TestMethod]
+    public void RangedHooks_ApplyStats_LooksUpBeforeTheEngineAndDelegates()
+    {
+        var apply = Body(Read("Hooks/HeroRangedHooks.cs"), "public static void ApplyStats(");
+
+        Assert.IsTrue(At(apply, ".KitOf(agent) == null") < At(apply, "ApplyFor(roster, agent, agent.IsMount, properties);"));
+    }
+
+    [TestMethod]
+    public void Module_SetsRosterAndPierceDelegate()
+    {
+        var statics = Body(Read("HeroAbilitiesModule.cs"), "public override void InitializeStatics(");
+
+        StringAssert.Contains(statics, "HeroRangedHooks.Roster = resolver.Resolve<HeroAbilityRuntime>().Ranged;");
+        StringAssert.Contains(statics, "CombatMechanicsHooks.ShooterPiercesShields = HeroRangedHooks.PiercesShields;");
+        StringAssert.Contains(Read("HeroAbilityRuntime.cs"), "public HeroRangedRoster<Agent> Ranged { get; } = new();");
+    }
+
+    // The grant is ORed after the shield-penetration service, so its MCM switch (ShieldPenetrationService.cs:51) cannot
+    // turn it off, and it never adds MultiplePenetration. The floor reads the engine's two parameters only when granted.
+    [TestMethod]
+    public void CombatHooks_GrantAfterTheService_FloorReadsParametersOnlyWhenGranted()
+    {
+        var hooks = RepoPaths.ReadSource("Main/Features/CombatMechanics/Hooks/CombatMechanicsHooks.cs", stripComments: true);
+        var flags = Body(hooks, "public WeaponFlags PenetrationFlags(");
+
+        Assert.IsTrue(At(flags, "_shieldPenetrationService.ApplyPenetrationFlags(") < At(flags, "ShooterPiercesShields"));
+        StringAssert.Contains(flags, "| WeaponFlags.CanPenetrateShield");
+        Assert.IsFalse(flags.Contains("MultiplePenetration"));
+
+        var floor = Body(hooks, "public float ShieldPierceFloor(");
+        Assert.IsTrue(At(floor, "ShooterPiercesShields?.Invoke(attacker) != true") < At(floor, "ManagedParameters.Instance"));
+        StringAssert.Contains(floor, "ManagedParametersEnum.ShieldPenetrationOffset");
+        StringAssert.Contains(floor, "ManagedParametersEnum.ShieldPenetrationFactor");
+        StringAssert.Contains(floor, "attackInformation.VictimShield.GetGetModifiedArmorForCurrentUsage()");
+        StringAssert.Contains(floor, "ShieldPierceMath.Floor(");
+        Assert.IsTrue(At(floor, "ShieldPenetrationOffset") < At(floor, "ShieldPenetrationFactor"), "the arguments are offset, then factor");
+        StringAssert.Contains(RepoPaths.ReadSource("Main/Features/CombatMechanics/ShieldPierceMath.cs", stripComments: true),
+            "public static float Floor(float damage, float offset, float factor, float armour)");
+    }
+
+    // ---- #1361 Slice 3: the engine side of the ranged kit ----
+
+    // Native may raise the three missile callbacks off the main thread (#634): each only reads the roster's published
+    // map and enqueues; the tick drains. The kill, the extra arrows and the tally live behind the drain.
+    [TestMethod]
+    public void RangedLogic_CallbacksOnlyEnqueue()
+    {
+        var logic = Read("Hooks/HeroRangedMissionLogic.cs");
+
+        foreach (var marker in new[] { "public override void OnAgentShootMissile(", "public override void OnMissileHit(", "public override void OnAgentHit(" })
+        {
+            var body = Body(logic, marker);
+            Assert.IsTrue(At(body, "KitOf(") < At(body, "_queue.Enqueue("), marker + ": roster shooters only");
+            foreach (var banned in new[] { "TryKill", "AddCustomMissile", "_runner", "_kills", "TallyOf", "IsEnemyOf", "Outcomes" })
+                Assert.IsFalse(body.Contains(banned), marker + " must not touch " + banned);
+        }
+
+        var tick = Body(logic, "public override void OnMissionTick(");
+        Assert.IsTrue(At(tick, "MissionThreadGuard.MarkMainThread();") < At(tick, "_queue.TryDequeue("));
+        Assert.IsTrue(At(tick, "try") < At(tick, "_queue.TryDequeue("));
+        StringAssert.Contains(logic, "[HeroAbilities] ranged kit disabled for this mission after ");
+        StringAssert.Contains(Body(logic, "public override void OnRemoveBehavior("), "HeroRangedChecks.WriteEnd(");
+    }
+
+    // A friendly hit proves nothing and must never roll a kill: the enemy test is the only guard before the roll, since
+    // the instant-kill executor checks no team. Only a missile blow counts, and extras fire only inside the window.
+    [TestMethod]
+    public void RangedLogic_HandleKeepsEnemyMissileAndWindowGuards()
+    {
+        var logic = Read("Hooks/HeroRangedMissionLogic.cs");
+        var handle = Body(logic, "private void Handle(");
+        var enemy = At(handle, "heroTeam.IsEnemyOf(e.VictimTeam)");
+
+        Assert.IsTrue(enemy < At(handle, "_kills.OnBodyHit("), "the enemy test comes before the kill roll");
+        Assert.IsTrue(enemy < At(handle, "t.MissileHit("), "the enemy test comes before the pierce tally");
+        StringAssert.Contains(Body(logic, "public override void OnAgentHit("), "!blow.IsMissile");
+        Assert.IsTrue(At(handle, "burst.Until > now") < At(handle, "_runner.Fire("), "extras fire only inside the burst window");
+    }
+
+    // Native hands a freed missile index to the next missile at once, so the tallies forget an index when its missile is
+    // removed (Mission.OnMissileRemovedEvent, Mission.cs:1573, raised at :5770). The handler only enqueues, behind the hits
+    // of that missile, and only while a hero is listed and the logic stands.
+    [TestMethod]
+    public void RangedLogic_OnMissileRemovedOnlyEnqueues()
+    {
+        var logic = Read("Hooks/HeroRangedMissionLogic.cs");
+        var removed = Body(logic, "private void QueueMissileRemoved(");
+
+        Assert.IsTrue(At(removed, "_disabled") < At(removed, "_queue.Enqueue(HeroMissileEvent.Removed("));
+        Assert.IsTrue(At(removed, "_runtime.Ranged.IsEmpty") < At(removed, "_queue.Enqueue(HeroMissileEvent.Removed("));
+        foreach (var banned in new[] { "TryKill", "AddCustomMissile", "_runner", "_kills", "_tallies", "Outcomes" })
+            Assert.IsFalse(removed.Contains(banned), "the removal handler must not touch " + banned);
+        StringAssert.Contains(Body(logic, "public override void AfterStart("), "Mission.OnMissileRemovedEvent += QueueMissileRemoved;");
+        Assert.IsTrue(At(Body(logic, "private void Handle("), "HeroMissileKind.Removed") < At(Body(logic, "private void Handle("), "_tallies.Of("),
+            "a removal names no hero and goes to every tally");
+    }
+
+    [TestMethod]
+    public void RangedLogic_UnsubscribesInOnRemoveBehavior()
+    {
+        var end = Body(Read("Hooks/HeroRangedMissionLogic.cs"), "public override void OnRemoveBehavior(");
+
+        StringAssert.Contains(end, "Mission.OnMissileRemovedEvent -= QueueMissileRemoved;");
+        Assert.IsTrue(At(end, "Mission.OnMissileRemovedEvent -= QueueMissileRemoved;") < At(end, "base.OnRemoveBehavior();"));
+    }
+
+    // An arrow is an extra by its item alone: the missile index is reused at once, so a remembered index would misread
+    // his next primary arrow. OnAgentHit carries the missile's weapon (Mission.cs:5657-5658); OnMissileHit reads the
+    // missile from the mission's list by the index the hit carries.
+    [TestMethod]
+    public void RangedLogic_TellsAnExtraByItsItemOnly()
+    {
+        var logic = Read("Hooks/HeroRangedMissionLogic.cs");
+        var runner = Read("Hooks/HeroMultiShotRunner.cs");
+
+        StringAssert.Contains(Body(logic, "public override void OnMissileHit("), "LongDefeatVolleyHooks.MissileItem(Mission, collisionData.AffectorWeaponSlotOrMissileIndex) ?? \"\"");
+        StringAssert.Contains(Body(RepoPaths.ReadSource("Main/Features/LongDefeat/Hooks/LongDefeatVolleyHooks.cs", stripComments: true), "internal static string? MissileItem("), "mission.MissilesList");
+        StringAssert.Contains(Body(logic, "private void Handle("), "e.IsExtraArrow");
+        StringAssert.Contains(Read("Hooks/HeroMissileQueue.cs"), "internal bool IsExtraArrow => Kit.ExtraArrowItem.Length > 0 && ItemId == Kit.ExtraArrowItem;");
+        foreach (var gone in new[] { "IsExtra(", "_extras", "IndexMemorySeconds" })
+        {
+            Assert.IsFalse(logic.Contains(gone), "logic: " + gone);
+            Assert.IsFalse(runner.Contains(gone), "runner: " + gone);
+        }
+        var tally = Read("Hooks/HeroRangedTally.cs");
+        Assert.IsFalse(tally.Contains("IndexMemorySeconds") || tally.Contains("PierceWindowSeconds"), "no time window: an index lives until its removal");
+    }
+
+    [TestMethod]
+    public void RangedLogic_IsAgentOwner()
+    {
+        Assert.AreEqual(TAOM.Features.CoopInterop.Missions.CoopMissionRole.AgentOwner,
+            TAOM.Features.CoopInterop.Missions.CoopMissionRoles.Of(typeof(TAOM.Features.HeroAbilities.Hooks.HeroRangedMissionLogic)));
+    }
+
+    // One executor class for the melee strike and the arrow (decision R3): the module builds it from the same services
+    // SignatureStrikesMissionLogic does.
+    [TestMethod]
+    public void Module_AddsTheRangedLogicWithTheSharedExecutor()
+    {
+        var module = Read("HeroAbilitiesModule.cs");
+
+        StringAssert.Contains(module, "new HeroRangedMissionLogic(runtime, new SignatureInstantKill(r.Resolve<ISignatureStrikeService>(), r.Resolve<ISignatureAgentRoster>(), r.Resolve<ISignatureStrikeRegistry>(), runtime.Outcomes, runtime.Logger))");
+    }
+
+    [TestMethod]
+    public void Host_AddsRosterBeforeRefresh()
+    {
+        var run = Body(Read("Hooks/HeroAbilityHost.cs"), "internal void RunAll(");
+        var passive = Body(run, "if (!record.PassiveGiven)");
+
+        Assert.IsTrue(At(passive, "_runtime.Ranged.Add(hero, record.Kit.Ranged);") < At(passive, "HeroAbilityCaster.Refresh(hero);"),
+            "the refresh must read the roster with him in it");
+        Assert.IsTrue(At(run, "!CoopMissionOwnership.IsOwnedHere(hero)") < At(run, "_runtime.Ranged.Add("), "owned heroes only");
+    }
+
+    [TestMethod]
+    public void Host_StandDownClearsRosterBeforeExpire()
+    {
+        var standDown = Body(Read("Hooks/HeroAbilityHost.cs"), "internal void StandDown(");
+        var first = standDown.Substring(standDown.IndexOf('{') + 1).TrimStart();
+
+        StringAssert.StartsWith(first, "_runtime.Ranged.Clear();", "the first statement");
+        Assert.IsTrue(At(standDown, "_runtime.Ranged.Clear();") < At(standDown, "Expire(float.PositiveInfinity);"),
+            "the expiry's refresh must drop the zeros");
+    }
+
+    [TestMethod]
+    public void Host_DropForgetAndClear_LeaveTheRoster()
+    {
+        var host = Read("Hooks/HeroAbilityHost.cs");
+
+        StringAssert.Contains(Body(host, "private void Drop("), "_runtime.Ranged.Remove(record.Agent);");
+        StringAssert.Contains(Body(host, "private void Drop("), "_runtime.Bursts.Remove(record.Agent);");
+        var forget = Body(host, "internal void Forget(");
+        StringAssert.Contains(forget, "_runtime.Ledger.Remove(agent);", "a non-hero ally carries grants too");
+        StringAssert.Contains(forget, "Drop(record);", "Drop takes the hero off the roster");
+        Assert.IsFalse(forget.Contains("_runtime.Ranged.Remove("), "Drop already removes him");
+        StringAssert.Contains(Body(host, "internal void Clear("), "_runtime.Ranged.Clear();");
+        StringAssert.Contains(Body(host, "internal void Clear("), "_runtime.Bursts.Clear();");
+    }
+
+    // A 40 m trigger with the query clamped to 15 m would count no contact, and the fired check could never fail.
+    [TestMethod]
+    public void Host_ContactQueryUnclamped()
+    {
+        var host = Read("Hooks/HeroAbilityHost.cs");
+
+        StringAssert.Contains(Body(host, "private bool InContact("), "mission.GetNearbyEnemyAgents(hero.Position.AsVec2, record.ContactRange, team, _scratch);");
+        Assert.IsFalse(host.Contains("MaxQueryRadius"));
+    }
+
+    [TestMethod]
+    public void Caster_BurstOnExtraArrows_AndRangedOnlyAllies()
+    {
+        var caster = Read("Hooks/HeroAbilityCaster.cs");
+
+        StringAssert.Contains(Body(caster, "internal CastResult Cast("), "if (ability.ExtraArrows > 0)");
+        StringAssert.Contains(Body(caster, "internal CastResult Cast("), "_runtime.Bursts[hero] = new HeroBurst(until, ability.ExtraArrows);");
+        var allies = Body(caster, "private int Allies(");
+        Assert.IsTrue(At(allies, "if (ability.AlliesRangedOnly && !ally.IsRangedCached)") < At(allies, "Grant(ally,"));
+    }
+
+    // AddCustomMissile writes missionObjectToIgnore.Id on a server or a recorder (Mission.cs:4972-4975), and the extra
+    // arrow has no object to ignore.
+    [TestMethod]
+    public void MultiShot_RefusesServerOrRecorder()
+    {
+        var fire = Body(Read("Hooks/HeroMultiShotRunner.cs"), "internal void Fire(");
+
+        Assert.IsTrue(At(fire, "if (GameNetwork.IsServerOrRecorder)") < At(fire, "AddCustomMissile("));
+        Assert.IsTrue(At(fire, "!AgentSlotIdentity.IsCurrentOccupant(hero) || !hero.IsActive()") < At(fire, "AddCustomMissile("), "the blow owner is the live hero");
+        StringAssert.Contains(fire, "AddCustomMissile(hero, weapon, origin, direction.Value, orientation, BaseSpeed(hero, speed), speed, false, null)");
+        Assert.IsFalse(fire.Contains("Added") || fire.Contains("MissilesList"), "AddCustomMissile always lists the missile (Mission.cs:4969-4971): no growth count");
+    }
+
+    [TestMethod]
+    public void MultiShot_AimsWithTheEngineSolver()
+    {
+        var runner = Read("Hooks/HeroMultiShotRunner.cs");
+
+        StringAssert.Contains(runner, "Mission.GetMissileVerticalAimCorrection(");
+        StringAssert.Contains(runner, "ItemObject.GetAirFrictionConstant(usage.WeaponClass, usage.WeaponFlags)");
+        StringAssert.Contains(runner, "weapon.GetWeaponStatsDataForUsage(0)");
+        StringAssert.Contains(runner, "ExtraShotAim.IsUsableAngle(");
+    }
+
+    // A dead attacker makes TakeDamage a no-op, and TryKill would then write died=0.
+    [TestMethod]
+    public void ArrowKills_ChecksShooterLiveBeforeTryKill()
+    {
+        var hit = Body(Read("Hooks/HeroArrowKills.cs"), "internal void OnBodyHit(");
+        var call = At(hit, "_executor.TryKill(");
+
+        Assert.IsTrue(At(hit, "!AgentSlotIdentity.IsCurrentOccupant(hero) || !hero.IsActive() || hero.IsFadingOut()") < call,
+            "TakeDamage refuses a fading attacker (CustomAttacksUtils.cs:170)");
+        Assert.IsTrue(At(hit, "t.DeadShooter++;") < call);
+        Assert.IsTrue(At(hit, "e.BlockedShield || e.BlockedWeapon") < call, "never a kill on a blocked hit");
+        Assert.IsTrue(At(hit, "t.Exempt++;") < call, "an extra arrow never rolls");
+        StringAssert.Contains(hit, "HeroRangedService.ArrowKillChance(");
+        StringAssert.Contains(hit, "e.Victim.IsActive() && e.Victim.Health > 0f", "a victim the arrow already killed is no call");
+        Assert.IsTrue(At(hit, "if (!(chance > 0f))") < At(hit, "t.Calls++;"));
+        StringAssert.Contains(hit, "_executor.TryKill(hero, e.Victim, chance, Magnitude, t.HeroId + \"_arrow\")");
     }
 }

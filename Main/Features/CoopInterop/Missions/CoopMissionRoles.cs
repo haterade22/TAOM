@@ -95,6 +95,7 @@ public static class CoopMissionRoles
         [nameof(RaceAbilitiesMissionLogic)] = CoopMissionRole.AgentOwner,
         [nameof(HeroAurasMissionLogic)] = CoopMissionRole.AgentOwner,
         [nameof(HeroAbilitiesMissionLogic)] = CoopMissionRole.AgentOwner,
+        [nameof(HeroRangedMissionLogic)] = CoopMissionRole.AgentOwner,
         [nameof(DeadTargetResetMissionBehavior)] = CoopMissionRole.AgentOwner,
 
         // Local: this peer's own view, log or files.

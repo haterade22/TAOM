@@ -2871,3 +2871,11 @@ The battle balance provider's new tests built `BattleBalanceConfig` objects in C
 **Prevent:** when a check fails on "it could have acted and did not", take the "could have" from the same numbers the code acts on (here the kit's easiest trigger: its count and range, in the same distance measure), and count it by a second path so a broken sensor still fails. Then ask what correct play looks like at the edge of the rule, and make sure that play does not fail.
 
 **Source:** [rca-hero-abilities-2026-11-15.md](../rca-hero-abilities-2026-11-15.md) finding 1.
+
+### When a check line gains a second writer, every manifest that reads its id names its own writer (#1361, 2026-11-16)
+
+**Why missed:** the `fired` and `instant-kill` lines were written for Aragorn and Gimli, and the manifest of #1359 matched them by id alone. Legolas's kit writes both lines too. The plan noticed and called it intended, without asking what a FAIL on a closed issue would then say. In the same review a copied test had lost its one positive assertion, and a "calls" count ran before the gate of the code it counts.
+
+**Prevent:** before a change writes an existing check id from a new place, grep `tools/ingame_checks/` for the id and narrow each reached, pass and fail pattern to the field that names the writer (`hero=`, `signature=`); add a test that feeds each manifest the other writer's lines. For a copied test, diff it against its source and account for every assertion that is gone. Prove a test of a validator by running the validator on input that must fail.
+
+**Source:** [rca-hero-ranged-kit-2026-11-16.md](../rca-hero-ranged-kit-2026-11-16.md) finding 3, 4 and 5.

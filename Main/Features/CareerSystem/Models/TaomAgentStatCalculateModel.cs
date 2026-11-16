@@ -10,6 +10,7 @@ using TAOM.Features.CreatureSiegeRole.Hooks;
 using TAOM.Features.CultureDoctrine;
 using TAOM.Features.CultureDoctrine.Hooks;
 using TAOM.Features.Elephant;
+using TAOM.Features.HeroAbilities.Hooks;
 using TAOM.Features.Mumakil;
 using TAOM.Features.RaceAbilities.Hooks;
 using TAOM.Features.Spider;
@@ -17,9 +18,7 @@ using TaleWorlds.Core;
 
 namespace TAOM.Features.CareerSystem.Models;
 
-// Phase 9b — thin boundary per gamemodels.md rule 4. All branching/stat-mutation logic
-// lives in ICareerAgentStatService. This file extracts primitives from the sealed Agent
-// at the boundary and delegates. Closes deferred audit-issue #142 inline-logic P2.
+// Thin boundary per gamemodels.md rule 4: the career decisions live in ICareerAgentStatService (#142).
 //
 // This one AgentStatCalculateModel slot carries the career, mount-lock, culture aggression, the #892 horse-stand polearm
 // favour (a post-pass right after the aggression one), cavalry charge, race ability
@@ -145,5 +144,6 @@ public class TaomAgentStatCalculateModel : SandboxAgentStatCalculateModel
 
         if (_chargeDamage != null)
             MountChargeDamageApplier.Apply(agent, agentDrivenProperties, _chargeDamage);
+        HeroRangedHooks.ApplyStats(agent, agentDrivenProperties);
     }
 }

@@ -68,6 +68,11 @@ public class TaomCombatMechanicsModel : TaomAgentApplyDamageModel
         => CreatureSiegeHooks.ScaleGateDamage(in attackInformation, in collisionData,
             base.ApplyDamageScaling(in attackInformation, in collisionData, baseDamage));
 
+    // Hero Abilities (#1361): a granted hero's shield-blocked arrow is raised above the shield pass-through threshold, after
+    // every other damage step; every other hit is base. The reason it sits here: CombatMechanicsHooks.ShieldPierceFloor.
+    public override float ApplyGeneralDamageModifiers(in AttackInformation attackInformation, in AttackCollisionData collisionData, float baseDamage)
+        => _combat.ShieldPierceFloor(in attackInformation, in collisionData, base.ApplyGeneralDamageModifiers(in attackInformation, in collisionData, baseDamage));
+
     // Race Abilities first: a defender standing fast holds against every crush-through, a raging swing breaks
     // any block; with neither live it has no opinion and the combat rules decide. The crush context (two
     // skill lookups and a roll) is built only when the combat rules are asked. The player's career counter
@@ -124,7 +129,7 @@ public class TaomCombatMechanicsModel : TaomAgentApplyDamageModel
     {
         // Base first — preserves the vanilla Javelin + Impale perk grant.
         base.DecideMissileWeaponFlags(attackerAgent, in missileWeapon, ref missileWeaponFlags);
-        missileWeaponFlags = _combat.PenetrationFlags(in missileWeapon, missileWeaponFlags);
+        missileWeaponFlags = _combat.PenetrationFlags(attackerAgent, in missileWeapon, missileWeaponFlags);
     }
 
     public override float CalculateShieldDamage(in AttackInformation attackInformation, float baseDamage)
