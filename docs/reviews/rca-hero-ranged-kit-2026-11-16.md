@@ -1,0 +1,52 @@
+# RCA: Legolas's ranged kit (#1361)
+
+Findings from the tier 1 review of #1361, Phase 5 of #1325, on the uncommitted worktree `feat/hero-companions` over 300854763. The first wave ran four lenses (5 Data flow, 2 Engine compatibility, 7 XML and ModuleData, Tooling) and found one HIGH and four MEDIUM. Because of the HIGH, a second wave (1 Standards, 3 Efficiency, 4 Completeness, 6 Design) read the corrected tree; it found one MEDIUM and confirmed the first wave's fixes. The engine lens verified 20 groups of engine members and found none incompatible; four engine questions stayed unverified, and two of them are listed below. The Codex pass did not run: the maintainer said to skip it while the account has no usage.
+
+| # | Sev | Bug | Category | Why Missed | Preventive Action |
+|---|---|---|---|---|---|
+| 1 | HIGH | The Elven Volley could choose Legolas as the owner of its arrows. Every gate of the kit asks only who shot the missile, so twelve to sixteen volley arrows would have carried his shield pierce, his damage floor and his kill roll (a headshot kills), and the checks of this issue could have passed on volley arrows alone | A grant keyed by the shooter, with a second source of missiles in his name | The plan read the volley as a reader of the extra arrows (its hit filter and its posts counter) and never as a writer: nobody listed what else can shoot in a hero's name. The owner rule prefers an archer far from the attackers, which describes Legolas late in a wave | A held hero never owns a volley: `LdOwnerCandidate.HeldHero`, skipped by `VolleyOwnerRule.Choose`, filled from the adapter's held list. Lesson 1 |
+| 2 | MED | Three memories were keyed by a missile index and ended by time (10 s and 2 s). Native gives a freed index to the next missile created anywhere in the mission, last in and first out, so his next arrow could inherit the index of an extra arrow (no kill roll, counted as an extra hit), of his last arrow (one contact for two arrows) or of an arrow stuck in a shield (a pass-through counted with no pass-through) | Identity by a handle the engine recycles | The builders knew the index is reused and guarded it with a time window, on the guess that reuse is slow. The allocator was not read until the review decompiled it | An extra arrow is known by its item. `Mission.OnMissileRemovedEvent` ends what an index remembers, through the same queue as the hits, so the order holds. Lesson 2 |
+| 3 | MED | The manifest of #1359, closed and still owed an in-game check, read any hero's `fired` line and any signature's `instant-kill` line. A Legolas who cast nothing, or one arrow roll that left its victim alive, would have failed Aragorn's and Gimli's issue | A check line that gained a second writer | The plan saw it and called it intended ("shared executor"). It did not ask what a FAIL on #1359 would then mean | Both manifests name their heroes and signatures; `HeroAbilities1359And1361Tests` proves neither reads the other's lines. Lesson 3 |
+| 4 | MED | The new item test could pass on a run that checked no mesh. It was copied from its sibling without the positive count, and the validator prints "missing: 0" also when it scanned no pack | A copied test that lost its positive assertion | The copy kept the two lines that looked like the result | The test asserts `unique visual meshes present (Tier B): 3/3` |
+| 5 | MED | `calls=` counted an arrow hit as a kill roll before the executor looked at the victim. The executor refuses a victim the arrow itself killed, so with a headshot chance of 1 most headshot "calls" were corpses, and the rule "fail after 50 calls with no kill" stood on about half that many real rolls | A "had the chance" count taken before the judged code's own gate | The same pattern as finding 1 of the #1359 review, one phase later: the count sat one line above the call it counts | `HeroRangedService.ArrowKillChance` takes `victimAlive` and answers 0 for a dead victim, so the count comes after the gate |
+| 6 | MED | The fix for finding 1 was tested in the pure rule only. The new field had a default of `false`, and no test read the adapter's call, so dropping the argument would have compiled, passed every test and brought the HIGH back | A fix proven one layer above where it is wired | The fix builder wrote the rule's test first, as asked, and the default kept every older caller compiling | The default is gone, so the compiler asks every caller; a source pin in `LongDefeatBlowOwnerTests` reads `IsHeldHero(a)` at the call |
+| 7 | LOW | The `added=` count could never differ from `fired=` (the engine always appends the missile); three comments stated engine behaviour wrongly (a blocked missile does reach `OnAgentHit`, the aim solver answers pi and not NaN when out of reach, the floor runs only when the engine's own shield damage is above 0); the shooter gate missed a fading-out shooter; the roster removal ran twice; the precision and pierce checks judged a kit whose switch is off; the Python test compared against fixed item ids and not the hero's own bow and arrow; the helper that finds a missile's item was a second copy of the Long Defeat's; three guards of the entry point and the order of the two shield parameters had no pin | First-draft gaps | Each is a line or a pin | Fixed in place, each with a test or a pin where code changed |
+
+Process notes, not findings of the lenses: the first fix builder made the Long Defeat's item helper internal, met a pin on its private signature, and wrote a copy instead of updating the pin; the second wave's design lens found the copy.
+
+Not applied:
+
+- No `GetWeaponInaccuracy` override in the stat models. Native can ask `Agent.GetWeaponInaccuracy` (Agent.cs:1876), which uses the model's formula and not the zeroed property. For his bow (accuracy 98, skill 300) the formula gives 0.0008, under a twentieth of a degree. Whether native uses that callback for the shot is not verified. The feature doc states the limit.
+- The decision when the precision line is due stays inline in `HeroRangedMissionLogic.Sample`. After the comment cleanup the class is 145 lines by the gate's count (the gate fails at 150), and a helper would add a member for no change in behaviour.
+- The validator regex `AbilityId` also validates the extra arrow's item id. Renaming an existing member is outside this change.
+- `LongDefeatBattlefieldAdapter.Volley.cs` keeps its own `added` count, which has the same dead comparison. It predates this work.
+
+FOLLOW-UP (#1325): the arrow kill's blow is placed at the midpoint of shooter and victim (`CustomAttacksUtils.TakeDamage`), so its hit sound plays between them. A change there touches every custom attack.
+
+FOLLOW-UP (#1325): `taom_legolas_arrow` loads in Custom Game only. The phase that puts the heroes in a campaign story mission must load the item there too. Status: #1366 did it (the item loads for Campaign, CampaignStoryMode and CustomGame, 2026-11-16); no campaign has been run with it yet.
+
+FOLLOW-UP (no issue: a pre-existing validator gap, not from this work): `validate_mesh_refs.py` does not check `holster_body_name`.
+
+## Proof
+
+Run 20261116-024002 (4 waves) on the committed build d33642297. `python tools/ingame_verdict.py --issue 1361` reads PASS for all seven checks: `fired` (13 casts, then 8 by the body bought after his fall in wave 3), `precision` (`nonzero=0` for both bodies), `hits` (`shots=55 contact=45 share=0.82`), `pierce` (`shield_hits=13 passed=10 broken=0`, and `4` of `4` for the second body), `multishot` (`windows=4 window_shots=4 fired=8 hits=11`), `arrow-kill` (`body_hits=50 head=11 exempt=5 calls=17 kills=3`) and `instant-kill` (`signature=taom_hero_legolas_arrow victim=fow_urukhai_skirmisher chance=1.00 roll=0.173 ... died=1`). No stand-down line; the session's one failed check is the muster line of #1142.
+
+The run settles the question the engine source left open: the body hit does follow a shield pass-through, 14 times in 17. With the removal event in place, that count cannot come from a reused index (finding 2). The `calls=17` against 50 body hits is finding 5 at work: 28 of his hits found the soldier already dead by the arrow itself.
+
+The run does not show a gain in kills, and it shows why: he shot 61 arrows in four waves. The hunters line counts a body's kills for its whole life: he had 10 at the end of wave 1 and 26 at the end of wave 2, fell in wave 3, and the body bought after that made 14 in wave 4; the run before the kit read 21, 34 and 39 at the end of waves 1, 2 and 3. (Corrected 2026-11-16: the first text of this paragraph read the counts as kills per wave.) The three heroes hold one post at the top of a wall lane, and there he fights with his sword much of the time. Helm's Deep sells no Elven Volley, so finding 1 could not have occurred in this run; its proof is the rule's test and the adapter pin.
+
+FOLLOW-UP (#1325): where Legolas stands. His kit needs a post from which he shoots; the shared post of the three heroes puts him in the melee. The decision that the three form one group is the maintainer's.
+
+## Root-cause pattern
+
+Findings 1, 3 and 6 are one habit: a rule was written for the path the author had in mind, and the other producers of the same input were not listed. The volley shoots in an agent's name; a second hero writes a shared line; a second caller can build the candidate. Finding 2 is the engine's version of it: an index names a missile only until the engine hands it to the next one.
+
+## Why each reviewer missed these
+
+- **The architect's pinned plan** listed the volley's readers of the extra arrows and marked the shared `instant-kill` line as intended. It did not ask the reverse question for either.
+- **The builders** followed the plan and guarded index reuse with a time window, without a read of the allocator.
+- **Lens 5** found 1 from the owner rule's own filter. **Lens 2, lens 5 and the tooling lens** each found 2; lens 5 decompiled the native allocator and the removal, which settled the order of reuse. **The tooling lens** found 3, 4 and 5 by running the judge and the validator against made-up input. **Lens 4** found 6 by asking which test would fail if the fix's one argument were dropped.
+
+## Lessons recorded
+
+One entry each in `docs/reviews/lessons/gamemodels-services.md`, `docs/reviews/lessons/adapters-taleworlds-api.md` and `docs/reviews/lessons/testing-qa.md`, dated 2026-11-16 with this file as their source.

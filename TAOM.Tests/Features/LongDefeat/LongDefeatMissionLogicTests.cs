@@ -186,7 +186,7 @@ public class LongDefeatMissionLogicTests
         StringAssert.Contains(body, "victim.Team?.Side != BattleSideEnum.Defender");
         StringAssert.Contains(body, "LongDefeatVolleyHitFilter.Cancelled(");
         StringAssert.Contains(body, "host.OnVolleyHit(");
-        StringAssert.Contains(BodyOf(source, "private static string? MissileItem("), "mission.MissilesList");
+        StringAssert.Contains(BodyOf(source, "internal static string? MissileItem("), "mission.MissilesList");
     }
 
     [TestMethod]

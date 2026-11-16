@@ -13,7 +13,7 @@ using TAOM.Tests.Infrastructure;
 namespace TAOM.Tests.Features.LongDefeat.Config;
 
 /// <summary>
-/// The <c>armoury</c>, <c>yard</c> and <c>marshal</c> blocks of a shop in shop.json (phase4-plan.md section 5). The cases live in tools/tests/long_defeat_location_cases.json, written by hand from the
+/// The <c>armoury</c> and <c>yard</c> blocks of a shop in shop.json (phase4-plan.md section 5). The cases live in tools/tests/long_defeat_location_cases.json, written by hand from the
 /// plan's rules table, and the Python mirror (<c>read_locations</c>) reads the same file, so the two loaders cannot drift apart while both suites pass.
 /// </summary>
 [TestClass]
@@ -41,10 +41,6 @@ public class LongDefeatLocationsReaderTests
         {
             ["reach"] = plan.Yard.Reach,
             ["engines"] = new JArray(plan.Yard.Engines.Select(e => new JArray(e.Kind, e.Price))),
-        },
-        ["marshal"] = plan.Marshal == null ? JValue.CreateNull() : new JObject
-        {
-            ["troop"] = plan.Marshal.Troop, ["price"] = plan.Marshal.Price, ["name"] = plan.Marshal.Name, ["text"] = plan.Marshal.Text,
         },
         ["warnings"] = warnings,
     };
@@ -90,7 +86,7 @@ public class LongDefeatLocationsReaderTests
     {
         var names = ((JArray)CaseFile()["cases"]!).Select(c => (string)c["name"]!).ToList();
 
-        foreach (var word in new[] { "reach", "id", "kind", "slots", "price", "classes", "engine", "marshal", "horse", "ballista" })
+        foreach (var word in new[] { "reach", "id", "kind", "slots", "price", "classes", "engine", "horse", "ballista" })
             Assert.IsTrue(names.Any(n => n.IndexOf(word, StringComparison.OrdinalIgnoreCase) >= 0), "no case names '" + word + "'");
     }
 
@@ -165,7 +161,7 @@ public class LongDefeatLocationsReaderTests
     }
 
     [TestMethod]
-    public void TheShopReader_HandsTheBlocksToThisReader_AndAShopWithoutThemHasNoLocationsPlan()
+    public void TheShopReader_HandsTheBlocksToThisReader_IgnoresARetiredMarshalKey_AndAShopWithoutBlocksHasNoLocationsPlan()
     {
         var logger = Substitute.For<IModLogger>();
         var shop = "{'shops':{'rohan':{'startingGold':600,'offers':[{'id':'m','troop':'t','class':'Infantry','packSize':12,'price':180}],"
@@ -174,7 +170,6 @@ public class LongDefeatLocationsReaderTests
         var shops = ShopReader.Read(shop, new LongDefeatConfigScope(logger, "shop.json"));
 
         Assert.AreEqual(450, shops["rohan"].Locations!.Yard!.Engines.Single().Price);
-        Assert.AreEqual("lord_4_7", shops["rohan"].Locations!.Marshal!.Troop);
         Assert.IsNull(shops["rohan"].Locations!.Armoury);
         Assert.IsNull(shops["plain"].Locations, "no key, no plan, and no warning for it");
         logger.DidNotReceive().LogWarning(Arg.Any<string>());

@@ -143,4 +143,20 @@ public class Patch70FiefGrantDecisionSwapBindingTests
             "KingdomDecision.NotifyPlayer is no longer writable — Patch70 cannot carry the " +
             "notification flag onto the replacement decision.");
     }
+
+    // On a co-op host, BannerlordCoop's AddDecision prefix (default priority 400) adds and publishes the
+    // decision and returns false, and Harmony 2.4.2 then skips this by-ref prefix. Equal priorities run in
+    // add order, so without High the election would be vanilla or TAOM's depending on which game the
+    // process ran first (#1346).
+    [TestMethod]
+    public void Prefix_RunsBeforeCoopsDefaultPriorityPrefix()
+    {
+        var prefix = typeof(TAOM.Features.FiefGranting.Hooks.Patch70_FiefGrantDecisionSwap)
+            .GetMethod("Prefix", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static);
+
+        Assert.IsNotNull(prefix, "Patch70_FiefGrantDecisionSwap.Prefix is gone.");
+        var priority = System.Reflection.CustomAttributeExtensions.GetCustomAttribute<HarmonyPriority>(prefix)?.info.priority ?? Priority.Normal;
+        Assert.IsTrue(priority > Priority.Normal,
+            "Patch70's prefix must outrank Coop's default-priority prefix so it swaps the decision before Coop adds it; it has " + priority);
+    }
 }

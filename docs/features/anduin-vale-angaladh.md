@@ -406,7 +406,7 @@ Restart Bannerlord fully, then start a new campaign. Precondition: the rows are 
 - The six careers show a blank portrait, as Dale's three do (#1058).
 - The cloned companion rosters `npc_companion_equipment_template_anduinvale` and `_angaladh` carry
   `dale_great_axe_a` beside a shield, inherited from Dale's own roster. `audit_polearm_shield_parity.py`
-  warns and passes.
+  holds the pair in `KNOWN_FAILURES` (a backup for when the shield breaks, #1312) and passes.
 - Load timing: the full restart is still needed for the new TAOM.dll and the six new
   `SubModule.xml` entries, even though the Dale starter kit loads at the next campaign start.
 - The 48 live Armory language files (`loc_LOTRAOM_horses`, `loc_LOTRLOME_crafting_pieces`,

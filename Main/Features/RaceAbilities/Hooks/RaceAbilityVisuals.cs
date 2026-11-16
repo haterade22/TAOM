@@ -106,6 +106,22 @@ public sealed class RaceAbilityVisuals
         }
     }
 
+    // A hero ability's outline on its hero (#1359): his colour while it runs, null to clear. It goes through Paint, so the
+    // feature keeps one guarded write site. The outline is not in this class's ledger, so Refresh may clear it when the
+    // hero's own race ability ends; the hero abilities paint it again on their next pass.
+    public void Outline(Agent agent, uint? color)
+    {
+        MissionThreadGuard.NoteCall("RaceAbilityVisuals.Outline", _runtime.Warn);
+        try
+        {
+            Paint(agent, Shown ? color : null, _runtime.Resolver.VisualsConfig.SeeThrough);
+        }
+        catch (Exception ex)
+        {
+            ReportFailure(nameof(Outline), ex);
+        }
+    }
+
     // Mission end: drops every reference. The mission's agents are being torn down, so no native call.
     public void Clear()
     {

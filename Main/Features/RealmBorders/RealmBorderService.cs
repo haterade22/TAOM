@@ -160,13 +160,19 @@ public sealed class RealmBorderService : IKingdomRenameListener
     public void MarkDirty() => _dirty = true;
 
     /// <summary>
-    /// Goes up by one each time a kingdom is renamed in play; the names layer letters the names anew when it changes, and
-    /// otherwise never reads them. Game thread only.
+    /// Goes up by one each time a kingdom is renamed in play, or a screen over the map closes; the names layer letters the
+    /// names anew when it changes, and otherwise never reads them. Game thread only.
     /// </summary>
     public int NameVersion { get; private set; }
 
     /// <summary>A kingdom took a new name (Realms: Erebor as Durin's Folk). Its place on the map is unchanged.</summary>
     public void OnKingdomRenamed(string kingdomId) => NameVersion++;
+
+    /// <summary>
+    /// A screen over the map closed, and the kingdom screen there may have renamed a kingdom, which tells nobody (#1316).
+    /// The names are lettered anew: a few strings per realm.
+    /// </summary>
+    public void OnNamesMayHaveChanged() => NameVersion++;
 
     public void ToggleVisible()
     {

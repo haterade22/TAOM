@@ -1,0 +1,51 @@
+# In-game checks for #1368 (the unattended story-mission run: python tools/run_scenario.py --kind story-mission --mission helms_deep_defend), read by
+# tools/ingame_verdict.py. The driver (Main/Features/Autorun/Scenario/ScenarioAutorunDriver.cs) starts a campaign, opens the story mission through the dev menu's own
+# click path, waits for the end and the map, and writes one done line. That line alone must not pass a mission that was abandoned: the player's agent that leaves the
+# boundary is retreated, StoryEndWatch records Abandoned (read as a loss), and the driver would still write reason=ok with verdict=Lost. So this manifest also holds the
+# story's own boot line and its ended line with the strict pattern of tools/ingame_checks/1105.toml, which names only the three ways a run ends by itself.
+# The two story rows carry a scope that opens a segment at the launch of helms_deep_defend and a scope_end that closes it at the next launch of any story mission or Long
+# Defeat run, as in tools/ingame_checks/1366.toml. The check ids of the two story rows repeat those of 1105; a manifest may repeat an id. The done row carries no scope:
+# the driver writes one done line per process, and a failure before the launch (a refused menu, a launcher refusal) writes no launching line, so a scope would read that
+# failure as NOT REACHED. Its patterns name the mission instead.
+# The runner (tools/run_scenario.py) holds the same three conditions plus exactly one launching line with autoplay True.
+# Read this manifest from one session (the default --sessions 1, or --session <the run's log>): the three rows must come from the same run, and a later row from an older
+# session could otherwise complete a pass that the newest run did not earn.
+#
+# fixed_in is the feature commit: only a build that holds it counts.
+issue = 1368
+title = "Unattended story-mission run: a new campaign, one story mission opened through the dev menu, quit when the map is back"
+fixed_in = "4baa2f53a"
+logs = ["taom"]
+
+# Written once, in Finish, with reason=ok only when the menu opened, the click was taken, the mission screen was seen, a verdict came (Won or Lost) and the map
+# settled again. Any other reason writes result=fail with the same detail, and that can happen before any launching line, so this row has no scope.
+# A done line of another mission is not read.
+[[check]]
+id = "taom.autorun.story-mission.done"
+needs = "an armed unattended run: python tools/run_scenario.py --kind story-mission --mission helms_deep_defend, on a build that holds the driver"
+reached = ['\[Check\] id=taom\.autorun\.story-mission\.done result=\S+ reason=\S+ mission=helms_deep_defend ']
+pass = ['\[Check\] id=taom\.autorun\.story-mission\.done result=pass reason=ok mission=helms_deep_defend verdict=(Won|Lost) mission_seconds=\d+\.\d culture=\S+$']
+fail = ['\[Check\] id=taom\.autorun\.story-mission\.done result=fail reason=\S+ mission=helms_deep_defend ']
+absence = "not-reached"
+
+[[check]]
+id = "taom.story-missions.hosted.boot"
+scope = '\[StoryMissions\] launching \S+ for \x27helms_deep_defend\x27 '
+scope_end = '\[(LongDefeat|StoryMissions)\] launching '
+needs = "the same run: the hosted Long Defeat run booted in the campaign (deployment finished, siege team AI, a main agent, IsFriendlyMission false)"
+reached = ['\[Check\] id=taom\.story-missions\.hosted\.boot result=']
+pass = ['\[Check\] id=taom\.story-missions\.hosted\.boot result=pass deployment_finished=true siege_ai=true main=true friendly=false']
+fail = ['\[Check\] id=taom\.story-missions\.hosted\.boot result=fail']
+absence = "not-reached"
+
+[[check]]
+id = "taom.story-missions.ended"
+scope = '\[StoryMissions\] launching \S+ for \x27helms_deep_defend\x27 '
+scope_end = '\[(LongDefeat|StoryMissions)\] launching '
+needs = "the same run: the wave ended by a win or a loss that the mission reached by itself (a reason=Abandoned end reads FAIL here)"
+reached = ['\[Check\] id=taom\.story-missions\.ended result=']
+pass = ['\[Check\] id=taom\.story-missions\.ended result=pass verdict=(Won|Lost) side=Defending reason=(TargetReached|DefendersDead|KeepLost) waves=\d+$']
+# The second fail pattern is only for this unattended run: the autoplayed agent leaving the boundary is retreated and recorded as Lost with reason=Abandoned
+# (StoryEndWatch.Detail writes the line). 1105 keeps NOT REACHED for it, because a person may retreat on purpose there.
+fail = ['\[Check\] id=taom\.story-missions\.ended result=fail', '\[Check\] id=taom\.story-missions\.ended result=pass verdict=Lost side=Defending reason=Abandoned ']
+absence = "not-reached"

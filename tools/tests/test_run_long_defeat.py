@@ -88,7 +88,7 @@ def wave_row(wave, seed=7, **more):
 
 # A run that bought nothing of the fortifications: no purchase, no gold spent, no level, and a wave row whose volleys never fired.
 NO_VOLLEYS = {"volley": {"uses": 0, "arrows": 0, "hits": 0, "kills": 0, "withheld": 0}, "towerVolley": {"uses": 0, "arrows": 0, "hits": 0, "kills": 0, "withheld": 0}}
-NO_FORT = {"purchases": [], "gold": {"spent": 0, "spentOn": {"packs": 0, "gate": 0, "towers": 0, "fieldCare": 0, "volley": 0, "upgrades": 0}},
+NO_FORT = {"purchases": [], "gold": {"spent": 0, "spentOn": {"packs": 0, "gate": 0, "towers": 0, "fieldCare": 0, "volley": 0, "upgrades": 0, "heroes": 0}},
            "fortifications": {"gateLevel": 0, "towerLevel": 0, "volleyLevel": 0}}
 
 
@@ -2741,8 +2741,32 @@ class PurchaseJudgeTests(unittest.TestCase):
 
     UPGRADES = {"a>b": 15}
 
+    HEROES = {"aragorn": 300}
+
     def problem(self, report):
-        return ld.purchase_problem(report, "helms", fort=self.PLAN, offers=self.OFFERS, percents=self.PERCENTS, upgrades=self.UPGRADES)
+        return ld.purchase_problem(report, "helms", fort=self.PLAN, offers=self.OFFERS, percents=self.PERCENTS, upgrades=self.UPGRADES, heroes=self.HEROES)
+
+    def test_a_hero_replays_at_his_shop_price_through_the_boons_price_factor(self):
+        pick = {"pick": 1, "taken": "haggler", "takenBeforeWave": 2}
+
+        self.assertIsNone(self.problem(self.report([self.buy(2, "hero", 300, 300, id="aragorn")])))
+        self.assertIsNone(self.problem(self.report([self.buy(2, "hero", 300, 240, id="aragorn")], boons=[pick])), "a hero takes the price factor, as a pack does")
+        self.assertIn("paid 299", self.problem(self.report([self.buy(2, "hero", 300, 299, id="aragorn")])))
+
+    def test_a_hero_needs_a_hero_of_the_shop_at_his_price(self):
+        self.assertIn("basePrice", self.problem(self.report([self.buy(2, "hero", 300, 300, id="boromir")])))
+        self.assertIn("basePrice", self.problem(self.report([self.buy(2, "hero", 250, 250, id="aragorn")])))
+
+    def test_hero_gold_belongs_in_the_heroes_sink(self):
+        report = self.report([self.buy(2, "hero", 300, 300, id="aragorn")])
+        report["gold"]["spentOn"]["heroes"] = 0
+        report["gold"]["spentOn"]["packs"] = 300
+
+        self.assertIn("gold.spentOn", self.problem(report))
+
+    def test_a_hero_bought_twice_replays(self):
+        # He was bought, fell, and was bought again; the fall itself is the game's check line, not this replay's.
+        self.assertIsNone(self.problem(self.report([self.buy(2, "hero", 300, 300, id="aragorn"), self.buy(4, "hero", 300, 300, id="aragorn")])))
 
     def upgrade(self, wave, base, price, count, id="a>b"):
         return {**self.buy(wave, "upgrade", base, price, id=id), "count": count}
@@ -2914,6 +2938,29 @@ class PurchaseJudgeTests(unittest.TestCase):
         report["gold"]["spentOn"]["packs"] = -1
         self.assertIn("spentOn", self.problem(report))
 
+    def test_a_spent_on_failure_names_the_missing_and_the_extra_keys(self):
+        report = self.report([])
+        del report["gold"]["spentOn"]["heroes"]
+        report["gold"]["spentOn"]["pets"] = 0
+        why = self.problem(report)
+        self.assertIn("missing key(s): heroes", why)
+        self.assertIn("extra key(s): pets", why)
+        self.assertIn("older than this tool", why)
+        self.assertIn("[BuildStamp]", why)
+
+        report = self.report([])
+        del report["gold"]["spentOn"]["volley"]
+        why = self.problem(report)
+        self.assertIn("missing key(s): volley", why)
+        self.assertNotIn("extra key", why)
+        self.assertNotIn("older than this tool", why)
+
+        report = self.report([])
+        report["gold"]["spentOn"]["packs"] = -1
+        why = self.problem(report)
+        self.assertNotIn("missing key", why)
+        self.assertNotIn("extra key", why)
+
     def test_purchases_and_levels_are_required(self):
         report = self.report([])
         del report["purchases"]
@@ -2998,7 +3045,7 @@ class PurchaseJudgeTests(unittest.TestCase):
         ld.expected_report = {}
         self.addCleanup(setattr, ld, "target_waves", None)
         self.addCleanup(setattr, ld, "checkout", None)
-        report = {**REPORT, "gold": {"spent": 5, "spentOn": {"packs": 0, "gate": 0, "towers": 0, "fieldCare": 0, "volley": 0, "upgrades": 0}}}
+        report = {**REPORT, "gold": {"spent": 5, "spentOn": {"packs": 0, "gate": 0, "towers": 0, "fieldCare": 0, "volley": 0, "upgrades": 0, "heroes": 0}}}
 
         code, why = ld.judge(FINAL, report, FULL_LOG)
 
@@ -3275,6 +3322,182 @@ class UpgradeManifestTests(unittest.TestCase):
         self.assertIn('"' + self.PINNED + '"', self.TEST_FILE.read_text(encoding="utf-8"))
 
 
+class HeroJudgeTests(unittest.TestCase):
+    """A run that bought a hero owes the game's own pass line for him (#1337): the line carries what the engine made of the body."""
+
+    HEAD_LINE = "[2026-11-15 20:00:00] [INFO] [Check] id=taom.long-defeat.hero result={} "
+    PRICES = {"aragorn": 300, "legolas": 250, "gimli": 250}
+
+    def setUp(self):
+        ld.target_waves = 2
+        ld.checkout = (HEAD, {})
+        ld.expected_report = {"startGold": 5000}
+        self.addCleanup(setattr, ld, "target_waves", None)
+        self.addCleanup(setattr, ld, "checkout", None)
+        self.addCleanup(setattr, ld, "expected_report", {})
+
+    HUNTERS_PASS = ("[2026-11-15 20:00:00] [INFO] [Check] id=taom.long-defeat.hunters result=pass w=2 standing=1 in_group=1 units=1 held=1 order=Move own=1 settled=240 near=1 kills=3"
+                    " by=aragorn:3 health=aragorn:0.80 retaken=0 moved_out=0 moved_back=0")
+    HUNTERS_SKIP = "[2026-11-15 20:00:00] [INFO] [Check] id=taom.long-defeat.hunters result=skip w=2 reason=none-standing"
+
+    def detail(self, hero):
+        return f"hero={hero} troop=taom_hero_{hero} is_hero=1 mounted=0 formation=7 held=1 strangers=0 order=Move health_factor=3.00 wanted_factor=3.00 wielded=strider_sword"
+
+    def report(self, *heroes, before=2):
+        bought = [{"beforeWave": before, "kind": "hero", "id": h, "level": 0, "basePrice": self.PRICES[h], "price": self.PRICES[h], "share": 0.0} for h in heroes]
+        spent = sum(p["price"] for p in bought)
+        return {**REPORT, "wavesCleared": 2, "wavesFelled": 0, "startGold": 5000, "waves": [wave_row(1), wave_row(2)], "purchases": bought,
+                "gold": {"spent": spent, "spentOn": {"packs": 0, "gate": 0, "towers": 0, "fieldCare": 0, "volley": 0, "upgrades": 0, "heroes": spent}}}
+
+    def log(self, *extra, hunters=True):
+        return log_of(ld.REQUIRED_CHECKS, 2) + "\n" + "\n".join(extra + ((self.HUNTERS_PASS,) if hunters else ()))
+
+    def line(self, result, hero):
+        return self.HEAD_LINE.format(result) + self.detail(hero)
+
+    def test_a_report_that_bought_the_heroes_replays_from_the_shipped_shop(self):
+        self.assertIsNone(ld.purchase_problem(self.report("aragorn", "legolas", "gimli")))
+
+    def test_a_run_that_bought_a_hero_owes_his_pass_line(self):
+        code, why = ld.judge(FINAL, self.report("aragorn"), self.log())
+        self.assertEqual(code, 1)
+        self.assertIn("taom.long-defeat.hero", why)
+
+        code, why = ld.judge(FINAL, self.report("aragorn"), self.log(self.line("pass", "aragorn")))
+        self.assertEqual(code, 0, why)
+
+    def test_each_hero_owes_his_own_pass_line(self):
+        code, why = ld.judge(FINAL, self.report("aragorn", "gimli"), self.log(self.line("pass", "aragorn")))
+        self.assertEqual(code, 1)
+        self.assertIn("a pass with hero=gimli", why)
+
+        self.assertEqual(ld.judge(FINAL, self.report("aragorn", "gimli"), self.log(self.line("pass", "aragorn"), self.line("pass", "gimli")))[0], 0)
+
+    def test_a_hero_bought_again_after_his_fall_owes_a_second_line(self):
+        code, why = ld.judge(FINAL, self.report("aragorn", "aragorn"), self.log(self.line("pass", "aragorn")))
+        self.assertEqual(code, 1)
+        self.assertIn("a pass with hero=aragorn", why)
+
+    def test_a_failed_line_pays_nothing(self):
+        code, why = ld.judge(FINAL, self.report("aragorn"), self.log(self.line("fail", "aragorn")))
+        self.assertEqual(code, 1)
+
+    def test_a_run_that_bought_no_hero_owes_no_line(self):
+        code, why = ld.judge(FINAL, self.report(), self.log())
+        self.assertEqual(code, 0, why)
+
+    def no_shop_log(self, *extra):
+        return log_of(tuple(n for n in ld.REQUIRED_CHECKS if n != "shop"), 2) + "\n" + "\n".join(extra + (self.HUNTERS_PASS,))
+
+    def with_pack(self, report):
+        report["purchases"] = [{"beforeWave": 1, "kind": "pack", "id": "militia", "level": 0, "basePrice": 180, "price": 180, "share": 0.0}] + report["purchases"]
+        report["gold"]["spent"] += 180
+        report["gold"]["spentOn"]["packs"] = 180
+        return report
+
+    def test_a_proof_run_that_bought_only_heroes_owes_no_shop_line(self):
+        code, why = ld.judge(FINAL, self.report("aragorn", "legolas"), self.no_shop_log(self.line("pass", "aragorn"), self.line("pass", "legolas")))
+        self.assertEqual(code, 0, why)
+        self.assertIn("hero", why)
+
+    def test_a_run_that_bought_a_pack_still_owes_the_shop_line(self):
+        code, why = ld.judge(FINAL, self.with_pack(self.report("aragorn")), self.no_shop_log(self.line("pass", "aragorn")))
+        self.assertEqual(code, 1)
+        self.assertIn("taom.long-defeat.shop", why)
+
+    def test_a_run_with_no_start_gold_owes_the_shop_line_even_with_no_pack(self):
+        ld.expected_report = {}
+        report = {**self.report(), "startGold": None}
+        code, why = ld.judge(FINAL, report, self.no_shop_log())
+        self.assertEqual(code, 1)
+        self.assertIn("taom.long-defeat.shop", why)
+
+    def test_owes_shop_is_true_with_no_start_gold_or_a_pack_and_false_otherwise(self):
+        self.assertTrue(ld.owes_shop({"startGold": None, "purchases": []}))
+        self.assertTrue(ld.owes_shop({"startGold": 5000, "purchases": [{"kind": "hero"}, {"kind": "pack"}]}))
+        self.assertFalse(ld.owes_shop({"startGold": 5000, "purchases": [{"kind": "hero"}]}))
+
+    def test_hero_purchases_counts_only_hero_rows(self):
+        self.assertEqual(2, ld.hero_purchases({"purchases": [{"kind": "hero"}, {"kind": "pack"}, {"kind": "hero"}]}))
+        self.assertEqual(0, ld.hero_purchases({"purchases": [{"kind": "pack"}]}))
+
+    def test_the_judge_requires_the_hero_check_for_a_hero_run(self):
+        code, why = ld.judge(FINAL, self.report("aragorn"), self.no_shop_log())
+        self.assertEqual(code, 1)
+        self.assertIn("taom.long-defeat.hero", why)
+        code, why = ld.judge(FINAL, self.report("aragorn"), log_of(ld.REQUIRED_CHECKS, 2) + "\n" + self.line("pass", "aragorn") + "\n" + self.HUNTERS_PASS)
+        self.assertEqual(code, 0, why)
+
+    def test_only_a_hero_pass_line_pays_the_hero_check(self):
+        for other in ("hero-fall", "hunters"):
+            line = f"[2026-11-15 20:00:00] [INFO] [Check] id=taom.long-defeat.{other} result=pass hero=aragorn x=1 "
+            self.assertEqual(["hero (a pass with hero=aragorn)"], ld.owed_hero_passes(self.report("aragorn"), line), other)
+
+    def test_a_hero_line_that_is_not_a_pass_pays_nothing(self):
+        for result in ("fail", "skip"):
+            self.assertEqual(1, len(ld.owed_hero_passes(self.report("aragorn"), self.line(result, "aragorn"))), result)
+        self.assertEqual([], ld.owed_hero_passes(self.report("aragorn"), self.line("pass", "aragorn")))
+
+    def test_the_hero_debt_is_named_where_a_fail_line_would_hide_it(self):
+        self.assertEqual(["hero (a pass with hero=gimli)"], ld.owed_hero_passes(self.report("aragorn", "gimli"), self.line("pass", "aragorn")))
+
+    def test_a_hero_bought_before_a_cleared_wave_owes_a_hunters_line_and_its_absence_fails(self):
+        code, why = ld.judge(FINAL, self.report("aragorn"), self.log(self.line("pass", "aragorn"), hunters=False))
+        self.assertEqual(code, 1)
+        self.assertIn("taom.long-defeat.hunters", why)
+
+    def test_a_hunters_pass_line_pays_the_debt(self):
+        self.assertEqual([], ld.owed_hunters_lines(self.report("aragorn"), self.HUNTERS_PASS))
+        code, why = ld.judge(FINAL, self.report("aragorn"), self.log(self.line("pass", "aragorn")))
+        self.assertEqual(code, 0, why)
+
+    def test_a_hunters_skip_line_pays_the_debt(self):
+        self.assertEqual([], ld.owed_hunters_lines(self.report("aragorn"), self.HUNTERS_SKIP))
+        code, why = ld.judge(FINAL, self.report("aragorn"), self.log(self.line("pass", "aragorn"), self.HUNTERS_SKIP, hunters=False))
+        self.assertEqual(code, 0, why)
+
+    def test_only_a_hunters_line_pays_the_hunters_debt(self):
+        for line in (self.line("pass", "aragorn"), "[2026-11-15 20:00:00] [INFO] [Check] id=taom.long-defeat.hero-fall result=pass hero=aragorn cause=killed"):
+            self.assertEqual(1, len(ld.owed_hunters_lines(self.report("aragorn"), line)), line)
+
+    def test_a_hero_bought_before_a_wave_the_run_never_cleared_owes_no_hunters_line(self):
+        self.assertEqual([], ld.owed_hunters_lines(self.report("aragorn", before=3), ""))
+        self.assertEqual(1, len(ld.owed_hunters_lines(self.report("aragorn", before=2), "")), "the run cleared wave 2")
+
+    def test_the_hunters_debt_reads_the_cleared_wave_numbers_not_the_clear_count(self):
+        # --start-wave 5 --waves 2 clears waves 5 and 6 with wavesCleared=2.
+        report = {**self.report("aragorn", before=6), "startWave": 5, "waves": [wave_row(5), wave_row(6)]}
+        self.assertEqual(1, len(ld.owed_hunters_lines(report, "")))
+        self.assertEqual([], ld.owed_hunters_lines({**report, "purchases": [{**report["purchases"][0], "beforeWave": 7}]}, ""))
+
+    def test_a_run_with_no_hero_purchase_owes_no_hunters_line(self):
+        self.assertEqual([], ld.owed_hunters_lines(self.report(), ""))
+        code, why = ld.judge(FINAL, self.report(), self.log(hunters=False))
+        self.assertEqual(code, 0, why)
+
+
+class ShippedHeroesTests(unittest.TestCase):
+    """shipped_heroes reads the heroes of the fortress's shop as the game's HeroesReader keeps them (#1325)."""
+
+    def test_the_shipped_shop_lists_the_three_heroes(self):
+        self.assertEqual({"aragorn": 300, "legolas": 250, "gimli": 250}, ld.shipped_heroes("helms"))
+
+    def test_a_shop_with_no_heroes_key_lists_none(self):
+        with tempfile.TemporaryDirectory() as folder:
+            path = Path(folder) / "shop.json"
+            path.write_text(json.dumps({"shops": {"rohan": {"offers": []}}}), encoding="utf-8")
+
+            self.assertEqual({}, ld.shipped_heroes("helms", path=path))
+
+    def test_a_repeated_id_keeps_the_first_and_a_row_with_no_whole_price_or_no_id_is_skipped(self):
+        with tempfile.TemporaryDirectory() as folder:
+            path = Path(folder) / "shop.json"
+            path.write_text(json.dumps({"shops": {"rohan": {"heroes": [
+                {"id": "aragorn", "price": 300}, {"id": "ARAGORN", "price": 9}, {"id": "gimli", "price": "x"}, {"price": 5}]}}}), encoding="utf-8")
+
+            self.assertEqual({"aragorn": 300}, ld.shipped_heroes("helms", path=path))
+
+
 class ShippedUpgradesTests(unittest.TestCase):
     """shipped_upgrades reads the steps of the fortress's shop as the game's UpgradesReader keeps them (#1161)."""
 
@@ -3313,7 +3536,7 @@ class UpgradeJudgeTests(unittest.TestCase):
         bought = [{"beforeWave": 2, "kind": "upgrade", "id": self.STEP, "level": 0, "basePrice": 15, "price": 45, "share": 0.0, "count": 3} for _ in range(orders)]
         spent = 45 * orders
         return {**REPORT, "wavesCleared": 2, "wavesFelled": 0, "startGold": 5000, "waves": [wave_row(1), wave_row(2)], "purchases": bought,
-                "gold": {"spent": spent, "spentOn": {"packs": 0, "gate": 0, "towers": 0, "fieldCare": 0, "volley": 0, "upgrades": spent}}}
+                "gold": {"spent": spent, "spentOn": {"packs": 0, "gate": 0, "towers": 0, "fieldCare": 0, "volley": 0, "upgrades": spent, "heroes": 0}}}
 
     def log(self, *extra):
         return log_of(ld.REQUIRED_CHECKS, 2) + "\n" + "\n".join(extra)
@@ -3394,7 +3617,7 @@ class FieldCareJudgeTests(unittest.TestCase):
         bought = [{"beforeWave": 2, "kind": "fieldCare", "id": "", "level": 0, "basePrice": 150, "price": 150, "share": 0.75}] if care else []
         spent = 150 if care else 0
         return {**REPORT, "wavesCleared": 2, "wavesFelled": 0, "startGold": 5000, "waves": [wave_row(1), wave_row(2)], "purchases": bought,
-                "gold": {"spent": spent, "spentOn": {"packs": 0, "gate": 0, "towers": 0, "fieldCare": spent, "volley": 0, "upgrades": 0}}, **more}
+                "gold": {"spent": spent, "spentOn": {"packs": 0, "gate": 0, "towers": 0, "fieldCare": spent, "volley": 0, "upgrades": 0, "heroes": 0}}, **more}
 
     def log(self, *extra):
         return log_of(ld.REQUIRED_CHECKS, 2) + "\n" + "\n".join(extra)
@@ -3409,7 +3632,7 @@ class FieldCareJudgeTests(unittest.TestCase):
         # Tower level 3 is the tower volley (Slice 8): all three levels are for sale; a fourth is no row of the shop.
         def towers(levels):
             bought = [{"beforeWave": n, "kind": "towerLevel", "id": "", "level": n, "basePrice": price, "price": price, "share": 0.0} for n, price in levels]
-            return self.report(care=False, purchases=bought, gold={"spent": sum(p for _, p in levels), "spentOn": {"packs": 0, "gate": 0, "towers": sum(p for _, p in levels), "fieldCare": 0, "volley": 0, "upgrades": 0}},
+            return self.report(care=False, purchases=bought, gold={"spent": sum(p for _, p in levels), "spentOn": {"packs": 0, "gate": 0, "towers": sum(p for _, p in levels), "fieldCare": 0, "volley": 0, "upgrades": 0, "heroes": 0}},
                                fortifications={"gateLevel": 0, "towerLevel": len(levels), "volleyLevel": 0})
         self.assertIsNone(ld.purchase_problem(towers(((1, 250), (2, 300), (3, 400)))))
         self.assertIsNotNone(ld.purchase_problem(towers(((1, 250), (2, 300), (3, 400), (4, 400)))))
@@ -3508,7 +3731,7 @@ class GateJudgeTests(unittest.TestCase):
             bought.append({"beforeWave": 2, "kind": "gateLevel", "id": "", "level": 1, "basePrice": 200, "price": 200, "share": 0.0})
         spent = sum(p["price"] for p in bought)
         return {**REPORT, "wavesCleared": waves, "wave": waves, "wavesFelled": 0, "startGold": 5000, "waves": [wave_row(n) for n in range(1, waves + 1)], "purchases": bought,
-                "gold": {"spent": spent, "spentOn": {"packs": 0, "gate": spent, "towers": 0, "fieldCare": 0, "volley": 0, "upgrades": 0}},
+                "gold": {"spent": spent, "spentOn": {"packs": 0, "gate": spent, "towers": 0, "fieldCare": 0, "volley": 0, "upgrades": 0, "heroes": 0}},
                 "fortifications": {"gateLevel": 1 if level else 0, "towerLevel": 0, "volleyLevel": 0}, **more}
 
     def log(self, *extra):
@@ -3697,7 +3920,7 @@ class VolleyJudgeTests(unittest.TestCase):
             volley = {"uses": 1, "arrows": arrows, "hits": 8, "kills": 3, "withheld": 0} if fire else NO_VOLLEYS["volley"]
             rows.append(wave_row(n, volley=volley))
         return {**REPORT, "wavesCleared": waves, "wave": waves, "wavesFelled": 0, "startGold": 5000, "waves": rows, "purchases": bought,
-                "gold": {"spent": spent, "spentOn": {"packs": 0, "gate": 0, "towers": 0, "fieldCare": 0, "volley": spent, "upgrades": 0}},
+                "gold": {"spent": spent, "spentOn": {"packs": 0, "gate": 0, "towers": 0, "fieldCare": 0, "volley": spent, "upgrades": 0, "heroes": 0}},
                 "fortifications": {"gateLevel": 0, "towerLevel": 0, "volleyLevel": levels}, **more}
 
     def line(self, result, detail, name="volley"):
@@ -3901,7 +4124,7 @@ class PostsJudgeTests(unittest.TestCase):
             bought.append({"beforeWave": 2, "kind": "towerLevel", "id": "", "level": 2, "basePrice": 300, "price": 300, "share": 0.0})
         spent = sum(p["price"] for p in bought)
         return {**cleared(waves), "wave": waves, "wavesFelled": 0, "startGold": 5000, "purchases": bought,
-                "gold": {"spent": spent, "spentOn": {"packs": 0, "gate": 0, "towers": spent, "fieldCare": 0, "volley": 0, "upgrades": 0}},
+                "gold": {"spent": spent, "spentOn": {"packs": 0, "gate": 0, "towers": spent, "fieldCare": 0, "volley": 0, "upgrades": 0, "heroes": 0}},
                 "fortifications": {"gateLevel": 0, "towerLevel": levels, "volleyLevel": 0}, **more}
 
     @staticmethod
@@ -3999,7 +4222,7 @@ class PostsJudgeTests(unittest.TestCase):
         self.assertIn("failed check", why)
 
     def towerless(self):
-        return {**self.report(), "purchases": [], "gold": {"spent": 0, "spentOn": {"packs": 0, "gate": 0, "towers": 0, "fieldCare": 0, "volley": 0, "upgrades": 0}},
+        return {**self.report(), "purchases": [], "gold": {"spent": 0, "spentOn": {"packs": 0, "gate": 0, "towers": 0, "fieldCare": 0, "volley": 0, "upgrades": 0, "heroes": 0}},
                 "fortifications": {"gateLevel": 0, "towerLevel": 0, "volleyLevel": 0}}
 
     def test_a_run_that_bought_no_tower_owes_no_posts_line(self):
@@ -4100,7 +4323,7 @@ class TowerVolleyJudgeTests(unittest.TestCase):
         bought = [{"beforeWave": n, "kind": "towerLevel", "id": "", "level": n, "basePrice": price, "price": price, "share": 0.0} for n, price in prices]
         spent = sum(price for _, price in prices)
         return {**cleared(waves), "wave": waves, "wavesFelled": 0, "startGold": 5000, "purchases": bought,
-                "gold": {"spent": spent, "spentOn": {"packs": 0, "gate": 0, "towers": spent, "fieldCare": 0, "volley": 0, "upgrades": 0}},
+                "gold": {"spent": spent, "spentOn": {"packs": 0, "gate": 0, "towers": spent, "fieldCare": 0, "volley": 0, "upgrades": 0, "heroes": 0}},
                 "fortifications": {"gateLevel": 0, "towerLevel": levels, "volleyLevel": 0}, **more}
 
     @staticmethod
@@ -4169,7 +4392,7 @@ class TowerVolleyJudgeTests(unittest.TestCase):
         self.assertIn("taom.long-defeat.tower-volley", why)
 
         elven = {**self.report(levels=0), "purchases": [{"beforeWave": 1, "kind": "volleyLevel", "id": "", "level": 1, "basePrice": 350, "price": 350, "share": 0.0}],
-                 "gold": {"spent": 350, "spentOn": {"packs": 0, "gate": 0, "towers": 0, "fieldCare": 0, "volley": 350, "upgrades": 0}}, "fortifications": {"gateLevel": 0, "towerLevel": 0, "volleyLevel": 1}}
+                 "gold": {"spent": 350, "spentOn": {"packs": 0, "gate": 0, "towers": 0, "fieldCare": 0, "volley": 350, "upgrades": 0, "heroes": 0}}, "fortifications": {"gateLevel": 0, "towerLevel": 0, "volleyLevel": 1}}
         code, why = ld.judge(FINAL, elven, self.log(*self.volley("hornburg")))
         self.assertEqual(code, 1)
         self.assertIn("taom.long-defeat.volley", why)
@@ -4329,23 +4552,23 @@ class LocationOfferedTests(unittest.TestCase):
     def test_the_offered_mirror_is_read_from_the_csharp_source(self):
         text = source("Domain", "LocationsPlan.cs")
         self.assertEqual(self.parse(text, "Offered"), ld.LOCATION_OFFERED)
-        self.assertEqual(sorted(ld.LOCATION_OFFERED), ["armoury", "mangonel", "marshal", "trebuchet"])
+        self.assertEqual(sorted(ld.LOCATION_OFFERED), ["armoury", "mangonel", "trebuchet"])
 
     def test_a_kind_raised_on_one_side_only_is_caught(self):
         text = source("Domain", "LocationsPlan.cs")
-        raised = text.replace("Offered { get; } = new(false, false, false, false);", "Offered { get; } = new(true, false, false, false);")
+        raised = text.replace("Offered { get; } = new(false, false, false);", "Offered { get; } = new(true, false, false);")
         self.assertNotEqual(raised, text, "the planted edit found its line")
         self.assertNotEqual(self.parse(raised, "Offered"), ld.LOCATION_OFFERED)
 
     def test_an_argument_that_is_not_a_bare_literal_is_refused_not_read_as_false(self):
         text = source("Domain", "LocationsPlan.cs")
-        named = text.replace("Offered { get; } = new(false, false, false, false);", "Offered { get; } = new(Armoury: true, false, false, false);")
+        named = text.replace("Offered { get; } = new(false, false, false);", "Offered { get; } = new(Armoury: true, false, false);")
         self.assertNotEqual(named, text, "the planted edit found its line")
         with self.assertRaises(AssertionError):
             self.parse(named, "Offered")
 
     def test_this_slice_delivers_nothing_so_every_row_stays_hidden(self):
-        self.assertEqual(ld.LOCATION_OFFERED, {"armoury": False, "mangonel": False, "trebuchet": False, "marshal": False})
+        self.assertEqual(ld.LOCATION_OFFERED, {"armoury": False, "mangonel": False, "trebuchet": False})
         self.assertEqual(self.parse(source("Domain", "LocationsPlan.cs"), "None"), ld.LOCATION_OFFERED)
 
 

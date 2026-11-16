@@ -33,7 +33,9 @@ hero-line pieces its lords already wear (no troop under level 41 wears them). He
 its tier words and its trailing variant tokens (a to j, a04, b1, lord3, silver); a lord-line piece
 with a tier word below lord (`_noble_heavy_`) is a soldier grade and stays out. A piece fits a race when that race
 is seen in the piece or its family; the Armory carries no race or gender usage flags, so nothing
-else is known about the fit.
+else is known about the fit. A lord armour variant (`taom_lord_<source>`, a TAOM copy of an Armory piece
+at the lord band, tools/generate_lord_armour_variants.py, #1333) is a pool piece of the culture
+tools/lord_armour_variants.json names, whatever its folder, and has its source's family.
 
 THE ASSIGNMENT, FIRST PASS (variety first, the maintainer's word of 2026-11-15)
 -------------------------------------------------------------------------------
@@ -362,8 +364,8 @@ _LORD_DIGIT_RE = re.compile(r'^(lord|noble|captain)(\d+)$')
 
 
 def _split(iid):
-    """(family tokens, variant tokens) of an armour id."""
-    tokens = (iid or '').lower().split('_')
+    """(family tokens, variant tokens) of an armour id; a lord armour variant's are its source's."""
+    tokens = (dat.lord_variant_source(iid) or iid or '').lower().split('_')
     while tokens and tokens[0] in PREFIX_WORDS:
         tokens = tokens[1:]
     variant = []
@@ -418,11 +420,14 @@ def lowest_troop_wearers(troops):
     return out
 
 
-def lord_pool(culture, items, troops, lord_battle_sets, template_sets=(), lowest=None):
+def lord_pool(culture, items, troops, lord_battle_sets, template_sets=(), lowest=None, variants=None):
     """{'folders', 'slots': {slot: [ids]}, 'fits': {id: {races}}, 'lowest': {id: (level, troop)}}.
     `lord_battle_sets` is [(race, set)] over the culture's lords' own sets (own_sets); `template_sets`
-    the culture's generic template sets (read for the folders and for kit lords already wear)."""
+    the culture's generic template sets (read for the folders and for kit lords already wear).
+    `variants` is {lord armour variant id: culture} (default: tools/lord_armour_variants.json): a
+    variant is a pool piece of its own culture, whatever its folder (#1333)."""
     lowest = lowest if lowest is not None else lowest_troop_wearers(troops)
+    variants = dat.lord_variant_cultures() if variants is None else variants
     worn = [(_race(t.get('race')), st) for t in troops.values() if t.get('culture') == culture
             for st in t['sets']] + [(_race(r), st) for r, st in lord_battle_sets]
     folders = Counter()
@@ -448,6 +453,10 @@ def lord_pool(culture, items, troops, lord_battle_sets, template_sets=(), lowest
     for iid in sorted(items):
         rec = items[iid]
         slot = _slot_of(rec)
+        if slot and iid in variants:
+            if variants[iid] == culture:
+                slots[slot].append(iid)
+            continue
         if not slot or rec.get('folder') not in own or ra.is_monster_kit(iid):
             continue
         if ra.mesh_tier_of(iid) == 'civilian' or ra.is_excluded(iid, rec.get('name')):

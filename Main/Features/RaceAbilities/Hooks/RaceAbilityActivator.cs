@@ -93,7 +93,8 @@ public sealed class RaceAbilityActivator
         runtime.Telemetry.Add(abilityId, RaceAbilityStat.MoraleRestored, (long)System.Math.Round(topUp));
     }
 
-    private static void WarCry(Agent agent, string cry)
+    // Also the hero abilities' cast cry (#1359).
+    internal static void WarCry(Agent agent, string cry)
     {
         SkinVoiceManager.SkinVoiceType? voice = cry switch
         {

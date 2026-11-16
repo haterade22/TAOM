@@ -1379,3 +1379,23 @@ A comment on TAOM's formation preset definer said the base id "matches the origi
 - **Why missed:** the sentence names two true facts, the base id and the class id, and each later reader checked those two. Saved data of two builds or two mods meets only when the behaviour's `StringId` (the type name by default), the SyncData key, the type id (base id plus class id), each field or property id and each member's type all match. Nobody opened the reader of the data.
 - **Prevent:** before writing "imports", "compatible" or "migrates" about saved data, read both ends: the writer's key and saved members, and the reader's. State which parts match, one by one, and what was not compared. A matching number is not an import. The rule line for tests is in `.claude/rules/tests.md`.
 - **Source:** [rca-external-mod-contract-tests-2026-11-13.md](../rca-external-mod-contract-tests-2026-11-13.md) findings 1 and 7; [external-mod-couplings.md](../../reference/external-mod-couplings.md) "What each value protects".
+
+### A startup guard in TAOM.Dependencies skips the Modding Kit like its siblings (#1340, 2026-11-16)
+The game version guard in `GameVersionNotice.Run` checked the dedicated server and test mode, then turned TAOM's code off on a version mismatch. TAOM.Dependencies also loads in the Modding Kit (`Win64_Shipping_wEditor`), whose engine can lag the client's, so the guard would have disabled TAOM inside the Kit. `IncompatibleModDetector.RunEarlyPhase` already skips the Kit through `IsEditorBin`.
+
+**Why missed:** the code followed the engine's own box rules and a test that runs with the game installed; the neighbouring startup code in the same assembly was not compared.
+
+**Prevent:** a new startup guard or marker in `Dependencies/` reads `IncompatibleModDetector.RunEarlyPhase` first and takes the same early return on `IsEditorBin`, with a log line. A test that reads a method body from a referenced engine assembly carries `RequiresGameIL` and `BindingVerification`.
+
+**Source:** [rca-game-version-warning-2026-11-16.md](../rca-game-version-warning-2026-11-16.md) findings 1 and 2.
+
+### A skip path that leaves data without code needs a way out (wrong game version warning, PR #1340, 2026-11-16)
+The version guard turned TAOM's code off but the engine had already registered TAOM's XML, and the game's save check compares only module ids and versions. A TAOM save would load with no warning and no TAOM code. The popup said "close the game", and its Ok button only closed the popup.
+- **Why missed:** the text described the right action, so the state looked handled; nobody asked what the save check sees in that state.
+- **Prevent:** when a guard leaves a half-loaded session, make its only action the safe one (quit), and name the checks that would otherwise pass in that state.
+- **Source:** [rca-pr1340-game-version-warning-2026-11-16.md](../rca-pr1340-game-version-warning-2026-11-16.md), row 1.
+### A step a co-op dedicated server needs cannot live only in the main-menu hook
+TAOM.CoopCompat registered TAOM's fief election type with BannerlordCoop from `OnBeforeInitialModuleScreenSetAsRoot`. Coop compares the registered types when a player joins, so a server without the registration refuses every client that has it. Under the Coop host the dedicated server never reaches that hook with TAOM loaded: four logged TAOM server boots show no call, while two vanilla boots show one (`E:\CoopDS\*.out`; row 8 of `docs/research/taom-headless-server.md` already said so). The first-wave review caught it before commit; the registration now also runs at the first campaign start, once per process.
+- **Why missed:** the hook was chosen because a client must register before it joins from the main menu, and the server's lifecycle was not checked against the same need. One review lens cited a vanilla boot as proof that the hook fires, which it does only without TAOM.
+- **Prevent:** for anything every co-op peer must have done before a join (a registration, a type list, a handshake), name the hook it runs from on a client, a listen host and the dedicated server, and read a TAOM server boot log, not a vanilla one. `SubModuleShapeTests.SubModule_RegistersDecisionTypes_AtTheMainMenuAndAtTheFirstCampaignStart` pins both calls.
+- **Source:** #1346.

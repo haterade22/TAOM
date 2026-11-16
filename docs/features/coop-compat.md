@@ -105,6 +105,18 @@ current connection, never from the message, and every field is bounded before an
   `Missions.Sessions.dll` in `CoopBinDir`, before BannerlordCoop #4694), the project builds
   `CoopSessionTransport.NoSessionApi.cs` instead: its `Start` throws, the module logs "sessions off",
   and the co-op option stays hidden.
+- TAOM fief elections (#1346): `DecisionTypeRegistration` registers `TaomSettlementClaimantDecision`
+  with Coop's `KingdomDecisionTypeRegistry`, once per process: from the main-menu hook on a client or
+  a listen host, and from the first campaign start, which is the only one of the two the dedicated
+  server reaches under the Coop host ([headless server](../research/taom-headless-server.md), row 8).
+  Coop then sends a TAOM fief election to every client and players vote on it; an unregistered type
+  would be decided by the host's AI. Coop compares the registered types at join, so a player without
+  this module, or with a build that registers different types, is refused with Coop's own message.
+  The payload (`FiefClaimantWire`) carries the settlement, the excluded clan and the proposer. Coop's
+  round status carries the host's ordered candidates and a vote carries its clan's key, so the ballot
+  and the result match the host's; a client's own merit and support figures can differ before the
+  votes arrive. Patch70 runs at `Priority.High` so the host swaps the decision before Coop's own
+  `AddDecision` prefix adds and publishes it.
 
 ### Component Diagram
 
@@ -144,6 +156,10 @@ settings of its own.
 | `CoopCompat/Handshake/InformationManagerSettingsNotice.cs` | The two player notices |
 | `CoopCompat/Momentum/MomentumRelayService.cs` | War of the Ring momentum relay |
 | `CoopCompat/GuestTrade/GuestTradeRelayService.cs` | Guest trade relay (#1329) |
+| `CoopCompat/Decisions/DecisionTypeRegistration.cs` | Registers TAOM's fief election with Coop at the main menu and at the first campaign start (#1346) |
+| `CoopCompat/Coop/Decisions/CoopDecisionTypes.cs` | The one call into Coop's `KingdomDecisionTypeRegistry` |
+| `Main/Features/FiefGranting/FiefClaimantWire.cs`, `FiefClaimantWireData.cs` | The fief election payload and its checks |
+| `Main/Features/FiefGranting/FiefClaimantDecisionCodec.cs` | Builds the payload on the host and the decision on a client |
 | `Main/Features/CoopInterop/GuestTrade/GuestTradeClient.cs` | The guest side: one request in flight, the reply callback, the balance copy |
 | `Main/Features/CoopInterop/GuestTrade/GuestTradeHost.cs` | The host side: request checks, the emissary and armoury runs |
 | `Main/Features/CoopInterop/GuestTrade/GuestTradeShops.cs` | Builds TAOM's emissary and armoury services for one guest hero |
@@ -166,6 +182,14 @@ settings of its own.
   wire contract round trip (empty arrays come back empty, not null) and names, the transport binding to
   Coop, the manifest, the type scan gate (`TypeScanGateTests`), the reference gate over both DLLs, the
   service signature and entry point line count gates.
+- `CoopModelPatchBaseCallGateTests` (#1151): Coop fixes vanilla rules with Harmony patches on
+  `Default*Model` methods, and a TAOM override that never calls `base` hides them (#1141). The gate
+  reads the Coop patches that the referenced Coop build declares by attribute (a target on the patch
+  method, on the class, or from `TargetMethod` and `TargetMethods`), and fails on a TAOM override of
+  a patched `Default*Model` method with no base call, unless its `Reviewed` entry says where TAOM
+  carries Coop's rule. One known target per way of declaring one is a canary. An override that calls
+  `base` on some paths passes. Patches registered at run time (`harmony.Patch`, AutoSync) are outside
+  its reach, and a base call does not prove that TAOM's own rule around it treats co-op players right.
 - `TAOM.Tests/Features/WarOfTheRingMomentum/MomentumStateStoreTests.cs`: `CaptureWarState` and
   `ApplyWarState`.
 - `TAOM.Tests/Features/CoopInterop/GuestTrade/`: the client (busy, the late reply, the balance copy
@@ -173,6 +197,10 @@ settings of its own.
   match, request bounds) and the module wiring. `TAOM.CoopCompat.Tests/GuestTrade/` and the transport
   tests cover the relay's field mapping both ways, the protocol check, the connection check and the hero
   lookup. The presenters' guest branches have no unit test (thin Gauntlet code); step 4 below covers them.
+- `TAOM.Tests/Features/FiefGranting/FiefClaimantWireTests.cs` covers the fief election payload;
+  `TAOM.CoopCompat.Tests/Decisions/` checks that the type reaches Coop's registry, once per process,
+  and `SubModuleShapeTests` that both hooks call it. Building the decision from ids is engine code
+  with no unit seam; step 5 below covers it.
 - `MomentumRelaySizeTests` measures the size of a full snapshot. Whether Coop's transport carries a
   snapshot of that size in one message is not verified in a session yet.
 
@@ -201,6 +229,13 @@ settings of its own.
    leave the town and open the emissary from a saved inquiry, or trade while the town is besieged:
    the host refuses with "not in this settlement, or it is in a battle or a siege", and nothing is
    charged.
+5. Fief elections (#1346): `python tools/ingame_verdict.py --issue 1346` reads the checks. Every
+   peer's taom log shows `taom.coopcompat.fief-election.registered` (a client and a listen host at
+   the main menu, a dedicated server at its campaign start). In the campaign, take a castle for the
+   kingdom that a client's clan is in. The host logs `fief-election.sent` and the client
+   `fief-election.read`; the client sees the same candidates as the host and can vote, and the fief
+   goes to the clan the votes chose. The server's Coop log shows no "is not synced, so the server AI
+   decides it" line for `TaomSettlementClaimantDecision`.
 
 ## Distribution
 
@@ -226,10 +261,11 @@ module. A change on either side gets copied to the other. Coodsz merges and rele
 - 2026-11-11: first version (#967 C3): build and settings handshake, War of the Ring momentum relay.
 - 2026-11-15: guest trade (#1329): a guest buys from the Elite Emissary and uses the armoury through
   the host. Ported from minimalcash63's `TAOM.CoopEmissaryArmory`, with Sternab's request checks.
+- 2026-11-15: TAOM fief elections sync to players (#1346).
 
 ## GitHub Issue
 
-- **Issue:** #967: co-op server authority and sync (sub-batch C3); #1329: guest trade
+- **Issue:** #967: co-op server authority and sync (sub-batch C3); #1329: guest trade; #1346: fief elections
 - **Status:** Open
 
 ---

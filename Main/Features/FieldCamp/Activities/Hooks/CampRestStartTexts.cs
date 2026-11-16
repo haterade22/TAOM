@@ -14,25 +14,25 @@ internal static class CampRestStartTexts
     /// <summary>The one message of a new campaign that could not start in camp.</summary>
     internal static string StartBlocked(CampBlockReason reason)
     {
-        TextObject why;
+        return new TextObject("{=taom_camp_start_blocked}Your campaign begins without a camp: {REASON}")
+            .SetTextVariable("REASON", Why(reason)).ToString();
+    }
+
+    /// <summary>The reason words, lower case and ending in a full stop: they follow a lead-in ("Your campaign begins
+    /// without a camp: ..." and the Make Camp tooltip's "Cannot camp now: ...").</summary>
+    internal static TextObject Why(CampBlockReason reason)
+    {
         switch (reason)
         {
             case CampBlockReason.InSettlement:
-                why = new TextObject("{=taom_camp_start_settlement}the party stands inside a settlement.");
-                break;
+                return new TextObject("{=taom_camp_start_settlement}the party stands inside a settlement.");
             case CampBlockReason.Moving:
-                why = new TextObject("{=taom_camp_start_moving}the party is on the move.");
-                break;
+                return new TextObject("{=taom_camp_start_moving}the party is on the move.");
             case CampBlockReason.External:
-                why = new TextObject("{=taom_camp_start_external}something nearby forbids a camp here.");
-                break;
+                return new TextObject("{=taom_camp_start_external}something nearby forbids a camp here.");
             default:
-                why = new TextObject("{=taom_camp_start_other}a camp cannot be pitched here.");
-                break;
+                return new TextObject("{=taom_camp_start_other}a camp cannot be pitched here.");
         }
-
-        return new TextObject("{=taom_camp_start_blocked}Your campaign begins without a camp: {REASON}")
-            .SetTextVariable("REASON", why).ToString();
     }
 
     private static string Number(float value) => value.ToString("0.#", CultureInfo.InvariantCulture);

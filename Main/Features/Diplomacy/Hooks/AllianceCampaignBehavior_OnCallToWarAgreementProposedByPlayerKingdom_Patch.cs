@@ -9,8 +9,8 @@ namespace TAOM.Features.Diplomacy.Hooks;
 // and never reads IsAllowed, so the two ballot patches cannot cancel it; accepting the notice would
 // reach StartCallToWarAgreement, which refuses a forbidden war only after the player saw the offer.
 // Skipping here for a war the rule refuses keeps the notice off the map. A larger kingdom's ballot is
-// skipped too, which is the same outcome as its IsAllowed patches cancelling it. The veto is the
-// DeclareWarAction prefix's own (ShouldPreventWarDeclaration, which defers to the host under co-op).
+// skipped too, which is the same outcome as its IsAllowed patches cancelling it. The veto is
+// ShouldPreventCallToWar (the war veto, or a callToWarRefusals row, #1283; it defers to the host under co-op).
 // Initialize is wired in DiplomacyIoC.InitializeHooks.
 [HarmonyPatch(typeof(AllianceCampaignBehavior), nameof(AllianceCampaignBehavior.OnCallToWarAgreementProposedByPlayerKingdom))]
 [HarmonyPatchCategory("Patch11_Diplomacy")]
@@ -29,6 +29,6 @@ public static class AllianceCampaignBehavior_OnCallToWarAgreementProposedByPlaye
         if (_hook == null || proposedKingdom == null || kingdomToCallToWarAgainst == null)
             return true;
 
-        return !_hook.ShouldPreventWarDeclaration(proposedKingdom.StringId, kingdomToCallToWarAgainst.StringId);
+        return !_hook.ShouldPreventCallToWar(proposedKingdom.StringId, kingdomToCallToWarAgainst.StringId);
     }
 }

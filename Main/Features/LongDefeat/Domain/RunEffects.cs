@@ -60,6 +60,9 @@ internal sealed class RunEffects
 
     /// <summary>The upgrades bought since the last tick (#1161); the director replaces the soldiers and books each with <see cref="SurvivalRun.CompleteUpgrade"/>.</summary>
     public List<UpgradeOrder> Upgrades { get; } = new();
+
+    /// <summary>The heroes bought since the last tick (#1325): the field spawns each and answers through <c>SurvivalRun.HeroSpawned</c>.</summary>
+    public List<HeroSpawn> SpawnHeroes { get; } = new();
     public bool SpawnPlayer { get; set; }
     public bool FinishInitialSpawn { get; set; }
     public WaveStart? StartWave { get; set; }

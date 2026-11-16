@@ -139,4 +139,15 @@ public class StoryMissionWiringPinTests
         Assert.AreEqual(1, Regex.Matches(offer, "isLeave: true").Count, "Continue only");
         StringAssert.Contains(offer, "ContinueCondition, Continue, isLeave: true, index: 3);");
     }
+
+    [TestMethod]
+    public void TheRosterCheck_IsWrittenAtSessionLaunch_WhichTheEngineRunsForANewGameAndALoadedSave()
+    {
+        // Campaign.cs:1685-1686 (a loaded save) and :1709-1710 (a new game) each call OnSessionStart, and CampaignEvents.OnSessionStart:2090 invokes _onSessionLaunchedEvent (v1.5.7).
+        var roster = Source("Main/Features/StoryMissions/Hooks/StoryRosterBehavior.cs");
+
+        StringAssert.Contains(roster, "public override void RegisterEvents() => CampaignEvents.OnSessionLaunchedEvent.AddNonSerializedListener(this, _ => _roster.Report());");
+        StringAssert.Contains(roster, "public override void SyncData(IDataStore dataStore) { }");
+        StringAssert.Contains(Source("Main/Features/StoryMissions/StoryRosterCheck.cs"), "public const string Id = \"taom.story-missions.roster\";");
+    }
 }

@@ -392,7 +392,9 @@ policy's `ApplyPenaltiesToPlayerClan`, so the policy and its tests did not churn
 | `Main/Features/FiefGranting/IFiefGrantSettingsProvider.cs` | Settings interface |
 | `Main/Features/FiefGranting/TaomSettlementClaimantDecision.cs` | The subclass, boundary entry point |
 | `Main/Features/FiefGranting/FiefGrantSaveableTypeDefiner.cs` | Save registration, base id 726900901 |
-| `Main/Features/FiefGranting/Hooks/Patch70_FiefGrantDecisionSwap.cs` | Instance swap on `Kingdom.AddDecision` |
+| `Main/Features/FiefGranting/Hooks/Patch70_FiefGrantDecisionSwap.cs` | Instance swap on `Kingdom.AddDecision`, at `Priority.High` (#1346) |
+| `Main/Features/FiefGranting/FiefClaimantWire.cs`, `FiefClaimantWireData.cs` | The co-op payload of a TAOM fief election (#1346) |
+| `Main/Features/FiefGranting/FiefClaimantDecisionCodec.cs` | Builds that payload on the host and the decision on a client; TAOM.CoopCompat registers it (#1346) |
 | `Main/Features/FiefGranting/FiefGrantingIoC.cs` | DryIoc registration |
 | `tools/apply_starting_fief_spread.py` | Starting-ownership data pass and its drift check |
 | `Main/Features/FiefGranting/UI/FiefGrantBallotTexts.cs` | The ballot row's player text, `taom_fiefgrant_ballot_*`; sorts the names |
@@ -408,6 +410,8 @@ policy's `ApplyPenaltiesToPlayerClan`, so the policy and its tests did not churn
   save-record warning, and for the ballot mixin's once-per-card fault line (resolved lazily)
 - UIExtenderEx and `TAOM.Client` for the ballot row: the mixin and prefab live in `Client/` and reach
   the builder and the ballot text through `InternalsVisibleTo`
+- In co-op, `TAOM.CoopCompat` and BannerlordCoop's `KingdomDecisionTypeRegistry` carry the election to
+  clients (#1346)
 
 ## Save compatibility
 
@@ -471,10 +475,13 @@ a separate design question, deliberately out of scope.
   side captures (the relief-battle row is the gap 1 regression), the mercenary and foreign-faction
   exclusions (gap 2 and Codex F1), when vanilla opens a claim on a staged one-clan and two-clan
   kingdom (Codex F2), and the clan lookup on a settlement party.
-- `TAOM.Tests/Features/FiefGranting/Patch70FiefGrantDecisionSwapBindingTests.cs`, 4 binding tests
+- `TAOM.Tests/Features/FiefGranting/Patch70FiefGrantDecisionSwapBindingTests.cs`, 5 binding tests
   against the installed engine: `Kingdom.AddDecision`'s parameter name (Harmony binds by name), the
   class still being subclassable with its 4-argument constructor, both scoring members still virtual
-  and not final, and the carried-over state still readable and writable.
+  and not final, the carried-over state still readable and writable, and the prefix outranking
+  BannerlordCoop's default-priority prefix (#1346).
+- `TAOM.Tests/Features/FiefGranting/FiefClaimantWireTests.cs`: the co-op payload round trip and every
+  refusal (#1346).
 - `TAOM.Tests/Features/FiefGranting/FiefSiegeParticipationBindingTests.cs`, 4 binding tests: the
   `MapEvent` side and outcome members, `MapEventParty.ContributionToBattle` as an int, the clan
   lookups (`PartyBase.MobileParty`, `MobileParty.ActualClan`, `MobileParty.Owner`,
@@ -512,18 +519,23 @@ default on an existing name reaches fresh installs only.
 
 ## Co-op
 
-The swap is skipped entirely when `ICoopSessionProvider.ShouldDeferToHost` is true, so a client runs
-vanilla and takes the host's result. This matters more than usual here because `GetAiChoice` calls
-`MBRandom` for the King's Vote roll, so two peers scoring differently would diverge. The recorder
-gates both of its handlers on `IsAuthority`: a client keeps no record of its own and takes the host's
-through the save.
+The host makes its elections TAOM's, and Coop carries them to the clients (#1346). Patch70 runs at
+`Priority.High`, so on the host it swaps the decision before BannerlordCoop's own `Kingdom.AddDecision`
+prefix adds and publishes it; without that, the order depended on which game the process ran first.
+`TAOM.CoopCompat` registers `TaomSettlementClaimantDecision` with Coop's `KingdomDecisionTypeRegistry`,
+so Coop sends the election to every client and players vote on it ([coop-compat.md](coop-compat.md)).
 
-Inherited limitation, on file since #458 and restated by the second Codex pass: a
-`TaomSettlementClaimantDecision` restored from the host's save never passes through
-`Kingdom.AddDecision`, so Patch70's `ShouldDeferToHost` skip does not apply to it and the decision
-scores with TAOM's policy on the client too. Whether that matters depends on the co-op layer
-overwriting the client's result, which has not been verified on two machines. Tracked with the
-other co-op verification items in [coop-interop.md](coop-interop.md).
+Coop's round status carries the host's ordered candidates, a client re-maps to them, and a vote carries
+its clan's key, so the ballot and the result match the host's. Before the votes arrive, a client's own
+merit and support figures can differ from the host's: the client has no participation record of its
+own beyond the one in its save, and vanilla gives the clan of each peer's own main hero 30 points. On a
+client the swap itself still stands down (`ShouldDeferToHost`): the client gets TAOM's decision from
+the host, not from its own producers. The recorder gates both of its handlers on `IsAuthority`: a
+client keeps no record of its own and takes the host's through the save.
+
+An election that a client player starts (Give Settlement) stays vanilla on every peer: the client's
+swap stands down, Coop sends the vanilla decision, and the host adds it through Coop's own path, which
+never calls `Kingdom.AddDecision`. Tracked in #1353.
 
 The ten MCM settings are classified simulation-relevant by `CoopSettingsRelevance` (include by
 default), which is correct: two peers with different fief weights allocate land differently. They are
@@ -531,6 +543,8 @@ covered by `SettingsFingerprint`.
 
 ## Changelog
 
+- 2026-11-15: #1346. In co-op, a host's TAOM fief election reaches every client and players vote on it;
+  Patch70 runs before BannerlordCoop's own `AddDecision` prefix.
 - 2026-10-23: #866. The fief-vote ballot shows each candidate clan's fortification count with a hover
   list of names (a `DecisionOptionVM` mixin and one prefab append). No scoring change.
 - 2026-09-11: #565. Participation replaces the `Town.LastCapturedBy` stamp: a per-clan record of the
@@ -549,6 +563,9 @@ covered by `SettingsFingerprint`.
 - **Issue:** #866, the fief-vote ballot shows each candidate's fief count and a hover list. Shipped on
   `bannerlord-1.5.x` in `3f3af7181` (v2.0.35); closed with `triage-needs-ingame`: the smoke tests for
   #866 below are owed.
+- **Issue:** #1346, co-op host: Patch70 lost to BannerlordCoop's `AddDecision` prefix, and the TAOM
+  type was not synced. Item 1 shipped; the two-client check is owed. Follow-up #1353: an election a
+  client player starts stays vanilla.
 - **Follow-up:** [#460](https://github.com/haterade22/TAOM/issues/460) carries the two design
   questions the first review surfaced (merit weights the election but does not decide it; the King's
   Vote cap binds AI rulers only). Unchanged by #565.

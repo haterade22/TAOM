@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Fail when a troop carries a shield beside a polearm the combat AI will refuse to use.
+"""Fail when a troop carries a shield beside a melee weapon the combat AI will refuse to use.
 
 THE DEFECT CLASS
 ----------------
@@ -17,14 +17,21 @@ verified by a scan written by hand and thrown away. This is that scan, kept.
 
 WHAT IT CHECKS
 --------------
-1. Every equipment roster that pairs a shield with a polearm whose PRIMARY usage set is flagged
-   `requires_no_shield`. Any culture, crafted or plain-`<Item>`.
+1. Every equipment roster that pairs a shield with a melee weapon (a polearm, or a two-handed
+   sword, axe or mace, which has no one-handed mode) whose PRIMARY usage set is flagged
+   `requires_no_shield`. Any culture, crafted or plain-`<Item>`. Pairs held in KNOWN_FAILURES
+   print under KNOWN and do not fail.
 2. Every `<AvailablePiece>` id in the merged weapon descriptions resolves to a real
-   `<CraftingPiece>`. A typo'd id in an XSLT fails silently in game -- the same class of hazard
+   `<CraftingPiece>`, unless KNOWN_DANGLING holds it. A typo'd id in an XSLT fails silently in game -- the same class of hazard
    `validate_mesh_refs.py` and `audit_item_refs.py` exist to catch elsewhere.
+3. Every crafted weapon a roster carries resolves to a primary usage. A weapon that resolves to
+   none was never judged by check 1, which is how 20 placeholder weapons went unchecked (#1354).
 
 Item and description data come from the INSTALLED modules (that is where LOTRLOME_Armory lives
-and it is not in this repo); rosters come from this repo, because a commit is what changes them.
+and it is not in this repo), except the module whose rosters are checked: that one is read from
+the checked tree, so an edit counts before it is deployed. Stylesheets are the ones each module's
+SubModule.xml `<XmlName>` rows name, and the modules that module's `<IncompatibleModules>` lists
+(NavalDLC for TAOM) are left out, as the engine never loads them beside it.
 
 EXIT CODES
 ----------
@@ -62,23 +69,16 @@ BLOCKING_FLAG = "requires_no_shield"
 # suppressed case by case.
 MELEE_TYPES = frozenset({"Polearm", "OneHandedWeapon", "TwoHandedWeapon"})
 
-# Polearms are the class this tool was written for, so they ratchet: any new one fails the build,
-# and the pre-existing ones are enumerated in KNOWN_FAILURES below. Two-handed swords/axes/maces
-# hit the identical engine rule and 98 rosters across 59 troops are already in that state (#450)
-# -- pre-existing, and a roster decision rather than a data registration, because a 2H axe has no
-# one-handed mode to register. (Was "33 rosters across 13 troops" while the walker read only one
-# element casing and so never opened a standalone roster file; re-measured 2026-09-01, #526. Four
-# of the 97 are enlistment kits, inherited from donor troops already on that list.)
-# They are reported in full every run rather than filtered out, because a gate that silently drops
-# what it cannot fix reads as "all clear". Pass --strict to fail on them too; once #450 is closed,
-# move "TwoHandedWeapon" into this set so it ratchets as well.
-FAILING_TYPES = frozenset({"Polearm"})
+# Every melee type fails the same way: a new pair fails the build. Two-handed weapons joined in
+# #1312, after each flagged roster was fixed or held below.
 
-# Pre-existing (owner, item) pairs that were already in this state when the roster walker was
-# taught the second element casing on 2026-09-01 (#526). Before that fix this tool had never read
-# a single standalone roster file, so these are not new data -- they are what the gate was blind
-# to. They are held here rather than suppressed silently, printed in full every run, so that a
-# NEW pair still fails the build. Emptying this table is what closes #526.
+# (owner, item) pairs held with their issue, printed in full every run, so that a NEW pair still
+# fails the build. Two kinds:
+# - #526: debt. These pairs were already there when the roster walker learned the second element
+#   casing on 2026-09-01; before that the tool never read a standalone roster file. Emptying
+#   them closes #526.
+# - #1312: accepted design. A shield troop keeps a two-handed weapon as a backup for when the
+#   shield breaks (Mike, 2026-11-15). These entries stay.
 #
 # Keyed on (owner id, item id) and NOT on the roster index, because the index shifts whenever a
 # roster is inserted above it, which would turn a cosmetic edit into a spurious failure.
@@ -101,27 +101,173 @@ KNOWN_FAILURES: dict[tuple[str, str], tuple[int, str]] = {
     # "a two-hander gets no shield" pass (#531), so the pair no longer exists and the
     # ratchet failed on the stale entry, which is the behaviour working as intended.
     ("npc_companion_equipment_template_isengard", "isengard_pike_a"): (3, "#526"),
+    # Two-handed weapons beside a shield (#1312): a backup for when the shield breaks. The two Dol
+    # Guldur career kits are the player's, who can switch weapons; the game moves the shield to
+    # the back.
+    # fords_troops.xml
+    ("fow_erebor_oathsworn_legionary", "sm_dwarf_erebor_mace_a"): (1, "#1312: backup after the shield breaks"),
+    ("fow_erebor_oathsworn_legionary", "sm_dwarf_iron_hammer_a"): (1, "#1312: backup after the shield breaks"),
+    ("fow_erebor_oathsworn_legionary", "sm_dwarf_iron_hammer_b"): (1, "#1312: backup after the shield breaks"),
+    ("fow_erebor_oathsworn_legionary", "sm_dwarf_iron_hammer_c"): (1, "#1312: backup after the shield breaks"),
+    ("fow_ironpass_ram_rider", "sm_dwarf_iron_axe_a"): (4, "#1312: backup after the shield breaks"),
+    ("fow_mordor_num_temple_guard", "sm_md_num_sword_2h_c"): (4, "#1312: backup after the shield breaks"),
+    # named_companions.xml
+    ("named_companion_balakhor", "wm_gf_knight_longsword"): (2, "#1312: backup after the shield breaks"),
+    ("named_companion_thyrell", "wm_gf_knight_longsword"): (2, "#1312: backup after the shield breaks"),
+    # taom_career_starting_equipment.xml
+    ("player_career_dolguldur_infantry_f", "wm_dol_goldur_axe_a04"): (1, "#1312: player career kit"),
+    ("player_career_dolguldur_infantry_m", "wm_dol_goldur_axe_a04"): (1, "#1312: player career kit"),
+    # taom_enlistment_equipment.xml
+    ("enlist_erebor_cavalry_sergeant", "sm_dwarf_iron_axe_b"): (1, "#1312: enlistment kit, backup after the shield breaks"),
+    ("enlist_erebor_cavalry_soldier", "sm_dwarf_iron_axe_a"): (1, "#1312: enlistment kit, backup after the shield breaks"),
+    ("enlist_erebor_infantry_veteran", "sm_dwarf_iron_axe_a"): (1, "#1312: enlistment kit, backup after the shield breaks"),
+    ("enlist_eredluin_cavalry_sergeant", "sm_dwarf_iron_axe_b"): (1, "#1312: enlistment kit, backup after the shield breaks"),
+    ("enlist_eredluin_cavalry_soldier", "sm_dwarf_iron_axe_a"): (1, "#1312: enlistment kit, backup after the shield breaks"),
+    ("enlist_eredluin_infantry_veteran", "sm_dwarf_iron_axe_a"): (1, "#1312: enlistment kit, backup after the shield breaks"),
+    ("enlist_mordor_infantry_sergeant", "sm_md_num_sword_2h_a"): (1, "#1312: enlistment kit, backup after the shield breaks"),
+    # taom_equipment_sets_mordor.xml
+    ("mordor_num_bat_template_lord_inf", "sm_md_num_sword_2h_c"): (1, "#1312: backup after the shield breaks"),
+    ("mordor_num_bat_template_mouth_of_sauron", "sm_md_num_sword_2h_c"): (1, "#1312: backup after the shield breaks"),
+    ("mordor_num_civ_template_lord_inf", "sm_md_num_sword_2h_c"): (1, "#1312: backup after the shield breaks"),
+    ("mordor_num_civ_template_mouth_of_sauron", "sm_md_num_sword_2h_c"): (1, "#1312: backup after the shield breaks"),
+    # taom_wanderer_equipment.xml
+    ("npc_companion_equipment_template_anduinvale", "dale_great_axe_a"): (2, "#1312: backup after the shield breaks"),
+    ("npc_companion_equipment_template_angaladh", "dale_great_axe_a"): (2, "#1312: backup after the shield breaks"),
+    ("npc_companion_equipment_template_dale", "dale_great_axe_a"): (2, "#1312: backup after the shield breaks"),
+    ("npc_companion_equipment_template_dolguldur", "wm_dol_goldur_axe_a01"): (1, "#1312: backup after the shield breaks"),
+    ("npc_companion_equipment_template_dorwinion", "dale_great_axe_a"): (2, "#1312: backup after the shield breaks"),
+    ("npc_companion_equipment_template_dunland", "dunland_caerdh_axe_2h_a"): (1, "#1312: backup after the shield breaks"),
+    # troops_erebor.xml
+    ("erebor_oathsworn_legionary", "sm_dwarf_erebor_mace_a"): (1, "#1312: backup after the shield breaks"),
+    ("erebor_oathsworn_legionary", "sm_dwarf_iron_hammer_a"): (1, "#1312: backup after the shield breaks"),
+    ("erebor_oathsworn_legionary", "sm_dwarf_iron_hammer_b"): (1, "#1312: backup after the shield breaks"),
+    ("erebor_oathsworn_legionary", "sm_dwarf_iron_hammer_c"): (1, "#1312: backup after the shield breaks"),
+    ("erebor_oathsworn_royal_legionary", "sm_dwarf_erebor_mace_b"): (1, "#1312: backup after the shield breaks"),
+    ("erebor_oathsworn_royal_legionary", "sm_dwarf_iron_hammer_a"): (1, "#1312: backup after the shield breaks"),
+    ("erebor_oathsworn_royal_legionary", "sm_dwarf_iron_hammer_c"): (1, "#1312: backup after the shield breaks"),
+    ("erebor_oathsworn_royal_legionary", "sm_dwarf_iron_hammer_d"): (1, "#1312: backup after the shield breaks"),
+    ("ironpass_goat_charger", "sm_dwarf_iron_axe_b"): (4, "#1312: backup after the shield breaks"),
+    ("ironpass_ram_breaker", "sm_dwarf_iron_axe_b"): (2, "#1312: backup after the shield breaks"),
+    ("ironpass_ram_breaker", "sm_dwarf_iron_axe_c"): (2, "#1312: backup after the shield breaks"),
+    ("ironpass_ram_herder", "sm_dwarf_iron_axe_a"): (4, "#1312: backup after the shield breaks"),
+    ("ironpass_ram_marshal", "sm_dwarf_iron_axe_c"): (4, "#1312: backup after the shield breaks"),
+    ("ironpass_ram_rider", "sm_dwarf_iron_axe_a"): (4, "#1312: backup after the shield breaks"),
+    ("ironpass_ram_vanguard", "sm_dwarf_iron_axe_c"): (4, "#1312: backup after the shield breaks"),
+    # troops_gondor.xml
+    ("gondor_da_foot_knight", "numenorean_greatsword_elite_a"): (2, "#1312: backup after the shield breaks"),
+    ("gondor_da_foot_knight", "numenorean_greatsword_elite_b"): (2, "#1312: backup after the shield breaks"),
+    ("gondor_da_infantry", "numenorean_greatsword_medium_a"): (1, "#1312: backup after the shield breaks"),
+    ("gondor_da_infantry", "numenorean_greatsword_medium_b"): (1, "#1312: backup after the shield breaks"),
+    ("gondor_da_swan_guard", "numenorean_greatsword_elite_a"): (2, "#1312: backup after the shield breaks"),
+    ("gondor_da_swan_guard", "numenorean_greatsword_elite_b"): (2, "#1312: backup after the shield breaks"),
+    ("gondor_da_vet_infantry", "numenorean_greatsword_heavy_a"): (1, "#1312: backup after the shield breaks"),
+    ("gondor_da_vet_infantry", "numenorean_greatsword_heavy_b"): (1, "#1312: backup after the shield breaks"),
+    # troops_mordor.xml
+    ("mordor_num_infantry", "sm_md_num_sword_2h_a"): (2, "#1312: backup after the shield breaks"),
+    ("mordor_num_temple_guard", "sm_md_num_sword_2h_c"): (4, "#1312: backup after the shield breaks"),
+    ("mordor_num_vet_infantry", "sm_md_num_sword_2h_b"): (2, "#1312: backup after the shield breaks"),
+    ("mordor_num_warden", "sm_md_num_sword_2h_c"): (2, "#1312: backup after the shield breaks"),
 }
+
+# <AvailablePiece> ids that name no <CraftingPiece>, held with the reason they are not fixed here.
+# None is in this repo: each is in the live Armory's weapon_descriptions.xslt (three also in its
+# crafting_templates.xslt) or in vanilla's own data. No item uses them, and the engine skips a
+# piece id it cannot resolve (WeaponDescription.Deserialize, CraftingTemplate.Deserialize). An
+# edit to the live Armory reverts on reinstall, so they are held rather than edited (#1312).
+# A dangling id not listed here fails the run, and so does a listed id that no longer dangles.
+KNOWN_DANGLING: dict[str, str] = {
+    "vlandian_blade_10": "vanilla's own, in Native weapon_descriptions.xml",
+    "numenorean_sword_handle_e": "#1312: live Armory, no item uses it",
+    "wm_gf_knight_spear_guard": "#1312: live Armory, no item uses it",
+    "wm_gf_knight_spear_pommel": "#1312: live Armory, no item uses it",
+    "wm_isengard_2h_axe_c02_handle": "#1312: live Armory, no item uses it",
+    "wm_isengard_2h_axe_c03_handle": "#1312: live Armory, no item uses it",
+}
+
+
+class GateInputError(Exception):
+    """Input the gate cannot judge (a SubModule.xml it cannot parse): exit 2, never a finding."""
 
 
 def _parse(path: Path):
     return ET.parse(str(path), ET.XMLParser(recover=True, huge_tree=True))
 
 
-def merged(modules: Path, name: str):
-    """Native's XML with every module's same-named XSLT chained onto it, as the engine does.
+def _submodule(path: Path):
+    """The root of a SubModule.xml, parsed strictly: the module list and stylesheets come from it,
+    so a file the engine would reject must stop the run rather than drop the module in silence."""
+    try:
+        root = ET.parse(str(path)).getroot()
+    except (ET.XMLSyntaxError, OSError) as exc:
+        raise GateInputError(f"cannot parse {path}: {exc}") from exc
+    if root is None:
+        raise GateInputError(f"cannot parse {path}: no root element")
+    return root
+
+
+def incompatible(submodule: Path) -> frozenset[str]:
+    """The module ids a SubModule.xml lists under <IncompatibleModules>.
+
+    TAOM lists NavalDLC there: the two never load together, so NavalDLC's weapon stylesheets and
+    pieces must not count (#1354).
+    """
+    block = _submodule(submodule).find("IncompatibleModules")
+    if block is None:
+        return frozenset()
+    return frozenset(m.get("Id") for m in block.findall("Module") if m.get("Id"))
+
+
+def module_dirs(modules: Path, own: Path | None, skip: frozenset[str]) -> list[Path]:
+    """The module folders to read, sorted by module id (load-equivalent, see merged()).
+
+    Every installed module except the skipped ids. `own` is the checked module's folder (the one
+    holding the SubModule.xml beside --rosters): it takes the place of its installed copy, so an
+    undeployed edit counts and a stale deployed file does not (#1354).
+    """
+    by_id = {p.name: p for p in modules.iterdir() if p.is_dir()}
+    if own is not None:
+        id_node = _submodule(own / "SubModule.xml").find("Id")
+        own_id = id_node.get("value") if id_node is not None else None
+        by_id[own_id or own.name] = own
+    return [by_id[k] for k in sorted(by_id) if k not in skip]
+
+
+def stylesheets(module: Path, xml_id: str) -> list[Path]:
+    """The stylesheets the engine applies from this module for one XmlName id, in row order.
+
+    The engine finds a module's files through its SubModule.xml rows
+    (`<XmlName id="WeaponDescriptions" path="placeholder_weapons/ph_weapon_descriptions"/>`), and a
+    path may sit in a subfolder. Reading `<name>.xslt` at the top level instead missed TAOM's
+    placeholder registrations, so every `taom_ph_*` weapon resolved to no usage (#1354).
+    """
+    sub = module / "SubModule.xml"
+    if not sub.is_file():
+        return []
+    sheets = []
+    for row in _submodule(sub).iter("XmlName"):
+        path = row.get("path")
+        if row.get("id") == xml_id and path:
+            sheet = module / "ModuleData" / f"{path}.xslt"
+            if sheet.is_file():
+                sheets.append(sheet)
+    return sheets
+
+
+def merged(dirs: list[Path], name: str, xml_id: str):
+    """Native's `<name>.xml` with every module's `xml_id` stylesheets chained onto it, as the engine does.
 
     `MBObjectManager.CreateMergedXmlFile` applies each contributing module's transform in load
     order. TAOM's contributors here are all additive (each override template ends by applying
-    templates to the node it replaced), so a sorted order gives the same document as load order.
+    templates to the node it replaced), so a sorted order gives the same document as load order,
+    and it keeps LOTRLOME_Armory, which replaces the lists, before TAOM, which appends to them.
     """
-    base = modules / "Native" / "ModuleData" / f"{name}.xml"
-    if not base.is_file():
+    native = next((d for d in dirs if d.name == "Native"), None)
+    base = native / "ModuleData" / f"{name}.xml" if native is not None else None
+    if base is None or not base.is_file():
         return None
     doc = _parse(base)
-    for module in sorted(p for p in modules.iterdir() if p.is_dir()):
-        sheet = module / "ModuleData" / f"{name}.xslt"
-        if sheet.is_file():
+    for module in dirs:
+        for sheet in stylesheets(module, xml_id):
             doc = ET.XSLT(_parse(sheet))(doc)
     return doc
 
@@ -154,10 +300,10 @@ def usage_flags(modules: Path) -> dict[str, set[str]]:
     return resolved
 
 
-def crafting_pieces(modules: Path) -> dict[str, set[str]]:
+def crafting_pieces(dirs: list[Path]) -> dict[str, set[str]]:
     """piece id -> the usage-feature tokens that piece excludes."""
     out: dict[str, set[str]] = {}
-    for module in sorted(p for p in modules.iterdir() if p.is_dir()):
+    for module in dirs:
         data = module / "ModuleData"
         if not data.is_dir():
             continue
@@ -168,9 +314,9 @@ def crafting_pieces(modules: Path) -> dict[str, set[str]]:
     return out
 
 
-def descriptions(modules: Path):
+def descriptions(dirs: list[Path]):
     """description id -> (available piece ids, its item_usage_features tokens)."""
-    doc = merged(modules, "weapon_descriptions")
+    doc = merged(dirs, "weapon_descriptions", "WeaponDescriptions")
     out: dict[str, tuple[set[str], list[str]]] = {}
     if doc is None:
         return out
@@ -184,12 +330,12 @@ def descriptions(modules: Path):
     return out
 
 
-def templates(modules: Path) -> dict[str, tuple[str, list[str]]]:
+def templates(dirs: list[Path]) -> dict[str, tuple[str, list[str]]]:
     """crafting template id -> (item_type, its WeaponDescription ids in order).
 
     The order is what decides the primary usage, so it must be preserved verbatim.
     """
-    doc = merged(modules, "crafting_templates")
+    doc = merged(dirs, "crafting_templates", "CraftingTemplates")
     out: dict[str, tuple[str, list[str]]] = {}
     if doc is None:
         return out
@@ -202,7 +348,7 @@ def templates(modules: Path) -> dict[str, tuple[str, list[str]]]:
     return out
 
 
-def items(modules: Path):
+def items(dirs: list[Path]):
     """(crafted, plain, shields).
 
     crafted: id -> (template, pieces).  plain: id -> (Type, item_usage).
@@ -210,7 +356,7 @@ def items(modules: Path):
     crafted: dict[str, tuple[str, list[str]]] = {}
     plain: dict[str, tuple[str, str]] = {}
     shields: set[str] = set()
-    for module in sorted(p for p in modules.iterdir() if p.is_dir()):
+    for module in dirs:
         data = module / "ModuleData"
         if not data.is_dir():
             continue
@@ -305,9 +451,6 @@ def main() -> int:
     )
     parser.add_argument("--game-modules", help="the Modules folder to read item data from")
     parser.add_argument("--rosters", help="the ModuleData folder holding equipment rosters")
-    parser.add_argument(
-        "--strict", action="store_true", help="fail on every melee type, not just %s" % "/".join(sorted(FAILING_TYPES))
-    )
     args = parser.parse_args()
 
     modules = Path(args.game_modules) if args.game_modules else game_modules(DEFAULT_GAME_ROOT)
@@ -321,10 +464,21 @@ def main() -> int:
         print(f"ERROR: roster folder not found: {roster_root}", file=sys.stderr)
         return 2
 
-    descs = descriptions(modules)
-    templs = templates(modules)
-    pieces_meta = crafting_pieces(modules)
-    crafted, plain, shields = items(modules)
+    # The checked module's own SubModule.xml names the modules that never load beside it (#1354).
+    # A --rosters folder with none beside it (a fixture, a copy) takes TAOM's list instead.
+    own_sub = roster_root.parent / "SubModule.xml"
+    own = roster_root.parent if own_sub.is_file() else None
+    skip_from = own_sub if own is not None else DEFAULT_ROSTERS.parent / "SubModule.xml"
+    try:
+        skip = incompatible(skip_from) if skip_from.is_file() else frozenset()
+        dirs = module_dirs(modules, own, skip)
+        descs = descriptions(dirs)
+        templs = templates(dirs)
+        pieces_meta = crafting_pieces(dirs)
+        crafted, plain, shields = items(dirs)
+    except GateInputError as exc:
+        print(f"ERROR: {exc}", file=sys.stderr)
+        return 2
     flags = usage_flags(modules)
     if not descs or not templs:
         print(f"ERROR: no weapon_descriptions/crafting_templates under {modules}", file=sys.stderr)
@@ -347,8 +501,20 @@ def main() -> int:
         if item_type in MELEE_TYPES and BLOCKING_FLAG in flags.get(usage, set()):
             blocking[item_id] = (item_type, "<plain item_usage>", usage)
 
-    failing, advisory, known = [], [], []
+    # Check 3. A roster weapon that resolves to no usage cannot be judged by check 1, and passing it
+    # in silence is how all 20 placeholder weapons went unchecked (#1354).
+    unresolved: dict[str, str] = {}
+    failing, known = [], []
     for troop, path, index, ids in rosters(roster_root):
+        for item_id in ids:
+            if item_id not in crafted or item_id in unresolved:
+                continue
+            template, item_pieces = crafted[item_id]
+            if template not in templs:
+                unresolved[item_id] = f"crafting template {template!r} is not defined"
+            elif templs[template][0] in MELEE_TYPES and primary_usage(
+                    item_pieces, template, descs, templs, pieces_meta)[1] is None:
+                unresolved[item_id] = f"no WeaponDescription of {template} lists all its pieces"
         if not any(i in shields for i in ids):
             continue
         for item_id in ids:
@@ -356,12 +522,7 @@ def main() -> int:
                 continue
             item_type, desc_id, usage = blocking[item_id]
             row = (troop, path, index, item_id, item_type, desc_id, usage)
-            if not (item_type in FAILING_TYPES or args.strict):
-                advisory.append(row)
-            elif (troop, item_id) in KNOWN_FAILURES:
-                known.append(row)
-            else:
-                failing.append(row)
+            (known if (troop, item_id) in KNOWN_FAILURES else failing).append(row)
 
     # Multiplicity. A ratcheted pair occurring MORE often than it was ratcheted at is new debt
     # wearing an old label, so the excess occurrences move to the failing list.
@@ -377,7 +538,11 @@ def main() -> int:
         failing.extend(excess)
 
     print(f"Modules:  {modules}")
+    if own is not None:
+        print(f"Own:      {own} (read in place of its installed copy)")
     print(f"Rosters:  {roster_root}")
+    if skip:
+        print(f"Skipped:  {', '.join(sorted(skip))} (incompatible, from {skip_from})")
     print(
         f"Loaded {len(descs)} weapon descriptions, {len(templs)} crafting templates, "
         f"{len(crafted)} crafted items, {len(shields)} shields."
@@ -385,17 +550,37 @@ def main() -> int:
     print(f"Melee weapons whose primary usage is {BLOCKING_FLAG}: {len(blocking)}")
 
     status = 0
-    if dangling:
-        # Advisory unless --strict: one of these (`vlandian_blade_10`, 2026-08-10) is vanilla's
-        # own, so failing on the set would leave a gate nobody can turn green. The insertion path
-        # that matters is guarded at the source -- register_one_handed_polearms.py refuses to
-        # write a piece id with no <CraftingPiece>.
-        if args.strict:
-            status = 1
-        label = "FAIL" if args.strict else "WARN"
-        print(f"\n{label}: {len(dangling)} <AvailablePiece> id(s) with no <CraftingPiece> definition:")
-        for piece in dangling:
+    # Fails in every mode, as KNOWN_FAILURES does: the callers (data_gates.py, the PostToolUse
+    # hook) run the default mode, and a crafting_pieces() read that found nothing would make every
+    # id dangle. register_one_handed_polearms.py also refuses to write a piece id with no
+    # <CraftingPiece>, which guards the insertion path at the source.
+    unheld = [p for p in dangling if p not in KNOWN_DANGLING]
+    stale_dangling = sorted(set(KNOWN_DANGLING) - set(dangling))
+    if unheld:
+        status = 1
+        print(f"\nFAIL: {len(unheld)} <AvailablePiece> id(s) with no <CraftingPiece> definition; "
+              "fix the id or hold it in KNOWN_DANGLING:")
+        for piece in unheld:
             print(f"  {piece}")
+    held = [p for p in dangling if p in KNOWN_DANGLING]
+    if held:
+        print(f"\nHELD: {len(held)} dangling <AvailablePiece> id(s) in KNOWN_DANGLING:")
+        for piece in held:
+            print(f"  {piece}  [{KNOWN_DANGLING[piece]}]")
+    if stale_dangling:
+        status = 1
+        print(f"\nFAIL: {len(stale_dangling)} KNOWN_DANGLING id(s) no longer dangle; delete them:")
+        for piece in stale_dangling:
+            print(f"  {piece}  [{KNOWN_DANGLING[piece]}]")
+
+    if unresolved:
+        status = 1
+        print(f"\nFAIL: {len(unresolved)} roster weapon(s) resolve no usage, so the shield check "
+              "cannot judge them:")
+        for item_id in sorted(unresolved):
+            print(f"  {item_id}: {unresolved[item_id]}")
+        print("Register the pieces in a WeaponDescription the template lists, through a stylesheet "
+              "a SubModule.xml <XmlName> row names, or fix the item's crafting_template.")
 
     def _display_path(path):
         """Repo-relative when possible, absolute otherwise.
@@ -423,14 +608,16 @@ def main() -> int:
         print(f"\nFAIL: {len(failing)} roster(s) pair a shield with a weapon the AI will not use:")
         show(failing)
         print(
-            "\nFix by registering the item's pieces under a shield-compatible description "
-            "(see tools/register_one_handed_polearms.py) or by changing the roster."
+            "Fix a polearm by registering its pieces under a shield-compatible description "
+            "(see tools/register_one_handed_polearms.py) or by changing the roster. A two-handed "
+            "sword, axe or mace has no one-handed mode: change the roster, or hold the pair in "
+            "KNOWN_FAILURES with its issue."
         )
 
     if known:
         print()
-        print(f"KNOWN ({len(known)} roster(s)): pre-existing pairs held by the #526 ratchet. "
-              "Not failing the run; fixing them is what closes that issue.")
+        print(f"KNOWN ({len(known)} roster(s)): pre-existing pairs held by the KNOWN_FAILURES "
+              "ratchet. Not failing the run; each entry names its issue.")
         show(known)
 
     # OUTSIDE the `if known` block on purpose. The worst case for a ratchet is every entry going
@@ -453,16 +640,9 @@ def main() -> int:
         for owner, item_id in stale:
             print(f"  ({owner}, {item_id})  [{KNOWN_FAILURES[(owner, item_id)][1]}]")
 
-    if advisory:
-        troops = len({row[0] for row in advisory})
-        print(
-            f"\nWARN ({len(advisory)} roster(s), {troops} troop(s)): the same engine rule, on "
-            "weapon types outside this gate's ratchet. Not failing the run; tracked separately."
-        )
-        show(advisory)
 
     if not status:
-        print(f"\nPASS: no shield roster carries a {'/'.join(sorted(FAILING_TYPES))} its primary usage forbids.")
+        print("\nPASS: no shield roster carries a melee weapon its primary usage forbids.")
     return status
 
 

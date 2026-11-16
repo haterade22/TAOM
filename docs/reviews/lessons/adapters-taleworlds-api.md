@@ -2008,6 +2008,35 @@ PR #1304's doc said god mode stays on while the player walks the field after the
 
 **Source:** `docs/reviews/rca-scenario-autorun-2026-11-15.md`
 
+### `Formation.SetControlledByAI` does nothing when the state is unchanged, and an off-AI formation still gains units (#1337, 2026-11-15)
+
+**Why missed:** the heroes' formation was to be kept apart from the siege tactic with `SetControlledByAI(true, enforceNotSplittableByAI: true)`. The method returns on its first lines when the formation is already AI controlled (Formation.cs:810-813), and every formation is after `AdoptMain`, so the flag was never set and the tactic merged the heroes into the foot formation. The fix then took the formation off AI control, which stops transfers out of it (Formation.cs:2155-2158) and not transfers into it: consolidation ranks such a formation first as a target (TacticComponent.cs:191). `LongDefeatBattlefieldAdapter.Posts.cs` and `.Split.cs` already said both in their comments.
+
+**Prevent:** before a design holds a formation by an engine switch, read the switch's first lines for an early return, and read both ends of `TransferUnitsAux` and its callers. Read the sibling adapters' comments for the same engine type, not only their code. A held formation gets a repair (strangers out, members back) and a line that reads its unit count.
+
+**Source:** [rca-ld-shop-heroes-2026-11-15.md](../rca-ld-shop-heroes-2026-11-15.md) findings 1 and 4.
+
+### An order lives only while it is applicable: a Charge with no enemy becomes Stop (#1337, 2026-11-15)
+
+**Why missed:** the heroes' group was given the order bar's charge at the spawn. `Formation.Tick` replaces any order that is not applicable with its substitute (Formation.cs:2466-2470); a Charge is applicable only while an enemy team has an active agent (MovementOrder.cs:804-815) and its substitute is Stop (:1107-1112). The shop sells between waves, so the order died within a frame. A formation off AI control also keeps the arrangement and form the AI's last behaviour gave it; `Formation.ResetAux` restores the defaults only at a mission reset.
+
+**Prevent:** for an order code gives to a formation, read `MovementOrder.IsApplicable` and `GetSubstituteOrder` for the moment it is given, and `TickOccasionally` for what the order does near gates and machines. Set the arrangement, firing and form orders with it, as `Split.Order` does. A Move is always applicable.
+
+**Source:** [rca-ld-shop-heroes-2026-11-15.md](../rca-ld-shop-heroes-2026-11-15.md) findings 2 and 5.
+### A notification flag stops one message, not every listener (refuge warden, PR #1323, 2026-11-15)
+
+**Why missed:** `KillCharacterAction.ApplyByRemove(hero, showNotification: false)` was documented as a silent removal. The flag only stops the death pop-up; SandBox's `CommentOnCharacterKilledBehavior.OnBeforeHeroKilled` still adds a `CharacterKilledLogEntry`, a visible chat notification that prints "<name> was lost.".
+
+**Prevent:** before calling an engine action silent, list the campaign events it fires and read each SandBox listener, not only the branch the flag guards.
+
+**Source:** `docs/reviews/rca-pr1323-refuge-warden-ranks-2026-11-15.md`
+### Two engine methods share a name; cite the one the call site binds (cheat party screen, PR #1321, 2026-11-15)
+
+**Why missed:** the hand-built copy of `PartyScreenHelper.OpenScreenAsCheat` used a Done handler that only returned true, citing "DefaultDoneHandler returns true". That is `PartyScreenLogic.DefaultDoneHandler`. The method `OpenScreenAsCheat` binds is the private `PartyScreenHelper.DefaultDoneHandler`, which releases the prisoners moved to the left first. Without it a released lord became a prisoner with no captor.
+
+**Prevent:** when copying an engine setup field by field, read each delegate it binds at that exact line (the IL `ldftn` names the declaring type), never a method found by name search.
+
+**Source:** `docs/reviews/rca-pr1321-cheat-troop-list-2026-11-15.md`
 ### A Coop id is an object key, not a StringId; an engine member is what its source says, not its name (#1329, 2026-11-15)
 
 **Why missed:** guest trade passed Coop's `Player.HeroId` to `CampaignObjectManager.Find<Hero>`. Coop builds that id with `ObjectManager.TryGetId`, which returns the key it registered, `"Hero_" + StringId` (`HeroInterface.RegisterPrimary`), and `Find` compares `StringId` only, so the host refused every real guest. The same change read `MobileParty.SiegeEvent` as any siege; it is `BesiegerCamp?.SiegeEvent`, the besieger's side only. Both were read from their names, and the transport test faked the lookup with the string `"hero_1"`.
@@ -2015,3 +2044,19 @@ PR #1304's doc said god mode stays on while the player walks the field after the
 **Prevent:** resolve a Coop id through Coop (`IPlayerManager.TryGetSenderHero`, `IObjectManager.TryGetObject`) and hand TAOM the object's `StringId`. Before using an engine member, read the line that sets it. A seam that carries an external id gets one test with that system's real id shape.
 
 **Source:** `docs/reviews/rca-coop-guest-trade-2026-11-15.md` (Class 1)
+
+### A missile index names a missile only until its removal; the next missile gets it at once (#1361, 2026-11-16)
+
+**Why missed:** hits carry `AttackCollisionData.AffectorWeaponSlotOrMissileIndex`, and the ranged kit paired a shield hit with a later body hit, told extra arrows from his own and counted contacts by that index, each memory ended by a time window. Native pops a new missile's index from the back of the free list that a removal pushes to (decompiled 2026-11-16: `IMBMission_AddMissileSingleUsage` and `IMBMission_RemoveMissile`), so the very next missile in the mission takes a freed index. The builders knew of the reuse and guessed it was slow.
+
+**Prevent:** tell a missile's kind by its weapon's item (`OnAgentHit` hands in `_missilesDictionary[index].Weapon`, Mission.cs:5655-5658; in `OnMissileHit` find it in `MissilesList`, which still holds it in single player, Mission.cs:6076-6078). End anything keyed by an index on `Mission.OnMissileRemovedEvent` (Mission.cs:1573, raised at 5770), sent through the same queue as the hits: a missile's hit callbacks come before its removal, because only `OnMissileRemoved` takes it from the table they read (5761). Also from this review: `AddCustomMissile` always appends and raises no behaviour callback (4954-4979); a blocked missile does reach `OnAgentHit`, through `OnAgentHitBlocked` (5537-5550); `GetMissileVerticalAimCorrection` answers pi, not NaN, for a target out of reach.
+
+**Source:** [rca-hero-ranged-kit-2026-11-16.md](../rca-hero-ranged-kit-2026-11-16.md) finding 2.
+
+### `is_hero` with no `<Hero>` is a hero in a custom game and a plain character in a campaign (#1366, 2026-11-16)
+
+**Why missed:** the three mission heroes are XML characters with `is_hero="true"` and no `<Hero>` entry. In a custom game `IsHero` reads the XML flag (BasicCharacterObject.cs:154); in a campaign it is `_heroObject != null` (CharacterObject.cs:300), so it is false. The plan listed the `IsHero` readers of the mission code. It missed two that sat elsewhere: the take-over rule, which a custom game closes and a campaign opens (Mission.cs:6395), with the director's "new player body" path behind it, and the face cache view, which keeps a character's own face only for `IsHero` (Mission.cs:4331-4342, MissionFaceCacheView.cs:173-189).
+
+**Prevent:** when a character moves between a custom game and a campaign, grep `IsHero` in the engine's mission, view and agent-build code, not only in TAOM, and for each branch write what both modes do. Known branches: fixed equipment and random item modifiers (Mission.cs:4284-4287, :4108), body and face (above), take-over (:6395), battle tier and power (BasicCharacterObject.cs:257-285, CharacterObject.cs:609-622). Give the spawn what the engine would give a hero (kit, body, age) rather than rely on the flag. Then follow every path the other mode's rule had closed to its end in TAOM code.
+
+**Source:** [rca-story-free-heroes-2026-11-16.md](../rca-story-free-heroes-2026-11-16.md) finding 3, 4 and 5.

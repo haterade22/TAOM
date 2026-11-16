@@ -159,6 +159,25 @@ public class LongDefeatDirectorTargetBoonTests
     }
 
     [TestMethod]
+    public void ATakenOverHeldHero_IsRefreshed_ButKeepsHisOwnHealth()
+    {
+        // #1366: in a campaign the engine lets a fallen player take over a free hero (Mission.cs:6395 reads IsHero, false there). His limit is his hero factor
+        // (SpawnHero's ScaleHealth); the player's factor would replace it.
+        var rig = new Rig(BoonPlan.None);
+        rig.Director.Start();
+        rig.Step();
+        rig.Field.Calls.Clear();
+
+        rig.Field.MainIsHeldHero = true;
+        rig.Field.MainBody = 2;
+        rig.Step();
+
+        Assert.AreEqual(1, rig.Field.Count("Adopt:True"), string.Join(",", rig.Field.Calls));
+        Assert.IsTrue(rig.Field.Calls.Contains("RefreshStats:Player"), string.Join(",", rig.Field.Calls));
+        Assert.IsFalse(rig.Field.Calls.Any(c => c.StartsWith("SetPlayerHealth:", System.StringComparison.Ordinal)), string.Join(",", rig.Field.Calls));
+    }
+
+    [TestMethod]
     public void ALordHealthPick_IsAnAbsoluteWrite_NeverAScale_SoABodyAdoptedInTheSameTickCannotTakeItTwice()
     {
         // The wave-clear respawn and the bot's pick can fall in one tick: the next tick adopts the new body (DressNewBody writes the product, this pick included) and only then

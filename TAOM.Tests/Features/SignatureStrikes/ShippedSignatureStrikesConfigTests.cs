@@ -59,11 +59,51 @@ public class ShippedSignatureStrikesConfigTests
     }
 
     [TestMethod]
-    public void ShippedConfig_ShipsExactlySauronAndTheNine()
+    public void ShippedConfig_ShipsSauronTheNineAragornAndGimli()
     {
         // Every signature is a balance change: a new one needs an issue, a control battle and a
         // docs/features/signature-strikes.md update, never a quiet data edit.
-        CollectionAssert.AreEqual(new[] { "sauron", "nazgul" }, _sut.GetConfig().Signatures.Select(s => s.Id).ToArray());
+        CollectionAssert.AreEqual(
+            new[] { "sauron", "nazgul", "aragorn", "gimli" },
+            _sut.GetConfig().Signatures.Select(s => s.Id).ToArray());
+    }
+
+    // ---- Aragorn and Gimli (#1359) -------------------------------------------------------------
+
+    [TestMethod]
+    public void HeroRows_ByHeroIdOnly()
+    {
+        // A race row would make every unit of that race strike, so both rows list no race and no set.
+        foreach (var pair in new[] { ("aragorn", "taom_hero_aragorn"), ("gimli", "taom_hero_gimli") })
+        {
+            var row = Signature(pair.Item1);
+            CollectionAssert.AreEqual(new[] { pair.Item2 }, row.HeroIds, pair.Item1);
+            Assert.AreEqual(0, row.Races.Count, pair.Item1);
+            Assert.AreEqual(0, row.HeroSets.Count, pair.Item1);
+        }
+    }
+
+    [TestMethod]
+    public void KillChance_OverheadOnly()
+    {
+        Assert.AreEqual(0.15f, Signature("aragorn").Strikes["Overhead"].KillChance, 0.0001f);
+        Assert.AreEqual(0.35f, Signature("gimli").Strikes["Overhead"].KillChance, 0.0001f);
+
+        foreach (var signature in _sut.GetConfig().Signatures)
+        {
+            foreach (var pair in signature.Strikes.Where(s => s.Key != "Overhead"))
+                Assert.AreEqual(0f, pair.Value.KillChance, signature.Id + " " + pair.Key);
+        }
+
+        Assert.AreEqual(0f, Signature("sauron").Strikes["Overhead"].KillChance, "Sauron has no instant kill");
+    }
+
+    [TestMethod]
+    public void KillImmuneRaces_AreThePinnedFive()
+    {
+        CollectionAssert.AreEqual(
+            new[] { "nazghul", "cave_troll", "hill_troll", "saruman", "sauron" },
+            _sut.GetConfig().KillImmuneRaces);
     }
 
     // ---- Sauron (#605) ---------------------------------------------------------------------

@@ -25,6 +25,17 @@ public class DiplomacyBehavior : CampaignBehaviorBase
 
         CampaignEvents.OnSessionLaunchedEvent.AddNonSerializedListener(
             this, _ => OnSessionLaunched());
+
+        // #1283: the war's own declaration line names only the called realm. The engine raises this event after its
+        // ally check and before the declaration (AllianceCampaignBehavior.StartCallToWarAgreement), and Coop's server
+        // copy of that method raises it too, so the line does not depend on patch order.
+        CampaignEvents.OnCallToWarAgreementStartedEvent.AddNonSerializedListener(
+            this, (calling, called, target) => _logger.LogInfo(CallToWarLine(calling?.StringId, called?.StringId, target?.StringId)));
+    }
+
+    internal static string CallToWarLine(string callingId, string calledId, string targetId)
+    {
+        return $"[Diplomacy] Call to war started: {callingId ?? "?"} calls {calledId ?? "?"} against {targetId ?? "?"}";
     }
 
     // CO-OP: the fifth diplomacy path, and the one both the internal review and the veto-scan test

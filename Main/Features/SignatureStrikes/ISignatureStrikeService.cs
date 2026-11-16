@@ -26,7 +26,16 @@ public interface ISignatureStrikeService
     /// cast cannot hold.</summary>
     int ComputeRingDamage(int damageBasis, float damageFraction, float falloff, bool victimBlocking);
 
-    /// <summary>Morale to remove from one ring victim, clamped to what the victim has. Zero for the
-    /// engine's -1 "no morale" sentinel or any non-finite input.</summary>
-    float ComputeFearDrain(float scaledFear, float falloff, float raceResist, float currentMorale);
+    /// <summary>True when a strike's instant-kill roll succeeds against this victim. False for a
+    /// roll at or above the chance, a victim that is not a plain humanoid soldier (not humanoid: a
+    /// horse or a creature; a hero, the player, the general, another signature bearer, an immune race,
+    /// a victim shrugging off blows) or any non-finite input. The blow flag a context carries never
+    /// holds a shrug-off on this path, so the shrug-off is a victim fact.</summary>
+    bool DecideInstantKill(
+        float chance, float roll, bool isHuman, bool isHero, bool isPlayer, bool isGeneral,
+        bool isSignatureBearer, bool isKillImmuneRace, bool isShruggingOff, float health);
+
+    /// <summary>Damage for an instant-kill blow: just over the victim's health. Zero for a
+    /// non-finite or non-positive health or one the int cast cannot hold.</summary>
+    int InstantKillDamage(float health);
 }

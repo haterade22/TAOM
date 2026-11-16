@@ -32,7 +32,7 @@ internal sealed partial class LongDefeatDirector
         if (!LordRides)
             return "";
 
-        var home = _plan.Muster?.Foot is { } foot ? LdPlace.From(foot) : _keepAt is { } keep ? LdPlace.At(keep) : null;
+        var home = PlanHome;
         if (home == null)
         {
             _logger.LogWarning($"{Tag}[Sally] no home point: the plan records no foot muster and the field gave no keep");

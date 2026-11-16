@@ -88,6 +88,7 @@ using TAOM.Features.MixedFormations.Hooks;
 using TAOM.Features.SmartCavalryAI.Hooks;
 using TAOM.Features.FiefManagement;
 using TAOM.Features.FiefManagement.Hooks;
+using TAOM.Features.HostilePeace.Models;
 using TAOM.Features.SettlementNameplateFade;
 using TAOM.Features.SettlementNameplateFade.Hooks;
 using TAOM.Features.SettlementNameplateRelation;
@@ -1158,13 +1159,21 @@ public class SubModule : MBSubModuleBase
         // installed" disabled TAOM's diplomacy for a solo player who merely had it enabled, and for
         // the co-op host itself. See ICoopSessionProvider.
         var coopSession = IoC.Resolve<TAOM.Features.CoopInterop.ICoopSessionProvider>();
+        // Hostile Peace (docs/features/hostile-peace.md). Block D: the three player alliance paths take the service, so the
+        // player's kingdom does not ally across the Free/Evil line unless "Allow Player Alliances With Anyone" is on.
+        var hostilePeace = IoC.Resolve<Features.HostilePeace.HostilePeaceService>();
         campaignStarter.AddBehavior(new DiplomacyBehavior(diplomacyService, diplomacyLogger, coopSession));
-        campaignStarter.AddBehavior(new PlayerAllianceProposalBehavior(diplomacyService, coopSession, diplomacyLogger));
-        campaignStarter.AddModel(new TaomAllianceModel(diplomacyService));
+        campaignStarter.AddBehavior(new PlayerAllianceProposalBehavior(diplomacyService, coopSession, diplomacyLogger, hostilePeace));
+        campaignStarter.AddModel(new TaomAllianceModel(diplomacyService, hostilePeace));
         campaignStarter.AddModel(new TaomKingdomDecisionPermissionModel(diplomacyService, wotrService,
-            IoC.Resolve<IOnAllianceAction>(), coopSession));
+            IoC.Resolve<IOnAllianceAction>(), coopSession, hostilePeace));
         campaignStarter.AddModel(new TaomDiplomacyModel(wotrService, coopSession, IoC.Resolve<IOnAllianceAction>(), IoC.Resolve<Features.Relations.IPersonalRelationService>(),
             IoC.Resolve<Features.KingdomAllegiance.KingdomAllegianceService>(), IoC.Resolve<Features.KingdomAllegiance.Models.AllegianceFactsReader>()));
+        // Blocks B and C: no trade agreement between Hostile realms, and the player meets their settlements as at war while
+        // they are at peace. TAOM overrides neither model anywhere else.
+        campaignStarter.AddModel(new TaomTradeAgreementModel(hostilePeace, coopSession));
+        campaignStarter.AddModel(new TaomSettlementAccessModel(hostilePeace));
+        campaignStarter.AddModel(new TaomCrimeModel(hostilePeace));
 
         var wotrLogger = IoC.Resolve<IModLogger>();
         // #764: must stay `new` per campaign. Its constructor resets the process-lifetime WotR service;

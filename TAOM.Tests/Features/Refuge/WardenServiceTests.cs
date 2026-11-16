@@ -9,7 +9,7 @@ namespace TAOM.Tests.Features.Refuge;
 /// <summary>
 /// Decision-path coverage for <see cref="WardenService"/>: candidate ordering and the
 /// companion-slot gate, the promote-exactly-one-troop sequencing, the release matrix under
-/// the NO-KILL contract (companion and promoted warden both return by action, absent no-op), and
+/// release (companion rejoins by action, promoted warden returns to the ranks, absent no-op), and
 /// the never-attached promotion rollback. Campaign statics are
 /// overridden on a test subclass; those virtual bodies are the honest untested boundary sliver.
 /// </summary>
@@ -121,7 +121,15 @@ public class WardenServiceTests
 
         protected override bool IsHeroWithRefugeParty(string heroId) => WithRefuge;
 
-        protected override void MoveHeroToMainParty(string heroId) => MovedToMainParty.Add(heroId);
+        // One ordered stream for the move, the removal, the refund and the message, so the
+        // return-to-ranks sequence can be pinned.
+        public readonly List<string> Steps = new List<string>();
+
+        protected override void MoveHeroToMainParty(string heroId)
+        {
+            MovedToMainParty.Add(heroId);
+            Steps.Add("move:" + heroId);
+        }
 
         public bool RemoveMintedResult = true;
         public readonly List<string> RemovedCompanions = new List<string>();
@@ -130,10 +138,33 @@ public class WardenServiceTests
         protected override bool RemoveMintedCompanion(string heroId)
         {
             RemovedCompanions.Add(heroId);
+            Steps.Add("remove:" + heroId);
             return RemoveMintedResult;
         }
 
-        protected override void AddOneTroopToMainParty(string troopId) => RefundedTroops.Add(troopId);
+        protected override void AddOneTroopToMainParty(string troopId)
+        {
+            RefundedTroops.Add(troopId);
+            Steps.Add("troop:" + troopId);
+        }
+
+        // A plain promoted warden by default: still the player's companion, no family, no role.
+        public PromotedWardenFacts Facts = new PromotedWardenFacts { IsPlayerClanCompanion = true };
+        public readonly HashSet<string> KnownTroops = new HashSet<string> { "troop_a", "culture_basic" };
+        public string CultureBasicTroop = "culture_basic";
+        public readonly List<string> RanksMessages = new List<string>();
+
+        protected override PromotedWardenFacts ReadPromotedWarden(string heroId) => Facts;
+
+        protected override bool IsRegularTroop(string troopId) => troopId != null && KnownTroops.Contains(troopId);
+
+        protected override string CultureBasicTroopId(string heroId) => CultureBasicTroop;
+
+        protected override void ShowReturnedToRanks(string troopId)
+        {
+            RanksMessages.Add(troopId);
+            Steps.Add("message:" + troopId);
+        }
     }
 
     private TestableWardenService _sut;
@@ -288,30 +319,43 @@ public class WardenServiceTests
         Assert.IsNull(_sut.ResolveWarden(new WardenCandidate { Id = "", IsCompanion = true }, out _, out _));
     }
 
-    // --- ReleaseWarden (the NO-KILL matrix) ---
+    // --- ReleaseWarden (companion rejoins; promoted warden goes back to the ranks) ---
 
     [TestMethod]
-    public void ReleaseWarden_CompanionWithRefuge_RejoinsMainParty()
+    public void ReleaseWarden_CompanionWithRefuge_RejoinsMainPartyAndIsNeverRemoved()
     {
         _sut.WithRefuge = true;
 
-        _sut.ReleaseWarden("companion_1", promoted: false);
+        _sut.ReleaseWarden("companion_1", promoted: false, promotedFromTroopId: null);
 
         CollectionAssert.AreEqual(new[] { "companion_1" }, _sut.MovedToMainParty);
+        Assert.AreEqual(0, _sut.RemovedCompanions.Count, "a warden who was already a companion stays one");
+        Assert.AreEqual(0, _sut.RefundedTroops.Count);
     }
 
     [TestMethod]
-    public void ReleaseWarden_PromotedWardenWithRefuge_MovesByActionAndIsNeverKilled()
+    public void ReleaseWarden_CompanionWithStaleTroopId_IsNeverRemoved()
+    {
+        // Only the promoted flag decides; a stray troop id on a companion row changes nothing.
+        _sut.ReleaseWarden("companion_1", promoted: false, promotedFromTroopId: "troop_a");
+
+        Assert.AreEqual(0, _sut.RemovedCompanions.Count);
+        Assert.AreEqual(0, _sut.RefundedTroops.Count);
+    }
+
+    [TestMethod]
+    public void ReleaseWarden_PromotedWardenWithRefuge_ReturnsToTheRanksAsHisSourceTroop()
     {
         _sut.WithRefuge = true;
 
-        _sut.ReleaseWarden("hero_minted", promoted: true);
+        _sut.ReleaseWarden("hero_minted", promoted: true, promotedFromTroopId: "troop_a");
 
-        CollectionAssert.AreEqual(new[] { "hero_minted" }, _sut.MovedToMainParty,
-            "a promoted warden rides the same AddHeroToPartyAction as a companion; a raw roster "
-            + "merge nulls a hero's PartyBelongedTo when the source roster clears");
-        Assert.AreEqual(0, _sut.RemovedCompanions.Count, "release NEVER kills or de-promotes");
-        Assert.AreEqual(0, _sut.RefundedTroops.Count, "the soldier became somebody; no refund");
+        CollectionAssert.AreEqual(
+            new[] { "move:hero_minted", "remove:hero_minted", "troop:troop_a", "message:troop_a" },
+            _sut.Steps,
+            "he leaves the refuge by action first (a raw roster merge nulls PartyBelongedTo), is "
+            + "removed from the main party the way UnwindPromotion removes a minted hero, and "
+            + "exactly one of his source troop rejoins");
     }
 
     [TestMethod]
@@ -319,10 +363,83 @@ public class WardenServiceTests
     {
         _sut.WithRefuge = false;
 
-        _sut.ReleaseWarden("hero_minted", promoted: true);
+        _sut.ReleaseWarden("hero_minted", promoted: true, promotedFromTroopId: "troop_a");
 
-        Assert.AreEqual(0, _sut.MovedToMainParty.Count,
-            "a captured promoted warden is left where fate put him, same as a companion");
+        Assert.AreEqual(0, _sut.Steps.Count,
+            "a captured, dead or absent promoted warden is left where fate put him, and no "
+            + "soldier comes back for a hero the player does not hand over");
+    }
+
+    [DataTestMethod]
+    [DataRow("spouse", DisplayName = "married")]
+    [DataRow("children", DisplayName = "has children")]
+    [DataRow("clanLeader", DisplayName = "leads a clan")]
+    [DataRow("notCompanion", DisplayName = "no longer the player's companion")]
+    [DataRow("noFacts", DisplayName = "hero record missing")]
+    public void ReleaseWarden_PromotedWardenWithTies_StaysACompanion(string tie)
+    {
+        var facts = new PromotedWardenFacts { IsPlayerClanCompanion = true };
+        switch (tie)
+        {
+            case "spouse": facts.HasSpouse = true; break;
+            case "children": facts.HasChildren = true; break;
+            case "clanLeader": facts.IsClanLeader = true; break;
+            case "notCompanion": facts.IsPlayerClanCompanion = false; break;
+            case "noFacts": facts = null; break;
+        }
+        _sut.Facts = facts;
+
+        _sut.ReleaseWarden("hero_minted", promoted: true, promotedFromTroopId: "troop_a");
+
+        CollectionAssert.AreEqual(new[] { "hero_minted" }, _sut.MovedToMainParty,
+            "he still comes home by action");
+        Assert.AreEqual(0, _sut.RemovedCompanions.Count,
+            "removing a hero with family or a role would leave a widow, orphans or an empty seat");
+        Assert.AreEqual(0, _sut.RefundedTroops.Count);
+    }
+
+    [DataTestMethod]
+    [DataRow(null, DisplayName = "no troop recorded")]
+    [DataRow("", DisplayName = "empty troop id")]
+    [DataRow("troop_removed_by_update", DisplayName = "troop no longer in the game")]
+    public void ReleaseWarden_PromotedWardenSourceTroopUnknown_FallsBackToCultureBasicTroop(string troopId)
+    {
+        _sut.ReleaseWarden("hero_minted", promoted: true, promotedFromTroopId: troopId);
+
+        CollectionAssert.AreEqual(new[] { "hero_minted" }, _sut.RemovedCompanions);
+        CollectionAssert.AreEqual(new[] { "culture_basic" }, _sut.RefundedTroops);
+    }
+
+    [TestMethod]
+    public void ReleaseWarden_PromotedWardenNoTroopResolvable_StaysACompanion()
+    {
+        _sut.CultureBasicTroop = null;
+
+        _sut.ReleaseWarden("hero_minted", promoted: true, promotedFromTroopId: "troop_removed_by_update");
+
+        CollectionAssert.AreEqual(new[] { "hero_minted" }, _sut.MovedToMainParty);
+        Assert.AreEqual(0, _sut.RemovedCompanions.Count,
+            "never take the hero away when no soldier can be given back");
+        Assert.AreEqual(0, _sut.RefundedTroops.Count);
+        _logger.Received(1).LogWarning(Arg.Is<string>(s => s.Contains("hero_minted")));
+    }
+
+    [TestMethod]
+    public void ReleaseWarden_PromotedWardenRemovalRefused_NoSoldierAndNoMessage()
+    {
+        _sut.RemoveMintedResult = false;
+
+        _sut.ReleaseWarden("hero_minted", promoted: true, promotedFromTroopId: "troop_a");
+
+        Assert.AreEqual(0, _sut.RefundedTroops.Count,
+            "a soldier on top of a hero who is still there would duplicate him");
+        Assert.AreEqual(0, _sut.RanksMessages.Count);
+    }
+
+    [TestMethod]
+    public void MayReturnToRanks_PlainPromotedCompanion_True()
+    {
+        Assert.IsTrue(WardenService.MayReturnToRanks(new PromotedWardenFacts { IsPlayerClanCompanion = true }));
     }
 
     // --- UnwindPromotion (the never-attached rollback window) ---
@@ -364,7 +481,7 @@ public class WardenServiceTests
     {
         _sut.WithRefuge = false;
 
-        _sut.ReleaseWarden("companion_1", promoted: false);
+        _sut.ReleaseWarden("companion_1", promoted: false, promotedFromTroopId: null);
 
         Assert.AreEqual(0, _sut.MovedToMainParty.Count,
             "a captured or hospitalised warden is left where fate put him");
@@ -373,8 +490,8 @@ public class WardenServiceTests
     [TestMethod]
     public void ReleaseWarden_NullOrEmptyHeroId_NoOp()
     {
-        _sut.ReleaseWarden(null, promoted: false);
-        _sut.ReleaseWarden("", promoted: false);
+        _sut.ReleaseWarden(null, promoted: false, promotedFromTroopId: null);
+        _sut.ReleaseWarden("", promoted: true, promotedFromTroopId: "troop_a");
 
         Assert.AreEqual(0, _sut.MovedToMainParty.Count);
     }

@@ -67,9 +67,21 @@ public class HostedRunOutcomeLogTests
     }
 
     [TestMethod]
+    public void TheHeroIds_AreTheRenamedLongDefeatIds()
+    {
+        var seen = new System.Collections.Generic.List<string>();
+        _inner.When(i => i.Pass(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>())).Do(c => seen.Add(c.ArgAt<string>(0)));
+
+        foreach (var id in new[] { LongDefeatHeroChecks.SpawnId, LongDefeatHeroChecks.FallId, LongDefeatHeroChecks.HuntersId })
+            Sut().Pass(id, "story1", "d");
+
+        CollectionAssert.AreEqual(new[] { HostedRunOutcomeLog.HeroId, HostedRunOutcomeLog.HeroFallId, HostedRunOutcomeLog.HuntersId }, seen);
+    }
+
+    [TestMethod]
     public void EveryRewrittenId_StillMatchesTheOutcomeLogsIdPattern()
     {
-        foreach (var id in new[] { "taom.long-defeat.boot", "taom.long-defeat.best-run", "taom.long-defeat.early-start" })
+        foreach (var id in new[] { "taom.long-defeat.boot", "taom.long-defeat.best-run", "taom.long-defeat.early-start", LongDefeatHeroChecks.SpawnId, LongDefeatHeroChecks.FallId, LongDefeatHeroChecks.HuntersId })
         {
             string? seen = null;
             var inner = Substitute.For<IOutcomeLog>();

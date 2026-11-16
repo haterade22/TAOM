@@ -19,7 +19,7 @@ public class LongDefeatGearItemsTests
 
     private static RunPlan Plan(params GearSet[] sets) =>
         new("helms", new[] { new GarrisonRow("d", FormationSlot.Infantry, 1) }, new WavePlan(new[] { new WaveSpec(1, new[] { new WaveTroop("a", FormationSlot.Infantry, 1) }) }, new WaveScaling(1, 1)),
-            new ShopPlan(0, new ShopOffer[0], null, sets.Length == 0 ? null : new LocationsPlan(new ArmouryPlan(4f, sets), null, null)), RunRules.Default, RunOptions.Default);
+            new ShopPlan(0, new ShopOffer[0], null, sets.Length == 0 ? null : new LocationsPlan(new ArmouryPlan(4f, sets), null)), RunRules.Default, RunOptions.Default);
 
     /// <summary>An item test that knows these items and fits each of them to every slot.</summary>
     private static Func<string, string, bool> Known(params string[] items) => (slot, item) => items.Contains(item);

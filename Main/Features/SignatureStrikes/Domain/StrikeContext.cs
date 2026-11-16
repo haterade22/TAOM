@@ -62,6 +62,8 @@ public readonly record struct StrikeContext(
 /// <param name="Origin">Where the ring is centred: the hit point, or the attacker.</param>
 /// <param name="Sound">Module sound played once per strike; null for none.</param>
 /// <param name="SignatureId">The signature's config id, for the log line.</param>
+/// <param name="KillChance">Chance the struck foe dies outright, rolled on the next tick. Zero unless
+/// this hit was a clean, unshielded hit on a human that did damage.</param>
 public readonly record struct StrikeEffect(
     StrikeKind Kind,
     float OuterRadius,
@@ -74,4 +76,5 @@ public readonly record struct StrikeEffect(
     float FearMorale,
     StrikeOrigin Origin = StrikeOrigin.Impact,
     string? Sound = null,
-    string SignatureId = "");
+    string SignatureId = "",
+    float KillChance = 0f);

@@ -37,7 +37,7 @@ public class LongDefeatRunReportFortTests
         var levels = (JObject)report["fortifications"]!;
         Assert.AreEqual((0, 0, 0), ((int)levels["gateLevel"]!, (int)levels["towerLevel"]!, (int)levels["volleyLevel"]!));
         var spentOn = (JObject)((JObject)report["gold"]!)["spentOn"]!;
-        CollectionAssert.AreEquivalent(new[] { "packs", "gate", "towers", "fieldCare", "volley", "upgrades" }, spentOn.Properties().Select(p => p.Name).ToArray());
+        CollectionAssert.AreEquivalent(new[] { "packs", "gate", "towers", "fieldCare", "volley", "upgrades", "heroes" }, spentOn.Properties().Select(p => p.Name).ToArray());
         Assert.IsTrue(spentOn.Properties().All(p => (int)p.Value == 0));
         var wave = (JObject)report["waves"]!.Single();
         var gate = (JObject)wave["gate"]!;

@@ -2865,6 +2865,32 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
         HintText = "{=taom_kingdom_allegiance_mcm_enabled_hint}When enabled (default), lords keep to their side of the war. An AI clan of the Free Peoples never joins, defects to or serves as mercenaries for an Evil realm, and an Evil clan never does so for a Free realm. Neutral clans and realms may deal with either side. A new campaign also starts with no friendships between Free and Evil lords: each one becomes enmity of the same strength. Your own clan and a realm you lead keep the base game's rules. Clans that already serve a realm of the other side stay where they are. When off, the base game's rules apply. Applies at once, no restart; the friendships part applies to new campaigns only.")]
     public bool KingdomAllegianceEnabled { get; set; } = TAOM.Features.KingdomAllegiance.KingdomAllegianceSettingsProvider.DefaultEnabled;
 
+    // --- Hostile Peace (docs/features/hostile-peace.md) ---
+    //
+    // Read live at each question through HostilePeaceSettingsProvider, so none needs a restart. MCM wins over
+    // ModuleData/diplomacy/hostile_peace.json when MCM is loaded. GroupOrder 101 is used by no other group. New settings, so the
+    // defaults (on) reach every install.
+
+    [SettingPropertyGroup("World/Hostile Peace", GroupOrder = 101)]
+    [SettingPropertyBool("{=taom_hostile_peace_mcm_caravans}No Caravan Trade With Enemy Realms", Order = 0, RequireRestart = false,
+        HintText = "{=taom_hostile_peace_mcm_caravans_hint}When enabled (default), caravans of a Free realm do not trade in the towns of a realm of the Shadow, and the reverse, while the two are at peace before the War of the Ring. Realms that are not sworn enemies trade as before. When off, the base game's rules apply. Applies at once, no restart.")]
+    public bool HostilePeaceBlockCaravanTrade { get; set; } = TAOM.Features.HostilePeace.HostilePeaceSettingsProvider.DefaultBlockCaravanTrade;
+
+    [SettingPropertyGroup("World/Hostile Peace", GroupOrder = 101)]
+    [SettingPropertyBool("{=taom_hostile_peace_mcm_agreements}No Trade Agreements With Enemy Realms", Order = 1, RequireRestart = false,
+        HintText = "{=taom_hostile_peace_mcm_agreements_hint}When enabled (default), a Free realm and a realm of the Shadow never sign a trade agreement, neither by the AI nor by your own kingdom's vote. An agreement signed before this was switched on runs to its end. When off, the base game's rules apply. Applies at once, no restart.")]
+    public bool HostilePeaceBlockTradeAgreements { get; set; } = TAOM.Features.HostilePeace.HostilePeaceSettingsProvider.DefaultBlockTradeAgreements;
+
+    [SettingPropertyGroup("World/Hostile Peace", GroupOrder = 101)]
+    [SettingPropertyBool("{=taom_hostile_peace_mcm_access}Enemy Realms Close Their Gates", Order = 2, RequireRestart = false,
+        HintText = "{=taom_hostile_peace_mcm_access_hint}When enabled (default), the towns and castles of a sworn enemy realm treat you as they would in war, even while your realms are at peace: you enter a town only in disguise, a castle not at all, and you cannot trade, recruit or rest in its villages. Your own fiefs are not affected. When off, the base game's rules apply. Applies at once, no restart.")]
+    public bool HostilePeaceLimitTownAccess { get; set; } = TAOM.Features.HostilePeace.HostilePeaceSettingsProvider.DefaultLimitTownAccess;
+
+    [SettingPropertyGroup("World/Hostile Peace", GroupOrder = 101)]
+    [SettingPropertyBool("{=taom_hostile_peace_mcm_alliances}Allow Player Alliances With Anyone", Order = 3, RequireRestart = false,
+        HintText = "{=taom_hostile_peace_mcm_alliances_hint}When off (default), a kingdom you rule cannot ally with a realm on the other side of the war: a Free kingdom does not ally with the Shadow, and the reverse. Realms of the Neutral side can ally with anyone. A kingdom you founded takes the side of its culture. Alliances you already have are kept. When on, your kingdom may ally with any realm, as before. AI realms keep their own rules either way. Applies at once, no restart.")]
+    public bool AllowPlayerAlliancesWithAnyone { get; set; } = TAOM.Features.HostilePeace.HostilePeaceSettingsProvider.DefaultAllowPlayerAlliancesWithAnyone;
+
     // --- Realms (docs/features/realms.md) ---
     //
     // Feudal titles, claims, vassal duties and offices. Prices and payments are percentages of realms_titles.xml, which stays

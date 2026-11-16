@@ -8,7 +8,7 @@ namespace TAOM.Features.LongDefeat;
 /// <summary>
 /// shop.json: shops by id. A bad starting gold falls back to 0; an offer with no id or troop, a duplicate id (the first is
 /// kept), a bad class, pack size or price is skipped. A shop left with no offer still loads, so a fortress may start with only
-/// its gold and nothing to buy. A shop's <c>fortifications</c> block is read by <see cref="FortificationsReader"/>, and its <c>armoury</c>, <c>yard</c> and <c>marshal</c> blocks by <see cref="LocationsReader"/>,
+/// its gold and nothing to buy. A shop's <c>fortifications</c> block is read by <see cref="FortificationsReader"/>, and its <c>armoury</c> and <c>yard</c> blocks by <see cref="LocationsReader"/>,
 /// which checks a gear set's listed classes against <paramref name="classIds"/> (the ids classes.json holds, asked for only when a set lists a class) when the caller has them. Its
 /// <c>upgrades</c> list, the steps of its troop lines (#1161), is read by <see cref="UpgradesReader"/>.
 /// </summary>
@@ -66,6 +66,7 @@ internal static class ShopReader
         return new ShopPlan(s.Int(shop, label, "startingGold", 0, 0, 1_000_000), offers, FortificationsReader.Read(shop, label, s), LocationsReader.Read(shop, label, s, classIds))
         {
             Upgrades = UpgradesReader.Read(shop, label, s),
+            Heroes = HeroesReader.Read(shop, label, s),
         };
     }
 

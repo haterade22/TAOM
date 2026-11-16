@@ -59,7 +59,17 @@ public static class DeclareWarAction_ApplyInternal_Patch
             return false;
         }
 
+        // A later prefix of another mod could still skip the declaration, so the line says allowed, not declared.
+        _logger?.LogInfo(AllowedLine(faction1.StringId, faction2.StringId, declareWarDetail));
         return true;
+    }
+
+    // #1283: the engine path (an AI war vote, a call to war, a War of the Ring declaration) tells a long run's reader how a war began.
+    // Kingdom pairs only: a rebel clan's war returns above. For a call to war the called realm comes first; the caller is in the
+    // DiplomacyBehavior "Call to war started" line just before it.
+    internal static string AllowedLine(string faction1Id, string faction2Id, DeclareWarAction.DeclareWarDetail detail)
+    {
+        return $"[Diplomacy] War declaration allowed: {faction1Id} -> {faction2Id} ({detail})";
     }
 
     // The player's own acts: the war may start before the script allows. A crime-rating war

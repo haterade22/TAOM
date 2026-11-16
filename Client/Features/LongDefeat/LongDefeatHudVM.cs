@@ -83,6 +83,8 @@ public sealed class LongDefeatHudVM : LongDefeatViewModel
     private bool _isBoonHintVisible;
     private string _upgradesTitle = string.Empty;
     private bool _hasUpgrades;
+    private string _heroesTitle = string.Empty;
+    private bool _hasHeroes;
 
     internal LongDefeatHudVM(LongDefeatSession session, Action leave)
     {
@@ -90,6 +92,7 @@ public sealed class LongDefeatHudVM : LongDefeatViewModel
         _leave = leave;
         Offers = new MBBindingList<LongDefeatOfferVM>();
         Upgrades = new MBBindingList<LongDefeatUpgradeVM>();
+        Heroes = new MBBindingList<LongDefeatHeroVM>();
         Boons = new MBBindingList<LongDefeatBoonVM>();
         Speeds = new MBBindingList<LongDefeatSpeedVM>();
         Fort = new LongDefeatFortVM(BuyCare, BuyGate, RepairGate, BuyVolley, BuyTowers);
@@ -174,6 +177,16 @@ public sealed class LongDefeatHudVM : LongDefeatViewModel
 
     [DataSourceProperty]
     public bool HasUpgrades { get => _hasUpgrades; private set => Set(ref _hasUpgrades, value, nameof(HasUpgrades)); }
+
+    /// <summary>The heroes the shop sells (#1337): one row per hero of the plan, in its order, whatever his state.</summary>
+    [DataSourceProperty]
+    public MBBindingList<LongDefeatHeroVM> Heroes { get; }
+
+    [DataSourceProperty]
+    public string HeroesTitle { get => _heroesTitle; private set => Set(ref _heroesTitle, value, nameof(HeroesTitle)); }
+
+    [DataSourceProperty]
+    public bool HasHeroes { get => _hasHeroes; private set => Set(ref _hasHeroes, value, nameof(HasHeroes)); }
 
     [DataSourceProperty]
     public bool IsPickVisible { get => _isPickVisible; private set => Set(ref _isPickVisible, value, nameof(IsPickVisible)); }
@@ -403,6 +416,7 @@ public sealed class LongDefeatHudVM : LongDefeatViewModel
             HornText = LongDefeatHudText.Horn();
             CloseText = LongDefeatHudText.Close();
             ApplyOffers(view);
+            ApplyHeroes(view);
             ApplyUpgrades(view);
             Fort.Update(view);
             ApplyShop(view);
@@ -497,6 +511,28 @@ public sealed class LongDefeatHudVM : LongDefeatViewModel
 
         for (var i = 0; i < view.Offers.Count; i++)
             Offers[i].Update(view.Offers[i], view.Gold);
+    }
+
+    /// <summary>The hero group above the upgrades: its title and one row per hero of the shop.</summary>
+    private void ApplyHeroes(RunView view)
+    {
+        HasHeroes = view.Heroes.Count > 0;
+        HeroesTitle = HasHeroes ? LongDefeatHudText.HeroesTitle() : string.Empty;
+        if (Heroes.Count != view.Heroes.Count)
+        {
+            Heroes.Clear();
+            for (var i = 0; i < view.Heroes.Count; i++)
+                Heroes.Add(new LongDefeatHeroVM(BuyHero));
+        }
+
+        for (var i = 0; i < view.Heroes.Count; i++)
+            Heroes[i].Update(view.Heroes[i], view.Gold);
+    }
+
+    private void BuyHero(string heroId)
+    {
+        Notify(LongDefeatHudText.Refusal(_session.TryBuyHero(heroId)));
+        Refresh();
     }
 
     /// <summary>The upgrade group under the packs: its title and one row per step on offer.</summary>

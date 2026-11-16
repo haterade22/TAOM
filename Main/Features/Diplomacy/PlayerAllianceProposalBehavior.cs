@@ -24,11 +24,16 @@ public class PlayerAllianceProposalBehavior : CampaignBehaviorBase
     private CampaignGameStarter _lastSessionStarter;
     private bool _dialogsRegistered;
 
-    public PlayerAllianceProposalBehavior(IDiplomacyService service, ICoopSessionProvider coop, IModLogger logger)
+    private readonly HostilePeace.HostilePeaceService? _hostilePeace;
+
+    /// <param name="hostilePeace">Hostile Peace block D; null keeps the old full freedom for the player's kingdom.</param>
+    public PlayerAllianceProposalBehavior(IDiplomacyService service, ICoopSessionProvider coop, IModLogger logger,
+        HostilePeace.HostilePeaceService? hostilePeace = null)
     {
         _service = service;
         _coop = coop;
         _logger = logger;
+        _hostilePeace = hostilePeace;
     }
 
     public override void RegisterEvents()
@@ -82,6 +87,9 @@ public class PlayerAllianceProposalBehavior : CampaignBehaviorBase
 
         var targetKingdom = GetConversationRulerKingdom();
         if (targetKingdom == null || targetKingdom == playerKingdom) return false;
+
+        // Block D (docs/features/hostile-peace.md): no line toward a realm across the Free/Evil line.
+        if (HostilePeace.Models.PlayerAllianceGate.Blocks(_hostilePeace, playerKingdom, targetKingdom)) return false;
 
         return _service.CanPlayerProposeAlliance(playerKingdom.StringId, targetKingdom.StringId);
     }

@@ -116,14 +116,14 @@ public class LongDefeatPlacePointsReaderTests
 
         Assert.IsTrue(catalog.Fortresses.Count > 0);
         Assert.IsTrue(catalog.Fortresses.All(f => f.ArmouryPoint == null && f.YardPoint == null), "no coordinate ships until taom.ld_export produces it");
-        Assert.IsTrue(catalog.Fortresses.All(f => f.Shop.Locations == null), "no set, engine or Marshal ships in the first slice, so every location row stays hidden");
+        Assert.IsTrue(catalog.Fortresses.All(f => f.Shop.Locations == null), "no set or engine ships in the first slice, so every location row stays hidden");
     }
 
     [TestMethod]
     public void BuildPlan_CarriesTheRecordedPlaces_AndTheShopsBlocks()
     {
         var catalog = Catalog(Fortress("'armoury':" + Place + ",'yard':{'x':4,'y':5,'z':6,'fx':1,'fy':0}"),
-            "'armoury':{'sets':[{'id':'a','kind':'armour','price':5,'slots':{'Head':'h'}}]},'yard':{'engines':[{'kind':'mangonel','price':450}]},'marshal':{'troop':'lord_4_7','price':500}");
+            "'armoury':{'sets':[{'id':'a','kind':'armour','price':5,'slots':{'Head':'h'}}]},'yard':{'engines':[{'kind':'mangonel','price':450}]}");
 
         var plan = catalog.BuildPlan(catalog.Fortresses[0], RunOptions.Default);
 
@@ -131,21 +131,18 @@ public class LongDefeatPlacePointsReaderTests
         Assert.AreEqual(new MusterFrame(4f, 5f, 6f, 1f, 0f), plan.YardPoint);
         Assert.AreEqual("a", plan.Armoury!.Sets.Single().Id);
         Assert.AreEqual("mangonel", plan.Yard!.Engines.Single().Kind);
-        Assert.AreEqual("lord_4_7", plan.Marshal!.Troop);
     }
 
     [TestMethod]
-    public void ThePlansThreeBlocks_AreTheShopsOwn_SoNoFixtureCanSetOneCopyAndNotTheOther()
+    public void ThePlansTwoBlocks_AreTheShopsOwn_SoNoFixtureCanSetOneCopyAndNotTheOther()
     {
         var armoury = new ArmouryPlan(4f, new[] { new GearSet("a", "a", "", GearKind.Armour, null, new[] { new LdKitSlot("Head", "h") }, 5) });
         var yard = new YardPlan(6f, new[] { new EngineOffer("mangonel", 450) });
-        var marshal = new MarshalPlan("lord_4_7", 500, "m", "");
         var plan = new RunPlan("helms", new[] { new GarrisonRow("d", FormationSlot.Infantry, 1) }, new WavePlan(new[] { new WaveSpec(1, new[] { new WaveTroop("a", FormationSlot.Infantry, 1) }) }, new WaveScaling(1, 1)),
-            new ShopPlan(0, new ShopOffer[0], null, new LocationsPlan(armoury, yard, marshal)), RunRules.Default, RunOptions.Default);
+            new ShopPlan(0, new ShopOffer[0], null, new LocationsPlan(armoury, yard)), RunRules.Default, RunOptions.Default);
 
         Assert.AreSame(armoury, plan.Armoury);
         Assert.AreSame(yard, plan.Yard);
-        Assert.AreSame(marshal, plan.Marshal);
     }
 
     [TestMethod]
@@ -159,7 +156,6 @@ public class LongDefeatPlacePointsReaderTests
         Assert.IsNull(plan.YardPoint);
         Assert.IsNull(plan.Armoury);
         Assert.IsNull(plan.Yard);
-        Assert.IsNull(plan.Marshal);
         Assert.AreEqual(0, plan.HiddenGearSets.Count);
         Assert.AreEqual(LocationOffer.None, plan.Locations, "Slice 1 delivers no location, so the plan offers none");
     }

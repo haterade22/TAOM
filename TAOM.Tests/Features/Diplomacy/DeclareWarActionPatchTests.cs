@@ -27,4 +27,23 @@ public class DeclareWarActionPatchTests
     {
         Assert.AreEqual(expected, DeclareWarAction_ApplyInternal_Patch.IsCausedByPlayer(detail));
     }
+
+    // #1283: the declaration line of a call to war names the called realm and the target, never the realm that made the call.
+    [TestMethod]
+    public void CallToWarLine_NamesTheCallerTheCalledRealmAndTheTarget()
+    {
+        Assert.AreEqual(
+            "[Diplomacy] Call to war started: rivendell calls empire_w against empire",
+            TAOM.Features.Diplomacy.DiplomacyBehavior.CallToWarLine("rivendell", "empire_w", "empire"));
+    }
+
+    // #1283: a war TAOM lets through left no line, so a run could not say who started a war or by which path.
+    [TestMethod]
+    public void AllowedLine_NamesBothRealmsAndTheEnginePath()
+    {
+        Assert.AreEqual(
+            "[Diplomacy] War declaration allowed: empire_w -> empire (CausedByCallToWarAgreement)",
+            DeclareWarAction_ApplyInternal_Patch.AllowedLine(
+                "empire_w", "empire", DeclareWarAction.DeclareWarDetail.CausedByCallToWarAgreement));
+    }
 }

@@ -5155,3 +5155,14 @@ The Kit's sprite generation re-saved all 13 GUI `_tex.tpac` files. I copied back
 - **Why missed:** the package facts were verified once by hand, and the tests checked our side of the contract only.
 - **Prevent:** when a target is ordered or conditioned around a dependency's targets, add a test that reads the pinned version's file from the NuGet cache and asserts those facts (Inconclusive when the cache lacks it).
 - **Source:** [rca-dependencies-deploy-dlls-2026-11-16.md](../rca-dependencies-deploy-dlls-2026-11-16.md), finding 2.
+### An advisory tier that waits for an issue to close is never promoted (shield and two-hander gate, #1312, 2026-11-15)
+`audit_polearm_shield_parity.py` reported two-handed weapons beside a shield as WARN, with the comment "once #450 is closed, move TwoHandedWeapon into this set". #450 closed and nobody moved it, so the count grew from 33 to 98 to 114 rosters, and the 2026-11-05 RCA saw it and filed nothing.
+- **Why missed:** the promotion was a note in a comment, owned by no commit; closing the issue did not touch the tool.
+- **Prevent:** the commit that closes the issue an advisory tier waits on also edits the gate, and a hold carries its reason in the table (`KNOWN_FAILURES`), never a WARN that nothing reads.
+- **Source:** issue #1312.
+
+### A gate that mirrors engine loading must find files the way the engine does (placeholder weapons, #1354, 2026-11-16)
+`audit_polearm_shield_parity.py` applied each module's `ModuleData/<name>.xslt` by file name. The engine applies the stylesheets that `SubModule.xml` `<XmlName>` rows name, and TAOM's placeholder registrations sit in `placeholder_weapons/`, so all 20 `taom_ph_*` weapons resolved to no usage and their 270 places beside a shield were never judged. Reading the rows then pulled in NavalDLC, which TAOM declares incompatible, and its pieces showed as dangling.
+- **Why missed:** the file-name rule matched every stylesheet that existed when the gate was written; nothing failed when a new one used a subfolder.
+- **Prevent:** derive the file list from the manifest the engine reads (`SubModule.xml` rows, `<IncompatibleModules>`), and test both edges: a row's subfolder file counts, a file no row names does not. Make an input the gate cannot judge fail the run: a roster weapon that resolves to no usage now fails instead of passing in silence.
+- **Source:** issue #1354.

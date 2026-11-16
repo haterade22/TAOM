@@ -165,6 +165,12 @@ class Families(unittest.TestCase):
         self.assertEqual(lk.family_key('rivendell_torso_lord1_silver'), lk.family_key('rivendell_torso_lord3'))
         self.assertNotEqual(lk.family_key('roh_nbl_arm_1'), lk.family_key('cts_rohan_armor_captain'))
 
+    def test_a_lord_armour_variant_is_of_its_sources_family_and_colour(self):
+        self.assertEqual(lk.family_key('taom_lord_mkwd_inf3_chest_bronze'), lk.family_key('mkwd_inf3_chest_bronze'))
+        self.assertEqual(lk.variant_of('taom_lord_mkwd_inf3_chest_bronze'), 'bronze')
+        self.assertTrue(lk.same_look('taom_lord_mkwd_inf3_chest_bronze', 'taom_lord_mkwd_inf3_pauldrons_bronze'))
+        self.assertFalse(lk.same_look('taom_lord_mkwd_inf3_chest_bronze', 'mkwd_inf3_pauldrons_silver'))
+
 
 class LordPool(unittest.TestCase):
     def _pool(self, lord_sets=()):
@@ -186,6 +192,20 @@ class LordPool(unittest.TestCase):
 
     def test_the_lowest_troop_wearer_is_recorded(self):
         self.assertEqual(self._pool()['lowest']['x_chest_lord_a'], (26, 'x_sergeant'))
+
+    def test_a_lord_armour_variant_is_a_pool_piece_of_its_own_culture_only(self):
+        # #1333: a repo variant has no Armory folder; the spec names its culture.
+        items = dict(ITEMS, taom_lord_x_chest_light_a=dict(_it('Body', b=51), folder=None),
+                     taom_lord_z_chest_lord_a=dict(_it('Body', b=51), folder=None))
+        variants = {'taom_lord_x_chest_light_a': 'x', 'taom_lord_z_chest_lord_a': 'z'}
+        # A variant is an id the spec lists (derive_armor_tiers.lord_variant_source); these two stand in it.
+        with mock.patch.object(lk.dat, '_shipped_variant_cultures', return_value=variants):
+            pool = lk.lord_pool('x', items, TROOPS, [], variants=variants)
+        self.assertIn('taom_lord_x_chest_light_a', pool['slots']['Body'])
+        self.assertNotIn('taom_lord_z_chest_lord_a', pool['slots']['Body'])
+        # It fits the races its source's family is seen on, and no troop wears it.
+        self.assertEqual(pool['fits']['taom_lord_x_chest_light_a'], {'human'})
+        self.assertNotIn('taom_lord_x_chest_light_a', pool['lowest'])
 
     def test_the_pool_table_names_its_value_source_and_each_piece_family(self):
         with tempfile.TemporaryDirectory() as tmp:

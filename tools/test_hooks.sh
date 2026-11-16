@@ -3447,6 +3447,19 @@ for PG_CASE in "a Windows path|$PG_WIN" "a path with spaces|$PG/my data/r 2.xml"
         bad "check-polearm-shield-parity did not report for ${PG_CASE%%|*}: ${PG_OUT3:0:160}"
     fi
 done
+# Two FAIL blocks (a dangling piece id, then a roster finding, #1312): both reach Claude, so the
+# first block cannot hide the second or mute it as a repeat.
+printf '%s\n' 'import sys' 'print("FAIL: 1 <AvailablePiece> id(s) with no <CraftingPiece> definition")' \
+    'print("  dangling_z")' 'print("")' 'print("FAIL: 1 roster pairs a shield with an undrawn weapon")' \
+    'print("  troop_x: shield + axe_y")' 'print("")' 'sys.exit(1)' > "$PG/tools/audit_polearm_shield_parity.py"
+rm -f "$PG/.claude/logs/.polearm-gate-reported-v2"
+PG_PAYLOAD=$("$HPY" -c 'import json,sys; print(json.dumps({"hook_event_name":"PostToolUse","tool_name":"Edit","tool_input":{"file_path":sys.argv[1]}}))' "$PG/data/r.xml")
+PG_OUT4=$(pg_run)
+if printf '%s' "$PG_OUT4" | "$HPY" -c 'import json,sys; c=json.load(sys.stdin)["hookSpecificOutput"]["additionalContext"]; sys.exit(0 if "dangling_z" in c and "troop_x" in c else 1)' 2>/dev/null; then
+    ok "check-polearm-shield-parity reports every FAIL block"
+else
+    bad "check-polearm-shield-parity dropped a FAIL block: ${PG_OUT4:0:200}"
+fi
 rm -rf "$PG"
 
 # ---------------------------------------------------------------------------

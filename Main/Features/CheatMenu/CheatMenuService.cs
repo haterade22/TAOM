@@ -1,3 +1,6 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using TAOM.Adapters;
 using TAOM.Core.Logging;
 using TAOM.Features.CoopInterop;
@@ -19,7 +22,7 @@ public enum CheatOutcomeKind
     NoBattle,
 }
 
-/// <summary>A result with no Name of its own, worded by what the cheat gave (CheatMenuTexts).</summary>
+/// <summary>Which cheat a Done result came from, so CheatMenuTexts words it for that cheat.</summary>
 public enum CheatGiven
 {
     Other,
@@ -27,11 +30,13 @@ public enum CheatGiven
     Influence,
     Renown,
     Heal,
+    Relation,
+    Teleport,
 }
 
 /// <param name="Name">What was given or reached (a troop, a resource, a kingdom, a settlement), when there is one.</param>
 /// <param name="Number">The result's number: gold now, troops added, soldiers healed, lords changed, the resource's new balance.</param>
-/// <param name="Given">For a result with no Name: what it gave, so the player reads more than a bare number.</param>
+/// <param name="Given">Which cheat it was, so the player reads what it did and not only a name and a bare number.</param>
 public sealed record CheatOutcome(CheatOutcomeKind Kind, string? Name = null, float Number = 0, TeleportRefusal Refusal = TeleportRefusal.None,
     CheatGiven Given = CheatGiven.Other)
 {
@@ -106,6 +111,39 @@ public sealed class CheatMenuService
             : Log("troops", new CheatOutcome(CheatOutcomeKind.Done, troop, count));
     }
 
+    /// <summary>Every regular troop of the player's faction (CheatTroopList), sorted by tier then name; empty in co-op.</summary>
+    public IReadOnlyList<CheatTroopFacts> FactionTroops()
+    {
+        if (!IsSinglePlayer) return Array.Empty<CheatTroopFacts>();
+        var read = _world.ReadFactionTroops();
+        return read == null ? Array.Empty<CheatTroopFacts>() : CheatTroopList.Select(read.Value.Sources, read.Value.Troops);
+    }
+
+    /// <summary>Adds <paramref name="count"/> of one troop of the faction's list; any other id is refused.</summary>
+    public CheatOutcome AddFactionTroop(string? troopId, int count)
+    {
+        if (!IsSinglePlayer) return Refused();
+        if (count < 1 || count > MaxTroops) return new CheatOutcome(CheatOutcomeKind.BadAmount, Number: MaxTroops);
+        if (string.IsNullOrWhiteSpace(troopId) || !FactionTroops().Any(t => t.Id == troopId))
+            return new CheatOutcome(CheatOutcomeKind.UnknownTarget, troopId);
+        var name = _world.AddTroop(troopId!, count);
+        return name == null
+            ? new CheatOutcome(CheatOutcomeKind.UnknownTarget, troopId)
+            : Log("troop", new CheatOutcome(CheatOutcomeKind.Done, name, count));
+    }
+
+    /// <summary>
+    /// The game's own cheat party screen (every troop, 10 of each, move the ones you want). NothingToDo when it could not be
+    /// opened.
+    /// </summary>
+    public CheatOutcome OpenCheatPartyScreen()
+    {
+        if (!IsSinglePlayer) return Refused();
+        return _world.OpenCheatPartyScreen()
+            ? Log("cheat party screen", new CheatOutcome(CheatOutcomeKind.Done))
+            : new CheatOutcome(CheatOutcomeKind.NothingToDo);
+    }
+
     public CheatOutcome Heal()
     {
         if (!IsSinglePlayer) return Refused();
@@ -120,7 +158,7 @@ public sealed class CheatMenuService
         var lords = _world.AddRelationWithKingdom(kingdomId!, amount);
         return lords == null
             ? new CheatOutcome(CheatOutcomeKind.UnknownTarget, kingdomId)
-            : Log("relation", new CheatOutcome(CheatOutcomeKind.Done, kingdomId, lords.Value));
+            : Log($"relation {kingdomId}", new CheatOutcome(CheatOutcomeKind.Done, KingdomName(kingdomId!), lords.Value, Given: CheatGiven.Relation));
     }
 
     /// <summary>
@@ -147,8 +185,13 @@ public sealed class CheatMenuService
         var name = string.IsNullOrWhiteSpace(settlementId) ? null : _world.SettlementName(settlementId!);
         if (name == null) return new CheatOutcome(CheatOutcomeKind.UnknownTarget, settlementId);
         _world.TeleportToGate(settlementId!);
-        return Log("teleport", new CheatOutcome(CheatOutcomeKind.Done, name));
+        return Log("teleport", new CheatOutcome(CheatOutcomeKind.Done, name, Given: CheatGiven.Teleport));
     }
+
+    // The picker's display name; its id only for a kingdom the picker leaves out (an eliminated one). spkingdoms.xslt
+    // keeps vanilla's ids (Gondor is empire_w), so the id alone means nothing to a player (#1317).
+    private string KingdomName(string kingdomId) =>
+        _world.Kingdoms().FirstOrDefault(k => k.Id == kingdomId).Name ?? kingdomId;
 
     private static CheatOutcome Refused() => new(CheatOutcomeKind.CoopRefused);
 

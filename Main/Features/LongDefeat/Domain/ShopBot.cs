@@ -17,6 +17,7 @@ internal enum BotActionKind
     VolleyLevel,
     Volley,
     Upgrade,
+    Hero,
 }
 
 internal readonly record struct BotAction(BotActionKind Kind, string? OfferId = null);
@@ -76,6 +77,11 @@ internal static class ShopBot
 
         if (!view.Fort.BuysFirst && Fortification(view) is { } afterPacks)
             return afterPacks;
+
+        // A hero of the shop (#1325), once no pack fits: the first one for sale that the gold reaches and the cap has room for.
+        var hero = view.Heroes.FirstOrDefault(h => h.State == HeroState.ForSale && h.Price <= view.Gold && held + 1 <= view.GarrisonCap);
+        if (hero != null)
+            return new BotAction(BotActionKind.Hero, hero.Offer.Id);
 
         var upgrade = view.Upgrades.FirstOrDefault(r => r.Affordable > 0);
         if (upgrade != null)

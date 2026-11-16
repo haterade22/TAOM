@@ -240,7 +240,10 @@ restrictions. The name is the kingdom's own `Name`. A realm renamed in play (Ere
 when its holder forms the title, see [Realms](realms.md)) is lettered anew in place without waiting
 for the borders to repaint: the game raises no event for `Kingdom.ChangeKingdomName`, so Realms tells
 every `IKingdomRenameListener` (Core/Domain), `RealmBorderService` raises its `NameVersion`, and the
-names layer reads the names again only when that number moves.
+names layer reads the names again only when that number moves. A rename in the kingdom screen tells
+nobody, so the map view also raises it in `OnResume`, when any screen over the map closes (#1316). In
+co-op a rename reaches the other peers through the Coop mod's name sync, which raises nothing: their
+labels show it after their next screen closes.
 
 ### Crossing notices
 

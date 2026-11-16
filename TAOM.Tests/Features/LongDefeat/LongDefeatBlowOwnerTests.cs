@@ -263,6 +263,8 @@ public class LongDefeatBlowOwnerTests
         StringAssert.Contains(choose, "IsAIControlled", "a player-controlled shooter loses the friendly-hit cancel (E14)");
         StringAssert.Contains(choose, "IsMainAgent", "the main agent never owns a volley arrow (D22)");
         StringAssert.Contains(choose, "VolleyOwnerRule.Choose(");
+        StringAssert.Contains(choose, "var held = IsHeldHero(a);", "a held hero's volley would carry his ranged kit (#1361)");
+        StringAssert.Contains(choose, "eligible ? NearestAttacker(a.Position, attackers) : 0f, held)", "the candidate carries the held flag as its last argument");
         Assert.IsFalse(choose.Contains(".IsActive()"), "IsActive alone passes for a stale handle");
         Assert.IsFalse(choose.Contains("MainAgent ??"), "the main agent is not a fallback owner");
         StringAssert.Contains(SourceOf("LongDefeatBattlefieldAdapter.Volley.cs"), "agent.IsActive() && AgentSlotIdentity.IsCurrentOccupant(agent)");

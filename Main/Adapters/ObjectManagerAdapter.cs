@@ -32,6 +32,9 @@ public class ObjectManagerAdapter : IObjectManagerAdapter
         }
     }
 
+    public bool ItemExists(string id) =>
+        !string.IsNullOrEmpty(id) && MBObjectManager.Instance?.GetObject<ItemObject>(id) != null;
+
     public BasicCultureObject GetBasicCulture(string id)
     {
         if (string.IsNullOrEmpty(id)) return null;

@@ -25,18 +25,11 @@ public class RaceAbilitiesConfigProvider : IRaceAbilitiesConfigProvider
         ObjectCreationHandling = ObjectCreationHandling.Replace,
     };
 
-    private static readonly string[] WarCries = { "", "Yell", "Charge", "Victory", "Grunt" };
+    internal static readonly string[] WarCries = { "", "Yell", "Charge", "Victory", "Grunt" };
     private static readonly string EmptyEffects = JsonConvert.SerializeObject(new RaceAbilityEffects());
 
-    // Native IMBMission.GetNearbyAgentsAux searches its proximity grid only up to 15 m
-    // (ProximityMapMaxSearchRadius on v1.5.5) and walks every agent in the mission beyond it. Five
-    // shipped profiles sense enemies past 15 m: Stand Fast 20 m (every dwarf), Forth Eorlingas 30 m
-    // (mounted), and Swiftness, Serpent's Venom and Bard's Aim at 30 to 40 m (holding any ranged
-    // weapon, javelins included). Each such soldier pays one full walk a pass, about once a second,
-    // until his ability fires. Accepted, unmeasured. The four radii and KinWithin stay on the grid.
-    private const float MaxRange = 40f;
     private const float MaxRadius = 15f;
-    private const float MaxEventSeconds = 30f;
+    private const float MaxEventSeconds = RaceAbilityTriggerCheck.MaxEventSeconds;
 
     // Each outlined soldier costs the renderer extra draws of his meshes (unmeasured), so the cap is bounded.
     private const int MaxGlowingCap = 200;
@@ -339,93 +332,17 @@ public class RaceAbilitiesConfigProvider : IRaceAbilitiesConfigProvider
 
     private List<RaceAbilityTrigger> ValidateTriggers(List<RaceAbilityTrigger>? parsed, string field, ref bool rejected)
     {
-        var triggers = new List<RaceAbilityTrigger>();
-        if (parsed == null)
-            return triggers;
-        for (var i = 0; i < parsed.Count; i++)
+        // A ref cannot be captured by the lambda, so a local flag carries the warning out.
+        var bad = false;
+        var triggers = RaceAbilityTriggerCheck.ValidateAll(parsed, field, message =>
         {
-            var trigger = ValidateTrigger(parsed[i], $"{field}[{i}]", ref rejected);
-            if (trigger != null)
-                triggers.Add(trigger);
-        }
+            _logger.LogWarning("RaceAbilitiesConfigProvider: " + message);
+            bad = true;
+        });
+        if (bad)
+            rejected = true;
         return triggers;
     }
-
-    private RaceAbilityTrigger? ValidateTrigger(RaceAbilityTrigger? parsed, string field, ref bool rejected)
-    {
-        if (parsed == null)
-        {
-            Warn($"{field} is null, skipped", ref rejected);
-            return null;
-        }
-        if (!TryParseKind(parsed.Kind, out var kind))
-        {
-            Warn($"{field}.kind='{parsed.Kind}' is not a known trigger kind, skipped", ref rejected);
-            return null;
-        }
-
-        var trigger = new RaceAbilityTrigger
-        {
-            Kind = kind.ToString(),
-            ParsedKind = kind,
-            Range = parsed.Range,
-            Seconds = parsed.Seconds,
-            Fraction = parsed.Fraction,
-            Count = parsed.Count,
-        };
-        var valid = true;
-        // KinWithin runs the same ally query as kinBonus.radius, on every pass: it stays on the grid.
-        var maxRange = kind == RaceAbilityTriggerKind.KinWithin ? MaxRadius : MaxRange;
-        if (ReadsRange(kind) && !(FiniteFloatValidator.IsFiniteAtMost(parsed.Range, maxRange) && parsed.Range > 0f))
-            valid = SkipTrigger($"{field}.range={parsed.Range} must be a finite value in (0,{maxRange}]", ref rejected);
-        if (ReadsSeconds(kind) && !(FiniteFloatValidator.IsFiniteAtMost(parsed.Seconds, MaxEventSeconds) && parsed.Seconds > 0f))
-            valid = SkipTrigger($"{field}.seconds={parsed.Seconds} must be a finite value in (0,{MaxEventSeconds}]", ref rejected);
-        if (ReadsFraction(kind) && !(FiniteFloatValidator.IsFiniteAtMost(parsed.Fraction, 1f) && parsed.Fraction > 0f))
-            valid = SkipTrigger($"{field}.fraction={parsed.Fraction} must be a finite value in (0,1]", ref rejected);
-        if (ReadsCount(kind) && (parsed.Count < 1 || parsed.Count > 50))
-            valid = SkipTrigger($"{field}.count={parsed.Count} must be in [1,50]", ref rejected);
-        return valid ? trigger : null;
-    }
-
-    // One kind's exact name, any case. Enum.TryParse would also take a number, or a comma list whose values
-    // it ORs together into some other kind ("EnemyWithin,CavalryClosing" reads as RangedTargetWithin).
-    private static bool TryParseKind(string? value, out RaceAbilityTriggerKind kind)
-    {
-        var name = value?.Trim();
-        foreach (RaceAbilityTriggerKind candidate in Enum.GetValues(typeof(RaceAbilityTriggerKind)))
-        {
-            if (string.Equals(candidate.ToString(), name, StringComparison.OrdinalIgnoreCase))
-            {
-                kind = candidate;
-                return true;
-            }
-        }
-        kind = default;
-        return false;
-    }
-
-    private static bool ReadsRange(RaceAbilityTriggerKind kind) => kind switch
-    {
-        RaceAbilityTriggerKind.EnemyWithin => true,
-        RaceAbilityTriggerKind.EnemiesWithin => true,
-        RaceAbilityTriggerKind.KinFell => true,
-        RaceAbilityTriggerKind.WoundedEnemyWithin => true,
-        RaceAbilityTriggerKind.CavalryClosing => true,
-        RaceAbilityTriggerKind.RangedTargetWithin => true,
-        RaceAbilityTriggerKind.KinWithin => true,
-        RaceAbilityTriggerKind.NoEnemyWithin => true,
-        _ => false,
-    };
-
-    private static bool ReadsSeconds(RaceAbilityTriggerKind kind) =>
-        kind == RaceAbilityTriggerKind.KinFell || kind == RaceAbilityTriggerKind.LandedKill;
-
-    private static bool ReadsFraction(RaceAbilityTriggerKind kind) =>
-        kind == RaceAbilityTriggerKind.HealthBelow || kind == RaceAbilityTriggerKind.WoundedEnemyWithin
-        || kind == RaceAbilityTriggerKind.MoraleBelow;
-
-    private static bool ReadsCount(RaceAbilityTriggerKind kind) =>
-        kind == RaceAbilityTriggerKind.EnemiesWithin || kind == RaceAbilityTriggerKind.KinWithin;
 
     private RaceAbilityEffects ValidateEffects(RaceAbilityEffects? parsed, string field, ref bool rejected)
     {
@@ -486,12 +403,6 @@ public class RaceAbilitiesConfigProvider : IRaceAbilitiesConfigProvider
     {
         Warn($"{field}={value} outside {range}, reverting to {fallback}", ref rejected);
         return fallback;
-    }
-
-    private bool SkipTrigger(string message, ref bool rejected)
-    {
-        Warn(message + ", trigger skipped", ref rejected);
-        return false;
     }
 
     private void Warn(string message, ref bool rejected)

@@ -39,6 +39,10 @@ public interface IDiplomacyService
     bool FormPlayerAlliance(string playerKingdomId, string targetKingdomId);
 
     bool IsWarAllowed(string kingdomAId, string kingdomBId);
+
+    // A callToWarRefusals row in diplomacy.json: the called kingdom refuses any call to war against the target.
+    bool RefusesCallToWar(string calledKingdomId, string targetKingdomId);
+
     void EstablishInitialAlliances();
     void EnforcePermanentAlliances();
 }

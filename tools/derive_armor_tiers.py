@@ -46,6 +46,7 @@ Usage:
 
 import argparse
 import datetime
+import functools
 import json
 import os
 import re
@@ -73,6 +74,37 @@ DATA_DIR = os.path.join(REPO_ROOT, 'tools', 'data')
 REPORT_DIR = os.path.join(REPO_ROOT, 'tools', 'reports', 'armor-balance')
 MAP_JSON = os.path.join(DATA_DIR, 'armor_roster_tiers.json')
 REPORT_MD = os.path.join(REPORT_DIR, 'ROSTER-TIERS.md')
+# Lord armour variants (#1333): repo items that copy an Armory piece at the lord band for the lord
+# templates (tools/generate_lord_armour_variants.py). Read here beside the Armory, in the source's
+# folder, so the class table, the restat map and fix_lord_kits see them.
+LORD_VARIANT_PREFIX = 'taom_lord_'
+LORD_VARIANTS_SPEC = os.path.join(REPO_ROOT, 'tools', 'lord_armour_variants.json')
+LORD_VARIANTS_XML = os.path.join(MODULEDATA_DIR, 'lord_armour', 'lord_armour_variants.xml')
+
+
+def lord_variant_source(item_id, spec=None):
+    """The Armory id a lord armour variant copies, or None for any other id. A variant is an id the
+    spec lists (lord_variant_cultures), not any id with the prefix: taom_lord_intro_* are dialogue keys."""
+    if item_id in lord_variant_cultures(spec):
+        return item_id[len(LORD_VARIANT_PREFIX):]
+    return None
+
+
+def lord_variant_cultures(spec=None):
+    """{variant id: the template culture whose lords wear it} from the spec (the shipped one, read
+    once, when not given)."""
+    if spec is None:
+        return _shipped_variant_cultures()
+    return {LORD_VARIANT_PREFIX + row['source']: culture
+            for culture, rows in (spec.get('cultures') or {}).items() for row in rows}
+
+
+@functools.lru_cache(maxsize=None)
+def _shipped_variant_cultures():
+    if not os.path.exists(LORD_VARIANTS_SPEC):
+        return {}
+    with open(LORD_VARIANTS_SPEC, encoding='utf-8') as f:
+        return lord_variant_cultures(json.load(f))
 
 # Bannerlord equipment slot -> armor curve slot. Item0-3/Horse/HorseHarness are not armor.
 EQUIP_SLOT_MAP = {'Head': 'head', 'Body': 'body', 'Leg': 'leg', 'Gloves': 'arm', 'Cape': 'shoulder'}
@@ -300,8 +332,31 @@ def _wearers(heroes):
     return wearers
 
 
+def _index_entry(item, folder, slot_type):
+    armor = item.find('.//Armor')
+    if armor is None or not item.get('id') or item.get('Type') not in ra.CHARACTER_ARMOUR_TYPES:
+        return None
+    values = ra.parse_current_values(armor, slot_type)
+    try:
+        weight = float(item.get('weight')) if item.get('weight') is not None else None
+    except (TypeError, ValueError):
+        weight = None
+    return {
+        'folder': folder,
+        'slot': slot_type,
+        'primary': ra._get_primary_stat(values, slot_type),
+        # (head, body, arm, leg): generate_armour_classes.py never offers an upgrade that only lowers them
+        'armour': tuple(values.get(k, 0) for k in ('head_armor', 'body_armor', 'arm_armor', 'leg_armor')) if values else None,
+        'weight': weight,
+        'name': ra.get_display_name(item.get('name', '')),
+        # the item's own Type, kept for the shipped-table test
+        'type': item.get('Type'),
+    }
+
+
 def build_armory_index():
-    """Return item_id -> {folder, slot, primary, armour, weight, name, type}."""
+    """Return item_id -> {folder, slot, primary, armour, weight, name, type}: the Armory's five slot
+    files of every folder, then the repo's lord armour variants in the folder and slot of their source."""
     index = {}
     armory_dir = ra.ARMORY_DIR
     if not os.path.isdir(armory_dir):
@@ -319,26 +374,19 @@ def build_armory_index():
             except ET.ParseError:
                 continue
             for item in root.findall('.//Item'):
-                item_id = item.get('id', '')
-                armor = item.find('.//Armor')
-                if armor is None or not item_id or item.get('Type') not in ra.CHARACTER_ARMOUR_TYPES:
-                    continue
-                values = ra.parse_current_values(armor, slot_type)
-                try:
-                    weight = float(item.get('weight')) if item.get('weight') is not None else None
-                except (TypeError, ValueError):
-                    weight = None
-                index[item_id] = {
-                    'folder': folder,
-                    'slot': slot_type,
-                    'primary': ra._get_primary_stat(values, slot_type),
-                    # (head, body, arm, leg): generate_armour_classes.py never offers an upgrade that only lowers them
-                    'armour': tuple(values.get(k, 0) for k in ('head_armor', 'body_armor', 'arm_armor', 'leg_armor')) if values else None,
-                    'weight': weight,
-                    'name': ra.get_display_name(item.get('name', '')),
-                    # the item's own Type, kept for the shipped-table test
-                    'type': item.get('Type'),
-                }
+                entry = _index_entry(item, folder, slot_type)
+                if entry is not None:
+                    index[item.get('id')] = entry
+    if os.path.exists(LORD_VARIANTS_XML):
+        try:
+            root = ET.parse(LORD_VARIANTS_XML).getroot()
+        except ET.ParseError:
+            root = None
+        for item in (root.findall('.//Item') if root is not None else ()):
+            source = index.get(lord_variant_source(item.get('id', '')))
+            entry = _index_entry(item, source['folder'], source['slot']) if source else None
+            if entry is not None:
+                index[item.get('id')] = entry
     return index, armory_dir
 
 

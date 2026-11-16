@@ -65,6 +65,11 @@ public class TaomCustomBattleDamageModel : CustomAgentApplyDamageModel
         => CreatureSiegeHooks.ScaleGateDamage(in attackInformation, in collisionData,
             base.ApplyDamageScaling(in attackInformation, in collisionData, baseDamage));
 
+    // Hero Abilities (#1361): the shield-pierce floor, as in the campaign model. The Custom Battle base returns its input
+    // (CustomAgentApplyDamageModel.cs:106-109), so every other hit keeps its damage.
+    public override float ApplyGeneralDamageModifiers(in AttackInformation attackInformation, in AttackCollisionData collisionData, float baseDamage)
+        => _combat.ShieldPierceFloor(in attackInformation, in collisionData, base.ApplyGeneralDamageModifiers(in attackInformation, in collisionData, baseDamage));
+
     // Race Abilities first, then the combat rules, then the engine's own: Custom Battle's base crushes through only for a
     // CanCrushThrough weapon swung overhead with energy above 58 (x1.2 against a shield); a combat rule that answers wins.
     public override bool DecideCrushedThrough(Agent attackerAgent, Agent defenderAgent, float totalAttackEnergy, Agent.UsageDirection attackDirection, StrikeType strikeType, WeaponComponentData defendItem, bool isPassiveUsageHit)
@@ -110,7 +115,7 @@ public class TaomCustomBattleDamageModel : CustomAgentApplyDamageModel
     public override void DecideMissileWeaponFlags(Agent attackerAgent, in MissionWeapon missileWeapon, ref WeaponFlags missileWeaponFlags)
     {
         base.DecideMissileWeaponFlags(attackerAgent, in missileWeapon, ref missileWeaponFlags);
-        missileWeaponFlags = _combat.PenetrationFlags(in missileWeapon, missileWeaponFlags);
+        missileWeaponFlags = _combat.PenetrationFlags(attackerAgent, in missileWeapon, missileWeaponFlags);
     }
 
     // The Custom Battle base multiplies by 1.25 and applies the banner reduction; the runtime correction rides on that result.

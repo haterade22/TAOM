@@ -15,6 +15,7 @@ public class DiplomacyService : IDiplomacyService
     private readonly IModLogger _logger;
     private readonly Dictionary<(string, string), AllianceTier> _relationships;
     private readonly List<KingdomRelationship> _permanentRelationships;
+    private readonly HashSet<(string Called, string Target)> _callToWarRefusals = new();
     private readonly WarPledgeStore? _pledges;
 
     // pledges: optional for the same reason as in AlignmentService; the container always passes the store.
@@ -43,6 +44,9 @@ public class DiplomacyService : IDiplomacyService
                 _permanentRelationships.Add(rel);
             }
         }
+
+        foreach (var refusal in config.CallToWarRefusals)
+            _callToWarRefusals.Add((refusal.Called, refusal.Target));
     }
 
     // #1113: a realm that pledged to a side is Hostile to every realm of the other side, so the Full War
@@ -137,6 +141,11 @@ public class DiplomacyService : IDiplomacyService
         if (_alignmentService.AreSameAlignment(kingdomAId, kingdomBId))
             return false;
         return true;
+    }
+
+    public bool RefusesCallToWar(string calledKingdomId, string targetKingdomId)
+    {
+        return _callToWarRefusals.Contains((calledKingdomId, targetKingdomId));
     }
 
     public void EstablishInitialAlliances()

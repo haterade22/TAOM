@@ -94,4 +94,41 @@ public class RaceAbilityEffectsMergeTests
         Assert.AreEqual(-15f, merged.MoraleOnEnd, 0.001f);
         Assert.AreEqual(5f, merged.HealPerKill, 0.001f);
     }
+
+    [TestMethod]
+    public void Combine3_BuffOnly()
+    {
+        var buff = new RaceAbilityEffects { MeleeDamagePercent = 15f };
+
+        Assert.AreSame(buff, RaceAbilityEffectsMerge.Combine(null, null, buff));
+    }
+
+    [TestMethod]
+    public void Combine3_AllNull() =>
+        Assert.IsNull(RaceAbilityEffectsMerge.Combine(null, null, null));
+
+    [TestMethod]
+    public void Combine3_StrongerPerChannel()
+    {
+        var merged = RaceAbilityEffectsMerge.Combine(
+            new RaceAbilityEffects { MeleeDamagePercent = 20f, DamageReductionPercent = 5f },
+            new RaceAbilityEffects { MeleeDamagePercent = 10f, DamageReductionPercent = 15f },
+            new RaceAbilityEffects { MeleeDamagePercent = 12f, DamageReductionPercent = 30f, ShrugOffBlows = true })!;
+
+        Assert.AreEqual(20f, merged.MeleeDamagePercent, 0.001f);
+        Assert.AreEqual(30f, merged.DamageReductionPercent, 0.001f);
+        Assert.IsTrue(merged.ShrugOffBlows);
+    }
+
+    [TestMethod]
+    public void Combine3_OwnOnlyFieldsFromOwn()
+    {
+        var merged = RaceAbilityEffectsMerge.Combine(
+            new RaceAbilityEffects { MoraleOnEnd = -15f },
+            new RaceAbilityEffects { MeleeDamagePercent = 5f },
+            new RaceAbilityEffects { MoraleOnEnd = -40f, MeleeDamagePercent = 9f })!;
+
+        Assert.AreEqual(-15f, merged.MoraleOnEnd, 0.001f);
+        Assert.AreEqual(9f, merged.MeleeDamagePercent, 0.001f);
+    }
 }

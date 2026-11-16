@@ -75,13 +75,17 @@ a kingdom-only map, and the "16 keys" and "22 keys" figures in that document and
 
 <!-- engine-ref type="TAOM.Features.Diplomacy.Models.KingdomRelationship" file="Main/Features/Diplomacy/Models/KingdomRelationship.cs" lines="5-7" -->
 
-`diplomacy/diplomacy.json` is one key, `relationships`, holding an array of pair rows.
+`diplomacy/diplomacy.json` has two keys: `relationships`, an array of pair rows, and `callToWarRefusals`, an array of calls to war a
+kingdom always refuses (#1283).
 
 | Attribute | Type | Required | Default when absent | What it does | Read at (file:line) |
 |---|---|---|---|---|---|
 | `kingdomA` | string | yes | `""` | One side of the pair; order does not matter | `KingdomRelationship.cs:5` |
 | `kingdomB` | string | yes | `""` | The other side | `KingdomRelationship.cs:6` |
 | `tier` | enum | yes | `Neutral` | `Permanent`, `Natural`, `Neutral` or `Hostile` | `KingdomRelationship.cs:7`, `AllianceTier.cs:3-9` |
+
+A `callToWarRefusals` row has `called` and `target` (strings, both required, `CallToWarRefusal.cs`). The called kingdom refuses any call
+to war against the target; the row has a direction. An absent key is an empty list (`DiplomacyConfig.cs`).
 
 A pair with no row resolves `AllianceTier.Neutral` (`DiplomacyService.cs:46`), so omission is silent.
 

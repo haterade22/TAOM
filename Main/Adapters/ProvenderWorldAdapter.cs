@@ -320,14 +320,19 @@ public sealed class ProvenderWorldAdapter : IProvenderWorldAdapter
 
     /// <summary>
     /// The player lacks full access: vanilla's own access model (the same call the gate menu makes), for a town or a village
-    /// only, since any other settlement type asserts there.
+    /// only, since any other settlement type asserts there. A village also refuses when the model refuses Trade there (a Hostile
+    /// realm's village at peace, Hostile Peace block C), so the Provender-master does not buy where the player may not trade.
     /// </summary>
     internal static bool RefusesPlayer(Settlement settlement)
     {
         if (!settlement.IsTown && !settlement.IsVillage)
             return false;
-        Campaign.Current!.Models.SettlementAccessModel.CanMainHeroEnterSettlement(settlement, out var access);
-        return access.AccessLevel != SettlementAccessModel.AccessLevel.FullAccess;
+        var model = Campaign.Current!.Models.SettlementAccessModel;
+        model.CanMainHeroEnterSettlement(settlement, out var access);
+        if (access.AccessLevel != SettlementAccessModel.AccessLevel.FullAccess)
+            return true;
+        return settlement.IsVillage
+            && !model.CanMainHeroDoSettlementAction(settlement, SettlementAccessModel.SettlementAction.Trade, out _, out _);
     }
 
     /// <summary>The food units in the stores without the herd: the food items plus the part-eaten unit the engine carries.</summary>

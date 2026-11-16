@@ -23,17 +23,21 @@ public class TaomKingdomDecisionPermissionModel : DefaultKingdomDecisionPermissi
     private readonly IWarOfTheRingService _wotrService;
     private readonly IOnAllianceAction _allianceHook;
     private readonly ICoopSessionProvider _coop;
+    private readonly HostilePeace.HostilePeaceService? _hostilePeace;
 
+    /// <param name="hostilePeace">Hostile Peace block D; null keeps the old full freedom for the player's kingdom.</param>
     public TaomKingdomDecisionPermissionModel(
         IDiplomacyService diplomacyService,
         IWarOfTheRingService wotrService,
         IOnAllianceAction allianceHook,
-        ICoopSessionProvider coop)
+        ICoopSessionProvider coop,
+        HostilePeace.HostilePeaceService? hostilePeace = null)
     {
         _diplomacyService = diplomacyService;
         _wotrService = wotrService;
         _allianceHook = allianceHook;
         _coop = coop;
+        _hostilePeace = hostilePeace;
     }
 
     public override bool IsStartAllianceDecisionAllowedBetweenKingdoms(
@@ -47,6 +51,14 @@ public class TaomKingdomDecisionPermissionModel : DefaultKingdomDecisionPermissi
         if (!_diplomacyService.IsAllianceDecisionAllowed(kingdom1.StringId, kingdom2.StringId, involvesPlayer))
         {
             reason = new TextObject("{=taom_alliance_blocked}These kingdoms can never be allied.");
+            return false;
+        }
+
+        // Block D (docs/features/hostile-peace.md): the player's kingdom does not ally across the Free/Evil line unless the
+        // "Allow Player Alliances With Anyone" switch is on.
+        if (involvesPlayer && HostilePeace.Models.PlayerAllianceGate.Blocks(_hostilePeace, kingdom1, kingdom2))
+        {
+            reason = HostilePeace.HostilePeaceTexts.NoCrossSideAlliance();
             return false;
         }
 

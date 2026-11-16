@@ -84,6 +84,13 @@ PLACEHOLDER_GLOBS = ("*/placeholder_weapons/*", "*tools/placeholder_weapons.json
                      "*tools/fix_melee_ladder.py", "*/troops/troops_*.xml") + ARMORY_GLOBS
 # Both armour generators write stats through rebalance_armor.calculate_stats.
 ARMOUR_CURVE_GLOBS = ("*tools/rebalance_armor.py",)
+# The lord armour variants (#1333): their output and spec, the generator and every tool it imports, the
+# rosters its wearer check reads (TROOP_GLOBS), the Armory sources it copies and the restat map (the
+# repo trace of an Armory restat, which can change a source's weight, material or share).
+LORD_VARIANT_GLOBS = ("*/lord_armour/*", "*tools/lord_armour_variants.json", "*tools/generate_lord_armour_variants.py",
+                      "*tools/derive_armor_tiers.py", "*tools/fix_lord_kits.py", "*tools/rebalance_troops.py",
+                      "*tools/fix_upgrade_armour_regressions.py", "*tools/data/armor_roster_tiers.json",
+                      "*/submodule.xml") + ARMOUR_CURVE_GLOBS + TROOP_GLOBS + ARMORY_GLOBS
 CREATURE_GLOBS = ("*/action_sets.xml", "*/action_types.xml", "*/monster_usage_sets.xml", "*/monsters/*.xml",
                   "*/lotr_monster_*.xml")
 FBX_GLOBS = ("*/assetsources/*.fbx",)
@@ -129,7 +136,8 @@ GATES = (
     Gate("armory-refs", "Armory items, crafting pieces, weapon descriptions", ARMORY_GLOBS,
          ("python", "tools/audit_armory_refs.py", "--report", "-"), (ARMORY_DOC,),
          note="meshes, collision bodies, dead item ids, and the companion checks of /armory-audit"),
-    Gate("polearm-shield", "Armory weapons and pieces", ARMORY_GLOBS + TROOP_GLOBS,
+    Gate("polearm-shield", "Armory weapons and pieces", ARMORY_GLOBS + TROOP_GLOBS
+         + ("*/placeholder_weapons/*", "*/_module/submodule.xml", "*tools/audit_polearm_shield_parity.py"),
          ("python", "tools/audit_polearm_shield_parity.py"), ("docs/features/weapon-xml-pipeline.md",)),
     Gate("couch-brace", "Armory weapon descriptions, the couch spec and its tool",
          ARMORY_GLOBS + ("*tools/couch_brace_polearms.json", "*tools/register_couch_brace_polearms.py",
@@ -141,7 +149,8 @@ GATES = (
     Gate("mesh-refs", "Armory weapons and pieces", ARMORY_GLOBS,
          ("python", "tools/validate_mesh_refs.py", "--scan-bodies"), (ARMORY_DOC,),
          note="every mesh= and body_name= resolves to a shipped asset; pending artist bo_ meshes are the expected exception"),
-    Gate("armour-classes", "Armory armour, troop rosters", ARMORY_GLOBS + TROOP_GLOBS,
+    Gate("armour-classes", "Armory armour, troop rosters, the lord armour variants",
+         ARMORY_GLOBS + TROOP_GLOBS + ("*/lord_armour/*",),
          ("python", "tools/generate_armour_classes.py", "--check"), (ARMORY_DOC,),
          note="exit 1 stale, 2 no Armory; re-run with --apply when stale"),
     Gate("armory-names", "Armory item and piece names", ARMORY_GLOBS,
@@ -173,6 +182,16 @@ GATES = (
          ("python", "tools/generate_placeholder_weapons.py", "--verify"), ("docs/features/placeholder-weapons.md",),
          note="exit 1 when a generated file differs from the render or a placeholder is over its carriers' tier "
               "limit; run it after restat_melee_blades.py --apply, because each damage factor is relative to its donor"),
+    Gate("lord-armour-variants", "lord armour variants, their spec, the generator and its imports, rosters, Armory sources",
+         LORD_VARIANT_GLOBS, ("python", "tools/generate_lord_armour_variants.py", "--check"),
+         ("docs/features/armor-balance.md",),
+         note="exit 1 when the variants file or its SubModule node differs from the render, a source no longer "
+              "needs a variant, or a roster other than a generic lord template or a fallback or ruler roster names "
+              "one; exit 2 is NOT RUN (no install); after --apply run derive_armor_tiers.py and "
+              "generate_armour_classes.py --apply"),
+    Gate("lord-variant-meshes", "lord armour variants", ("*/lord_armour/*",),
+         ("python", "tools/validate_mesh_refs.py", "--items", "Main/_Module/ModuleData/lord_armour", "--scan-bodies"),
+         (ARMORY_DOC,), note="the mesh-refs gate scans the Armory only; a variant names an Armory mesh"),
     Gate("lorien-armor", "Lorien armour items and their generator",
          ARMORY_GLOBS + ARMOUR_CURVE_GLOBS + ("*tools/generate_lothlorien_armor.py",),
          ("python", "tools/generate_lothlorien_armor.py", "--check"), ("docs/features/lothlorien-snow-orcs.md",),

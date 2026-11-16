@@ -19,14 +19,18 @@ public sealed class WardenCandidate
 }
 
 /// <summary>
-/// Warden lifecycle. The source module's promoted-warden handling destroyed heroes:
-/// dismantling KILLED the promoted hero via KillCharacterAction and refunded the troop, and a
-/// refuge lost to a raid orphaned him. Reworked policy, because heroes are precious in TAOM:
+/// Warden lifecycle. Promotion consumes one soldier and mints a companion hero
+/// (culture-matched template, renamed to the troop).
 ///
-/// <para>Promotion consumes one soldier and mints a companion hero (culture-matched template,
-/// renamed to the troop). On dismantle the promoted warden REMAINS a clan companion; the soldier
-/// is not refunded, he became somebody. A warden who is not with the refuge party at dismantle
-/// (captured, hospitalised) is left where fate put him and the dismantle proceeds.</para>
+/// <para>On dismantle a warden who was already a companion rejoins the party as a companion. A
+/// PROMOTED warden goes back to the ranks: the minted hero is removed with the ApplyByRemove
+/// UnwindPromotion uses (no death pop-up; the engine still logs "NAME was lost." to chat) and
+/// one of his source troop rejoins the party. Keeping him
+/// as a companion made found, promote, dismantle a free companion every time (owner, 15 Nov
+/// 2026). A promoted warden who gained family or a role (spouse, children, clan leader,
+/// or left the player's companions) stays a companion, because removing him would break
+/// those ties. A warden who is not with the refuge party at dismantle (captured, dead) is left
+/// where fate put him and the dismantle proceeds. A refuge lost in battle never calls this.</para>
 /// </summary>
 public interface IWardenService
 {
@@ -41,15 +45,15 @@ public interface IWardenService
     /// candidate is a troop. Null on failure (companion limit reached, troop gone).</summary>
     string ResolveWarden(WardenCandidate candidate, out bool promoted, out string promotedFromTroopId);
 
-    /// <summary>Returns a warden home on dismantle: companion or promoted, he rejoins the main
-    /// party via AddHeroToPartyAction when he is with the refuge (a promoted warden stays a clan
-    /// companion; never killed, no troop refund). No-op when the hero is elsewhere (captured),
-    /// and the caller proceeds.</summary>
-    void ReleaseWarden(string wardenHeroId, bool promoted);
+    /// <summary>Returns a warden home on dismantle when he is with the refuge: he rejoins the
+    /// main party via AddHeroToPartyAction, and a promoted warden without family or a role is
+    /// then turned back into one <paramref name="promotedFromTroopId"/> (or his culture's basic
+    /// troop when that troop is unknown; he stays a companion when neither resolves). No-op when
+    /// the hero is elsewhere (captured, dead), and the caller proceeds.</summary>
+    void ReleaseWarden(string wardenHeroId, bool promoted, string promotedFromTroopId);
 
     /// <summary>Unwinds a promotion whose founding then failed before the hero ever reached the
     /// refuge (engine spawn refusal): removes the never-attached minted companion and refunds the
-    /// soldier. ONLY legal in that never-attached window; once the hero led a refuge the no-kill
-    /// policy above governs. No-op for a companion candidate (promoted == false at resolve).</summary>
+    /// soldier. No-op for a companion candidate (promoted == false at resolve).</summary>
     void UnwindPromotion(string wardenHeroId, string promotedFromTroopId);
 }

@@ -1,0 +1,124 @@
+# In-game checks for #1366 (Phase 6 of #1325: Aragorn, Legolas and Gimli stand free with the garrison in the Helm's Deep story mission of a campaign), read by
+# tools/ingame_verdict.py. The story mission hosts the Long Defeat run, whose check lines HostedRunOutcomeLog writes as taom.story-missions.hosted.<name>; the ability,
+# ranged and aura lines are not renamed. Every mission check below carries a scope that opens a segment at each launch of helms_deep_defend
+# (StoryMissionLauncher's "[StoryMissions] launching <scene> for '<id>' (...)") and a scope_end that closes it at the next launch of any story mission or Long Defeat
+# run, so lines before the story launch and after the next mission launch are not read. A campaign battle fought after the story mission in the same game process
+# writes no launch line, so its lines ARE still read (the aura row can then match the companion Aragorn, named_companion_aragorn in hero_auras.json): read the
+# verdict from a game process that fought no other battle after the story mission.
+# hero, key storyNh<N>, is written on the first tick for each free hero: in a campaign the body is a CharacterObject with no Hero behind it, so the line reads is_hero=0
+# campaign=1 (a Custom Game body reads is_hero=1 campaign=0 and does not pass here). One pass pattern per hero, each with the item in his hand.
+# hunters is the #1337 wave-clear hold check, read here with the free heroes standing. The ability gate line is not read: it passes on trunk in the story mission without
+# any hero. The fired, precision, multishot and aura rows are the #1359 and #1361 rows, scoped to the story mission; multishot needs item=1, which proves the extra arrow
+# item loads in a campaign.
+# roster is written once when a campaign session starts: for every story mission the hero and garrison troop ids that resolve to no character, and the extra arrow item
+# of each hero kit that resolves to no item. It has no scope, because it is written before any mission opens. It passes only with items= above 0 (an empty hero
+# abilities config looks up no item and proves nothing), and the error line of a throw in the check fails it.
+# The roster row has an unattended proof (python tools/run_scenario.py --days 2). The mission rows have an unattended proof too (#1368, first run 20261116-075342): python tools/run_scenario.py --kind story-mission --mission helms_deep_defend, then python tools/ingame_verdict.py --issue 1366 on its log. By hand: taom.story_open helms_deep_defend auto, click Open the mission, then the same verdict command.
+issue = 1366
+title = "Story missions: Aragorn, Legolas and Gimli stand free with the garrison in the Helm's Deep story mission"
+# fixed_in is the feature commit: only a build that holds it counts.
+fixed_in = "8ee4ef2fe"
+logs = ["taom"]
+
+[[check]]
+id = "taom.story-missions.roster"
+needs = "a campaign session started on this build, a new game or a loaded save (unattended: python tools/run_scenario.py --days 2 on a build that holds this change): one line names the story mission troops and hero kit arrow items that do not resolve"
+reached = ['\[Check\] id=taom\.story-missions\.roster result=']
+pass = ['\[Check\] id=taom\.story-missions\.roster result=pass missions=[0-9]+ troops=[0-9]+ missing=- items=[1-9][0-9]* items_missing=-$']
+fail = ['\[Check\] id=taom\.story-missions\.roster result=fail', '\[StoryMissions\] the roster check failed: ']
+absence = "not-reached"
+
+[[check]]
+id = "taom.story-missions.hosted.hero"
+scope = '\[StoryMissions\] launching \S+ for \x27helms_deep_defend\x27 '
+scope_end = '\[(LongDefeat|StoryMissions)\] launching '
+needs = "in a loaded campaign: taom.story_open helms_deep_defend auto, choose Open the mission; one line per free hero on the first tick"
+reached = ['\[Check\] id=taom\.story-missions\.hosted\.hero result=']
+pass = [
+    '\[Check\] id=taom\.story-missions\.hosted\.hero result=pass hero=\S+ troop=taom_hero_aragorn is_hero=0 campaign=1 mounted=0 formation=7 held=1 strangers=0 order=\S+ health_factor=3\.00 wanted_factor=3\.00 wielded=strider_sword$',
+    '\[Check\] id=taom\.story-missions\.hosted\.hero result=pass hero=\S+ troop=taom_hero_legolas is_hero=0 campaign=1 mounted=0 formation=7 held=1 strangers=0 order=\S+ health_factor=3\.00 wanted_factor=3\.00 wielded=wm_mirkwood_bow_a01$',
+    '\[Check\] id=taom\.story-missions\.hosted\.hero result=pass hero=\S+ troop=taom_hero_gimli is_hero=0 campaign=1 mounted=0 formation=7 held=1 strangers=0 order=\S+ health_factor=3\.00 wanted_factor=3\.00 wielded=sm_dwarf_dain_axe_a$',
+]
+fail = ['\[Check\] id=taom\.story-missions\.hosted\.hero result=fail']
+absence = "not-reached"
+
+[[check]]
+id = "taom.story-missions.hosted.hunters"
+scope = '\[StoryMissions\] launching \S+ for \x27helms_deep_defend\x27 '
+scope_end = '\[(LongDefeat|StoryMissions)\] launching '
+needs = "the same run, with a wave cleared while a free hero stands; one line per cleared wave, w= is the wave"
+reached = ['\[Check\] id=taom\.story-missions\.hosted\.hunters result=']
+pass = ['\[Check\] id=taom\.story-missions\.hosted\.hunters result=pass w=[0-9]+ standing=([0-9]+) in_group=\1 units=\1 held=1 order=\S+ (?:own=0 settled=[0-9]+ near=[0-9]+|own=1 settled=[0-5]?[0-9] near=[0-9]+|own=1 settled=(?:[6-9][0-9]|[0-9]{3,}) near=\1) kills=[0-9]+ by=\S+ health=\S+ retaken=[0-9]+ moved_out=[0-9]+ moved_back=[0-9]+$']
+fail = ['\[Check\] id=taom\.story-missions\.hosted\.hunters result=fail']
+absence = "not-reached"
+
+[[check]]
+id = "taom.hero-abilities.fired"
+scope = '\[StoryMissions\] launching \S+ for \x27helms_deep_defend\x27 '
+scope_end = '\[(LongDefeat|StoryMissions)\] launching '
+needs = "the same run, with Aragorn, Legolas and Gimli meeting the waves at the wall"
+reached = ['\[Check\] id=taom\.hero-abilities\.fired result=(pass|fail) hero=taom_hero_(aragorn|legolas|gimli) ']
+pass = [
+    '\[Check\] id=taom\.hero-abilities\.fired result=pass hero=taom_hero_aragorn fired=[1-9][0-9]* contact_s=[0-9]+ allies=[0-9]+ shocked=[0-9]+ owned=1$',
+    '\[Check\] id=taom\.hero-abilities\.fired result=pass hero=taom_hero_legolas fired=[1-9][0-9]* contact_s=[0-9]+ allies=[0-9]+ shocked=[0-9]+ owned=1$',
+    '\[Check\] id=taom\.hero-abilities\.fired result=pass hero=taom_hero_gimli fired=[1-9][0-9]* contact_s=[0-9]+ allies=[0-9]+ shocked=[0-9]+ owned=1$',
+]
+fail = ['\[Check\] id=taom\.hero-abilities\.fired result=fail hero=taom_hero_(aragorn|legolas|gimli) ', '\[HeroAbilities\] disabled for this mission after ', '\[HeroAbilities\] ranged kit disabled for this mission after ']
+absence = "not-reached"
+
+[[check]]
+id = "taom.hero-abilities.precision"
+scope = '\[StoryMissions\] launching \S+ for \x27helms_deep_defend\x27 '
+scope_end = '\[(LongDefeat|StoryMissions)\] launching '
+needs = "the same run, with Legolas holding his bow at least once"
+reached = ['\[Check\] id=taom\.hero-abilities\.precision result=(pass|fail)']
+pass = ['\[Check\] id=taom\.hero-abilities\.precision result=pass hero=\S+ ranged=1 nonzero=0 shooter_error=0\.0000 inaccuracy=0\.0000$']
+fail = ['\[Check\] id=taom\.hero-abilities\.precision result=fail', '\[HeroAbilities\] ranged kit disabled for this mission after ', '\[HeroAbilities\] disabled for this mission after ']
+absence = "not-reached"
+
+[[check]]
+id = "taom.hero-abilities.multishot"
+scope = '\[StoryMissions\] launching \S+ for \x27helms_deep_defend\x27 '
+scope_end = '\[(LongDefeat|StoryMissions)\] launching '
+needs = "the same run, with Legolas casting Many Arrows (5 enemies within 40 m) and shooting during it; item=1 proves the extra arrow item loads in a campaign"
+reached = ['\[Check\] id=taom\.hero-abilities\.multishot result=(pass|fail)']
+pass = ['\[Check\] id=taom\.hero-abilities\.multishot result=pass hero=\S+ item=1 windows=[1-9][0-9]* window_shots=[0-9]+ fired=[0-9]+ no_target=[0-9]+ out_of_range=[0-9]+ hits=[1-9][0-9]*$']
+fail = ['\[Check\] id=taom\.hero-abilities\.multishot result=fail', '\[HeroAbilities\] ranged kit disabled for this mission after ', '\[HeroAbilities\] disabled for this mission after ']
+absence = "not-reached"
+
+[[check]]
+id = "taom.hero-auras.reached"
+scope = '\[StoryMissions\] launching \S+ for \x27helms_deep_defend\x27 '
+scope_end = '\[(LongDefeat|StoryMissions)\] launching '
+needs = "the same run: Aragorn's aura (aragorn_heir_of_isildur) reaches at least one soldier, named in the mission-end line"
+reached = ['\[HeroAuras\] Mission end: ']
+pass = ['\[HeroAuras\] Mission end: (.*; )?aragorn_heir_of_isildur: [1-9][0-9]* soldier\(s\)']
+fail = ['\[HeroAuras\] disabled for this mission after ']
+absence = "not-reached"
+
+[[human]]
+claim = "key 8 selects the three heroes as one group, and they hold the nearest wall lane"
+
+[[human]]
+claim = "after the player falls he can take control of a hero, that hero keeps his health and casts nothing while the player controls him"
+
+[[human]]
+claim = "the War Chronicle offer path opens the same mission with the three heroes"
+
+[[human]]
+claim = "save under a NEW name, never over an existing save: a new save and an old save each load, play one day, save and reload clean"
+
+[[human]]
+claim = "no taom_hero_* character appears in the encyclopedia, the party screen or the companion pool"
+
+[[human]]
+claim = "the campaign shows no change after the return from the mission"
+
+[[human]]
+claim = "the faces and bodies of Aragorn, Legolas and Gimli look as they do in the Long Defeat"
+
+[[human]]
+claim = "at the lowest Character Detail setting, Aragorn, Legolas and Gimli have their own faces in the story mission (launch it three times: the face cache picks at random)"
+
+[[human]]
+claim = "a save made on this build loads on a trunk build"

@@ -1,3 +1,4 @@
+using TAOM.Tests.Infrastructure;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TAOM.Features.RaceAbilities.Hooks;
 using TaleWorlds.Core;
@@ -53,4 +54,38 @@ public class RaceAbilityHooksTests
 
     [TestMethod]
     public void NoRuntime_TheStatPassDoesNothing() => RaceAbilityHooks.ApplyStats(null!, null!);
+
+    [TestMethod]
+    public void NoRuntime_BuffHookSet_PassesThrough()
+    {
+        var saved = RaceAbilityHooks.BuffEffects;
+        RaceAbilityHooks.BuffEffects = _ => throw new System.InvalidOperationException("must not be read without a runtime");
+        try
+        {
+            Assert.AreEqual(0.7f, RaceAbilityHooks.KnockDownResistance(null!, 0.7f));
+            Assert.IsFalse(RaceAbilityHooks.HasLiveEffects(null!));
+            Assert.IsNull(RaceAbilityHooks.MergedEffectsOf(null!));
+        }
+        finally
+        {
+            RaceAbilityHooks.BuffEffects = saved;
+        }
+    }
+
+    [TestMethod]
+    public void EffectsOf_MergesTheBuffSource()
+    {
+        var source = RepoPaths.ReadSource("Main/Features/RaceAbilities/Hooks/RaceAbilityHooks.cs", stripComments: true);
+
+        StringAssert.Contains(source, "BuffEffects?.Invoke(agent)");
+        StringAssert.Contains(source, "RaceAbilityEffectsMerge.Combine(own, aura, buff)");
+    }
+
+    [TestMethod]
+    public void HasLiveEffects_ReadsTheMergedEffects()
+    {
+        var source = RepoPaths.ReadSource("Main/Features/RaceAbilities/Hooks/RaceAbilityHooks.cs", stripComments: true);
+
+        StringAssert.Contains(source, "return runtime != null && EffectsOf(runtime, agent, out _) != null;");
+    }
 }

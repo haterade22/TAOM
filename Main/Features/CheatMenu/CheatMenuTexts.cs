@@ -25,6 +25,8 @@ public static class CheatMenuTexts
             CheatGiven.Influence => new TextObject("{=taom_cheat_done_influence}Gained {NUMBER} influence."),
             CheatGiven.Renown => new TextObject("{=taom_cheat_done_renown}Gained {NUMBER} renown."),
             CheatGiven.Heal => new TextObject("{=taom_cheat_done_heal}Your party is healed. Soldiers healed: {NUMBER}."),
+            CheatGiven.Relation => new TextObject("{=taom_cheat_done_relation}Lords of {NAME} whose relation changed: {NUMBER}."),
+            CheatGiven.Teleport => new TextObject("{=taom_cheat_done_teleport}You are at the gate of {NAME}."),
             _ => new TextObject("{=taom_cheat_done}Done: {NAME} {NUMBER}"),
         })
             .SetTextVariable("NAME", o.Name ?? string.Empty)

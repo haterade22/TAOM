@@ -1512,9 +1512,6 @@
                     slot="Item0"
                     id="Item.dunland_caerdh_axe_2h_b" />
                 <equipment
-                    slot="Item1"
-                    id="Item.dunland_wulf_shield_heavy_b" />
-                <equipment
                     slot="Item2"
                     id="Item.northern_javelin_3_t4" />
                 <equipment
@@ -1592,9 +1589,6 @@
                     slot="Item0"
                     id="Item.dunland_caerdh_axe_2h_c" />
                 <equipment
-                    slot="Item1"
-                    id="Item.dunland_caerdh_shield_elite_b" />
-                <equipment
                     slot="Item2"
                     id="Item.northern_javelin_3_t4" />
                 <equipment
@@ -1668,9 +1662,6 @@
                 <equipment
                     slot="Item0"
                     id="Item.dunland_caerdh_axe_2h_d" />
-                <equipment
-                    slot="Item1"
-                    id="Item.dunland_caerdh_shield_lord_c" />
                 <equipment
                     slot="Item2"
                     id="Item.northern_javelin_3_t4" />

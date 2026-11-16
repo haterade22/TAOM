@@ -59,7 +59,8 @@ public interface IRefugeService
     bool Upgrade(RefugeData refuge);
 
     /// <summary>Dismantles: rosters and stash merge back to the main party, the warden lifecycle
-    /// resolves (see IWardenService; nobody is killed), the party is destroyed, visuals removed.</summary>
+    /// resolves (see IWardenService: a promoted warden returns to the ranks), the party is destroyed,
+    /// visuals removed.</summary>
     void Dismantle(RefugeData refuge);
 
     /// <summary>Frame-cadence: build advancement, the hold-nearby rule while a refuge raises

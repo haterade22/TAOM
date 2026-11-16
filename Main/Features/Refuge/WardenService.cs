@@ -6,6 +6,8 @@ using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Actions;
 using TaleWorlds.CampaignSystem.Party;
 using TaleWorlds.Core;
+using TaleWorlds.Library;
+using TaleWorlds.Localization;
 using TaleWorlds.ObjectSystem;
 using Helpers;
 
@@ -40,6 +42,17 @@ public sealed class PromotionSource
     public string PlayerCultureId;
 }
 
+/// <summary>The ties of a promoted warden that make removing him unsafe, read at the campaign
+/// boundary. Pure data for <see cref="WardenService.MayReturnToRanks"/>.</summary>
+public sealed class PromotedWardenFacts
+{
+    /// <summary>True when the hero's <c>CompanionOf</c> is the player clan.</summary>
+    public bool IsPlayerClanCompanion;
+    public bool HasSpouse;
+    public bool HasChildren;
+    public bool IsClanLeader;
+}
+
 /// <summary>The hero a promotion just created, handed from the create seam to the rename and
 /// enrol seams so they act on that exact hero without a second lookup (the
 /// <see cref="RefugePrisoner"/> precedent).</summary>
@@ -59,11 +72,11 @@ public sealed class MintedHero
 /// noble or quest hero must never be strandable in a refuge. Promotable soldiers follow, and only
 /// while the clan has a companion slot free, because resolving one mints a real companion.</para>
 ///
-/// <para>Release NEVER kills. The source "depromoted" a promoted warden with
-/// KillCharacterAction.ApplyByRemove and refunded the troop; here the promoted warden simply
-/// remains a clan companion (he became somebody), and the soldier is not refunded. The ONE place
-/// ApplyByRemove survives is UnwindPromotion: a founding that failed after the promotion, before
-/// the minted hero ever attached to a refuge - a transactional rollback, not a release.</para>
+/// <para>Release never kills a companion warden. A promoted warden goes back to the ranks on
+/// dismantle, as in the source (KillCharacterAction.ApplyByRemove plus one of his troop),
+/// but only after he left the refuge by action and only when he has no family or role that the
+/// removal would break; otherwise he stays a clan companion. UnwindPromotion uses the same
+/// removal for a founding that failed before the minted hero ever attached to a refuge.</para>
 ///
 /// <para>Campaign statics sit behind protected virtuals (the CampService/SupplyOrderService
 /// pattern) so the candidate ordering, the promote sequencing and the release matrix are all
@@ -136,21 +149,66 @@ public class WardenService : IWardenService
         return heroId;
     }
 
-    public void ReleaseWarden(string wardenHeroId, bool promoted)
+    public void ReleaseWarden(string wardenHeroId, bool promoted, string promotedFromTroopId)
     {
         if (string.IsNullOrEmpty(wardenHeroId))
             return;
-        // NO-KILL policy (the contract): a promoted warden stays a clan companion - no
-        // KillCharacterAction, no troop refund. He rides the SAME AddHeroToPartyAction move as a
-        // companion warden: an earlier build let the roster merge "carry him back", but a raw
-        // roster copy+clear nulls a hero's PartyBelongedTo (the engine's OnHeroRemoved fires on
-        // the clear), so every hero must move by action.
-        // A warden who is not with the refuge (captured, hospitalised) is left where fate put
-        // him; the dismantle proceeds without touching him.
+        // A warden who is not with the refuge (captured, dead) is left where fate put him; the
+        // dismantle proceeds without touching him, and no soldier comes back for him.
         if (!IsHeroWithRefugeParty(wardenHeroId))
             return;
+        // Every warden leaves the refuge by action first: a raw roster copy+clear nulls a hero's
+        // PartyBelongedTo (the engine's OnHeroRemoved fires on the clear). A promoted warden is
+        // then removed from the MAIN party, the same state UnwindPromotion removes a minted hero
+        // from: removing him while he still led the refuge would run the engine's
+        // party-leader branch of the kill, which starts a disband.
         MoveHeroToMainParty(wardenHeroId);
+        if (promoted)
+            ReturnToRanks(wardenHeroId, promotedFromTroopId);
     }
+
+    /// <summary>
+    /// Turns a promoted warden back into one soldier on dismantle (owner, 15 Nov 2026: keeping him
+    /// as a companion made found, promote, dismantle a free companion every time). Removal is
+    /// KillCharacterAction.ApplyByRemove, the call UnwindPromotion already uses: no death pop-up
+    /// (the engine's CommentOnCharacterKilledBehavior still logs "NAME was lost." to chat), the
+    /// clan companion slot is freed, his gold goes to the clan leader. A governorship needs no
+    /// tie check: AddHeroToPartyAction already removed it when he rejoined the main party.
+    /// His equipment is the template kit he was minted with (a refuge warden's gear cannot be
+    /// changed: the stash screen holds items only), so it is not handed out; handing it out would
+    /// be a free kit every cycle.
+    /// </summary>
+    private void ReturnToRanks(string heroId, string promotedFromTroopId)
+    {
+        if (!MayReturnToRanks(ReadPromotedWarden(heroId)))
+        {
+            _logger.LogInfo(
+                $"[Refuge] promoted warden '{heroId}' has family or a role; he stays a clan companion.");
+            return;
+        }
+        string troopId = IsRegularTroop(promotedFromTroopId) ? promotedFromTroopId : CultureBasicTroopId(heroId);
+        if (!IsRegularTroop(troopId))
+        {
+            _logger.LogWarning(
+                $"[Refuge] no troop to return promoted warden '{heroId}' as (source '{promotedFromTroopId}'); he stays a clan companion.");
+            return;
+        }
+        if (!RemoveMintedCompanion(heroId))
+            return;
+        AddOneTroopToMainParty(troopId);
+        ShowReturnedToRanks(troopId);
+        _logger.LogInfo($"[Refuge] promoted warden '{heroId}' returned to the ranks as one '{troopId}'.");
+    }
+
+    /// <summary>True when removing the promoted hero breaks nothing: still the player's companion,
+    /// no spouse, no children, leads no clan. Null facts (hero record gone) are
+    /// false. internal for TAOM.Tests (InternalsVisibleTo).</summary>
+    internal static bool MayReturnToRanks(PromotedWardenFacts facts) =>
+        facts != null
+        && facts.IsPlayerClanCompanion
+        && !facts.HasSpouse
+        && !facts.HasChildren
+        && !facts.IsClanLeader;
 
     public void UnwindPromotion(string wardenHeroId, string promotedFromTroopId)
     {
@@ -158,7 +216,7 @@ public class WardenService : IWardenService
             return;
         // The never-attached window: the hero was minted seconds ago, sits in the main party, and
         // never led anything. Removing him here is the transactional rollback of ResolveWarden,
-        // not a violation of the no-kill release policy (which governs wardens who served).
+        // and the soldier is refunded.
         if (!RemoveMintedCompanion(wardenHeroId))
             return;
         AddOneTroopToMainParty(promotedFromTroopId);
@@ -375,9 +433,12 @@ public class WardenService : IWardenService
         return true;
     }
 
-    /// <summary>Removes a just-minted, never-attached companion from the game (the source's
-    /// depromote action). KillCharacterAction.ApplyByRemove handles the party row, the clan
-    /// companion slot and the hero record in one engine call.</summary>
+    /// <summary>Removes a minted companion from the game (the source's depromote action): the
+    /// never-attached rollback and the dismantle return to the ranks. KillCharacterAction
+    /// .ApplyByRemove (showNotification false) removes the party row and frees the clan companion
+    /// slot in one engine call; the hero stays in the records as dead. The dismantle guard checks
+    /// the refuge's map event, not the main party's; no caller is known to reach this while the
+    /// main party is in a battle or a siege.</summary>
     protected virtual bool RemoveMintedCompanion(string heroId)
     {
         var hero = FindHero(heroId);
@@ -386,13 +447,16 @@ public class WardenService : IWardenService
         try
         {
             KillCharacterAction.ApplyByRemove(hero);
-            return true;
+            // Inside a map or siege event the engine only adds a death mark, which a later daily
+            // tick executes; report that as not removed, so no soldier is added on top of a hero
+            // who is still there.
+            return !hero.IsAlive;
         }
         catch (Exception ex)
         {
             // A failed rollback leaves an extra companion, an annoyance; a throw here would eat
             // the player's founding-failure message.
-            _logger.LogWarning($"[Refuge] promotion unwind failed for '{heroId}': {ex.Message}");
+            _logger.LogWarning($"[Refuge] removing minted warden '{heroId}' failed: {ex.Message}");
             return false;
         }
     }
@@ -404,6 +468,41 @@ public class WardenService : IWardenService
         if (roster == null || troop == null)
             return;
         roster.AddToCounts(troop, 1);
+    }
+
+    /// <summary>The ties that make removing a promoted warden unsafe, read from the hero. Null
+    /// when the hero is not found.</summary>
+    protected virtual PromotedWardenFacts ReadPromotedWarden(string heroId)
+    {
+        var hero = FindHero(heroId);
+        if (hero == null)
+            return null;
+        var clan = Clan.PlayerClan;
+        return new PromotedWardenFacts
+        {
+            IsPlayerClanCompanion = clan != null && hero.CompanionOf == clan,
+            HasSpouse = hero.Spouse != null,
+            HasChildren = (hero.Children?.Count ?? 0) > 0,
+            IsClanLeader = hero.Clan?.Leader == hero,
+        };
+    }
+
+    /// <summary>True when the id names a regular (non-hero) troop that exists in this game.</summary>
+    protected virtual bool IsRegularTroop(string troopId)
+    {
+        var troop = FindTroop(troopId);
+        return troop != null && !troop.IsHero;
+    }
+
+    /// <summary>The basic troop of the hero's culture, or null.</summary>
+    protected virtual string CultureBasicTroopId(string heroId) => FindHero(heroId)?.Culture?.BasicTroop?.StringId;
+
+    protected virtual void ShowReturnedToRanks(string troopId)
+    {
+        var troop = FindTroop(troopId);
+        var text = new TextObject("{=taom_rf_warden_ranks}Your promoted warden returns to the ranks as {TROOP}.");
+        text.SetTextVariable("TROOP", troop?.Name ?? new TextObject(troopId));
+        InformationManager.DisplayMessage(new InformationMessage(text.ToString()));
     }
 
     protected virtual bool IsHeroWithRefugeParty(string heroId)

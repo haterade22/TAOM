@@ -703,10 +703,10 @@
     			<Equipment slot="Item0" id="Item.mirkwood_sword_a01" />
     			<Equipment slot="Item1" id="Item.wm_mirkwood_shield_a02" />
     			<Equipment slot="Head" id="Item.mkwd_inf3_t3_helmet_gold_hc" />
-    			<Equipment slot="Body" id="Item.mkwd_inf3_chest_silver" />
-    			<Equipment slot="Cape" id="Item.mkwd_inf3_pauldrons_silver" />
+    			<Equipment slot="Body" id="Item.taom_lord_mkwd_inf3_chest" />
+    			<Equipment slot="Cape" id="Item.mkwd_inf3_pauldrons" />
     			<Equipment slot="Gloves" id="Item.mkwd_inf3_vambraces_bronze" />
-    			<Equipment slot="Leg" id="Item.mkwd_inf3_greaves_silver" />
+    			<Equipment slot="Leg" id="Item.taom_lord_mkwd_inf3_greaves" />
     			<Equipment slot="HorseHarness" id="Item.taom_elk_saddle_a" />
     			<Equipment slot="Horse" id="Item.taom_animalia_moose_a" />
     		</EquipmentSet>
@@ -717,10 +717,10 @@
     			<Equipment slot="Item0" id="Item.mirkwood_sword_a01" />
     			<Equipment slot="Item1" id="Item.wm_mirkwood_shield_a02" />
     			<Equipment slot="Head" id="Item.mkwd_inf3_t3_helmet_gold_hc" />
-    			<Equipment slot="Body" id="Item.mkwd_inf3_chest_silver" />
-    			<Equipment slot="Cape" id="Item.mkwd_inf3_pauldrons_silver" />
+    			<Equipment slot="Body" id="Item.taom_lord_mkwd_inf3_chest" />
+    			<Equipment slot="Cape" id="Item.mkwd_inf3_pauldrons" />
     			<Equipment slot="Gloves" id="Item.mkwd_inf3_vambraces_bronze" />
-    			<Equipment slot="Leg" id="Item.mkwd_inf3_greaves_silver" />
+    			<Equipment slot="Leg" id="Item.taom_lord_mkwd_inf3_greaves" />
     			<Equipment slot="HorseHarness" id="Item.taom_elk_saddle_a" />
     			<Equipment slot="Horse" id="Item.taom_animalia_moose_a" />
     		</EquipmentSet>
@@ -787,10 +787,10 @@
     			<Equipment slot="Item0" id="Item.mirkwood_sword_a01" />
     			<Equipment slot="Item1" id="Item.wm_mirkwood_shield_a02" />
     			<Equipment slot="Head" id="Item.mkwd_inf3_t3_helmet_gold_hc" />
-    			<Equipment slot="Body" id="Item.mkwd_inf3_chest_silver" />
-    			<Equipment slot="Cape" id="Item.mkwd_inf3_pauldrons_silver" />
+    			<Equipment slot="Body" id="Item.taom_lord_mkwd_inf3_chest" />
+    			<Equipment slot="Cape" id="Item.mkwd_inf3_pauldrons" />
     			<Equipment slot="Gloves" id="Item.mkwd_inf3_vambraces_bronze" />
-    			<Equipment slot="Leg" id="Item.mkwd_inf3_greaves_silver" />
+    			<Equipment slot="Leg" id="Item.taom_lord_mkwd_inf3_greaves" />
     			<Equipment slot="HorseHarness" id="Item.taom_elk_saddle_a" />
     			<Equipment slot="Horse" id="Item.taom_animalia_moose_a" />
     		</EquipmentSet>
@@ -801,10 +801,10 @@
     			<Equipment slot="Item0" id="Item.mirkwood_sword_a01" />
     			<Equipment slot="Item1" id="Item.wm_mirkwood_shield_a02" />
     			<Equipment slot="Head" id="Item.mkwd_inf3_t3_helmet_gold_hc" />
-    			<Equipment slot="Body" id="Item.mkwd_inf3_chest_silver" />
-    			<Equipment slot="Cape" id="Item.mkwd_inf3_pauldrons_silver" />
+    			<Equipment slot="Body" id="Item.taom_lord_mkwd_inf3_chest" />
+    			<Equipment slot="Cape" id="Item.mkwd_inf3_pauldrons" />
     			<Equipment slot="Gloves" id="Item.mkwd_inf3_vambraces_bronze" />
-    			<Equipment slot="Leg" id="Item.mkwd_inf3_greaves_silver" />
+    			<Equipment slot="Leg" id="Item.taom_lord_mkwd_inf3_greaves" />
     			<Equipment slot="HorseHarness" id="Item.taom_elk_saddle_a" />
     			<Equipment slot="Horse" id="Item.taom_animalia_moose_a" />
     		</EquipmentSet>
@@ -1406,13 +1406,13 @@
     <EquipmentSet>
     			<Equipment slot="Item0" id="Item.aserai_sword_3_t3" />
     			<Equipment slot="Item1" id="Item.desert_round_shield" />
-    			<Equipment slot="Head" id="Item.sk_hr_st_helmet_heavy_c" />
-    			<Equipment slot="Body" id="Item.sk_hr_st_chest_cav_heavy_a" />
+    			<Equipment slot="Head" id="Item.taom_lord_sk_hr_st_helmet_heavy_c" />
+    			<Equipment slot="Body" id="Item.taom_lord_sk_hr_st_chest_inf_chest_light_a" />
     			<Equipment slot="Gloves" id="Item.sk_hr_st_bracer_light_a" />
-    			<Equipment slot="Leg" id="Item.sk_hr_st_grvs_heavy_a" />
+    			<Equipment slot="Leg" id="Item.taom_lord_sk_hr_st_grvs_light_a" />
     			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
     			<Equipment slot="Horse" id="Item.charger" />
-    			<Equipment slot="Cape" id="Item.sk_hr_st_pauld_cav_elite_a" />
+    			<Equipment slot="Cape" id="Item.sk_hr_st_pauld_inf_elite_a" />
     		</EquipmentSet>
     <Flags IsLordTemplate="true" />
   </EquipmentRoster>
@@ -1420,13 +1420,13 @@
     <EquipmentSet>
     			<Equipment slot="Item0" id="Item.aserai_sword_3_t3" />
     			<Equipment slot="Item1" id="Item.desert_round_shield" />
-    			<Equipment slot="Head" id="Item.sk_hr_st_helmet_heavy_c" />
-    			<Equipment slot="Body" id="Item.sk_hr_st_chest_cav_heavy_a" />
+    			<Equipment slot="Head" id="Item.taom_lord_sk_hr_st_helmet_heavy_c" />
+    			<Equipment slot="Body" id="Item.taom_lord_sk_hr_st_chest_inf_chest_light_a" />
     			<Equipment slot="Gloves" id="Item.sk_hr_st_bracer_light_a" />
-    			<Equipment slot="Leg" id="Item.sk_hr_st_grvs_heavy_a" />
+    			<Equipment slot="Leg" id="Item.taom_lord_sk_hr_st_grvs_light_a" />
     			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
     			<Equipment slot="Horse" id="Item.charger" />
-    			<Equipment slot="Cape" id="Item.sk_hr_st_pauld_cav_elite_a" />
+    			<Equipment slot="Cape" id="Item.sk_hr_st_pauld_inf_elite_a" />
     		</EquipmentSet>
     <Flags IsLordTemplate="true" IsFemaleTemplate="true" />
   </EquipmentRoster>
@@ -1512,13 +1512,13 @@
     <EquipmentSet>
     			<Equipment slot="Item0" id="Item.aserai_sword_3_t3" />
     			<Equipment slot="Item1" id="Item.desert_round_shield" />
-    			<Equipment slot="Head" id="Item.sk_hr_st_helmet_heavy_c" />
-    			<Equipment slot="Body" id="Item.sk_hr_st_chest_cav_heavy_a" />
+    			<Equipment slot="Head" id="Item.taom_lord_sk_hr_st_helmet_heavy_c" />
+    			<Equipment slot="Body" id="Item.taom_lord_sk_hr_st_chest_inf_chest_light_a" />
     			<Equipment slot="Gloves" id="Item.sk_hr_st_bracer_light_a" />
-    			<Equipment slot="Leg" id="Item.sk_hr_st_grvs_heavy_a" />
+    			<Equipment slot="Leg" id="Item.taom_lord_sk_hr_st_grvs_light_a" />
     			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
     			<Equipment slot="Horse" id="Item.charger" />
-    			<Equipment slot="Cape" id="Item.sk_hr_st_pauld_cav_elite_a" />
+    			<Equipment slot="Cape" id="Item.sk_hr_st_pauld_inf_elite_a" />
     		</EquipmentSet>
     <Flags IsKingdomRulerTemplate="true" />
   </EquipmentRoster>
@@ -1526,13 +1526,13 @@
     <EquipmentSet>
     			<Equipment slot="Item0" id="Item.aserai_sword_3_t3" />
     			<Equipment slot="Item1" id="Item.desert_round_shield" />
-    			<Equipment slot="Head" id="Item.sk_hr_st_helmet_heavy_c" />
-    			<Equipment slot="Body" id="Item.sk_hr_st_chest_cav_heavy_a" />
+    			<Equipment slot="Head" id="Item.taom_lord_sk_hr_st_helmet_heavy_c" />
+    			<Equipment slot="Body" id="Item.taom_lord_sk_hr_st_chest_inf_chest_light_a" />
     			<Equipment slot="Gloves" id="Item.sk_hr_st_bracer_light_a" />
-    			<Equipment slot="Leg" id="Item.sk_hr_st_grvs_heavy_a" />
+    			<Equipment slot="Leg" id="Item.taom_lord_sk_hr_st_grvs_light_a" />
     			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
     			<Equipment slot="Horse" id="Item.charger" />
-    			<Equipment slot="Cape" id="Item.sk_hr_st_pauld_cav_elite_a" />
+    			<Equipment slot="Cape" id="Item.sk_hr_st_pauld_inf_elite_a" />
     		</EquipmentSet>
     <Flags IsKingdomRulerTemplate="true" IsFemaleTemplate="true" />
   </EquipmentRoster>
@@ -1568,13 +1568,13 @@
     <EquipmentSet>
     			<Equipment slot="Item0" id="Item.aserai_sword_3_t3" />
     			<Equipment slot="Item1" id="Item.desert_round_shield" />
-    			<Equipment slot="Head" id="Item.sk_hr_st_helmet_heavy_c" />
-    			<Equipment slot="Body" id="Item.sk_hr_st_chest_cav_heavy_a" />
+    			<Equipment slot="Head" id="Item.taom_lord_sk_hr_st_helmet_heavy_c" />
+    			<Equipment slot="Body" id="Item.taom_lord_sk_hr_st_chest_inf_chest_light_a" />
     			<Equipment slot="Gloves" id="Item.sk_hr_st_bracer_light_a" />
-    			<Equipment slot="Leg" id="Item.sk_hr_st_grvs_heavy_a" />
+    			<Equipment slot="Leg" id="Item.taom_lord_sk_hr_st_grvs_light_a" />
     			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
     			<Equipment slot="Horse" id="Item.charger" />
-    			<Equipment slot="Cape" id="Item.sk_hr_st_pauld_cav_elite_a" />
+    			<Equipment slot="Cape" id="Item.sk_hr_st_pauld_inf_elite_a" />
     		</EquipmentSet>
     <Flags IsLordTemplate="true" />
   </EquipmentRoster>
@@ -1582,13 +1582,13 @@
     <EquipmentSet>
     			<Equipment slot="Item0" id="Item.aserai_sword_3_t3" />
     			<Equipment slot="Item1" id="Item.desert_round_shield" />
-    			<Equipment slot="Head" id="Item.sk_hr_st_helmet_heavy_c" />
-    			<Equipment slot="Body" id="Item.sk_hr_st_chest_cav_heavy_a" />
+    			<Equipment slot="Head" id="Item.taom_lord_sk_hr_st_helmet_heavy_c" />
+    			<Equipment slot="Body" id="Item.taom_lord_sk_hr_st_chest_inf_chest_light_a" />
     			<Equipment slot="Gloves" id="Item.sk_hr_st_bracer_light_a" />
-    			<Equipment slot="Leg" id="Item.sk_hr_st_grvs_heavy_a" />
+    			<Equipment slot="Leg" id="Item.taom_lord_sk_hr_st_grvs_light_a" />
     			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
     			<Equipment slot="Horse" id="Item.charger" />
-    			<Equipment slot="Cape" id="Item.sk_hr_st_pauld_cav_elite_a" />
+    			<Equipment slot="Cape" id="Item.sk_hr_st_pauld_inf_elite_a" />
     		</EquipmentSet>
     <Flags IsLordTemplate="true" IsFemaleTemplate="true" />
   </EquipmentRoster>
@@ -1674,13 +1674,13 @@
     <EquipmentSet>
     			<Equipment slot="Item0" id="Item.aserai_sword_3_t3" />
     			<Equipment slot="Item1" id="Item.desert_round_shield" />
-    			<Equipment slot="Head" id="Item.sk_hr_st_helmet_heavy_c" />
-    			<Equipment slot="Body" id="Item.sk_hr_st_chest_cav_heavy_a" />
+    			<Equipment slot="Head" id="Item.taom_lord_sk_hr_st_helmet_heavy_c" />
+    			<Equipment slot="Body" id="Item.taom_lord_sk_hr_st_chest_inf_chest_light_a" />
     			<Equipment slot="Gloves" id="Item.sk_hr_st_bracer_light_a" />
-    			<Equipment slot="Leg" id="Item.sk_hr_st_grvs_heavy_a" />
+    			<Equipment slot="Leg" id="Item.taom_lord_sk_hr_st_grvs_light_a" />
     			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
     			<Equipment slot="Horse" id="Item.charger" />
-    			<Equipment slot="Cape" id="Item.sk_hr_st_pauld_cav_elite_a" />
+    			<Equipment slot="Cape" id="Item.sk_hr_st_pauld_inf_elite_a" />
     		</EquipmentSet>
     <Flags IsKingdomRulerTemplate="true" />
   </EquipmentRoster>
@@ -1688,13 +1688,13 @@
     <EquipmentSet>
     			<Equipment slot="Item0" id="Item.aserai_sword_3_t3" />
     			<Equipment slot="Item1" id="Item.desert_round_shield" />
-    			<Equipment slot="Head" id="Item.sk_hr_st_helmet_heavy_c" />
-    			<Equipment slot="Body" id="Item.sk_hr_st_chest_cav_heavy_a" />
+    			<Equipment slot="Head" id="Item.taom_lord_sk_hr_st_helmet_heavy_c" />
+    			<Equipment slot="Body" id="Item.taom_lord_sk_hr_st_chest_inf_chest_light_a" />
     			<Equipment slot="Gloves" id="Item.sk_hr_st_bracer_light_a" />
-    			<Equipment slot="Leg" id="Item.sk_hr_st_grvs_heavy_a" />
+    			<Equipment slot="Leg" id="Item.taom_lord_sk_hr_st_grvs_light_a" />
     			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
     			<Equipment slot="Horse" id="Item.charger" />
-    			<Equipment slot="Cape" id="Item.sk_hr_st_pauld_cav_elite_a" />
+    			<Equipment slot="Cape" id="Item.sk_hr_st_pauld_inf_elite_a" />
     		</EquipmentSet>
     <Flags IsKingdomRulerTemplate="true" IsFemaleTemplate="true" />
   </EquipmentRoster>
@@ -2004,13 +2004,13 @@
     <EquipmentSet>
     			<Equipment slot="Item0" id="Item.aserai_sword_3_t3" />
     			<Equipment slot="Item1" id="Item.desert_round_shield" />
-    			<Equipment slot="Head" id="Item.sk_hr_st_helmet_heavy_c" />
-    			<Equipment slot="Body" id="Item.sk_hr_st_chest_cav_heavy_a" />
+    			<Equipment slot="Head" id="Item.taom_lord_sk_hr_st_helmet_heavy_c" />
+    			<Equipment slot="Body" id="Item.taom_lord_sk_hr_st_chest_inf_chest_light_a" />
     			<Equipment slot="Gloves" id="Item.sk_hr_st_bracer_light_a" />
-    			<Equipment slot="Leg" id="Item.sk_hr_st_grvs_heavy_a" />
+    			<Equipment slot="Leg" id="Item.taom_lord_sk_hr_st_grvs_light_a" />
     			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
     			<Equipment slot="Horse" id="Item.charger" />
-    			<Equipment slot="Cape" id="Item.sk_hr_st_pauld_cav_elite_a" />
+    			<Equipment slot="Cape" id="Item.sk_hr_st_pauld_inf_elite_a" />
     		</EquipmentSet>
     <Flags IsLordTemplate="true" />
   </EquipmentRoster>
@@ -2018,13 +2018,13 @@
     <EquipmentSet>
     			<Equipment slot="Item0" id="Item.aserai_sword_3_t3" />
     			<Equipment slot="Item1" id="Item.desert_round_shield" />
-    			<Equipment slot="Head" id="Item.sk_hr_st_helmet_heavy_c" />
-    			<Equipment slot="Body" id="Item.sk_hr_st_chest_cav_heavy_a" />
+    			<Equipment slot="Head" id="Item.taom_lord_sk_hr_st_helmet_heavy_c" />
+    			<Equipment slot="Body" id="Item.taom_lord_sk_hr_st_chest_inf_chest_light_a" />
     			<Equipment slot="Gloves" id="Item.sk_hr_st_bracer_light_a" />
-    			<Equipment slot="Leg" id="Item.sk_hr_st_grvs_heavy_a" />
+    			<Equipment slot="Leg" id="Item.taom_lord_sk_hr_st_grvs_light_a" />
     			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
     			<Equipment slot="Horse" id="Item.charger" />
-    			<Equipment slot="Cape" id="Item.sk_hr_st_pauld_cav_elite_a" />
+    			<Equipment slot="Cape" id="Item.sk_hr_st_pauld_inf_elite_a" />
     		</EquipmentSet>
     <Flags IsLordTemplate="true" IsFemaleTemplate="true" />
   </EquipmentRoster>
@@ -2084,13 +2084,13 @@
     <EquipmentSet>
     			<Equipment slot="Item0" id="Item.aserai_sword_3_t3" />
     			<Equipment slot="Item1" id="Item.desert_round_shield" />
-    			<Equipment slot="Head" id="Item.sk_hr_st_helmet_heavy_c" />
-    			<Equipment slot="Body" id="Item.sk_hr_st_chest_cav_heavy_a" />
+    			<Equipment slot="Head" id="Item.taom_lord_sk_hr_st_helmet_heavy_c" />
+    			<Equipment slot="Body" id="Item.taom_lord_sk_hr_st_chest_inf_chest_light_a" />
     			<Equipment slot="Gloves" id="Item.sk_hr_st_bracer_light_a" />
-    			<Equipment slot="Leg" id="Item.sk_hr_st_grvs_heavy_a" />
+    			<Equipment slot="Leg" id="Item.taom_lord_sk_hr_st_grvs_light_a" />
     			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
     			<Equipment slot="Horse" id="Item.charger" />
-    			<Equipment slot="Cape" id="Item.sk_hr_st_pauld_cav_elite_a" />
+    			<Equipment slot="Cape" id="Item.sk_hr_st_pauld_inf_elite_a" />
     		</EquipmentSet>
     <Flags IsKingdomRulerTemplate="true" />
   </EquipmentRoster>
@@ -2098,13 +2098,13 @@
     <EquipmentSet>
     			<Equipment slot="Item0" id="Item.aserai_sword_3_t3" />
     			<Equipment slot="Item1" id="Item.desert_round_shield" />
-    			<Equipment slot="Head" id="Item.sk_hr_st_helmet_heavy_c" />
-    			<Equipment slot="Body" id="Item.sk_hr_st_chest_cav_heavy_a" />
+    			<Equipment slot="Head" id="Item.taom_lord_sk_hr_st_helmet_heavy_c" />
+    			<Equipment slot="Body" id="Item.taom_lord_sk_hr_st_chest_inf_chest_light_a" />
     			<Equipment slot="Gloves" id="Item.sk_hr_st_bracer_light_a" />
-    			<Equipment slot="Leg" id="Item.sk_hr_st_grvs_heavy_a" />
+    			<Equipment slot="Leg" id="Item.taom_lord_sk_hr_st_grvs_light_a" />
     			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
     			<Equipment slot="Horse" id="Item.charger" />
-    			<Equipment slot="Cape" id="Item.sk_hr_st_pauld_cav_elite_a" />
+    			<Equipment slot="Cape" id="Item.sk_hr_st_pauld_inf_elite_a" />
     		</EquipmentSet>
     <Flags IsKingdomRulerTemplate="true" IsFemaleTemplate="true" />
   </EquipmentRoster>
@@ -2418,13 +2418,13 @@
     <EquipmentSet>
     			<Equipment slot="Item0" id="Item.aserai_sword_3_t3" />
     			<Equipment slot="Item1" id="Item.desert_round_shield" />
-    			<Equipment slot="Head" id="Item.sk_hr_st_helmet_heavy_c" />
-    			<Equipment slot="Body" id="Item.sk_hr_st_chest_cav_heavy_a" />
+    			<Equipment slot="Head" id="Item.taom_lord_sk_hr_st_helmet_heavy_c" />
+    			<Equipment slot="Body" id="Item.taom_lord_sk_hr_st_chest_inf_chest_light_a" />
     			<Equipment slot="Gloves" id="Item.sk_hr_st_bracer_light_a" />
-    			<Equipment slot="Leg" id="Item.sk_hr_st_grvs_heavy_a" />
+    			<Equipment slot="Leg" id="Item.taom_lord_sk_hr_st_grvs_light_a" />
     			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
     			<Equipment slot="Horse" id="Item.charger" />
-    			<Equipment slot="Cape" id="Item.sk_hr_st_pauld_cav_elite_a" />
+    			<Equipment slot="Cape" id="Item.sk_hr_st_pauld_inf_elite_a" />
     		</EquipmentSet>
     <Flags IsLordTemplate="true" />
   </EquipmentRoster>
@@ -2432,13 +2432,13 @@
     <EquipmentSet>
     			<Equipment slot="Item0" id="Item.aserai_sword_3_t3" />
     			<Equipment slot="Item1" id="Item.desert_round_shield" />
-    			<Equipment slot="Head" id="Item.sk_hr_st_helmet_heavy_c" />
-    			<Equipment slot="Body" id="Item.sk_hr_st_chest_cav_heavy_a" />
+    			<Equipment slot="Head" id="Item.taom_lord_sk_hr_st_helmet_heavy_c" />
+    			<Equipment slot="Body" id="Item.taom_lord_sk_hr_st_chest_inf_chest_light_a" />
     			<Equipment slot="Gloves" id="Item.sk_hr_st_bracer_light_a" />
-    			<Equipment slot="Leg" id="Item.sk_hr_st_grvs_heavy_a" />
+    			<Equipment slot="Leg" id="Item.taom_lord_sk_hr_st_grvs_light_a" />
     			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
     			<Equipment slot="Horse" id="Item.charger" />
-    			<Equipment slot="Cape" id="Item.sk_hr_st_pauld_cav_elite_a" />
+    			<Equipment slot="Cape" id="Item.sk_hr_st_pauld_inf_elite_a" />
     		</EquipmentSet>
     <Flags IsLordTemplate="true" IsFemaleTemplate="true" />
   </EquipmentRoster>
@@ -2524,13 +2524,13 @@
     <EquipmentSet>
     			<Equipment slot="Item0" id="Item.aserai_sword_3_t3" />
     			<Equipment slot="Item1" id="Item.desert_round_shield" />
-    			<Equipment slot="Head" id="Item.sk_hr_st_helmet_heavy_c" />
-    			<Equipment slot="Body" id="Item.sk_hr_st_chest_cav_heavy_a" />
+    			<Equipment slot="Head" id="Item.taom_lord_sk_hr_st_helmet_heavy_c" />
+    			<Equipment slot="Body" id="Item.taom_lord_sk_hr_st_chest_inf_chest_light_a" />
     			<Equipment slot="Gloves" id="Item.sk_hr_st_bracer_light_a" />
-    			<Equipment slot="Leg" id="Item.sk_hr_st_grvs_heavy_a" />
+    			<Equipment slot="Leg" id="Item.taom_lord_sk_hr_st_grvs_light_a" />
     			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
     			<Equipment slot="Horse" id="Item.charger" />
-    			<Equipment slot="Cape" id="Item.sk_hr_st_pauld_cav_elite_a" />
+    			<Equipment slot="Cape" id="Item.sk_hr_st_pauld_inf_elite_a" />
     		</EquipmentSet>
     <Flags IsKingdomRulerTemplate="true" />
   </EquipmentRoster>
@@ -2538,13 +2538,13 @@
     <EquipmentSet>
     			<Equipment slot="Item0" id="Item.aserai_sword_3_t3" />
     			<Equipment slot="Item1" id="Item.desert_round_shield" />
-    			<Equipment slot="Head" id="Item.sk_hr_st_helmet_heavy_c" />
-    			<Equipment slot="Body" id="Item.sk_hr_st_chest_cav_heavy_a" />
+    			<Equipment slot="Head" id="Item.taom_lord_sk_hr_st_helmet_heavy_c" />
+    			<Equipment slot="Body" id="Item.taom_lord_sk_hr_st_chest_inf_chest_light_a" />
     			<Equipment slot="Gloves" id="Item.sk_hr_st_bracer_light_a" />
-    			<Equipment slot="Leg" id="Item.sk_hr_st_grvs_heavy_a" />
+    			<Equipment slot="Leg" id="Item.taom_lord_sk_hr_st_grvs_light_a" />
     			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
     			<Equipment slot="Horse" id="Item.charger" />
-    			<Equipment slot="Cape" id="Item.sk_hr_st_pauld_cav_elite_a" />
+    			<Equipment slot="Cape" id="Item.sk_hr_st_pauld_inf_elite_a" />
     		</EquipmentSet>
     <Flags IsKingdomRulerTemplate="true" IsFemaleTemplate="true" />
   </EquipmentRoster>

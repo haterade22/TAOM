@@ -1,0 +1,42 @@
+{
+  "description": [
+    "Lord armour variants (#1333): tools/generate_lord_armour_variants.py writes one TAOM item per row,",
+    "id taom_lord_<source>, the source's Armory look at the lord band of its kingdom line, for the lord",
+    "templates of the culture named. A row is allowed only for a piece the curve leaves short of the",
+    "lord band for good (worn by a troop, or unworn with no lord-line token); a piece at lord values is",
+    "worn as it is. An optional cap {value, reason} holds the primary under the culture's limit where",
+    "the lord band would pass it. The key is the template culture (aserai is Harad).",
+    "docs/features/armor-balance.md, section Lord armour variants."
+  ],
+  "cultures": {
+    "mirkwood": [
+      {"source": "mkwd_inf3_chest", "reason": "the plain look's Body for mirkwood _a (worn there at 12b21d5e3); troops wear it from level 11"},
+      {"source": "mkwd_inf3_greaves", "reason": "the plain look's Leg for mirkwood _a; troops wear it from level 11"},
+      {"source": "mkwd_inf3_chest_bronze", "reason": "the bronze look's Body for mirkwood _b (worn there at 12b21d5e3); troops wear it from level 16"},
+      {"source": "mkwd_inf3_pauldrons_bronze", "reason": "the bronze look's Cape for mirkwood _b; troops wear it from level 16"},
+      {"source": "mkwd_inf3_greaves_bronze", "reason": "the bronze look's Leg for mirkwood _b; troops wear it from level 16"},
+      {"source": "mirkwood_body", "reason": "the palace guard look's Body for mirkwood _c and _d (worn by _d at 12b21d5e3); troops wear it from level 11"},
+      {"source": "mirkwood_boots", "reason": "the palace guard look's Leg for mirkwood _c and _d; troops wear it from level 11"}
+    ],
+    "aserai": [
+      {"source": "sk_hr_st_chest_inf_chest_light_a", "reason": "harad _a's own chest (worn there at 12b21d5e3); troops wear it from level 6"},
+      {"source": "sk_hr_st_chest_inf_chest_med_a", "reason": "harad _b's own chest (worn there at 12b21d5e3)"},
+      {"source": "sk_hr_st_chest_inf_chest_med_b", "reason": "harad _c's own chest (worn there at 12b21d5e3)"},
+      {"source": "sk_hr_st_chest_inf_chest_heavy_b", "reason": "harad _d's own chest (worn there at 12b21d5e3)"},
+      {"source": "sk_hr_st_chest_cav_heavy_b", "reason": "harad _e's own chest (it wore it before #1333; _e shared _c's chest at 12b21d5e3); troops wear it from level 26"},
+      {"source": "sk_hr_st_pauld_inf_med_a", "reason": "the infantry Cape of harad _b, _c and _d (worn there at 12b21d5e3), the look of their chests"},
+      {"source": "sk_hr_st_grvs_light_a", "reason": "the Leg of harad _a and _e (worn there at 12b21d5e3)"},
+      {"source": "sk_hr_st_grvs_med_a", "reason": "the Leg of harad _b, _c and _d (worn there at 12b21d5e3)"},
+      {"source": "sk_hr_st_helmet_heavy_c", "reason": "harad _a's own helmet (head 38 against the reference 39); no troop wears it",
+       "cap": {"value": 44, "reason": "the Harad lord band for a helmet is 45, over the head limit 44 (the reference 39 plus fix_lord_kits.CEILING_MARGIN)"}},
+      {"source": "sk_hr_st_helmet_heavy_a", "reason": "harad _b's own helmet (head 34 against the reference 39)",
+       "cap": {"value": 44, "reason": "the Harad lord band for a helmet is 45, over the head limit 44 (the reference 39 plus fix_lord_kits.CEILING_MARGIN)"}},
+      {"source": "sk_hr_st_helmet_heavy_d", "reason": "harad _c's own helmet (head 34 against the reference 39); no troop wears it",
+       "cap": {"value": 44, "reason": "the Harad lord band for a helmet is 45, over the head limit 44 (the reference 39 plus fix_lord_kits.CEILING_MARGIN)"}},
+      {"source": "sk_hr_st_helmet_heavy_b", "reason": "harad _d's own helmet (head 34 against the reference 39)",
+       "cap": {"value": 44, "reason": "the Harad lord band for a helmet is 45, over the head limit 44 (the reference 39 plus fix_lord_kits.CEILING_MARGIN)"}},
+      {"source": "sk_sg_st_helmet_heavy_d", "reason": "harad _e's own helmet (head 34 against the reference 39); no troop wears it",
+       "cap": {"value": 44, "reason": "the Harad lord band for a helmet is 45, over the head limit 44 (the reference 39 plus fix_lord_kits.CEILING_MARGIN)"}}
+    ]
+  }
+}

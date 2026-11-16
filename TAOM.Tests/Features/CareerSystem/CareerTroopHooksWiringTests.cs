@@ -52,7 +52,7 @@ public class CareerTroopHooksWiringTests
             "A CalculateMoraleChangeToCharacter call must sit inside CareerTroopHooks.ScaleFearDrain(<stats>, <the same victim>, ...): "
             + string.Join("; ", unwrapped));
         CollectionAssert.IsSubsetOf(
-            new[] { "DreadPulseRunner.cs", "SignatureStrikeRunner.cs", "RaceAbilityDeaths.cs", "RaceAbilityTicker.cs" },
+            new[] { "DreadPulseRunner.cs", "MoraleShock.cs", "RaceAbilityDeaths.cs", "RaceAbilityTicker.cs" },
             wrappedFiles,
             "the scan found fewer fear sites than the four known ones: the pattern is stale");
     }
@@ -141,7 +141,7 @@ public class CareerTroopHooksWiringTests
 
     [DataTestMethod]
     [DataRow("Main/Features/DreadAura/Hooks/DreadPulseRunner.cs", "CareerTroopHooks.ScaleFearDrain(_careerStats, target,")]
-    [DataRow("Main/Features/SignatureStrikes/Hooks/SignatureStrikeRunner.cs", "CareerTroopHooks.ScaleFearDrain(_careerStats, victim,")]
+    [DataRow("Main/Features/DreadAura/Hooks/MoraleShock.cs", "CareerTroopHooks.ScaleFearDrain(careerStats, victim,")]
     [DataRow("Main/Features/RaceAbilities/Hooks/RaceAbilityDeaths.cs", "CareerTroopHooks.ScaleFearDrain(_runtime.CareerStats, victim,")]
     [DataRow("Main/Features/RaceAbilities/Hooks/RaceAbilityTicker.cs", "CareerTroopHooks.ScaleFearDrain(_runtime.CareerStats, victim,")]
     public void EveryFearSite_PassesItsOwnInjectedService(string path, string expected)
@@ -155,7 +155,7 @@ public class CareerTroopHooksWiringTests
         StringAssert.Contains(Squash(ReadSource("Main/Features/DreadAura/Hooks/DreadAuraMissionLogic.cs", stripComments: true)),
             "new DreadPulseRunner(_service, _settings, IoC.Resolve<ICareerAgentStatService>())");
         StringAssert.Contains(Squash(ReadSource("Main/Features/SignatureStrikes/Hooks/SignatureStrikesMissionLogic.cs", stripComments: true)),
-            "new SignatureStrikeRunner(_service, IoC.Resolve<IDreadRegistry>(), _logger, IoC.Resolve<ICareerAgentStatService>())");
+            "new SignatureStrikeRunner(_service, IoC.Resolve<IDreadRegistry>(), _logger, IoC.Resolve<ICareerAgentStatService>(), new SignatureInstantKill(_service, _roster, IoC.Resolve<ISignatureStrikeRegistry>(), IoC.Resolve<IOutcomeLog>(), _logger))");
     }
 
     [DataTestMethod]

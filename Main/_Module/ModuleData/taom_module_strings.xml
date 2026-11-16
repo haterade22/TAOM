@@ -341,6 +341,16 @@
 	<!-- DLL localization token overrides (diplomacy/policy messages) -->
 	<!-- These reuse the same localization tokens as vanilla C# code to override at load time -->
 	<string id="taom_alliance_formed" text="{=0cdXddA9}{KINGDOM1_LINK} has formed an alliance with {KINGDOM2_LINK}." />
+	<string id="taom_hostile_peace_mcm_access" text="{=taom_hostile_peace_mcm_access}Enemy Realms Close Their Gates" />
+	<string id="taom_hostile_peace_mcm_access_hint" text="{=taom_hostile_peace_mcm_access_hint}When enabled (default), the towns and castles of a sworn enemy realm treat you as they would in war, even while your realms are at peace: you enter a town only in disguise, a castle not at all, and you cannot trade, recruit or rest in its villages. Your own fiefs are not affected. When off, the base game&apos;s rules apply. Applies at once, no restart." />
+	<string id="taom_hostile_peace_mcm_agreements" text="{=taom_hostile_peace_mcm_agreements}No Trade Agreements With Enemy Realms" />
+	<string id="taom_hostile_peace_mcm_agreements_hint" text="{=taom_hostile_peace_mcm_agreements_hint}When enabled (default), a Free realm and a realm of the Shadow never sign a trade agreement, neither by the AI nor by your own kingdom&apos;s vote. An agreement signed before this was switched on runs to its end. When off, the base game&apos;s rules apply. Applies at once, no restart." />
+	<string id="taom_hostile_peace_mcm_caravans" text="{=taom_hostile_peace_mcm_caravans}No Caravan Trade With Enemy Realms" />
+	<string id="taom_hostile_peace_mcm_caravans_hint" text="{=taom_hostile_peace_mcm_caravans_hint}When enabled (default), caravans of a Free realm do not trade in the towns of a realm of the Shadow, and the reverse, while the two are at peace before the War of the Ring. Realms that are not sworn enemies trade as before. When off, the base game&apos;s rules apply. Applies at once, no restart." />
+	<string id="taom_hostile_peace_mcm_alliances" text="{=taom_hostile_peace_mcm_alliances}Allow Player Alliances With Anyone" />
+	<string id="taom_hostile_peace_mcm_alliances_hint" text="{=taom_hostile_peace_mcm_alliances_hint}When off (default), a kingdom you rule cannot ally with a realm on the other side of the war: a Free kingdom does not ally with the Shadow, and the reverse. Realms of the Neutral side can ally with anyone. A kingdom you founded takes the side of its culture. Alliances you already have are kept. When on, your kingdom may ally with any realm, as before. AI realms keep their own rules either way. Applies at once, no restart." />
+	<string id="taom_hostile_peace_no_alliance" text="{=taom_hostile_peace_no_alliance}Your realms stand on opposite sides of the war and cannot be allied." />
+	<string id="taom_hostile_peace_no_trade" text="{=taom_hostile_peace_no_trade}Your realms are enemies in all but war. They will not trade." />
 	<string id="taom_no_longer_enemies" text="{=1rbg3Hz2}{FACTION_1} and {FACTION_2} are no longer enemies." />
 
 	<!-- Erebor -->
@@ -2457,6 +2467,7 @@
 	<string id="taom_cheat_pick_kingdom" text="{=taom_cheat_pick_kingdom}Choose a kingdom" />
 	<string id="taom_cheat_pick_ok" text="{=taom_cheat_pick_ok}Choose" />
 	<string id="taom_cheat_pick_settlement" text="{=taom_cheat_pick_settlement}Choose where to teleport" />
+	<string id="taom_cheat_pick_troop" text="{=taom_cheat_pick_troop}Choose a troop: 10 of it join your party" />
 	<string id="taom_cheat_teleport_text" text="{=taom_cheat_teleport_text}Teleport to a settlement's gate. You arrive outside and enter as usual." />
 	<string id="taom_cheat_tp_army" text="{=taom_cheat_tp_army}Leave the army first. Only an army's leader can teleport it." />
 	<string id="taom_cheat_tp_camp" text="{=taom_cheat_tp_camp}Break camp first, then teleport." />
@@ -2471,8 +2482,11 @@
 	<string id="taom_cheat_tp_siege" text="{=taom_cheat_tp_siege}End the siege first." />
 	<string id="taom_cheat_tp_towns" text="{=taom_cheat_tp_towns}Towns..." />
 	<string id="taom_cheat_tp_villages" text="{=taom_cheat_tp_villages}Villages..." />
+	<string id="taom_cheat_troop_row" text="{=taom_cheat_troop_row}Tier {TIER}: {NAME}" />
+	<string id="taom_cheat_troops_any" text="{=taom_cheat_troops_any}+10 of any troop of your faction..." />
 	<string id="taom_cheat_troops_basic" text="{=taom_cheat_troops_basic}+10 basic recruits" />
 	<string id="taom_cheat_troops_elite" text="{=taom_cheat_troops_elite}+10 elite recruits" />
+	<string id="taom_cheat_troops_screen" text="{=taom_cheat_troops_screen}Every troop (party screen)..." />
 	<string id="taom_cheat_troops_text" text="{=taom_cheat_troops_text}Add recruits of your culture to your party." />
 	<string id="taom_cheat_unknown" text="{=taom_cheat_unknown}Nothing called &quot;{NAME}&quot; was found." />
 
@@ -2956,6 +2970,7 @@
 	<string id="taom_rf_upgrade_tooltip" text="{=taom_rf_upgrade_tooltip}Cost: {GOLD} denars. Your company stays while it is rebuilt into a stronghold." />
 	<string id="taom_rf_upgrading" text="{=taom_rf_upgrading}Rebuilding the refuge into a stronghold - your company must stay until it is done." />
 	<string id="taom_rf_warden_desc" text="{=taom_rf_warden_desc}Choose who commands the refuge - a companion, or promote one of your soldiers into an officer. They leave your party to lead it." />
+	<string id="taom_rf_warden_ranks" text="{=taom_rf_warden_ranks}Your promoted warden returns to the ranks as {TROOP}." />
 	<string id="taom_rf_warden_title" text="{=taom_rf_warden_title}Assign a Warden" />
 	<string id="taom_rf_fallen" text="{=taom_rf_fallen}Your refuge has fallen. What remains of its garrison is lost; your warden's fate rides with the survivors." />
 	<string id="taom_rf_food_note" text="{=taom_rf_food_note}The garrison eats from the stored goods; keep the stash provisioned or it will starve." />
@@ -2966,7 +2981,11 @@
 	<string id="taom_fcamp_ambush_ok" text="{=taom_fcamp_ambush_ok}Your ambush is set against {ENEMY} - strike now?" />
 	<string id="taom_fcamp_ambush_terrain" text="{=taom_fcamp_ambush_terrain}Needs concealing terrain - forest, hills, swamp, canyon, dunes, a bridge or a ford." />
 	<string id="taom_fcamp_ambush_title" text="{=taom_fcamp_ambush_title}Ambush" />
+	<string id="taom_fcamp_block_disorganized" text="{=taom_fcamp_block_disorganized}the party is still disorganized; wait a few hours." />
+	<string id="taom_fcamp_block_encounter" text="{=taom_fcamp_block_encounter}the party is in an encounter." />
+	<string id="taom_fcamp_block_menu" text="{=taom_fcamp_block_menu}a menu or window is open; close it first." />
 	<string id="taom_fcamp_broken" text="{=taom_fcamp_broken}Camp broken." />
+	<string id="taom_fcamp_btn_blocked" text="{=taom_fcamp_btn_blocked}Cannot camp now: {REASON}" />
 	<string id="taom_fcamp_btn_make" text="{=taom_fcamp_btn_make}Make Camp" />
 	<string id="taom_fcamp_btn_options" text="{=taom_fcamp_btn_options}Camp Options" />
 	<string id="taom_fcamp_building" text="{=taom_fcamp_building}The camp is still being set up." />
@@ -4923,6 +4942,9 @@
 	<string id="TAOM_LD_Up_VeteranBowmen" text="{=TAOM_LD_Up_VeteranBowmen}Bowmen to Veteran Bowmen" />
 	<string id="TAOM_LD_Up_RoyalGuard" text="{=TAOM_LD_Up_RoyalGuard}King's Knights to the King's Royal Guard" />
 	<string id="TAOM_LD_Up_Riders" text="{=TAOM_LD_Up_Riders}Royal Guard to the Riders of Rohan" />
+	<string id="TAOM_LD_Hero_Aragorn_Text" text="{=TAOM_LD_Hero_Aragorn_Text}The heir of Isildur, sword in hand. If he falls, he can be called again." />
+	<string id="TAOM_LD_Hero_Legolas_Text" text="{=TAOM_LD_Hero_Legolas_Text}The prince of Mirkwood and his bow. If he falls, he can be called again." />
+	<string id="TAOM_LD_Hero_Gimli_Text" text="{=TAOM_LD_Hero_Gimli_Text}The son of Glóin and his axe. If he falls, he can be called again." />
 	<string id="TAOM_LD_Prompt_Cancel" text="{=TAOM_LD_Prompt_Cancel}Cancel" />
 	<string id="TAOM_LD_Prompt_ChoiceBest" text="{=TAOM_LD_Prompt_ChoiceBest}{NAME}, best run: waves cleared {WAVES}, kills {KILLS}" />
 	<string id="TAOM_LD_Prompt_ChoiceClass" text="{=TAOM_LD_Prompt_ChoiceClass}{NAME}: {TEXT}" />
@@ -5009,6 +5031,11 @@
 	<string id="TAOM_LD_Hud_UpgradePrice" text="{=TAOM_LD_Hud_UpgradePrice}{PRICE} gold each" />
 	<string id="TAOM_LD_Notice_UnknownUpgrade" text="{=TAOM_LD_Notice_UnknownUpgrade}That upgrade is not for sale." />
 	<string id="TAOM_LD_Notice_NoneToUpgrade" text="{=TAOM_LD_Notice_NoneToUpgrade}No soldier of that troop is left to upgrade." />
+	<string id="TAOM_LD_Hud_HeroesTitle" text="{=TAOM_LD_Hud_HeroesTitle}Heroes" />
+	<string id="TAOM_LD_Hud_HeroPending" text="{=TAOM_LD_Hud_HeroPending}On his way" />
+	<string id="TAOM_LD_Hud_HeroStanding" text="{=TAOM_LD_Hud_HeroStanding}On the field" />
+	<string id="TAOM_LD_Notice_UnknownHero" text="{=TAOM_LD_Notice_UnknownHero}That hero is not for sale." />
+	<string id="TAOM_LD_Notice_HeroAlive" text="{=TAOM_LD_Notice_HeroAlive}That hero is already with you." />
 	<string id="TAOM_LD_Hud_PickSubtitle" text="{=TAOM_LD_Hud_PickSubtitle}Select one blessing" />
 	<string id="TAOM_LD_Hud_KeyHorn" text="{=TAOM_LD_Hud_KeyHorn}Sound the horn" />
 	<string id="TAOM_LD_Hud_KeySpeed" text="{=TAOM_LD_Hud_KeySpeed}Speed {SPEED}x" />
@@ -5203,5 +5230,213 @@
 	<string id="taom_guest_trade_busy" text="{=taom_guest_trade_busy}The host has not answered your last request yet." />
 	<string id="taom_guest_trade_no_link" text="{=taom_guest_trade_no_link}The host cannot be reached." />
 	<string id="taom_guest_trade_no_answer" text="{=taom_guest_trade_no_answer}The host did not answer your last request. Try again." />
+	<!-- harvested by tools/harvest_literal_loc_keys.py -->
+	<!-- CheatMenu -->
+	<string id="taom_cheat_done_relation" text="{=taom_cheat_done_relation}Lords of {NAME} whose relation changed: {NUMBER}." />
+	<string id="taom_cheat_done_teleport" text="{=taom_cheat_done_teleport}You are at the gate of {NAME}." />
+	<!-- harvested by tools/harvest_literal_loc_keys.py -->
+	<!-- HeroAbilities -->
+	<string id="taom_hero_ability_aragorn_for_frodo" text="{=taom_hero_ability_aragorn_for_frodo}For Frodo!" />
+	<string id="taom_hero_ability_aragorn_isildurs_heir" text="{=taom_hero_ability_aragorn_isildurs_heir}Heir of Isildur" />
+	<string id="taom_hero_ability_gimli_baruk_khazad" text="{=taom_hero_ability_gimli_baruk_khazad}Baruk Khazâd!" />
+	<string id="taom_hero_ability_gimli_still_standing" text="{=taom_hero_ability_gimli_still_standing}Still Standing" />
+	<string id="taom_hero_ability_legolas_rapid_fire" text="{=taom_hero_ability_legolas_rapid_fire}Rapid Fire" />
+	<string id="taom_hero_ability_legolas_many_arrows" text="{=taom_hero_ability_legolas_many_arrows}Many Arrows" />
+	<string id="taom_hero_ability_legolas_archers_eye" text="{=taom_hero_ability_legolas_archers_eye}Archer's Eye" />
+	<string id="taom_hero_ability_cast_ally" text="{=taom_hero_ability_cast_ally}{HERO}: {ABILITY}" />
+	<string id="taom_hero_ability_cast_enemy" text="{=taom_hero_ability_cast_enemy}Enemy {HERO}: {ABILITY}" />
+	<!-- harvested by tools/harvest_literal_loc_keys.py -->
+	<!-- Realms -->
+	<string id="realms_ui_cost" text="{=realms_ui_cost}{AMOUNT} {RESOURCE}" />
+	<string id="realms_ui_no_resource" text="{=realms_ui_no_resource}Your people have no resource to buy claims with." />
+	<string id="realms_ui_low_resource" text="{=realms_ui_low_resource}You have {AMOUNT} {RESOURCE}." />
+	<string id="realms_ui_buy_claim" text="{=realms_ui_buy_claim}Buy a claim" />
+	<string id="realms_ui_buy_claim_ask" text="{=realms_ui_buy_claim_ask}Buy a claim on the {TITLE} for {COST}?" />
+	<string id="realms_ui_influence_cost" text="{=realms_ui_influence_cost}{AMOUNT} influence" />
+	<string id="realms_ui_low_influence" text="{=realms_ui_low_influence}Your clan has {AMOUNT} influence." />
+	<string id="realms_ui_usurp" text="{=realms_ui_usurp}Usurp" />
+	<string id="realms_ui_usurp_ask" text="{=realms_ui_usurp_ask}Press your claim and take the {TITLE} for {COST}?" />
+	<string id="realms_ui_yes" text="{=realms_ui_yes}Yes" />
+	<string id="realms_ui_no" text="{=realms_ui_no}No" />
+	<string id="realms_ui_claim_failed" text="{=realms_ui_claim_failed}That is no longer possible." />
+	<string id="realms_ui_refuse_clan" text="{=realms_ui_refuse_clan}Your own clan holds it." />
+	<string id="realms_ui_refuse_realm" text="{=realms_ui_refuse_realm}It lies in your own realm." />
+	<string id="realms_ui_refuse_far" text="{=realms_ui_refuse_far}It does not border your fiefs." />
+	<string id="realms_ui_refuse_owned" text="{=realms_ui_refuse_owned}Your clan must hold its fief first." />
+	<string id="realms_ui_refuse_vassals" text="{=realms_ui_refuse_vassals}You, your clan and your vassals must hold more than half of its lands." />
+	<string id="realms_ui_refuse_foothold" text="{=realms_ui_refuse_foothold}You, your clan or your vassals must first hold one of its lands." />
+	<string id="realms_ui_refuse_outside" text="{=realms_ui_refuse_outside}Its holder does not serve your realm." />
+	<string id="realms_ui_refuse_serving" text="{=realms_ui_refuse_serving}The claimant must serve its realm." />
+	<string id="realms_ui_refuse_restore_only" text="{=realms_ui_refuse_restore_only}Only the heir of its old kings can take up this throne." />
+	<string id="realms_ui_refuse_not_vacant" text="{=realms_ui_refuse_not_vacant}It is not vacant." />
+	<string id="realms_ui_refuse_culture" text="{=realms_ui_refuse_culture}Only its own people can take up this title." />
+	<string id="realms_ui_refuse" text="{=realms_ui_refuse}Not possible." />
+	<string id="realms_enc_title" text="{=realms_enc_title}Title" />
+	<string id="realms_enc_realm_title" text="{=realms_enc_realm_title}Realm title" />
+	<string id="realms_enc_titles" text="{=realms_enc_titles}Titles" />
+	<string id="realms_ency_titles" text="{=realms_ency_titles}Titles" />
+	<string id="realms_ency_titles_desc" text="{=realms_ency_titles_desc}Every title of the realms, from the village lordships to the high crowns: who holds each by right and who claims it." />
+	<string id="realms_ency_f_high" text="{=realms_ency_f_high}Realms and high titles" />
+	<string id="realms_ency_f_duchy" text="{=realms_ency_f_duchy}Duchies" />
+	<string id="realms_ency_f_county" text="{=realms_ency_f_county}Counties (towns)" />
+	<string id="realms_ency_f_barony" text="{=realms_ency_f_barony}Baronies (castles)" />
+	<string id="realms_ency_f_lordship" text="{=realms_ency_f_lordship}Lordships (villages)" />
+	<string id="realms_ency_f_held" text="{=realms_ency_f_held}Held by your clan" />
+	<string id="realms_ency_f_claimed" text="{=realms_ency_f_claimed}Claimed by your clan" />
+	<string id="realms_ency_f_realm" text="{=realms_ency_f_realm}In your realm" />
+	<string id="realms_ency_f_vacant" text="{=realms_ency_f_vacant}Vacant" />
+	<string id="realms_ency_f_has_claims" text="{=realms_ency_f_has_claims}Claimed" />
+	<string id="realms_ency_g_rank" text="{=realms_ency_g_rank}Rank" />
+	<string id="realms_ency_g_yours" text="{=realms_ency_g_yours}Yours" />
+	<string id="realms_ency_g_status" text="{=realms_ency_g_status}Status" />
+	<string id="realms_ency_s_rank" text="{=realms_ency_s_rank}Rank" />
+	<string id="realms_ency_s_claims" text="{=realms_ency_s_claims}Claims" />
+	<string id="realms_ui_holder" text="{=realms_ui_holder}Held by right" />
+	<string id="realms_page_vacant" text="{=realms_page_vacant}Vacant" />
+	<string id="realms_page_no_vassals" text="{=realms_page_no_vassals}No titles below it." />
+	<string id="realms_page_no_seat" text="{=realms_page_no_seat}No fief of its own." />
+	<string id="realms_page_actions" text="{=realms_page_actions}Your actions" />
+	<string id="realms_page_no_actions" text="{=realms_page_no_actions}Nothing you can do with this title now." />
+	<string id="realms_ui_chronicle" text="{=realms_ui_chronicle}Chronicle" />
+	<string id="realms_page_no_chronicle" text="{=realms_page_no_chronicle}No holders recorded yet." />
+	<string id="realms_page_tree" text="{=realms_page_tree}Title tree" />
+	<string id="realms_page_fief" text="{=realms_page_fief}Fief" />
+	<string id="realms_page_seat" text="{=realms_page_seat}Seat" />
+	<string id="realms_ui_liege" text="{=realms_ui_liege}Liege title" />
+	<string id="realms_page_realm" text="{=realms_page_realm}Realm" />
+	<string id="realms_page_kingdom" text="{=realms_page_kingdom}Kingdom" />
+	<string id="realms_ui_owner" text="{=realms_ui_owner}Fief owned by" />
+	<string id="realms_ui_ruler" text="{=realms_ui_ruler}Realm ruled by" />
+	<string id="realms_ui_without_title" text="{=realms_ui_without_title}(without the title)" />
+	<string id="realms_ui_laws" text="{=realms_ui_laws}Laws" />
+	<string id="realms_ui_claims" text="{=realms_ui_claims}Claims" />
+	<string id="realms_ui_none_cap" text="{=realms_ui_none_cap}None" />
+	<string id="realms_enc_claimant" text="{=realms_enc_claimant}1 claimant" />
+	<string id="realms_enc_claimants" text="{=realms_enc_claimants}{COUNT} claimants" />
+	<string id="realms_page_lands" text="{=realms_page_lands}Lands it lies over, its vassals once formed" />
+	<string id="realms_ui_vassals" text="{=realms_ui_vassals}Vassal titles" />
+	<string id="realms_page_rank_realm" text="{=realms_page_rank_realm}{RANK}, {REALM}" />
+	<string id="realms_page_owned_by" text="{=realms_page_owned_by}Owned by {OWNER}" />
+	<string id="realms_ui_none" text="{=realms_ui_none}none" />
+	<string id="realms_enc_more" text="{=realms_enc_more}and {COUNT} more" />
+	<string id="realms_enc_style" text="{=realms_enc_style}Style" />
+	<string id="realms_enc_offices" text="{=realms_enc_offices}Offices" />
+	<string id="realms_enc_holds" text="{=realms_enc_holds}Holds" />
+	<string id="realms_enc_pay" text="{=realms_enc_pay}Pay {COST}" />
+	<string id="realms_enc_cost_refused" text="{=realms_enc_cost_refused}{COST}: {REASON}" />
+	<string id="realms_claim_conquest_short" text="{=realms_claim_conquest_short}conquest" />
+	<string id="realms_claim_fabricated_short" text="{=realms_claim_fabricated_short}fabricated" />
+	<string id="realms_claim_ancestral_short" text="{=realms_claim_ancestral_short}ancestral" />
+	<string id="realms_ui_grant_village" text="{=realms_ui_grant_village}A village passes to another clan only with its town or castle." />
+	<string id="realms_ui_grant_none" text="{=realms_ui_grant_none}No one can receive it." />
+	<string id="realms_ui_grant" text="{=realms_ui_grant}Grant" />
+	<string id="realms_ui_grant_pick" text="{=realms_ui_grant_pick}Who receives the {TITLE}?" />
+	<string id="realms_ui_free" text="{=realms_ui_free}no influence" />
+	<string id="realms_ui_revoke" text="{=realms_ui_revoke}Revoke" />
+	<string id="realms_ui_revoke_ask" text="{=realms_ui_revoke_ask}Take the {TITLE} back from its holder for {COST}? They will not forget it." />
+	<string id="realms_ui_restore" text="{=realms_ui_restore}Restore" />
+	<string id="realms_ui_restore_for" text="{=realms_ui_restore_for}Restore for {HERO}" />
+	<string id="realms_ui_restore_ask" text="{=realms_ui_restore_ask}Spend {COST} so that {HERO} takes up the {TITLE} by right of blood?" />
+	<string id="realms_ui_form" text="{=realms_ui_form}Form" />
+	<string id="realms_ui_form_ask" text="{=realms_ui_form_ask}Form the {TITLE} for {COST}?" />
+	<string id="realms_ui_appoint" text="{=realms_ui_appoint}Appoint the {OFFICE}" />
+	<string id="realms_ui_appoint_none" text="{=realms_ui_appoint_none}No lord of your realm can take it up." />
+	<string id="realms_ui_appoint_pick" text="{=realms_ui_appoint_pick}Who will be the {TITLE}?" />
+	<string id="realms_ui_dismiss" text="{=realms_ui_dismiss}Dismiss {HERO} as {OFFICE}" />
+	<string id="realms_ui_dismiss_header" text="{=realms_ui_dismiss_header}Dismiss" />
+	<string id="realms_ui_grant_fief" text="{=realms_ui_grant_fief}With its fief: the town or castle passes to their clan." />
+	<string id="realms_ui_grant_vassals" text="{=realms_ui_grant_vassals}With the titles below it that you hold." />
+	<string id="realms_ui_grant_title" text="{=realms_ui_grant_title}The title alone: its lands stay with their lords." />
+	<string id="realms_ui_grant_ask_fief" text="{=realms_ui_grant_ask_fief}Give the {TITLE} and its fief to {HERO}?" />
+	<string id="realms_ui_grant_ask" text="{=realms_ui_grant_ask}Grant the {TITLE} to {HERO}?" />
+	<string id="realms_ui_coronation_ask_player" text="{=realms_ui_coronation_ask_player}Your clan will become the {CLAN} and rule {KINGDOM} from {SEAT}." />
+	<string id="realms_ui_coronation_ask_player_no_seat" text="{=realms_ui_coronation_ask_player_no_seat}Your clan will become the {CLAN} and rule {KINGDOM}." />
+	<string id="realms_ui_coronation_ask" text="{=realms_ui_coronation_ask}{HERO} will leave your clan, found the {CLAN} and rule {KINGDOM} from {SEAT}." />
+	<string id="realms_ui_coronation_ask_no_seat" text="{=realms_ui_coronation_ask_no_seat}{HERO} will leave your clan, found the {CLAN} and rule {KINGDOM}." />
+	<string id="realms_ui_coronation_player" text="{=realms_ui_coronation_player}You will no longer rule {KINGDOM}." />
+	<string id="realms_ui_choose" text="{=realms_ui_choose}Choose" />
+	<string id="realms_ui_back" text="{=realms_ui_back}Back" />
+	<string id="realms_claim_conquest" text="{=realms_claim_conquest}Conquest claim" />
+	<string id="realms_claim_fabricated" text="{=realms_claim_fabricated}Fabricated claim" />
+	<string id="realms_claim_ancestral" text="{=realms_claim_ancestral}Ancestral claim" />
+	<string id="realms_claims_on" text="{=realms_claims_on}Claims on {TITLE}" />
+	<string id="realms_tree_lands" text="{=realms_tree_lands}Lies under the realm above once it is formed." />
+	<string id="realms_tree_lordship" text="{=realms_tree_lordship}+1 lordship" />
+	<string id="realms_tree_lordships" text="{=realms_tree_lordships}+{COUNT} lordships" />
+	<string id="realms_ui_you" text="{=realms_ui_you}(you)" />
+	<string id="realms_ui_waiting" text="{=realms_ui_waiting}Waiting for" />
+	<string id="realms_ui_wait_ruler" text="{=realms_ui_wait_ruler}the realm to choose a ruler" />
+	<string id="realms_ui_wait_clan" text="{=realms_ui_wait_clan}the clan to choose a leader" />
+	<string id="realms_why_inherited" text="{=realms_why_inherited}inherited" />
+	<string id="realms_why_clan" text="{=realms_why_clan}new clan leader" />
+	<string id="realms_why_ruler" text="{=realms_why_ruler}new ruler" />
+	<string id="realms_why_transfer" text="{=realms_why_transfer}handed over" />
+	<string id="realms_why_possession" text="{=realms_why_possession}took up" />
+	<string id="realms_why_vacated" text="{=realms_why_vacated}fell vacant" />
+	<string id="realms_why_conquest" text="{=realms_why_conquest}conquered" />
+	<string id="realms_why_grant" text="{=realms_why_grant}granted" />
+	<string id="realms_why_usurped" text="{=realms_why_usurped}usurped" />
+	<string id="realms_why_claim" text="{=realms_why_claim}by claim" />
+	<string id="realms_why_start" text="{=realms_why_start}first holder" />
+	<string id="realms_why_formed" text="{=realms_why_formed}formed" />
+	<string id="realms_why_restored" text="{=realms_why_restored}restored" />
+	<string id="realms_why_revoked" text="{=realms_why_revoked}revoked" />
+	<string id="realms_why_appointed" text="{=realms_why_appointed}appointed" />
+	<string id="realms_why_dismissed" text="{=realms_why_dismissed}left office" />
+	<string id="realms_why_other" text="{=realms_why_other}changed" />
+	<string id="realms_law_primo" text="{=realms_law_primo}eldest child inherits" />
+	<string id="realms_law_ultimo" text="{=realms_law_ultimo}youngest child inherits" />
+	<string id="realms_law_seniority" text="{=realms_law_seniority}eldest of the clan inherits" />
+	<string id="realms_law_clan" text="{=realms_law_clan}passes to the clan leader" />
+	<string id="realms_law_elective" text="{=realms_law_elective}passes to the chosen ruler" />
+	<string id="realms_law_agnatic" text="{=realms_law_agnatic}men only" />
+	<string id="realms_law_agnatic_cognatic" text="{=realms_law_agnatic_cognatic}men first" />
+	<string id="realms_law_absolute" text="{=realms_law_absolute}men and women equally" />
+	<string id="realms_ui_rank_lordship" text="{=realms_ui_rank_lordship}Lordship (village)" />
+	<string id="realms_ui_rank_barony" text="{=realms_ui_rank_barony}Barony (castle)" />
+	<string id="realms_ui_rank_county" text="{=realms_ui_rank_county}County (town)" />
+	<string id="realms_ui_rank_duchy" text="{=realms_ui_rank_duchy}Duchy" />
+	<string id="realms_ui_rank_kingdom" text="{=realms_ui_rank_kingdom}Kingdom" />
+	<string id="realms_ui_rank_union" text="{=realms_ui_rank_union}Union of realms" />
+	<string id="realms_ui_rank_empire" text="{=realms_ui_rank_empire}High title" />
+	<string id="realms_news_coronation" text="{=realms_news_coronation}{HERO} is crowned in {SEAT}. The {CLAN} rules {KINGDOM}." />
+	<string id="realms_coronation_text_default" text="{=realms_coronation_text_default}{HERO} is crowned in {SEAT}, and the {CLAN} rules {REALM}." />
+	<string id="realms_coronation_line_house_player" text="{=realms_coronation_line_house_player}Your clan becomes the {CLAN}, the ruling house of {REALM}." />
+	<string id="realms_coronation_line_house" text="{=realms_coronation_line_house}{HERO} founds the {CLAN}, the ruling house of {REALM}." />
+	<string id="realms_coronation_line_titles_lordships_player" text="{=realms_coronation_line_titles_lordships_player}You hold by right: {TITLES} and {COUNT} lordships." />
+	<string id="realms_coronation_line_titles_player" text="{=realms_coronation_line_titles_player}You hold by right: {TITLES}." />
+	<string id="realms_coronation_line_titles_lordships" text="{=realms_coronation_line_titles_lordships}He holds by right: {TITLES} and {COUNT} lordships." />
+	<string id="realms_coronation_line_titles" text="{=realms_coronation_line_titles}He holds by right: {TITLES}." />
+	<string id="realms_coronation_line_office" text="{=realms_coronation_line_office}{NAME} remains {OFFICE} under the King." />
+	<string id="realms_coronation_line_relation" text="{=realms_coronation_line_relation}{HERO} likes you more (+{AMOUNT})." />
+	<string id="realms_coronation_line_paid" text="{=realms_coronation_line_paid}Your clan paid {AMOUNT} influence." />
+	<string id="realms_finance_tribute_in" text="{=realms_finance_tribute_in}Tribute from Vassals" />
+	<string id="realms_finance_tribute_out" text="{=realms_finance_tribute_out}Tribute to Liege" />
+	<string id="realms_msg_office_vacant" text="{=realms_msg_office_vacant}{OLD} is no longer {OFFICE}." />
+	<string id="realms_msg_office_follows" text="{=realms_msg_office_follows}{HERO} takes up the office of {OFFICE}." />
+	<string id="realms_msg_office_appointed" text="{=realms_msg_office_appointed}{HERO} is appointed {OFFICE}." />
+	<string id="realms_msg_claim_bought" text="{=realms_msg_claim_bought}{HERO} has bought a claim on the {TITLE}." />
+	<string id="realms_msg_claim_blood" text="{=realms_msg_claim_blood}{HERO} inherits a claim on the {TITLE}." />
+	<string id="realms_msg_claim" text="{=realms_msg_claim}{HERO} now has a claim on the {TITLE}." />
+	<string id="realms_msg_usurp" text="{=realms_msg_usurp}{HERO} has usurped the {TITLE}." />
+	<string id="realms_msg_revoke" text="{=realms_msg_revoke}{HERO} has taken the {TITLE} back from {OLD}." />
+	<string id="realms_msg_form" text="{=realms_msg_form}{HERO} has formed the {TITLE}." />
+	<string id="realms_msg_restore" text="{=realms_msg_restore}{HERO} has restored the {TITLE} by right of blood." />
+	<string id="realms_msg_by_claim" text="{=realms_msg_by_claim}{HERO} takes up the {TITLE} by claim." />
+	<string id="realms_msg_vacant" text="{=realms_msg_vacant}The {TITLE} has fallen vacant." />
+	<string id="realms_msg_inherit" text="{=realms_msg_inherit}{HERO} inherits the {TITLE}." />
+	<string id="realms_msg_grant" text="{=realms_msg_grant}{HERO} is granted the {TITLE}." />
+	<string id="realms_msg_transfer" text="{=realms_msg_transfer}The {TITLE} passes to {HERO}." />
+	<string id="realms_msg_holder" text="{=realms_msg_holder}{HERO} now holds the {TITLE}." />
+	<string id="realms_vacant" text="{=realms_vacant}(vacant)" />
+	<string id="realms_known_as_epithet" text="{=realms_known_as_epithet}{HOLDER} of {TITLE}, {EPITHET}" />
+	<string id="realms_known_as" text="{=realms_known_as}{HOLDER} of {TITLE}" />
+	<string id="realms_known_as_style_epithet" text="{=realms_known_as_style_epithet}{HOLDER}, {EPITHET}" />
+	<string id="realms_known_as_style" text="{=realms_known_as_style}{HOLDER}" />
+	<!-- harvested by tools/harvest_literal_loc_keys.py -->
+	<!-- CrashReport -->
+	<string id="TAOM_CrashReport_Title" text="{=TAOM_CrashReport_Title}TAOM caught a crash" />
+	<string id="TAOM_CrashReport_Continue" text="{=TAOM_CrashReport_Continue}Continue (risky)" />
+	<string id="TAOM_CrashReport_OpenBundle" text="{=TAOM_CrashReport_OpenBundle}Open bundle folder" />
 
 </strings>

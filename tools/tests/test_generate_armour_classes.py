@@ -63,6 +63,22 @@ class Classify(unittest.TestCase):
         # Fail open: a piece nothing can class stays freely available rather than vanishing.
         self.assertEqual(gac.classify('mystery_piece', 'Mystery', None, None), 'light')
 
+    def test_a_lord_armour_variant_is_named_kit(self):
+        # #1333: a variant is a lord template's piece; never sold, looted, forged, stripped or upgraded.
+        self.assertEqual(gac.classify('taom_lord_mkwd_inf3_chest', "[Mirkwood] Lord's Infantry Chestplate I",
+                                      'lord', None), 'named')
+
+    def test_no_piece_upgrades_into_a_lord_armour_variant(self):
+        records = {
+            'mkwd_inf3_chest_silver': {'tier': 'elite', 'slot': 'body', 'culture': 'mirkwood', 'name': 'Silver',
+                                       'armour': (0, 48, 8, 19)},
+            'taom_lord_mkwd_inf3_chest': {'tier': 'lord', 'slot': 'body', 'culture': 'mirkwood', 'name': 'Lord',
+                                          'armour': (0, 51, 0, 20)},
+        }
+        rows = gac.build_rows(records, targets=lambda *a: {})
+        self.assertEqual(rows['taom_lord_mkwd_inf3_chest'], ('named', None))
+        self.assertIsNone(rows['mkwd_inf3_chest_silver'][1])
+
     def test_khamul_line_is_troop_kit_not_named(self):
         # The Dol Guldur "Khamul ..." line is named after its captain, not worn by him.
         self.assertEqual(gac.classify('sk_dg_khml_chest_heavy_a', 'Khamul Guard Chest', 'heavy', None), 'heavy')

@@ -61,6 +61,7 @@ from dataclasses import dataclass
 from typing import Callable, Dict, Iterable, Optional, Tuple
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import derive_armor_tiers as dat  # noqa: E402
 import fix_armour_mesh_ladder as fml  # noqa: E402
 import rebalance_armor as ra  # noqa: E402
 
@@ -84,7 +85,7 @@ class Piece:
 
 def classify(item_id: str, name: str, derived_tier: Optional[str], stat_band_tier: Optional[str]) -> str:
     """The acquisition class of one piece; the precedence is the module docstring's."""
-    if ra.is_excluded(item_id, name):
+    if ra.is_excluded(item_id, name) or dat.lord_variant_source(item_id):
         return 'named'
     token = ra.mesh_tier_of(item_id)
     if token == 'lord':
@@ -257,7 +258,6 @@ def diff(old: Dict[str, Row], new: Dict[str, Row]) -> Dict[str, list]:
 
 def generate() -> Optional[Dict[str, Row]]:
     """Rows for the live Armory, or None when it is not installed."""
-    import derive_armor_tiers as dat
     if not os.path.isdir(ra.ARMORY_DIR):
         return None
     records, _ = dat.derive()

@@ -116,8 +116,11 @@ public class CoopMissionSeamPinTests
         var runner = Source("Main/Features/SignatureStrikes/Hooks/SignatureStrikeRunner.cs");
         var run = Member(runner, "public void Run(Mission mission, in StrikeRequest request)");
         CheckPrecedes(run, Owned + "attacker)", "_sound.Play(", "ring attacker");
-        // The victim's morale is gated by DreadAgentGate (an AI controller), not by a registry check.
-        CheckPrecedes(run, "DreadAgentGate.CanAffect(victim)", "victim.ChangeMorale(", "ring victim morale");
+        // The victim's morale is gated by DreadAgentGate (an AI controller), not by a registry check; the
+        // ring hands it to MoraleShock, which holds the gate.
+        StringAssert.Contains(run, "MoraleShock.Apply(victim,");
+        var shock = Member(Source("Main/Features/DreadAura/Hooks/MoraleShock.cs"), "public static float Apply(");
+        CheckPrecedes(shock, "DreadAgentGate.CanAffect(victim)", "victim.ChangeMorale(", "ring victim morale");
         Assert.IsFalse(run.Contains(Owned + "victim)"), "the ring victim is gated by DreadAgentGate alone");
     }
 
@@ -158,6 +161,7 @@ public class CoopMissionSeamPinTests
         foreach (var path in new[]
                  {
                      "Main/Features/DreadAura/Hooks/DreadPulseRunner.cs",
+                     "Main/Features/DreadAura/Hooks/MoraleShock.cs",
                      "Main/Features/RaceAbilities/Hooks/RaceAbilityDeaths.cs",
                      "Main/Features/RaceAbilities/Hooks/RaceAbilityTicker.cs",
                  })

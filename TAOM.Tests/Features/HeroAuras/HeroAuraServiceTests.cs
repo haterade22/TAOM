@@ -7,6 +7,7 @@ using TAOM.Features.HeroAuras;
 using TAOM.Features.HeroAuras.Domain;
 using TAOM.Features.RaceAbilities;
 using TAOM.Features.RaceAbilities.Domain;
+using TAOM.Tests.Infrastructure;
 
 namespace TAOM.Tests.Features.HeroAuras;
 
@@ -69,6 +70,28 @@ public class HeroAuraServiceTests
     {
         Assert.AreEqual(10f, _sut.AuraFor("named_companion_aragorn")!.Radius, 0.001f);
         Assert.AreEqual(15f, _sut.AuraFor("lord_E1_1")!.Radius, 0.001f);
+    }
+
+    [TestMethod]
+    public void SourceId_ACampaignHero_IsTheHeroId() =>
+        Assert.AreEqual("lord_1_15", HeroAuraService.SourceId("lord_1_15", "troop_template_x"));
+
+    // A campaign character with no Hero behind it (the story mission's heroes, #1366) and a Custom Game character both read their own id.
+    [TestMethod]
+    public void SourceId_NoHero_IsTheCharacterId()
+    {
+        Assert.AreEqual("taom_hero_aragorn", HeroAuraService.SourceId(null, "taom_hero_aragorn"));
+        Assert.IsNull(HeroAuraService.SourceId(null, null));
+    }
+
+    // Source pin: Dread's hero axis gives a campaign character with no Hero no id, so the pulse must not use it.
+    [TestMethod]
+    public void ThePulse_FindsItsSourcesBySourceId_NotByDreadsHeroAxis()
+    {
+        var pulse = RepoPaths.ReadSource("Main/Features/HeroAuras/Hooks/HeroAuraPulse.cs", stripComments: true);
+
+        StringAssert.Contains(pulse, "HeroAuraService.SourceId(campaignCharacter?.HeroObject?.StringId, agent.Character.StringId)");
+        Assert.IsFalse(pulse.Contains("HeroAxisId"));
     }
 
     [TestMethod]

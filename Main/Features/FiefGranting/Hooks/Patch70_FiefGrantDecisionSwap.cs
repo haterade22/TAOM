@@ -56,7 +56,9 @@ public static class Patch70_FiefGrantDecisionSwap
     /// </summary>
     private static Campaign _faultReportedFor;
 
+    // Coop's AddDecision prefix returns false on a host, after which Harmony skips this one: run first (#1346).
     [HarmonyPrefix]
+    [HarmonyPriority(Priority.High)]
     public static void Prefix(ref KingdomDecision kingdomDecision)
     {
         try

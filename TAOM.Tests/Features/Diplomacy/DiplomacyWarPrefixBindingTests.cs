@@ -173,4 +173,28 @@ public class DiplomacyWarPrefixBindingTests
         Assert.AreEqual(typeof(bool), isAllowed.ReturnType, "IsAllowed no longer returns bool: the prefix's __result changed type.");
         Assert.AreEqual(0, isAllowed.GetParameters().Length, "IsAllowed gained parameters.");
     }
+
+    // BannerlordCoop prefixes all three at the default priority (400), and equal priorities run in the
+    // order they were added, which Coop usually wins. On StartCallToWarAgreement, Coop's server branch
+    // does the agreement itself and returns false; Harmony 2.4.2 then skips every later bool prefix
+    // (MethodCreator.AddPrefixes), so a veto below High never ran and the gold moved before the war was
+    // refused (#1343). On DeclareWarAction.ApplyInternal, Coop's server branch sends the war to the
+    // clients and returns true, so a veto below High would refuse the war after the clients heard of it.
+    // MakePeaceAction's High predates Coop (BannerlordTogether, AllianceActionHook.DeferToHost).
+    [TestMethod]
+    public void WarVetoPrefixes_RunBeforeCoopsDefaultPriorityPrefixes()
+    {
+        foreach (var patch in new[]
+                 {
+                     typeof(DeclareWarAction_ApplyInternal_Patch),
+                     typeof(MakePeaceAction_ApplyInternal_Patch),
+                     typeof(AllianceCampaignBehavior_StartCallToWarAgreement_Patch),
+                 })
+        {
+            var prefix = patch.GetMethod("Prefix", BindingFlags.Public | BindingFlags.Static);
+            Assert.IsNotNull(prefix, patch.Name + ".Prefix is gone.");
+            Assert.AreEqual(Priority.High, prefix.GetCustomAttribute<HarmonyPriority>()?.info.priority,
+                patch.Name + ".Prefix must be Priority.High so it runs before Coop's prefix on the same method.");
+        }
+    }
 }

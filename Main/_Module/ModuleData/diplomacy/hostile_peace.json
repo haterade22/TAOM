@@ -1,0 +1,6 @@
+{
+  "blockCaravanTrade": true,
+  "blockTradeAgreements": true,
+  "limitTownAccess": true,
+  "allowPlayerAlliancesWithAnyone": false
+}

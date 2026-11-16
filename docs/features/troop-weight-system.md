@@ -534,15 +534,15 @@ Simple XML format with one element per weighted troop. Any troop not listed defa
 
 > **Note (2026-05-14):** `cave_troll`'s weight-4.0 row sits inside a comment block in `troop_weights.xml` (WIP: see CHANGELOG "Phase 9c: Disable troll content in-place"), so it is NOT one of the live rows counted below. Re-enable by uncommenting.
 
-**133 live rows**, measured rather than estimated: an earlier version of this table said "~70 at 2.0" and omitted the 10.0 tier entirely:
+**224 live rows** (re-measured 2026-11-15; the 133 the older tables carried had already drifted to 160 on trunk), measured rather than estimated:
 
 | Weight | Count | Troop ids |
 |--------|-------|-----------|
 | 20.0 | 1 | `harad_mumakil_rider` |
 | 12.0 | 1 | `harad_elephant_rider` |
 | 4.0 | 6 | `hill_troll`, `taom_spider_creature`, `taom_spider_rider_brown`, `taom_spider_rider_pale` (the three Spider Rider rungs, #616), `goblin_spider_rider`, `goblin_spider_lord` (`cave_troll` would be one more, but is commented out) |
-| 3.0 | 66 | Every other listed troop at level 41 or above: the Rivendell and Lindon Gondolin lines (5 each) and Mirkwood palace guard + Thingol's heir (2) at level 51, and at level 41 to 46 the Imladris, Lindon and Mirkwood elites, the Erebor/Iron Hills royal wardens and nobles' tips, `ironpass_ram_marshal`, Khamûl's shadow and veiled lines, the Black Númenórean knight/warden/marksman and temple tips, `orthanc_bodyguard`, `battlemaster_of_the_first_age` |
-| 2.0 | 59 | Every other listed troop below level 41: the lower Imladris/Lindon/Mirkwood elves, warg riders (all cultures), the Black Númenórean initiate to veteran rungs, Dol Guldur uruk black guard, Mordor elite captains, Orthanc guard/warden, the lower Erebor/Iron Hills nobles, Ironpass ram cavalry rungs, Gundabad elites, `gondor_pg_vet_cavalry` |
+| 3.0 | 79 | Every other listed troop at level 41 or above: the Rivendell and Lindon Gondolin lines (5 each) and Mirkwood palace guard + Thingol's heir (2) at level 51, and at level 41 to 46 the Imladris, Lindon and Mirkwood elites, the Erebor/Iron Hills royal wardens and nobles' tips, `ironpass_ram_marshal`, Khamûl's shadow and veiled lines, the Black Númenórean knight/warden/marksman and temple tips, `orthanc_bodyguard`, `battlemaster_of_the_first_age` |
+| 2.0 | 137 | Every other listed troop below level 41: the lower Imladris/Lindon/Mirkwood elves, warg riders (all cultures), the Black Númenórean initiate to veteran rungs, Dol Guldur uruk black guard, Mordor elite captains, Orthanc guard/warden, the lower Erebor/Iron Hills nobles, Ironpass ram cavalry rungs, Gundabad elites, `gondor_pg_vet_cavalry`, the Hired copies of 2.0 troops, the level 31 Dual Wield troops, and every level 31 to 36 troop of the evil and dwarf cultures (the 2026-11-15 sweep) |
 | 1.0 | default | Every unlisted troop, stated in the file's own header comment, and there is no other default anywhere |
 
 **The level rule (#585, 2026-09-13).** A listed troop at level 41 or above pays 3.0 and a listed troop
@@ -557,6 +557,15 @@ tree that ships with no rows passes it: Lindon did from 2026-08-11 until #749. E
 now weighs the same as its Rivendell twin (`rivendell_X` where that troop exists, else `X`), and
 `TroopWeightLevelBandTests.EveryLindonTroop_WeighsTheSameAsItsRivendellTwin` fails on a Lindon troop
 that differs from its twin or has none.
+
+**The coverage gaps (2026-11-15).** The rule sees only troops that have a row, so a troop nobody listed weighs 1.0 and
+nothing complains. A player report (Imladris Bowman 2 slots, Imladris Infantry 1, Blade-Dancer and Blade-Maiden none)
+found three kinds. The level 26 Imladris and Mithlond Infantry now match their Bowman. The Hired copies weigh like
+their original. The Dual Wield troops (module `DualWield`, its TAOM troop set, defined outside this repo, rows kept here because the
+service reads only this file) follow the level rule and never sit below the troop they upgrade from. The evil and dwarf
+trees' level 31 to 36 troops now pay 2.0. `TroopWeightCoverageTests` pins all of it and fails on any upgrade that lowers
+the weight. Left open: Gondor, Rohan, Rhun, Harad and Dunland carry no weights even at level 41+ (design call), and the
+Rivendell block comment says "level 21 to 36 (2.0)" while the Lothlorien one says "listed from level 31".
 
 <!-- measured: python -c "import xml.etree.ElementTree as ET,collections;r=ET.parse('Main/_Module/ModuleData/TroopWeights/troop_weights.xml').getroot();d=collections.defaultdict(list);[d[x.get('weight')].append(x.get('id')) for x in r.findall('.//TroopWeight')];print({k:len(v) for k,v in d.items()})" 2026-10-06 -->
 | 1.0 | default | All standard human/orc/goblin infantry, archers, militia, cavalry |
@@ -586,7 +595,7 @@ that differs from its twin or has none.
 | `Main/Features/TroopWeight/Hooks/IOn*.cs` | 6 hook interfaces: shed-on-upgrade + the 5 display surfaces |
 | `Main/Features/TroopWeight/Hooks/*_Patch.cs` | 6 Harmony patches, all `Patch17_TroopWeight`: `UpgradeReadyTroops` + `PartyVM.RefreshPartyInformation` + `CampaignUIHelper.GetMainPartyHealthTooltip` + `ClanPartyItemWithPartyVM` / `ClanPartyItemWithHeroVM` `.UpdateProperties` + `RecruitmentVM.RefreshPartyProperties` + `PartyCharacterVM.RefreshValues` |
 | `Main/Features/TroopWeight/Diagnostics/` | TEMPORARY diagnostics: the special-currency count diagnostic (separate investigation) and the main-roster loss diagnostic (`MainRosterLossDiagnostics` plus the two `TroopRoster_*_Patch` prefixes) |
-| `Main/_Module/ModuleData/TroopWeights/troop_weights.xml` | Weight definitions, **133 live rows: 59 at 2.0, 66 at 3.0, six at 4.0, one at 12.0, one at 20.0.** A raw grep returns one more because a `cave_troll` row sits inside a comment block. Unlisted troops weigh 1.0 <!-- measured: python -c "import xml.etree.ElementTree as ET,collections;r=ET.parse('Main/_Module/ModuleData/TroopWeights/troop_weights.xml').getroot();w=[x.get('weight') for x in r.findall('.//TroopWeight')];print(len(w),sorted(collections.Counter(w).items()))" 2026-10-06 --> |
+| `Main/_Module/ModuleData/TroopWeights/troop_weights.xml` | Weight definitions, **224 live rows: 137 at 2.0, 79 at 3.0, six at 4.0, one at 12.0, one at 20.0.** A raw grep returns one more because a `cave_troll` row sits inside a comment block. Unlisted troops weigh 1.0 <!-- measured: python -c "import xml.etree.ElementTree as ET,collections;r=ET.parse('Main/_Module/ModuleData/TroopWeights/troop_weights.xml').getroot();w=[x.get('weight') for x in r.findall('.//TroopWeight')];print(len(w),sorted(collections.Counter(w).items()))" 2026-11-15 --> |
 | `Main/_Module/ModuleData/taom_module_strings.xml` | `{=taom_troop_weight_size}` (enforcement label, no longer rendered) + `{=taom_troop_weight_tag}` (row `×N` tag) |
 | `Main/Features/TaomSettings.cs` | MCM toggle (`EnableTroopWeight`) |
 

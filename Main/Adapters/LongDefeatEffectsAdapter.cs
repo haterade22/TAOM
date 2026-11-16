@@ -288,10 +288,17 @@ internal sealed class LongDefeatEffectsAdapter : ILongDefeatEffectsAdapter
     private Agent? StandingCommander() =>
         _registry == null ? null : StandingAttackers().FirstOrDefault(a => _registry.RoleOf(a) == AttackerRole.Commander);
 
+    // A shop hero's health is his shop factor alone (#1337), so a group's health step skips every IsHero body (Agent.cs:871-877: "return Character.IsHero;"), and the boon read
+    // skips him too, since his health limit would fail it. The lord is not touched here: he is the Player target (LongDefeatTargets.Of), which the director sets through
+    // SetPlayerHealth and never sends to ScaleHealth. A story mission's free hero is held the same way, and his health is his own factor alone too: when the fallen player takes
+    // him over in a campaign (#1366), the director skips SetPlayerHealth for him (DressNewBody).
+    private static bool TakesNoHealthBoon(Agent agent) => agent.IsHero;
+
     public LdTouched ScaleHealth(BoonTarget target, float factor)
     {
         var watch = Stopwatch.StartNew();
         var standing = Standing(target);
+        standing.RemoveAll(TakesNoHealthBoon);
         foreach (var agent in standing)
             Rescale(agent, agent.BaseHealthLimit * factor);
 
@@ -307,7 +314,7 @@ internal sealed class LongDefeatEffectsAdapter : ILongDefeatEffectsAdapter
 
     public LdTargetSample ReadTarget(BoonTarget target, IReadOnlyList<string> stats, bool newest)
     {
-        var plain = Standing(target).Where(a => !a.IsRunningAway && !RaceAbilityHooks.HasLiveEffects(a)).ToList();
+        var plain = Standing(target).Where(a => !a.IsRunningAway && !RaceAbilityHooks.HasLiveEffects(a) && !TakesNoHealthBoon(a)).ToList();
         var agent = newest ? plain.LastOrDefault() : plain.FirstOrDefault();
         return agent == null
             ? LdTargetSample.None

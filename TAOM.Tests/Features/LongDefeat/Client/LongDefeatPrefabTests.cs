@@ -66,7 +66,7 @@ public class LongDefeatPrefabTests
         foreach (var root in EveryMovieRoot())
             Walk(root, typeof(LongDefeatHudVM), failures, bound);
 
-        foreach (var vmType in new[] { typeof(LongDefeatHudVM), typeof(LongDefeatOfferVM), typeof(LongDefeatSpeedVM), typeof(LongDefeatBoonVM), typeof(LongDefeatFortVM) })
+        foreach (var vmType in new[] { typeof(LongDefeatHudVM), typeof(LongDefeatOfferVM), typeof(LongDefeatHeroVM), typeof(LongDefeatSpeedVM), typeof(LongDefeatBoonVM), typeof(LongDefeatFortVM) })
         {
             var names = bound.TryGetValue(vmType, out var found) ? found : new HashSet<string>();
             foreach (var property in vmType.GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly))

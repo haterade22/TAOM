@@ -17,8 +17,15 @@ public class ScenarioSupportTests
     private static ScenarioPlan Plan(string extra = "") =>
         ScenarioPlan.Resolve(n => n == ScenarioPlan.EnvVar ? @"E:\arm.txt" : null, _ => true, _ => "kind=campaign-new\nout=E:\\o\n" + extra);
 
+    private static ScenarioPlan StoryPlan() =>
+        ScenarioPlan.Resolve(n => n == ScenarioPlan.EnvVar ? @"E:\arm.txt" : null, _ => true,
+            _ => "kind=story-mission\nout=E:\\o\nmission=helms_deep_defend\n");
+
     private static ScenarioRunFacts Facts(string reason = "ok") =>
         new(reason, 10, 13, 2, 3, 5, 4, "autosave off, held", 123.45, "2026-11-15T10:00:00", "2026-11-15T10:02:03");
+
+    private static ScenarioRunFacts StoryFacts(string reason = "ok", string verdict = "Won") =>
+        Facts(reason) with { Verdict = verdict, MissionSeconds = 241.26 };
 
     [TestMethod]
     public void Text_WritesEveryKeyInOrder()
@@ -30,6 +37,33 @@ public class ScenarioSupportTests
             "reason", "kind", "scenario", "culture", "creation", "day_start", "day_end", "days_run", "days_wanted", "inquiries_hidden",
             "notices_hidden", "event_windows_closed", "time_resets", "prepared", "wall_seconds", "started", "ended",
         }, keys);
+    }
+
+    [TestMethod]
+    public void Text_StoryKind_AppendsMissionVerdictAndSecondsAndDropsTheDays()
+    {
+        var text = ScenarioAutorunDone.Text(StoryPlan(), StoryFacts());
+        var keys = text.TrimEnd('\n').Split('\n').Select(l => l.Split('=')[0]).ToArray();
+
+        CollectionAssert.AreEqual(new[]
+        {
+            "reason", "kind", "scenario", "culture", "creation", "day_start", "day_end", "inquiries_hidden",
+            "notices_hidden", "event_windows_closed", "time_resets", "prepared", "wall_seconds", "started", "ended",
+            "mission", "verdict", "mission_seconds",
+        }, keys);
+        StringAssert.Contains(text, "kind=story-mission\n");
+        StringAssert.Contains(text, "mission=helms_deep_defend\n");
+        StringAssert.Contains(text, "verdict=Won\n");
+        StringAssert.Contains(text, "mission_seconds=241.3\n");
+        Assert.IsFalse(text.Contains("mission_opened") || text.Contains("returned"));
+    }
+
+    [TestMethod]
+    public void Text_CampaignNew_HasNoMissionKeys()
+    {
+        var text = ScenarioAutorunDone.Text(Plan(), Facts());
+
+        Assert.IsFalse(text.Contains("mission") || text.Contains("verdict"));
     }
 
     [TestMethod]
@@ -81,6 +115,27 @@ public class ScenarioSupportTests
     public void Detail_NamesReasonDaysAndCulture()
     {
         Assert.AreEqual("reason=stalled days_run=3 days_wanted=3 culture=gondor", ScenarioOutcomes.Detail(Plan(), Facts("stalled")));
+    }
+
+    [TestMethod]
+    public void Detail_StoryKind_NamesMissionVerdictSecondsAndCulture()
+    {
+        Assert.AreEqual("reason=mission_undecided mission=helms_deep_defend verdict=Undecided mission_seconds=241.3 culture=gondor",
+            ScenarioOutcomes.Detail(StoryPlan(), StoryFacts("mission_undecided", "Undecided")));
+    }
+
+    [TestMethod]
+    public void Report_StoryKind_UsesTheStoryDoneId()
+    {
+        var log = Substitute.For<IOutcomeLog>();
+
+        ScenarioOutcomes.Report(log, StoryPlan(), StoryFacts("ok"));
+        ScenarioOutcomes.Report(log, StoryPlan(), StoryFacts("mission_limit", "-"));
+
+        Assert.AreEqual("taom.autorun.story-mission.done", ScenarioOutcomes.StoryDoneId);
+        log.Received(1).Pass(ScenarioOutcomes.StoryDoneId, "", NSubstitute.Arg.Any<string>());
+        log.Received(1).Fail(ScenarioOutcomes.StoryDoneId, "", NSubstitute.Arg.Is<string>(s => s.StartsWith("reason=mission_limit")));
+        log.DidNotReceive().Pass(ScenarioOutcomes.DoneId, NSubstitute.Arg.Any<string>(), NSubstitute.Arg.Any<string>());
     }
 
     [TestMethod]
@@ -156,6 +211,21 @@ public class ScenarioSupportTests
         host.EndCampaign();
         host.WriteFile("a", "b");
         host.Quit();
+    }
+
+    [TestMethod]
+    public void NullHost_StoryMembers_RefuseAndReportNothing()
+    {
+        var host = new NullCampaignAutorunHost();
+
+        Assert.IsFalse(host.OpenStoryMenu("helms_deep_defend", out var message));
+        Assert.AreEqual("no campaign", message);
+        Assert.IsFalse(host.StoryMenuShown);
+        Assert.IsNull(host.OpenMenuId);
+        Assert.IsFalse(host.ChooseOpenMission());
+        Assert.IsFalse(host.ChooseBackToMap());
+        Assert.IsNull(host.StoryVerdict);
+        Assert.IsFalse(host.EventWindowOpenOrWaiting);
     }
 
     [TestMethod]

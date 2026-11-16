@@ -419,7 +419,7 @@ Code: No code changes needed
 
 | Number | Command | Date |
 |---|---|---|
-| 133 live `<TroopWeight>` rows (134 raw lines, one commented out); 59 at 2.0, 66 at 3.0, 6 at 4.0, 1 at 12.0, 1 at 20.0 | python ElementTree count plus a `weight` Counter over `troop_weights.xml`, and `rg -c '<TroopWeight '` for the raw line count | 2026-11-03 |
+| 224 live `<TroopWeight>` rows (225 raw lines, one commented out); 137 at 2.0, 79 at 3.0, 6 at 4.0, 1 at 12.0, 1 at 20.0 | python ElementTree count plus a `weight` Counter over `troop_weights.xml`, and `rg -c '<TroopWeight '` for the raw line count | 2026-11-15 |
 | 89 `<Troop>` rows with six distinct attributes in `troop_resource_costs.xml` | python ElementTree attribute union over `troop_resource_costs.xml` | 2026-11-03 |
 | 11 `<Resource>` rows in `special_resources_config.xml` | python ElementTree count over `special_resources_config.xml` | 2026-09-05 |
 | 30 `<Culture>` rows in `startup_resources_config.xml` | python ElementTree count over `startup_resources_config.xml` | 2026-11-03 |
