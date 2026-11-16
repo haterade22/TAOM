@@ -19,4 +19,7 @@ public interface ISignatureStrikeRegistry
 
     /// <summary>The config id of that signature, for log lines; empty for an index out of range.</summary>
     string GetSignatureId(int signatureIndex);
+
+    /// <summary>True when this FaceGen race is on the instant-kill immunity list. False for null.</summary>
+    bool IsKillImmuneRace(int? raceId);
 }

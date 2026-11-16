@@ -118,5 +118,6 @@ internal static class FeatureModules
         new Features.BattleShaderNotice.BattleShaderNoticeModule(),
         new Features.CoopInterop.GuestTrade.GuestTradeModule(),
         new Features.HostilePeace.HostilePeaceModule(),
+        new Features.HeroAbilities.HeroAbilitiesModule(),
     };
 }

@@ -13,6 +13,10 @@ namespace TAOM.Features.RaceAbilities.Domain;
 /// </summary>
 public static class RaceAbilityEffectsMerge
 {
+    // Own ability, hero aura, then a timed hero-ability buff (#1359): the same stronger-per-channel rule, folded in order.
+    public static RaceAbilityEffects? Combine(RaceAbilityEffects? own, RaceAbilityEffects? aura, RaceAbilityEffects? buff) =>
+        Combine(Combine(own, aura), buff);
+
     public static RaceAbilityEffects? Combine(RaceAbilityEffects? own, RaceAbilityEffects? aura)
     {
         if (aura == null)

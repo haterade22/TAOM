@@ -35,7 +35,7 @@ public sealed class SignatureStrikesMissionLogic : MissionLogic
         _service = IoC.Resolve<ISignatureStrikeService>();
         _roster = IoC.Resolve<ISignatureAgentRoster>();
         _logger = IoC.Resolve<IModLogger>();
-        _runner = new SignatureStrikeRunner(_service, IoC.Resolve<IDreadRegistry>(), _logger, IoC.Resolve<ICareerAgentStatService>());
+        _runner = new SignatureStrikeRunner(_service, IoC.Resolve<IDreadRegistry>(), _logger, IoC.Resolve<ICareerAgentStatService>(), new SignatureInstantKill(_service, _roster, IoC.Resolve<ISignatureStrikeRegistry>(), IoC.Resolve<IOutcomeLog>(), _logger));
     }
 
     public override void OnCreated() => Reset();

@@ -22,7 +22,102 @@ public class SignatureStrikesConfig
     /// first signature whose hero ids or hero sets name it, else the first whose races do.</summary>
     public List<SignatureConfig> Signatures { get; set; } = DefaultSignatures();
 
-    public static List<SignatureConfig> DefaultSignatures() => new List<SignatureConfig> { Sauron(), Nazgul() };
+    /// <summary>FaceGen race names an instant kill never takes (#1359). Trolls are humanoid, so
+    /// they are listed here rather than caught by a health cap, which the Long Defeat's per-wave
+    /// health scaling would defeat.</summary>
+    public List<string> KillImmuneRaces { get; set; } = DefaultKillImmuneRaces();
+
+    public static List<string> DefaultKillImmuneRaces() => new List<string> { "nazghul", "cave_troll", "hill_troll", "saruman", "sauron" };
+
+    public static List<SignatureConfig> DefaultSignatures() => new List<SignatureConfig> { Sauron(), Nazgul(), Aragorn(), Gimli() };
+
+    /// <summary>Aragorn (#1359): matched by hero id only, so no race row. Numbers are first guesses.</summary>
+    public static SignatureConfig Aragorn() => new SignatureConfig
+    {
+        Id = "aragorn",
+        HeroIds = new List<string> { "taom_hero_aragorn" },
+        Races = new List<string>(),
+        Cooldowns = new Dictionary<string, float>
+        {
+            [nameof(StrikeKind.Slam)] = 15f,
+            [nameof(StrikeKind.Sweep)] = 8f,
+        },
+        Strikes = new Dictionary<string, StrikeProfileConfig>
+        {
+            [nameof(StrikeDirection.Overhead)] = new StrikeProfileConfig
+            {
+                Kind = nameof(StrikeKind.Slam),
+                OuterRadius = 2.5f,
+                InnerRadius = 1f,
+                DamageFraction = 0.4f,
+                WorldHitBaseDamage = 0,
+                Magnitude = 60f,
+                KnockDown = false,
+                KnockBack = true,
+                FearMorale = 8f,
+                KillChance = 0.15f,
+            },
+            [nameof(StrikeDirection.Left)] = AragornSweep(),
+            [nameof(StrikeDirection.Right)] = AragornSweep(),
+        },
+    };
+
+    /// <summary>Gimli (#1359): matched by hero id only.</summary>
+    public static SignatureConfig Gimli() => new SignatureConfig
+    {
+        Id = "gimli",
+        HeroIds = new List<string> { "taom_hero_gimli" },
+        Races = new List<string>(),
+        Cooldowns = new Dictionary<string, float>
+        {
+            [nameof(StrikeKind.Slam)] = 10f,
+            [nameof(StrikeKind.Sweep)] = 6f,
+        },
+        Strikes = new Dictionary<string, StrikeProfileConfig>
+        {
+            [nameof(StrikeDirection.Overhead)] = new StrikeProfileConfig
+            {
+                Kind = nameof(StrikeKind.Slam),
+                OuterRadius = 3f,
+                InnerRadius = 1.2f,
+                DamageFraction = 0.5f,
+                WorldHitBaseDamage = 0,
+                Magnitude = 90f,
+                KnockDown = true,
+                KnockBack = false,
+                FearMorale = 12f,
+                KillChance = 0.35f,
+            },
+            [nameof(StrikeDirection.Left)] = GimliSweep(),
+            [nameof(StrikeDirection.Right)] = GimliSweep(),
+        },
+    };
+
+    private static StrikeProfileConfig AragornSweep() => new StrikeProfileConfig
+    {
+        Kind = nameof(StrikeKind.Sweep),
+        OuterRadius = 2.5f,
+        InnerRadius = 1f,
+        DamageFraction = 0.25f,
+        WorldHitBaseDamage = 0,
+        Magnitude = 50f,
+        KnockDown = false,
+        KnockBack = true,
+        FearMorale = 0f,
+    };
+
+    private static StrikeProfileConfig GimliSweep() => new StrikeProfileConfig
+    {
+        Kind = nameof(StrikeKind.Sweep),
+        OuterRadius = 2.5f,
+        InnerRadius = 1.2f,
+        DamageFraction = 0.3f,
+        WorldHitBaseDamage = 0,
+        Magnitude = 70f,
+        KnockDown = true,
+        KnockBack = false,
+        FearMorale = 5f,
+    };
 
     /// <summary>Sauron (#605): the overhead is a Slam, the side swings a Sweep. Long cooldowns on
     /// purpose, Sauron must not be overpowered (Mike, 2026-09-16).</summary>
@@ -163,6 +258,10 @@ public class StrikeProfileConfig
     /// <summary>One-shot morale drain on ring victims and the struck foe, before tier and race
     /// resistance. 0 disables.</summary>
     public float FearMorale { get; set; }
+
+    /// <summary>Chance in [0, 1] that the struck foe dies outright on a clean hit (#1359). Rolled on
+    /// the next mission tick, never in the hit callback. 0 disables.</summary>
+    public float KillChance { get; set; }
 
     /// <summary>A <c>module_sounds.xml</c> name played once per strike at the attacker; null or
     /// blank for none.</summary>

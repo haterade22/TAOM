@@ -7,8 +7,8 @@
   "auras": [
     {
       "id": "aragorn_heir_of_isildur",
-      "_comment": "Aragorn steadies the men around him.",
-      "heroIds": ["named_companion_aragorn"],
+      "_comment": "Aragorn steadies the men around him. taom_hero_aragorn is the Long Defeat's Aragorn (#1359), found by his character id in a battle without a campaign.",
+      "heroIds": ["named_companion_aragorn", "taom_hero_aragorn"],
       "races": ["human"],
       "effects": { "moraleFloor": 30, "damageReductionPercent": 10, "blockAbilityPercent": 10 }
     },

@@ -34,6 +34,9 @@ public sealed class SignatureStrikeRegistry : ISignatureStrikeRegistry
     // prevents duplicate builds when several agents spawn on the same frame.
     private volatile SignatureTable[]? _tables;
 
+    // Built beside the tables, and assigned before them, so a reader that saw _tables sees this.
+    private volatile HashSet<int>? _killImmuneRaceIds;
+
     public SignatureStrikeRegistry(
         ISignatureStrikesConfigProvider configProvider,
         IRaceManager raceManager,
@@ -72,6 +75,17 @@ public sealed class SignatureStrikeRegistry : ISignatureStrikeRegistry
         return null;
     }
 
+    public bool IsKillImmuneRace(int? raceId)
+    {
+        if (!raceId.HasValue)
+            return false;
+
+        if (_tables == null)
+            Build();
+
+        return _killImmuneRaceIds!.Contains(raceId.Value);
+    }
+
     public string GetSignatureId(int signatureIndex)
     {
         var tables = _tables ?? Build();
@@ -85,7 +99,8 @@ public sealed class SignatureStrikeRegistry : ISignatureStrikeRegistry
             if (_tables != null)
                 return _tables;
 
-            var signatures = _configProvider.GetConfig().Signatures ?? new List<SignatureConfig>();
+            var config = _configProvider.GetConfig();
+            var signatures = config.Signatures ?? new List<SignatureConfig>();
             var tables = new SignatureTable[signatures.Count];
             // First owner of each hero id, hero set and race name, to warn about an overlap once.
             var owners = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
@@ -93,9 +108,29 @@ public sealed class SignatureStrikeRegistry : ISignatureStrikeRegistry
             for (var i = 0; i < signatures.Count; i++)
                 tables[i] = BuildTable(signatures[i], owners);
 
+            _killImmuneRaceIds = BuildKillImmune(config);
             _tables = tables;
             return tables;
         }
+    }
+
+    // Same gate as the identity races: resolve each name once behind IsValidRaceName, skip and warn
+    // on an unknown one (GetRaceNameFromId coerces an unknown id to "human"; nothing here uses it).
+    private HashSet<int> BuildKillImmune(SignatureStrikesConfig config)
+    {
+        var ids = new HashSet<int>();
+        foreach (var name in config.KillImmuneRaces ?? new List<string>())
+        {
+            if (string.IsNullOrEmpty(name) || !_raceManager.IsValidRaceName(name))
+            {
+                _logger.LogWarning($"SignatureStrikeRegistry: killImmuneRaces entry '{name}' is not a known race name, entry skipped");
+                continue;
+            }
+
+            ids.Add(_raceManager.GetRaceIdFromName(name));
+        }
+
+        return ids;
     }
 
     private SignatureTable BuildTable(SignatureConfig? signature, Dictionary<string, string> owners)
