@@ -8,7 +8,7 @@
 issue = 1370
 title = "Story missions: the free heroes' formation takes no soldier of the garrison"
 # fixed_in names the trunk commit this manifest was written on; a fix commit replaces it, and only a build that holds it counts. The docs commit of the feature sets it (the main session does that).
-fixed_in = "a4cedd4c2"
+fixed_in = "de891ce4e"
 logs = ["taom"]
 
 [[check]]
