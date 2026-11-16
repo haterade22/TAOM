@@ -1109,7 +1109,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.wm_gondor_spear_b" />
+                    id="Item.taom_ph_wm_gondor_spear_b_t6" />
                 <equipment
                     slot="Item1"
                     id="Item.viking_round_shield" />
@@ -1141,7 +1141,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.wm_gondor_spear_b" />
+                    id="Item.taom_ph_wm_gondor_spear_b_t6" />
                 <equipment
                     slot="Item1"
                     id="Item.viking_round_shield" />
@@ -1173,7 +1173,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.wm_gondor_spear_b" />
+                    id="Item.taom_ph_wm_gondor_spear_b_t6" />
                 <equipment
                     slot="Item1"
                     id="Item.viking_round_shield" />
@@ -1205,7 +1205,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.wm_gondor_spear_b" />
+                    id="Item.taom_ph_wm_gondor_spear_b_t6" />
                 <equipment
                     slot="Item1"
                     id="Item.viking_round_shield" />
@@ -1279,7 +1279,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.wm_gondor_spear_b" />
+                    id="Item.taom_ph_wm_gondor_spear_b_t6" />
                 <equipment
                     slot="Item1"
                     id="Item.viking_round_shield" />
@@ -1305,7 +1305,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.wm_gondor_spear_b" />
+                    id="Item.taom_ph_wm_gondor_spear_b_t6" />
                 <equipment
                     slot="Item1"
                     id="Item.viking_round_shield" />
@@ -1331,7 +1331,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.wm_gondor_spear_b" />
+                    id="Item.taom_ph_wm_gondor_spear_b_t6" />
                 <equipment
                     slot="Item1"
                     id="Item.viking_round_shield" />
@@ -1357,7 +1357,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.wm_gondor_spear_b" />
+                    id="Item.taom_ph_wm_gondor_spear_b_t6" />
                 <equipment
                     slot="Item1"
                     id="Item.viking_round_shield" />

@@ -42,6 +42,7 @@ from pathlib import Path
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from _gamedir import DEFAULT_GAME_ROOT, game_modules  # noqa: E402
+import generate_placeholder_weapons as placeholders  # noqa: E402
 
 ROOT = Path(__file__).resolve().parents[1]
 OUTPUT = ROOT / "Main" / "_Module" / "ModuleData" / "troops" / "troops_gundabad_snow.xml"
@@ -247,6 +248,9 @@ def render(troops, skills_by_id):
             lines.append("    </upgrade_targets>")
         lines.append("    <Equipments>")
         for eq in sets_of(t):
+            # A tier clone of tools/placeholder_weapons.json replaces its donor, by the placeholder tool's rule.
+            eq = {s: placeholders.placeholder_for_troop(v, t["id"], "gundabad", TIER_LEVEL[t["tier"]])
+                  if s.startswith("Item") else v for s, v in eq.items()}
             lines.append("      <EquipmentRoster>")
             lines += [f'        <equipment slot="{s}" id="Item.{eq[s]}" />' for s in SLOT_ORDER if s in eq]
             lines.append("      </EquipmentRoster>")

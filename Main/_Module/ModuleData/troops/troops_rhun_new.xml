@@ -3402,7 +3402,7 @@
         <upgrade_targets />
         <Equipments>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.sm_rh_drag_2h_mace_b" />
+                <equipment slot="Item0" id="Item.taom_ph_sm_rh_drag_2h_mace_b_t9" />
                 <equipment slot="Head" id="Item.sk_rh_drag_helmet_inf_elite_b" />
                 <equipment slot="Body" id="Item.sk_rh_drag_plate_heavy_b" />
                 <equipment slot="Cape" id="Item.sk_rh_drag_cape_plate_heavy_a" />
@@ -3410,7 +3410,7 @@
                 <equipment slot="Leg" id="Item.sk_rh_drag_grvs_plate_elite_a" />
             </EquipmentRoster>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.sm_rh_drag_2h_mace_b" />
+                <equipment slot="Item0" id="Item.taom_ph_sm_rh_drag_2h_mace_b_t9" />
                 <equipment slot="Head" id="Item.sk_rh_drag_helmet_inf_elite_c" />
                 <equipment slot="Body" id="Item.sk_rh_drag_plate_heavy_b" />
                 <equipment slot="Cape" id="Item.sk_rh_drag_cape_plate_heavy_a" />

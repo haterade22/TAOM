@@ -213,7 +213,7 @@
                 <equipment slot="Cape" id="Item.sk_dale_lake_town_shoulder_mariner_a03" />
             </EquipmentRoster>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.dale_great_axe_a" />
+                <equipment slot="Item0" id="Item.taom_ph_dale_great_axe_a_t5" />
                 <equipment slot="Item1" id="Item.dale_sword_a" />
                 <equipment slot="Head" id="Item.sk_dale_lake_town_helmet_mariner_a04" />
                 <equipment slot="Body" id="Item.sk_dale_lake_town_chest_mariner_a04" />
@@ -382,7 +382,7 @@
         <upgrade_targets></upgrade_targets>
         <Equipments>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.dale_poleaxe_a" />
+                <equipment slot="Item0" id="Item.taom_ph_dale_poleaxe_a_t6" />
                 <equipment slot="Item1" id="Item.dale_sword_a" />
                 <equipment slot="Head" id="Item.sk_dale_lake_town_helmet_mariner_b04" />
                 <equipment slot="Body" id="Item.sk_dale_lake_town_chest_mariner_b04" />
@@ -391,7 +391,7 @@
                 <equipment slot="Cape" id="Item.sk_dale_lake_town_shoulder_mariner_b03" />
             </EquipmentRoster>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.dale_poleaxe_a" />
+                <equipment slot="Item0" id="Item.taom_ph_dale_poleaxe_a_t6" />
                 <equipment slot="Item1" id="Item.dale_sword_a" />
                 <equipment slot="Head" id="Item.sk_dale_lake_town_helmet_mariner_b04" />
                 <equipment slot="Body" id="Item.sk_dale_lake_town_chest_mariner_b04" />

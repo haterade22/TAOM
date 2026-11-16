@@ -170,12 +170,12 @@ KNOWN_FAILURES: dict[tuple[str, str], tuple[int, str]] = {
     # troops_gondor.xml
     ("gondor_da_foot_knight", "numenorean_greatsword_elite_a"): (2, "#1312: backup after the shield breaks"),
     ("gondor_da_foot_knight", "numenorean_greatsword_elite_b"): (2, "#1312: backup after the shield breaks"),
-    ("gondor_da_infantry", "numenorean_greatsword_medium_a"): (1, "#1312: backup after the shield breaks"),
-    ("gondor_da_infantry", "numenorean_greatsword_medium_b"): (1, "#1312: backup after the shield breaks"),
+    ("gondor_da_infantry", "taom_ph_numenorean_greatsword_medium_a_t6"): (1, "#1312: backup after the shield breaks; a tier clone of numenorean_greatsword_medium_a"),
+    ("gondor_da_infantry", "taom_ph_numenorean_greatsword_medium_b_t6"): (1, "#1312: backup after the shield breaks; a tier clone of numenorean_greatsword_medium_b"),
     ("gondor_da_swan_guard", "numenorean_greatsword_elite_a"): (2, "#1312: backup after the shield breaks"),
     ("gondor_da_swan_guard", "numenorean_greatsword_elite_b"): (2, "#1312: backup after the shield breaks"),
-    ("gondor_da_vet_infantry", "numenorean_greatsword_heavy_a"): (1, "#1312: backup after the shield breaks"),
-    ("gondor_da_vet_infantry", "numenorean_greatsword_heavy_b"): (1, "#1312: backup after the shield breaks"),
+    ("gondor_da_vet_infantry", "taom_ph_numenorean_greatsword_heavy_a_t7"): (1, "#1312: backup after the shield breaks; a tier clone of numenorean_greatsword_heavy_a"),
+    ("gondor_da_vet_infantry", "taom_ph_numenorean_greatsword_heavy_b_t7"): (1, "#1312: backup after the shield breaks; a tier clone of numenorean_greatsword_heavy_b"),
     # troops_mordor.xml
     ("mordor_num_infantry", "sm_md_num_sword_2h_a"): (2, "#1312: backup after the shield breaks"),
     ("mordor_num_temple_guard", "sm_md_num_sword_2h_c"): (4, "#1312: backup after the shield breaks"),

@@ -115,6 +115,64 @@ Record each pending feature's module, source file, exact keys and English text, 
 | `taom_ph_gundabad_spear_a02_t4_name` | [Gundabad] War Spear (added by #1296) |
 | `taom_ph_gundabad_spear_a03_t5_name` | [Gundabad] Blackshield Spear (added by #1296) |
 | `taom_ph_gundabad_spear_a03_t8_name` | [Gundabad] Blackshield Spear, Tempered (added by #1296) |
+| `taom_ph_dale_great_axe_a_t5_name` | [Dale] Dale Great Axe II (tier clone, #631) |
+| `taom_ph_dale_poleaxe_a_t6_name` | [Dale] Dale Poleaxe II (tier clone, #631) |
+| `taom_ph_dale_poleaxe_a_t7_name` | [Dale] Dale Poleaxe III (tier clone, #631) |
+| `taom_ph_isengard_berserker_sword_2h_t5_name` | [Isengard] Berserker Sword 2H II (tier clone, #631) |
+| `taom_ph_isengard_berserker_sword_2h_t6_name` | [Isengard] Berserker Sword 2H III (tier clone, #631) |
+| `taom_ph_isengard_spear_b_t6_name` | [Isengard] Spear III (tier clone, #631) |
+| `taom_ph_mirkwood_glaive_a01_t8_name` | [Mirkwood] Glaive II (tier clone, #631) |
+| `taom_ph_mirkwood_spear_a01_t2_name` | [Mirkwood] Spear III (tier clone, #631) |
+| `taom_ph_mirkwood_spear_a01_t8_name` | [Mirkwood] Spear V (tier clone, #631) |
+| `taom_ph_mirkwood_spear_a02_t2_name` | [Mirkwood] Spear IV (tier clone, #631) |
+| `taom_ph_mirkwood_spear_a02_t8_name` | [Mirkwood] Spear VI (tier clone, #631) |
+| `taom_ph_numenorean_bastard_heavy_a_t4_name` | [Númenor] Bastard Sword Elite A II (tier clone, #631) |
+| `taom_ph_numenorean_bastard_heavy_b_t4_name` | [Númenor] Bastard Sword Elite B II (tier clone, #631) |
+| `taom_ph_numenorean_greatsword_heavy_a_t7_name` | [Númenor] Greatsword Elite A II (tier clone, #631) |
+| `taom_ph_numenorean_greatsword_heavy_b_t6_name` | [Númenor] Greatsword Elite B II (tier clone, #631) |
+| `taom_ph_numenorean_greatsword_heavy_b_t7_name` | [Númenor] Greatsword Elite B III (tier clone, #631) |
+| `taom_ph_numenorean_greatsword_medium_a_t6_name` | [Númenor] Greatsword Heavy A II (tier clone, #631) |
+| `taom_ph_numenorean_greatsword_medium_b_t6_name` | [Númenor] Greatsword Heavy B II (tier clone, #631) |
+| `taom_ph_numenorean_poleaxe_heavy_t8_name` | [Númenor] Poleaxe Heavy II (tier clone, #631) |
+| `taom_ph_sm_dg_khml_1h_mace_a_t9_name` | [Rhûn] Khamul Mace III (tier clone, #631) |
+| `taom_ph_sm_dwarf_erebor_spear_a_t6_name` | [Erebor] Spear V (tier clone, #631) |
+| `taom_ph_sm_dwarf_erebor_spear_b_t4_name` | [Erebor] Spear IV (tier clone, #631) |
+| `taom_ph_sm_dwarf_erebor_spear_a_t2_name` | [Erebor] Spear III (tier clone, #631) |
+| `taom_ph_sm_dwarf_iron_sword_a_t6_name` | [Iron Hills] Sword A II (tier clone, #631) |
+| `taom_ph_sm_dwarf_iron_sword_b_t6_name` | [Iron Hills] Sword B II (tier clone, #631) |
+| `taom_ph_sm_rh_drag_2h_mace_b_t9_name` | [Rhûn] Dragon Two-Handed Mace III (tier clone, #631) |
+| `taom_ph_sm_uruk_halberd_b_t9_name` | [Mordor] Uruk Halberd XIV (tier clone, #631) |
+| `taom_ph_sm_uruk_halberd_j_t7_name` | [Mordor] Uruk Halberd XIII (tier clone, #631) |
+| `taom_ph_wm_dol_goldur_1h_mace_a02_t7_name` | [Dol Guldur] Dol Guldur Mace IV (tier clone, #631) |
+| `taom_ph_wm_dol_goldur_halberd_a01_t1_name` | [Dol Guldur] Dol Guldur Halberd VI (tier clone, #631) |
+| `taom_ph_wm_dol_goldur_halberd_a02_t1_name` | [Dol Guldur] Dol Guldur Halberd VII (tier clone, #631) |
+| `taom_ph_wm_dol_goldur_halberd_a03_t1_name` | [Dol Guldur] Dol Guldur Halberd IX (tier clone, #631) |
+| `taom_ph_wm_dol_goldur_halberd_a04_t1_name` | [Dol Guldur] Dol Guldur Halberd VIII (tier clone, #631) |
+| `taom_ph_wm_gondor_lamedon_2h_sword_c_t6_name` | [Gondor] Lamedon Greatsword Elite A II (tier clone, #631) |
+| `taom_ph_wm_gondor_lossarnach_1h_axe_black_ash_a_t6_name` | [Gondor] Lossarnach Axe Heavy II (tier clone, #631) |
+| `taom_ph_wm_gondor_spear_b_t6_name` | [Gondor] Heavy Spear II (tier clone, #631) |
+| `taom_ph_wm_gondor_spear_b_cardolan_t4_name` | [Gondor] Heavy Spear - Cardolan II (tier clone, #631) |
+| `taom_ph_wm_gondor_sword_a03_t10_name` | [Gondor] Sword Elite A II (tier clone, #631) |
+| `taom_ph_wm_gundabad_axe_a01_t7_name` | [Gundabad] Axe V (tier clone, #631) |
+| `taom_ph_wm_gundabad_axe_a02_t6_name` | [Gundabad] Axe IV (tier clone, #631) |
+| `taom_ph_wm_gundabad_axe_a03_t8_name` | [Gundabad] Axe VI (tier clone, #631) |
+| `taom_ph_wm_gundabad_mace_a01_t7_name` | [Gundabad] Mace III (tier clone, #631) |
+| `taom_ph_wm_gundabad_spear_a02_t3_name` | [Gundabad] Spear IV (tier clone, #631) |
+| `taom_ph_wm_mordor_set1_polearm_a01_t4_name` | [Mordor] Orc Polearm V (tier clone, #631) |
+| `taom_ph_wm_mordor_set1_polearm_a01_t6_name` | [Mordor] Orc Polearm VI (tier clone, #631) |
+| `taom_ph_wm_rivendell_sword_a01_black_t10_name` | [Rivendell] Rivendell Sword I Black II (tier clone, #631) |
+| `taom_ph_wm_rohan_spear_a_t7_name` | [Rohan] Spear XVI (tier clone, #631) |
+| `taom_ph_wm_rohan_ws_axe_1h_a01_t5_name` | [Rohan] One-Handed Axe II (tier clone, #631) |
+| `taom_ph_wm_rohan_ws_spear_a01_t5_name` | [Rohan] Spear XIII (tier clone, #631) |
+| `taom_ph_wm_rohan_ws_spear_a02_t6_name` | [Rohan] Spear XV (tier clone, #631) |
+| `taom_ph_wm_rohan_ws_spear_a03_t6_name` | [Rohan] Spear XIV (tier clone, #631) |
+| `taom_ph_wm_rohan_ws_sword_a01_t5_name` | [Rohan] Sword IV (tier clone, #631) |
+| `taom_ph_wm_rohan_ws_sword_a02_t6_name` | [Rohan] Sword VI (tier clone, #631) |
+| `taom_ph_wm_rohan_ws_sword_a03_t6_name` | [Rohan] Sword V (tier clone, #631) |
+| `taom_ph_wm_swan_knight_lance_a_t5_name` | [Gondor] Swan Knight Lance III (tier clone, #631) |
+| `taom_ph_wm_swan_knight_lance_a_t6_name` | [Gondor] Swan Knight Lance IV (tier clone, #631) |
+| `taom_ph_wm_swan_knight_sworda_t7_name` | [Gondor] Swan Knight Sword A II (tier clone, #631) |
+| `taom_ph_wm_swan_knight_swordb_t9_name` | [Gondor] Swan Knight Sword B II (tier clone, #631) |
 | `taom_ph_isengard_1h_sword_t7_blade_name` | Isengard Sword Blade A (placeholder) |
 | `taom_ph_erebor_spear_a_t4_blade_name` | Erebor Spear Blade A (placeholder) |
 | `taom_ph_erebor_spear_b_t4_blade_name` | Erebor Spear Blade B (placeholder) |
@@ -134,6 +192,64 @@ Record each pending feature's module, source file, exact keys and English text, 
 | `taom_ph_gundabad_spear_a02_t4_blade_name` | Gundabad Orc Spear Blade II (placeholder) (added by #1296) |
 | `taom_ph_gundabad_spear_a03_t5_blade_name` | Gundabad Orc Spear Blade III (placeholder) (added by #1296) |
 | `taom_ph_gundabad_spear_a03_t8_blade_name` | Gundabad Orc Spear Blade III (placeholder) (added by #1296) |
+| `taom_ph_dale_great_axe_a_t5_blade_name` | Dale Great Axe Head (placeholder) (tier clone, #631) |
+| `taom_ph_dale_poleaxe_a_t6_blade_name` | Dale Poleaxe Head (placeholder) (tier clone, #631) |
+| `taom_ph_dale_poleaxe_a_t7_blade_name` | Dale Poleaxe Head (placeholder) (tier clone, #631) |
+| `taom_ph_isengard_berserker_sword_2h_t5_blade_name` | Isengard Berserker Blade A (placeholder) (tier clone, #631) |
+| `taom_ph_isengard_berserker_sword_2h_t6_blade_name` | Isengard Berserker Blade A (placeholder) (tier clone, #631) |
+| `taom_ph_isengard_spear_b_t6_blade_name` | Isengard Spear Blade B01 (placeholder) (tier clone, #631) |
+| `taom_ph_mirkwood_glaive_a01_t8_blade_name` | [Mirkwood] Glaive Blade (placeholder) (tier clone, #631) |
+| `taom_ph_mirkwood_spear_a01_t2_blade_name` | [Mirkwood] Spear Blade I (placeholder) (tier clone, #631) |
+| `taom_ph_mirkwood_spear_a01_t8_blade_name` | [Mirkwood] Spear Blade I (placeholder) (tier clone, #631) |
+| `taom_ph_mirkwood_spear_a02_t2_blade_name` | [Mirkwood] Spear Blade II (placeholder) (tier clone, #631) |
+| `taom_ph_mirkwood_spear_a02_t8_blade_name` | [Mirkwood] Spear Blade II (placeholder) (tier clone, #631) |
+| `taom_ph_numenorean_bastard_heavy_a_t4_blade_name` | Numenorean Sword Blade D (Elite) (placeholder) (tier clone, #631) |
+| `taom_ph_numenorean_bastard_heavy_b_t4_blade_name` | Numenorean Sword Blade D (Elite) (placeholder) (tier clone, #631) |
+| `taom_ph_numenorean_greatsword_heavy_a_t7_blade_name` | Numenorean Sword Blade B (placeholder) (tier clone, #631) |
+| `taom_ph_numenorean_greatsword_heavy_b_t6_blade_name` | Numenorean Sword Blade B (placeholder) (tier clone, #631) |
+| `taom_ph_numenorean_greatsword_heavy_b_t7_blade_name` | Numenorean Sword Blade B (placeholder) (tier clone, #631) |
+| `taom_ph_numenorean_greatsword_medium_a_t6_blade_name` | Numenorean Sword Blade A (placeholder) (tier clone, #631) |
+| `taom_ph_numenorean_greatsword_medium_b_t6_blade_name` | Numenorean Sword Blade A (placeholder) (tier clone, #631) |
+| `taom_ph_numenorean_poleaxe_heavy_t8_blade_name` | Arnor Poleaxe Blade (Heavy) (placeholder) (tier clone, #631) |
+| `taom_ph_sm_dg_khml_1h_mace_a_t9_blade_name` | Khamul Mace 1H Head A (placeholder) (tier clone, #631) |
+| `taom_ph_sm_dwarf_erebor_spear_a_t6_blade_name` | Erebor Spear Blade A (placeholder) (tier clone, #631) |
+| `taom_ph_sm_dwarf_erebor_spear_b_t4_blade_name` | Erebor Spear Blade B (placeholder) (tier clone, #631) |
+| `taom_ph_sm_dwarf_erebor_spear_a_t2_blade_name` | Erebor Spear Blade A (placeholder) (tier clone, #631) |
+| `taom_ph_sm_dwarf_iron_sword_a_t6_blade_name` | Iron Hills  Sword Blade A (placeholder) (tier clone, #631) |
+| `taom_ph_sm_dwarf_iron_sword_b_t6_blade_name` | Iron Hills  Sword Blade A (placeholder) (tier clone, #631) |
+| `taom_ph_sm_rh_drag_2h_mace_b_t9_blade_name` | Dragon Mace 2H Head B (placeholder) (tier clone, #631) |
+| `taom_ph_sm_uruk_halberd_b_t9_blade_name` | Uruk Halberd Blade A2 (placeholder) (tier clone, #631) |
+| `taom_ph_sm_uruk_halberd_j_t7_blade_name` | Uruk Halberd Blade A3 (placeholder) (tier clone, #631) |
+| `taom_ph_wm_dol_goldur_1h_mace_a02_t7_blade_name` | Dol Guldur Orc Mace 1H Head II (placeholder) (tier clone, #631) |
+| `taom_ph_wm_dol_goldur_halberd_a01_t1_blade_name` | Dol Guldur Orc Spear Blade I (placeholder) (tier clone, #631) |
+| `taom_ph_wm_dol_goldur_halberd_a02_t1_blade_name` | Dol Guldur Orc Spear Blade II (placeholder) (tier clone, #631) |
+| `taom_ph_wm_dol_goldur_halberd_a03_t1_blade_name` | Dol Guldur Orc Spear Blade III (placeholder) (tier clone, #631) |
+| `taom_ph_wm_dol_goldur_halberd_a04_t1_blade_name` | Dol Guldur Orc Spear Blade IV (placeholder) (tier clone, #631) |
+| `taom_ph_wm_gondor_lamedon_2h_sword_c_t6_blade_name` | Numenorean Sword Blade B (placeholder) (tier clone, #631) |
+| `taom_ph_wm_gondor_lossarnach_1h_axe_black_ash_a_t6_blade_name` | Gondor Lossarnach 1H Black Ash Axe Blade A (placeholder) (tier clone, #631) |
+| `taom_ph_wm_gondor_spear_b_t6_blade_name` | Gondor Spear Head C (placeholder) (tier clone, #631) |
+| `taom_ph_wm_gondor_spear_b_cardolan_t4_blade_name` | Gondor Spear Head C (placeholder) (tier clone, #631) |
+| `taom_ph_wm_gondor_sword_a03_t10_blade_name` | Gondor Sword Blade Elite A (placeholder) (tier clone, #631) |
+| `taom_ph_wm_gundabad_axe_a01_t7_blade_name` | Gundabad Orc Axe 1H Blade I (placeholder) (tier clone, #631) |
+| `taom_ph_wm_gundabad_axe_a02_t6_blade_name` | Gundabad Orc Axe 1H Blade II (placeholder) (tier clone, #631) |
+| `taom_ph_wm_gundabad_axe_a03_t8_blade_name` | Gundabad Orc Axe 1H Blade III (placeholder) (tier clone, #631) |
+| `taom_ph_wm_gundabad_mace_a01_t7_blade_name` | Gundabad Orc Axe 1H Head I (placeholder) (tier clone, #631) |
+| `taom_ph_wm_gundabad_spear_a02_t3_blade_name` | Gundabad Orc Spear Blade II (placeholder) (tier clone, #631) |
+| `taom_ph_wm_mordor_set1_polearm_a01_t4_blade_name` | Mordor Orc Polearm Blade A (placeholder) (tier clone, #631) |
+| `taom_ph_wm_mordor_set1_polearm_a01_t6_blade_name` | Mordor Orc Polearm Blade A (placeholder) (tier clone, #631) |
+| `taom_ph_wm_rivendell_sword_a01_black_t10_blade_name` | Rivendell Sword Blade Black (placeholder) (tier clone, #631) |
+| `taom_ph_wm_rohan_spear_a_t7_blade_name` | Rohan Spear Head A (placeholder) (tier clone, #631) |
+| `taom_ph_wm_rohan_ws_axe_1h_a01_t5_blade_name` | Rohan 1H Axe Blade A (placeholder) (tier clone, #631) |
+| `taom_ph_wm_rohan_ws_spear_a01_t5_blade_name` | Rohan Spear WS A Blade (placeholder) (tier clone, #631) |
+| `taom_ph_wm_rohan_ws_spear_a02_t6_blade_name` | Rohan Spear WS B Blade (placeholder) (tier clone, #631) |
+| `taom_ph_wm_rohan_ws_spear_a03_t6_blade_name` | Rohan Spear WS C Blade (placeholder) (tier clone, #631) |
+| `taom_ph_wm_rohan_ws_sword_a01_t5_blade_name` | Rohan Sword A Blade (placeholder) (tier clone, #631) |
+| `taom_ph_wm_rohan_ws_sword_a02_t6_blade_name` | Rohan Sword B Blade (placeholder) (tier clone, #631) |
+| `taom_ph_wm_rohan_ws_sword_a03_t6_blade_name` | Rohan Sword C Blade (placeholder) (tier clone, #631) |
+| `taom_ph_wm_swan_knight_lance_a_t5_blade_name` | [Gondor] Swan Knight Lance Head I (placeholder) (tier clone, #631) |
+| `taom_ph_wm_swan_knight_lance_a_t6_blade_name` | [Gondor] Swan Knight Lance Head I (placeholder) (tier clone, #631) |
+| `taom_ph_wm_swan_knight_sworda_t7_blade_name` | Swan Knight Sword Blade A (placeholder) (tier clone, #631) |
+| `taom_ph_wm_swan_knight_swordb_t9_blade_name` | Swan Knight Sword Blade B (placeholder) (tier clone, #631) |
 
 ## Lord armour variant names (#1333)
 
