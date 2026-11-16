@@ -8315,6 +8315,8 @@
     <string id="taom_cheat_unlimited_party_bonus" text="Unlimited party (cheat)" />
     <string id="taom_cheat_unlimited_party_off" text="Unlimited party is off: the size limit and desertion apply again." />
     <string id="taom_cheat_unlimited_party_on" text="Unlimited party is on: no size limit, and enemy troops in your party do not desert because of their culture." />
+    <string id="taom_realm_borders_mcm_name_size" text="Realm Name Size" />
+    <string id="taom_realm_borders_mcm_name_size_hint" text="Makes the kingdom names on the map larger or smaller. Default: 100%." />
   </strings>
 
 </base>

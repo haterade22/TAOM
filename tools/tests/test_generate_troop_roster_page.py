@@ -35,7 +35,8 @@ class PlainItemTests(unittest.TestCase):
         write(modules / "SandBoxCore" / "ModuleData" / "shields.xml",
               '<Items><Item id="round_shield" Type="Shield"/></Items>\n')
         own = tmp / "own" / "SubModule.xml"
-        write(own, '<Module><Id value="TAOM"/><IncompatibleModules><Module Id="NavalDLC"/>'
+        write(own, '<Module><Id value="TAOM"/><DependedModules><DependedModule Id="SandBoxCore"/>'
+                   '</DependedModules><IncompatibleModules><Module Id="NavalDLC"/>'
                    '</IncompatibleModules></Module>\n')
         old = mc.TAOM_SUBMODULE
         mc.TAOM_SUBMODULE = own

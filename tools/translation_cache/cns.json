@@ -26207,6 +26207,8 @@
   "taom_ranger_of_the_angle_root_desc": "伏击带来 +5% 远程伤害，其持续时间随弓术技能提升。",
   "taom_ranger_of_the_north_root_desc": "“伏击”提供 +5% 远程伤害，其持续时间随弓术技能提升。",
   "taom_realm_borders_entering": "你进入了{REALM}的领土。",
+  "taom_realm_borders_mcm_name_size": "国家名称大小",
+  "taom_realm_borders_mcm_name_size_hint": "放大或缩小地图上的国家名称。默认：100%。",
   "taom_realm_borders_mode_alignment": "地图显示自由民族与黑暗势力。",
   "taom_realm_borders_mode_political": "地图显示各个国度。",
   "taom_realm_borders_mode_war": "地图显示你的盟友与敌人。",

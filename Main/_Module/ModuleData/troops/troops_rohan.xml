@@ -624,7 +624,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.wm_rohan_spear_b" />
+                    id="Item.wm_rohan_ws_spear_a01" />
                 <equipment
                     slot="Item1"
                     id="Item.wm_rohan_shield_a01_rbw" />
@@ -695,7 +695,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.wm_rohan_ws_spear_a01" />
+                    id="Item.wm_rohan_ws_spear_a02" />
                 <equipment
                     slot="Item1"
                     id="Item.wm_rohan_shield_a02_rbw" />
@@ -1190,7 +1190,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.wm_rohan_spear_b" />
+                    id="Item.wm_rohan_ws_spear_a01" />
                 <equipment
                     slot="Item1"
                     id="Item.wm_rohan_shield_a01_gbw" />
@@ -1261,7 +1261,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.wm_rohan_ws_spear_a01" />
+                    id="Item.wm_rohan_ws_spear_a03" />
                 <equipment
                     slot="Item1"
                     id="Item.wm_rohan_shield_a02_gbw" />
@@ -1341,7 +1341,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.wm_rohan_ws_spear_a02" />
+                    id="Item.wm_rohan_spear_a" />
                 <equipment
                     slot="Item1"
                     id="Item.wm_rohan_shield_a03_gbw" />
@@ -1421,7 +1421,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.wm_rohan_ws_spear_a02" />
+                    id="Item.wm_rohan_spear_a" />
                 <equipment
                     slot="Item1"
                     id="Item.wm_rohan_shield_a01_ggw" />
@@ -1501,7 +1501,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.wm_rohan_ws_spear_a03" />
+                    id="Item.wm_rohan_spear_a" />
                 <equipment
                     slot="Item1"
                     id="Item.wm_rohan_shield_a02_ggw" />
@@ -2518,7 +2518,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.wm_rohan_spear_b" />
+                    id="Item.wm_rohan_ws_spear_a01" />
                 <equipment
                     slot="Item1"
                     id="Item.wm_rohan_shield_a01_ybw" />
@@ -2583,7 +2583,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.wm_rohan_ws_spear_a01" />
+                    id="Item.wm_rohan_ws_spear_a03" />
                 <equipment
                     slot="Item1"
                     id="Item.wm_rohan_shield_a02_ybw" />
@@ -2657,7 +2657,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.wm_rohan_ws_spear_a02" />
+                    id="Item.wm_rohan_spear_a" />
                 <equipment
                     slot="Item1"
                     id="Item.wm_rohan_shield_a03_ybw" />
@@ -2731,7 +2731,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.wm_rohan_ws_spear_a02" />
+                    id="Item.wm_rohan_spear_a" />
                 <equipment
                     slot="Item1"
                     id="Item.wm_rohan_shield_a01_ysw" />
@@ -2802,7 +2802,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.wm_rohan_ws_spear_a03" />
+                    id="Item.wm_rohan_spear_a" />
                 <equipment
                     slot="Item1"
                     id="Item.wm_rohan_shield_a03_ysw" />
@@ -2885,7 +2885,7 @@
                     id="Item.wm_rohan_shield_a01_gsg" />
                 <equipment
                     slot="Item2"
-                    id="Item.wm_rohan_spear_b" />
+                    id="Item.wm_rohan_ws_spear_a01" />
                 <equipment
                     slot="Head"
                     id="Item.cts_rohan_helmet1a" />
@@ -2908,7 +2908,7 @@
                     id="Item.wm_rohan_shield_a02_gsg" />
                 <equipment
                     slot="Item2"
-                    id="Item.wm_rohan_spear_b" />
+                    id="Item.wm_rohan_ws_spear_a01" />
                 <equipment
                     slot="Head"
                     id="Item.cts_rohan_helmet1b" />
@@ -2931,7 +2931,7 @@
                     id="Item.wm_rohan_shield_a01_gsg" />
                 <equipment
                     slot="Item2"
-                    id="Item.wm_rohan_spear_b" />
+                    id="Item.wm_rohan_ws_spear_a01" />
                 <equipment
                     slot="Head"
                     id="Item.cts_rohan_helmet4b" />
@@ -2954,7 +2954,7 @@
                     id="Item.wm_rohan_shield_a02_gsg" />
                 <equipment
                     slot="Item2"
-                    id="Item.wm_rohan_spear_b" />
+                    id="Item.wm_rohan_ws_spear_a01" />
                 <equipment
                     slot="Head"
                     id="Item.cts_rohan_helmet4d" />
@@ -3076,7 +3076,7 @@
                     id="Item.wm_rohan_shield_a02_gsg" />
                 <equipment
                     slot="Item2"
-                    id="Item.wm_rohan_ws_spear_a01" />
+                    id="Item.wm_rohan_ws_spear_a02" />
                 <equipment
                     slot="Head"
                     id="Item.cts_rohan_helmet1a" />
@@ -3128,7 +3128,7 @@
                     id="Item.wm_rohan_shield_a02_gsg" />
                 <equipment
                     slot="Item2"
-                    id="Item.wm_rohan_ws_spear_a01" />
+                    id="Item.wm_rohan_ws_spear_a02" />
                 <equipment
                     slot="Head"
                     id="Item.cts_rohan_helmet1" />
