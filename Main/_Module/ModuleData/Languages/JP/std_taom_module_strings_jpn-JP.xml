@@ -8003,6 +8003,16 @@
     <string id="taom_cheat_done_relation" text="Lords of {NAME} whose relation changed: {NUMBER}." />
     <string id="taom_cheat_done_teleport" text="You are at the gate of {NAME}." />
     <string id="taom_rf_warden_ranks" text="Your promoted warden returns to the ranks as {TROOP}." />
+    <string id="taom_hostile_peace_mcm_access" text="Enemy Realms Close Their Gates" />
+    <string id="taom_hostile_peace_mcm_access_hint" text="When enabled (default), the towns and castles of a sworn enemy realm treat you as they would in war, even while your realms are at peace: you enter a town only in disguise, a castle not at all, and you cannot trade, recruit or rest in its villages. Your own fiefs are not affected. When off, the base game's rules apply. Applies at once, no restart." />
+    <string id="taom_hostile_peace_mcm_agreements" text="No Trade Agreements With Enemy Realms" />
+    <string id="taom_hostile_peace_mcm_agreements_hint" text="When enabled (default), a Free realm and a realm of the Shadow never sign a trade agreement, neither by the AI nor by your own kingdom's vote. An agreement signed before this was switched on runs to its end. When off, the base game's rules apply. Applies at once, no restart." />
+    <string id="taom_hostile_peace_mcm_caravans" text="No Caravan Trade With Enemy Realms" />
+    <string id="taom_hostile_peace_mcm_caravans_hint" text="When enabled (default), caravans of a Free realm do not trade in the towns of a realm of the Shadow, and the reverse, while the two are at peace before the War of the Ring. Realms that are not sworn enemies trade as before. When off, the base game's rules apply. Applies at once, no restart." />
+    <string id="taom_hostile_peace_mcm_alliances" text="Allow Player Alliances With Anyone" />
+    <string id="taom_hostile_peace_mcm_alliances_hint" text="When off (default), a kingdom you rule cannot ally with a realm on the other side of the war: a Free kingdom does not ally with the Shadow, and the reverse. Realms of the Neutral side can ally with anyone. A kingdom you founded takes the side of its culture. Alliances you already have are kept. When on, your kingdom may ally with any realm, as before. AI realms keep their own rules either way. Applies at once, no restart." />
+    <string id="taom_hostile_peace_no_alliance" text="Your realms stand on opposite sides of the war and cannot be allied." />
+    <string id="taom_hostile_peace_no_trade" text="Your realms are enemies in all but war. They will not trade." />
   </strings>
 
 </base>

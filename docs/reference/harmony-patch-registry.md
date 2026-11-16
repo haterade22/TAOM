@@ -2099,6 +2099,15 @@ Applied from `SubModule.cs` in the standard `OnGameInitializationFinished` batch
 
 **Co-op and server.** The service never starts on a dedicated server (`IDedicatedServerProvider`); the core window host is the null host there anyway. **Tests:** `BattleShaderNoticeGateTests`, `BattleShaderNoticeServiceTests`, `ShaderCompileNoticeModeTests`; the targets are covered by `HarmonyPatchBindingTests`. **ACTIVE**, not yet checked in game.
 
+## Patch156_HostilePeace
+
+**Target (v1.5.7, read on the installed `TaleWorlds.CampaignSystem.dll` 2026-11-15):** `private bool TaleWorlds.CampaignSystem.CampaignBehaviors.CaravansCampaignBehavior.CanTradeWith(IFaction caravanFaction, IFaction targetFaction)`. Postfix `Patch156_CaravanTrade_HostilePeace`, bound by name (the method is private).
+
+**Why.** Vanilla refuses a caravan only a town at war. The caravan chooses its destinations through this method (`FindNextDestinationForCaravan`, and the destination check in `HourlyTickParty`, which is also the mid-route drop), so a `false` keeps a caravan out of a Hostile realm's towns while the two are at peace ([hostile-peace.md](../features/hostile-peace.md), block A). A caravan already in or heading into a Hostile town when the block turns on trades there once: `OnSettlementEntered` sells and the hourly tick buys without asking `CanTradeWith`.
+
+**What it changes.** It only turns a `true` into `false`, and only when `HostilePeaceService.BlocksCaravanTrade` says so: the switch is on, the two factions are not at war, and their `diplomacy.json` tier is Hostile. A fault keeps vanilla's answer and is logged once.
+
+**Coexistence.** `Patch59_CaravanTrade` postfixes the same method but only turns a war-caused `false` into `true`; the two never act on the same call, so their order does not matter.
 ## Realms manual patches (no category)
 
 **Targets (v1.5.7):** three classes in `Main/Features/Realms/Hooks/` and `TitleEncyclopediaPagePatch` in `Client/Features/Realms/Encyclopedia/`, each applied by hand with its own Harmony id, outside any patch category, so `PatchShield` and the category list do not see them. Feature: [realms.md](../features/realms.md).
