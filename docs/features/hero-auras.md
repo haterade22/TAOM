@@ -47,9 +47,10 @@ arenas or multiplayer. Status: Slice 1, not yet played in game.
   alone adds nothing to it; on a soldier with both, the aura's share is counted under his ability.
 - `HeroAuraLedger` holds each soldier's aura effects and their end time in a concurrent map of immutable
   entries, keyed by the agent reference (never `Agent.Index`). The models read it from any thread.
-- The source side follows the Dread Aura: heroes are found by hero StringId through
-  `DreadSourceTracker.HeroAxisId` (the hero's id in a campaign, the character's own id outside one), and a fallen
-  hero leaves the source list.
+- The source side follows the Dread Aura, with one difference: heroes are found by StringId through
+  `HeroAuraService.SourceId` (the id of the `Hero` behind a campaign character, else the character's own id), and a
+  fallen hero leaves the source list. It does not use `DreadSourceTracker.HeroAxisId`: that returns null for a
+  campaign character with no `Hero`, and Dread depends on the null (#1366).
 - **Who is reached:** `Mission.GetNearbyAllyAgents` returns every active humanoid of a team not hostile to the
   hero's, within the radius in 2D, and it includes the hero himself; the pulse skips him. A soldier of an allied
   team (the player fighting beside a lord outside an army) is reached too.
@@ -99,7 +100,7 @@ factor of 0 or less as 1). Both settings are simulation-relevant for co-op ([coo
 
 | Aura | Heroes | Reaches | Effects |
 |---|---|---|---|
-| `aragorn_heir_of_isildur` | Aragorn (`named_companion_aragorn`) | men | morale floor 30, damage reduction 10 %, block 10 % |
+| `aragorn_heir_of_isildur` | Aragorn (`named_companion_aragorn`, and the Long Defeat's `taom_hero_aragorn`) | men | morale floor 30, damage reduction 10 %, block 10 % |
 | `dain_ironfoot` | Dáin II Ironfoot (`lord_E1_1`) | dwarves | knockdown resistance 40 %, knock-back resistance 30 %, block 15 % |
 | `theoden_king_of_the_mark` | Théoden (`lord_4_1`) | men | morale floor 25, melee damage 8 %, mount speed 8 %, dismount resistance 30 % |
 | `eomer_marshal_of_the_mark` | Éomer (`lord_4_3_1`) | men | melee damage 10 %, dismount resistance 40 %, mount speed 5 % |
@@ -108,7 +109,14 @@ factor of 0 or less as 1). Both settings are simulation-relevant for co-op ([coo
 | `witch_king` | the Witch-king (`lord_1_15`) | orcs, goblins, uruks | morale floor 40, attack eagerness 15 % |
 
 The numbers are first drafts for tuning. Théoden is the vanilla ruler `lord_4_1`, renamed in `lords.xslt`. Aragorn
-is a campaign hero only: he is not a Custom Battle commander, so his aura appears in a campaign battle only.
+the companion is a campaign hero only: he is not a Custom Battle commander. The Long Defeat's mission hero
+`taom_hero_aragorn` (#1359) carries the same aura. In the Long Defeat (a Custom Battle, whose characters are
+`BasicCharacterObject`s) `SourceId` reads his character id. In the Helm's Deep story mission of a campaign he is a
+`CharacterObject` with no `<Hero>` entry, so there is no `HeroObject` id and `SourceId` falls back to his character id
+too (#1366, Phase 6 of #1325; [hero-abilities.md](hero-abilities.md)). The fallback has a cost: a campaign soldier whose
+`StringId` equals an aura `heroId` would radiate. `ShippedHeroAurasConfigTests` guards it: no aura `heroId` may name
+an NPCCharacter of this repo that a Campaign node loads and that lacks `is_hero="true"`. The aura reaching him in the
+story mission has not been seen in a game.
 
 **Known limitations:**
 
@@ -140,7 +148,7 @@ is a campaign hero only: he is not a Custom Battle commander, so his aura appear
 
 - [Race Abilities](race-abilities.md): the effect channels, `RaceAbilityService.Scale` and `MoraleTopUp`, and the
   hooks the models call.
-- [Dread Aura](dread-aura.md): `DreadSourceTracker.HeroAxisId` for the hero id.
+- [Dread Aura](dread-aura.md): the source tracker pattern; the hero id itself comes from `HeroAuraService.SourceId`, not `DreadSourceTracker.HeroAxisId`.
 - [Signature Strikes](signature-strikes.md): `SignatureMissionGate` (combat missions, Custom Battle included, no
   multiplayer).
 

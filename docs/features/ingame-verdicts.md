@@ -74,6 +74,7 @@ One manifest per issue, UTF-8, read with `tomllib`. Patterns are regexes in TOML
 | `[[check]] id` | string | The check id, `^[a-z0-9]+(\.[a-z0-9-]+)+$` |
 | `[[check]] needs` | string | What the tester does; printed whenever the check is not PASS |
 | `[[check]] scope` | regex | Optional; cuts each log into one segment per match, judged apart (needs a single log kind) |
+| `[[check]] scope_end` | regex | Optional, only with a `scope`; a line that matches it and not the scope ends the current segment, and the lines after it are not read until the next scope match. `1366.toml` ends a story-mission segment at the next `[LongDefeat]` or `[StoryMissions] launching` line |
 | `[[check]] reached` | list | Lines that prove the path ran |
 | `[[check]] pass` | list | Required; each must match at least `min` lines |
 | `[[check]] fail` | list | Any match is FAIL |

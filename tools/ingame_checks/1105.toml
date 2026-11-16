@@ -2,6 +2,7 @@
 # Main/Features/StoryMissions/StoryEndWatch.cs. The Long Defeat director writes its check lines for the same run with the mission key "storyN", but the launcher
 # hands it HostedRunOutcomeLog, which writes them as taom.story-missions.hosted.<name> instead of taom.long-defeat.<name>, so a story run never lands on the rows of
 # tools/ingame_checks/1079.toml (its HUD rows would read as fails: a story mission has no HUD). This manifest reads the hosted boot line and the ended line.
+# The unattended run (#1368) is: python tools/run_scenario.py --kind story-mission --mission helms_deep_defend; tools/ingame_checks/1368.toml reads its boot and ended lines too.
 #
 # fixed_in is the trunk commit the slice was built on: the manifest ships with the emitter.
 issue = 1105

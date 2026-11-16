@@ -42,6 +42,22 @@ public class SubModuleShapeTests
         Assert.AreEqual(typeof(TAOM.CoopCompat.Transport.ICoopTransport), field!.FieldType);
     }
 
+    // #1346: a dedicated server reaches only the campaign start; a client must register at the main menu,
+    // before it joins. Dropping either call refuses players at join or hands the vote to the host's AI.
+    [TestMethod]
+    public void SubModule_RegistersDecisionTypes_AtTheMainMenuAndAtTheFirstCampaignStart()
+    {
+        var text = System.IO.File.ReadAllText(RepoFiles.Path("CoopCompat/CoopCompatSubModule.cs"));
+
+        foreach (var hook in new[] { "void OnBeforeInitialModuleScreenSetAsRoot()", "void StartOnce()" })
+        {
+            var start = text.IndexOf(hook, StringComparison.Ordinal);
+            Assert.IsTrue(start >= 0, hook + " is gone");
+            var end = text.IndexOf("\n    }", start, StringComparison.Ordinal);
+            StringAssert.Contains(text.Substring(start, end - start), "DecisionTypeRegistration.TryRegister(", hook);
+        }
+    }
+
     [TestMethod]
     public void SubModule_StaysUnder150Lines()
     {

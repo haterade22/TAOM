@@ -1423,3 +1423,19 @@ The auto-resolve change stated that a side's strength goes as `N^1.6 x P^(2e)`, 
 - **Why missed:** the derivation started from the line that the vanilla formula pointed at, and the rest of the method was not read. A simulation of the field loop agreed with the law, so nothing contradicted it.
 - **Prevent:** before you write a law, a table or a ratio derived from engine code, read every branch of each method the derivation uses, and name the branch the law holds on beside it. A simulation proves only the branches it models: say which.
 - **Source:** [rca-faction-balance-data-2026-11-14.md](../rca-faction-balance-data-2026-11-14.md), "#1283 batch 2 review", rows B2 and B4.
+
+### A morale drain is an effect only where the morale model lets the agent panic (#1359, 2026-11-15)
+
+**Why missed:** Gimli's fear was designed as a morale drain on the enemies near him, with the drain math and the gates read in the strike feature. The Long Defeat holds every attacker (`LongDefeatMorale.HoldsAttacker`, read by both TAOM morale models), and for an agent that cannot panic the engine sets morale to a floor and goes on (CommonAIComponent.cs:84-93). The drain was applied and counted, and changed nothing.
+
+**Prevent:** for an effect that works through a model's decision (panic, retreat, a stat), read every TAOM override of that decision for the missions the effect is gated to, not only the code that writes the input. If a mode forbids the outcome, say so in the design and choose another effect there.
+
+**Source:** [rca-hero-abilities-2026-11-15.md](../rca-hero-abilities-2026-11-15.md) finding 5.
+
+### A grant keyed by the shooter needs the list of everything that shoots in his name (#1361, 2026-11-16)
+
+**Why missed:** Legolas's shield pierce, his damage floor and his arrow's kill roll all ask one question: is the attacker a hero on the ranged roster. The Long Defeat's Elven Volley adds its arrows with `AddCustomMissile(owner, ...)`, and its owner rule took any live AI human defender, archers first and the one farthest from the attackers. That is Legolas late in a wave. The plan had read the volley only as a reader of his extra arrows.
+
+**Prevent:** when a model or a callback grants something by `attackerAgent`, grep every `AddCustomMissile` and every blow built with an owner in the missions the grant is gated to, and decide for each whether its shooter can be the granted agent. Close it at the producer (the owner rule) and make the closed fact a required argument, so a new caller cannot leave it out.
+
+**Source:** [rca-hero-ranged-kit-2026-11-16.md](../rca-hero-ranged-kit-2026-11-16.md) finding 1 and 6.

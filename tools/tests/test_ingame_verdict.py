@@ -202,6 +202,11 @@ class ManifestTests(unittest.TestCase):
                 "pass = ['x']", r"pass = ['\[Check\] id=taom.battle-action-bar.atach result=pass']"),
             # A scope cuts each log on its own, so a pass line in a second kind of log would be dropped.
             "scope over two log kinds": self.BASE.replace('["taom"]', '["taom", "rgl"]') + "scope = 'x'\n",
+            # A scope_end with no scope would end segments that nothing opens.
+            "scope_end without scope": self.BASE + "scope_end = 'x'\n",
+            "scope_end not a string": self.BASE + "scope = 'x'\nscope_end = ['y']\n",
+            "scope_end not a regex": self.BASE + "scope = 'x'\nscope_end = '('\n",
+            "scope_end matches an empty line": self.BASE + "scope = 'x'\nscope_end = 'y*'\n",
         }
         for label, text in cases.items():
             with self.subTest(label):
@@ -234,6 +239,64 @@ class ManifestTests(unittest.TestCase):
         text = self.BASE.replace("pass = ['x']", r"pass = ['\[Check\] id=taom\.battle-action-bar\.attach result=pass']")
         m = iv.load_manifest(self.write(text), 9200)
         self.assertEqual(iv.named_check_ids(m), {"taom.battle-action-bar.attach"})
+
+    def test_a_scope_end_loads_with_its_scope_and_names_its_check_ids(self):
+        text = self.BASE + "scope = 'open'\n" + r"scope_end = '\[Check\] id=taom\.fixture\.end result='" + "\n"
+        m = iv.load_manifest(self.write(text), 9200)
+        self.assertEqual(m.checks[0].scope_end.pattern, r"\[Check\] id=taom\.fixture\.end result=")
+        self.assertEqual(iv.named_check_ids(m), {"taom.fixture.end"})
+        self.assertIsNone(iv.load_manifest(self.write(self.BASE + "scope = 'open'\n"), 9200).checks[0].scope_end)
+
+
+class ScopeEndTests(unittest.TestCase):
+    """A scope_end line that does not match the scope ends the current segment; the lines after it are not read until the
+    next scope match."""
+
+    MANIFEST = ('issue = 9300\nfixed_in = "40385aa5b"\nlogs = ["taom"]\n'
+                '[[check]]\nid = "taom.fixture.scoped"\n'
+                r"scope = '\[Fixture\] launching wanted '" "\n"
+                r"scope_end = '\[Fixture\] launching '" "\n"
+                r"reached = ['\[Check\] id=taom\.fixture\.scoped result=']" "\n"
+                r"pass = ['\[Check\] id=taom\.fixture\.scoped result=pass']" "\n"
+                r"fail = ['\[Check\] id=taom\.fixture\.scoped result=fail']" "\n"
+                'absence = "not-reached"\n')
+    WANTED = "[Fixture] launching wanted mission"
+    OTHER = "[Fixture] launching other mission"
+    PASS_LINE = "[Check] id=taom.fixture.scoped result=pass"
+    FAIL_LINE = "[Check] id=taom.fixture.scoped result=fail"
+
+    def judge(self, *lines):
+        t = Tree(self)
+        (t.checks / "9300.toml").write_text(self.MANIFEST, encoding="utf-8")
+        stamp = (f"[2026-11-16 10:00:00] [INFO] [BuildStamp] TAOM=v2.0.40 build.20261116-100000Z+{GOOD} "
+                 f"TAOM.Dependencies=v2.0.40 build.20261116-095958Z+{GOOD} (pair OK)")
+        body = [f"[2026-11-16 10:05:{i:02d}] [INFO] {line}" for i, line in enumerate(lines)]
+        (t.client / "Logs" / "taom_debug_2026-11-16_10-00-00.log").write_text("\n".join([stamp] + body) + "\n", encoding="utf-8")
+        code, out, _ = t.run(["--issue", "9300"])
+        return verdict_of(out, "taom.fixture.scoped"), out
+
+    def test_lines_after_a_scope_end_are_not_read(self):
+        verdict, out = self.judge(self.WANTED, self.OTHER, self.PASS_LINE)
+        self.assertEqual(verdict, "NOT REACHED", out)
+
+    def test_a_fail_line_after_a_scope_end_is_not_read(self):
+        verdict, out = self.judge(self.WANTED, self.PASS_LINE, self.OTHER, self.FAIL_LINE)
+        self.assertEqual(verdict, "PASS", out)
+
+    def test_a_scope_match_after_a_scope_end_opens_a_new_segment(self):
+        verdict, out = self.judge(self.WANTED, self.OTHER, self.WANTED, self.PASS_LINE)
+        self.assertEqual(verdict, "PASS", out)
+        self.assertIn("(segment 2 of 2)", out)
+
+    def test_a_line_that_matches_scope_and_scope_end_starts_a_segment(self):
+        # WANTED matches both patterns: it opens a segment, it does not end one.
+        verdict, out = self.judge(self.WANTED, self.PASS_LINE)
+        self.assertEqual(verdict, "PASS", out)
+
+    def test_a_scope_end_before_any_scope_match_reads_nothing(self):
+        verdict, out = self.judge(self.OTHER, self.PASS_LINE)
+        self.assertEqual(verdict, "NOT REACHED", out)
+        self.assertIn("matched no line", out)
 
 
 # One C# token at a time, leftmost first: a // or /* */ comment, a verbatim or regular string, or a char literal.
@@ -485,6 +548,285 @@ class CoopCompat967Tests(unittest.TestCase):
     def test_a_log_with_no_momentum_lines_leaves_the_momentum_check_not_reached(self):
         code, out = self.judge((self.SETTINGS_SERVER, self.SETTINGS_PASS))
         self.assertEqual(verdict_of(out, self.MOMENTUM_SERVER), "NOT REACHED", out)
+
+
+class HeroAbilities1359And1361Tests(unittest.TestCase):
+    """The real #1359 and #1361 manifests read the same two [Check] ids (the fired line of HeroAbilityHost and the
+    instant-kill line of SignatureInstantKill), so each must read only its own heroes' lines: Aragorn and Gimli for
+    #1359, Legolas for #1361. The lines render HeroAbilityChecks.Fired and SignatureInstantKill's detail as OutcomeLog
+    writes them. Every mission check of both manifests is scoped to a Long Defeat launch (LongDefeatMissionLauncher's
+    line, as in the proof logs), so judge() writes that line first; a Helm's Deep story mission launch ends the scope."""
+
+    FIRED = "taom.hero-abilities.fired"
+    KILL = "taom.signature-strikes.instant-kill"
+    LD_LAUNCH = "[LongDefeat] launching taom_rohan_castle_helms_deep_forceatmo for fortress helms (autorun)"
+    STORY_LAUNCH = "[StoryMissions] launching taom_rohan_castle_helms_deep_forceatmo for 'helms_deep_defend' (story1, autoplay True)"
+    LEGOLAS_FIRED_FAIL = "result=fail hero=taom_hero_legolas fired=0 contact_s=25 allies=0 shocked=0 owned=1"
+    LEGOLAS_FIRED_PASS = "result=pass hero=taom_hero_legolas fired=2 contact_s=31 allies=6 shocked=0 owned=1"
+    ARAGORN_FIRED_FAIL = "result=fail hero=taom_hero_aragorn fired=0 contact_s=25 allies=0 shocked=0 owned=1"
+    ARROW_DIED_0 = "result=fail signature=taom_hero_legolas_arrow victim=uruk_a chance=0.10 roll=0.050 health=37 damage=38 died=0"
+    ARROW_DIED_1 = "result=pass signature=taom_hero_legolas_arrow victim=uruk_a chance=1.00 roll=0.420 health=37 damage=38 died=1"
+
+    def setUp(self):
+        self.t = Tree(self)
+        self.t.real_manifest("1359.toml")
+        self.t.real_manifest("1361.toml")
+
+    def judge(self, issue, *checks, launch=LD_LAUNCH):
+        stamp = (f"[2026-11-16 10:00:00] [INFO] [BuildStamp] TAOM=v2.0.40 build.20261116-100000Z+{GOOD} "
+                 f"TAOM.Dependencies=v2.0.40 build.20261116-095958Z+{GOOD} (pair OK)")
+        body = []
+        for line in checks:
+            if isinstance(line, str):
+                body.append(f"[2026-11-16 10:05:00] [INFO] {line}")
+            else:
+                cid, tail = line
+                body.append(f"[2026-11-16 10:05:00] [INFO] [Check] id={cid} {tail}")
+        lines = [stamp, f"[2026-11-16 10:01:00] [INFO] {launch}"] + body
+        path = self.t.client / "Logs" / "taom_debug_2026-11-16_10-00-00.log"
+        path.write_text("\n".join(lines) + "\n", encoding="utf-8")
+        code, out, _ = self.t.run(["--issue", str(issue)])
+        return code, out
+
+    def story_only_lines(self):
+        """Every mission line both manifests pass on, written in a story mission."""
+        aragorn = self.LEGOLAS_FIRED_PASS.replace("legolas", "aragorn")
+        gimli = self.LEGOLAS_FIRED_PASS.replace("legolas", "gimli")
+        return ((self.FIRED, self.LEGOLAS_FIRED_PASS), (self.FIRED, aragorn), (self.FIRED, gimli),
+                (self.KILL, self.ARROW_DIED_1),
+                (self.KILL, "result=pass signature=gimli victim=uruk_a chance=0.35 roll=0.104 health=3 damage=4 died=1"),
+                ("taom.hero-abilities.gate", "result=pass long_defeat=1 combat=1 config=1 kits=3"),
+                ("taom.hero-abilities.stats-refreshed", "result=pass ability=aragorn_for_frodo troop=taom_hero_aragorn ratio=1.100 want=1.100"),
+                ("taom.hero-abilities.precision", "result=pass hero=taom_hero_legolas ranged=1 nonzero=0 shooter_error=0.0000 inaccuracy=0.0000"),
+                ("taom.hero-abilities.hits", "result=pass hero=taom_hero_legolas shots=55 contact=45 share=0.82 shield=8"),
+                ("taom.hero-abilities.pierce", "result=pass hero=taom_hero_legolas shield_hits=13 passed=10 broken=0"),
+                ("taom.hero-abilities.multishot", "result=pass hero=taom_hero_legolas item=1 windows=2 window_shots=4 fired=8 no_target=0 out_of_range=0 hits=3"),
+                ("taom.hero-abilities.arrow-kill", "result=pass hero=taom_hero_legolas body_hits=30 head=4 exempt=2 dead_shooter=0 calls=20 kills=2"),
+                "[HeroAuras] Mission end: aragorn_heir_of_isildur: 12 soldier(s)")
+
+    def test_a_story_mission_session_alone_is_not_reached_for_1359_and_1361(self):
+        for issue in (1359, 1361):
+            with self.subTest(issue=issue):
+                code, out = self.judge(issue, *self.story_only_lines(), launch=self.STORY_LAUNCH)
+                self.assertEqual(code, 4, out)
+                self.assertRegex(out, rf"#{issue} .*: NOT REACHED")
+                for c in iv.load_manifest(self.t.checks / f"{issue}.toml", issue).checks:
+                    self.assertEqual(verdict_of(out, c.id), "NOT REACHED", out)
+
+    def test_the_same_lines_after_a_long_defeat_launch_pass_1359_and_1361(self):
+        # The control for the story-only case: the lines themselves pass once a Long Defeat launch opens the scope.
+        for issue in (1359, 1361):
+            with self.subTest(issue=issue):
+                code, out = self.judge(issue, *self.story_only_lines())
+                self.assertEqual(code, 0, out)
+
+    def test_a_story_mission_after_a_long_defeat_run_is_not_read_for_1359(self):
+        aragorn_fail = self.ARAGORN_FIRED_FAIL
+        code, out = self.judge(1359, (self.FIRED, self.LEGOLAS_FIRED_PASS.replace("legolas", "aragorn")),
+                               (self.FIRED, self.LEGOLAS_FIRED_PASS.replace("legolas", "gimli")),
+                               self.STORY_LAUNCH, (self.FIRED, aragorn_fail))
+        self.assertEqual(verdict_of(out, self.FIRED), "PASS", out)
+
+    def test_legolas_lines_do_not_fail_1359(self):
+        code, out = self.judge(1359, (self.FIRED, self.LEGOLAS_FIRED_FAIL), (self.KILL, self.ARROW_DIED_0))
+        self.assertEqual(verdict_of(out, self.FIRED), "NOT REACHED", out)
+        self.assertEqual(verdict_of(out, self.KILL), "NOT REACHED", out)
+        self.assertNotEqual(code, 1, out)
+
+    def test_an_aragorn_fired_fail_is_not_reached_for_1361(self):
+        code, out = self.judge(1361, (self.FIRED, self.ARAGORN_FIRED_FAIL))
+        self.assertEqual(verdict_of(out, self.FIRED), "NOT REACHED", out)
+
+    def test_an_aragorn_fired_fail_still_fails_1359(self):
+        code, out = self.judge(1359, (self.FIRED, self.ARAGORN_FIRED_FAIL))
+        self.assertEqual(verdict_of(out, self.FIRED), "FAIL", out)
+
+    def test_legolas_fired_pass_and_arrow_kill_pass_1361(self):
+        code, out = self.judge(1361, (self.FIRED, self.LEGOLAS_FIRED_PASS), (self.KILL, self.ARROW_DIED_1))
+        self.assertEqual(verdict_of(out, self.FIRED), "PASS", out)
+        self.assertEqual(verdict_of(out, self.KILL), "PASS", out)
+
+
+class StoryHeroes1337And1366Tests(unittest.TestCase):
+    """The real #1337 and #1366 manifests read the hero spawn line the Long Defeat director writes. The Long Defeat run
+    renders it as taom.long-defeat.hero (is_hero=1 campaign=0, or no campaign= in a log from before #1366); the hosted
+    story mission renders it as taom.story-missions.hosted.hero (is_hero=0 campaign=1, a CharacterObject with no Hero)."""
+
+    LD = "taom.long-defeat.hero"
+    HOSTED = "taom.story-missions.hosted.hero"
+    LAUNCH = "[StoryMissions] launching taom_rohan_castle_helms_deep_forceatmo for 'helms_deep_defend' (story1, autoplay True)"
+    LAUNCH_OTHER = "[StoryMissions] launching taom_other_scene for 'other_mission' (story2, autoplay False)"
+    TAIL = "mounted=0 formation=7 held=1 strangers=0 order=Move health_factor=3.00 wanted_factor=3.00 wielded=strider_sword"
+    OLD_LD = "result=pass hero=aragorn troop=taom_hero_aragorn is_hero=1 " + TAIL
+    LD_NOW = "result=pass hero=aragorn troop=taom_hero_aragorn is_hero=1 campaign=0 " + TAIL
+    CAMPAIGN = "result=pass hero=aragorn troop=taom_hero_aragorn is_hero=0 campaign=1 " + TAIL
+    CUSTOM_GAME = "result=pass hero=aragorn troop=taom_hero_aragorn is_hero=1 campaign=0 " + TAIL
+
+    def setUp(self):
+        self.t = Tree(self)
+        self.t.real_manifest("1337.toml")
+        self.t.real_manifest("1366.toml")
+
+    def judge(self, issue, *lines):
+        stamp = (f"[2026-11-16 10:00:00] [INFO] [BuildStamp] TAOM=v2.0.40 build.20261116-100000Z+{GOOD} "
+                 f"TAOM.Dependencies=v2.0.40 build.20261116-095958Z+{GOOD} (pair OK)")
+        body = []
+        for line in lines:
+            if isinstance(line, str):
+                body.append(f"[2026-11-16 10:05:00] [INFO] {line}")
+            else:
+                cid, tail = line
+                body.append(f"[2026-11-16 10:05:01] [INFO] [Check] id={cid} {tail}")
+        path = self.t.client / "Logs" / "taom_debug_2026-11-16_10-00-00.log"
+        path.write_text("\n".join([stamp] + body) + "\n", encoding="utf-8")
+        code, out, _ = self.t.run(["--issue", str(issue)])
+        return code, out
+
+    def test_an_old_1337_hero_line_with_no_campaign_field_still_passes_1337(self):
+        code, out = self.judge(1337, (self.LD, self.OLD_LD))
+        self.assertEqual(verdict_of(out, self.LD), "PASS", out)
+
+    def test_a_1337_hero_line_with_campaign_0_passes_1337(self):
+        code, out = self.judge(1337, (self.LD, self.LD_NOW))
+        self.assertEqual(verdict_of(out, self.LD), "PASS", out)
+
+    def test_a_campaign_1_hero_line_does_not_pass_1337(self):
+        code, out = self.judge(1337, (self.LD, self.CAMPAIGN))
+        self.assertNotEqual(verdict_of(out, self.LD), "PASS", out)
+
+    def test_a_campaign_1_hero_line_matches_its_own_hero_pass_pattern_for_1366(self):
+        code, out = self.judge(1366, self.LAUNCH, (self.HOSTED, self.CAMPAIGN))
+        self.assertEqual(verdict_of(out, self.HOSTED), "NOT REACHED", out)
+        self.assertIn("reached, but no line matched pass pattern", out)
+        self.assertIn("troop=taom_hero_legolas is_hero=0", out)
+
+    def test_all_three_campaign_hero_lines_pass_1366(self):
+        legolas = self.CAMPAIGN.replace("aragorn", "legolas").replace("strider_sword", "wm_mirkwood_bow_a01")
+        gimli = self.CAMPAIGN.replace("aragorn", "gimli").replace("strider_sword", "sm_dwarf_dain_axe_a")
+        code, out = self.judge(1366, self.LAUNCH, (self.HOSTED, self.CAMPAIGN), (self.HOSTED, legolas), (self.HOSTED, gimli))
+        self.assertEqual(verdict_of(out, self.HOSTED), "PASS", out)
+
+    def test_custom_game_hero_lines_are_not_reached_for_1366(self):
+        # All three heroes' lines, so the row stays NOT REACHED for each pattern, not just for the missing two.
+        legolas = self.CUSTOM_GAME.replace("aragorn", "legolas").replace("strider_sword", "wm_mirkwood_bow_a01")
+        gimli = self.CUSTOM_GAME.replace("aragorn", "gimli").replace("strider_sword", "sm_dwarf_dain_axe_a")
+        code, out = self.judge(1366, self.LAUNCH, (self.HOSTED, self.CUSTOM_GAME), (self.HOSTED, legolas), (self.HOSTED, gimli))
+        self.assertEqual(verdict_of(out, self.HOSTED), "NOT REACHED", out)
+        self.assertIn("reached, but no line matched pass pattern", out)
+
+    LD_LAUNCH = "[LongDefeat] launching taom_rohan_castle_helms_deep_forceatmo for fortress helms (autorun)"
+    ROSTER = "taom.story-missions.roster"
+
+    def three_hero_passes(self):
+        legolas = self.CAMPAIGN.replace("aragorn", "legolas").replace("strider_sword", "wm_mirkwood_bow_a01")
+        gimli = self.CAMPAIGN.replace("aragorn", "gimli").replace("strider_sword", "sm_dwarf_dain_axe_a")
+        return (self.HOSTED, self.CAMPAIGN), (self.HOSTED, legolas), (self.HOSTED, gimli)
+
+    def test_a_long_defeat_run_after_the_story_mission_is_not_read_for_1366(self):
+        # Tooling F1: the four rows whose lines keep their ids in the story mission must not pass from a later Long Defeat run.
+        hunters = ("taom.story-missions.hosted.hunters", "result=pass w=1 standing=3 in_group=3 units=3 held=1 order=Move "
+                   "own=0 settled=10 near=3 kills=5 by=aragorn health=0.9 retaken=0 moved_out=0 moved_back=0")
+        fired = [("taom.hero-abilities.fired", f"result=pass hero=taom_hero_{h} fired=3 contact_s=40 allies=5 shocked=2 owned=1")
+                 for h in ("aragorn", "legolas", "gimli")]
+        code, out = self.judge(
+            1366, f"[Check] id={self.ROSTER} result=pass missions=1 troops=12 missing=- items=1 items_missing=-",
+            self.LAUNCH, *self.three_hero_passes(), hunters, "[HeroAuras] Mission end: no soldier reached",
+            self.LD_LAUNCH, *fired,
+            ("taom.hero-abilities.precision", "result=pass hero=taom_hero_legolas ranged=1 nonzero=0 shooter_error=0.0000 inaccuracy=0.0000"),
+            ("taom.hero-abilities.multishot", "result=pass hero=taom_hero_legolas item=1 windows=2 window_shots=4 fired=8 no_target=0 out_of_range=0 hits=3"),
+            "[HeroAuras] Mission end: aragorn_heir_of_isildur: 12 soldier(s)")
+        self.assertEqual(verdict_of(out, self.HOSTED), "PASS", out)
+        for check_id in ("taom.hero-abilities.fired", "taom.hero-abilities.precision", "taom.hero-abilities.multishot",
+                         "taom.hero-auras.reached"):
+            self.assertNotEqual(verdict_of(out, check_id), "PASS", check_id + "\n" + out)
+        self.assertNotRegex(out, r"#1366 .*: PASS")
+        self.assertNotEqual(code, 0, out)
+
+    def test_the_roster_row(self):
+        prefix = f"[Check] id={self.ROSTER} result="
+        cases = {
+            "items=1 passes": (prefix + "pass missions=1 troops=12 missing=- items=1 items_missing=-", "PASS"),
+            "a fail line fails": (prefix + "fail missions=1 troops=12 missing=taom_hero_gimli items=1 items_missing=-", "FAIL"),
+            # No extra-arrow item was looked up (an empty hero_abilities.json): nothing proves the item loads.
+            "items=0 is not a pass": (prefix + "pass missions=1 troops=12 missing=- items=0 items_missing=-", "NOT REACHED"),
+            "a throw fails": ("[StoryMissions] the roster check failed: System.NullReferenceException: x", "FAIL"),
+        }
+        for label, (line, want) in cases.items():
+            with self.subTest(label):
+                code, out = self.judge(1366, line)
+                self.assertEqual(verdict_of(out, self.ROSTER), want, out)
+
+    def test_a_hero_line_of_another_mission_is_not_reached_for_1366(self):
+        legolas = self.CAMPAIGN.replace("aragorn", "legolas").replace("strider_sword", "wm_mirkwood_bow_a01")
+        gimli = self.CAMPAIGN.replace("aragorn", "gimli").replace("strider_sword", "sm_dwarf_dain_axe_a")
+        code, out = self.judge(1366, self.LAUNCH_OTHER, (self.HOSTED, self.CAMPAIGN), (self.HOSTED, legolas), (self.HOSTED, gimli))
+        self.assertEqual(verdict_of(out, self.HOSTED), "NOT REACHED", out)
+
+    def test_a_failed_campaign_hero_line_fails_1366(self):
+        code, out = self.judge(1366, self.LAUNCH, (self.HOSTED, self.CAMPAIGN.replace("result=pass", "result=fail")))
+        self.assertEqual(verdict_of(out, self.HOSTED), "FAIL", out)
+
+
+class StoryMissionRun1368Tests(unittest.TestCase):
+    """The real #1368 manifest over the lines of one unattended story run. The done row has no scope: the driver writes one done line per
+    process, and a failure before the launch has to read FAIL. The boot and ended rows stay scoped to the launch of helms_deep_defend."""
+
+    DONE_ID = "taom.autorun.story-mission.done"
+    BOOT_ID = "taom.story-missions.hosted.boot"
+    ENDED_ID = "taom.story-missions.ended"
+    LAUNCH = "[StoryMissions] launching taom_rohan_castle_helms_deep_forceatmo for 'helms_deep_defend' (story1, autoplay True)"
+    BOOT = (BOOT_ID, "result=pass deployment_finished=true siege_ai=true main=true friendly=false")
+    ENDED = (ENDED_ID, "result=pass verdict=Won side=Defending reason=TargetReached waves=1")
+    ENDED_ABANDONED = (ENDED_ID, "result=pass verdict=Lost side=Defending reason=Abandoned waves=0")
+    DONE_PASS = (DONE_ID, "result=pass reason=ok mission=helms_deep_defend verdict=Won mission_seconds=230.4 culture=gondor")
+    DONE_REFUSED = (DONE_ID, "result=fail reason=mission_refused mission=helms_deep_defend verdict=- mission_seconds=0.0 culture=gondor")
+    DONE_OTHER = (DONE_ID, "result=fail reason=mission_refused mission=dale_defend verdict=- mission_seconds=0.0 culture=gondor")
+
+    def setUp(self):
+        self.t = Tree(self)
+        self.t.real_manifest("1368.toml")
+
+    def judge(self, *lines):
+        stamp = (f"[2026-11-16 10:00:00] [INFO] [BuildStamp] TAOM=v2.0.40 build.20261116-100000Z+{GOOD} "
+                 f"TAOM.Dependencies=v2.0.40 build.20261116-095958Z+{GOOD} (pair OK)")
+        body = []
+        for line in lines:
+            if isinstance(line, str):
+                body.append(f"[2026-11-16 10:05:00] [INFO] {line}")
+            else:
+                cid, tail = line
+                body.append(f"[2026-11-16 10:05:00] [INFO] [Check] id={cid} {tail}")
+        path = self.t.client / "Logs" / "taom_debug_2026-11-16_10-00-00.log"
+        path.write_text("\n".join([stamp] + body) + "\n", encoding="utf-8")
+        code, out, _ = self.t.run(["--issue", "1368"])
+        return code, out
+
+    def test_a_done_fail_line_with_no_launch_line_reads_fail(self):
+        code, out = self.judge(self.DONE_REFUSED)
+        self.assertEqual(verdict_of(out, self.DONE_ID), "FAIL", out)
+        self.assertEqual(code, 1, out)
+
+    def test_a_full_good_run_reads_pass(self):
+        code, out = self.judge(self.LAUNCH, self.BOOT, self.ENDED, self.DONE_PASS)
+        for check_id in (self.DONE_ID, self.BOOT_ID, self.ENDED_ID):
+            self.assertEqual(verdict_of(out, check_id), "PASS", out)
+        self.assertEqual(code, 0, out)
+
+    def test_a_good_done_line_with_no_launch_is_not_a_pass(self):
+        code, out = self.judge(self.DONE_PASS)
+        self.assertEqual(verdict_of(out, self.DONE_ID), "PASS", out)
+        self.assertEqual(verdict_of(out, self.BOOT_ID), "NOT REACHED", out)
+        self.assertEqual(verdict_of(out, self.ENDED_ID), "NOT REACHED", out)
+        self.assertEqual(code, 4, out)
+
+    def test_a_done_fail_of_another_mission_is_not_read(self):
+        code, out = self.judge(self.DONE_OTHER)
+        self.assertEqual(verdict_of(out, self.DONE_ID), "NOT REACHED", out)
+
+    def test_an_abandoned_unattended_run_reads_fail(self):
+        code, out = self.judge(self.LAUNCH, self.BOOT, self.ENDED_ABANDONED, self.DONE_PASS)
+        self.assertEqual(verdict_of(out, self.ENDED_ID), "FAIL", out)
+        self.assertEqual(code, 1, out)
 
 
 class VerdictRuleTests(unittest.TestCase):

@@ -13,6 +13,15 @@ internal sealed class HostedRunOutcomeLog : IOutcomeLog
     /// <summary>Where the run's boot check lands (<c>taom.long-defeat.boot</c> renamed); tools/ingame_checks/1105.toml reads it.</summary>
     internal const string BootId = "taom.story-missions.hosted.boot";
 
+    /// <summary>The hero spawn check (<c>taom.long-defeat.hero</c> renamed); tools/ingame_checks/1366.toml reads it.</summary>
+    internal const string HeroId = "taom.story-missions.hosted.hero";
+
+    /// <summary>The hero fall line (<c>taom.long-defeat.hero-fall</c> renamed).</summary>
+    internal const string HeroFallId = "taom.story-missions.hosted.hero-fall";
+
+    /// <summary>The wave-clear hold check (<c>taom.long-defeat.hunters</c> renamed).</summary>
+    internal const string HuntersId = "taom.story-missions.hosted.hunters";
+
     private const string From = "taom.long-defeat.";
     private const string To = "taom.story-missions.hosted.";
 

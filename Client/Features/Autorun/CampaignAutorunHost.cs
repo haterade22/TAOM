@@ -9,7 +9,10 @@ using TaleWorlds.CampaignSystem.Party;
 using TaleWorlds.Core;
 using TaleWorlds.Library;
 using TaleWorlds.MountAndBlade;
+using TAOM.Client.Features.EventWindow;
 using TAOM.Features.Autorun.Scenario;
+using TAOM.Features.StoryMissions.Domain;
+using TAOM.Features.StoryMissions.Hooks;
 
 namespace TAOM.Client.Features.Autorun;
 
@@ -17,12 +20,17 @@ namespace TAOM.Client.Features.Autorun;
 /// The engine half of the unattended campaign driver (#1075, <see cref="ScenarioAutorunDriver"/>). It lives in TAOM.Client, so a
 /// dedicated server never loads it and can never be armed. Only the client's application tick calls it, so every call runs on the
 /// main thread. Each engine fact is cited in docs/features/scenario-autorun.md "Engine facts" (v1.5.7).
+/// For a story mission (#1368) it opens the dev story menu through <see cref="StoryDevMenuBehavior"/>'s own Open and picks the menu's options on
+/// the path a person's click takes (<c>MenuContext.InvokeConsequence</c> after <c>GameMenu.GetMenuOptionConditionsHold</c>), from the application
+/// tick: never from the console and never inside the campaign tick. It skips the console command's cheat-mode gate, which is safe because only
+/// the arm file starts the driver.
 /// </summary>
 internal sealed class CampaignAutorunHost : ICampaignAutorunHost
 {
     private readonly string _outFolder;
     private string? _lastInquiryTitle;
     private bool? _focusSettingBefore;
+    private StoryOutcome? _storyVerdict;
 
     public CampaignAutorunHost(ScenarioPlan plan)
     {
@@ -39,6 +47,7 @@ internal sealed class CampaignAutorunHost : ICampaignAutorunHost
             VideoPlaybackState => AutorunScreen.Video,
             CharacterCreationState => AutorunScreen.CharacterCreation,
             MapState map => map.AtMenu ? AutorunScreen.MapMenu : AutorunScreen.Map,
+            MissionState => AutorunScreen.Mission,
             _ => AutorunScreen.Other,
         };
 
@@ -196,6 +205,56 @@ internal sealed class CampaignAutorunHost : ICampaignAutorunHost
     }
 
     public void Quit() => TaleWorlds.Engine.Utilities.QuitGame();
+
+    // EventWindows.Tick opens a queued window whenever a game exists, a mission included, and its layer stops the active state ticking.
+    public bool EventWindowOpenOrWaiting => EventWindows.IsOpen;
+
+    public bool OpenStoryMenu(string missionId, out string message)
+    {
+        _storyVerdict = null;
+        var behavior = Campaign.Current?.GetCampaignBehavior<StoryDevMenuBehavior>();
+        if (behavior == null)
+        {
+            message = "the story menu is not loaded in this campaign";
+            return false;
+        }
+
+        message = behavior.Open(missionId, true, verdict => _storyVerdict = verdict);
+        return StoryMenuShown;
+    }
+
+    public bool StoryMenuShown => OpenMenuId == StoryDevMenuBehavior.MenuId;
+
+    public string? OpenMenuId => MapMenuContext()?.GameMenu?.StringId;
+
+    public bool ChooseOpenMission() => Choose(StoryDevMenuBehavior.OpenOptionId);
+
+    public bool ChooseBackToMap() => Choose(StoryDevMenuBehavior.BackOptionId);
+
+    public StoryOutcome? StoryVerdict => _storyVerdict;
+
+    // The map's own menu only. Campaign.CurrentMenuContext also returns the MapState's context under a mission (it reads the active state's
+    // predecessor), where no menu shows.
+    private static MenuContext? MapMenuContext() => (GameStateManager.Current?.ActiveState as MapState)?.MenuContext;
+
+    // A click is GameMenuItemVM.ExecuteAction -> MenuContext.InvokeConsequence(Index) -> GameMenuManager.RunConsequenceOfVirtualMenuOption.
+    // InvokeConsequence runs no condition: the menu shows only an option whose condition holds (GameMenuVM, GetVirtualMenuOptionConditionsHold)
+    // and enables its button from IsEnabled, which the condition sets. With no repeat objects the virtual index is the list index.
+    private bool Choose(string optionId)
+    {
+        var context = MapMenuContext();
+        var menu = context?.GameMenu;
+        if (context == null || menu == null || menu.StringId != StoryDevMenuBehavior.MenuId || menu.MenuRepeatObjects.Count > 0)
+            return false;
+
+        var options = menu.MenuOptions.ToList();
+        var index = options.FindIndex(option => option.IdString == optionId);
+        if (index < 0 || !menu.GetMenuOptionConditionsHold(Game.Current, context, index) || !options[index].IsEnabled)
+            return false;
+
+        context.InvokeConsequence(index);
+        return true;
+    }
 
     // Autosave off for this process: the SaveHandler skips an autosave when the interval is -1 or the manager says disabled.
     private sealed class NoAutoSaveManager : ISaveManager

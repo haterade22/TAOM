@@ -5149,3 +5149,9 @@ The Kit's sprite generation re-saved all 13 GUI `_tex.tpac` files. I copied back
 - **Why missed:** the wrapper copied the sibling's stamp check but not its timing (`run_long_defeat.py` reads HEAD once in `main`) or its report text. This repeats "An unattended wrapper binds its PASS to the build under test".
 - **Prevent:** when you copy a check from a sibling launcher, copy where it reads its reference, what it prints on PASS and when it refuses. Test each one: a commit during the run, a PASS text with the sha, a refusal before launch.
 - **Source:** [rca-scenario-event-window-2026-11-15.md](../rca-scenario-event-window-2026-11-15.md), findings 3, 4 and 6.
+
+### An advisory tier that waits for an issue to close is never promoted (shield and two-hander gate, #1312, 2026-11-15)
+`audit_polearm_shield_parity.py` reported two-handed weapons beside a shield as WARN, with the comment "once #450 is closed, move TwoHandedWeapon into this set". #450 closed and nobody moved it, so the count grew from 33 to 98 to 114 rosters, and the 2026-11-05 RCA saw it and filed nothing.
+- **Why missed:** the promotion was a note in a comment, owned by no commit; closing the issue did not touch the tool.
+- **Prevent:** the commit that closes the issue an advisory tier waits on also edits the gate, and a hold carries its reason in the table (`KNOWN_FAILURES`), never a WARN that nothing reads.
+- **Source:** issue #1312.

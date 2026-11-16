@@ -66,7 +66,7 @@ hand edits, so land a repo-side validator gate with any fix.
 
 | Command | Proves | Cannot see |
 |---|---|---|
-| `python tools/audit_polearm_shield_parity.py` | no roster pairs a shield with a weapon whose primary usage is `requires_no_shield` | two-handers, which it warns about rather than failing |
+| `python tools/audit_polearm_shield_parity.py` | no roster pairs a shield with a weapon whose primary usage is `requires_no_shield` | the pairs held in its `KNOWN_FAILURES` ratchet, which print under KNOWN |
 | `python tools/analyze_troop_balance.py` | per-culture parity heatmap, outliers, level monotonicity | whether the curve is the right curve |
 | `python tools/analyze_armor_balance.py` | per-culture armour balance against the same baselines the writer uses | mesh quality, silhouette, lore fit |
 | `python tools/derive_armor_tiers.py` | an item's intended tier, derived from which troops actually wear it | items no roster references |
@@ -157,7 +157,7 @@ A green exit is not the same claim in every tool.
 |---|---|
 | `validate_moduledata.py` | 1 on any ERROR, 0 when clean, 2 on bad input. Warnings do not change the code |
 | `audit_mount_parity.py` | report-only, **always 0**. Read the output; checking the return code proves nothing (`tools/README.md`, the `audit_mount_parity.py` row) |
-| `audit_polearm_shield_parity.py` | 1 on a polearm violation, WARN on two-handers, and SKIP at exit 0 when there is no game install |
+| `audit_polearm_shield_parity.py` | 1 on a new shield pair, an unheld dangling piece id, or a stale or overstated `KNOWN_FAILURES` or `KNOWN_DANGLING` entry; SKIP at exit 0 when there is no game install |
 | `check_prefab_budget.py` | prints `OK` while the real cross-module total sits near the cap, because it counts `TAOM_Map/Prefabs` alone |
 | `audit_action_set_parity.py` | non-zero on either failure class, so it is safe to chain |
 | `triage_battle_load.py` | 1 for any diagnosed hang, 0 for COMPLETED or UNKNOWN, 2 for a bad path. UNKNOWN means diagnostics were off, not that the load was fine |
@@ -271,7 +271,7 @@ $ python tools/validate_mesh_refs.py
     KNOWN_DEAD_MESH            3
 
 $ python tools/audit_polearm_shield_parity.py
-PASS: no shield roster carries a Polearm its primary usage forbids.
+PASS: no shield roster carries a melee weapon its primary usage forbids.
 ```
 
 Three things to read out of that transcript rather than skim past.

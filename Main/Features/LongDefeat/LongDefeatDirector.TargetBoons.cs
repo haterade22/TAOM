@@ -44,14 +44,16 @@ internal sealed partial class LongDefeatDirector
     /// <summary>
     /// A new body is the lord's (the start, a respawn, a soldier taken over after his death). The controller setter calls no stat update (<c>Agent.cs:1233-1290</c>), so the body is
     /// refreshed and given the player's stats and health: the player record replaces its group's, and the health limit is set outright, not scaled, so a taken-over soldier's group factor never stacks.
+    /// A held hero taken over (<paramref name="heldHero"/>, a free hero in a campaign, #1366) keeps his own health: his limit is his hero factor, and the player's would replace it.
     /// </summary>
-    private void DressNewBody()
+    private void DressNewBody(bool heldHero)
     {
         if (_effects == null)
             return;
 
         _effects.RefreshStats(BoonTarget.Player);
-        _effects.SetPlayerHealth(_run.HealthFactor(BoonTarget.Player));
+        if (!heldHero)
+            _effects.SetPlayerHealth(_run.HealthFactor(BoonTarget.Player));
     }
 
     /// <summary>The standing read of the pick just taken: a soldier of each target the boon changed, against the numbers every boon owned gives that target. Empty with no effects adapter or no such target.</summary>

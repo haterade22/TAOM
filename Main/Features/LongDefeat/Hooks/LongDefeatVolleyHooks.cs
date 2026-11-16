@@ -36,7 +36,8 @@ internal static class LongDefeatVolleyHooks
     }
 
     // The list is the main thread's to change, so an off-thread read can meet a change under it; that is no hit to count, not a fault to raise from an engine callback.
-    private static string? MissileItem(Mission mission, int index)
+    // In single player the missile is still listed at the hit callback: only a client or a replay removes it first (Mission.cs:6076-6078).
+    internal static string? MissileItem(Mission mission, int index)
     {
         try
         {

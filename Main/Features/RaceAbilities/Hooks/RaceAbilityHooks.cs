@@ -13,8 +13,8 @@ namespace TAOM.Features.RaceAbilities.Hooks;
 /// <c>TaomCustomBattleMoraleModel</c>. The engine calls these from any thread; each reads one immutable
 /// state from the store, asks the service, and counts what changed in the telemetry. Until
 /// RaceAbilitiesModule sets <see cref="Runtime"/>, and with no ability live, every call hands its input back.
-/// A hero aura (#1127, docs/features/hero-auras.md) reaches the same seams: <see cref="EffectsOf"/> merges the
-/// soldier's own ability with the aura he stands in (<see cref="RaceAbilityEffectsMerge"/>). The telemetry counts
+/// A hero aura (#1127, docs/features/hero-auras.md) and a timed hero-ability buff (#1359) reach the same seams:
+/// <see cref="EffectsOf"/> merges the soldier's own ability with the aura he stands in and his buff (<see cref="RaceAbilityEffectsMerge"/>). The telemetry counts
 /// the events in which a live race ability took part, with the merged result: a soldier with an aura alone adds nothing
 /// to it, and on a soldier with both, the aura's share is counted under his ability.
 /// </summary>
@@ -25,6 +25,9 @@ public static class RaceAbilityHooks
     // The hero aura a soldier carries now, set by HeroAurasModule. Any thread.
     internal static Func<Agent, RaceAbilityEffects?>? AuraEffects { get; set; }
 
+    // The timed hero-ability buff a soldier carries now, set by HeroAbilitiesModule (#1359). Any thread.
+    internal static Func<Agent, RaceAbilityEffects?>? BuffEffects { get; set; }
+
     // A soldier's own live ability merged with his aura. live is his ability's state while it runs, else null: the
     // telemetry counts only what a live ability took part in.
     private static RaceAbilityEffects? EffectsOf(RaceAbilityRuntime runtime, Agent? agent, out RaceAbilityState? live)
@@ -33,7 +36,16 @@ public static class RaceAbilityHooks
         var own = state?.CurrentEffects;
         live = own == null ? null : state;
         var aura = agent == null ? null : AuraEffects?.Invoke(agent);
-        return RaceAbilityEffectsMerge.Combine(own, aura);
+        var buff = agent == null ? null : BuffEffects?.Invoke(agent);
+        return RaceAbilityEffectsMerge.Combine(own, aura, buff);
+    }
+
+    // What the models see for this agent now (his ability, his aura and his hero-ability buff), for a check that
+    // a refresh took effect. Null with no runtime or nothing live.
+    internal static RaceAbilityEffects? MergedEffectsOf(Agent agent)
+    {
+        var runtime = Runtime;
+        return runtime == null ? null : EffectsOf(runtime, agent, out _);
     }
 
     // A soldier's own stats, or for a horse its rider's mount effects (a mount's own Character is null, #611).

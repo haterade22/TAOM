@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace TAOM.Features.LongDefeat.Domain;
 
-// The places of Phase 4 (phase4-plan.md sections 4 and 5), as shop.json holds them: the armoury's gear sets, the engineer's yard's engine kinds and the Marshal. Plain data:
+// The places of Phase 4 (phase4-plan.md sections 4 and 5), as shop.json holds them: the armoury's gear sets, the engineer's yard's engine kinds. Plain data:
 // LocationsReader builds it, LoadoutMerge folds the owned sets into the lord's kit, and a later slice sells from it.
 
 /// <summary>The slot names a gear set may use (D34): the five armour slots for an armour set, the four weapon slots for a weapons set. No set touches a horse slot.</summary>
@@ -43,21 +43,18 @@ internal sealed record EngineOffer(string Kind, int Price);
 /// <summary>The engineer's yard: how close the lord must stand to its recorded place, in metres, and the engine kinds it lists. At least one.</summary>
 internal sealed record YardPlan(float Reach, IReadOnlyList<EngineOffer> Engines);
 
-/// <summary>The bought hero: the lord stub (<c>custom_battle_lords.xml</c>) he is spawned from, the price, and his raw <c>{=KEY}English</c> name and text (the troop id and empty when shop.json gives none).</summary>
-internal sealed record MarshalPlan(string Troop, int Price, string Name, string Text);
-
-/// <summary>A shop's three Phase 4 blocks; a null one is absent from shop.json (or failed its rules) and is hidden.</summary>
-internal sealed record LocationsPlan(ArmouryPlan? Armoury, YardPlan? Yard, MarshalPlan? Marshal);
+/// <summary>A shop's two Phase 4 blocks; a null one is absent from shop.json (or failed its rules) and is hidden.</summary>
+internal sealed record LocationsPlan(ArmouryPlan? Armoury, YardPlan? Yard);
 
 /// <summary>
-/// What this build can deliver (D46), in the <see cref="FortOffer"/> shape: the armoury, each engine kind and the Marshal. Each slice raises its kind when its effect lands, and the Python judge
+/// What this build can deliver (D46), in the <see cref="FortOffer"/> shape: the armoury and each engine kind. Each slice raises its kind when its effect lands, and the Python judge
 /// mirrors it as <c>LOCATION_OFFERED</c> (a test reads this source, so the two cannot drift). Slice 1 delivers nothing, so every row of shop.json stays hidden and shipped play is unchanged.
 /// </summary>
-internal sealed record LocationOffer(bool Armoury, bool Mangonel, bool Trebuchet, bool Marshal)
+internal sealed record LocationOffer(bool Armoury, bool Mangonel, bool Trebuchet)
 {
     /// <summary>What this build can deliver.</summary>
-    public static LocationOffer Offered { get; } = new(false, false, false, false);
+    public static LocationOffer Offered { get; } = new(false, false, false);
 
     /// <summary>Nothing for sale: a run that plays as it did before any location.</summary>
-    public static LocationOffer None { get; } = new(false, false, false, false);
+    public static LocationOffer None { get; } = new(false, false, false);
 }

@@ -19,8 +19,11 @@ internal static class StoryTestData
     }
 
     internal static StoryMissionDefinition Definition(StorySide side = StorySide.Defending, int waves = 1, KeepPoint? keep = null, MusterPoints? muster = null,
-        RunRules? rules = null) =>
+        RunRules? rules = null, HeroSpawn[]? heroes = null) =>
         new("m1", "{=!}Mission one", "scene_a", side, "vlandia", "isengard",
             new[] { new GarrisonRow("g1", FormationSlot.Infantry, 100), new GarrisonRow("g2", FormationSlot.Ranged, 50) },
-            Waves(waves), rules ?? RunRules.Default, keep, muster);
+            Waves(waves), rules ?? RunRules.Default, keep, muster)
+        {
+            Heroes = heroes ?? Array.Empty<HeroSpawn>(),
+        };
 }

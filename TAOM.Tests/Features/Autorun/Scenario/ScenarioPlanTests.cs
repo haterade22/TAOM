@@ -122,6 +122,7 @@ public class ScenarioPlanTests
 
         Assert.IsFalse(plan.Armed);
         StringAssert.Contains(plan.Problem, "campaign-load");
+        StringAssert.Contains(plan.Problem, "kind=campaign-new or kind=story-mission");
     }
 
     [TestMethod]
@@ -156,7 +157,7 @@ public class ScenarioPlanTests
     [TestMethod]
     public void Resolve_EveryKey_IsRead()
     {
-        var plan = Resolve(Head + "scenario=smoke\nculture=vlandia\ndays=7\nspeed=2.5\nstall_seconds=90\nwall_limit_seconds=120.5\nquit=1\n");
+        var plan = Resolve(Head + "scenario=smoke\nculture=vlandia\ndays=7\nspeed=2.5\nstall_seconds=90\nwall_limit_seconds=120.5\nquit=1\nmission=x\nmission_limit_seconds=77.5\n");
 
         Assert.IsTrue(plan.Armed);
         Assert.AreEqual("smoke", plan.Scenario);
@@ -166,6 +167,65 @@ public class ScenarioPlanTests
         Assert.AreEqual(90.0, plan.StallSeconds);
         Assert.AreEqual(120.5, plan.WallLimitSeconds);
         Assert.IsTrue(plan.Quit);
+        Assert.AreEqual(77.5, plan.MissionLimitSeconds);
+    }
+
+    [TestMethod]
+    public void Resolve_StoryMissionKind_ReadsMissionAndMissionLimit()
+    {
+        var plan = Resolve("kind=story-mission\nout=E:\\x\\out\nmission=helms_deep_defend\nmission_limit_seconds=900\n");
+
+        Assert.IsTrue(plan.Armed);
+        Assert.AreEqual("story-mission", plan.Kind);
+        Assert.AreEqual("helms_deep_defend", plan.MissionId);
+        Assert.AreEqual(900.0, plan.MissionLimitSeconds);
+        Assert.AreEqual(0, plan.Warnings.Count);
+    }
+
+    [DataTestMethod]
+    [DataRow("")]
+    [DataRow("mission=\n")]
+    [DataRow("mission=-\n")]
+    public void Resolve_StoryMissionWithoutMission_IsUnarmed(string extra)
+    {
+        var plan = Resolve("kind=story-mission\nout=E:\\x\n" + extra);
+
+        Assert.IsFalse(plan.Armed);
+        StringAssert.Contains(plan.Problem, "needs mission=<story mission id> for kind=story-mission");
+    }
+
+    [TestMethod]
+    public void Resolve_Defaults_AreNoMissionAndTwentyMinutes()
+    {
+        var plan = Resolve(Head);
+
+        Assert.AreEqual("-", plan.MissionId);
+        Assert.AreEqual(1200.0, plan.MissionLimitSeconds);
+    }
+
+    [DataTestMethod]
+    [DataRow("NaN")]
+    [DataRow("Infinity")]
+    [DataRow("0")]
+    [DataRow("-5")]
+    [DataRow("soon")]
+    public void Resolve_BadMissionLimit_WarnsAndKeepsTheDefault(string value)
+    {
+        var plan = Resolve("kind=story-mission\nout=E:\\x\nmission=a\nmission_limit_seconds=" + value + "\n");
+
+        Assert.IsTrue(plan.Armed);
+        Assert.AreEqual(1200.0, plan.MissionLimitSeconds);
+        Assert.AreEqual(1, plan.Warnings.Count);
+    }
+
+    [TestMethod]
+    public void Resolve_MissionKeyUnderCampaignNew_IsIgnoredWithoutAWarning()
+    {
+        var plan = Resolve(Head + "mission=helms_deep_defend\n");
+
+        Assert.IsTrue(plan.Armed);
+        Assert.AreEqual("-", plan.MissionId);
+        Assert.AreEqual(0, plan.Warnings.Count);
     }
 
     [TestMethod]
@@ -274,7 +334,7 @@ public class ScenarioPlanTests
     {
         var text = Resolve(Head + "scenario=smoke\nquit=1\n").Describe();
 
-        foreach (var part in new[] { "kind=campaign-new", "scenario=smoke", "culture=gondor", "days=3", "speed=15", "stall_seconds=600", "wall_limit_seconds=3600", "quit=1", "out=E:\\x\\out", "arm=" + ArmPath })
+        foreach (var part in new[] { "kind=campaign-new", "scenario=smoke", "mission=-", "mission_limit_seconds=1200", "culture=gondor", "days=3", "speed=15", "stall_seconds=600", "wall_limit_seconds=3600", "quit=1", "out=E:\\x\\out", "arm=" + ArmPath })
             StringAssert.Contains(text, part);
     }
 }

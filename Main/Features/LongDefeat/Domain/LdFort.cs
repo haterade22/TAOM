@@ -48,10 +48,11 @@ internal enum PurchaseKind
     FieldCare,
     VolleyLevel,
     Upgrade,
+    Hero,
 }
 
 /// <summary>
-/// One thing bought, in order. <c>BeforeWave</c> is the wave that starts next; <c>Id</c> is the offer of a pack, the step of an upgrade (#1161) and empty for the rest; <c>Level</c> is the level a
+/// One thing bought, in order. <c>BeforeWave</c> is the wave that starts next; <c>Id</c> is the offer of a pack, the step of an upgrade (#1161), the id of a hero (#1337) and empty for the rest; <c>Level</c> is the level a
 /// level kind reached and 0 for the rest; <c>BasePrice</c> is shop.json's price and <c>Price</c> what was paid after the boons' price factor (D29), which an upgrade does not take: its price is
 /// <c>BasePrice</c> times <see cref="Count"/>, the soldiers the field replaced (0 for every other kind); <c>Share</c> is the missing share a repair mended and the share of the missing health care
 /// returned, 0 for the rest.
@@ -152,12 +153,15 @@ internal enum LdVolleyHitKind
 /// </summary>
 internal readonly record struct LdVolleyHit(string ItemId, LdVolleyHitKind Kind, bool Kill, bool AffectorNull, bool AffectorSideWrong, float StartingBaseSpeed, float ImpactSpeed, int Missile = -1);
 
-/// <summary>A defender who might own a volley's arrows, as the adapter reads him: still the live occupant of his slot, AI-controlled, the main agent or not, an archer, and how far he stands from the nearest attacker.</summary>
-internal readonly record struct LdOwnerCandidate(bool Live, bool AiControlled, bool IsMain, bool Archer, float NearestAttacker);
+/// <summary>
+/// A defender who might own a volley's arrows, as the adapter reads him: still the live occupant of his slot, AI-controlled, the main agent or not, an archer, how far he stands from the nearest attacker,
+/// and whether he is one of the run's held heroes (the adapter's own hero list, by reference).
+/// </summary>
+internal readonly record struct LdOwnerCandidate(bool Live, bool AiControlled, bool IsMain, bool Archer, float NearestAttacker, bool HeldHero);
 
 /// <summary>
 /// Who owns a volley's arrows (phase3-plan.md D22). Eligible: live, AI-controlled and not the main agent, because a kill needs a real affector (E17) and a friendly hit is cancelled only for an AI shooter (E14).
-/// Archers first and, among the chosen kind, the one farthest from the nearest attacker (an owner who dies while his arrow flies is an UNSETTLED native case, A24). A distance that is not a number ranks last.
+/// Never a held hero: the engine treats the owner as the shooter, so a volley he owned would carry his ranged kit (#1361: the shield pierce, the damage floor and the kill roll). Archers first and, among the chosen kind, the one farthest from the nearest attacker (an owner who dies while his arrow flies is an UNSETTLED native case, A24). A distance that is not a number ranks last.
 /// </summary>
 internal static class VolleyOwnerRule
 {
@@ -168,7 +172,7 @@ internal static class VolleyOwnerRule
         for (var i = 0; i < candidates.Count; i++)
         {
             var c = candidates[i];
-            if (!c.Live || !c.AiControlled || c.IsMain)
+            if (!c.Live || !c.AiControlled || c.IsMain || c.HeldHero)
                 continue;
             if (best < 0 || Beats(c, candidates[best]))
                 best = i;

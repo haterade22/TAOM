@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using System.Linq;
 using TAOM.Features.AdvancedCombat;
 using TAOM.Features.CoopInterop.Missions;
-using TAOM.Features.DreadAura.Hooks;
 using TAOM.Features.HeroAuras.Domain;
 using TAOM.Features.RaceAbilities.Domain;
 using TaleWorlds.CampaignSystem;
@@ -13,7 +12,7 @@ namespace TAOM.Features.HeroAuras.Hooks;
 
 /// <summary>
 /// One battle's aura sources and the pulse that stamps their allies (#1127). A source is a hero the config names, found
-/// by DreadSourceTracker.HeroAxisId. Each pulse stamps every allied soldier in a hero's reach with the strongest auras
+/// by HeroAuraService.SourceId. Each pulse stamps every allied soldier in a hero's reach with the strongest auras
 /// on him; the same auras at the same strength only move the end, a change refreshes his stats and his horse's. Main
 /// thread only. Holds agent references for one mission: <see cref="Clear"/> at its end. Boundary code, game-tested (ADR-008).
 /// </summary>
@@ -37,7 +36,7 @@ public sealed class HeroAuraPulse
         if (agent == null || !agent.IsHuman || agent.IsMount || agent.Character == null)
             return;
         var campaignCharacter = agent.Character as CharacterObject;
-        var heroId = DreadSourceTracker.HeroAxisId(campaignCharacter != null, campaignCharacter?.HeroObject?.StringId, agent.Character.StringId);
+        var heroId = HeroAuraService.SourceId(campaignCharacter?.HeroObject?.StringId, agent.Character.StringId);
         var aura = _runtime.Service.AuraFor(heroId);
         if (aura != null && _sources.All(s => !ReferenceEquals(s.Key, agent)))
             _sources.Add(new KeyValuePair<Agent, HeroAura>(agent, aura));

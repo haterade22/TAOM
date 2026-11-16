@@ -62,6 +62,9 @@ internal sealed record RunView(
 
     /// <summary>The upgrade steps the shop can sell now (#1161), in shop.json order: one row per step whose troop has a soldier standing and not yet sold. Empty in a wave.</summary>
     public IReadOnlyList<UpgradeRow> Upgrades { get; init; } = Array.Empty<UpgradeRow>();
+
+    /// <summary>Every hero of the shop (#1325) in shop.json order, in a wave too: the price to pay now and whether he is for sale, bought or standing.</summary>
+    public IReadOnlyList<HeroRow> Heroes { get; init; } = Array.Empty<HeroRow>();
 }
 
 /// <summary>One upgrade row: the step, the soldiers of its troop that stand and are not yet sold, and how many of them the gold pays for now.</summary>

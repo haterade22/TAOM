@@ -1144,6 +1144,17 @@
         <GameType value="CampaignStoryMode"/>
       </IncludedGameTypes>
     </XmlNode>
+    <!-- The mission heroes (taom_hero_aragorn, taom_hero_legolas, taom_hero_gimli): the Long Defeat's own copies of the named companions (#1335), and
+         the free heroes of the Helm's Deep story mission in a campaign (#1366). All obsolete, so no picker lists them. No <Hero> entry, so in a campaign
+         no Hero stands behind one and IsHero reads false (CharacterObject.IsHero). -->
+    <XmlNode>
+      <XmlName id="NPCCharacters" path="characters/taom_mission_heroes"/>
+      <IncludedGameTypes>
+        <GameType value="Campaign"/>
+        <GameType value="CampaignStoryMode"/>
+        <GameType value="CustomGame"/>
+      </IncludedGameTypes>
+    </XmlNode>
     <!-- Custom Battle only, after every NPCCharacters node but fords_troops (all obsolete): hide non-army characters
          (non-harad_ Aserai/Shaghana, vanilla Calradian lines, dummies, vanilla commanders); list in its header. -->
     <XmlNode>
@@ -1440,6 +1451,16 @@
     <XmlNode>
       <XmlName id="Items" path="long_defeat/long_defeat_items"/>
       <IncludedGameTypes>
+        <GameType value="CustomGame"/>
+      </IncludedGameTypes>
+    </XmlNode>
+    <!-- Beside long_defeat_items: the extra arrow of the ranged hero kit (taom_legolas_arrow, #1361), which no troop carries and no shop sells. Also loaded in a
+         campaign for the Helm's Deep story mission (#1366): is_merchandise="false" keeps it out of workshops, loot and prizes, and CannotBePickedUp off the field. -->
+    <XmlNode>
+      <XmlName id="Items" path="hero_abilities/hero_abilities_items"/>
+      <IncludedGameTypes>
+        <GameType value="Campaign"/>
+        <GameType value="CampaignStoryMode"/>
         <GameType value="CustomGame"/>
       </IncludedGameTypes>
     </XmlNode>

@@ -61,9 +61,9 @@ public class LongDefeatTargetWiringTests
         var source = RepoPaths.ReadSource("Main/Features/LongDefeat/LongDefeatDirector.cs", stripComments: true);
         var adopt = BodyOf(source, "private void AdoptIfNew()");
         var body = RepoPaths.ReadSource("Main/Features/LongDefeat/LongDefeatDirector.TargetBoons.cs", stripComments: true);
-        var dress = BodyOf(body, "private void DressNewBody()");
+        var dress = BodyOf(body, "private void DressNewBody(bool heldHero)");
 
-        Assert.IsTrue(adopt.IndexOf("_field.AdoptMain(", StringComparison.Ordinal) < adopt.IndexOf("DressNewBody()", StringComparison.Ordinal));
+        Assert.IsTrue(adopt.IndexOf("_field.AdoptMain(", StringComparison.Ordinal) < adopt.IndexOf("DressNewBody(heldHero)", StringComparison.Ordinal));
         StringAssert.Contains(dress, "_effects.RefreshStats(BoonTarget.Player)");
         StringAssert.Contains(dress, "_effects.SetPlayerHealth(_run.HealthFactor(BoonTarget.Player))");
     }
@@ -95,6 +95,36 @@ public class LongDefeatTargetWiringTests
         StringAssert.Contains(mount, "model.UpdateAgentStats(mount, scratch)");
         StringAssert.Contains(mount, "mount.GetAgentDrivenPropertyValue(DrivenProperty.MountSpeed)");
         StringAssert.Contains(mount, "LongDefeatStatHooks.Baseline(");
+    }
+
+    // A shop hero's health is his shop factor alone (#1337): a boon's health rescale skips every IsHero body of a group target (Agent.cs:871-877 answers Character.IsHero), so a hero standing
+    // when the boon is picked takes no step the hero bought later does not. The lord's own path is the Player target: LongDefeatTargets.Of answers Player for the main agent before it reads
+    // the character, the director never sends Player to ScaleHealth (it calls SetPlayerHealth), and SetPlayerHealth reads Standing(Player) with no hero filter.
+    [TestMethod]
+    public void TheEffectsAdapter_HealthRescaleSkipsTheShopsHeroes_AndLeavesTheLordsPathAlone()
+    {
+        var source = RepoPaths.ReadSource("Main/Adapters/LongDefeatEffectsAdapter.cs", stripComments: true);
+        var targets = RepoPaths.ReadSource("Main/Features/LongDefeat/Hooks/LongDefeatTargets.cs", stripComments: true);
+        var director = RepoPaths.ReadSource("Main/Features/LongDefeat/LongDefeatDirector.TargetBoons.cs", stripComments: true);
+
+        StringAssert.Contains(source, "private static bool TakesNoHealthBoon(Agent agent) => agent.IsHero;");
+        StringAssert.Contains(BodyOf(source, "public LdTouched ScaleHealth("), "standing.RemoveAll(TakesNoHealthBoon);");
+        Assert.IsFalse(BodyOf(source, "public void SetPlayerHealth(").Contains("IsHero"), "the lord's own boon path takes no hero filter");
+        Assert.IsFalse(BodyOf(source, "public LdTouched RefreshStats(").Contains("IsHero"), "a stat boon still reaches the hero");
+        Assert.IsTrue(BodyOf(targets, "internal static BoonTarget? Of(").IndexOf("ReferenceEquals(mission.MainAgent, body)", System.StringComparison.Ordinal)
+            < BodyOf(targets, "internal static BoonTarget? Of(").IndexOf("body.Character", System.StringComparison.Ordinal), "the main agent is the Player target before the character is read");
+        StringAssert.Contains(director, "_effects.SetPlayerHealth(_run.HealthFactor(BoonTarget.Player))");
+    }
+
+    // The boon read samples one standing defender of the target. A shop hero is the oldest standing body of his class once the soldiers before him fall, and his tripled health limit
+    // would fail the boon read (LongDefeatBoonChecks.TargetRead), so the sample skips IsHero bodies as the health step does.
+    [TestMethod]
+    public void TheEffectsAdapter_BoonTargetSample_SkipsTheShopsHeroes()
+    {
+        var source = RepoPaths.ReadSource("Main/Adapters/LongDefeatEffectsAdapter.cs", stripComments: true);
+
+        StringAssert.Contains(source, "private static bool TakesNoHealthBoon(Agent agent) => agent.IsHero;");
+        StringAssert.Contains(BodyOf(source, "public LdTargetSample ReadTarget("), "Standing(target).Where(a => !a.IsRunningAway && !RaceAbilityHooks.HasLiveEffects(a) && !TakesNoHealthBoon(a))");
     }
 
     [TestMethod]

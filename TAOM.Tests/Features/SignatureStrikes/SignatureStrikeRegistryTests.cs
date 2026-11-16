@@ -106,7 +106,7 @@ public class SignatureStrikeRegistryTests
     [TestMethod]
     public void GetSignatureId_OutOfRange_IsEmpty()
     {
-        Assert.AreEqual("", _sut.GetSignatureId(2));
+        Assert.AreEqual("", _sut.GetSignatureId(4));
         Assert.AreEqual("", _sut.GetSignatureId(-1));
     }
 
@@ -221,4 +221,26 @@ public class SignatureStrikeRegistryTests
 
         _configProvider.Received(1).GetConfig();
     }
+
+    // ---- Kill immunity (#1359) ---------------------------------------------------------------
+
+    [TestMethod]
+    public void IsKillImmuneRace_Listed_True()
+    {
+        Assert.IsTrue(_sut.IsKillImmuneRace(14), "sauron is on the default list");
+        Assert.IsFalse(_sut.IsKillImmuneRace(3), "orc is not");
+    }
+
+    [TestMethod]
+    public void IsKillImmuneRace_UnknownName_SkippedWarns()
+    {
+        _config.KillImmuneRaces = new List<string> { "nazghul", "no_such_race" };
+
+        Assert.IsTrue(_sut.IsKillImmuneRace(15));
+        _logger.Received().LogWarning(Arg.Is<string>(m => m.Contains("no_such_race") && m.Contains("killImmuneRaces")));
+        _raceManager.DidNotReceive().GetRaceNameFromId(Arg.Any<int>());
+    }
+
+    [TestMethod]
+    public void IsKillImmuneRace_Null_False() => Assert.IsFalse(_sut.IsKillImmuneRace(null));
 }

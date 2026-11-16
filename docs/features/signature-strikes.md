@@ -144,7 +144,7 @@ SignatureStrikesConfigProvider (validates every field; drops unknown rows, strik
 SignatureStrikeRegistry         SignatureStrikesSettingsProvider (MCM toggle + cooldown multiplier)
  (hero id | hero set | race            |
   -> signature index)          SignatureStrikeService (pure, per signature: Evaluate,
-        |                        DecideKnockdown, DecideKnockback, ComputeRingDamage, ComputeFearDrain)
+        |                        DecideKnockdown, DecideKnockback, ComputeRingDamage)
 SignatureAgentRoster                   /                      \
  (Agent -> signature + stamps)        /                        \
         |                            /                          \
@@ -191,6 +191,8 @@ The MCM cooldown multiplier applies live.
 | `strikes.*.knockBack` | bool | Ring victims and the struck agent are staggered back |
 | `strikes.*.fearMorale` | float 0..100 | One-shot morale drain on ring victims and the struck agent before tier and race resistance; 0 = none |
 | `strikes.*.sound` | string | A `module_sounds.xml` name played once per strike; letters, digits and `_ : / . -` only, blank for none |
+| `strikes.*.killChance` | float 0..1 | Since #1359: the chance that a clean hit (on the agent, not shield-blocked, on a humanoid, with damage; a victim shrugging off blows is skipped by the kill filter, see "Killing blows") kills the struck foe outright. Rolled once on the next mission tick by `SignatureInstantKill`; 0 = never. See "Killing blows" below |
+| `killImmuneRaces` | string[] | Since #1359, at the root: races no killing blow can fell. `null` reverts to the compiled five; a blank name is removed with a warning; an unknown name is skipped with a warning at first use |
 
 Every float is NaN/Infinity-rejected before its range check and reverts to that signature's and
 that direction's compiled default (the neutral default for an id the compiled set does not know)
@@ -203,6 +205,23 @@ with a warning; one summary warning says the file had invalid values.
 | sauron | Overhead | Slam | Impact | 4.0 m / 1.5 m | 0.6 | 60 | 80 | yes | no | 15 | none |
 | sauron | Left, Right | Sweep | Impact | 3.0 m / 1.5 m | 0.25 | 0 (none) | 60 | no | yes | 0 | none |
 | nazgul | Overhead, Left, Right | Scream | Self | 6.0 m / 2.5 m | 0.3 | 0 (none) | 60 | no | yes | 25 | `LOTR/Mordor/Nazgul/nazgul_scream` |
+| aragorn | Overhead | Slam | Impact | 2.5 m / 1.0 m | 0.4 | 0 (none) | 60 | no | yes | 8 | none |
+| aragorn | Left, Right | Sweep | Impact | 2.5 m / 1.0 m | 0.25 | 0 (none) | 50 | no | yes | 0 | none |
+| gimli | Overhead | Slam | Impact | 3.0 m / 1.2 m | 0.5 | 0 (none) | 90 | yes | no | 12 | none |
+| gimli | Left, Right | Sweep | Impact | 2.5 m / 1.2 m | 0.3 | 0 (none) | 70 | yes | no | 5 | none |
+
+**Killing blows (#1359).** The Long Defeat's mission heroes `taom_hero_aragorn` and `taom_hero_gimli` (matched by
+hero id only, `races` empty, so no other dwarf or man strikes) carry a `killChance` on the overhead: Aragorn 0.15
+with Slam 15 s and Sweep 8 s, Gimli 0.35 with Slam 10 s and Sweep 6 s. The roll and the blow run on the main
+tick after the ring (`SignatureInstantKill.TryKill`), against the struck foe only, after re-checking that he is
+active, not fading, still his slot's occupant and alive. The foe must be humanoid (not a horse or a creature: the
+test is `Agent.IsHuman`), not shrugging off blows (`RaceAbilityHooks.IsShruggingOff`, read at the roll because the
+strike context is built with `BlowFlags.None` on this path and never carries the flag), not a hero, not the player or a
+player's body, not his team's general, not a signature bearer, and of a race outside `killImmuneRaces` (shipped:
+`nazghul`, `cave_troll`, `hill_troll`, `saruman`, `sauron`). There is no health cap, because the Long Defeat scales
+troop health per wave. The blow is `CustomAttacksUtils.TakeDamage` for the health left plus one, owned by the
+hero. Each roll moves the counter `taom.signature-strikes.instant-kill-rolls`; a roll that wins writes the
+`taom.signature-strikes.instant-kill` check line. Their timed abilities are [hero-abilities.md](hero-abilities.md). Legolas's arrows ask the same executor from the hero abilities' ranged logic (#1361), with `signature=taom_hero_legolas_arrow` in the line: [hero-abilities.md](hero-abilities.md), "The ranged kit".
 
 Cooldowns: Sauron's Slam 20 s and Sweep 12 s, the Nine's Scream 15 s (one timer for all three
 directions). Long on purpose: Mike's standing instruction is that Sauron must not be overpowered.
@@ -242,7 +261,7 @@ race resistance (elf 0.4, dwarf 0.5) and falloff, clamped to what the agent has;
 
 | File | Purpose |
 |------|---------|
-| `Main/Features/SignatureStrikes/SignatureStrikeService.cs` | Pure decisions per signature: `Evaluate`, `DecideKnockdown`, `DecideKnockback`, `ComputeRingDamage`, `ComputeFearDrain` |
+| `Main/Features/SignatureStrikes/SignatureStrikeService.cs` | Pure decisions per signature: `Evaluate`, `DecideKnockdown`, `DecideKnockback`, `ComputeRingDamage` |
 | `Main/Features/SignatureStrikes/SignatureStrikeFalloff.cs` | The engine's `1 / lerp(1,3,t)^2` band as a pure static |
 | `Main/Features/SignatureStrikes/SignatureStrikeRegistry.cs` | Three-axis identity to a signature index, one id-keyed table per signature, built once |
 | `Main/Features/SignatureStrikes/SignatureStrikesConfigProvider.cs` | Validating loader (DreadAura shape), per-signature fallback by id |

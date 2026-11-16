@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Items>
+  <!-- Legolas's extra arrow (#1361, Many Arrows). Mission.AddCustomMissile adds no bow damage (Mission.cs:4954-4980, a damage bonus of 0f), so an extra arrow carries only its
+       own thrust: this item has the thrust of his bow and his arrow together, wm_mirkwood_bow_a01 (86) plus wm_mirkwood_arrow_a03 (4), and the arrow's meshes and missile speed. The
+       flight speed is his shot's own, passed to AddCustomMissile. tools/tests/test_hero_abilities_items.py reads both Armory items, so a retuned bow or arrow fails it.
+       No troop carries it and it is not for sale. CannotBePickedUp keeps a stuck extra arrow from becoming a pickup (SpawnedItemEntity.cs:163-164), as the Long Defeat volley arrows do.
+       The name is vanilla's {=gFtu0j4T}Arrows, so the item adds no string. Loaded for Campaign, CampaignStoryMode and CustomGame (SubModule.xml), beside long_defeat_items: the Helm's Deep story mission (#1366) uses it in a campaign, where
+       is_merchandise="false" keeps it out of workshops, loot and prizes. -->
+  <Item
+    id="taom_legolas_arrow"
+    name="{=gFtu0j4T}Arrows"
+    body_name="bo_capsule_arrow"
+    holster_body_name="bo_axe_short"
+    mesh="wm_mirkwood_arrow_a03"
+    holster_mesh="wm_elven_quiver_v3_a"
+    holster_mesh_with_weapon="wm_elven_quiver_v3_a"
+    weight="0.05"
+    is_merchandise="false"
+    flying_mesh="arrow_bl_flying"
+    appearance="1"
+    Type="Arrows"
+    item_holsters="quiver_back_middle:quiver_bolts_2:quiver_bolts"
+    holster_position_shift="0.0,0.0,0.15">
+    <ItemComponent>
+      <Weapon
+        weapon_class="Arrow"
+        stack_amount="40"
+        physics_material="missile"
+        thrust_speed="0"
+        speed_rating="0"
+        missile_speed="10"
+        weapon_length="97"
+        thrust_damage="90"
+        thrust_damage_type="Pierce"
+        item_usage="arrow_right"
+        passby_sound_code="event:/mission/combat/missile/passby"
+        rotation="0, -80, 25"
+        sticking_position="0,-0.97,0"
+        sticking_rotation="90,0,0"
+        center_of_mass="0,0,-0.13"
+        modifier_group="arrow">
+        <WeaponFlags
+          Consumable="true"
+          AmmoSticksWhenShot="true"
+          AmmoBreaksOnBounceBack="true" />
+      </Weapon>
+    </ItemComponent>
+    <Flags CannotBePickedUp="true" />
+  </Item>
+</Items>

@@ -109,10 +109,10 @@ internal interface ILongDefeatBattlefieldAdapter
     /// <summary>The wave's first batch is out: force the engines on and give the attackers a fresh breach tactic.</summary>
     void RefreshAttackerTactic();
 
-    /// <summary>Both teams charge, and the defenders' formations are handed back to AI first.</summary>
+    /// <summary>Both teams charge, and the defenders' formations are handed back to AI first. The shop's heroes charge too, by their next hold.</summary>
     void OrderCharge();
 
-    /// <summary>The defenders get a new defend-the-castle tactic after a charge.</summary>
+    /// <summary>The defenders get a new defend-the-castle tactic after a charge. The shop's heroes take their wall order again first.</summary>
     void RestoreDefenderTactic();
 
     /// <summary>Every standing defender regains <paramref name="share"/> of the health they are missing.</summary>
@@ -133,8 +133,9 @@ internal interface ILongDefeatBattlefieldAdapter
     /// <summary>
     /// Makes the player's body the team's general and the owner of its orders, then hands every formation to AI, so an order
     /// still takes one back. With <paramref name="aiDriven"/> the agent itself is also driven by AI (the unattended run).
+    /// Returns true when that body is a held hero (in a campaign the fallen player can take over a free hero, #1366), whose health is his own.
     /// </summary>
-    void AdoptMain(bool aiDriven);
+    bool AdoptMain(bool aiDriven);
 
     /// <summary>The facts the boot and general checks judge, read now.</summary>
     LdBootFacts BootFacts();
@@ -189,6 +190,40 @@ internal interface ILongDefeatBattlefieldAdapter
     /// formation, its health limit scaled by <paramref name="healthFactor"/> and holding the old one's share of health; the old one is faded, which the run reads as no loss. Main thread.
     /// </summary>
     LdUpgradeReport ReplaceDefenders(string fromTroop, string toTroop, int count, float healthFactor);
+
+    /// <summary>
+    /// Spawns one hero of the shop (#1325) on the defenders' team at <paramref name="place"/>, in the heroes' own formation
+    /// (<see cref="HeroGroup.FormationIndex"/>), with his health limit scaled by the factor, and holds his body by reference:
+    /// <see cref="Classify"/> reports his removal as <see cref="LdRemovalKind.Hero"/> with his shop id. A hero already held under the same
+    /// id is replaced. Soldiers who are not held heroes leave the formation before the spawn, and held heroes outside it are put back
+    /// after it. When the formation is AI controlled at that moment (its first use, or after a hand-back), it is taken off AI control and
+    /// given the standing order at the wall: a Move to the wall lane nearest the spawn place, else to the outer gate, else to the spawn
+    /// place, resolved once per mission, in a line of the wide form that fires at will; with none of those places, Stop. Between the
+    /// stalemate charge and the tactic's return the order is a charge. A formation already off AI control keeps its order, which may be the
+    /// player's.
+    /// The report reads back the body, whether the formation is off AI control, the strangers left in it and its order. Main thread only.
+    /// </summary>
+    LdHeroReport SpawnHero(HeroSpawn hero, LdPlace place);
+
+    /// <summary>
+    /// Reads every held hero whose body is still live and not routing (#1337): kills, formation index, health share, and ground distance
+    /// and height difference to the heroes' place (NaN before the place is resolved or when there is none), ordered by hero id, and the
+    /// heroes' formation itself: off AI control or not, the name of its movement order, whether that order is still the field's own Move
+    /// to the place (within the split's 2 m tolerance), its unit count, and the seconds since the field gave that order (0 under another
+    /// order). The formation is read also when no hero stands. Main thread only.
+    /// </summary>
+    LdHeroesRead ReadHeroes();
+
+    /// <summary>
+    /// Keeps the heroes' formation whole (#1337); the director calls it every tick while a hero stands. With no live held hero, or when the
+    /// formation is off AI control, holds exactly the live held heroes and each of them is in it, it only reads and returns
+    /// <see cref="LdHuntersHold.Nothing"/>. Otherwise it repairs: every soldier who is not a live held hero goes out (ranged to the Ranged
+    /// formation, any other to the Infantry formation), every live held hero outside it is put back (a routing hero is left alone), and
+    /// when the formation is AI controlled it gets the standing order at the wall again, or the charge while the stalemate charge runs. The hand-backs that make it AI controlled are the engine's at the lord's fall
+    /// (Mission.OnAgentRemoved calls Team.DelegateCommandToAI) and TAOM's own at a new body for the lord (AdoptMain) and at the stalemate charge
+    /// (OrderCharge). Returns what the repair did. Main thread only.
+    /// </summary>
+    LdHuntersHold HoldHunters();
 
     /// <summary>Drops every handle the adapter holds. Safe to call twice.</summary>
     void Clear();

@@ -6,9 +6,14 @@ namespace TAOM.Features.LongDefeat.Domain;
 /// <summary>Every troop a run can spawn, so the launcher can refuse a missing one before the run instead of a batch spawning none after the domain has dequeued it.</summary>
 internal static class RunPlanTroops
 {
-    /// <summary>The garrison, the shop, the towers' troop, every upgrade troop, every authored wave, every tier target, every commander and every summon troop, each id once.</summary>
+    /// <summary>
+    /// The garrison, the shop, the towers' troop, every upgrade troop, every hero of the shop (#1325), every free hero of the plan (#1366), every authored wave, every tier target, every commander and every summon troop,
+    /// each id once. A hero is not among <see cref="DefenderTroopIds"/>: he belongs to no defender group, so no boon draws for him, a health boon never rescales him (the effects adapter skips IsHero bodies), and the stat and damage boons of his arm reach him at hit time as they reach any defender.
+    /// </summary>
     public static IReadOnlyList<string> AllTroopIds(RunPlan plan) =>
         DefenderTroopIds(plan)
+            .Concat(plan.Shop.Heroes.Select(h => h.TroopId))
+            .Concat(plan.FreeHeroes.Select(h => h.TroopId))
             .Concat(plan.Waves.Authored.SelectMany(w => w.Mix.Select(m => m.TroopId)))
             .Concat(plan.Waves.Endless.Targets)
             .Concat(plan.Waves.Commanders.TroopIds)

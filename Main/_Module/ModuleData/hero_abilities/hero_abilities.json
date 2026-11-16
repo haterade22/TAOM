@@ -1,0 +1,131 @@
+{
+  "_comment": "Hero Abilities (#1359, docs/features/hero-abilities.md). Timed abilities for the mission heroes, keyed by characterId (taom_mission_heroes.xml). The kits work in the Long Defeat and in the Helm's Deep story mission of a campaign, where the three stand as free heroes (#1366). Once a second each hero the AI drives casts the first ability in this order that is off cooldown and whose triggers hold (every requires trigger and one anyOf trigger; the race abilities' trigger kinds, KinWithin, KinFell and LandedKill excepted). A cast gives the hero selfEffects and allyEffects together for durationSeconds, gives allyEffects to his own team's soldiers within radius, adds allyMorale to them (topped up to the allyEffects moraleFloor, never past 100), and drains enemyShockMorale from the enemies within enemyShockRadius through the battle morale model. The shock drain is applied (the fired line counts it as shocked=) but cannot rout an attacker while the Long Defeat holds him (LongDefeatMorale.HoldsAttacker: the engine sets his morale to a floor instead of panicking), so fear changes no outcome in the gated missions; what fear should do there is an open decision for the maintainer. passive is the hero's for the whole mission. The effect keys are the race abilities' (race_abilities.json); where two sources give the same channel, the stronger counts, values never add. Rules: an ability id is 1 to 63 of a-z, 0-9 and _, and unique in the file; a characterId is unique; cooldownSeconds 60 to 120 and durationSeconds above 0 and at most the cooldown, else the ability is dropped; an ability with no usable trigger is dropped; radius and enemyShockRadius 0 to 15, allyMorale and enemyShockMorale 0 to 50, else 0; an effect only strengthens, damageReductionPercent at most 90, a resistance at most 1000, any other percent at most 300, else 0; glow is #RRGGBB or no outline; warCry is Yell, Charge, Victory, Grunt or none. A kit may carry a ranged block (#1361; Legolas): zeroAimError writes 0 to the ten aim-error stats the engine's stat models set, for the whole mission; pierceShields lets his arrows pass a shield that blocks them (the CanPenetrateShield flag, not MultiplePenetration, and a damage floor just above the engine's pass-through threshold of 30 plus 3 times the shield's armour, so his arrows also break shields often); headshotKillChance and bodyKillChance, 0 to 1, are the kill roll on an unblocked arrow hit, through the signature strikes' instant-kill filter (a human soldier only: no hero, player, general, signature bearer, kill-immune race or soldier shrugging off blows); an extra arrow never rolls. extraArrowItem (a lowercase item id, hero_abilities_items.xml), extraArrowSpreadMeters 0 to 20 and extraArrowRangeMeters 0 to 150 aim the extra arrows of an ability with extraArrows 1 to 3: while it runs, each of his shots adds that many arrows at the enemies nearest his target. extraArrows needs a ranged block with an item, a spread and a range above 0, else it is 0. alliesRangedOnly gives allyEffects only to allies with a bow or crossbow and ammunition. A bad ranged value is set to 0, false or \"\". No Legolas ability touches enemy morale. Numbers are first guesses for tuning.",
+  "enabled": true,
+  "heroes": [
+    {
+      "characterId": "taom_hero_aragorn",
+      "glow": "#E8D27A",
+      "passive": {},
+      "abilities": [
+        {
+          "id": "aragorn_for_frodo",
+          "cooldownSeconds": 90,
+          "durationSeconds": 15,
+          "anyOf": [ { "kind": "EnemiesWithin", "range": 10, "count": 3 } ],
+          "radius": 15,
+          "allyEffects": { "meleeDamagePercent": 15, "swingSpeedPercent": 10, "damageReductionPercent": 15, "knockdownResistancePercent": 50, "moraleFloor": 60 },
+          "selfEffects": {},
+          "allyMorale": 25,
+          "enemyShockRadius": 10,
+          "enemyShockMorale": 10,
+          "warCry": "Charge"
+        },
+        {
+          "id": "aragorn_isildurs_heir",
+          "cooldownSeconds": 120,
+          "durationSeconds": 12,
+          "requires": [ { "kind": "HealthBelow", "fraction": 0.4 } ],
+          "radius": 10,
+          "allyEffects": { "blockAbilityPercent": 20, "parryAbilityPercent": 20, "damageReductionPercent": 20 },
+          "selfEffects": { "damageReductionPercent": 40, "shrugOffBlows": true },
+          "allyMorale": 0,
+          "enemyShockRadius": 0,
+          "enemyShockMorale": 0,
+          "warCry": "Yell"
+        }
+      ]
+    },
+    {
+      "characterId": "taom_hero_gimli",
+      "glow": "#E07A2B",
+      "passive": { "knockdownResistancePercent": 1000, "knockbackResistancePercent": 300 },
+      "abilities": [
+        {
+          "id": "gimli_baruk_khazad",
+          "cooldownSeconds": 75,
+          "durationSeconds": 12,
+          "anyOf": [ { "kind": "EnemiesWithin", "range": 8, "count": 3 } ],
+          "radius": 12,
+          "allyEffects": { "meleeDamagePercent": 10 },
+          "selfEffects": { "meleeDamagePercent": 25, "swingSpeedPercent": 20, "shrugOffBlows": true },
+          "allyMorale": 0,
+          "enemyShockRadius": 10,
+          "enemyShockMorale": 15,
+          "warCry": "Yell"
+        },
+        {
+          "id": "gimli_still_standing",
+          "cooldownSeconds": 120,
+          "durationSeconds": 15,
+          "requires": [ { "kind": "HealthBelow", "fraction": 0.35 } ],
+          "radius": 0,
+          "allyEffects": {},
+          "selfEffects": { "damageReductionPercent": 45, "swingSpeedPercent": 25 },
+          "allyMorale": 0,
+          "enemyShockRadius": 0,
+          "enemyShockMorale": 0,
+          "warCry": "Grunt"
+        }
+      ]
+    },
+    {
+      "characterId": "taom_hero_legolas",
+      "glow": "#7FD4FF",
+      "passive": {},
+      "ranged": {
+        "zeroAimError": true,
+        "pierceShields": true,
+        "headshotKillChance": 1.0,
+        "bodyKillChance": 0.10,
+        "extraArrowItem": "taom_legolas_arrow",
+        "extraArrowSpreadMeters": 10,
+        "extraArrowRangeMeters": 120
+      },
+      "abilities": [
+        {
+          "id": "legolas_rapid_fire",
+          "cooldownSeconds": 75,
+          "durationSeconds": 15,
+          "requires": [ { "kind": "RangedTargetWithin", "range": 40 } ],
+          "anyOf": [ { "kind": "EnemiesWithin", "range": 40, "count": 3 } ],
+          "radius": 0,
+          "allyEffects": {},
+          "selfEffects": { "drawSpeedPercent": 60, "reloadSpeedPercent": 50 },
+          "allyMorale": 0,
+          "enemyShockRadius": 0,
+          "enemyShockMorale": 0,
+          "warCry": "Yell"
+        },
+        {
+          "id": "legolas_many_arrows",
+          "cooldownSeconds": 90,
+          "durationSeconds": 12,
+          "requires": [ { "kind": "RangedTargetWithin", "range": 40 } ],
+          "anyOf": [ { "kind": "EnemiesWithin", "range": 40, "count": 5 } ],
+          "radius": 0,
+          "allyEffects": {},
+          "selfEffects": {},
+          "extraArrows": 2,
+          "allyMorale": 0,
+          "enemyShockRadius": 0,
+          "enemyShockMorale": 0,
+          "warCry": ""
+        },
+        {
+          "id": "legolas_archers_eye",
+          "cooldownSeconds": 120,
+          "durationSeconds": 20,
+          "anyOf": [ { "kind": "EnemiesWithin", "range": 40, "count": 5 } ],
+          "radius": 15,
+          "alliesRangedOnly": true,
+          "allyEffects": { "drawSpeedPercent": 20, "aimErrorPercent": -50, "rangedDamagePercent": 15 },
+          "selfEffects": {},
+          "allyMorale": 0,
+          "enemyShockRadius": 0,
+          "enemyShockMorale": 0,
+          "warCry": "Yell"
+        }
+      ]
+    }
+  ]
+}

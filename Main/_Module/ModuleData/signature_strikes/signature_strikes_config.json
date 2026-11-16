@@ -7,7 +7,10 @@
   "_comment_shieldBlockedMultiplier": "Fraction of the damage basis kept when the triggering hit landed on a shield, and of a ring victim's damage while that victim is shield-blocking (a blocking victim is never knocked down). 0 to 1. Shared by every signature.",
   "shieldBlockedMultiplier": 0.25,
 
-  "_comment_signatures": "One entry per group of heroes. id: names the signature in the log, unique. heroIds: hero StringIds (in a Custom Battle the character's own id, which for a lord is the same). heroSets: named lore groups, only nazgul_nine is known. races: FaceGen race names. An agent carries the first signature whose heroIds or heroSets name it, else the first whose races do. cooldowns: seconds per strike kind (Slam, Sweep, Scream), per attacker, in mission time, 0.5 to 120; every kind a strike uses needs an entry, and the directions that share a kind share its timer. strikes: one profile per swing direction. kind: Slam, Sweep or Scream. origin: Impact centres the ring on the hit point, Self on the attacker. outerRadius / innerRadius in metres (0.1 to 15, inner <= outer): full effect inside inner, one ninth at outer, the engine's own boulder curve. damageFraction (0 to 1): share of the hit's damage a ring victim takes before falloff. worldHitBaseDamage (0 to 500): damage basis when the swing hits the ground instead of a foe, 0 = a ground hit does nothing. magnitude (0 to 500): blow impulse on ring victims. knockDown: ring victims fall (riders are dismounted) and the struck foe always falls. knockBack: ring victims and the struck foe are staggered back. fearMorale (0 to 100): one-shot morale drain on ring victims and the struck foe, before tier and race resistance, 0 = none. sound: a module_sounds.xml name played once per strike at the attacker's head, omit for none.",
+  "_comment_killImmuneRaces": "FaceGen race names an instant kill (a strike's killChance) never takes (#1359). The kill also skips a hero, the player, the team's general, any signature bearer and anything that is not humanoid (a horse or a creature; the test is Agent.IsHuman). Trolls are humanoid, so they are listed here: there is no health cap, because the Long Defeat scales troop health per wave. An unknown name is skipped with a warning; an empty list means no race is immune.",
+  "killImmuneRaces": [ "nazghul", "cave_troll", "hill_troll", "saruman", "sauron" ],
+
+  "_comment_signatures": "One entry per group of heroes. id: names the signature in the log, unique. heroIds: hero StringIds (in a Custom Battle the character's own id, which for a lord is the same). heroSets: named lore groups, only nazgul_nine is known. races: FaceGen race names. An agent carries the first signature whose heroIds or heroSets name it, else the first whose races do. cooldowns: seconds per strike kind (Slam, Sweep, Scream), per attacker, in mission time, 0.5 to 120; every kind a strike uses needs an entry, and the directions that share a kind share its timer. strikes: one profile per swing direction. kind: Slam, Sweep or Scream. origin: Impact centres the ring on the hit point, Self on the attacker. outerRadius / innerRadius in metres (0.1 to 15, inner <= outer): full effect inside inner, one ninth at outer, the engine's own boulder curve. damageFraction (0 to 1): share of the hit's damage a ring victim takes before falloff. worldHitBaseDamage (0 to 500): damage basis when the swing hits the ground instead of a foe, 0 = a ground hit does nothing. magnitude (0 to 500): blow impulse on ring victims. knockDown: ring victims fall (riders are dismounted) and the struck foe always falls. knockBack: ring victims and the struck foe are staggered back. fearMorale (0 to 100): one-shot morale drain on ring victims and the struck foe, before tier and race resistance, 0 = none. killChance (0 to 1, default 0): chance a clean hit kills the struck foe outright, rolled on the next mission tick; it needs an unshielded humanoid victim (not a horse or a creature) and a hit that did damage; the roll also skips a victim whose race ability shrugs off blows. sound: a module_sounds.xml name played once per strike at the attacker's head, omit for none.",
   "signatures": [
     {
       "_comment_balance": "Sauron (#605). Long cooldowns on purpose: a Slam is guaranteed knockdown + ring + fear in one package, and Mike's standing instruction is that Sauron must not be overpowered. Listed by hero id AND by race so the feature survives a data change that drops his race attribute; the race finds him in a Custom Battle.",
@@ -99,6 +102,98 @@
           "knockBack": true,
           "fearMorale": 25,
           "sound": "LOTR/Mordor/Nazgul/nazgul_scream"
+        }
+      }
+    },
+    {
+      "_comment_balance": "Aragorn (#1359). Matched by hero id only, so races is empty: a race row would make every unit of that race strike. First-guess numbers for the maintainer to tune. The overhead is the only row with a killChance.",
+      "id": "aragorn",
+      "heroIds": [ "taom_hero_aragorn" ],
+      "races": [],
+      "cooldowns": { "Slam": 15, "Sweep": 8 },
+      "strikes": {
+        "Overhead": {
+          "kind": "Slam",
+          "origin": "Impact",
+          "outerRadius": 2.5,
+          "innerRadius": 1.0,
+          "damageFraction": 0.4,
+          "worldHitBaseDamage": 0,
+          "magnitude": 60,
+          "knockDown": false,
+          "knockBack": true,
+          "fearMorale": 8,
+          "killChance": 0.15
+        },
+        "Left": {
+          "kind": "Sweep",
+          "origin": "Impact",
+          "outerRadius": 2.5,
+          "innerRadius": 1.0,
+          "damageFraction": 0.25,
+          "worldHitBaseDamage": 0,
+          "magnitude": 50,
+          "knockDown": false,
+          "knockBack": true,
+          "fearMorale": 0
+        },
+        "Right": {
+          "kind": "Sweep",
+          "origin": "Impact",
+          "outerRadius": 2.5,
+          "innerRadius": 1.0,
+          "damageFraction": 0.25,
+          "worldHitBaseDamage": 0,
+          "magnitude": 50,
+          "knockDown": false,
+          "knockBack": true,
+          "fearMorale": 0
+        }
+      }
+    },
+    {
+      "_comment_balance": "Gimli (#1359). Matched by hero id only. First-guess numbers for the maintainer to tune. His fear is the strike fearMorale here and the war-cry shock of his abilities; the Dread Aura gate stays closed.",
+      "id": "gimli",
+      "heroIds": [ "taom_hero_gimli" ],
+      "races": [],
+      "cooldowns": { "Slam": 10, "Sweep": 6 },
+      "strikes": {
+        "Overhead": {
+          "kind": "Slam",
+          "origin": "Impact",
+          "outerRadius": 3.0,
+          "innerRadius": 1.2,
+          "damageFraction": 0.5,
+          "worldHitBaseDamage": 0,
+          "magnitude": 90,
+          "knockDown": true,
+          "knockBack": false,
+          "fearMorale": 12,
+          "killChance": 0.35
+        },
+        "Left": {
+          "kind": "Sweep",
+          "origin": "Impact",
+          "outerRadius": 2.5,
+          "innerRadius": 1.2,
+          "damageFraction": 0.3,
+          "worldHitBaseDamage": 0,
+          "magnitude": 70,
+          "knockDown": true,
+          "knockBack": false,
+          "fearMorale": 5
+        },
+        "Right": {
+          "kind": "Sweep",
+          "origin": "Impact",
+          "outerRadius": 2.5,
+          "innerRadius": 1.2,
+          "damageFraction": 0.3,
+          "worldHitBaseDamage": 0,
+          "magnitude": 70,
+          "knockDown": true,
+          "knockBack": false,
+          "fearMorale": 5
         }
       }
     }

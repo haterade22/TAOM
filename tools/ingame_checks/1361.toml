@@ -1,0 +1,120 @@
+# In-game checks for #1361 (Hero abilities: Legolas's ranged kit), read by tools/ingame_verdict.py. The [Check] lines come from
+# Main/Features/HeroAbilities/Hooks/ (HeroRangedMissionLogic, HeroMultiShotRunner, HeroArrowKills; verdicts in HeroRangedChecks;
+# fired in HeroAbilityHost, as for #1359) and Main/Features/SignatureStrikes/Hooks/SignatureInstantKill.cs.
+# Every ranged line has the key hr<N>-<characterId>-<k>: the Nth mission, the kth body of that hero. A hero enters the ranged
+# roster only on the hero abilities host's first owned pass in a gated mission (the Long Defeat), so a run in which the bot never
+# buys Legolas writes no ranged line: every check then reads NOT REACHED, never a pass.
+# precision is written at the first one-second sample with a ranged weapon in his hand: nonzero= counts the ten aim-error stats the
+# models wrote (HeroPrecisionApplier) that are not 0, shooter_error= and inaccuracy= are two of them. It passes when all ten are 0.
+# A mission end with no such sample writes a skip (never-ranged). This proves the zeros were written, not what native does with them.
+# hits, at the mission end: shots= his own shots (OnAgentShootMissile), contact= the shots whose missile met an enemy, blocked or
+# not (each missile once), share= contact over shots, shield= his own shots an enemy shield blocked. It passes at 20 shots with a share
+# of at least 0.50, fails under it, else skips (few-shots). One run has no vanilla control: it is a floor for "he misses most shots".
+# precision and pierce skip with reason=off when the kit's switch (zeroAimError, pierceShields) is off: there is nothing to judge.
+# pierce, at the mission end: shield_hits= his arrows an enemy shield blocked, passed= those followed by an unblocked hit of the same
+# missile on the same victim before the missile was removed (the pass-through; native gives a freed missile index to the next missile
+# at once, so an index is one arrow only until its removal), broken= the shield hits that broke the shield. It passes with one
+# pass-through, fails after 5 shield hits with none, else skips (few-shield-hits). The engine code does not show that the body hit
+# follows a pass-through; this line measures it (run 20261116-024002: passed=10 of 13, and 4 of 4).
+# multishot, at the mission end: item=1 when the extra arrow item resolved, windows= the Many Arrows windows seen, window_shots= his
+# shots inside one, fired= extra arrows given to AddCustomMissile (which always lists the missile, Mission.cs:4969-4971), no_target=
+# window shots with no enemy inside the 6 degree cone, out_of_range= extras the engine's aim solver refused, hits= extras that met an
+# enemy, told apart by their item. It passes with 2 fired and one hit; it fails when 3 window shots fired nothing, or when 10 fired hit
+# nothing; else it skips (no-window, few-shots). On a server or recorder no extra is added and no window shot counted.
+# arrow-kill, at the mission end: body_hits= his unblocked arrow hits on an enemy, head= those to the head, exempt= those by extra arrows
+# (no roll), dead_shooter= hits that landed after he fell or while he faded out (no roll), calls= the rolls asked of the instant-kill
+# executor (a victim the arrow itself killed is no call), kills= those that killed. It passes with one kill, fails after 50 calls with none, else skips (few-calls).
+# instant-kill, key the signature id, is the shared executor's line (as in 1359.toml), written when a roll wins: died=1 passes.
+# fired is the #1359 line for his abilities (Rapid Fire, Many Arrows, Archer's Eye); contact_s= counts the seconds with 3 enemies within 40 m.
+# A throw in the ranged logic writes its stand-down line, and a throw in the hero abilities its own; both fail fired and the five
+# ranged checks (the instant-kill line is the shared executor's).
+# Every check is scoped to a Long Defeat run: a segment opens at LongDefeatMissionLauncher's "[LongDefeat] launching <scene> for fortress
+# <id>" line and closes at the next Long Defeat or story mission launch. The Helm's Deep story mission holds the same logic and, since #1366,
+# the three heroes, so it writes these same lines; that run is read by tools/ingame_checks/1366.toml and not here. A campaign battle fought
+# after a Long Defeat run in the same game process writes no launch line and is still read.
+# The unattended proof: python tools/run_long_defeat.py --waves 4 --garrison-scale 1.3 --start-gold 5000, so the bot buys the heroes.
+# A run of skips only is not a pass.
+issue = 1361
+title = "Hero abilities: Legolas's ranged kit"
+# fixed_in is the feature commit: only a build that holds it counts. No build before it writes a ranged line or a Legolas fired line.
+fixed_in = "d33642297"
+logs = ["taom"]
+
+[[check]]
+id = "taom.hero-abilities.fired"
+scope = '\[LongDefeat\] launching \S+ for fortress '
+scope_end = '\[(LongDefeat|StoryMissions)\] launching '
+needs = "a Long Defeat run in which the bot or the player buys Legolas and the waves come within 40 m of him"
+reached = ['\[Check\] id=taom\.hero-abilities\.fired result=(pass|fail) hero=taom_hero_legolas ']
+pass = ['\[Check\] id=taom\.hero-abilities\.fired result=pass hero=taom_hero_legolas fired=[1-9][0-9]* contact_s=[0-9]+ allies=[0-9]+ shocked=[0-9]+ owned=1$']
+fail = ['\[Check\] id=taom\.hero-abilities\.fired result=fail hero=taom_hero_legolas ', '\[HeroAbilities\] disabled for this mission after ', '\[HeroAbilities\] ranged kit disabled for this mission after ']
+absence = "not-reached"
+
+[[check]]
+id = "taom.hero-abilities.precision"
+scope = '\[LongDefeat\] launching \S+ for fortress '
+scope_end = '\[(LongDefeat|StoryMissions)\] launching '
+needs = "a Long Defeat run with Legolas bought, holding his bow at least once"
+reached = ['\[Check\] id=taom\.hero-abilities\.precision result=(pass|fail)']
+pass = ['\[Check\] id=taom\.hero-abilities\.precision result=pass hero=\S+ ranged=1 nonzero=0 shooter_error=0\.0000 inaccuracy=0\.0000$']
+fail = ['\[Check\] id=taom\.hero-abilities\.precision result=fail', '\[HeroAbilities\] ranged kit disabled for this mission after ', '\[HeroAbilities\] disabled for this mission after ']
+absence = "not-reached"
+
+[[check]]
+id = "taom.hero-abilities.hits"
+scope = '\[LongDefeat\] launching \S+ for fortress '
+scope_end = '\[(LongDefeat|StoryMissions)\] launching '
+needs = "a Long Defeat run in which Legolas shoots at least 20 arrows"
+reached = ['\[Check\] id=taom\.hero-abilities\.hits result=(pass|fail)']
+pass = ['\[Check\] id=taom\.hero-abilities\.hits result=pass hero=\S+ shots=[0-9]+ contact=[0-9]+ share=[0-9.]+ shield=[0-9]+$']
+fail = ['\[Check\] id=taom\.hero-abilities\.hits result=fail', '\[HeroAbilities\] ranged kit disabled for this mission after ', '\[HeroAbilities\] disabled for this mission after ']
+absence = "not-reached"
+
+[[check]]
+id = "taom.hero-abilities.pierce"
+scope = '\[LongDefeat\] launching \S+ for fortress '
+scope_end = '\[(LongDefeat|StoryMissions)\] launching '
+needs = "a Long Defeat run in which enemy shields block Legolas's arrows (5 or more to judge a miss)"
+reached = ['\[Check\] id=taom\.hero-abilities\.pierce result=(pass|fail)']
+pass = ['\[Check\] id=taom\.hero-abilities\.pierce result=pass hero=\S+ shield_hits=[0-9]+ passed=[1-9][0-9]* broken=[0-9]+$']
+fail = ['\[Check\] id=taom\.hero-abilities\.pierce result=fail', '\[HeroAbilities\] ranged kit disabled for this mission after ', '\[HeroAbilities\] disabled for this mission after ']
+absence = "not-reached"
+
+[[check]]
+id = "taom.hero-abilities.multishot"
+scope = '\[LongDefeat\] launching \S+ for fortress '
+scope_end = '\[(LongDefeat|StoryMissions)\] launching '
+needs = "a Long Defeat run in which Legolas casts Many Arrows (5 enemies within 40 m) and shoots during it"
+reached = ['\[Check\] id=taom\.hero-abilities\.multishot result=(pass|fail)']
+pass = ['\[Check\] id=taom\.hero-abilities\.multishot result=pass hero=\S+ item=1 windows=[1-9][0-9]* window_shots=[0-9]+ fired=[0-9]+ no_target=[0-9]+ out_of_range=[0-9]+ hits=[1-9][0-9]*$']
+fail = ['\[Check\] id=taom\.hero-abilities\.multishot result=fail', '\[HeroAbilities\] ranged kit disabled for this mission after ', '\[HeroAbilities\] disabled for this mission after ']
+absence = "not-reached"
+
+[[check]]
+id = "taom.hero-abilities.arrow-kill"
+scope = '\[LongDefeat\] launching \S+ for fortress '
+scope_end = '\[(LongDefeat|StoryMissions)\] launching '
+needs = "a Long Defeat run in which Legolas's arrows land on enough human soldiers for a kill roll to win (50 rolls to judge a miss)"
+reached = ['\[Check\] id=taom\.hero-abilities\.arrow-kill result=(pass|fail)']
+pass = ['\[Check\] id=taom\.hero-abilities\.arrow-kill result=pass hero=\S+ body_hits=[0-9]+ head=[0-9]+ exempt=[0-9]+ dead_shooter=[0-9]+ calls=[0-9]+ kills=[1-9][0-9]*$']
+fail = ['\[Check\] id=taom\.hero-abilities\.arrow-kill result=fail', '\[HeroAbilities\] ranged kit disabled for this mission after ', '\[HeroAbilities\] disabled for this mission after ']
+absence = "not-reached"
+
+[[check]]
+id = "taom.signature-strikes.instant-kill"
+scope = '\[LongDefeat\] launching \S+ for fortress '
+scope_end = '\[(LongDefeat|StoryMissions)\] launching '
+needs = "a Long Defeat run with an arrow of Legolas's on an unshielded human soldier whose kill roll wins"
+reached = ['\[Check\] id=taom\.signature-strikes\.instant-kill result=(pass|fail) signature=taom_hero_legolas_arrow ']
+pass = ['\[Check\] id=taom\.signature-strikes\.instant-kill result=pass signature=taom_hero_legolas_arrow victim=\S+ chance=[0-9.]+ roll=[0-9.]+ health=[0-9]+ damage=[0-9]+ died=1$']
+fail = ['\[Check\] id=taom\.signature-strikes\.instant-kill result=fail signature=taom_hero_legolas_arrow ']
+absence = "not-reached"
+
+[[human]]
+claim = "when Legolas casts Rapid Fire or Archer's Eye, he shouts, sparks burst at his chest, and he wears a pale blue outline while it runs; during Rapid Fire he draws and looses visibly faster"
+
+[[human]]
+claim = "during Many Arrows two more arrows leave his bow with each shot and fly at soldiers near his target; they look like his own arrows"
+
+[[human]]
+claim = "his arrows often break or pass an enemy shield; the archers within 15 m of him shoot faster while Archer's Eye runs"

@@ -6,6 +6,10 @@ The scenario autorun starts a new sandbox campaign and lets the AI play it with 
 keeps the player's party out of the world, holds time on fast forward until the wanted number of days has passed, then writes a done
 file, ends the campaign and quits the game. `tools/run_scenario.py` launches the game, waits for the done file and judges the run.
 
+A second kind, `story-mission` (#1368), starts the same campaign, opens one story mission through the dev menu's own click path, waits
+for the mission to end and the map to come back, and quits. It runs no campaign days of its own. No run of it has happened yet: the
+sections below describe the code and its unit tests, not a proven run.
+
 ## Why This Exists
 
 - **Vanilla behavior:** a campaign needs a person at every step: the menu, character creation, the map, every popup.
@@ -30,7 +34,8 @@ time for popups, focus loss and some menus. The driver must also never arm in a 
 - After the done file, the driver waits up to 60 s for the main menu and then quits; a wait that runs out logs `exit_stalled`. The
   launcher kills the game 120 s after it sees the done file, so the game quits first.
 - `ScenarioAutorunDriver` is a pure state machine ticked with wall seconds from the client's application tick. Phases: `WaitMenu`,
-  `Creation`, `WaitMap`, `Running`, `Exiting`, `Done`. The decisions are in `ScenarioRules`; every wall and day gate fails on NaN.
+  `Creation`, `WaitMap`, `Running`, `Exiting`, `Done`; the story kind adds `MissionMenu`, `MissionOpen`, `InMission` and
+  `MissionReturn` and has no `Running`. The decisions are in `ScenarioRules`; every wall and day gate fails on NaN.
 - `ICampaignAutorunHost` holds every engine call. Core registers `NullCampaignAutorunHost`; TAOM.Client replaces it with
   `CampaignAutorunHost` (ADR-013), so a dedicated server never runs the driver.
 - Every exit path writes `autorun_done.txt` once and one `[Check]` line, then ends the campaign. A throw finishes the run as
@@ -59,9 +64,11 @@ UTF-8 `key=value` lines. An unknown key or a bad value is a warning and keeps th
 
 | Key | Type | Description |
 |-----|------|-------------|
-| `kind` | string | Must be `campaign-new`, or the plan is unarmed |
+| `kind` | string | Must be `campaign-new` or `story-mission`, or the plan is unarmed |
 | `out` | path | Absolute folder for the done and status files; required |
 | `scenario` | string | A free label, echoed in the log and the done file (default `-`) |
+| `mission` | string | `story-mission` only, required: the story mission id. A story kind with no mission, or `-`, is unarmed. Ignored under `campaign-new` |
+| `mission_limit_seconds` | number | `story-mission` only: wall seconds from the mission screen until the run stops as `mission_limit` (default 1200) |
 | `culture` | string | The player's culture id (default `gondor`; a kingdom id such as `empire_w` fails); checked at the culture stage |
 | `days` | int | Campaign days to run, 1 to 1000 (default 3) |
 | `speed` | float | Fast forward multiplier, above 0, at most 30 (default 15) |
@@ -72,6 +79,47 @@ UTF-8 `key=value` lines. An unknown key or a bad value is a warning and keeps th
 ### Done reasons
 
 `ok`, `start_refused`, `creation_failed`, `creation_timeout`, `map_timeout`, `stalled`, `wall_limit`, `driver_error`.
+
+The story kind adds `mission_refused`, `mission_not_opened`, `mission_limit`, `mission_undecided`, `mission_no_verdict` and
+`return_failed`. `days`, `speed` and `stall_seconds` are not used by it, and its done file has no `days_run` or `days_wanted`.
+
+### The story-mission kind
+
+The driver (`ScenarioAutorunDriver`) goes on from `WaitMap` into four phases. Each step waits at most 120 s
+(`ScenarioRules.StoryStepWaitSeconds`) and reuses `ScenarioRules.MapSettled` as its settle time.
+
+1. `MissionMenu`: with the free map held, it calls `ICampaignAutorunHost.OpenStoryMenu`, which is `StoryDevMenuBehavior.Open` with the
+   armed id, the auto flag and a verdict callback. A refusal finishes as `mission_refused`; the warning carries the dev menu's message
+   and the id of the menu that is open (`open_menu=`).
+2. `MissionOpen`: with the story menu shown and settled, and no event window open or waiting, it calls `ChooseOpenMission`.
+3. `InMission`: hides inquiries and closes event windows every tick, never fast forwards. It reads the verdict when the map is back
+   (`StoryVerdict`): `Undecided` is `mission_undecided`, no verdict is `mission_no_verdict`, no mission screen in 120 s is
+   `mission_not_opened`, and a mission still running after `mission_limit_seconds` is `mission_limit`.
+4. `MissionReturn`: finishes `ok` when the free map has settled, after "Back to the map" was chosen or with no menu open (the log says
+   which). A map that does not settle in 120 s is `return_failed`.
+
+The click path: the host calls `MenuContext.InvokeConsequence` after `GetMenuOptionConditionsHold` and `IsEnabled`, from the application
+tick, never from the console and never inside the campaign tick. It does not pass the cheat-mode gate of the `taom.story_open` console
+command; only the arm file starts it. The host reads the menu of the active `MapState`, because during a mission
+`Campaign.CurrentMenuContext` falls back to the map state's menu.
+
+The done file for the kind has `reason`, `kind`, `mission`, `verdict` (`Won`, `Lost`, `Undecided`, or `-`), `mission_seconds`,
+`day_start`, `day_end` and the shared keys. The check id is `taom.autorun.story-mission.done`; only `reason=ok` passes.
+
+Not covered: the defence mission only (`helms_deep_defend` is the one the manifest names), no War Chronicle offer path, no save, no
+co-op, no speed above 1x, no forced loss. The wall limit of the Running phase does not apply; the step waits, the mission limit and
+the launcher's wall limit bound the run.
+
+The judge in `run_scenario.py` and `tools/ingame_checks/1368.toml` both require three log lines: the done line with
+`verdict=(Won|Lost)` for the armed mission, the `hosted.boot` pass line and the strict `taom.story-missions.ended` pass line. The
+judge searches the whole log and requires exactly one launch line. The manifest scopes the boot and ended rows to the launch of the
+armed mission; its done row has no scope, because the driver writes one done line per process and a failure before the launch
+(`mission_refused`, a launcher refusal) writes no launching line. Its fail pattern names the mission, and the ended row also fails a
+`reason=Abandoned` end. Read the manifest from one session (the default `--sessions 1`, or `--session <the run's log>`), because its
+three rows must come from the same run.
+The driver writes `reason=ok` with `verdict=Lost` for an abandoned mission (the player's agent left the boundary), so the done line
+alone cannot pass it; the strict `ended` pattern names only the three ways a mission ends by itself. The judge also requires exactly one
+`[StoryMissions] launching` line, with `autoplay True` and the armed id.
 
 ## Engine facts
 
@@ -106,6 +154,24 @@ All from the v1.5.7 decompile (`pwsh tools/taom-src.ps1 path <Type>`).
   the log only.
 - **Day count:** `CampaignTimeModel.CampaignStartTime.ElapsedDaysUntilNow`.
 - **Exit:** `MBGameManager.EndGame()`, then `TaleWorlds.Engine.Utilities.QuitGame()`.
+
+The story kind (#1368) also relies on these, read in the v1.5.7 source:
+
+- **The click:** `MenuContext.InvokeConsequence(int)` runs only when `Campaign.Current.CurrentMenuContext == this`
+  (`MenuContext.cs` lines 154 to 160). With a `MapState` active, `Campaign.CurrentMenuContext` returns that state's `MenuContext`
+  (`Campaign.cs` lines 423 to 425); during a mission it falls back to the predecessor `MapState`'s menu (lines 427 to 429). So the
+  host reads the menu of the active `MapState` on every call and passes that object.
+- **The option index:** `GameMenuManager.RunConsequenceOfVirtualMenuOption` (`GameMenuManager.cs` lines 385 to 407) counts one virtual
+  item when the menu has no repeat objects (`MenuRepeatObjects.Count <= 0`), so the index `k` of a menu with no repeat objects reaches
+  `RunConsequencesOfMenuOption(menuContext, k)`. The host refuses a menu that has repeat objects.
+- **After the mission:** `MapState.OnActivate` calls `MenuContext?.Refresh()` unless a conversation flow is active (`MapState.cs`
+  lines 237 to 245), so the menu context is the same object, refreshed, when the map is back.
+- **No escape menu on focus loss in a mission:** `MissionGauntletSingleplayerEscapeMenu.OnFocusChangeOnGameWindow` opens the menu only
+  when `BannerlordConfig.StopGameOnFocusLost` is true (line 54), and the host sets that to false.
+- **The end order:** `Mission.EndMissionInternal` calls every listener's `OnEndMission` (`Mission.cs` line 4645) and every behavior's
+  `OnEndMissionInternal` (line 4650, which calls the behavior's `OnEndMission`, `MissionBehavior.cs` lines 125 to 127) before it sets
+  `CurrentState = State.Over` (line 4667). `MissionState` pops its state only when the mission is `Over` (`MissionState.cs` lines 120
+  to 128), so the story's verdict callback has fired before the map is back.
 
 Read in the v1.5.7 source by the 2026-11-15 review:
 
@@ -148,6 +214,8 @@ UNVERIFIED: that a layer tick runs between two application ticks, which the seco
 | `Client/ClientSubModule.cs`, `Client/TaomClientComposition.cs` | Tick and registration |
 | `tools/run_scenario.py` | Launcher and judge |
 | `tools/ingame_checks/1075.toml` | Manifest for `taom.autorun.campaign-new.done` |
+| `tools/ingame_checks/1368.toml` | Manifest for the story kind: the done line, `hosted.boot` and the strict `ended` line |
+| `Main/Features/StoryMissions/Hooks/StoryDevMenuBehavior.cs` | The dev menu the story kind opens; `Open` has an optional verdict callback (the console path passes none) |
 
 ## Tests
 
@@ -169,10 +237,24 @@ so it needs Mike's word.
    Exiting wall=` line give the running seconds, and `days_run` in the done file gives the days. (`wall_seconds` in the done file also
    counts boot, the menu, creation and the map load.) Then set a wall limit for the long run.
 3. Run `python tools/run_scenario.py --days 150`. The run folder holds `ledger.txt` from `analyze_war_ledger.py`.
+4. Story kind (owed, never run): `python tools/run_scenario.py --kind story-mission --mission helms_deep_defend`. `--days` is refused
+   with it, as are `--speed` and `--stall-seconds`. The default wall limit is the campaign-new boot allowance plus the 1200 s mission
+   limit (3000 s); the driver reads none of it for this kind, and `--wall-limit` only moves the runner's give-up time. An unarmed
+   build (one without this kind) ends as the runner's 10 minute stall, and the printed results then quote its `not armed:` line. Then
+   `python tools/ingame_verdict.py --issue 1368` reads the three rows (one session: its default).
+
+The first story run (`E:\Temp\scenario-runs\20261116-075342`, build 4baa2f53a) settled what only a game can prove. The click opened
+the scene: `phase MissionOpen -> InMission` came 32 s after the game started, with `[StoryMissions] launching ... for
+'helms_deep_defend' (story1, autoplay True)`. The autoplayed lord and the hosted run ended the mission with no input in a campaign:
+`taom.story-missions.ended result=pass verdict=Won side=Defending reason=TargetReached waves=1`, then `mission ended verdict=Won
+seconds=390.3`. The map came back: `chose Back to the map`, `back on the free map after Back to the map`, `done reason=ok`. The whole
+run took 432 s of game time, hid three inquiries, closed no event window, and unloaded clean. The runner printed PASS, and
+`python tools/ingame_verdict.py` read PASS for #1368 and #1366 and for the boot, ended and music rows of #1105.
 
 ## Changelog
 
 - 2026-11-15: first slice, `campaign-new` only (#1075, for #1283).
+- 2026-11-16: the `story-mission` kind (#1368). Proved by the unattended run 20261116-075342.
 
 ## GitHub Issue
 

@@ -53,13 +53,18 @@ internal enum LdRemovalKind
     Attacker,
     Defender,
     Player,
+
+    /// <summary>A hero of the shop (#1325) the field held: <c>TroopId</c> carries his shop id, and <c>Loss</c> is false for a rout.</summary>
+    Hero,
 }
 
 /// <summary>
 /// What a removed agent was to this mission. <c>None</c> is a stranger, a horse, or a removal that is no loss, except the commander's: an attacker comes with the <c>Role</c> the registry holds
 /// for him and whether the stalemate rule's <c>Fell</c> marked him (<c>Felled</c>), and a commander removed with no loss (a rout; a deletion only if native raises a removal for it, risk 2) is reported with <c>Loss</c> false so the run stops him.
+/// <c>PlayerBody</c>: a <see cref="LdRemovalKind.Hero"/> whose body was the player's (a take-over in a campaign, #1366), so his fall is also the player's death.
 /// </summary>
-internal readonly record struct LdRemoval(LdRemovalKind Kind, string TroopId, AttackerRole Role = AttackerRole.Roster, bool Felled = false, bool Loss = true, AgentKey Key = default)
+internal readonly record struct LdRemoval(LdRemovalKind Kind, string TroopId, AttackerRole Role = AttackerRole.Roster, bool Felled = false, bool Loss = true, AgentKey Key = default,
+    bool PlayerBody = false)
 {
     /// <summary>Whether the registry held the agent, so the run must forget its key (a removal of a kind <see cref="LdRemovalKind.None"/> can still carry one: a routed soldier, a deleted horse's rider).</summary>
     public bool HasKey => Key.Value > 0;

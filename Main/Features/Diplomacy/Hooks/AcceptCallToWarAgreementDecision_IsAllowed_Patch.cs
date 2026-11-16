@@ -28,7 +28,7 @@ public static class AcceptCallToWarAgreementDecision_IsAllowed_Patch
         var target = __instance.KingdomToCallToWarAgainst;
         if (called == null || target == null) return true;
 
-        if (!_hook.ShouldPreventWarDeclaration(called.StringId, target.StringId)) return true;
+        if (!_hook.ShouldPreventCallToWar(called.StringId, target.StringId)) return true;
 
         __result = false;
         return false;

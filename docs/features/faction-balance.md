@@ -113,12 +113,31 @@ lines) passed 150 of 150 days with a clean unload. It met the three targets the 
 In the second run, Gondor went from 11 towns and 16 castles to 9 and 9 (the first run ended at 12 and 19); Mordor from 6 and 8 to 7 and 11. Isengard ended with 1 town and 4 castles, after
 2 and 7 on day 100. Each figure is one campaign, so a single run cannot separate the tier change from chance.
 
-Dunland's war with Gondor comes from its alliance: the Misty Mountain Orcs call Dunland in against Gondor. TAOM allows that call. Whether
-Dunland should refuse such a call is a gameplay decision, still open.
+Dunland's war with Gondor comes from its alliance: the Misty Mountain Orcs call Dunland in against Gondor. On the maintainer's decision
+(2026-11-15), Dunland now refuses every call to war against Gondor: the `callToWarRefusals` list in `diplomacy.json`
+([diplomacy.md](diplomacy.md)).
+
+## The third 150-day run
+
+Run `E:\Temp\scenario-runs\20261115-193557` (build `2a48c3d99.dirty`, built 2026-11-16 01:35 UTC, with Dunland's call-to-war
+refusal) passed 150 of 150 days with a clean unload. Dunland refused three calls to war against Gondor (`Call to war refused: empire
+will not join a war against empire_w`), and the log has no war declaration between the two realms.
+
+| Day 150 | Second run | Third run |
+|---|---|---|
+| Gondor towns/castles, strength | 9/9, 21,631 | 11/15, 23,883 |
+| Mordor towns/castles, strength | 7/11, 15,523 | 6/10, 13,734 |
+| Gondor to Mordor gap (day 1 gap) | 6,108 (8,674) | 10,149 (6,466) |
+| Harad towns/castles | 6/16 | 5/10 |
+| Dunland towns/castles | 3/6 | 4/6 |
+
+The gap stayed below the first run's 15,231 but grew from day 1, where the second run's shrank. The ledger's capital target failed:
+Blue Craig lost its capital on day 75 and was destroyed on day 99. In the second run Blue Craig lived with 1 town. Each run is one
+campaign, so these runs cannot say whether Dunland's peace with Gondor freed Gondor to fight Blue Craig.
 
 ## Still owed
 
-- A decision: should Dunland refuse a call to war against Gondor from an evil ally? The second run showed that path (#1283).
+- Blue Craig fell on day 75 of the third run: watch its capital in the next run before any change (#1283).
 - Gondor's survival row (0.3, shared with Arthedain) and its tier 7+ party template stacks: not changed, because the second run
   closed the gap. Revisit only if a later run shows the gap again.
 - A Codex review of 5101f151b and of these changes: the account's usage limit blocks Codex until 2026-11-20.
