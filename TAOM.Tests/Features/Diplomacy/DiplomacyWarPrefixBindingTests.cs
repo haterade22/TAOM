@@ -174,6 +174,46 @@ public class DiplomacyWarPrefixBindingTests
         Assert.AreEqual(0, isAllowed.GetParameters().Length, "IsAllowed gained parameters.");
     }
 
+    // #1350: the sponsor option's clickable condition is private and patched by name, so a rename would
+    // leave the option live for a refused call with nothing to say why.
+    [TestMethod]
+    [TestCategory("BindingVerification")]
+    public void SponsorCallToWarClickableCondition_BindingResolves_PrivateBoolWithOutHint()
+    {
+        RequireGame();
+
+        var method = SingleMethod(Resolve(Ns + "CampaignBehaviors.LordConversationsCampaignBehavior"),
+            "conversation_player_wants_to_sponsor_call_to_war_list_on_clickable_condition");
+
+        Assert.IsFalse(method.IsStatic, "The sponsor clickable condition became static.");
+        Assert.AreEqual(typeof(bool), method.ReturnType, "The sponsor clickable condition no longer returns bool.");
+        var parameters = method.GetParameters();
+        Assert.AreEqual(1, parameters.Length, "The sponsor clickable condition's arity drifted.");
+        Assert.AreEqual("hint", parameters[0].Name, "The sponsor clickable condition's hint parameter was renamed.");
+        Assert.IsTrue(parameters[0].IsOut, "The sponsor clickable condition's hint is no longer an out parameter.");
+        Assert.AreEqual(Resolve("TaleWorlds.Localization.TextObject"), parameters[0].ParameterType.GetElementType(),
+            "The sponsor clickable condition's hint is no longer a TextObject.");
+        AssertPrefixBindsToTarget(typeof(LordConversations_SponsorCallToWarClickable_Patch), method);
+    }
+
+    // #1350: the sponsor consequence is replaced by a prefix that reads the clicked row; a rename would bring back
+    // vanilla's first-kingdom-on-the-page call.
+    [TestMethod]
+    [TestCategory("BindingVerification")]
+    public void SponsorCallToWarConsequence_BindingResolves_PrivateParameterlessVoid()
+    {
+        RequireGame();
+
+        var method = SingleMethod(Resolve(Ns + "CampaignBehaviors.LordConversationsCampaignBehavior"),
+            "conversation_player_wants_to_sponsor_call_to_war_list_on_consequence");
+
+        Assert.IsFalse(method.IsStatic, "The sponsor consequence became static.");
+        Assert.AreEqual(typeof(void), method.ReturnType, "The sponsor consequence no longer returns void.");
+        Assert.AreEqual(0, method.GetParameters().Length, "The sponsor consequence gained parameters.");
+        Assert.AreEqual(5, SingleMethod(Resolve(Ns + "CampaignBehaviors.IAllianceCampaignBehavior"), "StartCallToWarAgreement")
+            .GetParameters().Length, "IAllianceCampaignBehavior.StartCallToWarAgreement changed arity: the prefix's call would not JIT.");
+    }
+
     // BannerlordCoop prefixes all three at the default priority (400), and equal priorities run in the
     // order they were added, which Coop usually wins. On StartCallToWarAgreement, Coop's server branch
     // does the agreement itself and returns false; Harmony 2.4.2 then skips every later bool prefix
