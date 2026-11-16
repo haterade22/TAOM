@@ -88,7 +88,7 @@ The callers behind the classification:
 
 **No start wars in data.** Every `<relationship>` row in `spkingdoms.xslt` and `taom_spkingdoms.xml` is `value >= 0` and not `isAtWar`, because `Kingdom.Deserialize` declares war for any negative value. `ShippedKingdomDataTests` pins it.
 
-**Known gap.** A player hostile action against a `Permanent` or same-alignment kingdom still starts the fight, but the war declaration is blocked, so the two kingdoms fight while at peace. The phase vetoes no longer cause this. A second gap: the lord-dialogue "sponsor a call to war" option is not silent. Vanilla's call-to-war cost (`DefaultAllianceModel.GetCallToWarCostForCalledKingdom`) subtracts `GetScoreOfDeclaringWar`, so for a vetoed pair the option shows a cost in the millions and is greyed out ("You don't have enough money"); only an ally with no fiefs or a player holding millions reaches the `StartCallToWarAgreement` backstop, which then does nothing.
+**Known gap.** A player hostile action against a `Permanent` or same-alignment kingdom still starts the fight, but the war declaration is blocked, so the two kingdoms fight while at peace. The phase vetoes no longer cause this. The lord-dialogue "sponsor a call to war" option is greyed out for a vetoed pair, with the veto's text as its hint in place of "You don't have enough money" (#1350). The option still shows vanilla's cost, which the war-score penalty inflates.
 
 **Open follow-ups.** #818 is this work. #819: switching the War of the Ring off during Full War does not unlock peace. #820: the phase transitions are gated on `IsAuthority` alone, so they run on every BannerlordTogether peer.
 

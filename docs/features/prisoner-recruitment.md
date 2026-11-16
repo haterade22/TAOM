@@ -8,7 +8,8 @@ loses nothing — all serve Sauron. A Gondor captor recruiting Rohan or Dwarf pr
 other case keeps vanilla behavior untouched.
 
 Applies to the player, AI lords, and the party-screen cost label alike, through a single GameModel
-override. MCM group: **World/Prisoner Recruitment** (master + per-player/AI gates, all default ON).
+override. MCM group: **World/Prisoner Recruitment** (master + per-player/AI gates, all default ON). In co-op the
+player gate covers every party a human player leads, a guest's too (#1371).
 
 ## Why This Exists
 
