@@ -5,6 +5,7 @@ using TaleWorlds.CampaignSystem;
 using TaleWorlds.Core;
 using TaleWorlds.MountAndBlade;
 using TAOM.Core.Logging;
+using TAOM.CoopCompat.Decisions;
 using TAOM.CoopCompat.GuestTrade;
 using TAOM.CoopCompat.Handshake;
 using TAOM.CoopCompat.Momentum;
@@ -42,6 +43,7 @@ public sealed class CoopCompatSubModule : MBSubModuleBase
     {
         if (_sessionsTried) return;
         _sessionsTried = true;
+        DecisionTypeRegistration.TryRegister(Log);
         try
         {
             StartSessions();
@@ -69,11 +71,12 @@ public sealed class CoopCompatSubModule : MBSubModuleBase
 
     // At the first campaign start, when every module's OnSubModuleLoad has run, so Coop's assemblies
     // resolve whatever the module order. On the dedicated server, DedicatedServer.Windows installs that
-    // resolver in its own OnSubModuleLoad.
+    // resolver in its own OnSubModuleLoad. The server loads its campaign before it accepts players.
     private void StartOnce()
     {
         if (_startTried) return;
         _startTried = true;
+        DecisionTypeRegistration.TryRegister(Log);
         try
         {
             StartTransport();
