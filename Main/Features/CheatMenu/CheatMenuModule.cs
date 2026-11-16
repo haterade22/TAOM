@@ -14,7 +14,7 @@ namespace TAOM.Features.CheatMenu;
 /// map's bar opens three game menus of cheats (teleport, gold, special resource, influence, renown, troops, relations, heal),
 /// which the <c>taom.cheat_*</c> console commands share through <see cref="CheatMenuService"/>. One patch (Patch151, the
 /// button), one behavior (the menus, and it attaches the map view that reads the map key), one rebindable key (H by default,
-/// <see cref="TaomCheatMenuHotKeyCategory"/>), nothing saved. The button element and the map view live in TAOM.Client (ADR-013).
+/// <see cref="TaomCheatMenuHotKeyCategory"/>), and one saved flag, the "Unlimited party" switch (<see cref="ICheatPartyRules"/>). The button element and the map view live in TAOM.Client (ADR-013).
 /// In a mission, Patch152 (TAOM.Client, the Esc menu's "Cheats" item) opens the battle list, which the
 /// <c>taom.cheat_battle_*</c> commands share through <see cref="BattleCheatService"/>.
 /// </summary>
@@ -35,16 +35,21 @@ internal sealed class CheatMenuModule : TaomFeatureModule
             r.Resolve<CheatMenuService>(),
             r.Resolve<ICheatMenuSettingsProvider>(),
             r.Resolve<ICheatWorldAdapter>(),
-            r.Resolve<ICheatMenuMapViewAdapter>())),
+            r.Resolve<ICheatMenuMapViewAdapter>(),
+            r.Resolve<ICheatPartyRules>())),
     };
 
     public override string Id => "CheatMenu";
+
+    // The "Unlimited party" switch is saved with the campaign (CheatMenuCampaignBehavior.SyncData).
+    public override bool OwnsSaveData => true;
 
     public override void RegisterServices(IRegistrator registrator)
     {
         registrator.Register<ICheatMenuSettingsProvider, CheatMenuSettingsProvider>(Reuse.Singleton);
         registrator.Register<ICheatWorldAdapter, CheatWorldAdapter>(Reuse.Singleton);
         registrator.Register<ICheatMenuHostAdapter, CheatMenuHostAdapter>(Reuse.Singleton);
+        registrator.Register<ICheatPartyRules, CheatPartyRules>(Reuse.Singleton);
         registrator.Register<CheatMenuService>(Reuse.Singleton);
         registrator.Register<CheatMenuOpener>(Reuse.Singleton);
         registrator.Register<ICheatMenuNavigationElementFactory, NullCheatMenuNavigationElementFactory>(Reuse.Singleton);

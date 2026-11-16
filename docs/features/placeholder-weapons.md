@@ -205,6 +205,8 @@ The validator then reports any troop still pointing at the removed id.
   run again.
 - v2.0.40 (16 Nov 2026, #1354): the shield gate reads these sheets; before, every placeholder resolved to no
   usage there and was never checked.
+- v2.0.40 (16 Nov 2026, #1384): `docs/reference/troop-rosters.html` prices these weapons from this folder;
+  before, their 305 slots on the page read "not found".
 
 ## GitHub Issue
 

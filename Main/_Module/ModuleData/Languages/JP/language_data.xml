@@ -25,4 +25,5 @@
   <LanguageFile xml_path="JP/std_taom_career_data_strings_jpn-JP.xml" />
   <LanguageFile xml_path="JP/std_taom_character_name_strings_jpn-JP.xml" />
   <LanguageFile xml_path="JP/std_taom_battle_scene_strings_jpn-JP.xml" />
+  <LanguageFile xml_path="JP/std_taom_realms_title_strings_jpn-JP.xml" />
 </LanguageData>

@@ -1625,3 +1625,9 @@ A notice for "TAOM did not load" first fired when TAOM.Dependencies loaded witho
 - **Why missed:** the trigger came from one observed launch, which had TAOM_Map too.
 - **Prevent:** key a "TAOM is missing" check on TAOM_Map, the module only TAOM players load. Text shown only when TAOM did not load is plain English with no `{=KEY}` row.
 - **Source:** [rca-pr1309-startup-alerts-2026-11-15.md](../rca-pr1309-startup-alerts-2026-11-15.md) findings 6 and 7.
+
+### A key scan reads every file shape the loader reads, not only the shape it was written for (#1390, 2026-11-16)
+The first #1390 gate scanned `*.xml` attributes only. The stylesheets carry about 1,700 inline keys as element text and as `{{=KEY}}` templates, so a new unregistered lord name in `lords.xslt` passed it. Its allowlist also worked per file, so a listed generator output could gain keys unnoticed, and nothing failed on an empty scan.
+- **Why missed:** the scan reused the generator's `ATTR_KEY_PATTERN`, which was written for the category sources, and the backlog was designed for shrinking, not growth.
+- **Prevent:** before a gate trusts a regex, list every file type and text position the data uses (`grep -c '{=' --include` per extension). Give an allowlist a count, and give a scan a floor.
+- **Source:** the #1390 tier 2 review, Tooling findings 1 and 2, Data flow trace 5.

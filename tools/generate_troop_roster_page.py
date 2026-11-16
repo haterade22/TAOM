@@ -41,6 +41,7 @@ sys.path.insert(0, str(REPO / "tools"))
 
 import analyze_melee_ladder as report  # noqa: E402
 import melee_catalogue as mc  # noqa: E402
+import taom_schema as ts  # noqa: E402
 from ranged_ladder import engine_tier  # noqa: E402
 
 try:
@@ -51,6 +52,8 @@ except ImportError:
 MODULES = report.MODULES
 TROOPS = report.TROOPS
 OUT = REPO / "docs" / "reference" / "troop-rosters.html"
+# TAOM's taom_ph_ weapons: the catalogue leaves their sheets out, so they are priced from this tree (#1384).
+PLACEHOLDERS = REPO / "Main" / "_Module" / "ModuleData" / ts.PLACEHOLDER_DIR
 
 ARMOUR_ATTRS = ("head_armor", "body_armor", "arm_armor", "leg_armor")
 ARMOUR_SLOTS = ("Head", "Body", "Cape", "Gloves", "Leg")
@@ -188,7 +191,8 @@ def load_troops_full(root: Path) -> list[TroopRow]:
             sets: list[TroopSet] = []
             for block in node.iter("Equipments"):
                 for roster in block.iter("EquipmentRoster"):
-                    if (roster.get("equipmentType") or "") == "Civilian":
+                    # The ladder's rule, which mirrors the engine: civilian="true" is Civilian too.
+                    if report._is_civilian_roster(roster):
                         continue
                     slots: dict[str, str] = {}
                     for eq in roster.iter("equipment", "Equipment"):
@@ -517,6 +521,36 @@ def wrap_document(fragment: str) -> str:
     return "\n".join(head) + "\n" + body + "</body>\n</html>\n"
 
 
+def index_weapons(items: dict, cat, ph_dir: Path) -> tuple[int, int]:
+    """Add the crafted weapons to `items`: priced ones with their damage and DPS, unpriced ones by
+    name, so the slot is never "not found". Returns (priced, unpriced).
+
+    TAOM's taom_ph_ placeholders are priced from `ph_dir` the way the validator prices them
+    (taom_schema.price_placeholders): the catalogue leaves their sheets out (#1372, #1384).
+    """
+    priced, failures = mc.price_all(cat)
+    ph_priced, ph_problems = ts.price_placeholders(cat, ph_dir)
+    for file, entry, reason in ph_problems:
+        print(f"WARNING: placeholder {entry} ({file}) not priced: {reason}", file=sys.stderr)
+    for iid, p in {**priced, **ph_priced}.items():
+        info = items.get(iid) or ItemInfo(iid, p.item.name, "")
+        info.melee = True
+        info.swing_damage = p.swing_damage
+        info.thrust_damage = p.thrust_damage
+        info.dps = p.best_dps
+        info.weapon_class = p.item.template
+        items[iid] = info
+    # Crafted weapons that could not be priced still deserve a name and a slot.
+    # Named only when the pricing pass could read the file: it reports one that will not parse.
+    ph_file = ph_dir / ts.PLACEHOLDER_ITEMS
+    unreadable = any(entry == ts.PLACEHOLDER_ITEMS for _file, entry, _reason in ph_problems)
+    ph_items = ts._placeholder_items(ph_file) if ph_file.is_file() and not unreadable else {}
+    for iid, item in {**cat.items, **ph_items}.items():
+        if iid not in items:
+            items[iid] = ItemInfo(iid, item.name, item.template)
+    return len(priced) + len(ph_priced), len(failures) + len(ph_problems)
+
+
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     ap.add_argument("--out", default=str(OUT), help="standalone HTML to write")
@@ -532,19 +566,7 @@ def main(argv=None) -> int:
 
     items = load_plain_items(MODULES)
     cat = mc.load(MODULES, item_modules={report.ARMORY_MODULE, "SandBoxCore", "SandBox", "Native"})
-    priced, failures = mc.price_all(cat)
-    for iid, p in priced.items():
-        info = items.get(iid) or ItemInfo(iid, p.item.name, "")
-        info.melee = True
-        info.swing_damage = p.swing_damage
-        info.thrust_damage = p.thrust_damage
-        info.dps = p.best_dps
-        info.weapon_class = p.item.template
-        items[iid] = info
-    # Crafted weapons that could not be priced still deserve a name and a slot.
-    for iid, item in cat.items.items():
-        if iid not in items:
-            items[iid] = ItemInfo(iid, item.name, item.template)
+    priced, unpriced = index_weapons(items, cat, PLACEHOLDERS)
 
     troops = load_troops_full(TROOPS)
     fragment = build(items, troops)
@@ -553,7 +575,7 @@ def main(argv=None) -> int:
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(wrap_document(fragment), encoding="utf-8")
     print(f"wrote {out} ({len(troops)} troops, {len(items)} items indexed, "
-          f"{len(priced)} melee weapons priced, {len(failures)} unpriced)")
+          f"{priced} melee weapons priced, {unpriced} unpriced)")
     if args.fragment:
         Path(args.fragment).write_text(fragment, encoding="utf-8")
         print(f"wrote fragment {args.fragment}")

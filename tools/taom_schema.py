@@ -411,7 +411,8 @@ def melee_pass_rows(troops, priced, spec):
         craft = ml.craft_key(t.id, t.culture, spec)
         best = [(priced[i].best_dps, i) for i in t.items if i in priced]
         if best:
-            dps, iid = max(best)
+            # A tie names the smallest id, as analyze_melee_ladder.py does (#1379).
+            dps, iid = min(best, key=lambda b: (-b[0], b[1]))
             p = priced[iid]
             kits.append((t.id, craft, t.tier, iid, dps, p.blade_piece, p.item.template,
                          *ml.dominant_flags(p.item.template, p.swing_damage, p.thrust_damage,

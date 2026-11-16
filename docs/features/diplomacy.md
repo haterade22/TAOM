@@ -72,6 +72,7 @@ Harmony Patch11_Diplomacy
   ProposeCallToWarAgreementDecision.IsAllowed / AcceptCallToWarAgreementDecision.IsAllowed [Prefix] -> ShouldPreventCallToWar, result false, so vanilla cancels the ballot before the player sees it
   LordConversationsCampaignBehavior sponsor-call-to-war clickable condition [Prefix] -> IOnAllianceAction.GetCallToWarRefusalText (logs nothing), result false with the refusal as the hint (#1350)
   LordConversationsCampaignBehavior sponsor-call-to-war consequence [Prefix] -> vanilla's two calls for SelectedRepeatObject, the clicked row (vanilla used the first kingdom on the page, #1350)
+  LordConversationsCampaignBehavior sponsor-call-to-war list condition [Postfix] -> GOLD on the row's own text, so each row shows its own price (#1381)
   MakePeaceAction.ApplyInternal        [Prefix] -> IOnPeaceAction.ShouldPreventPeace
   AllianceCampaignBehavior.StartAlliance [Postfix] -> [diag] log (TEMPORARY, player-involved)
 
@@ -304,6 +305,7 @@ Phase 1 (Isengard and Dunland attack Rohan) triggers on day 30; Phase 2 (the ful
 | `Main/Features/Diplomacy/Hooks/AllianceCampaignBehavior_OnCallToWarAgreementProposedByPlayerKingdom_Patch.cs` | Harmony Prefix: `ShouldPreventCallToWar` for a player kingdom's call-to-war notice, which vanilla posts without reading `IsAllowed` |
 | `Main/Features/Diplomacy/Hooks/ProposeCallToWarAgreementDecision_IsAllowed_Patch.cs` | Harmony Prefix: the propose decision is not allowed when `ShouldPreventCallToWar` refuses the call |
 | `Main/Features/Diplomacy/Hooks/AcceptCallToWarAgreementDecision_IsAllowed_Patch.cs` | Harmony Prefix: the accept decision is not allowed when `ShouldPreventCallToWar` refuses the call |
+| `Main/Features/Diplomacy/Hooks/LordConversations_SponsorCallToWarPrice_Patch.cs` | Harmony Postfix: each row of the sponsor list shows its own price; vanilla showed the last row's on every row (#1381) |
 | `Main/Features/Diplomacy/Hooks/LordConversations_SponsorCallToWarConsequence_Patch.cs` | Harmony Prefix: the sponsor option calls the war against the clicked kingdom; vanilla used the first kingdom on the page (#1350) |
 | `Main/Features/Diplomacy/Hooks/LordConversations_SponsorCallToWarClickable_Patch.cs` | Harmony Prefix: greys out the lord dialogue's sponsor-a-call-to-war option with `GetCallToWarRefusalText` as the hint (#1350) |
 | `Main/Features/Diplomacy/Hooks/MakePeaceAction_ApplyInternal_Patch.cs` | Harmony Prefix — calls `IOnPeaceAction.ShouldPreventPeace` |
@@ -352,7 +354,7 @@ Phase 1 (Isengard and Dunland attack Rohan) triggers on day 30; Phase 2 (the ful
 | `TAOM.Tests/Features/Diplomacy/WarVetoReasonsTests.cs` | Every veto has its own keyed inline text; `Permanent` keeps `taom_war_blocked` |
 | `TAOM.Tests/Features/Diplomacy/ShippedKingdomDataTests.cs` | No `<relationship>` row in any shipped ModuleData xml or xslt declares war; a `LiveInstall` check of the transformed `spkingdoms.xslt` output |
 | `TAOM.Tests/Features/Diplomacy/DeclareWarActionPatchTests.cs` | Which `DeclareWarDetail` values count as player-caused (`RequiresGame`) |
-| `TAOM.Tests/Features/Diplomacy/DiplomacyWarPrefixBindingTests.cs` | `BindingVerification`: the war prefixes' parameter names and the decision fields they read, and the private sponsor clickable condition's name and `out TextObject hint`, and the sponsor consequence, against the installed engine |
+| `TAOM.Tests/Features/Diplomacy/DiplomacyWarPrefixBindingTests.cs` | `BindingVerification`: the war prefixes' parameter names and the decision fields they read, and the private sponsor clickable condition's name and `out TextObject hint`, the sponsor consequence and the sponsor list condition, against the installed engine |
 | `TAOM.Tests/Features/Diplomacy/WarOfTheRingShippedConfigTests.cs` | The shipped `war_of_the_ring.json`: days, ordering, test mode off, and the exact phase 1 list (`isengard->vlandia`, `empire->vlandia`) |
 | `TAOM.Tests/Features/Diplomacy/PeaceActionHookTests.cs` | `ShouldPreventPeace` during active vs inactive War of the Ring |
 | `TAOM.Tests/Features/Diplomacy/KingdomVoteDeadlockServiceTests.cs` | Patch80 staleness verdict, null ballot, throwing staleness check (suppresses, does not defer), announce path, per-ballot dedupe, throwing presenter, bounded dedupe set |
@@ -373,6 +375,7 @@ Phase 1 (Isengard and Dunland attack Rohan) triggers on day 30; Phase 2 (the ful
 
 ## Changelog
 
+- 2026-11-16: Each row of the lord dialogue's sponsor-a-call-to-war list shows its own price (#1381). Vanilla showed the last row's price on every row, so a vetoed last row made every live row look like it cost millions.
 - 2026-11-16: The lord dialogue's sponsor-a-call-to-war option is greyed out for a call TAOM refuses, with the reason as its hint (#1350). Before, a `callToWarRefusals` pair kept a live option that did nothing, and a vetoed pair showed only "not enough money". The option's consequence also called the war against the first kingdom on the dialogue page, not the clicked one (a vanilla bug); it now uses the clicked kingdom.
 - 2026-11-15: Dunland refuses every call to war against Gondor (`callToWarRefusals` in `diplomacy.json`, #1283). The second 150-day run showed the war begin on day 2 when the Misty Mountain Orcs called Dunland in; the maintainer decided Dunland refuses such calls.
 - 2026-11-15: `ShippedConfig_EveryKingdomId_IsARealKingdom` fails when a `diplomacy.json` row names an id that is no kingdom (#1291). The table is keyed on the two id strings, so a lore name such as `rohan` for `vlandia` loads without a warning and its pair silently reads Neutral. The kingdom list comes from `taom_spkingdoms.xml` and `spkingdoms.xslt`, the same reader the army targeting tests use.

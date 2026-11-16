@@ -105,6 +105,8 @@ Diplomacy system
 
 `LordConversationsCampaignBehavior.conversation_player_wants_to_sponsor_call_to_war_list_on_consequence()` (Prefix, `LordConversations_SponsorCallToWarConsequence_Patch`, 2026-11-16, #1350): vanilla's consequence reads `ConversationSentence.CurrentProcessedRepeatObject`, but `ConversationManager.GetSentenceOptions` resets that index to 0 for the two lines listed after the repeat line, so the click called the war against the first kingdom on the page. The prefix makes vanilla's two calls (`AllianceModel.GetCallToWarCost`, `IAllianceCampaignBehavior.StartCallToWarAgreement`) for `SelectedRepeatObject`, the clicked row, and returns false. The TAOM and Coop prefixes on `StartCallToWarAgreement` still run. Reviewed safe for co-op; the binding is pinned in `DiplomacyWarPrefixBindingTests`.
 
+`LordConversationsCampaignBehavior.conversation_player_wants_to_sponsor_call_to_war_list_on_condition()` (Postfix, `LordConversations_SponsorCallToWarPrice_Patch`, 2026-11-16, #1381): vanilla sets each row's price as the global text variable `GOLD`, and the rows are drawn only after all of them are built, so every row showed the last row's price. The postfix also sets `GOLD` on the row's own text (`ConversationSentence.SelectedRepeatLine`), which `TextProcessingContext.GetVariableValue` reads before the global variable. Display only; a void postfix skips nothing, so it has no co-op classification row. The binding is pinned in `DiplomacyWarPrefixBindingTests`.
+
 ## Patch12_WarOfTheRing
 
 **Target:** Various

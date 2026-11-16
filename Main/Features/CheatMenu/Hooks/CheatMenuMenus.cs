@@ -49,6 +49,7 @@ internal static class CheatMenuMenus
                 id => CheatMenuTexts.Show(service.AddRelation(id, RelationStep))));
         Option(starter, CheatMenuIds.Root, "taom_cheat_opt_heal", "{=taom_cheat_opt_heal}Heal your party and your heroes", i++,
             Shown, () => CheatMenuTexts.Show(service.Heal()));
+        UnlimitedPartyOption(starter, service, Shown, i++);
         Leave(starter, CheatMenuIds.Root, "taom_cheat_opt_close", "{=taom_cheat_opt_close}Close", i, GameMenu.ExitToLast);
 
         starter.AddGameMenu(CheatMenuIds.Teleport,
@@ -140,6 +141,34 @@ internal static class CheatMenuMenus
             }
         }
     }
+
+    // "Unlimited party: off / on" (CheatPartyRules). The label shows the current state; the hint says both things it does. A
+    // click flips it, says what changed, and redraws the page so the label follows.
+    private static void UnlimitedPartyOption(CampaignGameStarter starter, CheatMenuService service, Func<bool> shown, int index) =>
+        starter.AddGameMenuOption(CheatMenuIds.Root, "taom_cheat_opt_unlimited_party",
+            "{=taom_cheat_opt_unlimited_party}Unlimited party: {STATE}",
+            args =>
+            {
+                args.optionLeaveType = GameMenuOption.LeaveType.Continue;
+                args.Text.SetTextVariable("STATE", new TextObject(service.UnlimitedParty
+                    ? "{=taom_cheat_state_on}on" : "{=taom_cheat_state_off}off"));
+                args.Tooltip = new TextObject("{=taom_cheat_unlimited_party_hint}While on, your party has no troop limit, and troops of enemy or opposite-alignment cultures in it do not desert because of their culture. Turning it off keeps every troop, but the usual rules apply again: men over the troop limit start to desert, morale drops and the party is slower.");
+                return shown();
+            },
+            _ => Guarded("taom_cheat_opt_unlimited_party", () =>
+            {
+                var outcome = service.SetUnlimitedParty(!service.UnlimitedParty);
+                if (!outcome.Ok)
+                {
+                    CheatMenuTexts.Show(outcome);
+                    return;
+                }
+                TaleWorlds.Library.InformationManager.DisplayMessage(new TaleWorlds.Library.InformationMessage(new TextObject(service.UnlimitedParty
+                    ? "{=taom_cheat_unlimited_party_on}Unlimited party is on: no size limit, and enemy troops in your party do not desert because of their culture."
+                    : "{=taom_cheat_unlimited_party_off}Unlimited party is off: the size limit and desertion apply again.").ToString()));
+                GameMenu.SwitchToMenu(CheatMenuIds.Root);
+            }),
+            isLeave: false, index: index);
 
     private static void Leave(CampaignGameStarter starter, string menu, string id, string text, int index, Action act) =>
         starter.AddGameMenuOption(menu, id, text,

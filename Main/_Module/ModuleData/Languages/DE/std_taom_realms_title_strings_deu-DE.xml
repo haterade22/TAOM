@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="utf-8"?>
+<base xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+      type="string">
+  <tags>
+    <tag language="German" />
+  </tags>
+  <strings>
+    <string id="realms_clan_telcontar" text="House of Telcontar" />
+    <string id="realms_clan_telcontar_short" text="Telcontar" />
+    <string id="realms_coronation_button" text="Long live the King!" />
+    <string id="realms_coronation_heading" text="The Return of the King" />
+    <string id="realms_coronation_text" text="Before the gate of Minas Tirith the Steward of Gondor offers up the white rod of his office, and the King gives it back to him. Then the ancient crown of the kings is set upon the head of {HERO}.{newline}After long years an heir of Isildur sits upon the throne of Gondor, and the {CLAN} rules the realm from {SEAT}." />
+    <string id="realms_duchy_aldmyrr" text="Aldmyrr" />
+    <string id="realms_duchy_amex_kannu" text="Amêx Kânnu" />
+    <string id="realms_duchy_anbarul" text="Anbârul" />
+    <string id="realms_duchy_anfalas" text="Anfalas" />
+    <string id="realms_duchy_anorien" text="Anórien" />
+    <string id="realms_duchy_ansharan" text="Anshâran" />
+    <string id="realms_duchy_aradhrynd" text="Aradhrynd" />
+    <string id="realms_duchy_arshalag" text="Arshâlag" />
+    <string id="realms_duchy_balcoth" text="Balcoth" />
+    <string id="realms_duchy_belfalas" text="Belfalas" />
+    <string id="realms_duchy_bleakmere" text="Bleakmere" />
+    <string id="realms_duchy_breelands" text="Breelands" />
+    <string id="realms_duchy_brownlands" text="Brownlands" />
+    <string id="realms_duchy_buzra_dum" text="Buzrâ-dûm" />
+    <string id="realms_duchy_caradhras" text="Caradhras" />
+    <string id="realms_duchy_chajapun" text="Chajapun" />
+    <string id="realms_duchy_chelkar" text="Chelkar" />
+    <string id="realms_duchy_coresching" text="Coresching" />
+    <string id="realms_duchy_dalelands" text="Dalelands" />
+    <string id="realms_duchy_darsalan" text="Dârsalan" />
+    <string id="realms_duchy_dathabha" text="Dáthabha" />
+    <string id="realms_duchy_dol_guldur" text="Dol Guldur" />
+    <string id="realms_duchy_donfahan" text="Dônfahan" />
+    <string id="realms_duchy_dragon_wrath" text="Dragon-Wrath" />
+    <string id="realms_duchy_drownholt" text="Drownholt" />
+    <string id="realms_duchy_drunin" text="Drûnin" />
+    <string id="realms_duchy_dunfearan" text="Dunfearan" />
+    <string id="realms_duchy_dunlandfells" text="Dunlandfells" />
+    <string id="realms_duchy_eastemnet" text="Eastemnet" />
+    <string id="realms_duchy_eastern_trollshaws" text="Eastern Trollshaws" />
+    <string id="realms_duchy_eastfold" text="Eastfold" />
+    <string id="realms_duchy_emyn_i_firith" text="Emyn-i-Firith" />
+    <string id="realms_duchy_entwash_vale" text="Entwash Vale" />
+    <string id="realms_duchy_erebor" text="Erebor" />
+    <string id="realms_duchy_evendim" text="Evendim" />
+    <string id="realms_duchy_faerdor" text="Faerdor" />
+    <string id="realms_duchy_falyagash" text="Fâlyagash" />
+    <string id="realms_duchy_fanuidhol" text="Fanuidhol" />
+    <string id="realms_duchy_far_rhun" text="Far-Rhûn" />
+    <string id="realms_duchy_forlindon" text="Forlindon" />
+    <string id="realms_duchy_gap_of_khand" text="Gap of Khand" />
+    <string id="realms_duchy_girithlin" text="Girithlin" />
+    <string id="realms_duchy_glaudhol" text="Gláudhól" />
+    <string id="realms_duchy_goblin_town" text="Goblin Town" />
+    <string id="realms_duchy_gorgoroth" text="Gorgoroth" />
+    <string id="realms_duchy_gorogrod" text="Gorogrod" />
+    <string id="realms_duchy_gramavuld" text="Gramavuld" />
+    <string id="realms_duchy_gramberg" text="Gramberg" />
+    <string id="realms_duchy_gundalok" text="Gundalok" />
+    <string id="realms_duchy_harlindon" text="Harlindon" />
+    <string id="realms_duchy_harondor" text="Harondor" />
+    <string id="realms_duchy_haruzan" text="Haruzan" />
+    <string id="realms_duchy_hearthlands" text="Hearthlands" />
+    <string id="realms_duchy_herimundi" text="Herimundi" />
+    <string id="realms_duchy_imladris" text="Imladris" />
+    <string id="realms_duchy_iron_gap" text="Iron Gap" />
+    <string id="realms_duchy_iron_hills" text="Iron Hills" />
+    <string id="realms_duchy_ithilien" text="Ithilien" />
+    <string id="realms_duchy_jelut" text="Jelût" />
+    <string id="realms_duchy_kanelemas" text="Kanelemas" />
+    <string id="realms_duchy_ketex_ul" text="Ketêx Ûl" />
+    <string id="realms_duchy_khand_amu" text="Khand-Amû" />
+    <string id="realms_duchy_khand_khuvesra" text="Khand-Khûvesra" />
+    <string id="realms_duchy_khigan" text="Khigan" />
+    <string id="realms_duchy_khur_khand" text="Khûr-khand" />
+    <string id="realms_duchy_kingstead" text="Kingstead" />
+    <string id="realms_duchy_koanoz" text="Koanoz" />
+    <string id="realms_duchy_lamedon" text="Lamedon" />
+    <string id="realms_duchy_langfells" text="Langfells" />
+    <string id="realms_duchy_lebennin" text="Lebennin" />
+    <string id="realms_duchy_lithlad" text="Lithlad" />
+    <string id="realms_duchy_lone_lands" text="Lone Lands" />
+    <string id="realms_duchy_lorien" text="Lórien" />
+    <string id="realms_duchy_lossarnach" text="Lossarnach" />
+    <string id="realms_duchy_marsant" text="Mârsant" />
+    <string id="realms_duchy_minhiriath" text="Minhiriath" />
+    <string id="realms_duchy_mithelad" text="Mithelad" />
+    <string id="realms_duchy_mithlond" text="Mithlond" />
+    <string id="realms_duchy_morgul_vale" text="Morgul Vale" />
+    <string id="realms_duchy_nakar" text="Nâkar" />
+    <string id="realms_duchy_nan_angmar" text="Nan Angmar" />
+    <string id="realms_duchy_nan_curunir" text="Nan Curunir" />
+    <string id="realms_duchy_nogrod" text="Nogrod" />
+    <string id="realms_duchy_northdowns" text="Northdowns" />
+    <string id="realms_duchy_nurn" text="Nûrn" />
+    <string id="realms_duchy_nykkea" text="Nykkeâ" />
+    <string id="realms_duchy_parth_celebrant" text="Parth Celebrant" />
+    <string id="realms_duchy_pezarsan" text="Pezarsan" />
+    <string id="realms_duchy_pinnath_gelin" text="Pinnath Gelin" />
+    <string id="realms_duchy_sairthiuda" text="Sairthiuda" />
+    <string id="realms_duchy_seregost" text="Seregost" />
+    <string id="realms_duchy_shire" text="Shire" />
+    <string id="realms_duchy_starlurtsa" text="Starlurtsa" />
+    <string id="realms_duchy_sunnarinna" text="Sunnarinna" />
+    <string id="realms_duchy_szreliviod" text="Szreliviod" />
+    <string id="realms_duchy_tal_bruinen" text="Tal Bruinen" />
+    <string id="realms_duchy_taur_nu_fuin" text="Taur-nu-Fuin" />
+    <string id="realms_duchy_the_wold" text="The Wold" />
+    <string id="realms_duchy_trollshaws" text="Trollshaws" />
+    <string id="realms_duchy_tubultarna" text="Tûbultârna" />
+    <string id="realms_duchy_uda_khand" text="Uda-Khand" />
+    <string id="realms_duchy_udun" text="Ûdun" />
+    <string id="realms_duchy_umbar_baharbel" text="Umbar Bahârbel" />
+    <string id="realms_duchy_vargfell" text="Vargfell" />
+    <string id="realms_duchy_vestvineland" text="Vestvineland" />
+    <string id="realms_duchy_vidufells" text="Vídufells" />
+    <string id="realms_duchy_west_bight" text="West Bight" />
+    <string id="realms_duchy_west_nan_amlug" text="West Nan Amlug" />
+    <string id="realms_duchy_westemnet" text="Westemnet" />
+    <string id="realms_duchy_westfold" text="Westfold" />
+    <string id="realms_duchy_zirakzigil" text="Zirakzigil" />
+    <string id="realms_holder_count_harad" text="Tarb {NAME}" />
+    <string id="realms_holder_countess_harad" text="Tarbah {NAME}" />
+    <string id="realms_holder_duchess_harad" text="Autarbah {NAME}" />
+    <string id="realms_holder_duke_harad" text="Autarb {NAME}" />
+    <string id="realms_holder_high_king" text="High King {NAME}" />
+    <string id="realms_holder_high_king_harad" text="Chák Taskral {NAME}" />
+    <string id="realms_holder_high_queen" text="High Queen {NAME}" />
+    <string id="realms_holder_high_queen_harad" text="Chák Taskralah {NAME}" />
+    <string id="realms_holder_king" text="King {NAME}" />
+    <string id="realms_holder_king_elf" text="Aran {NAME}" />
+    <string id="realms_holder_king_harad" text="Taskral {NAME}" />
+    <string id="realms_holder_lady" text="Lady {NAME}" />
+    <string id="realms_holder_lady_elf" text="Híril {NAME}" />
+    <string id="realms_holder_lord" text="Lord {NAME}" />
+    <string id="realms_holder_lord_dwarf" text="Uzbad {NAME}" />
+    <string id="realms_holder_lord_elf" text="Hîr {NAME}" />
+    <string id="realms_holder_marshal" text="Marshal {NAME}" />
+    <string id="realms_holder_prince" text="Prince {NAME}" />
+    <string id="realms_holder_princess" text="Princess {NAME}" />
+    <string id="realms_holder_queen" text="Queen {NAME}" />
+    <string id="realms_holder_queen_elf" text="Bereth {NAME}" />
+    <string id="realms_holder_queen_harad" text="Taskralah {NAME}" />
+    <string id="realms_holder_steward" text="Steward {NAME}" />
+    <string id="realms_of_barad_dur" text="Barad-dûr" />
+    <string id="realms_of_gondor" text="Gondor" />
+    <string id="realms_of_the_mark" text="the Mark" />
+    <string id="realms_office_lieutenant" text="Lieutenant of Barad-dûr" />
+    <string id="realms_office_marshal_1" text="First Marshal of the Mark" />
+    <string id="realms_office_marshal_2" text="Second Marshal of the Mark" />
+    <string id="realms_office_marshal_3" text="Third Marshal of the Mark" />
+    <string id="realms_office_steward_gondor" text="Steward of Gondor" />
+    <string id="realms_prefix_dol_amroth" text="Princedom of {NAME}" />
+    <string id="realms_prefix_ered_luin" text="Mansion of Ered Luin" />
+    <string id="realms_prefix_gabilgathol" text="Mansion of Gabilgathol" />
+    <string id="realms_prefix_gondor_fief" text="Fief of {NAME}" />
+    <string id="realms_prefix_harwan" text="Taskralan of Harwan" />
+    <string id="realms_prefix_reunited" text="Reunited Kingdom" />
+    <string id="realms_rank_barony" text="Barony of {NAME}" />
+    <string id="realms_rank_barony_dwarf" text="Delving of {NAME}" />
+    <string id="realms_rank_county" text="County of {NAME}" />
+    <string id="realms_rank_county_elf" text="Refuge of {NAME}" />
+    <string id="realms_rank_county_harad" text="Tarba of {NAME}" />
+    <string id="realms_rank_county_orc" text="Stronghold of {NAME}" />
+    <string id="realms_rank_duchy" text="Duchy of {NAME}" />
+    <string id="realms_rank_duchy_dwarf" text="Hold of {NAME}" />
+    <string id="realms_rank_duchy_elf" text="Refuge of {NAME}" />
+    <string id="realms_rank_duchy_harad" text="Autara of {NAME}" />
+    <string id="realms_rank_duchy_orc" text="Warlordship of {NAME}" />
+    <string id="realms_rank_empire" text="High Kingship of {NAME}" />
+    <string id="realms_rank_empire_dwarf" text="Kingship of {NAME}" />
+    <string id="realms_rank_kingdom" text="Kingdom of {NAME}" />
+    <string id="realms_rank_kingdom_dwarf" text="Mansion of {NAME}" />
+    <string id="realms_rank_kingdom_elf" text="Realm of {NAME}" />
+    <string id="realms_rank_kingdom_harad" text="Taskralan of {NAME}" />
+    <string id="realms_rank_kingdom_orc" text="Dominion of {NAME}" />
+    <string id="realms_rank_lordship" text="Lordship of {NAME}" />
+    <string id="realms_rank_union" text="Reunited Kingdom of {NAME}" />
+    <string id="realms_rank_union_dwarf" text="High Kingship of {NAME}" />
+    <string id="realms_realm_greenwood" text="Greenwood" />
+    <string id="realms_realm_misty_mountains" text="Misty Mountains" />
+    <string id="realms_realm_reunited" text="Reunited Kingdom" />
+    <string id="realms_title_arnor" text="Arnor" />
+    <string id="realms_title_durins_folk" text="Durin's Folk" />
+    <string id="realms_title_eredluin" text="Ered Luin" />
+    <string id="realms_title_greenwood" text="Greenwood" />
+    <string id="realms_title_haradwaith" text="Haradwaith" />
+    <string id="realms_title_khazad_dum" text="Khazad-dûm" />
+    <string id="realms_title_misty_mountains" text="the Misty Mountains" />
+    <string id="realms_title_reunited" text="Gondor and Arnor" />
+    <string id="realms_title_rhovanion" text="Rhovanion" />
+  </strings>
+</base>
