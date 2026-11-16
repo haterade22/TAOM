@@ -128,6 +128,14 @@ CATEGORIES: dict[str, dict] = {
                   "tools/generate_name_localization_strings.py. Do not hand-edit; re-run the "
                   "generator instead.",
     },
+    # #1374: Realms rank, title and house names. TitleNames builds a TextObject from each raw name.
+    "realms_title": {
+        "sources": lambda: [MODULE_DATA / "realms_titles.xml"],
+        "output": MODULE_DATA / "taom_realms_title_strings.xml",
+        "header": "Generated Realms title strings (rank templates, titles, houses): extracted from "
+                  "realms_titles.xml by tools/generate_name_localization_strings.py. Do not "
+                  "hand-edit; re-run the generator instead.",
+    },
 }
 
 
