@@ -2960,6 +2960,7 @@
 	<string id="taom_rf_upgrade_tooltip" text="{=taom_rf_upgrade_tooltip}Cost: {GOLD} denars. Your company stays while it is rebuilt into a stronghold." />
 	<string id="taom_rf_upgrading" text="{=taom_rf_upgrading}Rebuilding the refuge into a stronghold - your company must stay until it is done." />
 	<string id="taom_rf_warden_desc" text="{=taom_rf_warden_desc}Choose who commands the refuge - a companion, or promote one of your soldiers into an officer. They leave your party to lead it." />
+	<string id="taom_rf_warden_ranks" text="{=taom_rf_warden_ranks}Your promoted warden returns to the ranks as {TROOP}." />
 	<string id="taom_rf_warden_title" text="{=taom_rf_warden_title}Assign a Warden" />
 	<string id="taom_rf_fallen" text="{=taom_rf_fallen}Your refuge has fallen. What remains of its garrison is lost; your warden's fate rides with the survivors." />
 	<string id="taom_rf_food_note" text="{=taom_rf_food_note}The garrison eats from the stored goods; keep the stash provisioned or it will starve." />

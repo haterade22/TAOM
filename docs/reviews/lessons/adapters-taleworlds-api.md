@@ -2008,6 +2008,13 @@ PR #1304's doc said god mode stays on while the player walks the field after the
 
 **Source:** `docs/reviews/rca-scenario-autorun-2026-11-15.md`
 
+### A notification flag stops one message, not every listener (refuge warden, PR #1323, 2026-11-15)
+
+**Why missed:** `KillCharacterAction.ApplyByRemove(hero, showNotification: false)` was documented as a silent removal. The flag only stops the death pop-up; SandBox's `CommentOnCharacterKilledBehavior.OnBeforeHeroKilled` still adds a `CharacterKilledLogEntry`, a visible chat notification that prints "<name> was lost.".
+
+**Prevent:** before calling an engine action silent, list the campaign events it fires and read each SandBox listener, not only the branch the flag guards.
+
+**Source:** `docs/reviews/rca-pr1323-refuge-warden-ranks-2026-11-15.md`
 ### Two engine methods share a name; cite the one the call site binds (cheat party screen, PR #1321, 2026-11-15)
 
 **Why missed:** the hand-built copy of `PartyScreenHelper.OpenScreenAsCheat` used a Done handler that only returned true, citing "DefaultDoneHandler returns true". That is `PartyScreenLogic.DefaultDoneHandler`. The method `OpenScreenAsCheat` binds is the private `PartyScreenHelper.DefaultDoneHandler`, which releases the prisoners moved to the left first. Without it a released lord became a prisoner with no captor.
