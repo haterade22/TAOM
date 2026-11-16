@@ -136,7 +136,8 @@ GATES = (
     Gate("armory-refs", "Armory items, crafting pieces, weapon descriptions", ARMORY_GLOBS,
          ("python", "tools/audit_armory_refs.py", "--report", "-"), (ARMORY_DOC,),
          note="meshes, collision bodies, dead item ids, and the companion checks of /armory-audit"),
-    Gate("polearm-shield", "Armory weapons and pieces", ARMORY_GLOBS + TROOP_GLOBS,
+    Gate("polearm-shield", "Armory weapons and pieces", ARMORY_GLOBS + TROOP_GLOBS
+         + ("*/placeholder_weapons/*", "*/_module/submodule.xml", "*tools/audit_polearm_shield_parity.py"),
          ("python", "tools/audit_polearm_shield_parity.py"), ("docs/features/weapon-xml-pipeline.md",)),
     Gate("couch-brace", "Armory weapon descriptions, the couch spec and its tool",
          ARMORY_GLOBS + ("*tools/couch_brace_polearms.json", "*tools/register_couch_brace_polearms.py",

@@ -13,6 +13,9 @@ Each test maps to a way the gate could be wrong and pass anyway:
   - detects_shield_with_unusable_polearm  -> the #445/#447 defect itself
   - passes_when_registered                -> the fix is recognised (no permanent red)
   - registration_must_cover_every_piece   -> Crafting.cs's all-pieces-must-match rule
+  - stylesheet_named_by_a_submodule_row_applies -> #1354: a row's subfolder path is read
+  - stylesheet_without_a_submodule_row_is_ignored -> only what the engine loads counts
+  - incompatible_module_is_ignored        -> #1354: NavalDLC never loads beside TAOM
   - first_description_wins                -> template order decides the primary usage
   - ranged_is_not_a_finding               -> a bow + shield is normal, not a defect
   - twohanded_fails_like_polearm          -> #1312: two-handed weapons joined the ratchet
@@ -34,7 +37,7 @@ import subprocess
 import sys
 import tempfile
 import unittest
-from contextlib import redirect_stdout
+from contextlib import redirect_stderr, redirect_stdout
 from unittest import mock
 from pathlib import Path
 
@@ -163,6 +166,12 @@ def xslt_registering(*piece_ids: str) -> str:
     )
 
 
+def submodule_xml(*rows: tuple[str, str]) -> str:
+    """A SubModule.xml whose <XmlName> rows the engine reads to find a module's stylesheets."""
+    nodes = "".join(f'<XmlNode><XmlName id="{i}" path="{p}"/></XmlNode>' for i, p in rows)
+    return f'<Module><Xmls>{nodes}</Xmls></Module>\n'
+
+
 def write(path: Path, text: str) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(text, encoding="utf-8")
@@ -181,6 +190,8 @@ class GateContractTests(unittest.TestCase):
         write(native / "crafting_pieces.xml", PIECES)
         write(self.modules / "TestArmory" / "ModuleData" / "items.xml", ITEMS)
         self.overlay = self.modules / "TestArmory" / "ModuleData" / "weapon_descriptions.xslt"
+        write(self.modules / "TestArmory" / "SubModule.xml",
+              submodule_xml(("WeaponDescriptions", "weapon_descriptions")))
         self.addCleanup(self._tmp.cleanup)
         # Empty ratchet by default. The shipped KNOWN_FAILURES names real roster ids, and every
         # one of them is stale against this synthetic tree, which would fail every test here for
@@ -214,7 +225,7 @@ class GateContractTests(unittest.TestCase):
         buffer = io.StringIO()
         old, sys.argv = sys.argv, argv
         try:
-            with redirect_stdout(buffer):
+            with redirect_stdout(buffer), redirect_stderr(buffer):
                 code = audit.main()
         finally:
             sys.argv = old
@@ -235,6 +246,105 @@ class GateContractTests(unittest.TestCase):
         code, out = self.run_gate()
         self.assertEqual(code, 0, out)
         self.assertIn("PASS", out)
+
+    def test_stylesheet_named_by_a_submodule_row_applies(self):
+        """#1354: a row's path may sit in a subfolder (TAOM's placeholder_weapons/), and the
+        engine applies it. Reading only `<name>.xslt` at the top level missed every one."""
+        write(self.rosters / "troops.xml", roster_xml("test_spear", "test_shield"))
+        module = self.modules / "TestMod"
+        write(module / "SubModule.xml", submodule_xml(("WeaponDescriptions", "extra/ph_descriptions")))
+        write(module / "ModuleData" / "extra" / "ph_descriptions.xslt",
+              xslt_registering("spear_blade", "spear_handle"))
+        code, out = self.run_gate()
+        self.assertEqual(code, 0, out)
+        self.assertIn("PASS", out)
+
+    def test_row_for_another_id_is_not_applied(self):
+        """A CraftingTemplates row's stylesheet must not register weapon descriptions."""
+        write(self.rosters / "troops.xml", roster_xml("test_spear", "test_shield"))
+        module = self.modules / "TestMod"
+        write(module / "SubModule.xml", submodule_xml(("CraftingTemplates", "ct_overlay")))
+        write(module / "ModuleData" / "ct_overlay.xslt", xslt_registering("spear_blade", "spear_handle"))
+        code, out = self.run_gate()
+        self.assertEqual(code, 1, out)
+        self.assertIn("test_spear", out)
+
+    def test_checked_tree_replaces_its_installed_copy(self):
+        """#1354 review: the module whose rosters are checked is read from that tree, not from its
+        deployed copy, so an undeployed registration counts and a stale deployed one does not."""
+        write(self.rosters / "troops.xml", roster_xml("test_spear", "test_shield"))
+        own = self.rosters.parent
+        write(own / "SubModule.xml",
+              '<Module><Id value="TestOwn"/><Xmls><XmlNode><XmlName id="WeaponDescriptions" '
+              'path="ph/ph_descriptions"/></XmlNode></Xmls></Module>\n')
+        write(own / "ModuleData" / "ph" / "ph_descriptions.xslt", xslt_registering("spear_blade", "spear_handle"))
+        write(self.modules / "TestOwn" / "SubModule.xml", '<Module><Id value="TestOwn"/></Module>\n')
+        code, out = self.run_gate()
+        self.assertEqual(code, 0, out)
+        self.assertIn("PASS", out)
+
+    def test_roster_weapon_that_resolves_no_usage_fails(self):
+        """#1354's root: a weapon whose pieces no description lists resolved to no usage, and the
+        gate passed in silence. A roster weapon must resolve, or the run fails naming it."""
+        write(self.modules / "TestArmory" / "ModuleData" / "items.xml", ITEMS.replace(
+            "</Items>",
+            '  <CraftedItem id="test_orphan" crafting_template="SpearTemplate">'
+            '<Pieces><Piece id="spear_blade"/><Piece id="great_handle"/></Pieces></CraftedItem>\n</Items>'))
+        write(self.rosters / "troops.xml", roster_xml("test_orphan"))
+        code, out = self.run_gate()
+        self.assertEqual(code, 1, out)
+        self.assertIn("test_orphan", out)
+        self.assertIn("resolve no usage", out)
+
+    def test_missing_submodule_falls_back_to_taoms_and_says_so(self):
+        """--rosters with no SubModule.xml beside it reads TAOM's own, and names the file it used."""
+        write(self.rosters / "troops.xml", roster_xml("test_spear"))
+        code, out = self.run_gate()
+        self.assertEqual(code, 0, out)
+        self.assertIn("Skipped:", out)
+        self.assertIn("NavalDLC", out)
+
+    def test_malformed_submodule_exits_2_and_names_it(self):
+        """A broken SubModule.xml in any installed module is bad input (exit 2), not a finding."""
+        write(self.rosters / "troops.xml", roster_xml("test_spear"))
+        write(self.modules / "Broken" / "SubModule.xml", "")
+        code, out = self.run_gate()
+        self.assertEqual(code, 2, out)
+        self.assertIn("Broken", out)
+
+    def test_stylesheet_without_a_submodule_row_is_ignored(self):
+        """The engine reads no stylesheet a SubModule.xml row does not name, so neither does the gate."""
+        write(self.rosters / "troops.xml", roster_xml("test_spear", "test_shield"))
+        write(self.modules / "TestMod" / "ModuleData" / "weapon_descriptions.xslt",
+              xslt_registering("spear_blade", "spear_handle"))
+        code, out = self.run_gate()
+        self.assertEqual(code, 1, out)
+        self.assertIn("test_spear", out)
+
+    def test_incompatible_module_is_ignored(self):
+        """#1354: TAOM's <IncompatibleModules> (NavalDLC) never load beside it, so a registration
+        or a piece id there must not count. The list comes from the SubModule.xml beside --rosters."""
+        write(self.rosters / "troops.xml", roster_xml("test_spear", "test_shield"))
+        write(self.rosters.parent / "SubModule.xml",
+              '<Module><IncompatibleModules><Module Id="TestMod"/></IncompatibleModules></Module>\n')
+        module = self.modules / "TestMod"
+        write(module / "SubModule.xml", submodule_xml(("WeaponDescriptions", "weapon_descriptions")))
+        write(module / "ModuleData" / "weapon_descriptions.xslt",
+              xslt_registering("spear_blade", "spear_handle", "ghost_piece"))
+        # Its pieces and items must not count either: a piece defined there would hide a dangling
+        # id, and a shield defined there would hide a pair.
+        write(self.overlay, xslt_registering("naval_piece"))
+        write(module / "ModuleData" / "crafting_pieces.xml",
+              '<CraftingPieces><CraftingPiece id="naval_piece" piece_type="Blade"/></CraftingPieces>\n')
+        write(module / "ModuleData" / "items.xml", '<Items><Item id="naval_shield" Type="Shield"/></Items>\n')
+        write(self.rosters / "troops2.xml", roster_xml("test_greatsword", "naval_shield").replace(
+            'id="test_troop"', 'id="naval_troop"'))
+        code, out = self.run_gate()
+        self.assertEqual(code, 1, out)
+        self.assertIn("test_spear", out)
+        self.assertNotIn("ghost_piece", out)
+        self.assertIn("naval_piece", out)
+        self.assertNotIn("naval_troop", out)
 
     def test_registration_must_cover_every_piece(self):
         """Half a registration is no registration -- Crafting.cs needs every used piece."""

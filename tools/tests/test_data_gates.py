@@ -93,6 +93,10 @@ class SelectionTests(unittest.TestCase):
         ids = _ids(dg.select(dg.GATES, [LIVE_ARMORY]))
         self.assertIn("armory-refs", ids)
         self.assertIn("polearm-shield", ids)
+        # #1354: the gate reads TAOM's placeholder sheets, its SubModule.xml rows and its own code.
+        for path in ("Main/_Module/ModuleData/placeholder_weapons/ph_weapon_descriptions.xslt",
+                     "Main/_Module/SubModule.xml", "tools/audit_polearm_shield_parity.py"):
+            self.assertIn("polearm-shield", _ids(dg.select(dg.GATES, [path])), path)
 
     def test_a_weapon_description_sheet_or_the_couch_spec_selects_the_couch_gate(self):
         sheet = LIVE_ARMORY.rsplit("/LOTRLOME_items", 1)[0] + "/weapon_descriptions.xslt"

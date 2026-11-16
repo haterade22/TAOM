@@ -5155,3 +5155,9 @@ The Kit's sprite generation re-saved all 13 GUI `_tex.tpac` files. I copied back
 - **Why missed:** the promotion was a note in a comment, owned by no commit; closing the issue did not touch the tool.
 - **Prevent:** the commit that closes the issue an advisory tier waits on also edits the gate, and a hold carries its reason in the table (`KNOWN_FAILURES`), never a WARN that nothing reads.
 - **Source:** issue #1312.
+
+### A gate that mirrors engine loading must find files the way the engine does (placeholder weapons, #1354, 2026-11-16)
+`audit_polearm_shield_parity.py` applied each module's `ModuleData/<name>.xslt` by file name. The engine applies the stylesheets that `SubModule.xml` `<XmlName>` rows name, and TAOM's placeholder registrations sit in `placeholder_weapons/`, so all 20 `taom_ph_*` weapons resolved to no usage and their 270 places beside a shield were never judged. Reading the rows then pulled in NavalDLC, which TAOM declares incompatible, and its pieces showed as dangling.
+- **Why missed:** the file-name rule matched every stylesheet that existed when the gate was written; nothing failed when a new one used a subfolder.
+- **Prevent:** derive the file list from the manifest the engine reads (`SubModule.xml` rows, `<IncompatibleModules>`), and test both edges: a row's subfolder file counts, a file no row names does not. Make an input the gate cannot judge fail the run: a roster weapon that resolves to no usage now fails instead of passing in silence.
+- **Source:** issue #1354.
