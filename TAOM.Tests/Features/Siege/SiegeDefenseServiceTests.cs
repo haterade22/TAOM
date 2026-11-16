@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json;
@@ -7,6 +8,7 @@ using TAOM.Core.Logging;
 using TAOM.Features.CoopInterop;
 using TAOM.Features.Siege;
 using TAOM.Features.Siege.Models;
+using TaleWorlds.Library;
 
 namespace TAOM.Tests.Features.Siege;
 
@@ -14,11 +16,19 @@ namespace TAOM.Tests.Features.Siege;
 [TestCategory("RequiresGame")]
 public class SiegeDefenseServiceTests
 {
+    // The defaults as the service must key them (#1385): taom_module_strings.xml registers each key.
+    private const string DefaultTitle = "{=taom_siege_defense_default_title}{attacker} is besieging {settlement}!";
+    private const string DefaultBody = "{=taom_siege_defense_default_body}Will you answer the call to defend? You have {days} days to reach the settlement.";
+    private const string DefaultAcceptButton = "{=taom_siege_defense_default_accept_button}Help Defend";
+    private const string DefaultAcceptMessage = "{=taom_siege_defense_default_accept_message}You have pledged to defend {settlement}. Ride now!";
+    private const string DefaultRewardMessage = "{=taom_siege_defense_default_reward_message}You answered the call! +{influence} influence, +{relation} relation.";
+
     private ISiegeDefenseConfigProvider _configProvider;
     private ISiegeDefenseSettingsProvider _settings;
     private IPlayerContextAdapter _playerContext;
     private IModLogger _logger;
     private ICoopSessionProvider _coopSession;
+    private ITextLocalizerAdapter _text;
     private SiegeDefenseService _sut;
 
     [TestInitialize]
@@ -59,7 +69,8 @@ public class SiegeDefenseServiceTests
         _coopSession = Substitute.For<ICoopSessionProvider>();
         _coopSession.IsAuthority.Returns(true);
         _coopSession.IsCoopClient.Returns(false);
-        _sut = new SiegeDefenseService(_configProvider, _settings, _playerContext, _logger, _coopSession);
+        _text = Substitute.For<ITextLocalizerAdapter>();
+        _sut = new SiegeDefenseService(_configProvider, _settings, _playerContext, _logger, _coopSession, _text);
     }
 
     // --- IsWatchedSiege: player kingdom ---
@@ -355,17 +366,17 @@ public class SiegeDefenseServiceTests
     // --- GetMessages ---
 
     [TestMethod]
-    public void GetMessages_KnownFactionId_ReturnsConfigMessages()
+    public void GetMessages_KnownFactionId_KeysEachConfigMessageByKingdomAndField()
     {
         // Act
         var msgs = _sut.GetMessages("gondor");
 
         // Assert
-        Assert.AreEqual("Gondor Calls For Aid!", msgs.Title);
-        Assert.AreEqual("{attacker} besieges {settlement}! You have {days} days.", msgs.Body);
-        Assert.AreEqual("For Gondor!", msgs.AcceptButton);
-        Assert.AreEqual("Ride to {settlement}!", msgs.AcceptMessage);
-        Assert.AreEqual("Gondor remembers! +{influence} influence, +{relation} relation.", msgs.RewardMessage);
+        Assert.AreEqual("{=taom_siege_defense_gondor_title}Gondor Calls For Aid!", msgs.Title);
+        Assert.AreEqual("{=taom_siege_defense_gondor_body}{attacker} besieges {settlement}! You have {days} days.", msgs.Body);
+        Assert.AreEqual("{=taom_siege_defense_gondor_accept_button}For Gondor!", msgs.AcceptButton);
+        Assert.AreEqual("{=taom_siege_defense_gondor_accept_message}Ride to {settlement}!", msgs.AcceptMessage);
+        Assert.AreEqual("{=taom_siege_defense_gondor_reward_message}Gondor remembers! +{influence} influence, +{relation} relation.", msgs.RewardMessage);
     }
 
     [TestMethod]
@@ -375,8 +386,11 @@ public class SiegeDefenseServiceTests
         var msgs = _sut.GetMessages("unknown_faction");
 
         // Assert
-        StringAssert.Contains(msgs.Title, "{attacker}");
-        Assert.AreEqual("Help Defend", msgs.AcceptButton);
+        Assert.AreEqual(DefaultTitle, msgs.Title);
+        Assert.AreEqual(DefaultBody, msgs.Body);
+        Assert.AreEqual(DefaultAcceptButton, msgs.AcceptButton);
+        Assert.AreEqual(DefaultAcceptMessage, msgs.AcceptMessage);
+        Assert.AreEqual(DefaultRewardMessage, msgs.RewardMessage);
     }
 
     [TestMethod]
@@ -386,7 +400,7 @@ public class SiegeDefenseServiceTests
         var msgs = _sut.GetMessages("");
 
         // Assert
-        Assert.AreEqual("Help Defend", msgs.AcceptButton);
+        Assert.AreEqual(DefaultAcceptButton, msgs.AcceptButton);
     }
 
     // --- GetMessages: partial or null entries in siege_defense_config.json (#660) ---
@@ -398,7 +412,7 @@ public class SiegeDefenseServiceTests
             ?? throw new AssertFailedException("test JSON deserialized to null");
         var provider = Substitute.For<ISiegeDefenseConfigProvider>();
         provider.LoadConfig().Returns(config);
-        return new SiegeDefenseService(provider, _settings, _playerContext, _logger, _coopSession);
+        return new SiegeDefenseService(provider, _settings, _playerContext, _logger, _coopSession, _text);
     }
 
     [TestMethod]
@@ -413,11 +427,11 @@ public class SiegeDefenseServiceTests
         var msgs = sut.GetMessages("rohan");
 
         // Assert
-        Assert.AreEqual("Rohan Rides!", msgs.Title);
-        Assert.AreEqual("The horns of {settlement}.", msgs.Body);
-        Assert.AreEqual("Help Defend", msgs.AcceptButton);
-        Assert.AreEqual("You have pledged to defend {settlement}. Ride now!", msgs.AcceptMessage);
-        Assert.AreEqual("You answered the call! +{influence} influence, +{relation} relation.", msgs.RewardMessage);
+        Assert.AreEqual("{=taom_siege_defense_rohan_title}Rohan Rides!", msgs.Title);
+        Assert.AreEqual("{=taom_siege_defense_rohan_body}The horns of {settlement}.", msgs.Body);
+        Assert.AreEqual(DefaultAcceptButton, msgs.AcceptButton);
+        Assert.AreEqual(DefaultAcceptMessage, msgs.AcceptMessage);
+        Assert.AreEqual(DefaultRewardMessage, msgs.RewardMessage);
     }
 
     [TestMethod]
@@ -433,11 +447,11 @@ public class SiegeDefenseServiceTests
         var msgs = sut.GetMessages("rohan");
 
         // Assert
-        Assert.AreEqual("{attacker} is besieging {settlement}!", msgs.Title);
-        Assert.AreEqual("Will you answer the call to defend? You have {days} days to reach the settlement.", msgs.Body);
-        Assert.AreEqual("Help Defend", msgs.AcceptButton);
-        Assert.AreEqual("You have pledged to defend {settlement}. Ride now!", msgs.AcceptMessage);
-        Assert.AreEqual("Rohan remembers.", msgs.RewardMessage);
+        Assert.AreEqual(DefaultTitle, msgs.Title);
+        Assert.AreEqual(DefaultBody, msgs.Body);
+        Assert.AreEqual(DefaultAcceptButton, msgs.AcceptButton);
+        Assert.AreEqual(DefaultAcceptMessage, msgs.AcceptMessage);
+        Assert.AreEqual("{=taom_siege_defense_rohan_reward_message}Rohan remembers.", msgs.RewardMessage);
     }
 
     [TestMethod]
@@ -451,9 +465,9 @@ public class SiegeDefenseServiceTests
 
         // Assert
         Assert.IsNotNull(msgs);
-        Assert.AreEqual("{attacker} is besieging {settlement}!", msgs.Title);
-        Assert.AreEqual("Help Defend", msgs.AcceptButton);
-        Assert.AreEqual("You answered the call! +{influence} influence, +{relation} relation.", msgs.RewardMessage);
+        Assert.AreEqual(DefaultTitle, msgs.Title);
+        Assert.AreEqual(DefaultAcceptButton, msgs.AcceptButton);
+        Assert.AreEqual(DefaultRewardMessage, msgs.RewardMessage);
     }
 
     [TestMethod]
@@ -469,9 +483,9 @@ public class SiegeDefenseServiceTests
         var again = sut.GetMessages("rohan");
 
         // Assert
-        Assert.AreEqual("{attacker} is besieging {settlement}!", defaults.Title);
-        Assert.AreEqual("Help Defend", defaults.AcceptButton);
-        Assert.AreEqual("Help Defend", again.AcceptButton);
+        Assert.AreEqual(DefaultTitle, defaults.Title);
+        Assert.AreEqual(DefaultAcceptButton, defaults.AcceptButton);
+        Assert.AreEqual(DefaultAcceptButton, again.AcceptButton);
         var entry = config.KingdomMessages["rohan"];
         Assert.IsNotNull(entry);
         Assert.IsNull(entry.AcceptButton);
@@ -497,12 +511,91 @@ public class SiegeDefenseServiceTests
 
         // Assert
         Assert.AreNotSame(unknown, unknownAgain);
-        Assert.AreEqual("{attacker} is besieging {settlement}!", unknownAgain.Title);
-        Assert.AreEqual("Help Defend", unknownAgain.AcceptButton);
-        Assert.AreEqual("Help Defend", nullEntryAgain.AcceptButton);
-        Assert.AreEqual("You answered the call! +{influence} influence, +{relation} relation.", nullEntryAgain.RewardMessage);
+        Assert.AreEqual(DefaultTitle, unknownAgain.Title);
+        Assert.AreEqual(DefaultAcceptButton, unknownAgain.AcceptButton);
+        Assert.AreEqual(DefaultAcceptButton, nullEntryAgain.AcceptButton);
+        Assert.AreEqual(DefaultRewardMessage, nullEntryAgain.RewardMessage);
         Assert.AreNotSame(emptyId, otherService);
-        Assert.AreEqual("Help Defend", otherService.AcceptButton);
+        Assert.AreEqual(DefaultAcceptButton, otherService.AcceptButton);
+    }
+
+    // --- The popup's text goes through the localizer under its key (#1385) ---
+
+    private static ISiegeEventAdapter Siege(string defenderFactionId, string settlementId)
+    {
+        var siege = Substitute.For<ISiegeEventAdapter>();
+        siege.DefenderFactionId.Returns(defenderFactionId);
+        siege.SettlementId.Returns(settlementId);
+        siege.SettlementName.Returns("Minas Tirith");
+        siege.AttackerName.Returns("Mordor");
+        siege.IsTown.Returns(true);
+        return siege;
+    }
+
+    /// <summary>The popup OnSiegeStarted shows; the fake localizer marks each string it was handed with "L:".</summary>
+    private InquiryData? ShowPopup(ISiegeEventAdapter siege)
+    {
+        _text.Localize(Arg.Any<string>()).Returns(call => "L:" + call.ArgAt<string>(0));
+        _text.Localize(Arg.Any<string>(), Arg.Any<IReadOnlyDictionary<string, string>>())
+            .Returns(call => "L:" + call.ArgAt<string>(0));
+        InquiryData? shown = null;
+        Action<InquiryData, bool, bool> capture = (data, _, _) => shown = data;
+        InformationManager.OnShowInquiry += capture;
+        try
+        {
+            _sut.OnSiegeStarted(siege);
+        }
+        finally
+        {
+            InformationManager.OnShowInquiry -= capture;
+        }
+        return shown;
+    }
+
+    [TestMethod]
+    public void OnSiegeStarted_ConfiguredKingdom_ShowsEachStringLocalizedUnderItsKingdomKey()
+    {
+        var popup = ShowPopup(Siege("gondor", "town_gondor_1"));
+
+        Assert.IsNotNull(popup, "OnSiegeStarted showed no popup.");
+        Assert.AreEqual("L:{=taom_siege_defense_gondor_title}Gondor Calls For Aid!", popup.TitleText);
+        Assert.AreEqual("L:{=taom_siege_defense_gondor_body}{attacker} besieges {settlement}! You have {days} days.", popup.Text);
+        Assert.AreEqual("L:{=taom_siege_defense_gondor_accept_button}For Gondor!", popup.AffirmativeText);
+        Assert.AreEqual("L:{=taom_siege_defense_ignore}Ignore", popup.NegativeText);
+    }
+
+    [TestMethod]
+    public void OnSiegeStarted_KingdomWithNoEntry_ShowsTheDefaultKeys()
+    {
+        var popup = ShowPopup(Siege("unknown_faction", "town_special"));
+
+        Assert.IsNotNull(popup, "OnSiegeStarted showed no popup.");
+        Assert.AreEqual("L:" + DefaultTitle, popup.TitleText);
+        Assert.AreEqual("L:" + DefaultBody, popup.Text);
+        Assert.AreEqual("L:" + DefaultAcceptButton, popup.AffirmativeText);
+        Assert.AreEqual("L:{=taom_siege_defense_ignore}Ignore", popup.NegativeText);
+    }
+
+    [TestMethod]
+    public void OnSiegeStarted_GivesTheSiegeToTheTextAsVariables()
+    {
+        ShowPopup(Siege("gondor", "town_gondor_1"));
+
+        _text.Received(1).Localize("{=taom_siege_defense_gondor_title}Gondor Calls For Aid!",
+            Arg.Is<IReadOnlyDictionary<string, string>>(v =>
+                v["settlement"] == "Minas Tirith" && v["attacker"] == "Mordor" && v["days"] == "3"));
+        _text.Received(1).Localize("{=taom_siege_defense_gondor_accept_message}Ride to {settlement}!",
+            Arg.Is<IReadOnlyDictionary<string, string>>(v => v["settlement"] == "Minas Tirith"));
+    }
+
+    [TestMethod]
+    public void Resolve_RewardValues_AreTheInfluenceAndRelationVariables()
+    {
+        _sut.Resolve(DefaultRewardMessage, "town_gondor_1", "", 0, 10, 5);
+
+        _text.Received(1).Localize(DefaultRewardMessage,
+            Arg.Is<IReadOnlyDictionary<string, string>>(v =>
+                v["influence"] == "10" && v["relation"] == "5" && v["attacker"] == "" && v["days"] == "0"));
     }
 
     // Phase 9b #132 — Reset + Snapshot/Restore for save-load + R1 singleton reset

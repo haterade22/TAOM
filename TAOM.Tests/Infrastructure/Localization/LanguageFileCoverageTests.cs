@@ -58,7 +58,7 @@ public class LanguageFileCoverageTests
     /// <summary>
     /// The key a row is addressed by. Mirrors <c>_parse_string_xml(strip_keys=True)</c> in the
     /// translator exactly: the <c>{=KEY}</c> prefix embedded in the text when there is one,
-    /// otherwise the bare <c>id</c> (which is how <c>taom_wotr_strings.xml</c> is authored).
+    /// otherwise the bare <c>id</c> (no TAOM GameText row is plain since #1385: GameTextRowsAreKeyedTests).
     /// Getting this wrong in either direction would make the test compare two different universes.
     /// </summary>
     private static string TranslationKey(XElement row)

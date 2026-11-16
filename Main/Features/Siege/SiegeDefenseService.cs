@@ -15,20 +15,12 @@ namespace TAOM.Features.Siege;
 
 public class SiegeDefenseService : ISiegeDefenseService
 {
-    private static readonly KingdomSiegeMessages DefaultMessages = new KingdomSiegeMessages
-    {
-        Title = "{attacker} is besieging {settlement}!",
-        Body = "Will you answer the call to defend? You have {days} days to reach the settlement.",
-        AcceptButton = "Help Defend",
-        AcceptMessage = "You have pledged to defend {settlement}. Ride now!",
-        RewardMessage = "You answered the call! +{influence} influence, +{relation} relation."
-    };
-
     private readonly ISiegeDefenseSettingsProvider _settings;
     private readonly IPlayerContextAdapter _playerContext;
     private readonly IModLogger _logger;
     private readonly SiegeDefenseConfig _config;
     private readonly ICoopSessionProvider _coopSession;
+    private readonly ITextLocalizerAdapter _text;
     private readonly Dictionary<string, ActiveSiegeDefenseEvent> _activeEvents = new Dictionary<string, ActiveSiegeDefenseEvent>();
 
     // Rewards this PROCESS has already granted to its own player. Deliberately NOT serialized and
@@ -43,9 +35,11 @@ public class SiegeDefenseService : ISiegeDefenseService
         ISiegeDefenseSettingsProvider settings,
         IPlayerContextAdapter playerContext,
         IModLogger logger,
-        ICoopSessionProvider coopSession)
+        ICoopSessionProvider coopSession,
+        ITextLocalizerAdapter text)
     {
         _coopSession = coopSession;
+        _text = text;
         _settings = settings;
         _playerContext = playerContext;
         _logger = logger;
@@ -75,8 +69,9 @@ public class SiegeDefenseService : ISiegeDefenseService
 
     // A kingdom's entry may omit keys, leave them "", or be JSON null; each such field takes the
     // default, so none reaches the popup as a blank button or empty text (#660); a value of only
-    // spaces is kept as written. Always a fresh copy:
-    // neither DefaultMessages nor the config entry is ever handed out or written to.
+    // spaces is kept as written. Each text comes back under its key (SiegeDefenseText), so a
+    // translated row applies (#1385). Always a fresh copy: the config entry is never handed out or
+    // written to.
     internal KingdomSiegeMessages GetMessages(string factionId)
     {
         KingdomSiegeMessages? configured = null;
@@ -85,30 +80,28 @@ public class SiegeDefenseService : ISiegeDefenseService
 
         return new KingdomSiegeMessages
         {
-            Title = OrDefault(configured?.Title, DefaultMessages.Title),
-            Body = OrDefault(configured?.Body, DefaultMessages.Body),
-            AcceptButton = OrDefault(configured?.AcceptButton, DefaultMessages.AcceptButton),
-            AcceptMessage = OrDefault(configured?.AcceptMessage, DefaultMessages.AcceptMessage),
-            RewardMessage = OrDefault(configured?.RewardMessage, DefaultMessages.RewardMessage)
+            Title = SiegeDefenseText.Keyed(factionId, SiegeDefenseText.Title, configured?.Title, SiegeDefenseText.DefaultTitle),
+            Body = SiegeDefenseText.Keyed(factionId, SiegeDefenseText.Body, configured?.Body, SiegeDefenseText.DefaultBody),
+            AcceptButton = SiegeDefenseText.Keyed(factionId, SiegeDefenseText.AcceptButton, configured?.AcceptButton, SiegeDefenseText.DefaultAcceptButton),
+            AcceptMessage = SiegeDefenseText.Keyed(factionId, SiegeDefenseText.AcceptMessage, configured?.AcceptMessage, SiegeDefenseText.DefaultAcceptMessage),
+            RewardMessage = SiegeDefenseText.Keyed(factionId, SiegeDefenseText.RewardMessage, configured?.RewardMessage, SiegeDefenseText.DefaultRewardMessage)
         };
     }
 
-    private static string? OrDefault(string? value, string? fallback) =>
-        value is null || value.Length == 0 ? fallback : value;
-
-    private static string Resolve(string? template, string settlement, string attacker,
-        int days, int influence, int relation)
-    {
-        // net472's string.IsNullOrEmpty has no [NotNullWhen(false)], so spell the check out
-        // for the compiler; the behaviour is identical.
-        if (template is null || template.Length == 0) return "";
-        return template
-            .Replace("{settlement}", settlement)
-            .Replace("{attacker}", attacker)
-            .Replace("{days}", days.ToString())
-            .Replace("{influence}", influence.ToString())
-            .Replace("{relation}", relation.ToString());
-    }
+    // The template's {settlement}, {attacker}, {days}, {influence} and {relation} are text variables,
+    // so a translation can put them in any order. All five are set every time: a name left unset shows
+    // nothing, or the global text variable of that name in any case (vanilla sets SETTLEMENT and
+    // ATTACKER), never this siege's value.
+    internal string Resolve(string? template, string settlement, string attacker,
+        int days, int influence, int relation) =>
+        _text.Localize(template ?? "", new Dictionary<string, string>
+        {
+            ["settlement"] = settlement,
+            ["attacker"] = attacker,
+            ["days"] = days.ToString(System.Globalization.CultureInfo.InvariantCulture),
+            ["influence"] = influence.ToString(System.Globalization.CultureInfo.InvariantCulture),
+            ["relation"] = relation.ToString(System.Globalization.CultureInfo.InvariantCulture)
+        });
 
     public void OnSiegeStarted(ISiegeEventAdapter siege)
     {
@@ -160,8 +153,8 @@ public class SiegeDefenseService : ISiegeDefenseService
                 text: body,
                 isAffirmativeOptionShown: true,
                 isNegativeOptionShown: true,
-                affirmativeText: msgs.AcceptButton,
-                negativeText: "Ignore",
+                affirmativeText: Resolve(msgs.AcceptButton, settlementName, attackerName, days, 0, 0),
+                negativeText: _text.Localize(SiegeDefenseText.Ignore),
                 affirmativeAction: () =>
                 {
                     evt.PlayerAccepted = true;

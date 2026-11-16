@@ -347,7 +347,7 @@
                   <Children>
                     <ListPanel Id="HistoryContent" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" StackLayout.LayoutMethod="VerticalTopToBottom">
                       <Children>
-                        <TextWidget WidthSizePolicy="StretchToParent" SuggestedHeight="38" Text="History" Brush="TAOM.Encyclopedia.FilterHeading" />
+                        <FrontEndTextWidget WidthSizePolicy="StretchToParent" SuggestedHeight="38" LocalizedText="{=taom_ency_hero_history}History" Brush="TAOM.Encyclopedia.FilterHeading" />
                         <ImageWidget WidthSizePolicy="StretchToParent" SuggestedHeight="2" MarginBottom="12" Sprite="fs_divider_thin" />
                         <RichTextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" Text="@LastSeenText" MarginLeft="0" Brush="Encyclopedia.SubPage.History.Text" Command.LinkClick="ExecuteLink" />
                         <ListPanel DataSource="{History}" HeightSizePolicy="CoverChildren" WidthSizePolicy="StretchToParent" StackLayout.LayoutMethod="VerticalTopToBottom" MarginBottom="55">
