@@ -5150,6 +5150,11 @@ The Kit's sprite generation re-saved all 13 GUI `_tex.tpac` files. I copied back
 - **Prevent:** when you copy a check from a sibling launcher, copy where it reads its reference, what it prints on PASS and when it refuses. Test each one: a commit during the run, a PASS text with the sha, a refusal before launch.
 - **Source:** [rca-scenario-event-window-2026-11-15.md](../rca-scenario-event-window-2026-11-15.md), findings 3, 4 and 6.
 
+### Pin the package facts a build guard is scheduled around (Dependencies deploy guard, 2026-11-16)
+`FailOnMissingBundledDlls` runs `BeforeTargets="PostBuildCopyToModules"` and mirrors `CopyBinariesWindows`' condition rather than `DisableModuleCopy`. Both choices depend on the pinned Bannerlord.BuildResources `Basic.targets` (declaration order, and a clean that ignores `DisableModuleCopy`), and the wiring tests read only our csproj, so a package bump could silently stop the guard running first.
+- **Why missed:** the package facts were verified once by hand, and the tests checked our side of the contract only.
+- **Prevent:** when a target is ordered or conditioned around a dependency's targets, add a test that reads the pinned version's file from the NuGet cache and asserts those facts (Inconclusive when the cache lacks it).
+- **Source:** [rca-dependencies-deploy-dlls-2026-11-16.md](../rca-dependencies-deploy-dlls-2026-11-16.md), finding 2.
 ### An advisory tier that waits for an issue to close is never promoted (shield and two-hander gate, #1312, 2026-11-15)
 `audit_polearm_shield_parity.py` reported two-handed weapons beside a shield as WARN, with the comment "once #450 is closed, move TwoHandedWeapon into this set". #450 closed and nobody moved it, so the count grew from 33 to 98 to 114 rosters, and the 2026-11-05 RCA saw it and filed nothing.
 - **Why missed:** the promotion was a note in a comment, owned by no commit; closing the issue did not touch the tool.
@@ -5167,3 +5172,9 @@ The Kit's sprite generation re-saved all 13 GUI `_tex.tpac` files. I copied back
 - **Why missed:** the fix searched for the defect in the file the issue named, not for other code with the same shape.
 - **Prevent:** when fixing a helper, grep for its copies (the function name, "Copied in shape from", the same loop) and fix or file each in the same change. Before reusing a loader, read what each caller adds on top of it.
 - **Source:** issue #1372.
+
+### A loop over a set decides ties by hash order (melee ladder report, #1379, 2026-11-16)
+`analyze_melee_ladder.py` looped over `Troop.items`, a frozenset, and kept the first of two equal weapons, so one row of the report named a different axe from run to run on the same data. Python salts string hashes per process, so a test inside one process never sees the change.
+- **Why missed:** each run looked stable; only two runs side by side, or two `PYTHONHASHSEED` values, show it.
+- **Prevent:** when output depends on the order of a set (a tie-break, the first match, a dict filled from it), loop over `sorted(...)`. Prove a generator or report deterministic by running it under two or more `PYTHONHASHSEED` values in subprocesses.
+- **Source:** issue #1379.

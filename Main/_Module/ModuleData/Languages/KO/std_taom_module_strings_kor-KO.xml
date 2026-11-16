@@ -8216,6 +8216,13 @@
     <string id="TAOM_CrashReport_Continue" text="Continue (risky)" />
     <string id="TAOM_CrashReport_OpenBundle" text="Open bundle folder" />
     <string id="taom_call_to_war_refused" text="{CALLED_KINGDOM} will not go to war against {KINGDOM_TO_CALL_TO_WAR_AGAINST}." />
+    <string id="taom_cheat_opt_unlimited_party" text="Unlimited party: {STATE}" />
+    <string id="taom_cheat_state_off" text="off" />
+    <string id="taom_cheat_state_on" text="on" />
+    <string id="taom_cheat_unlimited_party_hint" text="While on, your party has no troop limit, and troops of enemy or opposite-alignment cultures in it do not desert because of their culture. Turning it off keeps every troop, but the usual rules apply again: men over the troop limit start to desert, morale drops and the party is slower." />
+    <string id="taom_cheat_unlimited_party_bonus" text="Unlimited party (cheat)" />
+    <string id="taom_cheat_unlimited_party_off" text="Unlimited party is off: the size limit and desertion apply again." />
+    <string id="taom_cheat_unlimited_party_on" text="Unlimited party is on: no size limit, and enemy troops in your party do not desert because of their culture." />
   </strings>
 
 </base>

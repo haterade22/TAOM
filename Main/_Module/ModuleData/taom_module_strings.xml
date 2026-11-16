@@ -2484,6 +2484,13 @@
 	<string id="taom_cheat_tp_villages" text="{=taom_cheat_tp_villages}Villages..." />
 	<string id="taom_cheat_troop_row" text="{=taom_cheat_troop_row}Tier {TIER}: {NAME}" />
 	<string id="taom_cheat_troops_any" text="{=taom_cheat_troops_any}+10 of any troop of your faction..." />
+	<string id="taom_cheat_opt_unlimited_party" text="{=taom_cheat_opt_unlimited_party}Unlimited party: {STATE}" />
+	<string id="taom_cheat_state_off" text="{=taom_cheat_state_off}off" />
+	<string id="taom_cheat_state_on" text="{=taom_cheat_state_on}on" />
+	<string id="taom_cheat_unlimited_party_hint" text="{=taom_cheat_unlimited_party_hint}While on, your party has no troop limit, and troops of enemy or opposite-alignment cultures in it do not desert because of their culture. Turning it off keeps every troop, but the usual rules apply again: men over the troop limit start to desert, morale drops and the party is slower." />
+	<string id="taom_cheat_unlimited_party_bonus" text="{=taom_cheat_unlimited_party_bonus}Unlimited party (cheat)" />
+	<string id="taom_cheat_unlimited_party_off" text="{=taom_cheat_unlimited_party_off}Unlimited party is off: the size limit and desertion apply again." />
+	<string id="taom_cheat_unlimited_party_on" text="{=taom_cheat_unlimited_party_on}Unlimited party is on: no size limit, and enemy troops in your party do not desert because of their culture." />
 	<string id="taom_cheat_troops_basic" text="{=taom_cheat_troops_basic}+10 basic recruits" />
 	<string id="taom_cheat_troops_elite" text="{=taom_cheat_troops_elite}+10 elite recruits" />
 	<string id="taom_cheat_troops_screen" text="{=taom_cheat_troops_screen}Every troop (party screen)..." />

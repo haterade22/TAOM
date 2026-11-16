@@ -362,7 +362,8 @@ class Placement:
 def place(priced: dict[str, mc.Priced], troops: list[Troop]) -> dict[str, Placement]:
     out: dict[str, Placement] = {}
     for troop in troops:
-        for iid in troop.items:
+        # sorted: troop.items is a frozenset, and hash order would reorder the tables (#1379)
+        for iid in sorted(troop.items):
             if iid in priced:
                 out.setdefault(iid, Placement(iid, [])).wearers.append(troop)
     return out
@@ -415,7 +416,8 @@ def tier_inversions(
     best: dict[tuple[str, str, int], list[tuple[float, Troop, str]]] = collections.defaultdict(list)
     for troop in troops:
         per_template: dict[str, tuple[float, str]] = {}
-        for iid in troop.items:
+        # sorted: on a tie the first weapon seen stays, so hash order would pick it (#1379)
+        for iid in sorted(troop.items):
             p = priced.get(iid)
             if p is None:
                 continue

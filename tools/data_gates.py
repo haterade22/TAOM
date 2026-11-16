@@ -95,6 +95,12 @@ CREATURE_GLOBS = ("*/action_sets.xml", "*/action_types.xml", "*/monster_usage_se
                   "*/lotr_monster_*.xml")
 FBX_GLOBS = ("*/assetsources/*.fbx",)
 LANG_GLOBS = ("*/languages/*.xml", "*/taom_module_strings.xml", "*/taom_xslt_strings.xml")
+# Every source and output of generate_name_localization_strings.py CATEGORIES not already in TROOP_GLOBS,
+# and the tool itself (#1374; test_data_gates pins it against CATEGORIES).
+NAME_LOC_GLOBS = ("*/realms_titles.xml", "*/custom_battle_scenes.xml", "*/career_system/*.xml",
+                  "*/taom_spkingdoms.xml", "*/taom_wanderers.xml", "*/named_companions/named_companions.xml",
+                  "*/_module/moduledata/taom_*_strings.xml", "*tools/generate_name_localization_strings.py",
+                  "*tools/_loc_sources.py")
 # Globs tested against the file name alone: `*banner*` on a full path matches the install folder
 # "Mount & Blade II Bannerlord", so every named live file would select banner-sheets.
 NAME_GLOBS = ("*banner*",)
@@ -122,7 +128,7 @@ GATES = (
     Gate("career-kits", "troops, characters, rosters", TROOP_GLOBS,
          ("python", "tools/generate_career_kits.py", "--verify"), ("docs/features/career-system.md",),
          note="after any troop add or delete, re-run every generator check, not only the validator"),
-    Gate("name-loc", "troops, characters, language files", TROOP_GLOBS + LANG_GLOBS,
+    Gate("name-loc", "troops, characters, language files, name generator sources", TROOP_GLOBS + LANG_GLOBS + NAME_LOC_GLOBS,
          ("python", "tools/generate_name_localization_strings.py", "--check"), ("docs/localization/TRANSLATOR_GUIDE.md",)),
     Gate("wanderers", "wanderers, wanderer strings", ("*/taom_wanderers.xml", "*/taom_wanderer_strings.xml"),
          _dotnet("WandererBackstoryCoverageTests"), (MODULEDATA_DOC,), dotnet=True),

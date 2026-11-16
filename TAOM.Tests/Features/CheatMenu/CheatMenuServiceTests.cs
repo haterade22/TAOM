@@ -22,6 +22,7 @@ public class CheatMenuServiceTests
     private ICoopSessionProvider _coop = null!;
     private IDedicatedServerProvider _dedicated = null!;
     private CheatMenuService _service = null!;
+    private CheatPartyRules _partyRules = null!;
 
     internal static TeleportState Free() => new(
         CampaignRunning: true, InMission: false, InSettlement: false, InMapEventOrEncounter: false, InSiege: false,
@@ -35,7 +36,9 @@ public class CheatMenuServiceTests
         _coop = Substitute.For<ICoopSessionProvider>();
         _coop.IsAuthority.Returns(true);
         _dedicated = Substitute.For<IDedicatedServerProvider>();
-        _service = new CheatMenuService(_world, _resources, _coop, _dedicated, Substitute.For<IModLogger>());
+        _partyRules = new CheatPartyRules();
+        _service = new CheatMenuService(_world, _resources, _coop, _dedicated, Substitute.For<IModLogger>(), _partyRules,
+            Substitute.For<IPartySizeCacheInvalidator>());
         _world.ReadTeleportState().Returns(Free());
     }
 

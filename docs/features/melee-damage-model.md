@@ -644,10 +644,11 @@ either way; this is the fixed point, not a stopping place chosen early.
 
 ### Three guards, each of which was wrong once
 
-1. **Couchable weapons, asymmetrically.** `ComputeBlowMagnitudeMelee` feeds the attacker's
-   closing speed into `CalculateStrikeMagnitudeForThrust` as `extraLinearSpeed`, where it is
-   added to the thrust speed and the sum is **squared**. A couched lance therefore already
-   lands several times the standing-thrust magnitude this model computes, so RAISING one is
+1. **Couchable weapons, asymmetrically.** A couch is a passive usage. On v1.5.7
+   `ComputeBlowMagnitudeMelee` sends it to `CalculateBaseBlowMagnitudeForPassiveUsage`
+   (`MissionCombatMechanicsHelper.cs:661-671`), which computes a thrust with zero thrust speed
+   and 0.83 times the closing speed (`CombatStatCalculator.cs:53-56`). The blow therefore comes
+   from the charge, not from the thrust this model computes, so RAISING a couchable weapon is
    refused. The first version refused to move them at all, which protected
    `wm_gundabad_spear_a02` at 164 DPS in the hands of tier-3 militia, the single worst weapon
    the audit found. Lowering is safe and is now allowed.
@@ -828,7 +829,7 @@ and its main weapon is an open decision (rca-black-uruk-weapons-2026-11-07 F1). 
 | `tools/generate_placeholder_weapons.py` | The `taom_ph_` placeholder weapons, capped by every carrier's tier limit |
 | `tools/analyze_melee_ladder.py` | The read-only report |
 | `tools/taom_schema.py` | The `MELEE_LADDER_INVERSION` and `MELEE_BLOW_CEILING` gates |
-| `tools/tests/test_melee_damage.py`, `test_melee_ladder.py`, `test_restat_melee_blades.py`, `test_generate_placeholder_weapons.py`, `test_analyze_melee_ladder.py`, `test_melee_catalogue_loading.py` | The tests |
+| `tools/tests/test_melee_damage.py`, `test_melee_ladder.py`, `test_restat_melee_blades.py`, `test_generate_placeholder_weapons.py`, `test_analyze_melee_ladder.py`, `test_melee_catalogue_loading.py`, `test_analyze_melee_ladder_order.py` | The tests |
 
 ## How to verify in game
 
@@ -856,6 +857,11 @@ armoured troop (see "Class limits"). After the apply and a full restart:
   ladder, the generators and the validator gave the same output on TAOM's weapons; the troop roster page now
   reads items without NavalDLC's stubs, so its Umbar `northern_round_shield` shows 300 hp (page regenerated
   under #1384).
+- v2.0.40 (16 Nov 2026, #1379): `analyze_melee_ladder.py` gave a different report from run to run when two
+  weapons tied (the erebor `TwoHandedAxe` row named `sm_dwarf_iron_axe_c` or `_d` by hash order). A tie
+  now goes to the first item id in sorted order, in the report and in the validator's melee gate, so a
+  `MELEE_LADDER` warning names the same weapon as `LADDER.md`; `test_analyze_melee_ladder_order.py` runs six
+  hash seeds.
 
 ## GitHub Issue
 
@@ -864,6 +870,7 @@ armoured troop (see "Class limits"). After the apply and a full restart:
 - **Status:** Open
 - The melee ladder umbrella is #631.
 - #1372: the catalogue loads modules and stylesheets by the shield gate's rule.
+- #1379: the report gives the same output on every run.
 
 ## Related
 

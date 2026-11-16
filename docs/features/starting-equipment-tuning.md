@@ -28,7 +28,7 @@ And once the #617 ranged ladder lowered low-tier troop bows to 33 to 43 damage, 
 the 9-point starter legs and the 220 HP starter shields sat above some cultures' regular troop gear. The
 career kits now take the culture's lowest troop gear directly, with no twins.
 
-## The engine facts the design rests on (1.4.8 dump)
+## The engine facts the design rests on (1.4.8 dump; hidden pieces rechecked on v1.5.7)
 
 - **Crafted damage is proportional to the blade's factor.** `Crafting.cs:134-135` reads the swing and thrust
   factors from the Blade piece alone; `363-381` multiply a magnitude computed from speed, reach, weight,
@@ -39,8 +39,11 @@ career kits now take the culture's lowest troop gear directly, with no twins.
   sword at 2.5; the anchors sit at or below each class's p5, and the generator prints each clone's
   percentile within its class so the claim is checkable.
 - **A hidden piece still needs registering.** `CraftingPiece.cs:201` reads `is_hidden` into
-  `IsHiddenOnDesigner`, consumed only by the smithing UI (`WeaponDesignVM.cs:1483, 1634`) and the unlock
-  behaviour (`CraftingCampaignBehavior.cs:668`). A crafted item resolves its usages by matching every
+  `IsHiddenOnDesigner`, consumed by the smithing UI (`WeaponDesignVM.cs:1483, 1634`), the unlock
+  behaviour (`CraftingCampaignBehavior.cs:668`) and the two default-piece picks, `Crafting.Init`
+  (`Crafting.cs:682`) and `CraftingCampaignBehavior.GetWeaponPieces` (`:1059`). Both picks call
+  `First(p => !p.CraftingPiece.IsHiddenOnDesigner)`, which throws when every piece of a slot is
+  hidden, so a hidden piece must never be the only one registered for its slot (v1.5.7). A crafted item resolves its usages by matching every
   fitted piece against `WeaponDescription.AvailablePieces` and the template's `UsablePieces`
   (`Crafting.cs:566-608`), so the starter blade must appear in every stylesheet block the donor blade
   appears in, or the item silently loses that usage (a spear missing from `OneHandedPolearm` resolves

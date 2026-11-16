@@ -10,7 +10,7 @@ Each day, every town in TAOM is seeded with a small rotation of items pulled fro
 
 LOTRLOME_Armory ships ~6,155 culture-tagged items across 17 LOTR factions (Gondor, Mordor, Rohan, Erebor, Isengard, Rivendell, Mirkwood, Rhun, Harad, Dunland, Gundabad, Dol Guldur, Arnor, Iron Hills, Mercenary, Thenn, Troll). Without this feature none of them appear in trade.
 
-- **Vanilla behavior:** `ItemObject.Culture` is silently ignored by Bannerlord's marketplace. Town inventory is restocked daily by `VillageGoodProductionCampaignBehavior.TickGoodProduction`, which only pushes items from `VillageType.Productions` (food, hides, raw materials). Equipment in vanilla markets is incidental — it arrives via caravan transfers and defeated-lord sells.
+- **Vanilla behavior:** the daily restock ignores `ItemObject.Culture`. Workshops are the exception: a workshop adds its output to the town's stock (`WorkshopsCampaignBehavior.cs:848`) and picks an item of the town's culture, or one with no culture, before any other (`:875-881`, `:1040-1058`, v1.5.7). Town inventory is restocked daily by `VillageGoodProductionCampaignBehavior.TickGoodProduction`, which only pushes items from `VillageType.Productions` (food, hides, raw materials). Equipment in vanilla markets is incidental — it arrives via caravan transfers and defeated-lord sells.
 - **TAOM requirement:** LOTRLOME's lore-correct catalog needs to surface during normal trade, biased toward the owning culture so a Gondor town feels like Gondor and an Easterling town feels like Rhun.
 - **Without this feature:** Markets are dominated by vanilla Calradian items regardless of culture. Players can't gear up locally; lore-correct equipment is reachable only by killing lords for their gear.
 
