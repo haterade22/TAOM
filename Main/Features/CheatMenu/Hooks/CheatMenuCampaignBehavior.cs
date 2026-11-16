@@ -35,6 +35,7 @@ public sealed class CheatMenuCampaignBehavior : CampaignBehaviorBase
     {
         CampaignEvents.OnSessionLaunchedEvent.AddNonSerializedListener(this, OnSessionLaunched);
         CampaignEvents.TickEvent.AddNonSerializedListener(this, OnTick);
+        CampaignEvents.OnPlayerCharacterChangedEvent.AddNonSerializedListener(this, (_, _, _, _) => _service.OnPlayerCharacterChanged());
     }
 
     public override void SyncData(IDataStore dataStore)

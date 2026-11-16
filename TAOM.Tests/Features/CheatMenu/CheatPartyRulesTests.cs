@@ -175,6 +175,30 @@ public class CheatPartyRulesTests
         StringAssert.Contains(launch.Groups["body"].Value, "_service.ReconcileAtSessionLaunch();");
     }
 
+    // ChangePlayerCharacterAction moves MainParty to another hero with no roster change, so the old party, now AI-led,
+    // would keep its cached +10,000 limit until its roster changes.
+    [DataTestMethod]
+    [DataRow(true)]
+    [DataRow(false)]
+    public void PlayerCharacterChanged_RefreshesEveryLimit_OnlyWhileTheSwitchIsOn(bool on)
+    {
+        var cache = Substitute.For<IPartySizeCacheInvalidator>();
+        var (service, rules, _) = ServiceWithCache(cache);
+        rules.UnlimitedParty = on;
+
+        service.OnPlayerCharacterChanged();
+
+        cache.Received(on ? 1 : 0).InvalidateAll();
+    }
+
+    [TestMethod]
+    public void Behavior_RefreshesTheLimits_WhenThePlayerCharacterChanges()
+    {
+        var src = RepoPaths.ReadSource("Main/Features/CheatMenu/Hooks/CheatMenuCampaignBehavior.cs", stripComments: true);
+        StringAssert.Contains(src,
+            "CampaignEvents.OnPlayerCharacterChangedEvent.AddNonSerializedListener(this, (_, _, _, _) => _service.OnPlayerCharacterChanged())");
+    }
+
     [TestMethod]
     public void ANewCampaign_StartsWithTheSwitchOff()
     {
@@ -242,7 +266,7 @@ public class CheatPartyRulesTests
     }
 
     [TestMethod]
-    public void PartySizeModel_AddsTheUnlimitedBonusLast_AfterTheTroopWeightPenalty()
+    public void PartySizeModel_AddsTheUnlimitedBonus_BeforeTheTroopWeightPenalty()
     {
         var src = File.ReadAllText(RepoPaths.RepoPath("Main", "Features", "CulturalFeats", "Models", "TaomPartySizeModel.cs"));
         int penalty = src.LastIndexOf("_troopWeight.ApplyPartySizeWeightPenalty(", System.StringComparison.Ordinal);
@@ -253,7 +277,9 @@ public class CheatPartyRulesTests
         int end = src.IndexOf("return result;", bonus < 0 ? 0 : bonus, System.StringComparison.Ordinal);
 
         Assert.IsTrue(penalty >= 0 && bonus >= 0, "the model applies the TroopWeight penalty and the cheat bonus");
-        Assert.IsTrue(bonus > penalty, "the bonus comes after the TroopWeight penalty, so nothing later shrinks it");
+        // Before the penalty, like every flat bonus: the penalty saves the limit it reads as the "true base", which the
+        // party-screen header shows, so a bonus added after it would make the header disagree with the tooltip.
+        Assert.IsTrue(bonus < penalty, "the bonus comes before the TroopWeight penalty");
         Assert.IsTrue(end > bonus, "the bonus is part of GetPartyMemberSizeLimit's result");
         Assert.AreEqual(1, System.Text.RegularExpressions.Regex.Matches(src, @"IoC\.Resolve<CheatMenu\.ICheatPartyRules>\(\)").Count);
     }

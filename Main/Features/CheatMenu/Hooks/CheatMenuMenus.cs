@@ -152,7 +152,7 @@ internal static class CheatMenuMenus
                 args.optionLeaveType = GameMenuOption.LeaveType.Continue;
                 args.Text.SetTextVariable("STATE", new TextObject(service.UnlimitedParty
                     ? "{=taom_cheat_state_on}on" : "{=taom_cheat_state_off}off"));
-                args.Tooltip = new TextObject("{=taom_cheat_unlimited_party_hint}While on, your party has no size limit, and troops of enemy or opposite-alignment cultures in it do not desert because of their culture. Turning it off keeps every troop, but the usual rules apply again: men over the size limit start to desert and the party is slower.");
+                args.Tooltip = new TextObject("{=taom_cheat_unlimited_party_hint}While on, your party has no troop limit, and troops of enemy or opposite-alignment cultures in it do not desert because of their culture. Turning it off keeps every troop, but the usual rules apply again: men over the troop limit start to desert, morale drops and the party is slower.");
                 return shown();
             },
             _ => Guarded("taom_cheat_opt_unlimited_party", () =>

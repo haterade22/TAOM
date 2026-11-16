@@ -106,6 +106,15 @@ public sealed class CheatMenuService
         RefreshMainPartySizeLimit();
     }
 
+    /// <summary>
+    /// After the player changes character (heir selection, Player Switcher). MainParty moves to the new hero with no roster
+    /// change, so the old party, now AI-led, would keep the cached +10,000 limit: refresh every party while the switch is on.
+    /// </summary>
+    public void OnPlayerCharacterChanged()
+    {
+        if (_partyRules.UnlimitedParty) _partySizeCache.InvalidateAll();
+    }
+
     // PartyBase.PartySizeLimit is cached until the roster's VersionNo changes, so a flip would otherwise show only after some
     // roster change. The main hero leads the main party; the invalidator also refreshes the army leader party (its speed cache).
     private void RefreshMainPartySizeLimit()

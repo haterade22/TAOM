@@ -98,6 +98,14 @@ public class TaomPartySizeModel : DefaultPartySizeLimitModel
         AiPartySizeService.AddResultFrameBonus(ref result, _eyeOfSauron.GetHostSizeBonus(
             party.MobileParty?.StringId, result.ResultNumber, result.SumOfFactors,
             party.MemberRoster?.TotalManCount ?? 0, party, _weightedCountOf));
+        // Cheat menu "Unlimited party" (CheatPartyRules): a +10,000 flat bonus for the main party only, while the switch is on.
+        // Before the TroopWeight penalty, like every flat bonus: the penalty saves the limit it reads as the "true base" that
+        // the party-screen header shows, so the header and the tooltip agree. The penalty only subtracts the weight surplus,
+        // so the enforced limit is the same either way.
+        // The switch is read first, then MobileParty.IsMainParty: PartyBase.MainParty dereferences Campaign.Current.MainParty,
+        // which vanilla nulls for a moment in OnPlayerCharacterChanged.
+        AiPartySizeService.AddResultFrameBonus(ref result,
+            _cheatParty.SizeBonusFor(_cheatParty.UnlimitedParty && party.MobileParty?.IsMainParty == true), UnlimitedPartyBonusText);
         // TroopWeight "elite tax" (2026-07-11 rework): shrink the limit by the party's weight surplus so
         // heavy troops fill the cap at 2× while every COUNT reads raw. No-op when EnableTroopWeight is off.
         // Call position is irrelevant to the arithmetic — ExplainedNumber sums factors and applies them to
@@ -109,13 +117,6 @@ public class TaomPartySizeModel : DefaultPartySizeLimitModel
         // the enforcement path (PartyBase.PartySizeLimit, includeDescriptions: false) still deflates. The
         // branch lives in the service, not here — gamemodels.md rule 4 keeps this override branch-free.
         _troopWeight.ApplyPartySizeWeightPenalty(party, ref result, includeDescriptions);
-        // Cheat menu "Unlimited party" (CheatPartyRules): a +10,000 flat bonus for the main party only, while the switch is on.
-        // Last on purpose: after the TroopWeight penalty, so nothing applied later can take it back; the TroopWeight shed
-        // never trims the main party (PartyUpgraderUpgradeReadyTroopsHook), so its "true base" snapshot needs no bonus.
-        // The switch is read first, then MobileParty.IsMainParty: PartyBase.MainParty dereferences Campaign.Current.MainParty,
-        // which vanilla nulls for a moment in OnPlayerCharacterChanged.
-        AiPartySizeService.AddResultFrameBonus(ref result,
-            _cheatParty.SizeBonusFor(_cheatParty.UnlimitedParty && party.MobileParty?.IsMainParty == true), UnlimitedPartyBonusText);
         // TEMPORARY (2026-07-17) — one-shot load-order probe for the "max troop goes over after loading"
         // report; self-guards to the first main-party computation. Strip with the diagnostic class.
         PartySizeLoadOrderDiagnostic.RecordFirstMainPartyLimit(party, result.ResultNumber, _careerPassives, _logger);

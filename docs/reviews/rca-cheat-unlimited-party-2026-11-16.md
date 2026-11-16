@@ -46,3 +46,20 @@ sides), `Behavior_ReconcilesTheSwitchAtSessionLaunch_AfterTheSaveIsRead`, `Party
 In `CheatMenuWiringTests`: `UnlimitedPartyLabel_SetsItsStateOnItsOwnText`,
 `UnlimitedPartyTexts_SayEnemyTroopsKeepOnlyTheCultureRule`. With the two service fixes removed, three of them fail
 (both cases of the refresh test and the co-op session-launch test).
+
+## Maintainer review (2026-11-16)
+
+Tier 1 (a GameModel, save data): lens 5 (data flow) and lens 2 (engine compatibility) at `max`. Lens 2 found all 21
+engine members present on v1.5.7. Codex did not run: it is out of usage.
+
+| # | Sev | Finding | Category | Why missed | Preventive action |
+|---|---|---|---|---|---|
+| M1 | LOW | The bonus ran after the TroopWeight penalty, which saves the limit it reads as the base the party-screen header shows, so the header counted the weight surplus twice and disagreed with the tooltip (lens 5 trace 9) | Order against a second reader | The model comment named only the daily shed as a reader of the saved base | Fixed: the bonus runs just before the penalty, like the other flat bonuses; the enforced limit is unchanged; the order test is flipped |
+| M2 | LOW | After a player character change (heir selection, Player Switcher) the old main party, now AI-led, kept the cached +10,000 limit until its roster changed (lens 5 trace 5) | Cache not invalidated on every path | `IsMainParty` can change without a roster change | Fixed: `OnPlayerCharacterChangedEvent` refreshes every party while the switch is on; two new tests |
+| M3 | LOW | The doc said the AI reads the player's party "as huge"; the AI reads the fill ratio, so it sees the party as nearly empty (lens 2 F1, lens 5 trace 10) | Wrong engine claim | The speed model sums limits; the AI was assumed to do the same | Fixed: the doc names both effects |
+| M4 | LOW | The hint and the doc left out that morale drops when the switch turns off, and "no size limit" covered the prisoner limit too (lens 2 F2, F4) | Incomplete text | The over-limit morale penalty is a separate model | Fixed: "no troop limit" and "morale drops" in the hint (an English key with no translation yet) and the doc |
+| M5 | LOW | The 7 new keys had no rows in the 12 language files (lens 5 item 11; the full verify failed `EveryLanguage_DeclaresARowForEveryEnglishKey`) | Seed skipped | The seed is a separate step | Fixed: English rows seeded in all 12 files |
+| M6 | LOW | Row 2's stale-cache window after a load is possible, not shown: after a load every cache counter is zero (lens 2 U2) | Unproven claim | The refresh is cheap, so nobody traced a reader | Not applied: the refresh stays. This row records the doubt |
+| M7 | LOW | A co-op session that goes live after the load would keep a switch saved on (lens 2 U1) | Timing outside TAOM | Lens 2 did not check the Coop start order | No change: lens 5 read the installed Coop host code, which sets its container before it loads the save, so the session-launch check sees the session |
+| M8 | LOW | No round-trip test of `SyncData`; deleting the write-back line would pass every test (lens 5 trace 1) | Test gate scope | The source match pins the call, not the value | Not applied. FOLLOW-UP no issue: add an `IDataStore` round-trip test if this behavior gains more saved fields |
+| M9 | LOW | The MCM **Enable Cheat Menu** hint does not say that Unlimited party stays on when the menu is turned off (lens 5 item 13) | Text | The doc says it; the hint predates the switch | Not applied: editing that hint makes 12 translations stale. FOLLOW-UP no issue: change it with the next translation pass |
