@@ -51,6 +51,34 @@ internal static class VanillaLocalizationKeys
         return ids;
     }
 
+    /// <summary>
+    /// Vanilla's rows of one language folder (<c>CNs</c>, <c>DE</c>...), id to text, across the modules in load
+    /// order. A later row replaces an earlier one, as the engine's dictionary does.
+    /// </summary>
+    public static Dictionary<string, string> TranslatedRows(string languageDir)
+    {
+        var game = GameDir();
+        var rows = new Dictionary<string, string>(StringComparer.Ordinal);
+        foreach (var module in Modules)
+        {
+            var dir = Path.Combine(game, "Modules", module, "ModuleData", "Languages", languageDir);
+            if (!Directory.Exists(dir))
+                continue;
+            foreach (var file in Directory.EnumerateFiles(dir, "*.xml", SearchOption.TopDirectoryOnly))
+            {
+                foreach (var row in System.Xml.Linq.XDocument.Load(file).Descendants("string"))
+                {
+                    var id = (string?)row.Attribute("id");
+                    if (!string.IsNullOrEmpty(id))
+                        rows[id!] = (string?)row.Attribute("text") ?? "";
+                }
+            }
+        }
+        if (rows.Count < MinimumLanguageFileIds)
+            Assert.Inconclusive($"Only {rows.Count} vanilla {languageDir} rows found under {game}; the install is missing or partial.");
+        return rows;
+    }
+
     /// <summary>The inline <c>{=KEY}</c> keys of vanilla's data XML plus <see cref="LanguageFileIds"/>.</summary>
     public static HashSet<string> All()
     {

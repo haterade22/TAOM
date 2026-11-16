@@ -10,7 +10,7 @@
           <Children>
             <ImageWidget Id="EscapeBackplate" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Brush="TAOM.Escape.Panel" DoNotAcceptEvents="true" />
 
-            <TextWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="240" SuggestedHeight="42" HorizontalAlignment="Center" MarginTop="102" Brush="TAOM.Escape.Title" Text="PAUSED" />
+            <FrontEndTextWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="240" SuggestedHeight="42" HorizontalAlignment="Center" MarginTop="102" Brush="TAOM.Escape.Title" LocalizedText="{=taom_fui_paused}PAUSED" />
             <ImageWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="240" SuggestedHeight="13" HorizontalAlignment="Center" MarginTop="152" Brush="TAOM.Escape.Divider" DoNotAcceptEvents="true" />
 
             <Widget Id="MenuArea" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="300" SuggestedHeight="450" HorizontalAlignment="Center" MarginTop="195">

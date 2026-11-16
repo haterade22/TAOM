@@ -76,42 +76,47 @@ before the restat, `--verify` reports drift in `ph_crafting_pieces.xml` afterwar
 
 ### Current Values
 
-20 weapons. The target is the donor's class curve (`melee_ladder.target`: class top x `class_tier_fraction` at
+19 weapons. The target is the donor's class curve (`melee_ladder.target`: class top x `class_tier_fraction` at
 the tier x the culture's craft column, band 15%; a polearm donor that thrusts harder than it swings is banded
 from the thrust top by `dominant_flags`), and the multiplier stops at the tier limit (`tier_limit`, the
-`class_limits` of `tools/melee_ladders.json` scaled to the placeholder's tier). Values from the generator's dry
-run on 15 Nov 2026, with the Armory blades restated (`restat_melee_blades.py --apply`, 14 Nov):
+`class_limits` of `tools/melee_ladders.json` scaled to the placeholder's tier). Since 2026-11-16 (#631) a
+placeholder whose every carrier has a shield is banded on the modes a shield allows (for a spear, the one handed
+thrust and its `OneHandedPolearm` class), and each carrier row is held to the tier limit of the mode it wields,
+as the validator judges them (melee-damage-model.md, "A troop with a shield"). Values from the generator's dry
+run on 16 Nov 2026, after the blade restat of that day was written to the Armory; DPS marked * is in the shield modes, swing and thrust are the whole weapon's:
 
-| Placeholder | Donor DPS after the restat | DPS | Swing | Thrust | k |
+| Placeholder | Donor DPS | DPS | Swing | Thrust | k |
 |---|---|---|---|---|---|
 | Isengard 1H sword T7 | 46 | 63 | 72 | 20 | 1.35 |
 | Erebor spear a, T4 | 21 | 27 | 35 | 31 | 1.24 |
-| Erebor spear b, T4 | 23 | 27 | 34 | 32 | 1.19 |
+| Erebor spear b, T4 | 18* | 22* | 35 | 33 | 1.23 |
 | Erebor spear a, T8 | 21 | 30 | 40 | 35 | 1.41 |
 | Erebor spear b, T8 | 23 | 32 | 38 | 37 | 1.34 |
 | Gondor heavy spear T5 (base) | 26 | 31 | 0 | 38 | 1.22 |
-| Gondor heavy spear T5 (Gondor, Pinnath Gelin, Swan Knight) | 25 | 32 | 0 | 39 | 1.25 |
-| Gondor heavy spear T8 (base) | 26 | 37 | 0 | 45 | 1.43 |
-| Gondor heavy spear T8 (Gondor, Pinnath Gelin, Swan Knight) | 25 | 37 | 0 | 46 | 1.48 |
-| Gondor Fountain Guard spear T8 | 27 | 39 | 0 | 46 | 1.43 |
+| Gondor heavy spear T5 (Pinnath Gelin) | 25 | 32 | 0 | 39 | 1.25 |
+| Gondor heavy spear T5 (Gondor, Swan Knight) | 18* | 25* | 0 | 40 | 1.29 |
+| Gondor heavy spear T8 (base) | 20* | 29* | 0 | 46 | 1.47 |
+| Gondor heavy spear T8 (Gondor, Pinnath Gelin, Swan Knight) | 18* | 28* | 0 | 47 | 1.53 |
+| Gondor Fountain Guard spear T8 | 21* | 31* | 0 | 47 | 1.47 |
 | Mirkwood sword T8 | 48 | 66 | 78 | 45 | 1.37 |
 | Mirkwood sword T10 | 48 | 70 | 83 | 48 | 1.47 |
 | Gundabad War Spear (a02), T4 | 52 | 86 | 110 | 28 | 1.68 |
-| Gundabad Blackshield Spear (a03), T5 | 68 | 91 | 106 | 33 | 1.34 |
-| Gundabad Blackshield Spear (a03), T8 | 68 | 103 | 120 | 37 | 1.50 |
-| Lothlorien Galadhrim Spear (he_spear), T6 | 68 | 114 | 131 | 42 | 1.69 |
+| Gundabad Blackshield Spear (a03), T5 | 67 | 91 | 106 | 32 | 1.37 |
+| Gundabad Blackshield Spear (a03), T8 | 24* | 27* | 91 | 35 | 1.11 |
 
-All 20 beat their donor (k between 1.19 and 1.69). The swords and the Gondor, Gundabad and Lothlorien spears
-stop at the tier limit of their class, below their DPS target (66, 72 and 76 for the swords; 34 at T5 and 39 at
-T8 for the Gondor spears, which reach 31 to 32 and 37 to 39; 87, 92 and 106 for the Gundabad spears, which reach
-86, 91 and 103; 115 for the Lothlorien spear, which reaches 114; every one of these inside its band), and the
-four Erebor spears are blended (0.5) on purpose. The Gundabad line rises with tier: 86 at T4-T5, 91 at T5-T6,
-103 at T7-T8. The Fountain Guard spear
-comes closest: the dry run prints 39 against a target of 39, still held a fraction under by the tier limit. A placeholder capped over every
+All 19 beat their donor in the view they are banded on (k between 1.11 and 1.68). The swords, the Gondor spears
+and the Gundabad T8 spear stop at the tier limit of the mode their carriers wield, below their DPS target; the
+four Erebor spears are blended (0.5) on purpose. The Gundabad T8 spear is weaker than the T5 one in its two
+handed swing (91 against 106) and stronger in the one handed thrust its shield carriers use (27 against 24): the
+T5 spear has carriers without a shield, so it is banded on the whole weapon. A placeholder capped over every
 carrier's row stays under the limit of the lowest tier and weakest craft that will carry it.
 
+`taom_ph_lothlorien_spear_t6` was retired on 16 Nov 2026: the Lorien rider and lancer carry a shield, and
+`he_spear`'s one handed thrust (30.6 DPS) already sat at their tier 6 limit (30.9), so the generator found no
+room above the donor. The two riders carry `he_spear` again (`generate_lothlorien_troops.py`).
+
 `git grep -o "Item\.taom_ph_" -- Main/_Module/ModuleData/troops | wc -l` counts the troop equipment rows that
-carry one: 305 on 15 Nov 2026. The tool's dry run lists every carrier.
+carry one: 301 on 16 Nov 2026. The tool's dry run lists every carrier.
 
 Before #1296 one factor scaled both attacks, so `he_spear` and `wm_gundabad_spear_a03`, whose thrust DPS sits
 at its tier limit, could not rise at all (66.8 and 68.4 DPS against bands of 98 to 133 and 78 to 105) and the
@@ -209,6 +214,9 @@ The validator then reports any troop still pointing at the removed id.
   `.xsl` sibling wins over its `.xslt`, as in the engine. The 20 placeholders resolve as before.
 - v2.0.40 (16 Nov 2026, #1384): `docs/reference/troop-rosters.html` prices these weapons from this folder;
   before, their 305 slots on the page read "not found".
+- v2.0.40 (16 Nov 2026, #631): a placeholder whose every carrier has a shield is banded on its shield
+  modes, and each carrier row is held to the tier limit of the mode it wields;
+  `taom_ph_lothlorien_spear_t6` retired.
 
 ## GitHub Issue
 

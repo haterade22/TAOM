@@ -37,7 +37,7 @@ reached = ['\[Check\] id=taom\.story-missions\.hosted\.hero result=']
 pass = [
     '\[Check\] id=taom\.story-missions\.hosted\.hero result=pass hero=\S+ troop=taom_hero_aragorn is_hero=0 campaign=1 mounted=0 formation=7 held=1 strangers=0 order=\S+ health_factor=3\.00 wanted_factor=3\.00 wielded=strider_sword$',
     '\[Check\] id=taom\.story-missions\.hosted\.hero result=pass hero=\S+ troop=taom_hero_legolas is_hero=0 campaign=1 mounted=0 formation=7 held=1 strangers=0 order=\S+ health_factor=3\.00 wanted_factor=3\.00 wielded=wm_mirkwood_bow_a01$',
-    '\[Check\] id=taom\.story-missions\.hosted\.hero result=pass hero=\S+ troop=taom_hero_gimli is_hero=0 campaign=1 mounted=0 formation=7 held=1 strangers=0 order=\S+ health_factor=3\.00 wanted_factor=3\.00 wielded=sm_dwarf_dain_axe_a$',
+    '\[Check\] id=taom\.story-missions\.hosted\.hero result=pass hero=\S+ troop=taom_hero_gimli is_hero=0 campaign=1 mounted=0 formation=7 held=1 strangers=0 order=\S+ health_factor=3\.00 wanted_factor=3\.00 wielded=sm_dwarf_(?:dain_axe_a|erebor_axe_2h_c)$',
 ]
 fail = ['\[Check\] id=taom\.story-missions\.hosted\.hero result=fail']
 absence = "not-reached"
@@ -48,7 +48,7 @@ scope = '\[StoryMissions\] launching \S+ for \x27helms_deep_defend\x27 '
 scope_end = '\[(LongDefeat|StoryMissions)\] launching '
 needs = "the same run, with a wave cleared while a free hero stands; one line per cleared wave, w= is the wave"
 reached = ['\[Check\] id=taom\.story-missions\.hosted\.hunters result=']
-pass = ['\[Check\] id=taom\.story-missions\.hosted\.hunters result=pass w=[0-9]+ standing=([0-9]+) in_group=\1 units=\1 held=1 order=\S+ (?:own=0 settled=[0-9]+ near=[0-9]+|own=1 settled=[0-5]?[0-9] near=[0-9]+|own=1 settled=(?:[6-9][0-9]|[0-9]{3,}) near=\1) kills=[0-9]+ by=\S+ health=\S+ retaken=[0-9]+ moved_out=[0-9]+ moved_back=[0-9]+$']
+pass = ['\[Check\] id=taom\.story-missions\.hosted\.hunters result=pass w=[0-9]+ standing=([0-9]+) in_group=\1 units=\1 held=1 order=\S+ (?:own=0 settled=[0-9]+ near=[0-9]+|own=1 settled=[0-5]?[0-9] near=[0-9]+|own=1 settled=(?:[6-9][0-9]|[0-9]{3,}) near=\1) kills=[0-9]+ by=\S+ health=\S+ (?:weapons=\S+ )?retaken=[0-9]+ moved_out=[0-9]+ moved_back=[0-9]+$']
 fail = ['\[Check\] id=taom\.story-missions\.hosted\.hunters result=fail']
 absence = "not-reached"
 

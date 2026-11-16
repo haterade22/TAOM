@@ -33,7 +33,7 @@ Read-only.
 from __future__ import annotations
 
 import sys
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
@@ -65,6 +65,9 @@ MELEE_TEMPLATES = {
 }
 
 THROWN_TEMPLATES = {"Javelin", "ThrowingAxe", "ThrowingKnife"}
+
+# A usage set carrying this flag cannot be paired with a shield (Native item_usage_sets.xml).
+NO_SHIELD_FLAG = "requires_no_shield"
 
 
 class CatalogueError(Exception):
@@ -108,6 +111,12 @@ class Usage:
     usage_set: str
     strikes: frozenset[str]
     stats: md.WeaponStats
+    # False when the usage set carries `requires_no_shield`: a wielder with a shield never uses it.
+    shield_ok: bool = True
+    # The class this mode fights as, the description's weapon_class: a bastard sword's one handed
+    # mode is a OneHandedSword, a spear's a OneHandedPolearm. melee_ladders.json has a class limit
+    # for each class a shield view can take (test_every_held_class_has_a_class_limit).
+    class_template: str = ""
 
     @property
     def can_swing(self) -> bool:
@@ -152,6 +161,14 @@ class Priced:
     usages: tuple[Usage, ...]
     blade_piece: str
     tier: int
+    # Set by `with_shield` only: the class the shield modes fight as, when it is not the item's.
+    held_template: str = ""
+
+    @property
+    def class_template(self) -> str:
+        """The template whose class band and limits judge this weapon: the item's own, except for
+        the shield view of a weapon whose shield mode is another class (`with_shield`)."""
+        return self.held_template or self.item.template
 
     @property
     def primary(self) -> Usage:
@@ -230,6 +247,24 @@ class Priced:
     def stats(self) -> md.WeaponStats:
         """Shape (weight, reach, inertia) is mode-independent, so the primary speaks for it."""
         return self.primary.stats
+
+    def with_shield(self) -> "Priced":
+        """The weapon as a wielder with a shield uses it: only the modes a shield allows.
+
+        An Armory spear's two handed mode (swing and thrust) is `requires_no_shield`; its one
+        handed mode only thrusts. A troop that carries a shield therefore never swings the spear,
+        and pricing it on that swing judges it against the halberd band. A bastard sword's shield
+        mode is a one handed sword, so the view is judged as one (`class_template`). When no mode
+        allows a shield, or the primary mode refuses one (a two handed polearm whose only shield mode
+        is its couch, such as dale_war_spear_a), the wielder draws the weapon in a mode without the
+        shield, so the weapon is returned whole.
+        """
+        held = tuple(u for u in self.usages if u.shield_ok)
+        if not held or len(held) == len(self.usages) or not self.primary.shield_ok:
+            return self
+        cls = held[0].class_template
+        return replace(self, usages=held,
+                       held_template=cls if cls and cls != self.item.template else "")
 
 
 @dataclass
@@ -723,6 +758,8 @@ def price(cat: Catalogue, item: Item) -> Priced:
                 usage_set=usage_set,
                 strikes=cat.strike_types(usage_set),
                 stats=stats,
+                shield_ok=NO_SHIELD_FLAG not in cat.usage_flags.get(usage_set, frozenset()),
+                class_template=desc.weapon_class or item.template,
             )
         )
 

@@ -351,24 +351,4 @@
                 scale_factor="100" />
         </Pieces>
     </CraftedItem>
-
-    <!-- PLACEHOLDER taom_ph_lothlorien_spear_t6: look of he_spear, tier 6 ladder target -->
-    <CraftedItem
-        id="taom_ph_lothlorien_spear_t6"
-        name="{=taom_ph_lothlorien_spear_t6_name}[Lothlorien] Galadhrim Spear"
-        crafting_template="TwoHandedPolearm"
-        culture="Culture.rivendell"
-        is_merchandise="false"
-        modifier_group="polearm">
-        <Pieces>
-            <Piece
-                id="taom_ph_lothlorien_spear_t6_blade"
-                Type="Blade"
-                scale_factor="100" />
-            <Piece
-                id="wm_elven_spear_shaft"
-                Type="Handle"
-                scale_factor="100" />
-        </Pieces>
-    </CraftedItem>
 </Items>

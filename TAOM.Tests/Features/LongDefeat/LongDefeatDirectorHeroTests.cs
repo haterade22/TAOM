@@ -308,12 +308,12 @@ public class LongDefeatDirectorHeroTests
         rig.Director.Tick(0.1f);
         rig.Session.TryBuyHero("aragorn");
         rig.Director.Tick(0.1f);
-        rig.Field.HeroFacts = new List<LdHeroFacts> { new("aragorn", 4, HeroGroup.FormationIndex, 0.75f, 2f, 0f) };
+        rig.Field.HeroFacts = new List<LdHeroFacts> { new("aragorn", 4, HeroGroup.FormationIndex, 0.75f, 2f, 0f, Weapon: "TwoHandedSword") };
 
         ClearOneWave(rig);
 
         var line = rig.Outcomes.Lines.Single(l => l.Contains(LongDefeatHeroChecks.HuntersId));
-        Assert.AreEqual("pass taom.long-defeat.hunters m1hw1 w=1 standing=1 in_group=1 units=1 held=1 order=Move own=1 settled=600 near=1 kills=4 by=aragorn:4 health=aragorn:0.75"
+        Assert.AreEqual("pass taom.long-defeat.hunters m1hw1 w=1 standing=1 in_group=1 units=1 held=1 order=Move own=1 settled=600 near=1 kills=4 by=aragorn:4 health=aragorn:0.75 weapons=aragorn:TwoHandedSword"
             + " retaken=0 moved_out=0 moved_back=0", line);
     }
 

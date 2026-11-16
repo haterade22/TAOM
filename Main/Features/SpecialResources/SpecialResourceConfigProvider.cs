@@ -7,6 +7,7 @@ using System.Xml.Linq;
 using TAOM.Core.Infrastructure;
 using TAOM.Core.Logging;
 using TAOM.Features.SpecialResources.Domain;
+using ITextLocalizerAdapter = TAOM.Adapters.ITextLocalizerAdapter;
 
 namespace TAOM.Features.SpecialResources;
 
@@ -15,6 +16,7 @@ public class SpecialResourceConfigProvider : ISpecialResourceConfigProvider
     private readonly IPathService _pathService;
     private readonly IModLogger _logger;
     private readonly ISpecialResourceSettingsProvider _settings;
+    private readonly ITextLocalizerAdapter? _text;
     private List<SpecialResource> _resources;
     private Dictionary<string, SpecialResource> _byKingdom;
     private Dictionary<string, SpecialResource> _byCulture;
@@ -22,11 +24,13 @@ public class SpecialResourceConfigProvider : ISpecialResourceConfigProvider
     private Dictionary<string, TroopResourceCostEntry> _troopCosts;
     private Dictionary<string, TroopResourceCostEntry> _goldOnlyTroopCosts;
 
-    public SpecialResourceConfigProvider(IPathService pathService, IModLogger logger, ISpecialResourceSettingsProvider settings = null)
+    public SpecialResourceConfigProvider(IPathService pathService, IModLogger logger, ISpecialResourceSettingsProvider settings = null,
+        ITextLocalizerAdapter? text = null)
     {
         _pathService = pathService;
         _logger = logger;
         _settings = settings;
+        _text = text;
     }
 
     public SpecialResource? GetByKingdomId(string? kingdomId)
@@ -101,14 +105,15 @@ public class SpecialResourceConfigProvider : ISpecialResourceConfigProvider
                         cultureIds.Add(cid);
                 }
 
-                var tiers = ParseTiers(el);
+                var id = el.Attribute("id")?.Value ?? "";
+                var tiers = ParseTiers(el, id);
                 var (battleReference, battleMin, battleMax) = ParseBattleScale(el);
 
                 var resource = new SpecialResource(
-                    id: el.Attribute("id")?.Value ?? "",
+                    id: id,
                     kingdomIds: kingdomIds,
                     cultureIds: cultureIds,
-                    displayName: el.Attribute("display_name")?.Value ?? "",
+                    displayName: Shown("taom_res_name_" + id, el.Attribute("display_name")?.Value ?? ""),
                     iconSpriteName: el.Attribute("icon_sprite")?.Value ?? "",
                     cap: ParseFloat(el, "cap", 100f),
                     startingAmount: ParseFloat(el, "starting_amount", 0f),
@@ -189,7 +194,13 @@ public class SpecialResourceConfigProvider : ISpecialResourceConfigProvider
         }
     }
 
-    private static List<ResourceTier> ParseTiers(XElement resourceEl)
+    // The config holds plain English; each text is shown under a key built from the resource id and tier
+    // level, so a translated row applies (#1385). The text is resolved once, when the config first loads.
+    // taom_module_strings.xml registers the keys (SpecialResourceConfigProviderTextTests).
+    private string Shown(string key, string english) =>
+        english.Length == 0 || _text == null ? english : _text.Localize("{=" + key + "}" + english);
+
+    private List<ResourceTier> ParseTiers(XElement resourceEl, string resourceId)
     {
         var tiersEl = resourceEl.Element("Tiers");
         if (tiersEl == null)
@@ -212,7 +223,8 @@ public class SpecialResourceConfigProvider : ISpecialResourceConfigProvider
             if (!float.TryParse(thresholdStr, NumberStyles.Float, CultureInfo.InvariantCulture, out var threshold))
                 continue;
 
-            tiers.Add(new ResourceTier(level, name, threshold, description));
+            var key = "taom_res_tier_" + resourceId + "_" + levelStr;
+            tiers.Add(new ResourceTier(level, Shown(key + "_name", name), threshold, Shown(key + "_desc", description)));
         }
 
         tiers.Sort((a, b) => a.Threshold.CompareTo(b.Threshold));

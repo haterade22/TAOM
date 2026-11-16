@@ -446,6 +446,67 @@ other weapon. The grouping is the author's reading of the lore and waits for the
 blade above its hero limit, each factor by its own limits, and leaves one below it alone, or one that only
 ladder-exempt troops carry.
 
+### Tier tolerance (2026-11-16)
+
+A troop one or two tiers up already fights harder with the same weapon. Weapon skill raises blow damage
+(+0.15% per point one handed, +0.16% two handed, +0.07% polearm) and attack speed (+0.07%, +0.06%, +0.06%), so
+a tier step adds about 4 to 6% DPS for swords and axes and about 3% for polearms, against weapon targets that
+rise 3 to 9% per tier. The maintainer (2026-11-16): tier 5 and tier 6 may share one weapon, because the tier 6
+troop swings faster and wears more armour.
+
+`melee_ladder.judge` decides which troops are out of band, for the validator (through `findings()`) and for
+`fix_melee_ladder.py`. A weapon under its carrier's band is "ok" when it sits inside the band of a tier up to
+`under_tolerance_tiers` (2) below; `melee_ladder.tolerance_floor` is that lowest accepted DPS, and the
+`MELEE_LADDER_INVERSION` warning names it ("accepted from N"). A weapon over its band is never excused. The
+tolerance only decides who is flagged: a replacement the fixer picks must sit inside the strict band of its own
+class (`pick_substitute`, step 4), and `restat_melee_blades.py` still prices a blade onto the exact target of
+its weakest carrier. `analyze_melee_ladder.py` keeps its own report and does not read the tolerance. On
+2026-11-16 the tolerance took `MELEE_LADDER_INVERSION` from 270 to 146 warnings.
+
+### A troop with a shield (2026-11-16)
+
+A troop that carries a shield wields its weapon in the modes a shield allows. An Armory spear has a one handed
+thrust mode (`OneHandedPolearm`, usage set `onehanded_polearm_block_long_rshield_thrust`, flag
+`requires_shield`) and a two handed swing and thrust mode (`polearm_block_long_shield_swing_thrust`, flag
+`requires_no_shield`). The spearman never swings the spear. A bastard sword's shield mode is a one handed
+sword. The ladder judged both on the two handed mode before this change.
+
+- `melee_catalogue.Priced.with_shield()` keeps only the modes whose usage set has no `requires_no_shield`.
+  When no mode allows a shield, or the primary mode refuses one, the weapon is judged whole (the troop draws
+  it without the shield). On 2026-11-16 ten weapons had a primary that refuses a shield and a couch mode that
+  allows one, all two handed polearms (`dale_war_spear_a`, `mirkwood_glaive_a01`, `wm_mordor_set1_polearm_a01`
+  to `_a04` and others). `Priced.class_template` is the class the held mode fights as (its description's
+  `weapon_class`).
+- Which mode an agent with a shield draws is not verified in the engine source. The usage flags are read in
+  native code (`TaleWorlds.Native.dll`); in managed code only `CampaignUIHelper` reads `requires_no_shield`, for
+  the tooltip. The rule above matches what the flags allow. An in-game check is owed: a Gondor spearman with a
+  shield must thrust one handed and never swing two handed.
+- A troop "carries a shield" when any of its battle sets holds one, the same reading as the fixer's shield
+  guard (`troop_carries_shield`).
+- `OneHandedPolearm` has its own class limit: thrust 45 per blow and 37 DPS. Vanilla's 55 one handed polearm
+  modes thrust 42 at most (median 32) and 35.4 DPS at most (median 25.8), measured 2026-11-16 over SandBoxCore
+  and SandBox. Judged on the two handed thrust top of 45 DPS, every shield spear inside vanilla's range read as
+  under-armed.
+- The validator (`melee_pass_rows`), `fix_melee_ladder.py` and `restat_melee_blades.py` all price a shield
+  carrier through `with_shield`. The restat sets a blade's target in the mode its weakest carrier holds, and
+  holds every mode of every weapon on the blade inside its class limit, because a player or a troop without a
+  shield can still use the two handed mode. An unworn weapon on a blade whose weakest carrier has a shield is
+  held to that carrier's tier limit in the shield modes, and to its class limit only in the other modes.
+- `generate_placeholder_weapons.py` bands a placeholder on the shield modes when every carrier has a shield,
+  and holds each carrier row to the tier limit of the mode it wields. On 2026-11-16 this retired
+  `taom_ph_lothlorien_spear_t6`: its riders carry a shield, and `he_spear`'s one handed thrust (30.6 DPS)
+  already sat at their tier 6 limit (30.9), so the four slots carry `he_spear` again.
+- The fixer's upgrade ceiling (`pick_substitute`, step 5b) reads each upgrade target's weapons as that target
+  wields them. Where a troop without a shield upgrades to one with a shield, or back, the two weapons are
+  compared in different modes.
+
+Measured on 2026-11-16 with the live Armory: `MELEE_LADDER_INVERSION` 146 to 125. The restat dry run went
+from 1 blade (`dunland_caerdh_spear_head_e`, planned on trunk before this change) to 10: nine shield spear
+blades come down 2 to 7% to the one handed polearm tier limit, and `numenorean_sword_blade_d_elite` goes up 6%. Most shield spears are now in band. The Numenorean bastard swords
+are not: their one handed mode sustains 37 DPS, where vanilla's bastard swords sustain a median of 61 in the
+same mode, and a blade restat cannot raise the one handed mode without taking the two handed mode over its
+class limit.
+
 ### `--limits-only`
 
 `python tools/restat_melee_blades.py --limits-only` lowers only the blades above a class or hero limit. It
@@ -853,6 +914,11 @@ armoured troop (see "Class limits"). After the apply and a full restart:
 
 ## Changelog
 
+- v2.0.40 (16 Nov 2026, #631): a weapon up to two tiers under its carrier's band is accepted (tier
+  tolerance), and a troop with a shield is judged on the modes a shield allows, with a new
+  `OneHandedPolearm` class limit from vanilla. `MELEE_LADDER_INVERSION` 270 to 125; the restat plans 10
+  small blade changes, not yet written to the Armory. The placeholder generator follows the same rule and
+  retires `taom_ph_lothlorien_spear_t6`.
 - 2026-11-14: class limits on one blow and on DPS, per-class tier targets over ten tiers with a craft table,
   tier limits, hero limits by maker group, `--limits-only`, and a DPS cap in whole damage points (#1271).
   Built and dry run; the Armory is not yet restated.

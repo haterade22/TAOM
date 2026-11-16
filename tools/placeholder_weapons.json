@@ -54,8 +54,6 @@
     {"id": "taom_ph_gundabad_spear_a03_t5", "donor": "wm_gundabad_spear_a03", "tier": 5, "tiers": [5, 6],
      "cultures": ["gundabad"], "name": "[Gundabad] Blackshield Spear"},
     {"id": "taom_ph_gundabad_spear_a03_t8", "donor": "wm_gundabad_spear_a03", "tier": 8, "tiers": [7, 8],
-     "cultures": ["gundabad"], "name": "[Gundabad] Blackshield Spear, Tempered"},
-    {"id": "taom_ph_lothlorien_spear_t6", "donor": "he_spear", "tier": 6, "tiers": [6, 7],
-     "cultures": ["lothlorien"], "name": "[Lothlorien] Galadhrim Spear"}
+     "cultures": ["gundabad"], "name": "[Gundabad] Blackshield Spear, Tempered"}
   ]
 }

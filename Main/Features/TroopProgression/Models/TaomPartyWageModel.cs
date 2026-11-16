@@ -72,7 +72,7 @@ public class TaomPartyWageModel : DefaultPartyWageModel
         // GetCharacterWage, so Campaign.AverageWage — which the garrison-donation math divides by —
         // keeps reading true per-head cost.
         _aiPartySize.ApplyAiWageRelief(mobileParty, ref result);
-        return result;
+        return TAOM.Features.BattleBalance.Hooks.FreeGarrisonUpkeepLine.Wage(mobileParty, result, CultureText);
     }
 
     // FULL REPLACEMENT of DefaultPartyWageModel.GetTroopRecruitmentCost (v1.5.5): the cost is rebuilt from an int

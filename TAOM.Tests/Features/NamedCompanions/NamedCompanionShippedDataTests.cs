@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Xml.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json;
 using TAOM.Features.NamedCompanions.Domain;
@@ -171,5 +172,24 @@ public class NamedCompanionShippedDataTests
         StringAssert.Contains(entry.Value, "culture=\"Culture.arthedain\"");
         StringAssert.Contains(entry.Value, "occupation=\"Wanderer\"");
         StringAssert.Contains(entry.Value, "is_hero=\"true\"");
+    }
+
+    [TestMethod]
+    public void OnlyGimli_CarriesTheEreborTwoHandedAxe_TheCommunityDwarvesKeepDainsAxe()
+    {
+        var characters = XDocument.Load(RepoPaths.RepoPath("Main", "_Module", "ModuleData", "named_companions", "named_companions.xml"));
+        string BattleItem0(string id) => characters.Descendants("NPCCharacter").Single(n => (string?)n.Attribute("id") == id)
+            .Element("Equipments")!.Elements("EquipmentRoster").Single(r => r.Attribute("civilian") == null)
+            .Elements("equipment").Single(e => (string?)e.Attribute("slot") == "Item0").Attribute("id")!.Value;
+
+        Assert.AreEqual("Item.sm_dwarf_erebor_axe_2h_c", BattleItem0("named_companion_gimli"));
+        foreach (var id in new[] { "named_companion_rcmcplayz", "named_companion_yotthani", "named_companion_whitegoat" })
+            Assert.AreEqual("Item.sm_dwarf_dain_axe_a", BattleItem0(id), id);
+
+        var carriers = characters.Descendants("NPCCharacter")
+            .Where(n => n.Descendants("EquipmentRoster").Where(r => r.Attribute("civilian") == null)
+                .Any(r => r.Elements("equipment").Any(e => (string?)e.Attribute("slot") == "Item0" && (string?)e.Attribute("id") == "Item.sm_dwarf_erebor_axe_2h_c")))
+            .Select(n => (string?)n.Attribute("id")).ToArray();
+        CollectionAssert.AreEqual(new[] { "named_companion_gimli" }, carriers);
     }
 }

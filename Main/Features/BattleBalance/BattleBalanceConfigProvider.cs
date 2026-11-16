@@ -114,6 +114,20 @@ public class BattleBalanceConfigProvider : IBattleBalanceConfigProvider
             reverted++;
         }
 
+        if (config.SiegeDefence.UpkeepFreeGarrisons == null)
+        {
+            _logger.LogWarning("BattleBalanceConfig: SiegeDefence.UpkeepFreeGarrisons is null; using the compiled table");
+            config.SiegeDefence.UpkeepFreeGarrisons = compiled.SiegeDefence.UpkeepFreeGarrisons;
+            reverted++;
+        }
+
+        if (config.SiegeDefence.DailyGarrisonGrowth == null)
+        {
+            _logger.LogWarning("BattleBalanceConfig: SiegeDefence.DailyGarrisonGrowth is null; using the compiled table");
+            config.SiegeDefence.DailyGarrisonGrowth = compiled.SiegeDefence.DailyGarrisonGrowth;
+            reverted++;
+        }
+
         // A bad value reverts to its compiled row. A key with no compiled row is removed, so the lookup's own
         // fallback decides: the tier formula in GetTierPower, and 0 (the engine's own chance) for survival.
         // TierPower values: finite and > 0 (zero or negative power is nonsense).
@@ -130,6 +144,10 @@ public class BattleBalanceConfigProvider : IBattleBalanceConfigProvider
         // doubles their strikes.
         reverted += RevertInvalid(config.SiegeDefence.DefenderAdvantageBonuses, compiled.SiegeDefence.DefenderAdvantageBonuses,
             value => FiniteFloatValidator.IsFiniteInRange(value, 0f, 1f), "DefenderAdvantageBonuses", "out of [0,1]");
+
+        // DailyGarrisonGrowth: finite, [0, 20] troops a day per fortification.
+        reverted += RevertInvalid(config.SiegeDefence.DailyGarrisonGrowth, compiled.SiegeDefence.DailyGarrisonGrowth,
+            value => FiniteFloatValidator.IsFiniteInRange(value, 0f, 20f), "DailyGarrisonGrowth", "out of [0,20]");
 
         if (reverted > 0)
             _logger.LogWarning($"BattleBalanceConfig: {reverted} value(s) reverted to compiled defaults; see the warnings above");

@@ -3344,6 +3344,15 @@
 	<string id="taom_fui_details" text="{=taom_fui_details}DETAILS" />
 	<string id="taom_fui_strengths" text="{=taom_fui_strengths}Strengths" />
 	<string id="taom_fui_weaknesses" text="{=taom_fui_weaknesses}Weaknesses" />
+	<string id="taom_fui_realm_not_playable" text="{=taom_fui_realm_not_playable}This realm is not playable" />
+	<string id="taom_fui_perks" text="{=taom_fui_perks}Perks" />
+	<string id="taom_fui_special_units" text="{=taom_fui_special_units}Special Units" />
+	<string id="taom_fui_bonuses" text="{=taom_fui_bonuses}Bonuses" />
+	<string id="taom_fui_start" text="{=taom_fui_start}Start" />
+	<string id="taom_fui_paused" text="{=taom_fui_paused}PAUSED" />
+	<string id="taom_ency_hero_history" text="{=taom_ency_hero_history}History" />
+	<string id="taom_ency_search" text="{=taom_ency_search}Search..." />
+	<string id="taom_tcb_hero" text="{=taom_tcb_hero}HERO" />
 	<string id="taom_fui_confirm" text="{=taom_fui_confirm}Confirm" />
 	<string id="taom_fui_characters" text="{=taom_fui_characters}Characters" />
 	<string id="taom_fui_leader" text="{=taom_fui_leader}Leader" />
@@ -5457,5 +5466,122 @@
 	<!-- harvested by tools/harvest_literal_loc_keys.py -->
 	<!-- AlignmentDesertion -->
 	<string id="taom_recruit_slot_realm_refuses" text="{=taom_recruit_slot_realm_refuses}Your side may not take volunteers from this realm." />
+
+	<!-- SiegeDefense: SiegeDefenseText keys, one per siege_defense_config.json kingdom and field -->
+	<string id="taom_siege_defense_default_title" text="{=taom_siege_defense_default_title}{attacker} is besieging {settlement}!" />
+	<string id="taom_siege_defense_default_body" text="{=taom_siege_defense_default_body}Will you answer the call to defend? You have {days} days to reach the settlement." />
+	<string id="taom_siege_defense_default_accept_button" text="{=taom_siege_defense_default_accept_button}Help Defend" />
+	<string id="taom_siege_defense_default_accept_message" text="{=taom_siege_defense_default_accept_message}You have pledged to defend {settlement}. Ride now!" />
+	<string id="taom_siege_defense_default_reward_message" text="{=taom_siege_defense_default_reward_message}You answered the call! +{influence} influence, +{relation} relation." />
+	<string id="taom_siege_defense_ignore" text="{=taom_siege_defense_ignore}Ignore" />
+	<string id="taom_siege_defense_empire_w_title" text="{=taom_siege_defense_empire_w_title}Gondor Calls For Aid!" />
+	<string id="taom_siege_defense_empire_w_body" text="{=taom_siege_defense_empire_w_body}{attacker} besieges {settlement}! The White Tower calls upon all loyal servants. You have {days} days." />
+	<string id="taom_siege_defense_empire_w_accept_button" text="{=taom_siege_defense_empire_w_accept_button}For Gondor!" />
+	<string id="taom_siege_defense_empire_w_accept_message" text="{=taom_siege_defense_empire_w_accept_message}Ride now! Ride to the defense of {settlement}!" />
+	<string id="taom_siege_defense_empire_w_reward_message" text="{=taom_siege_defense_empire_w_reward_message}Gondor remembers your valor! +{influence} influence, +{relation} relation." />
+	<string id="taom_siege_defense_empire_s_title" text="{=taom_siege_defense_empire_s_title}Sauron Commands You!" />
+	<string id="taom_siege_defense_empire_s_body" text="{=taom_siege_defense_empire_s_body}{attacker} dares assault {settlement}! The Dark Lord demands its defense. You have {days} days." />
+	<string id="taom_siege_defense_empire_s_accept_button" text="{=taom_siege_defense_empire_s_accept_button}I obey!" />
+	<string id="taom_siege_defense_empire_s_accept_message" text="{=taom_siege_defense_empire_s_accept_message}March! Defend {settlement} in the name of Sauron!" />
+	<string id="taom_siege_defense_empire_s_reward_message" text="{=taom_siege_defense_empire_s_reward_message}The Dark Lord is pleased. +{influence} influence, +{relation} relation." />
+	<string id="taom_siege_defense_vlandia_title" text="{=taom_siege_defense_vlandia_title}Rohan Calls For Aid!" />
+	<string id="taom_siege_defense_vlandia_body" text="{=taom_siege_defense_vlandia_body}{attacker} threatens {settlement}! The Rohirrim must answer. You have {days} days." />
+	<string id="taom_siege_defense_vlandia_accept_button" text="{=taom_siege_defense_vlandia_accept_button}Forth Eorlingas!" />
+	<string id="taom_siege_defense_vlandia_accept_message" text="{=taom_siege_defense_vlandia_accept_message}The Riders of Rohan ride to {settlement}!" />
+	<string id="taom_siege_defense_vlandia_reward_message" text="{=taom_siege_defense_vlandia_reward_message}The Rohirrim sing of your courage! +{influence} influence, +{relation} relation." />
+	<string id="taom_siege_defense_erebor_title" text="{=taom_siege_defense_erebor_title}The Mountain Calls!" />
+	<string id="taom_siege_defense_erebor_body" text="{=taom_siege_defense_erebor_body}{attacker} besieges {settlement}! The Dwarves of Erebor will not stand idle. You have {days} days." />
+	<string id="taom_siege_defense_erebor_accept_button" text="{=taom_siege_defense_erebor_accept_button}Baruk Khazad!" />
+	<string id="taom_siege_defense_erebor_accept_message" text="{=taom_siege_defense_erebor_accept_message}Axes of the Dwarves! To the defense of {settlement}!" />
+	<string id="taom_siege_defense_erebor_reward_message" text="{=taom_siege_defense_erebor_reward_message}The halls of Erebor honor your bravery! +{influence} influence, +{relation} relation." />
+	<string id="taom_siege_defense_rivendell_title" text="{=taom_siege_defense_rivendell_title}The Last Homely House Calls!" />
+	<string id="taom_siege_defense_rivendell_body" text="{=taom_siege_defense_rivendell_body}{attacker} threatens {settlement}! Elrond summons the Elves to war. You have {days} days." />
+	<string id="taom_siege_defense_rivendell_accept_button" text="{=taom_siege_defense_rivendell_accept_button}For Imladris!" />
+	<string id="taom_siege_defense_rivendell_accept_message" text="{=taom_siege_defense_rivendell_accept_message}The Elves of Rivendell march to {settlement}!" />
+	<string id="taom_siege_defense_rivendell_reward_message" text="{=taom_siege_defense_rivendell_reward_message}Elrond honors your service. +{influence} influence, +{relation} relation." />
+	<string id="taom_siege_defense_lothlorien_title" text="{=taom_siege_defense_lothlorien_title}The Golden Wood Is Threatened!" />
+	<string id="taom_siege_defense_lothlorien_body" text="{=taom_siege_defense_lothlorien_body}{attacker} assails {settlement}! The Lady of Light calls her wardens. You have {days} days." />
+	<string id="taom_siege_defense_lothlorien_accept_button" text="{=taom_siege_defense_lothlorien_accept_button}For Lothlorien!" />
+	<string id="taom_siege_defense_lothlorien_accept_message" text="{=taom_siege_defense_lothlorien_accept_message}The wardens of the Golden Wood march to {settlement}!" />
+	<string id="taom_siege_defense_lothlorien_reward_message" text="{=taom_siege_defense_lothlorien_reward_message}The Lady of the Wood is grateful. +{influence} influence, +{relation} relation." />
+	<string id="taom_siege_defense_mirkwood_title" text="{=taom_siege_defense_mirkwood_title}The Woodland Realm Calls!" />
+	<string id="taom_siege_defense_mirkwood_body" text="{=taom_siege_defense_mirkwood_body}{attacker} threatens {settlement}! King Thranduil summons his hunters. You have {days} days." />
+	<string id="taom_siege_defense_mirkwood_accept_button" text="{=taom_siege_defense_mirkwood_accept_button}For the Woodland Realm!" />
+	<string id="taom_siege_defense_mirkwood_accept_message" text="{=taom_siege_defense_mirkwood_accept_message}The hunters of Mirkwood march to {settlement}!" />
+	<string id="taom_siege_defense_mirkwood_reward_message" text="{=taom_siege_defense_mirkwood_reward_message}King Thranduil acknowledges your loyalty. +{influence} influence, +{relation} relation." />
+	<string id="taom_siege_defense_isengard_title" text="{=taom_siege_defense_isengard_title}Saruman Orders You!" />
+	<string id="taom_siege_defense_isengard_body" text="{=taom_siege_defense_isengard_body}{attacker} attacks {settlement}! The White Wizard will not suffer this insult. You have {days} days." />
+	<string id="taom_siege_defense_isengard_accept_button" text="{=taom_siege_defense_isengard_accept_button}By Saruman's will!" />
+	<string id="taom_siege_defense_isengard_accept_message" text="{=taom_siege_defense_isengard_accept_message}The Uruk-hai march to {settlement}!" />
+	<string id="taom_siege_defense_isengard_reward_message" text="{=taom_siege_defense_isengard_reward_message}Saruman rewards your obedience. +{influence} influence, +{relation} relation." />
+	<string id="taom_siege_defense_gundabad_title" text="{=taom_siege_defense_gundabad_title}Gundabad Stirs!" />
+	<string id="taom_siege_defense_gundabad_body" text="{=taom_siege_defense_gundabad_body}{attacker} dares assault {settlement}! The war drums sound. You have {days} days." />
+	<string id="taom_siege_defense_gundabad_accept_button" text="{=taom_siege_defense_gundabad_accept_button}For Gundabad!" />
+	<string id="taom_siege_defense_gundabad_accept_message" text="{=taom_siege_defense_gundabad_accept_message}The hosts of Gundabad march to {settlement}!" />
+	<string id="taom_siege_defense_gundabad_reward_message" text="{=taom_siege_defense_gundabad_reward_message}Gundabad rewards the strong. +{influence} influence, +{relation} relation." />
+	<string id="taom_siege_defense_dolguldur_title" text="{=taom_siege_defense_dolguldur_title}The Necromancer Commands!" />
+	<string id="taom_siege_defense_dolguldur_body" text="{=taom_siege_defense_dolguldur_body}{attacker} threatens {settlement}! The shadow of Dol Guldur demands obedience. You have {days} days." />
+	<string id="taom_siege_defense_dolguldur_accept_button" text="{=taom_siege_defense_dolguldur_accept_button}The shadow commands!" />
+	<string id="taom_siege_defense_dolguldur_accept_message" text="{=taom_siege_defense_dolguldur_accept_message}The servants of Dol Guldur march to {settlement}!" />
+	<string id="taom_siege_defense_dolguldur_reward_message" text="{=taom_siege_defense_dolguldur_reward_message}The shadow is appeased. +{influence} influence, +{relation} relation." />
+	<string id="taom_siege_defense_sturgia_title" text="{=taom_siege_defense_sturgia_title}Dale Calls For Aid!" />
+	<string id="taom_siege_defense_sturgia_body" text="{=taom_siege_defense_sturgia_body}{attacker} threatens {settlement}! The Men of Dale require your sword. You have {days} days." />
+	<string id="taom_siege_defense_sturgia_accept_button" text="{=taom_siege_defense_sturgia_accept_button}For Dale!" />
+	<string id="taom_siege_defense_sturgia_accept_message" text="{=taom_siege_defense_sturgia_accept_message}March to the defense of {settlement}!" />
+	<string id="taom_siege_defense_sturgia_reward_message" text="{=taom_siege_defense_sturgia_reward_message}The people of Dale honor your courage! +{influence} influence, +{relation} relation." />
+	<string id="taom_siege_defense_empire_title" text="{=taom_siege_defense_empire_title}Dunland Calls For Aid!" />
+	<string id="taom_siege_defense_empire_body" text="{=taom_siege_defense_empire_body}{attacker} besieges {settlement}! The Dunlendings demand vengeance. You have {days} days." />
+	<string id="taom_siege_defense_empire_accept_button" text="{=taom_siege_defense_empire_accept_button}For Dunland!" />
+	<string id="taom_siege_defense_empire_accept_message" text="{=taom_siege_defense_empire_accept_message}The Dunlendings march to {settlement}!" />
+	<string id="taom_siege_defense_empire_reward_message" text="{=taom_siege_defense_empire_reward_message}Dunland remembers your service. +{influence} influence, +{relation} relation." />
+	<string id="taom_siege_defense_aserai_title" text="{=taom_siege_defense_aserai_title}The Haradrim Call!" />
+	<string id="taom_siege_defense_aserai_body" text="{=taom_siege_defense_aserai_body}{attacker} threatens {settlement}! The Serpent Lord demands your spear. You have {days} days." />
+	<string id="taom_siege_defense_aserai_accept_button" text="{=taom_siege_defense_aserai_accept_button}For Harad!" />
+	<string id="taom_siege_defense_aserai_accept_message" text="{=taom_siege_defense_aserai_accept_message}The Haradrim march to {settlement}!" />
+	<string id="taom_siege_defense_aserai_reward_message" text="{=taom_siege_defense_aserai_reward_message}The Serpent Lord is satisfied. +{influence} influence, +{relation} relation." />
+	<string id="taom_siege_defense_khuzait_title" text="{=taom_siege_defense_khuzait_title}The Easterlings Call!" />
+	<string id="taom_siege_defense_khuzait_body" text="{=taom_siege_defense_khuzait_body}{attacker} threatens {settlement}! The Wainriders demand your blade. You have {days} days." />
+	<string id="taom_siege_defense_khuzait_accept_button" text="{=taom_siege_defense_khuzait_accept_button}For Rhun!" />
+	<string id="taom_siege_defense_khuzait_accept_message" text="{=taom_siege_defense_khuzait_accept_message}The hosts of Rhun march to {settlement}!" />
+	<string id="taom_siege_defense_khuzait_reward_message" text="{=taom_siege_defense_khuzait_reward_message}The lords of Rhun acknowledge your service. +{influence} influence, +{relation} relation." />
+	<string id="taom_siege_defense_battania_title" text="{=taom_siege_defense_battania_title}Khand Calls For Aid!" />
+	<string id="taom_siege_defense_battania_body" text="{=taom_siege_defense_battania_body}{attacker} threatens {settlement}! The Variags demand your service. You have {days} days." />
+	<string id="taom_siege_defense_battania_accept_button" text="{=taom_siege_defense_battania_accept_button}For Khand!" />
+	<string id="taom_siege_defense_battania_accept_message" text="{=taom_siege_defense_battania_accept_message}The Variags of Khand march to {settlement}!" />
+	<string id="taom_siege_defense_battania_reward_message" text="{=taom_siege_defense_battania_reward_message}The Variags honor the bold. +{influence} influence, +{relation} relation." />
+	<string id="taom_siege_defense_umbar_title" text="{=taom_siege_defense_umbar_title}The Corsairs Call!" />
+	<string id="taom_siege_defense_umbar_body" text="{=taom_siege_defense_umbar_body}{attacker} threatens {settlement}! The fleet demands its captains. You have {days} days." />
+	<string id="taom_siege_defense_umbar_accept_button" text="{=taom_siege_defense_umbar_accept_button}For Umbar!" />
+	<string id="taom_siege_defense_umbar_accept_message" text="{=taom_siege_defense_umbar_accept_message}The Corsairs of Umbar sail to {settlement}!" />
+	<string id="taom_siege_defense_umbar_reward_message" text="{=taom_siege_defense_umbar_reward_message}The fleet remembers your service. +{influence} influence, +{relation} relation." />
+	<string id="taom_siege_defense_shaghana_title" text="{=taom_siege_defense_shaghana_title}Shaghana Calls!" />
+	<string id="taom_siege_defense_shaghana_body" text="{=taom_siege_defense_shaghana_body}{attacker} threatens {settlement}! Your people need you. You have {days} days." />
+	<string id="taom_siege_defense_shaghana_accept_button" text="{=taom_siege_defense_shaghana_accept_button}Defend!" />
+	<string id="taom_siege_defense_shaghana_accept_message" text="{=taom_siege_defense_shaghana_accept_message}March to the defense of {settlement}!" />
+	<string id="taom_siege_defense_shaghana_reward_message" text="{=taom_siege_defense_shaghana_reward_message}Your people are grateful. +{influence} influence, +{relation} relation." />
+	<string id="taom_siege_defense_abanissa_title" text="{=taom_siege_defense_abanissa_title}Abanissa Calls!" />
+	<string id="taom_siege_defense_abanissa_body" text="{=taom_siege_defense_abanissa_body}{attacker} threatens {settlement}! Your people need you. You have {days} days." />
+	<string id="taom_siege_defense_abanissa_accept_button" text="{=taom_siege_defense_abanissa_accept_button}Defend!" />
+	<string id="taom_siege_defense_abanissa_accept_message" text="{=taom_siege_defense_abanissa_accept_message}March to the defense of {settlement}!" />
+	<string id="taom_siege_defense_abanissa_reward_message" text="{=taom_siege_defense_abanissa_reward_message}Your people are grateful. +{influence} influence, +{relation} relation." />
+
+	<!-- SpecialResources: one key per special_resources_config.xml name and tier text -->
+	<string id="taom_res_name_war_spoils" text="{=taom_res_name_war_spoils}War Spoils" />
+	<string id="taom_res_name_gems" text="{=taom_res_name_gems}Gems" />
+	<string id="taom_res_tier_gems_1_name" text="{=taom_res_tier_gems_1_name}Apprentice Miner" />
+	<string id="taom_res_tier_gems_1_desc" text="{=taom_res_tier_gems_1_desc}Dwarven mining efficiency improves. -5% troop upgrade cost." />
+	<string id="taom_res_tier_gems_2_name" text="{=taom_res_tier_gems_2_name}Journeyman Smith" />
+	<string id="taom_res_tier_gems_2_desc" text="{=taom_res_tier_gems_2_desc}Erebor's forges burn bright. -8% enchantment cost, +5% troop morale." />
+	<string id="taom_res_tier_gems_3_name" text="{=taom_res_tier_gems_3_name}Master of the Treasury" />
+	<string id="taom_res_tier_gems_3_desc" text="{=taom_res_tier_gems_3_desc}The wealth of Erebor flows. -12% troop wages, +3 party size." />
+	<string id="taom_res_name_caster" text="{=taom_res_name_caster}Castar" />
+	<string id="taom_res_name_marks" text="{=taom_res_name_marks}Marks" />
+	<string id="taom_res_name_elven_wine" text="{=taom_res_name_elven_wine}Elven Wine" />
+	<string id="taom_res_name_lake_fish" text="{=taom_res_name_lake_fish}Lake Fish" />
+	<string id="taom_res_name_war_drums" text="{=taom_res_name_war_drums}War Drums" />
+	<string id="taom_res_name_tribal_relics" text="{=taom_res_name_tribal_relics}Tribal Relics" />
+	<string id="taom_res_name_dunlending_ale" text="{=taom_res_name_dunlending_ale}Dunlending Ale" />
+	<string id="taom_res_name_plunder" text="{=taom_res_name_plunder}Plunder" />
+	<string id="taom_res_name_war_banners" text="{=taom_res_name_war_banners}War Banners" />
 
 </strings>
