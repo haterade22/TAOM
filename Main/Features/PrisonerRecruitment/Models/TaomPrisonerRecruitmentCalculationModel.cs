@@ -5,6 +5,7 @@ using TAOM.Adapters;
 using TAOM.Features.AlignmentDesertion;
 using TAOM.Features.CareerSystem;
 using TAOM.Features.CareerSystem.Domain;
+using TAOM.Features.CoopInterop;
 
 namespace TAOM.Features.PrisonerRecruitment.Models;
 
@@ -13,13 +14,23 @@ public class TaomPrisonerRecruitmentCalculationModel : DefaultPrisonerRecruitmen
     private readonly IPrisonerRecruitmentMoraleService _morale;
     private readonly ICareerPassiveService _careerPassives;
     private readonly IDesertionRecruitGuard _desertionGuard;
+    private readonly IPlayerControlQuery _players;
 
+    // The query is resolved here, not as a constructor parameter: that would need an edit to SubModule.cs, where this
+    // model is built.
     public TaomPrisonerRecruitmentCalculationModel(IPrisonerRecruitmentMoraleService morale, ICareerPassiveService careerPassives,
         IDesertionRecruitGuard desertionGuard)
+        : this(morale, careerPassives, desertionGuard, IoC.Resolve<IPlayerControlQuery>())
+    {
+    }
+
+    internal TaomPrisonerRecruitmentCalculationModel(IPrisonerRecruitmentMoraleService morale,
+        ICareerPassiveService careerPassives, IDesertionRecruitGuard desertionGuard, IPlayerControlQuery players)
     {
         _morale = morale;
         _careerPassives = careerPassives;
         _desertionGuard = desertionGuard;
+        _players = players;
     }
 
     /// <summary>
@@ -69,6 +80,9 @@ public class TaomPrisonerRecruitmentCalculationModel : DefaultPrisonerRecruitmen
     /// Clan/Kingdom/IFaction. Keep the static type as CharacterObject: its Culture property is
     /// declared `new`, shadowing BasicCharacterObject.Culture (which returns a BasicCultureObject).
     /// party.LeaderHero is null for garrisons, militia and caravans; those never waive.
+    ///
+    /// A co-op guest's recruit is applied on the server, where Hero.MainHero is the server's own hero, so the
+    /// player test asks the player query (#1371).
     /// </summary>
     public override float GetPrisonerRecruitmentMoraleEffect(PartyBase party, CharacterObject character, int num)
     {
@@ -78,8 +92,12 @@ public class TaomPrisonerRecruitmentCalculationModel : DefaultPrisonerRecruitmen
                    FactionSides.OfHero(leader),
                    leader?.Culture?.StringId,
                    character?.Culture?.StringId,
-                   leader == Hero.MainHero)
+                   IsPlayerLeader(leader, _players))
             ? 0f
             : base.GetPrisonerRecruitmentMoraleEffect(party, character, num);
     }
+
+    // Unknown is not a player, as in TaomPregnancyModel: an unreadable registry keeps the AI rule.
+    internal static bool IsPlayerLeader(Hero? leader, IPlayerControlQuery players)
+        => players.OfHero(leader) == PlayerControl.Player;
 }
