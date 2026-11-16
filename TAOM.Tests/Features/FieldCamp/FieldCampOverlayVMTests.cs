@@ -190,6 +190,129 @@ public class FieldCampOverlayVMTests
         Assert.AreSame(first, property.GetValue(vm));
     }
 
+    // ---- The tooltip names why the button is blocked ----
+
+    [TestMethod]
+    public void Refresh_PartyMoving_CampHintNamesTheReason()
+    {
+        _activation.IsMainPartyStationary.Returns(false);
+        var vm = CreateVm();
+
+        vm.Refresh();
+
+        var hint = CampHintText(vm);
+        StringAssert.Contains(hint, "Make Camp");
+        StringAssert.Contains(hint, "Cannot camp now");
+        StringAssert.Contains(hint, "on the move");
+    }
+
+    [TestMethod]
+    public void Refresh_CampAllowed_CampHintHasNoReasonLine()
+    {
+        var vm = CreateVm();
+
+        vm.Refresh();
+
+        Assert.IsTrue(vm.CanMakeCamp);
+        Assert.IsFalse(CampHintText(vm).Contains("Cannot camp now"), "an enabled button must not claim to be blocked");
+    }
+
+    [TestMethod]
+    public void Refresh_ReasonClears_CampHintDropsTheReasonLine()
+    {
+        _activation.IsMainPartyStationary.Returns(false);
+        var vm = CreateVm();
+        vm.Refresh();
+        _activation.IsMainPartyStationary.Returns(true);
+
+        vm.Refresh();
+
+        Assert.IsFalse(CampHintText(vm).Contains("Cannot camp now"), "the tooltip kept a stale reason after the party stopped");
+    }
+
+    [TestMethod]
+    public void Refresh_ReasonChanges_CampHintFollowsTheNewReason()
+    {
+        _activation.IsMainPartyStationary.Returns(false);
+        var vm = CreateVm();
+        vm.Refresh();
+        _activation.IsMainPartyStationary.Returns(true);
+        _activation.IsMainPartyDisorganized.Returns(true);
+
+        vm.Refresh();
+
+        var hint = CampHintText(vm);
+        StringAssert.Contains(hint, "still disorganized");
+        Assert.IsFalse(hint.Contains("on the move"), "the tooltip kept the old reason");
+    }
+
+    [TestMethod]
+    public void Refresh_ReasonUnchanged_KeepsTheSameHintInstance()
+    {
+        // 4 Hz again, now with a reason showing: the hint is rebuilt only when its text changes.
+        _activation.IsMainPartyStationary.Returns(false);
+        var vm = CreateVm();
+        vm.Refresh();
+        var property = typeof(FieldCampOverlayVM).GetProperty("CampButtonHint");
+        var first = property!.GetValue(vm);
+
+        vm.Refresh();
+
+        Assert.AreSame(first, property.GetValue(vm));
+    }
+
+    [TestMethod]
+    public void Refresh_MasterToggleOff_CampHintNamesNoReason()
+    {
+        // The button is hidden then; the hint must not talk about a block the player cannot see.
+        _settings.Enabled.Returns(false);
+        _activation.IsMainPartyStationary.Returns(false);
+        var vm = CreateVm();
+
+        vm.Refresh();
+
+        Assert.IsFalse(CampHintText(vm).Contains("Cannot camp now"));
+    }
+
+    [TestMethod]
+    public void Refresh_CoopGuest_CampHintNamesNoReason()
+    {
+        _activation.DefersToCoopHost.Returns(true);
+        _activation.IsMainPartyStationary.Returns(false);
+        var vm = CreateVm();
+
+        vm.Refresh();
+
+        Assert.IsFalse(CampHintText(vm).Contains("Cannot camp now"));
+    }
+
+    [TestMethod]
+    public void ExecuteOpenCampMenu_EveryBlockedState_DoesNotOpenTheMenu()
+    {
+        // The click and the tooltip share one picker: a state the tooltip calls blocked must not open the menu.
+        var setups = new List<Action>
+        {
+            () => _activation.IsMainPartyInSettlement.Returns(true),
+            () => _activation.IsMainPartyInEncounter.Returns(true),
+            () => _activation.IsMapScreenClear.Returns(false),
+            () => _activation.IsMainPartyStationary.Returns(false),
+            () => _activation.IsMainPartyDisorganized.Returns(true),
+        };
+
+        foreach (var setup in setups)
+        {
+            Setup();
+            setup();
+            var vm = CreateVm();
+            vm.Refresh();
+
+            vm.ExecuteOpenCampMenu();
+
+            Assert.IsFalse(vm.CanMakeCamp);
+            _menus.DidNotReceiveWithAnyArgs().Activate(default!);
+        }
+    }
+
     [TestMethod]
     public void Refresh_ContributorCaptionEmpty_FallsBackToMakeCamp()
     {

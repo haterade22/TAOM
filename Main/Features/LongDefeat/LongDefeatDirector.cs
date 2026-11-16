@@ -170,6 +170,7 @@ internal sealed partial class LongDefeatDirector
         TickSplit(dt, fx.DefenderBatches.Count > 0);
         TickVolleyWatch(dt);
         TickPosts(dt);
+        TickHunters();
         if (_plan.Options.Autoplay)
             PlayShop(dt);
         TickSally(dt);
@@ -206,6 +207,9 @@ internal sealed partial class LongDefeatDirector
                     _run.PlayerDown();
                     _deathPending = true;
                     NoteEngineTookSplit("the lord fell");
+                    break;
+                case LdRemovalKind.Hero:
+                    HeroLeft(removal.TroopId, removal.Loss);
                     break;
             }
         });
@@ -281,6 +285,8 @@ internal sealed partial class LongDefeatDirector
             _run.TryBuy(action.OfferId);
         else if (action.Kind == BotActionKind.Upgrade && action.OfferId != null)
             _run.TryUpgrade(action.OfferId);
+        else if (action.Kind == BotActionKind.Hero && action.OfferId != null)
+            _run.TryBuyHero(action.OfferId);
         else if (action.Kind == BotActionKind.Pick && action.OfferId != null)
             _run.TryPickBoon(action.OfferId);
         else if (action.Kind == BotActionKind.Reroll)

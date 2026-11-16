@@ -34,7 +34,8 @@ public class ReflectionSiteBindingTests
     [ClassInitialize]
     public static void Init(TestContext _) => _gameLoaded = GameAssemblies.EnsureLoaded();
 
-    // fullName, simpleName, member, kind (Field|Property|Method|Member), sourceSite
+    // fullName, simpleName, member, kind (Field|Property|Method|Member|Constructor), sourceSite
+    // A Constructor row's member is its parameter types' simple names, comma-separated.
     [DataTestMethod]
     [TestCategory("BindingVerification")]
     // --- EquipPresets / inventory (InventoryScreenAdapter.cs) ---
@@ -62,6 +63,13 @@ public class ReflectionSiteBindingTests
     // --- Realms encyclopedia Titles page (TitleEncyclopediaPagePatch.cs) ---
     [DataRow("TaleWorlds.CampaignSystem.Encyclopedia.EncyclopediaPage", "EncyclopediaPage", "_identifierTypes", "Field", "TitleEncyclopediaPagePatch.cs:28")]
     [DataRow("TaleWorlds.CampaignSystem.Encyclopedia.EncyclopediaManager", "EncyclopediaManager", "_pages", "Field", "TitleEncyclopediaPagePatch.cs:29")]
+    // --- Realms house banners, patches applied by hand (HouseBanners.cs, #1320) ---
+    [DataRow("SandBox.View.Map.Visuals.MobilePartyVisual", "MobilePartyVisual", "RefreshPartyIcon", "Method", "HouseBanners.cs:71")]
+    [DataRow("SandBox.View.Map.Visuals.MobilePartyVisual", "MobilePartyVisual", "AddTentEntityForParty", "Method", "HouseBanners.cs:73")]
+    [DataRow("SandBox.ViewModelCollection.Nameplate.SettlementNameplatePartyMarkerItemVM", "SettlementNameplatePartyMarkerItemVM", "MobileParty", "Constructor", "HouseBanners.cs:76")]
+    [DataRow("TaleWorlds.CampaignSystem.ViewModelCollection.Encyclopedia.Pages.EncyclopediaClanPageVM", "EncyclopediaClanPageVM", "Refresh", "Method", "HouseBanners.cs:81")]
+    [DataRow("TaleWorlds.CampaignSystem.ViewModelCollection.Encyclopedia.Items.EncyclopediaFactionVM", "EncyclopediaFactionVM", "IFaction", "Constructor", "HouseBanners.cs:83")]
+    [DataRow("SandBox.GauntletUI.BannerEditor.GauntletBannerEditorScreen", "GauntletBannerEditorScreen", "BannerEditorState", "Constructor", "HouseBanners.cs:87")]
     // --- CharacterCreation narrative mount guard, Patch20 prefix (CharacterCreationCampaignBehavior_GetYouthMenuArgs_Patch.cs) ---
     [DataRow("SandBox.GauntletUI.CharacterCreation.CharacterCreationNarrativeStageView", "CharacterCreationNarrativeStageView", "SpawnNonHumanNarrativeMenuCharacter", "Method", "CharacterCreationCampaignBehavior_GetYouthMenuArgs_Patch.cs:154 (TargetMethod)")]
     [DataRow("SandBox.GauntletUI.CharacterCreation.CharacterCreationNarrativeStageView", "CharacterCreationNarrativeStageView", "_characterScene", "Field", "CharacterCreationCampaignBehavior_GetYouthMenuArgs_Patch.cs:158 (____characterScene)")]
@@ -267,6 +275,7 @@ public class ReflectionSiteBindingTests
     // the non-generic IDictionary (their value type is a private nested enum). A miss logs one warning and every first-meeting read
     // answers false, so the caravan and villager greetings stay vanilla.
     [DataRow("TaleWorlds.CampaignSystem.CampaignBehaviors.CaravansCampaignBehavior", "CaravansCampaignBehavior", "_interactedCaravans", "Field", "EncounterLinesAdapter.cs:34")]
+    [DataRow("Helpers.PartyScreenHelper", "PartyScreenHelper", "GetRosterWithAllGameTroops", "Method", "CheatWorldAdapter.cs:149")]
     [DataRow("TaleWorlds.CampaignSystem.CampaignBehaviors.VillagerCampaignBehavior", "VillagerCampaignBehavior", "_interactedVillagers", "Field", "EncounterLinesAdapter.cs:35")]
     // The text seam's three ConversationManager fields, bound once in Initialize. A miss logs one warning and the surrender and
     // hideout boss lines stay vanilla.
@@ -282,6 +291,10 @@ public class ReflectionSiteBindingTests
         Assert.IsNotNull(type,
             $"Type '{fullName}' not found in any loaded engine assembly. The reflection site at {source} " +
             "would resolve null at runtime — the engine type was likely renamed or moved in this Bannerlord version.");
+        // The fallback finds a type by its simple name, but AccessTools.TypeByName("Full.Name") does not: a moved type
+        // would pass here and resolve null at runtime (#1320).
+        Assert.AreEqual(fullName, type.FullName,
+            $"'{fullName}' moved to {type.FullName}. Update the type name at {source} and in this DataRow.");
 
         Assert.IsTrue(HasMember(type, member, kind),
             $"{kind} '{member}' not found on {type.FullName}. The reflection site at {source} would resolve null " +
@@ -438,6 +451,11 @@ public class ReflectionSiteBindingTests
     {
         const BindingFlags F = BindingFlags.Public | BindingFlags.NonPublic |
                                BindingFlags.Instance | BindingFlags.Static | BindingFlags.DeclaredOnly;
+
+        // A constructor's member is its parameter types' simple names, comma-separated: "MobileParty".
+        if (kind == "Constructor")
+            return type.GetConstructors(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)
+                .Any(c => string.Join(",", c.GetParameters().Select(p => p.ParameterType.Name)) == member);
 
         for (var t = type; t != null && t != typeof(object); t = t.BaseType)
         {

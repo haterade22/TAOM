@@ -302,6 +302,8 @@ internal sealed partial class FakeLongDefeatField : ILongDefeatBattlefieldAdapte
         var key = KeyOf(text.TrimEnd('!'));
         if (text.StartsWith("C:", StringComparison.Ordinal))
             return new LdRemoval(LdRemovalKind.Attacker, text.TrimEnd('!').Substring(2), AttackerRole.Commander, text.EndsWith("!", StringComparison.Ordinal), loss, key);
+        if (text.StartsWith("H:", StringComparison.Ordinal))
+            return new LdRemoval(LdRemovalKind.Hero, text.Substring(2), Loss: loss, Key: key);
         if (!loss)
             return new LdRemoval(LdRemovalKind.None, "", Key: key);
         if (text == "P")

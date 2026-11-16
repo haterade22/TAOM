@@ -41,6 +41,12 @@ public sealed class SignatureStrikeService : ISignatureStrikeService
         if (!(basis > 0))
             return null;
 
+        var killable = context.Collision == StrikeCollision.StrikeAgent
+            && context.IsColliderAgent
+            && !context.AttackBlockedWithShield
+            && context.VictimIsHuman
+            && context.InflictedDamage > 0;
+
         return new StrikeEffect(
             profile.Kind,
             profile.OuterRadius,
@@ -53,7 +59,8 @@ public sealed class SignatureStrikeService : ISignatureStrikeService
             profile.FearMorale,
             profile.Origin,
             profile.Sound,
-            signature.Id);
+            signature.Id,
+            killable ? profile.KillChance : 0f);
     }
 
     public bool? DecideKnockdown(in StrikeContext context)
@@ -87,24 +94,29 @@ public sealed class SignatureStrikeService : ISignatureStrikeService
         return (int)Math.Round(raw);
     }
 
-    public float ComputeFearDrain(float scaledFear, float falloff, float raceResist, float currentMorale)
+    public bool DecideInstantKill(
+        float chance, float roll, bool isHuman, bool isHero, bool isPlayer, bool isGeneral,
+        bool isSignatureBearer, bool isKillImmuneRace, bool isShruggingOff, float health)
     {
-        if (!FiniteFloatValidator.IsFinite(scaledFear)
-            || !FiniteFloatValidator.IsFinite(falloff)
-            || !FiniteFloatValidator.IsFinite(raceResist)
-            || !FiniteFloatValidator.IsFinite(currentMorale))
-            return 0f;
+        // Positive requirements throughout: a NaN chance, roll or health fails closed.
+        if (!FiniteFloatValidator.IsFinite(chance) || !FiniteFloatValidator.IsFinite(roll) || !FiniteFloatValidator.IsFinite(health))
+            return false;
 
-        // GetMorale() answers -1f for an agent with no CommonAIComponent; that is "no morale",
-        // never "already drained".
-        if (!(currentMorale > 0f))
-            return 0f;
+        if (!(chance > 0f) || !(health > 0f) || !(roll < chance))
+            return false;
 
-        var drain = scaledFear * falloff * raceResist;
-        if (!(drain > 0f))
-            return 0f;
+        return isHuman && !isHero && !isPlayer && !isGeneral && !isSignatureBearer && !isKillImmuneRace && !isShruggingOff;
+    }
 
-        return Math.Min(drain, currentMorale);
+    // Ceil plus one so the blow always exceeds the health left. (int) of a float at or past
+    // int.MaxValue is int.MinValue on net472, so the cast is gated on the value.
+    public int InstantKillDamage(float health)
+    {
+        if (!FiniteFloatValidator.IsFinite(health) || !(health > 0f))
+            return 0;
+
+        var raw = Math.Ceiling(health) + 1.0;
+        return raw < int.MaxValue ? (int)raw : 0;
     }
 
     // A verdict is granted only for the case the engine's own decider would otherwise evaluate:
@@ -255,6 +267,7 @@ public sealed class SignatureStrikeService : ISignatureStrikeService
             KnockDown = config.KnockDown;
             KnockBack = config.KnockBack;
             FearMorale = config.FearMorale;
+            KillChance = config.KillChance;
             Sound = string.IsNullOrWhiteSpace(config.Sound) ? null : config.Sound;
         }
 
@@ -268,6 +281,7 @@ public sealed class SignatureStrikeService : ISignatureStrikeService
         public bool KnockDown { get; }
         public bool KnockBack { get; }
         public float FearMorale { get; }
+        public float KillChance { get; }
         public string? Sound { get; }
     }
 }

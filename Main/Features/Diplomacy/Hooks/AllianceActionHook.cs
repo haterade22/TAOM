@@ -41,6 +41,17 @@ public class AllianceActionHook : IOnAllianceAction
         return veto != WarVeto.None;
     }
 
+    public bool ShouldPreventCallToWar(string calledKingdomId, string targetKingdomId)
+    {
+        if (ShouldPreventWarDeclaration(calledKingdomId, targetKingdomId)) return true;
+        // ShouldPreventWarDeclaration already returned false under co-op; the host's rule governs the refusal too.
+        if (_coop.ShouldDeferToHost || !_diplomacyService.RefusesCallToWar(calledKingdomId, targetKingdomId))
+            return false;
+
+        _logger.LogInfo($"[Diplomacy] Call to war refused: {calledKingdomId} will not join a war against {targetKingdomId}");
+        return true;
+    }
+
     public string GetWarRefusalText(string kingdomAId, string kingdomBId)
     {
         if (_coop.ShouldDeferToHost) return null;

@@ -1,4 +1,7 @@
 {
+  "callToWarRefusals": [
+    { "called": "empire", "target": "empire_w" }
+  ],
   "relationships": [
     { "kingdomA": "empire_w", "kingdomB": "vlandia", "tier": "Permanent" },
     { "kingdomA": "erebor", "kingdomB": "sturgia", "tier": "Permanent" },

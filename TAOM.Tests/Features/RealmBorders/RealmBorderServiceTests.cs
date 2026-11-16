@@ -110,6 +110,18 @@ public class RealmBorderServiceTests
     }
 
     [TestMethod]
+    public void OnNamesMayHaveChanged_MovesTheNameVersion_SoTheLabelsAreLetteredAnew()
+    {
+        // A rename in the kingdom screen tells Realms nothing; the map view calls this when that screen closes (#1316).
+        var rig = new Rig(("west", 100, "empire_w"));
+        var before = rig.Service.NameVersion;
+
+        rig.Service.OnNamesMayHaveChanged();
+
+        Assert.AreNotEqual(before, rig.Service.NameVersion);
+    }
+
+    [TestMethod]
     public void OnMapFrame_OneRealmOnBothSides_DrawsNothing()
     {
         var rig = new Rig(("west", 100, "empire_w"), ("east", 300, "empire_w"));

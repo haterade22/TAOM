@@ -733,6 +733,203 @@ of all three cultures follow `_a`.
 **Existing saves.** A hero's battle set is saved (above), so the kits reach new campaigns only. The
 maintainer does not mind existing saves (2026-11-15).
 
+The Harad and Mirkwood kits above are replaced by the lord armour variants below (#1333).
+
+### Lord armour variants (2026-11-15, #1333)
+
+**What a variant is.** A lord armour variant is a TAOM item that copies one Armory armour piece: the
+same mesh, culture, weight, appearance, cover and gender flags, `material_type`, `Flags` and every
+other attribute or child the source declares. It differs in five things: the id `taom_lord_<source
+id>`; `is_merchandise="false"`; its own name key `taom_lord_<source id>_name`, with "Lord's" after the
+culture tag of the source's English name and the tier words Light, Med, Medium, Heavy and Elite left
+out (a variant is at lord values; the look letter or numeral stays), and a name two variants would
+share numbered I, II, ... in spec order (`unique_names`); `modifier_group` at the lord band
+(`modifier_group_for`); and its armour, at the lord band of the source's kingdom line
+(`rebalance_armor.calculate_stats('lord')`).
+
+The slot's primary is the lord value, or the spec row's `cap` where the lord band would pass the
+culture's limit (the reference plus 5); a cap must bind, carries a reason, and fails `--check` when it
+passes the limit of the slot's part as the reference stands today (`check_cap`), so a changed
+reference cannot leave a stale cap. Each secondary takes the
+larger of two shares of the primary (`kingdom_secondary`, as the restat prices a lord piece): the
+source's own, and that of the culture's reference piece in the slot. The reference piece is the one
+the troop that sets the culture's reference on the slot's part (`fix_lord_kits.culture_reference`; a
+Cape's part is body) wears there, the lowest of its sets: Mirkwood's is `mkwd_inf3_chest_silver`
+(0/48/8/19, from `mirkwood_beleglas`), Harad's the vanilla `aserai_scale_armor_on_chain` (0/51/16/16,
+from `harad_pz_camel_lancer`). So a lord does not lose arm armour because his chest's look carries no
+arm share. Where the source has no share, the row secondary of the slot is the least value written (a
+chest's leg, a cape's arm, as `generate_lothlorien_armor.py` writes them). A declared stat with no share
+and no row value stays 0.
+
+A variant is made only for a piece whose primary the curve leaves short of the lord band (or the cap)
+for good (`fix_lord_kits.is_short`): one a troop wears (`derive_armor_tiers.parse_rosters`), priced at
+its lowest wearer's band, or one no troop wears that has no lord-line token, which the restat only
+lowers when a lord wears it (`rebalance_armor._roster_first_plan`). An unworn lord-line piece is
+restated at the lord band and needs none. The refusal tests the lord-line token only, while the restat
+raises such a piece only when it is also not hero-named (`rebalance_armor.py:1076`): an unworn,
+hero-named lord-line piece is refused too, on the safe side. A piece already at lord values is worn as
+it is. No Armory
+value changes: the Armory is only read, and `python tools/rebalance_armor.py --check` stays at 0.
+
+**The spec and the output.** `tools/lord_armour_variants.json` lists, per template culture (`aserai` is
+Harad), the source ids with a reason each; one source belongs to one culture.
+`tools/generate_lord_armour_variants.py` writes `Main/_Module/ModuleData/lord_armour/lord_armour_variants.xml`
+(CRLF, parsed before any write) and one `Items` node in `Main/_Module/SubModule.xml`, after the
+placeholder weapons' node. `--check` also fails when any roster other than a generic lord template
+(`<family>_bat_template_medium_<x>`) or a fallback or ruler roster, or any other `*.xml` or `*.xslt`,
+names a variant (`roster_violations`), and when a troop, companion, wanderer or other hero who is not a
+lord wears one, inline or through a template roster by id (`worn_violations`, through
+`derive_armor_tiers._hero_battle_items`). A lord is an occupation Lord hero or `lords.xslt` lord
+(`_hero_elements(lords_only=True)`), or a template a culture lists in `<lord_templates>` or
+`<rebellion_hero_templates>` (the `spc_<culture>_lord_<n>` templates wear the fallback rosters). A
+variant is an id the spec lists (`derive_armor_tiers.lord_variant_source`), not any id that starts with
+`taom_lord_`: the `taom_lord_intro_*` dialogue keys share the prefix.
+
+**Who reads the variants.** `derive_armor_tiers.build_armory_index` reads the file after the Armory,
+each variant in its source's folder and slot, so `derive_armor_tiers.py`, `generate_armour_classes.py`
+and `fix_lord_kits.planned_items` see them. `fix_upgrade_armour_regressions.load_item_armour` already
+read the repo's ModuleData, so the validator (`LORD_ARMOUR_RANGE`, `WORN_ARMOUR_*`, item refs) and
+`fix_lord_kits.py` see them as well. In `fix_lord_kits.py` a variant has its source's family and
+colour (`_split`), and it is a lord-pool piece of the culture the spec names whatever its folder
+(`lord_pool`, argument `variants`); it is never a rule (b) piece. The class table classes every variant
+`named` (`generate_armour_classes.classify`). The gate `lord-variant-meshes` runs
+`validate_mesh_refs.py` over the variant file, because the `mesh-refs` gate scans the Armory only.
+
+**Commands**, from the repo root:
+
+```
+python tools/generate_lord_armour_variants.py            # dry run: each variant, its source, old -> new values
+python tools/generate_lord_armour_variants.py --apply    # write the file and the SubModule node
+python tools/generate_lord_armour_variants.py --check    # gate lord-armour-variants: 0 clean, 1 drift or a bad roster, 2 no install, 3 crash
+python tools/derive_armor_tiers.py
+python tools/generate_armour_classes.py --apply
+python tools/fix_lord_kits.py --check                    # then again with --values planned
+python tools/fix_lord_kits.py --values planned --pool-md docs/reference/lord-armour-pool.md
+```
+
+**Adding a culture.**
+
+1. Pick the looks: the culture's own line, one Body, Cape and Leg family per template. A piece at lord
+   values needs no variant.
+2. Add a row per source to `tools/lord_armour_variants.json`, under the template culture, with a
+   reason. Run the dry run; it refuses a source already at lord values or an unworn lord-line piece.
+   Where a template's total would pass the reference plus 5, add a `cap` with its reason.
+3. `--apply`, then edit the templates (`equipmentsets/taom_equipment_sets_<culture>.xml`) by hand to
+   wear the variants. Keep each file's CRLF.
+4. `python tools/fix_lord_kits.py`, read its plan, then `--apply`: it writes the fallback and ruler
+   rosters (they mirror `_a`) and any swap of its own. Repeat until `--check` exits 0 on the live and
+   the planned values.
+5. `python tools/derive_armor_tiers.py`, `python tools/generate_armour_classes.py --apply`, the pool
+   table above, and `python tools/validate_moduledata.py`. If a promoted culture clones the culture's
+   templates, run `python tools/promote_borrowed_cultures.py --only <culture> --check` and re-apply
+   through the promoter.
+6. Add the new name keys to the backlog in `docs/localization/translation-backlog.md`.
+
+**The variants of 2026-11-15** (head/body/arm/leg; `python tools/generate_lord_armour_variants.py`):
+
+| Culture | Source | Slot | Worn from | Source values | Variant values | English name |
+|---|---|---|---|---|---|---|
+| mirkwood | `mkwd_inf3_chest` | body | L11 | -/8/0/0 | -/51/9/20 | [Mirkwood] Lord's Infantry Chestplate I |
+| mirkwood | `mkwd_inf3_greaves` | leg | L11 | -/-/-/3 | -/-/-/23 | [Mirkwood] Lord's Greaves I |
+| mirkwood | `mkwd_inf3_chest_bronze` | body | L16 | -/17/0/0 | -/51/9/20 | [Mirkwood] Lord's Infantry Chestplate III |
+| mirkwood | `mkwd_inf3_pauldrons_bronze` | shoulder | L16 | -/5/0/- | -/14/12/- | [Mirkwood] Lord's Pauldrons III |
+| mirkwood | `mkwd_inf3_greaves_bronze` | leg | L16 | -/-/-/8 | -/-/-/23 | [Mirkwood] Lord's Greaves III |
+| mirkwood | `mirkwood_body` | body | L11 | -/8/0/- | -/51/9/20 | [Mirkwood] Lord's Palace Guard Body Armor |
+| mirkwood | `mirkwood_boots` | leg | L11 | -/-/-/3 | -/-/-/23 | [Mirkwood] Lord's Palace Guard Boots |
+| aserai | `sk_hr_st_chest_inf_chest_light_a` | body | L6 | -/6/0/- | -/43/13/17 | [Harwan] Lord's Infantry Chest A I |
+| aserai | `sk_hr_st_chest_inf_chest_med_a` | body | L11 | -/6/0/- | -/43/13/17 | [Harwan] Lord's Infantry Chest A II |
+| aserai | `sk_hr_st_chest_inf_chest_med_b` | body | L16 | -/14/0/- | -/43/13/17 | [Harwan] Lord's Infantry Chest B I |
+| aserai | `sk_hr_st_chest_inf_chest_heavy_b` | body | L26 | -/27/8/- | -/43/13/17 | [Harwan] Lord's Infantry Chest B II |
+| aserai | `sk_hr_st_chest_cav_heavy_b` | body | L26 | -/27/8/- | -/43/13/17 | [Harwan] Lord's Cavalry Chest B |
+| aserai | `sk_hr_st_pauld_inf_med_a` | shoulder | L11 | -/2/0/- | -/12/11/- | [Harwan] Lord's Infantry Pauldron A |
+| aserai | `sk_hr_st_grvs_light_a` | leg | L6 | -/-/-/3 | -/-/-/19 | [Harwan] Lord's Greaves A I |
+| aserai | `sk_hr_st_grvs_med_a` | leg | L16 | -/-/-/6 | -/-/-/19 | [Harwan] Lord's Greaves A II |
+| aserai | `sk_hr_st_helmet_heavy_c` | head | no troop | 38/-/-/- | 44/-/-/- (cap) | [Harwan] Lord's Helmet C |
+| aserai | `sk_hr_st_helmet_heavy_a` | head | L21 | 34/-/-/- | 44/-/-/- (cap) | [Harwan] Lord's Helmet A |
+| aserai | `sk_hr_st_helmet_heavy_d` | head | no troop | 34/-/-/- | 44/-/-/- (cap) | [Harwan] Lord's Helmet D |
+| aserai | `sk_hr_st_helmet_heavy_b` | head | L26 | 34/-/-/- | 44/-/-/- (cap) | [Harwan] Lord's Helmet B |
+| aserai | `sk_sg_st_helmet_heavy_d` | head | no troop | 34/-/-/- | 44/-/-/- (cap) | [Shaghana] Lord's Helmet D |
+
+A `-` is a stat the item does not declare. The Harad helmet's lord band is 45, over the head limit 44
+(the reference 39 plus 5), so each helmet row carries `cap` 44. Every variant keeps its source's other
+attributes, the helmets' `hair_cover_type` and `beard_cover_type` among them.
+
+**Mirkwood.** The four looks of 12b21d5e3 are back: `_a` plain (`mkwd_inf3_*`), `_b` bronze, `_c` and
+`_d` the palace guard (`mirkwood_*`), `_e` silver. The fifth template, `_c`, takes the look whose other
+slots differ most from those of the template already in it: its helmet and vambraces share one family
+token with `_d`'s, two with `_b`'s, three with `_a`'s and four with `_e`'s. Heads and Gloves are
+unchanged; the plain and palace-guard pauldrons (13/11) are worn as they are.
+
+| Template | Body | Cape | Leg | h/b/a/l before | after |
+|---|---|---|---|---|---|
+| `_a` | `taom_lord_mkwd_inf3_chest` | `mkwd_inf3_pauldrons` | `taom_lord_mkwd_inf3_greaves` | 50/61/43/41 | 50/64/44/43 |
+| `_b` | `taom_lord_mkwd_inf3_chest_bronze` | `taom_lord_mkwd_inf3_pauldrons_bronze` | `taom_lord_mkwd_inf3_greaves_bronze` | 50/61/43/41 | 50/65/45/43 |
+| `_c` | `taom_lord_mirkwood_body` | `mirkwood_shoulder` | `taom_lord_mirkwood_boots` | 50/61/43/41 | 50/64/44/43 |
+| `_d` | `taom_lord_mirkwood_body` | `mirkwood_shoulder` | `taom_lord_mirkwood_boots` | 50/61/43/41 | 50/64/44/43 |
+| `_e` | `mkwd_inf3_chest_silver` | `mkwd_inf3_pauldrons_silver` | `mkwd_inf3_greaves_silver` | 50/61/43/41 | 50/61/43/41 |
+
+The reference is 50/61/43/41 (`mirkwood_beleglas` and its peers), the limit 55/66/48/46. The plain,
+bronze and palace-guard chests declare no arm armour; each variant chest takes the silver chest's arm
+share (8 of 48) and so carries arm 9, and no template is lower on any part than before.
+
+**Harad.** Each template has its own chest, all of the Harad infantry or cavalry line, and its own
+helmet at 44; the Capes follow the chest's line (`same_look`). Every chest variant carries
+arm 13 (the reference chest's share, capped at 0.30), so the Gloves are the lightest that keep arm at
+or over its value before #1333 and inside the limit of 30: light bracers on `_a`, `_b`, `_c` and `_e`.
+`_d` was at arm 29 before; with the infantry pauldron variant (arm 11) no Harad bracer lands it on 29
+or 30, so `_d` wears `sk_hr_st_pauld_inf_elite_b` (11/9) and a medium bracer (7).
+
+| Template | Head | Body | Cape | Gloves | Leg | h/b/a/l before | after |
+|---|---|---|---|---|---|---|---|
+| `_a` | `taom_lord_..._helmet_heavy_c` | `taom_lord_..._inf_chest_light_a` | `sk_hr_st_pauld_inf_elite_a` | `sk_hr_st_bracer_light_a` | `taom_lord_..._grvs_light_a` | 38/39/21/12 | 44/55/26/36 |
+| `_b` | `taom_lord_..._helmet_heavy_a` | `taom_lord_..._inf_chest_med_a` | `taom_lord_..._pauld_inf_med_a` | `sk_hr_st_bracer_light_b` | `taom_lord_..._grvs_med_a` | 34/38/24/12 | 44/55/27/36 |
+| `_c` | `taom_lord_..._helmet_heavy_d` | `taom_lord_..._inf_chest_med_b` | `taom_lord_..._pauld_inf_med_a` | `sk_sg_st_bracer_light_a` | `taom_lord_..._grvs_med_a` | 34/39/25/12 | 44/55/27/36 |
+| `_d` | `taom_lord_..._helmet_heavy_b` | `taom_lord_..._inf_chest_heavy_b` | `sk_hr_st_pauld_inf_elite_b` | `sk_hr_st_bracer_med_b` | `taom_lord_..._grvs_med_a` | 34/35/29/12 | 44/54/29/36 |
+| `_e` | `taom_lord_sk_sg_st_helmet_heavy_d` | `taom_lord_..._chest_cav_heavy_b` | `sk_hr_st_pauld_cav_elite_a` | `sk_hr_st_bracer_light_a` | `taom_lord_..._grvs_light_a` | 34/39/21/12 | 44/55/26/36 |
+
+`...` is `sk_hr_st`. The reference is 39/51/25/39 (`harad_pz_camel_lancer`), the limit 44/56/30/44.
+No part is short on any template. The fallback and ruler rosters of Harad, Shaghana, the Abanissa and
+Khand follow `_a`, and Mirkwood's follow its `_a` (written by `fix_lord_kits.py --apply`).
+
+**Before and after** (`python tools/fix_lord_kits.py`, live values; the planned values print the same
+line): all judged lords 1,671; head short 292 to 119, body short 248 to 18, arm short 189 to 86, leg
+short 275 to 45; every over count unchanged (head 42, body 0, arm 17, leg 18). Per culture, short
+head/body/arm/leg: Harad (`aserai`) 41/56/25/56 to 0/0/0/0, Shaghana 70/94/43/94 to 0/0/0/0, the
+Abanissa 62/80/35/80 to 0/0/0/0, Mirkwood 1/0/0/0 to 1/0/0/0. `LORD_ARMOUR_RANGE` warnings: 95 to 72,
+none of them on a Mirkwood or Harad template or roster.
+
+A source piece the templates no longer wear loses its lord wearers, so five Harad pieces change plan in
+`tools/data/armor_roster_tiers.json` (`rebalance_armor._roster_first_plan`): `sk_hr_st_helmet_heavy_d`
+and `sk_sg_st_helmet_heavy_d` from (lord, clamp) to (heavy, full), `sk_hr_st_pauld_cav_elite_b` to
+(elite, full), `sk_hr_st_pauld_inf_heavy_c` to (heavy, full), and `sk_hr_st_pauld_inf_elite_b`, which
+`_d` now wears, from (elite, full) to (lord, clamp). Each is already at its new band (`status` match),
+so `python tools/rebalance_armor.py --check` stays at 0. Mirkwood has four looks for five templates,
+so `_c` and `_d` share Body, Cape and Leg.
+
+**Where a variant can and cannot reach a player** (engine lines from the v1.5.7 decompile):
+
+| Route | What happens to a variant | Where |
+|---|---|---|
+| Shops | `is_merchandise="false"` sets `NotMerchandise`; a workshop never produces such an item; TAOM's market gate refuses a non-merchandise record and a named piece, and never flips one to merchandise | `ItemObject.cs:501`, `WorkshopsCampaignBehavior.cs:993`; `ArmourGateService.cs:141` and `:147`, `ArmourGatePlanner.cs:51` |
+| Tournament prizes | vanilla skips `NotMerchandise`; TAOM's pool refuses a non-merchandise item and takes only light, medium, civilian or heavy classes | `DefaultTournamentModel.cs:101`; `TournamentPrizeRules.cs:59`, `TournamentService.cs:62` to `:64` |
+| Loot from a defeated lord | vanilla loots a casualty (dead or wounded) through `GetLootedItemFromTroop`, whose `GetRandomItem` skips a `NotMerchandise` item; a party's item roster is looted without them too. TAOM does not override it, and loot is unchanged | `MapEvent.cs:1490`, `:1502`, `:1657`, `:1396`; `DefaultBattleRewardModel.cs:92`, `:108`, `:136`; `BattleLootAdapter.cs:54` |
+| Armoury upgrade | a named piece is no upgrade source (rank -1), and the table names no variant as `next` | `ArmouryUpgradeService.cs:49` to `:53`, `ArmourClass.cs:73` |
+| Lord's Ladder, lord harness | they hand out `GetPieces(ArmourClass.Lord)`, and a variant is `named` | `LordsLadderService.cs:137`, `:145`; `LordHarnessService.cs:41`, `:48` |
+| Stripping a captive lord | named pieces are left on him | `StripService.cs:84` |
+| Companion made a lord | the template kit replaces a lower tier piece when the companion leaves the player's clan as a lord: a lord wears it | `CompanionRolesCampaignBehavior.cs:291`, `:299` to `:318`; `TaomEquipmentSelectionModel.cs:22` |
+| Enlistment and career kits | both generators read only non-hero troops of `troops/troops_*.xml`, and no troop wears a variant | `generate_enlistment_rosters.py:377`, `:1029`; `generate_career_kits.py:140`, `:207` |
+| Faction screen preset or takeover (known route) | a lord picked on the faction screen puts his gear on the player: a preset clones the hero's battle equipment and fills the player's with it, and a takeover plays the lord himself with his gear ([faction-ui.md](faction-ui.md), the takeover and "Copied picks" items) | `PresetAppearanceAdapter.cs:26` to `:33`, `:94` |
+| Come of age in the player's clan (known route) | a hero of the player's clan who comes of age as a Harad or Mirkwood lord gets a peer lord's kit | `TaomEquipmentSelectionModel.cs:19`, `LordKitDonorAdapter.cs:45` to `:66` |
+
+The two known routes are the same class: every hero-only lord piece already reaches the player this
+way, and the variants add no new route. A variant on the player can be moved in the inventory and sold:
+the engine's transfer checks only a quest item and `GetIsTransferable`, which refuses only
+`stealth_throwing_stone` (`SPItemVM.cs:487`, `DefaultItemValueModel.cs:254` to `:257`), and
+`InventoryLogic.cs` reads no `NotMerchandise`. A sold variant stays in the town's market until the next
+daily tick of that town, when TAOM's sweep removes it as a gated `named` piece that is not merchandise
+(`ArmourAcquisitionCampaignBehavior.cs:89`, `ArmourStockSweepService.cs:37` to `:41`,
+`ArmourGateService.cs:141`, `ArmourClass.cs:45`); the sweep does not run while the armour gate is off.
+
 ### Open decisions for the maintainer (2026-11-14, #1271)
 
 1. **The loot table of heavy, elite and lord extremities: decided, `leather`.** Bracers, greaves and
@@ -1015,6 +1212,15 @@ tools also left 102 `*.bak-*` files beside the live XML files (counted with `fin
 must be swept before a mirror sync or a release package: `pwsh tools/sweep_module_backups.ps1` is the
 dry run, and `pwsh tools/sweep_module_backups.ps1 -Apply` moves them into a dated quarantine with a
 SHA256 manifest.
+
+Swept and mirrored on 2026-11-15 (maintainer's word). The sweep moved 164 sidecars, all from the
+Armory's `ModuleData`, into `E:\Bannerlord_Backups\module_bak_sweep_2026-11-15`. The `lotraom-assets`
+mirror then took the live data in commit `2088acbc2` (pushed): 181 `ModuleData` files and
+`SubModule.xml` under `v1.5/LOTRLOME_Armory`, each newer in the install than its last mirror commit.
+119 of them carry the rebalance, and 62 were older live edits the mirror did not hold (`action_sets.xml`,
+`skins.xml`, five language files in each of the 12 languages). `SubModule.xml` went from v2.0.36 to
+v2.0.40 there. Not mirrored: the eight scene shader caches and the shader compile log that differ,
+`RuntimeDataCache`, and nothing was deleted from the mirror.
 
 Generator band fix, applied to the live Armory. The first generator run priced
 each of the 97 generator-owned pieces by the tier word in its id, so 47 of the 79 worn pieces sat below
@@ -1490,8 +1696,10 @@ live Armory: `LOTRLOME_items/gondor/*.bak-noble-restat-2026-09-25` (KEYforce's s
 `ARMOUR_MESH_TIER_LADDER` 1,330 against 1,348 at `HEAD`, `CROSS_CULTURE_ARMOUR_INVERSION` 7
 (unchanged), `UPGRADE_ARMOUR_REGRESSION` 4 against 6, none of them Gondor.
 
-The restat lives only in the unversioned Armory, and the mirror still holds KEYforce's stats by
-Mike's rule, so a re-sync reverts it silently. Re-run the restat after any Gondor sync:
+Until 2026-11-15 the restat lived only in the unversioned Armory, and the mirror held KEYforce's
+stats by Mike's rule. Since mirror commit `2088acbc2` of that day the mirror holds the live values, the
+Gondor ones included, so a sync from the mirror's head no longer reverts them; a sync from an older
+copy, or a new artist drop, still can. Re-run the restat after any Gondor sync:
 `python tools/derive_armor_tiers.py`, then
 `python tools/rebalance_armor.py --dry-run --tier-source roster-first --keep-weights
 --keep-material-type --cultures gondor`; a clean tree reports `Changed: 0`.
@@ -1566,9 +1774,25 @@ loads at launch), each step pairs a check a tool can make with what only a perso
    the encyclopedia, two Rohan lords and two Dunland lords of different templates wear different
    chests, an Arthedain lord wears Arnor kit (no Gondor piece), and a Rhun lord of template `_c` or
    `_f` keeps the Khamul armour.
+10. Lord armour variants (#1333). Start a NEW campaign after a full restart. Tool:
+   `python tools/generate_lord_armour_variants.py --check` and `python tools/fix_lord_kits.py --check`
+   exit 0, and `armour_classes.xml` classes every `taom_lord_` id `named`. Person only: in the
+   encyclopedia, Mirkwood lords of templates `_a`, `_b`, `_c` and `_e` wear four different chests
+   (plain, bronze, palace guard, silver), and Harad lords of the five templates five different chests;
+   the tooltip of a lord's piece reads "Lord's", carries no Light, Med, Heavy or Elite, and shows the
+   variant's values (a Harad chest 43 body, 13 arm, 17 leg; a Harad helmet 44 head; a Mirkwood plain
+   chest 51 body, 9 arm, 20 leg); the Harad helmets keep their hair and beard cover; and no `Lord's`
+   piece appears in a town market, a tournament prize list or the loot screen after defeating a
+   Mirkwood or Harad lord's party. Known route: start a new campaign, pick a Harad lord (template `_b`
+   to `_e`) on the faction screen as a preset, and the player wears his `Lord's` pieces; sell one in a
+   town, and it is gone from that town's market the next day.
 
 ## Changelog
 
+- 2026-11-15: Lord armour variants: TAOM copies of Armory pieces at the lord band, worn only by the lord
+  templates (`tools/generate_lord_armour_variants.py`, gate `lord-armour-variants`); Mirkwood's four
+  looks are back and each Harad template has its own chest and helmet, with no part lower than
+  before (#1333).
 - 2026-11-15: Lord kit: a lord is judged by his worst whole battle set on head, body, arm and leg;
   the generic lord templates wear different lord pieces of their culture's pool, variety before armour
   points; the fallback and ruler rosters mirror template `_a`; a hero-only lord piece is priced at the
@@ -1584,6 +1808,8 @@ loads at launch), each step pairs a check a tool can make with what only a perso
 ## GitHub Issue
 
 - **Issue:** #1271: [Weapons and armour sit far above the vanilla range](https://github.com/haterade22/TAOM/issues/1271)
+- **Status:** Open
+- **Issue:** #1333: [Lord armour variants: Mirkwood and Harad lords get distinct looks at lord armour values](https://github.com/haterade22/TAOM/issues/1333)
 - **Status:** Open
 
 ---

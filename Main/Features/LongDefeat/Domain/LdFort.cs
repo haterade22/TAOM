@@ -48,10 +48,11 @@ internal enum PurchaseKind
     FieldCare,
     VolleyLevel,
     Upgrade,
+    Hero,
 }
 
 /// <summary>
-/// One thing bought, in order. <c>BeforeWave</c> is the wave that starts next; <c>Id</c> is the offer of a pack, the step of an upgrade (#1161) and empty for the rest; <c>Level</c> is the level a
+/// One thing bought, in order. <c>BeforeWave</c> is the wave that starts next; <c>Id</c> is the offer of a pack, the step of an upgrade (#1161), the id of a hero (#1337) and empty for the rest; <c>Level</c> is the level a
 /// level kind reached and 0 for the rest; <c>BasePrice</c> is shop.json's price and <c>Price</c> what was paid after the boons' price factor (D29), which an upgrade does not take: its price is
 /// <c>BasePrice</c> times <see cref="Count"/>, the soldiers the field replaced (0 for every other kind); <c>Share</c> is the missing share a repair mended and the share of the missing health care
 /// returned, 0 for the rest.

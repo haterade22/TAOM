@@ -15,7 +15,11 @@ Each test maps to a way the gate could be wrong and pass anyway:
   - registration_must_cover_every_piece   -> Crafting.cs's all-pieces-must-match rule
   - first_description_wins                -> template order decides the primary usage
   - ranged_is_not_a_finding               -> a bow + shield is normal, not a defect
-  - twohanded_is_advisory_until_strict    -> the ratchet boundary is real
+  - twohanded_fails_like_polearm          -> #1312: two-handed weapons joined the ratchet
+  - onehanded_weapon_with_blocking_usage_fails -> every melee type fails the same way
+  - unheld_dangling_piece_fails           -> a piece id with no definition fails every run
+  - held_dangling_piece_passes            -> #1312: a held dangling id prints its reason
+  - stale_held_dangling_piece_fails       -> a held id that no longer dangles must go
   - missing_install_skips_cleanly         -> absent install exits 0, never a false PASS
   - standalone_roster_casing_is_scanned   -> #526: the walker read one element casing and so
                                              never opened a single equipmentsets/ file
@@ -31,6 +35,7 @@ import sys
 import tempfile
 import unittest
 from contextlib import redirect_stdout
+from unittest import mock
 from pathlib import Path
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -63,6 +68,9 @@ TEMPLATES = """<?xml version="1.0" encoding="utf-8"?>
       <WeaponDescription id="OneHandedPolearm"/>
       <WeaponDescription id="TwoHandedPolearm"/>
     </WeaponDescriptions>
+  </CraftingTemplate>
+  <CraftingTemplate id="OddswordTemplate" item_type="OneHandedWeapon">
+    <WeaponDescriptions><WeaponDescription id="TwoHandedSword"/></WeaponDescriptions>
   </CraftingTemplate>
   <CraftingTemplate id="GreatswordTemplate" item_type="TwoHandedWeapon">
     <WeaponDescriptions><WeaponDescription id="TwoHandedSword"/></WeaponDescriptions>
@@ -103,6 +111,9 @@ ITEMS = """<?xml version="1.0" encoding="utf-8"?>
     <Pieces><Piece id="spear_blade"/><Piece id="spear_handle"/></Pieces>
   </CraftedItem>
   <CraftedItem id="test_greatsword" crafting_template="GreatswordTemplate">
+    <Pieces><Piece id="great_blade"/><Piece id="great_handle"/></Pieces>
+  </CraftedItem>
+  <CraftedItem id="test_oddsword" crafting_template="OddswordTemplate">
     <Pieces><Piece id="great_blade"/><Piece id="great_handle"/></Pieces>
   </CraftedItem>
   <Item id="test_shield" Type="Shield"/>
@@ -175,6 +186,23 @@ class GateContractTests(unittest.TestCase):
         # one of them is stale against this synthetic tree, which would fail every test here for
         # a reason none of them is testing. The two ratchet tests install their own table.
         self.ratchet({})
+        # The same for the shipped KNOWN_DANGLING: its ids are absent here, so each would read as
+        # stale and fail every run for a reason no test here is testing.
+        self.held_dangling({})
+
+    def swap(self, table, mapping):
+        """Replace a module table for one test. REPLACES rather than extends: the shipped tables
+        name real ids, none of which exist in this synthetic tree, so merging would make every
+        shipped entry read as stale and turn each test red for a reason it is not testing."""
+        patcher = mock.patch.dict(table, mapping, clear=True)
+        patcher.start()
+        self.addCleanup(patcher.stop)
+
+    def ratchet(self, table):
+        self.swap(audit.KNOWN_FAILURES, table)
+
+    def held_dangling(self, table):
+        self.swap(audit.KNOWN_DANGLING, table)
 
     def run_gate(self, *extra: str):
         argv = [
@@ -229,16 +257,50 @@ class GateContractTests(unittest.TestCase):
         self.assertEqual(code, 0, out)
         self.assertNotIn("test_bow", out)
 
-    def test_twohanded_is_advisory_until_strict(self):
-        """Two-handed swords hit the same rule but sit outside the ratchet until --strict."""
+    def test_twohanded_fails_like_polearm(self):
+        """#1312: a two-handed sword beside a shield is in the ratchet, so the default run fails."""
         write(self.rosters / "troops.xml", roster_xml("test_greatsword", "test_shield"))
         code, out = self.run_gate()
-        self.assertEqual(code, 0, out)
-        self.assertIn("WARN", out)
-        self.assertIn("test_greatsword", out)
-
-        code, out = self.run_gate("--strict")
         self.assertEqual(code, 1, out)
+        self.assertIn("\n\nFAIL:", out)
+        self.assertIn("test_greatsword", out)
+        self.assertIn("no one-handed mode", out)  # the fix text sits inside the FAIL block
+
+    def test_onehanded_weapon_with_blocking_usage_fails(self):
+        """A one-handed weapon whose primary usage forbids a shield is the same defect."""
+        write(self.rosters / "troops.xml", roster_xml("test_oddsword", "test_shield"))
+        code, out = self.run_gate()
+        self.assertEqual(code, 1, out)
+        self.assertIn("test_oddsword", out)
+
+    def test_unheld_dangling_piece_fails(self):
+        """An <AvailablePiece> with no <CraftingPiece> fails the default run unless it is held."""
+        write(self.rosters / "troops.xml", roster_xml("test_spear"))
+        write(self.overlay, xslt_registering("ghost_piece"))
+        code, out = self.run_gate()
+        self.assertEqual(code, 1, out)
+        # At line start after a blank line: the hook cuts FAIL blocks on exactly that shape.
+        self.assertIn("\n\nFAIL: 1 <AvailablePiece> id(s)", out)
+        self.assertIn("ghost_piece", out)
+
+    def test_held_dangling_piece_passes(self):
+        """#1312: a held dangling id is printed with its reason and fails neither mode."""
+        write(self.rosters / "troops.xml", roster_xml("test_spear"))
+        write(self.overlay, xslt_registering("ghost_piece"))
+        self.held_dangling({"ghost_piece": "#000 -- fixture"})
+        code, out = self.run_gate()
+        self.assertEqual(code, 0, out)
+        self.assertIn("\n\nHELD: 1 dangling", out)
+        self.assertIn("#000 -- fixture", out)
+
+    def test_stale_held_dangling_piece_fails(self):
+        """A held id that is no longer dangling is a suppression that outlived its finding."""
+        write(self.rosters / "troops.xml", roster_xml("test_spear"))
+        self.held_dangling({"gone_piece": "#000 -- fixture"})
+        code, out = self.run_gate()
+        self.assertEqual(code, 1, out)
+        self.assertIn("FAIL: 1 KNOWN_DANGLING id(s) no longer dangle", out)
+        self.assertIn("gone_piece", out)
 
     def test_standalone_roster_casing_is_scanned(self):
         """#526: `<Equipment>` in an equipmentsets-shaped file must be read like `<equipment>`.
@@ -252,23 +314,6 @@ class GateContractTests(unittest.TestCase):
         self.assertEqual(code, 1, out)
         self.assertIn("test_spear", out)
         self.assertIn("test_roster", out)
-
-    def ratchet(self, table):
-        """Swap KNOWN_FAILURES wholesale for the duration of one test.
-
-        REPLACES rather than extends: the shipped table names real roster ids, none of which exist
-        in this synthetic tree, so merging would make every shipped entry read as stale and turn
-        each of these tests red for a reason it is not testing.
-        """
-        original = dict(audit.KNOWN_FAILURES)
-        audit.KNOWN_FAILURES.clear()
-        audit.KNOWN_FAILURES.update(table)
-
-        def restore():
-            audit.KNOWN_FAILURES.clear()
-            audit.KNOWN_FAILURES.update(original)
-
-        self.addCleanup(restore)
 
     def test_known_failure_is_held_not_failed(self):
         """A ratcheted pair reports under KNOWN and does not fail the run."""

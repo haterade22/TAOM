@@ -339,7 +339,7 @@ public class RefugeServiceTests
 
         // Order-sensitive collaborators log into the same event stream as the subclass seams.
         _camps.When(c => c.BreakPlayerCamp()).Do(_ => _sut.Events.Add("break"));
-        _wardens.When(w => w.ReleaseWarden(Arg.Any<string>(), Arg.Any<bool>()))
+        _wardens.When(w => w.ReleaseWarden(Arg.Any<string>(), Arg.Any<bool>(), Arg.Any<string>()))
             .Do(_ => _sut.Events.Add("release"));
     }
 
@@ -782,7 +782,7 @@ public class RefugeServiceTests
 
         CollectionAssert.AreEqual(new[] { "release", "merge", "destroy" }, _sut.Events,
             "the companion must leave via a real action before his roster element is copied");
-        _wardens.Received(1).ReleaseWarden("warden_1", false);
+        _wardens.Received(1).ReleaseWarden("warden_1", false, null);
         CollectionAssert.AreEqual(new[] { "r1" }, _sut.MergedParties);
         CollectionAssert.AreEqual(new[] { "r1" }, _sut.DestroyedParties);
         Assert.AreEqual(0, _sut.AllRefuges.Count);
@@ -802,7 +802,7 @@ public class RefugeServiceTests
         _sut.Dismantle(data);
 
         Assert.AreEqual(0, _sut.Events.Count);
-        _wardens.DidNotReceiveWithAnyArgs().ReleaseWarden(default!, default);
+        _wardens.DidNotReceiveWithAnyArgs().ReleaseWarden(default!, default, default);
         Assert.AreEqual(0, _sut.DestroyedParties.Count);
         Assert.AreEqual(1, _sut.AllRefuges.Count);
     }
@@ -816,7 +816,7 @@ public class RefugeServiceTests
 
         _sut.Dismantle(data);
 
-        _wardens.Received(1).ReleaseWarden("warden_1", true);
+        _wardens.Received(1).ReleaseWarden("warden_1", true, "troop_1");
     }
 
     [TestMethod]
@@ -826,7 +826,7 @@ public class RefugeServiceTests
         _sut.Dismantle(new RefugeData { PartyId = "ghost" });
 
         Assert.AreEqual(0, _sut.Events.Count);
-        _wardens.DidNotReceive().ReleaseWarden(Arg.Any<string>(), Arg.Any<bool>());
+        _wardens.DidNotReceive().ReleaseWarden(Arg.Any<string>(), Arg.Any<bool>(), Arg.Any<string>());
     }
 
     // --- FrameTick: builds ---
@@ -1660,6 +1660,21 @@ public class RefugeServiceTests
     }
 
     [TestMethod]
+    public void OnPartyDestroyed_PromotedWarden_NoReleaseAndNoSoldierBack()
+    {
+        // A refuge lost in battle is not a dismantle: the engine's own battle accounting decides
+        // the warden's fate, and nothing is handed back to the player's party.
+        var data = Seed("r1");
+        data.WardenPromoted = true;
+        data.PromotedFromTroopId = "troop_1";
+
+        _sut.OnPartyDestroyed("r1");
+
+        _wardens.DidNotReceiveWithAnyArgs().ReleaseWarden(default!, default, default);
+        _wardens.DidNotReceiveWithAnyArgs().UnwindPromotion(default!, default!);
+    }
+
+    [TestMethod]
     public void OnPartyDestroyed_FreesTheCapSlot()
     {
         _settings.MaxRefugesCap.Returns(1);
@@ -2208,7 +2223,7 @@ public class RefugeServiceTests
         Assert.AreEqual(RefugeBlockReason.None, reason);
         Assert.AreEqual(0, _sut.Charges.Count, "the throw came before the charge; nothing to refund");
         Assert.AreEqual(0, _sut.Refunds.Count);
-        _wardens.Received(1).ReleaseWarden("hero_1", false);
+        _wardens.Received(1).ReleaseWarden("hero_1", false, null);
         CollectionAssert.AreEqual(new[] { "taom_refuge_0" }, _sut.DestroyedParties);
         Assert.AreEqual(0, _sut.AllRefuges.Count, "no ghost row may survive a failed founding");
     }
@@ -2229,7 +2244,7 @@ public class RefugeServiceTests
         Assert.IsTrue(breakThrew);
         CollectionAssert.AreEqual(new[] { 2000 }, _sut.Charges);
         CollectionAssert.AreEqual(new[] { 2000 }, _sut.Refunds, "the charge completed, so it must unwind");
-        _wardens.Received(1).ReleaseWarden("hero_1", false);
+        _wardens.Received(1).ReleaseWarden("hero_1", false, null);
         CollectionAssert.AreEqual(new[] { "taom_refuge_0" }, _sut.DestroyedParties);
         Assert.AreEqual(0, _sut.AllRefuges.Count);
     }

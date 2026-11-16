@@ -78,4 +78,15 @@ public class ShippedHeroAurasConfigTests
 
         Assert.AreEqual(0, unknown.Count, "race names TAOM does not ship: " + string.Join(", ", unknown));
     }
+
+    [TestMethod]
+    public void AragornAura_NamesTheMissionHero()
+    {
+        // #1359: in a Custom Battle (the Long Defeat) the aura finds a hero by his character id, and the shop's Aragorn
+        // is taom_hero_aragorn. The hired companion keeps his own row.
+        var aura = _sut.GetConfig().Auras.Single(a => a.Id == "aragorn_heir_of_isildur");
+
+        CollectionAssert.Contains(aura.HeroIds, "taom_hero_aragorn");
+        CollectionAssert.Contains(aura.HeroIds, "named_companion_aragorn");
+    }
 }

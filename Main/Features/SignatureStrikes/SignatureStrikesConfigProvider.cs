@@ -100,6 +100,7 @@ public sealed class SignatureStrikesConfigProvider : ISignatureStrikesConfigProv
                 parsed.ShieldBlockedMultiplier, defaults.ShieldBlockedMultiplier,
                 0f, 1f, "shieldBlockedMultiplier", ref rejected),
             Signatures = ValidateSignatures(parsed.Signatures, defaults.Signatures, ref rejected),
+            KillImmuneRaces = ValidateList(parsed.KillImmuneRaces, defaults.KillImmuneRaces, "killImmuneRaces", ref rejected),
         };
 
         if (rejected)
@@ -306,6 +307,8 @@ public sealed class SignatureStrikesConfigProvider : ISignatureStrikesConfigProv
             KnockBack = parsed.KnockBack,
             FearMorale = ValidateFloat(
                 parsed.FearMorale, fallback.FearMorale, 0f, MaxFearMorale, $"{field}.fearMorale", ref rejected),
+            KillChance = ValidateFloat(
+                parsed.KillChance, fallback.KillChance, 0f, 1f, $"{field}.killChance", ref rejected),
             Sound = ValidateSound(parsed.Sound, fallback.Sound, field, ref rejected),
         };
     }

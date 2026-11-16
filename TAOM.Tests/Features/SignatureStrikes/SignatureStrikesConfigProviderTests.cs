@@ -81,7 +81,7 @@ public class SignatureStrikesConfigProviderTests
         var config = _sut.GetConfig();
 
         Assert.IsTrue(config.Enabled);
-        CollectionAssert.AreEqual(new[] { "sauron", "nazgul" }, config.Signatures.Select(s => s.Id).ToArray());
+        CollectionAssert.AreEqual(new[] { "sauron", "nazgul", "aragorn", "gimli" }, config.Signatures.Select(s => s.Id).ToArray());
         _logger.Received().LogWarning(Arg.Is<string>(m => m.Contains("not found")));
     }
 
@@ -92,7 +92,7 @@ public class SignatureStrikesConfigProviderTests
 
         var config = _sut.GetConfig();
 
-        Assert.AreEqual(2, config.Signatures.Count);
+        Assert.AreEqual(4, config.Signatures.Count);
         _logger.Received().LogError(Arg.Is<string>(m => m.Contains("parse")));
     }
 
@@ -152,7 +152,7 @@ public class SignatureStrikesConfigProviderTests
     {
         WriteConfig(@"{ ""signatures"": null }");
 
-        Assert.AreEqual(2, _sut.GetConfig().Signatures.Count);
+        Assert.AreEqual(4, _sut.GetConfig().Signatures.Count);
         AssertRejected("signatures");
     }
 
@@ -625,5 +625,74 @@ public class SignatureStrikesConfigProviderTests
         _sut.GetConfig();
 
         _logger.Received(1).LogWarning(Arg.Is<string>(m => m.Contains("contained invalid values")));
+    }
+
+    // ---- killChance and killImmuneRaces (#1359) ---------------------------------------------
+
+    private void WriteKill(string killChanceJson) => WriteStrikes(
+        @"{ ""Overhead"": { ""kind"": ""Slam"", ""killChance"": " + killChanceJson + @" } }");
+
+    [TestMethod]
+    public void Load_KillChanceValid_Kept()
+    {
+        WriteKill("0.4");
+
+        Assert.AreEqual(0.4f, Only().Strikes["Overhead"].KillChance, 0.0001f);
+    }
+
+    [TestMethod]
+    public void Load_KillChanceAbove1_Reverts()
+    {
+        WriteKill("1.5");
+
+        Assert.AreEqual(0f, Only().Strikes["Overhead"].KillChance, 0.0001f);
+        AssertRejected("killChance");
+    }
+
+    [TestMethod]
+    public void Load_KillChanceNaN_Reverts()
+    {
+        WriteKill("NaN");
+
+        Assert.AreEqual(0f, Only().Strikes["Overhead"].KillChance, 0.0001f);
+        AssertRejected("killChance");
+    }
+
+    [TestMethod]
+    public void Load_KillChanceNegative_Reverts()
+    {
+        WriteKill("-0.2");
+
+        Assert.AreEqual(0f, Only().Strikes["Overhead"].KillChance, 0.0001f);
+        AssertRejected("killChance");
+    }
+
+    private void WriteImmune(string immuneJson) => WriteConfig(
+        @"{ ""enabled"": true, ""killImmuneRaces"": " + immuneJson + @", ""signatures"": [ { " + SauronBody + " } ] }");
+
+    [TestMethod]
+    public void Load_NullKillImmuneRaces_Default()
+    {
+        WriteImmune("null");
+
+        CollectionAssert.AreEqual(SignatureStrikesConfig.DefaultKillImmuneRaces(), _sut.GetConfig().KillImmuneRaces);
+        AssertRejected("killImmuneRaces");
+    }
+
+    [TestMethod]
+    public void Load_BlankImmuneRace_Removed()
+    {
+        WriteImmune(@"[ ""sauron"", "" "", ""cave_troll"" ]");
+
+        CollectionAssert.AreEqual(new[] { "sauron", "cave_troll" }, _sut.GetConfig().KillImmuneRaces);
+        AssertRejected("killImmuneRaces");
+    }
+
+    [TestMethod]
+    public void Load_EmptyKillImmuneRaces_StaysEmpty()
+    {
+        WriteImmune("[]");
+
+        Assert.AreEqual(0, _sut.GetConfig().KillImmuneRaces.Count);
     }
 }

@@ -88,6 +88,9 @@ internal sealed class RunStats
 
     public void DefenderLost() => _lost++;
 
+    /// <summary>The defenders lost since the last clear: the count the wave's row takes at its clear.</summary>
+    public int LostThisWave => _lost;
+
     public void AttackerFled() => Fled++;
 
     public void PlayerDied() => PlayerDeaths++;

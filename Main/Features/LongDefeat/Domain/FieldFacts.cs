@@ -53,6 +53,9 @@ internal enum LdRemovalKind
     Attacker,
     Defender,
     Player,
+
+    /// <summary>A hero of the shop (#1325) the field held: <c>TroopId</c> carries his shop id, and <c>Loss</c> is false for a rout.</summary>
+    Hero,
 }
 
 /// <summary>

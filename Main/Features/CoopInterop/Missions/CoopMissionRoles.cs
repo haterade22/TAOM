@@ -24,6 +24,7 @@ using TAOM.Features.Elk;
 using TAOM.Features.Enlistment.Hooks;
 using TAOM.Features.FellFoes.Hooks;
 using TAOM.Features.FieldCommission.Hooks;
+using TAOM.Features.HeroAbilities.Hooks;
 using TAOM.Features.HeroAuras.Hooks;
 using TAOM.Features.HostReview.Hooks;
 using TAOM.Features.LostFooting.Hooks;
@@ -94,6 +95,7 @@ public static class CoopMissionRoles
         [nameof(CreatureBanditMissionBehavior)] = CoopMissionRole.AgentOwner,
         [nameof(RaceAbilitiesMissionLogic)] = CoopMissionRole.AgentOwner,
         [nameof(HeroAurasMissionLogic)] = CoopMissionRole.AgentOwner,
+        [nameof(HeroAbilitiesMissionLogic)] = CoopMissionRole.AgentOwner,
         [nameof(DeadTargetResetMissionBehavior)] = CoopMissionRole.AgentOwner,
 
         // Local: this peer's own view, log or files.

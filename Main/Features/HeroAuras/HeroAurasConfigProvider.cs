@@ -150,55 +150,8 @@ public sealed class HeroAurasConfigProvider : IHeroAurasConfigProvider
         };
     }
 
-    private RaceAbilityEffects ValidateEffects(string id, RaceAbilityEffects e)
-    {
-        float Gain(float value, string name) => Check(id, name, value, value >= 0f);
-        return new RaceAbilityEffects
-        {
-            MoveSpeedPercent = Gain(e.MoveSpeedPercent, "moveSpeedPercent"),
-            AccelerationPercent = Gain(e.AccelerationPercent, "accelerationPercent"),
-            SwingSpeedPercent = Gain(e.SwingSpeedPercent, "swingSpeedPercent"),
-            DrawSpeedPercent = Gain(e.DrawSpeedPercent, "drawSpeedPercent"),
-            ReloadSpeedPercent = Gain(e.ReloadSpeedPercent, "reloadSpeedPercent"),
-            MissileSpeedPercent = Gain(e.MissileSpeedPercent, "missileSpeedPercent"),
-            MountSpeedPercent = Gain(e.MountSpeedPercent, "mountSpeedPercent"),
-            MeleeDamagePercent = Gain(e.MeleeDamagePercent, "meleeDamagePercent"),
-            RangedDamagePercent = Gain(e.RangedDamagePercent, "rangedDamagePercent"),
-            DamageReductionPercent = Gain(e.DamageReductionPercent, "damageReductionPercent"),
-            KnockdownResistancePercent = Gain(e.KnockdownResistancePercent, "knockdownResistancePercent"),
-            KnockbackResistancePercent = Gain(e.KnockbackResistancePercent, "knockbackResistancePercent"),
-            DismountResistancePercent = Gain(e.DismountResistancePercent, "dismountResistancePercent"),
-            BlockAbilityPercent = Gain(e.BlockAbilityPercent, "blockAbilityPercent"),
-            ParryAbilityPercent = Gain(e.ParryAbilityPercent, "parryAbilityPercent"),
-            AttackEagernessPercent = Gain(e.AttackEagernessPercent, "attackEagernessPercent"),
-            AimErrorPercent = Check(id, "aimErrorPercent", e.AimErrorPercent, e.AimErrorPercent <= 0f),
-            ForceCrushThrough = e.ForceCrushThrough,
-            HoldAgainstCrush = e.HoldAgainstCrush,
-            ShrugOffBlows = e.ShrugOffBlows,
-            MoraleFloor = Math.Min(MaxMoraleFloor, Gain(e.MoraleFloor, "moraleFloor")),
-            MoraleOnEnd = AbilityOnly(id, "moraleOnEnd", e.MoraleOnEnd),
-            HealPerKill = AbilityOnly(id, "healPerKill", e.HealPerKill),
-            FearOnKillRadius = AbilityOnly(id, "fearOnKillRadius", e.FearOnKillRadius),
-            FearOnKillMorale = AbilityOnly(id, "fearOnKillMorale", e.FearOnKillMorale),
-            FearAuraRadius = AbilityOnly(id, "fearAuraRadius", e.FearAuraRadius),
-            FearAuraMoralePerSecond = AbilityOnly(id, "fearAuraMoralePerSecond", e.FearAuraMoralePerSecond),
-        };
-    }
-
-    private float Check(string id, string name, float value, bool strengthens)
-    {
-        if (FiniteFloatValidator.IsFinite(value) && strengthens)
-            return value;
-        Reject($"aura '{id}': {name} {value} would weaken the soldiers, set to 0");
-        return 0f;
-    }
-
-    private float AbilityOnly(string id, string name, float value)
-    {
-        if (value != 0f)
-            Reject($"aura '{id}': {name} is read only for a race ability, set to 0");
-        return 0f;
-    }
+    private RaceAbilityEffects ValidateEffects(string id, RaceAbilityEffects e) =>
+        HeroEffectsCheck.Validate($"aura '{id}'", e, MaxMoraleFloor, Reject);
 
     private float InRange(float value, float fallback, float min, float max, string name)
     {

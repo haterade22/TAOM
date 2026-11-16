@@ -28,6 +28,8 @@ The tower volley's proof run is --waves 3 --garrison-scale 1.3 --start-gold 5000
 The high towers' proof run is --waves 2 --garrison-scale 1.3 --start-gold 5000 at a fortress with recorded tower posts (phase3-plan.md Slice 7, spike S6; Helm's Deep records none until 2026-11-06, and then the tower row is not for sale): the bot buys tower level 1 in the preparation and level 2 at clear 1. A report that bought a tower level before a wave the run played owes a posts pass line (the posted archers stood, held their posts 30 s in and loosed an arrow), and one with level 2 owes a pass with level=2 (the wave it filled). --posts-variant A, B or C names how the archers are held (A scripted position, B with a speed limit of 0, C with the formation not splittable by AI) by setting TAOM_LD_POSTS_VARIANT for the game, and then the pass lines must name that variant; run it once per variant, and Mike picks from the lines.
 A fortress row with a split block owes one split pass once the log shows a calm's split ([LongDefeat][Split] preparation: or intermission:) and a wave cleared (#1128); a skip does not pay it.
 The engines' restore proof run is --waves 2 --garrison-scale 1.3 --start-gold 5000 --break-engines 1 (#1160): at clear 1 the game destroys every ram and tower, the bot repairs a broken gate, and the start of wave 2 brings the engines back. --break-engines N must be below --waves, the report must echo it as breakEngines (a run armed with none must report null), and a report that cleared a wave past N, a lost run included, owes an engine-restore and an engine-use pass that name the wave after the break (w=startWave+N); a skip, or a pass of another wave, does not pay either.
+The heroes' proof run is --waves 3 --garrison-scale 1.3 --start-gold 5000 (#1337): the bot buys the heroes with the gold nothing else wants, each hero purchase owes its own hero pass line, a hero bought
+before a wave the run cleared owes a hunters pass or skip line, and the run buys no pack (the bot buys packs only under its garrison ceiling), so it owes the shop pass line only when its report bought a pack or armed no start gold (owes_shop).
 The upgrades' proof run is --waves 2 --garrison-scale 1.3 --start-gold 5000 (#1161): the bot buys an upgrade step with the gold no pack and no fortification wants, an upgrade purchase's basePrice is its shop.json step's price for one soldier and its price is that times its count (no boon factor), and each upgrade purchase owes its own upgrade pass line.
 A cavalry run also owes sally and sally-return, except that both read skip with reason=no-sally-point while no sally point is recorded in fortresses.json (the run rides from Begin): the judge accepts that skip for that reason alone, and only while this tree's fortress row holds no sally key at all (sally_recorded: the game writes the same reason when it drops a malformed block), and sally-return is owed only once a wave was cleared (sally_waived, owes_return).
 A report with a wave row whose healthFactor or damageFactor is above 1 (a wave past the authored list, as in --start-wave 12 --waves 2) also owes the scale check.
@@ -71,6 +73,8 @@ CHECK_PREFIX = "taom.long-defeat."
 # The check ids a full run must write, each with a row in the manifest. menu is written when the main
 # menu first asks whether the option is hidden (LongDefeatMenuEntry), so it precedes the run and the unattended driver's own start reads it too.
 REQUIRED_CHECKS = ("menu", "boot", "general", "muster", "keep", "class", "orders", "hud", "wave", "no-rout", "gold", "shop", "early-start", "end", "best-run")
+
+SHOP_CHECK = "shop"
 
 # A run built to lose clears no wave on purpose, so the checks that need a cleared wave, a bought pack or a horn are not asked of it.
 LOSE_CHECKS = ("menu", "boot", "general", "muster", "keep", "class", "orders", "hud", "end", "best-run")
@@ -672,10 +676,12 @@ def owes_summon(report_json):
 # purchase_problem replays rules 8, 19 and 20 of leaderboard-plan.md over a report.
 MAX_PRICE = 1_000_000
 FORT_OFFERED = {"gate": 3, "towers": 3, "fieldCare": True, "volley": 2}  # field care landed in Slice 4, the gate in Slice 5, the Elven Volley in Slice 6, tower levels 1 and 2 in Slice 7 and level 3, the tower volley, in Slice 8; each later slice raises its kind here and in FortOffer.Offered
-PURCHASE_KINDS = ("pack", "gateLevel", "gateRepair", "towerLevel", "fieldCare", "volleyLevel", "upgrade")
+PURCHASE_KINDS = ("pack", "gateLevel", "gateRepair", "towerLevel", "fieldCare", "volleyLevel", "upgrade", "hero")
 # "upgrades" is the sink of the shop's troop upgrades (#1161): one "upgrade" purchase per order the field carried out, its count the soldiers it replaced.
-SPENT_ON = ("packs", "gate", "towers", "fieldCare", "volley", "upgrades")
-KIND_SINK = {"pack": "packs", "gateLevel": "gate", "gateRepair": "gate", "towerLevel": "towers", "fieldCare": "fieldCare", "volleyLevel": "volley", "upgrade": "upgrades"}
+# "heroes" is the sink of the shop's named heroes (#1325): one "hero" purchase per hero bought, its id the shop's hero id. A hero the field could not spawn is paid back and leaves no row.
+SPENT_ON = ("packs", "gate", "towers", "fieldCare", "volley", "upgrades", "heroes")
+KIND_SINK = {"pack": "packs", "gateLevel": "gate", "gateRepair": "gate", "towerLevel": "towers", "fieldCare": "fieldCare", "volleyLevel": "volley", "upgrade": "upgrades",
+             "hero": "heroes"}
 SHARE_TOLERANCE = 0.0005
 
 
@@ -850,10 +856,10 @@ def shipped_fortifications(fortress_id=None, path=None):
     return read_fortifications(shop)[0] if isinstance(shop, dict) else None
 
 
-# The Phase 4 places (phase4-plan.md section 5). shop.json carries an `armoury`, a `yard` and a `marshal` block per shop. read_locations mirrors LocationsReader rule for rule (both suites read
+# The Phase 4 places (phase4-plan.md section 5). shop.json carries an `armoury` and a `yard` block per shop. Any other key, a retired `marshal` block included, is ignored (the shop's heroes list replaced it, #1337). read_locations mirrors LocationsReader rule for rule (both suites read
 # tools/tests/long_defeat_location_cases.json), and LOCATION_OFFERED mirrors LocationOffer.Offered (D46): a test reads the C# source and compares the two, since FORT_OFFERED is pinned only to literals.
 # Nothing is delivered yet, so a shop's rows stay hidden; each later slice raises its kind here and in LocationOffer.Offered.
-LOCATION_OFFERED = {"armoury": False, "mangonel": False, "trebuchet": False, "marshal": False}
+LOCATION_OFFERED = {"armoury": False, "mangonel": False, "trebuchet": False}
 ARMOURY_REACH = 4
 YARD_REACH = 6
 REACH_RANGE = (1, 15)
@@ -921,10 +927,10 @@ def _read_gear_set(item, seen, class_ids, warnings):
 
 
 def read_locations(shop, class_ids=None):
-    """(plan, warnings) of one shop's `armoury`, `yard` and `marshal` blocks, as LocationsReader reads them. The plan is None when the shop has none of the three keys; otherwise a dict
-    {armoury, yard, marshal}, each None when its block is dropped. `class_ids` are the ids classes.json holds (None: not known, a listed class is taken as it is). `warnings` counts the values
+    """(plan, warnings) of one shop's `armoury` and `yard` blocks, as LocationsReader reads them. The plan is None when the shop has neither key; otherwise a dict
+    {armoury, yard}, each None when its block is dropped. `class_ids` are the ids classes.json holds (None: not known, a listed class is taken as it is). `warnings` counts the values
     that reverted or were skipped, one per problem, as the game logs them."""
-    if not any(key in shop for key in ("armoury", "yard", "marshal")):
+    if not any(key in shop for key in ("armoury", "yard")):
         return None, 0
     warnings = []
 
@@ -987,17 +993,7 @@ def read_locations(shop, class_ids=None):
             else:
                 warnings.append("yard has no valid engine")
 
-    marshal = None
-    row = block("marshal")
-    if row is not None:
-        troop = _fort_text(row.get("troop"))
-        if troop is None:
-            warnings.append("marshal.troop")
-        elif not _fort_int(row.get("price"), 1, MAX_PRICE):
-            warnings.append("marshal.price")
-        else:
-            marshal = {"troop": troop, "price": row["price"], "name": _fort_text(row.get("name")) or troop, "text": _fort_text(row.get("text")) or ""}
-    return {"armoury": armoury, "yard": yard, "marshal": marshal}, len(warnings)
+    return {"armoury": armoury, "yard": yard}, len(warnings)
 
 
 def shipped_offers(fortress_id=None, path=None):
@@ -1071,7 +1067,35 @@ def repair_total(whole, shares):
     return range(sum(r.start for r in ranges), sum(r.stop - 1 for r in ranges) + 1)
 
 
-def purchase_problem(report_json, fortress_id=None, fort=None, offers=None, percents=None, upgrades=None):
+def shipped_heroes(fortress_id=None, path=None):
+    """{hero id: price} of the heroes of the fortress's shop in this tree's shop.json (#1325). It takes the shipped rows as they stand: ShippedMissionHeroesTests holds the shipped file valid,
+    so this does not repeat the game reader's refusals. A row with no string id or no whole price is skipped, and the first of two rows whose ids differ only in case wins."""
+    fortress = next((f for f in _json_object(FORTRESS_FILE).get("fortresses", []) if isinstance(f, dict) and f.get("id") == (fortress_id or DEFAULT_FORTRESS)), None)
+    shops = _json_object(path or SHOP_FILE).get("shops", {})
+    shop = shops.get(fortress.get("shop")) if fortress is not None and isinstance(shops, dict) else None
+    rows = shop.get("heroes", []) if isinstance(shop, dict) else []
+    out, seen = {}, set()
+    for h in rows if isinstance(rows, list) else []:
+        if isinstance(h, dict) and isinstance(h.get("id"), str) and _is_int(h.get("price")) and h["id"].lower() not in seen:
+            seen.add(h["id"].lower())
+            out[h["id"]] = h["price"]
+    return out
+
+
+def spent_on_keys_note(spent_on):
+    """"; missing key(s): ...; extra key(s): ..." for a gold.spentOn dict whose keys are not the sinks, and "" for any other fault. A missing heroes key means the report comes from a build
+    older than this tool, which the log's [BuildStamp] line names."""
+    if not isinstance(spent_on, dict):
+        return ""
+    missing = [k for k in SPENT_ON if k not in spent_on]
+    extra = sorted(str(k) for k in spent_on if k not in SPENT_ON)
+    note = (f"; missing key(s): {', '.join(missing)}" if missing else "") + (f"; extra key(s): {', '.join(extra)}" if extra else "")
+    if "heroes" in missing:
+        note += " (a report with no 'heroes' key comes from a build older than this tool: read the [BuildStamp] line of the log)"
+    return note
+
+
+def purchase_problem(report_json, fortress_id=None, fort=None, offers=None, percents=None, upgrades=None, heroes=None):
     """None when the report's gold books and purchases replay from the shop, else what is wrong (leaderboard-plan.md rules 8, 19 and 20, phase3-plan.md section 7).
 
     Rule 8: gold.spent equals the sum of gold.spentOn, and each spentOn part equals the prices of its purchases. Rule 19: each purchase's basePrice is shop.json's for its kind and level
@@ -1084,13 +1108,14 @@ def purchase_problem(report_json, fortress_id=None, fort=None, offers=None, perc
     plan = (shipped_fortifications(fortress_id) if fort is None else fort) or {}
     offers = shipped_offers(fortress_id) if offers is None else offers
     upgrades = shipped_upgrades(fortress_id) if upgrades is None else upgrades
+    heroes = shipped_heroes(fortress_id) if heroes is None else heroes
     percents = shipped_price_percents() if percents is None else percents
     purchases, gold, final = report_json.get("purchases"), report_json.get("gold"), report_json.get("fortifications")
     if not isinstance(purchases, list):
         return f"purchases is {purchases!r}, wanted a list"
     spent_on = gold.get("spentOn") if isinstance(gold, dict) else None
     if not isinstance(spent_on, dict) or set(spent_on) != set(SPENT_ON) or not all(_is_int(v) and v >= 0 for v in spent_on.values()):
-        return f"gold.spentOn is {spent_on!r}, wanted a whole number for each of {', '.join(SPENT_ON)}"
+        return f"gold.spentOn is {spent_on!r}, wanted a whole number for each of {', '.join(SPENT_ON)}{spent_on_keys_note(spent_on)}"
     if not isinstance(final, dict) or not all(_is_int(final.get(k)) for k in ("gateLevel", "towerLevel", "volleyLevel")):
         return f"fortifications is {final!r}, wanted gateLevel, towerLevel and volleyLevel"
     if not _is_int(gold.get("spent")) or gold["spent"] != sum(spent_on.values()):
@@ -1123,6 +1148,9 @@ def purchase_problem(report_json, fortress_id=None, fort=None, offers=None, perc
         if kind == "pack":
             if offers.get(p.get("id")) != base:
                 return f"{where}: pack {p.get('id')!r} has basePrice {base}, shop.json's offer is {offers.get(p.get('id'))!r}"
+        elif kind == "hero":
+            if heroes.get(p.get("id")) != base:
+                return f"{where}: hero {p.get('id')!r} has basePrice {base}, shop.json's hero is {heroes.get(p.get('id'))!r}"
         elif kind == "upgrade":
             count = p.get("count")
             if upgrades.get(p.get("id")) != base:
@@ -1262,6 +1290,62 @@ def owed_upgrade_passes(report_json, log_text):
         else:
             owed.append(f"{UPGRADE_CHECK} (a pass with w={p.get('beforeWave')} from={frm} to={to} replaced={p.get('count')})")
     return owed
+
+
+# The shop's heroes (#1337). The game writes hero (key <mission>h<N>) on the tick after each hero buy, with what the engine made of the body. A report that lists the purchase owes the pass.
+HERO_CHECK = "hero"
+HERO_PASS = re.compile(r"\[Check\] id=" + re.escape("taom.long-defeat." + HERO_CHECK) + r" result=pass hero=(\S+) ")
+
+
+def owes_shop(report_json):
+    """True when the run owes the shop pass line: it armed no start gold (startGold is None), or its report bought a pack. The game writes the shop line only for a pack, and the bot buys
+    packs only under its garrison ceiling, so a start-gold proof run that bought only fortifications, upgrades or heroes writes none."""
+    if report_json.get("startGold") is None:
+        return True
+    purchases = report_json.get("purchases")
+    return isinstance(purchases, list) and any(isinstance(p, dict) and p.get("kind") == "pack" for p in purchases)
+
+
+def hero_purchases(report_json):
+    """The number of hero purchases in the report."""
+    purchases = report_json.get("purchases")
+    return sum(1 for p in purchases if isinstance(p, dict) and p.get("kind") == "hero") if isinstance(purchases, list) else 0
+
+
+def owed_hero_passes(report_json, log_text):
+    """The hero purchases no pass line pays, one entry each. A purchase is paid by a pass line of its own with its hero id (hero=, case ignored; the game compares hero ids exactly and both sides carry the same id, so the
+    fold only forgives a hand-typed log); a line pays one purchase, so a hero bought again after his fall owes a second line."""
+    purchases = report_json.get("purchases")
+    lines = {}
+    for hero in HERO_PASS.findall(log_text or ""):
+        lines[hero.lower()] = lines.get(hero.lower(), 0) + 1
+    owed = []
+    for p in purchases if isinstance(purchases, list) else []:
+        if not isinstance(p, dict) or p.get("kind") != "hero":
+            continue
+        hero = str(p.get("id", "")).lower()
+        if lines.get(hero, 0) > 0:
+            lines[hero] -= 1
+        else:
+            owed.append(f"{HERO_CHECK} (a pass with hero={p.get('id')})")
+    return owed
+
+
+# The heroes' group (#1337). The game writes hunters (key <mission>hw<wave>) at each wave clear of a mission whose field took a hero. A hero bought before wave N stands from
+# the next tick, so a run that cleared wave N wrote at least one hunters line. The cleared wave numbers come from the report's waves rows, not from wavesCleared, which counts
+# clears from the start wave (RunOptions.StartWave). A pass or a skip (no hero standing at that clear) pays; a fail line fails the run through the generic rule.
+HUNTERS_CHECK = "hunters"
+
+
+def owed_hunters_lines(report_json, log_text):
+    """[] when no hunters line is owed or one was written, else one entry naming the debt. Owed when a hero purchase's beforeWave is a wave number the run cleared or below
+    the last one it cleared."""
+    cleared = [w.get("wave") for w in report_json.get("waves") or [] if isinstance(w, dict) and _is_int(w.get("wave"))]
+    last = max(cleared, default=0)
+    owed = any(_is_int(p.get("beforeWave")) and p["beforeWave"] <= last for p in _bought(report_json, "hero"))
+    if not owed or check_pattern(HUNTERS_CHECK, "(?:pass|skip)").search(log_text or ""):
+        return []
+    return [f"{HUNTERS_CHECK} (a pass or a skip: a hero stood through a wave the run cleared)"]
 
 
 # The gates (Slice 5). The game writes gate-level (key l<N>) after each level it writes, gate-repair (key w<N>) after each repair and gate-attacked (key w<N>) at the next clear or the run's end for the
@@ -1634,6 +1718,8 @@ def judge(done, report_json, log_text=None):
     if over > 0:
         return 1, f"owner_missing={over} (the report's poison.ownerMissing and the log's tokens, worst of them): a poison tick found its owner gone, so a kill could reach the engine with a stale hitter"
     required = LOSE_CHECKS if lose else (DEEP_CHECKS if deep else REQUIRED_CHECKS)
+    if SHOP_CHECK in required and not owes_shop(report_json):
+        required = tuple(name for name in required if name != SHOP_CHECK)
     required = required + tuple(name for name in CLASS_CHECKS.get(report_json.get("class"), ()) if name not in required and (name != SALLY_RETURN_CHECK or owes_return(report_json, lose)))
     recorded = sally_recorded(report_json.get("fortress"))
     waived = [name for name in (SALLY_CHECK, SALLY_RETURN_CHECK) if name in required and sally_waived(name, log_text, recorded)]
@@ -1660,6 +1746,8 @@ def judge(done, report_json, log_text=None):
             required = required + (name,)
     if upgrade_purchases(report_json) and UPGRADE_CHECK not in required:
         required = required + (UPGRADE_CHECK,)
+    if hero_purchases(report_json) and HERO_CHECK not in required:
+        required = required + (HERO_CHECK,)
     if not lose and owes_split(report_json, log_text) and SPLIT_CHECK not in required:
         required = required + (SPLIT_CHECK,)
     if not lose and posts_variant and not owes_posts(report_json):
@@ -1667,6 +1755,9 @@ def judge(done, report_json, log_text=None):
     missing = [name for name in required if not check_pattern(name, "pass").search(log_text)]
     if UPGRADE_CHECK not in missing:
         missing.extend(owed_upgrade_passes(report_json, log_text))
+    if HERO_CHECK not in missing:
+        missing.extend(owed_hero_passes(report_json, log_text))
+    missing.extend(owed_hunters_lines(report_json, log_text))
     if not lose and posts_variant and not posts_variant_pattern(posts_variant).search(log_text):
         missing.append(POSTS_CHECK + f" (a pass with variant={posts_variant}: {POSTS_VARIANT_ENV} never took effect)")
     if not lose and owes_posts_level2(report_json) and not POSTS_LEVEL2_PASS.search(log_text):
