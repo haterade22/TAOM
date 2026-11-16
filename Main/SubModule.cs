@@ -1173,6 +1173,7 @@ public class SubModule : MBSubModuleBase
         // they are at peace. TAOM overrides neither model anywhere else.
         campaignStarter.AddModel(new TaomTradeAgreementModel(hostilePeace, coopSession));
         campaignStarter.AddModel(new TaomSettlementAccessModel(hostilePeace));
+        campaignStarter.AddModel(new TaomCrimeModel(hostilePeace));
 
         var wotrLogger = IoC.Resolve<IModLogger>();
         // #764: must stay `new` per campaign. Its constructor resets the process-lifetime WotR service;

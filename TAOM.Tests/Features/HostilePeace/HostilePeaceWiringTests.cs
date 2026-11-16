@@ -75,6 +75,7 @@ public class HostilePeaceWiringTests
         StringAssert.Contains(src, "IoC.Resolve<Features.HostilePeace.HostilePeaceService>()");
         StringAssert.Contains(src, "campaignStarter.AddModel(new TaomTradeAgreementModel(hostilePeace, coopSession))");
         StringAssert.Contains(src, "campaignStarter.AddModel(new TaomSettlementAccessModel(hostilePeace))");
+        StringAssert.Contains(src, "campaignStarter.AddModel(new TaomCrimeModel(hostilePeace))");
     }
 
     [TestMethod]
@@ -141,6 +142,8 @@ public class HostilePeaceWiringTests
     {
         Assert.AreEqual(typeof(TaleWorlds.CampaignSystem.GameComponents.DefaultTradeAgreementModel), typeof(TaomTradeAgreementModel).BaseType);
         Assert.AreEqual(typeof(TaleWorlds.CampaignSystem.GameComponents.DefaultSettlementAccessModel), typeof(TaomSettlementAccessModel).BaseType);
+        Assert.AreEqual(typeof(TaleWorlds.CampaignSystem.GameComponents.DefaultCrimeModel), typeof(TaomCrimeModel).BaseType);
+        Assert.AreEqual(typeof(TaomCrimeModel), typeof(TaomCrimeModel).GetMethod("GetEffectiveCrimeChange")!.DeclaringType);
         Assert.AreEqual(typeof(TaomTradeAgreementModel), typeof(TaomTradeAgreementModel).GetMethod("CanMakeTradeAgreement")!.DeclaringType);
         Assert.AreEqual(typeof(TaomSettlementAccessModel), typeof(TaomSettlementAccessModel).GetMethod("CanMainHeroEnterSettlement")!.DeclaringType);
         Assert.AreEqual(typeof(TaomSettlementAccessModel), typeof(TaomSettlementAccessModel).GetMethod("CanMainHeroDoSettlementAction")!.DeclaringType);

@@ -70,6 +70,12 @@ public sealed class HostilePeaceService
     public bool LimitsPlayerAccess(string? playerFactionId, string? settlementFactionId, bool atWar, bool playerOwnsSettlement) =>
         !playerOwnsSettlement && LimitsTownAccess(playerFactionId, settlementFactionId, atWar);
 
+    /// <summary>True when the player's crime rating with <paramref name="crimeFactionId"/> must stay below the war threshold:
+    /// the player leads the realm and meets the Hostile pair as at war (<see cref="LimitsTownAccess"/>). A player who does not
+    /// lead a realm is never declared against by crime, so there is nothing to cap.</summary>
+    public bool CapsCrimeBelowWar(string? playerFactionId, string? crimeFactionId, bool atWar, bool playerLeadsRealm) =>
+        playerLeadsRealm && LimitsTownAccess(playerFactionId, crimeFactionId, atWar);
+
     /// <summary>Two different, named realms of the Hostile tier. A clan without a kingdom, or a realm missing from
     /// <c>diplomacy.json</c>, reads Neutral there and is never blocked.</summary>
     public bool IsHostilePair(string? kingdomAId, string? kingdomBId)

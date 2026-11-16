@@ -53,6 +53,14 @@ one-sidedly.
   game's texts). The menus read only those values: the sneak-in option is `LimitedAccessSolution.Disguise` and the closed-gate
   text is `AccessLimitationReason.HostileFaction` (`EncounterGameMenuBehavior`). A sneak caught at peace raises the crime rating
   and ends in captivity, the base game's own path for a peaceful town where the player has a crime rating.
+- **Crime stops short of war (owner's rule, 2026-11-15: "Keep failed sneaks from starting a war, crime only").** A failed sneak
+  adds crime, and at the engine's threshold (60) a ruler player's kingdom would declare war (`ChangeCrimeRatingAction`). So when
+  the player leads a realm and the faction is a Hostile realm at peace, `TaomCrimeModel` caps the new crime rating at 59
+  (`GetEffectiveCrimeChange`, `LimitMax(threshold - 1)`). It is a cap and not a block on the war because the action applies -10
+  relation with the faction leader before it declares, and a blocked war would leave the rating over the threshold and repeat that
+  loss on every later crime change. Crime still fines and still feeds the disguise detection; the severe-crime line (65) is not
+  reached for that realm. A player who does not lead a realm is never declared against by crime and is not capped. Block C's
+  "Enemy Realms Close Their Gates" switch turns the cap off with it.
 - **The player's own fiefs are left alone.** Block C never limits a settlement the player's clan owns. It does not exempt the
   settlement the player is in: on v1.5.7 the engine sets `CurrentSettlement` before the gate menu asks the model, so such an
   exemption would always be true. No town or castle menu asks `CanMainHeroEnterSettlement` from inside. A town's keep and the
@@ -98,7 +106,8 @@ into `true`; Patch156 only turns a peacetime `true` into `false`. The order of t
 ## Testing
 
 - `TAOM.Tests/Features/HostilePeace/HostilePeaceServiceTests.cs`: each block for a Hostile pair at peace, the same pair at war,
-  a non-Hostile pair, a switch off, blank and identical ids, and the player's own settlement.
+  a non-Hostile pair, a switch off, blank and identical ids, the player's own settlement, and the crime cap (leader or not, war,
+  switch off, Neutral and identical realms).
 - `TAOM.Tests/Features/HostilePeace/HostilePeaceWiringTests.cs`: the module and its patch binding, the models' overrides, the
   access answers against the base game's war answers (town, castle, keep, village), MCM over JSON, the JSON defaults and the
   shipped file.
@@ -118,13 +127,12 @@ Not done yet. Start a campaign as Thranduil (Woodland Realm) and stay before day
    denied), not granted.
 6. Ride into a Dol Guldur village with a Provender-master hired: he does not buy there (the base game refuses Trade in that
    village), and he still buys in a Lothlorien village.
-7. Turn each A to C switch off in MCM ("World/Hostile Peace"): its block lifts at once.
+7. As a realm ruler, fail sneaks at a Dol Guldur town until the crime rating stops rising: it stops at 59, no war is declared and
+   no further relation loss with their leader follows. As a non-ruler (a clan in another realm), crime rises as in the base game.
+8. Turn each A to C switch off in MCM ("World/Hostile Peace"): its block lifts at once.
 
 ## Known limits
 
-- Each failed sneak into a Hostile town adds crime rating, and at the crime threshold the engine declares war on a kingdom the
-  player leads (`ChangeCrimeRatingAction`). Failed sneaks can therefore start a war before the War of the Ring. This is a known
-  consequence of the base game's war path, awaiting the owner's decision; no code changes it.
 - A caravan already in or heading into a Hostile town when block A turns on trades there once: `OnSettlementEntered` sells and
   the hourly tick buys without asking `CanTradeWith`.
 - Block C covers the player only. AI lords already keep out of the other side's recruits and tournaments (Alignment

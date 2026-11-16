@@ -231,6 +231,49 @@ public class HostilePeaceServiceTests
         Assert.IsFalse(_service.LimitsPlayerAccess(Mirkwood, DolGuldur, atWar: false, playerOwnsSettlement: false));
     }
 
+    // ---- C: crime with a Hostile realm stops short of war ----
+
+    [TestMethod]
+    public void CapsCrimeBelowWar_HostilePairAtPeace_PlayerLeads_Caps()
+    {
+        Assert.IsTrue(_service.CapsCrimeBelowWar(Mirkwood, DolGuldur, atWar: false, playerLeadsRealm: true));
+    }
+
+    [TestMethod]
+    public void CapsCrimeBelowWar_PlayerDoesNotLead_LeavesItToVanilla()
+    {
+        // Vanilla declares war by crime only for a ruler, so there is no war to prevent.
+        Assert.IsFalse(_service.CapsCrimeBelowWar(Mirkwood, DolGuldur, atWar: false, playerLeadsRealm: false));
+    }
+
+    [TestMethod]
+    public void CapsCrimeBelowWar_AtWar_LeavesItToVanilla()
+    {
+        Assert.IsFalse(_service.CapsCrimeBelowWar(Mirkwood, DolGuldur, atWar: true, playerLeadsRealm: true));
+    }
+
+    [TestMethod]
+    public void CapsCrimeBelowWar_SwitchOff_LeavesItToVanilla()
+    {
+        _settings.LimitTownAccess.Returns(false);
+
+        Assert.IsFalse(_service.CapsCrimeBelowWar(Mirkwood, DolGuldur, atWar: false, playerLeadsRealm: true));
+    }
+
+    [DataTestMethod]
+    [DataRow(Lothlorien)]
+    [DataRow(Dorwinion)]
+    public void CapsCrimeBelowWar_NotHostile_LeavesItToVanilla(string crimeRealm)
+    {
+        Assert.IsFalse(_service.CapsCrimeBelowWar(Mirkwood, crimeRealm, atWar: false, playerLeadsRealm: true));
+    }
+
+    [TestMethod]
+    public void CapsCrimeBelowWar_SameRealm_LeavesItToVanilla()
+    {
+        Assert.IsFalse(_service.CapsCrimeBelowWar(Mirkwood, Mirkwood, atWar: false, playerLeadsRealm: true));
+    }
+
     // ---- The switches are independent ----
 
     [TestMethod]
