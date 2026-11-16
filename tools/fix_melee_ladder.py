@@ -1,7 +1,5 @@
 #!/usr/bin/env python3
-"""DO NOT run with --apply: it does not keep a troop in its weapon category (docs/features/melee-damage-model.md).
-
-Pass 1 of the melee ladder fix (#631): narrow each weapon to its troop's tier band.
+"""Pass 1 of the melee ladder fix (#631): swap a troop's weapon for one of the same category in its tier band.
 
 The melee ladder was flat. Measured 2026-09-20, the median best sustained damage per engine
 tier ran 66, 64, 66, 67, 69, 69, 81, 82, 82, 69 for tiers 1 to 10, a climb of 1.04x against
@@ -93,6 +91,33 @@ def shield_forbidden(cat: mc.Catalogue, item: mc.Item) -> bool:
     return NO_SHIELD_FLAG in cat.usage_flags.get(usage, frozenset())
 
 
+def weapon_category(cat: mc.Catalogue, p: mc.Priced, couchable: frozenset[str]) -> tuple:
+    """The weapon category a troop is built for: a swap never leaves it.
+
+    The maintainer's rule (2026-11-14, docs/features/melee-damage-model.md "A troop keeps its
+    weapon category"): sword and shield, two handed sword or axe, spear and shield, spear that
+    lances, polearms, pikes, bows. Read here as the crafting template; for a polearm, whether it
+    swings or thrusts (the attack with the higher DPS); whether it can be couched; and whether its
+    primary usage refuses a shield. All polearms share one template, which is how a poleaxe once
+    became a short spear.
+    """
+    attack = None
+    if "Polearm" in p.item.template:
+        attack = "swing" if p.swing_dps >= p.thrust_dps else "thrust"
+    return (p.item.template, attack, p.item.id in couchable, shield_forbidden(cat, p.item))
+
+
+def describe_category(category: tuple) -> str:
+    template, attack, couch, no_shield = category
+    words = [template]
+    if attack:
+        words.append("swinging" if attack == "swing" else "thrusting")
+    words.append("couchable" if couch else "not couchable")
+    if no_shield:
+        words.append("two handed only")
+    return ", ".join(words)
+
+
 def troop_carries_shield(troop: report.Troop, shields: set[str]) -> bool:
     return any(i in shields for i in troop.items)
 
@@ -154,6 +179,7 @@ def pick_substitute(
     needs_shield_safe: bool,
     spec: dict,
     taken: frozenset[str] = frozenset(),
+    couchable: frozenset[str] = frozenset(),
 ) -> tuple[mc.Priced | None, str]:
     """The best replacement for `current`, or (None, why not).
 
@@ -161,8 +187,9 @@ def pick_substitute(
     chosen from a worse class just because its number fits:
 
       1. The troop's OWN culture. A hard filter applied before anything else, by the caller.
-      2. Same crafting template. A troop's skills, animations and holster all follow the class,
-         so swapping a sword for a mace is a different troop, not a rebalance.
+      2. Same weapon category (`weapon_category`): same crafting template, and for a polearm the
+         same main attack, couch usage and shield use. A troop's skills, animations and holster
+         follow the category, so a sword for a mace or a poleaxe for a spear is a different troop.
       3. Shield-safe when the troop carries a shield. Non-negotiable, see NO_SHIELD_FLAG.
       4. Inside the tier band of the CANDIDATE's own class (`band_of`), and not a hero blade
          unless nothing else is in band. A halberd and a spear share a template but not a curve.
@@ -183,6 +210,10 @@ def pick_substitute(
     candidates = culture_pool.get(current.item.template, [])
     if not candidates:
         return None, f"this culture fields no other {current.item.template}"
+    category = weapon_category(cat, current, couchable)
+    candidates = [c for c in candidates if weapon_category(cat, c, couchable) == category]
+    if not candidates:
+        return None, f"this culture fields no other weapon of its category ({describe_category(category)})"
 
     usable = [c for c in candidates if band_of(c).verdict(c.best_dps) == "ok"]
     if not usable:
@@ -250,6 +281,7 @@ def plan(
 ) -> tuple[list[Swap], list[tuple[report.Troop, str, str]]]:
     """(swaps to make, troops that could not be fixed with a reason each)."""
     pool = build_pool(priced, troops)
+    couchable = frozenset(mc.couchable_ids(priced))
     swaps: list[Swap] = []
     unresolved: list[tuple[report.Troop, str, str]] = []
 
@@ -290,7 +322,7 @@ def plan(
             p = priced[iid]
             replacement, why = pick_substitute(
                 p, band_of, fits_limit, pool.get(troop.culture, {}), cat, carries_shield, spec,
-                frozenset(taken),
+                frozenset(taken), couchable,
             )
             if replacement is None:
                 unresolved.append((troop, iid, why))
