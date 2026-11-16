@@ -2212,7 +2212,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.sm_dwarf_erebor_axe_2h_c2" />
+                    id="Item.sm_dwarf_iron_axe_c" />
                 <equipment
                     slot="Head"
                     id="Item.sk_dwarf_erebor_helmet_plate_heavy_b" />
@@ -2232,7 +2232,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.sm_dwarf_erebor_axe_2h_c2" />
+                    id="Item.sm_dwarf_iron_axe_c" />
                 <equipment
                     slot="Head"
                     id="Item.sk_dwarf_erebor_helmet_plate_heavy_c" />
@@ -2252,7 +2252,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.sm_dwarf_erebor_axe_2h_c2" />
+                    id="Item.sm_dwarf_iron_axe_c" />
                 <equipment
                     slot="Head"
                     id="Item.sk_dwarf_erebor_helmet_plate_heavy_d" />
@@ -2272,7 +2272,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.sm_dwarf_erebor_axe_2h_c2" />
+                    id="Item.sm_dwarf_iron_axe_c" />
                 <equipment
                     slot="Head"
                     id="Item.sk_dwarf_erebor_helmet_plate_med_d" />
@@ -2817,7 +2817,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.sm_dwarf_erebor_axe_2h_d2" />
+                    id="Item.sm_dwarf_iron_axe_d" />
                 <equipment
                     slot="Item1"
                     id="Item.southern_throwing_axe_1_t4" />
@@ -2840,7 +2840,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.sm_dwarf_erebor_axe_2h_d2" />
+                    id="Item.sm_dwarf_iron_axe_d" />
                 <equipment
                     slot="Item1"
                     id="Item.southern_throwing_axe_1_t4" />
@@ -2863,7 +2863,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.sm_dwarf_erebor_axe_2h_c2" />
+                    id="Item.sm_dwarf_iron_axe_c" />
                 <equipment
                     slot="Item1"
                     id="Item.southern_throwing_axe_1_t4" />
@@ -2886,7 +2886,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.sm_dwarf_erebor_axe_2h_d2" />
+                    id="Item.sm_dwarf_iron_axe_d" />
                 <equipment
                     slot="Item1"
                     id="Item.southern_throwing_axe_1_t4" />
@@ -5174,7 +5174,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.sm_dwarf_erebor_axe_2h_a" />
+                    id="Item.sm_dwarf_iron_axe_b" />
                 <equipment
                     slot="Item1"
                     id="Item.taom_ph_erebor_spear_a_t4" />
@@ -5321,7 +5321,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.sm_dwarf_erebor_axe_2h_b" />
+                    id="Item.sm_dwarf_iron_axe_c" />
                 <equipment
                     slot="Item1"
                     id="Item.taom_ph_erebor_spear_a_t8" />
@@ -5344,7 +5344,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.sm_dwarf_erebor_axe_2h_d" />
+                    id="Item.sm_dwarf_iron_axe_d" />
                 <equipment
                     slot="Item1"
                     id="Item.taom_ph_erebor_spear_b_t8" />
@@ -5441,7 +5441,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.sm_dwarf_erebor_axe_2h_d" />
+                    id="Item.sm_dwarf_iron_axe_d" />
                 <equipment
                     slot="Item1"
                     id="Item.taom_ph_erebor_spear_b_t8" />
@@ -5487,7 +5487,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.sm_dwarf_erebor_axe_2h_d" />
+                    id="Item.sm_dwarf_iron_axe_d" />
                 <equipment
                     slot="Item1"
                     id="Item.taom_ph_erebor_spear_b_t8" />
@@ -5599,7 +5599,7 @@
                     id="Item.sm_dwarf_iron_bolt_a" />
                 <equipment
                     slot="Item2"
-                    id="Item.sm_dwarf_erebor_axe_2h_a" />
+                    id="Item.sm_dwarf_iron_axe_b" />
                 <equipment
                     slot="Head"
                     id="Item.sk_dwarf_iron_helmet_med_c2" />
@@ -5625,7 +5625,7 @@
                     id="Item.sm_dwarf_iron_bolt_a" />
                 <equipment
                     slot="Item2"
-                    id="Item.sm_dwarf_erebor_axe_2h_a" />
+                    id="Item.sm_dwarf_iron_axe_b" />
                 <equipment
                     slot="Head"
                     id="Item.sk_dwarf_iron_helmet_light_d1" />
@@ -5651,7 +5651,7 @@
                     id="Item.sm_dwarf_iron_bolt_a" />
                 <equipment
                     slot="Item2"
-                    id="Item.sm_dwarf_erebor_axe_2h_a" />
+                    id="Item.sm_dwarf_iron_axe_b" />
                 <equipment
                     slot="Head"
                     id="Item.sk_dwarf_iron_helmet_med_a1" />
@@ -5784,7 +5784,7 @@
                     id="Item.sm_dwarf_iron_bolt_a" />
                 <equipment
                     slot="Item2"
-                    id="Item.sm_dwarf_erebor_axe_2h_a" />
+                    id="Item.sm_dwarf_iron_axe_a" />
                 <equipment
                     slot="Head"
                     id="Item.sk_dwarf_iron_helmet_heavy_c1" />
@@ -5913,7 +5913,7 @@
                     id="Item.sm_dwarf_iron_bolt_a" />
                 <equipment
                     slot="Item2"
-                    id="Item.sm_dwarf_erebor_axe_2h_c2" />
+                    id="Item.sm_dwarf_iron_axe_d" />
                 <equipment
                     slot="Head"
                     id="Item.sk_dwarf_iron_helmet_heavy_a2" />
@@ -5939,7 +5939,7 @@
                     id="Item.sm_dwarf_iron_bolt_a" />
                 <equipment
                     slot="Item2"
-                    id="Item.sm_dwarf_erebor_axe_2h_c2" />
+                    id="Item.sm_dwarf_iron_axe_d" />
                 <equipment
                     slot="Head"
                     id="Item.sk_dwarf_iron_helmet_heavy_c1" />
@@ -5965,7 +5965,7 @@
                     id="Item.sm_dwarf_iron_bolt_a" />
                 <equipment
                     slot="Item2"
-                    id="Item.sm_dwarf_erebor_axe_2h_c2" />
+                    id="Item.sm_dwarf_iron_axe_d" />
                 <equipment
                     slot="Head"
                     id="Item.sk_dwarf_iron_helmet_heavy_b2" />

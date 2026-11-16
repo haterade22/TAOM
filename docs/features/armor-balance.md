@@ -1091,8 +1091,9 @@ close the game, the launcher and the dedicated server.
    and `--apply` (the Armory's `LOTRLOME_crafting_pieces.xml`); `python tools/fix_melee_ladder.py` and
    `--apply` (REPO: troop rosters); then `python tools/restat_melee_blades.py` as a dry run again,
    which must report 0 blades to move. If it does not, repeat this step.
-10. **REPO, carry the step 9 swaps into the troop generators.** `fix_melee_ladder.py --apply` rewrote
-    troop rosters too. Repeat step 7, parts 1 to 4, for the troops it changed.
+10. **REPO, carry the step 9 swaps into the troop generators.** Since 2026-11-16 `fix_melee_ladder.py`
+    reports a weapon in a troop file a generator writes (`GENERATED_TROOP_FILES`) and does not swap it.
+    Change such a weapon in its generator, then repeat step 7, parts 1 to 4, for those troops.
 11. **Career, starter and enlistment kit.**
     - REPO: `python tools/generate_career_kits.py`, `--apply`, `--verify`.
     - LIVE ARMORY: `python tools/generate_starter_armor.py`, read the dry run, then `--apply`. Its 12
@@ -1189,8 +1190,8 @@ Not run, and why:
 
 - `fix_melee_ladder.py` (step 9). Its plan replaced poleaxes with short spears, which moves a troop to
   another weapon category; see "A troop keeps its weapon category" in
-  [melee-damage-model.md](./melee-damage-model.md). The 318 ladder inversions stay until the tool
-  holds the category.
+  [melee-damage-model.md](./melee-damage-model.md). The tool holds the category since 2026-11-16, and
+  its roster pass was applied that day (the counts are in that section).
 - `generate_starter_armor.py` (step 11). It overwrites the hand fixes in `harad/starter_armors.xml`,
   and Gondor's starter file needs a hand edit first. The starter armour literals are still the old
   ones.

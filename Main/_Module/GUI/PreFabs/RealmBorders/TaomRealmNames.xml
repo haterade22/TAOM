@@ -7,7 +7,8 @@
          through ScaledPositionXOffset/YOffset, so the UI scale never enters the maths (the problem
          an absolutely placed field-camp widget once had). Two text widgets per label: aniron for the
          names it has every glyph for, the language's own default font for the rest. The fade binds
-         Brush.GlobalAlphaFactor, as vanilla fades text: AlphaFactor on a TextWidget never reaches the text. -->
+         Brush.GlobalAlphaFactor, as vanilla fades text: AlphaFactor on a TextWidget never reaches the text.
+         Brush.FontSize binds the size RealmNamesVM computes from MCM's Realm Name Size (#1380). -->
     <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" DoNotAcceptEvents="true">
       <Children>
         <!-- A plain Widget, not a ListPanel: a ListPanel stacks its children, and these must overlap. -->
@@ -18,9 +19,9 @@
                     ScaledPositionXOffset="@OffsetX" ScaledPositionYOffset="@OffsetY">
               <Children>
                 <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" DoNotAcceptEvents="true"
-                            Brush="TaomRealmBorders.Name" Brush.GlobalAlphaFactor="@Alpha" Text="@Name" IsVisible="@ShowTolkien" />
+                            Brush="TaomRealmBorders.Name" Brush.GlobalAlphaFactor="@Alpha" Brush.FontSize="@FontSize" Text="@Name" IsVisible="@ShowTolkien" />
                 <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" DoNotAcceptEvents="true"
-                            Brush="TaomRealmBorders.Name.Plain" Brush.GlobalAlphaFactor="@Alpha" Text="@Name" IsVisible="@ShowPlain" />
+                            Brush="TaomRealmBorders.Name.Plain" Brush.GlobalAlphaFactor="@Alpha" Brush.FontSize="@FontSize" Text="@Name" IsVisible="@ShowPlain" />
               </Children>
             </Widget>
           </ItemTemplate>

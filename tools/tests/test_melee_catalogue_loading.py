@@ -13,6 +13,7 @@ Map:
   - installed_taom_stylesheets_are_left_out  -> callers price TAOM's placeholders from their own
                                                 tree, so a stale deployed sheet must not count
   - own_submodule_unreadable_or_missing      -> a CatalogueError, never a silent empty skip list
+  - module_outside_the_playset_is_left_out   -> #1375: only the modules TAOM loads with count
 """
 from __future__ import annotations
 
@@ -54,11 +55,17 @@ def registering(*piece_ids: str) -> str:
     )
 
 
-def submodule(*rows: tuple[str, str], incompatible: tuple[str, ...] = (), module_id: str = "TestOwn") -> str:
+def submodule(*rows: tuple[str, str], incompatible: tuple[str, ...] = (), module_id: str = "TestOwn",
+              depends: tuple[str, ...] = ()) -> str:
     xml = "".join(f'<XmlNode><XmlName id="{i}" path="{p}"/></XmlNode>' for i, p in rows)
     inc = "".join(f'<Module Id="{m}"/>' for m in incompatible)
-    return (f'<Module><Id value="{module_id}"/><Xmls>{xml}</Xmls>'
+    deps = "".join(f'<DependedModule Id="{m}"/>' for m in depends)
+    return (f'<Module><Id value="{module_id}"/><DependedModules>{deps}</DependedModules><Xmls>{xml}</Xmls>'
             f"<IncompatibleModules>{inc}</IncompatibleModules></Module>\n")
+
+
+# The playset TAOM_SUBMODULE names (#1375): the catalogue reads these modules and no others.
+PLAYSET = ("Native", "TestMod", "Naval", "Broken", "TAOM")
 
 
 def write(path: Path, text: str) -> None:
@@ -76,7 +83,7 @@ class CatalogueLoadingTests(unittest.TestCase):
         write(self.modules / "Native" / "ModuleData" / "crafting_templates.xml", NATIVE_CT)
         # The SubModule.xml whose <IncompatibleModules> decides what is left out (TAOM's in use).
         self.own = self.tmp / "own" / "SubModule.xml"
-        write(self.own, submodule())
+        write(self.own, submodule(depends=PLAYSET))
         old = mc.TAOM_SUBMODULE
         mc.TAOM_SUBMODULE = self.own
         self.addCleanup(setattr, mc, "TAOM_SUBMODULE", old)
@@ -86,21 +93,21 @@ class CatalogueLoadingTests(unittest.TestCase):
 
     def test_row_stylesheet_in_a_subfolder_applies(self):
         mod = self.modules / "TestMod"
-        write(mod / "SubModule.xml", submodule(("WeaponDescriptions", "ph/ph_descriptions")))
+        write(mod / "SubModule.xml", submodule(("WeaponDescriptions", "ph/ph_descriptions"), module_id="TestMod"))
         write(mod / "ModuleData" / "ph" / "ph_descriptions.xslt", registering("ph_blade"))
         self.assertIn("ph_blade", self.available())
 
     def test_stylesheet_without_a_row_is_ignored(self):
         mod = self.modules / "TestMod"
-        write(mod / "SubModule.xml", submodule(("CraftingTemplates", "crafting_templates")))
+        write(mod / "SubModule.xml", submodule(("CraftingTemplates", "crafting_templates"), module_id="TestMod"))
         write(mod / "ModuleData" / "weapon_descriptions.xslt", registering("ghost_blade"))
         self.assertNotIn("ghost_blade", self.available())
         self.assertIn("native_blade", self.available())
 
     def test_incompatible_module_is_left_out(self):
-        write(self.own, submodule(incompatible=("Naval",)))
+        write(self.own, submodule(incompatible=("Naval",), depends=PLAYSET))
         naval = self.modules / "Naval"
-        write(naval / "SubModule.xml", submodule(("WeaponDescriptions", "weapon_descriptions")))
+        write(naval / "SubModule.xml", submodule(("WeaponDescriptions", "weapon_descriptions"), module_id="Naval"))
         write(naval / "ModuleData" / "weapon_descriptions.xslt", registering("naval_blade"))
         write(naval / "ModuleData" / "naval_crafting_pieces.xml",
               '<CraftingPieces><CraftingPiece id="naval_blade" piece_type="Blade" length="80" weight="1"/>'
@@ -125,7 +132,7 @@ class CatalogueLoadingTests(unittest.TestCase):
         """TAOM's placeholder registrations are priced from the caller's own tree
         (taom_schema.price_placeholders, generate_placeholder_weapons.price_new). A deployed copy
         in the catalogue would hide a registration the tree has lost."""
-        write(self.own, submodule(module_id="TAOM"))
+        write(self.own, submodule(module_id="TAOM", depends=PLAYSET))
         taom = self.modules / "TAOM"
         write(taom / "SubModule.xml", submodule(("WeaponDescriptions", "ph/ph_descriptions"), module_id="TAOM"))
         write(taom / "ModuleData" / "ph" / "ph_descriptions.xslt", registering("stale_blade"))
@@ -135,6 +142,18 @@ class CatalogueLoadingTests(unittest.TestCase):
               '<CraftingPieces><CraftingPiece id="taom_piece" piece_type="Blade" length="80" weight="1"/>'
               '</CraftingPieces>\n')
         self.assertIn("taom_piece", mc.load_pieces(self.modules))
+
+    def test_module_outside_the_playset_is_left_out(self):
+        """#1375: an installed module TAOM neither depends on nor loads after (AWOIAF_Armoury)
+        never loads beside it, so its sheets, pieces and items do not count."""
+        other = self.modules / "Other"
+        write(other / "SubModule.xml", submodule(("WeaponDescriptions", "weapon_descriptions"), module_id="Other"))
+        write(other / "ModuleData" / "weapon_descriptions.xslt", registering("other_blade"))
+        write(other / "ModuleData" / "other_crafting_pieces.xml",
+              '<CraftingPieces><CraftingPiece id="other_blade" piece_type="Blade" length="80" weight="1"/>'
+              '</CraftingPieces>\n')
+        self.assertNotIn("other_blade", self.available())
+        self.assertNotIn("other_blade", mc.load_pieces(self.modules))
 
     def test_missing_native_base_is_a_catalogue_error(self):
         (self.modules / "Native" / "ModuleData" / "weapon_descriptions.xml").unlink()

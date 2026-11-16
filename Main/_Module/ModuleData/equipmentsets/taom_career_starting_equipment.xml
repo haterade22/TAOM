@@ -623,7 +623,7 @@
 
     <EquipmentRoster id="player_career_vlandia_cavalry_m" culture="Culture.vlandia">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.wm_rohan_spear_b" />
+            <Equipment slot="Item0" id="Item.wm_rohan_ws_spear_a01" />
             <Equipment slot="Item1" id="Item.wm_rohan_shield_a01_gsg" />
             <Equipment slot="Item2" id="Item.wm_rohan_ws_sword_a01" />
             <Equipment slot="Body" id="Item.rohan_militia_armour_c" />
@@ -635,7 +635,7 @@
 
     <EquipmentRoster id="player_career_vlandia_cavalry_f" culture="Culture.vlandia">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.wm_rohan_spear_b" />
+            <Equipment slot="Item0" id="Item.wm_rohan_ws_spear_a01" />
             <Equipment slot="Item1" id="Item.wm_rohan_shield_a01_gsg" />
             <Equipment slot="Item2" id="Item.wm_rohan_ws_sword_a01" />
             <Equipment slot="Body" id="Item.rohan_militia_armour_c" />
@@ -649,7 +649,7 @@
         <EquipmentSet>
             <Equipment slot="Item0" id="Item.wm_rohan_ws_sword_a01" />
             <Equipment slot="Item1" id="Item.wm_rohan_shield_a01_gsg" />
-            <Equipment slot="Item2" id="Item.wm_rohan_spear_b" />
+            <Equipment slot="Item2" id="Item.wm_rohan_ws_spear_a01" />
             <Equipment slot="Body" id="Item.rohan_militia_armour_c" />
             <Equipment slot="Leg" id="Item.cts_rohan_boots3" />
         </EquipmentSet>
@@ -659,7 +659,7 @@
         <EquipmentSet>
             <Equipment slot="Item0" id="Item.wm_rohan_ws_sword_a01" />
             <Equipment slot="Item1" id="Item.wm_rohan_shield_a01_gsg" />
-            <Equipment slot="Item2" id="Item.wm_rohan_spear_b" />
+            <Equipment slot="Item2" id="Item.wm_rohan_ws_spear_a01" />
             <Equipment slot="Body" id="Item.rohan_militia_armour_c" />
             <Equipment slot="Leg" id="Item.cts_rohan_boots3" />
         </EquipmentSet>
@@ -1313,7 +1313,7 @@
 
     <EquipmentRoster id="player_career_umbar_cavalry_m" culture="Culture.umbar">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.wm_gondor_spear_b" />
+            <Equipment slot="Item0" id="Item.wm_gondor_spear_a" />
             <Equipment slot="Item1" id="Item.small_flat_heater_shield" />
             <Equipment slot="Item2" id="Item.wm_gondor_sword_a01" />
             <Equipment slot="Body" id="Item.sk_hr_st_chest_inf_chest_light_a" />
@@ -1325,7 +1325,7 @@
 
     <EquipmentRoster id="player_career_umbar_cavalry_f" culture="Culture.umbar">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.wm_gondor_spear_b" />
+            <Equipment slot="Item0" id="Item.wm_gondor_spear_a" />
             <Equipment slot="Item1" id="Item.small_flat_heater_shield" />
             <Equipment slot="Item2" id="Item.wm_gondor_sword_a01" />
             <Equipment slot="Body" id="Item.sk_hr_st_chest_inf_chest_light_a" />
@@ -1341,7 +1341,7 @@
         <EquipmentSet>
             <Equipment slot="Item0" id="Item.wm_gondor_sword_a01" />
             <Equipment slot="Item1" id="Item.small_flat_heater_shield" />
-            <Equipment slot="Item2" id="Item.wm_gondor_spear_b" />
+            <Equipment slot="Item2" id="Item.wm_gondor_spear_a" />
             <Equipment slot="Body" id="Item.sk_hr_st_chest_inf_chest_light_a" />
             <Equipment slot="Leg" id="Item.sk_hr_st_grvs_light_a" />
         </EquipmentSet>
@@ -1351,7 +1351,7 @@
         <EquipmentSet>
             <Equipment slot="Item0" id="Item.wm_gondor_sword_a01" />
             <Equipment slot="Item1" id="Item.small_flat_heater_shield" />
-            <Equipment slot="Item2" id="Item.wm_gondor_spear_b" />
+            <Equipment slot="Item2" id="Item.wm_gondor_spear_a" />
             <Equipment slot="Body" id="Item.sk_hr_st_chest_inf_chest_light_a" />
             <Equipment slot="Leg" id="Item.sk_hr_st_grvs_light_a" />
         </EquipmentSet>

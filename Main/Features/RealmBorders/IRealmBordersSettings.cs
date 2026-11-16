@@ -25,6 +25,9 @@ public interface IRealmBordersSettings
 
     bool RealmNames { get; }
 
+    /// <summary>Multiplies the realm names' font size, 0.5 to 2.5.</summary>
+    float NameScale { get; }
+
     bool CrossingNotices { get; }
 
     /// <summary>Tint each realm's land in its colour between the borders.</summary>

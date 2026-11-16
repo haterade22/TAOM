@@ -5178,3 +5178,9 @@ The Kit's sprite generation re-saved all 13 GUI `_tex.tpac` files. I copied back
 - **Why missed:** each run looked stable; only two runs side by side, or two `PYTHONHASHSEED` values, show it.
 - **Prevent:** when output depends on the order of a set (a tie-break, the first match, a dict filled from it), loop over `sorted(...)`. Prove a generator or report deterministic by running it under two or more `PYTHONHASHSEED` values in subprocesses.
 - **Source:** issue #1379.
+
+### A gate that mirrors engine loading needs the engine's module set too (shield gate and catalogue, #1375, 2026-11-16)
+After #1354 the gate and the catalogue found stylesheets through `SubModule.xml` rows, but they still read every installed module, so AWOIAF_Armoury's 280 crafting pieces and its items counted in a TAOM campaign where it never loads. They also read `.xslt` where the engine reads `.xsl` first, applied rows meant for multiplayer, and keyed modules by folder name (SandBox's Id is `Sandbox`).
+- **Why missed:** each fix copied one rule of `MBObjectManager.GetMergedXmlForManaged` at a time; no test listed the whole function's branches.
+- **Prevent:** when a tool mirrors an engine loader, list every branch of the engine function (module active, game type, file suffix, file or folder) in the docstring or a test map, and make each one either a test or bad input (exit 2) that names what the tool does not model.
+- **Source:** issue #1375.
