@@ -1648,3 +1648,8 @@ The first Chinese import (24d636cc5) took the team's text wherever its placehold
 - **Why missed:** the importer was written from the drop's language files alone and judged each row by itself. The drop's own `SubModule.xml` named its version and git held every English text, but neither was read, and no one screened the name lists the reviewers had not named.
 - **Prevent:** before outside text replaces ours, read which English it was made from and compare every text the id had since then, not only the two ends (`english_after`). Judge each list a player picks from as a set, and run the guard over every name file, not only the ones where damage was seen. A translated name list can rename with our English unchanged: screen for it (`KEEP_OURS`).
 - **Source:** [rca-cn-import-2026-11-16.md](../rca-cn-import-2026-11-16.md) rows 1, 3, 4, 5 and 18.
+### A player-facing reason must be true in every mode of the rule it explains (#1408, 2026-11-16)
+The first #1408 hint said "This realm will not let its people serve your side." Under the "Only Good Rejects Evil" mode the block fires only for a Free player at an Evil settlement, and the setting says the Free side does the refusing, so the sentence named the wrong side. The fix says what is true in both modes: "Your side may not take volunteers from this realm."
+- **Why missed:** the sentence was written for the default Symmetric mode, and the service's other branch was not read.
+- **Prevent:** before writing a reason line, read every branch of the decision it explains, including each setting mode, and check the sentence against each one.
+- **Source:** the #1408 tier 1 review, Data flow trace 16.

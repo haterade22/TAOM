@@ -9,6 +9,7 @@ using TaleWorlds.Core.ViewModelCollection.Information;
 using TaleWorlds.Library;
 using TaleWorlds.Localization;
 using TAOM.Core.Logging;
+using TAOM.Features.AlignmentRecruitment;
 
 namespace TAOM.Features.AlignmentDesertion.Hooks;
 
@@ -19,6 +20,8 @@ namespace TAOM.Features.AlignmentDesertion.Hooks;
 /// finds none for those slots or for the slot just before the deserter, and vanilla's hint shows "You need 0". For a
 /// locked slot the prefix names the cause; for the slot before the deserter it shows the relation that opens it. It then
 /// skips vanilla. Every other slot runs vanilla. Display only: the cap itself is unchanged.
+/// #1408: when TAOM's alignment recruitment block refuses the notable's volunteers to the player, the model returns -1 at
+/// every relation, so every slot said "You need 0" too; the prefix names the block on each of them first.
 /// Notes: docs/reference/harmony-patch-registry.md "Patch157_DesertionRecruitHint".
 /// </summary>
 [HarmonyPatchCategory(AlignmentDesertionModule.HintPatchCategory)]
@@ -27,12 +30,14 @@ namespace TAOM.Features.AlignmentDesertion.Hooks;
 public static class Patch157_RecruitSlotHint_Prefix
 {
     private static IDesertionRecruitGuard? _guard;
+    private static IRecruitmentAlignmentService? _alignment;
     private static IModLogger? _logger;
     private static bool _logged;
 
-    public static void Initialize(IDesertionRecruitGuard guard, IModLogger logger)
+    public static void Initialize(IDesertionRecruitGuard guard, IRecruitmentAlignmentService alignment, IModLogger logger)
     {
         _guard = guard;
+        _alignment = alignment;
         _logger = logger;
     }
 
@@ -51,6 +56,14 @@ public static class Patch157_RecruitSlotHint_Prefix
             var index = __instance.Index;
             if (party == null || owner == null || slots == null || index < 0 || index >= slots.Length)
                 return true;
+
+            // The same ids TaomVolunteerModel.MaximumIndexHeroCanRecruitFromHero passes; the block comes before the cap.
+            if (_alignment != null && _alignment.IsRecruitmentBlocked(Hero.MainHero?.Clan?.Kingdom?.StringId,
+                    owner.CurrentSettlement?.MapFaction?.StringId, isPlayerRecruiter: true))
+            {
+                Show(__instance, new TextObject("{=taom_recruit_slot_realm_refuses}Your side may not take volunteers from this realm.").ToString());
+                return false;
+            }
 
             var first = DesertionRecruitCap.NoDeserter;
             for (var i = 0; i < slots.Length; i++)

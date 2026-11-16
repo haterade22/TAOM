@@ -8273,6 +8273,7 @@
     <string id="taom_realm_borders_mcm_name_size_hint" text="Makes the kingdom names on the map larger or smaller. Default: 100%." />
     <string id="taom_recruit_slot_would_desert" text="This volunteer would desert your party: their people will not serve your side." />
     <string id="taom_recruit_slot_behind_deserter" text="An earlier volunteer here would desert your party, and volunteers are recruited in order." />
+    <string id="taom_recruit_slot_realm_refuses" text="Your side may not take volunteers from this realm." />
   </strings>
 
 </base>
