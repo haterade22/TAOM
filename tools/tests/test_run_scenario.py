@@ -777,7 +777,7 @@ class StoryManifestTests(unittest.TestCase):
 
     def test_the_1368_manifest_holds_the_three_rows_scoped_to_the_armed_mission(self):
         new = self.manifest(1368)
-        self.assertEqual((new["issue"], new["fixed_in"], new["logs"]), (1368, "e3f612bad", ["taom"]))
+        self.assertEqual((new["issue"], new["fixed_in"], new["logs"]), (1368, "4baa2f53a", ["taom"]))
         self.assertEqual([c["id"] for c in new["check"]],
                          ["taom.autorun.story-mission.done", "taom.story-missions.hosted.boot", "taom.story-missions.ended"])
         old = self.manifest(1105)

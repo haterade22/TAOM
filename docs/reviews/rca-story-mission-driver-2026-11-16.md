@@ -15,6 +15,12 @@ Not applied:
 - No log poll in the shared runner to end the ten-minute wait on an unarmed build early. The message now names the cause; the wait stays.
 - No wall-limit check inside the story phases. The step waits and the mission limit bound them, and the runner's own limit is the outer bound.
 
+## Proof
+
+Run 20261116-075342 on the committed build 4baa2f53a, the first run of the kind. The driver's lines, in order: `phase WaitMap -> MissionMenu`, `story menu: The story menu is open for 'helms_deep_defend'. Choose "Open the mission".`, `phase MissionOpen -> InMission`, `mission ended verdict=Won seconds=390.3`, `chose Back to the map`, `back on the free map after Back to the map`, `done reason=ok`. The done file reads `reason=ok`, `verdict=Won`, `mission_seconds=390.3`, `event_windows_closed=0`. The runner printed PASS with a clean unload and no crash block, and `python tools/ingame_verdict.py --issue 1368` reads PASS for its three rows.
+
+What the run did not exercise: a refusal, a mission that hits its limit, an event window inside the mission, a return with no menu, an unarmed build. Those rest on the unit tests.
+
 ## Root-cause pattern
 
 Both MEDIUM findings are a result placed where its reader does not look: a row behind a scope that a failed run never opens, and a message behind a branch that a failed run never enters. In both, the test exercised the piece and not the path a real failed run takes.

@@ -11,10 +11,10 @@
 # Read this manifest from one session (the default --sessions 1, or --session <the run's log>): the three rows must come from the same run, and a later row from an older
 # session could otherwise complete a pass that the newest run did not earn.
 #
-# fixed_in is the trunk commit before the driver: the feature commit replaces it when it exists.
+# fixed_in is the feature commit: only a build that holds it counts.
 issue = 1368
 title = "Unattended story-mission run: a new campaign, one story mission opened through the dev menu, quit when the map is back"
-fixed_in = "e3f612bad"
+fixed_in = "4baa2f53a"
 logs = ["taom"]
 
 # Written once, in Finish, with reason=ok only when the menu opened, the click was taken, the mission screen was seen, a verdict came (Won or Lost) and the map

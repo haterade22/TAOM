@@ -9,7 +9,7 @@ Signature Strikes row ([signature-strikes.md](signature-strikes.md), "Killing bl
 Defeat missions and, since #1366 (Phase 6), in a campaign: `characters/taom_mission_heroes.xml` and
 `hero_abilities/hero_abilities_items.xml` load for Campaign, CampaignStoryMode and CustomGame
 (`Main/_Module/SubModule.xml`), and the three stand free in the Helm's Deep story mission
-([story-missions.md](story-missions.md), "The free heroes"). That mission has not been opened in a game yet. A hired
+([story-missions.md](story-missions.md), "The free heroes"). A hired
 campaign companion keeps his normal strength.
 
 Legolas (`taom_hero_legolas`) has a ranged kit (#1361, Phase 5): his arrows have no aim error, pass a shield that
@@ -318,10 +318,10 @@ arrow `taom_legolas_arrow` within 10 m of his target and 120 m of him; outline `
     a campaign character with no `Hero` and which Dread depends on. See [hero-auras.md](hero-auras.md).
   - **Unreached code.** The shop's upgrade filter and the boon health rescale skip `IsHero` bodies, but the story
     mission has no shop upgrade or boon, so neither is reached.
-- **Not proven in a game:** the story mission with the three heroes has not been opened in a game. The unit tests,
-  the shipped-data pins and the manifest `tools/ingame_checks/1366.toml` are all that exist, and no driver opens a
-  story mission without a person. The manifest's rows end at the next mission launch (`scope_end`), and the
-  `1359.toml` and `1361.toml` rows read only a Long Defeat run.
+- **Proven in a game:** the unattended run 20261116-075342 (the driver of #1368) opened the story mission with the three
+  heroes, and `tools/ingame_checks/1366.toml` reads PASS for all seven rows ([story-missions.md](story-missions.md)). The
+  manifest's rows end at the next mission launch (`scope_end`), and the `1359.toml` and `1361.toml` rows read only a
+  Long Defeat run.
 - A buffed soldier counts as moved by an ability (`RaceAbilityHooks.HasLiveEffects`) while his buff lasts, so the
   Long Defeat's boon read-back passes him over for 12 to 15 s. With no plain soldier left its check is skipped
   (`reason=no-soldier`), never failed.

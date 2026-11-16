@@ -13,7 +13,7 @@
 # roster is written once when a campaign session starts: for every story mission the hero and garrison troop ids that resolve to no character, and the extra arrow item
 # of each hero kit that resolves to no item. It has no scope, because it is written before any mission opens. It passes only with items= above 0 (an empty hero
 # abilities config looks up no item and proves nothing), and the error line of a throw in the check fails it.
-# The roster row has an unattended proof (python tools/run_scenario.py --days 2). The mission rows have an unattended run (#1368, not yet run): python tools/run_scenario.py --kind story-mission --mission helms_deep_defend, then python tools/ingame_verdict.py --issue 1366 on its log. By hand: taom.story_open helms_deep_defend auto, click Open the mission, then the same verdict command.
+# The roster row has an unattended proof (python tools/run_scenario.py --days 2). The mission rows have an unattended proof too (#1368, first run 20261116-075342): python tools/run_scenario.py --kind story-mission --mission helms_deep_defend, then python tools/ingame_verdict.py --issue 1366 on its log. By hand: taom.story_open helms_deep_defend auto, click Open the mission, then the same verdict command.
 issue = 1366
 title = "Story missions: Aragorn, Legolas and Gimli stand free with the garrison in the Helm's Deep story mission"
 # fixed_in is the feature commit: only a build that holds it counts.

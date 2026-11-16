@@ -241,14 +241,20 @@ so it needs Mike's word.
    with it, as are `--speed` and `--stall-seconds`. The default wall limit is the campaign-new boot allowance plus the 1200 s mission
    limit (3000 s); the driver reads none of it for this kind, and `--wall-limit` only moves the runner's give-up time. An unarmed
    build (one without this kind) ends as the runner's 10 minute stall, and the printed results then quote its `not armed:` line. Then
-   `python tools/ingame_verdict.py --issue 1368` reads the three rows (one session: its default). The first run settles only what a
-   game can prove: that the click opens the scene, that the autoplayed lord and the hosted run end the mission with no input in a
-   campaign, and that the map comes back.
+   `python tools/ingame_verdict.py --issue 1368` reads the three rows (one session: its default).
+
+The first story run (`E:\Temp\scenario-runs\20261116-075342`, build 4baa2f53a) settled what only a game can prove. The click opened
+the scene: `phase MissionOpen -> InMission` came 32 s after the game started, with `[StoryMissions] launching ... for
+'helms_deep_defend' (story1, autoplay True)`. The autoplayed lord and the hosted run ended the mission with no input in a campaign:
+`taom.story-missions.ended result=pass verdict=Won side=Defending reason=TargetReached waves=1`, then `mission ended verdict=Won
+seconds=390.3`. The map came back: `chose Back to the map`, `back on the free map after Back to the map`, `done reason=ok`. The whole
+run took 432 s of game time, hid three inquiries, closed no event window, and unloaded clean. The runner printed PASS, and
+`python tools/ingame_verdict.py` read PASS for #1368 and #1366 and for the boot, ended and music rows of #1105.
 
 ## Changelog
 
 - 2026-11-15: first slice, `campaign-new` only (#1075, for #1283).
-- 2026-11-16: the `story-mission` kind (#1368), built and unit tested, not yet run in the game.
+- 2026-11-16: the `story-mission` kind (#1368). Proved by the unattended run 20261116-075342.
 
 ## GitHub Issue
 
