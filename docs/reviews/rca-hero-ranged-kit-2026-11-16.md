@@ -27,6 +27,16 @@ FOLLOW-UP (#1325): `taom_legolas_arrow` loads in Custom Game only. The phase tha
 
 FOLLOW-UP (no issue: a pre-existing validator gap, not from this work): `validate_mesh_refs.py` does not check `holster_body_name`.
 
+## Proof
+
+Run 20261116-024002 (4 waves) on the committed build d33642297. `python tools/ingame_verdict.py --issue 1361` reads PASS for all seven checks: `fired` (13 casts, then 8 by the body bought after his fall in wave 3), `precision` (`nonzero=0` for both bodies), `hits` (`shots=55 contact=45 share=0.82`), `pierce` (`shield_hits=13 passed=10 broken=0`, and `4` of `4` for the second body), `multishot` (`windows=4 window_shots=4 fired=8 hits=11`), `arrow-kill` (`body_hits=50 head=11 exempt=5 calls=17 kills=3`) and `instant-kill` (`signature=taom_hero_legolas_arrow victim=fow_urukhai_skirmisher chance=1.00 roll=0.173 ... died=1`). No stand-down line; the session's one failed check is the muster line of #1142.
+
+The run settles the question the engine source left open: the body hit does follow a shield pass-through, 14 times in 17. With the removal event in place, that count cannot come from a reused index (finding 2). The `calls=17` against 50 body hits is finding 5 at work: 28 of his hits found the soldier already dead by the arrow itself.
+
+The run does not show a gain in kills (10, 26 and 14 in the waves he finished, against 39 in three waves before the kit), and it shows why: he shot 61 arrows in four waves. The three heroes hold one post at the top of a wall lane, and there he fights with his sword much of the time. Helm's Deep sells no Elven Volley, so finding 1 could not have occurred in this run; its proof is the rule's test and the adapter pin.
+
+FOLLOW-UP (#1325): where Legolas stands. His kit needs a post from which he shoots; the shared post of the three heroes puts him in the melee. The decision that the three form one group is the maintainer's.
+
 ## Root-cause pattern
 
 Findings 1, 3 and 6 are one habit: a rule was written for the path the author had in mind, and the other producers of the same input were not listed. The volley shoots in an agent's name; a second hero writes a shared line; a second caller can build the candidate. Finding 2 is the engine's version of it: an index names a missile only until the engine hands it to the next one.

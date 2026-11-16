@@ -14,8 +14,8 @@
 # pierce, at the mission end: shield_hits= his arrows an enemy shield blocked, passed= those followed by an unblocked hit of the same
 # missile on the same victim before the missile was removed (the pass-through; native gives a freed missile index to the next missile
 # at once, so an index is one arrow only until its removal), broken= the shield hits that broke the shield. It passes with one
-# pass-through, fails after 5 shield hits with none, else skips (few-shield-hits). That the body hit follows a pass-through is ASSUMED;
-# this measures it.
+# pass-through, fails after 5 shield hits with none, else skips (few-shield-hits). The engine code does not show that the body hit
+# follows a pass-through; this line measures it (run 20261116-024002: passed=10 of 13, and 4 of 4).
 # multishot, at the mission end: item=1 when the extra arrow item resolved, windows= the Many Arrows windows seen, window_shots= his
 # shots inside one, fired= extra arrows given to AddCustomMissile (which always lists the missile, Mission.cs:4969-4971), no_target=
 # window shots with no enemy inside the 6 degree cone, out_of_range= extras the engine's aim solver refused, hits= extras that met an
@@ -28,13 +28,12 @@
 # fired is the #1359 line for his abilities (Rapid Fire, Many Arrows, Archer's Eye); contact_s= counts the seconds with 3 enemies within 40 m.
 # A throw in the ranged logic writes its stand-down line, and a throw in the hero abilities its own; both fail fired and the five
 # ranged checks (the instant-kill line is the shared executor's).
-# The unattended proof: python tools/run_long_defeat.py --waves 4--garrison-scale 1.3 --start-gold 5000, so the bot buys the heroes.
+# The unattended proof: python tools/run_long_defeat.py --waves 4 --garrison-scale 1.3 --start-gold 5000, so the bot buys the heroes.
 # A run of skips only is not a pass.
 issue = 1361
 title = "Hero abilities: Legolas's ranged kit"
-# fixed_in is the base this work started from until the feature commit exists; the follow-up docs commit sets the feature commit,
-# as 1359.toml did. No build before this work writes a ranged line or a Legolas fired line.
-fixed_in = "300854763"
+# fixed_in is the feature commit: only a build that holds it counts. No build before it writes a ranged line or a Legolas fired line.
+fixed_in = "d33642297"
 logs = ["taom"]
 
 [[check]]

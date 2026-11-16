@@ -227,7 +227,7 @@ arrow `taom_legolas_arrow` within 10 m of his target and 120 m of him; outline `
 
 1. `python tools/run_long_defeat.py --waves 4 --garrison-scale 1.3 --start-gold 5000`, then
    `python tools/ingame_verdict.py --issue 1359`.
-2. `[Check] id=taom.hero-abilities.gate result=pass ... combat=1 config=1 kits=2` once per mission.
+2. `[Check] id=taom.hero-abilities.gate result=pass ... combat=1 config=1 kits=3` once per mission.
 3. `[Check] id=taom.hero-abilities.fired result=pass hero=taom_hero_aragorn fired=<1 or more> ...` and the same for
    `taom_hero_gimli`, at the mission end. `contact_s` counts the passes in which the kit's easiest enemy trigger held
    by an independent count (3 enemies within 10 m for Aragorn, 3 within 8 m for Gimli, in 3D). `fired=0` after 20 or
@@ -318,12 +318,31 @@ at the last clear; in the run before the abilities, Aragorn fell twice in three 
 the line "Aragorn: For Frodo!". Not seen by any run: the war cry, the sparks and the outline, the low-health ability
 of Gimli, and an ability of a hero on the enemy side.
 
+**Proof run, Legolas (#1361).** The unattended run 20261116-024002 (4 waves, commit d33642297) reads PASS for all
+seven checks in `python tools/ingame_verdict.py --issue 1361`. He fell in wave 3 and the bot bought him again, so the
+run has two bodies of him and two sets of lines. The first body: `precision ... nonzero=0`; `hits ... shots=55
+contact=45 share=0.82`; `pierce ... shield_hits=13 passed=10 broken=0`; `multishot ... windows=4 window_shots=4
+fired=8 ... hits=11`; `arrow-kill ... body_hits=50 head=11 exempt=5 calls=17 kills=3`; 13 casts. The second body
+passed precision, pierce (`shield_hits=4 passed=4`) and multishot (`fired=2 hits=2`) and cast 8 times; its hits and
+arrow-kill lines are skips (6 shots, 1 roll). One kill line: `signature=taom_hero_legolas_arrow
+victim=fow_urukhai_skirmisher chance=1.00 roll=0.173 health=20 damage=21 died=1`, a headshot.
+
+What the run settles: the engine does carry an arrow on to the body after it passes a shield (14 of 17 shield hits
+were followed by a hit of the same arrow on the same soldier), and the extra arrows fly and land (10 fired, none
+without a target, none refused by the aim solver). `hits=` counts hit events, and an extra arrow that passes a shield
+makes two, so it can be above `fired=`. What it does not show: a gain in kills. He made 10 and 26 kills in waves 1 and
+2 and 14 in wave 4, against 39 in three waves in the run before the kit. He shot only 61 arrows in four waves: the
+three heroes hold one post at the top of a wall lane, and there he fights much of the time with his sword (14 kills
+in wave 4 from 6 shots). Where he should stand is the maintainer's decision (#1325). Not seen by any run: the faster
+draw of Rapid Fire, Archer's Eye on the archers near him, the look of the extra arrows, and a shield he broke
+(`broken=0`).
+
 ## Changelog
 
 - 2026-11-15: first version (#1359): Aragorn's and Gimli's timed abilities, their killing blows and Aragorn's aura in
   the Long Defeat. Proved by the unattended run 20261115-232309.
 - 2026-11-16: Legolas's ranged kit (#1361): zero aim error, shield pierce, the arrow kill, extra arrows, and three
-  abilities. Not yet run in the game.
+  abilities. Proved by the unattended run 20261116-024002.
 
 ## GitHub Issue
 
