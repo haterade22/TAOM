@@ -72,7 +72,8 @@ site (transpiler anchor missing, or a latch trips; any thread)
 The id is the feature's patch category, or `<category>.<part>` where one category holds two fixes, so a
 player report greps straight to its `## <category>` heading in the
 [patch registry](../reference/harmony-patch-registry.md). The Marshal's Word thrower patch applies in the
-category `Patch_MissionTime_MarshalsWord` and reports under the feature's `Patch141_MarshalsWord`.
+category `Patch_MissionTime_MarshalsWord` and reports under the feature's `Patch141_MarshalsWord`. A latch outside
+a patch class (#1223) has no category, so its id is `<feature folder>[.<part>]` under `Main/Features/`.
 
 | Site | Id | What is lost |
 |---|---|---|
@@ -94,14 +95,17 @@ category `Patch_MissionTime_MarshalsWord` and reports under the feature's `Patch
 | Party icon scale transpilers | `Patch53_PartyIconScale` | the Map Figure Scale slider for one or more figures |
 | Seat of Seeing order panel transpiler | `Patch140_SeatOfSeeing` | a hero who fights on can open the order panel |
 | Banner layer limit transpiler | `Patch15_BannerLayerLimit` | nothing today: the setting is off by default and v1.5.7 has no layer cap |
+| Custom attack blow binding (`CustomAttacksUtils.Unbound`) | `AdvancedCombat.SyntheticBlow` | damage, knockdowns and kills from every TAOM synthetic blow (creature and dwarf attacks, Signature Strikes, instant kills), until the game restarts |
+| Action index repair, third failed pass (`ActionIndexCacheRepair.ReportIfSpent`) | `HeroRace.ActionIndexRepair` | characters in UI tableaus stand in their idle pose; they lie flat in bind pose for the session (other named actions that read the same cache are not checked) |
+| Player Switcher handler registration, while the feature is on | `PlayerSwitcher` | taking over a lord picked in character creation, for the session |
 
 Left out on purpose: transpilers whose loss costs the player nothing (the RaceAge assert noise, the tick and
 map profilers, which are off by default), the Shadowfax clan and inventory fast paths (a degrade builds the
-screen as vanilla does and the install is already logged), the diagnostic latches, and the polygon
-emblem latch. A log-once flag that does not skip the next call is not a disable and is not reported.
-
-Not reported yet (#1223): four feature latches that sit outside a patch class, in the custom attack blow
-binding, the action index repair, the Player Switcher session latch and the map view release.
+screen as vanilla does and the install is already logged), the map view release (`MapViewReleaseService.SwitchOff`:
+the map keeps its view as vanilla does, and the error is logged), the diagnostic latches, and the polygon
+emblem latch. The Player Switcher's other latches are not reported: a blocked handover is announced to the
+player by its handler, the picker panel's probe failure shows its own inquiry, and a Patch77 apply failure
+shows the game-init patch notice. A log-once flag that does not skip the next call is not a disable and is not reported.
 
 ## Key Files
 
@@ -135,6 +139,7 @@ binding, the action index repair, the Player Switcher session latch and the map 
   expects one ledger entry with the site's id.
 - `MarshalPatchTests`, `TaomBuildingUiHooksTests`, `Patch81SelfDisableTests` and `HiddenHostsFaultBudgetTests`
   (with `HiddenHostsBindMissSelfDisableTests`) cover the latches.
+- `TAOM.Tests/Core/Diagnostics/FeatureSelfDisableSiteTests.cs` covers the three feature latches of #1223.
 - `TAOM.Tests/Migration/TranspilerSiteBindingTests.cs` and the feature binding tests run the transpilers over
   the installed engine's IL: on a healthy v1.5.7 install no site reports.
 
@@ -168,3 +173,5 @@ exists, and `MapScreen` lowers the loading window a few frames after its scene i
 ## Changelog
 
 - #1185: the ledger, the drain and a report at every site in the table above.
+- #1223: three feature latches outside a patch class report too (custom attack blows, the action index repair,
+  the Player Switcher registration); the map view release is left out.

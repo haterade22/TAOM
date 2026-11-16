@@ -36,7 +36,7 @@ internal sealed class HeroArrowKills
             return;
         }
 
-        // CustomAttacksUtils.TakeDamage does nothing for a dead or fading attacker (CustomAttacksUtils.cs:170), so TryKill
+        // CustomAttacksUtils.TakeDamage does nothing for a dead or fading attacker (CustomAttacksUtils.cs:185), so TryKill
         // would write died=0 for a roll it won.
         var hero = e.Hero;
         if (!AgentSlotIdentity.IsCurrentOccupant(hero) || !hero.IsActive() || hero.IsFadingOut())

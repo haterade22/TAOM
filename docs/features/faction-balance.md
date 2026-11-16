@@ -157,9 +157,32 @@ called in by Rivendell; Blue Craig declared on Arthedain and Ered Luin), so its 
 both runs with Dunland's refusal and lived in the one run without it. Three campaigns cannot prove the cause, but the pattern fits
 Gondor having no Dunland front.
 
+## The fifth 150-day run
+
+Run `E:\Temp\scenario-runs\20261116-104744` (trunk `ab43768ce`, built 2026-11-16 16:47 UTC, with Blue Craig Hostile only to its
+neighbours) passed 150 of 150 days with a clean unload. Blue Craig started with four wars instead of ten: Rivendell, Arthedain and Ered
+Luin by its Hostile rows, and Lindon, which Arthedain called in. Dunland refused two calls to war against Gondor and stayed at peace
+with it.
+
+| Day 150 | Fourth run | Fifth run |
+|---|---|---|
+| Gondor towns/castles, strength | 10/15, 24,060 | 10/13, 24,910 |
+| Mordor towns/castles, strength | 7/10, 15,468 | 9/11, 16,883 |
+| Gondor to Mordor gap (day 1 gap) | 8,592 (8,646) | 8,027 (6,206) |
+| Rohan towns/castles | 5/3 | 3/1 |
+| Arthedain towns/castles | 2/6 | 0/5 |
+| Blue Craig capital lost, destroyed | day 53, day 122 | day 73, day 113 |
+
+The free share stayed within 0.4 to 0.6 on all 150 days (maximum deviation 0.033). Blue Craig still fell: it lost its capital 20 days
+later than in the fourth run and was destroyed 9 days earlier. Its four neighbours alone took it, so the six distant wars were not
+what decided its fate; Blue Craig sits on a closed land-navigation island and can reach no other realm (`WarTheaterAndReachTests`),
+so it cannot carry the war to anyone. Arthedain also lost its capital, on day 78, and ended with no town. Rohan fell from 7 towns and
+7 castles to 3 and 1.
+
 ## Still owed
 
-- Blue Craig: on the maintainer's decision (2026-11-16) its Hostile rows with the six distant free realms are removed, so Full War opens wars only with Arthedain, Ered Luin and Rivendell (and Lindon, which Rivendell can call in). A fifth run should show whether its capital holds past day 120 ([diplomacy.md](diplomacy.md), #1283).
+- Blue Craig fell in the fifth run too (capital day 73), with only its four neighbours at war with it. Fewer wars did not save it; the maintainer decides whether it needs a stronger defence or may fall (#1283).
+- Arthedain lost its capital on day 78 of the fifth run, and Rohan ended with 3 towns and 1 castle: watch both in the next run (#1283).
 - Gondor's survival row (0.3, shared with Arthedain) and its tier 7+ party template stacks: not changed, because the second run
   closed the gap. Revisit only if a later run shows the gap again.
 - A Codex review of 5101f151b and of these changes: the account's usage limit blocks Codex until 2026-11-20.
@@ -168,6 +191,7 @@ Gondor having no Dunland front.
 
 ## Changelog
 
+- 2026-11-16: Fifth 150-day run recorded; Blue Craig still falls with four wars (#1283).
 - 2026-11-16: Blue Craig keeps Hostile rows only with its Eriador neighbours (#1283).
 - 2026-11-16: Fourth 150-day run recorded; Blue Craig fell again (#1283).
 - 2026-11-15: First 150-day run recorded; Harad's clans raised to tier 5; allowed war declarations logged (#1283).

@@ -112,7 +112,7 @@ def load_plain_items(modules: Path) -> dict[str, ItemInfo]:
         data = module / "ModuleData"
         if not data.is_dir():
             continue
-        for path in sorted(data.rglob("*.xml")):
+        for path in mc.campaign_files(module, data.rglob("*.xml")):
             try:
                 root = LET.parse(str(path), LET.XMLParser(recover=True, huge_tree=True)).getroot()
             except (LET.XMLSyntaxError, OSError):
