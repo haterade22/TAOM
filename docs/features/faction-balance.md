@@ -233,7 +233,7 @@ and Arthedain. The Gondor to Mordor gap on day 300 was 12,693 to 18,786 in four 
 
 ## Still owed
 
-- Blue Craig still falls before the maintainer's target of about day 300 (2026-11-16): days 88 to 251 in five 300-day runs. Garrison growth and the siege defence bonus did not move it beyond chance; the runs point at Lindon's lords, who join through a call to war. The next lever is diplomacy, and it needs the maintainer's decision (#1283).
+- Blue Craig still falls before the maintainer's target of about day 300 (2026-11-16): days 88 to 251 in five 300-day runs. Garrison growth and the siege defence bonus did not move it beyond chance; the runs point at Lindon's lords, who join through a call to war. The next lever was diplomacy; the maintainer chose to keep the current values and end the tuning (2026-11-16, #1283).
 - Gondor lost its capital on day 15 in one 300-day run. Watch it in the next runs (#1283).
 - The Gondor to Mordor gap widened to 14,362 in the sixth run (8,027 in the fifth), and was 12,693 to 18,786 on day 300 in four of five 300-day runs. Watch it before any change (#1283).
 - Gondor's survival row (0.3, shared with Arthedain) and its tier 7+ party template stacks: not changed, because the second run
@@ -244,6 +244,7 @@ and Arthedain. The Gondor to Mordor gap on day 300 was 12,693 to 18,786 in four 
 
 ## Changelog
 
+- 2026-11-16: Blue Craig tuning ends: the maintainer keeps growth 2 and defence 0.1, and Blue Craig may fall before day 300 (#1283).
 - 2026-11-16: Five 300-day runs recorded; Blue Craig falls on day 88 to 251, and garrison growth and the siege defence bonus do not change that (#1283).
 - 2026-11-16: Blue Craig's garrisons cost no wages or food, take no starvation wounds, and grow by 2 free troops a day (#1283).
 - 2026-11-16: Sixth 150-day run recorded; Blue Craig, with its siege defence bonus, lasts to day 140 but loses its capital on day 54 (#1283).
