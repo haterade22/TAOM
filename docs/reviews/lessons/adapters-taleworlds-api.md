@@ -2045,6 +2045,13 @@ PR #1304's doc said god mode stays on while the player walks the field after the
 
 **Source:** `docs/reviews/rca-coop-guest-trade-2026-11-15.md` (Class 1)
 
+### A per-agent visual set at OnAgentBuild must also run after vanilla's in-place skin rebuilds (orc battle voice, 2026-11-16)
+
+**Why missed:** the orc voice was set in `OnAgentBuild`, after `BuildAgent` had built the skin. `BannerBearerLogic.UpdateAgent` calls `Agent.UpdateSpawnEquipmentAndRefreshVisuals`, which runs `ClearVisualComponents`, `EquipItemsFromSpawnEquipment` and `AddSkinMeshes` again with no new `OnAgentBuild`, and TAOM's banner bearer feature triggers it in nearly every field battle. The native re-pick of the skin voice undoes the orc voice.
+
+**Prevent:** before setting a per-agent visual in `OnAgentBuild`, grep the decompile for the other callers of `AddSkinMeshes` and `UpdateSpawnEquipmentAndRefreshVisuals` and hook the call they all share: implement `IMissionListener` and apply in `OnEquipItemsFromSpawnEquipment`, which `Agent.EquipItemsFromSpawnEquipment` raises after `AddSkinMeshes` (`Mission.AddListener` in `AfterStart`, not `OnBehaviorInitialize` (#606), and `RemoveListener` at the mission end). Keep the `OnAgentBuild` override, since the listener fires before `InitializeAgentRecord`. Make the set idempotent (return when the agent already shows the value) so the repeat call is free.
+
+**Source:** `docs/reviews/rca-orc-battle-voice-2026-11-16.md` (finding 1)
 ### A missile index names a missile only until its removal; the next missile gets it at once (#1361, 2026-11-16)
 
 **Why missed:** hits carry `AttackCollisionData.AffectorWeaponSlotOrMissileIndex`, and the ranged kit paired a shield hit with a later body hit, told extra arrows from his own and counted contacts by that index, each memory ended by a time window. Native pops a new missile's index from the back of the free list that a removal pushes to (decompiled 2026-11-16: `IMBMission_AddMissileSingleUsage` and `IMBMission_RemoveMissile`), so the very next missile in the mission takes a freed index. The builders knew of the reuse and guessed it was slow.

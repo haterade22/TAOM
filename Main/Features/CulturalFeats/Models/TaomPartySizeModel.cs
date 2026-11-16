@@ -26,6 +26,10 @@ public class TaomPartySizeModel : DefaultPartySizeLimitModel
     private readonly IEyeOfSauronHook _eyeOfSauron;
     private readonly ICastlePatrolSizeHook _castlePatrolSize;
     private readonly IPatrolRosterHook _patrolRoster;
+    private readonly CheatMenu.ICheatPartyRules _cheatParty;
+    // The tooltip line of the cheat menu's "Unlimited party" bonus.
+    private static readonly TaleWorlds.Localization.TextObject UnlimitedPartyBonusText =
+        new("{=taom_cheat_unlimited_party_bonus}Unlimited party (cheat)");
     // Built once: a lambda over the method parameter would allocate a closure and a Func on every call, every party.
     private readonly System.Func<object?, float> _weightedCountOf;
 
@@ -46,6 +50,7 @@ public class TaomPartySizeModel : DefaultPartySizeLimitModel
         // Resolved once here, not as a constructor parameter: that would need an edit to SubModule.cs, where this model is built.
         _castlePatrolSize = IoC.Resolve<ICastlePatrolSizeHook>();
         _patrolRoster = IoC.Resolve<IPatrolRosterHook>();
+        _cheatParty = IoC.Resolve<CheatMenu.ICheatPartyRules>();
         _weightedCountOf = p => _troopWeight.CalculateWeightedMemberCount((PartyBase)p!);
     }
 
@@ -93,6 +98,14 @@ public class TaomPartySizeModel : DefaultPartySizeLimitModel
         AiPartySizeService.AddResultFrameBonus(ref result, _eyeOfSauron.GetHostSizeBonus(
             party.MobileParty?.StringId, result.ResultNumber, result.SumOfFactors,
             party.MemberRoster?.TotalManCount ?? 0, party, _weightedCountOf));
+        // Cheat menu "Unlimited party" (CheatPartyRules): a +10,000 flat bonus for the main party only, while the switch is on.
+        // Before the TroopWeight penalty, like every flat bonus: the penalty saves the limit it reads as the "true base" that
+        // the party-screen header shows, so the header and the tooltip agree. The penalty only subtracts the weight surplus,
+        // so the enforced limit is the same either way.
+        // The switch is read first, then MobileParty.IsMainParty: PartyBase.MainParty dereferences Campaign.Current.MainParty,
+        // which vanilla nulls for a moment in OnPlayerCharacterChanged.
+        AiPartySizeService.AddResultFrameBonus(ref result,
+            _cheatParty.SizeBonusFor(_cheatParty.UnlimitedParty && party.MobileParty?.IsMainParty == true), UnlimitedPartyBonusText);
         // TroopWeight "elite tax" (2026-07-11 rework): shrink the limit by the party's weight surplus so
         // heavy troops fill the cap at 2× while every COUNT reads raw. No-op when EnableTroopWeight is off.
         // Call position is irrelevant to the arithmetic — ExplainedNumber sums factors and applies them to

@@ -84,7 +84,8 @@ public class CheatMenuPolicyTests
         var coop = Substitute.For<ICoopSessionProvider>();
         coop.IsAuthority.Returns(true);
         var service = new CheatMenuService(Substitute.For<ICheatWorldAdapter>(), Substitute.For<ISpecialResourceService>(), coop,
-            Substitute.For<IDedicatedServerProvider>(), Substitute.For<IModLogger>());
+            Substitute.For<IDedicatedServerProvider>(), Substitute.For<IModLogger>(), new CheatPartyRules(),
+            Substitute.For<IPartySizeCacheInvalidator>());
         var host = Substitute.For<ICheatMenuHostAdapter>();
         host.IsMapClearForMenu.Returns(true);
         return (new CheatMenuOpener(settings, service, host), settings, coop, host);

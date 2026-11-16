@@ -125,9 +125,10 @@ public class CheatMenuHotKeyTests
         GameAssemblies.EnsureLoaded();
         var adapter = Substitute.For<ICheatMenuMapViewAdapter>();
         var service = new CheatMenuService(Substitute.For<ICheatWorldAdapter>(), Substitute.For<ISpecialResourceService>(),
-            Substitute.For<ICoopSessionProvider>(), Substitute.For<IDedicatedServerProvider>(), Substitute.For<IModLogger>());
+            Substitute.For<ICoopSessionProvider>(), Substitute.For<IDedicatedServerProvider>(), Substitute.For<IModLogger>(), new CheatPartyRules(),
+            Substitute.For<IPartySizeCacheInvalidator>());
         var behavior = new CheatMenuCampaignBehavior(service, Substitute.For<ICheatMenuSettingsProvider>(),
-            Substitute.For<ICheatWorldAdapter>(), adapter);
+            Substitute.For<ICheatWorldAdapter>(), adapter, new CheatPartyRules());
 
         behavior.OnTick(0f);
 

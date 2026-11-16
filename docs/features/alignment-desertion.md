@@ -70,6 +70,10 @@ The behavior gates the party path to `IsLordParty || IsMainParty` (lord field pa
 + the player's main party). Caravans, villagers, militia, bandits, and garrison parties are excluded from
 the party path; garrisons desert via the settlement tick under their own MCM gate.
 
+The main party is exempt while the cheat menu's "Unlimited party" switch is on: `OnDailyTickParty` reads
+`IAlignmentDesertionService.KeepsMainPartyTroops` before it tests for the main party, and `DesertionRecruitGuard` stops
+blocking opposed troops for it. Other player-clan parties and garrisons keep the rule ([cheat-menu.md](cheat-menu.md)).
+
 ### Component Diagram
 
 ```
