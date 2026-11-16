@@ -2002,7 +2002,6 @@
   "TAOM_LD_Offer_Yeomen": "Yeomen do Estfold",
   "TAOM_LD_Prompt_Cancel": "Cancelar",
   "TAOM_LD_Prompt_ChoiceBest": "{NAME}, melhor jornada: ondas vencidas {WAVES}, mortes {KILLS}",
-  "TAOM_LD_Prompt_ChoiceClass": "{NAME}: {TEXT}",
   "TAOM_LD_Prompt_Choose": "Escolher",
   "TAOM_LD_Prompt_ClassDesc": "Sua classe define as armas que você leva para a luta. A cavalaria também define sua armadura e o coloca sobre um cavalo; as demais classes deixam sua armadura como está.",
   "TAOM_LD_Prompt_ClassTitle": "Escolha sua classe",

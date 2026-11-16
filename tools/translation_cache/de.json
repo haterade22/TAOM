@@ -1941,7 +1941,6 @@
   "TAOM_LD_Offer_Yeomen": "Freibauern der Ostmark",
   "TAOM_LD_Prompt_Cancel": "Abbrechen",
   "TAOM_LD_Prompt_ChoiceBest": "{NAME}, bester Lauf: bezwungene Wellen {WAVES}, Tötungen {KILLS}",
-  "TAOM_LD_Prompt_ChoiceClass": "{NAME}: {TEXT}",
   "TAOM_LD_Prompt_Choose": "Wählen",
   "TAOM_LD_Prompt_ClassDesc": "Deine Klasse bestimmt die Waffen, die du in den Kampf trägst. Die Reiterei bestimmt zudem deine Rüstung und setzt dich auf ein Pferd; die anderen Klassen lassen deine Rüstung, wie sie ist.",
   "TAOM_LD_Prompt_ClassTitle": "Wähle deine Klasse",

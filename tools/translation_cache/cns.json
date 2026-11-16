@@ -1915,7 +1915,6 @@
   "TAOM_LD_Offer_Yeomen": "东伏尔德自耕农兵",
   "TAOM_LD_Prompt_Cancel": "取消",
   "TAOM_LD_Prompt_ChoiceBest": "{NAME}，最佳战绩：清除波次 {WAVES}，击杀 {KILLS}",
-  "TAOM_LD_Prompt_ChoiceClass": "{NAME}：{TEXT}",
   "TAOM_LD_Prompt_Choose": "选择",
   "TAOM_LD_Prompt_ClassDesc": "你的兵种决定你带入战斗的武器。骑兵还会决定你的护甲并让你骑上战马；其他兵种则保留你原有的护甲。",
   "TAOM_LD_Prompt_ClassTitle": "选择你的兵种",
