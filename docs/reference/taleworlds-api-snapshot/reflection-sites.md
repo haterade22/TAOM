@@ -18,7 +18,9 @@ dotnet test TAOM.Tests/TAOM.Tests.csproj -p:DisableModuleCopy=true -p:ModuleId= 
 
 Every `[HarmonyPatch(...)]` target — including patches whose target is resolved by a `TargetMethod()` / `TargetMethods()` body (e.g. SettlementGuards' manual patches, the `MapConversationTableau` / `CultureStageView` `TypeByName` lookups) — is **auto-discovered and resolved** by `TAOM.Tests/Migration/HarmonyPatchBindingTests.cs`. That suite enumerates all 110 `[HarmonyPatch]` / `TargetMethod`-bearing types in `TAOM.dll` and resolves each target exactly as Harmony does at `PatchAll` time. No manual catalogue is needed for them; do not duplicate them below.
 
-The one hand-attached exception: `CrashReport/Hooks/Native2ManagedTargets.cs` names the `ManagedCallbacks.*CallbacksGenerated` shims in `Native2ManagedTargets.All` by string (assembly, type and method) for `Native2ManagedPatcher` to `harmony.Patch`. They are engine members an update can rename, and they are gated by `TAOM.Tests/Features/CrashReport/Native2ManagedTargetsTests.cs` (`BindingVerification`), not by the suite above or by a Category B `[DataRow]`.
+The first hand-attached exception: `CrashReport/Hooks/Native2ManagedTargets.cs` names the `ManagedCallbacks.*CallbacksGenerated` shims in `Native2ManagedTargets.All` by string (assembly, type and method) for `Native2ManagedPatcher` to `harmony.Patch`. They are engine members an update can rename, and they are gated by `TAOM.Tests/Features/CrashReport/Native2ManagedTargetsTests.cs` (`BindingVerification`), not by the suite above or by a Category B `[DataRow]`.
+
+The other hand-attached patches: `Realms/Hooks/HouseBanners.cs` looks up six of its targets by name (`TypeByName` and a method or constructor). The suite above cannot see them, so they are Category B `[DataRow]`s below (#1320).
 
 > First run of that gate (2026-05-28) caught a real defect: `HeroViewModel_FillFrom_Patch` was name-only on an overloaded method (`HeroViewModel` inherits two more `FillFrom` overloads from `CharacterViewModel`), so Harmony's `AccessTools.Method` threw `AmbiguousMatchException` at patch time — the postfix never applied in v1.4.5. Fixed by pinning the argument types.
 
@@ -28,7 +30,7 @@ A third-party site gated the same way: `Adapters/ButterLibDistanceMatrixAdapter.
 
 ## Category B — Auxiliary static-engine reflection (GATED)
 
-Reflection against engine members performed *outside* a patch's target resolution: private state read from patch bodies, adapters, and services. The target type is known statically (`typeof(EngineType)` or a literal `TypeByName("...")`), so the lookup is verifiable offline. **Each row below is a test `[DataRow]`.**
+Reflection against engine members performed *outside* a patch's target resolution: private state read from patch bodies, adapters, and services. The target type is known statically (`typeof(EngineType)` or a literal `TypeByName("...")`), so the lookup is verifiable offline. **Each row below is a test `[DataRow]`.** A constructor row names its parameter types' simple names, comma-separated, in the Member column.
 
 | Engine type | Member | Kind | Source site | What it drives |
 |---|---|---|---|---|
@@ -87,6 +89,12 @@ Reflection against engine members performed *outside* a patch's target resolutio
 | `…Party.PartyScreenLogic+PartyCommand` | `TotalNumber` | member | `PartyScreenLogic_AddCommand_Patch.cs:72` | SpecialResources transactional spend |
 | `TaleWorlds.CampaignSystem.Encyclopedia.EncyclopediaPage` | `_identifierTypes` | field (private) | `TitleEncyclopediaPagePatch.cs:28` | Realms encyclopedia Titles page (#1298): the constructor prefix writes `RealmsTitle` here, because the base constructor reads the target types only from the internal `EncyclopediaModel` attribute. Missing: a log line, no patch is applied and the encyclopedia has no Titles page |
 | `TaleWorlds.CampaignSystem.Encyclopedia.EncyclopediaManager` | `_pages` | field (private) | `TitleEncyclopediaPagePatch.cs:29` | Realms encyclopedia Titles page (#1298): the `CreateEncyclopediaPages` postfix adds the page to this dictionary. Missing: a log line, no patch is applied and the encyclopedia has no Titles page |
+| `SandBox.View.Map.Visuals.MobilePartyVisual` | `RefreshPartyIcon` | method (private) | `HouseBanners.cs:71` | Realms house banners (#1320): a scope around it shows the house banner on a party at a town. Missing: the target is skipped with a log line and that surface shows the realm banner for a ruling house |
+| `SandBox.View.Map.Visuals.MobilePartyVisual` | `AddTentEntityForParty` | method | `HouseBanners.cs:73` | Realms house banners (#1320): the siege camp banner. Missing: the target is skipped with a log line and that surface shows the realm banner for a ruling house |
+| `SandBox.ViewModelCollection.Nameplate.SettlementNameplatePartyMarkerItemVM` | `MobileParty` | constructor | `HouseBanners.cs:76` | Realms house banners (#1320): the settlement party marker. Missing: the target is skipped with a log line and that surface shows the realm banner for a ruling house |
+| `TaleWorlds.CampaignSystem.ViewModelCollection.Encyclopedia.Pages.EncyclopediaClanPageVM` | `Refresh` | method | `HouseBanners.cs:81` | Realms house banners (#1320): the encyclopedia clan page. Missing: the target is skipped with a log line and that surface shows the realm banner for a ruling house |
+| `TaleWorlds.CampaignSystem.ViewModelCollection.Encyclopedia.Items.EncyclopediaFactionVM` | `IFaction` | constructor | `HouseBanners.cs:83` | Realms house banners (#1320): the encyclopedia faction card. Missing: the target is skipped with a log line and that surface shows the realm banner for a ruling house |
+| `SandBox.GauntletUI.BannerEditor.GauntletBannerEditorScreen` | `BannerEditorState` | constructor | `HouseBanners.cs:87` | Realms house banners (#1320): the banner editor edits the house banner. Missing: the target is skipped with a log line and that surface shows the realm banner for a ruling house |
 | `…ViewModelCollection.Encyclopedia.Items.EncyclopediaUnitVM` | `_character` | field (private) | `EncyclopediaUnitBadgeMixin.cs:32` | SpecialResources encyclopedia troop badge (#590). The unit VM keeps the troop only here, so the badge reads its `StringId` once at construction; a null read hides the badge |
 | `…Map.DistanceCache.NavigationCache`1` | `_settlementToSettlementDistanceWithLandRatio` | field | `NavigationCacheAdapter.cs:71` | Distance cache rebuild |
 | `…NavigationCache`1` | `_fortificationNeighbors` | field | `NavigationCacheAdapter.cs:73` | Neighbor cache |
