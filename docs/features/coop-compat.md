@@ -166,6 +166,14 @@ settings of its own.
   wire contract round trip (empty arrays come back empty, not null) and names, the transport binding to
   Coop, the manifest, the type scan gate (`TypeScanGateTests`), the reference gate over both DLLs, the
   service signature and entry point line count gates.
+- `CoopModelPatchBaseCallGateTests` (#1151): Coop fixes vanilla rules with Harmony patches on
+  `Default*Model` methods, and a TAOM override that never calls `base` hides them (#1141). The gate
+  reads the Coop patches that the referenced Coop build declares by attribute (a target on the patch
+  method, on the class, or from `TargetMethod` and `TargetMethods`), and fails on a TAOM override of
+  a patched `Default*Model` method with no base call, unless its `Reviewed` entry says where TAOM
+  carries Coop's rule. One known target per way of declaring one is a canary. An override that calls
+  `base` on some paths passes. Patches registered at run time (`harmony.Patch`, AutoSync) are outside
+  its reach, and a base call does not prove that TAOM's own rule around it treats co-op players right.
 - `TAOM.Tests/Features/WarOfTheRingMomentum/MomentumStateStoreTests.cs`: `CaptureWarState` and
   `ApplyWarState`.
 - `TAOM.Tests/Features/CoopInterop/GuestTrade/`: the client (busy, the late reply, the balance copy

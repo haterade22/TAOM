@@ -59,6 +59,11 @@
 			<HintPath>%(Identity)</HintPath>
 			<Private>True</Private>
 		</Reference>
+		<!-- Module DLLs (TaleWorlds.MountAndBlade.View and others) stay in the game: tests that read Coop's attributes resolve them from here. -->
+		<AssemblyAttribute Include="System.Reflection.AssemblyMetadataAttribute">
+			<_Parameter1>TaomGameFolder</_Parameter1>
+			<_Parameter2>$(GameFolder)</_Parameter2>
+		</AssemblyAttribute>
 	</ItemGroup>
 
 	<Target Name="TaomCoopCompatTestsTaskExtensions" AfterTargets="Build" Condition="'$(TaomCoopCompatEnabled)' == 'true'">
