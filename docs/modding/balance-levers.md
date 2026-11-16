@@ -81,11 +81,11 @@ A separate, level-driven term is easy to mistake for a skill effect. `BasicChara
 
 **In a simulated map battle**, skills do nothing at all. The per-soldier number is tier and mount, and what sits above it is the party leader's captain perks and a terrain modifier. No part of that chain reads a skill, which is why the project's main skill tool has never touched an axis auto-resolve can see ([auto-resolve-diagnostics.md, "Why this exists"](../features/auto-resolve-diagnostics.md#why-this-exists)).
 
-**Where the target numbers live.** `tools/rebalance_troops.py` holds the whole curve: `GROUP_BASELINES` at line 148 (four tables, Infantry / Ranged / Cavalry / HorseArcher, keyed by the eleven grid levels) and `CULTURAL_MODS` at line 159 (21 culture keys). <!-- measured: python -c "import re;s=open('tools/rebalance_troops.py',encoding='utf-8').read();a=open('tools/rebalance_armor.py',encoding='utf-8').read();print(len(re.findall(r\"^    '[a-z_]+':\",re.search(r'^CULTURAL_MODS = \{(.*?)^\}',s,re.S|re.M).group(1),re.M)),len(re.findall(r\"^    '[a-z_]+':\",re.search(r'^CULTURAL_MODS = \{(.*?)^\}',a,re.S|re.M).group(1),re.M)))" 2026-09-05 --> No doc prints the baseline tables; open the file. The per-culture deltas are printed in [troop-skill-balance.md:68-95](../features/troop-skill-balance.md). A missing `CULTURAL_MODS` key does not error, it silently rebaselines that whole faction to the bare curve, which is how a Lindon apply nearly stripped 30 troops in one run.
+**Where the target numbers live.** `tools/rebalance_troops.py` holds the whole curve (#343): `TIER_CURVE` (N, the main weapon's number at each engine tier, 20 to 260), the role table in `calculate_skills` (the main weapon N, a carried sidearm 0.9 N, an uncarried melee class 0.5 N, and so on) and `CULTURE_PCT` (each culture's percent of N on each skill). [troop-skill-balance.md](../features/troop-skill-balance.md#the-role-table-343) prints all three. A culture with no row stops `--apply` (`MissingCultureRow`); before #343 a missing key silently put that whole faction on the bare curve, which is how a Lindon apply nearly stripped 30 troops in one run.
 
-After the baseline and the culture delta, two more passes run: a weapon specialisation shift of `swap_amount = 15` (`tools/rebalance_troops.py:358`) triggered by keywords in the troop's name, and a roster-wide monotonicity clamp that raises a child's skill to its parent's over the whole upgrade graph.
+After the role table, two passes run over the whole roster: the purpose order (`tools/troop_purpose.py`: the kit's main weapon holds the troop's top weapon skill) and the monotonicity clamp that raises a child's skill to its parent's over the upgrade graph. No pass reads the troop's name.
 
-**A ranged troop's Bow or Crossbow is not on this curve.** Since #617 `rebalance_troops.ladder_cells` replaces it, for every troop carrying a ladder bow in a battle set at a tier its line lists, with the ranged ladder's cell (`tools/ranged_ladders.json`, `ranged_ladder.skill_cell`): a per-tier anchor shifted by the kingdom's rank, militia included. The same cell is what `tools/rebalance_ranged_ladders.py --apply` writes, so the two tools agree.
+**A ranged troop's Bow or Crossbow is its ladder cell.** Since #617 `rebalance_troops.ladder_cells` replaces the role table's value, for every troop carrying a ladder bow in a battle set at a tier its line lists, with the ranged ladder's cell (`tools/ranged_ladders.json`, `ranged_ladder.skill_cell`): a per-tier anchor shifted by the kingdom's rank, militia included. The same cell is what `tools/rebalance_ranged_ladders.py --apply` writes, so the two tools agree.
 
 **Ranged damage and accuracy are item data, not skill.** A hit is `(v_hit / v_launch)^2 x (bow thrust_damage + ammo thrust_damage) x (1 + 0.0011 x Bow)`, crossbows without the skill factor, then the Pierce armour formula (`SandboxStrikeMagnitudeModel.CalculateStrikeMagnitudeForMissile`, `ComputeRawDamage`); the spread is `(100 - accuracy) x (1 - 0.0009 x Bow) x 0.001`, crossbows `0.0005 x Crossbow` (`GetWeaponInaccuracy`). So the lever for "archers hit too hard" or "never miss" is the launcher's `thrust_damage` and `accuracy`: the troops' `ladder_*` items from the ladder spec, the Armory's own bows and ammo from its `donor_stats` / `ammo_stats` (`tools/restat_ranged_donors.py`). TAOM's registered `TaomAgentStatCalculateModel` and `TaomCombatMechanicsModel` leave every formula in that chain to the Sandbox base; they add hero career passives on the final damage (ranged hits included), the refuge defender reduction and the Culture Doctrine AI-error pass (off), so a troop-versus-troop arrow is pure engine outside a career hero's battle (there the leader's `TroopDamage` / `TroopResistance` passives scale their troops' hits, and the Infantry ability's ally buff adds damage and draw speed). In a campaign mission each troop slot also rolls a random `ItemModifier` (vanilla's bow group spans -15 to +7 damage, the crossbow group -10 to +4), so compare base values; a Custom Battle rolls none. Inside a kingdom a crossbow out-hits and out-aims every bow at the same tier (#617). [ranged-ladders.md](../features/ranged-ladders.md).
 
@@ -164,13 +164,13 @@ There is a second, older curve. `tools/generate_gondor_armor.py` carries `STAT_T
       <face_key_template value="BodyProperty.fighter_gondor" />
     </face>
     <skills>
-      <skill id="Athletics" value="100" />
-      <skill id="Riding" value="20" />
-      <skill id="OneHanded" value="120" />
-      <skill id="TwoHanded" value="115" />
-      <skill id="Polearm" value="150" />
-      <skill id="Bow" value="15" />
-      <skill id="Crossbow" value="10" />
+      <skill id="Athletics" value="105" />
+      <skill id="Riding" value="40" />
+      <skill id="OneHanded" value="50" />
+      <skill id="TwoHanded" value="50" />
+      <skill id="Polearm" value="105" />
+      <skill id="Bow" value="40" />
+      <skill id="Crossbow" value="40" />
       <skill id="Throwing" value="40" />
     </skills>
     <upgrade_targets>
@@ -223,7 +223,7 @@ There is a second, older curve. `tools/generate_gondor_armor.py` carries `STAT_T
 2. **Tier 4** gives a wage of 8 denars per day. No Horse slot, so no 1.3 multiplier; `occupation="Soldier"` is not a mercenary occupation, so no 1.5.
 3. **Level 21** falls in the `<= 21` recruitment band, so 400 denars.
 4. **Tier 4, and `default_group="Infantry"` so not mounted**, gives auto-resolve power `(2+4) * (10+4) * 0.02 = 1.68`. <!-- measured: python -c "print((2+4)*(10+4)*0.02, (2+5)*(10+5)*0.02*1.2)" 2026-09-05 --> Turning "Enable Custom Troop Power" off in MCM leaves that number where it is, because TAOM only replaces the curve above tier 6.
-5. **The skills reproduce the tool exactly.** Infantry baseline at level 21 is Athletics 95, OneHanded 125, TwoHanded 110, Polearm 130, Riding 15, Bow 15, Crossbow 10, Throwing 50 (`tools/rebalance_troops.py`, `INFANTRY_BASELINES`). Gondor's deltas are +5 / +5 / +10 / +5 / +5 and Throwing -10 ([troop-skill-balance.md:68-95](../features/troop-skill-balance.md)). The name contains "spear", so the specialisation pass shifts 15 from OneHanded into Polearm. That lands on 135 - 15 = 120 OneHanded and 135 + 15 = 150 Polearm, which is what the file says.
+5. **The skills reproduce the tool exactly.** Tier 4 gives N = 100 (`TIER_CURVE`). Every battle set opens with a spear and carries a shield and nothing else, so Polearm is the main weapon: 100 x 1.03 (Gondor's Polearm +3) = 103, rounded to 105. Athletics on foot is also 100 x 1.03, so 105. OneHanded and TwoHanded are melee classes it does not carry, 0.5 x 100 = 50; Riding on foot, Bow, Crossbow and Throwing are 0.4 x 100 = 40. `rebalance_troops.calculate_skills` returns exactly these eight, and the file says the same ([troop-skill-balance.md](../features/troop-skill-balance.md#the-role-table-343)). The troop's name plays no part.
 
 Its upgrade target `gondor_pg_cavalry` is level 26 on `default_group="Cavalry"`: tier 5, wage `12 * 1.3 = 15`, power `(2+5) * (10+5) * 0.02 * 1.2 = 2.52`. One rung up the tree is worth 50 percent more auto-resolve power and 87 percent more wage, and the group attribute buys both. It fills `slot="Horse"` as well, which is what vanilla's terrain modifier reads, but neither the wage nor the power multiplier looks there.
 
@@ -276,7 +276,7 @@ A seventh call, `ApplyCastlePatrolSize` (`TaomPartySizeModel.cs:59`), runs first
 
 The 12 cultures at contributor 1 are Mordor, Gundabad, Goblin, Blue Craig, Misty Mountain Orcs, Dol Guldur, Isengard, Gondor, Dunland, Rhun, Harad and Khand (`Main/Features/CulturalFeats/CulturalFeatsService.cs:247-274`). Their magnitudes are C#, not XML: `taom_spcultures.xml` only binds the feat id, and the number is the third argument to `FeatObject.Initialize` (Mordor's party size feat is `0.05f` at `Main/Features/CulturalFeats/TaomCulturalFeats.cs:913-916`). Changing a feat's strength is a code change.
 
-Contributor 6 is the elite tax. `ComputeSizePenalty` subtracts `weightedCount - rawCount`, clamped at 0 below and at `baseLimit - 1` above (`Main/Features/TroopWeight/TroopWeightService.cs:204-219`). Weights come from `Main/_Module/ModuleData/TroopWeights/troop_weights.xml`, which holds **133 live `<TroopWeight>` rows: 59 at weight 2.0, 66 at 3.0, six at 4.0, one at 12.0 and one at 20.0** (since #585, 2026-09-13, every listed troop at level 41 or above pays 3.0; the spider rows at 4.0, the elephant at 12.0 and the Mumakil at 20.0 are mount packages that price the creature plus its crew, per the file's header comment, and `hill_troll` at 4.0 is a monster unit). A raw grep for `<TroopWeight ` returns 134 because one `cave_troll` row sits inside a comment block. <!-- measured: python -c "import xml.etree.ElementTree as ET,collections;r=ET.parse('Main/_Module/ModuleData/TroopWeights/troop_weights.xml').getroot();w=[x.get('weight') for x in r.findall('.//TroopWeight')];print(len(w),sorted(collections.Counter(w).items()))" re-measured 2026-11-03 --> [`troop-weight-system.md`](../features/troop-weight-system.md) now carries the same measured breakdown (corrected 2026-09-06); [`gamemodels-services.md:440`](../reviews/lessons/gamemodels-services.md) holds a 2026-08-14 count of "87 live weighted ids, 75 at 2.0" and remains stale. An unlisted troop weighs 1.0, stated in the file's own header comment on line 3, and there is no other default anywhere.
+Contributor 6 is the elite tax. `ComputeSizePenalty` subtracts `weightedCount - rawCount`, clamped at 0 below and at `baseLimit - 1` above (`Main/Features/TroopWeight/TroopWeightService.cs:204-219`). Weights come from `Main/_Module/ModuleData/TroopWeights/troop_weights.xml`, which holds **218 live `<TroopWeight>` rows: 131 at weight 2.0, 79 at 3.0, six at 4.0, one at 12.0 and one at 20.0** (since #585, 2026-09-13, every listed troop at level 41 or above pays 3.0; the spider rows at 4.0, the elephant at 12.0 and the Mumakil at 20.0 are mount packages that price the creature plus its crew, per the file's header comment, and `hill_troll` at 4.0 is a monster unit). A raw grep for `<TroopWeight ` returns 219 because one `cave_troll` row sits inside a comment block. <!-- measured: python -c "import xml.etree.ElementTree as ET,collections;r=ET.parse('Main/_Module/ModuleData/TroopWeights/troop_weights.xml').getroot();w=[x.get('weight') for x in r.findall('.//TroopWeight')];print(len(w),sorted(collections.Counter(w).items()))" re-measured 2026-11-15 --> [`troop-weight-system.md`](../features/troop-weight-system.md) now carries the same measured breakdown (corrected 2026-09-06); [`gamemodels-services.md:440`](../reviews/lessons/gamemodels-services.md) holds a 2026-08-14 count of "87 live weighted ids, 75 at 2.0" and remains stale. An unlisted troop weighs 1.0, stated in the file's own header comment on line 3, and there is no other default anywhere.
 
 The five spider rows at 4.0, the elephant at 12.0 and the Mumakil at 20.0 are the mount packages: the file's header comment says they price the creature plus its crew rather than the rider's tier. `hill_troll` at 4.0 sits under its own monster-unit comment. Nothing records what these numbers were sized against.
 
@@ -328,7 +328,7 @@ One number readers expect on that list is missing on purpose. **Auto-resolve tro
 1. Open the troop's file under `Main/_Module/ModuleData/troops/troops_<culture>.xml` and find the `<skills>` block.
 2. Change the `value=` numbers you want. Keep the eight-skill shape the rest of the file uses.
 3. Check the upgrade edges: if this troop has a parent, the parent must not out-skill it. The monotonicity gate is checked by the validator, not by the game.
-4. If the change is meant to survive the next curve pass, put it in `SKIP_TROOP_IDS` in `tools/rebalance_troops.py` or the next `--apply` will overwrite it.
+4. If the change is meant to survive the next curve pass, put it in `SKIP_TROOP_IDS` in `tools/rebalance_troops.py` or the next `--apply` will overwrite it, and `test_the_shipped_skills_are_a_fixed_point_of_the_writer` fails until then.
 
 Check: `python tools/validate_moduledata.py`
 Takes effect: full game restart
@@ -337,10 +337,10 @@ Code: No code changes needed
 ### Retune a whole culture's troop skills
 
 1. Read the current state first: `python tools/analyze_troop_balance.py --stdout`, then open `tools/reports/troop-balance/REPORT.html`.
-2. Edit `CULTURAL_MODS['<culture>']` at `tools/rebalance_troops.py:159` for identity, or `GROUP_BASELINES` at line 148 for the whole power curve.
+2. Edit `CULTURE_PCT['<culture>']` in `tools/rebalance_troops.py` for identity (keep the order `CultureTableTests` pins: Elves, then Dwarves, then Men, the orcs under Men), or `TIER_CURVE` for the whole power curve (then the ranged ladder's `stats.skill` too, `LadderSpecTests`). The feature doc's culture table must match (`test_the_feature_doc_prints_the_table_the_code_holds`).
 3. Preview: `python tools/rebalance_troops.py --dry-run`. Read the downward changes first; a big drop usually means the modifier is too weak, not that the troops were over-tuned.
 4. Apply: `python tools/rebalance_troops.py --apply`.
-5. Read `git diff --stat` **per file**, not just the total. A file that moved an order of magnitude more than expected is the tool doing something you did not ask for. That is how a missing `CULTURAL_MODS` key was caught mid-apply, at 478 lines against an expected 30 ([troop-skill-balance.md:229-239](../features/troop-skill-balance.md)).
+5. Read `git diff --stat` **per file**, not just the total. A file that moved an order of magnitude more than expected is the tool doing something you did not ask for. That is how a missing culture key was caught mid-apply, at 478 lines against an expected 30, before a missing row became an error ([troop-skill-balance.md](../features/troop-skill-balance.md), "How to review balance").
 
 Check: `python tools/validate_moduledata.py` and confirm no `UPGRADE_SKILL_REGRESSION` rows
 Takes effect: full game restart
@@ -377,7 +377,7 @@ Code: Code changes required in `Main/Features/TroopProgression/TroopCostService.
 - **An explicit `value=` on an item silences the whole price model.** `ItemObject.cs:477-484`. A hand-set `value="6000"` on a starter weapon is invisible to any armour or tier pass.
 - **A `modifier_group` the engine does not know resolves to null with no warning**, and the item then never rolls any modifier. Two shipped examples exist: `modifier_group="mail"` and `modifier_group="false"`. The legal set is the 20 group ids listed above.
 - **Party template prose in the docs is stale by a factor of 13.** Sum the file.
-- **Troop weight doc counts are stale.** 133 live rows, not 80, not 87 and not 105.
+- **Troop weight doc counts are stale.** 224 live rows (2026-11-15), not 80, not 87, not 105 and not 133.
 
 ### Questions this chapter cannot answer
 
@@ -393,7 +393,7 @@ Code: Code changes required in `Main/Features/TroopProgression/TroopCostService.
 |---|---|---|
 | 948 `[SettingProperty` lines (472 group, 470 value, 2 buttons, 4 commented out; 104 groups) | `grep -c "\[SettingProperty" Main/Features/TaomSettings.cs` and the value-attribute grep in the paragraph above | 2026-11-03 |
 | 1064 troop levels across 25 files; levels 1, 6, 7, 11, 16, 21, 26, 31, 36, 41, 46, 51 | `python -c "import glob,re,collections;c=collections.Counter();[c.update(int(m) for m in re.findall(r'level=\"(\d+)\"',open(f,encoding='utf-8-sig').read())) for f in glob.glob('Main/_Module/ModuleData/troops/troops_*.xml')];print(sum(c.values()),sorted(c))"` | 2026-11-03 |
-| 21 troop culture keys, 20 armour culture keys | `python -c "import re;s=open('tools/rebalance_troops.py',encoding='utf-8').read();a=open('tools/rebalance_armor.py',encoding='utf-8').read();print(len(re.findall(r\"^    '[a-z_]+':\",re.search(r'^CULTURAL_MODS = \{(.*?)^\}',s,re.S\|re.M).group(1),re.M)),len(re.findall(r\"^    '[a-z_]+':\",re.search(r'^CULTURAL_MODS = \{(.*?)^\}',a,re.S\|re.M).group(1),re.M)))"` | 2026-09-05 |
+| 31 troop culture rows, 20 armour culture keys | `python -c "import re,sys;sys.path.insert(0,'tools');import rebalance_troops as rb;a=open('tools/rebalance_armor.py',encoding='utf-8').read();print(len(rb.CULTURE_PCT),len(re.findall(r\"^    '[a-z_]+':\",re.search(r'^CULTURAL_MODS = \{(.*?)^\}',a,re.S\|re.M).group(1),re.M)))"` | 2026-11-15 |
 | Damage surviving magnitude 100 at armour 0 / 33 / 43 / 60 | `python -c "bf={'Blunt':0.6,'Cut':0.1,'Pierce':0.25}; sub={'Cut':0.5,'Pierce':0.33,'Blunt':0.2}; f=lambda t,ae:(lambda n2: bf[t]*n2+(1-bf[t])*max(0.0,n2-ae*sub[t]))(100*50.0/(50.0+ae)); print([(ae,{t:round(f(t,ae),1) for t in ('Cut','Pierce','Blunt')}) for ae in (0,33,43,60)])"` | 2026-09-05 |
 | 8883 denars, tier 3.9, 51.69 tier factor; 5582 at default appearance | `python -c "print(int(120*2.75**((33+10)*0.1-0.4)*(1+0.2*(3-1))+100*(3-1)), round(2.75**((33+10)*0.1-0.4),2))"` and the same with `0.5` for appearance | 2026-09-05 |
 | Power 1.68 on foot at tier 4, 2.52 mounted at tier 5 | `python -c "print((2+4)*(10+4)*0.02, (2+5)*(10+5)*0.02*1.2)"` | 2026-09-05 |
@@ -401,7 +401,7 @@ Code: Code changes required in `Main/Features/TroopProgression/TroopCostService.
 | 14.3 percent, the gap between `CharacterObject.GetPower` and the real auto-resolve number at tier 4 | `python -c "print(round(100*(1-((2+4)*(8+4)*0.02)/((2+4)*(10+4)*0.02)),1))"` | 2026-09-05 |
 | `battle_balance_config.json` rows T0 to T6 equal the vanilla formula | `python -c "import json;d=json.load(open('Main/_Module/ModuleData/configs/battle_balance_config.json'))['TroopPower']['TierPower'];print([(k,v,round((2+int(k[1:]))*(10+int(k[1:]))*0.02,2)) for k,v in d.items()])"` | 2026-09-05 |
 | 510 party templates; goblin 320, mordor 267, isengard 260, erebor 225, gondor 200, rivendell 150 | `python -c "import xml.etree.ElementTree as ET;r=ET.parse('Main/_Module/ModuleData/taom_partyTemplates.xml').getroot();t=r.findall('.//MBPartyTemplate');print(len(t))"` plus the per-template max sums | 2026-11-03 |
-| 133 live `<TroopWeight>` rows: 59 at 2.0, 66 at 3.0, 6 at 4.0, 1 at 12.0, 1 at 20.0 | `python -c "import xml.etree.ElementTree as ET,collections;r=ET.parse('Main/_Module/ModuleData/TroopWeights/troop_weights.xml').getroot();w=[x.get('weight') for x in r.findall('.//TroopWeight')];print(len(w),sorted(collections.Counter(w).items()))"` | 2026-11-03 |
+| 224 live `<TroopWeight>` rows: 137 at 2.0, 79 at 3.0, 6 at 4.0, 1 at 12.0, 1 at 20.0 | `python -c "import xml.etree.ElementTree as ET,collections;r=ET.parse('Main/_Module/ModuleData/TroopWeights/troop_weights.xml').getroot();w=[x.get('weight') for x in r.findall('.//TroopWeight')];print(len(w),sorted(collections.Counter(w).items()))"` | 2026-11-15 |
 | 20 item modifier groups | `grep -oE 'id="[^"]+"' Native/ModuleData/item_modifiers_groups.xml \| wc -l` | 2026-09-05 |
 | 3 validator schemas | `ls tools/schemas/ \| wc -l` | 2026-09-05 |
 | 9 keys in `settlement_food_config.json` | `grep -o '"[a-zA-Z]*"' Main/_Module/ModuleData/settlement_food/settlement_food_config.json \| sort -u \| wc -l` | 2026-09-06 |

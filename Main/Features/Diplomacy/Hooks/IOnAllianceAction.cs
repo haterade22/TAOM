@@ -5,6 +5,8 @@ public interface IOnAllianceAction
     bool ShouldPreventAllianceEnd(string kingdomAId, string kingdomBId);
     // causedByPlayer: the declaration is the player's own act, which lifts the phase vetoes.
     bool ShouldPreventWarDeclaration(string factionAId, string factionBId, bool causedByPlayer = false);
+    // A call to war: the war veto above, or a callToWarRefusals row for the called kingdom and the target.
+    bool ShouldPreventCallToWar(string calledKingdomId, string targetKingdomId);
     // The refusal text for a war between two kingdoms, or null when it is allowed or the co-op host
     // governs. Logs nothing: the engine asks it for every AI proposal.
     string GetWarRefusalText(string kingdomAId, string kingdomBId);

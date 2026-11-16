@@ -19,7 +19,16 @@ public static class CheatMenuTexts
         CheatOutcomeKind.NothingToDo => new TextObject("{=taom_cheat_nothing}Nothing changed: your hero has nothing this cheat can give to."),
         CheatOutcomeKind.TeleportRefused => Refusal(o.Refusal),
         CheatOutcomeKind.NoBattle => new TextObject("{=taom_cheat_battle_none}Start a battle first. Battle cheats work only while a battle is on."),
-        _ => new TextObject("{=taom_cheat_done}Done: {NAME} {NUMBER}")
+        _ => (o.Given switch
+        {
+            CheatGiven.Gold => new TextObject("{=taom_cheat_done_gold}Gold given. You now have {NUMBER} denars."),
+            CheatGiven.Influence => new TextObject("{=taom_cheat_done_influence}Gained {NUMBER} influence."),
+            CheatGiven.Renown => new TextObject("{=taom_cheat_done_renown}Gained {NUMBER} renown."),
+            CheatGiven.Heal => new TextObject("{=taom_cheat_done_heal}Your party is healed. Soldiers healed: {NUMBER}."),
+            CheatGiven.Relation => new TextObject("{=taom_cheat_done_relation}Lords of {NAME} whose relation changed: {NUMBER}."),
+            CheatGiven.Teleport => new TextObject("{=taom_cheat_done_teleport}You are at the gate of {NAME}."),
+            _ => new TextObject("{=taom_cheat_done}Done: {NAME} {NUMBER}"),
+        })
             .SetTextVariable("NAME", o.Name ?? string.Empty)
             .SetTextVariable("NUMBER", o.Number.ToString("#,0.##")),
     };

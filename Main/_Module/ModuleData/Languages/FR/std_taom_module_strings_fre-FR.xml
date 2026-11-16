@@ -8005,6 +8005,60 @@
     <string id="taom_battle_shader_notice_title" text="Preparing this scene: {COUNT} shaders compiled" />
     <string id="taom_battle_shader_notice_detail" text="The game is compiling shaders for this scene. It is not frozen. This can take a minute or two." />
     <string id="taom_battle_shader_loading_line" text="Compiling shaders for this scene. This can take a minute or two; the game is not frozen." />
+    <string id="taom_startup_alert_war_sails" text="War Sails is loaded, but TAOM does not support it. Close the game, untick War Sails in the launcher, and start again." />
+    <string id="taom_bundled_library_copies_body" text="TAOM.Dependencies already provides Harmony, ButterLib, UIExtenderEx and MCM, so these separate copies are not needed:{NEWLINE}{NEWLINE}{LIST}{NEWLINE}{NEWLINE}Unsubscribe from a Steam Workshop copy. A copy in the Modules folder took the place of TAOM's own small module with that name: reinstall TAOM to put it back, and do not delete the folder, or mods that need the library stop loading." />
+    <string id="taom_bundled_library_copy_workshop" text="{NAME} {VERSION}, Steam Workshop" />
+    <string id="taom_bundled_library_copy_modules" text="{NAME} {VERSION}, folder {FOLDER}" />
+    <string id="taom_cheat_done_gold" text="Gold given. You now have {NUMBER} denars." />
+    <string id="taom_cheat_done_influence" text="Gained {NUMBER} influence." />
+    <string id="taom_cheat_done_renown" text="Gained {NUMBER} renown." />
+    <string id="taom_cheat_done_heal" text="Your party is healed. Soldiers healed: {NUMBER}." />
+    <string id="taom_fcamp_block_disorganized" text="the party is still disorganized; wait a few hours." />
+    <string id="taom_fcamp_block_encounter" text="the party is in an encounter." />
+    <string id="taom_fcamp_block_menu" text="a menu or window is open; close it first." />
+    <string id="taom_fcamp_btn_blocked" text="Cannot camp now: {REASON}" />
+    <string id="TAOM_LD_Coop_NoCoop" text="Co-op needs the Coop mod loaded." />
+    <string id="TAOM_LD_Coop_BadPayload" text="The host's run could not be read. Install the same TAOM as the host." />
+    <string id="TAOM_LD_Coop_BadAddress" text="Enter the host's address as address:port, for example 192.168.1.20:4200." />
+    <string id="TAOM_LD_Coop_HostLeft" text="The host left, so the run ended." />
+    <string id="TAOM_LD_Coop_RunEnded" text="The run ended at wave {WAVE}. Waves cleared: {WAVES}. Kills: {KILLS}." />
+    <string id="TAOM_LD_Coop_MenuOption" text="The Long Defeat (co-op)" />
+    <string id="TAOM_LD_Coop_MenuHint" text="Hold a fortress with other players over the Coop mod. One player hosts; the others join by address." />
+    <string id="TAOM_LD_Coop_Prompt_Desc" text="Host a run for other players, or join a run another player hosts." />
+    <string id="TAOM_LD_Coop_Host" text="Host a run" />
+    <string id="TAOM_LD_Coop_Join" text="Join a run" />
+    <string id="TAOM_LD_Coop_JoinText" text="The host's address and port, for example 192.168.1.20:4200." />
+    <string id="taom_story_offer_attack" text="Storm the walls" />
+    <string id="taom_story_offer_body_both" text="The hour of {TARGET} has come. Will you ride there and choose your side of its walls, or let fate decide?" />
+    <string id="taom_story_offer_body_attack" text="The hour of {TARGET} has come. Will you march on its walls and lead the assault yourself, or let fate decide?" />
+    <string id="taom_story_offer_march" text="March on {TARGET}" />
+    <string id="taom_story_offer_repulsed" text="Your assault on {TARGET} is thrown back, and its walls hold." />
+    <string id="taom_story_offer_stormed" text="The walls of {TARGET} are stormed, and the fortress falls." />
+    <string id="taom_story_offer_menu_host" text="A host gathers before the walls of {TARGET}. Time stands until you choose." />
+    <string id="taom_guest_trade_not_leader" text="The host cannot trade for you while you do not lead a free party." />
+    <string id="taom_guest_trade_not_here" text="The host cannot trade for you here: your party is not in this settlement, or it is in a battle or a siege." />
+    <string id="taom_guest_trade_no_armoury" text="The host finds no armourer at work in this town." />
+    <string id="taom_guest_trade_failed" text="The host could not complete this. Try again." />
+    <string id="taom_guest_trade_busy" text="The host has not answered your last request yet." />
+    <string id="taom_guest_trade_no_link" text="The host cannot be reached." />
+    <string id="taom_guest_trade_no_answer" text="The host did not answer your last request. Try again." />
+    <string id="taom_cheat_pick_troop" text="Choose a troop: 10 of it join your party" />
+    <string id="taom_cheat_troop_row" text="Tier {TIER}: {NAME}" />
+    <string id="taom_cheat_troops_any" text="+10 of any troop of your faction..." />
+    <string id="taom_cheat_troops_screen" text="Every troop (party screen)..." />
+    <string id="taom_cheat_done_relation" text="Lords of {NAME} whose relation changed: {NUMBER}." />
+    <string id="taom_cheat_done_teleport" text="You are at the gate of {NAME}." />
+    <string id="taom_rf_warden_ranks" text="Your promoted warden returns to the ranks as {TROOP}." />
+    <string id="taom_hostile_peace_mcm_access" text="Enemy Realms Close Their Gates" />
+    <string id="taom_hostile_peace_mcm_access_hint" text="When enabled (default), the towns and castles of a sworn enemy realm treat you as they would in war, even while your realms are at peace: you enter a town only in disguise, a castle not at all, and you cannot trade, recruit or rest in its villages. Your own fiefs are not affected. When off, the base game's rules apply. Applies at once, no restart." />
+    <string id="taom_hostile_peace_mcm_agreements" text="No Trade Agreements With Enemy Realms" />
+    <string id="taom_hostile_peace_mcm_agreements_hint" text="When enabled (default), a Free realm and a realm of the Shadow never sign a trade agreement, neither by the AI nor by your own kingdom's vote. An agreement signed before this was switched on runs to its end. When off, the base game's rules apply. Applies at once, no restart." />
+    <string id="taom_hostile_peace_mcm_caravans" text="No Caravan Trade With Enemy Realms" />
+    <string id="taom_hostile_peace_mcm_caravans_hint" text="When enabled (default), caravans of a Free realm do not trade in the towns of a realm of the Shadow, and the reverse, while the two are at peace before the War of the Ring. Realms that are not sworn enemies trade as before. When off, the base game's rules apply. Applies at once, no restart." />
+    <string id="taom_hostile_peace_mcm_alliances" text="Allow Player Alliances With Anyone" />
+    <string id="taom_hostile_peace_mcm_alliances_hint" text="When off (default), a kingdom you rule cannot ally with a realm on the other side of the war: a Free kingdom does not ally with the Shadow, and the reverse. Realms of the Neutral side can ally with anyone. A kingdom you founded takes the side of its culture. Alliances you already have are kept. When on, your kingdom may ally with any realm, as before. AI realms keep their own rules either way. Applies at once, no restart." />
+    <string id="taom_hostile_peace_no_alliance" text="Your realms stand on opposite sides of the war and cannot be allied." />
+    <string id="taom_hostile_peace_no_trade" text="Your realms are enemies in all but war. They will not trade." />
   </strings>
 
 </base>

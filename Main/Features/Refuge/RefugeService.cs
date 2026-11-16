@@ -100,7 +100,8 @@ public sealed class RefugePrisoner
 /// the militia's own troop type survives its casualties; OnGameLoaded
 /// re-pins the party AI (the source only pinned at spawn; the engine saves the pin, so this is an
 /// idempotent belt for a failed or missing pin) and
-/// logs both reconcile directions; the warden is never killed (see IWardenService).</para>
+/// logs both reconcile directions; a companion warden is never removed, and a promoted warden
+/// returns to the ranks on dismantle (see IWardenService).</para>
 ///
 /// <para>Campaign statics (parties, gold, distances, militia rosters, raids, messages) sit behind
 /// protected virtual members, the CampService/SupplyOrderService pattern, so every decision path
@@ -286,7 +287,8 @@ public class RefugeService : IRefugeService, IRefugeBook
                 RefundPlayer(_settings.FoundCost);
             // The warden (if the attach got that far) rides the same action-based return the
             // dismantle path uses; a hero must never be deleted with his party.
-            _wardens.ReleaseWarden(wardenHeroId, promoted: false);
+            // promoted: false here; the menu's UnwindPromotion rolls a promotion back afterwards.
+            _wardens.ReleaseWarden(wardenHeroId, promoted: false, promotedFromTroopId: null);
             DestroyRefugeParty(partyId);
             return null;
         }
@@ -369,11 +371,11 @@ public class RefugeService : IRefugeService, IRefugeBook
         if (IsPartyInMapEvent(refuge.PartyId))
             return;
 
-        // Warden first, roster merge second: releasing the warden (companion or promoted, same
-        // path since the promoted-warden strand fix) moves him with a real AddHeroToPartyAction.
-        // The merge then moves any REMAINING heroes (deposited companions, hero prisoners) with
+        // Warden first, roster merge second: releasing the warden moves him with a real
+        // AddHeroToPartyAction (a promoted warden is then turned back into his soldier). The
+        // merge then moves any REMAINING heroes (deposited companions, hero prisoners) with
         // engine actions before bulk-copying regulars, so no hero row ever rides a raw copy.
-        _wardens.ReleaseWarden(refuge.WardenHeroId, refuge.WardenPromoted);
+        _wardens.ReleaseWarden(refuge.WardenHeroId, refuge.WardenPromoted, refuge.PromotedFromTroopId);
         MergeRefugeIntoMainParty(refuge.PartyId);
         _refuges.Remove(refuge.PartyId);
         DestroyRefugeParty(refuge.PartyId);

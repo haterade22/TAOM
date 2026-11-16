@@ -63,7 +63,7 @@ public sealed class CrashReportSettings : AttributeGlobalSettings<CrashReportSet
 
     [SettingPropertyGroup("Bug Report")]
     [SettingPropertyButton("Make Bug Report", Order = 0, RequireRestart = false, Content = "Make",
-        HintText = "Writes one zip in the Logs folder with what a bug report needs: this game's and the previous game's TAOM logs, the game's own logs, the game's crash folder from the previous game (files up to 64 MB), the module list, the TAOM settings and, in a campaign, the campaign details. Then shows where the zip is. It carries your PC's name, your hero's name and folder paths of your install.")]
+        HintText = "Writes one zip in the Logs folder with what a bug report needs: this game's and the previous game's TAOM logs, the game's own logs, the game's crash folder from the previous game (files up to 64 MB each, 128 MB in all), the module list, the TAOM settings and, in a campaign, the campaign details. Then shows where the zip is. It carries your PC's name, your hero's name and folder paths of your install.")]
     public System.Action MakeBugReportAction { get; set; } = static () => BugReport.BugReportStartup.MakeAndShow("button");
 
     [SettingPropertyGroup("Bug Report")]

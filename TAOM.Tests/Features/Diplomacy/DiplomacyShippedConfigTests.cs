@@ -77,4 +77,31 @@ public class DiplomacyShippedConfigTests
 
         Assert.AreEqual(0, missing.Count, $"{kingdom} is not Hostile to: {string.Join(", ", missing)}");
     }
+
+    private static List<CallToWarRefusal> ShippedRefusals()
+    {
+        var paths = Substitute.For<IPathService>();
+        paths.ModuleDataPath.Returns(CultureDataFixture.ModuleDataPath());
+        return new DiplomacyConfigProvider(paths, Substitute.For<IModLogger>()).LoadConfig().CallToWarRefusals;
+    }
+
+    // #1283: the second 150-day run showed Dunland ("empire") at war with Gondor ("empire_w") from day 2, called in by
+    // the Misty Mountain Orcs. The maintainer's decision (2026-11-15): Dunland refuses a call to war against Gondor.
+    [TestMethod]
+    public void ShippedConfig_Dunland_RefusesACallToWarAgainstGondor()
+    {
+        Assert.IsTrue(ShippedRefusals().Any(r => r.Called == "empire" && r.Target == "empire_w"),
+            "diplomacy.json has no callToWarRefusals row for Dunland against Gondor");
+    }
+
+    [TestMethod]
+    public void ShippedConfig_EveryRefusalId_IsARealKingdom()
+    {
+        var kingdoms = CultureDataFixture.KingdomIds();
+
+        var unknown = ShippedRefusals().SelectMany(r => new[] { r.Called, r.Target })
+            .Where(id => !kingdoms.Contains(id)).Distinct().OrderBy(id => id).ToList();
+
+        Assert.AreEqual(0, unknown.Count, $"callToWarRefusals names ids that are no kingdom: {string.Join(", ", unknown)}");
+    }
 }

@@ -181,6 +181,23 @@ public class BugReportFilesTests
     }
 
     [TestMethod]
+    public void Collect_CrashFolderOverItsTotalBudget_KeepsTheSmallFilesAndNamesTheRest()
+    {
+        Log("taom_debug_2026-11-13_23-12-05.log", hoursAgo: 5);
+        var current = Log("taom_debug_2026-11-14_10-00-00.log", hoursAgo: 0);
+        var start = BugReportFiles.SessionStartUtc("taom_debug_2026-11-13_23-12-05.log")!.Value;
+        Crash("new", start.AddHours(1), ("dump.dmp", 10), ("crash_tags.txt", 5), ("module_list.txt", 5));
+
+        var sources = BugReportSources.Collect(_logs, current, new[] { _engine }, maxCrashFileBytes: 100, maxCrashFolderBytes: 12);
+
+        Assert.IsNotNull(Source(sources, "crash/crash_tags.txt"));
+        Assert.IsNotNull(Source(sources, "crash/module_list.txt"));
+        Assert.IsNull(Source(sources, "crash/dump.dmp"));
+        Assert.IsTrue(sources.Notes.Any(n => n.Contains("crash/dump.dmp") && n.Contains("not included")),
+            string.Join("\n", sources.Notes));
+    }
+
+    [TestMethod]
     public void Collect_Notes_NameFilesOnly_NeverAFolderPath()
     {
         Log("taom_debug_2026-11-13_23-12-05.log", hoursAgo: 5);

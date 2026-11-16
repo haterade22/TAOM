@@ -3,20 +3,24 @@
 
 Run:  python -m unittest tools.tests.test_run_long_defeat
 """
+import contextlib
 import io
 import json
 import os
 import re
+import subprocess
 import sys
 import tempfile
 import tomllib
 import unittest
+from datetime import datetime
 from pathlib import Path
 from types import SimpleNamespace
 from unittest import mock
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
+import autorun_build  # noqa: E402
 import run_fords_autorun as runner  # noqa: E402
 import run_long_defeat as ld  # noqa: E402
 import ingame_verdict as iv  # noqa: E402
@@ -40,6 +44,8 @@ def skip_line(name, wave, reason):
 
 HEAD = "0123456789abcdef0123456789abcdef01234567"
 FIXTURE_HEAD = "985b0d54e1672ede8d9dc08ed986d0f3870aa5d3"
+# A tree with one uncommitted watched file, as the dirty real-run fixtures and a dirty stamp need (a deletion has no time that can be newer than the build).
+DIRTY_TREE = {"Main/a.cs": datetime.min}
 FIXTURE = REPO / "tools" / "tests" / "fixtures" / "long_defeat_checks.txt"
 LOST_FIXTURE = REPO / "tools" / "tests" / "fixtures" / "long_defeat_lost_checks.txt"
 # The two real-run fixtures predate the class check, so a test adds the line the game writes now (LongDefeatChecks.Class) to what it reads.
@@ -105,10 +111,10 @@ class JudgeTests(unittest.TestCase):
 
     def setUp(self):
         ld.target_waves = 5
-        ld.tree_head = HEAD
+        ld.checkout = (HEAD, {})
         ld.expected_report = {}
         self.addCleanup(setattr, ld, "target_waves", None)
-        self.addCleanup(setattr, ld, "tree_head", None)
+        self.addCleanup(setattr, ld, "checkout", None)
 
     def test_a_given_speed_must_be_the_reports_max_speed(self):
         ld.expected_speed = 10
@@ -164,9 +170,10 @@ class JudgeTests(unittest.TestCase):
     def test_a_stamp_that_names_this_trees_head_passes_and_names_the_build(self):
         code, why = ld.judge(FINAL, REPORT, FULL_LOG)
         self.assertEqual(code, 0, why)
-        self.assertIn(f"build {HEAD[:9]},", why)
+        self.assertIn(f"build {HEAD[:9]} built 20261104-100000 UTC,", why)
 
     def test_a_dirty_stamp_on_this_trees_head_passes_and_says_dirty(self):
+        ld.checkout = (HEAD, DIRTY_TREE)
         code, why = ld.judge(FINAL, REPORT, log_of(STANDARD, 5, stamp_line(dirty=True)))
         self.assertEqual(code, 0, why)
         self.assertIn(f"build {HEAD[:9]}.dirty", why)
@@ -183,9 +190,34 @@ class JudgeTests(unittest.TestCase):
         self.assertEqual(code, 1)
         self.assertIn("BuildStamp", why)
 
-    def test_an_unknown_tree_head_fails_rather_than_skips_the_match(self):
-        ld.tree_head = None
-        self.assertEqual(ld.judge(FINAL, REPORT, FULL_LOG)[0], 1)
+    def test_an_unread_checkout_fails_rather_than_skips_the_match(self):
+        ld.checkout = None
+        code, why = ld.judge(FINAL, REPORT, FULL_LOG)
+        self.assertEqual(code, 1)
+        self.assertIn("not read at launch", why)
+
+    def test_a_dirty_stamp_with_a_clean_tree_fails(self):
+        code, why = ld.judge(FINAL, REPORT, log_of(STANDARD, 5, stamp_line(dirty=True)))
+        self.assertEqual(code, 1)
+        self.assertIn("this tree has none", why)
+
+    def test_a_clean_stamp_with_an_uncommitted_watched_file_fails(self):
+        ld.checkout = (HEAD, DIRTY_TREE)
+        code, why = ld.judge(FINAL, REPORT, FULL_LOG)
+        self.assertEqual(code, 1)
+        self.assertIn("Main/a.cs", why)
+
+    def test_a_watched_file_edited_after_the_build_fails(self):
+        ld.checkout = (HEAD, {"Main/a.cs": datetime(2026, 11, 4, 11, 0, 0)})
+        code, why = ld.judge(FINAL, REPORT, log_of(STANDARD, 5, stamp_line(dirty=True)))
+        self.assertEqual(code, 1)
+        self.assertIn("changed after the build", why)
+
+    def test_a_mismatch_stamp_fails(self):
+        mismatch = stamp_line().replace("(pair OK)", "MISMATCH built 2d apart")
+        code, why = ld.judge(FINAL, REPORT, log_of(STANDARD, 5, mismatch))
+        self.assertEqual(code, 1)
+        self.assertIn("MISMATCH", why)
 
     def test_fewer_wave_pass_lines_than_waves_cleared_fails(self):
         # The manifest asks for 5 wave lines; one line beside wavesCleared=5 passed the judge.
@@ -283,9 +315,9 @@ class LoseJudgeTests(unittest.TestCase):
     LOST = {"reason": "lost_defenders", "expect": "lost"}
 
     def setUp(self):
-        ld.tree_head = HEAD
+        ld.checkout = (HEAD, {})
         ld.expected_report = {}
-        self.addCleanup(setattr, ld, "tree_head", None)
+        self.addCleanup(setattr, ld, "checkout", None)
 
     def test_a_lost_run_passes_on_the_shorter_list_with_no_wave_cleared(self):
         for reason in ld.LOSE_REASONS:
@@ -519,9 +551,9 @@ class ManifestTests(unittest.TestCase):
         return [(None, number, row) for number, row in enumerate(rows, 1)]
 
     def test_the_real_run_passes_the_judge(self):
-        ld.target_waves, ld.tree_head = 2, FIXTURE_HEAD
+        ld.target_waves, ld.checkout = 2, (FIXTURE_HEAD, DIRTY_TREE)
         self.addCleanup(setattr, ld, "target_waves", None)
-        self.addCleanup(setattr, ld, "tree_head", None)
+        self.addCleanup(setattr, ld, "checkout", None)
         text = FIXTURE.read_text(encoding="utf-8") + "\n" + CLASS_LINE
         code, why = ld.judge({"reason": "final"}, cleared(2, wavesFelled=0), text)
         self.assertEqual(code, 0, why)
@@ -532,9 +564,9 @@ class ManifestTests(unittest.TestCase):
                     "high=8 high_median=8.4 high_high=8 held_s=95.0 released=4 kept=0 close=1,0,0")
 
     def judge_real_run(self, *extra):
-        ld.target_waves, ld.tree_head = 2, FIXTURE_HEAD
+        ld.target_waves, ld.checkout = 2, (FIXTURE_HEAD, DIRTY_TREE)
         self.addCleanup(setattr, ld, "target_waves", None)
-        self.addCleanup(setattr, ld, "tree_head", None)
+        self.addCleanup(setattr, ld, "checkout", None)
         text = "\n".join([FIXTURE.read_text(encoding="utf-8"), CLASS_LINE, *extra])
         return ld.judge({"reason": "final"}, cleared(2, wavesFelled=0), text)
 
@@ -632,9 +664,9 @@ class ManifestTests(unittest.TestCase):
 
     def test_an_injected_failure_flips_the_judge_and_its_row(self):
         manifest = iv.load_manifest(REPO / "tools" / "ingame_checks" / "1079.toml", 1079)
-        ld.target_waves, ld.tree_head = 2, FIXTURE_HEAD
+        ld.target_waves, ld.checkout = 2, (FIXTURE_HEAD, DIRTY_TREE)
         self.addCleanup(setattr, ld, "target_waves", None)
-        self.addCleanup(setattr, ld, "tree_head", None)
+        self.addCleanup(setattr, ld, "checkout", None)
         text = FIXTURE.read_text(encoding="utf-8") + "\n" + CLASS_LINE
         report = cleared(2)
         for row in manifest.checks:
@@ -644,8 +676,8 @@ class ManifestTests(unittest.TestCase):
 
     def test_the_lost_run_passes_the_lose_judge_and_its_rows(self):
         # Run 20261104-035343: three waves cleared, then the defenders died. The done file of a --lose run carries expect=lost.
-        ld.tree_head = FIXTURE_HEAD
-        self.addCleanup(setattr, ld, "tree_head", None)
+        ld.checkout = (FIXTURE_HEAD, DIRTY_TREE)
+        self.addCleanup(setattr, ld, "checkout", None)
         text = LOST_FIXTURE.read_text(encoding="utf-8") + "\n" + CLASS_LINE
         done = {"reason": "lost_defenders", "expect": "lost"}
         code, why = ld.judge(done, cleared(3, final=False), text)
@@ -792,11 +824,11 @@ class PatchTests(unittest.TestCase):
                          collect=lambda folder, bin_dir, done, started, pid, say: (None, {**REPORT, "startRerolls": 1}))
             with mock.patch.multiple(runner, **keep), mock.patch.multiple(runner, **fakes), \
                     mock.patch.object(runner.subprocess, "Popen", lambda *a, **k: Proc()), \
-                    mock.patch.object(ld, "tree_head_sha", lambda: HEAD):
+                    mock.patch.object(autorun_build, "checkout_state", lambda: (HEAD, {})):
                 code = ld.main(["--waves", "5", "--runs-root", root, "--require-idle-minutes", "0"])
             status = next(Path(root).glob("*/runner_status.txt")).read_text(encoding="utf-8")
         self.addCleanup(setattr, ld, "target_waves", None)
-        self.addCleanup(setattr, ld, "tree_head", None)
+        self.addCleanup(setattr, ld, "checkout", None)
         self.assertEqual(code, 1)
         self.assertIn("no TAOM log", status)
 
@@ -1019,10 +1051,10 @@ class AffixJudgeTests(unittest.TestCase):
 
     def setUp(self):
         ld.target_waves = 5
-        ld.tree_head = HEAD
+        ld.checkout = (HEAD, {})
         ld.expected_report = {}
         self.addCleanup(setattr, ld, "target_waves", None)
-        self.addCleanup(setattr, ld, "tree_head", None)
+        self.addCleanup(setattr, ld, "checkout", None)
         self.addCleanup(setattr, ld, "expected_report", {})
 
     def report(self, cleared=5, rows=None, **more):
@@ -1146,10 +1178,10 @@ class PhaseTwoJudgeTests(unittest.TestCase):
 
     def setUp(self):
         ld.target_waves = 5
-        ld.tree_head = HEAD
+        ld.checkout = (HEAD, {})
         ld.expected_report = {}
         self.addCleanup(setattr, ld, "target_waves", None)
-        self.addCleanup(setattr, ld, "tree_head", None)
+        self.addCleanup(setattr, ld, "checkout", None)
         self.addCleanup(setattr, ld, "expected_report", {})
 
     def test_a_schema_one_report_is_refused_and_says_so(self):
@@ -1469,10 +1501,10 @@ class DeepJudgeTests(unittest.TestCase):
 
     def setUp(self):
         ld.target_waves = 4
-        ld.tree_head = HEAD
+        ld.checkout = (HEAD, {})
         ld.expected_report = {}
         self.addCleanup(setattr, ld, "target_waves", None)
-        self.addCleanup(setattr, ld, "tree_head", None)
+        self.addCleanup(setattr, ld, "checkout", None)
 
     def test_the_deep_list_is_the_plans(self):
         self.assertEqual(ld.DEEP_CHECKS, ("boot", "general", "class", "commander", "affix", "scale", "end"))
@@ -1625,8 +1657,10 @@ class PhaseTwoArmTests(unittest.TestCase):
     def captured_arm(self, *argv):
         keep = {name: getattr(runner, name) for name in ("ENV_VAR", "DONE_FILE", "STATUS_FILE", "RUNS_ROOT", "judge", "arm_text_for", "handle_dialogs", "show_results")}
         captured = {}
-        with mock.patch.multiple(runner, main=lambda rest: captured.setdefault("arm", runner.arm_text_for), **keep):
+        with mock.patch.multiple(runner, main=lambda rest: captured.setdefault("arm", runner.arm_text_for), **keep), \
+                mock.patch.object(autorun_build, "checkout_state", return_value=(HEAD, {})):
             ld.main(list(argv))
+        self.addCleanup(setattr, ld, "checkout", None)
         self.addCleanup(setattr, ld, "target_waves", None)
         self.addCleanup(setattr, ld, "expected_report", {})
         return captured["arm"]
@@ -1710,10 +1744,10 @@ class ClassJudgeTests(unittest.TestCase):
 
     def setUp(self):
         ld.target_waves = 5
-        ld.tree_head = HEAD
+        ld.checkout = (HEAD, {})
         ld.expected_report = {}
         self.addCleanup(setattr, ld, "target_waves", None)
-        self.addCleanup(setattr, ld, "tree_head", None)
+        self.addCleanup(setattr, ld, "checkout", None)
         self.addCleanup(setattr, ld, "expected_report", {})
 
     def test_the_bots_class_is_pinned_to_the_games_vectors(self):
@@ -2058,10 +2092,10 @@ class BoonJudgeTests(unittest.TestCase):
 
     def setUp(self):
         ld.target_waves = 5
-        ld.tree_head = HEAD
+        ld.checkout = (HEAD, {})
         ld.expected_report = {"class": self.CLASS}
         self.addCleanup(setattr, ld, "target_waves", None)
-        self.addCleanup(setattr, ld, "tree_head", None)
+        self.addCleanup(setattr, ld, "checkout", None)
         self.addCleanup(setattr, ld, "expected_report", {})
 
     def report(self, picks=None, cleared=5, **more):
@@ -2381,10 +2415,10 @@ class BoonReadBackJudgeTests(unittest.TestCase):
 
     def setUp(self):
         ld.target_waves = 5
-        ld.tree_head = HEAD
+        ld.checkout = (HEAD, {})
         ld.expected_report = {"class": self.CLASS}
         self.addCleanup(setattr, ld, "target_waves", None)
-        self.addCleanup(setattr, ld, "tree_head", None)
+        self.addCleanup(setattr, ld, "checkout", None)
         self.addCleanup(setattr, ld, "expected_report", {})
 
     def card(self, reads):
@@ -2465,10 +2499,10 @@ class CommanderJudgeTests(unittest.TestCase):
 
     def setUp(self):
         ld.target_waves = 5
-        ld.tree_head = HEAD
+        ld.checkout = (HEAD, {})
         ld.expected_report = {"class": self.CLASS}
         self.addCleanup(setattr, ld, "target_waves", None)
-        self.addCleanup(setattr, ld, "tree_head", None)
+        self.addCleanup(setattr, ld, "checkout", None)
         self.addCleanup(setattr, ld, "expected_report", {})
 
     def commander(self, troop, rank, steps=0, outcome="killed", uses=None, after_end=0):
@@ -3007,10 +3041,10 @@ class PurchaseJudgeTests(unittest.TestCase):
 
     def test_the_judge_fails_a_report_whose_books_do_not_replay(self):
         ld.target_waves = 5
-        ld.tree_head = HEAD
+        ld.checkout = (HEAD, {})
         ld.expected_report = {}
         self.addCleanup(setattr, ld, "target_waves", None)
-        self.addCleanup(setattr, ld, "tree_head", None)
+        self.addCleanup(setattr, ld, "checkout", None)
         report = {**REPORT, "gold": {"spent": 5, "spentOn": {"packs": 0, "gate": 0, "towers": 0, "fieldCare": 0, "volley": 0, "upgrades": 0, "heroes": 0}}}
 
         code, why = ld.judge(FINAL, report, FULL_LOG)
@@ -3025,10 +3059,10 @@ class StartGoldArgumentTests(unittest.TestCase):
 
     def setUp(self):
         ld.target_waves = 5
-        ld.tree_head = HEAD
+        ld.checkout = (HEAD, {})
         ld.expected_report = {}
         self.addCleanup(setattr, ld, "target_waves", None)
-        self.addCleanup(setattr, ld, "tree_head", None)
+        self.addCleanup(setattr, ld, "checkout", None)
         self.addCleanup(setattr, ld, "expected_report", {})
 
     def parse(self, *argv):
@@ -3061,7 +3095,7 @@ class StartGoldArgumentTests(unittest.TestCase):
 
     def test_the_report_must_echo_the_armed_start_gold(self):
         self.captured_arm("--start-gold", "5000", "--start-rerolls", "0")
-        ld.tree_head = HEAD
+        ld.checkout = (HEAD, {})
         self.assertEqual(ld.expected_report["startGold"], 5000)
 
         armed = {**REPORT, "startRerolls": 0}
@@ -3073,7 +3107,7 @@ class StartGoldArgumentTests(unittest.TestCase):
 
     def test_a_run_armed_with_no_start_gold_must_report_none(self):
         self.captured_arm("--start-rerolls", "0")
-        ld.tree_head = HEAD
+        ld.checkout = (HEAD, {})
         self.assertNotIn("startGold", ld.expected_report)
 
         armed = {**REPORT, "startRerolls": 0}
@@ -3096,10 +3130,10 @@ class BreakEnginesTests(unittest.TestCase):
 
     def setUp(self):
         ld.target_waves = 5
-        ld.tree_head = HEAD
+        ld.checkout = (HEAD, {})
         ld.expected_report = {}
         self.addCleanup(setattr, ld, "target_waves", None)
-        self.addCleanup(setattr, ld, "tree_head", None)
+        self.addCleanup(setattr, ld, "checkout", None)
         self.addCleanup(setattr, ld, "expected_report", {})
 
     def parse(self, *argv):
@@ -3150,7 +3184,7 @@ class BreakEnginesTests(unittest.TestCase):
 
     def test_the_report_must_echo_the_armed_clear(self):
         self.captured_arm("--break-engines", "1", "--start-rerolls", "0")
-        ld.tree_head = HEAD
+        ld.checkout = (HEAD, {})
         self.assertEqual(ld.expected_report["breakEngines"], 1)
 
         armed = {**REPORT, "startRerolls": 0}
@@ -3163,7 +3197,7 @@ class BreakEnginesTests(unittest.TestCase):
 
     def test_a_run_armed_with_none_must_report_none(self):
         self.captured_arm("--start-rerolls", "0")
-        ld.tree_head = HEAD
+        ld.checkout = (HEAD, {})
         self.assertNotIn("breakEngines", ld.expected_report)
 
         armed = {**REPORT, "startRerolls": 0}
@@ -3296,10 +3330,10 @@ class HeroJudgeTests(unittest.TestCase):
 
     def setUp(self):
         ld.target_waves = 2
-        ld.tree_head = HEAD
+        ld.checkout = (HEAD, {})
         ld.expected_report = {"startGold": 5000}
         self.addCleanup(setattr, ld, "target_waves", None)
-        self.addCleanup(setattr, ld, "tree_head", None)
+        self.addCleanup(setattr, ld, "checkout", None)
         self.addCleanup(setattr, ld, "expected_report", {})
 
     HUNTERS_PASS = ("[2026-11-15 20:00:00] [INFO] [Check] id=taom.long-defeat.hunters result=pass w=2 standing=1 in_group=1 units=1 held=1 order=Move own=1 settled=240 near=1 kills=3"
@@ -3492,10 +3526,10 @@ class UpgradeJudgeTests(unittest.TestCase):
 
     def setUp(self):
         ld.target_waves = 2
-        ld.tree_head = HEAD
+        ld.checkout = (HEAD, {})
         ld.expected_report = {"startGold": 5000}
         self.addCleanup(setattr, ld, "target_waves", None)
-        self.addCleanup(setattr, ld, "tree_head", None)
+        self.addCleanup(setattr, ld, "checkout", None)
         self.addCleanup(setattr, ld, "expected_report", {})
 
     def report(self, orders=1):
@@ -3573,10 +3607,10 @@ class FieldCareJudgeTests(unittest.TestCase):
 
     def setUp(self):
         ld.target_waves = 2
-        ld.tree_head = HEAD
+        ld.checkout = (HEAD, {})
         ld.expected_report = {"startGold": 5000}
         self.addCleanup(setattr, ld, "target_waves", None)
-        self.addCleanup(setattr, ld, "tree_head", None)
+        self.addCleanup(setattr, ld, "checkout", None)
         self.addCleanup(setattr, ld, "expected_report", {})
 
     def report(self, care=True, **more):
@@ -3683,10 +3717,10 @@ class GateJudgeTests(unittest.TestCase):
 
     def setUp(self):
         ld.target_waves = 3
-        ld.tree_head = HEAD
+        ld.checkout = (HEAD, {})
         ld.expected_report = {"startGold": 5000}
         self.addCleanup(setattr, ld, "target_waves", None)
-        self.addCleanup(setattr, ld, "tree_head", None)
+        self.addCleanup(setattr, ld, "checkout", None)
         self.addCleanup(setattr, ld, "expected_report", {})
 
     def report(self, level=True, repair=True, waves=3, **more):
@@ -3869,10 +3903,10 @@ class VolleyJudgeTests(unittest.TestCase):
 
     def setUp(self):
         ld.target_waves = 3
-        ld.tree_head = HEAD
+        ld.checkout = (HEAD, {})
         ld.expected_report = {"startGold": 5000}
         self.addCleanup(setattr, ld, "target_waves", None)
-        self.addCleanup(setattr, ld, "tree_head", None)
+        self.addCleanup(setattr, ld, "checkout", None)
         self.addCleanup(setattr, ld, "expected_report", {})
 
     def report(self, levels=2, waves=3, fire=True, **more):
@@ -4054,10 +4088,10 @@ class FortPointsHintTests(unittest.TestCase):
         skip = "[2026-11-06 10:00:00] [INFO] [Check] id=taom.long-defeat.fort-points result=skip points=0 reason=none-recorded"
         with mock.patch.object(ld, "recorded_fort_points", return_value=True):
             ld.target_waves = 5
-            ld.tree_head = HEAD
+            ld.checkout = (HEAD, {})
             ld.expected_report = {}
             self.addCleanup(setattr, ld, "target_waves", None)
-            self.addCleanup(setattr, ld, "tree_head", None)
+            self.addCleanup(setattr, ld, "checkout", None)
             code, why = ld.judge(FINAL, {**report, "wavesCleared": 5, "waves": [wave_row(n) for n in range(1, 6)]}, FULL_LOG + "\n" + skip)
 
         self.assertEqual(code, 1)
@@ -4076,11 +4110,11 @@ class PostsJudgeTests(unittest.TestCase):
 
     def setUp(self):
         ld.target_waves = 2
-        ld.tree_head = HEAD
+        ld.checkout = (HEAD, {})
         ld.expected_report = {"startGold": 5000}
         ld.posts_variant = None
         self.addCleanup(setattr, ld, "target_waves", None)
-        self.addCleanup(setattr, ld, "tree_head", None)
+        self.addCleanup(setattr, ld, "checkout", None)
         self.addCleanup(setattr, ld, "expected_report", {})
         self.addCleanup(setattr, ld, "posts_variant", None)
 
@@ -4276,11 +4310,11 @@ class TowerVolleyJudgeTests(unittest.TestCase):
 
     def setUp(self):
         ld.target_waves = 3
-        ld.tree_head = HEAD
+        ld.checkout = (HEAD, {})
         ld.expected_report = {"startGold": 5000}
         ld.posts_variant = None
         self.addCleanup(setattr, ld, "target_waves", None)
-        self.addCleanup(setattr, ld, "tree_head", None)
+        self.addCleanup(setattr, ld, "checkout", None)
         self.addCleanup(setattr, ld, "expected_report", {})
         self.addCleanup(setattr, ld, "posts_variant", None)
 
@@ -4536,6 +4570,43 @@ class LocationOfferedTests(unittest.TestCase):
     def test_this_slice_delivers_nothing_so_every_row_stays_hidden(self):
         self.assertEqual(ld.LOCATION_OFFERED, {"armoury": False, "mangonel": False, "trebuchet": False})
         self.assertEqual(self.parse(source("Domain", "LocationsPlan.cs"), "None"), ld.LOCATION_OFFERED)
+
+
+class LaunchCheckoutTests(unittest.TestCase):
+    """The checkout is read once, in main, before the game starts, and the judge main hands the runner uses that state."""
+
+    KEEP = ("ENV_VAR", "DONE_FILE", "STATUS_FILE", "RUNS_ROOT", "judge", "arm_text_for", "handle_dialogs", "show_results")
+
+    def launched(self, state):
+        """Runs main with autorun_build.checkout_state answering from state (an exception or a list is a side_effect); returns the captured
+        judge or None when the runner was never reached, the exit code, the mock and what main printed."""
+        keep = {name: getattr(runner, name) for name in self.KEEP}
+        seen = {}
+        kind = {"side_effect": state} if isinstance(state, (Exception, list)) else {"return_value": state}
+        self.addCleanup(setattr, ld, "checkout", None)
+        self.addCleanup(setattr, ld, "target_waves", None)
+        with mock.patch.multiple(runner, main=lambda rest: seen.setdefault("judge", runner.judge) and 0, **keep), \
+                mock.patch.object(autorun_build, "checkout_state", **kind) as git, contextlib.redirect_stdout(io.StringIO()) as out:
+            code = ld.main(["--waves", "5"])
+        return seen.get("judge"), code, git, out.getvalue()
+
+    def test_a_git_that_fails_at_launch_returns_1_and_starts_nothing(self):
+        for error in (OSError("git exited 128"), subprocess.TimeoutExpired("git", 60)):
+            with self.subTest(error=type(error).__name__):
+                judge, code, _, out = self.launched(error)
+                self.assertEqual(code, 1)
+                self.assertIsNone(judge)
+                self.assertIn("cannot read the checkout from git", out)
+
+    def test_a_commit_or_an_edit_made_after_the_launch_does_not_fail_a_good_run(self):
+        moved = ("0" * 40, {"Main/a.cs": datetime(2026, 11, 4, 11, 0, 0)})
+        judge, code, git, _ = self.launched([(HEAD, {}), moved])
+        self.assertEqual(code, 0)
+        self.assertEqual(ld.checkout, (HEAD, {}))
+        done = judge(FINAL, {**REPORT, "startRerolls": 1}, log_of(STANDARD + ("reroll",), 5))
+        self.assertEqual(done[0], 0, done[1])
+        self.assertIn(f"build {HEAD[:9]} built 20261104-100000 UTC,", done[1])
+        self.assertEqual(git.call_count, 1)
 
 
 if __name__ == "__main__":

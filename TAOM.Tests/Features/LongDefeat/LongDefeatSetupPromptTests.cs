@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -185,6 +186,18 @@ public class LongDefeatSetupPromptTests
         PromptWithClasses().Begin();
 
         _factory.Received(1).Start(new LongDefeatSetup("helms", "menu", RunOptions.Default with { ClassId = "bow" }));
+    }
+
+    [TestMethod]
+    public void Begin_WithAStartOfItsOwn_HandsThePickedClassToThatStart()
+    {
+        _menu = new FakeLongDefeatMenu("helms", "bow");
+        var started = new List<LongDefeatSetup>();
+
+        PromptWithClasses().Begin(setup => { started.Add(setup); return true; });
+
+        Assert.AreEqual(new LongDefeatSetup("helms", "menu", RunOptions.Default with { ClassId = "bow" }), started.Single());
+        _factory.DidNotReceive().Start(Arg.Any<LongDefeatSetup>());
     }
 
     private LongDefeatSetupPrompt PromptWithShippedClasses() =>

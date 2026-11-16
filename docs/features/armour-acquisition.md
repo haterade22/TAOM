@@ -159,9 +159,11 @@ engine's own ItemCategory is an absolute tier that ignores TAOM's per-kingdom ca
    it, offers it only to a player of the same group (`for_player_culture`), and an untaken offer is
    withdrawn once the player's culture stops matching (a new campaign creates its first issues before
    character creation).
-8. **Co-op.** World changes (the sweep, visiting armourers) run on the campaign's authority; the bench and
-   the ladder's rows turn a co-op guest away before anything is charged (the EliteEmissary
-   "pay-real-get-phantom" finding); the ladder's battle hand-off and the event skip a guest and a
+8. **Co-op.** World changes (the sweep, visiting armourers) run on the campaign's authority. With
+   `TAOM.CoopCompat`, a guest's armoury asks the host, which runs `ArmouryUpgradeService.Execute` for the
+   guest's hero and inventory (#1329, [coop-compat.md](coop-compat.md)); the guest sees no ladder rows.
+   Without it, the bench turns a co-op guest away before anything is charged (the EliteEmissary
+   "pay-real-get-phantom" finding). The ladder's battle hand-off and the event skip a guest and a
    dedicated server.
 
 ### Engine facts the ladder rests on (v1.5.3, verified 2026-09-28)
@@ -386,7 +388,7 @@ Another route can be a CareerQuest `GrantItem` reward or a LotrIssues `reward_it
 - CultureMarketplace (consumer of the stock gate, owner of the `armour_from` map), SpecialResources
   (`ISpecialResourceSpender`), CareerSystem (`ICareerQuestService`, the `CareerQuest` shell and its
   `HeroKills` objective), LotrIssues (data rows and `reward_count`), CoopInterop (`ICoopSessionProvider`,
-  `IDedicatedServerProvider`), `ITownRosterAdapter`, the feature-module runner (the kill counter is a
+  `IDedicatedServerProvider`, and `GuestTradeClient` for the armoury's guest path, #1329), `ITownRosterAdapter`, the feature-module runner (the kill counter is a
   `MissionBehaviorDecl`).
 - `CareerQuestCampaignBehavior` blocks a new career quest only while a quest of the player's current
   career runs, so a ladder rung never holds career quests back (and a quest from a previous career no
@@ -521,8 +523,8 @@ Arthedain carry what their `<Stock>` rows name). An item
   running quest's progress. No kills count in an arena, a tournament, a plain town scene or a custom
   battle; a battle left early credits its kills within the hour and yields no find. A Player Switcher change
   mid-rung: the new hero can take up their own rung while the old hero's quest still runs. With the master switch
-  off, the town menu offers no armoury and battles count nothing; a co-op guest is turned away at the
-  armoury and gets no finds.
+  off, the town menu offers no armoury and battles count nothing. A co-op guest gets no finds, and is
+  turned away at the armoury unless `TAOM.CoopCompat` is loaded.
 
 ## GitHub Issue
 
@@ -530,6 +532,9 @@ The lord's gear ladder: #693. The base feature: none yet (see Owed).
 
 ## Changelog
 
+- 2026-11-15 (#1329): with `TAOM.CoopCompat`, a co-op guest's armoury upgrade runs on the host for the guest's
+  hero and inventory; the guest sees no ladder rows. `ArmouryPresenter` takes `GuestTradeClient` in place of
+  `ICoopSessionProvider`. Credit: minimalcash63 (`TAOM.CoopEmissaryArmory`). Owed in game.
 - 2026-10-15: the Harad Armourer's Commission rewards followed the 2026-10-10 Harad armour. `lotr_armourer_commission_harad` now rewards `sk_hr_st_chest_inf_chest_heavy_a` and `lotr_armourer_commission_shaghana` rewards `sk_sg_st_chest_inf_chest_heavy_a`; both paid the vanilla `aserai_scale_armor_on_chain` before.
 - 2026-10-14: the class generator now classes a piece by the item's own `Type`, not by its file. Harad's
   art drop filed four camel bardings (`Type="HorseHarness"`) in `body_armors.xml`, and classed by file they

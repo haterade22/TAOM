@@ -8,7 +8,7 @@ using TaleWorlds.Localization;
 using TaleWorlds.ObjectSystem;
 using TAOM.Adapters;
 using TAOM.Core.Logging;
-using TAOM.Features.CoopInterop;
+using TAOM.Features.CoopInterop.GuestTrade;
 using TAOM.Features.EliteEmissary.Domain;
 
 namespace TAOM.Features.EliteEmissary.Hooks;
@@ -25,26 +25,43 @@ public sealed class EliteEmissaryInquiryPresenter
 
     private readonly IEliteEmissaryService _service;
     private readonly ISettlementOwnerAdapter _ownerAdapter;
-    private readonly ICoopSessionProvider _coopSession;
+    private readonly GuestTradeClient _guestTrade;
     private readonly IModLogger _logger;
 
     public EliteEmissaryInquiryPresenter(
         IEliteEmissaryService service,
         ISettlementOwnerAdapter ownerAdapter,
-        ICoopSessionProvider coopSession,
+        GuestTradeClient guestTrade,
         IModLogger logger)
     {
         _service = service;
         _ownerAdapter = ownerAdapter;
-        _coopSession = coopSession;
+        _guestTrade = guestTrade;
         _logger = logger;
     }
 
+    /// <summary>
+    /// Opens the list. A co-op guest first asks the host for the balance (#1329), which the client copies into this
+    /// machine's store, so the list below shows the host's number.
+    /// </summary>
     public void OpenTroopList(Settlement settlement)
+    {
+        if (settlement == null) return;
+        if (!_guestTrade.IsGuest)
+        {
+            ShowTroopList(settlement);
+            return;
+        }
+        AskHost(new GuestTradeRequest(GuestTradeAction.EmissaryBalance, settlement.StringId), _ => ShowTroopList(settlement));
+    }
+
+    private void AskHost(GuestTradeRequest request, Action<GuestTradeReply> onHandled) =>
+        GuestTradeTexts.AskHost(_guestTrade, request, onHandled, text => Notify(text, Colors.Red));
+
+    private void ShowTroopList(Settlement settlement)
     {
         try
         {
-            if (settlement == null) return;
             var heroId = Hero.MainHero?.StringId;
             if (heroId == null)
             {
@@ -124,7 +141,7 @@ public sealed class EliteEmissaryInquiryPresenter
         }
         catch (Exception ex)
         {
-            _logger.LogError($"[EliteEmissary] OpenTroopList failed: {ex.Message}");
+            _logger.LogError($"[EliteEmissary] ShowTroopList failed: {ex.Message}");
         }
     }
 
@@ -190,13 +207,17 @@ public sealed class EliteEmissaryInquiryPresenter
 
     private void ExecutePurchase(SettlementOwnerInfo owner, string heroId, string troopId, int qty)
     {
-        // Refuse BEFORE charging. On a non-authoritative peer the resource deduction persists
-        // (TAOM's own SyncData carries it) but the troop is added to a client-side roster the next
-        // resync overwrites — the player pays and gets nothing, which field testing confirmed as
-        // "pay-real-get-phantom" (report 2026-08-03 §9.1). Granting it properly needs a message
-        // TAOM cannot send without taking a compile-time dependency on a specific co-op mod, so the
-        // honest behaviour is to decline the sale and say why.
-        if (_coopSession.ShouldDeferToHost)
+        if (_guestTrade.IsGuest)
+        {
+            AskHost(new GuestTradeRequest(GuestTradeAction.EmissaryBuy, owner.SettlementId, troopId, Quantity: qty),
+                reply => ShowResult(EmissaryPurchaseResult.Of((EmissaryPurchaseStatus)reply.Status, troopId, reply.Quantity,
+                    reply.TotalCost, reply.ResourceName), troopId));
+            return;
+        }
+
+        // Refuse before any charge: on a guest the troops would land in a client roster that the next resync
+        // overwrites (docs/features/elite-emissary.md, co-op).
+        if (_guestTrade.IsGuestWithoutLink)
         {
             _logger.LogInfo(
                 $"[EliteEmissary] Purchase of {qty}x '{troopId}' declined — not the authority. " +
@@ -205,7 +226,11 @@ public sealed class EliteEmissaryInquiryPresenter
             return;
         }
 
-        var result = _service.Purchase(heroId, owner.OwnerKingdomId, owner.OwnerCultureId, troopId, qty);
+        ShowResult(_service.Purchase(heroId, owner.OwnerKingdomId, owner.OwnerCultureId, troopId, qty), troopId);
+    }
+
+    private void ShowResult(EmissaryPurchaseResult result, string troopId)
+    {
         var character = MBObjectManager.Instance?.GetObject<CharacterObject>(troopId);
         var troopName = character?.Name?.ToString() ?? troopId;
 

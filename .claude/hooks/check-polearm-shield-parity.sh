@@ -24,9 +24,8 @@
 # Exits 0, or 2 when no python can encode the JSON (exit 2 is PostToolUse's other visible
 # channel). Advisory either way: PostToolUse fires after the write and gates nothing.
 #
-# The WARN block (43 rosters pairing a shield with a two-handed sword/axe/mace, issue #450) is
-# deliberately not reported. It is pre-existing, it is a roster decision rather than a data one,
-# and surfacing it on every edit would be permanent noise.
+# Two-handed swords, axes and maces fail like polearms since #1312. The pairs held in the tool's
+# KNOWN_FAILURES and KNOWN_DANGLING print under KNOWN and HELD, which this hook does not report.
 
 INPUT=$(cat)
 
@@ -50,7 +49,7 @@ fi
 
 [[ -z "$FILE_PATH" ]] && exit 0
 
-# --- relevance filter (cheap; the audit itself costs ~1.5s, so only pay it when it can matter) ---
+# --- relevance filter (cheap; the audit itself costs about 5 s, so only pay it when it can matter) ---
 # Three ways an edit can introduce or fix this defect: the registration (weapon_descriptions.xslt),
 # the item definition (LOTRLOME_items), or the roster that pairs weapon with shield (any ModuleData
 # XML carrying an <EquipmentRoster>). The roster test reads the file rather than matching a path
@@ -122,7 +121,7 @@ if [[ ! -f "$TOOL" ]]; then
     report_once "polearm/shield gate did not run: $TOOL is absent from this tree (it landed on trunk 2026-08-20). A shield paired with a weapon the AI will not draw is silent in game."
 fi
 
-# Inner bound of 15 s. The audit measured 2.9s on 2026-08-31,
+# Inner bound of 15 s. The audit measured 2.9s on 2026-08-31 and about 4.8 s on 2026-11-15 (a loaded machine),
 # but it was registered at 5s, so a cold cache or a busy machine could push it past the
 # harness kill. A kill discards output, and for THIS hook silence is read as "no findings"
 # (see the CONTRACT above), so the overrun has to be caught here where it can still speak.
@@ -134,15 +133,17 @@ if [[ $STATUS -eq 124 ]]; then
 fi
 
 if [[ $STATUS -eq 1 ]]; then
-    # The FAIL block only: from the FAIL header to the blank line that ends it.
-    BLOCK=$(printf '%s\n' "$OUTPUT" | awk '/^FAIL:/{f=1} f{if(/^$/)exit; print}')
+    # Every FAIL block: from each FAIL header to the blank line that ends it. The tool can print
+    # several (a dangling piece id, then a roster finding), and keeping only the first would hide
+    # the rest and mute them as a repeat.
+    BLOCK=$(printf '%s\n' "$OUTPUT" | awk '/^FAIL:/{f=1} f&&/^$/{f=0; print ""} f')
     [[ -z "$BLOCK" ]] && BLOCK="$OUTPUT"
+    # Each FAIL block carries its own fix text from the tool; this suffix holds only what is
+    # true of every kind.
     report_once "$BLOCK
 
-These troops hold the weapon at spawn and draw a sidearm when the fight starts. Nothing logs it.
-Register the pieces via 'tools/register_one_handed_polearms.py' (add the item to ONE_HANDED_ITEMS)
-or change the roster. Never hand-edit the Armory XSLT: it is not in this repo and a module refresh
-reverts it. Background: docs/reference/doc-lookup.md, 'Confirm a troop will actually FIGHT'."
+Never hand-edit the Armory XSLT: it is not in this repo and a module refresh reverts it.
+Background: docs/reference/doc-lookup.md, 'Confirm a troop will actually FIGHT'."
 elif [[ $STATUS -ne 0 ]]; then
     report_once "polearm/shield gate errored (exit $STATUS). First line: $(printf '%s\n' "$OUTPUT" | head -1)"
 elif printf '%s\n' "$OUTPUT" | grep -q '^SKIP:'; then

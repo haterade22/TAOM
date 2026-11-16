@@ -1,6 +1,7 @@
 using System;
 using TAOM.Adapters;
 using TAOM.Core.Logging;
+using TAOM.Features.LongDefeat.Coop;
 using TAOM.Features.LongDefeat.Diagnostics;
 using TAOM.Features.LongDefeat.Domain;
 
@@ -16,6 +17,9 @@ internal sealed class LongDefeatRunHost
     private const float ReadyAt = 0.5f;
     private const int MaxFaultsLogged = 5;
 
+    /// <summary>How long a co-op run (#1280) waits for Coop to elect its host before it leaves.</summary>
+    internal const float NoHostLimitSeconds = 60f;
+
     private readonly RunPlan _plan;
     private readonly LongDefeatSession _session;
     private readonly IModLogger _logger;
@@ -25,6 +29,9 @@ internal sealed class LongDefeatRunHost
     private readonly Func<ILongDefeatBattlefieldAdapter> _fieldFactory;
     private readonly Func<ILongDefeatEffectsAdapter>? _effectsFactory;
     private readonly LongDefeatRunRecords? _records;
+    private readonly LongDefeatRunCoop? _coop;
+    private float _hostWait;
+    private bool _endReported;
     private volatile LongDefeatDirector? _director;
     private bool _startDue;
     private bool _leaving;
@@ -34,7 +41,7 @@ internal sealed class LongDefeatRunHost
     /// <param name="missionKey">One value per mission (the launcher counts them): the outcome log latches each check line once per id, result and key for the whole process.</param>
     public LongDefeatRunHost(RunPlan plan, LongDefeatSession session, IModLogger logger, IOutcomeLog outcomes, Action leave,
         string missionKey, Func<ILongDefeatBattlefieldAdapter> fieldFactory, LongDefeatRunRecords? records = null,
-        Func<ILongDefeatEffectsAdapter>? effectsFactory = null)
+        Func<ILongDefeatEffectsAdapter>? effectsFactory = null, LongDefeatRunCoop? coop = null)
     {
         _plan = plan;
         _session = session;
@@ -45,6 +52,7 @@ internal sealed class LongDefeatRunHost
         _fieldFactory = fieldFactory;
         _effectsFactory = effectsFactory;
         _records = records;
+        _coop = coop;
     }
 
     /// <summary>The mission is set up: the next tick that is ready starts the run. Spawns nothing itself (rca-fords-of-war-2026-10-31.md).</summary>
@@ -56,12 +64,10 @@ internal sealed class LongDefeatRunHost
         try
         {
             if (_startDue && missionTime() >= ReadyAt)
-            {
-                _startDue = false;
-                StartRun();
-            }
+                StartForRole(dt);
 
             _director?.Tick(dt);
+            ReportEnd(_director);
         }
         catch (Exception ex)
         {
@@ -111,6 +117,9 @@ internal sealed class LongDefeatRunHost
         var director = _director;
         _director = null;
         Guarded("TearDown", () => director?.Shutdown());
+        ReportEnd(director);
+        if (_coop != null)
+            Guarded("CoopMissionEnded", _coop.MissionEnded);
     }
 
     public void Leave()
@@ -120,6 +129,49 @@ internal sealed class LongDefeatRunHost
 
         _leaving = true;
         Guarded("Leave", _leave);
+    }
+
+    // A co-op run waits for Coop's host election (#1280). Role None means the co-op side already ended this game, so nothing starts.
+    private void StartForRole(float dt)
+    {
+        var role = _coop?.Role() ?? LongDefeatCoopRole.Host;
+        if (role == LongDefeatCoopRole.Pending && (_hostWait += dt) < NoHostLimitSeconds)
+            return;
+
+        _startDue = false;
+        switch (role)
+        {
+            case LongDefeatCoopRole.Host:
+                StartRun();
+                if (_director != null && _coop != null)
+                {
+                    _session.SpeedLocked = true;
+                    _coop.BecameHost();
+                }
+                return;
+            case LongDefeatCoopRole.Follower when LongDefeatFollowerRun.Start(_plan, _fieldFactory(), _logger):
+                return;
+            case LongDefeatCoopRole.Follower:
+                _session.RecordFault("FollowerStart");
+                break;
+            case LongDefeatCoopRole.Pending:
+                _logger.LogError($"[LongDefeat][Coop] no host was elected in {NoHostLimitSeconds} s; leaving the run");
+                _session.RecordFault("NoHost");
+                break;
+            default:
+                return;
+        }
+
+        Leave();
+    }
+
+    private void ReportEnd(LongDefeatDirector? director)
+    {
+        if (_coop == null || _endReported || director == null || _session.Result is not { } result)
+            return;
+
+        _endReported = true;
+        _coop.Ended(result);
     }
 
     private void StartRun()

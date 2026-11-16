@@ -339,6 +339,10 @@ internal sealed partial class LongDefeatBattlefieldAdapter : ILongDefeatBattlefi
         Vec2? initialDirection = place == null ? null : FacingOf(place);
         var data = _mission.GetAgentBuildDataToSpawnTroop(new BasicBattleAgentOrigin(troop), playerSide, true, false, reinforcement, count, index, initialPosition, initialDirection, formationIndex: cls)
             .Banner(team.Banner);
+        // In a Coop session (#1280) Coop adds a defender ally team, and the engine puts a plain origin there (Mission.cs:5229-5233), so the
+        // garrison would stand off DefenderTeam. In a solo run the engine already picked this team, and nothing changes.
+        if (data.AgentTeam != team)
+            data.Team(team).ClothingColor1(team.Color).ClothingColor2(team.Color2).Formation(team.GetFormation(data.AgentFormation?.FormationIndex ?? cls));
         if (kit != null)
             data.Equipment(kit).NoHorses(!mounted);
 

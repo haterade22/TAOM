@@ -39,6 +39,24 @@ public class TroopWeightLevelBandTests
         "goblin_spider_lord",
     };
 
+    /// <summary>
+    /// Troops of the separate DualWield module. No troops_*.xml here defines them, so they resolve to no
+    /// level; their rows sit in this file because the weight service reads only this one, and a row for a
+    /// module that is not loaded is never looked up. Pinned by TroopWeightCoverageTests.
+    /// </summary>
+    private static readonly HashSet<string> DualWieldModuleTroops = new(StringComparer.Ordinal)
+    {
+        "dw_imladris_bladedancer",
+        "dw_lindon_bladedancer",
+        "dw_imladris_blademaiden",
+        "dw_mirkwood_twinblade_warden",
+        "dw_mirkwood_twinblade_huntress",
+        "dw_goblintown_twinblade",
+        "dw_gundabad_pale_twinaxe",
+        "dw_isengard_urukhai_twinblade",
+        "dw_mordor_uruk_twinblade",
+    };
+
     private static Dictionary<string, float> _weights = null!;
     private static Dictionary<string, int> _levels = null!;
 
@@ -146,12 +164,12 @@ public class TroopWeightLevelBandTests
     public void EveryWeightedId_ResolvesToATroopOrIsANamedMountPackage()
     {
         var unresolved = _weights.Keys
-            .Where(id => !_levels.ContainsKey(id) && !MountPackages.Contains(id))
+            .Where(id => !_levels.ContainsKey(id) && !MountPackages.Contains(id) && !DualWieldModuleTroops.Contains(id))
             .OrderBy(id => id, StringComparer.Ordinal)
             .ToList();
 
         Assert.AreEqual(0, unresolved.Count,
-            "weighted ids that are neither a troops_*.xml troop nor a named mount package (a dead row, or a renamed troop):\n  "
+            "weighted ids that are neither a troops_*.xml troop, a named mount package nor a named DualWield troop (a dead row, or a renamed troop):\n  "
             + string.Join("\n  ", unresolved));
     }
 }

@@ -568,8 +568,8 @@ delta in the merged document is the `AvailablePiece` entries on `OneHandedPolear
 description touched. The Dale half was confirmed in game 2026-08-09 by a tester running the
 equivalent change.
 
-**Gate.** `python tools/audit_polearm_shield_parity.py` — fails when any roster pairs a shield with a
-polearm whose primary usage forbids one. Proven to fire, twice: reverting the Dale half takes it from
+**Gate.** `python tools/audit_polearm_shield_parity.py` fails when any roster pairs a shield with a
+polearm or (since #1312) a two-handed weapon whose primary usage forbids one. Proven to fire, twice: reverting the Dale half takes it from
 PASS to exactly 28 extra findings (measured 2026-08-20 against current trunk), and it caught the 8
 lance rosters on its own before they had ever been looked at.
 

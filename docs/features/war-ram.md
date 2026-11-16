@@ -350,35 +350,33 @@ monotonically:
 
 ### Skills: dwarves are the worst riders in the game
 
-Athletics, OneHanded, Polearm, Bow and Crossbow sit exactly on `CAVALRY_BASELINES` in
-`tools/rebalance_troops.py`. Two skills deviate, in opposite directions, and both deviations are
-deliberate.
-
-**Riding runs far below baseline at every rung**, by roughly a quarter throughout, so dwarves are not
-merely the worst riders in the game but visibly so. Measured mean Riding by culture and level:
+The ram riders' skills come from the role table in `tools/rebalance_troops.py`
+([troop-skill-balance.md](troop-skill-balance.md#the-role-table-343)), on Erebor's culture row, and
+then the monotonicity clamp. A mounted troop's Riding is N times Erebor's Riding percent, the
+lowest in the table, and its Athletics is half the foot value. The engine's mount-difficulty floor
+does not lift them: the goats are not in the mount difficulty registry, so the tool reads their
+difficulty as 0. Measured mean Riding of mounted troops by culture and level:
 
 | culture | 16 | 21 | 26 | 31 | 36 | 41 |
 |---|---|---|---|---|---|---|
-| **Erebor (war ram)** | **65** | **90** | **125** | **165** | **205** | **245** |
-| baseline | 95 | 120 | 160 | 210 | 270 | 320 |
-| Dol Guldur | 90 | 115 | 155 | 205 | 265 | - |
-| Isengard | 100 | 125 | 165 | - | - | - |
-| Harad | 110 | 145 | 188 | 225 | - | - |
-| Gundabad | - | 145 | 195 | 205 | 265 | 315 |
-| Rohan | 119 | 148 | 190 | 241 | 300 | 340 |
-| Lindon / Rivendell | - | - | - | - | 300 | 360 |
+| **Erebor (war ram)** | **65** | **90** | **115** | **140** | **165** | **185** |
+| Dol Guldur | 70 | 95 | 125 | 150 | 175 | 200 |
+| Isengard | 70 | 105 | 135 | - | - | - |
+| Harad | 75 | 110 | 140 | 170 | 195 | - |
+| Gundabad | - | 95 | 125 | 150 | 175 | 200 |
+| Rohan | 80 | 115 | 150 | 180 | 210 | 240 |
+| Lindon / Rivendell | - | - | - | - | 205 | 235 |
 
-Erebor is the lowest at every level it fields a mount, and by a wide margin: at 41 the marshal rides
-245 against Gundabad's 315, Rohan's 340 and the elves' 360. It was nominally lowest before this pass
-too (120/160/200/240/300), but only by a handful of points, which read as a rounding difference
-rather than a racial trait.
+<!-- measured: the troop files after the #343 restat, mean Riding of troops with a Horse slot, 2026-11-15 -->
 
-**TwoHanded and Throwing run above baseline**, and that is forced rather than chosen.
-`ironpass_warrior` (16) carries TwoHanded 105 and Throwing 40, and it upgrades into
-`ironpass_ram_rider` (21), whose baseline values are 60 and 30. Straight baseline would be a skill
-regression across that edge and `TroopUpgradeSkillMonotonicityTests` fails it. Dwarves being heavy
-two-handed axe fighters makes the forced floor coherent anyway, so the curve keeps it rather than
-weakening the warrior to fit.
+Erebor is the lowest at every level it fields a mount: at 41 the marshal rides 185 against
+Gundabad's 200, the elves' 235 and Rohan's 240.
+
+`ironpass_ram_rider` (21) and `ironpass_goat_charger` (26) differ from the bare role table, because
+the clamp raises them to their parents: the rider takes Athletics 75 from `ironpass_warrior` (16),
+which fights on foot. The rest of the line is the role table exactly. The old forced TwoHanded and
+Throwing floor is gone: `ironpass_warrior` carries no two-handed axe or throwing weapon, so its
+values there are the uncarried ones and the rider's are not under them.
 
 The herder originally filled no `HorseHarness` slot at all, and this doc called that deliberate.
 It was a defect, corrected on 2026-09-06 after players reported dwarves riding bareback.

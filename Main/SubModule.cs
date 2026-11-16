@@ -88,6 +88,7 @@ using TAOM.Features.MixedFormations.Hooks;
 using TAOM.Features.SmartCavalryAI.Hooks;
 using TAOM.Features.FiefManagement;
 using TAOM.Features.FiefManagement.Hooks;
+using TAOM.Features.HostilePeace.Models;
 using TAOM.Features.SettlementNameplateFade;
 using TAOM.Features.SettlementNameplateFade.Hooks;
 using TAOM.Features.SettlementNameplateRelation;
@@ -672,16 +673,25 @@ public class SubModule : MBSubModuleBase
         // an inflight marker (phase-4 wrote it; phase-6/end never ran to clear it). If it
         // survived to this main menu, the previous load never finished — surface a notice so
         // the player knows to send the diagnostic log. See docs/features/battle-load-diagnostics.md.
+        bool stallShown = false;
         try
         {
             var stallMarker = IoC.Resolve<Features.BattleLoadDiagnostics.IBattleLoadStallMarker>();
             var stale = stallMarker?.TryConsumeStaleMarker();
             if (stale != null)
+            {
+                stallShown = true;
                 Features.BattleLoadDiagnostics.StallReportNotifier.Notify(stale);
-            // Any other session that ended without the clean unload line: offer the bug report (crash-report.md).
-            // Once per launch; a launch that showed the stall notice uses its turn here, so no later menu offers it.
+            }
+        }
+        catch { /* never block the main menu over a diagnostic */ }
+        // Any other session that ended without the clean unload line: offer the bug report (crash-report.md).
+        // Once per launch; a launch that showed the stall notice uses its turn here, so no later menu offers it.
+        // A try of its own, so a stall marker that throws does not skip the offer (#1297).
+        try
+        {
             Features.CrashReport.BugReport.BugReportStartup.CheckPreviousSession(
-                IoC.Resolve<IModLogger>(), stallNoticeShown: stale != null);
+                IoC.Resolve<IModLogger>(), stallNoticeShown: stallShown);
         }
         catch { /* never block the main menu over a diagnostic */ }
 
@@ -1149,13 +1159,21 @@ public class SubModule : MBSubModuleBase
         // installed" disabled TAOM's diplomacy for a solo player who merely had it enabled, and for
         // the co-op host itself. See ICoopSessionProvider.
         var coopSession = IoC.Resolve<TAOM.Features.CoopInterop.ICoopSessionProvider>();
+        // Hostile Peace (docs/features/hostile-peace.md). Block D: the three player alliance paths take the service, so the
+        // player's kingdom does not ally across the Free/Evil line unless "Allow Player Alliances With Anyone" is on.
+        var hostilePeace = IoC.Resolve<Features.HostilePeace.HostilePeaceService>();
         campaignStarter.AddBehavior(new DiplomacyBehavior(diplomacyService, diplomacyLogger, coopSession));
-        campaignStarter.AddBehavior(new PlayerAllianceProposalBehavior(diplomacyService, coopSession, diplomacyLogger));
-        campaignStarter.AddModel(new TaomAllianceModel(diplomacyService));
+        campaignStarter.AddBehavior(new PlayerAllianceProposalBehavior(diplomacyService, coopSession, diplomacyLogger, hostilePeace));
+        campaignStarter.AddModel(new TaomAllianceModel(diplomacyService, hostilePeace));
         campaignStarter.AddModel(new TaomKingdomDecisionPermissionModel(diplomacyService, wotrService,
-            IoC.Resolve<IOnAllianceAction>(), coopSession));
+            IoC.Resolve<IOnAllianceAction>(), coopSession, hostilePeace));
         campaignStarter.AddModel(new TaomDiplomacyModel(wotrService, coopSession, IoC.Resolve<IOnAllianceAction>(), IoC.Resolve<Features.Relations.IPersonalRelationService>(),
             IoC.Resolve<Features.KingdomAllegiance.KingdomAllegianceService>(), IoC.Resolve<Features.KingdomAllegiance.Models.AllegianceFactsReader>()));
+        // Blocks B and C: no trade agreement between Hostile realms, and the player meets their settlements as at war while
+        // they are at peace. TAOM overrides neither model anywhere else.
+        campaignStarter.AddModel(new TaomTradeAgreementModel(hostilePeace, coopSession));
+        campaignStarter.AddModel(new TaomSettlementAccessModel(hostilePeace));
+        campaignStarter.AddModel(new TaomCrimeModel(hostilePeace));
 
         var wotrLogger = IoC.Resolve<IModLogger>();
         // #764: must stay `new` per campaign. Its constructor resets the process-lifetime WotR service;
@@ -1494,7 +1512,7 @@ public class SubModule : MBSubModuleBase
             IoC.Resolve<Features.EliteEmissary.IEliteEmissarySettingsProvider>(),
             IoC.Resolve<Features.EliteEmissary.IEliteEmissaryConfigProvider>(),
             IoC.Resolve<ISettlementOwnerAdapter>(),
-            IoC.Resolve<Features.CoopInterop.ICoopSessionProvider>(),
+            IoC.Resolve<Features.CoopInterop.GuestTrade.GuestTradeClient>(),
             IoC.Resolve<IModLogger>()));
 
         // CultureConversion — conquered cross-culture fiefs gradually adopt the new owner's culture

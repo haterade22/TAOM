@@ -8,7 +8,7 @@ using TAOM.Features.TroopWeight;
 namespace TAOM.Adapters;
 
 /// <summary>Reads the main hero id and the main party's daily wage, and adds purchased emissary troops to the
-/// roster (ADR-007). <c>GrantTroop</c> returns false on any reason a charge must NOT follow — no main party,
+/// roster (ADR-007); an instance from <see cref="ForHero"/> acts for that hero and its party instead. <c>GrantTroop</c> returns false on any reason a charge must NOT follow — no main party,
 /// unresolvable troop id, or an add exception.</summary>
 public sealed class PlayerPartyAdapter : IPlayerPartyAdapter
 {
@@ -17,13 +17,27 @@ public sealed class PlayerPartyAdapter : IPlayerPartyAdapter
     private bool _wageFailureLogged;
     private bool _freeSlotsFailureLogged;
 
+    private readonly Hero? _guest;
+
     public PlayerPartyAdapter(IModLogger logger, ITroopWeightService troopWeight)
     {
         _logger = logger;
         _troopWeight = troopWeight;
     }
 
-    public string GetMainHeroId() => Hero.MainHero?.StringId;
+    private PlayerPartyAdapter(IModLogger logger, ITroopWeightService troopWeight, Hero guest)
+        : this(logger, troopWeight)
+    {
+        _guest = guest;
+    }
+
+    /// <summary>The same adapter for another hero's party, for a co-op guest's emissary purchase on the host (#1329).</summary>
+    public static PlayerPartyAdapter ForHero(Hero hero, IModLogger logger, ITroopWeightService troopWeight) =>
+        new(logger, troopWeight, hero);
+
+    private Hero? Self => _guest ?? Hero.MainHero;
+
+    public string GetMainHeroId() => Self?.StringId;
 
     /// <summary>
     /// <c>DefaultClanFinanceModel.CalculatePartyWage</c> charges <c>MobileParty.TotalWage</c>, which asks the
@@ -33,7 +47,7 @@ public sealed class PlayerPartyAdapter : IPlayerPartyAdapter
     {
         try
         {
-            var wage = Hero.MainHero?.PartyBelongedTo?.TotalWage ?? 0;
+            var wage = Self?.PartyBelongedTo?.TotalWage ?? 0;
             _wageFailureLogged = false;
             return wage > 0 ? wage : 0;
         }
@@ -52,7 +66,7 @@ public sealed class PlayerPartyAdapter : IPlayerPartyAdapter
     {
         try
         {
-            var party = Hero.MainHero?.PartyBelongedTo?.Party;
+            var party = Self?.PartyBelongedTo?.Party;
             var freeSlots = party == null ? 0 : Math.Max(0, party.PartySizeLimit - party.NumberOfAllMembers);
             _freeSlotsFailureLogged = false;
             return freeSlots;
@@ -80,7 +94,7 @@ public sealed class PlayerPartyAdapter : IPlayerPartyAdapter
 
         try
         {
-            var roster = Hero.MainHero?.PartyBelongedTo?.MemberRoster;
+            var roster = Self?.PartyBelongedTo?.MemberRoster;
             if (roster == null)
             {
                 _logger.LogWarning("[EliteEmissary] GrantTroop: no main-party roster (dead hero / no party)");

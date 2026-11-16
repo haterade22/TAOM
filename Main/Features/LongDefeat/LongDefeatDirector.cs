@@ -94,7 +94,7 @@ internal sealed partial class LongDefeatDirector
 
         _startedUtc = DateTime.UtcNow;
 
-        if (!_field.Boot(PlanSizes(), out var problem))
+        if (!_field.Boot(LongDefeatPlanSizes.Of(_plan), out var problem))
         {
             _logger.LogError($"{Tag}[Boot] the field cannot host a run: {problem}");
             LongDefeatChecks.Record(_outcomes, LongDefeatChecks.BootId, _mission, LongDefeatChecks.BootFailed(problem));
@@ -246,15 +246,6 @@ internal sealed partial class LongDefeatDirector
         _session.Clear();
         _field.Clear();
         _deferred.Clear();
-    }
-
-    private LdPlanSizes PlanSizes()
-    {
-        // The foot formation reserves a slot for the lord, unless he rides: a mounted lord joins the cavalry formation instead.
-        var foot = _plan.Garrison.Where(r => r.Slot == FormationSlot.Infantry).Sum(r => _plan.Options.ScaledCount(r.Count)) + (LordRides ? 0 : 1);
-        var ranged = _plan.Garrison.Where(r => r.Slot == FormationSlot.Ranged).Sum(r => _plan.Options.ScaledCount(r.Count));
-        var attackerRanged = _plan.Rules.LiveCap / 4;
-        return new LdPlanSizes(foot, ranged, _plan.Rules.LiveCap - attackerRanged, attackerRanged);
     }
 
     private void AdoptIfNew()
