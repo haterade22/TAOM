@@ -6,34 +6,34 @@
     <tag language="Simplified Chinese" />
   </tags>
   <strings>
-    <string id="taom_send_messenger" text="派遣信使" />
-    <string id="taom_messenger_target_unavailable" text="此人目前无法通过信使联系。" />
-    <string id="taom_messenger_disabled" text="信使系统已在设置中禁用。" />
+    <string id="taom_send_messenger" text="派出信使" />
+    <string id="taom_messenger_target_unavailable" text="现在无法通过信使联系此人。" />
+    <string id="taom_messenger_disabled" text="信使系统已在设置中关闭。" />
     <string id="taom_messenger_not_available" text="信使系统不可用。" />
-    <string id="taom_messenger_invalid_target" text="无效目标。" />
-    <string id="taom_messenger_cannot_send" text="无法派遣信使" />
-    <string id="taom_messenger_no_gold" text="金币不足!你需要{COST}第纳尔。" />
-    <string id="taom_messenger_already_sent" text="已向此人派遣过信使。" />
-    <string id="taom_messenger_hero_dead" text="{HERO_NAME}已死亡。" />
-    <string id="taom_messenger_hero_prisoner" text="{HERO_NAME}被囚禁,无法接收信使。" />
-    <string id="taom_messenger_hero_fugitive" text="{HERO_NAME}正在逃亡,无法找到。" />
-    <string id="taom_messenger_hero_child" text="{HERO_NAME}太年幼,无法接收信使。" />
-    <string id="taom_messenger_confused" text="信使似乎很困惑——他们试图联系的是你自己队伍中的人!" />
-    <string id="taom_messenger_sent" text="已向{HERO_NAME}派遣信使,将在{DAYS}天内抵达。" />
-    <string id="taom_messenger_sent_title" text="信使已派遣" />
-    <string id="taom_messenger_arrived" text="来自{HERO_NAME}的信使已抵达。你想与他们交谈吗?" />
+    <string id="taom_messenger_invalid_target" text="目标无效。" />
+    <string id="taom_messenger_cannot_send" text="无法派出信使" />
+    <string id="taom_messenger_no_gold" text="金币不足！你需要 {COST} 第纳尔。" />
+    <string id="taom_messenger_already_sent" text="已经派出一名信使去找此人了。" />
+    <string id="taom_messenger_hero_dead" text="{HERO_NAME} 已经死亡。" />
+    <string id="taom_messenger_hero_prisoner" text="{HERO_NAME} 正被囚禁，无法接收信使。" />
+    <string id="taom_messenger_hero_fugitive" text="{HERO_NAME} 正在逃亡，找不到此人。" />
+    <string id="taom_messenger_hero_child" text="{HERO_NAME} 年纪太小，无法接收信使。" />
+    <string id="taom_messenger_confused" text="信使似乎有些困惑：他们要找的人就在你的队伍里！" />
+    <string id="taom_messenger_sent" text="信使已被派往 {HERO_NAME} 处，将在 {DAYS} 天内抵达。" />
+    <string id="taom_messenger_sent_title" text="信使已派出" />
+    <string id="taom_messenger_arrived" text="{HERO_NAME} 派来的信使已经抵达。你要和他们交谈吗？" />
     <string id="taom_messenger_arrived_title" text="信使抵达" />
     <string id="taom_messenger_speak" text="交谈" />
     <string id="taom_messenger_dismiss" text="打发走" />
-    <string id="taom_messenger_lost" text="你派往{HERO_NAME}的信使遭到强盗伏击,未能抵达。" />
-    <string id="taom_messenger_recipient_gone" text="你派往{HERO_NAME}的信使未能送达消息便返回了——收信人已无法联系。" />
+    <string id="taom_messenger_lost" text="你派往 {HERO_NAME} 处的信使遭到强盗伏击，始终没有抵达。" />
+    <string id="taom_messenger_recipient_gone" text="你派往 {HERO_NAME} 处的信使无功而返：收信人已经无法联系。" />
     <string id="taom_messenger_lost_title" text="信使失踪" />
     <string id="taom_messenger_error" text="信使错误" />
-    <string id="taom_messenger_dialog_init" text="我之后可能需要给你传个信。我能派信使去找你吗?" />
-    <string id="taom_messenger_dialog_npc_accept" text="当然可以。我会确保在你的信使抵达时接见他。" />
-    <string id="taom_messenger_dialog_send" text="派遣信使({COST}第纳尔)" />
-    <string id="taom_messenger_dialog_decline" text="再想想,算了。" />
+    <string id="taom_messenger_dialog_init" text="之后我可能需要给你传消息。可以派信使去找你吗？" />
+    <string id="taom_messenger_dialog_npc_accept" text="当然。你的信使到了之后，我会接见他们。" />
+    <string id="taom_messenger_dialog_send" text="派出信使（{COST} 第纳尔）" />
+    <string id="taom_messenger_dialog_decline" text="我再想想，算了。" />
     <string id="taom_messenger_dialog_decline_ack" text="如你所愿。" />
-    <string id="taom_messenger_dialog_sent" text="那我就等你的信使了。" />
+    <string id="taom_messenger_dialog_sent" text="那我会等你的信使。" />
   </strings>
 </base>

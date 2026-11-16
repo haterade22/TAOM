@@ -6,291 +6,291 @@
     <tag language="Traditional Chinese" />
   </tags>
   <strings>
-    <string id="taom_enlist_already_serving" text="你已受軍役所約束。" />
-    <string id="taom_enlist_discharge" text="我請求解除軍役。" />
-    <string id="taom_enlist_discharge_answer" text="你的行軍已足夠稱職。去吧——你自由了。" />
-    <string id="taom_enlist_menu_leave" text="請求解除軍役" />
-    <string id="taom_enlist_menu_leave_pass" text="在聚落中休假" />
-    <string id="taom_enlist_menu_status" text="查看你的軍役狀況" />
-    <string id="taom_enlist_merit_toast" text="士官記錄了你的表現：{GRADE}。" />
-    <string id="taom_enlist_oath_ask" text="那就立誓吧：你的劍隨我左右，我的糧在你行囊，直至役期滿為止。你可立誓？" />
-    <string id="taom_enlist_oath_decline" text="再想想吧——還不是時候。" />
-    <string id="taom_enlist_oath_swear" text="我立誓。" />
-    <string id="taom_enlist_offer" text="我願在你麾下從軍。" />
+    <string id="taom_enlist_already_serving" text="你已有軍役在身。" />
+    <string id="taom_enlist_discharge" text="我請求退役，離開你的部隊。" />
+    <string id="taom_enlist_discharge_answer" text="你在軍中的表現還算不錯。去吧，你可以退役了。" />
+    <string id="taom_enlist_menu_leave" text="請求退役" />
+    <string id="taom_enlist_menu_leave_pass" text="在聚落內休假" />
+    <string id="taom_enlist_menu_status" text="查看服役情況" />
+    <string id="taom_enlist_merit_toast" text="軍士們對你的表現做了評價：{GRADE}。" />
+    <string id="taom_enlist_oath_ask" text="那就立誓吧：你用刀劍爲我而戰，我給你的行囊裝上口糧，直到服役期滿。你願意發誓嗎？" />
+    <string id="taom_enlist_oath_decline" text="再想想，我現在還不想入伍。" />
+    <string id="taom_enlist_oath_swear" text="我發誓。" />
+    <string id="taom_enlist_offer" text="我想加入你的部隊，在你麾下服役。" />
     <string id="taom_enlist_ok" text="明白了" />
-    <string id="taom_enlist_promoted" text="你已晉升為{RANK}。" />
-    <string id="taom_enlist_qm_issued" text="去看看軍需官的車——你的裝備已在行囊之中。" />
-    <string id="taom_enlist_qm_refused" text="你已領取與你階級相符的份額。先掙得下一道軍階吧。" />
-    <string id="taom_enlist_qm_request" text="我想向軍需官領取我的軍役裝備。" />
-    <string id="taom_enlist_reassign" text="我想在陣中換個位置。" />
-    <string id="taom_enlist_reassign_arc" text="我射箭比刺殺更在行。" />
-    <string id="taom_enlist_reassign_cav" text="我會騎馬。讓我去騎兵隊。" />
-    <string id="taom_enlist_reassign_done" text="那就去向你的新編隊報到。別讓我後悔。" />
-    <string id="taom_enlist_reassign_inf" text="讓我進盾陣。" />
-    <string id="taom_enlist_reassign_sup" text="行囊與傷兵需要人手。" />
-    <string id="taom_enlist_status_body" text="指揮官：{COMMANDER}。入伍於第 {ENLISTED_DAY} 天；契約於第 {CONTRACT_END} 天結束。" />
-    <string id="taom_enlist_status_title" text="軍役記錄" />
-    <string id="taom_enlist_wage_deferred" text="餉櫃短缺——你有 {AMOUNT}{GOLD_ICON} 的薪餉將延後補發。" />
-    <string id="taom_enlist_wage_forfeited" text="這支隊伍再也無法交代你 {AMOUNT}{GOLD_ICON} 的欠餉。" />
-    <string id="taom_enlist_wage_paid" text="已領取薪餉：{AMOUNT}{GOLD_ICON}" />
-    <string id="taom_enlist_wage_line" text="服役薪餉" />
-    <string id="taom_enlist_welcome" text="歡迎加入行列，士兵。列隊。" />
+    <string id="taom_enlist_promoted" text="你已晉升爲{RANK}。" />
+    <string id="taom_enlist_qm_issued" text="去軍需官的貨車那裏，你的裝備已經放進行囊了。" />
+    <string id="taom_enlist_qm_refused" text="你已經領過當前軍階應得的裝備了。先爭取晉升再來吧。" />
+    <string id="taom_enlist_qm_request" text="我想找軍需官領取服役裝備。" />
+    <string id="taom_enlist_reassign" text="我想調換在陣線中的位置。" />
+    <string id="taom_enlist_reassign_arc" text="比起持矛近戰，我更擅長射箭。" />
+    <string id="taom_enlist_reassign_cav" text="我會騎馬。讓我加入騎兵隊吧。" />
+    <string id="taom_enlist_reassign_done" text="那就去新分隊報到。別讓我後悔。" />
+    <string id="taom_enlist_reassign_inf" text="把我編進盾牆吧。" />
+    <string id="taom_enlist_reassign_sup" text="輜重和傷員都需要人照料。" />
+    <string id="taom_enlist_status_body" text="指揮官：{COMMANDER}。第{ENLISTED_DAY}天入伍，第{CONTRACT_END}天服役期滿。" />
+    <string id="taom_enlist_status_title" text="服役記錄" />
+    <string id="taom_enlist_wage_deferred" text="軍餉不足，暫欠你的{AMOUNT}{GOLD_ICON}軍餉將留待以後補發。" />
+    <string id="taom_enlist_wage_forfeited" text="部隊已無法再兌現拖欠你的{AMOUNT}{GOLD_ICON}軍餉。" />
+    <string id="taom_enlist_wage_paid" text="已領軍餉：{AMOUNT}{GOLD_ICON}" />
+    <string id="taom_enlist_wage_line" text="服役軍餉" />
+    <string id="taom_enlist_welcome" text="歡迎入伍，士兵。入列！" />
     <string id="taom_fc_accept" text="晉升" />
     <string id="taom_fc_acknowledge" text="明白了" />
     <string id="taom_fc_confirm_name" text="確認" />
-    <string id="taom_fc_decline" text="暫且不要" />
-    <string id="taom_fc_keep_name" text="保留原本的名字" />
-    <string id="taom_fc_no_room_body" text="目前已無空位再容納一名同伴。{TROOP_NAME} 的晉升將於日後再次提出。" />
-    <string id="taom_fc_offer_body" text="{TROOP_NAME} 在戰鬥中表現卓越。要將其晉升為同伴嗎？" />
+    <string id="taom_fc_decline" text="暫時不要" />
+    <string id="taom_fc_keep_name" text="保留默認名字" />
+    <string id="taom_fc_no_room_body" text="目前沒有空餘的同伴名額。之後還會再次詢問是否晉升{TROOP_NAME}。" />
+    <string id="taom_fc_offer_body" text="{TROOP_NAME}在戰鬥中表現出衆。要將這名士兵晉升爲同伴嗎？" />
     <string id="taom_fc_offer_title" text="戰場晉升" />
-    <string id="taom_fc_rename_body" text="為 {TROOP_NAME} 取個名字，或保留其征戰時所用的舊名。" />
-    <string id="taom_fc_rename_title" text="為新同伴命名" />
+    <string id="taom_fc_rename_body" text="爲{TROOP_NAME}取一個名字，也可以保留原來上陣時使用的名字。" />
+    <string id="taom_fc_rename_title" text="爲新同伴命名" />
     <string id="taom_fc_cancel" text="取消" />
-    <string id="taom_fc_dismiss" text="你的委任到此為止。回到隊列中去吧。" />
-    <string id="taom_fc_dismiss_answer" text="那就回到隊列去。我所攜帶的一切都隨委任而去；回到行伍中可不會還給我。你確定嗎？" />
-    <string id="taom_fc_dismiss_cancel" text="不。保留你的委任吧；就當我沒說過。" />
-    <string id="taom_fc_dismiss_confirm" text="我確定。回到{TROOP_NAME}的隊列中去。" />
-    <string id="taom_fc_dismiss_confirm_body" text="{HERO_NAME}將被解除職務，並由一名{TROOP_NAME}加入你的隊伍取而代之。他們作為同伴所攜帶的一切都將隨委任一同失去。此操作無法撤銷。" />
-    <string id="taom_fc_dismiss_done" text="那我就回到隊列中去。能擔此軍階是我的榮幸。" />
-    <string id="taom_fc_dismiss_entry" text="{HERO_NAME}（原為{TROOP_NAME}）" />
-    <string id="taom_fc_dismiss_failed" text="目前無法解除{HERO_NAME}的職務。" />
-    <string id="taom_fc_dismiss_failed_unnamed" text="目前無法解除該同伴的職務。" />
-    <string id="taom_fc_dismiss_menu" text="解除一名晉升同伴的職務" />
+    <string id="taom_fc_dismiss" text="撤去你的軍官任命，回到士兵隊伍吧。" />
+    <string id="taom_fc_dismiss_answer" text="那我就回去當兵了。我身上的裝備是受任命時領的，回去以後不會再還給我。你確定嗎？" />
+    <string id="taom_fc_dismiss_cancel" text="不。繼續當你的軍官，就當我沒說過。" />
+    <string id="taom_fc_dismiss_confirm" text="我確定。回去當{TROOP_NAME}吧。" />
+    <string id="taom_fc_dismiss_confirm_body" text="{HERO_NAME}將被撤職，你的部隊會增加一名{TROOP_NAME}。其作爲同伴攜帶的全部裝備都會失去。此操作無法撤銷。" />
+    <string id="taom_fc_dismiss_done" text="那我就回去當兵了。能擔任這個職位，是我的榮幸。" />
+    <string id="taom_fc_dismiss_entry" text="{HERO_NAME}（原兵種：{TROOP_NAME}）" />
+    <string id="taom_fc_dismiss_failed" text="現在無法撤去{HERO_NAME}的任命。" />
+    <string id="taom_fc_dismiss_failed_unnamed" text="現在無法撤去這名同伴的任命。" />
+    <string id="taom_fc_dismiss_menu" text="撤去晉升同伴的任命" />
     <string id="taom_fc_dismiss_pick" text="選擇" />
-    <string id="taom_fc_dismiss_picker_desc" text="選擇誰要回到隊列。他們將以晉升前的兵種身分重新加入你的隊伍；他們作為同伴所攜帶的裝備將會失去。" />
-    <string id="taom_fc_dismiss_picker_title" text="解除晉升同伴的職務" />
-    <string id="taom_fc_dismiss_title" text="回歸隊列" />
-    <string id="taom_fc_dismiss_yes" text="解除職務" />
-    <string id="taom_fc_dismissed" text="{HERO_NAME}已作為{TROOP_NAME}回到隊列中。" />
-    <string id="taom_enlist_act_battle" text="{COMMANDER}正在交戰。守住你在陣中的位置。" />
-    <string id="taom_enlist_act_lost" text="你與隊伍失散了。等待長官的消息。" />
-    <string id="taom_enlist_act_march" text="你隨{COMMANDER}的隊伍行軍，依長官的步調前進。" />
-    <string id="taom_enlist_act_settlement" text="隊伍在{SETTLEMENT}內休整。" />
-    <string id="taom_enlist_act_siege" text="你隨{COMMANDER}的隊伍在城牆前紮營。" />
-    <string id="taom_enlist_arrival_title" text="隊列停下" />
-    <string id="taom_enlist_arrival_body" text="你的隊伍在{SETTLEMENT}停了下來。若你想有幾個小時的自由時間，你的士官會裝作沒看見。" />
-    <string id="taom_enlist_arrival_take" text="告假離隊" />
-    <string id="taom_enlist_arrival_stay" text="留在隊伍中" />
-    <string id="taom_enlist_board_arrears" text="{NEWLINE}尚欠你的軍餉：{GOLD}{GOLD_ICON}" />
-    <string id="taom_enlist_board_duty" text="{NEWLINE}你接到命令：{DUTY_NAME}" />
-    <string id="taom_enlist_duty_already" text="你已經接到命令了。先把它辦妥。" />
-    <string id="taom_enlist_duty_none" text="眼下沒有你的差事。保持警覺——情況隨時會變。" />
-    <string id="taom_enlist_leave_refused" text="你現在無法在此告假離隊。" />
-    <string id="taom_enlist_menu_duty" text="向你的士官長領取差事" />
-    <string id="taom_enlist_menu_talk" text="與你的長官交談" />
+    <string id="taom_fc_dismiss_picker_desc" text="選擇要回到士兵隊伍的人。他們會以晉升前的兵種重新加入你的部隊，作爲同伴攜帶的裝備將會失去。" />
+    <string id="taom_fc_dismiss_picker_title" text="撤去晉升同伴的任命" />
+    <string id="taom_fc_dismiss_title" text="回到士兵隊伍" />
+    <string id="taom_fc_dismiss_yes" text="撤職" />
+    <string id="taom_fc_dismissed" text="{HERO_NAME}已回到隊伍，重新成爲{TROOP_NAME}。" />
+    <string id="taom_enlist_act_battle" text="{COMMANDER}已投入戰鬥。守住你在陣線中的位置。" />
+    <string id="taom_enlist_act_lost" text="你與隊伍失散了，正在等待指揮官的消息。" />
+    <string id="taom_enlist_act_march" text="你跟隨{COMMANDER}的部隊，按指揮官的步調行軍。" />
+    <string id="taom_enlist_act_settlement" text="部隊正在{SETTLEMENT}內休整。" />
+    <string id="taom_enlist_act_siege" text="你與{COMMANDER}的部隊在城牆前紮營。" />
+    <string id="taom_enlist_arrival_title" text="部隊停駐" />
+    <string id="taom_enlist_arrival_body" text="你的部隊已在{SETTLEMENT}停駐。如果你想抽幾個小時自由活動，軍士會睜一隻眼閉一隻眼。" />
+    <string id="taom_enlist_arrival_take" text="暫時離隊休假" />
+    <string id="taom_enlist_arrival_stay" text="留在部隊中" />
+    <string id="taom_enlist_board_arrears" text="{NEWLINE}拖欠的軍餉：{GOLD}{GOLD_ICON}" />
+    <string id="taom_enlist_board_duty" text="{NEWLINE}你已接到軍令：{DUTY_NAME}" />
+    <string id="taom_enlist_duty_already" text="你已經領到命令了，先把它辦完。" />
+    <string id="taom_enlist_duty_none" text="眼下沒你的差事。別鬆懈，隨時可能有事要做。" />
+    <string id="taom_enlist_leave_refused" text="你現在不能在這裏休假。" />
+    <string id="taom_enlist_menu_duty" text="向軍士領取任務" />
+    <string id="taom_enlist_menu_talk" text="與指揮官交談" />
     <string id="taom_enlist_rank_sergeant" text="軍士" />
-    <string id="taom_enlist_reassign_pick" text="你目前隨{CURRENT_SECTION}行軍。你更願意站在哪裡？" />
-    <string id="taom_enlist_release_battle" text="還有仗要打，此時不行。等戰場平靜了再來問我。" />
-    <string id="taom_enlist_release_desert" text="那我不再與你們同行了。無論誓言如何，我要走了。" />
-    <string id="taom_enlist_release_desert_answer" text="那你就是背棄誓言之人，這裡每個人都清楚。從我眼前消失。" />
-    <string id="taom_enlist_release_desert_option" text="逃離隊伍" />
-    <string id="taom_enlist_release_in_battle" text="還有仗要打。等戰場平靜了再來問。" />
-    <string id="taom_enlist_release_refused_body" text="你的長官要你守住誓言——你還欠{DAYS}天的服役。此時離去便是逃兵：你將失去尚欠你的軍餉，而你的長官也不會忘記此事。" />
-    <string id="taom_enlist_release_refused_title" text="你的役期尚未服滿" />
-    <string id="taom_enlist_release_relent" text="如你所言。我會守住陣線。" />
-    <string id="taom_enlist_release_soon" text="你曾立誓效命，那誓言還欠{DAYS}天。我要你履行到底。" />
-    <string id="taom_enlist_release_stay" text="留下繼續效命" />
+    <string id="taom_enlist_reassign_pick" text="你目前編在{CURRENT_SECTION}，想調到哪裏？" />
+    <string id="taom_enlist_release_battle" text="還要打仗，現在不行。等戰場平靜了再來問我。" />
+    <string id="taom_enlist_release_desert" text="那我不在你的部隊裏待了。管它什麼誓言，我現在就走。" />
+    <string id="taom_enlist_release_desert_answer" text="那你就是個背誓者，這裏人人都知道了。滾，別再讓我看見你。" />
+    <string id="taom_enlist_release_desert_option" text="逃離部隊" />
+    <string id="taom_enlist_release_in_battle" text="眼下還有仗要打，等戰場平靜了再來問。" />
+    <string id="taom_enlist_release_refused_body" text="指揮官要求你遵守誓言，你還需要服役{DAYS}天。現在離開就算逃兵：你會失去尚未補發的軍餉，指揮官也不會忘記這件事。" />
+    <string id="taom_enlist_release_refused_title" text="服役期未滿" />
+    <string id="taom_enlist_release_relent" text="就按你說的辦。我會堅守陣線。" />
+    <string id="taom_enlist_release_soon" text="你發誓要服役，現在還欠{DAYS}天。你必須履行誓言。" />
+    <string id="taom_enlist_release_stay" text="留下繼續服役" />
     <string id="taom_enlist_section_arc" text="弓手隊" />
-    <string id="taom_enlist_section_cav" text="騎隊" />
-    <string id="taom_enlist_section_inf" text="盾陣" />
+    <string id="taom_enlist_section_cav" text="騎兵隊" />
+    <string id="taom_enlist_section_inf" text="盾牆陣線" />
     <string id="taom_enlist_section_sup" text="輜重隊" />
-    <string id="taom_enlist_trust_known" text="略有名聲" />
+    <string id="taom_enlist_trust_known" text="已有些名氣" />
     <string id="taom_enlist_trust_new" text="未經考驗" />
-    <string id="taom_enlist_trust_poor" text="風評不佳" />
-    <string id="taom_enlist_trust_solid" text="頗受敬重" />
-    <string id="taom_enlist_trust_trusted" text="深受信賴" />
-    <string id="taom_enlist_grade_distinguished" text="功勳卓著" />
-    <string id="taom_enlist_grade_strong" text="表現出色" />
-    <string id="taom_enlist_grade_solid" text="穩健可靠" />
-    <string id="taom_enlist_grade_rough" text="艱難，但你撐住了" />
-    <string id="taom_enlist_duty_camp_discipline_title" text="營中生亂" />
-    <string id="taom_enlist_duty_camp_discipline_body" text="一場爭吵引來了圍觀的人群，眼看就要鬧得更大。" />
-    <string id="taom_enlist_duty_camp_discipline_opta" text="上前勸阻" />
-    <string id="taom_enlist_duty_camp_discipline_optb" text="去叫士官" />
+    <string id="taom_enlist_trust_poor" text="評價很差" />
+    <string id="taom_enlist_trust_solid" text="受到器重" />
+    <string id="taom_enlist_trust_trusted" text="深受信任" />
+    <string id="taom_enlist_grade_distinguished" text="卓越" />
+    <string id="taom_enlist_grade_strong" text="出色" />
+    <string id="taom_enlist_grade_solid" text="穩健" />
+    <string id="taom_enlist_grade_rough" text="有些喫力，但還是撐住了" />
+    <string id="taom_enlist_duty_camp_discipline_title" text="營地裏的爭吵" />
+    <string id="taom_enlist_duty_camp_discipline_body" text="一場爭吵引來了圍觀，再不制止就要鬧大了。" />
+    <string id="taom_enlist_duty_camp_discipline_opta" text="制止爭吵" />
+    <string id="taom_enlist_duty_camp_discipline_optb" text="去叫軍士" />
     <string id="taom_enlist_duty_camp_discipline_success" text="一切順利。" />
-    <string id="taom_enlist_duty_camp_discipline_failure" text="事情並未如願。" />
-    <string id="taom_enlist_duty_command_squad_title" text="指揮一支小隊" />
-    <string id="taom_enlist_duty_command_squad_body" text="這支小隊需要一雙穩健的手來操練，讓他們準備上陣。" />
-    <string id="taom_enlist_duty_command_squad_opta" text="操練陣式" />
-    <string id="taom_enlist_duty_command_squad_optb" text="檢視裝具" />
+    <string id="taom_enlist_duty_camp_discipline_failure" text="事情沒有按計劃發展。" />
+    <string id="taom_enlist_duty_command_squad_title" text="指揮小隊" />
+    <string id="taom_enlist_duty_command_squad_body" text="一支小隊需要沉穩可靠的人來操練，讓他們做好上陣的準備。" />
+    <string id="taom_enlist_duty_command_squad_opta" text="操練隊列機動" />
+    <string id="taom_enlist_duty_command_squad_optb" text="檢查裝備" />
     <string id="taom_enlist_duty_command_squad_success" text="一切順利。" />
-    <string id="taom_enlist_duty_command_squad_failure" text="事情並未如願。" />
+    <string id="taom_enlist_duty_command_squad_failure" text="事情沒有按計劃發展。" />
     <string id="taom_enlist_duty_coordinate_supply_title" text="補給線" />
-    <string id="taom_enlist_duty_coordinate_supply_body" text="貨車全都堵住了，得有人讓它們重新動起來。" />
-    <string id="taom_enlist_duty_coordinate_supply_opta" text="重新調度貨車" />
-    <string id="taom_enlist_duty_coordinate_supply_optb" text="僱用車夫" />
+    <string id="taom_enlist_duty_coordinate_supply_body" text="貨車堵在了路上，需要有人讓車隊重新動起來。" />
+    <string id="taom_enlist_duty_coordinate_supply_opta" text="調度車隊" />
+    <string id="taom_enlist_duty_coordinate_supply_optb" text="僱用車伕" />
     <string id="taom_enlist_duty_coordinate_supply_success" text="一切順利。" />
-    <string id="taom_enlist_duty_coordinate_supply_failure" text="事情並未如願。" />
-    <string id="taom_enlist_duty_equipment_check_title" text="裝具檢查" />
-    <string id="taom_enlist_duty_equipment_check_body" text="軍需官要求在集結之前檢查每一名士兵的裝具。" />
+    <string id="taom_enlist_duty_coordinate_supply_failure" text="事情沒有按計劃發展。" />
+    <string id="taom_enlist_duty_equipment_check_title" text="裝備檢查" />
+    <string id="taom_enlist_duty_equipment_check_body" text="軍需官要求在集結前檢查每一名士兵的裝備。" />
     <string id="taom_enlist_duty_equipment_check_opta" text="全面清點" />
-    <string id="taom_enlist_duty_equipment_check_optb" text="就地修補" />
+    <string id="taom_enlist_duty_equipment_check_optb" text="局部修補" />
     <string id="taom_enlist_duty_equipment_check_success" text="一切順利。" />
-    <string id="taom_enlist_duty_equipment_check_failure" text="事情並未如願。" />
-    <string id="taom_enlist_duty_gate_watch_title" text="城門值勤" />
-    <string id="taom_enlist_duty_gate_watch_body" text="城門需要一雙警醒的眼睛，盯著進出的人。" />
-    <string id="taom_enlist_duty_gate_watch_opta" text="查驗通行文書" />
-    <string id="taom_enlist_duty_gate_watch_optb" text="倚牆偷閒" />
+    <string id="taom_enlist_duty_equipment_check_failure" text="事情沒有按計劃發展。" />
+    <string id="taom_enlist_duty_gate_watch_title" text="城門值守" />
+    <string id="taom_enlist_duty_gate_watch_body" text="城門需要有人認真盯着，留意進出的人。" />
+    <string id="taom_enlist_duty_gate_watch_opta" text="查驗憑證" />
+    <string id="taom_enlist_duty_gate_watch_optb" text="靠牆歇着" />
     <string id="taom_enlist_duty_gate_watch_success" text="一切順利。" />
-    <string id="taom_enlist_duty_gate_watch_failure" text="事情並未如願。" />
-    <string id="taom_enlist_duty_inspect_defenses_title" text="巡視工事" />
-    <string id="taom_enlist_duty_inspect_defenses_body" text="得有人走一遍防禦工事，回報它們的狀況。" />
-    <string id="taom_enlist_duty_inspect_defenses_opta" text="巡走工事" />
-    <string id="taom_enlist_duty_inspect_defenses_optb" text="清點儲備" />
+    <string id="taom_enlist_duty_gate_watch_failure" text="事情沒有按計劃發展。" />
+    <string id="taom_enlist_duty_inspect_defenses_title" text="巡查工事" />
+    <string id="taom_enlist_duty_inspect_defenses_body" text="需要有人巡查防禦工事，再回來報告情況。" />
+    <string id="taom_enlist_duty_inspect_defenses_opta" text="巡查工事" />
+    <string id="taom_enlist_duty_inspect_defenses_optb" text="清點庫存" />
     <string id="taom_enlist_duty_inspect_defenses_success" text="一切順利。" />
-    <string id="taom_enlist_duty_inspect_defenses_failure" text="事情並未如願。" />
-    <string id="taom_enlist_duty_lead_patrol_title" text="率領巡邏隊" />
-    <string id="taom_enlist_duty_lead_patrol_body" text="下一支巡邏隊需要有人帶他們出去，並完整地帶回來。" />
-    <string id="taom_enlist_duty_lead_patrol_opta" text="親自打頭陣" />
-    <string id="taom_enlist_duty_lead_patrol_optb" text="委派路線" />
+    <string id="taom_enlist_duty_inspect_defenses_failure" text="事情沒有按計劃發展。" />
+    <string id="taom_enlist_duty_lead_patrol_title" text="率隊巡邏" />
+    <string id="taom_enlist_duty_lead_patrol_body" text="下一支巡邏隊需要有人帶隊出去，再把所有人平安帶回來。" />
+    <string id="taom_enlist_duty_lead_patrol_opta" text="在前面帶路" />
+    <string id="taom_enlist_duty_lead_patrol_optb" text="讓別人規劃路線" />
     <string id="taom_enlist_duty_lead_patrol_success" text="一切順利。" />
-    <string id="taom_enlist_duty_lead_patrol_failure" text="事情並未如預期發展。" />
-    <string id="taom_enlist_duty_night_patrol_title" text="守夜" />
-    <string id="taom_enlist_duty_night_patrol_body" text="士官需要有人在換班之前巡完夜間的崗哨。" />
-    <string id="taom_enlist_duty_night_patrol_opta" text="巡視崗哨" />
-    <string id="taom_enlist_duty_night_patrol_optb" text="加倍守夜" />
+    <string id="taom_enlist_duty_lead_patrol_failure" text="事情沒有按計劃發展。" />
+    <string id="taom_enlist_duty_night_patrol_title" text="夜間值守" />
+    <string id="taom_enlist_duty_night_patrol_body" text="軍士需要有人在換崗前完成夜間巡邏。" />
+    <string id="taom_enlist_duty_night_patrol_opta" text="巡視一圈" />
+    <string id="taom_enlist_duty_night_patrol_optb" text="加倍警戒" />
     <string id="taom_enlist_duty_night_patrol_success" text="一切順利。" />
-    <string id="taom_enlist_duty_night_patrol_failure" text="事情並未如預期發展。" />
-    <string id="taom_enlist_duty_pay_delay_title" text="軍餉又延發了" />
-    <string id="taom_enlist_duty_pay_delay_body" text="傳言軍餉又要遲發，弟兄們怨聲載道。" />
-    <string id="taom_enlist_duty_pay_delay_opta" text="力爭索討" />
+    <string id="taom_enlist_duty_night_patrol_failure" text="事情沒有按計劃發展。" />
+    <string id="taom_enlist_duty_pay_delay_title" text="軍餉又遲發了" />
+    <string id="taom_enlist_duty_pay_delay_body" text="軍餉又遲發的消息傳開了，士兵們滿腹牢騷。" />
+    <string id="taom_enlist_duty_pay_delay_opta" text="催討軍餉" />
     <string id="taom_enlist_duty_pay_delay_optb" text="耐心等待" />
     <string id="taom_enlist_duty_pay_delay_success" text="一切順利。" />
-    <string id="taom_enlist_duty_pay_delay_failure" text="事情並未如預期發展。" />
-    <string id="taom_enlist_duty_quartermaster_shortage_title" text="物資短缺" />
-    <string id="taom_enlist_duty_quartermaster_shortage_body" text="軍需官的補給不足，需要有人幫忙處理。" />
+    <string id="taom_enlist_duty_pay_delay_failure" text="事情沒有按計劃發展。" />
+    <string id="taom_enlist_duty_quartermaster_shortage_title" text="庫存短缺" />
+    <string id="taom_enlist_duty_quartermaster_shortage_body" text="軍需官的物資不夠了，需要有人幫忙解決。" />
     <string id="taom_enlist_duty_quartermaster_shortage_opta" text="節省物資" />
-    <string id="taom_enlist_duty_quartermaster_shortage_optb" text="與當地人交易" />
+    <string id="taom_enlist_duty_quartermaster_shortage_optb" text="與當地人以物易物" />
     <string id="taom_enlist_duty_quartermaster_shortage_success" text="一切順利。" />
-    <string id="taom_enlist_duty_quartermaster_shortage_failure" text="事情並未如預期發展。" />
+    <string id="taom_enlist_duty_quartermaster_shortage_failure" text="事情沒有按計劃發展。" />
     <string id="taom_enlist_duty_short_rations_title" text="口糧不足" />
-    <string id="taom_enlist_duty_short_rations_body" text="今晚的存糧見底，不足以分給所有人。" />
-    <string id="taom_enlist_duty_short_rations_opta" text="分享自己的份" />
-    <string id="taom_enlist_duty_short_rations_optb" text="外出覓食" />
+    <string id="taom_enlist_duty_short_rations_body" text="今晚存糧不多，已經不夠大家分了。" />
+    <string id="taom_enlist_duty_short_rations_opta" text="分出自己的口糧" />
+    <string id="taom_enlist_duty_short_rations_optb" text="外出蒐集食物" />
     <string id="taom_enlist_duty_short_rations_success" text="一切順利。" />
-    <string id="taom_enlist_duty_short_rations_failure" text="事情並未如預期發展。" />
+    <string id="taom_enlist_duty_short_rations_failure" text="事情沒有按計劃發展。" />
     <string id="taom_enlist_duty_strategic_planning_title" text="規劃行軍路線" />
-    <string id="taom_enlist_duty_strategic_planning_body" text="軍官們為下一段行軍爭論不休，想多聽一個人的意見。" />
-    <string id="taom_enlist_duty_strategic_planning_opta" text="草擬路線" />
-    <string id="taom_enlist_duty_strategic_planning_optb" text="向軍官簡報" />
+    <string id="taom_enlist_duty_strategic_planning_body" text="軍官們正爲接下來的行軍爭論不休，想再聽聽別人的意見。" />
+    <string id="taom_enlist_duty_strategic_planning_opta" text="擬定路線" />
+    <string id="taom_enlist_duty_strategic_planning_optb" text="向軍官說明方案" />
     <string id="taom_enlist_duty_strategic_planning_success" text="一切順利。" />
-    <string id="taom_enlist_duty_strategic_planning_failure" text="事情並未如預期發展。" />
+    <string id="taom_enlist_duty_strategic_planning_failure" text="事情沒有按計劃發展。" />
     <string id="taom_enlist_duty_train_recruits_title" text="操練新兵" />
-    <string id="taom_enlist_duty_train_recruits_body" text="一群生澀的新兵閒站著，等著有人來好好磨練他們。" />
-    <string id="taom_enlist_duty_train_recruits_opta" text="操練他們" />
-    <string id="taom_enlist_duty_train_recruits_optb" text="輕鬆對練" />
+    <string id="taom_enlist_duty_train_recruits_body" text="一羣缺乏經驗的新兵閒站着，等人來帶他們操練。" />
+    <string id="taom_enlist_duty_train_recruits_opta" text="帶他們操練" />
+    <string id="taom_enlist_duty_train_recruits_optb" text="簡單對練" />
     <string id="taom_enlist_duty_train_recruits_success" text="一切順利。" />
-    <string id="taom_enlist_duty_train_recruits_failure" text="事情並未如預期發展。" />
-    <string id="taom_enlist_duty_treat_wounded_title" text="傷者需要照料" />
-    <string id="taom_enlist_duty_treat_wounded_body" text="軍醫還來不及顧及所有人，數名傷者急需照料。" />
-    <string id="taom_enlist_duty_treat_wounded_opta" text="包紮傷口" />
-    <string id="taom_enlist_duty_treat_wounded_optb" text="搬運物資" />
+    <string id="taom_enlist_duty_train_recruits_failure" text="事情沒有按計劃發展。" />
+    <string id="taom_enlist_duty_treat_wounded_title" text="傷員需要照料" />
+    <string id="taom_enlist_duty_treat_wounded_body" text="幾名傷員需要照料，可軍醫還沒來得及顧上他們。" />
+    <string id="taom_enlist_duty_treat_wounded_opta" text="處理傷口" />
+    <string id="taom_enlist_duty_treat_wounded_optb" text="幫忙取送物資" />
     <string id="taom_enlist_duty_treat_wounded_success" text="一切順利。" />
-    <string id="taom_enlist_duty_treat_wounded_failure" text="事情並未如預期般順利。" />
-    <string id="taom_enlist_talk_no_battle" text="戰鬥之中不可如此。" />
-    <string id="taom_enlist_talk_no_duty" text="你正奉命在外——須親自騎馬去見他。" />
+    <string id="taom_enlist_duty_treat_wounded_failure" text="事情沒有按計劃發展。" />
+    <string id="taom_enlist_talk_no_battle" text="戰鬥中無法交談。" />
+    <string id="taom_enlist_talk_no_duty" text="你正奉命在外，請自己騎馬去找他。" />
     <string id="taom_enlist_talk_no_commander" text="無法聯繫上你的指揮官。" />
-    <string id="taom_enlist_talk_no_map" text="不能在此處進行。" />
-    <string id="taom_enlist_talk_no_generic" text="此刻你無法與他交談。" />
-    <string id="taom_enlist_duty_bandit_hunt_title" text="獵殺盜匪" />
-    <string id="taom_enlist_duty_deserter_sweep_title" text="掃蕩逃兵" />
-    <string id="taom_enlist_duty_forage_title" text="為部隊徵集糧草" />
+    <string id="taom_enlist_talk_no_map" text="不能在這裏進行。" />
+    <string id="taom_enlist_talk_no_generic" text="你現在無法與他交談。" />
+    <string id="taom_enlist_duty_bandit_hunt_title" text="剿匪" />
+    <string id="taom_enlist_duty_deserter_sweep_title" text="搜捕逃兵" />
+    <string id="taom_enlist_duty_forage_title" text="爲部隊蒐集糧草" />
     <string id="taom_enlist_duty_hideout_strike_title" text="突襲匪巢" />
-    <string id="taom_enlist_duty_mounted_pursuit_title" text="騎兵追擊" />
-    <string id="taom_enlist_duty_recon_sweep_title" text="偵察巡弋" />
-    <string id="taom_enlist_duty_recruitment_errand_title" text="招募差事" />
-    <string id="taom_enlist_duty_relief_dispatch_title" text="向受困的封地傳遞消息" />
+    <string id="taom_enlist_duty_mounted_pursuit_title" text="騎馬追擊" />
+    <string id="taom_enlist_duty_recon_sweep_title" text="偵察周邊地形" />
+    <string id="taom_enlist_duty_recruitment_errand_title" text="招募新兵" />
+    <string id="taom_enlist_duty_relief_dispatch_title" text="向受困封地傳遞消息" />
     <string id="taom_enlist_duty_road_patrol_title" text="道路巡邏" />
-    <string id="taom_enlist_duty_scout_route_title" text="偵查前方道路" />
-    <string id="taom_enlist_duty_service_shift_title" text="營地雜務" />
+    <string id="taom_enlist_duty_scout_route_title" text="偵察前方道路" />
+    <string id="taom_enlist_duty_service_shift_title" text="營地值勤" />
     <string id="taom_enlist_duty_supply_delivery_title" text="運送補給" />
-    <string id="taom_enlist_duty_trusted_dispatch_title" text="傳送軍令" />
-    <string id="taom_enlist_wait_board_v2" text="{ACTIVITY}{NEWLINE}{NEWLINE}軍階：{RANK} · {SECTION}{NEWLINE}服役天數：{DAYS} · 聲望：{TRUST}{NEWLINE}服役記錄：{XP} 經驗 · 每日薪資：{WAGE}{COIN}{LADDER}{ARREARS}{DUTY}" />
-    <string id="taom_enlist_board_ladder" text="{NEWLINE}晉升至 {NEXT_RANK}：{REQUIREMENT}" />
-    <string id="taom_enlist_req_days" text="服役 {COUNT} 天" />
-    <string id="taom_enlist_req_xp" text="{COUNT} 點服役經驗" />
-    <string id="taom_enlist_req_leadership" text="領導力 {COUNT}" />
-    <string id="taom_enlist_req_duties" text="完成 {COUNT} 項任務" />
-    <string id="taom_enlist_req_trust" text="你的指揮官的信任" />
-    <string id="taom_enlist_req_other" text="更多服役" />
-    <string id="taom_enlist_no_at_war" text="你的王國正與他的王國交戰。你不能既收他的錢，又守自己的誓言。" />
-    <string id="taom_enlist_no_generic" text="你現在無法在他麾下入伍。" />
-    <string id="taom_enlist_reassign_no_cooldown" text="你剛換過編制不久。{DAYS} 天後再來詢問。" />
-    <string id="taom_enlist_reassign_no_cooldown_one" text="你剛換過編制不久。明天再來詢問。" />
-    <string id="taom_enlist_reassign_no_generic" text="你現在無法更換編制。" />
-    <string id="taom_enlist_kit_reclaimed" text="軍需官收回了你的服役裝備：{COUNT} 件物品。" />
-    <string id="taom_enlist_duty_bandit_hunt_success" text="你離開時，那營地已成一堆冷灰。" />
-    <string id="taom_enlist_duty_bandit_hunt_failure" text="你發現營地已空，餘溫猶存——有人通風報信。" />
-    <string id="taom_enlist_duty_deserter_sweep_success" text="你把他們帶回了隊列。大多數還走得動。" />
-    <string id="taom_enlist_duty_deserter_sweep_failure" text="他們比你更熟悉這片土地，並善加利用。" />
-    <string id="taom_enlist_duty_forage_success" text="你回來時，比出發時載得更重。" />
-    <string id="taom_enlist_duty_forage_failure" text="這片地方已被搜刮一空，而且就在不久前。" />
-    <string id="taom_enlist_duty_hideout_strike_success" text="他們根本來不及列陣。一切在黑暗中結束。" />
-    <string id="taom_enlist_duty_hideout_strike_failure" text="接近途中就出了差錯，你只能帶著原班人馬撤回。" />
-    <string id="taom_enlist_duty_mounted_pursuit_success" text="在他們抵達林緣之前，你便將其追上擊倒。" />
-    <string id="taom_enlist_duty_mounted_pursuit_failure" text="他們四散逃入崎嶇之地，馬匹無法跟進。" />
-    <string id="taom_enlist_duty_recon_sweep_success" text="你沿著陣線巡騎，帶回了完整的地勢圖。" />
-    <string id="taom_enlist_duty_recon_sweep_failure" text="你先失了天光，才失了方向，所獲甚微。" />
-    <string id="taom_enlist_duty_recruitment_errand_success" text="三個名字，其中兩個已經握得住長矛。" />
-    <string id="taom_enlist_duty_recruitment_errand_failure" text="這村子願意交出的兒子，已經全交出了。" />
-    <string id="taom_enlist_duty_relief_dispatch_success" text="消息及時送達，起了作用。" />
-    <string id="taom_enlist_duty_relief_dispatch_failure" text="你趕到了他們那裡。但消息比你先到。" />
-    <string id="taom_enlist_duty_road_patrol_success" text="你身後的道路一片平靜，並持續平靜。" />
-    <string id="taom_enlist_duty_road_patrol_failure" text="你來回巡了兩趟，仍未察覺路上的動靜。" />
-    <string id="taom_enlist_duty_scout_route_success" text="前路暢通，而且你說得出理由。" />
-    <string id="taom_enlist_duty_scout_route_failure" text="你帶回的只是猜測。隊長要的是確據。" />
-    <string id="taom_enlist_duty_service_shift_success" text="你的當值平安無事地過去了。" />
-    <string id="taom_enlist_duty_service_shift_failure" text="有人發現你在崗位上睡著了。這已被記下。" />
-    <string id="taom_enlist_duty_supply_delivery_success" text="車輛輕了，倉廩滿了。" />
-    <string id="taom_enlist_duty_supply_delivery_failure" text="清點時，半數貨物已經壞了。" />
-    <string id="taom_enlist_duty_trusted_dispatch_success" text="急件送到了該送的人手中，別無他人經手。" />
-    <string id="taom_enlist_duty_trusted_dispatch_failure" text="急件遲到了，而你不敢發誓它未被人拆閱。" />
-    <string id="taom_enlist_duty_assigned" text="你接到了命令：{DUTY}。" />
+    <string id="taom_enlist_duty_trusted_dispatch_title" text="傳遞急件" />
+    <string id="taom_enlist_wait_board_v2" text="{ACTIVITY}{NEWLINE}{NEWLINE}軍階：{RANK} · {SECTION}{NEWLINE}服役天數：{DAYS} · 評價：{TRUST}{NEWLINE}服役記錄：{XP} 經驗 · 每日軍餉：{WAGE}{COIN}{LADDER}{ARREARS}{DUTY}" />
+    <string id="taom_enlist_board_ladder" text="{NEWLINE}晉升{NEXT_RANK}還需：{REQUIREMENT}" />
+    <string id="taom_enlist_req_days" text="服役{COUNT}天" />
+    <string id="taom_enlist_req_xp" text="{COUNT}點服役經驗" />
+    <string id="taom_enlist_req_leadership" text="統御{COUNT}" />
+    <string id="taom_enlist_req_duties" text="完成{COUNT}項任務" />
+    <string id="taom_enlist_req_trust" text="指揮官的信任" />
+    <string id="taom_enlist_req_other" text="繼續服役" />
+    <string id="taom_enlist_no_at_war" text="你的王國正與他的王國交戰。你不能一邊領他的軍餉，一邊遵守自己效忠的誓言。" />
+    <string id="taom_enlist_no_generic" text="你現在無法加入他的部隊。" />
+    <string id="taom_enlist_reassign_no_cooldown" text="你剛調換過分隊，請在{DAYS}天后再問。" />
+    <string id="taom_enlist_reassign_no_cooldown_one" text="你剛調換過分隊，明天再來問吧。" />
+    <string id="taom_enlist_reassign_no_generic" text="你現在無法調換分隊。" />
+    <string id="taom_enlist_kit_reclaimed" text="軍需官收回了配發給你的裝備，共{COUNT}件。" />
+    <string id="taom_enlist_duty_bandit_hunt_success" text="你離開時，營地已化成一片灰燼。" />
+    <string id="taom_enlist_duty_bandit_hunt_failure" text="營地空無一人，餘火卻還沒涼。有人提前給他們報了信。" />
+    <string id="taom_enlist_duty_deserter_sweep_success" text="你把他們帶回了部隊，大多數人還能自己走。" />
+    <string id="taom_enlist_duty_deserter_sweep_failure" text="他們比你更熟悉這裏的地形，並利用這一點甩掉了你。" />
+    <string id="taom_enlist_duty_forage_success" text="你帶回了蒐集到的物資，行囊比出發時更沉了。" />
+    <string id="taom_enlist_duty_forage_failure" text="這一帶剛被搜刮過不久。" />
+    <string id="taom_enlist_duty_hideout_strike_success" text="他們還沒來得及列陣，戰鬥就在黑暗中結束了。" />
+    <string id="taom_enlist_duty_hideout_strike_failure" text="剛接近目標就出了岔子，你只得帶着原來的人手撤回。" />
+    <string id="taom_enlist_duty_mounted_pursuit_success" text="他們還沒逃到林邊，就被你追上了。" />
+    <string id="taom_enlist_duty_mounted_pursuit_failure" text="他們分散逃進崎嶇地帶，戰馬無法繼續追趕。" />
+    <string id="taom_enlist_duty_recon_sweep_success" text="你沿線騎行偵察，回來時已經繪出了當地的地形。" />
+    <string id="taom_enlist_duty_recon_sweep_failure" text="天色暗了，你還沒來得及摸清地形，回來時所獲不多。" />
+    <string id="taom_enlist_duty_recruitment_errand_success" text="你招到了三個人，其中兩個已經會用長矛。" />
+    <string id="taom_enlist_duty_recruitment_errand_failure" text="這個村子願意送去參軍的年輕人都已經走了。" />
+    <string id="taom_enlist_duty_relief_dispatch_success" text="消息及時送到，還能派上用場。" />
+    <string id="taom_enlist_duty_relief_dispatch_failure" text="你趕到了，可消息比你先到。" />
+    <string id="taom_enlist_duty_road_patrol_success" text="你經過後，道路恢復了平靜，也一直沒有再出亂子。" />
+    <string id="taom_enlist_duty_road_patrol_failure" text="你在路上巡查了兩遍，還是沒找到可疑的目標。" />
+    <string id="taom_enlist_duty_scout_route_success" text="你已確認前方道路安全，也能說清判斷的依據。" />
+    <string id="taom_enlist_duty_scout_route_failure" text="你帶回來的只有猜測，隊長要的卻是確切的情報。" />
+    <string id="taom_enlist_duty_service_shift_success" text="你值勤期間平安無事。" />
+    <string id="taom_enlist_duty_service_shift_failure" text="你在崗上睡覺被人發現，已經記了一筆。" />
+    <string id="taom_enlist_duty_supply_delivery_success" text="貨車卸了貨，倉庫裏的儲備更充足了。" />
+    <string id="taom_enlist_duty_supply_delivery_failure" text="清點時才發現，一半的物資已經壞了。" />
+    <string id="taom_enlist_duty_trusted_dispatch_success" text="急件送到了該收的人手裏，沒經任何旁人的手。" />
+    <string id="taom_enlist_duty_trusted_dispatch_failure" text="急件送遲了，你也無法保證途中沒人拆看。" />
+    <string id="taom_enlist_duty_assigned" text="你接到命令：{DUTY}。" />
     <string id="taom_enlist_duty_result" text="命令：{DUTY}。{RESULT}" />
-    <string id="taom_enlist_lost_title" text="來自隊列的消息" />
-    <string id="taom_enlist_lost_captured_body" text="{COMMANDER}在戰場上被俘。{CAPTOR}將他囚於{TOWN}，隊伍已然潰散。你可堅守誓言、等候消息，或視你的服役到此為止。若{DAYS}天內仍無消息，誓言即行失效，你將領到應得的報酬。" />
-    <string id="taom_enlist_lost_captured_unknown_body" text="{COMMANDER}在戰場上被俘，無人能說出他被囚於何處。隊伍已然潰散。你可堅守誓言、等候消息，或視你的服役到此為止。若{DAYS}天內仍無消息，誓言即行失效，你將領到應得的報酬。" />
-    <string id="taom_enlist_lost_broken_body" text="{COMMANDER}的隊伍已被擊潰。他仍活著，但已無旗幟可供隨行。你可堅守誓言、等他重舉旗幟，或視你的服役到此為止。若{DAYS}天內仍無消息，誓言即行失效，你將領到應得的報酬。" />
-    <string id="taom_enlist_lost_hold" text="堅守你的誓言" />
-    <string id="taom_enlist_lost_leave" text="視服役已然結束" />
-    <string id="taom_enlist_menu_discharged_leave" text="踏上你的旅途" />
-    <string id="taom_enlist_wait_discharged" text="你的役期已結束。" />
-    <string id="taom_enlist_qm_refused_host" text="本次征戰中只有主軍的軍需官能發放裝備。" />
-    <string id="taom_enlist_qm_refused_load" text="此刻你的裝備無法裝入行囊。稍後再來問我吧。" />
-    <string id="taom_enlist_qm_refused_stores" text="軍需官的庫房裡沒有適合你部隊的東西。" />
-    <string id="taom_enlist_qm_refused_best" text="你身上的裝備已是我庫中最好的了。" />
+    <string id="taom_enlist_lost_title" text="部隊傳來的消息" />
+    <string id="taom_enlist_lost_captured_body" text="{COMMANDER}在戰場上被俘，現被{CAPTOR}關押在{TOWN}，部隊也已潰散。你可以遵守誓言等待消息，也可以就此結束服役。如果{DAYS}天內仍無消息，誓言就會失效，你也會領到拖欠的軍餉。" />
+    <string id="taom_enlist_lost_captured_unknown_body" text="{COMMANDER}在戰場上被俘，沒人知道他被關在哪裏，部隊也已潰散。你可以遵守誓言等待消息，也可以就此結束服役。如果{DAYS}天內仍無消息，誓言就會失效，你也會領到拖欠的軍餉。" />
+    <string id="taom_enlist_lost_broken_body" text="{COMMANDER}的部隊已經潰散。他還活着，但已沒有部隊能讓你跟隨行軍。你可以遵守誓言，等待他重建部隊，也可以就此結束服役。如果{DAYS}天內仍無消息，誓言就會失效，你也會領到拖欠的軍餉。" />
+    <string id="taom_enlist_lost_hold" text="遵守誓言，繼續等待" />
+    <string id="taom_enlist_lost_leave" text="結束服役" />
+    <string id="taom_enlist_menu_discharged_leave" text="你走吧。" />
+    <string id="taom_enlist_wait_discharged" text="你的服役已經結束。" />
+    <string id="taom_enlist_qm_refused_host" text="只有主機端的軍需官能在本戰役中發放裝備。" />
+    <string id="taom_enlist_qm_refused_load" text="你的裝備暫時無法裝進輜重，稍後再來找我。" />
+    <string id="taom_enlist_qm_refused_stores" text="軍需官的庫存裏沒有適合你這支隊伍的裝備。" />
+    <string id="taom_enlist_qm_refused_best" text="你現在帶着的，已經是我的庫存能發放的最好裝備了。" />
     <string id="taom_enlist_rank_master_sergeant" text="軍士長" />
     <string id="taom_enlist_rank_private" text="列兵" />
-    <string id="taom_enlist_rank_sergeant_first_class" text="一級軍士" />
-    <string id="taom_enlist_rank_sergeant_major" text="士官長" />
-    <string id="taom_enlist_rank_specialist" text="專技兵" />
-    <string id="taom_enlist_rank_staff_sergeant" text="參謀軍士" />
-    <string id="taom_enlist_sitout_wounded_tip" text="你負了傷。行伍將在沒有你的情況下繼續作戰，無人會因此責怪你。" />
-    <string id="taom_enlist_sitout_odds_tip" text="我方在戰場上佔盡優勢。你可以留在後方，但你的指揮官會記住這件事。" />
-    <string id="taom_enlist_sitout_refused_tip" text="你在指揮官的陣列中服役。回到你的位置去作戰。" />
-    <string id="taom_enlist_sitout_siege_tip" text="攻城需要每一名士兵。回到你在突擊中的位置。" />
-    <string id="taom_enlist_sat_out_line" text="當隊伍奮戰時你卻留在後方,你應得的戰利分成因此被削減。" />
-    <string id="taom_enlist_sat_out_wounded_line" text="你身負傷勢,在隊伍作戰時留在了後方。" />
-    <string id="taom_enlist_sat_out_forced_line" text="隊伍在沒有你的情況下作戰,你無從加入陣列。" />
-    <string id="taom_enlist_act_raid" text="行伍正在劫掠。" />
-    <string id="taom_enlist_crown_war_release" text="{COMMANDER} 的王國已與你的王國開戰。你帶著榮譽自行伍中解除職務，軍餉也已結清。" />
-    <string id="taom_enlist_desert_cost" text="逃兵也將使你失去指揮官的賞識與你的名譽。" />
-    <string id="taom_enlist_desert_cost_reply" text="（這會讓我失去指揮官的賞識與我的名譽。）" />
-    <string id="taom_enlist_spoils" text="你親手所得的戰利品：{ITEMS}" />
-    <string id="taom_enlist_promoted_kit" text="軍需官備有符合你新軍階的裝備。" />
-    <string id="taom_enlist_promoted_notice" text="{COMMANDER} 任命你為{RANK}。" />
-    <string id="taom_enlist_board_kit" text="{NEWLINE}可領裝備：軍需官備有符合你軍階的裝具。" />
-    <string id="taom_enlist_term_body" text="{COMMANDER} 願提供最多 {BONUS} 第納爾與重新託付的信任，請你再服役一期；你也可以帶著榮譽離開軍旅。" />
-    <string id="taom_enlist_term_leave" text="帶著榮譽離去" />
-    <string id="taom_enlist_term_renew" text="再簽一期" />
-    <string id="taom_enlist_term_title" text="你的役期已滿" />
-    <string id="taom_enlist_term_bonus_paid" text="你因再次簽署服役而獲得 {GOLD} 第納爾。" />
-    <string id="taom_enlist_oath_remembered" text="{COMMANDER} 記得你的效命：你以{RANK}的身分開始。" />
-    <string id="taom_enlist_refused_deserter" text="{COMMANDER} 記得你曾經逃兵，不願再受你的誓言。" />
-    <string id="taom_enlist_desert_memory" text="你的指揮官在一段時間內不會再接受你的誓言，若你歸來，這一期服役也將毫無意義。" />
-    <string id="taom_enlist_desert_memory_reply" text="（我的指揮官一段時間內不會再接受我的誓言，而這一期服役也將毫無意義。）" />
-    <string id="taom_enlist_board_column" text="{NEWLINE}行伍：{COLUMN}" />
-    <string id="taom_enlist_retinue_cost" text="你自己的部下每日耗費 {COST}{COIN}；軍餉為 {PAY}{COIN}。" />
-    <string id="taom_enlist_act_sitout" text="你的指揮官正在打一場你的誓言不容你參與的戰鬥。" />
+    <string id="taom_enlist_rank_sergeant_first_class" text="一等軍士" />
+    <string id="taom_enlist_rank_sergeant_major" text="總軍士長" />
+    <string id="taom_enlist_rank_specialist" text="專業兵" />
+    <string id="taom_enlist_rank_staff_sergeant" text="上士" />
+    <string id="taom_enlist_sitout_wounded_tip" text="你受傷了，隊伍會繼續作戰，不會有人因此責怪你。" />
+    <string id="taom_enlist_sitout_odds_tip" text="你方在戰場上佔據明顯優勢。你可以不參戰，但指揮官會記住這件事。" />
+    <string id="taom_enlist_sitout_refused_tip" text="你在指揮官麾下服役，去戰鬥吧。" />
+    <string id="taom_enlist_sitout_siege_tip" text="攻城需要每一個士兵，去參加進攻吧。" />
+    <string id="taom_enlist_sat_out_line" text="隊伍作戰時，你沒有參戰，因此被扣掉了一部分應得的戰鬥報酬。" />
+    <string id="taom_enlist_sat_out_wounded_line" text="你因受傷沒有參加隊伍的戰鬥。" />
+    <string id="taom_enlist_sat_out_forced_line" text="隊伍在你缺席時參加了戰鬥，你當時無法加入。" />
+    <string id="taom_enlist_act_raid" text="隊伍正在劫掠。" />
+    <string id="taom_enlist_crown_war_release" text="{COMMANDER}的國家已與你的國家開戰。你將光榮離隊，軍餉也已結清。" />
+    <string id="taom_enlist_desert_cost" text="當逃兵還會讓你失去指揮官的好感，損害你的聲望。" />
+    <string id="taom_enlist_desert_cost_reply" text="（這會讓我失去指揮官的好感，損害我的聲望。）" />
+    <string id="taom_enlist_spoils" text="你親手繳獲的戰利品：{ITEMS}" />
+    <string id="taom_enlist_promoted_kit" text="軍需官已經爲你的新軍銜準備好裝備。" />
+    <string id="taom_enlist_promoted_notice" text="{COMMANDER}任命你爲{RANK}。" />
+    <string id="taom_enlist_board_kit" text="{NEWLINE}可領取裝備：軍需官備有適合你當前軍銜的裝備。" />
+    <string id="taom_enlist_term_body" text="再服役一期，{COMMANDER}最多會付給你{BONUS}第納爾，也會再次向你表示信任。你也可以選擇光榮退役。" />
+    <string id="taom_enlist_term_leave" text="光榮退役" />
+    <string id="taom_enlist_term_renew" text="再服役一期" />
+    <string id="taom_enlist_term_title" text="服役期已滿" />
+    <string id="taom_enlist_term_bonus_paid" text="你續簽服役，獲得了{GOLD}第納爾。" />
+    <string id="taom_enlist_oath_remembered" text="{COMMANDER}還記得你的服役經歷，你將以{RANK}的軍銜入伍。" />
+    <string id="taom_enlist_refused_deserter" text="{COMMANDER}還記得你當過逃兵，不會接受你的效忠誓言。" />
+    <string id="taom_enlist_desert_memory" text="你的指揮官會在一段時間內拒絕你再次宣誓效忠，即使你回來，這期服役也不算數。" />
+    <string id="taom_enlist_desert_memory_reply" text="（指揮官會在一段時間內拒絕我再次宣誓效忠，這期服役也不算數。）" />
+    <string id="taom_enlist_board_column" text="{NEWLINE}隊伍行動：{COLUMN}" />
+    <string id="taom_enlist_retinue_cost" text="自己的士兵每天需{COST}{COIN}，服役日薪爲{PAY}{COIN}。" />
+    <string id="taom_enlist_act_sitout" text="指揮官正在作戰，但你的誓約不允許你參加這場戰鬥。" />
   </strings>
 </base>

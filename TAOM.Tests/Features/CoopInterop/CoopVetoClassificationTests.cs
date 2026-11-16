@@ -85,6 +85,9 @@ public class CoopVetoClassificationTests
             "Alignment desertion (#1189): skips RecruitPrisonersCampaignBehavior.GenerateConformityForTroop, a replicated " +
             "mutation (prisoner XP), for a stack the recruit guard blocks. The guard reads per-peer MCM switches, which no " +
             "co-op mod exchanges. The prefix runs vanilla while ICoopSessionProvider.ShouldDeferToHost holds."),
+        ["Patch157_RecruitSlotHint_Prefix"] = new(CoopVeto.ReviewedSafe,
+            "Alignment desertion recruit hint (#1189): skips RecruitVolunteerTroopVM.ExecuteBeginHint, which only " +
+            "shows a tooltip on this peer's screen. Nothing it skips changes campaign state."),
         ["Patch118_ProjectStewardXp"] = new(CoopVeto.GatedForCoop,
             "Seasoned Hosts (#890): skips DefaultSkillLevelingManager.OnSettlementProjectFinished, a replicated " +
             "mutation (1000 Steward XP on a hero's developer). The condition is a per-peer MCM switch, which no " +

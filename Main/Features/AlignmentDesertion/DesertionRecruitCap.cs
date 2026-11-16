@@ -58,4 +58,49 @@ public static class DesertionRecruitCap
     /// </summary>
     public static int EstimateSlotEnd(int slotsConsidered, int slotCount, int firstDeserterSlot)
         => Math.Max(0, Math.Min(Math.Min(slotsConsidered, slotCount), firstDeserterSlot));
+
+    /// <summary>
+    /// What the player's cap does to slot <paramref name="index"/> (#1189). The cap stops before the first deserter, so
+    /// a deserter and every slot after it stay locked at any relation. The slot just before the first deserter still
+    /// opens with relation, but the recruit VM's relation search (<c>index &lt; max</c>) cannot reach it under the cap.
+    /// </summary>
+    public static SlotLockReason LockReason(int index, int firstDeserterSlot, bool slotDeserts)
+    {
+        if (slotDeserts)
+            return SlotLockReason.WouldDesert;
+        if (firstDeserterSlot == NoDeserter || index < firstDeserterSlot - 1)
+            return SlotLockReason.None;
+        return index == firstDeserterSlot - 1 ? SlotLockReason.BeforeDeserter : SlotLockReason.BehindDeserter;
+    }
+
+    /// <summary>
+    /// The lowest relation, from -100 to 99, at which the player may recruit slot <paramref name="index"/>: the first
+    /// one where <c>index &lt;= maxIndexAtRelation(relation)</c>, as <c>HeroHelper.HeroCanRecruitFromHero</c> tests it.
+    /// Null when no relation in that range opens the slot.
+    /// </summary>
+    public static int? RequiredRelation(int index, Func<int, int> maxIndexAtRelation)
+    {
+        for (var relation = -100; relation < 100; relation++)
+        {
+            if (index <= maxIndexAtRelation(relation))
+                return relation;
+        }
+        return null;
+    }
+}
+
+/// <summary>Why a volunteer slot is locked for the player by the desertion cap.</summary>
+public enum SlotLockReason
+{
+    /// <summary>The cap does not lock it; any lock is vanilla's relation rule.</summary>
+    None,
+
+    /// <summary>This volunteer would desert the player's party.</summary>
+    WouldDesert,
+
+    /// <summary>An earlier volunteer would desert, and the player cannot recruit past them.</summary>
+    BehindDeserter,
+
+    /// <summary>The next volunteer would desert; relation opens this slot, but vanilla's hint cannot compute it.</summary>
+    BeforeDeserter,
 }

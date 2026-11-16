@@ -1453,3 +1453,9 @@ window. This repeats the Eye of Sauron entry of 2026-10-14 in `adapters-taleworl
 **Prevent:** when a model or a callback grants something by `attackerAgent`, grep every `AddCustomMissile` and every blow built with an owner in the missions the grant is gated to, and decide for each whether its shooter can be the granted agent. Close it at the producer (the owner rule) and make the closed fact a required argument, so a new caller cannot leave it out.
 
 **Source:** [rca-hero-ranged-kit-2026-11-16.md](../rca-hero-ranged-kit-2026-11-16.md) finding 1 and 6.
+
+### A capped model value has readers that compare it differently: check each one (#1189, 2026-11-16)
+The recruit cap holds the player's `MaximumIndexHeroCanRecruitFromHero` at `first - 1`. The unlock test reads it as `index <= max`, but the recruit VM's hint search reads it as `index < max(relation)`, so under the cap the slot just before the first deserter never found a relation and kept "You need 0". The first Patch157 fix named the cause only on slots at or after the deserter and missed that slot and empty slots.
+- **Why missed:** the fix started from the symptom's slots, not from every reader of the capped value and the comparison each reader uses.
+- **Prevent:** before a display fix for a model override, list every caller of the overridden method (game DLLs and TAOM), write each one's comparison, and test the boundary value for each (`DesertionRecruitCapTests.RequiredRelation_FindsTheSlotBeforeTheDeserter_AndNullWhenNoRelationOpensIt`).
+- **Source:** the #1189 item 3 tier 1 review, Data flow flow 2 and Engine compatibility F1.
