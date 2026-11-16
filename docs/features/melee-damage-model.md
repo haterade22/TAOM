@@ -808,7 +808,7 @@ applied.
 | `tools/generate_placeholder_weapons.py` | The `taom_ph_` placeholder weapons, capped by every carrier's tier limit |
 | `tools/analyze_melee_ladder.py` | The read-only report |
 | `tools/taom_schema.py` | The `MELEE_LADDER_INVERSION` and `MELEE_BLOW_CEILING` gates |
-| `tools/tests/test_melee_damage.py`, `test_melee_ladder.py`, `test_restat_melee_blades.py`, `test_generate_placeholder_weapons.py`, `test_analyze_melee_ladder.py`, `test_melee_catalogue_loading.py` | The tests |
+| `tools/tests/test_melee_damage.py`, `test_melee_ladder.py`, `test_restat_melee_blades.py`, `test_generate_placeholder_weapons.py`, `test_analyze_melee_ladder.py`, `test_melee_catalogue_loading.py`, `test_analyze_melee_ladder_order.py` | The tests |
 
 ## How to verify in game
 
@@ -836,6 +836,11 @@ armoured troop (see "Class limits"). After the apply and a full restart:
   ladder, the generators and the validator gave the same output on TAOM's weapons; the troop roster page now
   reads items without NavalDLC's stubs, so its Umbar `northern_round_shield` shows 300 hp (page regenerated
   under #1384).
+- v2.0.40 (16 Nov 2026, #1379): `analyze_melee_ladder.py` gave a different report from run to run when two
+  weapons tied (the erebor `TwoHandedAxe` row named `sm_dwarf_iron_axe_c` or `_d` by hash order). A tie
+  now goes to the first item id in sorted order, in the report and in the validator's melee gate, so a
+  `MELEE_LADDER` warning names the same weapon as `LADDER.md`; `test_analyze_melee_ladder_order.py` runs six
+  hash seeds.
 
 ## GitHub Issue
 
@@ -844,6 +849,7 @@ armoured troop (see "Class limits"). After the apply and a full restart:
 - **Status:** Open
 - The melee ladder umbrella is #631.
 - #1372: the catalogue loads modules and stylesheets by the shield gate's rule.
+- #1379: the report gives the same output on every run.
 
 ## Related
 
