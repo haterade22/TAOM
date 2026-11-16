@@ -308,6 +308,8 @@ side that costs least:
 | War Chronicle volunteer rate (`TaomVolunteerModel`, `CastleNotableMaintainer`, through `PlayerClanCheck`, #1141) | Player: no multiplier | A player's fiefs are never changed by an effect (decision D4), so doubt means no change. An unreadable registry stops the multiplier on every fief |
 | Realms AI claims (`RealmsCampaign.IsAPlayersClan`, #1141) | Player: no AI claim | A claim spends the clan's influence and gold, so doubt means no write. An unreadable registry stops every AI claim |
 | Pregnancy (`TaomPregnancyModel.IsPlayerMarriage`, #1141) | Not a player: AI rules | `Player` lifts the clan brake; doubt must not lift it for every AI clan |
+| Marriage alignment (`TaomMarriageModel.InvolvesPlayerClan`, #1371) | Not a player: AI toggle | A guest's marriage is checked on the server, where `Clan.PlayerClan` is the server's clan (player-to-player marriage, NPC courtship, marriage barter). Doubt answers AI for every clan on every peer, so client and server still agree, and no AI marriage moves to the player toggle |
+| Prisoner recruitment morale (`TaomPrisonerRecruitmentCalculationModel.IsPlayerLeader`, #1371) | Not a player: AI toggle | A guest's recruit is applied on the server, where `Hero.MainHero` is the server's hero. Doubt keeps the answer the server gave before the fix |
 
 The recruit charge does not use this query: it follows the Patch113 scope instead (below).
 
