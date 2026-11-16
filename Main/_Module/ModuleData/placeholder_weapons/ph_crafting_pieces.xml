@@ -677,7 +677,7 @@
         </Materials>
     </CraftingPiece>
 
-    <!-- taom_ph_gundabad_spear_a03_t5: donor blade wm_gundabad_spear_a03_blade, damage_factor swing x1.340, thrust x0.966 -->
+    <!-- taom_ph_gundabad_spear_a03_t5: donor blade wm_gundabad_spear_a03_blade, damage_factor swing x1.374, thrust x1.000 -->
     <CraftingPiece
         id="taom_ph_gundabad_spear_a03_t5_blade"
         name="{=taom_ph_gundabad_spear_a03_t5_blade_name}Gundabad Orc Spear Blade III (placeholder)"
@@ -693,10 +693,10 @@
             holster_mesh="">
             <Thrust
                 damage_type="Pierce"
-                damage_factor="2.03" />
+                damage_factor="2.02" />
             <Swing
                 damage_type="Cut"
-                damage_factor="3.26" />
+                damage_factor="3.25" />
         </BladeData>
         <Flags>
             <Flag
@@ -712,7 +712,7 @@
         </Materials>
     </CraftingPiece>
 
-    <!-- taom_ph_gundabad_spear_a03_t8: donor blade wm_gundabad_spear_a03_blade, damage_factor swing x1.129, thrust x1.068 -->
+    <!-- taom_ph_gundabad_spear_a03_t8: donor blade wm_gundabad_spear_a03_blade, damage_factor swing x1.170, thrust x1.105 -->
     <CraftingPiece
         id="taom_ph_gundabad_spear_a03_t8_blade"
         name="{=taom_ph_gundabad_spear_a03_t8_blade_name}Gundabad Orc Spear Blade III (placeholder)"
@@ -728,10 +728,10 @@
             holster_mesh="">
             <Thrust
                 damage_type="Pierce"
-                damage_factor="2.25" />
+                damage_factor="2.24" />
             <Swing
                 damage_type="Cut"
-                damage_factor="2.75" />
+                damage_factor="2.77" />
         </BladeData>
         <Flags>
             <Flag
