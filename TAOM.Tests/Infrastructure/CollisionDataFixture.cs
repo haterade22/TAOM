@@ -14,7 +14,7 @@ namespace TAOM.Tests.Infrastructure;
 /// </summary>
 internal static class CollisionDataFixture
 {
-    public static AttackCollisionData With(float chargeVelocity = 0f, int inflictedDamage = 0, int weaponSlot = 0, bool isColliderAgent = false, bool isAlternativeAttack = false, float fallSpeed = 0f)
+    public static AttackCollisionData With(float chargeVelocity = 0f, int inflictedDamage = 0, int weaponSlot = 0, bool isColliderAgent = false, bool isAlternativeAttack = false, float fallSpeed = 0f, bool isMissile = false, bool attackBlockedWithShield = false)
     {
         object boxed = default(AttackCollisionData);
         SetField(boxed, BackingField(nameof(AttackCollisionData.ChargeVelocity)), chargeVelocity);
@@ -22,6 +22,9 @@ internal static class CollisionDataFixture
         SetField(boxed, BackingField(nameof(AttackCollisionData.FallSpeed)), fallSpeed);
         SetField(boxed, "_isColliderAgent", isColliderAgent);
         SetField(boxed, "_isAlternativeAttack", isAlternativeAttack);
+        // v1.5.7 AttackCollisionData.cs:11, 26: IsMissile and AttackBlockedWithShield read these.
+        SetField(boxed, "_isMissile", isMissile);
+        SetField(boxed, "_attackBlockedWithShield", attackBlockedWithShield);
         var data = (AttackCollisionData)boxed;
         data.InflictedDamage = inflictedDamage;
         return data;

@@ -2052,3 +2052,10 @@ PR #1304's doc said god mode stays on while the player walks the field after the
 **Prevent:** before setting a per-agent visual in `OnAgentBuild`, grep the decompile for the other callers of `AddSkinMeshes` and `UpdateSpawnEquipmentAndRefreshVisuals` and hook the one that fires (`BannerBearerLogic.OnBannerBearerAgentUpdated`). Make the set idempotent (return when the agent already shows the value) so the repeat call is free. Subscribe in `AfterStart`, not `OnBehaviorInitialize` (#606), and unsubscribe at the mission end.
 
 **Source:** `docs/reviews/rca-orc-battle-voice-2026-11-16.md` (finding 1)
+### A missile index names a missile only until its removal; the next missile gets it at once (#1361, 2026-11-16)
+
+**Why missed:** hits carry `AttackCollisionData.AffectorWeaponSlotOrMissileIndex`, and the ranged kit paired a shield hit with a later body hit, told extra arrows from his own and counted contacts by that index, each memory ended by a time window. Native pops a new missile's index from the back of the free list that a removal pushes to (decompiled 2026-11-16: `IMBMission_AddMissileSingleUsage` and `IMBMission_RemoveMissile`), so the very next missile in the mission takes a freed index. The builders knew of the reuse and guessed it was slow.
+
+**Prevent:** tell a missile's kind by its weapon's item (`OnAgentHit` hands in `_missilesDictionary[index].Weapon`, Mission.cs:5655-5658; in `OnMissileHit` find it in `MissilesList`, which still holds it in single player, Mission.cs:6076-6078). End anything keyed by an index on `Mission.OnMissileRemovedEvent` (Mission.cs:1573, raised at 5770), sent through the same queue as the hits: a missile's hit callbacks come before its removal, because only `OnMissileRemoved` takes it from the table they read (5761). Also from this review: `AddCustomMissile` always appends and raises no behaviour callback (4954-4979); a blocked missile does reach `OnAgentHit`, through `OnAgentHitBlocked` (5537-5550); `GetMissileVerticalAimCorrection` answers pi, not NaN, for a target out of reach.
+
+**Source:** [rca-hero-ranged-kit-2026-11-16.md](../rca-hero-ranged-kit-2026-11-16.md) finding 2.

@@ -1,8 +1,11 @@
 using System.Collections.Generic;
 using DryIoc;
 using TAOM.Composition;
+using TAOM.Features.CombatMechanics.Hooks;
 using TAOM.Features.HeroAbilities.Hooks;
 using TAOM.Features.RaceAbilities.Hooks;
+using TAOM.Features.SignatureStrikes;
+using TAOM.Features.SignatureStrikes.Hooks;
 
 namespace TAOM.Features.HeroAbilities;
 
@@ -17,6 +20,12 @@ internal sealed class HeroAbilitiesModule : TaomFeatureModule
     private static readonly MissionBehaviorDecl[] Missions =
     {
         MissionBehaviorDecl.Of((_, r) => new HeroAbilitiesMissionLogic(r.Resolve<HeroAbilityRuntime>())),
+        // The ranged kit (#1361). Its arrow kill goes through the one executor class the melee strikes use (decision R3).
+        MissionBehaviorDecl.Of((_, r) =>
+        {
+            var runtime = r.Resolve<HeroAbilityRuntime>();
+            return new HeroRangedMissionLogic(runtime, new SignatureInstantKill(r.Resolve<ISignatureStrikeService>(), r.Resolve<ISignatureAgentRoster>(), r.Resolve<ISignatureStrikeRegistry>(), runtime.Outcomes, runtime.Logger));
+        }),
     };
 
     public override string Id => "HeroAbilities";
@@ -31,6 +40,8 @@ internal sealed class HeroAbilitiesModule : TaomFeatureModule
     public override void InitializeStatics(IResolver resolver)
     {
         RaceAbilityHooks.BuffEffects = resolver.Resolve<HeroAbilityRuntime>().Ledger.EffectsOf;
+        HeroRangedHooks.Roster = resolver.Resolve<HeroAbilityRuntime>().Ranged;
+        CombatMechanicsHooks.ShooterPiercesShields = HeroRangedHooks.PiercesShields;
     }
 
     public override IReadOnlyList<MissionBehaviorDecl> MissionBehaviors => Missions;

@@ -487,6 +487,54 @@ class CoopCompat967Tests(unittest.TestCase):
         self.assertEqual(verdict_of(out, self.MOMENTUM_SERVER), "NOT REACHED", out)
 
 
+class HeroAbilities1359And1361Tests(unittest.TestCase):
+    """The real #1359 and #1361 manifests read the same two [Check] ids (the fired line of HeroAbilityHost and the
+    instant-kill line of SignatureInstantKill), so each must read only its own heroes' lines: Aragorn and Gimli for
+    #1359, Legolas for #1361. None is on disk yet; the lines render HeroAbilityChecks.Fired and SignatureInstantKill's
+    detail as OutcomeLog writes them."""
+
+    FIRED = "taom.hero-abilities.fired"
+    KILL = "taom.signature-strikes.instant-kill"
+    LEGOLAS_FIRED_FAIL = "result=fail hero=taom_hero_legolas fired=0 contact_s=25 allies=0 shocked=0 owned=1"
+    LEGOLAS_FIRED_PASS = "result=pass hero=taom_hero_legolas fired=2 contact_s=31 allies=6 shocked=0 owned=1"
+    ARAGORN_FIRED_FAIL = "result=fail hero=taom_hero_aragorn fired=0 contact_s=25 allies=0 shocked=0 owned=1"
+    ARROW_DIED_0 = "result=fail signature=taom_hero_legolas_arrow victim=uruk_a chance=0.10 roll=0.050 health=37 damage=38 died=0"
+    ARROW_DIED_1 = "result=pass signature=taom_hero_legolas_arrow victim=uruk_a chance=1.00 roll=0.420 health=37 damage=38 died=1"
+
+    def setUp(self):
+        self.t = Tree(self)
+        self.t.real_manifest("1359.toml")
+        self.t.real_manifest("1361.toml")
+
+    def judge(self, issue, *checks):
+        stamp = (f"[2026-11-16 10:00:00] [INFO] [BuildStamp] TAOM=v2.0.40 build.20261116-100000Z+{GOOD} "
+                 f"TAOM.Dependencies=v2.0.40 build.20261116-095958Z+{GOOD} (pair OK)")
+        lines = [stamp] + [f"[2026-11-16 10:05:00] [INFO] [Check] id={cid} {tail}" for cid, tail in checks]
+        path = self.t.client / "Logs" / "taom_debug_2026-11-16_10-00-00.log"
+        path.write_text("\n".join(lines) + "\n", encoding="utf-8")
+        code, out, _ = self.t.run(["--issue", str(issue)])
+        return code, out
+
+    def test_legolas_lines_do_not_fail_1359(self):
+        code, out = self.judge(1359, (self.FIRED, self.LEGOLAS_FIRED_FAIL), (self.KILL, self.ARROW_DIED_0))
+        self.assertEqual(verdict_of(out, self.FIRED), "NOT REACHED", out)
+        self.assertEqual(verdict_of(out, self.KILL), "NOT REACHED", out)
+        self.assertNotEqual(code, 1, out)
+
+    def test_an_aragorn_fired_fail_is_not_reached_for_1361(self):
+        code, out = self.judge(1361, (self.FIRED, self.ARAGORN_FIRED_FAIL))
+        self.assertEqual(verdict_of(out, self.FIRED), "NOT REACHED", out)
+
+    def test_an_aragorn_fired_fail_still_fails_1359(self):
+        code, out = self.judge(1359, (self.FIRED, self.ARAGORN_FIRED_FAIL))
+        self.assertEqual(verdict_of(out, self.FIRED), "FAIL", out)
+
+    def test_legolas_fired_pass_and_arrow_kill_pass_1361(self):
+        code, out = self.judge(1361, (self.FIRED, self.LEGOLAS_FIRED_PASS), (self.KILL, self.ARROW_DIED_1))
+        self.assertEqual(verdict_of(out, self.FIRED), "PASS", out)
+        self.assertEqual(verdict_of(out, self.KILL), "PASS", out)
+
+
 class VerdictRuleTests(unittest.TestCase):
     """Rules 1 to 4 over the real #970 manifest, one fixture each."""
 

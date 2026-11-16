@@ -94,11 +94,43 @@ public sealed class CombatMechanicsHooks
         return _shieldBashKnockdownService.Decide(in context);
     }
 
-    public WeaponFlags PenetrationFlags(in MissionWeapon missileWeapon, WeaponFlags missileWeaponFlags)
-        => (WeaponFlags)_shieldPenetrationService.ApplyPenetrationFlags(
+    // A ranged hero kit (#1361) names its shooters here; HeroAbilitiesModule sets it. Any thread reads it: model methods.
+    internal static Func<Agent, bool>? ShooterPiercesShields { get; set; }
+
+    // The hero grant comes after the service, so the service's MCM switch (ShieldPenetrationService.cs:51) does not gate
+    // it. Only CanPenetrateShield: the arrow passes one shield, never a second body.
+    public WeaponFlags PenetrationFlags(Agent? attackerAgent, in MissionWeapon missileWeapon, WeaponFlags missileWeaponFlags)
+    {
+        var flags = (WeaponFlags)_shieldPenetrationService.ApplyPenetrationFlags(
             missileWeapon.Item?.StringId,
             GetWeaponClassName(missileWeapon.CurrentUsageItem),
             (ulong)missileWeaponFlags);
+        return attackerAgent != null && ShooterPiercesShields?.Invoke(attackerAgent) == true
+            ? flags | WeaponFlags.CanPenetrateShield
+            : flags;
+    }
+
+    // With the flag, the engine passes a missile through an unbroken shield only when the final rounded damage is above
+    // ShieldPenetrationOffset + ShieldPenetrationFactor x the shield's armour (Mission.cs:5836). That damage is
+    // CalculateDamage's result (Mission.cs:6536-6538), and ApplyGeneralDamageModifiers is its last step
+    // (AgentApplyDamageModel.cs:18), so a floor placed earlier would be cut by the reductions. The engine calls
+    // CalculateDamage, and so this floor, only when its pre-model shield damage is above 0 (Mission.cs:6533-6534). Side
+    // effect: the raised damage also wears the shield down, and it often breaks.
+    public float ShieldPierceFloor(in AttackInformation attackInformation, in AttackCollisionData collisionData, float damage)
+    {
+        if (!collisionData.IsMissile || !collisionData.AttackBlockedWithShield)
+            return damage;
+        var attacker = attackInformation.AttackerAgent;
+        if (attacker == null || ShooterPiercesShields?.Invoke(attacker) != true || attackInformation.VictimShield.IsEmpty)
+            return damage;
+        // TaleWorlds.Core's, the one Mission.cs:5836 reads (the campaign assembly has a type of the same name).
+        var parameters = TaleWorlds.Core.ManagedParameters.Instance;
+        return ShieldPierceMath.Floor(
+            damage,
+            parameters.GetManagedParameter(TaleWorlds.Core.ManagedParametersEnum.ShieldPenetrationOffset),
+            parameters.GetManagedParameter(TaleWorlds.Core.ManagedParametersEnum.ShieldPenetrationFactor),
+            attackInformation.VictimShield.GetGetModifiedArmorForCurrentUsage());
+    }
 
     public float ShieldDamage(in AttackInformation attackInformation, float baseResult)
     {

@@ -39,6 +39,7 @@ public class CustomBattleDamageModelTests
         "ApplyDamageReductions",
         "ApplyDamageAmplifications",
         "ApplyDamageScaling",
+        "ApplyGeneralDamageModifiers",
         "DecideCrushedThrough",
         "CalculateRemainingMomentum",
         "DecideWeaponCollisionReaction",
@@ -58,6 +59,7 @@ public class CustomBattleDamageModelTests
         ["ApplyDamageReductions"] = "base,CreatureBanditDamage.Reduce,RaceAbilityHooks.ReduceDamage,FordsUpgradeHooks.Reduce,LongDefeatCombatHooks.Reduce",
         ["ApplyDamageAmplifications"] = "base,RaceAbilityHooks.AmplifyDamage,FordsUpgradeHooks.Amplify,LongDefeatCombatHooks.Amplify",
         ["ApplyDamageScaling"] = "base,CreatureSiegeHooks.ScaleGateDamage",
+        ["ApplyGeneralDamageModifiers"] = "base,CombatMechanicsHooks.ShieldPierceFloor",
         ["DecideCrushedThrough"] = "RaceAbilityHooks.CrushVerdict,CombatMechanicsHooks.CrushThrough,base",
         ["CalculateRemainingMomentum"] = "CombatMechanicsHooks.CleaveMomentum,base",
         ["DecideWeaponCollisionReaction"] = "base,CombatMechanicsHooks.CollisionReaction",
@@ -165,7 +167,8 @@ public class CustomBattleDamageModelTests
     [DataRow("DecideAgentKnockedBackByBlow", "SignatureStrikeVerdicts.Decide(_signatureStrikes, _signatureRoster, attackerAgent, victimAgent, in collisionData, in blow, knockdown: false)")]
     [DataRow("DecideAgentKnockedBackByBlow", "base.DecideAgentKnockedBackByBlow(attackerAgent, victimAgent, in collisionData, attackerWeapon, in blow)")]
     [DataRow("DecideMissileWeaponFlags", "base.DecideMissileWeaponFlags(attackerAgent, in missileWeapon, ref missileWeaponFlags)")]
-    [DataRow("DecideMissileWeaponFlags", "_combat.PenetrationFlags(in missileWeapon, missileWeaponFlags)")]
+    [DataRow("DecideMissileWeaponFlags", "_combat.PenetrationFlags(attackerAgent, in missileWeapon, missileWeaponFlags)")]
+    [DataRow("ApplyGeneralDamageModifiers", "_combat.ShieldPierceFloor(in attackInformation, in collisionData, base.ApplyGeneralDamageModifiers(in attackInformation, in collisionData, baseDamage))")]
     [DataRow("CalculateShieldDamage", "_combat.ShieldDamage(in attackInformation, base.CalculateShieldDamage(in attackInformation, baseDamage))")]
     [DataRow("GetHorseChargePenetration", "_combat.HorseChargePenetration() ?? base.GetHorseChargePenetration()")]
     public void Source_HandsEachSeamItsOwnAgents(string overrideName, string call)

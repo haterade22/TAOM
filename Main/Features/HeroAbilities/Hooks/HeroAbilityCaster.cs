@@ -45,6 +45,8 @@ internal sealed class HeroAbilityCaster
         MissionThreadGuard.NoteCall("HeroAbilityCaster.Cast", _runtime.RaceAbilities.Warn);
         var until = now + ability.DurationSeconds;
         Grant(hero, ability.Id + ":self", _runtime.Service.SelfEffects(ability), until, ability.Id);
+        if (ability.ExtraArrows > 0)
+            _runtime.Bursts[hero] = new HeroBurst(until, ability.ExtraArrows);
         var team = hero.Team;
         var allies = team == null ? 0 : Allies(mission, hero, team, ability, until);
         var shocked = team == null ? 0 : Shock(mission, hero, team, ability);
@@ -95,6 +97,9 @@ internal sealed class HeroAbilityCaster
         {
             if (ally == null || ReferenceEquals(ally, hero) || !ally.IsHuman || !ally.IsActive() || !AgentSlotIdentity.IsCurrentOccupant(ally)
                 || ally.Team != team || !CoopMissionOwnership.IsOwnedHere(ally))
+                continue;
+            // A bow or crossbow with ammunition (Agent.cs:917).
+            if (ability.AlliesRangedOnly && !ally.IsRangedCached)
                 continue;
             Grant(ally, ability.Id, ability.AllyEffects, until, ability.Id);
             count++;

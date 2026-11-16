@@ -16,6 +16,9 @@ public class HeroAbilityNamesTests
     [DataRow("aragorn_isildurs_heir", "Heir of Isildur")]
     [DataRow("gimli_baruk_khazad", "Baruk Khazâd!")]
     [DataRow("gimli_still_standing", "Still Standing")]
+    [DataRow("legolas_rapid_fire", "Rapid Fire")]
+    [DataRow("legolas_many_arrows", "Many Arrows")]
+    [DataRow("legolas_archers_eye", "Archer's Eye")]
     public void Name_EveryShippedAbility_HasItsOwnLowercaseKeyRow(string id, string english) =>
         StringAssert.Contains(Source, $"\"{id}\" => new TextObject(\"{{=taom_hero_ability_{id}}}{english}\")");
 

@@ -50,6 +50,10 @@ public class CombatMechanicsModelInvariantsTests
         // CreatureSiegeRole (2026-10-05): a creature's melee blow on a castle gate is multiplied, after the engine's own
         // scaling (base runs first). The Custom Battle damage model carries the same call.
         "ApplyDamageScaling",
+        // HeroAbilities (#1361): a granted hero's shield-blocked arrow is floored above the engine's pass-through
+        // threshold after every other step of CalculateDamage (AgentApplyDamageModel.cs:15-18). The Custom Battle
+        // damage model carries the same call.
+        "ApplyGeneralDamageModifiers",
     };
 
     private static bool _gameLoaded;
@@ -138,6 +142,8 @@ public class CombatMechanicsModelInvariantsTests
     [DataRow("DecideAgentKnockedDownByBlow", "_combat.ShieldBashKnockdown(attackerAgent, victimAgent, in collisionData, attackerWeapon)")]
     [DataRow("DecideAgentKnockedDownByBlow", "SignatureStrikeVerdicts.Decide(_signatureStrikes, _signatureRoster, attackerAgent, victimAgent, in collisionData, in blow, knockdown: true)")]
     [DataRow("DecideAgentKnockedBackByBlow", "SignatureStrikeVerdicts.Decide(_signatureStrikes, _signatureRoster, attackerAgent, victimAgent, in collisionData, in blow, knockdown: false)")]
+    [DataRow("DecideMissileWeaponFlags", "_combat.PenetrationFlags(attackerAgent, in missileWeapon, missileWeaponFlags)")]
+    [DataRow("ApplyGeneralDamageModifiers", "_combat.ShieldPierceFloor(in attackInformation, in collisionData, base.ApplyGeneralDamageModifiers(in attackInformation, in collisionData, baseDamage))")]
     public void ModelSource_HandsEachSeamItsOwnAgents(string overrideName, string call)
     {
         StringAssert.Contains(OverrideText(overrideName), call, $"{overrideName} must call {call}");

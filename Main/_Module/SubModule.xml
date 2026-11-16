@@ -1449,6 +1449,13 @@
         <GameType value="CustomGame"/>
       </IncludedGameTypes>
     </XmlNode>
+    <!-- Custom Game only, beside long_defeat_items: the extra arrow of the ranged hero kit (taom_legolas_arrow, #1361), which no troop carries and no shop sells. -->
+    <XmlNode>
+      <XmlName id="Items" path="hero_abilities/hero_abilities_items"/>
+      <IncludedGameTypes>
+        <GameType value="CustomGame"/>
+      </IncludedGameTypes>
+    </XmlNode>
     <!-- Placeholder melee weapons (tools/generate_placeholder_weapons.py): ids start with taom_ph_ -->
     <XmlNode>
       <XmlName id="CraftingPieces" path="placeholder_weapons/ph_crafting_pieces"/>
