@@ -255,4 +255,43 @@ public class AllianceActionHookTests
         Assert.IsFalse(_sut.ShouldPreventCallToWar("empire", "empire_w"));
         _diplomacyService.DidNotReceive().RefusesCallToWar(Arg.Any<string>(), Arg.Any<string>());
     }
+
+    // #1350: the lord dialogue's sponsor option asks for the text of a refused call, every time it is drawn.
+    [TestMethod]
+    public void GetCallToWarRefusalText_RefusedPair_ReturnsTheRefusalTextAndLogsNothing()
+    {
+        _wotr.GetWarVeto("empire", "empire_w", false).Returns(WarVeto.None);
+        _diplomacyService.RefusesCallToWar("empire", "empire_w").Returns(true);
+
+        Assert.AreEqual(WarVetoReasons.CallToWarRefused, _sut.GetCallToWarRefusalText("empire", "empire_w"));
+        _logger.DidNotReceive().LogInfo(Arg.Any<string>());
+    }
+
+    [TestMethod]
+    public void GetCallToWarRefusalText_WarVetoed_ReturnsThatVetosText()
+    {
+        _wotr.GetWarVeto("rohan", "gondor", false).Returns(WarVeto.Permanent);
+        _diplomacyService.RefusesCallToWar("rohan", "gondor").Returns(true);
+
+        Assert.AreEqual(WarVetoReasons.Text(WarVeto.Permanent), _sut.GetCallToWarRefusalText("rohan", "gondor"));
+    }
+
+    [TestMethod]
+    public void GetCallToWarRefusalText_AllowedAndNotRefused_ReturnsNull()
+    {
+        _wotr.GetWarVeto("empire", "vlandia", false).Returns(WarVeto.None);
+
+        Assert.IsNull(_sut.GetCallToWarRefusalText("empire", "vlandia"));
+    }
+
+    [TestMethod]
+    public void GetCallToWarRefusalText_CoopDefersToHost_ReturnsNullWithoutConsultingEitherRule()
+    {
+        _coop.ShouldDeferToHost.Returns(true);
+        _diplomacyService.RefusesCallToWar("empire", "empire_w").Returns(true);
+
+        Assert.IsNull(_sut.GetCallToWarRefusalText("empire", "empire_w"));
+        _wotr.DidNotReceive().GetWarVeto(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<bool>());
+        _diplomacyService.DidNotReceive().RefusesCallToWar(Arg.Any<string>(), Arg.Any<string>());
+    }
 }

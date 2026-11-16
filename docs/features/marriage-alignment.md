@@ -121,7 +121,7 @@ This mirrors `TaomVolunteerModel`, which lives in `TroopProgression` and takes
 |---|---|---|---|
 | `enabled` | bool | `true` | Master toggle. When false nothing is blocked and the AI draw stays vanilla. |
 | `applyToAi` | bool | `true` | When false, AI lords marry unrestricted. |
-| `applyToPlayer` | bool | `true` | When false, the player clan marries unrestricted. |
+| `applyToPlayer` | bool | `true` | When false, the player clan marries unrestricted. In co-op every human player's clan counts, a guest's too (#1371). |
 | `steerAiPartnerSearch` | bool | `true` | Narrows the AI partner-clan draw. Turning this off keeps the block but restores vanilla's uniform draw, which is the rate collapse described above. |
 
 Every field is a bool, so there is no parseable-but-invalid value to reject. If a numeric or string

@@ -945,3 +945,69 @@ class RosterFixerTierLimitTests(TmpCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+def couch_spear(item_id, dps):
+    """A thrust-only polearm with a couch usage, as `couchable_ids` reads one."""
+    plain = thrust_weapon(item_id, "TwoHandedPolearm", dps)
+    u = plain.usages[0]
+    usage = cata.Usage(u.description, u.is_primary, ("couch",), u.usage_set, u.strikes, u.stats)
+    return cata.Priced(item=plain.item, usages=(usage,), blade_piece=plain.blade_piece, tier=plain.tier)
+
+
+class RosterFixerWeaponCategoryTests(TmpCase):
+    """The maintainer's rule (2026-11-14): a troop keeps its weapon category.
+
+    The defect these pin: the 2026-11-14 plan replaced poleaxes with short spears
+    (`numenorean_poleaxe_heavy` 92 DPS to `dunland_caerdh_short_spear_e` 33), because both are
+    TwoHandedPolearm and each sat in its own class band.
+    """
+
+    def test_an_over_armed_poleaxe_is_never_swapped_for_a_spear(self):
+        s = class_spec()
+        priced = {p.item.id: p for p in (
+            weapon("wm_x_poleaxe", "TwoHandedPolearm", dps=200.0),
+            thrust_weapon("wm_x_spear", "TwoHandedPolearm", 40.0),
+        )}
+        t = troop("lord", 51, "rivendell", ["wm_x_poleaxe"])
+        owner = troop("owner", 51, "rivendell", ["wm_x_spear"])
+        swaps, unresolved = fixer.plan(priced, cata.Catalogue(), [t, owner], s, shields=set())
+        assert [sw for sw in swaps if sw.troop == "lord"] == []
+        assert [(tr.id, i) for tr, i, _why in unresolved] == [("lord", "wm_x_poleaxe")]
+
+    def test_an_under_armed_poleaxe_is_never_given_a_weaker_spear(self):
+        """A spear inside the spear band is still a weaker weapon than the poleaxe it would replace."""
+        s = class_spec()
+        priced = {p.item.id: p for p in (
+            weapon("wm_x_poleaxe", "TwoHandedPolearm", dps=60.0),
+            thrust_weapon("wm_x_spear", "TwoHandedPolearm", 40.0),
+        )}
+        t = troop("lord", 51, "rivendell", ["wm_x_poleaxe"])
+        owner = troop("owner", 51, "rivendell", ["wm_x_spear"])
+        swaps, _unresolved = fixer.plan(priced, cata.Catalogue(), [t, owner], s, shields=set())
+        assert [sw for sw in swaps if sw.troop == "lord"] == []
+
+    def test_a_lance_is_only_swapped_for_another_lance(self):
+        s = class_spec()
+        priced = {p.item.id: p for p in (
+            couch_spear("wm_x_lance_weak", 20.0),
+            thrust_weapon("wm_x_spear", "TwoHandedPolearm", 40.0),
+            couch_spear("wm_x_lance_good", 39.0),
+        )}
+        rider = troop("rider", 51, "rivendell", ["wm_x_lance_weak"])
+        owner = troop("owner", 51, "rivendell", ["wm_x_spear", "wm_x_lance_good"])
+        swaps, _unresolved = fixer.plan(priced, cata.Catalogue(), [rider, owner], s, shields=set())
+        assert [(sw.old, sw.new) for sw in swaps if sw.troop == "rider"] == [
+            ("wm_x_lance_weak", "wm_x_lance_good")]
+
+    def test_a_plain_spear_is_never_swapped_for_a_lance(self):
+        s = class_spec()
+        priced = {p.item.id: p for p in (
+            thrust_weapon("wm_x_spear_weak", "TwoHandedPolearm", 20.0),
+            couch_spear("wm_x_lance_good", 39.0),
+        )}
+        foot = troop("foot", 51, "rivendell", ["wm_x_spear_weak"])
+        owner = troop("owner", 51, "rivendell", ["wm_x_lance_good"])
+        swaps, unresolved = fixer.plan(priced, cata.Catalogue(), [foot, owner], s, shields=set())
+        assert [sw for sw in swaps if sw.troop == "foot"] == []
+        assert [(tr.id, i) for tr, i, _why in unresolved] == [("foot", "wm_x_spear_weak")]

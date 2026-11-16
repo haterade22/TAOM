@@ -32,6 +32,7 @@ public static class DiplomacyIoC
         AllianceCampaignBehavior_OnCallToWarAgreementProposedByPlayerKingdom_Patch.Initialize(allianceHook);
         ProposeCallToWarAgreementDecision_IsAllowed_Patch.Initialize(allianceHook);
         AcceptCallToWarAgreementDecision_IsAllowed_Patch.Initialize(allianceHook);
+        LordConversations_SponsorCallToWarClickable_Patch.Initialize(allianceHook);
         MakePeaceAction_ApplyInternal_Patch.Initialize(peaceHook);
     }
 }

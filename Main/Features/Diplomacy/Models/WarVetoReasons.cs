@@ -5,6 +5,10 @@ namespace TAOM.Features.Diplomacy.Models;
 // Player-facing refusal text per veto, as a {=key}default string for the caller to wrap in a TextObject.
 public static class WarVetoReasons
 {
+    // A callToWarRefusals row (#1283). The caller sets CALLED_KINGDOM and KINGDOM_TO_CALL_TO_WAR_AGAINST.
+    public const string CallToWarRefused =
+        "{=taom_call_to_war_refused}{CALLED_KINGDOM} will not go to war against {KINGDOM_TO_CALL_TO_WAR_AGAINST}.";
+
     public static string Text(WarVeto veto)
     {
         switch (veto)

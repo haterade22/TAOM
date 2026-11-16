@@ -146,7 +146,9 @@ start at tier 4, left no room above the unrestated donor), the `placeholder-weap
   additions are wiped and the placeholders get no weapon usage. TAOM's SubModule.xml declares
   `<DependedModuleMetadata id="LOTRLOME_Armory" order="LoadBeforeThis" optional="true" />`: BUTR/BLSE
   launchers sort by it, the vanilla launcher ignores it.
-- The installed Armory (donors are read from it) and lxml (the shared `melee_catalogue`).
+- The installed Armory (donors are read from it) and lxml (the shared `melee_catalogue`). The catalogue
+  leaves TAOM's own placeholder sheets out (#1372): a caller that prices placeholders adds the registrations
+  from its own tree, as `taom_schema.price_placeholders` and `price_new` do.
 
 ## Tests
 
