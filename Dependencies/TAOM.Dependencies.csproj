@@ -82,6 +82,27 @@
 		       Text="Game Pass is not supported, but $(ProjectDir)_Module\bin\Gaming.Desktop.x64_Shipping_Client\ exists and CopyModule would deploy it. Delete that folder (and from &lt;game&gt;\Modules\$(ModuleId)\bin\, deployment is additive), then build again." />
 	</Target>
 
+	<!-- Bannerlord.BuildResources' CopyBinariesWindows deletes every .dll/.pdb/.config in
+	     <game>\Modules\$(ModuleId)\bin\Win64_Shipping_Client (Basic.targets, CopyFolder Clean="true"), then
+	     copies only this project's output. The bundled third-party DLLs come back only through CopyModule
+	     copying _Module\bin\Win64_Shipping_Client. A checkout without them (a sparse checkout that skips
+	     *.dll) deploys a module the engine cannot load ("Cannot load:
+	     Microsoft.Bcl.HashCode.dll", 2026-11-15). So fail before that clean when a DLL the module's
+	     SubModule.xml loads is neither built nor staged. CopyBinariesWindows' own condition, since it does
+	     not check DisableModuleCopy and a BeforeTargets runs whatever the host's condition. -->
+	<Target Name="FailOnMissingBundledDlls" BeforeTargets="PostBuildCopyToModules"
+	        Condition="'$(ModuleId)' != '' AND Exists('$(GameFolder)')">
+		<XmlPeek XmlInputPath="$(ProjectDir)_Module\SubModule.xml" Query="//DLLName/@value | //Assembly/@value">
+			<Output TaskParameter="Result" ItemName="_TaomDepsLoadedDll" />
+		</XmlPeek>
+		<ItemGroup>
+			<_TaomDepsMissingDll Include="@(_TaomDepsLoadedDll)" KeepDuplicates="false"
+			                     Condition="!Exists('$(ProjectDir)_Module\bin\Win64_Shipping_Client\%(Identity)') AND !Exists('$(TargetDir)%(Identity)')" />
+		</ItemGroup>
+		<Error Condition="'@(_TaomDepsMissingDll)' != ''"
+		       Text="@(_TaomDepsMissingDll, ', ') loaded by $(ProjectDir)_Module\SubModule.xml, but neither built nor in $(ProjectDir)_Module\bin\Win64_Shipping_Client\. Deploying now would delete the bundled DLLs in $(GameFolder)\Modules\$(ModuleId)\bin\Win64_Shipping_Client\ and not copy them back. Check out the vendored DLLs first (git ls-files -v Dependencies/_Module/bin marks each one a sparse checkout skipped with S), then build again." />
+	</Target>
+
 	<Target Name="CopyBinariesToModuleFolder" BeforeTargets="PostBuildCopyToModules">
 		<MakeDir Directories="$(ProjectDir)_Module\bin\Win64_Shipping_Client\" />
 		<Copy SourceFiles="$(TargetDir)$(TargetFileName)" DestinationFolder="$(ProjectDir)_Module\bin\Win64_Shipping_Client\" SkipUnchangedFiles="true" />
