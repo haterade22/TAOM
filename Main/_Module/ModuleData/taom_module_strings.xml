@@ -5240,6 +5240,9 @@
 	<string id="taom_hero_ability_aragorn_isildurs_heir" text="{=taom_hero_ability_aragorn_isildurs_heir}Heir of Isildur" />
 	<string id="taom_hero_ability_gimli_baruk_khazad" text="{=taom_hero_ability_gimli_baruk_khazad}Baruk Khazâd!" />
 	<string id="taom_hero_ability_gimli_still_standing" text="{=taom_hero_ability_gimli_still_standing}Still Standing" />
+	<string id="taom_hero_ability_legolas_rapid_fire" text="{=taom_hero_ability_legolas_rapid_fire}Rapid Fire" />
+	<string id="taom_hero_ability_legolas_many_arrows" text="{=taom_hero_ability_legolas_many_arrows}Many Arrows" />
+	<string id="taom_hero_ability_legolas_archers_eye" text="{=taom_hero_ability_legolas_archers_eye}Archer's Eye" />
 	<string id="taom_hero_ability_cast_ally" text="{=taom_hero_ability_cast_ally}{HERO}: {ABILITY}" />
 	<string id="taom_hero_ability_cast_enemy" text="{=taom_hero_ability_cast_enemy}Enemy {HERO}: {ABILITY}" />
 

@@ -39,12 +39,12 @@ absence = "not-reached"
 [[check]]
 id = "taom.hero-abilities.fired"
 needs = "a Long Defeat run in which the bot or the player buys Aragorn and Gimli and they meet the waves at the wall"
-reached = ['\[Check\] id=taom\.hero-abilities\.fired result=(pass|fail)']
+reached = ['\[Check\] id=taom\.hero-abilities\.fired result=(pass|fail) hero=taom_hero_(aragorn|gimli) ']
 pass = [
     '\[Check\] id=taom\.hero-abilities\.fired result=pass hero=taom_hero_aragorn fired=[1-9][0-9]* contact_s=[0-9]+ allies=[0-9]+ shocked=[0-9]+ owned=1$',
     '\[Check\] id=taom\.hero-abilities\.fired result=pass hero=taom_hero_gimli fired=[1-9][0-9]* contact_s=[0-9]+ allies=[0-9]+ shocked=[0-9]+ owned=1$',
 ]
-fail = ['\[Check\] id=taom\.hero-abilities\.fired result=fail', '\[HeroAbilities\] disabled for this mission after ']
+fail = ['\[Check\] id=taom\.hero-abilities\.fired result=fail hero=taom_hero_(aragorn|gimli) ', '\[HeroAbilities\] disabled for this mission after ']
 absence = "not-reached"
 
 [[check]]
@@ -58,9 +58,9 @@ absence = "not-reached"
 [[check]]
 id = "taom.signature-strikes.instant-kill"
 needs = "an overhead strike by Aragorn or Gimli on an unshielded human soldier whose kill roll wins"
-reached = ['\[Check\] id=taom\.signature-strikes\.instant-kill result=(pass|fail)']
+reached = ['\[Check\] id=taom\.signature-strikes\.instant-kill result=(pass|fail) signature=(aragorn|gimli) ']
 pass = ['\[Check\] id=taom\.signature-strikes\.instant-kill result=pass signature=(aragorn|gimli) victim=\S+ chance=[0-9.]+ roll=[0-9.]+ health=[0-9]+ damage=[0-9]+ died=1$']
-fail = ['\[Check\] id=taom\.signature-strikes\.instant-kill result=fail']
+fail = ['\[Check\] id=taom\.signature-strikes\.instant-kill result=fail signature=(aragorn|gimli) ']
 absence = "not-reached"
 
 [[check]]

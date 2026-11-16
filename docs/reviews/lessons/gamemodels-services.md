@@ -1431,3 +1431,11 @@ The auto-resolve change stated that a side's strength goes as `N^1.6 x P^(2e)`, 
 **Prevent:** for an effect that works through a model's decision (panic, retreat, a stat), read every TAOM override of that decision for the missions the effect is gated to, not only the code that writes the input. If a mode forbids the outcome, say so in the design and choose another effect there.
 
 **Source:** [rca-hero-abilities-2026-11-15.md](../rca-hero-abilities-2026-11-15.md) finding 5.
+
+### A grant keyed by the shooter needs the list of everything that shoots in his name (#1361, 2026-11-16)
+
+**Why missed:** Legolas's shield pierce, his damage floor and his arrow's kill roll all ask one question: is the attacker a hero on the ranged roster. The Long Defeat's Elven Volley adds its arrows with `AddCustomMissile(owner, ...)`, and its owner rule took any live AI human defender, archers first and the one farthest from the attackers. That is Legolas late in a wave. The plan had read the volley only as a reader of his extra arrows.
+
+**Prevent:** when a model or a callback grants something by `attackerAgent`, grep every `AddCustomMissile` and every blow built with an owner in the missions the grant is gated to, and decide for each whether its shooter can be the granted agent. Close it at the producer (the owner rule) and make the closed fact a required argument, so a new caller cannot leave it out.
+
+**Source:** [rca-hero-ranged-kit-2026-11-16.md](../rca-hero-ranged-kit-2026-11-16.md) finding 1 and 6.
