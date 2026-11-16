@@ -238,12 +238,12 @@ and Arthedain. The Gondor to Mordor gap on day 300 was 12,693 to 18,786 in four 
 - The Gondor to Mordor gap widened to 14,362 in the sixth run (8,027 in the fifth), and was 12,693 to 18,786 on day 300 in four of five 300-day runs. Watch it before any change (#1283).
 - Gondor's survival row (0.3, shared with Arthedain) and its tier 7+ party template stacks: not changed, because the second run
   closed the gap. Revisit only if a later run shows the gap again.
-- A Codex review of 5101f151b and of these changes: the account's usage limit blocks Codex until 2026-11-20.
 - Isengard in `CapturedFortHold.Factions`: decide from the run.
 - A gear (armour) factor in auto-resolve: considered and not added, because Gondor has the heaviest armour and the factor would widen the lead #1283 reported.
 
 ## Changelog
 
+- 2026-11-16: The maintainer waives the Codex review of the #1283 changes.
 - 2026-11-16: Blue Craig tuning ends: the maintainer keeps growth 2 and defence 0.1, and Blue Craig may fall before day 300 (#1283).
 - 2026-11-16: Five 300-day runs recorded; Blue Craig falls on day 88 to 251, and garrison growth and the siege defence bonus do not change that (#1283).
 - 2026-11-16: Blue Craig's garrisons cost no wages or food, take no starvation wounds, and grow by 2 free troops a day (#1283).
