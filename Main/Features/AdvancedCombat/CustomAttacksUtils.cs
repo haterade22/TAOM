@@ -7,6 +7,7 @@ using TaleWorlds.Engine;
 using TaleWorlds.Library;
 using TaleWorlds.MountAndBlade;
 using static TaleWorlds.MountAndBlade.Agent;
+using TAOM.Core.Diagnostics;
 
 namespace TAOM.Features.AdvancedCombat;
 
@@ -85,13 +86,28 @@ public class CustomAttacksUtils
 
     public static void RegisterBlow(Agent attacker, Agent victim, WeakGameEntity realHitEntity, Blow b, ref AttackCollisionData collisionData, in MissionWeapon attackerWeapon, ref CombatLogData combatLogData)
     {
-        if (_initializationFailed || _registerBlow == null)
+        if (Unbound(!_initializationFailed && _registerBlow != null, _initializationError))
         {
             TaleWorlds.Library.Debug.Print($"[TAOM] CustomAttacksUtils.RegisterBlow: Skipped - initialization failed: {_initializationError ?? "delegate is null"}", 0, TaleWorlds.Library.Debug.DebugColor.Yellow);
             return;
         }
         using (EnterSyntheticBlow())
             _registerBlow(Mission.Current, attacker, victim, realHitEntity, b, ref collisionData, in attackerWeapon, ref combatLogData);
+    }
+
+    /// <summary>The #1185 notice id for synthetic blows that do nothing (#1223).</summary>
+    internal const string SelfDisableId = "AdvancedCombat.SyntheticBlow";
+
+    /// <summary>
+    /// True when the engine's blow call did not bind, so the synthetic blow is skipped. Reports it once (#1223): every
+    /// blow that goes through it (creature and dwarf attacks, Signature Strikes, instant kills) does nothing until the
+    /// game restarts.
+    /// </summary>
+    internal static bool Unbound(bool bound, string? error)
+    {
+        if (bound) return false;
+        SelfDisables.Report(SelfDisableId, error ?? "Mission.RegisterBlow delegate is null");
+        return true;
     }
 
     // The flag belongs to the thread registering the blow, which is the thread the engine raises its hit callbacks on.

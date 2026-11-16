@@ -2919,3 +2919,7 @@ The battle balance provider's new tests built `BattleBalanceConfig` objects in C
 **Prevent:** for a feature with a button, the proof has two parts. The bot run proves the mechanism. A written walk proves the feature: the default gold and not the bot's, each choice a player has at the start (class, fortress), a click at the earliest moment the button is live, and what the screen says after a success. Each "says nothing" or "takes part of" in that walk is a finding before the maintainer plays.
 
 **Source:** [rca-long-defeat-upgrade-feedback-2026-11-16.md](../rca-long-defeat-upgrade-feedback-2026-11-16.md) the first table.
+### A test that calls a static member runs the class's static constructor (#1223, 2026-11-16)
+The #1223 tests called a pure helper on `CustomAttacksUtils`. Any static call runs its explicit static constructor, which binds the engine and prints through `Debug`, so the tests needed `RequiresGame`. The same change moved lines in that file, and three `file:line` pins in a comment, a test message and a feature doc went stale; only the reflection pin has a gate.
+- **Prevent:** before you tag a test of a pure helper as engine-free, check whether its class has a static constructor. After you insert lines in a file, `grep -rn '<File>.cs:'` for its pins.
+- **Source:** the #1223 tier 1 review, Data flow T9 and T10.

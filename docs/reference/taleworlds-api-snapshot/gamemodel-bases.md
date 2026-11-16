@@ -154,6 +154,7 @@ Models: 72. Regenerate after any patch, GameModel or engine change: `pwsh tools/
 ## TaomCombatSimulationModel : DefaultCombatSimulationModel
 `Base: TaleWorlds.CampaignSystem.GameComponents.DefaultCombatSimulationModel`
 
+- `Void GetBattleAdvantage(MapEvent mapEvent, ref ExplainedNumber defenderAdvantage, ref ExplainedNumber attackerAdvantage)`
 - `Single GetBluntDamageChance(CharacterObject strikerTroop, CharacterObject strikedTroop, PartyBase strikerParty, PartyBase strikedParty, MapEvent battle)`
 - `ExplainedNumber SimulateHit(CharacterObject strikerTroop, CharacterObject struckTroop, PartyBase strikerParty, PartyBase struckParty, Single strikerAdvantage, MapEvent battle, BattleEnvironment battleEnvironment, Single strikerSideMorale, Single struckSideMorale)`
 

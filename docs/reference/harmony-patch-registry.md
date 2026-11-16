@@ -2114,6 +2114,19 @@ Applied from `SubModule.cs` in the standard `OnGameInitializationFinished` batch
 **What it changes.** It only turns a `true` into `false`, and only when `HostilePeaceService.BlocksCaravanTrade` says so: the switch is on, the two factions are not at war, and their `diplomacy.json` tier is Hostile. A fault keeps vanilla's answer and is logged once.
 
 **Coexistence.** `Patch59_CaravanTrade` postfixes the same method but only turns a war-caused `false` into `true`; the two never act on the same call, so their order does not matter.
+
+## Patch157_DesertionRecruitHint
+
+**Target (v1.5.7, read on the installed DLL 2026-11-16):** `public virtual void TaleWorlds.CampaignSystem.ViewModelCollection.GameMenu.Recruitment.RecruitVolunteerTroopVM.ExecuteBeginHint()`, one prefix class `Patch157_RecruitSlotHint_Prefix` in `Main/Features/AlignmentDesertion/Hooks/`, category `Patch157_DesertionRecruitHint` (GameInit, declared by `AlignmentDesertionModule`), marked `[ClientOnly]` (the target is in `TaleWorlds.CampaignSystem.ViewModelCollection`). #1189 item 3, 2026-11-16. Feature: [alignment-desertion.md](../features/alignment-desertion.md).
+
+**Why.** The recruit cap (`DesertionRecruitCap.CapVolunteerIndex`) holds the player's index at `first - 1`, so a volunteer who would desert the player's party and every slot after it stay locked at any relation. The VM's constructor searches relations -100 to 99 for the first `i` with `index < MaximumIndexHeroCanRecruitFromHero(Hero.MainHero, owner, i)` (line 290) and leaves `_requiredRelation` at 0 when none matches. Under the cap that holds for every slot from `first - 1` on, so vanilla's hint said "You need 0". The unlock test is `index <= max` (`HeroHelper.HeroCanRecruitFromHero`), so slot `first - 1` does open with relation. The prefix replaces vanilla's relation line: a deserter gets `taom_recruit_slot_would_desert` (tested for the hovered slot itself, so a deserter behind another deserter is named as one), a later slot gets `taom_recruit_slot_behind_deserter`, and slot `first - 1` gets vanilla's relation line with the relation from `DesertionRecruitCap.RequiredRelation` (the inclusive test). A volunteer gets vanilla's tooltip layout (name, separator, level, the line); an empty slot gets vanilla's hint layout (`str_recruit_volunteers_new_troop`, newline, the line). It then skips vanilla. A slot with enough relation, a slot before `first - 1`, no deserter, no relation in range and a fault all run vanilla; a fault is logged once.
+
+**Alignment recruitment block (#1408).** Before the desertion reasons, the prefix asks `IRecruitmentAlignmentService.IsRecruitmentBlocked` with the ids `TaomVolunteerModel.MaximumIndexHeroCanRecruitFromHero` passes (the main hero's kingdom, the notable's settlement map faction, player recruiter). A blocked notable makes the model return -1 at every relation, so each of its locked slots shows `taom_recruit_slot_realm_refuses` in the same layouts.
+
+**Callers and thread.** The recruit screen's `HintWidget` on hover; UI thread. The prefix reads `IDesertionRecruitGuard.WouldDesertFromParty` for each slot up to the first deserter and for the hovered slot, and not at all when the alignment block applies; the cap itself is unchanged.
+
+**Co-op.** Display only, so `ReviewedSafe` in `CoopVetoClassificationTests`. **Tests:** `DesertionRecruitCapTests.LockReason_NamesTheDeserterAndTheSlotsAroundIt` and `RequiredRelation_FindsTheSlotBeforeTheDeserter_AndNullWhenNoRelationOpensIt`. **ACTIVE**, not yet checked in game.
+
 ## Realms manual patches (no category)
 
 **Targets (v1.5.7):** three classes in `Main/Features/Realms/Hooks/` and `TitleEncyclopediaPagePatch` in `Client/Features/Realms/Encyclopedia/`, each applied by hand with its own Harmony id, outside any patch category, so `PatchShield` and the category list do not see them. Feature: [realms.md](../features/realms.md).

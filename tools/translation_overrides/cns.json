@@ -1,4 +1,5 @@
 {
   "_comment": "Hand-authored to preserve Bannerlord conditional placeholders. The AI translator's placeholder-integrity guard rejected its own output for these ids because the model collapsed or duplicated a {?VAR}a{?}b{\\?} block; the engine needs the count to match English exactly. Where the target language has no grammatical gender, both branches carry the same word on purpose. The vanilla-derived ids that once lived here (uc4M4bhG, qa4FlTWS, uiY3ds0Z) are English-only overrides now.",
-  "aom_lord_I1_0_name": "白袍萨鲁曼"
+  "aom_lord_I1_0_name": "“白袍”萨茹曼",
+  "TAOM_LD_End_Report": "报告文件位于 bin/Win64_Shipping_Client/Logs："
 }
