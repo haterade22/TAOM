@@ -2015,3 +2015,11 @@ PR #1304's doc said god mode stays on while the player walks the field after the
 **Prevent:** resolve a Coop id through Coop (`IPlayerManager.TryGetSenderHero`, `IObjectManager.TryGetObject`) and hand TAOM the object's `StringId`. Before using an engine member, read the line that sets it. A seam that carries an external id gets one test with that system's real id shape.
 
 **Source:** `docs/reviews/rca-coop-guest-trade-2026-11-15.md` (Class 1)
+
+### A per-agent visual set at OnAgentBuild must also run after vanilla's in-place skin rebuilds (orc battle voice, 2026-11-16)
+
+**Why missed:** the orc voice was set in `OnAgentBuild`, after `BuildAgent` had built the skin. `BannerBearerLogic.UpdateAgent` calls `Agent.UpdateSpawnEquipmentAndRefreshVisuals`, which runs `ClearVisualComponents`, `EquipItemsFromSpawnEquipment` and `AddSkinMeshes` again with no new `OnAgentBuild`, and TAOM's banner bearer feature triggers it in nearly every field battle. A native re-pick of the skin voice would silently undo the orc voice.
+
+**Prevent:** before setting a per-agent visual in `OnAgentBuild`, grep the decompile for the other callers of `AddSkinMeshes` and `UpdateSpawnEquipmentAndRefreshVisuals` and hook the one that fires (`BannerBearerLogic.OnBannerBearerAgentUpdated`). Make the set idempotent (return when the agent already shows the value) so the repeat call is free. Subscribe in `AfterStart`, not `OnBehaviorInitialize` (#606), and unsubscribe at the mission end.
+
+**Source:** `docs/reviews/rca-orc-battle-voice-2026-11-16.md` (finding 1)

@@ -2,9 +2,10 @@
 
 ## Overview
 
-Soldiers of the plain `orc` race use TAOM's Uruk battle voice (`uruk_01`) for their grunts, pain cries,
-death screams and yells, instead of the vanilla human male voices. The voice is set from C# once per
-soldier at spawn. The Armory's `skins.xml` is not changed.
+Male adult agents of the plain `orc` race use TAOM's Uruk battle voice (`uruk_01`) for their grunts, pain
+cries, death screams and yells, instead of the vanilla human male voices. That covers every such agent in any
+mission, not only soldiers: townsfolk, notables and heroes too. The voice is set from C# at spawn and again
+after a banner bearer's skin rebuild. The Armory's `skins.xml` is not changed.
 
 ## Why This Exists
 
@@ -16,6 +17,9 @@ soldier at spawn. The Armory's `skins.xml` is not changed.
   `uruk_01`. Players hear Mordor orcs die with human screams.
 - **Without this feature:** the fix needs a `skins.xml` edit in the unversioned Armory module
   ([kingdom-voices.md](kingdom-voices.md) route A), which TAOM does not own, or an XSLT over that file.
+  TAOM does not rewrite the Armory's skins at load without haterade's OK, because that is his data. The XSLT
+  route (keep only the orc adult male `voice_types` entry `uruk_01`, or keep seven entries) stays an option
+  for him; the PR body lists it.
 
 ## Architecture
 
@@ -41,17 +45,21 @@ One `MissionLogic` (`OrcBattleVoiceMissionBehavior`) overrides `OnAgentBuild`, w
 
 `OrcBattleVoiceService` handles each agent:
 
-1. Skips every agent that is not humanoid, is female, is player controlled, has no `AgentVisuals`, is not
-   race `orc` (through `IRaceManager`), or already reports `uruk_01`.
+1. Skips every agent that is not humanoid, is female, is below adult age (18, `Agent.Age`, so orc child
+   townsfolk keep their own voice), is player controlled, has no `AgentVisuals`, is not race `orc` (through
+   `IRaceManager`), or already reports `uruk_01`. An agent without `AgentVisuals` is skipped.
 2. On the first orc of a mission it probes: it sets each `human`-class index on that orc in turn and reads
    the name the agent then reports (`Agent.GetAgentVoiceDefinition`), until `uruk_01` answers. Each later
    orc gets the found index with one call.
-3. If no index answers `uruk_01`, the probed orc goes back to the index that reported its original voice.
-   If two indices report the same name, the report does not follow the setter (definitions are merged by
-   name, so two indices never share one): probing stops there. Either way a `[Check]` Fail line is written
-   and the feature stands down for the mission.
-4. The pitch is the soldier's `BodyPropertiesSeed` mapped to [0, 1] with vanilla's mount factor
-   (`num2 * 4.656613E-10f`), so pitch varies per soldier and is stable across peers.
+3. If no index answers `uruk_01`, the probed orc goes back to the definition it was built with, at the seed
+   pitch. If two indices report the same name, the report does not follow the setter (definitions are merged
+   by name, so two indices never share one): probing stops there and the orc keeps whatever the last set gave
+   it. Either way a `[Check]` Fail line is written and the feature stands down for the mission.
+4. The pitch is the agent's `BodyPropertiesSeed` mapped to [0, 1] with vanilla's mount factor
+   (`num2 * 4.656613E-10f`). Soldiers with a seed differ in pitch and keep it across peers. Hero agents and
+   Long Defeat / Fords of War soldiers carry seed 0, so they share one pitch.
+5. The behavior also listens to `BannerBearerLogic.OnBannerBearerAgentUpdated` (see Known limits) and runs the
+   same service call on the agent. The call is idempotent: it returns at once while the agent reports `uruk_01`.
 
 After each set the service reads the name back. The first match writes a `[Check]` Pass line; the first
 mismatch writes a Fail line with the reported name.
@@ -82,9 +90,16 @@ None. The race (`orc`), the voice (`uruk_01`) and the sound class (`human`) are 
 - **The player's own orc** keeps the voice chosen in character creation.
 - **Trolls** (`cave_troll`, `hill_troll`) are out of scope: no troll voice definition exists yet, although
   the troll clips do (`ModuleSounds/LOTR/Monsters/Troll`).
-- **Equipment refresh.** `Agent.UpdateSpawnEquipmentAndRefreshVisuals` runs `AddSkinMeshes` again mid-mission.
-  Whether native then picks the skin voice again is not known; an orc whose kit is refreshed may fall back
-  to a human voice.
+- **Equipment refresh.** `Agent.UpdateSpawnEquipmentAndRefreshVisuals` runs `AddSkinMeshes` again mid-mission,
+  and `OnAgentBuild` does not fire again. Vanilla's `BannerBearerLogic.UpdateAgent` does this when an agent
+  becomes or stops being a banner bearer (`BannerBearerLogic.cs:733-756`), and TAOM's banner bearer feature
+  triggers it in nearly every field battle. Whether native then picks the skin voice again is not known, so
+  the behavior subscribes to `BannerBearerLogic.OnBannerBearerAgentUpdated` in `AfterStart` (not
+  `OnBehaviorInitialize`, #606), unsubscribes at the mission end, and re-applies the voice. No other kit
+  refresh path is covered.
+- **Children** (age below 18) keep their own voice: `uruk_01` is an adult male voice.
+- **Co-op.** Another player's orc hero gets `uruk_01` on the other peers too, as every peer sets the voice on
+  the agents it spawns.
 - **Not proven in game.** That the native voice of a humanoid agent follows `SetVoiceDefinitionIndex` is
   inferred from the mount caller and checked only through the name readback; no one has listened yet.
 
@@ -106,11 +121,11 @@ None. The race (`orc`), the voice (`uruk_01`) and the sound class (`human`) are 
 
 ## Tests
 
-- `TAOM.Tests/Features/OrcBattleVoice/OrcBattleVoiceServiceTests.cs`: 17 tests and 5 data rows covering
-  each skip rule, the probe order, reuse of the found index, the restore when `uruk_01` is missing, a
+- `TAOM.Tests/Features/OrcBattleVoice/OrcBattleVoiceServiceTests.cs`: 20 tests and 5 data rows covering
+  each skip rule (children too), the probe order, a repeat apply and a reverted voice, reuse of the found index, the restore when `uruk_01` is missing, a
   readback that does not follow the setter, an empty catalog, Pass and Fail lines, and the seed-to-pitch map.
-- `TAOM.Tests/Features/OrcBattleVoice/OrcBattleVoiceWiringTests.cs`: 7 tests pinning the module, the
-  adapter registration, the co-op role, the entry point size and the engine calls.
+- `TAOM.Tests/Features/OrcBattleVoice/OrcBattleVoiceWiringTests.cs`: 8 tests pinning the module, the
+  adapter registration, the co-op role, the entry point size, the banner bearer subscription and the engine calls.
 - Co-op role: Local (presentation on this peer's own agents), row in [coop-interop.md](coop-interop.md).
 
 ## How to verify in game
@@ -125,3 +140,6 @@ None. The race (`orc`), the voice (`uruk_01`) and the sound class (`human`) are 
 3. Listen: orc soldiers grunt, cry out and die with the Uruk clips, not human screams. Compare with a Gondor
    or Rohan soldier on the same field. Only a person can judge this step.
 4. Orc women, if any spawn, still use the vanilla female voices (known limit).
+5. Banner bearers: in a field battle, listen to an orc banner bearer, including after a bearer falls and
+   another picks up the banner. It must keep the Uruk voice.
+6. Visit a Misty Mountain Orcs town: adult male orcs use the Uruk voice, orc children do not.
