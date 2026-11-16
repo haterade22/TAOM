@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using DryIoc;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
@@ -225,6 +226,67 @@ public class StoryMissionsWiringTests
         var message = behavior.Open("m1", false);
 
         StringAssert.Contains(message, "could not open");
+    }
+
+    private static object? PendingVerdict(StoryDevMenuBehavior behavior) =>
+        typeof(StoryDevMenuBehavior).GetField("_pendingVerdict", BindingFlags.NonPublic | BindingFlags.Instance)!.GetValue(behavior);
+
+    // The scenario autorun (#1368) opens the menu with a verdict callback; the console passes none.
+    [TestMethod]
+    public void Open_WithAVerdictCallback_OpensTheMenuAsBefore()
+    {
+        var (behavior, menus) = Behavior();
+
+        var message = behavior.Open("m1", true, _ => { });
+
+        menus.Received(1).EnsureMenuOpen(StoryDevMenuBehavior.MenuId);
+        StringAssert.Contains(message, "The story menu is open for 'm1'");
+        Assert.IsNotNull(PendingVerdict(behavior));
+    }
+
+    [TestMethod]
+    public void Open_RefusedWithACallback_KeepsNoPendingCallback()
+    {
+        var (refused, _) = Behavior(currentMenu: "camp");
+        var (closed, closedMenus) = Behavior();
+        closedMenus.EnsureMenuOpen(StoryDevMenuBehavior.MenuId).Returns(false);
+
+        refused.Open("m1", true, _ => { });
+        closed.Open("m1", true, _ => { });
+
+        Assert.IsNull(PendingVerdict(refused), "a refusal stores nothing");
+        Assert.IsNull(PendingVerdict(closed), "a menu that would not open clears the request with its callback");
+    }
+
+    [TestMethod]
+    public void Open_WithoutACallback_ReplacesAPendingOne()
+    {
+        var (behavior, _) = Behavior();
+        behavior.Open("m1", true, _ => { });
+
+        behavior.Open("m1", false);
+
+        Assert.IsNull(PendingVerdict(behavior), "a later console open is a new request, with no verdict callback");
+    }
+
+    [TestMethod]
+    public void DevMenuSource_PassesThePendingVerdictToTheLauncher()
+    {
+        var source = RepoPaths.ReadSource("Main/Features/StoryMissions/Hooks/StoryDevMenuBehavior.cs", stripComments: true);
+
+        StringAssert.Contains(source, "var verdict = _pendingVerdict;");
+        StringAssert.Contains(source, "_launcher.Launch(id, _pendingAuto, verdict)");
+    }
+
+    [TestMethod]
+    public void DevMenuSource_NamesItsOptionsByConstant()
+    {
+        var source = RepoPaths.ReadSource("Main/Features/StoryMissions/Hooks/StoryDevMenuBehavior.cs", stripComments: true);
+
+        Assert.AreEqual("taom_story_dev_open", StoryDevMenuBehavior.OpenOptionId);
+        Assert.AreEqual("taom_story_dev_back", StoryDevMenuBehavior.BackOptionId);
+        StringAssert.Contains(source, "AddGameMenuOption(MenuId, OpenOptionId, ");
+        StringAssert.Contains(source, "AddGameMenuOption(MenuId, BackOptionId, ");
     }
 
     [TestMethod]

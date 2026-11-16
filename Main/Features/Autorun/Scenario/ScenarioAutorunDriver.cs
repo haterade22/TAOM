@@ -1,6 +1,7 @@
 using System;
 using TAOM.Core.Logging;
 using TAOM.Core.Validation;
+using TAOM.Features.StoryMissions.Domain;
 
 namespace TAOM.Features.Autorun.Scenario;
 
@@ -14,7 +15,8 @@ internal sealed class ScenarioAutorunDriver
 {
     private const string Prefix = "[Autorun][Scenario] ";
 
-    private enum Phase { Off, WaitMenu, Creation, WaitMap, Running, Exiting, Done }
+    // The story phases stay before Exiting: Tick and Finish test _phase < Phase.Exiting.
+    private enum Phase { Off, WaitMenu, Creation, WaitMap, MissionMenu, MissionOpen, InMission, MissionReturn, Running, Exiting, Done }
 
     private readonly ScenarioPlan _plan;
     private readonly ICampaignAutorunHost _host;
@@ -27,7 +29,9 @@ internal sealed class ScenarioAutorunDriver
     private int _dayStart = ScenarioRules.UnknownDay, _lastDay = ScenarioRules.UnknownDay;
     private int _inquiries, _notices, _eventWindows, _resets;
     private string _prepared = "";
-    private bool _noticeSeen;
+    private bool _noticeSeen, _missionSeen, _backClicked;
+    private double _missionStart, _missionEnd = -1.0, _freeMapHeld;
+    private StoryOutcome? _verdict;
 
     public ScenarioAutorunDriver(ScenarioPlan plan, ICampaignAutorunHost host, IModLogger logger, IOutcomeLog outcomes)
     {
@@ -92,6 +96,10 @@ internal sealed class ScenarioAutorunDriver
             case Phase.WaitMenu: WaitMenu(); break;
             case Phase.Creation: Creation(); break;
             case Phase.WaitMap: WaitMap(); break;
+            case Phase.MissionMenu: MissionMenu(); break;
+            case Phase.MissionOpen: MissionOpen(); break;
+            case Phase.InMission: InMission(); break;
+            case Phase.MissionReturn: MissionReturn(); break;
             case Phase.Running: Running(); break;
             case Phase.Exiting: Exiting(); break;
         }
@@ -166,15 +174,144 @@ internal sealed class ScenarioAutorunDriver
         }
 
         _dayChanged = _wall;
-        Enter(Phase.Running);
+        Enter(_plan.Kind == ScenarioPlan.KindStoryMission ? Phase.MissionMenu : Phase.Running);
+    }
+
+    // The story kind opens the dev story menu from the free map, picks "Open the mission" once that menu has settled, waits out the
+    // mission and ends when the map is back. It never fast forwards: the mission runs at 1x and no Running phase follows.
+    private void MissionMenu()
+    {
+        MapChores();
+        if (!ScenarioRules.Waiting(_wall - _phaseStart, ScenarioRules.StoryStepWaitSeconds))
+        {
+            StoryRefused("the map never showed with no menu open in " + ScenarioRules.StoryStepWaitSeconds + " s");
+            return;
+        }
+
+        if (!Held(_host.Screen == AutorunScreen.Map) || !ScenarioRules.MapSettled(_held))
+            return;
+
+        var opened = _host.OpenStoryMenu(_plan.MissionId, out var message);
+        _logger.LogInfo(Prefix + "story menu: " + message);
+        if (opened)
+            Enter(Phase.MissionOpen);
+        else
+            StoryRefused("the story menu was refused: " + message);
+    }
+
+    private void MissionOpen()
+    {
+        MapChores();
+        if (!ScenarioRules.Waiting(_wall - _phaseStart, ScenarioRules.StoryStepWaitSeconds))
+        {
+            StoryRefused("the story menu never settled in " + ScenarioRules.StoryStepWaitSeconds + " s");
+            return;
+        }
+
+        if (!Held(_host.Screen == AutorunScreen.MapMenu && _host.StoryMenuShown) || !ScenarioRules.MapSettled(_held) || _host.EventWindowOpenOrWaiting)
+            return;
+
+        if (_host.ChooseOpenMission())
+            Enter(Phase.InMission);
+        else
+            StoryRefused("the Open the mission option was not offered");
+    }
+
+    private void InMission()
+    {
+        HideInquiry();
+        CloseEventWindow();
+        if (!_missionSeen)
+        {
+            if (_host.Screen == AutorunScreen.Mission)
+            {
+                _missionSeen = true;
+                _missionStart = _wall;
+            }
+            else if (!ScenarioRules.Waiting(_wall - _phaseStart, ScenarioRules.StoryStepWaitSeconds))
+                Finish("mission_not_opened");
+            return;
+        }
+
+        if (ScenarioRules.OnMap(_host.Screen))
+        {
+            _missionEnd = _wall;
+            _verdict = _host.StoryVerdict;
+            _logger.LogInfo(Prefix + "mission ended verdict=" + (_verdict?.ToString() ?? "-") + " seconds=" + ScenarioAutorunDone.F1(_missionEnd - _missionStart));
+            var reason = ScenarioRules.MissionReason(_verdict);
+            if (reason == null)
+                Enter(Phase.MissionReturn);
+            else
+                Finish(reason);
+        }
+        else if (!ScenarioRules.WithinWallLimit(_wall - _missionStart, _plan.MissionLimitSeconds))
+        {
+            _logger.LogWarning(Prefix + "mission_limit: the mission did not end in " + ScenarioAutorunDone.F1(_plan.MissionLimitSeconds) + " s screen=" + _host.Screen);
+            Finish("mission_limit");
+        }
+    }
+
+    private void MissionReturn()
+    {
+        MapChores();
+        if (!ScenarioRules.Waiting(_wall - _phaseStart, ScenarioRules.StoryStepWaitSeconds))
+        {
+            _logger.LogWarning(Prefix + "return_failed: the map did not settle in " + ScenarioRules.StoryStepWaitSeconds + " s screen=" + _host.Screen
+                + " open_menu=" + (_host.OpenMenuId ?? "none"));
+            Finish("return_failed");
+            return;
+        }
+
+        var screen = _host.Screen;
+        _freeMapHeld = screen == AutorunScreen.Map ? _freeMapHeld + _dt : 0.0;
+        if (Held(!_backClicked && screen == AutorunScreen.MapMenu && _host.StoryMenuShown))
+        {
+            if (!ScenarioRules.MapSettled(_held))
+                return;
+
+            if (_host.ChooseBackToMap())
+            {
+                _backClicked = true;
+                _logger.LogInfo(Prefix + "chose Back to the map");
+            }
+            else
+            {
+                _logger.LogWarning(Prefix + "return_failed: the Back to the map option was not offered");
+                Finish("return_failed");
+            }
+
+            return;
+        }
+
+        if (ScenarioRules.MapSettled(_freeMapHeld))
+        {
+            _logger.LogInfo(Prefix + (_backClicked ? "back on the free map after Back to the map" : "back on the free map with no menu open"));
+            Finish(ScenarioAutorunDone.ReasonOk);
+        }
+    }
+
+    private void StoryRefused(string why)
+    {
+        _logger.LogWarning(Prefix + "mission_refused: " + why + " open_menu=" + (_host.OpenMenuId ?? "none"));
+        Finish("mission_refused");
+    }
+
+    private void MapChores()
+    {
+        HideInquiry();
+        HideSceneNotification();
+        CloseEventWindow();
+    }
+
+    private void CloseEventWindow()
+    {
+        if (_host.CloseEventWindow() && ScenarioRules.TitleLogged(++_eventWindows))
+            _logger.LogInfo(Prefix + "event window closed n=" + _eventWindows + " phase=" + _phase);
     }
 
     private void Running()
     {
-        HideInquiry();
-        HideSceneNotification();
-        if (_host.CloseEventWindow() && ScenarioRules.TitleLogged(++_eventWindows))
-            _logger.LogInfo(Prefix + "event window closed n=" + _eventWindows + " phase=" + _phase);
+        MapChores();
         if (_host.KeepFastForward(_plan.Speed))
             _resets++;
 
@@ -220,12 +357,19 @@ internal sealed class ScenarioAutorunDriver
 
         Enter(Phase.Exiting);
         var facts = new ScenarioRunFacts(reason, _dayStart, _lastDay, _inquiries, _notices, _eventWindows, _resets, _prepared, _wall, _startedAt,
-            DateTime.Now.ToString("o"));
+            DateTime.Now.ToString("o")) with
+        {
+            Verdict = _verdict?.ToString() ?? "-",
+            MissionSeconds = _missionSeen ? (_missionEnd >= 0.0 ? _missionEnd : _wall) - _missionStart : 0.0,
+        };
         Guarded("restore the focus setting", _host.RestoreFocusSetting);
         // The text is built inside the guard, so a throw while building it still lets the outcome and the campaign end run.
         Guarded("write " + ScenarioAutorunDone.DoneFile, () => _host.WriteFile(ScenarioAutorunDone.DoneFile, ScenarioAutorunDone.Text(_plan, facts)));
-        Guarded("log the result", () => _logger.LogInfo(Prefix + "done reason=" + reason + " scenario=" + _plan.Scenario + " days_run="
-            + ScenarioRules.DaysRun(_dayStart, _lastDay) + " days_wanted=" + _plan.Days + " quit=" + (_plan.Quit ? 1 : 0)));
+        Guarded("log the result", () => _logger.LogInfo(Prefix + "done reason=" + reason + " scenario=" + _plan.Scenario
+            + (_plan.Kind == ScenarioPlan.KindStoryMission
+                ? " mission=" + _plan.MissionId + " verdict=" + facts.Verdict
+                : " days_run=" + ScenarioRules.DaysRun(_dayStart, _lastDay) + " days_wanted=" + _plan.Days)
+            + " quit=" + (_plan.Quit ? 1 : 0)));
         Guarded("report the outcome", () => ScenarioOutcomes.Report(_outcomes, _plan, facts));
         Guarded("end the campaign", _host.EndCampaign);
     }

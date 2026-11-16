@@ -183,7 +183,7 @@ not for sale; each is a row of the mission's `heroes` list.
   at session start, so a new game and a loaded save in the same process write one line, not two.
 - **Not done:** no hero strip on the HUD, no message when a hero falls, no per-hero position (the three
   stand where the heroes' home place puts them, at the nearest wall lane), no `<Hero>` entry, and no
-  unattended driver for the story mission.
+  unattended driver beyond the one defence mission of #1368 (built, not yet run: [scenario autorun](scenario-autorun.md)).
 
 The feature declares no Harmony patch and no GameModel. Its one saved value, a declined offer, is a
 field of the War Chronicle's payload.
@@ -333,8 +333,15 @@ Slice 4, in a campaign at the Full War:
 `python tools/ingame_verdict.py` reads these rows from `tools/ingame_checks/1105.toml`. The proof is
 owed, and Slice 2 waits on it.
 
-The free heroes (#1366). No driver opens a story mission, so a person runs this, in a loaded campaign
-on a build that holds the feature (a `.dirty` build is not counted):
+The free heroes (#1366). A driver for the story mission exists since #1368 (step 0 below), but it has not run yet, so a person
+still runs this by hand until it has, in a loaded campaign on a build that holds the feature (a `.dirty` build is not counted).
+
+0. The unattended route: `python tools/run_scenario.py --kind story-mission --mission helms_deep_defend` starts a new campaign,
+   opens the mission through the dev menu's click path (`Open the mission`), waits for the end and chooses `Back to the map`, then
+   quits. It reaches the mission rows of `1366.toml` for the one defence mission, and `python tools/ingame_verdict.py --issue 1368` reads
+   its own three rows. It does not reach: step 5 (a person's judgement), the War Chronicle's offer path, a save and reload, a forced
+   loss, or any other mission id. The driver is unit tested only; its first run is owed.
+
 
 1. Start a new campaign or load a save, single player, on the map with no menu open. The line
    `[Check] id=taom.story-missions.roster result=pass` appears at session start, with `missing=-` and
@@ -376,9 +383,9 @@ and NOT REACHED for the mission rows. The unattended Long Defeat run `E:/Temp/lo
 hero lines read `is_hero=1 campaign=0 ... health_factor=3.00` with their own weapons, and
 `python tools/ingame_verdict.py` reads PASS for #1337 and for all seven rows of #1361.
 
-What no run has proven: the story mission with the three heroes has not been opened in a game, and no
-driver opens it without a person. The unit tests and the manifest's patterns are the only evidence
-for the mission rows. Not proven either: that an XML character no party holds survives a save and reload.
+What no run has proven: the story mission with the three heroes has not been opened in a game. The
+driver of #1368 would open it without a person for the one defence mission, but it has never run. The unit tests and the manifest's
+patterns are the only evidence for the mission rows. Not proven either: that an XML character no party holds survives a save and reload.
 
 ## How to add a story mission
 

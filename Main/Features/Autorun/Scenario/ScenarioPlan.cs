@@ -16,6 +16,7 @@ internal sealed class ScenarioPlan
 {
     internal const string EnvVar = "TAOM_AUTORUN";
     internal const string KindCampaignNew = "campaign-new";
+    internal const string KindStoryMission = "story-mission";
     internal const string DefaultCulture = "gondor";
     internal const int DefaultDays = 3;
     internal const int MaxDays = 1000;
@@ -23,6 +24,7 @@ internal sealed class ScenarioPlan
     internal const float MaxSpeed = 30f;
     internal const double DefaultStallSeconds = 600.0;
     internal const double DefaultWallLimitSeconds = 3600.0;
+    internal const double DefaultMissionLimitSeconds = 1200.0;
 
     // Each of these also drives the game from the main menu (CommandTrialAutostart is the Seat's field trial), so two would both start one.
     private static readonly string[] OtherEnvVars = { "TAOM_FORDS_AUTORUN", "TAOM_LONGDEFEAT_AUTORUN", "TAOM_COMMAND_TRIAL" };
@@ -43,6 +45,12 @@ internal sealed class ScenarioPlan
 
     /// <summary>A free label, echoed in the log and the done file.</summary>
     public string Scenario { get; internal init; } = "-";
+
+    /// <summary>The story mission id the <see cref="KindStoryMission"/> kind opens; "-" for any other kind.</summary>
+    public string MissionId { get; internal init; } = "-";
+
+    /// <summary>How long the story mission may run before the driver gives up on it.</summary>
+    public double MissionLimitSeconds { get; internal init; } = DefaultMissionLimitSeconds;
 
     /// <summary>The culture StringId; the game judges it at start, not the plan.</summary>
     public string Culture { get; internal init; } = DefaultCulture;
@@ -89,7 +97,7 @@ internal sealed class ScenarioPlan
 
     /// <summary>One line for the log: every value the run will use.</summary>
     internal string Describe() =>
-        "kind=" + Kind + " scenario=" + Scenario + " culture=" + Culture + " days=" + Days + " speed=" + Num(Speed)
+        "kind=" + Kind + " scenario=" + Scenario + " mission=" + MissionId + " mission_limit_seconds=" + Num(MissionLimitSeconds) + " culture=" + Culture + " days=" + Days + " speed=" + Num(Speed)
         + " stall_seconds=" + Num(StallSeconds) + " wall_limit_seconds=" + Num(WallLimitSeconds) + " quit=" + (Quit ? 1 : 0)
         + " out=" + OutFolder + " arm=" + ArmPath;
 

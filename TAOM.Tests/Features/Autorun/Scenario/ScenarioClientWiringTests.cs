@@ -69,4 +69,38 @@ public class ScenarioClientWiringTests
         Assert.IsFalse(src.Contains("IoC."), "the host takes its plan by constructor");
         StringAssert.Contains(src, "public CampaignAutorunHost(ScenarioPlan plan)");
     }
+
+    // #1368: the driver opens the dev menu through its own Open (the same refusals), then picks an option on the path a person's click
+    // takes (GameMenuItemVM.ExecuteAction -> MenuContext.InvokeConsequence), which runs no condition itself, so the host checks it first.
+    [TestMethod]
+    public void HostSource_ChoosesAStoryOptionAsAClickDoes()
+    {
+        var src = RepoPaths.ReadSource("Client/Features/Autorun/CampaignAutorunHost.cs", stripComments: true);
+
+        StringAssert.Contains(src, "GetCampaignBehavior<StoryDevMenuBehavior>()");
+        StringAssert.Contains(src, ".Open(missionId, true, verdict => _storyVerdict = verdict)");
+        StringAssert.Contains(src, "MenuRepeatObjects.Count > 0");
+        StringAssert.Contains(src, ".GetMenuOptionConditionsHold(");
+        StringAssert.Contains(src, ".InvokeConsequence(index)");
+        StringAssert.Contains(src, "Choose(StoryDevMenuBehavior.OpenOptionId)");
+        StringAssert.Contains(src, "Choose(StoryDevMenuBehavior.BackOptionId)");
+        Assert.IsFalse(src.Contains("StoryMissionLauncher"), "the mission opens from the menu option, never from the launcher directly");
+        Assert.IsFalse(src.Contains("RunConsequence"), "the click's path, never the option's consequence run directly");
+    }
+
+    [TestMethod]
+    public void HostSource_MapsMissionStateToMission()
+    {
+        var src = RepoPaths.ReadSource("Client/Features/Autorun/CampaignAutorunHost.cs", stripComments: true);
+
+        StringAssert.Contains(src, "MissionState => AutorunScreen.Mission,");
+    }
+
+    [TestMethod]
+    public void HostSource_AnEventWindowWaitingCountsAsOpen()
+    {
+        var src = RepoPaths.ReadSource("Client/Features/Autorun/CampaignAutorunHost.cs", stripComments: true);
+
+        StringAssert.Contains(src, "public bool EventWindowOpenOrWaiting => EventWindows.IsOpen;");
+    }
 }

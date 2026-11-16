@@ -2887,3 +2887,11 @@ The battle balance provider's new tests built `BattleBalanceConfig` objects in C
 **Prevent:** for every scoped check ask what a tester does next in the same session, and end the segment there (`scope_end` in `tools/ingame_verdict.py`). When a mission starts to write an existing check line, give every manifest that reads the line a scope, and prove the bound with a made-up mixed session run through the real manifest. Where no line marks the end (a campaign battle writes none), say so in the manifest header and in the steps a person follows. Record a spike's run in the repo when it runs, with what it did not prove.
 
 **Source:** [rca-story-free-heroes-2026-11-16.md](../rca-story-free-heroes-2026-11-16.md) finding 1, 2 and 6.
+
+### A run's failure is tested through the path a failed run takes (#1368, 2026-11-16)
+
+**Why missed:** the unattended story run got a done row in its manifest and a "this build did not arm the run" message in its judge. The done row carried the scope of the mission rows, so a run that failed before the mission launched matched no segment and read NOT REACHED. The message sat in the judge, which the runner calls only when a done file exists, and an unarmed build writes none. Each had a unit test, and each test called the piece directly with the input the piece expects.
+
+**Prevent:** for every failure a runner can report, write the test from the outside: the log and files a real failed run leaves (no done file, no launch line, a fail line before the scope), through the runner's own call order, then through `tools/ingame_verdict.py` with the real manifest. Before a row gets a scope, list the lines it must read and check that each one comes after the scope's start. Put a diagnosis where every stop reason passes (the printer), not inside the success path's judge.
+
+**Source:** [rca-story-mission-driver-2026-11-16.md](../rca-story-mission-driver-2026-11-16.md) finding 1 and 2.
