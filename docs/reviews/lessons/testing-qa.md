@@ -2879,3 +2879,11 @@ The battle balance provider's new tests built `BattleBalanceConfig` objects in C
 **Prevent:** before a change writes an existing check id from a new place, grep `tools/ingame_checks/` for the id and narrow each reached, pass and fail pattern to the field that names the writer (`hero=`, `signature=`); add a test that feeds each manifest the other writer's lines. For a copied test, diff it against its source and account for every assertion that is gone. Prove a test of a validator by running the validator on input that must fail.
 
 **Source:** [rca-hero-ranged-kit-2026-11-16.md](../rca-hero-ranged-kit-2026-11-16.md) finding 3, 4 and 5.
+
+### A proof cut from a log has an end as well as a start (#1366, 2026-11-16)
+
+**Why missed:** the manifest of #1366 opened its segment at the story mission's launch line, to keep out what came before. The ability and aura lines keep their ids in the story mission, a game process writes one log, and a segment ran to the end of the file, so a Long Defeat run played afterwards could pass or fail the issue. The header said such lines are never read. The manifests of #1359 and #1361 had no scope at all, and the story mission had just become a second place that writes their lines.
+
+**Prevent:** for every scoped check ask what a tester does next in the same session, and end the segment there (`scope_end` in `tools/ingame_verdict.py`). When a mission starts to write an existing check line, give every manifest that reads the line a scope, and prove the bound with a made-up mixed session run through the real manifest. Where no line marks the end (a campaign battle writes none), say so in the manifest header and in the steps a person follows. Record a spike's run in the repo when it runs, with what it did not prove.
+
+**Source:** [rca-story-free-heroes-2026-11-16.md](../rca-story-free-heroes-2026-11-16.md) finding 1, 2 and 6.

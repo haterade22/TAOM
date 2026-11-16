@@ -137,7 +137,10 @@ internal sealed class StoryMissionCatalog
         var rules = WavesReader.KeepAboveStragglers(WavesReader.ReadRules(s.Group(o, "rules", ""), s), new[] { roster }, s);
         seen.Add(id);
         return new StoryMissionDefinition(id, LongDefeatConfigScope.Text(o["name"]) ?? id, scene, side, defenderCulture, attackerCulture, garrison, roster, rules,
-            FortressesReader.ReadKeep(o["keep"], id, rules.KeepRadius, s), FortressesReader.ReadMuster(o["muster"], id, s), ReadMusic(o["music"], id, s));
+            FortressesReader.ReadKeep(o["keep"], id, rules.KeepRadius, s), FortressesReader.ReadMuster(o["muster"], id, s), ReadMusic(o["music"], id, s))
+        {
+            Heroes = StoryHeroesReader.Read(o["heroes"], id, s),
+        };
     }
 
     private static string? ReadMusic(JToken? token, string id, LongDefeatConfigScope s)

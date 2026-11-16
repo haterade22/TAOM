@@ -114,6 +114,31 @@ public class ShippedStoryMissionsTests
     }
 
     [TestMethod]
+    public void HelmsDeepDefend_ShipsAragornLegolasAndGimli_AsFreeHeroes()
+    {
+        var m = Helms();
+
+        CollectionAssert.AreEqual(new[] { "aragorn", "legolas", "gimli" }, m.Heroes.Select(h => h.Id).ToArray());
+        CollectionAssert.AreEqual(new[] { "taom_hero_aragorn", "taom_hero_legolas", "taom_hero_gimli" }, m.Heroes.Select(h => h.TroopId).ToArray());
+        Assert.IsTrue(m.Heroes.All(h => h.HealthFactor == 3f), "the Long Defeat shop's factor");
+        Assert.IsTrue(RunPlanTroops.AllTroopIds(StoryPlanBuilder.Build(m, RunOptions.Default)).Contains("taom_hero_legolas"));
+    }
+
+    [TestMethod]
+    public void EveryHeroAMissionFields_HasTheHealthFactorTheLongDefeatShopGivesHim()
+    {
+        var shop = Newtonsoft.Json.Linq.JObject.Parse(File.ReadAllText(Path.Combine(ModuleData, "long_defeat", "shop.json")));
+        var shopFactors = shop["shops"]!.Children<Newtonsoft.Json.Linq.JProperty>().SelectMany(p => p.Value["heroes"] ?? new Newtonsoft.Json.Linq.JArray())
+            .GroupBy(h => (string)h["troop"]!).ToDictionary(g => g.Key, g => (float)g.First()["healthFactor"]!);
+
+        foreach (var m in All())
+        {
+            foreach (var h in m.Heroes)
+                Assert.AreEqual(shopFactors[h.TroopId], h.HealthFactor, m.Id + ": " + h.Id);
+        }
+    }
+
+    [TestMethod]
     public void TheShippedFile_NamesNoCustomGameContent()
     {
         var text = File.ReadAllText(Path.Combine(ModuleData, "story_missions", "story_missions.json"));

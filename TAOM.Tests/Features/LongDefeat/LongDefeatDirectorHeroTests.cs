@@ -27,7 +27,7 @@ public class LongDefeatDirectorHeroTests
         public LongDefeatDirector Director { get; set; } = null!;
     }
 
-    private static Rig NewRig(bool keep = true, bool autoplay = false, HeroOffer[]? heroes = null)
+    private static Rig NewRig(bool keep = true, bool autoplay = false, HeroOffer[]? heroes = null, HeroSpawn[]? free = null)
     {
         var rig = new Rig();
         var plan = new RunPlan(
@@ -39,6 +39,7 @@ public class LongDefeatDirectorHeroTests
             new RunOptions { Autoplay = autoplay })
         {
             Bounties = new Dictionary<string, int> { ["orc"] = 4 },
+            FreeHeroes = free ?? System.Array.Empty<HeroSpawn>(),
         };
         if (!keep)
             rig.Field.Keep = null;
@@ -180,6 +181,97 @@ public class LongDefeatDirectorHeroTests
         var line = rig.Outcomes.Lines.Single(l => l.Contains(LongDefeatHeroChecks.FallId));
         StringAssert.StartsWith(line, "pass ");
         StringAssert.Contains(line, "hero=aragorn cause=killed");
+    }
+
+    [TestMethod]
+    public void AFreeHero_IsSpawnedOnTheFirstTick_AfterTheMainIsAdopted_AtTheHomePlace()
+    {
+        var free = new HeroSpawn("aragorn", "taom_hero_aragorn", 3f);
+        var rig = NewRig(free: new[] { free });
+        Assert.IsTrue(rig.Director.Start());
+        Assert.AreEqual(0, rig.Field.HeroSpawns.Count, "Start spawns no hero");
+
+        rig.Director.Tick(0.1f);
+
+        var spawn = rig.Field.HeroSpawns.Single();
+        Assert.AreEqual(free, spawn.Hero);
+        Assert.AreEqual(LdPlace.At(rig.Field.Keep!.Value), spawn.Place, "no foot muster is recorded, so the keep is his home");
+        Assert.AreEqual(HeroState.Standing, StateOf(rig));
+        Assert.AreEqual(3000, rig.Session.GetView()!.Gold, "a free hero costs nothing");
+        Assert.IsTrue(rig.Field.Calls.IndexOf("Adopt:False") >= 0 && rig.Field.Calls.IndexOf("Adopt:False") < rig.Field.Calls.IndexOf("SpawnHero"), string.Join(",", rig.Field.Calls));
+        StringAssert.StartsWith(rig.Outcomes.Of(LongDefeatHeroChecks.SpawnId).Single(), "m1h1 ");
+        rig.Director.Tick(0.1f);
+        Assert.AreEqual(1, rig.Field.HeroSpawns.Count, "one spawn for one free hero");
+    }
+
+    [TestMethod]
+    public void AFreeHerosFall_WritesTheFallLine()
+    {
+        // As in a story mission, the shop sells no hero (StoryPlanBuilder).
+        var rig = NewRig(heroes: System.Array.Empty<HeroOffer>(), free: new[] { new HeroSpawn("aragorn", "taom_hero_aragorn", 3f) });
+        Assert.IsTrue(rig.Director.Start());
+        rig.Director.Tick(0.1f);
+
+        rig.Director.OnAgentRemoved("H:aragorn", true);
+        rig.Director.Tick(0.1f);
+
+        var line = rig.Outcomes.Lines.Single(l => l.Contains(LongDefeatHeroChecks.FallId));
+        StringAssert.StartsWith(line, "pass ");
+        StringAssert.Contains(line, "hero=aragorn cause=killed");
+        Assert.AreEqual(1, rig.Field.HeroSpawns.Count, "nothing brings him back");
+        Assert.IsTrue(rig.Log.Lines.Any(l => l.Contains("[Hero] aragorn fell; a free hero does not come back")), string.Join("\n", rig.Log.Lines));
+        Assert.IsFalse(rig.Log.Lines.Any(l => l.Contains("for sale again")), "the story mission has no shop");
+    }
+
+    [TestMethod]
+    public void TheHeroLogTexts_NameASaleAndARefund_OnlyForAHeroTheShopSells()
+    {
+        Assert.AreEqual("aragorn fell; a hero of the shop is for sale again", LongDefeatDirector.HeroLeftText("aragorn", true, sold: true));
+        Assert.AreEqual("aragorn fled; a hero of the shop is for sale again", LongDefeatDirector.HeroLeftText("aragorn", false, sold: true));
+        Assert.AreEqual("aragorn fell; a free hero does not come back", LongDefeatDirector.HeroLeftText("aragorn", true, sold: false));
+        Assert.AreEqual("a price he cost is paid back", LongDefeatDirector.HeroRefusedTail(sold: true));
+        Assert.AreEqual("he was free, so nothing is paid back", LongDefeatDirector.HeroRefusedTail(sold: false));
+    }
+
+    [TestMethod]
+    public void AFreeHeroTheFieldRefuses_LogsNoRefund()
+    {
+        var rig = NewRig(heroes: System.Array.Empty<HeroOffer>(), free: new[] { new HeroSpawn("aragorn", "taom_hero_aragorn", 3f) });
+        rig.Field.HeroAnswer = new LdHeroReport(false, "no character 'taom_hero_aragorn'");
+        Assert.IsTrue(rig.Director.Start());
+        rig.Director.Tick(0.1f);
+
+        Assert.IsTrue(rig.Log.Lines.Any(l => l.Contains("[Hero] aragorn (taom_hero_aragorn) could not be spawned (no character 'taom_hero_aragorn'); he was free, so nothing is paid back")),
+            string.Join("\n", rig.Log.Lines));
+    }
+
+    [TestMethod]
+    public void ATakenOverFreeHerosFall_IsBookedAsHisFall_AndAsThePlayersDeath()
+    {
+        // #1366: in a campaign the fallen player can take over a free hero. Classify matches the held hero first, so the field reports that the body was the player's as well;
+        // a player's death is counted, splits the defenders again (the engine hands every formation to the AI when the main agent falls, Mission.cs:3017, :3039-3041) and is
+        // checked at the next body.
+        var rig = NewRig(free: new[] { new HeroSpawn("aragorn", "taom_hero_aragorn", 3f) });
+        Assert.IsTrue(rig.Director.Start());
+        rig.Director.Tick(0.1f);
+        rig.Director.OnAgentRemoved("P", true);
+        rig.Field.MainBody = 0;
+        rig.Director.Tick(0.1f);
+        rig.Field.MainIsHeldHero = true;
+        rig.Field.MainBody = 2;
+        rig.Director.Tick(0.1f);
+
+        rig.Director.OnAgentRemoved("HP:aragorn", true);
+        rig.Field.MainBody = 0;
+        rig.Director.Tick(0.1f);
+        rig.Field.MainIsHeldHero = false;
+        rig.Field.MainBody = 3;
+        rig.Director.Tick(0.1f);
+
+        StringAssert.Contains(rig.Outcomes.Lines.Single(l => l.Contains(LongDefeatHeroChecks.FallId)), "hero=aragorn cause=killed");
+        var deaths = rig.Outcomes.Lines.Where(l => l.Contains(LongDefeatChecks.PlayerDeathId)).ToList();
+        Assert.IsTrue(deaths.Any(l => l.StartsWith("pass " + LongDefeatChecks.PlayerDeathId + " d1 ") && l.Contains("via=takeover")), string.Join("\n", rig.Outcomes.Lines));
+        Assert.IsTrue(deaths.Any(l => l.StartsWith("pass " + LongDefeatChecks.PlayerDeathId + " d2 ") && l.Contains("via=takeover")), string.Join("\n", rig.Outcomes.Lines));
     }
 
     [TestMethod]

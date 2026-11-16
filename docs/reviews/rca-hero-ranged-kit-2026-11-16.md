@@ -23,7 +23,7 @@ Not applied:
 
 FOLLOW-UP (#1325): the arrow kill's blow is placed at the midpoint of shooter and victim (`CustomAttacksUtils.TakeDamage`), so its hit sound plays between them. A change there touches every custom attack.
 
-FOLLOW-UP (#1325): `taom_legolas_arrow` loads in Custom Game only. The phase that puts the heroes in a campaign story mission must load the item there too.
+FOLLOW-UP (#1325): `taom_legolas_arrow` loads in Custom Game only. The phase that puts the heroes in a campaign story mission must load the item there too. Status: #1366 did it (the item loads for Campaign, CampaignStoryMode and CustomGame, 2026-11-16); no campaign has been run with it yet.
 
 FOLLOW-UP (no issue: a pre-existing validator gap, not from this work): `validate_mesh_refs.py` does not check `holster_body_name`.
 
