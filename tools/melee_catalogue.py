@@ -283,8 +283,9 @@ def _gate():
 
 
 def module_dirs(modules: Path, without_taom: bool = False) -> list[Path]:
-    """The installed module folders to read, in sorted order, without the ones TAOM's
-    SubModule.xml lists as incompatible (NavalDLC never loads beside TAOM).
+    """The installed module folders to read, in sorted order: the modules TAOM's SubModule.xml
+    loads with (its dependencies and LoadBeforeThis metadata, followed through each module, #1375),
+    without the ones it lists as incompatible (NavalDLC never loads beside TAOM).
 
     `without_taom` also leaves out TAOM itself, for the stylesheet chain: the callers that price
     TAOM's placeholders add the registrations from their own tree (`taom_schema.price_placeholders`,
@@ -298,7 +299,7 @@ def module_dirs(modules: Path, without_taom: bool = False) -> list[Path]:
         if without_taom:
             id_node = gate._submodule(TAOM_SUBMODULE).find("Id")
             skip |= {id_node.get("value") if id_node is not None else ""}
-        return gate.module_dirs(modules, None, skip)
+        return gate.module_dirs(modules, None, skip, TAOM_SUBMODULE)
     except gate.GateInputError as exc:
         raise CatalogueError(str(exc)) from exc
 

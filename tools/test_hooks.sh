@@ -3112,6 +3112,87 @@ cp_run "$CP_SETTINGS" "x/../../tmp/claude-config-override-$CP_SID"; got=$?
 rm -f "/tmp/claude-config-override-$CP_SID"
 
 # ---------------------------------------------------------------------------
+head2 "7p. block-trunk-edit denies an Edit or Write in a checkout on trunk, and only there"
+# The hook reads the repository from the file's own folder, so a worktree on a branch passes while the
+# main checkout it hangs from is on trunk. A case is "deny" or "allow".
+TB_MAIN="$SANDBOX/tb-main"
+TB_WT="$SANDBOX/tb-wt"
+rm -rf "$TB_MAIN" "$TB_WT"
+mkdir -p "$TB_MAIN"
+(
+    cd "$TB_MAIN" || exit 1
+    git init -q -b bannerlord-1.5.x . \
+        && printf 'ignored.txt\n' > .gitignore \
+        && : > tracked.txt \
+        && git add .gitignore tracked.txt \
+        && git -c user.name=t -c user.email=t@t.invalid -c core.hooksPath=/dev/null commit -q -m init \
+        && git worktree add -q -b feat/x "$TB_WT"
+) >/dev/null 2>&1
+tb_run() {   # $1 file path, $2 the payload's session_id or "", then env assignments; prints deny or allow
+    local path="$1" sid="$2" payload out
+    shift 2
+    payload=$("$HPY" -c '
+import json, sys
+d = {"tool_name": "Write", "tool_input": {"file_path": sys.argv[1]}, "hook_event_name": "PreToolUse"}
+if sys.argv[2]:
+    d["session_id"] = sys.argv[2]
+print(json.dumps(d))' "$path" "$sid")
+    out=$(printf '%s' "$payload" | timeout -k 2 10 env -u CLAUDE_CODE_SESSION_ID -u CLAUDE_SESSION_ID \
+        CLAUDE_PROJECT_DIR="$TB_MAIN" "$@" bash "$REPO/.claude/hooks/block-trunk-edit.sh" 2>/dev/null)
+    [[ "$out" == *'"permissionDecision":"deny"'* && "$out" == *'"hookSpecificOutput"'* ]] && echo deny || echo allow
+}
+TB_SID="taom-hooktest-tb-$$"
+TB_CASES=(
+  "deny|$TB_MAIN/tracked.txt"
+  "deny|$TB_MAIN/new-folder/new-file.cs"
+  "allow|$TB_MAIN/ignored.txt"
+  "allow|$TB_WT/tracked.txt"
+  "allow|$SANDBOX/outside-any-repo.txt"
+  "allow|tracked.txt"
+)
+if command -v cygpath >/dev/null 2>&1; then
+    TB_CASES+=("deny|$(cygpath -w "$TB_MAIN")\\tracked.txt")
+fi
+for entry in "${TB_CASES[@]}"; do
+    want="${entry%%|*}"; path="${entry#*|}"
+    got=$(tb_run "$path" "$TB_SID")
+    [[ "$got" == "$want" ]] && ok "block-trunk-edit $got for: $path" \
+        || bad "block-trunk-edit expected $want, got $got for: $path"
+done
+# Another branch in the main checkout passes; trunk in a worktree denies (the branch is per work tree).
+TB_OTHER="$SANDBOX/tb-other"
+rm -rf "$TB_OTHER"
+git -C "$TB_MAIN" worktree add -q --detach "$TB_OTHER" >/dev/null 2>&1
+got=$(tb_run "$TB_OTHER/tracked.txt" "$TB_SID")
+[[ "$got" == allow ]] && ok "block-trunk-edit: a detached HEAD allows" \
+    || bad "block-trunk-edit denied a detached HEAD (got $got)"
+# The override is per session, named like config-protection's.
+: > "/tmp/claude-trunk-override-$TB_SID"
+got=$(tb_run "$TB_MAIN/tracked.txt" "$TB_SID")
+[[ "$got" == allow ]] && ok "block-trunk-edit: this session's override allows" \
+    || bad "block-trunk-edit ignored this session's override (got $got)"
+got=$(tb_run "$TB_MAIN/tracked.txt" "taom-hooktest-tb-other-$$")
+[[ "$got" == deny ]] && ok "block-trunk-edit: another session's override does not unlock this session" \
+    || bad "block-trunk-edit let one session's override unlock another (got $got)"
+got=$(tb_run "$TB_MAIN/tracked.txt" "" CLAUDE_CODE_SESSION_ID="$TB_SID")
+[[ "$got" == allow ]] && ok "block-trunk-edit: CLAUDE_CODE_SESSION_ID names the override when the payload has no id" \
+    || bad "block-trunk-edit ignored CLAUDE_CODE_SESSION_ID (got $got)"
+got=$(tb_run "$TB_MAIN/tracked.txt" "x/../../tmp/claude-trunk-override-$TB_SID")
+[[ "$got" == deny ]] && ok "block-trunk-edit: a session id cannot walk to another override file" \
+    || bad "block-trunk-edit followed path characters in a session id (got $got)"
+rm -f "/tmp/claude-trunk-override-$TB_SID"
+# Fail open: a payload with no path, and a payload that is not JSON, both allow.
+out=$(printf '{"tool_name":"Write","tool_input":{}}' | timeout -k 2 10 bash "$REPO/.claude/hooks/block-trunk-edit.sh" 2>/dev/null)
+[[ "$out" != *deny* ]] && ok "block-trunk-edit: a payload with no file path allows" \
+    || bad "block-trunk-edit denied a payload with no file path"
+out=$(printf 'file_path not json' | timeout -k 2 10 bash "$REPO/.claude/hooks/block-trunk-edit.sh" 2>/dev/null)
+[[ "$out" != *deny* ]] && ok "block-trunk-edit: a payload that is not JSON allows" \
+    || bad "block-trunk-edit denied a payload that is not JSON"
+git -C "$TB_MAIN" worktree remove --force "$TB_WT" >/dev/null 2>&1
+git -C "$TB_MAIN" worktree remove --force "$TB_OTHER" >/dev/null 2>&1
+rm -rf "$TB_MAIN" "$TB_WT" "$TB_OTHER"
+
+# ---------------------------------------------------------------------------
 # 7h. A payload in Git Bash's here-string hang window still gets its answer (#681).
 #     Git Bash 5.3 hangs forever on a here-string or here-document whose document is 65,537 to
 #     65,664 bytes (text of 65,536 to 65,663 plus the newline a here-string adds), and a killed gate

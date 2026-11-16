@@ -51,7 +51,7 @@ among them) are in [release-process.md](../reference/release-process.md).
 
 ## Working in a shared tree
 
-- **Work on a branch, and land it at key points** (Mike, 2026-11-14). Several people and sessions merge PRs into `bannerlord-1.5.x`, and uncommitted work in the trunk checkout blocks their fetch, pull and push. Once the maintainer has given the word for a piece of work, do it on a new branch (a sibling worktree on E: when other sessions share the trunk checkout), and commit, push and merge it at coherent points instead of holding it. The review gates still run before each commit. Edits to the live Armory or `TAOM_Map` are outside git and need no branch.
+- **Nothing is edited on trunk; work on a branch, and land it at key points** (Mike, 2026-11-14; made a ban and a gate 2026-11-16). Several people and sessions merge PRs into `bannerlord-1.5.x`, and uncommitted work in the trunk checkout blocks their fetch, pull and push, so a session that starts on trunk makes its branch or worktree before its first edit. `.claude/hooks/block-trunk-edit.sh` refuses an Edit or Write there; Mike's word to edit on trunk is the `/tmp/claude-trunk-override-<session id>` flag, deleted after. Once the maintainer has given the word for a piece of work, do it on a new branch (a sibling worktree on E: when other sessions share the trunk checkout), and commit, push and merge it at coherent points instead of holding it. The review gates still run before each commit. Edits to the live Armory or `TAOM_Map` are outside git and need no branch.
 
 Several sessions (Claude, Codex, the IDE) often share one working tree, and anything uncommitted is
 exposed to the next git operation any of them runs. On 2026-08-07 a session ran `git pull --rebase`,

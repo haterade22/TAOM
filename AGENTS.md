@@ -34,6 +34,7 @@ Engine migrations: [TRACKING.md](docs/migration/TRACKING.md), latest
 | Rule | Detail |
 |---|---|
 | **Preserve others' work** | Never stash, reset, clean, commit, deploy or push someone else's staged, unstaged or untracked changes, least of all to manufacture a clean tree or review. Never run anything whose output path could be a file handed to the maintainer; give a generator an explicit `--out`. |
+| **Branch first** | Never edit a file in a checkout on `bannerlord-1.5.x`. Check `git branch --show-current` before the first edit. On trunk, make a branch or a sibling worktree on E: first; that is part of an authorized task. Exempt: files outside git and gitignored files. Gate: `block-trunk-edit.sh` ([why](docs/ai-includes/git-and-commits.md#working-in-a-shared-tree)). |
 | **Before each task** | Before the first task and each new task or sub-task: claim it with `python tools/work_claims.py claim <issue or key>` (exit 3: another session owns it, so stop and ask; a client with no Claude session runs `check`), and ask whether the result just back matters to the job in hand; if not, go on ([work claims](docs/features/work-claims.md)). |
 | **Evidence, never invention** | State no file list, diff, count, hash, tool output, signature, model identity or test result you have not read this turn. "I don't know yet, checking" is fine; an invented fact never is. Read the proving output before writing the doc, CHANGELOG or commit. |
 | **TDD** | RED, GREEN, REFACTOR. Test first, always. A thin entry point needs no unit test of its own. |
