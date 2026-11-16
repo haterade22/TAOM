@@ -250,7 +250,10 @@ public class SpecialResourceEarningServiceDailyTests
 
         var outcome = kit.Sut.OnDailyTick(Input());
 
-        StringAssert.Contains(outcome.Warning, "War Spoils running out: 5 left, losing 6/day");
+        StringAssert.StartsWith(outcome.Warning.Value, "{=taom_res_running_out}");
+        Assert.AreEqual("War Spoils", outcome.Warning.Attributes["RESOURCE"]);
+        Assert.AreEqual("5", outcome.Warning.Attributes["BALANCE"]);
+        Assert.AreEqual("6", outcome.Warning.Attributes["LOSS"]);
     }
 
     [TestMethod]

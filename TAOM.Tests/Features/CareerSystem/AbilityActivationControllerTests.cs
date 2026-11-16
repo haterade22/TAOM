@@ -58,6 +58,18 @@ public class AbilityActivationControllerTests
     }
 
     [TestMethod]
+    public void Tick_ReadyFirstTime_CarriesTheBoundKeyNameForTheToast()
+    {
+        // #1385: the toast said "Press V" whatever the player had bound the key to.
+        _abilityService.IsAbilityReady(HeroId).Returns(true);
+        _input.ActivationKeyName.Returns("G");
+
+        var result = _sut.Tick(0.016f, HeroId, hasCareer: true, isControllingCareerHero: true);
+
+        Assert.AreEqual("G", result.KeyName);
+    }
+
+    [TestMethod]
     public void Tick_AlreadyNotifiedReady_DoesNotReFireJustBecameReady()
     {
         _abilityService.IsAbilityReady(HeroId).Returns(true);

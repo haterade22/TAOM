@@ -163,9 +163,9 @@
     </upgrade_targets>
     <Equipments>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.wm_gondor_spear_b_cardolan" />
+        <equipment slot="Item0" id="Item.taom_ph_wm_gondor_spear_b_cardolan_t4" />
         <equipment slot="Item1" id="Item.sm_gd_shield_a3" />
-        <equipment slot="Item2" id="Item.numenorean_bastard_heavy_a" />
+        <equipment slot="Item2" id="Item.taom_ph_numenorean_bastard_heavy_a_t4" />
         <equipment slot="Head" id="Item.sk_gd_anf_inf_helmet_med_a" />
         <equipment slot="Body" id="Item.sk_gd_anf_inf_chest_med_a" />
         <equipment slot="Cape" id="Item.sk_gd_ano_pauld_inf_med_a" />
@@ -173,9 +173,9 @@
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_med_a" />
       </EquipmentRoster>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.wm_gondor_spear_b_cardolan" />
+        <equipment slot="Item0" id="Item.taom_ph_wm_gondor_spear_b_cardolan_t4" />
         <equipment slot="Item1" id="Item.sm_gd_shield_a4" />
-        <equipment slot="Item2" id="Item.numenorean_bastard_heavy_b" />
+        <equipment slot="Item2" id="Item.taom_ph_numenorean_bastard_heavy_b_t4" />
         <equipment slot="Head" id="Item.sk_gd_anf_inf_helmet_med_b" />
         <equipment slot="Body" id="Item.sk_gd_anf_inf_chest_med_b" />
         <equipment slot="Cape" id="Item.sk_gd_ano_pauld_inf_med_b" />
@@ -212,7 +212,7 @@
     </upgrade_targets>
     <Equipments>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.wm_gondor_spear_b_cardolan" />
+        <equipment slot="Item0" id="Item.taom_ph_wm_gondor_spear_b_cardolan_t4" />
         <equipment slot="Item1" id="Item.sm_gd_shield_b1" />
         <equipment slot="Item2" id="Item.numenorean_bastard_elite_a" />
         <equipment slot="Head" id="Item.sk_gd_pin_spear_helmet_heavy_a" />
@@ -222,7 +222,7 @@
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_heavy_a" />
       </EquipmentRoster>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.wm_gondor_spear_b_cardolan" />
+        <equipment slot="Item0" id="Item.taom_ph_wm_gondor_spear_b_cardolan_t4" />
         <equipment slot="Item1" id="Item.sm_gd_shield_b2" />
         <equipment slot="Item2" id="Item.numenorean_bastard_elite_b" />
         <equipment slot="Head" id="Item.sk_gd_pin_spear_helmet_heavy_b" />
@@ -260,7 +260,7 @@
       <EquipmentRoster>
         <equipment slot="Item0" id="Item.numenorean_bastard_elite_a" />
         <equipment slot="Item1" id="Item.sm_gd_shield_b1" />
-        <equipment slot="Item2" id="Item.wm_gondor_spear_b_cardolan" />
+        <equipment slot="Item2" id="Item.taom_ph_wm_gondor_spear_b_cardolan_t4" />
         <equipment slot="Head" id="Item.sk_gd_pin_spear_helmet_heavy_a" />
         <equipment slot="Body" id="Item.sk_gd_pin_inf_chest_heavy_a" />
         <equipment slot="Cape" id="Item.sk_gd_ano_pauld_cape_inf_elite_a" />
@@ -270,7 +270,7 @@
       <EquipmentRoster>
         <equipment slot="Item0" id="Item.numenorean_bastard_elite_b" />
         <equipment slot="Item1" id="Item.sm_gd_shield_b2" />
-        <equipment slot="Item2" id="Item.wm_gondor_spear_b_cardolan" />
+        <equipment slot="Item2" id="Item.taom_ph_wm_gondor_spear_b_cardolan_t4" />
         <equipment slot="Head" id="Item.sk_gd_pin_spear_helmet_heavy_b" />
         <equipment slot="Body" id="Item.sk_gd_pin_inf_chest_heavy_b" />
         <equipment slot="Cape" id="Item.sk_gd_ano_pauld_cape_inf_elite_a" />
@@ -452,7 +452,7 @@
       <EquipmentRoster>
         <equipment slot="Item0" id="Item.wm_swan_knight_lance_a" />
         <equipment slot="Item1" id="Item.sm_gd_shield_a3" />
-        <equipment slot="Item2" id="Item.numenorean_bastard_heavy_a" />
+        <equipment slot="Item2" id="Item.taom_ph_numenorean_bastard_heavy_a_t4" />
         <equipment slot="Head" id="Item.sk_gd_anf_inf_helmet_med_a" />
         <equipment slot="Body" id="Item.sk_gd_anf_inf_chest_med_a" />
         <equipment slot="Cape" id="Item.sk_gd_ano_pauld_inf_med_a" />
@@ -464,7 +464,7 @@
       <EquipmentRoster>
         <equipment slot="Item0" id="Item.wm_swan_knight_lance_a" />
         <equipment slot="Item1" id="Item.sm_gd_shield_a4" />
-        <equipment slot="Item2" id="Item.numenorean_bastard_heavy_b" />
+        <equipment slot="Item2" id="Item.taom_ph_numenorean_bastard_heavy_b_t4" />
         <equipment slot="Head" id="Item.sk_gd_anf_inf_helmet_med_b" />
         <equipment slot="Body" id="Item.sk_gd_anf_inf_chest_med_b" />
         <equipment slot="Cape" id="Item.sk_gd_ano_pauld_inf_med_b" />
@@ -502,7 +502,7 @@
     </upgrade_targets>
     <Equipments>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.wm_swan_knight_lance_a" />
+        <equipment slot="Item0" id="Item.taom_ph_wm_swan_knight_lance_a_t5" />
         <equipment slot="Item1" id="Item.sm_gd_shield_b1" />
         <equipment slot="Item2" id="Item.numenorean_bastard_elite_a" />
         <equipment slot="Head" id="Item.sk_gd_anf_cav_helmet_heavy_a" />
@@ -514,7 +514,7 @@
         <equipment slot="HorseHarness" id="Item.gondor_horse_armor_3" />
       </EquipmentRoster>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.wm_swan_knight_lance_a" />
+        <equipment slot="Item0" id="Item.taom_ph_wm_swan_knight_lance_a_t5" />
         <equipment slot="Item1" id="Item.sm_gd_shield_b2" />
         <equipment slot="Item2" id="Item.numenorean_bastard_elite_b" />
         <equipment slot="Head" id="Item.sk_gd_anf_cav_helmet_heavy_a" />
@@ -554,7 +554,7 @@
     </upgrade_targets>
     <Equipments>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.wm_swan_knight_lance_a" />
+        <equipment slot="Item0" id="Item.taom_ph_wm_swan_knight_lance_a_t5" />
         <equipment slot="Item1" id="Item.sm_gd_shield_b1" />
         <equipment slot="Item2" id="Item.numenorean_bastard_elite_a" />
         <equipment slot="Head" id="Item.sk_gd_dol_helmet_heavy_a" />
@@ -566,7 +566,7 @@
         <equipment slot="HorseHarness" id="Item.gondor_horse_armor_3" />
       </EquipmentRoster>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.wm_swan_knight_lance_a" />
+        <equipment slot="Item0" id="Item.taom_ph_wm_swan_knight_lance_a_t5" />
         <equipment slot="Item1" id="Item.sm_gd_shield_b2" />
         <equipment slot="Item2" id="Item.numenorean_bastard_elite_b" />
         <equipment slot="Head" id="Item.sk_gd_dol_helmet_heavy_b" />
@@ -604,7 +604,7 @@
     <upgrade_targets></upgrade_targets>
     <Equipments>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.wm_swan_knight_lance_a" />
+        <equipment slot="Item0" id="Item.taom_ph_wm_swan_knight_lance_a_t5" />
         <equipment slot="Item1" id="Item.sm_gd_shield_b1" />
         <equipment slot="Item2" id="Item.numenorean_bastard_elite_a" />
         <equipment slot="Head" id="Item.sk_gd_dol_cav_helmet_elite_a" />
@@ -616,7 +616,7 @@
         <equipment slot="HorseHarness" id="Item.gondor_horse_armor_3" />
       </EquipmentRoster>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.wm_swan_knight_lance_a" />
+        <equipment slot="Item0" id="Item.taom_ph_wm_swan_knight_lance_a_t5" />
         <equipment slot="Item1" id="Item.sm_gd_shield_b2" />
         <equipment slot="Item2" id="Item.numenorean_bastard_elite_b" />
         <equipment slot="Head" id="Item.sk_gd_dol_cav_helmet_elite_b" />

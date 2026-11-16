@@ -14,11 +14,15 @@ import sys
 import tempfile
 import unittest
 from pathlib import Path
+from unittest import mock
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 import analyze_melee_ladder as report  # noqa: E402
+import generate_lothlorien_troops as lorien  # noqa: E402
 import generate_placeholder_weapons as gen  # noqa: E402
+import generate_snow_orc_troops as snow  # noqa: E402
+import realm_troops as rt  # noqa: E402
 import melee_catalogue as cata  # noqa: E402
 import melee_damage as md  # noqa: E402
 import melee_ladder as ladder  # noqa: E402
@@ -204,7 +208,10 @@ class PlaceholderCarrierLimitTests(unittest.TestCase):
         spec = spec_for(8, "rivendell")
         spec["weapons"][0]["cultures"] = ["rivendell", "nowhere"]
         troops = [carrier("elf", 41, "rivendell"), carrier("man", 41, "nowhere")]
-        _p, _i, plan, _s, _d, _t = gen.build(spec, cat, priced, troops, self.root)
+        # check_spec refuses two craft rows in one entry; carriers of one culture can still differ
+        # through `craft_troop_prefix`, so the cap over carrier rows is tested on its own here.
+        with mock.patch.object(gen, "check_spec", lambda spec, lspec=None: spec):
+            _p, _i, plan, _s, _d, _t = gen.build(spec, cat, priced, troops, self.root)
         donor, k = plan[0][1], plan[0][3]
         self.assertAlmostEqual(k, self.cap(donor, 8, "nowhere"))
         self.assertLess(k, self.cap(donor, 8, "rivendell"))
@@ -331,6 +338,183 @@ class PlaceholderShieldCarrierTests(unittest.TestCase):
         _p, _i, plan, _s, _d, _t = gen.build(spec_for(5), cat, priced, troops, self.root, shields={"sh"})
         band = plan[0][2]
         self.assertAlmostEqual(band.target, ladder.target(5, "nowhere", self.lspec, "TwoHandedPolearm", True, True))
+
+
+class LineNumeralTests(unittest.TestCase):
+    """A tier clone continues its donor's numbered line (owner, 2026-11-16). A melee line reads I to
+    XXXIX; a numeral outside that range raises instead of dropping the weapon out of its line."""
+
+    def test_a_line_runs_past_ten(self):
+        self.assertEqual(report.line_key("[X] Spear XIV"), ("[X] Spear", "XIV"))
+        self.assertEqual(report.NUMERAL_RANK["XIV"], 14)
+        self.assertEqual([gen.roman(n) for n in (1, 4, 9, 14, 19, 24, 39)], ["I", "IV", "IX", "XIV", "XIX", "XXIV", "XXXIX"])
+
+    def test_a_numeral_outside_the_line_range_raises(self):
+        for n in (0, 40):
+            with self.assertRaises(ValueError):
+                gen.roman(n)
+
+
+class CheckSpecTests(unittest.TestCase):
+    """The spec rules that need no install run when the spec loads (`check_spec`), so the troop
+    generators that call `placeholder_for` read a checked spec."""
+
+    LSPEC = {"craft": {"a": [1.0, 1.0, 1.0], "b": [0.9, 1.0, 1.0]}, "craft_default": [0.85, 0.85, 0.85]}
+
+    def spec(self, *rows):
+        return {"tag": "taom_ph_", "weapons": [dict(r) for r in rows]}
+
+    def row(self, wid, tiers, cultures=("a",), donor="d", tier=None):
+        return {"id": wid, "donor": donor, "tier": tiers[0] if tier is None else tier, "tiers": list(tiers),
+                "cultures": list(cultures), "name": wid}
+
+    def test_overlapping_entries_of_one_donor_and_culture_raise(self):
+        with self.assertRaisesRegex(gen.PlaceholderError, "same donor, culture and tier"):
+            gen.check_spec(self.spec(self.row("taom_ph_x", (4, 6)), self.row("taom_ph_y", (6, 8))), self.LSPEC)
+
+    def test_touching_spans_pass(self):
+        gen.check_spec(self.spec(self.row("taom_ph_x", (4, 6)), self.row("taom_ph_y", (7, 8))), self.LSPEC)
+
+    def test_cultures_with_different_craft_rows_raise(self):
+        with self.assertRaisesRegex(gen.PlaceholderError, "different craft rows"):
+            gen.check_spec(self.spec(self.row("taom_ph_x", (4, 6), ("a", "b"))), self.LSPEC)
+
+    def test_cultures_on_the_default_row_share_it(self):
+        gen.check_spec(self.spec(self.row("taom_ph_x", (4, 6), ("p", "q"))), self.LSPEC)
+
+    def test_a_tier_outside_its_span_raises(self):
+        with self.assertRaisesRegex(gen.PlaceholderError, "outside its tiers"):
+            gen.check_spec(self.spec(self.row("taom_ph_x", (4, 6), tier=7)), self.LSPEC)
+
+    def test_a_duplicate_id_and_a_missing_tag_raise(self):
+        with self.assertRaisesRegex(gen.PlaceholderError, "duplicate id"):
+            gen.check_spec(self.spec(self.row("taom_ph_x", (4, 4)), self.row("taom_ph_x", (6, 6), donor="e")), self.LSPEC)
+        with self.assertRaisesRegex(gen.PlaceholderError, "tag"):
+            gen.check_spec(self.spec(self.row("other_x", (4, 4))), self.LSPEC)
+
+    def test_the_committed_spec_passes_without_an_install(self):
+        gen.load_spec.cache_clear()
+        self.assertTrue(gen.load_spec()["weapons"])
+
+class NumberedLineFaultTests(unittest.TestCase):
+    """Every numbered line keeps unique numerals, and no step a placeholder takes part in falls in DPS. A fall
+    between two Armory weapons is the Armory's (25 lines on 16 Nov 2026) and is not this tool's to judge."""
+
+    def test_a_duplicate_numeral_is_a_fault(self):
+        faults = gen.line_faults({"[X] Axe": [(2, 40.0, "a", False), (2, 45.0, "taom_ph_b", True)]})
+        self.assertEqual(len(faults), 1)
+        self.assertIn("II", faults[0])
+
+    def test_a_placeholder_below_the_step_before_it_is_a_fault(self):
+        faults = gen.line_faults({"[X] Axe": [(1, 40.0, "a", False), (2, 50.0, "b", False),
+                                              (3, 45.0, "taom_ph_c", True)]})
+        self.assertEqual(len(faults), 1)
+        self.assertIn("taom_ph_c", faults[0])
+
+    def test_an_armory_fall_is_not_judged_and_a_rising_placeholder_passes(self):
+        self.assertEqual(gen.line_faults({"[X] Axe": [(1, 50.0, "a", False), (2, 40.0, "b", False),
+                                                      (3, 40.2, "taom_ph_c", True), (4, 60.0, "taom_ph_d", True)]}), [])
+
+    def test_an_unpriced_member_is_skipped(self):
+        self.assertEqual(gen.line_faults({"[X] Axe": [(1, None, "a", False), (2, 40.0, "taom_ph_b", True)]}), [])
+
+    def test_numbered_lines_group_by_line_name(self):
+        lines = gen.numbered_lines({"a": ("[X] Axe II", 40.0), "b": ("[X] Axe", 30.0), "taom_ph_c": ("[X] Axe III", 50.0)},
+                                   {"taom_ph_c"})
+        self.assertEqual(lines, {"[X] Axe": [(2, 40.0, "a", False), (3, 50.0, "taom_ph_c", True)]})
+
+
+SPEC_ROWS = ({"id": "taom_ph_t", "donor": "donor_x", "tiers": [4, 6], "cultures": ["gondor"]},
+             {"id": "taom_ph_u", "donor": "donor_x", "tiers": [7, 8], "cultures": ["gondor"]})
+
+
+class SharedSwapRuleTests(unittest.TestCase):
+    """One rule, read from the spec, swaps a donor for its placeholder: the tool's own step 4 and every troop
+    generator that writes a whole file call it, so a regeneration never undoes a swap."""
+
+    def test_a_donor_is_swapped_by_culture_and_tier(self):
+        self.assertEqual(gen.placeholder_for("donor_x", "gondor", 5, SPEC_ROWS), "taom_ph_t")
+        self.assertEqual(gen.placeholder_for("donor_x", "gondor", 7, SPEC_ROWS), "taom_ph_u")
+
+    def test_anything_else_is_left_alone(self):
+        self.assertEqual(gen.placeholder_for("donor_x", "gondor", 3, SPEC_ROWS), "donor_x")
+        self.assertEqual(gen.placeholder_for("donor_x", "mordor", 5, SPEC_ROWS), "donor_x")
+        self.assertEqual(gen.placeholder_for("other", "gondor", 5, SPEC_ROWS), "other")
+
+    def test_the_troop_form_reads_the_melee_ladder_tier(self):
+        level = 26   # engine tier 5
+        tier = report.Troop("t", "t", level, "gondor", "x.xml", frozenset()).tier
+        self.assertEqual(report.melee_tier("t", level), tier)
+        self.assertEqual(gen.placeholder_for_troop("donor_x", "t", "gondor", level, SPEC_ROWS),
+                         gen.placeholder_for("donor_x", "gondor", tier, SPEC_ROWS))
+
+    def test_a_troop_the_melee_ladder_exempts_keeps_its_weapon(self):
+        exempt = next(iter(ladder.load_spec()["exempt_troops"]))
+        self.assertEqual(gen.placeholder_for_troop("donor_x", exempt, "gondor", 26, SPEC_ROWS), "donor_x")
+        w = dict(SPEC_ROWS[0], cultures=["gondor"])
+        troops = [carrier(exempt, 26, "gondor", ("donor_x",)), carrier("plain", 26, "gondor", ("donor_x",))]
+        self.assertEqual([t.id for t in gen.carriers_of(w, troops)], ["plain"])
+
+    def test_the_default_rows_are_the_spec_file(self):
+        self.assertEqual([w["id"] for w in gen.spec_weapons()], [w["id"] for w in gen.load_spec()["weapons"]])
+
+    def test_slots_in_a_generated_troop_file_are_left_to_its_generator(self):
+        swaps = [{"file": "/x/troops_lothlorien.xml", "troop": "a", "slot": "Item0", "old": "d", "new": "p"},
+                 {"file": "/x/troops_arthedain.xml", "troop": "b", "slot": "Item0", "old": "d", "new": "p"},
+                 {"file": "/x/troops_gondor.xml", "troop": "c", "slot": "Item0", "old": "d", "new": "p"}]
+        writable, owed = gen.split_generated(swaps)
+        self.assertEqual([s["troop"] for s in writable], ["c"])
+        self.assertEqual([s["troop"] for s in owed], ["a", "b"])
+
+
+class GeneratorAppliesTheSwapTests(unittest.TestCase):
+    """A troop in a generated file gets its clone through its generator, under the same rule."""
+
+    def rows(self, donor, culture, troop_id, level):
+        tier = report.melee_tier(troop_id, level)
+        return ({"id": "taom_ph_clone", "donor": donor, "tiers": [tier, tier], "cultures": [culture]},)
+
+    def test_the_lothlorien_generator_renders_the_clone(self):
+        troop = next(t for t in lorien.TROOPS if t["id"] == "lorien_militia_spearman")
+        donor = troop["weapons"][0]["Item0"]
+        rows = self.rows(donor, "lothlorien", troop["id"], lorien.TIER_LEVEL[troop["tier"]])
+        with mock.patch.object(gen, "spec_weapons", return_value=rows):
+            xml = lorien.render(lorien.TROOPS, {})   # the whole tree: the tavern copy names its source
+        block = next(b for b in xml.split("<NPCCharacter") if f'id="{troop["id"]}"' in b)
+        self.assertIn('id="Item.taom_ph_clone"', block)
+        self.assertNotIn(f'id="Item.{donor}"', block)
+
+    def test_the_snow_orc_generator_renders_the_clone(self):
+        troop = snow.TROOPS[0]
+        donor = next(v for k, v in troop["weapons"][0].items() if k.startswith("Item"))
+        rows = self.rows(donor, "gundabad", troop["id"], snow.TIER_LEVEL[troop["tier"]])
+        with mock.patch.object(gen, "spec_weapons", return_value=rows):
+            xml = snow.render([troop], {})
+        self.assertIn('id="Item.taom_ph_clone"', xml)
+        self.assertNotIn(f'id="Item.{donor}"', xml)
+
+    def test_a_realm_generator_renders_the_clone(self):
+        realm = rt.Realm(culture="arthedain", label="[Arthedain]", script="x.py", pt_marker="X", militia={},
+                         merc_source="", merc_name="")
+        troop = rt.Troop("arthedain_x", "X", 26, "Infantry", "spear", rt.same("donor_y", "shield_z"),
+                         ({"Body": "b"}, {"Body": "b"}), realm=realm)
+        troop.sk = dict.fromkeys(rt.SKILLS, 0)
+        rows = self.rows("donor_y", "arthedain", troop.id, troop.level)
+        with mock.patch.object(gen, "spec_weapons", return_value=rows):
+            xml = troop.xml("\n")
+        self.assertEqual(xml.count('slot="Item0" id="Item.taom_ph_clone"'), 2)
+        self.assertIn('slot="Item1" id="Item.shield_z"', xml)
+
+
+class LiveNumberedLineTests(unittest.TestCase):
+    """LiveInstall: every numbered line of the installed Armory plus the placeholders, priced by the engine
+    port, keeps unique numerals and does not fall at any step a placeholder takes part in."""
+
+    def test_every_numbered_line_with_a_placeholder_holds(self):
+        if not (report.MODULES / gen.ARMORY).is_dir():
+            self.skipTest(f"no Armory at {report.MODULES / gen.ARMORY}")
+        faults = gen.live_line_faults()
+        self.assertEqual(faults, [], "\n".join(faults))
 
 
 if __name__ == "__main__":

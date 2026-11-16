@@ -97,14 +97,39 @@ def escape_xml_attr(text: str) -> str:
                 .replace("<", "&lt;").replace(">", "&gt;"))
 
 
-def declared_keys():
-    """key -> (default_text, repo_relative_path, line_no), first declaration wins."""
-    found = OrderedDict()
+def code_files():
+    """(repo_relative_path, text) of each C# source file under CODE_ROOTS, build output skipped."""
     for cs in sorted(p for sub in CODE_ROOTS for p in (REPO_ROOT / sub).rglob("*.cs")):
         if any(part in ("bin", "obj") for part in cs.parts):
             continue
-        text = read_text(cs)
-        rel = cs.relative_to(REPO_ROOT).as_posix()
+        yield cs.relative_to(REPO_ROOT).as_posix(), read_text(cs)
+
+
+# A literal that goes on with + "...", + $"...", + @"...", + $@"..." or + @$"...": LITERAL reads one
+# literal, so the row would hold only the first part of the English (#1385). Not caught, and absent
+# from the code today: a comment between the literal and the +, or + ("...").
+CONTINUED = re.compile(r'\s*\+\s*(?:\$@?|@\$?)?"')
+
+
+def continued_literals(text):
+    """(key, line_no) for each {=KEY} literal in text that goes on with + and another literal."""
+    return [(m.group(2), text.count("\n", 0, m.start()) + 1)
+            for m in LITERAL.finditer(text) if CONTINUED.match(text, m.end())]
+
+
+def split_keys():
+    """key -> (repo_relative_path, line_no) for each key whose default is split over joined literals."""
+    found = {}
+    for rel, text in code_files():
+        for key, line in continued_literals(text):
+            found.setdefault(key, (rel, line))
+    return found
+
+
+def declared_keys():
+    """key -> (default_text, repo_relative_path, line_no), first declaration wins."""
+    found = OrderedDict()
+    for rel, text in code_files():
         for m in LITERAL.finditer(text):
             key = m.group(2)
             if key in found:
@@ -211,6 +236,15 @@ def main():
         print(f"\n  REFUSING: {len(raw)} key(s) have a default with \\n, \\r or \\t, which the XML "
               f"attribute would read back as a space. Write {{newline}} for a line break:", file=sys.stderr)
         for k, _d, rel, line in raw:
+            print(f"    {k}  ({rel}:{line})", file=sys.stderr)
+        return 1
+
+    split_at = split_keys()
+    split = [(k, *split_at[k]) for k, _d, _r, _l in missing if k in split_at]
+    if split:
+        print(f"\n  REFUSING: {len(split)} key(s) have a default split over literals joined with +, and only "
+              f"the first part would be registered. Write each default as one literal:", file=sys.stderr)
+        for k, rel, line in split:
             print(f"    {k}  ({rel}:{line})", file=sys.stderr)
         return 1
 

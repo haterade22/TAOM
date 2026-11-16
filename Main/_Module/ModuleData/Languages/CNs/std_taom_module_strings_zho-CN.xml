@@ -8454,6 +8454,72 @@
     <string id="YT4OvaAG" text="很好。你可以认为自己已经受到{FACTION_NAME}的保护。你必须在明天这个时候前完成旅程，否则我们可能会再向你收取一笔费用。" />
     <string id="yUYNlQhU" text="很好，我会让手下写一份简单契约。我代表{KINGDOM_FORMAL_NAME}欢迎你。愿你的剑能好好用在我们的敌人身上。" />
     <string id="zXuo0Wbj" text="正在与{KINGDOM}签署贸易协定" />
+    <string id="taom_bab_brace" text="架枪迎击骑兵" />
+    <string id="taom_bab_free_fire" text="自由射击" />
+    <string id="taom_bab_hold_fire" text="停止射击" />
+    <string id="taom_bab_line_charge" text="列阵冲锋" />
+    <string id="taom_bab_pike_wall" text="长枪阵" />
+    <string id="taom_bab_shield_wall" text="盾墙" />
+    <string id="taom_bab_skirmish" text="散兵作战" />
+    <string id="taom_bab_testudo" text="龟甲阵" />
+    <string id="taom_bab_volley_fire" text="齐射" />
+    <string id="taom_career_ability_ready" text="职业技能已就绪！按 {KEY} 发动。" />
+    <string id="taom_ep_button" text="预设" />
+    <string id="taom_ep_mount_no" text="否" />
+    <string id="taom_ep_mount_yes" text="是" />
+    <string id="taom_fm_choose_realm" text="选择你的国度" />
+    <string id="taom_fm_side_evil" text="邪恶势力" />
+    <string id="taom_fm_side_free" text="自由人民" />
+    <string id="taom_fm_side_neutral" text="中立" />
+    <string id="taom_fp_load_failed" text="[TAOM] 无法载入阵型预设，已清空预设列表。详情请查看日志。" />
+    <string id="taom_howdah_enter" text="登上" />
+    <string id="taom_howdah_seat" text="象舆座位" />
+    <string id="taom_mf_layout_checkerboard" text="棋盘阵" />
+    <string id="taom_mf_layout_inf_front" text="步兵在前，远程兵在后" />
+    <string id="taom_mf_layout_ranged_front" text="远程兵在前，步兵在后" />
+    <string id="taom_mf_layout_ranged_wings" text="远程兵在两翼，步兵居中" />
+    <string id="taom_mf_scope_all" text="全部编队" />
+    <string id="taom_mf_scope_selected" text="已选编队" />
+    <string id="taom_mumakil_climb" text="爬上" />
+    <string id="taom_mumakil_platform" text="猛犸象轿" />
+    <string id="taom_qa_sell_all_vanilla" text="全部出售（原版）" />
+    <string id="taom_qa_sell_all_vanilla_hint" text="使用《霸主》原版的处理方式。" />
+    <string id="taom_qa_sell_damaged" text="出售受损物品" />
+    <string id="taom_qa_sell_damaged_hint" text="出售品质低于设定阈值的损坏物品。" />
+    <string id="taom_qa_sell_low_value_hint" text="出售价值不超过设定第纳尔上限的物品。" />
+    <string id="taom_qa_unequip_all" text="卸下全部装备" />
+    <string id="taom_qa_unequip_all_hint" text="将你的战斗装备和平民装备全部卸下，放入物品栏。" />
+    <string id="taom_res_source_hideout" text="清剿藏身处" />
+    <string id="taom_res_source_prisoners" text="俘虏" />
+    <string id="taom_res_source_raid" text="劫掠" />
+    <string id="taom_res_source_tournament" text="竞技大赛" />
+    <string id="taom_res_source_victory" text="战斗胜利" />
+    <string id="taom_role_1h" text="单手" />
+    <string id="taom_role_2h" text="双手" />
+    <string id="taom_role_bow" text="弓" />
+    <string id="taom_role_cav" text="骑兵" />
+    <string id="taom_role_har" text="骑射" />
+    <string id="taom_role_inf" text="盾兵" />
+    <string id="taom_role_pol" text="长杆" />
+    <string id="taom_role_skr" text="散兵" />
+    <string id="taom_role_slg" text="投石" />
+    <string id="taom_role_xbw" text="弩" />
+    <string id="taom_spc_cancelled" text="已取消着色器预编译。" />
+    <string id="taom_spc_cancelling" text="正在取消着色器预编译……" />
+    <string id="taom_spc_loading" text="正在载入" />
+    <string id="taom_spc_none_aborted" text="没有中止的项目" />
+    <string id="taom_spc_stopped_battle" text="着色器预编译已停止：另一场战斗已经开始。请返回主菜单重新运行。" />
+    <string id="taom_warg_rage_over" text="你又能控制座狼了！" />
+    <string id="taom_warg_rage_start" text="你的座狼陷入狂怒，失去了控制！" />
+    <string id="taom_res_earned" text="通过{SOURCE}获得{AMOUNT}{RESOURCE}" />
+    <string id="taom_res_running_out" text="{RESOURCE}即将耗尽：剩余{BALANCE}，每天减少{LOSS}。" />
+    <string id="taom_spc_complete" text="着色器预编译完成：共{ITEMS}项，{ABORTED}，用时{TIME}。现在可以开始游戏了。" />
+    <string id="taom_spc_aborted" text="{COUNT}项已中止，详情请查看日志" />
+    <string id="taom_spc_shaders_left" text="{COUNT}个着色器" />
+    <string id="taom_qa_sell_low_value" text="出售低价物品（不超过{DENARS}第纳尔）" />
+    <string id="taom_career_ability_charging" text="职业技能还在充能，剩余{SECONDS}秒。" />
+    <string id="taom_spc_progress" text="正在预编译着色器：{INDEX}/{TOTAL}，{ITEM}，{REMAINING}。（当前项用时：{ITEM_TIME}，总用时：{TOTAL_TIME}）。按 Ctrl+Shift+K 取消" />
+    <string id="taom_mf_layout_changed" text="[混合编队]阵型（{SCOPE}）→ {LAYOUT}" />
   </strings>
 
 </base>

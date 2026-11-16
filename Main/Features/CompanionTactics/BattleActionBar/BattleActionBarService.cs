@@ -51,15 +51,15 @@ public sealed class BattleActionBarService : IBattleActionBarService
         if (composition.HasRanged)
         {
             actions.Add(new BattleAction(
-                "action_hold_fire", "Hold Fire", ActionCategory.Ranged,
+                "action_hold_fire", "{=taom_bab_hold_fire}Hold Fire", ActionCategory.Ranged,
                 () => { /* Display-only; ranged firing-order API not exposed in v1.3.15. */ }));
             actions.Add(new BattleAction(
-                "action_free_fire", "Free Fire", ActionCategory.Ranged,
+                "action_free_fire", "{=taom_bab_free_fire}Free Fire", ActionCategory.Ranged,
                 () => { /* Display-only. */ }));
             if (_settings.EnableVolleyFire)
             {
                 actions.Add(new BattleAction(
-                    "action_volley", "Volley Fire", ActionCategory.Ranged,
+                    "action_volley", "{=taom_bab_volley_fire}Volley Fire", ActionCategory.Ranged,
                     () => { /* Display-only. */ }));
             }
         }
@@ -67,30 +67,30 @@ public sealed class BattleActionBarService : IBattleActionBarService
         if (composition.HasPolearm)
         {
             actions.Add(new BattleAction(
-                "action_brace", "Brace for Cavalry", ActionCategory.Polearm,
+                "action_brace", "{=taom_bab_brace}Brace for Cavalry", ActionCategory.Polearm,
                 () => Guarded(formationIndex, TroopStance.BracedForCavalry)));
             actions.Add(new BattleAction(
-                "action_pike_wall", "Pike Wall", ActionCategory.Polearm,
+                "action_pike_wall", "{=taom_bab_pike_wall}Pike Wall", ActionCategory.Polearm,
                 () => Guarded(formationIndex, TroopStance.PikeWall)));
         }
 
         if (composition.HasShields)
         {
             actions.Add(new BattleAction(
-                "action_shield_wall", "Shield Wall", ActionCategory.Shield,
+                "action_shield_wall", "{=taom_bab_shield_wall}Shield Wall", ActionCategory.Shield,
                 () => { /* Display-only. */ }));
             actions.Add(new BattleAction(
-                "action_testudo", "Testudo", ActionCategory.Shield,
+                "action_testudo", "{=taom_bab_testudo}Testudo", ActionCategory.Shield,
                 () => Guarded(formationIndex, TroopStance.Testudo)));
         }
 
         if (composition.HasCavalry)
         {
             actions.Add(new BattleAction(
-                "action_charge", "Line Charge", ActionCategory.Cavalry,
+                "action_charge", "{=taom_bab_line_charge}Line Charge", ActionCategory.Cavalry,
                 () => Guarded(formationIndex, TroopStance.LineCharge)));
             actions.Add(new BattleAction(
-                "action_skirmish", "Skirmish", ActionCategory.Cavalry,
+                "action_skirmish", "{=taom_bab_skirmish}Skirmish", ActionCategory.Cavalry,
                 () => Guarded(formationIndex, TroopStance.Skirmish)));
         }
 

@@ -4331,7 +4331,8 @@ class FlagScopeTests(unittest.TestCase):
 
     def test_findings_name_the_given_trees_troop_file(self):
         mr = self._need_install()
-        src = mr.TROOPS / "troops_dolguldur.xml"
+        # Gondor keeps findings the tier limit holds (its Numenorean bastard swords and greatswords).
+        src = mr.TROOPS / "troops_gondor.xml"
         with tempfile.TemporaryDirectory() as tmp:
             md = Path(tmp)
             _write(md / "troops" / "troops_x.xml", src.read_text(encoding="utf-8-sig"))

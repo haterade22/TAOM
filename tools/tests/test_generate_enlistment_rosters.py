@@ -160,6 +160,18 @@ def parse_troops_from(xml):
             return ger.parse_troops()
 
 
+class ParseTroopsPlaceholderTests(unittest.TestCase):
+    def test_a_placeholder_reads_as_its_donor(self):
+        # A tier clone (tools/placeholder_weapons.json) is a troop's restated weapon: an enlistment kit,
+        # like a career kit (generate_career_kits.index_troop_gear), takes the Armory donor instead.
+        xml = ('<?xml version="1.0" encoding="utf-8"?>\n<NPCCharacters>\n'
+               + goblin('clone_carrier', roster('        <equipment slot="Item0" id="Item.taom_ph_axe_t5" />\n'))
+               + '</NPCCharacters>\n')
+        with mock.patch.object(ger, 'placeholder_donors', return_value={'taom_ph_axe_t5': 'wm_gundabad_axe_a01'}):
+            troop = parse_troops_from(xml)['goblin'][0]
+        self.assertEqual('wm_gundabad_axe_a01', troop['slots']['Item0'])
+
+
 class ParseTroopsMountTests(unittest.TestCase):
     def test_the_mounts_come_from_the_battle_rosters_and_are_never_a_slot(self):
         troop = parse_troops_from(TROOPS)['goblin'][0]

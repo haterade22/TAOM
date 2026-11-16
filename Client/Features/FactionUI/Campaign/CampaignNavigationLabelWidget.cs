@@ -1,5 +1,6 @@
 using TaleWorlds.GauntletUI;
 using TaleWorlds.GauntletUI.BaseTypes;
+using TaleWorlds.Localization;
 
 namespace TAOM.Features.FactionUI.Campaign
 {
@@ -18,15 +19,18 @@ namespace TAOM.Features.FactionUI.Campaign
             _lastItemId = ItemId;
             switch (ItemId)
             {
-                case "character_developer": Text = "Character"; break;
-                case "inventory": Text = "Inventory"; break;
-                case "party": Text = "Party"; break;
-                case "quest": Text = "Quests"; break;
-                case "clan": Text = "Clan"; break;
-                case "kingdom": Text = "Kingdom"; break;
-                case "manage_fleet": Text = "Fleet"; break;
+                case "character_developer": Text = Shown("{=klZnvb15}Character"); break;
+                case "inventory": Text = Shown("{=rbz1Bwbv}Inventory"); break;
+                case "party": Text = Shown("{=qnxJYAs7}Party"); break;
+                case "quest": Text = Shown("{=KUEHAD4U}Quests"); break;
+                case "clan": Text = Shown("{=j4F7tTzy}Clan"); break;
+                case "kingdom": Text = Shown("{=03mPaWum}Kingdom"); break;
+                case "manage_fleet": Text = Shown("{=p6QNVu8p}Fleet"); break;
                 default: Text = ""; break;
             }
         }
+
+        // Vanilla's keys for these labels: TaleWorlds translates them in every language it ships.
+        private static string Shown(string keyed) => new TextObject(keyed).ToString();
     }
 }

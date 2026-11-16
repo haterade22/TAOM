@@ -22,6 +22,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Callable
 
+import generate_placeholder_weapons as placeholders
 import ranged_ladder as rl
 import rebalance_troops as rb
 import troop_purpose as tp
@@ -165,6 +166,9 @@ class Troop:
         for weapons, gear in zip(self.weapons, self.gear):
             lines.append("      <EquipmentRoster>")
             for i, w in enumerate(weapons):
+                # A tier clone of tools/placeholder_weapons.json replaces its donor, by the placeholder
+                # tool's rule; the skills above were read off the donor, the same weapon class.
+                w = placeholders.placeholder_for_troop(w, self.id, self.realm.culture, self.level)
                 lines.append(f'        <equipment slot="Item{i}" id="Item.{w}" />')
             for slot in ("Head", "Body", "Cape", "Gloves", "Leg"):
                 if slot in gear:

@@ -83,7 +83,10 @@ PLACEHOLDER_GLOBS = ("*/placeholder_weapons/*", "*tools/placeholder_weapons.json
                      "*tools/melee_catalogue.py", "*tools/analyze_melee_ladder.py", "*tools/restat_melee_blades.py",
                      "*tools/fix_melee_ladder.py", "*/troops/troops_*.xml",
                      # The catalogue's module set and loading rules (#1375).
-                     "*/_module/submodule.xml", "*tools/audit_polearm_shield_parity.py") + ARMORY_GLOBS
+                     "*/_module/submodule.xml", "*tools/audit_polearm_shield_parity.py",
+                     # The swap rule: melee_tier reads NOBLE_TROOPS, and split_generated reads the
+                     # generated troop files that REGENERATABLE feeds.
+                     "*tools/taom_schema.py", "*tools/generate_new_faction_kingdoms.py") + ARMORY_GLOBS
 # Both armour generators write stats through rebalance_armor.calculate_stats.
 ARMOUR_CURVE_GLOBS = ("*tools/rebalance_armor.py",)
 # The lord armour variants (#1333): their output and spec, the generator and every tool it imports, the
@@ -189,7 +192,9 @@ GATES = (
     Gate("placeholder-weapons", "placeholder weapons, their spec, the melee tools, donors and carriers", PLACEHOLDER_GLOBS,
          ("python", "tools/generate_placeholder_weapons.py", "--verify"), ("docs/features/placeholder-weapons.md",),
          note="exit 1 when a generated file differs from the render or a placeholder is over its carriers' tier "
-              "limit; run it after restat_melee_blades.py --apply, because each damage factor is relative to its donor"),
+              "limit, when a numbered line repeats a numeral or falls in DPS at a placeholder's step, or when a troop "
+              "file a generator writes still owes a swap (run that generator with --apply); run it after "
+              "restat_melee_blades.py --apply, because each damage factor is relative to its donor"),
     Gate("lord-armour-variants", "lord armour variants, their spec, the generator and its imports, rosters, Armory sources",
          LORD_VARIANT_GLOBS, ("python", "tools/generate_lord_armour_variants.py", "--check"),
          ("docs/features/armor-balance.md",),

@@ -5,6 +5,7 @@ using System;
 using TaleWorlds.Core;
 using TaleWorlds.Library;
 using TaleWorlds.MountAndBlade;
+using TaleWorlds.Localization;
 
 namespace TAOM.Features.Warg.BehaviorTreeElements;
 
@@ -30,8 +31,9 @@ public class FinishRageMode : BTTask, IBTWargBlackboard
     {
         if (Agent.Main != null && warg.Health > 0)
         {
-            MBInformationManager.AddQuickInformation(new("You are able to control your warg again!"));
-            InformationManager.DisplayMessage(new InformationMessage("You are able to control your warg again!"));
+            var text = new TextObject("{=taom_warg_rage_over}You are able to control your warg again!");
+            MBInformationManager.AddQuickInformation(text);
+            InformationManager.DisplayMessage(new InformationMessage(text.ToString()));
         }
         WargMissionBehavior.SwitchMainAgentController(false);
         var controller = Mission.Current.GetMissionBehavior<IAutonomousMovementController>();
