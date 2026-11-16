@@ -8059,6 +8059,23 @@
     <string id="taom_hostile_peace_mcm_alliances_hint" text="When off (default), a kingdom you rule cannot ally with a realm on the other side of the war: a Free kingdom does not ally with the Shadow, and the reverse. Realms of the Neutral side can ally with anyone. A kingdom you founded takes the side of its culture. Alliances you already have are kept. When on, your kingdom may ally with any realm, as before. AI realms keep their own rules either way. Applies at once, no restart." />
     <string id="taom_hostile_peace_no_alliance" text="Your realms stand on opposite sides of the war and cannot be allied." />
     <string id="taom_hostile_peace_no_trade" text="Your realms are enemies in all but war. They will not trade." />
+    <string id="TAOM_LD_Hero_Aragorn_Text" text="The heir of Isildur, sword in hand. If he falls, he can be called again." />
+    <string id="TAOM_LD_Hero_Legolas_Text" text="The prince of Mirkwood and his bow. If he falls, he can be called again." />
+    <string id="TAOM_LD_Hero_Gimli_Text" text="The son of Glóin and his axe. If he falls, he can be called again." />
+    <string id="TAOM_LD_Hud_HeroesTitle" text="Heroes" />
+    <string id="TAOM_LD_Hud_HeroPending" text="On his way" />
+    <string id="TAOM_LD_Hud_HeroStanding" text="On the field" />
+    <string id="TAOM_LD_Notice_UnknownHero" text="That hero is not for sale." />
+    <string id="TAOM_LD_Notice_HeroAlive" text="That hero is already with you." />
+    <string id="taom_hero_ability_aragorn_for_frodo" text="For Frodo!" />
+    <string id="taom_hero_ability_aragorn_isildurs_heir" text="Heir of Isildur" />
+    <string id="taom_hero_ability_gimli_baruk_khazad" text="Baruk Khazâd!" />
+    <string id="taom_hero_ability_gimli_still_standing" text="Still Standing" />
+    <string id="taom_hero_ability_legolas_rapid_fire" text="Rapid Fire" />
+    <string id="taom_hero_ability_legolas_many_arrows" text="Many Arrows" />
+    <string id="taom_hero_ability_legolas_archers_eye" text="Archer's Eye" />
+    <string id="taom_hero_ability_cast_ally" text="{HERO}: {ABILITY}" />
+    <string id="taom_hero_ability_cast_enemy" text="Enemy {HERO}: {ABILITY}" />
   </strings>
 
 </base>
