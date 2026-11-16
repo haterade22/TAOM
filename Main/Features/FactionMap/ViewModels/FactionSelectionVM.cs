@@ -3,6 +3,7 @@ using TaleWorlds.CampaignSystem;
 using TaleWorlds.Core;
 using TaleWorlds.Library;
 using TAOM.Adapters;
+using TaleWorlds.Localization;
 
 namespace TAOM.Features.FactionMap.ViewModels;
 
@@ -15,7 +16,7 @@ public class FactionSelectionVM : ViewModel
     private readonly ICultureResolverService _cultureResolver;
     private readonly IFactionMapWidgetAdapter _widgets;
     private string _selectedRegionName = "";
-    private string _title = "Choose your Realm";
+    private string _title = new TextObject("{=taom_fm_choose_realm}Choose your Realm").ToString();
     private string _selectedFactionName = "";
     private string _selectedFactionDesc = "";
     private bool _hasSelection;
@@ -84,7 +85,8 @@ public class FactionSelectionVM : ViewModel
     [DataSourceProperty] public string SelectedFactionSide { get => _selectedFactionSide; set { if (value != _selectedFactionSide) { _selectedFactionSide = value; OnPropertyChangedWithValue(value); OnPropertyChanged(nameof(IsFreePeoples)); OnPropertyChanged(nameof(IsEvil)); OnPropertyChanged(nameof(SideDisplayText)); } } }
     [DataSourceProperty] public bool IsFreePeoples => _selectedFactionSide == "free";
     [DataSourceProperty] public bool IsEvil => _selectedFactionSide == "evil";
-    [DataSourceProperty] public string SideDisplayText => _selectedFactionSide switch { "free" => "Free Peoples", "evil" => "Forces of Evil", _ => "Neutral" };
+    [DataSourceProperty] public string SideDisplayText => new TextObject(_selectedFactionSide switch
+        { "free" => "{=taom_fm_side_free}Free Peoples", "evil" => "{=taom_fm_side_evil}Forces of Evil", _ => "{=taom_fm_side_neutral}Neutral" }).ToString();
     [DataSourceProperty] public int Difficulty { get => _difficulty; set { if (value != _difficulty) { _difficulty = value; OnPropertyChangedWithValue(value); OnPropertyChanged(nameof(HasDifficulty)); } } }
     [DataSourceProperty] public bool HasDifficulty => _difficulty > 0;
     [DataSourceProperty] public string DifficultyText { get => _difficultyText; set { if (value != _difficultyText) { _difficultyText = value; OnPropertyChangedWithValue(value); } } }

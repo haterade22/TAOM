@@ -8,6 +8,7 @@ using TaleWorlds.Core.ViewModelCollection;
 using TaleWorlds.Core.ViewModelCollection.ImageIdentifiers;
 using TaleWorlds.InputSystem;
 using TaleWorlds.Library;
+using TaleWorlds.Localization;
 using TaleWorlds.MountAndBlade;
 using TaleWorlds.MountAndBlade.CustomBattle;
 using TaleWorlds.MountAndBlade.CustomBattle.CustomBattle;
@@ -32,8 +33,8 @@ namespace TAOM.Client.Features.CustomBattles.Muster
         public TcbVM(IReadOnlyDictionary<string, string>? kingdomBanners = null)
         {
             var factions = CustomBattleData.Factions.Where(f => f != null).ToList();
-            Player = new TcbSideVM("Your army", true, factions, 0, OnChanged, Activate, kingdomBanners);
-            Enemy = new TcbSideVM("Enemy army", false, factions, factions.Count > 1 ? 1 : 0, OnChanged, Activate, kingdomBanners);
+            Player = new TcbSideVM(new TextObject("{=taom_tcb_your_army}Your army").ToString(), true, factions, 0, OnChanged, Activate, kingdomBanners);
+            Enemy = new TcbSideVM(new TextObject("{=taom_tcb_enemy_army}Enemy army").ToString(), false, factions, factions.Count > 1 ? 1 : 0, OnChanged, Activate, kingdomBanners);
             Field = new TcbFieldVM(OnChanged);
             Activate(Player);
             CustomBattleMuster.Log($"screen open: {factions.Count} factions");
@@ -44,20 +45,20 @@ namespace TAOM.Client.Features.CustomBattles.Muster
         [DataSourceProperty] public TcbSideVM Enemy { get; }
         [DataSourceProperty] public TcbFieldVM Field { get; }
         [DataSourceProperty] public TcbSideVM Active { get => _active; private set { _active = value; OnPropertyChangedWithValue(value); } }
-        [DataSourceProperty] public string TitleText => "CUSTOM BATTLE";
-        [DataSourceProperty] public string ArmiesText => "ARMIES";
-        [DataSourceProperty] public string FieldText => "BATTLEFIELD";
-        [DataSourceProperty] public string StartText => "START BATTLE";
-        [DataSourceProperty] public string BackText => "BACK";
-        [DataSourceProperty] public string RandomText => "RANDOMISE";
+        [DataSourceProperty] public string TitleText => new TextObject("{=taom_tcb_title}CUSTOM BATTLE").ToString();
+        [DataSourceProperty] public string ArmiesText => new TextObject("{=taom_tcb_armies}ARMIES").ToString();
+        [DataSourceProperty] public string FieldText => new TextObject("{=taom_tcb_battlefield}BATTLEFIELD").ToString();
+        [DataSourceProperty] public string StartText => new TextObject("{=taom_tcb_start_battle}START BATTLE").ToString();
+        [DataSourceProperty] public string BackText => new TextObject("{=taom_tcb_back}BACK").ToString();
+        [DataSourceProperty] public string RandomText => new TextObject("{=taom_tcb_randomise}RANDOMISE").ToString();
         [DataSourceProperty] public bool IsArmiesTab => !_fieldTab;
         [DataSourceProperty] public bool IsFieldTab => _fieldTab;
         private int Sum => (Player?.Total ?? 0) + (Enemy?.Total ?? 0);
-        [DataSourceProperty] public string TotalText => $"{Sum} / {ArmySpec.MaxTroops} TROOPS";
+        [DataSourceProperty] public string TotalText => new TextObject("{=taom_tcb_total_troops}{SUM} / {MAX} TROOPS").SetTextVariable("SUM", Sum).SetTextVariable("MAX", ArmySpec.MaxTroops).ToString();
         [DataSourceProperty] public bool IsOverLimit => Sum > ArmySpec.MaxTroops;
         [DataSourceProperty]
         public string SummaryText => Player == null || Enemy == null || Field == null ? "" :
-            $"{Player.FactionName} ({Player.Total})   vs   {Enemy.FactionName} ({Enemy.Total})      |      {Field.Summary}";
+            new TextObject("{=taom_tcb_summary}{PLAYER} ({PLAYER_TOTAL})   vs   {ENEMY} ({ENEMY_TOTAL})      |      {FIELD}").SetTextVariable("PLAYER", Player.FactionName).SetTextVariable("PLAYER_TOTAL", Player.Total).SetTextVariable("ENEMY", Enemy.FactionName).SetTextVariable("ENEMY_TOTAL", Enemy.Total).SetTextVariable("FIELD", Field.Summary).ToString();
 
         [DataSourceProperty]
         public string Status
@@ -82,8 +83,12 @@ namespace TAOM.Client.Features.CustomBattles.Muster
             OnPropertyChanged(nameof(TotalText));
             OnPropertyChanged(nameof(IsOverLimit));
             OnPropertyChanged(nameof(SummaryText));
-            Status = IsOverLimit ? $"Too many men: the engine takes at most {ArmySpec.MaxTroops}" : "";
+            Status = IsOverLimit ? TooManyText : "";
         }
+
+        // ArmySpec.Validate reports the same limit in English for spec files, so START checks it here first.
+        private static string TooManyText =>
+            new TextObject("{=taom_tcb_too_many}Too many men: the engine takes at most {MAX}").SetTextVariable("MAX", ArmySpec.MaxTroops).ToString();
 
         public void ExecuteArmiesTab() { _fieldTab = false; OnPropertyChanged(nameof(IsArmiesTab)); OnPropertyChanged(nameof(IsFieldTab)); }
         public void ExecuteFieldTab() { _fieldTab = true; OnPropertyChanged(nameof(IsArmiesTab)); OnPropertyChanged(nameof(IsFieldTab)); }
@@ -94,23 +99,24 @@ namespace TAOM.Client.Features.CustomBattles.Muster
         {
             try
             {
-                if (Player.Culture == null || Enemy.Culture == null) { Status = "Choose both factions"; return; }
-                if (Player.Units.Count == 0) { Status = "Muster at least one unit for your army"; Activate(Player); return; }
-                if (Enemy.Units.Count == 0) { Status = "Muster at least one unit for the enemy"; Activate(Enemy); return; }
-                if (Field.SceneId == null) { Status = "Choose a battlefield"; ExecuteFieldTab(); return; }
+                if (Player.Culture == null || Enemy.Culture == null) { Status = new TextObject("{=taom_tcb_choose_both_factions}Choose both factions").ToString(); return; }
+                if (Player.Units.Count == 0) { Status = new TextObject("{=taom_tcb_muster_player}Muster at least one unit for your army").ToString(); Activate(Player); return; }
+                if (Enemy.Units.Count == 0) { Status = new TextObject("{=taom_tcb_muster_enemy}Muster at least one unit for the enemy").ToString(); Activate(Enemy); return; }
+                if (Field.SceneId == null) { Status = new TextObject("{=taom_tcb_choose_battlefield}Choose a battlefield").ToString(); ExecuteFieldTab(); return; }
+                if (IsOverLimit) { Status = TooManyText; return; }
                 var spec = new ArmySpec { Player = Player.ToSpec(), Enemy = Enemy.ToSpec() };
                 var problems = spec.Validate();
                 if (problems.Count > 0) { Status = problems[0]; return; }
                 var playerCmd = Player.Commander ?? CustomBattleMuster.CommanderOf(Player.Culture);
                 var enemyCmd = Enemy.Commander ?? CustomBattleMuster.CommanderOf(Enemy.Culture);
-                if (playerCmd == null || enemyCmd == null) { Status = "No commander found for a faction"; return; }
+                if (playerCmd == null || enemyCmd == null) { Status = new TextObject("{=taom_tcb_no_commander}No commander found for a faction").ToString(); return; }
                 // A captain serves under another lord. The engine reads that lord's name for every field battle and
                 // throws on a null one (#1184); a siege starts without him.
                 var (generalId, refused) = MusterGeneralChoice.ForStart(Field.PlayerType == CustomBattlePlayerType.Sergeant, Field.IsSiege,
                     Player.LordIds, playerCmd.StringId, Player.HeroUnitIds.Concat(Enemy.HeroUnitIds).Append(enemyCmd.StringId));
                 if (refused)
                 {
-                    Status = "A captain needs another lord of the faction to lead the army";
+                    Status = new TextObject("{=taom_tcb_captain_needs_lord}A captain needs another lord of the faction to lead the army").ToString();
                     Activate(Player);
                     return;
                 }
@@ -138,7 +144,7 @@ namespace TAOM.Client.Features.CustomBattles.Muster
             }
             catch (Exception e)
             {
-                Status = "Could not start: " + e.Message;
+                Status = new TextObject("{=taom_tcb_start_failed}Could not start: {ERROR}").SetTextVariable("ERROR", e.Message).ToString();
                 CustomBattleMuster.Log("KCB start failed: " + e);
                 if (Field.PlayerType == CustomBattlePlayerType.Sergeant)
                     Outcomes.Fail(MusterChecks.CaptainStartId, Field.GameType, MusterChecks.FailedDetail(Field.GameType, e));
@@ -162,7 +168,7 @@ namespace TAOM.Client.Features.CustomBattles.Muster
         internal static string Tier(BasicCharacterObject c)
         {
             int t = Math.Max(1, Math.Min(7, (int)Math.Ceiling((c.Level - 5) / 5f)));
-            return "Tier " + new[] { "I", "II", "III", "IV", "V", "VI", "VII" }[t - 1];
+            return new TextObject("{=taom_tcb_tier}Tier {TIER}").SetTextVariable("TIER", new[] { "I", "II", "III", "IV", "V", "VI", "VII" }[t - 1]).ToString();
         }
 
         /// <summary>Shift = 10, Ctrl = 100 per click.</summary>
@@ -221,10 +227,10 @@ namespace TAOM.Client.Features.CustomBattles.Muster
             for (int i = 0; i < Kinds.Length; i++)
             {
                 var k = Kinds[i];
-                TroopKinds.Add(new TcbChoiceVM(k.name, k.name, c => { _kind = k.name; FillTroops(); }) { Owner = TroopKinds, Width = widths[i] });
+                TroopKinds.Add(new TcbChoiceVM(TcbTroopVM.ClassName(k.cls, k.heroes), k.name, c => { _kind = k.name; FillTroops(); }) { Owner = TroopKinds, Width = widths[i] });
             }
             foreach (var g in BannerManager.Instance?.BannerIconGroups?.Where(g => !g.IsPattern) ?? Enumerable.Empty<BannerIconGroup>())
-                IconGroups.Add(new TcbChoiceVM(g.Name?.ToString() ?? $"Group {g.Id}", g, c => FillIcons((BannerIconGroup)c.Value)) { Owner = IconGroups });
+                IconGroups.Add(new TcbChoiceVM(g.Name?.ToString() ?? new TextObject("{=taom_tcb_group}Group {ID}").SetTextVariable("ID", g.Id.ToString()).ToString(), g, c => FillIcons((BannerIconGroup)c.Value)) { Owner = IconGroups });
             foreach (var f in factions) Factions.Add(new TcbFactionVM(f, MusterBannerDesign.KingdomCode(kingdomBanners, f.StringId) ?? CultureBannerCode(f), SelectFaction));
             if (Factions.Count > initial) SelectFaction(Factions[initial]);
             if (TroopKinds.Count > 0) TroopKinds[0].ExecuteSelect();
@@ -259,27 +265,27 @@ namespace TAOM.Client.Features.CustomBattles.Muster
         [DataSourceProperty] public string FactionName => _faction?.Name ?? "-";
         [DataSourceProperty] public string CommanderName => _commander?.Name ?? "-";
         [DataSourceProperty] public string TotalNumber => Total.ToString();
-        [DataSourceProperty] public string TroopsLine => $"{Total} TROOPS";
-        [DataSourceProperty] public string TroopsWord => "TROOPS";
-        [DataSourceProperty] public string ChangeFactionText => "CHANGE FACTION";
-        [DataSourceProperty] public string BannerHint => "Click the pennant to change the banner";
-        [DataSourceProperty] public string CommanderHeader => "COMMANDER";
-        [DataSourceProperty] public string BannerHeader => "BANNER";
-        [DataSourceProperty] public string FactionHeader => "CHOOSE FACTION";
-        [DataSourceProperty] public string ChooseCommanderHeader => "CHOOSE COMMANDER";
-        [DataSourceProperty] public string AvailableHeader => "AVAILABLE TROOPS";
-        [DataSourceProperty] public string MusteredHeader => "MUSTERED ARMY";
-        [DataSourceProperty] public string SearchPlaceholder => "Search troops...";
-        [DataSourceProperty] public string EmptyArmyText => Units.Count == 0 ? "Add troops from the Available Troops list" : "";
+        [DataSourceProperty] public string TroopsLine => new TextObject("{=taom_tcb_troops_line}{TOTAL} TROOPS").SetTextVariable("TOTAL", Total).ToString();
+        [DataSourceProperty] public string TroopsWord => new TextObject("{=taom_tcb_troops}TROOPS").ToString();
+        [DataSourceProperty] public string ChangeFactionText => new TextObject("{=taom_tcb_change_faction}CHANGE FACTION").ToString();
+        [DataSourceProperty] public string BannerHint => new TextObject("{=taom_tcb_banner_hint}Click the pennant to change the banner").ToString();
+        [DataSourceProperty] public string CommanderHeader => new TextObject("{=taom_tcb_commander_header}COMMANDER").ToString();
+        [DataSourceProperty] public string BannerHeader => new TextObject("{=taom_tcb_banner_header}BANNER").ToString();
+        [DataSourceProperty] public string FactionHeader => new TextObject("{=taom_tcb_choose_faction_header}CHOOSE FACTION").ToString();
+        [DataSourceProperty] public string ChooseCommanderHeader => new TextObject("{=taom_tcb_choose_commander_header}CHOOSE COMMANDER").ToString();
+        [DataSourceProperty] public string AvailableHeader => new TextObject("{=taom_tcb_available_header}AVAILABLE TROOPS").ToString();
+        [DataSourceProperty] public string MusteredHeader => new TextObject("{=taom_tcb_mustered_header}MUSTERED ARMY").ToString();
+        [DataSourceProperty] public string SearchPlaceholder => new TextObject("{=taom_tcb_search_placeholder}Search troops...").ToString();
+        [DataSourceProperty] public string EmptyArmyText => Units.Count == 0 ? new TextObject("{=taom_tcb_empty_army}Add troops from the Available Troops list").ToString() : "";
         [DataSourceProperty] public bool IsArmyEmpty => Units.Count == 0;
-        [DataSourceProperty] public string HintText => "Shift + click: 10    Ctrl + click: 100";
+        [DataSourceProperty] public string HintText => new TextObject("{=taom_tcb_hint_text}Shift + click: 10    Ctrl + click: 100").ToString();
         [DataSourceProperty] public string Color1 => TcbSwatchVM.Hex(_color1);
         [DataSourceProperty] public string Color2 => TcbSwatchVM.Hex(_color2);
-        [DataSourceProperty] public string BannerColorText => "BACKGROUND";
-        [DataSourceProperty] public string EmblemColorText => "EMBLEM COLOUR";
-        [DataSourceProperty] public string EmblemText => "EMBLEM";
-        [DataSourceProperty] public string PaletteTitle => _paletteFor == 1 ? "BACKGROUND COLOUR" : "EMBLEM COLOUR";
-        [DataSourceProperty] public string CloseText => "DONE";
+        [DataSourceProperty] public string BannerColorText => new TextObject("{=taom_tcb_background}BACKGROUND").ToString();
+        [DataSourceProperty] public string EmblemColorText => new TextObject("{=taom_tcb_emblem_colour}EMBLEM COLOUR").ToString();
+        [DataSourceProperty] public string EmblemText => new TextObject("{=taom_tcb_emblem}EMBLEM").ToString();
+        [DataSourceProperty] public string PaletteTitle => _paletteFor == 1 ? new TextObject("{=taom_tcb_background_colour}BACKGROUND COLOUR").ToString() : new TextObject("{=taom_tcb_emblem_colour}EMBLEM COLOUR").ToString();
+        [DataSourceProperty] public string CloseText => new TextObject("{=taom_tcb_done}DONE").ToString();
         [DataSourceProperty] public bool IsPaletteOpen => _paletteFor != 0;
         [DataSourceProperty] public bool IsIconsOpen => _iconsOpen;
         [DataSourceProperty] public bool IsBannerHome => _bannerOpen && !_iconsOpen && _paletteFor == 0;
@@ -386,7 +392,7 @@ namespace TAOM.Client.Features.CustomBattles.Muster
             foreach (var c in list)
             {
                 if (!_troopVMs.TryGetValue(c, out var vm))
-                    _troopVMs[c] = vm = new TcbTroopVM(c, AddUnit, c.IsHero ? (_famous.Contains(c.StringId) ? "Famous hero" : "Lord") : null);
+                    _troopVMs[c] = vm = new TcbTroopVM(c, AddUnit, c.IsHero ? (_famous.Contains(c.StringId) ? new TextObject("{=taom_tcb_famous_hero}Famous hero").ToString() : new TextObject("{=taom_tcb_lord}Lord").ToString()) : null);
                 Troops.Add(vm);
             }
         }
@@ -536,7 +542,7 @@ namespace TAOM.Client.Features.CustomBattles.Muster
             _select = select;
             IsFamous = famous;
             Name = TcbVM.Clean(c);
-            Info = famous ? "Famous commander" : "Lord";
+            Info = famous ? new TextObject("{=taom_tcb_famous_commander}Famous commander").ToString() : new TextObject("{=taom_tcb_lord}Lord").ToString();
         }
 
         public BasicCharacterObject Character { get; }
@@ -657,7 +663,7 @@ namespace TAOM.Client.Features.CustomBattles.Muster
             Troop = troop;
             _add = add;
             Name = TcbVM.Clean(troop);
-            Info = heroInfo ?? $"{TcbVM.Tier(troop)}  ·  {TcbTroopVM.ClassName(troop.DefaultFormationClass)}";
+            Info = heroInfo ?? new TextObject("{=taom_tcb_tier_class}{TIER}  ·  {CLASS}").SetTextVariable("TIER", TcbVM.Tier(troop)).SetTextVariable("CLASS", TcbTroopVM.ClassName(troop.DefaultFormationClass)).ToString();
             IsHero = troop.IsHero;
         }
 
@@ -673,12 +679,19 @@ namespace TAOM.Client.Features.CustomBattles.Muster
         {
             switch (c)
             {
-                case FormationClass.Infantry: return "Infantry";
-                case FormationClass.Ranged: return "Archers";
-                case FormationClass.Cavalry: return "Cavalry";
-                case FormationClass.HorseArcher: return "Horse archers";
+                case FormationClass.Infantry: return new TextObject("{=taom_tcb_kind_infantry}Infantry").ToString();
+                case FormationClass.Ranged: return new TextObject("{=taom_tcb_kind_archers}Archers").ToString();
+                case FormationClass.Cavalry: return new TextObject("{=taom_tcb_kind_cavalry}Cavalry").ToString();
+                case FormationClass.HorseArcher: return new TextObject("{=taom_tcb_kind_horse_archers}Horse archers").ToString();
                 default: return c.ToString();
             }
+        }
+
+        /// <summary>The label of a troop type tab: its class name, "All" or "Heroes". The tab's id stays the English word in Kinds.</summary>
+        internal static string ClassName(FormationClass? c, bool heroes)
+        {
+            if (heroes) return new TextObject("{=taom_tcb_kind_heroes}Heroes").ToString();
+            return c == null ? new TextObject("{=taom_tcb_kind_all}All").ToString() : ClassName(c.Value);
         }
     }
 
@@ -697,7 +710,7 @@ namespace TAOM.Client.Features.CustomBattles.Muster
             _changed = changed;
             _remove = remove;
             Name = TcbVM.Clean(troop);
-            Info = troop.IsHero ? "Hero  ·  one man" : $"{TcbVM.Tier(troop)}  ·  {TcbTroopVM.ClassName(troop.DefaultFormationClass)}";
+            Info = troop.IsHero ? new TextObject("{=taom_tcb_hero_one_man}Hero  ·  one man").ToString() : new TextObject("{=taom_tcb_tier_class}{TIER}  ·  {CLASS}").SetTextVariable("TIER", TcbVM.Tier(troop)).SetTextVariable("CLASS", TcbTroopVM.ClassName(troop.DefaultFormationClass)).ToString();
             Image = TcbVM.Portrait(troop);
         }
 
@@ -715,14 +728,14 @@ namespace TAOM.Client.Features.CustomBattles.Muster
         [DataSourceProperty] public bool IsTroop => !Troop.IsHero;
         [DataSourceProperty] public string CountText => _count.ToString();
         [DataSourceProperty] public bool IsOptionsOpen => _optionsOpen && IsTroop;
-        [DataSourceProperty] public string OptionsText => Roles == 0 ? "FORMATION OPTIONS" : string.Join(" · ", new[] { _banner ? "BANNER" : null, _captain ? "CAPTAIN" : null, _horn ? "HORN" : null }.Where(s => s != null));
-        [DataSourceProperty] public string Breakdown => Roles == 0 ? $"{_count} soldiers" : $"{_count - Roles} soldiers + {Roles} from the unit's number";
+        [DataSourceProperty] public string OptionsText => Roles == 0 ? new TextObject("{=taom_tcb_formation_options}FORMATION OPTIONS").ToString() : string.Join(" · ", new[] { _banner ? new TextObject("{=taom_tcb_banner_caps}BANNER").ToString() : null, _captain ? new TextObject("{=taom_tcb_captain_caps}CAPTAIN").ToString() : null, _horn ? new TextObject("{=taom_tcb_horn_caps}HORN").ToString() : null }.Where(s => s != null));
+        [DataSourceProperty] public string Breakdown => Roles == 0 ? new TextObject("{=taom_tcb_soldiers}{COUNT} soldiers").SetTextVariable("COUNT", _count).ToString() : new TextObject("{=taom_tcb_soldiers_plus_roles}{COUNT} soldiers + {ROLES} from the unit's number").SetTextVariable("COUNT", _count - Roles).SetTextVariable("ROLES", Roles).ToString();
         [DataSourceProperty] public bool IsBanner => _banner;
         [DataSourceProperty] public bool IsCaptain => _captain;
         [DataSourceProperty] public bool IsHorn => _horn;
-        [DataSourceProperty] public string BannerText => "Banner Bearer";
-        [DataSourceProperty] public string CaptainText => "Captain";
-        [DataSourceProperty] public string HornText => "Horn Blower";
+        [DataSourceProperty] public string BannerText => new TextObject("{=taom_tcb_banner_bearer}Banner Bearer").ToString();
+        [DataSourceProperty] public string CaptainText => new TextObject("{=taom_tcb_captain}Captain").ToString();
+        [DataSourceProperty] public string HornText => new TextObject("{=taom_tcb_horn_blower}Horn Blower").ToString();
 
         public void Add(int n)
         {

@@ -32,7 +32,8 @@ public class CareerChoiceGroupObjectVM : ViewModel
         {
             var tierTok = parts[parts.Length - 2];
             if (tierTok.Length >= 2 && tierTok[0] == 't' && char.IsDigit(tierTok[1]))
-                return "Path " + char.ToUpperInvariant(last[0]);
+                return new TextObject("{=taom_career_path}Path {LETTER}")
+                    .SetTextVariable("LETTER", char.ToUpperInvariant(last[0]).ToString()).ToString();
         }
         return string.Join(" ", System.Array.ConvertAll(parts, p =>
             p.Length == 0 ? p : char.ToUpperInvariant(p[0]) + p.Substring(1)));

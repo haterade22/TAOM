@@ -99,7 +99,7 @@ in a pure type.
   rage holds, so leaving does not start vanilla's controller beside the rage's own. The rage's own end turns vanilla's controller back
   on, except while the Seat is up: the swap back skips vanilla's `Enable()` when `SeatPresence.IsSeated`, and the Seat's own leave turns
   it on, because `RageHoldsHero` is false by then. Three routes reach the swap back with the Seat up: `OnWargDied` with no rage running
-  (`OnWargDied.cs:38-39`, `FinishRageMode.cs:36`), for example when an arrow kills a calm warg; a rage that starts and ends between two
+  (`OnWargDied.cs:38-39`, `FinishRageMode.cs:38`), for example when an arrow kills a calm warg; a rage that starts and ends between two
   screen ticks (fast time runs several mission ticks in one frame); and a rider who fell during a rage, took the Seat and then lost the
   warg. Each would turn vanilla's controller on under the Seat, and the hero would walk on the flight keys. Outside the Seat the swap does
   what it did before the Seat, so it does not test `HoldsHero`. The file is on the shrink-only line baseline, so two events with no reader

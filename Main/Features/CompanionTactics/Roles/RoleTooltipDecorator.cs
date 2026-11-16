@@ -11,6 +11,7 @@ using TaleWorlds.MountAndBlade.ViewModelCollection.OrderOfBattle;
 using TAOM.Adapters;
 using TAOM.Core.Logging;
 using TAOM.Features.CompanionTactics.Roles.Models;
+using TaleWorlds.Localization;
 
 namespace TAOM.Features.CompanionTactics.Roles;
 
@@ -52,7 +53,7 @@ public sealed class RoleTooltipDecorator : IRoleTooltipDecorator
         var role = _roles.GetPrimaryRole(new HeroCombatAdapter(hero));
         if (role == CombatRole.Unknown) return;
 
-        var label = _roles.GetRoleShortText(role);
+        var label = new TextObject(_roles.GetRoleShortText(role)).ToString();
         var prefix = $"[{label}] ";
         var current = vm.Name ?? string.Empty;
         if (!current.StartsWith(prefix, StringComparison.Ordinal))
@@ -101,7 +102,7 @@ public sealed class RoleTooltipDecorator : IRoleTooltipDecorator
     {
         try
         {
-            var label = _roles.GetRoleShortText(role);
+            var label = new TextObject(_roles.GetRoleShortText(role)).ToString();
             var prefix = $"[{label}] ";
             var first = props[0];
             var def = first?.DefinitionLabel ?? string.Empty;

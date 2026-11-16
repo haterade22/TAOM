@@ -8457,6 +8457,72 @@
     <string id="yUYNlQhU" text="很好，我會讓手下寫一份簡單契約。我代表{KINGDOM_FORMAL_NAME}歡迎你。願你的劍能好好用在我們的敵人身上。" />
     <string id="zd9sawl9" text="你已經與{KINGDOM_NAME}結盟。" />
     <string id="zXuo0Wbj" text="正在與{KINGDOM}簽署貿易協定" />
+    <string id="taom_bab_brace" text="架槍迎擊騎兵" />
+    <string id="taom_bab_free_fire" text="自由射擊" />
+    <string id="taom_bab_hold_fire" text="停止射擊" />
+    <string id="taom_bab_line_charge" text="列陣衝鋒" />
+    <string id="taom_bab_pike_wall" text="長槍陣" />
+    <string id="taom_bab_shield_wall" text="盾牆" />
+    <string id="taom_bab_skirmish" text="散兵作戰" />
+    <string id="taom_bab_testudo" text="龜甲陣" />
+    <string id="taom_bab_volley_fire" text="齊射" />
+    <string id="taom_career_ability_ready" text="職業技能已就緒！按 {KEY} 發動。" />
+    <string id="taom_ep_button" text="預設" />
+    <string id="taom_ep_mount_no" text="否" />
+    <string id="taom_ep_mount_yes" text="是" />
+    <string id="taom_fm_choose_realm" text="選擇你的國度" />
+    <string id="taom_fm_side_evil" text="邪惡勢力" />
+    <string id="taom_fm_side_free" text="自由人民" />
+    <string id="taom_fm_side_neutral" text="中立" />
+    <string id="taom_fp_load_failed" text="[TAOM] 無法載入陣型預設，已清空預設列表。詳情請查看日誌。" />
+    <string id="taom_howdah_enter" text="登上" />
+    <string id="taom_howdah_seat" text="象輿座位" />
+    <string id="taom_mf_layout_checkerboard" text="棋盤陣" />
+    <string id="taom_mf_layout_inf_front" text="步兵在前，遠程兵在後" />
+    <string id="taom_mf_layout_ranged_front" text="遠程兵在前，步兵在後" />
+    <string id="taom_mf_layout_ranged_wings" text="遠程兵在兩翼，步兵居中" />
+    <string id="taom_mf_scope_all" text="全部編隊" />
+    <string id="taom_mf_scope_selected" text="已選編隊" />
+    <string id="taom_mumakil_climb" text="爬上" />
+    <string id="taom_mumakil_platform" text="猛獁象轎" />
+    <string id="taom_qa_sell_all_vanilla" text="全部出售（原版）" />
+    <string id="taom_qa_sell_all_vanilla_hint" text="使用《霸主》原版的處理方式。" />
+    <string id="taom_qa_sell_damaged" text="出售受損物品" />
+    <string id="taom_qa_sell_damaged_hint" text="出售品質低於設定閾值的損壞物品。" />
+    <string id="taom_qa_sell_low_value_hint" text="出售價值不超過設定第納爾上限的物品。" />
+    <string id="taom_qa_unequip_all" text="卸下全部裝備" />
+    <string id="taom_qa_unequip_all_hint" text="將你的戰鬥裝備和平民裝備全部卸下，放入物品欄。" />
+    <string id="taom_res_source_hideout" text="清剿藏身處" />
+    <string id="taom_res_source_prisoners" text="俘虜" />
+    <string id="taom_res_source_raid" text="劫掠" />
+    <string id="taom_res_source_tournament" text="競技大賽" />
+    <string id="taom_res_source_victory" text="戰鬥勝利" />
+    <string id="taom_role_1h" text="單手" />
+    <string id="taom_role_2h" text="雙手" />
+    <string id="taom_role_bow" text="弓" />
+    <string id="taom_role_cav" text="騎兵" />
+    <string id="taom_role_har" text="騎射" />
+    <string id="taom_role_inf" text="盾兵" />
+    <string id="taom_role_pol" text="長杆" />
+    <string id="taom_role_skr" text="散兵" />
+    <string id="taom_role_slg" text="投石" />
+    <string id="taom_role_xbw" text="弩" />
+    <string id="taom_spc_cancelled" text="已取消着色器預編譯。" />
+    <string id="taom_spc_cancelling" text="正在取消着色器預編譯……" />
+    <string id="taom_spc_loading" text="正在載入" />
+    <string id="taom_spc_none_aborted" text="沒有中止的項目" />
+    <string id="taom_spc_stopped_battle" text="着色器預編譯已停止：另一場戰鬥已經開始。請返回主菜單重新運行。" />
+    <string id="taom_warg_rage_over" text="你又能控制座狼了！" />
+    <string id="taom_warg_rage_start" text="你的座狼陷入狂怒，失去了控制！" />
+    <string id="taom_res_earned" text="通過{SOURCE}獲得{AMOUNT}{RESOURCE}" />
+    <string id="taom_res_running_out" text="{RESOURCE}即將耗盡：剩餘{BALANCE}，每天減少{LOSS}。" />
+    <string id="taom_spc_complete" text="着色器預編譯完成：共{ITEMS}項，{ABORTED}，用時{TIME}。現在可以開始遊戲了。" />
+    <string id="taom_spc_aborted" text="{COUNT}項已中止，詳情請查看日誌" />
+    <string id="taom_spc_shaders_left" text="{COUNT}個着色器" />
+    <string id="taom_qa_sell_low_value" text="出售低價物品（不超過{DENARS}第納爾）" />
+    <string id="taom_career_ability_charging" text="職業技能還在充能，剩餘{SECONDS}秒。" />
+    <string id="taom_spc_progress" text="正在預編譯着色器：{INDEX}/{TOTAL}，{ITEM}，{REMAINING}。（當前項用時：{ITEM_TIME}，總用時：{TOTAL_TIME}）。按 Ctrl+Shift+K 取消" />
+    <string id="taom_mf_layout_changed" text="[混合編隊]陣型（{SCOPE}）→ {LAYOUT}" />
   </strings>
 
 </base>

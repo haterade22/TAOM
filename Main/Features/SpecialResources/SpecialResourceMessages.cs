@@ -42,6 +42,31 @@ internal static class SpecialResourceMessages
             .SetTextVariable("COUNT", count)
             .SetTextVariable("TROOP", troopName);
 
+    /// <summary>The green toast for an earning; the source id (victory, raid...) shows as its own keyed word.</summary>
+    public static TextObject Earned(string resourceName, float amount, string source) =>
+        new TextObject("{=taom_res_earned}+{AMOUNT} {RESOURCE} from {SOURCE}")
+            .SetTextVariable("RESOURCE", resourceName)
+            .SetTextVariable("AMOUNT", FormatAmount(amount))
+            .SetTextVariable("SOURCE", SourceText(source));
+
+    /// <summary>The word for an earning source id; an unknown id shows as written.</summary>
+    public static TextObject SourceText(string source) => new TextObject(source switch
+    {
+        "victory" => "{=taom_res_source_victory}victory",
+        "raid" => "{=taom_res_source_raid}raid",
+        "hideout" => "{=taom_res_source_hideout}hideout",
+        "tournament" => "{=taom_res_source_tournament}tournament",
+        "prisoners" => "{=taom_res_source_prisoners}prisoners",
+        _ => "{=!}" + source,
+    });
+
+    /// <summary>The yellow warning when the next daily tick would empty the balance.</summary>
+    public static TextObject RunningOut(string resourceName, float balance, float netPerDay) =>
+        new TextObject("{=taom_res_running_out}{RESOURCE} running out: {BALANCE} left, losing {LOSS}/day")
+            .SetTextVariable("RESOURCE", resourceName)
+            .SetTextVariable("BALANCE", FormatAmount(balance))
+            .SetTextVariable("LOSS", FormatAmount(-netPerDay));
+
     /// <summary>Up to two decimals, trailing zeros dropped, invariant separator: 3, 2.4, 0.05.</summary>
     internal static string FormatAmount(float value) =>
         value.ToString("0.##", CultureInfo.InvariantCulture);

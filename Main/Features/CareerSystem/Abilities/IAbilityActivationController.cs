@@ -26,6 +26,9 @@ public struct AbilityActivationResult
     // activation. Set independently of Activated -- both can fire on the same frame.
     public bool JustBecameReady;
 
+    // With JustBecameReady: the key the player bound for activation, for the toast; "" when unbound.
+    public string KeyName;
+
     // V was pressed THIS frame while the ability was ready; ExecuteAbilityEffect should run AND
     // the yellow "{ability} activated!" toast should display.
     public bool Activated;

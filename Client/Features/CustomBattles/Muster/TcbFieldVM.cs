@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using TaleWorlds.Core;
 using TaleWorlds.Library;
+using TaleWorlds.Localization;
 using TaleWorlds.MountAndBlade;
 using TaleWorlds.MountAndBlade.CustomBattle;
 using TaleWorlds.MountAndBlade.CustomBattle.CustomBattle;
@@ -51,28 +52,28 @@ namespace TAOM.Client.Features.CustomBattles.Muster
             _scenes = CustomGame.Current?.CustomBattleScenes?.ToList() ?? new List<CustomBattleSceneData>();
             Settings = new MBBindingList<TcbDropdownVM>();
             Thumbs = new MBBindingList<TcbChoiceVM>();
-            _type = Add("Game Type", CustomBattleData.GameTypes.Select(t => (t.Item1, (object)t.Item2)), c => FillMaps());
-            _player = Add("Player Type", new[] { ("Commander", (object)CustomBattlePlayerType.Commander), ("Captain", (object)CustomBattlePlayerType.Sergeant) }, null);
-            _side = Add("Player Side", new[] { ("Attacker", (object)CustomBattlePlayerSide.Attacker), ("Defender", (object)CustomBattlePlayerSide.Defender) }, null);
-            _map = Add("Map", Enumerable.Empty<(string, object)>(), c => FillThumbs());
-            _list = Add("Maps Shown", new[] { ("TAOM maps", (object)false), ("All maps", (object)true) }, c => { _allMaps = (bool)c.Value; FillMaps(); });
-            _season = Add("Season", CustomBattleData.Seasons.Select(t => (t.Item1, (object)t.Item2)), null);
-            _time = Add("Time of Day", CustomBattleData.TimesOfDay.Select(t => (t.Item1, (object)(int)t.Item2)), null);
-            _walls = Add("Walls", CustomBattleData.WallHitpoints.Select(t => (t.Item1, (object)t.Item2)), null);
-            _level = Add("Town Level", CustomBattleData.SceneLevels.Select(l => ($"Level {l}", (object)l)), null);
+            _type = Add(new TextObject("{=taom_tcb_game_type}Game Type").ToString(), CustomBattleData.GameTypes.Select(t => (t.Item1, (object)t.Item2)), c => FillMaps());
+            _player = Add(new TextObject("{=taom_tcb_player_type}Player Type").ToString(), new[] { (new TextObject("{=taom_tcb_type_commander}Commander").ToString(), (object)CustomBattlePlayerType.Commander), (new TextObject("{=taom_tcb_type_captain}Captain").ToString(), (object)CustomBattlePlayerType.Sergeant) }, null);
+            _side = Add(new TextObject("{=taom_tcb_player_side}Player Side").ToString(), new[] { (new TextObject("{=KASD0tnO}Attacker").ToString(), (object)CustomBattlePlayerSide.Attacker), (new TextObject("{=XEVFUaFj}Defender").ToString(), (object)CustomBattlePlayerSide.Defender) }, null);
+            _map = Add(new TextObject("{=taom_tcb_map}Map").ToString(), Enumerable.Empty<(string, object)>(), c => FillThumbs());
+            _list = Add(new TextObject("{=taom_tcb_maps_shown}Maps Shown").ToString(), new[] { (new TextObject("{=taom_tcb_maps_taom}TAOM maps").ToString(), (object)false), (new TextObject("{=taom_tcb_maps_all}All maps").ToString(), (object)true) }, c => { _allMaps = (bool)c.Value; FillMaps(); });
+            _season = Add(new TextObject("{=taom_tcb_season}Season").ToString(), CustomBattleData.Seasons.Select(t => (t.Item1, (object)t.Item2)), null);
+            _time = Add(new TextObject("{=taom_tcb_time_of_day}Time of Day").ToString(), CustomBattleData.TimesOfDay.Select(t => (t.Item1, (object)(int)t.Item2)), null);
+            _walls = Add(new TextObject("{=taom_tcb_walls}Walls").ToString(), CustomBattleData.WallHitpoints.Select(t => (t.Item1, (object)t.Item2)), null);
+            _level = Add(new TextObject("{=taom_tcb_town_level}Town Level").ToString(), CustomBattleData.SceneLevels.Select(l => (new TextObject("{=taom_tcb_level}Level {LEVEL}").SetTextVariable("LEVEL", l).ToString(), (object)l)), null);
             // siege engines: the game's own Custom Battle machine slots
-            _atkEngines = Add("Attacker Engines", new[]
+            _atkEngines = Add(new TextObject("{=taom_tcb_attacker_engines}Attacker Engines").ToString(), new[]
             {
-                ("Ram and two towers", (object)"ram,tower,tower"), ("Ram only", (object)"ram"), ("Two towers", (object)"tower,tower"),
-                ("Ladders only", (object)""),
+                (new TextObject("{=taom_tcb_eng_ram_towers}Ram and two towers").ToString(), (object)"ram,tower,tower"), (new TextObject("{=taom_tcb_eng_ram}Ram only").ToString(), (object)"ram"), (new TextObject("{=taom_tcb_eng_towers}Two towers").ToString(), (object)"tower,tower"),
+                (new TextObject("{=taom_tcb_eng_ladders}Ladders only").ToString(), (object)""),
             }, null);
-            _rngEngines = Add("Attacker Artillery", new[]
+            _rngEngines = Add(new TextObject("{=taom_tcb_attacker_artillery}Attacker Artillery").ToString(), new[]
             {
-                ("None", (object)""), ("Two catapults", (object)"onager,onager"), ("Trebuchet and catapults", (object)"trebuchet,onager,onager,fireballista"),
+                (new TextObject("{=taom_tcb_eng_none}None").ToString(), (object)""), (new TextObject("{=taom_tcb_eng_catapults}Two catapults").ToString(), (object)"onager,onager"), (new TextObject("{=taom_tcb_eng_trebuchet}Trebuchet and catapults").ToString(), (object)"trebuchet,onager,onager,fireballista"),
             }, null);
-            _defEngines = Add("Defender Engines", new[]
+            _defEngines = Add(new TextObject("{=taom_tcb_defender_engines}Defender Engines").ToString(), new[]
             {
-                ("None", (object)""), ("Ballistas", (object)"ballista,ballista"), ("Catapults and ballistas", (object)"firecatapult,catapult,ballista,fireballista"),
+                (new TextObject("{=taom_tcb_eng_none}None").ToString(), (object)""), (new TextObject("{=taom_tcb_eng_ballistas}Ballistas").ToString(), (object)"ballista,ballista"), (new TextObject("{=taom_tcb_eng_catapults_ballistas}Catapults and ballistas").ToString(), (object)"firecatapult,catapult,ballista,fireballista"),
             }, null);
             _walls.IsSiegeOnly = _level.IsSiegeOnly = _atkEngines.IsSiegeOnly = _rngEngines.IsSiegeOnly = _defEngines.IsSiegeOnly = true;
             foreach (var d in Settings) d.Pick(0);
@@ -82,18 +83,20 @@ namespace TAOM.Client.Features.CustomBattles.Muster
 
         [DataSourceProperty] public MBBindingList<TcbDropdownVM> Settings { get; }
         [DataSourceProperty] public MBBindingList<TcbChoiceVM> Thumbs { get; }
-        [DataSourceProperty] public string PreviewHeader => "BATTLEFIELD PREVIEW";
-        [DataSourceProperty] public string SettingsHeader => "BATTLE SETTINGS";
-        [DataSourceProperty] public string Tagline => "Choose the field upon which your armies shall meet.";
-        [DataSourceProperty] public string MapName => _map.Selected?.Name ?? "No map for this battle type";
+        [DataSourceProperty] public string PreviewHeader => new TextObject("{=taom_tcb_preview_header}BATTLEFIELD PREVIEW").ToString();
+        [DataSourceProperty] public string SettingsHeader => new TextObject("{=taom_tcb_settings_header}BATTLE SETTINGS").ToString();
+        [DataSourceProperty] public string Tagline => new TextObject("{=taom_tcb_field_tagline}Choose the field upon which your armies shall meet.").ToString();
+        [DataSourceProperty] public string MapName => _map.Selected?.Name ?? new TextObject("{=taom_tcb_no_map_for_type}No map for this battle type").ToString();
         [DataSourceProperty] public string PreviewSprite => TcbSprites.MapSprite(SceneId);
         [DataSourceProperty] public bool HasPreview => TcbSprites.HasMapPreview(SceneId);
         [DataSourceProperty] public bool NoPreview => !HasPreview;
-        [DataSourceProperty] public string NoPreviewText => "No preview of this map yet";
+        [DataSourceProperty] public string NoPreviewText => new TextObject("{=taom_tcb_no_preview}No preview of this map yet").ToString();
         [DataSourceProperty] public bool IsSiege => GameType == "Siege";
 
+        private static string NoMapText => new TextObject("{=taom_tcb_no_map}no map").ToString();
+
         [DataSourceProperty]
-        public string Summary => $"{_type.Selected?.Name}  ·  {_map.Selected?.Name ?? "no map"}  ·  {_time.Selected?.Name}, {_season.Selected?.Name}  ·  {_side.Selected?.Name}" +
+        public string Summary => $"{_type.Selected?.Name}  ·  {_map.Selected?.Name ?? NoMapText}  ·  {_time.Selected?.Name}, {_season.Selected?.Name}  ·  {_side.Selected?.Name}" +
                                  (IsSiege ? $", {_walls.Selected?.Name}" : "");
 
         public string GameType => _type.Selected?.Value as string ?? "Battle";

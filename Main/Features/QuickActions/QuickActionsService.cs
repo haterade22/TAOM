@@ -29,17 +29,6 @@ public sealed class QuickActionsService : IQuickActionsService
         _logger = logger;
     }
 
-    public IReadOnlyList<(QuickActionType type, string label, string description)> GetMenuOptions()
-    {
-        return new List<(QuickActionType, string, string)>
-        {
-            (QuickActionType.SellDamaged,    "Sell Damaged",     "Sell all items below the configured damage threshold."),
-            (QuickActionType.SellLowValue,   "Sell Low Value",   "Sell all items at or below the configured denars threshold."),
-            (QuickActionType.UnequipAll,     "Unequip All",      "Strip every slot of the player's battle and civilian equipment."),
-            (QuickActionType.OriginalSellAll,"Sell All (Vanilla)","Default Bannerlord 'sell all' behavior."),
-        };
-    }
-
     public void OpenMenu(Action originalSellAll)
     {
         try
@@ -48,24 +37,25 @@ public sealed class QuickActionsService : IQuickActionsService
             {
                 new InquiryElement(
                     QuickActionType.SellDamaged,
-                    "Sell Damaged",
+                    new TextObject("{=taom_qa_sell_damaged}Sell Damaged").ToString(),
                     null, true,
-                    "Sells damaged items below your configured threshold."),
+                    new TextObject("{=taom_qa_sell_damaged_hint}Sells damaged items below your configured threshold.").ToString()),
                 new InquiryElement(
                     QuickActionType.SellLowValue,
-                    $"Sell Low Value (≤{_settings.LowValueThreshold} denars)",
+                    new TextObject("{=taom_qa_sell_low_value}Sell Low Value (≤{DENARS} denars)")
+                        .SetTextVariable("DENARS", _settings.LowValueThreshold).ToString(),
                     null, true,
-                    "Sells items at or below your denars threshold."),
+                    new TextObject("{=taom_qa_sell_low_value_hint}Sells items at or below your denars threshold.").ToString()),
                 new InquiryElement(
                     QuickActionType.UnequipAll,
-                    "Unequip All",
+                    new TextObject("{=taom_qa_unequip_all}Unequip All").ToString(),
                     null, true,
-                    "Strips your battle + civilian equipment to inventory."),
+                    new TextObject("{=taom_qa_unequip_all_hint}Strips your battle + civilian equipment to inventory.").ToString()),
                 new InquiryElement(
                     QuickActionType.OriginalSellAll,
-                    "Sell All (Vanilla)",
+                    new TextObject("{=taom_qa_sell_all_vanilla}Sell All (Vanilla)").ToString(),
                     null, true,
-                    "Default Bannerlord behavior."),
+                    new TextObject("{=taom_qa_sell_all_vanilla_hint}Default Bannerlord behavior.").ToString()),
             };
 
             var data = new MultiSelectionInquiryData(
