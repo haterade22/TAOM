@@ -9,21 +9,25 @@ namespace TAOM.Features.OrcBattleVoice;
 /// <summary>
 /// Gives soldiers of the plain <c>orc</c> race the Uruk battle voice (<c>uruk_01</c>: grunts, pain, death and
 /// yells) instead of the vanilla human male voices their Armory skin lists (<c>male_02</c> to <c>male_08</c>).
-/// TAOM-only route C of docs/features/kingdom-voices.md: the voice is set on the agent's visuals once at spawn,
-/// and the Armory's skins.xml is not touched.
+/// TAOM-only route C of docs/features/kingdom-voices.md: the voice is set on the agent's visuals at spawn and
+/// again after a banner bearer's skin rebuild, and the Armory's skins.xml is not touched. It covers every male
+/// adult orc agent in any mission (soldiers, townsfolk, notables, heroes), not only soldiers.
 /// <para>
 /// The engine hands out voice definitions only as opaque native indices
 /// (<c>SkinVoiceManager.GetVoiceDefinitionListWithMonsterSoundAndCollisionInfoClassName</c>) and has no
 /// name-to-index lookup. So the first orc of a mission is probed: each <c>human</c>-class index is set on it in
 /// turn and the definition name the agent then reports (<c>Agent.GetAgentVoiceDefinition</c>) is recorded, until
-/// <c>uruk_01</c> answers. Every later orc gets that index with one call. If no index answers, or the report does
-/// not follow the setter, the probed orc goes back to the voice it was built with, a Fail line is written, and
-/// the feature stands down for the mission.
+/// <c>uruk_01</c> answers. Every later orc gets that index with one call. If no index answers, the probed orc
+/// goes back to the definition it was built with at the seed pitch. If the report does not follow the setter,
+/// probing stops and the orc keeps whatever the last set gave it. Either way a Fail line is written and the
+/// feature stands down for the mission.
 /// </para>
 /// <para>
 /// Left alone: other races, female orcs (the adult female orc skin lists vanilla <c>female_*</c>, and
 /// <c>uruk_01</c> is a male voice), the player's own agent (its voice was chosen in character creation),
-/// agents without visuals, and orcs already on <c>uruk_01</c>. One instance per mission, main thread only.
+/// children (below <see cref="AdultAge"/>), an agent without <c>AgentVisuals</c> is skipped, and orcs already on
+/// <c>uruk_01</c>. The same call is safe to repeat on one agent: it does nothing while the agent reports
+/// <c>uruk_01</c> and sets it again after a rebuild reverted it. One instance per mission, main thread only.
 /// </para>
 /// </summary>
 public sealed class OrcBattleVoiceService
@@ -32,6 +36,10 @@ public sealed class OrcBattleVoiceService
     internal const string OrcRace = "orc";
     internal const string UrukVoice = "uruk_01";
     internal const string SoundClass = "human";
+
+    // Vanilla's adult age (a hero comes of age at 18; v1.5.7 Agent.cs:5456 uses 14f only for the adult body
+    // underwear). Orc child townsfolk in Misty Mountain Orcs towns are below it and keep their own voice.
+    internal const float AdultAge = 18f;
 
     // 1 / 2^31, the factor vanilla uses to turn a seed into a mount's voice pitch
     // (v1.5.7 MountVisualCreator.SetVoiceDefinition: `float voicePitch = (float)num2 * 4.656613E-10f;`).
@@ -66,11 +74,15 @@ public sealed class OrcBattleVoiceService
     /// </summary>
     public static float PitchFor(int seed) => (float)Math.Min(1.0, Math.Abs((long)seed) * SeedToPitch);
 
-    /// <summary>Handles one freshly built agent. An engine exception propagates to the mission behavior.</summary>
+    /// <summary>
+    /// Handles one freshly built agent, or one whose skin vanilla rebuilt in place (a banner bearer). Repeating it
+    /// on one agent is safe. An engine exception propagates to the mission behavior.
+    /// </summary>
     public void OnAgentBuild(IOrcBattleVoiceAgent agent)
     {
         if (_ended || _unavailable || agent == null) return;
         if (!agent.IsHuman || agent.IsFemale || agent.IsPlayerControlled || !agent.HasVisuals) return;
+        if (agent.Age < AdultAge) return;
         if (!string.Equals(_races.GetRaceNameFromId(agent.Race), OrcRace, StringComparison.Ordinal)) return;
 
         var built = agent.VoiceDefinitionName;

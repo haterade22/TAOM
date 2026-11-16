@@ -39,6 +39,7 @@ public class OrcBattleVoiceServiceTests
         public bool IsFemale { get; set; }
         public bool IsPlayerControlled { get; set; }
         public bool HasVisuals { get; set; } = true;
+        public float Age { get; set; } = 30f;
         public int Race { get; set; } = OrcRace;
         public int BodyPropertiesSeed { get; set; } = 1073741824;
         public bool ReadbackFollowsSet { get; set; } = true;
@@ -152,6 +153,49 @@ public class OrcBattleVoiceServiceTests
         rig.Service.OnAgentBuild(player);
 
         Assert.AreEqual(0, player.Sets.Count);
+    }
+
+    [TestMethod]
+    public void OnAgentBuild_OrcChild_KeepsItsVoice()
+    {
+        var rig = new Rig();
+        var child = new FakeAgent { Age = 9f };
+
+        rig.Service.OnAgentBuild(child);
+
+        Assert.AreEqual(0, child.Sets.Count, "uruk_01 is an adult male voice");
+        rig.Catalog.DidNotReceive().GetDefinitionIndices(Arg.Any<string>());
+    }
+
+    [TestMethod]
+    public void OnAgentBuild_SecondApplyOnTheSameOrc_IsANoOp()
+    {
+        var rig = new Rig();
+        var orc = new FakeAgent();
+        rig.Service.OnAgentBuild(orc);
+        int sets = orc.Sets.Count;
+
+        rig.Service.OnAgentBuild(orc);
+
+        Assert.AreEqual(sets, orc.Sets.Count);
+        Assert.AreEqual("uruk_01", orc.Current);
+    }
+
+    [TestMethod]
+    public void OnAgentBuild_OrcRevertedByASkinRebuild_GetsTheUrukVoiceAgainWithoutProbing()
+    {
+        var rig = new Rig();
+        var orc = new FakeAgent();
+        rig.Service.OnAgentBuild(orc);
+        orc.Current = "male_03"; // vanilla's banner bearer refresh re-picked the skin voice
+        int sets = orc.Sets.Count;
+
+        rig.Service.OnAgentBuild(orc);
+
+        Assert.AreEqual(sets + 1, orc.Sets.Count, "one set, no second probe");
+        Assert.AreEqual(15, orc.Sets.Last().Index);
+        Assert.AreEqual("uruk_01", orc.Current);
+        rig.Catalog.Received(1).GetDefinitionIndices("human");
     }
 
     [TestMethod]

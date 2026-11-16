@@ -66,6 +66,18 @@ public class OrcBattleVoiceWiringTests
     }
 
     [TestMethod]
+    public void Behavior_ReappliesAfterABannerBearerRebuildAndLetsGoAtTheEnd()
+    {
+        var body = RepoPaths.ReadSource("Main/Features/OrcBattleVoice/Hooks/OrcBattleVoiceMissionBehavior.cs", stripComments: true);
+
+        StringAssert.Contains(body, "override void AfterStart()");
+        StringAssert.Contains(body, "GetMissionBehavior<BannerBearerLogic>()");
+        StringAssert.Contains(body, "OnBannerBearerAgentUpdated +=");
+        StringAssert.Contains(body, "OnBannerBearerAgentUpdated -=");
+        Assert.IsTrue(body.Contains("_bannerLogic != null"), "the logic may be absent in a mission");
+    }
+
+    [TestMethod]
     public void Adapter_SetsTheVoiceOnTheAgentVisualsAndReadsItBackFromTheAgent()
     {
         var body = RepoPaths.ReadSource("Main/Adapters/OrcBattleVoiceAgent.cs", stripComments: true);

@@ -18,6 +18,7 @@ public sealed class OrcBattleVoiceMissionBehavior : MissionLogic
     private readonly IModLogger _logger;
     private readonly Action<string> _warn;
     private bool _failed;
+    private BannerBearerLogic? _bannerLogic;
 
     public OrcBattleVoiceMissionBehavior(OrcBattleVoiceService service, IModLogger logger)
     {
@@ -46,12 +47,42 @@ public sealed class OrcBattleVoiceMissionBehavior : MissionLogic
         }
     }
 
-    protected override void OnEndMission() => _service.End();
+    // v1.5.7 BannerBearerLogic.UpdateAgent calls Agent.UpdateSpawnEquipmentAndRefreshVisuals (BannerBearerLogic.cs:
+    // 733-755), which rebuilds the skin through AddSkinMeshes with no new OnAgentBuild, so a native re-pick of the
+    // skin voice would undo the orc voice. The event is raised after that refresh (:756). AfterStart, not
+    // OnBehaviorInitialize, which never fires for a behavior added from OnMissionBehaviorInitialize (#606).
+    public override void AfterStart()
+    {
+        base.AfterStart();
+        if (_failed) return;
+        try
+        {
+            _bannerLogic = Mission?.GetMissionBehavior<BannerBearerLogic>();
+            if (_bannerLogic != null) _bannerLogic.OnBannerBearerAgentUpdated += OnBannerBearerAgentUpdated;
+        }
+        catch (Exception ex)
+        {
+            Fail("AfterStart", ex);
+        }
+    }
+
+    private void OnBannerBearerAgentUpdated(Agent agent, bool willBecomeBannerBearer) => OnAgentBuild(agent, null);
+
+    protected override void OnEndMission() => Stop();
 
     public override void OnRemoveBehavior()
     {
-        _service.End();
+        Stop();
         base.OnRemoveBehavior();
+    }
+
+    private void Stop()
+    {
+        _service.End();
+        if (_bannerLogic == null) return;
+        try { _bannerLogic.OnBannerBearerAgentUpdated -= OnBannerBearerAgentUpdated; }
+        catch { /* swallow-ok: the mission is ending, an unsubscribe failure has no effect */ }
+        _bannerLogic = null;
     }
 
     private void Fail(string site, Exception ex)

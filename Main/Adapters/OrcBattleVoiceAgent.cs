@@ -17,6 +17,9 @@ public sealed class OrcBattleVoiceAgent : IOrcBattleVoiceAgent
 
     public bool HasVisuals => _agent.AgentVisuals != null;
 
+    // v1.5.7 Agent.cs:1527-1530: `return BodyPropertiesValue.Age;`
+    public float Age => _agent.Age;
+
     public int Race => _agent.Character?.Race ?? -1;
 
     public int BodyPropertiesSeed => _agent.BodyPropertiesSeed;

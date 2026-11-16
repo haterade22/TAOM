@@ -13,13 +13,16 @@ public interface IOrcBattleVoiceAgent
     /// <summary>The main agent, or an agent a player controls.</summary>
     bool IsPlayerControlled { get; }
 
-    /// <summary>False when the agent has no <c>MBAgentVisuals</c> to carry a voice (a headless server).</summary>
+    /// <summary>False when the agent has no <c>MBAgentVisuals</c> to carry a voice. An agent without visuals is skipped.</summary>
     bool HasVisuals { get; }
+
+    /// <summary>The agent's age in years (<c>Agent.Age</c>, from its body properties): a child is below adult age.</summary>
+    float Age { get; }
 
     /// <summary>The troop's race index (<c>BasicCharacterObject.Race</c>), or -1 without a character.</summary>
     int Race { get; }
 
-    /// <summary><c>Agent.BodyPropertiesSeed</c>: stable per soldier, unlike <c>Agent.Index</c>.</summary>
+    /// <summary><c>Agent.BodyPropertiesSeed</c>: the soldier's pitch seed. Hero agents and Long Defeat / Fords of War soldiers carry seed 0, so they share one pitch.</summary>
     int BodyPropertiesSeed { get; }
 
     /// <summary>The name of the voice definition the engine reports for the agent (<c>Agent.GetAgentVoiceDefinition</c>).</summary>
