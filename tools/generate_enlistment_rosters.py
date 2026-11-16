@@ -342,9 +342,21 @@ TREE_ALIASES = {
 # Parsing
 # =============================================================================
 
-def _slot_items(equipment):
-    """{slot: item id} over <equipment> elements, a later one overwriting an earlier (Equipment.DeserializeNode)."""
-    return {eq.get('slot', ''): eq.get('id', '').removeprefix('Item.') for eq in equipment}
+def placeholder_donors():
+    """placeholder id -> its Armory donor (tools/placeholder_weapons.json). An enlistment kit, like a
+    career kit, never hands out a troop's restated tier clone: it takes the donor."""
+    import generate_placeholder_weapons as gpw
+    return {w['id']: w['donor'] for w in gpw.spec_weapons()}
+
+
+def _slot_items(equipment, donor_of):
+    """{slot: item id} over <equipment> elements, a later one overwriting an earlier (Equipment.DeserializeNode).
+    A placeholder reads as its donor (`donor_of`)."""
+    out = {}
+    for eq in equipment:
+        item = eq.get('id', '').removeprefix('Item.')
+        out[eq.get('slot', '')] = donor_of.get(item, item)
+    return out
 
 
 def parse_troops():
@@ -359,6 +371,7 @@ def parse_troops():
     occupation="Soldier" today; the guard is cheap).
     """
     by_culture = {}
+    donor_of = placeholder_donors()
     if not os.path.isdir(TROOPS_DIR):
         raise SystemExit(f'ERROR: troops dir not found: {TROOPS_DIR}')
     for fn in sorted(os.listdir(TROOPS_DIR)):
@@ -384,8 +397,8 @@ def parse_troops():
                 continue
             # Each battle set as the engine builds it: the roster's own slots, then every <equipment>
             # directly under <Equipments> written over them (MBEquipmentRoster.AddOverriddenEquipments).
-            overrides = _slot_items(npc.findall('Equipments/equipment'))
-            battle_sets = [{**_slot_items(roster.findall('equipment')), **overrides}
+            overrides = _slot_items(npc.findall('Equipments/equipment'), donor_of)
+            battle_sets = [{**_slot_items(roster.findall('equipment'), donor_of), **overrides}
                            for roster in npc.findall('.//EquipmentRoster') if not rl.is_civilian(roster)]
             first = battle_sets[0] if battle_sets else {}
             by_culture.setdefault(culture, []).append({
@@ -1028,6 +1041,7 @@ def culture_troop_gear(troops_dir=TROOPS_DIR):
     given their source tree's gear.
     """
     gear = {}
+    donor_of = placeholder_donors()
     for fn in sorted(os.listdir(troops_dir)):
         if not (fn.startswith('troops_') and fn.endswith('.xml')):
             continue
@@ -1042,11 +1056,11 @@ def culture_troop_gear(troops_dir=TROOPS_DIR):
                     or npc.get('occupation', 'Soldier') != 'Soldier':
                 continue
             slots = gear.setdefault(raw.split('.', 1)[1], {})
-            overrides = _slot_items(npc.findall('Equipments/equipment'))
+            overrides = _slot_items(npc.findall('Equipments/equipment'), donor_of)
             for roster in npc.findall('.//EquipmentRoster'):
                 if rl.is_civilian(roster):
                     continue
-                for slot, item in {**_slot_items(roster.findall('equipment')), **overrides}.items():
+                for slot, item in {**_slot_items(roster.findall('equipment'), donor_of), **overrides}.items():
                     if item:
                         slots.setdefault(slot, set()).add(item)
     for alias, source in TREE_ALIASES.items():

@@ -42,7 +42,7 @@ from _gamedir import game_dir  # noqa: E402
 import melee_catalogue as mc  # noqa: E402
 import melee_damage as md  # noqa: E402
 import melee_ladder as _ladder  # noqa: E402
-from ranged_ladder import MAX_TIER, TIER_NUMERAL, TIER_NUMERAL_RE, engine_tier  # noqa: E402
+from ranged_ladder import MAX_TIER, engine_tier  # noqa: E402
 import taom_schema as _ts  # noqa: E402
 
 # Noble-line troops are judged and anchor one tier up (Mike, 2026-09-25): nobles carry better kit
@@ -62,9 +62,26 @@ OUT_DIR = REPO / "tools" / "reports" / "melee-balance"
 ARMORY_MODULE = "LOTRLOME_Armory"
 VANILLA_MODULES = {"SandBoxCore", "SandBox"}
 
-# Numeral -> rank, the inverse of ranged_ladder.TIER_NUMERAL. Shared so the melee lines and
-# the ranged ladder agree on what "II" means.
-NUMERAL_RANK = {v: k for k, v in TIER_NUMERAL.items() if k}
+
+
+def roman(n: int) -> str:
+    """1 -> I, 14 -> XIV, 39 -> XXXIX. Outside 1 to 39 it raises: `line_key` reads no other numeral, so a
+    name with one would drop out of its line without a word."""
+    if not 1 <= n <= 39:
+        raise ValueError(f"no line numeral for {n}: a melee line reads I to XXXIX")
+    out = []
+    for value, letters in ((10, "X"), (9, "IX"), (5, "V"), (4, "IV"), (1, "I")):
+        while n >= value:
+            out.append(letters)
+            n -= value
+    return "".join(out)
+
+
+# Numeral -> rank. I to X read as ranged_ladder.TIER_NUMERAL does, so the melee lines and the ranged
+# ladder agree on what "II" means; a melee line runs on past X, because the tier clones of
+# generate_placeholder_weapons.py continue a line above its highest numeral (owner, 2026-11-16).
+NUMERAL_RANK = {roman(n): n for n in range(1, 40)}
+LINE_NUMERAL_RE = re.compile(r"\s+(?:%s)\s*$" % "|".join(sorted(NUMERAL_RANK, key=len, reverse=True)))
 
 # Sustained damage below this gap is a rounding difference, not a step down. The DPS numbers
 # run roughly 15 to 170, so half a point is well inside the noise.
@@ -110,8 +127,13 @@ class Troop:
 
     @property
     def tier(self) -> int:
-        tier = engine_tier(self.level)
-        return min(tier + 1, MAX_TIER) if self.id in NOBLE_TROOPS else tier
+        return melee_tier(self.id, self.level)
+
+
+def melee_tier(troop_id: str, level: int) -> int:
+    """The tier the melee ladder judges a troop at: its engine tier, one up for a noble-line troop."""
+    tier = engine_tier(level)
+    return min(tier + 1, MAX_TIER) if troop_id in NOBLE_TROOPS else tier
 
 
 def _is_civilian_roster(roster) -> bool:
@@ -221,10 +243,10 @@ ID_SUFFIX_RE = re.compile(r"_([a-z])(\d*)$")
 def line_key(name: str) -> tuple[str, str] | None:
     """Split `[Mordor] Uruk Sword III` into (`[Mordor] Uruk Sword`, `III`).
 
-    Uses the ranged ladder's own trailing-numeral regex so both systems read the convention
-    the same way.
+    I to X read as the ranged ladder's trailing numeral does; a melee line also reads XI to XXXIX
+    (NUMERAL_RANK).
     """
-    match = TIER_NUMERAL_RE.search(name)
+    match = LINE_NUMERAL_RE.search(name)
     if not match:
         return None
     numeral = match.group(0).strip()

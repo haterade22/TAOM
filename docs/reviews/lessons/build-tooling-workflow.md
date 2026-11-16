@@ -5196,3 +5196,9 @@ The shield view (a troop with a shield is judged on the modes a shield allows) w
 - **Why missed:** the consumers were found by grepping the calls that judge troops (`findings`, `judge`, `band`). The generator caps with `tier_limit` and `max_factor` row by row and never calls them.
 - **Prevent:** before changing how the ladder judges a weapon, grep every caller of `melee_ladder.` (`tier_limit`, `max_factor`, `class_limit`, `band`, `target`, `judge`, `findings`) and of `melee_catalogue.price_all`, and list each tool as changed or as left on purpose.
 - **Source:** [RCA](../rca-melee-tier-tolerance-2026-11-16.md) F1.
+
+### A check moves with the rule it guards (tier clones, #631, 2026-11-16)
+The placeholder spec's overlap check, which keeps `placeholder_for` to one match, ran only inside `build()`, which needs the installed Armory. The tier clones made the spec the source of a swap rule that three troop generators also read, with no check and no test of the rule.
+- **Why missed:** the check was written when `build()` was the spec's only reader, and the port added readers without moving it.
+- **Prevent:** when a data file gains a second reader, put its validation where the file loads (`load_spec`), not in one consumer, and test the rule in both directions.
+- **Source:** [RCA](../rca-melee-tier-clones-2026-11-16.md) F1.

@@ -7,7 +7,9 @@ Leg; the twohanded layout has no Item2) of each `player_career_{culture}_{archet
 
 1. candidates are the items of that slot's class that a non-hero troop of the culture carries in
    a battle set (`troops/troops_*.xml`: inline `EquipmentRoster`s that are not `civilian="true"`,
-   plus direct `<Equipments>/<equipment>` overrides, which the engine applies to every set). For
+   plus direct `<Equipments>/<equipment>` overrides, which the engine applies to every set). A
+   placeholder (`tools/placeholder_weapons.json`, a donor restated to a troop's tier) counts as its
+   donor, so a career never starts with a troop's restated weapon. For
    Isengard's, Mordor's and Gundabad's Body and Leg, only their uruk line (`ARMOUR_LINE`): their low orcs
    wear Mordor orc kit, which does not fit an uruk player, while uruk armour sits on the human
    skeleton every race of theirs uses. A culture with no piece on its line is an error;
@@ -132,8 +134,17 @@ def _bare(value: str | None) -> str:
     return value.split(".", 1)[1] if "." in value else value
 
 
-def index_troop_gear(roots: list[ET.Element]) -> dict[str, dict[str, tuple[int, int]]]:
-    """culture -> item -> (lowest carrier level, entries naming it), battle gear of non-hero troops."""
+def placeholder_donors() -> dict[str, str]:
+    """placeholder id -> its donor, from tools/placeholder_weapons.json."""
+    import generate_placeholder_weapons as gpw
+    return {w["id"]: w["donor"] for w in gpw.spec_weapons()}
+
+
+def index_troop_gear(roots: list[ET.Element],
+                     donor_of: dict[str, str] | None = None) -> dict[str, dict[str, tuple[int, int]]]:
+    """culture -> item -> (lowest carrier level, entries naming it), battle gear of non-hero troops.
+    A placeholder is counted as its donor (`donor_of`, default the placeholder spec)."""
+    donor_of = placeholder_donors() if donor_of is None else donor_of
     found: dict[str, dict[str, list[int]]] = defaultdict(dict)
     for root in roots:
         for npc in root.iter("NPCCharacter"):
@@ -152,6 +163,7 @@ def index_troop_gear(roots: list[ET.Element]) -> dict[str, dict[str, tuple[int, 
                 item = _bare(eq.get("id"))
                 if not item:
                     continue
+                item = donor_of.get(item, item)
                 seen = found[culture].setdefault(item, [level, 0])
                 seen[0] = min(seen[0], level)
                 seen[1] += 1

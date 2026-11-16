@@ -224,7 +224,7 @@
                 <equipment slot="Leg" id="Item.sk_dg_uruk_boots_med_a" />
             </EquipmentRoster>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.wm_gundabad_spear_a02" />
+                <equipment slot="Item0" id="Item.taom_ph_wm_gundabad_spear_a02_t3" />
                 <equipment slot="Item1" id="Item.wm_dol_goldur_axe_a01" />
                 <equipment slot="Head" id="Item.sk_gb_uruk_helmet_med_b" />
                 <equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_light_c" />
