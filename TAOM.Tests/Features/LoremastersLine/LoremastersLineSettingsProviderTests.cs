@@ -1,5 +1,6 @@
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using TAOM.Features.ServerSettings;
 using TAOM.Features;
 using TAOM.Features.LoremastersLine;
 
@@ -43,6 +44,6 @@ public class LoremastersLineSettingsProviderTests
         StringAssert.StartsWith((string)type.GetProperty("HintText")!.GetValue(attribute)!, "{=taom_ll_mcm_enable_hint}");
         Assert.AreEqual(false, type.GetProperty("RequireRestart")!.GetValue(attribute));
         var group = property.GetCustomAttributes(inherit: false).Single(a => a.GetType().Name == "SettingPropertyGroupAttribute");
-        Assert.AreEqual("Character Screen/Loremaster's Line", group.GetType().GetProperty("GroupName")!.GetValue(group));
+        Assert.AreEqual("Character Screen/Loremaster's Line", McmText.Plain(group.GetType().GetProperty("GroupName")!.GetValue(group) as string));
     }
 }

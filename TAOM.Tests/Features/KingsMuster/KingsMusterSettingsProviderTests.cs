@@ -1,6 +1,7 @@
 using System.Linq;
 using System.Reflection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using TAOM.Features.ServerSettings;
 using TAOM.Features;
 using TAOM.Features.KingsMuster;
 
@@ -57,10 +58,10 @@ public class KingsMusterSettingsProviderTests
         var property = typeof(TaomSettings).GetProperty(nameof(TaomSettings.EnableKingsMusterDiscount))!;
 
         var group = Attribute(property, "SettingPropertyGroupAttribute");
-        Assert.AreEqual(Group, Read(group, "GroupName"));
+        Assert.AreEqual(Group, McmText.Plain(Read(group, "GroupName") as string));
         Assert.AreEqual(0, Read(group, "GroupOrder"), "the order is carried by the group's first property only (EnableRedArrow)");
         var value = Attribute(property, "SettingPropertyBoolAttribute");
-        Assert.AreEqual("Rulers call hosts for less influence", Read(value, "DisplayName"));
+        Assert.AreEqual("Rulers call hosts for less influence", McmText.Plain(Read(value, "DisplayName") as string));
         Assert.AreEqual(false, Read(value, "RequireRestart"), "read on every call");
         var hint = (string)Read(value, "HintText");
         StringAssert.Contains(hint, "co-op");

@@ -26,7 +26,7 @@ public class UnderTheEavesSettingsProviderTests
         var property = typeof(TaomSettings).GetProperty(nameof(TaomSettings.ForestSightPenaltyEnabled))!;
         var text = string.Join("|", property.GetCustomAttributesData().Select(a => a.ToString()));
 
-        StringAssert.Contains(text, "Map UI/Hidden Hosts");
+        StringAssert.Contains(text, "Map UI/{=taom_mcm_group_hidden_hosts}Hidden Hosts");
         StringAssert.Contains(text, "RequireRestart = False");
         StringAssert.Contains(text, "Order = 1");
     }
@@ -36,7 +36,7 @@ public class UnderTheEavesSettingsProviderTests
     {
         var orders = typeof(TaomSettings).GetProperties()
             .Select(p => (Property: p, Text: string.Join("|", p.GetCustomAttributesData().Select(a => a.ToString()))))
-            .Where(x => x.Text.Contains("\"Map UI/Hidden Hosts\""))
+            .Where(x => x.Text.Contains("\"{=taom_mcm_group_map_ui}Map UI/{=taom_mcm_group_hidden_hosts}Hidden Hosts\""))
             .Select(x => System.Text.RegularExpressions.Regex.Match(x.Text, @"\bOrder = (\d+)").Groups[1].Value)
             .ToList();
 

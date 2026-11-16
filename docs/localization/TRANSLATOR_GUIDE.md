@@ -334,6 +334,23 @@ the commit of a trunk build. Pass it to the importer as `--base`.
 TAOM_Map and the Armory are live installs, so a reinstall reverts their imported rows: run the import
 again for those modules afterwards.
 
+The team's module also patched text that TAOM showed without a key: the MCM settings, C# literals
+(landmarks, the custom battle screen, the quick actions), the War of the Ring strings, the siege
+defense and special resource texts, and a few prefab labels. #1385 keyed all of these at the source,
+so each now has a key and an English row, and the team translates it in the language files. A key
+whose CNs or CNt row does not exist yet shows English; the importer only replaces rows, so such a row
+is added first (the hand-off lists them). Their
+`HardcodedTextPatcher`, `RuntimeTranslations*.xml`, file overrides and XSLTs are then not needed. A
+text that still shows in English with every row translated is a missing key in TAOM: report it as an
+issue, never patch it at runtime. The Phase 3 and 4 rows were matched from their
+`RuntimeTranslations*.xml` by exact English; the importer does not read those files.
+
+An MCM group path has one key per part (`{=taom_mcm_group_world}World/{=taom_mcm_group_realms}Realms`),
+because MCM splits the path on `/` before it translates each part. MCM then removes the parent's
+translated text from the child's, so a child group's text must not contain its parent's text, and a
+parent's text must not be empty (MCM then hides the whole TAOM page). Gate:
+`McmSettingsTextIsKeyedTests.NoChildGroupText_ContainsItsParentsText_InAnyLanguage`.
+
 ---
 
 ## Changing English Text That Is Already Translated

@@ -1,6 +1,7 @@
 using System.Linq;
 using System.Reflection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using TAOM.Features.ServerSettings;
 using TAOM.Features;
 using TAOM.Features.KeepWardens;
 
@@ -38,7 +39,7 @@ public class CastlePatrolSettingsProviderTests
         // MCM reads these attributes by name; MCMv5 is runtime-only here, so the test does too.
         var property = typeof(TaomSettings).GetProperty(nameof(TaomSettings.EnableCastlePatrols))!;
 
-        Assert.AreEqual("Fief Management/Keep Wardens", Read(Attribute(property, "SettingPropertyGroupAttribute"), "GroupName"));
+        Assert.AreEqual("Fief Management/Keep Wardens", McmText.Plain(Read(Attribute(property, "SettingPropertyGroupAttribute"), "GroupName") as string));
         var value = Attribute(property, "SettingPropertyBoolAttribute");
         Assert.AreEqual(false, Read(value, "RequireRestart"), "the patrol queue reads the switch at each visit");
         Assert.IsTrue(new TaomSettings().EnableCastlePatrols);
@@ -51,7 +52,7 @@ public class CastlePatrolSettingsProviderTests
     {
         var property = typeof(TaomSettings).GetProperty(nameof(TaomSettings.EnableGuardHouseBuildPriority))!;
 
-        Assert.AreEqual("Fief Management/Keep Wardens", Read(Attribute(property, "SettingPropertyGroupAttribute"), "GroupName"));
+        Assert.AreEqual("Fief Management/Keep Wardens", McmText.Plain(Read(Attribute(property, "SettingPropertyGroupAttribute"), "GroupName") as string));
         var value = Attribute(property, "SettingPropertyBoolAttribute");
         Assert.AreEqual(1, Read(value, "Order"), "after Castle Patrols (Order 0)");
         Assert.AreEqual(false, Read(value, "RequireRestart"), "the AI build pick reads the switch each time");

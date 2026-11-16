@@ -1,6 +1,7 @@
 using System.Linq;
 using System.Reflection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using TAOM.Features.ServerSettings;
 using TAOM.Features;
 using TAOM.Features.RedArrow;
 
@@ -40,9 +41,9 @@ public class RedArrowSettingsProviderTests
         var property = typeof(TaomSettings).GetProperty(nameof(TaomSettings.EnableRedArrow))!;
 
         var group = Attribute(property, "SettingPropertyGroupAttribute");
-        Assert.AreEqual("War of the Ring/Armies", Read(group, "GroupName"));
+        Assert.AreEqual("War of the Ring/Armies", McmText.Plain(Read(group, "GroupName") as string));
         var value = Attribute(property, "SettingPropertyBoolAttribute");
-        Assert.AreEqual("Call armies during your siege", Read(value, "DisplayName"));
+        Assert.AreEqual("Call armies during your siege", McmText.Plain(Read(value, "DisplayName") as string));
         Assert.AreEqual(false, Read(value, "RequireRestart"), "read each time the screen opens");
         var hint = (string)Read(value, "HintText");
         StringAssert.Contains(hint, "Defending a siege");
@@ -54,7 +55,7 @@ public class RedArrowSettingsProviderTests
     {
         var groups = typeof(TaomSettings).GetProperties()
             .SelectMany(p => p.GetCustomAttributes(inherit: false).Where(a => a.GetType().Name == "SettingPropertyGroupAttribute"))
-            .Select(a => (Name: (string)Read(a, "GroupName"), Order: (int)Read(a, "GroupOrder")))
+            .Select(a => (Name: McmText.Plain(McmText.Plain(Read(a, "GroupName") as string)), Order: (int)Read(a, "GroupOrder")))
             .Where(g => g.Order != 0)
             .ToList();
 

@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Reflection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using TAOM.Features.ServerSettings;
 using TAOM.Features;
 using TAOM.Features.FellFoes;
 using TAOM.Features.FellFoes.Domain;
@@ -129,14 +130,14 @@ public class FellFoesSettingsProviderTests
     {
         var first = typeof(TaomSettings).GetProperty(nameof(TaomSettings.FellFoesCorneredRouters))!;
         var group = Attribute(first, "SettingPropertyGroupAttribute")!;
-        Assert.AreEqual("Battle Tactics/Fell Foes", Read(group, "GroupName"));
+        Assert.AreEqual("Battle Tactics/Fell Foes", McmText.Plain(Read(group, "GroupName") as string));
         var order = (int)Read(group, "GroupOrder");
         Assert.AreNotEqual(0, order, "MCM ignores a GroupOrder on any later property, so the first carries it");
 
         var others = typeof(TaomSettings).GetProperties()
             .Select(p => Attribute(p, "SettingPropertyGroupAttribute"))
-            .Where(a => a != null && (string)Read(a, "GroupName") != "Battle Tactics/Fell Foes" && (int)Read(a, "GroupOrder") == order)
-            .Select(a => (string)Read(a!, "GroupName"))
+            .Where(a => a != null && McmText.Plain(Read(a, "GroupName") as string) != "Battle Tactics/Fell Foes" && (int)Read(a, "GroupOrder") == order)
+            .Select(a => McmText.Plain(Read(a!, "GroupName") as string))
             .ToList();
         Assert.AreEqual(0, others.Count, "another group uses GroupOrder " + order + ": " + string.Join(", ", others));
     }
@@ -149,12 +150,12 @@ public class FellFoesSettingsProviderTests
         Assert.AreEqual(9, mine.Count);
         foreach (var p in mine)
         {
-            Assert.AreEqual("Battle Tactics/Fell Foes", Read(Attribute(p, "SettingPropertyGroupAttribute")!, "GroupName"), p.Name);
+            Assert.AreEqual("Battle Tactics/Fell Foes", McmText.Plain(Read(Attribute(p, "SettingPropertyGroupAttribute")!, "GroupName") as string), p.Name);
             var value = p.GetCustomAttributes(inherit: false).Single(a => a.GetType().Name.StartsWith("SettingProperty", StringComparison.Ordinal)
                                                                       && !a.GetType().Name.StartsWith("SettingPropertyGroup", StringComparison.Ordinal));
             Assert.AreEqual(false, Read(value, "RequireRestart"), p.Name);
             var hint = (string)Read(value, "HintText");
-            Assert.IsFalse(hint.Contains("{=") || ((string)Read(value, "DisplayName")).Contains("{="), p.Name + ": plain English, like its neighbours");
+            Assert.IsTrue(hint.StartsWith("{=taom_mcm_") && ((string)Read(value, "DisplayName")).StartsWith("{=taom_mcm_"), p.Name + ": keyed, like its neighbours (#1385)");
             Assert.IsFalse(hint.IndexOf((char)0x2014) >= 0 || hint.IndexOf((char)0x2013) >= 0, p.Name + ": no em or en dash");
         }
     }

@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Reflection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using TAOM.Features.ServerSettings;
 using TAOM.Features;
 using TAOM.Features.CreatureSiegeRole;
 
@@ -77,7 +78,7 @@ public class CreatureSiegeRoleSettingsProviderTests
         var property = typeof(TaomSettings).GetProperty(nameof(TaomSettings.EnableCreatureSiegeRole))!;
 
         var group = Attribute(property, "SettingPropertyGroupAttribute");
-        Assert.AreEqual("Battle Tactics/Creature Siege Role", Read(group, "GroupName"));
+        Assert.AreEqual("Battle Tactics/Creature Siege Role", McmText.Plain(Read(group, "GroupName") as string));
         Assert.AreEqual(26, (int)Read(group, "GroupOrder"),
             "MCM creates a group from its first property and ignores a GroupOrder on any later one");
 
@@ -86,14 +87,14 @@ public class CreatureSiegeRoleSettingsProviderTests
     }
 
     [TestMethod]
-    public void TheLabelAndHint_ArePlainEnglish_AndSayWhenItTakesEffect()
+    public void TheLabelAndHint_AreKeyed_AndSayWhenItTakesEffect()
     {
-        // MCM labels and hints in this file are not localisation keys (0 matches for "{=" in TaomSettings.cs).
+        // MCM labels and hints carry taom_mcm_ keys (#1385 Phase 4).
         var value = Attribute(typeof(TaomSettings).GetProperty(nameof(TaomSettings.EnableCreatureSiegeRole))!, "SettingPropertyBoolAttribute");
         var label = (string)Read(value, "DisplayName");
         var hint = (string)Read(value, "HintText");
 
-        Assert.IsFalse(label.Contains("{=") || hint.Contains("{="));
+        Assert.IsTrue(label.StartsWith("{=taom_mcm_") && hint.StartsWith("{=taom_mcm_"));
         StringAssert.Contains(hint, "ladders");
         StringAssert.Contains(hint, "towers");
         StringAssert.Contains(hint, "siege engines");
@@ -110,7 +111,7 @@ public class CreatureSiegeRoleSettingsProviderTests
             .Where(p => p.Name != nameof(TaomSettings.EnableCreatureSiegeRole))
             .Select(p => p.GetCustomAttributes(inherit: false).FirstOrDefault(a => a.GetType().Name == "SettingPropertyGroupAttribute"))
             .Where(a => a != null)
-            .Select(a => (Name: (string)Read(a!, "GroupName"), Order: (int)Read(a!, "GroupOrder")))
+            .Select(a => (Name: McmText.Plain(Read(a!, "GroupName") as string), Order: (int)Read(a!, "GroupOrder")))
             .Where(g => g.Name.StartsWith("Battle Tactics/", StringComparison.Ordinal) && g.Order != 0)
             .ToList();
 

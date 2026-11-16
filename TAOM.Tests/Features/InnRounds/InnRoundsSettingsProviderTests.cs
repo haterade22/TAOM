@@ -1,6 +1,7 @@
 using System.Linq;
 using System.Reflection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using TAOM.Features.ServerSettings;
 using TAOM.Features;
 using TAOM.Features.CoopInterop;
 using TAOM.Features.InnRounds;
@@ -80,14 +81,14 @@ public class InnRoundsSettingsProviderTests
     {
         var enable = typeof(TaomSettings).GetProperty(nameof(TaomSettings.EnableInnRounds))!;
         var group = Attribute(enable, "SettingPropertyGroupAttribute");
-        Assert.AreEqual("World/Inn Rounds", Read(group, "GroupName"));
+        Assert.AreEqual("World/Inn Rounds", McmText.Plain(Read(group, "GroupName") as string));
         Assert.AreEqual(79, Read(group, "GroupOrder"));
         Assert.AreEqual(false, Read(Attribute(enable, "SettingPropertyBoolAttribute"), "RequireRestart"));
 
         foreach (var name in new[] { nameof(TaomSettings.InnRoundsMoraleScale), nameof(TaomSettings.InnRoundsRenownScale) })
         {
             var property = typeof(TaomSettings).GetProperty(name)!;
-            Assert.AreEqual("World/Inn Rounds", Read(Attribute(property, "SettingPropertyGroupAttribute"), "GroupName"), name);
+            Assert.AreEqual("World/Inn Rounds", McmText.Plain(Read(Attribute(property, "SettingPropertyGroupAttribute"), "GroupName") as string), name);
             var slider = Attribute(property, "SettingPropertyFloatingIntegerAttribute");
             Assert.AreEqual(0f, System.Convert.ToSingle(Read(slider, "MinValue")), name);
             Assert.AreEqual(3f, System.Convert.ToSingle(Read(slider, "MaxValue")), name);

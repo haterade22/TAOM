@@ -1,6 +1,7 @@
 using System.Linq;
 using System.Reflection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using TAOM.Features.ServerSettings;
 using TAOM.Features;
 using TAOM.Features.PosternGate;
 
@@ -29,7 +30,7 @@ public class PosternGateSettingsProviderTests
         // MCM reads these attributes by name; MCMv5 is runtime-only here, so the test does too.
         var property = typeof(TaomSettings).GetProperty(nameof(TaomSettings.EnablePosternGate))!;
 
-        Assert.AreEqual("Fief Management/Postern Gate", Read(Attribute(property, "SettingPropertyGroupAttribute"), "GroupName"));
+        Assert.AreEqual("Fief Management/Postern Gate", McmText.Plain(Read(Attribute(property, "SettingPropertyGroupAttribute"), "GroupName") as string));
         var value = Attribute(property, "SettingPropertyBoolAttribute");
         Assert.AreEqual(false, Read(value, "RequireRestart"), "the cut is read at each break-in or break-out");
         Assert.IsTrue(new TaomSettings().EnablePosternGate);

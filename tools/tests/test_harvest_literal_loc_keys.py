@@ -188,6 +188,45 @@ class SplitLiteralRefusalTests(unittest.TestCase):
         insert.assert_not_called()
 
 
+class McmGroupPathTests(unittest.TestCase):
+    """#1385 Phase 4: MCM splits a group path on '/' and translates each part, so each part carries its own key.
+    LITERAL reads the first key with the whole rest of the path as its default."""
+
+    def test_group_parts_TwoKeyedParts_GiveTwoRows(self):
+        self.assertEqual([("taom_mcm_group_a", "Battle Tactics"), ("taom_mcm_group_b", "Mixed Formations")],
+                         h.group_parts("taom_mcm_group_a", "Battle Tactics/{=taom_mcm_group_b}Mixed Formations"))
+
+    def test_group_parts_OnePart_IsUnchanged(self):
+        self.assertEqual([("taom_mcm_group_a", "Realm Borders")], h.group_parts("taom_mcm_group_a", "Realm Borders"))
+
+    def test_group_parts_OtherKeyWithASlash_IsUnchanged(self):
+        # Only an MCM group key is a path; any other default keeps its slash.
+        self.assertEqual([("taom_x", "a/{=taom_y}b")], h.group_parts("taom_x", "a/{=taom_y}b"))
+
+    def test_group_parts_UnkeyedChild_KeepsOnlyTheFirstPart(self):
+        # MCM looks up the first part alone, so its row never holds the rest of the path.
+        self.assertEqual([("taom_mcm_group_a", "A")], h.group_parts("taom_mcm_group_a", "A/B"))
+
+    def test_group_parts_ThreeParts_GiveThreeRows(self):
+        self.assertEqual([("taom_mcm_group_a", "A"), ("taom_mcm_group_b", "B"), ("taom_mcm_group_c", "C")],
+                         h.group_parts("taom_mcm_group_a", "A/{=taom_mcm_group_b}B/{=taom_mcm_group_c}C"))
+
+    def test_group_parts_NonTaomNestedKey_IsNotDeclared(self):
+        # A vanilla key in taom_module_strings.xml overrides the vanilla text, so the harvester never registers one.
+        self.assertEqual([("taom_mcm_group_a", "A")], h.group_parts("taom_mcm_group_a", "A/{=Xy12Ab34}Diplomacy"))
+
+    def test_declared_keys_GroupPath_RegistersEachPart(self):
+        with tempfile.TemporaryDirectory() as d:
+            root = Path(d)
+            cs = root / "Main" / "Features" / "S.cs"
+            cs.parent.mkdir(parents=True)
+            h.write_text(cs, '[SettingPropertyGroup("{=taom_mcm_group_a}A/{=taom_mcm_group_b}B")]\r\n')
+            with mock.patch.object(h, "REPO_ROOT", root):
+                found = h.declared_keys()
+        self.assertEqual({"taom_mcm_group_a": ("A", "Main/Features/S.cs", 1),
+                          "taom_mcm_group_b": ("B", "Main/Features/S.cs", 1)}, dict(found))
+
+
 class InsertRowsBlankLineTests(unittest.TestCase):
     def test_insert_rows_AnyTrailingBlankRun_LeavesExactlyOneAcrossRuns(self):
         for shape, (head, tail) in SHAPES.items():

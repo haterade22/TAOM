@@ -145,9 +145,10 @@ public class LanguageTextIntegrityTests
         @"\{[^}]*\}|<[^>]*>|\[[a-z]{2}:[^\]]*\]|^\[[^\]]*\]");
 
     /// <summary>File names and code identifiers a row keeps verbatim ("fords_of_war/factions.json",
-    /// "realms_titles.xml", "castle_patrols", "guardHousePriorityChance"): never English prose.</summary>
+    /// "realms_titles.xml", "castle_patrols", "guardHousePriorityChance", the console command "taom.tactic_status",
+    /// the sound "event:/ui/transfer"): never English prose.</summary>
     private static readonly System.Text.RegularExpressions.Regex Identifier = new System.Text.RegularExpressions.Regex(
-        @"[A-Za-z0-9_./-]*[A-Za-z0-9]\.(?:json|xml|txt|csv)|[A-Za-z0-9]+(?:_[A-Za-z0-9]+)+/?|[a-z]+[A-Z][A-Za-z0-9]*");
+        @"[A-Za-z0-9_./-]*[A-Za-z0-9]\.(?:json|xml|txt|csv|log)|[A-Za-z][A-Za-z0-9_]*(?::?/[A-Za-z0-9_]+|\.[A-Za-z_][A-Za-z0-9_]*)+|[A-Za-z0-9]+(?:_[A-Za-z0-9]+)+/?|[a-z]+[A-Z][A-Za-z0-9]*");
 
     /// <summary>The identifiers the registered English carries. Only these are masked: a token that matches
     /// the shape but is in no English row ("haiOops", a bare key) is damage, not a kept identifier.</summary>
@@ -262,6 +263,7 @@ public class LanguageTextIntegrityTests
     [DataRow("TR", "demirhanə")]
     [DataRow("CNt", "艾辛格的烏魯克haiOops")]
     [DataRow("CNs", "aom_ang_arena")]
+    [DataRow("CNs", "控制台命令 taom.not_a_command 可以随时输出")]
     public void WritingSystemProblems_DamagedRow_IsReported(string language, string text)
     {
         Assert.AreNotEqual(0, WritingSystemProblems(language, text).Count, text);
@@ -283,6 +285,10 @@ public class LanguageTextIntegrityTests
     [DataRow("JP", "城塞はいずれもcastle_patrols.jsonの設定に従う")]
     [DataRow("KO", "realms_titles.xml에 적힌 가격")]
     [DataRow("JP", "(castle_patrols.json内のguardHousePriorityChance)")]
+    [DataRow("CNs", "控制台命令 taom.tactic_status 可以随时输出")]
+    [DataRow("CNs", "每次批量操作后播放 'event:/ui/transfer' 提示音。")]
+    [DataRow("CNs", "向taom_debug.log写入一条[ScreenOpen]记录")]
+    [DataRow("CNt", "數量由 race_abilities.json 的 visuals.maxGlowing 控制")]
     public void WritingSystemProblems_CleanRow_IsNotReported(string language, string text)
     {
         var problems = WritingSystemProblems(language, text);

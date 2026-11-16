@@ -4,6 +4,7 @@ using System.Reflection;
 using System.Text.RegularExpressions;
 using MCM.Common;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using TAOM.Features.ServerSettings;
 using TAOM.Features;
 using TAOM.Features.CoopInterop;
 using TAOM.Features.Realms;
@@ -221,14 +222,14 @@ public class RealmsSettingsProviderTests
     {
         var source = RepoPaths.ReadSource("Main/Features/TaomSettings.cs", stripComments: true);
 
-        Assert.IsTrue(source.Contains("[SettingPropertyGroup(\"World/Realms\", GroupOrder = 87)]"));
+        Assert.IsTrue(source.Contains("[SettingPropertyGroup(\"{=taom_mcm_group_world}World/{=taom_mcm_group_realms}Realms\", GroupOrder = 87)]"));
         Assert.AreEqual(1, source.Split(new[] { "GroupOrder = 87" }, StringSplitOptions.None).Length - 1, "GroupOrder 87 is used by another group");
 
         var properties = GroupProperties();
         Assert.AreEqual(17, properties.Length);
         foreach (var property in properties)
         {
-            Assert.AreEqual("World/Realms", Read(Attribute(property, "SettingPropertyGroupAttribute"), "GroupName"), property.Name);
+            Assert.AreEqual("World/Realms", McmText.Plain(Read(Attribute(property, "SettingPropertyGroupAttribute"), "GroupName") as string), property.Name);
             Assert.AreEqual(false, Read(ValueAttribute(property), "RequireRestart"), property.Name + " is read live");
         }
         CollectionAssert.AreEquivalent(Enumerable.Range(0, 17).ToArray(),
@@ -303,7 +304,7 @@ public class RealmsSettingsProviderTests
         foreach (var property in GroupProperties())
         {
             var attribute = ValueAttribute(property);
-            var text = (string)Read(attribute, "DisplayName") + " " + (string)Read(attribute, "HintText");
+            var text = McmText.Plain(Read(attribute, "DisplayName") as string) + " " + (string)Read(attribute, "HintText");
 
             Assert.IsFalse(Regex.IsMatch(text, @"\b(he|she|his|her|him|hers|himself|herself|man|woman|men|women|kinsmen)\b", RegexOptions.IgnoreCase), text);
             Assert.IsFalse(text.Contains('—') || text.Contains('–'), "a dash in: " + text);

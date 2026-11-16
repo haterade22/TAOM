@@ -42,7 +42,7 @@ internal static class ServerSettingsSchema
 
     private static ServerSettingDescriptor Describe(PropertyInfo p, object defaults)
     {
-        var group = p.GetCustomAttribute<SettingPropertyGroupAttribute>(inherit: true)?.GroupName ?? "";
+        var group = McmText.Plain(p.GetCustomAttribute<SettingPropertyGroupAttribute>(inherit: true)?.GroupName);
         var none = Array.Empty<string>();
         var kinds = p.GetCustomAttributes(inherit: true).OfType<BaseSettingPropertyAttribute>().ToList();
         if (kinds.Count == 0)

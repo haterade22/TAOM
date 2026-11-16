@@ -2,6 +2,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using TAOM.Features.ServerSettings;
 using TAOM.Features;
 using TAOM.Features.SettlementServices;
 
@@ -53,7 +54,7 @@ public class SettlementServicesSettingsProviderTests
         var property = typeof(TaomSettings).GetProperty(nameof(TaomSettings.EnableWatchSilver))!;
 
         var group = Attribute(property, "SettingPropertyGroupAttribute");
-        Assert.AreEqual("Fief Management/Watch-Silver", Read(group, "GroupName"));
+        Assert.AreEqual("Fief Management/Watch-Silver", McmText.Plain(Read(group, "GroupName") as string));
         Assert.AreEqual(5, Read(group, "GroupOrder"), "Postern Gate is 0, From the Ashes 1, Reeve's Ledger 2, Namegiving 3 and Keep Wardens 4");
         Assert.AreEqual(0, Read(Attribute(property, "SettingPropertyBoolAttribute"), "Order"));
     }
@@ -64,7 +65,7 @@ public class SettlementServicesSettingsProviderTests
         var property = typeof(TaomSettings).GetProperty(nameof(TaomSettings.EnableTidingsOfTheLists))!;
 
         var group = Attribute(property, "SettingPropertyGroupAttribute");
-        Assert.AreEqual("Tournaments", Read(group, "GroupName"));
+        Assert.AreEqual("Tournaments", McmText.Plain(Read(group, "GroupName") as string));
         Assert.AreEqual(4, Read(Attribute(property, "SettingPropertyBoolAttribute"), "Order"));
     }
 

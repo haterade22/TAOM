@@ -2,6 +2,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using TAOM.Features.ServerSettings;
 using TAOM.Features;
 using TAOM.Features.Namegiving;
 
@@ -38,7 +39,7 @@ public class NamegivingSettingsProviderTests
         var property = typeof(TaomSettings).GetProperty(nameof(TaomSettings.EnableNamegiving))!;
 
         var group = Attribute(property, "SettingPropertyGroupAttribute");
-        Assert.AreEqual("Fief Management/Namegiving", Read(group, "GroupName"));
+        Assert.AreEqual("Fief Management/Namegiving", McmText.Plain(Read(group, "GroupName") as string));
         Assert.AreEqual(3, Read(group, "GroupOrder"), "Postern Gate is 0, From the Ashes 1 and Reeve's Ledger 2");
         Assert.AreEqual(0, Read(Attribute(property, "SettingPropertyBoolAttribute"), "Order"));
     }

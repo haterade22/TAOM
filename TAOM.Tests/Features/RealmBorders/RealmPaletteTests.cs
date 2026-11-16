@@ -11,6 +11,7 @@ using TAOM.Core.Infrastructure;
 using TAOM.Core.Logging;
 using TAOM.Features.RealmBorders;
 using TAOM.Features.RealmBorders.Domain;
+using TAOM.Features.ServerSettings;
 using TAOM.SceneScripts.Roads;
 
 namespace TAOM.Tests.Features.RealmBorders;
@@ -280,7 +281,7 @@ public class RealmPaletteTests
             var text = property.GetCustomAttributes(false).Single(a => a.GetType().Name == "SettingPropertyTextAttribute");
             string hint = (string)text.GetType().GetProperty("HintText")!.GetValue(text, null)!;
             string label = (string)text.GetType().GetProperty("DisplayName")!.GetValue(text, null)!;
-            var field = fields.Single(f => f.Label == label);
+            var field = fields.Single(f => f.Label == McmText.Plain(label));
             StringAssert.Contains(hint, config.Realms[field.Realm], $"{label}'s tooltip names another default than palette.json");
         }
     }

@@ -7,6 +7,7 @@ using HarmonyLib;
 using MCM.Abstractions.Attributes;
 using MCM.Abstractions.Attributes.v2;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using TAOM.Features.ServerSettings;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Party;
 using TaleWorlds.CampaignSystem.Settlements;
@@ -508,10 +509,10 @@ public class NameplateCullBindingTests
         Assert.AreEqual(typeof(bool), property.PropertyType);
         var attribute = property.GetCustomAttribute<SettingPropertyBoolAttribute>();
         Assert.IsNotNull(attribute);
-        Assert.AreEqual("Cull Hidden Settlement Nameplates", attribute.DisplayName);
+        Assert.AreEqual("Cull Hidden Settlement Nameplates", McmText.Plain(attribute.DisplayName));
         Assert.IsFalse(attribute.RequireRestart, "read on every frame, so a live A/B works");
         Assert.IsFalse(string.IsNullOrWhiteSpace(attribute.HintText));
-        Assert.AreEqual("Map Performance", property.GetCustomAttribute<SettingPropertyGroupAttribute>()!.GroupName);
+        Assert.AreEqual("Map Performance", McmText.Plain(property.GetCustomAttribute<SettingPropertyGroupAttribute>()!.GroupName));
         Assert.AreEqual(true, new BattleLoadDiagnosticsSettings().CullHiddenNameplates);
     }
 }
