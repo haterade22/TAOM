@@ -37,6 +37,15 @@ internal static class WarLedgerFormatter
             Inv($"vr={Multiplier(volunteerMultiplier)} pe={Multiplier(escapeMultiplier)}"));
     }
 
+    /// <summary>
+    /// #1283: the men in a kingdom's garrisons, so a test run can see garrison growth and losses. <c>forts</c> is
+    /// its towns plus castles; <c>men</c> counts the wounded, <c>fit</c> does not. A negative count reads as zero.
+    /// </summary>
+    internal static string Garrison(string campaignId, int day, KingdomWarSnapshot k) =>
+        string.Concat(
+            Inv($"{Head} t=garrison cid={Token(campaignId)} day={day} k={Token(k.Id)} "),
+            Inv($"forts={Math.Max(0, k.Towns) + Math.Max(0, k.Castles)} men={Math.Max(0, k.GarrisonMen)} fit={Math.Max(0, k.GarrisonHealthy)}"));
+
     internal static string Side(string campaignId, int day, FactionSide side, int points, int? baseline, int alive) =>
         Inv($"{Head} t=side cid={Token(campaignId)} day={day} side={SideName(side)} pts={points} base={Base(baseline)} alive={alive}");
 

@@ -31,6 +31,12 @@ public sealed class KingdomWarSnapshot
     /// <summary>Heroes of the kingdom's clans who are in captivity.</summary>
     public int PrisonerLords { get; set; }
 
+    /// <summary>Men in the garrisons of the kingdom's towns and castles, wounded included.</summary>
+    public int GarrisonMen { get; set; }
+
+    /// <summary>The healthy part of <see cref="GarrisonMen"/>.</summary>
+    public int GarrisonHealthy { get; set; }
+
     /// <summary>Fortification points, 2 per town and 1 per castle (a negative count reads as zero).</summary>
     public int FortificationPoints => 2 * Math.Max(0, Towns) + Math.Max(0, Castles);
 }
