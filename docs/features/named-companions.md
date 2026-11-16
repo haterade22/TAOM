@@ -174,6 +174,7 @@ A companion's JSON entry can carry `hire_terms` (gold, items, flags), `topics` a
 
 ## Changelog
 
+- 2026-11-16: Gimli carries "[Erebor] Two-Handed Axe V" (`sm_dwarf_erebor_axe_2h_c`) since #1373, in a new campaign only, because a Hero's equipment is saved (`Hero.cs:212-213`). The three community dwarves keep Dain's axe.
 - 2026-11-14: the custom companions are back to their authored faces (owner: "i meant to not touch the custom non lotr characters"). The look passes of #1181, #1190, #1191 and #1261 had recoloured Thyrell, Swan, Belecthar and Eohart, and #1231 gave Igor Aragorn's new colours. Look gates skip the 15 custom ids, and their faces are pinned.
 - 2026-10-29: the backstory strings are now shown (#1061). TAOM sets `HasMet` at placement, which closed vanilla's first-meeting chain, so `OathIntroDialog` plays the seven strings once to an unrecruited companion.
 - 2026-10-29: Elegost, a Dúnedain Ranger of the North, waits in Bree in new campaigns (#1060, player

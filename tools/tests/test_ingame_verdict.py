@@ -767,6 +767,196 @@ class StoryHeroes1337And1366Tests(unittest.TestCase):
         self.assertEqual(verdict_of(out, self.HOSTED), "FAIL", out)
 
 
+def judge_lines(tree, issue, *lines):
+    """Write one log (a build stamp, then each line: a bare string as an info line, a (check id, tail) pair as a [Check] line) and judge `issue`."""
+    stamp = (f"[2026-11-16 10:00:00] [INFO] [BuildStamp] TAOM=v2.0.40 build.20261116-100000Z+{GOOD} "
+             f"TAOM.Dependencies=v2.0.40 build.20261116-095958Z+{GOOD} (pair OK)")
+    body = []
+    for line in lines:
+        if isinstance(line, str):
+            body.append(f"[2026-11-16 10:05:00] [INFO] {line}")
+        else:
+            cid, tail = line
+            body.append(f"[2026-11-16 10:05:01] [INFO] [Check] id={cid} {tail}")
+    path = tree.client / "Logs" / "taom_debug_2026-11-16_10-00-00.log"
+    path.write_text("\n".join([stamp] + body) + "\n", encoding="utf-8")
+    code, out, _ = tree.run(["--issue", str(issue)])
+    return code, out
+
+
+class StoryChurn1370Tests(unittest.TestCase):
+    """The real #1370 manifest over the hunters line of one story run. The issue is open: the row is red on the defect, which read
+    moved_out=1481 at the first wave clear (run 20261116-081024) and passes only on moved_out=0."""
+
+    HUNTERS = "taom.story-missions.hosted.hunters"
+    LAUNCH = "[StoryMissions] launching taom_rohan_castle_helms_deep_forceatmo for 'helms_deep_defend' (story1, autoplay True)"
+    LD_LAUNCH = "[LongDefeat] launching taom_rohan_castle_helms_deep_forceatmo for fortress helms (autorun)"
+    # The line of run 20261116-081024 as the log wrote it, and the same line with the weapons= field of #1373.
+    HEAD = ("result=pass w=1 standing=3 in_group=3 units=3 held=1 order=Move own=1 settled=412 near=3 kills=35 by=aragorn:0,gimli:2,legolas:33 "
+            "health=aragorn:0.67,gimli:0.76,legolas:0.66 ")
+    WEAPONS = "weapons=aragorn:TwoHandedSword,gimli:TwoHandedAxe,legolas:Bow "
+    DEFECT = HEAD + "retaken=0 moved_out=1481 moved_back=0"
+    CLEAN = HEAD + "retaken=0 moved_out=0 moved_back=0"
+
+    def setUp(self):
+        self.t = Tree(self)
+        self.t.real_manifest("1370.toml")
+
+    def judge(self, *lines):
+        return judge_lines(self.t, 1370, *lines)
+
+    def test_the_defects_hunters_line_with_moved_out_1481_fails_1370(self):
+        code, out = self.judge(self.LAUNCH, (self.HUNTERS, self.DEFECT))
+        self.assertEqual(verdict_of(out, self.HUNTERS), "FAIL", out)
+        self.assertNotEqual(code, 0, out)
+
+    def test_the_defects_line_fails_with_the_weapons_field_too(self):
+        line = self.HEAD + self.WEAPONS + "retaken=0 moved_out=1481 moved_back=0"
+        code, out = self.judge(self.LAUNCH, (self.HUNTERS, line))
+        self.assertEqual(verdict_of(out, self.HUNTERS), "FAIL", out)
+
+    def test_a_hunters_line_with_moved_out_0_passes_1370_with_and_without_the_weapons_field(self):
+        for line in (self.CLEAN, self.HEAD + self.WEAPONS + "retaken=0 moved_out=0 moved_back=0"):
+            with self.subTest(line):
+                code, out = self.judge(self.LAUNCH, (self.HUNTERS, line))
+                self.assertEqual(verdict_of(out, self.HUNTERS), "PASS", out)
+                self.assertEqual(code, 0, out)
+
+    def test_one_clear_with_moved_out_above_0_fails_even_after_a_clean_one(self):
+        later = self.DEFECT.replace("w=1", "w=2").replace("moved_out=1481", "moved_out=1")
+        code, out = self.judge(self.LAUNCH, (self.HUNTERS, self.CLEAN), (self.HUNTERS, later))
+        self.assertEqual(verdict_of(out, self.HUNTERS), "FAIL", out)
+
+    def test_a_long_defeat_run_after_the_story_mission_is_not_read(self):
+        code, out = self.judge(self.LAUNCH, self.LD_LAUNCH, (self.HUNTERS, self.CLEAN))
+        self.assertEqual(verdict_of(out, self.HUNTERS), "NOT REACHED", out)
+
+    def test_a_hunters_result_fail_line_with_moved_out_0_passes_this_row(self):
+        line = self.CLEAN.replace("result=pass", "result=fail", 1)
+        code, out = self.judge(self.LAUNCH, (self.HUNTERS, line))
+        self.assertEqual(verdict_of(out, self.HUNTERS), "PASS", out)
+
+    def test_the_manifest_has_the_hunters_row_only(self):
+        code, out = self.judge(self.LAUNCH, (self.HUNTERS, self.CLEAN))
+        self.assertEqual(len(re.findall(r"^\s*(?:PASS|FAIL|NOT REACHED)\s+taom\.", out, re.M)), 1, out)
+
+
+class HeroWeapons1373Tests(unittest.TestCase):
+    """The real #1373 manifest over the hero spawn line and the hunters line of one Long Defeat run and one story run. Each hero has his
+    own weapon row, since a fallen hero is not in the hunters list. A hunters line from before #1373 has no weapons= field."""
+
+    LD_HERO = "taom.long-defeat.hero-gimli-axe"
+    ST_HERO = "taom.story-missions.hosted.hero-gimli-axe"
+    LD_LAUNCH = "[LongDefeat] launching taom_rohan_castle_helms_deep_forceatmo for fortress helms (autorun)"
+    ST_LAUNCH = "[StoryMissions] launching taom_rohan_castle_helms_deep_forceatmo for 'helms_deep_defend' (story1, autoplay True)"
+    TAIL = "mounted=0 formation=7 held=1 strangers=0 order=Move health_factor=3.00 wanted_factor=3.00 wielded="
+    HEAD = "result=pass w=2 standing=3 in_group=3 units=3 held=1 order=Move own=0 settled=10 near=3 kills=5 by=aragorn:3,gimli:2,legolas:0 health=aragorn:0.90,gimli:1.00,legolas:1.00"
+    TAILS = " retaken=0 moved_out=0 moved_back=0"
+    NOW = HEAD + " weapons=aragorn:TwoHandedSword,gimli:TwoHandedAxe,legolas:Bow" + TAILS
+    OLD = HEAD + TAILS
+
+    def setUp(self):
+        self.t = Tree(self)
+        self.t.real_manifest("1373.toml")
+        self.t.real_manifest("1337.toml")
+        self.t.real_manifest("1366.toml")
+
+    def judge(self, issue, *lines):
+        return judge_lines(self.t, issue, *lines)
+
+    def hunters(self, tail, hosted=False):
+        return ("taom.story-missions.hosted.hunters" if hosted else "taom.long-defeat.hunters", tail)
+
+    def hero_line(self, hero, item):
+        return f"result=pass hero={hero} troop=taom_hero_{hero} is_hero=0 campaign=1 " + self.TAIL + item
+
+    def test_a_hunters_line_with_aragorn_two_handed_passes_his_row_in_both_missions(self):
+        for hosted, launch, row in ((False, self.LD_LAUNCH, "taom.long-defeat.weapon-aragorn"),
+                                    (True, self.ST_LAUNCH, "taom.story-missions.hosted.weapon-aragorn")):
+            with self.subTest(row):
+                code, out = self.judge(1373, launch, self.hunters(self.NOW, hosted))
+                self.assertEqual(verdict_of(out, row), "PASS", out)
+
+    def test_each_hero_has_his_own_weapon_row(self):
+        code, out = self.judge(1373, self.LD_LAUNCH, self.hunters(self.NOW))
+        for hero in ("aragorn", "gimli", "legolas"):
+            self.assertEqual(verdict_of(out, "taom.long-defeat.weapon-" + hero), "PASS", out)
+
+    def test_a_fallen_hero_leaves_only_his_own_row_not_reached(self):
+        line = self.NOW.replace("by=aragorn:3,gimli:2,legolas:0", "by=gimli:2,legolas:0").replace(
+            "health=aragorn:0.90,gimli:1.00", "health=gimli:1.00").replace("weapons=aragorn:TwoHandedSword,", "weapons=")
+        code, out = self.judge(1373, self.LD_LAUNCH, self.hunters(line))
+        self.assertEqual(verdict_of(out, "taom.long-defeat.weapon-aragorn"), "NOT REACHED", out)
+        self.assertEqual(verdict_of(out, "taom.long-defeat.weapon-gimli"), "PASS", out)
+        self.assertEqual(verdict_of(out, "taom.long-defeat.weapon-legolas"), "PASS", out)
+
+    def test_aragorn_one_handed_fails_his_row(self):
+        line = self.NOW.replace("aragorn:TwoHandedSword", "aragorn:OneHandedSword")
+        for hosted, launch, row in ((False, self.LD_LAUNCH, "taom.long-defeat.weapon-aragorn"),
+                                    (True, self.ST_LAUNCH, "taom.story-missions.hosted.weapon-aragorn")):
+            with self.subTest(row):
+                code, out = self.judge(1373, launch, self.hunters(line, hosted))
+                self.assertEqual(verdict_of(out, row), "FAIL", out)
+                self.assertNotEqual(code, 0, out)
+
+    def test_an_old_hunters_line_with_no_weapons_is_not_reached_for_1373_and_still_passes_1337(self):
+        code, out = self.judge(1373, self.LD_LAUNCH, self.hunters(self.OLD))
+        for hero in ("aragorn", "gimli", "legolas"):
+            self.assertEqual(verdict_of(out, "taom.long-defeat.weapon-" + hero), "NOT REACHED", out)
+        code, out = self.judge(1337, self.hunters(self.OLD))
+        self.assertEqual(verdict_of(out, "taom.long-defeat.hunters"), "PASS", out)
+
+    def test_a_hunters_line_with_the_weapons_field_passes_1337_and_1366(self):
+        code, out = self.judge(1337, self.hunters(self.NOW))
+        self.assertEqual(verdict_of(out, "taom.long-defeat.hunters"), "PASS", out)
+        code, out = self.judge(1366, self.ST_LAUNCH, self.hunters(self.NOW, True))
+        self.assertEqual(verdict_of(out, "taom.story-missions.hosted.hunters"), "PASS", out)
+
+    def test_gimlis_spawn_line_passes_with_the_erebor_axe_and_fails_with_dains_axe(self):
+        head = "result=pass hero=gimli troop=taom_hero_gimli is_hero=1 campaign=0 " + self.TAIL
+        code, out = self.judge(1373, self.LD_LAUNCH, ("taom.long-defeat.hero", head + "sm_dwarf_erebor_axe_2h_c"))
+        self.assertEqual(verdict_of(out, self.LD_HERO), "PASS", out)
+        code, out = self.judge(1373, self.LD_LAUNCH, ("taom.long-defeat.hero", head + "sm_dwarf_dain_axe_a"))
+        self.assertEqual(verdict_of(out, self.LD_HERO), "FAIL", out)
+
+    def test_the_story_spawn_line_of_gimli_passes_with_the_erebor_axe_and_fails_with_dains_axe(self):
+        host = "taom.story-missions.hosted.hero"
+        code, out = self.judge(1373, self.ST_LAUNCH, (host, self.hero_line("gimli", "sm_dwarf_erebor_axe_2h_c")))
+        self.assertEqual(verdict_of(out, self.ST_HERO), "PASS", out)
+        code, out = self.judge(1373, self.ST_LAUNCH, (host, self.hero_line("gimli", "sm_dwarf_dain_axe_a")))
+        self.assertEqual(verdict_of(out, self.ST_HERO), "FAIL", out)
+
+    def test_a_failed_spawn_check_with_the_right_axe_still_passes_the_axe_rows(self):
+        # strangers=1 fails the spawn check (#1337's matter); the axe rows judge the axe only.
+        ld = "result=fail hero=gimli troop=taom_hero_gimli is_hero=1 campaign=0 " + self.TAIL.replace("strangers=0", "strangers=1")
+        code, out = self.judge(1373, self.LD_LAUNCH, ("taom.long-defeat.hero", ld + "sm_dwarf_erebor_axe_2h_c"))
+        self.assertEqual(verdict_of(out, self.LD_HERO), "PASS", out)
+        st = self.hero_line("gimli", "sm_dwarf_erebor_axe_2h_c").replace("result=pass", "result=fail").replace("strangers=0", "strangers=1")
+        code, out = self.judge(1373, self.ST_LAUNCH, ("taom.story-missions.hosted.hero", st))
+        self.assertEqual(verdict_of(out, self.ST_HERO), "PASS", out)
+
+    def test_a_refused_spawn_line_with_no_wielded_field_does_not_reach_the_axe_rows(self):
+        line = "result=fail hero=gimli troop=taom_hero_gimli problem=no_place_for_the_hero"
+        code, out = self.judge(1373, self.LD_LAUNCH, ("taom.long-defeat.hero", line))
+        self.assertEqual(verdict_of(out, self.LD_HERO), "NOT REACHED", out)
+        code, out = self.judge(1373, self.ST_LAUNCH, ("taom.story-missions.hosted.hero", line))
+        self.assertEqual(verdict_of(out, self.ST_HERO), "NOT REACHED", out)
+
+    def test_a_failed_spawn_check_with_dains_axe_fails_the_axe_row(self):
+        ld = "result=fail hero=gimli troop=taom_hero_gimli is_hero=1 campaign=0 " + self.TAIL + "sm_dwarf_dain_axe_a"
+        code, out = self.judge(1373, self.LD_LAUNCH, ("taom.long-defeat.hero", ld))
+        self.assertEqual(verdict_of(out, self.LD_HERO), "FAIL", out)
+
+    def test_the_1366_gimli_row_accepts_the_old_and_the_new_axe(self):
+        host = "taom.story-missions.hosted.hero"
+        for axe in ("sm_dwarf_dain_axe_a", "sm_dwarf_erebor_axe_2h_c"):
+            with self.subTest(axe):
+                heroes = [self.hero_line("aragorn", "strider_sword"), self.hero_line("legolas", "wm_mirkwood_bow_a01"),
+                          self.hero_line("gimli", axe)]
+                code, out = self.judge(1366, self.ST_LAUNCH, *[(host, h) for h in heroes])
+                self.assertEqual(verdict_of(out, host), "PASS", out)
+
+
 class StoryMissionRun1368Tests(unittest.TestCase):
     """The real #1368 manifest over the lines of one unattended story run. The done row has no scope: the driver writes one done line per
     process, and a failure before the launch has to read FAIL. The boot and ended rows stay scoped to the launch of helms_deep_defend."""

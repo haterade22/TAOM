@@ -16,12 +16,12 @@ namespace TAOM.Features.LongDefeat.Diagnostics;
 /// <see cref="HuntersId"/>, key <c>&lt;mission&gt;hw&lt;wave&gt;</c>, is written at each wave clear of a mission that spawned a hero: the heroes'
 /// formation (the units it holds, whether it is off AI control, its movement order and whether that is still the field's own order at the
 /// wall, <c>own=</c>), how many standing heroes are within <see cref="HeroGroup.NearMetres"/> of that place (<c>near=</c>), what each standing
-/// hero did (kills, health) and the director's running totals of the holds (<c>retaken=</c>, <c>moved_out=</c>, <c>moved_back=</c>). It passes
+/// hero did (kills, health, the weapon class in his hand: <c>weapons=</c>) and the director's running totals of the holds (<c>retaken=</c>, <c>moved_out=</c>, <c>moved_back=</c>). It passes
 /// when every standing hero is in the heroes' formation, the formation holds no one else, it is off AI control, and, once it has held the
 /// field's own order for <see cref="HeroGroup.SettleSeconds"/>, every standing hero is near the place on the ground and in height. A
 /// player's own order is never judged, and neither are heroes on their way after a new order. A hero the player controls (a take-over in a
 /// campaign, #1366) counts as near: he stands where the player wants him. <c>kills</c> is the engine's KillCount,
-/// which also counts knock-outs; it and the totals are reported, never judged. With no hero standing it is skipped.
+/// which also counts knock-outs; it, <c>weapons=</c> and the totals are reported, never judged. With no hero standing it is skipped.
 /// </summary>
 internal static class LongDefeatHeroChecks
 {
@@ -57,6 +57,7 @@ internal static class LongDefeatHeroChecks
             + $" own={(read.OwnOrder ? 1 : 0)} settled={settled} near={near} kills={facts.Sum(f => f.Kills)}"
             + " by=" + string.Join(",", facts.Select(f => f.Id + ":" + f.Kills))
             + " health=" + string.Join(",", facts.Select(f => f.Id + ":" + f.HealthShare.ToString("0.00", CultureInfo.InvariantCulture)))
+            + " weapons=" + string.Join(",", facts.Select(f => f.Id + ":" + Words(f.Weapon)))
             + $" retaken={totals.Retaken} moved_out={totals.MovedOut} moved_back={totals.MovedBack}";
         var placed = !read.OwnOrder || !(read.SettledSeconds >= HeroGroup.SettleSeconds) || near == facts.Count;
         return LongDefeatChecks.Verdict(inGroup == facts.Count && read.GroupUnits == inGroup && read.GroupHeld && placed, detail);

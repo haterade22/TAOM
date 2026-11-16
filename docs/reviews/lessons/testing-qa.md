@@ -2904,6 +2904,13 @@ The battle balance provider's new tests built `BattleBalanceConfig` objects in C
 
 **Source:** [rca-game-version-warning-2026-11-16.md](../rca-game-version-warning-2026-11-16.md) finding F9.
 
+### A root cause explains the case that works as well as the case that fails (#1370, 2026-11-16)
+
+**Why missed:** in the story mission the engine's castle tactic moved the garrison's foot into the heroes' formation about once a second before the first wave. One instrumented run in that mission showed the mechanism exactly. The cause of the difference from the Long Defeat was then read from the plan code (the Long Defeat has an opening split, the story plan has none) and a fix was built on it. Seven Long Defeat logs on disk showed the same muster with no split yet and no such move, so the split could not be the difference. The review found it; the investigation had not opened one of those logs.
+
+**Prevent:** before a cause is named for "A fails and B does not", state what B must show if the cause is right, and read it in a log or a run of B. Instrument both modes with the same lines, not only the failing one. A fix whose reason is a difference between two modes is not built until that difference is seen in evidence from both.
+
+**Source:** [rca-hero-weapons-2026-11-16.md](../rca-hero-weapons-2026-11-16.md) finding 1.
 ### A test that calls a static member runs the class's static constructor (#1223, 2026-11-16)
 The #1223 tests called a pure helper on `CustomAttacksUtils`. Any static call runs its explicit static constructor, which binds the engine and prints through `Debug`, so the tests needed `RequiresGame`. The same change moved lines in that file, and three `file:line` pins in a comment, a test message and a feature doc went stale; only the reflection pin has a gate.
 - **Prevent:** before you tag a test of a pure helper as engine-free, check whether its class has a static constructor. After you insert lines in a file, `grep -rn '<File>.cs:'` for its pins.

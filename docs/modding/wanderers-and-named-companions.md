@@ -155,7 +155,7 @@ A named companion, copied whole from its own file.
 			</Traits>
 			<Equipments>
 				<EquipmentRoster>
-				<equipment slot="Item0" id="Item.sm_dwarf_dain_axe_a" />
+				<equipment slot="Item0" id="Item.sm_dwarf_erebor_axe_2h_c" />
 				<equipment slot="Head" id="Item.sk_dwarf_erebor_helmet_leather_heavy_a"/>
 				<equipment slot="Cape" id="Item.sk_dwarf_iron_pauldron_medium_a"/>
 				<equipment slot="Body" id="Item.sk_dwarf_erebor_chest_leather_med_b"/>
