@@ -90,7 +90,7 @@ public class CareerPerkMissionBehavior : MissionBehavior
         if (result.JustBecameReady)
         {
             InformationManager.DisplayMessage(new InformationMessage(
-                "Career ability is ready! Press V to activate.", Colors.Green));
+                CareerAbilityMessages.Ready(result.KeyName).ToString(), Colors.Green));
         }
         if (result.Activated)
         {
@@ -103,7 +103,7 @@ public class CareerPerkMissionBehavior : MissionBehavior
             var remaining = (int)Math.Ceiling(_abilityService.GetCooldownRemaining(heroId));
             if (remaining < 1) remaining = 1;
             InformationManager.DisplayMessage(new InformationMessage(
-                $"Career ability still charging — {remaining}s remaining.", Colors.Gray));
+                CareerAbilityMessages.Charging(remaining).ToString(), Colors.Gray));
         }
 
         var currentTime = Mission.Current?.CurrentTime ?? 0f;

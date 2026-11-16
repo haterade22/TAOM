@@ -5580,5 +5580,185 @@
 	<string id="taom_res_name_dunlending_ale" text="{=taom_res_name_dunlending_ale}Dunlending Ale" />
 	<string id="taom_res_name_plunder" text="{=taom_res_name_plunder}Plunder" />
 	<string id="taom_res_name_war_banners" text="{=taom_res_name_war_banners}War Banners" />
+	<!-- harvested by tools/harvest_literal_loc_keys.py -->
+	<!-- CustomBattles -->
+	<string id="taom_tcb_your_army" text="{=taom_tcb_your_army}Your army" />
+	<string id="taom_tcb_enemy_army" text="{=taom_tcb_enemy_army}Enemy army" />
+	<string id="taom_tcb_title" text="{=taom_tcb_title}CUSTOM BATTLE" />
+	<string id="taom_tcb_armies" text="{=taom_tcb_armies}ARMIES" />
+	<string id="taom_tcb_battlefield" text="{=taom_tcb_battlefield}BATTLEFIELD" />
+	<string id="taom_tcb_start_battle" text="{=taom_tcb_start_battle}START BATTLE" />
+	<string id="taom_tcb_back" text="{=taom_tcb_back}BACK" />
+	<string id="taom_tcb_randomise" text="{=taom_tcb_randomise}RANDOMISE" />
+	<string id="taom_tcb_total_troops" text="{=taom_tcb_total_troops}{SUM} / {MAX} TROOPS" />
+	<string id="taom_tcb_summary" text="{=taom_tcb_summary}{PLAYER} ({PLAYER_TOTAL})   vs   {ENEMY} ({ENEMY_TOTAL})      |      {FIELD}" />
+	<string id="taom_tcb_too_many" text="{=taom_tcb_too_many}Too many men: the engine takes at most {MAX}" />
+	<string id="taom_tcb_choose_both_factions" text="{=taom_tcb_choose_both_factions}Choose both factions" />
+	<string id="taom_tcb_muster_player" text="{=taom_tcb_muster_player}Muster at least one unit for your army" />
+	<string id="taom_tcb_muster_enemy" text="{=taom_tcb_muster_enemy}Muster at least one unit for the enemy" />
+	<string id="taom_tcb_choose_battlefield" text="{=taom_tcb_choose_battlefield}Choose a battlefield" />
+	<string id="taom_tcb_no_commander" text="{=taom_tcb_no_commander}No commander found for a faction" />
+	<string id="taom_tcb_captain_needs_lord" text="{=taom_tcb_captain_needs_lord}A captain needs another lord of the faction to lead the army" />
+	<string id="taom_tcb_start_failed" text="{=taom_tcb_start_failed}Could not start: {ERROR}" />
+	<string id="taom_tcb_tier" text="{=taom_tcb_tier}Tier {TIER}" />
+	<string id="taom_tcb_group" text="{=taom_tcb_group}Group {ID}" />
+	<string id="taom_tcb_troops_line" text="{=taom_tcb_troops_line}{TOTAL} TROOPS" />
+	<string id="taom_tcb_troops" text="{=taom_tcb_troops}TROOPS" />
+	<string id="taom_tcb_change_faction" text="{=taom_tcb_change_faction}CHANGE FACTION" />
+	<string id="taom_tcb_banner_hint" text="{=taom_tcb_banner_hint}Click the pennant to change the banner" />
+	<string id="taom_tcb_commander_header" text="{=taom_tcb_commander_header}COMMANDER" />
+	<string id="taom_tcb_banner_header" text="{=taom_tcb_banner_header}BANNER" />
+	<string id="taom_tcb_choose_faction_header" text="{=taom_tcb_choose_faction_header}CHOOSE FACTION" />
+	<string id="taom_tcb_choose_commander_header" text="{=taom_tcb_choose_commander_header}CHOOSE COMMANDER" />
+	<string id="taom_tcb_available_header" text="{=taom_tcb_available_header}AVAILABLE TROOPS" />
+	<string id="taom_tcb_mustered_header" text="{=taom_tcb_mustered_header}MUSTERED ARMY" />
+	<string id="taom_tcb_search_placeholder" text="{=taom_tcb_search_placeholder}Search troops..." />
+	<string id="taom_tcb_empty_army" text="{=taom_tcb_empty_army}Add troops from the Available Troops list" />
+	<string id="taom_tcb_hint_text" text="{=taom_tcb_hint_text}Shift + click: 10    Ctrl + click: 100" />
+	<string id="taom_tcb_background" text="{=taom_tcb_background}BACKGROUND" />
+	<string id="taom_tcb_emblem_colour" text="{=taom_tcb_emblem_colour}EMBLEM COLOUR" />
+	<string id="taom_tcb_emblem" text="{=taom_tcb_emblem}EMBLEM" />
+	<string id="taom_tcb_background_colour" text="{=taom_tcb_background_colour}BACKGROUND COLOUR" />
+	<string id="taom_tcb_done" text="{=taom_tcb_done}DONE" />
+	<string id="taom_tcb_famous_hero" text="{=taom_tcb_famous_hero}Famous hero" />
+	<string id="taom_tcb_lord" text="{=taom_tcb_lord}Lord" />
+	<string id="taom_tcb_famous_commander" text="{=taom_tcb_famous_commander}Famous commander" />
+	<string id="taom_tcb_tier_class" text="{=taom_tcb_tier_class}{TIER}  ·  {CLASS}" />
+	<string id="taom_tcb_kind_infantry" text="{=taom_tcb_kind_infantry}Infantry" />
+	<string id="taom_tcb_kind_archers" text="{=taom_tcb_kind_archers}Archers" />
+	<string id="taom_tcb_kind_cavalry" text="{=taom_tcb_kind_cavalry}Cavalry" />
+	<string id="taom_tcb_kind_horse_archers" text="{=taom_tcb_kind_horse_archers}Horse archers" />
+	<string id="taom_tcb_kind_heroes" text="{=taom_tcb_kind_heroes}Heroes" />
+	<string id="taom_tcb_kind_all" text="{=taom_tcb_kind_all}All" />
+	<string id="taom_tcb_hero_one_man" text="{=taom_tcb_hero_one_man}Hero  ·  one man" />
+	<string id="taom_tcb_formation_options" text="{=taom_tcb_formation_options}FORMATION OPTIONS" />
+	<string id="taom_tcb_captain_caps" text="{=taom_tcb_captain_caps}CAPTAIN" />
+	<string id="taom_tcb_horn_caps" text="{=taom_tcb_horn_caps}HORN" />
+	<string id="taom_tcb_soldiers" text="{=taom_tcb_soldiers}{COUNT} soldiers" />
+	<string id="taom_tcb_soldiers_plus_roles" text="{=taom_tcb_soldiers_plus_roles}{COUNT} soldiers + {ROLES} from the unit's number" />
+	<string id="taom_tcb_banner_bearer" text="{=taom_tcb_banner_bearer}Banner Bearer" />
+	<string id="taom_tcb_captain" text="{=taom_tcb_captain}Captain" />
+	<string id="taom_tcb_horn_blower" text="{=taom_tcb_horn_blower}Horn Blower" />
+	<!-- ModuleRunner -->
+	<string id="taom_module_fault_summary" text="{=taom_module_fault_summary}TAOM: feature modules failed and are off this session: {MODULES}. The TAOM log names the cause." />
+	<!-- CareerSystem -->
+	<string id="taom_career_ability_ready" text="{=taom_career_ability_ready}Career ability is ready! Press {KEY} to activate." />
+	<string id="taom_career_ability_charging" text="{=taom_career_ability_charging}Career ability still charging — {SECONDS}s remaining." />
+	<string id="taom_career_path" text="{=taom_career_path}Path {LETTER}" />
+	<!-- CompanionTactics -->
+	<string id="taom_bab_hold_fire" text="{=taom_bab_hold_fire}Hold Fire" />
+	<string id="taom_bab_free_fire" text="{=taom_bab_free_fire}Free Fire" />
+	<string id="taom_bab_volley_fire" text="{=taom_bab_volley_fire}Volley Fire" />
+	<string id="taom_bab_brace" text="{=taom_bab_brace}Brace for Cavalry" />
+	<string id="taom_bab_pike_wall" text="{=taom_bab_pike_wall}Pike Wall" />
+	<string id="taom_bab_shield_wall" text="{=taom_bab_shield_wall}Shield Wall" />
+	<string id="taom_bab_testudo" text="{=taom_bab_testudo}Testudo" />
+	<string id="taom_bab_line_charge" text="{=taom_bab_line_charge}Line Charge" />
+	<string id="taom_bab_skirmish" text="{=taom_bab_skirmish}Skirmish" />
+	<string id="taom_fp_load_failed" text="{=taom_fp_load_failed}[TAOM] Formation presets could not be loaded — reset to empty (see log for details)." />
+	<string id="taom_role_bow" text="{=taom_role_bow}BOW" />
+	<string id="taom_role_xbw" text="{=taom_role_xbw}XBW" />
+	<string id="taom_role_inf" text="{=taom_role_inf}INF" />
+	<string id="taom_role_2h" text="{=taom_role_2h}2H" />
+	<string id="taom_role_pol" text="{=taom_role_pol}POL" />
+	<string id="taom_role_cav" text="{=taom_role_cav}CAV" />
+	<string id="taom_role_har" text="{=taom_role_har}H.AR" />
+	<string id="taom_role_skr" text="{=taom_role_skr}SKR" />
+	<string id="taom_role_1h" text="{=taom_role_1h}1H" />
+	<string id="taom_role_slg" text="{=taom_role_slg}SLG" />
+	<!-- Elephant -->
+	<string id="taom_howdah_enter" text="{=taom_howdah_enter}Enter" />
+	<string id="taom_howdah_seat" text="{=taom_howdah_seat}Howdah Seat" />
+	<!-- EquipPresets -->
+	<string id="taom_ep_button" text="{=taom_ep_button}Presets" />
+	<string id="taom_ep_mount_yes" text="{=taom_ep_mount_yes}yes" />
+	<string id="taom_ep_mount_no" text="{=taom_ep_mount_no}no" />
+	<!-- FactionMap -->
+	<string id="taom_fm_choose_realm" text="{=taom_fm_choose_realm}Choose your Realm" />
+	<string id="taom_fm_side_free" text="{=taom_fm_side_free}Free Peoples" />
+	<string id="taom_fm_side_evil" text="{=taom_fm_side_evil}Forces of Evil" />
+	<string id="taom_fm_side_neutral" text="{=taom_fm_side_neutral}Neutral" />
+	<!-- MixedFormations -->
+	<string id="taom_mf_scope_selected" text="{=taom_mf_scope_selected}selected" />
+	<string id="taom_mf_scope_all" text="{=taom_mf_scope_all}all" />
+	<string id="taom_mf_layout_changed" text="{=taom_mf_layout_changed}[MixedFormations] Layout ({SCOPE}) → {LAYOUT}" />
+	<string id="taom_mf_layout_inf_front" text="{=taom_mf_layout_inf_front}Infantry front, Ranged back" />
+	<string id="taom_mf_layout_ranged_front" text="{=taom_mf_layout_ranged_front}Ranged front, Infantry back" />
+	<string id="taom_mf_layout_ranged_wings" text="{=taom_mf_layout_ranged_wings}Ranged wings, Infantry center" />
+	<string id="taom_mf_layout_checkerboard" text="{=taom_mf_layout_checkerboard}Checkerboard" />
+	<!-- Mumakil -->
+	<string id="taom_mumakil_climb" text="{=taom_mumakil_climb}Climb" />
+	<string id="taom_mumakil_platform" text="{=taom_mumakil_platform}Mumakil Platform" />
+	<!-- QuickActions -->
+	<string id="taom_qa_sell_damaged" text="{=taom_qa_sell_damaged}Sell Damaged" />
+	<string id="taom_qa_sell_damaged_hint" text="{=taom_qa_sell_damaged_hint}Sells damaged items below your configured threshold." />
+	<string id="taom_qa_sell_low_value" text="{=taom_qa_sell_low_value}Sell Low Value (≤{DENARS} denars)" />
+	<string id="taom_qa_sell_low_value_hint" text="{=taom_qa_sell_low_value_hint}Sells items at or below your denars threshold." />
+	<string id="taom_qa_unequip_all" text="{=taom_qa_unequip_all}Unequip All" />
+	<string id="taom_qa_unequip_all_hint" text="{=taom_qa_unequip_all_hint}Strips your battle + civilian equipment to inventory." />
+	<string id="taom_qa_sell_all_vanilla" text="{=taom_qa_sell_all_vanilla}Sell All (Vanilla)" />
+	<string id="taom_qa_sell_all_vanilla_hint" text="{=taom_qa_sell_all_vanilla_hint}Default Bannerlord behavior." />
+	<!-- ShaderPrecompilation -->
+	<string id="taom_spc_none_aborted" text="{=taom_spc_none_aborted}0 aborted" />
+	<string id="taom_spc_aborted" text="{=taom_spc_aborted}{COUNT} aborted, see the log" />
+	<string id="taom_spc_complete" text="{=taom_spc_complete}Shader pre-compilation COMPLETE: {ITEMS} items, {ABORTED}, in {TIME}. You can play now." />
+	<string id="taom_spc_incomplete" text="{=taom_spc_incomplete}Shader pre-compilation INCOMPLETE: no troop shaders were compiled because the first batch never loaded ({ABORTED}, {TIME}). Check the log and run it again." />
+	<string id="taom_spc_cancelling" text="{=taom_spc_cancelling}Shader pre-compilation cancelling..." />
+	<string id="taom_spc_cancelled" text="{=taom_spc_cancelled}Shader pre-compilation cancelled." />
+	<string id="taom_spc_stopped_battle" text="{=taom_spc_stopped_battle}Shader pre-compilation stopped: another battle was started. Run it again from the main menu." />
+	<string id="taom_spc_stopped" text="{=taom_spc_stopped}Shader pre-compilation stopped: {REASON}. Quit to the main menu and run it again." />
+	<string id="taom_spc_gpu_crash" text="{=taom_spc_gpu_crash}{COUNT} scene(s) crashed your GPU on a previous shader pre-compile. To help fix it, send the latest Bannerlord 'Application Error' from Windows Event Viewer (eventvwr.msc -&gt; Windows Logs -&gt; Application) to the TAOM author. Details are in the Logs folder." />
+	<string id="taom_spc_loading" text="{=taom_spc_loading}loading" />
+	<string id="taom_spc_shaders_left" text="{=taom_spc_shaders_left}{COUNT} shaders" />
+	<string id="taom_spc_progress" text="{=taom_spc_progress}Pre-compiling shaders — {INDEX}/{TOTAL}: {ITEM} — {REMAINING} (item {ITEM_TIME}, total {TOTAL_TIME}) — Ctrl+Shift+K to cancel" />
+	<!-- SpecialResources -->
+	<string id="taom_res_upgrade_cost_hint" text="{=taom_res_upgrade_cost_hint}{RESOURCE} cost: {COST} per troop (have {HAVE})" />
+	<string id="taom_res_earned" text="{=taom_res_earned}+{AMOUNT} {RESOURCE} from {SOURCE}" />
+	<string id="taom_res_source_victory" text="{=taom_res_source_victory}victory" />
+	<string id="taom_res_source_raid" text="{=taom_res_source_raid}raid" />
+	<string id="taom_res_source_hideout" text="{=taom_res_source_hideout}hideout" />
+	<string id="taom_res_source_tournament" text="{=taom_res_source_tournament}tournament" />
+	<string id="taom_res_source_prisoners" text="{=taom_res_source_prisoners}prisoners" />
+	<string id="taom_res_running_out" text="{=taom_res_running_out}{RESOURCE} running out: {BALANCE} left, losing {LOSS}/day" />
+	<!-- Warg -->
+	<string id="taom_warg_rage_over" text="{=taom_warg_rage_over}You are able to control your warg again!" />
+	<string id="taom_warg_rage_start" text="{=taom_warg_rage_start}Your warg entered into a rage, you lost control!" />
+	<!-- harvested by tools/harvest_literal_loc_keys.py -->
+	<!-- CustomBattles -->
+	<string id="taom_tcb_game_type" text="{=taom_tcb_game_type}Game Type" />
+	<string id="taom_tcb_player_type" text="{=taom_tcb_player_type}Player Type" />
+	<string id="taom_tcb_type_commander" text="{=taom_tcb_type_commander}Commander" />
+	<string id="taom_tcb_type_captain" text="{=taom_tcb_type_captain}Captain" />
+	<string id="taom_tcb_player_side" text="{=taom_tcb_player_side}Player Side" />
+	<string id="taom_tcb_map" text="{=taom_tcb_map}Map" />
+	<string id="taom_tcb_maps_shown" text="{=taom_tcb_maps_shown}Maps Shown" />
+	<string id="taom_tcb_maps_taom" text="{=taom_tcb_maps_taom}TAOM maps" />
+	<string id="taom_tcb_maps_all" text="{=taom_tcb_maps_all}All maps" />
+	<string id="taom_tcb_season" text="{=taom_tcb_season}Season" />
+	<string id="taom_tcb_time_of_day" text="{=taom_tcb_time_of_day}Time of Day" />
+	<string id="taom_tcb_walls" text="{=taom_tcb_walls}Walls" />
+	<string id="taom_tcb_town_level" text="{=taom_tcb_town_level}Town Level" />
+	<string id="taom_tcb_level" text="{=taom_tcb_level}Level {LEVEL}" />
+	<string id="taom_tcb_attacker_engines" text="{=taom_tcb_attacker_engines}Attacker Engines" />
+	<string id="taom_tcb_eng_ram_towers" text="{=taom_tcb_eng_ram_towers}Ram and two towers" />
+	<string id="taom_tcb_eng_ram" text="{=taom_tcb_eng_ram}Ram only" />
+	<string id="taom_tcb_eng_towers" text="{=taom_tcb_eng_towers}Two towers" />
+	<string id="taom_tcb_eng_ladders" text="{=taom_tcb_eng_ladders}Ladders only" />
+	<string id="taom_tcb_attacker_artillery" text="{=taom_tcb_attacker_artillery}Attacker Artillery" />
+	<string id="taom_tcb_eng_none" text="{=taom_tcb_eng_none}None" />
+	<string id="taom_tcb_eng_catapults" text="{=taom_tcb_eng_catapults}Two catapults" />
+	<string id="taom_tcb_eng_trebuchet" text="{=taom_tcb_eng_trebuchet}Trebuchet and catapults" />
+	<string id="taom_tcb_defender_engines" text="{=taom_tcb_defender_engines}Defender Engines" />
+	<string id="taom_tcb_eng_ballistas" text="{=taom_tcb_eng_ballistas}Ballistas" />
+	<string id="taom_tcb_eng_catapults_ballistas" text="{=taom_tcb_eng_catapults_ballistas}Catapults and ballistas" />
+	<string id="taom_tcb_preview_header" text="{=taom_tcb_preview_header}BATTLEFIELD PREVIEW" />
+	<string id="taom_tcb_settings_header" text="{=taom_tcb_settings_header}BATTLE SETTINGS" />
+	<string id="taom_tcb_field_tagline" text="{=taom_tcb_field_tagline}Choose the field upon which your armies shall meet." />
+	<string id="taom_tcb_no_map_for_type" text="{=taom_tcb_no_map_for_type}No map for this battle type" />
+	<string id="taom_tcb_no_preview" text="{=taom_tcb_no_preview}No preview of this map yet" />
+	<string id="taom_tcb_no_map" text="{=taom_tcb_no_map}no map" />
+	<string id="taom_tcb_banner_caps" text="{=taom_tcb_banner_caps}BANNER" />
+	<!-- CareerSystem -->
+	<string id="taom_career_ability_ready_unbound" text="{=taom_career_ability_ready_unbound}Career ability is ready! Bind its key under Options, Keybindings to activate it." />
 
 </strings>

@@ -39,10 +39,10 @@ public class TaomHowdahMachine : UsableMachine
     private HowdahDiagnosticsReporter _reporter;
 
     public override TextObject GetActionTextForStandingPoint(UsableMissionObject usableGameObject)
-        => new TextObject("Enter");
+        => new TextObject("{=taom_howdah_enter}Enter");
 
     public override TextObject GetDescriptionText(WeakGameEntity gameEntity, Agent requesterAgent)
-        => new TextObject("Howdah Seat");
+        => new TextObject("{=taom_howdah_seat}Howdah Seat");
 
     // 0 = no detachment; seats are pre-filled at spawn, dead crew stay empty for the battle.
     protected override float GetDetachmentWeightAux(BattleSideEnum side) => 0f;

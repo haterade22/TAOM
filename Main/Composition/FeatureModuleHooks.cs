@@ -4,6 +4,7 @@ using DryIoc;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.Core;
 using TaleWorlds.Library;
+using TaleWorlds.Localization;
 using TaleWorlds.MountAndBlade;
 
 namespace TAOM.Composition;
@@ -148,14 +149,14 @@ internal static class FeatureModuleHooks
     {
         if (notice == FaultNotice.Hold) return;
 
-        var summary = runner.TakeFaultSummary();
+        var summary = runner.TakeFaultSummary()?.ToString();
         if (summary == null) return;
 
         try
         {
             if (notice == FaultNotice.Inquiry)
                 InformationManager.ShowInquiry(new InquiryData(
-                    "TAOM", summary, true, false, "OK", string.Empty, null, null));
+                    "TAOM", summary, true, false, new TextObject("{=yS7PvrTD}OK").ToString(), string.Empty, null, null));
             else
                 InformationManager.DisplayMessage(new InformationMessage(summary, Colors.Red));
         }

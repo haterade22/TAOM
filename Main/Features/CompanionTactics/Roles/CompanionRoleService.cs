@@ -37,16 +37,16 @@ public sealed class CompanionRoleService : ICompanionRoleService
 
     public string GetRoleShortText(CombatRole role) => role switch
     {
-        CombatRole.Archer => "BOW",
-        CombatRole.Crossbow => "XBW",
-        CombatRole.ShieldInfantry => "INF",
-        CombatRole.TwoHanded => "2H",
-        CombatRole.Polearm => "POL",
-        CombatRole.Cavalry => "CAV",
-        CombatRole.HorseArcher => "H.AR",
-        CombatRole.Skirmisher => "SKR",
-        CombatRole.OneHanded => "1H",
-        CombatRole.Slinger => "SLG",
+        CombatRole.Archer => "{=taom_role_bow}BOW",
+        CombatRole.Crossbow => "{=taom_role_xbw}XBW",
+        CombatRole.ShieldInfantry => "{=taom_role_inf}INF",
+        CombatRole.TwoHanded => "{=taom_role_2h}2H",
+        CombatRole.Polearm => "{=taom_role_pol}POL",
+        CombatRole.Cavalry => "{=taom_role_cav}CAV",
+        CombatRole.HorseArcher => "{=taom_role_har}H.AR",
+        CombatRole.Skirmisher => "{=taom_role_skr}SKR",
+        CombatRole.OneHanded => "{=taom_role_1h}1H",
+        CombatRole.Slinger => "{=taom_role_slg}SLG",
         _ => string.Empty,
     };
 

@@ -5,6 +5,7 @@ using TaleWorlds.Library;
 using TaleWorlds.MountAndBlade;
 using TAOM.Adapters;
 using TAOM.Core.Logging;
+using TaleWorlds.Localization;
 
 namespace TAOM.Features.MixedFormations.Hooks;
 
@@ -130,13 +131,15 @@ public sealed class MixedFormationsMissionBehavior : MissionBehavior
         if (!TryGetTeamAdapters(out var allFormations, out var selectedFormations)) return;
 
         var target = selectedFormations.Count > 0 ? selectedFormations : allFormations;
-        var scope = selectedFormations.Count > 0 ? "selected" : "all";
+        var scope = selectedFormations.Count > 0 ? "{=taom_mf_scope_selected}selected" : "{=taom_mf_scope_all}all";
 
         var (newLayout, affected) = _service.CycleLayouts(target);
         if (affected > 0)
         {
             InformationManager.DisplayMessage(new InformationMessage(
-                $"[MixedFormations] Layout ({scope}) → {Models.FormationLayoutLabels.Describe(newLayout)}",
+                new TextObject("{=taom_mf_layout_changed}[MixedFormations] Layout ({SCOPE}) → {LAYOUT}")
+                    .SetTextVariable("SCOPE", new TextObject(scope))
+                    .SetTextVariable("LAYOUT", new TextObject(Models.FormationLayoutLabels.Describe(newLayout))).ToString(),
                 Colors.Yellow));
         }
     }

@@ -7,6 +7,7 @@ using TaleWorlds.GauntletUI.Data;
 using TAOM.Adapters;
 using TAOM.Core.Logging;
 using TAOM.Features.FactionMap.ViewModels;
+using TaleWorlds.Localization;
 
 namespace TAOM.Features.FactionMap.Hooks;
 
@@ -125,7 +126,8 @@ public class CultureStageViewCreatedHook : IOnCultureStageViewCreated
             {
                 var titleProp = AccessTools.Property(_originalDataSource.GetType(), "Title");
                 if (titleProp != null)
-                    _factionVM.Title = titleProp.GetValue(_originalDataSource) as string ?? "Choose your Realm";
+                    _factionVM.Title = titleProp.GetValue(_originalDataSource) as string
+                        ?? new TextObject("{=taom_fm_choose_realm}Choose your Realm").ToString();
             }
 
             _progressionService.LoadFactionMapResources();
