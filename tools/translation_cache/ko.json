@@ -1916,7 +1916,6 @@
   "TAOM_LD_Offer_Yeomen": "이스트폴드 자유농병",
   "TAOM_LD_Prompt_Cancel": "취소",
   "TAOM_LD_Prompt_ChoiceBest": "{NAME}, 최고 기록: 격퇴한 공세 {WAVES}, 처치 {KILLS}",
-  "TAOM_LD_Prompt_ChoiceClass": "{NAME}: {TEXT}",
   "TAOM_LD_Prompt_Choose": "선택",
   "TAOM_LD_Prompt_ClassDesc": "직업에 따라 전투에 들고 갈 무기가 정해집니다. 기병은 갑옷도 정해지고 말을 타게 되며, 다른 직업은 갑옷을 그대로 둡니다.",
   "TAOM_LD_Prompt_ClassTitle": "직업을 선택하십시오",

@@ -102,9 +102,10 @@ class ItemInfo:
 
 
 def load_plain_items(modules: Path) -> dict[str, ItemInfo]:
-    """Every `<Item>` across the loaded modules with the numbers this page shows."""
+    """Every `<Item>` across the loaded modules with the numbers this page shows. The modules are the
+    catalogue's (#1372): NavalDLC's stubs of SandBoxCore items would otherwise win on folder order."""
     out: dict[str, ItemInfo] = {}
-    for module in sorted(p for p in modules.iterdir() if p.is_dir()):
+    for module in mc.module_dirs(modules):
         data = module / "ModuleData"
         if not data.is_dir():
             continue

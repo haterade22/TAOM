@@ -61,15 +61,66 @@ public sealed class CheatMenuService
     private readonly ICoopSessionProvider _coop;
     private readonly IDedicatedServerProvider _dedicated;
     private readonly IModLogger _logger;
+    private readonly ICheatPartyRules _partyRules;
+    private readonly IPartySizeCacheInvalidator _partySizeCache;
 
     public CheatMenuService(ICheatWorldAdapter world, ISpecialResourceService resources, ICoopSessionProvider coop,
-        IDedicatedServerProvider dedicated, IModLogger logger)
+        IDedicatedServerProvider dedicated, IModLogger logger, ICheatPartyRules partyRules, IPartySizeCacheInvalidator partySizeCache)
     {
         _world = world;
         _resources = resources;
         _coop = coop;
         _dedicated = dedicated;
         _logger = logger;
+        _partyRules = partyRules;
+        _partySizeCache = partySizeCache;
+    }
+
+    /// <summary>The "Unlimited party" switch (<see cref="ICheatPartyRules"/>): no size limit and no desertion of enemy troops for the player's party.</summary>
+    public bool UnlimitedParty => _partyRules.UnlimitedParty;
+
+    /// <summary>
+    /// Turns the "Unlimited party" switch on or off, in force at once. Turning it off removes no troop: the game's own rules
+    /// apply again.
+    /// </summary>
+    public CheatOutcome SetUnlimitedParty(bool on)
+    {
+        if (!IsSinglePlayer) return Refused();
+        _partyRules.UnlimitedParty = on;
+        RefreshMainPartySizeLimit();
+        return Log("unlimited party", new CheatOutcome(CheatOutcomeKind.Done, on ? "on" : "off", on ? 1 : 0));
+    }
+
+    /// <summary>
+    /// At session launch, after the save is read. Only the setter checks co-op, so a single-player save with the switch on,
+    /// loaded into a shared session, has it turned off here. A switch loaded on also refreshes the party's cached size limit.
+    /// </summary>
+    public void ReconcileAtSessionLaunch()
+    {
+        if (!_partyRules.UnlimitedParty) return;
+        if (!IsSinglePlayer)
+        {
+            _partyRules.UnlimitedParty = false;
+            _logger.LogInfo("[CheatMenu] unlimited party: turned off, not single player");
+        }
+        RefreshMainPartySizeLimit();
+    }
+
+    /// <summary>
+    /// After the player changes character (heir selection, Player Switcher). MainParty moves to the new hero with no roster
+    /// change, so the old party, now AI-led, would keep the cached +10,000 limit: refresh every party while the switch is on.
+    /// </summary>
+    public void OnPlayerCharacterChanged()
+    {
+        if (_partyRules.UnlimitedParty) _partySizeCache.InvalidateAll();
+    }
+
+    // PartyBase.PartySizeLimit is cached until the roster's VersionNo changes, so a flip would otherwise show only after some
+    // roster change. The main hero leads the main party; the invalidator also refreshes the army leader party (its speed cache).
+    private void RefreshMainPartySizeLimit()
+    {
+        var heroId = _world.MainHeroIds().HeroId;
+        if (heroId != null) _partySizeCache.InvalidateLedBy(new[] { heroId });
     }
 
     /// <summary>Read live on every call (ICoopSessionProvider's contract).</summary>

@@ -83,6 +83,20 @@ class ReaderTests(GateCase):
         self.assertEqual(code, 1)
         self.assertIn("taom_dead", out)
 
+    def test_unread_realms_and_upper_case_taom_rows_fail(self):
+        # #1377: the Realms features write realms_ keys and several features TAOM_ keys (#1130).
+        # A taom_ row is present, so the old gate passed silently instead of stopping at "no rows".
+        self.strings("taom_read", "realms_dead", "TAOM_Dead", "realms_read", "TAOM_Read")
+        _write(self.root / "Main/F.cs",
+               'class F { string a = "{=realms_read}x"; string b = "{=TAOM_Read}y"; string c = "{=taom_read}z"; }')
+        code, out, _ = self.run_gate()
+        self.assertEqual(code, 1)
+        self.assertIn("checked 5 rows", out)
+        self.assertIn("UNREAD realms_dead", out)
+        self.assertIn("UNREAD TAOM_Dead", out)
+        self.assertNotIn("UNREAD realms_read", out)
+        self.assertNotIn("UNREAD TAOM_Read", out)
+
     def test_csharp_literal_reader_passes(self):
         self.strings("taom_a", "taom_b")
         _write(self.root / "Main/Feature.cs",
@@ -382,7 +396,7 @@ class BadInputTests(GateCase):
         with redirect_stdout(out), redirect_stderr(err):
             code = cor.main(["--repo-root", str(self.root)])
         self.assertEqual(code, 2)
-        self.assertIn("no taom_ rows", err.getvalue())
+        self.assertIn("no TAOM-prefixed rows", err.getvalue())
 
     def test_a_deleted_listed_source_is_a_finding(self):
         self.strings("taom_a")

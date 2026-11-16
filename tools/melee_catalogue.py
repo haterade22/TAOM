@@ -8,7 +8,11 @@ each item's primary usage, and hands back priced weapons.
 Why the merge matters. `MBObjectManager.CreateMergedXmlFile` applies every module's XSLT onto
 Native's base XML, so the Armory's `crafting_templates.xslt` and `weapon_descriptions.xslt`
 change both the build orders and the available-piece sets. Reading Native alone, or matching
-the XSLT with a regex, gets a different weapon than the one that ships.
+the XSLT with a regex, gets a different weapon than the one that ships. The stylesheets are the
+ones each module's SubModule.xml `<XmlName>` rows name, and the modules TAOM lists under
+`<IncompatibleModules>` (NavalDLC) are left out of every loader, by the same rule as
+`audit_polearm_shield_parity.py` (#1372). TAOM's own placeholder sheets are left out of the chain:
+the callers that price placeholders add them from the tree they check.
 
 Two things that are easy to get wrong and that this module gets from the data rather than a
 hardcoded table:
@@ -35,6 +39,9 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 import melee_damage as md
+
+# TAOM's own SubModule.xml: its <IncompatibleModules> (NavalDLC) never load beside it (#1372).
+TAOM_SUBMODULE = Path(__file__).resolve().parent.parent / "Main" / "_Module" / "SubModule.xml"
 
 try:
     from lxml import etree as LET
@@ -264,28 +271,58 @@ def _parse(path: Path):
     return LET.parse(str(path), LET.XMLParser(recover=True, huge_tree=True))
 
 
-def merged(modules: Path, name: str):
-    """Native's XML with every module's same-named XSLT chained on, as the engine merges it.
+def _gate():
+    """The shield gate, whose module and stylesheet rules this module shares (#1372).
 
-    Copied in shape from `tools/audit_polearm_shield_parity.py:merged`, which established
-    that a sorted module order gives the same document as load order for TAOM's additive
-    transforms.
+    Imported on first use: the gate needs lxml, and this module stays importable without it.
     """
     if LET is None:
-        raise CatalogueError("lxml is required to apply the module XSLT chain")
-    base = modules / "Native" / "ModuleData" / f"{name}.xml"
-    if not base.is_file():
-        raise CatalogueError(f"missing base XML: {base}")
-    doc = _parse(base)
-    for module in sorted(p for p in modules.iterdir() if p.is_dir()):
-        sheet = module / "ModuleData" / f"{name}.xslt"
-        if sheet.is_file():
-            doc = LET.XSLT(_parse(sheet))(doc)
+        raise CatalogueError("lxml is required to read SubModule.xml rows")
+    import audit_polearm_shield_parity as gate
+    return gate
+
+
+def module_dirs(modules: Path, without_taom: bool = False) -> list[Path]:
+    """The installed module folders to read, in sorted order, without the ones TAOM's
+    SubModule.xml lists as incompatible (NavalDLC never loads beside TAOM).
+
+    `without_taom` also leaves out TAOM itself, for the stylesheet chain: the callers that price
+    TAOM's placeholders add the registrations from their own tree (`taom_schema.price_placeholders`,
+    `generate_placeholder_weapons.price_new`), so a deployed copy must not count beside them.
+    """
+    gate = _gate()
+    if not TAOM_SUBMODULE.is_file():
+        raise CatalogueError(f"missing {TAOM_SUBMODULE}: it names the modules that never load beside TAOM")
+    try:
+        skip = gate.incompatible(TAOM_SUBMODULE)
+        if without_taom:
+            id_node = gate._submodule(TAOM_SUBMODULE).find("Id")
+            skip |= {id_node.get("value") if id_node is not None else ""}
+        return gate.module_dirs(modules, None, skip)
+    except gate.GateInputError as exc:
+        raise CatalogueError(str(exc)) from exc
+
+
+def merged(modules: Path, name: str, xml_id: str):
+    """Native's `<name>.xml` with every module's `xml_id` stylesheets chained on, as the engine
+    merges it: the sheets each module's SubModule.xml rows name, in row order. TAOM's own sheets
+    are left out (see module_dirs).
+
+    A sorted module order gives the same document as load order for TAOM's additive transforms
+    (`audit_polearm_shield_parity.merged`).
+    """
+    gate = _gate()
+    try:
+        doc = gate.merged(module_dirs(modules, without_taom=True), name, xml_id)
+    except gate.GateInputError as exc:
+        raise CatalogueError(str(exc)) from exc
+    if doc is None:
+        raise CatalogueError(f"missing base XML: {modules / 'Native' / 'ModuleData' / f'{name}.xml'}")
     return doc
 
 
 def load_templates(modules: Path) -> dict[str, Template]:
-    doc = merged(modules, "crafting_templates")
+    doc = merged(modules, "crafting_templates", "CraftingTemplates")
     out: dict[str, Template] = {}
     for node in doc.getroot().iter("CraftingTemplate"):
         tid = node.get("id")
@@ -312,7 +349,7 @@ def load_templates(modules: Path) -> dict[str, Template]:
 
 
 def load_descriptions(modules: Path) -> dict[str, Description]:
-    doc = merged(modules, "weapon_descriptions")
+    doc = merged(modules, "weapon_descriptions", "WeaponDescriptions")
     out: dict[str, Description] = {}
     for node in doc.getroot().iter("WeaponDescription"):
         did = node.get("id")
@@ -342,7 +379,7 @@ def load_pieces(modules: Path) -> dict[str, md.Piece]:
     wins and the duplicate is ignored, which matches how the other TAOM audits behave.
     """
     out: dict[str, md.Piece] = {}
-    for module in sorted(p for p in modules.iterdir() if p.is_dir()):
+    for module in module_dirs(modules):
         data = module / "ModuleData"
         if not data.is_dir():
             continue
@@ -390,7 +427,7 @@ def load_items(modules: Path, only: set[str] | None = None) -> dict[str, Item]:
     if LET is None:
         raise CatalogueError("lxml is required")
     out: dict[str, Item] = {}
-    for module in sorted(p for p in modules.iterdir() if p.is_dir()):
+    for module in module_dirs(modules):
         if only is not None and module.name not in only:
             continue
         data = module / "ModuleData"
@@ -519,7 +556,7 @@ def load_shield_ids(modules: Path) -> set[str]:
     if LET is None:
         raise CatalogueError("lxml is required")
     out: set[str] = set()
-    for module in sorted(p for p in modules.iterdir() if p.is_dir()):
+    for module in module_dirs(modules):
         data = module / "ModuleData"
         if not data.is_dir():
             continue
@@ -539,7 +576,7 @@ def load_shield_ids(modules: Path) -> set[str]:
 def load_excluded_features(modules: Path) -> dict[str, frozenset[str]]:
     """piece id -> the usage-feature tokens it excludes, which reshape the usage-set id."""
     out: dict[str, frozenset[str]] = {}
-    for module in sorted(p for p in modules.iterdir() if p.is_dir()):
+    for module in module_dirs(modules):
         data = module / "ModuleData"
         if not data.is_dir():
             continue

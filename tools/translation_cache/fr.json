@@ -1926,7 +1926,6 @@
   "TAOM_LD_Offer_Yeomen": "Francs-tenanciers du Folde Est",
   "TAOM_LD_Prompt_Cancel": "Annuler",
   "TAOM_LD_Prompt_ChoiceBest": "{NAME}, meilleure partie : vagues repoussées {WAVES}, victimes {KILLS}",
-  "TAOM_LD_Prompt_ChoiceClass": "{NAME} : {TEXT}",
   "TAOM_LD_Prompt_Choose": "Choisir",
   "TAOM_LD_Prompt_ClassDesc": "Votre classe détermine les armes que vous emportez au combat. La cavalerie fixe aussi votre armure et vous met en selle ; les autres classes laissent votre armure telle quelle.",
   "TAOM_LD_Prompt_ClassTitle": "Choisissez votre classe",

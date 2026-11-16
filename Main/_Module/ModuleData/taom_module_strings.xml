@@ -2484,6 +2484,13 @@
 	<string id="taom_cheat_tp_villages" text="{=taom_cheat_tp_villages}Villages..." />
 	<string id="taom_cheat_troop_row" text="{=taom_cheat_troop_row}Tier {TIER}: {NAME}" />
 	<string id="taom_cheat_troops_any" text="{=taom_cheat_troops_any}+10 of any troop of your faction..." />
+	<string id="taom_cheat_opt_unlimited_party" text="{=taom_cheat_opt_unlimited_party}Unlimited party: {STATE}" />
+	<string id="taom_cheat_state_off" text="{=taom_cheat_state_off}off" />
+	<string id="taom_cheat_state_on" text="{=taom_cheat_state_on}on" />
+	<string id="taom_cheat_unlimited_party_hint" text="{=taom_cheat_unlimited_party_hint}While on, your party has no troop limit, and troops of enemy or opposite-alignment cultures in it do not desert because of their culture. Turning it off keeps every troop, but the usual rules apply again: men over the troop limit start to desert, morale drops and the party is slower." />
+	<string id="taom_cheat_unlimited_party_bonus" text="{=taom_cheat_unlimited_party_bonus}Unlimited party (cheat)" />
+	<string id="taom_cheat_unlimited_party_off" text="{=taom_cheat_unlimited_party_off}Unlimited party is off: the size limit and desertion apply again." />
+	<string id="taom_cheat_unlimited_party_on" text="{=taom_cheat_unlimited_party_on}Unlimited party is on: no size limit, and enemy troops in your party do not desert because of their culture." />
 	<string id="taom_cheat_troops_basic" text="{=taom_cheat_troops_basic}+10 basic recruits" />
 	<string id="taom_cheat_troops_elite" text="{=taom_cheat_troops_elite}+10 elite recruits" />
 	<string id="taom_cheat_troops_screen" text="{=taom_cheat_troops_screen}Every troop (party screen)..." />
@@ -4947,7 +4954,6 @@
 	<string id="TAOM_LD_Hero_Gimli_Text" text="{=TAOM_LD_Hero_Gimli_Text}The son of Glóin and his axe. If he falls, he can be called again." />
 	<string id="TAOM_LD_Prompt_Cancel" text="{=TAOM_LD_Prompt_Cancel}Cancel" />
 	<string id="TAOM_LD_Prompt_ChoiceBest" text="{=TAOM_LD_Prompt_ChoiceBest}{NAME}, best run: waves cleared {WAVES}, kills {KILLS}" />
-	<string id="TAOM_LD_Prompt_ChoiceClass" text="{=TAOM_LD_Prompt_ChoiceClass}{NAME}: {TEXT}" />
 	<string id="TAOM_LD_Prompt_Choose" text="{=TAOM_LD_Prompt_Choose}Choose" />
 	<string id="TAOM_LD_Prompt_ClassDesc" text="{=TAOM_LD_Prompt_ClassDesc}Your class sets the weapons you carry into the fight. Cavalry also sets your armour and puts you on a horse; the other classes leave your armour as it is." />
 	<string id="TAOM_LD_Prompt_ClassTitle" text="{=TAOM_LD_Prompt_ClassTitle}Choose your class" />
@@ -5161,9 +5167,6 @@
 	<string id="taom_char_title" text="{=taom_char_title}Character" />
 	<string id="taom_char_perk_or" text="{=taom_char_perk_or}or" />
 	<string id="taom_char_attribute_points" text="{=taom_char_attribute_points}Attribute Points" />
-	<string id="taom_char_next_perk_tier" text="{=taom_char_next_perk_tier}Skill {LEVEL}: next perk tier {TIER}, {COUNT} skill levels away" />
-	<string id="taom_char_next_perk_tier_one" text="{=taom_char_next_perk_tier_one}Skill {LEVEL}: next perk tier {TIER}, 1 skill level away" />
-	<string id="taom_char_all_perk_tiers" text="{=taom_char_all_perk_tiers}Skill {LEVEL}: every perk tier reached" />
 	<string id="taom_char_perk_tier_locked" text="{=taom_char_perk_tier_locked}Locked" />
 	<string id="taom_char_no_traits" text="{=taom_char_no_traits}No notable traits" />
 	<!-- InformationManagerSettingsNotice -->

@@ -1,10 +1,11 @@
 #!/usr/bin/env python
-"""Gate for registered `taom_*` localization rows that nothing reads (#1018).
+"""Gate for registered `taom_*`, `TAOM_*` and `realms_*` localization rows that nothing reads
+(#1018, #1377).
 
 A row in TAOM's own English strings files costs a translation in 12 languages. When the code that
 read it is removed (`taom_enlist_wait_text` sat unused from 3164fb291 until #1016), the row stays and
-no check notices. This lists every `taom_*` id in the English strings files and fails when none of
-these names it:
+no check notices. This lists every id with one of TAOM's three key prefixes (LOC_KEY_PREFIXES in
+_loc_sources.py) in the English strings files and fails when none of these names it:
 
   * a C# string literal (`{=id}` or the bare id; comments do not count) under Main/, Client/ or
     CoopCompat/, the folders harvest_literal_loc_keys.py registers from (CODE_ROOTS in
@@ -25,7 +26,7 @@ these names it:
 
 The English files are those registered as GameText in Main/_Module/SubModule.xml plus the table in
 tools/_loc_sources.py (a listed file that is missing is a finding). Out of scope: the Languages/<LANG>
-copies, ids not starting `taom_` (vanilla keys, the dotted `str_key_name.*` keybind rows), and
+copies, ids without a TAOM prefix (vanilla keys, `aom_*`, the dotted `str_key_name.*` keybind rows), and
 anything outside this repo: the live TAOM_Map and LOTRLOME_Armory may read a row this gate calls dead.
 
 Known limit: the C# scan ends a string at the next quote, so a literal nested inside an interpolation
@@ -47,10 +48,10 @@ import xml.etree.ElementTree as ET
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from _loc_sources import CODE_ROOTS, OVERRIDE_SOURCE, TAOM_SOURCES, VANILLA_ID_SHAPE  # noqa: E402
+from _loc_sources import CODE_ROOTS, LOC_KEY_PREFIXES, OVERRIDE_SOURCE, TAOM_SOURCES, VANILLA_ID_SHAPE  # noqa: E402
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
-PREFIX = "taom_"
+PREFIX = LOC_KEY_PREFIXES
 INLINE_KEY = re.compile(r"\{=([^}]*)\}")
 TOKEN = re.compile(r"[A-Za-z0-9_]+")
 # Comments first so a literal inside one is never read; char literals so '"' opens no string.
@@ -182,7 +183,7 @@ def check(root, families_path, allow_path):
     ids = {rid for rid, _, _ in all_rows if rid.startswith(PREFIX)}
     n_rows = sum(1 for rid, _, _ in all_rows if rid.startswith(PREFIX))
     if not n_rows:
-        raise GateError("no taom_ rows in %d English strings file(s)" % len(files))
+        raise GateError("no TAOM-prefixed rows in %d English strings file(s)" % len(files))
     code_tokens, data_tokens = read_tokens(root, files)
     tokens = code_tokens | data_tokens
     families = _load_map(families_path, "family", ("regex", "reason", "site"))
