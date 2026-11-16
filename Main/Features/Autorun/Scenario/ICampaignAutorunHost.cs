@@ -1,9 +1,11 @@
+using TAOM.Features.StoryMissions.Domain;
+
 namespace TAOM.Features.Autorun.Scenario;
 
 /// <summary>Which screen the game shows, as the scenario driver needs to tell them apart.</summary>
 internal enum AutorunScreen
 {
-    /// <summary>Anything the driver does not wait for: loading, a mission, an unknown state.</summary>
+    /// <summary>Anything the driver does not wait for: loading, an unknown state.</summary>
     Other,
     MainMenu,
     /// <summary>The campaign intro video (<c>VideoPlaybackState</c>).</summary>
@@ -13,6 +15,8 @@ internal enum AutorunScreen
     Map,
     /// <summary><c>MapState</c> is active with a game menu open; only a wait menu lets time run.</summary>
     MapMenu,
+    /// <summary><c>MissionState</c> is active, its scene load included.</summary>
+    Mission,
 }
 
 /// <summary>
@@ -20,6 +24,10 @@ internal enum AutorunScreen
 /// (<c>CampaignAutorunHost</c>) and replaces core's <see cref="NullCampaignAutorunHost"/> (ADR-013), so a dedicated server can never be
 /// armed. The driver ticks on wall time from the client's application tick, so every call below is made from the engine's main thread.
 /// The engine facts behind each call are in docs/features/scenario-autorun.md "Engine facts".
+/// The story members (#1368) open the dev story menu and pick its options on the path a person's click takes
+/// (<c>MenuContext.InvokeConsequence</c> after <c>GameMenu.GetMenuOptionConditionsHold</c>), from the application tick: never from the
+/// console and never inside the campaign tick. They skip the cheat-mode gate of the <c>taom.story_open</c> console command, which is
+/// safe because only the arm file starts the driver.
 /// </summary>
 internal interface ICampaignAutorunHost
 {
@@ -84,4 +92,28 @@ internal interface ICampaignAutorunHost
 
     /// <summary>Asks the engine to shut down.</summary>
     void Quit();
+
+    /// <summary>A story event window is showing, or one is queued and opens on a later frame (any Realms popup counts).</summary>
+    bool EventWindowOpenOrWaiting { get; }
+
+    /// <summary>
+    /// Opens the dev story menu for this mission with the bot playing the lord, through the dev menu's own refusals, and forgets the
+    /// last verdict. <paramref name="message"/> is the dev menu's answer, or why it was not reached. True when the story menu shows.
+    /// </summary>
+    bool OpenStoryMenu(string missionId, out string message);
+
+    /// <summary>The map shows the dev story menu.</summary>
+    bool StoryMenuShown { get; }
+
+    /// <summary>The id of the game menu the map shows, or null when none is open.</summary>
+    string? OpenMenuId { get; }
+
+    /// <summary>Picks "Open the mission" as a click does. False when the story menu is not shown or the option is not offered.</summary>
+    bool ChooseOpenMission();
+
+    /// <summary>Picks "Back to the map" as a click does. False when the story menu is not shown or the option is not offered.</summary>
+    bool ChooseBackToMap();
+
+    /// <summary>The verdict the mission opened after the last <see cref="OpenStoryMenu"/> reported, or null until it reports one.</summary>
+    StoryOutcome? StoryVerdict { get; }
 }

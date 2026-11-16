@@ -7,6 +7,7 @@ import contextlib
 import io
 import json
 import os
+import re
 import sys
 import tempfile
 import subprocess
@@ -472,6 +473,353 @@ class ShowResultsTests(unittest.TestCase):
             rs.show_results("reason=stalled\n", None, None, messages.append)
         run.assert_not_called()
 
+
+STORY_ARGS = ["--kind", "story-mission", "--mission", "helms_deep_defend"]
+STORY_PASS = ("[2026-11-16 10:00:00] [INFO] [Check] id=taom.autorun.story-mission.done result=pass reason=ok mission=helms_deep_defend "
+              "verdict=Won mission_seconds=230.4 culture=gondor")
+STORY_LAUNCH = ("[2026-11-16 09:50:00] [INFO] [StoryMissions] launching taom_rohan_castle_helms_deep_forceatmo for 'helms_deep_defend' "
+                "(story1, autoplay True)")
+STORY_BOOT = ("[2026-11-16 09:50:05] [INFO] [Check] id=taom.story-missions.hosted.boot result=pass deployment_finished=true siege_ai=true "
+              "main=true friendly=false")
+STORY_ENDED = ("[2026-11-16 09:55:00] [INFO] [Check] id=taom.story-missions.ended result=pass verdict=Won side=Defending "
+               "reason=TargetReached waves=1")
+STORY_LOG = "\n".join([STORY_LAUNCH, STORY_BOOT, STORY_ENDED, STORY_PASS, UNLOAD_LINE, STAMP_LINE.format(HEAD)])
+ROOT = Path(__file__).resolve().parents[2]
+NOT_ARMED_LOG = ("[2026-11-16 09:00:00] [WARNING] [Autorun][Scenario] not armed: the arm file x needs kind=campaign-new (got 'story-mission')\n"
+                 + UNLOAD_LINE)
+
+
+def story_armed(**overrides):
+    values = {"kind": "story-mission", "scenario": "story-mission", "culture": "gondor", "days": None, "mission": "helms_deep_defend"}
+    values.update(overrides)
+    return SimpleNamespace(**values)
+
+
+def good_story_done(**overrides):
+    done = {"reason": "ok", "kind": "story-mission", "scenario": "story-mission", "culture": "gondor", "mission": "helms_deep_defend",
+            "verdict": "Won", "mission_seconds": "230.4"}
+    done.update(overrides)
+    return done
+
+
+def story_judge(done, log_text, armed=None):
+    return rs.judge(done, None, log_text, armed=armed or story_armed(), checkout=(HEAD, {}))
+
+
+def without(log, needle):
+    return "\n".join(line for line in log.splitlines() if needle not in line)
+
+
+class StoryArmTextTests(unittest.TestCase):
+    def test_story_kind_writes_mission_and_mission_limit_in_order(self):
+        known, _ = parse(STORY_ARGS)
+        text, wall = rs.arm_text_for(Path(r"E:\x\run"), known, SimpleNamespace(wall_limit=None))
+        keys = arm_dict(text)
+        self.assertEqual(list(keys), ["kind", "out", "scenario", "mission", "mission_limit_seconds", "culture", "wall_limit_seconds", "quit"])
+        self.assertEqual((keys["kind"], keys["scenario"], keys["mission"], keys["mission_limit_seconds"], keys["culture"], keys["quit"]),
+                         ("story-mission", "story-mission", "helms_deep_defend", "1200", "gondor", "1"))
+        self.assertEqual(wall, 3000)
+        self.assertEqual(keys["wall_limit_seconds"], "3000")
+
+    def test_story_kind_needs_a_mission(self):
+        self.assertIn("--mission", parse_fails(["--kind", "story-mission"]))
+
+    def test_mission_with_campaign_new_is_refused(self):
+        self.assertIn("--mission", parse_fails(["--mission", "helms_deep_defend"]))
+
+    def test_days_with_the_story_kind_is_refused(self):
+        self.assertIn("--days", parse_fails(STORY_ARGS + ["--days", "3"]))
+
+    def test_campaign_new_still_defaults_to_three_days(self):
+        known, _ = parse([])
+        self.assertEqual((known.days, known.mission, known.scenario), (3, None, "campaign-new"))
+
+    def test_an_empty_mission_is_refused(self):
+        self.assertIn("--mission", parse_fails(["--kind", "story-mission", "--mission", " "]))
+
+    def test_the_mission_is_stripped_and_lowercased_at_parse(self):
+        # The game accepts any case and logs the catalog id, which is lowercase; the judge and the 1368 manifest compare with case.
+        known, _ = parse(["--kind", "story-mission", "--mission", "  Helms_Deep_Defend "])
+        self.assertEqual(known.mission, "helms_deep_defend")
+        text, _ = rs.arm_text_for(Path(r"E:\x"), known, SimpleNamespace(wall_limit=None))
+        self.assertEqual(arm_dict(text)["mission"], "helms_deep_defend")
+
+    def test_speed_and_stall_seconds_with_the_story_kind_are_refused(self):
+        self.assertIn("--speed", parse_fails(STORY_ARGS + ["--speed", "5"]))
+        self.assertIn("--stall-seconds", parse_fails(STORY_ARGS + ["--stall-seconds", "60"]))
+        self.assertIn("only for --kind campaign-new", parse_fails(STORY_ARGS + ["--speed", "5"]))
+        self.assertIn("only for --kind campaign-new", parse_fails(STORY_ARGS + ["--stall-seconds", "60"]))
+
+    def test_the_story_kind_without_speed_or_stall_seconds_parses(self):
+        known, _ = parse(STORY_ARGS)
+        self.assertEqual((known.speed, known.stall_seconds), (None, None))
+
+    def test_campaign_new_fills_the_speed_and_stall_defaults(self):
+        known, _ = parse([])
+        self.assertEqual((known.speed, known.stall_seconds), (rs.DEFAULT_SPEED, rs.DEFAULT_STALL_SECONDS))
+
+    def test_story_default_wall_limit_adds_the_mission_limit(self):
+        self.assertEqual(rs.default_wall_limit(3), 1800)
+        self.assertEqual(rs.default_wall_limit(3, rs.DEFAULT_MISSION_LIMIT_SECONDS), 3000)
+
+    def test_runner_wall_limit_wins_for_the_story_kind(self):
+        known, _ = parse(STORY_ARGS)
+        text, wall = rs.arm_text_for(Path(r"E:\x"), known, SimpleNamespace(wall_limit=4000.0))
+        self.assertEqual((wall, arm_dict(text)["wall_limit_seconds"]), (4000.0, "4000"))
+
+    def test_there_is_no_mission_limit_flag(self):
+        _, rest = parse(STORY_ARGS + ["--mission-limit", "60"])
+        self.assertEqual(rest, ["--mission-limit", "60"])
+
+
+class StoryJudgeTests(unittest.TestCase):
+    def test_story_ok(self):
+        code, why = story_judge(good_story_done(), STORY_LOG)
+        self.assertEqual(code, 0, why)
+        self.assertIn("reason=ok, mission helms_deep_defend verdict Won, back on the map", why)
+        self.assertIn("pass line present, no CrashReport block, clean unload", why)
+
+    def test_a_lost_verdict_passes_too(self):
+        log = STORY_LOG.replace("verdict=Won mission_seconds", "verdict=Lost mission_seconds").replace("verdict=Won side", "verdict=Lost side")
+        self.assertEqual(story_judge(good_story_done(verdict="Lost"), log)[0], 0)
+
+    def test_story_needs_its_own_pass_line(self):
+        for log in (without(STORY_LOG, "story-mission.done"), STORY_LOG.replace("story-mission.done", "campaign-new.done"),
+                    STORY_LOG.replace("result=pass reason=ok", "result=fail reason=ok")):
+            code, why = story_judge(good_story_done(), log)
+            self.assertEqual(code, 1)
+            self.assertIn("story-mission.done result=pass", why)
+
+    def test_the_campaign_pass_line_does_not_satisfy_the_story_kind(self):
+        code, _ = story_judge(good_story_done(), without(STORY_LOG, "story-mission.done") + "\n" + PASS_LINE)
+        self.assertEqual(code, 1)
+
+    def test_the_pass_line_must_name_the_armed_mission_and_a_decided_verdict(self):
+        for bad in (STORY_LOG.replace("mission=helms_deep_defend", "mission=other"), STORY_LOG.replace("verdict=Won mission", "verdict=Undecided mission")):
+            self.assertEqual(story_judge(good_story_done(), bad)[0], 1)
+
+    def test_story_needs_boot_and_ended_pass_lines(self):
+        for needle in ("hosted.boot", "story-missions.ended"):
+            code, why = story_judge(good_story_done(), without(STORY_LOG, needle))
+            self.assertEqual(code, 1)
+            self.assertIn(needle, why)
+
+    def test_an_abandoned_end_is_not_a_pass(self):
+        log = STORY_LOG.replace("verdict=Won side=Defending reason=TargetReached", "verdict=Lost side=Defending reason=Abandoned")
+        code, why = story_judge(good_story_done(), log)
+        self.assertEqual(code, 1)
+        self.assertIn("story-missions.ended", why)
+
+    def test_story_needs_exactly_one_launch_line_with_autoplay_true(self):
+        for log in (without(STORY_LOG, "launching"), STORY_LOG.replace("autoplay True", "autoplay False")):
+            code, why = story_judge(good_story_done(), log)
+            self.assertEqual(code, 1)
+            self.assertIn("launching", why)
+
+    def test_a_second_mission_launch_fails(self):
+        for second in (STORY_LAUNCH, STORY_LAUNCH.replace("helms_deep_defend", "dale_defend"),
+                       "[2026-11-16 09:58:00] [INFO] [LongDefeat] launching scene for fortress x"):
+            code, why = story_judge(good_story_done(), STORY_LOG + "\n" + second)
+            self.assertEqual(code, 1)
+            self.assertIn("launching", why)
+
+    def test_story_verdict_must_be_won_or_lost(self):
+        for verdict in ("Undecided", "-", "none", ""):
+            code, why = story_judge(good_story_done(verdict=verdict), STORY_LOG)
+            self.assertEqual(code, 1)
+            self.assertIn("verdict=", why)
+
+    def test_story_done_must_echo_the_mission(self):
+        code, why = story_judge(good_story_done(mission="other"), STORY_LOG)
+        self.assertEqual(code, 1)
+        self.assertIn("mission=other", why)
+
+    def test_story_done_must_echo_kind_scenario_and_culture(self):
+        for key, value in (("kind", "campaign-new"), ("scenario", "x"), ("culture", "rohan")):
+            code, why = story_judge(good_story_done(**{key: value}), STORY_LOG)
+            self.assertEqual(code, 1)
+            self.assertIn(f"{key}={value}", why)
+
+    def test_a_story_done_file_needs_no_days(self):
+        self.assertNotIn("days_run", good_story_done())
+        self.assertEqual(story_judge(good_story_done(), STORY_LOG)[0], 0)
+
+    def test_non_ok_story_reasons_fail_and_are_named(self):
+        for reason in ("mission_refused", "mission_not_opened", "mission_limit", "mission_undecided", "mission_no_verdict", "return_failed"):
+            with self.subTest(reason=reason):
+                code, why = story_judge(good_story_done(reason=reason), STORY_LOG)
+                self.assertEqual(code, 1)
+                self.assertIn("reason=" + reason, why)
+
+    def test_a_crash_block_and_a_missing_unload_still_fail(self):
+        self.assertEqual(story_judge(good_story_done(), STORY_LOG + "\n" + CRASH_LINE)[0], 1)
+        self.assertEqual(story_judge(good_story_done(), without(STORY_LOG, "Shutdown"))[0], 1)
+
+    def test_a_stale_build_still_fails(self):
+        code, why = rs.judge(good_story_done(), None, STORY_LOG.replace(HEAD, "b" * 40), armed=story_armed(), checkout=(HEAD, {}))
+        self.assertEqual(code, 1)
+        self.assertIn("not this checkout", why)
+
+    def test_no_done_file_says_only_that_even_with_a_not_armed_line(self):
+        # An unarmed build writes no done file, so the runner never calls the judge for it; the printers name the cause (StoryWiringTests).
+        self.assertEqual(story_judge({}, STORY_LOG), (1, "no done file"))
+        self.assertEqual(story_judge({}, NOT_ARMED_LOG), (1, "no done file"))
+
+
+class StoryWiringTests(unittest.TestCase):
+    def run_main(self, argv):
+        seen = {}
+        names = ("ENV_VAR", "DONE_FILE", "STATUS_FILE", "RUNS_ROOT", "arm_text_for", "judge", "show_results", "handle_dialogs", "STALL_SECONDS", "main")
+        saved = {name: getattr(runner, name) for name in names}
+
+        def fake_main(rest):
+            seen["rest"] = rest
+            seen["handle_dialogs"] = runner.handle_dialogs
+            seen["show_results"] = runner.show_results
+            seen["judge"] = runner.judge
+            seen["arm"] = runner.arm_text_for(Path(r"E:\o"), SimpleNamespace(wall_limit=None))
+            return 0
+
+        try:
+            runner.main = fake_main
+            with mock.patch.object(autorun_build, "checkout_state", return_value=(HEAD, {})), contextlib.redirect_stdout(io.StringIO()):
+                code = rs.main(argv)
+        finally:
+            for name, value in saved.items():
+                setattr(runner, name, value)
+        return code, seen
+
+    def test_story_kind_presses_the_terrain_shader_dialog(self):
+        # Helm's Deep stops its load at that dialog: the story kind uses the Long Defeat runner's handler, which presses Cancel on it.
+        _, seen = self.run_main(STORY_ARGS)
+        self.assertIs(seen["handle_dialogs"], rs.long_defeat.handle_dialogs)
+        self.assertIsNot(seen["handle_dialogs"], rs.long_defeat.FORDS_HANDLE_DIALOGS)
+
+    def test_campaign_new_keeps_the_fords_dialog_handling(self):
+        _, seen = self.run_main([])
+        self.assertIs(seen["handle_dialogs"], rs.long_defeat.FORDS_HANDLE_DIALOGS)
+        self.assertIs(seen["show_results"], rs.show_results)
+
+    def test_story_kind_uses_its_own_printer_and_judge(self):
+        _, seen = self.run_main(STORY_ARGS)
+        self.assertIs(seen["show_results"], rs.show_story_results)
+        code, _ = seen["judge"](good_story_done(), None, STORY_LOG)
+        self.assertEqual(code, 0)
+        self.assertEqual(seen["rest"], [])
+        self.assertEqual(arm_dict(seen["arm"][0])["mission"], "helms_deep_defend")
+
+    def test_story_printer_prints_the_story_check_lines_and_the_launch_line_and_no_ledger(self):
+        with tempfile.TemporaryDirectory() as folder:
+            log = Path(folder) / "taom_debug_x.log"
+            log.write_text(STORY_LOG + "\n[2026-11-16 10:00:01] [INFO] [Check] id=taom.hero-abilities.fired result=pass\n", encoding="utf-8")
+            messages = []
+            out = io.StringIO()
+            with mock.patch.object(rs.subprocess, "run") as run, contextlib.redirect_stdout(out):
+                rs.show_story_results("reason=ok\nmission=helms_deep_defend\n", log, None, messages.append)
+            run.assert_not_called()
+            for want in ("reason=ok", "story-mission.done result=pass", "story-missions.hosted.boot", "story-missions.ended", "launching taom_rohan"):
+                self.assertIn(want, out.getvalue())
+            self.assertNotIn("hero-abilities", out.getvalue())
+            self.assertTrue(any("clean module unload line: present" in m for m in messages))
+            self.assertFalse((Path(folder) / "ledger.txt").exists())
+
+    def test_both_printers_name_an_unarmed_build_from_its_log_line(self):
+        # The runner prints for every stop reason with the log it collected, and an unarmed build ends as a stall with no done file.
+        want = "this build did not arm the run: [Autorun][Scenario] not armed: the arm file x needs kind=campaign-new"
+        for printer in (rs.show_story_results, rs.show_results):
+            with self.subTest(printer=printer.__name__), tempfile.TemporaryDirectory() as folder:
+                log = Path(folder) / "taom_debug_x.log"
+                log.write_text(NOT_ARMED_LOG + "\n[Autorun][Scenario] not armed: a second line\n", encoding="utf-8")
+                messages = []
+                with mock.patch.object(rs.subprocess, "run", return_value=SimpleNamespace(returncode=1, stdout="", stderr="")), \
+                        contextlib.redirect_stdout(io.StringIO()):
+                    printer("", log, None, messages.append)
+                self.assertEqual([m for m in messages if "did not arm" in m], [want + " (got 'story-mission')"])
+
+    def test_the_printers_say_nothing_about_arming_for_an_armed_build(self):
+        for printer in (rs.show_story_results, rs.show_results):
+            with self.subTest(printer=printer.__name__), tempfile.TemporaryDirectory() as folder:
+                log = Path(folder) / "taom_debug_x.log"
+                log.write_text(STORY_LOG, encoding="utf-8")
+                messages = []
+                with mock.patch.object(rs.subprocess, "run", return_value=SimpleNamespace(returncode=1, stdout="", stderr="")), \
+                        contextlib.redirect_stdout(io.StringIO()):
+                    printer("reason=ok\n", log, None, messages.append)
+                self.assertFalse(any("did not arm" in m for m in messages))
+
+    def test_story_printer_with_no_log_copy_says_so(self):
+        messages = []
+        with contextlib.redirect_stdout(io.StringIO()):
+            rs.show_story_results("reason=mission_limit\n", None, None, messages.append)
+        self.assertTrue(any("no TAOM log copy" in m for m in messages))
+
+    def test_help_names_the_mission_argument(self):
+        out = io.StringIO()
+        with contextlib.redirect_stdout(out), self.assertRaises(SystemExit):
+            rs.parse_own(["--help"])
+        self.assertIn("--mission", out.getvalue())
+        self.assertIn("story-mission", out.getvalue())
+        self.assertNotIn("--mission-limit", out.getvalue())
+
+
+class StoryManifestTests(unittest.TestCase):
+    def manifest(self, issue):
+        import tomllib
+        return tomllib.loads((ROOT / "tools/ingame_checks" / f"{issue}.toml").read_text(encoding="utf-8"))
+
+    def check(self, manifest, check_id):
+        return next(entry for entry in manifest["check"] if entry["id"] == check_id)
+
+    def test_story_patterns_match_the_1105_manifest(self):
+        old = self.manifest(1105)
+        self.assertEqual([rs.STORY_BOOT_PASS], self.check(old, "taom.story-missions.hosted.boot")["pass"])
+        self.assertEqual([rs.STORY_ENDED_PASS], self.check(old, "taom.story-missions.ended")["pass"])
+
+    def test_the_1368_manifest_holds_the_three_rows_scoped_to_the_armed_mission(self):
+        new = self.manifest(1368)
+        self.assertEqual((new["issue"], new["fixed_in"], new["logs"]), (1368, "4baa2f53a", ["taom"]))
+        self.assertEqual([c["id"] for c in new["check"]],
+                         ["taom.autorun.story-mission.done", "taom.story-missions.hosted.boot", "taom.story-missions.ended"])
+        old = self.manifest(1105)
+        for check in new["check"][1:]:
+            self.assertEqual(check["pass"], self.check(old, check["id"])["pass"])
+        for check in new["check"][1:]:
+            self.assertEqual(check["scope"], r"\[StoryMissions\] launching \S+ for \x27helms_deep_defend\x27 ")
+            self.assertEqual(check["scope_end"], r"\[(LongDefeat|StoryMissions)\] launching ")
+        done = new["check"][0]
+        # One done line per process, and a failure before the launch writes no launching line: the done row has no scope and names the mission.
+        self.assertNotIn("scope", done)
+        self.assertNotIn("scope_end", done)
+        self.assertEqual(done["fail"], [r"\[Check\] id=taom\.autorun\.story-mission\.done result=fail reason=\S+ mission=helms_deep_defend "])
+        refused = STORY_PASS.replace("result=pass reason=ok", "result=fail reason=mission_refused")
+        self.assertTrue(re.search(done["fail"][0], refused))
+        self.assertFalse(re.search(done["fail"][0], refused.replace("mission=helms_deep_defend", "mission=dale_defend")))
+        ended = self.check(new, "taom.story-missions.ended")
+        self.assertTrue(any(re.search(p, STORY_ENDED.replace("verdict=Won side=Defending reason=TargetReached",
+                                                             "verdict=Lost side=Defending reason=Abandoned")) for p in ended["fail"]))
+        self.assertFalse(any(re.search(p, STORY_ENDED) for p in ended["fail"]))
+        self.assertTrue(re.search(done["pass"][0], STORY_PASS))
+        self.assertFalse(re.search(done["pass"][0], STORY_PASS.replace("verdict=Won", "verdict=Undecided")))
+        self.assertFalse(re.search(done["pass"][0], STORY_PASS.replace("reason=ok", "reason=mission_limit")))
+
+    def test_the_two_older_manifests_name_the_unattended_command(self):
+        for issue in (1105, 1366):
+            text = (ROOT / f"tools/ingame_checks/{issue}.toml").read_text(encoding="utf-8")
+            self.assertIn("python tools/run_scenario.py --kind story-mission --mission helms_deep_defend", text)
+
+    def test_driver_source_keeps_the_story_names(self):
+        scenario = ROOT / "Main/Features/Autorun/Scenario"
+        self.assertIn(f'StoryDoneId = "{rs.STORY_CHECK_ID}"', (scenario / "ScenarioOutcomes.cs").read_text(encoding="utf-8"))
+        plan = (scenario / "ScenarioPlan.cs").read_text(encoding="utf-8")
+        self.assertIn('KindStoryMission = "story-mission"', plan)
+        self.assertIn(f"DefaultMissionLimitSeconds = {rs.DEFAULT_MISSION_LIMIT_SECONDS}.0", plan)
+        launcher = (ROOT / "Main/Features/StoryMissions/Hooks/StoryMissionLauncher.cs").read_text(encoding="utf-8")
+        self.assertIn("[StoryMissions] launching {definition.Scene} for '{definition.Id}' ({key}, autoplay {autoplay})", launcher)
+        start = (scenario / "ScenarioAutorunStart.cs").read_text(encoding="utf-8")
+        self.assertIn('"[Autorun][Scenario] not armed: "', start)
+        driver = (scenario / "ScenarioAutorunDriver.cs").read_text(encoding="utf-8")
+        for reason in ("mission_refused", "mission_not_opened", "mission_limit", "return_failed"):
+            self.assertIn(reason, driver)
 
 if __name__ == "__main__":
     unittest.main()

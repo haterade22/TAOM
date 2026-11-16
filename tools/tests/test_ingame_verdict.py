@@ -767,6 +767,68 @@ class StoryHeroes1337And1366Tests(unittest.TestCase):
         self.assertEqual(verdict_of(out, self.HOSTED), "FAIL", out)
 
 
+class StoryMissionRun1368Tests(unittest.TestCase):
+    """The real #1368 manifest over the lines of one unattended story run. The done row has no scope: the driver writes one done line per
+    process, and a failure before the launch has to read FAIL. The boot and ended rows stay scoped to the launch of helms_deep_defend."""
+
+    DONE_ID = "taom.autorun.story-mission.done"
+    BOOT_ID = "taom.story-missions.hosted.boot"
+    ENDED_ID = "taom.story-missions.ended"
+    LAUNCH = "[StoryMissions] launching taom_rohan_castle_helms_deep_forceatmo for 'helms_deep_defend' (story1, autoplay True)"
+    BOOT = (BOOT_ID, "result=pass deployment_finished=true siege_ai=true main=true friendly=false")
+    ENDED = (ENDED_ID, "result=pass verdict=Won side=Defending reason=TargetReached waves=1")
+    ENDED_ABANDONED = (ENDED_ID, "result=pass verdict=Lost side=Defending reason=Abandoned waves=0")
+    DONE_PASS = (DONE_ID, "result=pass reason=ok mission=helms_deep_defend verdict=Won mission_seconds=230.4 culture=gondor")
+    DONE_REFUSED = (DONE_ID, "result=fail reason=mission_refused mission=helms_deep_defend verdict=- mission_seconds=0.0 culture=gondor")
+    DONE_OTHER = (DONE_ID, "result=fail reason=mission_refused mission=dale_defend verdict=- mission_seconds=0.0 culture=gondor")
+
+    def setUp(self):
+        self.t = Tree(self)
+        self.t.real_manifest("1368.toml")
+
+    def judge(self, *lines):
+        stamp = (f"[2026-11-16 10:00:00] [INFO] [BuildStamp] TAOM=v2.0.40 build.20261116-100000Z+{GOOD} "
+                 f"TAOM.Dependencies=v2.0.40 build.20261116-095958Z+{GOOD} (pair OK)")
+        body = []
+        for line in lines:
+            if isinstance(line, str):
+                body.append(f"[2026-11-16 10:05:00] [INFO] {line}")
+            else:
+                cid, tail = line
+                body.append(f"[2026-11-16 10:05:00] [INFO] [Check] id={cid} {tail}")
+        path = self.t.client / "Logs" / "taom_debug_2026-11-16_10-00-00.log"
+        path.write_text("\n".join([stamp] + body) + "\n", encoding="utf-8")
+        code, out, _ = self.t.run(["--issue", "1368"])
+        return code, out
+
+    def test_a_done_fail_line_with_no_launch_line_reads_fail(self):
+        code, out = self.judge(self.DONE_REFUSED)
+        self.assertEqual(verdict_of(out, self.DONE_ID), "FAIL", out)
+        self.assertEqual(code, 1, out)
+
+    def test_a_full_good_run_reads_pass(self):
+        code, out = self.judge(self.LAUNCH, self.BOOT, self.ENDED, self.DONE_PASS)
+        for check_id in (self.DONE_ID, self.BOOT_ID, self.ENDED_ID):
+            self.assertEqual(verdict_of(out, check_id), "PASS", out)
+        self.assertEqual(code, 0, out)
+
+    def test_a_good_done_line_with_no_launch_is_not_a_pass(self):
+        code, out = self.judge(self.DONE_PASS)
+        self.assertEqual(verdict_of(out, self.DONE_ID), "PASS", out)
+        self.assertEqual(verdict_of(out, self.BOOT_ID), "NOT REACHED", out)
+        self.assertEqual(verdict_of(out, self.ENDED_ID), "NOT REACHED", out)
+        self.assertEqual(code, 4, out)
+
+    def test_a_done_fail_of_another_mission_is_not_read(self):
+        code, out = self.judge(self.DONE_OTHER)
+        self.assertEqual(verdict_of(out, self.DONE_ID), "NOT REACHED", out)
+
+    def test_an_abandoned_unattended_run_reads_fail(self):
+        code, out = self.judge(self.LAUNCH, self.BOOT, self.ENDED_ABANDONED, self.DONE_PASS)
+        self.assertEqual(verdict_of(out, self.ENDED_ID), "FAIL", out)
+        self.assertEqual(code, 1, out)
+
+
 class VerdictRuleTests(unittest.TestCase):
     """Rules 1 to 4 over the real #970 manifest, one fixture each."""
 

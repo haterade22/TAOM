@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using TAOM.Features.Autorun.Scenario;
+using TAOM.Features.StoryMissions.Domain;
 
 namespace TAOM.Tests.Features.Autorun.Scenario;
 
@@ -134,4 +135,48 @@ internal sealed class FakeCampaignAutorunHost : ICampaignAutorunHost
         Order.Add("quit");
         Quits++;
     }
+
+    /// <summary>A window queued behind <see cref="EventWindowOpen"/>: counts as open or waiting, and closing the open one leaves it.</summary>
+    public bool EventWindowWaiting;
+
+    public bool EventWindowOpenOrWaiting => EventWindowOpen || EventWindowWaiting;
+
+    public bool StoryMenuOpens = true;
+    public string StoryMenuMessage = "The story menu is open for 'helms_deep_defend'. Choose \"Open the mission\".";
+    public bool StoryMenuShownValue;
+    public string? OpenMenuIdValue;
+    public bool OpenChoiceResult = true;
+    public bool BackChoiceResult = true;
+    public StoryOutcome? Verdict;
+
+    public int StoryMenuCalls;
+    public int OpenChoices;
+    public int BackChoices;
+    public string? LastMissionId;
+
+    public bool OpenStoryMenu(string missionId, out string message)
+    {
+        StoryMenuCalls++;
+        LastMissionId = missionId;
+        message = StoryMenuMessage;
+        return StoryMenuOpens;
+    }
+
+    public bool StoryMenuShown => StoryMenuShownValue;
+
+    public string? OpenMenuId => OpenMenuIdValue;
+
+    public bool ChooseOpenMission()
+    {
+        OpenChoices++;
+        return OpenChoiceResult;
+    }
+
+    public bool ChooseBackToMap()
+    {
+        BackChoices++;
+        return BackChoiceResult;
+    }
+
+    public StoryOutcome? StoryVerdict => Verdict;
 }

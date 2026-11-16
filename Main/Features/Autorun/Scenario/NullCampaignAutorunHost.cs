@@ -1,3 +1,5 @@
+using TAOM.Features.StoryMissions.Domain;
+
 namespace TAOM.Features.Autorun.Scenario;
 
 /// <summary>
@@ -51,4 +53,22 @@ internal sealed class NullCampaignAutorunHost : ICampaignAutorunHost
     public void Quit()
     {
     }
+
+    public bool EventWindowOpenOrWaiting => false;
+
+    public bool OpenStoryMenu(string missionId, out string message)
+    {
+        message = "no campaign";
+        return false;
+    }
+
+    public bool StoryMenuShown => false;
+
+    public string? OpenMenuId => null;
+
+    public bool ChooseOpenMission() => false;
+
+    public bool ChooseBackToMap() => false;
+
+    public StoryOutcome? StoryVerdict => null;
 }

@@ -1,5 +1,6 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TAOM.Features.Autorun.Scenario;
+using TAOM.Features.StoryMissions.Domain;
 
 namespace TAOM.Tests.Features.Autorun.Scenario;
 
@@ -56,6 +57,7 @@ public class ScenarioRulesTests
         Assert.IsFalse(ScenarioRules.OnMap(AutorunScreen.MainMenu));
         Assert.IsFalse(ScenarioRules.OnMap(AutorunScreen.Other));
         Assert.IsFalse(ScenarioRules.OnMap(AutorunScreen.CharacterCreation));
+        Assert.IsFalse(ScenarioRules.OnMap(AutorunScreen.Mission));
     }
 
     [TestMethod]
@@ -112,5 +114,30 @@ public class ScenarioRulesTests
         Assert.AreEqual(0, ScenarioRules.DaysRun(ScenarioRules.UnknownDay, 13));
         Assert.AreEqual(0, ScenarioRules.DaysRun(10, ScenarioRules.UnknownDay));
         Assert.AreEqual(0, ScenarioRules.DaysRun(10, 9));
+    }
+
+    [TestMethod]
+    public void MissionReason_WonOrLost_IsNull()
+    {
+        Assert.IsNull(ScenarioRules.MissionReason(StoryOutcome.Won));
+        Assert.IsNull(ScenarioRules.MissionReason(StoryOutcome.Lost));
+    }
+
+    [TestMethod]
+    public void MissionReason_Undecided_IsMissionUndecided()
+    {
+        Assert.AreEqual("mission_undecided", ScenarioRules.MissionReason(StoryOutcome.Undecided));
+    }
+
+    [TestMethod]
+    public void MissionReason_None_IsMissionNoVerdict()
+    {
+        Assert.AreEqual("mission_no_verdict", ScenarioRules.MissionReason(null));
+    }
+
+    [TestMethod]
+    public void StoryStepWait_IsTwoMinutes()
+    {
+        Assert.AreEqual(120.0, ScenarioRules.StoryStepWaitSeconds);
     }
 }

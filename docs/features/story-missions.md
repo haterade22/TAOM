@@ -183,7 +183,7 @@ not for sale; each is a row of the mission's `heroes` list.
   at session start, so a new game and a loaded save in the same process write one line, not two.
 - **Not done:** no hero strip on the HUD, no message when a hero falls, no per-hero position (the three
   stand where the heroes' home place puts them, at the nearest wall lane), no `<Hero>` entry, and no
-  unattended driver for the story mission.
+  unattended driver beyond the one defence mission of #1368 ([scenario autorun](scenario-autorun.md)).
 
 The feature declares no Harmony patch and no GameModel. Its one saved value, a declined offer, is a
 field of the War Chronicle's payload.
@@ -333,8 +333,15 @@ Slice 4, in a campaign at the Full War:
 `python tools/ingame_verdict.py` reads these rows from `tools/ingame_checks/1105.toml`. The proof is
 owed, and Slice 2 waits on it.
 
-The free heroes (#1366). No driver opens a story mission, so a person runs this, in a loaded campaign
-on a build that holds the feature (a `.dirty` build is not counted):
+The free heroes (#1366). A driver for the story mission exists since #1368 (step 0 below), but it has not run yet, so a person
+still runs this by hand until it has, in a loaded campaign on a build that holds the feature (a `.dirty` build is not counted).
+
+0. The unattended route: `python tools/run_scenario.py --kind story-mission --mission helms_deep_defend` starts a new campaign,
+   opens the mission through the dev menu's click path (`Open the mission`), waits for the end and chooses `Back to the map`, then
+   quits. It reaches the mission rows of `1366.toml` for the one defence mission, and `python tools/ingame_verdict.py --issue 1368` reads
+   its own three rows. It does not reach: step 5 (a person's judgement), the War Chronicle's offer path, a save and reload, a forced
+   loss, or any other mission id. The driver is unit tested only; its first run is owed.
+
 
 1. Start a new campaign or load a save, single player, on the map with no menu open. The line
    `[Check] id=taom.story-missions.roster result=pass` appears at session start, with `missing=-` and
@@ -376,9 +383,22 @@ and NOT REACHED for the mission rows. The unattended Long Defeat run `E:/Temp/lo
 hero lines read `is_hero=1 campaign=0 ... health_factor=3.00` with their own weapons, and
 `python tools/ingame_verdict.py` reads PASS for #1337 and for all seven rows of #1361.
 
-What no run has proven: the story mission with the three heroes has not been opened in a game, and no
-driver opens it without a person. The unit tests and the manifest's patterns are the only evidence
-for the mission rows. Not proven either: that an XML character no party holds survives a save and reload.
+The story mission itself is proven by the unattended run `E:/Temp/scenario-runs/20261116-075342` (the driver of #1368,
+build 4baa2f53a): `python tools/ingame_verdict.py --issue 1366` reads PASS for all seven rows. The three hero lines read
+`is_hero=0 campaign=1 mounted=0 formation=7 held=1 strangers=0 order=Move health_factor=3.00` with `strider_sword`,
+`wm_mirkwood_bow_a01` and `sm_dwarf_dain_axe_a`. The hunters line passed at the wave clear with all three standing and in place.
+Each cast (`fired=1`, `8` and `2`), Legolas's aim read zero, Many Arrows fired ten extra arrows with the campaign-loaded item
+(`item=1`), and Aragorn's aura reached 102 soldiers, which in a campaign only the new source rule can do. The mission was won
+(108 kills, 9 defenders lost).
+
+One number of that run is not healthy: the hunters line ends `retaken=1 moved_out=1517`. From the second after the heroes
+spawned, the repair moved about 20 soldiers out of the heroes' formation every second (the log's first five repairs read 21, 20,
+20, 20 and 40), and it never does so in a Long Defeat (`moved_out=0` in every run there). Something puts garrison soldiers into
+formation 7 again and again in the story mission. The checks pass because the repair wins each time; what it does to those
+soldiers is not known. It has its own issue.
+
+Not proven: that an XML character no party holds survives a save and reload, and every row a person must look at (the order
+key, the take-over, the faces, the War Chronicle offer path).
 
 ## How to add a story mission
 
